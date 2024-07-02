@@ -1,403 +1,110 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 010C41607B2
-	for <linux-hardening@vger.kernel.org>; Tue,  2 Jul 2024 12:27:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5FFA1BD03E
+	for <linux-hardening@vger.kernel.org>; Tue,  2 Jul 2024 16:15:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719923229; cv=none; b=bzSaqTtWhiv6n67j2vxGNIyPTwpNWuz+BW0A8wkkY1NLjCqChxYg6KvY+thQtDbwUXIIkgg4VSG7IOOZ/yLI/9Bfuu2POroxMZN9qGzxrzPblTGmLBOWSE1jqrp1NlP7aZ4+Z7A4S8TFjgLedvtcdb/2U25fNzdUT8bhX4kfxbc=
+	t=1719936905; cv=none; b=rRgvs2Yc8fes03DCZPiGT5g0mQY7puL0YpQ+WQ+k9QePWkfFs63XRoUTzC8O44xLS7dOj+5FUxr7nMecfByJsFoKtg6vQGxcCFoqNxw0HszOezLI5BTkPwQMl2fHUstvVl+EmJH2UJ+MDs9Pb0p8D3r0D6q7AnXrBfoimVHkJCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719923229; c=relaxed/simple;
-	bh=9gtxB7TV7IYAdJY0czoQ5nhKwkEw5xmMZOO9m9iOJBM=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=tvjq0Bv9/GhcVJgNuCOF8hPqJ15Hf/JsQr0o/MxQW/+vUW690HnwXj6GC5BJ09rDi/9ykQyKLUORy15XEkfFbBlHGxwWEC1N5wubrwh86+IO9A7qNng/RIpVWF1cOpodAFUIJdMxkaI+hhCBM4kH4QvG5p8TvjJa3s1nrgzhDvo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NUpoGlfj; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1719936905; c=relaxed/simple;
+	bh=vl0S7Z8DpmU2zNirDJUeMFIKfv3z94bq8ndZdBprWrs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rXcpT50/2YYGEg4Ogu8imStt3MmMFZmQdzfku4xy52wlmEo9l7d9yH1XrTHSQW5SZmqqZpZlrVkQg1ifSJFNZeqk2KtcuhJ0Rwj9f61mxbG5SvYl4ozJgM6kK85U3Q6B2S/6Eg/hJWFwMaD23NRjamOdIcs6fKZefQiegZbG9sc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=eocu5ISx; arc=none smtp.client-ip=209.85.166.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NUpoGlfj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719923226;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=aSKvN3HqQTuZVbHxOnZyONOHDWwHQPp2U8cWBbGGU6U=;
-	b=NUpoGlfjfWbdp5CWFZkMvJC+A7OTpQNSZo6cxpXqxSvpNV+Kf5xs/BsvJkjQ6XMyp3cH7p
-	SC0Ov0Ke6VFGnSR1zntsxxTI+SO5i2mgUV48FiOJy+/JM8VAnaMyIepUK5PV/kXJx7E9nM
-	i2Gq+IZwqjOnL80L1zRXZo/r7OaL4iM=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-590-L0oXltRPNeqjR_CIG2nnjQ-1; Tue,
- 02 Jul 2024 08:27:01 -0400
-X-MC-Unique: L0oXltRPNeqjR_CIG2nnjQ-1
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 537411944CCA;
-	Tue,  2 Jul 2024 12:26:55 +0000 (UTC)
-Received: from hydra.redhat.com (unknown [10.39.193.208])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 47AFC1955E80;
-	Tue,  2 Jul 2024 12:26:43 +0000 (UTC)
-From: Jocelyn Falempe <jfalempe@redhat.com>
-To: Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Kees Cook <kees@kernel.org>,
-	Tony Luck <tony.luck@intel.com>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	Petr Mladek <pmladek@suse.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Jocelyn Falempe <jfalempe@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jani Nikula <jani.nikula@intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Kefeng Wang <wangkefeng.wang@huawei.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Uros Bizjak <ubizjak@gmail.com>,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linux-hyperv@vger.kernel.org,
-	linux-mtd@lists.infradead.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v2] printk: Add a short description string to kmsg_dump()
-Date: Tue,  2 Jul 2024 14:26:04 +0200
-Message-ID: <20240702122639.248110-1-jfalempe@redhat.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="eocu5ISx"
+Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3758686ef2fso2537255ab.0
+        for <linux-hardening@vger.kernel.org>; Tue, 02 Jul 2024 09:15:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1719936903; x=1720541703; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=t+JnTEY5nK6WHCH03S/fnQh6gkAQjGBHi3UQYO6T6R4=;
+        b=eocu5ISx3NZm4z2OqYqHenuVEDv01ODXmQR19rCfdoTms0ZeveqvUO3ctWU4D9M8ro
+         H2DHI21kasar2tFK7TVV8l71kPIpkrMTLiiyUDcN2hV4yDkRR/WU3UuRjO0Yt2BoYGpB
+         UhK6JfCfGgphEwiQipKrlD9Bkzlvch6SAYXEs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719936903; x=1720541703;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=t+JnTEY5nK6WHCH03S/fnQh6gkAQjGBHi3UQYO6T6R4=;
+        b=hkbm31D25XE4qQxesSjx94Tk14m/tGTDOy0BwwA4uFTui2fPIGoIntjxvFa3zsPFQq
+         leLHNSHmCr4UXHIe+l4X2zj2SK/dx+Lg3iLBvqs4OCH4QYMk1Rx1iirQ9hK686auP8vy
+         c4JrP4up07Na4xyimxidxzYgr4qhs0O+CpsZHx8UXKfif0p5CqNbD9IUrBQNQTMKKoUo
+         Bj5sCQzxAPwSk1VJzivDfg//o/fFDwjtAsCPUJnOIN+/nztvgR6RiqCQ0k9KDfgT638V
+         e3mwZBI1KgjZPOxRMhEVxOHG5i1doLlqW+rakY1Wq79YZzE5fYbhz7T0OKLDImZ/c4b9
+         tjFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWCkNaYcBENItnqVmrQvZGH4NK/1iC8IUhaqfjwVCN3h/59mog1LdFkmAI44gWOZRMM30vRwgQ1IaOeE8lc86DSxXHZBdjCEzQ4kk27ja28
+X-Gm-Message-State: AOJu0YzkrRYf7+YsuC2loVyNTviKmfiHLvI4fTDZbDicvv3aDanUNGjl
+	gmYWNcQ5/y6adERJ/AnGO5tSDeonkiO+ZUhWWgHfVG2C7E+rILKsU1w8CoH256s=
+X-Google-Smtp-Source: AGHT+IHlIAprc4clVNBI6LajbpkwWNn6lQCN1xV4M6c0WjzXYwqzBdJE1r0JFxzSfgbla2kaNTXAoQ==
+X-Received: by 2002:a5d:9b8e:0:b0:7f3:a20e:c38f with SMTP id ca18e2360f4ac-7f62ed4cf57mr825907439f.0.1719936902970;
+        Tue, 02 Jul 2024 09:15:02 -0700 (PDT)
+Received: from [192.168.1.128] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4bb73f910fdsm2867682173.91.2024.07.02.09.15.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Jul 2024 09:15:02 -0700 (PDT)
+Message-ID: <42ebb5e2-66c5-4787-b934-3eeef0e9903f@linuxfoundation.org>
+Date: Tue, 2 Jul 2024 10:15:01 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] kunit/usercopy: Disable testing on !CONFIG_MMU
+To: David Gow <davidgow@google.com>, Kees Cook <kees@kernel.org>
+Cc: kernel test robot <lkp@intel.com>,
+ Brendan Higgins <brendan.higgins@linux.dev>, Rae Moar <rmoar@google.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-kselftest@vger.kernel.org,
+ kunit-dev@googlegroups.com, linux-hardening@vger.kernel.org,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <20240619202511.it.861-kees@kernel.org>
+ <CABVgOSk7RCMak0ZjRaTE4tYAwV5ZZ2ZHdWC7RWO0Vo6ZwORMdQ@mail.gmail.com>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <CABVgOSk7RCMak0ZjRaTE4tYAwV5ZZ2ZHdWC7RWO0Vo6ZwORMdQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-kmsg_dump doesn't forward the panic reason string to the kmsg_dumper
-callback.
-This patch adds a new struct kmsg_dump_detail, that will hold the
-reason and description, and pass it to the dump() callback.
+On 7/1/24 22:05, David Gow wrote:
+> On Thu, 20 Jun 2024 at 04:25, Kees Cook <kees@kernel.org> wrote:
+>>
+>> Since arch_pick_mmap_layout() is an inline for non-MMU systems, disable
+>> this test there.
+>>
+>> Reported-by: kernel test robot <lkp@intel.com>
+>> Closes: https://lore.kernel.org/oe-kbuild-all/202406160505.uBge6TMY-lkp@intel.com/
+>> Signed-off-by: Kees Cook <kees@kernel.org>
+>> ---
+>> Resending as v2 with Shuah in To:
+>> ---
+>> Cc: Shuah Khan <skhan@linuxfoundation.org>
+>> Cc: Brendan Higgins <brendan.higgins@linux.dev>
+>> Cc: David Gow <davidgow@google.com>
+>> Cc: Rae Moar <rmoar@google.com>
+>> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Cc: linux-kselftest@vger.kernel.org
+>> Cc: kunit-dev@googlegroups.com
+>> Cc: linux-hardening@vger.kernel.org
+>> Cc: linux-mm@kvack.org
+>> ---
+> 
+> Reviewed-by: David Gow <davidgow@google.com>
+> 
+> Cheers,
+> -- David
 
-To avoid updating all kmsg_dump() call, it adds a kmsg_dump_desc()
-function and a macro for backward compatibility.
+Thank you both. Applied to linux-kselftest kunit branch for next.
 
-I've written this for drm_panic, but it can be useful for other
-kmsg_dumper.
-It allows to see the panic reason, like "sysrq triggered crash"
-or "VFS: Unable to mount root fs on xxxx" on the drm panic screen.
-
-v2:
- * Use a struct kmsg_dump_detail to hold the reason and description
-   pointer, for more flexibility if we want to add other parameters.
-   (Kees Cook)
- * Fix powerpc/nvram_64 build, as I didn't update the forward
-   declaration of oops_to_nvram()
-
-Signed-off-by: Jocelyn Falempe <jfalempe@redhat.com>
----
- arch/powerpc/kernel/nvram_64.c             |  8 ++++----
- arch/powerpc/platforms/powernv/opal-kmsg.c |  4 ++--
- arch/um/kernel/kmsg_dump.c                 |  2 +-
- drivers/gpu/drm/drm_panic.c                |  4 ++--
- drivers/hv/hv_common.c                     |  4 ++--
- drivers/mtd/mtdoops.c                      |  2 +-
- fs/pstore/platform.c                       | 10 +++++-----
- include/linux/kmsg_dump.h                  | 22 +++++++++++++++++++---
- kernel/panic.c                             |  2 +-
- kernel/printk/printk.c                     | 11 ++++++++---
- 10 files changed, 45 insertions(+), 24 deletions(-)
-
-diff --git a/arch/powerpc/kernel/nvram_64.c b/arch/powerpc/kernel/nvram_64.c
-index e385d3164648..f9c6568a9137 100644
---- a/arch/powerpc/kernel/nvram_64.c
-+++ b/arch/powerpc/kernel/nvram_64.c
-@@ -73,7 +73,7 @@ static const char *nvram_os_partitions[] = {
- };
- 
- static void oops_to_nvram(struct kmsg_dumper *dumper,
--			  enum kmsg_dump_reason reason);
-+			  struct kmsg_dump_detail *detail);
- 
- static struct kmsg_dumper nvram_kmsg_dumper = {
- 	.dump = oops_to_nvram
-@@ -643,7 +643,7 @@ void __init nvram_init_oops_partition(int rtas_partition_exists)
-  * partition.  If that's too much, go back and capture uncompressed text.
-  */
- static void oops_to_nvram(struct kmsg_dumper *dumper,
--			  enum kmsg_dump_reason reason)
-+			  struct kmsg_dump_detail *detail)
- {
- 	struct oops_log_info *oops_hdr = (struct oops_log_info *)oops_buf;
- 	static unsigned int oops_count = 0;
-@@ -655,7 +655,7 @@ static void oops_to_nvram(struct kmsg_dumper *dumper,
- 	unsigned int err_type = ERR_TYPE_KERNEL_PANIC_GZ;
- 	int rc = -1;
- 
--	switch (reason) {
-+	switch (detail->reason) {
- 	case KMSG_DUMP_SHUTDOWN:
- 		/* These are almost always orderly shutdowns. */
- 		return;
-@@ -671,7 +671,7 @@ static void oops_to_nvram(struct kmsg_dumper *dumper,
- 		break;
- 	default:
- 		pr_err("%s: ignoring unrecognized KMSG_DUMP_* reason %d\n",
--		       __func__, (int) reason);
-+		       __func__, (int) detail->reason);
- 		return;
- 	}
- 
-diff --git a/arch/powerpc/platforms/powernv/opal-kmsg.c b/arch/powerpc/platforms/powernv/opal-kmsg.c
-index 6c3bc4b4da98..bb4218fa796e 100644
---- a/arch/powerpc/platforms/powernv/opal-kmsg.c
-+++ b/arch/powerpc/platforms/powernv/opal-kmsg.c
-@@ -20,13 +20,13 @@
-  * message, it just ensures that OPAL completely flushes the console buffer.
-  */
- static void kmsg_dump_opal_console_flush(struct kmsg_dumper *dumper,
--				     enum kmsg_dump_reason reason)
-+				     struct kmsg_dump_detail *detail)
- {
- 	/*
- 	 * Outside of a panic context the pollers will continue to run,
- 	 * so we don't need to do any special flushing.
- 	 */
--	if (reason != KMSG_DUMP_PANIC)
-+	if (detail->reason != KMSG_DUMP_PANIC)
- 		return;
- 
- 	opal_flush_console(0);
-diff --git a/arch/um/kernel/kmsg_dump.c b/arch/um/kernel/kmsg_dump.c
-index 4382cf02a6d1..419021175272 100644
---- a/arch/um/kernel/kmsg_dump.c
-+++ b/arch/um/kernel/kmsg_dump.c
-@@ -8,7 +8,7 @@
- #include <os.h>
- 
- static void kmsg_dumper_stdout(struct kmsg_dumper *dumper,
--				enum kmsg_dump_reason reason)
-+				struct kmsg_dump_detail *detail)
- {
- 	static struct kmsg_dump_iter iter;
- 	static DEFINE_SPINLOCK(lock);
-diff --git a/drivers/gpu/drm/drm_panic.c b/drivers/gpu/drm/drm_panic.c
-index 948aed00595e..8794c7f6c0ee 100644
---- a/drivers/gpu/drm/drm_panic.c
-+++ b/drivers/gpu/drm/drm_panic.c
-@@ -655,11 +655,11 @@ static struct drm_plane *to_drm_plane(struct kmsg_dumper *kd)
- 	return container_of(kd, struct drm_plane, kmsg_panic);
- }
- 
--static void drm_panic(struct kmsg_dumper *dumper, enum kmsg_dump_reason reason)
-+static void drm_panic(struct kmsg_dumper *dumper, struct kmsg_dump_detail *detail)
- {
- 	struct drm_plane *plane = to_drm_plane(dumper);
- 
--	if (reason == KMSG_DUMP_PANIC)
-+	if (detail->reason == KMSG_DUMP_PANIC)
- 		draw_panic_plane(plane);
- }
- 
-diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
-index 9c452bfbd571..7a35c82976e0 100644
---- a/drivers/hv/hv_common.c
-+++ b/drivers/hv/hv_common.c
-@@ -207,13 +207,13 @@ static int hv_die_panic_notify_crash(struct notifier_block *self,
-  * buffer and call into Hyper-V to transfer the data.
-  */
- static void hv_kmsg_dump(struct kmsg_dumper *dumper,
--			 enum kmsg_dump_reason reason)
-+			 struct kmsg_dump_detail *detail)
- {
- 	struct kmsg_dump_iter iter;
- 	size_t bytes_written;
- 
- 	/* We are only interested in panics. */
--	if (reason != KMSG_DUMP_PANIC || !sysctl_record_panic_msg)
-+	if (detail->reason != KMSG_DUMP_PANIC || !sysctl_record_panic_msg)
- 		return;
- 
- 	/*
-diff --git a/drivers/mtd/mtdoops.c b/drivers/mtd/mtdoops.c
-index 2f11585b5613..86d49db9196d 100644
---- a/drivers/mtd/mtdoops.c
-+++ b/drivers/mtd/mtdoops.c
-@@ -298,7 +298,7 @@ static void find_next_position(struct mtdoops_context *cxt)
- }
- 
- static void mtdoops_do_dump(struct kmsg_dumper *dumper,
--			    enum kmsg_dump_reason reason)
-+			    struct kmsg_dump_detail *detail)
- {
- 	struct mtdoops_context *cxt = container_of(dumper,
- 			struct mtdoops_context, dump);
-diff --git a/fs/pstore/platform.c b/fs/pstore/platform.c
-index 3497ede88aa0..9c6b7c97fa3c 100644
---- a/fs/pstore/platform.c
-+++ b/fs/pstore/platform.c
-@@ -275,7 +275,7 @@ void pstore_record_init(struct pstore_record *record,
-  * end of the buffer.
-  */
- static void pstore_dump(struct kmsg_dumper *dumper,
--			enum kmsg_dump_reason reason)
-+			struct kmsg_dump_detail *detail)
- {
- 	struct kmsg_dump_iter iter;
- 	unsigned long	total = 0;
-@@ -285,9 +285,9 @@ static void pstore_dump(struct kmsg_dumper *dumper,
- 	int		saved_ret = 0;
- 	int		ret;
- 
--	why = kmsg_dump_reason_str(reason);
-+	why = kmsg_dump_reason_str(detail->reason);
- 
--	if (pstore_cannot_block_path(reason)) {
-+	if (pstore_cannot_block_path(detail->reason)) {
- 		if (!spin_trylock_irqsave(&psinfo->buf_lock, flags)) {
- 			pr_err("dump skipped in %s path because of concurrent dump\n",
- 					in_nmi() ? "NMI" : why);
-@@ -311,7 +311,7 @@ static void pstore_dump(struct kmsg_dumper *dumper,
- 		pstore_record_init(&record, psinfo);
- 		record.type = PSTORE_TYPE_DMESG;
- 		record.count = oopscount;
--		record.reason = reason;
-+		record.reason = detail->reason;
- 		record.part = part;
- 		record.buf = psinfo->buf;
- 
-@@ -352,7 +352,7 @@ static void pstore_dump(struct kmsg_dumper *dumper,
- 		}
- 
- 		ret = psinfo->write(&record);
--		if (ret == 0 && reason == KMSG_DUMP_OOPS) {
-+		if (ret == 0 && detail->reason == KMSG_DUMP_OOPS) {
- 			pstore_new_entry = 1;
- 			pstore_timer_kick();
- 		} else {
-diff --git a/include/linux/kmsg_dump.h b/include/linux/kmsg_dump.h
-index 906521c2329c..65f5a47727bc 100644
---- a/include/linux/kmsg_dump.h
-+++ b/include/linux/kmsg_dump.h
-@@ -39,6 +39,17 @@ struct kmsg_dump_iter {
- 	u64	next_seq;
- };
- 
-+/**
-+ *struct kmsg_dump_detail - kernel crash detail
-+ * @reason: reason for the crash, see kmsg_dump_reason.
-+ * @description: optional short string, to provide additional information.
-+ */
-+
-+struct kmsg_dump_detail {
-+	enum kmsg_dump_reason reason;
-+	const char *description;
-+};
-+
- /**
-  * struct kmsg_dumper - kernel crash message dumper structure
-  * @list:	Entry in the dumper list (private)
-@@ -49,13 +60,13 @@ struct kmsg_dump_iter {
-  */
- struct kmsg_dumper {
- 	struct list_head list;
--	void (*dump)(struct kmsg_dumper *dumper, enum kmsg_dump_reason reason);
-+	void (*dump)(struct kmsg_dumper *dumper, struct kmsg_dump_detail *detail);
- 	enum kmsg_dump_reason max_reason;
- 	bool registered;
- };
- 
- #ifdef CONFIG_PRINTK
--void kmsg_dump(enum kmsg_dump_reason reason);
-+void kmsg_dump_desc(enum kmsg_dump_reason reason, const char *desc);
- 
- bool kmsg_dump_get_line(struct kmsg_dump_iter *iter, bool syslog,
- 			char *line, size_t size, size_t *len);
-@@ -71,7 +82,7 @@ int kmsg_dump_unregister(struct kmsg_dumper *dumper);
- 
- const char *kmsg_dump_reason_str(enum kmsg_dump_reason reason);
- #else
--static inline void kmsg_dump(enum kmsg_dump_reason reason)
-+static inline void kmsg_dump_desc(enum kmsg_dump_reason reason, const char *desc)
- {
- }
- 
-@@ -107,4 +118,9 @@ static inline const char *kmsg_dump_reason_str(enum kmsg_dump_reason reason)
- }
- #endif
- 
-+static inline void kmsg_dump(enum kmsg_dump_reason reason)
-+{
-+	kmsg_dump_desc(reason, NULL);
-+}
-+
- #endif /* _LINUX_KMSG_DUMP_H */
-diff --git a/kernel/panic.c b/kernel/panic.c
-index 0843a275531a..0a8b29c44f3c 100644
---- a/kernel/panic.c
-+++ b/kernel/panic.c
-@@ -378,7 +378,7 @@ void panic(const char *fmt, ...)
- 
- 	panic_print_sys_info(false);
- 
--	kmsg_dump(KMSG_DUMP_PANIC);
-+	kmsg_dump_desc(KMSG_DUMP_PANIC, buf);
- 
- 	/*
- 	 * If you doubt kdump always works fine in any situation,
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index 5dcc05e1aa56..19bc414be5f0 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -4272,16 +4272,21 @@ const char *kmsg_dump_reason_str(enum kmsg_dump_reason reason)
- EXPORT_SYMBOL_GPL(kmsg_dump_reason_str);
- 
- /**
-- * kmsg_dump - dump kernel log to kernel message dumpers.
-+ * kmsg_dump_desc - dump kernel log to kernel message dumpers.
-  * @reason: the reason (oops, panic etc) for dumping
-+ * @desc: a short string to describe what caused the panic or oops. Can be NULL
-+ * if no additional description is available.
-  *
-  * Call each of the registered dumper's dump() callback, which can
-  * retrieve the kmsg records with kmsg_dump_get_line() or
-  * kmsg_dump_get_buffer().
-  */
--void kmsg_dump(enum kmsg_dump_reason reason)
-+void kmsg_dump_desc(enum kmsg_dump_reason reason, const char *desc)
- {
- 	struct kmsg_dumper *dumper;
-+	struct kmsg_dump_detail detail = {
-+		.reason = reason,
-+		.description = desc};
- 
- 	rcu_read_lock();
- 	list_for_each_entry_rcu(dumper, &dump_list, list) {
-@@ -4299,7 +4304,7 @@ void kmsg_dump(enum kmsg_dump_reason reason)
- 			continue;
- 
- 		/* invoke dumper which will iterate over records */
--		dumper->dump(dumper, reason);
-+		dumper->dump(dumper, &detail);
- 	}
- 	rcu_read_unlock();
- }
-
-base-commit: 82e4255305c554b0bb18b7ccf2db86041b4c8b6e
--- 
-2.45.2
-
+thanks,
+-- Shuah
