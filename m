@@ -1,91 +1,97 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F0AE1DDDB
-	for <linux-hardening@vger.kernel.org>; Tue,  2 Jul 2024 04:05:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF462179AF
+	for <linux-hardening@vger.kernel.org>; Tue,  2 Jul 2024 04:09:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719893125; cv=none; b=LUeKytphJuaEtgorUl2CmwmHvsfb9mm1Q0tFUaiEsbSRLlAJUQL0J5Ov5RFNiqbIGl4irPxP8ZS4OxgsezvhM017+syhhU0tJbUSy8i9SrAy4ThDYWBLO4Hgo7iHXyBF+TdnGmH/ykZVEThi3sjx8l0a45scTa/17CXHmDM3mpk=
+	t=1719893356; cv=none; b=WMoAD5zPvDcbmTLZkMJgmHNLQrxD6R5UrsoqsqogGUNay8EjE/4wd4JpaRvX1Uxho7FUpvvKx4HpFle0SVn5J+g7RwO8pzl/8FScsaj9zR0C2hHK81jHoDpgAnn8+N4GWWC169WClkcAy2EdtRwpfwJDanhZOPJt7Yrt3gnxZlE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719893125; c=relaxed/simple;
-	bh=rcP+Jh7X+Gmz0Dhq0n3twC9DU5G8C3N3gdJQ2vyOS/M=;
+	s=arc-20240116; t=1719893356; c=relaxed/simple;
+	bh=dNLPV3Nups4qlblh1WX8VXk2AKj4V9dAl2PwDt94pzA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=N+3u9yb4iV0b6yEB44F+0Cte4qERTa2zO3APbIM4Jt3vpaRDsAZBZYliUBJD6VsIWTcCZRBKOwbehdr/FFmHgO2323N3N6VrdnfVTQ7FkRLkG20SVZBVS+ywZ55ls0J/EpuI+rfuluOnCzP3dUIF4dUj6j73pX5bjLRTYLuZK8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4ajjA5cr; arc=none smtp.client-ip=209.85.160.169
+	 To:Cc:Content-Type; b=TIDroxl/EvaJpS2tq1GeQiqUhMxGSHPthiYBrFB/v6qPmJddtwWl7yNX4h6R2+lakrlrD7p/E2oLJugLeGxl3jJAlcPPgbmN2DL34O/aDLZhp4O6S1IFZ8IQhUO3Nv0i7hfOJ7SYL5gHlGPjB4yS2cNfmRIxmQnRYFYy2lkg7fc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xgJF8Rn1; arc=none smtp.client-ip=209.85.160.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4ajjA5cr"
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-444fe7e9f11so765021cf.0
-        for <linux-hardening@vger.kernel.org>; Mon, 01 Jul 2024 21:05:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xgJF8Rn1"
+Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-444fe7e9f11so765791cf.0
+        for <linux-hardening@vger.kernel.org>; Mon, 01 Jul 2024 21:09:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1719893123; x=1720497923; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1719893353; x=1720498153; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=rcP+Jh7X+Gmz0Dhq0n3twC9DU5G8C3N3gdJQ2vyOS/M=;
-        b=4ajjA5crDcvkf+xFFUixJeCceyrWnFuO737UHp7LOkw5i/ysfjI6RQ0bgcZQYLU+sb
-         MU8Kcnkrr2ekUBJ0yAgwnbHkthwbsTNnnPdlQ09Ykl1XAxKGWC/ruwoH4CqOdogl8YEL
-         qvEpXsEK3OcoZg/rzfmG64zSVGZRsb+/h//3qP/+6eE4Nru8OYg03EQIyCiZiWv8aL/C
-         LRqzXKCA0LOTopxbI+TGdYIhy8YfyhrTBqomL6Q6mbma2WAUzYQSb87m9CO1QGza16VC
-         LgHclPKXnhHinEK66PBSX4qiTbAKRiA9Df2TyatIvH22TnzDhWXBlzFHL3eHo+T79cVA
-         EVAg==
+        bh=dNLPV3Nups4qlblh1WX8VXk2AKj4V9dAl2PwDt94pzA=;
+        b=xgJF8Rn1YfROAO/WoectYKTVOe+S6JYTlW17zFczvGJd5Iyl6h8Gqk+8ICr2iB5DSK
+         XmbvpyszJOu+onDBC47vArposG53b/U9kV0ISbERt3Gx6J0SWxsuJ8tEJBQXVSbCoj3s
+         AmcGPKwwpi6Ij0kSAwD3dU4zXvYj4uRVJoypulDC1JKUGlcIrZgxrIVi46Qk5Cnhn3TR
+         pssBxsWIfwLFE9IrCa1dD/qSbpsCaKa77a0UXM6j28d1Bi8YL+gYeEVvsN2RbXIhVa4P
+         0QaJsQdlLyx2R5zVUf27oU4VSsX/wwUyhu4sHpaU0Kd8H1aFZ+46VQOgQHR9vVHvUT5T
+         uRvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719893123; x=1720497923;
+        d=1e100.net; s=20230601; t=1719893353; x=1720498153;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=rcP+Jh7X+Gmz0Dhq0n3twC9DU5G8C3N3gdJQ2vyOS/M=;
-        b=vLIhYrT40xpe4TQobLkwwb6cSYrGEG5m4fTgfUwthLFCkD1iEgsu0RvNQmJiJpSstE
-         WZxdofhN6p6owrlmbGK6eW7eLbvWy283uOm1rZmMZQCrgXObOzP2+3yt8t6RA5AyylJm
-         sSgFXIiaw1xSlUme9FCpm/kFstSxfQ15WrAOH5RfEKB8DMkbmqXJjpbRJRUKdEIuky1h
-         NeUEzc0MLzUTyj5dO9/Cxx7VEdv5pX7WTsQ3ucz+R8XbGVPj/YIF2ff8lEQCqQhZEyWJ
-         MYlRtPBtf3tJA9UrtVwpRb/Z/qrHWSBA8dW0uf+7qIf+ncpdc3/fKpPDXdJbtRgD9gyh
-         2ZpQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWTLaRkx/CvpZk3eS5h7Ku8ME0vdAc3bcM2ZFm33p0KiAtXgl6XUQitXNMhEaHgvuHX0DVuJaugLC/fuilm7Ug57VtIJ0MLor1DJmP/wSW2
-X-Gm-Message-State: AOJu0YwmklDr+6tZxJMzjIRtoM/nnJD5dHmRTXwGVPiscUmPkUWaEUTU
-	TNFzu/N2nVUgevwc/n4ROC9VGpnM+MRKEanfBM8kfD8TGYHLF78nVIGEBepoCcPUmJ8Q0FN2xfH
-	EyE173uPqGqmH8Ztb6VnsfYeykgpuNuXdhOO7
-X-Google-Smtp-Source: AGHT+IERnb8c9twaRApiB6apELSkVdUVuCvxqT8JyCmXCXDDLsHGhtHYDy4PTcuFVgv+tVRHq1244xcxH3u9Pp+J/rU=
+        bh=dNLPV3Nups4qlblh1WX8VXk2AKj4V9dAl2PwDt94pzA=;
+        b=jr28WcZjQrPn8g95uGmncBCQfpadMIBAepjjCJI6DBRA/vDMIDpv1JdjkfCkVdinlN
+         edR+QuaCFsnto6MkpOHoopbn0GVC8+SYoZ3RReQLQg7BTXgysoNoDVM4idvSdu/E1MKd
+         l1lLBqi/BSxtKv8yldiAJEFbiZJ1NImZSi/g5CgL4ZUx1Qu95jPcqqST6zj2nSL9yiji
+         7McdgjCr7CdVzW8l23WIBnbMvoWZDzUBU1F3z1yhmo8NeZZlDwI2afSS3ayow/bznQ0u
+         S2jMK310eBdrD9LmnrNttVomypsAemgXd0U6IiYbWpnM2eYMEgsHIN9TsyGdvJj8Ga1p
+         T1lw==
+X-Forwarded-Encrypted: i=1; AJvYcCVoAKHJNaYo1eMOiGnpAOwaRgjSop2BqaLKyiHRfAJ7bPEN0iJ4jtwrM9iM2jWWNvX5cMLGLkNt2T+/PD3K1MUPD7H7dquBwaU3T+Qy6Ikg
+X-Gm-Message-State: AOJu0YzfOkXi7oTGd0s/pl3jqA1NhDG5WWaWqqb48eV1ED1aUIGO+Nq2
+	MUMM/hApqYxAYxRFqAa6N9XaMSmIPr2FO77IFSWTiwsmtOhB6mfkox+FRTs8goP7cu/dvcc7loF
+	PqN7nQXYLKdEaoNLqACIB19odTBp0/JvrXY1I
+X-Google-Smtp-Source: AGHT+IHTq2vFWnuyFleYxcX5szuebmkHdxhFqmK8wuyk709Ytw8htr39s3gY8nGlhUuM4CRQtEyhWRNhMKc2HBnhxDE=
 X-Received: by 2002:a05:622a:4709:b0:444:e9b9:708f with SMTP id
- d75a77b69052e-4465df8c326mr6031971cf.21.1719893122967; Mon, 01 Jul 2024
- 21:05:22 -0700 (PDT)
+ d75a77b69052e-4465df8c326mr6039071cf.21.1719893353560; Mon, 01 Jul 2024
+ 21:09:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240619202511.it.861-kees@kernel.org>
-In-Reply-To: <20240619202511.it.861-kees@kernel.org>
+References: <20240619202659.work.532-kees@kernel.org>
+In-Reply-To: <20240619202659.work.532-kees@kernel.org>
 From: David Gow <davidgow@google.com>
-Date: Tue, 2 Jul 2024 12:05:10 +0800
-Message-ID: <CABVgOSk7RCMak0ZjRaTE4tYAwV5ZZ2ZHdWC7RWO0Vo6ZwORMdQ@mail.gmail.com>
-Subject: Re: [PATCH v2] kunit/usercopy: Disable testing on !CONFIG_MMU
+Date: Tue, 2 Jul 2024 12:09:02 +0800
+Message-ID: <CABVgOS=Sqt7dbMkece_dokZm60PeyOtO1t1hPor+vYJqjN+ApA@mail.gmail.com>
+Subject: Re: [PATCH] kunit/usercopy: Add missing MODULE_DESCRIPTION()
 To: Kees Cook <kees@kernel.org>
-Cc: Shuah Khan <skhan@linuxfoundation.org>, kernel test robot <lkp@intel.com>, 
+Cc: Shuah Khan <skhan@linuxfoundation.org>, Jeff Johnson <quic_jjohnson@quicinc.com>, 
 	Brendan Higgins <brendan.higgins@linux.dev>, Rae Moar <rmoar@google.com>, 
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
 	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
 	linux-hardening@vger.kernel.org, linux-mm@kvack.org, 
 	linux-kernel@vger.kernel.org
 Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="000000000000ae5e25061c3bd27d"
+	boundary="0000000000006a2148061c3be07a"
 
---000000000000ae5e25061c3bd27d
+--0000000000006a2148061c3be07a
 Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 20 Jun 2024 at 04:25, Kees Cook <kees@kernel.org> wrote:
+On Thu, 20 Jun 2024 at 04:27, Kees Cook <kees@kernel.org> wrote:
 >
-> Since arch_pick_mmap_layout() is an inline for non-MMU systems, disable
-> this test there.
+> From: Jeff Johnson <quic_jjohnson@quicinc.com>
 >
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202406160505.uBge6TMY-lkp@intel.com/
+> Fix warning seen with:
+>
+> $ make allmodconfig && make W=1 C=1 lib/usercopy_kunit.ko
+> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/usercopy_kunit.o
+>
+> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
 > Signed-off-by: Kees Cook <kees@kernel.org>
 > ---
-> Resending as v2 with Shuah in To:
+> At Jeff's reminder, I've split this out of:
+> https://lore.kernel.org/all/20240601-md-lib-test-v1-1-a728620e37d8@quicinc.com/
+> since the file got renamed.
 > ---
 > Cc: Shuah Khan <skhan@linuxfoundation.org>
+> Cc: Jeff Johnson <quic_jjohnson@quicinc.com>
 > Cc: Brendan Higgins <brendan.higgins@linux.dev>
 > Cc: David Gow <davidgow@google.com>
 > Cc: Rae Moar <rmoar@google.com>
@@ -102,7 +108,7 @@ Reviewed-by: David Gow <davidgow@google.com>
 Cheers,
 -- David
 
---000000000000ae5e25061c3bd27d
+--0000000000006a2148061c3be07a
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
@@ -170,13 +176,13 @@ GQs0EfiilyTgsH8iMOPqUJ1h4oX9z1FpaiJzfxcvcGG46SCieSFP0USs9aMl7GeERue37kBf14Pd
 kOYIfx09Pcv/N6lHV6kXlzG0xeUuV3RxtLtszQgxggJqMIICZgIBATBoMFQxCzAJBgNVBAYTAkJF
 MRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFzIFIz
 IFNNSU1FIENBIDIwMjACEAFsPHWl8lqMEwx3lAnpufYwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZI
-hvcNAQkEMSIEIERdrr/H+lcdIq/omLS+iZA7EBY0pE5H3TdzU0sC0PyaMBgGCSqGSIb3DQEJAzEL
-BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MDcwMjA0MDUyM1owaQYJKoZIhvcNAQkPMVww
+hvcNAQkEMSIEIIghmbmhS3G8lIcy8JlVXs9mFoz9qVPdKiQPo/8w//l2MBgGCSqGSIb3DQEJAzEL
+BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MDcwMjA0MDkxM1owaQYJKoZIhvcNAQkPMVww
 WjALBglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkq
-hkiG9w0BAQowCwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQAeCMCg
-tCdPjIqGlcKMlKtJmPCqeRkGLVnYVmfq+0NHbmKYhVRPrt9gBRN22kMzWLYXDkQEJ8Y3fhCJBmMc
-AdP1zNzBBuj4aooMxRpItgXoXskUBJ/Y8/r99knnZeV5JTPNVMIbLIYkAiRrrNYp42r7sXs5u6AK
-ZttK2Xy7KbPhwmwI9QRfCFgG1PQG5cnWgZYLBN+TJN7bHkElYCFz4oWw3BmKFuSw/lZL9mWdCLdG
-3wPWI+ANRH8czQ57qCn8hzHfYhVok00jyKdbuD0XT6tqGwudI4ybSSGZR3HA84tRR93CkRUrHALn
-L3HraDUZYCsnK9h2y3vsaT+OBkeAyNvy
---000000000000ae5e25061c3bd27d--
+hkiG9w0BAQowCwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQBpcU9W
+t8fkP77r0aUywd4EpBwPBYopY7onJVlcUdGcXy1zQqR0ucOaLmYUwMKsD2AtNBF38XfrE22sJD/w
+Q6YYbWDF8x/M2rC1Zyqr00dz3v1QarqEGmcchKGtXwKF6nCwuoKynAXroF5o6J4bEy3vSOHnubx7
+NErL5HbmT4AIUnQ7YOy1SJ6rzU06SueaAKYJCT5Ks7DxuJW/IfCkz5l61ybBZwnQ9QaExwG2RvO7
+c/DSdMBj+9WCkWb+P9g/5ZWymhZ3B3lefHkN7wqOd9oOHittL4zrCdcwj/hmsISlULSjFfzdkdwh
+81OqarBpq5TLi1p92Dme5YGgQVOSuU1s
+--0000000000006a2148061c3be07a--
