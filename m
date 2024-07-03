@@ -1,60 +1,60 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30F4913A865
-	for <linux-hardening@vger.kernel.org>; Wed,  3 Jul 2024 08:12:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2422F5B1E8
+	for <linux-hardening@vger.kernel.org>; Wed,  3 Jul 2024 08:22:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719994376; cv=none; b=NxS3RcxogcU0PzmVjVjW6qQzPcyrPH8FzPLa4D1CykxP82k02DJV6/ohPcTm0fNc9C7E4r81Xd0gKetqx7lx79bZY+nFgDr8sF3zrzUStt+bPcPeiF+G15iIRUfhol7huM2RWQZbPut1SAx5/7oWJf//VoC6BIijhP8gwmtIzPk=
+	t=1719994954; cv=none; b=S/yKAAxioEcObpP9s6CnFKsiYil0sM46UUrnZRV8gJaktO/sGpLrI7eNffaGsTiL6cC/Oj5EThHdFX3ddHw2dJPhg9eWnAaAmDWeXv5l2bHIcSajb+I+UUj7/ZvmtEy50EPoYGGMl4FPCwIiHdCNzfMkEhx+TJKunMX3pvI9pc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719994376; c=relaxed/simple;
-	bh=liRpZl4IWwGyImnY5WnWNXsLYqZlwepr8DqzpwnJB+Y=;
+	s=arc-20240116; t=1719994954; c=relaxed/simple;
+	bh=krucwHfZgcKYkNzvalwXTEzmuibTJbKcB/Iz0w38Tuw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ROtvhDIgmCdRq7hg9ba/J5A8xPDmaS6RH/QFQRUM4M5AH2vsxIZlLJV2fMW4CPkiEXwE/OIIsb4EBfD22mhkyK/lbV+jYwJky/XUe4pKBi02othZFeJvSJo/6Cl8jcAoW0OXn5H+t18vSMGPYNUkLZdfcfySDY3SyCvrVbnrpZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=IEeKDY/z; arc=none smtp.client-ip=209.85.208.174
+	 Content-Type:Content-Disposition:In-Reply-To; b=aYWLm/6nIUYcqegptNgbg/G9BfFv9ngrhn0DwQgGQtFvaHCT/7gvr3fythGahogxh2s0ob8MJhLVqVWCtL6Fdghp1nnPhmSYBTHRlFKeKsWlxBwqeXprBEnRfpEGXYHPk9ryj4yLfcfHINucLfRLQ6PoV4LqBeSo6xpQ65LbOXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=ZdHdlV5y; arc=none smtp.client-ip=209.85.208.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="IEeKDY/z"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2ec50d4e47bso48577641fa.2
-        for <linux-hardening@vger.kernel.org>; Wed, 03 Jul 2024 01:12:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="ZdHdlV5y"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2ee794ebffbso20305591fa.1
+        for <linux-hardening@vger.kernel.org>; Wed, 03 Jul 2024 01:22:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1719994372; x=1720599172; darn=vger.kernel.org;
+        d=suse.com; s=google; t=1719994949; x=1720599749; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=bdyT6ioPy1VNeKmL4j3XjcoiZwneAHmBRTL0mGefOq4=;
-        b=IEeKDY/ziqWaB/ZSYmi4XUzZ4kaLM90R8qWgWGW3vxI9mSW0O3ELuKwybhAQ/5yCmR
-         RBo0lCJctwDzWiXbnFAwtWC9RcA3be42xvF6RKhxxKo515/SxBbh5wi4OTYSVYZq8aGL
-         P0glNdIDrojcB/6Z8SlQTTUswFof99e6qrLfIXTuW9MzbrhYiyRl6sxausqNEQK7ni8l
-         STwz7PxuFmrhexeppujFG4qakce52SFP9YW71DUSre4ISIhwzDpmq/2SfWHqgNjx7+5z
-         QUq0Hc/UCzodd1PANO150ohHWYCNaph4BVXGhU0rZ0aRwZQFuTwXQ0bVglKg52WeYmKN
-         HRuQ==
+        bh=TMQqT/Muz0iwxmBm/vQkZCAi7Byb2pCrA2WM9iHg1No=;
+        b=ZdHdlV5yriZV5W2z0XZDrHuTq3pD9AFqc5tdA7R73oflre9CglUW5FnedqIcA9uSpG
+         RZwf953EmV7IVt/uTuBUJO+zV1/ahsAwjdnBQ+w2FEs7IE9UWtQSDBq+l3wE4bypCg+c
+         WI+LlQS8tE7i9IiOdlG5Znkg/lnEJRnT/BUuPFrVzFLvQP5iPzgf6xLMVwKV5ih0ti38
+         m5P2HxBECQN+OZHI0i0BXRnfC/O2xSL6prJhXn6kAEZB5/SHAx6UhUca1dJIDghDMU7f
+         JOVSWWz01zDNwBPJ/9gTtYvUriuTEsggyAjJgeG6zagQoGDxAjbVIeW6kqmssI2Apb+E
+         ZpBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719994372; x=1720599172;
+        d=1e100.net; s=20230601; t=1719994949; x=1720599749;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=bdyT6ioPy1VNeKmL4j3XjcoiZwneAHmBRTL0mGefOq4=;
-        b=sEy+6Qet+REACbF38/ZWxft4vi2yh8Su8o/z8DZev4EV+SVeLGMQJAr/ZjUKSFMqPl
-         28HPHylbgasBPTk+j6NdhoM5I/sHbpBTTakYiG91PObgDovqgRew0JY9MJ4C+Gr0/4zQ
-         qDI1LXGNZdhbVi2umzlUCjA/3QSKHGhvFzcFN4+JvuLscZ2MHgFAlf91Q77HMim6wAxq
-         Wetg6MO7KZL52PdHk7sNUhr9B3OFVUjvKSH1o1aZzx6rVBBUx/dJA6KytIZ1F6HHW5g0
-         Ylhv5tuVRSSkt+AK+LnEJIGn0PcDPBZAaUZCltvSrf1vIPox/JHhewaMkVHsL+Jbj0LL
-         PStw==
-X-Forwarded-Encrypted: i=1; AJvYcCW+E+Q9VzeIILYLdplEWd8WvgkIQJT8cgOYPcWI/JeSCwqp1CxXPo8RgH8Hfm9YRi16rqJly0Y4f9bFQce7pUklly0rYvwRPU8oM8efdbOc
-X-Gm-Message-State: AOJu0Yyffh7vryXENYoZLDvmWvpWxXlWDrK0fITu8YYivTxvDOr89zUA
-	3H5IkuCy127LmH1jltzBJVgTPPNbSdRQ8sYsq9x6TiGR57Th/bFpFNyEyfihu7Y=
-X-Google-Smtp-Source: AGHT+IFCrx5O8SyoDb7pv8NJaiksMiDUk0MIzdtkS+naCkfqpA17Gjg/ppieWiNLDo4J+A42AblrZQ==
-X-Received: by 2002:a05:651c:2010:b0:2ec:550e:24f3 with SMTP id 38308e7fff4ca-2ee5e337c3emr70900071fa.10.1719994372235;
-        Wed, 03 Jul 2024 01:12:52 -0700 (PDT)
+        bh=TMQqT/Muz0iwxmBm/vQkZCAi7Byb2pCrA2WM9iHg1No=;
+        b=uVERXMgqf1uHUujdwwANbbh/70iwjW4y8vP99wAsCe2ubrV0iNheBqtRP55hujkp/f
+         r3jCaOK43oAptsZuBVQ62C03ndjK0jPprxzDu404wWP0ErzcfnmrPIfoyAx+EM+JTItZ
+         QNdfWDVOsxJa5XJRIUw3qKOQT86UVXLuC9t2K05AcCNSvdy49AyPkNgJHMop1vNexEPD
+         hCxzHne0JZWSNRBtrvMw4BOEPNqqAIiQWsVDDm6BMasI4SdQuT3U0mmR33yH3fvLZQog
+         c+rRov0ik93ALVPYhDxXihtN2dZ/b9CFP+/XbPVntDR466DKs9TKI86S+EtQ7p/RSuve
+         y27Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVeOH38/CSH89tJ4/h/OhdiTo4WAdUb+RmW2ly91VjgaRhOIFxkZMURWaXDj2PdA6e1ZrCdEb3K5l8sBye7vPYkAZJAiIKT8/DsQBzj/ZeM
+X-Gm-Message-State: AOJu0Yx2d+dbRDVZS3jwbPcPqetUiiVq5J8+bmx0HDOdWsGQLJ3jqG2Y
+	w/Nn4xVS7QAvmah4gJebshRNBdD/qmMzsoTaolznIiJKq97Vo2CKoZ0Wqb767Aw=
+X-Google-Smtp-Source: AGHT+IGgmL2y9QM4c4g0Wf6Xz0uaCMi9coDigbGLy4p0by/hZmKG4KPflaiBbCeCe+DcbaFV7kidJA==
+X-Received: by 2002:a2e:bc88:0:b0:2ee:7a54:3b14 with SMTP id 38308e7fff4ca-2ee7a543b8dmr26465461fa.7.1719994949278;
+        Wed, 03 Jul 2024 01:22:29 -0700 (PDT)
 Received: from pathway.suse.cz ([176.114.240.50])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fb0c2e10dasm15659175ad.223.2024.07.03.01.12.38
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70802959d41sm10094847b3a.96.2024.07.03.01.22.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jul 2024 01:12:51 -0700 (PDT)
-Date: Wed, 3 Jul 2024 10:12:33 +0200
+        Wed, 03 Jul 2024 01:22:28 -0700 (PDT)
+Date: Wed, 3 Jul 2024 10:22:11 +0200
 From: Petr Mladek <pmladek@suse.com>
 To: Jocelyn Falempe <jfalempe@redhat.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>,
+Cc: Kees Cook <kees@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>,
 	Nicholas Piggin <npiggin@gmail.com>,
 	Christophe Leroy <christophe.leroy@csgroup.eu>,
 	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
@@ -67,7 +67,7 @@ Cc: Michael Ellerman <mpe@ellerman.id.au>,
 	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
 	Miquel Raynal <miquel.raynal@bootlin.com>,
 	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>, Kees Cook <kees@kernel.org>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
 	Tony Luck <tony.luck@intel.com>,
 	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
 	Steven Rostedt <rostedt@goodmis.org>,
@@ -83,8 +83,10 @@ Cc: Michael Ellerman <mpe@ellerman.id.au>,
 	linux-hyperv@vger.kernel.org, linux-mtd@lists.infradead.org,
 	linux-hardening@vger.kernel.org
 Subject: Re: [PATCH v2] printk: Add a short description string to kmsg_dump()
-Message-ID: <ZoUH8S4j164Ovfiq@pathway.suse.cz>
+Message-ID: <ZoUKM9-RiOrv0_Vf@pathway.suse.cz>
 References: <20240702122639.248110-1-jfalempe@redhat.com>
+ <202407021326.E75B8EA@keescook>
+ <10ea2ea1-e692-443e-8b48-ce9884e8b942@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -93,34 +95,82 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240702122639.248110-1-jfalempe@redhat.com>
+In-Reply-To: <10ea2ea1-e692-443e-8b48-ce9884e8b942@redhat.com>
 
-On Tue 2024-07-02 14:26:04, Jocelyn Falempe wrote:
-> kmsg_dump doesn't forward the panic reason string to the kmsg_dumper
-> callback.
-> This patch adds a new struct kmsg_dump_detail, that will hold the
-> reason and description, and pass it to the dump() callback.
+On Wed 2024-07-03 09:57:26, Jocelyn Falempe wrote:
 > 
-> To avoid updating all kmsg_dump() call, it adds a kmsg_dump_desc()
-> function and a macro for backward compatibility.
 > 
-> I've written this for drm_panic, but it can be useful for other
-> kmsg_dumper.
-> It allows to see the panic reason, like "sysrq triggered crash"
-> or "VFS: Unable to mount root fs on xxxx" on the drm panic screen.
+> On 02/07/2024 22:29, Kees Cook wrote:
+> > On Tue, Jul 02, 2024 at 02:26:04PM +0200, Jocelyn Falempe wrote:
+> > > kmsg_dump doesn't forward the panic reason string to the kmsg_dumper
+> > > callback.
+> > > This patch adds a new struct kmsg_dump_detail, that will hold the
+> > > reason and description, and pass it to the dump() callback.
+> > 
+> > Thanks! I like this much better. :)
+> > 
+> > > 
+> > > To avoid updating all kmsg_dump() call, it adds a kmsg_dump_desc()
+> > > function and a macro for backward compatibility.
+> > > 
+> > > I've written this for drm_panic, but it can be useful for other
+> > > kmsg_dumper.
+> > > It allows to see the panic reason, like "sysrq triggered crash"
+> > > or "VFS: Unable to mount root fs on xxxx" on the drm panic screen.
+> > > 
+> > > v2:
+> > >   * Use a struct kmsg_dump_detail to hold the reason and description
+> > >     pointer, for more flexibility if we want to add other parameters.
+> > >     (Kees Cook)
+> > >   * Fix powerpc/nvram_64 build, as I didn't update the forward
+> > >     declaration of oops_to_nvram()
+> > 
+> > The versioning history commonly goes after the "---".
 > 
-> v2:
->  * Use a struct kmsg_dump_detail to hold the reason and description
->    pointer, for more flexibility if we want to add other parameters.
->    (Kees Cook)
->  * Fix powerpc/nvram_64 build, as I didn't update the forward
->    declaration of oops_to_nvram()
+> ok, I was not aware of this.
+> > 
+> > > [...]
+> > > diff --git a/include/linux/kmsg_dump.h b/include/linux/kmsg_dump.h
+> > > index 906521c2329c..65f5a47727bc 100644
+> > > --- a/include/linux/kmsg_dump.h
+> > > +++ b/include/linux/kmsg_dump.h
+> > > @@ -39,6 +39,17 @@ struct kmsg_dump_iter {
+> > >   	u64	next_seq;
+> > >   };
+> > > +/**
+> > > + *struct kmsg_dump_detail - kernel crash detail
+> > 
+> > Is kern-doc happy with this? I think there is supposed to be a space
+> > between the "*" and the first word:
+> > 
+> >   /**
+> >    * struct kmsg...
+> > 
+> > 
+> Good catch, yes there is a space missing.
 > 
-> Signed-off-by: Jocelyn Falempe <jfalempe@redhat.com>
+> I just checked with "make htmldocs", and in fact include/linux/kmsg_dump.h
+> is not indexed for kernel documentation.
+> And you can't find the definition of struct kmsg_dumper in the online doc.
+> https://www.kernel.org/doc/html/latest/search.html?q=kmsg_dumper
+> 
+> > Otherwise looks good to me!
+> > 
+> 
+> Thanks.
+> 
+> As this patch touches different subsystems, do you know on which tree it
+> should land ?
 
-Looks good to me. With the minor fixes suggested by Kees:
+Andrew usually takes patches against kernel/panic.c.
 
-Acked-by: Petr Mladek <pmladek@suse.com>
+Or you could take it via the DRM tree, especially if you already have the code
+using the string.
+
+Also I could take it via the printk tree. The only complication is
+that I am going to be away the following two weeks and would come
+back in the middle of the merge window. I do not expect much problems
+with this change but...
 
 Best Regards,
 Petr
