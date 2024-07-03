@@ -1,176 +1,139 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2422F5B1E8
-	for <linux-hardening@vger.kernel.org>; Wed,  3 Jul 2024 08:22:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0022B17DE09;
+	Wed,  3 Jul 2024 11:29:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719994954; cv=none; b=S/yKAAxioEcObpP9s6CnFKsiYil0sM46UUrnZRV8gJaktO/sGpLrI7eNffaGsTiL6cC/Oj5EThHdFX3ddHw2dJPhg9eWnAaAmDWeXv5l2bHIcSajb+I+UUj7/ZvmtEy50EPoYGGMl4FPCwIiHdCNzfMkEhx+TJKunMX3pvI9pc0=
+	t=1720006143; cv=none; b=N7Ld3DS+WRQ9NS9MRwQwjF3sqgSaRKtzawVnZphQWTSTgUzweWmBOXzR+TaqcNMEzVCKx44Bp0VkO1gl1TnPCAD+lwOzbI7if+Z5EKReVeLUOz3n949XX9vIY52Q39h3inpAqgA+eqRW4720NEFN8yQDxrplMrEMW7k7WTV1K9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719994954; c=relaxed/simple;
-	bh=krucwHfZgcKYkNzvalwXTEzmuibTJbKcB/Iz0w38Tuw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aYWLm/6nIUYcqegptNgbg/G9BfFv9ngrhn0DwQgGQtFvaHCT/7gvr3fythGahogxh2s0ob8MJhLVqVWCtL6Fdghp1nnPhmSYBTHRlFKeKsWlxBwqeXprBEnRfpEGXYHPk9ryj4yLfcfHINucLfRLQ6PoV4LqBeSo6xpQ65LbOXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=ZdHdlV5y; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1720006143; c=relaxed/simple;
+	bh=GP3AlTYBaxDwzf6YAcfOSqeT9SVo7ipv51DtlZa0tL8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=f7WE6MwVyZ4IIs4ZBTxxhIiAsoim97xvu1UQtdxOL1JTFW45mfMKo0Omm+OV5mOJBwKjFlbDR7AmdUQrr0ZZAOiskvfPWA+VpdSZ2xOi8j4seEZP6mkJhvGSFVI0FfDp/BEE3Gi2FzF1RY5+wdaGhaKENOUFqgFO4gNSDbvX90Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=CBQuYSx1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="ZdHdlV5y"
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2ee794ebffbso20305591fa.1
-        for <linux-hardening@vger.kernel.org>; Wed, 03 Jul 2024 01:22:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1719994949; x=1720599749; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TMQqT/Muz0iwxmBm/vQkZCAi7Byb2pCrA2WM9iHg1No=;
-        b=ZdHdlV5yriZV5W2z0XZDrHuTq3pD9AFqc5tdA7R73oflre9CglUW5FnedqIcA9uSpG
-         RZwf953EmV7IVt/uTuBUJO+zV1/ahsAwjdnBQ+w2FEs7IE9UWtQSDBq+l3wE4bypCg+c
-         WI+LlQS8tE7i9IiOdlG5Znkg/lnEJRnT/BUuPFrVzFLvQP5iPzgf6xLMVwKV5ih0ti38
-         m5P2HxBECQN+OZHI0i0BXRnfC/O2xSL6prJhXn6kAEZB5/SHAx6UhUca1dJIDghDMU7f
-         JOVSWWz01zDNwBPJ/9gTtYvUriuTEsggyAjJgeG6zagQoGDxAjbVIeW6kqmssI2Apb+E
-         ZpBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719994949; x=1720599749;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TMQqT/Muz0iwxmBm/vQkZCAi7Byb2pCrA2WM9iHg1No=;
-        b=uVERXMgqf1uHUujdwwANbbh/70iwjW4y8vP99wAsCe2ubrV0iNheBqtRP55hujkp/f
-         r3jCaOK43oAptsZuBVQ62C03ndjK0jPprxzDu404wWP0ErzcfnmrPIfoyAx+EM+JTItZ
-         QNdfWDVOsxJa5XJRIUw3qKOQT86UVXLuC9t2K05AcCNSvdy49AyPkNgJHMop1vNexEPD
-         hCxzHne0JZWSNRBtrvMw4BOEPNqqAIiQWsVDDm6BMasI4SdQuT3U0mmR33yH3fvLZQog
-         c+rRov0ik93ALVPYhDxXihtN2dZ/b9CFP+/XbPVntDR466DKs9TKI86S+EtQ7p/RSuve
-         y27Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVeOH38/CSH89tJ4/h/OhdiTo4WAdUb+RmW2ly91VjgaRhOIFxkZMURWaXDj2PdA6e1ZrCdEb3K5l8sBye7vPYkAZJAiIKT8/DsQBzj/ZeM
-X-Gm-Message-State: AOJu0Yx2d+dbRDVZS3jwbPcPqetUiiVq5J8+bmx0HDOdWsGQLJ3jqG2Y
-	w/Nn4xVS7QAvmah4gJebshRNBdD/qmMzsoTaolznIiJKq97Vo2CKoZ0Wqb767Aw=
-X-Google-Smtp-Source: AGHT+IGgmL2y9QM4c4g0Wf6Xz0uaCMi9coDigbGLy4p0by/hZmKG4KPflaiBbCeCe+DcbaFV7kidJA==
-X-Received: by 2002:a2e:bc88:0:b0:2ee:7a54:3b14 with SMTP id 38308e7fff4ca-2ee7a543b8dmr26465461fa.7.1719994949278;
-        Wed, 03 Jul 2024 01:22:29 -0700 (PDT)
-Received: from pathway.suse.cz ([176.114.240.50])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70802959d41sm10094847b3a.96.2024.07.03.01.22.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jul 2024 01:22:28 -0700 (PDT)
-Date: Wed, 3 Jul 2024 10:22:11 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: Jocelyn Falempe <jfalempe@redhat.com>
-Cc: Kees Cook <kees@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="CBQuYSx1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EC28C2BD10;
+	Wed,  3 Jul 2024 11:29:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1720006142;
+	bh=GP3AlTYBaxDwzf6YAcfOSqeT9SVo7ipv51DtlZa0tL8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=CBQuYSx10/i+z4DhoBUt+2fPKLLMZVj12VPAJHFiKcb4IRg5iBM8sUYZwVrUQH0pl
+	 RnP296MOAxscVDrD8Zv8iANAMj7b/IVhEnircnB6xtReeOLN97iv6+P1JZBWSdiN2L
+	 erbpqS/2Hh29qcmWHAovjLrGOwHkmTOgA5LMLI5w=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
 	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Tony Luck <tony.luck@intel.com>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jani Nikula <jani.nikula@intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Kefeng Wang <wangkefeng.wang@huawei.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Uros Bizjak <ubizjak@gmail.com>, linuxppc-dev@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linux-hyperv@vger.kernel.org, linux-mtd@lists.infradead.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] printk: Add a short description string to kmsg_dump()
-Message-ID: <ZoUKM9-RiOrv0_Vf@pathway.suse.cz>
-References: <20240702122639.248110-1-jfalempe@redhat.com>
- <202407021326.E75B8EA@keescook>
- <10ea2ea1-e692-443e-8b48-ce9884e8b942@redhat.com>
+	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+	Kees Cook <keescook@chromium.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.15 283/356] bpf: Take return from set_memory_ro() into account with bpf_prog_lock_ro()
+Date: Wed,  3 Jul 2024 12:40:19 +0200
+Message-ID: <20240703102923.821740919@linuxfoundation.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240703102913.093882413@linuxfoundation.org>
+References: <20240703102913.093882413@linuxfoundation.org>
+User-Agent: quilt/0.67
+X-stable: review
+X-Patchwork-Hint: ignore
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <10ea2ea1-e692-443e-8b48-ce9884e8b942@redhat.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed 2024-07-03 09:57:26, Jocelyn Falempe wrote:
-> 
-> 
-> On 02/07/2024 22:29, Kees Cook wrote:
-> > On Tue, Jul 02, 2024 at 02:26:04PM +0200, Jocelyn Falempe wrote:
-> > > kmsg_dump doesn't forward the panic reason string to the kmsg_dumper
-> > > callback.
-> > > This patch adds a new struct kmsg_dump_detail, that will hold the
-> > > reason and description, and pass it to the dump() callback.
-> > 
-> > Thanks! I like this much better. :)
-> > 
-> > > 
-> > > To avoid updating all kmsg_dump() call, it adds a kmsg_dump_desc()
-> > > function and a macro for backward compatibility.
-> > > 
-> > > I've written this for drm_panic, but it can be useful for other
-> > > kmsg_dumper.
-> > > It allows to see the panic reason, like "sysrq triggered crash"
-> > > or "VFS: Unable to mount root fs on xxxx" on the drm panic screen.
-> > > 
-> > > v2:
-> > >   * Use a struct kmsg_dump_detail to hold the reason and description
-> > >     pointer, for more flexibility if we want to add other parameters.
-> > >     (Kees Cook)
-> > >   * Fix powerpc/nvram_64 build, as I didn't update the forward
-> > >     declaration of oops_to_nvram()
-> > 
-> > The versioning history commonly goes after the "---".
-> 
-> ok, I was not aware of this.
-> > 
-> > > [...]
-> > > diff --git a/include/linux/kmsg_dump.h b/include/linux/kmsg_dump.h
-> > > index 906521c2329c..65f5a47727bc 100644
-> > > --- a/include/linux/kmsg_dump.h
-> > > +++ b/include/linux/kmsg_dump.h
-> > > @@ -39,6 +39,17 @@ struct kmsg_dump_iter {
-> > >   	u64	next_seq;
-> > >   };
-> > > +/**
-> > > + *struct kmsg_dump_detail - kernel crash detail
-> > 
-> > Is kern-doc happy with this? I think there is supposed to be a space
-> > between the "*" and the first word:
-> > 
-> >   /**
-> >    * struct kmsg...
-> > 
-> > 
-> Good catch, yes there is a space missing.
-> 
-> I just checked with "make htmldocs", and in fact include/linux/kmsg_dump.h
-> is not indexed for kernel documentation.
-> And you can't find the definition of struct kmsg_dumper in the online doc.
-> https://www.kernel.org/doc/html/latest/search.html?q=kmsg_dumper
-> 
-> > Otherwise looks good to me!
-> > 
-> 
-> Thanks.
-> 
-> As this patch touches different subsystems, do you know on which tree it
-> should land ?
+5.15-stable review patch.  If anyone has any objections, please let me know.
 
-Andrew usually takes patches against kernel/panic.c.
+------------------
 
-Or you could take it via the DRM tree, especially if you already have the code
-using the string.
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
 
-Also I could take it via the printk tree. The only complication is
-that I am going to be away the following two weeks and would come
-back in the middle of the merge window. I do not expect much problems
-with this change but...
+[ Upstream commit 7d2cc63eca0c993c99d18893214abf8f85d566d8 ]
 
-Best Regards,
-Petr
+set_memory_ro() can fail, leaving memory unprotected.
+
+Check its return and take it into account as an error.
+
+Link: https://github.com/KSPP/linux/issues/7
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: linux-hardening@vger.kernel.org <linux-hardening@vger.kernel.org>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Message-ID: <286def78955e04382b227cb3e4b6ba272a7442e3.1709850515.git.christophe.leroy@csgroup.eu>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ include/linux/filter.h | 5 +++--
+ kernel/bpf/core.c      | 4 +++-
+ kernel/bpf/verifier.c  | 8 ++++++--
+ 3 files changed, 12 insertions(+), 5 deletions(-)
+
+diff --git a/include/linux/filter.h b/include/linux/filter.h
+index af0103bebb7bf..9cb3558683393 100644
+--- a/include/linux/filter.h
++++ b/include/linux/filter.h
+@@ -875,14 +875,15 @@ bpf_ctx_narrow_access_offset(u32 off, u32 size, u32 size_default)
+ 
+ #define bpf_classic_proglen(fprog) (fprog->len * sizeof(fprog->filter[0]))
+ 
+-static inline void bpf_prog_lock_ro(struct bpf_prog *fp)
++static inline int __must_check bpf_prog_lock_ro(struct bpf_prog *fp)
+ {
+ #ifndef CONFIG_BPF_JIT_ALWAYS_ON
+ 	if (!fp->jited) {
+ 		set_vm_flush_reset_perms(fp);
+-		set_memory_ro((unsigned long)fp, fp->pages);
++		return set_memory_ro((unsigned long)fp, fp->pages);
+ 	}
+ #endif
++	return 0;
+ }
+ 
+ static inline void bpf_jit_binary_lock_ro(struct bpf_binary_header *hdr)
+diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
+index 36c2896ee45f4..f36f7b71dc07b 100644
+--- a/kernel/bpf/core.c
++++ b/kernel/bpf/core.c
+@@ -1940,7 +1940,9 @@ struct bpf_prog *bpf_prog_select_runtime(struct bpf_prog *fp, int *err)
+ 	}
+ 
+ finalize:
+-	bpf_prog_lock_ro(fp);
++	*err = bpf_prog_lock_ro(fp);
++	if (*err)
++		return fp;
+ 
+ 	/* The tail call compatibility check can only be done at
+ 	 * this late stage as we need to determine, if we deal
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index 07ca1157f97cf..b9f63c4b8598c 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -12812,10 +12812,14 @@ static int jit_subprogs(struct bpf_verifier_env *env)
+ 	 * bpf_prog_load will add the kallsyms for the main program.
+ 	 */
+ 	for (i = 1; i < env->subprog_cnt; i++) {
+-		bpf_prog_lock_ro(func[i]);
+-		bpf_prog_kallsyms_add(func[i]);
++		err = bpf_prog_lock_ro(func[i]);
++		if (err)
++			goto out_free;
+ 	}
+ 
++	for (i = 1; i < env->subprog_cnt; i++)
++		bpf_prog_kallsyms_add(func[i]);
++
+ 	/* Last step: make now unused interpreter insns from main
+ 	 * prog consistent for later dump requests, so they can
+ 	 * later look the same as if they were interpreted only.
+-- 
+2.43.0
+
+
+
