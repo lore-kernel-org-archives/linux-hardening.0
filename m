@@ -1,85 +1,157 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CCB11AED27;
-	Thu,  4 Jul 2024 13:10:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7974B3D3AC;
+	Thu,  4 Jul 2024 17:44:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720098657; cv=none; b=T1bimdxh2rVFcOl2kgoOO/80LNzoKVqK3OLxkXhGtsyFq3/lSI13mp8rLeGoASEqBHFP5xQUXBfoF+a0EKhOc+/F/ArG08POcJtCzjyVIgVQN44sa9+FSAp5MDVUGpEWnd1CTRME2ybm4VI/mbsXUo7onZYmSO/JTGUwzuUCsSE=
+	t=1720115063; cv=none; b=aRHDFzh1P/2KX+bIg23wD6BIXIBbkDew1sPwfut7sE1OxmzwSj/sUjrQSwqI+xqwi8++FGKyXuzPSYij0hcoor0C+AXSYqQW5VU/Hg8ZnNB4CLhNFgtvXky6nNbpwOoL/rDOCESt645bqt/cufwHje404QsWhN8+bsmvmQ6Ma4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720098657; c=relaxed/simple;
-	bh=lJXnONd5ISVvmE4QQ4QJTEc1T2lWaVBV5IrBFXcFzSs=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=RyziWlbFZvksz6E4/oP+1W+KIi7FZiDd4FTFBCD7JtY0i+Ur4CFq1L666XpInDwEF3in4G9fHc9JLkuegwl51fk/Cu5zwQI5/LU7Ko2uFgmaTQHlSgaV+1KF1Nt0FVsrAsLLRNG8W2UerE67Gr8ydTWwCsbo0rqweEvBlivS6HA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vpwd2tcY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720115063; c=relaxed/simple;
+	bh=AzVLN5s8m2pR07hkp4MUmLEh08g3IkzD0iu13g2nOIo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PSNiSSX6ElzmmmbEtuEh2A2SvsAZpl5FPRsOEa3HmFF2Jygl0j8lDEMRGD0kDsOl5yOw1mKjsRJQWpnDiuTm7HYE/Q7/Pz3IrCPg8hdVPxZ4C7/DNtnNHHKWOheLT8pNGn70F8zGIhhBc/08mvNMO7Yuyh8/VKmna+ZEnSTrV4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fp04a8kh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vpwd2tcY"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E2A1DC4AF11;
-	Thu,  4 Jul 2024 13:10:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fp04a8kh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBF0BC3277B;
+	Thu,  4 Jul 2024 17:44:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720098657;
-	bh=lJXnONd5ISVvmE4QQ4QJTEc1T2lWaVBV5IrBFXcFzSs=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=Vpwd2tcYqNgW1dMG4DUsuYkKBIfDlCn4PVslQ+vVDvZ3zq5iOcb6vvRYYnY6zPLqm
-	 b7qRPNJMCF708+0X9bllMigap/i9FHO/+hiquNIRAZExPqCwtGbOBjIJuQ7OkQnqn0
-	 sPH8SB9WW3Zr18pR0U7e1oUFPHWfJ1HJqEs8ZH2+2KSpcEudv6FOxA6WTWsch9b6Or
-	 Tab2z58GTWX2feeNdjzi6LpoNRXkbTLsvakMu53Ah1izJcjwti+u6cCNBmIy7ILBgZ
-	 8q99pCDwKY1JTEl8QytqRgm64Qa8FzCXj9BCjgdlSwIP/Xyncj4Y/MSAwHIEK4Njwe
-	 nAqxfUSP9Im+g==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id D4BA4C433A2;
-	Thu,  4 Jul 2024 13:10:56 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1720115063;
+	bh=AzVLN5s8m2pR07hkp4MUmLEh08g3IkzD0iu13g2nOIo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Fp04a8khZ0ndBddqA0DLvSs631FmVud72skRkUs8zP/6w+757aMn5psgiVA14HIre
+	 fchF+ee7Y9F5LJSElxVE7mlRVdCTCYIglkzqTD4N2oZUGbOlsbPxsY77cnZcyXKZNA
+	 3MDlgXwMHkX9637NcxJVWNnRNIdqkPabyo27JHud/gNUYn3GfNqZk0GvP8JkKlMOhX
+	 nK2tm6xpN73P9O+DbdyV+7PQGJ9IDkaMNFCHqeMDGkiUqqNZAP05AI2roPkHBUjWUE
+	 sY69eyvc9+Yret1FjSWXFO/O6vMG0Xz2ofudBVZowajTVWwtXMQ7jEcJnrNe9n74hN
+	 osSCiwLuT6bVQ==
+Date: Thu, 4 Jul 2024 12:44:19 -0500
+From: Bjorn Andersson <andersson@kernel.org>
+To: Odelu Kukatla <quic_okukatla@quicinc.com>
+Cc: Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	Georgi Djakov <djakov@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Kees Cook <keescook@chromium.org>, cros-qcom-dts-watchers@chromium.org, 
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	quic_rlaggysh@quicinc.com, quic_mdtipton@quicinc.com
+Subject: Re: [PATCH] interconnect: qcom: Fix DT backwards compatibility for
+ QoS
+Message-ID: <jhfya4mjnckrmogtmusyvwjv4mlyycgqj3apt2kaj5umxprhtv@rfew7c5w3zf5>
+References: <20240704125515.22194-1-quic_okukatla@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] randomize_kstack: Remove non-functional per-arch entropy
- filtering
-From: patchwork-bot+linux-riscv@kernel.org
-Message-Id: 
- <172009865686.17306.9398253862841269029.git-patchwork-notify@kernel.org>
-Date: Thu, 04 Jul 2024 13:10:56 +0000
-References: <20240619214711.work.953-kees@kernel.org>
-In-Reply-To: <20240619214711.work.953-kees@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: linux-riscv@lists.infradead.org, arnd@arndb.de, liuyuntao12@huawei.com,
- mark.rutland@arm.com, catalin.marinas@arm.com, will@kernel.org,
- hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
- borntraeger@linux.ibm.com, svens@linux.ibm.com, tglx@linutronix.de,
- mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
- gustavoars@kernel.org, paul.walmsley@sifive.com, palmer@dabbelt.com,
- aou@eecs.berkeley.edu, leobras@redhat.com, imbrenda@linux.ibm.com,
- pawan.kumar.gupta@linux.intel.com, linux-kernel@vger.kernel.org,
- x86@kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-s390@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240704125515.22194-1-quic_okukatla@quicinc.com>
 
-Hello:
-
-This patch was applied to riscv/linux.git (fixes)
-by Kees Cook <kees@kernel.org>:
-
-On Wed, 19 Jun 2024 14:47:15 -0700 you wrote:
-> An unintended consequence of commit 9c573cd31343 ("randomize_kstack:
-> Improve entropy diffusion") was that the per-architecture entropy size
-> filtering reduced how many bits were being added to the mix, rather than
-> how many bits were being used during the offsetting. All architectures
-> fell back to the existing default of 0x3FF (10 bits), which will consume
-> at most 1KiB of stack space. It seems that this is working just fine,
-> so let's avoid the confusion and update everything to use the default.
+On Thu, Jul 04, 2024 at 06:25:15PM GMT, Odelu Kukatla wrote:
+> Add qos_clks_required flag to skip QoS configuration if clocks property
+> is not populated in devicetree for providers which require clocks to be
+> enabled for accessing registers. This is to keep the QoS configuration
+> backwards compatible with devices that have older DTB.
 > 
-> [...]
 
-Here is the summary with links:
-  - randomize_kstack: Remove non-functional per-arch entropy filtering
-    https://git.kernel.org/riscv/c/6db1208bf95b
+Please read "Describe your changes" [1], and make your commit message
+start with the problem description - establish to the reader why this
+change is needed, then follow that with a technical description of the
+solution (likely in a separate paragraph).
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+[1] https://docs.kernel.org/process/submitting-patches.html#describe-your-changes
+
+> Reported-by: Bjorn Andersson <andersson@kernel.org>
+> Closes: https://lore.kernel.org/all/ciji6nlxn752ina4tmh6kwvek52nxpnguomqek6plwvwgvoqef@yrtexkpmn5br/
+> Signed-off-by: Odelu Kukatla <quic_okukatla@quicinc.com>
+> ---
+>  drivers/interconnect/qcom/icc-rpmh.c | 2 +-
+>  drivers/interconnect/qcom/icc-rpmh.h | 1 +
+>  drivers/interconnect/qcom/sc7280.c   | 2 ++
+>  3 files changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/interconnect/qcom/icc-rpmh.c b/drivers/interconnect/qcom/icc-rpmh.c
+> index 93047defd5e2..f49a8e0cb03c 100644
+> --- a/drivers/interconnect/qcom/icc-rpmh.c
+> +++ b/drivers/interconnect/qcom/icc-rpmh.c
+> @@ -311,7 +311,7 @@ int qcom_icc_rpmh_probe(struct platform_device *pdev)
+>  		}
+>  
+>  		qp->num_clks = devm_clk_bulk_get_all(qp->dev, &qp->clks);
+> -		if (qp->num_clks < 0) {
+> +		if (qp->num_clks < 0 || (!qp->num_clks && desc->qos_clks_required)) {
+
+For this new case, I think the dev_info() below makes total sense. I.e.
+this looks good to me.
 
 
+However, the num_clks < 0 case would represent finding a devicetree node
+with clocks specified, but failing to get these clocks. I believe that
+this would include EPROBE_DEFER.
+
+I don't think it's correct to print a informational message and continue
+without QoS. I think we should fail here.
+
+Also, in this case devm_clk_bulk_get_all() would have pr_err() a message
+about which clock it failed to acquire and why, so printing again here
+doesn't seem useful.
+
+But I think that is a separate follow up patch.
+
+>  			dev_info(dev, "Skipping QoS, failed to get clk: %d\n", qp->num_clks);
+>  			goto skip_qos_config;
+>  		}
+> diff --git a/drivers/interconnect/qcom/icc-rpmh.h b/drivers/interconnect/qcom/icc-rpmh.h
+> index 9a5142c70486..14db89850fb3 100644
+> --- a/drivers/interconnect/qcom/icc-rpmh.h
+> +++ b/drivers/interconnect/qcom/icc-rpmh.h
+> @@ -153,6 +153,7 @@ struct qcom_icc_desc {
+>  	size_t num_nodes;
+>  	struct qcom_icc_bcm * const *bcms;
+>  	size_t num_bcms;
+> +	bool qos_clks_required;
+>  };
+>  
+>  int qcom_icc_aggregate(struct icc_node *node, u32 tag, u32 avg_bw,
+> diff --git a/drivers/interconnect/qcom/sc7280.c b/drivers/interconnect/qcom/sc7280.c
+> index 759c609a20bf..167971f8e8be 100644
+> --- a/drivers/interconnect/qcom/sc7280.c
+> +++ b/drivers/interconnect/qcom/sc7280.c
+> @@ -1691,6 +1691,7 @@ static const struct qcom_icc_desc sc7280_aggre1_noc = {
+>  	.num_nodes = ARRAY_SIZE(aggre1_noc_nodes),
+>  	.bcms = aggre1_noc_bcms,
+>  	.num_bcms = ARRAY_SIZE(aggre1_noc_bcms),
+> +	.qos_clks_required = true,
+>  };
+>  
+>  static struct qcom_icc_bcm * const aggre2_noc_bcms[] = {
+> @@ -1722,6 +1723,7 @@ static const struct qcom_icc_desc sc7280_aggre2_noc = {
+>  	.num_nodes = ARRAY_SIZE(aggre2_noc_nodes),
+>  	.bcms = aggre2_noc_bcms,
+>  	.num_bcms = ARRAY_SIZE(aggre2_noc_bcms),
+> +	.qos_clks_required = true,
+
+When reading the commit message and the name of this property, my first
+reaction was "aggre2_noc requires qos clocks".
+
+As such, I'd prefer if this was renamed "qos_requires_clocks" to more
+clearly document what the requirement entails and hint the future reader
+that the interconnect might still be operational.
+
+
+With that said, thanks for your quick reply to my regression report!
+
+Tested-by: Bjorn Andersson <andersson@kernel.org>
+
+Regards,
+Bjorn
+
+>  };
+>  
+>  static struct qcom_icc_bcm * const clk_virt_bcms[] = {
+> -- 
+> 2.17.1
+> 
