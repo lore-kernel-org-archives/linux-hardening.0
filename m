@@ -1,201 +1,143 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4BC11822D8
-	for <linux-hardening@vger.kernel.org>; Wed,  3 Jul 2024 16:40:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCD171AE861;
+	Thu,  4 Jul 2024 12:55:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720024820; cv=none; b=PDTclqqxzQ+N5anMLGgw4iNmppKM/9V4Zr8JmDrXEAJJKzCrLSYsr9NNkplkPwHvJcrRUFRRuW95KGGMOgWkkHCuBBGfHTRo698pR8TuogieYq63bIem11zWXKfnrqD0ClO+8aW9/ROMGiAQcG2fyI6gJK++0xG9FkDsC9KoTLo=
+	t=1720097754; cv=none; b=n8yypXpdQAx+ORxrEZKvfNP3rXxSlGUJtV2lHvQ9DuD1lSOZvIRFZe7Hd++HiFVf0pB1O876rtXiRiEiU+wYJDZVPUgssMvPxxZDt+nny4A+s1FLUJo7FgDqf1l2uYLZtvyVMhPARUOqO7tcIUeWEOueeU8a3B2WR7cJe32i3mQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720024820; c=relaxed/simple;
-	bh=21K+un7CaiJVoHI9Gxi8vgmdLcVLvKjA1T7x4gcPYqE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UuqOQtQp7RqZKvB/CufLfUUU/BbVTpOlWj1re/fndqMit0TZmRDasF8c8v6Rrj5Oey9FZGu2xjmlggPM+y/Tou1F1j0pYw6B6FTQ6gxIUJzy84ErJfVR7UQQEInT+ltwCRIvIcdXUfHzdxICrw6Zt7mNxvDiIr/gX8zbxfTNAIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Hr1hiLgu; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1720097754; c=relaxed/simple;
+	bh=3Gn+5X8kApPn/TQHUrXkCfhIU8vbH4qzNoznN0rMLNw=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Ke7UfqyTuF/lPdRqyWDCCEAJFSNU62/hIkTHf/cFRmEUvzIbIqhIuvzROEj2yzjQ8qCiUWRbwRqf5eTqInk7pd8iXlU4AYwfXOAMQsLyY/SouGKgZsLuMQ7wf7hcxMiDD94zQo2nX+JpQZKUvaPzFNEwItR01QFiRJ0G9OTqReU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=l3qk7iYb; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Hr1hiLgu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720024817;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=f/NKPoncPw4sIDqFM3t6GuhdQa0oQUQo4XXTqMGF3ME=;
-	b=Hr1hiLguSGzp+Ntsm0ONhMyTT/yPsioiNQjnA+1D3qy+IV6yvHXOJzQ4SiXax7Tvx0TTEm
-	lwwwHBWezU7N0TUF8ENVncZCvOhFx3eDkRrms7TXbb2yKds5k8GzAB1opWxu9jtYC50fkA
-	Sl/uGgiySc0510ha6304DOOEdwMp4zs=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-132-GtOs4emnN6azy1Am6c8HUQ-1; Wed, 03 Jul 2024 12:40:16 -0400
-X-MC-Unique: GtOs4emnN6azy1Am6c8HUQ-1
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3678f832c75so1088815f8f.3
-        for <linux-hardening@vger.kernel.org>; Wed, 03 Jul 2024 09:40:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720024815; x=1720629615;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=f/NKPoncPw4sIDqFM3t6GuhdQa0oQUQo4XXTqMGF3ME=;
-        b=vdI4giZAz9NH12HTG6fknLJQehKYWtAtJZ88IY4nECrz53m3Z8WM6I+1si9GYgTnTr
-         +cNO63QyzdMycVYv95Ews0s9WB0DpXKZJhChKJSvXitxT95bRqNzDlnqHo2x8IuNhua4
-         5jevo8a4Cs38k42tvAED+BkbTpy58zjWOgiTahnNYMow99jP02YDUYj6pAhN0083TCTe
-         Apf4aADeq/ogIgveDLv454RMfe77nyDy3X0+sbgo7mrOMqb+Zg9jIIH2KmBMClhkxv0a
-         xEP8LO2dCsHeomvT4kWNQk45huWCFvVbKbguY3XtkK/c9OyHYLJw1YL5eCwlFX9mmCiT
-         ePEQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUb1r5a5QKSMRwUjrBIvROntQSsEzQgGyfCAMCsbhpt4RZYq8gNnpi39kbsxMnKG6TEGYPxel6IJOdU+lbUAwA2Mw99/c9Ikc4E+FH+ZhSy
-X-Gm-Message-State: AOJu0YxFoUgEftsK5RWj73H0XYq5Y4SMM7RYufmtsiOsEE3d3pm0DsaS
-	zqc3QT+7T4Q22STS/vt54wwFS03BzWBISeoP6hhYk4Jfbn6YUUnzoa5LJaYsCfez2Hh1RV8LhTg
-	nRX9odvDjAH6iA7DlxFN/60E7chTZmw0u2wRksvRlgYB/XNtVsFpr9h074IzMP6jPVw==
-X-Received: by 2002:adf:fa83:0:b0:367:890e:838e with SMTP id ffacd0b85a97d-367890e86c6mr3596774f8f.40.1720024815348;
-        Wed, 03 Jul 2024 09:40:15 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFECIbpt3OJn614ksUNxWcM5kxqBGXD+RFA85ATl3K5a4iBL/0MjztMRm9i7OEdpByRhuroqQ==
-X-Received: by 2002:adf:fa83:0:b0:367:890e:838e with SMTP id ffacd0b85a97d-367890e86c6mr3596739f8f.40.1720024814927;
-        Wed, 03 Jul 2024 09:40:14 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:d5:a000:680e:9bf4:b6a9:959b? ([2a01:e0a:d5:a000:680e:9bf4:b6a9:959b])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36791d7a93bsm2401812f8f.81.2024.07.03.09.40.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Jul 2024 09:40:14 -0700 (PDT)
-Message-ID: <9e7023f4-775c-4371-ade5-1ed860545aaa@redhat.com>
-Date: Wed, 3 Jul 2024 18:40:12 +0200
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="l3qk7iYb"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4648bkRD000337;
+	Thu, 4 Jul 2024 12:55:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-type:date:from:message-id:mime-version:subject:to; s=
+	qcppdkim1; bh=nFqrxVv5j0XXUicQugiyuQ7XNx0h0LFXvHKht5Lk8gM=; b=l3
+	qk7iYbvmy6XZFdIUZ5xyNuIZp3pU+r1ghTijs1lc/Vy7lKxy1S2tmD3sIyBFlorq
+	UkeE2EiZ8kSd2B/n7VQeAZBjJyh5iS/qWco4iS9IGD2zU18YDgmLTmt8Kr1f2I3O
+	b4s5vvfSAP7TDDGwhqDQIC+dlHzx1Z+D3/t0janRbvPM1vzqdwOhbQacRg/KlfJJ
+	vJqY6CrSwCttaz1Rasm3zPbQS74SsPXr/dbQc3v8XUZv93d6u5QfPUEwxis3VvZv
+	3NGlLalaZXTbbGU7ibJnBIxKX7dwlKuudl+urJWqv1sDYE6oUhiRgco4BFKJm2pq
+	oUdiZHpl+RtkddHETR7g==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 402abtuh34-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 04 Jul 2024 12:55:46 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA05.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 464Ctjxw031604
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 4 Jul 2024 12:55:45 GMT
+Received: from hu-okukatla-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Thu, 4 Jul 2024 05:55:40 -0700
+From: Odelu Kukatla <quic_okukatla@quicinc.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konrad.dybcio@linaro.org>,
+        Georgi Djakov <djakov@kernel.org>, Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>
+CC: Kees Cook <keescook@chromium.org>, <cros-qcom-dts-watchers@chromium.org>,
+        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>, <quic_rlaggysh@quicinc.com>,
+        <quic_mdtipton@quicinc.com>, <quic_okukatla@quicinc.com>
+Subject: [PATCH] interconnect: qcom: Fix DT backwards compatibility for QoS
+Date: Thu, 4 Jul 2024 18:25:15 +0530
+Message-ID: <20240704125515.22194-1-quic_okukatla@quicinc.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] printk: Add a short description string to kmsg_dump()
-To: Kees Cook <kees@kernel.org>, Petr Mladek <pmladek@suse.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin
- <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>,
- "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- "K. Y. Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>, Miquel Raynal <miquel.raynal@bootlin.com>,
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
- Tony Luck <tony.luck@intel.com>, "Guilherme G. Piccoli"
- <gpiccoli@igalia.com>, Steven Rostedt <rostedt@goodmis.org>,
- John Ogness <john.ogness@linutronix.de>,
- Sergey Senozhatsky <senozhatsky@chromium.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Jani Nikula <jani.nikula@intel.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Kefeng Wang <wangkefeng.wang@huawei.com>,
- Thomas Gleixner <tglx@linutronix.de>, Uros Bizjak <ubizjak@gmail.com>,
- linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
- linux-mtd@lists.infradead.org, linux-hardening@vger.kernel.org
-References: <20240702122639.248110-1-jfalempe@redhat.com>
- <202407021326.E75B8EA@keescook>
- <10ea2ea1-e692-443e-8b48-ce9884e8b942@redhat.com>
- <ZoUKM9-RiOrv0_Vf@pathway.suse.cz> <202407030926.D5DA9B901D@keescook>
-From: Jocelyn Falempe <jfalempe@redhat.com>
-In-Reply-To: <202407030926.D5DA9B901D@keescook>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US, fr
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: qWI9-P1L0w6GS7MJ0lnPkwwiJiQtu9Dg
+X-Proofpoint-ORIG-GUID: qWI9-P1L0w6GS7MJ0lnPkwwiJiQtu9Dg
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-04_09,2024-07-03_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ priorityscore=1501 mlxscore=0 clxscore=1015 suspectscore=0 malwarescore=0
+ lowpriorityscore=0 phishscore=0 adultscore=0 spamscore=0 impostorscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2407040092
 
+Add qos_clks_required flag to skip QoS configuration if clocks property
+is not populated in devicetree for providers which require clocks to be
+enabled for accessing registers. This is to keep the QoS configuration
+backwards compatible with devices that have older DTB.
 
+Reported-by: Bjorn Andersson <andersson@kernel.org>
+Closes: https://lore.kernel.org/all/ciji6nlxn752ina4tmh6kwvek52nxpnguomqek6plwvwgvoqef@yrtexkpmn5br/
+Signed-off-by: Odelu Kukatla <quic_okukatla@quicinc.com>
+---
+ drivers/interconnect/qcom/icc-rpmh.c | 2 +-
+ drivers/interconnect/qcom/icc-rpmh.h | 1 +
+ drivers/interconnect/qcom/sc7280.c   | 2 ++
+ 3 files changed, 4 insertions(+), 1 deletion(-)
 
-On 03/07/2024 18:27, Kees Cook wrote:
-> On Wed, Jul 03, 2024 at 10:22:11AM +0200, Petr Mladek wrote:
->> On Wed 2024-07-03 09:57:26, Jocelyn Falempe wrote:
->>>
->>>
->>> On 02/07/2024 22:29, Kees Cook wrote:
->>>> On Tue, Jul 02, 2024 at 02:26:04PM +0200, Jocelyn Falempe wrote:
->>>>> kmsg_dump doesn't forward the panic reason string to the kmsg_dumper
->>>>> callback.
->>>>> This patch adds a new struct kmsg_dump_detail, that will hold the
->>>>> reason and description, and pass it to the dump() callback.
->>>>
->>>> Thanks! I like this much better. :)
->>>>
->>>>>
->>>>> To avoid updating all kmsg_dump() call, it adds a kmsg_dump_desc()
->>>>> function and a macro for backward compatibility.
->>>>>
->>>>> I've written this for drm_panic, but it can be useful for other
->>>>> kmsg_dumper.
->>>>> It allows to see the panic reason, like "sysrq triggered crash"
->>>>> or "VFS: Unable to mount root fs on xxxx" on the drm panic screen.
->>>>>
->>>>> v2:
->>>>>    * Use a struct kmsg_dump_detail to hold the reason and description
->>>>>      pointer, for more flexibility if we want to add other parameters.
->>>>>      (Kees Cook)
->>>>>    * Fix powerpc/nvram_64 build, as I didn't update the forward
->>>>>      declaration of oops_to_nvram()
->>>>
->>>> The versioning history commonly goes after the "---".
->>>
->>> ok, I was not aware of this.
->>>>
->>>>> [...]
->>>>> diff --git a/include/linux/kmsg_dump.h b/include/linux/kmsg_dump.h
->>>>> index 906521c2329c..65f5a47727bc 100644
->>>>> --- a/include/linux/kmsg_dump.h
->>>>> +++ b/include/linux/kmsg_dump.h
->>>>> @@ -39,6 +39,17 @@ struct kmsg_dump_iter {
->>>>>    	u64	next_seq;
->>>>>    };
->>>>> +/**
->>>>> + *struct kmsg_dump_detail - kernel crash detail
->>>>
->>>> Is kern-doc happy with this? I think there is supposed to be a space
->>>> between the "*" and the first word:
->>>>
->>>>    /**
->>>>     * struct kmsg...
->>>>
->>>>
->>> Good catch, yes there is a space missing.
->>>
->>> I just checked with "make htmldocs", and in fact include/linux/kmsg_dump.h
->>> is not indexed for kernel documentation.
->>> And you can't find the definition of struct kmsg_dumper in the online doc.
->>> https://www.kernel.org/doc/html/latest/search.html?q=kmsg_dumper
->>>
->>>> Otherwise looks good to me!
->>>>
->>>
->>> Thanks.
->>>
->>> As this patch touches different subsystems, do you know on which tree it
->>> should land ?
->>
->> Andrew usually takes patches against kernel/panic.c.
->>
->> Or you could take it via the DRM tree, especially if you already have the code
->> using the string.
-
-If it's not taken in Andrew's tree next week, I will see if I can push 
-it to the drm-misc tree. I think there is a very low chance of conflicts.
-
->>
->> Also I could take it via the printk tree. The only complication is
->> that I am going to be away the following two weeks and would come
->> back in the middle of the merge window. I do not expect much problems
->> with this change but...
-> 
-> If DRM doesn't want to carry it, I can put it in through the pstore
-> tree. Let me know! :)
-> 
-
-Thanks for the proposition, I will see how it goes, it would be nice to 
-have it in time for the v6.11 merge window.
-
-Best regards,
-
+diff --git a/drivers/interconnect/qcom/icc-rpmh.c b/drivers/interconnect/qcom/icc-rpmh.c
+index 93047defd5e2..f49a8e0cb03c 100644
+--- a/drivers/interconnect/qcom/icc-rpmh.c
++++ b/drivers/interconnect/qcom/icc-rpmh.c
+@@ -311,7 +311,7 @@ int qcom_icc_rpmh_probe(struct platform_device *pdev)
+ 		}
+ 
+ 		qp->num_clks = devm_clk_bulk_get_all(qp->dev, &qp->clks);
+-		if (qp->num_clks < 0) {
++		if (qp->num_clks < 0 || (!qp->num_clks && desc->qos_clks_required)) {
+ 			dev_info(dev, "Skipping QoS, failed to get clk: %d\n", qp->num_clks);
+ 			goto skip_qos_config;
+ 		}
+diff --git a/drivers/interconnect/qcom/icc-rpmh.h b/drivers/interconnect/qcom/icc-rpmh.h
+index 9a5142c70486..14db89850fb3 100644
+--- a/drivers/interconnect/qcom/icc-rpmh.h
++++ b/drivers/interconnect/qcom/icc-rpmh.h
+@@ -153,6 +153,7 @@ struct qcom_icc_desc {
+ 	size_t num_nodes;
+ 	struct qcom_icc_bcm * const *bcms;
+ 	size_t num_bcms;
++	bool qos_clks_required;
+ };
+ 
+ int qcom_icc_aggregate(struct icc_node *node, u32 tag, u32 avg_bw,
+diff --git a/drivers/interconnect/qcom/sc7280.c b/drivers/interconnect/qcom/sc7280.c
+index 759c609a20bf..167971f8e8be 100644
+--- a/drivers/interconnect/qcom/sc7280.c
++++ b/drivers/interconnect/qcom/sc7280.c
+@@ -1691,6 +1691,7 @@ static const struct qcom_icc_desc sc7280_aggre1_noc = {
+ 	.num_nodes = ARRAY_SIZE(aggre1_noc_nodes),
+ 	.bcms = aggre1_noc_bcms,
+ 	.num_bcms = ARRAY_SIZE(aggre1_noc_bcms),
++	.qos_clks_required = true,
+ };
+ 
+ static struct qcom_icc_bcm * const aggre2_noc_bcms[] = {
+@@ -1722,6 +1723,7 @@ static const struct qcom_icc_desc sc7280_aggre2_noc = {
+ 	.num_nodes = ARRAY_SIZE(aggre2_noc_nodes),
+ 	.bcms = aggre2_noc_bcms,
+ 	.num_bcms = ARRAY_SIZE(aggre2_noc_bcms),
++	.qos_clks_required = true,
+ };
+ 
+ static struct qcom_icc_bcm * const clk_virt_bcms[] = {
 -- 
-
-Jocelyn
+2.17.1
 
