@@ -1,95 +1,172 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DECB52F6F;
-	Sat,  6 Jul 2024 09:30:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C7F44A35
+	for <linux-hardening@vger.kernel.org>; Sat,  6 Jul 2024 12:31:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720258204; cv=none; b=Tw+Vv4Rs16256MgebWsBIbKOY/JvtWBugAZ78PSYgt2Xo3toKXRDvmWFwnoIkIyp3fBJLmWWd0P0wbWj1phHN3kCUXldpW/ijZx0Bo6UyJLWD3hEhgUT9Fu6EFNZa5lBceWfMnKsRxvdg8D9oYEGI8xhxLLcBUxG8t25SnQq6aU=
+	t=1720269109; cv=none; b=HCrmeoUIPZaqW5c+uDnbIm7U0yHn49bCagOubxQK9iXFUkc19gg/RkGH0Ui58uW1fa7RT7NCEbsCi6hhY0zT39urAfBexse6iP1rl1+CiatO8knL4sgMYKYg4umeRMf9ZajEuT3eknuAIXJSN4jXU2zbn9/eIboI/VBs49p7wCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720258204; c=relaxed/simple;
-	bh=Q+ZAuNvfo1PLDNuwb6saf6UKRg3oyUIqT65wz6VNwlQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mdBtXg9yQlXGfo9EB1f41eT/wAgePqLI+lr63+guBSxr/j3rooDWE5Zw7R+3fUdApbdeCJctXzagtGTD9Dk9jJTv8QNe8lnDbT9o+smpti+K+mI+Ob1TEWkr3qGpRFZBmzqcdtQ2bpAaiJ+hoN354xqgzT9cyj763LOacmLRPQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Kc5x37IP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720269109; c=relaxed/simple;
+	bh=AZeVgGjUhu0VLE0MdVJfGODsbNpLCLUc7QabVgczy4c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FSpglHxyl5OKFo8PZq5Qtgujwar0FpnzkXbZUtj9L1vQUD/D4ZYBwp/qT7f9arIVvmVLc6ovtzihFXdexXSK+V4ZW8nk0fapDgbuLaR+m36c4lNvlslm76l1qP0x1YbhcMC6De6qkv74lqNTk8wMFi/57PR7oxFYRZS0SKJijCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jEbGzdph; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Kc5x37IP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFC60C2BD10;
-	Sat,  6 Jul 2024 09:30:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1720258203;
-	bh=Q+ZAuNvfo1PLDNuwb6saf6UKRg3oyUIqT65wz6VNwlQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Kc5x37IPXd/KXYTnyhWVxzDoXwmOXsRa5lkhUApri9j23K0WVDUdWsoChDf/QZzIn
-	 nLBCT1GGHeh3IqQRpILYy+hn/QzfyHCk1qNDsE+52O4RoyRVdr3K26E82uxxYOtDvu
-	 DeHaNNHlFiUxPMmQrYl3UWnAaoMEYUipQBUHvb/o=
-Date: Sat, 6 Jul 2024 11:30:00 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: WangYuli <wangyuli@uniontech.com>
-Cc: stable@vger.kernel.org, sashal@kernel.org, ast@kernel.org,
-	keescook@chromium.org, linux-hardening@vger.kernel.org,
-	christophe.leroy@csgroup.eu, catalin.marinas@arm.com,
-	song@kernel.org, puranjay12@gmail.com, daniel@iogearbox.net,
-	andrii@kernel.org, martin.lau@linux.dev, yonghong.song@linux.dev,
-	john.fastabend@gmail.com, kpsingh@kernel.org, sdf@google.com,
-	haoluo@google.com, jolsa@kernel.org, illusionist.neo@gmail.com,
-	linux@armlinux.org.uk, bpf@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	chenhuacai@kernel.org, kernel@xen0n.name, loongarch@lists.linux.dev,
-	johan.almbladh@anyfinetworks.com, paulburton@kernel.org,
-	tsbogend@alpha.franken.de, linux-mips@vger.kernel.org,
-	deller@gmx.de, linux-parisc@vger.kernel.org, iii@linux.ibm.com,
-	hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
-	borntraeger@linux.ibm.com, svens@linux.ibm.com,
-	linux-s390@vger.kernel.org, davem@davemloft.net,
-	sparclinux@vger.kernel.org, kuba@kernel.org, hawk@kernel.org,
-	netdev@vger.kernel.org, dsahern@kernel.org, tglx@linutronix.de,
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-	x86@kernel.org, hpa@zytor.com, guanwentao@uniontech.com,
-	baimingcong@uniontech.com
-Subject: Re: [PATCH] Revert "bpf: Take return from set_memory_rox() into
- account with bpf_jit_binary_lock_ro()" for linux-6.6.37
-Message-ID: <2024070631-unrivaled-fever-8548@gregkh>
-References: <5A29E00D83AB84E3+20240706031101.637601-1-wangyuli@uniontech.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jEbGzdph"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-585e774fd3dso3255737a12.0
+        for <linux-hardening@vger.kernel.org>; Sat, 06 Jul 2024 05:31:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1720269106; x=1720873906; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=WxO9tUoRJ8g2YphFGWhNO5NnoblLdOv7a0AOZSNvnaY=;
+        b=jEbGzdphwYMn99g5rD4CYqpGE1FgTnTeRZTL83RvKQSYiUaetjPXK6CK6gD34Eq+9n
+         qmS7FjaGpVhJegb10zHMr3afEHO29YgW3TnA9ClNuT6X+vvn0YmTNNJJEJsgCy1ygsLU
+         An86qfpKidBEMuYWnaZUiBuun4TbIg8NZBMHj2lLMMxhdbSrJ2QdHPv9Q5dVNquHeBKj
+         BZPgz8c6pmlR6J9sJZyw245ARhVvMiAg7oHlQouf/L9FnLa8gjBSQA8vhUFiHw5gsdhm
+         j83AztYMT/4Q6FFdVA+JR9g/XjEDNPl963RyNysM+PV6F0C8mg6PeIAIU0sriETu9/h5
+         7g6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720269106; x=1720873906;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WxO9tUoRJ8g2YphFGWhNO5NnoblLdOv7a0AOZSNvnaY=;
+        b=GLPAIHzvyQh9j3SD5smDtixapUJa0L1hWzw3JMduMxbgYf7VGmZgvYo5l8Gxw8L/c4
+         Y60Qkww1u74vmxCXoxU7CA1LjSjaFAJiScL/+cuAh/GAebzk2uJAb0z84Suq3IeyqCYS
+         ZjZMD/M4pO0H3BjArv8Cn6zCCsReRGEsIQwjN8/ni7HWq2d15slzuJoxbFrx/PUmbfKr
+         eDdUrD+B8GsS9xCecOaVSOBCmCKBltmMCgmd2jAxPTRpG0FKtjfawTw1THwwQaYlWO9h
+         mQ1kauHigiZZPTVAok5kQl9SLVYWDXxhLgJgaREjuD46CoNnSEFJBTmZBgR/ZrJa08Eu
+         IE/w==
+X-Forwarded-Encrypted: i=1; AJvYcCWd0NNTKzOSYVSOQ1/9rpwudmH6Y2X/id1i8NJq5LljenOtc4RDACnwYjjbhi2FvqhSBhLwLL5oQeoo1rYUa2CP+bS4FHPUFmG32qCsEdZM
+X-Gm-Message-State: AOJu0YzPOf9DsffR7tO8H5P7jxdrI4iMPS6O3MKcvBbNxdlwF4+mKYBR
+	IKmX0EZg6t2CzumWeL/NDNnGCf+9sjGAMDfI2Z+AJh0bJtbxk+cTuZqgT7Z94d0=
+X-Google-Smtp-Source: AGHT+IFI1cK6dkv274ZfwByVzNk3B8KSxmGMCLvDGsiBoU/kAEVX4B/R+FpPnlJdrcjBGgmV37lYoA==
+X-Received: by 2002:a05:6402:5108:b0:57d:692:92d9 with SMTP id 4fb4d7f45d1cf-58e59265f08mr5744423a12.4.1720269105563;
+        Sat, 06 Jul 2024 05:31:45 -0700 (PDT)
+Received: from [192.168.105.194] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-58f63380f3csm2126686a12.58.2024.07.06.05.31.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 06 Jul 2024 05:31:45 -0700 (PDT)
+Message-ID: <c15fc1de-c930-44b6-a9f9-d17e4da002fe@linaro.org>
+Date: Sat, 6 Jul 2024 14:31:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5A29E00D83AB84E3+20240706031101.637601-1-wangyuli@uniontech.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] interconnect: qcom: Fix DT backwards compatibility for
+ QoS
+To: Bjorn Andersson <andersson@kernel.org>,
+ Odelu Kukatla <quic_okukatla@quicinc.com>
+Cc: Georgi Djakov <djakov@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Kees Cook <keescook@chromium.org>,
+ cros-qcom-dts-watchers@chromium.org,
+ "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+ linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, quic_rlaggysh@quicinc.com,
+ quic_mdtipton@quicinc.com
+References: <20240704125515.22194-1-quic_okukatla@quicinc.com>
+ <jhfya4mjnckrmogtmusyvwjv4mlyycgqj3apt2kaj5umxprhtv@rfew7c5w3zf5>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
+ 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
+ izWDgYvmBE8=
+In-Reply-To: <jhfya4mjnckrmogtmusyvwjv4mlyycgqj3apt2kaj5umxprhtv@rfew7c5w3zf5>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sat, Jul 06, 2024 at 11:11:01AM +0800, WangYuli wrote:
-> This reverts commit 08f6c05feb1db21653e98ca84ea04ca032d014c7.
+On 4.07.2024 7:44 PM, Bjorn Andersson wrote:
+> On Thu, Jul 04, 2024 at 06:25:15PM GMT, Odelu Kukatla wrote:
+>> Add qos_clks_required flag to skip QoS configuration if clocks property
+>> is not populated in devicetree for providers which require clocks to be
+>> enabled for accessing registers. This is to keep the QoS configuration
+>> backwards compatible with devices that have older DTB.
+>>
 > 
-> Upstream commit e60adf513275 ("bpf: Take return from set_memory_rox() into account with bpf_jit_binary_lock_ro()")
-> depends on
-> upstream commit 1dad391daef1 ("bpf, arm64: use bpf_prog_pack for memory management").
+> Please read "Describe your changes" [1], and make your commit message
+> start with the problem description - establish to the reader why this
+> change is needed, then follow that with a technical description of the
+> solution (likely in a separate paragraph).
 > 
-> It will cause a compilation warning on the arm64 if it's not merged:
->   arch/arm64/net/bpf_jit_comp.c: In function ‘bpf_int_jit_compile’:
->   arch/arm64/net/bpf_jit_comp.c:1651:17: warning: ignoring return value of ‘bpf_jit_binary_lock_ro’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
->    1651 |                 bpf_jit_binary_lock_ro(header);
->         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> [1] https://docs.kernel.org/process/submitting-patches.html#describe-your-changes
 > 
-> This will prevent the kernel with the '-Werror' compile option from
-> being compiled successfully.
+>> Reported-by: Bjorn Andersson <andersson@kernel.org>
+>> Closes: https://lore.kernel.org/all/ciji6nlxn752ina4tmh6kwvek52nxpnguomqek6plwvwgvoqef@yrtexkpmn5br/
+>> Signed-off-by: Odelu Kukatla <quic_okukatla@quicinc.com>
+>> ---
+>>  drivers/interconnect/qcom/icc-rpmh.c | 2 +-
+>>  drivers/interconnect/qcom/icc-rpmh.h | 1 +
+>>  drivers/interconnect/qcom/sc7280.c   | 2 ++
+>>  3 files changed, 4 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/interconnect/qcom/icc-rpmh.c b/drivers/interconnect/qcom/icc-rpmh.c
+>> index 93047defd5e2..f49a8e0cb03c 100644
+>> --- a/drivers/interconnect/qcom/icc-rpmh.c
+>> +++ b/drivers/interconnect/qcom/icc-rpmh.c
+>> @@ -311,7 +311,7 @@ int qcom_icc_rpmh_probe(struct platform_device *pdev)
+>>  		}
+>>  
+>>  		qp->num_clks = devm_clk_bulk_get_all(qp->dev, &qp->clks);
+>> -		if (qp->num_clks < 0) {
+>> +		if (qp->num_clks < 0 || (!qp->num_clks && desc->qos_clks_required)) {
 > 
-> We might as well revert this commit in linux-6.6.37 to solve the
-> problem in a simple way.
+> For this new case, I think the dev_info() below makes total sense. I.e.
+> this looks good to me.
+> 
+> 
+> However, the num_clks < 0 case would represent finding a devicetree node
+> with clocks specified, but failing to get these clocks. I believe that
+> this would include EPROBE_DEFER.
+> 
+> I don't think it's correct to print a informational message and continue
+> without QoS. I think we should fail here.
 
-This makes it sound like you are reverting this because of a build
-error, which is not the case here, right?  Isn't this because of the
-powerpc issue reported here:
-	https://lore.kernel.org/r/20240705203413.wbv2nw3747vjeibk@altlinux.org
-?
+Since setting QoS settings is optional, I'd say we should simply skip trying
+to do so. Unless setting them on some buses (i.e. ones without failing clocks)
+and not on the rest would cause issues. But then, these settings should be
+bus-local, so perhaps it would still be fine?
 
-If not, why not just backport the single missing arm64 commit, and why
-didn't this show up in testing?
-
-confused,
-
-greg k-h
+Konrad
