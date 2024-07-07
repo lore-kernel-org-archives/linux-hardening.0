@@ -1,123 +1,86 @@
-Received: from smtpbg154.qq.com (smtpbg154.qq.com [15.184.224.54])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCA5BF4EB;
-	Sun,  7 Jul 2024 07:34:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=15.184.224.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 640FEEDC;
+	Sun,  7 Jul 2024 15:22:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720337691; cv=none; b=Qig4wjPVYJh5Ifujx2SVqCE/pfp2z34GYRVkNHpQIx1oOIk7Ocf4ZCcuDR3NysDOE6ueMncDNonYW+lvlT4QZUDiEY6miD12FHYUsJ0l/bCMyuircQSjCdut3RItMHf9cqeW/v24F7FUvg0rzI+shimhAbsQq6/uneaDWyBow7Q=
+	t=1720365734; cv=none; b=ADK6L8qj+zgBD9V+AZ2sgZeF36GJ8tuxWOW6bYSPn+S1f+y7EPH6KiHKZ2IgNum1noVZfseQfksPNwjGW/gq1LqiHFZSkLYLoD1h2OJi85+bUdY5DOjp9NiWIb+V3o6UdyVUC6CGMF2ebHmz6S4otuzsQGOmfVW2fZYt2+ZNv3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720337691; c=relaxed/simple;
-	bh=SdMTMEyAxrDIFF9Na+K5TW8VSz8xAY0Kf2QaI/yF0XU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nIy+dYFUo7zeTUOl+0RjVEaGX9KfV8F9v6JCgmWat7lJELptIpHwApsHFu4+/E5RjU2ePxy21DpqONta2uLFvXnBvIIk77Vh0h++/Kx6MUoZLHLYrEmvuMWBuMI6FSUntC/NkrIWXqfAbaEXQE2IPBOxZ5eUF9UcSUr9lNTIQho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; arc=none smtp.client-ip=15.184.224.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
-X-QQ-mid: bizesmtpip3t1720337660tkacxpm
-X-QQ-Originating-IP: xEPDphvktVF415/GqFjUMqm3UtXJmiJdfibU97Nz69Q=
-Received: from [IPV6:240e:36c:d19:e900:dfc1:d0 ( [255.153.174.1])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Sun, 07 Jul 2024 15:34:15 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 8694329200217638920
-Message-ID: <B7E3B29557B78CB1+afadbaa6-987e-4db4-96b5-4e4d5465c37b@uniontech.com>
-Date: Sun, 7 Jul 2024 15:34:15 +0800
+	s=arc-20240116; t=1720365734; c=relaxed/simple;
+	bh=tmXvznDulf9bw8t1c6IsEHMz46Iiva662nh3Y9tT0aE=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=i1TKySvsRYkHb6CH0vK3QhhMY3WFrW0gw1D0wdO2VaVFkNcCEGETvjVHFfaGlQr+ZAXomQ6zB/qcXMgX/YinD+2bUHzFrYmxs1aDekTD+Y1LblnIlT9BfKo17r0aUk3JtqNYZAA8MMRKSFaBGlRPgVcg46WjfVyN+xR67rkc+oA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B5SSOY74; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B5SSOY74"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C57AC3277B;
+	Sun,  7 Jul 2024 15:22:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720365734;
+	bh=tmXvznDulf9bw8t1c6IsEHMz46Iiva662nh3Y9tT0aE=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=B5SSOY74qYG5DLdwzkTGwVb0XVucLP4eHp+Y5Q/0/pNXCVSpbcpBEWVy1wnzivMIa
+	 +5+gJxhq7H2IexxQ0cepAVSj74tIGUuvd/aV4rSTWO9LHK9ly1nVcOTK6NdXz8o/4/
+	 AlJ37XDlVb5o/s1p9TmCaCizwulq1WnbpxIkgZS4xxqJERNWDiIzj8gpSAUEhbjh3D
+	 AB3CtVOVIXQ6mNNT6hgwY3j912JwhQPz4zATZIIwH95OsBthqkx3vqHF8lH4h7tJ4e
+	 JmG/YY/IWd2vTtLQM45SWVAEOWdF/j/RuhV7B1e/JTu5uSediYwvhEkdxU2eVXFWMA
+	 FvL3yGwLOj35w==
+Date: Sun, 07 Jul 2024 08:22:13 -0700
+From: Kees Cook <kees@kernel.org>
+To: Mirsad Todorovac <mtodorovac69@gmail.com>, linux-hardening@vger.kernel.org
+CC: Andy Lutomirski <luto@amacapital.net>, Will Drewry <wad@chromium.org>,
+ linux-kernel@vger.kernel.org
+Subject: =?UTF-8?Q?Re=3A_=5BPROBLEM_linux-next=5D_include/linux/for?=
+ =?UTF-8?Q?tify-string=2Eh=3A580=3A25=3A?=
+ =?UTF-8?Q?_error=3A_call_to_=E2=80=98=5F=5Frea?=
+ =?UTF-8?Q?d=5Foverflow2=5Ffield=E2=80=99_declared_with_attribute_?=
+ =?UTF-8?Q?warning=3A_detected_read_beyond_size_of_field?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <9b69fb14-df89-4677-9c82-056ea9e706f5@gmail.com>
+References: <9b69fb14-df89-4677-9c82-056ea9e706f5@gmail.com>
+Message-ID: <3639BC84-F533-45A6-AB7D-CABA1A1673EF@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: =?UTF-8?B?TW96aWxsYSBUaHVuZGVyYmlyZCDmtYvor5XniYg=?=
-Subject: Re: [PATCH] Revert "bpf: Take return from set_memory_rox() into
- account with bpf_jit_binary_lock_ro()" for linux-6.6.37
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, sashal@kernel.org, ast@kernel.org,
- keescook@chromium.org, linux-hardening@vger.kernel.org,
- christophe.leroy@csgroup.eu, catalin.marinas@arm.com, song@kernel.org,
- puranjay12@gmail.com, daniel@iogearbox.net, andrii@kernel.org,
- martin.lau@linux.dev, yonghong.song@linux.dev, john.fastabend@gmail.com,
- kpsingh@kernel.org, sdf@google.com, haoluo@google.com, jolsa@kernel.org,
- illusionist.neo@gmail.com, linux@armlinux.org.uk, bpf@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- chenhuacai@kernel.org, kernel@xen0n.name, loongarch@lists.linux.dev,
- johan.almbladh@anyfinetworks.com, paulburton@kernel.org,
- tsbogend@alpha.franken.de, linux-mips@vger.kernel.org, deller@gmx.de,
- linux-parisc@vger.kernel.org, iii@linux.ibm.com, hca@linux.ibm.com,
- gor@linux.ibm.com, agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
- svens@linux.ibm.com, linux-s390@vger.kernel.org, davem@davemloft.net,
- sparclinux@vger.kernel.org, kuba@kernel.org, hawk@kernel.org,
- netdev@vger.kernel.org, dsahern@kernel.org, tglx@linutronix.de,
- mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
- hpa@zytor.com, guanwentao@uniontech.com, baimingcong@uniontech.com
-References: <5A29E00D83AB84E3+20240706031101.637601-1-wangyuli@uniontech.com>
- <2024070631-unrivaled-fever-8548@gregkh>
-From: WangYuli <wangyuli@uniontech.com>
-Content-Language: en-US
-Autocrypt: addr=wangyuli@uniontech.com; keydata=
- xjMEZoEsiBYJKwYBBAHaRw8BAQdAyDPzcbPnchbIhweThfNK1tg1imM+5kgDBJSKP+nX39DN
- IVdhbmdZdWxpIDx3YW5neXVsaUB1bmlvbnRlY2guY29tPsKJBBMWCAAxFiEEa1GMzYeuKPkg
- qDuvxdofMEb0C+4FAmaBLIgCGwMECwkIBwUVCAkKCwUWAgMBAAAKCRDF2h8wRvQL7g0UAQCH
- 3mrGM0HzOaARhBeA/Q3AIVfhS010a0MZmPTRGVfPbwD/SrncJwwPAL4GiLPEC4XssV6FPUAY
- 0rA68eNNI9cJLArOOARmgSyJEgorBgEEAZdVAQUBAQdA88W4CTLDD9fKwW9PB5yurCNdWNS7
- VTL0dvPDofBTjFYDAQgHwngEGBYIACAWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZoEsiQIb
- DAAKCRDF2h8wRvQL7sKvAP4mBvm7Zn1OUjFViwkma8IGRGosXAvMUFyOHVcl1RTgFQEAuJkU
- o9ERi7qS/hbUdUgtitI89efbY0TVetgDsyeQiwU=
-In-Reply-To: <2024070631-unrivaled-fever-8548@gregkh>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
 
-On 2024/7/6 17:30, Greg KH wrote:
-> This makes it sound like you are reverting this because of a build
-> error, which is not the case here, right?  Isn't this because of the
-> powerpc issue reported here:
-> 	https://lore.kernel.org/r/20240705203413.wbv2nw3747vjeibk@altlinux.org
-> ?
 
-No, it only occurs on ARM64 architecture. The reason is that before 
-being modified, the function
-
-bpf_jit_binary_lock_ro() in arch/arm64/net/bpf_jit_comp.c +1651
-
-was introduced with __must_check, which is defined as 
-__attribute__((__warn_unused_result__)).
-
-
-However, at this point, calling bpf_jit_binary_lock_ro(header) 
-coincidentally results in an unused-result
-
-warning.
-
-> If not, why not just backport the single missing arm64 commit,
-
-Upstream commit 1dad391daef1 ("bpf, arm64: use bpf_prog_pack for memory 
-management") is part of
-
-a larger change that involves multiple commits. It's not an isolated commit.
-
-
-We could certainly backport all of them to solve this problem, but it's 
-not the simplest solution.
-
-> and why
-> didn't this show up in testing?
-
-Thanks for the tip.
-
-I'll be sure to keep a closer eye on the stable kernel testing phase in 
-the future and hopefully catch any
-
-problems more timely.
-
-> confused,
+On July 6, 2024 5:26:25 PM PDT, Mirsad Todorovac <mtodorovac69@gmail=2Ecom=
+> wrote:
+>Hi, all!
 >
-> greg k-h
+>This is the result of testing randconfig with KCONFIG_SEED=3D0xEE7AB52F i=
+n next-20240703 vanilla tree on
+>Ubuntu 22=2E04 LTS=2E GCC used is gcc (Ubuntu 12=2E3=2E0-1ubuntu1~22=2E04=
+) 12=2E3=2E0=2E
 >
-Sincerely
--- 
-WangYuli <wangyuli@uniontech.com>
+>The particular error is as follows:
+>
+>In file included from =2E/include/linux/string=2Eh:374,
+>                 from =2E/arch/x86/include/asm/page_32=2Eh:18,
+>                 from =2E/arch/x86/include/asm/page=2Eh:14,
+>                 from =2E/arch/x86/include/asm/processor=2Eh:20,
+>                 from =2E/include/linux/sched=2Eh:13,
+>                 from =2E/include/linux/audit=2Eh:12,
+>                 from kernel/seccomp=2Ec:19:
+>In function =E2=80=98fortify_memcpy_chk=E2=80=99,
+>    inlined from =E2=80=98syscall_get_arguments=E2=80=99 at =2E/arch/x86/=
+include/asm/syscall=2Eh:85:2,
+
+memcpy(args, &regs->bx, 6 * sizeof(args[0]));
+
+Yup, this reads from regs starting at bx, rather than only bx=2E I will se=
+nd to patch to expand it (like is done for compat mode a few lines later)=
+=2E
+
+-Kees
+
+--=20
+Kees Cook
