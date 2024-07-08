@@ -1,174 +1,126 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B076D14C5BD;
-	Mon,  8 Jul 2024 19:18:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8E52146A98;
+	Mon,  8 Jul 2024 20:22:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720466321; cv=none; b=i7GNRSGHfnFYHCCVmtOu7qBKnHEQew+18MAu7GRHAcZRTplCnMu4e0qxx1CSJbTILXLO5ypnHN+wdypzrQHHknQZFUj3JTTqdkPBqAb4i7XKwpn1SFxFz37b+woaQbNRDfBhU33de53wWW4m+Z8W0pqbWdveZypgiYs98DoEb90=
+	t=1720470127; cv=none; b=rsc9oMg590cqm6G7IVKbO2aRui3p+YS+qBFtvAh9hvczjJGGosjLJXOGBwAsuUej3F8xxFxS6FnyCuDuVw1k1SxI5bizSJ0B+xKtWkTkkC20RZDHSyg84Gl8R+42joSzLYcYr2ofM+gka0ADORC4or4PMg53fWJJ2Yucj/Mqflc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720466321; c=relaxed/simple;
-	bh=uZVkbgeH0EuqCqY0VzPg0KmfW7oX+qB7fM4s+/wiMwc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=TMHzdM9F+jAttAL8ENeNp7WiLy2FB0YRYaCbI8BgBuLRxfdoKa5BSeFmQFRZI4udfdZ2i/WHrh95bCECjDvKDnt6YCFIk6inzw4gaGc+L9HQ3jSTJPsLRq50iwJPeqqgx0R6+CrbIZBHinpkwvzURauSOzdCrTyYZkaGf+DbFd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NwLkmYW8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720470127; c=relaxed/simple;
+	bh=R+KCjxeALUlTLABjk0xgsQ68pJ97ScmMIL7WBVxnLgk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=Bzv8aiKAIZkrAAnN08DldeHp5lr0a7BJp7PXNeEFHMvkSxHyNr5rKVsQPDCB0x2eUNganSLqLL4FBVQop3rDDfo6pHDSNw3dml+QyF91c2Nj3RvytTJ6IJ6DmJep04T6atOd2hz2GxPj+SSrRRRDqlMbcyH2b24m3J6w2MhUKgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YGl51C77; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NwLkmYW8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41B96C4AF0D;
-	Mon,  8 Jul 2024 19:18:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YGl51C77"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 900DEC116B1;
+	Mon,  8 Jul 2024 20:22:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720466321;
-	bh=uZVkbgeH0EuqCqY0VzPg0KmfW7oX+qB7fM4s+/wiMwc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NwLkmYW8fDSlPfZ6zg7OC+ydN9VHjamB6SV206zEE06CByDYBXL/E3kNymf8f5Z/E
-	 WXWWVI1V3oP15b7GAXdSADCafWiAMveNkB2HZ8+7NEQYI7YdmW42qR7tgMpWlporuN
-	 J6+evyd+mmMafD6umN9x6L0ddtcnOi2Z/esDflp2s17QEeO3zfTDHjjxNwRPSRfd2D
-	 N/Wx4RbcY7RYlE6239c5cLmYVj9D7kFyUZZLHE19qqTGaklfFdSuR11ywV6Sd70kIJ
-	 u0Osw7RcbBkJDMa5T0vBYml4oKCg3CzE+2hy/lCWNO73/LSIfqxrEtYHJUDtN1rpMW
-	 F4uvi02aZMKmQ==
+	s=k20201202; t=1720470127;
+	bh=R+KCjxeALUlTLABjk0xgsQ68pJ97ScmMIL7WBVxnLgk=;
+	h=From:To:Cc:Subject:Date:From;
+	b=YGl51C775NG7mxOfJcr9Lwkxxq26mgmL+wU0WoDcbOoqCY/TekeVr4FBZ9MJyeHFt
+	 1CYElD5rYI9oWeqpVkQwe1IIiuNdkV6YymYIwc2Qak8Sg8naBmUoCFK3825SnZk+TI
+	 KEfCL7tARav1xZFUL9j0L0O81gHrjyD1cyZxrrPmXFyZk3MtY6lFC3fIHba1IBakOu
+	 micnrwZlTRiJ9JM3A6n7g8ZKdOSESXJpkOEqgWrue9f5wtT+x8aH4J8RbRgHXICycr
+	 cXe8x+pOqqUjhL1rMMo3nIfs/KUsvAyQQ1kbVI5nx1JVhuO76jrVrpIY8lmFovCuQ7
+	 31hS5JLWiWkdQ==
 From: Kees Cook <kees@kernel.org>
-To: Vlastimil Babka <vbabka@suse.cz>
+To: Thomas Gleixner <tglx@linutronix.de>
 Cc: Kees Cook <kees@kernel.org>,
-	Christoph Lameter <cl@linux.com>,
-	Pekka Enberg <penberg@kernel.org>,
-	David Rientjes <rientjes@google.com>,
-	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-	linux-mm@kvack.org,
-	Jann Horn <jannh@google.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Marco Elver <elver@google.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Hao Luo <haoluo@google.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Petr Pavlu <petr.pavlu@suse.com>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Tony Ambardar <tony.ambardar@gmail.com>,
+	Mirsad Todorovac <mtodorovac69@gmail.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Daniel Sneddon <daniel.sneddon@linux.intel.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Brian Gerst <brgerst@gmail.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Peter Collingbourne <pcc@google.com>,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [RFC][PATCH 3/4] slab: Allow for type introspection during allocation
-Date: Mon,  8 Jul 2024 12:18:37 -0700
-Message-Id: <20240708191840.335463-3-kees@kernel.org>
+Subject: [PATCH] x86/syscall: Avoid memcpy() for ia32 syscall_get_arguments()
+Date: Mon,  8 Jul 2024 13:22:06 -0700
+Message-Id: <20240708202202.work.477-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240708190924.work.846-kees@kernel.org>
-References: <20240708190924.work.846-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4343; i=kees@kernel.org; h=from:subject; bh=uZVkbgeH0EuqCqY0VzPg0KmfW7oX+qB7fM4s+/wiMwc=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmjDuOqk8BerNUzSb5otXo2P3d37h+IoXOh1nFQ Es8spHhmLSJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZow7jgAKCRCJcvTf3G3A Js1KD/wJ2MAI4caQ2BMn/GB4nzrXJRJ23IazCtug/USRi+kQWodnvPYxG+OU+xrhwSce62gNZ9S znIek1BQjBppXGf28xJhr6X4LXKca7NgslCOEdUwoqIub1c++sTts9qQT0tH57ia5wamfKn6pyb CQE10/gSkeqCJt0UJuJ5/nCE10q12uZrqT3yJWH3xw2XrHBYAvGUdKKCODaz1ntjJNY30179RPL 9TfhRvm8kUACvshW0bDFQnvld+uTNyM6tGAPJqebTDc46oj5rt1MBJG/VeIJe68j6rEDiIzwsPD Fxj3qdXHzCh07JW5zueYPrNQAaPon3vbQ4oeqURGA+Ky+WTmXYUXObiGcGDk+nzW5Osma2tNXQB ezldsO8GZgleLm4WbuOE0XPe39ya0qFBrlRUDHU6w9yVcakglo92jKjgVftQkOlgHimrUSwRKrz 0CosucBmH1tXhl1rCKvcapwPwn6zI9wIKZnxexvS+E0QYWtmRm5Ck2dp8I4ID/xVzy/xaacUEFg odokjaXlY93cRzej7rDMtDo9xGQRxb+K1OpBiyNjuiieHati+E+xNlxzSQZXu+6tfd82Dk7BcDk YVMVnnig8SN4IU2Yzai3pznlTfzu7/X0wPowK80xVs4df6Al6nIE33Dk0eP1JiMtnDb/jzShLKL ylIoTkHjI1WSlnA==
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2703; i=kees@kernel.org; h=from:subject:message-id; bh=R+KCjxeALUlTLABjk0xgsQ68pJ97ScmMIL7WBVxnLgk=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmjEptrVQyLhuRtz3Bw+kovOBW9KKzepjilyX72 klnrpFCAKaJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZoxKbQAKCRCJcvTf3G3A Jjo1EACOvYDVteegjw03HK9rSnkjN7JhnSDcy/JA3wtBwHuOJdPndOBm2aTWNKZbdBeL/xI9oke 45CKf3vtHRrFwOyIbLoSPP0cC95Bwc0b4m1fBnvUNzVkp8uLlmIfXM3YQyUnV79UaaANmN1zIij 2UvElugYloK147m6gPpePlZGIYJxvWi28Pn5g+TdfGT6icAbLIIe8/IIju7giG8j0uDugKXw83n 2FOwOXNmQKvTOfTfvVPBvFcqjrrsHtXJEYD0jy6gQY6j7m0/qD2/A1mwfP+V60okKPa/s3YnOiJ nlzGuAj7+rffzgjHkA7yZcFra5h0a4dR7qWVg2ryq1YN1FeP7+cjVCCgOM1wnoPRLOMSa2mAt7/ 69H91BVQhw5qUzKEchda+vLCpzX9uL89wTJLQ2ULytjlCawh3vGoK4xhLDP+AXiQcq8ockBEj51 pmSmZy7oGcukasQbsJgvY1lQzfDn80sv/ZgUBzvc8MYGJAsCIdEPnV1Adld3NFD9L5JjLk1Kpoy w0RPIXl+LGv+85DfBWtq6l7EcZa2PAvxNL7EJdzw9VwxzWbA+FOVNKX/FrTBlwJWlh0Cpb4icCL zbRYgi38SdiZmJ0LOzsc24jKud6zFzTn82EllSYWUtulf3aszvki4tzAtxOoiAxiudcKWUiEFJr 9isaBVSBjN5jk
+ NQ==
 X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-There is currently no way for the slab to know what type is being
-allocated, and this hampers the development of any logic that would need
-this information including basic type checking, alignment need analysis,
-etc.
+Modern (fortified) memcpy() prefers to avoid writing (or reading) beyond
+the end of the addressed destination (or source) struct member:
 
-Allow the size argument to optionally be a variable, from which the
-type (and there by the size, alignment, or any other features) can be
-determined at compile-time. This allows for the incremental replacement
-of the classic code pattern:
+In function ‘fortify_memcpy_chk’,
+    inlined from ‘syscall_get_arguments’ at ./arch/x86/include/asm/syscall.h:85:2,
+    inlined from ‘populate_seccomp_data’ at kernel/seccomp.c:258:2,
+    inlined from ‘__seccomp_filter’ at kernel/seccomp.c:1231:3:
+./include/linux/fortify-string.h:580:25: error: call to ‘__read_overflow2_field’ declared with attribute warning: detected read beyond size of field (2nd parameter); maybe use struct_group()? [-Werror=attribute-warning]
+  580 |                         __read_overflow2_field(q_size_field, size);
+      |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-	obj = kmalloc(sizeof(*obj), gfp);
+As already done for x86_64 and compat mode, do not use memcpy() to
+extract syscall arguments from struct pt_regs but rather just perform
+direct assignments. Binary output differences are negligible, and actually
+ends up using less stack space:
 
-into:
+-       sub    $0x84,%esp
++       sub    $0x6c,%esp
 
-	obj = kmalloc(obj, gfp);
+and less text size:
 
-As an additional build-time safety feature, the return value of kmalloc()
-also becomes typed so that the assignment and first argument cannot drift,
-doing away with the other, more fragile, classic code pattern:
+   text    data     bss     dec     hex filename
+  10794     252       0   11046    2b26 gcc-32b/kernel/seccomp.o.stock
+  10714     252       0   10966    2ad6 gcc-32b/kernel/seccomp.o.after
 
-	obj = kmalloc(sizeof(struct the_object), gfp);
-
-into:
-
-	obj = kmalloc(obj, gfp);
-
-And any accidental variable drift will not be masked by the traditional
-default "void *" return value:
-
-	obj = kmalloc(something_else, gfp);
-
-error: assignment to 'struct the_object *' from incompatible pointer type 'struct foo *' [-Wincompatible-pointer-types]
-   71 |     obj = kmalloc(something_else, gfp);
-      |         ^
-
-This also opens the door for a proposed heap hardening feature that
-would randomize the starting offset of the allocated object within
-its power-of-2 bucket. Without being able to introspect the type for
-alignment needs, this can't be done safely (or cannot be done without
-significant memory usage overhead). For example, a 132 byte structure
-with an 8 byte alignment could be randomized into 15 locations within
-the 256 byte bucket: (256 - 132) / 8.
-
+Reported-by: Mirsad Todorovac <mtodorovac69@gmail.com>
+Closes: https://lore.kernel.org/lkml/9b69fb14-df89-4677-9c82-056ea9e706f5@gmail.com/
 Signed-off-by: Kees Cook <kees@kernel.org>
 ---
-Cc: Christoph Lameter <cl@linux.com>
-Cc: Pekka Enberg <penberg@kernel.org>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Roman Gushchin <roman.gushchin@linux.dev>
-Cc: Hyeonggon Yoo <42.hyeyoo@gmail.com>
-Cc: linux-mm@kvack.org
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: x86@kernel.org
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Daniel Sneddon <daniel.sneddon@linux.intel.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Brian Gerst <brgerst@gmail.com>
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Cc: Peter Collingbourne <pcc@google.com>
 ---
- include/linux/slab.h | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+ arch/x86/include/asm/syscall.h | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/slab.h b/include/linux/slab.h
-index 7353756cbec6..4a7350bbcfe7 100644
---- a/include/linux/slab.h
-+++ b/include/linux/slab.h
-@@ -685,6 +685,7 @@ static __always_inline __alloc_size(1) void *kmalloc_noprof(size_t size, gfp_t f
- 	return __kmalloc_noprof(size, flags);
+diff --git a/arch/x86/include/asm/syscall.h b/arch/x86/include/asm/syscall.h
+index 2fc7bc3863ff..7c488ff0c764 100644
+--- a/arch/x86/include/asm/syscall.h
++++ b/arch/x86/include/asm/syscall.h
+@@ -82,7 +82,12 @@ static inline void syscall_get_arguments(struct task_struct *task,
+ 					 struct pt_regs *regs,
+ 					 unsigned long *args)
+ {
+-	memcpy(args, &regs->bx, 6 * sizeof(args[0]));
++	args[0] = regs->bx;
++	args[1] = regs->cx;
++	args[2] = regs->dx;
++	args[3] = regs->si;
++	args[4] = regs->di;
++	args[5] = regs->bp;
  }
- #define kmalloc_sized(...)			alloc_hooks(kmalloc_noprof(__VA_ARGS__))
-+#define kmalloc_aligned(size, align, gfp)	alloc_hooks(kmalloc_noprof(size, gfp))
  
- #define __size_force_positive(x)				\
- 	({							\
-@@ -701,7 +702,10 @@ static __always_inline __alloc_size(1) void *kmalloc_noprof(size_t size, gfp_t f
- 	signed char:    kmalloc_sized(__size_force_positive(p), gfp), \
- 	signed short:   kmalloc_sized(__size_force_positive(p), gfp), \
- 	signed int:     kmalloc_sized(__size_force_positive(p), gfp), \
--	signed long:    kmalloc_sized(__size_force_positive(p), gfp))
-+	signed long:    kmalloc_sized(__size_force_positive(p), gfp), \
-+	default:	(typeof(__force_ptr_expr(p)))kmalloc_aligned(  \
-+				sizeof(*__force_ptr_expr(p)),	      \
-+				__alignof__(*__force_ptr_expr(p)), gfp))
- 
- #define kmem_buckets_alloc(_b, _size, _flags)	\
- 	alloc_hooks(__kmalloc_node_noprof(PASS_BUCKET_PARAMS(_size, _b), _flags, NUMA_NO_NODE))
-@@ -816,14 +820,11 @@ static inline __alloc_size(1, 2) void *kmalloc_array_node_noprof(size_t n, size_
- 
- /**
-  * kzalloc - allocate memory. The memory is set to zero.
-- * @size: how many bytes of memory are required.
-+ * @p: either a pointer to an object to be allocated or bytes of memory are required.
-  * @flags: the type of memory to allocate (see kmalloc).
-  */
--static inline __alloc_size(1) void *kzalloc_noprof(size_t size, gfp_t flags)
--{
--	return kmalloc_noprof(size, flags | __GFP_ZERO);
--}
--#define kzalloc(...)				alloc_hooks(kzalloc_noprof(__VA_ARGS__))
-+#define kzalloc(_p, _flags)			kmalloc(_p, (_flags)|__GFP_ZERO)
-+#define kzalloc_noprof(_size, _flags)		kmalloc_noprof(_size, (_flags)|__GFP_ZERO)
- #define kzalloc_node(_size, _flags, _node)	kmalloc_node(_size, (_flags)|__GFP_ZERO, _node)
- 
- void *__kvmalloc_node_noprof(DECL_BUCKET_PARAMS(size, b), gfp_t flags, int node) __alloc_size(1);
+ static inline int syscall_get_arch(struct task_struct *task)
 -- 
 2.34.1
 
