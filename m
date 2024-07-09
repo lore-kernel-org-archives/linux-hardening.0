@@ -1,258 +1,209 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 069BB12D1E0;
-	Tue,  9 Jul 2024 07:07:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.19
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720508837; cv=fail; b=DAE/SiMMT8fOvCslKmdAlGLe3fTYfP66+jDVCN4xdvWoSCHlvZL0MiGJxeOIZGSTej1D7r0Q6EYqnWLgZQQzGFx53Kwj4vAzVo1UrShjmyMcES2OvtrLk0MNuTmIIs+yZ65GnphSUZs5ulcofEOa1gia9G98uMvffjq08Vohqao=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720508837; c=relaxed/simple;
-	bh=6j2dAoL5twnC0Z+UhWkUF3/esKeEJd96kz6FKuNlLU8=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=c/YidIn9VNppKU3tPOnFFknMqyHRKhBGhhsYKdM5CM85CYTj07k2uiNSkAc3qXyhmqEkQgkID7Mrdxd5iChfyrrEO+I0GYl85YkdAYLa+Q66EtRXn8FFYk9W5RE5pGgbVdAlCF0TTA7R/aVeaXvvwe492RDtauGSCHRMqa/NuYY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P8xQH+sH; arc=fail smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CED81DA2F;
+	Tue,  9 Jul 2024 09:16:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720516560; cv=none; b=o46AuTjU/Oh2+A7B8xHMywvUTEh6lIxPcf6buc8eA1b+UWAgk3i94jb7bL0SvHuviHiq+q4yg2LTkw58Zrf4jOiEjgELNURKxioXlXegFK9Z/24bGlZXv7W3c2qx5YvvtqaFcWr3Qb+OwM5Hf8lCEjW/tfA+wyNSXd0kPEC9KxM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720516560; c=relaxed/simple;
+	bh=hK2QUQoSLsKZsz2jegmGiISGgACqpgV+13IffX5u+qA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Hpmhwe9C7pKFype5pMQ3KhGNl+0+F0MqfREeyOD+KduE8idQ3v7UnEEBpGkJ/USUsh04/IenZrDxOqkXoPr6jB97EVzTP+1kG/SjO4XwoJMB6AqYUVIFhw/YflpcyOJ1qKZZrUZTlzAFBELz3L0fNJTaiN/L5CyzI8xVS1G/wk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=b5CS9d8E; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P8xQH+sH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720508836; x=1752044836;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=6j2dAoL5twnC0Z+UhWkUF3/esKeEJd96kz6FKuNlLU8=;
-  b=P8xQH+sHFTsjbdHjOM9a4lPlZu5Qduk1HGZkmznKqrmCId4KPWpNFeRh
-   YutIN8ibal+AW20b8ar40CfHGx/OtdbO5zPYoTvG4pNSa0sCNIl454Rs/
-   LCZ+gdz4XL0GWiw415R7T7HXzw1nHh2hpzJhGnWFK4Dl5/Zlg6OMhxOaN
-   BjBe5Wz2XhmLp5Glf0KHAjwbwVR4dnjUEiUQth8Jxs1fTnwpxaSL1gc1D
-   WOsmOXxc7GYmLCQwtoOIX3+itHwRz1NUMN0QdDeVpdN+GN7T2aEZeLO1E
-   rznGhv5AyRdGo2xbsIkjpB6OIL0fT4h8lL5Z8TMQICe53VKDrqkGyDfEI
-   g==;
-X-CSE-ConnectionGUID: wivWOqUUTYyANBBSD1ZBcA==
-X-CSE-MsgGUID: qDLIrUdSQ1yZBVq2X9lPZg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11127"; a="17450241"
-X-IronPort-AV: E=Sophos;i="6.09,194,1716274800"; 
-   d="scan'208";a="17450241"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2024 00:07:10 -0700
-X-CSE-ConnectionGUID: 0mFuJes7RUWNulTqMnAuVg==
-X-CSE-MsgGUID: Hm74VzYfQJi81i25pqhJPQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,194,1716274800"; 
-   d="scan'208";a="52360671"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by fmviesa004.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 09 Jul 2024 00:07:10 -0700
-Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Tue, 9 Jul 2024 00:07:09 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Tue, 9 Jul 2024 00:07:09 -0700
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (104.47.73.40) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Tue, 9 Jul 2024 00:07:09 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aBoc35tiIWsShJOHCdSVeMFvhag/fiYi0nGU1GpEvMJjxZkpy7/DNyZuSFhOCJtsNqcxXkPsjCKz5o7BUS0889sxT+fQ5/nfU3tJWk8BkPOjH+tH8B0+BTl01gffb5tpG8Plyh4M9jIUAtYSOBJyKQt58Zxa/tyoyLw1NGdMmczgF/49rZ5b8XzIveku94ogRTMbzfB5lGBOy1OC87idk5oEH9Fdc3RFMfS2rE49bcExmKgbi7Z2dEE/epMLFdbAirA/iHH/E//x2eQ1JZtwdXT9CiiIY5LCiKzA2mPJ07kfchgrqAdFcVwwFyCqjX26AbxgsRwTamPtWFUvFlVopQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4zywVbsfQ274EOyKCzQ4oVj2enE9WL/FBmQSzLrOmJ4=;
- b=knTj0Fb5B1zSZLxpyKsZ2Q4Ml06Csug1s4bZ4SfvJrCp8I4BXFsVDTl6kFg5ePDJh0r3PXLWTXvikbe9A3/QhbOqy8FRp+OLYq3/l6MQ+DCf/qIE5EqRjMAL1CuQ9Cidx0XghjZdhgEKVu3n4qYD9dVgMf1QU9WQIAGhGbo6cXYbaMosklhudo/WPQflW9b27Qq07HePFlWBVDCC/20iiLUrPibcIn8NymQXXJHh9/tcgTuindoaJOt7LdHWeXeQhLjfwjF+bB9yB4P+8q3bOUNJFzX6KgIhToPSMNgdym8oDQcxdSrMwhTUSQKbPMP2ro/JMIqTXIvk99B+rMjkug==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from MN6PR11MB8102.namprd11.prod.outlook.com (2603:10b6:208:46d::9)
- by SJ0PR11MB6622.namprd11.prod.outlook.com (2603:10b6:a03:478::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.36; Tue, 9 Jul
- 2024 07:07:07 +0000
-Received: from MN6PR11MB8102.namprd11.prod.outlook.com
- ([fe80::15b2:ee05:2ae7:cfd6]) by MN6PR11MB8102.namprd11.prod.outlook.com
- ([fe80::15b2:ee05:2ae7:cfd6%7]) with mapi id 15.20.7741.033; Tue, 9 Jul 2024
- 07:07:06 +0000
-Message-ID: <093108ea-f567-4210-9f2e-eb8e5039d1eb@intel.com>
-Date: Tue, 9 Jul 2024 09:06:58 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC][PATCH 4/4] pstore: Replace classic kmalloc code pattern
- with typed argument
-To: Kees Cook <kees@kernel.org>, Vlastimil Babka <vbabka@suse.cz>
-CC: Tony Luck <tony.luck@intel.com>, "Guilherme G. Piccoli"
-	<gpiccoli@igalia.com>, <linux-hardening@vger.kernel.org>, Jann Horn
-	<jannh@google.com>, Nick Desaulniers <ndesaulniers@google.com>, Miguel Ojeda
-	<ojeda@kernel.org>, Marco Elver <elver@google.com>, Nathan Chancellor
-	<nathan@kernel.org>, Hao Luo <haoluo@google.com>, Christoph Lameter
-	<cl@linux.com>, Pekka Enberg <penberg@kernel.org>, David Rientjes
-	<rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, Andrew Morton
-	<akpm@linux-foundation.org>, Roman Gushchin <roman.gushchin@linux.dev>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>, Mark Rutland <mark.rutland@arm.com>,
-	Jakub Kicinski <kuba@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>,
-	"Alexander Lobakin" <aleksander.lobakin@intel.com>, Tony Ambardar
-	<tony.ambardar@gmail.com>, <linux-kernel@vger.kernel.org>,
-	<linux-mm@kvack.org>
-References: <20240708190924.work.846-kees@kernel.org>
- <20240708191840.335463-4-kees@kernel.org>
-From: Przemek Kitszel <przemyslaw.kitszel@intel.com>
-Content-Language: en-US
-In-Reply-To: <20240708191840.335463-4-kees@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: VI1PR07CA0151.eurprd07.prod.outlook.com
- (2603:10a6:802:16::38) To MN6PR11MB8102.namprd11.prod.outlook.com
- (2603:10b6:208:46d::9)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="b5CS9d8E"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E023C3277B;
+	Tue,  9 Jul 2024 09:15:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1720516560;
+	bh=hK2QUQoSLsKZsz2jegmGiISGgACqpgV+13IffX5u+qA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=b5CS9d8EmjYuSh4Oeec2RjoRUGGvRd0pLtlX6LmRJt4hCd5HbYeEb7JcMhMOETUiL
+	 nJGOijZI7omuHyu+1Qf35faihpB0P+eHXoiC/u41ezJKQHr3qA2gW9sxBtTIXizM63
+	 z1FgzWNtkl38ekbRw1GjxAc4UY7Jz4/WW8/AIhfs=
+Date: Tue, 9 Jul 2024 11:15:57 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: LEROY Christophe <christophe.leroy2@cs-soprasteria.com>
+Cc: WangYuli <wangyuli@uniontech.com>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>,
+	"sashal@kernel.org" <sashal@kernel.org>,
+	"ast@kernel.org" <ast@kernel.org>,
+	"keescook@chromium.org" <keescook@chromium.org>,
+	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+	"catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+	"song@kernel.org" <song@kernel.org>,
+	"puranjay12@gmail.com" <puranjay12@gmail.com>,
+	"daniel@iogearbox.net" <daniel@iogearbox.net>,
+	"andrii@kernel.org" <andrii@kernel.org>,
+	"martin.lau@linux.dev" <martin.lau@linux.dev>,
+	"yonghong.song@linux.dev" <yonghong.song@linux.dev>,
+	"john.fastabend@gmail.com" <john.fastabend@gmail.com>,
+	"kpsingh@kernel.org" <kpsingh@kernel.org>,
+	"sdf@google.com" <sdf@google.com>,
+	"haoluo@google.com" <haoluo@google.com>,
+	"jolsa@kernel.org" <jolsa@kernel.org>,
+	"illusionist.neo@gmail.com" <illusionist.neo@gmail.com>,
+	"linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+	"bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"chenhuacai@kernel.org" <chenhuacai@kernel.org>,
+	"kernel@xen0n.name" <kernel@xen0n.name>,
+	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
+	"johan.almbladh@anyfinetworks.com" <johan.almbladh@anyfinetworks.com>,
+	"paulburton@kernel.org" <paulburton@kernel.org>,
+	"tsbogend@alpha.franken.de" <tsbogend@alpha.franken.de>,
+	"linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+	"deller@gmx.de" <deller@gmx.de>,
+	"linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+	"iii@linux.ibm.com" <iii@linux.ibm.com>,
+	"hca@linux.ibm.com" <hca@linux.ibm.com>,
+	"gor@linux.ibm.com" <gor@linux.ibm.com>,
+	"agordeev@linux.ibm.com" <agordeev@linux.ibm.com>,
+	"borntraeger@linux.ibm.com" <borntraeger@linux.ibm.com>,
+	"svens@linux.ibm.com" <svens@linux.ibm.com>,
+	"linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+	"davem@davemloft.net" <davem@davemloft.net>,
+	"sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
+	"kuba@kernel.org" <kuba@kernel.org>,
+	"hawk@kernel.org" <hawk@kernel.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"dsahern@kernel.org" <dsahern@kernel.org>,
+	"tglx@linutronix.de" <tglx@linutronix.de>,
+	"mingo@redhat.com" <mingo@redhat.com>,
+	"bp@alien8.de" <bp@alien8.de>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+	"guanwentao@uniontech.com" <guanwentao@uniontech.com>,
+	"baimingcong@uniontech.com" <baimingcong@uniontech.com>
+Subject: Re: [PATCH] Revert "bpf: Take return from set_memory_rox() into
+ account with bpf_jit_binary_lock_ro()" for linux-6.6.37
+Message-ID: <2024070908-glade-granny-1137@gregkh>
+References: <5A29E00D83AB84E3+20240706031101.637601-1-wangyuli@uniontech.com>
+ <2024070631-unrivaled-fever-8548@gregkh>
+ <B7E3B29557B78CB1+afadbaa6-987e-4db4-96b5-4e4d5465c37b@uniontech.com>
+ <2024070815-udder-charging-7f75@gregkh>
+ <a1dac525-4e6d-4d28-87ee-63723abbafad@cs-soprasteria.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN6PR11MB8102:EE_|SJ0PR11MB6622:EE_
-X-MS-Office365-Filtering-Correlation-Id: 59973173-aae4-4897-8b1f-08dc9fe5be2e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?aURwNWpSVlZZbjNEQk55eUZHOTYxdWVCdlp2eFV0by9naWlGVklXNGNGdzJH?=
- =?utf-8?B?ODRFR3dzYlo3NDhuazdqV004WlpmVzIwQWxmbTdaYk84dGp1QmVqMW1WaVV6?=
- =?utf-8?B?UThRcUo2SEhUUzVhMnhva2xaOS9wZTBRYUhYZ21meXQ2ZXk2dG5QTnVTUCtx?=
- =?utf-8?B?MG10QzhFSzZyb01NdXhqSTlITHhYQnVoR1UyODdDRHJzQ0Jqc1pvOUpFZGRS?=
- =?utf-8?B?NStVMVpsTmpCeUlOdHRvT05oUFZYL3JFdmhFY29xOHVlcko5ZTJDdXgrejZT?=
- =?utf-8?B?aXpIZEVLTEY5RmtmbW9TN0huSUJ4bTUySlNoa2lOcy85dzByK21TVDFiRFpn?=
- =?utf-8?B?NXlxMlJXbFRnVCtMRHp4VUdOYXQ2emE3dE85eVAwaHNCUnRJeVdYODhUbUF5?=
- =?utf-8?B?TWpNU283Q0tRUG84MUYvUmZiczBUY2IxWEZ5bGFhaTQ2a25yREUzVEdJV1lG?=
- =?utf-8?B?bnpTaFJpQ3htbDdlWkcwazVNSXYvLzRKUFFyT05tRFVmTmppaFk5SGJCSzFz?=
- =?utf-8?B?R3JBMnZtQW00eU85c1dDQmFBcG1QTVZNcmVLUFlPa3ZtZjZLZ2g4WXdiZndh?=
- =?utf-8?B?SDJyYjR4aUhaNWZ1MmJwTk00MThGTjRXVlRjaklUanRiK05WdGpiZnVJeGoy?=
- =?utf-8?B?czkvSWNaV3NkSmExMys1b1VsQUxIZWc1ZHNQWVczdEM4N1g3YTM4MWNtUzV5?=
- =?utf-8?B?eW45VlkrSWJTaWdEYmZFWUNQajUrTThDVGFPdEtnNFc1emJOaUxpblAyQzZ4?=
- =?utf-8?B?UGJNTnRabnZRSUJTUEh4MEQyZENNWTUwVjR2NGNXOXh4UFc2b29vV3pqRmZm?=
- =?utf-8?B?VGloVEpoeHJMZU1GaTBRdHdxNHYwaUxZbDVXVCs4WGZyUFpJbDk4M1N3VWph?=
- =?utf-8?B?NktscHZEVXdyOVl0cU01Qzd3U0czOXgrcE5GNTlFT3FoU3RidXVlM1FJMzVt?=
- =?utf-8?B?YmNMRzIrWDB0VlI3VEtSNU9aMlpKVGVmbDdPUXZPYnQ5WXUzQy93OWR1alpJ?=
- =?utf-8?B?NGRzaHBNUjhNM0FrZEpRNEdwQTYrU2N3aThjREk5SHZ4VzVUSWttRWhxQWRq?=
- =?utf-8?B?cXF4U091eVFkQnpWUHRORHpieTdUZEgxZ2w4RVBzL1JCTW9Rb3cxT1ZlNWVS?=
- =?utf-8?B?MUtzRmFTSk1JQVU0RHM0cHhocDdidFkrMmcxNmpiM3h2M1I1ZGM2NGJMT05M?=
- =?utf-8?B?VnFSSFBUM3B2ZUdaLzVoQm1LMkdFTjdhSGVLOFdEaEtLSWlaRXdWSFdDOFZD?=
- =?utf-8?B?di9KdEtiUmpteFJLWGNjRXp1SkpKVzVseW9qT1pjMUg1MHZtNk1rSFhZOE4v?=
- =?utf-8?B?czlTei9kQkVrMWdlR1FLV0lFZGdhK0RqOWZudGM3L21FaWRJZjZxcmcxbkFr?=
- =?utf-8?B?cFAzeThLdWpQZi9FK0EvUFFlcnlkM0xQbHFpcWdxL2F3ZXNTKzUvdml4c3h5?=
- =?utf-8?B?RmlxNnlNNytxUFFCcUFmS05VZXlhVjc4TWw2cFdBQk96c1hZT2Vva0M1VVls?=
- =?utf-8?B?MjgzTTJPSDFJUkl6cFZ5Q1FDUjI3ZFczdURRSmFxUjVYc0s0cUc4MGluakNn?=
- =?utf-8?B?aCt6ZnhwUzhCcVJaTXpEY1NtOS9yN0JGYy9reTF2M2s0WVF0UkN3aGFrUkYw?=
- =?utf-8?B?aHdJMTN5dkFCaHZ4T0VHbDR4Um10aUM5b1RMajFFUXh0UEFzam9aSm10ZWdI?=
- =?utf-8?B?NkU2TVZPckU2NDlPQmdEWEloMTNWbVRaUzQ1OUoyckJaZzUrL3hWdmtQMkNF?=
- =?utf-8?B?MUpjemhKN3Z2NC9DNWJYbWJSSXltWGsrRDhUb2VtenNQODVZQTVtZytqbW45?=
- =?utf-8?B?Zm9RSkl5V1lFSVZReWp5dz09?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN6PR11MB8102.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?d2Qrd1pYOGowZXZ3Smc1dVZ6bFJpQSsrM1Bsd3JkeWR3NURqTW1hWjRaUUhW?=
- =?utf-8?B?ZDdzQ2VpK1htWktGcktjeGpvVEw3V3RDNTh6RExOcmdiQy9ubTNZZGJEU2NU?=
- =?utf-8?B?ZnZaMFFIZ1dMTHB5eWZObHBGSko2ZlZSQ2EwQWpTMnJUN1MwQk9vdVRZUVFp?=
- =?utf-8?B?YWV3SVZnbFJLVGd1UmVHNEFXM1JLN1BOY09ZNmkxWFJ2V2s4NUg1VlJIR050?=
- =?utf-8?B?L2lSeUZ0TmJoMkhMRUxFNDgxZ2xVSUhvL3UxKzhxeDdJa1VGSU93RmxQV2Nu?=
- =?utf-8?B?UXEwWUJRQml4OFJPR1ZmK2FnemZKR1RGODZzajRBeHR0dEdISDFFNkhmdUpi?=
- =?utf-8?B?SExKZG9WOGQzK3JMdUlYR0tPNEdValU4cFFRVnA3Y00vdFhtZi9QTjAxQnor?=
- =?utf-8?B?Wm9XVkJ4UFJ3dnc4N1pibjcxemJhNHh4dmJVOVZFOWNUTWM3TmRzbUEvWk1G?=
- =?utf-8?B?bnFTaGIxU2swSWVsUG15QkJRa1FpdE1kVjJ1ZlUvYnNrY09TM2FkcFArUTdO?=
- =?utf-8?B?cnRoK1pkbG1LQ2h6eHVvTXdiWjUzaWlRbTMwUVBuODlhMUdWcEloam1GNVFS?=
- =?utf-8?B?dkRmdGZ0eFFMRlVQN3NTZUVMdC8zZVBoNjBTV3p0NkhxSHVKNnVWcDl4L2U2?=
- =?utf-8?B?N1pLKzJRTXRLVWdUUUl0d09WUXAzSENaQ3FJejViRzNCOS9aNUM4Um9XRzlR?=
- =?utf-8?B?VVVXTnMwZ3cvL2p6V1FEMlA4VnJ5S0VEVkcrenlRcUY4RitTekgvSFBhR2FU?=
- =?utf-8?B?Unk5MTZuVmo2OTFhd0JVSFUxNXJMNXh6RHhDNVFvR1RxaXl0OXNjTkFCT0k3?=
- =?utf-8?B?MEZpVytKc294UGt3WFJZSzdHQm9pZjh2NDVHWGZWSHdCRG1NNGNkRWZXZFd0?=
- =?utf-8?B?bEpRUmNOb2ROTVlQUVFodzNJdnFURVhrUEdYVTl5QmdGTGV6Tjh6dVBuM0pB?=
- =?utf-8?B?aVZGak1iZ2s1dy9FcUFHcFFGV1hOQlRzdkpCdjNZcWZRMVVhUExVRGQzM29W?=
- =?utf-8?B?SDJMOHJyWnUvVGVVTVpOK2J0dno2SUV2OUdsemNBbTZOcW92cUdHUUFKREZT?=
- =?utf-8?B?OHlRaEhJZ1U2RXpZNllzbzB6MjBia3dCM3BsWllOK3AzYVJvTVg4a1p2bDBh?=
- =?utf-8?B?UmN3eHFhbzFCTXl4U3F5bU1tRnJWYWZlTW1zTVFFd0xhMkRmeWNMT0xDV002?=
- =?utf-8?B?UklyeER4bW12WUdUNURaN244WDJXN2xRdk9lNWRINnpTQk9Gd3dkM0xKdTgx?=
- =?utf-8?B?aURNUjQ0UlN6SzYwbE53TmtvUDM1d1RrUDJVdU1GQml4a1JYdlN5bkJwWDJn?=
- =?utf-8?B?Z1cvbFRhS0hINUswTzdQbmREQzRLT1NqMTArNVorczhpWDA1bHprbWR2RFBh?=
- =?utf-8?B?UGdsNklleUptb0J1alFMdk1sRjhpSUQyMXJsak0zZXI1OE9ra2JiVFgrc2dC?=
- =?utf-8?B?UXZ6OE44dGRiOWp1MEwzdzNBY1QvTDBZQ09iVWJPUXdnblV5WE1FOHgxVEVz?=
- =?utf-8?B?NEdzSmZoTWU0Mm9XVXdSeFMwT1RmWEcrR3hhZXBqTE5ZOXJWQjVaWHFNYklE?=
- =?utf-8?B?b1Z6b1VhRmw0TWNyVUp3YlV3VE1qaXM1ZjhKbWp5NkJJdUdTZDRRVlZ2djlC?=
- =?utf-8?B?emRDNWlPTGpUd1p3anJXQUMxMmVEY0NZcXN4Z3VHMS9HSElvT2EwUGIxa1Za?=
- =?utf-8?B?bWI5aFduektxWmROQmJnV1ZXY1NEQ2VGZktlamJNWmhRNlh4ZjM2OXRIdEo2?=
- =?utf-8?B?L1BzZFpGazBtcVBKZk9BczB2bkIvMkFKT0JYSmZ3L3dxeHV0QmJtN2VIajA4?=
- =?utf-8?B?VXVKQmpXTHhqWE9EOExieFdDTC9uUG5hMUZvcWxjUS9mbWxxYjJ6MHhJZTgw?=
- =?utf-8?B?TnZ2dy83bHdIeDJ6aExQWkkvb0kzL1JNbDNObDFNVk5MR0d6cjBYVlRSM2N1?=
- =?utf-8?B?blR5V3orWmV4NEdYelFWaTdmaVN5RGR6WWJXSGxybU41SE1Nc0JaZFBrSTNp?=
- =?utf-8?B?WHpZdHJ6dXpPd1pqS2lRNk1GUlNOQVBjN2lZVEJzUE9YTDRpeWdJOHhQWUpO?=
- =?utf-8?B?S3Zuak11T0ZvK3h1SHhzeW8rcWVud08veUE3djF2NFdCcEVWcEloMVJWMjNk?=
- =?utf-8?B?TEUzNndBK00rZWt1cmEyRFFONHRGYk1ucFpmSjRjMHljK1JXVm1jMmcxN1Y5?=
- =?utf-8?B?bkE9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 59973173-aae4-4897-8b1f-08dc9fe5be2e
-X-MS-Exchange-CrossTenant-AuthSource: MN6PR11MB8102.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jul 2024 07:07:06.7778
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 045L8g00upxbYN/NavK/t6nAqb5lGnBwyDXgIW25261Q4fYk5nlp7XZPY1fzC09t4HnItWtQ87D0P+GgJCkyJzkc3Zyi3FLGK3tF1ycFM5Y=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB6622
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a1dac525-4e6d-4d28-87ee-63723abbafad@cs-soprasteria.com>
 
-On 7/8/24 21:18, Kees Cook wrote:
-> Using a short Coccinelle script, it is possible to replace the classic
-> kmalloc code patterns with the typed information:
+On Mon, Jul 08, 2024 at 03:12:55PM +0000, LEROY Christophe wrote:
 > 
-> @alloc@
-> type TYPE;
-> TYPE *P;
-> expression GFP;
-> identifier ALLOC =~ "k[mz]alloc";
-> @@
 > 
-> 	P = ALLOC(
-> -		\(sizeof(*P)\|sizeof(TYPE)\), GFP)
-> +		P, GFP)
+> Le 08/07/2024 à 14:36, Greg KH a écrit :
+> > On Sun, Jul 07, 2024 at 03:34:15PM +0800, WangYuli wrote:
+> >>
+> >> On 2024/7/6 17:30, Greg KH wrote:
+> >>> This makes it sound like you are reverting this because of a build
+> >>> error, which is not the case here, right?  Isn't this because of the
+> >>> powerpc issue reported here:
+> >>>     https://lore.kernel.org/r/20240705203413.wbv2nw3747vjeibk@altlinux.org
+> >>> ?
+> >>
+> >> No, it only occurs on ARM64 architecture. The reason is that before being
+> >> modified, the function
+> >>
+> >> bpf_jit_binary_lock_ro() in arch/arm64/net/bpf_jit_comp.c +1651
+> >>
+> >> was introduced with __must_check, which is defined as
+> >> __attribute__((__warn_unused_result__)).
+> >>
+> >>
+> >> However, at this point, calling bpf_jit_binary_lock_ro(header)
+> >> coincidentally results in an unused-result
+> >>
+> >> warning.
+> >
+> > Ok, thanks, but why is no one else seeing this in their testing?
 > 
-> Show this just for kmalloc/kzalloc usage in fs/pstore as an example.
+> Probably the configs used by robots do not activate BPF JIT ?
 > 
-> Doing this for all allocator calls in the kernel touches much more:
+> >
+> >>> If not, why not just backport the single missing arm64 commit,
+> >>
+> >> Upstream commit 1dad391daef1 ("bpf, arm64: use bpf_prog_pack for memory
+> >> management") is part of
+> >>
+> >> a larger change that involves multiple commits. It's not an isolated commit.
+> >>
+> >>
+> >> We could certainly backport all of them to solve this problem, buthas it's not
+> >> the simplest solution.
+> >
+> > reverting the change feels wrong in that you will still have the bug
+> > present that it was trying to solve, right?  If so, can you then provide
+> > a working version?
 > 
->   11941 files changed, 22459 insertions(+), 22345 deletions(-)
+> Indeed, by reverting the change you "punish" all architectures because
+> arm64 hasn't properly been backported, is it fair ?
 > 
-> And obviously requires some more wrappers for kv*alloc, devm_*alloc,
-> etc.
+> In fact, when I implemented commit e60adf513275 ("bpf: Take return from
+> set_memory_rox() into account with bpf_jit_binary_lock_ro()"), we had
+> the following users for function bpf_jit_binary_lock_ro() :
 > 
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
-> Cc: Tony Luck <tony.luck@intel.com>
-> Cc: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-> Cc: linux-hardening@vger.kernel.org
-> ---
->   fs/pstore/blk.c      | 2 +-
->   fs/pstore/platform.c | 2 +-
->   fs/pstore/ram.c      | 3 +--
->   fs/pstore/ram_core.c | 2 +-
->   fs/pstore/zone.c     | 2 +-
->   5 files changed, 5 insertions(+), 6 deletions(-)
+> $ git grep bpf_jit_binary_lock_ro e60adf513275~
+> e60adf513275~:arch/arm/net/bpf_jit_32.c:
+> bpf_jit_binary_lock_ro(header);
+> e60adf513275~:arch/loongarch/net/bpf_jit.c:
+> bpf_jit_binary_lock_ro(header);
+> e60adf513275~:arch/mips/net/bpf_jit_comp.c:
+> bpf_jit_binary_lock_ro(header);
+> e60adf513275~:arch/parisc/net/bpf_jit_core.c:
+> bpf_jit_binary_lock_ro(jit_data->header);
+> e60adf513275~:arch/s390/net/bpf_jit_comp.c:
+> bpf_jit_binary_lock_ro(header);
+> e60adf513275~:arch/sparc/net/bpf_jit_comp_64.c:
+> bpf_jit_binary_lock_ro(header);
+> e60adf513275~:arch/x86/net/bpf_jit_comp32.c:
+> bpf_jit_binary_lock_ro(header);
+> e60adf513275~:include/linux/filter.h:static inline void
+> bpf_jit_binary_lock_ro(struct bpf_binary_header *hdr)
 > 
-> diff --git a/fs/pstore/blk.c b/fs/pstore/blk.c
-> index de8cf5d75f34..7bb9cacb380f 100644
-> --- a/fs/pstore/blk.c
-> +++ b/fs/pstore/blk.c
-> @@ -297,7 +297,7 @@ static int __init __best_effort_init(void)
->   		return -EINVAL;
->   	}
->   
-> -	best_effort_dev = kzalloc(sizeof(*best_effort_dev), GFP_KERNEL);
-> +	best_effort_dev = kzalloc(best_effort_dev, GFP_KERNEL);
->   	if (!best_effort_dev)
->   		return -ENOMEM;
-I expect raised eyebrows and typical vocalizations of amusement :D -
-IOW: we should consider changing the name of the macro, although I like
-it as is :)
+> But when commit 08f6c05feb1d ("bpf: Take return from set_memory_rox()
+> into account with bpf_jit_binary_lock_ro()") was applied, we had one
+> more user which is arm64:
+> 
+> $ git grep bpf_jit_binary_lock_ro 08f6c05feb1d~
+> 08f6c05feb1d~:arch/arm/net/bpf_jit_32.c:
+> bpf_jit_binary_lock_ro(header);
+> 08f6c05feb1d~:arch/arm64/net/bpf_jit_comp.c:
+> bpf_jit_binary_lock_ro(header);
+> 08f6c05feb1d~:arch/loongarch/net/bpf_jit.c:
+> bpf_jit_binary_lock_ro(header);
+> 08f6c05feb1d~:arch/mips/net/bpf_jit_comp.c:
+> bpf_jit_binary_lock_ro(header);
+> 08f6c05feb1d~:arch/parisc/net/bpf_jit_core.c:
+> bpf_jit_binary_lock_ro(jit_data->header);
+> 08f6c05feb1d~:arch/s390/net/bpf_jit_comp.c:
+> bpf_jit_binary_lock_ro(header);
+> 08f6c05feb1d~:arch/sparc/net/bpf_jit_comp_64.c:
+> bpf_jit_binary_lock_ro(header);
+> 08f6c05feb1d~:arch/x86/net/bpf_jit_comp32.c:
+> bpf_jit_binary_lock_ro(header);
+> 08f6c05feb1d~:include/linux/filter.h:static inline void
+> bpf_jit_binary_lock_ro(struct bpf_binary_header *hdr)
+> 
+> Therefore, commit 08f6c05feb1d should have included a backport for arm64.
+> 
+> So yes, I agree with Greg, the correct fix should be to backport to
+> ARM64 the changes done on other architectures in order to properly
+> handle return of set_memory_rox() in bpf_jit_binary_lock_ro().
 
-other:
-you repeat the pointer name twice, and code is magic anyway, so perhaps:
-	kzalloc_me(best_effort_dev, GFP_KERNEL);
-and another variant to cover declaration-with-init.
+Ok, but it looks like due to this series, the powerpc tree is crashing
+at the first bpf load, so something went wrong.  Let me go revert these
+4 patches for now, and then I will be glad to queue them up if you can
+provide a working series for all arches.
+
+thanks,
+
+greg k-h
