@@ -1,46 +1,67 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A192E14038F;
-	Tue,  9 Jul 2024 11:30:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47BE815B115;
+	Tue,  9 Jul 2024 12:54:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720524615; cv=none; b=puwh/SeAhhGRQuyxXrOjY+hblQmrc8SWztf7Dy/uZga0ki4RDORJos8NvG0OjLzBzS/k/c9oxwAbP8B4NXpP9c3zNrFshl1/7O/lfwUrdg5ipGFyRf/M9ezPDV8CiugwmpclVsBgp408aFSIxGnbGJyGY1i4bz7ZmRSG6vkuWJw=
+	t=1720529701; cv=none; b=b65CEOlzISOOun3831uGhAy3SvCufjWlpjDxU/o9oRdFiq/hNM+EC+5YCCPvQrVmieqD5ohjX5fYQ1DcTpZGRFzVYUDj7vQ0rXKRXG8BrHbrybeynCJHmz+ubUCOrUIO/R1ldvhWNR+EOhah/Swvw0jPJjL9xySgO+oqV5iIjXU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720524615; c=relaxed/simple;
-	bh=9RUv6v6pfqzuWb/WPV9LR8eL4tnbGOPRzRtrbew79Jg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gw3LBqshknLlPP700YDMk6k+6YFBkFricK8mQJM6wh9LFVR68bEhsspkNxqPluBp9FDgZm+CY0sUH3m4KmoZPBRgcx/XDJH1zsazA5iWyHOSBzlPSf22eHN3nyyK9rz9zELLZ6shKpShephgmAJeoCk8pNqXnsqK+FcoEA5sPrQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=O8AtBKKe; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="O8AtBKKe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD9FEC3277B;
-	Tue,  9 Jul 2024 11:30:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1720524615;
-	bh=9RUv6v6pfqzuWb/WPV9LR8eL4tnbGOPRzRtrbew79Jg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=O8AtBKKe9dmsXWFPVk/qWfDt86bcMPTEwUCa6aWMV4QrNxwd2f6wWAKZSqgtfFhHN
-	 SNIqXRmnn7dCWStbdjwPYvhXzDTKbQtKD8IWelo75OQDk1XUMZcZ94Zhq3wMG/14aO
-	 tfy165HmPtMKhk0Q845kqvPlsamELNdup3+zD5m0=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: stable@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	patches@lists.linux.dev,
+	s=arc-20240116; t=1720529701; c=relaxed/simple;
+	bh=9PO3TWvq+waQ74u3npd7fq5+Cw0Zco4GaDHQdeBV0Ec=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uZXTBwyYq6RJfn64S7H+DmFfjS0buwOu3zDbharMRRksmSfhmkjEyU76r+oU367RSqjzlMhBlUNYRJZXgyWSIvHWmay9p3uH8gYwTro3E5qa/pYxxQL3bmVJcA4JmCPPUAIqJUCOTegX8nbmT0ISKJFOAfxOnjB5q2fFAfbuWa4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2ee77db6f97so70411001fa.2;
+        Tue, 09 Jul 2024 05:54:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720529697; x=1721134497;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bYRK+lWxc+A6Zv3ZqTk81Q6ZiXhb7j50T+TrH+WeHaE=;
+        b=d4NzGO6xS4ApRQmhMJwCCCQpKGpI8ObQnMflBkpdCM0NwoCAJAgdK9cZXZG2cuOcYv
+         XtCbxygYCahQq8Ai/S57OahdH4bcCMlqvXFmS692uh8PomighMgssJupzfGbuD5HZ9Dv
+         sZgDxfgW3KjbN0Mej70VZntdBBObmHMR7T9wjYX6X1ggww1MN7fX+HZfiR+7gr2KUK1G
+         Eg5dW/iZoxkRx1Ul36oUSJbflk5tVP5FsnPK7d1yytIdCWmwkfFhdHffvt4MHz+TRwWA
+         JpDyLE93rjJXhCZdi2wtsdswbvUvBX5L5Iy0B7ZncVW7Rcyh2poyftY2M+lyHdsHUQrz
+         w9TQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX157WklpbOVIwGwZ5qJRWehoUfPH3R4fkCLxL7gkBLfZYhSo6Y55STsoqHiZvCtkELjUut978IoxTycYmffoQFuIce2fJa4VYX3SwUBAiNDWKkPoH/n4nm2oPT/VtB+MuQcGGLdH6A5/G/lFjL3x5MtrNl4Pm9pkndFzPUCqZh/3YqbIoB
+X-Gm-Message-State: AOJu0YyFYRoZ++CcKP+nQSMCkx2KZVb+ZZZBp/l8CTdhyUOt3HaM6L5b
+	LxuF09H71Y2uDTQByo72LqkHk4hKRleMRrmmx3qhC9XFFg7GBKcr
+X-Google-Smtp-Source: AGHT+IGUIUE8izYvb7NUGi91NFWWGNLL6W16JszYvLUzOoMkkOlxPTldAWE3Wghrd/STmPVD3c0d0g==
+X-Received: by 2002:a2e:9b0f:0:b0:2ee:8dce:2f92 with SMTP id 38308e7fff4ca-2eeb30ba7acmr21073781fa.1.1720529697040;
+        Tue, 09 Jul 2024 05:54:57 -0700 (PDT)
+Received: from localhost (fwdproxy-lla-006.fbsv.net. [2a03:2880:30ff:6::face:b00c])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a780a6e157bsm76326766b.80.2024.07.09.05.54.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jul 2024 05:54:56 -0700 (PDT)
+From: Breno Leitao <leitao@debian.org>
+To: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: keescook@chromium.org,
+	horms@kernel.org,
+	nex.sw.ncis.osdt.itp.upstreaming@intel.com,
 	linux-hardening@vger.kernel.org,
-	Justin Stitt <justinstitt@google.com>,
-	Phillip Potter <phil@philpotter.co.uk>,
-	Jens Axboe <axboe@kernel.dk>,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 042/102] cdrom: rearrange last_media_change check to avoid unintentional overflow
-Date: Tue,  9 Jul 2024 13:10:05 +0200
-Message-ID: <20240709110653.011490496@linuxfoundation.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240709110651.353707001@linuxfoundation.org>
-References: <20240709110651.353707001@linuxfoundation.org>
-User-Agent: quilt/0.67
-X-stable: review
-X-Patchwork-Hint: ignore
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Jiri Pirko <jiri@resnulli.us>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Johannes Berg <johannes.berg@intel.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	netdev@vger.kernel.org (open list:NETWORKING [GENERAL]),
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH net-next v2] netdevice: define and allocate &net_device _properly_
+Date: Tue,  9 Jul 2024 05:54:25 -0700
+Message-ID: <20240709125433.4026177-1-leitao@debian.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -49,74 +70,179 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-6.1-stable review patch.  If anyone has any objections, please let me know.
+From: Alexander Lobakin <aleksander.lobakin@intel.com>
 
-------------------
+In fact, this structure contains a flexible array at the end, but
+historically its size, alignment etc., is calculated manually.
+There are several instances of the structure embedded into other
+structures, but also there's ongoing effort to remove them and we
+could in the meantime declare &net_device properly.
+Declare the array explicitly, use struct_size() and store the array
+size inside the structure, so that __counted_by() can be applied.
+Don't use PTR_ALIGN(), as SLUB itself tries its best to ensure the
+allocated buffer is aligned to what the user expects.
+Also, change its alignment from %NETDEV_ALIGN to the cacheline size
+as per several suggestions on the netdev ML.
 
-From: Justin Stitt <justinstitt@google.com>
+bloat-o-meter for vmlinux:
 
-[ Upstream commit efb905aeb44b0e99c0e6b07865b1885ae0471ebf ]
+free_netdev                                  445     440      -5
+netdev_freemem                                24       -     -24
+alloc_netdev_mqs                            1481    1450     -31
 
-When running syzkaller with the newly reintroduced signed integer wrap
-sanitizer we encounter this splat:
+On x86_64 with several NICs of different vendors, I was never able to
+get a &net_device pointer not aligned to the cacheline size after the
+change.
 
-[  366.015950] UBSAN: signed-integer-overflow in ../drivers/cdrom/cdrom.c:2361:33
-[  366.021089] -9223372036854775808 - 346321 cannot be represented in type '__s64' (aka 'long long')
-[  366.025894] program syz-executor.4 is using a deprecated SCSI ioctl, please convert it to SG_IO
-[  366.027502] CPU: 5 PID: 28472 Comm: syz-executor.7 Not tainted 6.8.0-rc2-00035-gb3ef86b5a957 #1
-[  366.027512] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
-[  366.027518] Call Trace:
-[  366.027523]  <TASK>
-[  366.027533]  dump_stack_lvl+0x93/0xd0
-[  366.027899]  handle_overflow+0x171/0x1b0
-[  366.038787] ata1.00: invalid multi_count 32 ignored
-[  366.043924]  cdrom_ioctl+0x2c3f/0x2d10
-[  366.063932]  ? __pm_runtime_resume+0xe6/0x130
-[  366.071923]  sr_block_ioctl+0x15d/0x1d0
-[  366.074624]  ? __pfx_sr_block_ioctl+0x10/0x10
-[  366.077642]  blkdev_ioctl+0x419/0x500
-[  366.080231]  ? __pfx_blkdev_ioctl+0x10/0x10
-...
-
-Historically, the signed integer overflow sanitizer did not work in the
-kernel due to its interaction with `-fwrapv` but this has since been
-changed [1] in the newest version of Clang. It was re-enabled in the
-kernel with Commit 557f8c582a9ba8ab ("ubsan: Reintroduce signed overflow
-sanitizer").
-
-Let's rearrange the check to not perform any arithmetic, thus not
-tripping the sanitizer.
-
-Link: https://github.com/llvm/llvm-project/pull/82432 [1]
-Closes: https://github.com/KSPP/linux/issues/354
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Justin Stitt <justinstitt@google.com>
-Link: https://lore.kernel.org/lkml/20240507-b4-sio-ata1-v1-1-810ffac6080a@google.com
-Reviewed-by: Phillip Potter <phil@philpotter.co.uk>
-Link: https://lore.kernel.org/lkml/ZjqU0fbzHrlnad8D@equinox
-Signed-off-by: Phillip Potter <phil@philpotter.co.uk>
-Link: https://lore.kernel.org/r/20240507222520.1445-2-phil@philpotter.co.uk
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
+Signed-off-by: Breno Leitao <leitao@debian.org>
+Reviewed-by: Przemek Kitszel <przemyslaw.kitszel@intel.com>
 ---
- drivers/cdrom/cdrom.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changelog:
 
-diff --git a/drivers/cdrom/cdrom.c b/drivers/cdrom/cdrom.c
-index 416f723a2dbb3..8e3eeb96db63e 100644
---- a/drivers/cdrom/cdrom.c
-+++ b/drivers/cdrom/cdrom.c
-@@ -2372,7 +2372,7 @@ static int cdrom_ioctl_timed_media_change(struct cdrom_device_info *cdi,
- 		return -EFAULT;
+v2:
+ * Rebased Alexander's patch on top of f750dfe825b90 ("ethtool: provide
+   customized dim profile management").
+ * Removed the ALIGN() of SMP_CACHE_BYTES for sizeof_priv.
+
+v1:
+ * https://lore.kernel.org/netdev/90fd7cd7-72dc-4df6-88ec-fbc8b64735ad@intel.com
+
+ include/linux/netdevice.h | 12 +++++++-----
+ net/core/dev.c            | 30 ++++++------------------------
+ net/core/net-sysfs.c      |  2 +-
+ 3 files changed, 14 insertions(+), 30 deletions(-)
+
+diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
+index 93558645c6d0..f0dd499244d4 100644
+--- a/include/linux/netdevice.h
++++ b/include/linux/netdevice.h
+@@ -2199,10 +2199,10 @@ struct net_device {
+ 	unsigned short		neigh_priv_len;
+ 	unsigned short          dev_id;
+ 	unsigned short          dev_port;
+-	unsigned short		padded;
++	int			irq;
++	u32			priv_len;
  
- 	tmp_info.media_flags = 0;
--	if (tmp_info.last_media_change - cdi->last_media_change_ms < 0)
-+	if (cdi->last_media_change_ms > tmp_info.last_media_change)
- 		tmp_info.media_flags |= MEDIA_CHANGED_FLAG;
+ 	spinlock_t		addr_list_lock;
+-	int			irq;
  
- 	tmp_info.last_media_change = cdi->last_media_change_ms;
+ 	struct netdev_hw_addr_list	uc;
+ 	struct netdev_hw_addr_list	mc;
+@@ -2406,7 +2406,10 @@ struct net_device {
+ 
+ 	/** @irq_moder: dim parameters used if IS_ENABLED(CONFIG_DIMLIB). */
+ 	struct dim_irq_moder	*irq_moder;
+-};
++
++	u8			priv[] ____cacheline_aligned
++				       __counted_by(priv_len);
++} ____cacheline_aligned;
+ #define to_net_dev(d) container_of(d, struct net_device, dev)
+ 
+ /*
+@@ -2596,7 +2599,7 @@ void dev_net_set(struct net_device *dev, struct net *net)
+  */
+ static inline void *netdev_priv(const struct net_device *dev)
+ {
+-	return (char *)dev + ALIGN(sizeof(struct net_device), NETDEV_ALIGN);
++	return (void *)dev->priv;
+ }
+ 
+ /* Set the sysfs physical device reference for the network logical device
+@@ -3127,7 +3130,6 @@ static inline void unregister_netdevice(struct net_device *dev)
+ 
+ int netdev_refcnt_read(const struct net_device *dev);
+ void free_netdev(struct net_device *dev);
+-void netdev_freemem(struct net_device *dev);
+ void init_dummy_netdev(struct net_device *dev);
+ 
+ struct net_device *netdev_get_xmit_slave(struct net_device *dev,
+diff --git a/net/core/dev.c b/net/core/dev.c
+index 73e5af6943c3..6ea1d20676fb 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -11006,13 +11006,6 @@ void netdev_sw_irq_coalesce_default_on(struct net_device *dev)
+ }
+ EXPORT_SYMBOL_GPL(netdev_sw_irq_coalesce_default_on);
+ 
+-void netdev_freemem(struct net_device *dev)
+-{
+-	char *addr = (char *)dev - dev->padded;
+-
+-	kvfree(addr);
+-}
+-
+ /**
+  * alloc_netdev_mqs - allocate network device
+  * @sizeof_priv: size of private data to allocate space for
+@@ -11032,8 +11025,6 @@ struct net_device *alloc_netdev_mqs(int sizeof_priv, const char *name,
+ 		unsigned int txqs, unsigned int rxqs)
+ {
+ 	struct net_device *dev;
+-	unsigned int alloc_size;
+-	struct net_device *p;
+ 
+ 	BUG_ON(strlen(name) >= sizeof(dev->name));
+ 
+@@ -11047,21 +11038,12 @@ struct net_device *alloc_netdev_mqs(int sizeof_priv, const char *name,
+ 		return NULL;
+ 	}
+ 
+-	alloc_size = sizeof(struct net_device);
+-	if (sizeof_priv) {
+-		/* ensure 32-byte alignment of private area */
+-		alloc_size = ALIGN(alloc_size, NETDEV_ALIGN);
+-		alloc_size += sizeof_priv;
+-	}
+-	/* ensure 32-byte alignment of whole construct */
+-	alloc_size += NETDEV_ALIGN - 1;
+-
+-	p = kvzalloc(alloc_size, GFP_KERNEL_ACCOUNT | __GFP_RETRY_MAYFAIL);
+-	if (!p)
++	dev = kvzalloc(struct_size(dev, priv, sizeof_priv),
++		       GFP_KERNEL_ACCOUNT | __GFP_RETRY_MAYFAIL);
++	if (!dev)
+ 		return NULL;
+ 
+-	dev = PTR_ALIGN(p, NETDEV_ALIGN);
+-	dev->padded = (char *)dev - (char *)p;
++	dev->priv_len = sizeof_priv;
+ 
+ 	ref_tracker_dir_init(&dev->refcnt_tracker, 128, name);
+ #ifdef CONFIG_PCPU_DEV_REFCNT
+@@ -11148,7 +11130,7 @@ struct net_device *alloc_netdev_mqs(int sizeof_priv, const char *name,
+ 	free_percpu(dev->pcpu_refcnt);
+ free_dev:
+ #endif
+-	netdev_freemem(dev);
++	kvfree(dev);
+ 	return NULL;
+ }
+ EXPORT_SYMBOL(alloc_netdev_mqs);
+@@ -11203,7 +11185,7 @@ void free_netdev(struct net_device *dev)
+ 	/*  Compatibility with error handling in drivers */
+ 	if (dev->reg_state == NETREG_UNINITIALIZED ||
+ 	    dev->reg_state == NETREG_DUMMY) {
+-		netdev_freemem(dev);
++		kvfree(dev);
+ 		return;
+ 	}
+ 
+diff --git a/net/core/net-sysfs.c b/net/core/net-sysfs.c
+index 4c27a360c294..0e2084ce7b75 100644
+--- a/net/core/net-sysfs.c
++++ b/net/core/net-sysfs.c
+@@ -2028,7 +2028,7 @@ static void netdev_release(struct device *d)
+ 	 * device is dead and about to be freed.
+ 	 */
+ 	kfree(rcu_access_pointer(dev->ifalias));
+-	netdev_freemem(dev);
++	kvfree(dev);
+ }
+ 
+ static const void *net_namespace(const struct device *d)
 -- 
 2.43.0
-
-
 
