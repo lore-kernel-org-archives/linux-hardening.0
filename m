@@ -1,28 +1,28 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3427C158A1F;
-	Tue,  9 Jul 2024 11:22:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A192E14038F;
+	Tue,  9 Jul 2024 11:30:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720524122; cv=none; b=nduuNiaZWYjbpksb2PA8k3sSCROwh7Fwhw7RPaoWfjPBpo5MgJ9qTHTH3O3XQS6Uj23Bp2TAiHQGHwlHyRaNvdkEmqSsQXjPKLUJtza+vfc6l76Wh/bJUKLCQwFWh2jjZb0pXNJG4I959zMCc0HZ5ZhuWuQmGgNExkfk/QunxYo=
+	t=1720524615; cv=none; b=puwh/SeAhhGRQuyxXrOjY+hblQmrc8SWztf7Dy/uZga0ki4RDORJos8NvG0OjLzBzS/k/c9oxwAbP8B4NXpP9c3zNrFshl1/7O/lfwUrdg5ipGFyRf/M9ezPDV8CiugwmpclVsBgp408aFSIxGnbGJyGY1i4bz7ZmRSG6vkuWJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720524122; c=relaxed/simple;
-	bh=u4U8zQ4DX8W/i7HR7bVx4ZCmoPvPT1EJJOtUO7JR5lY=;
+	s=arc-20240116; t=1720524615; c=relaxed/simple;
+	bh=9RUv6v6pfqzuWb/WPV9LR8eL4tnbGOPRzRtrbew79Jg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XHsJJ2ZiU3Dwwk6x79cMLCUxQR2TCQgU3gzYI0rrsyc214332JkhgAUEL/tabA4zNHoQpCukZArVRpvCeoIDpLnX4nP+SG2n0PLbgk77mmYPZkuKLJt9WeCyh+K2XNjKBJNOt1SkKgg+ycfcQiPgsJ4P3ZAYxCoJF6TP+onqj0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=BveV8H7t; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=gw3LBqshknLlPP700YDMk6k+6YFBkFricK8mQJM6wh9LFVR68bEhsspkNxqPluBp9FDgZm+CY0sUH3m4KmoZPBRgcx/XDJH1zsazA5iWyHOSBzlPSf22eHN3nyyK9rz9zELLZ6shKpShephgmAJeoCk8pNqXnsqK+FcoEA5sPrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=O8AtBKKe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="BveV8H7t"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3A0CC3277B;
-	Tue,  9 Jul 2024 11:22:01 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="O8AtBKKe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD9FEC3277B;
+	Tue,  9 Jul 2024 11:30:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1720524122;
-	bh=u4U8zQ4DX8W/i7HR7bVx4ZCmoPvPT1EJJOtUO7JR5lY=;
+	s=korg; t=1720524615;
+	bh=9RUv6v6pfqzuWb/WPV9LR8eL4tnbGOPRzRtrbew79Jg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BveV8H7tnz3D9d+gjOdl0TtqOWnYpR2PJFQE7KChBi8oExW9g76UN8ynDm9/suYP3
-	 KukXdlhgQwy6PD1E/hW41nA4totP7XBjL1v5NEv2iQGsVKLKC9GT/xBaPwX9Gqi/Ak
-	 BLQV9833/WycXc1i9wgi+3UyBcZk1WIzpIR69sgs=
+	b=O8AtBKKe9dmsXWFPVk/qWfDt86bcMPTEwUCa6aWMV4QrNxwd2f6wWAKZSqgtfFhHN
+	 SNIqXRmnn7dCWStbdjwPYvhXzDTKbQtKD8IWelo75OQDk1XUMZcZ94Zhq3wMG/14aO
+	 tfy165HmPtMKhk0Q845kqvPlsamELNdup3+zD5m0=
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: stable@vger.kernel.org
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -32,12 +32,12 @@ Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Phillip Potter <phil@philpotter.co.uk>,
 	Jens Axboe <axboe@kernel.dk>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.9 078/197] cdrom: rearrange last_media_change check to avoid unintentional overflow
-Date: Tue,  9 Jul 2024 13:08:52 +0200
-Message-ID: <20240709110711.987507268@linuxfoundation.org>
+Subject: [PATCH 6.1 042/102] cdrom: rearrange last_media_change check to avoid unintentional overflow
+Date: Tue,  9 Jul 2024 13:10:05 +0200
+Message-ID: <20240709110653.011490496@linuxfoundation.org>
 X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240709110708.903245467@linuxfoundation.org>
-References: <20240709110708.903245467@linuxfoundation.org>
+In-Reply-To: <20240709110651.353707001@linuxfoundation.org>
+References: <20240709110651.353707001@linuxfoundation.org>
 User-Agent: quilt/0.67
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -49,7 +49,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-6.9-stable review patch.  If anyone has any objections, please let me know.
+6.1-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
@@ -103,10 +103,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/cdrom/cdrom.c b/drivers/cdrom/cdrom.c
-index a5e07270e0d41..20c90ebb3a3f6 100644
+index 416f723a2dbb3..8e3eeb96db63e 100644
 --- a/drivers/cdrom/cdrom.c
 +++ b/drivers/cdrom/cdrom.c
-@@ -2358,7 +2358,7 @@ static int cdrom_ioctl_timed_media_change(struct cdrom_device_info *cdi,
+@@ -2372,7 +2372,7 @@ static int cdrom_ioctl_timed_media_change(struct cdrom_device_info *cdi,
  		return -EFAULT;
  
  	tmp_info.media_flags = 0;
