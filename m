@@ -1,97 +1,83 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FAC01B86DC;
-	Tue,  9 Jul 2024 20:22:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46A5D14F108;
+	Tue,  9 Jul 2024 20:28:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720556526; cv=none; b=J9bhvDLi+y7GBuJlNK7HKWo3ccWcTvcOrT6suPnoLx58sGluzj7R//kkRhuM6w4P9PsEq7lPNykrD7mLNp8irabXHxqpaPaaNimfOplcsW6NuSc4CyGHPQcEjdvGGCdsBulLKk3FllS7kD7NSDO68OzaQYkaBPOTIL8QeSGAiek=
+	t=1720556929; cv=none; b=u6ZkntjW3tns4kKUaIR4A9ArqRCB75mxEqMZ1kQzrvN5OUgL4atI/YgHuTPEPRay9+R/kp/50V9t1x+IeytI1wvDz5UiZG/HHPS9dAF5gDfyVs/STTgW2/Zd9aUmc8IVfH+SIoB3sDu08WDmzeUeji+RWwijKQrDjaPf/8XjziU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720556526; c=relaxed/simple;
-	bh=RGmSQUGbWLYnF/rlMB7F8Gre8jpeZnVMx52cnn9GY6I=;
+	s=arc-20240116; t=1720556929; c=relaxed/simple;
+	bh=/od/8NDo7YI4mcGiqROSpWSo0Vq0Svc7ugQRRWHIgmA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YbxfFvDF2LC0SLgKpgj1W+oFoy9aPve9rMjMHvCIwpdWUpdNFP3Z8aaCqN5ca+OjHF92MEYeBhDzP4hjaMC91H6/4Yc/OSzPiQEjwuRYS+dAStomsi1IAZdG4G0U1P4rwNQX71s1x1fViFjBLeDbPfYw6acTZ2MXP/P6SpdkSQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-595712c49ebso1254433a12.0;
-        Tue, 09 Jul 2024 13:22:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720556524; x=1721161324;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vvRIuRA8Q0ILQxQtGh1N00X9AsqI+8Alg4FEVLSH3uQ=;
-        b=Lus1Yj2k85MlCxtWTR9+HlwU3KO/AWPP2oP2NMlJzE8DSDv8RQ0YTJOh16KRgiXV7Y
-         Rb7pmilR2ZAlNwrMLJyjZfpC6LbppdNbSG3aY1ewbqMX27YzgXOcnNgyXoB04bSyn/zL
-         beIXC4pXDkGK1c2FKFnh58U5dTa3e5cKsJecjjmircCbplANjBQ6PdAYiYjfQgcp4RoS
-         EplSKw5A2W6Dp1huMxGmBF9Ie3rWu9cWwdH15fRDuPIs64JjcFDtWMVH1ZjplLOW/vwG
-         ogonjGHKxvPzrYrLSu8IcAKVX461JS//EfuR/R+4DRvO6Gfl2E2zvqISlmaqMpnVO01X
-         nzLA==
-X-Forwarded-Encrypted: i=1; AJvYcCXq3alDlNxDzWSfR8gF/Dy+WcMSmdUbZtVRHi7K8TKS3+5mCrWRGPbPxrX7vE2XkedSWY53nR+Lz7zeFqm7yVJFGG/l7B9TVoUp81vmZHh+qSL8EoV7n+LcHxA0n8+heLXqhepRKLRfbl3ZlYtdrGIYVQjHlD89qrYzEYQx3Gt3V/1gurej
-X-Gm-Message-State: AOJu0YwY+3T/hzftJrqV3qD5hJpxypKXdgcROHM0oDos5dz0kB03GP68
-	FtDhY83rpoNs/LFnxhEIwQMhGG/9PDQLcqtumU6nlAsf6+C7TupsvIv6Xw==
-X-Google-Smtp-Source: AGHT+IGcKzyE8EOMfQ3OoW0Ujo4qjw7hNTfIbEERwMkINzHm41RRGPA3WbgjNLiDaSnmLTq5IifRmw==
-X-Received: by 2002:a17:907:724a:b0:a72:5a8c:87c6 with SMTP id a640c23a62f3a-a780b68a9d5mr252708166b.10.1720556523516;
-        Tue, 09 Jul 2024 13:22:03 -0700 (PDT)
-Received: from gmail.com (fwdproxy-lla-113.fbsv.net. [2a03:2880:30ff:71::face:b00c])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a780a6bcd09sm104633666b.19.2024.07.09.13.22.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jul 2024 13:22:03 -0700 (PDT)
-Date: Tue, 9 Jul 2024 13:22:00 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Eric Dumazet <edumazet@google.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	keescook@chromium.org, horms@kernel.org,
-	nex.sw.ncis.osdt.itp.upstreaming@intel.com,
-	linux-hardening@vger.kernel.org,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=BiN9AR/6oReREKTrbUAL9PNhj4sajiIB9XBgQpR+efn6FnvZQMrF58UKfEH5mAFceqXTC3hHcLRRGeK+jP1JHg/kZaIMeGnn/sUs24vzkLDu3/FGilxGXKkujQWqDtRRjkAtoo/68wjxeJJrGwaeor6Oei2O0YZOU3BAmrLLBG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EmTAyWIB; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EmTAyWIB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3159C3277B;
+	Tue,  9 Jul 2024 20:28:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720556928;
+	bh=/od/8NDo7YI4mcGiqROSpWSo0Vq0Svc7ugQRRWHIgmA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EmTAyWIBox6iTlNcpEjiozvHqqsaSQqmssiA3sRSEjudjhFFGUH0gF1m+YjkY2CtY
+	 DnGJk2CEvBT5c6skfOIQJWLXh7PMOn59Z9DucZ2qCfblOXYDhOWttvty4yVVgXun9C
+	 83539ZtY6woapgUb+Q3j2dnxwApt8TQa9hYehkmqHbC6p79ZnYv9wzQT4+XuN0eYWU
+	 FP1neFvEGOaNw5A0e0d0siPkwDYeNTj/8xxV3aGavRaE5m6o1gz95s3ZRP3pJUMthC
+	 Z+GvVb2J8T+GBT6MD8sAZvonOjYhPsd5ro0W4wIdcMnvesgHrjlbKYHgPBb6KHzuyf
+	 Mr+LX/keb3nuA==
+Date: Tue, 9 Jul 2024 13:28:48 -0700
+From: Kees Cook <kees@kernel.org>
+To: "Christoph Lameter (Ampere)" <cl@gentwo.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+	Tony Luck <tony.luck@intel.com>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>, Marco Elver <elver@google.com>,
+	Nathan Chancellor <nathan@kernel.org>, Hao Luo <haoluo@google.com>,
 	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Jiri Pirko <jiri@resnulli.us>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Johannes Berg <johannes.berg@intel.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	"open list:NETWORKING [GENERAL]" <netdev@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next v2] netdevice: define and allocate &net_device
- _properly_
-Message-ID: <Zo2b6DJDMXLm/dBK@gmail.com>
-References: <20240709125433.4026177-1-leitao@debian.org>
- <CANn89iJSUg8LJkpRrT0BWWMTiHixJVo1hSpt2-2kBw7BzB8Mqg@mail.gmail.com>
+	Pekka Enberg <penberg@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Jakub Kicinski <kuba@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Tony Ambardar <tony.ambardar@gmail.com>,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [RFC][PATCH 0/4] slab: Allow for type introspection during
+ allocation
+Message-ID: <202407091327.AEF6C020D@keescook>
+References: <20240708190924.work.846-kees@kernel.org>
+ <a1fd42b5-50b7-1360-4fd0-8f590dc08e02@gentwo.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANn89iJSUg8LJkpRrT0BWWMTiHixJVo1hSpt2-2kBw7BzB8Mqg@mail.gmail.com>
+In-Reply-To: <a1fd42b5-50b7-1360-4fd0-8f590dc08e02@gentwo.org>
 
-On Tue, Jul 09, 2024 at 08:27:45AM -0700, Eric Dumazet wrote:
-> On Tue, Jul 9, 2024 at 5:54 AM Breno Leitao <leitao@debian.org> wrote:
+On Tue, Jul 09, 2024 at 10:26:32AM -0700, Christoph Lameter (Ampere) wrote:
+> On Mon, 8 Jul 2024, Kees Cook wrote:
+> 
+> > 
+> >            obj = kmalloc(obj, gfp);
+> 
+> Could we avoid repeating "obj" in this pattern?
+> 
+> F.e.
+> 
+> 	KMALLOC(obj, gfp);
 
-> > @@ -2596,7 +2599,7 @@ void dev_net_set(struct net_device *dev, struct net *net)
-> >   */
-> >  static inline void *netdev_priv(const struct net_device *dev)
-> >  {
-> > -       return (char *)dev + ALIGN(sizeof(struct net_device), NETDEV_ALIGN);
-> > +       return (void *)dev->priv;
+This appears to be the common feedback, which is good! :) And we can
+still have it return "obj" as well, so it could still be used in
+"return" statements, etc. I will work up a new RFC...
 
-> Minor remark : the cast is not needed, but this is fine.
-
-Thanks. I will fix it in a v3, which needs to be done to address some
-kernel-doc warnings identified by Simon..
-
-> It would be great to get rid of NETDEV_ALIGN eventually.
-
-Would you mind sharing what do you have in mind? What do you use as a
-replacement?
-
-Thanks
+-- 
+Kees Cook
