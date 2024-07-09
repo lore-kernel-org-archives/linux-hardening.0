@@ -1,57 +1,68 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75A3817B02B;
-	Tue,  9 Jul 2024 18:57:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2C061B86E2;
+	Tue,  9 Jul 2024 20:19:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720551440; cv=none; b=So2f6MplG8M3KD8ybRigTtVetRuouc4WoFJBPNy3jpSCZjJlD83VZxjVYbyThutzCmWkX9F+mr3bJXlVBvTyiulL3E8UltYoSA6Z1YL3z9hlQrqb4kMNCfJVCKRy9cqPBFGXremMqHuSqSe/PsstjDu8OTMZd8QqZOEUz02t/oc=
+	t=1720556394; cv=none; b=IzB39szuMJr4Vy9Bzp/OHPZKOQpZQMqNchUY7dhnfGibOIUwEmJqn7DzhdxlTOQR8cuUYAGIss7HAuc+ZRlgiGEavqLmyU1SyVOCCv0ZXMKO8Kb4LCGN6zhVSPiBmbjZySBGmqtlmDM/+DdJWrd0JnRL8VhARDCTq5CrSwpSb9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720551440; c=relaxed/simple;
-	bh=BwqLwtrExU9DV27J8IQjRT372nw9zEI5Ny0egiaWJK0=;
+	s=arc-20240116; t=1720556394; c=relaxed/simple;
+	bh=xEnkJp0gArq0WuiIGLrWX7kpveK7Rf68JlO+T6b+QWw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cDq6iuj8qCUnUJExK2g38drc+goaIfq8SMficEUH1SzxnWAoL8HFYzGUbn1NGvABt7/C7nkXmkTF4RmBiXHCgkqNurG0I5ZOhHDZInuB/NSs2yaiExaXsWxDutNgiKmLFF6FOa/YGqFKajXz3zszcLjwgiD9OMn6rmNWh0zzemc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qjA4DhPT; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qjA4DhPT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D266C3277B;
-	Tue,  9 Jul 2024 18:57:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720551440;
-	bh=BwqLwtrExU9DV27J8IQjRT372nw9zEI5Ny0egiaWJK0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qjA4DhPTcZp05JxJcSy1L2Va3w0tst+HrK3SIOmEDlwoPPukKJpcmhbgEmohx7JsX
-	 s1GE0DRFDYeR6retitf/mErPEDNWRiFd4yLAPR2bQh7q8/y9CPtakLg5/4GYyZdjQo
-	 UDCzjHdU1PDeaQIhO70yosfSXscEwARJFFOpTkw8cqJlhKB6LBYY8uFt2H+wykGGCT
-	 qawYbjR3V4BCYphgrCMMBDvORtJAWiQV7Cfylu1ifVMMSR/DEBLEGt8kVdAGOCMexV
-	 p2wa7q4hTZ0vUvvQzcrYIc3m+fI56nzLlhWx8xn95VtnohVJ0EllmlzLTeqNrWjJh2
-	 LzPYSJRa4R5HQ==
-Date: Tue, 9 Jul 2024 11:57:19 -0700
-From: Kees Cook <kees@kernel.org>
-To: Roman Gushchin <roman.gushchin@linux.dev>
-Cc: Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Miguel Ojeda <ojeda@kernel.org>, Marco Elver <elver@google.com>,
-	Nathan Chancellor <nathan@kernel.org>, Hao Luo <haoluo@google.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
-	David Rientjes <rientjes@google.com>,
-	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Jakub Kicinski <kuba@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=PYth/0N561HhcaH05Sn/mRtIVQAznPBNo7IJnCmWUWWsQQbsyRT38teYXFVkuRjAv8shocGp518iHx7JB+z0x4bGO9f8k5aX9iAXfN+Cllx2Xn3BVk/OS80Pig3/i7zs1rUKvezqcOXuVb0EB/xwWkqGWesR30aTR8MLlj7Ym5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a77e7420697so449393266b.1;
+        Tue, 09 Jul 2024 13:19:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720556391; x=1721161191;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0QdwLBn0J0GvcOGX8RCaus4UscnHhqmUU5ndiMC5O8g=;
+        b=eoNWSzVEtdlcsVSp5dilNzqBS39mFvrnTJKNe8JfaLPv8kIWPgecKNubfgwSUqgNCk
+         x4q4gdI+r8DuZNFu/KKHN7AMGFXggRfdDicKdfkFSIbG6h+IfW0Eu+DzfA9MmWfFWlsf
+         +Do1xqeJhA+dT+bF6ENoZAfA+dpMSr65Sg+kT6CThFCPJGRnnSvnr8ojzfJ1pw/yfEZw
+         0g8y2uJRS1oJLUan7yA6W/ELdy675hQN9zfsaKDZhrlP4Jm88LUvZz9xceYkI53Y2Rae
+         61nkzfTQo3G82xOszhSDcDjT3oTRvjsOHpmpxIEVIQJd/vDbOj9uGd1HSdXfbXCKUPuB
+         JsKg==
+X-Forwarded-Encrypted: i=1; AJvYcCXFahAfbDtiSliKqzi8Vlz0LSK4PPe6LTu1COO5WUQF+1+U2bay7OaWQudl5B2/cAf2pYxQ/vGGQAs65g2yg/Fm82VpoNhJtOMK8wzn+4Z+E4NIUUV1oLHwt6f11Cuf4+9p/VqcWy5GGkyBoTk4Fx7aXbcFLdmP/qW2uoTJiJNILxSQF2SV
+X-Gm-Message-State: AOJu0YxXRJFcs6aCT8yBqyT+aL7eytWpUGlbqUf6wWqiF1t6qvFFzmH8
+	hKq48Yg6qLQXTVhxPJebAOaSG9j0u62YsU5Tb4A38bPR7NCZ6A62
+X-Google-Smtp-Source: AGHT+IFTuzuG2o8aRh8UmWLGLFL1aRSNIl6PJfXxcZm/FrqMW/4oTQzx4CkvKw7vlTSzm0wmrSLi2w==
+X-Received: by 2002:a17:906:4a54:b0:a77:f2c5:84bf with SMTP id a640c23a62f3a-a780b6881ecmr186015466b.2.1720556387362;
+        Tue, 09 Jul 2024 13:19:47 -0700 (PDT)
+Received: from gmail.com (fwdproxy-lla-006.fbsv.net. [2a03:2880:30ff:6::face:b00c])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a780a8720f9sm103530966b.220.2024.07.09.13.19.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jul 2024 13:19:47 -0700 (PDT)
+Date: Tue, 9 Jul 2024 13:19:44 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Simon Horman <horms@kernel.org>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	keescook@chromium.org, nex.sw.ncis.osdt.itp.upstreaming@intel.com,
+	linux-hardening@vger.kernel.org,
 	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Tony Ambardar <tony.ambardar@gmail.com>,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [RFC][PATCH 0/4] slab: Allow for type introspection during
- allocation
-Message-ID: <202407091155.1D0D7584@keescook>
-References: <20240708190924.work.846-kees@kernel.org>
- <Zo1sAhEEN8ep7XZg@google.com>
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Jiri Pirko <jiri@resnulli.us>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Johannes Berg <johannes.berg@intel.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	"open list:NETWORKING [GENERAL]" <netdev@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next v2] netdevice: define and allocate &net_device
+ _properly_
+Message-ID: <Zo2bYCAVQaViN6z8@gmail.com>
+References: <20240709125433.4026177-1-leitao@debian.org>
+ <20240709181128.GO346094@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -60,66 +71,46 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Zo1sAhEEN8ep7XZg@google.com>
+In-Reply-To: <20240709181128.GO346094@kernel.org>
 
-On Tue, Jul 09, 2024 at 04:57:38PM +0000, Roman Gushchin wrote:
-> On Mon, Jul 08, 2024 at 12:18:34PM -0700, Kees Cook wrote:
-> > Hi,
+On Tue, Jul 09, 2024 at 07:11:28PM +0100, Simon Horman wrote:
+> On Tue, Jul 09, 2024 at 05:54:25AM -0700, Breno Leitao wrote:
+> > From: Alexander Lobakin <aleksander.lobakin@intel.com>
 > > 
-> > This is an RFC for some changes I'd like to make to the kernel's
-> > allocators (starting with slab) that allow for type introspection, which
-> > has been a long-time gap in potential analysis capabilities available
-> > at compile-time. The changes here are just a "first step" example that
-> > updates kmalloc() and kzalloc() to show what I'm thinking we can do,
-> > and shows an example conversion within the fs/pstore tree.
+> > In fact, this structure contains a flexible array at the end, but
+> > historically its size, alignment etc., is calculated manually.
+> > There are several instances of the structure embedded into other
+> > structures, but also there's ongoing effort to remove them and we
+> > could in the meantime declare &net_device properly.
+> > Declare the array explicitly, use struct_size() and store the array
+> > size inside the structure, so that __counted_by() can be applied.
+> > Don't use PTR_ALIGN(), as SLUB itself tries its best to ensure the
+> > allocated buffer is aligned to what the user expects.
+> > Also, change its alignment from %NETDEV_ALIGN to the cacheline size
+> > as per several suggestions on the netdev ML.
 > > 
-> > Repeating patch 3's commit log here:
+> > bloat-o-meter for vmlinux:
 > > 
-> >     There is currently no way for the slab to know what type is being
-> >     allocated, and this hampers the development of any logic that would need
-> >     this information including basic type checking, alignment need analysis,
-> >     etc.
-> >     
-> >     Allow the size argument to optionally be a variable, from which the
-> >     type (and there by the size, alignment, or any other features) can be
-> >     determined at compile-time. This allows for the incremental replacement
-> >     of the classic code pattern:
-> >     
-> >             obj = kmalloc(sizeof(*obj), gfp);
-> >     
-> >     into:
-> >     
-> >             obj = kmalloc(obj, gfp);
-> >     
-> >     As an additional build-time safety feature, the return value of kmalloc()
-> >     also becomes typed so that the assignment and first argument cannot drift,
-> >     doing away with the other, more fragile, classic code pattern:
-> >     
-> >             obj = kmalloc(sizeof(struct the_object), gfp);
-> >     
-> >     into:
-> >     
-> >             obj = kmalloc(obj, gfp);
+> > free_netdev                                  445     440      -5
+> > netdev_freemem                                24       -     -24
+> > alloc_netdev_mqs                            1481    1450     -31
+> > 
+> > On x86_64 with several NICs of different vendors, I was never able to
+> > get a &net_device pointer not aligned to the cacheline size after the
+> > change.
+> > 
+> > Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
+> > Signed-off-by: Breno Leitao <leitao@debian.org>
+> > Reviewed-by: Przemek Kitszel <przemyslaw.kitszel@intel.com>
 > 
-> I like the idea, however it's not as simple and straightforward because
-> it's common for structures to have a variable part (usually at the end)
-> and also allocate more than one structure at once.
+> Hi Breno,
 > 
-> There are many allocations which look like
-> 	kmalloc(sizeof(my_struct) * 2 + SOME_MAGIC_LENGTH, GFP_...)
-> or something like this, which you can't easily convert to your scheme.
+> Some kernel doc warnings from my side.
 
-Right -- and with this we can leave those as-is initially (since a size
-argument will still work).
+Thanks. I will send a v3 with the fixes.
 
-> The only option I see is to introduce the new set of functions/macros,
-> something like kmalloc_obj() or kmalloc_struct(). Or maybe tmalloc()?
-> (t for typed)
+> Flagged by: kernel-doc -none
 
-Yeah, in a neighboring thread I was talking about a kmalloc_obj that
-would handle fixed-sized structs, flexible array structs, and arrays. I
-need to prove out the array part, but the first two should be trivial to
-implement.
+How do you run this test exactly? I would like to add to my workflow.
 
--- 
-Kees Cook
+Thanks!
