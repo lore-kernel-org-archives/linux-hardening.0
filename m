@@ -1,107 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC921194C7D;
-	Wed, 10 Jul 2024 16:29:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABF5B7641E
+	for <linux-hardening@vger.kernel.org>; Wed, 10 Jul 2024 17:04:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720628988; cv=none; b=fXKpTBWjA6c4ppbrrI1CsACCRe+suKxsXEEBzgWnwDMx5WSlrkXF2J3gbJcnM3COifl5hpH7zBBU4s+ejhe663ZWYj8ff4IP59YaBGk/0bs/wPvuow1UJnbTHKpLYv4uHRDhSBrBYA6Jv7tYGzVOx9QPBZIPp+lBoGehzAyswwU=
+	t=1720631097; cv=none; b=DJIICnsuEedzDpISglXHRxfOg9SXTBTV6dfs2vzHKev5r2jlnwUz5qFftKgGN3kNrtxllwnGB4t0xl6afPEQ1RdgrbRrS5p9japbYUqsn67MuUzERJ3KCFRZN7pIP7uSCF0ZbWhuFWspaRADsVAhZo6wZaTZOBIcgNZBaLQ/dbE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720628988; c=relaxed/simple;
-	bh=bx9D8NKwTdRINZb3r2LnlQ1Wd7RT9h4+RBDqcerlajk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kj8hJK1JHvwvt4B06thB3/PLkVVAQxv2txlH3BdFewBg/xLP2AaJ+MorMfINCgJkmNlJr3niHnWO0j0i2/et1czqx+5pegMfnHmx2OtJRvwz8HJTPkaiGnrjJ1Cr8nwGMVft7AoCsulxCRrG7UyIUYuXWLgRyQgbYtgX+37MQrQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OEGi+sto; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720631097; c=relaxed/simple;
+	bh=oq70z4/bCsrC1GoQvBoxOPOia/ExqElmdDJ/iZsXfL8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=vB5/AOmUrahvezV+cfiLr7R4VXV8oxg+qlmj7wqnPrkZ+hTL43vWvNciK3BEk8godIc44XzRSxFQAQdavca/x6BL78dYpEVGlSUSxjoK3gqWPYUaXCuxiOvNenVPBdGCBpHZdhLuQEXdQml/RdrFx7JV9eWaq1DG24Kqr4TwgaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TB1BeChD; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OEGi+sto"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66CAAC32781;
-	Wed, 10 Jul 2024 16:29:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720628987;
-	bh=bx9D8NKwTdRINZb3r2LnlQ1Wd7RT9h4+RBDqcerlajk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OEGi+stov8aPkMbYfVULNzrQjikFEyCT3EM9gGTyjbSuUAphaNf3gCpn3ouKGyqcT
-	 hNkWbmQD+qJdAxpxMTsxKFFTMZntrG3Ugcr6uGKzyWLWCiIOE0By3uvVtxecA7+MWP
-	 5T2SPF9cSxrnjJ7jk9AJved5hoS9CPaA4oOP6pHuJlZSPfunbN5Z17FR9J/oUE+c1F
-	 bTF+mPfyhTwMpMK9GG3QRb10j0hjziso00LbfCyI90ksnaHRI55dX0il9kFM+nZ9MI
-	 OEW3OCRzNZQaKNYPpkTo46plPVDtbtR9SRtQnyFPGHM7dWgXAIFpNprL7wxRa4MxGU
-	 1LaiYSmqiKfeg==
-Date: Wed, 10 Jul 2024 09:29:46 -0700
-From: Kees Cook <kees@kernel.org>
-To: Alexander Lobakin <aleksander.lobakin@intel.com>
-Cc: Breno Leitao <leitao@debian.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, horms@kernel.org,
-	linux-hardening@vger.kernel.org,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Jiri Pirko <jiri@resnulli.us>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Johannes Berg <johannes.berg@intel.com>,
-	"open list:NETWORKING [GENERAL]" <netdev@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next v3] netdevice: define and allocate &net_device
- _properly_
-Message-ID: <202407100927.3CA9DE888A@keescook>
-References: <20240710113036.2125584-1-leitao@debian.org>
- <0664910d-026d-49b8-8b70-a5c881888761@intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TB1BeChD"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-58c0abd6b35so456a12.0
+        for <linux-hardening@vger.kernel.org>; Wed, 10 Jul 2024 10:04:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1720631094; x=1721235894; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1HGeZAs5GCO0/ogUU/V9u51auuYtWzKSV+J+gDPs5AQ=;
+        b=TB1BeChDHW6vSnVRI/5kHSoCHullabm7gJQ8B/sVA71vlWgHTfigpyqjJ8WGjR4bgC
+         y+Y+SsWXzDiCivYqRr1IfKBImgLQsUc4ew+xQk+Xjw8X0SO5mHQA+5y1C940Dd8hFL25
+         eqtNo0BlH/H58pmNwi2b6ffDA8GNUIGW8c5TLCgi5S3D6z1gloUiAAJh+tNo/dTulMIr
+         nnf/tWDEfbaDIlTF9Uul5n5sGJSt1su5lO9xdISDIODoc0+Va3WOcwuQ/UK9iI8pLm7t
+         k64K0XjuGXp2c1n5YWr5lKJ9QxJI3HM7kB61aNljVpcNUofckiKgKbprRd8kGUsnFMGg
+         3+ew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720631094; x=1721235894;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1HGeZAs5GCO0/ogUU/V9u51auuYtWzKSV+J+gDPs5AQ=;
+        b=wqeTVNtVRXizDeMII6BHAHAdloXYiWIYpmvkFD1WdDKuqHcRVUtrJZBcoPnGjE4n1q
+         FbRGNfZHbHWMUZCe1mtD6osV9t1921Sf4n37kMUq69fRJCL/DptXHhU0Dh2ZuQi5xZ/3
+         VqenTL7s0oYUtfuSeQ7qySh/YOcOAUsFDDHvGOhY+hKTsbvNEFqd4jalM1YQioxYe/Om
+         c3nHeBPneUVAaV16GEg6p4zw7nG3RBeWKpTYXXjJIpWiofoRtTRsRaAMeCM7W/XJOkfo
+         Wt57AWr7gg3FS1F9Ege95kho6fL1WrHQ/CijGskfa1kTUUbNcVcVT0yoYkqpyatk6Qbt
+         HyKA==
+X-Forwarded-Encrypted: i=1; AJvYcCVloD6Beo3MkoJrHaU4obd6rnZ7BfXTxboRpXMB09f/3g9JhKy2KZhTLhBoeQnntunD0FnTCTcBSv1+iASsNJUHz8UWCvafzTi6qrSr3wNi
+X-Gm-Message-State: AOJu0YyCbkBPMiTrGgqw6mV8QH9/k/Pu/GYpWqmdw6EWhVsEwVv2enZy
+	NPFY5qKVNgXlfrayPnCj/FfMu9gRuraJRizQ0U2XCiSnhBi/Vdh9iW0UZeHdvHd6Zu/ewmZ4oqN
+	UJROQlba/vwdeOICBv4eATBP2eGE7vXtGh2gN
+X-Google-Smtp-Source: AGHT+IFY/CNV/3qrOH0Lh/APA9kMWu5yookxnY4Qhb2zRpXDPgqdWc1JKzZnJgXLhNnDQvH3c7i3SF5iReQ6xkV6bXo=
+X-Received: by 2002:a50:8716:0:b0:58b:15e4:d786 with SMTP id
+ 4fb4d7f45d1cf-596f914a15amr216846a12.5.1720631093774; Wed, 10 Jul 2024
+ 10:04:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0664910d-026d-49b8-8b70-a5c881888761@intel.com>
+References: <20240709125433.4026177-1-leitao@debian.org> <CANn89iJSUg8LJkpRrT0BWWMTiHixJVo1hSpt2-2kBw7BzB8Mqg@mail.gmail.com>
+ <Zo5uRR8tOswuMhq0@gmail.com>
+In-Reply-To: <Zo5uRR8tOswuMhq0@gmail.com>
+From: Eric Dumazet <edumazet@google.com>
+Date: Wed, 10 Jul 2024 10:04:39 -0700
+Message-ID: <CANn89iLssOFT2JDfjk9LYh8SVzWZv8tRGS_6ziTLcUTqvqTwYQ@mail.gmail.com>
+Subject: Re: [PATCH net-next v2] netdevice: define and allocate &net_device _properly_
+To: Breno Leitao <leitao@debian.org>
+Cc: "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, keescook@chromium.org, horms@kernel.org, 
+	nex.sw.ncis.osdt.itp.upstreaming@intel.com, linux-hardening@vger.kernel.org, 
+	Alexander Lobakin <aleksander.lobakin@intel.com>, 
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>, Jiri Pirko <jiri@resnulli.us>, 
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Lorenzo Bianconi <lorenzo@kernel.org>, Johannes Berg <johannes.berg@intel.com>, 
+	Heiner Kallweit <hkallweit1@gmail.com>, 
+	"open list:NETWORKING [GENERAL]" <netdev@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 10, 2024 at 04:01:35PM +0200, Alexander Lobakin wrote:
-> From: Breno Leitao <leitao@debian.org>
-> Date: Wed, 10 Jul 2024 04:30:28 -0700
-> 
-> > From: Alexander Lobakin <aleksander.lobakin@intel.com>
-> > 
-> > In fact, this structure contains a flexible array at the end, but
-> > historically its size, alignment etc., is calculated manually.
-> > There are several instances of the structure embedded into other
-> > structures, but also there's ongoing effort to remove them and we
-> > could in the meantime declare &net_device properly.
-> > Declare the array explicitly, use struct_size() and store the array
-> > size inside the structure, so that __counted_by() can be applied.
-> > Don't use PTR_ALIGN(), as SLUB itself tries its best to ensure the
-> > allocated buffer is aligned to what the user expects.
-> > Also, change its alignment from %NETDEV_ALIGN to the cacheline size
-> > as per several suggestions on the netdev ML.
-> > 
-> > bloat-o-meter for vmlinux:
-> > 
-> > free_netdev                                  445     440      -5
-> > netdev_freemem                                24       -     -24
-> > alloc_netdev_mqs                            1481    1450     -31
-> > 
-> > On x86_64 with several NICs of different vendors, I was never able to
-> > get a &net_device pointer not aligned to the cacheline size after the
-> > change.
-> > 
-> > Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
-> > Signed-off-by: Breno Leitao <leitao@debian.org>
-> > Reviewed-by: Przemek Kitszel <przemyslaw.kitszel@intel.com>
-> > Reviewed-by: Eric Dumazet <edumazet@google.com>
-> > Reviewed-by: Kees Cook <kees@kernel.org>
-> 
-> You did a great job converting embedded &net_devices, thanks a lot!
-> 
-> I hope SLUB won't return you a non-cacheline-aligned pointer after that
-> you removed SMP_CACHE_ALIGN(sizeof_priv), right?
+On Wed, Jul 10, 2024 at 4:19=E2=80=AFAM Breno Leitao <leitao@debian.org> wr=
+ote:
+>
+> Hello Eric,
+>
+> On Tue, Jul 09, 2024 at 08:27:45AM -0700, Eric Dumazet wrote:
+> > On Tue, Jul 9, 2024 at 5:54=E2=80=AFAM Breno Leitao <leitao@debian.org>=
+ wrote:
+>
+> > > @@ -2596,7 +2599,7 @@ void dev_net_set(struct net_device *dev, struct=
+ net *net)
+> > >   */
+> > >  static inline void *netdev_priv(const struct net_device *dev)
+> > >  {
+> > > -       return (char *)dev + ALIGN(sizeof(struct net_device), NETDEV_=
+ALIGN);
+> > > +       return (void *)dev->priv;
+> >
+> > Minor remark : the cast is not needed, but this is fine.
+>
+> In fact, the compiler is not very happy if I remove the cast:
+>
+>         ./include/linux/netdevice.h:2603:9: error: returning 'const u8[]'=
+ (aka 'const unsigned char[]') from a function with result type 'void *' di=
+scards qualifiers [-Werror,-Wincompatible-pointer-types-discards-qualifiers=
+]
+>          2603 |         return dev->priv;
+>               |                ^~~~~~~~~
 
-Currently the slab will do power-of-2 alignment (i.e. aligned to the
-bucket size), so this should be fine. In the future I'm trying to make
-the slab more aware of the required alignments so that it can still
-provide needed alignment without having to do maximal (power-of-2)
-alignments.
+This is because of the =E2=80=98const=E2=80=99 qualifier of the parameter.
 
--- 
-Kees Cook
+This could be solved with _Generic() later, if we want to keep the
+const qualifier.
