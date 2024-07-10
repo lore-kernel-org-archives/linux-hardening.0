@@ -1,89 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 930ED12BF23;
-	Wed, 10 Jul 2024 23:15:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6FA414EC4A
+	for <linux-hardening@vger.kernel.org>; Wed, 10 Jul 2024 23:16:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720653357; cv=none; b=nfoI2fpWESnQ5Fc/PfqV8hPiBILnHlQqAgLAE//qFKmojKS0xZlVNk9BJdU7XWPNQMcOUzczDCxL+74YrK5F9uZW4BGYKD3+qJqqBLCRCyesZArelnuhZYLUZLrxHZLAPjUKjuvuvlq0d4Lt4bqODo0uAESVz3jEEZU+EBJr2Ns=
+	t=1720653421; cv=none; b=HqUvPwCe8IsjsJsjdjXXuIZhAroTYiqtvM6w/MkyO1UmjZKUqmGqS9ZooLXzqUHEcQt+pPKCor7cMzV6njVub4Pxr4xHbTamszjta+RZtCZbRO60+18sv0v9Pe2PAhoy/M3xZD3THgIzmyM13XhxgqpIDoSbMNnIghLxntT4Esk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720653357; c=relaxed/simple;
-	bh=12K8PkjgAlf4Yy3Ph2YxFc15bLk8RLBUzI3Tg0Ee4Y8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=XSUcmWOqY54u6VaciDrw1Wh5eOuqklcPOgHb5p+8uqYw8uEVefKzu0DEtEF+LyPvLy7dciNdvJ6u9zcSSLQtWoy1wzB4e7hhNK56gUVU7zgZsK2Wdih/JmLdyt2Nky15UTGKseqPV4nIf7i3lB0Z6x9KSeYfA/FBoEhNDigB6LY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IPw1nJ9F; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720653421; c=relaxed/simple;
+	bh=sC+v9/yANl9hLQYeBgjFHxA+lkxPKYW5RPrkbjfI/zE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aO+mLxtF9sJSeA18bWPXxHXBI8Nyz9g7GEaG6wrncTodEnUbAcxw/A7ycPfDU4QB1zvHiXLbPAFAyYmlAYvTyOUYEBWHfccxeoAXqgDDRjg2EYAa+ZzoUAYk0DJGj4iTEr7gitJJdrwiM91Anbme3H7IfjTVWTw66Us1H6RhwlU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=uRUsS3Oc; arc=none smtp.client-ip=44.202.169.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IPw1nJ9F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32AB6C32781;
-	Wed, 10 Jul 2024 23:15:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720653357;
-	bh=12K8PkjgAlf4Yy3Ph2YxFc15bLk8RLBUzI3Tg0Ee4Y8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=IPw1nJ9FWyMJ6rTcVV6mwP+n/EHVO/hu/nsrqzc5cpIKH1VmmBUEnw8iFlpOkTzUR
-	 UktTExsVFBCeg/uyY6vOrV2NGrq2d8X/85c72WrOTEqSPDgnnrWemCyh4ccEtYXZO2
-	 vOqUcimb9vciIKCk2SD+sFO2+Ovcp80ogM6I+Hub7W3LBI1kExXbGNztdepzhSod0o
-	 oPUdgbonjSRFK1D/alPJDZpWDDy+Zxbj/LP/67xrdFINUBS7AIU1Xyct4+vajBk8EK
-	 pWSnYVdDq/gdOa+8GQuXw2heWfUnuOaBirvuJArr318gd7rej2RuKK+00eYeNRklLB
-	 jW4zR0VCvjEWA==
-From: Kees Cook <kees@kernel.org>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Kees Cook <kees@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] virt: vbox: struct vmmdev_hgcm_pagelist: Replace 1-element array with flexible array
-Date: Wed, 10 Jul 2024 16:15:55 -0700
-Message-Id: <20240710231555.work.406-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="uRUsS3Oc"
+Received: from eig-obgw-5001a.ext.cloudfilter.net ([10.0.29.139])
+	by cmsmtp with ESMTPS
+	id RfV8sMl4TiA19RgYPswUdq; Wed, 10 Jul 2024 23:16:53 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id RgYOsOEuS6MrpRgYOshT8g; Wed, 10 Jul 2024 23:16:52 +0000
+X-Authority-Analysis: v=2.4 cv=SJGJV/vH c=1 sm=1 tr=0 ts=668f1664
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=frY+GlAHrI6frpeK1MvySw==:17
+ a=IkcTkHD0fZMA:10 a=4kmOji7k6h8A:10 a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8
+ a=VwQbUJbxAAAA:8 a=pGLkceISAAAA:8 a=COk6AnOGAAAA:8 a=KKAkSRfTAAAA:8
+ a=mQTSY71ofxE6tXbfK60A:9 a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22
+ a=TjNXssC_j7lpFel5tvFf:22 a=cvBusfyB2V15izCimMoJ:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=AX4VtRHSQCF7dAnD2xsWmA+IklZiBVIQGTjA3CNugNA=; b=uRUsS3Oc2b9NPpqrHgj/SWUpdR
+	ViqpY9movygUdVcpKD/LNIdGBlz+1xNNThF6GfeBaXyDYpI2ono3NYcSAa8qI7oVrPUIulbE8fI45
+	kV2VpjraNnHZwV9/EeIC1Pz5Y5vWsdGcHGajcunj09RABZyYZ+OgY9FxNHmuF+f5wNjOHnchKjZS4
+	JvuUuA/KiX84KwxhAzy5tZxe7Bne7cCDgyKRNvmgPDbZIb3P6AHePemKNjrvbn2gZgNmYNvn9lYlT
+	tplq8f5JW+XgSlzC53qwXUP0Xf3dAnygPyl7iKdyvcAe/cnAgoGJPIQDKVS840kh4vw37kppo5V/S
+	tmodMN3A==;
+Received: from [201.172.173.139] (port=54868 helo=[192.168.15.4])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1sRgYN-004Cic-22;
+	Wed, 10 Jul 2024 18:16:51 -0500
+Message-ID: <4193c6b4-164e-4c65-bd8b-cf392b1a865f@embeddedor.com>
+Date: Wed, 10 Jul 2024 17:16:49 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1505; i=kees@kernel.org; h=from:subject:message-id; bh=12K8PkjgAlf4Yy3Ph2YxFc15bLk8RLBUzI3Tg0Ee4Y8=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmjxYrQFvg6Myp/dqaxd9c1I9SQeTAOBna3TgY/ 4ZwxFwY9FKJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZo8WKwAKCRCJcvTf3G3A JhwQD/9gHHrHq9XVc3JrCq1py5D/rZjBDuIAIorvUWWAftf+AI6Ksg43Ttb42ARYdOkuP9uwy8Y QNleZEenyiyFmgrad+UruCXN6KM7esTqmYRaXkxKgP9Garf/rusUyNAJdT2MCqr7w37GECSjBLZ 5a7EC/HBYrT2NWFY8VExq3HDwrNFouM+/MI3tvt72oWzP/3EHb49JQ3mENBeVhtC+83TzgziGHr xFuiBc3TPskKcJFF9a8iXQIT7c+kzJvGR/KZglwyu7sKK9Hpw2kYzA8YmNWVSwNH0ScrLWJgrzg S43C4Sq4Dxc9jJUYatAhzCNckZiduDETM0QVbvxKaZI4T9Cn05sbSoXCqJl0GICFPHC4Dwucqr7 0/yxlNdrlRL+ftuNizQkh3okzMG36oQDg7+t4oAR6tCFkQYlNtF9k3opPhbFd3GmF7IoWzUGFne arkW1v8LpAWfg32vYIYF0svYCISOJQwG89/QWeWCQ/EeFrrE/eQSYOWIOXEtfSQWV2aWeV4Dy02 YT6pRATV4x6CmM30+ut72yKua7sknXZ/sdAADpDWpXecIwIKz7q9ijWzErGllaB/lrJL9pG1A5x Sj2k8Bi9taR6NsEDPOdNr6xIYwfCiQa/WKEnI/B/ryeTXEogvONqN7xJiT0Hh4TAKuFn8eUaKQI fseDqnnoOUllh
- lg==
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] media: venus: hfi_cmds: struct
+ hfi_session_release_buffer_pkt: Replace 1-element array with flexible array
+To: Kees Cook <kees@kernel.org>,
+ Stanimir Varbanov <stanimir.k.varbanov@gmail.com>
+Cc: Vikash Garodia <quic_vgarodia@quicinc.com>,
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-media@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-hardening@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240710230728.work.977-kees@kernel.org>
+ <20240710230914.3156277-1-kees@kernel.org>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20240710230914.3156277-1-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.172.173.139
+X-Source-L: No
+X-Exim-ID: 1sRgYN-004Cic-22
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.15.4]) [201.172.173.139]:54868
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 2
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfIaAVzi1P4H7JJysqkfSPE8pJZ3nsgDOI6c1W7I1IJO01mgwUesga6AAyX7lb2v3oK9iE5udybzd7VRwO1hSB96dpduRwvCzqmQ8JlGjVHtuimir60d3
+ vwIpIH50reJvm9p/LPIShCkN7rC2/OAQjs+8ke3nfSFhShLxw8QBjZZKvjO/0rSUGGd7br5kX+W2SwAi26f9lmiXBipbV04+Fqk0N2ISHPbogZsHhr9GM5RK
 
-Replace the deprecated[1] use of a 1-element array in
-struct vmmdev_hgcm_pagelist with a modern flexible array. As this is
-UAPI, we cannot trivially change the size of the struct, so use a union
-to retain the old first element's size, but switch "pages" to a flexible
-array.
 
-No binary differences are present after this conversion.
 
-Link: https://github.com/KSPP/linux/issues/79 [1]
-Signed-off-by: Kees Cook <kees@kernel.org>
----
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: linux-hardening@vger.kernel.org
----
- include/uapi/linux/vbox_vmmdev_types.h | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+On 10/07/24 17:09, Kees Cook wrote:
+> Replace the deprecated[1] use of a 1-element array in
+> struct hfi_session_release_buffer_pkt with a modern flexible array.
+> 
+> No binary differences are present after this conversion.
+> 
+> Link: https://github.com/KSPP/linux/issues/79 [1]
+> Signed-off-by: Kees Cook <kees@kernel.org>
+> ---
+> Cc: Stanimir Varbanov <stanimir.k.varbanov@gmail.com>
+> Cc: Vikash Garodia <quic_vgarodia@quicinc.com>
+> Cc: "Bryan O'Donoghue" <bryan.odonoghue@linaro.org>
+> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> Cc: linux-media@vger.kernel.org
+> Cc: linux-arm-msm@vger.kernel.org
+> Cc: linux-hardening@vger.kernel.org
 
-diff --git a/include/uapi/linux/vbox_vmmdev_types.h b/include/uapi/linux/vbox_vmmdev_types.h
-index f8a8d6b3c521..6073858d52a2 100644
---- a/include/uapi/linux/vbox_vmmdev_types.h
-+++ b/include/uapi/linux/vbox_vmmdev_types.h
-@@ -282,7 +282,10 @@ struct vmmdev_hgcm_pagelist {
- 	__u32 flags;             /** VMMDEV_HGCM_F_PARM_*. */
- 	__u16 offset_first_page; /** Data offset in the first page. */
- 	__u16 page_count;        /** Number of pages. */
--	__u64 pages[1];          /** Page addresses. */
-+	union {
-+		__u64 unused;	/** Deprecated place-holder for first "pages" entry. */
-+		__DECLARE_FLEX_ARRAY(__u64, pages); /** Page addresses. */
-+	};
- };
- VMMDEV_ASSERT_SIZE(vmmdev_hgcm_pagelist, 4 + 2 + 2 + 8);
- 
--- 
-2.34.1
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
+Thanks
+--
+Gustavo
+
+> ---
+>   drivers/media/platform/qcom/venus/hfi_cmds.h | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/media/platform/qcom/venus/hfi_cmds.h b/drivers/media/platform/qcom/venus/hfi_cmds.h
+> index 20acd412ee7b..42825f07939d 100644
+> --- a/drivers/media/platform/qcom/venus/hfi_cmds.h
+> +++ b/drivers/media/platform/qcom/venus/hfi_cmds.h
+> @@ -227,7 +227,7 @@ struct hfi_session_release_buffer_pkt {
+>   	u32 extradata_size;
+>   	u32 response_req;
+>   	u32 num_buffers;
+> -	u32 buffer_info[1];
+> +	u32 buffer_info[];
+>   };
+>   
+>   struct hfi_session_release_resources_pkt {
