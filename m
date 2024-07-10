@@ -1,120 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 084B729AB;
-	Wed, 10 Jul 2024 07:27:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E78A517FD;
+	Wed, 10 Jul 2024 09:59:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720596427; cv=none; b=qI2eO1+TFJdZYY0qrOfexaU+XQChQ6ZlhHkrx4AMzBXmIAbNIHSeZdlyRbSXQo7HGsE60vEcBFX6koeL4qKf8ldSSZl6PyqSUr+Oq+si/Nb4QSE6VVQamemj1JaesMFhCm84Zlbs+pU70hcFyWjZaMUCyMUkqkkKywgpIOz20yE=
+	t=1720605563; cv=none; b=d0H+RGrIiBgK5Ai0tABAcAml+yeIXPhXLZbckDjCishc58eSf4/FhF/a66ibww7jvmwEwGaGbHh/lomlbPioztrF4qRBoL8ShkdI6hjqr+i9N45BD5knFl5InWnDuiod4prPuPgj8+cYxzf84qKZrPaxJxJd8orvzEyMD8K4Eeg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720596427; c=relaxed/simple;
-	bh=+KMYWayEGAvxREze4tvIWkgB2gUtkxFPdOXXQOZS2cQ=;
+	s=arc-20240116; t=1720605563; c=relaxed/simple;
+	bh=BaCZzjmg8GC3UEj2EVodIg9vJl+VTk1i0cGEJeC89Zg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Zmnb/TIjws0Nhz57SbYejgRdjMWn7QPr0aLSL31q0uq9EIo7hHM9zXNFQrHsGmtgatOqQ/rt2PypiYjKd9BI0VUJJj1QDc7VdZtQ2WZ8bDF2qa7j8CaU3X3oKZ7ooukZLtdNDL9OC+K22I0y03tOJlXXQ7uAGR4sVbK+7nqxt44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rRs3JNub; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rRs3JNub"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B783AC32781;
-	Wed, 10 Jul 2024 07:27:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720596426;
-	bh=+KMYWayEGAvxREze4tvIWkgB2gUtkxFPdOXXQOZS2cQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rRs3JNub5pwPBgZpiCL8Fu8uN22NItrtnjuO5+x+qI3Z0SN+JuL3+7gKNORDaOQjq
-	 HOdXrUGCEmB6yIW84UejzwZg31Olr1JUu3NbJypVVtIE+ue5B/EcYuL9xtMZdzRJ2G
-	 ssSqq/Ne8W2ri/oW7/OOLxeJDr5LXgH1sUmFSLzAnnh8IvVCFe48uf4vvx3SW2ERH/
-	 7iLF52Ck+aSwwwA+0pkrFNEH0XoVjj6OoAJcltAghbI5DFEtMy0NcbK3lQLTFttShp
-	 GD5RXxMWxMLqn5oGA6emAFG6DIRbR+Dd0KUNg4tjg/b51PU92VjkQf1eHTbw6fdD6b
-	 pFOSPs4dVEJeg==
-Date: Wed, 10 Jul 2024 08:27:00 +0100
-From: Simon Horman <horms@kernel.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	keescook@chromium.org, nex.sw.ncis.osdt.itp.upstreaming@intel.com,
-	linux-hardening@vger.kernel.org,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Jiri Pirko <jiri@resnulli.us>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Johannes Berg <johannes.berg@intel.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	"open list:NETWORKING [GENERAL]" <netdev@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next v2] netdevice: define and allocate &net_device
- _properly_
-Message-ID: <20240710072700.GQ346094@kernel.org>
-References: <20240709125433.4026177-1-leitao@debian.org>
- <20240709181128.GO346094@kernel.org>
- <Zo2bYCAVQaViN6z8@gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=rDR1o6YYOLH/WuvstQjGke6bka2LDxztyVYSuT9veRHNZm6oMlxEXStQnhbLoHZpzQkSB1s3YZQoPYNA9jmKm7W9rM3emsYVOhWNB3xotT9fca0XvDP1qmJohwvpftBdZIue6fyDdgRqb6eg9qvBnrvyyzgg4t618aK38uRp7UM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=denx.de; spf=fail smtp.mailfrom=denx.de; arc=none smtp.client-ip=46.255.230.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=denx.de
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+	id 146831C009E; Wed, 10 Jul 2024 11:59:19 +0200 (CEST)
+Date: Wed, 10 Jul 2024 11:59:18 +0200
+From: Pavel Machek <pavel@denx.de>
+To: Sasha Levin <sashal@kernel.org>
+Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	Kees Cook <keescook@chromium.org>, Ard Biesheuvel <ardb@kernel.org>,
+	linux-hardening@vger.kernel.org, linux-efi@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 6.1 07/29] efi: pstore: Return proper errors on
+ UEFI failures
+Message-ID: <Zo5bdtz0vrA71vwX@duo.ucw.cz>
+References: <20240618124018.3303162-1-sashal@kernel.org>
+ <20240618124018.3303162-7-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="+LLDe38b+Fw9GN0g"
+Content-Disposition: inline
+In-Reply-To: <20240618124018.3303162-7-sashal@kernel.org>
+
+
+--+LLDe38b+Fw9GN0g
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Zo2bYCAVQaViN6z8@gmail.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 09, 2024 at 01:19:44PM -0700, Breno Leitao wrote:
-> On Tue, Jul 09, 2024 at 07:11:28PM +0100, Simon Horman wrote:
-> > On Tue, Jul 09, 2024 at 05:54:25AM -0700, Breno Leitao wrote:
-> > > From: Alexander Lobakin <aleksander.lobakin@intel.com>
-> > > 
-> > > In fact, this structure contains a flexible array at the end, but
-> > > historically its size, alignment etc., is calculated manually.
-> > > There are several instances of the structure embedded into other
-> > > structures, but also there's ongoing effort to remove them and we
-> > > could in the meantime declare &net_device properly.
-> > > Declare the array explicitly, use struct_size() and store the array
-> > > size inside the structure, so that __counted_by() can be applied.
-> > > Don't use PTR_ALIGN(), as SLUB itself tries its best to ensure the
-> > > allocated buffer is aligned to what the user expects.
-> > > Also, change its alignment from %NETDEV_ALIGN to the cacheline size
-> > > as per several suggestions on the netdev ML.
-> > > 
-> > > bloat-o-meter for vmlinux:
-> > > 
-> > > free_netdev                                  445     440      -5
-> > > netdev_freemem                                24       -     -24
-> > > alloc_netdev_mqs                            1481    1450     -31
-> > > 
-> > > On x86_64 with several NICs of different vendors, I was never able to
-> > > get a &net_device pointer not aligned to the cacheline size after the
-> > > change.
-> > > 
-> > > Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
-> > > Signed-off-by: Breno Leitao <leitao@debian.org>
-> > > Reviewed-by: Przemek Kitszel <przemyslaw.kitszel@intel.com>
-> > 
-> > Hi Breno,
-> > 
-> > Some kernel doc warnings from my side.
-> 
-> Thanks. I will send a v3 with the fixes.
-> 
-> > Flagged by: kernel-doc -none
-> 
-> How do you run this test exactly? I would like to add to my workflow.
+Hi!
 
-It can be run like this:
+> [ Upstream commit 7c23b186ab892088f76a3ad9dbff1685ffe2e832 ]
+>=20
+> Right now efi-pstore either returns 0 (success) or -EIO; but we
+> do have a function to convert UEFI errors in different standard
+> error codes, helping to narrow down potential issues more accurately.
+>=20
+> So, let's use this helper here.
 
-./scripts/kernel-doc -none include/linux/netdevice.h
+I don't believe we need this in stable.
 
-Or this:
+Best regards,
+								Pavel
+--=20
+DENX Software Engineering GmbH,        Managing Director: Erika Unter
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
 
-./scripts/kernel-doc -none -Wall include/linux/netdevice.h
+--+LLDe38b+Fw9GN0g
+Content-Type: application/pgp-signature; name="signature.asc"
 
-In this case the second invocation has a lot of output relating
-to documentation of return values which is unrelated to your patch.
+-----BEGIN PGP SIGNATURE-----
 
-But the first invocation shows the issues that I flagged in my previous
-email.
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZo5bdgAKCRAw5/Bqldv6
+8rpxAJ9kRQeo22P62JMVNulvCl7OpJdjwwCeJC7y4AdHjBkg/KS78Nm0Ao/8VTs=
+=BFBc
+-----END PGP SIGNATURE-----
 
-
+--+LLDe38b+Fw9GN0g--
