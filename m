@@ -1,39 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B3661411ED;
-	Wed, 10 Jul 2024 22:55:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEC121411ED;
+	Wed, 10 Jul 2024 22:57:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720652150; cv=none; b=Mtu6W/osD8OLRS7koGxyCl0n3jLFmDqItHpcC9Rc2UQTGAwgF++K1TyXP/6HvCr513mnvw9n2AiBtFOfdw5u4T8JLUAFc9AU36lft2ynFf9aDomzSr0Y/bNjEneG6xnvHpbdzXEHEocrpCXNUQmDR69Q/DK3DHEhsJZu4RszD6o=
+	t=1720652231; cv=none; b=WzotpX10NGds/AwoIT79sAsRu+2K5sZ9VnU3xYM0muIsJ7pfjYzcwlYK+nPjcjhTBPWjtI9GOCJi7LJSVQJuxLcMp4hxXlTVCrIUY1rcMhd5t/RvzBfavehjKze07FRZRycd6GVL4QTcF4VouJueyNXDs4F7aHvRWwq/AmSbHIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720652150; c=relaxed/simple;
-	bh=tA8EowCt7yQ9n01EIXy3jVpx5cDt0751LfgzlrzR254=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LFDM/Rh1puXUwq5Ymc4P9HG1n/+QM+gZWCixCqiSpRCQANxqlk/QWqSB0HlnhtWK4w+mzHNQTEAxObhoe06rQ79j4hHz2Ocak7DUV/8cZaDqUO2rxLuDhr/l72p2wqdmVnxG/wkTOt1I2UmEA4RyvU0b9VQFXpnQ8/sY/6qfHPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OYSflvzz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720652231; c=relaxed/simple;
+	bh=VeZ0jAlaOsuBLB4942xy+6Tdi45diUS3vYZtSDLxNj4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pSbam9BPbGIaegrl26H+drZNLiRCsvfxDJ2Q2wsTqR9ArGv63x3f8N7GQpMvkawMpzK961AhjfWSz1tyngBW8ES7QNjj6SJENL5SvmYAdvl8S4tgqVP6tUYX+SBYbCYh5tUroIV8mk9aHFTGoAVLsBSvEEan4U7JCmU7Dhxkyyk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I/z9Zref; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OYSflvzz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7A4CC32781;
-	Wed, 10 Jul 2024 22:55:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I/z9Zref"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 638E2C32781;
+	Wed, 10 Jul 2024 22:57:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720652149;
-	bh=tA8EowCt7yQ9n01EIXy3jVpx5cDt0751LfgzlrzR254=;
+	s=k20201202; t=1720652231;
+	bh=VeZ0jAlaOsuBLB4942xy+6Tdi45diUS3vYZtSDLxNj4=;
 	h=From:To:Cc:Subject:Date:From;
-	b=OYSflvzz713DV5FtaX1W+/rzgu/i07POf1KUYF9g4lFh0iFxt7UgyEWB0Er/7f7QE
-	 ++22z1KJ5wP2uak3Vql+q+MQ7tBs6Ruiy/Uqby8zzLYhfsFC/rFmCgY7PsAMmbMjy7
-	 H0ugMo/LT1SRbqJwPkxRevzm949zB/LdM6gRjqz7Nv4mnOe9o/fnY5DIuNVVXzLk/J
-	 xSNN8OZRJV1mJr37vOhfu7A1paYVZfpuGaQzpwCfM0FeHjiQfsgl54LN12aaNYf/hR
-	 EI7D5sNC7PKhqFP+mF6Rz71GUoeDPWWctvgb8ZmtQVTnpyzEP3M8nUqhaVxXo1NozN
-	 ituqATFMA1eZw==
+	b=I/z9ZrefHG6DopScp1g3VYpy8Ybu/7Z8w9LDsvHKRnQ0XX3+gzpvwTJTSrzzBwsHN
+	 26ZWRDvFGaKjjOkzqQfML6uwBgd6g4SH9elf0VpMiyQI94Ij8szfTiDY1arbG/t5q2
+	 rLbKeMN+YAOg6jv+83g50lUKD73E8VVJOHqCCG40hxHCG/uHwqYciBJAEIiFgGnz1D
+	 zcX3GCXZQF/Rb2nLi7d7Iwml8qV0YrkYdK2Fg5cKtW/dFP3Q0D+9HcYUvi2ulkOCol
+	 JtC9IzU7LZTVeImnIalb0iFAUch5VTFevAh+gzDbbmBlyeauO8sH3EkXlIHPfIE5ZN
+	 P/rbWZmKti2vg==
 From: Kees Cook <kees@kernel.org>
-To: Ard Biesheuvel <ardb@kernel.org>
+To: David Sterba <dsterba@suse.com>
 Cc: Kees Cook <kees@kernel.org>,
-	linux-efi@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH] efi: Replace efi_memory_attributes_table_t 0-sized array with flexible array
-Date: Wed, 10 Jul 2024 15:55:42 -0700
-Message-Id: <20240710225538.work.224-kees@kernel.org>
+Subject: [PATCH] fs/affs: struct affs_head: Replace 1-element array with flexible array
+Date: Wed, 10 Jul 2024 15:57:09 -0700
+Message-Id: <20240710225709.work.175-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -41,57 +41,38 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1737; i=kees@kernel.org; h=from:subject:message-id; bh=tA8EowCt7yQ9n01EIXy3jVpx5cDt0751LfgzlrzR254=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmjxFulF/PptAM1kRj0lGUj5tBfy6AWGSucrEp5 T1+9BpDv/eJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZo8RbgAKCRCJcvTf3G3A JsvREACIDISo4ZwAKyrGmkTwn3Wkbi11X8HG7AGopGidk/5ook+I+J3HrJAhrY0ba7YXZX/iiKf PsSZ2RGXE57dZ5FY/YRZQ3VAOqIuJEB3yKyneQnFslR5/qgQ1zZXRWrtn5EGZwnfJOK44EsNh/O 4HLUxj8ibBlO8QEl3Yybz5jQ5B1QfMI3U2gnzW3gKY+j989luPVFp6oqHE4kvgxvMTv8W3Bj+BO wp71KOIGNET/BsNo5o1NUNeaLHr62AGbJmTwcW7S1sIPEbNjLRre8YDOGh/xHkYbUsfbWVr3tjO DCDffiunjfGc3CR8oeumaFxExhXBi6FKbqkzwx/wLmIjjigrcf1rNy8Ebdpvqe2yysWjxgCZxOm vJiZZD0gJUps6kxf/QTjaX5EtokcttB8VTLmBoqGhJ0FTO656P2+nFBNEu7fg6YRuLGR92usCgE dIgXy4e9SfV4ytG6UDGst26E/up8CPjaUpQqK1/EVAkfHh11wf694cvSfvofRtDgG8a/Etr6u6e +4mgIReW+SK2xH5whLbmeSLdQHJ1KIT9soh88CKldnlmJNrUk6rJBmOEiKTuMY/4MAnuCSQ8RTs SJZsxSux0qHXVJuJh4MvdmI6a6G20ATSp8OdCMk+CbE+nYi1L3S11cgbSVvQKwMHOjaPLcMZt1+ Z9E1VQT+6iStL
- PA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=834; i=kees@kernel.org; h=from:subject:message-id; bh=VeZ0jAlaOsuBLB4942xy+6Tdi45diUS3vYZtSDLxNj4=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmjxHF5Ez54HZBFkF2f/07ZPqU5USXhLL8SAxk/ 0rxhGyYZD+JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZo8RxQAKCRCJcvTf3G3A Jtf8D/43Y6ayx7bY9+1DmlCjUHDtsXceewBTMcCCXX36yi3ToaLh5FtBCQbCC3lSbhbH8U1Pi7d rVkYmNNoryQutUY0wXwHICfZYs+DrDC8ovpJpE/rMJqCxdMNvNo76YXELXh0nZVSOU+Yko0SGfm vuCLHskl9Yut2kfqXRO6jSTflXdQL+6YUURFzfrcjca2FPv64X/+MvpDkuLcES4HGW3ynUE5LYs i5ABgAJ03L9s6grl1mS/8EK85IAZOgKsPAN9NEOHj6f4EY8hS9GEHFZJoxuPz+CC44BiW1wZl/d DJysOkVdk1l4ZGTYF1WvjWlfJq7wmsJIvpBwxa77T7H+FYEjAPeoHMMvSRr2Iba7ZZbiPdrHd5d 6lg7PqLTu1T2rNnL5CfesfN8SmizMCo/2EHtXh/GXPTmpSNYLzkyWZgR66OeB6/i2/gpi6H7l/L lNaJ11tEGkNN+GDXRh65y6/eKJZD8F5aVP3iNp28pWgQiDBcMgXtpTGml9rzabxo1JsB0QouxwT pGGwB73bZVkrSYdxT/r9Qi94u0FDQrZ6J1Zm/rdwvRfAUKDWcna1fu/ZBNGj1D+rwZ/0K8I0LD0 yuFOUbIV5xwQrP3GthdDiP6KG8SlSsqHznC4u2JqKTj48J5y6l4JnPw/8tCivN1Mh/JK9u3uidr tg2xhxFWWI7ydn
+ Q==
 X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-While efi_memory_attributes_table_t::entry isn't used directly as an
-array, it is used as a base for pointer arithmetic. The type is wrong
-as it's not technically an array of efi_memory_desc_t's; they could be
-larger. Regardless, leave the type unchanged and remove the old style
-"0" array size. Additionally replace the open-coded entry offset code
-with the existing efi_early_memdesc_ptr() helper.
+AFFS uses struct affs_head's "table" array as a flexible array. Switch
+this to a proper flexible array[1]. There are no sizeof() uses; struct
+affs_head is only ever uses via direct casts. No binary output
+differences were found after this change.
 
+Link: https://github.com/KSPP/linux/issues/79 [1]
 Signed-off-by: Kees Cook <kees@kernel.org>
 ---
-Cc: Ard Biesheuvel <ardb@kernel.org>
-Cc: linux-efi@vger.kernel.org
+Cc: David Sterba <dsterba@suse.com>
+Cc: linux-fsdevel@vger.kernel.org
 ---
- drivers/firmware/efi/memattr.c | 2 +-
- include/linux/efi.h            | 6 +++++-
- 2 files changed, 6 insertions(+), 2 deletions(-)
+ fs/affs/amigaffs.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/firmware/efi/memattr.c b/drivers/firmware/efi/memattr.c
-index ab85bf8e165a..01142604e8df 100644
---- a/drivers/firmware/efi/memattr.c
-+++ b/drivers/firmware/efi/memattr.c
-@@ -164,7 +164,7 @@ int __init efi_memattr_apply_permissions(struct mm_struct *mm,
- 		bool valid;
- 		char buf[64];
+diff --git a/fs/affs/amigaffs.h b/fs/affs/amigaffs.h
+index 5509fbc98bc0..09dc23a644df 100644
+--- a/fs/affs/amigaffs.h
++++ b/fs/affs/amigaffs.h
+@@ -80,7 +80,7 @@ struct affs_head {
+ 	__be32 spare1;
+ 	__be32 first_data;
+ 	__be32 checksum;
+-	__be32 table[1];
++	__be32 table[];
+ };
  
--		valid = entry_is_valid((void *)tbl->entry + i * tbl->desc_size,
-+		valid = entry_is_valid(efi_early_memdesc_ptr(tbl->entry, tbl->desc_size, i),
- 				       &md);
- 		size = md.num_pages << EFI_PAGE_SHIFT;
- 		if (efi_enabled(EFI_DBG) || !valid)
-diff --git a/include/linux/efi.h b/include/linux/efi.h
-index 418e555459da..b06639c4f6a5 100644
---- a/include/linux/efi.h
-+++ b/include/linux/efi.h
-@@ -607,7 +607,11 @@ typedef struct {
- 	u32 num_entries;
- 	u32 desc_size;
- 	u32 flags;
--	efi_memory_desc_t entry[0];
-+	/*
-+	 * There are @num_entries following, each of size @desc_size bytes,
-+	 * including an efi_memory_desc_t header.
-+	 */
-+	efi_memory_desc_t entry[];
- } efi_memory_attributes_table_t;
- 
- typedef struct {
+ struct affs_tail {
 -- 
 2.34.1
 
