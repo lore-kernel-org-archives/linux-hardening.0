@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 684DB16DC17;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A22D16DC1C;
 	Thu, 11 Jul 2024 17:28:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720718902; cv=none; b=K15YL9Oe5OS+NX0oqRgBU5LHTj3t98imi27vk1oVPolhEFpGUP8K8DGgwje3qab/R65cn5PDZ7cYsu0IidY/w9agv+qo/Latjte779eyIhbX+eOH9JuQkBSfKKCPnAyu2xxd3mcudfQu5tPnLIalaOg+lsJ04s185NtE6zf4hRA=
+	t=1720718902; cv=none; b=b9bUgs/SNWLcPMCWi4CZS3GrIwSSsqBWGfgEa/zTtO+f0QV8rnCpkuj0+8M/kOW+yuNi3MzCR+hnEJbT2meg3nYY6XrfRScJo3OMTUBIFe0ys2SrzVN/o/f4w+O9chzqx4UnE4F/Si0cV2GAs5e7bWV6+uuiRNrewyFQ7hKNUbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1720718902; c=relaxed/simple;
-	bh=tlFNtdPXIsjyicZF+y3g8YyRlX+dG+Y/x87VFaz+p5w=;
+	bh=TFdd55gm7tedjfyA0tSLEzREVFMSxyPLwq5f8b56lIU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=T4cE6uWe5X8TgfrI9My929mOogXpI6EjLUL1CGHeU9UA4hm2rVvRawq7ISguWYLr2N+/mNVPozPetw7qy3U1Dvo6sJsr6e/MZZmygeq3AuyWD7EN/7zHg6nX0T0X7qqngSnCAspG298Pyz1/K5DVYv58NkfAA6NRag62g4bomYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kW0d/7d5; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=C2Mz8hyPXMEqrFOQJpiN2w74qaI8dS2MIx7R5xRUm5sOvDndSpvoSTOWEzwv+KLaeTo+vxF9ocCtd9SMkL4DggMzrLuz4ar9dN3MnbhV0gXyUTpVKaaSYnETxGy8IeEsCHn3640JF9SaB36GTMWZ09cCAssa/cXPIX1wGQcAPZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oNTz3k1R; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kW0d/7d5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16062C4AF07;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oNTz3k1R"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F79BC4AF0E;
 	Thu, 11 Jul 2024 17:28:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1720718902;
-	bh=tlFNtdPXIsjyicZF+y3g8YyRlX+dG+Y/x87VFaz+p5w=;
+	bh=TFdd55gm7tedjfyA0tSLEzREVFMSxyPLwq5f8b56lIU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kW0d/7d5Alt7O+762Ma05vwt7bgo9oDQJ6QTTq8Qo8BKakNtMkX1fn1Nop+s9R9F5
-	 UByrDK+FEb1qFagvYD/xuP1mJUsv2zdDyZu/3BmoEUEMNP4zuHWprJP/uZyiL34Kbj
-	 mdb2KwuchxnHdqnx9BSF4olEPu6dpmh36KgHfu/mGm6u9cVUdYKQAt2pxzsAcmIKc5
-	 F/J50PJBJxFyJ4t2kju2csbyfO+pqaWOmBriKHILUt6XcqqHQwJYJTw/eBVg+mV1TM
-	 eye10XbHwTebPYxOxXT4INhYMRmAGB/hwaiQpff4aqms6LuapihEIA8jNdJCv/+Pk/
-	 fRojRIZ/NKxXQ==
+	b=oNTz3k1RXtoJrTD9geq4YJ0PrHvAeG2XxRtC9sf46503DGwhjZmQaqDW9kJOcNTSq
+	 Qsj/hvU6mzG8ZtMeIUEV197iGw+y8AfJZ7/WH0mQjU6yYuB9ndL4hB3iFWbf6R8+BU
+	 Z8UQopMovKLTBt6MiPpYj1ZLqy4IItYhoKX3ViSlK8jquNLVkS9bvxazVQu3z9fDpt
+	 Gc2quSK38zGhYI56+s5PeLy2VJgh+ff6wmD26qan2pyaxULvlkkIRywLixZrFIliMC
+	 x6LsA4wn2lk8KEDvYdof5tlssYkhD7v4iurSHMb7Xm0TZkuvQCA5B4QPKWWStzV0tb
+	 Y18sudmcjoNZQ==
 From: Kees Cook <kees@kernel.org>
 To: Sathya Prakash <sathya.prakash@broadcom.com>
 Cc: Kees Cook <kees@kernel.org>,
@@ -36,9 +36,9 @@ Cc: Kees Cook <kees@kernel.org>,
 	linux-scsi@vger.kernel.org,
 	linux-hardening@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/6] scsi: message: fusion: struct _CONFIG_PAGE_SAS_IO_UNIT_0: Replace 1-element array with flexible array
-Date: Thu, 11 Jul 2024 10:28:16 -0700
-Message-Id: <20240711172821.123936-2-kees@kernel.org>
+Subject: [PATCH 4/6] scsi: message: fusion: struct _CONFIG_PAGE_IOC_2: Replace 1-element array with flexible array
+Date: Thu, 11 Jul 2024 10:28:18 -0700
+Message-Id: <20240711172821.123936-4-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240711172432.work.523-kees@kernel.org>
 References: <20240711172432.work.523-kees@kernel.org>
@@ -48,25 +48,33 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2852; i=kees@kernel.org; h=from:subject; bh=tlFNtdPXIsjyicZF+y3g8YyRlX+dG+Y/x87VFaz+p5w=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmkBYzm99u/pI8tnb58UexRVIlgpTl/2by8ge3B JVT1Tp83WaJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZpAWMwAKCRCJcvTf3G3A JndXEAClVG8hZ1gvChJQI1q05OsMAnd5K6vjz1iD0F1YVbxf1Io/lmnMbvyQkBaGIbUUyD5HX0C nswXfB9Tn4RouUs1NfnAZbgEC010eVqzKW3ploKcZ4ocLCLLR2T31lssRQH/pXT7uFEgx9k5HUP 8QzvJ5gbkmzLB0/QYNSrJC2yYaOXqdC3jsoc/O4vQaTX6OmF3AO4e1u4ge1c5AaS6bmD4m259b2 3M6nzZRF8lLRwJ28YZtLNG9vDEYmql1fI793PCklXIgVd6BRzx73/6QyDKAhSAbHPDxiM66LyqD S3iQOdU3PLKKrX9zSs+Bgsa2lRVlS8BzPWnzcL9s0lE2/BcfKn6Opx+I60wDUO1lou4drEOhHyh pSoKFYXZCfb+/4s39zakPEWR3UxCLafSHrQUB9kj4Wt5MvK0jhFgmZBPf9gOKpzI7kJuG8XCw9P EJjR7Iv4UYsKoXpLOLF9sOtkLVbPeqDzwGl+Sp3EcLYzijksTvw/lxK2qv10kNHUW2tGGnfiRNW EcV20TAb8rw5dUvwiqg3tIQFsT+LxOB2O6isQAhj2yWMlP6mdD8R+0vn6r26JQEX5+BptDHUJNi bR85cDX96CrdOONyK/FY02wJM5y56X3CW4YiIm5PGFRnYLilfKIedWmqsIBItAZR/NFRPMDLf09 K+WvqVTsAa4tEGg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3512; i=kees@kernel.org; h=from:subject; bh=TFdd55gm7tedjfyA0tSLEzREVFMSxyPLwq5f8b56lIU=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmkBYznU8jZsF6x0BPmD/cpzsBuAcKzr5zPGH8d 6njqRjZCS+JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZpAWMwAKCRCJcvTf3G3A Jh3gEACcdiLzOrjIsH9nE0Jmj2soc1aVdJlCGWpvkTRhtXFB4qYoXSUz0FamS8xcMmgSZpPhJHX g7xPhTslDwQJCbQwu25emCMpaHKERUR7WSXYtLagPOH3ux2+3B8qfaE+nXq5JvysvIgYS2a3dx9 BCdSkg5/CiLpRAXWBr99yKCvkaaAI4lJ8vEuKHxtAOVkr+lUkfH8nLyqXv5vagDTyGkfYWUPMcJ WkqCBQmStYBBJ8NvrQJjKZ+civiqKv2PR2UQwUoRX3cKo5KGubB9cyPcaWQmSvR7wWqApi19izC mUl+AWCiZkFouXX95ai+6UInmWHjtJ/rl86CL+eeKwQlN+UnjsAMeex26IlUKE41IdEptGxU956 jE2MSPA4641M9o9ozAxRfYjmWuHksUVuNl9jUeRZHRWCWvwRLWC34mzoJtxDm1RdDvMVDUExmQ0 BGbul+ZtVDXMt60e/7mTMB1CYzjJbb4g0m89MFrznJJWAGVItnuD32aVoFd2oM5i3IhrpS63oqx b04bNWR1k4uyVEYKbLMNsscCi58iNlUeGK46VC9F0qXPHlsGWoFx6ACDJCnaDBMDSRNy30MxG+u X8/0gxgZrVNQK1qUFLocaZk8aSrD/Uidh2+cpVGg7OjN1xBQRTbFR4w+VhbbvkjR9oTRpb1e4kt Cuvm5c0PHMDbINQ==
 X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
 Replace the deprecated[1] use of a 1-element array in
-struct _CONFIG_PAGE_SAS_IO_UNIT_0 with a modern flexible array.
+struct _CONFIG_PAGE_IOC_2 with a modern flexible array.
 
-Additionally add __counted_by annotation since PhyData is only ever
-accessed via a loops bounded by NumPhys:
+Additionally add __counted_by annotation since RaidVolume is only ever
+accessed from loops controlled by NumActiveVolumes:
 
-lsi/mpi_cnfg.h:    MPI_SAS_IO_UNIT0_PHY_DATA       PhyData[] __counted_by(NumPhys);    /* 10h */
-mptsas.c:       port_info->num_phys = buffer->NumPhys;
-mptsas.c:       for (i = 0; i < port_info->num_phys; i++) {
-mptsas.c:               mptsas_print_phy_data(ioc, &buffer->PhyData[i]);
-mptsas.c:               port_info->phy_info[i].phy_id = i;
-mptsas.c:               port_info->phy_info[i].port_id =
-mptsas.c:                   buffer->PhyData[i].Port;
-mptsas.c:               port_info->phy_info[i].negotiated_link_rate =
-mptsas.c:                   buffer->PhyData[i].NegotiatedLinkRate;
+lsi/mpi_cnfg.h:    CONFIG_PAGE_IOC_2_RAID_VOL  RaidVolume[] __counted_by(NumActiveVolumes); /* 0Ch */
+mptbase.c:      for (i = 0; i < pIoc2->NumActiveVolumes ; i++)
+mptbase.c:                  pIoc2->RaidVolume[i].VolumeBus,
+mptbase.c:                  pIoc2->RaidVolume[i].VolumeID);
+mptsas.c:               for (i = 0; i < ioc->raid_data.pIocPg2->NumActiveVolumes; i++) {
+mptsas.c:                                       RaidVolume[i].VolumeID) {
+mptsas.c:                                       RaidVolume[i].VolumeBus;
+mptsas.c:       for (i = 0; i < ioc->raid_data.pIocPg2->NumActiveVolumes; i++) {
+mptsas.c:                   ioc->raid_data.pIocPg2->RaidVolume[i].VolumeID, 0);
+mptsas.c:                   ioc->raid_data.pIocPg2->RaidVolume[i].VolumeID);
+mptsas.c:                   ioc->raid_data.pIocPg2->RaidVolume[i].VolumeID, 0);
+mptsas.c:               for (i = 0; i < ioc->raid_data.pIocPg2->NumActiveVolumes; i++) {
+mptsas.c:                       if (ioc->raid_data.pIocPg2->RaidVolume[i].VolumeID ==
+mptsas.c:       for (i = 0; i < ioc->raid_data.pIocPg2->NumActiveVolumes; i++)
+mptsas.c:               if (ioc->raid_data.pIocPg2->RaidVolume[i].VolumeID == id)
+mptspi.c:       for (i=0; i < ioc->raid_data.pIocPg2->NumActiveVolumes; i++) {
+mptspi.c:               if (ioc->raid_data.pIocPg2->RaidVolume[i].VolumeID == id) {
 
 No binary differences are present after this conversion.
 
@@ -85,32 +93,32 @@ Cc: linux-hardening@vger.kernel.org
  1 file changed, 1 insertion(+), 9 deletions(-)
 
 diff --git a/drivers/message/fusion/lsi/mpi_cnfg.h b/drivers/message/fusion/lsi/mpi_cnfg.h
-index f59a741ef21c..c7997e32e82e 100644
+index e30132b57ae7..7713c74e515b 100644
 --- a/drivers/message/fusion/lsi/mpi_cnfg.h
 +++ b/drivers/message/fusion/lsi/mpi_cnfg.h
-@@ -2547,14 +2547,6 @@ typedef struct _MPI_SAS_IO_UNIT0_PHY_DATA
- } MPI_SAS_IO_UNIT0_PHY_DATA, MPI_POINTER PTR_MPI_SAS_IO_UNIT0_PHY_DATA,
-   SasIOUnit0PhyData, MPI_POINTER pSasIOUnit0PhyData;
+@@ -1018,14 +1018,6 @@ typedef struct _CONFIG_PAGE_IOC_2_RAID_VOL
+ 
+ #define MPI_IOCPAGE2_FLAG_VOLUME_INACTIVE           (0x08)
  
 -/*
 - * Host code (drivers, BIOS, utilities, etc.) should leave this define set to
 - * one and check Header.PageLength at runtime.
 - */
--#ifndef MPI_SAS_IOUNIT0_PHY_MAX
--#define MPI_SAS_IOUNIT0_PHY_MAX         (1)
+-#ifndef MPI_IOC_PAGE_2_RAID_VOLUME_MAX
+-#define MPI_IOC_PAGE_2_RAID_VOLUME_MAX      (1)
 -#endif
 -
- typedef struct _CONFIG_PAGE_SAS_IO_UNIT_0
+ typedef struct _CONFIG_PAGE_IOC_2
  {
-     CONFIG_EXTENDED_PAGE_HEADER     Header;                             /* 00h */
-@@ -2563,7 +2555,7 @@ typedef struct _CONFIG_PAGE_SAS_IO_UNIT_0
-     U8                              NumPhys;                            /* 0Ch */
-     U8                              Reserved2;                          /* 0Dh */
-     U16                             Reserved3;                          /* 0Eh */
--    MPI_SAS_IO_UNIT0_PHY_DATA       PhyData[MPI_SAS_IOUNIT0_PHY_MAX];   /* 10h */
-+    MPI_SAS_IO_UNIT0_PHY_DATA       PhyData[] __counted_by(NumPhys);    /* 10h */
- } CONFIG_PAGE_SAS_IO_UNIT_0, MPI_POINTER PTR_CONFIG_PAGE_SAS_IO_UNIT_0,
-   SasIOUnitPage0_t, MPI_POINTER pSasIOUnitPage0_t;
+     CONFIG_PAGE_HEADER          Header;                              /* 00h */
+@@ -1034,7 +1026,7 @@ typedef struct _CONFIG_PAGE_IOC_2
+     U8                          MaxVolumes;                          /* 09h */
+     U8                          NumActivePhysDisks;                  /* 0Ah */
+     U8                          MaxPhysDisks;                        /* 0Bh */
+-    CONFIG_PAGE_IOC_2_RAID_VOL  RaidVolume[MPI_IOC_PAGE_2_RAID_VOLUME_MAX];/* 0Ch */
++    CONFIG_PAGE_IOC_2_RAID_VOL  RaidVolume[] __counted_by(NumActiveVolumes); /* 0Ch */
+ } CONFIG_PAGE_IOC_2, MPI_POINTER PTR_CONFIG_PAGE_IOC_2,
+   IOCPage2_t, MPI_POINTER pIOCPage2_t;
  
 -- 
 2.34.1
