@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A1D542AB5;
-	Thu, 11 Jul 2024 17:16:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A0BF16DC0F;
+	Thu, 11 Jul 2024 17:28:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720718214; cv=none; b=TpcBtF6Km4xgq9USE2iigjCi6ZushG3qRRvU7l9weu9ZEyJqZVKwNFUg+dHZuTEi+jcjk2Q1lLkzJ8nNy90oAP1exznRX4pWrW3YFi4gMYLH9+C6cwU4yDZWgizljYtBWC5FQbyqI6SIJLEz09JZ9tjLMiR0HQVFS4d94q1M0pY=
+	t=1720718902; cv=none; b=XElRPNuy8QpW0yUzmfi4WZzvqI6k969kYEFgkMELyCHD6nCO+kptnDpWbZwgJkD2d0LUHhey7Nw4PoqyfQAeRMj10N22NqEfIg8A4TlGlUVg4kZQc/Hy0U3gND3Jr43HIxQxar3VON5Cxz0BP+5mqwXAB+M56/bfdX4c7Dqrtf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720718214; c=relaxed/simple;
-	bh=ZjODE9du+l2tlogfzAH2XBZ8zzThaPkwpHjdjbXzZ2Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WXuyPHoyvA2afJh6X4WOupoqhECntDzkOMwqCqCyuBv4lQkA78bL2c5NeMc7kH78dMwBgCsFc+VHtZwFnSK1gvfZv9GXpA3eUfzy46V5/3otUhoH+XaWRccvC6nuM0co3kOZV511tzjdeY1Xp6G1jzUnEAf19lSTfwTICPLWkMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UXZdqOOj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720718902; c=relaxed/simple;
+	bh=V1YprhAmorpwrONXWh+NHJ2n1tCH1SDtbs2oxzRP8Sc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lWmC0/1+1Wdm42nf1kTbsKTenlQ51AgJnt4Uvbgv+5V/pn9WvHVM58m55dxZGs4CzsjjojWbyfkMMegMUSrjtTZGO6Vt6DXZKqu2s5zmb6mJhoT4rH3wO0XiVtDPn0QZBeUgwfCc0JRBuGceiE4y+T9jFLOd/dIpAvIVjtOFtas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jM4VKXa2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UXZdqOOj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00C19C116B1;
-	Thu, 11 Jul 2024 17:16:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jM4VKXa2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12E99C32786;
+	Thu, 11 Jul 2024 17:28:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720718214;
-	bh=ZjODE9du+l2tlogfzAH2XBZ8zzThaPkwpHjdjbXzZ2Y=;
+	s=k20201202; t=1720718902;
+	bh=V1YprhAmorpwrONXWh+NHJ2n1tCH1SDtbs2oxzRP8Sc=;
 	h=From:To:Cc:Subject:Date:From;
-	b=UXZdqOOj8ddzCSYwYikAKwa8SLEHPyX33qiB2TCchjc4Qzw5MvHEUOeSjF0qQ56PR
-	 merLHAEGGP2ruqgi7fP/MJEjy0CanhI5unXVZjMq6iDIl5TrPzuT4TlxHhclbI2ZP5
-	 8lgTVG7mCVyDXux1fOUGm7aM0VnExgbE1sY85gSt2uNSi1zrkQsxfdJwN0rOz1Pcol
-	 nNuM4dd78mTNFVx4BU6CFsZhNNRL1xA+Qtu/89YIigL+3Oumbhh4lS3LyOzW3xwWA8
-	 EkgC8JWmQsi7K6WjFXmBlwTqxcu6NCd3KOn7hMc5zROGyReFZBbyV9afLG9NgBHZSX
-	 vXS5xjKAoexIA==
+	b=jM4VKXa2LxfHcB3j7rlu1fknEoLHy8oYGGdxVVwjoD7IPi6RBifzLYdH5rvw/8fwG
+	 gt+p/5GSs+EHXw5aMp4bwhEviArbsH3w4kh0XOgqqftFPEfjYD+tV6+YKgCcbn41Yr
+	 0EARCCMt5EBcM2FZuBqYGSZae6n0hiTVk4TZw2bbovwbDy/TK0dE79CrJLEhwDPFiw
+	 TVnkeqnvZV3MuUmsvxQhjJMN1bZIurMbyw9jVGdNH1pw9sestB0531hTUTVhRwfPi3
+	 63O7g+Tmsl1Ed3zoEJEn9l3zLYzYSG8nWx7echGT6zwOhXzklDGpwTxhrbF+CRiLZw
+	 wf72jzJB2PSDg==
 From: Kees Cook <kees@kernel.org>
-To: Eric Dumazet <edumazet@google.com>
+To: Sathya Prakash <sathya.prakash@broadcom.com>
 Cc: Kees Cook <kees@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	David Ahern <dsahern@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org,
+	Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+	Suganath Prabu Subramani <suganath-prabu.subramani@broadcom.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	linux-kernel@vger.kernel.org,
+	MPT-FusionLinux.pdl@broadcom.com,
+	linux-scsi@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH] net/ipv4: Replace tcp_ca_get_name_by_key()'s strncpy() with strscpy()
-Date: Thu, 11 Jul 2024 10:16:52 -0700
-Message-Id: <20240711171652.work.887-kees@kernel.org>
+Subject: [PATCH 0/6] scsi: message: fusion: Replace 1-element arrays with flexible arrays
+Date: Thu, 11 Jul 2024 10:28:14 -0700
+Message-Id: <20240711172432.work.523-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -45,51 +45,38 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1346; i=kees@kernel.org; h=from:subject:message-id; bh=ZjODE9du+l2tlogfzAH2XBZ8zzThaPkwpHjdjbXzZ2Y=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmkBOEhbRNdvlw/GB0dPfSbNkwMF0ZFuFleqrPl +odepzX0v2JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZpAThAAKCRCJcvTf3G3A JkTND/9r/ctN0UPYXIadXEYAygCB/n29KT75M/ILNe6JkHVHQh9BiZjQ4SBZM7dVowOjU11PkRE eHuiqS5ce54EOca22vrZs003/+ZCHUKyEPxu/8mvNqLHjo5nGfhwL48fI1Crl32ao1Agvp7gzcI RXB6YfjgBKJc+AahVTBmaUMKWTqJe8XXiPCBie4uN5xt7qMwUbFzk07+TBiDLXkhHnUyghQY0Ix aKJFXWDtDpjoqX6j492FYkz8P0AjzrHyBkjP8COare0ZHlx0+g0s+HjAUN/Qz4UlVUimxwkaxJj vZ3SRsiFboMVZVXOoTp6f4BbL8z6eKLGEXL32yQ128O+dfX/VdEx64O7+5Q0qFait3UTCdm8sSV GA7668NUAnyKlb8RXYxqjO5fH89ygoHPaIkKc667w8WJo4/7nLbc8pdXnqwphntVaJPCegcOfan jD9QP9klXgyEuPDjfzmPfFeBW+aOQv26OHiExE5HF//uYAWkfXeNJ7KHQKsVGpibNhBdixPPzLF iL+HyzevNMfxF1c7YZQgzkBpw++9Q3WYllq5q8RaWLNWxxNuDnqdJ1irCDDWna90uALGolighXc jLTS0rhuY/wb7Xd46Dj0T0e2OsDzZgCJfeAx128aRxKqIML+pModWw73xWvynqymklQIqHOOkar r9c0usl1erH/n
- Zw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=975; i=kees@kernel.org; h=from:subject:message-id; bh=V1YprhAmorpwrONXWh+NHJ2n1tCH1SDtbs2oxzRP8Sc=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmkBYzIn64pgvfTCbTO9TZjopxPJO2NthyC8yVV cQ6YPmSc9uJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZpAWMwAKCRCJcvTf3G3A Jm0nD/9ra65WzdfD1AZ90IYwRQyH5y1/k/Db3vsdyfGwrQbWVPpCWci6pnmd7Qi33S0fYS0mF6L moaj73hu48n0ED5mlQBI3NN9mLx5569HRH1ZnTdRWZFpvKKv2/cSCtDw3ipRYOf24J7I+wMUn75 jQfZshvwne+R+Qgr62j+Zz/nTJCT5lLE+Ntg7ET3Y+0NFTD56NCw1csr31S7AYrPLo/DMTqzlti +tvAh06Yxm9VMIiunp/DFv1b7WlXLh73K/JzQqPZPWSFtm0BRAWqJkzd6umhD8+JljGBq5GS1/d AS3s2pBNaTjEOz7Jm7aJt1CvIO4bbggBaV1fqynnI/XCa7LOImxPCiIWK/vDPmtpfXDOHS9VVW1 nR9Xz8dNB7i4uMfqG2ScO0ARCC5BEyzsOTopcKDNB+ebImO1xlN5kNNSQ64l6u3fJcOIGbCA7OH hCLl8zHbtPmo5o7fVJ7ofo/VpLECCMT06USH/bawaRaHsZwPoGzb/GEaBHzlZiLxDTJafVAQ/kv H6k7mo0j7zU3La4j+XVF16LNEesY0GmDhd/rIRA+o80x7G+PDX8HsZZc7Ua4cKG/3asVAdGVjuH hEo5CTjdFzwwndMSV1RVc2I9DUqGso01IdO7Gemb7Y9Ci3C+qWEP/K8/a1HuxVSz6FaoPHrnjEu b4rMy5UnBzUZi1
+ Q==
 X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-Replace the deprecated[1] use of strncpy() in tcp_ca_get_name_by_key().
-The only caller passes the results to nla_put_string(), so trailing
-padding is not needed.
+Hi,
 
-Since passing "buffer" decays it to a pointer, the size can't be
-trivially determined by the compiler. ca->name is the same length,
-so strscpy() won't fail (when ca->name is NUL-terminated). Include the
-length explicitly instead of using the 2-argument strscpy().
+Replace all remaining uses of deprecated 1-element "fake" flexible arrays
+with modern C99 flexible arrays. Add __counted_by annotations at the
+same time.
 
-Link: https://github.com/KSPP/linux/issues/90 [1]
-Signed-off-by: Kees Cook <kees@kernel.org>
----
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: David Ahern <dsahern@kernel.org>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org
----
- net/ipv4/tcp_cong.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+Thanks!
 
-diff --git a/net/ipv4/tcp_cong.c b/net/ipv4/tcp_cong.c
-index 28ffcfbeef14..2a303a7cba59 100644
---- a/net/ipv4/tcp_cong.c
-+++ b/net/ipv4/tcp_cong.c
-@@ -203,9 +203,10 @@ char *tcp_ca_get_name_by_key(u32 key, char *buffer)
- 
- 	rcu_read_lock();
- 	ca = tcp_ca_find_key(key);
--	if (ca)
--		ret = strncpy(buffer, ca->name,
--			      TCP_CA_NAME_MAX);
-+	if (ca) {
-+		strscpy(buffer, ca->name, TCP_CA_NAME_MAX);
-+		ret = buffer;
-+	}
- 	rcu_read_unlock();
- 
- 	return ret;
+-Kees
+
+Kees Cook (6):
+  scsi: message: fusion: struct _RAID_VOL0_SETTINGS: Replace 1-element
+    array with flexible array
+  scsi: message: fusion: struct _CONFIG_PAGE_SAS_IO_UNIT_0: Replace
+    1-element array with flexible array
+  scsi: message: fusion: struct _CONFIG_PAGE_RAID_PHYS_DISK_1: Replace
+    1-element array with flexible array
+  scsi: message: fusion: struct _CONFIG_PAGE_IOC_2: Replace 1-element
+    array with flexible array
+  scsi: message: fusion: struct _CONFIG_PAGE_IOC_3: Replace 1-element
+    array with flexible array
+  scsi: message: fusion: struct _CONFIG_PAGE_IOC_4: Replace 1-element
+    array with flexible array
+
+ drivers/message/fusion/lsi/mpi_cnfg.h | 60 +++------------------------
+ 1 file changed, 6 insertions(+), 54 deletions(-)
+
 -- 
 2.34.1
 
