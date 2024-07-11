@@ -1,158 +1,125 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE2A816B752;
-	Thu, 11 Jul 2024 16:35:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 634A716CD39;
+	Thu, 11 Jul 2024 16:54:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720715725; cv=none; b=d9r7CRGIx82YPM5bnS0cT0drDdbN39EnU0ANLtkLgpG5l3lNFhMGmzYHnQ2R0FfPjXpgDOQb77ONUsEckkqM67vaKHY9QWQL+KzEfXdiY4TcLGZbJdHg7JxgRewD0pjYLJs40NwFvSZome9dM++lw70w0bm6vJprD/DDx4RC1ps=
+	t=1720716878; cv=none; b=NU37QwA+3VG43Q7pMG59AHif9F+tsG4dQA5v9VmvG3HFboXgYb3OKZOZ4XCx5XDgXQgoc1rdeFHWaGuHL1dc1JIoUzLsERgiis4pbv63LYpkeMVtnAC+R3vGd02JDSlDzQ/O+mE/AcqSPVXIe2BkyL1wZKX6AB0dOd+gQy7tQfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720715725; c=relaxed/simple;
-	bh=eYOzrKzYkBArUGV+retdG2v4fSbxeHESNpJPniHrEBk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Hwmbukn1aQk+Mphk9wuQcIRZVMv4pihJUBMX+xQkGAP4eVvtxCSrteliQgfqVgiRGo3Fzvr6omlVNoI3MjviIWF3rR+Q8VD4U54d1+LHECNUtWrzYEByKIkMpWDzhx8E81N13Hmu/d9oQPTkFyBmcN1uixN7hy4E5QJXJj9gHhs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kty32UDH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720716878; c=relaxed/simple;
+	bh=YhiyGaiuRRSfHnjOqc3BEsL5YLjUMQ8IUktkjyA/ApU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=IHt70+VoO3/M+p6r10siu37XSYLEtqN2LOE5m4mvmGA0g8FQvFbBBC3IfSqJ+k7CpUA/UNwz4XiFN1Mwdk9RH3DNFtAFt56gueCTtNyL5yTqnOWKWN/cZGaa/lHfXIstrN2dxbJRWTOuFx5eq/eTKJThbrNdva2iSugaRcqaD8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MQjXmNL+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kty32UDH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49893C116B1;
-	Thu, 11 Jul 2024 16:35:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MQjXmNL+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3033C32786;
+	Thu, 11 Jul 2024 16:54:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720715725;
-	bh=eYOzrKzYkBArUGV+retdG2v4fSbxeHESNpJPniHrEBk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kty32UDHqUwc34fH+pbtVG4FtlLSqpihl2Oc+Hx7JE/2QJAOzQDDdd+WDi2mpE1FR
-	 ZRrliVHVYrxT73c5ivaXYRtGNOypC2rjHn0GspIwx18EiujaaBZPWBReeLhHof6AQo
-	 KcE3iC9+6EU4S8xKN3dNo6itXqwJDzE2Jh0U086Jl1YY7TWF7FsoQekJJUzjNBNyPz
-	 sOctkctn3WNBmPUZZtVkzDYsOgUYuIGMKxtwUOYHfd2cs3AzCYs1vtPTEUUmVnCRy/
-	 r8sALqwCo5bDRDDISgYzxZlOqdSj/f43VR73tyNDJMtEzx6AzvNfC2CXY04fTc08vW
-	 fdndubSKuYHeA==
-Date: Thu, 11 Jul 2024 09:35:24 -0700
+	s=k20201202; t=1720716877;
+	bh=YhiyGaiuRRSfHnjOqc3BEsL5YLjUMQ8IUktkjyA/ApU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=MQjXmNL+3yXKgd+NtY095FUXMn8NiTd7S8AQkjb/t29nn2AVOmtFiyRiqb0Y4gJiH
+	 3ogQIC0RG96++F8RFVAwxFO7JVj05EGZcB46TNm5nOEnEjmj3JIqJ7Wey9naLG3s9v
+	 QMFXgGXjnImvUSxG2I7/38VwLp/gScCUQFppOLV6rwS3lvdygnxoFbBhCC1mo/4NDd
+	 12oE9OMp0Wn17xJgUmbQUeP26gsjvw25q0hkNxJaYHU3Ti71djA8ENZigyDYyN7zpm
+	 DaUcNPh7DZ3kUQEQgrbK4pjCIFCwPZddN/QLGcJWQxXYUZDduZpby//0AZOe1qqGf4
+	 ny4k282B+diuw==
 From: Kees Cook <kees@kernel.org>
-To: Marco Elver <elver@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Gatlin Newhouse <gatlin.newhouse@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <bhe@redhat.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Pengfei Xu <pengfei.xu@intel.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Changbin Du <changbin.du@huawei.com>, Xin Li <xin3.li@intel.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
-	linux-hardening@vger.kernel.org, llvm@lists.linux.dev,
-	t.p.northover@gmail.com, Fangrui Song <maskray@google.com>
-Subject: Re: [PATCH v4] x86/traps: Enable UBSAN traps on x86
-Message-ID: <202407110924.81A08DD4D@keescook>
-References: <20240710203250.238782-1-gatlin.newhouse@gmail.com>
- <20240711081031.GB4587@noisy.programming.kicks-ass.net>
- <CANpmjNObEzShHvw19EAntPvCYJbqezKBq+pB=mkd7j3sXDEE7A@mail.gmail.com>
+To: Brendan Higgins <brendan.higgins@linux.dev>
+Cc: Kees Cook <kees@kernel.org>,
+	David Gow <davidgow@google.com>,
+	Rae Moar <rmoar@google.com>,
+	linux-kselftest@vger.kernel.org,
+	kunit-dev@googlegroups.com,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v2] kunit: executor: Simplify string allocation handling
+Date: Thu, 11 Jul 2024 09:54:32 -0700
+Message-Id: <20240711165428.it.345-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANpmjNObEzShHvw19EAntPvCYJbqezKBq+pB=mkd7j3sXDEE7A@mail.gmail.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2584; i=kees@kernel.org; h=from:subject:message-id; bh=YhiyGaiuRRSfHnjOqc3BEsL5YLjUMQ8IUktkjyA/ApU=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmkA5IYYbjf2+UDJNgaLFC2B6iPUrmI21ygPUrL YH9kE40FwCJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZpAOSAAKCRCJcvTf3G3A JpNwEACFEm4kfWxNFsNucbzTW5bNVxWSDSwx6Jg5wqG8ATXHyXz/WfyZQ2EhJYFd1nY0Zdvpbbg FTKAD/8hYHpy5Ci73htvaRe9QTl8LhTrR4QOs660Bd3wPh1ebm11IoDCadR6RF4nHzg1linuIw2 ZkrdfLOvq9AAu/9c+Xtl2zAprzYvLVRmxEZ+pNuVsAcLGBCZ6BIONR4F5fF7W2HVOtP4iuuxe5i qN9E6/okxDIN6Z29J0/1Ya8uR0jRI98376WOFYmvmV0/PYiwMrxIiaxbsoiO+nhqyjynW1DJoCh Ns6E/qJnGMs41e1FiI/m5sTgHlYX2Eqez+/Ge4VsQwz+vM+dT37R1h7wCgor8/+x+FV7c2vZgEz 3JzAP+2slipGc1wrCfUZ+H0eTjyizNv0POu8GZGQkrFB8+bCQGGceZ3SxbV8MWcWaKOz00hjV/e JOE3rCzsZkcAeBeRuQD2uVZkFPOK8hn9x4cwaPjx5CFq7cJTvA5w6ffYXKNhTTATEwsyhNM5ZEu PBicdrEvumhwSyCc80owOOJ2rB8DH19TKQufibxV7erwxrHKV0ilEwwsYeK7EdzjXqK0mLSCIMu /gPPWXnQTm6p1FVf3PkPpMihUkkJnp4C51hkZBp+LUIsVyjOw1oAbLJovTBuu9TfkWWJ0+BYibh t4/KHuUJzAWEJ
+ 0g==
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jul 11, 2024 at 11:06:12AM +0200, Marco Elver wrote:
-> On Thu, 11 Jul 2024 at 10:10, Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > On Wed, Jul 10, 2024 at 08:32:38PM +0000, Gatlin Newhouse wrote:
-> > > Currently ARM architectures extract which specific sanitizer
-> > > has caused a trap via encoded data in the trap instruction.
-> > > Clang on x86 currently encodes the same data in ud1 instructions
-> > > but the x86 handle_bug() and is_valid_bugaddr() functions
-> > > currently only look at ud2s.
-> > >
-> > > Bring x86 to parity with arm64, similar to commit 25b84002afb9
-> > > ("arm64: Support Clang UBSAN trap codes for better reporting").
-> > > Enable the reporting of UBSAN sanitizer detail on x86 architectures
-> > > compiled with clang when CONFIG_UBSAN_TRAP=y.
-> >
-> > Can we please get some actual words on what code clang will generate for
-> > this? This doesn't even refer to the clang commit.
-> >
-> > How am I supposed to know if the below patch matches what clang will
-> > generate etc..
-> 
-> I got curious what the history of this is - I think it was introduced
-> in https://github.com/llvm/llvm-project/commit/c5978f42ec8e9, which
-> was reviewed here: https://reviews.llvm.org/D89959
+The alloc/copy code pattern is better consolidated to single kstrdup (and
+kstrndup) calls instead. This gets rid of deprecated[1] strncpy() uses as
+well. Replace one other strncpy() use with the more idiomatic strscpy().
 
-Sorry, I should have suggested this commit be mentioned in the commit
-log. The details are in llvm/lib/Target/X86/X86MCInstLower.cpp:
-https://github.com/llvm/llvm-project/commit/c5978f42ec8e9#diff-bb68d7cd885f41cfc35843998b0f9f534adb60b415f647109e597ce448e92d9f
+Link: https://github.com/KSPP/linux/issues/90 [1]
+Reviewed-by: David Gow <davidgow@google.com>
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+Cc: Brendan Higgins <brendan.higgins@linux.dev>
+Cc: David Gow <davidgow@google.com>
+Cc: Rae Moar <rmoar@google.com>
+Cc: linux-kselftest@vger.kernel.org
+Cc: kunit-dev@googlegroups.com
+---
+ lib/kunit/executor.c      | 12 +++---------
+ lib/kunit/executor_test.c |  2 +-
+ 2 files changed, 4 insertions(+), 10 deletions(-)
 
-  case X86::UBSAN_UD1:
-    EmitAndCountInstruction(MCInstBuilder(X86::UD1Lm)
-                                .addReg(X86::EAX)
-                                .addReg(X86::EAX)
-                                .addImm(1)
-                                .addReg(X86::NoRegister)
-                                .addImm(MI->getOperand(0).getImm())
-                                .addReg(X86::NoRegister));
-
-Which is using the UD1Lm template from
-https://github.com/llvm/llvm-project/blob/main/llvm/lib/Target/X86/X86InstrSystem.td#L27
-
-  def UD1Lm   : I<0xB9, MRMSrcMem, (outs), (ins GR32:$src1, i32mem:$src2),
-                  "ud1{l}\t{$src2, $src1|$src1, $src2}", []>, TB, OpSize32;
-
-It uses OpSize32, distinct from UD1Wm (16) and UD1Qm (64).
-
-> But besides that, there's very little documentation. Either Gatlin or
-> one of the other LLVM folks might have more background, but we might
-> be out of luck if that 1 commit is all there is.
-> 
-> [+Cc Tim, author of the LLVM commit]
-> 
-> > > diff --git a/arch/x86/include/asm/bug.h b/arch/x86/include/asm/bug.h
-> > > index a3ec87d198ac..ccd573d58edb 100644
-> > > --- a/arch/x86/include/asm/bug.h
-> > > +++ b/arch/x86/include/asm/bug.h
-> > > @@ -13,6 +13,17 @@
-> > >  #define INSN_UD2     0x0b0f
-> > >  #define LEN_UD2              2
-> > >
-> > > +/*
-> > > + * In clang we have UD1s reporting UBSAN failures on X86, 64 and 32bit.
-> > > + */
-> > > +#define INSN_ASOP    0x67
-> >
-> > I asked, but did not receive answer, *WHY* does clang add this silly
-> > prefix? AFAICT this is entirely spurious and things would be simpler if
-> > we don't have to deal with it.
-
-Even if we change LLVM, I'd still like to support the older versions, so
-we'll need to handle this regardless.
-
-> >
-> > > +#define OPCODE_PREFIX        0x0f
-> >
-> > This is *NOT* a prefix, it is an escape, please see the SDM Vol 2
-> > Chapter 'Instruction Format'. That ASOP thing above is a prefix.
-> >
-> > > +#define OPCODE_UD1   0xb9
-> > > +#define OPCODE_UD2   0x0b
-> >
-> > These are second byte opcodes. The actual (single byte opcodes) of those
-> > value exist and are something entirely different (0xB0+r is MOV, and
-> > 0x0B is OR).
-
-What would be your preferred names for all of these defines?
-
+diff --git a/lib/kunit/executor.c b/lib/kunit/executor.c
+index 70b9a43cd257..34b7b6833df3 100644
+--- a/lib/kunit/executor.c
++++ b/lib/kunit/executor.c
+@@ -70,32 +70,26 @@ struct kunit_glob_filter {
+ static int kunit_parse_glob_filter(struct kunit_glob_filter *parsed,
+ 				    const char *filter_glob)
+ {
+-	const int len = strlen(filter_glob);
+ 	const char *period = strchr(filter_glob, '.');
+ 
+ 	if (!period) {
+-		parsed->suite_glob = kzalloc(len + 1, GFP_KERNEL);
++		parsed->suite_glob = kstrdup(filter_glob, GFP_KERNEL);
+ 		if (!parsed->suite_glob)
+ 			return -ENOMEM;
+-
+ 		parsed->test_glob = NULL;
+-		strcpy(parsed->suite_glob, filter_glob);
+ 		return 0;
+ 	}
+ 
+-	parsed->suite_glob = kzalloc(period - filter_glob + 1, GFP_KERNEL);
++	parsed->suite_glob = kstrndup(filter_glob, period - filter_glob, GFP_KERNEL);
+ 	if (!parsed->suite_glob)
+ 		return -ENOMEM;
+ 
+-	parsed->test_glob = kzalloc(len - (period - filter_glob) + 1, GFP_KERNEL);
++	parsed->test_glob = kstrdup(period + 1, GFP_KERNEL);
+ 	if (!parsed->test_glob) {
+ 		kfree(parsed->suite_glob);
+ 		return -ENOMEM;
+ 	}
+ 
+-	strncpy(parsed->suite_glob, filter_glob, period - filter_glob);
+-	strncpy(parsed->test_glob, period + 1, len - (period - filter_glob));
+-
+ 	return 0;
+ }
+ 
+diff --git a/lib/kunit/executor_test.c b/lib/kunit/executor_test.c
+index 3f7f967e3688..f0090c2729cd 100644
+--- a/lib/kunit/executor_test.c
++++ b/lib/kunit/executor_test.c
+@@ -286,7 +286,7 @@ static struct kunit_suite *alloc_fake_suite(struct kunit *test,
+ 
+ 	/* We normally never expect to allocate suites, hence the non-const cast. */
+ 	suite = kunit_kzalloc(test, sizeof(*suite), GFP_KERNEL);
+-	strncpy((char *)suite->name, suite_name, sizeof(suite->name) - 1);
++	strscpy((char *)suite->name, suite_name, sizeof(suite->name));
+ 	suite->test_cases = test_cases;
+ 
+ 	return suite;
 -- 
-Kees Cook
+2.34.1
+
