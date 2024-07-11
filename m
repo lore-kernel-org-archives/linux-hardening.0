@@ -1,117 +1,109 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4303D16D4FF
-	for <linux-hardening@vger.kernel.org>; Thu, 11 Jul 2024 17:38:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1C7012C52E;
+	Thu, 11 Jul 2024 17:48:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720719495; cv=none; b=BXIeU5d6xuQhhGcHdv4DgGD9gp2DgfaZibmF1SHK0lb3XeHqSR2BBtjgfmUwRZjh9IJgv6liHa7Vnc1+aW4r3m1yu7NQTTMVWWIp13f3LjL/E/Oeh3NgIZpHUXFO95KVcNrfASoUgFQ2Dzm2G2WTHvubOq8Mw9us1NQhEEE+7zQ=
+	t=1720720111; cv=none; b=ZwU+2skPbRSucr0gCX6XPHAHoxSQ7AEn2dbmA94sELDcIpj+rT8+c5cNOcwx1V5MmcltLrCEJWMVS63ej3ifMue6FErHoghfcnVHSMtiDrBIKQyIdM4cdJIQMVcavKtkP6fmSQGSVNv0ce9ExQqHepu8WLvf4oeJkkUPW9lyfxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720719495; c=relaxed/simple;
-	bh=5Xgl+EcOjT7f93shPiHRMJ4pO5M75AEYdIGVDYwpN8M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QlRvjYLCN+JF+S7SIs6q91GRWajPE2Bkb1ZLSIMZsUkE2Nwi4VkYa+Qe4E4fC2clmjuzQ2RzRSd8TSJZpict0y4Zs7EwmBWqKWVP09glRcUTMStEjV6Q/SQx+FNjZ31GENPT5WsouQA5dGLKa7K6YOUwjXKxBzzb/WRl+G1djUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oe9j52uy; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1720720111; c=relaxed/simple;
+	bh=HGcnN4KTok0t7axiVRtqkEovmvgm24DUvqfkC7/4Hg8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hJxevq49jWTv+T47AumknaEyvyvBys8GtBWjmd1Pzj9IA/15N30Okiwz88v4nYuSk1NqC/WSI0sCZNurXDU2OkchCn7eT38h7AfYk5vAFwxDD9hJwg/TlnzdMU47vGkrx+xKD1pAHpdTHsDDXzA6MEy2qCG5ey74Eqk/q9Iu/6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sOWPD0iQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oe9j52uy"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-57a16f4b8bfso553a12.0
-        for <linux-hardening@vger.kernel.org>; Thu, 11 Jul 2024 10:38:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1720719492; x=1721324292; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kmi5HLcqE6fK5ySS3lyqzl4ypWFtv4L42PctvT1OoP0=;
-        b=oe9j52uyDrHceb9y99ZhuiWajBBOOb0Vu5p4YsdN8JRq9bMms36Ydg9DebfagfNYFp
-         2bb8egBjYqI+xW7EYeBcnd68Br5gRMChOOnv1uqkpO/NzNAN1bdURs9I1Ys8TSpUaFUB
-         GK9K/LdgpHQT24rwAzYds0+QH0TmzpcXFL/v7MaLkVVEOTer+y6D3tDqGPyJCuvrEBY8
-         XXCOUzLIJGfg8/lRf2OZr7daWAW25E/BcHRFh8ZBjgx0FxsEAfmQUDDc658XqYyVrbzV
-         Xk3n+MfAS1xGB9VXYXXzajf/EM9AjqCa/EMP7xGfTCwggDaU48a3latx5Cg8Bu017uWV
-         qMzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720719492; x=1721324292;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kmi5HLcqE6fK5ySS3lyqzl4ypWFtv4L42PctvT1OoP0=;
-        b=tiDmFNCQLVPpHVgKoAuLzZdYAp10gmPb4wsbaUhtZEs1U5OtRbvHhr3IXlgaIuuPUa
-         e7T1MRywsl1Z/UTRIYSwgwuDZvgR/EKgddTMwM9elsJS5ZGdm4AX1A+4NXxG4ieBUXBU
-         GdM2K1wNe9/mtWqKFF4Tji3GoPBZRewKz6wW9ZTG+ia3Vo+qEVUMU568dK+CL4q/JWWi
-         8yHr+FrhhpigTCS2VXA9xdO4X1VSii0rYJGvVsQzJS2x7vb8CdGfloXVpxYpjeuK5Yiy
-         ZS+xf3VlKNBYl9unWkH/ARQxWMfXq98aW0ccnk4izGEmsps64WYmFI+p76fEE90B2NAT
-         eixQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXKJNqiY4xfdZPvKOJmaYFuMRgUIP244+smJF0oe5hzaaai1KPb9HMsgzC62bFRSag0Xvfg7bt9xAt3TwHeEHOWL386xkj/XJUZn6FQbXkM
-X-Gm-Message-State: AOJu0YzhO7Cnzuu45QxneBFvsDf+uMRdtXVGsbBxkVWeRKm4OnrdwLCr
-	4g3rvAQBCt+sjWfyb2/Jnuw1Kn+35z3COkAxiUMTNQiIksJ9UAGHf/qtHMEL3Xk2gmNyxxurxwb
-	0neFTD+PnOSU6BGNCWVwhqlmh2RVDdYeZn9q3
-X-Google-Smtp-Source: AGHT+IH7ZVeKGtFW1ffbCmLAUEv4AqAX1Zjzfy/SAWoRHxzSGzNdtgnfN009pJNeMEQH46pIXGbzCkhrPdNrgHUru00=
-X-Received: by 2002:a05:6402:51cc:b0:58b:b1a0:4a2d with SMTP id
- 4fb4d7f45d1cf-5997b09fef9mr1782a12.1.1720719492339; Thu, 11 Jul 2024 10:38:12
- -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sOWPD0iQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54666C116B1;
+	Thu, 11 Jul 2024 17:48:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720720111;
+	bh=HGcnN4KTok0t7axiVRtqkEovmvgm24DUvqfkC7/4Hg8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=sOWPD0iQO2087GV6Wy719T6yjDeOLzuMNTPbXZovWf2BDn1PwG73n/8Ab5vpzMq9z
+	 2N/lp9SlQNTuU1oRPuQ/7FGn2h4YbFjHW8ArgPQ9dVVRXjXAAsNDvZ6hesXB0D8XkO
+	 kLPXAIsernn2DppfhCrBKcOLpAe1G65MLp/fmMVTB2G2xMMCxZYxGI8cMHX0TMHqQx
+	 D464k1Cq3DMxgXC7p7douXiPWXzzo8L14uKJMRkb8/W6nid5/CkZ2/1maXFMvh3T/e
+	 HlKj6Qh7POFGR2QFgrMdxuyU0+ohryrZ2ZUyAFB6i/gNfvvVLqWYM9TyWpYNYOV6uI
+	 zlCDz9iG1aWTw==
+From: Kees Cook <kees@kernel.org>
+To: Adaptec OEM Raid Solutions <aacraid@microsemi.com>
+Cc: Kees Cook <kees@kernel.org>,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	linux-scsi@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] scsi: aacraid: union aac_init: Replace 1-element array with flexible array
+Date: Thu, 11 Jul 2024 10:48:23 -0700
+Message-Id: <20240711174815.work.689-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240711171652.work.887-kees@kernel.org>
-In-Reply-To: <20240711171652.work.887-kees@kernel.org>
-From: Eric Dumazet <edumazet@google.com>
-Date: Thu, 11 Jul 2024 10:38:01 -0700
-Message-ID: <CANn89iKqZD68w1QtM3ztL_X290tj_EGyWRvFrhyAz-=T+GkogQ@mail.gmail.com>
-Subject: Re: [PATCH] net/ipv4: Replace tcp_ca_get_name_by_key()'s strncpy()
- with strscpy()
-To: Kees Cook <kees@kernel.org>
-Cc: "David S. Miller" <davem@davemloft.net>, David Ahern <dsahern@kernel.org>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2162; i=kees@kernel.org; h=from:subject:message-id; bh=HGcnN4KTok0t7axiVRtqkEovmvgm24DUvqfkC7/4Hg8=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmkBrmlNgW/4H9lf+vQtTOiV5fbi4QsQb2L+v/c lqeVpUgiLaJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZpAa5gAKCRCJcvTf3G3A Jn/GD/wK2gm1gCxL5IXKrUtAmylMoT/MHacXDK47HEy1zGd3V029xS/MeYZ9IDnrmkCsqIGFQNz sdE3svAvY7o8hF5g1o3o0FrPQhYAJFMr5oxOFBEFyh9PtXwUCW0AA7ObaVPv0dGhkBq7tW42uTg taR1hMccfb567jp4LFqZM/lobei5rC4DQsgjwJpDujRvbNZSX/AgnTRTLEhzhZUOR6aGy4CQntJ QWu4tdcjPP5sbTAeQ03xB9+cxzPnAz4IESFDuUAq7insuUx3aPnfosbdPZzCbIIZkcrJosRW6gE XF9gdkqI32U9s4zX+HFVowiIb4piatszrZqG/hs4uibdRCqZ+gvOhTSCbz6M7+8Ms37j+155tzH hC+4P4f5DRkGXGlnInHXeIkZiLMxUC/sRsiqmOc/eLO8CsEdk0slpRKT7BUXbnTAByBJKrU5k3Z 4E63tKRhu2ajGzfiYp0NQsg9WPcYqHTNia7rob6tVge1D3MGj1wW9XKoVb3VqA9HP8vXmtLCXvz dxg+VLIktYMPNLvuLSLSoOLuk2aTJwMROdiPBXc/fK4C6Wdx97cuefifeLGD6BB0K83+I+HtLRi E+sKnbC0JHa7woXQz9kfEzwinw2RjD+65F7KT+9run/0IFjvULyGaO2+oK9TH+R63u+Uu/BWRck G403EI6tkQOIA
+ CQ==
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jul 11, 2024 at 10:16=E2=80=AFAM Kees Cook <kees@kernel.org> wrote:
->
-> Replace the deprecated[1] use of strncpy() in tcp_ca_get_name_by_key().
-> The only caller passes the results to nla_put_string(), so trailing
-> padding is not needed.
->
-> Since passing "buffer" decays it to a pointer, the size can't be
-> trivially determined by the compiler. ca->name is the same length,
-> so strscpy() won't fail (when ca->name is NUL-terminated). Include the
-> length explicitly instead of using the 2-argument strscpy().
->
-> Link: https://github.com/KSPP/linux/issues/90 [1]
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
-> Cc: Eric Dumazet <edumazet@google.com>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: David Ahern <dsahern@kernel.org>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Paolo Abeni <pabeni@redhat.com>
-> Cc: netdev@vger.kernel.org
-> ---
->  net/ipv4/tcp_cong.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
->
-> diff --git a/net/ipv4/tcp_cong.c b/net/ipv4/tcp_cong.c
-> index 28ffcfbeef14..2a303a7cba59 100644
-> --- a/net/ipv4/tcp_cong.c
-> +++ b/net/ipv4/tcp_cong.c
-> @@ -203,9 +203,10 @@ char *tcp_ca_get_name_by_key(u32 key, char *buffer)
->
->         rcu_read_lock();
->         ca =3D tcp_ca_find_key(key);
-> -       if (ca)
-> -               ret =3D strncpy(buffer, ca->name,
-> -                             TCP_CA_NAME_MAX);
-> +       if (ca) {
-> +               strscpy(buffer, ca->name, TCP_CA_NAME_MAX);
-> +               ret =3D buffer;
-> +       }
->         rcu_read_unlock();
->
+Replace the deprecated[1] use of a 1-element array in
+union aac_init with a modern flexible array.
 
-Ok, but what about tcp_get_default_congestion_control() ?
+Additionally add __counted_by annotation since rrq is only ever accessed
+after rr_queue_count has been set (with the same value used to control
+the loop):
 
-Thanks.
+                init->r8.rr_queue_count = cpu_to_le32(dev->max_msix);
+		...
+                for (i = 0; i < dev->max_msix; i++) {
+                        addr = (u64)dev->host_rrq_pa + dev->vector_cap * i *
+                                        sizeof(u32);
+                        init->r8.rrq[i].host_addr_high = cpu_to_le32(
+                                                upper_32_bits(addr));
+
+No binary differences are present after this conversion.
+
+Link: https://github.com/KSPP/linux/issues/79 [1]
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+Cc: Adaptec OEM Raid Solutions <aacraid@microsemi.com>
+Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
+Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: linux-scsi@vger.kernel.org
+---
+ drivers/scsi/aacraid/aacraid.h | 2 +-
+ drivers/scsi/aacraid/src.c     | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/scsi/aacraid/aacraid.h b/drivers/scsi/aacraid/aacraid.h
+index 7d5a155073c6..659e393c1033 100644
+--- a/drivers/scsi/aacraid/aacraid.h
++++ b/drivers/scsi/aacraid/aacraid.h
+@@ -873,7 +873,7 @@ union aac_init
+ 			__le16	element_count;
+ 			__le16	comp_thresh;
+ 			__le16	unused;
+-		} rrq[1];		/* up to 64 RRQ addresses */
++		} rrq[] __counted_by_le(rr_queue_count); /* up to 64 RRQ addresses */
+ 	} r8;
+ };
+ 
+diff --git a/drivers/scsi/aacraid/src.c b/drivers/scsi/aacraid/src.c
+index 11ef58204e96..28115ed637e8 100644
+--- a/drivers/scsi/aacraid/src.c
++++ b/drivers/scsi/aacraid/src.c
+@@ -410,7 +410,7 @@ static void aac_src_start_adapter(struct aac_dev *dev)
+ 			lower_32_bits(dev->init_pa),
+ 			upper_32_bits(dev->init_pa),
+ 			sizeof(struct _r8) +
+-			(AAC_MAX_HRRQ - 1) * sizeof(struct _rrq),
++			AAC_MAX_HRRQ * sizeof(struct _rrq),
+ 			0, 0, 0, NULL, NULL, NULL, NULL, NULL);
+ 	} else {
+ 		init->r7.host_elapsed_seconds =
+-- 
+2.34.1
+
