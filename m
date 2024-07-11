@@ -1,137 +1,158 @@
-Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7727A8F72
-	for <linux-hardening@vger.kernel.org>; Thu, 11 Jul 2024 16:27:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE2A816B752;
+	Thu, 11 Jul 2024 16:35:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720715243; cv=none; b=RdBAzqJEcjqz6rs+vmI6SV2YRPMQUnubGhoFrAE3vaenCHD7SbhPbRhexi58PrRdoBMO/EdB/oELoK1PuyK/nEujCWlYEYPvbATxCzD8ZTLe967gTQRbWm/m2nSzHctSnjbdKRO4gQ90B4ZuXUG2HFztChgpNB8fzteig+kSod0=
+	t=1720715725; cv=none; b=d9r7CRGIx82YPM5bnS0cT0drDdbN39EnU0ANLtkLgpG5l3lNFhMGmzYHnQ2R0FfPjXpgDOQb77ONUsEckkqM67vaKHY9QWQL+KzEfXdiY4TcLGZbJdHg7JxgRewD0pjYLJs40NwFvSZome9dM++lw70w0bm6vJprD/DDx4RC1ps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720715243; c=relaxed/simple;
-	bh=7Npujt/HI+JKoyoMEPQGekvvaq3PC5E7qr0zDHfpoCA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=E/acznADNdMVl6d8x1VvzJfOmz38VAK9kNMtmcQRUPMovfrhBx41axI9mDDUKRUz7zv7jxGilR2JFubIiYB8xg6EbebnaG3RIo7YTZUcQw2iviLr8wu/IPeiySrkkWemDQxps40SUXciTn2KQXp4pP7QAGhByQlkBrPHFHAtjDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=dyD5K72Z; arc=none smtp.client-ip=35.89.44.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1720715725; c=relaxed/simple;
+	bh=eYOzrKzYkBArUGV+retdG2v4fSbxeHESNpJPniHrEBk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Hwmbukn1aQk+Mphk9wuQcIRZVMv4pihJUBMX+xQkGAP4eVvtxCSrteliQgfqVgiRGo3Fzvr6omlVNoI3MjviIWF3rR+Q8VD4U54d1+LHECNUtWrzYEByKIkMpWDzhx8E81N13Hmu/d9oQPTkFyBmcN1uixN7hy4E5QJXJj9gHhs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kty32UDH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="dyD5K72Z"
-Received: from eig-obgw-6001a.ext.cloudfilter.net ([10.0.30.140])
-	by cmsmtp with ESMTPS
-	id RuJVsZmIPumtXRwdes3xki; Thu, 11 Jul 2024 16:27:22 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id RwddsA4EMZlJQRwddsf3xL; Thu, 11 Jul 2024 16:27:21 +0000
-X-Authority-Analysis: v=2.4 cv=DMBE4DNb c=1 sm=1 tr=0 ts=669007ea
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=frY+GlAHrI6frpeK1MvySw==:17
- a=IkcTkHD0fZMA:10 a=4kmOji7k6h8A:10 a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8
- a=VwQbUJbxAAAA:8 a=Q-fNiiVtAAAA:8 a=bLk-5xynAAAA:8 a=yPCof4ZbAAAA:8
- a=RC4BnwySBbfqoxRRKE4A:9 a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22
- a=Fp8MccfUoT0GBdDC_Lng:22 a=zSyb8xVVt2t83sZkrLMb:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=7RxJ21FjXXoxPmpAMaOPM/NGSLf98n+q9lHoeiSK3rU=; b=dyD5K72ZxHOe6gUh2eDT6OikmS
-	HaefSlR5n3lItPNf/YZG8LYP+WW3DhL/VqHZ29sVoI21Rcu+V6bNQzKIhgC5yHr13annwFe9lruDw
-	a8NnenPgMuozXZTp0EUiE4V7uYfVkItc5NuEwaKbRycIz8su2FXcL469cWwDgkDaGeiAuwdbaOnSd
-	pFD3X8lYPY4bGEUKwQG1X4ddUA2+ivBotRvV5USBr2fkBFOJ5A+RvwG4VSUjFR5RIRHASUHuqxUfr
-	JMk2Uv83iPuSHRF225vTQi350Pfh0A9BFDJ3KLkrGxP7yrXpMflTTnwRx0PMkYAejhM/aYTDBdRS1
-	OuqoetpA==;
-Received: from [201.172.173.139] (port=40030 helo=[192.168.15.4])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1sRwdc-0006S7-0x;
-	Thu, 11 Jul 2024 11:27:20 -0500
-Message-ID: <b819d9bd-8b29-4c09-a1f9-f8ec30e4495a@embeddedor.com>
-Date: Thu, 11 Jul 2024 10:27:18 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kty32UDH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49893C116B1;
+	Thu, 11 Jul 2024 16:35:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720715725;
+	bh=eYOzrKzYkBArUGV+retdG2v4fSbxeHESNpJPniHrEBk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kty32UDHqUwc34fH+pbtVG4FtlLSqpihl2Oc+Hx7JE/2QJAOzQDDdd+WDi2mpE1FR
+	 ZRrliVHVYrxT73c5ivaXYRtGNOypC2rjHn0GspIwx18EiujaaBZPWBReeLhHof6AQo
+	 KcE3iC9+6EU4S8xKN3dNo6itXqwJDzE2Jh0U086Jl1YY7TWF7FsoQekJJUzjNBNyPz
+	 sOctkctn3WNBmPUZZtVkzDYsOgUYuIGMKxtwUOYHfd2cs3AzCYs1vtPTEUUmVnCRy/
+	 r8sALqwCo5bDRDDISgYzxZlOqdSj/f43VR73tyNDJMtEzx6AzvNfC2CXY04fTc08vW
+	 fdndubSKuYHeA==
+Date: Thu, 11 Jul 2024 09:35:24 -0700
+From: Kees Cook <kees@kernel.org>
+To: Marco Elver <elver@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Gatlin Newhouse <gatlin.newhouse@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Baoquan He <bhe@redhat.com>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Pengfei Xu <pengfei.xu@intel.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Changbin Du <changbin.du@huawei.com>, Xin Li <xin3.li@intel.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
+	linux-hardening@vger.kernel.org, llvm@lists.linux.dev,
+	t.p.northover@gmail.com, Fangrui Song <maskray@google.com>
+Subject: Re: [PATCH v4] x86/traps: Enable UBSAN traps on x86
+Message-ID: <202407110924.81A08DD4D@keescook>
+References: <20240710203250.238782-1-gatlin.newhouse@gmail.com>
+ <20240711081031.GB4587@noisy.programming.kicks-ass.net>
+ <CANpmjNObEzShHvw19EAntPvCYJbqezKBq+pB=mkd7j3sXDEE7A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] scsi: megaraid_sas: struct MR_LD_VF_MAP: Replace
- 1-element arrays with flexible arrays
-To: Kees Cook <kees@kernel.org>, Kashyap Desai <kashyap.desai@broadcom.com>
-Cc: Sumit Saxena <sumit.saxena@broadcom.com>,
- Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
- Chandrakanth patil <chandrakanth.patil@broadcom.com>,
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
- "Martin K. Petersen" <martin.petersen@oracle.com>,
- megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20240711155823.work.778-kees@kernel.org>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20240711155823.work.778-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.173.139
-X-Source-L: No
-X-Exim-ID: 1sRwdc-0006S7-0x
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.4]) [201.172.173.139]:40030
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 57
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfBkg0Q1BRhmcKwgHQMetABhBH2c8wU4p4PKxAI89cUaePXfU3tiz1KMinZYTDKXaf8QydWXbqKpGRteeI0YKMQE5CHVVMvk6riWr6BiTv8LXOcBnosYJ
- iJGshzsDUwO01MAJb4O8opkJLHUb8zHpSbH/ep8uoxEqtmGTTYpUjGLhYSRgwHF7V6d74HoxTY8wdTspW60SdA8rT1ZAZ/a7p3ikmJIgcC9ftevVe1a0nE/J
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANpmjNObEzShHvw19EAntPvCYJbqezKBq+pB=mkd7j3sXDEE7A@mail.gmail.com>
 
-
-
-On 11/07/24 09:58, Kees Cook wrote:
-> Replace the deprecated[1] use of a 1-element array in
-> struct MR_LD_VF_MAP with a modern flexible array.
+On Thu, Jul 11, 2024 at 11:06:12AM +0200, Marco Elver wrote:
+> On Thu, 11 Jul 2024 at 10:10, Peter Zijlstra <peterz@infradead.org> wrote:
+> >
+> > On Wed, Jul 10, 2024 at 08:32:38PM +0000, Gatlin Newhouse wrote:
+> > > Currently ARM architectures extract which specific sanitizer
+> > > has caused a trap via encoded data in the trap instruction.
+> > > Clang on x86 currently encodes the same data in ud1 instructions
+> > > but the x86 handle_bug() and is_valid_bugaddr() functions
+> > > currently only look at ud2s.
+> > >
+> > > Bring x86 to parity with arm64, similar to commit 25b84002afb9
+> > > ("arm64: Support Clang UBSAN trap codes for better reporting").
+> > > Enable the reporting of UBSAN sanitizer detail on x86 architectures
+> > > compiled with clang when CONFIG_UBSAN_TRAP=y.
+> >
+> > Can we please get some actual words on what code clang will generate for
+> > this? This doesn't even refer to the clang commit.
+> >
+> > How am I supposed to know if the below patch matches what clang will
+> > generate etc..
 > 
-> No binary differences are present after this conversion.
+> I got curious what the history of this is - I think it was introduced
+> in https://github.com/llvm/llvm-project/commit/c5978f42ec8e9, which
+> was reviewed here: https://reviews.llvm.org/D89959
+
+Sorry, I should have suggested this commit be mentioned in the commit
+log. The details are in llvm/lib/Target/X86/X86MCInstLower.cpp:
+https://github.com/llvm/llvm-project/commit/c5978f42ec8e9#diff-bb68d7cd885f41cfc35843998b0f9f534adb60b415f647109e597ce448e92d9f
+
+  case X86::UBSAN_UD1:
+    EmitAndCountInstruction(MCInstBuilder(X86::UD1Lm)
+                                .addReg(X86::EAX)
+                                .addReg(X86::EAX)
+                                .addImm(1)
+                                .addReg(X86::NoRegister)
+                                .addImm(MI->getOperand(0).getImm())
+                                .addReg(X86::NoRegister));
+
+Which is using the UD1Lm template from
+https://github.com/llvm/llvm-project/blob/main/llvm/lib/Target/X86/X86InstrSystem.td#L27
+
+  def UD1Lm   : I<0xB9, MRMSrcMem, (outs), (ins GR32:$src1, i32mem:$src2),
+                  "ud1{l}\t{$src2, $src1|$src1, $src2}", []>, TB, OpSize32;
+
+It uses OpSize32, distinct from UD1Wm (16) and UD1Qm (64).
+
+> But besides that, there's very little documentation. Either Gatlin or
+> one of the other LLVM folks might have more background, but we might
+> be out of luck if that 1 commit is all there is.
 > 
-> Link: https://github.com/KSPP/linux/issues/79 [1]
-> Signed-off-by: Kees Cook <kees@kernel.org>
+> [+Cc Tim, author of the LLVM commit]
+> 
+> > > diff --git a/arch/x86/include/asm/bug.h b/arch/x86/include/asm/bug.h
+> > > index a3ec87d198ac..ccd573d58edb 100644
+> > > --- a/arch/x86/include/asm/bug.h
+> > > +++ b/arch/x86/include/asm/bug.h
+> > > @@ -13,6 +13,17 @@
+> > >  #define INSN_UD2     0x0b0f
+> > >  #define LEN_UD2              2
+> > >
+> > > +/*
+> > > + * In clang we have UD1s reporting UBSAN failures on X86, 64 and 32bit.
+> > > + */
+> > > +#define INSN_ASOP    0x67
+> >
+> > I asked, but did not receive answer, *WHY* does clang add this silly
+> > prefix? AFAICT this is entirely spurious and things would be simpler if
+> > we don't have to deal with it.
 
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Even if we change LLVM, I'd still like to support the older versions, so
+we'll need to handle this regardless.
 
-Thanks
+> >
+> > > +#define OPCODE_PREFIX        0x0f
+> >
+> > This is *NOT* a prefix, it is an escape, please see the SDM Vol 2
+> > Chapter 'Instruction Format'. That ASOP thing above is a prefix.
+> >
+> > > +#define OPCODE_UD1   0xb9
+> > > +#define OPCODE_UD2   0x0b
+> >
+> > These are second byte opcodes. The actual (single byte opcodes) of those
+> > value exist and are something entirely different (0xB0+r is MOV, and
+> > 0x0B is OR).
+
+What would be your preferred names for all of these defines?
+
 -- 
-Gustavo
-
-> ---
-> Cc: Kashyap Desai <kashyap.desai@broadcom.com>
-> Cc: Sumit Saxena <sumit.saxena@broadcom.com>
-> Cc: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
-> Cc: Chandrakanth patil <chandrakanth.patil@broadcom.com>
-> Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
-> Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
-> Cc: megaraidlinux.pdl@broadcom.com
-> Cc: linux-scsi@vger.kernel.org
-> ---
->   drivers/scsi/megaraid/megaraid_sas.h | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/scsi/megaraid/megaraid_sas.h b/drivers/scsi/megaraid/megaraid_sas.h
-> index 5680c6cdb221..84cf77c48c0d 100644
-> --- a/drivers/scsi/megaraid/megaraid_sas.h
-> +++ b/drivers/scsi/megaraid/megaraid_sas.h
-> @@ -2473,7 +2473,7 @@ struct MR_LD_VF_MAP {
->   	union MR_LD_REF ref;
->   	u8 ldVfCount;
->   	u8 reserved[6];
-> -	u8 policy[1];
-> +	u8 policy[];
->   };
->   
->   struct MR_LD_VF_AFFILIATION {
+Kees Cook
