@@ -1,104 +1,82 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C93A16D313;
-	Thu, 11 Jul 2024 17:11:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DD05450FA;
+	Thu, 11 Jul 2024 17:13:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720717875; cv=none; b=oCoC9M+sZx1Nqm7IuvsUFZh7prML+m610skDReTOqPWOvUEaeRdhchlR8I8bKXQ0retw8LH0ZdJLOl7YRl9ZIE4zaOKQwPUARY8nGb5YllW2RRn5zP5MDDoeP89BHcZRapVHAy/HrNTVb+6BDhX+Kq6gGNhnkmj0A6mrvEnb6hk=
+	t=1720717991; cv=none; b=I7HpscrldIdx2tcTH5JvqO0Deq5p3fcIDGmy0ci+dYkQO9/6AIwO3z0SlBuO44L96E85H+Y6ZJS3sB/MBm7mvqC5T9UF5kGMuJMZdIhk4RBjPqNqs9uvuhZSiiiYw4gC2Rutvqx1ulK1fZHw4F6cbGntHQoHHXLZ11l47zynZBM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720717875; c=relaxed/simple;
-	bh=PnCjovdovXk9cCG240pvFyOatuK6fCFNWcfBvIcgqTE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ESH799+GaSdntfv2M0APgeFK/OFUd/vlzDqZ9jGSIPjlOQysJjrPfZKTEvBf28oisks2X3o2KC3BPbzrIOeL9fZeulmbdZhZUONHwBc7yHKV6lvs0zn+1nf0zbcJobIx7e6PM8Tml4VMY3Ep0OviaQo3VGxnRjBy987jw4ubt2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nNjprgW/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720717991; c=relaxed/simple;
+	bh=xaKsQpF71MSFmC0xsITNp3M5gYzUZlBQesDbEER8aRE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Z2QwcZzUw0c+OANfUiHVc28XFOKZWyTjfVfQwjNho04NoInx2LVYTDiCnzqeKecGe895DyqPUj04FgG2kiDSMyjH8M+waCf3e8++kT50xj9teN/Ru870YWGJkh/mtRTYHacDK90IxJn1IMKsrVMzUi19B8QcXwcC1lfRzjt2XMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nUngXAXl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nNjprgW/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF0B5C4AF07;
-	Thu, 11 Jul 2024 17:11:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nUngXAXl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A419CC116B1;
+	Thu, 11 Jul 2024 17:13:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720717874;
-	bh=PnCjovdovXk9cCG240pvFyOatuK6fCFNWcfBvIcgqTE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nNjprgW/2jpNHNaDpcjA4OnmlFkC5G1rvr/2uDzwRpP01/JEDwupaQ/Y+ONE1kgwG
-	 CaJ35xc4Vza09SZ8iu8BkCr/jW9hSFWZUgGlRVMJfGM7T7kVU7cxxgt0APVajZeZLb
-	 zb0tHYRruSW+ix6stIHsUEK6J3lWpdNYroF2VJtkah5Gg35336fOaCXeNgakb7UYiG
-	 ZY/gihcKITUubrCKxfdMTvY5PYB7fjqiUkuYkZR7inh3edid8w/JbnGYIyVrqv2FCd
-	 aijKZgHxiO+iIv5YNhiHYsFvbGszFFqQJbTDUnu+HWNbwYwABjKri+6617YArDW0Ff
-	 KhLOQQ4Hj5G4A==
+	s=k20201202; t=1720717990;
+	bh=xaKsQpF71MSFmC0xsITNp3M5gYzUZlBQesDbEER8aRE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=nUngXAXlBPFuZAJ7YrQh1lA8I7U2wZ3rMquELhfTAjK5H6al2vkjY35knKCZizZp8
+	 FrtoBKgBSM7mpfRTA/fT2musgNKf9ncvxZkFNz2vwUcLuAyN8dsQTEq0OQiuWRkpXG
+	 4HpQK/2vyT03C8XqX2Kknw89oNeYf1cxNuvy6ZgoGwQnFSuM8HY421g+1+8hnnjgoW
+	 ToI91YFhcpY0ydPlqhK/SW/8+iuT+P8BUcT5RPKm5/qb70elLGDnX2NVT+lhtMpum7
+	 seBacQqZEZ9oKLaI6OzjwRtm51Q3V6jAqAmU2aCtsTdaS/5phcI2yZbCzOPqJbeyjY
+	 qNeQbX5Jw9nTA==
 From: Kees Cook <kees@kernel.org>
-To: Ard Biesheuvel <ardb@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>
 Cc: Kees Cook <kees@kernel.org>,
-	linux-efi@vger.kernel.org,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	"Borislav Petkov (AMD)" <bp@alien8.de>,
-	Baskov Evgeniy <baskov@ispras.ru>,
-	Ingo Molnar <mingo@kernel.org>,
-	Radek Podgorny <radek@podgorny.cz>,
+	"Eric W. Biederman" <ebiederm@xmission.com>,
+	Peng Liu <liupeng256@huawei.com>,
+	"Dr. Thomas Orgis" <thomas.orgis@uni-hamburg.de>,
+	Ismael Luceno <ismael@iodev.co.uk>,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH v2 2/2] efi: Replace efi_memory_attributes_table_t 0-sized array with flexible array
-Date: Thu, 11 Jul 2024 10:11:13 -0700
-Message-Id: <20240711171114.121313-2-kees@kernel.org>
+Subject: [PATCH] tsacct: Replace strncpy() with strscpy()
+Date: Thu, 11 Jul 2024 10:13:09 -0700
+Message-Id: <20240711171308.work.995-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240711170727.it.194-kees@kernel.org>
-References: <20240711170727.it.194-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1748; i=kees@kernel.org; h=from:subject; bh=PnCjovdovXk9cCG240pvFyOatuK6fCFNWcfBvIcgqTE=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmkBIxTZOLrENfCsAvyVVDL8bZ4k0hY9cZ8bQnc IzNZMEQ/S6JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZpASMQAKCRCJcvTf3G3A JnOmEACGwHHHeKkIjpVqzImdgW7pYpvw2dwfpQXro7NiYCbZRan+muQ5C+LH10AwVGFwwNBykvi 4d4qAtUUeMWQaTWxqxgrgrpL4ZDtPVgJxLNqbQ+Wz9I9QoOJuJgxAxKjUbhywqTkJ//0Sfe8Njr LIQb3jzTyjRtCYFffwT5MWrqImyIEAvGtRGDFkOzGwEacT/nUi17eqTc5iVBhwf4dsuAYQiW+Ue TsBLrScfZkKPifyuL1ncWoQskj66zU6POtYcjAVRkbCP06Y2hIyhUThwGzWRfrMu4N02JYD5i2W q1rzsIyqW97mZjz9IsqRDMYpjWjCttw1RaiNeXQzKCiMBA+dLOrCuV+RFv7LQq2/q5V4AUVLN1j /lfegKZxCb15Gcmq7FZvN1LiIdCZWNIuTLjHHq1tRXlX6nvEf3xtnxLZfDqo2pLrBUSsMZWYzsg Wj4dTsu5t6dhCCj4l3SdPXHoFDynqKzYQ3h/enYhilEUDmHwukphqY91Vsk10Rq8DOIRtyKqLBo sG9ORcmuFS8KPomMzW54JOZbYMPVliMVV/tCTQWGkHimYtXmQccdTW7FdFP6GIO6gBHwsF1ozMl vKqzXz1pyj+48rvbwDxP2Af5IV8LVm3NioYq93fL0BfEJ8/rAgZ4Su9gvWVpNiq+bJPD/Qo5Ii1 sZWkESA7YjCwTew==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=942; i=kees@kernel.org; h=from:subject:message-id; bh=xaKsQpF71MSFmC0xsITNp3M5gYzUZlBQesDbEER8aRE=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmkBKlYLWBH+hNVujXhbheeiLsYWDV5guB5thjH umH2hIqAcSJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZpASpQAKCRCJcvTf3G3A Jok0EACNE8GTbsRAEKnflQ2G8v+TvQZ62CugkWiPe6oYsvwxU/nlLWyxp8x6JchhoSeag6R5Bfl l8rte8qbEAZejHnWR2Jk6hCvBqRzjRV1WyPAEr5h16yIhHrgzUiYt/3dR+FZnCI+LNFECDOGrhf aOUhG//mvSvf/82+qNGQrpG/viMWn4r7aDgyqM12tHaZjlwdBX080NrC3RoaI/IQLiMvVHFlPFg aNJJ/Zv6T6J6CzWnUnkIAbUL1+MufQcMbYb4+HZCydJkHUvg/0UlFMTUIJwY6rtzreO59taW2er yjZ+H7dVqcd4ivgv5/grkNjGeCTz02EPA+LMrsiSbNwsif3ZG49AFyOr0tXClJ5guv2iBXhpT/O Vw+Myv6USPnK6m+hit3DOEjYp++wyH/gr4oZV1+JnNgFRv0py8n9jHDqQXp6FfosyRu6T5bgyA0 Xc4GLd5pHkyHuLHSgDOvd1Q2kkj89bFuuPOy+LNZbhn1MrxOKNYKj/CNc+Vdlwx7QycVbPUQguB 0qsld82RCzqzZlPVrp7SfNlfvQkd2N8ymJz1DquhN/ppz0O/0h339VpeECvmYpJ0a46dxnqK6Ja uIENPbTD58USqSWxVwAk8ELPKkqsswe4E89199K5ADzgxlIvGgQftTSSvcZpHTz+P8g3F9gAx8j UJKnZENKvww8zq
+ Q==
 X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-While efi_memory_attributes_table_t::entry isn't used directly as an
-array, it is used as a base for pointer arithmetic. The type is wrong
-as it's not technically an array of efi_memory_desc_t's; they could be
-larger. Regardless, leave the type unchanged and remove the old style
-"0" array size. Additionally replace the open-coded entry offset code
-with the existing efi_memdesc_ptr() helper.
+Replace the deprecated[1] use of strncpy() in bacct_add_tsk(). Since this
+is UAPI, include trailing padding in the copy.
 
+Link: https://github.com/KSPP/linux/issues/90 [1]
 Signed-off-by: Kees Cook <kees@kernel.org>
 ---
-Cc: Ard Biesheuvel <ardb@kernel.org>
-Cc: linux-efi@vger.kernel.org
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Peng Liu <liupeng256@huawei.com>
+Cc: "Dr. Thomas Orgis" <thomas.orgis@uni-hamburg.de>
+Cc: Ismael Luceno <ismael@iodev.co.uk>
 ---
- drivers/firmware/efi/memattr.c | 2 +-
- include/linux/efi.h            | 6 +++++-
- 2 files changed, 6 insertions(+), 2 deletions(-)
+ kernel/tsacct.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/firmware/efi/memattr.c b/drivers/firmware/efi/memattr.c
-index ab85bf8e165a..164203429fa7 100644
---- a/drivers/firmware/efi/memattr.c
-+++ b/drivers/firmware/efi/memattr.c
-@@ -164,7 +164,7 @@ int __init efi_memattr_apply_permissions(struct mm_struct *mm,
- 		bool valid;
- 		char buf[64];
+diff --git a/kernel/tsacct.c b/kernel/tsacct.c
+index 4252f0645b9e..16b283f9d831 100644
+--- a/kernel/tsacct.c
++++ b/kernel/tsacct.c
+@@ -76,7 +76,7 @@ void bacct_add_tsk(struct user_namespace *user_ns,
+ 	stats->ac_minflt = tsk->min_flt;
+ 	stats->ac_majflt = tsk->maj_flt;
  
--		valid = entry_is_valid((void *)tbl->entry + i * tbl->desc_size,
-+		valid = entry_is_valid(efi_memdesc_ptr(tbl->entry, tbl->desc_size, i),
- 				       &md);
- 		size = md.num_pages << EFI_PAGE_SHIFT;
- 		if (efi_enabled(EFI_DBG) || !valid)
-diff --git a/include/linux/efi.h b/include/linux/efi.h
-index fbdfcc9a81e6..40475d77231c 100644
---- a/include/linux/efi.h
-+++ b/include/linux/efi.h
-@@ -607,7 +607,11 @@ typedef struct {
- 	u32 num_entries;
- 	u32 desc_size;
- 	u32 flags;
--	efi_memory_desc_t entry[0];
-+	/*
-+	 * There are @num_entries following, each of size @desc_size bytes,
-+	 * including an efi_memory_desc_t header. See efi_memdesc_ptr().
-+	 */
-+	efi_memory_desc_t entry[];
- } efi_memory_attributes_table_t;
+-	strncpy(stats->ac_comm, tsk->comm, sizeof(stats->ac_comm));
++	strscpy_pad(stats->ac_comm, tsk->comm);
+ }
  
- typedef struct {
+ 
 -- 
 2.34.1
 
