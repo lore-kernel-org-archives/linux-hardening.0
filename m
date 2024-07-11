@@ -1,122 +1,112 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 801BA1509BC;
-	Thu, 11 Jul 2024 21:01:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34A7519FA9A;
+	Thu, 11 Jul 2024 21:45:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720731720; cv=none; b=kMkQ4GgvLl9AOXSjh4IEYGB17k6597X+bI//W+2iF7qe2btnl6W7vyMF9TGZ+qcT2zXBf0aZtoF6QAx9m3AovFrxEd84fJDV+3VJXazXmmtk8gQT4tji33u318Bld83IpN7I5bGhzC0kNX1lXZgEg+pe6/25iyeBQCFKvMoeLCc=
+	t=1720734304; cv=none; b=HopyppNB4Pegm/FJB+X19smGqKDQa7gymwpjJwLzXs9HKqoF0f+62hi/FWcIsyLhJ2zIkGuIYtUuozyVP4uRLUpcgtd7drLmZkW/h4zs/xgD+nWf/ZBIVY/1xLSq2Yca+z5GpdSKQkLX2Ipwsw61fBsztdrg/wH9Na5Tmvx7ZRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720731720; c=relaxed/simple;
-	bh=Krb9F4VAsc/TNpIbMiRsb20CidVKObO5UAXOT7f1fEE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=K3Ai2sQ54CHd3eLtHF497ncRue1Qzj7C0sf4Sh4upTj8R81izKNQBhJtnqINiuJpHnRfx9o7WZ2nv+ujCmeOO3ZsoXDy5Ux0P8MlFwJFpsbZMw1vZqn1gG6gA3jgxeAaU8IIHWWV+Asfhg376+MvsiUmTbDhtpCNOLUFaH7BtpY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RwqISL51; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1720734304; c=relaxed/simple;
+	bh=y4QCjrZp9udTHrKwao6/0x3F9ZJopGjZZ/0G6cebUoc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FBafdQhwmY3O9X0S4poyWArAQ60EiShGHXyHV4sDAa5Vc1mxgELAmQ9j9jdWwhzJaiXZo5Nd5+am0PfR8WZd56MRsKCgvvs6I+yd1FsV4w/yo1uEDmR0T4xPtLJhfETZdDDYrPX5ewk15p3ez1geR64fvRNlUUunXKPWX3mU/mQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=qYulYDrM; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RwqISL51"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720731719; x=1752267719;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Krb9F4VAsc/TNpIbMiRsb20CidVKObO5UAXOT7f1fEE=;
-  b=RwqISL51HU0Dhk3UMZ6yDZ9crsE25PWwDYf49G2hJ2pVMxX38bXSw1bI
-   LdM2m6Pd03yw5Y9/b9Nb5dGy0ehlAFssN87D51NNMJNkYebFMAcQDZ7DT
-   B1uE3vgPfW5AxDkQRtpe4XUYAq8A9jAL6DFInOs7WGCPxxVyyj9VxtvYW
-   FRzeqSL8zwvaxWCq3IdJEM77qu9bmx8wsdDylM2mlz4b9yH6TL6nDRjvH
-   Ti28akrQ5kfD0FfLRCd5RRACT1A06mIG/4X/P2vDcj7DdqhLRV+JTYDY+
-   Tskdf3GYsEZKuoulMRlRKzFVGe+bQIs1BbrToSh+m2I6r4Oii6fOruvRK
-   A==;
-X-CSE-ConnectionGUID: Jvk7ek6ERBu0TRvqwyp6Iw==
-X-CSE-MsgGUID: 0jW2abRATQ6k3ByXNFGUEQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11130"; a="28740481"
-X-IronPort-AV: E=Sophos;i="6.09,201,1716274800"; 
-   d="scan'208";a="28740481"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 14:01:58 -0700
-X-CSE-ConnectionGUID: aAolWHEMSmu+ew2muZFURA==
-X-CSE-MsgGUID: JMbO4RkjTdii1bKEb1x4QA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,201,1716274800"; 
-   d="scan'208";a="48431162"
-Received: from unknown (HELO [10.124.221.144]) ([10.124.221.144])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 14:01:57 -0700
-Message-ID: <842a88e0-90ae-48be-91c9-8a7c3a8359a9@intel.com>
-Date: Thu, 11 Jul 2024 14:01:53 -0700
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qYulYDrM"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=Q7XTOdv/1NFK+VQFz08tWfPZaB/5T1Gst3uridfDy8E=; b=qYulYDrM5a+mSSnWjHLULZz/hV
+	oUxfKtOT1hcAbmxkqvrP10YQFASm2zRWpnNxxYNJtvZWOPlRGbtW+eOOcZ2dBESs1J4ZUyQs15b8a
+	GJAclUyRyEEiWwUp50qeWHmd7p6mk4FWPWI/JEFQejdTtvlzIsE48U9gbX/LJa8CyuxEskKygJcKI
+	aSwRuOnXrtmuRlbsy9eE1sTdvqgLUq0VfyE+wYVFal4lUfsD5uspAtEXIDRNhMbppxBr42qYjtKGx
+	ctYGGDemDT4SUngr/kkHGoFn5rWcCzTMnEDBYfDOFwgi1Y+ooK95kWDkTq02SqdVquNUXd8/pI5an
+	Egb4H2FA==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sS1at-0000000Bgtl-13Yx;
+	Thu, 11 Jul 2024 21:44:51 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 9B44230050D; Thu, 11 Jul 2024 23:44:50 +0200 (CEST)
+Date: Thu, 11 Jul 2024 23:44:50 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Mirsad Todorovac <mtodorovac69@gmail.com>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Daniel Sneddon <daniel.sneddon@linux.intel.com>,
+	Arnd Bergmann <arnd@arndb.de>, Brian Gerst <brgerst@gmail.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Peter Collingbourne <pcc@google.com>, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] x86/syscall: Avoid memcpy() for ia32
+ syscall_get_arguments()
+Message-ID: <20240711214450.GG27299@noisy.programming.kicks-ass.net>
+References: <20240708202202.work.477-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] x86/syscall: Avoid memcpy() for ia32
- syscall_get_arguments()
-To: Kees Cook <kees@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Mirsad Todorovac <mtodorovac69@gmail.com>, Ingo Molnar
- <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>,
- Daniel Sneddon <daniel.sneddon@linux.intel.com>,
- Arnd Bergmann <arnd@arndb.de>, Brian Gerst <brgerst@gmail.com>,
- Josh Poimboeuf <jpoimboe@kernel.org>,
- Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
- Peter Collingbourne <pcc@google.com>, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20240708202202.work.477-kees@kernel.org>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 In-Reply-To: <20240708202202.work.477-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 7/8/24 13:22, Kees Cook wrote:
-...
+On Mon, Jul 08, 2024 at 01:22:06PM -0700, Kees Cook wrote:
+> Modern (fortified) memcpy() prefers to avoid writing (or reading) beyond
+> the end of the addressed destination (or source) struct member:
+> 
+> In function ‘fortify_memcpy_chk’,
+>     inlined from ‘syscall_get_arguments’ at ./arch/x86/include/asm/syscall.h:85:2,
+>     inlined from ‘populate_seccomp_data’ at kernel/seccomp.c:258:2,
+>     inlined from ‘__seccomp_filter’ at kernel/seccomp.c:1231:3:
+> ./include/linux/fortify-string.h:580:25: error: call to ‘__read_overflow2_field’ declared with attribute warning: detected read beyond size of field (2nd parameter); maybe use struct_group()? [-Werror=attribute-warning]
+>   580 |                         __read_overflow2_field(q_size_field, size);
+>       |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> 
+> As already done for x86_64 and compat mode, do not use memcpy() to
+> extract syscall arguments from struct pt_regs but rather just perform
+> direct assignments. Binary output differences are negligible, and actually
+> ends up using less stack space:
+> 
+> -       sub    $0x84,%esp
+> +       sub    $0x6c,%esp
+> 
+> and less text size:
+> 
+>    text    data     bss     dec     hex filename
+>   10794     252       0   11046    2b26 gcc-32b/kernel/seccomp.o.stock
+>   10714     252       0   10966    2ad6 gcc-32b/kernel/seccomp.o.after
+> 
+> Reported-by: Mirsad Todorovac <mtodorovac69@gmail.com>
+> Closes: https://lore.kernel.org/lkml/9b69fb14-df89-4677-9c82-056ea9e706f5@gmail.com/
+> Signed-off-by: Kees Cook <kees@kernel.org>
+> ---
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: x86@kernel.org
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Daniel Sneddon <daniel.sneddon@linux.intel.com>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Brian Gerst <brgerst@gmail.com>
+> Cc: Josh Poimboeuf <jpoimboe@kernel.org>
+> Cc: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+> Cc: Peter Collingbourne <pcc@google.com>
+> ---
+>  arch/x86/include/asm/syscall.h | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
 > diff --git a/arch/x86/include/asm/syscall.h b/arch/x86/include/asm/syscall.h
 > index 2fc7bc3863ff..7c488ff0c764 100644
 > --- a/arch/x86/include/asm/syscall.h
@@ -133,9 +123,12 @@ On 7/8/24 13:22, Kees Cook wrote:
 > +	args[4] = regs->di;
 > +	args[5] = regs->bp;
 >  }
->  
 
-Yeah, that's much less magic.  I'll stick this in the queue to go in to
-the tree in a few weeks.
+Just for my education on things foritfy; would something like:
 
-Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
+void syscall_get_arguments(struct pt_regs *regs, unsigned long args[6])
+{
+        memcpy(args, (typeof(args))&regs->bx, 6*sizeof(args[0]));
+}
+
+work?
