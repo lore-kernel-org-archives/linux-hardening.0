@@ -1,135 +1,97 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EF2315ECCA;
-	Thu, 11 Jul 2024 14:29:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45BFD28FF
+	for <linux-hardening@vger.kernel.org>; Thu, 11 Jul 2024 15:41:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720708188; cv=none; b=towT7NeMm62KqgsorwlLG/373TSBhLcWbP4Apoy/48CVLgcsp0aYejGiTZNkA6VcCCgSGHQ94dC8pJkD9CmmibhZP0STAs+1AOymokLnZBKyqCzau9JR+JtI2uGNKtAMnY43bM4Q4LAUeFYDGbnudsy7Wv1mNUfu+PfH9l1p2Dc=
+	t=1720712502; cv=none; b=QFoQK8dpOPviroEWoDy12QE6O0AjV2CbYzjWRofeEtqG43G5j1gNp3VAqZO6xbIVymu+KJyKPcSjFwGZNe9OKH4MpE2+JfSBfT2qXDKuI/BZJAoj6fPUWGvdxfVoJMh1lW2qdizDMdWKMavXvrtITtWvlsF1pDewdXgFEz1rBPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720708188; c=relaxed/simple;
-	bh=GU0xdeNkNhxA/0nFt5TwpELEEtnBOegmjpdSd81yY7M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FEZ/VOZqstGkXW9S3CxeEF9aM7CiBdd9WibCuMtilvifM1qbNguw/hSSIhxi3A6IAkK6l1QJAx2N9oUUFcSdYPSLcjBOZ8XEPDIBmG/Zt75+PVwK2R91gG9te3JYhOUDKpSOiKiFt6Ovl4mRSCR5gW4SARhbGfBcweXRCZte0dY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=aZO0hu+m; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=v+nkHe6R; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=mL7hHlO+; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=NpffYXfe; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1720712502; c=relaxed/simple;
+	bh=h74SYtaDurtWVMNe12MxjW2lrtvwlW5PQSKC1xWTX6k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=alLwOf7IlJ4KEdXXERHuJDUdi9L1cGnubO4PQgVQA7jT5gQ+ocdMx8PaoopjH/U5wRFVQH/8yIopOW4qm/JftyAoJ71PzbWAS/8Fmo0HQFsdi3aXpNnaplo5e3Q2Z2Yy3zRlV8AUjP1haaopzKEm3Jb0Tw70joueoZPdXS3FM0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=brWeXE3S; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="aZO0hu+m";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="v+nkHe6R";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="mL7hHlO+";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="NpffYXfe"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 0F1471F8D6;
-	Thu, 11 Jul 2024 14:29:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1720708179;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GXsVvEVmcCHIEAk1iWp3BrHLQnBHN0Sz0SM1aR0NFn4=;
-	b=aZO0hu+mkUDSRwYb+QjJF3LTIqXFbvbESBXutwQbhx5v4R0z1s7UmHH72MwFm+6Mmh9JGU
-	unI5P0VY0zI8jjueNuWcFmEOexQjvnEzfHQQf6E/oGsrYwKvFbPY9vbM9IYeOMrrIu3UvM
-	eeo5qjrYQRTLxW9ukjv9FFr9SSO3MFM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1720708179;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GXsVvEVmcCHIEAk1iWp3BrHLQnBHN0Sz0SM1aR0NFn4=;
-	b=v+nkHe6Rx0ajlYVTJbe/sTh827Q8AwHvpnyPBBbqPqxySLJeVrM38WW2ywZJYpnilusEKP
-	GdRBsGtrBvb0jNDQ==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1720708178;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GXsVvEVmcCHIEAk1iWp3BrHLQnBHN0Sz0SM1aR0NFn4=;
-	b=mL7hHlO+czO+475uItk9I6CDuU3a0DdImFUa/g0DYxxfjM3us1BTUZOz9aifCt2O++wzSs
-	Ao7rgNoU48yctzmU0Yq1EOjhkSou/YNgINB7mI/Dhz0F0FDd1Ig09UEM4gMYK/uwRaCLYF
-	yXwBDlVvjaEW08LQOIz8mEji3C/kp3A=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1720708178;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GXsVvEVmcCHIEAk1iWp3BrHLQnBHN0Sz0SM1aR0NFn4=;
-	b=NpffYXfe14JmLWMJQRJS7259W7Z1zqvhPdVJxegKtCz1K4SJALeEyw10dJDKLApbU29My5
-	yDUxUSchFtMR9SBw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E6D5D136AF;
-	Thu, 11 Jul 2024 14:29:37 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id M1wqOFHsj2ZuEAAAD6G6ig
-	(envelope-from <dsterba@suse.cz>); Thu, 11 Jul 2024 14:29:37 +0000
-Date: Thu, 11 Jul 2024 16:29:28 +0200
-From: David Sterba <dsterba@suse.cz>
-To: Kees Cook <kees@kernel.org>
-Cc: David Sterba <dsterba@suse.com>, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] fs/affs: struct slink_front: Replace 1-element array
- with flexible array
-Message-ID: <20240711142928.GB8022@suse.cz>
-Reply-To: dsterba@suse.cz
-References: <20240710225734.work.823-kees@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="brWeXE3S"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4266f796e67so70815e9.1
+        for <linux-hardening@vger.kernel.org>; Thu, 11 Jul 2024 08:41:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1720712499; x=1721317299; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=h74SYtaDurtWVMNe12MxjW2lrtvwlW5PQSKC1xWTX6k=;
+        b=brWeXE3SDJ+uVb9dBB2XMSlzt8/Kt+uPdTnVW5lWs1eRQe9Hg1int2wXMEUbNTTXfn
+         1RH5FBKOCxXIagdOLezHUGdc7b9/cCUqNcAyNVLwqvAnWt7UGsrhEqNMPyW2ScPkEMO3
+         1wHjUe1OpIPZV0BjAsLYJ92n0vkiOVgoD2zMKFRNf6JJQnMC2IkLeg/n+yffvaI+W1PD
+         eIAA8Z16JlkMnA1EL4D5a31Xuwu0QzxuGFFa+itBSciwh7iNUa7AvFfVEP6KLu56b3qd
+         b674/XlOm4sDPm7T9XKgUpafqVJ4CI6cR2EQrsLsHw0UNBPTmVmuC/uepBC1z3cfFv5Z
+         oSWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720712499; x=1721317299;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=h74SYtaDurtWVMNe12MxjW2lrtvwlW5PQSKC1xWTX6k=;
+        b=XPQoLHB+8omPfXmtTz6VNWXMe0zLAulh68OtQounXswebwB2B+ZJfza2cXfkGLXzIh
+         5fFAK7DX+mBbM7nJQ7MCVovrlHcs5TvUAFm3vUAbZ9CpK+sbK5ApuSh3wIoOx+kQ0xC5
+         ULDKStH4nkoaOAbDDBsSy0IpYUHGN/LKLNxJCJldgC+ur3fFfUkWhmleIyinigqTVvpi
+         L5JUEh5vc7oBfFVp0/CyyImtBkUCf91txtJk/zbbSb+GkFWjFANV7HFA7GVTNPpf33av
+         oygVfcO2Safd6JuSeHHSv0Gzg+K2ccQFckeLgkOr5h7mFpFBl6Oev6V1BVbVU7OZeN+a
+         Upgg==
+X-Forwarded-Encrypted: i=1; AJvYcCXa8qEPI6Cnhmjd+8gahlF1LFzHSaI1GgirfU3p65ifrci+sIOPC9hU+Flfiud9IBAKI61hGHTCKexyXz9ec/Af00IDoeMHc6W66WeWDz19
+X-Gm-Message-State: AOJu0YwVxitzdZ0QPv35IgqSc+7eCfJ4t21H+F1ZrsLwZJzy5smi+/xi
+	D561J0sJFYN5/muR6S+IXKw52gTjyAbm98dP46kuBOlmqz9H69rlMkSucktm/pxHIrCWtvB1CnK
+	EXmT3zN3+RCw64MZ9kStxOctkR1XamXd43qiH
+X-Google-Smtp-Source: AGHT+IHqsH8u6qwFJLBhhqu6nDqLgqH34jJy4y2QgSKBLi1LsZ+No2szVtZGkUHRDFSFjzp+JHcGZ7kloKTfhDAvrLU=
+X-Received: by 2002:a05:600c:4f08:b0:426:5d89:896d with SMTP id
+ 5b1f17b1804b1-4279976a51bmr1709895e9.1.1720712498599; Thu, 11 Jul 2024
+ 08:41:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240710225734.work.823-kees@kernel.org>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Spamd-Result: default: False [-4.00 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	NEURAL_HAM_SHORT(-0.20)[-0.999];
-	MIME_GOOD(-0.10)[text/plain];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	REPLYTO_ADDR_EQ_FROM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[bootlin.com:url];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCPT_COUNT_FIVE(0.00)[5]
-X-Spam-Flag: NO
-X-Spam-Score: -4.00
-X-Spam-Level: 
+References: <20240709125433.4026177-1-leitao@debian.org> <CANn89iJSUg8LJkpRrT0BWWMTiHixJVo1hSpt2-2kBw7BzB8Mqg@mail.gmail.com>
+ <Zo5uRR8tOswuMhq0@gmail.com> <CANn89iLssOFT2JDfjk9LYh8SVzWZv8tRGS_6ziTLcUTqvqTwYQ@mail.gmail.com>
+ <279c95ad-a716-415b-a050-b323e21bec31@intel.com>
+In-Reply-To: <279c95ad-a716-415b-a050-b323e21bec31@intel.com>
+From: Eric Dumazet <edumazet@google.com>
+Date: Thu, 11 Jul 2024 08:41:27 -0700
+Message-ID: <CANn89iLfpHam2pcha0R3Y8OBZiwsevDEM-kbhzB2Vv5UYgC7xw@mail.gmail.com>
+Subject: Re: [PATCH net-next v2] netdevice: define and allocate &net_device _properly_
+To: Alexander Lobakin <aleksander.lobakin@intel.com>
+Cc: Breno Leitao <leitao@debian.org>, "David S. Miller" <davem@davemloft.net>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, keescook@chromium.org, horms@kernel.org, 
+	nex.sw.ncis.osdt.itp.upstreaming@intel.com, linux-hardening@vger.kernel.org, 
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>, Jiri Pirko <jiri@resnulli.us>, 
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Lorenzo Bianconi <lorenzo@kernel.org>, Johannes Berg <johannes.berg@intel.com>, 
+	Heiner Kallweit <hkallweit1@gmail.com>, 
+	"open list:NETWORKING [GENERAL]" <netdev@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 10, 2024 at 03:57:34PM -0700, Kees Cook wrote:
-> Replace the deprecated[1] use of a 1-element array in
-> struct slink_front with a modern flexible array.
-> 
-> No binary differences are present after this conversion.
-> 
-> Link: https://github.com/KSPP/linux/issues/79 [1]
-> Signed-off-by: Kees Cook <kees@kernel.org>
+On Thu, Jul 11, 2024 at 5:54=E2=80=AFAM Alexander Lobakin
+<aleksander.lobakin@intel.com> wrote:
+>
+> From: Eric Dumazet <edumazet@google.com>
+> Date: Wed, 10 Jul 2024 10:04:39 -0700
+>
+> > This is because of the =E2=80=98const=E2=80=99 qualifier of the paramet=
+er.
+> >
+> > This could be solved with _Generic() later, if we want to keep the
+> > const qualifier.
+>
+> I tried _Generic() when I was working on this patch and it seems like
+> lots of drivers need to be fixed first. They pass a const &net_device,
+> but assign the result to a non-const variable and modify fields there.
+> That's why I bet up on this and just casted to (void *) for now.
 
-Thanks, I've added the 3 patches to my tree. I've noticed there's one
-more 1-element array in struct affs_root_head (hashtable):
-
-https://elixir.bootlin.com/linux/latest/source/fs/affs/amigaffs.h#L50
-
-The struct is used only partially by AFFS_ROOT_HEAD from affs_fill_super
-and not accessing the hashtable. This could have been missed by the
-tools you use or was the conversion intentionally skipped?
+Right, I will clean things up in the next cycle.
