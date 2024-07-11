@@ -1,158 +1,83 @@
-Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83BD616B74F
-	for <linux-hardening@vger.kernel.org>; Thu, 11 Jul 2024 16:56:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28AAC15445D;
+	Thu, 11 Jul 2024 17:11:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720716967; cv=none; b=J/uWjWbYQVZuBzN3DsF+qqltp84UsLpLkJOaU8zN0qr4XKAGvCTOCrS0Wdf+8ygBsW9yUK+WDc4AGN5GJ8ZV05sV/PAJQOb1v1a551Ha1vPKvQKX6Xb0jCqLyepDkQqQVyZkwq+r1XJCRMIKBTN3cFEvBIrtfi1Rl1wihSyBx+8=
+	t=1720717875; cv=none; b=tlX6VD4PGIeDypzuG2qdNIzlqGrIGzj54DRjyVpxaNGdfNqHllQ6atY0yj2Mx9numz/rPIxx2BAyIPY1wMkqV4j2RqOfavCqIyXgwT0QSUbQb/2BNEmiNQknD4dPZaisWSjmV9sGDkxpsR8+f6B/pRJtsJvv1atjgmiYOUSecB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720716967; c=relaxed/simple;
-	bh=2iYVbONDaBq6JV/7qJFLtv3UBiUya7pvZXvPB51GSE4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X2YQwBbnNmvLZbScR6Zf3ZyprH0o4owmdtJWq/SeXw28lX/MfG4B/7W3hgne36cj16WSu+9EwY/xHMj09LF23hK+SlNqpdO9hjc20nFCZRPfjsBoxpoF14rIg21EKLPILn37t8g7oHy/XUM8K7rbQztDierAFWT1JqU0ABYJaTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=eG2O+ml2; arc=none smtp.client-ip=44.202.169.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1720717875; c=relaxed/simple;
+	bh=Kn7lxeI0ZZmou2Kjl6lW7oTqn17kXtcuO8fEU7YJnX8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=emGFiswzKeLJzGdx88quIUJXbUS+8V6lqEMkqvCeGfLmBPbrJ6fHSeqy+V1T+vc630QX/KJAmMK06nBKOM+EDb05/ZCEzV2MDWdQ8YETu5wMmbEASA4Kl09GREH5t3kvJYqsQA8F9sUf8gjVZt+GF9PN6zXQBUUAK8464XGPaFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X2qID9v2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="eG2O+ml2"
-Received: from eig-obgw-5010a.ext.cloudfilter.net ([10.0.29.199])
-	by cmsmtp with ESMTPS
-	id Rw3WsQuoWiA19Rx5Ns4aGu; Thu, 11 Jul 2024 16:56:01 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id Rx5MsmJJBvtoqRx5Msz8Ss; Thu, 11 Jul 2024 16:56:01 +0000
-X-Authority-Analysis: v=2.4 cv=Ffcxxo+6 c=1 sm=1 tr=0 ts=66900ea1
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=frY+GlAHrI6frpeK1MvySw==:17
- a=IkcTkHD0fZMA:10 a=4kmOji7k6h8A:10 a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8
- a=VwQbUJbxAAAA:8 a=Q-fNiiVtAAAA:8 a=bLk-5xynAAAA:8 a=yPCof4ZbAAAA:8
- a=BgCAbCOdkOygMcBay5MA:9 a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22
- a=Fp8MccfUoT0GBdDC_Lng:22 a=zSyb8xVVt2t83sZkrLMb:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=olFfmXh0pIyFs0WXsAhOmo1AA3OqVFBo3TyzIH79O9Y=; b=eG2O+ml2DqwWw7JzxJY+7gGZ4h
-	AjfNziXEI5gLZAqEkFp2iWJ76A8GJPxlfuHlhYpYFQtR+E6MOlPhYIqvdvoaEo8v5h/LfND7yNaCC
-	QFamol47XUYDjlCeP+FSzXYt/hxAF0HoFKA0TvoTRSJhZ4fJDOKE2N4EdED+A7Z+GKoj7kKcW8161
-	MCT0YtBEblKFOKi54OXKh/bAA24+f4vW0ApQxwmdzcefYRuSvOIi3vPfvghUbpMk3F+FQPr+/LigX
-	gBSOeDJBe1wXfMDgubgC3Xs8C9tu8l+0NxFu08AIi2H3ymJoZb7PWVwQCsjKys0QBS3jKILBt/8ud
-	tqIxptSQ==;
-Received: from [201.172.173.139] (port=55332 helo=[192.168.15.4])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1sRx5L-000eHk-10;
-	Thu, 11 Jul 2024 11:55:59 -0500
-Message-ID: <58418596-5d8f-4bec-9d4c-64ed8ef0ff9e@embeddedor.com>
-Date: Thu, 11 Jul 2024 10:55:57 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X2qID9v2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B75B7C116B1;
+	Thu, 11 Jul 2024 17:11:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720717874;
+	bh=Kn7lxeI0ZZmou2Kjl6lW7oTqn17kXtcuO8fEU7YJnX8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=X2qID9v2iGUa6J6fQOPYtb8isZzxAFu2mKteBPtGpmJI0W6UWj/RpNN1cI81v6JnZ
+	 Q2LGbHVJ0CqW4+8jzZLM4mauGiCBE4yhwAJjNHPayBh2WYAlXxacZ6Sgm7uPZgOvjY
+	 eB1LA3XprE/7CJ3eU/OJ2DJ+QTIH8bYu3FXWIehQbFurLbHcchdEVYqeAu32z9FiPR
+	 gzIcgYzHYlirih7V42I/zAp78DxodmV2SJ94mbV1XQro3Vl9yvsLDUgZscp0h7Fg/4
+	 o+wBmexwjN6nLtCJyWubDFwPpy0oSq0FrFDFLfGdoFpHIWCtzoh8ky6ATBW5vhq+oV
+	 5GRm+SHIQSfNQ==
+From: Kees Cook <kees@kernel.org>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Kees Cook <kees@kernel.org>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	"Borislav Petkov (AMD)" <bp@alien8.de>,
+	Baskov Evgeniy <baskov@ispras.ru>,
+	Ingo Molnar <mingo@kernel.org>,
+	Radek Podgorny <radek@podgorny.cz>,
+	linux-kernel@vger.kernel.org,
+	linux-efi@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v2 0/2] efi: Replace efi_memory_attributes_table_t 0-sized array with flexible array
+Date: Thu, 11 Jul 2024 10:11:11 -0700
+Message-Id: <20240711170727.it.194-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] scsi: megaraid_sas: struct MR_HOST_DEVICE_LIST: Replace
- 1-element array with flexible array
-To: Kees Cook <kees@kernel.org>, Kashyap Desai <kashyap.desai@broadcom.com>
-Cc: Sumit Saxena <sumit.saxena@broadcom.com>,
- Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
- Chandrakanth patil <chandrakanth.patil@broadcom.com>,
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
- "Martin K. Petersen" <martin.petersen@oracle.com>,
- megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20240711155841.work.839-kees@kernel.org>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20240711155841.work.839-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.173.139
-X-Source-L: No
-X-Exim-ID: 1sRx5L-000eHk-10
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.4]) [201.172.173.139]:55332
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 68
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfDd5YEVotvjX9ba0xaRv+MTwC7fpyGzQvkAHU87YTaUumq+anlePZAc443D6M2DfwUAsMwOPXYSfW1gwS266TXI0/xdj5BQHF/dajq5Njl1jjmf6O151
- fMjPgNasF0PpvpwvSLLYBm/ZiWAXG5U1Pdj7iVErplS+bZG072f9Ot8ySgb2tPYD1tc7wf5qe615AdTgF3aQxSFk0wGYvkc4e/YEOBhXueC/xqiBpdCHAogt
+X-Developer-Signature: v=1; a=openpgp-sha256; l=952; i=kees@kernel.org; h=from:subject:message-id; bh=Kn7lxeI0ZZmou2Kjl6lW7oTqn17kXtcuO8fEU7YJnX8=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmkBIwsYZ0zG0JibHl9qyLiouKR3mNODyxCguP3 gI4a89/+02JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZpASMAAKCRCJcvTf3G3A Jo2lD/9O8MQELlRwkRlVSXbtF3NnIsiQQ+S4CmKbEzBu3JN5Fx8tU7+U/QwJGCKEoKGgYZvDKiJ nnaccIGjzY1wPtyr6JU1fobWLrjnf7n7gl1HRsokrVGqSpI+ri+AgZGobis6u/qEZyt46hf3AuE kVo/t2+rvlJ/6rTB2j5cMFBViJ2Sb9wWd6fEoIqwP5k9LamxZl5Q6hijR7AALeWbX1I0s9bNg5w SGi6cnLHAswJVxYHEGIJ5g4OZ2mc72746OEUDptQVN2Y3HvOD1ybouUwTg9OM8ny+HxlnB6ZevL 40uR5lRrPPBkHFh1FW61T4J3xYRKJjOqF+6rd32i0notRxL4E75v6XO+Q1iFuQkXqHb3G6hwevG Gyl680KrtIKWAxknH+nB4ukZPFA6KhBeKYvHGRGNZsQa8rNvunYqRCI9tsCvA4APkk72oOhoVAq 8o9OxCbp9f4AA6T8ce7lNT2wHMBvSsK8n+R6GhZcKop7jL4ywM6vyCV+A9LNj5FnlbHNVvdsgof XlGkID+PhTvk3tvSeFyxJ1Z+AAYL9IhWTD8vJtOCxki/BInAkcmJqjCkARhvnEzzZGtmAMG9hgf wm9KyjWzHJmQLaWZKS0372zEHQvG4nJVyP+lRN/xro+JAVQ7ux50PJrP+EqVEvbDii7iJLdmhdm 9o/RI2rFD3H9KG
+ w==
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
+Hi,
 
+Update efi_memory_attributes_table_t to use a proper flexible
+array. Renames efi_early_memdesc_ptr() to efi_memdesc_ptr() so it more
+accurately reflects its usage.
 
-On 11/07/24 09:58, Kees Cook wrote:
-> Replace the deprecated[1] use of a 1-element array in
-> struct MR_HOST_DEVICE_LIST with a modern flexible array.
-> 
-> One binary difference appears in megasas_host_device_list_query():
-> 
->          struct MR_HOST_DEVICE_LIST *ci;
-> 	...
->          ci = instance->host_device_list_buf;
-> 	...
->          memset(ci, 0, sizeof(*ci));
-> 
-> The memset() clears only the non-flexible array fields. Looking at the
-> rest of the function, this appears to be fine: firmware is using this
-> region to communicate with the kernel, so it likely never made sense to
-> clear the first MR_HOST_DEVICE_LIST_ENTRY.
+Thanks!
 
-Yeah, clearing that fist entry seems odd/buggy. So, this patch is probably
-even fixing a bug. :)
+-Kees
 
-> 
-> Link: https://github.com/KSPP/linux/issues/79 [1]
-> Signed-off-by: Kees Cook <kees@kernel.org>
+ v2:
+  - rename efi_early_memdesc_ptr() to efi_memdesc_ptr()
+  - add comment about reading efi_memdesc_ptr() to efi_memory_attributes_table_t
+ v1: https://lore.kernel.org/lkml/20240710225538.work.224-kees@kernel.org/
 
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Kees Cook (2):
+  efi: Rename efi_early_memdesc_ptr() to efi_memdesc_ptr()
+  efi: Replace efi_memory_attributes_table_t 0-sized array with flexible
+    array
 
-Thanks
+ drivers/firmware/efi/libstub/relocate.c          |  2 +-
+ drivers/firmware/efi/libstub/unaccepted_memory.c |  2 +-
+ drivers/firmware/efi/libstub/x86-stub.c          |  2 +-
+ drivers/firmware/efi/memattr.c                   |  2 +-
+ include/linux/efi.h                              | 10 +++++++---
+ 5 files changed, 11 insertions(+), 7 deletions(-)
+
 -- 
-Gustavo
+2.34.1
 
-> ---
-> Cc: Kashyap Desai <kashyap.desai@broadcom.com>
-> Cc: Sumit Saxena <sumit.saxena@broadcom.com>
-> Cc: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
-> Cc: Chandrakanth patil <chandrakanth.patil@broadcom.com>
-> Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
-> Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
-> Cc: megaraidlinux.pdl@broadcom.com
-> Cc: linux-scsi@vger.kernel.org
-> ---
->   drivers/scsi/megaraid/megaraid_sas.h | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/scsi/megaraid/megaraid_sas.h b/drivers/scsi/megaraid/megaraid_sas.h
-> index 84cf77c48c0d..088cc40ae866 100644
-> --- a/drivers/scsi/megaraid/megaraid_sas.h
-> +++ b/drivers/scsi/megaraid/megaraid_sas.h
-> @@ -814,12 +814,12 @@ struct MR_HOST_DEVICE_LIST {
->   	__le32			size;
->   	__le32			count;
->   	__le32			reserved[2];
-> -	struct MR_HOST_DEVICE_LIST_ENTRY	host_device_list[1];
-> +	struct MR_HOST_DEVICE_LIST_ENTRY	host_device_list[] __counted_by_le(count);
->   } __packed;
->   
->   #define HOST_DEVICE_LIST_SZ (sizeof(struct MR_HOST_DEVICE_LIST) +	       \
->   			      (sizeof(struct MR_HOST_DEVICE_LIST_ENTRY) *      \
-> -			      (MEGASAS_MAX_PD + MAX_LOGICAL_DRIVES_EXT - 1)))
-> +			      (MEGASAS_MAX_PD + MAX_LOGICAL_DRIVES_EXT)))
->   
->   
->   /*
