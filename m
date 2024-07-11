@@ -1,134 +1,79 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34A7519FA9A;
-	Thu, 11 Jul 2024 21:45:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 757E01A00DE;
+	Thu, 11 Jul 2024 21:57:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720734304; cv=none; b=HopyppNB4Pegm/FJB+X19smGqKDQa7gymwpjJwLzXs9HKqoF0f+62hi/FWcIsyLhJ2zIkGuIYtUuozyVP4uRLUpcgtd7drLmZkW/h4zs/xgD+nWf/ZBIVY/1xLSq2Yca+z5GpdSKQkLX2Ipwsw61fBsztdrg/wH9Na5Tmvx7ZRw=
+	t=1720735060; cv=none; b=DjWF6AoBvdBBRNgKNor63k5vX0S8g2lrKbk2gRw9BfiWKk0BUok6PgZ4lkFIh18Ka2Fe91LTJ4rybNwvzAeOmb/7hDNeEEhLp4RXSLq/8AEz+qCG+yYRlwAd2zeVX8GAH6dPuiym00GUvI81IkID+PuCtLLiNVcbCBPbbUbI/VI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720734304; c=relaxed/simple;
-	bh=y4QCjrZp9udTHrKwao6/0x3F9ZJopGjZZ/0G6cebUoc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FBafdQhwmY3O9X0S4poyWArAQ60EiShGHXyHV4sDAa5Vc1mxgELAmQ9j9jdWwhzJaiXZo5Nd5+am0PfR8WZd56MRsKCgvvs6I+yd1FsV4w/yo1uEDmR0T4xPtLJhfETZdDDYrPX5ewk15p3ez1geR64fvRNlUUunXKPWX3mU/mQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=qYulYDrM; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1720735060; c=relaxed/simple;
+	bh=ybyGHtzigMOqjGxyaBFEijGZXpaJVJQ9vmvlN/xYw6k=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DNTBZmfmhxr3MrhKQlJFhVuq7ilwGMvhKlg29oCHANplgcmyx9K8wIRSOyEsOI/qZAaZsfiY3jBzptjo8w4rQgOeDvOxpVqoowSg+4LfhxSlizO4UW/RDu3TUNP+rBWGYlkJJ16yzz2Mz/Q9jfqV4C4K4SM784NtxM1EUHXEAxg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fyxhCn65; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qYulYDrM"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=Q7XTOdv/1NFK+VQFz08tWfPZaB/5T1Gst3uridfDy8E=; b=qYulYDrM5a+mSSnWjHLULZz/hV
-	oUxfKtOT1hcAbmxkqvrP10YQFASm2zRWpnNxxYNJtvZWOPlRGbtW+eOOcZ2dBESs1J4ZUyQs15b8a
-	GJAclUyRyEEiWwUp50qeWHmd7p6mk4FWPWI/JEFQejdTtvlzIsE48U9gbX/LJa8CyuxEskKygJcKI
-	aSwRuOnXrtmuRlbsy9eE1sTdvqgLUq0VfyE+wYVFal4lUfsD5uspAtEXIDRNhMbppxBr42qYjtKGx
-	ctYGGDemDT4SUngr/kkHGoFn5rWcCzTMnEDBYfDOFwgi1Y+ooK95kWDkTq02SqdVquNUXd8/pI5an
-	Egb4H2FA==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sS1at-0000000Bgtl-13Yx;
-	Thu, 11 Jul 2024 21:44:51 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 9B44230050D; Thu, 11 Jul 2024 23:44:50 +0200 (CEST)
-Date: Thu, 11 Jul 2024 23:44:50 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Mirsad Todorovac <mtodorovac69@gmail.com>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Daniel Sneddon <daniel.sneddon@linux.intel.com>,
-	Arnd Bergmann <arnd@arndb.de>, Brian Gerst <brgerst@gmail.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Peter Collingbourne <pcc@google.com>, linux-kernel@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fyxhCn65"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15511C116B1;
+	Thu, 11 Jul 2024 21:57:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720735060;
+	bh=ybyGHtzigMOqjGxyaBFEijGZXpaJVJQ9vmvlN/xYw6k=;
+	h=From:To:Cc:Subject:Date:From;
+	b=fyxhCn65O0fL5Nm5CGAL/QB4Do+KHjGMMjZPxX+sVc4H83mjnFayLNnl4htXv69SQ
+	 3qdD88En/n9wrZuHkwO3M/W3+nY1rm+viDEVIkwCBLtKOICL2RHfKu3wB+Q5Usky4T
+	 e9TgzzFPwxyYnpDRb6os6pePlIiiyX5Z6XOXrXiZuqYzjC0YByjBdGeoOeR8NnM3r9
+	 hdJ+0VtH21xpII2hHACWCV64uPIHTopTWOnXbG/nn8opETJImp0GN6kCc+HV0DyA/H
+	 I57L36qLf8PzyRHK99LDUJmQVzH/v08D9sT1foVoJ3X6ijsYXHigjU1b/gHIgTNMxz
+	 y2an+BjZuuaxQ==
+From: Kees Cook <kees@kernel.org>
+To: Adaptec OEM Raid Solutions <aacraid@microsemi.com>
+Cc: Kees Cook <kees@kernel.org>,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	linux-kernel@vger.kernel.org,
+	linux-scsi@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] x86/syscall: Avoid memcpy() for ia32
- syscall_get_arguments()
-Message-ID: <20240711214450.GG27299@noisy.programming.kicks-ass.net>
-References: <20240708202202.work.477-kees@kernel.org>
+Subject: [PATCH 0/2] scsi: aacraid: struct sgmap: Replace 1-element arrays with flexible arrays
+Date: Thu, 11 Jul 2024 14:57:36 -0700
+Message-Id: <20240711212732.work.162-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1022; i=kees@kernel.org; h=from:subject:message-id; bh=ybyGHtzigMOqjGxyaBFEijGZXpaJVJQ9vmvlN/xYw6k=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmkFVSFXvDE+43NNFnHJ1H7JDM3JDiB473Tr38G QFs5Y1V3SCJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZpBVUgAKCRCJcvTf3G3A Js26D/9tz2/3LOkXmEYeBUeNrZkqGkGNi55YQp9+H7SwRq0hmT1BEFDlB6ufjRkHMvWs41Y1sEy vNvC7gOgi1DVp+lxTyJCxByUT1a5490MoJwzuI6hRuia0HXJuWXOc0JGZL86T1yhUartNOcK3GF 0xs0/Sh8QwxnLQfD9vd5CkxfV+CN5wfJrwwhgHe8LtjIZ+srv8rfKCYfhoNjV1Wx0xwCm+RC+3o tdFAJLEgeFiglAPUdhdoJDmdALq224DFBkJVA9HxBkQYRR49hIfYR6h7GX2pxR0iRZQKjiB+mZT sB6N/HXNmfxs2rVEhEO+uMw/LIi+qmSagO0ChUQSvXOaVuzTCqW59iEWMKp9hFnFeeo63zonBt2 FR8zAl1x5aXGMkLIe9rXjuji4jiaUjCK27tWo5TKrkkgrtX1M0xwxcxq1Q4bfkpjPG9QXaEuBko yWa1/s9jf3ldMHxTYGzOyM9844vXZC2bGaDLfEWx0t55gt/duAYnj7sFPqO7Iqk2FCuxrCOAGD7 V6w4ens4bvF4/YHJB5nVwiEAMDFmKBCL7A3TBxjW/15f2kZYagDxFwoRdsFUulgJHgDNy/e7RtO QaYaFJSv6hlxzFp3wPH44QB1ekz9DBWMgu+0g5B2iNRAp7JUoaAw5jPTTp34OgWiKLa7LCBr0sO luYgP4Lnkg6Xx
+ gw==
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240708202202.work.477-kees@kernel.org>
 
-On Mon, Jul 08, 2024 at 01:22:06PM -0700, Kees Cook wrote:
-> Modern (fortified) memcpy() prefers to avoid writing (or reading) beyond
-> the end of the addressed destination (or source) struct member:
-> 
-> In function ‘fortify_memcpy_chk’,
->     inlined from ‘syscall_get_arguments’ at ./arch/x86/include/asm/syscall.h:85:2,
->     inlined from ‘populate_seccomp_data’ at kernel/seccomp.c:258:2,
->     inlined from ‘__seccomp_filter’ at kernel/seccomp.c:1231:3:
-> ./include/linux/fortify-string.h:580:25: error: call to ‘__read_overflow2_field’ declared with attribute warning: detected read beyond size of field (2nd parameter); maybe use struct_group()? [-Werror=attribute-warning]
->   580 |                         __read_overflow2_field(q_size_field, size);
->       |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> 
-> As already done for x86_64 and compat mode, do not use memcpy() to
-> extract syscall arguments from struct pt_regs but rather just perform
-> direct assignments. Binary output differences are negligible, and actually
-> ends up using less stack space:
-> 
-> -       sub    $0x84,%esp
-> +       sub    $0x6c,%esp
-> 
-> and less text size:
-> 
->    text    data     bss     dec     hex filename
->   10794     252       0   11046    2b26 gcc-32b/kernel/seccomp.o.stock
->   10714     252       0   10966    2ad6 gcc-32b/kernel/seccomp.o.after
-> 
-> Reported-by: Mirsad Todorovac <mtodorovac69@gmail.com>
-> Closes: https://lore.kernel.org/lkml/9b69fb14-df89-4677-9c82-056ea9e706f5@gmail.com/
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: x86@kernel.org
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: Daniel Sneddon <daniel.sneddon@linux.intel.com>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Brian Gerst <brgerst@gmail.com>
-> Cc: Josh Poimboeuf <jpoimboe@kernel.org>
-> Cc: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-> Cc: Peter Collingbourne <pcc@google.com>
-> ---
->  arch/x86/include/asm/syscall.h | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/include/asm/syscall.h b/arch/x86/include/asm/syscall.h
-> index 2fc7bc3863ff..7c488ff0c764 100644
-> --- a/arch/x86/include/asm/syscall.h
-> +++ b/arch/x86/include/asm/syscall.h
-> @@ -82,7 +82,12 @@ static inline void syscall_get_arguments(struct task_struct *task,
->  					 struct pt_regs *regs,
->  					 unsigned long *args)
->  {
-> -	memcpy(args, &regs->bx, 6 * sizeof(args[0]));
-> +	args[0] = regs->bx;
-> +	args[1] = regs->cx;
-> +	args[2] = regs->dx;
-> +	args[3] = regs->si;
-> +	args[4] = regs->di;
-> +	args[5] = regs->bp;
->  }
+Hi,
 
-Just for my education on things foritfy; would something like:
+This replaces some of the last remaining uses in the kernel of 1-element
+"fake" flexible arrays with modern C99 flexible arrays. Some refactoring
+is done to ease this, and binary differences are identified. For the
+on stack size changes in patch 2, the "yes, that is the source of the binary
+differences" debugging patch can be found here[1].
 
-void syscall_get_arguments(struct pt_regs *regs, unsigned long args[6])
-{
-        memcpy(args, (typeof(args))&regs->bx, 6*sizeof(args[0]));
-}
+Thanks!
 
-work?
+-Kees
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/commit/?h=dev/v6.10-rc2/1-element&id=45e6226bcbc5e982541754eca7ac29f403e82f5e
+
+Kees Cook (2):
+  scsi: aacraid: Rearrange order of struct aac_srb_unit
+  scsi: aacraid: struct {user,}sgmap{,64,raw}: Replace 1-element arrays
+    with flexible arrays
+
+ drivers/scsi/aacraid/aachba.c   | 26 ++++++++++++--------------
+ drivers/scsi/aacraid/aacraid.h  | 17 ++++++-----------
+ drivers/scsi/aacraid/commctrl.c |  4 ++--
+ drivers/scsi/aacraid/comminit.c |  3 +--
+ drivers/scsi/aacraid/commsup.c  |  5 +++--
+ 5 files changed, 24 insertions(+), 31 deletions(-)
+
+-- 
+2.34.1
+
