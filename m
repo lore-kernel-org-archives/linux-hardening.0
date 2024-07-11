@@ -1,291 +1,190 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D8B01A00DF;
-	Thu, 11 Jul 2024 21:57:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA0F11A00E4
+	for <linux-hardening@vger.kernel.org>; Thu, 11 Jul 2024 22:24:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720735060; cv=none; b=ZR86CSsU1dKUZ11u90Wh8pbVLJyGIQ1wdL6vQCU/dpuQxvxm9k8e/thVN1zHJ1DbxGjLGdsYnQZR1yyZp3wJ0EzFC5bl+qBB0hkh97KXB9aJQsJ5DhLxjhNZuJlgmezaMhhLV9Cjo5VDCKy2x0o3taRwrjCEs8rCEN/zfhgcy2M=
+	t=1720736650; cv=none; b=cSAVucZRiV48kpEwDhDJ80o0eWOlp/TBFdR5GYR+lH9WSebdNmikOg9YYTqq/i/IxPN/a45RlEf3qRjLiEMm+CXuZA8WVzk5YEPt5FI46lJfWSMCCyl6LXH6cOw7i4yGJpqAMqtocH34Fu9QqxcX4hwAzdqT0l5CHYw52jqyk8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720735060; c=relaxed/simple;
-	bh=1IRXyi/lRo/A/NE66PocxoxjSzmZ7a9GKAafH7Rhuqw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GqbVjE5yBALXROaEScQcxABXlGRY5rO4CjZOQyBw3yMysnmSSX3GoBC2Qejn1k1P4zSEW//lPRHVla2HX+P5I+b5D5Pl8RCD/gLUgd5p/OY0iu9ijCScqIadIaaqnZzJCT/NxtRPlg+AecCXc+GmXN1EMIbRCuiY2HuSDj7L3io=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QHrbjRov; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720736650; c=relaxed/simple;
+	bh=umz65CgamqI9woTw9I8lAdO2908JYg7ok02eaBGsWkc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FF8zUXz9rbQMGzn2fqojpIrAcj4lnLS9AHRfKDfpwconZSYylkJTxuDXbgFMmgsHr8QbW/7mzTy2b/knX09rLlN+Ai325ijx37qBC6BCgagJpy3IxsoMstGCMLOvRuFExD+aSlbIZmzM3F4Q/A25XRqab5mnDKidUU+0gn70ggg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0K8zKent; arc=none smtp.client-ip=209.85.160.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QHrbjRov"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30B69C4AF0A;
-	Thu, 11 Jul 2024 21:57:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720735060;
-	bh=1IRXyi/lRo/A/NE66PocxoxjSzmZ7a9GKAafH7Rhuqw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QHrbjRovV4DVToZfDdEVJ6P5myNFcdRn0MRsz3AL9XYYikhAIW30CVkM+mf+H4yOL
-	 WkukyXiCao+VIWt7F8jkmnFY7tpjLA3GYOxhgH7AusLYUN2vkAC9VcCZxX8u+0QCh1
-	 tx94Cfb6ehIuj6LJL38VwTnk8mQ8UmX+6+KhqfK1wSXgS1ue6nnCZrFkwc0HIxFLVy
-	 +lzRMmkqx/9lrOKeIKwfizj4688KXCozvd3ycmrtKU/K37cM1zMVtHaaT7Sh2WuIYK
-	 lp1F8TwjObJUGQwE0V0xqyFNHrCCyCDQCCm2Cejj3K8BX3Rn/DUYCUxOk+vH6Y6tAA
-	 lHjnJI5IjPyNQ==
-From: Kees Cook <kees@kernel.org>
-To: Adaptec OEM Raid Solutions <aacraid@microsemi.com>
-Cc: Kees Cook <kees@kernel.org>,
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH 2/2] scsi: aacraid: struct {user,}sgmap{,64,raw}: Replace 1-element arrays with flexible arrays
-Date: Thu, 11 Jul 2024 14:57:38 -0700
-Message-Id: <20240711215739.208776-2-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240711212732.work.162-kees@kernel.org>
-References: <20240711212732.work.162-kees@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0K8zKent"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-447df43324fso48931cf.1
+        for <linux-hardening@vger.kernel.org>; Thu, 11 Jul 2024 15:24:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1720736648; x=1721341448; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1ikbsIYih3ehLlIfT5YoG7a0BVQ8XeYIK6rrLHADErw=;
+        b=0K8zKent4k5GsWH1KQPj9oEjzCUYsfoNU7SHZQrlt2GtoD0LfCTi2MCIMmMjJ0aPaA
+         aojFhlLvvMclR1/zsOmdBeGC1mjD5puCGZN1VoKGaHv2q3uvXf/k4F4tszCRIkBZBuP0
+         SmB2f+b2SOR4PlRLElHZTSpQxFPNTGutQVbYLwgmGRe4Q5rP1SK0QbHqEYohRoI6zkAE
+         XB5k45KcwYfYTsARQsQd2derr7ZT4UByHkR5vUxV0bH6c2Y3Fv5Hk+scwq7GFqfQmQsM
+         IJhGEP7mx1POBgWnT1k9Wn8lZCU1GAzaWQlXnyHrnCZ76eYiiOR1bMNw3cvA9JiT8nj/
+         kFvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720736648; x=1721341448;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1ikbsIYih3ehLlIfT5YoG7a0BVQ8XeYIK6rrLHADErw=;
+        b=d9vBgjM8uMhKdSB4DzGsZvApEXwlB01aLd3S222dH7rdgiwhwUHl4eLr5erBKXhbKu
+         LtOa6UeafeLLXyEIeAjWBFOsInVt1S0PzyLUZcEByTP6oMKMSmBOP56FJRWu0Ay/ilPV
+         8hRMFk7oTNnqKPOdAS/9mZ7ctvkYgyswHWrtohgAVFBAnMgwUS0vFOPfemLbV/g245Jy
+         kGLATT24ueFDk2WMniv/P6BZqn1lNtr030RVvyky9WB+8QYtcl1y/0WIt7VKNM4V8Rvf
+         aM/6ojzmGC1MiV6XSfqlg6qYoFb2V4pORWbttE9xeY/ItaYpteo9DuRfj0J9WwyO8WRF
+         OgKA==
+X-Forwarded-Encrypted: i=1; AJvYcCWfNlcTKlIWjXdhW3lFmr6sLxDTHaWGqj+yVGY801fhwjaTDHixniK6vf+frl5d4815hlNpDreA7qx0v9btR/AwWypxvoFSQFuTFVYkLdBS
+X-Gm-Message-State: AOJu0YyA0xkDPlvR8V/Mi/KAK5bNvJ7bYLatg0ytqPdSgkbmCNhDJjzO
+	h1ytnxF5VmMdfmX1E27zYJUYb3TsytByhehApvL+kqGlxE4kOnpUYe9dNAYHEtlJ66VGQ1MYsza
+	BJsutG/8eufLyR1K+b72ntUSQliFaQcTa8Iyv
+X-Google-Smtp-Source: AGHT+IGAc884CVEDTkvsd7h8jIYVN5c3I7pSJJVtiIZ6adS6zViqgnZWfojP5ub98vVg/kgQUmfRgXI+GvGBo0Nwylo=
+X-Received: by 2002:a05:622a:289a:b0:447:f3ae:383b with SMTP id
+ d75a77b69052e-44e9e556a99mr307391cf.19.1720736647474; Thu, 11 Jul 2024
+ 15:24:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=9550; i=kees@kernel.org; h=from:subject; bh=1IRXyi/lRo/A/NE66PocxoxjSzmZ7a9GKAafH7Rhuqw=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmkFVSeO4OotIy2yFPrJ/hgkBtbPuoG4qpqHP2L Kgy6aEbcheJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZpBVUgAKCRCJcvTf3G3A JnrXD/9G+frfTQSSE61nke4ZgullMSsS6L3uZzDaWk0ypajZMtlEeqmm/Ry0Dbo1BcoaQfVsqK6 0GUatVu9Cx4GHVB4usGeyUQj6xEYt+Sd6fMGkbadiaVG0jmOpEfER1bYDaxdtsr5HoQLvariaM4 oMonYR50nZ9n0SMiFg3cQbd2vZ5GZg9stJbRHWLuxUJr+t1GDFPQTKNKPXugZ5PEli0gku0Nz2F pxRtOpJ2fBlVqWbVSqtItlh/jSK8fQASKo1hh/0XpO02KbVy2lmj3jtL3y5luARmGwoWkOQf5Yl C/Lou4e9QhT51dE8fWj4nEoIwH2g+cpoGyx+4mOeSwZBUygzJgPkHmL9+OXy+r0wBPttUnvhec5 CueDAyCKOEBcqh2g2osr6vLvUT7ERKEd4f5E6JEU9L+Magv3PD5E7CSDkO3MCiYiO1WwtfQYbMe x7Fz/IS9k7fWgaeLdUWaWAdbhVXAF5fp8G2N40nzhHcR3rHvVw/SVFdJdgRulmr3DFM6xY/Efxa 94D4pGC2ChxE8Mbm6rf1PwchAjUNgb7OcQc224fNNkVS8zeaCRXc0xyjZY/+a692vpjjYtyPyQe yD/pv1Jvr6B6JHCk4XxKB/+SOIMGNwHvrfKJuDs6vkH4FXW01jNliryWg9X+3QBXa3hz5Nri9kc B8FvBM+dvlwMfVw==
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+References: <20240711102436.4432-1-Dhananjay.Ugwekar@amd.com>
+In-Reply-To: <20240711102436.4432-1-Dhananjay.Ugwekar@amd.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 11 Jul 2024 15:23:56 -0700
+Message-ID: <CAP-5=fXXuWchzUK0n5KTH8kamr=DQoEni+bUoo8f-4j8Y+eMBg@mail.gmail.com>
+Subject: Re: [PATCH v4 00/11] Add per-core RAPL energy counter support for AMD CPUs
+To: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
+	tglx@linutronix.de, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
+	kees@kernel.org, gustavoars@kernel.org, rui.zhang@intel.com, 
+	oleksandr@natalenko.name, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	ananth.narayan@amd.com, gautham.shenoy@amd.com, kprateek.nayak@amd.com, 
+	ravi.bangoria@amd.com, sandipan.das@amd.com, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Replace the deprecated[1] use of 1-element arrays in
-struct sgmap, struct sgmap64, struct sgmapraw, struct user_sgmap,
-and struct user_sgmap64 with modern flexible arrays. Additionally
-remove struct user_sgmapraw as it is unused.
+On Thu, Jul 11, 2024 at 3:25=E2=80=AFAM Dhananjay Ugwekar
+<Dhananjay.Ugwekar@amd.com> wrote:
+>
+> Currently the energy-cores event in the power PMU aggregates energy
+> consumption data at a package level. On the other hand the core energy
+> RAPL counter in AMD CPUs has a core scope (which means the energy
+> consumption is recorded separately for each core). Earlier efforts to add
+> the core event in the power PMU had failed [1], due to the difference in
+> the scope of these two events. Hence, there is a need for a new core scop=
+e
+> PMU.
+>
+> This patchset adds a new "power_per_core" PMU alongside the existing
+> "power" PMU, which will be responsible for collecting the new
+> "energy-per-core" event.
 
-The resulting binary output differences from this change are limited
-only to stack space consumption of the smaller "srbu" variable
-in aac_issue_safw_bmic_identify() and aac_get_safw_ciss_luns(),
-as well as the smaller associated pair of memcpy()s in
-aac_send_safw_bmic_cmd(). Artificially growing the size of srbu back to
-its prior size removes all binary differences[2].
+Sorry for being naive, is the only reason for adding the new PMU for
+the sake of the cpumask? Perhaps we can add per event cpumasks like
+say `/sys/devices/power/events/energy-per-core.cpumask` which contains
+the CPUs of the different cores in this case. There's supporting
+hotplugging CPUs as an issue. Adding the tool support for this
+wouldn't be hard and it may be less messy (although old perf tools on
+new kernels wouldn't know about these files).
 
-As an aside, after studying the aacraid driver code I wonder how
-aac_send_wellness_command() ever works. It is reporting a size 4 bytes
-too small for what it has constructed in memory in the DMA region:
-sgentry64 is size 12, whereas sgentry is size 8. Perhaps the hardware
-doesn't care. (Regardless, it is unchanged by this patch.)
+Thanks,
+Ian
 
-Link: https://github.com/KSPP/linux/issues/79 [1]
-Link: https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/commit/?h=dev/v6.10-rc2/1-element&id=45e6226bcbc5e982541754eca7ac29f403e82f5e [2]
-Signed-off-by: Kees Cook <kees@kernel.org>
----
-Cc: Adaptec OEM Raid Solutions <aacraid@microsemi.com>
-Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
-Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: linux-scsi@vger.kernel.org
----
- drivers/scsi/aacraid/aachba.c   | 26 ++++++++++++--------------
- drivers/scsi/aacraid/aacraid.h  | 15 +++++----------
- drivers/scsi/aacraid/commctrl.c |  4 ++--
- drivers/scsi/aacraid/comminit.c |  3 +--
- drivers/scsi/aacraid/commsup.c  |  5 +++--
- 5 files changed, 23 insertions(+), 30 deletions(-)
 
-diff --git a/drivers/scsi/aacraid/aachba.c b/drivers/scsi/aacraid/aachba.c
-index 497c6dd5df91..ec3834bda111 100644
---- a/drivers/scsi/aacraid/aachba.c
-+++ b/drivers/scsi/aacraid/aachba.c
-@@ -1267,7 +1267,7 @@ static int aac_read_raw_io(struct fib * fib, struct scsi_cmnd * cmd, u64 lba, u3
- 			return ret;
- 		command = ContainerRawIo;
- 		fibsize = sizeof(struct aac_raw_io) +
--			((le32_to_cpu(readcmd->sg.count)-1) * sizeof(struct sgentryraw));
-+			(le32_to_cpu(readcmd->sg.count) * sizeof(struct sgentryraw));
- 	}
- 
- 	BUG_ON(fibsize > (fib->dev->max_fib_size - sizeof(struct aac_fibhdr)));
-@@ -1302,7 +1302,7 @@ static int aac_read_block64(struct fib * fib, struct scsi_cmnd * cmd, u64 lba, u
- 	if (ret < 0)
- 		return ret;
- 	fibsize = sizeof(struct aac_read64) +
--		((le32_to_cpu(readcmd->sg.count) - 1) *
-+		(le32_to_cpu(readcmd->sg.count) *
- 		 sizeof (struct sgentry64));
- 	BUG_ON (fibsize > (fib->dev->max_fib_size -
- 				sizeof(struct aac_fibhdr)));
-@@ -1337,7 +1337,7 @@ static int aac_read_block(struct fib * fib, struct scsi_cmnd * cmd, u64 lba, u32
- 	if (ret < 0)
- 		return ret;
- 	fibsize = sizeof(struct aac_read) +
--			((le32_to_cpu(readcmd->sg.count) - 1) *
-+			(le32_to_cpu(readcmd->sg.count) *
- 			 sizeof (struct sgentry));
- 	BUG_ON (fibsize > (fib->dev->max_fib_size -
- 				sizeof(struct aac_fibhdr)));
-@@ -1401,7 +1401,7 @@ static int aac_write_raw_io(struct fib * fib, struct scsi_cmnd * cmd, u64 lba, u
- 			return ret;
- 		command = ContainerRawIo;
- 		fibsize = sizeof(struct aac_raw_io) +
--			((le32_to_cpu(writecmd->sg.count)-1) * sizeof (struct sgentryraw));
-+			(le32_to_cpu(writecmd->sg.count) * sizeof(struct sgentryraw));
- 	}
- 
- 	BUG_ON(fibsize > (fib->dev->max_fib_size - sizeof(struct aac_fibhdr)));
-@@ -1436,7 +1436,7 @@ static int aac_write_block64(struct fib * fib, struct scsi_cmnd * cmd, u64 lba,
- 	if (ret < 0)
- 		return ret;
- 	fibsize = sizeof(struct aac_write64) +
--		((le32_to_cpu(writecmd->sg.count) - 1) *
-+		(le32_to_cpu(writecmd->sg.count) *
- 		 sizeof (struct sgentry64));
- 	BUG_ON (fibsize > (fib->dev->max_fib_size -
- 				sizeof(struct aac_fibhdr)));
-@@ -1473,7 +1473,7 @@ static int aac_write_block(struct fib * fib, struct scsi_cmnd * cmd, u64 lba, u3
- 	if (ret < 0)
- 		return ret;
- 	fibsize = sizeof(struct aac_write) +
--		((le32_to_cpu(writecmd->sg.count) - 1) *
-+		(le32_to_cpu(writecmd->sg.count) *
- 		 sizeof (struct sgentry));
- 	BUG_ON (fibsize > (fib->dev->max_fib_size -
- 				sizeof(struct aac_fibhdr)));
-@@ -1592,9 +1592,9 @@ static int aac_scsi_64(struct fib * fib, struct scsi_cmnd * cmd)
- 	/*
- 	 *	Build Scatter/Gather list
- 	 */
--	fibsize = sizeof (struct aac_srb) - sizeof (struct sgentry) +
-+	fibsize = sizeof(struct aac_srb) +
- 		((le32_to_cpu(srbcmd->sg.count) & 0xff) *
--		 sizeof (struct sgentry64));
-+		 sizeof(struct sgentry64));
- 	BUG_ON (fibsize > (fib->dev->max_fib_size -
- 				sizeof(struct aac_fibhdr)));
- 
-@@ -1624,7 +1624,7 @@ static int aac_scsi_32(struct fib * fib, struct scsi_cmnd * cmd)
- 	 *	Build Scatter/Gather list
- 	 */
- 	fibsize = sizeof (struct aac_srb) +
--		(((le32_to_cpu(srbcmd->sg.count) & 0xff) - 1) *
-+		((le32_to_cpu(srbcmd->sg.count) & 0xff) *
- 		 sizeof (struct sgentry));
- 	BUG_ON (fibsize > (fib->dev->max_fib_size -
- 				sizeof(struct aac_fibhdr)));
-@@ -1693,8 +1693,7 @@ static int aac_send_safw_bmic_cmd(struct aac_dev *dev,
- 	fibptr->hw_fib_va->header.XferState &=
- 		~cpu_to_le32(FastResponseCapable);
- 
--	fibsize  = sizeof(struct aac_srb) - sizeof(struct sgentry) +
--						sizeof(struct sgentry64);
-+	fibsize = sizeof(struct aac_srb) + sizeof(struct sgentry64);
- 
- 	/* allocate DMA buffer for response */
- 	addr = dma_map_single(&dev->pdev->dev, xfer_buf, xfer_len,
-@@ -2267,7 +2266,7 @@ int aac_get_adapter_info(struct aac_dev* dev)
- 		dev->a_ops.adapter_bounds = aac_bounds_32;
- 		dev->scsi_host_ptr->sg_tablesize = (dev->max_fib_size -
- 			sizeof(struct aac_fibhdr) -
--			sizeof(struct aac_write) + sizeof(struct sgentry)) /
-+			sizeof(struct aac_write)) /
- 				sizeof(struct sgentry);
- 		if (dev->dac_support) {
- 			dev->a_ops.adapter_read = aac_read_block64;
-@@ -2278,8 +2277,7 @@ int aac_get_adapter_info(struct aac_dev* dev)
- 			dev->scsi_host_ptr->sg_tablesize =
- 				(dev->max_fib_size -
- 				sizeof(struct aac_fibhdr) -
--				sizeof(struct aac_write64) +
--				sizeof(struct sgentry64)) /
-+				sizeof(struct aac_write64)) /
- 					sizeof(struct sgentry64);
- 		} else {
- 			dev->a_ops.adapter_read = aac_read_block;
-diff --git a/drivers/scsi/aacraid/aacraid.h b/drivers/scsi/aacraid/aacraid.h
-index 8e7a0a5cb7aa..1d09d3ac6aa4 100644
---- a/drivers/scsi/aacraid/aacraid.h
-+++ b/drivers/scsi/aacraid/aacraid.h
-@@ -507,32 +507,27 @@ struct sge_ieee1212 {
- 
- struct sgmap {
- 	__le32		count;
--	struct sgentry	sg[1];
-+	struct sgentry	sg[];
- };
- 
- struct user_sgmap {
- 	u32		count;
--	struct user_sgentry	sg[1];
-+	struct user_sgentry	sg[];
- };
- 
- struct sgmap64 {
- 	__le32		count;
--	struct sgentry64 sg[1];
-+	struct sgentry64 sg[];
- };
- 
- struct user_sgmap64 {
- 	u32		count;
--	struct user_sgentry64 sg[1];
-+	struct user_sgentry64 sg[];
- };
- 
- struct sgmapraw {
- 	__le32		  count;
--	struct sgentryraw sg[1];
--};
--
--struct user_sgmapraw {
--	u32		  count;
--	struct user_sgentryraw sg[1];
-+	struct sgentryraw sg[];
- };
- 
- struct creation_info
-diff --git a/drivers/scsi/aacraid/commctrl.c b/drivers/scsi/aacraid/commctrl.c
-index e7cc927ed952..68240d6f27ab 100644
---- a/drivers/scsi/aacraid/commctrl.c
-+++ b/drivers/scsi/aacraid/commctrl.c
-@@ -523,7 +523,7 @@ static int aac_send_raw_srb(struct aac_dev* dev, void __user * arg)
- 		goto cleanup;
- 	}
- 
--	if ((fibsize < (sizeof(struct user_aac_srb) - sizeof(struct user_sgentry))) ||
-+	if ((fibsize < sizeof(struct user_aac_srb)) ||
- 	    (fibsize > (dev->max_fib_size - sizeof(struct aac_fibhdr)))) {
- 		rcode = -EINVAL;
- 		goto cleanup;
-@@ -561,7 +561,7 @@ static int aac_send_raw_srb(struct aac_dev* dev, void __user * arg)
- 		rcode = -EINVAL;
- 		goto cleanup;
- 	}
--	actual_fibsize = sizeof(struct aac_srb) - sizeof(struct sgentry) +
-+	actual_fibsize = sizeof(struct aac_srb) +
- 		((user_srbcmd->sg.count & 0xff) * sizeof(struct sgentry));
- 	actual_fibsize64 = actual_fibsize + (user_srbcmd->sg.count & 0xff) *
- 	  (sizeof(struct sgentry64) - sizeof(struct sgentry));
-diff --git a/drivers/scsi/aacraid/comminit.c b/drivers/scsi/aacraid/comminit.c
-index bd99c5492b7d..fee857236991 100644
---- a/drivers/scsi/aacraid/comminit.c
-+++ b/drivers/scsi/aacraid/comminit.c
-@@ -522,8 +522,7 @@ struct aac_dev *aac_init_adapter(struct aac_dev *dev)
- 	spin_lock_init(&dev->iq_lock);
- 	dev->max_fib_size = sizeof(struct hw_fib);
- 	dev->sg_tablesize = host->sg_tablesize = (dev->max_fib_size
--		- sizeof(struct aac_fibhdr)
--		- sizeof(struct aac_write) + sizeof(struct sgentry))
-+		- sizeof(struct aac_fibhdr) - sizeof(struct aac_write))
- 			/ sizeof(struct sgentry);
- 	dev->comm_interface = AAC_COMM_PRODUCER;
- 	dev->raw_io_interface = dev->raw_io_64 = 0;
-diff --git a/drivers/scsi/aacraid/commsup.c b/drivers/scsi/aacraid/commsup.c
-index 25cee03d7f97..47287559c768 100644
---- a/drivers/scsi/aacraid/commsup.c
-+++ b/drivers/scsi/aacraid/commsup.c
-@@ -2327,8 +2327,9 @@ static int aac_send_wellness_command(struct aac_dev *dev, char *wellness_str,
- 	sg64->sg[0].addr[0] = cpu_to_le32((u32)(addr & 0xffffffff));
- 	sg64->sg[0].count = cpu_to_le32(datasize);
- 
--	ret = aac_fib_send(ScsiPortCommand64, fibptr, sizeof(struct aac_srb),
--				FsaNormal, 1, 1, NULL, NULL);
-+	ret = aac_fib_send(ScsiPortCommand64, fibptr,
-+			   sizeof(struct aac_srb) + sizeof(struct sgentry),
-+			   FsaNormal, 1, 1, NULL, NULL);
- 
- 	dma_free_coherent(&dev->pdev->dev, datasize, dma_buf, addr);
- 
--- 
-2.34.1
-
+> Tested the package level and core level PMU counters with workloads
+> pinned to different CPUs.
+>
+> Results with workload pinned to CPU 1 in Core 1 on an AMD Zen4 Genoa
+> machine:
+>
+> $ perf stat -a --per-core -e power_per_core/energy-per-core/ -- sleep 1
+>
+>  Performance counter stats for 'system wide':
+>
+> S0-D0-C0         1          0.02 Joules power_per_core/energy-per-core/
+> S0-D0-C1         1          5.72 Joules power_per_core/energy-per-core/
+> S0-D0-C2         1          0.02 Joules power_per_core/energy-per-core/
+> S0-D0-C3         1          0.02 Joules power_per_core/energy-per-core/
+> S0-D0-C4         1          0.02 Joules power_per_core/energy-per-core/
+> S0-D0-C5         1          0.02 Joules power_per_core/energy-per-core/
+> S0-D0-C6         1          0.02 Joules power_per_core/energy-per-core/
+> S0-D0-C7         1          0.02 Joules power_per_core/energy-per-core/
+> S0-D0-C8         1          0.02 Joules power_per_core/energy-per-core/
+> S0-D0-C9         1          0.02 Joules power_per_core/energy-per-core/
+> S0-D0-C10        1          0.02 Joules power_per_core/energy-per-core/
+>
+> [1]: https://lore.kernel.org/lkml/3e766f0e-37d4-0f82-3868-31b14228868d@li=
+nux.intel.com/
+>
+> This patchset applies cleanly on top of v6.10-rc7 as well as latest
+> tip/master.
+>
+> v4 changes:
+> * Add patch 11 which removes the unused function cpu_to_rapl_pmu()
+> * Add Rui's rb tag for patch 1
+> * Invert the pmu scope check logic in patch 2 (Peter)
+> * Add comments explaining the scope check in patch 2 (Peter)
+> * Use cpumask_var_t instead of cpumask_t in patch 5 (Peter)
+> * Move renaming code to patch 8 (Rui)
+> * Reorder the cleanup order of per-core and per-pkg PMU in patch 10 (Rui)
+> * Add rapl_core_hw_unit variable to store the per-core PMU unit in patch
+>   10 (Rui)
+>
+> PS: Scope check logic is still kept the same (i.e., all Intel systems bei=
+ng
+> considered as die scope), Rui will be modifying it to limit the die-scope
+> only to Cascadelake-AP in a future patch on top of this patchset.
+>
+> v3 changes:
+> * Patch 1 added to introduce the logical_core_id which is unique across
+>   the system (Prateek)
+> * Use the unique topology_logical_core_id() instead of
+>   topology_core_id() (which is only unique within a package on tested
+>   AMD and Intel systems) in Patch 10
+>
+> v2 changes:
+> * Patches 6,7,8 added to split some changes out of the last patch
+> * Use container_of to get the rapl_pmus from event variable (Rui)
+> * Set PERF_EV_CAP_READ_ACTIVE_PKG flag only for pkg scope PMU (Rui)
+> * Use event id 0x1 for energy-per-core event (Rui)
+> * Use PERF_RAPL_PER_CORE bit instead of adding a new flag to check for
+>   per-core counter hw support (Rui)
+>
+> Dhananjay Ugwekar (10):
+>   perf/x86/rapl: Fix the energy-pkg event for AMD CPUs
+>   perf/x86/rapl: Rename rapl_pmu variables
+>   perf/x86/rapl: Make rapl_model struct global
+>   perf/x86/rapl: Move cpumask variable to rapl_pmus struct
+>   perf/x86/rapl: Add wrapper for online/offline functions
+>   perf/x86/rapl: Add an argument to the cleanup and init functions
+>   perf/x86/rapl: Modify the generic variable names to *_pkg*
+>   perf/x86/rapl: Remove the global variable rapl_msrs
+>   perf/x86/rapl: Add per-core energy counter support for AMD CPUs
+>   perf/x86/rapl: Remove the unused function cpu_to_rapl_pmu
+>
+> K Prateek Nayak (1):
+>   x86/topology: Introduce topology_logical_core_id()
+>
+>  Documentation/arch/x86/topology.rst   |   4 +
+>  arch/x86/events/rapl.c                | 454 ++++++++++++++++++--------
+>  arch/x86/include/asm/processor.h      |   1 +
+>  arch/x86/include/asm/topology.h       |   1 +
+>  arch/x86/kernel/cpu/debugfs.c         |   1 +
+>  arch/x86/kernel/cpu/topology_common.c |   1 +
+>  6 files changed, 328 insertions(+), 134 deletions(-)
+>
+> --
+> 2.34.1
+>
