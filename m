@@ -1,330 +1,225 @@
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2046.outbound.protection.outlook.com [40.107.92.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 777381422CE
-	for <linux-hardening@vger.kernel.org>; Thu, 11 Jul 2024 09:06:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.51
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720688813; cv=none; b=F077kuWPSR+HekdiQEVLBvRaku4SOMcwHlL6eKiEjd+OJoztxUAXvNTid/9vfBqLswXQcdYTj7gr1G6kYGWiwRwvQeTJea//UMVRkK4AqjJHLsDZ7zGx59eUrUwd6dH7sZeqGW/NhSAqz0WueGBlnW6569/F6JzlkW6D7Lk3AVM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720688813; c=relaxed/simple;
-	bh=ndqDakJeUVibqBthQj6MLhOYHID5w0Dp0CWxFqOMqyU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=k1NMS35HzD2MkSQ2sWB9SJg7+pa+VejLwQq5bqpC7aXiiTSb4kM2JwW8wA/PGH8kMtScnBb4sprPPcwTZCvc9bYBR7tcdqbGkcBd1gSkK5vAKiWPaJa0EYg1Z5dcdcOQRvdl9sLXxgfpsCbMs4Duad3ZT2jgCTAxC+MV5L8iArk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=h5Lzob+T; arc=none smtp.client-ip=209.85.222.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9E94158DDD;
+	Thu, 11 Jul 2024 10:25:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.46
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720693535; cv=fail; b=WfJrOmRO7/RI2PpAC9+YKNnbN6/tFsrWcoAIfPzTCNr14/I8ky+w6c3Ix/GR6lK6xzkRO35j8gifNzcb7GvA5OgG5muTSSCB6oGbs/kAX9QFZTcKHB9Rrg1P6PgB6jQ0ASha8GH6sgdXeAcCgNsILYsdtL0/jIFAL5uzZ2HEW/M=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720693535; c=relaxed/simple;
+	bh=gEU2zSp1/XhNFjsY/G9KZYZlBz9JnafmSzYwhygMyLI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Ny2Q6tmbiboalBKtC4XlBYiLeXaULfLmrwDmfYgiQN8Gv0xEtamfQOcBF75mpzLOgkoPnQoaBjTwENPA+GQEZDk87CCrIMVJnAS/TFJLwaeN6ElmzE0has9epvZZjSstUPtPNhpNaQs2WXAqt6qXek5ePufg632Wq64Kf0eyYC8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=3AVI+mLF; arc=fail smtp.client-ip=40.107.92.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h5Lzob+T"
-Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-81022501a12so946132241.0
-        for <linux-hardening@vger.kernel.org>; Thu, 11 Jul 2024 02:06:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1720688810; x=1721293610; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ehnNMNXfvb4vki4ExU1sjmRzfNAU6K60o3BlICJME1k=;
-        b=h5Lzob+TDQLhCuqtJr1FMQf1BR/dtd7ejdJBBiaoLmP9b3jVT/SQ20hhX7jFgma0YU
-         oWUr/fmR6avU1dsSH9Pdqp5dhybJVdpH2ZkGbNg+RnDMrmTwrHPlcKMNwLS6MtiNP8AB
-         ZafqHdlG+/8NmuWWmy8Fy/r9WY/SYfE355tGD5tp0tlI1T2nPvhhUN0p6Z2eev+jBfBq
-         MItsy94PO8+Hic5i5VS4VRzHKn6orWkT+X7hnmw76e+iMq9NSv1vUxNlXQ9iJ37t0YXo
-         aLCYiw4udzXVnDB+wzEWpbrXbrqxKl/v/8VyozY8I+MRAGFgbywMvBhay9Kz/QGc9T/p
-         o2RA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720688810; x=1721293610;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ehnNMNXfvb4vki4ExU1sjmRzfNAU6K60o3BlICJME1k=;
-        b=LsAr7eHDtsKhlBr+ab9oyDKPFgDgH7kNq196TCJSQkFhloDo3tkur5Gk6LP+fW/X82
-         ddmjMrD8KwojHgt/RCfewapKtXT4HFRnrKacadcUkmlNpQCllf9UhH4ld6achjhm1CPS
-         y922mqMyCv32lY26kODX5dsvzGSyl7Wv4AlY1pAHvnMtUNeOa/RBakcaP5LRbpKaDidz
-         HYNM4DcLQw61rD7Kd5j+IshQcqh0KFWOMw6hrZuRcb9uUAQj1EWXQbHgjICr/2Y0nksh
-         IEHjfFPmpV84zPrtf9NXXQJ+tL1EPWmDRw3BnDGFCwvr2PckAtWPVMo5a4RT1xfzCcuB
-         XFlw==
-X-Forwarded-Encrypted: i=1; AJvYcCWi3WwUsSwYP9ACilOXBIYBzmVzOjh+tIOnXeqH9ig1dKvr3dWhQUHwGk0lRX8U2MZ8iFI2S1TxEy22irNlGP4QH2emzfYqD8Ecww96sWKA
-X-Gm-Message-State: AOJu0YwgZ3iZ91CcrqVs9kfeWIE4LYaq0HHKk6zLEsADbM+Q6GWFU/ZO
-	yBu4vWV+YAz+s2mT2YPIpe3CjEb/rKX4tpomR4aVC8FjbbSG34xif0yphhH07C6oXomtodXbD6k
-	Noz5e9Pe+PTv5oU/6gqI6zoZAsaYdyZ4zOlDD
-X-Google-Smtp-Source: AGHT+IEzZXxlgACZZ2LkFBwiR1DKvLCA9FwFFgt9xwq1LOgCBOB03gm4IqBFDxgiH5jjg/c9tVlvGnhMo1yOb3sPchQ=
-X-Received: by 2002:a05:6102:3e02:b0:48f:968b:1714 with SMTP id
- ada2fe7eead31-491119541f8mr377121137.11.1720688810066; Thu, 11 Jul 2024
- 02:06:50 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="3AVI+mLF"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=KF0eDuj3JVTaZNfJ2sLyYSX8u3DI19t5043bpiz5lbkvf0kEhtzsH49BFFbX4TuqQi+YQ7jQkHbo6YOR0HL7G9OJ44JkkaIfWkfFPUektwITwB6KSwsDKkeTMKADCVpoqyBx4DsyIswAlzD28wx0RPKcLLCYLhZV4hbOaA+ceWHhIJpGnPB5BcJ41wTsvVePdYL0FCBl8IkewWJoLmb+Xjb6YYFd93RHzc2BzemAiNtJMZ3vVUmXsaejjD1ocCywZGnMpA2ch38lxER05CJ1ebQyQbszfQjra+O5dOhaqW3B3bqEGf1W4PF9wUynySxA/btmk+HM5EuspIUeh/edVg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=gz5aih4ChjQF0k5a1F91PhbHXzb7m+YVcpwKfwyeiJQ=;
+ b=NXPkm9sTrpojUS5OZmzjJJHRgYNiE10XJ+dW5tl4y8lAe+93WClwuOETEhK9HkaqPSmvVYwAR/HiH1NzBx/0GjzHcGmqlIo3Sva8mh7mSqIkAyHN2p0u4UKCJ7MKiyq3CvyLTfRwYZ8MJVQoWaVO2UX5u84ObwekcWo10PfyK8uaFs+ge4ytYXzCDxpgQ8Q06B5zoY2MDJMo5tj9Hb8wA284dKjQlVheYSiJ6HB6p7mtoMcn84/ziD3KO1DJ5xvJWGVCJiSPiMrWeVcw170w8WhmyazbDWs3Qb+rEa9CgZwrBgBiS4JlsNnXlX87yv+dzSUCeyKtCmg8gYXt/7mjiA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gz5aih4ChjQF0k5a1F91PhbHXzb7m+YVcpwKfwyeiJQ=;
+ b=3AVI+mLFVlrPOyEu3pixYHFwQsEO5J6z7rpI9Q5OjgF7FUfjxGeCMaf6Ph3TC+752CXc1ib7yrrOniZpvftqPcBZqToaEzYsPgU6P278YkhjNBbQ4B4JJhDQcU0vQPk8zuM0Vh819VZE3yMNdFzQCbBZTsIyfksNfuwUIKfKFrI=
+Received: from SN6PR2101CA0015.namprd21.prod.outlook.com
+ (2603:10b6:805:106::25) by CY5PR12MB6082.namprd12.prod.outlook.com
+ (2603:10b6:930:2a::6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.23; Thu, 11 Jul
+ 2024 10:25:29 +0000
+Received: from SN1PEPF000397B2.namprd05.prod.outlook.com
+ (2603:10b6:805:106:cafe::fe) by SN6PR2101CA0015.outlook.office365.com
+ (2603:10b6:805:106::25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7784.8 via Frontend
+ Transport; Thu, 11 Jul 2024 10:25:29 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SN1PEPF000397B2.mail.protection.outlook.com (10.167.248.56) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7762.17 via Frontend Transport; Thu, 11 Jul 2024 10:25:28 +0000
+Received: from shatadru.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 11 Jul
+ 2024 05:25:20 -0500
+From: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
+To: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+	<namhyung@kernel.org>, <mark.rutland@arm.com>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<irogers@google.com>, <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
+	<tglx@linutronix.de>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
+	<x86@kernel.org>, <kees@kernel.org>, <gustavoars@kernel.org>,
+	<rui.zhang@intel.com>, <oleksandr@natalenko.name>
+CC: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-hardening@vger.kernel.org>, <ananth.narayan@amd.com>,
+	<gautham.shenoy@amd.com>, <kprateek.nayak@amd.com>, <ravi.bangoria@amd.com>,
+	<sandipan.das@amd.com>, <linux-pm@vger.kernel.org>,
+	<Dhananjay.Ugwekar@amd.com>
+Subject: [PATCH v4 00/11] Add per-core RAPL energy counter support for AMD CPUs
+Date: Thu, 11 Jul 2024 10:24:26 +0000
+Message-ID: <20240711102436.4432-1-Dhananjay.Ugwekar@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240710203250.238782-1-gatlin.newhouse@gmail.com> <20240711081031.GB4587@noisy.programming.kicks-ass.net>
-In-Reply-To: <20240711081031.GB4587@noisy.programming.kicks-ass.net>
-From: Marco Elver <elver@google.com>
-Date: Thu, 11 Jul 2024 11:06:12 +0200
-Message-ID: <CANpmjNObEzShHvw19EAntPvCYJbqezKBq+pB=mkd7j3sXDEE7A@mail.gmail.com>
-Subject: Re: [PATCH v4] x86/traps: Enable UBSAN traps on x86
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Gatlin Newhouse <gatlin.newhouse@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Kees Cook <keescook@chromium.org>, 
-	Andrey Konovalov <andreyknvl@gmail.com>, Andrey Ryabinin <ryabinin.a.a@gmail.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>, 
-	Rick Edgecombe <rick.p.edgecombe@intel.com>, Pengfei Xu <pengfei.xu@intel.com>, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, Changbin Du <changbin.du@huawei.com>, Xin Li <xin3.li@intel.com>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>, 
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, linux-kernel@vger.kernel.org, 
-	kasan-dev@googlegroups.com, linux-hardening@vger.kernel.org, 
-	llvm@lists.linux.dev, t.p.northover@gmail.com, 
-	Fangrui Song <maskray@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN1PEPF000397B2:EE_|CY5PR12MB6082:EE_
+X-MS-Office365-Filtering-Correlation-Id: 41228f73-c5fd-4ff5-3011-08dca193c965
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|1800799024|82310400026|36860700013|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?WuQTOMQfJLh12ZWiLbC/XQmVe+32xkyN7S2y1q1s82Wx5o4hvefDSu8Zzzd7?=
+ =?us-ascii?Q?HdwSHpp67mYLuQDKN0FZlSXgLvKL+XBnVVmZg3xSDYfBjlFEwxdFEzhucb1p?=
+ =?us-ascii?Q?evwTqVnEOcno2kVzOsZ4YEUjj/TL2VhOkwa8u064X9NA5X1KVseU1pErtgXX?=
+ =?us-ascii?Q?0HZTZ2exRlzfmrYzauNfbMlVckegz7vkyCfd/RBEQxQ2vAa9hOM/PqA2ykcz?=
+ =?us-ascii?Q?t3RvBgbA3KdxxXGuHDR7OdsCLPrcZEbVd9AamsOoTLKPPzdxPB1KuBtCvfX2?=
+ =?us-ascii?Q?NTltJVNEenpSvoN7kKUO3ALmP0uiGFAM/GBtJB8pslohGqhu+BxdAvwD3/dJ?=
+ =?us-ascii?Q?39XhV1Rxf1wOJvD/d6/P8wjynqKXHx5q1JC6pMoKNAwzI7y3lOUxQAZ8s64A?=
+ =?us-ascii?Q?Z97mohsSdaVRBuSR/n+NwsCP+UaYhrMFKIjUDb/keKoRK6wwTOsFka1Gw0dk?=
+ =?us-ascii?Q?BXQwez39mu7xNBUdks/gr/xb1YQqxlTGnN+SBamympsJRQULKCpvYSgsdi+v?=
+ =?us-ascii?Q?td5b5IrPE9UIQsDRIc2F0BqEEhCYVzZHNzt6J4P1w/s9SK7gdK5jR2lV97A7?=
+ =?us-ascii?Q?ULU7soOcqL4pmRcYRu25HFHwbaS9qJNZ6mAdh4hMLRWO52ZaHqCJoTOeYdoz?=
+ =?us-ascii?Q?RySr/T56auDJNFGK4HNLsy08bfq2VM9XUeJNR8utFHTmq5J4Iwwf1WHviPHr?=
+ =?us-ascii?Q?yUuBqbRfBNbn75qnIVBqHMTT5dGwinCfsylS8yXgJXjYdDSTA8dPsBYDLc9g?=
+ =?us-ascii?Q?ukq3QngnianKduF6Brz04NpX9nfm4ESX3N2ANrhfcJzjZwLPa1/pk5u1pwjm?=
+ =?us-ascii?Q?8rbxFyBS7MEf4sTUyyEsgOKSvSARqYfTkTA7xPC+FJaH5M5fW+cmbf/Lzgs8?=
+ =?us-ascii?Q?Fgfz7ErSqXJwxwOd0dSwLC3P7iBhsO//rZWn/9bCdo/BjrXzLIlN/Ce7N6hT?=
+ =?us-ascii?Q?3Y5iMTXyLEgsgbVRHePnIJ5KVj6B7HvLZ3i7aUyTIVs/WAWijD26o2FG2LMo?=
+ =?us-ascii?Q?JaIUapTi2GxgzA9KPi04yc9gHsVyBk4Wqp9s+3ZAQdRtDH4bB6DOaAGQRokN?=
+ =?us-ascii?Q?nRVFDhE9fd72n3Fby+G8jBsDspoqANEQx8A7BpQYRI98y0Nwb7MfFjQA3cWS?=
+ =?us-ascii?Q?vL2EELL0v+gVa/bn/piWKAKCJz1qK4O2N5MIOKk1f4D3fo/BPPQbl2+HLC6c?=
+ =?us-ascii?Q?rdErviTpdyPINFKzkjuaaOU/AsAb68Ae/5XYCfq/pCJrpGbW3UIBMpUbXgob?=
+ =?us-ascii?Q?uTzcHtwd27hfI/+YY8gybfRplVD/FP/fIDjhU+X6nOSIG/ttUgtnmPMhEsvT?=
+ =?us-ascii?Q?Byu/xCOaoG27+RjrhIKCzRoEk8Cqzllz6j0j26qeiO0/5LgK9lZV2dMrp2ge?=
+ =?us-ascii?Q?Lm6/dfEZCJ0Bw2EJFZDjW0IO/V0qF3MZE0xfF1VQIj1bXj8tVw=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(82310400026)(36860700013)(921020);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jul 2024 10:25:28.8540
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 41228f73-c5fd-4ff5-3011-08dca193c965
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SN1PEPF000397B2.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6082
 
-On Thu, 11 Jul 2024 at 10:10, Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Wed, Jul 10, 2024 at 08:32:38PM +0000, Gatlin Newhouse wrote:
-> > Currently ARM architectures extract which specific sanitizer
-> > has caused a trap via encoded data in the trap instruction.
-> > Clang on x86 currently encodes the same data in ud1 instructions
-> > but the x86 handle_bug() and is_valid_bugaddr() functions
-> > currently only look at ud2s.
-> >
-> > Bring x86 to parity with arm64, similar to commit 25b84002afb9
-> > ("arm64: Support Clang UBSAN trap codes for better reporting").
-> > Enable the reporting of UBSAN sanitizer detail on x86 architectures
-> > compiled with clang when CONFIG_UBSAN_TRAP=y.
->
-> Can we please get some actual words on what code clang will generate for
-> this? This doesn't even refer to the clang commit.
->
-> How am I supposed to know if the below patch matches what clang will
-> generate etc..
+Currently the energy-cores event in the power PMU aggregates energy
+consumption data at a package level. On the other hand the core energy
+RAPL counter in AMD CPUs has a core scope (which means the energy 
+consumption is recorded separately for each core). Earlier efforts to add
+the core event in the power PMU had failed [1], due to the difference in 
+the scope of these two events. Hence, there is a need for a new core scope
+PMU.
 
-I got curious what the history of this is - I think it was introduced
-in https://github.com/llvm/llvm-project/commit/c5978f42ec8e9, which
-was reviewed here: https://reviews.llvm.org/D89959
+This patchset adds a new "power_per_core" PMU alongside the existing
+"power" PMU, which will be responsible for collecting the new
+"energy-per-core" event.
 
-But besides that, there's very little documentation. Either Gatlin or
-one of the other LLVM folks might have more background, but we might
-be out of luck if that 1 commit is all there is.
+Tested the package level and core level PMU counters with workloads
+pinned to different CPUs.
 
-[+Cc Tim, author of the LLVM commit]
+Results with workload pinned to CPU 1 in Core 1 on an AMD Zen4 Genoa 
+machine:
 
-> > diff --git a/arch/x86/include/asm/bug.h b/arch/x86/include/asm/bug.h
-> > index a3ec87d198ac..ccd573d58edb 100644
-> > --- a/arch/x86/include/asm/bug.h
-> > +++ b/arch/x86/include/asm/bug.h
-> > @@ -13,6 +13,17 @@
-> >  #define INSN_UD2     0x0b0f
-> >  #define LEN_UD2              2
-> >
-> > +/*
-> > + * In clang we have UD1s reporting UBSAN failures on X86, 64 and 32bit.
-> > + */
-> > +#define INSN_ASOP    0x67
->
-> I asked, but did not receive answer, *WHY* does clang add this silly
-> prefix? AFAICT this is entirely spurious and things would be simpler if
-> we don't have to deal with it.
->
-> > +#define OPCODE_PREFIX        0x0f
->
-> This is *NOT* a prefix, it is an escape, please see the SDM Vol 2
-> Chapter 'Instruction Format'. That ASOP thing above is a prefix.
->
-> > +#define OPCODE_UD1   0xb9
-> > +#define OPCODE_UD2   0x0b
->
-> These are second byte opcodes. The actual (single byte opcodes) of those
-> value exist and are something entirely different (0xB0+r is MOV, and
-> 0x0B is OR).
->
-> > +#define BUG_NONE     0xffff
-> > +#define BUG_UD1              0xfffe
-> > +#define BUG_UD2              0xfffd
->
-> These are return codes and not related to the defines above and as such
-> should be separated from them with some whitespace.
->
-> > +
-> >  #ifdef CONFIG_GENERIC_BUG
-> >
-> >  #ifdef CONFIG_X86_32
-> > diff --git a/arch/x86/include/asm/ubsan.h b/arch/x86/include/asm/ubsan.h
-> > new file mode 100644
-> > index 000000000000..ac2080984e83
-> > --- /dev/null
-> > +++ b/arch/x86/include/asm/ubsan.h
-> > @@ -0,0 +1,23 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +#ifndef _ASM_X86_UBSAN_H
-> > +#define _ASM_X86_UBSAN_H
-> > +
-> > +/*
-> > + * Clang Undefined Behavior Sanitizer trap mode support.
-> > + */
-> > +#include <linux/bug.h>
-> > +#include <linux/ubsan.h>
-> > +#include <asm/ptrace.h>
-> > +
-> > +/*
-> > + * UBSAN uses the EAX register to encode its type in the ModRM byte.
->
-> This is a claim, but I have nothing to verify this against. I mean, I
-> could go trawl through the clang sources, but this really should be part
-> of the changelog to explain the clang code generation.
->
-> > + */
-> > +#define UBSAN_REG    0x40
->
-> This is a ModRM byte, not a REG. The REG encoded therein is 0.
->
-> > +
-> > +#ifdef CONFIG_UBSAN_TRAP
-> > +void handle_ubsan_failure(struct pt_regs *regs, u16 insn);
-> > +#else
-> > +static inline void handle_ubsan_failure(struct pt_regs *regs, u16 insn) { return; }
-> > +#endif /* CONFIG_UBSAN_TRAP */
-> > +
-> > +#endif /* _ASM_X86_UBSAN_H */
-> > diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
-> > index 74077694da7d..fe1d9db27500 100644
-> > --- a/arch/x86/kernel/Makefile
-> > +++ b/arch/x86/kernel/Makefile
-> > @@ -145,6 +145,7 @@ obj-$(CONFIG_UNWINDER_GUESS)              += unwind_guess.o
-> >  obj-$(CONFIG_AMD_MEM_ENCRYPT)                += sev.o
-> >
-> >  obj-$(CONFIG_CFI_CLANG)                      += cfi.o
-> > +obj-$(CONFIG_UBSAN_TRAP)             += ubsan.o
-> >
-> >  obj-$(CONFIG_CALL_THUNKS)            += callthunks.o
-> >
-> > diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-> > index 4fa0b17e5043..b6664016622a 100644
-> > --- a/arch/x86/kernel/traps.c
-> > +++ b/arch/x86/kernel/traps.c
-> > @@ -67,6 +67,7 @@
-> >  #include <asm/vdso.h>
-> >  #include <asm/tdx.h>
-> >  #include <asm/cfi.h>
-> > +#include <asm/ubsan.h>
-> >
-> >  #ifdef CONFIG_X86_64
-> >  #include <asm/x86_init.h>
-> > @@ -91,6 +92,45 @@ __always_inline int is_valid_bugaddr(unsigned long addr)
-> >       return *(unsigned short *)addr == INSN_UD2;
-> >  }
-> >
-> > +/*
-> > + * Check for UD1 or UD2, accounting for Address Size Override Prefixes.
-> > + * If it's a UD1, get the ModRM byte to pass along to UBSan.
-> > + */
-> > +__always_inline int decode_bug(unsigned long addr, u32 *imm)
-> > +{
-> > +     u8 v;
-> > +
-> > +     if (addr < TASK_SIZE_MAX)
-> > +             return BUG_NONE;
-> > +
-> > +     v = *(u8 *)(addr++);
-> > +     if (v == INSN_ASOP)
-> > +             v = *(u8 *)(addr++);
-> > +     if (v != OPCODE_PREFIX)
-> > +             return BUG_NONE;
-> > +
-> > +     v = *(u8 *)(addr++);
-> > +     if (v == OPCODE_UD2)
-> > +             return BUG_UD2;
-> > +     if (v != OPCODE_UD1)
-> > +             return BUG_NONE;
-> > +
-> > +     v = *(u8 *)(addr++);
-> > +     if (X86_MODRM_RM(v) == 4)
-> > +             addr++;
-> > +
-> > +     *imm = 0;
-> > +     if (X86_MODRM_MOD(v) == 1)
-> > +             *imm = *(u8 *)addr;
-> > +     else if (X86_MODRM_MOD(v) == 2)
-> > +             *imm = *(u32 *)addr;
-> > +     else
-> > +             WARN_ONCE(1, "Unexpected MODRM_MOD: %u\n", X86_MODRM_MOD(v));
-> > +
-> > +     return BUG_UD1;
-> > +}
-> > +
-> > +
-> >  static nokprobe_inline int
-> >  do_trap_no_signal(struct task_struct *tsk, int trapnr, const char *str,
-> >                 struct pt_regs *regs, long error_code)
-> > @@ -216,6 +256,8 @@ static inline void handle_invalid_op(struct pt_regs *regs)
-> >  static noinstr bool handle_bug(struct pt_regs *regs)
-> >  {
-> >       bool handled = false;
-> > +     int ud_type;
-> > +     u32 imm;
-> >
-> >       /*
-> >        * Normally @regs are unpoisoned by irqentry_enter(), but handle_bug()
-> > @@ -223,7 +265,8 @@ static noinstr bool handle_bug(struct pt_regs *regs)
-> >        * irqentry_enter().
-> >        */
-> >       kmsan_unpoison_entry_regs(regs);
-> > -     if (!is_valid_bugaddr(regs->ip))
-> > +     ud_type = decode_bug(regs->ip, &imm);
-> > +     if (ud_type == BUG_NONE)
-> >               return handled;
-> >
-> >       /*
-> > @@ -236,10 +279,14 @@ static noinstr bool handle_bug(struct pt_regs *regs)
-> >        */
-> >       if (regs->flags & X86_EFLAGS_IF)
-> >               raw_local_irq_enable();
-> > -     if (report_bug(regs->ip, regs) == BUG_TRAP_TYPE_WARN ||
-> > -         handle_cfi_failure(regs) == BUG_TRAP_TYPE_WARN) {
-> > -             regs->ip += LEN_UD2;
-> > -             handled = true;
-> > +     if (ud_type == BUG_UD2) {
-> > +             if (report_bug(regs->ip, regs) == BUG_TRAP_TYPE_WARN ||
-> > +                 handle_cfi_failure(regs) == BUG_TRAP_TYPE_WARN) {
-> > +                     regs->ip += LEN_UD2;
-> > +                     handled = true;
-> > +             }
-> > +     } else {
-> > +             handle_ubsan_failure(regs, imm);
-> >       }
-> >       if (regs->flags & X86_EFLAGS_IF)
-> >               raw_local_irq_disable();
-> > diff --git a/arch/x86/kernel/ubsan.c b/arch/x86/kernel/ubsan.c
-> > new file mode 100644
-> > index 000000000000..c90e337a1b6a
-> > --- /dev/null
-> > +++ b/arch/x86/kernel/ubsan.c
-> > @@ -0,0 +1,21 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Clang Undefined Behavior Sanitizer trap mode support.
-> > + */
-> > +#include <linux/bug.h>
-> > +#include <linux/string.h>
-> > +#include <linux/printk.h>
-> > +#include <linux/ubsan.h>
-> > +#include <asm/ptrace.h>
-> > +#include <asm/ubsan.h>
-> > +
-> > +/*
-> > + * Checks for the information embedded in the UD1 trap instruction
-> > + * for the UB Sanitizer in order to pass along debugging output.
-> > + */
-> > +void handle_ubsan_failure(struct pt_regs *regs, u16 type)
-> > +{
-> > +     if ((type & 0xFF) == UBSAN_REG)
-> > +             type >>= 8;
->
-> This makes no sense, we've consumed the ModRM byte ealier, this should
-> really only ever get the immediate.
->
-> > +     pr_crit("%s at %pS\n", report_ubsan_failure(regs, type), (void *)regs->ip);
-> > +}
-> > --
-> > 2.25.1
-> >
+$ perf stat -a --per-core -e power_per_core/energy-per-core/ -- sleep 1
+
+ Performance counter stats for 'system wide':
+
+S0-D0-C0         1          0.02 Joules power_per_core/energy-per-core/
+S0-D0-C1         1          5.72 Joules power_per_core/energy-per-core/
+S0-D0-C2         1          0.02 Joules power_per_core/energy-per-core/
+S0-D0-C3         1          0.02 Joules power_per_core/energy-per-core/
+S0-D0-C4         1          0.02 Joules power_per_core/energy-per-core/
+S0-D0-C5         1          0.02 Joules power_per_core/energy-per-core/
+S0-D0-C6         1          0.02 Joules power_per_core/energy-per-core/
+S0-D0-C7         1          0.02 Joules power_per_core/energy-per-core/
+S0-D0-C8         1          0.02 Joules power_per_core/energy-per-core/
+S0-D0-C9         1          0.02 Joules power_per_core/energy-per-core/
+S0-D0-C10        1          0.02 Joules power_per_core/energy-per-core/
+
+[1]: https://lore.kernel.org/lkml/3e766f0e-37d4-0f82-3868-31b14228868d@linux.intel.com/
+
+This patchset applies cleanly on top of v6.10-rc7 as well as latest 
+tip/master.
+
+v4 changes:
+* Add patch 11 which removes the unused function cpu_to_rapl_pmu()
+* Add Rui's rb tag for patch 1
+* Invert the pmu scope check logic in patch 2 (Peter)
+* Add comments explaining the scope check in patch 2 (Peter)
+* Use cpumask_var_t instead of cpumask_t in patch 5 (Peter)
+* Move renaming code to patch 8 (Rui)
+* Reorder the cleanup order of per-core and per-pkg PMU in patch 10 (Rui)
+* Add rapl_core_hw_unit variable to store the per-core PMU unit in patch
+  10 (Rui)
+
+PS: Scope check logic is still kept the same (i.e., all Intel systems being 
+considered as die scope), Rui will be modifying it to limit the die-scope 
+only to Cascadelake-AP in a future patch on top of this patchset.
+
+v3 changes:
+* Patch 1 added to introduce the logical_core_id which is unique across
+  the system (Prateek)
+* Use the unique topology_logical_core_id() instead of
+  topology_core_id() (which is only unique within a package on tested
+  AMD and Intel systems) in Patch 10
+
+v2 changes:
+* Patches 6,7,8 added to split some changes out of the last patch
+* Use container_of to get the rapl_pmus from event variable (Rui)
+* Set PERF_EV_CAP_READ_ACTIVE_PKG flag only for pkg scope PMU (Rui)
+* Use event id 0x1 for energy-per-core event (Rui)
+* Use PERF_RAPL_PER_CORE bit instead of adding a new flag to check for
+  per-core counter hw support (Rui)
+
+Dhananjay Ugwekar (10):
+  perf/x86/rapl: Fix the energy-pkg event for AMD CPUs
+  perf/x86/rapl: Rename rapl_pmu variables
+  perf/x86/rapl: Make rapl_model struct global
+  perf/x86/rapl: Move cpumask variable to rapl_pmus struct
+  perf/x86/rapl: Add wrapper for online/offline functions
+  perf/x86/rapl: Add an argument to the cleanup and init functions
+  perf/x86/rapl: Modify the generic variable names to *_pkg*
+  perf/x86/rapl: Remove the global variable rapl_msrs
+  perf/x86/rapl: Add per-core energy counter support for AMD CPUs
+  perf/x86/rapl: Remove the unused function cpu_to_rapl_pmu
+
+K Prateek Nayak (1):
+  x86/topology: Introduce topology_logical_core_id()
+
+ Documentation/arch/x86/topology.rst   |   4 +
+ arch/x86/events/rapl.c                | 454 ++++++++++++++++++--------
+ arch/x86/include/asm/processor.h      |   1 +
+ arch/x86/include/asm/topology.h       |   1 +
+ arch/x86/kernel/cpu/debugfs.c         |   1 +
+ arch/x86/kernel/cpu/topology_common.c |   1 +
+ 6 files changed, 328 insertions(+), 134 deletions(-)
+
+-- 
+2.34.1
+
