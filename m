@@ -1,126 +1,89 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5BAE16FF5A;
-	Fri, 12 Jul 2024 13:27:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5963AEAC7;
+	Fri, 12 Jul 2024 13:34:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720790879; cv=none; b=RHmmiQICeYBq3UnrsRI8S4k2XbwxS+M8DqgK4s8xyeTQOmxfPVbCtffhnxGAxoGeVILw8ml6+wT25macuVCpuu9KhW3uyVXX2a36EJU1nPaBC1RA3zpFxBYrbT7cupQZQ4+aAwHe5ElHU3mrLwy6AIv9GhXcS4wSadh2QV9I0N4=
+	t=1720791274; cv=none; b=LOCOD2Jg0vZGN8m9osac7jIW1AumC6GXBNdmuDVS+LJ4ct+xz2gZUsMWGXrNfaaGlrJ8sA/2uEYPn+Zz0bUX3WRW3qpAhdowMZqSDc49sYsd4+NyumtU0K2QUrqAOD/uuzvHnRmtmzCvdk/6Pqw6V+J+njMRy1pQto1albAHvTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720790879; c=relaxed/simple;
-	bh=awq1mjxtEZBNcYP5FYGsjZu6nKv5uMZVYeF4LNvKAF4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=mluz0DUXx+dIKyltOO6Ez8a1SlqIxxgrQNFkLAUd/ErVPWhF/89FHY1umv6ktDUGyjQGKv7pFEaSC5CaKVl/e5WOYzPVUOshtAVWH+Qyzp+6YK91aAg5kXYs8ZgYNGqopeTZIJjMSCf9O2WmiU7nHE1LsHW1oZ4F3b6mtiaNh7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=kaV+8hUi; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1720791274; c=relaxed/simple;
+	bh=5l82faOt0Ftj9KB/8OhC//sWOYz4iWkq9/TcEQ4beHA=;
+	h=Date:From:To:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=CPf+dap1iUATsZCM+VKjT3M66Wr105WRF74lmxTx5azW2WcOwidAK5d0qJdsb5heUxR9elcIEHioF0uIyiwYB+5rsiQWnYiAXcRJatz8l6QjDIKV7CFBwEEBDtjTWKwPvmWAV709ejG77+nHKlNebWyXzzdSwRAdb49YXCkhvKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NIpY/lPl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="kaV+8hUi"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46CAtkob003356;
-	Fri, 12 Jul 2024 13:27:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	hBH0rX5OBvn/ClAcquAzu1NAzKIGexD61Ufx4KxHcNg=; b=kaV+8hUi7OMmDJVZ
-	T/xJI6K4kDPmo0BqdkbEu19u4RsT/gDIKJANE0X/uqAiNnSOU2jluPgNt/vrRo7Z
-	8E0tuBzut4xy84ls85fOcchB/WWdVK9Wq9p/uIpvZKZBMyuFYkZaKoASc4Kd1gIT
-	VnoZyrucflJjKBt7ayJBL1NUIPV5LUXuWqhSFMZvNxbX/YFVmVa8nIc814mY9r/5
-	2LRYkBRSPxR9ltNmkp1MBrU28vsIJlCM5jOUIqYj55fHRkH0yOlfLtu8LgOOG3t7
-	bH7CjD8iisRlGt/XwW/4Mo9PCXEFHkenG4zeQNuAtUdWOiIGlNfJW9QbX1vr2nvB
-	hUD0EA==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 406wgwybnv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 12 Jul 2024 13:27:53 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46CDRqXn002091
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 12 Jul 2024 13:27:52 GMT
-Received: from [10.216.15.10] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 12 Jul
- 2024 06:27:49 -0700
-Message-ID: <6cffcc3e-ec36-7982-dcf1-fc5ed96a5208@quicinc.com>
-Date: Fri, 12 Jul 2024 18:57:46 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NIpY/lPl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBED9C32782;
+	Fri, 12 Jul 2024 13:34:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720791274;
+	bh=5l82faOt0Ftj9KB/8OhC//sWOYz4iWkq9/TcEQ4beHA=;
+	h=Date:From:To:Subject:In-Reply-To:References:From;
+	b=NIpY/lPlSWZI3R+9H16iJmlQjohMYFbKAnN1ICZijVCIxlgCeDDozmphS3SENp6t9
+	 NaJhKqPC2L8m/HhmUn3W6QwjFQd/BxayAj7rZgH6JmROTNvSjCqWErvxVjIADxA0Jj
+	 LgbR9KZgDD9ky0QfIk3xvRcWppmfvG3dVyOk8VOviNIbK5nTvzjFYb7I8uWRBNSMRu
+	 d3nU3c8KR4w4tG0Xzv7Pz8rfkjFWDVpKrAc2CF3WVWE56Xl+ySb8aCouJ2iNi1EcRY
+	 0JGEMFMckUZ1xp20pBOl/IX9BbWxSmIcNIpXGqtp5j++B+0GSe+alM11vUY6Dxvl2r
+	 WcfbiWV3jxNxw==
+Date: Fri, 12 Jul 2024 06:34:33 -0700
+From: Kees Cook <kees@kernel.org>
+To: Jocelyn Falempe <jfalempe@redhat.com>, Michael Ellerman <mpe@ellerman.id.au>,
+ Nicholas Piggin <npiggin@gmail.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ "K. Y. Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>, Miquel Raynal <miquel.raynal@bootlin.com>,
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Tony Luck <tony.luck@intel.com>,
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>, Petr Mladek <pmladek@suse.com>,
+ Steven Rostedt <rostedt@goodmis.org>,
+ John Ogness <john.ogness@linutronix.de>,
+ Sergey Senozhatsky <senozhatsky@chromium.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Jani Nikula <jani.nikula@intel.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Kefeng Wang <wangkefeng.wang@huawei.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Uros Bizjak <ubizjak@gmail.com>,
+ linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
+ linux-mtd@lists.infradead.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] printk: Add a short description string to kmsg_dump()
+User-Agent: K-9 Mail for Android
+In-Reply-To: <2d886ba5-950b-4dff-81ea-8748d7d67c55@redhat.com>
+References: <20240702122639.248110-1-jfalempe@redhat.com> <2d886ba5-950b-4dff-81ea-8748d7d67c55@redhat.com>
+Message-ID: <277007E3-48FA-482C-9EE0-FA28F470D6C4@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH 2/2] media: venus: hfi_cmds: struct
- hfi_session_release_buffer_pkt: Add __counted_by annotation
-Content-Language: en-US
-To: Kees Cook <kees@kernel.org>,
-        Stanimir Varbanov
-	<stanimir.k.varbanov@gmail.com>
-CC: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Mauro Carvalho Chehab
-	<mchehab@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-hardening@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20240710230728.work.977-kees@kernel.org>
- <20240710230914.3156277-2-kees@kernel.org>
-From: Vikash Garodia <quic_vgarodia@quicinc.com>
-In-Reply-To: <20240710230914.3156277-2-kees@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: P-Ny8pZ2ybFtv1k2I97r1xEguIHJBjSv
-X-Proofpoint-ORIG-GUID: P-Ny8pZ2ybFtv1k2I97r1xEguIHJBjSv
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-12_09,2024-07-11_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 mlxscore=0
- adultscore=0 malwarescore=0 spamscore=0 bulkscore=0 lowpriorityscore=0
- suspectscore=0 clxscore=1015 priorityscore=1501 phishscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2407120091
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
 
 
-On 7/11/2024 4:39 AM, Kees Cook wrote:
-> The only direct user of struct hfi_session_release_buffer_pkt is
-> pkt_session_unset_buffers() which sets "num_buffers" before using it
-> as a loop counter for accessing "buffer_info". Add the __counted_by
-> annotation to reflect the relationship.
-> 
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
-> Cc: Stanimir Varbanov <stanimir.k.varbanov@gmail.com>
-> Cc: Vikash Garodia <quic_vgarodia@quicinc.com>
-> Cc: "Bryan O'Donoghue" <bryan.odonoghue@linaro.org>
-> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-> Cc: linux-media@vger.kernel.org
-> Cc: linux-arm-msm@vger.kernel.org
-> Cc: linux-hardening@vger.kernel.org
-> ---
->  drivers/media/platform/qcom/venus/hfi_cmds.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/media/platform/qcom/venus/hfi_cmds.h b/drivers/media/platform/qcom/venus/hfi_cmds.h
-> index 42825f07939d..1adf2d2ae5f2 100644
-> --- a/drivers/media/platform/qcom/venus/hfi_cmds.h
-> +++ b/drivers/media/platform/qcom/venus/hfi_cmds.h
-> @@ -227,7 +227,7 @@ struct hfi_session_release_buffer_pkt {
->  	u32 extradata_size;
->  	u32 response_req;
->  	u32 num_buffers;
-> -	u32 buffer_info[];
-> +	u32 buffer_info[] __counted_by(num_buffers);
->  };
->  
->  struct hfi_session_release_resources_pkt {
+On July 12, 2024 2:59:30 AM PDT, Jocelyn Falempe <jfalempe@redhat=2Ecom> w=
+rote:
+>Gentle ping, I need reviews from powerpc, usermod linux, mtd, pstore and =
+hyperv, to be able to push it in the drm-misc tree=2E
 
-Reviewed-by: Vikash Garodia <quic_vgarodia@quicinc.com>
+Oops, I thought I'd Acked already!
 
-Regards,
-Vikash
+Acked-by: Kees Cook <kees@kernel=2Eorg>
+
+And, yeah, as mpe said, you're all good to take this via drm-misc=2E
+
+Thanks!
+
+-Kees
+
+
+--=20
+Kees Cook
