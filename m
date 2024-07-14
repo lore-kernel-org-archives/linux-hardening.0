@@ -1,108 +1,118 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78B44D51D;
-	Sun, 14 Jul 2024 04:11:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76D131E494;
+	Sun, 14 Jul 2024 17:09:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720930277; cv=none; b=rCk1SCFQt6keuxXzzQixQ3Tygqot1mupCCbuPmk1OiDhYinsxr0FsrH+xiXWzea+ku+FRaIW0iHJzKb6m5S5bFygwOkQGqLBNNfhGTq7mm8fPJpHnzfkW4FmpeGnxUacOkkVkBR6jqu+9pCXfDMwCL0FKqUH9Plv+Fkyo4cKT2M=
+	t=1720976943; cv=none; b=m5w972iwdKkaoJ/UP/T/oIEWoy+O7QPMWcWlyZvm/jVdR9zsbO1xhCZuu/m4Pq3i9TfqHp8CitKBw/txL5rrgzjOcN2pZDWLGAv3hIVKF2EMl9e+wX8S/2dhGKiSTkANSYkNeHpX8nff1ac3F9G56V86fcZ1kt/9LZPH6RGmmkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720930277; c=relaxed/simple;
-	bh=CS0Ls0MuwNsY7hOa+wW/UsNVnthdrSTKsX+XpH3xDYw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Rwg8vLnPVoOXiIxDukq8d2b3tJ68IhWjmXpbD069b4Gd/KixDubPzsH94hHiK5GgJ1t9TxKiQtozn/4z2OYpsDos2iVdQuJMUaU0RDVcGKNlWX/afebDHZ54y7mqtqZLShkViPGkOJm6JbPFt83PfsEyueJ3tKQhpw7u0lh8JLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lEX9kvu7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720976943; c=relaxed/simple;
+	bh=MxRLc97aWW1jnO5G6Jndd9uzcfVljas1IZvntva/lCs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uK06dQXb2UWPsanhdIaiWW3Nz2JWEmTmrNBsyd3yGFQf//6udvhpNWNUlSKCIPdPksPgHs0S4d0tRk4HW4Pbx6dgrToin0wqYxRHgYdqntJ0686lXF1AGiBpFk7Rdqeqga0x7fq8fUgJ8JFYYyP3pu4KZejjy0qUZsSFayW5J5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JQoJrb9a; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lEX9kvu7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EC3CC116B1;
-	Sun, 14 Jul 2024 04:11:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JQoJrb9a"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31172C116B1;
+	Sun, 14 Jul 2024 17:09:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720930277;
-	bh=CS0Ls0MuwNsY7hOa+wW/UsNVnthdrSTKsX+XpH3xDYw=;
+	s=k20201202; t=1720976943;
+	bh=MxRLc97aWW1jnO5G6Jndd9uzcfVljas1IZvntva/lCs=;
 	h=From:To:Cc:Subject:Date:From;
-	b=lEX9kvu7A9gADCi1IUDUpTr8TMa1B1wpaLd6o+/gtzIxnUWmY7cDYJ6JosdFTFDLF
-	 hmBJmAMYe/3d9t93CrOFE/f1TWyKk9vxeBlnixlFg224lRL2CDyhZMffOQ5i9D+Em8
-	 iqYViJNAbLHpQcMiJEZ+jfL9mA6SWLixsmbjGeeGgz6DYunlXNWUQMF9M1F2lYNIlq
-	 gDZOydTeHj1Rk1iUTWvFH5XhVI67Ter0+HHwufQkpkCKFRZhjyl73VEhwrxqrXU3Tr
-	 ebYBmiA0TAkBbC0e9gyntQE6SPpln7cFXUC4LiBa64Y1G5UPBMk1O7aJpDsiEhA0io
-	 VrH53q6HHa85A==
-From: Kees Cook <kees@kernel.org>
-To: Eric Dumazet <edumazet@google.com>
-Cc: Kees Cook <kees@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	David Ahern <dsahern@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
+	b=JQoJrb9atcNILl3gxuE/+a/h+aqRk7cRcQPuS2x294rEZXNGqaEVwMlBFoyVuc9aM
+	 OsJgdz1DgDAmaCfkjGSnxuJXdRE4H6aYI0571cWd5b4EwDDZkPAHQx9leTO0lm2Dqu
+	 n6wi4wwXAbKyxno4h52krvbuXMW94oCxaoktW4c0g29ZQ+7JYQ2Xgxf5VyuRD/vZgS
+	 Tfa0wDk62afOb5725AoLWw+/eP2tJVU0Wb95D5zkTM2hsn4qjmD6DZGxssJ5R1Tg22
+	 obxBPvZ2DzOMkwplGxd/89KnFq4lLIJN7ekDlZenAYAzm6q56RAb4v6t6CdceTui4J
+	 fQKViagwMmGXw==
+From: Masahiro Yamada <masahiroy@kernel.org>
+To: linux-kbuild@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Arnd Bergmann <arnd@arndb.de>,
+	Kees Cook <keescook@chromium.org>,
+	Marco Elver <elver@google.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Kees Cook <kees@kernel.org>,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH v2] net/ipv4/tcp_cong: Replace strncpy() with strscpy()
-Date: Sat, 13 Jul 2024 21:11:15 -0700
-Message-Id: <20240714041111.it.918-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+Subject: [PATCH] fortify: fix warnings in fortify tests with KASAN
+Date: Mon, 15 Jul 2024 02:04:32 +0900
+Message-ID: <20240714170847.2029108-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1904; i=kees@kernel.org; h=from:subject:message-id; bh=CS0Ls0MuwNsY7hOa+wW/UsNVnthdrSTKsX+XpH3xDYw=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmk0/jgqbYNdSchEcFgoVX5gQ/Vj0Ot35vBhu9E p+U+m0RVseJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZpNP4wAKCRCJcvTf3G3A JmBdD/41cm3ixFlgvt+VTgOfuFtJer3iyrrw1QmIuc2hf4ebF28VSORUg44rUzEVCHy8n5wY0VF 1OpxjPS1Htytu9Y2d+Xn3GEz91PnDn+OZE6d54uLbC0qzb183KfUYfUuITMBtUS++nyjyJ9SUJ0 5nGcIERWU5XUUnGQVjFZrxZ1eQ76iizWq4O7WSveoYVhP/upTBCpf/eIRHwB3izjHY6K7tOUvhC QhdYX8IGmUb1hWSRTfq4Wr94toe6e313+9ocBIpIkhYkgaw77ERAT1h6TyEufdDtzE23aGQTAJ/ 8JmOrBORwYrCXnlNs9AuaaX5yYYsklTcgahAAN6O7ptb8a4O3yjCvXgCUBYD4PO8+dtMfYmuGVR euZ/BC4qnjACAVb53JGxfJsu3wbLlDWSF+YE19ileJubBWwX1u2wWlRgiupFIgGz6iBD7fa6fLe F2kN9VbFWg1mqz6KMn/qzDPDIffhrqrsMbmCiClIM8eCMR05geGtKWzmoDPFw1Mh366KdXll6yY XjcnEpJehvu7EvllqyHQq31utMC7d3W6sHQtd6dfIGZ2S/4YmJIRdnNXnQpPETzvQ1WfUjmJtPf TWeaiZE5FuwSfOVrm+AIbeBt/OFmlUo8BwbW99hrZIyejAkZ26Qc6SUEasAImP5RvODbf3sMOve FKBNes9NN9zgK
- Ew==
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-Replace the deprecated[1] uses of strncpy() in tcp_ca_get_name_by_key()
-and tcp_get_default_congestion_control(). The callers use the results as
-standard C strings (via nla_put_string() and proc handlers respectively),
-so trailing padding is not needed.
+When a software KASAN mode is enabled, the fortify tests emit warnings
+on some architectures.
 
-Since passing the destination buffer arguments decays it to a pointer,
-the size can't be trivially determined by the compiler. ca->name is
-the same length in both cases, so strscpy() won't fail (when ca->name
-is NUL-terminated). Include the length explicitly instead of using the
-2-argument strscpy().
+For example, for ARCH=arm, the combination of CONFIG_FORTIFY_SOURCE=y
+and CONFIG_KASAN=y produces the following warnings:
 
-Link: https://github.com/KSPP/linux/issues/90 [1]
-Signed-off-by: Kees Cook <kees@kernel.org>
+    TEST    lib/test_fortify/read_overflow-memchr.log
+  warning: unsafe memchr() usage lacked '__read_overflow' warning in lib/test_fortify/read_overflow-memchr.c
+    TEST    lib/test_fortify/read_overflow-memchr_inv.log
+  warning: unsafe memchr_inv() usage lacked '__read_overflow' symbol in lib/test_fortify/read_overflow-memchr_inv.c
+    TEST    lib/test_fortify/read_overflow-memcmp.log
+  warning: unsafe memcmp() usage lacked '__read_overflow' warning in lib/test_fortify/read_overflow-memcmp.c
+    TEST    lib/test_fortify/read_overflow-memscan.log
+  warning: unsafe memscan() usage lacked '__read_overflow' symbol in lib/test_fortify/read_overflow-memscan.c
+    TEST    lib/test_fortify/read_overflow2-memcmp.log
+  warning: unsafe memcmp() usage lacked '__read_overflow2' warning in lib/test_fortify/read_overflow2-memcmp.c
+     [ more and more similar warnings... ]
+
+Commit 9c2d1328f88a ("kbuild: provide reasonable defaults for tool
+coverage") removed KASAN flags from non-kernel objects by default.
+It was an intended behavior because lib/test_fortify/*.c are unit
+tests that are not linked to the kernel.
+
+As it turns out, some architectures require -fsanitize=kernel-(hw)address
+to define __SANITIZE_ADDRESS__ for the fortify tests.
+
+Without __SANITIZE_ADDRESS__ defined, arch/arm/include/asm/string.h
+defines __NO_FORTIFY, thus excluding <linux/fortify-string.h>.
+
+This issue does not occur on x86 thanks to commit 4ec4190be4cf
+("kasan, x86: don't rename memintrinsics in uninstrumented files"),
+but there are still some architectures that define __NO_FORTIFY
+in such a situation.
+
+Set KASAN_SANITIZE=y explicitly to the fortify tests.
+
+Fixes: 9c2d1328f88a ("kbuild: provide reasonable defaults for tool coverage")
+Reported-by: Arnd Bergmann <arnd@arndb.de>
+Closes: https://lore.kernel.org/all/0e8dee26-41cc-41ae-9493-10cd1a8e3268@app.fastmail.com/
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
- v2: add tcp_get_default_congestion_control() conversion
- v1: https://lore.kernel.org/lkml/20240711171652.work.887-kees@kernel.org/
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: David Ahern <dsahern@kernel.org>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org
----
- net/ipv4/tcp_cong.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/net/ipv4/tcp_cong.c b/net/ipv4/tcp_cong.c
-index 28ffcfbeef14..874531c7c08b 100644
---- a/net/ipv4/tcp_cong.c
-+++ b/net/ipv4/tcp_cong.c
-@@ -203,9 +203,10 @@ char *tcp_ca_get_name_by_key(u32 key, char *buffer)
- 
- 	rcu_read_lock();
- 	ca = tcp_ca_find_key(key);
--	if (ca)
--		ret = strncpy(buffer, ca->name,
--			      TCP_CA_NAME_MAX);
-+	if (ca) {
-+		strscpy(buffer, ca->name, TCP_CA_NAME_MAX);
-+		ret = buffer;
-+	}
- 	rcu_read_unlock();
- 
- 	return ret;
-@@ -338,7 +339,7 @@ void tcp_get_default_congestion_control(struct net *net, char *name)
- 
- 	rcu_read_lock();
- 	ca = rcu_dereference(net->ipv4.tcp_congestion_control);
--	strncpy(name, ca->name, TCP_CA_NAME_MAX);
-+	strscpy(name, ca->name, TCP_CA_NAME_MAX);
- 	rcu_read_unlock();
- }
- 
+Kees Cook said "I'll try to figure this out", but I have not seen a patch so far,
+so I decided to do this myself.
+(https://lore.kernel.org/all/202405310908.A5733DF@keescook/)
+
+I will send a pull req with this and some other fixes.
+I need to fix this, as v6.10 will be released soon.
+
+
+
+ lib/Makefile | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/lib/Makefile b/lib/Makefile
+index 3b1769045651..30337431d10e 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -426,3 +426,7 @@ $(obj)/$(TEST_FORTIFY_LOG): $(addprefix $(obj)/, $(TEST_FORTIFY_LOGS)) FORCE
+ ifeq ($(CONFIG_FORTIFY_SOURCE),y)
+ $(obj)/string.o: $(obj)/$(TEST_FORTIFY_LOG)
+ endif
++
++# Some architectures define __NO_FORTIFY if __SANITIZE_ADDRESS__ is undefined.
++# Pass CFLAGS_KASAN to avoid warnings.
++$(foreach x, $(patsubst %.log,%.o,$(TEST_FORTIFY_LOGS)), $(eval KASAN_SANITIZE_$(x) := y))
 -- 
-2.34.1
+2.43.0
 
