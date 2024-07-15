@@ -1,189 +1,137 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC88413BAC4;
-	Mon, 15 Jul 2024 08:37:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7476F18508B;
+	Mon, 15 Jul 2024 08:58:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721032655; cv=none; b=b3bbt68hyOw6Tr1PUykmGAEWCuuO1RWhmNAWGS0wJF2v0fnE+L3S+snfEdt7OfO15SWmZIVJhOKCtONo3YJDd7RZT9UHDQcV0PKkr7SAgcHVJZOhqTLEFGMcKopKyyoWavO826VZ1OubDwGbTVF4tCvsyNxklnUeIrL1qN2APII=
+	t=1721033883; cv=none; b=SpNxbeO6FnWBqEXilIh5Kwg4Yrl1aiiGxo/bAaaQ29AgnT/+DDgXdhk1GhI6deCvHu4snxNSr0ocsDYKCtHl4mJ2/QGSXFJTDOZHrZ+9jNajYcMVvMk7fFzCoAUGdbBaKMGz4OFyCy9EAxZ2tfkkUOM284gufjm7pxik/qZKixk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721032655; c=relaxed/simple;
-	bh=6a47WPAIRfycPuOXAWxzW6xF3377lHud2VcJBGbtAZ8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ipUQUmkgwDq9LpFtKtghTfh4mhLO1Kki1kb+/PBxa+YnzP7nYroARyt2AWK2efS59w3r7LwBnb/LMUdXTCpzSIKlY77tikGf+2MSwyz2Kr6GBR+DxdwB/PMcDmsb81/f/FE1mn3QK/foONfLPe63zRamjBCRC3FhV9VNi7AyFWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=MAvEBGFk; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1721033883; c=relaxed/simple;
+	bh=6RI5uJ35+4Yew3i8Ir8hfGxp4NmxoOPt9ONJWo3gFmw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BqeeX3xMjLkUhNk1wGSGRRIGEDavqBjCOCAKHEdYMY5JUaA3tZKn/Xao8nGuiWWZnWgMn62Ra2SOAvAQ0PiIDgH8ztAIEzAAgj1nPu01uO/hMKfS5hdlri7rxKJBYggJY5/U8Osgylj1pOHyO69g3n2A+W4heBR2LkrFlb79Nig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IMnV0GLz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MAvEBGFk"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=P3XQdNXvKucQfzbIesbDHM6Ks3Dxta1uhheNQVnB0gk=; b=MAvEBGFkB2t3GlMRTwZWFx5kWi
-	TuAbQxtjubFI2vJbTagxDOaCQHc4ocf9RSMnlO6a9uo0oA1y4TpZ03G2HiWtyRdtLnsODJLEVij2J
-	eMztHpz7GkpTvku8+GxHopbarVGApOC/QUGy41kSH5u91GLCAimg6LAQPX1okHTOjdXfNUmyG7nrG
-	YWM5+xegfAjiyvfp0fkKl2MMtGaKUvP64rnizJwF07zHyXAA+BvUdTRMwNLSIHI99mm8HMzEzvv+Q
-	3djM7Zuxs/c0juhXRtrE80+5QrlDc4mjX+YUWlDb7HV0n4z8sKusUMfjMffR/ON5Pn5u4+6RkSXmg
-	QYa01LFg==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sTHCt-0000000FZm3-1McC;
-	Mon, 15 Jul 2024 08:37:15 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 283BD3003FF; Mon, 15 Jul 2024 10:37:13 +0200 (CEST)
-Date: Mon, 15 Jul 2024 10:37:13 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Mirsad Todorovac <mtodorovac69@gmail.com>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Daniel Sneddon <daniel.sneddon@linux.intel.com>,
-	Arnd Bergmann <arnd@arndb.de>, Brian Gerst <brgerst@gmail.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Peter Collingbourne <pcc@google.com>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] x86/syscall: Avoid memcpy() for ia32
- syscall_get_arguments()
-Message-ID: <20240715083713.GX27299@noisy.programming.kicks-ass.net>
-References: <20240708202202.work.477-kees@kernel.org>
- <20240711214450.GG27299@noisy.programming.kicks-ass.net>
- <202407111500.B86485B3@keescook>
- <20240712090008.GA19796@noisy.programming.kicks-ass.net>
- <202407121008.EDAD65A33@keescook>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IMnV0GLz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12B4AC4AF0B;
+	Mon, 15 Jul 2024 08:57:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721033883;
+	bh=6RI5uJ35+4Yew3i8Ir8hfGxp4NmxoOPt9ONJWo3gFmw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=IMnV0GLz/s34FlJI8kxhM6t4jiFyI+bzDnoi6iYRb7Tem7IoBPVQJlZ9isMV7ZAja
+	 Yz7QAMgkq1iqTiei1tS/rxDXW6Rpzy+nqbY/vejIdNbXFJ5JMOh6lMt4+Y+0EU9OfV
+	 aYr7utvg0CQGt7QHgRGothHrI3FUou5/zu+nWLADxUON25Qn752oOmAOwrd2n1ChQP
+	 djMJIMM8kIcAEaZy3QFelpDiElTnPxBC0F8ewqlFGdSVRWgc+sIGr3Oj5oTSZ2Eis+
+	 7STvqarry/c9nmBxzbjChLmhcdCS71Wjb8TRnT7KD1XyRti4uGtuPD7NH/Vk7N7jGH
+	 XskbztLElHwMA==
+Message-ID: <552dac56-8915-4b26-8c90-769d09924861@kernel.org>
+Date: Mon, 15 Jul 2024 10:57:54 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202407121008.EDAD65A33@keescook>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ARM: dts: qcom: msm8974pro-samsung-klte: Add pstore node
+To: Bingwu Zhang <xtex@envs.net>, Tony Luck <tony.luck@intel.com>,
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>
+Cc: Bingwu Zhang <xtexchooser@duck.com>, Rong Zhang <i@rong.moe>,
+ Daniele Debernardi <drebrez@gmail.com>, Luca Weiss <luca@z3ntu.xyz>,
+ linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-hardening@vger.kernel.org, ~xtex/staging@lists.sr.ht
+References: <20240715083245.80169-2-xtex@envs.net>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240715083245.80169-2-xtex@envs.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jul 12, 2024 at 10:55:16AM -0700, Kees Cook wrote:
-
-> > What will actually break if you 'fix' this? Given that inlining (see
-> > below) changes the rules willy nilly, I feel we can (and should!) just
-> > fix this.
+On 15/07/2024 10:32, Bingwu Zhang wrote:
+> From: Bingwu Zhang <xtexchooser@duck.com>
 > 
-> I'm not sure -- I have kind of given up on "standard" C helping with any
-> of this. I look to consistent language extensions now, and where there
-> isn't any, we've been trying to create them. :P 
-
-Yeah, arguing a committee is mostly a waste of time, also, they
-typically listen a lot more when you say, here these two compilers have
-implemented it and this Linux thing uses it.
-
-So yeah, language extensions are it.
-
-> And we're not alone:
-> Apple's -fbounds-safety stuff[1] looks good too, and overlaps with what
-> we were already designing with the "counted_by" attribute:
-> https://discourse.llvm.org/t/rfc-enforcing-bounds-safety-in-c-fbounds-safety/
-> (We borrowed the "counted_by" name, which is better than what we were
-> calling it: "element_count".)
-
-Yep, I read that a while back. I think you referenced it in one of them
-other threads where we disagreed over struct_size() :-)
-
-> > > Does report the expected things for _bdos internally (48), but not for
-> > > sizeof (8) nor _bos (SIZE_MAX). Of course if we inline it, _bos starts
-> > > working and, along with _bdos, realizes it was lied to, and reports
-> > > 32 again.
-> > 
-> > WTF ?!?! How can all this be so inconsistent and why are people okay
-> > with that?
+> Add pstore node to allow for retrieving crash logs.
 > 
-> This. A thousands times, this. I'm really not okay with it, and we've
-> been working to get rid of every ambiguity we trip over. It's made sane
-> bounds checking in Linux extremely hard to get right.
+> Tested-by: Bingwu Zhang <xtexchooser@duck.com> # on SM-G9008W (samsung-kltechn)
 
-Yeah, not just Linux I imagine. The rules are so insane it's near
-useless. I'd say press onwards with the language extension, it's not
-like Linux kernel is written in ANSI/ISO C anyway :-)
+Tested-by tags are provided by others, not by yourself. It's expected
+that you test youro own patches. Drop the tag.
 
-> For more fun with array bounds, the one that absolutely floored me was
-> the exception over trailing arrays:
+> Signed-off-by: Bingwu Zhang <xtexchooser@duck.com>
+> ---
+>  .../qcom-msm8974pro-samsung-klte-common.dtsi    | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
 > 
-> struct middle_t {
-> 	u8 array[6];
-> 	int foo;
-> } *middle;
-> 
-> __builtin_object_size(middle->array, 1)  ==  6
-> 
-> struct trailing_t {
-> 	int foo;
-> 	u8 array[6];
-> } *trailing;
-> 
-> __builtin_object_size(trailing->array, 1)  ==  SIZE_MAX ("unknown")
+> diff --git a/arch/arm/boot/dts/qcom/qcom-msm8974pro-samsung-klte-common.dtsi b/arch/arm/boot/dts/qcom/qcom-msm8974pro-samsung-klte-common.dtsi
+> index b5443fd5b425..ff98b9362b0d 100644
+> --- a/arch/arm/boot/dts/qcom/qcom-msm8974pro-samsung-klte-common.dtsi
+> +++ b/arch/arm/boot/dts/qcom/qcom-msm8974pro-samsung-klte-common.dtsi
+> @@ -126,6 +126,23 @@ led@3 {
+>  		};
+>  	};
+>  
+> +	reserved-memory {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges;
 
-WTF :-)
+Don't duplicate the nodes, but rather extend via phandle/label. Or at
+least drop duplicated properties.
 
-> > So I'm not entirely sure I agree with that argument. Yes, &regs->bx is
-> > 'unsigned long *' and sizeof(unsigned long) is 8 (if we assume 64bit).
-> > However, you can also read it as the point of pt_regs where bx sits --
-> > which is a far more sensible interpretation IMO.
-> > 
-> > Because then we're looking at struct pt_regs and an offset therein.
-> 
-> Right -- the way to make this unambiguous has been to make sure there
-> is an addressable object which contains the elements in question. For
-> the least disruption, the best we were able to do is introduce the
-> struct_group() helper. It's internally ugly, but it works.
-
-That macro is fairly trivial, nowhere near as ugly as struct_size() :-)
-But urgh... can't we do something like:
-
-void *memcpy_off(void *dst, const void *src, size_t off, size_t n)
-{
-	memcpu(dst, src+off, n);
-	return dst;
-}
-
-And then you can write:
-
-  memcpy_off(args, regs, offsetof(*regs, bx), 6);
-
-I mean, that sucks, but possilby less than struct_group() does.
-
-[ also, we should probably do:
-  #defime offsetof(t, m) __builtin_offsetof(typeof(t), m) ]
-
-> > So really pt_regs *is* an array of unsigned long, and I feel it is
-> > really unfortunate we cannot express this in a way that is more concise.
-> 
-> A way to do this would be:
-> 
-> struct pt_regs {
-> 	union {
-> 		struct {
-> 			unsigned long bx;
-> 			unsigned long cx;
-> 			unsigned long dx;
-> 			unsigned long si;
-> 			unsigned long di;
-> 			unsigned long bp;
-> 		};
-> 		unsigned long syscall_regs[6];
-> 	};
-> 	unsigned long ax;
-> 	...
-> };
-> 
-> Now regs->syscall_regs is addressable, sized, etc. "bx" means just bx,
-> and "syscall_regs" means all 6.
-
-In this case I would just make all of pt_regs a union with one giant
-array (much like some archs already have IIRC).
-
-> I wrote up a bunch of notes about much of this horror last year here:
-> https://people.kernel.org/kees/bounded-flexible-arrays-in-c
-
-Oh, yeah, I think I saw that fly by on hackernews a while ago.
+> +
+> +		ramoops@3e8e0000 {
+> +			compatible = "ramoops";
+> +			reg = <0x3e8e0000 0x200000>;
+> +
+Best regards,
+Krzysztof
 
