@@ -1,74 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-bc0b.mail.infomaniak.ch (smtp-bc0b.mail.infomaniak.ch [45.157.188.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8470186E53;
-	Mon, 15 Jul 2024 09:41:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BABD18787F;
+	Mon, 15 Jul 2024 12:21:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721036471; cv=none; b=nJcyVKCps5ovWEeCLzVkErsNWXZ5tziDfiNy+PAwk+zpl/k8A2KkOxEZbEhm/a0xuf06H7pUxnaOIgGL0I6H0WSD0tkWHk77fl8jaAZlmVK41jHRIKmeF9zEI2kcMIRqa8odxFzGTILKvrcPM3AOojm7iaIG4GDEmW4hpdD9de0=
+	t=1721046074; cv=none; b=fc45oeDmHvNfBfQmLOYoRgyfLjcL+koe9kq0EkBnCtH4+ZoKxnXjanxwxzbWwdabxFf5CoTEzTpXYDUSnwf4TiMbZyi3IkOMRAT1rBGcTkrHhKgCdOBKfJD2nnqLTbP8yEPFBDMc9v/mpFzj3xCa/YfFCM6nIbA/p4OViF4f9ag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721036471; c=relaxed/simple;
-	bh=AEai4tRTjpLLxJMQynC7rJSqQSFH7z3lKVFB/znJm0Q=;
+	s=arc-20240116; t=1721046074; c=relaxed/simple;
+	bh=qLeSM8yy9Pm45fo+A7K1Jltke1y6CtzYxPtAFqAQmWM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TxllvNLoS4GX6nZi93XRtNNOsFCWTxJNPpbtuYhy2RIKRj5aI9kja6r41h0rtDGlO24oSscNqY9fDVqA6TBsXbfN81pYq6xHq0LJ0PycIuXY6LdsV7vpenc+tOTBOcQnJSKlqJtMRfO7EU29FMasLdj1jxKDjyRapamTNPc7J1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Re0OJe5U; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=M7Xl7ZJq3d3zi7K9oYWgaA0NWRGBiKgOVnW4Q3CpwmM29YpnOVJ6Wupz/IEdr90xEmL57d0wsurbJ5guSfsua8aLi3xkba3XAzeZSetlVZM7NNksXe8SV4p6NC6kz1kpSC/i1Uh26+diI33RxJM3fNKb0s5ir1yo/jDFM2qp4iY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=J+TUa4ey; arc=none smtp.client-ip=45.157.188.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Re0OJe5U"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CD12C32782;
-	Mon, 15 Jul 2024 09:41:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721036471;
-	bh=AEai4tRTjpLLxJMQynC7rJSqQSFH7z3lKVFB/znJm0Q=;
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="J+TUa4ey"
+Received: from smtp-4-0000.mail.infomaniak.ch (smtp-4-0000.mail.infomaniak.ch [10.7.10.107])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4WN1Wd40wKzgCQ;
+	Mon, 15 Jul 2024 14:21:01 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
+	s=20191114; t=1721046061;
+	bh=sTqWvowT9CGlN8d5YXZBulF2bbw/PtMqLh9miq/PfrA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Re0OJe5Upu2yCWIQNxGahN+p84im4ZC+xPwuDAcU7lA32btwaFLFUvESaTrLCC+Ym
-	 +8EJ5hYpVTKB03qr7qZWCc4j7viDn5U7zFyHXOZdGqDRPzWKe69MVWDPK2EK3u7RIq
-	 fdkPcC/SRlP1jKND+cSsxUclGSf9jxWqcHnQ5v10f+vc5jHI0RVo6kFm0EuUYKwsyO
-	 zcu8XzDREKByGytbo+fCidF98zSEub+UNcFvc8vpwjqO7sXlQDtB7eNNJPfe3uwmvg
-	 MoXnLe5zVbbR0ZLQX1D/9Aaokk1x2QQfJCmJVCEJ7Im0iz96ID0d7TnXvz8+AWLOtt
-	 BEHkPejXNg2WA==
-Date: Mon, 15 Jul 2024 10:41:07 +0100
-From: Simon Horman <horms@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Eric Dumazet <edumazet@google.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	David Ahern <dsahern@kernel.org>, Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] net/ipv4/tcp_cong: Replace strncpy() with strscpy()
-Message-ID: <20240715094107.GM8432@kernel.org>
-References: <20240714041111.it.918-kees@kernel.org>
+	b=J+TUa4eypLG7kr9QeXVxab92+lL1eTU2yn3O/0spQ6YkXSLqrDVQ/P7+6fktYUqBE
+	 wLPCmKdFqsL3KZ5WujJsdro8mFLLaM85FrxFGGSo/hdzWThflw1ZzMT5AjH8O9F8T2
+	 UVoiXHxXzH8UHKQXWKhmANsBLiVu+99X3KOMqIbE=
+Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4WN1Wc6TYhzwYx;
+	Mon, 15 Jul 2024 14:21:00 +0200 (CEST)
+Date: Mon, 15 Jul 2024 14:20:59 +0200
+From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: cve@kernel.org, linux-kernel@vger.kernel.org, 
+	=?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, linux-security-module@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Subject: Re: CVE-2024-40938: landlock: Fix d_parent walk
+Message-ID: <20240715.Eishohd0ehoo@digikod.net>
+References: <2024071218-CVE-2024-40938-1619@gregkh>
+ <20240715.aeLiunipi8ia@digikod.net>
+ <2024071553-yippee-broadways-8035@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240714041111.it.918-kees@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2024071553-yippee-broadways-8035@gregkh>
+X-Infomaniak-Routing: alpha
 
-On Sat, Jul 13, 2024 at 09:11:15PM -0700, Kees Cook wrote:
-> Replace the deprecated[1] uses of strncpy() in tcp_ca_get_name_by_key()
-> and tcp_get_default_congestion_control(). The callers use the results as
-> standard C strings (via nla_put_string() and proc handlers respectively),
-> so trailing padding is not needed.
+On Mon, Jul 15, 2024 at 01:16:38PM +0200, Greg Kroah-Hartman wrote:
+> On Mon, Jul 15, 2024 at 12:37:53PM +0200, Mickaël Salaün wrote:
+> > Hello,
+> > 
+> > AFAIK, commit 88da52ccd66e ("landlock: Fix d_parent walk") doesn't fix a
+> > security issue but an unexpected case.  The triggered WARN_ON_ONCE() is
+> > just a canary, and this case was correctly handled with defensive
+> > programming and didn't allow to bypass the security policy nor to harm
+> > the kernel.  However, this fix should indeed be backported.
 > 
-> Since passing the destination buffer arguments decays it to a pointer,
-> the size can't be trivially determined by the compiler. ca->name is
-> the same length in both cases, so strscpy() won't fail (when ca->name
-> is NUL-terminated). Include the length explicitly instead of using the
-> 2-argument strscpy().
+> If a WARN_ON() is hit, a machine with panic_on_warn enabled will reboot,
+> hence if there is any way that userspace can hit this, it needs to be
+> issued a CVE, sorry.
+
+OK, I didn't know about this panic_on_warn rule for CVE.  Out of
+curiosity, panic_on_warn is definitely useful for fuzzing and testing,
+but what is the rational to enable panic_on_warn on production systems?
+It literally transforms a warning message into a system DoS (i.e.
+WARN_ON into BUG_ON).  We should explicitly use BUG_ON() if this is a
+critical unhandled case, right?
+
 > 
-> Link: https://github.com/KSPP/linux/issues/90 [1]
-> Signed-off-by: Kees Cook <kees@kernel.org>
+> > Could you please Cc me for future CVE related to my changes or to
+> > Landlock?  For kernel CVEs, I think it would be good to Cc at least
+> > maintainers, reviewers, authors, and committers for the related commits.
+> 
+> I suggest setting up lei to watch the linux-cve-announce mailing list if
+> you wish to do this (just filter for landlock stuff).  Automatically
+> mailing cve stuff to maintainers has been deemed too "noisy" which is
+> why we do not do this by default.
 
-nit: Looking at git history, the subject prefix should probably be 'tcp'.
-     And it would be best to explicitly target the patch against net-next.
-
-     Subject: [PATCH net-next v2] tcp: ...
-
-That notwithstanding, this looks good to me.
-
-Reviewed-by: Simon Horman <horms@kernel.org>
-
-...
+Well, it might be too noisy for some but I guess/hope not for most.
+Email filtering should be easy for the few receiving too many of these
+emails though.
