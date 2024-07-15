@@ -1,118 +1,189 @@
-Received: from mail.envs.net (mail.envs.net [5.199.136.28])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B671184100;
-	Mon, 15 Jul 2024 08:33:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.199.136.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC88413BAC4;
+	Mon, 15 Jul 2024 08:37:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721032423; cv=none; b=JL9fBkB43caH507vNYXHFFMNwK0g7HDIRESKDF3GUteK6NG4vVEC8aBL2/ydD0ggq784X7RAvzh5kl3DSkG8aclr/h2RG6NfxDcbhrhMoX8NDvzV0GMFt+bxS9+5RqqDNYIezYVBWmmoZ0vSp+ZEWIOfzrjPcFKA1l1hkkPqze0=
+	t=1721032655; cv=none; b=b3bbt68hyOw6Tr1PUykmGAEWCuuO1RWhmNAWGS0wJF2v0fnE+L3S+snfEdt7OfO15SWmZIVJhOKCtONo3YJDd7RZT9UHDQcV0PKkr7SAgcHVJZOhqTLEFGMcKopKyyoWavO826VZ1OubDwGbTVF4tCvsyNxklnUeIrL1qN2APII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721032423; c=relaxed/simple;
-	bh=GOFHld7N2DnMubu4a676OGIxZoC5c9W/WFt4GLcbc6I=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IVvWHkA263IBzXYt7bH/f5tug1JHxHAuw1kTCetz2g/3nVKmBw8F8ZHJeIuOWJtMNDKW3SfIf3wjHTsNnNErioWfOcL4voutieuxFYZ7/56447ya7w63RybpSVMCOD7Xj8nGccjWrXq/JvVtaJWkMJllDAR0hHRH/Nl6o6+9Lic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=envs.net; spf=pass smtp.mailfrom=envs.net; dkim=pass (4096-bit key) header.d=envs.net header.i=@envs.net header.b=hnS8YKHT; arc=none smtp.client-ip=5.199.136.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=envs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=envs.net
+	s=arc-20240116; t=1721032655; c=relaxed/simple;
+	bh=6a47WPAIRfycPuOXAWxzW6xF3377lHud2VcJBGbtAZ8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ipUQUmkgwDq9LpFtKtghTfh4mhLO1Kki1kb+/PBxa+YnzP7nYroARyt2AWK2efS59w3r7LwBnb/LMUdXTCpzSIKlY77tikGf+2MSwyz2Kr6GBR+DxdwB/PMcDmsb81/f/FE1mn3QK/foONfLPe63zRamjBCRC3FhV9VNi7AyFWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=MAvEBGFk; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=envs.net header.i=@envs.net header.b="hnS8YKHT"
-Received: from localhost (mail.envs.net [127.0.0.1])
-	by mail.envs.net (Postfix) with ESMTP id 497D638A399E;
-	Mon, 15 Jul 2024 08:33:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=envs.net; s=modoboa;
-	t=1721032414; bh=I2caou9mvPwzmKsHqGYo0NPtkkydAHfAzkWxXhdErY0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=hnS8YKHTdaYeZ5jMZmM41XHTenW66/lRFCzh0TU18lhdSm+rkoSqGhEBCuXLdFoBq
-	 xUqgyn9xuTC3hDiVkbnZrcl105teQRrtVf6KUlgKJ5G8qlTBq7/+Q9/iYctpD2z4gQ
-	 CFaEyJGElpI5Q0rY1vWLmBQHJk0ZUKm9QtCAh6vZ8eSjTQLRtzbTYVGpuJx4XlvQ2T
-	 G43RVt/lgkopExjovyb9cxQSeXBhYrieeXs4NLbH776iJJc4NBo1GuTfPdB1wz6qFC
-	 US8F7etxQozB6EojjRJ7siPifUH3rvMl+WHe99xxXZgXB2GOfjiH56ttiLC3MI4MU4
-	 +0JpqB/fNd4S52UuFdLJfF14t/zSe4AkvjKNqvPnDWUxg8Lg9RhFug1y6v3guKvzn9
-	 0TL1B1H3i7DJU+OcsHoSVk7pidSDawpR/maBDASC3f/nXwoePvtBqrcmr4ltklJ6Gz
-	 F5cR334V+/fJLi0rZ198p8rAypZpM2Ky7Fy+2j4c9arwwYTLFReWvDn4VWyV7Ce9tr
-	 JPMWLSFan/TkzANu9NSmQUt1G/z1mvoLFQFs9ER6xlGg7OwzlDtnxDpptdP7omu9rW
-	 +bmGu5ynJchDXln4UuR1ce6YaVyuo6noaEScEPikY0O1Abm75qqi2GZJWwTZaseKXp
-	 WZxL9epY4LCP+OT305roHY3I=
-X-Virus-Scanned: Debian amavisd-new at mail.envs.net
-Received: from mail.envs.net ([127.0.0.1])
-	by localhost (mail.envs.net [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id Ach_p67wPtD6; Mon, 15 Jul 2024 08:33:28 +0000 (UTC)
-Received: from xtexx.eu.org (unknown [120.230.214.120])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.envs.net (Postfix) with ESMTPSA;
-	Mon, 15 Jul 2024 08:33:28 +0000 (UTC)
-From: Bingwu Zhang <xtex@envs.net>
-To: Tony Luck <tony.luck@intel.com>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>
-Cc: Bingwu Zhang <xtexchooser@duck.com>,
-	Rong Zhang <i@rong.moe>,
-	Daniele Debernardi <drebrez@gmail.com>,
-	Luca Weiss <luca@z3ntu.xyz>,
-	linux-arm-msm@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	~xtex/staging@lists.sr.ht
-Subject: [PATCH] ARM: dts: qcom: msm8974pro-samsung-klte: Add pstore node
-Date: Mon, 15 Jul 2024 16:32:40 +0800
-Message-ID: <20240715083245.80169-2-xtex@envs.net>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MAvEBGFk"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=P3XQdNXvKucQfzbIesbDHM6Ks3Dxta1uhheNQVnB0gk=; b=MAvEBGFkB2t3GlMRTwZWFx5kWi
+	TuAbQxtjubFI2vJbTagxDOaCQHc4ocf9RSMnlO6a9uo0oA1y4TpZ03G2HiWtyRdtLnsODJLEVij2J
+	eMztHpz7GkpTvku8+GxHopbarVGApOC/QUGy41kSH5u91GLCAimg6LAQPX1okHTOjdXfNUmyG7nrG
+	YWM5+xegfAjiyvfp0fkKl2MMtGaKUvP64rnizJwF07zHyXAA+BvUdTRMwNLSIHI99mm8HMzEzvv+Q
+	3djM7Zuxs/c0juhXRtrE80+5QrlDc4mjX+YUWlDb7HV0n4z8sKusUMfjMffR/ON5Pn5u4+6RkSXmg
+	QYa01LFg==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sTHCt-0000000FZm3-1McC;
+	Mon, 15 Jul 2024 08:37:15 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 283BD3003FF; Mon, 15 Jul 2024 10:37:13 +0200 (CEST)
+Date: Mon, 15 Jul 2024 10:37:13 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Mirsad Todorovac <mtodorovac69@gmail.com>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Daniel Sneddon <daniel.sneddon@linux.intel.com>,
+	Arnd Bergmann <arnd@arndb.de>, Brian Gerst <brgerst@gmail.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Peter Collingbourne <pcc@google.com>, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] x86/syscall: Avoid memcpy() for ia32
+ syscall_get_arguments()
+Message-ID: <20240715083713.GX27299@noisy.programming.kicks-ass.net>
+References: <20240708202202.work.477-kees@kernel.org>
+ <20240711214450.GG27299@noisy.programming.kicks-ass.net>
+ <202407111500.B86485B3@keescook>
+ <20240712090008.GA19796@noisy.programming.kicks-ass.net>
+ <202407121008.EDAD65A33@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1147; i=xtexchooser@duck.com; h=from:subject; bh=pZ8z0gqdS1fPPC5alHLTORsjbM2aO189atg8HOE/k+c=; b=owGbwMvMwCW2U4Ij7wZL9ETG02pJDGlT7q2t+SVnKJhjzTtP5arNflEvT7WVvfNnK+76efXMc +cLbrM+d5SyMIhxMciKKbIUGTZ4s+qk84suK5eFmcPKBDKEgYtTACbir8/wm6WNoa1vbcL3e6J7 Z5VZzjW8FPmaoenTNa9El8U+RkoCcxn+WVg8c561+fImlsBfF5WvuX1OML6gOt2m+pHcF8N6E/H vvAA=
-X-Developer-Key: i=xtexchooser@duck.com; a=openpgp; fpr=7231804B052C670F15A6771DB918086ED8045B91
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202407121008.EDAD65A33@keescook>
 
-From: Bingwu Zhang <xtexchooser@duck.com>
+On Fri, Jul 12, 2024 at 10:55:16AM -0700, Kees Cook wrote:
 
-Add pstore node to allow for retrieving crash logs.
+> > What will actually break if you 'fix' this? Given that inlining (see
+> > below) changes the rules willy nilly, I feel we can (and should!) just
+> > fix this.
+> 
+> I'm not sure -- I have kind of given up on "standard" C helping with any
+> of this. I look to consistent language extensions now, and where there
+> isn't any, we've been trying to create them. :P 
 
-Tested-by: Bingwu Zhang <xtexchooser@duck.com> # on SM-G9008W (samsung-kltechn)
-Signed-off-by: Bingwu Zhang <xtexchooser@duck.com>
----
- .../qcom-msm8974pro-samsung-klte-common.dtsi    | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+Yeah, arguing a committee is mostly a waste of time, also, they
+typically listen a lot more when you say, here these two compilers have
+implemented it and this Linux thing uses it.
 
-diff --git a/arch/arm/boot/dts/qcom/qcom-msm8974pro-samsung-klte-common.dtsi b/arch/arm/boot/dts/qcom/qcom-msm8974pro-samsung-klte-common.dtsi
-index b5443fd5b425..ff98b9362b0d 100644
---- a/arch/arm/boot/dts/qcom/qcom-msm8974pro-samsung-klte-common.dtsi
-+++ b/arch/arm/boot/dts/qcom/qcom-msm8974pro-samsung-klte-common.dtsi
-@@ -126,6 +126,23 @@ led@3 {
- 		};
- 	};
- 
-+	reserved-memory {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		ramoops@3e8e0000 {
-+			compatible = "ramoops";
-+			reg = <0x3e8e0000 0x200000>;
-+
-+			console-size = <0x100000>;
-+			record-size = <0x10000>;
-+			ftrace-size = <0x10000>;
-+			pmsg-size = <0x80000>;
-+			ecc-size = <8>;
-+		};
-+	};
-+
- 	vreg_wlan: wlan-regulator {
- 		compatible = "regulator-fixed";
- 
+So yeah, language extensions are it.
 
-base-commit: 6fd4da15c334831a865d4700ceb3ff5a917163e3
--- 
-2.45.2
+> And we're not alone:
+> Apple's -fbounds-safety stuff[1] looks good too, and overlaps with what
+> we were already designing with the "counted_by" attribute:
+> https://discourse.llvm.org/t/rfc-enforcing-bounds-safety-in-c-fbounds-safety/
+> (We borrowed the "counted_by" name, which is better than what we were
+> calling it: "element_count".)
+
+Yep, I read that a while back. I think you referenced it in one of them
+other threads where we disagreed over struct_size() :-)
+
+> > > Does report the expected things for _bdos internally (48), but not for
+> > > sizeof (8) nor _bos (SIZE_MAX). Of course if we inline it, _bos starts
+> > > working and, along with _bdos, realizes it was lied to, and reports
+> > > 32 again.
+> > 
+> > WTF ?!?! How can all this be so inconsistent and why are people okay
+> > with that?
+> 
+> This. A thousands times, this. I'm really not okay with it, and we've
+> been working to get rid of every ambiguity we trip over. It's made sane
+> bounds checking in Linux extremely hard to get right.
+
+Yeah, not just Linux I imagine. The rules are so insane it's near
+useless. I'd say press onwards with the language extension, it's not
+like Linux kernel is written in ANSI/ISO C anyway :-)
+
+> For more fun with array bounds, the one that absolutely floored me was
+> the exception over trailing arrays:
+> 
+> struct middle_t {
+> 	u8 array[6];
+> 	int foo;
+> } *middle;
+> 
+> __builtin_object_size(middle->array, 1)  ==  6
+> 
+> struct trailing_t {
+> 	int foo;
+> 	u8 array[6];
+> } *trailing;
+> 
+> __builtin_object_size(trailing->array, 1)  ==  SIZE_MAX ("unknown")
+
+WTF :-)
+
+> > So I'm not entirely sure I agree with that argument. Yes, &regs->bx is
+> > 'unsigned long *' and sizeof(unsigned long) is 8 (if we assume 64bit).
+> > However, you can also read it as the point of pt_regs where bx sits --
+> > which is a far more sensible interpretation IMO.
+> > 
+> > Because then we're looking at struct pt_regs and an offset therein.
+> 
+> Right -- the way to make this unambiguous has been to make sure there
+> is an addressable object which contains the elements in question. For
+> the least disruption, the best we were able to do is introduce the
+> struct_group() helper. It's internally ugly, but it works.
+
+That macro is fairly trivial, nowhere near as ugly as struct_size() :-)
+But urgh... can't we do something like:
+
+void *memcpy_off(void *dst, const void *src, size_t off, size_t n)
+{
+	memcpu(dst, src+off, n);
+	return dst;
+}
+
+And then you can write:
+
+  memcpy_off(args, regs, offsetof(*regs, bx), 6);
+
+I mean, that sucks, but possilby less than struct_group() does.
+
+[ also, we should probably do:
+  #defime offsetof(t, m) __builtin_offsetof(typeof(t), m) ]
+
+> > So really pt_regs *is* an array of unsigned long, and I feel it is
+> > really unfortunate we cannot express this in a way that is more concise.
+> 
+> A way to do this would be:
+> 
+> struct pt_regs {
+> 	union {
+> 		struct {
+> 			unsigned long bx;
+> 			unsigned long cx;
+> 			unsigned long dx;
+> 			unsigned long si;
+> 			unsigned long di;
+> 			unsigned long bp;
+> 		};
+> 		unsigned long syscall_regs[6];
+> 	};
+> 	unsigned long ax;
+> 	...
+> };
+> 
+> Now regs->syscall_regs is addressable, sized, etc. "bx" means just bx,
+> and "syscall_regs" means all 6.
+
+In this case I would just make all of pt_regs a union with one giant
+array (much like some archs already have IIRC).
+
+> I wrote up a bunch of notes about much of this horror last year here:
+> https://people.kernel.org/kees/bounded-flexible-arrays-in-c
+
+Oh, yeah, I think I saw that fly by on hackernews a while ago.
 
