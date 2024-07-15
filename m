@@ -1,118 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.envs.net (mail.envs.net [5.199.136.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25D7A17995;
-	Sun, 14 Jul 2024 21:43:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B671184100;
+	Mon, 15 Jul 2024 08:33:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.199.136.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720993413; cv=none; b=I8cKlkf5oug5zvVaEsFakdqz+SpMHa2CE5DG8/G1ECHqQrFXk2BbXalk4Kq76Np6RoCy4UTnJ1mV1hWHbV91AbfUEXBeCS04X9KwMjWMpkns+TC+bvJvfDFXqQDv1/v+cRHCTPkF47kdQ4wfZvKwzIUHXjzHxqldTp30b1LWFoE=
+	t=1721032423; cv=none; b=JL9fBkB43caH507vNYXHFFMNwK0g7HDIRESKDF3GUteK6NG4vVEC8aBL2/ydD0ggq784X7RAvzh5kl3DSkG8aclr/h2RG6NfxDcbhrhMoX8NDvzV0GMFt+bxS9+5RqqDNYIezYVBWmmoZ0vSp+ZEWIOfzrjPcFKA1l1hkkPqze0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720993413; c=relaxed/simple;
-	bh=ct0qPOqX44pf411JPF6Z0tkH2qji7IzJANyguHIxcBY=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=pX9iGx+xq/kfTLgzV0QLtDGb5QuZCLIEhIs+fFRltWueBV4qwtQD6++7Id6icERfxcKiHycY/6LK7ImIjtS/r3H3YYsFPeUSDv/QhQTPBUxglceIrUZbW114temsrXpXt4SlPabqFMirkhLA2m+IRhElR0uX4HFgEj48lG/Jm3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CoP74KCh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721032423; c=relaxed/simple;
+	bh=GOFHld7N2DnMubu4a676OGIxZoC5c9W/WFt4GLcbc6I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IVvWHkA263IBzXYt7bH/f5tug1JHxHAuw1kTCetz2g/3nVKmBw8F8ZHJeIuOWJtMNDKW3SfIf3wjHTsNnNErioWfOcL4voutieuxFYZ7/56447ya7w63RybpSVMCOD7Xj8nGccjWrXq/JvVtaJWkMJllDAR0hHRH/Nl6o6+9Lic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=envs.net; spf=pass smtp.mailfrom=envs.net; dkim=pass (4096-bit key) header.d=envs.net header.i=@envs.net header.b=hnS8YKHT; arc=none smtp.client-ip=5.199.136.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=envs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=envs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CoP74KCh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 826B9C116B1;
-	Sun, 14 Jul 2024 21:43:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720993412;
-	bh=ct0qPOqX44pf411JPF6Z0tkH2qji7IzJANyguHIxcBY=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=CoP74KChCxzdVDbeMwom84ufBP1oMU/0yYQGqG/TkB2m/jLH9SNsqYYdFSam1K3vq
-	 C5IaHq/FpDN6fCvx8vYdTUtvuZFhT/b54D1ZEBgIGSRhWSLkm0IE23JZr45hB7dyaw
-	 is3n2LJKtnuLXmXZqJs2Hav8TWS6p2IMOBIs1oSs6NqZzNt7g09doYlQ3zD2DjLgbu
-	 fYZjVrplzAP6H82xoCm+tDFZLPLcLRcw0un2Qgqs7eiy9GK7ue4NcYgdWIwPS4EaLx
-	 AibFklS9lLxAQgf8glyPy8C9wbaeg5i3o1I1P34YwFj538cJ9/coHKGwRv5nJLXI7t
-	 XFSZSFgK+BQWw==
-Date: Sun, 14 Jul 2024 14:43:27 -0700
-From: Kees Cook <kees@kernel.org>
-To: Masahiro Yamada <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org
-CC: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
- Kees Cook <keescook@chromium.org>, Marco Elver <elver@google.com>,
- Andrew Morton <akpm@linux-foundation.org>, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] fortify: fix warnings in fortify tests with KASAN
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20240714170847.2029108-1-masahiroy@kernel.org>
-References: <20240714170847.2029108-1-masahiroy@kernel.org>
-Message-ID: <BCF87531-EBAE-4942-ADC7-BAF27EF7CC43@kernel.org>
+	dkim=pass (4096-bit key) header.d=envs.net header.i=@envs.net header.b="hnS8YKHT"
+Received: from localhost (mail.envs.net [127.0.0.1])
+	by mail.envs.net (Postfix) with ESMTP id 497D638A399E;
+	Mon, 15 Jul 2024 08:33:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=envs.net; s=modoboa;
+	t=1721032414; bh=I2caou9mvPwzmKsHqGYo0NPtkkydAHfAzkWxXhdErY0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=hnS8YKHTdaYeZ5jMZmM41XHTenW66/lRFCzh0TU18lhdSm+rkoSqGhEBCuXLdFoBq
+	 xUqgyn9xuTC3hDiVkbnZrcl105teQRrtVf6KUlgKJ5G8qlTBq7/+Q9/iYctpD2z4gQ
+	 CFaEyJGElpI5Q0rY1vWLmBQHJk0ZUKm9QtCAh6vZ8eSjTQLRtzbTYVGpuJx4XlvQ2T
+	 G43RVt/lgkopExjovyb9cxQSeXBhYrieeXs4NLbH776iJJc4NBo1GuTfPdB1wz6qFC
+	 US8F7etxQozB6EojjRJ7siPifUH3rvMl+WHe99xxXZgXB2GOfjiH56ttiLC3MI4MU4
+	 +0JpqB/fNd4S52UuFdLJfF14t/zSe4AkvjKNqvPnDWUxg8Lg9RhFug1y6v3guKvzn9
+	 0TL1B1H3i7DJU+OcsHoSVk7pidSDawpR/maBDASC3f/nXwoePvtBqrcmr4ltklJ6Gz
+	 F5cR334V+/fJLi0rZ198p8rAypZpM2Ky7Fy+2j4c9arwwYTLFReWvDn4VWyV7Ce9tr
+	 JPMWLSFan/TkzANu9NSmQUt1G/z1mvoLFQFs9ER6xlGg7OwzlDtnxDpptdP7omu9rW
+	 +bmGu5ynJchDXln4UuR1ce6YaVyuo6noaEScEPikY0O1Abm75qqi2GZJWwTZaseKXp
+	 WZxL9epY4LCP+OT305roHY3I=
+X-Virus-Scanned: Debian amavisd-new at mail.envs.net
+Received: from mail.envs.net ([127.0.0.1])
+	by localhost (mail.envs.net [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id Ach_p67wPtD6; Mon, 15 Jul 2024 08:33:28 +0000 (UTC)
+Received: from xtexx.eu.org (unknown [120.230.214.120])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.envs.net (Postfix) with ESMTPSA;
+	Mon, 15 Jul 2024 08:33:28 +0000 (UTC)
+From: Bingwu Zhang <xtex@envs.net>
+To: Tony Luck <tony.luck@intel.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>
+Cc: Bingwu Zhang <xtexchooser@duck.com>,
+	Rong Zhang <i@rong.moe>,
+	Daniele Debernardi <drebrez@gmail.com>,
+	Luca Weiss <luca@z3ntu.xyz>,
+	linux-arm-msm@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	~xtex/staging@lists.sr.ht
+Subject: [PATCH] ARM: dts: qcom: msm8974pro-samsung-klte: Add pstore node
+Date: Mon, 15 Jul 2024 16:32:40 +0800
+Message-ID: <20240715083245.80169-2-xtex@envs.net>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1147; i=xtexchooser@duck.com; h=from:subject; bh=pZ8z0gqdS1fPPC5alHLTORsjbM2aO189atg8HOE/k+c=; b=owGbwMvMwCW2U4Ij7wZL9ETG02pJDGlT7q2t+SVnKJhjzTtP5arNflEvT7WVvfNnK+76efXMc +cLbrM+d5SyMIhxMciKKbIUGTZ4s+qk84suK5eFmcPKBDKEgYtTACbir8/wm6WNoa1vbcL3e6J7 Z5VZzjW8FPmaoenTNa9El8U+RkoCcxn+WVg8c561+fImlsBfF5WvuX1OML6gOt2m+pHcF8N6E/H vvAA=
+X-Developer-Key: i=xtexchooser@duck.com; a=openpgp; fpr=7231804B052C670F15A6771DB918086ED8045B91
+Content-Transfer-Encoding: 8bit
 
+From: Bingwu Zhang <xtexchooser@duck.com>
 
+Add pstore node to allow for retrieving crash logs.
 
-On July 14, 2024 10:04:32 AM PDT, Masahiro Yamada <masahiroy@kernel=2Eorg>=
- wrote:
->When a software KASAN mode is enabled, the fortify tests emit warnings
->on some architectures=2E
->
->For example, for ARCH=3Darm, the combination of CONFIG_FORTIFY_SOURCE=3Dy
->and CONFIG_KASAN=3Dy produces the following warnings:
->
->    TEST    lib/test_fortify/read_overflow-memchr=2Elog
->  warning: unsafe memchr() usage lacked '__read_overflow' warning in lib/=
-test_fortify/read_overflow-memchr=2Ec
->    TEST    lib/test_fortify/read_overflow-memchr_inv=2Elog
->  warning: unsafe memchr_inv() usage lacked '__read_overflow' symbol in l=
-ib/test_fortify/read_overflow-memchr_inv=2Ec
->    TEST    lib/test_fortify/read_overflow-memcmp=2Elog
->  warning: unsafe memcmp() usage lacked '__read_overflow' warning in lib/=
-test_fortify/read_overflow-memcmp=2Ec
->    TEST    lib/test_fortify/read_overflow-memscan=2Elog
->  warning: unsafe memscan() usage lacked '__read_overflow' symbol in lib/=
-test_fortify/read_overflow-memscan=2Ec
->    TEST    lib/test_fortify/read_overflow2-memcmp=2Elog
->  warning: unsafe memcmp() usage lacked '__read_overflow2' warning in lib=
-/test_fortify/read_overflow2-memcmp=2Ec
->     [ more and more similar warnings=2E=2E=2E ]
->
->Commit 9c2d1328f88a ("kbuild: provide reasonable defaults for tool
->coverage") removed KASAN flags from non-kernel objects by default=2E
->It was an intended behavior because lib/test_fortify/*=2Ec are unit
->tests that are not linked to the kernel=2E
->
->As it turns out, some architectures require -fsanitize=3Dkernel-(hw)addre=
-ss
->to define __SANITIZE_ADDRESS__ for the fortify tests=2E
->
->Without __SANITIZE_ADDRESS__ defined, arch/arm/include/asm/string=2Eh
->defines __NO_FORTIFY, thus excluding <linux/fortify-string=2Eh>=2E
->
->This issue does not occur on x86 thanks to commit 4ec4190be4cf
->("kasan, x86: don't rename memintrinsics in uninstrumented files"),
->but there are still some architectures that define __NO_FORTIFY
->in such a situation=2E
->
->Set KASAN_SANITIZE=3Dy explicitly to the fortify tests=2E
->
->Fixes: 9c2d1328f88a ("kbuild: provide reasonable defaults for tool covera=
-ge")
->Reported-by: Arnd Bergmann <arnd@arndb=2Ede>
->Closes: https://lore=2Ekernel=2Eorg/all/0e8dee26-41cc-41ae-9493-10cd1a8e3=
-268@app=2Efastmail=2Ecom/
->Signed-off-by: Masahiro Yamada <masahiroy@kernel=2Eorg>
->---
->
->Kees Cook said "I'll try to figure this out", but I have not seen a patch=
- so far,
->so I decided to do this myself=2E
->(https://lore=2Ekernel=2Eorg/all/202405310908=2EA5733DF@keescook/)
->
->I will send a pull req with this and some other fixes=2E
->I need to fix this, as v6=2E10 will be released soon=2E
+Tested-by: Bingwu Zhang <xtexchooser@duck.com> # on SM-G9008W (samsung-kltechn)
+Signed-off-by: Bingwu Zhang <xtexchooser@duck.com>
+---
+ .../qcom-msm8974pro-samsung-klte-common.dtsi    | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-Awesome! Thanks for figuring this out; I hadn't had time yet=2E=20
+diff --git a/arch/arm/boot/dts/qcom/qcom-msm8974pro-samsung-klte-common.dtsi b/arch/arm/boot/dts/qcom/qcom-msm8974pro-samsung-klte-common.dtsi
+index b5443fd5b425..ff98b9362b0d 100644
+--- a/arch/arm/boot/dts/qcom/qcom-msm8974pro-samsung-klte-common.dtsi
++++ b/arch/arm/boot/dts/qcom/qcom-msm8974pro-samsung-klte-common.dtsi
+@@ -126,6 +126,23 @@ led@3 {
+ 		};
+ 	};
+ 
++	reserved-memory {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		ramoops@3e8e0000 {
++			compatible = "ramoops";
++			reg = <0x3e8e0000 0x200000>;
++
++			console-size = <0x100000>;
++			record-size = <0x10000>;
++			ftrace-size = <0x10000>;
++			pmsg-size = <0x80000>;
++			ecc-size = <8>;
++		};
++	};
++
+ 	vreg_wlan: wlan-regulator {
+ 		compatible = "regulator-fixed";
+ 
 
-Acked-by: Kees Cook<kees@kernel=2Eorg>
+base-commit: 6fd4da15c334831a865d4700ceb3ff5a917163e3
+-- 
+2.45.2
 
-
---=20
-Kees Cook
