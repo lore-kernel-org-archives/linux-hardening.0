@@ -1,65 +1,86 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D0131F5F6;
-	Mon, 15 Jul 2024 16:07:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F102A43158;
+	Mon, 15 Jul 2024 16:11:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721059657; cv=none; b=tThlGZgOaaFRgDZhlGbwQtiFQeFxbloeSHvE49abMVInT/l+F/tUofYsl3NNQ9r/aJOFCJrejyXUENsWMUUYUNm7B6ZhYlD5sYJE33CgHQLD7jE1CDbNrUNq7FUObEXR48Kyub2pKCJ0GXLABI0LgmfJT+nDxLLM7zZ3WEycdkw=
+	t=1721059896; cv=none; b=Q7EkbfjewXzAv6pgifm3w4RYEZuwLq8rb/pd0FV0XLH8NyaX7tAJW09YdCYPoqJn3Aj2nfqD5bmFBhne+WZaHUAxR5o7CzvSX1kbH7e1KVTy57JmJsiuoPUB+KkW5RVBlwsw4zpKuPiNb54xss45kF3H9CXycY9MVCplmTBfmaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721059657; c=relaxed/simple;
-	bh=TehSUkDWxfnL7kQYd+Ih+VXqWzIBZClmsW2uHfvyxGg=;
+	s=arc-20240116; t=1721059896; c=relaxed/simple;
+	bh=ZNODHTsIH1tP4zxTnnkfGFtWwx4Cm7pw0WpB7OJ/SS0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rIGLwNbU9fBSmrX6uhJqcPVwyo8/530ycNkqCEqhwc7Gmfwdm+t5EGQTkzbK4PhZUs4wJq6MQo8GLpAbEUMxLzQrsHydLibTiZVNTWlJhFfciS+rCje8LGhsiTM+ysH/puzoqRn5RfD4ZeWj7SzhusXa6QiruhwGpZwTdC5f2e8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HPERKn81; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=b/zOC5EOUiTJbBr9uVSKpm+ORFlX71Gfc2gZlx/zx8O9A9Yq+MuFN7Nvn7WI5wXdeoGMIirkXE/coCCtXP4U8YpPlwP6sOVlcbNn+1ijkJazEGBds/hBiU29MevLVN7cXdFVT2Xen+KkDVirVJG3AK2cCgdTAHD0R88bsjKWV7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TKMHV9Ch; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HPERKn81"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2268BC32782;
-	Mon, 15 Jul 2024 16:07:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TKMHV9Ch"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98252C4AF0A;
+	Mon, 15 Jul 2024 16:11:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721059657;
-	bh=TehSUkDWxfnL7kQYd+Ih+VXqWzIBZClmsW2uHfvyxGg=;
+	s=k20201202; t=1721059895;
+	bh=ZNODHTsIH1tP4zxTnnkfGFtWwx4Cm7pw0WpB7OJ/SS0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HPERKn81rjAv/MZSjnHkKnRwfPwuwuz7PJsceZNNZXc1zLH9WftBjQ554TAHAz0Vx
-	 7rS8C8oZ/dWAESUUxxMqeZY4DhGbZtjDRaIVGXE307/315kkr7AGSGmJltVZ+p51Mk
-	 rr/gch3QM88LHhmPeTbNDksR4GgUC4aQ6jNqSiEPRH68aF6aW4Hdv3Dn0AVvnkj7nl
-	 RBnqzUcuBIXL/79f7jYAU1sz6IzA8NET+S5QSAUKgGSjOEyFkhbrbbhHyrJvI66mf2
-	 B8IOKuPscDH/pOPKYkmnfIp0cTKULq9ewLLIGPnai4Gz1nbNh0p35wLmGKoO+JFRGG
-	 radx6vRhvgpcQ==
-Date: Mon, 15 Jul 2024 09:07:36 -0700
+	b=TKMHV9ChaoZwtbci9kK4FxHs8MW3hsObwXCnlCHL6oUrYWbxWMWxIT6zv99L23XDs
+	 hZib5BUW2Jf1E0lAPr70zt/p8iJCNTxIYBmJJne90sJpjXgpEEt9jNGm/HxG2/hJut
+	 VZrxgOBnNasUJIF5P5J1vg5dov1tbQex4R4TokkrkbT7U/okPM3b32WzZTVaKBK0Do
+	 QmA5RcLGqnP/ZO8H1LFNfCaOhq5TKJq3GCMM2Ig8SZD6ffdHFvDClnqmx6sZWbSgH0
+	 kAHKlEPxQVRZJAgedW/0N3KX7htIZFbXVFoE1kU9JscQzCKx9IZxbmgsqFXDe9B3Qp
+	 MLO84fYULHVdw==
+Date: Mon, 15 Jul 2024 09:11:35 -0700
 From: Kees Cook <kees@kernel.org>
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] fortify: fix various issues in test_fortify Makefile
-Message-ID: <202407150905.56BBE11@keescook>
-References: <20240715144529.101634-1-masahiroy@kernel.org>
+To: =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, cve@kernel.org,
+	linux-kernel@vger.kernel.org,
+	=?iso-8859-1?Q?G=FCnther?= Noack <gnoack@google.com>,
+	linux-security-module@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: CVE-2024-40938: landlock: Fix d_parent walk
+Message-ID: <202407150908.34E00AAD1@keescook>
+References: <2024071218-CVE-2024-40938-1619@gregkh>
+ <20240715.aeLiunipi8ia@digikod.net>
+ <2024071553-yippee-broadways-8035@gregkh>
+ <20240715.Eishohd0ehoo@digikod.net>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20240715144529.101634-1-masahiroy@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240715.Eishohd0ehoo@digikod.net>
 
-On Mon, Jul 15, 2024 at 11:45:22PM +0900, Masahiro Yamada wrote:
-> Applicable to v6.10 tag.
+On Mon, Jul 15, 2024 at 02:20:59PM +0200, Mickaël Salaün wrote:
+> On Mon, Jul 15, 2024 at 01:16:38PM +0200, Greg Kroah-Hartman wrote:
+> > On Mon, Jul 15, 2024 at 12:37:53PM +0200, Mickaël Salaün wrote:
+> > > Hello,
+> > > 
+> > > AFAIK, commit 88da52ccd66e ("landlock: Fix d_parent walk") doesn't fix a
+> > > security issue but an unexpected case.  The triggered WARN_ON_ONCE() is
+> > > just a canary, and this case was correctly handled with defensive
+> > > programming and didn't allow to bypass the security policy nor to harm
+> > > the kernel.  However, this fix should indeed be backported.
+> > 
+> > If a WARN_ON() is hit, a machine with panic_on_warn enabled will reboot,
+> > hence if there is any way that userspace can hit this, it needs to be
+> > issued a CVE, sorry.
 > 
-> 
-> 
-> Masahiro Yamada (3):
->   fortify: use if_changed_dep to record header dependency in *.cmd files
->   fortify: refactor test_fortify Makefile to fix some build problems
->   fortify: move test_fortify.sh to lib/test_fortify/
+> OK, I didn't know about this panic_on_warn rule for CVE.  Out of
+> curiosity, panic_on_warn is definitely useful for fuzzing and testing,
+> but what is the rational to enable panic_on_warn on production systems?
+> It literally transforms a warning message into a system DoS (i.e.
+> WARN_ON into BUG_ON).  We should explicitly use BUG_ON() if this is a
+> critical unhandled case, right?
 
-Thanks for this improvement! I will take this into the hardening tree
-after -rc2, unless you would prefer to send this during the merge window
-based on your tree? (The fix you sent for the v6.10 release means my
-trees based on -rc2 can't apply this series...)
+We need a way to raise WARN to panic for deployments that have tested
+their workloads and want FORTIFY_SOURCE and UBSAN_BOUNDS to actually
+perform mitigations instead of just warning. Linus rejected all prior
+knobs for this and panic_on_warn (or better yet, kernel.warn_limit
+syscall) is used for this purpose.
 
--Kees
+Userspace actions must never be able to reach a WARN or BUG state:
+https://docs.kernel.org/process/deprecated.html#bug-and-bug-on
 
 -- 
 Kees Cook
