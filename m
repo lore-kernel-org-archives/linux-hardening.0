@@ -1,96 +1,125 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E46A4225DA;
-	Mon, 15 Jul 2024 16:39:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1C491CAA1;
+	Mon, 15 Jul 2024 17:01:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721061567; cv=none; b=m0Ny9lBclVGz933w9yQhOFaAjMz3/vBK7kpnCttID4FRmv7bJ1fIurE9W4lIDFiJJD7l8Tjh1Fk7SWCmP808B9zuKDalFi7B2LDR7QIxW1Wdy+OThwlsB0PCS9DejgXP2zzzxpTmWSHVVr++Cre6vqksDjwvB/55u6PmIQkFFZs=
+	t=1721062917; cv=none; b=jCbP+qNtP21E06rmufGzB4nP1Gxt5/L12Xg6MXslFeYwpon4YVLlIZ1kE4LwowwqL0MDIKadLNdVc8HgPG049QafSx+QgNJGoign0G6/Wuto7Jj8aZyrAXkcWzwM5i4UpUynCm/dsGCxqhCg83TxZzVzR+Dlb1P9+PemfuwhP6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721061567; c=relaxed/simple;
-	bh=82LA9oTdWdNNOcKpEekI3O0AXuZjf8m09y5LDdFj5j4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YKl54S50Z4ikENd7sIj2LYLpo1GIBQTxOmvQRNT6TxFXk2MJtLdbQcN5YiMGDDzaNabR4UkXPGtGwGs2CT93b1QrytOM5LxZ1UFSFtv8feMWNVfwZ6+ye3cvgRm2de1aLM13dZQAKATyQNixurrIjhkWZ47Ohm/MF8LH+kdxY9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hJotXoGt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721062917; c=relaxed/simple;
+	bh=YfAErmDFuTuGgAAA5BBqIA3z3wpqh2qk+SRl1hShE0o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=S1LMSwk9u0Okgcw6BDtJRS9OUzROiQrv0tt+NjYxoJd3M1EOZJb+bwFlNPrZhQaWdl3nM2hHmOlcPDcgjH7kQr4B9Gc21eBpH/BR/cqfWHswqSs5ehDqk74sY9+mvYR20QMhwFSp1ywZ0OklhM4kwU//672j/g7/tSEp4pWHB0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FA/D+vVD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hJotXoGt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 658ACC4AF0D;
-	Mon, 15 Jul 2024 16:39:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FA/D+vVD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FA72C4AF0D;
+	Mon, 15 Jul 2024 17:01:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721061566;
-	bh=82LA9oTdWdNNOcKpEekI3O0AXuZjf8m09y5LDdFj5j4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=hJotXoGt9UNc4UbcRUmbcK2cbsbGlgWKk+FoXf/UXruGi0ZJVttVORnwk4pO06in2
-	 t7avHfhzet3DVEmXhvDMz94eDgqL4YT6HjxtO5a98rTpWbBc2PVrOuDFEIDIf6bl0H
-	 Q37WU8lXTMyjYl4XhWB9WW80tpv/cmuJhQYIlAgQehxUx9xRtSZ08FmRnjSoAHqnTP
-	 2R3UDqi368GZs+FY77rstf0/fD+OOvshLBTugWwXuh/m3vaazVXUk2XEFh9qq8xXqS
-	 55pSU6xTZDJdy4Z3HUI+oMyw0Q1MoQu920Y3trS3hFnROgh3qZdXBuQ9Aw1BA01g0Y
-	 nG8S/WaQFfD2w==
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-52ea79e689eso6381211e87.1;
-        Mon, 15 Jul 2024 09:39:26 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWo6qBVSRZETJoSSTHMNegasQKu4js5K/QGBRN1CrxFWYEe9KBrLcBYUIvnAWwsA/dwpwn0WpJc4qkT5yQChFd8yTuw4Q+qOGjHTESk1XER8kXV/1fW6N6QmOHYtCHV9sMNEeo0zdUU1xYk
-X-Gm-Message-State: AOJu0YxE8Yz35MaMx671qbiH12ff9LuHR4Q7CKyV3BMSAeZUkAB66DIm
-	VkwAKEJ07sK2vE26U9lDe1tdPcZIWLhHG88MATnbwCf2hotICD0Zk4MQ7XNbE/2dBiy2txVYll0
-	pwUQZmmtzgpS6/n88NoFbK2p2rEs=
-X-Google-Smtp-Source: AGHT+IGxPzXD3QSs/6Dv2oXoKA8CP5cnB7NfH523pRmTeHHXispFdRWPahC1XhxoiuH8fVM3p/RihNU3y2vnB3WrszY=
-X-Received: by 2002:a05:6512:4002:b0:52c:df83:a740 with SMTP id
- 2adb3069b0e04-52ede1b2d94mr69300e87.30.1721061565037; Mon, 15 Jul 2024
- 09:39:25 -0700 (PDT)
+	s=k20201202; t=1721062917;
+	bh=YfAErmDFuTuGgAAA5BBqIA3z3wpqh2qk+SRl1hShE0o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FA/D+vVDeqwU92wURKsxE+FPSR5D+TT7bVdiQ5atMRceoq5JbhYljtitkxQc3woGY
+	 raxOHm/+gNqdUw1O9mFfAPKZoO73t4WWlLQIS2GC5rDZjHoB0rNUdn0rzIO2N0xs5U
+	 dm3ae8h9Az5KxPoC0k3Y9oJRDlzDT6VfStZYBnefRXr5+GiGj9r62d5nEO7J3wO4iF
+	 fG9REMg1s9bmwea3WJZU4dGAd5TOVBEx8sLFOJWLYVWdGc7ALwYLH9GjbP7/YJZCP8
+	 4ZoM6PtkTHlRFaWD43T+Apg9z9ldBEAsIiP0IRaIKphJaX4ghUJFnDqGlwdRAO3hKh
+	 rEn6Hlu5AAI3A==
+Date: Mon, 15 Jul 2024 10:01:56 -0700
+From: Kees Cook <kees@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Mirsad Todorovac <mtodorovac69@gmail.com>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Daniel Sneddon <daniel.sneddon@linux.intel.com>,
+	Arnd Bergmann <arnd@arndb.de>, Brian Gerst <brgerst@gmail.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Peter Collingbourne <pcc@google.com>, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] x86/syscall: Avoid memcpy() for ia32
+ syscall_get_arguments()
+Message-ID: <202407150947.92A48C959@keescook>
+References: <20240708202202.work.477-kees@kernel.org>
+ <20240711214450.GG27299@noisy.programming.kicks-ass.net>
+ <202407111500.B86485B3@keescook>
+ <20240712090008.GA19796@noisy.programming.kicks-ass.net>
+ <202407121008.EDAD65A33@keescook>
+ <20240715083713.GX27299@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240715144529.101634-1-masahiroy@kernel.org> <202407150905.56BBE11@keescook>
-In-Reply-To: <202407150905.56BBE11@keescook>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Tue, 16 Jul 2024 01:38:48 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATh-azmUyp_4uOAJ+e=0O25vvkb+yNrNJDU_5nZS3NqYA@mail.gmail.com>
-Message-ID: <CAK7LNATh-azmUyp_4uOAJ+e=0O25vvkb+yNrNJDU_5nZS3NqYA@mail.gmail.com>
-Subject: Re: [PATCH 0/3] fortify: fix various issues in test_fortify Makefile
-To: Kees Cook <kees@kernel.org>
-Cc: linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240715083713.GX27299@noisy.programming.kicks-ass.net>
 
-On Tue, Jul 16, 2024 at 1:07=E2=80=AFAM Kees Cook <kees@kernel.org> wrote:
->
-> On Mon, Jul 15, 2024 at 11:45:22PM +0900, Masahiro Yamada wrote:
-> > Applicable to v6.10 tag.
-> >
-> >
-> >
-> > Masahiro Yamada (3):
-> >   fortify: use if_changed_dep to record header dependency in *.cmd file=
-s
-> >   fortify: refactor test_fortify Makefile to fix some build problems
-> >   fortify: move test_fortify.sh to lib/test_fortify/
->
-> Thanks for this improvement! I will take this into the hardening tree
-> after -rc2, unless you would prefer to send this during the merge window
-> based on your tree? (The fix you sent for the v6.10 release means my
-> trees based on -rc2 can't apply this series...)
+On Mon, Jul 15, 2024 at 10:37:13AM +0200, Peter Zijlstra wrote:
+> Yeah, arguing a committee is mostly a waste of time, also, they
+> typically listen a lot more when you say, here these two compilers have
+> implemented it and this Linux thing uses it.
 
+Precisely.
 
+> So yeah, language extensions are it.
 
-No problem.
+The one I may try to point out to the committee is flexible arrays in
+unions. "array[1]" and "array[0]" are allowed in unions, but "array[]"
+wasn't. This totally wrecks attempts to modernize a codebase that
+depends on such union uses. We worked around it but finally got the
+language extension, er, extended, recently:
 
-This patch set is not urgent.
+https://github.com/llvm/llvm-project/commit/14ba782a87e16e9e15460a51f50e67e2744c26d9
+https://gcc.gnu.org/git/?p=gcc.git;a=commitdiff;h=adb1c8a0f167c3a1f7593d75f5a10eb07a5d741a
 
+> Yeah, not just Linux I imagine. The rules are so insane it's near
+> useless. I'd say press onwards with the language extension, it's not
+> like Linux kernel is written in ANSI/ISO C anyway :-)
 
+Yup. Between the above flex arrays in unions fix and -fstrict-flex-arrays=3,
+a C codebase can actually get unambiguous array bounds handling. And now
+with the "counted_by" attribute, we can cover _dynamic_ arrays too.
 
+> > struct_group() helper. It's internally ugly, but it works.
+> 
+> That macro is fairly trivial, nowhere near as ugly as struct_size() :-)
+> But urgh... can't we do something like:
+> 
+> void *memcpy_off(void *dst, const void *src, size_t off, size_t n)
+> {
+> 	memcpu(dst, src+off, n);
+> 	return dst;
+> }
+> 
+> And then you can write:
+> 
+>   memcpy_off(args, regs, offsetof(*regs, bx), 6);
+> 
+> I mean, that sucks, but possilby less than struct_group() does.
+> 
+> [ also, we should probably do:
+>   #defime offsetof(t, m) __builtin_offsetof(typeof(t), m) ]
 
->
-> -Kees
+Yeah, that would be possible, but I wanted something that the compiler
+could reason about for a given identifier since it's not just fortify
+that cares about object bounds. Being able to declare the layouts so
+that the bounds sanitizer instrumentation wouldn't get confused was
+important too. That is more related to arrays than integral members, but
+separating those quickly became confusing to declare easily/correctly. So
+struct_group() ended up being the best direction in the general case.
 
->
-> --
-> Kees Cook
+> In this case I would just make all of pt_regs a union with one giant
+> array (much like some archs already have IIRC).
 
+Yup, that works too. (Though pt_regs is relatively unique in this "the
+whole thing is expected to be an array" characteristic.)
 
+-Kees
 
---
-Best Regards
-Masahiro Yamada
+-- 
+Kees Cook
