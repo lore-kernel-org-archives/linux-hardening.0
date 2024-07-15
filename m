@@ -1,87 +1,131 @@
-Received: from smtp-bc0b.mail.infomaniak.ch (smtp-bc0b.mail.infomaniak.ch [45.157.188.11])
+Received: from mail.envs.net (mail.envs.net [5.199.136.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BABD18787F;
-	Mon, 15 Jul 2024 12:21:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97ACB1850AF;
+	Mon, 15 Jul 2024 12:22:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.199.136.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721046074; cv=none; b=fc45oeDmHvNfBfQmLOYoRgyfLjcL+koe9kq0EkBnCtH4+ZoKxnXjanxwxzbWwdabxFf5CoTEzTpXYDUSnwf4TiMbZyi3IkOMRAT1rBGcTkrHhKgCdOBKfJD2nnqLTbP8yEPFBDMc9v/mpFzj3xCa/YfFCM6nIbA/p4OViF4f9ag=
+	t=1721046141; cv=none; b=X5bB3OJNwWQNMfPdvZnfLBDt/kviPLg6EsDM7YZ0D2XparKQ9Yvzw/gMxzqQURDevqF+j1+g1gQCaXrS1EbZhUkP2YLEOITjhNqNfUGuvl73rtiSVbxnNtzmidM4P35Rn1vNt9OTPGgRsfUaxOv/Lg3lO+fe1mRGQPFLR0Khg9E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721046074; c=relaxed/simple;
-	bh=qLeSM8yy9Pm45fo+A7K1Jltke1y6CtzYxPtAFqAQmWM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M7Xl7ZJq3d3zi7K9oYWgaA0NWRGBiKgOVnW4Q3CpwmM29YpnOVJ6Wupz/IEdr90xEmL57d0wsurbJ5guSfsua8aLi3xkba3XAzeZSetlVZM7NNksXe8SV4p6NC6kz1kpSC/i1Uh26+diI33RxJM3fNKb0s5ir1yo/jDFM2qp4iY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=J+TUa4ey; arc=none smtp.client-ip=45.157.188.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+	s=arc-20240116; t=1721046141; c=relaxed/simple;
+	bh=rhj6YU+4sh2fmtzVDWQcXgy8QAUuN6NeLcd416vREKA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qi56PtBDpDA7eGjE+pINQXgH5/ohnQAsWvMYwknlU6+PP/K1twBUprSithJKRlh4LQba/3JDONx1v47sVNCUhMb8wUguA5z49FSDJU+MKKRsiHjZOpYEjD96kcM5XsKGt2W/UTlYwSkcCrmGU7CcRQMZ4fkrowg9U8ZfShYzpQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=envs.net; spf=pass smtp.mailfrom=envs.net; dkim=pass (4096-bit key) header.d=envs.net header.i=@envs.net header.b=DvchD5Pi; arc=none smtp.client-ip=5.199.136.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=envs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=envs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="J+TUa4ey"
-Received: from smtp-4-0000.mail.infomaniak.ch (smtp-4-0000.mail.infomaniak.ch [10.7.10.107])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4WN1Wd40wKzgCQ;
-	Mon, 15 Jul 2024 14:21:01 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1721046061;
-	bh=sTqWvowT9CGlN8d5YXZBulF2bbw/PtMqLh9miq/PfrA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=J+TUa4eypLG7kr9QeXVxab92+lL1eTU2yn3O/0spQ6YkXSLqrDVQ/P7+6fktYUqBE
-	 wLPCmKdFqsL3KZ5WujJsdro8mFLLaM85FrxFGGSo/hdzWThflw1ZzMT5AjH8O9F8T2
-	 UVoiXHxXzH8UHKQXWKhmANsBLiVu+99X3KOMqIbE=
-Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4WN1Wc6TYhzwYx;
-	Mon, 15 Jul 2024 14:21:00 +0200 (CEST)
-Date: Mon, 15 Jul 2024 14:20:59 +0200
-From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: cve@kernel.org, linux-kernel@vger.kernel.org, 
-	=?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, linux-security-module@vger.kernel.org, 
+	dkim=pass (4096-bit key) header.d=envs.net header.i=@envs.net header.b="DvchD5Pi"
+Received: from localhost (mail.envs.net [127.0.0.1])
+	by mail.envs.net (Postfix) with ESMTP id BBC7038A399E;
+	Mon, 15 Jul 2024 12:22:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=envs.net; s=modoboa;
+	t=1721046133; bh=y1+SQ3apUbmcQoHUoMHVMaKDypGWPo698XSl7yEvF8g=;
+	h=From:To:Cc:Subject:Date:From;
+	b=DvchD5PiHrE0Qk+MU8ryF0zg2YejEeb/LQjCc9RCFh+VFoF19NPbTmF0T3175T9Sr
+	 m14+XOTgvb3JNTR0d1kPmJt10uH+DKvxNjhAqlpsYoKzwYROHAvJYAY6ESnv5Kxl6L
+	 GJzhcakm+E90dvOBUbLCVwZk7hC0tgxbOOYRZk3msuFV+hufSZ+gZohl83X93fVMmd
+	 XUij27MqnVLZRXuntWNDvt3/V9gSGiL5e2eWUa7AQMFGB4dXLlHLehiSGCN4RqwSTu
+	 EQjtrGGNlKX4t5/JnxGft0pG1hEii8lIFV4H4pa/s4aKWyjzYPP/KZS8akkcsih2a8
+	 3OauShvmLQXkzygOWvGXJE3+7j6xBDJFE0JTvvAq2TBYnxyQHtwqY2QyednBSh7NI4
+	 kf+DhTA1l2KKyEVQ4HuRv4jp18TncWDHuO/POqmsHGLVNqoM8H8rkTUOWX0jM2BLDn
+	 JSy5jPf8gofuqa/9YtBnaKAuEo52PgZMPZxRpN4iQE/Sdm+gqKgPjGChNfbjeiSBQx
+	 JIP8VdMcIhKBdBX/nG7YWenpc1w/I3QzOigYpyIzE+eW59P/8vMcg9+TMEquIrQ0xC
+	 gsqhpzoWCYmDeDDXIfmEJ3AMePi7eZ/HxAunsOQZ7/xQpYfDCNzocIFDfDx9ldwwLH
+	 kraLcXPL5ZstaG5z/TdRODK8=
+X-Virus-Scanned: Debian amavisd-new at mail.envs.net
+Received: from mail.envs.net ([127.0.0.1])
+	by localhost (mail.envs.net [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id y8VJbKC15Tc8; Mon, 15 Jul 2024 12:22:07 +0000 (UTC)
+Received: from xtexx.eu.org (unknown [120.230.214.120])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.envs.net (Postfix) with ESMTPSA;
+	Mon, 15 Jul 2024 12:22:07 +0000 (UTC)
+From: Bingwu Zhang <xtex@envs.net>
+To: Tony Luck <tony.luck@intel.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>
+Cc: Bingwu Zhang <xtexchooser@duck.com>,
+	Rong Zhang <i@rong.moe>,
+	Daniele Debernardi <drebrez@gmail.com>,
+	Luca Weiss <luca@z3ntu.xyz>,
+	linux-arm-msm@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: Re: CVE-2024-40938: landlock: Fix d_parent walk
-Message-ID: <20240715.Eishohd0ehoo@digikod.net>
-References: <2024071218-CVE-2024-40938-1619@gregkh>
- <20240715.aeLiunipi8ia@digikod.net>
- <2024071553-yippee-broadways-8035@gregkh>
+Subject: [PATCH v2] ARM: dts: qcom: msm8974pro-samsung-klte: Add pstore node
+Date: Mon, 15 Jul 2024 20:22:01 +0800
+Message-ID: <20240715122201.345426-2-xtex@envs.net>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1617; i=xtexchooser@duck.com; h=from:subject; bh=g0144RZDvUfKue3w7fs4s3tdYQywVwxNoaGNF6PBxak=; b=owGbwMvMwCW2U4Ij7wZL9ETG02pJDGlTRTL9+ISVhHwk9TMW2kx//TIidt5h4ZfWH89eqMkJq b9a8OJyRykLgxgXg6yYIkuRYYM3q046v+iyclmYOaxMIEMYuDgFYCLhlxn+inmsWPVJLOa5x/QZ C0/vsvvYvHUGj7fWgtk/AuqnBV2Y7czIcLVj/awXX2538x7L3+HS+Et1Tv5iMWY5vc7mRoYD9Ze FGAA=
+X-Developer-Key: i=xtexchooser@duck.com; a=openpgp; fpr=7231804B052C670F15A6771DB918086ED8045B91
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <2024071553-yippee-broadways-8035@gregkh>
-X-Infomaniak-Routing: alpha
 
-On Mon, Jul 15, 2024 at 01:16:38PM +0200, Greg Kroah-Hartman wrote:
-> On Mon, Jul 15, 2024 at 12:37:53PM +0200, Mickaël Salaün wrote:
-> > Hello,
-> > 
-> > AFAIK, commit 88da52ccd66e ("landlock: Fix d_parent walk") doesn't fix a
-> > security issue but an unexpected case.  The triggered WARN_ON_ONCE() is
-> > just a canary, and this case was correctly handled with defensive
-> > programming and didn't allow to bypass the security policy nor to harm
-> > the kernel.  However, this fix should indeed be backported.
-> 
-> If a WARN_ON() is hit, a machine with panic_on_warn enabled will reboot,
-> hence if there is any way that userspace can hit this, it needs to be
-> issued a CVE, sorry.
+From: Bingwu Zhang <xtexchooser@duck.com>
 
-OK, I didn't know about this panic_on_warn rule for CVE.  Out of
-curiosity, panic_on_warn is definitely useful for fuzzing and testing,
-but what is the rational to enable panic_on_warn on production systems?
-It literally transforms a warning message into a system DoS (i.e.
-WARN_ON into BUG_ON).  We should explicitly use BUG_ON() if this is a
-critical unhandled case, right?
+Add pstore node to allow for retrieving crash logs.
 
-> 
-> > Could you please Cc me for future CVE related to my changes or to
-> > Landlock?  For kernel CVEs, I think it would be good to Cc at least
-> > maintainers, reviewers, authors, and committers for the related commits.
-> 
-> I suggest setting up lei to watch the linux-cve-announce mailing list if
-> you wish to do this (just filter for landlock stuff).  Automatically
-> mailing cve stuff to maintainers has been deemed too "noisy" which is
-> why we do not do this by default.
+Signed-off-by: Bingwu Zhang <xtexchooser@duck.com>
 
-Well, it might be too noisy for some but I guess/hope not for most.
-Email filtering should be easy for the few receiving too many of these
-emails though.
+---
+Changes in v2:
+  Add a label to reserved-memory and extend it to avoid duplicating nodes.
+
+---
+ arch/arm/boot/dts/qcom/qcom-msm8974.dtsi            |  2 +-
+ .../qcom/qcom-msm8974pro-samsung-klte-common.dtsi   | 13 +++++++++++++
+ 2 files changed, 14 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/qcom/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom/qcom-msm8974.dtsi
+index 15568579459a..19c12686831b 100644
+--- a/arch/arm/boot/dts/qcom/qcom-msm8974.dtsi
++++ b/arch/arm/boot/dts/qcom/qcom-msm8974.dtsi
+@@ -149,7 +149,7 @@ rpmcc: clock-controller {
+ 		};
+ 	};
+ 
+-	reserved-memory {
++	reserved_memory: reserved-memory {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		ranges;
+diff --git a/arch/arm/boot/dts/qcom/qcom-msm8974pro-samsung-klte-common.dtsi b/arch/arm/boot/dts/qcom/qcom-msm8974pro-samsung-klte-common.dtsi
+index b5443fd5b425..d3959741d2ea 100644
+--- a/arch/arm/boot/dts/qcom/qcom-msm8974pro-samsung-klte-common.dtsi
++++ b/arch/arm/boot/dts/qcom/qcom-msm8974pro-samsung-klte-common.dtsi
+@@ -438,6 +438,19 @@ fuelgauge_pin: fuelgauge-int-state {
+ 	};
+ };
+ 
++&reserved_memory {
++	ramoops@3e8e0000 {
++		compatible = "ramoops";
++		reg = <0x3e8e0000 0x200000>;
++
++		console-size = <0x100000>;
++		record-size = <0x10000>;
++		ftrace-size = <0x10000>;
++		pmsg-size = <0x80000>;
++		ecc-size = <8>;
++	};
++};
++
+ &remoteproc_adsp {
+ 	status = "okay";
+ 	cx-supply = <&pma8084_s2>;
+
+base-commit: 6fd4da15c334831a865d4700ceb3ff5a917163e3
+-- 
+2.45.2
+
