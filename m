@@ -1,103 +1,69 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 252961891A4;
-	Mon, 15 Jul 2024 12:39:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D37A433FD;
+	Mon, 15 Jul 2024 14:45:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721047181; cv=none; b=a63nnqjcQML/G17lnECw7em3K3yaczc88H9BULOIZ3GD+lh1yZP7f+TmlSqFwemNCf+Hq8KmId2KCMSR0Pfj+BC1+/MfFzsOgO361tq9Pg72+L0VIGrN2sMJ7cInmy4H8E6HaFgvvKRX5bXXVUwNHubKEAZnrniewoVvYhqGURA=
+	t=1721054738; cv=none; b=MKcH/Nybi/hFRJ87LuX4UoyCUCSCEQknQJ+Izo2Vw/Y/srr/7LvIXpxwsvLS41hGPMbEkRYcjOkL+c60iTbN59/lIiEQ2v3LbbfuD25Xe6ZncEID2Y9GjUAN6VwlgGDIhNDMmvOpdQLewDKZ60cnCzx7vRnKrkZAY4hXXyh9EMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721047181; c=relaxed/simple;
-	bh=urFsKcjAp6UTHzAfM659oLy3mk1/RPrjyvRtDxyWXyA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nllTLPjV290LPv6NWF6f2TCDmQv1EGrDQXM59HXrycQyQIU1J//M2DnnGW1UywkTKx8tgYOeTVtxbFaEFAVgijau76cdV+8pJlJhT4ZMyIKlutt1ZP/KRl4TAsTOhprl/du80S4f8pMZf/LjmrFTn1jaxj/EE4qmZGKqQmk8VwQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=kjCkiobM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721054738; c=relaxed/simple;
+	bh=X04A38J1ASypU0/eMsW50ZZ5MX80zSI0G0Nm5VTCPv4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SrlcnwQMPtUBBiLJMaehYcaSRQLihpJtAbrQEKKO6W/6SFbisHQpxMAnfwJ6OA+/NKsrQJb23Rh58BfaIvWXtkbuF2Lpd/4uooHWPVsAVwMxGcb1tw+syik1Tz87+2TCQYPksa0qLFu0ahR7Te4F4p7+Y/qXg7DFsp++tim0vaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rcKE3Egt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="kjCkiobM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39DBFC32782;
-	Mon, 15 Jul 2024 12:39:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1721047180;
-	bh=urFsKcjAp6UTHzAfM659oLy3mk1/RPrjyvRtDxyWXyA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kjCkiobMrrmzutk0XWXmPF7ovtLU/HHJrgpvpUKqFctINM57tngfPipyqinp8m/Ig
-	 7jgaGq/w2YHTx32S01/MJVNrM6qiOc03nnM95/fen55w7SiD5TBBu5KQOS4KztaB29
-	 lGjW+F1n8nXHxqQi4m20iXb7VnZnXadIegHb+RZc=
-Date: Mon, 15 Jul 2024 14:39:37 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
-Cc: cve@kernel.org, linux-kernel@vger.kernel.org,
-	=?iso-8859-1?Q?G=FCnther?= Noack <gnoack@google.com>,
-	linux-security-module@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rcKE3Egt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F7BCC32782;
+	Mon, 15 Jul 2024 14:45:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721054737;
+	bh=X04A38J1ASypU0/eMsW50ZZ5MX80zSI0G0Nm5VTCPv4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=rcKE3Egt2LL42KuB6UqPDrFsqy05/RHQVw8exp6XkvQThXgm3rJUaT5iu1gTbsVFU
+	 Nki9f+QoPCcXHVkSzKodJjPyvT5Mr0Fkpg6ErN8N5aAhD83SWxDDqqS8mXA/wxCZc2
+	 D+f/nNMANDd12G5pfrvqp3FK1FVIrKgJ7qvrCnmHQPTeBGeV1z2IdKo/OCROaRlYHp
+	 IwHfkbfqs9a+Z7Lz+cdYOJ8FcgQvQCc/vv4euwYziphikJtywPtLzWxz4PqnaJB41s
+	 fwHUu7zD75B02Q5WFa3wz+/abrCUHx+e/0IPe7SZH+fJkpIAI2sWGExorO1g8PaXnA
+	 +ia5u5kqLaVrg==
+From: Masahiro Yamada <masahiroy@kernel.org>
+To: Kees Cook <kees@kernel.org>,
 	linux-hardening@vger.kernel.org
-Subject: Re: CVE-2024-40938: landlock: Fix d_parent walk
-Message-ID: <2024071508-prison-liftoff-7987@gregkh>
-References: <2024071218-CVE-2024-40938-1619@gregkh>
- <20240715.aeLiunipi8ia@digikod.net>
- <2024071553-yippee-broadways-8035@gregkh>
- <20240715.Eishohd0ehoo@digikod.net>
+Cc: linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>
+Subject: [PATCH 0/3] fortify: fix various issues in test_fortify Makefile
+Date: Mon, 15 Jul 2024 23:45:22 +0900
+Message-ID: <20240715144529.101634-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240715.Eishohd0ehoo@digikod.net>
 
-On Mon, Jul 15, 2024 at 02:20:59PM +0200, Mickaël Salaün wrote:
-> On Mon, Jul 15, 2024 at 01:16:38PM +0200, Greg Kroah-Hartman wrote:
-> > On Mon, Jul 15, 2024 at 12:37:53PM +0200, Mickaël Salaün wrote:
-> > > Hello,
-> > > 
-> > > AFAIK, commit 88da52ccd66e ("landlock: Fix d_parent walk") doesn't fix a
-> > > security issue but an unexpected case.  The triggered WARN_ON_ONCE() is
-> > > just a canary, and this case was correctly handled with defensive
-> > > programming and didn't allow to bypass the security policy nor to harm
-> > > the kernel.  However, this fix should indeed be backported.
-> > 
-> > If a WARN_ON() is hit, a machine with panic_on_warn enabled will reboot,
-> > hence if there is any way that userspace can hit this, it needs to be
-> > issued a CVE, sorry.
-> 
-> OK, I didn't know about this panic_on_warn rule for CVE.  Out of
-> curiosity, panic_on_warn is definitely useful for fuzzing and testing,
-> but what is the rational to enable panic_on_warn on production systems?
 
-People like to have their devices/servers rebooted if _anything_ is seen
-to go wrong.  A few billion phones have this enabled, as do most all
-cloud servers it seems :(
+Applicable to v6.10 tag.
 
-> It literally transforms a warning message into a system DoS (i.e.
-> WARN_ON into BUG_ON).
 
-Yes :(
 
-> We should explicitly use BUG_ON() if this is a critical unhandled
-> case, right?
+Masahiro Yamada (3):
+  fortify: use if_changed_dep to record header dependency in *.cmd files
+  fortify: refactor test_fortify Makefile to fix some build problems
+  fortify: move test_fortify.sh to lib/test_fortify/
 
-Personally I would use neither, handle the error properly and clean up
-correctly.  Only if the continuing to run would cause unrecoverable harm
-(i.e. data loss or corruption or compromise) would I ever call BUG_ON().
+ MAINTAINERS                                   |  1 -
+ lib/.gitignore                                |  2 -
+ lib/Makefile                                  | 38 +------------------
+ lib/test_fortify/.gitignore                   |  2 +
+ lib/test_fortify/Makefile                     | 25 ++++++++++++
+ {scripts => lib/test_fortify}/test_fortify.sh |  0
+ 6 files changed, 28 insertions(+), 40 deletions(-)
+ create mode 100644 lib/test_fortify/.gitignore
+ create mode 100644 lib/test_fortify/Makefile
+ rename {scripts => lib/test_fortify}/test_fortify.sh (100%)
 
-> > > Could you please Cc me for future CVE related to my changes or to
-> > > Landlock?  For kernel CVEs, I think it would be good to Cc at least
-> > > maintainers, reviewers, authors, and committers for the related commits.
-> > 
-> > I suggest setting up lei to watch the linux-cve-announce mailing list if
-> > you wish to do this (just filter for landlock stuff).  Automatically
-> > mailing cve stuff to maintainers has been deemed too "noisy" which is
-> > why we do not do this by default.
-> 
-> Well, it might be too noisy for some but I guess/hope not for most.
-> Email filtering should be easy for the few receiving too many of these
-> emails though.
+-- 
+2.43.0
 
-For now we have decided to not cc: maintainers as these are all sent to
-a public list that can be subscribed to if they wish to.
-
-thanks,
-
-greg k-h
