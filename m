@@ -1,134 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69CD51A2C24;
-	Tue, 16 Jul 2024 14:30:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0187819E7CF
+	for <linux-hardening@vger.kernel.org>; Tue, 16 Jul 2024 14:39:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721140228; cv=none; b=TITvMsCfO90mk4fqT1lnXFsHMyBGPCxWjfU7JvZH2Rso1WUGHrgCNsyUGCvEhB6c96TBpxiX07E6GFWNtMa+i2bzC7ZlSplAn9xAwxAcJ0S6/nbX5WVPg6aKoIlnBeDKWjz1IPH4ICIjxORDGTjnNM6gJYzc6N0lmKPmPW1Ij2Q=
+	t=1721140761; cv=none; b=sPN0ejnMQcehTYH2t1tXoWdw+2QmdTTCkssYpokTdEyP/rdD7I6RTlv8RlivfbirWGMkxLSvFjLQNboyMntNYeJeedgwb7Am5WXN3qCUuMyQ6kxqBM6FNpbsaWHk7QC+xL0XUMcpJ+ab97DVDvDKMrtHzNqX0XP3ej+7lJE659c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721140228; c=relaxed/simple;
-	bh=jyWYB67o19VLcwMYfZlKi8pc6TxN8bVl/Jq5LoXZXHk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Wop8QyuTy0/EKuZaUEaCTwnqWE9e6/N1wYTZAnpG3R6oV2MQKHu3MyS1xWYwameb06IKLhvbAIWOcMpTnrM1Nxn7Juo6LLVD9hGafYelM1RPDSGZZ26LOVmOnFuTWUJfjDCEkXigbGg7WuSrttM341jXgINLB3cNYWhNJfYY7GE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rh7SPLVV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721140761; c=relaxed/simple;
+	bh=MzRRUxdfl+9rUlnOGhrWT+i9Ba4CWdrZlHh7nGDZNM4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nC16CcAc0LQzQ2EOIJHgtnJL8ON03DgpU5L+idZN3s/6Bla0oYbRJ85JpIHoB3gn8JHAGadslsEEa1SmcDSFepFOGO7YJgwL2ePvkHjuynj1miq6iU6DVMp5XtbBxldxKqpfU3IXsn6saQHmgFifkcu9zn5saZ57GPigysMcGHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=D/0OYFnv; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rh7SPLVV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 645D5C116B1;
-	Tue, 16 Jul 2024 14:30:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721140228;
-	bh=jyWYB67o19VLcwMYfZlKi8pc6TxN8bVl/Jq5LoXZXHk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Rh7SPLVV2K2rd84LG5rz4s5gydhi3GHBQDnw72jVs18jfBGmf+luwhU/U1HRAVFPI
-	 XUXsy7lnVgej/aG9vppsWsnZ/bLHkiTWjOZUbCtZLNH4WtuLm7+i7XJM9U1mgpf796
-	 O4PffnZXN+Z98A7ZaKpZCmPhdkkhtbVjaMe5Zd6cALBkClNZekqgGIVJb/F2xn8YtH
-	 90m1DDwb1MJWwwpRqJZ22anJZz1JJWBqgCLsCrApj/vKaw6lBeOjUR4zKxbBDNZRQa
-	 wsnkSfgbgTP2rTojeK15Ob2Adw3LmYY0BZuvDE5T2cvr0pCSt1s7DePdTgMVjDmjEM
-	 XS8dK9cXdo0TQ==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Anjali K <anjalik@linux.ibm.com>,
-	Vishal Chourasia <vishalc@linux.ibm.com>,
-	Srikar Dronamraju <srikar@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Sasha Levin <sashal@kernel.org>,
-	kees@kernel.org,
-	arbab@linux.ibm.com,
-	robh@kernel.org,
-	christophe.leroy@csgroup.eu,
-	aneesh.kumar@linux.ibm.com,
-	ruscur@russell.cc,
-	npiggin@gmail.com,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 2/7] powerpc/pseries: Whitelist dtl slub object for copying to userspace
-Date: Tue, 16 Jul 2024 10:30:10 -0400
-Message-ID: <20240716143021.2714348-2-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240716143021.2714348-1-sashal@kernel.org>
-References: <20240716143021.2714348-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="D/0OYFnv"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-57a16f4b8bfso19758a12.0
+        for <linux-hardening@vger.kernel.org>; Tue, 16 Jul 2024 07:39:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1721140758; x=1721745558; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dT5FLWbWUPfMqjFRBjpee8/HikhM3a2iAoNdQQA++MI=;
+        b=D/0OYFnv7Z9RyQAEiH18j9jR2WOVYkZs3jLCRwMcCznGWHjkIZWrl4Ww84motaFZv+
+         JYC/ehGqe4gEP0PzjGzJap1X5Wd3iOlyaEFqe5eLa0/SDYJj6hAMHgW+FmrU0o+WMaoj
+         nR87V4yDV4L1LBnqLynsuwwUwfxotKvqrZXkwJDYHB61iQkpn7/dFTYNbhvWuj26YDd4
+         vQHd6OTIvBQjdKrDdHXh9nmslEY/kbdvkPDwvP9YJyCIjk16Mqyd2DWQe/6kbsTJpaxr
+         AM5D+h/ASI3R8Cy8bBB/yQeBWZT+VMcVHT43UAG+cF/+AgcL0QpzyTVukqbAuuUIiGDK
+         cpwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721140758; x=1721745558;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dT5FLWbWUPfMqjFRBjpee8/HikhM3a2iAoNdQQA++MI=;
+        b=PuAXAwzRzwyfcm1uvuWtL7t4su0W+sokw169j0KmPo54qD0706K1gVlqEUQ48Ax6aT
+         QYazdsBzh/ZwMg3Xk3MB8PODhMvSK7ftqDg81frqO14Tl/T50pO8fMw8KecsRbynPYI3
+         5DjMgN7ySyVyx8Q3dD2YT2T9ZL0fpwsjjDEZGy/EwsNL7ZtL+yHC/SQxuvsg8jm8I1zl
+         Fyjadvjx9G49YwDFOjGb6bHxn4ZziwVSlFf0W37ws22QvdPWz3hqbRF05e73Hr2jGA4e
+         iJisSyQ84Fx1JdvTdvBikUSGtE45B8sJG+l5VFPbsfrg+o9xlcwVimJeLeeM5EmEbCHn
+         0QOA==
+X-Forwarded-Encrypted: i=1; AJvYcCXjlFh9WUnW7p+3RSz2zs6wij0cIlKsbP4DzthH8f9byQEq7/bU53RKPvQ5po7wvWapSCcJsj5gwlTmgpthCWYQC1eDpPu3QjEF0Pxa927Z
+X-Gm-Message-State: AOJu0YyNfvocb4W9Ou7QLApgy1/3Q4nlB4Lz6dGuR6ParO5Af6VHJI7H
+	WqfZyVTcul+iwuTJWqaVWYcp/+9wC96lz5RncAUFMwwBHJqqfNqT7WGEZ2jjPtsLFzrzRDaz946
+	5lXePatCA3YoZpOkxXdHxHNAqO/F+xKeiZTPq
+X-Google-Smtp-Source: AGHT+IGmSsybD0lwtju0owF8AM0wm2lcQbvYRwn3K5A2uMn2kfbPepm0PCfZm5tU5+Hu3yXbRdLVB8GSziRa18AlELU=
+X-Received: by 2002:a05:6402:5106:b0:58b:90c6:c59e with SMTP id
+ 4fb4d7f45d1cf-59eed87975dmr285403a12.7.1721140758063; Tue, 16 Jul 2024
+ 07:39:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.4.279
-Content-Transfer-Encoding: 8bit
+References: <20240714041111.it.918-kees@kernel.org> <20240715094107.GM8432@kernel.org>
+ <6d1a441d-31f9-4bc3-8856-be18620e4401@redhat.com>
+In-Reply-To: <6d1a441d-31f9-4bc3-8856-be18620e4401@redhat.com>
+From: Eric Dumazet <edumazet@google.com>
+Date: Tue, 16 Jul 2024 07:39:05 -0700
+Message-ID: <CANn89i+iRU_GcRg9XUsAzahtGr5vKshJqyw02J63U_rChaCQjQ@mail.gmail.com>
+Subject: Re: [PATCH v2] net/ipv4/tcp_cong: Replace strncpy() with strscpy()
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: Simon Horman <horms@kernel.org>, Kees Cook <kees@kernel.org>, 
+	"David S. Miller" <davem@davemloft.net>, David Ahern <dsahern@kernel.org>, 
+	Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Anjali K <anjalik@linux.ibm.com>
+On Tue, Jul 16, 2024 at 4:32=E2=80=AFAM Paolo Abeni <pabeni@redhat.com> wro=
+te:
+>
+> On 7/15/24 11:41, Simon Horman wrote:
+> > On Sat, Jul 13, 2024 at 09:11:15PM -0700, Kees Cook wrote:
+> >> Replace the deprecated[1] uses of strncpy() in tcp_ca_get_name_by_key(=
+)
+> >> and tcp_get_default_congestion_control(). The callers use the results =
+as
+> >> standard C strings (via nla_put_string() and proc handlers respectivel=
+y),
+> >> so trailing padding is not needed.
+> >>
+> >> Since passing the destination buffer arguments decays it to a pointer,
+> >> the size can't be trivially determined by the compiler. ca->name is
+> >> the same length in both cases, so strscpy() won't fail (when ca->name
+> >> is NUL-terminated). Include the length explicitly instead of using the
+> >> 2-argument strscpy().
+> >>
+> >> Link: https://github.com/KSPP/linux/issues/90 [1]
+> >> Signed-off-by: Kees Cook <kees@kernel.org>
+> >
+> > nit: Looking at git history, the subject prefix should probably be 'tcp=
+'.
+> >       And it would be best to explicitly target the patch against net-n=
+ext.
+> >
+> >       Subject: [PATCH net-next v2] tcp: ...
+> >
+> > That notwithstanding, this looks good to me.
+> >
+> > Reviewed-by: Simon Horman <horms@kernel.org>
+>
+> @Eric: I can fix the prefix when applying the patch. Please LMK if you
+> prefer otherwise.
 
-[ Upstream commit 1a14150e1656f7a332a943154fc486504db4d586 ]
+Sure thing, thanks for taking care of this Paolo, Simon, and Kees.
 
-Reading the dispatch trace log from /sys/kernel/debug/powerpc/dtl/cpu-*
-results in a BUG() when the config CONFIG_HARDENED_USERCOPY is enabled as
-shown below.
-
-    kernel BUG at mm/usercopy.c:102!
-    Oops: Exception in kernel mode, sig: 5 [#1]
-    LE PAGE_SIZE=64K MMU=Radix SMP NR_CPUS=2048 NUMA pSeries
-    Modules linked in: xfs libcrc32c dm_service_time sd_mod t10_pi sg ibmvfc
-    scsi_transport_fc ibmveth pseries_wdt dm_multipath dm_mirror dm_region_hash dm_log dm_mod fuse
-    CPU: 27 PID: 1815 Comm: python3 Not tainted 6.10.0-rc3 #85
-    Hardware name: IBM,9040-MRX POWER10 (raw) 0x800200 0xf000006 of:IBM,FW1060.00 (NM1060_042) hv:phyp pSeries
-    NIP:  c0000000005d23d4 LR: c0000000005d23d0 CTR: 00000000006ee6f8
-    REGS: c000000120c078c0 TRAP: 0700   Not tainted  (6.10.0-rc3)
-    MSR:  8000000000029033 <SF,EE,ME,IR,DR,RI,LE>  CR: 2828220f  XER: 0000000e
-    CFAR: c0000000001fdc80 IRQMASK: 0
-    [ ... GPRs omitted ... ]
-    NIP [c0000000005d23d4] usercopy_abort+0x78/0xb0
-    LR [c0000000005d23d0] usercopy_abort+0x74/0xb0
-    Call Trace:
-     usercopy_abort+0x74/0xb0 (unreliable)
-     __check_heap_object+0xf8/0x120
-     check_heap_object+0x218/0x240
-     __check_object_size+0x84/0x1a4
-     dtl_file_read+0x17c/0x2c4
-     full_proxy_read+0x8c/0x110
-     vfs_read+0xdc/0x3a0
-     ksys_read+0x84/0x144
-     system_call_exception+0x124/0x330
-     system_call_vectored_common+0x15c/0x2ec
-    --- interrupt: 3000 at 0x7fff81f3ab34
-
-Commit 6d07d1cd300f ("usercopy: Restrict non-usercopy caches to size 0")
-requires that only whitelisted areas in slab/slub objects can be copied to
-userspace when usercopy hardening is enabled using CONFIG_HARDENED_USERCOPY.
-Dtl contains hypervisor dispatch events which are expected to be read by
-privileged users. Hence mark this safe for user access.
-Specify useroffset=0 and usersize=DISPATCH_LOG_BYTES to whitelist the
-entire object.
-
-Co-developed-by: Vishal Chourasia <vishalc@linux.ibm.com>
-Signed-off-by: Vishal Chourasia <vishalc@linux.ibm.com>
-Signed-off-by: Anjali K <anjalik@linux.ibm.com>
-Reviewed-by: Srikar Dronamraju <srikar@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://msgid.link/20240614173844.746818-1-anjalik@linux.ibm.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/powerpc/platforms/pseries/setup.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/powerpc/platforms/pseries/setup.c b/arch/powerpc/platforms/pseries/setup.c
-index d5abb25865e36..bc1a4e024529b 100644
---- a/arch/powerpc/platforms/pseries/setup.c
-+++ b/arch/powerpc/platforms/pseries/setup.c
-@@ -305,8 +305,8 @@ static int alloc_dispatch_log_kmem_cache(void)
- {
- 	void (*ctor)(void *) = get_dtl_cache_ctor();
- 
--	dtl_cache = kmem_cache_create("dtl", DISPATCH_LOG_BYTES,
--						DISPATCH_LOG_BYTES, 0, ctor);
-+	dtl_cache = kmem_cache_create_usercopy("dtl", DISPATCH_LOG_BYTES,
-+						DISPATCH_LOG_BYTES, 0, 0, DISPATCH_LOG_BYTES, ctor);
- 	if (!dtl_cache) {
- 		pr_warn("Failed to create dispatch trace log buffer cache\n");
- 		pr_warn("Stolen time statistics will be unreliable\n");
--- 
-2.43.0
-
+Reviewed-by: Eric Dumazet <edumazet@google.com>
