@@ -1,133 +1,112 @@
-Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0210E12B17C
-	for <linux-hardening@vger.kernel.org>; Tue, 16 Jul 2024 21:54:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56F887441A;
+	Tue, 16 Jul 2024 21:57:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721166849; cv=none; b=gHM3abCc2gqDwH2oTMx1rsQmVrhY0z1aZue9IHwM+IAJFunqtrHWioml/V5SZJZDkch/W9BEWHwJWz/ORDzLwwl8Ox0P02IiemSFj9o3xOuFgebE6cA6+3rwhnwSOWHI8hOSUnSX4+JQBpEusRjIWlt2c95ewgWXXGX4K2okMAg=
+	t=1721167028; cv=none; b=rznghtYC/8RohUg0mTo1v6ZhNAepkWuxFGPbKFb6vvOs9dpxss7I+pICp1TmDO7NwenIx2O2N0LThj9cWNV+RMHYuQwNd44Lr9mLvrYKtpV/ecn2aaIGImpw4cWpAuu6/TqqEFfjgkb0L2Xlj2sWraPT9keR/G4KYzFHyqzgbEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721166849; c=relaxed/simple;
-	bh=/v7SBEYyAFXSZP6HH1/ng/YIKTlSO2bhoybTNyrPRNg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jYRnzbapMXcVuQHCtWyLejzfUn37QobQWAitQhQ/IjIsjEmNIiHkqI/jI0zmewH3zOwmOoEw13vIBWyMQaQZh5mhrZODUV0Ej+WImVvPJXFGWNP/B6JKWHleDtTQP3SdhGwfP/TIdeMrUV3lTIJv5Orje2cC0dsx8re9on6JDLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=YkacCOVL; arc=none smtp.client-ip=44.202.169.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1721167028; c=relaxed/simple;
+	bh=bwiVrWgypWBECie/s1mDOD7hIJm+DB9R8xzMdeISMkY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bDjLPaFfMizgR+v6f9xeqpXB1UlHGVnFkuNzaiuHCMjD99b0om4tuc0TKn+wQ93ZVlKrezRNns8WChryGHdDMj6vY/kV/1eslqoJ2mfqI53PrJlcj3DgQiKZwwCMeQJE7NbX+iRutDdSMOQA+d9CAxR6xJS87gVEtJMekGaRpb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fcPuY3Di; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="YkacCOVL"
-Received: from eig-obgw-6003a.ext.cloudfilter.net ([10.0.30.151])
-	by cmsmtp with ESMTPS
-	id TmT6sqGWxiA19Tq7Usp4b9; Tue, 16 Jul 2024 21:54:01 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id Tq7UstYLuV2ivTq7UsMaEV; Tue, 16 Jul 2024 21:54:00 +0000
-X-Authority-Analysis: v=2.4 cv=OLns3jaB c=1 sm=1 tr=0 ts=6696ebf8
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=frY+GlAHrI6frpeK1MvySw==:17
- a=IkcTkHD0fZMA:10 a=4kmOji7k6h8A:10 a=VwQbUJbxAAAA:8 a=9IUVmF_uN4HtD0BfTqgA:9
- a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22 a=Xt_RvD8W3m28Mn_h3AK8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=dV9YVxJPuIXVAPNCLnlMOQMoWavIDcj3/ND7BIJk3U8=; b=YkacCOVLokc2loc0vcE9mWz2fS
-	R10osTZ0lvAJ4JU1of2wxfUzPI6AtXeZ0jAfZUYuM2d5b+uEtATlycuw96fwqsiYANg4xuSQDRwnu
-	HrxrksHBQiVT0BnlP5nblFnRflb0IV/BXL1WxqpzFyUsABVC+p9ccteaszzezYZW4KgatllVVfwiJ
-	R7QkqZE325glyIADCvkLhnNliEitk5Q2/U9DNrRTEYnAPVOJfsoch5c62+1yxiMVZwEl2nqpFtQmQ
-	ZDTikQ2zVfuiN7dWXs8UP3r8cXpPYBQOAq367QTdXN/EZS7bRGFXVtD4T0QL/2McoRHTTNl1/87FJ
-	2bsYzLTQ==;
-Received: from [201.172.173.139] (port=33646 helo=[192.168.15.14])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1sTq7T-000Vx6-2X;
-	Tue, 16 Jul 2024 16:53:59 -0500
-Message-ID: <de26df66-67e8-4b88-b337-a50311bf2ea2@embeddedor.com>
-Date: Tue, 16 Jul 2024 15:53:58 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fcPuY3Di"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9CCFC116B1;
+	Tue, 16 Jul 2024 21:57:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721167027;
+	bh=bwiVrWgypWBECie/s1mDOD7hIJm+DB9R8xzMdeISMkY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=fcPuY3DiidPB6DduwthSWiUJytd1GM4AxM8MxXagjXGKXVhGK2TLvHIjtHvW9UYKN
+	 6Tea2LQsLZRvCjaSTJ5/R8QExz02QCnsCOjY0yOchzDhh1foLSc9ktUcknR6q9/m3U
+	 AdpMMyACw2+NzS8ZsE3cJ6z4GtKzYC5XnSkNouQlJc8Zl8wOhznFxNYeJUbkGUG8ZC
+	 /wXU8XPTdRUyPv3UydVfhTSRSxVN3ig1M4thUCAikgNycfir/Ww3ZrMeoApSmq58d3
+	 Za6mGytrW9s2x786pI7RN6zlzp5u2LlVB4bhYr9W79CNI22dzT1+LLSpIb4st2IEvb
+	 Z5Yb3NmPtOyPA==
+From: Kees Cook <kees@kernel.org>
+To: Peter Ujfalusi <peter.ujfalusi@gmail.com>
+Cc: Kees Cook <kees@kernel.org>,
+	Vinod Koul <vkoul@kernel.org>,
+	dmaengine@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] dmaengine: ti: omap-dma: Initialize sglen after allocation
+Date: Tue, 16 Jul 2024 14:57:06 -0700
+Message-Id: <20240716215702.work.802-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] interconnect: icc-clk: Add missed num_nodes
- initialization
-To: Kees Cook <kees@kernel.org>, Georgi Djakov <djakov@kernel.org>
-Cc: linux-pm@vger.kernel.org, Konrad Dybcio <konrad.dybcio@linaro.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20240716214819.work.328-kees@kernel.org>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20240716214819.work.328-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.173.139
-X-Source-L: No
-X-Exim-ID: 1sTq7T-000Vx6-2X
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.14]) [201.172.173.139]:33646
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 19
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfLLMez5KtjclGjBdpj4NXlDgFPFjHDCex7ThETOFQ3FADE1x3rINY2RqQd/i1I/6eTHEBsvt2r5RQigoXDw4x4XZLokfXU3siLEBktW1jc4NbJgUW1I4
- Yl6bg6zSQNpx5SK+LgN74oPfscf0jo9EMpjjZ2bzYoWqh7llY+VEmq1Sdy3b3GvSe7hgVjCBl/2bkQKUuVYsKJEljcIOM8WxiA+ePGNvnBIBw7IVS/L/SApm
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2048; i=kees@kernel.org; h=from:subject:message-id; bh=bwiVrWgypWBECie/s1mDOD7hIJm+DB9R8xzMdeISMkY=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmluyxGjp2z9PYeRXfXMWfLcFWNql3Qog4Ansrd XhNvP1P0ZyJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZpbssQAKCRCJcvTf3G3A JpZ/D/99eTgdWlRO81FMBexrHCAhl4eK0zepp75IT0PSIKdvQiBBSLRKuzQkxXc0ZYdPdw2qnaF nZMfKbt2UwHEYxT6iX+EM38iuGImr2SOPzYff+/de6c9mh6uUu+cVmZQCQQf7uZIqFOjNsQ+smj fP0jdnA11FKyyhaMUCrjLeTFQo+hyNh6Kx6x8iY0x6vpBj2rKGVaRUelkxZqa3hF6U3VcAusFB6 89seG3e2LbPEYonJkciL3eqmDRuzsGs1k23OffwQv0pydgYv4wYC40wp4JJW56cP67De7VWSh+D anToQFKSgAg8zOv1qSAhFCJrIKswyl8aNn0aRM8HHfC3inwqb3mmTw1mV9xUZBGrQH+zBbqkL9f cZhWad8S5ujjjRZeIYcINGdc6KaN8RCJg6mhiOvKrovgxqdi/g6cqslOsc6iOp7Xpi4gz2Zry0p Hb0OLKgFOkava/SGQsFBccpWp4gSDZHD33Z86OrJxBBsvscVDSUVesC795dT3QQ+Q6GbEJLQe33 oVHixvHMMHLXuNWub+DSi6dxPENFky7dNPD++phmD4D2pSk0Hdsztk08z/D52YmAuE5dZ/8fhws OwYCanTQv/ppulJ6U83W5o1qjSHRbwwbuA/Hv9aEy5XzgUXLd84wxCbamI+14+vgiI6ksHEorxG 0jF9n0tlUSouA
+ HA==
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
+With the new __counted_by annocation, the "sglen" struct member must
+be set before accessing the "sg" array. This initialization was done in
+other places where a new struct omap_desc is allocated, but these cases
+were missed. Set "sglen" after allocation.
 
+Fixes: b85178611c11 ("dmaengine: ti: omap-dma: Annotate struct omap_desc with __counted_by")
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+Cc: Peter Ujfalusi <peter.ujfalusi@gmail.com>
+Cc: Vinod Koul <vkoul@kernel.org>
+Cc: dmaengine@vger.kernel.org
+---
+ drivers/dma/ti/omap-dma.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-On 16/07/24 15:48, Kees Cook wrote:
-> With the new __counted_by annotation, the "num_nodes" struct member must
-> be set before accessing the "nodes" array. This initialization was done
-> in other places where a new struct icc_onecell_data is allocated, but this
-> case in icc_clk_register() was missed. Set "num_nodes" after allocation.
-> 
-> Fixes: dd4904f3b924 ("interconnect: qcom: Annotate struct icc_onecell_data with __counted_by")
-> Signed-off-by: Kees Cook <kees@kernel.org>
-
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-
-Thanks
+diff --git a/drivers/dma/ti/omap-dma.c b/drivers/dma/ti/omap-dma.c
+index 7e6c04afbe89..6ab9bfbdc480 100644
+--- a/drivers/dma/ti/omap-dma.c
++++ b/drivers/dma/ti/omap-dma.c
+@@ -1186,10 +1186,10 @@ static struct dma_async_tx_descriptor *omap_dma_prep_dma_cyclic(
+ 	d->dev_addr = dev_addr;
+ 	d->fi = burst;
+ 	d->es = es;
++	d->sglen = 1;
+ 	d->sg[0].addr = buf_addr;
+ 	d->sg[0].en = period_len / es_bytes[es];
+ 	d->sg[0].fn = buf_len / period_len;
+-	d->sglen = 1;
+ 
+ 	d->ccr = c->ccr;
+ 	if (dir == DMA_DEV_TO_MEM)
+@@ -1258,10 +1258,10 @@ static struct dma_async_tx_descriptor *omap_dma_prep_dma_memcpy(
+ 	d->dev_addr = src;
+ 	d->fi = 0;
+ 	d->es = data_type;
++	d->sglen = 1;
+ 	d->sg[0].en = len / BIT(data_type);
+ 	d->sg[0].fn = 1;
+ 	d->sg[0].addr = dest;
+-	d->sglen = 1;
+ 	d->ccr = c->ccr;
+ 	d->ccr |= CCR_DST_AMODE_POSTINC | CCR_SRC_AMODE_POSTINC;
+ 
+@@ -1309,6 +1309,7 @@ static struct dma_async_tx_descriptor *omap_dma_prep_dma_interleaved(
+ 	if (data_type > CSDP_DATA_TYPE_32)
+ 		data_type = CSDP_DATA_TYPE_32;
+ 
++	d->sglen = 1;
+ 	sg = &d->sg[0];
+ 	d->dir = DMA_MEM_TO_MEM;
+ 	d->dev_addr = xt->src_start;
+@@ -1316,7 +1317,6 @@ static struct dma_async_tx_descriptor *omap_dma_prep_dma_interleaved(
+ 	sg->en = xt->sgl[0].size / BIT(data_type);
+ 	sg->fn = xt->numf;
+ 	sg->addr = xt->dst_start;
+-	d->sglen = 1;
+ 	d->ccr = c->ccr;
+ 
+ 	src_icg = dmaengine_get_src_icg(xt, &xt->sgl[0]);
 -- 
-Gustavo
+2.34.1
 
-> ---
-> Cc: Georgi Djakov <djakov@kernel.org>
-> Cc: linux-pm@vger.kernel.org
-> ---
->   drivers/interconnect/icc-clk.c | 3 +--
->   1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/interconnect/icc-clk.c b/drivers/interconnect/icc-clk.c
-> index f788db15cd76..b956e4050f38 100644
-> --- a/drivers/interconnect/icc-clk.c
-> +++ b/drivers/interconnect/icc-clk.c
-> @@ -87,6 +87,7 @@ struct icc_provider *icc_clk_register(struct device *dev,
->   	onecell = devm_kzalloc(dev, struct_size(onecell, nodes, 2 * num_clocks), GFP_KERNEL);
->   	if (!onecell)
->   		return ERR_PTR(-ENOMEM);
-> +	onecell->num_nodes = 2 * num_clocks;
->   
->   	qp = devm_kzalloc(dev, struct_size(qp, clocks, num_clocks), GFP_KERNEL);
->   	if (!qp)
-> @@ -133,8 +134,6 @@ struct icc_provider *icc_clk_register(struct device *dev,
->   		onecell->nodes[j++] = node;
->   	}
->   
-> -	onecell->num_nodes = j;
-> -
->   	ret = icc_provider_register(provider);
->   	if (ret)
->   		goto err;
