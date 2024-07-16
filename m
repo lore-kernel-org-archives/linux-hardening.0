@@ -1,63 +1,40 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 230DA1A00E3;
-	Tue, 16 Jul 2024 17:51:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FC481C6B7;
+	Tue, 16 Jul 2024 18:21:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721152274; cv=none; b=FTixgBuTrIrYikFv6SBWOBPxL/Xql5gUYC8tgA86czVoCyr3ZnK4zfBbw/OEMWCtW2vJM93H7gA1O+TY9GC0/esl0fD4pA5DHROfTqqc861WZcl30utEwimsgiWkXFBuKoTL1LPtnR/yLfCiJ1nZ3pFxMWDa35qO5JKUmu+Ghgc=
+	t=1721154101; cv=none; b=mfE3cCslQLcXoRAK0xZi/4Pj9rc10uQBfKkh9MQQBzTlNV6P2Ka7jEIEIVso5UdGGgD43+i0z6B5yULdZVr6RtvSGswcysXUDgV2PD2BSKk4pzLu6GqtMyP6meksoJNlJ1whxAP2HwLonZg3G6WVg3DuVsCQSG5/wmbk7JTNe6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721152274; c=relaxed/simple;
-	bh=vVztFECHj5A5lDM1edvCHwH4SGqeskbjWvte3GbWgm4=;
+	s=arc-20240116; t=1721154101; c=relaxed/simple;
+	bh=044rSlWGGt25I/jbnoSwX8WDuMMAoxqjcZ+E1O/wNvo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GYsOfR9lBfwZnDuvxeRi9iRhTdjEOjWV3ETEtUwnHXOG84H2trJNBQSdF3jXavY/A9N8i1dDejc1IcMze/U6sJAoNwyFn+LPjuOVJyfSEBnnfQGNBKJ0nCEaGUuLIX34izqKF0iQoQjtDNB4qYli9/32J15f1000IpHWU1pvpAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k2WiZAo5; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=lFLPwnwQLEqUTm3fdgMxXrzY+MjTHaJUoxpNWCjS+OPhz/U/4Jep3hT4B4kfkSCin9m0KoPrIfLFR2fJnGOch2VzMEsfv1uDvZpll2jvpN4C/mBrNduYFYEhzNHu+lYG8RibmizMgsd8UfHvu1uFZvX0CdXiVlUn2ecAr46pBnQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=am2WK7N3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k2WiZAo5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1721152273; x=1752688273;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=vVztFECHj5A5lDM1edvCHwH4SGqeskbjWvte3GbWgm4=;
-  b=k2WiZAo5onKtWcS7rrs4IxYHYyjSRXb2S1QPBK5zkebr87Y20LX3Xowz
-   BJgzJmfclpDMIzAedrCXBetRtnD9J5aXghfCQkFDQ43ORkoAzM94KMYX7
-   9cYGogwx6ca1tWAbQa8AVDXY6G5PKT+tS7tpuldHUShCh5Jsuxh7Tje99
-   XExjOXztlU/gEJYXJutGn5cuHN6sHh2UH463IoGAxOtk2sqHIMAnyAlmU
-   +fyhAlc3ElVyjSd7cRjkZxOAwl+1L8x3YruE1LZGeTZE0kyhta6pBw8oh
-   y44lRdp4cVQj0hM2TU+qkPrGuZ9kuC8Af+14HrA4hXuCeZSjVrrU92cEB
-   Q==;
-X-CSE-ConnectionGUID: C/xMyRqgScmzLWO05DHDhg==
-X-CSE-MsgGUID: a5pu0/gPT3aoqWBLY82Ymw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11135"; a="22475938"
-X-IronPort-AV: E=Sophos;i="6.09,212,1716274800"; 
-   d="scan'208";a="22475938"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2024 10:51:12 -0700
-X-CSE-ConnectionGUID: TvOZy+QYTjKtTS+txJxKYw==
-X-CSE-MsgGUID: QnmizcwqSTa1q5PEJuOYfg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,212,1716274800"; 
-   d="scan'208";a="55250475"
-Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by orviesa004.jf.intel.com with ESMTP; 16 Jul 2024 10:51:11 -0700
-Received: from kbuild by 68891e0c336b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sTmKS-000fUy-20;
-	Tue, 16 Jul 2024 17:51:08 +0000
-Date: Wed, 17 Jul 2024 01:50:54 +0800
-From: kernel test robot <lkp@intel.com>
-To: Masahiro Yamada <masahiroy@kernel.org>, Kees Cook <kees@kernel.org>,
-	linux-hardening@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, linux-kbuild@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>
-Subject: Re: [PATCH 1/3] fortify: use if_changed_dep to record header
- dependency in *.cmd files
-Message-ID: <202407170104.dCe5MKsA-lkp@intel.com>
-References: <20240715144529.101634-2-masahiroy@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="am2WK7N3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A54F3C116B1;
+	Tue, 16 Jul 2024 18:21:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721154100;
+	bh=044rSlWGGt25I/jbnoSwX8WDuMMAoxqjcZ+E1O/wNvo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=am2WK7N3QWAIp5CGIvAxD+NE+BGGP/DQ29eBeLw82stb9MpmI5wd27gB3qowPiqVT
+	 yjS5Ed4vIJw5iC9qtwvCB4SG+89KNq99ssD879gmHAxsOoGADHL1q9kVMKF1+1P0of
+	 GEoPPm6e4fX2VqqUC1uhX8k/ok8lMjvj7Vyd1IOUWK3JsLbsO+jJTGgwL9btZG3ttx
+	 KKTy8RBO1S4n3RppBVXQzbhgXwHb2Tgx1PY9PRT8Ce9zx0WUBsy1yuGeOdziNHRV8x
+	 tuNosjuQgkClcNFEQnWgmPMv1MNxlQMUknTVGm96iLp+Hg8TRuDHKJe7I+n2vqjmlj
+	 m/CHKVeHlXDig==
+Date: Tue, 16 Jul 2024 11:21:40 -0700
+From: Kees Cook <kees@kernel.org>
+To: Dmitry Antipov <dmantipov@yandex.ru>
+Cc: Johannes Berg <johannes.berg@intel.com>, linux-wireless@vger.kernel.org,
+	linux-hardening@vger.kernel.org, lvc-project@linuxtesting.org
+Subject: Re: [PATCH] wifi: wireless: fix more UBSAN noise in
+ cfg80211_conn_scan()
+Message-ID: <202407161121.C00AC44@keescook>
+References: <20240716174011.236849-1-dmantipov@yandex.ru>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -66,57 +43,39 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240715144529.101634-2-masahiroy@kernel.org>
+In-Reply-To: <20240716174011.236849-1-dmantipov@yandex.ru>
 
-Hi Masahiro,
+On Tue, Jul 16, 2024 at 08:40:11PM +0300, Dmitry Antipov wrote:
+> Looking at https://syzkaller.appspot.com/bug?extid=d5dc2801166df6d34774
+> and trying to reproduce it with CONFIG_UBSAN enabled, I've noticed the
+> following:
+> 
+> UBSAN: array-index-out-of-bounds in net/wireless/sme.c:95:3
+> index 0 is out of range for type 'struct ieee80211_channel *[]'
+> CPU: 3 PID: 4993 Comm: repro Not tainted 6.10.0-01155-gd67978318827 #5
+> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS <...>
+> Call Trace:
+>  <TASK>
+>  dump_stack_lvl+0x1c2/0x2a0
+>  ? __pfx_dump_stack_lvl+0x10/0x10
+>  ? __pfx__printk+0x10/0x10
+>  ? __local_bh_enable_ip+0x12e/0x1c0
+>  __ubsan_handle_out_of_bounds+0x127/0x150
+>  cfg80211_conn_scan+0xd8e/0xf30
+>  cfg80211_connect+0x1400/0x1c30
+>  nl80211_connect+0x1549/0x1a70
+>  ...<the rest is not too useful...>
+> 
+> This is very similar to 92ecbb3ac6f3 ("wifi: mac80211: fix UBSAN noise
+> in ieee80211_prep_hw_scan()"), so just fix it in the same way by setting
+> 'request->n_channels' early to help '__counted_by()' work as expected.
+> And the same 'kmalloc()' math adjustment is also applicable.
+> 
+> Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
 
-kernel test robot noticed the following build errors:
+Nice catch! Yes, this looks correct.
 
-[auto build test ERROR on linus/master]
-[also build test ERROR on v6.10 next-20240716]
-[cannot apply to akpm-mm/mm-nonmm-unstable kees/for-next/hardening kees/for-next/pstore kees/for-next/kspp]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Masahiro-Yamada/fortify-use-if_changed_dep-to-record-header-dependency-in-cmd-files/20240715-224820
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20240715144529.101634-2-masahiroy%40kernel.org
-patch subject: [PATCH 1/3] fortify: use if_changed_dep to record header dependency in *.cmd files
-config: i386-randconfig-004-20240716 (https://download.01.org/0day-ci/archive/20240717/202407170104.dCe5MKsA-lkp@intel.com/config)
-compiler: gcc-7 (Ubuntu 7.5.0-6ubuntu2) 7.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240717/202407170104.dCe5MKsA-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202407170104.dCe5MKsA-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> fixdep: error opening file: lib/test_fortify/.write_overflow-memcpy.log.d: No such file or directory
---
->> fixdep: error opening file: lib/test_fortify/.read_overflow2-memcmp.log.d: No such file or directory
---
->> fixdep: error opening file: lib/test_fortify/.read_overflow-memchr.log.d: No such file or directory
---
->> fixdep: error opening file: lib/test_fortify/.write_overflow-strcpy-lit.log.d: No such file or directory
---
->> fixdep: error opening file: lib/test_fortify/.read_overflow2-memmove.log.d: No such file or directory
---
->> fixdep: error opening file: lib/test_fortify/.write_overflow-strncpy-src.log.d: No such file or directory
---
->> fixdep: error opening file: lib/test_fortify/.read_overflow-memcmp.log.d: No such file or directory
---
->> fixdep: error opening file: lib/test_fortify/.read_overflow-memscan.log.d: No such file or directory
---
->> fixdep: error opening file: lib/test_fortify/.write_overflow-strcpy.log.d: No such file or directory
---
->> fixdep: error opening file: lib/test_fortify/.write_overflow-memmove.log.d: No such file or directory
---
->> fixdep: error opening file: lib/test_fortify/.write_overflow-memset.log.d: No such file or directory
-..
+Reviewed-by: Kees Cook <kees@kernel.org>
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Kees Cook
