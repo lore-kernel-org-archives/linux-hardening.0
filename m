@@ -1,118 +1,132 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EA7413D2A4
-	for <linux-hardening@vger.kernel.org>; Tue, 16 Jul 2024 11:32:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B0F619CD18;
+	Tue, 16 Jul 2024 14:25:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721129524; cv=none; b=oRmI+lsrB+2TB48Z8zx/1RBgROlM2q9cuAHv9sHIG2BQopCrYJAOG23RkDT6JFfI30At13v5Xi3L/0+uO1zJeJmcrlm3kI5UzWwomvBWG8h2J635FZrAXS+z0pgeq11Oa8UG+uCO5NTNn9RU1D2xFLgWdqSfeQG50h5ylvYBqsw=
+	t=1721139929; cv=none; b=dDgc3BuEvmFEXyGE4ljdhRjwm+mjvYGcfzXvDNcGdJpUeT9ObqxhEotl8yZYFUp+wY1bIQ8im0lqHM5dDRezw+i16zQxSwcU5gLZS+YrnLGyeSS1XeA4M7g9DhMwz0qrdcyL6COOHMnxwqvNdPB9bZp9kTHkd1ICLGme6tuaxnQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721129524; c=relaxed/simple;
-	bh=rlo30+owHu5Rt2jo2hgUO++4+6OM0lijE05ELQk0XLc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Rud2wSnbRQppUJnGoKDBLpfbb/DEkrb9cARSuLjuHPUwrNrqcAYC5jGukRSUy2SdtcVsNW04y6s/YVVbHEFbK0DwELLSbDJYEMdnOhnYN+udrF54Lj1QqWpY1SB7R1HI1BMVjz+pfMPmMTtDR5bdz8VuFrx2O3VGJFr7P5RxmNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=R285MnxX; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1721139929; c=relaxed/simple;
+	bh=NLwybZFmejC88VgbyrRR2QeBOmfjeyD4rUgFrIOedjg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=iZ8FbwUhxtkk3daWVu46k8EpIDG4jDVVTdTgbj7tv2Iaqgvi+ulmrVZDcpPSfOln7N+yWyYCoRDloKs3ijxdFt3JUmAjlDGUV5TSPnTNUVsOLTQBfdmkhoIRKwU37y/WTtPY2J+pNf0GQ64ZnfQMVH+z/ZzHJwOmHASpkUmDFLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KRP8qUq7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R285MnxX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1721129520;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wS8IhieGZEGOs6So34MinArqLEMTFaAJheWRiSUC3Ws=;
-	b=R285MnxXziYg/NB4vNabpTJRmZvfRpC1J/+CUNB7rZ+gaaRMnI/NUdUWnTVWLZBrALr7e1
-	uO2xBEzsIAQN+pZ9Xq53HXaQfZIxTCL2zxwtj39DYLBkBzxrj5eQ518CNxwNCDKqyLi9Gr
-	C7XobAytnVKYchZwVUQ4TrUsyZcTkGc=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-118-q_zNT7ueP02aRAZM96Fn6g-1; Tue, 16 Jul 2024 07:31:59 -0400
-X-MC-Unique: q_zNT7ueP02aRAZM96Fn6g-1
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-42669213f26so10090035e9.2
-        for <linux-hardening@vger.kernel.org>; Tue, 16 Jul 2024 04:31:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721129518; x=1721734318;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wS8IhieGZEGOs6So34MinArqLEMTFaAJheWRiSUC3Ws=;
-        b=ZiXmbdt2ZNwig7/qrHY+8WblwwMjQwvFR2pI3G2iZsJZu27DogOaQoe53jKQY7Q85X
-         4vccMEDl/t1GEyNlvYS3s5DytQg8BNDvjyR5CpwV3fJWoIojJARp/DSkl09h2cE2aUN3
-         GHk4xLkEtByFCn8woBIxhjdr4gGC2p+MAI0bNc9hmWzl+Wt1S+IvhLQlzkNt3hADh3gQ
-         V/rmiIHt0jCs/+2wWSP0tlSx8qz14ENOM3mrGQGS12WdWbJaIbamKdYRo3TLh0a31Xf3
-         C7mpD+8PXHJmtIo6G3w0wyQA6yKBeiM+2Mv0MNBiOBt/7c5x8LViZ8Klbmy4OhiyhCV+
-         8ZzQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVIsDemb+p/kxNZSJl/SEUBhiMKLRNaWKxlpqspwSBJwZaXBznyHpQgvYFlf9sUgj64/vLPbjNrD12umdQAmXMB08Lg0MzWFwhYSBPwzhsV
-X-Gm-Message-State: AOJu0YzXn7wCBlprJUQKz0994O4G87PH1HNtLwdLwr2EC1g1Owv2Bv3E
-	OfWANeFrXyrNj8/vrdNobLjFWlzJVaYT6pMbOBQgRasbgG8kA/SrOpsa3EAeXf+TX24cBkwjt4A
-	OeuWimXPnUlWujaz/vx9w7EwT0fJbfm+c9IKJDXeVZwrGPjzEjkN/Hu61etyMUeUQbA==
-X-Received: by 2002:a5d:64c5:0:b0:367:9505:73ed with SMTP id ffacd0b85a97d-368240c50b6mr1250928f8f.7.1721129517978;
-        Tue, 16 Jul 2024 04:31:57 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHw4mlz5Eqf83dMPSKFCXM5jNJw+x1Bc4/Vh0VpL7NnFMTMQckuVWIERpgMS5Em6aSzgUuVmg==
-X-Received: by 2002:a5d:64c5:0:b0:367:9505:73ed with SMTP id ffacd0b85a97d-368240c50b6mr1250920f8f.7.1721129517598;
-        Tue, 16 Jul 2024 04:31:57 -0700 (PDT)
-Received: from ?IPV6:2a0d:3344:1738:5210:e05b:d4c9:1ad4:1bd3? ([2a0d:3344:1738:5210:e05b:d4c9:1ad4:1bd3])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3680dab3d4dsm8793172f8f.23.2024.07.16.04.31.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 16 Jul 2024 04:31:57 -0700 (PDT)
-Message-ID: <6d1a441d-31f9-4bc3-8856-be18620e4401@redhat.com>
-Date: Tue, 16 Jul 2024 13:31:53 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KRP8qUq7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06BCAC4AF0F;
+	Tue, 16 Jul 2024 14:25:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721139928;
+	bh=NLwybZFmejC88VgbyrRR2QeBOmfjeyD4rUgFrIOedjg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=KRP8qUq7J0sAkIVl6MaFZBySPSjt/9csibA+bV1H7sAIKIY3VFSGpBnS4fbS9Wve/
+	 SJ/DivlqaaMkvIjbgXGRyFoEU1myzegoozgqFRDpunJhAeEWcMqLXerRGu3TP+qJ/D
+	 Mj8NYlHnK1tepxl8URtrrVBXuLsd/m94TO0r6coz/OqqJxal9Li5pLcUW0tORe6/zV
+	 wKoadBKEVP7qIisI9+dLaAmlfyL71/smWaHM1q/3iCx/jerUY3wJnVHHnTw3KoFi5X
+	 XKUNCN8QxSYCBwPUxXVcCIbF62ZGsDFGciO+6sD1N1Y5B2L23JjUVmgOh7g/AH7Lyd
+	 mC2TLvofBlCtQ==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Anjali K <anjalik@linux.ibm.com>,
+	Vishal Chourasia <vishalc@linux.ibm.com>,
+	Srikar Dronamraju <srikar@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Sasha Levin <sashal@kernel.org>,
+	kees@kernel.org,
+	npiggin@gmail.com,
+	ruscur@russell.cc,
+	aneesh.kumar@linux.ibm.com,
+	christophe.leroy@csgroup.eu,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.9 03/22] powerpc/pseries: Whitelist dtl slub object for copying to userspace
+Date: Tue, 16 Jul 2024 10:24:10 -0400
+Message-ID: <20240716142519.2712487-3-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240716142519.2712487-1-sashal@kernel.org>
+References: <20240716142519.2712487-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] net/ipv4/tcp_cong: Replace strncpy() with strscpy()
-To: Simon Horman <horms@kernel.org>, Kees Cook <kees@kernel.org>,
- Eric Dumazet <edumazet@google.com>
-Cc: "David S. Miller" <davem@davemloft.net>, David Ahern
- <dsahern@kernel.org>, Jakub Kicinski <kuba@kernel.org>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20240714041111.it.918-kees@kernel.org>
- <20240715094107.GM8432@kernel.org>
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <20240715094107.GM8432@kernel.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.9.9
+Content-Transfer-Encoding: 8bit
 
-On 7/15/24 11:41, Simon Horman wrote:
-> On Sat, Jul 13, 2024 at 09:11:15PM -0700, Kees Cook wrote:
->> Replace the deprecated[1] uses of strncpy() in tcp_ca_get_name_by_key()
->> and tcp_get_default_congestion_control(). The callers use the results as
->> standard C strings (via nla_put_string() and proc handlers respectively),
->> so trailing padding is not needed.
->>
->> Since passing the destination buffer arguments decays it to a pointer,
->> the size can't be trivially determined by the compiler. ca->name is
->> the same length in both cases, so strscpy() won't fail (when ca->name
->> is NUL-terminated). Include the length explicitly instead of using the
->> 2-argument strscpy().
->>
->> Link: https://github.com/KSPP/linux/issues/90 [1]
->> Signed-off-by: Kees Cook <kees@kernel.org>
-> 
-> nit: Looking at git history, the subject prefix should probably be 'tcp'.
->       And it would be best to explicitly target the patch against net-next.
-> 
->       Subject: [PATCH net-next v2] tcp: ...
-> 
-> That notwithstanding, this looks good to me.
-> 
-> Reviewed-by: Simon Horman <horms@kernel.org>
+From: Anjali K <anjalik@linux.ibm.com>
 
-@Eric: I can fix the prefix when applying the patch. Please LMK if you 
-prefer otherwise.
+[ Upstream commit 1a14150e1656f7a332a943154fc486504db4d586 ]
 
-Thanks,
+Reading the dispatch trace log from /sys/kernel/debug/powerpc/dtl/cpu-*
+results in a BUG() when the config CONFIG_HARDENED_USERCOPY is enabled as
+shown below.
 
-Paolo
+    kernel BUG at mm/usercopy.c:102!
+    Oops: Exception in kernel mode, sig: 5 [#1]
+    LE PAGE_SIZE=64K MMU=Radix SMP NR_CPUS=2048 NUMA pSeries
+    Modules linked in: xfs libcrc32c dm_service_time sd_mod t10_pi sg ibmvfc
+    scsi_transport_fc ibmveth pseries_wdt dm_multipath dm_mirror dm_region_hash dm_log dm_mod fuse
+    CPU: 27 PID: 1815 Comm: python3 Not tainted 6.10.0-rc3 #85
+    Hardware name: IBM,9040-MRX POWER10 (raw) 0x800200 0xf000006 of:IBM,FW1060.00 (NM1060_042) hv:phyp pSeries
+    NIP:  c0000000005d23d4 LR: c0000000005d23d0 CTR: 00000000006ee6f8
+    REGS: c000000120c078c0 TRAP: 0700   Not tainted  (6.10.0-rc3)
+    MSR:  8000000000029033 <SF,EE,ME,IR,DR,RI,LE>  CR: 2828220f  XER: 0000000e
+    CFAR: c0000000001fdc80 IRQMASK: 0
+    [ ... GPRs omitted ... ]
+    NIP [c0000000005d23d4] usercopy_abort+0x78/0xb0
+    LR [c0000000005d23d0] usercopy_abort+0x74/0xb0
+    Call Trace:
+     usercopy_abort+0x74/0xb0 (unreliable)
+     __check_heap_object+0xf8/0x120
+     check_heap_object+0x218/0x240
+     __check_object_size+0x84/0x1a4
+     dtl_file_read+0x17c/0x2c4
+     full_proxy_read+0x8c/0x110
+     vfs_read+0xdc/0x3a0
+     ksys_read+0x84/0x144
+     system_call_exception+0x124/0x330
+     system_call_vectored_common+0x15c/0x2ec
+    --- interrupt: 3000 at 0x7fff81f3ab34
+
+Commit 6d07d1cd300f ("usercopy: Restrict non-usercopy caches to size 0")
+requires that only whitelisted areas in slab/slub objects can be copied to
+userspace when usercopy hardening is enabled using CONFIG_HARDENED_USERCOPY.
+Dtl contains hypervisor dispatch events which are expected to be read by
+privileged users. Hence mark this safe for user access.
+Specify useroffset=0 and usersize=DISPATCH_LOG_BYTES to whitelist the
+entire object.
+
+Co-developed-by: Vishal Chourasia <vishalc@linux.ibm.com>
+Signed-off-by: Vishal Chourasia <vishalc@linux.ibm.com>
+Signed-off-by: Anjali K <anjalik@linux.ibm.com>
+Reviewed-by: Srikar Dronamraju <srikar@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://msgid.link/20240614173844.746818-1-anjalik@linux.ibm.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/powerpc/platforms/pseries/setup.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/powerpc/platforms/pseries/setup.c b/arch/powerpc/platforms/pseries/setup.c
+index 284a6fa04b0c2..cba40d9d12848 100644
+--- a/arch/powerpc/platforms/pseries/setup.c
++++ b/arch/powerpc/platforms/pseries/setup.c
+@@ -343,8 +343,8 @@ static int alloc_dispatch_log_kmem_cache(void)
+ {
+ 	void (*ctor)(void *) = get_dtl_cache_ctor();
+ 
+-	dtl_cache = kmem_cache_create("dtl", DISPATCH_LOG_BYTES,
+-						DISPATCH_LOG_BYTES, 0, ctor);
++	dtl_cache = kmem_cache_create_usercopy("dtl", DISPATCH_LOG_BYTES,
++						DISPATCH_LOG_BYTES, 0, 0, DISPATCH_LOG_BYTES, ctor);
+ 	if (!dtl_cache) {
+ 		pr_warn("Failed to create dispatch trace log buffer cache\n");
+ 		pr_warn("Stolen time statistics will be unreliable\n");
+-- 
+2.43.0
 
