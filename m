@@ -1,41 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 203D53CF4F;
-	Tue, 16 Jul 2024 21:25:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 511DF46522;
+	Tue, 16 Jul 2024 21:38:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721165102; cv=none; b=T5OuZ2O4i9nLupTsT54falqnIRrluNa/ns/J6oJQmzxxXVQ8QSEncYlDx1ct+E10YWNXSNExWkuAvIbbsunkUXVcIdBTIQrxMfyav9W7eN+anXsByp0GBVCu77v5Od3BInPStnQO1anbq8XHapRiVkvsJCijGTh/lVh5v2MOMmk=
+	t=1721165915; cv=none; b=GhPRapftUDguQN0cfs70a5/7TnPk+uVxuPE6LnpTJb7yThLa4TxydA/gm3vhH6qjogGicWQ7X9K51EO54OWYOaNkFW7OG/9quQZggOrPi8e6TMw44VXw0CJM/A1qvhWo9NYaxuxmMgwWGSpRqZWCTX4gDoYirTdRVEt+vUHgSh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721165102; c=relaxed/simple;
-	bh=0KfPRo37su5mr39AobY7aI+apgV4uSA31yq4ETtf3q4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rUUQg6cuHw6SzBgXDgf1C9OAjc/Ez4v7A1RNiGd6ndUk3nMnxhEFoqpZYizAAfjkBNv7+1rrJsJXA5uiWmFd4AWOEyzGx7f1l+R9prcaXs1wdHNh9NYhf0FyGtIHuQjtkK/A54IRJJNjoLu0oSjK09L3cLbnny/l4tlCmATFfHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cT4WdwSs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721165915; c=relaxed/simple;
+	bh=s3argfT0bjT56iOArbsY0GzxvURpvlj8dSdXayAnGo8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=E1KnW5aQEoskmlx7+RKaiHXWgoWfKZCer8J68OXw5MjRpuAIQqv3U7P9Z1Qw7bvJJDTcaCL05wE11punpnBkGtrFn+nnCC2G/WhM64x1a6gpDkUeHGtCpxqktNnSuRqxq9jMyTobuO08kqY4mcwK+PaTbR7/nxRoyaHCyueQrik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cUW+jcmq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cT4WdwSs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A32B6C116B1;
-	Tue, 16 Jul 2024 21:25:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cUW+jcmq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB571C116B1;
+	Tue, 16 Jul 2024 21:38:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721165101;
-	bh=0KfPRo37su5mr39AobY7aI+apgV4uSA31yq4ETtf3q4=;
+	s=k20201202; t=1721165914;
+	bh=s3argfT0bjT56iOArbsY0GzxvURpvlj8dSdXayAnGo8=;
 	h=From:To:Cc:Subject:Date:From;
-	b=cT4WdwSs1mqdz/s17edCI/V3iOy0/eezJULLPdCn0ScoQ9gjRm6GG9A0Y3yNMj9FT
-	 DqwuBfHS7QWPy1qqalRyFbmHZzX9KFSWendVXJvYiiNdtWAeNysucScSzeb+cpLpNT
-	 5IV6dKWaJLC9jnWQlIgEKYkthvF1ofv8uDlBiIrvZAnLxzN32vleA8lDGG5Z2Pi7yr
-	 E7ZpTY842xR1AmDE6OQIShidO+gMtwzy899PlyWr5GANts7oQbrR4vudM/M6LJDs+z
-	 C3e6vNGf4e5lDpIZX9SSICgIT90LgkIbeVlxa3+GNeBkuslg6eH6/lnO/30cY25bdi
-	 3MpMmqwWBemiw==
+	b=cUW+jcmqnCG0IrFlXrXiG5XfhplLdmPDpmoLC62qovl97ix3YhOwFUAj98ha2vL2A
+	 Dg6Uy+T+mG0v1w5TAr5cInRbJyKL5+9jEiE4QB5TY4erkqmkIfBYMGUDLukhJaGgGF
+	 tTOfTWKAafXrKk5MH9u/pdwX1/2nZRuMa9v55AEc2pTlzsuFiE/v982X/j4tOEDXUL
+	 eylO+JM4kJWwPnsKwsf1sEjgeN4CmPH9DGk7f98aFml5IqPC3cbfv1LHbwAqA0pg/I
+	 mMu1Zcnjulhn6AdDYLDMo1AMZFDj0yCaUpqb1OA/ka+7iHU5xYMHYawoxhBwQb0oBE
+	 1SeEAe1+diIYA==
 From: Kees Cook <kees@kernel.org>
-To: Lee Jones <lee@kernel.org>
+To: =?UTF-8?q?Am=C3=A9lie=20Delaunay?= <amelie.delaunay@foss.st.com>
 Cc: Kees Cook <kees@kernel.org>,
-	Pavel Machek <pavel@ucw.cz>,
-	linux-leds@vger.kernel.org,
+	Vinod Koul <vkoul@kernel.org>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	dmaengine@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH] leds: gpio: Set num_leds after allocation
-Date: Tue, 16 Jul 2024 14:24:59 -0700
-Message-Id: <20240716212455.work.809-kees@kernel.org>
+Subject: [PATCH] dmaengine: stm32-dma3: Set lli_size after allocation
+Date: Tue, 16 Jul 2024 14:38:33 -0700
+Message-Id: <20240716213830.work.951-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -43,67 +47,55 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1999; i=kees@kernel.org; h=from:subject:message-id; bh=0KfPRo37su5mr39AobY7aI+apgV4uSA31yq4ETtf3q4=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmluUrFMNdfqaChiBzifkfXBx9T8v2qRVdtSBv7 e9TqnvSKzaJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZpblKwAKCRCJcvTf3G3A Jj/xD/9PX+RUqRgBfnbRviA/Sw9wZTm7Nak1JVZQj36Rg1oiaLvmtlU8QZVM+GBmjBUTqJdPmiB QdexpPQQ5vUkh0h68D7YPsNkN1g1iB35pPmfHSHrqGPVyYKYSMKUpSAARdcHLAbBv71e0NdkNUp UJi/BHiiX1Vm7HP+X2lt+egQGHBH+xJQv5Ojaxa+Sr3HnCyvAW8aH1nAnjMHlEO+u7rCUmNkr3x Mcc3ISmQ2skH+dZ8oJHZtiBx9K4UqCoTmWA+smqq+DfSoRDmIE/0D3KThF3mbXzaP9jIG1C0BuQ +yeReWtNR9pqEka4PwCL2k5d2uwFAE6cFYDw9cZ3QVeZjztFMkIz3vmeBLwvoo/jQ0CFIfX6a6b /ybvqHHyZbIw/kia8aACFbZBJ6V32tA1RGQ8nX2AdWwdZBMbDzkvwoUOF8ibqzy3bJfKI94RVoU M1g/CKeJA6s43zbTH9JsGw1h/ytNy/yyZdbZhdcSta5aku67mh09kPW2iOjhrNuy50ISR4X8K41 1IyRD32ujlWOb8HU9BHwZu1S34dGs/VuD4GitjkM6Cac+WuQlMNbJfKjiatXrQDNqTUHWzgKi9y nsRFKnSt8x4Q2bA5hAx5LRIzl0SEYOE5ltwOhAswS3eTDaBHQh97k7izEj8WRao2Aw8Zmk4toJw hxDcDs5IhqsCU
- SQ==
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1753; i=kees@kernel.org; h=from:subject:message-id; bh=s3argfT0bjT56iOArbsY0GzxvURpvlj8dSdXayAnGo8=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmluhZjVuTZVY4VuNVA9HyBDrilOXfvC/bv0t4D 77IyyEHNQOJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZpboWQAKCRCJcvTf3G3A Jj/0D/9PvSaesj4pRMPSiHXBTn/G/dt9EL9dWBSh2VkDcnpNnwHRa0MCb1KLQh+je5Tr27kb0en iQFv480u4YA/RKgn4DsO5czDWawVMnMcUK3v9DlFWhMdadEBzZYX/vyooYqIedRmwjg+qQVYQCS UCjHpsqGu3bgDvMTwHMZ1d0NVqXxdDK1DxWXiMdKem3bNLArIps5ic5WdCUTuDGK/AfTphwTnzW Ejybti4O6+eLNyj28ccYb724kuf5KYL0U2mktsSBn8nkP2H/ZolT4YNxgw72VnC2m13sMj0zz9e 2zwlZ34PzE7Ce8KKG2BEqAdZZYxh+HPPW0HQtmLqT3HEfP1v9wvrnaiEYSbRadMVdavcLXJfMSS RjoxqTou5N9PONYHLqhmuiqNwiE/kYKYN+Qtol5lXdasf1r7zitzs020sBI0BXH2rQHmei7aG4Z Fpxr8pCUQXU/DJJmIUhNRfI5FYK6jGN8mG3cLgZFhTxrZdzsJlICLSj9oV0tQE/dPuTcpnhAkpU Kokd76DCk4PQKu1X6F9iX8l99p0JPt4XNN/rSos3++hvRFbMaweJpcz/V+B6oxRRJfXChznHNir QItIsXDzAqqxAzTMs1S7TaMqXRGLGIhnF1d97O9zAzlMb02otRb19zZinSKmL9hKGWvuLX6ngdW HbGOqYVdMdTP7
+ Hw==
 X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-With the new __counted_by annotation, the "num_leds" variable needs to
-valid for accesses to the "leds" array. This requirement is not met in
-gpio_leds_create(), since "num_leds" starts at "0", so "leds" index "0"
-will not be considered valid (num_leds would need to be "1" to access
-index "0").
+With the new __counted_by annotation, the "lli_size" variable needs to
+valid for accesses to the "lli" array. This requirement is not met in
+stm32_dma3_chan_desc_alloc(), since "lli_size" starts at "0", so "lli"
+index "0" will not be considered valid during the initialization for loop.
 
-Fix this by setting the allocation size after allocation, and then update
-the final count based on how many were actually added to the array.
+Fix this by setting lli_size immediately after allocation (similar to
+how this is handled in stm32_mdma_alloc_desc() for the node/count
+relationship).
 
-Fixes: 52cd75108a42 ("leds: gpio: Annotate struct gpio_leds_priv with __counted_by")
+Fixes: f561ec8b2b33 ("dmaengine: Add STM32 DMA3 support")
 Signed-off-by: Kees Cook <kees@kernel.org>
 ---
-Cc: Lee Jones <lee@kernel.org>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: linux-leds@vger.kernel.org
+Cc: "Amélie Delaunay" <amelie.delaunay@foss.st.com>
+Cc: Vinod Koul <vkoul@kernel.org>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: Alexandre Torgue <alexandre.torgue@foss.st.com>
+Cc: dmaengine@vger.kernel.org
+Cc: linux-stm32@st-md-mailman.stormreply.com
+Cc: linux-arm-kernel@lists.infradead.org
 ---
- drivers/leds/leds-gpio.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/dma/stm32/stm32-dma3.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/leds/leds-gpio.c b/drivers/leds/leds-gpio.c
-index 83fcd7b6afff..4d1612d557c8 100644
---- a/drivers/leds/leds-gpio.c
-+++ b/drivers/leds/leds-gpio.c
-@@ -150,7 +150,7 @@ static struct gpio_leds_priv *gpio_leds_create(struct device *dev)
- {
- 	struct fwnode_handle *child;
- 	struct gpio_leds_priv *priv;
--	int count, ret;
-+	int count, used, ret;
+diff --git a/drivers/dma/stm32/stm32-dma3.c b/drivers/dma/stm32/stm32-dma3.c
+index 4087e0263a48..0be6e944df6f 100644
+--- a/drivers/dma/stm32/stm32-dma3.c
++++ b/drivers/dma/stm32/stm32-dma3.c
+@@ -403,6 +403,7 @@ static struct stm32_dma3_swdesc *stm32_dma3_chan_desc_alloc(struct stm32_dma3_ch
+ 	swdesc = kzalloc(struct_size(swdesc, lli, count), GFP_NOWAIT);
+ 	if (!swdesc)
+ 		return NULL;
++	swdesc->lli_size = count;
  
- 	count = device_get_child_node_count(dev);
- 	if (!count)
-@@ -159,9 +159,11 @@ static struct gpio_leds_priv *gpio_leds_create(struct device *dev)
- 	priv = devm_kzalloc(dev, struct_size(priv, leds, count), GFP_KERNEL);
- 	if (!priv)
- 		return ERR_PTR(-ENOMEM);
-+	priv->num_leds = count;
-+	used = 0;
- 
- 	device_for_each_child_node(dev, child) {
--		struct gpio_led_data *led_dat = &priv->leds[priv->num_leds];
-+		struct gpio_led_data *led_dat = &priv->leds[used];
- 		struct gpio_led led = {};
- 
- 		/*
-@@ -197,8 +199,9 @@ static struct gpio_leds_priv *gpio_leds_create(struct device *dev)
- 		/* Set gpiod label to match the corresponding LED name. */
- 		gpiod_set_consumer_name(led_dat->gpiod,
- 					led_dat->cdev.dev->kobj.name);
--		priv->num_leds++;
-+		used++;
+ 	for (i = 0; i < count; i++) {
+ 		swdesc->lli[i].hwdesc = dma_pool_zalloc(chan->lli_pool, GFP_NOWAIT,
+@@ -410,7 +411,6 @@ static struct stm32_dma3_swdesc *stm32_dma3_chan_desc_alloc(struct stm32_dma3_ch
+ 		if (!swdesc->lli[i].hwdesc)
+ 			goto err_pool_free;
  	}
-+	priv->num_leds = used;
+-	swdesc->lli_size = count;
+ 	swdesc->ccr = 0;
  
- 	return priv;
- }
+ 	/* Set LL base address */
 -- 
 2.34.1
 
