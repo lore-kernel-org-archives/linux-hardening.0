@@ -1,101 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 511DF46522;
-	Tue, 16 Jul 2024 21:38:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 560A573478;
+	Tue, 16 Jul 2024 21:43:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721165915; cv=none; b=GhPRapftUDguQN0cfs70a5/7TnPk+uVxuPE6LnpTJb7yThLa4TxydA/gm3vhH6qjogGicWQ7X9K51EO54OWYOaNkFW7OG/9quQZggOrPi8e6TMw44VXw0CJM/A1qvhWo9NYaxuxmMgwWGSpRqZWCTX4gDoYirTdRVEt+vUHgSh8=
+	t=1721166216; cv=none; b=lQn4Nezil9MLmYmeNu8ArNXpawpUC8rttq9diyVyIOV5uKcr33zqf/p8gtUX/5H+75eE5WjRFDV/xM8bmaPmhaXbD31ZuP88Jw1sOq6J2YfWWqIF+jcEDySFw754AuIg/yajBpBq+tS//yOt3jtU7o+1epIAWjXhEWZOXH03/S0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721165915; c=relaxed/simple;
-	bh=s3argfT0bjT56iOArbsY0GzxvURpvlj8dSdXayAnGo8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=E1KnW5aQEoskmlx7+RKaiHXWgoWfKZCer8J68OXw5MjRpuAIQqv3U7P9Z1Qw7bvJJDTcaCL05wE11punpnBkGtrFn+nnCC2G/WhM64x1a6gpDkUeHGtCpxqktNnSuRqxq9jMyTobuO08kqY4mcwK+PaTbR7/nxRoyaHCyueQrik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cUW+jcmq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721166216; c=relaxed/simple;
+	bh=/gP1d8Ynww6awa/zUsHTh9a+QkvgeBsP7vZTtNq8TnM=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=Jvry+N7U7wBw/TN0WfAtTwGYDEy7XLEh5VFO2Ydnz7K3L3d3jRbI0FhalaqCdCZPMwtMm1TGLYPnPo0/p4QHAREHF9TCJ4yNWnj9ZFnxJSbn6vhseXz6JnuMjpslizF7JmnxO5wv4GJEFEavdI7ow0j11B0q8bwYjOtDXMtg+RQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dkS7ztxc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cUW+jcmq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB571C116B1;
-	Tue, 16 Jul 2024 21:38:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dkS7ztxc"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id BE039C116B1;
+	Tue, 16 Jul 2024 21:43:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721165914;
-	bh=s3argfT0bjT56iOArbsY0GzxvURpvlj8dSdXayAnGo8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=cUW+jcmqnCG0IrFlXrXiG5XfhplLdmPDpmoLC62qovl97ix3YhOwFUAj98ha2vL2A
-	 Dg6Uy+T+mG0v1w5TAr5cInRbJyKL5+9jEiE4QB5TY4erkqmkIfBYMGUDLukhJaGgGF
-	 tTOfTWKAafXrKk5MH9u/pdwX1/2nZRuMa9v55AEc2pTlzsuFiE/v982X/j4tOEDXUL
-	 eylO+JM4kJWwPnsKwsf1sEjgeN4CmPH9DGk7f98aFml5IqPC3cbfv1LHbwAqA0pg/I
-	 mMu1Zcnjulhn6AdDYLDMo1AMZFDj0yCaUpqb1OA/ka+7iHU5xYMHYawoxhBwQb0oBE
-	 1SeEAe1+diIYA==
-From: Kees Cook <kees@kernel.org>
-To: =?UTF-8?q?Am=C3=A9lie=20Delaunay?= <amelie.delaunay@foss.st.com>
-Cc: Kees Cook <kees@kernel.org>,
-	Vinod Koul <vkoul@kernel.org>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	dmaengine@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] dmaengine: stm32-dma3: Set lli_size after allocation
-Date: Tue, 16 Jul 2024 14:38:33 -0700
-Message-Id: <20240716213830.work.951-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	s=k20201202; t=1721166215;
+	bh=/gP1d8Ynww6awa/zUsHTh9a+QkvgeBsP7vZTtNq8TnM=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=dkS7ztxceO2PmVSXD5C2Ajwjxi+7BK/uYAUzLtVwBiTDviXOnzXa6p9hyuHpe5Rgq
+	 58LQvn3x5M5tChmOazReZVdA0QKtrqxT6Ck530o5zICHpjMC/y0pfE3UFC+kjIj7dN
+	 Mm2pYYdn59hMHjg47PZGar41RuMKQAFq/JAcoUXKLUdokfrjewxfFs4KBiJPmhdL0C
+	 6p7Ax3q10GlGpntMG+3w65e4MFcqFc0Z4UgBef51s2NeKzUeyNJTQ5x78k+u8nL/+3
+	 G6nwh+APzIx2u6YhviNArvXBuaPofL6PX7fxQ4nYId4xnibI0582TwgVkzV00OIT8O
+	 qFZNaV8u1N8Aw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id B461AC43443;
+	Tue, 16 Jul 2024 21:43:35 +0000 (UTC)
+Subject: Re: [GIT PULL] pstore updates for v6.11-rc1
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <202407150926.4864BCABD8@keescook>
+References: <202407150926.4864BCABD8@keescook>
+X-PR-Tracked-List-Id: <linux-hardening.vger.kernel.org>
+X-PR-Tracked-Message-Id: <202407150926.4864BCABD8@keescook>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/pstore-v6.11-rc1
+X-PR-Tracked-Commit-Id: 9b3c13c9ea4ecb2b95948f666560b8df8f358b40
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 8050258bd1eed0f77dd7e3fa15feb23bbcc38e63
+Message-Id: <172116621572.23491.12812023645156996571.pr-tracker-bot@kernel.org>
+Date: Tue, 16 Jul 2024 21:43:35 +0000
+To: Kees Cook <kees@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, Jeff Johnson <quic_jjohnson@quicinc.com>, Justin Stitt <justinstitt@google.com>, Kees Cook <keescook@chromium.org>, Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1753; i=kees@kernel.org; h=from:subject:message-id; bh=s3argfT0bjT56iOArbsY0GzxvURpvlj8dSdXayAnGo8=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmluhZjVuTZVY4VuNVA9HyBDrilOXfvC/bv0t4D 77IyyEHNQOJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZpboWQAKCRCJcvTf3G3A Jj/0D/9PvSaesj4pRMPSiHXBTn/G/dt9EL9dWBSh2VkDcnpNnwHRa0MCb1KLQh+je5Tr27kb0en iQFv480u4YA/RKgn4DsO5czDWawVMnMcUK3v9DlFWhMdadEBzZYX/vyooYqIedRmwjg+qQVYQCS UCjHpsqGu3bgDvMTwHMZ1d0NVqXxdDK1DxWXiMdKem3bNLArIps5ic5WdCUTuDGK/AfTphwTnzW Ejybti4O6+eLNyj28ccYb724kuf5KYL0U2mktsSBn8nkP2H/ZolT4YNxgw72VnC2m13sMj0zz9e 2zwlZ34PzE7Ce8KKG2BEqAdZZYxh+HPPW0HQtmLqT3HEfP1v9wvrnaiEYSbRadMVdavcLXJfMSS RjoxqTou5N9PONYHLqhmuiqNwiE/kYKYN+Qtol5lXdasf1r7zitzs020sBI0BXH2rQHmei7aG4Z Fpxr8pCUQXU/DJJmIUhNRfI5FYK6jGN8mG3cLgZFhTxrZdzsJlICLSj9oV0tQE/dPuTcpnhAkpU Kokd76DCk4PQKu1X6F9iX8l99p0JPt4XNN/rSos3++hvRFbMaweJpcz/V+B6oxRRJfXChznHNir QItIsXDzAqqxAzTMs1S7TaMqXRGLGIhnF1d97O9zAzlMb02otRb19zZinSKmL9hKGWvuLX6ngdW HbGOqYVdMdTP7
- Hw==
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
 
-With the new __counted_by annotation, the "lli_size" variable needs to
-valid for accesses to the "lli" array. This requirement is not met in
-stm32_dma3_chan_desc_alloc(), since "lli_size" starts at "0", so "lli"
-index "0" will not be considered valid during the initialization for loop.
+The pull request you sent on Mon, 15 Jul 2024 09:29:29 -0700:
 
-Fix this by setting lli_size immediately after allocation (similar to
-how this is handled in stm32_mdma_alloc_desc() for the node/count
-relationship).
+> https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/pstore-v6.11-rc1
 
-Fixes: f561ec8b2b33 ("dmaengine: Add STM32 DMA3 support")
-Signed-off-by: Kees Cook <kees@kernel.org>
----
-Cc: "Amélie Delaunay" <amelie.delaunay@foss.st.com>
-Cc: Vinod Koul <vkoul@kernel.org>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: Alexandre Torgue <alexandre.torgue@foss.st.com>
-Cc: dmaengine@vger.kernel.org
-Cc: linux-stm32@st-md-mailman.stormreply.com
-Cc: linux-arm-kernel@lists.infradead.org
----
- drivers/dma/stm32/stm32-dma3.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/8050258bd1eed0f77dd7e3fa15feb23bbcc38e63
 
-diff --git a/drivers/dma/stm32/stm32-dma3.c b/drivers/dma/stm32/stm32-dma3.c
-index 4087e0263a48..0be6e944df6f 100644
---- a/drivers/dma/stm32/stm32-dma3.c
-+++ b/drivers/dma/stm32/stm32-dma3.c
-@@ -403,6 +403,7 @@ static struct stm32_dma3_swdesc *stm32_dma3_chan_desc_alloc(struct stm32_dma3_ch
- 	swdesc = kzalloc(struct_size(swdesc, lli, count), GFP_NOWAIT);
- 	if (!swdesc)
- 		return NULL;
-+	swdesc->lli_size = count;
- 
- 	for (i = 0; i < count; i++) {
- 		swdesc->lli[i].hwdesc = dma_pool_zalloc(chan->lli_pool, GFP_NOWAIT,
-@@ -410,7 +411,6 @@ static struct stm32_dma3_swdesc *stm32_dma3_chan_desc_alloc(struct stm32_dma3_ch
- 		if (!swdesc->lli[i].hwdesc)
- 			goto err_pool_free;
- 	}
--	swdesc->lli_size = count;
- 	swdesc->ccr = 0;
- 
- 	/* Set LL base address */
+Thank you!
+
 -- 
-2.34.1
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
