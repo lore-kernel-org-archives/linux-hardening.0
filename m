@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F8BC1A0AF2;
-	Tue, 16 Jul 2024 14:29:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AADA19E830;
+	Tue, 16 Jul 2024 14:30:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721140167; cv=none; b=gJzDEjX4dYKCemKJca0sxFRs2eEEpF9cg8r/a5sFaBH94wmiF9xZ/xx4c+GNWV6bkbi9t8Q2TKnu93QCp5Jm+JRcpKuwfCJdI2ms1oDC7VAEnHuFbc3tZgsuVE3gexcwBqbf24vhOrOW3ZfACPom1ynKxbdvRc5Nm6RfkNJuGjs=
+	t=1721140200; cv=none; b=bxf6/OW9INh4Ahcd2pQAN5vJDi6a0/z0dp5Pe0F5ooFHtYIwTYikDly9gXrh5qkWpMIjzClTDdKsAzBs0ftJF7z2iquFbStrkoE0Y0pTg+ohf3Vu1k71Utr35yYfJ1p3OjD8qj3oMlNXBg/zoHiEpShjCJRTHnzMNBF2zL8TOzA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721140167; c=relaxed/simple;
-	bh=4RX0ydbFNbj+V8SN3HO80ALFj8/x8YWqJfql8E+ekHI=;
+	s=arc-20240116; t=1721140200; c=relaxed/simple;
+	bh=K2JKgD1RDkD4AEy8dcdJAc7GB4xg+TF5zojeEf1Xg7E=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=vBlG38G0rSjO40oQoFViY4Ag7JYsZfdoE5z0ybBDrAMMnpcGQwv5LfU0Wava7nAlAJDXk4iPyLzD4mDnkWXtxwnpTL+fovotEuSr7ppu1hScMdmutzeJnEvirO4/sziWO7I3yRQihO75YtlVlIkVa2oDvZ07g5ZGqASiqgAVYdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gYcZuL0Y; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=PxU2B1zukpWGRQ1FYgblEdfNInpPualElZfWT3UOWJLGTuPlMsDL+V+cTB/nAoVVQ1ZNDLBJRfvSRv1iKAinszc2IJThOQSltD/2FW+AKfZB7fnAehrN2FFqfol5AKWLiHeiMNldRMLdjWDfoJ2LAbyu7hZjb7wKXzOU+FK+G1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mv8ytWVB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gYcZuL0Y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47613C4AF09;
-	Tue, 16 Jul 2024 14:29:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mv8ytWVB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42E43C4AF15;
+	Tue, 16 Jul 2024 14:29:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721140166;
-	bh=4RX0ydbFNbj+V8SN3HO80ALFj8/x8YWqJfql8E+ekHI=;
+	s=k20201202; t=1721140200;
+	bh=K2JKgD1RDkD4AEy8dcdJAc7GB4xg+TF5zojeEf1Xg7E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gYcZuL0YYhQuWYcE/xpSQSaqKMmFPmVlv1oDBQ8YH9N9DB1IY9loEY/MC98XHLpJc
-	 FG5AGzJboCcuoxlvf0LQP+2ZMtYdTP6DRd7XkF5Ejy5WiuupTQdgc5Yqaa9SBiwlhO
-	 Q6r0Ww+SHbbiyNyCpk/xwF1Bl9CyeoWtvf8fhq9Fq1Kr3lxYLNX34+O8XhtrWbPtjP
-	 gKAY74b3hq6MNOf4/CDZI5RVUdveFVYiMHPsUM08eylTNzpD+iQ5QT+1m1jBIsPrrq
-	 crOGakCIeDJEDpPg4UiB4mO6krsbY0U7ALB0Xw73vvoDf7BFhkfLZG5RLfLjp9FTuE
-	 3WKCVXmIl1XwQ==
+	b=Mv8ytWVBkYFY4969HtQWDyXrrWdE4/DPGPLCoyjMsiuDlpXkFbchlVTN5IdOnV/LN
+	 oiD44RuNBgbwl5HMagGCUeO49YiiFXqXYV/Lu0f6p6jmS9ITeQegKdnY0nZCIrNmlW
+	 fkP50JVjt+mzqu7qUa3Gyec+eERs3PyIs1JMT5cigGztC/PELDLxHLA2jt70O6+8VX
+	 zcFyStYGdfxGvR4/j29di+MD239d7aoLgjGwBJ+WpeWjCSIiXLRM+blnvWXxagzTJt
+	 IKAsS/00eZXGgWahMVab6zR0SbY4gza1JWPxl1O7gHghhIycFLAYbpYVK+IPdHFYSK
+	 MJyNUtcPTd6CA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -35,18 +35,19 @@ Cc: Anjali K <anjalik@linux.ibm.com>,
 	Michael Ellerman <mpe@ellerman.id.au>,
 	Sasha Levin <sashal@kernel.org>,
 	kees@kernel.org,
-	npiggin@gmail.com,
+	robh@kernel.org,
 	ruscur@russell.cc,
-	aneesh.kumar@linux.ibm.com,
 	christophe.leroy@csgroup.eu,
+	npiggin@gmail.com,
+	aneesh.kumar@linux.ibm.com,
 	linuxppc-dev@lists.ozlabs.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 2/9] powerpc/pseries: Whitelist dtl slub object for copying to userspace
-Date: Tue, 16 Jul 2024 10:29:04 -0400
-Message-ID: <20240716142920.2713829-2-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.10 2/7] powerpc/pseries: Whitelist dtl slub object for copying to userspace
+Date: Tue, 16 Jul 2024 10:29:42 -0400
+Message-ID: <20240716142953.2714154-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240716142920.2713829-1-sashal@kernel.org>
-References: <20240716142920.2713829-1-sashal@kernel.org>
+In-Reply-To: <20240716142953.2714154-1-sashal@kernel.org>
+References: <20240716142953.2714154-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -55,7 +56,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.15.162
+X-stable-base: Linux 5.10.221
 Content-Transfer-Encoding: 8bit
 
 From: Anjali K <anjalik@linux.ibm.com>
@@ -113,10 +114,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/arch/powerpc/platforms/pseries/setup.c b/arch/powerpc/platforms/pseries/setup.c
-index d25053755c8b8..309a72518ecc3 100644
+index 822be2680b792..8e4a2e8aee114 100644
 --- a/arch/powerpc/platforms/pseries/setup.c
 +++ b/arch/powerpc/platforms/pseries/setup.c
-@@ -314,8 +314,8 @@ static int alloc_dispatch_log_kmem_cache(void)
+@@ -312,8 +312,8 @@ static int alloc_dispatch_log_kmem_cache(void)
  {
  	void (*ctor)(void *) = get_dtl_cache_ctor();
  
