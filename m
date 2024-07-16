@@ -1,63 +1,88 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 560A573478;
-	Tue, 16 Jul 2024 21:43:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DCBB224D2;
+	Tue, 16 Jul 2024 21:48:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721166216; cv=none; b=lQn4Nezil9MLmYmeNu8ArNXpawpUC8rttq9diyVyIOV5uKcr33zqf/p8gtUX/5H+75eE5WjRFDV/xM8bmaPmhaXbD31ZuP88Jw1sOq6J2YfWWqIF+jcEDySFw754AuIg/yajBpBq+tS//yOt3jtU7o+1epIAWjXhEWZOXH03/S0=
+	t=1721166505; cv=none; b=InI5vBosOdsr8wgDVt9578SOS6Atg1ekZ8Q1TeoauEcR0TDNYQyhNz2tBCEgO9EXg4W9CRi34nbxXP8fvb50xTFNX9OnXUwL/oF5A/LErXrJ3EHVZEyDpLw3wnfCKuGyDA4lw3TxMhn6dHDSxSUH3aIfGD1XsdW+vCYDr394m7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721166216; c=relaxed/simple;
-	bh=/gP1d8Ynww6awa/zUsHTh9a+QkvgeBsP7vZTtNq8TnM=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=Jvry+N7U7wBw/TN0WfAtTwGYDEy7XLEh5VFO2Ydnz7K3L3d3jRbI0FhalaqCdCZPMwtMm1TGLYPnPo0/p4QHAREHF9TCJ4yNWnj9ZFnxJSbn6vhseXz6JnuMjpslizF7JmnxO5wv4GJEFEavdI7ow0j11B0q8bwYjOtDXMtg+RQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dkS7ztxc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721166505; c=relaxed/simple;
+	bh=/03veJJ18CFeaEDpWrM3IE9z8xd892V8TxX5ZFhZV98=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jpRqQ779FRK214qJgpSQLqHa301PgVkcm+ckXd6/Jo16uJNm0DwyiriQjSom2zdi1a9w3Twc7KZ+V1A4P5iWLWK4IYbHKQQyRf9NOwyHVtIww5eClPucokTz7h2/qXxfzVuPGbmTADfgJrbRI5vxb21r8ar7arRXHAtco/6ht/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GZzKBycZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dkS7ztxc"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id BE039C116B1;
-	Tue, 16 Jul 2024 21:43:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GZzKBycZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE502C116B1;
+	Tue, 16 Jul 2024 21:48:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721166215;
-	bh=/gP1d8Ynww6awa/zUsHTh9a+QkvgeBsP7vZTtNq8TnM=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=dkS7ztxceO2PmVSXD5C2Ajwjxi+7BK/uYAUzLtVwBiTDviXOnzXa6p9hyuHpe5Rgq
-	 58LQvn3x5M5tChmOazReZVdA0QKtrqxT6Ck530o5zICHpjMC/y0pfE3UFC+kjIj7dN
-	 Mm2pYYdn59hMHjg47PZGar41RuMKQAFq/JAcoUXKLUdokfrjewxfFs4KBiJPmhdL0C
-	 6p7Ax3q10GlGpntMG+3w65e4MFcqFc0Z4UgBef51s2NeKzUeyNJTQ5x78k+u8nL/+3
-	 G6nwh+APzIx2u6YhviNArvXBuaPofL6PX7fxQ4nYId4xnibI0582TwgVkzV00OIT8O
-	 qFZNaV8u1N8Aw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id B461AC43443;
-	Tue, 16 Jul 2024 21:43:35 +0000 (UTC)
-Subject: Re: [GIT PULL] pstore updates for v6.11-rc1
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <202407150926.4864BCABD8@keescook>
-References: <202407150926.4864BCABD8@keescook>
-X-PR-Tracked-List-Id: <linux-hardening.vger.kernel.org>
-X-PR-Tracked-Message-Id: <202407150926.4864BCABD8@keescook>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/pstore-v6.11-rc1
-X-PR-Tracked-Commit-Id: 9b3c13c9ea4ecb2b95948f666560b8df8f358b40
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 8050258bd1eed0f77dd7e3fa15feb23bbcc38e63
-Message-Id: <172116621572.23491.12812023645156996571.pr-tracker-bot@kernel.org>
-Date: Tue, 16 Jul 2024 21:43:35 +0000
-To: Kees Cook <kees@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, Jeff Johnson <quic_jjohnson@quicinc.com>, Justin Stitt <justinstitt@google.com>, Kees Cook <keescook@chromium.org>, Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org
+	s=k20201202; t=1721166504;
+	bh=/03veJJ18CFeaEDpWrM3IE9z8xd892V8TxX5ZFhZV98=;
+	h=From:To:Cc:Subject:Date:From;
+	b=GZzKBycZ3xqZ2lsfqSReSxejKOObPhoNc7D6TcPMVwoVmMKB7bwqt4naOR34oCXPK
+	 aBw5gKhTaT63M9+BMQQNAX194NiDkVUmOnQdv+njzIiqCjLy4wD2JPz5GtW8HckpPn
+	 aLPB2mid/YuX5dOXSS+ZENheup3+JhmT2Is7mHzseyhc27JUSMYWtvpGqCkd4My2gD
+	 gSww2IakpUYw/GPG/MjRJ1C5cuajVflvnnixbmeirCIkGPSA4tPNayKXzrxP1YQe5D
+	 YQ38IjW696+96aGcB5rpQFIzVK6Mxmqms+ciEBJ3zt2pGN1Lg2naU5K53dln7o2ibb
+	 wfTHzmyagVImQ==
+From: Kees Cook <kees@kernel.org>
+To: Georgi Djakov <djakov@kernel.org>
+Cc: Kees Cook <kees@kernel.org>,
+	linux-pm@vger.kernel.org,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] interconnect: icc-clk: Add missed num_nodes initialization
+Date: Tue, 16 Jul 2024 14:48:23 -0700
+Message-Id: <20240716214819.work.328-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1378; i=kees@kernel.org; h=from:subject:message-id; bh=/03veJJ18CFeaEDpWrM3IE9z8xd892V8TxX5ZFhZV98=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmluqnQmQ87HfSEbjFPpg5A22ZhF1jpnObToQ1r sCdtJQni5yJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZpbqpwAKCRCJcvTf3G3A JqjED/96TKqtYdPMANtgTDXmpPpCfaPtWkBV6mgf0kdH0TQMEjWfpvzfkJDs+T+asURsHqt4fwo /yt/HTCKURs94/gphAN9aptmjd2qreCtscCax5xSn+9YLMKQtXq2VEmTQ5gO4DOPtb6ml7Gbkof rwkK0dnA+FPyyOPwpmWVc0ti31iVIHFzLPv9YrijlfJdNZQvdHBmmLjPxSxL/7VkO6yqRyI8X3J YTIVsz0Hb8VV4/Rc6RAULoeNI8vgvctBMzVN0ZYDTX1fiYu0Feifp/jAi7PqXE8Re0SX1dG42zV DRX/vyPk8yn7Pw4rfzx5HJ2yGEpoKgwA7ty8jv+vDmGyLeR/ZkG/9QmTNVxK9+XWoMYb9WPojOE Ovt8YGD126FlYGIDmrBm9/tQ4oRVuZbypLIHg76qguTvXLoC8jD7shDDwJ4djBTYg/dIxdcfuJR fgPQ+CXB04icxmpm5Vb6dE7SEfta7FhkQC0hNSgV42ehCJdbOYwPQnu8YzXUbaVaopFf/LJduqr QAp/RsnVXAkKwtJhvvtaq9Fn9mQ8hlkTvb2dMA3GEOfgkQut92BnKRC8QQ4R7/aLwyaOaxZUqaa epBnI0C1VMmzsbk2qkAaSZ8rLTM1FhizcP6OJTR8mTLrKhPqMUlDXX4J/B+xheJE86kIMzM6eCF KYZz2MTftmvX1
+ ag==
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-The pull request you sent on Mon, 15 Jul 2024 09:29:29 -0700:
+With the new __counted_by annotation, the "num_nodes" struct member must
+be set before accessing the "nodes" array. This initialization was done
+in other places where a new struct icc_onecell_data is allocated, but this
+case in icc_clk_register() was missed. Set "num_nodes" after allocation.
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/pstore-v6.11-rc1
+Fixes: dd4904f3b924 ("interconnect: qcom: Annotate struct icc_onecell_data with __counted_by")
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+Cc: Georgi Djakov <djakov@kernel.org>
+Cc: linux-pm@vger.kernel.org
+---
+ drivers/interconnect/icc-clk.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/8050258bd1eed0f77dd7e3fa15feb23bbcc38e63
-
-Thank you!
-
+diff --git a/drivers/interconnect/icc-clk.c b/drivers/interconnect/icc-clk.c
+index f788db15cd76..b956e4050f38 100644
+--- a/drivers/interconnect/icc-clk.c
++++ b/drivers/interconnect/icc-clk.c
+@@ -87,6 +87,7 @@ struct icc_provider *icc_clk_register(struct device *dev,
+ 	onecell = devm_kzalloc(dev, struct_size(onecell, nodes, 2 * num_clocks), GFP_KERNEL);
+ 	if (!onecell)
+ 		return ERR_PTR(-ENOMEM);
++	onecell->num_nodes = 2 * num_clocks;
+ 
+ 	qp = devm_kzalloc(dev, struct_size(qp, clocks, num_clocks), GFP_KERNEL);
+ 	if (!qp)
+@@ -133,8 +134,6 @@ struct icc_provider *icc_clk_register(struct device *dev,
+ 		onecell->nodes[j++] = node;
+ 	}
+ 
+-	onecell->num_nodes = j;
+-
+ 	ret = icc_provider_register(provider);
+ 	if (ret)
+ 		goto err;
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.34.1
+
