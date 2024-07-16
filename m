@@ -1,112 +1,333 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56F887441A;
-	Tue, 16 Jul 2024 21:57:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A979C143892
+	for <linux-hardening@vger.kernel.org>; Tue, 16 Jul 2024 22:47:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721167028; cv=none; b=rznghtYC/8RohUg0mTo1v6ZhNAepkWuxFGPbKFb6vvOs9dpxss7I+pICp1TmDO7NwenIx2O2N0LThj9cWNV+RMHYuQwNd44Lr9mLvrYKtpV/ecn2aaIGImpw4cWpAuu6/TqqEFfjgkb0L2Xlj2sWraPT9keR/G4KYzFHyqzgbEY=
+	t=1721170056; cv=none; b=J1Q3fW297ti8t95q7w2Qn9s+6iqC8GMfRweM/5N/Qp7QoC7VkZncxbsZNKo3iWizCQqr9eetxIA6OP8l8akxWfKLghe9wYqQBb8rhLUf3D1UemV/LGvy2DhTjfbESn8HLAPTsUhGkGffjeBFAKxc/dLXdGYkMMIxbht0vRqHqoQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721167028; c=relaxed/simple;
-	bh=bwiVrWgypWBECie/s1mDOD7hIJm+DB9R8xzMdeISMkY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bDjLPaFfMizgR+v6f9xeqpXB1UlHGVnFkuNzaiuHCMjD99b0om4tuc0TKn+wQ93ZVlKrezRNns8WChryGHdDMj6vY/kV/1eslqoJ2mfqI53PrJlcj3DgQiKZwwCMeQJE7NbX+iRutDdSMOQA+d9CAxR6xJS87gVEtJMekGaRpb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fcPuY3Di; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721170056; c=relaxed/simple;
+	bh=9MaJofm+++Q68BNaCakwqLyHo3TZ9wFFHQ0DvoN+RYQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WYF8+AHuar46Gqvc8KXO2n2cITazuxMtxb7KIVXBcdsiPfgyaRpFoWdIZqWtN+NdOLqyLUsD9G7Ep4BcDvH5irRGIdTPfQyHheiVuLRiwV1kxxGheIGCoQTUOh9ahjWPvV0lIaqjjewOQtrhRyjjW5/khmmffTP4KSxr5mGsT+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HPwJlcIU; arc=none smtp.client-ip=209.85.166.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fcPuY3Di"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9CCFC116B1;
-	Tue, 16 Jul 2024 21:57:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721167027;
-	bh=bwiVrWgypWBECie/s1mDOD7hIJm+DB9R8xzMdeISMkY=;
-	h=From:To:Cc:Subject:Date:From;
-	b=fcPuY3DiidPB6DduwthSWiUJytd1GM4AxM8MxXagjXGKXVhGK2TLvHIjtHvW9UYKN
-	 6Tea2LQsLZRvCjaSTJ5/R8QExz02QCnsCOjY0yOchzDhh1foLSc9ktUcknR6q9/m3U
-	 AdpMMyACw2+NzS8ZsE3cJ6z4GtKzYC5XnSkNouQlJc8Zl8wOhznFxNYeJUbkGUG8ZC
-	 /wXU8XPTdRUyPv3UydVfhTSRSxVN3ig1M4thUCAikgNycfir/Ww3ZrMeoApSmq58d3
-	 Za6mGytrW9s2x786pI7RN6zlzp5u2LlVB4bhYr9W79CNI22dzT1+LLSpIb4st2IEvb
-	 Z5Yb3NmPtOyPA==
-From: Kees Cook <kees@kernel.org>
-To: Peter Ujfalusi <peter.ujfalusi@gmail.com>
-Cc: Kees Cook <kees@kernel.org>,
-	Vinod Koul <vkoul@kernel.org>,
-	dmaengine@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] dmaengine: ti: omap-dma: Initialize sglen after allocation
-Date: Tue, 16 Jul 2024 14:57:06 -0700
-Message-Id: <20240716215702.work.802-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HPwJlcIU"
+Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-38206c2f5e3so21475ab.1
+        for <linux-hardening@vger.kernel.org>; Tue, 16 Jul 2024 15:47:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1721170054; x=1721774854; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YqatXpCeOeeYRRYniUfxQaID24gWkHyIwmTyEpa9Osk=;
+        b=HPwJlcIU00WhrhRhV8MOhDl/LYbWBmUQrFWecwrHLOQ2q+iD/UCdsXI63oANSc+Dh9
+         S7i1oSjg/EIWsjsPQWdTeBKzNSX4F1XAqY8wN1ZUZBOGYucC9Qso6Q8kvGBSXKLS4gT+
+         zrck4mEZgW/nLraMGj2WHqo1CU/7yAkNb6809HpEgqdassOMwSNYoNYqF4Kzery6zKBP
+         zBD0hhuZHHm8P/zhklEDWm2g7i+F47G4vJhfNdQzrtEyXGM/lhegwKYYAkzqWbhJUKSU
+         wvJbdvkwn9FRow3Nrx1vTdci6jkCJ/eYhe6Np99nUytsfsw6ciztk/AEBfIVlkxTPcLh
+         yXkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721170054; x=1721774854;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YqatXpCeOeeYRRYniUfxQaID24gWkHyIwmTyEpa9Osk=;
+        b=K0H1Ob8Q+d8rmyRCLjF10+rEcFM5AQo4KhSFR741JAkIpAX+5a/jb2tLwuOSsAX/kB
+         NnQYLcYTyqrhXb+fb0YPGf7J8d0xdk51YhrXmfs7EbA9BJ/5+3xZKVrB4LuEGUDTunIi
+         n2YhxjsRbHtRraEOBD8QTT3F1TnL1+8Ft6XKTlTUt/nRWO409UUbrYLbt0h49yC7GJTe
+         D5ZHzfYTcD04cY6slYYjVIVCFcgPps8p4GzXQDindoiAD5sumrENZZr1M8UMUPQ+VZw8
+         S/yy9JxgIUNXH3Tz9OVjdoWunIETbnSVhJK6vMk4sLl2dzr1WP4GbQ/NfbcBHKgOI2kL
+         8snA==
+X-Forwarded-Encrypted: i=1; AJvYcCWuhCBZ5upNWeWOVI7ybJWnzJwWwJaAHqPvOnkSVBe7LMQ/cmk+UKUcMxSnRW0danUV3NZgex0MD8rUPJUVaDEkYqe/M/tmVoYA7QxgjcoT
+X-Gm-Message-State: AOJu0YygQOHt6y92Ux5uZfPmUvRQM5vaPZxdPoqIJCNblxH+dJ6mc8Xm
+	jcOh4azP5MTp0NwVylTGhMRSYsqtkqSGNDkBFJ6eUMKk4pwRtJpaWgxeOXxqVah8dO4d6VM2Und
+	F1g+2pNLg4kYcEmlHz9a9FfTAF3YtRgBddNpd
+X-Google-Smtp-Source: AGHT+IE30+A5+lNa3FYa2SP2MHH4fk60OXoX0aWIvrvIXGeOH+XbKkl+n+Lav00eYBsP2CVhSNRfXkkl4yqZEHA6oMA=
+X-Received: by 2002:a05:6e02:184c:b0:375:ee62:5917 with SMTP id
+ e9e14a558f8ab-3951364af1bmr1124465ab.6.1721170053573; Tue, 16 Jul 2024
+ 15:47:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2048; i=kees@kernel.org; h=from:subject:message-id; bh=bwiVrWgypWBECie/s1mDOD7hIJm+DB9R8xzMdeISMkY=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmluyxGjp2z9PYeRXfXMWfLcFWNql3Qog4Ansrd XhNvP1P0ZyJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZpbssQAKCRCJcvTf3G3A JpZ/D/99eTgdWlRO81FMBexrHCAhl4eK0zepp75IT0PSIKdvQiBBSLRKuzQkxXc0ZYdPdw2qnaF nZMfKbt2UwHEYxT6iX+EM38iuGImr2SOPzYff+/de6c9mh6uUu+cVmZQCQQf7uZIqFOjNsQ+smj fP0jdnA11FKyyhaMUCrjLeTFQo+hyNh6Kx6x8iY0x6vpBj2rKGVaRUelkxZqa3hF6U3VcAusFB6 89seG3e2LbPEYonJkciL3eqmDRuzsGs1k23OffwQv0pydgYv4wYC40wp4JJW56cP67De7VWSh+D anToQFKSgAg8zOv1qSAhFCJrIKswyl8aNn0aRM8HHfC3inwqb3mmTw1mV9xUZBGrQH+zBbqkL9f cZhWad8S5ujjjRZeIYcINGdc6KaN8RCJg6mhiOvKrovgxqdi/g6cqslOsc6iOp7Xpi4gz2Zry0p Hb0OLKgFOkava/SGQsFBccpWp4gSDZHD33Z86OrJxBBsvscVDSUVesC795dT3QQ+Q6GbEJLQe33 oVHixvHMMHLXuNWub+DSi6dxPENFky7dNPD++phmD4D2pSk0Hdsztk08z/D52YmAuE5dZ/8fhws OwYCanTQv/ppulJ6U83W5o1qjSHRbwwbuA/Hv9aEy5XzgUXLd84wxCbamI+14+vgiI6ksHEorxG 0jF9n0tlUSouA
- HA==
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+References: <20240711102436.4432-1-Dhananjay.Ugwekar@amd.com>
+ <CAP-5=fXXuWchzUK0n5KTH8kamr=DQoEni+bUoo8f-4j8Y+eMBg@mail.gmail.com>
+ <05e96873-12a9-4b1f-b1b3-1db7647211ce@amd.com> <CAP-5=fVXi3Pdtjaw++oRkYgubh-MDkRYf=2k7dNqE8s+jyQ+Ew@mail.gmail.com>
+ <2e7064c2-c769-41bb-a536-c6e75e8e5800@amd.com>
+In-Reply-To: <2e7064c2-c769-41bb-a536-c6e75e8e5800@amd.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 16 Jul 2024 15:47:22 -0700
+Message-ID: <CAP-5=fXBYVH=qBJPm1d0-QEp8+HP3WtTLuukfF0g-2WU3gTofQ@mail.gmail.com>
+Subject: Re: [PATCH v4 00/11] Add per-core RAPL energy counter support for AMD CPUs
+To: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
+	tglx@linutronix.de, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
+	kees@kernel.org, gustavoars@kernel.org, rui.zhang@intel.com, 
+	oleksandr@natalenko.name, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	ananth.narayan@amd.com, gautham.shenoy@amd.com, kprateek.nayak@amd.com, 
+	ravi.bangoria@amd.com, sandipan.das@amd.com, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-With the new __counted_by annocation, the "sglen" struct member must
-be set before accessing the "sg" array. This initialization was done in
-other places where a new struct omap_desc is allocated, but these cases
-were missed. Set "sglen" after allocation.
+On Tue, Jul 16, 2024 at 1:42=E2=80=AFAM Dhananjay Ugwekar
+<Dhananjay.Ugwekar@amd.com> wrote:
+>
+> Hello Ian,
+>
+> On 7/15/2024 8:52 PM, Ian Rogers wrote:
+> > On Mon, Jul 15, 2024 at 2:36=E2=80=AFAM Dhananjay Ugwekar
+> > <Dhananjay.Ugwekar@amd.com> wrote:
+> >>
+> >> Hello Ian,
+> >>
+> >> On 7/12/2024 3:53 AM, Ian Rogers wrote:
+> >>> On Thu, Jul 11, 2024 at 3:25=E2=80=AFAM Dhananjay Ugwekar
+> >>> <Dhananjay.Ugwekar@amd.com> wrote:
+> >>>>
+> >>>> Currently the energy-cores event in the power PMU aggregates energy
+> >>>> consumption data at a package level. On the other hand the core ener=
+gy
+> >>>> RAPL counter in AMD CPUs has a core scope (which means the energy
+> >>>> consumption is recorded separately for each core). Earlier efforts t=
+o add
+> >>>> the core event in the power PMU had failed [1], due to the differenc=
+e in
+> >>>> the scope of these two events. Hence, there is a need for a new core=
+ scope
+> >>>> PMU.
+> >>>>
+> >>>> This patchset adds a new "power_per_core" PMU alongside the existing
+> >>>> "power" PMU, which will be responsible for collecting the new
+> >>>> "energy-per-core" event.
+> >>>
+> >>> Sorry for being naive, is the only reason for adding the new PMU for
+> >>> the sake of the cpumask? Perhaps we can add per event cpumasks like
+> >>> say `/sys/devices/power/events/energy-per-core.cpumask` which contain=
+s
+> >>> the CPUs of the different cores in this case. There's supporting
+> >>> hotplugging CPUs as an issue. Adding the tool support for this
+> >>> wouldn't be hard and it may be less messy (although old perf tools on
+> >>> new kernels wouldn't know about these files).
+> >>
+> >> I went over the two approaches and below are my thoughts,
+> >>
+> >> New PMU approach:
+> >> Pros
+> >> * It will work with older perf tools, hence these patches can be backp=
+orted to an older kernel and the new per-core event will work there as well=
+.
+> >> Cons
+> >> * More code changes in rapl.c
+> >>
+> >> Event specific cpumask approach:
+> >> Pros
+> >> * It might be easier to add diff scope events within the same PMU in f=
+uture(although currently I'm not able to find such a usecase, apart from th=
+e RAPL pkg and core energy counters)
+> >> Cons
+> >> * Both new kernel and perf tool will be required to use the new per-co=
+re event.
+> >>
+> >> I feel that while the event-specific cpumask is a viable alternative t=
+o the new PMU addition approach, I dont see any clear pros to select that o=
+ver the current approach. Please let me know if you have any design related=
+ concerns to the addition of new PMU or your concern is mostly about the am=
+ount of code changes in this approach.
+> >
+> > Thanks Dhananjay, and thanks for taking the time for an objective
+> > discussion on the mailing list. I'm very supportive of seeing the work
+> > you are enabling land.
+> >
+> > My concern comes from the tool side. If every PMU starts to have
+> > variants for the sake of the cpumask what does this mean for
+> > aggregation in the perf tool? There is another issue around event
+> > grouping, you can't group events across PMUs, but my feeling is that
+> > event grouping needs to be rethought. By default the power_per_core
+> > events are going to be aggregated together by the perf tool, which
+> > then loses their per_core-ness.
+>
+> Yea right, maybe we need to fix this behavior.
+>
+> >
+> > I was trying to think of the same problem but in other PMUs. One
+> > thought I had was the difference between hyperthread and core events.
+> > At least on Intel, some events can only count for the whole core not
+> > per hyperthread. The events don't have a cpu_per_core PMU, they just
+> > use the regular cpu one, and so the cpumask is set to all online
+> > hyperthreads. When a per-core event is programmed it will get
+> > programmed on every hyperthread and so counted twice for the core.
+> > This at the least wastes a counter, but it probably also yields twice
+> > the expected count as every event is counted twice then aggregated. So
+> > this is just wrong and the user is expected to be smart and fix it
+> > (checking the x86 events there is a convention to use a ".ALL" or
+> > ".ANY" suffix for core wide events iirc). If we had a cpumask for
+> > these events then we could avoid the double setting, free up a counter
+> > and avoid double counting. Were we to fix things the way it is done in
+> > this patch series we'd add another PMU.
+>
+> Yes, this seems like a valid usecase for event-specific cpumasks.
+>
+> >
+> > My feeling is that in the longer term a per event cpumask looks
+> > cleaner. I think either way you need a new kernel for the new RAPL
+> > events. The problem with an old perf tool and a new kernel, this
+> > doesn't normally happen with distributions as they match the perf tool
+> > to the kernel version needlessly losing features and fixes along the
+> > way. If the new PMU is going to get backported through fixes.. then we
+> > can do similar for reading the per event cpumask. I'd be tempted not
+> > to do this and focus on the next LTS kernel, getting the kernel and
+> > tool fixes in as necessary.
+>
+> Makes sense, even though this approach will require more effort but it se=
+ems
+> to be worthwhile as it would help things down the line (make it easier to=
+ have
+> heterogenous-scope events within a PMU). I'll need to go through the perf=
+ tool
+> to see how we can design this. I'll get back with an RFC series probably =
+once
+> I have an initial design in mind.
 
-Fixes: b85178611c11 ("dmaengine: ti: omap-dma: Annotate struct omap_desc with __counted_by")
-Signed-off-by: Kees Cook <kees@kernel.org>
+Hi Dhananjay,
+
+I can have a go at the perf tool side of this - I probably know the
+way around the code best. Basically we need to do something similar to
+how other "<event>.<setting>" values are parsed:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/perf/util/pmu.c?h=3Dperf-tools-next#n335
+The cpumask handling in the perf tool is a little weird as there is a
+summary value in the evlist. Anyway, I can do that if you want to spin
+the RAPL/power PMU side of things.
+
+Thanks,
+Ian
+
+> Thanks,
+> Dhananjay
+>
+> >
+> > Thanks,
+> > Ian
+> >
+> >
+> >> Thanks,
+> >> Dhananjay
+> >>
+> >>>
+> >>> Thanks,
+> >>> Ian
+> >>>
+> >>>
+> >>>> Tested the package level and core level PMU counters with workloads
+> >>>> pinned to different CPUs.
+> >>>>
+> >>>> Results with workload pinned to CPU 1 in Core 1 on an AMD Zen4 Genoa
+> >>>> machine:
+> >>>>
+> >>>> $ perf stat -a --per-core -e power_per_core/energy-per-core/ -- slee=
+p 1
+> >>>>
+> >>>>  Performance counter stats for 'system wide':
+> >>>>
+> >>>> S0-D0-C0         1          0.02 Joules power_per_core/energy-per-co=
+re/
+> >>>> S0-D0-C1         1          5.72 Joules power_per_core/energy-per-co=
+re/
+> >>>> S0-D0-C2         1          0.02 Joules power_per_core/energy-per-co=
+re/
+> >>>> S0-D0-C3         1          0.02 Joules power_per_core/energy-per-co=
+re/
+> >>>> S0-D0-C4         1          0.02 Joules power_per_core/energy-per-co=
+re/
+> >>>> S0-D0-C5         1          0.02 Joules power_per_core/energy-per-co=
+re/
+> >>>> S0-D0-C6         1          0.02 Joules power_per_core/energy-per-co=
+re/
+> >>>> S0-D0-C7         1          0.02 Joules power_per_core/energy-per-co=
+re/
+> >>>> S0-D0-C8         1          0.02 Joules power_per_core/energy-per-co=
+re/
+> >>>> S0-D0-C9         1          0.02 Joules power_per_core/energy-per-co=
+re/
+> >>>> S0-D0-C10        1          0.02 Joules power_per_core/energy-per-co=
+re/
+> >>>>
+> >>>> [1]: https://lore.kernel.org/lkml/3e766f0e-37d4-0f82-3868-31b1422886=
+8d@linux.intel.com/
+> >>>>
+> >>>> This patchset applies cleanly on top of v6.10-rc7 as well as latest
+> >>>> tip/master.
+> >>>>
+> >>>> v4 changes:
+> >>>> * Add patch 11 which removes the unused function cpu_to_rapl_pmu()
+> >>>> * Add Rui's rb tag for patch 1
+> >>>> * Invert the pmu scope check logic in patch 2 (Peter)
+> >>>> * Add comments explaining the scope check in patch 2 (Peter)
+> >>>> * Use cpumask_var_t instead of cpumask_t in patch 5 (Peter)
+> >>>> * Move renaming code to patch 8 (Rui)
+> >>>> * Reorder the cleanup order of per-core and per-pkg PMU in patch 10 =
+(Rui)
+> >>>> * Add rapl_core_hw_unit variable to store the per-core PMU unit in p=
+atch
+> >>>>   10 (Rui)
+> >>>>
+> >>>> PS: Scope check logic is still kept the same (i.e., all Intel system=
+s being
+> >>>> considered as die scope), Rui will be modifying it to limit the die-=
+scope
+> >>>> only to Cascadelake-AP in a future patch on top of this patchset.
+> >>>>
+> >>>> v3 changes:
+> >>>> * Patch 1 added to introduce the logical_core_id which is unique acr=
+oss
+> >>>>   the system (Prateek)
+> >>>> * Use the unique topology_logical_core_id() instead of
+> >>>>   topology_core_id() (which is only unique within a package on teste=
+d
+> >>>>   AMD and Intel systems) in Patch 10
+> >>>>
+> >>>> v2 changes:
+> >>>> * Patches 6,7,8 added to split some changes out of the last patch
+> >>>> * Use container_of to get the rapl_pmus from event variable (Rui)
+> >>>> * Set PERF_EV_CAP_READ_ACTIVE_PKG flag only for pkg scope PMU (Rui)
+> >>>> * Use event id 0x1 for energy-per-core event (Rui)
+> >>>> * Use PERF_RAPL_PER_CORE bit instead of adding a new flag to check f=
+or
+> >>>>   per-core counter hw support (Rui)
+> >>>>
+> >>>> Dhananjay Ugwekar (10):
+> >>>>   perf/x86/rapl: Fix the energy-pkg event for AMD CPUs
+> >>>>   perf/x86/rapl: Rename rapl_pmu variables
+> >>>>   perf/x86/rapl: Make rapl_model struct global
+> >>>>   perf/x86/rapl: Move cpumask variable to rapl_pmus struct
+> >>>>   perf/x86/rapl: Add wrapper for online/offline functions
+> >>>>   perf/x86/rapl: Add an argument to the cleanup and init functions
+> >>>>   perf/x86/rapl: Modify the generic variable names to *_pkg*
+> >>>>   perf/x86/rapl: Remove the global variable rapl_msrs
+> >>>>   perf/x86/rapl: Add per-core energy counter support for AMD CPUs
+> >>>>   perf/x86/rapl: Remove the unused function cpu_to_rapl_pmu
+> >>>>
+> >>>> K Prateek Nayak (1):
+> >>>>   x86/topology: Introduce topology_logical_core_id()
+> >>>>
+> >>>>  Documentation/arch/x86/topology.rst   |   4 +
+> >>>>  arch/x86/events/rapl.c                | 454 ++++++++++++++++++-----=
 ---
-Cc: Peter Ujfalusi <peter.ujfalusi@gmail.com>
-Cc: Vinod Koul <vkoul@kernel.org>
-Cc: dmaengine@vger.kernel.org
----
- drivers/dma/ti/omap-dma.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/dma/ti/omap-dma.c b/drivers/dma/ti/omap-dma.c
-index 7e6c04afbe89..6ab9bfbdc480 100644
---- a/drivers/dma/ti/omap-dma.c
-+++ b/drivers/dma/ti/omap-dma.c
-@@ -1186,10 +1186,10 @@ static struct dma_async_tx_descriptor *omap_dma_prep_dma_cyclic(
- 	d->dev_addr = dev_addr;
- 	d->fi = burst;
- 	d->es = es;
-+	d->sglen = 1;
- 	d->sg[0].addr = buf_addr;
- 	d->sg[0].en = period_len / es_bytes[es];
- 	d->sg[0].fn = buf_len / period_len;
--	d->sglen = 1;
- 
- 	d->ccr = c->ccr;
- 	if (dir == DMA_DEV_TO_MEM)
-@@ -1258,10 +1258,10 @@ static struct dma_async_tx_descriptor *omap_dma_prep_dma_memcpy(
- 	d->dev_addr = src;
- 	d->fi = 0;
- 	d->es = data_type;
-+	d->sglen = 1;
- 	d->sg[0].en = len / BIT(data_type);
- 	d->sg[0].fn = 1;
- 	d->sg[0].addr = dest;
--	d->sglen = 1;
- 	d->ccr = c->ccr;
- 	d->ccr |= CCR_DST_AMODE_POSTINC | CCR_SRC_AMODE_POSTINC;
- 
-@@ -1309,6 +1309,7 @@ static struct dma_async_tx_descriptor *omap_dma_prep_dma_interleaved(
- 	if (data_type > CSDP_DATA_TYPE_32)
- 		data_type = CSDP_DATA_TYPE_32;
- 
-+	d->sglen = 1;
- 	sg = &d->sg[0];
- 	d->dir = DMA_MEM_TO_MEM;
- 	d->dev_addr = xt->src_start;
-@@ -1316,7 +1317,6 @@ static struct dma_async_tx_descriptor *omap_dma_prep_dma_interleaved(
- 	sg->en = xt->sgl[0].size / BIT(data_type);
- 	sg->fn = xt->numf;
- 	sg->addr = xt->dst_start;
--	d->sglen = 1;
- 	d->ccr = c->ccr;
- 
- 	src_icg = dmaengine_get_src_icg(xt, &xt->sgl[0]);
--- 
-2.34.1
-
+> >>>>  arch/x86/include/asm/processor.h      |   1 +
+> >>>>  arch/x86/include/asm/topology.h       |   1 +
+> >>>>  arch/x86/kernel/cpu/debugfs.c         |   1 +
+> >>>>  arch/x86/kernel/cpu/topology_common.c |   1 +
+> >>>>  6 files changed, 328 insertions(+), 134 deletions(-)
+> >>>>
+> >>>> --
+> >>>> 2.34.1
+> >>>>
