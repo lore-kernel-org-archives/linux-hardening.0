@@ -1,110 +1,109 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDED21448ED
-	for <linux-hardening@vger.kernel.org>; Tue, 16 Jul 2024 20:43:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 203D53CF4F;
+	Tue, 16 Jul 2024 21:25:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721162633; cv=none; b=GLGuM/ke/+SdGQfGy3qsUNZYv4deTt0BGkvxm3Euvy7D3FwpO2lQyj8go/i6L7+LpkHK1lUAJ0C+kxZukiNH+JPyUYzbrX+ZR6gh9rzgSYeJyQ/8kv2ivcLMcjjHTx9NCCvcC5q07q83aBM1ZE12zd5Ub7JwYTrERlsL0O7oQF8=
+	t=1721165102; cv=none; b=T5OuZ2O4i9nLupTsT54falqnIRrluNa/ns/J6oJQmzxxXVQ8QSEncYlDx1ct+E10YWNXSNExWkuAvIbbsunkUXVcIdBTIQrxMfyav9W7eN+anXsByp0GBVCu77v5Od3BInPStnQO1anbq8XHapRiVkvsJCijGTh/lVh5v2MOMmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721162633; c=relaxed/simple;
-	bh=1KWCKv/9inKGII7KtToWHIt3Df0DdcGGOvAj6/wIBTY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mSHhLL/Efqh1u2NCR+kiGfDJnZ4rf62a4Qilqe/pK5Mylz5ATDzOIIUzJOTjKpchHUJdNiCapJXszks7YW4EbIUiT2c6lYct3nX5iE6yFCgA4E3HTEx88qiVxqtBCWiVugTTK9I3gwTjA+uiyMwwpt4N5T5qb0IjU2AaL7jJ6FE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=TEJl6pAu; arc=none smtp.client-ip=209.85.208.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1721165102; c=relaxed/simple;
+	bh=0KfPRo37su5mr39AobY7aI+apgV4uSA31yq4ETtf3q4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rUUQg6cuHw6SzBgXDgf1C9OAjc/Ez4v7A1RNiGd6ndUk3nMnxhEFoqpZYizAAfjkBNv7+1rrJsJXA5uiWmFd4AWOEyzGx7f1l+R9prcaXs1wdHNh9NYhf0FyGtIHuQjtkK/A54IRJJNjoLu0oSjK09L3cLbnny/l4tlCmATFfHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cT4WdwSs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="TEJl6pAu"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2eeb1ba0468so71709271fa.0
-        for <linux-hardening@vger.kernel.org>; Tue, 16 Jul 2024 13:43:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1721162630; x=1721767430; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=FUaHQYTLzRHBKTZzDYfY3JozSjPXKaeTqwHBAMUNNtg=;
-        b=TEJl6pAuZmYe/ZF35fsXHCcXu+ZmOKUnBneMhW/bYrY0T+F8ZYBnNLany/x9345VEu
-         LaXagyyBbRN1v1awNaM8+fgV5lkoQD4VDIiHUd6/KJp5Gfi53f2UsMBdYfdRCBFKTkdL
-         dZLY7SiHHQv7TyWhPUZ8FNL3mMyXuOBsfDa4c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721162630; x=1721767430;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FUaHQYTLzRHBKTZzDYfY3JozSjPXKaeTqwHBAMUNNtg=;
-        b=oWCy7ZZPxpqjN0as2Sv/sXHh3S6MPOJWgHZTb+iTwqEMeSbpkGaaONW9MZ7cK2Bcm5
-         K/gRcVXOrMJpsmLdG8nVFQo3difKzDSY6cwzPN2kjBn1nt02s0VZJOk8mn/W8Hqpp3la
-         pOviQNlhFQHEdA3pvZenlHXS7ssqKJdqu56WptrBitOnJXEJW++wrloG2/lguXFOuIIu
-         PIzjVmXZsccRQm5TNOtx6A6gQ0wzKE+zD0d3rSBjXdDZbKboPi87uO4mPhkizUUPRHWL
-         rB0ghZmRN5XduFSL/z8yAgAWauA67JH07wysElxW0T7KCyDtr+QiBqnb4p+cK7ayThUu
-         nB8A==
-X-Forwarded-Encrypted: i=1; AJvYcCWWepL3U6vj9RZuDbERwjj/yLad42LNdfPXY+d76JOK5Kj/Rbwg+PhwZRRWlWzjLdETnhvS4sNTMRo53oL9rZvAavVel5zP/H+z/hZa+Vs3
-X-Gm-Message-State: AOJu0YyHzhEmI25iRJI8FYFEJj8QNKXjnTP2D/N9SeRM0SV8lyP+/H/A
-	i33W7mtoC6bQu+2b7ouCWbbRwcXxxZqSKUlxfDKl3oLKp0809HeLAneHP2KBwxadaiXPYFvnWl1
-	VtggjZg==
-X-Google-Smtp-Source: AGHT+IGWmqCTMyOqBqezpt+wH8kxv5k6E5kmWuT/F3RXJYRVdtqYFJ2t1AWMKwgxKWXDYIxSauNGHw==
-X-Received: by 2002:a2e:9e15:0:b0:2ec:568e:336e with SMTP id 38308e7fff4ca-2eef4159e74mr24647891fa.1.1721162629789;
-        Tue, 16 Jul 2024 13:43:49 -0700 (PDT)
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com. [209.85.218.44])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-59b25528e18sm5478428a12.56.2024.07.16.13.43.49
-        for <linux-hardening@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 16 Jul 2024 13:43:49 -0700 (PDT)
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a77c080b521so631988466b.3
-        for <linux-hardening@vger.kernel.org>; Tue, 16 Jul 2024 13:43:49 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXrTuf/FYDtvIQ1VEcRIfc6ml7MRKwDxZEBwwQZpsZhLu0w534Lnz3pXiva/IplHP5T7QxoOtGosc/LBD43GjN71g0VRYlI2FWLAZzzhvlk
-X-Received: by 2002:a17:906:7c44:b0:a77:cad0:5a92 with SMTP id
- a640c23a62f3a-a79ea4367a8mr225972766b.24.1721162628850; Tue, 16 Jul 2024
- 13:43:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cT4WdwSs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A32B6C116B1;
+	Tue, 16 Jul 2024 21:25:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721165101;
+	bh=0KfPRo37su5mr39AobY7aI+apgV4uSA31yq4ETtf3q4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=cT4WdwSs1mqdz/s17edCI/V3iOy0/eezJULLPdCn0ScoQ9gjRm6GG9A0Y3yNMj9FT
+	 DqwuBfHS7QWPy1qqalRyFbmHZzX9KFSWendVXJvYiiNdtWAeNysucScSzeb+cpLpNT
+	 5IV6dKWaJLC9jnWQlIgEKYkthvF1ofv8uDlBiIrvZAnLxzN32vleA8lDGG5Z2Pi7yr
+	 E7ZpTY842xR1AmDE6OQIShidO+gMtwzy899PlyWr5GANts7oQbrR4vudM/M6LJDs+z
+	 C3e6vNGf4e5lDpIZX9SSICgIT90LgkIbeVlxa3+GNeBkuslg6eH6/lnO/30cY25bdi
+	 3MpMmqwWBemiw==
+From: Kees Cook <kees@kernel.org>
+To: Lee Jones <lee@kernel.org>
+Cc: Kees Cook <kees@kernel.org>,
+	Pavel Machek <pavel@ucw.cz>,
+	linux-leds@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] leds: gpio: Set num_leds after allocation
+Date: Tue, 16 Jul 2024 14:24:59 -0700
+Message-Id: <20240716212455.work.809-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <202407150926.4864BCABD8@keescook>
-In-Reply-To: <202407150926.4864BCABD8@keescook>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Tue, 16 Jul 2024 13:43:32 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wioGrBpYXENm73w0OHvzhFtETgkaUH+5LYovRWOHJpZ0A@mail.gmail.com>
-Message-ID: <CAHk-=wioGrBpYXENm73w0OHvzhFtETgkaUH+5LYovRWOHJpZ0A@mail.gmail.com>
-Subject: Re: [GIT PULL] pstore updates for v6.11-rc1
-To: Kees Cook <kees@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Jeff Johnson <quic_jjohnson@quicinc.com>, 
-	Justin Stitt <justinstitt@google.com>, Kees Cook <keescook@chromium.org>, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1999; i=kees@kernel.org; h=from:subject:message-id; bh=0KfPRo37su5mr39AobY7aI+apgV4uSA31yq4ETtf3q4=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmluUrFMNdfqaChiBzifkfXBx9T8v2qRVdtSBv7 e9TqnvSKzaJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZpblKwAKCRCJcvTf3G3A Jj/xD/9PX+RUqRgBfnbRviA/Sw9wZTm7Nak1JVZQj36Rg1oiaLvmtlU8QZVM+GBmjBUTqJdPmiB QdexpPQQ5vUkh0h68D7YPsNkN1g1iB35pPmfHSHrqGPVyYKYSMKUpSAARdcHLAbBv71e0NdkNUp UJi/BHiiX1Vm7HP+X2lt+egQGHBH+xJQv5Ojaxa+Sr3HnCyvAW8aH1nAnjMHlEO+u7rCUmNkr3x Mcc3ISmQ2skH+dZ8oJHZtiBx9K4UqCoTmWA+smqq+DfSoRDmIE/0D3KThF3mbXzaP9jIG1C0BuQ +yeReWtNR9pqEka4PwCL2k5d2uwFAE6cFYDw9cZ3QVeZjztFMkIz3vmeBLwvoo/jQ0CFIfX6a6b /ybvqHHyZbIw/kia8aACFbZBJ6V32tA1RGQ8nX2AdWwdZBMbDzkvwoUOF8ibqzy3bJfKI94RVoU M1g/CKeJA6s43zbTH9JsGw1h/ytNy/yyZdbZhdcSta5aku67mh09kPW2iOjhrNuy50ISR4X8K41 1IyRD32ujlWOb8HU9BHwZu1S34dGs/VuD4GitjkM6Cac+WuQlMNbJfKjiatXrQDNqTUHWzgKi9y nsRFKnSt8x4Q2bA5hAx5LRIzl0SEYOE5ltwOhAswS3eTDaBHQh97k7izEj8WRao2Aw8Zmk4toJw hxDcDs5IhqsCU
+ SQ==
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Mon, 15 Jul 2024 at 09:29, Kees Cook <kees@kernel.org> wrote:
->
-> Please pull these small pstore updates for v6.11-rc1. (Note that since there
-> were no pstore updates for v6.10, this is based on v6.9-rc2. I forgot
-> to do my traditional merge-on-rc2 for this tree when v6.10-rc2 happened.)
+With the new __counted_by annotation, the "num_leds" variable needs to
+valid for accesses to the "leds" array. This requirement is not met in
+gpio_leds_create(), since "num_leds" starts at "0", so "leds" index "0"
+will not be considered valid (num_leds would need to be "1" to access
+index "0").
 
-Note that this is exactly what should happen. No need to do any
-back-merges if some sub-area has been quiet.
+Fix this by setting the allocation size after allocation, and then update
+the final count based on how many were actually added to the array.
 
-Sure, if some branch is *really* old, you might want to do a
-test-merge just to see if there are conflicts (either textual or just
-due to infrastructure changes elsewhere that cause old changes to not
-work in a modern context), but honestly, even that is just a "nice to
-have".
+Fixes: 52cd75108a42 ("leds: gpio: Annotate struct gpio_leds_priv with __counted_by")
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+Cc: Lee Jones <lee@kernel.org>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: linux-leds@vger.kernel.org
+---
+ drivers/leds/leds-gpio.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-But "missed one release" is not very old in the big picture. We do
-releases relatively often, after all.
+diff --git a/drivers/leds/leds-gpio.c b/drivers/leds/leds-gpio.c
+index 83fcd7b6afff..4d1612d557c8 100644
+--- a/drivers/leds/leds-gpio.c
++++ b/drivers/leds/leds-gpio.c
+@@ -150,7 +150,7 @@ static struct gpio_leds_priv *gpio_leds_create(struct device *dev)
+ {
+ 	struct fwnode_handle *child;
+ 	struct gpio_leds_priv *priv;
+-	int count, ret;
++	int count, used, ret;
+ 
+ 	count = device_get_child_node_count(dev);
+ 	if (!count)
+@@ -159,9 +159,11 @@ static struct gpio_leds_priv *gpio_leds_create(struct device *dev)
+ 	priv = devm_kzalloc(dev, struct_size(priv, leds, count), GFP_KERNEL);
+ 	if (!priv)
+ 		return ERR_PTR(-ENOMEM);
++	priv->num_leds = count;
++	used = 0;
+ 
+ 	device_for_each_child_node(dev, child) {
+-		struct gpio_led_data *led_dat = &priv->leds[priv->num_leds];
++		struct gpio_led_data *led_dat = &priv->leds[used];
+ 		struct gpio_led led = {};
+ 
+ 		/*
+@@ -197,8 +199,9 @@ static struct gpio_leds_priv *gpio_leds_create(struct device *dev)
+ 		/* Set gpiod label to match the corresponding LED name. */
+ 		gpiod_set_consumer_name(led_dat->gpiod,
+ 					led_dat->cdev.dev->kobj.name);
+-		priv->num_leds++;
++		used++;
+ 	}
++	priv->num_leds = used;
+ 
+ 	return priv;
+ }
+-- 
+2.34.1
 
-So then merge conflicts like that are on me as a top-level maintainer,
-and if they end up being very complex I might come back to you and ask
-for guidance. But honestly, that's quite rare.
-
-IOW, I'd much rather developers concentrate on their own branch and on
-making it very solid, rather than worry too much about what has
-happened elsewhere meantime.
-
-(Of course, that's all for the simple and good case where you have
-clearly separate trees - which pstore largely is. Some other areas get
-a lot more "this is affected by other changes and in turn affects
-other areas", and then people there have to inevitably be more
-involved with what has been going on).
-
-                 Linus
