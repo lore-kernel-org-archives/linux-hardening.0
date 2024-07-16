@@ -1,121 +1,122 @@
-Received: from forward205b.mail.yandex.net (forward205b.mail.yandex.net [178.154.239.152])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F75C19FA6B;
-	Tue, 16 Jul 2024 17:50:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 230DA1A00E3;
+	Tue, 16 Jul 2024 17:51:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721152213; cv=none; b=nxJyRyY5iC3TZoS74f0nQrS1gf7ULBS3VGBs8rHmoobu8hL3zSKVSS71V3imHTh1Zxi36TpHX9c7OB2JqaKh3rRftSr8S+LZNEQ6ElVUAy3sovHqZzN7UfImi/mf9AYdzeAEKEnpDGv9c06NuXCX80VtpVIMaYrSLTKAU3qxV6M=
+	t=1721152274; cv=none; b=FTixgBuTrIrYikFv6SBWOBPxL/Xql5gUYC8tgA86czVoCyr3ZnK4zfBbw/OEMWCtW2vJM93H7gA1O+TY9GC0/esl0fD4pA5DHROfTqqc861WZcl30utEwimsgiWkXFBuKoTL1LPtnR/yLfCiJ1nZ3pFxMWDa35qO5JKUmu+Ghgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721152213; c=relaxed/simple;
-	bh=kOZIUp+7mOgkp0wgDzBOaf/49efLomQLDOPt3gEi1Fs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tONNQyMlRPSjYbLrXehLRNOqAU2qG5p3b2QeqlFjwpk5l0W2zz3D2hjJyxHIhSFx4HguD4ZXoB98tXqlnYVW/z+zW6yQgD71SiPnno/oL5JXWRAUvkkIFSH04gJfQIjuQRhO8g1huQfdqH7AdjonJMR8cjkG4U+Q9/kP+RpBj+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=nMXSASuN; arc=none smtp.client-ip=178.154.239.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
+	s=arc-20240116; t=1721152274; c=relaxed/simple;
+	bh=vVztFECHj5A5lDM1edvCHwH4SGqeskbjWvte3GbWgm4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GYsOfR9lBfwZnDuvxeRi9iRhTdjEOjWV3ETEtUwnHXOG84H2trJNBQSdF3jXavY/A9N8i1dDejc1IcMze/U6sJAoNwyFn+LPjuOVJyfSEBnnfQGNBKJ0nCEaGUuLIX34izqKF0iQoQjtDNB4qYli9/32J15f1000IpHWU1pvpAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k2WiZAo5; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="nMXSASuN"
-Received: from forward100b.mail.yandex.net (forward100b.mail.yandex.net [IPv6:2a02:6b8:c02:900:1:45:d181:d100])
-	by forward205b.mail.yandex.net (Yandex) with ESMTPS id 42E4967014;
-	Tue, 16 Jul 2024 20:42:07 +0300 (MSK)
-Received: from mail-nwsmtp-smtp-production-main-25.sas.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-25.sas.yp-c.yandex.net [IPv6:2a02:6b8:c1c:3099:0:640:f09b:0])
-	by forward100b.mail.yandex.net (Yandex) with ESMTPS id 1CD6460030;
-	Tue, 16 Jul 2024 20:41:59 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-25.sas.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id ufL1En0RpW20-QBXoBI6w;
-	Tue, 16 Jul 2024 20:41:58 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
-	t=1721151718; bh=VBpeyVV4LcIg++K3/geizSkG0bnKgeREWv/ijcctgq8=;
-	h=Message-ID:Date:Cc:Subject:To:From;
-	b=nMXSASuNpFUW3SpVZksEwKBOoCcfoq701O2ADNZDsXJgEAYHquU4D0LLP+SyICgAB
-	 u/yE/UpSvtxRQLRns33W6FE3UP1eOis/4vLEVaxTLQwWkYBq9o+UKanBCxkRrsTlJa
-	 qqCbZbfjoP/ZIIDHUz8CliBhF5S1IFmD18mTv1qc=
-Authentication-Results: mail-nwsmtp-smtp-production-main-25.sas.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
-From: Dmitry Antipov <dmantipov@yandex.ru>
-To: Johannes Berg <johannes.berg@intel.com>
-Cc: Kees Cook <kees@kernel.org>,
-	linux-wireless@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	lvc-project@linuxtesting.org,
-	Dmitry Antipov <dmantipov@yandex.ru>
-Subject: [PATCH] wifi: wireless: fix more UBSAN noise in cfg80211_conn_scan()
-Date: Tue, 16 Jul 2024 20:40:11 +0300
-Message-ID: <20240716174011.236849-1-dmantipov@yandex.ru>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k2WiZAo5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1721152273; x=1752688273;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=vVztFECHj5A5lDM1edvCHwH4SGqeskbjWvte3GbWgm4=;
+  b=k2WiZAo5onKtWcS7rrs4IxYHYyjSRXb2S1QPBK5zkebr87Y20LX3Xowz
+   BJgzJmfclpDMIzAedrCXBetRtnD9J5aXghfCQkFDQ43ORkoAzM94KMYX7
+   9cYGogwx6ca1tWAbQa8AVDXY6G5PKT+tS7tpuldHUShCh5Jsuxh7Tje99
+   XExjOXztlU/gEJYXJutGn5cuHN6sHh2UH463IoGAxOtk2sqHIMAnyAlmU
+   +fyhAlc3ElVyjSd7cRjkZxOAwl+1L8x3YruE1LZGeTZE0kyhta6pBw8oh
+   y44lRdp4cVQj0hM2TU+qkPrGuZ9kuC8Af+14HrA4hXuCeZSjVrrU92cEB
+   Q==;
+X-CSE-ConnectionGUID: C/xMyRqgScmzLWO05DHDhg==
+X-CSE-MsgGUID: a5pu0/gPT3aoqWBLY82Ymw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11135"; a="22475938"
+X-IronPort-AV: E=Sophos;i="6.09,212,1716274800"; 
+   d="scan'208";a="22475938"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2024 10:51:12 -0700
+X-CSE-ConnectionGUID: TvOZy+QYTjKtTS+txJxKYw==
+X-CSE-MsgGUID: QnmizcwqSTa1q5PEJuOYfg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,212,1716274800"; 
+   d="scan'208";a="55250475"
+Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
+  by orviesa004.jf.intel.com with ESMTP; 16 Jul 2024 10:51:11 -0700
+Received: from kbuild by 68891e0c336b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sTmKS-000fUy-20;
+	Tue, 16 Jul 2024 17:51:08 +0000
+Date: Wed, 17 Jul 2024 01:50:54 +0800
+From: kernel test robot <lkp@intel.com>
+To: Masahiro Yamada <masahiroy@kernel.org>, Kees Cook <kees@kernel.org>,
+	linux-hardening@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>
+Subject: Re: [PATCH 1/3] fortify: use if_changed_dep to record header
+ dependency in *.cmd files
+Message-ID: <202407170104.dCe5MKsA-lkp@intel.com>
+References: <20240715144529.101634-2-masahiroy@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240715144529.101634-2-masahiroy@kernel.org>
 
-Looking at https://syzkaller.appspot.com/bug?extid=d5dc2801166df6d34774
-and trying to reproduce it with CONFIG_UBSAN enabled, I've noticed the
-following:
+Hi Masahiro,
 
-UBSAN: array-index-out-of-bounds in net/wireless/sme.c:95:3
-index 0 is out of range for type 'struct ieee80211_channel *[]'
-CPU: 3 PID: 4993 Comm: repro Not tainted 6.10.0-01155-gd67978318827 #5
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS <...>
-Call Trace:
- <TASK>
- dump_stack_lvl+0x1c2/0x2a0
- ? __pfx_dump_stack_lvl+0x10/0x10
- ? __pfx__printk+0x10/0x10
- ? __local_bh_enable_ip+0x12e/0x1c0
- __ubsan_handle_out_of_bounds+0x127/0x150
- cfg80211_conn_scan+0xd8e/0xf30
- cfg80211_connect+0x1400/0x1c30
- nl80211_connect+0x1549/0x1a70
- ...<the rest is not too useful...>
+kernel test robot noticed the following build errors:
 
-This is very similar to 92ecbb3ac6f3 ("wifi: mac80211: fix UBSAN noise
-in ieee80211_prep_hw_scan()"), so just fix it in the same way by setting
-'request->n_channels' early to help '__counted_by()' work as expected.
-And the same 'kmalloc()' math adjustment is also applicable.
+[auto build test ERROR on linus/master]
+[also build test ERROR on v6.10 next-20240716]
+[cannot apply to akpm-mm/mm-nonmm-unstable kees/for-next/hardening kees/for-next/pstore kees/for-next/kspp]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
----
- net/wireless/sme.c | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+url:    https://github.com/intel-lab-lkp/linux/commits/Masahiro-Yamada/fortify-use-if_changed_dep-to-record-header-dependency-in-cmd-files/20240715-224820
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20240715144529.101634-2-masahiroy%40kernel.org
+patch subject: [PATCH 1/3] fortify: use if_changed_dep to record header dependency in *.cmd files
+config: i386-randconfig-004-20240716 (https://download.01.org/0day-ci/archive/20240717/202407170104.dCe5MKsA-lkp@intel.com/config)
+compiler: gcc-7 (Ubuntu 7.5.0-6ubuntu2) 7.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240717/202407170104.dCe5MKsA-lkp@intel.com/reproduce)
 
-diff --git a/net/wireless/sme.c b/net/wireless/sme.c
-index a8ad55f11133..f5da45331847 100644
---- a/net/wireless/sme.c
-+++ b/net/wireless/sme.c
-@@ -77,12 +77,16 @@ static int cfg80211_conn_scan(struct wireless_dev *wdev)
- 	else
- 		n_channels = ieee80211_get_num_supported_channels(wdev->wiphy);
- 
--	request = kzalloc(sizeof(*request) + sizeof(request->ssids[0]) +
--			  sizeof(request->channels[0]) * n_channels,
--			  GFP_KERNEL);
-+	request = kzalloc(struct_size(request, channels, n_channels) +
-+			  sizeof(request->ssids[0]), GFP_KERNEL);
- 	if (!request)
- 		return -ENOMEM;
- 
-+	/* None of the channels are actually set
-+	 * up but let UBSAN know the boundaries.
-+	 */
-+	request->n_channels = n_channels;
-+
- 	if (wdev->conn->params.channel) {
- 		enum nl80211_band band = wdev->conn->params.channel->band;
- 		struct ieee80211_supported_band *sband =
-@@ -112,9 +116,9 @@ static int cfg80211_conn_scan(struct wireless_dev *wdev)
- 			}
- 			request->rates[band] = (1 << bands->n_bitrates) - 1;
- 		}
--		n_channels = i;
-+		request->n_channels = i;
- 	}
--	request->n_channels = n_channels;
-+
- 	request->ssids = (void *)&request->channels[n_channels];
- 	request->n_ssids = 1;
- 
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202407170104.dCe5MKsA-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> fixdep: error opening file: lib/test_fortify/.write_overflow-memcpy.log.d: No such file or directory
+--
+>> fixdep: error opening file: lib/test_fortify/.read_overflow2-memcmp.log.d: No such file or directory
+--
+>> fixdep: error opening file: lib/test_fortify/.read_overflow-memchr.log.d: No such file or directory
+--
+>> fixdep: error opening file: lib/test_fortify/.write_overflow-strcpy-lit.log.d: No such file or directory
+--
+>> fixdep: error opening file: lib/test_fortify/.read_overflow2-memmove.log.d: No such file or directory
+--
+>> fixdep: error opening file: lib/test_fortify/.write_overflow-strncpy-src.log.d: No such file or directory
+--
+>> fixdep: error opening file: lib/test_fortify/.read_overflow-memcmp.log.d: No such file or directory
+--
+>> fixdep: error opening file: lib/test_fortify/.read_overflow-memscan.log.d: No such file or directory
+--
+>> fixdep: error opening file: lib/test_fortify/.write_overflow-strcpy.log.d: No such file or directory
+--
+>> fixdep: error opening file: lib/test_fortify/.write_overflow-memmove.log.d: No such file or directory
+--
+>> fixdep: error opening file: lib/test_fortify/.write_overflow-memset.log.d: No such file or directory
+..
+
 -- 
-2.45.2
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
