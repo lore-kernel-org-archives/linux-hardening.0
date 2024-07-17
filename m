@@ -1,100 +1,65 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 120A9181319
-	for <linux-hardening@vger.kernel.org>; Wed, 17 Jul 2024 15:36:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2ABE1822DC;
+	Wed, 17 Jul 2024 17:22:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721230587; cv=none; b=HFU0GjrNrfJCFdH8IzfCSj3P3LHCn2sPWjG+QJi/okSw0UlrNwTlP1JfgnhpVEscY4X4qcXUOPjCrY1xL0Vdi7b3e/Ps749rEBSl2JCXD4KGG6uiCopiWYDJCM6l1iYDSsl+uR5skJ0wGI89EJQO1b2uWt0pmKylFm7rWKwmvww=
+	t=1721236979; cv=none; b=efqTzHNMDeb+QZO1ucSlJPQYBUBQOwdocnZXiQE4rQeOEWx3KoXj/SzgK5/MoDVIzSyySrVyj9GuylSUJZUF3zeFsRJcjTkkEH3XjwMVlF44M044gN+WdQFQRWa5mhv2Ct5XTh28c5JnNQk8oEyUOy1qXUEsfHRWEdcu6D72lFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721230587; c=relaxed/simple;
-	bh=U4lOBq92/A5nbA68C1/X8MmurvsWYYfhY8kYgF78L2s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rakA0eLeGr5T8bsSr2Y19VWdyxGQNz5Xw9vaE+4HXaDj6LCHb183Ait7gXsG8sHgDJYYclak/VwLEDWpTw6drCUQMsbe2arLgJv0o0MYPBKR3cH6DEqbDRCn7wNxmBp3JnvgeTiMfjRG06bJwyoEEXl8qETqk9XUIoukkEolQG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yHgLi2mP; arc=none smtp.client-ip=209.85.160.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1721236979; c=relaxed/simple;
+	bh=vXLSOrGn/aah+WtVj2d/I7VJH4jg0Ee672xxZq8HGdw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gSoqKp9dkSdebbNkycxbb3yCh0pj4vdJ3RGptpfYYo4ME0j5NercjM2O8BAI4PZNfiVEncdPiZa3jOY76N7Z/yBzyh5TjV1q0osw9CbFRq0OcYFruvKqXAraw/2ZUnkCmCAADFG1nAvD/bGx4Nvm3/dQH5mnwthtn26GSnhxik0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xz/TYGku; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yHgLi2mP"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-447df43324fso296471cf.1
-        for <linux-hardening@vger.kernel.org>; Wed, 17 Jul 2024 08:36:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1721230585; x=1721835385; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=U4lOBq92/A5nbA68C1/X8MmurvsWYYfhY8kYgF78L2s=;
-        b=yHgLi2mPxZXkIvn3MwA0IV+mHz8zopb7BFS0q581PIsmTQ0AFSaxCMbhuXVQ2moSN2
-         2HLNQwwkCTNMaK8AuAQKvJR6GN45dlSfMdVFaRdgBQxu/COisYdpOu6u4nvNFvMYTnRl
-         Ln2NTQ/It66UT4zOLkh4N43WwoAoEDOH6XD2nWOwg6AU+D+vT6AMi2yacH3xTGZ71yPn
-         PWJsMr21Vc/zgjpMeAy0n9lG8fm9Umvm3pqOqQqctM0deJwDVkZ9HftGYbULk3lRauLd
-         dyyUn2zc7iZHE47t6135AVR1JlMqZ705JjKeHViEJ0WSnMZW+iOJ9KNHShkd0y78lYMf
-         r4JA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721230585; x=1721835385;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=U4lOBq92/A5nbA68C1/X8MmurvsWYYfhY8kYgF78L2s=;
-        b=bFT9jIcjJBJIX5NQdJNDmO1Tz/TTolOR+znKtORPudpzjCfWpmq54/L+g6eAUQkMYg
-         1UaF4w62LW4SIt5SeCVKSsEnPGT+09uNu5WWk8m24JXg4mgbNThhzaPWAlHRTLjMHLmU
-         U1C3ToT65AKnIFJALGKwW0VY8fUutoUAovrfm4r+VcrcsYc3sKavwLhWc54Jio65/F3/
-         iPS7SfCbPmyCcGx4XEGwfj+oFIpDUUhxOVAt3K1VNS9pH7jWB2l+CYuPceOwtivr420Z
-         y34xuv7nkNYzJcDDyu3hxdyj6hoWIzGdFF/MoS8ZdCrfIF2J1eMRbgR6WXrFnjmFZIkT
-         UlOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXTIut42TS4u+2R+at4i0s8rsVUWHnZTMddLWeqhsLBHwr1w4aphhTvKnKxf+7R5/7JlBnkHJSZ4pI7ettJkcnsdLgwDb/mQYNSw7Z3QHWp
-X-Gm-Message-State: AOJu0YwBsQKFIiZVaRUQOocKdLmutjFGUDP3bLX5wqO02unaQIrTUmvU
-	S0MVbZLxCk4eykQgrDjvSD36cyNJTnyNqZ/4yJtLRxpQPB5Dktd8m283vzKrCBwqIWiGcDCZ/md
-	4mfFgJhbtKRi6o8TybupRzLpl4QHNsuPrY7h2
-X-Google-Smtp-Source: AGHT+IEalDvuhLDexLMZf/xCnrcvDmSl+qwkU4w3Z8mWew0Oue5zbO8Ev8APAN6BenQiPOpjM3focVcnEXdW9CpFBeA=
-X-Received: by 2002:a05:622a:2515:b0:447:dbac:facd with SMTP id
- d75a77b69052e-44f83a73376mr3929431cf.24.1721230584789; Wed, 17 Jul 2024
- 08:36:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xz/TYGku"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E854C2BD10;
+	Wed, 17 Jul 2024 17:22:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721236979;
+	bh=vXLSOrGn/aah+WtVj2d/I7VJH4jg0Ee672xxZq8HGdw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Xz/TYGkuAVjvLd8XZ+jmdmRyYX5twMMZcUExUiF2rZ8juVpUDFAv1ouulk9d7NkkV
+	 Ir1E9rXBMoNu/GYRFIlwPsQTUVwrtPfYcPuNN8g2xtI+KpaSsC3bvrHUh5h+GTixK6
+	 E9/TAZ56cwTqGb+1aRzxfbm6vdm9ydUGQZ+mMbR5xjgx7Y722NqgWTT/kcMKmCCW8n
+	 W2L9ekz37YcRY8QhFAsL7wHQ7OMa2IX/kL5JWZxCoZPI4CIXcFzGNO7QAdCIwzdQBq
+	 JtcfM7IbxfultoQC6D11woJBliUtTo7jYch/1xxxWGFYB/A1Qffajy/uFAs10+vUy7
+	 E1/4g+1quc5Yw==
+Date: Wed, 17 Jul 2024 10:22:58 -0700
+From: Kees Cook <kees@kernel.org>
+To: Adrian Ratiu <adrian.ratiu@collabora.com>
+Cc: linux-fsdevel@vger.kernel.org, linux-security-module@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	kernel@collabora.com, gbiv@google.com, inglorion@google.com,
+	ajordanr@google.com, Doug Anderson <dianders@chromium.org>,
+	Jeff Xu <jeffxu@google.com>, Jann Horn <jannh@google.com>,
+	Christian Brauner <brauner@kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH] proc: add config to block FOLL_FORCE in mem writes
+Message-ID: <202407171017.A0930117@keescook>
+References: <20240717111358.415712-1-adrian.ratiu@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240711102436.4432-1-Dhananjay.Ugwekar@amd.com>
- <CAP-5=fXXuWchzUK0n5KTH8kamr=DQoEni+bUoo8f-4j8Y+eMBg@mail.gmail.com>
- <05e96873-12a9-4b1f-b1b3-1db7647211ce@amd.com> <CAP-5=fVXi3Pdtjaw++oRkYgubh-MDkRYf=2k7dNqE8s+jyQ+Ew@mail.gmail.com>
- <2e7064c2-c769-41bb-a536-c6e75e8e5800@amd.com> <CAP-5=fXBYVH=qBJPm1d0-QEp8+HP3WtTLuukfF0g-2WU3gTofQ@mail.gmail.com>
- <a1603596-aa36-4bb9-8c66-295b1872a2fe@amd.com>
-In-Reply-To: <a1603596-aa36-4bb9-8c66-295b1872a2fe@amd.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 17 Jul 2024 08:36:13 -0700
-Message-ID: <CAP-5=fVZvprNLZiO0baQ0cBgJE1qXjqqHRZvWz9YvU3FHUJHiQ@mail.gmail.com>
-Subject: Re: [PATCH v4 00/11] Add per-core RAPL energy counter support for AMD CPUs
-To: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
-	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
-	tglx@linutronix.de, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
-	kees@kernel.org, gustavoars@kernel.org, rui.zhang@intel.com, 
-	oleksandr@natalenko.name, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	ananth.narayan@amd.com, gautham.shenoy@amd.com, kprateek.nayak@amd.com, 
-	ravi.bangoria@amd.com, sandipan.das@amd.com, linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240717111358.415712-1-adrian.ratiu@collabora.com>
 
-On Wed, Jul 17, 2024 at 1:05=E2=80=AFAM Dhananjay Ugwekar
-<Dhananjay.Ugwekar@amd.com> wrote:
-...
-> Sounds great!, I'll be happy to refactor the RAPL code to use the event.c=
-pumask
-> feature to add the per-core energy counter. Also, please let me know if y=
-ou need
-> any help from me on the perf tool side as well.
+On Wed, Jul 17, 2024 at 02:13:58PM +0300, Adrian Ratiu wrote:
+> This simple Kconfig option removes the FOLL_FORCE flag from
+> procfs write calls because it can be abused.
 
-I hope to send out some patches soon. One thought I have is that
-"event.cpumask" is probably less intention revealing the "event.cpus"
-as a name, so I'm going to code assuming the suffix is ".cpus" but
-obviously we can change it to ".cpumask". To me the "mask" makes it
-sound like we "and" the values with something, hence wanting to avoid
-the confusion. There's much confusion in the area already, such as the
-term "cpu map" that does not implement some kind of map.
+For this to be available for general distros, I still want to have a
+bootparam to control this, otherwise this mitigation will never see much
+testing as most kernel deployments don't build their own kernels. A
+simple __ro_after_init variable can be used.
 
-Thanks,
-Ian
+In the future if folks want a more flexible version, we could make this
+a one-way per-process flag, like no_new_privs.
+
+-- 
+Kees Cook
