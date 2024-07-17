@@ -1,130 +1,100 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1E4E17F398;
-	Wed, 17 Jul 2024 11:14:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 120A9181319
+	for <linux-hardening@vger.kernel.org>; Wed, 17 Jul 2024 15:36:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721214890; cv=none; b=ZdgCVAURmqgA+MI5j7Vvx+ZI9uv72sNlG1TybEScNvy1TdfRJujOQ2u6Z6XTFp5UfBhdk9gJLaRDQeSBbm9xH4xTAKLd7X94I20iD4lG1/V9mx3dCak+twwhqTstpL4fpkqCZF2fPnEh1spPkifqrt/yS9DVVRuxUXEqpr8iyxc=
+	t=1721230587; cv=none; b=HFU0GjrNrfJCFdH8IzfCSj3P3LHCn2sPWjG+QJi/okSw0UlrNwTlP1JfgnhpVEscY4X4qcXUOPjCrY1xL0Vdi7b3e/Ps749rEBSl2JCXD4KGG6uiCopiWYDJCM6l1iYDSsl+uR5skJ0wGI89EJQO1b2uWt0pmKylFm7rWKwmvww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721214890; c=relaxed/simple;
-	bh=uKIQZyZb4wlIcTIQWuj2eLj1eh0WA1HrCO/Syb8iJB0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GW4Z/gz36gAcX+ta0JvROYGPsTTrMyU6NT6gG0DAIlxLKNuYfoBiWQIDkZkeFaeqkysEPx1kULUdZ6D21bRm4yDCFc+ASO4EW+dyCAw4P755IgNN5xLEgbdvuNNF31ey3yNJB6/epNrfGFDIdyfCFUQtJhqBSI0MeAV56+a3t/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=bUQUacIO; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1721230587; c=relaxed/simple;
+	bh=U4lOBq92/A5nbA68C1/X8MmurvsWYYfhY8kYgF78L2s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rakA0eLeGr5T8bsSr2Y19VWdyxGQNz5Xw9vaE+4HXaDj6LCHb183Ait7gXsG8sHgDJYYclak/VwLEDWpTw6drCUQMsbe2arLgJv0o0MYPBKR3cH6DEqbDRCn7wNxmBp3JnvgeTiMfjRG06bJwyoEEXl8qETqk9XUIoukkEolQG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yHgLi2mP; arc=none smtp.client-ip=209.85.160.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="bUQUacIO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1721214887;
-	bh=uKIQZyZb4wlIcTIQWuj2eLj1eh0WA1HrCO/Syb8iJB0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=bUQUacIOuc8/IUKEzBK2agauSMgBeqCeJFsxJaqgc+V/GEvsdu/w9/9ZVNqms9hNJ
-	 cQo2YzK5acaY/F1sonOsvh/XYBh6LLNv/8I7fKQP6WN0AEUramlOsNLuL5+gS4uHfy
-	 8VN25xoqih5K51nogszVpR+dVUI82J+eRDM/8EWLpmgkAW43zTtqHH3DzEw/rtyaV/
-	 R72O3dIaU6Iq3pDky9s2S+oXY3P9Quz9Dci55SVJYl8TJh6pejFEwGIsZ4xJr0Jc1D
-	 UDG1YDABJygqh3M0QVfNnmvMcVh7e+Rj3GbZXWBC/mkTr6KEOhzhjWr1Ibx+ChbY1p
-	 EbaRRqKxs458Q==
-Received: from gentoo.ratioveremundo.com (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: aratiu)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 1B7043780C11;
-	Wed, 17 Jul 2024 11:14:46 +0000 (UTC)
-From: Adrian Ratiu <adrian.ratiu@collabora.com>
-To: linux-fsdevel@vger.kernel.org
-Cc: linux-security-module@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	kernel@collabora.com,
-	gbiv@google.com,
-	inglorion@google.com,
-	ajordanr@google.com,
-	Adrian Ratiu <adrian.ratiu@collabora.com>,
-	Doug Anderson <dianders@chromium.org>,
-	Jeff Xu <jeffxu@google.com>,
-	Jann Horn <jannh@google.com>,
-	Kees Cook <kees@kernel.org>,
-	Christian Brauner <brauner@kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH] proc: add config to block FOLL_FORCE in mem writes
-Date: Wed, 17 Jul 2024 14:13:58 +0300
-Message-ID: <20240717111358.415712-1-adrian.ratiu@collabora.com>
-X-Mailer: git-send-email 2.44.2
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yHgLi2mP"
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-447df43324fso296471cf.1
+        for <linux-hardening@vger.kernel.org>; Wed, 17 Jul 2024 08:36:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1721230585; x=1721835385; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=U4lOBq92/A5nbA68C1/X8MmurvsWYYfhY8kYgF78L2s=;
+        b=yHgLi2mPxZXkIvn3MwA0IV+mHz8zopb7BFS0q581PIsmTQ0AFSaxCMbhuXVQ2moSN2
+         2HLNQwwkCTNMaK8AuAQKvJR6GN45dlSfMdVFaRdgBQxu/COisYdpOu6u4nvNFvMYTnRl
+         Ln2NTQ/It66UT4zOLkh4N43WwoAoEDOH6XD2nWOwg6AU+D+vT6AMi2yacH3xTGZ71yPn
+         PWJsMr21Vc/zgjpMeAy0n9lG8fm9Umvm3pqOqQqctM0deJwDVkZ9HftGYbULk3lRauLd
+         dyyUn2zc7iZHE47t6135AVR1JlMqZ705JjKeHViEJ0WSnMZW+iOJ9KNHShkd0y78lYMf
+         r4JA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721230585; x=1721835385;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=U4lOBq92/A5nbA68C1/X8MmurvsWYYfhY8kYgF78L2s=;
+        b=bFT9jIcjJBJIX5NQdJNDmO1Tz/TTolOR+znKtORPudpzjCfWpmq54/L+g6eAUQkMYg
+         1UaF4w62LW4SIt5SeCVKSsEnPGT+09uNu5WWk8m24JXg4mgbNThhzaPWAlHRTLjMHLmU
+         U1C3ToT65AKnIFJALGKwW0VY8fUutoUAovrfm4r+VcrcsYc3sKavwLhWc54Jio65/F3/
+         iPS7SfCbPmyCcGx4XEGwfj+oFIpDUUhxOVAt3K1VNS9pH7jWB2l+CYuPceOwtivr420Z
+         y34xuv7nkNYzJcDDyu3hxdyj6hoWIzGdFF/MoS8ZdCrfIF2J1eMRbgR6WXrFnjmFZIkT
+         UlOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXTIut42TS4u+2R+at4i0s8rsVUWHnZTMddLWeqhsLBHwr1w4aphhTvKnKxf+7R5/7JlBnkHJSZ4pI7ettJkcnsdLgwDb/mQYNSw7Z3QHWp
+X-Gm-Message-State: AOJu0YwBsQKFIiZVaRUQOocKdLmutjFGUDP3bLX5wqO02unaQIrTUmvU
+	S0MVbZLxCk4eykQgrDjvSD36cyNJTnyNqZ/4yJtLRxpQPB5Dktd8m283vzKrCBwqIWiGcDCZ/md
+	4mfFgJhbtKRi6o8TybupRzLpl4QHNsuPrY7h2
+X-Google-Smtp-Source: AGHT+IEalDvuhLDexLMZf/xCnrcvDmSl+qwkU4w3Z8mWew0Oue5zbO8Ev8APAN6BenQiPOpjM3focVcnEXdW9CpFBeA=
+X-Received: by 2002:a05:622a:2515:b0:447:dbac:facd with SMTP id
+ d75a77b69052e-44f83a73376mr3929431cf.24.1721230584789; Wed, 17 Jul 2024
+ 08:36:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240711102436.4432-1-Dhananjay.Ugwekar@amd.com>
+ <CAP-5=fXXuWchzUK0n5KTH8kamr=DQoEni+bUoo8f-4j8Y+eMBg@mail.gmail.com>
+ <05e96873-12a9-4b1f-b1b3-1db7647211ce@amd.com> <CAP-5=fVXi3Pdtjaw++oRkYgubh-MDkRYf=2k7dNqE8s+jyQ+Ew@mail.gmail.com>
+ <2e7064c2-c769-41bb-a536-c6e75e8e5800@amd.com> <CAP-5=fXBYVH=qBJPm1d0-QEp8+HP3WtTLuukfF0g-2WU3gTofQ@mail.gmail.com>
+ <a1603596-aa36-4bb9-8c66-295b1872a2fe@amd.com>
+In-Reply-To: <a1603596-aa36-4bb9-8c66-295b1872a2fe@amd.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 17 Jul 2024 08:36:13 -0700
+Message-ID: <CAP-5=fVZvprNLZiO0baQ0cBgJE1qXjqqHRZvWz9YvU3FHUJHiQ@mail.gmail.com>
+Subject: Re: [PATCH v4 00/11] Add per-core RAPL energy counter support for AMD CPUs
+To: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
+	tglx@linutronix.de, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
+	kees@kernel.org, gustavoars@kernel.org, rui.zhang@intel.com, 
+	oleksandr@natalenko.name, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	ananth.narayan@amd.com, gautham.shenoy@amd.com, kprateek.nayak@amd.com, 
+	ravi.bangoria@amd.com, sandipan.das@amd.com, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This simple Kconfig option removes the FOLL_FORCE flag from
-procfs write calls because it can be abused.
+On Wed, Jul 17, 2024 at 1:05=E2=80=AFAM Dhananjay Ugwekar
+<Dhananjay.Ugwekar@amd.com> wrote:
+...
+> Sounds great!, I'll be happy to refactor the RAPL code to use the event.c=
+pumask
+> feature to add the per-core energy counter. Also, please let me know if y=
+ou need
+> any help from me on the perf tool side as well.
 
-Enabling it breaks some debuggers like GDB so it defaults off.
+I hope to send out some patches soon. One thought I have is that
+"event.cpumask" is probably less intention revealing the "event.cpus"
+as a name, so I'm going to code assuming the suffix is ".cpus" but
+obviously we can change it to ".cpumask". To me the "mask" makes it
+sound like we "and" the values with something, hence wanting to avoid
+the confusion. There's much confusion in the area already, such as the
+term "cpu map" that does not implement some kind of map.
 
-Previously we tried a more sophisticated approach allowing
-distributions to fine-tune proc/pid/mem behaviour via both
-kconfig and boot params, however that got NAK-ed by Linus [1]
-who prefers this simpler approach.
-
-Link: https://lore.kernel.org/lkml/CAHk-=wiGWLChxYmUA5HrT5aopZrB7_2VTa0NLZcxORgkUe5tEQ@mail.gmail.com/ [1]
-Cc: Doug Anderson <dianders@chromium.org>
-Cc: Jeff Xu <jeffxu@google.com>
-Cc: Jann Horn <jannh@google.com>
-Cc: Kees Cook <kees@kernel.org>
-Cc: Christian Brauner <brauner@kernel.org>
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
----
- fs/proc/base.c   |  6 +++++-
- security/Kconfig | 14 ++++++++++++++
- 2 files changed, 19 insertions(+), 1 deletion(-)
-
-diff --git a/fs/proc/base.c b/fs/proc/base.c
-index 72a1acd03675..53ad71d7d785 100644
---- a/fs/proc/base.c
-+++ b/fs/proc/base.c
-@@ -855,7 +855,11 @@ static ssize_t mem_rw(struct file *file, char __user *buf,
- 	if (!mmget_not_zero(mm))
- 		goto free;
- 
--	flags = FOLL_FORCE | (write ? FOLL_WRITE : 0);
-+	flags = (write ? FOLL_WRITE : 0);
-+
-+#ifndef CONFIG_SECURITY_PROC_MEM_RESTRICT_FOLL_FORCE
-+	flags |= FOLL_FORCE;
-+#endif
- 
- 	while (count > 0) {
- 		size_t this_len = min_t(size_t, count, PAGE_SIZE);
-diff --git a/security/Kconfig b/security/Kconfig
-index 412e76f1575d..24053b8ff786 100644
---- a/security/Kconfig
-+++ b/security/Kconfig
-@@ -19,6 +19,20 @@ config SECURITY_DMESG_RESTRICT
- 
- 	  If you are unsure how to answer this question, answer N.
- 
-+config SECURITY_PROC_MEM_RESTRICT_FOLL_FORCE
-+	bool "Remove FOLL_FORCE usage from /proc/pid/mem writes"
-+	default n
-+	help
-+	  This restricts FOLL_FORCE flag usage in procfs mem write calls
-+	  because it bypasses memory permission checks and can be used by
-+	  attackers to manipulate process memory contents that would be
-+	  otherwise protected.
-+
-+	  Enabling this will break GDB, gdbserver and other debuggers
-+	  which require FOLL_FORCE for basic functionalities.
-+
-+	  If you are unsure how to answer this question, answer N.
-+
- config SECURITY
- 	bool "Enable different security models"
- 	depends on SYSFS
--- 
-2.44.2
-
+Thanks,
+Ian
