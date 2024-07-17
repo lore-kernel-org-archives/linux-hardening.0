@@ -1,100 +1,72 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB54812E75;
-	Wed, 17 Jul 2024 18:19:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A0D524205;
+	Wed, 17 Jul 2024 20:53:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721240349; cv=none; b=nJnj85oQ1dR1BNyVrAeblrudYbqgcViyOsw1KrkIy8NNcJ+jD4qGz7YR/rP7raz/Ak/TwnOkndMt1/q4XQvphoEzsX4jLAggePcFaxBrtgsWsWjtXgXEoOPZLnQXdJ3dpxwGs1rlbkvrQ6zvhWV9O9hadkL0tlk29FY5pidDokg=
+	t=1721249618; cv=none; b=ATTPoUODCMv3fJk2GjbcEkJgPHLdkqsGEKEppEPY5UigAHqD99RctFJZJugT3RO2SPRKb5AxtvXhmg60qUnI0vleItdCQdbyB0O59/oxM4p3npl5p96JuNkkmDF296a3i+/hX75IN9JSPoRJbzfBFYnPlOIpSZvq8Gwk3eBV/hs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721240349; c=relaxed/simple;
-	bh=b1aouR+Nif/3pJdFAc+mKgJd7ddCAcxvRCJD0JbS8jI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=bXc8wEq+fbTAPY+9hI04TR5XVYuIM4FJeSfDH6SU/WslPWGc3jaESjslfZYtk+Q4cixZesVLYDFrGAjLFCAguGijtHeywDpF0OWcCHvwRX9QOeyFpBGEITJIC+d1aOiQ7zhhAs2C3PS3UlqcLwRfV/oWAVkzNv86Cz12+YMwovw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=OhFxAIc6; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1721249618; c=relaxed/simple;
+	bh=PAC0XAD5h5KSIY92fLN5w0D6dZqt0PDGf1vPOyQgb9E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=d2qQBzM3Sk9M5Nvpwb6+crxa9QIiUMmkalPs8TPPH01hHVaRurByBt6remkvEuwBtUO3jw22M/FI8ZpmfyJ7imnxKZ13biDBa911VW9vyfNXNDd2gXFm986Cov1/nPql3ABPXA1rS3gC7o1AEKkDBJ5XlXdSWFdXADN7kVqBEVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lalYT496; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="OhFxAIc6"
-Received: from [10.0.0.114] (c-67-182-156-199.hsd1.wa.comcast.net [67.182.156.199])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 8C91C20B7165;
-	Wed, 17 Jul 2024 11:19:06 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8C91C20B7165
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1721240347;
-	bh=tJdPiTzkzL7kgsepa1RSwY8pS6OHdOQ3F2zaVjV9kCg=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=OhFxAIc677f8IqoXw8fkc7DEx9Q+cXUJi3G4rOZDYBneRlzPDrjR/CFTVzqwIbbm0
-	 HFEb5lGZUS8QYZIRkCfOC+BMbijncDDiglaGQAisAM2JNl8ST6zjFRhrGXClE1Dh67
-	 CFadODeFv2QGdIzToPUffWMbbhbsJOjiIRQfib3I=
-Message-ID: <c13f74fc-1c18-480e-84d4-55f11bcb1e98@linux.microsoft.com>
-Date: Wed, 17 Jul 2024 11:19:03 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lalYT496"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66360C2BD10;
+	Wed, 17 Jul 2024 20:53:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721249617;
+	bh=PAC0XAD5h5KSIY92fLN5w0D6dZqt0PDGf1vPOyQgb9E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lalYT496H46aL/ZFWsjDkM+ZkEBRQYvIlIb6Av/4wLvntPc3PirnRvy3I5eLhwtPa
+	 T2RxBUmJCt+HaqCOHLzWT8GxdECpqaLrPsp75MIuutp/gQpriluHxmp+UydLtEIDCw
+	 WQJkZ2rNFV/ds5MWCOxPLfoE1WtQ2Qaa4DITyi5zH7vpODpC3q8K7YU5uxsZ6zQmLw
+	 9nVqxBXs/3wSt+mw9yz/PQd5QXD3YpFkoHkCCvElS3Z0cCdluZQVPwox0eMpl0RCdc
+	 /yuF9vSOvW2Ee6A78To5TGNJnr02xiA7oq5O/d3923wiBoqH7N4iRQD5vQUmKsPFds
+	 FPB/IN8abQoWQ==
+Date: Wed, 17 Jul 2024 13:53:35 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Adrian Ratiu <adrian.ratiu@collabora.com>
+Cc: linux-fsdevel@vger.kernel.org, linux-security-module@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	kernel@collabora.com, gbiv@google.com, inglorion@google.com,
+	ajordanr@google.com, Doug Anderson <dianders@chromium.org>,
+	Jeff Xu <jeffxu@google.com>, Jann Horn <jannh@google.com>,
+	Kees Cook <kees@kernel.org>, Christian Brauner <brauner@kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH] proc: add config to block FOLL_FORCE in mem writes
+Message-ID: <20240717205335.GA3632@sol.localdomain>
+References: <20240717111358.415712-1-adrian.ratiu@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] printk: Add a short description string to kmsg_dump()
-To: Jocelyn Falempe <jfalempe@redhat.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- "K. Y. Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>, Miquel Raynal <miquel.raynal@bootlin.com>,
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
- Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>,
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>, Petr Mladek
- <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>,
- John Ogness <john.ogness@linutronix.de>,
- Sergey Senozhatsky <senozhatsky@chromium.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Jani Nikula <jani.nikula@intel.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Kefeng Wang <wangkefeng.wang@huawei.com>,
- Thomas Gleixner <tglx@linutronix.de>, Uros Bizjak <ubizjak@gmail.com>,
- linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
- linux-mtd@lists.infradead.org, linux-hardening@vger.kernel.org
-References: <20240702122639.248110-1-jfalempe@redhat.com>
-Content-Language: en-US
-From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-In-Reply-To: <20240702122639.248110-1-jfalempe@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240717111358.415712-1-adrian.ratiu@collabora.com>
 
-On 7/2/2024 5:26 AM, Jocelyn Falempe wrote:
-> kmsg_dump doesn't forward the panic reason string to the kmsg_dumper
-> callback.
-> This patch adds a new struct kmsg_dump_detail, that will hold the
-> reason and description, and pass it to the dump() callback.
-> 
-> To avoid updating all kmsg_dump() call, it adds a kmsg_dump_desc()
-> function and a macro for backward compatibility.
-> 
-> I've written this for drm_panic, but it can be useful for other
-> kmsg_dumper.
-> It allows to see the panic reason, like "sysrq triggered crash"
-> or "VFS: Unable to mount root fs on xxxx" on the drm panic screen.
-> 
-> v2:
->  * Use a struct kmsg_dump_detail to hold the reason and description
->    pointer, for more flexibility if we want to add other parameters.
->    (Kees Cook)
->  * Fix powerpc/nvram_64 build, as I didn't update the forward
->    declaration of oops_to_nvram()
-> 
-> Signed-off-by: Jocelyn Falempe <jfalempe@redhat.com>
-> ---
->  arch/powerpc/kernel/nvram_64.c             |  8 ++++----
->  arch/powerpc/platforms/powernv/opal-kmsg.c |  4 ++--
->  arch/um/kernel/kmsg_dump.c                 |  2 +-
->  drivers/gpu/drm/drm_panic.c                |  4 ++--
->  drivers/hv/hv_common.c                     |  4 ++--
+On Wed, Jul 17, 2024 at 02:13:58PM +0300, Adrian Ratiu wrote:
+> +config SECURITY_PROC_MEM_RESTRICT_FOLL_FORCE
+> +	bool "Remove FOLL_FORCE usage from /proc/pid/mem writes"
+> +	default n
+> +	help
+> +	  This restricts FOLL_FORCE flag usage in procfs mem write calls
+> +	  because it bypasses memory permission checks and can be used by
+> +	  attackers to manipulate process memory contents that would be
+> +	  otherwise protected.
+> +
+> +	  Enabling this will break GDB, gdbserver and other debuggers
+> +	  which require FOLL_FORCE for basic functionalities.
+> +
+> +	  If you are unsure how to answer this question, answer N.
 
-Acked-by: Nuno Das Neves <nunodasneves@linux.microsoft.com> (hyperv)
+FOLL_FORCE is an internal flag, and people who aren't kernel developers aren't
+going to know what it is.  Could this option be named and documented in a way
+that would be more understandable to people who aren't kernel developers?  What
+is the effect on how /proc/pid/mem behaves?
 
-LGTM
+- Eric
