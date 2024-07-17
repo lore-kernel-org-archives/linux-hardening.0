@@ -1,158 +1,161 @@
-Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FEEC13CFA3
-	for <linux-hardening@vger.kernel.org>; Tue, 16 Jul 2024 23:07:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AE9223D2;
+	Wed, 17 Jul 2024 04:47:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721171270; cv=none; b=OtELG9E9ZNgUhWWaSholCHzzNo26t2AMyIIUPKxTIxeABFpHcX3sDjcYPwdlZ64yHXAc5Vk4Gkf11yFj5w1bFKonu6UIRMfHG4GbHg/nV8ADLkcRSzGfwTIFcdaAVuC/AlVnREl8s9SxhkzvEeyYXSTHGTBrajm6HeQ8KByRGGc=
+	t=1721191630; cv=none; b=G55aL72MnyY6uoGKUju94m7Za8KQbwIQRCBxxzETRiehTpgxIBXNkFgL4onsYUCeCMmwFYLYP+B7x8dummJ/NfBCiH41nHh4EVADMlV6dkMhDpOSJKkKQY6q2xccJM9gf86G8liNmcDETB/9tHGyHUZ11MSE2B2hDr4j2AnK4d4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721171270; c=relaxed/simple;
-	bh=PgkJeXK711q9T5jHZ93Vvs5bA7ZheF6cfbiibchQyuI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Zy3qQR1+xUtQYz6T9dluw2sA7o1ZXt1Tzpib8rQ0fx+VXZWvzL3T0sWlEaK5uXRU6JJi6ioGp1aWalULE0B1hlu7Noa5Gh1fl44OBuK2bNIAqQAS7AkB3qbFHAFyAcRFleCf+vz4I1g7IPyacfSES4Xmlw4bBFrnyDoCy1snsnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=qfE6cpkz; arc=none smtp.client-ip=44.202.169.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1721191630; c=relaxed/simple;
+	bh=O00HlWRq3/YI66sw0KHGSmVq8UO+Yk0xqgU9Ht2Ogu4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=e26Dj0Xjb/2xhrd+Nm7rSf6hxUOuBsvRVP2KESSvCy4t0GIthrxlG80hq+dt/si6fs0jxUuIQBMovPd7wWW7BqpGjxXA9U7Jeb5NI5on2CT05bdqy7ns97YzgTBWxmVBRCeikTgqLLgtuBU37SWQUkdlaNfVI22W17hGGMaBRVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K7ghpope; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="qfE6cpkz"
-Received: from eig-obgw-5003a.ext.cloudfilter.net ([10.0.29.159])
-	by cmsmtp with ESMTPS
-	id TnPBsqZB9iA19TrGtspc2q; Tue, 16 Jul 2024 23:07:47 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id TrGsshkNbO7CrTrGssmoqe; Tue, 16 Jul 2024 23:07:47 +0000
-X-Authority-Analysis: v=2.4 cv=Pco0hThd c=1 sm=1 tr=0 ts=6696fd43
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=frY+GlAHrI6frpeK1MvySw==:17
- a=IkcTkHD0fZMA:10 a=4kmOji7k6h8A:10 a=VwQbUJbxAAAA:8 a=pGLkceISAAAA:8
- a=L4V35b6CUpzR6yRTVgwA:9 a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22
- a=Xt_RvD8W3m28Mn_h3AK8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=xn9sRu2G2ukLaoOA+BdHT4+T5um7wUVenOr+ww+zBLM=; b=qfE6cpkzNJZF+EntMnHE4A70Q+
-	3kriP5k/X5v2J9JCREmmF5KDWnYFhdk/+Y/7U25eQRymh1L2kaSpDqmqktcXXB8kZGiaak9WmSd63
-	GakxxOs3bKWJ3u8fjT1x2iYiywsKIw3YiR0RLgrkiT1CG6lLvzqRcPp3wTGwWM7VDDH1JUWrPyA4R
-	Q1QcXMzYO2tq7GkptCLhUQpgEVIbhqDTUzPRz2tQxgHUWoNIBzqovEAJtR4kXGyvI9NqztKSLvPD3
-	FZBh1AktSu7LbwygnpXbpayTIveDyaFY1QCz5512A50gzxAfyS+OZylRD+8JvWEAVM1RrqjQGH9SV
-	+Kb+25Ug==;
-Received: from [201.172.173.139] (port=37628 helo=[192.168.15.14])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1sTrGr-001eKJ-1e;
-	Tue, 16 Jul 2024 18:07:45 -0500
-Message-ID: <e6d67fca-55c0-4f16-8433-9328e928bbed@embeddedor.com>
-Date: Tue, 16 Jul 2024 17:07:44 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K7ghpope"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6EC2C4AF0E;
+	Wed, 17 Jul 2024 04:47:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721191629;
+	bh=O00HlWRq3/YI66sw0KHGSmVq8UO+Yk0xqgU9Ht2Ogu4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=K7ghpopeYN2cDE2jv1GuUBMvARpEscDUNxnExZN8nLgmtEA9CX0kR/uFglBoTYvw7
+	 YYDpMS16bPzTVvWLI7R3fNHL4584MgLCaC98Fn5s3VPvP3OabO7cOyFlpOQpTK/k4y
+	 lgASxUq3R9Srfe/9spW/HoRRaltnxko7eQwrEbjZpRz7vLKbJM6wAZ9rS40GFZYx4n
+	 VpAc8H/Oi7PkMZo2rHJ1oKNnSr9dJ9cDl3IAbeG9bqhQl/OhSmy0vEVav05HH1jcyB
+	 4cLc5jOq+cHtPl+wjz+aAHcten2kJj4LsQewtfwrwKF72HHgvdLyiOU8L591VLJwFf
+	 uoXGqRWAFjtWQ==
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2eeb1ba0481so88751831fa.2;
+        Tue, 16 Jul 2024 21:47:09 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVHq/6x8ya9OIqO+Rdl7jovj3dHm2Fe1XotEXcyYiVakaDyY1dfPIJ2WqavylcAHOT4GfcTTL0Q3IIB5Ox2p9ht5VYW8b6qX2TU3swFN5vfU8lRvSaYtfd7fJ25FSHqOXZSCokKRB8c4QOz6zP4ZgoDQUFQZY7ZBxGqx3fkUAsUf+DCeU0Qv0Vwansx
+X-Gm-Message-State: AOJu0YxaXdd81Ms7nMIFTAc2H1QH7RGDB3F97ggZevmiBJOcWLc1TrKR
+	H4vm7JrdafxGWZWNehj4zWDgL/6/Bs1XGu4ExxC0onDvPhs1SV2QTCkjB2EV4iM+tspUHZahfR4
+	G4pwJwD+RiIBUyT/4P6s7GqKQTx0=
+X-Google-Smtp-Source: AGHT+IFhJUAahC0YXBMFeaWxUm1UYTIiYutbuK+Xbs1qfllp2riK57VQcHNcH4yDtC9N5eQw5wY0SvhE1HPavxXuqWg=
+X-Received: by 2002:a2e:3c11:0:b0:2ec:5fa1:2434 with SMTP id
+ 38308e7fff4ca-2eefd06e7dcmr3309641fa.9.1721191628509; Tue, 16 Jul 2024
+ 21:47:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dmaengine: ti: omap-dma: Initialize sglen after
- allocation
-To: Kees Cook <kees@kernel.org>, Peter Ujfalusi <peter.ujfalusi@gmail.com>
-Cc: Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20240716215702.work.802-kees@kernel.org>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20240716215702.work.802-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.173.139
-X-Source-L: No
-X-Exim-ID: 1sTrGr-001eKJ-1e
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.14]) [201.172.173.139]:37628
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfBBR9QnmAUX6o7ld68EGQdhGIdqk8JCmL3uU1KuVIfY9XKPwx7dXUoFtMUgu1QTBeDxTlpybe8KfSy6pvg6qlRC0tzq8UwpH8W1soxAz9PnA3ULkOUsy
- 1xPuyXcltzSD9W4RmbuNHJHMpaCf8NRrCY0HDrY3uniO7IIqV4vB6a7d70fy47EjgwJRYwBzjqdY4xFZ8OkCLusf9fhbWIQxTh9QVN3arPOaw15BQeMVYqdf
+References: <20240715144529.101634-2-masahiroy@kernel.org> <202407170104.dCe5MKsA-lkp@intel.com>
+In-Reply-To: <202407170104.dCe5MKsA-lkp@intel.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Wed, 17 Jul 2024 13:46:32 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARmJcyyzL-jVJfBPi3W684LTDmuhMf1koF0TXoCpKTmcw@mail.gmail.com>
+Message-ID: <CAK7LNARmJcyyzL-jVJfBPi3W684LTDmuhMf1koF0TXoCpKTmcw@mail.gmail.com>
+Subject: Re: [PATCH 1/3] fortify: use if_changed_dep to record header
+ dependency in *.cmd files
+To: kernel test robot <lkp@intel.com>
+Cc: Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org, 
+	oe-kbuild-all@lists.linux.dev, linux-kbuild@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Jul 17, 2024 at 2:51=E2=80=AFAM kernel test robot <lkp@intel.com> w=
+rote:
+>
+> Hi Masahiro,
+>
+> kernel test robot noticed the following build errors:
+>
+> [auto build test ERROR on linus/master]
+> [also build test ERROR on v6.10 next-20240716]
+> [cannot apply to akpm-mm/mm-nonmm-unstable kees/for-next/hardening kees/f=
+or-next/pstore kees/for-next/kspp]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+>
+> url:    https://github.com/intel-lab-lkp/linux/commits/Masahiro-Yamada/fo=
+rtify-use-if_changed_dep-to-record-header-dependency-in-cmd-files/20240715-=
+224820
+> base:   linus/master
+> patch link:    https://lore.kernel.org/r/20240715144529.101634-2-masahiro=
+y%40kernel.org
+> patch subject: [PATCH 1/3] fortify: use if_changed_dep to record header d=
+ependency in *.cmd files
+> config: i386-randconfig-004-20240716 (https://download.01.org/0day-ci/arc=
+hive/20240717/202407170104.dCe5MKsA-lkp@intel.com/config)
+> compiler: gcc-7 (Ubuntu 7.5.0-6ubuntu2) 7.5.0
+> reproduce (this is a W=3D1 build): (https://download.01.org/0day-ci/archi=
+ve/20240717/202407170104.dCe5MKsA-lkp@intel.com/reproduce)
+>
+> If you fix the issue in a separate patch/commit (i.e. not just a new vers=
+ion of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202407170104.dCe5MKsA-lkp=
+@intel.com/
+>
+> All errors (new ones prefixed by >>):
+>
+> >> fixdep: error opening file: lib/test_fortify/.write_overflow-memcpy.lo=
+g.d: No such file or directory
+> --
+> >> fixdep: error opening file: lib/test_fortify/.read_overflow2-memcmp.lo=
+g.d: No such file or directory
+> --
+> >> fixdep: error opening file: lib/test_fortify/.read_overflow-memchr.log=
+.d: No such file or directory
+> --
+> >> fixdep: error opening file: lib/test_fortify/.write_overflow-strcpy-li=
+t.log.d: No such file or directory
+> --
+> >> fixdep: error opening file: lib/test_fortify/.read_overflow2-memmove.l=
+og.d: No such file or directory
+> --
+> >> fixdep: error opening file: lib/test_fortify/.write_overflow-strncpy-s=
+rc.log.d: No such file or directory
+> --
+> >> fixdep: error opening file: lib/test_fortify/.read_overflow-memcmp.log=
+.d: No such file or directory
+> --
+> >> fixdep: error opening file: lib/test_fortify/.read_overflow-memscan.lo=
+g.d: No such file or directory
+> --
+> >> fixdep: error opening file: lib/test_fortify/.write_overflow-strcpy.lo=
+g.d: No such file or directory
+> --
+> >> fixdep: error opening file: lib/test_fortify/.write_overflow-memmove.l=
+og.d: No such file or directory
+> --
+> >> fixdep: error opening file: lib/test_fortify/.write_overflow-memset.lo=
+g.d: No such file or directory
+> ..
 
 
 
-On 16/07/24 15:57, Kees Cook wrote:
-> With the new __counted_by annocation, the "sglen" struct member must
-> be set before accessing the "sg" array. This initialization was done in
-> other places where a new struct omap_desc is allocated, but these cases
-> were missed. Set "sglen" after allocation.
-> 
-> Fixes: b85178611c11 ("dmaengine: ti: omap-dma: Annotate struct omap_desc with __counted_by")
-> Signed-off-by: Kees Cook <kees@kernel.org>
+This issue seems to occur with GCC <=3D7
 
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Thanks
--- 
-Gustavo
+$ echo 'void b(void) __attribute__((__error__(""))); void a(void) {
+b(); }' | gcc -Wp,-MMD,test.d -c -o /dev/null -x c -
 
-> ---
-> Cc: Peter Ujfalusi <peter.ujfalusi@gmail.com>
-> Cc: Vinod Koul <vkoul@kernel.org>
-> Cc: dmaengine@vger.kernel.org
-> ---
->   drivers/dma/ti/omap-dma.c | 6 +++---
->   1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/dma/ti/omap-dma.c b/drivers/dma/ti/omap-dma.c
-> index 7e6c04afbe89..6ab9bfbdc480 100644
-> --- a/drivers/dma/ti/omap-dma.c
-> +++ b/drivers/dma/ti/omap-dma.c
-> @@ -1186,10 +1186,10 @@ static struct dma_async_tx_descriptor *omap_dma_prep_dma_cyclic(
->   	d->dev_addr = dev_addr;
->   	d->fi = burst;
->   	d->es = es;
-> +	d->sglen = 1;
->   	d->sg[0].addr = buf_addr;
->   	d->sg[0].en = period_len / es_bytes[es];
->   	d->sg[0].fn = buf_len / period_len;
-> -	d->sglen = 1;
->   
->   	d->ccr = c->ccr;
->   	if (dir == DMA_DEV_TO_MEM)
-> @@ -1258,10 +1258,10 @@ static struct dma_async_tx_descriptor *omap_dma_prep_dma_memcpy(
->   	d->dev_addr = src;
->   	d->fi = 0;
->   	d->es = data_type;
-> +	d->sglen = 1;
->   	d->sg[0].en = len / BIT(data_type);
->   	d->sg[0].fn = 1;
->   	d->sg[0].addr = dest;
-> -	d->sglen = 1;
->   	d->ccr = c->ccr;
->   	d->ccr |= CCR_DST_AMODE_POSTINC | CCR_SRC_AMODE_POSTINC;
->   
-> @@ -1309,6 +1309,7 @@ static struct dma_async_tx_descriptor *omap_dma_prep_dma_interleaved(
->   	if (data_type > CSDP_DATA_TYPE_32)
->   		data_type = CSDP_DATA_TYPE_32;
->   
-> +	d->sglen = 1;
->   	sg = &d->sg[0];
->   	d->dir = DMA_MEM_TO_MEM;
->   	d->dev_addr = xt->src_start;
-> @@ -1316,7 +1317,6 @@ static struct dma_async_tx_descriptor *omap_dma_prep_dma_interleaved(
->   	sg->en = xt->sgl[0].size / BIT(data_type);
->   	sg->fn = xt->numf;
->   	sg->addr = xt->dst_start;
-> -	d->sglen = 1;
->   	d->ccr = c->ccr;
->   
->   	src_icg = dmaengine_get_src_icg(xt, &xt->sgl[0]);
+
+did not create *.d with GCC <=3D 7.
+
+I do not see the issue with GCC >=3D 8 or Clang.
+
+
+One quick solution is to skip the test for GCC <=3D 7.
+
+
+
+
+
+>
+> --
+> 0-DAY CI Kernel Test Service
+> https://github.com/intel/lkp-tests/wiki
+>
+
+
+--=20
+Best Regards
+Masahiro Yamada
