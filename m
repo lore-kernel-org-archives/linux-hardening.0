@@ -1,126 +1,105 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C84A0374F6;
-	Wed, 17 Jul 2024 22:19:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECC9D3BBEB;
+	Wed, 17 Jul 2024 22:23:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721254746; cv=none; b=M//MFIxw2/hxZYgBORbKaaQSGye8wGAcBuhhcX+A5EmO642zub1Q/IcxDjnMXbPJQaOeQqUfBz0ljDuATJ13USb16o7XUvhyfosGe1a2CfwXxqSQqS0vLhhjtwwUPUIZ5IJVnYioMRQrwcH/Iefl6LrfabD+q6wrvMpCfEaqrBg=
+	t=1721255038; cv=none; b=PHuuQiOpu/J10hZ89iysQfPqJ72LfKdKXWtzlU5PXGC1BIqdf6LMcN7UeyeZzpj6kiubifSEaiQed9Uxrk4mxgs/bg33IIk4jPAgbIuaMDJLbHjKC8vAQ2fOtcxKdUHTbaQB3ST7UdsNYRbrEs/qYchHvtSJQ9QuCwwGALEPhLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721254746; c=relaxed/simple;
-	bh=xc24c4DCXp9DmXRuS+gGjrGQINabT9K3W2WonlbSMP0=;
+	s=arc-20240116; t=1721255038; c=relaxed/simple;
+	bh=lVte0NjxgcA/RIrwcGCMqJelccj6in8YLPIu7QjUJ94=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YQ3cl4o+8LcKePjAIHOiE2728VgQa63qC7fnzJbH5szPFMlbFJP3UVmn1x1qUDCf++xJXyb9yDlrstzHxdkSifkIMShTPOxpyP5NQFlq4w+PDFscZLJnElSFg5rX0JLCW0FxnAjNAiUQ83WtJNWs5uFMVlggWNo4BLuh7cJ0MTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VG00w2g7; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=VMM1LtvO0+FiC0bXJX12q4eZJZ+GbXZEtjiLLwzWPxXPp0jGvm/MUOrEsSQU0ESY2M3SY3CrgNJnWvshv9okJGNLsofDa0NhQixQoiwb8BIXQNgfTMzFJ8bD15mrX8XNE1ixAvGy5PbjrVniSOhGrDZZOV36fanOX63K19+f/Ns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EqSZ/kTb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VG00w2g7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F86BC2BD10;
-	Wed, 17 Jul 2024 22:19:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EqSZ/kTb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F365C2BD10;
+	Wed, 17 Jul 2024 22:23:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721254746;
-	bh=xc24c4DCXp9DmXRuS+gGjrGQINabT9K3W2WonlbSMP0=;
+	s=k20201202; t=1721255037;
+	bh=lVte0NjxgcA/RIrwcGCMqJelccj6in8YLPIu7QjUJ94=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VG00w2g7RKks1WqUv1BSAmpIy/Cx1npWfI4ZccNod8IrQWGhWOoCzAKp4ROsnOtC/
-	 GKII1BI8AwS6hDYiQr1zTR4suyLH+Qje+f9x0/bNYnfFeZfYVq4xiAqR62/qcFrY+8
-	 6yopV/i+rGFPsMAA1V4edFpgzQaWzX9xrCCVgJC+3MXO5fc/7F2LjZYifC/nGjNu4d
-	 4M79UY/H1d+KWPiLgtbN1EBdMbgo6qcbukiIWVHfKsE7Rf3XlpXwHhSQ953ENY6RSR
-	 jS+s0SsC58DbdZ6o1gqp+RJlvcXvocBuMkayMkSLpKjsWqW5iXjSgM4YkotO7ghlk8
-	 fzTusG+7EOqeg==
-Date: Wed, 17 Jul 2024 15:19:05 -0700
+	b=EqSZ/kTb0yENo4g8xgwq6oW20Jm2cUhCWp+6LGPXJY+yfVs6bsyXSYESYHSIF3KFF
+	 BMnyBbQatBUrThevej6hETgTAEdE3Cy41tXhOwdXCuj08M386PQcnS8nGeL6R4cdu2
+	 QLHT9j5Fika+1kVGR8YJsvW5WjTNw8kh+BhEHeN4M6bbjTX/eF4c9duUAvpDNknV9m
+	 1B5/rc+7e+FMemHgb1t5SSn/AQApGZVj4t7ZF6YL/HyFfOGX/BEYcBEwlO3+Oa4dT7
+	 lQqeJczc59Uuj1ERRP6//1TEDBvhHPhoaqgG2EXbM3BPaX1fJDQxNLyFwSjhKw0Vjj
+	 kWDZeoAh+PAUg==
+Date: Wed, 17 Jul 2024 15:23:56 -0700
 From: Kees Cook <kees@kernel.org>
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: kernel test robot <lkp@intel.com>, linux-hardening@vger.kernel.org,
-	oe-kbuild-all@lists.linux.dev, linux-kbuild@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] fortify: use if_changed_dep to record header
- dependency in *.cmd files
-Message-ID: <202407171517.EC9EE07@keescook>
-References: <20240715144529.101634-2-masahiroy@kernel.org>
- <202407170104.dCe5MKsA-lkp@intel.com>
- <CAK7LNARmJcyyzL-jVJfBPi3W684LTDmuhMf1koF0TXoCpKTmcw@mail.gmail.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Adrian Ratiu <adrian.ratiu@collabora.com>,
+	linux-fsdevel@vger.kernel.org,
+	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, kernel@collabora.com,
+	gbiv@google.com, inglorion@google.com, ajordanr@google.com,
+	Doug Anderson <dianders@chromium.org>, Jeff Xu <jeffxu@google.com>,
+	Jann Horn <jannh@google.com>,
+	Christian Brauner <brauner@kernel.org>
+Subject: Re: [PATCH] proc: add config to block FOLL_FORCE in mem writes
+Message-ID: <202407171520.FD49AE35@keescook>
+References: <20240717111358.415712-1-adrian.ratiu@collabora.com>
+ <202407171017.A0930117@keescook>
+ <CAHk-=wi3m98GCv-kXJqRvsjOa+DCFqQux7pcmJW9WR8_n=QPqg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAK7LNARmJcyyzL-jVJfBPi3W684LTDmuhMf1koF0TXoCpKTmcw@mail.gmail.com>
+In-Reply-To: <CAHk-=wi3m98GCv-kXJqRvsjOa+DCFqQux7pcmJW9WR8_n=QPqg@mail.gmail.com>
 
-On Wed, Jul 17, 2024 at 01:46:32PM +0900, Masahiro Yamada wrote:
-> On Wed, Jul 17, 2024 at 2:51 AM kernel test robot <lkp@intel.com> wrote:
+On Wed, Jul 17, 2024 at 11:16:56AM -0700, Linus Torvalds wrote:
+> On Wed, 17 Jul 2024 at 10:23, Kees Cook <kees@kernel.org> wrote:
 > >
-> > Hi Masahiro,
-> >
-> > kernel test robot noticed the following build errors:
-> >
-> > [auto build test ERROR on linus/master]
-> > [also build test ERROR on v6.10 next-20240716]
-> > [cannot apply to akpm-mm/mm-nonmm-unstable kees/for-next/hardening kees/for-next/pstore kees/for-next/kspp]
-> > [If your patch is applied to the wrong git tree, kindly drop us a note.
-> > And when submitting patch, we suggest to use '--base' as documented in
-> > https://git-scm.com/docs/git-format-patch#_base_tree_information]
-> >
-> > url:    https://github.com/intel-lab-lkp/linux/commits/Masahiro-Yamada/fortify-use-if_changed_dep-to-record-header-dependency-in-cmd-files/20240715-224820
-> > base:   linus/master
-> > patch link:    https://lore.kernel.org/r/20240715144529.101634-2-masahiroy%40kernel.org
-> > patch subject: [PATCH 1/3] fortify: use if_changed_dep to record header dependency in *.cmd files
-> > config: i386-randconfig-004-20240716 (https://download.01.org/0day-ci/archive/20240717/202407170104.dCe5MKsA-lkp@intel.com/config)
-> > compiler: gcc-7 (Ubuntu 7.5.0-6ubuntu2) 7.5.0
-> > reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240717/202407170104.dCe5MKsA-lkp@intel.com/reproduce)
-> >
-> > If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> > the same patch/commit), kindly add following tags
-> > | Reported-by: kernel test robot <lkp@intel.com>
-> > | Closes: https://lore.kernel.org/oe-kbuild-all/202407170104.dCe5MKsA-lkp@intel.com/
-> >
-> > All errors (new ones prefixed by >>):
-> >
-> > >> fixdep: error opening file: lib/test_fortify/.write_overflow-memcpy.log.d: No such file or directory
-> > --
-> > >> fixdep: error opening file: lib/test_fortify/.read_overflow2-memcmp.log.d: No such file or directory
-> > --
-> > >> fixdep: error opening file: lib/test_fortify/.read_overflow-memchr.log.d: No such file or directory
-> > --
-> > >> fixdep: error opening file: lib/test_fortify/.write_overflow-strcpy-lit.log.d: No such file or directory
-> > --
-> > >> fixdep: error opening file: lib/test_fortify/.read_overflow2-memmove.log.d: No such file or directory
-> > --
-> > >> fixdep: error opening file: lib/test_fortify/.write_overflow-strncpy-src.log.d: No such file or directory
-> > --
-> > >> fixdep: error opening file: lib/test_fortify/.read_overflow-memcmp.log.d: No such file or directory
-> > --
-> > >> fixdep: error opening file: lib/test_fortify/.read_overflow-memscan.log.d: No such file or directory
-> > --
-> > >> fixdep: error opening file: lib/test_fortify/.write_overflow-strcpy.log.d: No such file or directory
-> > --
-> > >> fixdep: error opening file: lib/test_fortify/.write_overflow-memmove.log.d: No such file or directory
-> > --
-> > >> fixdep: error opening file: lib/test_fortify/.write_overflow-memset.log.d: No such file or directory
-> > ..
+> > For this to be available for general distros, I still want to have a
+> > bootparam to control this, otherwise this mitigation will never see much
+> > testing as most kernel deployments don't build their own kernels. A
+> > simple __ro_after_init variable can be used.
 > 
+> Oh, btw, I looked at the FOLL_FORCE back in 2017 when we did this:
 > 
+>     8ee74a91ac30 ("proc: try to remove use of FOLL_FORCE entirely")
 > 
-> This issue seems to occur with GCC <=7
+> and then we had to undo that with
 > 
+>     f511c0b17b08 (""Yes, people use FOLL_FORCE ;)"")
 > 
-> $ echo 'void b(void) __attribute__((__error__(""))); void a(void) {
-> b(); }' | gcc -Wp,-MMD,test.d -c -o /dev/null -x c -
+> but at the time I also had an experimental patch that worked for me,
+> but I seem to have only sent that out in private to the people
+> involved with the original issue.
 > 
+> And then that whole discussion petered out, and nothing happened.
 > 
-> did not create *.d with GCC <= 7.
+> But maybe we can try again.
 > 
-> I do not see the issue with GCC >= 8 or Clang.
+> In particular, while people piped up about other uses (see the quotes
+> in that commit f511c0b17b08) they were fairly rare and specialized.
+> 
+> The one *common* use was gdb.
+> 
+> But my old diff from years ago mostly still applies, so I resurrected it.
+> 
+> It basically restricts FOLL_FORCE to just ptracers.
+> 
+> That's *not* good for some of the people that piped up back when (eg
+> Julia JIT), but it might be a more palatable halfway state.
+> 
+> In particular, this patch would make it easy to make that
+> SECURITY_PROC_MEM_RESTRICT_FOLL_FORCE config option be a "choice"
+> where you pick "never, ptrace, always" by just changing the rules in
+> proc_is_ptracing().
 
-Any idea why this happens here and not for other sources in the tree?
+So the original patch could be reduced to just the single tristate option
+instead of 3 tristates? I think that would be a decent middle ground,
+and IIUC, will still provide the coverage Chrome OS is looking for[1].
 
-> One quick solution is to skip the test for GCC <= 7.
+-Kees
 
-I'd be fine with that -- it is designed to catch regressions/misbehaviours
-in newly release compilers so I don't mind dropping checks against older
-versions.
+[1] https://lore.kernel.org/lkml/CABi2SkWDwAU2ARyMVTeCqFeOXyQZn3hbkdWv-1OzzgG=MNoU8Q@mail.gmail.com/
 
 -- 
 Kees Cook
