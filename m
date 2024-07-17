@@ -1,72 +1,108 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A0D524205;
-	Wed, 17 Jul 2024 20:53:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED7D43A8CB;
+	Wed, 17 Jul 2024 21:00:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721249618; cv=none; b=ATTPoUODCMv3fJk2GjbcEkJgPHLdkqsGEKEppEPY5UigAHqD99RctFJZJugT3RO2SPRKb5AxtvXhmg60qUnI0vleItdCQdbyB0O59/oxM4p3npl5p96JuNkkmDF296a3i+/hX75IN9JSPoRJbzfBFYnPlOIpSZvq8Gwk3eBV/hs=
+	t=1721250054; cv=none; b=LWC4DSRUQ5LeguFEaq8v7kqfp/PSofnALIH0+x4I/zFwt3PdQscYbHAhuFcrk79RmWkL/e6EFNr1HWCQuyzAKnKIoEGW+HWn+ytvOMnCs1XllOo93cVKS0JFkJVoOTGKzwTVjLqoUwcT6MpYsMvNDgWTKj+TxHPr9HwF1Vi9IVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721249618; c=relaxed/simple;
-	bh=PAC0XAD5h5KSIY92fLN5w0D6dZqt0PDGf1vPOyQgb9E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d2qQBzM3Sk9M5Nvpwb6+crxa9QIiUMmkalPs8TPPH01hHVaRurByBt6remkvEuwBtUO3jw22M/FI8ZpmfyJ7imnxKZ13biDBa911VW9vyfNXNDd2gXFm986Cov1/nPql3ABPXA1rS3gC7o1AEKkDBJ5XlXdSWFdXADN7kVqBEVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lalYT496; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721250054; c=relaxed/simple;
+	bh=hx0QDwgtkl7XPPPboI5Y5+whl1JJAdaP0kiIHNpUrFM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Ff47tPCJgBSjssOmzkWBd33wNVVp//2x3LnKgZ0v0Baixbd+DruHLGFj1AEs9YAu2rhgQFP3cUDaA0CGRNYjTQZBMNz2FAT/dHvB2kvydXu5ED9PmeKHRVldMaPSkOhfKJVJBsIoRrMU3UFqRKmEqhsr2pl0v/Kt5ivkpsvLtpM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CLMbumAv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lalYT496"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66360C2BD10;
-	Wed, 17 Jul 2024 20:53:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CLMbumAv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C60B8C2BD10;
+	Wed, 17 Jul 2024 21:00:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721249617;
-	bh=PAC0XAD5h5KSIY92fLN5w0D6dZqt0PDGf1vPOyQgb9E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lalYT496H46aL/ZFWsjDkM+ZkEBRQYvIlIb6Av/4wLvntPc3PirnRvy3I5eLhwtPa
-	 T2RxBUmJCt+HaqCOHLzWT8GxdECpqaLrPsp75MIuutp/gQpriluHxmp+UydLtEIDCw
-	 WQJkZ2rNFV/ds5MWCOxPLfoE1WtQ2Qaa4DITyi5zH7vpODpC3q8K7YU5uxsZ6zQmLw
-	 9nVqxBXs/3wSt+mw9yz/PQd5QXD3YpFkoHkCCvElS3Z0cCdluZQVPwox0eMpl0RCdc
-	 /yuF9vSOvW2Ee6A78To5TGNJnr02xiA7oq5O/d3923wiBoqH7N4iRQD5vQUmKsPFds
-	 FPB/IN8abQoWQ==
-Date: Wed, 17 Jul 2024 13:53:35 -0700
-From: Eric Biggers <ebiggers@kernel.org>
-To: Adrian Ratiu <adrian.ratiu@collabora.com>
-Cc: linux-fsdevel@vger.kernel.org, linux-security-module@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	kernel@collabora.com, gbiv@google.com, inglorion@google.com,
-	ajordanr@google.com, Doug Anderson <dianders@chromium.org>,
-	Jeff Xu <jeffxu@google.com>, Jann Horn <jannh@google.com>,
-	Kees Cook <kees@kernel.org>, Christian Brauner <brauner@kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH] proc: add config to block FOLL_FORCE in mem writes
-Message-ID: <20240717205335.GA3632@sol.localdomain>
-References: <20240717111358.415712-1-adrian.ratiu@collabora.com>
+	s=k20201202; t=1721250053;
+	bh=hx0QDwgtkl7XPPPboI5Y5+whl1JJAdaP0kiIHNpUrFM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=CLMbumAvH706svVyKqCqd2AS2KDtzWf6R9wl6kFPjPMaWffWQfNdIroZWzLwAelZj
+	 5UWwtLACy2VHBokwoK0rXL/YGAJIqHr5qMy9pXgmFROKZ/1QmZOcaDK3nYZZmFk+QQ
+	 4sN5/Nmdy7P9YoY8Nc8AZJYfmLIDwsBkFBLk8kRgRQ2Tm1XbaszyQGxACIDttP7tm1
+	 b5ZmqDOaWRTftKoFQKAJ91uiENGRofMGnhPNGO95woBifKOnfnWS37/O6ncKGpFcDM
+	 sLyPUwLfWveD+XiXSjbtLUwHh11WS5JWyEYfwQxnbFwbhFNcMSyN22+MiC6hZ0Xlya
+	 ZTLK7pWdSx04Q==
+From: Kees Cook <kees@kernel.org>
+To: David Gow <davidgow@google.com>
+Cc: Kees Cook <kees@kernel.org>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	Rae Moar <rmoar@google.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	linux-kselftest@vger.kernel.org,
+	kunit-dev@googlegroups.com,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] Documentation: KUnit: Update filename best practices
+Date: Wed, 17 Jul 2024 14:00:51 -0700
+Message-Id: <20240717210047.work.412-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240717111358.415712-1-adrian.ratiu@collabora.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2536; i=kees@kernel.org; h=from:subject:message-id; bh=hx0QDwgtkl7XPPPboI5Y5+whl1JJAdaP0kiIHNpUrFM=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmmDEDs+QbXewuQGR1tbdvh9esJtQOJRD/O3tua 64PBN3SwouJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZpgxAwAKCRCJcvTf3G3A JkAsD/9q2jXtZWkpZFiNft5vxU/PHm//mD+0lzWW+7WLTyr7XmF9o9O/QA4pVpQKttRpb/J9nvI FazHC9c3CgYi1splpIjPfdfNcVr8wTOtQbSOjJpgI8ppmDPzL0Z4HVLL3MeH1yUnjcD91stXBPv lHckhC6nRn+oeYa7gFtS+kTp0yCuqHjUCGDTxBmdilLwpRDUh4oLakhdzqqfhq3nxEAz08dKmUN 4P2gxUeo0IgwOa6ciO+pPTiiDgV/1ko1V44CjOw2h6pXEZdkhW+Pk8Oi6Jhn0Ec7t7q85D6Tz2R PO8i1BHGYSX93CKQSdoJub6u4SGnyCyma8GTdFz71HpdfM8XAOztcWJMI4YMnnxKqyexjW6gOOM yeZ41vK1cFlK6/jupmp5BkbsJgpB3t7WnaLPRWxp3oLubAL+651cFO0rSsgZj+5dq+9Rzr/GTGw GphdIflMOZ+Ji6SH19zx2Um7yAU7xUTVHsFm67JXvSOTRECLhQq1J1zKxU/vbH1D/A9LWUQhBPD k//jo3ZyMamL9+Vvibk0AcI0BYu6rbGVAHcTeJgQ1lVdNJ475wHT2ppPchH4hnSnxTnl9ILm65V ScI8oFoOJqd4Y5pfNqeS+R2MPSHa2FOuq4s1Pw/aJRNzByevR8oQOg6vK4e9k/9gIX7250i7Abu XDwp+bvDplrC4
+ eA==
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jul 17, 2024 at 02:13:58PM +0300, Adrian Ratiu wrote:
-> +config SECURITY_PROC_MEM_RESTRICT_FOLL_FORCE
-> +	bool "Remove FOLL_FORCE usage from /proc/pid/mem writes"
-> +	default n
-> +	help
-> +	  This restricts FOLL_FORCE flag usage in procfs mem write calls
-> +	  because it bypasses memory permission checks and can be used by
-> +	  attackers to manipulate process memory contents that would be
-> +	  otherwise protected.
-> +
-> +	  Enabling this will break GDB, gdbserver and other debuggers
-> +	  which require FOLL_FORCE for basic functionalities.
-> +
-> +	  If you are unsure how to answer this question, answer N.
+Based on feedback from Linus[1], change the suggested file naming for
+KUnit tests.
 
-FOLL_FORCE is an internal flag, and people who aren't kernel developers aren't
-going to know what it is.  Could this option be named and documented in a way
-that would be more understandable to people who aren't kernel developers?  What
-is the effect on how /proc/pid/mem behaves?
+Link: https://lore.kernel.org/lkml/CAHk-=wgim6pNiGTBMhP8Kd3tsB7_JTAuvNJ=XYd3wPvvk=OHog@mail.gmail.com/ [1]
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+Cc: David Gow <davidgow@google.com>
+Cc: Brendan Higgins <brendan.higgins@linux.dev>
+Cc: Rae Moar <rmoar@google.com>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kselftest@vger.kernel.org
+Cc: kunit-dev@googlegroups.com
+Cc: linux-doc@vger.kernel.org
+---
+ Documentation/dev-tools/kunit/style.rst | 21 +++++++++++++--------
+ 1 file changed, 13 insertions(+), 8 deletions(-)
 
-- Eric
+diff --git a/Documentation/dev-tools/kunit/style.rst b/Documentation/dev-tools/kunit/style.rst
+index b6d0d7359f00..761dee3f89ca 100644
+--- a/Documentation/dev-tools/kunit/style.rst
++++ b/Documentation/dev-tools/kunit/style.rst
+@@ -188,15 +188,20 @@ For example, a Kconfig entry might look like:
+ Test File and Module Names
+ ==========================
+ 
+-KUnit tests can often be compiled as a module. These modules should be named
+-after the test suite, followed by ``_test``. If this is likely to conflict with
+-non-KUnit tests, the suffix ``_kunit`` can also be used.
+-
+-The easiest way of achieving this is to name the file containing the test suite
+-``<suite>_test.c`` (or, as above, ``<suite>_kunit.c``). This file should be
+-placed next to the code under test.
++Whether a KUnit test is compiled as a separate module or via an
++``#include`` in a core kernel source file, the files should be named
++after the test suite, followed by ``_test``, and live in a ``tests``
++subdirectory to avoid conflicting with regular modules or the core kernel
++source file names (e.g. for tab-completion). If this would conflict with
++non-KUnit tests, the suffix ``_kunit`` can be used instead.
++
++So for the common case, name the file containing the test suite
++``tests/<suite>_test.c`` (or, if needed, ``tests/<suite>_kunit.c``). The
++``tests`` directory should be placed at the same level as the
++code under test. For example, tests for ``lib/string.c`` live in
++``lib/tests/string_test.c``.
+ 
+ If the suite name contains some or all of the name of the test's parent
+ directory, it may make sense to modify the source filename to reduce redundancy.
+-For example, a ``foo_firmware`` suite could be in the ``foo/firmware_test.c``
++For example, a ``foo_firmware`` suite could be in the ``tests/foo/firmware_test.c``
+ file.
+-- 
+2.34.1
+
