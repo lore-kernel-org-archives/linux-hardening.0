@@ -1,123 +1,86 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E48DA27448;
-	Thu, 18 Jul 2024 12:42:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5364C14532B;
+	Thu, 18 Jul 2024 15:58:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721306572; cv=none; b=TxHLHEblsok5y8BTHXrvWSM3dImGQ6X3BMfqiaC8gCSsuKvQGxSkg32YPRLNRdXDbVmUP1VmfKs/WJ3cjuHedswMlJhsqA0co+Gd7r4QrlCWFLVD+/KrAuiPApmkVMHNqN6nNUNAsk4CAAiyEZwRcoty7rj2X5AYax4bjuWx31E=
+	t=1721318294; cv=none; b=B90cZLtNPL2qZVtE8jPEdKuK6QvDorETqJSOqKrMRy6rhsSD3HNX7rpwor4Mi6kidnkleUcPITxnT6C8/bnf2qD+d4rFULsp+uRXq1b8KDbUwxXwVNevuFj8fzESp9NGUhKscN05XDjRkjazSaW55jJDG+yZP5Ws0JPwT3qwa0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721306572; c=relaxed/simple;
-	bh=3oo/1fdRVEeoCJR851fHyddrLVIO6d49k2GGZFgER/Q=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=mHu5+ACSl6eO2NB/iOcV5H8GJbgSHQCQuO+Jw5VbVzbmNx/Tq0RAJiXiCzrdQW9CrDyJomA8v9KB/PB2sONEPT/P0Hd1HQPUtZWga/ufl/6IZAvD+TieQKeJt4EkmTkj3YwGnAfx4W72SUnPacgq7y0CSchnCljF/DNSHNymKyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4WPslw4s7BzyN2q;
-	Thu, 18 Jul 2024 20:38:04 +0800 (CST)
-Received: from kwepemi100008.china.huawei.com (unknown [7.221.188.57])
-	by mail.maildlp.com (Postfix) with ESMTPS id B511918005F;
-	Thu, 18 Jul 2024 20:42:48 +0800 (CST)
-Received: from huawei.com (10.90.53.73) by kwepemi100008.china.huawei.com
- (7.221.188.57) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 18 Jul
- 2024 20:42:48 +0800
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-To: <chenhuacai@kernel.org>, <kernel@xen0n.name>, <kees@kernel.org>,
-	<gustavoars@kernel.org>, <arnd@arndb.de>, <maobibo@loongson.cn>,
-	<loongarch@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-	<linux-hardening@vger.kernel.org>
-CC: <ruanjinjie@huawei.com>
-Subject: [PATCH] loongarch: Support RANDOMIZE_KSTACK_OFFSET
-Date: Thu, 18 Jul 2024 20:47:39 +0800
-Message-ID: <20240718124739.3834489-1-ruanjinjie@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1721318294; c=relaxed/simple;
+	bh=e+Mfphj55ScHIRjhyc2GqmrZc3aIc1iAzpaFZ2zbjC0=;
+	h=From:In-Reply-To:Content-Type:References:Date:Cc:To:MIME-Version:
+	 Message-ID:Subject; b=ZY/uUlOp49ctG6Lf3GfUY89JkgscTlcHEapOxYViGsIE2oDvDAgIGHUeMNmvjbYp5DEu76OgWdpxr1RWsd/N6zxuLxYWYniyibesf+HgdJ9+SP98MLc1SSBbDWn8QK5ElcHiUePDRcnrVPIxV529GOqnU8Ed2J+AstP90upyWlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Received: from harlem.collaboradmins.com (harlem.collaboradmins.com [IPv6:2a01:4f8:1c0c:5936::1])
+	by madrid.collaboradmins.com (Postfix) with ESMTP id 6483137811CD;
+	Thu, 18 Jul 2024 15:58:10 +0000 (UTC)
+From: "Adrian Ratiu" <adrian.ratiu@collabora.com>
+In-Reply-To: <CAHk-=wi9qsy-bX65ev8jgDzGM+uTk=Vbix32F8SLfUWegajT+w@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+X-Forward: 127.0.0.1
+References: <20240717111358.415712-1-adrian.ratiu@collabora.com>
+ <202407171017.A0930117@keescook> <CAHk-=wi3m98GCv-kXJqRvsjOa+DCFqQux7pcmJW9WR8_n=QPqg@mail.gmail.com>
+ <202407171520.FD49AE35@keescook> <CAHk-=wi9qsy-bX65ev8jgDzGM+uTk=Vbix32F8SLfUWegajT+w@mail.gmail.com>
+Date: Thu, 18 Jul 2024 16:58:10 +0100
+Cc: "Kees Cook" <kees@kernel.org>, linux-fsdevel@vger.kernel.org, linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, kernel@collabora.com, gbiv@google.com, inglorion@google.com, ajordanr@google.com, "Doug Anderson" <dianders@chromium.org>, "Jeff Xu" <jeffxu@google.com>, "Jann Horn" <jannh@google.com>, "Christian Brauner" <brauner@kernel.org>
+To: "Linus Torvalds" <torvalds@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemi100008.china.huawei.com (7.221.188.57)
+Message-ID: <11987f-66993b80-1-116be8e0@64320549>
+Subject: =?utf-8?q?Re=3A?= [PATCH] =?utf-8?q?proc=3A?= add config to block 
+ =?utf-8?q?FOLL=5FFORCE?= in mem writes
+User-Agent: SOGoMail 5.10.0
+Content-Transfer-Encoding: quoted-printable
 
-Add support of kernel stack offset randomization while handling syscall,
-the offset is defaultly limited by KSTACK_OFFSET_MAX().
+On Thursday, July 18, 2024 03:04 EEST, Linus Torvalds <torvalds@linux-f=
+oundation.org> wrote:
 
-In order to avoid trigger stack canaries (due to __builtin_alloca) and
-slowing down the entry path, use __no_stack_protector attribute to
-disable stack protector for do_syscall() at function level.
+> On Wed, 17 Jul 2024 at 15:24, Kees Cook <kees@kernel.org> wrote:
+> >
+> > > In particular, this patch would make it easy to make that
+> > > SECURITY=5FPROC=5FMEM=5FRESTRICT=5FFOLL=5FFORCE config option be =
+a "choice"
+> > > where you pick "never, ptrace, always" by just changing the rules=
+ in
+> > > proc=5Fis=5Fptracing().
+> >
+> > So the original patch could be reduced to just the single tristate =
+option
+> > instead of 3 tristates? I think that would be a decent middle groun=
+d,
+> > and IIUC, will still provide the coverage Chrome OS is looking for[=
+1].
+>=20
+> So here's what I kind of think might be ok.
+>=20
+> ENTIRELY UNTESTED! This is more of a "look, something like this,
+> perhaps" patch than a real one.
+>=20
+> If somebody tests this, and it is ok for Chrome OS, you can consider
+> this signed-off-on, but only with actual testing. I might have gotten
+> something hroribly wrong.
 
-With this patch, the REPORT_STACK test show that:
-	`loongarch64 bits of stack entropy: 7`
+Thanks for the patch!
 
-Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
----
- arch/loongarch/Kconfig          |  1 +
- arch/loongarch/kernel/syscall.c | 16 +++++++++++++++-
- 2 files changed, 16 insertions(+), 1 deletion(-)
+I tested it on ChromeOS and it does what it intends, just with two
+minor fixes applied:
 
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index ddc042895d01..fcf6451b4e38 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -106,6 +106,7 @@ config LOONGARCH
- 	select HAVE_ARCH_KFENCE
- 	select HAVE_ARCH_KGDB if PERF_EVENTS
- 	select HAVE_ARCH_MMAP_RND_BITS if MMU
-+	select HAVE_ARCH_RANDOMIZE_KSTACK_OFFSET
- 	select HAVE_ARCH_SECCOMP
- 	select HAVE_ARCH_SECCOMP_FILTER
- 	select HAVE_ARCH_TRACEHOOK
-diff --git a/arch/loongarch/kernel/syscall.c b/arch/loongarch/kernel/syscall.c
-index ec17cd5163b7..a332c6cb76ec 100644
---- a/arch/loongarch/kernel/syscall.c
-+++ b/arch/loongarch/kernel/syscall.c
-@@ -9,6 +9,7 @@
- #include <linux/entry-common.h>
- #include <linux/errno.h>
- #include <linux/linkage.h>
-+#include <linux/randomize_kstack.h>
- #include <linux/syscalls.h>
- #include <linux/unistd.h>
- 
-@@ -39,7 +40,7 @@ void *sys_call_table[__NR_syscalls] = {
- typedef long (*sys_call_fn)(unsigned long, unsigned long,
- 	unsigned long, unsigned long, unsigned long, unsigned long);
- 
--void noinstr do_syscall(struct pt_regs *regs)
-+__no_stack_protector void noinstr do_syscall(struct pt_regs *regs)
- {
- 	unsigned long nr;
- 	sys_call_fn syscall_fn;
-@@ -55,11 +56,24 @@ void noinstr do_syscall(struct pt_regs *regs)
- 
- 	nr = syscall_enter_from_user_mode(regs, nr);
- 
-+	add_random_kstack_offset();
-+
- 	if (nr < NR_syscalls) {
- 		syscall_fn = sys_call_table[nr];
- 		regs->regs[4] = syscall_fn(regs->orig_a0, regs->regs[5], regs->regs[6],
- 					   regs->regs[7], regs->regs[8], regs->regs[9]);
- 	}
- 
-+	/*
-+	 * This value will get limited by KSTACK_OFFSET_MAX(), which is 10
-+	 * bits. The actual entropy will be further reduced by the compiler
-+	 * when applying stack alignment constraints: 16-byte (i.e. 4-bit)
-+	 * aligned, which will remove the 4 low bits from any entropy chosen
-+	 * here.
-+	 *
-+	 * The resulting 6 bits of entropy is seen in SP[9:4].
-+	 */
-+	choose_random_kstack_offset(get_random_u16());
-+
- 	syscall_exit_to_user_mode(regs);
- }
--- 
-2.34.1
+--- a/security/Kconfig
++++ b/security/Kconfig
+-config CONFIG=5FPROC=5FMEM=5FFORCE=5FPTRACE
++config PROC=5FMEM=5FFORCE=5FPTRACE
+.....
+ -config CONFIG=5FPROC=5FMEM=5FNO=5FFORCE
++config PROC=5FMEM=5FNO=5FFORCE
+
+As Kees suggested, I'll add a bootparam with a simple =5F=5Fro=5Fafter=5F=
+init
+variable to select this and then send a v2 for review.
 
