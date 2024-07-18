@@ -1,160 +1,186 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FDAB19E
-	for <linux-hardening@vger.kernel.org>; Thu, 18 Jul 2024 00:04:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB9141E520;
+	Thu, 18 Jul 2024 04:23:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721261090; cv=none; b=gw3S0ii5YpPWIJNW/kAGiHXZ43s/nMRbrW2Fa6FvX5SZPPeWfqjwmAWKPvfqZNx1Vb8Hpk9o344toGQtTu/GAu1PcWQ+C1UsReaWOpQ5YzSNcCFcDs9VFaR7ibyXVoRX5mre0cbkQsF16n9arOpdDNJW39MXwy0K/b2MHXFFahY=
+	t=1721276618; cv=none; b=bwcH0spAXsdy9Grrzu2lwqVkmEwuXUzuSpI93Z7WgbrJJ/DPXskedbwKfFIO6OjBM8aZuHlAmIPHKOOUanG0e4tH499jlYDv9LimRPzLezPAIa2pjCEDBr5fKzpuyTq+aBRQQ2zgAhISeBBfdrreOi8HuvxxzA1VtGzU1EVLvZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721261090; c=relaxed/simple;
-	bh=FAj1MClzOnm7txs8nlFo1G77N9NS2dCzEHAW+o9TMto=;
+	s=arc-20240116; t=1721276618; c=relaxed/simple;
+	bh=BC1ly2XhabHaargWQzMhTuH7TYChEjz2PkjD7IEgYLU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Zt6KIGn9UDTc99xIuTrXXdrkEjuajXOHUb2lssRpNnhJfEk/nXZec1zCX4c4ug22kkcnxOOIGBk7vsfI3HFlsEAKH5bZPGr5loMHCtpG6Awpj+pDvB35Bn3QIzge9cdQgX9ZR9+AbkHb5OhpuRxO04QelNXgC1VdMqTyG4Bg3bg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=cRKAzffD; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	 To:Cc:Content-Type; b=GDgqS63bm0Dan26J7z4YDW2lykZU70PYhg2XIgEEnLjgtVTBlDzjzdy//wSK8GDc9B8TdZvhDgoE9yoD54jJotZOb1CruB+VoVc4gA1p+ZH6NLaqzmhmiDdRYhiagbdiAsWFe4mc8JWCkcF2xSaG4Y3ubTvcXSrj+I8vtYTviuM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SG4LYBXO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="cRKAzffD"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a77abe5c709so19051166b.2
-        for <linux-hardening@vger.kernel.org>; Wed, 17 Jul 2024 17:04:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1721261087; x=1721865887; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=fgh/5TL5RuPEkrIYyZ+YL3lfHWM6eC22E94AhsG1cyU=;
-        b=cRKAzffDHNvW6cf5bu0AdMWft7GMqe3Y47CkPsIILgDMq4/feKTpQ2gJd2kroEJVdx
-         A1sMt9XAyJf0sz8qkMg7yNyt0CeIGEEP/LKmDI3i/62gpc9NDAG3ryHgRkeCk5XYYxl/
-         LQvhJkX//KpKhl/e9SBN1o+OM67ekHF4XFggM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721261087; x=1721865887;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fgh/5TL5RuPEkrIYyZ+YL3lfHWM6eC22E94AhsG1cyU=;
-        b=fi1h2pYQCarnfowmpXN8mDDcPs9hB7I2n+vrJyguoIB7CUewJJ4hLsP9C3xhcUPjB2
-         vyr/OT//rCREv2ePtvd4WFt0qpvil83FrdPLave2CeQYlv+AslhSfFFpFEg+kWUvgC49
-         u1w7Cp699M94ErXU/htXuBso4264Xdhbbh1uij1KbwWg1O4wKZpX9mh6BvFVvFexg3MV
-         SHDQIne+A1F7gCYGl7lugdNeSpuTY9xhHATEwB8Y0ijGCN0w7VHHzSdJWPel+jpTj1JY
-         +Y43UdXne9pVw6S1d9odLHknp9m1BRYFHuWUSIck3NAUvrxE9+UmtLB1io9XgWKr+IIO
-         2A0g==
-X-Forwarded-Encrypted: i=1; AJvYcCXxWmfEed0sQ3YoPlsX5V+Z2vDjSmCzmcYeWkHMsQ7QyjSxhbTmqHjMKllTWvH7LSk7wYyQ4mRFOiZSRyxII5eUmGVrzntuDzKeov0TxpJL
-X-Gm-Message-State: AOJu0YypDHVgjOXIuJqbzJRYY+iQiLlf4mXbMF8PxcBuUOeBczndg2pi
-	5ETX+fnezJWVdEN9Wa9Ajh+UglHFg8v7JREUKDd0Ch14MZ7vrH8i3HMzzts7pLQOB9bjHyxGyUM
-	lSFeFpA==
-X-Google-Smtp-Source: AGHT+IHJG2+hzlbXg60jXZ3eicHEaAnOJ2bbPNqZAZaOvGwIInRtQNrTYzdRiHy+0KxiHE2bvIPD1A==
-X-Received: by 2002:a17:906:fa98:b0:a6f:ba77:e677 with SMTP id a640c23a62f3a-a7a013690d9mr198773566b.73.1721261086648;
-        Wed, 17 Jul 2024 17:04:46 -0700 (PDT)
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com. [209.85.218.52])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a79bc5a38acsm491863566b.38.2024.07.17.17.04.44
-        for <linux-hardening@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Jul 2024 17:04:44 -0700 (PDT)
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a77e5929033so20841966b.0
-        for <linux-hardening@vger.kernel.org>; Wed, 17 Jul 2024 17:04:44 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXwW/JOxaM//AizVDgpjQd+ZUws29foammmlxaXEZOU/pTKhv0QAhbxIi4YQGY/9Erv2I4jhhAJ3e0wNiu+9IqcrtkM81SLmoQcr8hHIwEY
-X-Received: by 2002:a17:906:40d5:b0:a77:cd3c:e9b7 with SMTP id
- a640c23a62f3a-a7a0133ac71mr230759566b.57.1721261084140; Wed, 17 Jul 2024
- 17:04:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SG4LYBXO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F486C4AF0B;
+	Thu, 18 Jul 2024 04:23:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721276617;
+	bh=BC1ly2XhabHaargWQzMhTuH7TYChEjz2PkjD7IEgYLU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=SG4LYBXOKiCD6ZNct82wKnaBIZ4gHkZVV653qh3I8tI2sO74ty6vY/4AGvV+4/bfb
+	 DNtFmkmlMmSB2M5nls/Uj3R2maIV/d2NF70mfGPuVwBT4Cj+RjxCDPYEYIBnCh4GbF
+	 spEHSOdivph9ZYs9H1bG3iulREJLRifGN3HDpvcjR1N75QpcTCwI0erwYSNZ/QI8TT
+	 O3l9UfSjo9a3L96J8laRr0Cwqz8zOVkTeni8pwn0Vw2QDclzUODt3PEEPFWLxsBlJA
+	 IXL6hifdHde9pbf9sfR9VnsYRtfWPDh59TFLcZVYln9n2ih2OsgcjnBeFPr5qJRzCw
+	 2kPWwOGzTFYQA==
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2eee083c044so4220471fa.3;
+        Wed, 17 Jul 2024 21:23:37 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUFLP2AejJC9K7VNaVuTO4IGVQH3JKqSVCfjLK9aw116Dy1k+jNk7iabAuI0/eHrQ7vjouDpZ1OF+a1GDAMJDoEHSHr+Ry6Trh0ax//x1RWPhBxR5a7KZxr5fI1Ud5iBlJXoDpQtfSO4rUops6hex9prSfwD6rLT6aJRALG9pC1LBMPqw6u4bMoAkqk
+X-Gm-Message-State: AOJu0YxfU13/fEWFcE5fykqnBR98/K78efle9+SBODelM6w7b8W9fP5S
+	/pKbkSu8jywUD/apHNkOWfzQTLOsyMLSLfruEQB3CGot48dhFRMAJWn2cysWjB18ydbnZerPV3B
+	Gecd0moIAOfBKyz7xe5x9+UPE024=
+X-Google-Smtp-Source: AGHT+IHVMC7ZBPrOh8Be2nCK/k5Smu8cjV1zA2tfZpClitYjhQaSXezCsrYpK5lpzYRa0zfrXfCt+CglMTNx90aiosU=
+X-Received: by 2002:a05:651c:b2b:b0:2eb:d924:43fb with SMTP id
+ 38308e7fff4ca-2ef05d4d2abmr9556511fa.41.1721276616278; Wed, 17 Jul 2024
+ 21:23:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240717111358.415712-1-adrian.ratiu@collabora.com>
- <202407171017.A0930117@keescook> <CAHk-=wi3m98GCv-kXJqRvsjOa+DCFqQux7pcmJW9WR8_n=QPqg@mail.gmail.com>
- <202407171520.FD49AE35@keescook>
-In-Reply-To: <202407171520.FD49AE35@keescook>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Wed, 17 Jul 2024 17:04:27 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wi9qsy-bX65ev8jgDzGM+uTk=Vbix32F8SLfUWegajT+w@mail.gmail.com>
-Message-ID: <CAHk-=wi9qsy-bX65ev8jgDzGM+uTk=Vbix32F8SLfUWegajT+w@mail.gmail.com>
-Subject: Re: [PATCH] proc: add config to block FOLL_FORCE in mem writes
+References: <20240715144529.101634-2-masahiroy@kernel.org> <202407170104.dCe5MKsA-lkp@intel.com>
+ <CAK7LNARmJcyyzL-jVJfBPi3W684LTDmuhMf1koF0TXoCpKTmcw@mail.gmail.com> <202407171517.EC9EE07@keescook>
+In-Reply-To: <202407171517.EC9EE07@keescook>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Thu, 18 Jul 2024 13:22:59 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQaXiYviTz=pYnnjsrfssw7P+o7eXTAuY_30cayRRv8KA@mail.gmail.com>
+Message-ID: <CAK7LNAQaXiYviTz=pYnnjsrfssw7P+o7eXTAuY_30cayRRv8KA@mail.gmail.com>
+Subject: Re: [PATCH 1/3] fortify: use if_changed_dep to record header
+ dependency in *.cmd files
 To: Kees Cook <kees@kernel.org>
-Cc: Adrian Ratiu <adrian.ratiu@collabora.com>, linux-fsdevel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, kernel@collabora.com, gbiv@google.com, 
-	inglorion@google.com, ajordanr@google.com, 
-	Doug Anderson <dianders@chromium.org>, Jeff Xu <jeffxu@google.com>, Jann Horn <jannh@google.com>, 
-	Christian Brauner <brauner@kernel.org>
-Content-Type: multipart/mixed; boundary="0000000000007ccffd061d7a5312"
-
---0000000000007ccffd061d7a5312
+Cc: kernel test robot <lkp@intel.com>, linux-hardening@vger.kernel.org, 
+	oe-kbuild-all@lists.linux.dev, linux-kbuild@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 17 Jul 2024 at 15:24, Kees Cook <kees@kernel.org> wrote:
+On Thu, Jul 18, 2024 at 7:19=E2=80=AFAM Kees Cook <kees@kernel.org> wrote:
 >
-> > In particular, this patch would make it easy to make that
-> > SECURITY_PROC_MEM_RESTRICT_FOLL_FORCE config option be a "choice"
-> > where you pick "never, ptrace, always" by just changing the rules in
-> > proc_is_ptracing().
+> On Wed, Jul 17, 2024 at 01:46:32PM +0900, Masahiro Yamada wrote:
+> > On Wed, Jul 17, 2024 at 2:51=E2=80=AFAM kernel test robot <lkp@intel.co=
+m> wrote:
+> > >
+> > > Hi Masahiro,
+> > >
+> > > kernel test robot noticed the following build errors:
+> > >
+> > > [auto build test ERROR on linus/master]
+> > > [also build test ERROR on v6.10 next-20240716]
+> > > [cannot apply to akpm-mm/mm-nonmm-unstable kees/for-next/hardening ke=
+es/for-next/pstore kees/for-next/kspp]
+> > > [If your patch is applied to the wrong git tree, kindly drop us a not=
+e.
+> > > And when submitting patch, we suggest to use '--base' as documented i=
+n
+> > > https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> > >
+> > > url:    https://github.com/intel-lab-lkp/linux/commits/Masahiro-Yamad=
+a/fortify-use-if_changed_dep-to-record-header-dependency-in-cmd-files/20240=
+715-224820
+> > > base:   linus/master
+> > > patch link:    https://lore.kernel.org/r/20240715144529.101634-2-masa=
+hiroy%40kernel.org
+> > > patch subject: [PATCH 1/3] fortify: use if_changed_dep to record head=
+er dependency in *.cmd files
+> > > config: i386-randconfig-004-20240716 (https://download.01.org/0day-ci=
+/archive/20240717/202407170104.dCe5MKsA-lkp@intel.com/config)
+> > > compiler: gcc-7 (Ubuntu 7.5.0-6ubuntu2) 7.5.0
+> > > reproduce (this is a W=3D1 build): (https://download.01.org/0day-ci/a=
+rchive/20240717/202407170104.dCe5MKsA-lkp@intel.com/reproduce)
+> > >
+> > > If you fix the issue in a separate patch/commit (i.e. not just a new =
+version of
+> > > the same patch/commit), kindly add following tags
+> > > | Reported-by: kernel test robot <lkp@intel.com>
+> > > | Closes: https://lore.kernel.org/oe-kbuild-all/202407170104.dCe5MKsA=
+-lkp@intel.com/
+> > >
+> > > All errors (new ones prefixed by >>):
+> > >
+> > > >> fixdep: error opening file: lib/test_fortify/.write_overflow-memcp=
+y.log.d: No such file or directory
+> > > --
+> > > >> fixdep: error opening file: lib/test_fortify/.read_overflow2-memcm=
+p.log.d: No such file or directory
+> > > --
+> > > >> fixdep: error opening file: lib/test_fortify/.read_overflow-memchr=
+.log.d: No such file or directory
+> > > --
+> > > >> fixdep: error opening file: lib/test_fortify/.write_overflow-strcp=
+y-lit.log.d: No such file or directory
+> > > --
+> > > >> fixdep: error opening file: lib/test_fortify/.read_overflow2-memmo=
+ve.log.d: No such file or directory
+> > > --
+> > > >> fixdep: error opening file: lib/test_fortify/.write_overflow-strnc=
+py-src.log.d: No such file or directory
+> > > --
+> > > >> fixdep: error opening file: lib/test_fortify/.read_overflow-memcmp=
+.log.d: No such file or directory
+> > > --
+> > > >> fixdep: error opening file: lib/test_fortify/.read_overflow-memsca=
+n.log.d: No such file or directory
+> > > --
+> > > >> fixdep: error opening file: lib/test_fortify/.write_overflow-strcp=
+y.log.d: No such file or directory
+> > > --
+> > > >> fixdep: error opening file: lib/test_fortify/.write_overflow-memmo=
+ve.log.d: No such file or directory
+> > > --
+> > > >> fixdep: error opening file: lib/test_fortify/.write_overflow-memse=
+t.log.d: No such file or directory
+> > > ..
+> >
+> >
+> >
+> > This issue seems to occur with GCC <=3D7
+> >
+> >
+> > $ echo 'void b(void) __attribute__((__error__(""))); void a(void) {
+> > b(); }' | gcc -Wp,-MMD,test.d -c -o /dev/null -x c -
+> >
+> >
+> > did not create *.d with GCC <=3D 7.
+> >
+> > I do not see the issue with GCC >=3D 8 or Clang.
 >
-> So the original patch could be reduced to just the single tristate option
-> instead of 3 tristates? I think that would be a decent middle ground,
-> and IIUC, will still provide the coverage Chrome OS is looking for[1].
+> Any idea why this happens here and not for other sources in the tree?
 
-So here's what I kind of think might be ok.
 
-ENTIRELY UNTESTED! This is more of a "look, something like this,
-perhaps" patch than a real one.
+Because the logic is opposite.
 
-If somebody tests this, and it is ok for Chrome OS, you can consider
-this signed-off-on, but only with actual testing. I might have gotten
-something hroribly wrong.
 
-              Linus
+For other locations, you need to write the correct code.
+When it is compiled successfully, *.d is generated as well.
 
---0000000000007ccffd061d7a5312
-Content-Type: text/x-patch; charset="US-ASCII"; name="patch.diff"
-Content-Disposition: attachment; filename="patch.diff"
-Content-Transfer-Encoding: base64
-Content-ID: <f_lyqie9xt0>
-X-Attachment-Id: f_lyqie9xt0
 
-IGZzL3Byb2MvYmFzZS5jICAgfCAyMiArKysrKysrKysrKysrKysrKysrKystCiBzZWN1cml0eS9L
-Y29uZmlnIHwgMzIgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysKIDIgZmlsZXMgY2hh
-bmdlZCwgNTMgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQoKZGlmZiAtLWdpdCBhL2ZzL3By
-b2MvYmFzZS5jIGIvZnMvcHJvYy9iYXNlLmMKaW5kZXggNzJhMWFjZDAzNjc1Li5mYmU5YTk2YzJk
-OTggMTAwNjQ0Ci0tLSBhL2ZzL3Byb2MvYmFzZS5jCisrKyBiL2ZzL3Byb2MvYmFzZS5jCkBAIC04
-MzUsNiArODM1LDI0IEBAIHN0YXRpYyBpbnQgbWVtX29wZW4oc3RydWN0IGlub2RlICppbm9kZSwg
-c3RydWN0IGZpbGUgKmZpbGUpCiAJcmV0dXJuIHJldDsKIH0KIAorc3RhdGljIGJvb2wgcHJvY19t
-ZW1fZm9sbF9mb3JjZShzdHJ1Y3QgZmlsZSAqZmlsZSwgc3RydWN0IG1tX3N0cnVjdCAqbW0pCit7
-CisjaWYgZGVmaW5lZChDT05GSUdfUFJPQ19NRU1fTk9fRk9SQ0UpCisJcmV0dXJuIGZhbHNlOwor
-I2VsaWYgZGVmaW5lZChDT05GSUdfUFJPQ19NRU1fRk9SQ0VfUFRSQUNFKQorCWJvb2wgcHRyYWNl
-X2FjdGl2ZSA9IGZhbHNlOworCXN0cnVjdCB0YXNrX3N0cnVjdCAqdGFzayA9IGdldF9wcm9jX3Rh
-c2soZmlsZV9pbm9kZShmaWxlKSk7CisKKwlpZiAodGFzaykgeworCQlwdHJhY2VfYWN0aXZlID0g
-dGFzay0+cHRyYWNlICYmIHRhc2stPm1tID09IG1tICYmIHRhc2stPnBhcmVudCA9PSBjdXJyZW50
-OworCQlwdXRfdGFza19zdHJ1Y3QodGFzayk7CisJfQorCXJldHVybiBwdHJhY2VfYWN0aXZlOwor
-I2Vsc2UKKwlyZXR1cm4gdHJ1ZTsKKyNlbmRpZgorfQorCiBzdGF0aWMgc3NpemVfdCBtZW1fcnco
-c3RydWN0IGZpbGUgKmZpbGUsIGNoYXIgX191c2VyICpidWYsCiAJCQlzaXplX3QgY291bnQsIGxv
-ZmZfdCAqcHBvcywgaW50IHdyaXRlKQogewpAQCAtODU1LDcgKzg3Myw5IEBAIHN0YXRpYyBzc2l6
-ZV90IG1lbV9ydyhzdHJ1Y3QgZmlsZSAqZmlsZSwgY2hhciBfX3VzZXIgKmJ1ZiwKIAlpZiAoIW1t
-Z2V0X25vdF96ZXJvKG1tKSkKIAkJZ290byBmcmVlOwogCi0JZmxhZ3MgPSBGT0xMX0ZPUkNFIHwg
-KHdyaXRlID8gRk9MTF9XUklURSA6IDApOworCWZsYWdzID0gd3JpdGUgPyBGT0xMX1dSSVRFIDog
-MDsKKwlpZiAocHJvY19tZW1fZm9sbF9mb3JjZShmaWxlLCBtbSkpCisJCWZsYWdzIHw9IEZPTExf
-Rk9SQ0U7CiAKIAl3aGlsZSAoY291bnQgPiAwKSB7CiAJCXNpemVfdCB0aGlzX2xlbiA9IG1pbl90
-KHNpemVfdCwgY291bnQsIFBBR0VfU0laRSk7CmRpZmYgLS1naXQgYS9zZWN1cml0eS9LY29uZmln
-IGIvc2VjdXJpdHkvS2NvbmZpZwppbmRleCA0MTJlNzZmMTU3NWQuLmIyMDFhZTNmZWVhYiAxMDA2
-NDQKLS0tIGEvc2VjdXJpdHkvS2NvbmZpZworKysgYi9zZWN1cml0eS9LY29uZmlnCkBAIC0xOSw2
-ICsxOSwzOCBAQCBjb25maWcgU0VDVVJJVFlfRE1FU0dfUkVTVFJJQ1QKIAogCSAgSWYgeW91IGFy
-ZSB1bnN1cmUgaG93IHRvIGFuc3dlciB0aGlzIHF1ZXN0aW9uLCBhbnN3ZXIgTi4KIAorY2hvaWNl
-CisJcHJvbXB0ICJBbGxvdyAvcHJvYy9waWQvbWVtIGFjY2VzcyBvdmVycmlkZSIKKwlkZWZhdWx0
-IFBST0NfUElEX01FTV9BTFdBWVNfRk9SQ0UKKwloZWxwCisJICBUcmFkaXRpb25hbGx5IC9wcm9j
-L3BpZC9tZW0gYWxsb3dzIHVzZXJzIHRvIG92ZXJyaWRlIG1lbW9yeQorCSAgcGVybWlzc2lvbnMg
-Zm9yIHVzZXJzIGxpa2UgcHRyYWNlLCBhc3N1bWluZyB0aGV5IGhhdmUgcHRyYWNlCisJICBjYXBh
-YmlsaXR5LgorCisJICBUaGlzIGFsbG93cyBwZW9wbGUgdG8gbGltaXQgdGhhdCAtIGVpdGhlciBu
-ZXZlciBvdmVycmlkZSwgb3IKKwkgIHJlcXVpcmUgYWN0dWFsIGFjdGl2ZSBwdHJhY2UgYXR0YWNo
-bWVudC4KKworCSAgRGVmYXVsdHMgdG8gdGhlIHRyYWRpdGlvbmFsIGJlaGF2aW9yIChmb3Igbm93
-KQorCitjb25maWcgUFJPQ19QSURfTUVNX0FMV0FZU19GT1JDRQorCWJvb2wgIlRyYWRpdGlvbmFs
-IC9wcm9jL3BpZC9tZW0gYmVoYXZpb3IiCisJaGVscAorCSAgVGhpcyBhbGxvd3MgL3Byb2MvcGlk
-L21lbSBhY2Nlc3NlcyB0byBvdmVycmlkZSBtZW1vcnkgbWFwcGluZworCSAgcGVybWlzc2lvbnMg
-aWYgeW91IGhhdmUgcHRyYWNlIGFjY2VzcyByaWdodHMuCisKK2NvbmZpZyBDT05GSUdfUFJPQ19N
-RU1fRk9SQ0VfUFRSQUNFCisJYm9vbCAiUmVxdWlyZSBhY3RpdmUgcHRyYWNlKCkgdXNlIGZvciBh
-Y2Nlc3Mgb3ZlcnJpZGUiCisJaGVscAorCSAgVGhpcyBhbGxvd3MgL3Byb2MvcGlkL21lbSBhY2Nl
-c3NlcyB0byBvdmVycmlkZSBtZW1vcnkgbWFwcGluZworCSAgcGVybWlzc2lvbnMgZm9yIGFjdGl2
-ZSBwdHJhY2VycyBsaWtlIGdkYi4KKworY29uZmlnIENPTkZJR19QUk9DX01FTV9OT19GT1JDRQor
-CWJvb2wgIk5ldmVyIgorCWhlbHAKKwkgIE5ldmVyIG92ZXJyaWRlIG1lbW9yeSBtYXBwaW5nIHBl
-cm1pc3Npb25zCisKK2VuZGNob2ljZQorCiBjb25maWcgU0VDVVJJVFkKIAlib29sICJFbmFibGUg
-ZGlmZmVyZW50IHNlY3VyaXR5IG1vZGVscyIKIAlkZXBlbmRzIG9uIFNZU0ZTCg==
---0000000000007ccffd061d7a5312--
+
+Under lib/test_fortify/, you intentionally incorrect code.
+GCC emits a compile error, and test_fortify.sh checks
+the error message.
+I believe *.d should be still generated unless a pre-processor error occurs=
+.
+
+
+
+
+
+> > One quick solution is to skip the test for GCC <=3D 7.
+>
+> I'd be fine with that -- it is designed to catch regressions/misbehaviour=
+s
+> in newly release compilers so I don't mind dropping checks against older
+> versions.
+>
+> --
+> Kees Cook
+
+
+
+--=20
+Best Regards
+Masahiro Yamada
