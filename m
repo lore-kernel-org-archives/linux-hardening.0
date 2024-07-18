@@ -1,86 +1,85 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5364C14532B;
-	Thu, 18 Jul 2024 15:58:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF79063A;
+	Thu, 18 Jul 2024 17:46:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721318294; cv=none; b=B90cZLtNPL2qZVtE8jPEdKuK6QvDorETqJSOqKrMRy6rhsSD3HNX7rpwor4Mi6kidnkleUcPITxnT6C8/bnf2qD+d4rFULsp+uRXq1b8KDbUwxXwVNevuFj8fzESp9NGUhKscN05XDjRkjazSaW55jJDG+yZP5Ws0JPwT3qwa0k=
+	t=1721324769; cv=none; b=cfZ6t0EcBdwlxFbbT0Qm7ptAmvro7Fkc+6n7ZaaoeWWI0QPJiXbR/Xfhg/VfPicTYjbdoDu4jhczprnZRONjCWPz5RSzW4VZHTNsH641aZAidwV3sFAHGZJ2UWY4F9vUpewCODCUEvVgJ2cdPiFfOpCv6FUeIp+z7thpU6d+0zg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721318294; c=relaxed/simple;
-	bh=e+Mfphj55ScHIRjhyc2GqmrZc3aIc1iAzpaFZ2zbjC0=;
-	h=From:In-Reply-To:Content-Type:References:Date:Cc:To:MIME-Version:
-	 Message-ID:Subject; b=ZY/uUlOp49ctG6Lf3GfUY89JkgscTlcHEapOxYViGsIE2oDvDAgIGHUeMNmvjbYp5DEu76OgWdpxr1RWsd/N6zxuLxYWYniyibesf+HgdJ9+SP98MLc1SSBbDWn8QK5ElcHiUePDRcnrVPIxV529GOqnU8Ed2J+AstP90upyWlA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Received: from harlem.collaboradmins.com (harlem.collaboradmins.com [IPv6:2a01:4f8:1c0c:5936::1])
-	by madrid.collaboradmins.com (Postfix) with ESMTP id 6483137811CD;
-	Thu, 18 Jul 2024 15:58:10 +0000 (UTC)
-From: "Adrian Ratiu" <adrian.ratiu@collabora.com>
-In-Reply-To: <CAHk-=wi9qsy-bX65ev8jgDzGM+uTk=Vbix32F8SLfUWegajT+w@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-X-Forward: 127.0.0.1
-References: <20240717111358.415712-1-adrian.ratiu@collabora.com>
- <202407171017.A0930117@keescook> <CAHk-=wi3m98GCv-kXJqRvsjOa+DCFqQux7pcmJW9WR8_n=QPqg@mail.gmail.com>
- <202407171520.FD49AE35@keescook> <CAHk-=wi9qsy-bX65ev8jgDzGM+uTk=Vbix32F8SLfUWegajT+w@mail.gmail.com>
-Date: Thu, 18 Jul 2024 16:58:10 +0100
-Cc: "Kees Cook" <kees@kernel.org>, linux-fsdevel@vger.kernel.org, linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, kernel@collabora.com, gbiv@google.com, inglorion@google.com, ajordanr@google.com, "Doug Anderson" <dianders@chromium.org>, "Jeff Xu" <jeffxu@google.com>, "Jann Horn" <jannh@google.com>, "Christian Brauner" <brauner@kernel.org>
-To: "Linus Torvalds" <torvalds@linux-foundation.org>
+	s=arc-20240116; t=1721324769; c=relaxed/simple;
+	bh=FZDUnmMzTHtLAXj0DJWdawnws+McoB3ISL8JL9ZoqBk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=qM27iiwuFL6eOh4Ppp77dx9kThvTtHW7cOPhb1CoWsT77V8PcNbzYLaITDTwZC9sVpTfN6OMkByUGZQECfsyWSRlnby0j8WVl9HLPPQaO9cJ7aOHmA+GecW7s1UCpXTBLNYIujv0W7R/9wWWeyC8Xtbn5hYYJWq4EpQzKc5A9YI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nj3znlN3; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nj3znlN3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AE0DC116B1;
+	Thu, 18 Jul 2024 17:46:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721324768;
+	bh=FZDUnmMzTHtLAXj0DJWdawnws+McoB3ISL8JL9ZoqBk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Nj3znlN3AMkMwF5rQdgZV+lF2XeAWxMV018XmeSJrCra/irgx1ml+Ts4wL5XHFGDn
+	 IZh75axRhZ4XO6r2EZ01HBw3E/RtbbPg//PY+ffUvFRO+9k5nNT9qxsslUst13h7TL
+	 GmP8K8LH1nvt6u/Lu9zly1GlcC3zTczZ5TGX1mzqjStBvM8EsD1CUjLXM2EkIu0WSp
+	 p24PS0vIPCjL9cUeyWvwiBYToHOD/Tp/XnKFpLuSHvSrFvsEK8jnTYwToZlJ956nlx
+	 ZvDOSyDkG6jG4nE9B+pAPwZMm4Oluk9q8a7KadRnGtFIBm5IltlobcQxQTOf3jtr4T
+	 LGX0zyysQAIqg==
+From: SeongJae Park <sj@kernel.org>
+To: David Gow <davidgow@google.com>
+Cc: SeongJae Park <sj@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] execve: Move KUnit tests to tests/ subdirectory
+Date: Thu, 18 Jul 2024 10:46:01 -0700
+Message-Id: <20240718174601.64851-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <CABVgOSmKwPq7JEpHfS6sbOwsR0B-DBDk_JP-ZD9s9ZizvpUjbQ@mail.gmail.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <11987f-66993b80-1-116be8e0@64320549>
-Subject: =?utf-8?q?Re=3A?= [PATCH] =?utf-8?q?proc=3A?= add config to block 
- =?utf-8?q?FOLL=5FFORCE?= in mem writes
-User-Agent: SOGoMail 5.10.0
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thursday, July 18, 2024 03:04 EEST, Linus Torvalds <torvalds@linux-f=
-oundation.org> wrote:
+On Thu, 18 Jul 2024 14:04:14 +0800 David Gow <davidgow@google.com> wrote:
 
-> On Wed, 17 Jul 2024 at 15:24, Kees Cook <kees@kernel.org> wrote:
+> On Thu, 18 Jul 2024 at 05:22, Kees Cook <kees@kernel.org> wrote:
 > >
-> > > In particular, this patch would make it easy to make that
-> > > SECURITY=5FPROC=5FMEM=5FRESTRICT=5FFOLL=5FFORCE config option be =
-a "choice"
-> > > where you pick "never, ptrace, always" by just changing the rules=
- in
-> > > proc=5Fis=5Fptracing().
+> > Move the exec KUnit tests into a separate directory to avoid polluting
+> > the local directory namespace. Additionally update MAINTAINERS for the
+> > new files and mark myself as Maintainer.
 > >
-> > So the original patch could be reduced to just the single tristate =
-option
-> > instead of 3 tristates? I think that would be a decent middle groun=
-d,
-> > and IIUC, will still provide the coverage Chrome OS is looking for[=
-1].
->=20
-> So here's what I kind of think might be ok.
->=20
-> ENTIRELY UNTESTED! This is more of a "look, something like this,
-> perhaps" patch than a real one.
->=20
-> If somebody tests this, and it is ok for Chrome OS, you can consider
-> this signed-off-on, but only with actual testing. I might have gotten
-> something hroribly wrong.
+> > Signed-off-by: Kees Cook <kees@kernel.org>
+> > ---
+> > I'll toss this into -next and send it to Linus before -rc1 closes.
+> > ---
+> 
+> With s/_test/_kunit (once the docs changes are sorted), this looks good.
 
-Thanks for the patch!
+I have no strong opinion, but I agree to David's rationale [1] on preferrence
+of _kunit overall, and would prefer having a consistent and simple rule.
 
-I tested it on ChromeOS and it does what it intends, just with two
-minor fixes applied:
+[1] https://lore.kernel.org/CABVgOS=B29PcKyhVXtTk47k_BhjSaoxL8eF15fVhzty_0syeSQ@mail.gmail.com
 
---- a/security/Kconfig
-+++ b/security/Kconfig
--config CONFIG=5FPROC=5FMEM=5FFORCE=5FPTRACE
-+config PROC=5FMEM=5FFORCE=5FPTRACE
-.....
- -config CONFIG=5FPROC=5FMEM=5FNO=5FFORCE
-+config PROC=5FMEM=5FNO=5FFORCE
+> 
+> Reviewed-by: David Gow <davidgow@google.com>
 
-As Kees suggested, I'll add a bootparam with a simple =5F=5Fro=5Fafter=5F=
-init
-variable to select this and then send a v2 for review.
+Reviewed-by: SeongJae Park <sj@kernel.org>
 
+
+Thanks,
+SJ
+
+[...]
