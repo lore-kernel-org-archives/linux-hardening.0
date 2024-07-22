@@ -1,45 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 382107462;
-	Sat, 20 Jul 2024 18:12:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C782812B63;
+	Mon, 22 Jul 2024 04:19:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721499135; cv=none; b=Wjf+Dwb8byvtoAiKr5To46jc0OKwnrvewVM1mxuQTN8W9QemNxOCuiGuPzL04B8oIEJ/ggZlYpnfn9dfsMjo0KXobn7iX3yHOAz2wC9eBEzoCT5fY8poqm38LDY5rXH42DUBQLum4Qg222WZ+fRnmqsjXapPKxocVt/ki0NBJXY=
+	t=1721621965; cv=none; b=VlxRGm6MaQNRT0ytwWVdSWUIHvbFJfJHnRqWmMbW43NYM+xDbsrs/R6PWIjv6+am35F0CyX5gLc+zkqCflm21yfVbQSeq9V+Mn4dxTQZd9Tj7RcBLqX+WxUoCWKk2z7sE9y6vG6OP8Bonf62y2+QFFxcW2O07Z80gk7s3wZg+qQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721499135; c=relaxed/simple;
-	bh=xvGkl/Q5RZm1OHzjC1CEvaV9TM/ddsiXIvui9kZdAxA=;
+	s=arc-20240116; t=1721621965; c=relaxed/simple;
+	bh=muonCMzrB0AixKWg4qxRoZ/sNzBc5ShBmZrCqfBeeWo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BrD7yhSI1NJK+oMZLyXTfYxaYqZIPCNafYB4p114k7jbjTOCsHhn9/1GVycH+rvhK99e6Vzck2mNNOY+TS8epAX915O7ht+fg3Ql1OD+NzNLgmUJ4B9kgzk6b5T5orf0vyLmV1o9azm8XOnrrVAv0ko3mGcV/vHBm/7z9D0Vt90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AB84Dxvy; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=IWuLvagxl8UpwfqPk8HpFWBP/Jz0fPz6zZcFBcHbw5YDIw+fBZEF//rzYzs37htn9hoktLDCs5GuaZtn4aHJ2eBOeLzMzlUo0FGwfZOp/6YIz/btb8k0gpXLQdU4E+w0Sl0VunIMbf5UBReAXk1n5cU3wqmBhqXGmoUIjZZFju0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vHQbuFrt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AB84Dxvy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC4EDC2BD10;
-	Sat, 20 Jul 2024 18:12:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vHQbuFrt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47556C116B1;
+	Mon, 22 Jul 2024 04:19:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721499134;
-	bh=xvGkl/Q5RZm1OHzjC1CEvaV9TM/ddsiXIvui9kZdAxA=;
+	s=k20201202; t=1721621965;
+	bh=muonCMzrB0AixKWg4qxRoZ/sNzBc5ShBmZrCqfBeeWo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AB84DxvybDZU1PPp2G3mtE1hLs6HalMqgJQo3syRQHPW0Y9ZIBZbxd5UBGB+EO+fV
-	 bLWmVNVu510YlPs+0CmS5T54l3N1yjyJLZqdJCwcgetS1l6xcaQ1xh1u50sLiyWUqW
-	 SJrkzgli6EDFqXuw37oCKl2Z1asL+623EADegqDWmdnahmHjqUlj2pMx5ZSPFg8B9d
-	 eNrA6GFh1Cek1YPtzejqdgyDUzODIyz0mBLoMRJM9jlpzEqlhJcRJg1ibl8Kmgc2oZ
-	 mx/bZnh8Wr6U6OLO3Dd89t9vGKO64J2UdA7LLTJ4GxuJF21VEh1UZFlB8E6xcG2bf+
-	 5UryfthWGMyJw==
-Date: Sat, 20 Jul 2024 11:12:14 -0700
-From: Kees Cook <kees@kernel.org>
-To: John Hubbard <jhubbard@nvidia.com>
-Cc: David Gow <davidgow@google.com>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	Rae Moar <rmoar@google.com>, Jonathan Corbet <corbet@lwn.net>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	b=vHQbuFrtHDOtfSo8OWSdzaH2KfMT2a4KDbFHNt1oZNtITrxGTBKzg4HL99QjZBDUP
+	 3DZm8g9hsx8Y3RJ4f0WLgNR/12X+stk/AHEzebLPWILY26YkAogJBOYviqL+4XpYwT
+	 F0ZUYOr17ixUhSPQHLJPj/Nes57mC6fNrpzquQZLQO5HTqWaHm5AfPaH8QAD7JrUJH
+	 VwLcHhfvZThCJgQ2a4KNHkD45+laSoMSmyKDezo0lS4SpOMsgk0gAORTOw9JNzNi4C
+	 tflseL8a5FJ7Jr74OODXzedKr+/aCi/dkz0G+I1l5QWjRvrPssCoUZ61x2P0HjI7FW
+	 Ng0MJEgSBEwdA==
+Date: Sun, 21 Jul 2024 21:19:24 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: "Artem S. Tashkinov" <aros@gmx.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	linux-ext4@vger.kernel.org, xcreativ@gmail.com, madeisbaer@arcor.de,
+	justinstitt@google.com, keescook@chromium.org,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] Documentation: KUnit: Update filename best practices
-Message-ID: <202407201111.C5DE72A11C@keescook>
-References: <20240720165441.it.320-kees@kernel.org>
- <c9613b11-5751-400f-ae83-4590d4593ab4@nvidia.com>
+Subject: Re: Linux 6.10 regression resulting in a crash when using an ext4
+ filesystem
+Message-ID: <20240722041924.GB103010@frogsfrogsfrogs>
+References: <500f38b2-ad30-4161-8065-a10e53bf1b02@gmx.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -48,89 +45,204 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c9613b11-5751-400f-ae83-4590d4593ab4@nvidia.com>
+In-Reply-To: <500f38b2-ad30-4161-8065-a10e53bf1b02@gmx.com>
 
-On Sat, Jul 20, 2024 at 10:59:10AM -0700, John Hubbard wrote:
-> On 7/20/24 9:54 AM, Kees Cook wrote:
-> > Based on feedback from Linus[1] and follow-up discussions, change the
-> > suggested file naming for KUnit tests.
-> > 
-> > Link: https://lore.kernel.org/lkml/CAHk-=wgim6pNiGTBMhP8Kd3tsB7_JTAuvNJ=XYd3wPvvk=OHog@mail.gmail.com/ [1]
-> > Signed-off-by: Kees Cook <kees@kernel.org>
-> > ---
-> > Cc: David Gow <davidgow@google.com>
-> > Cc: Brendan Higgins <brendan.higgins@linux.dev>
-> > Cc: Rae Moar <rmoar@google.com>
-> > Cc: John Hubbard <jhubbard@nvidia.com>
-> > Cc: Jonathan Corbet <corbet@lwn.net>
-> > Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> > Cc: linux-kselftest@vger.kernel.org
-> > Cc: kunit-dev@googlegroups.com
-> > Cc: linux-doc@vger.kernel.org
-> > Cc: linux-kernel@vger.kernel.org
-> > Cc: linux-hardening@vger.kernel.org
-> > ---
-> >   Documentation/dev-tools/kunit/style.rst | 25 +++++++++++++++----------
-> >   1 file changed, 15 insertions(+), 10 deletions(-)
-> > 
-> > diff --git a/Documentation/dev-tools/kunit/style.rst b/Documentation/dev-tools/kunit/style.rst
-> > index b6d0d7359f00..1538835cd0e2 100644
-> > --- a/Documentation/dev-tools/kunit/style.rst
-> > +++ b/Documentation/dev-tools/kunit/style.rst
-> > @@ -188,15 +188,20 @@ For example, a Kconfig entry might look like:
-> >   Test File and Module Names
-> >   ==========================
-> > -KUnit tests can often be compiled as a module. These modules should be named
-> > -after the test suite, followed by ``_test``. If this is likely to conflict with
-> > -non-KUnit tests, the suffix ``_kunit`` can also be used.
-> > -
-> > -The easiest way of achieving this is to name the file containing the test suite
-> > -``<suite>_test.c`` (or, as above, ``<suite>_kunit.c``). This file should be
-> > -placed next to the code under test.
-> > +Whether a KUnit test is compiled as a separate module or via an
-> > +``#include`` in a core kernel source file, the file should be named
-> > +after the test suite, followed by ``_kunit``, and live in a ``tests``
-> > +subdirectory to avoid conflicting with regular modules (e.g. if "foobar"
-> > +is the core module, then "foobar_kunit" is the KUnit test module) or the
-> > +core kernel source file names (e.g. for tab-completion). Many existing
-> > +tests use a ``_test`` suffix, but this is considered deprecated.
+On Sun, Jul 21, 2024 at 09:10:59PM +0000, Artem S. Tashkinov wrote:
+> Hello,
 > 
-> For this paragraph, may I suggest this wording below? It attempts to
-> explain the _kunit a bit (without leaving anything behind that would need
-> to be changed later, if/when people rename things from _test.c to _kunit.c),
-> as well as fixing up the sentence structure slightly:
+> There are now two bug reports containing very similar if not exactly the
+> same backtraces.
 > 
+> https://bugzilla.kernel.org/show_bug.cgi?id=219072
+> https://bugzilla.kernel.org/show_bug.cgi?id=219078
 > 
-> Whether a KUnit test is compiled as a separate module or via an
-> ``#include`` in a core kernel source file, the file should be named
-> after the test suite, followed by ``_kunit``, and live in a ``tests``
-> subdirectory. This is to avoid conflicting with regular modules (e.g. if
-> "foobar" is the core module, then "foobar_kunit" is the KUnit test
-> module) or with the core kernel source file names (e.g. for
-> tab-completion). The ``_kunit`` suffix was chosen over the older (and
-> now deprecated) ``_test`` suffix, because KUnit behavior is sufficiently
-> distinct that it is worth identifying at file name level.
+> Theodore, please take a look.
 
-Sure! I like that.
+[adding everyone involved in 744a56389f739 ("ext4: replace deprecated
+strncpy with alternatives") to cc]
 
-> > +
-> > +So for the common case, name the file containing the test suite
-> > +``tests/<suite>_kunit.c``. The ``tests`` directory should be placed at
-> > +the same level as the code under test. For example, tests for
-> > +``lib/string.c`` live in ``lib/tests/string_kunit.c``.
-> >   If the suite name contains some or all of the name of the test's parent
-> > -directory, it may make sense to modify the source filename to reduce redundancy.
-> > -For example, a ``foo_firmware`` suite could be in the ``foo/firmware_test.c``
-> > -file.
-> > +directory, it may make sense to modify the source filename to reduce
-> > +redundancy. For example, a ``foo_firmware`` suite could be in the
-> > +``tests/foo/firmware_kunit.c`` file.
+Is strscpy_pad appropriate if the @src parameter itself is a fixed
+length char[16] which isn't null terminated when the label itself is 16
+chars long?
+
+--D
+
+> Might not be necesserily ext4 related but I cannot tell.
 > 
-> Whether you use that wording or not, this looks good, so:
+> ------------[ cut here ]------------
+> strnlen: detected buffer overflow: 17 byte read of buffer size 16
+> WARNING: CPU: 3 PID: 1622 at lib/string_helpers.c:1029
+> __fortify_report+0x43/0x50
+> Modules linked in: rfcomm snd_seq_dummy snd_hrtimer snd_seq uhid cmac
+> algif_hash algif_skcipher af_alg bnep vfat fat amd_atl intel_rapl_msr
+> intel_rapl_common kvm_amd snd_hda_codec_realtek snd_hda_codec_generic
+> kvm ip6t_REJECT snd_hda_scodec_component snd_hda_codec_hdmi
+> nf_reject_ipv6 crct10dif_pclmul crc32_pclmul xt_hl snd_usb_audio
+> polyval_clmulni snd_hda_intel ip6t_rt polyval_generic snd_intel_dspcfg
+> gf128mul snd_usbmidi_lib snd_intel_sdw_acpi ghash_clmulni_intel
+> sha512_ssse3 snd_ump snd_hda_codec sha256_ssse3 snd_rawmidi sha1_ssse3
+> btusb snd_hda_core snd_seq_device aesni_intel btrtl mc snd_hwdep btintel
+> crypto_simd btbcm snd_pcm cryptd r8169 btmtk realtek snd_timer
+> mdio_devres rapl bluetooth snd wmi_bmof k10temp pcspkr ipt_REJECT ccp
+> i2c_piix4 libphy soundcore nf_reject_ipv4 xt_LOG rfkill nf_log_syslog
+> joydev mousedev nft_limit gpio_amdpt gpio_generic mac_hid lz4
+> lz4_compress xt_limit xt_addrtype xt_tcpudp xt_conntrack nf_conntrack
+> nf_defrag_ipv6 nf_defrag_ipv4 nft_compat nf_tables libcrc32c tcp_bbr
+>  winesync(OE) pkcs8_key_parser i2c_dev crypto_user dm_mod loop
+> nfnetlink zram ip_tables x_tables ext4 crc32c_generic crc16 mbcache jbd2
+> hid_generic usbhid amdgpu video amdxcp i2c_algo_bit drm_ttm_helper ttm
+> drm_exec gpu_sched drm_suballoc_helper drm_buddy nvme drm_display_helper
+> nvme_core crc32c_intel cec xhci_pci xhci_pci_renesas nvme_auth wmi
+> CPU: 3 PID: 1622 Comm: KIO::WorkerThre Tainted: G           OE
+> 6.10.0-arch1-1 #1 3f70a25b32dbfb369f64430c352117d965bafd6c
+> Hardware name: Micro-Star International Co., Ltd MS-7C02/B450 TOMAHAWK
+> MAX (MS-7C02), BIOS 3.I0 10/14/2023
+> RIP: 0010:__fortify_report+0x43/0x50
+> Code: c1 83 e7 01 48 c7 c1 82 1a 45 8f 48 c7 c7 e8 49 4b 8f 48 8b 34 c5
+> e0 55 ed 8e 48 c7 c0 3d f7 44 8f 48 0f 44 c8 e8 7d 4b a3 ff <0f> 0b c3
+> cc cc cc cc 66 0f 1f 44 00 00 90 90 90 90 90 90 90 90 90
+> RSP: 0018:ffffb4b09f7b3b68 EFLAGS: 00010286
+> RAX: 0000000000000000 RBX: ffff991a934c6000 RCX: 0000000000000027
+> RDX: ffff99219eba19c8 RSI: 0000000000000001 RDI: ffff99219eba19c0
+> RBP: ffffb4b09f7b3c38 R08: 0000000000000000 R09: ffffb4b09f7b39e8
+> R10: ffffffff8fcb21e8 R11: 0000000000000003 R12: 0000760a5dfff390
+> R13: ffff991a8a724af8 R14: ffff991aa4a3d478 R15: ffffffff8fd2a5a0
+> FS:  0000760a5e0006c0(0000) GS:ffff99219eb80000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00007609e0013810 CR3: 000000012cb70000 CR4: 0000000000f50ef0
+> PKRU: 55555554
+> Call Trace:
+>  <TASK>
+>  ? __fortify_report+0x43/0x50
+>  ? __warn.cold+0x8e/0xe8
+>  ? __fortify_report+0x43/0x50
+>  ? report_bug+0xff/0x140
+>  ? console_unlock+0x84/0x130
+>  ? handle_bug+0x3c/0x80
+>  ? exc_invalid_op+0x17/0x70
+>  ? asm_exc_invalid_op+0x1a/0x20
+>  ? __fortify_report+0x43/0x50
+>  ? __fortify_report+0x43/0x50
+>  __fortify_panic+0xd/0xf
+>  __ext4_ioctl.cold+0x13/0x59 [ext4
+> 2a94c00997ffaf4059189da5c3ba69455dc04edb]
+>  ? do_filp_open+0xc4/0x170
+>  ? __fdget_raw+0xa5/0xc0
+>  ? terminate_walk+0x61/0x100
+>  __x64_sys_ioctl+0x94/0xd0
+>  do_syscall_64+0x82/0x190
+>  ? from_kgid_munged+0x12/0x30
+>  ? cp_statx+0x19f/0x1e0
+>  ? do_statx+0x72/0xa0
+>  ? syscall_exit_to_user_mode+0x72/0x200
+>  ? do_syscall_64+0x8e/0x190
+>  ? do_user_addr_fault+0x36c/0x620
+>  ? exc_page_fault+0x81/0x190
+>  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> RIP: 0033:0x760ade31f13f
+> Code: 00 48 89 44 24 18 31 c0 48 8d 44 24 60 c7 04 24 10 00 00 00 48 89
+> 44 24 08 48 8d 44 24 20 48 89 44 24 10 b8 10 00 00 00 0f 05 <89> c2 3d
+> 00 f0 ff ff 77 18 48 8b 44 24 18 64 48 2b 04 25 28 00 00
+> RSP: 002b:0000760a5dfff310 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+> RAX: ffffffffffffffda RBX: 0000760a5dfff560 RCX: 0000760ade31f13f
+> RDX: 0000760a5dfff390 RSI: 0000000081009431 RDI: 000000000000003e
+> RBP: 0000760a5dfff4b0 R08: 0000760a5dfff580 R09: 00007609e0007ae0
+> R10: 0000000000001000 R11: 0000000000000246 R12: 0000760a5dfff390
+> R13: 00007609e00135e0 R14: 0000760a5dfff540 R15: 0000000000010308
+>  </TASK>
+> ---[ end trace 0000000000000000 ]---
+> ------------[ cut here ]------------
+> kernel BUG at lib/string_helpers.c:1037!
+> Oops: invalid opcode: 0000 [#1] PREEMPT SMP NOPTI
+> CPU: 3 PID: 1622 Comm: KIO::WorkerThre Tainted: G        W  OE
+> 6.10.0-arch1-1 #1 3f70a25b32dbfb369f64430c352117d965bafd6c
+> Hardware name: Micro-Star International Co., Ltd MS-7C02/B450 TOMAHAWK
+> MAX (MS-7C02), BIOS 3.I0 10/14/2023
+> RIP: 0010:__fortify_panic+0xd/0xf
+> Code: ff e8 87 03 00 00 e9 08 b8 89 ff 66 90 90 90 90 90 90 90 90 90 90
+> 90 90 90 90 90 90 90 f3 0f 1e fa 40 0f b6 ff e8 b3 e2 89 ff <0f> 0b 48
+> 8b 54 24 10 48 8b 74 24 08 4c 89 e9 48 c7 c7 99 27 42 8f
+> RSP: 0018:ffffb4b09f7b3b70 EFLAGS: 00010286
+> RAX: 0000000000000000 RBX: ffff991a934c6000 RCX: 0000000000000027
+> RDX: ffff99219eba19c8 RSI: 0000000000000001 RDI: ffff99219eba19c0
+> RBP: ffffb4b09f7b3c38 R08: 0000000000000000 R09: ffffb4b09f7b39e8
+> R10: ffffffff8fcb21e8 R11: 0000000000000003 R12: 0000760a5dfff390
+> R13: ffff991a8a724af8 R14: ffff991aa4a3d478 R15: ffffffff8fd2a5a0
+> FS:  0000760a5e0006c0(0000) GS:ffff99219eb80000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00007609e0013810 CR3: 000000012cb70000 CR4: 0000000000f50ef0
+> PKRU: 55555554
+> Call Trace:
+>  <TASK>
+>  ? __die_body.cold+0x19/0x27
+>  ? die+0x2e/0x50
+>  ? do_trap+0xca/0x110
+>  ? do_error_trap+0x6a/0x90
+>  ? __fortify_panic+0xd/0xf
+>  ? exc_invalid_op+0x50/0x70
+>  ? __fortify_panic+0xd/0xf
+>  ? asm_exc_invalid_op+0x1a/0x20
+>  ? __fortify_panic+0xd/0xf
+>  __ext4_ioctl.cold+0x13/0x59 [ext4
+> 2a94c00997ffaf4059189da5c3ba69455dc04edb]
+>  ? do_filp_open+0xc4/0x170
+>  ? __fdget_raw+0xa5/0xc0
+>  ? terminate_walk+0x61/0x100
+>  __x64_sys_ioctl+0x94/0xd0
+>  do_syscall_64+0x82/0x190
+>  ? from_kgid_munged+0x12/0x30
+>  ? cp_statx+0x19f/0x1e0
+>  ? do_statx+0x72/0xa0
+>  ? syscall_exit_to_user_mode+0x72/0x200
+>  ? do_syscall_64+0x8e/0x190
+>  ? do_user_addr_fault+0x36c/0x620
+>  ? exc_page_fault+0x81/0x190
+>  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> RIP: 0033:0x760ade31f13f
+> Code: 00 48 89 44 24 18 31 c0 48 8d 44 24 60 c7 04 24 10 00 00 00 48 89
+> 44 24 08 48 8d 44 24 20 48 89 44 24 10 b8 10 00 00 00 0f 05 <89> c2 3d
+> 00 f0 ff ff 77 18 48 8b 44 24 18 64 48 2b 04 25 28 00 00
+> RSP: 002b:0000760a5dfff310 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+> RAX: ffffffffffffffda RBX: 0000760a5dfff560 RCX: 0000760ade31f13f
+> RDX: 0000760a5dfff390 RSI: 0000000081009431 RDI: 000000000000003e
+> RBP: 0000760a5dfff4b0 R08: 0000760a5dfff580 R09: 00007609e0007ae0
+> R10: 0000000000001000 R11: 0000000000000246 R12: 0000760a5dfff390
+> R13: 00007609e00135e0 R14: 0000760a5dfff540 R15: 0000000000010308
+>  </TASK>
+> Modules linked in: rfcomm snd_seq_dummy snd_hrtimer snd_seq uhid cmac
+> algif_hash algif_skcipher af_alg bnep vfat fat amd_atl intel_rapl_msr
+> intel_rapl_common kvm_amd snd_hda_codec_realtek snd_hda_codec_generic
+> kvm ip6t_REJECT snd_hda_scodec_component snd_hda_codec_hdmi
+> nf_reject_ipv6 crct10dif_pclmul crc32_pclmul xt_hl snd_usb_audio
+> polyval_clmulni snd_hda_intel ip6t_rt polyval_generic snd_intel_dspcfg
+> gf128mul snd_usbmidi_lib snd_intel_sdw_acpi ghash_clmulni_intel
+> sha512_ssse3 snd_ump snd_hda_codec sha256_ssse3 snd_rawmidi sha1_ssse3
+> btusb snd_hda_core snd_seq_device aesni_intel btrtl mc snd_hwdep btintel
+> crypto_simd btbcm snd_pcm cryptd r8169 btmtk realtek snd_timer
+> mdio_devres rapl bluetooth snd wmi_bmof k10temp pcspkr ipt_REJECT ccp
+> i2c_piix4 libphy soundcore nf_reject_ipv4 xt_LOG rfkill nf_log_syslog
+> joydev mousedev nft_limit gpio_amdpt gpio_generic mac_hid lz4
+> lz4_compress xt_limit xt_addrtype xt_tcpudp xt_conntrack nf_conntrack
+> nf_defrag_ipv6 nf_defrag_ipv4 nft_compat nf_tables libcrc32c tcp_bbr
+>  winesync(OE) pkcs8_key_parser i2c_dev crypto_user dm_mod loop
+> nfnetlink zram ip_tables x_tables ext4 crc32c_generic crc16 mbcache jbd2
+> hid_generic usbhid amdgpu video amdxcp i2c_algo_bit drm_ttm_helper ttm
+> drm_exec gpu_sched drm_suballoc_helper drm_buddy nvme drm_display_helper
+> nvme_core crc32c_intel cec xhci_pci xhci_pci_renesas nvme_auth wmi
+> ---[ end trace 0000000000000000 ]---
+> RIP: 0010:__fortify_panic+0xd/0xf
+> Code: ff e8 87 03 00 00 e9 08 b8 89 ff 66 90 90 90 90 90 90 90 90 90 90
+> 90 90 90 90 90 90 90 f3 0f 1e fa 40 0f b6 ff e8 b3 e2 89 ff <0f> 0b 48
+> 8b 54 24 10 48 8b 74 24 08 4c 89 e9 48 c7 c7 99 27 42 8f
+> RSP: 0018:ffffb4b09f7b3b70 EFLAGS: 00010286
+> RAX: 0000000000000000 RBX: ffff991a934c6000 RCX: 0000000000000027
+> RDX: ffff99219eba19c8 RSI: 0000000000000001 RDI: ffff99219eba19c0
+> RBP: ffffb4b09f7b3c38 R08: 0000000000000000 R09: ffffb4b09f7b39e8
+> R10: ffffffff8fcb21e8 R11: 0000000000000003 R12: 0000760a5dfff390
+> R13: ffff991a8a724af8 R14: ffff991aa4a3d478 R15: ffffffff8fd2a5a0
+> FS:  0000760a5e0006c0(0000) GS:ffff99219eb80000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00007609e0013810 CR3: 000000012cb70000 CR4: 0000000000f50ef0
+> PKRU: 55555554
 > 
-> Reviewed-by: John Hubbard <jhubbard@nvidia.com>
-
-Thanks!
-
--- 
-Kees Cook
+> 
