@@ -1,63 +1,57 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89FB6137748
-	for <linux-hardening@vger.kernel.org>; Tue, 23 Jul 2024 16:54:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 311D114C5A1;
+	Tue, 23 Jul 2024 17:18:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721753661; cv=none; b=LWJ4P1oP+W5zdlStcBLcuztb6EAoV4RD6ctblBXi7a7KMTY/i/bivpNfP0IKODoGafzq2fKB0umo8Ue7+tJc1KJ4gzFvos78/feJVn7b3m4SEapPQXbRIBgohzYoF+l/mgN+prX8tooJ0JtA8uoi6XOS5Aof9Fpth/5ZuIdi9qI=
+	t=1721755102; cv=none; b=EYZCH9fD3XV6VYtCb7WPl/pumDS7F+D+55wmjV74gzcb/0u8Jxl0JCSfDTD3dxW7xALWqjVdVIKAwlW0zDs9nuxyowCeQnizgQbZTotZfcsz2d4cadrULNBXugm9l032ENy5x+eSA6qDVCnQ1R3Rv1cYV1g5vxuM7bMpmCglZ4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721753661; c=relaxed/simple;
-	bh=EqmoXx9ANo44HduyygKOKQ9h/PuYmQB0faEDVLlWrU4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cwXftIfAzJMweifPg6nJ5udz5+/QyqF66exH3pPc84axvogqEVv99orD+Q9ck12jIv6N4lO1LRMQjXFihMRcHnt2F/BBOTPXm3lehv5soZbqKoToX/yKP344MfRnnxUtCPU3a4D9KxZ2tJvJtdLW+MPQRUsco2Gq8b+uCUKTIrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=B5R/5gLG; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+	s=arc-20240116; t=1721755102; c=relaxed/simple;
+	bh=DbhrmL0C4tQ5GXXI65BQshJiPvMP6gqNXYkIW18wC4A=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GFzQJLL7iYMjh4XsSpwFu7QAMa3sEhiKyL7PxSM2lTZWHBJJqfryIQjs5IyNCorpFerA6jE6GYzU8WDFzEYTrEpUvbAP0zB7kdrF2uq8PhErsfvbxtYMgHjNmralvOY2ScIDN0j/d7ddQpTnsFFE+AAM7RmBqQ/eNn/6QxnY5ks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=zSP9jq8u; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="B5R/5gLG"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4266eda81c5so50401995e9.0
-        for <linux-hardening@vger.kernel.org>; Tue, 23 Jul 2024 09:54:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1721753658; x=1722358458; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ec19jJGfGnBIYVJTGlviXly/zWfA2esrkPo5x5OJnq0=;
-        b=B5R/5gLGOcGjmEcAuVGEJn7OcLmFxNTstKzEl/MiuRR+BTl/tVifs59tkOBALUgfr0
-         +r7aY3NDlTKzngyIcaUnV7nh7tmh2AnC/3VulAkWuPsCEXBUboZOXF4LYwehlHzGaT/i
-         l35d1Y8flB/92AgiVZ9OvY+rqGuFFrkNleH/bjWtH439nUqDj28x/mRIla9Q55mnmjJP
-         Rz/4yUETQHCQMAv10JDDy2b0f/vcac26c+zzS9NbCwU4VZYThXXgSCUdE5ycg2NdK0Qh
-         YPGB8vT7nSa7vOPOAN7dH/bR7N0OwnzNM/OvJTbh5JgwgsZdvdOnasnxwRZ9hv1/fynF
-         aVJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721753658; x=1722358458;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ec19jJGfGnBIYVJTGlviXly/zWfA2esrkPo5x5OJnq0=;
-        b=WQJWPwJWfDA4MTD2UTx/lp7kWHwc/DopAKndluaCcs6YxRRCUd8PWBdsDFbk1CcPQ+
-         0s++y5fg/JSZEtyRxqRq72cKDZVVCxVOfAPrsWrX6z9w8XT2A9A3CjQtGPtKm2memSAA
-         BPjdTbIsfxlPBN0RvDIt5ewWMGt5q1pEPvI+J76jPdERxnP+HqmB2oZDEZHpGfkrWz+C
-         9WhVF3Cc6DJv81foeLJD/GfwGGPjDvkZCF19XbpnYkMoAeqGXRBhbDVojQDhXWNfNM0I
-         2Of2s9HTMTyaclXOaMUKV4Wg7b2DxvXAQWo95TH4CDHsnAH4IY16rwBMSf+iZlWHOS7B
-         iJWg==
-X-Gm-Message-State: AOJu0Yz0AU3KIWpuxu+1fd7A+ZDwm5IwMIFDdrEmu8TRiQt7wI5GHlng
-	ws2IkNOMs9YBlMKyCBsCneo3cIDYtyMv7BZNcc7siZnGY0YDFRPSbmjV0MMvlZA=
-X-Google-Smtp-Source: AGHT+IE8FjLzbMDmFIu1l0FGepGi7un4GubrWRXa08UU0tOJSgIX3H10cJdAw1PsPSBh6SaicfBxTw==
-X-Received: by 2002:a05:600c:b9a:b0:426:5b44:2be7 with SMTP id 5b1f17b1804b1-427f7abaf92mr998335e9.10.1721753657738;
-        Tue, 23 Jul 2024 09:54:17 -0700 (PDT)
-Received: from fedora.fritz.box (aftr-82-135-80-26.dynamic.mnet-online.de. [82.135.80.26])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-427df79bf64sm126909345e9.5.2024.07.23.09.54.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jul 2024 09:54:17 -0700 (PDT)
-From: Thorsten Blum <thorsten.blum@toblux.com>
-To: kees@kernel.org
-Cc: linux-hardening@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="zSP9jq8u"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1721755095;
+	bh=DbhrmL0C4tQ5GXXI65BQshJiPvMP6gqNXYkIW18wC4A=;
+	h=From:To:Cc:Subject:Date:From;
+	b=zSP9jq8uzYVkAXnLnOi1p2cRctsaYPkVIXX1Fwiz+VlyJp+HA1aYkr9FxisRb7k6T
+	 KXNc0+An8xkCq8OvkQWlnlu8jKj1DoHu4re978HAsF5go2MOrbpFubf0p64saUCA1u
+	 WHSiXs8zlgEIyVcf6AlMhp1Ts3jeKTcwmDD0bsFeuqhfMg47vmWpYiYOQBBulom368
+	 0OKFnDqP7eaXnARdMYlWcxMbaRDJjWWmBgzLW5ngHZQOlddAYyl7WyjJEfVMaECUA4
+	 r4LLwDauNziHnO7E2jreecg+HyK1bFqNjVwIxYlWUSEz6AKBYbG9oP8opZSaIUfYkG
+	 Eul2Lh54X+PGA==
+Received: from gentoo.ratioveremundo.com (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: aratiu)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 63667378206B;
+	Tue, 23 Jul 2024 17:18:14 +0000 (UTC)
+From: Adrian Ratiu <adrian.ratiu@collabora.com>
+To: linux-fsdevel@vger.kernel.org
+Cc: linux-security-module@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Thorsten Blum <thorsten.blum@toblux.com>
-Subject: [PATCH] gcc-plugins: randstruct: Remove GCC 4.7 or newer requirement
-Date: Tue, 23 Jul 2024 18:53:31 +0200
-Message-ID: <20240723165332.1947-1-thorsten.blum@toblux.com>
-X-Mailer: git-send-email 2.45.2
+	linux-hardening@vger.kernel.org,
+	kernel@collabora.com,
+	gbiv@google.com,
+	inglorion@google.com,
+	ajordanr@google.com,
+	Adrian Ratiu <adrian.ratiu@collabora.com>,
+	Doug Anderson <dianders@chromium.org>,
+	Jeff Xu <jeffxu@google.com>,
+	Jann Horn <jannh@google.com>,
+	Kees Cook <kees@kernel.org>,
+	Christian Brauner <brauner@kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH] proc: add config & param to block forcing mem writes
+Date: Tue, 23 Jul 2024 20:17:53 +0300
+Message-ID: <20240723171753.739971-1-adrian.ratiu@collabora.com>
+X-Mailer: git-send-email 2.44.2
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -66,29 +60,180 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Since the kernel currently requires GCC 5.1 as a minimum, remove the
-unnecessary GCC version >= 4.7 check.
+This adds a Kconfig option and boot param to allow removing
+the FOLL_FORCE flag from /proc/pid/mem write calls because
+it can be abused.
 
-Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+The traditional forcing behavior is kept as default because
+it can break GDB and some other use cases.
+
+Previously we tried a more sophisticated approach allowing
+distributions to fine-tune /proc/pid/mem behavior, however
+that got NAK-ed by Linus [1], who prefers this simpler
+approach with semantics also easier to understand for users.
+
+Link: https://lore.kernel.org/lkml/CAHk-=wiGWLChxYmUA5HrT5aopZrB7_2VTa0NLZcxORgkUe5tEQ@mail.gmail.com/ [1]
+Cc: Doug Anderson <dianders@chromium.org>
+Cc: Jeff Xu <jeffxu@google.com>
+Cc: Jann Horn <jannh@google.com>
+Cc: Kees Cook <kees@kernel.org>
+Cc: Christian Brauner <brauner@kernel.org>
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
 ---
- scripts/gcc-plugins/randomize_layout_plugin.c | 4 ----
- 1 file changed, 4 deletions(-)
+ .../admin-guide/kernel-parameters.txt         | 10 ++++
+ fs/proc/base.c                                | 58 ++++++++++++++++++-
+ security/Kconfig                              | 32 ++++++++++
+ 3 files changed, 99 insertions(+), 1 deletion(-)
 
-diff --git a/scripts/gcc-plugins/randomize_layout_plugin.c b/scripts/gcc-plugins/randomize_layout_plugin.c
-index 746ff2d272f2..5694df3da2e9 100644
---- a/scripts/gcc-plugins/randomize_layout_plugin.c
-+++ b/scripts/gcc-plugins/randomize_layout_plugin.c
-@@ -19,10 +19,6 @@
- #include "gcc-common.h"
- #include "randomize_layout_seed.h"
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index c1134ad5f06d..793301f360ec 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -4791,6 +4791,16 @@
+ 	printk.time=	Show timing data prefixed to each printk message line
+ 			Format: <bool>  (1/Y/y=enable, 0/N/n=disable)
  
--#if BUILDING_GCC_MAJOR < 4 || (BUILDING_GCC_MAJOR == 4 && BUILDING_GCC_MINOR < 7)
--#error "The RANDSTRUCT plugin requires GCC 4.7 or newer."
--#endif
--
- #define ORIG_TYPE_NAME(node) \
- 	(TYPE_NAME(TYPE_MAIN_VARIANT(node)) != NULL_TREE ? ((const unsigned char *)IDENTIFIER_POINTER(TYPE_NAME(TYPE_MAIN_VARIANT(node)))) : (const unsigned char *)"anonymous")
++	proc_mem.force_override= [KNL]
++			Format: {always | ptrace | never}
++			Traditionally /proc/pid/mem allows users to override memory
++			permissions. This allows people to limit that.
++			Can be one of:
++			- 'always' traditional behavior always allows mem overrides.
++			- 'ptrace' only allow for active ptracers.
++			- 'never'  never allow mem permission overrides.
++			If not specified, default is always.
++
+ 	processor.max_cstate=	[HW,ACPI]
+ 			Limit processor to maximum C-state
+ 			max_cstate=9 overrides any DMI blacklist limit.
+diff --git a/fs/proc/base.c b/fs/proc/base.c
+index 72a1acd03675..5ef14ba953a2 100644
+--- a/fs/proc/base.c
++++ b/fs/proc/base.c
+@@ -117,6 +117,40 @@
+ static u8 nlink_tid __ro_after_init;
+ static u8 nlink_tgid __ro_after_init;
  
++enum proc_mem_force_state {
++	PROC_MEM_FORCE_ALWAYS,
++	PROC_MEM_FORCE_PTRACE,
++	PROC_MEM_FORCE_NEVER
++};
++
++#if defined(CONFIG_PROC_MEM_ALWAYS_FORCE)
++static enum proc_mem_force_state proc_mem_force_override __ro_after_init = PROC_MEM_FORCE_ALWAYS;
++#elif defined(CONFIG_PROC_MEM_FORCE_PTRACE)
++static enum proc_mem_force_state proc_mem_force_override __ro_after_init = PROC_MEM_FORCE_PTRACE;
++#else
++static enum proc_mem_force_state proc_mem_force_override __ro_after_init = PROC_MEM_FORCE_NEVER;
++#endif
++
++static int __init early_proc_mem_force_override(char *buf)
++{
++	if (!buf)
++		return -EINVAL;
++
++	if (strcmp(buf, "always") == 0) {
++		proc_mem_force_override = PROC_MEM_FORCE_ALWAYS;
++	} else if (strcmp(buf, "ptrace") == 0) {
++		proc_mem_force_override = PROC_MEM_FORCE_PTRACE;
++	} else if (strcmp(buf, "never") == 0) {
++		proc_mem_force_override = PROC_MEM_FORCE_NEVER;
++	} else {
++		pr_warn("proc_mem.force_override: ignoring unknown option '%s'\n", buf);
++		return -EINVAL;
++	}
++
++	return 0;
++}
++early_param("proc_mem.force_override", early_proc_mem_force_override);
++
+ struct pid_entry {
+ 	const char *name;
+ 	unsigned int len;
+@@ -835,6 +869,26 @@ static int mem_open(struct inode *inode, struct file *file)
+ 	return ret;
+ }
+ 
++static bool proc_mem_foll_force(struct file *file, struct mm_struct *mm)
++{
++	switch (proc_mem_force_override) {
++	case PROC_MEM_FORCE_NEVER:
++		return false;
++	case PROC_MEM_FORCE_PTRACE: {
++		bool ptrace_active = false;
++		struct task_struct *task = get_proc_task(file_inode(file));
++
++		if (task) {
++			ptrace_active = task->ptrace && task->mm == mm && task->parent == current;
++			put_task_struct(task);
++		}
++		return ptrace_active;
++	}
++	default:
++		return true;
++	}
++}
++
+ static ssize_t mem_rw(struct file *file, char __user *buf,
+ 			size_t count, loff_t *ppos, int write)
+ {
+@@ -855,7 +909,9 @@ static ssize_t mem_rw(struct file *file, char __user *buf,
+ 	if (!mmget_not_zero(mm))
+ 		goto free;
+ 
+-	flags = FOLL_FORCE | (write ? FOLL_WRITE : 0);
++	flags = write ? FOLL_WRITE : 0;
++	if (proc_mem_foll_force(file, mm))
++		flags |= FOLL_FORCE;
+ 
+ 	while (count > 0) {
+ 		size_t this_len = min_t(size_t, count, PAGE_SIZE);
+diff --git a/security/Kconfig b/security/Kconfig
+index 412e76f1575d..a93c1a9b7c28 100644
+--- a/security/Kconfig
++++ b/security/Kconfig
+@@ -19,6 +19,38 @@ config SECURITY_DMESG_RESTRICT
+ 
+ 	  If you are unsure how to answer this question, answer N.
+ 
++choice
++	prompt "Allow /proc/pid/mem access override"
++	default PROC_MEM_ALWAYS_FORCE
++	help
++	  Traditionally /proc/pid/mem allows users to override memory
++	  permissions for users like ptrace, assuming they have ptrace
++	  capability.
++
++	  This allows people to limit that - either never override, or
++	  require actual active ptrace attachment.
++
++	  Defaults to the traditional behavior (for now)
++
++config PROC_MEM_ALWAYS_FORCE
++	bool "Traditional /proc/pid/mem behavior"
++	help
++	  This allows /proc/pid/mem accesses to override memory mapping
++	  permissions if you have ptrace access rights.
++
++config PROC_MEM_FORCE_PTRACE
++	bool "Require active ptrace() use for access override"
++	help
++	  This allows /proc/pid/mem accesses to override memory mapping
++	  permissions for active ptracers like gdb.
++
++config PROC_MEM_NO_FORCE
++	bool "Never"
++	help
++	  Never override memory mapping permissions
++
++endchoice
++
+ config SECURITY
+ 	bool "Enable different security models"
+ 	depends on SYSFS
 -- 
-2.45.2
+2.44.2
 
