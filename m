@@ -1,130 +1,98 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C35AE136982;
-	Wed, 24 Jul 2024 09:16:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 649F015B14C;
+	Wed, 24 Jul 2024 17:23:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721812590; cv=none; b=JhacaJAkGHEVjBL+vgqqkEyotAkreF63lPwi2jSRavVfdPGA6q/f4LD7ggiTxoble38i4JUISvuvhCIJjk6mXLp2e7sV9wlBH2NnTDecZfRywdXrBvt1CsBg2WkmZWu4jDxPQ3srobEZ6ES0LVYB561kIT3QmxL3765IFKPsUWI=
+	t=1721841802; cv=none; b=kaGaki8IcmAbVq2jFWDi40Rfj1ZIOuEpRa2FVKXU81J8cLnLLFp3QvDYlqWVHF+EHjD3WcznPme8GvEs8B4HPRF91NvBorSxhK2wVPRG4FGZNyhbVbbn/cr7VFWvlRTFCrGt70bHi69CHHjInD9KCXqeSBIXTs8F9S5uph4F9QQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721812590; c=relaxed/simple;
-	bh=B+/JsHJlzC4TmerN6ugwJQ7CYgG+ju/HUQuae7jz+f8=;
-	h=From:In-Reply-To:Content-Type:References:Date:Cc:To:MIME-Version:
-	 Message-ID:Subject; b=kKElY2X5yDyF1MdhErt4b6kb2fqVGl4LGo372CX5lyZQA4HFsllSxNUC/vKNVZxCv78Ovla/I6se8RD15+wHZhHNl/rml1OkyVXN8jWcD5NtDbQsY8YcIV1QSOOk6VQmL409+b/AnaKLKGI/WO+Je5mZGkjX+9MSLkHbRCVDPZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Received: from harlem.collaboradmins.com (harlem.collaboradmins.com [IPv6:2a01:4f8:1c0c:5936::1])
-	by madrid.collaboradmins.com (Postfix) with ESMTP id 02CBF3780BC2;
-	Wed, 24 Jul 2024 09:16:25 +0000 (UTC)
-From: "Adrian Ratiu" <adrian.ratiu@collabora.com>
-In-Reply-To: <CAHk-=wiJL59WxvyHOuz2ChW+Vi1PTRKJ+w+9E8d1f4QZs9UFcg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-X-Forward: 127.0.0.1
-References: <20240723171753.739971-1-adrian.ratiu@collabora.com> <CAHk-=wiJL59WxvyHOuz2ChW+Vi1PTRKJ+w+9E8d1f4QZs9UFcg@mail.gmail.com>
-Date: Wed, 24 Jul 2024 10:16:25 +0100
-Cc: linux-fsdevel@vger.kernel.org, linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, kernel@collabora.com, gbiv@google.com, inglorion@google.com, ajordanr@google.com, "Doug Anderson" <dianders@chromium.org>, "Jeff Xu" <jeffxu@google.com>, "Jann Horn" <jannh@google.com>, "Kees Cook" <kees@kernel.org>, "Christian Brauner" <brauner@kernel.org>
-To: "Linus Torvalds" <torvalds@linux-foundation.org>
+	s=arc-20240116; t=1721841802; c=relaxed/simple;
+	bh=HtaYanDI9QSAj+Q/1e0tx4hNbNfHrEbaegfKgGBVggU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k0xPbYGDZqe0AhVwseCqx0Uq43NS49SIsK3dM4JVM5wR9+1+oeyILyMU3iCjebZJjykXaow+KCmsKX2zfc/Nw0QRdzlen19RPy3uyujEoozoWcrOWZSKfLTLDVfDJX3qtLXKUpzeAEkbeiZJOYZMm/l871TwMl5vaVmn1O4yTMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cw4j2Wlk; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cw4j2Wlk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E06B8C32781;
+	Wed, 24 Jul 2024 17:23:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721841802;
+	bh=HtaYanDI9QSAj+Q/1e0tx4hNbNfHrEbaegfKgGBVggU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Cw4j2Wlk8s5iY0wgXmyGUV6Jmhbdfa79dYmNGXSbmiwyxEIShYDs40i425dpG2eY6
+	 5a/+nFe1+G7Vuy//Iwpta0nHr1/ABtogVo3NMwth+ypZpC0OsNHsuZXutt79Vg6iiw
+	 jaU1gHeWUA9GIuFUE7GDyLN23ZZUZgV+/Wl2ZIJbUrAGSWMBA6aX4mcLyITc5kr/8K
+	 f+Zl725GQeWB+uzOgUUX9Q+MMI4qkw1lUs+3rlE2kFap7aSCQn00hjOmuXM1HmURWi
+	 i4igJ/Nfxx4PnOiR5cZh3MD8DqLv37FqOFN04ETPfJjjcZ1DKk5xrUGgbgcveEiWFs
+	 UHxUynT39Ue8Q==
+Date: Wed, 24 Jul 2024 10:23:21 -0700
+From: Kees Cook <kees@kernel.org>
+To: David Gow <davidgow@google.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Yury Norov <yury.norov@gmail.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	"Jason A. Donenfeld" <Jason@zx2c4.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Brown <broonie@kernel.org>,
+	Matti Vaittinen <mazziesaccount@gmail.com>,
+	linux-hardening@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	kunit-dev@googlegroups.com, linux-trace-kernel@vger.kernel.org,
+	Palmer Dabbelt <palmer@rivosinc.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Simon Horman <horms@kernel.org>, Jakub Kicinski <kuba@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Daniel Latypov <dlatypov@google.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	David Howells <dhowells@redhat.com>,
+	=?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
+	Marco Elver <elver@google.com>, Mark Rutland <mark.rutland@arm.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Fangrui Song <maskray@google.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] lib: Move KUnit tests into tests/ subdirectory
+Message-ID: <202407241013.A810920@keescook>
+References: <20240720181025.work.002-kees@kernel.org>
+ <CABVgOSnz1nvVQBmcZrTsUp3RStBYwk5_VN5-heOSHq3aYMsXTQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <27ea5-66a0c680-3-322bfd00@171174474>
-Subject: =?utf-8?q?Re=3A?= [PATCH] =?utf-8?q?proc=3A?= add config & param to block 
- forcing mem writes
-User-Agent: SOGoMail 5.10.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABVgOSnz1nvVQBmcZrTsUp3RStBYwk5_VN5-heOSHq3aYMsXTQ@mail.gmail.com>
 
-On Tuesday, July 23, 2024 21:30 EEST, Linus Torvalds <torvalds@linux-fo=
-undation.org> wrote:
-
-> On Tue, 23 Jul 2024 at 10:18, Adrian Ratiu <adrian.ratiu@collabora.co=
-m> wrote:
+On Wed, Jul 24, 2024 at 02:43:15PM +0800, David Gow wrote:
+> On Sun, 21 Jul 2024 at 02:10, Kees Cook <kees@kernel.org> wrote:
 > >
-> > This adds a Kconfig option and boot param to allow removing
-> > the FOLL=5FFORCE flag from /proc/pid/mem write calls because
-> > it can be abused.
->=20
-> Ack, this looks much simpler.
->=20
-> That said, I think this can be prettied up some more:
->=20
-> > +enum proc=5Fmem=5Fforce=5Fstate {
-> > +       PROC=5FMEM=5FFORCE=5FALWAYS,
-> > +       PROC=5FMEM=5FFORCE=5FPTRACE,
-> > +       PROC=5FMEM=5FFORCE=5FNEVER
-> > +};
-> > +
-> > +#if defined(CONFIG=5FPROC=5FMEM=5FALWAYS=5FFORCE)
-> > +static enum proc=5Fmem=5Fforce=5Fstate proc=5Fmem=5Fforce=5Foverri=
-de =5F=5Fro=5Fafter=5Finit =3D PROC=5FMEM=5FFORCE=5FALWAYS;
-> > +#elif defined(CONFIG=5FPROC=5FMEM=5FFORCE=5FPTRACE)
-> > +static enum proc=5Fmem=5Fforce=5Fstate proc=5Fmem=5Fforce=5Foverri=
-de =5F=5Fro=5Fafter=5Finit =3D PROC=5FMEM=5FFORCE=5FPTRACE;
-> > +#else
-> > +static enum proc=5Fmem=5Fforce=5Fstate proc=5Fmem=5Fforce=5Foverri=
-de =5F=5Fro=5Fafter=5Finit =3D PROC=5FMEM=5FFORCE=5FNEVER;
-> > +#endif
->=20
-> I think instead of that forest of #if defined(), we can just do
->=20
->   enum proc=5Fmem=5Fforce {
->         PROC=5FMEM=5FFORCE=5FALWAYS,
->         PROC=5FMEM=5FFORCE=5FPTRACE,
->         PROC=5FMEM=5FFORCE=5FNEVER
->   };
->=20
->   static enum proc=5Fmem=5Fforce proc=5Fmem=5Fforce=5Foverride =5F=5F=
-ro=5Fafter=5Finit =3D
->       IS=5FENABLED(CONFIG=5FPROC=5FMEM=5FALWAYS=5FFORCE) ? PROC=5FMEM=
-=5FFORCE=5FALWAYS :
->       IS=5FENABLED(CONFIG=5FPROC=5FMEM=5FFORCE=5FPTRACE) ? PROC=5FMEM=
-=5FFORCE=5FPTRACE :
->       PROC=5FMEM=5FFORCE=5FNEVER;
->=20
-> I also really thought we had some parser helper for this pattern:
->=20
-> > +static int =5F=5Finit early=5Fproc=5Fmem=5Fforce=5Foverride(char *=
-buf)
-> > +{
-> > +       if (!buf)
-> > +               return -EINVAL;
-> > +
-> > +       if (strcmp(buf, "always") =3D=3D 0) {
-> > +               proc=5Fmem=5Fforce=5Foverride =3D PROC=5FMEM=5FFORC=
-E=5FALWAYS;
->  ....
->=20
-> but it turns out we only really "officially" have it for filesystem
-> superblock parsing.
->=20
-> Oh well. We could do
->=20
->   #include <linux/fs=5Fparser.h>
->  ...
->   struct constant=5Ftable proc=5Fmem=5Fforce=5Ftable[] {
->         { "ptrace", PROC=5FMEM=5FFORCE=5FPTRACE },
->         { "never", PROC=5FMEM=5FFORCE=5FNEVER },
->         { }
->   };
->   ...
->   proc=5Fmem=5Fforce=5Foverride =3D lookup=5Fconstant(
->         proc=5Fmem=5Fforce=5Ftable, buf, PROC=5FMEM=5FFORCE=5FNEVER);
->=20
-> but while that looks a bit prettier, the whole "fs=5Fparser.h" thing =
-is
-> admittedly odd.
->=20
-> Anyway, I think the patch is ok, although I also happen to think it
-> could be a bit prettier.
+> > Following from the recent KUnit file naming discussion[1], move all
+> > KUnit tests in lib/ into lib/tests/.
+> >
+> > Link: https://lore.kernel.org/lkml/20240720165441.it.320-kees@kernel.org/ [1]
+> > Signed-off-by: Kees Cook <kees@kernel.org>
+> > ---
+> > I can carry this in the hardening tree. To disrupt people as little as
+> > possible, I'm hoping to send this either at the end of -rc1 or early
+> > in -rc2.
+> 
+> Thanks.
+> 
+> I'm happy if you want to rename list-test.c -> list_kunit.c, too.
 
-Thanks again, I am perfectly fine with using fs=5Fparser.h.
+Sure! I was thinking about doing some separate follow-up changes for
+individual tests.
 
-I'll wait a few days to give others a chance to review/respond,
-then apply your changes and send a v3.
+-Kees
 
-(this was actually v2, however git format-patch removed my
-"Changes in v2" blurb and v2 title; will add them next time)
-
+-- 
+Kees Cook
