@@ -1,176 +1,485 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 027EA2D030
-	for <linux-hardening@vger.kernel.org>; Wed, 24 Jul 2024 05:06:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75AF74CE05
+	for <linux-hardening@vger.kernel.org>; Wed, 24 Jul 2024 06:43:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721797612; cv=none; b=U1PfcMkuBpriYWQH4pVQxfUP6XuSYN8zUiJfEO+sW+6io9PA7sxxZZ3rUFCAm6MnhTJN7zl1V5qgK8fsFcdRJRm6m/KrxODOP/Xk/+y7VZIUtnLOniZAZK3bJISTZvD4kJ7oBS3MOw5zEv/Ho4j8tGB8VgvlqNHsVoBI6C97AZ8=
+	t=1721803413; cv=none; b=MHWQuHDLC+tYgxRGM5FMX4yL+B54EGvF9zXftNZjfaTrfE9DEFEuO4TbMwHBCIeUpFPhySqKl18SYzEAQB54NA6wwnwvsEwmj9I/J+nA9DCNx6PFcki9URNSlh2R5ZgBTkgViTMFFT5FbQa1aKEuWA+8N7UuuUScE0YrHRRTVB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721797612; c=relaxed/simple;
-	bh=opsiMzXJy/Z4aZa/p1esl4NC8Pl5ioW4fqdZtKERffI=;
+	s=arc-20240116; t=1721803413; c=relaxed/simple;
+	bh=xS/pycPaiEKXg6VzWFP/zeIslR807r5hIzJkCVYfErg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PwLVwhZkIzR2x4Br1XNQEo6rsbCAqy9S0aRcPWbX/b6yAx9QWF76gtQaJUldsnlVAsr3MYnRGWq69xOsEQBjwddg1xEfesRG+89aqc60NqyOnHiPfSgqlI2x/rhq5bBnujRahepMTZio9kgeA1Ze2sgZxwFvxj88pbt2dc9Z0Qs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=I+dRJlXk; arc=none smtp.client-ip=209.85.160.182
+	 To:Cc:Content-Type; b=mXwW0GGY1SmDL2e2wAgjoWIQ86U2rxSJIBAapHnt0A4gQSstmIj4hBtMuUOfKEElAcvlHV4dS2krjvhqtKb/dEFGiMK4PSzsdYudvZ4v3HX10ezFqCSMBFgE5RC9iMmcvjz162zO4MX7EOX3Z/+m8uo2Nz2JAN3CWU3hF4McUgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pBAkAu8o; arc=none smtp.client-ip=209.85.160.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I+dRJlXk"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-447df43324fso162501cf.1
-        for <linux-hardening@vger.kernel.org>; Tue, 23 Jul 2024 22:06:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pBAkAu8o"
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-44f9d7cb5c5so221551cf.0
+        for <linux-hardening@vger.kernel.org>; Tue, 23 Jul 2024 23:43:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1721797610; x=1722402410; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1721803408; x=1722408208; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=p4tk045z8d6kN71LRZSdzHhCrLDvmPHXDvNQAFefIWs=;
-        b=I+dRJlXkFqZueVf4HEttLXPMNV2qmKZ3jQbhhzW8m/eQeq6zy/Bgv+T/kUTR0UP8KJ
-         +6DiX+dmS24b++FQypwlrqMmVOeGmzcgI/VU6luS81OxqYbe7s7ehUKd+dckfmRCm7RK
-         KifyS9LoWCA2TLVwh6e23BudOP/RRX1yZaMPZ/FR6tOUMJx6VUWL6kabDLMpf8IW1Zvz
-         8bKuvoMYIe6TgjuuBJA9AoYuRlNHa6b91dz1vvOP7cMpHpaGuEedYrNcs01Bk9jZYIdN
-         mvtGvoclWC3zq3ZT+RyMix5HycWV8Z8VSZW4YYdgODj1QtSfh+9CN2j9541yImF6AsFZ
-         grTg==
+        bh=vFoTsVR1q1m+/UmjN+ZLeRgZQPHh0+sfF7aHnW737Xs=;
+        b=pBAkAu8oUWcF5vIHwn7OrBHisi9AYMy8VEMGNWgY+62w4TfXQOVBs9K9QpPPnzyoWD
+         ArUF0V6AX5bn4QqN3ACZHuL/PgDVlbQEngT7KUDLnP0kECIl57jhIvTWI6Vm7UItP6d1
+         CGSkmFu1ed64L9S7J1/oJanqB6HlfmMJoygEIy6ahuK/m8NKlwPxkRC9JfHgU5q+LHp/
+         wnXbDhFm23i8W9HovP5z7qjpg2vMvv/Kiz1C+1eJw48kQ+r27Ix6HvzI6HH1awyOwdm8
+         Vxk+XkLbaOkVH4rc+qQP04ux+kRB8/KKD+jGg/LRQkhxCJSnvhkCwitIn3blOXTTFiHl
+         OfRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721797610; x=1722402410;
+        d=1e100.net; s=20230601; t=1721803408; x=1722408208;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=p4tk045z8d6kN71LRZSdzHhCrLDvmPHXDvNQAFefIWs=;
-        b=wmhLoCF9ObZZiTH6LsFSD1IbIh0JcvMNhywpI6qpw+JFkzsQ3VwiB9naSDUt7kxQAD
-         PM0SO+SOjr1x+MsAZWcc0U2rIslqtCG0oRa7KtSgfo5yWvOy4DCY0SACSFJRjgyBd5zo
-         vBSSDRv/3hHECfi5RVcKAwisQm2mNfToytkBbdx6QQ5vA+CiV5JVRwVRisGXnGHNX/l8
-         WU652ElTvWaBbJQmaoh7yQBpniwu856a4Q9C2EdVATFVtbHcN2OiAMfGEfIBmv8uU8Qs
-         u53K+oajjQ5D2UFYZVk0FDCCewe9zLaRCzblDYjXhVgtnC4bN7j7kZY4PHmse6sl1j9Z
-         yHnw==
-X-Forwarded-Encrypted: i=1; AJvYcCVL+Nl3JPbUSejBM7HHF3ri6MkxeycFW8AFUybRpRhAvSSG7ON3CR7PjovLJsIJnzXhcdGpFDQTSYY4jKBIUukdmvpl540arIY03sDJe8Rr
-X-Gm-Message-State: AOJu0Ywm1RbBASfZLQzQexl4Kl7CWLrGt+lPfCrzRoLdQi99wTIyfxpO
-	HNMRM5OJ5lppkbr6Vf3Zn4ts+QNxV5PYSEd/DxWlCFqxkZpbWPtmJo3hwH9dEeXrCzPEiZSml1B
-	k4/oFDHT6mVpa9zx2h8emB1av/oc+VgzC3EW1
-X-Google-Smtp-Source: AGHT+IE76U5azBGKDAqS1aO7ppAjfu/MPZN19CK8S9AIPI3hibVPDl9a8ilY3OfLS8+aPNfryjUpU3cXweXi42UIy5E=
-X-Received: by 2002:a05:622a:1450:b0:447:eeb1:3d2 with SMTP id
- d75a77b69052e-44fd4c88964mr2229121cf.27.1721797609699; Tue, 23 Jul 2024
- 22:06:49 -0700 (PDT)
+        bh=vFoTsVR1q1m+/UmjN+ZLeRgZQPHh0+sfF7aHnW737Xs=;
+        b=uqUfQ3r9IqoG682SRRoW5swYW0jlUWyQksuBWtyjiHdzPRy9YpEyiGuPHoZxe6ewyG
+         5BAGnSNSA7Se9ZEkomLiCuIr1k2pZSHcDaW8Qq8s6gNgeyt8i/nCa/RJTmX2XRuuxrvq
+         8U46doB/Sq0CgcnJU4s7rUGxwFwWaxSghXc/MyKHcykhxUycY11j4zWAvSwxs9Dg+OC2
+         bfjzzzH9LlWBPh+z4GZOd2c4VMDWLu+vpS/qKWvNijABjsQGki+4LI1BXCV1bOBnGK7x
+         BHcG59ZfQRmOypDtbpyN82Bg73v774zy0g4dqX19atYFGI7iDpTfio1t2S7aDBFUTrF4
+         YEOA==
+X-Forwarded-Encrypted: i=1; AJvYcCW7nUjvYfQkDQWl09oU4tqtGqXjk+C7MQnkI/c5eJBQQa6d8XoyK2zywodJH4K+cn/uPAnlHYnUGKfljU9EvC4ZvvhzL/FkTlQXSbk5fgsZ
+X-Gm-Message-State: AOJu0Yy7ADPUwHt8p5+SDTPVNJ90XopFHl/tIQWCpeEfA+pyqekQSanA
+	Uu9VxaG3AjhE0KKzsgdW00JT6URnSc2qxwtUX+Swq2L7zx+aWuxlqGqvowcdlVBhZVnrkvcvoW2
+	oPI2utPRge4R5JwdnuyIORsCsFAwak3EGCOM+
+X-Google-Smtp-Source: AGHT+IERQ/irJOv4MisrPi/QNY/+lOsfFjAeCoSgr2fRJQcAUd+Ok9bslxQIkITkUCodIKyt78t2gDeufpwWCvE5j+w=
+X-Received: by 2002:a05:622a:13ca:b0:447:d78d:773b with SMTP id
+ d75a77b69052e-44fd4a76c47mr2665461cf.6.1721803408146; Tue, 23 Jul 2024
+ 23:43:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240720165441.it.320-kees@kernel.org>
-In-Reply-To: <20240720165441.it.320-kees@kernel.org>
+References: <20240720181025.work.002-kees@kernel.org>
+In-Reply-To: <20240720181025.work.002-kees@kernel.org>
 From: David Gow <davidgow@google.com>
-Date: Wed, 24 Jul 2024 13:06:38 +0800
-Message-ID: <CABVgOS=oWSyhkCSAS1-oagEa8Sdj7T+ys9uzLpZbik9Chpvw_w@mail.gmail.com>
-Subject: Re: [PATCH v2] Documentation: KUnit: Update filename best practices
+Date: Wed, 24 Jul 2024 14:43:15 +0800
+Message-ID: <CABVgOSnz1nvVQBmcZrTsUp3RStBYwk5_VN5-heOSHq3aYMsXTQ@mail.gmail.com>
+Subject: Re: [PATCH] lib: Move KUnit tests into tests/ subdirectory
 To: Kees Cook <kees@kernel.org>
-Cc: Brendan Higgins <brendan.higgins@linux.dev>, Rae Moar <rmoar@google.com>, 
-	John Hubbard <jhubbard@nvidia.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, linux-kselftest@vger.kernel.org, 
-	kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Cc: Andrew Morton <akpm@linux-foundation.org>, Yury Norov <yury.norov@gmail.com>, 
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>, "Jason A. Donenfeld" <Jason@zx2c4.com>, 
+	Andy Shevchenko <andy@kernel.org>, "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, 
+	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>, "David S. Miller" <davem@davemloft.net>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mark Brown <broonie@kernel.org>, 
+	Matti Vaittinen <mazziesaccount@gmail.com>, linux-hardening@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+	linux-trace-kernel@vger.kernel.org, Palmer Dabbelt <palmer@rivosinc.com>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Charlie Jenkins <charlie@rivosinc.com>, 
+	Simon Horman <horms@kernel.org>, Jakub Kicinski <kuba@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Shuah Khan <skhan@linuxfoundation.org>, Daniel Latypov <dlatypov@google.com>, 
+	Guenter Roeck <linux@roeck-us.net>, David Howells <dhowells@redhat.com>, 
+	=?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
+	Marco Elver <elver@google.com>, Mark Rutland <mark.rutland@arm.com>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Vlastimil Babka <vbabka@suse.cz>, 
+	Geert Uytterhoeven <geert@linux-m68k.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Fangrui Song <maskray@google.com>, linux-kernel@vger.kernel.org
 Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="000000000000ef75eb061df73e2f"
+	boundary="0000000000008c8d2c061df898a3"
 
---000000000000ef75eb061df73e2f
+--0000000000008c8d2c061df898a3
 Content-Type: text/plain; charset="UTF-8"
 
-On Sun, 21 Jul 2024 at 00:54, Kees Cook <kees@kernel.org> wrote:
+On Sun, 21 Jul 2024 at 02:10, Kees Cook <kees@kernel.org> wrote:
 >
-> Based on feedback from Linus[1] and follow-up discussions, change the
-> suggested file naming for KUnit tests.
+> Following from the recent KUnit file naming discussion[1], move all
+> KUnit tests in lib/ into lib/tests/.
 >
-> Link: https://lore.kernel.org/lkml/CAHk-=wgim6pNiGTBMhP8Kd3tsB7_JTAuvNJ=XYd3wPvvk=OHog@mail.gmail.com/ [1]
+> Link: https://lore.kernel.org/lkml/20240720165441.it.320-kees@kernel.org/ [1]
 > Signed-off-by: Kees Cook <kees@kernel.org>
 > ---
-> Cc: David Gow <davidgow@google.com>
-> Cc: Brendan Higgins <brendan.higgins@linux.dev>
-> Cc: Rae Moar <rmoar@google.com>
-> Cc: John Hubbard <jhubbard@nvidia.com>
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> Cc: linux-kselftest@vger.kernel.org
-> Cc: kunit-dev@googlegroups.com
-> Cc: linux-doc@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-hardening@vger.kernel.org
-> ---
+> I can carry this in the hardening tree. To disrupt people as little as
+> possible, I'm hoping to send this either at the end of -rc1 or early
+> in -rc2.
 
-Thanks again for dealing with this, Kees.
+Thanks.
 
->  Documentation/dev-tools/kunit/style.rst | 25 +++++++++++++++----------
->  1 file changed, 15 insertions(+), 10 deletions(-)
->
-> diff --git a/Documentation/dev-tools/kunit/style.rst b/Documentation/dev-tools/kunit/style.rst
-> index b6d0d7359f00..1538835cd0e2 100644
-> --- a/Documentation/dev-tools/kunit/style.rst
-> +++ b/Documentation/dev-tools/kunit/style.rst
-> @@ -188,15 +188,20 @@ For example, a Kconfig entry might look like:
->  Test File and Module Names
->  ==========================
->
-> -KUnit tests can often be compiled as a module. These modules should be named
-> -after the test suite, followed by ``_test``. If this is likely to conflict with
-> -non-KUnit tests, the suffix ``_kunit`` can also be used.
-> -
-> -The easiest way of achieving this is to name the file containing the test suite
-> -``<suite>_test.c`` (or, as above, ``<suite>_kunit.c``). This file should be
-> -placed next to the code under test.
-> +Whether a KUnit test is compiled as a separate module or via an
-> +``#include`` in a core kernel source file, the file should be named
-> +after the test suite, followed by ``_kunit``, and live in a ``tests``
-> +subdirectory to avoid conflicting with regular modules (e.g. if "foobar"
-> +is the core module, then "foobar_kunit" is the KUnit test module) or the
-> +core kernel source file names (e.g. for tab-completion). Many existing
-> +tests use a ``_test`` suffix, but this is considered deprecated.
+I'm happy if you want to rename list-test.c -> list_kunit.c, too.
 
-I think John's updated version here is better. Personally, I'd rather
-the bit about module names lead here, as I think that's the part most
-likely to cause actual issues, and the source file name bit is more of
-a "here are problems to avoid, and sensible defaults which avoid them"
-than "here's an utterly inviolable rule".
-
-Maybe:
-```
-KUnit tests are often compiled as a separate module. To avoid
-conflicting with regular modules, KUnit modules should be named after
-the test suite, followed by ``_kunit`` (e.g. if
-"foobar" is the core module, then "foobar_kunit" is the KUnit test module).
-
-Test source files, whether compiled as a separate module or an
-``#include`` in another source file, are best kept in a ``tests/
-subdirectory to not conflict with other source files (e.g. for
-tab-completion).
-
-Note that the ``_test`` suffix has also been used in some existing
-tests. The ``_kunit`` suffix is preferred, as it makes the distinction
-between KUnit and non-KUnit tests clearer.
-```
-
-(But this is all largely bikeshedding at this point. As long as we end
-up describing the sensible defaults, and don't paint ourselves (and
-subsystem maintainers) into a corner, either should work.
-
-> +
-> +So for the common case, name the file containing the test suite
-> +``tests/<suite>_kunit.c``. The ``tests`` directory should be placed at
-> +the same level as the code under test. For example, tests for
-> +``lib/string.c`` live in ``lib/tests/string_kunit.c``.
->
->  If the suite name contains some or all of the name of the test's parent
-> -directory, it may make sense to modify the source filename to reduce redundancy.
-> -For example, a ``foo_firmware`` suite could be in the ``foo/firmware_test.c``
-> -file.
-> +directory, it may make sense to modify the source filename to reduce
-> +redundancy. For example, a ``foo_firmware`` suite could be in the
-> +``tests/foo/firmware_kunit.c`` file.
-
-I think that this should be ``foo/tests/firmware_kunit.c``. I'd even
-be okay with ``foo/tests/firmware.c``, as the module name needs
-manually updating in the makefile anyway, where it should either be
-``foo_firmware_kunit``, or included in a larger ``foo_kunit`` module.
-
+Cheers
 -- David
 
---000000000000ef75eb061df73e2f
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Yury Norov <yury.norov@gmail.com>
+> Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> Cc: David Gow <davidgow@google.com>
+> Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>
+> Cc: Andy Shevchenko <andy@kernel.org>
+> Cc: "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
+> Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Matti Vaittinen <mazziesaccount@gmail.com>
+> Cc: linux-hardening@vger.kernel.org
+> Cc: linux-kselftest@vger.kernel.org
+> Cc: kunit-dev@googlegroups.com
+> Cc: linux-trace-kernel@vger.kernel.org
+> ---
+>  MAINTAINERS                            | 18 ++++++-------
+>  lib/Makefile                           | 35 +-----------------------
+>  lib/tests/Makefile                     | 37 ++++++++++++++++++++++++++
+>  lib/{ => tests}/bitfield_kunit.c       |  0
+>  lib/{ => tests}/checksum_kunit.c       |  0
+>  lib/{ => tests}/cmdline_kunit.c        |  0
+>  lib/{ => tests}/cpumask_kunit.c        |  0
+>  lib/{ => tests}/fortify_kunit.c        |  0
+>  lib/{ => tests}/hashtable_test.c       |  0
+>  lib/{ => tests}/is_signed_type_kunit.c |  0
+>  lib/{ => tests}/kunit_iov_iter.c       |  0
+>  lib/{ => tests}/list-test.c            |  0
+>  lib/{ => tests}/memcpy_kunit.c         |  0
+>  lib/{ => tests}/overflow_kunit.c       |  0
+>  lib/{ => tests}/siphash_kunit.c        |  0
+>  lib/{ => tests}/slub_kunit.c           |  0
+>  lib/{ => tests}/stackinit_kunit.c      |  0
+>  lib/{ => tests}/string_helpers_kunit.c |  0
+>  lib/{ => tests}/string_kunit.c         |  0
+>  lib/{ => tests}/test_bits.c            |  0
+>  lib/{ => tests}/test_fprobe.c          |  0
+>  lib/{ => tests}/test_hash.c            |  0
+>  lib/{ => tests}/test_kprobes.c         |  0
+>  lib/{ => tests}/test_linear_ranges.c   |  0
+>  lib/{ => tests}/test_list_sort.c       |  0
+>  lib/{ => tests}/test_sort.c            |  0
+>  26 files changed, 47 insertions(+), 43 deletions(-)
+>  create mode 100644 lib/tests/Makefile
+>  rename lib/{ => tests}/bitfield_kunit.c (100%)
+>  rename lib/{ => tests}/checksum_kunit.c (100%)
+>  rename lib/{ => tests}/cmdline_kunit.c (100%)
+>  rename lib/{ => tests}/cpumask_kunit.c (100%)
+>  rename lib/{ => tests}/fortify_kunit.c (100%)
+>  rename lib/{ => tests}/hashtable_test.c (100%)
+>  rename lib/{ => tests}/is_signed_type_kunit.c (100%)
+>  rename lib/{ => tests}/kunit_iov_iter.c (100%)
+>  rename lib/{ => tests}/list-test.c (100%)
+>  rename lib/{ => tests}/memcpy_kunit.c (100%)
+>  rename lib/{ => tests}/overflow_kunit.c (100%)
+>  rename lib/{ => tests}/siphash_kunit.c (100%)
+>  rename lib/{ => tests}/slub_kunit.c (100%)
+>  rename lib/{ => tests}/stackinit_kunit.c (100%)
+>  rename lib/{ => tests}/string_helpers_kunit.c (100%)
+>  rename lib/{ => tests}/string_kunit.c (100%)
+>  rename lib/{ => tests}/test_bits.c (100%)
+>  rename lib/{ => tests}/test_fprobe.c (100%)
+>  rename lib/{ => tests}/test_hash.c (100%)
+>  rename lib/{ => tests}/test_kprobes.c (100%)
+>  rename lib/{ => tests}/test_linear_ranges.c (100%)
+>  rename lib/{ => tests}/test_list_sort.c (100%)
+>  rename lib/{ => tests}/test_sort.c (100%)
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 8754ac2c259d..3f4b9d007cbb 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -3737,10 +3737,10 @@ F:      include/vdso/bits.h
+>  F:     lib/bitmap-str.c
+>  F:     lib/bitmap.c
+>  F:     lib/cpumask.c
+> -F:     lib/cpumask_kunit.c
+>  F:     lib/find_bit.c
+>  F:     lib/find_bit_benchmark.c
+>  F:     lib/test_bitmap.c
+> +F:     lib/tests/cpumask_kunit.c
+>  F:     tools/include/linux/bitfield.h
+>  F:     tools/include/linux/bitmap.h
+>  F:     tools/include/linux/bits.h
+> @@ -8618,9 +8618,9 @@ L:        linux-hardening@vger.kernel.org
+>  S:     Supported
+>  T:     git git://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git for-next/hardening
+>  F:     include/linux/fortify-string.h
+> -F:     lib/fortify_kunit.c
+> -F:     lib/memcpy_kunit.c
+>  F:     lib/test_fortify/*
+> +F:     lib/tests/fortify_kunit.c
+> +F:     lib/tests/memcpy_kunit.c
+>  F:     scripts/test_fortify.sh
+>  K:     \b__NO_FORTIFY\b
+>
+> @@ -9246,9 +9246,9 @@ F:        include/linux/string.h
+>  F:     include/linux/string_choices.h
+>  F:     include/linux/string_helpers.h
+>  F:     lib/string.c
+> -F:     lib/string_kunit.c
+>  F:     lib/string_helpers.c
+> -F:     lib/string_helpers_kunit.c
+> +F:     lib/tests/string_helpers_kunit.c
+> +F:     lib/tests/string_kunit.c
+>  F:     scripts/coccinelle/api/string_choices.cocci
+>
+>  GENERIC UIO DRIVER FOR PCI DEVICES
+> @@ -12347,7 +12347,7 @@ F:      Documentation/trace/kprobes.rst
+>  F:     include/asm-generic/kprobes.h
+>  F:     include/linux/kprobes.h
+>  F:     kernel/kprobes.c
+> -F:     lib/test_kprobes.c
+> +F:     lib/tests/test_kprobes.c
+>  F:     samples/kprobes
+>
+>  KS0108 LCD CONTROLLER DRIVER
+> @@ -12697,7 +12697,7 @@ M:      Mark Brown <broonie@kernel.org>
+>  R:     Matti Vaittinen <mazziesaccount@gmail.com>
+>  F:     include/linux/linear_range.h
+>  F:     lib/linear_ranges.c
+> -F:     lib/test_linear_ranges.c
+> +F:     lib/tests/test_linear_ranges.c
+>
+>  LINUX FOR POWER MACINTOSH
+>  L:     linuxppc-dev@lists.ozlabs.org
+> @@ -12824,7 +12824,7 @@ M:      David Gow <davidgow@google.com>
+>  L:     linux-kselftest@vger.kernel.org
+>  L:     kunit-dev@googlegroups.com
+>  S:     Maintained
+> -F:     lib/list-test.c
+> +F:     lib/tests/list-test.c
+>
+>  LITEX PLATFORM
+>  M:     Karol Gugala <kgugala@antmicro.com>
+> @@ -20498,7 +20498,7 @@ M:      Jason A. Donenfeld <Jason@zx2c4.com>
+>  S:     Maintained
+>  F:     include/linux/siphash.h
+>  F:     lib/siphash.c
+> -F:     lib/siphash_kunit.c
+> +F:     lib/tests/siphash_kunit.c
+>
+>  SIS 190 ETHERNET DRIVER
+>  M:     Francois Romieu <romieu@fr.zoreil.com>
+> diff --git a/lib/Makefile b/lib/Makefile
+> index 3b1769045651..f00fe120ee9e 100644
+> --- a/lib/Makefile
+> +++ b/lib/Makefile
+> @@ -49,9 +49,7 @@ obj-y += bcd.o sort.o parser.o debug_locks.o random32.o \
+>          percpu-refcount.o rhashtable.o base64.o \
+>          once.o refcount.o rcuref.o usercopy.o errseq.o bucket_locks.o \
+>          generic-radix-tree.o bitmap-str.o
+> -obj-$(CONFIG_STRING_KUNIT_TEST) += string_kunit.o
+>  obj-y += string_helpers.o
+> -obj-$(CONFIG_STRING_HELPERS_KUNIT_TEST) += string_helpers_kunit.o
+>  obj-y += hexdump.o
+>  obj-$(CONFIG_TEST_HEXDUMP) += test_hexdump.o
+>  obj-y += kstrtox.o
+> @@ -62,22 +60,17 @@ obj-$(CONFIG_TEST_DHRY) += test_dhry.o
+>  obj-$(CONFIG_TEST_FIRMWARE) += test_firmware.o
+>  obj-$(CONFIG_TEST_BITOPS) += test_bitops.o
+>  CFLAGS_test_bitops.o += -Werror
+> -obj-$(CONFIG_CPUMASK_KUNIT_TEST) += cpumask_kunit.o
+>  obj-$(CONFIG_TEST_SYSCTL) += test_sysctl.o
+> -obj-$(CONFIG_TEST_IOV_ITER) += kunit_iov_iter.o
+> -obj-$(CONFIG_HASH_KUNIT_TEST) += test_hash.o
+>  obj-$(CONFIG_TEST_IDA) += test_ida.o
+>  obj-$(CONFIG_TEST_UBSAN) += test_ubsan.o
+>  CFLAGS_test_ubsan.o += $(call cc-disable-warning, vla)
+>  CFLAGS_test_ubsan.o += $(call cc-disable-warning, unused-but-set-variable)
+>  UBSAN_SANITIZE_test_ubsan.o := y
+>  obj-$(CONFIG_TEST_KSTRTOX) += test-kstrtox.o
+> -obj-$(CONFIG_TEST_LIST_SORT) += test_list_sort.o
+>  obj-$(CONFIG_TEST_MIN_HEAP) += test_min_heap.o
+>  obj-$(CONFIG_TEST_LKM) += test_module.o
+>  obj-$(CONFIG_TEST_VMALLOC) += test_vmalloc.o
+>  obj-$(CONFIG_TEST_RHASHTABLE) += test_rhashtable.o
+> -obj-$(CONFIG_TEST_SORT) += test_sort.o
+>  obj-$(CONFIG_TEST_USER_COPY) += test_user_copy.o
+>  obj-$(CONFIG_TEST_STATIC_KEYS) += test_static_keys.o
+>  obj-$(CONFIG_TEST_STATIC_KEYS) += test_static_key_base.o
+> @@ -104,10 +97,7 @@ obj-$(CONFIG_TEST_MEMINIT) += test_meminit.o
+>  obj-$(CONFIG_TEST_LOCKUP) += test_lockup.o
+>  obj-$(CONFIG_TEST_HMM) += test_hmm.o
+>  obj-$(CONFIG_TEST_FREE_PAGES) += test_free_pages.o
+> -obj-$(CONFIG_KPROBES_SANITY_TEST) += test_kprobes.o
+>  obj-$(CONFIG_TEST_REF_TRACKER) += test_ref_tracker.o
+> -CFLAGS_test_fprobe.o += $(CC_FLAGS_FTRACE)
+> -obj-$(CONFIG_FPROBE_SANITY_TEST) += test_fprobe.o
+>  obj-$(CONFIG_TEST_OBJPOOL) += test_objpool.o
+>
+>  obj-$(CONFIG_TEST_FPU) += test_fpu.o
+> @@ -129,7 +119,7 @@ endif
+>  obj-$(CONFIG_DEBUG_INFO_REDUCED) += debug_info.o
+>  CFLAGS_debug_info.o += $(call cc-option, -femit-struct-debug-detailed=any)
+>
+> -obj-y += math/ crypto/
+> +obj-y += math/ crypto/ tests/
+>
+>  obj-$(CONFIG_GENERIC_IOMAP) += iomap.o
+>  obj-$(CONFIG_HAS_IOMEM) += iomap_copy.o devres.o
+> @@ -366,29 +356,6 @@ obj-$(CONFIG_OBJAGG) += objagg.o
+>  # pldmfw library
+>  obj-$(CONFIG_PLDMFW) += pldmfw/
+>
+> -# KUnit tests
+> -CFLAGS_bitfield_kunit.o := $(DISABLE_STRUCTLEAK_PLUGIN)
+> -obj-$(CONFIG_BITFIELD_KUNIT) += bitfield_kunit.o
+> -obj-$(CONFIG_CHECKSUM_KUNIT) += checksum_kunit.o
+> -obj-$(CONFIG_LIST_KUNIT_TEST) += list-test.o
+> -obj-$(CONFIG_HASHTABLE_KUNIT_TEST) += hashtable_test.o
+> -obj-$(CONFIG_LINEAR_RANGES_TEST) += test_linear_ranges.o
+> -obj-$(CONFIG_BITS_TEST) += test_bits.o
+> -obj-$(CONFIG_CMDLINE_KUNIT_TEST) += cmdline_kunit.o
+> -obj-$(CONFIG_SLUB_KUNIT_TEST) += slub_kunit.o
+> -obj-$(CONFIG_MEMCPY_KUNIT_TEST) += memcpy_kunit.o
+> -obj-$(CONFIG_IS_SIGNED_TYPE_KUNIT_TEST) += is_signed_type_kunit.o
+> -CFLAGS_overflow_kunit.o = $(call cc-disable-warning, tautological-constant-out-of-range-compare)
+> -obj-$(CONFIG_OVERFLOW_KUNIT_TEST) += overflow_kunit.o
+> -CFLAGS_stackinit_kunit.o += $(call cc-disable-warning, switch-unreachable)
+> -obj-$(CONFIG_STACKINIT_KUNIT_TEST) += stackinit_kunit.o
+> -CFLAGS_fortify_kunit.o += $(call cc-disable-warning, unsequenced)
+> -CFLAGS_fortify_kunit.o += $(call cc-disable-warning, stringop-overread)
+> -CFLAGS_fortify_kunit.o += $(call cc-disable-warning, stringop-truncation)
+> -CFLAGS_fortify_kunit.o += $(DISABLE_STRUCTLEAK_PLUGIN)
+> -obj-$(CONFIG_FORTIFY_KUNIT_TEST) += fortify_kunit.o
+> -obj-$(CONFIG_SIPHASH_KUNIT_TEST) += siphash_kunit.o
+> -
+>  obj-$(CONFIG_GENERIC_LIB_DEVMEM_IS_ALLOWED) += devmem_is_allowed.o
+>
+>  obj-$(CONFIG_FIRMWARE_TABLE) += fw_table.o
+> diff --git a/lib/tests/Makefile b/lib/tests/Makefile
+> new file mode 100644
+> index 000000000000..c6a14cc8663e
+> --- /dev/null
+> +++ b/lib/tests/Makefile
+> @@ -0,0 +1,37 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +#
+> +# Makefile for tests of kernel library functions.
+> +
+> +# KUnit tests
+> +CFLAGS_bitfield_kunit.o := $(DISABLE_STRUCTLEAK_PLUGIN)
+> +obj-$(CONFIG_BITFIELD_KUNIT) += bitfield_kunit.o
+> +obj-$(CONFIG_BITS_TEST) += test_bits.o
+> +obj-$(CONFIG_CHECKSUM_KUNIT) += checksum_kunit.o
+> +obj-$(CONFIG_CMDLINE_KUNIT_TEST) += cmdline_kunit.o
+> +obj-$(CONFIG_CPUMASK_KUNIT_TEST) += cpumask_kunit.o
+> +CFLAGS_fortify_kunit.o += $(call cc-disable-warning, unsequenced)
+> +CFLAGS_fortify_kunit.o += $(call cc-disable-warning, stringop-overread)
+> +CFLAGS_fortify_kunit.o += $(call cc-disable-warning, stringop-truncation)
+> +CFLAGS_fortify_kunit.o += $(DISABLE_STRUCTLEAK_PLUGIN)
+> +obj-$(CONFIG_FORTIFY_KUNIT_TEST) += fortify_kunit.o
+> +CFLAGS_test_fprobe.o += $(CC_FLAGS_FTRACE)
+> +obj-$(CONFIG_FPROBE_SANITY_TEST) += test_fprobe.o
+> +obj-$(CONFIG_HASHTABLE_KUNIT_TEST) += hashtable_test.o
+> +obj-$(CONFIG_HASH_KUNIT_TEST) += test_hash.o
+> +obj-$(CONFIG_TEST_IOV_ITER) += kunit_iov_iter.o
+> +obj-$(CONFIG_IS_SIGNED_TYPE_KUNIT_TEST) += is_signed_type_kunit.o
+> +obj-$(CONFIG_KPROBES_SANITY_TEST) += test_kprobes.o
+> +obj-$(CONFIG_LIST_KUNIT_TEST) += list-test.o
+> +obj-$(CONFIG_TEST_LIST_SORT) += test_list_sort.o
+> +obj-$(CONFIG_LINEAR_RANGES_TEST) += test_linear_ranges.o
+> +obj-$(CONFIG_MEMCPY_KUNIT_TEST) += memcpy_kunit.o
+> +CFLAGS_overflow_kunit.o = $(call cc-disable-warning, tautological-constant-out-of-range-compare)
+> +obj-$(CONFIG_OVERFLOW_KUNIT_TEST) += overflow_kunit.o
+> +obj-$(CONFIG_SIPHASH_KUNIT_TEST) += siphash_kunit.o
+> +obj-$(CONFIG_SLUB_KUNIT_TEST) += slub_kunit.o
+> +obj-$(CONFIG_TEST_SORT) += test_sort.o
+> +CFLAGS_stackinit_kunit.o += $(call cc-disable-warning, switch-unreachable)
+> +obj-$(CONFIG_STACKINIT_KUNIT_TEST) += stackinit_kunit.o
+> +obj-$(CONFIG_STRING_KUNIT_TEST) += string_kunit.o
+> +obj-$(CONFIG_STRING_HELPERS_KUNIT_TEST) += string_helpers_kunit.o
+> +
+> diff --git a/lib/bitfield_kunit.c b/lib/tests/bitfield_kunit.c
+> similarity index 100%
+> rename from lib/bitfield_kunit.c
+> rename to lib/tests/bitfield_kunit.c
+> diff --git a/lib/checksum_kunit.c b/lib/tests/checksum_kunit.c
+> similarity index 100%
+> rename from lib/checksum_kunit.c
+> rename to lib/tests/checksum_kunit.c
+> diff --git a/lib/cmdline_kunit.c b/lib/tests/cmdline_kunit.c
+> similarity index 100%
+> rename from lib/cmdline_kunit.c
+> rename to lib/tests/cmdline_kunit.c
+> diff --git a/lib/cpumask_kunit.c b/lib/tests/cpumask_kunit.c
+> similarity index 100%
+> rename from lib/cpumask_kunit.c
+> rename to lib/tests/cpumask_kunit.c
+> diff --git a/lib/fortify_kunit.c b/lib/tests/fortify_kunit.c
+> similarity index 100%
+> rename from lib/fortify_kunit.c
+> rename to lib/tests/fortify_kunit.c
+> diff --git a/lib/hashtable_test.c b/lib/tests/hashtable_test.c
+> similarity index 100%
+> rename from lib/hashtable_test.c
+> rename to lib/tests/hashtable_test.c
+> diff --git a/lib/is_signed_type_kunit.c b/lib/tests/is_signed_type_kunit.c
+> similarity index 100%
+> rename from lib/is_signed_type_kunit.c
+> rename to lib/tests/is_signed_type_kunit.c
+> diff --git a/lib/kunit_iov_iter.c b/lib/tests/kunit_iov_iter.c
+> similarity index 100%
+> rename from lib/kunit_iov_iter.c
+> rename to lib/tests/kunit_iov_iter.c
+> diff --git a/lib/list-test.c b/lib/tests/list-test.c
+> similarity index 100%
+> rename from lib/list-test.c
+> rename to lib/tests/list-test.c
+> diff --git a/lib/memcpy_kunit.c b/lib/tests/memcpy_kunit.c
+> similarity index 100%
+> rename from lib/memcpy_kunit.c
+> rename to lib/tests/memcpy_kunit.c
+> diff --git a/lib/overflow_kunit.c b/lib/tests/overflow_kunit.c
+> similarity index 100%
+> rename from lib/overflow_kunit.c
+> rename to lib/tests/overflow_kunit.c
+> diff --git a/lib/siphash_kunit.c b/lib/tests/siphash_kunit.c
+> similarity index 100%
+> rename from lib/siphash_kunit.c
+> rename to lib/tests/siphash_kunit.c
+> diff --git a/lib/slub_kunit.c b/lib/tests/slub_kunit.c
+> similarity index 100%
+> rename from lib/slub_kunit.c
+> rename to lib/tests/slub_kunit.c
+> diff --git a/lib/stackinit_kunit.c b/lib/tests/stackinit_kunit.c
+> similarity index 100%
+> rename from lib/stackinit_kunit.c
+> rename to lib/tests/stackinit_kunit.c
+> diff --git a/lib/string_helpers_kunit.c b/lib/tests/string_helpers_kunit.c
+> similarity index 100%
+> rename from lib/string_helpers_kunit.c
+> rename to lib/tests/string_helpers_kunit.c
+> diff --git a/lib/string_kunit.c b/lib/tests/string_kunit.c
+> similarity index 100%
+> rename from lib/string_kunit.c
+> rename to lib/tests/string_kunit.c
+> diff --git a/lib/test_bits.c b/lib/tests/test_bits.c
+> similarity index 100%
+> rename from lib/test_bits.c
+> rename to lib/tests/test_bits.c
+> diff --git a/lib/test_fprobe.c b/lib/tests/test_fprobe.c
+> similarity index 100%
+> rename from lib/test_fprobe.c
+> rename to lib/tests/test_fprobe.c
+> diff --git a/lib/test_hash.c b/lib/tests/test_hash.c
+> similarity index 100%
+> rename from lib/test_hash.c
+> rename to lib/tests/test_hash.c
+> diff --git a/lib/test_kprobes.c b/lib/tests/test_kprobes.c
+> similarity index 100%
+> rename from lib/test_kprobes.c
+> rename to lib/tests/test_kprobes.c
+> diff --git a/lib/test_linear_ranges.c b/lib/tests/test_linear_ranges.c
+> similarity index 100%
+> rename from lib/test_linear_ranges.c
+> rename to lib/tests/test_linear_ranges.c
+> diff --git a/lib/test_list_sort.c b/lib/tests/test_list_sort.c
+> similarity index 100%
+> rename from lib/test_list_sort.c
+> rename to lib/tests/test_list_sort.c
+> diff --git a/lib/test_sort.c b/lib/tests/test_sort.c
+> similarity index 100%
+> rename from lib/test_sort.c
+> rename to lib/tests/test_sort.c
+> --
+> 2.34.1
+>
+> --
+> You received this message because you are subscribed to the Google Groups "KUnit Development" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to kunit-dev+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/kunit-dev/20240720181025.work.002-kees%40kernel.org.
+
+--0000000000008c8d2c061df898a3
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
@@ -238,13 +547,13 @@ GQs0EfiilyTgsH8iMOPqUJ1h4oX9z1FpaiJzfxcvcGG46SCieSFP0USs9aMl7GeERue37kBf14Pd
 kOYIfx09Pcv/N6lHV6kXlzG0xeUuV3RxtLtszQgxggJqMIICZgIBATBoMFQxCzAJBgNVBAYTAkJF
 MRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFzIFIz
 IFNNSU1FIENBIDIwMjACEAFsPHWl8lqMEwx3lAnpufYwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZI
-hvcNAQkEMSIEIFywzNhdYJV6HJfTp3IFU/XOaeZ8PyR8L0g+R71aSkzGMBgGCSqGSIb3DQEJAzEL
-BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MDcyNDA1MDY1MFowaQYJKoZIhvcNAQkPMVww
+hvcNAQkEMSIEIMGZ2yAL0VfU2724txV50/Rg6ZEojpi61SLfRYrctg0pMBgGCSqGSIb3DQEJAzEL
+BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MDcyNDA2NDMyOFowaQYJKoZIhvcNAQkPMVww
 WjALBglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkq
-hkiG9w0BAQowCwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQA4dRW9
-mJEuK+rO6FGScRoffagxNO32yLtyPCkbQhGuexUAb1+GBjx/9Ozjcqa5aIOi9mP8BpuftLOwJ4Vd
-Hwovr/ik6xDq4TUJi6WHW1pyt+DdEEzrCXjEqgtg3JCJhqOiv1BEryNENYIqq4xqTs1cX4Uczwwk
-PCUCJlgGEfLs8YMycPv/d0N36k5I+VONm4e+Sz8Ekf3FvIs0fZxLVXcrxQdGX7TEiS/Tuy6BZPrr
-vLqTP0u+ET23jGmazBl0MAf7we7urvybdPhX12FiQX7PQoPZ0kbdpIG1PbtiDGwkj4DzXtiJ7Qh3
-+aP6ae+GkxqMaV89yvUf50BnNTnRbBST
---000000000000ef75eb061df73e2f--
+hkiG9w0BAQowCwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQAKQx+a
+D75DG8lMeTmcMHcl85snOx5wEkkrB188+qm10rhrAEhq26YiZDktW2D97Xq/SsuMT7J/UnqRk1R0
+E8r++nljCOqDh8WTW9eRVFeUnWU7ddfgOUcNPRkHjDRXWas5z9mDs1SFS6Y5x4CFTJnzqf18817G
+k/jfHB7kzU8DN89Km9cOOcAmAo/2HnhKO3m0jBvM3aXTQULZawdAlQSWt/TOVHMxffFV7sysuNgx
+4JQa4YWLnjNBnJ7N0nug4xaGeybclOKOGW/NvvUS/fm0SnPgfPFmPgsiymQOKWwVYZD+64Eti5zR
+xGpSyElHi8jwoQY/ubcGcqncdouqpBlK
+--0000000000008c8d2c061df898a3--
