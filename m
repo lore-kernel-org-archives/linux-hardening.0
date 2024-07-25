@@ -1,123 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E81CD1741F0;
-	Thu, 25 Jul 2024 10:22:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2098E19D8B8;
+	Thu, 25 Jul 2024 14:40:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721902965; cv=none; b=OGoYRps1jl/w20rvul56i/GZ6PRF7cHpYYFSfUHrQgukCc1OI6jz+WmIdOkHFvTeb4t8sI/HCVIoy33sDMkqzz7So0n9SQLfwSzDaXHZGe3nLfuy9M2H6WJTAmHubo76hoZXna2vEmZtDBLh8UgJQ7SYAVwrOON8Zd5IJl2J29A=
+	t=1721918403; cv=none; b=WImshXQvVn1Koq7OZCU+zhQKg1hphMrkEYYnoqKTSjhCP+i6zoIsvP3ddAePG45c6o/af4ZLQIoJklb/b+JjWFdtTTYyQ7IFELc/XmK3r2no/7wBRROYVA3WDFreJR7Cp3X4iFvvEH51zIisTDctTnvfx08D9ZnH06RS3W6l7sE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721902965; c=relaxed/simple;
-	bh=3qFhU+Y9MXc9OmpxW465huXr5oqytMjuCzZaj34RsJE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Swk7YycxBpGLRptbH1iwjYhNRAHnuVtOViG0/fE/B748nR07y5g45LKG/CWpgWNVgtGLSmQORWUWm4GZERtV1B0MkyzbCOqOEEzv1qC/jD7oEI9nfQJ8c7l7IKl62ayIXDeyqQ2oynaUDO9OfprczBDEhy8uihp8IAwT/TB+ZMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dm7hW8QZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721918403; c=relaxed/simple;
+	bh=BBhq5624r8n0DFX9jJsphUkl40luIhVJpnNCsUEgguw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=EqlN1CgOmkrf4Lx2bGbXRZzJbicD0aSM2wNx4d5ex94Ij6zuvZE93h+WGBp6spZ8ZFo46fYoebB3FjM2jpnhnlhhD/sTdnzBcXVEAHCVGOPxGWhh6jd7XIik6+rxeCTAnU2g15jhF0sd7oNIZvw0vRx9alufDf8uizi7s+lS++o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=CMDhPx4y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dm7hW8QZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9436C116B1;
-	Thu, 25 Jul 2024 10:22:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721902964;
-	bh=3qFhU+Y9MXc9OmpxW465huXr5oqytMjuCzZaj34RsJE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Dm7hW8QZInpGLQ+lLuiBtOJHE9i9CGYD58Dweu2MaEcaG6m4p4I1LjAR++L5hSV1K
-	 QM/eedUv549InZvVk2u7NWWPvXvm0jtdoC28d1qrzHoQQKBQgfgs60prHqJAfymtjT
-	 0vUMDOdBpOuAuCAig/W8mw4EXKgEB2walVDb6XavsEKx1lxwK0/Oat30R8mt4LXtGX
-	 Vgw+nXSCsZIZjznHn38DxYwWEYCCHN2JggpuoV9AIPBFKwC4dl5omk4229RPjnT/Im
-	 HQWceD61rc6+23vrXIZEW1jYL2jf2bI9NQ4lj8Mm2NWYB7Y1PzvK8+yQE6JVoAAf8X
-	 II9Smq5nMe7MQ==
-Date: Thu, 25 Jul 2024 11:22:40 +0100
-From: Lee Jones <lee@kernel.org>
-To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc: Kees Cook <kees@kernel.org>, Pavel Machek <pavel@ucw.cz>,
-	linux-leds@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] leds: gpio: Set num_leds after allocation
-Message-ID: <20240725102240.GE501857@google.com>
-References: <20240716212455.work.809-kees@kernel.org>
- <c16715ff-1e47-4a73-8fcb-87462069b5ca@embeddedor.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="CMDhPx4y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 873F2C116B1;
+	Thu, 25 Jul 2024 14:40:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1721918403;
+	bh=BBhq5624r8n0DFX9jJsphUkl40luIhVJpnNCsUEgguw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=CMDhPx4y/u1pJo4lITlQmzzs31zIW9YfJFE27tLE0QzmkAumwIQNOdZRseQJOTc5+
+	 4Uz5vgdFe0BdV9giSYAVhsklm7shK1PihwG8BGK6RgXDGo+fD5DUZrQZCUYhihEKhD
+	 XIekdPLeEXyPCH2LVwwAs87UaT1uM1M14mMt6md8=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	linux-hardening@vger.kernel.org,
+	Kees Cook <keescook@chromium.org>,
+	Thomas Meyer <thomas@m3y3r.de>
+Subject: [PATCH 4.19 01/33] gcc-plugins: Rename last_stmt() for GCC 14+
+Date: Thu, 25 Jul 2024 16:36:24 +0200
+Message-ID: <20240725142728.570623587@linuxfoundation.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240725142728.511303502@linuxfoundation.org>
+References: <20240725142728.511303502@linuxfoundation.org>
+User-Agent: quilt/0.67
+X-stable: review
+X-Patchwork-Hint: ignore
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <c16715ff-1e47-4a73-8fcb-87462069b5ca@embeddedor.com>
 
-On Tue, 16 Jul 2024, Gustavo A. R. Silva wrote:
+4.19-stable review patch.  If anyone has any objections, please let me know.
 
-> 
-> 
-> On 16/07/24 15:24, Kees Cook wrote:
-> > With the new __counted_by annotation, the "num_leds" variable needs to
-> > valid for accesses to the "leds" array. This requirement is not met in
-> > gpio_leds_create(), since "num_leds" starts at "0", so "leds" index "0"
-> > will not be considered valid (num_leds would need to be "1" to access
-> > index "0").
-> > 
-> > Fix this by setting the allocation size after allocation, and then update
-> > the final count based on how many were actually added to the array.
-> > 
-> > Fixes: 52cd75108a42 ("leds: gpio: Annotate struct gpio_leds_priv with __counted_by")
-> > Signed-off-by: Kees Cook <kees@kernel.org>
-> 
-> Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> 
-> Thanks
-> -- 
+------------------
 
-Using the signature tag in the middle of an email turns the remainder of
-the body into a signature block, which is odd to say the least.  By all
-means sign-off in the middle of a mail, but please refrain from
-converting the rest of the mail.
+From: Kees Cook <keescook@chromium.org>
 
-> Gustavo
-> 
-> > ---
-> > Cc: Lee Jones <lee@kernel.org>
-> > Cc: Pavel Machek <pavel@ucw.cz>
-> > Cc: linux-leds@vger.kernel.org
-> > ---
-> >   drivers/leds/leds-gpio.c | 9 ++++++---
-> >   1 file changed, 6 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/leds/leds-gpio.c b/drivers/leds/leds-gpio.c
-> > index 83fcd7b6afff..4d1612d557c8 100644
-> > --- a/drivers/leds/leds-gpio.c
-> > +++ b/drivers/leds/leds-gpio.c
-> > @@ -150,7 +150,7 @@ static struct gpio_leds_priv *gpio_leds_create(struct device *dev)
-> >   {
-> >   	struct fwnode_handle *child;
-> >   	struct gpio_leds_priv *priv;
-> > -	int count, ret;
-> > +	int count, used, ret;
-> >   	count = device_get_child_node_count(dev);
-> >   	if (!count)
-> > @@ -159,9 +159,11 @@ static struct gpio_leds_priv *gpio_leds_create(struct device *dev)
-> >   	priv = devm_kzalloc(dev, struct_size(priv, leds, count), GFP_KERNEL);
-> >   	if (!priv)
-> >   		return ERR_PTR(-ENOMEM);
-> > +	priv->num_leds = count;
-> > +	used = 0;
-> >   	device_for_each_child_node(dev, child) {
-> > -		struct gpio_led_data *led_dat = &priv->leds[priv->num_leds];
-> > +		struct gpio_led_data *led_dat = &priv->leds[used];
-> >   		struct gpio_led led = {};
-> >   		/*
-> > @@ -197,8 +199,9 @@ static struct gpio_leds_priv *gpio_leds_create(struct device *dev)
-> >   		/* Set gpiod label to match the corresponding LED name. */
-> >   		gpiod_set_consumer_name(led_dat->gpiod,
-> >   					led_dat->cdev.dev->kobj.name);
-> > -		priv->num_leds++;
-> > +		used++;
-> >   	}
-> > +	priv->num_leds = used;
-> >   	return priv;
-> >   }
+commit 2e3f65ccfe6b0778b261ad69c9603ae85f210334 upstream.
 
--- 
-Lee Jones [李琼斯]
+In GCC 14, last_stmt() was renamed to last_nondebug_stmt(). Add a helper
+macro to handle the renaming.
+
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Cc: Thomas Meyer <thomas@m3y3r.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ scripts/gcc-plugins/gcc-common.h |    4 ++++
+ 1 file changed, 4 insertions(+)
+
+--- a/scripts/gcc-plugins/gcc-common.h
++++ b/scripts/gcc-plugins/gcc-common.h
+@@ -977,4 +977,8 @@ static inline void debug_gimple_stmt(con
+ #define SET_DECL_MODE(decl, mode)	DECL_MODE(decl) = (mode)
+ #endif
+ 
++#if BUILDING_GCC_VERSION >= 14000
++#define last_stmt(x)			last_nondebug_stmt(x)
++#endif
++
+ #endif
+
+
