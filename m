@@ -1,175 +1,250 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90FC4176241
-	for <linux-hardening@vger.kernel.org>; Fri, 26 Jul 2024 07:14:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D88886116;
+	Fri, 26 Jul 2024 09:11:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721978095; cv=none; b=cJXUSG9PPFVlYcOQ20RFqjEuAjDRsiWoMnN14Bx/I08htSw6lAZo0vx7Bmidau9OPO4S00kXgiDxnaWMJ0tQkfCF5954RhbIXeMFTbMGs/s5NBQxofxLlCCR4q7o4ess7k3ifcNBEsh12sKyW0/TVtK1bT6rN63+XWkKZTbazts=
+	t=1721985069; cv=none; b=hgBvWL1jAobg4CmM3As9ZMH/pWbo3OidvsDo34cQc5JhRfzxJ1fr5aRbOV0UZXuZs3RKKJUApZoZvVMgiHc3ekUmZ/rvrZ+sQPLqkmnliOqRRrvrWVcUazHe6RrdHNqCX8tEzlGlEvxRhZl8DALRWn0ROt1IZi0Lvm0fRhHF0Sw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721978095; c=relaxed/simple;
-	bh=Igj38RGQ8QPVGnNVPn5zRMBA7xJMQC8VOlWCTet411w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=F+j5uBD0AiyDlM1FmMxm+FJyP7i7h9xU8MYGq+NPHBbFWDeQU4vwaCmAziFbMczX9dazvo2n7SzxPXMCWLsP+yRFLNi3jBkuhaNFHwAB2f4WF4Ao6dDS8q+oMLsfmjot5S6gRgDtDkLFmhJRuNGOh3yKqDj+yY8duP4ob0aQOsM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nWW3E6j2; arc=none smtp.client-ip=209.85.160.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1721985069; c=relaxed/simple;
+	bh=bq3iCME2nAnit/kbDFA2bmrEht0puPIAaBbXD4f/7G4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Jj10fTTeaKdKKEKexZsicRzscZWxJvJiQ/xWlLVuV38cl7eujim2NMZ4+EWvAr7ORl2vC9RLDhoq4A4VSLIV0rVGiUaIKdE0kUARYzwiJiwZx9/gzNb1utcT8zeJv4QJB9/tFCIWMPjr2HJBxgLfrxQXlQY/2VplYZixcRBkYMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=D0yDXv5R; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nWW3E6j2"
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-44e534a1fbeso107711cf.1
-        for <linux-hardening@vger.kernel.org>; Fri, 26 Jul 2024 00:14:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1721978092; x=1722582892; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Igj38RGQ8QPVGnNVPn5zRMBA7xJMQC8VOlWCTet411w=;
-        b=nWW3E6j2VVlWXSOWs40LUp8L6V8JNldV6Nw3aNB5B7jMMuXcSGUSrhseeGvs2KJt/A
-         mw2sS+Lyw3nK/0zSuoV/BSBs6sSUO/j0sqHX+SanlnCSVG43ANU20ltZUTwUs2C99Pvr
-         09LG4Fs0LHJ5ZUauwDSad2BjA9KRdtMM3csLiYjzIdjUXllDW3UHMErKxFaKRyA3dtRH
-         z6te80ym7qevUPrLe7IQJllQTVdiuSdabCQUjyKHxSbMPc6BstpbO+UeYN72JLlxpI2+
-         FKcZINnno9+C53IXlscH449rTRhzcfhLF8TYNryc7JK8E1OJy9zHlqtPJ2KKgJ3zqnKY
-         rd4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721978092; x=1722582892;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Igj38RGQ8QPVGnNVPn5zRMBA7xJMQC8VOlWCTet411w=;
-        b=jamzV4Gbwy3iG3EgHMLjdQCt4C9yX0YmbyxfUEe7DulqLhZlkOJA3cbDQD6PgMN9QJ
-         RlOQnuAE0uLbSJYUY5+XfgeFQn11JBVF3GfsH/qQLGOqkMY3DtmKwA77XgC7HmdAXW4/
-         zuFj5QvqlYXtQM85/F3rJlfnDoFlhYQu0EPXSK38wxLdB0lq2oX5s3pz9t6gwl0ZRPXa
-         9vmYG8SfX5QsPLa8yZQuI2IceoXX4BukPQSpP1EC4ycvRAK4wEonaNYLcKedPqMR/LyA
-         k+DO9B19Fl9FJLV4R9wwCmihk16HDPKrbffCtAgl+xNBniexRHW7eh5QI3MlQIvwU2nY
-         m/iA==
-X-Forwarded-Encrypted: i=1; AJvYcCWcFCYHjKAn4UBOn6WChvmfzN1cuDAQlVI0GGYjIkysMyL/LCr/iAXnKZvlLrFi29kotYvlJeP1vHMe+Y+wwV9aX4Pabw4oORSaMKD6s0Pt
-X-Gm-Message-State: AOJu0YyOdllQBOVoOGLbhHtFw5yVx0Jd7PyPiSICsV8LvfUj/5fBMPFj
-	6LIl7GMnpu8K/plu+8BwvfqGKebQ5CKoRXvh0T7dM1ciTHyGiFMODpD+nnog9UYQ7Y75dwY2nvp
-	4fkUlqOStB6y0fAksx8xNEO2U727565N4N1KP
-X-Google-Smtp-Source: AGHT+IHsrLxY9ZdyqO525tDx0nWcyk90PA5eQ0nUeQmK7znJDAJF7gOtprtD76fs+N4PCATz5lI8rod3UJ0eTrdUNX0=
-X-Received: by 2002:ac8:7f93:0:b0:447:e497:95d0 with SMTP id
- d75a77b69052e-44ff3e8af82mr2283451cf.17.1721978092268; Fri, 26 Jul 2024
- 00:14:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="D0yDXv5R"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1721985064;
+	bh=bq3iCME2nAnit/kbDFA2bmrEht0puPIAaBbXD4f/7G4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=D0yDXv5RURjaGL6RYrw4S2mI3km2BF/m6xn8fN5qbKb+ap76+jhz8fHxRbyNz4WOQ
+	 4y3gCsHZlDMvWCYnBs91Zn/WObe2LBiqE7Ta6SvhhfwjWjsFgYrFEFpyf8Jm7JlFnR
+	 ecsC1P2p2pY3IaGI8yO7J5dFPfUPtRV9vMGeiWR2Gb2DZ5km237GoVVZ5/2dFYXRbZ
+	 E1zGh43l9sk2Ek1Md6zS353hAiGi1L6Ot0agw5mlb/0ws47MmeNZXuO5KSzf4dcRpm
+	 TkDU5wRa4MRz1y34jMuOeaopuf3D4t1PoKfgYjda0brFn0YQiAJ4u+o3yBGtXiM3uw
+	 QDlwj3kq/wu9Q==
+Received: from gentoo.ratioveremundo.com (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: aratiu)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 4F04137804D4;
+	Fri, 26 Jul 2024 09:11:03 +0000 (UTC)
+From: Adrian Ratiu <adrian.ratiu@collabora.com>
+To: linux-fsdevel@vger.kernel.org
+Cc: linux-security-module@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	kernel@collabora.com,
+	gbiv@google.com,
+	inglorion@google.com,
+	ajordanr@google.com,
+	Adrian Ratiu <adrian.ratiu@collabora.com>,
+	Doug Anderson <dianders@chromium.org>,
+	Jeff Xu <jeffxu@google.com>,
+	Jann Horn <jannh@google.com>,
+	Kees Cook <kees@kernel.org>,
+	Christian Brauner <brauner@kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH v3] proc: add config & param to block forcing mem writes
+Date: Fri, 26 Jul 2024 12:08:58 +0300
+Message-ID: <20240726090858.71541-1-adrian.ratiu@collabora.com>
+X-Mailer: git-send-email 2.44.2
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240724201354.make.730-kees@kernel.org>
-In-Reply-To: <20240724201354.make.730-kees@kernel.org>
-From: David Gow <davidgow@google.com>
-Date: Fri, 26 Jul 2024 15:14:36 +0800
-Message-ID: <CABVgOSmXqv_+20OKjVAPJoqrP1EvBk+1WUqF4wBsefegxYNiWA@mail.gmail.com>
-Subject: Re: [PATCH v3] Documentation: KUnit: Update filename best practices
-To: Kees Cook <kees@kernel.org>
-Cc: John Hubbard <jhubbard@nvidia.com>, Brendan Higgins <brendan.higgins@linux.dev>, 
-	Rae Moar <rmoar@google.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, linux-kselftest@vger.kernel.org, 
-	kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="00000000000088697d061e214437"
+Content-Transfer-Encoding: 8bit
 
---00000000000088697d061e214437
-Content-Type: text/plain; charset="UTF-8"
+This adds a Kconfig option and boot param to allow removing
+the FOLL_FORCE flag from /proc/pid/mem write calls because
+it can be abused.
 
-On Thu, 25 Jul 2024 at 04:14, Kees Cook <kees@kernel.org> wrote:
->
-> Based on feedback from Linus[1] and follow-up discussions, change the
-> suggested file naming for KUnit tests.
->
-> Link: https://lore.kernel.org/lkml/CAHk-=wgim6pNiGTBMhP8Kd3tsB7_JTAuvNJ=XYd3wPvvk=OHog@mail.gmail.com/ [1]
-> Reviewed-by: John Hubbard <jhubbard@nvidia.com>
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
+The traditional forcing behavior is kept as default because
+it can break GDB and some other use cases.
 
-Looks good to me. (And it seems like sphinx is okay with it, too,
-which is always nice.)
+Previously we tried a more sophisticated approach allowing
+distributions to fine-tune /proc/pid/mem behavior, however
+that got NAK-ed by Linus [1], who prefers this simpler
+approach with semantics also easier to understand for users.
 
-We normally take these changes in via the kunit tree, but if you want
-to try to push it through along with the naming changes, that's fine
-by me.
+Link: https://lore.kernel.org/lkml/CAHk-=wiGWLChxYmUA5HrT5aopZrB7_2VTa0NLZcxORgkUe5tEQ@mail.gmail.com/ [1]
+Cc: Doug Anderson <dianders@chromium.org>
+Cc: Jeff Xu <jeffxu@google.com>
+Cc: Jann Horn <jannh@google.com>
+Cc: Kees Cook <kees@kernel.org>
+Cc: Christian Brauner <brauner@kernel.org>
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
+---
+Changes in v3:
+* Simplified code to use shorthand ifs and a
+  lookup_constant() table.
 
-Reviewed-by: David Gow <davidgow@google.com>
+Changes in v2:
+* Added bootparam on top of Linus' patch.
+* Slightly reworded commit msg.
+---
+ .../admin-guide/kernel-parameters.txt         | 10 ++++
+ fs/proc/base.c                                | 54 ++++++++++++++++++-
+ security/Kconfig                              | 32 +++++++++++
+ 3 files changed, 95 insertions(+), 1 deletion(-)
 
-Thanks,
--- David
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index c1134ad5f06d..793301f360ec 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -4791,6 +4791,16 @@
+ 	printk.time=	Show timing data prefixed to each printk message line
+ 			Format: <bool>  (1/Y/y=enable, 0/N/n=disable)
+ 
++	proc_mem.force_override= [KNL]
++			Format: {always | ptrace | never}
++			Traditionally /proc/pid/mem allows users to override memory
++			permissions. This allows people to limit that.
++			Can be one of:
++			- 'always' traditional behavior always allows mem overrides.
++			- 'ptrace' only allow for active ptracers.
++			- 'never'  never allow mem permission overrides.
++			If not specified, default is always.
++
+ 	processor.max_cstate=	[HW,ACPI]
+ 			Limit processor to maximum C-state
+ 			max_cstate=9 overrides any DMI blacklist limit.
+diff --git a/fs/proc/base.c b/fs/proc/base.c
+index 72a1acd03675..0ca3fc3d9e0e 100644
+--- a/fs/proc/base.c
++++ b/fs/proc/base.c
+@@ -85,6 +85,7 @@
+ #include <linux/elf.h>
+ #include <linux/pid_namespace.h>
+ #include <linux/user_namespace.h>
++#include <linux/fs_parser.h>
+ #include <linux/fs_struct.h>
+ #include <linux/slab.h>
+ #include <linux/sched/autogroup.h>
+@@ -117,6 +118,35 @@
+ static u8 nlink_tid __ro_after_init;
+ static u8 nlink_tgid __ro_after_init;
+ 
++enum proc_mem_force {
++	PROC_MEM_FORCE_ALWAYS,
++	PROC_MEM_FORCE_PTRACE,
++	PROC_MEM_FORCE_NEVER
++};
++
++static enum proc_mem_force proc_mem_force_override __ro_after_init =
++	IS_ENABLED(CONFIG_PROC_MEM_ALWAYS_FORCE) ? PROC_MEM_FORCE_ALWAYS :
++	IS_ENABLED(CONFIG_PROC_MEM_FORCE_PTRACE) ? PROC_MEM_FORCE_PTRACE :
++	PROC_MEM_FORCE_NEVER;
++
++struct constant_table proc_mem_force_table[] = {
++	{ "always", PROC_MEM_FORCE_ALWAYS },
++	{ "ptrace", PROC_MEM_FORCE_PTRACE },
++	{ }
++};
++
++static int __init early_proc_mem_force_override(char *buf)
++{
++	if (!buf)
++		return -EINVAL;
++
++	proc_mem_force_override = lookup_constant(proc_mem_force_table,
++						  buf, PROC_MEM_FORCE_NEVER);
++
++	return 0;
++}
++early_param("proc_mem.force_override", early_proc_mem_force_override);
++
+ struct pid_entry {
+ 	const char *name;
+ 	unsigned int len;
+@@ -835,6 +865,26 @@ static int mem_open(struct inode *inode, struct file *file)
+ 	return ret;
+ }
+ 
++static bool proc_mem_foll_force(struct file *file, struct mm_struct *mm)
++{
++	switch (proc_mem_force_override) {
++	case PROC_MEM_FORCE_NEVER:
++		return false;
++	case PROC_MEM_FORCE_PTRACE: {
++		bool ptrace_active = false;
++		struct task_struct *task = get_proc_task(file_inode(file));
++
++		if (task) {
++			ptrace_active = task->ptrace && task->mm == mm && task->parent == current;
++			put_task_struct(task);
++		}
++		return ptrace_active;
++	}
++	default:
++		return true;
++	}
++}
++
+ static ssize_t mem_rw(struct file *file, char __user *buf,
+ 			size_t count, loff_t *ppos, int write)
+ {
+@@ -855,7 +905,9 @@ static ssize_t mem_rw(struct file *file, char __user *buf,
+ 	if (!mmget_not_zero(mm))
+ 		goto free;
+ 
+-	flags = FOLL_FORCE | (write ? FOLL_WRITE : 0);
++	flags = write ? FOLL_WRITE : 0;
++	if (proc_mem_foll_force(file, mm))
++		flags |= FOLL_FORCE;
+ 
+ 	while (count > 0) {
+ 		size_t this_len = min_t(size_t, count, PAGE_SIZE);
+diff --git a/security/Kconfig b/security/Kconfig
+index 412e76f1575d..a93c1a9b7c28 100644
+--- a/security/Kconfig
++++ b/security/Kconfig
+@@ -19,6 +19,38 @@ config SECURITY_DMESG_RESTRICT
+ 
+ 	  If you are unsure how to answer this question, answer N.
+ 
++choice
++	prompt "Allow /proc/pid/mem access override"
++	default PROC_MEM_ALWAYS_FORCE
++	help
++	  Traditionally /proc/pid/mem allows users to override memory
++	  permissions for users like ptrace, assuming they have ptrace
++	  capability.
++
++	  This allows people to limit that - either never override, or
++	  require actual active ptrace attachment.
++
++	  Defaults to the traditional behavior (for now)
++
++config PROC_MEM_ALWAYS_FORCE
++	bool "Traditional /proc/pid/mem behavior"
++	help
++	  This allows /proc/pid/mem accesses to override memory mapping
++	  permissions if you have ptrace access rights.
++
++config PROC_MEM_FORCE_PTRACE
++	bool "Require active ptrace() use for access override"
++	help
++	  This allows /proc/pid/mem accesses to override memory mapping
++	  permissions for active ptracers like gdb.
++
++config PROC_MEM_NO_FORCE
++	bool "Never"
++	help
++	  Never override memory mapping permissions
++
++endchoice
++
+ config SECURITY
+ 	bool "Enable different security models"
+ 	depends on SYSFS
+-- 
+2.44.2
 
---00000000000088697d061e214437
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-MIIPqgYJKoZIhvcNAQcCoIIPmzCCD5cCAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
-gg0EMIIEtjCCA56gAwIBAgIQeAMYYHb81ngUVR0WyMTzqzANBgkqhkiG9w0BAQsFADBMMSAwHgYD
-VQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSMzETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UE
-AxMKR2xvYmFsU2lnbjAeFw0yMDA3MjgwMDAwMDBaFw0yOTAzMTgwMDAwMDBaMFQxCzAJBgNVBAYT
-AkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFz
-IFIzIFNNSU1FIENBIDIwMjAwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCvLe9xPU9W
-dpiHLAvX7kFnaFZPuJLey7LYaMO8P/xSngB9IN73mVc7YiLov12Fekdtn5kL8PjmDBEvTYmWsuQS
-6VBo3vdlqqXZ0M9eMkjcKqijrmDRleudEoPDzTumwQ18VB/3I+vbN039HIaRQ5x+NHGiPHVfk6Rx
-c6KAbYceyeqqfuJEcq23vhTdium/Bf5hHqYUhuJwnBQ+dAUcFndUKMJrth6lHeoifkbw2bv81zxJ
-I9cvIy516+oUekqiSFGfzAqByv41OrgLV4fLGCDH3yRh1tj7EtV3l2TngqtrDLUs5R+sWIItPa/4
-AJXB1Q3nGNl2tNjVpcSn0uJ7aFPbAgMBAAGjggGKMIIBhjAOBgNVHQ8BAf8EBAMCAYYwHQYDVR0l
-BBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMBIGA1UdEwEB/wQIMAYBAf8CAQAwHQYDVR0OBBYEFHzM
-CmjXouseLHIb0c1dlW+N+/JjMB8GA1UdIwQYMBaAFI/wS3+oLkUkrk1Q+mOai97i3Ru8MHsGCCsG
-AQUFBwEBBG8wbTAuBggrBgEFBQcwAYYiaHR0cDovL29jc3AyLmdsb2JhbHNpZ24uY29tL3Jvb3Ry
-MzA7BggrBgEFBQcwAoYvaHR0cDovL3NlY3VyZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvcm9vdC1y
-My5jcnQwNgYDVR0fBC8wLTAroCmgJ4YlaHR0cDovL2NybC5nbG9iYWxzaWduLmNvbS9yb290LXIz
-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
-JEfDtvHU6wy3MSBE3/TrMFcGA1UdIARQME4wCQYHZ4EMAQUBATBBBgkrBgEEAaAyASgwNDAyBggr
-BgEFBQcCARYmaHR0cHM6Ly93d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wDAYDVR0TAQH/
-BAIwADCBmgYIKwYBBQUHAQEEgY0wgYowPgYIKwYBBQUHMAGGMmh0dHA6Ly9vY3NwLmdsb2JhbHNp
-Z24uY29tL2NhL2dzYXRsYXNyM3NtaW1lY2EyMDIwMEgGCCsGAQUFBzAChjxodHRwOi8vc2VjdXJl
-Lmdsb2JhbHNpZ24uY29tL2NhY2VydC9nc2F0bGFzcjNzbWltZWNhMjAyMC5jcnQwHwYDVR0jBBgw
-FoAUfMwKaNei6x4schvRzV2Vb4378mMwRgYDVR0fBD8wPTA7oDmgN4Y1aHR0cDovL2NybC5nbG9i
-YWxzaWduLmNvbS9jYS9nc2F0bGFzcjNzbWltZWNhMjAyMC5jcmwwDQYJKoZIhvcNAQELBQADggEB
-AGwXYwvLVjByVooZ+uKzQVW2nnClCIizd0jfARuMRTPNAWI2uOBSKoR0T6XWsGsVvX1vBF0FA+a9
-DQOd8GYqzEaKOiHDIjq/o455YXkiKhPpxDSIM+7st/OZnlkRbgAyq4rAhAjbZlceKp+1vj0wIvCa
-4evQZvJNnJvTb4Vcnqf4Xg2Pl57hSUAgejWvIGAxfiAKG8Zk09I9DNd84hucIS2UIgoRGGWw3eIg
-GQs0EfiilyTgsH8iMOPqUJ1h4oX9z1FpaiJzfxcvcGG46SCieSFP0USs9aMl7GeERue37kBf14Pd
-kOYIfx09Pcv/N6lHV6kXlzG0xeUuV3RxtLtszQgxggJqMIICZgIBATBoMFQxCzAJBgNVBAYTAkJF
-MRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFzIFIz
-IFNNSU1FIENBIDIwMjACEAFsPHWl8lqMEwx3lAnpufYwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZI
-hvcNAQkEMSIEIO9CwRQo9z7xrtSefNJ+O+Rt65NDXWrHG5qNq1U4xcFsMBgGCSqGSIb3DQEJAzEL
-BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MDcyNjA3MTQ1MlowaQYJKoZIhvcNAQkPMVww
-WjALBglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkq
-hkiG9w0BAQowCwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQBgRXkw
-eWkr+SiN3nL/3e6L/bQqhiTQpV1hzH4xWDlbl2cLbjNRRhHkOkpMhJz8DjhV3sUJALDK/v+U8f+b
-VOKNPOoF/soxTyisGXB5QlJO+t4kQpe/zvbVDl6q3MKV9AjmlhmGyIeFEPaVImUDPdaVH421gSk5
-/XdNkR3sCS5EH1kbj25/FU/twxyy2GvLshyHV+FQi3TTaUq/aVZ2zGVhoHNZyk5z9VeSXh2Y4wFO
-fC6tVhOI3Pc94s4rFC3nKQiqjOfWd5DtVACkxcmhkhmCMNoszoUNAjuSLacuYy3iSaQOOn2Lmtte
-oMp8IW9pCO64G8eEBP/Lovi7UfGw9e5O
---00000000000088697d061e214437--
