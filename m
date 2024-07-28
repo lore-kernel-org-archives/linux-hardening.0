@@ -1,30 +1,30 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 360C482490;
-	Sun, 28 Jul 2024 00:48:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A78951392;
+	Sun, 28 Jul 2024 00:48:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722127715; cv=none; b=YnuxQw7iMACMP6Ee/9BbLTXlnYjikHn2uZD4ygbP2fUmJ5T5dB7Z83SOlzNGjag5p5LwHZ6a6JZyf9KPjl5GnFvvcfizcw0BBiGeVoYUaU3cOeH925yZzTvPq6NuM9XdYKlQjvtyoCI0dsxxIFRJbdrulUsi8AKgOacExE99UEA=
+	t=1722127731; cv=none; b=hlvRUWOnh24vzj+qJ6t9QxuL/qjJC5oYVPm6JIgsfRuEaHIaQ/yPfKasEobXaltEXvWIjGVv6v3hgZCT6O5WLhWZrUrpqUPAlH9oCEmHYF9AOwCICPg6PiqcBWCZPRJ/ItfQMCuqjx2XCROfcvVW9GjqWMFp6j7zYSLXVDzICXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722127715; c=relaxed/simple;
-	bh=wpFTFCkAiw+MrSe0s3jP4O4FSRpIAlZ6VyiF+BPLdbA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rI5+aYF6is0ZMiB3PveAgl2TZUTgRjCliGZ0tOhRxRCInNhjq5cnU4WsE/QvAH7zycl9H8ddo1gETYT0/ilXIl0jiNz7FDhwrad0PFUEtUS/5BJ8Q6vD/BlkepJE3ruPJRQ1kqYd9HKrbzT9YROtIl20ChY3r2KcwHPH+Z4kmrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sVqzgrZU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1722127731; c=relaxed/simple;
+	bh=C2OL0D0MbWN4w/jwrvvBWMRxL7nHPzwd8QfA9M4553w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Q7qHgHlI5DS23LQzYk42xwcQV8H6K77+CX/r5471OgCOaePVbweQILh73zu+6ZznsZEX7JPC117GV2oqhNCLifd7MuW/Qxxpo3LiMlwfCpB6qkxVaJVYz0p6rx59YOx/MurJVDQMIvxzxez0ydW4tSyE2T5YT6OIxhBgDDGPuP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iin/FgHY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sVqzgrZU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78AE0C32781;
-	Sun, 28 Jul 2024 00:48:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iin/FgHY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02774C32781;
+	Sun, 28 Jul 2024 00:48:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722127715;
-	bh=wpFTFCkAiw+MrSe0s3jP4O4FSRpIAlZ6VyiF+BPLdbA=;
+	s=k20201202; t=1722127731;
+	bh=C2OL0D0MbWN4w/jwrvvBWMRxL7nHPzwd8QfA9M4553w=;
 	h=From:To:Cc:Subject:Date:From;
-	b=sVqzgrZUIPKBHN92dC9ZKlMw48bqs6xVuwl5HmifxTS5EktpbBil8+edXGddpXU8A
-	 fW4JcmwWGohvCtx0bj5bLxATPpj2VpAYY42l3Q6oaoeAP87hix/DiTo9efRx7XLKoa
-	 FgYNEexdsRl3oMTtcptb/ceQLCoxjo3WtKrpxnKgHUzHZW+QASjyWEwCgEyWTOSKNZ
-	 xt+oYj8IwghEt6KzNjlArmjOv6rtEy0zUYNXZx8pImwMvktpeDRQqqzOdsxWnBIlH6
-	 +FFWq1hFoltdN71qFaXjMVA0SKFnExhsLlMlCmvzof3kh62LgTRE3VoFVvbX0lPLin
-	 zviytcK5hHPZA==
+	b=iin/FgHYgR7cayEIodi9EtpcGo30OQSlzIj4nOfxwzKGawUJYjt77xS6IVoTMaNsc
+	 aN7kqsFBcfjDCYM6AbqRdg/od7G51Hr5FqIidlvXhTFTjJkkCYmFSXDm9ykptUz1tQ
+	 m+T6pCqy1UqnOEGO8B3tuYJCZjBlvzx0xla0Ogcdz6EkHf5H6B2o76/qOdULybvWvv
+	 BEftRTW7TP1xvaeadh9qTBhWZeENHI5X4YQ0WoRDA2YGH++EQT35PtrYA61i0F92ne
+	 haCbk4t5CBJf5rdpt3R6n3EXU8YcS4WDoFH1mxk27/D8JHQk8RNfPxQRRu381DiERX
+	 XcW/H7GxRuYFQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -38,9 +38,9 @@ Cc: Justin Stitt <justinstitt@google.com>,
 	nathan@kernel.org,
 	linux-fsdevel@vger.kernel.org,
 	llvm@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.1 1/8] fs: remove accidental overflow during wraparound check
-Date: Sat, 27 Jul 2024 20:48:23 -0400
-Message-ID: <20240728004831.1702511-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.15 1/6] fs: remove accidental overflow during wraparound check
+Date: Sat, 27 Jul 2024 20:48:42 -0400
+Message-ID: <20240728004848.1703616-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -50,7 +50,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.1.102
+X-stable-base: Linux 5.15.164
 Content-Transfer-Encoding: 8bit
 
 From: Justin Stitt <justinstitt@google.com>
@@ -107,10 +107,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/fs/open.c b/fs/open.c
-index 0d63c94e1c5e6..dd68725cd7247 100644
+index 97932af49071a..73d864636ae57 100644
 --- a/fs/open.c
 +++ b/fs/open.c
-@@ -244,6 +244,7 @@ int vfs_fallocate(struct file *file, int mode, loff_t offset, loff_t len)
+@@ -229,6 +229,7 @@ int vfs_fallocate(struct file *file, int mode, loff_t offset, loff_t len)
  {
  	struct inode *inode = file_inode(file);
  	long ret;
@@ -118,7 +118,7 @@ index 0d63c94e1c5e6..dd68725cd7247 100644
  
  	if (offset < 0 || len <= 0)
  		return -EINVAL;
-@@ -312,8 +313,11 @@ int vfs_fallocate(struct file *file, int mode, loff_t offset, loff_t len)
+@@ -297,8 +298,11 @@ int vfs_fallocate(struct file *file, int mode, loff_t offset, loff_t len)
  	if (!S_ISREG(inode->i_mode) && !S_ISBLK(inode->i_mode))
  		return -ENODEV;
  
