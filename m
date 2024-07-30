@@ -1,173 +1,315 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 882841AA3FF
-	for <linux-hardening@vger.kernel.org>; Tue, 30 Jul 2024 22:03:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED60418CC01
+	for <linux-hardening@vger.kernel.org>; Tue, 30 Jul 2024 23:09:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722377011; cv=none; b=c0WvX1fm2eONF+A+Qyj6AWkMKw/d7DqMOcL+zlk97TLX0oY1V0UWyBl8v/qtvQddAMM56OI0XlkBadaja6UliH22MNKYrK52WrXSzCUHKlmbXfZbAXBd6bqICcZeCWL/DUFU4dsnx8Xfk/zucG5aWMRUK/HO/QnuT/VSJUTfTUo=
+	t=1722380958; cv=none; b=SKxgloj4jBMkoE4luV+3h6T1eNlkGxqVfjcBJTt7DUQNj6958aLeP9RyHb84q9f5nIYBMA+Xyp+u97D0w39bnA08QGaHlLUUnxGir4Hkpv2AN8NIsU8/UB/CIQ/SxMQYDZ1hZWW9lFoWopWxe2eaCHWT2MC7/KEp1MTiiKDBQdU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722377011; c=relaxed/simple;
-	bh=T6XB/UxIt5ahppozx8cDvdlnzxM96xFJq46yS1oHwxQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nuMdUrJpX2fKk0rAVczkFMrAeFnpFixqTcxouJFSWuxsy4rQiMN8UQulFpm4MvYE/2ryAo7wCaSnWCXQgrSPVfvhfK3eUfTYuCUauzKUtQ8L3Oe3UpYazlOvJhDm49jUIFtv55UFAGdlzn0QpLAl5UiitQSITA6vFtJZg69Zu/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=XUGRRXTe; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+	s=arc-20240116; t=1722380958; c=relaxed/simple;
+	bh=CWVd7zM9rhEDHEgTLc2FZInKf8KJxygX6mGY0ypXKWo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jaW/7kaqSPjg6zhP1Aa22iQXZKKVY6hDivAvqTrRDQXRu5dvkPlwICFqXJiMe+yXNTYqkwg19SN3X4wInFtYFprLihl5YOG3ytyQrEUJMXISTvgRadSiK+gzcqLGhmLV9QqP3bey8j7ufr+VlDKJRS6O6QgKF3M2SaisdXNQ27k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cmKg1I5m; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="XUGRRXTe"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a7a8a4f21aeso667547966b.2
-        for <linux-hardening@vger.kernel.org>; Tue, 30 Jul 2024 15:03:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cmKg1I5m"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5a28b61b880so5602a12.1
+        for <linux-hardening@vger.kernel.org>; Tue, 30 Jul 2024 16:09:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1722377008; x=1722981808; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=cQd/qUCzd98DKMhZGAyQi0AZAIe2ySF7lmegpNpJvqc=;
-        b=XUGRRXTeU1hL1DdBy2M+mloNrJA1m2bJuJyuLXk+J+pMs71vhkLShuZ3xGs9d89DEk
-         idm7UzxDujupV30MAS7g0j32doxNoIfXULDUrG+nHU/ttt+QDykK7p9jWOUHnK+14h9I
-         HghJ5sqcmvCzllwq/UxoWudQ+OKSoeZrQsbkbrA6ug4MCbV1kIDg61Foa0y4F3pT+AG2
-         Jm3kGoV7r+Xoym411/SjvDdgs1q/HkRPJ+CV9njgOZD2W6lU6mQMtelR5kQeEmYWmKz9
-         iQnF8LbK+gpq5G+iVj4iRGktbehVrlMU+qmVhcKvCo23sAG1zy1yHHGtRdgNjCQOIqbT
-         Pp9g==
+        d=google.com; s=20230601; t=1722380954; x=1722985754; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EjNkuxlo0ObgZ1OMPHSYwFfZSih4s+xQbxCeuhHEjJ8=;
+        b=cmKg1I5mX37YPfk7J45ktgYwzynJb+rhhe2lT/qprMfu+0pcFepEhRg/JU7V+SMre/
+         Dj2CFCe+tWRUi/IphtxoU587VqrjoMDRU7Zru2PpXWYCH/RdKF+diI5ulV3zulZOGYXf
+         zNzLWTw9gUyKkxwW4wtvw5DQxBlDomWb2SBk3gbsXHxebYe7XkB/5b1Euf3VLL8DBS6n
+         k3cQ1f5Pq8swSSULg3BAom7lqx+kX8dcdGR6LsOsRKp/NGfa4PwimotFJFvPbwGxgXrc
+         YNbyrfZd68KFRGL9WR31B55HuMOV7RW2cVxCcG29oz1TYTKQ2l19HiKsMWPuJf/HDry2
+         0VNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722377008; x=1722981808;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=cQd/qUCzd98DKMhZGAyQi0AZAIe2ySF7lmegpNpJvqc=;
-        b=rSE3sL/uNfBySsG7K29gPuzjwnKz3EhRahtmfAhffCCMOU47CO593R/kRsfw+qvAHb
-         KvBrzo8LTqo6MZij0Dw7xc3pcW6IM8IIaE/6jTc9IihhGUIOfFfBRAVQcYGl7NQBIaWi
-         ZVNWdHSvi5ahGpxGNQc4jnzYQB0SL0OWPtcUquIQpCJmArVyIKynA6mW7L/7rNgCYYun
-         QU9pn8bGFEGMxH7rOjc9P08M6qUqv1luMvaVg02MHGrNXXW/h3C/YCx5l0jagdpImbcD
-         NMLuRxdH+objAk0Do7y4T8iYNDixBrxPgvjGhOgHl4nJJxBMBEC8kPg9BO9XZIq8srWG
-         8eYA==
-X-Forwarded-Encrypted: i=1; AJvYcCUaeiue5tWHrM61s3UkNcGBgItvikHwK7l5zTCB3MCzON3m0zWMrGuPimIx9kve26spoztKpIAR6db9HLsz8t0FhcnT21hIRTH9E8QOAXXb
-X-Gm-Message-State: AOJu0YzN9GVnHbMTfx5DyE1F6Sek0KPELeBPE5ckFM/4nEah3/cNwUb/
-	C6OFmXE450IOiruKEp6IVX73aGYR0PTOKZsxtoPDL6nhUi10K2iL1BQdzaLpa1g=
-X-Google-Smtp-Source: AGHT+IF1gaydBCbdkb+0mIKJs7r3iiV7SXsmmw8DHjaqfSQT0GzXJ1xKgEKeQAvKNKhSYoY+VfmB+A==
-X-Received: by 2002:a17:907:6d25:b0:a7d:34fd:6cd0 with SMTP id a640c23a62f3a-a7d4015fca8mr902016966b.66.1722377007402;
-        Tue, 30 Jul 2024 15:03:27 -0700 (PDT)
-Received: from fedora.fritz.box (aftr-82-135-80-26.dynamic.mnet-online.de. [82.135.80.26])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a7acadb9819sm691401966b.205.2024.07.30.15.03.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jul 2024 15:03:27 -0700 (PDT)
-From: Thorsten Blum <thorsten.blum@toblux.com>
-To: tytso@mit.edu,
-	adilger.kernel@dilger.ca,
-	kees@kernel.org,
-	gustavoars@kernel.org
-Cc: linux-ext4@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	Thorsten Blum <thorsten.blum@toblux.com>
-Subject: [PATCH v4] ext4: Annotate struct ext4_xattr_inode_array with __counted_by()
-Date: Wed, 31 Jul 2024 00:02:02 +0200
-Message-ID: <20240730220200.410939-3-thorsten.blum@toblux.com>
-X-Mailer: git-send-email 2.45.2
+        d=1e100.net; s=20230601; t=1722380954; x=1722985754;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EjNkuxlo0ObgZ1OMPHSYwFfZSih4s+xQbxCeuhHEjJ8=;
+        b=v1XupSIL7JOiIXs6/dt+JkFOU5YFAw3YW34PIuTkuCJeK8MIBl/jB6f1oCLeTMchHq
+         +eCe6D/eQQSvP6lSM9yPQd9enGiFhV/+uVn2XDNvTp//oaiwZKkajRkVcDq5x5xTxtcw
+         oy4JwzWXyooaif5ILt3NoXdtDlbcFft4X+mDpuSac8RGS2x9XwToxWKoNeATZnOs0FHm
+         ySpJvB7MDHtJXZi+ByPUyFMk0a/DaSU/nX5OKofNzVNF8Ujtps1kAoFyvvpK+Sek/csE
+         ApMRuFIZQgA39l/T7h4d+IYwsQCYXrjs8TdNlLlzQOODahov3NXrmlo5/kApu7ULhWrv
+         haHg==
+X-Forwarded-Encrypted: i=1; AJvYcCXWx1nyHh7bl7qRFy4Y6t8sCHKTmEqIyhe1X3NohJzB0t3hMR1GgdsixAadNAUnTKgXuHBRgyzLUpEeDS6buDKtZIyWjA6QpdVgXZq2Go0v
+X-Gm-Message-State: AOJu0Yx0tmPa3BMyPLF6x3SyL7K+kJXvpwDrNFv8q4WqmVA2SeLfbZEn
+	eRBt/MVJ9CMg/ZEA5+I9U+RFNHxEhfvp8qPPuxONwgSwIDA6O82hZGdFIM0pg1lEbH+m3ITcGDg
+	qI+gI+R6FfH2VIzCqI4reEJNk15dltRrCKxxB
+X-Google-Smtp-Source: AGHT+IH+kXuAL1vOqrJzmA/QRhTgNKgTz0m4/UBL6ewOha80SzsUMO+qu6d5uTxBn8caVXZ7VkevjmeYWxFQcqWsWcs=
+X-Received: by 2002:a05:6402:11cd:b0:5ac:4ce3:8f6a with SMTP id
+ 4fb4d7f45d1cf-5b58ea443d5mr73654a12.6.1722380953925; Tue, 30 Jul 2024
+ 16:09:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240730132528.1143520-1-adrian.ratiu@collabora.com>
+In-Reply-To: <20240730132528.1143520-1-adrian.ratiu@collabora.com>
+From: Jeff Xu <jeffxu@google.com>
+Date: Tue, 30 Jul 2024 16:08:35 -0700
+Message-ID: <CALmYWFumfPxoEE-jJEadnep=38edT7KZaY7KO9HLod=tdsOG=w@mail.gmail.com>
+Subject: Re: [PATCH v4] proc: add config & param to block forcing mem writes
+To: Adrian Ratiu <adrian.ratiu@collabora.com>
+Cc: linux-fsdevel@vger.kernel.org, linux-security-module@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	kernel@collabora.com, gbiv@google.com, inglorion@google.com, 
+	ajordanr@google.com, Doug Anderson <dianders@chromium.org>, Jann Horn <jannh@google.com>, 
+	Kees Cook <kees@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, 
+	Christian Brauner <brauner@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add the __counted_by compiler attribute to the flexible array member
-inodes to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
-CONFIG_FORTIFY_SOURCE.
+On Tue, Jul 30, 2024 at 6:25=E2=80=AFAM Adrian Ratiu <adrian.ratiu@collabor=
+a.com> wrote:
+>
+> This adds a Kconfig option and boot param to allow removing
+> the FOLL_FORCE flag from /proc/pid/mem write calls because
+> it can be abused.
+>
+> The traditional forcing behavior is kept as default because
+> it can break GDB and some other use cases.
+>
+> Previously we tried a more sophisticated approach allowing
+> distributions to fine-tune /proc/pid/mem behavior, however
+> that got NAK-ed by Linus [1], who prefers this simpler
+> approach with semantics also easier to understand for users.
+>
+> Link: https://lore.kernel.org/lkml/CAHk-=3DwiGWLChxYmUA5HrT5aopZrB7_2VTa0=
+NLZcxORgkUe5tEQ@mail.gmail.com/ [1]
+> Cc: Doug Anderson <dianders@chromium.org>
+> Cc: Jeff Xu <jeffxu@google.com>
+> Cc: Jann Horn <jannh@google.com>
+> Cc: Kees Cook <kees@kernel.org>
+> Cc: Ard Biesheuvel <ardb@kernel.org>
+> Cc: Christian Brauner <brauner@kernel.org>
+> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+> Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+> Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
+> ---
+> Changes in v4:
+> * Fixed doc punctuation, used passive tense, improved
+>   wording consistency, fixed default value wording
+> * Made struct constant_table a static const __initconst
+> * Reworked proc_mem_foll_force() indentation and var
+>   declarations to make code clearer
+> * Reworked enum + struct definition so lookup_constant()
+>   defaults to 'always'.
+>
+> Changes in v3:
+> * Simplified code to use shorthand ifs and a
+>   lookup_constant() table
+>
+> Changes in v2:
+> * Added bootparam on top of Linus' patch
+> * Slightly reworded commit msg
+> ---
+>  .../admin-guide/kernel-parameters.txt         | 10 ++++
+>  fs/proc/base.c                                | 54 ++++++++++++++++++-
+>  security/Kconfig                              | 32 +++++++++++
+>  3 files changed, 95 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentat=
+ion/admin-guide/kernel-parameters.txt
+> index f1384c7b59c9..8396e015aab3 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -4788,6 +4788,16 @@
+>         printk.time=3D    Show timing data prefixed to each printk messag=
+e line
+>                         Format: <bool>  (1/Y/y=3Denable, 0/N/n=3Ddisable)
+>
+> +       proc_mem.force_override=3D [KNL]
+> +                       Format: {always | ptrace | never}
+> +                       Traditionally /proc/pid/mem allows memory permiss=
+ions to be
+> +                       overridden without restrictions. This option may =
+be set to
+> +                       restrict that. Can be one of:
+> +                       - 'always': traditional behavior always allows me=
+m overrides.
+> +                       - 'ptrace': only allow mem overrides for active p=
+tracers.
+> +                       - 'never':  never allow mem overrides.
+> +                       If not specified, default is the CONFIG_PROC_MEM_=
+* choice.
+> +
+>         processor.max_cstate=3D   [HW,ACPI]
+>                         Limit processor to maximum C-state
+>                         max_cstate=3D9 overrides any DMI blacklist limit.
+> diff --git a/fs/proc/base.c b/fs/proc/base.c
+> index 72a1acd03675..daacb8070042 100644
+> --- a/fs/proc/base.c
+> +++ b/fs/proc/base.c
+> @@ -85,6 +85,7 @@
+>  #include <linux/elf.h>
+>  #include <linux/pid_namespace.h>
+>  #include <linux/user_namespace.h>
+> +#include <linux/fs_parser.h>
+>  #include <linux/fs_struct.h>
+>  #include <linux/slab.h>
+>  #include <linux/sched/autogroup.h>
+> @@ -117,6 +118,35 @@
+>  static u8 nlink_tid __ro_after_init;
+>  static u8 nlink_tgid __ro_after_init;
+>
+> +enum proc_mem_force {
+> +       PROC_MEM_FORCE_ALWAYS,
+> +       PROC_MEM_FORCE_PTRACE,
+> +       PROC_MEM_FORCE_NEVER
+> +};
+> +
+> +static enum proc_mem_force proc_mem_force_override __ro_after_init =3D
+> +       IS_ENABLED(CONFIG_PROC_MEM_NO_FORCE) ? PROC_MEM_FORCE_NEVER :
+> +       IS_ENABLED(CONFIG_PROC_MEM_FORCE_PTRACE) ? PROC_MEM_FORCE_PTRACE =
+:
+> +       PROC_MEM_FORCE_ALWAYS;
+> +
+> +static const struct constant_table proc_mem_force_table[] __initconst =
+=3D {
+> +       { "never", PROC_MEM_FORCE_NEVER },
+> +       { "ptrace", PROC_MEM_FORCE_PTRACE },
+> +       { }
+> +};
+> +
+> +static int __init early_proc_mem_force_override(char *buf)
+> +{
+> +       if (!buf)
+> +               return -EINVAL;
+> +
+> +       proc_mem_force_override =3D lookup_constant(proc_mem_force_table,
+> +                                                 buf, PROC_MEM_FORCE_ALW=
+AYS);
+proc_mem_force_table has two entries, this means:
+if kernel cmdline has proc_mem.force_override=3D"invalid",
+    PROC_MEM_FORCE_ALWAYS will be used.
 
-Remove the now obsolete comment on the count field.
+Another option is to have 3 entries in proc_mem_force_table: adding
+{"aways", PROC_MEM_FORCE_ALWAYS}
 
-In ext4_expand_inode_array(), use struct_size() instead of offsetof()
-and remove the local variable count. Increment the count field before
-adding a new inode to the inodes array.
+and let lookup_constant return -1 when not found, and not override
+proc_mem_force_override.
 
-Compile-tested only.
+This enforces the kernel cmd line must be set to one of three choices
+"always|ptrace|never" to be effective.
 
-Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
----
-Changes in v2:
-- Adjust ext4_expand_inode_array() as suggested by Gustavo A. R. Silva
-- Use struct_size() and struct_size_t() instead of offsetof()
-- Link to v1: https://lore.kernel.org/linux-kernel/20240729110454.346918-3-thorsten.blum@toblux.com/
+If you choose this path: please modify kernel-parameters.txt to
+"If not specified or invalid, default is the CONFIG_PROC_MEM_* choice."
 
-Changes in v3:
-- Use struct_size() instead of struct_size_t() as suggested by Kees Cook
-- Remove the local variable count as suggested by Gustavo A. R. Silva
-- Increment count before adding a new inode as suggested by Gustavo
-- Link to v2: https://lore.kernel.org/linux-kernel/20240730172301.231867-4-thorsten.blum@toblux.com/
+or else please clarify in the kernel-parameters.text:
+If not specified, default is the CONFIG_PROC_MEM_* choice
+If invalid str or empty string, PROC_MEM_FORCE_ALWAYS will be used
+regardless CONFIG_PROC_MEM_* choice
 
-Changes in v4:
-- Remove unnecessary count assignment and adjust copying the whole
-  struct as suggested by Gustavo
-- Link to v3: https://lore.kernel.org/linux-kernel/20240730205509.323320-3-thorsten.blum@toblux.com/
----
- fs/ext4/xattr.c | 22 ++++++++++------------
- fs/ext4/xattr.h |  4 ++--
- 2 files changed, 12 insertions(+), 14 deletions(-)
+> +
+> +       return 0;
+> +}
+> +early_param("proc_mem.force_override", early_proc_mem_force_override);
+> +
+>  struct pid_entry {
+>         const char *name;
+>         unsigned int len;
+> @@ -835,6 +865,26 @@ static int mem_open(struct inode *inode, struct file=
+ *file)
+>         return ret;
+>  }
+>
+> +static bool proc_mem_foll_force(struct file *file, struct mm_struct *mm)
+> +{
+> +       struct task_struct *task;
+> +       bool ptrace_active =3D false;
+> +
+> +       switch (proc_mem_force_override) {
+> +       case PROC_MEM_FORCE_NEVER:
+> +               return false;
+> +       case PROC_MEM_FORCE_PTRACE:
+> +               task =3D get_proc_task(file_inode(file));
+> +               if (task) {
+> +                       ptrace_active =3D task->ptrace && task->mm =3D=3D=
+ mm && task->parent =3D=3D current;
+Do we need to call "read_lock(&tasklist_lock);" ?
+see comments in ptrace_check_attach() of  kernel/ptrace.c
 
-diff --git a/fs/ext4/xattr.c b/fs/ext4/xattr.c
-index 46ce2f21fef9..263567d4e13d 100644
---- a/fs/ext4/xattr.c
-+++ b/fs/ext4/xattr.c
-@@ -2879,33 +2879,31 @@ ext4_expand_inode_array(struct ext4_xattr_inode_array **ea_inode_array,
- 	if (*ea_inode_array == NULL) {
- 		/*
- 		 * Start with 15 inodes, so it fits into a power-of-two size.
--		 * If *ea_inode_array is NULL, this is essentially offsetof()
- 		 */
--		(*ea_inode_array) =
--			kmalloc(offsetof(struct ext4_xattr_inode_array,
--					 inodes[EIA_MASK]),
--				GFP_NOFS);
-+		(*ea_inode_array) = kmalloc(
-+			struct_size(*ea_inode_array, inodes, EIA_MASK),
-+			GFP_NOFS);
- 		if (*ea_inode_array == NULL)
- 			return -ENOMEM;
- 		(*ea_inode_array)->count = 0;
- 	} else if (((*ea_inode_array)->count & EIA_MASK) == EIA_MASK) {
- 		/* expand the array once all 15 + n * 16 slots are full */
- 		struct ext4_xattr_inode_array *new_array = NULL;
--		int count = (*ea_inode_array)->count;
- 
--		/* if new_array is NULL, this is essentially offsetof() */
- 		new_array = kmalloc(
--				offsetof(struct ext4_xattr_inode_array,
--					 inodes[count + EIA_INCR]),
--				GFP_NOFS);
-+			struct_size(*ea_inode_array, inodes,
-+				    (*ea_inode_array)->count + EIA_INCR),
-+			GFP_NOFS);
- 		if (new_array == NULL)
- 			return -ENOMEM;
- 		memcpy(new_array, *ea_inode_array,
--		       offsetof(struct ext4_xattr_inode_array, inodes[count]));
-+		       struct_size(*ea_inode_array, inodes,
-+				   (*ea_inode_array)->count));
- 		kfree(*ea_inode_array);
- 		*ea_inode_array = new_array;
- 	}
--	(*ea_inode_array)->inodes[(*ea_inode_array)->count++] = inode;
-+	(*ea_inode_array)->count++;
-+	(*ea_inode_array)->inodes[(*ea_inode_array)->count - 1] = inode;
- 	return 0;
- }
- 
-diff --git a/fs/ext4/xattr.h b/fs/ext4/xattr.h
-index bd97c4aa8177..e14fb19dc912 100644
---- a/fs/ext4/xattr.h
-+++ b/fs/ext4/xattr.h
-@@ -130,8 +130,8 @@ struct ext4_xattr_ibody_find {
- };
- 
- struct ext4_xattr_inode_array {
--	unsigned int count;		/* # of used items in the array */
--	struct inode *inodes[];
-+	unsigned int count;
-+	struct inode *inodes[] __counted_by(count);
- };
- 
- extern const struct xattr_handler ext4_xattr_user_handler;
--- 
-2.45.2
 
+
+> +                       put_task_struct(task);
+> +               }
+> +               return ptrace_active;
+> +       default:
+> +               return true;
+> +       }
+> +}
+> +
+>  static ssize_t mem_rw(struct file *file, char __user *buf,
+>                         size_t count, loff_t *ppos, int write)
+>  {
+> @@ -855,7 +905,9 @@ static ssize_t mem_rw(struct file *file, char __user =
+*buf,
+>         if (!mmget_not_zero(mm))
+>                 goto free;
+>
+> -       flags =3D FOLL_FORCE | (write ? FOLL_WRITE : 0);
+> +       flags =3D write ? FOLL_WRITE : 0;
+> +       if (proc_mem_foll_force(file, mm))
+> +               flags |=3D FOLL_FORCE;
+>
+>         while (count > 0) {
+>                 size_t this_len =3D min_t(size_t, count, PAGE_SIZE);
+> diff --git a/security/Kconfig b/security/Kconfig
+> index 412e76f1575d..a93c1a9b7c28 100644
+> --- a/security/Kconfig
+> +++ b/security/Kconfig
+> @@ -19,6 +19,38 @@ config SECURITY_DMESG_RESTRICT
+>
+>           If you are unsure how to answer this question, answer N.
+>
+> +choice
+> +       prompt "Allow /proc/pid/mem access override"
+> +       default PROC_MEM_ALWAYS_FORCE
+> +       help
+> +         Traditionally /proc/pid/mem allows users to override memory
+> +         permissions for users like ptrace, assuming they have ptrace
+> +         capability.
+> +
+> +         This allows people to limit that - either never override, or
+> +         require actual active ptrace attachment.
+> +
+> +         Defaults to the traditional behavior (for now)
+> +
+> +config PROC_MEM_ALWAYS_FORCE
+> +       bool "Traditional /proc/pid/mem behavior"
+> +       help
+> +         This allows /proc/pid/mem accesses to override memory mapping
+> +         permissions if you have ptrace access rights.
+> +
+> +config PROC_MEM_FORCE_PTRACE
+> +       bool "Require active ptrace() use for access override"
+> +       help
+> +         This allows /proc/pid/mem accesses to override memory mapping
+> +         permissions for active ptracers like gdb.
+> +
+> +config PROC_MEM_NO_FORCE
+> +       bool "Never"
+> +       help
+> +         Never override memory mapping permissions
+> +
+> +endchoice
+> +
+>  config SECURITY
+>         bool "Enable different security models"
+>         depends on SYSFS
+> --
+> 2.44.2
+>
