@@ -1,206 +1,173 @@
-Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACC851AA3FF
-	for <linux-hardening@vger.kernel.org>; Tue, 30 Jul 2024 21:16:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 882841AA3FF
+	for <linux-hardening@vger.kernel.org>; Tue, 30 Jul 2024 22:03:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722374187; cv=none; b=Lyyxh66uasrKl502V7y5zsLEmsQrN/oSizj4X7yRQS6rKXcxUIIVPfJLIwt5dsS/3yw9ESBkdudi+NaH69DcQmf0hGRAztVuvZmWu3gtSRFA9M4qJWtjiofvjctLXgA8v8EWhY2w94yy4mRbzELqySK/178XZvUiSO5zFmzp1ec=
+	t=1722377011; cv=none; b=c0WvX1fm2eONF+A+Qyj6AWkMKw/d7DqMOcL+zlk97TLX0oY1V0UWyBl8v/qtvQddAMM56OI0XlkBadaja6UliH22MNKYrK52WrXSzCUHKlmbXfZbAXBd6bqICcZeCWL/DUFU4dsnx8Xfk/zucG5aWMRUK/HO/QnuT/VSJUTfTUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722374187; c=relaxed/simple;
-	bh=yQROK7TOy6F4YHHi7UFYQ667ySciMZe3bS9vVGssi0o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ppEaV8WFds9wKE/Gq2+nYFfeRmA4aXNWthfSbpq9XgmSKtj1C0qABs/h8lY5a2lx2dNvdYGtiuVGApWPJj27Gev7c6zMZN7lkwWKKGHgefxSjreh9HzlvCvT/LW4ZGxpHVWdhTPKvS4x+3pk8DqoxMebt1V7Jjy71o25FpVqCEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=TR+Xe2lS; arc=none smtp.client-ip=35.89.44.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1722377011; c=relaxed/simple;
+	bh=T6XB/UxIt5ahppozx8cDvdlnzxM96xFJq46yS1oHwxQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nuMdUrJpX2fKk0rAVczkFMrAeFnpFixqTcxouJFSWuxsy4rQiMN8UQulFpm4MvYE/2ryAo7wCaSnWCXQgrSPVfvhfK3eUfTYuCUauzKUtQ8L3Oe3UpYazlOvJhDm49jUIFtv55UFAGdlzn0QpLAl5UiitQSITA6vFtJZg69Zu/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=XUGRRXTe; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="TR+Xe2lS"
-Received: from eig-obgw-5007a.ext.cloudfilter.net ([10.0.29.141])
-	by cmsmtp with ESMTPS
-	id YqtJsH50fjnP5YuCmsOsiC; Tue, 30 Jul 2024 21:16:24 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id YuCkssunpB06aYuClsPATS; Tue, 30 Jul 2024 21:16:23 +0000
-X-Authority-Analysis: v=2.4 cv=dKCgmvZb c=1 sm=1 tr=0 ts=66a95827
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=frY+GlAHrI6frpeK1MvySw==:17
- a=IkcTkHD0fZMA:10 a=4kmOji7k6h8A:10 a=ZI_cG6RJAAAA:8 a=VwQbUJbxAAAA:8
- a=opMxIaHlLsu84nJWUF0A:9 a=QEXdDO2ut3YA:10 a=CiASUvFRIoiJKylo2i9u:22
- a=AjGcO6oz07-iQ99wixmX:22 a=Xt_RvD8W3m28Mn_h3AK8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=FVJ8Gd6JLwpKI78ipVUAxRuLxc0kJAq7kaVQNmDHTfk=; b=TR+Xe2lSuvxlRLW916iXcbECJ6
-	1wZ3HQGxRf1oPt35/s4JSgL/u0CKwVPOal1mzXrzjOOkBlNyMqnzySxoq814w92L4ts3tN+BjvNxe
-	3DSvAlJEEKrqtCYm1m0EYWTCUZoPRSLI/VbvG14w4hSZNXznLiv8w8Tuwxj3i+rhnayLP7vw2UWjs
-	jYNfAbRjzyq9DQx+hNr41Yd4TGdCDb+gryweqQgmDnsK36DODqCN3U15h1MXZ8UBbiSsR5Zn/hKHL
-	wE2zYGS20BBoj3YoJTEyxItFx4U10RwfXVVJ73XTjm9FIm+nf34ZmJp3J5lkR2vlW+aNuZM1MTJ9F
-	rOlO+RJQ==;
-Received: from [201.172.173.139] (port=44832 helo=[192.168.15.5])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1sYuCk-004E3d-1K;
-	Tue, 30 Jul 2024 16:16:22 -0500
-Message-ID: <66267271-85a1-4ac6-99c5-6ea9b8d19287@embeddedor.com>
-Date: Tue, 30 Jul 2024 15:16:21 -0600
+	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="XUGRRXTe"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a7a8a4f21aeso667547966b.2
+        for <linux-hardening@vger.kernel.org>; Tue, 30 Jul 2024 15:03:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1722377008; x=1722981808; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=cQd/qUCzd98DKMhZGAyQi0AZAIe2ySF7lmegpNpJvqc=;
+        b=XUGRRXTeU1hL1DdBy2M+mloNrJA1m2bJuJyuLXk+J+pMs71vhkLShuZ3xGs9d89DEk
+         idm7UzxDujupV30MAS7g0j32doxNoIfXULDUrG+nHU/ttt+QDykK7p9jWOUHnK+14h9I
+         HghJ5sqcmvCzllwq/UxoWudQ+OKSoeZrQsbkbrA6ug4MCbV1kIDg61Foa0y4F3pT+AG2
+         Jm3kGoV7r+Xoym411/SjvDdgs1q/HkRPJ+CV9njgOZD2W6lU6mQMtelR5kQeEmYWmKz9
+         iQnF8LbK+gpq5G+iVj4iRGktbehVrlMU+qmVhcKvCo23sAG1zy1yHHGtRdgNjCQOIqbT
+         Pp9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722377008; x=1722981808;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=cQd/qUCzd98DKMhZGAyQi0AZAIe2ySF7lmegpNpJvqc=;
+        b=rSE3sL/uNfBySsG7K29gPuzjwnKz3EhRahtmfAhffCCMOU47CO593R/kRsfw+qvAHb
+         KvBrzo8LTqo6MZij0Dw7xc3pcW6IM8IIaE/6jTc9IihhGUIOfFfBRAVQcYGl7NQBIaWi
+         ZVNWdHSvi5ahGpxGNQc4jnzYQB0SL0OWPtcUquIQpCJmArVyIKynA6mW7L/7rNgCYYun
+         QU9pn8bGFEGMxH7rOjc9P08M6qUqv1luMvaVg02MHGrNXXW/h3C/YCx5l0jagdpImbcD
+         NMLuRxdH+objAk0Do7y4T8iYNDixBrxPgvjGhOgHl4nJJxBMBEC8kPg9BO9XZIq8srWG
+         8eYA==
+X-Forwarded-Encrypted: i=1; AJvYcCUaeiue5tWHrM61s3UkNcGBgItvikHwK7l5zTCB3MCzON3m0zWMrGuPimIx9kve26spoztKpIAR6db9HLsz8t0FhcnT21hIRTH9E8QOAXXb
+X-Gm-Message-State: AOJu0YzN9GVnHbMTfx5DyE1F6Sek0KPELeBPE5ckFM/4nEah3/cNwUb/
+	C6OFmXE450IOiruKEp6IVX73aGYR0PTOKZsxtoPDL6nhUi10K2iL1BQdzaLpa1g=
+X-Google-Smtp-Source: AGHT+IF1gaydBCbdkb+0mIKJs7r3iiV7SXsmmw8DHjaqfSQT0GzXJ1xKgEKeQAvKNKhSYoY+VfmB+A==
+X-Received: by 2002:a17:907:6d25:b0:a7d:34fd:6cd0 with SMTP id a640c23a62f3a-a7d4015fca8mr902016966b.66.1722377007402;
+        Tue, 30 Jul 2024 15:03:27 -0700 (PDT)
+Received: from fedora.fritz.box (aftr-82-135-80-26.dynamic.mnet-online.de. [82.135.80.26])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a7acadb9819sm691401966b.205.2024.07.30.15.03.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jul 2024 15:03:27 -0700 (PDT)
+From: Thorsten Blum <thorsten.blum@toblux.com>
+To: tytso@mit.edu,
+	adilger.kernel@dilger.ca,
+	kees@kernel.org,
+	gustavoars@kernel.org
+Cc: linux-ext4@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	Thorsten Blum <thorsten.blum@toblux.com>
+Subject: [PATCH v4] ext4: Annotate struct ext4_xattr_inode_array with __counted_by()
+Date: Wed, 31 Jul 2024 00:02:02 +0200
+Message-ID: <20240730220200.410939-3-thorsten.blum@toblux.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] ext4: Annotate struct ext4_xattr_inode_array with
- __counted_by()
-To: Thorsten Blum <thorsten.blum@toblux.com>, tytso@mit.edu,
- adilger.kernel@dilger.ca, kees@kernel.org, gustavoars@kernel.org
-Cc: linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20240730205509.323320-3-thorsten.blum@toblux.com>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20240730205509.323320-3-thorsten.blum@toblux.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.173.139
-X-Source-L: No
-X-Exim-ID: 1sYuCk-004E3d-1K
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.5]) [201.172.173.139]:44832
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfOSbFBNXZfxqvgDrOxXYuFXq2K4YxJSI57Rk46X6obgY45FnhQbumXKM2gDVnHspRGbAh4bcmK8ZFqMqBG5+Qr2urL9A8QdWVZ8RRzy/lexomd12vvZz
- ewrqDksimOb7OAlqle82R0VE6vnBmyF3MQ6WUC/ViIPi6hjjX3pyqZvCy5CZNoiBnuEK6VWS4d+fWSSNRBpRg+sntwS6eUiPzcAHJtSWAPYZWuIpk45wSHlv
+Content-Transfer-Encoding: 8bit
 
+Add the __counted_by compiler attribute to the flexible array member
+inodes to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
+CONFIG_FORTIFY_SOURCE.
 
+Remove the now obsolete comment on the count field.
 
-On 30/07/24 14:55, Thorsten Blum wrote:
-> Add the __counted_by compiler attribute to the flexible array member
-> inodes to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
-> CONFIG_FORTIFY_SOURCE.
-> 
-> Remove the now obsolete comment on the count field.
-> 
-> Refactor ext4_expand_inode_array() by assigning count before copying any
-> data using memcpy().
-> 
-> Use struct_size() instead of offsetof() and remove the local variable
-> count.
-> 
-> Increment count before adding a new inode to the inodes array.
-> 
-> Compile-tested only.
-> 
-> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
-> ---
-> Changes in v2:
-> - Adjust ext4_expand_inode_array() as suggested by Gustavo A. R. Silva
-> - Use struct_size() and struct_size_t() instead of offsetof()
-> - Link to v1: https://lore.kernel.org/linux-kernel/20240729110454.346918-3-thorsten.blum@toblux.com/
-> 
-> Changes in v3:
-> - Use struct_size() instead of struct_size_t() as suggested by Kees Cook
-> - Remove the local variable count as suggested by Gustavo A. R. Silva
-> - Increment count before adding a new inode as suggested by Gustavo
-> - Link to v2: https://lore.kernel.org/linux-kernel/20240730172301.231867-4-thorsten.blum@toblux.com/
-> ---
->   fs/ext4/xattr.c | 24 +++++++++++-------------
->   fs/ext4/xattr.h |  4 ++--
->   2 files changed, 13 insertions(+), 15 deletions(-)
-> 
-> diff --git a/fs/ext4/xattr.c b/fs/ext4/xattr.c
-> index 46ce2f21fef9..4e20ef7cc502 100644
-> --- a/fs/ext4/xattr.c
-> +++ b/fs/ext4/xattr.c
-> @@ -2879,33 +2879,31 @@ ext4_expand_inode_array(struct ext4_xattr_inode_array **ea_inode_array,
->   	if (*ea_inode_array == NULL) {
->   		/*
->   		 * Start with 15 inodes, so it fits into a power-of-two size.
-> -		 * If *ea_inode_array is NULL, this is essentially offsetof()
->   		 */
-> -		(*ea_inode_array) =
-> -			kmalloc(offsetof(struct ext4_xattr_inode_array,
-> -					 inodes[EIA_MASK]),
-> -				GFP_NOFS);
-> +		(*ea_inode_array) = kmalloc(
-> +			struct_size(*ea_inode_array, inodes, EIA_MASK),
-> +			GFP_NOFS);
->   		if (*ea_inode_array == NULL)
->   			return -ENOMEM;
->   		(*ea_inode_array)->count = 0;
->   	} else if (((*ea_inode_array)->count & EIA_MASK) == EIA_MASK) {
->   		/* expand the array once all 15 + n * 16 slots are full */
->   		struct ext4_xattr_inode_array *new_array = NULL;
-> -		int count = (*ea_inode_array)->count;
->   
-> -		/* if new_array is NULL, this is essentially offsetof() */
->   		new_array = kmalloc(
-> -				offsetof(struct ext4_xattr_inode_array,
-> -					 inodes[count + EIA_INCR]),
-> -				GFP_NOFS);
-> +			struct_size(*ea_inode_array, inodes,
-> +				    (*ea_inode_array)->count + EIA_INCR),
-> +			GFP_NOFS);
->   		if (new_array == NULL)
->   			return -ENOMEM;
-> -		memcpy(new_array, *ea_inode_array,
-> -		       offsetof(struct ext4_xattr_inode_array, inodes[count]));
-> +		new_array->count = (*ea_inode_array)->count;
+In ext4_expand_inode_array(), use struct_size() instead of offsetof()
+and remove the local variable count. Increment the count field before
+adding a new inode to the inodes array.
 
-The line above is not really necessary if you copy `*ea_inode_array` at once like
+Compile-tested only.
 
-memcpy(... , struct_size(new_array, inodes, (*ea_inode_array)->count));
+Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+---
+Changes in v2:
+- Adjust ext4_expand_inode_array() as suggested by Gustavo A. R. Silva
+- Use struct_size() and struct_size_t() instead of offsetof()
+- Link to v1: https://lore.kernel.org/linux-kernel/20240729110454.346918-3-thorsten.blum@toblux.com/
 
-or like
+Changes in v3:
+- Use struct_size() instead of struct_size_t() as suggested by Kees Cook
+- Remove the local variable count as suggested by Gustavo A. R. Silva
+- Increment count before adding a new inode as suggested by Gustavo
+- Link to v2: https://lore.kernel.org/linux-kernel/20240730172301.231867-4-thorsten.blum@toblux.com/
 
-memcpy(... , struct_size(*ea_inode_array, inodes, (*ea_inode_array)->count));
+Changes in v4:
+- Remove unnecessary count assignment and adjust copying the whole
+  struct as suggested by Gustavo
+- Link to v3: https://lore.kernel.org/linux-kernel/20240730205509.323320-3-thorsten.blum@toblux.com/
+---
+ fs/ext4/xattr.c | 22 ++++++++++------------
+ fs/ext4/xattr.h |  4 ++--
+ 2 files changed, 12 insertions(+), 14 deletions(-)
 
-whichever works.
+diff --git a/fs/ext4/xattr.c b/fs/ext4/xattr.c
+index 46ce2f21fef9..263567d4e13d 100644
+--- a/fs/ext4/xattr.c
++++ b/fs/ext4/xattr.c
+@@ -2879,33 +2879,31 @@ ext4_expand_inode_array(struct ext4_xattr_inode_array **ea_inode_array,
+ 	if (*ea_inode_array == NULL) {
+ 		/*
+ 		 * Start with 15 inodes, so it fits into a power-of-two size.
+-		 * If *ea_inode_array is NULL, this is essentially offsetof()
+ 		 */
+-		(*ea_inode_array) =
+-			kmalloc(offsetof(struct ext4_xattr_inode_array,
+-					 inodes[EIA_MASK]),
+-				GFP_NOFS);
++		(*ea_inode_array) = kmalloc(
++			struct_size(*ea_inode_array, inodes, EIA_MASK),
++			GFP_NOFS);
+ 		if (*ea_inode_array == NULL)
+ 			return -ENOMEM;
+ 		(*ea_inode_array)->count = 0;
+ 	} else if (((*ea_inode_array)->count & EIA_MASK) == EIA_MASK) {
+ 		/* expand the array once all 15 + n * 16 slots are full */
+ 		struct ext4_xattr_inode_array *new_array = NULL;
+-		int count = (*ea_inode_array)->count;
+ 
+-		/* if new_array is NULL, this is essentially offsetof() */
+ 		new_array = kmalloc(
+-				offsetof(struct ext4_xattr_inode_array,
+-					 inodes[count + EIA_INCR]),
+-				GFP_NOFS);
++			struct_size(*ea_inode_array, inodes,
++				    (*ea_inode_array)->count + EIA_INCR),
++			GFP_NOFS);
+ 		if (new_array == NULL)
+ 			return -ENOMEM;
+ 		memcpy(new_array, *ea_inode_array,
+-		       offsetof(struct ext4_xattr_inode_array, inodes[count]));
++		       struct_size(*ea_inode_array, inodes,
++				   (*ea_inode_array)->count));
+ 		kfree(*ea_inode_array);
+ 		*ea_inode_array = new_array;
+ 	}
+-	(*ea_inode_array)->inodes[(*ea_inode_array)->count++] = inode;
++	(*ea_inode_array)->count++;
++	(*ea_inode_array)->inodes[(*ea_inode_array)->count - 1] = inode;
+ 	return 0;
+ }
+ 
+diff --git a/fs/ext4/xattr.h b/fs/ext4/xattr.h
+index bd97c4aa8177..e14fb19dc912 100644
+--- a/fs/ext4/xattr.h
++++ b/fs/ext4/xattr.h
+@@ -130,8 +130,8 @@ struct ext4_xattr_ibody_find {
+ };
+ 
+ struct ext4_xattr_inode_array {
+-	unsigned int count;		/* # of used items in the array */
+-	struct inode *inodes[];
++	unsigned int count;
++	struct inode *inodes[] __counted_by(count);
+ };
+ 
+ extern const struct xattr_handler ext4_xattr_user_handler;
+-- 
+2.45.2
 
-> +		memcpy(new_array, *ea_inode_array,
-> +		       struct_size(new_array, inodes, new_array->count));
->   		kfree(*ea_inode_array);
->   		*ea_inode_array = new_array;
->   	}
-> -	(*ea_inode_array)->inodes[(*ea_inode_array)->count++] = inode;
-> +	(*ea_inode_array)->count++;
-> +	(*ea_inode_array)->inodes[(*ea_inode_array)->count - 1] = inode;
-
-This looks good, thanks!
-
->   	return 0;
->   }
->   
-> diff --git a/fs/ext4/xattr.h b/fs/ext4/xattr.h
-> index bd97c4aa8177..e14fb19dc912 100644
-> --- a/fs/ext4/xattr.h
-> +++ b/fs/ext4/xattr.h
-> @@ -130,8 +130,8 @@ struct ext4_xattr_ibody_find {
->   };
->   
->   struct ext4_xattr_inode_array {
-> -	unsigned int count;		/* # of used items in the array */
-> -	struct inode *inodes[];
-> +	unsigned int count;
-> +	struct inode *inodes[] __counted_by(count);
->   };
->   
->   extern const struct xattr_handler ext4_xattr_user_handler;
-
---
-Gustavo
