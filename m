@@ -1,182 +1,96 @@
-Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [195.130.132.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from forward204a.mail.yandex.net (forward204a.mail.yandex.net [178.154.239.89])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70D241BBBE5
-	for <linux-hardening@vger.kernel.org>; Tue, 30 Jul 2024 15:58:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.132.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74D591A6177;
+	Tue, 30 Jul 2024 16:11:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.89
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722355101; cv=none; b=YeW6PmL3uB4T+TRlf/DxXuptnpu0FFq+MSnMic7Q8CICiUuq/418dhiwhvkkQEQwavjcwH3VetYqzQpasTn5VVmSUQOqpF5TjtV6wiqaTsJnz3pfQSV7vBOJ7MFWj8paliGSfHjolHH4HldVQzvbmsJn5bA4Iw2AJFiaKb+U/3E=
+	t=1722355898; cv=none; b=t8Kj7BxXEjqBQLoriIWCaoiy7Etw0PikDIxY/SGW72vwMKGakFRU6YWxsTM4Z5FWZSwc4IbLsK6EJMr3a9/v7JaFqcHeU8JJRW0P1JUsh3ngBop/CASkMvo85F+Xco8EETO4JaR2tIJphljv9R+EUQM6lwEY8dDUXyiemjYSxVE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722355101; c=relaxed/simple;
-	bh=PhE0zHyhBPpXrP8vj024jFThH76fT2vGmRe0f5Rv87M=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=U9DIsCwqgIKfchGlLHbJEBgm/wvdoHsaLvfIV5Ta2CXBcl5Be0D5uJQYkuoylnG+K/+2OUbdszRDS/+4KwDhlCPlpsCYNLfKonKLHFSM24QNsaCMNbD92ZxKhIANkiOeW0/Ljl/XBWDb6m3eDjr/5yWiCXn0J2TVCvy7N+9/+24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.132.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:520d:93ad:ff6d:335e])
-	by xavier.telenet-ops.be with bizsmtp
-	id tryD2C00F30Ayot01ryDmm; Tue, 30 Jul 2024 17:58:17 +0200
-Received: from rox.of.borg ([192.168.97.57])
-	by ramsan.of.borg with esmtp (Exim 4.95)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1sYpEU-004BRd-Ki;
-	Tue, 30 Jul 2024 17:58:13 +0200
-Received: from geert by rox.of.borg with local (Exim 4.95)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1sYpEr-00EdEl-L7;
-	Tue, 30 Jul 2024 17:58:13 +0200
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-To: Alex Deucher <alexander.deucher@amd.com>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	Xinhui Pan <Xinhui.Pan@amd.com>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Chris Down <chris@chrisdown.name>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>
-Cc: amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
+	s=arc-20240116; t=1722355898; c=relaxed/simple;
+	bh=9xq46AiLEciJhjWVl6ablTXxZG22njIKii2dUInMvUw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YiXcmIt8+TAMx+B7dq4TV9IzY2Xv+niHqHPyq3jSpfmcfFvsmV/Y2PPMdi+AA9NN+eLD9N3VA2j3MMuhUZs+ub0WOP3LvQedNhNJE505w4abwHV93208tJpCSwXxBEtP57LTojgtLWjtEmHZDxoHb0gdFaj4/K7p+IGsM12AMMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=XxRoxAe2; arc=none smtp.client-ip=178.154.239.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="XxRoxAe2"
+Received: from forward103a.mail.yandex.net (forward103a.mail.yandex.net [IPv6:2a02:6b8:c0e:500:1:45:d181:d103])
+	by forward204a.mail.yandex.net (Yandex) with ESMTPS id D2A1E69B72;
+	Tue, 30 Jul 2024 19:05:04 +0300 (MSK)
+Received: from mail-nwsmtp-smtp-production-main-57.myt.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-57.myt.yp-c.yandex.net [IPv6:2a02:6b8:c12:48a9:0:640:5080:0])
+	by forward103a.mail.yandex.net (Yandex) with ESMTPS id 7DF3A60917;
+	Tue, 30 Jul 2024 19:04:56 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-57.myt.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id t4YWXWtXtSw0-9YzPMW0s;
+	Tue, 30 Jul 2024 19:04:55 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
+	t=1722355496; bh=0bSL0dug3kMaGUZF4zCdpsGvEbqmBIiV+gNdXzkzm8I=;
+	h=Message-ID:Date:Cc:Subject:To:From;
+	b=XxRoxAe2qZKFTZlqa3cyQ4KAERbiU3GoKcsj4YaynaSAEad0hDVGlyupqEqEY3xii
+	 19O3x4xRFnc1sBQsjN93K8VPDnILH36W6BlCDIq3pqAdC/mGZTA4LKsSpjQFIbwzUM
+	 xK9ZDdyjI+oBN6vRFdWSX8BwCV582LVU6A1PIQUk=
+Authentication-Results: mail-nwsmtp-smtp-production-main-57.myt.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
+From: Dmitry Antipov <dmantipov@yandex.ru>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: Kees Cook <kees@kernel.org>,
+	netdev@vger.kernel.org,
 	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] drm/radeon/r100: Handle unknown family in r100_cp_init_microcode()
-Date: Tue, 30 Jul 2024 17:58:12 +0200
-Message-Id: <ae4d951d022e6c34b87ae46e15f1522f8d6d3480.1722355024.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.34.1
+	Dmitry Antipov <dmantipov@yandex.ru>
+Subject: [PATCH] net: core: use __counted_by for trailing VLA of struct sock_reuseport
+Date: Tue, 30 Jul 2024 19:04:49 +0300
+Message-ID: <20240730160449.368698-1-dmantipov@yandex.ru>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-With -Werror:
+According to '__reuseport_alloc()', annotate trailing VLA 'sock' of
+'struct sock_reuseport' with '__counted_by()' and use convenient
+'struct_size()' to simplify the math used in 'kzalloc()'.
 
-    In function ‘r100_cp_init_microcode’,
-	inlined from ‘r100_cp_init’ at drivers/gpu/drm/radeon/r100.c:1136:7:
-    include/linux/printk.h:465:44: error: ‘%s’ directive argument is null [-Werror=format-overflow=]
-      465 | #define printk(fmt, ...) printk_index_wrap(_printk, fmt, ##__VA_ARGS__)
-	  |                                            ^
-    include/linux/printk.h:437:17: note: in definition of macro ‘printk_index_wrap’
-      437 |                 _p_func(_fmt, ##__VA_ARGS__);                           \
-	  |                 ^~~~~~~
-    include/linux/printk.h:508:9: note: in expansion of macro ‘printk’
-      508 |         printk(KERN_ERR pr_fmt(fmt), ##__VA_ARGS__)
-	  |         ^~~~~~
-    drivers/gpu/drm/radeon/r100.c:1062:17: note: in expansion of macro ‘pr_err’
-     1062 |                 pr_err("radeon_cp: Failed to load firmware \"%s\"\n", fw_name);
-	  |                 ^~~~~~
-
-Fix this by converting the if/else if/... construct into a proper
-switch() statement with a default to handle the error case.
-
-As a bonus, the generated code is ca. 100 bytes smaller (with gcc 11.4.0
-targeting arm32).
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
 ---
-Compile-tested only.
----
- drivers/gpu/drm/radeon/r100.c | 70 ++++++++++++++++++++++-------------
- 1 file changed, 45 insertions(+), 25 deletions(-)
+ include/net/sock_reuseport.h | 2 +-
+ net/core/sock_reuseport.c    | 7 +++----
+ 2 files changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/radeon/r100.c b/drivers/gpu/drm/radeon/r100.c
-index 0b1e19345f43a771..bfd42e3e161e984f 100644
---- a/drivers/gpu/drm/radeon/r100.c
-+++ b/drivers/gpu/drm/radeon/r100.c
-@@ -1016,45 +1016,65 @@ static int r100_cp_init_microcode(struct radeon_device *rdev)
+diff --git a/include/net/sock_reuseport.h b/include/net/sock_reuseport.h
+index 6ec140b0a61b..6e4faf3ee76f 100644
+--- a/include/net/sock_reuseport.h
++++ b/include/net/sock_reuseport.h
+@@ -26,7 +26,7 @@ struct sock_reuseport {
+ 	unsigned int		bind_inany:1;
+ 	unsigned int		has_conns:1;
+ 	struct bpf_prog __rcu	*prog;		/* optional BPF sock selector */
+-	struct sock		*socks[];	/* array of sock pointers */
++	struct sock		*socks[] __counted_by(max_socks);
+ };
  
- 	DRM_DEBUG_KMS("\n");
+ extern int reuseport_alloc(struct sock *sk, bool bind_inany);
+diff --git a/net/core/sock_reuseport.c b/net/core/sock_reuseport.c
+index 5a165286e4d8..5eea73aaeb0f 100644
+--- a/net/core/sock_reuseport.c
++++ b/net/core/sock_reuseport.c
+@@ -173,11 +173,10 @@ static bool __reuseport_detach_closed_sock(struct sock *sk,
  
--	if ((rdev->family == CHIP_R100) || (rdev->family == CHIP_RV100) ||
--	    (rdev->family == CHIP_RV200) || (rdev->family == CHIP_RS100) ||
--	    (rdev->family == CHIP_RS200)) {
-+	switch (rdev->family) {
-+	case CHIP_R100:
-+	case CHIP_RV100:
-+	case CHIP_RV200:
-+	case CHIP_RS100:
-+	case CHIP_RS200:
- 		DRM_INFO("Loading R100 Microcode\n");
- 		fw_name = FIRMWARE_R100;
--	} else if ((rdev->family == CHIP_R200) ||
--		   (rdev->family == CHIP_RV250) ||
--		   (rdev->family == CHIP_RV280) ||
--		   (rdev->family == CHIP_RS300)) {
-+		break;
-+
-+	case CHIP_R200:
-+	case CHIP_RV250:
-+	case CHIP_RV280:
-+	case CHIP_RS300:
- 		DRM_INFO("Loading R200 Microcode\n");
- 		fw_name = FIRMWARE_R200;
--	} else if ((rdev->family == CHIP_R300) ||
--		   (rdev->family == CHIP_R350) ||
--		   (rdev->family == CHIP_RV350) ||
--		   (rdev->family == CHIP_RV380) ||
--		   (rdev->family == CHIP_RS400) ||
--		   (rdev->family == CHIP_RS480)) {
-+		break;
-+
-+	case CHIP_R300:
-+	case CHIP_R350:
-+	case CHIP_RV350:
-+	case CHIP_RV380:
-+	case CHIP_RS400:
-+	case CHIP_RS480:
- 		DRM_INFO("Loading R300 Microcode\n");
- 		fw_name = FIRMWARE_R300;
--	} else if ((rdev->family == CHIP_R420) ||
--		   (rdev->family == CHIP_R423) ||
--		   (rdev->family == CHIP_RV410)) {
-+		break;
-+
-+	case CHIP_R420:
-+	case CHIP_R423:
-+	case CHIP_RV410:
- 		DRM_INFO("Loading R400 Microcode\n");
- 		fw_name = FIRMWARE_R420;
--	} else if ((rdev->family == CHIP_RS690) ||
--		   (rdev->family == CHIP_RS740)) {
-+		break;
-+
-+	case CHIP_RS690:
-+	case CHIP_RS740:
- 		DRM_INFO("Loading RS690/RS740 Microcode\n");
- 		fw_name = FIRMWARE_RS690;
--	} else if (rdev->family == CHIP_RS600) {
-+		break;
-+
-+	case CHIP_RS600:
- 		DRM_INFO("Loading RS600 Microcode\n");
- 		fw_name = FIRMWARE_RS600;
--	} else if ((rdev->family == CHIP_RV515) ||
--		   (rdev->family == CHIP_R520) ||
--		   (rdev->family == CHIP_RV530) ||
--		   (rdev->family == CHIP_R580) ||
--		   (rdev->family == CHIP_RV560) ||
--		   (rdev->family == CHIP_RV570)) {
-+		break;
-+
-+	case CHIP_RV515:
-+	case CHIP_R520:
-+	case CHIP_RV530:
-+	case CHIP_R580:
-+	case CHIP_RV560:
-+	case CHIP_RV570:
- 		DRM_INFO("Loading R500 Microcode\n");
- 		fw_name = FIRMWARE_R520;
-+		break;
-+
-+	default:
-+		DRM_ERROR("Unsupported Radeon family %u\n", rdev->family);
-+		return -EINVAL;
- 	}
+ static struct sock_reuseport *__reuseport_alloc(unsigned int max_socks)
+ {
+-	unsigned int size = sizeof(struct sock_reuseport) +
+-		      sizeof(struct sock *) * max_socks;
+-	struct sock_reuseport *reuse = kzalloc(size, GFP_ATOMIC);
++	struct sock_reuseport *reuse =
++		kzalloc(struct_size(reuse, socks, max_socks), GFP_ATOMIC);
  
- 	err = request_firmware(&rdev->me_fw, fw_name, rdev->dev);
+-	if (!reuse)
++	if (unlikely(!reuse))
+ 		return NULL;
+ 
+ 	reuse->max_socks = max_socks;
 -- 
-2.34.1
+2.45.2
 
