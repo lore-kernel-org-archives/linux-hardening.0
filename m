@@ -1,75 +1,72 @@
-Received: from smtp-fw-9105.amazon.com (smtp-fw-9105.amazon.com [207.171.188.204])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A8D91AA3C5;
-	Tue, 30 Jul 2024 19:06:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.188.204
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EB1318B479;
+	Tue, 30 Jul 2024 20:11:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722366397; cv=none; b=Nkk8riUiGZW4XWW1QYKw0OhYkpR0V1ZxnNKvYfEm/X5DR57e2H/RRorDs2zK8it81n+8VNAWLyiudiyTti0maAWz2yS+AyoYBX4Qc/vpH4BwKEm7f8R76rcvhgvtAv865xWwzFPbx5lrFMzZB5xfXIe8D4bXEfOyNg12Q4gFOjo=
+	t=1722370292; cv=none; b=cf9FHBFZkhbHpV3pgo6QMcIWrfjLFT8dqtn/OPvlZ2W4spsr/2/mcKx5uamkfrY/w+OzKcC5Tag2j4gJbvaJPZNSxwrb1Ecy6+EkEOgFTleWc53HCSW/jIKcV7WN8JEeV8nn74uDtmGJYqB9diroYXpZ5WkLitdBVTq9WOyr7kI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722366397; c=relaxed/simple;
-	bh=otPqEQYFLD8H3akyUR9O8rU5UGmkX1M2I3WCn5i/vic=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=g1SrNz7UC6XLTzxjLRssJrGzy8yJFEqOe1tADx4yO+eQnj8HLe+CiJSj+c14aaL8uKc88YCE6qFbPOsy0F5coDAsJmcsyXUOQcZPs2fHR/nD78TB92gOIo1Mx4Fm9VlAfwqQ+MICBkfoH7203VL26qNjveFi90mOae+IUIpTQQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=PmvF/gXw; arc=none smtp.client-ip=207.171.188.204
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	s=arc-20240116; t=1722370292; c=relaxed/simple;
+	bh=h7xX26OUGEpC01WYdJ3hZXmyAhI3DKjPX1LnEyj8824=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pS43CtiJrvH37b6GzQ7aX81c8TO21NOILyQRi1TUHG8s6Q6e50GjDBdoUsLArJM15RltKlfpQB1V8kthi7lJ2rOIBSXi9F2jNE7l1o/aksxmsxbBWNsZNrqJXzK0+EA5oWnZ+bVojyP9xFGx6jbi9KJiRxE0Kh5Wy6F2Z8jbfT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JwjCx34K; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="PmvF/gXw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1722366396; x=1753902396;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=NVf6enMgAn0nRp15Rba4pCbZQnD5Nx0jm9+QNNSc7gI=;
-  b=PmvF/gXwcorseZIPLbDsbAyh/0mWe6zLcPkOrg1UwF8BnWyLIroAkYzW
-   87xMmQDeF7QQ9hX7C3j0m6UO2t4x4AygF5RZTPqHK8oPwIc6RTIu0h4wL
-   Iuqe2fIX/kwpngNRZwSU1Do4PgcYK6gSUsTeTDRYUiiHwqJZzY6EFh4u0
-   Y=;
-X-IronPort-AV: E=Sophos;i="6.09,248,1716249600"; 
-   d="scan'208";a="746459685"
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.210])
-  by smtp-border-fw-9105.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2024 19:06:30 +0000
-Received: from EX19MTAUWB002.ant.amazon.com [10.0.38.20:20946]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.49.198:2525] with esmtp (Farcaster)
- id b863f0b2-9293-430f-a8eb-88decde807f3; Tue, 30 Jul 2024 19:06:29 +0000 (UTC)
-X-Farcaster-Flow-ID: b863f0b2-9293-430f-a8eb-88decde807f3
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWB002.ant.amazon.com (10.250.64.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
- Tue, 30 Jul 2024 19:06:29 +0000
-Received: from 88665a182662.ant.amazon.com (10.106.101.38) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
- Tue, 30 Jul 2024 19:06:27 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <dmantipov@yandex.ru>
-CC: <kees@kernel.org>, <linux-hardening@vger.kernel.org>,
-	<netdev@vger.kernel.org>, <pabeni@redhat.com>, Kuniyuki Iwashima
-	<kuniyu@amazon.com>
-Subject: Re: [PATCH] net: core: use __counted_by for trailing VLA of struct sock_reuseport
-Date: Tue, 30 Jul 2024 12:06:16 -0700
-Message-ID: <20240730190616.84555-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20240730160449.368698-1-dmantipov@yandex.ru>
-References: <20240730160449.368698-1-dmantipov@yandex.ru>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JwjCx34K"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D34D1C32782;
+	Tue, 30 Jul 2024 20:11:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1722370292;
+	bh=h7xX26OUGEpC01WYdJ3hZXmyAhI3DKjPX1LnEyj8824=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JwjCx34K+uBYqyDO2TeGAoWeLfBrz65dSk4iUyUi72Uz5xOp3OPezmamBQ4KEeWwI
+	 zBXCCaEz3efqUabyLYLWgE1I03N2jfyOR8ueD0FGIOeYtMfOYyId3HQhalGeIEjpW7
+	 dzwgL/ps4093qOl9thTjsqMtZ9d2x7x5c2cO+9m0cPHUFjaW9e6zIesxKv7MB/FX0n
+	 tZ17bSEjw+OX0nFIM6RN5NDQPeth9KrKY/fwRpt2YTHkEWjeXA4PMW+goxf5G9Csbh
+	 Cr/EBHb3iTuSF4GYozPA3zMl/EWSNo6xS93HBSoEeF9ViyUhLzNI+u+QE1Kk4tnY0U
+	 fM7vrjPIs3ptg==
+Date: Tue, 30 Jul 2024 14:11:30 -0600
+From: Rob Herring <robh@kernel.org>
+To: Danila Tikhonov <danila@jiaxyga.com>
+Cc: krzk+dt@kernel.org, conor+dt@kernel.org, andersson@kernel.org,
+	konrad.dybcio@linaro.org, rafael@kernel.org,
+	viresh.kumar@linaro.org, heikki.krogerus@linux.intel.com,
+	gregkh@linuxfoundation.org, kees@kernel.org, tony.luck@intel.com,
+	gpiccoli@igalia.com, sudeep.holla@arm.com, quic_rjendra@quicinc.com,
+	andre.przywara@arm.com, ulf.hansson@linaro.org,
+	davidwronek@gmail.com, neil.armstrong@linaro.org,
+	heiko.stuebner@cherry.de, rafal@milecki.pl, macromorgan@hotmail.com,
+	linus.walleij@linaro.org, dmitry.baryshkov@linaro.org,
+	johan+linaro@kernel.org, javier.carrasco.cruz@gmail.com,
+	quic_kriskura@quicinc.com, lpieralisi@kernel.org, fekz115@gmail.com,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-usb@vger.kernel.org, linux-hardening@vger.kernel.org,
+	linux@mainlining.org
+Subject: Re: [PATCH 00/11] Add Nothing Phone (1) support
+Message-ID: <20240730201130.GA2074210-robh@kernel.org>
+References: <20240729201843.142918-1-danila@jiaxyga.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D031UWA002.ant.amazon.com (10.13.139.96) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240729201843.142918-1-danila@jiaxyga.com>
 
-From: Dmitry Antipov <dmantipov@yandex.ru>
-Date: Tue, 30 Jul 2024 19:04:49 +0300
-> According to '__reuseport_alloc()', annotate trailing VLA 'sock' of
-> 'struct sock_reuseport' with '__counted_by()' and use convenient
-> 'struct_size()' to simplify the math used in 'kzalloc()'.
-> 
-> Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
+On Mon, Jul 29, 2024 at 11:18:07PM +0300, Danila Tikhonov wrote:
+> This series of patches adds support for the Nothing Phone (1), identified
+> as nothing,spacewar. The Nothing Phone (1) is built on the Qualcomm
+> Snapdragon 778G+ (SM7325-AE, also known as yupik).
 
-Reviewed-by: Kuniyuki Iwashima <kuniyu@amazon.com>
+Your email header has this:
+
+Content-Type: text/plain; charset=y                                                                        
+
+charset=y is not valid. When git-send-email asks what charset, press 
+<enter>, not 'y', to accept the default utf-8.
+
+Rob
