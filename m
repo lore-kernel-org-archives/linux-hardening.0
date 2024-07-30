@@ -1,104 +1,112 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59E3512FB37
-	for <linux-hardening@vger.kernel.org>; Mon, 29 Jul 2024 21:30:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9D633FE4;
+	Tue, 30 Jul 2024 00:41:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722288630; cv=none; b=OfxmxtuCRB1tG00P/1VUBM/RBDg9wwvW62ReQNGXRTXjoZUIuGW0zJvO2BGSv+9sskwyYZ1VXDA2qy8skMULvUapx4UU4rzIMU3142+vwAda+rnXpmX12zApGe9pBC522frsXv5gEqy9hOIyDQkrFx2SB1qBf1lthMytb6AD30A=
+	t=1722300094; cv=none; b=AS9q2a/q+r7Gk+1WxKesVfSeaV6/AXDinZglfDNXFWfKNem9tOwIRzZn665jCe4KgqcHKtDeOwZKWFO5If7P52xQWM1d9ibwmT+ctGuqaug0v+t493uB+FaR6rA4PHBcClgrM472cuz3gvZ7lJDGG9CTm/OcEEsMaIE429I1UqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722288630; c=relaxed/simple;
-	bh=nkh3RY87LSj7T5WSe1L7vT9axB9xoj0Dh0BC+iFxZ1g=;
+	s=arc-20240116; t=1722300094; c=relaxed/simple;
+	bh=lekOe1+MxIlBhZ79to1c7J8l/84yUjXxzwj1ShXt120=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aHaLopzRLbLf3RrsFYA/P7Kid/t+ZNEXehBvsSqE8dBeNVqS8QGBLBXi6QCYKoGp5D9Nb0vaGKFPLSCX0CxEsH4kwd6rO6vi+LYZfUl2N2JwcOLM0wkEfMiDVtCUgLoDmZleahkXLxZXEyPEVEwCOIW37jH1Fcbx0bQBWOH9gw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iUaDFskl; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q7uZ9MKEPjA4Qc4g5lZYfZDR1jXlRC/sIZSA+ATNzHLvTzYGVxRF930q3UwiD0GskXabMrIazsEfbczr9vo/43vwBU61VtJpDaDQJn3MCKL5DJV9vKRilyKD0v7kkRN0AgpJCp8+LRabJNMJgQLN2EruI5Je0zCSpJQNse9K1GI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QFFZDywE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iUaDFskl"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2ef2c109eabso51009551fa.0
-        for <linux-hardening@vger.kernel.org>; Mon, 29 Jul 2024 14:30:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1722288626; x=1722893426; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=w+XeGVGpXC/9raSm+hbwTOeiVV3/eRdhAJVqlpmquSE=;
-        b=iUaDFsklFwK2/PiEXk2a4wFP+8Z0VcQ1C66GPfpSKxykbpuyIzvqCFTSdvICEbuRBj
-         hacpHDLqplm2s3g3MJb3yW/ZpbeJ25cYwcEhGT2oOUG2jEm2NMGm7FrlMNmlSXpeKXjy
-         3uk41R9/kcSreBW865yhiaMf9lXiZL7x42GTnGuM1w5S3wYj0yaQAy4I6GZICdt94p6e
-         JjMp8020WC+8854OMo05xgm5uzg54VmOmD6RFH5ms0rt7UcmIdMLAz6bu/xv/lowfBuw
-         81x3t0HIUdlD7crcLlwU7Dv8pL3dPBPqVmQcFoWlaZ/OnADnIEkFOm4sZYreoJXx25t/
-         pr/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722288626; x=1722893426;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=w+XeGVGpXC/9raSm+hbwTOeiVV3/eRdhAJVqlpmquSE=;
-        b=llumwD41IEvCC/kgVeWHymJclsWjtzgJVAvFMjYXFS6LpkI6DxR6GagD158jOjDHG1
-         D6OOIJOSxb9I55aACZmvXfKGuJqiYd4yHSUKHkyYSoVP9FSPO2R/oSG3IPEZHmxnSFxQ
-         hyxIftSYecChgWC6Z/huapqG2eCr+UVcCUAnMDRsipraDa88CJpMljVVE5hY5b5iRreU
-         Qt6dphN5XjP+jpxIt2NKMMh6+B4Atmtkv2vm0Ya4mkWsqQ63yw3PzmfqjBgmCx48SoO6
-         KVpMjzhfM27MgUpKZf3D8zV7CldH/cw4wGgjEOLnnaYqbdRLMtmQ3XDNrTo3K/bpofSD
-         S06w==
-X-Forwarded-Encrypted: i=1; AJvYcCUOPJYmauFOqmDuGFINebcbc2bEoGKZcOYVLjAYEaNrt+AMakIpPQdOIBnZDDS4gsNnGrqmdVSJd3uyPbuU3oc2w9yxm2nA6H8EiIXS45sf
-X-Gm-Message-State: AOJu0YyohRfVaqtzwqRzYUD9LLw7C+PGmChJAmouArQs4bcjubbeKKCC
-	G4Ot4R8NPS8AHdgXzJvukJjtTvLmlg3mijZnf9osMt8BI3nzaVA2dx3GrYfyXlc=
-X-Google-Smtp-Source: AGHT+IHkuA/ybS+vTEmAhWPiJMmSXwxniP06izUiJNBrRHRDIu1+0MlWYxSP7AAgk4esgMEHJO2Ehw==
-X-Received: by 2002:a2e:7c01:0:b0:2ef:2c86:4d47 with SMTP id 38308e7fff4ca-2f12ecd2cb8mr59018661fa.15.1722288626513;
-        Mon, 29 Jul 2024 14:30:26 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2f03d09574dsm14265531fa.140.2024.07.29.14.30.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jul 2024 14:30:26 -0700 (PDT)
-Date: Tue, 30 Jul 2024 00:30:24 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Danila Tikhonov <danila@jiaxyga.com>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	andersson@kernel.org, konrad.dybcio@linaro.org, rafael@kernel.org, 
-	viresh.kumar@linaro.org, heikki.krogerus@linux.intel.com, gregkh@linuxfoundation.org, 
-	kees@kernel.org, tony.luck@intel.com, gpiccoli@igalia.com, sudeep.holla@arm.com, 
-	quic_rjendra@quicinc.com, andre.przywara@arm.com, ulf.hansson@linaro.org, 
-	davidwronek@gmail.com, neil.armstrong@linaro.org, heiko.stuebner@cherry.de, 
-	rafal@milecki.pl, macromorgan@hotmail.com, linus.walleij@linaro.org, 
-	johan+linaro@kernel.org, javier.carrasco.cruz@gmail.com, quic_kriskura@quicinc.com, 
-	lpieralisi@kernel.org, fekz115@gmail.com, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, 
-	linux-usb@vger.kernel.org, linux-hardening@vger.kernel.org, linux@mainlining.org
-Subject: Re: [PATCH 08/11] arm64: dts: qcom: Add SM7325 device tree
-Message-ID: <g6w2z2apwu5ng2jolpnddduqqpxp27by7e2xshqpxrzkutyuhc@gyprjccngtya>
-References: <20240729201843.142918-1-danila@jiaxyga.com>
- <20240729201843.142918-9-danila@jiaxyga.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QFFZDywE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82CFEC32786;
+	Tue, 30 Jul 2024 00:41:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1722300094;
+	bh=lekOe1+MxIlBhZ79to1c7J8l/84yUjXxzwj1ShXt120=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QFFZDywEF0SbkA1T6NxPBDtE8DY9WpMHcsFArPqMBlGfl7FvduTsdJOT7vlQUT5Fg
+	 5LBJDufE7cJlcNEGezDo7apcOGC3Zz4Fswj5K876wOTWkeH+FhDfT0gIie/QY1Hgor
+	 u7AfQA9Wz2Y83u1J3nHTC304yXdAGRRbt0VheTg01RCdqwm6njkSgNTXtewQFxiGk1
+	 J5uGSULYCrkfZcLQljxoEmo+ikNoy24W1VKYD88IvMPfPHfTgCGTYM+oMNofQsFJwL
+	 4gvF7idkNbbVEnezp1MQWre3PFwj6omZPV6v8tvEmyn9UXAMJm+hZhNkosV7Vkrued
+	 DtkRKPqtTxF4Q==
+Date: Mon, 29 Jul 2024 17:41:34 -0700
+From: Kees Cook <kees@kernel.org>
+To: jvoisin <julien.voisin@dustri.org>
+Cc: ast@kernel.org, bp@alien8.de, dave.hansen@linux.intel.com,
+	hpa@zytor.com, jgross@suse.com, jpoimboe@kernel.org,
+	leitao@debian.org, linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org, mingo@redhat.com, nathan@kernel.org,
+	peterz@infradead.org, samitolvanen@google.com, tglx@linutronix.de,
+	x86@kernel.org
+Subject: Re: [PATCH] x86/alternatives: Make FineIBT mode Kconfig selectable
+Message-ID: <202407291720.1E1B193A@keescook>
+References: <20240501000218.work.998-kees@kernel.org>
+ <c875722b-0434-41fe-b375-cc685498c444@dustri.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240729201843.142918-9-danila@jiaxyga.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c875722b-0434-41fe-b375-cc685498c444@dustri.org>
 
-On Mon, Jul 29, 2024 at 11:18:15PM GMT, Danila Tikhonov wrote:
-> From: Eugene Lepshy <fekz115@gmail.com>
+On Mon, Jul 29, 2024 at 02:35:02PM +0200, jvoisin wrote:
+> > Since FineIBT performs checking at the destination, it is weaker against
+> > attacks that can construct arbitrary executable memory contents. As such,
+> > some system builders want to run with FineIBT disabled by default. Allow
+> > the "cfi=kcfi" boot param mode to be selectable through Kconfig via the
+> > newly introduced CONFIG_CFI_AUTO_DEFAULT.
 > 
-> The Snapdragon 778G (SM7325) / 778G+ (SM7325-AE) / 782G (SM7325-AF)
-> is software-wise very similar to the Snapdragon 7c+ Gen 3 (SC7280).
-> 
-> It uses the Kryo670.
-> 
-> Signed-off-by: Eugene Lepshy <fekz115@gmail.com>
-> Co-developed-by: Danila Tikhonov <danila@jiaxyga.com>
-> Signed-off-by: Danila Tikhonov <danila@jiaxyga.com>
-> ---
->  arch/arm64/boot/dts/qcom/sm7325.dtsi | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/qcom/sm7325.dtsi
-> 
+> I'm confused as why you think that KCFI is stronger/better than FineIBT.
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Sure, can I try to explain this more.
 
+> The latter is compatible with execute-only memory,
+
+Yes, and since Linux doesn't have kernel execute-only memory (and likely
+won't for some time), it doesn't make sense to use FineIBT over KCFI for
+that reason.
+
+> makes use of hardware support,
+
+Hm? KCFI does too. IBT is still enabled with KCFI (when the hardware
+supports it).
+
+> doesn't need LTO,
+
+KCFI doesn't need LTO either.
+
+> is faster,
+
+What? Measured how? I feel like you're thinking about the old Clang CFI,
+not the modern KCFI implementation.
+
+> … moreover, I don't see why an
+> attacker able to "construct arbitrary executable memory contents"
+> wouldn't be able to bypass KCFI as well,
+
+To bypass KCFI, the attacker additionally needs a targeted memory
+exposure to get the correct function hash that they must include before
+the malicious function they construct. With FineIBT, no such exposure is
+needed.
+
+> since its threat model
+> (https://github.com/kcfi/docs/blob/master/kCFI_whitepaper.pdf)
+> explicitly says "We assume an OS that fully implements the W^X policy
+> [56,58,106] preventing direct code injection in kernel space."
+
+I mean, a whitepaper's threat model is nice and all, but this just isn't
+the reality. Linux certainly tries to maintain W^X, but there are bugs
+and things like BPF, which can be manipulated to gain attacker-controlled
+executable code injected into the kernel address space. (e.g. BPF will
+flip a writable region from RW to RX, so W^X is maintained spatially but
+not temporally.)
+
+So without execute-only memory, some deployments prefer to not weaken
+the CFI implementation to allow for hash checking bypasses. Once X-O
+exists, FineIBT is a slam-dunk over KCFI. :)
+
+-Kees
 
 -- 
-With best wishes
-Dmitry
+Kees Cook
