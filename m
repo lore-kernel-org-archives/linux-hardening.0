@@ -1,96 +1,180 @@
-Received: from forward204a.mail.yandex.net (forward204a.mail.yandex.net [178.154.239.89])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74D591A6177;
-	Tue, 30 Jul 2024 16:11:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.89
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E4341A616E
+	for <linux-hardening@vger.kernel.org>; Tue, 30 Jul 2024 16:17:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722355898; cv=none; b=t8Kj7BxXEjqBQLoriIWCaoiy7Etw0PikDIxY/SGW72vwMKGakFRU6YWxsTM4Z5FWZSwc4IbLsK6EJMr3a9/v7JaFqcHeU8JJRW0P1JUsh3ngBop/CASkMvo85F+Xco8EETO4JaR2tIJphljv9R+EUQM6lwEY8dDUXyiemjYSxVE=
+	t=1722356234; cv=none; b=Gxvz4/5UyWo0QcWWM90b2gNhr1Oi6eYm0KG9o4XKkWa18klnb+8Gs0+OQ5nOM8cG+9AkWau/StG7iMCm96fF2LPMk1o+K/+ZJuyYJDUEG+igH5Va7WXWNxmJ2v9jUpgjlqvhdzIErAphZFMExqRoLIBhi1QD+2SsVllycAimjUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722355898; c=relaxed/simple;
-	bh=9xq46AiLEciJhjWVl6ablTXxZG22njIKii2dUInMvUw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YiXcmIt8+TAMx+B7dq4TV9IzY2Xv+niHqHPyq3jSpfmcfFvsmV/Y2PPMdi+AA9NN+eLD9N3VA2j3MMuhUZs+ub0WOP3LvQedNhNJE505w4abwHV93208tJpCSwXxBEtP57LTojgtLWjtEmHZDxoHb0gdFaj4/K7p+IGsM12AMMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=XxRoxAe2; arc=none smtp.client-ip=178.154.239.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
+	s=arc-20240116; t=1722356234; c=relaxed/simple;
+	bh=iGVV+m4HJkFiwhpP4XIVIdXAvDtHdGH9xOpxRwhOAis=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QqUArs4peATplmeFIWmrrner03x1vsjjSLvXKV2M18tLwgs2DImvXQEuMqXxFxcawaVV4++2bJUyL8amjIXmoG+2JUDw9GfcLaVWvy9j9425Lrgv1hwP4WnpVY3XBiPxXNroDDT30DPNNGC1WZGuZQHJd+SwDYkngxskGc0m7pI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pShVwaZ8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="XxRoxAe2"
-Received: from forward103a.mail.yandex.net (forward103a.mail.yandex.net [IPv6:2a02:6b8:c0e:500:1:45:d181:d103])
-	by forward204a.mail.yandex.net (Yandex) with ESMTPS id D2A1E69B72;
-	Tue, 30 Jul 2024 19:05:04 +0300 (MSK)
-Received: from mail-nwsmtp-smtp-production-main-57.myt.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-57.myt.yp-c.yandex.net [IPv6:2a02:6b8:c12:48a9:0:640:5080:0])
-	by forward103a.mail.yandex.net (Yandex) with ESMTPS id 7DF3A60917;
-	Tue, 30 Jul 2024 19:04:56 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-57.myt.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id t4YWXWtXtSw0-9YzPMW0s;
-	Tue, 30 Jul 2024 19:04:55 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
-	t=1722355496; bh=0bSL0dug3kMaGUZF4zCdpsGvEbqmBIiV+gNdXzkzm8I=;
-	h=Message-ID:Date:Cc:Subject:To:From;
-	b=XxRoxAe2qZKFTZlqa3cyQ4KAERbiU3GoKcsj4YaynaSAEad0hDVGlyupqEqEY3xii
-	 19O3x4xRFnc1sBQsjN93K8VPDnILH36W6BlCDIq3pqAdC/mGZTA4LKsSpjQFIbwzUM
-	 xK9ZDdyjI+oBN6vRFdWSX8BwCV582LVU6A1PIQUk=
-Authentication-Results: mail-nwsmtp-smtp-production-main-57.myt.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
-From: Dmitry Antipov <dmantipov@yandex.ru>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: Kees Cook <kees@kernel.org>,
-	netdev@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	Dmitry Antipov <dmantipov@yandex.ru>
-Subject: [PATCH] net: core: use __counted_by for trailing VLA of struct sock_reuseport
-Date: Tue, 30 Jul 2024 19:04:49 +0300
-Message-ID: <20240730160449.368698-1-dmantipov@yandex.ru>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pShVwaZ8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53884C4AF0C;
+	Tue, 30 Jul 2024 16:17:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1722356234;
+	bh=iGVV+m4HJkFiwhpP4XIVIdXAvDtHdGH9xOpxRwhOAis=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pShVwaZ83JafSgO/NqCmmX1ZAiLrpHgLYHXKiqL204ar5fZ2a8LLouFbyzJtOejr4
+	 hKiN3hsxy8B9IuwF5Y6ymbcrS+lRrmlIvtfCbmvlfywicEjAMcsCI1S9NgBBOSoRp3
+	 uxddG3lyJk8x3n6dcioM3DiuyS4fo2rj3tS6NKb7Yk7z3+y9/lYKG7uByyvgUyYjaV
+	 3TQQkh4IERUu1Drruh44f45cKgpPI8RPtSntAcbUjRxKmJoUhlT91Ulk+2F5SKUtKB
+	 WDai26Chwv0IBNGmvwH3/UypEXeb1sV1C1z3VpOsb8wJPbLfr9ETG8E3jULXxbwKfb
+	 WyN67Z6fvqUzQ==
+Date: Tue, 30 Jul 2024 09:17:13 -0700
+From: Kees Cook <kees@kernel.org>
+To: "Prithivi Raj.S" <prithivi.s017@gmail.com>
+Cc: linux-hardening@vger.kernel.org
+Subject: Re: Unexpected Heap Randomization Behavior in Kernel Version 5.10.216
+Message-ID: <202407300858.EC28E15@keescook>
+References: <CACBLJD=y-4aWa-7r-xhfYoTVEkQAGi2EmG3nA97rH2cz-KXmcw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACBLJD=y-4aWa-7r-xhfYoTVEkQAGi2EmG3nA97rH2cz-KXmcw@mail.gmail.com>
 
-According to '__reuseport_alloc()', annotate trailing VLA 'sock' of
-'struct sock_reuseport' with '__counted_by()' and use convenient
-'struct_size()' to simplify the math used in 'kzalloc()'.
+On Tue, Jul 30, 2024 at 04:45:29PM +0530, Prithivi Raj.S wrote:
+> I have been testing Address Space Layout Randomization (ASLR)
+> functionalities with the kernel.randomize_va_space sysctl parameter.
+> According to the kernel documentation:
+> 
+> 0 disables randomization.
+> 1 randomizes the address of mmap base, stack, and VDSO page.
+> 2 randomizes the heap address.
+> 
+> However, I have observed that in kernel version 5.10.216, the heap
+> base address is being randomized even when kernel.randomize_va_space
+> is set to 1. This behavior is not the same as described for this
+> parameter.
+> 
+> I tested this on an older kernel version (3.10.0) from the CentOS 7.9
+> distribution, where the feature worked as documented.
+> 
+> Test Code:
+> 
+> int main() {
+>     // Get the current end of the heap
+>     void *heap_addr = sbrk(0);
+> 
+>     printf("Current end of heap (base address): %p\n", heap_addr);
+> 
+>     return 0;
+> }
+> 
+> I would like to know if this behavior indicates a kernel bug or if the
+> heap address randomization is being influenced by other factors. This
+> is my first communication with the Linux community, so please let me
+> know if there is anything inappropriate or missing in my report. I am
+> happy to provide any additional information if needed.
 
-Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
----
- include/net/sock_reuseport.h | 2 +-
- net/core/sock_reuseport.c    | 7 +++----
- 2 files changed, 4 insertions(+), 5 deletions(-)
+Ignoring randomize_va_space=2 is not intended, but I suspect it may be
+related to PIE randomization (text base randomization), as the brk area
+is in a fixed position relative to the text address when not separately
+randomized, but this has the appearance of a random brk address (which
+is really showing the text address randomization).
 
-diff --git a/include/net/sock_reuseport.h b/include/net/sock_reuseport.h
-index 6ec140b0a61b..6e4faf3ee76f 100644
---- a/include/net/sock_reuseport.h
-+++ b/include/net/sock_reuseport.h
-@@ -26,7 +26,7 @@ struct sock_reuseport {
- 	unsigned int		bind_inany:1;
- 	unsigned int		has_conns:1;
- 	struct bpf_prog __rcu	*prog;		/* optional BPF sock selector */
--	struct sock		*socks[];	/* array of sock pointers */
-+	struct sock		*socks[] __counted_by(max_socks);
- };
- 
- extern int reuseport_alloc(struct sock *sk, bool bind_inany);
-diff --git a/net/core/sock_reuseport.c b/net/core/sock_reuseport.c
-index 5a165286e4d8..5eea73aaeb0f 100644
---- a/net/core/sock_reuseport.c
-+++ b/net/core/sock_reuseport.c
-@@ -173,11 +173,10 @@ static bool __reuseport_detach_closed_sock(struct sock *sk,
- 
- static struct sock_reuseport *__reuseport_alloc(unsigned int max_socks)
- {
--	unsigned int size = sizeof(struct sock_reuseport) +
--		      sizeof(struct sock *) * max_socks;
--	struct sock_reuseport *reuse = kzalloc(size, GFP_ATOMIC);
-+	struct sock_reuseport *reuse =
-+		kzalloc(struct_size(reuse, socks, max_socks), GFP_ATOMIC);
- 
--	if (!reuse)
-+	if (unlikely(!reuse))
- 		return NULL;
- 
- 	reuse->max_socks = max_socks;
+What was your base OS for the v5.10 test? I know at least Ubuntu does
+PIE builds (-pie -fPIE) by default in their compiler, and other distros
+are finally starting to catch up to them.
+
+Try this:
+
+int main() {
+	// Get the current end of the heap
+	void *heap_addr = sbrk(0);
+	void *main_addr = main;
+
+	printf("main: %p\n", main_addr);
+	printf("brk:  %p\n", heap_addr);
+	printf("main/brk offset: %lu\n",
+		(unsigned long)heap_addr -
+		(unsigned long)main_addr);
+
+	return 0;
+}
+
+Here's what I see:
+
+# sysctl -w kernel/randomize_va_space=2
+kernel.randomize_va_space = 2
+
+# ./test
+main: 0x5efc40341169
+brk:  0x5efc41999000
+main/brk offset: 23428759
+
+# ./test
+main: 0x5bd8d1283169
+brk:  0x5bd8d2cd8000
+main/brk offset: 27610775
+
+# sysctl -w kernel/randomize_va_space=1
+kernel.randomize_va_space = 1
+
+# ./test
+main: 0x64452def3169
+brk:  0x64452def7000
+main/brk offset: 16023
+
+# ./test
+main: 0x5dc1e726d169
+brk:  0x5dc1e7271000
+main/brk offset: 16023
+
+With randomize_va_space=2, the first 2 runs of "test" show differing
+"main" addresses, and differing main/brk offsets.
+
+With randomize_va_space=1, the next 2 runs of "test" still show the
+randomized "main" address, but unchanged main/brk offsets. (But the
+literal brk address is different between the two runs.)
+
+To turn off PIE builds, use "-no-pie":
+
+# gcc test.c -no-pie -o test
+
+# sysctl -w kernel/randomize_va_space=2
+kernel.randomize_va_space = 2
+
+# ./test
+main: 0x401156
+brk:  0x1cb6000
+main/brk offset: 25906858
+
+# ./test
+main: 0x401156
+brk:  0xe1f000
+main/brk offset: 10608298
+
+# sysctl -w kernel/randomize_va_space=1
+kernel.randomize_va_space = 1
+
+# ./test
+main: 0x401156
+brk:  0x405000
+main/brk offset: 16042
+
+# ./test
+main: 0x401156
+brk:  0x405000
+main/brk offset: 16042
+
+Without text randomization, under randomize_va_space=2, the brk
+offset (and address) are randomized. And under randomize_va_space=1,
+the brk offset (and the resulting address) are NOT randomized.
+
+Perhaps the docs for randomize_va_space need some clarification... :)
+
+-Kees
+
 -- 
-2.45.2
-
+Kees Cook
