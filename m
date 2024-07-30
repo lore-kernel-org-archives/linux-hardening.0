@@ -1,180 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E4341A616E
-	for <linux-hardening@vger.kernel.org>; Tue, 30 Jul 2024 16:17:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FFC3188017
+	for <linux-hardening@vger.kernel.org>; Tue, 30 Jul 2024 17:10:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722356234; cv=none; b=Gxvz4/5UyWo0QcWWM90b2gNhr1Oi6eYm0KG9o4XKkWa18klnb+8Gs0+OQ5nOM8cG+9AkWau/StG7iMCm96fF2LPMk1o+K/+ZJuyYJDUEG+igH5Va7WXWNxmJ2v9jUpgjlqvhdzIErAphZFMExqRoLIBhi1QD+2SsVllycAimjUg=
+	t=1722359444; cv=none; b=o5rirAdmr/LL2zvLNF1RGjywTmXBeQCmIpj6cg7on6jwfoo5oI0l2h6lGZVETcVXS6EmmrYwvyqRXUBFBEqXqqS7IuAuL7AS+yXf3xmXBqbr9a6mZT40LTe8xlrpOc8ZTkZt/gT2UfbMGdSN2v8JClWj6Hk1cH5IRgHTqN9HkKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722356234; c=relaxed/simple;
-	bh=iGVV+m4HJkFiwhpP4XIVIdXAvDtHdGH9xOpxRwhOAis=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QqUArs4peATplmeFIWmrrner03x1vsjjSLvXKV2M18tLwgs2DImvXQEuMqXxFxcawaVV4++2bJUyL8amjIXmoG+2JUDw9GfcLaVWvy9j9425Lrgv1hwP4WnpVY3XBiPxXNroDDT30DPNNGC1WZGuZQHJd+SwDYkngxskGc0m7pI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pShVwaZ8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1722359444; c=relaxed/simple;
+	bh=JWL+84QrTH5tw3D966TBf930YOahS4Q7ArSe5CSZG9U=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=Jc2obWphy4WxmvsxTkyAk7xyTGacQfx9E+PsMpYWJ/Bcqf9Dk2/sS2fAHEDQnubP1MzL7LXSOTea0dus0lpin33EsdMJPGzdwn/eLnivgpFYTfqDelrlYOtAwhroF8p1DQSWfJcT5v1dQbUN36OkvUB7ShtyQkcEAsz8Lxm47vI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=IlzmtGpZ; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pShVwaZ8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53884C4AF0C;
-	Tue, 30 Jul 2024 16:17:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722356234;
-	bh=iGVV+m4HJkFiwhpP4XIVIdXAvDtHdGH9xOpxRwhOAis=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pShVwaZ83JafSgO/NqCmmX1ZAiLrpHgLYHXKiqL204ar5fZ2a8LLouFbyzJtOejr4
-	 hKiN3hsxy8B9IuwF5Y6ymbcrS+lRrmlIvtfCbmvlfywicEjAMcsCI1S9NgBBOSoRp3
-	 uxddG3lyJk8x3n6dcioM3DiuyS4fo2rj3tS6NKb7Yk7z3+y9/lYKG7uByyvgUyYjaV
-	 3TQQkh4IERUu1Drruh44f45cKgpPI8RPtSntAcbUjRxKmJoUhlT91Ulk+2F5SKUtKB
-	 WDai26Chwv0IBNGmvwH3/UypEXeb1sV1C1z3VpOsb8wJPbLfr9ETG8E3jULXxbwKfb
-	 WyN67Z6fvqUzQ==
-Date: Tue, 30 Jul 2024 09:17:13 -0700
-From: Kees Cook <kees@kernel.org>
-To: "Prithivi Raj.S" <prithivi.s017@gmail.com>
-Cc: linux-hardening@vger.kernel.org
-Subject: Re: Unexpected Heap Randomization Behavior in Kernel Version 5.10.216
-Message-ID: <202407300858.EC28E15@keescook>
-References: <CACBLJD=y-4aWa-7r-xhfYoTVEkQAGi2EmG3nA97rH2cz-KXmcw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="IlzmtGpZ"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5a3b866ebc9so6733912a12.3
+        for <linux-hardening@vger.kernel.org>; Tue, 30 Jul 2024 10:10:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1722359441; x=1722964241; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JWL+84QrTH5tw3D966TBf930YOahS4Q7ArSe5CSZG9U=;
+        b=IlzmtGpZ8ZQn9ZEiqRo+eZxb9fCqwSD1YRUttw75EsLViV2+8G4CqM4gnrKnjG/E/0
+         2jfpXvUa2+mosuoIgVr5NtYHnGTEYi1fIMx09Xs3qoQ0Nc6MD3FehRZNLme3f0mA7aZz
+         hrO3EQ9DD5UdAPitTUU1UKGyqyn77GOn2S9nLDN+TnKCzzqzSeKJubrROyijmEwFi7uu
+         3tXeODamSQ59AVObvGhLIfawx8uXpkieCoWHrEPFa9+onAygG9iqlqrokP4ljY9bPd0D
+         svkvo2QVG/FfICEDtjwOC3+zeFrOef2QdvUONBAk+DNwTd0R4q6zPAcwfPHspLRNTsZ3
+         6r+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722359441; x=1722964241;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JWL+84QrTH5tw3D966TBf930YOahS4Q7ArSe5CSZG9U=;
+        b=rl5wkXejQpGWSoIIL9bTD8ieXyEQLPCwVEO/ww4OT1z9mddXRfhBEk7nQeWRQunbTV
+         OsQXA5ClhLhckCxQdLyJsUaA0lIl3HaVDTDiJ1hGvSEbjvAHJw5Kufeug1tXFhH6MOgA
+         4AALzhvXyGGkGi5e0wGivjGBzbyoubtvjaq9Tt3SoWuWZ6U3STg4dDhRysBXj97IbGUI
+         14Jxt+iHI3ulzvE4HgZ1L3gLlzhbcGlcrt0zYxPAq9uqKo9tN4VICosvlKx5mIxfFNRT
+         Wzg47rDjoRPcKxL25Xd/bbTQHIPg+5QkyzVRfXrSdexiM7IJ9WAKBfAFIqUNv2zyvkVQ
+         iiSA==
+X-Forwarded-Encrypted: i=1; AJvYcCWGc0WbCxrIcKUL/+QD5hsqwiBQOHHhQhU+lq8bAA5qaxWvwlPXDfLliovGcjNXLWcML7w62rNZTz65ZVAFKuQR89ltwV9tJpYX+GWZR7X+
+X-Gm-Message-State: AOJu0YwsjwAte9CTT/yNrFx/I/jL+rvnTaJuXdAQXnyCv9cclIZDUKP8
+	wPrtgj4rRORBScmNNk8KcoMFXgjMTv5B2qM4hsfEcErh5IGOm0hwQVO9hSPhIt0=
+X-Google-Smtp-Source: AGHT+IFTPXNn+BqzxpI9OZfLChsJzKTraVGft/zSDfoVx0UCP+Pt2KF6NNvg7KkKc/Qq2jHOWr6+Qg==
+X-Received: by 2002:a50:9fa1:0:b0:5a1:92d:dbac with SMTP id 4fb4d7f45d1cf-5b0205d4d33mr6436359a12.10.1722359440857;
+        Tue, 30 Jul 2024 10:10:40 -0700 (PDT)
+Received: from smtpclient.apple ([2001:a61:10b5:fc01:4198:a192:529f:265d])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5af2f233be4sm6260036a12.41.2024.07.30.10.10.39
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 30 Jul 2024 10:10:40 -0700 (PDT)
+Content-Type: text/plain;
+	charset=us-ascii
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACBLJD=y-4aWa-7r-xhfYoTVEkQAGi2EmG3nA97rH2cz-KXmcw@mail.gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.600.62\))
+Subject: Re: [PATCH] ext4: Annotate struct ext4_xattr_inode_array with
+ __counted_by()
+From: Thorsten Blum <thorsten.blum@toblux.com>
+In-Reply-To: <db367563-e144-4a2f-8d67-d1b4e879397e@embeddedor.com>
+Date: Tue, 30 Jul 2024 19:10:28 +0200
+Cc: tytso@mit.edu,
+ adilger.kernel@dilger.ca,
+ kees@kernel.org,
+ gustavoars@kernel.org,
+ linux-ext4@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <08F6527F-726D-4A3F-96B3-2C3712336D5C@toblux.com>
+References: <20240729110454.346918-3-thorsten.blum@toblux.com>
+ <db367563-e144-4a2f-8d67-d1b4e879397e@embeddedor.com>
+To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+X-Mailer: Apple Mail (2.3774.600.62)
 
-On Tue, Jul 30, 2024 at 04:45:29PM +0530, Prithivi Raj.S wrote:
-> I have been testing Address Space Layout Randomization (ASLR)
-> functionalities with the kernel.randomize_va_space sysctl parameter.
-> According to the kernel documentation:
-> 
-> 0 disables randomization.
-> 1 randomizes the address of mmap base, stack, and VDSO page.
-> 2 randomizes the heap address.
-> 
-> However, I have observed that in kernel version 5.10.216, the heap
-> base address is being randomized even when kernel.randomize_va_space
-> is set to 1. This behavior is not the same as described for this
-> parameter.
-> 
-> I tested this on an older kernel version (3.10.0) from the CentOS 7.9
-> distribution, where the feature worked as documented.
-> 
-> Test Code:
-> 
-> int main() {
->     // Get the current end of the heap
->     void *heap_addr = sbrk(0);
-> 
->     printf("Current end of heap (base address): %p\n", heap_addr);
-> 
->     return 0;
-> }
-> 
-> I would like to know if this behavior indicates a kernel bug or if the
-> heap address randomization is being influenced by other factors. This
-> is my first communication with the Linux community, so please let me
-> know if there is anything inappropriate or missing in my report. I am
-> happy to provide any additional information if needed.
+On 29. Jul 2024, at 16:09, Gustavo A. R. Silva <gustavo@embeddedor.com> =
+wrote:
+> On 29/07/24 05:04, Thorsten Blum wrote:
+>> Add the __counted_by compiler attribute to the flexible array member
+>> inodes to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
+>> CONFIG_FORTIFY_SOURCE.
+>=20
+> This change seems to be incomplete. The relationship between `count` =
+and
+> accesses to `inodes` should be adjusted at least in =
+`ext4_expand_inode_array()`
+>=20
+> See this for more details:
+>=20
+> =
+https://embeddedor.com/blog/2024/06/18/how-to-use-the-new-counted_by-attri=
+bute-in-c-and-linux/
 
-Ignoring randomize_va_space=2 is not intended, but I suspect it may be
-related to PIE randomization (text base randomization), as the brk area
-is in a fixed position relative to the text address when not separately
-randomized, but this has the appearance of a random brk address (which
-is really showing the text address randomization).
+Thanks. I'll submit a v2 shortly.
 
-What was your base OS for the v5.10 test? I know at least Ubuntu does
-PIE builds (-pie -fPIE) by default in their compiler, and other distros
-are finally starting to catch up to them.
-
-Try this:
-
-int main() {
-	// Get the current end of the heap
-	void *heap_addr = sbrk(0);
-	void *main_addr = main;
-
-	printf("main: %p\n", main_addr);
-	printf("brk:  %p\n", heap_addr);
-	printf("main/brk offset: %lu\n",
-		(unsigned long)heap_addr -
-		(unsigned long)main_addr);
-
-	return 0;
-}
-
-Here's what I see:
-
-# sysctl -w kernel/randomize_va_space=2
-kernel.randomize_va_space = 2
-
-# ./test
-main: 0x5efc40341169
-brk:  0x5efc41999000
-main/brk offset: 23428759
-
-# ./test
-main: 0x5bd8d1283169
-brk:  0x5bd8d2cd8000
-main/brk offset: 27610775
-
-# sysctl -w kernel/randomize_va_space=1
-kernel.randomize_va_space = 1
-
-# ./test
-main: 0x64452def3169
-brk:  0x64452def7000
-main/brk offset: 16023
-
-# ./test
-main: 0x5dc1e726d169
-brk:  0x5dc1e7271000
-main/brk offset: 16023
-
-With randomize_va_space=2, the first 2 runs of "test" show differing
-"main" addresses, and differing main/brk offsets.
-
-With randomize_va_space=1, the next 2 runs of "test" still show the
-randomized "main" address, but unchanged main/brk offsets. (But the
-literal brk address is different between the two runs.)
-
-To turn off PIE builds, use "-no-pie":
-
-# gcc test.c -no-pie -o test
-
-# sysctl -w kernel/randomize_va_space=2
-kernel.randomize_va_space = 2
-
-# ./test
-main: 0x401156
-brk:  0x1cb6000
-main/brk offset: 25906858
-
-# ./test
-main: 0x401156
-brk:  0xe1f000
-main/brk offset: 10608298
-
-# sysctl -w kernel/randomize_va_space=1
-kernel.randomize_va_space = 1
-
-# ./test
-main: 0x401156
-brk:  0x405000
-main/brk offset: 16042
-
-# ./test
-main: 0x401156
-brk:  0x405000
-main/brk offset: 16042
-
-Without text randomization, under randomize_va_space=2, the brk
-offset (and address) are randomized. And under randomize_va_space=1,
-the brk offset (and the resulting address) are NOT randomized.
-
-Perhaps the docs for randomize_va_space need some clarification... :)
-
--Kees
-
--- 
-Kees Cook
+Thorsten=
