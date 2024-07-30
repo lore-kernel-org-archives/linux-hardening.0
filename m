@@ -1,112 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9D633FE4;
-	Tue, 30 Jul 2024 00:41:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00921442C;
+	Tue, 30 Jul 2024 01:21:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722300094; cv=none; b=AS9q2a/q+r7Gk+1WxKesVfSeaV6/AXDinZglfDNXFWfKNem9tOwIRzZn665jCe4KgqcHKtDeOwZKWFO5If7P52xQWM1d9ibwmT+ctGuqaug0v+t493uB+FaR6rA4PHBcClgrM472cuz3gvZ7lJDGG9CTm/OcEEsMaIE429I1UqI=
+	t=1722302474; cv=none; b=itQT8vUiDRIKvN/O0wkAq7+Pdx6i/ZMTZyB3q4yoEtAwl4TIIXIo5g5W/qdeWm3sHt5pl4n+dr1q3illjSZSc3Euq1a1KQrLZsMQNa0aTZHl5pSNCTEJejIUMbXPXzkgOnNcjJ+pB2nuk7ULdhkgjijVzdPjlU+VNOoybVYbB2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722300094; c=relaxed/simple;
-	bh=lekOe1+MxIlBhZ79to1c7J8l/84yUjXxzwj1ShXt120=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q7uZ9MKEPjA4Qc4g5lZYfZDR1jXlRC/sIZSA+ATNzHLvTzYGVxRF930q3UwiD0GskXabMrIazsEfbczr9vo/43vwBU61VtJpDaDQJn3MCKL5DJV9vKRilyKD0v7kkRN0AgpJCp8+LRabJNMJgQLN2EruI5Je0zCSpJQNse9K1GI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QFFZDywE; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QFFZDywE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82CFEC32786;
-	Tue, 30 Jul 2024 00:41:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722300094;
-	bh=lekOe1+MxIlBhZ79to1c7J8l/84yUjXxzwj1ShXt120=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QFFZDywEF0SbkA1T6NxPBDtE8DY9WpMHcsFArPqMBlGfl7FvduTsdJOT7vlQUT5Fg
-	 5LBJDufE7cJlcNEGezDo7apcOGC3Zz4Fswj5K876wOTWkeH+FhDfT0gIie/QY1Hgor
-	 u7AfQA9Wz2Y83u1J3nHTC304yXdAGRRbt0VheTg01RCdqwm6njkSgNTXtewQFxiGk1
-	 J5uGSULYCrkfZcLQljxoEmo+ikNoy24W1VKYD88IvMPfPHfTgCGTYM+oMNofQsFJwL
-	 4gvF7idkNbbVEnezp1MQWre3PFwj6omZPV6v8tvEmyn9UXAMJm+hZhNkosV7Vkrued
-	 DtkRKPqtTxF4Q==
-Date: Mon, 29 Jul 2024 17:41:34 -0700
-From: Kees Cook <kees@kernel.org>
-To: jvoisin <julien.voisin@dustri.org>
-Cc: ast@kernel.org, bp@alien8.de, dave.hansen@linux.intel.com,
-	hpa@zytor.com, jgross@suse.com, jpoimboe@kernel.org,
-	leitao@debian.org, linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org, mingo@redhat.com, nathan@kernel.org,
-	peterz@infradead.org, samitolvanen@google.com, tglx@linutronix.de,
-	x86@kernel.org
-Subject: Re: [PATCH] x86/alternatives: Make FineIBT mode Kconfig selectable
-Message-ID: <202407291720.1E1B193A@keescook>
-References: <20240501000218.work.998-kees@kernel.org>
- <c875722b-0434-41fe-b375-cc685498c444@dustri.org>
+	s=arc-20240116; t=1722302474; c=relaxed/simple;
+	bh=hcPJG6k+j9ygJ3clDIY1cNkDZMFquFiCRVTu5NdrBb8=;
+	h=Subject:To:References:CC:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=fk3mHmaEzHjsLq4Hqj8X8dfPk7cM0vC+MADISMYwy+zpHWCkgetYfhOy7BZJanRkc2yPMZ6nDykvxQYjFAakjIkst39kzams3C03/eBAiGFFMVBnk+jrZm5lEHZ4ZIzI/GHb+7FNMn3xcYYA8vLPifemrv2vezSqJ+SFER4+VLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4WXy9066fTz1L9BW;
+	Tue, 30 Jul 2024 09:20:52 +0800 (CST)
+Received: from kwepemd200022.china.huawei.com (unknown [7.221.188.232])
+	by mail.maildlp.com (Postfix) with ESMTPS id 52D801800A2;
+	Tue, 30 Jul 2024 09:21:02 +0800 (CST)
+Received: from [10.174.178.185] (10.174.178.185) by
+ kwepemd200022.china.huawei.com (7.221.188.232) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Tue, 30 Jul 2024 09:21:01 +0800
+Subject: Re: [PATCH] ext4: Annotate struct ext4_xattr_inode_array with
+ __counted_by()
+To: Thorsten Blum <thorsten.blum@toblux.com>, <tytso@mit.edu>,
+	<adilger.kernel@dilger.ca>, <kees@kernel.org>, <gustavoars@kernel.org>
+References: <20240729110454.346918-3-thorsten.blum@toblux.com>
+CC: <linux-ext4@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-hardening@vger.kernel.org>
+From: "yebin (H)" <yebin10@huawei.com>
+Message-ID: <66A83FFC.7020802@huawei.com>
+Date: Tue, 30 Jul 2024 09:21:00 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:38.0) Gecko/20100101
+ Thunderbird/38.1.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c875722b-0434-41fe-b375-cc685498c444@dustri.org>
+In-Reply-To: <20240729110454.346918-3-thorsten.blum@toblux.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemd200022.china.huawei.com (7.221.188.232)
 
-On Mon, Jul 29, 2024 at 02:35:02PM +0200, jvoisin wrote:
-> > Since FineIBT performs checking at the destination, it is weaker against
-> > attacks that can construct arbitrary executable memory contents. As such,
-> > some system builders want to run with FineIBT disabled by default. Allow
-> > the "cfi=kcfi" boot param mode to be selectable through Kconfig via the
-> > newly introduced CONFIG_CFI_AUTO_DEFAULT.
-> 
-> I'm confused as why you think that KCFI is stronger/better than FineIBT.
 
-Sure, can I try to explain this more.
 
-> The latter is compatible with execute-only memory,
+On 2024/7/29 19:04, Thorsten Blum wrote:
+> Add the __counted_by compiler attribute to the flexible array member
+> inodes to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
+> CONFIG_FORTIFY_SOURCE.
+>
+> Remove the now obsolete comment on the count field.
+>
+> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+> ---
+>   fs/ext4/xattr.h | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/fs/ext4/xattr.h b/fs/ext4/xattr.h
+> index bd97c4aa8177..e14fb19dc912 100644
+> --- a/fs/ext4/xattr.h
+> +++ b/fs/ext4/xattr.h
+> @@ -130,8 +130,8 @@ struct ext4_xattr_ibody_find {
+>   };
+>   
+>   struct ext4_xattr_inode_array {
+> -	unsigned int count;		/* # of used items in the array */
+> -	struct inode *inodes[];
+> +	unsigned int count;
+As the comment says, 'count' is the number of items in the array that 
+have been used,
+not the total number of items in the array. So I think this check was 
+added incorrectly.
+> +	struct inode *inodes[] __counted_by(count);
+>   };
+>   
+>   extern const struct xattr_handler ext4_xattr_user_handler;
 
-Yes, and since Linux doesn't have kernel execute-only memory (and likely
-won't for some time), it doesn't make sense to use FineIBT over KCFI for
-that reason.
-
-> makes use of hardware support,
-
-Hm? KCFI does too. IBT is still enabled with KCFI (when the hardware
-supports it).
-
-> doesn't need LTO,
-
-KCFI doesn't need LTO either.
-
-> is faster,
-
-What? Measured how? I feel like you're thinking about the old Clang CFI,
-not the modern KCFI implementation.
-
-> … moreover, I don't see why an
-> attacker able to "construct arbitrary executable memory contents"
-> wouldn't be able to bypass KCFI as well,
-
-To bypass KCFI, the attacker additionally needs a targeted memory
-exposure to get the correct function hash that they must include before
-the malicious function they construct. With FineIBT, no such exposure is
-needed.
-
-> since its threat model
-> (https://github.com/kcfi/docs/blob/master/kCFI_whitepaper.pdf)
-> explicitly says "We assume an OS that fully implements the W^X policy
-> [56,58,106] preventing direct code injection in kernel space."
-
-I mean, a whitepaper's threat model is nice and all, but this just isn't
-the reality. Linux certainly tries to maintain W^X, but there are bugs
-and things like BPF, which can be manipulated to gain attacker-controlled
-executable code injected into the kernel address space. (e.g. BPF will
-flip a writable region from RW to RX, so W^X is maintained spatially but
-not temporally.)
-
-So without execute-only memory, some deployments prefer to not weaken
-the CFI implementation to allow for hash checking bypasses. Once X-O
-exists, FineIBT is a slam-dunk over KCFI. :)
-
--Kees
-
--- 
-Kees Cook
