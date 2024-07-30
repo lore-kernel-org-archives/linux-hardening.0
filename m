@@ -1,143 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0550442C;
-	Tue, 30 Jul 2024 09:07:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A81FA1DA32
+	for <linux-hardening@vger.kernel.org>; Tue, 30 Jul 2024 11:15:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722330466; cv=none; b=SawI6e8hqaxOGl0XBW8iCoiacm9LtaTTO0vgoxeF/B04VW3RhiI9mniCHd/nMfe0b+20hvgSTYYdtNzNIyMZ0H0w/UsYt0hs1N33ZF7AuznH7xNaULjIDtzXGjasTHjmL1E9LhIkzVa/z/VK/WzYBwWu47r0+dWKvSpk/cM6nBw=
+	t=1722338145; cv=none; b=YuScUfkZEAnWC/wEhhYUweENOTZB7XJQKdjQZgsWm/cYHzZHEncxEHShpQKTO1BuLA5mg53H+bABk52eMleIjDPgzCOON8Md2Xx+WcZy2r4hAOWRZiVHhrZHj4U6V0Kvxuw8GDeuVcpIIxUrtLf5ctJczwerdp9rIAoJxRnVTy4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722330466; c=relaxed/simple;
-	bh=Dx+qGB5ivvHdAixyU4wClkTxaB6RCHdWtG0QU3+YkPM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Otqpc4p+ZpPuTnnFqtryaLH9IVmMo3X01ReviygOmPsHy7NRJLcP3qVf1VX+kM6HlhLrZ7xdhLv2t+uwLRDoAfLyeWiYF3QfS1bUCLz1Q2PsvU11Llp1B+h7Z//mjCnfyI8/MOogX7GzZnNeljH+PS+ofTmxI8WUTom12yrRcxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LPcSFeZA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1722338145; c=relaxed/simple;
+	bh=A1ouoj2biGMQThr4PHepsojMjdSPnXVszMLgNFuXnCI=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=bROESZ+6VX1mUra3w5KqRFx5/c61uiZqV7DPD25gg9Fd0psduBUQKRSNLUngdLHEDN7n8MGTOA+xqzWEtFow52EQZFbZ3LL+sw8Rw5sSqDZJVobmfZu81KVDABeV6Pc00I3TUQskF4Dt4C3INmlSYhEQMY4YTgARjI65tDDcrRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=COv0xXvx; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LPcSFeZA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CCF3C4AF0B;
-	Tue, 30 Jul 2024 09:07:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722330466;
-	bh=Dx+qGB5ivvHdAixyU4wClkTxaB6RCHdWtG0QU3+YkPM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=LPcSFeZAIWRhX86nBBVNttOSbEDN0U71SJUnsd82NnTtGpGMBs812v4ebtZ+azK3X
-	 FuWyvalHESZLpdXOTTE+1f7pFS1Bf51P6DPumEB3OiA4wX7L+RcPYs97h8khXlmItR
-	 FiPvvaTaEkYWQRkbrRh/92fRnrJDf9ODbej8B/IebsjKeLYO/AndZQs+9wnZr2IMd1
-	 KISO0ElwVs6OQzkzj/SO3c+0ifazso3RONu1IVrIflxBVn9CrCktHnCgov3qCB4TKF
-	 VPgxPptb3PA5CqA7ZScgkHrKgcB6k631uqY7W8SuM8nKKAVJNzoCNPA+IuhXaib8Rz
-	 PFPSlh9FWbPBQ==
-Message-ID: <6e79d848-b1f0-4d56-b5cb-5fcf80868138@kernel.org>
-Date: Tue, 30 Jul 2024 11:07:33 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="COv0xXvx"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-52efa16aad9so6653414e87.0
+        for <linux-hardening@vger.kernel.org>; Tue, 30 Jul 2024 04:15:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1722338141; x=1722942941; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=39EkPA8s762lsFZeJiSE8QLWkm2cKVXdZkhO3zFmhUk=;
+        b=COv0xXvxYEzsKvBsTytI0e+nopT+60CvKP7qdnTRPdthp4m24+jXvdSjOImkjPm8Wh
+         jnATYtk4LrSAwS6icqbCcjN31kb/TyVCBz/J1vouJiDko0y2cjW1azYPbeLZLDOFn+WL
+         7dqKCRTW9q22Zhfn/ysPqSM7QrnoZWgCAp0pcRe8Bu0AGeKzV99Of916r82D9V41EKZW
+         hlMLvWQYOvG0DODAAInzH7O+/ogB8+wdCbBChfchMHTt0irPrPKb15533fGth7lbDjlC
+         On08GLHA+JAeuGRjotL6tHC3KI1OPX8Zdkj93B6NEftrWkRDIMiqyjSLm0681PEZbisD
+         86mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722338141; x=1722942941;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=39EkPA8s762lsFZeJiSE8QLWkm2cKVXdZkhO3zFmhUk=;
+        b=HVUFUmfB2lNIQ2wSz4mSClZVNgrT+oPr42S363GkIMuvdSXCU1i/RUbzAm07SAIcyf
+         hiVxvHPAt5wsoeDJBP3y9JYvwn9vaRDdQv1kSwcyrCJPkVJcCfcT9Qjd2tcsqMooW4Pj
+         1HCLUpPRQcHq0/0V+1NrrUwpYq72i88jnroCZ0qz6RAsdUkaDLlUPGh50p2LnK5U+ezi
+         2fy/bcYTrnNugT5hAptR0KVL/zXl1Gs8+xPahx7yrkCOea0AvNJqFaTJ0vHh7C7asV7b
+         0UajWGNzOI4jBPI3A8tpCPwoLomZYqdWsD55pE43GKWHC/u2o6lhlP+xdH+Zm6t149ps
+         56qQ==
+X-Gm-Message-State: AOJu0YzFqtnBHKesasgJivSd7o0GJI+Cg3MUjNNeXdVDlucogAEK6vOS
+	/kmsoCYsdUsQ/IqXs7BYu67zEjmwhdDNj4uqgTI+eFVoerK2Kdb7hC/0ysT4PfyzRvZrzu/po1i
+	YbNs29SpkSqD2jmqVbsLV/1EJssq+nA1Q
+X-Google-Smtp-Source: AGHT+IGtBNDWFB1UqmuVx+xjC7L9sbVIyptHGtucEBspeVdxXI+rNZKzLuzWmJVcH7BTyBCWowd0eS7E8ykPW3OV2cI=
+X-Received: by 2002:a05:6512:4009:b0:52e:be1f:bf84 with SMTP id
+ 2adb3069b0e04-5309b2ce44bmr8236660e87.53.1722338141006; Tue, 30 Jul 2024
+ 04:15:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 11/11] arm64: dts: qcom: sm7325: Add device-tree for
- Nothing Phone 1
-To: Danila Tikhonov <danila@jiaxyga.com>, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, andersson@kernel.org,
- konrad.dybcio@linaro.org, rafael@kernel.org, viresh.kumar@linaro.org,
- heikki.krogerus@linux.intel.com, gregkh@linuxfoundation.org,
- kees@kernel.org, tony.luck@intel.com, gpiccoli@igalia.com,
- sudeep.holla@arm.com, quic_rjendra@quicinc.com, andre.przywara@arm.com,
- ulf.hansson@linaro.org, davidwronek@gmail.com, neil.armstrong@linaro.org,
- heiko.stuebner@cherry.de, rafal@milecki.pl, macromorgan@hotmail.com,
- linus.walleij@linaro.org, dmitry.baryshkov@linaro.org,
- johan+linaro@kernel.org, javier.carrasco.cruz@gmail.com,
- quic_kriskura@quicinc.com, lpieralisi@kernel.org, fekz115@gmail.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
- linux-usb@vger.kernel.org, linux-hardening@vger.kernel.org,
- linux@mainlining.org
-References: <20240729201843.142918-1-danila@jiaxyga.com>
- <20240729201843.142918-12-danila@jiaxyga.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20240729201843.142918-12-danila@jiaxyga.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: "Prithivi Raj.S" <prithivi.s017@gmail.com>
+Date: Tue, 30 Jul 2024 16:45:29 +0530
+Message-ID: <CACBLJD=y-4aWa-7r-xhfYoTVEkQAGi2EmG3nA97rH2cz-KXmcw@mail.gmail.com>
+Subject: Unexpected Heap Randomization Behavior in Kernel Version 5.10.216
+To: linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 29/07/2024 22:18, Danila Tikhonov wrote:
-> From: Eugene Lepshy <fekz115@gmail.com>
-> 
-> Add device tree for the Nothing Phone 1 (nothing,spacewar) smartphone
-> which is based on the SM7325 SoC.
+I have been testing Address Space Layout Randomization (ASLR)
+functionalities with the kernel.randomize_va_space sysctl parameter.
+According to the kernel documentation:
 
-...
+0 disables randomization.
+1 randomizes the address of mmap base, stack, and VDSO page.
+2 randomizes the heap address.
 
-> +
-> +&i2c2 {
-> +	clock-frequency = <100000>;
-> +	status = "okay";
-> +
-> +	/* nxp,tfa9873 (EAR speaker codec) @ 34 */
-> +	/* nxp,tfa9873 (Main speaker codec) @ 35 */
-> +};
-> +
-> +&i2c9 {
-> +	clock-frequency = <1000000>;
-> +	status = "okay";
-> +
-> +	nfc@28 {
-> +		compatible = "nxp,nxp-nci-i2c";
+However, I have observed that in kernel version 5.10.216, the heap
+base address is being randomized even when kernel.randomize_va_space
+is set to 1. This behavior is not the same as described for this
+parameter.
 
-Prepend it with proper compatible for this NFC chip and update the bindings.
+I tested this on an older kernel version (3.10.0) from the CentOS 7.9
+distribution, where the feature worked as documented.
 
-> +		reg = <0x28>;
-> +
-> +		interrupt-parent = <&tlmm>;
-> +		interrupts = <41 IRQ_TYPE_NONE>;
+Test Code:
 
-This does not look like valid interrupt type...
+int main() {
+    // Get the current end of the heap
+    void *heap_addr = sbrk(0);
 
+    printf("Current end of heap (base address): %p\n", heap_addr);
 
+    return 0;
+}
 
-Best regards,
-Krzysztof
-
+I would like to know if this behavior indicates a kernel bug or if the
+heap address randomization is being influenced by other factors. This
+is my first communication with the Linux community, so please let me
+know if there is anything inappropriate or missing in my report. I am
+happy to provide any additional information if needed.
