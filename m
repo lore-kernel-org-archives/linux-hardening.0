@@ -1,105 +1,81 @@
-Received: from forward200d.mail.yandex.net (forward200d.mail.yandex.net [178.154.239.221])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C4231C2E
-	for <linux-hardening@vger.kernel.org>; Wed, 31 Jul 2024 04:54:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.221
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95AC019F49A;
+	Wed, 31 Jul 2024 13:15:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722401671; cv=none; b=OYOCEx2UK0Pl7jMnZ8+x4sei758Ms2TZVIxu5XP3cmM/iEy/otb+Dcal9m5yUHnmDbza1OYoNdlO+Lnnv+3SUT1LqPx+RYkXyvkfo81h5woHFop3SlsypBE7HFxePsYkb0CQusyHG4WX7Gs7aO+VNXugHqrQ6G8gDR07yxN4g48=
+	t=1722431759; cv=none; b=OuTRag9VkCTpdVGMw6Jxf319NrhXrFHdDW3eTprWoBsPOt1ObIyDR+9tlwEOjua6+d5k74MPvJm7lF/SPa2ZOvCRqNdkfDR8EPcDV/asIb+oY432mmgKrF53X2IW8FRgFEiHYnihoqinW6dT2oZA+qrlkIjSBXz3MZLW7SyF9fs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722401671; c=relaxed/simple;
-	bh=us1Sqamgk0WwEE5daT8sWu5uRpLHAlEQI/r5jzRZXxo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rlNzyQKi6ArGP/rQ/jKA6anCGvkcoFH0Eq6fU8yGZ62c3pwiyPCNeVqSISkHErH7195c7CngzZ3SRvt/2VWNYX8DUUbpUiDippp7pbME1Uz8C58c/atAJO4oNKWg/m0fGbHlo6ZebyrOTn2xx/56PCAAXG9VLkeR2CIS/HmJP9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=DgbWrk4X; arc=none smtp.client-ip=178.154.239.221
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="DgbWrk4X"
-Received: from forward200a.mail.yandex.net (forward200a.mail.yandex.net [IPv6:2a02:6b8:c0e:500:1:45:d181:d200])
-	by forward200d.mail.yandex.net (Yandex) with ESMTPS id 8BA3B6860C
-	for <linux-hardening@vger.kernel.org>; Wed, 31 Jul 2024 07:54:18 +0300 (MSK)
-Received: from forward102a.mail.yandex.net (forward102a.mail.yandex.net [IPv6:2a02:6b8:c0e:500:1:45:d181:d102])
-	by forward200a.mail.yandex.net (Yandex) with ESMTP id 72B1767401;
-	Wed, 31 Jul 2024 07:54:18 +0300 (MSK)
-Received: from mail-nwsmtp-smtp-production-main-46.myt.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-46.myt.yp-c.yandex.net [IPv6:2a02:6b8:c12:2789:0:640:f3da:0])
-	by forward102a.mail.yandex.net (Yandex) with ESMTPS id 69AD860D11;
-	Wed, 31 Jul 2024 07:54:09 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-46.myt.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id 7sNVbBxIWa60-rPptLQc3;
-	Wed, 31 Jul 2024 07:54:08 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
-	t=1722401648; bh=J8EwQBkcSTdrsmEeI8exxNgh424gbAD05v0aJfSCzHc=;
-	h=Message-ID:Date:In-Reply-To:Cc:Subject:References:To:From;
-	b=DgbWrk4XDqMNX8Qy/ts2+2NlY7amrBVBHu4uUdMyIQk27cJF4cODJdArjKq1mAuS/
-	 Zhxcx9Li9TDS8QXjKY6NgUyN5yyM+Q/DaRpWdrU1NIi8vDfxOh+ogyYGXheNwvGCEJ
-	 xQ/NJ2h6QDrd92FnmV8Gxfr5KzHLvcoNLYsPuPxQ=
-Authentication-Results: mail-nwsmtp-smtp-production-main-46.myt.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
-From: Dmitry Antipov <dmantipov@yandex.ru>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Paolo Abeni <pabeni@redhat.com>,
-	"Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Kees Cook <kees@kernel.org>,
-	netdev@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	Dmitry Antipov <dmantipov@yandex.ru>
-Subject: [PATCH v2] net: core: annotate socks of struct sock_reuseport with __counted_by
-Date: Wed, 31 Jul 2024 07:53:46 +0300
-Message-ID: <20240731045346.4087-1-dmantipov@yandex.ru>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240730170142.32a6e9aa@kernel.org>
-References: <20240730170142.32a6e9aa@kernel.org>
+	s=arc-20240116; t=1722431759; c=relaxed/simple;
+	bh=70RynTUJwC73RJmo/iFM7wHnQJcJm+PmYG2ZRhXGh/M=;
+	h=From:In-Reply-To:Content-Type:References:Date:Cc:To:MIME-Version:
+	 Message-ID:Subject; b=NqzyFZEoetFIV6DMa0t42QOOkG3zvtI4m8SAmAFCe5VKOV9kRRHYG3b9MJ87YQRDb2utTN1B6jNpRl7Hm7tU+to8gGC4Q4DXORyISuEJrBbZz58X4vEHFqPWcl6uM8/UbuRSU9+3bSP8JqQQcTzboDRlc5uCkFPceLdkK8MoW1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Received: from harlem.collaboradmins.com (harlem.collaboradmins.com [IPv6:2a01:4f8:1c0c:5936::1])
+	by madrid.collaboradmins.com (Postfix) with ESMTP id BF53537821CA;
+	Wed, 31 Jul 2024 13:15:54 +0000 (UTC)
+From: "Adrian Ratiu" <adrian.ratiu@collabora.com>
+In-Reply-To: <CAHk-=wiAzuaVxhHUg2De3yWG5fgcZpCFKJptDXYdcgF-uRru4w@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+X-Forward: 127.0.0.1
+References: <20240730132528.1143520-1-adrian.ratiu@collabora.com> <CALmYWFumfPxoEE-jJEadnep=38edT7KZaY7KO9HLod=tdsOG=w@mail.gmail.com> <CAHk-=wiAzuaVxhHUg2De3yWG5fgcZpCFKJptDXYdcgF-uRru4w@mail.gmail.com>
+Date: Wed, 31 Jul 2024 14:15:54 +0100
+Cc: "Jeff Xu" <jeffxu@google.com>, linux-fsdevel@vger.kernel.org, linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, kernel@collabora.com, gbiv@google.com, inglorion@google.com, ajordanr@google.com, "Doug Anderson" <dianders@chromium.org>, "Jann Horn" <jannh@google.com>, "Kees Cook" <kees@kernel.org>, "Ard Biesheuvel" <ardb@kernel.org>, "Christian Brauner" <brauner@kernel.org>
+To: "Linus Torvalds" <torvalds@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <3ea8c0-66aa3900-3-2bfd8e00@3451942>
+Subject: =?utf-8?q?Re=3A?= [PATCH v4] =?utf-8?q?proc=3A?= add config & param to 
+ block forcing mem writes
+User-Agent: SOGoMail 5.10.0
+Content-Transfer-Encoding: quoted-printable
 
-According to '__reuseport_alloc()', annotate flexible array member
-'sock' of 'struct sock_reuseport' with '__counted_by()' and use
-convenient 'struct_size()' to simplify the math used in 'kzalloc()'.
+On Wednesday, July 31, 2024 02:18 EEST, Linus Torvalds <torvalds@linux-=
+foundation.org> wrote:
 
-Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
----
-v2: style (Jakub), title and commit message (Gustavo) adjustments
----
- include/net/sock_reuseport.h | 2 +-
- net/core/sock_reuseport.c    | 6 +++---
- 2 files changed, 4 insertions(+), 4 deletions(-)
+> On Tue, 30 Jul 2024 at 16:09, Jeff Xu <jeffxu@google.com> wrote:
+> >
+> > > +               task =3D get=5Fproc=5Ftask(file=5Finode(file));
+> > > +               if (task) {
+> > > +                       ptrace=5Factive =3D task->ptrace && task-=
+>mm =3D=3D mm && task->parent =3D=3D current;
+> >
+> > Do we need to call "read=5Flock(&tasklist=5Flock);" ?
+> > see comments in ptrace=5Fcheck=5Fattach() of  kernel/ptrace.c
+>=20
+> Well, technically I guess the tasklist=5Flock should be taken.
+>=20
+> Practically speaking, maybe just using READ=5FONCE() for these fields
+> would really be sufficient.
+>=20
+> Yes, it could "race" with the task exiting or just detaching, but the
+> logic would basically be "at one point we were tracing it", and since
+> this fundamentally a "one-point" situation (with the actual =5Faccess=
+es=5F
+> happening later anyway), logically that should be sufficient.
+>=20
+> I mean - none of this is about "permissions" per se. We actually did
+> the proper *permission* check at open() time regardless of all this
+> code. This is more of a further tightening of the rules (ie it has
+> gone from "are we allowed to ptrace" to "are we actually actively
+> ptracing".
+>=20
+> I suspect that the main difference between the two situations is
+> probably (a) one extra step required and (b) whatever extra system
+> call security things people might have which may disable an actual
+> ptrace() or whatever..
 
-diff --git a/include/net/sock_reuseport.h b/include/net/sock_reuseport.h
-index 6ec140b0a61b..6e4faf3ee76f 100644
---- a/include/net/sock_reuseport.h
-+++ b/include/net/sock_reuseport.h
-@@ -26,7 +26,7 @@ struct sock_reuseport {
- 	unsigned int		bind_inany:1;
- 	unsigned int		has_conns:1;
- 	struct bpf_prog __rcu	*prog;		/* optional BPF sock selector */
--	struct sock		*socks[];	/* array of sock pointers */
-+	struct sock		*socks[] __counted_by(max_socks);
- };
- 
- extern int reuseport_alloc(struct sock *sk, bool bind_inany);
-diff --git a/net/core/sock_reuseport.c b/net/core/sock_reuseport.c
-index 5a165286e4d8..79f2456e27a5 100644
---- a/net/core/sock_reuseport.c
-+++ b/net/core/sock_reuseport.c
-@@ -173,9 +173,9 @@ static bool __reuseport_detach_closed_sock(struct sock *sk,
- 
- static struct sock_reuseport *__reuseport_alloc(unsigned int max_socks)
- {
--	unsigned int size = sizeof(struct sock_reuseport) +
--		      sizeof(struct sock *) * max_socks;
--	struct sock_reuseport *reuse = kzalloc(size, GFP_ATOMIC);
-+	struct sock_reuseport *reuse;
-+
-+	reuse = kzalloc(struct_size(reuse, socks, max_socks), GFP_ATOMIC);
- 
- 	if (!reuse)
- 		return NULL;
--- 
-2.45.2
+Either approach is fine with me.
+
+Will leave v4 a few days longer in case others have a stronger
+opinion or to gather & address more feedback.
+
+If no one objects by then, I'll send v5 with READ=5FONCE().
 
