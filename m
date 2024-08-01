@@ -1,81 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from forward103b.mail.yandex.net (forward103b.mail.yandex.net [178.154.239.150])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96942D2F5;
-	Thu,  1 Aug 2024 03:19:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB301171658;
+	Thu,  1 Aug 2024 14:25:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722482399; cv=none; b=dvUge6j2VmIMZzYhVibJhNdeompODQmVCSIkK63zI8jCCw3t/Tt952YCz6wBN3vko2oNbbD9Hmi3iHSxrJAT/6+pZCL8MJaABeF7GDTZ/on1AlF/oG99C95K1Xu+w6aF5ZbhrMrnFeD+Aammlq7nMuANwWFtdsjJ0uzKT0L7qTU=
+	t=1722522323; cv=none; b=LTyMLohzrR18dNoOgKiep5LLnIeoL+GsagucbqZPJjGmGI/lFLvoQu6N6n1LSCio2FLgs/q+XroIW7UDmQ8I3p2HaTEkR9RQlxnjnrQMBZx2fw4x1WHj5Pm1VDMGpJjKkXHqeopX2cPLBrXdXBFYEl/bov0XDAI3l3+FZaWK7Qo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722482399; c=relaxed/simple;
-	bh=62CvZFHiUZVVGVRnDRrYGgy7Qz4cBtl/5I+U/jVoanU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bXggHzYMGbVcFmlpD9BjjeeLJES4Boh9AKpk3+cgy36odq64aF6wQl6ds6Pf7Z46SjPyuBU+2Ec3C70jR/xQlyZ+E2qMstkqZ5ypdvGrMYXP0HYX3wRFhmme3RPJo/iRil6tkj9US+HWb5x4SBYLFsvEkCEf4YygVpBKGz1zLU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XXwGz1Om; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1722522323; c=relaxed/simple;
+	bh=tnPMVDODPErVkXhX7JdHgDvfNxcP2SANWJcEaBq5ZSw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LO8yRZeATXQodU1g79dOOHaPPV/3diEH/Kcn2yagHMbAG5MJxoZUTkw7C7sL0T1ksSVquDJ8P84S++uxdSER7ax18whszjuHBJN3UOb9bnpFRYcxrwkdvhIgZyyUTB4QLCLc5HLvBuN3CQeKkSEKLw8kIywsgvBt1Q6JBu9iOQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=ZIVPi3qI; arc=none smtp.client-ip=178.154.239.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XXwGz1Om"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A282FC4AF0E;
-	Thu,  1 Aug 2024 03:19:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722482399;
-	bh=62CvZFHiUZVVGVRnDRrYGgy7Qz4cBtl/5I+U/jVoanU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XXwGz1Omjc+G7UAb5MLMJYlGuQ/Atjv6QMmm9aFLIXDZXVWDvtp6lSSoIaf2NYDaD
-	 XbLI1oliuYo6ooV9aCwht5nazRG781zMzV/qTem7RL9L6MDlc6+b5iNGjiv9jsKqZy
-	 40ojVA1K8nKtnSPJ6EOJV4XXV03ZgwZeTX+DeCqD2VsSK1RZ5DAbxdCjsAKGX90BEg
-	 p3KVAcvXl3yp0aiP7kmxFbctBnEb0Vy7R9AYcTGRpIy1mnEVRi9aHIyxQCQRCBX2r4
-	 BVcpO21cHAS5Ab/UwxJDhqZHnfVwbT5w33wAWHdIco1OuC6qnWs8uQ3KUOksQ4FxCx
-	 KrA3TA+TNGLOA==
-From: Bjorn Andersson <andersson@kernel.org>
-To: Pavel Machek <pavel@ucw.cz>,
-	Lee Jones <lee@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Trilok Soni <quic_tsoni@quicinc.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="ZIVPi3qI"
+Received: from mail-nwsmtp-smtp-production-main-69.iva.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-69.iva.yp-c.yandex.net [IPv6:2a02:6b8:c0c:110e:0:640:f58d:0])
+	by forward103b.mail.yandex.net (Yandex) with ESMTPS id E2BDB60AF2;
+	Thu,  1 Aug 2024 17:25:11 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-69.iva.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id 9PYaALjHfa60-EttXx6ns;
+	Thu, 01 Aug 2024 17:25:11 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
+	t=1722522311; bh=PS1gDGUZKZonTsRZRmMbNyVHwQJErXIEm14MkBjHuts=;
+	h=Message-ID:Date:Cc:Subject:To:From;
+	b=ZIVPi3qIA6bkzoiXssrKWzPpHDhlfb2z74txpRdVpRMxuzH4HUDah7szEs0B3nBoF
+	 9aqTI1iHkJ4uovyayWlzShfXoaaz+ueMXsTGG/vneNFmbHOec97+/oxmwejJNk4Ry+
+	 FADUInPPl3N3IVBZxt2XSr8IaE+t+3QAyg75wDX0=
+Authentication-Results: mail-nwsmtp-smtp-production-main-69.iva.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
+From: Dmitry Antipov <dmantipov@yandex.ru>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>,
+	"Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+	Kuniyuki Iwashima <kuniyu@amazon.com>,
 	Kees Cook <kees@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	=?UTF-8?q?Andr=C3=A9=20Apitzsch?= <git@apitzsch.eu>
-Cc: linux-leds@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
 	linux-hardening@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	~postmarketos/upstreaming@lists.sr.ht,
-	phone-devel@vger.kernel.org
-Subject: Re: (subset) [PATCH v5 0/3] Add sy7802 flash led driver
-Date: Wed, 31 Jul 2024 22:19:42 -0500
-Message-ID: <172248238588.319692.10867242578610062893.b4-ty@kernel.org>
+	Dmitry Antipov <dmantipov@yandex.ru>
+Subject: [PATCH v3] net: core: annotate socks of struct sock_reuseport with __counted_by
+Date: Thu,  1 Aug 2024 17:23:11 +0300
+Message-ID: <20240801142311.42837-1-dmantipov@yandex.ru>
 X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240624-sy7802-v5-0-7abc9d96bfa6@apitzsch.eu>
-References: <20240624-sy7802-v5-0-7abc9d96bfa6@apitzsch.eu>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
+According to '__reuseport_alloc()', annotate flexible array member
+'sock' of 'struct sock_reuseport' with '__counted_by()' and use
+convenient 'struct_size()' to simplify the math used in 'kzalloc()'.
 
-On Mon, 24 Jun 2024 23:25:11 +0200, André Apitzsch wrote:
-> This series introduces a driver for the Silergy SY7802 charge pump used
-> in the BQ Aquaris M5 and X5 smartphones.
-> 
-> The implementation is based on information extracted from downstream as
-> the datasheet provided by a distributor of the hardware didn't include
-> any information about the i2c register description.
-> 
-> [...]
+Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
+---
+v3: one more style nit (Jakub)
+    https://lore.kernel.org/netdev/20240731165029.5f4b4e60@kernel.org
+v2: style (Jakub), title and commit message (Gustavo) adjustments
+    https://lore.kernel.org/netdev/20240730170142.32a6e9aa@kernel.org
+    https://lore.kernel.org/netdev/c815078e-67f9-4235-b66c-29f8bdd1a9e0@embeddedor.com
+---
+ include/net/sock_reuseport.h | 2 +-
+ net/core/sock_reuseport.c    | 5 ++---
+ 2 files changed, 3 insertions(+), 4 deletions(-)
 
-Applied, thanks!
-
-[3/3] arm64: dts: qcom: msm8939-longcheer-l9100: Add rear flash
-      commit: f98bdb21cfc94cb7733a5c3216e8f1dec1c06023
-
-Best regards,
+diff --git a/include/net/sock_reuseport.h b/include/net/sock_reuseport.h
+index 6ec140b0a61b..6e4faf3ee76f 100644
+--- a/include/net/sock_reuseport.h
++++ b/include/net/sock_reuseport.h
+@@ -26,7 +26,7 @@ struct sock_reuseport {
+ 	unsigned int		bind_inany:1;
+ 	unsigned int		has_conns:1;
+ 	struct bpf_prog __rcu	*prog;		/* optional BPF sock selector */
+-	struct sock		*socks[];	/* array of sock pointers */
++	struct sock		*socks[] __counted_by(max_socks);
+ };
+ 
+ extern int reuseport_alloc(struct sock *sk, bool bind_inany);
+diff --git a/net/core/sock_reuseport.c b/net/core/sock_reuseport.c
+index 5a165286e4d8..4211710393a8 100644
+--- a/net/core/sock_reuseport.c
++++ b/net/core/sock_reuseport.c
+@@ -173,10 +173,9 @@ static bool __reuseport_detach_closed_sock(struct sock *sk,
+ 
+ static struct sock_reuseport *__reuseport_alloc(unsigned int max_socks)
+ {
+-	unsigned int size = sizeof(struct sock_reuseport) +
+-		      sizeof(struct sock *) * max_socks;
+-	struct sock_reuseport *reuse = kzalloc(size, GFP_ATOMIC);
++	struct sock_reuseport *reuse;
+ 
++	reuse = kzalloc(struct_size(reuse, socks, max_socks), GFP_ATOMIC);
+ 	if (!reuse)
+ 		return NULL;
+ 
 -- 
-Bjorn Andersson <andersson@kernel.org>
+2.45.2
+
