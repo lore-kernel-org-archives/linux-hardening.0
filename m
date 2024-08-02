@@ -1,144 +1,75 @@
-Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
+Received: from smtp-fw-9105.amazon.com (smtp-fw-9105.amazon.com [207.171.188.204])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC39B1E4AB
-	for <linux-hardening@vger.kernel.org>; Thu,  1 Aug 2024 14:33:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DE9C33FD;
+	Fri,  2 Aug 2024 00:21:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.188.204
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722522790; cv=none; b=EsQPUsW6SfuZw2hjps3RGXTU1Boo1IjP20lvmRBnJ61EEtP3RdADF6FTM1M9bX9L2vyEpr5lwFckLRP4y+fOyTjYx+DllInreJPTVH6rOOiGBpaVMCsUxwt+XfHbJYOdJHur3bGJBqzlo6DSOsLaw/Kay5mdLgKJQZEPlYuhYfg=
+	t=1722558072; cv=none; b=iR2WhWOpjSN8pBLopNcbMcFbnbe0we/kLBcSqrG4WYhHu6+6KH9gmGT0j8rcTqju3xjg2Qt/IjwYiofQJ6FnObeuFLpjOLsss863ff76i/Zy3N2pj4JbzT7mA5El5c1ixmOUQelm+HYXNq93iLuJtWjRh4vBDhXrGDBGhrcIBOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722522790; c=relaxed/simple;
-	bh=K4vKgbesCOprKbM8PqvHz/1gjH/Rm/+LsMw268Uh4wo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Uz8kFzp2KNU3Xzdd7eu3Z8VjkyBEE0JSpjvNmpUXJFXyG0OSneqNonOUb//Kvd3O3hlhDaI+j0nV4b/MZEzBtq3MvLS1DMwEmzjGbdz+gHsLQnHSN/I86lC/fueJ1SWd7XJGMrYlAUa4O/LssdP0cQeXxgi21n8LxVWke/ZZLkw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=ZOR+U+F8; arc=none smtp.client-ip=44.202.169.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1722558072; c=relaxed/simple;
+	bh=MsbrQyIGSikh7XBnI6DqfX7hVfeG33KwViqZGNJa5h8=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fABdXt9XxLOatkzINxG95HWr0fLJOLPCipSaZjz4Ehc2M58x+yFJcT39ypPyVDyUtc+NIynJ22aG2WIwcRu7zBbxTRh4rbnwVRvezyOvLqhCbtB9qkAjmLwj+jvHWQJfFdZyaDJ4VdCQDvn0/QEWiUBK9Mmxs9PMxghbXyk6TYM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=v0MBdjo9; arc=none smtp.client-ip=207.171.188.204
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="ZOR+U+F8"
-Received: from eig-obgw-6005a.ext.cloudfilter.net ([10.0.30.201])
-	by cmsmtp with ESMTPS
-	id ZHMesQ5zfg2lzZWrbsTEFB; Thu, 01 Aug 2024 14:33:08 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id ZWrasCqfHRBkMZWrbsJ81w; Thu, 01 Aug 2024 14:33:07 +0000
-X-Authority-Analysis: v=2.4 cv=CbPD56rl c=1 sm=1 tr=0 ts=66ab9ca3
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=frY+GlAHrI6frpeK1MvySw==:17
- a=IkcTkHD0fZMA:10 a=yoJbH4e0A30A:10 a=vaJtXVxTAAAA:8 a=VwQbUJbxAAAA:8
- a=_Wotqz80AAAA:8 a=1_7KGQLcpcYysvMIg0QA:9 a=QEXdDO2ut3YA:10
- a=AjGcO6oz07-iQ99wixmX:22 a=buJP51TR1BpY-zbLSsyS:22 a=Xt_RvD8W3m28Mn_h3AK8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=/RwJck33CeFAo9e2n03ywz6fQ8bsGaOQf8tJj7CTEqA=; b=ZOR+U+F89Edznhn5tyuYm87DrG
-	R3REdGTb5bv1+upeltoBGW/peYHkc/YJmL7J7dafq2CoHhBcDIVETc/L6ZU5GnBw+YTR1cHLcndqW
-	EKZghMMbJx9bIe6UD4Ns19mKS42FPHkH7Juzl5/bSALoOShsUj9y/CZ8kLxbBVoVgbGhxlUIP8TQa
-	oFtioD89PU6671ow7omz0xZX62WKIQV8Tr3r9dLN9CCfty32QedUC227uasaLLTYtq1r7tmUFc6Xi
-	AdrtKjr1+06Goma2twcTZcOYoWCxJ2wUYXgkOt2sSqkIwDc/iJJOecHLYK1To5T3bvjX+S3YI1N09
-	9vcpUhjA==;
-Received: from [201.172.173.139] (port=51584 helo=[192.168.15.14])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1sZWrZ-002UZN-1v;
-	Thu, 01 Aug 2024 09:33:06 -0500
-Message-ID: <b6b0970d-08cd-4de0-9ae5-f3824b9071ca@embeddedor.com>
-Date: Thu, 1 Aug 2024 08:32:59 -0600
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="v0MBdjo9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1722558069; x=1754094069;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=kJUu/tdhQcLdOpUFgiOjROMa8uFVLpgASD2SwjEAVZo=;
+  b=v0MBdjo9j5N6cOKjiU+smVXDFtz21kQmhZIRNRL71o/G+lV8KV/haii0
+   XfZlusoDuXoGv6y8QXybkOJtdC1mI8Bz+RK6P0BA8sRBcN3dpA43890H5
+   NmW8lohrms1zZoLuN7bj1SMKq/A49nLKVpXBZp3RRFtS2Y+scW37P/cYQ
+   A=;
+X-IronPort-AV: E=Sophos;i="6.09,256,1716249600"; 
+   d="scan'208";a="747148812"
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.210])
+  by smtp-border-fw-9105.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2024 00:20:46 +0000
+Received: from EX19MTAUWB001.ant.amazon.com [10.0.38.20:60468]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.7.75:2525] with esmtp (Farcaster)
+ id 4a0ce127-70ca-4fda-8d6b-d31fc9baa09b; Fri, 2 Aug 2024 00:20:44 +0000 (UTC)
+X-Farcaster-Flow-ID: 4a0ce127-70ca-4fda-8d6b-d31fc9baa09b
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWB001.ant.amazon.com (10.250.64.248) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
+ Fri, 2 Aug 2024 00:20:43 +0000
+Received: from 88665a182662.ant.amazon.com (10.187.171.33) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
+ Fri, 2 Aug 2024 00:20:40 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <dmantipov@yandex.ru>
+CC: <gustavo@embeddedor.com>, <kees@kernel.org>, <kuba@kernel.org>,
+	<kuniyu@amazon.com>, <linux-hardening@vger.kernel.org>,
+	<netdev@vger.kernel.org>, <pabeni@redhat.com>
+Subject: Re: [PATCH v3] net: core: annotate socks of struct sock_reuseport with __counted_by
+Date: Thu, 1 Aug 2024 17:20:31 -0700
+Message-ID: <20240802002031.78111-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20240801142311.42837-1-dmantipov@yandex.ru>
+References: <20240801142311.42837-1-dmantipov@yandex.ru>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] net: core: annotate socks of struct sock_reuseport
- with __counted_by
-To: Dmitry Antipov <dmantipov@yandex.ru>, Jakub Kicinski <kuba@kernel.org>
-Cc: Paolo Abeni <pabeni@redhat.com>, Kuniyuki Iwashima <kuniyu@amazon.com>,
- Kees Cook <kees@kernel.org>, netdev@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20240801142311.42837-1-dmantipov@yandex.ru>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20240801142311.42837-1-dmantipov@yandex.ru>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.173.139
-X-Source-L: No
-X-Exim-ID: 1sZWrZ-002UZN-1v
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.14]) [201.172.173.139]:51584
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfIjRG3NRIWOuhZRvpgBYSX8gX/417mSW/qCvh7sRi0Q5xPvO3ULNgYNj5VqozNlP/50HktToRYezN+ZlYMp5EgNU9rG8h5vXiMvb96ckgZg4U0wluPgs
- OOftJG+CfBD+F2wtGCjpxiyMQyQYtTeOIxmZSsArM7IuxR6lNMmjyfaPVBaX3CoSbFwFOJI4JdBntOdFo2ufqTjcC10prGYw+jsSEZeGXOXlw6oLgv14GFpR
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D044UWB002.ant.amazon.com (10.13.139.188) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-
-
-On 01/08/24 08:23, Dmitry Antipov wrote:
+From: Dmitry Antipov <dmantipov@yandex.ru>
+Date: Thu,  1 Aug 2024 17:23:11 +0300
 > According to '__reuseport_alloc()', annotate flexible array member
 > 'sock' of 'struct sock_reuseport' with '__counted_by()' and use
 > convenient 'struct_size()' to simplify the math used in 'kzalloc()'.
 > 
 > Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
 
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-
-Thanks
--Gustavo
-
-> ---
-> v3: one more style nit (Jakub)
->      https://lore.kernel.org/netdev/20240731165029.5f4b4e60@kernel.org
-> v2: style (Jakub), title and commit message (Gustavo) adjustments
->      https://lore.kernel.org/netdev/20240730170142.32a6e9aa@kernel.org
->      https://lore.kernel.org/netdev/c815078e-67f9-4235-b66c-29f8bdd1a9e0@embeddedor.com
-> ---
->   include/net/sock_reuseport.h | 2 +-
->   net/core/sock_reuseport.c    | 5 ++---
->   2 files changed, 3 insertions(+), 4 deletions(-)
-> 
-> diff --git a/include/net/sock_reuseport.h b/include/net/sock_reuseport.h
-> index 6ec140b0a61b..6e4faf3ee76f 100644
-> --- a/include/net/sock_reuseport.h
-> +++ b/include/net/sock_reuseport.h
-> @@ -26,7 +26,7 @@ struct sock_reuseport {
->   	unsigned int		bind_inany:1;
->   	unsigned int		has_conns:1;
->   	struct bpf_prog __rcu	*prog;		/* optional BPF sock selector */
-> -	struct sock		*socks[];	/* array of sock pointers */
-> +	struct sock		*socks[] __counted_by(max_socks);
->   };
->   
->   extern int reuseport_alloc(struct sock *sk, bool bind_inany);
-> diff --git a/net/core/sock_reuseport.c b/net/core/sock_reuseport.c
-> index 5a165286e4d8..4211710393a8 100644
-> --- a/net/core/sock_reuseport.c
-> +++ b/net/core/sock_reuseport.c
-> @@ -173,10 +173,9 @@ static bool __reuseport_detach_closed_sock(struct sock *sk,
->   
->   static struct sock_reuseport *__reuseport_alloc(unsigned int max_socks)
->   {
-> -	unsigned int size = sizeof(struct sock_reuseport) +
-> -		      sizeof(struct sock *) * max_socks;
-> -	struct sock_reuseport *reuse = kzalloc(size, GFP_ATOMIC);
-> +	struct sock_reuseport *reuse;
->   
-> +	reuse = kzalloc(struct_size(reuse, socks, max_socks), GFP_ATOMIC);
->   	if (!reuse)
->   		return NULL;
->   
+Reviewed-by: Kuniyuki Iwashima <kuniyu@amazon.com>
