@@ -1,89 +1,82 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AB871E2865;
-	Fri,  2 Aug 2024 11:22:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C477E193;
+	Sat,  3 Aug 2024 00:30:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722597735; cv=none; b=b40Ph5RO0YiOXzFetPAPS++oZzzjYaNVUlq6P+NFbZHYCMTTdvVAuSN4CVKzuTQbLcsjE1wdvMhljewcDfjHYBw3+iHy9OZNaz/MS7N6oeT3Gnd/bkeWeNS/E+GnPjqUdsk0UrhyGpvzVvYLdOij9qu1eg/3EeL2JL0kDi26M4E=
+	t=1722645034; cv=none; b=pNwwDK2AL4xeX/3t4tLgIerJu1UGr5shgQt8CBnejqIRPNm7CL8YNVsigi00akL5urb4ZKdJ/cCKTngphwRga9AA++fFnFFoywrXytx4LL4KUXt81pct+RYd+isX5MhP6ZeeBVgRx2rWfKGld1jdqF1T/t1RlHRc6S1m9yhFJuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722597735; c=relaxed/simple;
-	bh=sTYDAl+GhWVFIrJHX9/36OBshNazLnzFGi1gab3mprc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ga/wZ6KA4HCTVOxirLtFd7muXRojXxpOTP9bcuwPSy1RfMdQi3iBu+ZRpepSZKxtuiA92ZIC0nhBv53FaqdXCMWhTCLipv0EGug784BzBwse38jV87ifj1e6wcd4AkCniJPFj1tQaFsyfGSpz2JeHDZD7QGLhjjRuYxfWxpPdGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ft4ErLKK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1722645034; c=relaxed/simple;
+	bh=dvcv47e/mnw1odLhgf9G+DkKF8UhBC6d70AzDqoco2c=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=m2wjkkwfDZiaNXY5SEgOWvVo/2ctpyF7Ax9ZRoet100M8FxvsqU7ZR8DK9B4pfzQcOrB/no3iBI7Lq4oNP2WMPN/e3mE7e/+/l/O0FXwUkFr6YXxB/UZ5o5DTLzG+qyI4J25vLPfY1K6drEDmjqUkLWOqQW2Cp7CGSgBBlSDtvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FTIRpTmN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ft4ErLKK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1356C4AF0A;
-	Fri,  2 Aug 2024 11:22:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FTIRpTmN"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 513AAC4AF0E;
+	Sat,  3 Aug 2024 00:30:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722597734;
-	bh=sTYDAl+GhWVFIrJHX9/36OBshNazLnzFGi1gab3mprc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ft4ErLKKsCb2O29R7k+q4UD58rM7PXs6HaR29kODgIC4dqihnEqviyQJlxB0Jjxi9
-	 eM8iHIR+c4YkTye2aSepFGYQYEgKA7/PL/ffQlvfpU4AGzDFJKRIKeTtTP/He0VRAJ
-	 s+VF8PKNQXLwNNwdDBT+B1o7XQYwWYrXnXO87AuazAoy17EVrTSCBiYii/fxWhQFdp
-	 36mRV1pi3e8BKQb0XUQGjBKup95jiDcuQhW9uEIZVs7egek1GVuhC1GkuXoYjRwsbw
-	 /vmztlJYR3iwk4A4f3d9RE/G9/H4XxxyhYke1wLk9okcVXsuav8irFptqUHgJ2eJIG
-	 ToHAPYDAXgeCQ==
-From: Christian Brauner <brauner@kernel.org>
-To: linux-fsdevel@vger.kernel.org,
-	Adrian Ratiu <adrian.ratiu@collabora.com>
-Cc: Christian Brauner <brauner@kernel.org>,
-	linux-security-module@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	kernel@collabora.com,
-	gbiv@google.com,
-	inglorion@google.com,
-	ajordanr@google.com,
-	Doug Anderson <dianders@chromium.org>,
-	Jeff Xu <jeffxu@google.com>,
-	Jann Horn <jannh@google.com>,
-	Kees Cook <kees@kernel.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v5] proc: add config & param to block forcing mem writes
-Date: Fri,  2 Aug 2024 13:22:05 +0200
-Message-ID: <20240802-pudding-wellpappe-98827e258859@brauner>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240802080225.89408-1-adrian.ratiu@collabora.com>
-References: <20240802080225.89408-1-adrian.ratiu@collabora.com>
+	s=k20201202; t=1722645034;
+	bh=dvcv47e/mnw1odLhgf9G+DkKF8UhBC6d70AzDqoco2c=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=FTIRpTmN1eN5RdDMIXZ1cdXRhSYsWp70zOBtwazRu5ttmAxr7TeH9JnHQZPjS8Nc/
+	 uL2EbcQINbUkdO8pkEDn7sx1jLnrXnhXM8mSJ3Er59eFz6sB5+tzt3w7qKZVWRpUXB
+	 TOMXJTnULR8VSDt9LJEcpuclsvAPE6yzgG6kLBPA5ozr7zw3sUpSGBlJ4Iq4h4xcVF
+	 W7FAvZxwt2A9ANa8HUUYnQoOj8ZoEdX/y+f8Dyo5B6Xkmo0E9DAjJ6j29seOosvAto
+	 EdYPWSjXNk18e2WiXfBjLTH1Ukat7Bg/6za7zLUsR4RXK8YeMUCsM8rTu/fl7pA1qv
+	 cR47B0l6iG+Ng==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 3DC87C4333D;
+	Sat,  3 Aug 2024 00:30:34 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1093; i=brauner@kernel.org; h=from:subject:message-id; bh=sTYDAl+GhWVFIrJHX9/36OBshNazLnzFGi1gab3mprc=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaStORi3xf+Md2msxXRb6UXHm29YOlgv3P+dZ95945AH1 3unJpu5d5SyMIhxMciKKbI4tJuEyy3nqdhslKkBM4eVCWQIAxenAFxElpHh2JRvhgc3d3PIim3k 4VSf9134s+4qRqNtbeu55y3WjNspx/C/jneJzLkVuVc+PdtvpMPL1NzVmCYntj7gedPzBIG5j7S 5AQ==
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v3] net: core: annotate socks of struct sock_reuseport with
+ __counted_by
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <172264503424.23714.10623886159740508620.git-patchwork-notify@kernel.org>
+Date: Sat, 03 Aug 2024 00:30:34 +0000
+References: <20240801142311.42837-1-dmantipov@yandex.ru>
+In-Reply-To: <20240801142311.42837-1-dmantipov@yandex.ru>
+To: Dmitry Antipov <dmantipov@yandex.ru>
+Cc: kuba@kernel.org, pabeni@redhat.com, gustavo@embeddedor.com,
+ kuniyu@amazon.com, kees@kernel.org, netdev@vger.kernel.org,
+ linux-hardening@vger.kernel.org
 
-On Fri, 02 Aug 2024 11:02:25 +0300, Adrian Ratiu wrote:
-> This adds a Kconfig option and boot param to allow removing
-> the FOLL_FORCE flag from /proc/pid/mem write calls because
-> it can be abused.
+Hello:
+
+This patch was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Thu,  1 Aug 2024 17:23:11 +0300 you wrote:
+> According to '__reuseport_alloc()', annotate flexible array member
+> 'sock' of 'struct sock_reuseport' with '__counted_by()' and use
+> convenient 'struct_size()' to simplify the math used in 'kzalloc()'.
 > 
-> The traditional forcing behavior is kept as default because
-> it can break GDB and some other use cases.
+> Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
+> ---
+> v3: one more style nit (Jakub)
+>     https://lore.kernel.org/netdev/20240731165029.5f4b4e60@kernel.org
+> v2: style (Jakub), title and commit message (Gustavo) adjustments
+>     https://lore.kernel.org/netdev/20240730170142.32a6e9aa@kernel.org
+>     https://lore.kernel.org/netdev/c815078e-67f9-4235-b66c-29f8bdd1a9e0@embeddedor.com
 > 
 > [...]
 
-Applied to the vfs.misc branch of the vfs/vfs.git tree.
-Patches in the vfs.misc branch should appear in linux-next soon.
+Here is the summary with links:
+  - [v3] net: core: annotate socks of struct sock_reuseport with __counted_by
+    https://git.kernel.org/netdev/net-next/c/f94074687d05
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
 
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs.misc
-
-[1/1] proc: add config & param to block forcing mem writes
-      https://git.kernel.org/vfs/vfs/c/26f9eafd16c5
