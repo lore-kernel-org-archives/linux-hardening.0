@@ -1,149 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA1E414B07C;
-	Mon,  5 Aug 2024 21:43:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 267CA16D4C1
+	for <linux-hardening@vger.kernel.org>; Mon,  5 Aug 2024 22:12:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722894227; cv=none; b=QWdFHEdI0euAPZv8OdhbEUM2ax/Dzk+a7a+v3tdVshFu1+M3FVKlkkbrvEBTK7kmFS5KA+5b3zRvz9qS+e6qcg05EuqtY8wMRnrtUwsFQlhQidnKHXqVmuS7BbPhvABVDXzU2I1ZlDHwMWizPYm78G+jzuLkxDOu5JAQIyuefNA=
+	t=1722895957; cv=none; b=G2nsdi4GjK/0ixXpa0sTWAttTzcW4YE07ZJop+1nzor94Xoaw9KDxMiOS8jiUBHrUcC78dKkR/3wGTAJ3+qR8imHBgJg2W8uc5ecyb1SAsM8afJKDkXwybh2cUZf93dXEy7mRtQhIeLxAh+701ns2ouV6/VoUl4ZtcQi2kWxkJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722894227; c=relaxed/simple;
-	bh=w1rNgVpubpxu7t9ez1M4o93NDC4Vb5FXEZkY9AcCwr4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VxyIn9Vpu/uoSLJjDjN3hAZEgeyLseVtv3JcmWxB1TobnFNk4lMhVmFY1T6ZqIUVXVH9fyBvzuUJMFXZSVKoz5q1cOLc+3soPAV/3xPYjhLxqUbRH7ZXJpk0rfGzP/MgQUwlBzjd9Eok0wLvM3JPey5VEzf8ks7kIQNIrvcKHqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bgKRMl0A; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1722895957; c=relaxed/simple;
+	bh=GMMQ/BSSoja6QdzkOekqjoODSmfp1vm+ibzeOFuYkao=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ifNZmtiDd968SwSWyPPamWhxFbIxvSMY40n3yKBr9bnrt6wGZIG4MkY8qm0ucYYiOoWY+kiGrgPX5DLHdpfujm9dbIwo5N0V76ShVxsrnJIxyo7BHfhHZngocleUNA49vozmEUAPvW78mEbgpMOxr8q+hc984UDCI0tZrCHXy74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=HGhuwseE; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bgKRMl0A"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 430E2C32782;
-	Mon,  5 Aug 2024 21:43:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722894227;
-	bh=w1rNgVpubpxu7t9ez1M4o93NDC4Vb5FXEZkY9AcCwr4=;
-	h=From:To:Cc:Subject:Date:From;
-	b=bgKRMl0A7EBdqXh9+cwyQX19aes9QeRTUqvB9IQaj8IvvqQAXqDIQG1NpAkoYDNh0
-	 5+5istaOAUfremykm+EC67/aSJajUMdHsZl5qpGV9nXpKkZLmmxYZk2tzRvUyrHSWX
-	 6upX2xKrrac1GpaYhe4179fRcOSxUFWfBzJiyhr5pM3cSWWiG+RzLBlMzovr1Ywx8A
-	 YtzfE1jlAuM2Ez54ibQ/JKFxdgnezr0/Lgvuq3WNtLGy4oEhpsLtZIvWYJJVm4ovZ+
-	 OZFljMwKpCy203uqooHoYT+MRWAb+TCK7ebpOnEvqEspS+Ha09aXUP78rrM07sVUXO
-	 gvPeV7YL3xeZQ==
-From: Kees Cook <kees@kernel.org>
-To: Andy Shevchenko <andy@kernel.org>
-Cc: Kees Cook <kees@kernel.org>,
-	Justin Stitt <justinstitt@google.com>,
-	Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Marco Elver <elver@google.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Hao Luo <haoluo@google.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	linux-sparse@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	Bill Wendling <morbo@google.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Tony Ambardar <tony.ambardar@gmail.com>,
-	Petr Pavlu <petr.pavlu@suse.com>,
+	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="HGhuwseE"
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2f040733086so405441fa.1
+        for <linux-hardening@vger.kernel.org>; Mon, 05 Aug 2024 15:12:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1722895953; x=1723500753; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=rjktkTxw/Pi+sq69hQv/6e2Ff6RBaiaqpdpd0sush00=;
+        b=HGhuwseEm9/CYF+OrEExQ8aUOWBcveUkaVLpJt8v36yEa/FHSUaeTFr7eVeG5NUfDb
+         sXwUHDlaLiZG0uYxxIHl9Y9LP+LSOJsZAjgaHgZ14wCW7ILupd1JaLxfnLfebTOPXgty
+         MC0si0m9F2T89RXQNoAZZKCquSnnEFoYizqXcVd7AVDhh7lhjwG1FAe79RkqMLPZNrYf
+         YUXk7npWr3QvZlM+H41kYskMX5XZV/rD/NCzO3Cz+Rrw1lRX+aeMmMn45MmIrViEAJYU
+         IufUFSeDwjCZgjhN1+w9yNTCd20SiZbTqWoXGKRbciNxIXPUqtiTcETwkK2xUxfbiWPs
+         zp7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722895953; x=1723500753;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rjktkTxw/Pi+sq69hQv/6e2Ff6RBaiaqpdpd0sush00=;
+        b=PesbhA2XI+nTQ5W4Cp/cyRWVIM7+0tvagYATGsveqkZG30I5Zskqu1iqHdh14Waazp
+         pLmKwgHeAn0wvUhkDzdFNjesCUkf5lL6jNhG4UtoUNGEZNAwFlYgE3Mo6m0NBYtKlxCS
+         mm9v9nboXifji1JpHiap7Ovr5Kidg8YStTevJChut7n5GigJ0c8fX6rhgESNdsOdgRXW
+         OtQLPGwNnaAqZqLdMEv032usMcvMBuxl2HYorauLyCT8d/kwD+cR3rywoqloW+kZ+DI/
+         cS1ztfueSs+diichRxZCOU56URQ1uvsAxdO7P+oFBbf8q5OCIS/ALQ0U6qagQUCGg6/L
+         B/ug==
+X-Forwarded-Encrypted: i=1; AJvYcCWxzBgzOwBmA8tiiRc1/Gp+e0kmxRvjG1CVXHe+ipC1liWccFXGXtVPgbMmEE6frPcz9hYgb8tfO+TzYt2KTCxZJ6Irogrb2l5drQfkC58g
+X-Gm-Message-State: AOJu0YwGV0VQ2SW9YraSY95iYe7n+defupOmdAX5gRxf4/n+tEJuZiXk
+	7eaSetlmbayix44m5+G3e1YuX8WBpxEqVfAFq+6UnttoVW4JQwC/I/UMr+6vOWY=
+X-Google-Smtp-Source: AGHT+IFs0Uy29mB1j2MnwxM05txW4e7pmKV5MgDq485zBDkbVZk2z/Q53EtTBT/oEK9MOwwMhGcJrQ==
+X-Received: by 2002:a2e:98cd:0:b0:2ef:23ec:9356 with SMTP id 38308e7fff4ca-2f15aa870dfmr86996511fa.8.1722895953040;
+        Mon, 05 Aug 2024 15:12:33 -0700 (PDT)
+Received: from fedora.fritz.box (aftr-82-135-80-26.dynamic.mnet-online.de. [82.135.80.26])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-428fecea453sm12355e9.1.2024.08.05.15.12.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 Aug 2024 15:12:32 -0700 (PDT)
+From: Thorsten Blum <thorsten.blum@toblux.com>
+To: herbert@gondor.apana.org.au,
+	davem@davemloft.net,
+	kees@kernel.org,
+	gustavoars@kernel.org
+Cc: linux-crypto@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: [PATCH] string: Check for "nonstring" attribute on strscpy() arguments
-Date: Mon,  5 Aug 2024 14:43:44 -0700
-Message-Id: <20240805214340.work.339-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	linux-hardening@vger.kernel.org,
+	Thorsten Blum <thorsten.blum@toblux.com>
+Subject: [PATCH v2] crypto: chacha20poly1305 - Annotate struct chachapoly_ctx with __counted_by()
+Date: Tue,  6 Aug 2024 00:11:30 +0200
+Message-ID: <20240805221129.2644-2-thorsten.blum@toblux.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3626; i=kees@kernel.org; h=from:subject:message-id; bh=w1rNgVpubpxu7t9ez1M4o93NDC4Vb5FXEZkY9AcCwr4=; b=owGbwMvMwCVmps19z/KJym7G02pJDGkb3SeUnlr5f67g7V+5X8wEpZ59nnT3rK//1rayiGsck zRynhXzdZSyMIhxMciKKbIE2bnHuXi8bQ93n6sIM4eVCWQIAxenAExkIwvD/6gvKxMLfwhM/Le3 T92bj9OYRcVhSo5h84KtCuus6mUnP2Zk+LJgzupi1qLrN4rPucVHzG7kK1MT5ZNIvfNimtqDe8v PsgAA
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-GCC already checks for arguments that are marked with the "nonstring"[1]
-attribute when used on standard C String API functions (e.g. strcpy). Gain
-this compile-time checking also for the kernel's primary string copying
-function, strscpy().
+Add the __counted_by compiler attribute to the flexible array member
+salt to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
+CONFIG_FORTIFY_SOURCE.
 
-Note that Clang has neither "nonstring" nor __builtin_has_attribute().
-
-Link: https://gcc.gnu.org/onlinedocs/gcc/Common-Variable-Attributes.html#index-nonstring-variable-attribute [1]
-Signed-off-by: Kees Cook <kees@kernel.org>
+Reviewed-by: Kees Cook <kees@kernel.org>
+Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
 ---
-Cc: Andy Shevchenko <andy@kernel.org>
-Cc: Justin Stitt <justinstitt@google.com>
-Cc: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>
-Cc: Marco Elver <elver@google.com>
-Cc: Nathan Chancellor <nathan@kernel.org>
-Cc: Hao Luo <haoluo@google.com>
-Cc: Przemek Kitszel <przemyslaw.kitszel@intel.com>
-Cc: linux-sparse@vger.kernel.org
-Cc: linux-hardening@vger.kernel.org
+Changes in v2:
+- Drop using struct_size_t() as suggested by Eric Biggers and Kees Cook
+- Link to v1: https://lore.kernel.org/linux-kernel/20240805175237.63098-2-thorsten.blum@toblux.com/
 ---
- include/linux/compiler.h       |  3 +++
- include/linux/compiler_types.h |  7 +++++++
- include/linux/string.h         | 12 ++++++++----
- 3 files changed, 18 insertions(+), 4 deletions(-)
+ crypto/chacha20poly1305.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-index 2df665fa2964..ec55bcce4146 100644
---- a/include/linux/compiler.h
-+++ b/include/linux/compiler.h
-@@ -242,6 +242,9 @@ static inline void *offset_to_ptr(const int *off)
- /* &a[0] degrades to a pointer: a different type from an array */
- #define __must_be_array(a)	BUILD_BUG_ON_ZERO(__same_type((a), &(a)[0]))
+diff --git a/crypto/chacha20poly1305.c b/crypto/chacha20poly1305.c
+index 9e4651330852..d740849f1c19 100644
+--- a/crypto/chacha20poly1305.c
++++ b/crypto/chacha20poly1305.c
+@@ -27,7 +27,7 @@ struct chachapoly_ctx {
+ 	struct crypto_ahash *poly;
+ 	/* key bytes we use for the ChaCha20 IV */
+ 	unsigned int saltlen;
+-	u8 salt[];
++	u8 salt[] __counted_by(saltlen);
+ };
  
-+/* Require C Strings (i.e. NUL-terminated) lack the "nonstring" attribute. */
-+#define __must_be_cstr(p)	BUILD_BUG_ON_ZERO(__annotated(p, nonstring))
-+
- /*
-  * This returns a constant expression while determining if an argument is
-  * a constant expression, most importantly without evaluating the argument.
-diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
-index f14c275950b5..1a957ea2f4fe 100644
---- a/include/linux/compiler_types.h
-+++ b/include/linux/compiler_types.h
-@@ -421,6 +421,13 @@ struct ftrace_likely_data {
- #define __member_size(p)	__builtin_object_size(p, 1)
- #endif
- 
-+/* Determine if an attribute has been applied to a variable. */
-+#if __has_builtin(__builtin_has_attribute)
-+#define __annotated(var, attr)	__builtin_has_attribute(var, attr)
-+#else
-+#define __annotated(var, attr)	(false)
-+#endif
-+
- /*
-  * Some versions of gcc do not mark 'asm goto' volatile:
-  *
-diff --git a/include/linux/string.h b/include/linux/string.h
-index 9edace076ddb..95b3fc308f4f 100644
---- a/include/linux/string.h
-+++ b/include/linux/string.h
-@@ -76,12 +76,16 @@ ssize_t sized_strscpy(char *, const char *, size_t);
-  * known size.
-  */
- #define __strscpy0(dst, src, ...)	\
--	sized_strscpy(dst, src, sizeof(dst) + __must_be_array(dst))
--#define __strscpy1(dst, src, size)	sized_strscpy(dst, src, size)
-+	sized_strscpy(dst, src, sizeof(dst) + __must_be_array(dst) +	\
-+				__must_be_cstr(dst) + __must_be_cstr(src))
-+#define __strscpy1(dst, src, size)	\
-+	sized_strscpy(dst, src, size + __must_be_cstr(dst) + __must_be_cstr(src))
- 
- #define __strscpy_pad0(dst, src, ...)	\
--	sized_strscpy_pad(dst, src, sizeof(dst) + __must_be_array(dst))
--#define __strscpy_pad1(dst, src, size)	sized_strscpy_pad(dst, src, size)
-+	sized_strscpy_pad(dst, src, sizeof(dst) + __must_be_array(dst) +	\
-+				    __must_be_cstr(dst) + __must_be_cstr(src))
-+#define __strscpy_pad1(dst, src, size)	\
-+	sized_strscpy_pad(dst, src, size + __must_be_cstr(dst) + __must_be_cstr(src))
- 
- /**
-  * strscpy - Copy a C-string into a sized buffer
+ struct poly_req {
 -- 
-2.34.1
+2.45.2
 
