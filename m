@@ -1,97 +1,149 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F40C17278D;
-	Mon,  5 Aug 2024 21:18:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA1E414B07C;
+	Mon,  5 Aug 2024 21:43:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722892725; cv=none; b=GFsTTKV7A6iK/wcnsHF+bggS9n9HO6PQW+Hen3Nn5oWvGf8bYdB2FxjynnoOBZEo2enrD6f4HIdBLXabu5Pn+f0Z2eZoI0OY9BIM7JbWIUMJDnDImWopSkRJlAyYPIPKPLlucKQDC/gLkANTJScGRIBX0yNvMsyxk03Qk7O5gQU=
+	t=1722894227; cv=none; b=QWdFHEdI0euAPZv8OdhbEUM2ax/Dzk+a7a+v3tdVshFu1+M3FVKlkkbrvEBTK7kmFS5KA+5b3zRvz9qS+e6qcg05EuqtY8wMRnrtUwsFQlhQidnKHXqVmuS7BbPhvABVDXzU2I1ZlDHwMWizPYm78G+jzuLkxDOu5JAQIyuefNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722892725; c=relaxed/simple;
-	bh=ZtYzxRxwWBp6bC31/4/B9/9mCEuN4MBBaKqD2IYjV7w=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fM94iy2TS7idUDEquTrhbdq9o30/J0vldEJkdoPoRZZq1+XDTj2HbGxGRjOGP1NyGXfZSwWdCR2mzQA59CVYTVc0F27Ypz810umFVKEG5sGuycwAI1Ps/3xKzAS9aoKm58BcXhFGpJiZZdJmkIGbYn/Q9dvRg/xvDAKRAKQbN5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=ABKQ2q/s; arc=none smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1722894227; c=relaxed/simple;
+	bh=w1rNgVpubpxu7t9ez1M4o93NDC4Vb5FXEZkY9AcCwr4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VxyIn9Vpu/uoSLJjDjN3hAZEgeyLseVtv3JcmWxB1TobnFNk4lMhVmFY1T6ZqIUVXVH9fyBvzuUJMFXZSVKoz5q1cOLc+3soPAV/3xPYjhLxqUbRH7ZXJpk0rfGzP/MgQUwlBzjd9Eok0wLvM3JPey5VEzf8ks7kIQNIrvcKHqY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bgKRMl0A; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ABKQ2q/s"
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 475KjSKL005293;
-	Mon, 5 Aug 2024 21:18:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-type:content-transfer-encoding; s=
-	corp-2023-11-20; bh=+2mRglz8YMJu9tB80+gf1v8xPqsFb3Xw2pex1b3qBvg=; b=
-	ABKQ2q/sHGOFY56RAbYBxbOay2oQNIio1gfIf6gRvL3IJ5x4q5AvObFn2B/IZ0Di
-	dgLH05k28tHeFMLh2J7QR1/FNVSImGvcXQtOfY0ImKwZW+uPiGPxkkOPThz8c8GT
-	PY43aVYNIAyvpEVA3yITS+rzMysCs/+nXrQ+ok2MNqX3W9cDLjnrYi4au7eUoxd9
-	LX5ChtAmIHgnd+cuTpDUWLVZT8d32Xt0TL88YShhDqimzjpcSvfPPkUCOVPIDUL0
-	uV3iqgZ46voi6sToj7nC7/kwVDnJ+nccDXE2+EPW0ljxL9RZ8Qk+7N7xy97q//PW
-	DDaelZbNFpWYEgoCyMlKfA==
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 40sbb2krqb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 05 Aug 2024 21:18:35 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 475K8BcZ034980;
-	Mon, 5 Aug 2024 21:18:34 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 40sb07ydmy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 05 Aug 2024 21:18:34 +0000
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 475LINEZ035403;
-	Mon, 5 Aug 2024 21:18:34 GMT
-Received: from ca-mkp2.ca.oracle.com.com (mpeterse-ol9.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.251.135])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 40sb07ydcw-9;
-	Mon, 05 Aug 2024 21:18:33 +0000
-From: "Martin K. Petersen" <martin.petersen@oracle.com>
-To: Kashyap Desai <kashyap.desai@broadcom.com>, Kees Cook <kees@kernel.org>
-Cc: "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sumit Saxena <sumit.saxena@broadcom.com>,
-        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
-        Chandrakanth patil <chandrakanth.patil@broadcom.com>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] scsi: megaraid_sas: struct MR_LD_VF_MAP: Replace 1-element arrays with flexible arrays
-Date: Mon,  5 Aug 2024 17:17:33 -0400
-Message-ID: <172289240509.2008326.4613816844614756968.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240711155823.work.778-kees@kernel.org>
-References: <20240711155823.work.778-kees@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bgKRMl0A"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 430E2C32782;
+	Mon,  5 Aug 2024 21:43:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1722894227;
+	bh=w1rNgVpubpxu7t9ez1M4o93NDC4Vb5FXEZkY9AcCwr4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=bgKRMl0A7EBdqXh9+cwyQX19aes9QeRTUqvB9IQaj8IvvqQAXqDIQG1NpAkoYDNh0
+	 5+5istaOAUfremykm+EC67/aSJajUMdHsZl5qpGV9nXpKkZLmmxYZk2tzRvUyrHSWX
+	 6upX2xKrrac1GpaYhe4179fRcOSxUFWfBzJiyhr5pM3cSWWiG+RzLBlMzovr1Ywx8A
+	 YtzfE1jlAuM2Ez54ibQ/JKFxdgnezr0/Lgvuq3WNtLGy4oEhpsLtZIvWYJJVm4ovZ+
+	 OZFljMwKpCy203uqooHoYT+MRWAb+TCK7ebpOnEvqEspS+Ha09aXUP78rrM07sVUXO
+	 gvPeV7YL3xeZQ==
+From: Kees Cook <kees@kernel.org>
+To: Andy Shevchenko <andy@kernel.org>
+Cc: Kees Cook <kees@kernel.org>,
+	Justin Stitt <justinstitt@google.com>,
+	Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Marco Elver <elver@google.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Hao Luo <haoluo@google.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	linux-sparse@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	Bill Wendling <morbo@google.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Tony Ambardar <tony.ambardar@gmail.com>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: [PATCH] string: Check for "nonstring" attribute on strscpy() arguments
+Date: Mon,  5 Aug 2024 14:43:44 -0700
+Message-Id: <20240805214340.work.339-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3626; i=kees@kernel.org; h=from:subject:message-id; bh=w1rNgVpubpxu7t9ez1M4o93NDC4Vb5FXEZkY9AcCwr4=; b=owGbwMvMwCVmps19z/KJym7G02pJDGkb3SeUnlr5f67g7V+5X8wEpZ59nnT3rK//1rayiGsck zRynhXzdZSyMIhxMciKKbIE2bnHuXi8bQ93n6sIM4eVCWQIAxenAExkIwvD/6gvKxMLfwhM/Le3 T92bj9OYRcVhSo5h84KtCuus6mUnP2Zk+LJgzupi1qLrN4rPucVHzG7kK1MT5ZNIvfNimtqDe8v PsgAA
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-08-05_09,2024-08-02_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 spamscore=0 phishscore=0
- mlxlogscore=637 mlxscore=0 adultscore=0 malwarescore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2407110000
- definitions=main-2408050151
-X-Proofpoint-GUID: UNO7DzaUiH-vDDSw1HCJXzBp8hXTnJ7d
-X-Proofpoint-ORIG-GUID: UNO7DzaUiH-vDDSw1HCJXzBp8hXTnJ7d
 
-On Thu, 11 Jul 2024 08:58:23 -0700, Kees Cook wrote:
+GCC already checks for arguments that are marked with the "nonstring"[1]
+attribute when used on standard C String API functions (e.g. strcpy). Gain
+this compile-time checking also for the kernel's primary string copying
+function, strscpy().
 
-> Replace the deprecated[1] use of a 1-element array in
-> struct MR_LD_VF_MAP with a modern flexible array.
-> 
-> No binary differences are present after this conversion.
-> 
-> 
+Note that Clang has neither "nonstring" nor __builtin_has_attribute().
 
-Applied to 6.12/scsi-queue, thanks!
+Link: https://gcc.gnu.org/onlinedocs/gcc/Common-Variable-Attributes.html#index-nonstring-variable-attribute [1]
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+Cc: Andy Shevchenko <andy@kernel.org>
+Cc: Justin Stitt <justinstitt@google.com>
+Cc: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>
+Cc: Marco Elver <elver@google.com>
+Cc: Nathan Chancellor <nathan@kernel.org>
+Cc: Hao Luo <haoluo@google.com>
+Cc: Przemek Kitszel <przemyslaw.kitszel@intel.com>
+Cc: linux-sparse@vger.kernel.org
+Cc: linux-hardening@vger.kernel.org
+---
+ include/linux/compiler.h       |  3 +++
+ include/linux/compiler_types.h |  7 +++++++
+ include/linux/string.h         | 12 ++++++++----
+ 3 files changed, 18 insertions(+), 4 deletions(-)
 
-[1/1] scsi: megaraid_sas: struct MR_LD_VF_MAP: Replace 1-element arrays with flexible arrays
-      https://git.kernel.org/mkp/scsi/c/ed8ab02c85b3
-
+diff --git a/include/linux/compiler.h b/include/linux/compiler.h
+index 2df665fa2964..ec55bcce4146 100644
+--- a/include/linux/compiler.h
++++ b/include/linux/compiler.h
+@@ -242,6 +242,9 @@ static inline void *offset_to_ptr(const int *off)
+ /* &a[0] degrades to a pointer: a different type from an array */
+ #define __must_be_array(a)	BUILD_BUG_ON_ZERO(__same_type((a), &(a)[0]))
+ 
++/* Require C Strings (i.e. NUL-terminated) lack the "nonstring" attribute. */
++#define __must_be_cstr(p)	BUILD_BUG_ON_ZERO(__annotated(p, nonstring))
++
+ /*
+  * This returns a constant expression while determining if an argument is
+  * a constant expression, most importantly without evaluating the argument.
+diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
+index f14c275950b5..1a957ea2f4fe 100644
+--- a/include/linux/compiler_types.h
++++ b/include/linux/compiler_types.h
+@@ -421,6 +421,13 @@ struct ftrace_likely_data {
+ #define __member_size(p)	__builtin_object_size(p, 1)
+ #endif
+ 
++/* Determine if an attribute has been applied to a variable. */
++#if __has_builtin(__builtin_has_attribute)
++#define __annotated(var, attr)	__builtin_has_attribute(var, attr)
++#else
++#define __annotated(var, attr)	(false)
++#endif
++
+ /*
+  * Some versions of gcc do not mark 'asm goto' volatile:
+  *
+diff --git a/include/linux/string.h b/include/linux/string.h
+index 9edace076ddb..95b3fc308f4f 100644
+--- a/include/linux/string.h
++++ b/include/linux/string.h
+@@ -76,12 +76,16 @@ ssize_t sized_strscpy(char *, const char *, size_t);
+  * known size.
+  */
+ #define __strscpy0(dst, src, ...)	\
+-	sized_strscpy(dst, src, sizeof(dst) + __must_be_array(dst))
+-#define __strscpy1(dst, src, size)	sized_strscpy(dst, src, size)
++	sized_strscpy(dst, src, sizeof(dst) + __must_be_array(dst) +	\
++				__must_be_cstr(dst) + __must_be_cstr(src))
++#define __strscpy1(dst, src, size)	\
++	sized_strscpy(dst, src, size + __must_be_cstr(dst) + __must_be_cstr(src))
+ 
+ #define __strscpy_pad0(dst, src, ...)	\
+-	sized_strscpy_pad(dst, src, sizeof(dst) + __must_be_array(dst))
+-#define __strscpy_pad1(dst, src, size)	sized_strscpy_pad(dst, src, size)
++	sized_strscpy_pad(dst, src, sizeof(dst) + __must_be_array(dst) +	\
++				    __must_be_cstr(dst) + __must_be_cstr(src))
++#define __strscpy_pad1(dst, src, size)	\
++	sized_strscpy_pad(dst, src, size + __must_be_cstr(dst) + __must_be_cstr(src))
+ 
+ /**
+  * strscpy - Copy a C-string into a sized buffer
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+2.34.1
+
