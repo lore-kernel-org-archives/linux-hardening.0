@@ -1,325 +1,140 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DD1E1C37AF;
-	Tue,  6 Aug 2024 11:33:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8DB919F464
+	for <linux-hardening@vger.kernel.org>; Tue,  6 Aug 2024 13:42:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722943988; cv=none; b=CfhlLQ+O/a8SAbDUGPuok+o8gbISBiowa7bTnxjpCY3ITo1+/vgoNvNutD/FLOYAv8mceSir2w60k7s1H6RvwBquiFAnAsNgtkhbMqHRk5PupLITyhne3RSK23Yktks8F++Gahb2cd+vOtWXU9YxVJkyS23bF6T6S3hKK2THoUw=
+	t=1722951754; cv=none; b=u0pRKc1i/4cnJcRxuHP+GEvo38scfy+tbjK7Fz++7iVvtGAy7Ja0lmXDgIuGMf6jkChvuVAOl6klx4x1J2Vboy/C9P5PPIQL6vizR4U/tm9a/EDfkcbPoEiDSGdrNykUUwgC6QV4Km0sUsJLuxPnphDK82W0R9eQ/9Z+jOrZ3ys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722943988; c=relaxed/simple;
-	bh=OFD62wRB2zpm+RyrKFUiRca+gNeuDFf1kvCDZr1PDp0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q9BLmjnZIAvKRNoilSz34o/PEUzWstepshowZrSP1Ki6f4oJ22INAU5jVDFxGjn9M53sJ1C5I1xMiBf3ptUQT8rHBFlT/SBkkIY0QJu+6cQHWEME2I5mfxLy493Usy8ia+K0JSf4Zjz04PeNw70fscgne9GgTYn9fFcQS37fPv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=IJ74lPpM; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1722951754; c=relaxed/simple;
+	bh=n7HWtJ2Q5oFAz2w27Cnx+HGUSNBLUy2DLPoYOD+2aZ4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fPRr4sWovb67J6RVU9smK+Gv4yTJMVnprd2Sdr4csSI2LH9e1cMgyKtD2U9ky2y/1XGiKKbxy4f5FLbVROP+Xb0uTYPme63gJdkrjbDpNKYBEpkSn5oMyH6bh/hFv9dYqB5ccpr1aJw1q7SuhogNKfYehcqpqR5RtD54N59xXnY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=vJ+Ta7uF; arc=none smtp.client-ip=44.202.169.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IJ74lPpM"
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="vJ+Ta7uF"
+Received: from eig-obgw-6007a.ext.cloudfilter.net ([10.0.30.247])
+	by cmsmtp with ESMTPS
+	id b12SsOFjCiA19bKSHstSMQ; Tue, 06 Aug 2024 13:42:25 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id bKSFsyB45VVU6bKSGs5cQZ; Tue, 06 Aug 2024 13:42:24 +0000
+X-Authority-Analysis: v=2.4 cv=K48kHTWI c=1 sm=1 tr=0 ts=66b22840
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=frY+GlAHrI6frpeK1MvySw==:17
+ a=IkcTkHD0fZMA:10 a=yoJbH4e0A30A:10 a=dkpxNnpPgF_yB_CXFPwA:9
+ a=QEXdDO2ut3YA:10 a=Xt_RvD8W3m28Mn_h3AK8:22
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=z6VG0JIpbLxI2trJ9q3LgWi7re73WaxG/xk3UlirF7E=; b=IJ74lPpMfMDm/linc30hotKtLK
-	dIS2x6jAzO+Na/m/MzxL3q5NCLzbkUZDibtzlPfsqXKQoRHLqA+OYR6cc3KsV4STcBtL1PlNlHyDa
-	UpAk0DRXyW0gjnB07z/EBelacRsrzRvtJEeyD/z5NDQa82bXV7Um8JPB7QLL5AgLkJMx6wfI7NE4S
-	DPupxjkt9Mpo75hf/+fKpUidBvFQZJUUeeH0MJfDqyo6rdBmQETnRTJy7eX4+i8yiCzidpN6O8NE7
-	nv1p+zf35xLz3TyRCkNa4SkWBZh8MosvzvWB/j6JDTbqU0vv/XZo4eUMjdXcjeGkfzsyy8Lw3RlRU
-	/W/9KVQw==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sbIQx-00000005dfz-0Xi0;
-	Tue, 06 Aug 2024 11:32:55 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 3AD3530047C; Tue,  6 Aug 2024 13:32:54 +0200 (CEST)
-Date: Tue, 6 Aug 2024 13:32:54 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] perf: Avoid -Wflex-array-member-not-at-end warnings
-Message-ID: <20240806113254.GG12673@noisy.programming.kicks-ass.net>
-References: <ZrFVW+6OOJ2tX23N@cute>
- <20240806105941.GV37996@noisy.programming.kicks-ass.net>
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=3t1+IP/qL/b1YIZ9yGD29vrZYQYidH1DMEuJE91dz9Y=; b=vJ+Ta7uF7VP9ifckAl/LUmNjo1
+	cVOgXpSfoMNe5WP3GUeuh7vcP5G0vBy2WtE32lx1Crdb31GMqyjNglYjsQ2JzEnOr54gQp9HuYYSt
+	J54F52l/Uu7INvGnj/HGgW3WRm4xbmrFKY2SnFv/LBl/+yNZWIFWlPgaTGHm4bk7FqOJdfUfM8EHt
+	T9L3lm7PfNyhde40L4E/hn3dz7EPEioVJGoXIqZfk+6u1b6rTSWj0TpRzjtg3YT+/+zBgxcI+E+Xt
+	idkKM/faKzyq7XtdwmKlB9MnfHe0M1Gthfnypt8zStNUyjH3J0sGmhMTXeej+UHkPQex3ewoPQ+ko
+	6ssNuk0w==;
+Received: from [201.172.173.139] (port=56644 helo=[192.168.15.5])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1sbKSF-003FWx-1G;
+	Tue, 06 Aug 2024 08:42:23 -0500
+Message-ID: <8e19df11-a64b-4fae-863a-c141612a3d36@embeddedor.com>
+Date: Tue, 6 Aug 2024 07:42:21 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240806105941.GV37996@noisy.programming.kicks-ass.net>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [EXTERNAL] [PATCH][next] net: atlantic: Aavoid
+ -Wflex-array-member-not-at-end warnings
+To: Igor Russkikh <irusskikh@marvell.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <ZrDwoVKH8d6TdVxn@cute>
+ <0d0a030c-b1ba-77a7-71f5-55448f6797f6@marvell.com>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <0d0a030c-b1ba-77a7-71f5-55448f6797f6@marvell.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.172.173.139
+X-Source-L: No
+X-Exim-ID: 1sbKSF-003FWx-1G
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.15.5]) [201.172.173.139]:56644
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfPL/UG/V42Ko44AjX2jxDlgaYPmyH7p+R7S9YTqmgshXOyHmhd9hxJJ7f8vkixOwifqgLuLYi8Mn+ovfkyxneucmtdOz6t2yDHemeUAf0x5oR8+54jSk
+ Gu4sSUF0Oe4yjUMJlvC5RclDd4bx1o4hbxWpcOLnuINT5HGvyjyVZijWX3NsJ5M5+IlZOrTzhH2o9fCUMZ1HddTqlpZpDbFfmXApRO24ny/XKh3rCvahhUmn
 
-On Tue, Aug 06, 2024 at 12:59:41PM +0200, Peter Zijlstra wrote:
-> On Mon, Aug 05, 2024 at 04:42:35PM -0600, Gustavo A. R. Silva wrote:
-> > -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-> > getting ready to enable it, globally.
-> > 
-> > So, in order to avoid ending up with a flexible-array member in the
-> > middle of multiple other structs, we use the `struct_group_tagged()`
-> > helper to create a new tagged `struct perf_branch_stack_hdr`.
-> > This structure groups together all the members of the flexible
-> > `struct perf_branch_stack` except the flexible array.
-> > 
-> > As a result, the array is effectively separated from the rest of the
-> > members without modifying the memory layout of the flexible structure.
-> > We then change the type of the middle struct members currently causing
-> > trouble from `struct perf_branch_stack` to `struct perf_branch_stack_hdr`.
-> > 
-> > We also want to ensure that when new members need to be added to the
-> > flexible structure, they are always included within the newly created
-> > tagged struct. For this, we use `static_assert()`. This ensures that the
-> > memory layout for both the flexible structure and the new tagged struct
-> > is the same after any changes.
-> > 
-> > This approach avoids having to implement `struct perf_branch_stack_hdr`
-> > as a completely separate structure, thus preventing having to maintain
-> > two independent but basically identical structures, closing the door
-> > to potential bugs in the future.
-> > 
-> > We also use `container_of()` whenever we need to retrieve a pointer to
-> > the flexible structure, through which the flexible-array member can be
-> > accessed, if necessary.
-> > 
-> > So, with these changes, fix the following warnings:
-> > arch/x86/events/amd/../perf_event.h:289:41: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> > arch/x86/events/intel/../perf_event.h:289:41: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> > arch/x86/events/perf_event.h:289:41: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> > arch/x86/events/zhaoxin/../perf_event.h:289:41: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> > ./arch/x86/include/generated/../../events/perf_event.h:289:41: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> > arch/x86/xen/../events/perf_event.h:289:41: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+
+
+On 06/08/24 03:42, Igor Russkikh wrote:
 > 
-> Urgh, this fugly.. And you're breaking coding style :-(
 > 
-> Let me see if this can't be done sanely...
+> On 8/5/2024 5:32 PM, Gustavo A. R. Silva wrote:
+>> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+>> getting ready to enable it, globally. Move the conflicting declaration to
+>> the end of the structure. Notice that `struct hw_atl_utils_fw_rpc` ends in
+>> a flexible-array member
+>>
+>> Fix the following warnings:
+>>
+>> drivers/net/ethernet/aquantia/atlantic/aq_hw.h:197:36: warning: structure
+>> containing a flexible array member is not at the end of another structure
+>> [-Wflex-array-member-not-at-end]
+>>
+>> drivers/net/ethernet/aquantia/atlantic/hw_atl/../aq_hw.h:197:36: warning:
+>> structure containing a flexible array member is not at the end of another
+>> structure [-Wflex-array-member-not-at-end]
+> 
+> Hi Gustavo!
+> 
+> I was abit curious about this variable length structure, because it looks strange and not actually used by driver.
+> 
+> I've cross checked, and its really some outdated declaration. The structure is never used as as a flex sized struct.
 
-This seems to build...
+Oh, this is great to know. Thanks for looking into this!
 
-diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
-index 920e3a640cad..9477dfd34e07 100644
---- a/arch/x86/events/amd/core.c
-+++ b/arch/x86/events/amd/core.c
-@@ -1001,7 +1001,7 @@ static int amd_pmu_v2_handle_irq(struct pt_regs *regs)
- 			continue;
- 
- 		if (has_branch_stack(event))
--			perf_sample_save_brstack(&data, event, &cpuc->lbr_stack, NULL);
-+			perf_sample_save_brstack(&data, event, cpu_lbr_stack(cpuc), NULL);
- 
- 		if (perf_event_overflow(event, &data, regs))
- 			x86_pmu_stop(event, 0);
-diff --git a/arch/x86/events/amd/lbr.c b/arch/x86/events/amd/lbr.c
-index 19c7b76e21bc..2a7a8673ed17 100644
---- a/arch/x86/events/amd/lbr.c
-+++ b/arch/x86/events/amd/lbr.c
-@@ -107,7 +107,7 @@ static void amd_pmu_lbr_filter(void)
- 	    ((br_sel & X86_BR_TYPE_SAVE) != X86_BR_TYPE_SAVE))
- 		fused_only = true;
- 
--	for (i = 0; i < cpuc->lbr_stack.nr; i++) {
-+	for (i = 0; i < cpu_lbr_stack(cpuc)->nr; i++) {
- 		from = cpuc->lbr_entries[i].from;
- 		to = cpuc->lbr_entries[i].to;
- 		type = branch_type_fused(from, to, 0, &offset);
-@@ -137,12 +137,12 @@ static void amd_pmu_lbr_filter(void)
- 		return;
- 
- 	/* Remove all invalid entries */
--	for (i = 0; i < cpuc->lbr_stack.nr; ) {
-+	for (i = 0; i < cpu_lbr_stack(cpuc)->nr; ) {
- 		if (!cpuc->lbr_entries[i].from) {
- 			j = i;
--			while (++j < cpuc->lbr_stack.nr)
-+			while (++j < cpu_lbr_stack(cpuc)->nr)
- 				cpuc->lbr_entries[j - 1] = cpuc->lbr_entries[j];
--			cpuc->lbr_stack.nr--;
-+			cpu_lbr_stack(cpuc)->nr--;
- 			if (!cpuc->lbr_entries[i].from)
- 				continue;
- 		}
-@@ -208,13 +208,13 @@ void amd_pmu_lbr_read(void)
- 		out++;
- 	}
- 
--	cpuc->lbr_stack.nr = out;
-+	cpu_lbr_stack(cpuc)->nr = out;
- 
- 	/*
- 	 * Internal register renaming always ensures that LBR From[0] and
- 	 * LBR To[0] always represent the TOS
- 	 */
--	cpuc->lbr_stack.hw_idx = 0;
-+	cpu_lbr_stack(cpuc)->hw_idx = 0;
- 
- 	/* Perform further software filtering */
- 	amd_pmu_lbr_filter();
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index be01823b1bb4..6054d209bcd1 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -1706,7 +1706,7 @@ int x86_pmu_handle_irq(struct pt_regs *regs)
- 		perf_sample_data_init(&data, 0, event->hw.last_period);
- 
- 		if (has_branch_stack(event))
--			perf_sample_save_brstack(&data, event, &cpuc->lbr_stack, NULL);
-+			perf_sample_save_brstack(&data, event, cpu_lbr_stack(cpuc), NULL);
- 
- 		if (perf_event_overflow(event, &data, regs))
- 			x86_pmu_stop(event, 0);
-diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-index fa5ea65de0d0..f4d5efb52d9b 100644
---- a/arch/x86/events/intel/ds.c
-+++ b/arch/x86/events/intel/ds.c
-@@ -1573,7 +1573,7 @@ static int intel_pmu_pebs_fixup_ip(struct pt_regs *regs)
- 	/*
- 	 * No LBR entry, no basic block, no rewinding
- 	 */
--	if (!cpuc->lbr_stack.nr || !from || !to)
-+	if (!cpu_lbr_stack(cpuc)->nr || !from || !to)
- 		return 0;
- 
- 	/*
-@@ -1869,7 +1869,7 @@ static void setup_pebs_fixed_sample_data(struct perf_event *event,
- 		setup_pebs_time(event, data, pebs->tsc);
- 
- 	if (has_branch_stack(event))
--		perf_sample_save_brstack(data, event, &cpuc->lbr_stack, NULL);
-+		perf_sample_save_brstack(data, event, cpu_lbr_stack(cpuc), NULL);
- }
- 
- static void adaptive_pebs_save_regs(struct pt_regs *regs,
-diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
-index dc641b50814e..1e9c4f114720 100644
---- a/arch/x86/events/intel/lbr.c
-+++ b/arch/x86/events/intel/lbr.c
-@@ -751,8 +751,8 @@ void intel_pmu_lbr_read_32(struct cpu_hw_events *cpuc)
- 		br->to		= msr_lastbranch.to;
- 		br++;
- 	}
--	cpuc->lbr_stack.nr = i;
--	cpuc->lbr_stack.hw_idx = tos;
-+	cpu_lbr_stack(cpuc)->nr = i;
-+	cpu_lbr_stack(cpuc)->hw_idx = tos;
- }
- 
- /*
-@@ -846,8 +846,8 @@ void intel_pmu_lbr_read_64(struct cpu_hw_events *cpuc)
- 		br[out].cycles	 = cycles;
- 		out++;
- 	}
--	cpuc->lbr_stack.nr = out;
--	cpuc->lbr_stack.hw_idx = tos;
-+	cpu_lbr_stack(cpuc)->nr = out;
-+	cpu_lbr_stack(cpuc)->hw_idx = tos;
- }
- 
- static DEFINE_STATIC_KEY_FALSE(x86_lbr_mispred);
-@@ -930,7 +930,7 @@ static void intel_pmu_store_lbr(struct cpu_hw_events *cpuc,
- 		e->reserved	= (info >> LBR_INFO_BR_CNTR_OFFSET) & LBR_INFO_BR_CNTR_FULL_MASK;
- 	}
- 
--	cpuc->lbr_stack.nr = i;
-+	cpu_lbr_stack(cpuc)->nr = i;
- }
- 
- /*
-@@ -956,7 +956,7 @@ static void intel_pmu_lbr_counters_reorder(struct cpu_hw_events *cpuc,
- 
- 	WARN_ON_ONCE(!pos);
- 
--	for (i = 0; i < cpuc->lbr_stack.nr; i++) {
-+	for (i = 0; i < cpu_lbr_stack(cpuc)->nr; i++) {
- 		src = cpuc->lbr_entries[i].reserved;
- 		dst = 0;
- 		for (j = 0; j < pos; j++) {
-@@ -974,11 +974,11 @@ void intel_pmu_lbr_save_brstack(struct perf_sample_data *data,
- {
- 	if (is_branch_counters_group(event)) {
- 		intel_pmu_lbr_counters_reorder(cpuc, event);
--		perf_sample_save_brstack(data, event, &cpuc->lbr_stack, cpuc->lbr_counters);
-+		perf_sample_save_brstack(data, event, cpu_lbr_stack(cpuc), cpuc->lbr_counters);
- 		return;
- 	}
- 
--	perf_sample_save_brstack(data, event, &cpuc->lbr_stack, NULL);
-+	perf_sample_save_brstack(data, event, cpu_lbr_stack(cpuc), NULL);
- }
- 
- static void intel_pmu_arch_lbr_read(struct cpu_hw_events *cpuc)
-@@ -1210,7 +1210,7 @@ intel_pmu_lbr_filter(struct cpu_hw_events *cpuc)
- 	    ((br_sel & X86_BR_TYPE_SAVE) != X86_BR_TYPE_SAVE))
- 		return;
- 
--	for (i = 0; i < cpuc->lbr_stack.nr; i++) {
-+	for (i = 0; i < cpu_lbr_stack(cpuc)->nr; i++) {
- 
- 		from = cpuc->lbr_entries[i].from;
- 		to = cpuc->lbr_entries[i].to;
-@@ -1248,14 +1248,14 @@ intel_pmu_lbr_filter(struct cpu_hw_events *cpuc)
- 		return;
- 
- 	/* remove all entries with from=0 */
--	for (i = 0; i < cpuc->lbr_stack.nr; ) {
-+	for (i = 0; i < cpu_lbr_stack(cpuc)->nr; ) {
- 		if (!cpuc->lbr_entries[i].from) {
- 			j = i;
--			while (++j < cpuc->lbr_stack.nr) {
-+			while (++j < cpu_lbr_stack(cpuc)->nr) {
- 				cpuc->lbr_entries[j-1] = cpuc->lbr_entries[j];
- 				cpuc->lbr_counters[j-1] = cpuc->lbr_counters[j];
- 			}
--			cpuc->lbr_stack.nr--;
-+			cpu_lbr_stack(cpuc)->nr--;
- 			if (!cpuc->lbr_entries[i].from)
- 				continue;
- 		}
-@@ -1270,9 +1270,9 @@ void intel_pmu_store_pebs_lbrs(struct lbr_entry *lbr)
- 	/* Cannot get TOS for large PEBS and Arch LBR */
- 	if (static_cpu_has(X86_FEATURE_ARCH_LBR) ||
- 	    (cpuc->n_pebs == cpuc->n_large_pebs))
--		cpuc->lbr_stack.hw_idx = -1ULL;
-+		cpu_lbr_stack(cpuc)->hw_idx = -1ULL;
- 	else
--		cpuc->lbr_stack.hw_idx = intel_pmu_lbr_tos();
-+		cpu_lbr_stack(cpuc)->hw_idx = intel_pmu_lbr_tos();
- 
- 	intel_pmu_store_lbr(cpuc, lbr);
- 	intel_pmu_lbr_filter(cpuc);
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index ac1182141bf6..0daab579264f 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -286,7 +286,7 @@ struct cpu_hw_events {
- 	 */
- 	int				lbr_users;
- 	int				lbr_pebs_users;
--	struct perf_branch_stack	lbr_stack;
-+	u64				lbr_hdr[sizeof(struct perf_branch_stack)/sizeof(u64)];
- 	struct perf_branch_entry	lbr_entries[MAX_LBR_ENTRIES];
- 	u64				lbr_counters[MAX_LBR_ENTRIES]; /* branch stack extra */
- 	union {
-@@ -349,6 +349,11 @@ struct cpu_hw_events {
- 	struct pmu			*pmu;
- };
- 
-+static __always_inline struct perf_branch_stack *cpu_lbr_stack(struct cpu_hw_events *cpuc)
-+{
-+	return (void *)&cpuc->lbr_hdr;
-+}
-+
- #define __EVENT_CONSTRAINT_RANGE(c, e, n, m, w, o, f) {	\
- 	{ .idxmsk64 = (n) },		\
- 	.code = (c),			\
+> 
+> So better would be to do just this:
+> 
+> --- a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils.h
+> +++ b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils.h
+> @@ -226,7 +226,6 @@ struct __packed offload_info {
+>          struct offload_port_info ports;
+>          struct offload_ka_info kas;
+>          struct offload_rr_info rrs;
+> -       u8 buf[];
+>   };
+> 
+> Let me know if you want to submit this, or I can do this as well.
+> 
+
+Feel free to send a patch if you wish. :)
+
+Thanks!
+--
+Gustavo
