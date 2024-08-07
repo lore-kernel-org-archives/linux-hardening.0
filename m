@@ -1,113 +1,265 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+Received: from mail-oo1-f50.google.com (mail-oo1-f50.google.com [209.85.161.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E84EF4D5BD;
-	Wed,  7 Aug 2024 21:20:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D8C91534FB
+	for <linux-hardening@vger.kernel.org>; Wed,  7 Aug 2024 21:23:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723065661; cv=none; b=gQzcElsPuePmekEutF7aRiafI9Y6FuvMW6eIS1bEbuFMx4AWA1lR7yJ1zQAOe3I7jjV+yYCvSNQ/b4I0MJmLKSjXOtNF5t8IaIX2Ua6CHeEPArR++Qry3dkc+ySEYV0yMAChm99Bk7C/4n65WDfhFy2iw5+QNhUqzsvBqJhYv+o=
+	t=1723065817; cv=none; b=rySV2R6nh4z6JL9l774JCvkYKN1dATPjxMWa+T/G6FXbGvM5Z2PTLT+KzrTQmktGdAIDX8uA9QJQPIti22eVA6ulkliTLqYWNBAJ5R4NyBw22l4k2D72AJx4j+Z1tH3aiRb5Dty1AXh6M2G83ZUz+I9ZeE6BZuhY6mxag5u/lRM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723065661; c=relaxed/simple;
-	bh=Q9StI1/oLF+reeI0BzXDCOqRdiXqcMHJpL+sJx+ZEH4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DN/dtv8E7nfQtEAcBlhNlcRFbs291lSyuJuXYc2EzxT+23t7FxMkb3kUzrrLZ7UTCMhJKQ+phxCabIjBJrn8Omh/hZIRSN20xluWyPLcyp1pK0zI42HeNmbBJoIGnCTlpejIfwPd/xCgtVSvtIm/lNF9gusFo4pufq2GgKAH7rE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LBTH4dMu; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1723065817; c=relaxed/simple;
+	bh=RVL2ZRF4WUT/8v2zpcjyefjSqJV50mC/w2Dpk8L0aZc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=W0QlxRWYZWVwiYL2VImpCfdRDhfwa7/vXquZLBLSCgZ0Wn084XFxrDc9sLc1PvNiTw9lAnJfhW9R9U6GFQrWowQhXSlss4to54sCbi+GV5lz3ravwrsQqAzm6XY1+qC6OIS+7/FaJiIopxelvDKzj0B2TjsAAN3z1O+y5hK2TnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=XcvDNni5; arc=none smtp.client-ip=209.85.161.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LBTH4dMu"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-52efdf02d13so476461e87.2;
-        Wed, 07 Aug 2024 14:20:59 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XcvDNni5"
+Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-5d5b1e33fa8so189791eaf.3
+        for <linux-hardening@vger.kernel.org>; Wed, 07 Aug 2024 14:23:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1723065658; x=1723670458; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Q9StI1/oLF+reeI0BzXDCOqRdiXqcMHJpL+sJx+ZEH4=;
-        b=LBTH4dMuv9O4vCotSulK0NL9e9ndZRbM43AQqeHem69VUIJNFQDhZMUBaopyyW+lhw
-         19lTiQi2MJjmwMTOrihLX/g0jqS9xLwW5oc/C3ZRYxKcSPZhJTrjHXjGxMh0k0S6jq71
-         /4ZbmEa6xNTxZk20YXPk63MLPXeBUESOh3Uf14A4PFy5758WA0Xl5osp0YcFHIwXan4M
-         eHLeLnERE2341hkUZQkY20pPig4n8sO708qms5SCwXx4QeO7MKkfPer5SIAqUC6RF3Hj
-         XGvAzJ+uB4GDPXf5E7ZhBlaZRInrn/AaglQYtlyc9jfdXx8p+q8AJFkefhEY8WWF/Cj3
-         i1XQ==
+        d=chromium.org; s=google; t=1723065815; x=1723670615; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RzngvWp9gQDLjMpg4qmJfCwDpEym+on+6/0H0Fu3rEY=;
+        b=XcvDNni5/x/xPxHPT1OwZ9PgesbMbocx4BkrinO0zsIXV5ps8Lho81e4uAEgm82kgJ
+         tzhqW4lpbfoBL/9N6lb209M1AE4W+xFI8LDSeruKW9on92VNTWCJhZB5Y2/PsJWrZN43
+         kcXml7xbvBUZEpBtrTLSOn9PSoqqggW9Xhn/4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723065658; x=1723670458;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Q9StI1/oLF+reeI0BzXDCOqRdiXqcMHJpL+sJx+ZEH4=;
-        b=PkYybIFQ6k2HR6H3sXt9HS9lavKEXZFmLF6HpCYVXFa4G7Jpak88Ix/RDmorja+VqG
-         msnrWvM0xLzPTeOE2u48MFH33uhne7H4XFHiXcaMvCoY3jxqyIztwxr/KQjY3UnDuWx9
-         3mrxmA8oqAW9tQdxgl90QB65aufuBYpX5dfBq757V+hNDuHX9QOPMew5krsqJBWhuLu1
-         anRg+9wX2XiFxIMwgfp9gC1XV15prNNZF9im195z14TpelRvvgq1cc1F3rpNXE3WjL1a
-         3ZmXiG7wgqN9LwSv3cpQ3zmPfM1wxPDePASC34rBf5KNH4nDO/wzss+1fj/u1cl4M4Jt
-         yFyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVPQ8oUPANFmQbKYYBcBLpaute9U3TGGBqABbN27k7dLW4RB+NFxC6MCeQrRnQ6amb4Xqn4T7V1fQUOnAzkSGEfORVJUKFOe16SFBXb3wYzn1zOOMsaGlTKApideUS05QEt0iFf4K4GEvXqMeDlBT3I/lIdHy7dB6w2Ag4eVd6gCvMDTA3WsduH+/KvOQV9
-X-Gm-Message-State: AOJu0YzRkJcxMYd6I5UuMWxDHbzxd+AhO1JNMEDFEA84BgyiaYKGJnNE
-	Z60u9o8EpeJeMTKetNupBfn+58tRXw2FWMDnrEpxRu/d3jpUK0FLXWkL/R/ProorhjQNR62ZbKh
-	ef09SbhgL3B8dQ3Q2QjPbEPUVQ1s=
-X-Google-Smtp-Source: AGHT+IGpRCJ1YRnn9uiP0qSF32UWBzHiNfVncOswejvTC7AEhNh8Su/FWlYjgnFO3/eOiUS+Ojcdk0H0lvKTkM+qwWE=
-X-Received: by 2002:a05:6512:1593:b0:52d:582e:4111 with SMTP id
- 2adb3069b0e04-530bb3810c5mr17636399e87.18.1723065657821; Wed, 07 Aug 2024
- 14:20:57 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1723065815; x=1723670615;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RzngvWp9gQDLjMpg4qmJfCwDpEym+on+6/0H0Fu3rEY=;
+        b=KBQ6h7Ywl33ZC8LCAGtUvJnTniBxD34EMT5cT6vXkJR771d6l8+I3alyXBIavdTNOV
+         y/ovQZrAX39JbjEjzbaYIFNlFsF2eoiRhQPoP5gEVn60MqJ4Nm2OVZb2LVCB/3XyRZ9E
+         R4Eubey3rbHLAqiURoYX4/95v/GQNw03heR4VNrx7+BpKdePBuzS6NRWNTQ4KZRQ6SNm
+         Vsvrp1xx48N6zZzN9AjqDq0yJYPztTqWvM2ogUr3HLXfJbIDrv0cEM+BzomIgfEFmiAy
+         oAxP/JapNFSuTG4FdZSWIcSgiRTRxESaZe22PcoRVXgDkMYWSYsUANSsRfdhUp8Npr6V
+         ChYA==
+X-Forwarded-Encrypted: i=1; AJvYcCWKqqrgd+MOyTAsMYKJstDbZrlqXynocntGMveE/KBAwR0zShoIy5s72xZqAc35CUwghYm1yHQl2lnpLfnBDB6REilfoMH4wTIan8k5C6Xq
+X-Gm-Message-State: AOJu0Yz9kmeqLu8Q1Iq0cyNCLHyr0hWBjjRl9xiEwcuwKlzlSQOSjuXw
+	Bb+WAjIdvVqNw2jyfoXT3dTHfV0ZEpcnZogdcvLJ9X0qd0bwKKV9XXwqJGej9YfX1pPUJaSz9jU
+	=
+X-Google-Smtp-Source: AGHT+IGwzaAwKwkzWZfQJR7sQNT2BHUu0cPXPvgMKZvVP2Y4msVjXFqhIZz2Nbr0jImAy+2leat17g==
+X-Received: by 2002:a17:903:32c9:b0:1ff:52c:34ce with SMTP id d9443c01a7336-1ff574cac78mr219351345ad.53.1723065804353;
+        Wed, 07 Aug 2024 14:23:24 -0700 (PDT)
+Received: from localhost (25.11.145.34.bc.googleusercontent.com. [34.145.11.25])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-1ff5905ff30sm110338885ad.156.2024.08.07.14.23.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 07 Aug 2024 14:23:23 -0700 (PDT)
+From: jeffxu@chromium.org
+To: akpm@linux-foundation.org,
+	willy@infradead.org,
+	torvalds@linux-foundation.org,
+	Liam.Howlett@oracle.com,
+	pedro.falcato@gmail.com
+Cc: jeffxu@google.com,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-mm@kvack.org,
+	dave.hansen@intel.com,
+	linux-hardening@vger.kernel.org,
+	lorenzo.stoakes@oracle.com,
+	mpe@ellerman.id.au,
+	oliver.sang@intel.com,
+	vbabka@suse.cz,
+	Jeff Xu <jeffxu@chromium.org>
+Subject: [PATCH v2] selftest mm/mseal: fix test_seal_mremap_move_dontunmap_anyaddr
+Date: Wed,  7 Aug 2024 21:23:20 +0000
+Message-ID: <20240807212320.2831848-1-jeffxu@chromium.org>
+X-Mailer: git-send-email 2.46.0.76.ge559c4bf1a-goog
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240807153544.2754247-1-jeffxu@chromium.org> <CAKbZUD2xDdbxOTvR3-P=636jvhG_JPO3h79tgB59dfPmv046hg@mail.gmail.com>
- <CALmYWFvDH=8U8wsaSjMrfCg1__S66SS-9Zo0f826XJDJT7hOSQ@mail.gmail.com>
-In-Reply-To: <CALmYWFvDH=8U8wsaSjMrfCg1__S66SS-9Zo0f826XJDJT7hOSQ@mail.gmail.com>
-From: Pedro Falcato <pedro.falcato@gmail.com>
-Date: Wed, 7 Aug 2024 22:20:44 +0100
-Message-ID: <CAKbZUD0JuEwfd2VnY_Kbv2Mr0g0KN2T2mYCLhPuS8j6PhbCNiQ@mail.gmail.com>
-Subject: Re: [PATCH v1] selftest mm/mseal: fix test_seal_mremap_move_dontunmap_anyaddr
-To: Jeff Xu <jeffxu@google.com>
-Cc: jeffxu@chromium.org, akpm@linux-foundation.org, willy@infradead.org, 
-	torvalds@linux-foundation.org, Liam.Howlett@oracle.com, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-mm@kvack.org, dave.hansen@intel.com, linux-hardening@vger.kernel.org, 
-	lorenzo.stoakes@oracle.com, mpe@ellerman.id.au, oliver.sang@intel.com, 
-	vbabka@suse.cz
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Aug 7, 2024 at 7:03=E2=80=AFPM Jeff Xu <jeffxu@google.com> wrote:
-<snip>
->
-> test_seal_mremap_move_dontunmap use 0 as new_addr, 0 indicates
-> allocating a new memory.
-> test_seal_mremap_move_dontunmap_anyaddr uses any arbitrary address as
-> a new address.
+From: Jeff Xu <jeffxu@chromium.org>
 
-No, MREMAP_DONTUNMAP uses the address you pass as a hint, aka you're
-just testing get_unmapped_area, not any mseal capability.
-There's no forced moving here.
+the syscall remap accepts following:
 
->
-> > You also don't know if 0xdead0000 is a valid page (hexagon for
-> > instance seems to support 256KiB and 1MiB pages, so does ppc32, and
-> > this is not something that should be hardcoded).
-> >
-> usually hardcode value is not good practice, but the point of this
-> test is to show
-> mremap can really relocate the mapping to an arbitrary address.
+mremap(src, size, size, MREMAP_MAYMOVE | MREMAP_DONTUNMAP, dst)
 
-That's what test_seal_mremap_move_dontunmap does, no?
+when the src is sealed, the call will fail with error code:
+EPERM
 
->
-> Do you have any suggestions here ? I can think of two options to choose f=
-rom:
->
-> 1> use 0xd0000000
-> 2> allocate a memory then free it, reuse the ptr.
+Previously, the test uses hard-coded 0xdeaddead as dst, and it
+will fail on the system with newer glibc installed.
 
-Personally I'd prefer 2, if you really want to keep the test. It's
-also a strategy used elsewhere (e.g mremap_dontunmap.c).
+This patch removes test's dependency on glibc for mremap(), also
+fix the test and remove the hardcoded address.
 
-FWIW I don't have the mental strength to bikeshed over this any more,
-so please do what you think is best!
+Signed-off-by: Jeff Xu <jeffxu@chromium.org>
+Reported-by: Pedro Falcato <pedro.falcato@gmail.com>
+---
+ tools/testing/selftests/mm/mseal_test.c | 57 ++++++++++++++++---------
+ 1 file changed, 36 insertions(+), 21 deletions(-)
 
---=20
-Pedro
+diff --git a/tools/testing/selftests/mm/mseal_test.c b/tools/testing/selftests/mm/mseal_test.c
+index a818f010de47..5bce2fe102ab 100644
+--- a/tools/testing/selftests/mm/mseal_test.c
++++ b/tools/testing/selftests/mm/mseal_test.c
+@@ -110,6 +110,16 @@ static int sys_madvise(void *start, size_t len, int types)
+ 	return sret;
+ }
+ 
++static void *sys_mremap(void *addr, size_t old_len, size_t new_len,
++	unsigned long flags, void *new_addr)
++{
++	void *sret;
++
++	errno = 0;
++	sret = (void *) syscall(__NR_mremap, addr, old_len, new_len, flags, new_addr);
++	return sret;
++}
++
+ static int sys_pkey_alloc(unsigned long flags, unsigned long init_val)
+ {
+ 	int ret = syscall(__NR_pkey_alloc, flags, init_val);
+@@ -1115,12 +1125,12 @@ static void test_seal_mremap_shrink(bool seal)
+ 	}
+ 
+ 	/* shrink from 4 pages to 2 pages. */
+-	ret2 = mremap(ptr, size, 2 * page_size, 0, 0);
++	ret2 = sys_mremap(ptr, size, 2 * page_size, 0, 0);
+ 	if (seal) {
+-		FAIL_TEST_IF_FALSE(ret2 == MAP_FAILED);
++		FAIL_TEST_IF_FALSE(ret2 == (void *) MAP_FAILED);
+ 		FAIL_TEST_IF_FALSE(errno == EPERM);
+ 	} else {
+-		FAIL_TEST_IF_FALSE(ret2 != MAP_FAILED);
++		FAIL_TEST_IF_FALSE(ret2 != (void *) MAP_FAILED);
+ 
+ 	}
+ 
+@@ -1147,7 +1157,7 @@ static void test_seal_mremap_expand(bool seal)
+ 	}
+ 
+ 	/* expand from 2 page to 4 pages. */
+-	ret2 = mremap(ptr, 2 * page_size, 4 * page_size, 0, 0);
++	ret2 = sys_mremap(ptr, 2 * page_size, 4 * page_size, 0, 0);
+ 	if (seal) {
+ 		FAIL_TEST_IF_FALSE(ret2 == MAP_FAILED);
+ 		FAIL_TEST_IF_FALSE(errno == EPERM);
+@@ -1180,7 +1190,7 @@ static void test_seal_mremap_move(bool seal)
+ 	}
+ 
+ 	/* move from ptr to fixed address. */
+-	ret2 = mremap(ptr, size, size, MREMAP_MAYMOVE | MREMAP_FIXED, newPtr);
++	ret2 = sys_mremap(ptr, size, size, MREMAP_MAYMOVE | MREMAP_FIXED, newPtr);
+ 	if (seal) {
+ 		FAIL_TEST_IF_FALSE(ret2 == MAP_FAILED);
+ 		FAIL_TEST_IF_FALSE(errno == EPERM);
+@@ -1299,7 +1309,7 @@ static void test_seal_mremap_shrink_fixed(bool seal)
+ 	}
+ 
+ 	/* mremap to move and shrink to fixed address */
+-	ret2 = mremap(ptr, size, 2 * page_size, MREMAP_MAYMOVE | MREMAP_FIXED,
++	ret2 = sys_mremap(ptr, size, 2 * page_size, MREMAP_MAYMOVE | MREMAP_FIXED,
+ 			newAddr);
+ 	if (seal) {
+ 		FAIL_TEST_IF_FALSE(ret2 == MAP_FAILED);
+@@ -1330,7 +1340,7 @@ static void test_seal_mremap_expand_fixed(bool seal)
+ 	}
+ 
+ 	/* mremap to move and expand to fixed address */
+-	ret2 = mremap(ptr, page_size, size, MREMAP_MAYMOVE | MREMAP_FIXED,
++	ret2 = sys_mremap(ptr, page_size, size, MREMAP_MAYMOVE | MREMAP_FIXED,
+ 			newAddr);
+ 	if (seal) {
+ 		FAIL_TEST_IF_FALSE(ret2 == MAP_FAILED);
+@@ -1361,7 +1371,7 @@ static void test_seal_mremap_move_fixed(bool seal)
+ 	}
+ 
+ 	/* mremap to move to fixed address */
+-	ret2 = mremap(ptr, size, size, MREMAP_MAYMOVE | MREMAP_FIXED, newAddr);
++	ret2 = sys_mremap(ptr, size, size, MREMAP_MAYMOVE | MREMAP_FIXED, newAddr);
+ 	if (seal) {
+ 		FAIL_TEST_IF_FALSE(ret2 == MAP_FAILED);
+ 		FAIL_TEST_IF_FALSE(errno == EPERM);
+@@ -1390,14 +1400,13 @@ static void test_seal_mremap_move_fixed_zero(bool seal)
+ 	/*
+ 	 * MREMAP_FIXED can move the mapping to zero address
+ 	 */
+-	ret2 = mremap(ptr, size, 2 * page_size, MREMAP_MAYMOVE | MREMAP_FIXED,
++	ret2 = sys_mremap(ptr, size, 2 * page_size, MREMAP_MAYMOVE | MREMAP_FIXED,
+ 			0);
+ 	if (seal) {
+ 		FAIL_TEST_IF_FALSE(ret2 == MAP_FAILED);
+ 		FAIL_TEST_IF_FALSE(errno == EPERM);
+ 	} else {
+ 		FAIL_TEST_IF_FALSE(ret2 == 0);
+-
+ 	}
+ 
+ 	REPORT_TEST_PASS();
+@@ -1420,13 +1429,13 @@ static void test_seal_mremap_move_dontunmap(bool seal)
+ 	}
+ 
+ 	/* mremap to move, and don't unmap src addr. */
+-	ret2 = mremap(ptr, size, size, MREMAP_MAYMOVE | MREMAP_DONTUNMAP, 0);
++	ret2 = sys_mremap(ptr, size, size, MREMAP_MAYMOVE | MREMAP_DONTUNMAP, 0);
+ 	if (seal) {
+ 		FAIL_TEST_IF_FALSE(ret2 == MAP_FAILED);
+ 		FAIL_TEST_IF_FALSE(errno == EPERM);
+ 	} else {
++		/* kernel will allocate a new address */
+ 		FAIL_TEST_IF_FALSE(ret2 != MAP_FAILED);
+-
+ 	}
+ 
+ 	REPORT_TEST_PASS();
+@@ -1434,7 +1443,7 @@ static void test_seal_mremap_move_dontunmap(bool seal)
+ 
+ static void test_seal_mremap_move_dontunmap_anyaddr(bool seal)
+ {
+-	void *ptr;
++	void *ptr, *ptr2;
+ 	unsigned long page_size = getpagesize();
+ 	unsigned long size = 4 * page_size;
+ 	int ret;
+@@ -1449,24 +1458,30 @@ static void test_seal_mremap_move_dontunmap_anyaddr(bool seal)
+ 	}
+ 
+ 	/*
+-	 * The 0xdeaddead should not have effect on dest addr
+-	 * when MREMAP_DONTUNMAP is set.
++	 * The new address is any address that not allocated.
++	 * use allocate/free to similate that.
+ 	 */
+-	ret2 = mremap(ptr, size, size, MREMAP_MAYMOVE | MREMAP_DONTUNMAP,
+-			0xdeaddead);
++	setup_single_address(size, &ptr2);
++	FAIL_TEST_IF_FALSE(ptr2 != (void *)-1);
++	ret = sys_munmap(ptr2, size);
++	FAIL_TEST_IF_FALSE(!ret);
++
++	/*
++	 * remap to any address.
++	 */
++	ret2 = sys_mremap(ptr, size, size, MREMAP_MAYMOVE | MREMAP_DONTUNMAP,
++			(void *) ptr2);
+ 	if (seal) {
+ 		FAIL_TEST_IF_FALSE(ret2 == MAP_FAILED);
+ 		FAIL_TEST_IF_FALSE(errno == EPERM);
+ 	} else {
+-		FAIL_TEST_IF_FALSE(ret2 != MAP_FAILED);
+-		FAIL_TEST_IF_FALSE((long)ret2 != 0xdeaddead);
+-
++		/* remap success and return ptr2 */
++		FAIL_TEST_IF_FALSE(ret2 ==  ptr2);
+ 	}
+ 
+ 	REPORT_TEST_PASS();
+ }
+ 
+-
+ static void test_seal_merge_and_split(void)
+ {
+ 	void *ptr;
+-- 
+2.46.0.76.ge559c4bf1a-goog
+
