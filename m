@@ -1,119 +1,105 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EB5F1D0DFD
-	for <linux-hardening@vger.kernel.org>; Wed,  7 Aug 2024 10:00:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723024849; cv=none; b=J0OLNtIu48FJtBSfX97UcVYeBmxcuYeV2/NxqwnBUwtLn2f40sDu4Uzy2wCsoD0eq6fQAfJtxj9i3esNaMIYGPJSIPgL7aIJW91/MDuDWa4WiBmh5ZTIri799piZmxCNB/3n62tv3iOTbYY69C/X90AZq50emNewW3F2NioAVTY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723024849; c=relaxed/simple;
-	bh=JFeEg6KS1tps0Hdi+bU03Q7DXumXvmBP/um59ZL2G9c=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=o8iE5b2Ko6AeGyydVxJ+S/pwHGrccy6KWQdbshAevyXh4fC/AM2Qx9uKDnot5tg11SBGs6/+7tC96cbNHkc4SVj6DcaKnGLS0XzLjo36X3N/Nro3hxYsLS7pGvbiCAqBHI9gBuCHBl9IRFPa3bGBe5q4S23kRFHuU6P3Ml5zwkw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=ad+i+6Wj; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3500C1803A;
+	Wed,  7 Aug 2024 10:23:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1723026213; cv=pass; b=VC6u0dKKeLZZafM3rFNW8FHWYMunDQdIfHkEtoMbB50vvJ2xxchXyHc+huHcjOyo9lHo8PAqQjY4neUJMWEJLWY21ESoAlXZSMyXPIpVRXltCrCZ7x9dtHbZgr9NdhxD7gbZPiJe91KnXQyRkUPi0ewvJmogc9HjcjpWSa3W3Vo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1723026213; c=relaxed/simple;
+	bh=wnWSXJaeQCwIHmnEOPhe0/nxJnIM5HR9ZukuJwrGK+Q=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=aYWrZIoeM2N6eLUCNB7eXWLuba2/BXjWJfWCWKsLShJfFk/oSuv8drvLRjDuY+R9nZ8SG/RRkSaLVY2r8rBO6x8i9Yj2vzZbR/v+z4WAM2OUQs2TmwJX+3n4kLdCq1e0qjxT8A7ctC/p1Q/vbGMSgXAvZz87SmEgbiMeMmR8MtE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=Usama.Anjum@collabora.com header.b=IqxrD3KH; arc=pass smtp.client-ip=136.143.188.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="ad+i+6Wj"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a7ac469e4c4so119192366b.0
-        for <linux-hardening@vger.kernel.org>; Wed, 07 Aug 2024 03:00:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1723024847; x=1723629647; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=DP4grgcwBnNDkabKnZ/UoFhQsHN4IHhDNvWB2Kwa3HQ=;
-        b=ad+i+6Wjp/W+GrsjIeQXGUpHDjM0IHW3NXIu4YGc2vDcBTAZd5cNQ1IDNjg3l+9Eam
-         Mx5aWVzsWYePeBs1eLlB/5CAoBvUA72ppHZr6RtPl1d0zpe4SOUrccrQ2I5Iu2pRD62o
-         mXOp8JJNzD0ZVwlmbzAUfTEzPzIDf8KGugPORlQwK+7Y79sjILM9uvu+jzZthsoeKX0y
-         aTU4AuALdRos80QzmHpo+J0zJyMbahiKiQ9txrgm2c9b3dK7EuuRzSbgu60suTENU1z8
-         B+dFaBQOG26DdPChrz8a1nTZPvRpvwJr3vvz9GSYEw7nWREfhRvHL3Gatv9O3Jm6vgvA
-         /vGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723024847; x=1723629647;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DP4grgcwBnNDkabKnZ/UoFhQsHN4IHhDNvWB2Kwa3HQ=;
-        b=HyzgC6NAiOOOZelrnQbaz7HLYeVK0cq2EBFzXPYsHE4zJ8z5q+mc+S18ShMaIOnf38
-         yd9tX03XpAFE6Nb9ICptx1sIUTqt6xQyl1UMqGBE7m9Ec/qWrRZpQYQP4zfGr+/zzzKZ
-         z8NNm84AjKFErqi3fKHzjxfZ7jxu/QfxFxm2cfaMhGWyEet3HyezCy3Yzedf2zihe4lE
-         PHZjL5mlZ7NAJoEwfH3Nddlwe8gHV1rQmUYfIayWNge2yATx1kq/UPNn1zq6HFcz1yYo
-         X1TM87AWDp9GHbp7YVADt4pN7gjAKloVBcwXdBAS0EQnodlCsu3vreRa9CS4JrR7iQEJ
-         8g3g==
-X-Forwarded-Encrypted: i=1; AJvYcCWeormh85JiabB+KhR88b/nQVi5IHLSwyPzri/VJVukcxlNVGz/Pq83/+ZL5bEUg7K+brIxPk8ypWmQPnm6MOs7qH3XiA6JaLaBM7KajQW3
-X-Gm-Message-State: AOJu0YxNf+DqIAIsyzULTGYf13qXSmT5X91MhNy+Quh2lZ9m3ik0Pqbx
-	/ZIEqHlgE/4v5x5VdGU5wrBYTd7Cma4wt5FjB3AXBEacJ3ZQoaGetvBow9BbH+Y=
-X-Google-Smtp-Source: AGHT+IEKOsNBlWol3pZuzwoRWU5Ks5wtno2ZLUGOAKgnsV2/zLCuNitPlkJsmivU+bMoZuYZaD8oqA==
-X-Received: by 2002:a17:906:fe06:b0:a7a:a33e:47bf with SMTP id a640c23a62f3a-a807905171fmr121374166b.18.1723024846497;
-        Wed, 07 Aug 2024 03:00:46 -0700 (PDT)
-Received: from fedora.fritz.box (pd9e1640a.dip0.t-ipconnect.de. [217.225.100.10])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a7de4e7f336sm492467166b.131.2024.08.07.03.00.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Aug 2024 03:00:45 -0700 (PDT)
-From: Thorsten Blum <thorsten.blum@toblux.com>
-To: paulmck@kernel.org,
-	frederic@kernel.org,
-	neeraj.upadhyay@kernel.org,
-	joel@joelfernandes.org,
-	josh@joshtriplett.org,
-	boqun.feng@gmail.com,
-	urezki@gmail.com,
-	rostedt@goodmis.org,
-	mathieu.desnoyers@efficios.com,
-	jiangshanlai@gmail.com,
-	qiang.zhang1211@gmail.com,
-	kees@kernel.org,
-	gustavoars@kernel.org
-Cc: rcu@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	Thorsten Blum <thorsten.blum@toblux.com>
-Subject: [PATCH] rcu: Annotate struct kvfree_rcu_bulk_data with __counted_by()
-Date: Wed,  7 Aug 2024 11:55:00 +0200
-Message-ID: <20240807095459.1400-2-thorsten.blum@toblux.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=Usama.Anjum@collabora.com header.b="IqxrD3KH"
+ARC-Seal: i=1; a=rsa-sha256; t=1723026154; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=eQDaHF0UtmKq766okb9YAb1uVFKscDK0cg5eoQFjHe698y5wviqxXRXsW/U+dARP112dVe6SCs3C9DiGImo6tGTS10g5HoNfvwhLdToYgm2F5VFnqN+2A4OMgarxjroIe0Eqe2wAqxePPhz6EbiQXCv3sey8nlhhtYyZkJ1lT3o=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1723026154; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=scd/Y76ACZDqO6vf5zLO5/NvxyWCWABtzKGRnR86dDc=; 
+	b=GbBQ/avdO9yzTbjTBILxGRf9s6D02T9dAYDAHW1N530LOH7GX+Shof/q53Wyd2MjSj0B6Ni04ufveBMSh/ZcJkldqyELhp2SHH8LMgVlRrQjS1XNLLUp4+YHeYZRzxbHLF+rw6oSNOzri3U8x2n101AfvtOzCDCcHO5s74MG4uk=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=Usama.Anjum@collabora.com;
+	dmarc=pass header.from=<Usama.Anjum@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1723026154;
+	s=zohomail; d=collabora.com; i=Usama.Anjum@collabora.com;
+	h=Message-ID:Date:Date:MIME-Version:Cc:Cc:Subject:Subject:To:To:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=scd/Y76ACZDqO6vf5zLO5/NvxyWCWABtzKGRnR86dDc=;
+	b=IqxrD3KHgvy2hhbTtPTpF2qv2qv0npSBO6ngLDL3gIJtPUg79y4yVCB7oSKL0j6q
+	oB6CR8InZCxv6TekzlOnVqGwQyRnvc76srbPKS/uN3Zah6jiSI/KE1NzMYaDATcLiQO
+	tFDeUabmvGYhzpwP7ros+MMlychGkIiOyp0mfnWk=
+Received: by mx.zohomail.com with SMTPS id 1723026153049605.1074578697151;
+	Wed, 7 Aug 2024 03:22:33 -0700 (PDT)
+Message-ID: <a1e8ab86-64e1-4cf1-bd2f-145b4c173e6d@collabora.com>
+Date: Wed, 7 Aug 2024 15:22:18 +0500
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Cc: Usama.Anjum@collabora.com, "H . J . Lu" <hjl.tools@gmail.com>,
+ Chris Kennelly <ckennelly@google.com>, Eric Biederman
+ <ebiederm@xmission.com>, Shuah Khan <shuah@kernel.org>,
+ Fangrui Song <maskray@google.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Yang Yingliang <yangyingliang@huawei.com>,
+ linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
+ Mike Rapoport <rppt@kernel.org>, Rui Salvaterra <rsalvaterra@gmail.com>,
+ Victor Stinner <vstinner@redhat.com>, Jan Palus <jpalus@fastmail.com>,
+ Al Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>,
+ Jan Kara <jack@suse.cz>, linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 1/3] selftests/exec: Build both static and non-static
+ load_address tests
+To: Kees Cook <keescook@chromium.org>, John Hubbard <jhubbard@nvidia.com>
+References: <20240508172848.work.131-kees@kernel.org>
+ <20240508173149.677910-1-keescook@chromium.org>
+ <1f6a2905-395d-4f81-9ee0-57c541fb2486@nvidia.com>
+ <202405082312.D922795@keescook>
+Content-Language: en-US
+From: Muhammad Usama Anjum <Usama.Anjum@collabora.com>
+In-Reply-To: <202405082312.D922795@keescook>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
 
-Add the __counted_by compiler attribute to the flexible array member
-records to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
-CONFIG_FORTIFY_SOURCE.
+On 5/9/24 11:16 AM, Kees Cook wrote:
+> On Wed, May 08, 2024 at 07:54:13PM -0700, John Hubbard wrote:
+>> Didn't we learn recently, though, that -static-pie is gcc 8.1+, while the
+>> kernel's minimum gcc version is 5?
+> 
+> Yes, that's true. If we encounter anyone trying to build the selftests
+> with <8.1 I think we'll have to add a compiler version test in the
+> Makefile to exclude the static pie tests.
+> 
+> There's also the potential issue with arm64 builds that caused the
+> original attempt at -static. We'll likely need an exclusion there too.
+> 
+I'm not getting failures for arm64 instead for arm. I'm trying to find
+this "rcrt1.o" file. Does anybody have any idea if this error can be
+resolved by missing file or is it something arm-linux-gnueabihf
+toolchain doesn't support?
 
-Increment nr_records before adding a new pointer to the records array.
+make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
+arm-linux-gnueabihf-gcc -Wall -Wno-nonnull -D_GNU_SOURCE=
+-Wl,-z,max-page-size=0x1000 \
+        -fPIE -static-pie load_address.c -o
+/home/usama/repos/kernel/linux_mainline/tools/testing/selftests/exec/load_address.static.0x1000
+/usr/lib/gcc-cross/arm-linux-gnueabihf/12/../../../../arm-linux-gnueabihf/bin/ld:
+cannot find rcrt1.o: No such file or directory
+collect2: error: ld returned 1 exit status
+make: *** [Makefile:39:
+/home/usama/repos/kernel/linux_mainline/tools/testing/selftests/exec/load_address.static.0x1000]
+Error 1
 
-Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
----
- kernel/rcu/tree.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index e641cc681901..76d8d75dd8b3 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -3227,7 +3227,7 @@ struct kvfree_rcu_bulk_data {
- 	struct list_head list;
- 	struct rcu_gp_oldstate gp_snap;
- 	unsigned long nr_records;
--	void *records[];
-+	void *records[] __counted_by(nr_records);
- };
- 
- /*
-@@ -3767,7 +3767,8 @@ add_ptr_to_bulk_krc_lock(struct kfree_rcu_cpu **krcp,
- 	}
- 
- 	// Finally insert and update the GP for this page.
--	bnode->records[bnode->nr_records++] = ptr;
-+	bnode->nr_records++;
-+	bnode->records[bnode->nr_records - 1] = ptr;
- 	get_state_synchronize_rcu_full(&bnode->gp_snap);
- 	atomic_inc(&(*krcp)->bulk_count[idx]);
- 
 -- 
-2.45.2
+BR,
+Muhammad Usama Anjum
 
