@@ -1,115 +1,75 @@
-Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93CFF2209B;
-	Wed,  7 Aug 2024 16:38:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C670678C9A;
+	Wed,  7 Aug 2024 16:44:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723048710; cv=none; b=cEYvbpczp3VsFJZCRh0Q1ysfe2HNC7H4o3bMgyVyly+LnObMrxn+N9Rs8uHrJdvGtJvUU/T3qjeVHb/e3S+7tfe+pUtB+myst/H1G8wPf5QPb5vYxBGaCENWBBjblrr7+rZvqvTxggru8XNLBq9wkoDRUIAEhPNEApVm+1nfnBQ=
+	t=1723049083; cv=none; b=rw09ij1nDq/xZ7TE8vVvqZb/GEBnoHh40pEvTTOVEKiJTDNRrD6fEJt+JZ+loi1rSCZzPWOJzZjG9wcsCFanvlaREot/YjSK3jkcQ3y+OmcpftuttEDCSQAKOQwlIDXRG5kAZ74PTyGc6McNT71lvtqGPWONZzKBU3aZlqoB7hc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723048710; c=relaxed/simple;
-	bh=7UoBEwKBvrQT2AMxf80k+ltND63+oKRLomyxe7Y1++A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tif4CgMWzKNibvrmHeQtUuoPMaLsgdB6KnpQlIczLCF8/Iy/3rSdMTbZoTDc/arrC7tw+917vVAQjBxSB9B+QJx6Hjx2qgdndiBJSEafXYx3XKVen2MbARkWgP66K/6KzjeBWqLThr3UDFoErFuvsfecfAiVEPZ6mQA44rqTzwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kiKz9yac; arc=none smtp.client-ip=209.85.221.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1723049083; c=relaxed/simple;
+	bh=cC44WqnolE5AwP6XHBememnp0c8vgWkKs0T5Id9Z+nw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CrkP0umnPEwCJFFJrR4DhX16HiICiOdooWR9q8LARhO+kyCVMRyHUti83UYMOX1epa30fTPPwd7raAy9ji8Wo29UdlU5KFqzXGKW2coozl5jETC2Gbg3BbELXCIsviIkZlQ4+KsNkdQMhys+f+6Q7jES/Uz+rnIWMtMCe11N4HE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V0Mb6IVZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kiKz9yac"
-Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-4f527c0c959so17793e0c.1;
-        Wed, 07 Aug 2024 09:38:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1723048707; x=1723653507; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8mgCmD2KAcrYzQNy1uvrHNBnFb3EiB9zFOmW/TFGDZ8=;
-        b=kiKz9yacHSeNozVU3nKAoo/EazPIftDagpxFYFzQle4Ow3OHr59Fnw6oOZ+ZFUe2j3
-         AfBqzag2EFHTLiC/pQhhwEipEcQbgblwrRijpa2X6acnNYQVW1ck0zFWGJKXyLWSjVJF
-         lGt5WDsUDuGiVmI/VYZHHEwjc5HhJl0heZ4Ln13NZ0pIIpDOOqdvAcw8D1yV/fpiZ8QK
-         tQ3Q+MP7ouSBI8kmq6A/Jc4gOt4kVheE2ld/Wblht5j2MRqNl4r9MFEXkuWVK0R4vQar
-         bJrbjS4wOSa3ysAYevwZGxIhQf+AkGGrg7ut3muAUzBi0UPGP4QvCdVhUmyJNj9zoVId
-         xTeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723048707; x=1723653507;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8mgCmD2KAcrYzQNy1uvrHNBnFb3EiB9zFOmW/TFGDZ8=;
-        b=HBe23N8gPVMREHCd75i0ZzhY3mUjch1DO++hrSktCGopZX4wwjS7smsCo8k+F8Y9ZT
-         ifgIVmEW1wzLuIazeJPRaSp/S33gtJfSXmqsfSN5qszDXgxcq1fGN4b5Q+HX/njF+4ac
-         IKCtSOv8G6gUwixjt84qVa6DH3kMSoi8uVfNd5ebNE8Yc36/TTgGbQKifPIGCE4hTF41
-         yiLy8sAfnvae+cQJWbpypGGyEIA888F2RAx7oXI3t2o9lFueYN6zhYb2rsYd/0/k1Mdx
-         c9G1m2sNKlx/tJEQgc/HJkTevLye+v+UKypcTJ2ZEPSV+F+YMzHi/7N6knj6+Vf2ln2L
-         UGFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU3jMJiPsdQHtf1GDAdPY7d1PeDeSQyi478MohMQO6T7gfA1Yg1q7py5R71hYlwngncAXd8owdI7sY2rO+KqAedenixlahWyjxwdJl2ym8rcObhMdmu+EdqEC6d8q8HiP/HHv9iM/g+klK+rqSpVbeBCJH1DV8fpW8P2H2xBSSMtV0EppeRJ5exMLbcGSKY
-X-Gm-Message-State: AOJu0YwAutz9oQAi0h9VN1na83hUAhPVOH41b2CaMDGBIKaXTHLNKAE2
-	bsKBvfr1htGlcEv6g7CCSJ46zAWN41yebI2hxngJTGtjn8nOVObosXXUu6RRKPrWnQUeif6APl0
-	KskLz4y2SJRCYjKsKZEVZtX3I2+k=
-X-Google-Smtp-Source: AGHT+IEaPdM7pIWYj7gKtQjNufq1NVzXdVjvhAsj0E+4bsWTLCUCwCLraq7BAD6I5PzYhwVL6S2vmNZdAhIlxFNafD8=
-X-Received: by 2002:a05:6122:1d16:b0:4f2:f1f1:a9f2 with SMTP id
- 71dfb90a1353d-4f89ff6c61dmr22140799e0c.4.1723048707355; Wed, 07 Aug 2024
- 09:38:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V0Mb6IVZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 938FBC32781;
+	Wed,  7 Aug 2024 16:44:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1723049083;
+	bh=cC44WqnolE5AwP6XHBememnp0c8vgWkKs0T5Id9Z+nw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=V0Mb6IVZ2WtcRUpXYb5Nb4sGxE2TPIiKzp469wnfbTVFDLSDOxwsW126yCBGZyAh1
+	 OmufOVI4GzY03QiY2nmhfHApv4ZCuMoAt97ZpRo/2wVA2VlgP288fkVnLlw82R/qf9
+	 tifY6+qGvXyo8Uh5kcnYj3kbizxS6z//Pl5beBUKIXocBV1T9iNP+HrGWou/UzwXu2
+	 Agl1rzvCTaaHt3aegxP0nrcvuzwPWtBmmaHuH/8HjCvyZm6UfMAI7U/SbNdTOpkCfU
+	 AABUGdhhOZ/qSs/vB0fx+5g5dwk44HFV6zPvVYKTJnugRAKQB9g20FQNAPHCpVJNxP
+	 fp33vU0mnasyw==
+Date: Wed, 7 Aug 2024 17:44:39 +0100
+From: Simon Horman <horms@kernel.org>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Potnuri Bharat Teja <bharat@chelsio.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] ethtool: Avoid -Wflex-array-member-not-at-end
+ warning
+Message-ID: <20240807164439.GC3006561@kernel.org>
+References: <ZrDx4Jii7XfuOPfC@cute>
+ <20240807162602.GB3006561@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240807153544.2754247-1-jeffxu@chromium.org>
-In-Reply-To: <20240807153544.2754247-1-jeffxu@chromium.org>
-From: Pedro Falcato <pedro.falcato@gmail.com>
-Date: Wed, 7 Aug 2024 17:38:16 +0100
-Message-ID: <CAKbZUD2xDdbxOTvR3-P=636jvhG_JPO3h79tgB59dfPmv046hg@mail.gmail.com>
-Subject: Re: [PATCH v1] selftest mm/mseal: fix test_seal_mremap_move_dontunmap_anyaddr
-To: jeffxu@chromium.org
-Cc: akpm@linux-foundation.org, willy@infradead.org, 
-	torvalds@linux-foundation.org, Liam.Howlett@oracle.com, jeffxu@google.com, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-mm@kvack.org, dave.hansen@intel.com, linux-hardening@vger.kernel.org, 
-	lorenzo.stoakes@oracle.com, mpe@ellerman.id.au, oliver.sang@intel.com, 
-	vbabka@suse.cz
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240807162602.GB3006561@kernel.org>
 
-On Wed, Aug 7, 2024 at 4:35=E2=80=AFPM <jeffxu@chromium.org> wrote:
-<snip>
->         /* shrink from 4 pages to 2 pages. */
-> -       ret2 =3D mremap(ptr, size, 2 * page_size, 0, 0);
-> +       ret2 =3D sys_mremap(ptr, size, 2 * page_size, 0, 0);
->         if (seal) {
-> -               FAIL_TEST_IF_FALSE(ret2 =3D=3D MAP_FAILED);
-> +               FAIL_TEST_IF_FALSE(ret2 =3D=3D (void *) MAP_FAILED);
+On Wed, Aug 07, 2024 at 05:26:02PM +0100, Simon Horman wrote:
+> On Mon, Aug 05, 2024 at 09:38:08AM -0600, Gustavo A. R. Silva wrote:
+> > -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> > getting ready to enable it, globally.
+> > 
+> > Move the conflicting declaration to the end of the structure. Notice
+> > that `struct ethtool_dump` is a flexible structure --a structure that
+> > contains a flexible-array member.
+> > 
+> > Fix the following warning:
+> > ./drivers/net/ethernet/chelsio/cxgb4/cxgb4.h:1215:29: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> > 
+> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> 
+> Reviewed-by: Simon Horman <horms@kernel.org>
 
-MAP_FAILED is already void *
+Sorry, one minor nit, after the fact.
 
-<snip>
-> @@ -1449,18 +1457,16 @@ static void test_seal_mremap_move_dontunmap_anyad=
-dr(bool seal)
->         }
->
->         /*
-> -        * The 0xdeaddead should not have effect on dest addr
-> +        * The 0xdead0000 should not have effect on dest addr
->          * when MREMAP_DONTUNMAP is set.
->          */
-> -       ret2 =3D mremap(ptr, size, size, MREMAP_MAYMOVE | MREMAP_DONTUNMA=
-P,
-> -                       0xdeaddead);
-> +       ret2 =3D sys_mremap(ptr, size, size, MREMAP_MAYMOVE | MREMAP_DONT=
-UNMAP,
-> +                       (void *) 0xdead0000);
+cxgb4 would probably be a better prefix than ethtool for this patch.
+But then it would conflict, by name, with
 
-You still didn't explain why this test is actually needed. Why are you
-testing MREMAP_DONTUNMAP's hint system?
-This has nothing to do with mseal, you already test the
-MREMAP_DONTUNMAP and MREMAP_FIXED paths in other tests.
-You also don't know if 0xdead0000 is a valid page (hexagon for
-instance seems to support 256KiB and 1MiB pages, so does ppc32, and
-this is not something that should be hardcoded).
-
-I'm not a fan of just throwing random flags for tests, it should be
-somewhat logical.
-
---=20
-Pedro
+- [PATCH] cxgb4: Avoid -Wflex-array-member-not-at-end warning
+  https://lore.kernel.org/all/ZrD8vpfiYugd0cPQ@cute/
