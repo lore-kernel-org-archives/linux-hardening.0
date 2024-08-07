@@ -1,209 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from omta34.uswest2.a.cloudfilter.net (omta34.uswest2.a.cloudfilter.net [35.89.44.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE37E85260;
-	Wed,  7 Aug 2024 15:19:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7758E84D25
+	for <linux-hardening@vger.kernel.org>; Wed,  7 Aug 2024 15:29:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723043951; cv=none; b=H12VHqrOcSYX+AKX1RMJzFLB14gayOPHTU/zKCTlr3wH5hl5zg3+aJ1Ya9t7BxpGzJxStTLKdYv8PIpsAn1a1KFUKwrAfrYJaFH0TVPzey/i9K9dog8qOCSr2qTcum5RkTW6Xn46Q/wqI88DGgM6y5YLo9sBflxpwh2RYZXzShI=
+	t=1723044562; cv=none; b=DGTITrluw5x/Ff8vyKIewR+0qtQ/JyEmBm/3K7SCtT2Lvxk/flPV2xhpHOw+NyJOlNy0ulQm+id2uiTQwcG2Rb1uTWUnkfMbxAVPODJIyr9/06xWAi9Fq69WxdkupFDYfJ3n93apJdptFx9ft6XsHKddHVM87orHoqzbFjj7mfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723043951; c=relaxed/simple;
-	bh=SPE6Fim3/iZTP8g9bx27PJRqcSTjDSUfrbucJsDcrEU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=c2w6agOQk8Nv0pj4RxbpI7wUMh9pMikwoP6x9cAluhp9o9y92LfRPKn5Jc4EspRh1Si+ZwUVLJXKMwwLDm89vWYnXttT6vcQV0BZbeH++TF8Ai1wdpXGrPAh9e38ZpDrbBXawsUzcfUhm9y3/S14ESzoipsJPKlju7Bs2DDrJBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tba5G9VH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1723044562; c=relaxed/simple;
+	bh=W/j7ofAjp4lBil8BOqJhV6WZEhxedjS2h6klOSbHmqw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WeIc0FAKE8PHOCq4MjU06fColsiSnpsk5wY6aFBvNM8ZZ6uW3cK+D7Ov+vsKb2E8aYJf1vvuWClJjDLCgFqtd47nYXZmfrESZPGII+eBfpH2X+jtXEPzJTus5FQEbQ3JIedMmPHyf9AK+SLKlvvuvg94CkvG+S4fIVEnx691fto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=oR6kY+5M; arc=none smtp.client-ip=35.89.44.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tba5G9VH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBB7CC32781;
-	Wed,  7 Aug 2024 15:19:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723043950;
-	bh=SPE6Fim3/iZTP8g9bx27PJRqcSTjDSUfrbucJsDcrEU=;
-	h=Date:From:To:Cc:Subject:From;
-	b=Tba5G9VHUKd48En9J++DR0cKiGu175i47rvAl2+Pj2n0kDPB/3pVN2V/vP9r2nUIP
-	 ZHWmKBBvBsORM0FMdFlX9qLm9thrGYmJYWUBB5uGluD6b6XZBS03gIvI4sy8QrRZPk
-	 gLV9prQUWxB5x+aQmD6GlHAH1pMCyFzTwLikqysDskFp2wIxONT5FBuGlBW13qFh9V
-	 1sOj9cglhq8FC8jDWYwlINzveoYMFaUxXxmgiZfRxOYO8+tYT/mtcmSMNSrVMyg10H
-	 nJYYigNvl6Cqlx6dtRMd3mueSk8AuDfydnG2HoyWeJwf/R6r4QM32RtMmd3zlINK4f
-	 ni9XGLPod0euQ==
-Date: Wed, 7 Aug 2024 09:19:07 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Bjorn Andersson <andersson@kernel.org>,
-	Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] rpmsg: glink: Avoid -Wflex-array-member-not-at-end
- warnings
-Message-ID: <ZrOQa2gew5yadyt3@cute>
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="oR6kY+5M"
+Received: from eig-obgw-6009a.ext.cloudfilter.net ([10.0.30.184])
+	by cmsmtp with ESMTPS
+	id ba7dsEpqbVpzpbibCsb4Cl; Wed, 07 Aug 2024 15:29:14 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id bibCsIVJd0K4nbibCs6Gmf; Wed, 07 Aug 2024 15:29:14 +0000
+X-Authority-Analysis: v=2.4 cv=RsjDLjmK c=1 sm=1 tr=0 ts=66b392ca
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=frY+GlAHrI6frpeK1MvySw==:17
+ a=IkcTkHD0fZMA:10 a=yoJbH4e0A30A:10 a=ZI_cG6RJAAAA:8 a=VwQbUJbxAAAA:8
+ a=T5MvzxAiUVsB-E4yPXoA:9 a=QEXdDO2ut3YA:10 a=CiASUvFRIoiJKylo2i9u:22
+ a=AjGcO6oz07-iQ99wixmX:22 a=Xt_RvD8W3m28Mn_h3AK8:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=59150sAKwGxpaYJCN77m/MKm7XHRkgxuo8ao1z77FlU=; b=oR6kY+5MtJW2lfQQH8jwxz/n+p
+	ld81JKyBLNDPwW+Cml04V8/YNZ+m9EbK5fYlWqkS0DRw06/eEgGGUPTtx3nWFQyZpzaojkyN1PZa9
+	9q/6p2pNuzRgaxr1FKfrxYzuDnBBB1FXNnjn6AY9BaqaDoS+8awdi3FOxFb2eZWIe8u8yTNvanslK
+	0+zoFCavSaelECC3pbjxZKOwO0Lwyoe3rpXYgP/FOTsELsFK6xrG8w+rraBprKCIUUaiX5pNx63jx
+	eE2ASEnOyS5h8EGLvwM1SA6TMbQHbC2AoP2EG1nXMde48ypRIC0zac58hZ7JFoqf4df5RPez/EtMp
+	HzQUZgyA==;
+Received: from [201.172.173.139] (port=60294 helo=[192.168.15.5])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1sbib9-003NZG-27;
+	Wed, 07 Aug 2024 10:29:11 -0500
+Message-ID: <bcb88692-a384-4da8-b2b9-a116ecb17530@embeddedor.com>
+Date: Wed, 7 Aug 2024 09:29:09 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] rcu: Annotate struct kvfree_rcu_bulk_data with
+ __counted_by()
+To: Thorsten Blum <thorsten.blum@toblux.com>, paulmck@kernel.org,
+ frederic@kernel.org, neeraj.upadhyay@kernel.org, joel@joelfernandes.org,
+ josh@joshtriplett.org, boqun.feng@gmail.com, urezki@gmail.com,
+ rostedt@goodmis.org, mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+ qiang.zhang1211@gmail.com, kees@kernel.org, gustavoars@kernel.org
+Cc: rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20240807095459.1400-2-thorsten.blum@toblux.com>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20240807095459.1400-2-thorsten.blum@toblux.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.172.173.139
+X-Source-L: No
+X-Exim-ID: 1sbib9-003NZG-27
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.15.5]) [201.172.173.139]:60294
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfHtIESb4hchg589/snxWp4QvOiAvjNM1Q9Zf1t6h7Kf3guxkzaB0hNmR6Ue/PcWYGThaHDemupWpopETQnbU8iSTScVPt9R8YfZg5cYekJA/tuEpjqde
+ 3rCEFVK6JLEE0SKlNKXqEHZ/ZQoWOkUMvNrXSaUSIN6iJ5aALMjfjYmuToG1bY3kBl9P4v0IpJouxhPttMMIZPx5ax/+cT2IQef/doMND9N/pT/yryamympc
 
--Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-getting ready to enable it, globally.
 
-So, in order to avoid ending up with a flexible-array member in the
-middle of multiple other structs, we use the `__struct_group()`
-helper to create a new tagged `struct glink_msg_hdr`. This structure
-groups together all the members of the flexible `struct glink_msg`
-except the flexible array.
 
-As a result, the array is effectively separated from the rest of the
-members without modifying the memory layout of the flexible structure.
-We then change the type of the middle struct members currently causing
-trouble from `struct glink_msg` to `struct glink_msg_hdr`.
+On 07/08/24 03:55, Thorsten Blum wrote:
+> Add the __counted_by compiler attribute to the flexible array member
+> records to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
+> CONFIG_FORTIFY_SOURCE.
+> 
+> Increment nr_records before adding a new pointer to the records array.
+> 
 
-We also want to ensure that when new members need to be added to the
-flexible structure, they are always included within the newly created
-tagged struct. For this, we use `static_assert()`. This ensures that the
-memory layout for both the flexible structure and the new tagged struct
-is the same after any changes.
+Looks good.
 
-This approach avoids having to implement `struct glink_msg_hdr` as a
-completely separate structure, thus preventing having to maintain two
-independent but basically identical structures, closing the door to
-potential bugs in the future.
+> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
 
-We also use `container_of()` whenever we need to retrieve a pointer to
-the flexible structure, through which we can access the flexible-array
-member, if necessary.
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Additionally, we use the `DEFINE_RAW_FLEX()` helper for an on-stack
-definition of a flexible structure where the size for the flexible-array
-member is known at compile-time.
+Thanks
+--
+Gustavo
 
-So, with these changes, fix the following warnings:
-drivers/rpmsg/qcom_glink_native.c:51:26: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/rpmsg/qcom_glink_native.c:459:34: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/rpmsg/qcom_glink_native.c:846:34: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/rpmsg/qcom_glink_native.c:968:34: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/rpmsg/qcom_glink_native.c:1380:34: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/rpmsg/qcom_glink_native.c | 42 +++++++++++++++++--------------
- 1 file changed, 23 insertions(+), 19 deletions(-)
-
-diff --git a/drivers/rpmsg/qcom_glink_native.c b/drivers/rpmsg/qcom_glink_native.c
-index 82d460ff4777..ed89b810f262 100644
---- a/drivers/rpmsg/qcom_glink_native.c
-+++ b/drivers/rpmsg/qcom_glink_native.c
-@@ -30,11 +30,16 @@
- #define RPM_GLINK_CID_MAX	65536
- 
- struct glink_msg {
--	__le16 cmd;
--	__le16 param1;
--	__le32 param2;
-+	/* New members MUST be added within the __struct_group() macro below. */
-+	__struct_group(glink_msg_hdr, hdr, __packed,
-+		__le16 cmd;
-+		__le16 param1;
-+		__le32 param2;
-+	);
- 	u8 data[];
- } __packed;
-+static_assert(offsetof(struct glink_msg, data) == sizeof(struct glink_msg_hdr),
-+	      "struct member likely outside of __struct_group()");
- 
- /**
-  * struct glink_defer_cmd - deferred incoming control message
-@@ -48,7 +53,7 @@ struct glink_msg {
- struct glink_defer_cmd {
- 	struct list_head node;
- 
--	struct glink_msg msg;
-+	struct glink_msg_hdr msg;
- 	u8 data[];
- };
- 
-@@ -455,12 +460,9 @@ static void qcom_glink_intent_req_abort(struct glink_channel *channel)
- static int qcom_glink_send_open_req(struct qcom_glink *glink,
- 				    struct glink_channel *channel)
- {
--	struct {
--		struct glink_msg msg;
--		u8 name[GLINK_NAME_SIZE];
--	} __packed req;
-+	DEFINE_RAW_FLEX(struct glink_msg, req, data, GLINK_NAME_SIZE);
- 	int name_len = strlen(channel->name) + 1;
--	int req_len = ALIGN(sizeof(req.msg) + name_len, 8);
-+	int req_len = ALIGN(sizeof(*req) + name_len, 8);
- 	int ret;
- 	unsigned long flags;
- 
-@@ -476,12 +478,12 @@ static int qcom_glink_send_open_req(struct qcom_glink *glink,
- 
- 	channel->lcid = ret;
- 
--	req.msg.cmd = cpu_to_le16(GLINK_CMD_OPEN);
--	req.msg.param1 = cpu_to_le16(channel->lcid);
--	req.msg.param2 = cpu_to_le32(name_len);
--	strcpy(req.name, channel->name);
-+	req->cmd = cpu_to_le16(GLINK_CMD_OPEN);
-+	req->param1 = cpu_to_le16(channel->lcid);
-+	req->param2 = cpu_to_le32(name_len);
-+	strcpy(req->data, channel->name);
- 
--	ret = qcom_glink_tx(glink, &req, req_len, NULL, 0, true);
-+	ret = qcom_glink_tx(glink, req, req_len, NULL, 0, true);
- 	if (ret)
- 		goto remove_idr;
- 
-@@ -826,7 +828,9 @@ static int qcom_glink_rx_defer(struct qcom_glink *glink, size_t extra)
- 
- 	INIT_LIST_HEAD(&dcmd->node);
- 
--	qcom_glink_rx_peek(glink, &dcmd->msg, 0, sizeof(dcmd->msg) + extra);
-+	qcom_glink_rx_peek(glink,
-+			   container_of(&dcmd->msg, struct glink_msg, hdr), 0,
-+			   sizeof(dcmd->msg) + extra);
- 
- 	spin_lock(&glink->rx_lock);
- 	list_add_tail(&dcmd->node, &glink->rx_queue);
-@@ -843,7 +847,7 @@ static int qcom_glink_rx_data(struct qcom_glink *glink, size_t avail)
- 	struct glink_core_rx_intent *intent;
- 	struct glink_channel *channel;
- 	struct {
--		struct glink_msg msg;
-+		struct glink_msg_hdr msg;
- 		__le32 chunk_size;
- 		__le32 left_size;
- 	} __packed hdr;
-@@ -965,7 +969,7 @@ static void qcom_glink_handle_intent(struct qcom_glink *glink,
- 	};
- 
- 	struct {
--		struct glink_msg msg;
-+		struct glink_msg_hdr msg;
- 		struct intent_pair intents[];
- 	} __packed * msg;
- 
-@@ -1377,7 +1381,7 @@ static int __qcom_glink_send(struct glink_channel *channel,
- 	struct glink_core_rx_intent *tmp;
- 	int iid = 0;
- 	struct {
--		struct glink_msg msg;
-+		struct glink_msg_hdr msg;
- 		__le32 chunk_size;
- 		__le32 left_size;
- 	} __packed req;
-@@ -1685,7 +1689,7 @@ static void qcom_glink_work(struct work_struct *work)
- 		list_del(&dcmd->node);
- 		spin_unlock_irqrestore(&glink->rx_lock, flags);
- 
--		msg = &dcmd->msg;
-+		msg = container_of(&dcmd->msg, struct glink_msg, hdr);
- 		cmd = le16_to_cpu(msg->cmd);
- 		param1 = le16_to_cpu(msg->param1);
- 		param2 = le32_to_cpu(msg->param2);
--- 
-2.34.1
-
+> ---
+>   kernel/rcu/tree.c | 5 +++--
+>   1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> index e641cc681901..76d8d75dd8b3 100644
+> --- a/kernel/rcu/tree.c
+> +++ b/kernel/rcu/tree.c
+> @@ -3227,7 +3227,7 @@ struct kvfree_rcu_bulk_data {
+>   	struct list_head list;
+>   	struct rcu_gp_oldstate gp_snap;
+>   	unsigned long nr_records;
+> -	void *records[];
+> +	void *records[] __counted_by(nr_records);
+>   };
+>   
+>   /*
+> @@ -3767,7 +3767,8 @@ add_ptr_to_bulk_krc_lock(struct kfree_rcu_cpu **krcp,
+>   	}
+>   
+>   	// Finally insert and update the GP for this page.
+> -	bnode->records[bnode->nr_records++] = ptr;
+> +	bnode->nr_records++;
+> +	bnode->records[bnode->nr_records - 1] = ptr;
+>   	get_state_synchronize_rcu_full(&bnode->gp_snap);
+>   	atomic_inc(&(*krcp)->bulk_count[idx]);
+>   
