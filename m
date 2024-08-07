@@ -1,73 +1,77 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 889CD16F824
-	for <linux-hardening@vger.kernel.org>; Tue,  6 Aug 2024 21:49:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EB5F1D0DFD
+	for <linux-hardening@vger.kernel.org>; Wed,  7 Aug 2024 10:00:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722980981; cv=none; b=aJR/9J/tNKF94MVUy2Rn+YHa7Kq7eceyu6bac6Cy0r3ZcKneVa26p2o1IhHq4S8NoTjyLJLvOIW6f60wDDEgM7NKMr1pzJ35q1yjewdN0yv6OUEJD6GDAK49Md9E8UnSg6ZSawzB4aaKg9Raq+yJACnU8J6Thur4cf2MTWeRqcs=
+	t=1723024849; cv=none; b=J0OLNtIu48FJtBSfX97UcVYeBmxcuYeV2/NxqwnBUwtLn2f40sDu4Uzy2wCsoD0eq6fQAfJtxj9i3esNaMIYGPJSIPgL7aIJW91/MDuDWa4WiBmh5ZTIri799piZmxCNB/3n62tv3iOTbYY69C/X90AZq50emNewW3F2NioAVTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722980981; c=relaxed/simple;
-	bh=8qoQAfw+S/BqrZ655ssfoOu1yM4rBw2R1ToXpjPzEpo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Pw3AaJB0WB1u6Clo+v/zyusX0lkOyRIr4R3bDKIcD98qoDdNgIqOx4rTpYGJLuf1sJto11EbfVZWLg3a0a1go56+8xfPFHWdGobzkW1XAoCX/ob/ohnr8Mw5fDSc8G02o8LGtX5M/G+pvnQuOvSWXjS/txjwrOt6hdr68IC1tA8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=TFfRWvWu; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1723024849; c=relaxed/simple;
+	bh=JFeEg6KS1tps0Hdi+bU03Q7DXumXvmBP/um59ZL2G9c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=o8iE5b2Ko6AeGyydVxJ+S/pwHGrccy6KWQdbshAevyXh4fC/AM2Qx9uKDnot5tg11SBGs6/+7tC96cbNHkc4SVj6DcaKnGLS0XzLjo36X3N/Nro3hxYsLS7pGvbiCAqBHI9gBuCHBl9IRFPa3bGBe5q4S23kRFHuU6P3Ml5zwkw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=ad+i+6Wj; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TFfRWvWu"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2cfec641429so930190a91.0
-        for <linux-hardening@vger.kernel.org>; Tue, 06 Aug 2024 14:49:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="ad+i+6Wj"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a7ac469e4c4so119192366b.0
+        for <linux-hardening@vger.kernel.org>; Wed, 07 Aug 2024 03:00:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1722980980; x=1723585780; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sha3HMsUUnd+rWOJjoYfnPxcq+K0fuD2wUT+1pcBfNI=;
-        b=TFfRWvWumEkj22CJfHNF9L6fMsOtjiuNxPxSpdDUPoiDhYxigNWQonaGS5yWezIOH6
-         iBGp7nRz92ZB0iptK+bOAoPafGlCg4G4RtEoC2JSlDcDJWXc0F+HNfguTZ353NGtR55Q
-         +CWKy+x2j1dHRUgCRMfaeI3899lGmLmCK2OGo=
+        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1723024847; x=1723629647; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=DP4grgcwBnNDkabKnZ/UoFhQsHN4IHhDNvWB2Kwa3HQ=;
+        b=ad+i+6Wjp/W+GrsjIeQXGUpHDjM0IHW3NXIu4YGc2vDcBTAZd5cNQ1IDNjg3l+9Eam
+         Mx5aWVzsWYePeBs1eLlB/5CAoBvUA72ppHZr6RtPl1d0zpe4SOUrccrQ2I5Iu2pRD62o
+         mXOp8JJNzD0ZVwlmbzAUfTEzPzIDf8KGugPORlQwK+7Y79sjILM9uvu+jzZthsoeKX0y
+         aTU4AuALdRos80QzmHpo+J0zJyMbahiKiQ9txrgm2c9b3dK7EuuRzSbgu60suTENU1z8
+         B+dFaBQOG26DdPChrz8a1nTZPvRpvwJr3vvz9GSYEw7nWREfhRvHL3Gatv9O3Jm6vgvA
+         /vGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722980980; x=1723585780;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sha3HMsUUnd+rWOJjoYfnPxcq+K0fuD2wUT+1pcBfNI=;
-        b=BW11Atwe49H4wy6qG7nJ6xt3ybxPNekjA5LBCtoAZ/jaz27+HYGvWLc5c/rhyO4Gi6
-         bUSi8RiB35LpcZAGmnbGOU97nR4f6tFY8JXxRbG4NZa/aHeIssGVLnlHbFV78B9K0O49
-         tpvuWNlbaH5/OptRS1BJCWqF0D7q7xtW11QV0KqFQ1DB7ay+YqdSsqhNJ23LwBcz7+h7
-         Po6CadGL7NWLVqPSl4vfl2EmT8cBUB0jlF5/BtEF//WSkJh2Q+CJ3aG6FcHnQQR2AIaT
-         aa9ivVOkFJ231Fl4auQbn6h8XZC6Y/is+14pO9+LYA3WfDoJx+GW4KwFzEqAXo8+ZENT
-         D1ag==
-X-Forwarded-Encrypted: i=1; AJvYcCUu6sdcuhITc+H01AbkH/eUKI9S8Zm5DQn0jfwv2ohcqG8Ztddxzhr3exrjcXHpMC168pJUgSX54HzsgK97EDWwBHV/q9ffm7dKxKQ5L2BS
-X-Gm-Message-State: AOJu0YwNSbicBGekfNfgUKFg6T4VaimCBEaQLBSJ9ySJGlbPUPRyHzKg
-	pSt/Dne8Pl919NOHDTFs70if99D5Yi7BvUhSApLpeMm4SmNfIdAfCP6k6bL7ww==
-X-Google-Smtp-Source: AGHT+IGPCAUWD6UyKahBE++19PLIR2gew8Mc8CNEmhMvYBxgpUiK2RhJcATmImQMATI//9TyR4m5tw==
-X-Received: by 2002:a17:90a:2ec9:b0:2c9:784b:4a49 with SMTP id 98e67ed59e1d1-2cff956d33cmr16045945a91.38.1722980979410;
-        Tue, 06 Aug 2024 14:49:39 -0700 (PDT)
-Received: from localhost (25.11.145.34.bc.googleusercontent.com. [34.145.11.25])
-        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-2d1b36c00e3sm3895a91.13.2024.08.06.14.49.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 06 Aug 2024 14:49:39 -0700 (PDT)
-From: jeffxu@chromium.org
-To: akpm@linux-foundation.org,
-	keescook@chromium.org,
-	jannh@google.com,
-	sroettger@google.com,
-	adhemerval.zanella@linaro.org,
-	ojeda@kernel.org,
-	adobriyan@gmail.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	jorgelo@chromium.org,
+        d=1e100.net; s=20230601; t=1723024847; x=1723629647;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DP4grgcwBnNDkabKnZ/UoFhQsHN4IHhDNvWB2Kwa3HQ=;
+        b=HyzgC6NAiOOOZelrnQbaz7HLYeVK0cq2EBFzXPYsHE4zJ8z5q+mc+S18ShMaIOnf38
+         yd9tX03XpAFE6Nb9ICptx1sIUTqt6xQyl1UMqGBE7m9Ec/qWrRZpQYQP4zfGr+/zzzKZ
+         z8NNm84AjKFErqi3fKHzjxfZ7jxu/QfxFxm2cfaMhGWyEet3HyezCy3Yzedf2zihe4lE
+         PHZjL5mlZ7NAJoEwfH3Nddlwe8gHV1rQmUYfIayWNge2yATx1kq/UPNn1zq6HFcz1yYo
+         X1TM87AWDp9GHbp7YVADt4pN7gjAKloVBcwXdBAS0EQnodlCsu3vreRa9CS4JrR7iQEJ
+         8g3g==
+X-Forwarded-Encrypted: i=1; AJvYcCWeormh85JiabB+KhR88b/nQVi5IHLSwyPzri/VJVukcxlNVGz/Pq83/+ZL5bEUg7K+brIxPk8ypWmQPnm6MOs7qH3XiA6JaLaBM7KajQW3
+X-Gm-Message-State: AOJu0YxNf+DqIAIsyzULTGYf13qXSmT5X91MhNy+Quh2lZ9m3ik0Pqbx
+	/ZIEqHlgE/4v5x5VdGU5wrBYTd7Cma4wt5FjB3AXBEacJ3ZQoaGetvBow9BbH+Y=
+X-Google-Smtp-Source: AGHT+IEKOsNBlWol3pZuzwoRWU5Ks5wtno2ZLUGOAKgnsV2/zLCuNitPlkJsmivU+bMoZuYZaD8oqA==
+X-Received: by 2002:a17:906:fe06:b0:a7a:a33e:47bf with SMTP id a640c23a62f3a-a807905171fmr121374166b.18.1723024846497;
+        Wed, 07 Aug 2024 03:00:46 -0700 (PDT)
+Received: from fedora.fritz.box (pd9e1640a.dip0.t-ipconnect.de. [217.225.100.10])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a7de4e7f336sm492467166b.131.2024.08.07.03.00.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 Aug 2024 03:00:45 -0700 (PDT)
+From: Thorsten Blum <thorsten.blum@toblux.com>
+To: paulmck@kernel.org,
+	frederic@kernel.org,
+	neeraj.upadhyay@kernel.org,
+	joel@joelfernandes.org,
+	josh@joshtriplett.org,
+	boqun.feng@gmail.com,
+	urezki@gmail.com,
+	rostedt@goodmis.org,
+	mathieu.desnoyers@efficios.com,
+	jiangshanlai@gmail.com,
+	qiang.zhang1211@gmail.com,
+	kees@kernel.org,
+	gustavoars@kernel.org
+Cc: rcu@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org,
-	Jeff Xu <jeffxu@chromium.org>
-Subject: [PATCH v2 1/1] binfmt_elf: mseal address zero
-Date: Tue,  6 Aug 2024 21:49:27 +0000
-Message-ID: <20240806214931.2198172-2-jeffxu@google.com>
-X-Mailer: git-send-email 2.46.0.rc2.264.g509ed76dc8-goog
-In-Reply-To: <20240806214931.2198172-1-jeffxu@google.com>
-References: <20240806214931.2198172-1-jeffxu@google.com>
+	Thorsten Blum <thorsten.blum@toblux.com>
+Subject: [PATCH] rcu: Annotate struct kvfree_rcu_bulk_data with __counted_by()
+Date: Wed,  7 Aug 2024 11:55:00 +0200
+Message-ID: <20240807095459.1400-2-thorsten.blum@toblux.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -76,69 +80,40 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Jeff Xu <jeffxu@chromium.org>
+Add the __counted_by compiler attribute to the flexible array member
+records to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
+CONFIG_FORTIFY_SOURCE.
 
-Some legacy SVr4 apps might depend on page on address zero
-to be readable, however I can't find a reason that the page
-ever becomes writeable, so seal it.
+Increment nr_records before adding a new pointer to the records array.
 
-If there is a compain, we can make this configurable.
-
-Signed-off-by: Jeff Xu <jeffxu@chromium.org>
+Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
 ---
- fs/binfmt_elf.c    |  5 +++++
- include/linux/mm.h | 10 ++++++++++
- mm/mseal.c         |  2 +-
- 3 files changed, 16 insertions(+), 1 deletion(-)
+ kernel/rcu/tree.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-index 19fa49cd9907..f839fa228509 100644
---- a/fs/binfmt_elf.c
-+++ b/fs/binfmt_elf.c
-@@ -1314,6 +1314,11 @@ static int load_elf_binary(struct linux_binprm *bprm)
- 		   emulate the SVr4 behavior. Sigh. */
- 		error = vm_mmap(NULL, 0, PAGE_SIZE, PROT_READ | PROT_EXEC,
- 				MAP_FIXED | MAP_PRIVATE, 0);
-+
-+		retval = do_mseal(0, PAGE_SIZE, 0);
-+		if (retval)
-+			pr_warn("pid=%d, couldn't seal address 0, ret=%d.\n",
-+					task_pid_nr(current), retval);
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index e641cc681901..76d8d75dd8b3 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -3227,7 +3227,7 @@ struct kvfree_rcu_bulk_data {
+ 	struct list_head list;
+ 	struct rcu_gp_oldstate gp_snap;
+ 	unsigned long nr_records;
+-	void *records[];
++	void *records[] __counted_by(nr_records);
+ };
+ 
+ /*
+@@ -3767,7 +3767,8 @@ add_ptr_to_bulk_krc_lock(struct kfree_rcu_cpu **krcp,
  	}
  
- 	regs = current_pt_regs();
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index c4b238a20b76..a178c15812eb 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -4201,4 +4201,14 @@ void vma_pgtable_walk_end(struct vm_area_struct *vma);
+ 	// Finally insert and update the GP for this page.
+-	bnode->records[bnode->nr_records++] = ptr;
++	bnode->nr_records++;
++	bnode->records[bnode->nr_records - 1] = ptr;
+ 	get_state_synchronize_rcu_full(&bnode->gp_snap);
+ 	atomic_inc(&(*krcp)->bulk_count[idx]);
  
- int reserve_mem_find_by_name(const char *name, phys_addr_t *start, phys_addr_t *size);
- 
-+#ifdef CONFIG_64BIT
-+int do_mseal(unsigned long start, size_t len_in, unsigned long flags);
-+#else
-+static inline int do_mseal(unsigned long start, size_t len_in, unsigned long flags)
-+{
-+	/* noop on 32 bit */
-+	return 0;
-+}
-+#endif
-+
- #endif /* _LINUX_MM_H */
-diff --git a/mm/mseal.c b/mm/mseal.c
-index bf783bba8ed0..7a40a84569c8 100644
---- a/mm/mseal.c
-+++ b/mm/mseal.c
-@@ -248,7 +248,7 @@ static int apply_mm_seal(unsigned long start, unsigned long end)
-  *
-  *  unseal() is not supported.
-  */
--static int do_mseal(unsigned long start, size_t len_in, unsigned long flags)
-+int do_mseal(unsigned long start, size_t len_in, unsigned long flags)
- {
- 	size_t len;
- 	int ret = 0;
 -- 
-2.46.0.rc2.264.g509ed76dc8-goog
+2.45.2
 
