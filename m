@@ -1,66 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3793F13790B;
-	Wed,  7 Aug 2024 16:26:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93CFF2209B;
+	Wed,  7 Aug 2024 16:38:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723047967; cv=none; b=kCWC5bqWgxRF+Lh621zDY8WPVdYqzbeKfXNsIvn3LSKyCrVr159e/2XTen47glJTtuVgdEbpQByBDJcajv2FX+mxq4F9+h7KNGZTaQYn7cyD5vFjLwnTzXYE9XzPqouavG7NekzxtPelMnTqfkgM0z9c3e13knHxWSnPbGMDLKY=
+	t=1723048710; cv=none; b=cEYvbpczp3VsFJZCRh0Q1ysfe2HNC7H4o3bMgyVyly+LnObMrxn+N9Rs8uHrJdvGtJvUU/T3qjeVHb/e3S+7tfe+pUtB+myst/H1G8wPf5QPb5vYxBGaCENWBBjblrr7+rZvqvTxggru8XNLBq9wkoDRUIAEhPNEApVm+1nfnBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723047967; c=relaxed/simple;
-	bh=NlfN2rUAhsrwn8aZBO67G/atzrzfQzCsN3/oacVA/zc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=By+3Or6ZWkgPtIzwf9OwRfelaCdgNEEDXc0L0gPkJzuSNxzr0BQLJOAKXOHxI8Um4vTQIKa8WnqUkvDq3k0CH7p+WmfnojM/WpKNTjfa0eo0nShDEzRIG+ThdKxZsf6TkIYEE2N32NhQIYO4htcrgEUmUdlvymg5/8E/J2MT7yY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gBxTbUvO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1723048710; c=relaxed/simple;
+	bh=7UoBEwKBvrQT2AMxf80k+ltND63+oKRLomyxe7Y1++A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tif4CgMWzKNibvrmHeQtUuoPMaLsgdB6KnpQlIczLCF8/Iy/3rSdMTbZoTDc/arrC7tw+917vVAQjBxSB9B+QJx6Hjx2qgdndiBJSEafXYx3XKVen2MbARkWgP66K/6KzjeBWqLThr3UDFoErFuvsfecfAiVEPZ6mQA44rqTzwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kiKz9yac; arc=none smtp.client-ip=209.85.221.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gBxTbUvO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7050C32781;
-	Wed,  7 Aug 2024 16:26:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723047966;
-	bh=NlfN2rUAhsrwn8aZBO67G/atzrzfQzCsN3/oacVA/zc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gBxTbUvO8ZkKvCkQ2EamfsSUDd3YfpnSyzG9X2k9EdkBDIehfClv+dxq6A7TFkfDj
-	 y7SS6xy0eY5f+8yM1+wwoVMAn8wYU3yWlNTtXCCb5SDE+4UPDqbKGKdB7subr2eK4Z
-	 Rka51DVSnM4gZWUNujPkmzDtffjfubz9ys0JaX+P87veeLrUSXgA763bLBuzf0krfM
-	 uhk9vMo+C4mL1+13n5kGwYhAaLeeSopahInWSh897efC9Z/xrf8rVp5UuMhONRM31N
-	 GbSsThS3zK8NVsmHF6SaWOPbG05TBliutIttnlruqUPoO5irVhUpUGBpc+Yw1gKYt/
-	 7YtdSoNvmwXfQ==
-Date: Wed, 7 Aug 2024 17:26:02 +0100
-From: Simon Horman <horms@kernel.org>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Potnuri Bharat Teja <bharat@chelsio.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] ethtool: Avoid -Wflex-array-member-not-at-end
- warning
-Message-ID: <20240807162602.GB3006561@kernel.org>
-References: <ZrDx4Jii7XfuOPfC@cute>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kiKz9yac"
+Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-4f527c0c959so17793e0c.1;
+        Wed, 07 Aug 2024 09:38:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1723048707; x=1723653507; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8mgCmD2KAcrYzQNy1uvrHNBnFb3EiB9zFOmW/TFGDZ8=;
+        b=kiKz9yacHSeNozVU3nKAoo/EazPIftDagpxFYFzQle4Ow3OHr59Fnw6oOZ+ZFUe2j3
+         AfBqzag2EFHTLiC/pQhhwEipEcQbgblwrRijpa2X6acnNYQVW1ck0zFWGJKXyLWSjVJF
+         lGt5WDsUDuGiVmI/VYZHHEwjc5HhJl0heZ4Ln13NZ0pIIpDOOqdvAcw8D1yV/fpiZ8QK
+         tQ3Q+MP7ouSBI8kmq6A/Jc4gOt4kVheE2ld/Wblht5j2MRqNl4r9MFEXkuWVK0R4vQar
+         bJrbjS4wOSa3ysAYevwZGxIhQf+AkGGrg7ut3muAUzBi0UPGP4QvCdVhUmyJNj9zoVId
+         xTeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723048707; x=1723653507;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8mgCmD2KAcrYzQNy1uvrHNBnFb3EiB9zFOmW/TFGDZ8=;
+        b=HBe23N8gPVMREHCd75i0ZzhY3mUjch1DO++hrSktCGopZX4wwjS7smsCo8k+F8Y9ZT
+         ifgIVmEW1wzLuIazeJPRaSp/S33gtJfSXmqsfSN5qszDXgxcq1fGN4b5Q+HX/njF+4ac
+         IKCtSOv8G6gUwixjt84qVa6DH3kMSoi8uVfNd5ebNE8Yc36/TTgGbQKifPIGCE4hTF41
+         yiLy8sAfnvae+cQJWbpypGGyEIA888F2RAx7oXI3t2o9lFueYN6zhYb2rsYd/0/k1Mdx
+         c9G1m2sNKlx/tJEQgc/HJkTevLye+v+UKypcTJ2ZEPSV+F+YMzHi/7N6knj6+Vf2ln2L
+         UGFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU3jMJiPsdQHtf1GDAdPY7d1PeDeSQyi478MohMQO6T7gfA1Yg1q7py5R71hYlwngncAXd8owdI7sY2rO+KqAedenixlahWyjxwdJl2ym8rcObhMdmu+EdqEC6d8q8HiP/HHv9iM/g+klK+rqSpVbeBCJH1DV8fpW8P2H2xBSSMtV0EppeRJ5exMLbcGSKY
+X-Gm-Message-State: AOJu0YwAutz9oQAi0h9VN1na83hUAhPVOH41b2CaMDGBIKaXTHLNKAE2
+	bsKBvfr1htGlcEv6g7CCSJ46zAWN41yebI2hxngJTGtjn8nOVObosXXUu6RRKPrWnQUeif6APl0
+	KskLz4y2SJRCYjKsKZEVZtX3I2+k=
+X-Google-Smtp-Source: AGHT+IEaPdM7pIWYj7gKtQjNufq1NVzXdVjvhAsj0E+4bsWTLCUCwCLraq7BAD6I5PzYhwVL6S2vmNZdAhIlxFNafD8=
+X-Received: by 2002:a05:6122:1d16:b0:4f2:f1f1:a9f2 with SMTP id
+ 71dfb90a1353d-4f89ff6c61dmr22140799e0c.4.1723048707355; Wed, 07 Aug 2024
+ 09:38:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZrDx4Jii7XfuOPfC@cute>
+References: <20240807153544.2754247-1-jeffxu@chromium.org>
+In-Reply-To: <20240807153544.2754247-1-jeffxu@chromium.org>
+From: Pedro Falcato <pedro.falcato@gmail.com>
+Date: Wed, 7 Aug 2024 17:38:16 +0100
+Message-ID: <CAKbZUD2xDdbxOTvR3-P=636jvhG_JPO3h79tgB59dfPmv046hg@mail.gmail.com>
+Subject: Re: [PATCH v1] selftest mm/mseal: fix test_seal_mremap_move_dontunmap_anyaddr
+To: jeffxu@chromium.org
+Cc: akpm@linux-foundation.org, willy@infradead.org, 
+	torvalds@linux-foundation.org, Liam.Howlett@oracle.com, jeffxu@google.com, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-mm@kvack.org, dave.hansen@intel.com, linux-hardening@vger.kernel.org, 
+	lorenzo.stoakes@oracle.com, mpe@ellerman.id.au, oliver.sang@intel.com, 
+	vbabka@suse.cz
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Aug 05, 2024 at 09:38:08AM -0600, Gustavo A. R. Silva wrote:
-> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-> getting ready to enable it, globally.
-> 
-> Move the conflicting declaration to the end of the structure. Notice
-> that `struct ethtool_dump` is a flexible structure --a structure that
-> contains a flexible-array member.
-> 
-> Fix the following warning:
-> ./drivers/net/ethernet/chelsio/cxgb4/cxgb4.h:1215:29: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+On Wed, Aug 7, 2024 at 4:35=E2=80=AFPM <jeffxu@chromium.org> wrote:
+<snip>
+>         /* shrink from 4 pages to 2 pages. */
+> -       ret2 =3D mremap(ptr, size, 2 * page_size, 0, 0);
+> +       ret2 =3D sys_mremap(ptr, size, 2 * page_size, 0, 0);
+>         if (seal) {
+> -               FAIL_TEST_IF_FALSE(ret2 =3D=3D MAP_FAILED);
+> +               FAIL_TEST_IF_FALSE(ret2 =3D=3D (void *) MAP_FAILED);
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+MAP_FAILED is already void *
 
+<snip>
+> @@ -1449,18 +1457,16 @@ static void test_seal_mremap_move_dontunmap_anyad=
+dr(bool seal)
+>         }
+>
+>         /*
+> -        * The 0xdeaddead should not have effect on dest addr
+> +        * The 0xdead0000 should not have effect on dest addr
+>          * when MREMAP_DONTUNMAP is set.
+>          */
+> -       ret2 =3D mremap(ptr, size, size, MREMAP_MAYMOVE | MREMAP_DONTUNMA=
+P,
+> -                       0xdeaddead);
+> +       ret2 =3D sys_mremap(ptr, size, size, MREMAP_MAYMOVE | MREMAP_DONT=
+UNMAP,
+> +                       (void *) 0xdead0000);
+
+You still didn't explain why this test is actually needed. Why are you
+testing MREMAP_DONTUNMAP's hint system?
+This has nothing to do with mseal, you already test the
+MREMAP_DONTUNMAP and MREMAP_FIXED paths in other tests.
+You also don't know if 0xdead0000 is a valid page (hexagon for
+instance seems to support 256KiB and 1MiB pages, so does ppc32, and
+this is not something that should be hardcoded).
+
+I'm not a fan of just throwing random flags for tests, it should be
+somewhat logical.
+
+--=20
+Pedro
