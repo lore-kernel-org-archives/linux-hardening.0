@@ -1,139 +1,117 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BD1D1386C6
-	for <linux-hardening@vger.kernel.org>; Wed,  7 Aug 2024 18:03:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 548FF13F42D;
+	Wed,  7 Aug 2024 19:51:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723053818; cv=none; b=nMYMw/8ZFpM4Ey8fr4FvG7+4e/hoHy2gZ2T+48jbRhZpN4nRnXk1M2ShTF5UVMUEA0kej3uzhxEJFnTIrLYs1Ll+csAh2kNtTLBr6bhs1ZEFtFgnG3qE/SDhUblA6a7k/TVP5EdzY3U4kwfrN0oABfFqvRFnyG7tLwuVFiU1FL4=
+	t=1723060289; cv=none; b=nTQBfAed+4s5UWxo4stIgfNWJ2jBoZxvgPlDQseU7erMv1jt2RQDl3FCZ17kWthzkGgaWDf9BUcoAeBGOfjiswEdHKuFslt8GSdfmRYucdM/Hb0goSEMlcHP+PDYF20c0oElRRYOFgQfiGFdGEY8fTRMncrufCsfdgojcOT9Sdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723053818; c=relaxed/simple;
-	bh=/igLW5cGKyvrc8xeJe9spHKRE8+5cRBzFIFSVqv7Cd8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gjKQtKa8RHnSAdffiXQZ+AERd2ab5KG39EV/zYTIKRAE07TRevN4ciWrTZMGxyzg5MRzJL+jwxT+InbFQ5RFCc5B5pz2d/Wm5UPaUFddi0lMnIG96qL4KXKr/tQAnctxiWviRSAaMLWqc8wgHA7qkurFmN8lmotSHQPpe5CwiZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3ufnjhZ9; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1723060289; c=relaxed/simple;
+	bh=SvqeU/ZIJL4InXKZ4IE/gkXwgJ0pFR9Ce/8L1Ah0vsQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=t02S6S2eCf0k3ylHTi49UTyyRi1u0LdszVTufyIK/q7rje6bDEwXFRz29dtb3ZPTcb1yg6A7wAgHoCi5gRgyNi+L/HJWIxR98T5YUMJ39vgoXoIYX9CjucCdFzkQT+a2yPQKPBJvUdVVmzcreOYeLMYNaNgeAVdOvtP6e1+7xUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f2Zv5nWy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3ufnjhZ9"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5a28b61b880so1945a12.1
-        for <linux-hardening@vger.kernel.org>; Wed, 07 Aug 2024 11:03:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1723053815; x=1723658615; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xyQtOF1vxDhDuNycgpsX5NQIqDKmQIL//+OA3nFwfHM=;
-        b=3ufnjhZ96PTsUkxMdHTxgQQu15Op4lb7FHtEybxD5WpVn5GmhQcEn1kUsWDFJX4U88
-         riiDWEa22mlSzz5TWRygjZzgldCvz/bvfBC1U/rnmuDutm6W6KgfKqzOArEM/A8a8zv/
-         gpXW/oQx0oCJn123trJX9u1HV6SC6pQC6HBPHLRLcr0oJHUhX4LDqG0lfBDyRc4hApFm
-         a5ud5twZ1Gn/fH0UXgOQGnE0ac8FiOGkJA+e/B1D5OMp608nK3s5QssRwwEjhGTSi86q
-         WXbSplftxr4d8fqq0olX5ypI48BzMELLigrDxK4Rwh/oezyFQ7YjPTzvcU8S0vCvUogU
-         Ax3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723053815; x=1723658615;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xyQtOF1vxDhDuNycgpsX5NQIqDKmQIL//+OA3nFwfHM=;
-        b=WoW08tIXyfW1PC5QLI8jYuSFNiAKHZniJZsEYKhcicXpU47vhuGtRhgAm113s5mQHs
-         b/WNE7ULT7Ep+jmTlxO6wHCfDUGUrsdQgtCoNZ/3+kjC/GbFABKer4Je1fSo4/bov2Wg
-         mtExdGSfhjXicME50ucgSdlX3vTp4dzUFgXxeYv1A+7iTYSs7cEkSnxI3t21XhTE24fE
-         xmrUjL6EDphANMuVolS+Sts0EGACA6o+ReujqvqoauqTULHvi+jAblrPmkMqmp4eSZf1
-         EiZTUkVI875yMGfCSdYTYbPXzYnRRHmtsKgyR4FQUDLuz2IAuYdbHDn7YjrzL3nDmpxw
-         GsyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUJeeYapUX+8TYLJFXkfP48LBYo4gJW1WJc8yrUAEoGMV08h+x9Rjre/eXvTmKeY8uA8O0eO2vH2zHS1Wx055k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRxutIBaPup/JluIi0ibkF87Nilxkcaduc62v6y6INvuVmCeZt
-	HdrLAg3WouYVIZwcbVgRSSrlRZOfVAKlCEWXTwA1LtVZvn3y26LxU84zhLaNYii9EduKHQMIqQQ
-	cGbQONBmXxG2inPFiZLd4AhcpyB5yf837yCzN
-X-Google-Smtp-Source: AGHT+IHNgXjgqrAbiQnTxyfIC4MSApJgByOFffPeEqrpJGfxkuZ/yQYeD3R3pXQSk7hIuBatYSkKH+LlCFukduDyhC8=
-X-Received: by 2002:a05:6402:2751:b0:58b:93:b623 with SMTP id
- 4fb4d7f45d1cf-5bbb002ac8dmr3758a12.5.1723053814540; Wed, 07 Aug 2024 11:03:34
- -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f2Zv5nWy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1499C32781;
+	Wed,  7 Aug 2024 19:51:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1723060288;
+	bh=SvqeU/ZIJL4InXKZ4IE/gkXwgJ0pFR9Ce/8L1Ah0vsQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=f2Zv5nWyAL78JMALjEvnyPwQPdTRf9kMWSjuMAYiDlgp9dt+1Ig1gnZQNmwYKXe0F
+	 0oqFWF+shI8uRVvf1w8LS9ilw0dlV56mHBNDsYu0+TurLhf8wuUcVCNtEvGX8BkTGG
+	 9hBP2N+srYnnCZ6mh6kAb6mTMh8R+9H+qoCQipQf+ErAaQS2asDT+k9/7hbT3iNels
+	 +y/wf5ZQ77Fs2Bzri4wX2PtRKGs6YFo/lz3ZRQgvTshKxxezDWDYFQX85GG72hT8Z1
+	 CMZyVCmKIqeUfyQX3yK7CCw08VSqGpQN6VdVoVG1mIDsKl8PuRmg4jUCmCdtQ6XM9q
+	 IhmzUe++1V8Vg==
+From: Kees Cook <kees@kernel.org>
+To: Palmer Dabbelt <palmer@dabbelt.com>
+Cc: Kees Cook <kees@kernel.org>,
+	Stefan O'Rear <sorear@fastmail.com>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Greg Ungerer <gerg@linux-m68k.org>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>,
+	Eric Biederman <ebiederm@xmission.com>,
+	linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
+	Damien Le Moal <damien.lemoal@wdc.com>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v2] binfmt_flat: Fix corruption when not offsetting data start
+Date: Wed,  7 Aug 2024 12:51:23 -0700
+Message-Id: <20240807195119.it.782-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240807153544.2754247-1-jeffxu@chromium.org> <CAKbZUD2xDdbxOTvR3-P=636jvhG_JPO3h79tgB59dfPmv046hg@mail.gmail.com>
-In-Reply-To: <CAKbZUD2xDdbxOTvR3-P=636jvhG_JPO3h79tgB59dfPmv046hg@mail.gmail.com>
-From: Jeff Xu <jeffxu@google.com>
-Date: Wed, 7 Aug 2024 11:02:54 -0700
-Message-ID: <CALmYWFvDH=8U8wsaSjMrfCg1__S66SS-9Zo0f826XJDJT7hOSQ@mail.gmail.com>
-Subject: Re: [PATCH v1] selftest mm/mseal: fix test_seal_mremap_move_dontunmap_anyaddr
-To: Pedro Falcato <pedro.falcato@gmail.com>
-Cc: jeffxu@chromium.org, akpm@linux-foundation.org, willy@infradead.org, 
-	torvalds@linux-foundation.org, Liam.Howlett@oracle.com, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-mm@kvack.org, dave.hansen@intel.com, linux-hardening@vger.kernel.org, 
-	lorenzo.stoakes@oracle.com, mpe@ellerman.id.au, oliver.sang@intel.com, 
-	vbabka@suse.cz
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2234; i=kees@kernel.org; h=from:subject:message-id; bh=SvqeU/ZIJL4InXKZ4IE/gkXwgJ0pFR9Ce/8L1Ah0vsQ=; b=owGbwMvMwCVmps19z/KJym7G02pJDGmbL1hNX7o1ZHXuhwPhrQXex+8t+tBiLXdh59PcrYLOx zRumG+d0lHKwiDGxSArpsgSZOce5+Lxtj3cfa4izBxWJpAhDFycAjARbmtGhlk2q14+YHWddP+E zcXEValhnC5FBgoXfz9/bfQ4c0rM1ApGhpchtm0T1K35dYO2mXMF/d7+YFVbadhndv3tiS9eBO/ fwwAA
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Wed, Aug 7, 2024 at 9:38=E2=80=AFAM Pedro Falcato <pedro.falcato@gmail.c=
-om> wrote:
->
-> On Wed, Aug 7, 2024 at 4:35=E2=80=AFPM <jeffxu@chromium.org> wrote:
-> <snip>
-> >         /* shrink from 4 pages to 2 pages. */
-> > -       ret2 =3D mremap(ptr, size, 2 * page_size, 0, 0);
-> > +       ret2 =3D sys_mremap(ptr, size, 2 * page_size, 0, 0);
-> >         if (seal) {
-> > -               FAIL_TEST_IF_FALSE(ret2 =3D=3D MAP_FAILED);
-> > +               FAIL_TEST_IF_FALSE(ret2 =3D=3D (void *) MAP_FAILED);
->
-> MAP_FAILED is already void *
->
-> <snip>
-> > @@ -1449,18 +1457,16 @@ static void test_seal_mremap_move_dontunmap_any=
-addr(bool seal)
-> >         }
-> >
-> >         /*
-> > -        * The 0xdeaddead should not have effect on dest addr
-> > +        * The 0xdead0000 should not have effect on dest addr
-> >          * when MREMAP_DONTUNMAP is set.
-> >          */
-> > -       ret2 =3D mremap(ptr, size, size, MREMAP_MAYMOVE | MREMAP_DONTUN=
-MAP,
-> > -                       0xdeaddead);
-> > +       ret2 =3D sys_mremap(ptr, size, size, MREMAP_MAYMOVE | MREMAP_DO=
-NTUNMAP,
-> > +                       (void *) 0xdead0000);
->
-> You still didn't explain why this test is actually needed. Why are you
-> testing MREMAP_DONTUNMAP's hint system?
+Commit 04d82a6d0881 ("binfmt_flat: allow not offsetting data start")
+introduced a RISC-V specific variant of the FLAT format which does
+not allocate any space for the (obsolete) array of shared library
+pointers. However, it did not disable the code which initializes the
+array, resulting in the corruption of sizeof(long) bytes before the DATA
+segment, generally the end of the TEXT segment.
 
-I responded in my previous email. The test is to make sure when
-sealing is applied, the call fails with correct error code. I will
-update the comment in v2 to clarify that.
+Introduce MAX_SHARED_LIBS_UPDATE which depends on the state of
+CONFIG_BINFMT_FLAT_NO_DATA_START_OFFSET to guard the initialization of
+the shared library pointer region so that it will only be initialized
+if space is reserved for it.
 
-> This has nothing to do with mseal, you already test the
-> MREMAP_DONTUNMAP and MREMAP_FIXED paths in other tests.
-The remap code path is quite tricky, with many flags directing the call flo=
-w.
-The difference might not be that obvious:
+Fixes: 04d82a6d0881 ("binfmt_flat: allow not offsetting data start")
+Co-developed-by: Stefan O'Rear <sorear@fastmail.com>
+Signed-off-by: Stefan O'Rear <sorear@fastmail.com>
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+ v2: update based on v1 feedback
+ v1: https://lore.kernel.org/linux-mm/20240326032037.2478816-1-sorear@fastmail.com/
+Cc: Palmer Dabbelt <palmer@dabbelt.com>
+Cc: Alexandre Ghiti <alex@ghiti.fr>
+Cc: Greg Ungerer <gerg@linux-m68k.org>
+Cc: Damien Le Moal <dlemoal@kernel.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: Jan Kara <jack@suse.cz>
+Cc: Eric Biederman <ebiederm@xmission.com>
+Cc: linux-fsdevel@vger.kernel.org
+Cc: linux-mm@kvack.org
+---
+ fs/binfmt_flat.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-test_seal_mremap_move_dontunmap use 0 as new_addr, 0 indicates
-allocating a new memory.
-test_seal_mremap_move_dontunmap_anyaddr uses any arbitrary address as
-a new address.
+diff --git a/fs/binfmt_flat.c b/fs/binfmt_flat.c
+index c26545d71d39..cd6d5bbb4b9d 100644
+--- a/fs/binfmt_flat.c
++++ b/fs/binfmt_flat.c
+@@ -72,8 +72,10 @@
+ 
+ #ifdef CONFIG_BINFMT_FLAT_NO_DATA_START_OFFSET
+ #define DATA_START_OFFSET_WORDS		(0)
++#define MAX_SHARED_LIBS_UPDATE		(0)
+ #else
+ #define DATA_START_OFFSET_WORDS		(MAX_SHARED_LIBS)
++#define MAX_SHARED_LIBS_UPDATE		(MAX_SHARED_LIBS)
+ #endif
+ 
+ struct lib_info {
+@@ -880,7 +882,7 @@ static int load_flat_binary(struct linux_binprm *bprm)
+ 		return res;
+ 
+ 	/* Update data segment pointers for all libraries */
+-	for (i = 0; i < MAX_SHARED_LIBS; i++) {
++	for (i = 0; i < MAX_SHARED_LIBS_UPDATE; i++) {
+ 		if (!libinfo.lib_list[i].loaded)
+ 			continue;
+ 		for (j = 0; j < MAX_SHARED_LIBS; j++) {
+-- 
+2.34.1
 
-> You also don't know if 0xdead0000 is a valid page (hexagon for
-> instance seems to support 256KiB and 1MiB pages, so does ppc32, and
-> this is not something that should be hardcoded).
->
-usually hardcode value is not good practice, but the point of this
-test is to show
-mremap can really relocate the mapping to an arbitrary address.
-
-Do you have any suggestions here ? I can think of two options to choose fro=
-m:
-
-1> use 0xd0000000
-2> allocate a memory then free it, reuse the ptr.
-
-Thanks
--Jeff
