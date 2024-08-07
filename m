@@ -1,45 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C670678C9A;
-	Wed,  7 Aug 2024 16:44:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9942F13A276;
+	Wed,  7 Aug 2024 16:51:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723049083; cv=none; b=rw09ij1nDq/xZ7TE8vVvqZb/GEBnoHh40pEvTTOVEKiJTDNRrD6fEJt+JZ+loi1rSCZzPWOJzZjG9wcsCFanvlaREot/YjSK3jkcQ3y+OmcpftuttEDCSQAKOQwlIDXRG5kAZ74PTyGc6McNT71lvtqGPWONZzKBU3aZlqoB7hc=
+	t=1723049517; cv=none; b=foM9H+Qn7PKosMYGDqA+4F3kEjRJKob+g3kFiFodKvZBagUA/iYWz31ulNmfmXOWWDIdVRflsI9x33SfNJKW5bt4BV/dh8m5MwPon8t6hvBHkXmzDHi4hkYPQCgf3F5pOABPYoJwF5W2MQFAIM1iMfCcDm+wpHXU24Wz9PDJVyk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723049083; c=relaxed/simple;
-	bh=cC44WqnolE5AwP6XHBememnp0c8vgWkKs0T5Id9Z+nw=;
+	s=arc-20240116; t=1723049517; c=relaxed/simple;
+	bh=09PqWrqZPQEMxJ1qjYQqQEpqsKuuC0Q/dPyS6HwV5P4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CrkP0umnPEwCJFFJrR4DhX16HiICiOdooWR9q8LARhO+kyCVMRyHUti83UYMOX1epa30fTPPwd7raAy9ji8Wo29UdlU5KFqzXGKW2coozl5jETC2Gbg3BbELXCIsviIkZlQ4+KsNkdQMhys+f+6Q7jES/Uz+rnIWMtMCe11N4HE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V0Mb6IVZ; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=lcklOqeoVT18Qs1KV37uEOzQdr9JQ2hOdpxLsU0C3Kf3mZlEmV+CBHZXTLD9elnfJgDmk82NMsUBsevl+9JgIs1sugAvkgRVlKqUzeNv/oweVkN+XgzzyNlYMkn/wTVQMU+VSw+ohhfWd2fK8NonMct7T/Lc0XHCG5727Ds2gig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OexwvxQi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V0Mb6IVZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 938FBC32781;
-	Wed,  7 Aug 2024 16:44:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OexwvxQi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08E20C32781;
+	Wed,  7 Aug 2024 16:51:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723049083;
-	bh=cC44WqnolE5AwP6XHBememnp0c8vgWkKs0T5Id9Z+nw=;
+	s=k20201202; t=1723049517;
+	bh=09PqWrqZPQEMxJ1qjYQqQEpqsKuuC0Q/dPyS6HwV5P4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=V0Mb6IVZ2WtcRUpXYb5Nb4sGxE2TPIiKzp469wnfbTVFDLSDOxwsW126yCBGZyAh1
-	 OmufOVI4GzY03QiY2nmhfHApv4ZCuMoAt97ZpRo/2wVA2VlgP288fkVnLlw82R/qf9
-	 tifY6+qGvXyo8Uh5kcnYj3kbizxS6z//Pl5beBUKIXocBV1T9iNP+HrGWou/UzwXu2
-	 Agl1rzvCTaaHt3aegxP0nrcvuzwPWtBmmaHuH/8HjCvyZm6UfMAI7U/SbNdTOpkCfU
-	 AABUGdhhOZ/qSs/vB0fx+5g5dwk44HFV6zPvVYKTJnugRAKQB9g20FQNAPHCpVJNxP
-	 fp33vU0mnasyw==
-Date: Wed, 7 Aug 2024 17:44:39 +0100
+	b=OexwvxQiPL+Ht/JWFcWXTCYt2qe7JhUfehWeQmvvKdjmneR1VkWf05AxBRyIr0s6d
+	 TC0i/Qwd3xMCA8fmNb4xN3f2fyqOuuQeARWPQbe1N9xK6JUkXeKPW88W/uLFoSD4eA
+	 BMcgyNYMmDeMzaKBHDaZlglFe1aXX35LFldiDWSJfmKCSAOeIvJQYqvNyCPupqs9Ti
+	 LBCPakv5obBEAd+i1lDWqLNGvHE46PeCNhw6yyHp5QEcpNyngHe6jyaNd+22/X1v15
+	 KpbPz5UfYXADLUe2ChhbNX1LcZNsp1djhCPwV4ZGfWxCRwMrfAJT72tTW6WxFCjDkE
+	 VjhrMQWaePJLQ==
+Date: Wed, 7 Aug 2024 17:51:52 +0100
 From: Simon Horman <horms@kernel.org>
 To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
 Cc: Potnuri Bharat Teja <bharat@chelsio.com>,
 	"David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
 	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Jamal Hadi Salim <jhs@mojatatu.com>,
+	Cong Wang <xiyou.wangcong@gmail.com>, Jiri Pirko <jiri@resnulli.us>,
 	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] ethtool: Avoid -Wflex-array-member-not-at-end
- warning
-Message-ID: <20240807164439.GC3006561@kernel.org>
-References: <ZrDx4Jii7XfuOPfC@cute>
- <20240807162602.GB3006561@kernel.org>
+Subject: Re: [PATCH][next] cxgb4: Avoid -Wflex-array-member-not-at-end warning
+Message-ID: <20240807165152.GD3006561@kernel.org>
+References: <ZrD8vpfiYugd0cPQ@cute>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -48,28 +48,32 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240807162602.GB3006561@kernel.org>
+In-Reply-To: <ZrD8vpfiYugd0cPQ@cute>
 
-On Wed, Aug 07, 2024 at 05:26:02PM +0100, Simon Horman wrote:
-> On Mon, Aug 05, 2024 at 09:38:08AM -0600, Gustavo A. R. Silva wrote:
-> > -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-> > getting ready to enable it, globally.
-> > 
-> > Move the conflicting declaration to the end of the structure. Notice
-> > that `struct ethtool_dump` is a flexible structure --a structure that
-> > contains a flexible-array member.
-> > 
-> > Fix the following warning:
-> > ./drivers/net/ethernet/chelsio/cxgb4/cxgb4.h:1215:29: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> > 
-> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+On Mon, Aug 05, 2024 at 10:24:30AM -0600, Gustavo A. R. Silva wrote:
+> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> getting ready to enable it, globally.
 > 
-> Reviewed-by: Simon Horman <horms@kernel.org>
+> So, in order to avoid ending up with a flexible-array member in the
+> middle of multiple other structs, we use the `__struct_group()`
+> helper to create a new tagged `struct tc_u32_sel_hdr`. This structure
+> groups together all the members of the flexible `struct tc_u32_sel`
+> except the flexible array.
+> 
+> As a result, the array is effectively separated from the rest of the
+> members without modifying the memory layout of the flexible structure.
+> We then change the type of the middle struct member currently causing
+> trouble from `struct tc_u32_sel` to `struct tc_u32_sel_hdr`.
+> 
+> This approach avoids having to implement `struct tc_u32_sel_hdr`
+> as a completely separate structure, thus preventing having to maintain
+> two independent but basically identical structures, closing the door
+> to potential bugs in the future.
+> 
+> So, with these changes, fix the following warning:
+> drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_u32_parse.h:245:27: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Sorry, one minor nit, after the fact.
+Reviewed-by: Simon Horman <horms@kernel.org>
 
-cxgb4 would probably be a better prefix than ethtool for this patch.
-But then it would conflict, by name, with
-
-- [PATCH] cxgb4: Avoid -Wflex-array-member-not-at-end warning
-  https://lore.kernel.org/all/ZrD8vpfiYugd0cPQ@cute/
