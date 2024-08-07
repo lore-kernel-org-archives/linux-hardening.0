@@ -1,139 +1,239 @@
-Received: from omta34.uswest2.a.cloudfilter.net (omta34.uswest2.a.cloudfilter.net [35.89.44.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7758E84D25
-	for <linux-hardening@vger.kernel.org>; Wed,  7 Aug 2024 15:29:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16D5E83A09
+	for <linux-hardening@vger.kernel.org>; Wed,  7 Aug 2024 15:35:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723044562; cv=none; b=DGTITrluw5x/Ff8vyKIewR+0qtQ/JyEmBm/3K7SCtT2Lvxk/flPV2xhpHOw+NyJOlNy0ulQm+id2uiTQwcG2Rb1uTWUnkfMbxAVPODJIyr9/06xWAi9Fq69WxdkupFDYfJ3n93apJdptFx9ft6XsHKddHVM87orHoqzbFjj7mfU=
+	t=1723044952; cv=none; b=W0We4Ld1kDICW0O1bJMLey/jrF7wOsgin/s25TGxpLYNNEM9+f8FxztA83pDg+MVhuG5M8JLe8lI1K4JSeJL3lHQu29ZAyv7Aren0NRV6ulYxADfeJQfT1voydrfHdtqcY61ki6eeFwk/wvTj/9XWJGtAgIv12h/74A8+dks+mo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723044562; c=relaxed/simple;
-	bh=W/j7ofAjp4lBil8BOqJhV6WZEhxedjS2h6klOSbHmqw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WeIc0FAKE8PHOCq4MjU06fColsiSnpsk5wY6aFBvNM8ZZ6uW3cK+D7Ov+vsKb2E8aYJf1vvuWClJjDLCgFqtd47nYXZmfrESZPGII+eBfpH2X+jtXEPzJTus5FQEbQ3JIedMmPHyf9AK+SLKlvvuvg94CkvG+S4fIVEnx691fto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=oR6kY+5M; arc=none smtp.client-ip=35.89.44.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1723044952; c=relaxed/simple;
+	bh=s9CkfNWvW6jQ+KuZef0P+IXflX2IogIAMHBgJSRl9Pk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Qsk9cFGfDkbcXdNJmQA92o+9QK6fq0z9GkipBbQi6NY4tu0fPJOwr6EEpY7pntqKDM7q5rQ2D3hHdBx5oQYf5De1+wB4vn6vo8pEy0/+U4zx5XS+TGPiLXEGWQAh3Y9JGJxQKsj+cgvAy+nwaIoxHMOtK8pxVBAiVdKvCkj++tY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=UJF5d+oI; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="oR6kY+5M"
-Received: from eig-obgw-6009a.ext.cloudfilter.net ([10.0.30.184])
-	by cmsmtp with ESMTPS
-	id ba7dsEpqbVpzpbibCsb4Cl; Wed, 07 Aug 2024 15:29:14 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id bibCsIVJd0K4nbibCs6Gmf; Wed, 07 Aug 2024 15:29:14 +0000
-X-Authority-Analysis: v=2.4 cv=RsjDLjmK c=1 sm=1 tr=0 ts=66b392ca
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=frY+GlAHrI6frpeK1MvySw==:17
- a=IkcTkHD0fZMA:10 a=yoJbH4e0A30A:10 a=ZI_cG6RJAAAA:8 a=VwQbUJbxAAAA:8
- a=T5MvzxAiUVsB-E4yPXoA:9 a=QEXdDO2ut3YA:10 a=CiASUvFRIoiJKylo2i9u:22
- a=AjGcO6oz07-iQ99wixmX:22 a=Xt_RvD8W3m28Mn_h3AK8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=59150sAKwGxpaYJCN77m/MKm7XHRkgxuo8ao1z77FlU=; b=oR6kY+5MtJW2lfQQH8jwxz/n+p
-	ld81JKyBLNDPwW+Cml04V8/YNZ+m9EbK5fYlWqkS0DRw06/eEgGGUPTtx3nWFQyZpzaojkyN1PZa9
-	9q/6p2pNuzRgaxr1FKfrxYzuDnBBB1FXNnjn6AY9BaqaDoS+8awdi3FOxFb2eZWIe8u8yTNvanslK
-	0+zoFCavSaelECC3pbjxZKOwO0Lwyoe3rpXYgP/FOTsELsFK6xrG8w+rraBprKCIUUaiX5pNx63jx
-	eE2ASEnOyS5h8EGLvwM1SA6TMbQHbC2AoP2EG1nXMde48ypRIC0zac58hZ7JFoqf4df5RPez/EtMp
-	HzQUZgyA==;
-Received: from [201.172.173.139] (port=60294 helo=[192.168.15.5])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1sbib9-003NZG-27;
-	Wed, 07 Aug 2024 10:29:11 -0500
-Message-ID: <bcb88692-a384-4da8-b2b9-a116ecb17530@embeddedor.com>
-Date: Wed, 7 Aug 2024 09:29:09 -0600
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UJF5d+oI"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1ff67158052so446205ad.0
+        for <linux-hardening@vger.kernel.org>; Wed, 07 Aug 2024 08:35:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1723044949; x=1723649749; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Wwzf1u9uZY62W33ta9kOU+Pg3rCPU/ryARfGIfXdTqQ=;
+        b=UJF5d+oIpyRH/tzBzrFKKlEVSqR629mp+03LPfGPsivzJwVy6nyiUtMR18tt6sRiGD
+         /6otdjQt0o4ZXzuf1yGZd6bDJPUEaPXJqErg3ST2SYOqsV8ryW6yRI62UKQNu35tSGu0
+         k5Eu+DSJhiz2dXaUvAbVM+ML0rgXuJARqgdTE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723044949; x=1723649749;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Wwzf1u9uZY62W33ta9kOU+Pg3rCPU/ryARfGIfXdTqQ=;
+        b=K1A9TbLbtDTwnTbNC3+2RKNFNk6trOo9wlIivQMQBe0IfzOocFFjgiQ8Dm9YK/2yCe
+         38OmJsCe2hAa9NtNTiUpYcsFZvKxuELWhYVFBEfhMaI77vURiam8urGmra64mx+yNRxU
+         CcP8kUYor3RqvdUwOP9MD+8xD8yEny8livZndUToXcKJj/OXv6c98v0ORv1E1seWaxr+
+         Q3AER3hHw+yWNVZ7PthimTnoTMZ1I3oIZph8YPNPJl6cgm/f8dVpe7rPui1QJ/tNvPvc
+         DKpOMFroKoDPXuuh1Pv/p+BhVC4C9zDwkwxZkt/qJ/lwm0GgWx8hVpuu745vU5efyyVN
+         V/0A==
+X-Forwarded-Encrypted: i=1; AJvYcCUI3Bte9VpPRhAxlIiHoDjK8eq0c/uur9T3vqcbbRvMAX7Ozn4DEJ3zwtdTWDAjVg5V+MCUJMhf5xeSHuSM2WB/yGkP40OszQu+2rsXmG3j
+X-Gm-Message-State: AOJu0Ywd2yZS3+XgvFkEAqFtucX7eLVfJa3rD3TzwsEvymhaUDpEN/1f
+	Jz64DStruh6YglkWhI4PpzGail+XTm6eO4e3Vph1d0WnU2v/RbyNAsEgZtmWPw==
+X-Google-Smtp-Source: AGHT+IGvi7dQHzYwS3aVaZb2F6yx2nnD9//HN/3+Cc1hlgmg2cIb+ocyDjoQkdIhNeB/X542y+CYmQ==
+X-Received: by 2002:a17:902:ecd2:b0:1fd:64d2:62da with SMTP id d9443c01a7336-1ff572c4e13mr220549835ad.29.1723044949167;
+        Wed, 07 Aug 2024 08:35:49 -0700 (PDT)
+Received: from localhost (25.11.145.34.bc.googleusercontent.com. [34.145.11.25])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-1ff592aa11csm107549745ad.272.2024.08.07.08.35.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 07 Aug 2024 08:35:48 -0700 (PDT)
+From: jeffxu@chromium.org
+To: akpm@linux-foundation.org,
+	willy@infradead.org,
+	torvalds@linux-foundation.org,
+	Liam.Howlett@oracle.com,
+	pedro.falcato@gmail.com
+Cc: jeffxu@google.com,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-mm@kvack.org,
+	dave.hansen@intel.com,
+	linux-hardening@vger.kernel.org,
+	lorenzo.stoakes@oracle.com,
+	mpe@ellerman.id.au,
+	oliver.sang@intel.com,
+	vbabka@suse.cz,
+	Jeff Xu <jeffxu@chromium.org>
+Subject: [PATCH v1] selftest mm/mseal: fix test_seal_mremap_move_dontunmap_anyaddr
+Date: Wed,  7 Aug 2024 15:35:44 +0000
+Message-ID: <20240807153544.2754247-1-jeffxu@chromium.org>
+X-Mailer: git-send-email 2.46.0.rc2.264.g509ed76dc8-goog
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] rcu: Annotate struct kvfree_rcu_bulk_data with
- __counted_by()
-To: Thorsten Blum <thorsten.blum@toblux.com>, paulmck@kernel.org,
- frederic@kernel.org, neeraj.upadhyay@kernel.org, joel@joelfernandes.org,
- josh@joshtriplett.org, boqun.feng@gmail.com, urezki@gmail.com,
- rostedt@goodmis.org, mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
- qiang.zhang1211@gmail.com, kees@kernel.org, gustavoars@kernel.org
-Cc: rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20240807095459.1400-2-thorsten.blum@toblux.com>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20240807095459.1400-2-thorsten.blum@toblux.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.173.139
-X-Source-L: No
-X-Exim-ID: 1sbib9-003NZG-27
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.5]) [201.172.173.139]:60294
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfHtIESb4hchg589/snxWp4QvOiAvjNM1Q9Zf1t6h7Kf3guxkzaB0hNmR6Ue/PcWYGThaHDemupWpopETQnbU8iSTScVPt9R8YfZg5cYekJA/tuEpjqde
- 3rCEFVK6JLEE0SKlNKXqEHZ/ZQoWOkUMvNrXSaUSIN6iJ5aALMjfjYmuToG1bY3kBl9P4v0IpJouxhPttMMIZPx5ax/+cT2IQef/doMND9N/pT/yryamympc
+Content-Transfer-Encoding: 8bit
 
+From: Jeff Xu <jeffxu@chromium.org>
 
+the syscall remap accepts following:
 
-On 07/08/24 03:55, Thorsten Blum wrote:
-> Add the __counted_by compiler attribute to the flexible array member
-> records to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
-> CONFIG_FORTIFY_SOURCE.
-> 
-> Increment nr_records before adding a new pointer to the records array.
-> 
+sys_mremap(ptr, size, size, MREMAP_MAYMOVE | MREMAP_DONTUNMAP,
+		(void*) 0xdead0000)
 
-Looks good.
+when the src is sealed, the call will fail with when error code:
+EPERM
 
-> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+Also remove the dependency on glibc for mremap(), the previous
+version of test pass on certain version of glibc and fail in another.
+By calling syscall directly, we test and verify remap function
+in kernel directly.
 
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Signed-off-by: Jeff Xu <jeffxu@chromium.org>
+Reported-by: Pedro Falcato <pedro.falcato@gmail.com>
+---
+ tools/testing/selftests/mm/mseal_test.c | 44 ++++++++++++++-----------
+ 1 file changed, 25 insertions(+), 19 deletions(-)
 
-Thanks
---
-Gustavo
+diff --git a/tools/testing/selftests/mm/mseal_test.c b/tools/testing/selftests/mm/mseal_test.c
+index a818f010de47..45d299fd74ed 100644
+--- a/tools/testing/selftests/mm/mseal_test.c
++++ b/tools/testing/selftests/mm/mseal_test.c
+@@ -110,6 +110,16 @@ static int sys_madvise(void *start, size_t len, int types)
+ 	return sret;
+ }
+ 
++static void *sys_mremap(void *addr, size_t old_len, size_t new_len,
++	unsigned long flags, void *new_addr)
++{
++	void *sret;
++
++	errno = 0;
++	sret = (void *) syscall(__NR_mremap, addr, old_len, new_len, flags, new_addr);
++	return sret;
++}
++
+ static int sys_pkey_alloc(unsigned long flags, unsigned long init_val)
+ {
+ 	int ret = syscall(__NR_pkey_alloc, flags, init_val);
+@@ -1115,12 +1125,12 @@ static void test_seal_mremap_shrink(bool seal)
+ 	}
+ 
+ 	/* shrink from 4 pages to 2 pages. */
+-	ret2 = mremap(ptr, size, 2 * page_size, 0, 0);
++	ret2 = sys_mremap(ptr, size, 2 * page_size, 0, 0);
+ 	if (seal) {
+-		FAIL_TEST_IF_FALSE(ret2 == MAP_FAILED);
++		FAIL_TEST_IF_FALSE(ret2 == (void *) MAP_FAILED);
+ 		FAIL_TEST_IF_FALSE(errno == EPERM);
+ 	} else {
+-		FAIL_TEST_IF_FALSE(ret2 != MAP_FAILED);
++		FAIL_TEST_IF_FALSE(ret2 != (void *) MAP_FAILED);
+ 
+ 	}
+ 
+@@ -1147,7 +1157,7 @@ static void test_seal_mremap_expand(bool seal)
+ 	}
+ 
+ 	/* expand from 2 page to 4 pages. */
+-	ret2 = mremap(ptr, 2 * page_size, 4 * page_size, 0, 0);
++	ret2 = sys_mremap(ptr, 2 * page_size, 4 * page_size, 0, 0);
+ 	if (seal) {
+ 		FAIL_TEST_IF_FALSE(ret2 == MAP_FAILED);
+ 		FAIL_TEST_IF_FALSE(errno == EPERM);
+@@ -1180,7 +1190,7 @@ static void test_seal_mremap_move(bool seal)
+ 	}
+ 
+ 	/* move from ptr to fixed address. */
+-	ret2 = mremap(ptr, size, size, MREMAP_MAYMOVE | MREMAP_FIXED, newPtr);
++	ret2 = sys_mremap(ptr, size, size, MREMAP_MAYMOVE | MREMAP_FIXED, newPtr);
+ 	if (seal) {
+ 		FAIL_TEST_IF_FALSE(ret2 == MAP_FAILED);
+ 		FAIL_TEST_IF_FALSE(errno == EPERM);
+@@ -1299,7 +1309,7 @@ static void test_seal_mremap_shrink_fixed(bool seal)
+ 	}
+ 
+ 	/* mremap to move and shrink to fixed address */
+-	ret2 = mremap(ptr, size, 2 * page_size, MREMAP_MAYMOVE | MREMAP_FIXED,
++	ret2 = sys_mremap(ptr, size, 2 * page_size, MREMAP_MAYMOVE | MREMAP_FIXED,
+ 			newAddr);
+ 	if (seal) {
+ 		FAIL_TEST_IF_FALSE(ret2 == MAP_FAILED);
+@@ -1330,7 +1340,7 @@ static void test_seal_mremap_expand_fixed(bool seal)
+ 	}
+ 
+ 	/* mremap to move and expand to fixed address */
+-	ret2 = mremap(ptr, page_size, size, MREMAP_MAYMOVE | MREMAP_FIXED,
++	ret2 = sys_mremap(ptr, page_size, size, MREMAP_MAYMOVE | MREMAP_FIXED,
+ 			newAddr);
+ 	if (seal) {
+ 		FAIL_TEST_IF_FALSE(ret2 == MAP_FAILED);
+@@ -1361,7 +1371,7 @@ static void test_seal_mremap_move_fixed(bool seal)
+ 	}
+ 
+ 	/* mremap to move to fixed address */
+-	ret2 = mremap(ptr, size, size, MREMAP_MAYMOVE | MREMAP_FIXED, newAddr);
++	ret2 = sys_mremap(ptr, size, size, MREMAP_MAYMOVE | MREMAP_FIXED, newAddr);
+ 	if (seal) {
+ 		FAIL_TEST_IF_FALSE(ret2 == MAP_FAILED);
+ 		FAIL_TEST_IF_FALSE(errno == EPERM);
+@@ -1390,14 +1400,13 @@ static void test_seal_mremap_move_fixed_zero(bool seal)
+ 	/*
+ 	 * MREMAP_FIXED can move the mapping to zero address
+ 	 */
+-	ret2 = mremap(ptr, size, 2 * page_size, MREMAP_MAYMOVE | MREMAP_FIXED,
++	ret2 = sys_mremap(ptr, size, 2 * page_size, MREMAP_MAYMOVE | MREMAP_FIXED,
+ 			0);
+ 	if (seal) {
+ 		FAIL_TEST_IF_FALSE(ret2 == MAP_FAILED);
+ 		FAIL_TEST_IF_FALSE(errno == EPERM);
+ 	} else {
+ 		FAIL_TEST_IF_FALSE(ret2 == 0);
+-
+ 	}
+ 
+ 	REPORT_TEST_PASS();
+@@ -1420,13 +1429,12 @@ static void test_seal_mremap_move_dontunmap(bool seal)
+ 	}
+ 
+ 	/* mremap to move, and don't unmap src addr. */
+-	ret2 = mremap(ptr, size, size, MREMAP_MAYMOVE | MREMAP_DONTUNMAP, 0);
++	ret2 = sys_mremap(ptr, size, size, MREMAP_MAYMOVE | MREMAP_DONTUNMAP, 0);
+ 	if (seal) {
+ 		FAIL_TEST_IF_FALSE(ret2 == MAP_FAILED);
+ 		FAIL_TEST_IF_FALSE(errno == EPERM);
+ 	} else {
+ 		FAIL_TEST_IF_FALSE(ret2 != MAP_FAILED);
+-
+ 	}
+ 
+ 	REPORT_TEST_PASS();
+@@ -1449,18 +1457,16 @@ static void test_seal_mremap_move_dontunmap_anyaddr(bool seal)
+ 	}
+ 
+ 	/*
+-	 * The 0xdeaddead should not have effect on dest addr
++	 * The 0xdead0000 should not have effect on dest addr
+ 	 * when MREMAP_DONTUNMAP is set.
+ 	 */
+-	ret2 = mremap(ptr, size, size, MREMAP_MAYMOVE | MREMAP_DONTUNMAP,
+-			0xdeaddead);
++	ret2 = sys_mremap(ptr, size, size, MREMAP_MAYMOVE | MREMAP_DONTUNMAP,
++			(void *) 0xdead0000);
+ 	if (seal) {
+-		FAIL_TEST_IF_FALSE(ret2 == MAP_FAILED);
++		FAIL_TEST_IF_FALSE(ret2 == (void *) MAP_FAILED);
+ 		FAIL_TEST_IF_FALSE(errno == EPERM);
+ 	} else {
+-		FAIL_TEST_IF_FALSE(ret2 != MAP_FAILED);
+-		FAIL_TEST_IF_FALSE((long)ret2 != 0xdeaddead);
+-
++		FAIL_TEST_IF_FALSE(ret2 == (void *) 0xdead0000);
+ 	}
+ 
+ 	REPORT_TEST_PASS();
+-- 
+2.46.0.rc2.264.g509ed76dc8-goog
 
-> ---
->   kernel/rcu/tree.c | 5 +++--
->   1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> index e641cc681901..76d8d75dd8b3 100644
-> --- a/kernel/rcu/tree.c
-> +++ b/kernel/rcu/tree.c
-> @@ -3227,7 +3227,7 @@ struct kvfree_rcu_bulk_data {
->   	struct list_head list;
->   	struct rcu_gp_oldstate gp_snap;
->   	unsigned long nr_records;
-> -	void *records[];
-> +	void *records[] __counted_by(nr_records);
->   };
->   
->   /*
-> @@ -3767,7 +3767,8 @@ add_ptr_to_bulk_krc_lock(struct kfree_rcu_cpu **krcp,
->   	}
->   
->   	// Finally insert and update the GP for this page.
-> -	bnode->records[bnode->nr_records++] = ptr;
-> +	bnode->nr_records++;
-> +	bnode->records[bnode->nr_records - 1] = ptr;
->   	get_state_synchronize_rcu_full(&bnode->gp_snap);
->   	atomic_inc(&(*krcp)->bulk_count[idx]);
->   
