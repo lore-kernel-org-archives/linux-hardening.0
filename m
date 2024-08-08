@@ -1,87 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5587C4A1E;
-	Thu,  8 Aug 2024 06:20:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B3507464;
+	Thu,  8 Aug 2024 07:39:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723098019; cv=none; b=etmgsbsNE1F1EfHas3V2X+aYo/+GA7ItVp0gC8Lq4HSbG9mHnUK72tSbVlZxYrwaSg6/HOIt/jsR49Sjl0OubF9Y/wCRCoM5O2T4OoovnycWikH+vWUSkP58Uy9YWVVLb1S0YsmF1E6voowyf7yiusujXF0X6DtFLi70G3srKNk=
+	t=1723102778; cv=none; b=EKaS4j06KAbDmdMHDZv8p5QUJwiscrPCuonpGzxPhqWKIq8UhPx3gE3dyf+9My/YjYn7yN/3P8YjTmD3KY07daj3Jp6WlAjDU1u4bx9O3RIy8D1tPGKV6c5s5U6xb3zuEpvMoJPjHSJJf4Aukac/KHdZAhcunegu5UujRo4JCLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723098019; c=relaxed/simple;
-	bh=X9NY6xCSLD4ufw4GmHD6bL7PfZlnwn442WiojDh1QoM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WEahqyYWxiwVAUCkgY3+Lx/dzUwPdn8L3cxyjjBofQ+wgR99n/pmSCAwDjIeT1i7gAXAwAz0atFE2Z6ZlhsbP/WIRbAAA6pVI0pAP3F56Kn3wZcdVmAJKhNc0A/JJW9Uywbi4rB87pfurpK3b7ddkWjk6hMZhKMhdiUUpVOBHwU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lFDQbhkL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1723102778; c=relaxed/simple;
+	bh=0JaITmplsX++4cDReVkvZhDyM9fdYBeRW8cET75NUdw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=BRWtVmGD/V7rdPAsCVowJ7RdntTlwkna+K8By7GStCFLycbLG4rciKKDsGWay8go7eAtDN6m4OmQjbhG3IpsechCOn/MAk2PTd55sZECU0G0Sqiss5o/abgLF2rEkol/rJGa0CwNguglMe63aWu/21bFOmkMbCJnXtInub6Skec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=TxN9ND4U; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lFDQbhkL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C02DC32782;
-	Thu,  8 Aug 2024 06:20:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723098019;
-	bh=X9NY6xCSLD4ufw4GmHD6bL7PfZlnwn442WiojDh1QoM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lFDQbhkLAPVrpBzMivRB3q1DQzO9myhdCHwfR5uOB2+84aQTZxFi1chGA60bZieRS
-	 DaYksPM+Svo/5N6Nua0yXep112L3A/LQ4qVYn4+FjociZac/Ztb6is8UnjlvQV9LD1
-	 Xiasj2u8DB2UO7dteo58gW47cMwLORmnEpRLYs/4Ro/+AHBWBM3N2uLFJxRitvocDn
-	 AIams1FJMakx6yCSugubObtItgQ/3pLduNfsgeP/H3Ze5pm/owGXzSisZK1RDnkZuV
-	 1teqHp6wzmwn0GbsnkEoR0jUNSK8rkNvRl8N0Qb5iuJrK/5J+4aSwCVFKWUxKZB9gB
-	 x7v51oLnA+TDg==
-Date: Thu, 8 Aug 2024 09:18:07 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-	linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org,
-	Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>,
-	Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [PATCH] pstore/ramoops: Fix typo as there is no "reserver"
-Message-ID: <ZrRi7fdYo3yVPr1G@kernel.org>
-References: <20240807170029.3c1ff651@gandalf.local.home>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="TxN9ND4U"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 477Icj6C020412;
+	Thu, 8 Aug 2024 07:39:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	2d+qD9QbIkh/LhY9twFqPwccmJs0i4VuP7i4E69Oh/A=; b=TxN9ND4Uf3AwSy2O
+	EC/D78CPtObL/KmhHbQhRRO4E3rE0RCJXJ/DOnV7a4pRzZewnFa8AnXcKQEv0W9C
+	D5YshYFs5hHjC1/rXsDRXZL96j7y/kH2bgApmmr2TJRY226XjUtwQy9B9qqlFlU2
+	Xpi7F9bzb04SVfrwLz6X+3y3oQMNim0HK2nhuGNX3VL3WRxpyFUAQ1xkStlDYVJA
+	gsroGVHSb0PGTHmeXb0zrHgR0n7y3nrYcv1W58nObyDt/knHhnce8BuSBZpcdCaw
+	Vou4YLez65IeHkgAuCLiu5DlSluaTBdaF0/rtG4tGi3a4ItLW9wisU3IEoEvBldu
+	aG95gA==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 40scmu53jp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 08 Aug 2024 07:39:32 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 4787dV9H025346
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 8 Aug 2024 07:39:31 GMT
+Received: from [10.204.101.50] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 8 Aug 2024
+ 00:39:27 -0700
+Message-ID: <ec678a40-d7eb-61eb-947b-e264cf8bac49@quicinc.com>
+Date: Thu, 8 Aug 2024 13:09:24 +0530
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240807170029.3c1ff651@gandalf.local.home>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH 1/2] media: venus: hfi_cmds: struct
+ hfi_session_release_buffer_pkt: Replace 1-element array with flexible array
+Content-Language: en-US
+To: Kees Cook <kees@kernel.org>,
+        Stanimir Varbanov
+	<stanimir.k.varbanov@gmail.com>
+CC: Vikash Garodia <quic_vgarodia@quicinc.com>,
+        Bryan O'Donoghue
+	<bryan.odonoghue@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20240710230728.work.977-kees@kernel.org>
+ <20240710230914.3156277-1-kees@kernel.org>
+From: Dikshita Agarwal <quic_dikshita@quicinc.com>
+In-Reply-To: <20240710230914.3156277-1-kees@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: YA62WyI3jnZv4guu_lXXpdNWI0OtkzK5
+X-Proofpoint-GUID: YA62WyI3jnZv4guu_lXXpdNWI0OtkzK5
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-08-08_07,2024-08-07_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
+ clxscore=1011 malwarescore=0 impostorscore=0 adultscore=0 phishscore=0
+ lowpriorityscore=0 priorityscore=1501 suspectscore=0 spamscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2407110000 definitions=main-2408080054
 
-On Wed, Aug 07, 2024 at 05:00:29PM -0400, Steven Rostedt wrote:
-> From: Steven Rostedt <rostedt@goodmis.org>
+
+
+On 7/11/2024 4:39 AM, Kees Cook wrote:
+> Replace the deprecated[1] use of a 1-element array in
+> struct hfi_session_release_buffer_pkt with a modern flexible array.
 > 
-> For some reason my finger always hits the 'r' after typing "reserve".
-> Fix the typo in the Documentation example.
+> No binary differences are present after this conversion.
 > 
-> Fixes: d9d814eebb1ae ("pstore/ramoops: Add ramoops.mem_name= command line option")
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-
-Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-
+> Link: https://github.com/KSPP/linux/issues/79 [1]
+> Signed-off-by: Kees Cook <kees@kernel.org>
 > ---
-> Note, I did have this fixed, but the previous version was pulled:
->   https://lore.kernel.org/linux-trace-kernel/20240613233446.283241953@goodmis.org/
-> 
->  Documentation/admin-guide/ramoops.rst | 2 +-
+> Cc: Stanimir Varbanov <stanimir.k.varbanov@gmail.com>
+> Cc: Vikash Garodia <quic_vgarodia@quicinc.com>
+> Cc: "Bryan O'Donoghue" <bryan.odonoghue@linaro.org>
+> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> Cc: linux-media@vger.kernel.org
+> Cc: linux-arm-msm@vger.kernel.org
+> Cc: linux-hardening@vger.kernel.org
+> ---
+>  drivers/media/platform/qcom/venus/hfi_cmds.h | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/admin-guide/ramoops.rst b/Documentation/admin-guide/ramoops.rst
-> index 6f534a707b2a..2eabef31220d 100644
-> --- a/Documentation/admin-guide/ramoops.rst
-> +++ b/Documentation/admin-guide/ramoops.rst
-> @@ -129,7 +129,7 @@ Setting the ramoops parameters can be done in several different manners:
->      takes a size, alignment and name as arguments. The name is used
->      to map the memory to a label that can be retrieved by ramoops.
+> diff --git a/drivers/media/platform/qcom/venus/hfi_cmds.h b/drivers/media/platform/qcom/venus/hfi_cmds.h
+> index 20acd412ee7b..42825f07939d 100644
+> --- a/drivers/media/platform/qcom/venus/hfi_cmds.h
+> +++ b/drivers/media/platform/qcom/venus/hfi_cmds.h
+> @@ -227,7 +227,7 @@ struct hfi_session_release_buffer_pkt {
+>  	u32 extradata_size;
+>  	u32 response_req;
+>  	u32 num_buffers;
+> -	u32 buffer_info[1];
+> +	u32 buffer_info[];
+>  };
 >  
-> -	reserver_mem=2M:4096:oops  ramoops.mem_name=oops
-> +	reserve_mem=2M:4096:oops  ramoops.mem_name=oops
->  
->  You can specify either RAM memory or peripheral devices' memory. However, when
->  specifying RAM, be sure to reserve the memory by issuing memblock_reserve()
-> -- 
-> 2.43.0
-> 
+>  struct hfi_session_release_resources_pkt {
 
--- 
-Sincerely yours,
-Mike.
+Reviewed-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
+
+Thanks,
+Dikshita
