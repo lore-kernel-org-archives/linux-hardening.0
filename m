@@ -1,121 +1,99 @@
-Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BA3118C355
-	for <linux-hardening@vger.kernel.org>; Thu,  8 Aug 2024 15:11:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19E35189B8D;
+	Thu,  8 Aug 2024 17:20:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723129872; cv=none; b=feuwFOVnWrC7504FCx/olfvXSIZn2O7oJ548BF8fAI/lzdrs0KZryCx+f2Hi/1lj4SQSYGGHXYa8dpK7i+TD/hO1/4lBCIm2WCEKjrVlIv1JPhtB03Bf1XuH8PcX45MQb84hMSZbHq+ujZ8FAJUUOtZrFXe6YgiD5Go1Mbdb4hw=
+	t=1723137624; cv=none; b=t89v3MIgD+3/6ky7+LvR+V7GXqFP7h7OzNCW6Awwo6iJpH5oRMZf33sJvK3ll4t6ET/PW/415cYYORDKjMxM/TrpFmYV8sHBnJPsX2CLXMY4IWvDmRxkEM7Kh/MnZ9swfbZoD2vYM1Bf9bPeI87io7vG8GAv5/L89Fq9+Cb5VjA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723129872; c=relaxed/simple;
-	bh=iI7j9YM9NkAwGs4tVidYT/BcH0w5Sb7CColD3m3raU4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qQNUpY2FqjJIyTotdgUREyUSBL+mjM+TE6gepC3ZM3t/Q3ZOomxkxphephoImu5Gzm+yCsbZHJTsyPhUaQgUoSIj4EmXp9b+67vBS0uVVRIPzcIKbawyyMHGe4oU0xV+PdtLUd7dkn/9qtfw74MmzkO68CK0W+mC5/Qp6I0a3RQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=QPOJcy0b; arc=none smtp.client-ip=44.202.169.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1723137624; c=relaxed/simple;
+	bh=frzQzsm5MhWF5+FE6An4jpHJdeMQiqPsmIBSe8G7fpk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ehOe7TVaufUWa+IhbYRqYPx4iYIMdkE+sBKiroBIO53EolSuJGGDixNE//7DEyg9+mtpA31bcIuQ8BhPt193PCUF66fUccX1yL/smjtQpmeNO6ztBu09bgCMU+It4JRxD8V298jhvUqeYjqtfqGh+uEezDEz92DMUyq/0zSn5QU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ey+v+lk9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="QPOJcy0b"
-Received: from eig-obgw-6007a.ext.cloudfilter.net ([10.0.30.247])
-	by cmsmtp with ESMTPS
-	id ba7Ystgotg2lzc4nEsVdwZ; Thu, 08 Aug 2024 15:11:08 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id c4nDsKJDagvO5c4nDsmrpl; Thu, 08 Aug 2024 15:11:07 +0000
-X-Authority-Analysis: v=2.4 cv=eoXZzJpX c=1 sm=1 tr=0 ts=66b4e00b
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=frY+GlAHrI6frpeK1MvySw==:17
- a=IkcTkHD0fZMA:10 a=yoJbH4e0A30A:10 a=ZI_cG6RJAAAA:8 a=VwQbUJbxAAAA:8
- a=bAOmJZEJ0AiGMNYyOQsA:9 a=QEXdDO2ut3YA:10 a=zgiPjhLxNE0A:10
- a=zZCYzV9kfG8A:10 a=CiASUvFRIoiJKylo2i9u:22 a=AjGcO6oz07-iQ99wixmX:22
- a=Xt_RvD8W3m28Mn_h3AK8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=qMvp7AEo4WmmqjYvoT0LxSj9ZRUdxlBj+1r+x+WzKsg=; b=QPOJcy0bKYUHFKPiOS+BzJO7Zp
-	hGLQy30vuBk2njANV6abwBg0NNmarHyj6+WEtgsxSWPqovSklNnH8Up9dqjkJYmLnU8NBYEwT1Okb
-	YDz0jXOfqmglifhEestYNCfQFRtX4L67ElcJikhYwUQUko1sd4sBKb+EJJwy1ldxPkS+2bjldOV4O
-	7qzHbSKRNluUdwogVg0sgQ0pvc8XkUzu5wFq5E+LnuigRPXy05mqYclD1B0waOlyAx8tQ01SAGuIh
-	a1rdOTlrlZTJ8t2mtqWCmnvxaJPk3TMsJeVBCn0qY452n01zJvxlG6Qiua3vKFxWL3746M+hdwvSa
-	zBDyjgVg==;
-Received: from [201.172.173.139] (port=37952 helo=[192.168.15.14])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1sc4nC-000RNY-2T;
-	Thu, 08 Aug 2024 10:11:06 -0500
-Message-ID: <481a0b09-2e6f-4076-8e03-6205bae31f59@embeddedor.com>
-Date: Thu, 8 Aug 2024 09:11:04 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ey+v+lk9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0070C32782;
+	Thu,  8 Aug 2024 17:20:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1723137623;
+	bh=frzQzsm5MhWF5+FE6An4jpHJdeMQiqPsmIBSe8G7fpk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Ey+v+lk9EP6W3aoUZDhBmGDZyMbmIM18GngyiTsJCUngNzLwfFmsXXk3Zon5WYpGP
+	 ox2eISoqOjXLBfoCPNeJHpKONZ4kAQukctFbQ+eJkHyaHuD0JvNrr8ecvCpqsHsGlD
+	 Gz46x9Pt9qWI44mX0X6y1utaWMVrTbjP6NNps0U76SVsaV92gzvKUkGnhT8OVzvpDG
+	 V4U/P2iauL3uhkWZVVwClfQ+WFJPKEhiI8y94z6HzLmQvpdOf4KDAcJePQbeA2h4iX
+	 zdak0RxBJp59VhV8Zd3DP3lDWFySlhDG7HP6bxasISwAWCXpD2tNf8YbY0sXH4YM3q
+	 dzPWZCzZ0Tm8Q==
+Date: Thu, 8 Aug 2024 18:20:18 +0100
+From: Simon Horman <horms@kernel.org>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Kalle Valo <kvalo@kernel.org>,
+	Stanislav Yakovlev <stas.yakovlev@gmail.com>,
+	Ajay Singh <ajay.kathat@microchip.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+	libertas-dev@lists.infradead.org, netdev@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] wifi: radiotap: Avoid
+ -Wflex-array-member-not-at-end warnings
+Message-ID: <20240808172018.GC3075665@kernel.org>
+References: <ZrJmjM4izqDqwIrc@cute>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] fs/select: Annotate struct poll_list with __counted_by()
-To: Thorsten Blum <thorsten.blum@toblux.com>, viro@zeniv.linux.org.uk,
- brauner@kernel.org, jack@suse.cz, kees@kernel.org, gustavoars@kernel.org
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20240808150023.72578-2-thorsten.blum@toblux.com>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20240808150023.72578-2-thorsten.blum@toblux.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.173.139
-X-Source-L: No
-X-Exim-ID: 1sc4nC-000RNY-2T
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.14]) [201.172.173.139]:37952
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfHfVpC4FYrULzYnAqfP4PRwGUSu3vbIxJ5S67YFV3xHbymb8AXC7ROFY7JS6QDotYb59toxlKWpM3dyFLW4YNdalndehM9wBmL8p1T2uzaDns2X/01zL
- BDD6RcfnaCAc4O61VTIMK+lwFg64xgKdlmxrAkvhi/IHTz1Tw7vz9jViv3ipDhDd/vEQvZEsrDG9bRlMkkSjhGDCDDg5eYrpPZwgtOQhfY7wGEfW5qLUYi0t
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZrJmjM4izqDqwIrc@cute>
 
-
-
-On 08/08/24 09:00, Thorsten Blum wrote:
-> Add the __counted_by compiler attribute to the flexible array member
-> entries to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
-> CONFIG_FORTIFY_SOURCE.
+On Tue, Aug 06, 2024 at 12:08:12PM -0600, Gustavo A. R. Silva wrote:
+> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> getting ready to enable it, globally.
 > 
-> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
-
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-
-Thanks
---
-Gustavo
-
-> ---
->   fs/select.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+> So, in order to avoid ending up with a flexible-array member in the
+> middle of multiple other structs, we use the `__struct_group()`
+> helper to create a new tagged `struct ieee80211_radiotap_header_hdr`.
+> This structure groups together all the members of the flexible
+> `struct ieee80211_radiotap_header` except the flexible array.
 > 
-> diff --git a/fs/select.c b/fs/select.c
-> index 9515c3fa1a03..1a4849e2afb9 100644
-> --- a/fs/select.c
-> +++ b/fs/select.c
-> @@ -840,7 +840,7 @@ SYSCALL_DEFINE1(old_select, struct sel_arg_struct __user *, arg)
->   struct poll_list {
->   	struct poll_list *next;
->   	unsigned int len;
-> -	struct pollfd entries[];
-> +	struct pollfd entries[] __counted_by(len);
->   };
->   
->   #define POLLFD_PER_PAGE  ((PAGE_SIZE-sizeof(struct poll_list)) / sizeof(struct pollfd))
+> As a result, the array is effectively separated from the rest of the
+> members without modifying the memory layout of the flexible structure.
+> We then change the type of the middle struct members currently causing
+> trouble from `struct ieee80211_radiotap_header` to `struct
+> ieee80211_radiotap_header_hdr`.
+> 
+> We also want to ensure that in case new members need to be added to the
+> flexible structure, they are always included within the newly created
+> tagged struct. For this, we use `static_assert()`. This ensures that the
+> memory layout for both the flexible structure and the new tagged struct
+> is the same after any changes.
+> 
+> This approach avoids having to implement `struct ieee80211_radiotap_header_hdr`
+> as a completely separate structure, thus preventing having to maintain
+> two independent but basically identical structures, closing the door
+> to potential bugs in the future.
+> 
+> So, with these changes, fix the following warnings:
+> drivers/net/wireless/ath/wil6210/txrx.c:309:50: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> drivers/net/wireless/intel/ipw2x00/ipw2100.c:2521:50: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> drivers/net/wireless/intel/ipw2x00/ipw2200.h:1146:42: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> drivers/net/wireless/intel/ipw2x00/libipw.h:595:36: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> drivers/net/wireless/marvell/libertas/radiotap.h:34:42: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> drivers/net/wireless/marvell/libertas/radiotap.h:5:42: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> drivers/net/wireless/microchip/wilc1000/mon.c:10:42: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> drivers/net/wireless/microchip/wilc1000/mon.c:15:42: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> drivers/net/wireless/virtual/mac80211_hwsim.c:758:42: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> drivers/net/wireless/virtual/mac80211_hwsim.c:767:42: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+
+Reviewed-by: Simon Horman <horms@kernel.org>
+
