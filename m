@@ -1,99 +1,121 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC45818C34D
-	for <linux-hardening@vger.kernel.org>; Thu,  8 Aug 2024 15:00:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BA3118C355
+	for <linux-hardening@vger.kernel.org>; Thu,  8 Aug 2024 15:11:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723129245; cv=none; b=QQrDCgg4cTDzXv0mRrzUm8zy+X0/oNfYA0iveL1aUlZni829xrzA0uoE/cfpNLD05wl4X1hZl6JPtj5VqpQ5JUdMlpxcqRRljCSO0zaGq+aEinKXFJT8TG0eXRhcINneSve2IkNO2pVbVYZFTAQcdNq+5IJFXPlzO6lwBGlKCJU=
+	t=1723129872; cv=none; b=feuwFOVnWrC7504FCx/olfvXSIZn2O7oJ548BF8fAI/lzdrs0KZryCx+f2Hi/1lj4SQSYGGHXYa8dpK7i+TD/hO1/4lBCIm2WCEKjrVlIv1JPhtB03Bf1XuH8PcX45MQb84hMSZbHq+ujZ8FAJUUOtZrFXe6YgiD5Go1Mbdb4hw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723129245; c=relaxed/simple;
-	bh=vuvMWh6YATvbV2e/4JH4NJzWpYvqaaRTdIQvBVZ710s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Bk0+ACs1fTNJ679ELZemfVJlaUYNPgi8ZevtXkaSTeB5WqJahZc9ZBjkVRVLupr9r7L923JKpu78QRxY+OShFhWBt+PeYnwDyszT4OfemBSOtLSx0e1U45aJaIedYqamOpqwWkKsxUbDUKxdZTst+R1W4DaGSpOCBZml3q+HIqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=Y3Qm1zXG; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+	s=arc-20240116; t=1723129872; c=relaxed/simple;
+	bh=iI7j9YM9NkAwGs4tVidYT/BcH0w5Sb7CColD3m3raU4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qQNUpY2FqjJIyTotdgUREyUSBL+mjM+TE6gepC3ZM3t/Q3ZOomxkxphephoImu5Gzm+yCsbZHJTsyPhUaQgUoSIj4EmXp9b+67vBS0uVVRIPzcIKbawyyMHGe4oU0xV+PdtLUd7dkn/9qtfw74MmzkO68CK0W+mC5/Qp6I0a3RQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=QPOJcy0b; arc=none smtp.client-ip=44.202.169.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="Y3Qm1zXG"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5a1337cfbb5so1355007a12.3
-        for <linux-hardening@vger.kernel.org>; Thu, 08 Aug 2024 08:00:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1723129241; x=1723734041; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=rAu/fAt9pD45BuwjaKWE/kC9nLY3RaeXFsWLxqTj2xI=;
-        b=Y3Qm1zXGGB9WN+rnRUikO6VRXtHsRLxrwAzNrb7iZKnFAFXurxCQMBqxnLNUGQvaZg
-         gWxv6fq+jooWxp5XE+u+yBu3bCgUVILpqM+8pM9CjgQEmpYwi7QGQ7YeOk8CDxZyD79l
-         ZrJi8bmBzR8JANdd73oaX7LY42s5kcT1wiBykqzFg6A41xNnbor/LkV5Q+hmdwEmkrMv
-         KECKGhBVC/vh+xZS+Uw8jcbhIaVHo2FA7CYYQhl/yi6v+DU0zf+6rNLLfEKigKiHh+na
-         N4R99Ymmi3OtI/nkVcYTr5JyKsI98Qke5zyi0vxMX3MD4fekUVYxKsw7xlrNQiTXzh8f
-         KgWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723129241; x=1723734041;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rAu/fAt9pD45BuwjaKWE/kC9nLY3RaeXFsWLxqTj2xI=;
-        b=XvM0ma8/ABUqIlLbzQhemtF0wEa4XzgoRHm/MsHv6+B2okc3lxtybC9VgqtjdtQi2S
-         crIrd+T0bwlXE+UqVQZvQs8FBI0HosPm6/0PabhSN3uycUhjvaCqEXPsbvdrjQanhjQo
-         hTWEWmbaHDSEeujI+0VBH0Ll2V7oOP6a4PMyaaXu2WwhxrE9PYho1RHrzLJz9RW9qYeI
-         +CX4gLMzfXLKXGNGaraNuLKwWPQqx47BkiJOXVqScJ7TLuub8zuHdxF580XJup0iXw6L
-         4+7Pnv1IQ8ODu32nDiMZzhSAGuUaVyG3sQKtohWN4ZfVUFNaYtokhvrkP1V1bflTxRAq
-         KFOw==
-X-Forwarded-Encrypted: i=1; AJvYcCXrJi2AmKM1h8LrKuxEEq67mJR833tMrmMdVRDEKrm7vQqfdzddTzl3jZxGbbcoXvZ7etI4aU0lUe22rFHv+Tdn5ztkIGma/x95qKXIuiHG
-X-Gm-Message-State: AOJu0YzJNKTAOgFvvQXbKBCIWP1uReY9YMpWpkduoUeepkcf2sQQmkqz
-	/y727eOmX745+/z6FNme988IyQJ1hi1/T7w0Emk4ks4n92SiN2K0D4R7WJWReiA=
-X-Google-Smtp-Source: AGHT+IHJsIUMLs0BIicJgJK+av1Wa9E1DZrzzBCC/VZUB70rVlhYNgRsGns9/IL3QCsWu+oHUYyEdA==
-X-Received: by 2002:a05:6402:3550:b0:5a0:c709:aa0b with SMTP id 4fb4d7f45d1cf-5bbb233a752mr1705181a12.24.1723129241008;
-        Thu, 08 Aug 2024 08:00:41 -0700 (PDT)
-Received: from fedora.fritz.box (pd9e1640a.dip0.t-ipconnect.de. [217.225.100.10])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5bbb2c1dbe4sm698105a12.27.2024.08.08.08.00.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Aug 2024 08:00:40 -0700 (PDT)
-From: Thorsten Blum <thorsten.blum@toblux.com>
-To: viro@zeniv.linux.org.uk,
-	brauner@kernel.org,
-	jack@suse.cz,
-	kees@kernel.org,
-	gustavoars@kernel.org
-Cc: linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	Thorsten Blum <thorsten.blum@toblux.com>
-Subject: [PATCH] fs/select: Annotate struct poll_list with __counted_by()
-Date: Thu,  8 Aug 2024 17:00:24 +0200
-Message-ID: <20240808150023.72578-2-thorsten.blum@toblux.com>
-X-Mailer: git-send-email 2.46.0
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="QPOJcy0b"
+Received: from eig-obgw-6007a.ext.cloudfilter.net ([10.0.30.247])
+	by cmsmtp with ESMTPS
+	id ba7Ystgotg2lzc4nEsVdwZ; Thu, 08 Aug 2024 15:11:08 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id c4nDsKJDagvO5c4nDsmrpl; Thu, 08 Aug 2024 15:11:07 +0000
+X-Authority-Analysis: v=2.4 cv=eoXZzJpX c=1 sm=1 tr=0 ts=66b4e00b
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=frY+GlAHrI6frpeK1MvySw==:17
+ a=IkcTkHD0fZMA:10 a=yoJbH4e0A30A:10 a=ZI_cG6RJAAAA:8 a=VwQbUJbxAAAA:8
+ a=bAOmJZEJ0AiGMNYyOQsA:9 a=QEXdDO2ut3YA:10 a=zgiPjhLxNE0A:10
+ a=zZCYzV9kfG8A:10 a=CiASUvFRIoiJKylo2i9u:22 a=AjGcO6oz07-iQ99wixmX:22
+ a=Xt_RvD8W3m28Mn_h3AK8:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=qMvp7AEo4WmmqjYvoT0LxSj9ZRUdxlBj+1r+x+WzKsg=; b=QPOJcy0bKYUHFKPiOS+BzJO7Zp
+	hGLQy30vuBk2njANV6abwBg0NNmarHyj6+WEtgsxSWPqovSklNnH8Up9dqjkJYmLnU8NBYEwT1Okb
+	YDz0jXOfqmglifhEestYNCfQFRtX4L67ElcJikhYwUQUko1sd4sBKb+EJJwy1ldxPkS+2bjldOV4O
+	7qzHbSKRNluUdwogVg0sgQ0pvc8XkUzu5wFq5E+LnuigRPXy05mqYclD1B0waOlyAx8tQ01SAGuIh
+	a1rdOTlrlZTJ8t2mtqWCmnvxaJPk3TMsJeVBCn0qY452n01zJvxlG6Qiua3vKFxWL3746M+hdwvSa
+	zBDyjgVg==;
+Received: from [201.172.173.139] (port=37952 helo=[192.168.15.14])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1sc4nC-000RNY-2T;
+	Thu, 08 Aug 2024 10:11:06 -0500
+Message-ID: <481a0b09-2e6f-4076-8e03-6205bae31f59@embeddedor.com>
+Date: Thu, 8 Aug 2024 09:11:04 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] fs/select: Annotate struct poll_list with __counted_by()
+To: Thorsten Blum <thorsten.blum@toblux.com>, viro@zeniv.linux.org.uk,
+ brauner@kernel.org, jack@suse.cz, kees@kernel.org, gustavoars@kernel.org
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20240808150023.72578-2-thorsten.blum@toblux.com>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20240808150023.72578-2-thorsten.blum@toblux.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.172.173.139
+X-Source-L: No
+X-Exim-ID: 1sc4nC-000RNY-2T
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.15.14]) [201.172.173.139]:37952
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfHfVpC4FYrULzYnAqfP4PRwGUSu3vbIxJ5S67YFV3xHbymb8AXC7ROFY7JS6QDotYb59toxlKWpM3dyFLW4YNdalndehM9wBmL8p1T2uzaDns2X/01zL
+ BDD6RcfnaCAc4O61VTIMK+lwFg64xgKdlmxrAkvhi/IHTz1Tw7vz9jViv3ipDhDd/vEQvZEsrDG9bRlMkkSjhGDCDDg5eYrpPZwgtOQhfY7wGEfW5qLUYi0t
 
-Add the __counted_by compiler attribute to the flexible array member
-entries to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
-CONFIG_FORTIFY_SOURCE.
 
-Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
----
- fs/select.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/select.c b/fs/select.c
-index 9515c3fa1a03..1a4849e2afb9 100644
---- a/fs/select.c
-+++ b/fs/select.c
-@@ -840,7 +840,7 @@ SYSCALL_DEFINE1(old_select, struct sel_arg_struct __user *, arg)
- struct poll_list {
- 	struct poll_list *next;
- 	unsigned int len;
--	struct pollfd entries[];
-+	struct pollfd entries[] __counted_by(len);
- };
- 
- #define POLLFD_PER_PAGE  ((PAGE_SIZE-sizeof(struct poll_list)) / sizeof(struct pollfd))
--- 
-2.45.2
+On 08/08/24 09:00, Thorsten Blum wrote:
+> Add the __counted_by compiler attribute to the flexible array member
+> entries to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
+> CONFIG_FORTIFY_SOURCE.
+> 
+> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
 
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+
+Thanks
+--
+Gustavo
+
+> ---
+>   fs/select.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/select.c b/fs/select.c
+> index 9515c3fa1a03..1a4849e2afb9 100644
+> --- a/fs/select.c
+> +++ b/fs/select.c
+> @@ -840,7 +840,7 @@ SYSCALL_DEFINE1(old_select, struct sel_arg_struct __user *, arg)
+>   struct poll_list {
+>   	struct poll_list *next;
+>   	unsigned int len;
+> -	struct pollfd entries[];
+> +	struct pollfd entries[] __counted_by(len);
+>   };
+>   
+>   #define POLLFD_PER_PAGE  ((PAGE_SIZE-sizeof(struct poll_list)) / sizeof(struct pollfd))
