@@ -1,59 +1,61 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA3F0146A97
-	for <linux-hardening@vger.kernel.org>; Thu,  8 Aug 2024 09:10:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E84E8146A97
+	for <linux-hardening@vger.kernel.org>; Thu,  8 Aug 2024 09:11:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723108218; cv=none; b=aSovn4OeWIXHo/bawtb7tzX20aO4tq1SZHr3uQauWrl/SrmKOeFGz+tyvqx7GzH43QEyO+VH8Naf409elCbDDThwaO1uz+ivacuG+lu0VOg7ssNQiD73+toS+aV0BDYwhci2OKpsu6FNtYexxq3Io3lGweQgniJargT7aZAyZt4=
+	t=1723108274; cv=none; b=SApzZoCYZTNu7p3UAgqTDcaX/H2zoJXmABVqvPQP7MMFk2bwQDBEg5ephArB9u3Kyj/0tX1pG0m51H/V+R/7CROVa6Ee3q2EMoLBnxzKMoJbTs1fN4OY6qpuyPpI3Pzqu/7E3VdRNWcXrZgavW5get6priblqgJikJqrch2YRmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723108218; c=relaxed/simple;
-	bh=hRr3xEszEhk9BYpVF/uH23tXtfvSZFMRlshRvkYa5Bg=;
+	s=arc-20240116; t=1723108274; c=relaxed/simple;
+	bh=b0OpzdpdhhO0nLd9K/u2DPfFKntqE3kpTtJPQcXOLvE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HX0blSDWOanbTOE/n2G3zPnaWZqTTZmD4TzKdfEK6IJRwTpfbglpPW5PsHCRgPgAiNjrxDd9+uB8ujdVapURBsYnukwAZLICTCdMbNZvLc3ZNbEeRgKOekbYX+w31sMPjruIhpqQcp20u3QtZokU5yiPY7XbeNIFaYhj/DGeNXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BUJVb+je; arc=none smtp.client-ip=192.198.163.11
+	 Content-Type:Content-Disposition:In-Reply-To; b=cUJmjrZQuEgJ7gZHq7Ne8Vl7+9TpbGWrPXf1z0XPFXyzHOFxKDWN1B+XctppvO+SaCF2Xt7LXMoUoN/lVDHBG7O+1fsmvgKDHJqKGMmBZU0mTmGMwpO96ELp8EA4hDxI26VA6qoQKjT4sG0HhdquJOa5HrWgtv9u68BgS8Yf9+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QPDc5sVU; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BUJVb+je"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QPDc5sVU"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1723108217; x=1754644217;
+  t=1723108273; x=1754644273;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=hRr3xEszEhk9BYpVF/uH23tXtfvSZFMRlshRvkYa5Bg=;
-  b=BUJVb+je46VGi9CCeMUTuMMW22mySvJKJRod/m1YutQWcuaJGAxWOr2e
-   seuzc2TtdQ9gzDXcEPOtXMXuEQq3ciImPzSfC01qdMAdiOy3ozvdC7nCw
-   jZEz50ovmIbSEzj/Fb0du5h6FJEpCr+Aet0+lkriVaLZ4YKgABiO7d+/y
-   wtZJsgAa7FKodL8kfFUXAemuHnnvWFObLXP6boS4DIiZxN/hnRLUSbY69
-   /zX3+0jLFdSVn/S81CC7Gow2v3Wy6syAb3nXa+GAV2GxA2SFuLSvRnOZG
-   z3P6YTpWOTGypKwLM21ill/ptwL8IvMW3pw/y3LAZNo0p5q73VumCb72g
-   Q==;
-X-CSE-ConnectionGUID: 5NxIcKY1TTmHZeNStwodNw==
-X-CSE-MsgGUID: ABN9xIdvQ966FUvSswxYRA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11157"; a="31850902"
+  bh=b0OpzdpdhhO0nLd9K/u2DPfFKntqE3kpTtJPQcXOLvE=;
+  b=QPDc5sVUz92ByNvXSgaOzdaVjxBx6hZViZQGcHUR+MWy4Lq5y6FnxKbg
+   Pfllyz1prD+c8/35f5LpXra2qfCkPMHdEFf3SMtZVRChvvSEypWnp/XoJ
+   xpqmdPNIeKkii8CHLf6vQFCfaaXdWyXzrqAUYyULbgRbsm37ESw3PqKpT
+   VPE0R87+IRPKN0kQXBWEy3J9gnHxSmcYmJ0R/Jj9GVZnRbHHxqIKndALM
+   HgoiQVG3imedyr6GCX3HUIhsTrnOVol3fNZYHhG4hN8kk2hosqPk13IYy
+   W+MXK6nDiW8jyWgwwWMKOb9YbVEi5cVOhhse+d0t5p2q//F4J0GxQbfpp
+   g==;
+X-CSE-ConnectionGUID: 0q3EACuFTP+GRi9D4ldE5A==
+X-CSE-MsgGUID: IyRoaDGaTy2vAK9/kGUoJw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11157"; a="21102493"
 X-IronPort-AV: E=Sophos;i="6.09,272,1716274800"; 
-   d="scan'208";a="31850902"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2024 02:10:16 -0700
-X-CSE-ConnectionGUID: JZa6+RTPRnKA6rSB67xMHA==
-X-CSE-MsgGUID: UMmEjXp2Th2IdCOHxY3QPg==
+   d="scan'208";a="21102493"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2024 02:11:10 -0700
+X-CSE-ConnectionGUID: T6BeP2UYSfic/YRRnm/RcQ==
+X-CSE-MsgGUID: eLQwu1HHSTii2ke0rwmrZA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,272,1716274800"; 
-   d="scan'208";a="57113895"
+   d="scan'208";a="57389344"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2024 02:10:15 -0700
+  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2024 02:11:08 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.98)
 	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1sbz9w-0000000D0zb-3evB;
-	Thu, 08 Aug 2024 12:10:12 +0300
-Date: Thu, 8 Aug 2024 12:10:12 +0300
+	id 1sbzAn-0000000D10M-48jx;
+	Thu, 08 Aug 2024 12:11:05 +0300
+Date: Thu, 8 Aug 2024 12:11:05 +0300
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Michal Wajdeczko <michal.wajdeczko@intel.com>
 Cc: linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH 1/2] lib/string_choices: Add str_up_down() helper
-Message-ID: <ZrSLdCwtZA-iB1L-@smile.fi.intel.com>
+Subject: Re: [PATCH 2/2] coccinelle: Add rules to find str_up_down()
+ replacements
+Message-ID: <ZrSLqZhlrd2v-GfG@smile.fi.intel.com>
 References: <20240725101841.574-1-michal.wajdeczko@intel.com>
+ <20240725101841.574-2-michal.wajdeczko@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -62,23 +64,15 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240725101841.574-1-michal.wajdeczko@intel.com>
+In-Reply-To: <20240725101841.574-2-michal.wajdeczko@intel.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Thu, Jul 25, 2024 at 12:18:40PM +0200, Michal Wajdeczko wrote:
-> Add str_up_down() helper to return "up" or "down" string literal.
+On Thu, Jul 25, 2024 at 12:18:41PM +0200, Michal Wajdeczko wrote:
+> Add rules for finding places where str_up_down() can be used.
+> This currently finds over 20 locations.
 
-...
-
-> +static inline const char *str_up_down(bool v)
-> +{
-> +	return v ? "up" : "down";
-> +}
-
-Can you please add a respective macro for str_down_up() as it's done for (some)
-others?
-
-P.S. Yes, I see these two has been applied, so perhaps followup?
+This would be need an update as well in accordance with the review comment on
+patch 1.
 
 -- 
 With Best Regards,
