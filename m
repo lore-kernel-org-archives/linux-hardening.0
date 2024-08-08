@@ -1,62 +1,78 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28209770F6;
-	Thu,  8 Aug 2024 03:05:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A8B714386B;
+	Thu,  8 Aug 2024 03:30:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723086324; cv=none; b=DUn3SKqOn9Ykc4TA3rJpBSU4wOB4TS8hfeko4KPFwTDt+Gax1gDRZoXgyBtBLlJwokGPvSq01WJK6w472OEJJvUKACWnYTNaZKmns3MC5DSNs9x7dfEyi1LGa3TVcl7TZDGo+EnBPHJpU5Rwx4zMZPS8JBuNxvlaQ0jYUvuhjpg=
+	t=1723087844; cv=none; b=DsAEVJM+fEn6LZyThfvsbwKA42v6aYHkRdvEy5uRDZvGAX09WYU5EzGHPM5Lycn9DFujtRV+9Ggbl75XiUZobbY9KZXV4GooI584l/dul+BTrYeHbyfyZa9RCSuAdlhZj907y1/Ert7+/sqghqIAiMB4KVsj23GdY2yghmhkQoM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723086324; c=relaxed/simple;
-	bh=ikX92fLouxZr+jdI9LogpJin3zNYg+qF/+jOZgiP9ws=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GnK8dgLGoayc3Pi/Ya5Qb3ONJFF6rCg4uo1nHs487BDNcpP4CsxVMx97onRTSjocOQ8m4UPaBU46JGeoY3SUEkWLAi9kXm7vkdIb1poS/O2xuJvdCuwvt3+TP1M5sfUcjH387zAd7mv1aLdWFEeFnHtcgzw1o/QoCpNCbSYqWTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XXEIwUjf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1723087844; c=relaxed/simple;
+	bh=4dlVQg6b1LnGml4zNwLjvPLOxC7y9Q7ueEnwEpzmH64=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=riw4VBaTY+cp/aVeeDB8m+hrb5RgItA0c+TB2Gu2JEcWG01sfCoQvhOqrrUnuKwJJ3+UuNcSU9LtaV9JFx5fKFp4z3a3qjg5CPFrUAgeC5V90nS4MpUg3A8GRcgW8dkOydgIOeW4HUHPXF3TE67Llc3djmVSDUXY/07q4ralaDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zma4/voR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XXEIwUjf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29230C32781;
-	Thu,  8 Aug 2024 03:05:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zma4/voR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B859C32781;
+	Thu,  8 Aug 2024 03:30:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723086323;
-	bh=ikX92fLouxZr+jdI9LogpJin3zNYg+qF/+jOZgiP9ws=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=XXEIwUjfz6L5vA18Y/RcKa3hvxgzPm3XlwxKVlXUTGqIOTqeXyBHZM0lLwt+Ks/ib
-	 0TY/+devOZqt8majQd/k6EesFasAmMSQORNXJi8h4bIkwwSTOHk1BozhtIJucfasdY
-	 SXrfWxwmqbL4s9YIj5lgQbYSNrOZV3L5Aq+4cB8phmn5+05xvpt6KT4mQadkMR7BIo
-	 EeDcJa2kYs+9aYZew9HVQpDYygy3i7EfA9koHsha55faAwjUOZG7Rd+Zzn5nQSfHfH
-	 3gbHAk0W+0tYojDb8x8YXF27sZYxdVKPz26zJxO903cGbQkeGwN6rj1ZVpB+yJmUlE
-	 tsXHBw9TE0wbg==
-Date: Wed, 7 Aug 2024 20:05:22 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Potnuri Bharat Teja <bharat@chelsio.com>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
- <pabeni@redhat.com>, Jamal Hadi Salim <jhs@mojatatu.com>, Cong Wang
- <xiyou.wangcong@gmail.com>, Jiri Pirko <jiri@resnulli.us>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] cxgb4: Avoid -Wflex-array-member-not-at-end
- warning
-Message-ID: <20240807200522.2caba2dc@kernel.org>
-In-Reply-To: <ZrD8vpfiYugd0cPQ@cute>
-References: <ZrD8vpfiYugd0cPQ@cute>
+	s=k20201202; t=1723087843;
+	bh=4dlVQg6b1LnGml4zNwLjvPLOxC7y9Q7ueEnwEpzmH64=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=Zma4/voRW5WWT9qftxUth8X4T86rYgMU/KZqOK09xwTuTHhzcQlG/QQguxNMHYO8N
+	 JjoSPHLUvwxXA5JqruNEQYuTtwOwcLrhDSSlJSiobJXyepZYbq52DglPzGqF4PKkH4
+	 nfMK7A9ojv9lb/z/6DV/FKIO3hYDTHkRIIQn0YE3hCRFjS9ToIjl6Af8yCSXZ8D1GH
+	 PbIgdJxzO7FxNy+4ibVSclBn0A5s6vGkUkW8N8e+8hAQIdReFc6wv1Ve3RLmhNDOAK
+	 VdnWi6k2uwZWYmbxqB6QkeVJwgoh7NgZt23s5hZJ6FFuceRfzB2GwQYlXCs5+yhAp1
+	 zz8EWD+xeKsog==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE0953822D3B;
+	Thu,  8 Aug 2024 03:30:43 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH][next] net/fungible: Avoid -Wflex-array-member-not-at-end
+ warning
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <172308784242.2759733.10120842283235740519.git-patchwork-notify@kernel.org>
+Date: Thu, 08 Aug 2024 03:30:42 +0000
+References: <ZrDwEugW7DR/FlP5@cute>
+In-Reply-To: <ZrDwEugW7DR/FlP5@cute>
+To: Gustavo A. R. Silva <gustavoars@kernel.org>
+Cc: dmichail@fungible.com, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 
-On Mon, 5 Aug 2024 10:24:30 -0600 Gustavo A. R. Silva wrote:
-> Subject: [PATCH][next] cxgb4: Avoid -Wflex-array-member-not-at-end warning
-> Date: Mon, 5 Aug 2024 10:24:30 -0600
+Hello:
 
->  .../chelsio/cxgb4/cxgb4_tc_u32_parse.h        |  2 +-
->  include/uapi/linux/pkt_cls.h                  | 23 +++++++++++--------
+This patch was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-Took me a minute to realize you're changing uAPI.
-Please fix the subject.
+On Mon, 5 Aug 2024 09:30:26 -0600 you wrote:
+> Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
+> a flexible structure where the size of the flexible-array member
+> is known at compile-time, and refactor the rest of the code,
+> accordingly.
+> 
+> So, with these changes, fix the following warning:
+> drivers/net/ethernet/fungible/funcore/fun_dev.c:550:43: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 
+> [...]
+
+Here is the summary with links:
+  - [next] net/fungible: Avoid -Wflex-array-member-not-at-end warning
+    https://git.kernel.org/netdev/net-next/c/3f49edf44bd6
+
+You are awesome, thank you!
 -- 
-pw-bot: cr
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
