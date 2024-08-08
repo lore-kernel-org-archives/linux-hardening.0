@@ -1,45 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 708B82A1DF;
-	Thu,  8 Aug 2024 22:05:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D60615ADA4;
+	Thu,  8 Aug 2024 22:05:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723154702; cv=none; b=FBSVdOgNnVM+gXbdDOT/hRLLFUMhVLZIFdwaysfMwlk+X6EuYCtcmLHfINT6/XddkSF0fgicGF1lxYGzoTFU3pWlv7qqTVzgcjn/nXbQNdtS8nWSdKFXw8l9dMJ9qnUGDq28C2ahOZELLEtMNi3n5VNynDp2+3QvJSCq89axXdA=
+	t=1723154729; cv=none; b=mMawbaiCoN7wzzKLmiA7Q41o4kUsPKQeuCu6qvSZD/yKMOISCcNBuD1zFEQXkWKop+yEK3qG6fLh+GE/LyBa0dER/y3h6CDQX36+lwtNvVyV9OR4EqAjDbKwx5qKUfERGtBYEHNFPbiaoPVWSeNgHS9PHRuWROCPUbLdbjCzrOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723154702; c=relaxed/simple;
-	bh=qnpZw+lFbLx8fiwo3zs7XLa7SwYU5KxtlLxuoVA7qLU=;
+	s=arc-20240116; t=1723154729; c=relaxed/simple;
+	bh=XltQHJ1O4DYcU49OJPdFCg+IJTmIZaV8GlT/lyMKprQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=J6dnK7A+Stxz2syexvSHk6l3U2IYPtMzMEbYBybSWWBi6CkDh8O9YYjkFjgsu17ZhyjUgZoBS3pdIQz5p491ystBxA3XuMDvznTO6+GdaG9wQya2V24HYgKXWjox90Tg+plIk+L+Dx8c662/ij11y6h2oBlfuSwxBVeIjr2H+EU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EShAfoJi; arc=none smtp.client-ip=10.30.226.201
+	 Content-Disposition; b=HafqbqRlMU8Oum7UDxflYN+4uf/LGQ35HLi+0iieXThJ5WX7a9qhISwRSUJFapL1rHPvH+qrSHZ/sKusrhfnWDfSw8pDh2rgdqcPNWaKbr75fXKELBKuty4vAftaHMf4LrUp9WLaCMmYEYQfV2Fp00IaG1sUeZx4Rfd9PP4AUVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=frCzq9Wr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EShAfoJi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06378C32782;
-	Thu,  8 Aug 2024 22:05:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="frCzq9Wr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3201BC32782;
+	Thu,  8 Aug 2024 22:05:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723154702;
-	bh=qnpZw+lFbLx8fiwo3zs7XLa7SwYU5KxtlLxuoVA7qLU=;
+	s=k20201202; t=1723154728;
+	bh=XltQHJ1O4DYcU49OJPdFCg+IJTmIZaV8GlT/lyMKprQ=;
 	h=Date:From:To:Cc:Subject:From;
-	b=EShAfoJi5V3DpuVchMO7eZNgNNT4VJ9FiGfBB6cdBOC2cPVddqPrWRSuRIB5u1WQJ
-	 GDDUegjSxWTNGxZ0aQjkc82DR7bUcjiuBKXUUehGhpLCLJL1d6wKbybV5L2Ws4Izdm
-	 k4hYsxJcPR8TL5DNmCWyfvfc1Rh8jhZufMAvZMHu5wkE4RGl0kAjOeBhXNQcLayo3c
-	 CTJmSb3EhUAfVuZFK3RPgalpgkVq4H83Ns74mrceou6oDZi0+F0JUqArh+FDTcdIla
-	 RzwKBDuqM9wxup9VwyW6WVPMumasLGINrO1guidJGhFtcMRyll/OXb81RdYNPkMe3m
-	 0AfRlQjPIw5mA==
-Date: Thu, 8 Aug 2024 16:04:59 -0600
+	b=frCzq9WruCNbsC020l9lleSjLy1gS3TjCq3RSgJqC+hWLEyaoJoD5SpuFGHZsbPYm
+	 2VQxz0xMFOseVsRhKKYWSeFYpWpt0pPbCaA24N7Op03YfTbDK99H/hBr7qHUbg7PKj
+	 WDRVYaqvaJBwRdgu3T8VjONFNK69n3SXV9lsbV9z8jWf845mESRJXAbRG2ZnrwLBKI
+	 erG99aHK4Zz2+4Kx8A1KznDRGUjg5gdAKqKVSV5l5BdbB7OMKF4xMYc1KAQUQ7cofo
+	 5lGVmg+G1d/v++LPjmgCGAuK7MC2vgIigqKIE4qUHaqgxOuiOgibIpkd6R8+LkbpM/
+	 k5l/dpAGNp2lg==
+Date: Thu, 8 Aug 2024 16:05:26 -0600
 From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Mimi Zohar <zohar@linux.ibm.com>,
-	Roberto Sassu <roberto.sassu@huawei.com>,
-	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-	Eric Snowberg <eric.snowberg@oracle.com>,
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>
-Cc: linux-integrity@vger.kernel.org, linux-security-module@vger.kernel.org,
+To: Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>
+Cc: qat-linux@intel.com, linux-crypto@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] integrity: Use static_assert() to check struct sizes
-Message-ID: <ZrVBC9dGwukjfhet@cute>
+Subject: [PATCH][next] crypto: qat - Use static_assert() to check struct sizes
+Message-ID: <ZrVBJqdL1q3X3Dg/@cute>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -49,11 +46,10 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-Commit 38aa3f5ac6d2 ("integrity: Avoid -Wflex-array-member-not-at-end
-warnings") introduced tagged `struct evm_ima_xattr_data_hdr` and
-`struct ima_digest_data_hdr`. We want to ensure that when new members
-need to be added to the flexible structures, they are always included
-within these tagged structs.
+Commit 140e4c85d540 ("crypto: qat - Avoid -Wflex-array-member-not-at-end
+warnings") introduced tagged `struct qat_alg_buf_list_hdr`. We want to
+ensure that when new members need to be added to the flexible structure,
+they are always included within this tagged struct.
 
 So, we use `static_assert()` to ensure that the memory layout for
 both the flexible structure and the tagged struct is the same after
@@ -61,31 +57,22 @@ any changes.
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- security/integrity/integrity.h | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/crypto/intel/qat/qat_common/qat_bl.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/security/integrity/integrity.h b/security/integrity/integrity.h
-index 660f76cb69d3..c2c2da691123 100644
---- a/security/integrity/integrity.h
-+++ b/security/integrity/integrity.h
-@@ -37,6 +37,8 @@ struct evm_ima_xattr_data {
+diff --git a/drivers/crypto/intel/qat/qat_common/qat_bl.h b/drivers/crypto/intel/qat/qat_common/qat_bl.h
+index 85bc32a9ec0e..3f5b79015400 100644
+--- a/drivers/crypto/intel/qat/qat_common/qat_bl.h
++++ b/drivers/crypto/intel/qat/qat_common/qat_bl.h
+@@ -23,6 +23,8 @@ struct qat_alg_buf_list {
  	);
- 	u8 data[];
+ 	struct qat_alg_buf buffers[];
  } __packed;
-+static_assert(offsetof(struct evm_ima_xattr_data, data) == sizeof(struct evm_ima_xattr_data_hdr),
++static_assert(offsetof(struct qat_alg_buf_list, buffers) == sizeof(struct qat_alg_buf_list_hdr),
 +	      "struct member likely outside of __struct_group()");
  
- /* Only used in the EVM HMAC code. */
- struct evm_xattr {
-@@ -65,6 +67,8 @@ struct ima_digest_data {
- 	);
- 	u8 digest[];
- } __packed;
-+static_assert(offsetof(struct ima_digest_data, digest) == sizeof(struct ima_digest_data_hdr),
-+	      "struct member likely outside of __struct_group()");
- 
- /*
-  * Instead of wrapping the ima_digest_data struct inside a local structure
+ struct qat_alg_fixed_buf_list {
+ 	struct qat_alg_buf_list_hdr sgl_hdr;
 -- 
 2.34.1
 
