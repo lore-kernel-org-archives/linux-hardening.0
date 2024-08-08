@@ -1,78 +1,87 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A8B714386B;
-	Thu,  8 Aug 2024 03:30:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5587C4A1E;
+	Thu,  8 Aug 2024 06:20:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723087844; cv=none; b=DsAEVJM+fEn6LZyThfvsbwKA42v6aYHkRdvEy5uRDZvGAX09WYU5EzGHPM5Lycn9DFujtRV+9Ggbl75XiUZobbY9KZXV4GooI584l/dul+BTrYeHbyfyZa9RCSuAdlhZj907y1/Ert7+/sqghqIAiMB4KVsj23GdY2yghmhkQoM=
+	t=1723098019; cv=none; b=etmgsbsNE1F1EfHas3V2X+aYo/+GA7ItVp0gC8Lq4HSbG9mHnUK72tSbVlZxYrwaSg6/HOIt/jsR49Sjl0OubF9Y/wCRCoM5O2T4OoovnycWikH+vWUSkP58Uy9YWVVLb1S0YsmF1E6voowyf7yiusujXF0X6DtFLi70G3srKNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723087844; c=relaxed/simple;
-	bh=4dlVQg6b1LnGml4zNwLjvPLOxC7y9Q7ueEnwEpzmH64=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=riw4VBaTY+cp/aVeeDB8m+hrb5RgItA0c+TB2Gu2JEcWG01sfCoQvhOqrrUnuKwJJ3+UuNcSU9LtaV9JFx5fKFp4z3a3qjg5CPFrUAgeC5V90nS4MpUg3A8GRcgW8dkOydgIOeW4HUHPXF3TE67Llc3djmVSDUXY/07q4ralaDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zma4/voR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1723098019; c=relaxed/simple;
+	bh=X9NY6xCSLD4ufw4GmHD6bL7PfZlnwn442WiojDh1QoM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WEahqyYWxiwVAUCkgY3+Lx/dzUwPdn8L3cxyjjBofQ+wgR99n/pmSCAwDjIeT1i7gAXAwAz0atFE2Z6ZlhsbP/WIRbAAA6pVI0pAP3F56Kn3wZcdVmAJKhNc0A/JJW9Uywbi4rB87pfurpK3b7ddkWjk6hMZhKMhdiUUpVOBHwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lFDQbhkL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zma4/voR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B859C32781;
-	Thu,  8 Aug 2024 03:30:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lFDQbhkL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C02DC32782;
+	Thu,  8 Aug 2024 06:20:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723087843;
-	bh=4dlVQg6b1LnGml4zNwLjvPLOxC7y9Q7ueEnwEpzmH64=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=Zma4/voRW5WWT9qftxUth8X4T86rYgMU/KZqOK09xwTuTHhzcQlG/QQguxNMHYO8N
-	 JjoSPHLUvwxXA5JqruNEQYuTtwOwcLrhDSSlJSiobJXyepZYbq52DglPzGqF4PKkH4
-	 nfMK7A9ojv9lb/z/6DV/FKIO3hYDTHkRIIQn0YE3hCRFjS9ToIjl6Af8yCSXZ8D1GH
-	 PbIgdJxzO7FxNy+4ibVSclBn0A5s6vGkUkW8N8e+8hAQIdReFc6wv1Ve3RLmhNDOAK
-	 VdnWi6k2uwZWYmbxqB6QkeVJwgoh7NgZt23s5hZJ6FFuceRfzB2GwQYlXCs5+yhAp1
-	 zz8EWD+xeKsog==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE0953822D3B;
-	Thu,  8 Aug 2024 03:30:43 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1723098019;
+	bh=X9NY6xCSLD4ufw4GmHD6bL7PfZlnwn442WiojDh1QoM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lFDQbhkLAPVrpBzMivRB3q1DQzO9myhdCHwfR5uOB2+84aQTZxFi1chGA60bZieRS
+	 DaYksPM+Svo/5N6Nua0yXep112L3A/LQ4qVYn4+FjociZac/Ztb6is8UnjlvQV9LD1
+	 Xiasj2u8DB2UO7dteo58gW47cMwLORmnEpRLYs/4Ro/+AHBWBM3N2uLFJxRitvocDn
+	 AIams1FJMakx6yCSugubObtItgQ/3pLduNfsgeP/H3Ze5pm/owGXzSisZK1RDnkZuV
+	 1teqHp6wzmwn0GbsnkEoR0jUNSK8rkNvRl8N0Qb5iuJrK/5J+4aSwCVFKWUxKZB9gB
+	 x7v51oLnA+TDg==
+Date: Thu, 8 Aug 2024 09:18:07 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+	linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org,
+	Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>,
+	Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [PATCH] pstore/ramoops: Fix typo as there is no "reserver"
+Message-ID: <ZrRi7fdYo3yVPr1G@kernel.org>
+References: <20240807170029.3c1ff651@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH][next] net/fungible: Avoid -Wflex-array-member-not-at-end
- warning
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <172308784242.2759733.10120842283235740519.git-patchwork-notify@kernel.org>
-Date: Thu, 08 Aug 2024 03:30:42 +0000
-References: <ZrDwEugW7DR/FlP5@cute>
-In-Reply-To: <ZrDwEugW7DR/FlP5@cute>
-To: Gustavo A. R. Silva <gustavoars@kernel.org>
-Cc: dmichail@fungible.com, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240807170029.3c1ff651@gandalf.local.home>
 
-Hello:
-
-This patch was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Mon, 5 Aug 2024 09:30:26 -0600 you wrote:
-> Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
-> a flexible structure where the size of the flexible-array member
-> is known at compile-time, and refactor the rest of the code,
-> accordingly.
+On Wed, Aug 07, 2024 at 05:00:29PM -0400, Steven Rostedt wrote:
+> From: Steven Rostedt <rostedt@goodmis.org>
 > 
-> So, with these changes, fix the following warning:
-> drivers/net/ethernet/fungible/funcore/fun_dev.c:550:43: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> For some reason my finger always hits the 'r' after typing "reserve".
+> Fix the typo in the Documentation example.
 > 
-> [...]
+> Fixes: d9d814eebb1ae ("pstore/ramoops: Add ramoops.mem_name= command line option")
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-Here is the summary with links:
-  - [next] net/fungible: Avoid -Wflex-array-member-not-at-end warning
-    https://git.kernel.org/netdev/net-next/c/3f49edf44bd6
+Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 
-You are awesome, thank you!
+> ---
+> Note, I did have this fixed, but the previous version was pulled:
+>   https://lore.kernel.org/linux-trace-kernel/20240613233446.283241953@goodmis.org/
+> 
+>  Documentation/admin-guide/ramoops.rst | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/admin-guide/ramoops.rst b/Documentation/admin-guide/ramoops.rst
+> index 6f534a707b2a..2eabef31220d 100644
+> --- a/Documentation/admin-guide/ramoops.rst
+> +++ b/Documentation/admin-guide/ramoops.rst
+> @@ -129,7 +129,7 @@ Setting the ramoops parameters can be done in several different manners:
+>      takes a size, alignment and name as arguments. The name is used
+>      to map the memory to a label that can be retrieved by ramoops.
+>  
+> -	reserver_mem=2M:4096:oops  ramoops.mem_name=oops
+> +	reserve_mem=2M:4096:oops  ramoops.mem_name=oops
+>  
+>  You can specify either RAM memory or peripheral devices' memory. However, when
+>  specifying RAM, be sure to reserve the memory by issuing memblock_reserve()
+> -- 
+> 2.43.0
+> 
+
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Sincerely yours,
+Mike.
