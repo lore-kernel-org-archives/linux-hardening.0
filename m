@@ -1,102 +1,113 @@
-Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
+Received: from smtp39.i.mail.ru (smtp39.i.mail.ru [95.163.41.80])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50C66155316
-	for <linux-hardening@vger.kernel.org>; Thu,  8 Aug 2024 18:41:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D93BD155335;
+	Thu,  8 Aug 2024 18:41:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.163.41.80
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723142500; cv=none; b=nBOjr2ACpMIyvDBKYda4WXCZrIYnszUck8tPsRziwigKzPLimWVNVFMfsQdzwKajZ9ykb/VGBF/v9FkuM3ps/bCXqPb7Jo1K7cd6mVra7Yf8ob5Anz+QT71lmgVpS/2nRwtLA8WLNVLxv8LhNxr5whyW7o6cyrEdicmsQQsfvKU=
+	t=1723142500; cv=none; b=TkgicTqzi14kga2uKJlfPG1rvii81L4dnpR2nfHd/s+/HHPGvWL2Mdz8cIoa/erJ5DEB3dY3vLJZHpOGLRJNtCMyOStRuqoP5gEBaeBvymRqz5LQRKYQb6xHjGcqlkFXwwvy/nDecENHMc1yqqMdmxVKlFbl93tvjCeTVCcCxS0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1723142500; c=relaxed/simple;
-	bh=mc2b2wnvSswdd9bGNTJz3ThvN6deTuY2z1veO6hhceI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Y1H2McjP9j0mRORjKDfE9jXJRbAyJ6WmuPLI7u1LTuXhEp15yMASf2iHVrJ7m3/KhoW/NNIziECXX+cmOPeoEyznwvsZ9EYqz0vxKHiz0wZxH4iDVcQeou18t+ldrU1t+GanixAUeBO8Vhj1BdQ60k+1bZdphxTWw5j2Jr1SZAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=Gn2yR5A2; arc=none smtp.client-ip=44.202.169.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	bh=oqRrXJ8CUISiH0+6MUAgBYbuxSjpyVTzwmPq6LFtB1U=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=uoTu4x8Trdi/+ZHyHjgenO/70n929kCApI0F4iEwgeKc6oMyA3S1n9/emJVnI/G7QGm0cCOd/vJlPM+ZJx6E44R/htAmxXMt8A6nER1DGmhGxehuZz4Ijhzzj9U5RDAtYYxaZLjyNneCZo4b35Y0Teh2fk/jaaefXqal2DQgpC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jiaxyga.com; spf=pass smtp.mailfrom=jiaxyga.com; dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b=tuRnX+Qa; arc=none smtp.client-ip=95.163.41.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jiaxyga.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jiaxyga.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="Gn2yR5A2"
-Received: from eig-obgw-5001a.ext.cloudfilter.net ([10.0.29.139])
-	by cmsmtp with ESMTPS
-	id c5vZseOxyiA19c84vsI1Hj; Thu, 08 Aug 2024 18:41:37 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id c84usXcaP5D6dc84uskKnK; Thu, 08 Aug 2024 18:41:37 +0000
-X-Authority-Analysis: v=2.4 cv=I6GuR8gg c=1 sm=1 tr=0 ts=66b51161
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=frY+GlAHrI6frpeK1MvySw==:17
- a=IkcTkHD0fZMA:10 a=yoJbH4e0A30A:10 a=bf4sMg6fRU9RvZfKRQcA:9
- a=QEXdDO2ut3YA:10 a=Xt_RvD8W3m28Mn_h3AK8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=4Hy7G8KZGHDNlJ3507GxEirDfB3P09Yp8UX4cEgxCNo=; b=Gn2yR5A2DkEODa9mYfOrJzjBvR
-	jRsU0kedD/5yUEgWmNV2GKMzrEserzkqo5e49WwxpMcuYfEnyRAapQ9V372V0U7MVFMryABH8+c7R
-	vvCVCxf2zLD/CAJNO6nv0W9ff3iQMm04HZoLjjYyp+KwKLrOfor+m2KK7u5bZ0CPhKm5a6wKMU/tn
-	nHOirqXdhkU97zocmxXTRBS7vjS/hKp/TRggipSVHyKM7ezFkTrGmYfp93ekqvi+6S8ZCwNSkug6r
-	qlg1k9yr+N8sTDfyTpnbsyzXz1XnX+pda8nwbLr5iB7DAZqN0oKgYS/xyIWbSFsL0KRxkZaaLEmIA
-	Lnaz3bWQ==;
-Received: from [201.172.173.139] (port=57980 helo=[192.168.15.5])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1sc84s-00417g-1x;
-	Thu, 08 Aug 2024 13:41:34 -0500
-Message-ID: <111cc058-a681-4aec-ace4-cd6bc19699f7@embeddedor.com>
-Date: Thu, 8 Aug 2024 12:41:32 -0600
+	dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b="tuRnX+Qa"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=jiaxyga.com
+	; s=mailru; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
+	Message-ID:Date:Subject:Cc:To:From:From:Sender:Reply-To:To:Cc:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive:
+	X-Cloud-Ids:Disposition-Notification-To;
+	bh=3RWNEzgkflnEQObOJCO+U1GwMf2lZ3z9OpwwVDJJmOM=; t=1723142499; x=1723232499; 
+	b=tuRnX+QaTd2750ZqLN3oQMINtWRrcGP3p4nfVkvQCu0GyKHwqNYCpMrRwm7ApY1YnBdtH+Fb+SD
+	OonjId9gaiEUBT2CzXTPrKC7GNCY1ZX5wS2x46vipFvndS0rLeRmrKSVOwRYvrtLSkdpvuRz1hpzI
+	PF6VTO2uQmu6veHzAlQ=;
+Received: by smtp39.i.mail.ru with esmtpa (envelope-from <danila@jiaxyga.com>)
+	id 1sc84s-00000001fDW-1prM; Thu, 08 Aug 2024 21:41:34 +0300
+From: Danila Tikhonov <danila@jiaxyga.com>
+To: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	andersson@kernel.org,
+	konradybcio@kernel.org,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	rafael@kernel.org,
+	viresh.kumar@linaro.org,
+	kees@kernel.org,
+	tony.luck@intel.com,
+	gpiccoli@igalia.com,
+	ulf.hansson@linaro.org,
+	andre.przywara@arm.com,
+	quic_rjendra@quicinc.com,
+	davidwronek@gmail.com,
+	neil.armstrong@linaro.org,
+	heiko.stuebner@cherry.de,
+	rafal@milecki.pl,
+	macromorgan@hotmail.com,
+	linus.walleij@linaro.org,
+	lpieralisi@kernel.org,
+	dmitry.baryshkov@linaro.org,
+	fekz115@gmail.com
+Cc: devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	Danila Tikhonov <danila@jiaxyga.com>
+Subject: [PATCH v2 06/11] dt-bindings: nfc: nxp,nci: Document PN553 compatible
+Date: Thu,  8 Aug 2024 21:40:20 +0300
+Message-ID: <20240808184048.63030-7-danila@jiaxyga.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240808184048.63030-1-danila@jiaxyga.com>
+References: <20240808184048.63030-1-danila@jiaxyga.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] cxgb4: Avoid -Wflex-array-member-not-at-end warning
-To: Jakub Kicinski <kuba@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Potnuri Bharat Teja <bharat@chelsio.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Paolo Abeni <pabeni@redhat.com>, Jamal Hadi Salim <jhs@mojatatu.com>,
- Cong Wang <xiyou.wangcong@gmail.com>, Jiri Pirko <jiri@resnulli.us>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <ZrD8vpfiYugd0cPQ@cute> <20240807200522.2caba2dc@kernel.org>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20240807200522.2caba2dc@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.173.139
-X-Source-L: No
-X-Exim-ID: 1sc84s-00417g-1x
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.5]) [201.172.173.139]:57980
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfBWtVqqbcI0QX13PQiEEKJK+1a5EVnvwYI45kzUO8aVVOoU8oin+rg9CdzgqvrjnHf8vkAWp7ETgAGDs8zAOF2vYfxN53HpUvJtu75qDKQ3S6XxtdaIS
- 65SnZSz0zCQZ+fDMpYWFI29+OSwavsiG+Pn0uVzCz3E8ejMwIfvrCEJL5hIfufV0Ye2Ew6RSkb4qJnOTKAgA9gHsE04c82pUWGQcThUlx6sZNU/ydtPLGFJw
+Content-Transfer-Encoding: 8bit
+Authentication-Results: smtp39.i.mail.ru; auth=pass smtp.auth=danila@jiaxyga.com smtp.mailfrom=danila@jiaxyga.com
+X-Mailru-Src: smtp
+X-4EC0790: 10
+X-7564579A: B8F34718100C35BD
+X-77F55803: 4F1203BC0FB41BD9D9DED0FED0530B21D5CEFA8193EAC1B119F3FFB6EDB7E89700894C459B0CD1B9464F0E7320E002DD3E60E583875EFAA40D5072B2037778FFB940E011F974308A60DFE2D95CBACD2B
+X-7FA49CB5: FF5795518A3D127A4AD6D5ED66289B5278DA827A17800CE7FFA2A8BF6367A61CEA1F7E6F0F101C67BD4B6F7A4D31EC0BCC500DACC3FED6E28638F802B75D45FF8AA50765F79006377F69ABDCCC31D2058638F802B75D45FF36EB9D2243A4F8B5A6FCA7DBDB1FC311F39EFFDF887939037866D6147AF826D823E3A2C365B6759F9889FB57C2C458C239C2F3C65CF289E1CC7F00164DA146DAFE8445B8C89999728AA50765F7900637323E1896550E62E4389733CBF5DBD5E9C8A9BA7A39EFB766F5D81C698A659EA7CC7F00164DA146DA9985D098DBDEAEC8989FD0BDF65E50FBF6B57BC7E6449061A352F6E88A58FB86F5D81C698A659EA73AA81AA40904B5D9A18204E546F3947CCF7CD7A0D5AA5F256136E347CC761E074AD6D5ED66289B523666184CF4C3C14F6136E347CC761E07725E5C173C3A84C3D54606DEFE0495C9BA3038C0950A5D36B5C8C57E37DE458B330BD67F2E7D9AF16D1867E19FE14079C09775C1D3CA48CF3D321E7403792E342EB15956EA79C166A417C69337E82CC275ECD9A6C639B01B78DA827A17800CE71D0063F52110EA4A731C566533BA786AA5CC5B56E945C8DA
+X-C1DE0DAB: 0D63561A33F958A5996FB29906ABFFB95002B1117B3ED696C4D43FF832913BF01BDDAE3D1EA49BEA823CB91A9FED034534781492E4B8EEADEF0AF71940E62277C79554A2A72441328621D336A7BC284946AD531847A6065AED8438A78DFE0A9EBDAD6C7F3747799A
+X-C8649E89: 1C3962B70DF3F0ADE00A9FD3E00BEEDF3FED46C3ACD6F73ED3581295AF09D3DF87807E0823442EA2ED31085941D9CD0AF7F820E7B07EA4CF723E2695F986872089382DE5864B1765F17D2871EE8926992063137CE92F37890505AA998FFA684F5CC6C73BB6D1AD53EEFBBE84FB8522D8A8EF8C92EF10C188E7A7A7C0859ECD61F3ED94C7A551C90002C26D483E81D6BE72B480F99247062FEE42F474E8A1C6FD34D382445848F2F3
+X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2biojnAZp9Q+n/0NH0pkM0CidFQ==
+X-Mailru-Sender: 9EB879F2C80682A09F26F806C7394981C177C7546926660105E38EDE555C2806BD37446300EF067EB7C1B598849540DF2C62728BC403A049225EC17F3711B6CF1A6F2E8989E84EC137BFB0221605B344978139F6FA5A77F05FEEDEB644C299C0ED14614B50AE0675
+X-Mras: Ok
 
+The PN553 is another NFC chip from NXP, document the compatible in the
+bindings.
 
->>   .../chelsio/cxgb4/cxgb4_tc_u32_parse.h        |  2 +-
->>   include/uapi/linux/pkt_cls.h                  | 23 +++++++++++--------
-> 
-> Took me a minute to realize you're changing uAPI.
-> Please fix the subject.
+Signed-off-by: Danila Tikhonov <danila@jiaxyga.com>
+---
+ Documentation/devicetree/bindings/net/nfc/nxp,nci.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-What would be a preferred subject?
+diff --git a/Documentation/devicetree/bindings/net/nfc/nxp,nci.yaml b/Documentation/devicetree/bindings/net/nfc/nxp,nci.yaml
+index 6924aff0b2c5..364b36151180 100644
+--- a/Documentation/devicetree/bindings/net/nfc/nxp,nci.yaml
++++ b/Documentation/devicetree/bindings/net/nfc/nxp,nci.yaml
+@@ -17,6 +17,7 @@ properties:
+           - enum:
+               - nxp,nq310
+               - nxp,pn547
++              - nxp,pn553
+           - const: nxp,nxp-nci-i2c
+ 
+   enable-gpios:
+-- 
+2.45.2
 
---
-Gustavo
