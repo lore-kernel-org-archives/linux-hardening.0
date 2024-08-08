@@ -1,83 +1,71 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A361555769;
-	Thu,  8 Aug 2024 22:11:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42EF615EFB6;
+	Thu,  8 Aug 2024 23:11:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723155078; cv=none; b=JrgVehyXAGC3sQqUSbxIoarwwTmRlHScM+KFaTifj3Npb4tO6E2/iK3T2EFJuiMpqjac4oYuseRcs0Tw7zkJID0hHdqAaPRJbzt2sgBEEpVHnWh0kNGdfn35X2551C9nKUWgcwKhJI9P2B4znJ81VJDjSUHoWmWfWkrI3YHpN0A=
+	t=1723158666; cv=none; b=M43j5LeW2pEwUorb6hf64U+h2FlJlTMHZrKMou1ZKsdS3QerfJlr77IXsh03iqQJlzkrtHaC1mRtugbLM8ytBrKOA3s+1jG4pMs2Vhgk07xoyQXbLoNbk3Vebh7uV29dBnjPRidSJEPjNsJp64e5xBJCBJeH8S6IJjEYBQFQpIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723155078; c=relaxed/simple;
-	bh=e/zB+LA0zHnznYATwpefdryXkaCV34ukyDo/MVUOmQw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=AawJchib25CBUWblze6uX0K0Tk5r57CvuVY1HSHdfIj4PnV0nVFfiZWyX0b0QXoWliiEh5e3BMd2X0HOBirMDc0M+y53S6v9+9xSYGppu0mVVwsw5v7lFIyqNOR8PmVED9Eg9D5AtBf7FPeQQXv3vPty0AN2aLIDqGT09Xy/2Jc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hX4NJJW1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1723158666; c=relaxed/simple;
+	bh=aOHb6LusMMRPMXEAanHSL5GIU+4+KgqN2z0DDHzY6kQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jUdL8EEqR7Qyaj7/QfZa7JGkC7eWNWRBmwXUeaRWTGHAzZ74dn/v+ssIWij4QJGO8iuXd49LBXOauxhmwUjTExo05TU4wO7mfGGIVU0Bd1hM6I5NoWdrRsYHX+lo2p5kO0li04I68kuHCty7j7SdlquPMNdeD8sHoCC/Bg5Rbzc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k3g45c55; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hX4NJJW1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDA8DC4AF0C;
-	Thu,  8 Aug 2024 22:11:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k3g45c55"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C01F1C32782;
+	Thu,  8 Aug 2024 23:11:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723155078;
-	bh=e/zB+LA0zHnznYATwpefdryXkaCV34ukyDo/MVUOmQw=;
-	h=Date:From:To:Cc:Subject:From;
-	b=hX4NJJW1aRWhgoINveO9UKbxkL3kdDnaBXF1X8cxVAnBsW+CdrojX0ciMUjV0qRhS
-	 6z+Hi1iDIXwBP3dn95oFfGK3tgchLZ+mOmiTkI8/1luHpWvh/tSwQFy6Z734Ea3hCe
-	 iD4oJ6ksCoTArsuwa7jIGLLvZuv8qw48b979cJNk1nSPE5YsQPwP7zKZl5IsQs/rss
-	 1KOxwj9wAeYjwsmnx801l7NtmucULMwsP4xTGImbhZUmdrFp2IqAGHO9GqrTxh+P9Z
-	 BmR+XouxkwxEFc+VPinoL7o2gXZwntfGbrj/4t+BTfITtMKDYUwig1qb2i8GQj+vjD
-	 fY7LbFQF3+sIg==
-Date: Thu, 8 Aug 2024 16:11:15 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Kalle Valo <kvalo@kernel.org>
-Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] wifi: mwl8k: Use static_assert() to check struct sizes
-Message-ID: <ZrVCg51Q9M2fTPaF@cute>
+	s=k20201202; t=1723158665;
+	bh=aOHb6LusMMRPMXEAanHSL5GIU+4+KgqN2z0DDHzY6kQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=k3g45c55KqphM23ZBIu4vHRFLkGOEdjFuX3yl0rgAKVGLlUM1xC6Q29Djcze9Desm
+	 f5TavoiCTXNJXwZj4j5pGYzAPbBf3tNk0q66ZyT6bCa+vFOgzDC2LrvPG6s+uEhSiD
+	 4wSgskoLNU8AV9eIg1vc1Fk0/UaeDry8p8mnqbweo80XJmnMzMY/3/YUc3OWO+LZH6
+	 7NLPL71hPFfapIrNJeT2vTiPKpD8TOTUlUXmRNUpWuwTHad4sY5LoouhQuUlJK7pDN
+	 uj2xyUJZYZ3l8W5n4mcBc+PVJ2EG5e0h/Snk7MWETo0xbB2k/KIv2LYhZtG1CREos3
+	 6L/9W0EKn1pug==
+Date: Thu, 8 Aug 2024 16:11:05 -0700
+From: Kees Cook <kees@kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Justin Stitt <justinstitt@google.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] lib/string_helpers: rework overflow-dependent code
+Message-ID: <202408081609.D08D11C@keescook>
+References: <20240808-b4-string_helpers_caa133-v1-1-686a455167c4@google.com>
+ <CAHp75VfBjKLf3LqDXvAehW5sxGzYnU4sS3fr=JoaM-6p_gR34w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHp75VfBjKLf3LqDXvAehW5sxGzYnU4sS3fr=JoaM-6p_gR34w@mail.gmail.com>
 
-Commit 5c4250092fad ("wifi: mwl8k: Avoid -Wflex-array-member-not-at-end
-warnings") introduced tagged `struct mwl8k_cmd_pkt_hdr`. We want to
-ensure that when new members need to be added to the flexible structure,
-they are always included within this tagged struct.
+On Fri, Aug 09, 2024 at 01:07:21AM +0300, Andy Shevchenko wrote:
+> On Fri, Aug 9, 2024 at 12:44 AM Justin Stitt <justinstitt@google.com> wrote:
+> >
+> > When @size is 0, the desired behavior is to allow unlimited bytes to be
+> > parsed. Currently, this relies on some intentional arithmetic overflow
+> > where --size gives us SIZE_MAX when size is 0.
+> >
+> > Explicitly spell out the desired behavior without relying on intentional
+> > overflow/underflow.
+> 
+> Hmm... but why? Overflow for the _unsigned_ types is okay. No?
 
-We use `static_assert()` to ensure that the memory layout for both
-the flexible structure and the tagged struct is the same after any
-changes.
+Yes, it's well defined, but in trying to find a place to start making a
+meaningful impact on unexpected wrap-around, after discussions with
+Linus and Peter Zijlstra, we're going taking a stab at defining size_t
+as not expecting to wrap. Justin has been collecting false positive
+fixes while working on the compiler side of this, and I had asked him to
+send this one now since I think it additionally helps with readability.
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/net/wireless/marvell/mwl8k.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/net/wireless/marvell/mwl8k.c b/drivers/net/wireless/marvell/mwl8k.c
-index b130e057370f..bab9ef37a1ab 100644
---- a/drivers/net/wireless/marvell/mwl8k.c
-+++ b/drivers/net/wireless/marvell/mwl8k.c
-@@ -587,6 +587,7 @@ static int mwl8k_request_firmware(struct mwl8k_priv *priv, char *fw_image,
- }
- 
- struct mwl8k_cmd_pkt {
-+	/* New members MUST be added within the __struct_group() macro below. */
- 	__struct_group(mwl8k_cmd_pkt_hdr, hdr, __packed,
- 		__le16	code;
- 		__le16	length;
-@@ -596,6 +597,8 @@ struct mwl8k_cmd_pkt {
- 	);
- 	char payload[];
- } __packed;
-+static_assert(offsetof(struct mwl8k_cmd_pkt, payload) == sizeof(struct mwl8k_cmd_pkt_hdr),
-+	      "struct member likely outside of __struct_group()");
- 
- /*
-  * Firmware loading.
 -- 
-2.34.1
-
+Kees Cook
