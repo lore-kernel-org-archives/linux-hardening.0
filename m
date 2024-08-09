@@ -1,45 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA9BB15B992;
-	Fri,  9 Aug 2024 15:27:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EDF3195F3A;
+	Fri,  9 Aug 2024 16:20:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723217275; cv=none; b=ZEkqw/ms439yNIsHtHPp2Z14c4q1B5mqoH5T8O5k67IkcOV1htdQKBlxFB4s23aUhaewfMAEfuOGxdDPB1Up4VWtwXfsOLr82IwQxR20O6ziA37Ny4wUy/nvekSTCDVxWIzsOX6R5JYd74uFjih/JHK3plsg5jkRrIfBUj67tz4=
+	t=1723220449; cv=none; b=ZWq1wn2cXQ3Kv5i2hVEYt08I32/w632E1Cz3KsxqCFvwoFZfHBz8OWWWSFujfMTCm1dDQW6yYJ6NFhiT79NnMZx4N40jtT/f/rSn15tAW5a0oAh1e57jZSnNT9imjWKm8aMvhD+hk0Mr053CHdB8CPMAjQmBH30UAeUsSl5Ih4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723217275; c=relaxed/simple;
-	bh=78MTpby5wUdMPDJYFhMoXDD9VtwkON7pKOzZZuUVa8o=;
+	s=arc-20240116; t=1723220449; c=relaxed/simple;
+	bh=JvFuafIlA5XYuTkzcsIaPQIzRgFXGYfK86QgMIRemXM=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=LMUuhzR5Wck08h98Qcoa3LgSQCLYDDIgPYl80ZQnZ9H9/ZAFhKlZzpenTh7e4QxQH2rPeEQ/2pyyMrtKHvCJ/ejAOa7+/lhK0POY37OtcFWWb8An1LESi4SKrFp7qQyP8HdIvmvy0gssI4mh92cLPnUaoGl1YxNyL7z/6vMHwLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sO0IxqGy; arc=none smtp.client-ip=10.30.226.201
+	 Content-Disposition; b=lWd+yUvlw+Jzi2v1S+7JCD7uVm6VPUA5A87PwQysMBVe0oAzldezTAE7wjOroGuWu4g0Jm+XiBqRgDBRuDYeL4eoc49sX2AhjGEJl5QG6b3kMyN9gzOfN7r2SUDPBRMslK9TpFMWQdNd4witqhlLhCIETAWalT8QXAuQTFukuKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JTx0pkY3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sO0IxqGy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65F7DC32782;
-	Fri,  9 Aug 2024 15:27:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JTx0pkY3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1335BC32782;
+	Fri,  9 Aug 2024 16:20:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723217274;
-	bh=78MTpby5wUdMPDJYFhMoXDD9VtwkON7pKOzZZuUVa8o=;
+	s=k20201202; t=1723220448;
+	bh=JvFuafIlA5XYuTkzcsIaPQIzRgFXGYfK86QgMIRemXM=;
 	h=Date:From:To:Cc:Subject:From;
-	b=sO0IxqGyW0S6fPtHKANNdur6onARB40reweqbZ6295fDYGtnoyGQhHBft0Ms81Q0c
-	 ZHYnw3ZLX3XFTppp3TZaA5f1EYpp0X6GUuyh09qwkduPLNAvgSPP8IRIMhCIkiFl7U
-	 +bC2ZWqNzb64k4lwY3EtS/5T/LYPTaBcWVFrP2KX54YFhAQAoxcJmQzwPy7bgMrLGB
-	 LcIYMJecNHWCOB8z5HBnEon1GMY/dqMpUHLq2YzW/VOROQ9N5BW2e5h2xH2Lg9Shi2
-	 ISKGPHNfErG83T8YIgCJwB6jR/TkvlkKMAMptCbraxJ57sfYkw/DqbaHlkW97NYbU/
-	 y0CgEXvQBCFGA==
-Date: Fri, 9 Aug 2024 09:27:51 -0600
+	b=JTx0pkY32DTKdHuZ8o93I2RKkOrJMLad6J9pBwJVg4g/I4Kjq88Xx5NvRbLu7q+rn
+	 g71WncVeC5YSlCMMuF+dTJ5vOg7NkN1eBqh5PKWnAZrBuMUHqaGKj5TgZuJ3pa8c+g
+	 qQnq2FJ/xDMCZsluWC4pLkMRAGvig4a8Cd96pwUZtKS3YZZe/DOKqisVttItQmjf2B
+	 LHfwR8wch9DmpbeEdWklneFb8ENsA1y3Bkbm1W9oYraV7ehsOSbDt5KKzinSKlKyAv
+	 MPHtUqWLNOa7yJDux76y8dqQdkvtFtb2pLtfo4f/UkHz3FzZZQxdUmi7F14PZZuL3k
+	 WXuNAozIuging==
+Date: Fri, 9 Aug 2024 10:20:45 -0600
 From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Potnuri Bharat Teja <bharat@chelsio.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Jamal Hadi Salim <jhs@mojatatu.com>,
-	Cong Wang <xiyou.wangcong@gmail.com>, Jiri Pirko <jiri@resnulli.us>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+To: Kalle Valo <kvalo@kernel.org>, Jeff Johnson <jjohnson@kernel.org>
+Cc: linux-wireless@vger.kernel.org, ath11k@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH v2][next] UAPI: net/sched: Avoid
- -Wflex-array-member-not-at-end warning
-Message-ID: <ZrY1d01+JrX/SwqB@cute>
+Subject: [PATCH][next] wifi: ath11k: Avoid -Wflex-array-member-not-at-end
+ warnings
+Message-ID: <ZrZB3Rjswe0ZXtug@cute>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -49,84 +45,86 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
--Wflex-array-member-not-at-end has been introduced in GCC-14, and we
-are getting ready to enable it, globally.
+-Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+getting ready to enable it, globally.
 
-So, in order to avoid ending up with a flexible-array member in the
-middle of multiple other structs, we use the `__struct_group()`
-helper to create a new tagged `struct tc_u32_sel_hdr`. This structure
-groups together all the members of the flexible `struct tc_u32_sel`
-except the flexible array.
+Move the conflicting declaration to the end of the structure. Notice
+that `struct ieee80211_chanctx_conf` is a flexible structure --a
+structure that contains a flexible-array member.
 
-As a result, the array is effectively separated from the rest of the
-members without modifying the memory layout of the flexible structure.
-We then change the type of the middle struct member currently causing
-trouble from `struct tc_u32_sel` to `struct tc_u32_sel_hdr`.
+Also, remove a couple of unused structures.
 
-This approach avoids having to implement `struct tc_u32_sel_hdr`
-as a completely separate structure, thus preventing having to maintain
-two independent but basically identical structures, closing the door
-to potential bugs in the future.
-
-So, with these changes, fix the following warning:
-drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_u32_parse.h:245:27: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+Fix the following warnings:
+drivers/net/wireless/ath/ath11k/core.h:409:39: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/wireless/ath/ath11k/dp.h:1309:24: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/wireless/ath/ath11k/dp.h:1368:24: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
-Changes in v2:
- - Update subject line. (Jakub)
+ drivers/net/wireless/ath/ath11k/core.h |  4 +++-
+ drivers/net/wireless/ath/ath11k/dp.h   | 23 -----------------------
+ 2 files changed, 3 insertions(+), 24 deletions(-)
 
- .../chelsio/cxgb4/cxgb4_tc_u32_parse.h        |  2 +-
- include/uapi/linux/pkt_cls.h                  | 23 +++++++++++--------
- 2 files changed, 14 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_u32_parse.h b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_u32_parse.h
-index 9050568a034c..64663112cad8 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_u32_parse.h
-+++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_u32_parse.h
-@@ -242,7 +242,7 @@ struct cxgb4_next_header {
- 	 * field's value to jump to next header such as IHL field
- 	 * in IPv4 header.
- 	 */
--	struct tc_u32_sel sel;
-+	struct tc_u32_sel_hdr sel;
- 	struct tc_u32_key key;
- 	/* location of jump to make */
- 	const struct cxgb4_match_field *jump;
-diff --git a/include/uapi/linux/pkt_cls.h b/include/uapi/linux/pkt_cls.h
-index d36d9cdf0c00..2c32080416b5 100644
---- a/include/uapi/linux/pkt_cls.h
-+++ b/include/uapi/linux/pkt_cls.h
-@@ -246,16 +246,19 @@ struct tc_u32_key {
+diff --git a/drivers/net/wireless/ath/ath11k/core.h b/drivers/net/wireless/ath/ath11k/core.h
+index df24f0e409af..e283415dccf3 100644
+--- a/drivers/net/wireless/ath/ath11k/core.h
++++ b/drivers/net/wireless/ath/ath11k/core.h
+@@ -406,11 +406,13 @@ struct ath11k_vif {
+ 	bool wpaie_present;
+ 	bool bcca_zero_sent;
+ 	bool do_not_send_tmpl;
+-	struct ieee80211_chanctx_conf chanctx;
+ 	struct ath11k_arp_ns_offload arp_ns_offload;
+ 	struct ath11k_rekey_data rekey_data;
+ 
+ 	struct ath11k_reg_tpc_power_info reg_tpc_info;
++
++	/* Must be last - ends in a flexible-array member. */
++	struct ieee80211_chanctx_conf chanctx;
  };
  
- struct tc_u32_sel {
--	unsigned char		flags;
--	unsigned char		offshift;
--	unsigned char		nkeys;
--
--	__be16			offmask;
--	__u16			off;
--	short			offoff;
--
--	short			hoff;
--	__be32			hmask;
-+	/* New members MUST be added within the __struct_group() macro below. */
-+	__struct_group(tc_u32_sel_hdr, hdr, /* no attrs */,
-+		unsigned char		flags;
-+		unsigned char		offshift;
-+		unsigned char		nkeys;
-+
-+		__be16			offmask;
-+		__u16			off;
-+		short			offoff;
-+
-+		short			hoff;
-+		__be32			hmask;
-+	);
- 	struct tc_u32_key	keys[];
- };
+ struct ath11k_vif_iter {
+diff --git a/drivers/net/wireless/ath/ath11k/dp.h b/drivers/net/wireless/ath/ath11k/dp.h
+index 2f6dd69d3be2..65d2bc0687c8 100644
+--- a/drivers/net/wireless/ath/ath11k/dp.h
++++ b/drivers/net/wireless/ath/ath11k/dp.h
+@@ -1305,18 +1305,6 @@ struct htt_ppdu_stats_user_rate {
+ #define HTT_TX_INFO_PEERID(_flags) \
+ 			FIELD_GET(HTT_PPDU_STATS_TX_INFO_FLAGS_PEERID_M, _flags)
  
+-struct htt_tx_ppdu_stats_info {
+-	struct htt_tlv tlv_hdr;
+-	u32 tx_success_bytes;
+-	u32 tx_retry_bytes;
+-	u32 tx_failed_bytes;
+-	u32 flags; /* %HTT_PPDU_STATS_TX_INFO_FLAGS_ */
+-	u16 tx_success_msdus;
+-	u16 tx_retry_msdus;
+-	u16 tx_failed_msdus;
+-	u16 tx_duration; /* united in us */
+-} __packed;
+-
+ enum  htt_ppdu_stats_usr_compln_status {
+ 	HTT_PPDU_STATS_USER_STATUS_OK,
+ 	HTT_PPDU_STATS_USER_STATUS_FILTERED,
+@@ -1364,17 +1352,6 @@ struct htt_ppdu_stats_usr_cmpltn_ack_ba_status {
+ 	u32 success_bytes;
+ } __packed;
+ 
+-struct htt_ppdu_stats_usr_cmn_array {
+-	struct htt_tlv tlv_hdr;
+-	u32 num_ppdu_stats;
+-	/* tx_ppdu_stats_info is filled by multiple struct htt_tx_ppdu_stats_info
+-	 * elements.
+-	 * tx_ppdu_stats_info is variable length, with length =
+-	 *     number_of_ppdu_stats * sizeof (struct htt_tx_ppdu_stats_info)
+-	 */
+-	struct htt_tx_ppdu_stats_info tx_ppdu_info[];
+-} __packed;
+-
+ struct htt_ppdu_user_stats {
+ 	u16 peer_id;
+ 	u32 tlv_flags;
 -- 
 2.34.1
 
