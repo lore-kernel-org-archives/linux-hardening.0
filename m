@@ -1,110 +1,92 @@
-Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C042A198E6D
-	for <linux-hardening@vger.kernel.org>; Fri,  9 Aug 2024 15:21:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67BCC19883C;
+	Fri,  9 Aug 2024 15:22:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723216897; cv=none; b=gL6MDZRNCsTckHpVxTV+oFQDIsXBQyIG/VRRh8kiQKQT0wgdHda8DdcXVC7UYXotwElkFWHu+howwKnbXjs2e0FvMgpUVlp94Q6M+/uDKO4rSYxTiCfZ1xCFgajg3ISxsky5lUDFa4WXr5Djl8d1ZVTYTHOQZ1zV72Gxa8nV5pc=
+	t=1723216936; cv=none; b=hJ/H4/DUmxLTCsjpVOq3Vvsiyun855ORbmKQl0xwVww0fZeVgPzCiwpC39Cj01x5+j//ZpHjxxQDM3Ao88MgP1K1WZtQLImSWnymZ10+cwnuJONxQzZdHMTkXFu+uJIzUfjQGP708YBkN5tidZYMEJmxaSzswR+dv1mnqgTd4hY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723216897; c=relaxed/simple;
-	bh=YF2j1+300pl2tJxsYrUBAqHlJ5+NsKgS1Kx7u3KmH5s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EyigqNeZAPZbMnOlM5JQ3f1y4MRSntiDQAivGRVUukKgwwWf9pMO05Ok2cLb+lud6v+TsNQz3mmuHFUd/RHa3lcFo9iYVgjsuiYxRmMkG5x6J5Hd43FLOwp9PUBStWXfXlDmtuo2e1M+j7AwSxXMKOMPuDiCsvA23qqTmGWX/4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=qJznsSdi; arc=none smtp.client-ip=44.202.169.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1723216936; c=relaxed/simple;
+	bh=HlyJThkDlBMireeAQexe6626bYIaEEUXGfjWtQZWj04=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=cNTUMBxzPDESfoNycy/J9LyefvqkGTQEaPNnOOWgjhVZ657kFGAqW/u7VPSH8yx0xlIILayjSHxZLAavg3ooD728nALphAfun3jxtBUqX9y7bX58xvwFy1F/gymqMUiE1F8N+OY7nXSiaY79bxrsQhr3vGQrRqOP433NZhWDSws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r1b9FwcM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="qJznsSdi"
-Received: from eig-obgw-6009a.ext.cloudfilter.net ([10.0.30.184])
-	by cmsmtp with ESMTPS
-	id cOHts5qr2g2lzcRQmsg3Ta; Fri, 09 Aug 2024 15:21:29 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id cRQms3K1h0K4ncRQmsn1sh; Fri, 09 Aug 2024 15:21:28 +0000
-X-Authority-Analysis: v=2.4 cv=RsjDLjmK c=1 sm=1 tr=0 ts=66b633f8
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=frY+GlAHrI6frpeK1MvySw==:17
- a=IkcTkHD0fZMA:10 a=yoJbH4e0A30A:10 a=T-l7Lcn7wvsJkd90kOwA:9
- a=QEXdDO2ut3YA:10 a=Xt_RvD8W3m28Mn_h3AK8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=ahVHeUMbhgnB+4j25dq8VaYi1sZLU1wW+FemcJlE7HA=; b=qJznsSdiEPtuO2wrUGnlBQKaGZ
-	yk58PbqpzGYOPOD62nYNFmqLHJohRgT9AdyvnzFTD+XsyxvR0adWHccEXXLdOLJVjb81UXG3qXHAL
-	mxnGSOiNVZTVdve7q/fCKEPhFA5cUkoQALBXkjSpIx0dF322hdy+pywWD2m7bv+tIGNx348LnV3Y6
-	oM6qbYHM64w33S2wwl3hMWJcZZ2jfsQinBAdGLjDABBLkPqUlvS8IALblA1b5aWRMMJOdbjz4vVvk
-	g4hrDEJZ1+rZ7+t4ZKjOTe6UR+Yzij+kasVhBgUQYb9kZ6QlOqrWgAV88jB+r/COqmpKbS/QvfuxH
-	eXyu14vg==;
-Received: from [201.172.173.139] (port=54138 helo=[192.168.15.5])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1scRQk-002rcf-2B;
-	Fri, 09 Aug 2024 10:21:26 -0500
-Message-ID: <cc27ae84-e759-480b-a1ff-2fac4494307b@embeddedor.com>
-Date: Fri, 9 Aug 2024 09:21:25 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r1b9FwcM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A886C32782;
+	Fri,  9 Aug 2024 15:22:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1723216936;
+	bh=HlyJThkDlBMireeAQexe6626bYIaEEUXGfjWtQZWj04=;
+	h=Date:From:To:Cc:Subject:From;
+	b=r1b9FwcMuQtYCwpbG+D7+8ZgJHmjTuRNFvYBNtR3Extjz1LkgdeqJ4hhCkpq8fzJA
+	 2g4oMtVivHvTe8D/Ncur8s1vO740tTsLKrGsAMKLODj1LYQWPI6mU/QuBLcG+eHJZH
+	 mfzKLHQ+mnPPezZF0RleQ+vpzG9ksVcBq0NgsGHo4D9rzGhlkK/ZaX1uEB1mvsZLyo
+	 OH3uEPLLE7U60ISuDSUCJYPBF1bom89sWxgwUAdHJr5iHDbFWaQg3Ozb59J/zXBUwa
+	 tFm2T4sUl+8368S3OaPsb1IApCAGS1VxUxURppxO+ABEl5jrUQuSgzL0hYKthFmu9Z
+	 jYdQH2Ev8VGkA==
+Date: Fri, 9 Aug 2024 09:22:12 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Jamal Hadi Salim <jhs@mojatatu.com>,
+	Cong Wang <xiyou.wangcong@gmail.com>, Jiri Pirko <jiri@resnulli.us>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v2][next] sched: act_ct: avoid -Wflex-array-member-not-at-end
+ warning
+Message-ID: <ZrY0JMVsImbDbx6r@cute>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] sched: act_ct: avoid -Wflex-array-member-not-at-end
- warning
-To: Jakub Kicinski <kuba@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Jamal Hadi Salim <jhs@mojatatu.com>, Cong Wang
- <xiyou.wangcong@gmail.com>, Jiri Pirko <jiri@resnulli.us>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <ZrDxUhm5bqCKU9a9@cute> <20240808194655.6bd39d2e@kernel.org>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20240808194655.6bd39d2e@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.173.139
-X-Source-L: No
-X-Exim-ID: 1scRQk-002rcf-2B
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.5]) [201.172.173.139]:54138
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfGF3sx7FL83iPV2z1lWafsJ4+ZjF5+igXQUAZmGcOy3CJkIB0/8Yus/WyF7Wz7BumaRt4ZOrZc0lMfhfM1+T6VWLQCZz+xf9QXw/oVYKOlXGvaT/tzBw
- HbGX89czv/dkNHcyP0jYDkRWFHsrMHeRqfnOT5iPePoGg49rRsS3A/rFKWPRJP4f8bAiO5oqgBULHFXQd2CtZANx69gRZtIsb4ctmVjbQJWPUNBrwAypsNYb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+-Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+getting ready to enable it, globally.
 
+Remove unnecessary flex-array member `pad[]` and refactor the related
+code a bit.
 
-On 08/08/24 20:46, Jakub Kicinski wrote:
-> On Mon, 5 Aug 2024 09:35:46 -0600 Gustavo A. R. Silva wrote:
->> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
->> getting ready to enable it, globally.
->>
->> Move the conflicting declaration to the end of the structure. Notice
->> that `struct zones_ht_key` is a flexible structure --a structure that
->> contains a flexible-array member.
-> 
-> I think the flex member is there purely to mark the end of the struct.
-> You can use offsetofend(zone) instead of offsetof(pad), and delete pad.
+Fix the following warning:
+net/sched/act_ct.c:57:29: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
-Nice! I'll send v2, shortly.
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+Changes in v2:
+ - Remove flex array. (Jakub).
 
-Thanks
---
-Gustavo
+ net/sched/act_ct.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/net/sched/act_ct.c b/net/sched/act_ct.c
+index 3ba8e7e739b5..2197eb625658 100644
+--- a/net/sched/act_ct.c
++++ b/net/sched/act_ct.c
+@@ -44,8 +44,6 @@ static DEFINE_MUTEX(zones_mutex);
+ struct zones_ht_key {
+ 	struct net *net;
+ 	u16 zone;
+-	/* Note : pad[] must be the last field. */
+-	u8  pad[];
+ };
+ 
+ struct tcf_ct_flow_table {
+@@ -62,7 +60,7 @@ struct tcf_ct_flow_table {
+ static const struct rhashtable_params zones_params = {
+ 	.head_offset = offsetof(struct tcf_ct_flow_table, node),
+ 	.key_offset = offsetof(struct tcf_ct_flow_table, key),
+-	.key_len = offsetof(struct zones_ht_key, pad),
++	.key_len = offsetofend(struct zones_ht_key, zone),
+ 	.automatic_shrinking = true,
+ };
+ 
+-- 
+2.34.1
+
