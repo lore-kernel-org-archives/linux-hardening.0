@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16C88182B3;
-	Fri,  9 Aug 2024 19:17:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AC682B9A9;
+	Fri,  9 Aug 2024 19:24:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723231033; cv=none; b=HN3LIOW1jDPipxwyD8EwAiF0hNhlFgYK/4CxsWkYExDYIdjaM5R6jCAAtAmKdymfHIDc0rmJ3fJxiQ6AHkKZFlvYBJHw+G/otP8tQbi8Q4tRvJwTRvjrO9bdpUnHFfnokLHxcNCw38BA36+ONESgkGfg29GM1UjgZuh7ngWt4bw=
+	t=1723231464; cv=none; b=gtC8Gz3R4oltIlrRw0LDLlpNbtO/QT+Gul+MiKDt218LVhQm8xUS2ocQMpSyHlshuBqZ6jvGRVZVvPrw/XvNzXBJ2Ane4U3Il3ap5tKol7SDZOCrqtJVYYkmOQPdCQwybNDSa27w5uuW6Z1DRG9/jLY2LxhhZQDzCkzorE4enq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723231033; c=relaxed/simple;
-	bh=XmL5ncs3p6X8rgr9i2cov2GYQnkuex67uQt9cHDKhfs=;
+	s=arc-20240116; t=1723231464; c=relaxed/simple;
+	bh=+b7GDuXQp5NLlZE3+tHcPN1nqxx9393TnHwfURdPcDU=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=JA48dSeSOZAVoH5WjJToa5L8mrWqI2zPyTd97Xvo3RNraDa83zVGfHY4yQsB4QUg/Shu84meBbLWg/+VtAlhY7dfV7maGR3VReVwrl3eSNDhWu9vIv3GjMWYShB1yRrQ3G57S58nikptJX8hK4xgwd8lUrXdV+OaBawjeP3Kz3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U25OXcX1; arc=none smtp.client-ip=10.30.226.201
+	 Content-Disposition; b=NTtaAUE9jswJyJH0pUk/+pqo4md9spWBZfAD/5SBXfYMFOmEkw8k8i+4dOE30x5l/+JeT+IemX/IlZ0JMAMiySQ/VtXLi1qx+ieFf4sXgXMIgN8wkBfK61lOS1s3QfV3sGwYoOokjpb3p8LXmFhREEncIj0XuiCfTw/kcEFovNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LnQ0y62t; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U25OXcX1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 952A4C32782;
-	Fri,  9 Aug 2024 19:17:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LnQ0y62t"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16441C32782;
+	Fri,  9 Aug 2024 19:24:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723231032;
-	bh=XmL5ncs3p6X8rgr9i2cov2GYQnkuex67uQt9cHDKhfs=;
+	s=k20201202; t=1723231464;
+	bh=+b7GDuXQp5NLlZE3+tHcPN1nqxx9393TnHwfURdPcDU=;
 	h=Date:From:To:Cc:Subject:From;
-	b=U25OXcX1QIHYgFDdyQWE//lrB98SXdM6pP2FUzHGA9r/Yey7/IMmScfO75IppX2rz
-	 /lcsYFavSgW+AWhLXEMmZ4tehDCIofU5PwR327R2VCFUFNszALI9UFhCaNG9oGfhvZ
-	 mZcJzOFsQqoBqQ25BD2V1FVjrCqCr6GZwfXIf95bWdfkRPb7ykUi8U7BJgCz/8jTg1
-	 UA9u0lzwdTQLCdKSLM2XGG7jBTecf9pK73lRYl2h/X29ghIxHBAh73l2e04GJJnAlh
-	 0R97nnNCgtK1hollwazKSpHoAqWclhx/L/OmUUnXB0s9UxigzT3h9X9sKAQamj+wRP
-	 1e5UIROKl6z/g==
-Date: Fri, 9 Aug 2024 13:17:09 -0600
+	b=LnQ0y62t7JAOGGTRvoTXf2RiNenBK3m/9u3L+O8oaC/GzSEduuaglPXvnS89Y4EAm
+	 JZ8RpfTrEPL1vbM/2UevOFw+uJrumbIQ1bMhQVkVy5pW85TjawdK6Y6ntykUPUq3wz
+	 FhKD7QP/fuZiFBKvQMMbyykcPu/7qtdS3NP4R2jU1B3DdJqcQsrvISuXd0FzN4/KQw
+	 A9tHfcM22lQ8LnnoLHRll91hRMcdJnccTuIxmam/KinBO0Zkql+cYnB6xwZw/1TV5n
+	 a9xMbDahChdeQR38r6jqh6BhzR92vdzX4NNM8xDL7/SpnBSkQkzxDeqiPqGw/B8mXf
+	 kjmptzRa+YhAA==
+Date: Fri, 9 Aug 2024 13:24:20 -0600
 From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
 To: Miri Korenblit <miriam.rachel.korenblit@intel.com>,
 	Kalle Valo <kvalo@kernel.org>,
@@ -38,9 +38,9 @@ Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
 	netdev@vger.kernel.org,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] wifi: iwlwifi: mvm: Use __counted_by() and avoid
+Subject: [PATCH v2][next] wifi: iwlwifi: mvm: Use __counted_by() and avoid
  -Wfamnae warnings
-Message-ID: <ZrZrNfUZtUIqvbUI@cute>
+Message-ID: <ZrZs5KL5Pz9tIinr@cute>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -69,6 +69,9 @@ drivers/net/wireless/intel/iwlwifi/mvm/d3.c:2211:43: warning: structure containi
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
+Changes in v2:
+ - Fix use of keylen variable.
+
  .../net/wireless/intel/iwlwifi/fw/api/sta.h   |   2 +-
  drivers/net/wireless/intel/iwlwifi/mvm/d3.c   | 126 ++++++++----------
  drivers/net/wireless/intel/iwlwifi/mvm/sta.c  |   2 +-
@@ -338,7 +341,7 @@ index b4d650583ac2..b19579dd8de3 100644
  		return false;
  	ieee80211_set_key_rx_seq(key_config, 0, &seq);
 diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/sta.c b/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
-index 15e64d94d6ea..7e550d880584 100644
+index 15e64d94d6ea..1502f577a942 100644
 --- a/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
 +++ b/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
 @@ -4350,8 +4350,8 @@ int iwl_mvm_add_pasn_sta(struct iwl_mvm *mvm, struct ieee80211_vif *vif,
@@ -347,7 +350,7 @@ index 15e64d94d6ea..7e550d880584 100644
  	keyconf->cipher = cipher;
 -	memcpy(keyconf->key, key, key_len);
  	keyconf->keylen = key_len;
-+	memcpy(keyconf->key, key, keyconf->key_len);
++	memcpy(keyconf->key, key, keyconf->keylen);
  	keyconf->flags = IEEE80211_KEY_FLAG_PAIRWISE;
  
  	if (mld) {
