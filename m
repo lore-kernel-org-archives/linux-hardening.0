@@ -1,123 +1,134 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0DD717C98;
-	Fri,  9 Aug 2024 06:11:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0098F42A80;
+	Fri,  9 Aug 2024 07:33:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723183865; cv=none; b=KtigcuEz8E+gPWzp9tcpxUhNNHT18HpQeZEBKu1nYpzZkSx8B2z+Sw7qX/o9z2Dn/9Yxy1/7kekH6dBDwB5xP8PCXh+r/aiPxRAtIYvTFF/9cT5W8/zWUUWDY6wNAAo9x8JFQHD8K2Dv/aN8i0HDoLR1oPwZHbgMXYms190ZkJ8=
+	t=1723188790; cv=none; b=EnTZJ/FSPXrbl6wnegowtYiJe/sRhac5ayCKNo3SuQEzVwqpfRc4VnAyg4/isTqBnl67xVUhAb0tpQUnjq2EcI3/pVdl5NDjuiUakHQxBpDoHm1Dfalc1Jj75wcuEfSMmyfUkpBXS/lBKF7HKnuy0nYQUcPmXoTYmMj9d0wrFZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723183865; c=relaxed/simple;
-	bh=khFgQn+Lk4DWU3gaXvjqX4VWxA08RDqdBq4fmN6gLHI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=n2s384QRx6ZKmlNBlf0egObT7zNCu2tQZk4jHiOq37xaRwI5ldLrYyH5KpW+g/Mfkb/svRKrMed7L7tqU7Dry0vCDbqYoM/oBwEivZKS+etyuofm24hrEr6i/bJDHHmS0szmzmy3R6FibYd6v9pboZTMkC/etjMGqNGfncunMmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FmJiM9Nx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1723188790; c=relaxed/simple;
+	bh=fH+32u2hbe+aYvteHR+ZPHJXyfY1tBWhDA7Vvn2Or58=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=e+gQmH+GTW/5BSS/Kml+P8c1gpwqkeGj6XTOJew18wkxRZN6di3Q2GvvLgAarX0OqSmBZ+2m9F0ZB60FreAjN2gjOzACXGLFv/tCNc+ZON0ks2D0XuwUCrCkzk4UxqmjsfoKvNjfBmiJLNMW3pNRiL0q2ksWDKPGzf+qgs78MMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U1GOg7df; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FmJiM9Nx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8563C32782;
-	Fri,  9 Aug 2024 06:10:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U1GOg7df"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F687C32782;
+	Fri,  9 Aug 2024 07:33:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723183864;
-	bh=khFgQn+Lk4DWU3gaXvjqX4VWxA08RDqdBq4fmN6gLHI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=FmJiM9Nx7XSHzvpYa93Lc2Z2Ysv6sV8cSHMGTG+wNavyLMUT5Dn9gOhwsd/DPG1RR
-	 rLVVV+2vcosCYsoo3Vec7isA/T5udWEatW2cRnKSSlicIIEIvfy/wmn+N70PnB33iX
-	 oslqD4IOmbDlF3f0jnuX8vvx5xRIysH0PjT+oX+wK5Jpqt+Ml8832FULyMzmvxrQT5
-	 LLhPzdi09vvydZkmDYgYDERDmErg2xgxW6uHRnpp3T5mlxKtov+bWb7UvYm1SHYTk1
-	 mQXeNNTV069W5r7owtVUFqtxNvWQeqXRXiOmSBVKn0GDZgJRacDcl1ifermrt5Jmqg
-	 Qr/Gg01w19C6A==
-Message-ID: <b88ddaed-4f7c-4a1a-8f52-43a2acc4ca82@kernel.org>
-Date: Fri, 9 Aug 2024 08:10:51 +0200
+	s=k20201202; t=1723188789;
+	bh=fH+32u2hbe+aYvteHR+ZPHJXyfY1tBWhDA7Vvn2Or58=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=U1GOg7dfFb6vCTpdmAesrPycht4b3E2BP61/NHu5KkhADUw+F/qMwpsb+4EE0wwPr
+	 L9nvFDqSei8WJyngCv1Q76XygeWaSsjBlLrD6F/LC8/k4VknfL0og/dzm76kmgZgtR
+	 95TPrS8GpHcyJsvMNXhSCnbwb/zN8o2cGRSd7yux2dwYNZdWYITUiYaoPN0QRrAz4J
+	 xWzfOO8GT/bjnPzIqghQGJWNHo7TvFmqxfVY9RsL2FSgfXLSt5noN6OfXW0U8mVhWW
+	 LIZVWRO8MeNF1Hpm2FoGdrC++nOc8Th3OtGsIxGUZ8FgbOdZ6MVMjlaGpBWyS3Y5Uq
+	 lUO1diWANHxyg==
+From: Kees Cook <kees@kernel.org>
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Kees Cook <kees@kernel.org>,
+	Christoph Lameter <cl@linux.com>,
+	Pekka Enberg <penberg@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+	linux-mm@kvack.org,
+	Suren Baghdasaryan <surenb@google.com>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	"GONG, Ruiqi" <gongruiqi@huaweicloud.com>,
+	Jann Horn <jannh@google.com>,
+	Matteo Rizzo <matteorizzo@google.com>,
+	jvoisin <julien.voisin@dustri.org>,
+	Xiu Jianfeng <xiujianfeng@huawei.com>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH 1/5] slab: Introduce kmem_buckets_destroy()
+Date: Fri,  9 Aug 2024 00:33:02 -0700
+Message-Id: <20240809073309.2134488-1-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240809072532.work.266-kees@kernel.org>
+References: <20240809072532.work.266-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 05/11] dt-bindings: soc: qcom: qcom,pmic-glink:
- Document SM7325 compatible
-To: Danila Tikhonov <danila@jiaxyga.com>, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, andersson@kernel.org,
- konradybcio@kernel.org, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, rafael@kernel.org,
- viresh.kumar@linaro.org, kees@kernel.org, tony.luck@intel.com,
- gpiccoli@igalia.com, ulf.hansson@linaro.org, andre.przywara@arm.com,
- quic_rjendra@quicinc.com, davidwronek@gmail.com, neil.armstrong@linaro.org,
- heiko.stuebner@cherry.de, rafal@milecki.pl, macromorgan@hotmail.com,
- linus.walleij@linaro.org, lpieralisi@kernel.org,
- dmitry.baryshkov@linaro.org, fekz115@gmail.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20240808184048.63030-1-danila@jiaxyga.com>
- <20240808184048.63030-6-danila@jiaxyga.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20240808184048.63030-6-danila@jiaxyga.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2139; i=kees@kernel.org; h=from:subject; bh=fH+32u2hbe+aYvteHR+ZPHJXyfY1tBWhDA7Vvn2Or58=; b=owGbwMvMwCVmps19z/KJym7G02pJDGlbjxkoHv8l8yD/Mrump/fE6Mr5/aFh0Z63wl+F6swJe 9mx9VNSRykLgxgXg6yYIkuQnXuci8fb9nD3uYowc1iZQIYwcHEKwER0XzEyzOnisNb8799w6KzH TqX4LWYLH5sfsG/JsPy17/be9sMdXxgZDioISWWoefx3MnrGUf7s0jzWyOPSmyWaxZQnrvt/sGs bNwA=
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On 08/08/2024 20:40, Danila Tikhonov wrote:
-> The SM7325 is the closest SoC to the QCM6490 and is also identical
-> to the SC7280. The SM7325 also requires both UCSI_NO_PARTNER_PDOS &
-> UCSI_DELAY_DEVICE_PDOS quirks.
-> 
-> Document the PMIC GLINK firmware interface on the SM7325 Platform
-> by using the QCM6490 bindings as fallback.
-> 
-> Signed-off-by: Danila Tikhonov <danila@jiaxyga.com>
-> ---
->  .../devicetree/bindings/soc/qcom/qcom,pmic-glink.yaml        | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
+Modular use of kmem_buckets_create() means that kmem_buckets will need
+to be removed as well. Introduce kmem_buckets_destroy(), matching
+kmem_cache_destroy().
 
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Pekka Enberg <penberg@kernel.org>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Roman Gushchin <roman.gushchin@linux.dev>
+Cc: Hyeonggon Yoo <42.hyeyoo@gmail.com>
+Cc: linux-mm@kvack.org
+---
+ include/linux/slab.h |  1 +
+ mm/slab_common.c     | 17 ++++++++++++++---
+ 2 files changed, 15 insertions(+), 3 deletions(-)
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
-Best regards,
-Krzysztof
+diff --git a/include/linux/slab.h b/include/linux/slab.h
+index eb2bf4629157..86cb61a0102c 100644
+--- a/include/linux/slab.h
++++ b/include/linux/slab.h
+@@ -552,6 +552,7 @@ void kmem_cache_free(struct kmem_cache *s, void *objp);
+ kmem_buckets *kmem_buckets_create(const char *name, slab_flags_t flags,
+ 				  unsigned int useroffset, unsigned int usersize,
+ 				  void (*ctor)(void *));
++void kmem_buckets_destroy(kmem_buckets *b);
+ 
+ /*
+  * Bulk allocation and freeing operations. These are accelerated in an
+diff --git a/mm/slab_common.c b/mm/slab_common.c
+index 40b582a014b8..fc698cba0ebe 100644
+--- a/mm/slab_common.c
++++ b/mm/slab_common.c
+@@ -392,6 +392,19 @@ kmem_cache_create(const char *name, unsigned int size, unsigned int align,
+ }
+ EXPORT_SYMBOL(kmem_cache_create);
+ 
++void kmem_buckets_destroy(kmem_buckets *b)
++{
++	int idx;
++
++	if (!b)
++		return;
++
++	for (idx = 0; idx < ARRAY_SIZE(kmalloc_caches[KMALLOC_NORMAL]); idx++)
++		kmem_cache_destroy((*b)[idx]);
++	kfree(b);
++}
++EXPORT_SYMBOL(kmem_buckets_destroy);
++
+ static struct kmem_cache *kmem_buckets_cache __ro_after_init;
+ 
+ /**
+@@ -476,9 +489,7 @@ kmem_buckets *kmem_buckets_create(const char *name, slab_flags_t flags,
+ 	return b;
+ 
+ fail:
+-	for (idx = 0; idx < ARRAY_SIZE(kmalloc_caches[KMALLOC_NORMAL]); idx++)
+-		kmem_cache_destroy((*b)[idx]);
+-	kfree(b);
++	kmem_buckets_destroy(b);
+ 
+ 	return NULL;
+ }
+-- 
+2.34.1
 
