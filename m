@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3D3B12E7E;
-	Fri,  9 Aug 2024 05:40:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0DD717C98;
+	Fri,  9 Aug 2024 06:11:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723182004; cv=none; b=R+2eiCgBKnGzc7xHQvc55leDgGVnFI/eZQWLttktBs9loo2VYrGktpxxPW2V2UlllggnZHY12zK49Y67mQqrojuk95764LNG4BA2GHwBHSPHSRZUx2iRlwvxXOH6qXfu/67Zxj1Kao2unIyTs5W3xcbdZX5uZAk3gS8oJAJcSMw=
+	t=1723183865; cv=none; b=KtigcuEz8E+gPWzp9tcpxUhNNHT18HpQeZEBKu1nYpzZkSx8B2z+Sw7qX/o9z2Dn/9Yxy1/7kekH6dBDwB5xP8PCXh+r/aiPxRAtIYvTFF/9cT5W8/zWUUWDY6wNAAo9x8JFQHD8K2Dv/aN8i0HDoLR1oPwZHbgMXYms190ZkJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723182004; c=relaxed/simple;
-	bh=sY7MfAVIdMCdUi8FmSbX5HChtoeg+GqsRxp77iNKTvg=;
+	s=arc-20240116; t=1723183865; c=relaxed/simple;
+	bh=khFgQn+Lk4DWU3gaXvjqX4VWxA08RDqdBq4fmN6gLHI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SQKKsnl/sS8LhvsDFz6kefbkScLuWdniCn3ir3+4kTBIwyzWvhkMNfpSaSsWGq+6zQ3Q4+OYN6Rv4GdZbnLj74PHLhP1KhDoR+upBR6lq+dRi9hB5JE4JR9O6GaQHF7hlyNFzlJy9VLM8eXNu3r21iVv0PDzlLJhGnOhsICYyxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iQMkHS0q; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=n2s384QRx6ZKmlNBlf0egObT7zNCu2tQZk4jHiOq37xaRwI5ldLrYyH5KpW+g/Mfkb/svRKrMed7L7tqU7Dry0vCDbqYoM/oBwEivZKS+etyuofm24hrEr6i/bJDHHmS0szmzmy3R6FibYd6v9pboZTMkC/etjMGqNGfncunMmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FmJiM9Nx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iQMkHS0q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69919C32782;
-	Fri,  9 Aug 2024 05:39:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FmJiM9Nx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8563C32782;
+	Fri,  9 Aug 2024 06:10:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723182003;
-	bh=sY7MfAVIdMCdUi8FmSbX5HChtoeg+GqsRxp77iNKTvg=;
+	s=k20201202; t=1723183864;
+	bh=khFgQn+Lk4DWU3gaXvjqX4VWxA08RDqdBq4fmN6gLHI=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=iQMkHS0qQE3IpfFodDwhIOL5Tyww24ni4ckBbUHXEnvLIOc1ityAhZu46tDR5HwbF
-	 hFlVKUPrGIHLjpgd3f8ft5N+2S5BUOLaL5GoHhEXhrwoIas3LwOfu0oWVMpxMMtrfk
-	 bqymJKCKKDgwnN57du6un1nlQc/KUB6mz85KYs1CM63lAPrhDESalqacoqfffIgS/I
-	 zhZK7QZXTFOMOAZlzP39LOp06VmF+aumLRaexr47y+Y/YRYAH82pz+//5c899MCWlv
-	 L4bfmb7jz3z9cJ56o47QA1EJDgld3LfYmRZzstM6lLyi6DMcmuLCPujoTn29Fgh2Lc
-	 1LLuOCj6t+yDg==
-Message-ID: <493466e6-d83b-4d91-93a5-233d6da1fdd8@kernel.org>
-Date: Fri, 9 Aug 2024 07:39:53 +0200
+	b=FmJiM9Nx7XSHzvpYa93Lc2Z2Ysv6sV8cSHMGTG+wNavyLMUT5Dn9gOhwsd/DPG1RR
+	 rLVVV+2vcosCYsoo3Vec7isA/T5udWEatW2cRnKSSlicIIEIvfy/wmn+N70PnB33iX
+	 oslqD4IOmbDlF3f0jnuX8vvx5xRIysH0PjT+oX+wK5Jpqt+Ml8832FULyMzmvxrQT5
+	 LLhPzdi09vvydZkmDYgYDERDmErg2xgxW6uHRnpp3T5mlxKtov+bWb7UvYm1SHYTk1
+	 mQXeNNTV069W5r7owtVUFqtxNvWQeqXRXiOmSBVKn0GDZgJRacDcl1ifermrt5Jmqg
+	 Qr/Gg01w19C6A==
+Message-ID: <b88ddaed-4f7c-4a1a-8f52-43a2acc4ca82@kernel.org>
+Date: Fri, 9 Aug 2024 08:10:51 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -35,8 +35,8 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 06/11] dt-bindings: nfc: nxp,nci: Document PN553
- compatible
+Subject: Re: [PATCH v2 05/11] dt-bindings: soc: qcom: qcom,pmic-glink:
+ Document SM7325 compatible
 To: Danila Tikhonov <danila@jiaxyga.com>, robh@kernel.org,
  krzk+dt@kernel.org, conor+dt@kernel.org, andersson@kernel.org,
  konradybcio@kernel.org, davem@davemloft.net, edumazet@google.com,
@@ -51,7 +51,7 @@ Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
  linux-pm@vger.kernel.org, linux-hardening@vger.kernel.org
 References: <20240808184048.63030-1-danila@jiaxyga.com>
- <20240808184048.63030-7-danila@jiaxyga.com>
+ <20240808184048.63030-6-danila@jiaxyga.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -97,30 +97,26 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20240808184048.63030-7-danila@jiaxyga.com>
+In-Reply-To: <20240808184048.63030-6-danila@jiaxyga.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 08/08/2024 20:40, Danila Tikhonov wrote:
-> The PN553 is another NFC chip from NXP, document the compatible in the
-> bindings.
+> The SM7325 is the closest SoC to the QCM6490 and is also identical
+> to the SC7280. The SM7325 also requires both UCSI_NO_PARTNER_PDOS &
+> UCSI_DELAY_DEVICE_PDOS quirks.
+> 
+> Document the PMIC GLINK firmware interface on the SM7325 Platform
+> by using the QCM6490 bindings as fallback.
 > 
 > Signed-off-by: Danila Tikhonov <danila@jiaxyga.com>
 > ---
->  Documentation/devicetree/bindings/net/nfc/nxp,nci.yaml | 1 +
->  1 file changed, 1 insertion(+)
+>  .../devicetree/bindings/soc/qcom/qcom,pmic-glink.yaml        | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/net/nfc/nxp,nci.yaml b/Documentation/devicetree/bindings/net/nfc/nxp,nci.yaml
-> index 6924aff0b2c5..364b36151180 100644
-> --- a/Documentation/devicetree/bindings/net/nfc/nxp,nci.yaml
-> +++ b/Documentation/devicetree/bindings/net/nfc/nxp,nci.yaml
-> @@ -17,6 +17,7 @@ properties:
->            - enum:
->                - nxp,nq310
->                - nxp,pn547
-> +              - nxp,pn553
 
-Keep the list ordered.
+
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 Best regards,
 Krzysztof
