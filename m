@@ -1,96 +1,163 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68C79160865;
-	Sat, 10 Aug 2024 15:42:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E460433DD;
+	Sat, 10 Aug 2024 20:05:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723304554; cv=none; b=TyVgWDroK5tmq0ULI5998XpdHUAAn/gieWK8IH3v7VlVogwQttexTIZOVAz/Wi0PjMwN7xZ/fbyScGjxqpabOs4Zlgvevm1YArfXcJJRLEDrdQyeqJCDcJ3dHjKpX9g591UwA/9wKJ1pNNZoy5PYdl1PcfLvysCwIyqjQZiyd+8=
+	t=1723320358; cv=none; b=P1Tos2PkWaObpmpfTf+GFj22+uCyC+CKNI2TwwrR3+EzAOVFZ+S+qUyiOWjm/mejcYY9ILAFWSAuLDOOjrQ1x314fRYmyND8QBsWle5okDYiBhczvegfuV6XQDRe013M1aTmTOT31TRs5OL3w19bX5UsBvyF8tY/lkE8eTcMtf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723304554; c=relaxed/simple;
-	bh=WGZQ4c3+06GqirOB7NI9r450dEl8mcaYabw4sVBrEEM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=J22HmSyE2tToQscniX0lGMpfpA+k92qBuw79+S59162sJOeui39fb8GpsqWE9SxdHEQWsnYRGIy793YrZ15CV6H66fLpI04JbfoN79H3JFYRcsIYWwRAjDeZnHZpOB7r4u71+PAHDhL0it4QjCIVJWP60phhBbSbq9VDQJCE9cg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KCwS4k7l; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1723320358; c=relaxed/simple;
+	bh=/0lQasp91D+kBrslK0ue8j6f66yAubgt4IwOH2uM4cs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NPVBEeL8ydCMQaamIMPUhI8a/Zm6PfxnbJOPF25xU3VK2kyU3RWfxndU8MNJFqd0Ww2v+bZuk+7mH3INEhzcbTlUpJjZVImeNtuvky+glFtbg0ez3ygTTgxPZj8ZFylPNLuk4PixNGygRqlgR7exIkCkpLHV4oefe0oM+d9lgL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MWK/a331; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KCwS4k7l"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-52f04b4abdcso4390441e87.2;
-        Sat, 10 Aug 2024 08:42:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1723304550; x=1723909350; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ll0Zv3scvhHhGUgse8WyyqOtt9U6Ci62SJZyiCrYTy4=;
-        b=KCwS4k7lZpME4T5c6Twhiq0IIPhSnkH6KzyNdhDTf99fox6SCWAPZdeRjTXY2vRaS6
-         ySlUz5R53d2riQJq+VYCFTWKVITlRppp5+DM2ayGZ+x5AcBYc0NL6/zr/IebcV0q+e9o
-         FQgEK0sgc5pxM6VgXpPs4FSVvIZ1ozQ3RDuofo4zSs7n0AzzPIt1AAWIbw86rg5iBl/L
-         7FmQkYHKmv8rocc2g5wSqOiLhT0nXj9A/nViHhVE510XEbeSxxd1k6fwK6++5lHu/93I
-         zEVZ7ueVZxBZwhNAVpuAxfBdLsRrtJTkQz7sEuTvABBQRSzjc2THid9ggJ5JFHqTPlNj
-         ISjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723304550; x=1723909350;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ll0Zv3scvhHhGUgse8WyyqOtt9U6Ci62SJZyiCrYTy4=;
-        b=i1gSiqnjHFb3hAdA514344cI6AcXnReZ/czZuhpoTUOnHkjUhELemm3wthFa/Y26Fh
-         M6mmJIrAoSN+jJaUnI3VRot8Dp+TKxrwmQRAfsrYUZL3oMK2ZgEifI6GDO6gYkUeoYHd
-         M+xOMVjTI1Ip4FfJjw2holx9qQXmh3rPwxZRHhpyvRwpF8wu7Cy4+3jJgfHfPN5EyJQx
-         Ez8Ow44D+8KmltMeuhvff7fIOkmKn/Cm/lSg9xqqJdBCOtQ2HBzzr9qgo4Fx0bMocDAl
-         0lONaZ7QvMNhiKpZ4++VPxsPiLzXMnXvgxZARnj4DJisZHZKkeoagCEcO+RnPRhfj/P6
-         ShmA==
-X-Forwarded-Encrypted: i=1; AJvYcCV2m/ZM6eAAVA6qcDL/7jX9hXW2djo7dzHp8BlwQSB2TcGUz7dNcWZtxhmEBOWRzOgPigxdGeQgF8rJhPUmhOlsHjr+9RcMOKXM9odtkY+7zqdxj4Xoi7AtVOPSsRLECZyk3AbxMyNit9p4fgj0
-X-Gm-Message-State: AOJu0YxLR1zDW/8Kzf+6A1HTtHP3A2GUDV4Wx2jfSLYJLdrcn4JSDKFB
-	la3i6y/s93E+BeENhaou+XZKZJtL+lCmjadLUXbNXAs+ew7DlEbMj9SHxEiyoHPjKpDIMbcn4R9
-	OHv1zn78BeNlgOvHqJNuAoapHZsM=
-X-Google-Smtp-Source: AGHT+IH9NWcz126slfd+veSsB3wrrcHX+9BBuTolXnRJCO8ZWubzVMppiuahdh+WY93r6DZwBPLnLcfyDhceGIdD36s=
-X-Received: by 2002:a05:6512:68b:b0:52e:941d:7039 with SMTP id
- 2adb3069b0e04-530eea22e8cmr3253568e87.59.1723304550063; Sat, 10 Aug 2024
- 08:42:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MWK/a331"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1723320356; x=1754856356;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=/0lQasp91D+kBrslK0ue8j6f66yAubgt4IwOH2uM4cs=;
+  b=MWK/a331PoVVRlV9mPSvCr0svPWyvjFxKWjTPGoov1SsHpAFdDvjG6V3
+   KfOljtYQgXK39awlUo5JAHKtgkneT+36t+OT0BF94j5kABwMssw0V2cq+
+   Z+wFGGXQ7e3N2aKUUKfntW9QkI1xay2/vfzBzBFNg3rDTTdB+JwnCPSlS
+   gDT2F5vCt4ypMTZR9uN8PLwFZDsA3TO7JS79AFhVeq/u57UkYTQhVUKTi
+   4OwGdBe2m4teS7OJPgFBm4RxKjy97wt5ScYeWL8rO0FTXzaFXlj/MvHSG
+   m1goDEHKC8tyN/RD79QEOktLZrd6E0MvMoiXD3QD7AQIYS8nIaj5nMaof
+   g==;
+X-CSE-ConnectionGUID: ldrrqHZzSdOMAciiV+39vw==
+X-CSE-MsgGUID: oYmi/6okQEKyhGpBZ95xlg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11160"; a="25336716"
+X-IronPort-AV: E=Sophos;i="6.09,279,1716274800"; 
+   d="scan'208";a="25336716"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2024 13:05:55 -0700
+X-CSE-ConnectionGUID: WdQRY8y3RSmcjzlCH8qENA==
+X-CSE-MsgGUID: Mev2OkZ5QcWfEW0J5goX0g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,279,1716274800"; 
+   d="scan'208";a="62272713"
+Received: from unknown (HELO b6bf6c95bbab) ([10.239.97.151])
+  by fmviesa005.fm.intel.com with ESMTP; 10 Aug 2024 13:05:52 -0700
+Received: from kbuild by b6bf6c95bbab with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1scsLW-000AGN-2n;
+	Sat, 10 Aug 2024 20:05:50 +0000
+Date: Sun, 11 Aug 2024 04:05:49 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Miri Korenblit <miriam.rachel.korenblit@intel.com>,
+	Kalle Valo <kvalo@kernel.org>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: oe-kbuild-all@lists.linux.dev, netdev@vger.kernel.org,
+	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2][next] wifi: iwlwifi: mvm: Use __counted_by() and
+ avoid -Wfamnae warnings
+Message-ID: <202408110304.CRXk8u09-lkp@intel.com>
+References: <ZrZs5KL5Pz9tIinr@cute>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240808-b4-string_helpers_caa133-v1-1-686a455167c4@google.com>
- <CAHp75VfBjKLf3LqDXvAehW5sxGzYnU4sS3fr=JoaM-6p_gR34w@mail.gmail.com>
- <202408081609.D08D11C@keescook> <CAHp75Vd3wKyq2XE2UPoW_q3KjmncSeaEebL4ff5Gpx8Lz+dB9A@mail.gmail.com>
- <dyigpya2tb7obniv3g2rzhtahvjhximzjlvoi42c45fqkb7hx5@tw3loxvglexa> <CAHp75Vcpy3+wZ-UuLRMVtvhK8u7X9wAyB8_5t1v8M50NCyTYEA@mail.gmail.com>
-In-Reply-To: <CAHp75Vcpy3+wZ-UuLRMVtvhK8u7X9wAyB8_5t1v8M50NCyTYEA@mail.gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Sat, 10 Aug 2024 18:41:53 +0300
-Message-ID: <CAHp75Ve-uU9OfyTNUdP=nvEt0SoSWpeKofZ2pWz_J9PDdmJ1Zg@mail.gmail.com>
-Subject: Re: [PATCH] lib/string_helpers: rework overflow-dependent code
-To: Justin Stitt <justinstitt@google.com>
-Cc: Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZrZs5KL5Pz9tIinr@cute>
 
-On Sat, Aug 10, 2024 at 6:39=E2=80=AFPM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Sat, Aug 10, 2024 at 2:53=E2=80=AFAM Justin Stitt <justinstitt@google.=
-com> wrote:
-> > On Fri, Aug 09, 2024 at 02:07:57PM GMT, Andy Shevchenko wrote:
+Hi Gustavo,
 
-...
+kernel test robot noticed the following build errors:
 
-> > But, we could  do this too:
+[auto build test ERROR on wireless-next/main]
+[also build test ERROR on wireless/main linus/master v6.11-rc2 next-20240809]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-> > -       while (*src && --size) {
-> > -               if (src[0] =3D=3D '\\' && src[1] !=3D '\0' && size > 1)=
- {
+url:    https://github.com/intel-lab-lkp/linux/commits/Gustavo-A-R-Silva/wifi-iwlwifi-mvm-Use-__counted_by-and-avoid-Wfamnae-warnings/20240810-103759
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/wireless/wireless-next.git main
+patch link:    https://lore.kernel.org/r/ZrZs5KL5Pz9tIinr%40cute
+patch subject: [PATCH v2][next] wifi: iwlwifi: mvm: Use __counted_by() and avoid -Wfamnae warnings
+config: sparc-allmodconfig (https://download.01.org/0day-ci/archive/20240811/202408110304.CRXk8u09-lkp@intel.com/config)
+compiler: sparc64-linux-gcc (GCC) 14.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240811/202408110304.CRXk8u09-lkp@intel.com/reproduce)
 
-> This one is worse, I think.
-> Let's take time and not hurry up and think more about better approaches.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202408110304.CRXk8u09-lkp@intel.com/
 
-Btw, have you played with the "do {} while (size);" approach?
+All errors (new ones prefixed by >>):
 
---=20
-With Best Regards,
-Andy Shevchenko
+   In file included from <command-line>:
+   drivers/net/wireless/intel/iwlwifi/mvm/d3.c: In function 'iwl_mvm_gtk_rekey':
+>> include/linux/compiler_types.h:510:45: error: call to '__compiletime_assert_821' declared with attribute error: BUILD_BUG_ON failed: conf->keylen < WLAN_KEY_LEN_CCMP
+     510 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+         |                                             ^
+   include/linux/compiler_types.h:491:25: note: in definition of macro '__compiletime_assert'
+     491 |                         prefix ## suffix();                             \
+         |                         ^~~~~~
+   include/linux/compiler_types.h:510:9: note: in expansion of macro '_compiletime_assert'
+     510 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+         |         ^~~~~~~~~~~~~~~~~~~
+   include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_assert'
+      39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+         |                                     ^~~~~~~~~~~~~~~~~~
+   include/linux/build_bug.h:50:9: note: in expansion of macro 'BUILD_BUG_ON_MSG'
+      50 |         BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+         |         ^~~~~~~~~~~~~~~~
+   drivers/net/wireless/intel/iwlwifi/mvm/d3.c:2148:9: note: in expansion of macro 'BUILD_BUG_ON'
+    2148 |         BUILD_BUG_ON(conf->keylen < WLAN_KEY_LEN_CCMP);
+         |         ^~~~~~~~~~~~
+>> include/linux/compiler_types.h:510:45: error: call to '__compiletime_assert_822' declared with attribute error: BUILD_BUG_ON failed: conf->keylen < WLAN_KEY_LEN_GCMP_256
+     510 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+         |                                             ^
+   include/linux/compiler_types.h:491:25: note: in definition of macro '__compiletime_assert'
+     491 |                         prefix ## suffix();                             \
+         |                         ^~~~~~
+   include/linux/compiler_types.h:510:9: note: in expansion of macro '_compiletime_assert'
+     510 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+         |         ^~~~~~~~~~~~~~~~~~~
+   include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_assert'
+      39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+         |                                     ^~~~~~~~~~~~~~~~~~
+   include/linux/build_bug.h:50:9: note: in expansion of macro 'BUILD_BUG_ON_MSG'
+      50 |         BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+         |         ^~~~~~~~~~~~~~~~
+   drivers/net/wireless/intel/iwlwifi/mvm/d3.c:2149:9: note: in expansion of macro 'BUILD_BUG_ON'
+    2149 |         BUILD_BUG_ON(conf->keylen < WLAN_KEY_LEN_GCMP_256);
+         |         ^~~~~~~~~~~~
+
+
+vim +/__compiletime_assert_821 +510 include/linux/compiler_types.h
+
+eb5c2d4b45e3d2 Will Deacon 2020-07-21  496  
+eb5c2d4b45e3d2 Will Deacon 2020-07-21  497  #define _compiletime_assert(condition, msg, prefix, suffix) \
+eb5c2d4b45e3d2 Will Deacon 2020-07-21  498  	__compiletime_assert(condition, msg, prefix, suffix)
+eb5c2d4b45e3d2 Will Deacon 2020-07-21  499  
+eb5c2d4b45e3d2 Will Deacon 2020-07-21  500  /**
+eb5c2d4b45e3d2 Will Deacon 2020-07-21  501   * compiletime_assert - break build and emit msg if condition is false
+eb5c2d4b45e3d2 Will Deacon 2020-07-21  502   * @condition: a compile-time constant condition to check
+eb5c2d4b45e3d2 Will Deacon 2020-07-21  503   * @msg:       a message to emit if condition is false
+eb5c2d4b45e3d2 Will Deacon 2020-07-21  504   *
+eb5c2d4b45e3d2 Will Deacon 2020-07-21  505   * In tradition of POSIX assert, this macro will break the build if the
+eb5c2d4b45e3d2 Will Deacon 2020-07-21  506   * supplied condition is *false*, emitting the supplied error message if the
+eb5c2d4b45e3d2 Will Deacon 2020-07-21  507   * compiler has support to do so.
+eb5c2d4b45e3d2 Will Deacon 2020-07-21  508   */
+eb5c2d4b45e3d2 Will Deacon 2020-07-21  509  #define compiletime_assert(condition, msg) \
+eb5c2d4b45e3d2 Will Deacon 2020-07-21 @510  	_compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+eb5c2d4b45e3d2 Will Deacon 2020-07-21  511  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
