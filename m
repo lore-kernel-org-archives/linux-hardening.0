@@ -1,209 +1,96 @@
-Received: from omta34.uswest2.a.cloudfilter.net (omta34.uswest2.a.cloudfilter.net [35.89.44.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E1571870
-	for <linux-hardening@vger.kernel.org>; Sat, 10 Aug 2024 15:41:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68C79160865;
+	Sat, 10 Aug 2024 15:42:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723304506; cv=none; b=nIHMKdikghq8lrWn0odYKwo1z41GGlX/G0ID4rMBOokaP3ecgRfBs+aTsBfKSjGAI990uH/zYQjA3za8Pfjq/4zQU/+QlWqfkK7jFhCNwkstZwPmJaEbU75nXd8v4bvtqFQSLMgEc9zKYzfJxrE952seJfa0nzmP0ehoTcO/eeY=
+	t=1723304554; cv=none; b=TyVgWDroK5tmq0ULI5998XpdHUAAn/gieWK8IH3v7VlVogwQttexTIZOVAz/Wi0PjMwN7xZ/fbyScGjxqpabOs4Zlgvevm1YArfXcJJRLEDrdQyeqJCDcJ3dHjKpX9g591UwA/9wKJ1pNNZoy5PYdl1PcfLvysCwIyqjQZiyd+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723304506; c=relaxed/simple;
-	bh=o62VIjOPLALNmxGLCiVL2Zsve94rbDHXk3qMOQbZyAA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X+8FHdgnQ5HD/jGM14bKYhuHVk7/dj3b3S0JEvUps9DOOCNfroOTIK9z8cyX8V6t+/WnphPnNhpmy4dx3PMGKeY/Z2jUtyZCYu3kfUuwaRgCrusri0o9C1AYiGe/8Pi0ZT9F3ONt1IzZpYPEFEohbYpOpkKf+PD1IEUOqCmNNKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=F2HFU594; arc=none smtp.client-ip=35.89.44.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1723304554; c=relaxed/simple;
+	bh=WGZQ4c3+06GqirOB7NI9r450dEl8mcaYabw4sVBrEEM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=J22HmSyE2tToQscniX0lGMpfpA+k92qBuw79+S59162sJOeui39fb8GpsqWE9SxdHEQWsnYRGIy793YrZ15CV6H66fLpI04JbfoN79H3JFYRcsIYWwRAjDeZnHZpOB7r4u71+PAHDhL0it4QjCIVJWP60phhBbSbq9VDQJCE9cg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KCwS4k7l; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="F2HFU594"
-Received: from eig-obgw-6010a.ext.cloudfilter.net ([10.0.30.248])
-	by cmsmtp with ESMTPS
-	id cZ39sU6meVpzpcoDps2xh8; Sat, 10 Aug 2024 15:41:37 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id coDosAqIbqPKbcoDosUrkJ; Sat, 10 Aug 2024 15:41:36 +0000
-X-Authority-Analysis: v=2.4 cv=PZb5hDhd c=1 sm=1 tr=0 ts=66b78a30
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=frY+GlAHrI6frpeK1MvySw==:17
- a=IkcTkHD0fZMA:10 a=yoJbH4e0A30A:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8
- a=oKrQ66Li5qe5zRcEOgYA:9 a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22
- a=TjNXssC_j7lpFel5tvFf:22 a=Xt_RvD8W3m28Mn_h3AK8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=14Lw9ijUqufXCJHVSEUKjfux6K/+0xEy2ibtU/QVJd8=; b=F2HFU5946l41S5Ql/lZv+emjHf
-	ihq/ln7mxZ3Ajr7RrEC1PZqsp/JTcThniZQYIlTcFNjZoKfLOVAD8aAvRuIl7SYlBRXSTZ6GYZsw8
-	hyCCR6F9wdJyNpkJpehoNtFGNMaOX7I1mLUXXndfIuIrbD+pHwalT8NR6tbxJgLH/20UHucLJKghI
-	NEqSTKA4YcQUDnO3Cdi+yriIdP6bzIXaOPTOKqRYswV2vwybfuFJtTPINxRtREZHWBWwzNLm7SCZM
-	R0Mu4OIC7w+57NpqRUbpqee03nO2sXMe1+ykVCwacuboFak6O+bvUk2xCLDsm1034geEwOQmOnbTU
-	9vA7XxSQ==;
-Received: from [201.172.173.139] (port=52890 helo=[192.168.15.5])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1scoDm-0032aY-2q;
-	Sat, 10 Aug 2024 10:41:35 -0500
-Message-ID: <0070b332-b617-4454-ac7b-85b1d78fef68@embeddedor.com>
-Date: Sat, 10 Aug 2024 09:41:29 -0600
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KCwS4k7l"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-52f04b4abdcso4390441e87.2;
+        Sat, 10 Aug 2024 08:42:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1723304550; x=1723909350; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ll0Zv3scvhHhGUgse8WyyqOtt9U6Ci62SJZyiCrYTy4=;
+        b=KCwS4k7lZpME4T5c6Twhiq0IIPhSnkH6KzyNdhDTf99fox6SCWAPZdeRjTXY2vRaS6
+         ySlUz5R53d2riQJq+VYCFTWKVITlRppp5+DM2ayGZ+x5AcBYc0NL6/zr/IebcV0q+e9o
+         FQgEK0sgc5pxM6VgXpPs4FSVvIZ1ozQ3RDuofo4zSs7n0AzzPIt1AAWIbw86rg5iBl/L
+         7FmQkYHKmv8rocc2g5wSqOiLhT0nXj9A/nViHhVE510XEbeSxxd1k6fwK6++5lHu/93I
+         zEVZ7ueVZxBZwhNAVpuAxfBdLsRrtJTkQz7sEuTvABBQRSzjc2THid9ggJ5JFHqTPlNj
+         ISjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723304550; x=1723909350;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ll0Zv3scvhHhGUgse8WyyqOtt9U6Ci62SJZyiCrYTy4=;
+        b=i1gSiqnjHFb3hAdA514344cI6AcXnReZ/czZuhpoTUOnHkjUhELemm3wthFa/Y26Fh
+         M6mmJIrAoSN+jJaUnI3VRot8Dp+TKxrwmQRAfsrYUZL3oMK2ZgEifI6GDO6gYkUeoYHd
+         M+xOMVjTI1Ip4FfJjw2holx9qQXmh3rPwxZRHhpyvRwpF8wu7Cy4+3jJgfHfPN5EyJQx
+         Ez8Ow44D+8KmltMeuhvff7fIOkmKn/Cm/lSg9xqqJdBCOtQ2HBzzr9qgo4Fx0bMocDAl
+         0lONaZ7QvMNhiKpZ4++VPxsPiLzXMnXvgxZARnj4DJisZHZKkeoagCEcO+RnPRhfj/P6
+         ShmA==
+X-Forwarded-Encrypted: i=1; AJvYcCV2m/ZM6eAAVA6qcDL/7jX9hXW2djo7dzHp8BlwQSB2TcGUz7dNcWZtxhmEBOWRzOgPigxdGeQgF8rJhPUmhOlsHjr+9RcMOKXM9odtkY+7zqdxj4Xoi7AtVOPSsRLECZyk3AbxMyNit9p4fgj0
+X-Gm-Message-State: AOJu0YxLR1zDW/8Kzf+6A1HTtHP3A2GUDV4Wx2jfSLYJLdrcn4JSDKFB
+	la3i6y/s93E+BeENhaou+XZKZJtL+lCmjadLUXbNXAs+ew7DlEbMj9SHxEiyoHPjKpDIMbcn4R9
+	OHv1zn78BeNlgOvHqJNuAoapHZsM=
+X-Google-Smtp-Source: AGHT+IH9NWcz126slfd+veSsB3wrrcHX+9BBuTolXnRJCO8ZWubzVMppiuahdh+WY93r6DZwBPLnLcfyDhceGIdD36s=
+X-Received: by 2002:a05:6512:68b:b0:52e:941d:7039 with SMTP id
+ 2adb3069b0e04-530eea22e8cmr3253568e87.59.1723304550063; Sat, 10 Aug 2024
+ 08:42:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] wifi: ath11k: Avoid -Wflex-array-member-not-at-end
- warnings
-To: Jeff Johnson <quic_jjohnson@quicinc.com>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, Kalle Valo
- <kvalo@kernel.org>, Jeff Johnson <jjohnson@kernel.org>
-Cc: linux-wireless@vger.kernel.org, ath11k@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <ZrZB3Rjswe0ZXtug@cute>
- <8d31adac-fd43-4cf9-8fc8-655b359a573c@quicinc.com>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <8d31adac-fd43-4cf9-8fc8-655b359a573c@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.173.139
-X-Source-L: No
-X-Exim-ID: 1scoDm-0032aY-2q
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.5]) [201.172.173.139]:52890
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfCpHF01OjdoQFEijFC5uYtqxB8eq6bdHX1tNKaSe7yvrPuNB2cocDTfJoRRERt2W3UDsjQtuw1fjnvq8EZpaj8HO7C/7Hu2mUxTWu1kAGH0p0NkTJzI4
- 3uJ5Ra1qQx4fwjidk9lay7BjlVZp9mDdzJhpITTk1bkkQFDsxDuVUBnPsFsCRGg0Lg2rQRPmLOSgL7HlWLPeDti8t6nv/hFuKelXujvvvcU7rqg094/j147b
+References: <20240808-b4-string_helpers_caa133-v1-1-686a455167c4@google.com>
+ <CAHp75VfBjKLf3LqDXvAehW5sxGzYnU4sS3fr=JoaM-6p_gR34w@mail.gmail.com>
+ <202408081609.D08D11C@keescook> <CAHp75Vd3wKyq2XE2UPoW_q3KjmncSeaEebL4ff5Gpx8Lz+dB9A@mail.gmail.com>
+ <dyigpya2tb7obniv3g2rzhtahvjhximzjlvoi42c45fqkb7hx5@tw3loxvglexa> <CAHp75Vcpy3+wZ-UuLRMVtvhK8u7X9wAyB8_5t1v8M50NCyTYEA@mail.gmail.com>
+In-Reply-To: <CAHp75Vcpy3+wZ-UuLRMVtvhK8u7X9wAyB8_5t1v8M50NCyTYEA@mail.gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Sat, 10 Aug 2024 18:41:53 +0300
+Message-ID: <CAHp75Ve-uU9OfyTNUdP=nvEt0SoSWpeKofZ2pWz_J9PDdmJ1Zg@mail.gmail.com>
+Subject: Re: [PATCH] lib/string_helpers: rework overflow-dependent code
+To: Justin Stitt <justinstitt@google.com>
+Cc: Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Sat, Aug 10, 2024 at 6:39=E2=80=AFPM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Sat, Aug 10, 2024 at 2:53=E2=80=AFAM Justin Stitt <justinstitt@google.=
+com> wrote:
+> > On Fri, Aug 09, 2024 at 02:07:57PM GMT, Andy Shevchenko wrote:
 
+...
 
-On 09/08/24 20:21, Jeff Johnson wrote:
-> On 8/9/2024 9:20 AM, Gustavo A. R. Silva wrote:
->> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
->> getting ready to enable it, globally.
->>
->> Move the conflicting declaration to the end of the structure. Notice
->> that `struct ieee80211_chanctx_conf` is a flexible structure --a
->> structure that contains a flexible-array member.
->>
->> Also, remove a couple of unused structures.
->>
->> Fix the following warnings:
->> drivers/net/wireless/ath/ath11k/core.h:409:39: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
->> drivers/net/wireless/ath/ath11k/dp.h:1309:24: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
->> drivers/net/wireless/ath/ath11k/dp.h:1368:24: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
->>
->> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->> ---
->>   drivers/net/wireless/ath/ath11k/core.h |  4 +++-
->>   drivers/net/wireless/ath/ath11k/dp.h   | 23 -----------------------
->>   2 files changed, 3 insertions(+), 24 deletions(-)
->>
->> diff --git a/drivers/net/wireless/ath/ath11k/core.h b/drivers/net/wireless/ath/ath11k/core.h
->> index df24f0e409af..e283415dccf3 100644
->> --- a/drivers/net/wireless/ath/ath11k/core.h
->> +++ b/drivers/net/wireless/ath/ath11k/core.h
->> @@ -406,11 +406,13 @@ struct ath11k_vif {
->>   	bool wpaie_present;
->>   	bool bcca_zero_sent;
->>   	bool do_not_send_tmpl;
->> -	struct ieee80211_chanctx_conf chanctx;
->>   	struct ath11k_arp_ns_offload arp_ns_offload;
->>   	struct ath11k_rekey_data rekey_data;
->>   
->>   	struct ath11k_reg_tpc_power_info reg_tpc_info;
->> +
->> +	/* Must be last - ends in a flexible-array member. */
->> +	struct ieee80211_chanctx_conf chanctx;
-> 
-> there is something illogical about this since the vif is allocated using
-> sizeof() and hence there will never be memory allocated for the flexible
-> array, and it is assigned using either struct assignment or memcpy using the
-> struct size which (fortunately) would not transfer the flexible array contents:
-> 		arvif->chanctx = *ctx;
-> 
-> 		memcpy(&arvif->chanctx, ctx, sizeof(*ctx));
+> > But, we could  do this too:
 
-Yes; this is why I didn't include a 'Fixes' tag.
+> > -       while (*src && --size) {
+> > -               if (src[0] =3D=3D '\\' && src[1] !=3D '\0' && size > 1)=
+ {
 
-In any case, middle-flex-arrays are deprecated and should either be
-removed/refactored[1][2] or placed at the very bottom in any nested
-structures. :)
+> This one is worse, I think.
+> Let's take time and not hurry up and think more about better approaches.
 
-> 
-> since ath11k doesn't actually use the drv_priv[] I guess this change is OK, it
-> is just strange to me.
-> 
-> also makes me wonder why ath11k keeps a copy of the chanctx instead of just
-> getting it from the underlying ieee80211_link_data. but that is outside the
-> scope of this discussion.
-> 
->>   };
->>   
->>   struct ath11k_vif_iter {
->> diff --git a/drivers/net/wireless/ath/ath11k/dp.h b/drivers/net/wireless/ath/ath11k/dp.h
->> index 2f6dd69d3be2..65d2bc0687c8 100644
->> --- a/drivers/net/wireless/ath/ath11k/dp.h
->> +++ b/drivers/net/wireless/ath/ath11k/dp.h
->> @@ -1305,18 +1305,6 @@ struct htt_ppdu_stats_user_rate {
->>   #define HTT_TX_INFO_PEERID(_flags) \
->>   			FIELD_GET(HTT_PPDU_STATS_TX_INFO_FLAGS_PEERID_M, _flags)
->>   
->> -struct htt_tx_ppdu_stats_info {
->> -	struct htt_tlv tlv_hdr;
->> -	u32 tx_success_bytes;
->> -	u32 tx_retry_bytes;
->> -	u32 tx_failed_bytes;
->> -	u32 flags; /* %HTT_PPDU_STATS_TX_INFO_FLAGS_ */
->> -	u16 tx_success_msdus;
->> -	u16 tx_retry_msdus;
->> -	u16 tx_failed_msdus;
->> -	u16 tx_duration; /* united in us */
->> -} __packed;
->> -
->>   enum  htt_ppdu_stats_usr_compln_status {
->>   	HTT_PPDU_STATS_USER_STATUS_OK,
->>   	HTT_PPDU_STATS_USER_STATUS_FILTERED,
->> @@ -1364,17 +1352,6 @@ struct htt_ppdu_stats_usr_cmpltn_ack_ba_status {
->>   	u32 success_bytes;
->>   } __packed;
->>   
->> -struct htt_ppdu_stats_usr_cmn_array {
->> -	struct htt_tlv tlv_hdr;
->> -	u32 num_ppdu_stats;
->> -	/* tx_ppdu_stats_info is filled by multiple struct htt_tx_ppdu_stats_info
->> -	 * elements.
->> -	 * tx_ppdu_stats_info is variable length, with length =
->> -	 *     number_of_ppdu_stats * sizeof (struct htt_tx_ppdu_stats_info)
->> -	 */
->> -	struct htt_tx_ppdu_stats_info tx_ppdu_info[];
->> -} __packed;
->> -
->>   struct htt_ppdu_user_stats {
->>   	u16 peer_id;
->>   	u32 tlv_flags;
-> 
-> the second part if definitely ok.
-> 
-> Acked-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+Btw, have you played with the "do {} while (size);" approach?
 
-Thanks
---
-Gustavo
-
-[1] https://lore.kernel.org/linux-hardening/ZrOQa2gew5yadyt3@cute/
-[2] https://lore.kernel.org/linux-hardening/ZrJqtUpCI+uCeb4D@cute/
+--=20
+With Best Regards,
+Andy Shevchenko
