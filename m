@@ -1,75 +1,64 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3DC62B9B7;
-	Mon, 12 Aug 2024 18:44:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9535F1917D0;
+	Mon, 12 Aug 2024 19:49:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723488295; cv=none; b=E45bg8emwjCXE2ndral/zvvb1JKSG8XGdYVAcfKRtuoXOYuRFeS3JAxL8hKCpKJ9F/FoiXXVKb9Kb0jODgEy91h3xGZORkds9mZuWTXaM1DhWnbDSp/mTg+BogfYYNArlDFN6/nA8uMcrY9VopCvsQOBS+fxchJUHvhDddWkYP4=
+	t=1723492172; cv=none; b=euCsWPc1FEEv8MxmtqBS2oTHfE1mY9VF57AgjWQT6UWm39WQwPGrxphtWdbfaoKb601yPsVderMFHi+eWfHtEXGX5ia3ZWRb1nasbSLy2Pt904P3wMV5B82EbtfH4iZs16m0iW9PeFw6ppnqKJNWAzDBOhiOn0cDCBu9WZYJ9WA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723488295; c=relaxed/simple;
-	bh=6CjZRjGMV+H7c4xj8yV7T75tAXiMAZLCcw27R8ueuVI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DYVnNU0gUodHLZsiPYozFw5NLDM/ujxTFQhl7gelNzufjePks2UNZdjgK5Vvl/maKWsi61CdVWZHSqLhG8ebbYdeXR1qWZP8+oKvi+y4imx7QWeD81vaMXxb83epnczpKsDGJxnaadyOT3249jJdcCbf9JPisd4OHf16NZ6ChNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Au/Xjoz0; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Au/Xjoz0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 288BDC32782;
-	Mon, 12 Aug 2024 18:44:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723488295;
-	bh=6CjZRjGMV+H7c4xj8yV7T75tAXiMAZLCcw27R8ueuVI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Au/Xjoz0PAdBkeg1dpTgkLGZzsewhYUyGV3sxVxz2WEaoFCKMaidck1YWpQti1QMl
-	 auzKa4Z7Y/BHJEhjt90HfNuoKUBslS39A/mYsT7AuaZ63a0XXZ4Tgt3Hnek1A5D7x3
-	 yuaieICbgJ2fKrCOltZ8MN/r2IQtagt8dTCpCoLat9/U87pz9trp2xDeUL3skOFpZh
-	 iPn1SKzDagSbVWh0JedW3uuc+Nvei3GjSEX+ZlWUum6TZ2mSSBMtCnbSJXdG9B34SC
-	 0vdVL9uw23q4FGCBU5utk+0n34PaXG+Ksxmx2bLYrJ/ZRut8j5ruGZR977sR8ukRzP
-	 hrjG2BkLzMK4w==
-From: Kees Cook <kees@kernel.org>
-To: Andy Shevchenko <andy@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Justin Stitt <justinstitt@google.com>
-Cc: Kees Cook <kees@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] lib/string_helpers: rework overflow-dependent code
-Date: Mon, 12 Aug 2024 11:43:20 -0700
-Message-Id: <172348819834.2826487.9112203772355447388.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240808-b4-string_helpers_caa133-v1-1-686a455167c4@google.com>
-References: <20240808-b4-string_helpers_caa133-v1-1-686a455167c4@google.com>
+	s=arc-20240116; t=1723492172; c=relaxed/simple;
+	bh=rEkC2p3/hDYrdI2cqSHQc6pq99mJv0GMpnWt8CrxSzY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BlhhA8P60vTtWD6p/XZsTp25JIvKK0odmTVJYPEMgr8mMcNN7U27m4qwTr2IZAOA3qFxwuXgDK51TsoGERBZCxqbb2TCEgiLJMfjk26gJjx5sZi6JkujRp3MEcc1fl3npQj0lpNRW5oY6Ipatp7iJup5S8IdmrUbfazrPFVBVm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: n3Wf+aoYQWmAV5Nv2pqtrg==
+X-CSE-MsgGUID: +IPjiDHBSeWc6VpepDDfMQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11162"; a="12968499"
+X-IronPort-AV: E=Sophos;i="6.09,284,1716274800"; 
+   d="scan'208";a="12968499"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2024 12:49:30 -0700
+X-CSE-ConnectionGUID: knuB3U8nTuWCZguycpF7VA==
+X-CSE-MsgGUID: jmIeVavnQxOPUiPIpAaUgQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,284,1716274800"; 
+   d="scan'208";a="58031053"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2024 12:49:28 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andy@kernel.org>)
+	id 1sdb2k-0000000ETiB-2qxg;
+	Mon, 12 Aug 2024 22:49:26 +0300
+Date: Mon, 12 Aug 2024 22:49:26 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Michal Wajdeczko <michal.wajdeczko@intel.com>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] string_choices: Add wrapper for str_down_up()
+Message-ID: <ZrpnRgdCaXFM1sju@smile.fi.intel.com>
+References: <20240812182939.work.424-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240812182939.work.424-kees@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Thu, 08 Aug 2024 14:43:56 -0700, Justin Stitt wrote:
-> When @size is 0, the desired behavior is to allow unlimited bytes to be
-> parsed. Currently, this relies on some intentional arithmetic overflow
-> where --size gives us SIZE_MAX when size is 0.
-> 
-> Explicitly spell out the desired behavior without relying on intentional
-> overflow/underflow.
-> 
-> [...]
+On Mon, Aug 12, 2024 at 11:29:40AM -0700, Kees Cook wrote:
+> The string choice functions which are not clearly true/false synonyms
+> also have inverted wrappers. Add this for str_down_up() as well.
 
-Since we can't have allocations larger than INT_MAX, SIZE_MAX is
-sufficiently large for this use-case, and the "off by one" introduce
-here isn't meaningful. I prefer the improved readability and lack of
-wrapping pre-decrement.
-
-Applied to for-next/hardening, thanks!
-
-[1/1] lib/string_helpers: rework overflow-dependent code
-      https://git.kernel.org/kees/c/5d6b91b74ccd
-
-Take care,
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
 
 -- 
-Kees Cook
+With Best Regards,
+Andy Shevchenko
+
 
