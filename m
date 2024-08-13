@@ -1,164 +1,128 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CDBB1991D2;
-	Tue, 13 Aug 2024 11:47:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88ADC19AA41;
+	Tue, 13 Aug 2024 12:58:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723549622; cv=none; b=VXPR7RbeL91yljF5MnC1X4GKI/EavYTrQFqLsTC8/iw8c9rxYxrqLJEXhM5cM4ac096U+Oa9na0Dkdc9uoz2+ZmbYvE9wsX05LfyKy4LyLgAr3qhXBzE8AOWdP78UFBl/tBOeYbra2UcLtArlvB5mWKsUGAuwjsRoEkvJXH96PE=
+	t=1723553886; cv=none; b=NT/jD8cg03C5pkSZlMV+mz+BXuumrExMAV+8uaCJK7bV/CLV6NklglizwUVKSH34IsPY4DwjiTpkc5X6QFL0z6mxhwWwu/ByGJrvWGBlccS/04V+Ahc7Koa/Q6v4ao6zTgg/hJqqjbYkCKz5YZSPEV1qmlcsgbzY51wHAzp1Ryo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723549622; c=relaxed/simple;
-	bh=DYwOX3bvc2I/Wodi76K+HqyzxK2YKkr2FDXmZ7RYW28=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MhuoLdjO4/9uWoz5MLgAdUZLYV7EeimjPPbmaeG40LeEsF4lfUKZGj4V8ZkP19tLMbOMc8FaaeKQ7q05wNyYhym742di8Jb3EcGr+WBNQ6s4gIBzfPMB7tZEdDA9YigadAf04bdZSHWbZ0+XYQWOsrHC5kk3mwb+1IVX+IvlBsM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.234])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4WjqKJ6D1pz1HGQj;
-	Tue, 13 Aug 2024 19:43:48 +0800 (CST)
-Received: from kwepemi100008.china.huawei.com (unknown [7.221.188.57])
-	by mail.maildlp.com (Postfix) with ESMTPS id 2DC9E140134;
-	Tue, 13 Aug 2024 19:46:52 +0800 (CST)
-Received: from huawei.com (10.90.53.73) by kwepemi100008.china.huawei.com
- (7.221.188.57) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 13 Aug
- 2024 19:46:51 +0800
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-To: <naveen@kernel.org>, <anil.s.keshavamurthy@intel.com>,
-	<davem@davemloft.net>, <mhiramat@kernel.org>, <kees@kernel.org>,
-	<gustavoars@kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>
-CC: <ruanjinjie@huawei.com>
-Subject: [PATCH 3/3] kprobes: Cleanup collect_one_slot() and __disable_kprobe()
-Date: Tue, 13 Aug 2024 19:53:34 +0800
-Message-ID: <20240813115334.3922580-4-ruanjinjie@huawei.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240813115334.3922580-1-ruanjinjie@huawei.com>
-References: <20240813115334.3922580-1-ruanjinjie@huawei.com>
+	s=arc-20240116; t=1723553886; c=relaxed/simple;
+	bh=fprbuUCIft12Lh/fqhPte7xgQHBYCl8hUXaC2w9707M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VF/kwALkbII59GxYHn1i1APSG24nSPn5KwoV23RzZWf8i12q5C++G5Vc3lzQe6yECH2z2GOTrSaZoDvmy+29V3ToZF94o3icaHTaEU0bxwA72P4LKYeqmRAMwpJsMk3f44B4QA0grkPfQC1f71DrSdFfd8UIJEpn6Kb+JwbVpP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=0j17iggL; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=3cagGaXM; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=AcNwvEZ7; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=LZTPPjzY; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="0j17iggL";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="3cagGaXM";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="AcNwvEZ7";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="LZTPPjzY"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id D448F203AC;
+	Tue, 13 Aug 2024 12:58:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1723553882;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aHbJqc/Wg7mLt3KDCd57boNBus+5Zinmvd8FHgmbQIQ=;
+	b=0j17iggL3Re4G2zLK1KciLdYfonnXLvvKv3LEetMghU0VhLM2D+Mhuv05VWf4LfKAjpWOk
+	vYPFxD/70NyoJeoDM+OBvvUaA6nLiCvXL8mlMn2PilqXV5QuEE0u3ozFDp+4j1uN4Uud3k
+	vlHgK69mc6abhyje/Qw5yiCM/+g+fQU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1723553882;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aHbJqc/Wg7mLt3KDCd57boNBus+5Zinmvd8FHgmbQIQ=;
+	b=3cagGaXMsFn41Tkr0i1VXoWXnH7F2nLIBwRmoILAhuJsWy9R4iyBvYzXErWIBX/0lgdiqA
+	da/AMkuWH4iJBHAw==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1723553881;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aHbJqc/Wg7mLt3KDCd57boNBus+5Zinmvd8FHgmbQIQ=;
+	b=AcNwvEZ7N+pcdDfri0BJiG95cQwIzO3MntLFNsp7AOkE225x3cyyTu86BCm5J/r5aBBUIs
+	3ZyioeDhYa4f3+39ndRebgFa1ZSSv9CrpUOVlCH9sxhdmAth+0FnVO4tT7Vu7Oi5YfRnHe
+	4BFl76LfCGhDlwsng7PTEzS2CZvibKA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1723553881;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aHbJqc/Wg7mLt3KDCd57boNBus+5Zinmvd8FHgmbQIQ=;
+	b=LZTPPjzYFt+3Vv3t5Z4z67ZwbBLiyBiANm+J4ZPpjlBhtQyrk2ul8ozFuhpWT1w31bfDzR
+	l+8RddRMXZ7DtZAQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B1C9813983;
+	Tue, 13 Aug 2024 12:58:01 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id YDdcKllYu2Y4CwAAD6G6ig
+	(envelope-from <dsterba@suse.cz>); Tue, 13 Aug 2024 12:58:01 +0000
+Date: Tue, 13 Aug 2024 14:57:45 +0200
+From: David Sterba <dsterba@suse.cz>
+To: Thorsten Blum <thorsten.blum@toblux.com>
+Cc: clm@fb.com, josef@toxicpanda.com, dsterba@suse.com, kees@kernel.org,
+	gustavoars@kernel.org, linux-btrfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] btrfs: Annotate struct name_cache_entry with
+ __counted_by()
+Message-ID: <20240813125745.GO25962@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+References: <20240813105314.58484-2-thorsten.blum@toblux.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemi100008.china.huawei.com (7.221.188.57)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240813105314.58484-2-thorsten.blum@toblux.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+X-Spam-Score: -4.00
+X-Spamd-Result: default: False [-4.00 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	HAS_REPLYTO(0.30)[dsterba@suse.cz];
+	NEURAL_HAM_SHORT(-0.20)[-0.990];
+	MIME_GOOD(-0.10)[text/plain];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	REPLYTO_ADDR_EQ_FROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.cz:replyto,suse.com:email]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-If kip->nused is not zero, collect_one_slot() return false, otherwise do
-a lot of linked list operations, reverse the processing order to make the
-code if nesting more concise. __disable_kprobe() is the same as well.
+On Tue, Aug 13, 2024 at 12:53:15PM +0200, Thorsten Blum wrote:
+> Add the __counted_by compiler attribute to the flexible array member
+> name to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
+> CONFIG_FORTIFY_SOURCE.
+> 
+> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
 
-Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
----
- kernel/kprobes.c | 79 ++++++++++++++++++++++++------------------------
- 1 file changed, 40 insertions(+), 39 deletions(-)
+Thanks,
 
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index ca3fa8652c49..98d71a5acb72 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -206,29 +206,29 @@ static bool collect_one_slot(struct kprobe_insn_page *kip, int idx)
- {
- 	kip->slot_used[idx] = SLOT_CLEAN;
- 	kip->nused--;
--	if (kip->nused == 0) {
-+	if (kip->nused != 0)
-+		return false;
-+
-+	/*
-+	 * Page is no longer in use.  Free it unless
-+	 * it's the last one.  We keep the last one
-+	 * so as not to have to set it up again the
-+	 * next time somebody inserts a probe.
-+	 */
-+	if (!list_is_singular(&kip->list)) {
- 		/*
--		 * Page is no longer in use.  Free it unless
--		 * it's the last one.  We keep the last one
--		 * so as not to have to set it up again the
--		 * next time somebody inserts a probe.
-+		 * Record perf ksymbol unregister event before removing
-+		 * the page.
- 		 */
--		if (!list_is_singular(&kip->list)) {
--			/*
--			 * Record perf ksymbol unregister event before removing
--			 * the page.
--			 */
--			perf_event_ksymbol(PERF_RECORD_KSYMBOL_TYPE_OOL,
--					   (unsigned long)kip->insns, PAGE_SIZE, true,
--					   kip->cache->sym);
--			list_del_rcu(&kip->list);
--			synchronize_rcu();
--			kip->cache->free(kip->insns);
--			kfree(kip);
--		}
--		return true;
-+		perf_event_ksymbol(PERF_RECORD_KSYMBOL_TYPE_OOL,
-+				   (unsigned long)kip->insns, PAGE_SIZE, true,
-+				   kip->cache->sym);
-+		list_del_rcu(&kip->list);
-+		synchronize_rcu();
-+		kip->cache->free(kip->insns);
-+		kfree(kip);
- 	}
--	return false;
-+	return true;
- }
- 
- static int collect_garbage_slots(struct kprobe_insn_cache *c)
-@@ -1725,28 +1725,29 @@ static struct kprobe *__disable_kprobe(struct kprobe *p)
- 	if (unlikely(orig_p == NULL))
- 		return ERR_PTR(-EINVAL);
- 
--	if (!kprobe_disabled(p)) {
--		/* Disable probe if it is a child probe */
--		if (p != orig_p)
--			p->flags |= KPROBE_FLAG_DISABLED;
-+	if (kprobe_disabled(p))
-+		return orig_p;
- 
--		/* Try to disarm and disable this/parent probe */
--		if (p == orig_p || aggr_kprobe_disabled(orig_p)) {
--			/*
--			 * Don't be lazy here.  Even if 'kprobes_all_disarmed'
--			 * is false, 'orig_p' might not have been armed yet.
--			 * Note arm_all_kprobes() __tries__ to arm all kprobes
--			 * on the best effort basis.
--			 */
--			if (!kprobes_all_disarmed && !kprobe_disabled(orig_p)) {
--				ret = disarm_kprobe(orig_p, true);
--				if (ret) {
--					p->flags &= ~KPROBE_FLAG_DISABLED;
--					return ERR_PTR(ret);
--				}
-+	/* Disable probe if it is a child probe */
-+	if (p != orig_p)
-+		p->flags |= KPROBE_FLAG_DISABLED;
-+
-+	/* Try to disarm and disable this/parent probe */
-+	if (p == orig_p || aggr_kprobe_disabled(orig_p)) {
-+		/*
-+		 * Don't be lazy here.  Even if 'kprobes_all_disarmed'
-+		 * is false, 'orig_p' might not have been armed yet.
-+		 * Note arm_all_kprobes() __tries__ to arm all kprobes
-+		 * on the best effort basis.
-+		 */
-+		if (!kprobes_all_disarmed && !kprobe_disabled(orig_p)) {
-+			ret = disarm_kprobe(orig_p, true);
-+			if (ret) {
-+				p->flags &= ~KPROBE_FLAG_DISABLED;
-+				return ERR_PTR(ret);
- 			}
--			orig_p->flags |= KPROBE_FLAG_DISABLED;
- 		}
-+		orig_p->flags |= KPROBE_FLAG_DISABLED;
- 	}
- 
- 	return orig_p;
--- 
-2.34.1
-
+Reviewed-by: David Sterba <dsterba@suse.com>
