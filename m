@@ -1,101 +1,97 @@
-Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D127190079
-	for <linux-hardening@vger.kernel.org>; Mon, 12 Aug 2024 20:05:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D45D4184F;
+	Tue, 13 Aug 2024 00:25:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723493144; cv=none; b=YvM796nUwKAPmP9YrqB3pf4xQyTa063JtZnJX6HJ1612r1gL6+Q80D925ELdV3yShBarB7wNWGYvZdC8K319zMBnoZZEK2UavyANnMkH3bp3L1Q3VahiA0e+wzcEAYFLZoHfVc6amfRtG/Oi1dSP+8wreh3GttYcwp6WhIR4NzU=
+	t=1723508701; cv=none; b=SngbPTgH+JBorJ5405R4vp1QgSrp2pi9EGree/ZFw/v5heuykek2cqFcsRNvkosGW0trxrrIv2+7SBnfwjCZ360jzhtqekLmHxB07ZTtXWsAfWn7uI00SycAIPfZHdqvq9zz3X7hMiVNGnlO9aWTNby4vfZLnMjp5dafrKHu6pI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723493144; c=relaxed/simple;
-	bh=HC/HkWyioaVWnOz3y9LbjBN5t/NvM6PBmTS6jLGhths=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=X7CrJev3ULrBcMnVRYjmz1/lev8x6hY6DRZcYGSQ+GDqdC++AUrcy/Dmf3hIx1OgU93t6S7ergXRcY0FdbgxXxB4j/IuemdXFEGwLEd57ek2Yyl/VUqXjQuw+s9M8fOCJPKCBQfdjPYYBDT9VRSG6Q/ZWmlhlMLRCEHWk3LfNnk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zGhcbeXN; arc=none smtp.client-ip=209.85.217.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zGhcbeXN"
-Received: by mail-vs1-f50.google.com with SMTP id ada2fe7eead31-492a774c807so1766287137.3
-        for <linux-hardening@vger.kernel.org>; Mon, 12 Aug 2024 13:05:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1723493142; x=1724097942; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jnjAXFWaZgCI0dpAs+P5rMgjpQhkOPkxKEtIirlNQ1c=;
-        b=zGhcbeXNH0y0qYXQYvGU/FmNu/MJMyKH4lK2R9CNKi9AYUVpjMBvayZ/1SqG2C7nK+
-         GLH5H2M9ypXwOBqdp8pRjuFHXvYsy/4FcOJaMp497obpfQA0/ez7LEOiysqRh7DnBDv+
-         t/sM8eIjPNG4jw0iloJe5z33/SAEvH+MxS35+kVYYtb2aDDZAjJ9UrUU2CWcauAEEJyc
-         dbs1c6JaI9ZBKO6ysGLg8vmqpf39x1VhDrZuP3CpX5dHLKnJIPhAAxX1orkc4TH2+EOy
-         creJdPKd+Vm00O0NePjJcMc4rQJVZ2/cHw5VePGC+905+ETRq1+0JzVQS3gNADGkC2YS
-         q+Lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723493142; x=1724097942;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jnjAXFWaZgCI0dpAs+P5rMgjpQhkOPkxKEtIirlNQ1c=;
-        b=NJIvZ/7hwzgK5BiYXPk6WdrbLw38p9zg3Kojza5tfTL/nyuNNPMWLbRLs//QmDMMJK
-         S/POXOIrOzJr9/sUqz6tjisToXNpgFwPi1naWBDvfbA3sxVh0CKgG+DcqGiTKBYSYY1b
-         YSt4pIKJeRfaB18SU7SM86duf7PJppT69rv/uxtxJXwJb/sEr1mruZYoNrflg6m7PhFA
-         qzRRD414DEKHgsDbBbsvSAa6yt9hWwu94xrxGaF7w15AWbqXeo1hSrMkn4VTNx0d5Hsa
-         FEj+u4QrYYQ18vPP2lP/h0yNtj6aDGdBDhtbhJj8dBDWUE1IGpncUMEy6yWUTvSFo4dA
-         kdTA==
-X-Forwarded-Encrypted: i=1; AJvYcCVL+puA0ycpCUG+jP7YHOyZHU1iBec7f9GgLtZmaMBg3hsbQ6Nuxm7AvqhN+A4jjrTSjyBmJUfln7FOHccVVBQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxdtnlzaDiDKYpT/SNCdhP63lXzZ0xgfRl5AmN8mdmOWNKUSQfp
-	Yh06OuJDhDOvcEWKbHgXhl9IORNP+7X4tg3ElQO5ajIgRWCKx6dpm81/AHMepDJpGxecrIABlwP
-	jJ6y7RY1mr1ZwMr2BAaVjDzfwI4j6DzAbdNUYaGw74OGo2tNmrETt
-X-Google-Smtp-Source: AGHT+IG31k6RccFznpnDkUx0m1O+jpzSukTGwRy5LjT7DRyewgvZIkMnuGNZ5xTP33CvjDzt7YVKEu4yj3kt0flHHsI=
-X-Received: by 2002:a05:6102:b14:b0:493:c3b2:b5ba with SMTP id
- ada2fe7eead31-497439ee096mr1934349137.6.1723493141891; Mon, 12 Aug 2024
- 13:05:41 -0700 (PDT)
+	s=arc-20240116; t=1723508701; c=relaxed/simple;
+	bh=E3UgAigyPZ4GktOoWU3YxcQofkYxoQ2A8IuYC2xknQM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cMKAsHmY7Z6T5gJ60PFotV53Y53lY8EgHv7HaHe0yPqfJras1kCaR0xJnJvcromq5Pu68EKmsVhrPH5Lk3TDGfby08Ok+eY95TpvAlopmNfNHvV3jLS9toof1K4L62W2yGQgkEPR9/3Qa5pWWHZuvWzRUly6LuSfOVWaVoMxk+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F620C4AF0E;
+	Tue, 13 Aug 2024 00:24:57 +0000 (UTC)
+Date: Mon, 12 Aug 2024 20:25:07 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Yury Norov
+ <yury.norov@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, David
+ Gow <davidgow@google.com>, "Jason A. Donenfeld" <Jason@zx2c4.com>, Andy
+ Shevchenko <andy@kernel.org>, "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+ Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>, "David S. Miller"
+ <davem@davemloft.net>, Masami Hiramatsu <mhiramat@kernel.org>, Mark Brown
+ <broonie@kernel.org>, Matti Vaittinen <mazziesaccount@gmail.com>,
+ linux-hardening@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ kunit-dev@googlegroups.com, linux-trace-kernel@vger.kernel.org, Palmer
+ Dabbelt <palmer@rivosinc.com>, Christophe Leroy
+ <christophe.leroy@csgroup.eu>, Charlie Jenkins <charlie@rivosinc.com>,
+ Simon Horman <horms@kernel.org>, Jakub Kicinski <kuba@kernel.org>, Arnd
+ Bergmann <arnd@arndb.de>, Shuah Khan <skhan@linuxfoundation.org>, Daniel
+ Latypov <dlatypov@google.com>, Guenter Roeck <linux@roeck-us.net>, David
+ Howells <dhowells@redhat.com>, =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?=
+ <mic@digikod.net>, Marco Elver <elver@google.com>, Mark Rutland
+ <mark.rutland@arm.com>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Vlastimil Babka <vbabka@suse.cz>, Geert Uytterhoeven
+ <geert@linux-m68k.org>, Nathan Chancellor <nathan@kernel.org>, Fangrui Song
+ <maskray@google.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] lib: Move KUnit tests into tests/ subdirectory
+Message-ID: <20240812202507.453bda6b@gandalf.local.home>
+In-Reply-To: <20240720181025.work.002-kees@kernel.org>
+References: <20240720181025.work.002-kees@kernel.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240808-b4-string_helpers_caa133-v1-1-686a455167c4@google.com> <172348819834.2826487.9112203772355447388.b4-ty@kernel.org>
-In-Reply-To: <172348819834.2826487.9112203772355447388.b4-ty@kernel.org>
-From: Justin Stitt <justinstitt@google.com>
-Date: Mon, 12 Aug 2024 13:05:30 -0700
-Message-ID: <CAFhGd8qz3YT=fC3XKkD1ydwijps=7hzhLhvVrNpzyNxfXM0XKg@mail.gmail.com>
-Subject: Re: [PATCH] lib/string_helpers: rework overflow-dependent code
-To: Kees Cook <kees@kernel.org>
-Cc: Andy Shevchenko <andy@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Aug 12, 2024 at 11:44=E2=80=AFAM Kees Cook <kees@kernel.org> wrote:
->
-> On Thu, 08 Aug 2024 14:43:56 -0700, Justin Stitt wrote:
-> > When @size is 0, the desired behavior is to allow unlimited bytes to be
-> > parsed. Currently, this relies on some intentional arithmetic overflow
-> > where --size gives us SIZE_MAX when size is 0.
-> >
-> > Explicitly spell out the desired behavior without relying on intentiona=
-l
-> > overflow/underflow.
-> >
-> > [...]
->
-> Since we can't have allocations larger than INT_MAX, SIZE_MAX is
-> sufficiently large for this use-case, and the "off by one" introduce
-> here isn't meaningful. I prefer the improved readability and lack of
-> wrapping pre-decrement.
+On Sat, 20 Jul 2024 11:10:30 -0700
+Kees Cook <kees@kernel.org> wrote:
 
-Great! Thanks.
+> Following from the recent KUnit file naming discussion[1], move all
+> KUnit tests in lib/ into lib/tests/.
+> 
+> Link: https://lore.kernel.org/lkml/20240720165441.it.320-kees@kernel.org/ [1]
+> Signed-off-by: Kees Cook <kees@kernel.org>
+> ---
 
->
-> Applied to for-next/hardening, thanks!
->
-> [1/1] lib/string_helpers: rework overflow-dependent code
->       https://git.kernel.org/kees/c/5d6b91b74ccd
->
-> Take care,
->
-> --
-> Kees Cook
+Strong-Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+
+I was talking with Masami and asking him where the kunit test code lives
+and after pointing to lib/ I was disgusted with what I saw. I told him,
+"why isn't this in its own "tests/" directory"? And he mentioned this patch
+(which I forgot about).
+
+So yes, please move it.
+
+Thanks,
+
+-- Steve
+
+
+> I can carry this in the hardening tree. To disrupt people as little as
+> possible, I'm hoping to send this either at the end of -rc1 or early
+> in -rc2.
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Yury Norov <yury.norov@gmail.com>
+> Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> Cc: David Gow <davidgow@google.com>
+> Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>
+> Cc: Andy Shevchenko <andy@kernel.org>
+> Cc: "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
+> Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Matti Vaittinen <mazziesaccount@gmail.com>
+> Cc: linux-hardening@vger.kernel.org
+> Cc: linux-kselftest@vger.kernel.org
+> Cc: kunit-dev@googlegroups.com
+> Cc: linux-trace-kernel@vger.kernel.org
 >
