@@ -1,121 +1,150 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AE201A2573;
-	Tue, 13 Aug 2024 16:29:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 174981A38D9
+	for <linux-hardening@vger.kernel.org>; Tue, 13 Aug 2024 17:59:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723566551; cv=none; b=AZd/vat//BsYi3FjUklLyvsqedWSbHbANYzlOSY2lBeJbUi7pRwD6VuHyqeRpvMTUQWLPsu9uzhWpy72sSFsm1Yzojz7q8HQXbLp3pP4CcIw3EyBBbiNGGLUWxR1SWevmF4NzxgdKBKPrFZno/Z2Vo1EPUKuI2PTjEhRgqllu1E=
+	t=1723571981; cv=none; b=DRPXZs8r3GMOzGeUCxBm93AjcQddkSdYDrgJ38F8Q+WrT5V+c39memkYEY3iUenttYk1BVlH/DOL8OtY7fWn70D4F493twGVMPmOaHYaaZ2ujUOq4BWS9gwOJX3kQajA/VPfs/qADK+UQo3yCYFqfd6FL1NbH5+9lwq1yguJ0wU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723566551; c=relaxed/simple;
-	bh=wTHMksnShasaMu0YkQx+byCye7Bb9rVvVk7DsdGChvI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CGgj/m/HsfshW5j5iFI4V4AHDX7fAQJ0uKHRjgVbNfO0LtYh8JaN4bHToXaAmuooXxkqm9f8GgPh1HIAiUSaLe+XXxVtv5CxLeuJM4TvrWRfkDBB/SBtu+1gXyO8B7qeEscbhYphvdzPR/mz3IbGlWd0Ep2bCV3ZkfTlEuLLuII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GKfvfuCY; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1723571981; c=relaxed/simple;
+	bh=1D3aBq+76dfV3NuMMTICVwtmTkz//c6+wX/Vqv82420=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=FWUe7Z/cItRViRX80Tu35dxV3Jv2I/iB34tom4EDnvlxiafrFgCEWjcpUch4mymU603Y9rAaz1EVsBv2iwty8t86gaV/HKaRoWE2fAQxsWIC3xWD7z0ivHduOsdG1qJ8HQRIwX22tP0pb02dvYVGUeAB+LP8q4PczeFETwAsLlE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=vExC26ZU; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GKfvfuCY"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-428fb103724so160225e9.1;
-        Tue, 13 Aug 2024 09:29:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="vExC26ZU"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-58ef19aa69dso5686417a12.3
+        for <linux-hardening@vger.kernel.org>; Tue, 13 Aug 2024 10:59:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1723566548; x=1724171348; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1723571978; x=1724176778; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=dHZnlrhN2AES2SquLcRLOECxi9CzRlchk7IVnfUTEhs=;
-        b=GKfvfuCY4JJ1mcQIhA97CdpG+wWNWkIDz6loxlZxpPIpzMWGCak33/7iiqXozjSYEL
-         p/39GslQWsbw61CuyHrDhhgVhw9PL+7tPxHj+KHuziNnPn9FHjgph3ZtmyT5lyVAEbtc
-         291gkB9X69/nD5YksFFyh9XpmLBxXc9px0UgNzA/nnn660jh8/XGGpwO12UCxYPd25rd
-         yxVlwOlyA2jD79IwVL6KoNQsXhPTWYgYZXQXR/L/OM3Q8OC/47U+coRPtx2YqvQUtS6B
-         1liCWSuPFLAXgrXHPusqa20P1xDCDVToph5NZR/bwK963D8Xob+ODlwXFsqNZhLCfU6k
-         xgRw==
+        bh=fz0h1N/CKA3fHj12ow4qN56OoJaUyvUMXhRJFJBFv9g=;
+        b=vExC26ZUeGFlWXO+pAqX+yRgHf5qUqhxxdG2apYEZQMy5XOCAqcgiRzv8UmCUdOycn
+         Ika6FPVb3rvlKwA1ioA1V57QJWM5ocB6kKLo3GZBOytrNu79iBI+ttItdu1doWoCx4RP
+         ZZQ8+JrcFBYhQ7FLXxcC74YfqVG7Ag038xAhlKeVqPhxKzWifpjn5BVGdppWwyGqiJfE
+         Nrb5M90t0np7vFRhBdEN+pe7nx6dM7gKfAwoxhzeXIL+XNx/J5k2fimGyPs3tgu96XVg
+         bFUUbax4/jSdgbw7roDUvosUqksDUuXaOAVQMAiUlLDHGw3ZyUOPw1DNkvUUCtOXxDLi
+         vK6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723566548; x=1724171348;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1723571978; x=1724176778;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=dHZnlrhN2AES2SquLcRLOECxi9CzRlchk7IVnfUTEhs=;
-        b=OgAk/20j6+fO//Ap31LnnmDxfkhcxu2547H427wA1Izm4OcktSqbDirEpLh5Xw+oOp
-         TUUVATSD5il8DkXS+SKZApMp7M2Wf2lNCz+qtrQMcr1wMGnGunsUe4QtBAnIGTociRv1
-         zdU/6GXeInh3Qi77FJVcsmBySAnfRShd6JDRPaJdYmpM7uSzwYVYBHRkxBCM/aLRsSF1
-         pd0+j0ETrodc3jqLJEloR+PxXUivz6GOUTdz/2qKzSI+9/2rAXaSSKUIl+Lb+V+xhqCy
-         R6aZpX7VviUVm2nCKD2BDgPHWTBupS1h/Lpm5Nu7W4BH13io6mBS7WdxSy/IMW76Sf1Z
-         nzog==
-X-Forwarded-Encrypted: i=1; AJvYcCVgivwUTXKIeYZmTn6eyV5GExVhkWeNalM0iDn20DUoLRP/RA8TAr5NbZGTjB9We1xAYnklpsqf2vUutmflENGolLQldFO0zX8xCv0F3ybfrjyyjN/jbQLQ9wzHSOFoUrj6GjcLjpsZS9gnfPkv2goFPi2idY7YmETnP+H9VqtXqLjM
-X-Gm-Message-State: AOJu0YyfvS785RvpKxpWBzdn7b9kMSqEJEYDg4XhXrF1u3vl2yRLJvpD
-	ODv8FVh3ib2iDQkDIYyL+9Pyu9wcorXnUv2nl3kUas52rDl98R9GazivoVADMk7UXZMsp8Y8Co7
-	/5ObXMBeeR9pDnPCawCg7VI8/2R0=
-X-Google-Smtp-Source: AGHT+IEH6RWi44HaYQZCtjAKZvTHcH6VPvbJHSFdtTUFD5tvlEOWaGUQvp5fgB7LeQzj0zd7GSq7omX92zNzaIeDwsc=
-X-Received: by 2002:a05:600c:470f:b0:426:5e32:4857 with SMTP id
- 5b1f17b1804b1-429dcfe4b40mr2984495e9.0.1723566548086; Tue, 13 Aug 2024
- 09:29:08 -0700 (PDT)
+        bh=fz0h1N/CKA3fHj12ow4qN56OoJaUyvUMXhRJFJBFv9g=;
+        b=shtK9C0dryPVh8mXSNTKOUdzuPScs9lfxrsI5xGLnE1iw9EhC+X2prKo25pwy97Ojm
+         lyDO3/EtRSNjhwdXtOfzUg5p+Wh/oikATqmC/uYu//uBXRr0YnPB+06W7bFzP53xzwJ4
+         3b6oINkmxX6zAbMslpzC3atAKAgNnBfpqzMWMBXcfVPtmqdG8kN71AHA/gupos2TaXXu
+         4VMCR5TnzS0yWI4CmzPytqad2x2r8hvItY6+CD8zdd6O/7LAvZlFfFJkLRgLL3OtM9XR
+         Y0io047Zo2NKSA7oxdker+rRmm2UOhXxdpiZey1WPEBut6aL2RnquD0GN3XZvrV7omtO
+         dH2w==
+X-Forwarded-Encrypted: i=1; AJvYcCWsni2nHXCz8Gxp/KgCGlGidEfZ7Ndz6bBPQ2N0k+nM/3NYFJ6mOFoyL2DTvuiRlyDNe1vD1nBPe9uaGkSJW9jXOUt1BKMftRLZmCAV8htm
+X-Gm-Message-State: AOJu0YySuhxiEsg/yahk9RWfb7Uph3hNRSX2OI6+u105BGw+TfFtfoIX
+	hxJrTqxIpzxz9Zbapd7w+WKoFlNlHjUwg54o+xdygIJzCj+080d0UBeKw2oZk8o=
+X-Google-Smtp-Source: AGHT+IHvT1d9KDa22miJHX6Og5kQRd7CLcIk5kV1JH9fciPcel8AmUjrwBIuaOctOR9AlHNT4yM1QQ==
+X-Received: by 2002:a17:907:f186:b0:a7a:acae:340e with SMTP id a640c23a62f3a-a8366d444cfmr10573566b.26.1723571977503;
+        Tue, 13 Aug 2024 10:59:37 -0700 (PDT)
+Received: from smtpclient.apple ([2001:a61:a92:ee01:80be:a0fb:1808:f06e])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a80f3fa43f9sm88343866b.53.2024.08.13.10.59.36
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 13 Aug 2024 10:59:37 -0700 (PDT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240813151752.95161-2-thorsten.blum@toblux.com>
-In-Reply-To: <20240813151752.95161-2-thorsten.blum@toblux.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Tue, 13 Aug 2024 09:28:56 -0700
-Message-ID: <CAADnVQKEgG5bXvLMLYupAZO6xahWHU7mc06KFfseNoYUvoJbRQ@mail.gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.600.62\))
 Subject: Re: [PATCH] bpf: Annotate struct bpf_cand_cache with __counted_by()
-To: Thorsten Blum <thorsten.blum@toblux.com>
-Cc: Martin KaFai Lau <martin.lau@linux.dev>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, Eddy Z <eddyz87@gmail.com>, 
-	Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, 
-	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, bpf <bpf@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+From: Thorsten Blum <thorsten.blum@toblux.com>
+In-Reply-To: <CAADnVQKEgG5bXvLMLYupAZO6xahWHU7mc06KFfseNoYUvoJbRQ@mail.gmail.com>
+Date: Tue, 13 Aug 2024 19:59:25 +0200
+Cc: Martin KaFai Lau <martin.lau@linux.dev>,
+ Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>,
+ Andrii Nakryiko <andrii@kernel.org>,
+ Eddy Z <eddyz87@gmail.com>,
+ Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>,
+ KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@fomichev.me>,
+ Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>,
+ Kees Cook <kees@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ bpf <bpf@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>,
+ linux-hardening@vger.kernel.org
 Content-Transfer-Encoding: quoted-printable
+Message-Id: <2A7DB1E6-4CCE-446E-B6F1-4A99D3F87B57@toblux.com>
+References: <20240813151752.95161-2-thorsten.blum@toblux.com>
+ <CAADnVQKEgG5bXvLMLYupAZO6xahWHU7mc06KFfseNoYUvoJbRQ@mail.gmail.com>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+X-Mailer: Apple Mail (2.3774.600.62)
 
-On Tue, Aug 13, 2024 at 8:19=E2=80=AFAM Thorsten Blum <thorsten.blum@toblux=
-.com> wrote:
->
-> Add the __counted_by compiler attribute to the flexible array member
-> cands to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
-> CONFIG_FORTIFY_SOURCE.
->
-> Increment cnt before adding a new struct to the cands array.
+On 13. Aug 2024, at 18:28, Alexei Starovoitov =
+<alexei.starovoitov@gmail.com> wrote:
+> On Tue, Aug 13, 2024 at 8:19=E2=80=AFAM Thorsten Blum =
+<thorsten.blum@toblux.com> wrote:
+>>=20
+>> Add the __counted_by compiler attribute to the flexible array member
+>> cands to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
+>> CONFIG_FORTIFY_SOURCE.
+>>=20
+>> Increment cnt before adding a new struct to the cands array.
+>=20
+> why? What happens otherwise?
 
-why? What happens otherwise?
+If you try to access cands->cands[cands->cnt] without incrementing
+cands->cnt first, you're essentially accessing the array out of bounds
+which will fail during runtime.
 
->
+You can read more about it at [1] and [2].
+
 > Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
-> ---
->  kernel/bpf/btf.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
-> index 520f49f422fe..42bc70a56fcd 100644
-> --- a/kernel/bpf/btf.c
-> +++ b/kernel/bpf/btf.c
-> @@ -7240,7 +7240,7 @@ struct bpf_cand_cache {
->         struct {
->                 const struct btf *btf;
->                 u32 id;
-> -       } cands[];
-> +       } cands[] __counted_by(cnt);
->  };
->
->  static DEFINE_MUTEX(cand_cache_mutex);
-> @@ -8784,9 +8784,9 @@ bpf_core_add_cands(struct bpf_cand_cache *cands, co=
-nst struct btf *targ_btf,
->                 memcpy(new_cands, cands, sizeof_cands(cands->cnt));
->                 bpf_free_cands(cands);
->                 cands =3D new_cands;
-> -               cands->cands[cands->cnt].btf =3D targ_btf;
-> -               cands->cands[cands->cnt].id =3D i;
->                 cands->cnt++;
-> +               cands->cands[cands->cnt - 1].btf =3D targ_btf;
-> +               cands->cands[cands->cnt - 1].id =3D i;
->         }
->         return cands;
->  }
-> --
-> 2.46.0
->
+>> ---
+>> kernel/bpf/btf.c | 6 +++---
+>> 1 file changed, 3 insertions(+), 3 deletions(-)
+>>=20
+>> diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
+>> index 520f49f422fe..42bc70a56fcd 100644
+>> --- a/kernel/bpf/btf.c
+>> +++ b/kernel/bpf/btf.c
+>> @@ -7240,7 +7240,7 @@ struct bpf_cand_cache {
+>>        struct {
+>>                const struct btf *btf;
+>>                u32 id;
+>> -       } cands[];
+>> +       } cands[] __counted_by(cnt);
+>> };
+>>=20
+>> static DEFINE_MUTEX(cand_cache_mutex);
+>> @@ -8784,9 +8784,9 @@ bpf_core_add_cands(struct bpf_cand_cache =
+*cands, const struct btf *targ_btf,
+>>                memcpy(new_cands, cands, sizeof_cands(cands->cnt));
+>>                bpf_free_cands(cands);
+>>                cands =3D new_cands;
+>> -               cands->cands[cands->cnt].btf =3D targ_btf;
+>> -               cands->cands[cands->cnt].id =3D i;
+>>                cands->cnt++;
+>> +               cands->cands[cands->cnt - 1].btf =3D targ_btf;
+>> +               cands->cands[cands->cnt - 1].id =3D i;
+>>        }
+>>        return cands;
+>> }
+>> --
+>> 2.46.0
+>>=20
+
+[1] =
+https://opensource.googleblog.com/2024/07/bounds-checking-flexible-array-m=
+embers.html
+[2] =
+https://embeddedor.com/blog/2024/06/18/how-to-use-the-new-counted_by-attri=
+bute-in-c-and-linux/=
