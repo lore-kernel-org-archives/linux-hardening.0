@@ -1,83 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF41E33D8;
-	Wed, 14 Aug 2024 17:00:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A38B4502B;
+	Wed, 14 Aug 2024 17:10:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723654849; cv=none; b=UyiglXebOoP4VCcyqsXMVcYZfmjO2FBR1xjzKsiOb1lsviXVWYDB8oYVq9bLGgcibtn1UoQyimwGb5YNdaq9TfRh04r5FX+9BGMFAeyCVyx0UFkMMK7MQSRuPv7j1YNOFKAu46pE3w9+q8U4Who0idhzwaak5mibWgkaO/QGyTM=
+	t=1723655416; cv=none; b=E/mfpC/YdKTqEjuv/mMSFVCpZc50HBGGlHEAnnDAE431MTNGkjPc6V1eYFhs8CsCyQky24oZu0/RcAskCwM1luAAeuiBMJSx6totqz9m0OKDXcYg3qFPhpL8bDWP7LPtCV906ee9lVZbApV08FUcObO/jVLVBfRCl2/ez94fCPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723654849; c=relaxed/simple;
-	bh=wbO7ucUoXvbBcCVpFMs1yHhmKcKeSaruFWxVAtNHZV0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hur3gMNRX/9P3/+ziCLSsSHGYCqzYbO+YYmNviXjPLgmdWHYXo3Z14z0wI4QL4SZ0MdbSMrae/diDSfJNKy1q7/vMrsvFO1TPG6Kq05AV0agB4x+uDmNDolNagC788nVl6ciUakHnCjj6KDmwIspkAN4dcyxM3zYpv46m7XiHYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FsXbUB8V; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FsXbUB8V"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E575C116B1;
-	Wed, 14 Aug 2024 17:00:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723654849;
-	bh=wbO7ucUoXvbBcCVpFMs1yHhmKcKeSaruFWxVAtNHZV0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FsXbUB8VFtAetBwRuYuGCoVKoxpVYqgY6o2qHu8JOG3AKt9dmzTpF83knu/kC/C6o
-	 BKDOVSEKYXwL3zE7zVqrGxJy7/mmfr3p0QjVCOkoFUJWPFJuLkwFcNGqHCUB6k8EP4
-	 QWIr38ZQKo1ECDHjN/FKYfdGK5Q/vhs8P3ZvBYVQOxUx6YSyzOLqSttY/6rSX58i7i
-	 7Lz2vbNSVhgg9t03gzjKa0ZGt4Z5dhPWrJcKuwx6cVN8FrGKhNb2j9izeGs3/vF9V0
-	 8ExF5/7+RPe0rRQ/f6qLQJAuxyaP5L1PQU8ZmrZNuPQjQtoLUKrCWXRjrKMuREuNnz
-	 ABJuj2L+tXrFQ==
-From: Kees Cook <kees@kernel.org>
-To: akpm@linux-foundation.org,
-	jannh@google.com,
-	sroettger@google.com,
-	adhemerval.zanella@linaro.org,
-	ojeda@kernel.org,
-	adobriyan@gmail.com,
-	Kees Cook <kees@kernel.org>,
-	jeffxu@chromium.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	jorgelo@chromium.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 0/1] binfmt_elf: seal address zero
-Date: Wed, 14 Aug 2024 09:59:47 -0700
-Message-Id: <172365478431.4159848.371478248517217096.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240806214931.2198172-1-jeffxu@google.com>
-References: <20240806214931.2198172-1-jeffxu@google.com>
+	s=arc-20240116; t=1723655416; c=relaxed/simple;
+	bh=F4XPMawEpVXT9q7pRj4NtWJkjyAA81vm0rr2VpJL9tI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=mTogRPGrgwhfOMQMXDYcSo4WrcQDQ4MM8GxE5rqdZSzkH2WfQaCleIgUB/xy8bUHAhPdyFwmS0ebggLUEf5ZWxgVHxnYkoKfROrjMMcjM2VoU7Um7bMvow5YMMH+dWngJZkMQnj8n+NssV0jiL8DIlzyI7Dh/m37YC3dzEeL68w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2f032cb782dso1068431fa.3;
+        Wed, 14 Aug 2024 10:10:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723655413; x=1724260213;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7sP0prdJ764zDRhGrMOxeD1PYZLi3P8WVzp9dTBreHs=;
+        b=JGhbgY8mtlubOMfvtFbBlXKCr3VDxVCUGuNctqVOLPLslG00L3L3FwcpVf+RQCu+mK
+         X03J2fCIUGfd4hZUgI/vL+7rFz+2wkXj1RgqISQKWw8ykKYax8jWsGd9WU/seemDSdbN
+         2uwCJaxj2GJ0r2Xjr2/fDEM8RAwyK+CjC1CwYfU0dsqWNfeSoyvxWvzLyt/yAPYv6QzQ
+         5Xmha5DyuvTrTfYloVeIPYDBAsNmsuC2SfR8S8MSe9yxEASVfVfbMoRs1roNhXvJVhF2
+         V5VVxNQEYj4mQb7AX0VRWoxmvMP+2jTuJUml7z9W6137QooWidGcNc7rHmm13puML/XV
+         +g3g==
+X-Forwarded-Encrypted: i=1; AJvYcCXi273ST6BSjrT914G6mloFY6MiI6iV0FbBiTrU9gk6vwj3y6sP4QDtEPED1Cv27VBtyRBwPUKflleyyy3IzlPBtL6JqNpiW6+s3rV/7W7BrE3J/ulNt+U9hM9xOCEaZ0ZfQb+L9+7c
+X-Gm-Message-State: AOJu0YxADe2Q+5EBti77PvUKzzotUD0KZ/+EuohlnUYIl+VSVe9rXAW4
+	zkCsaJHlgifyW7Tn+94DbULVO0Z598xFf+7/RD023uTlnHJeUfvn
+X-Google-Smtp-Source: AGHT+IH8Z01+eFXbFBwCYnLygKYJO8nh4RI5+IJx3TWPFQdiMFkE4hEKhkA7azYW55nofQIrBXQquw==
+X-Received: by 2002:a2e:a99f:0:b0:2ee:7dfe:d99c with SMTP id 38308e7fff4ca-2f3aa1f51a3mr23695561fa.31.1723655412783;
+        Wed, 14 Aug 2024 10:10:12 -0700 (PDT)
+Received: from gmail.com (fwdproxy-lla-007.fbsv.net. [2a03:2880:30ff:7::face:b00c])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5be9bb73800sm1569528a12.38.2024.08.14.10.10.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Aug 2024 10:10:12 -0700 (PDT)
+Date: Wed, 14 Aug 2024 10:10:10 -0700
+From: Breno Leitao <leitao@debian.org>
+To: kees@kernel.org, elver@google.com, andreyknvl@gmail.com,
+	ryabinin.a.a@gmail.com
+Cc: kasan-dev@googlegroups.com, linux-hardening@vger.kernel.org,
+	axboe@kernel.dk, asml.silence@gmail.com, netdev@vger.kernel.org
+Subject: UBSAN: annotation to skip sanitization in variable that will wrap
+Message-ID: <Zrzk8hilADAj+QTg@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Tue, 06 Aug 2024 21:49:26 +0000, jeffxu@chromium.org wrote:
-> From: Jeff Xu <jeffxu@chromium.org>
-> 
-> In load_elf_binary as part of the execve(),  when the current
-> task’s personality has MMAP_PAGE_ZERO set, the kernel allocates
-> one page at address 0. According to the comment:
-> 
-> /* Why this, you ask???  Well SVr4 maps page 0 as read-only,
->     and some applications "depend" upon this behavior.
->     Since we do not have the power to recompile these, we
->      emulate the SVr4 behavior. Sigh. */
-> 
-> [...]
+Hello,
 
-I added the cover letter details to the commit log and changed pr_warn()
-to pr_warn_ratelimited(), but otherwise, looked good.
+I am seeing some signed-integer-overflow in percpu reference counters.
 
-Applied to for-next/execve, thanks!
+	UBSAN: signed-integer-overflow in ./arch/arm64/include/asm/atomic_lse.h:204:1
+	-9223372036854775808 - 1 cannot be represented in type 's64' (aka 'long long')
+	Call trace:
 
-[1/1] binfmt_elf: mseal address zero
-      https://git.kernel.org/kees/c/44f65d900698
+	 handle_overflow
+	 __ubsan_handle_sub_overflow
+	 percpu_ref_put_many
+	 css_put
+	 cgroup_sk_free
+	 __sk_destruct
+	 __sk_free
+	 sk_free
+	 unix_release_sock
+	 unix_release
+	 sock_close
 
-Take care,
+This overflow is probably happening in percpu_ref->percpu_ref_data->count.
 
--- 
-Kees Cook
+Looking at the code documentation, it seems that overflows are fine in
+per-cpu values. The lib/percpu-refcount.c code comment says:
+
+ * Note that the counter on a particular cpu can (and will) wrap - this
+ * is fine, when we go to shutdown the percpu counters will all sum to
+ * the correct value
+
+Is there a way to annotate the code to tell UBSAN that this overflow is
+expected and it shouldn't be reported?
+
+Thanks
+--breno
 
