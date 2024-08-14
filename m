@@ -1,83 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out28-50.mail.aliyun.com (out28-50.mail.aliyun.com [115.124.28.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 072F016BE34;
-	Tue, 13 Aug 2024 22:15:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A3B9376E9;
+	Wed, 14 Aug 2024 03:18:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.28.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723587335; cv=none; b=OX/9yCJkiLZ28GcJInwXQtSWoSu9dOukhgjzeBpN9XL5lruEqnI6ui1OZFmf1eCDSVk+2vO3Vt/WsZGpocRsPiCCauMzWp6Z1hbKNJi2e45tI/j48r80PTykolNsWyGfshQM1TXK4SmlLdiK190VBAPKyCm+dCODO7kzvGgCpco=
+	t=1723605515; cv=none; b=Tzk3vV0V/VIfTswl1fIXmBb8fPz9wK3Sbg4sDEbaXbZqu3NpntSlFEFerrd8xxIUIbv2E4K3L4y+Ddf4dERIS8kv+o5tpuvOniPldCbjMBUr/g8/U1U8QRZ2KQP516w9GAryvlJkPEUh07IBZP/1ng0Szx7lmc4qEA49sACts8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723587335; c=relaxed/simple;
-	bh=FYHaFzOiFxZuIxjj47094gz6uizuqz/cvG1pwVG5PDY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DS8OnctJ3w5c9TQeNB6WAYw5/SFU2FknVEhf6spvVitXgCvoL+y8NbUsLIMga6PxtUbQT+KidvE+73o3JYPFK7r0g+lJB7NccYRL3T2KXAR9PgU3GE7jQyoBW5kzVsHSOAJ58fzTNvH81ngCzRJ5RZUecBvKs6swUfE4u8yt5lU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tCobg8HD; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tCobg8HD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BCE6C32782;
-	Tue, 13 Aug 2024 22:15:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723587334;
-	bh=FYHaFzOiFxZuIxjj47094gz6uizuqz/cvG1pwVG5PDY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tCobg8HDDH9fxzTE7orSj2xZj4bM0/pXAD4Dmq1SlOIPNP/O9uen29q4aEE0RzWxR
-	 5gNKBZcJJnYcMDLiIg8v/xzWuDsqhMoXctXildp4v/E9AyHzIH8PpK+bSvdaRgGjuZ
-	 fSHS5Y8WIUWk54JyyI4IdFOIpTu8HVeH+9XZlM87m8FCcPh8vO6pVwDfuXZHfgtdlP
-	 fRJWg2vKM2iri9BfsFD0ie+UVhd9iiiUkPCIQLBx8z/H+LMsHOxfkbheyAHnQBuHIL
-	 tirMbZyTkdkH6QoAF/du62DLJVRXAqKLY/7VeMgF6LFktnKcfqjdqZBXlnWwt+B2yl
-	 yzASHUtFuQAMQ==
-Date: Tue, 13 Aug 2024 16:15:31 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Jamal Hadi Salim <jhs@mojatatu.com>,
-	Cong Wang <xiyou.wangcong@gmail.com>, Jiri Pirko <jiri@resnulli.us>,
-	Potnuri Bharat Teja <bharat@chelsio.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	s=arc-20240116; t=1723605515; c=relaxed/simple;
+	bh=AgVFMOPfloqSvCiROULfHPqQsTqxzcHX40p5bF4ZmIY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Eb0XZy14ftcJUr6p2shUv7RyxcYVX/K2XLLNhhx22NQS08wC+grC2yBLt7KxxJUgwTyWlX63Gg3IsQtmIkQNfjvSJDjDMXxKcBqKW7kRc1UAWvx0bCQYRd7pkpMSRH6hhkGH+w047F1DPQrWZ41vwSQuv+ywVTreQb9nFW1QyG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=awinic.com; spf=pass smtp.mailfrom=awinic.com; arc=none smtp.client-ip=115.124.28.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=awinic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=awinic.com
+Received: from awinic..(mailfrom:wangshuaijie@awinic.com fp:SMTPD_---.Yr7DV9B_1723605491)
+          by smtp.aliyun-inc.com;
+          Wed, 14 Aug 2024 11:18:20 +0800
+From: wangshuaijie@awinic.com
+To: jic23@kernel.org,
+	lars@metafoo.de,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	kees@kernel.org,
+	gustavoars@kernel.org,
+	linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH 2/2][next] cxgb4: Avoid -Wflex-array-member-not-at-end warning
-Message-ID: <97388e8a7990975aa56cf0ada211764c735c3432.1723586870.git.gustavoars@kernel.org>
-References: <cover.1723586870.git.gustavoars@kernel.org>
+Cc: wangshuaijie@awinic.com,
+	liweilei@awinic.com,
+	kangjiajun@awinic.com
+Subject: [PATCH V7 0/2] Add support for aw96103/aw96105 proximity sensor
+Date: Wed, 14 Aug 2024 03:18:06 +0000
+Message-ID: <20240814031808.2852418-1-wangshuaijie@awinic.com>
+X-Mailer: git-send-email 2.41.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1723586870.git.gustavoars@kernel.org>
+Content-Transfer-Encoding: 8bit
 
--Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-getting ready to enable it, globally.
+From: shuaijie wang <wangshuaijie@awinic.com>
 
-Change the type of the middle struct member currently causing
-trouble from `struct tc_u32_sel` to `struct tc_u32_sel_hdr`.
+Add drivers that support Awinic aw96103/aw96105 proximity sensors.
 
-Fix the following warning:
+The aw9610x series are high-sensitivity capacitive proximity detection
+sensors. This device detects human proximity and assists electronic devices
+in reducing specific absorption rate (SAR) to pass SAR related certifications.
+The device reduces RF power and reduces harm when detecting human proximity. 
+Increase power and improve signal quality when the human body is far away.
 
-drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_u32_parse.h:245:27: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+The specific absorption rate (SAR) is a metric that measures the degree of
+absorption of electromagnetic radiation emitted by wireless devices,
+such as mobile phones and tablets, by human tissue.
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_u32_parse.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This patch implements device initialization, registration,
+I/O operation handling and interrupt handling, and passed basic testing.
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_u32_parse.h b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_u32_parse.h
-index 9050568a034c..64663112cad8 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_u32_parse.h
-+++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_u32_parse.h
-@@ -242,7 +242,7 @@ struct cxgb4_next_header {
- 	 * field's value to jump to next header such as IHL field
- 	 * in IPv4 header.
- 	 */
--	struct tc_u32_sel sel;
-+	struct tc_u32_sel_hdr sel;
- 	struct tc_u32_key key;
- 	/* location of jump to make */
- 	const struct cxgb4_match_field *jump;
+v1->v2:
+-------
+ - Remove unnecessary log printing.
+ - Optimize comment style.
+ - Issues with modifying the device tree.
+ - Optimize code style.
+
+v2->v3:
+-------
+ - Add a description about the hardware device.
+ - Remove inappropriate configuration items.
+ - Modify the formatting issues.
+ - Modify the structure of the driver.
+ - Change the style of the driver's comments.
+ - Remove unnecessary log printing.
+ - Modify the function used for memory allocation.
+ - Modify the driver registration process.
+ - Remove the functionality related to updating firmware.
+ - Change the input subsystem in the driver to the iio subsystem.
+ - Modify the usage of the interrupt pin.
+ 
+v3->v4:
+-------
+The changes in this patch version are quite significant, and I concur
+with Krzysztof's viewpoint that this driver is indeed overly complex for
+the proximity sensor. Therefore, I have removed the compatibility for the
+aw963xx series, and the driver will now exclusively support the aw9610x series.
+
+ - Modify the software architecture to remove compatibility for
+   the aw963xx series.
+ - Optimize the parsing of register configuration files (.bin).
+ - Remove unnecessary log printing.
+ - Delete redefinition of true and false.
+ - Remove unnecessary interfaces.
+ - Optimize regulator usage.
+ - Convert the I2C communication interface to regmap.
+
+v4->v5:
+-------
+ - Solve errors that occur when executing the make dt_binding_check DT_SCHEMA_FILES.
+
+v5->v6:
+-------
+ - Rename AW9610X to aw96103.
+ - Remove the encapsulation of the i2c communication interface.
+ - Delete the update node.
+ - Modify the usage of regulator.
+ - Delete the remove and shutdown interfaces.
+ - Add iio's event-related interfaces.
+ - Modify the initialization process of iio.
+ - Delete power_supply-related operations.
+ - Modify the register names.
+
+v6->v7:
+-------
+ - Use __free(kfree) when allocating memory.
+ - Modify the way to request the register configuration file,
+   using request_firmware_nowait to request the configuration file.
+
+shuaijie wang (2):
+  dt-bindings: iio: aw96103: Add bindings for aw96103/aw96105 sensor
+  iio: proximity: aw96103: Add support for aw96103/aw96105 proximity
+    sensor
+
+ .../iio/proximity/awinic,aw96103.yaml         |  63 ++
+ drivers/iio/proximity/Kconfig                 |  11 +
+ drivers/iio/proximity/Makefile                |   1 +
+ drivers/iio/proximity/aw96103.c               | 814 ++++++++++++++++++
+ drivers/iio/proximity/aw96103.h               | 116 +++
+ 5 files changed, 1005 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/proximity/awinic,aw96103.yaml
+ create mode 100644 drivers/iio/proximity/aw96103.c
+ create mode 100644 drivers/iio/proximity/aw96103.h
+
+
+base-commit: 6b0f8db921abf0520081d779876d3a41069dab95
 -- 
-2.34.1
+2.45.1
 
