@@ -1,117 +1,106 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-oo1-f42.google.com (mail-oo1-f42.google.com [209.85.161.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E41711B4C47;
-	Wed, 14 Aug 2024 15:46:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8CF71BA89E
+	for <linux-hardening@vger.kernel.org>; Wed, 14 Aug 2024 16:57:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723650413; cv=none; b=GijOlhTn/APSF+Jk4+tx697e+gczbZdxETCSwDn5zEGosxcuKAGXRXWAz/Pz/ko25EDVnRLVxszIFvbEvx/4mcjXyiXVI8IcW3ZzQAPETcc8ZQKP7EkyPKhoW0n7A4O6DD78ZVhj5cju+doDunMdAVSZEfwWy/D+mxsNjenZ+jY=
+	t=1723654643; cv=none; b=Ic7nO5UIYQrjPABguLiT98adhB4DfYLsbjjzanjKWO+X6YQzGKvr2kEMZSTAiMDMZ0Z+lOoP3SnM5A57g4456xjp8DKGcnO+IOZnm5UyFBTl7hu0F++qCIbyxU1T24+ORUlaCQy4/iAeB73eAlMFWKT3HYlJZ5Y5l0nZhaZj3pk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723650413; c=relaxed/simple;
-	bh=V98U3jCry57U4aW6dz/YHzEaRCu3ocsWlI6bKED4zi4=;
+	s=arc-20240116; t=1723654643; c=relaxed/simple;
+	bh=ZKpdMlwy1Vuuc8abJVg8YoHUbcl+6GvtZq48vUrGLY8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GEoQF9I1TrjOlSGjfNmgolxwVpM5GnjJ8BCqz5qwOrWnzIixAXxFUWwj25Sg+nszveUea1WZHpeR/tDzXMRIfIEIoZjIAx3j6P/8+krO5WgC7OYpMLqR9x60e/WjXeIfz0YflGFaoJ18kk4Dfv6kZDqwSIu4ZGNfqk6680VlAeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R9rbK/+s; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Content-Type; b=lnC1fBeHpMjQVRj2Cb3AvE+pRvAFlaqAXaOCul12nSRSY0TpvouuelsALETIzkuan4pQrpXMLDFZmbxgTih+oFcU4ErdI3+YncQT4PE6T1orRYVwU2r4waIO06XZwKKHZET0abcF8mbVByH9HKIp5kQG2GaX9OUNWu0wlqixoCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=fnrvC043; arc=none smtp.client-ip=209.85.161.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R9rbK/+s"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3687f8fcab5so25186f8f.3;
-        Wed, 14 Aug 2024 08:46:51 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fnrvC043"
+Received: by mail-oo1-f42.google.com with SMTP id 006d021491bc7-5d5f9d68805so63633eaf.3
+        for <linux-hardening@vger.kernel.org>; Wed, 14 Aug 2024 09:57:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1723650410; x=1724255210; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+        d=chromium.org; s=google; t=1723654641; x=1724259441; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=V98U3jCry57U4aW6dz/YHzEaRCu3ocsWlI6bKED4zi4=;
-        b=R9rbK/+subVhm+qF2oDPnLZQbgMN8O8yTc70tkW2OIANt6FaGJoQXaomXCpqbcQI8h
-         YVfCf5JvB/iMXOUgrQgLX3J3+JsXh+yI/pvZu0JkCGlLXLM6HwTd4VtMJQxETUpDWWOx
-         Yq6pbqi29whbRWQySC6zmEStCBxkb5R1GK04qfW16i4dQ+dNlLr8BQfHRNIApQmNmxOd
-         CqOkzOSKr7TsS8Gsjyekq4TSzioKO8qLDMqZ6Vtaqh8D7HgmTrFMOnfpmEJBBVvac875
-         h07pIlBPqj9GEZj8nfvn2ihQTruldJHU5sJrGOGHfZYLmwg24EiiVs0m9ATTMLfacCtu
-         HDGA==
+        bh=Q3V7sI5wa59RYo+sZ7xurVHGqINhPxAhasnZ5W2BayU=;
+        b=fnrvC0432wJJexqO+555N8ww1qFWm9nFbI1szZyw4ev+x4vkFE0q2l37yrM/ohaa7m
+         AAbV5SOEXiYz4UHtb3zj3S9vWGbRhe3/mCdBBjnI1iz4hahFKTMNlc0t68DXFUpAcjmU
+         XonN6AfAI0RP8MQQy6KPd3GKPmLYVhDU8S7kk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723650410; x=1724255210;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+        d=1e100.net; s=20230601; t=1723654641; x=1724259441;
+        h=content-transfer-encoding:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=V98U3jCry57U4aW6dz/YHzEaRCu3ocsWlI6bKED4zi4=;
-        b=cDY8LWhcnnrdfFFnMBgcgQokpRYJoL6pyJwS6IVm/HdUJ1+AsQ7sKf2HbSQqvZweNk
-         FYhAujSo1WcBl4Ql8zZStLeLJh15vn14ZbOgGwrdZhVBF2hXGuPun6t/X1aOkKLaeX88
-         9+bTWqHKUu88oP7H41YRM2mh9s0/4MfuzfirNVr72rAGKXXJ+tokstEeZwscuvD1Zz3z
-         Eqp5nHb8beqpEhD4eRzfRZ7/nXTATxmUbWOD2PvkDEKgO2Xa8MaaGsPgBo81EhduWMkv
-         DLKFdbr/PLpJ4d0/YhHnseEEfbK4zgFLw20aGBiSwHaJYDKWCPIADE7AtF6ORw7RR//A
-         SV3A==
-X-Forwarded-Encrypted: i=1; AJvYcCXNe70C8LRI/YpK06idImB+/CEwmegrYfzcR/8EXtfaloo/qKKfbw3FJ2iQzLShEsVS/wA7TMA9mF4QkXlUCp96c80bMjBKew9/4mjDNyELpVz7Qws9+RvxwdXlcq/S2AU27NyvSbNe/Q/sd8VJz9i0N4XmSmaKttXdREbnDvi3vFDe
-X-Gm-Message-State: AOJu0YyHIbQy+2Fn79k3ZbtDwQLKixhoPxCP2Tcomy0XT5+UNLbeD+52
-	snlDlxuRR1umAI5JRvlZAQGoDFPM3p+RY9dcX6c7b8FY50ocvG4SnfAsjBqlCMr5MOc1GEGFtCS
-	f27SJjJrHm+ZiNQGTQ+q1V4gbHro=
-X-Google-Smtp-Source: AGHT+IEhlHRyEw+qi7xVhThlYz/esvqlaaHKizoRnHdoqbmGK7jkzYrmvkgfq8k4DCAE2nFrtbKwvRWPvufyKIqzw98=
-X-Received: by 2002:a05:6000:4388:b0:371:83a8:afee with SMTP id
- ffacd0b85a97d-37183a8b1d2mr475768f8f.27.1723650409921; Wed, 14 Aug 2024
- 08:46:49 -0700 (PDT)
+        bh=Q3V7sI5wa59RYo+sZ7xurVHGqINhPxAhasnZ5W2BayU=;
+        b=r9wFzMuCH6EejQ0dKVr9H8sfrn6yGeAzCN3pM58QIHRYUu1zn3ZfKBqMUTQ5j1ywNh
+         80WU2PM5Ii4L2tg0sEG2TtRCShJnuxh6C4JrYJ6sGOOsReE4NIr++diVHJ4QXvl5Z9kD
+         8EijLnTU0ftmlhpvXWLxcHg3EFzkh5hrH+zq3V3D91ZkUap++n+SCN+2OVyoz69dC/sy
+         C5pQijQcmzWAyIkGWQ1edKYRH8p+j0dWTVOyeb3eBxO5DrT1aOmQfpmMf9IMS26V+z03
+         sXPINGytOF2G/1lxvR+llA+ko8wqgsmq8U9UOZslevvr+CRFgAX+rZFf24+uGCjl3Kou
+         jpfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWEIWcWQFNukxozvaKGcmzmD3aViWmyusuPbTxJCTBQ02609NuQ9aLZYesLRFoPRDv4jObmJ68UtIzJSqQ6HH1gWZNfBGxv/18oeSMDS3Jm
+X-Gm-Message-State: AOJu0YxtHnRO4fh+LSzmPTSFED1PaLLSi0OFnun9euej2NwCxJQDafKF
+	mNApuo/qOGodMEDNgVROQBxHQSjW0u3eeAfs598fz6ikBZl1BztY9oJOQuEKd8Htd//DdtTp9Gz
+	kAPIPA+AGlgFQ5c3YhgQUGD3TAMt5sUSP6Seb
+X-Google-Smtp-Source: AGHT+IFrRfkhR2XduT5ByCnGofWNAIRptASixgPkXKhJgovUeEbG9xWDO8oNJsdQPuXoITtCyftAROEZJLTwNudxnuI=
+X-Received: by 2002:a05:6870:5b88:b0:260:ed20:dcb3 with SMTP id
+ 586e51a60fabf-26fe5aea2camr4053360fac.30.1723654640802; Wed, 14 Aug 2024
+ 09:57:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240813151752.95161-2-thorsten.blum@toblux.com>
- <CAADnVQKEgG5bXvLMLYupAZO6xahWHU7mc06KFfseNoYUvoJbRQ@mail.gmail.com>
- <2A7DB1E6-4CCE-446E-B6F1-4A99D3F87B57@toblux.com> <CAADnVQKw5x6sTwj62p4vxSqtjdisHEKhtKdPp_zK4t7rtDuWhQ@mail.gmail.com>
- <968A8194-61C0-4F9A-ADB6-8A6BB57E2A57@toblux.com>
-In-Reply-To: <968A8194-61C0-4F9A-ADB6-8A6BB57E2A57@toblux.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Wed, 14 Aug 2024 08:46:38 -0700
-Message-ID: <CAADnVQJWdiwoUqtF9CgKgkLD0oHeTaOkUhsfz0Y=0Ow+79KyxA@mail.gmail.com>
-Subject: Re: [PATCH] bpf: Annotate struct bpf_cand_cache with __counted_by()
-To: Thorsten Blum <thorsten.blum@toblux.com>
-Cc: Martin KaFai Lau <martin.lau@linux.dev>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, Eddy Z <eddyz87@gmail.com>, 
-	Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, 
-	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, bpf <bpf@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-hardening@vger.kernel.org
+References: <20240814071424.2655666-1-jeffxu@chromium.org> <slrsrycj73xrph5o2poicpt4cogpqw36bbwi5iqykvyce4pve3@suldmmv2mmo5>
+In-Reply-To: <slrsrycj73xrph5o2poicpt4cogpqw36bbwi5iqykvyce4pve3@suldmmv2mmo5>
+From: Jeff Xu <jeffxu@chromium.org>
+Date: Wed, 14 Aug 2024 09:57:09 -0700
+Message-ID: <CABi2SkV2LcrkYOGzkGm80eYw-mhPNN=Q=P3aKGm0j8_gAwXjog@mail.gmail.com>
+Subject: Re: [PATCH v1 0/2] mremap refactor: check src address for vma
+ boundaries first.
+To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, jeffxu@chromium.org, akpm@linux-foundation.org, 
+	willy@infradead.org, torvalds@linux-foundation.org, pedro.falcato@gmail.com, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-mm@kvack.org, linux-hardening@vger.kernel.org, jeffxu@google.com, 
+	lorenzo.stoakes@oracle.com, mpe@ellerman.id.au, oliver.sang@intel.com, 
+	vbabka@suse.cz, keescook@chromium.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Aug 13, 2024 at 1:51=E2=80=AFPM Thorsten Blum <thorsten.blum@toblux=
-.com> wrote:
+On Wed, Aug 14, 2024 at 7:40=E2=80=AFAM Liam R. Howlett <Liam.Howlett@oracl=
+e.com> wrote:
 >
-> On 13. Aug 2024, at 20:57, Alexei Starovoitov <alexei.starovoitov@gmail.c=
-om> wrote:
-> > On Tue, Aug 13, 2024 at 10:59=E2=80=AFAM Thorsten Blum <thorsten.blum@t=
-oblux.com> wrote:
-> >> On 13. Aug 2024, at 18:28, Alexei Starovoitov <alexei.starovoitov@gmai=
-l.com> wrote:
-> >>> On Tue, Aug 13, 2024 at 8:19=E2=80=AFAM Thorsten Blum <thorsten.blum@=
-toblux.com> wrote:
-> >>>>
-> >>>> Add the __counted_by compiler attribute to the flexible array member
-> >>>> cands to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
-> >>>> CONFIG_FORTIFY_SOURCE.
-> >>>>
-> >>>> Increment cnt before adding a new struct to the cands array.
-> >>>
-> >>> why? What happens otherwise?
-> >>
-> >> If you try to access cands->cands[cands->cnt] without incrementing
-> >> cands->cnt first, you're essentially accessing the array out of bounds
-> >> which will fail during runtime.
+> * jeffxu@chromium.org <jeffxu@chromium.org> [240814 03:14]:
+> > From: Jeff Xu <jeffxu@chromium.org>
 > >
-> > What kind of error/warn do you see ?
-> > Is it runtime or compile time?
+> > mremap doesn't allow relocate, expand, shrink across VMA boundaries,
+> > refactor the code to check src address range before doing anything on
+> > the destination, i.e. destination won't be unmapped, if src address
+> > failed the boundaries check.
+> >
+> > This also allows us to remove can_modify_mm from mremap.c, since
+> > the src address must be single VMA, can_modify_vma is used.
 >
-> I get a runtime error with Clang 18 [3].
+> I don't think sending out a separate patch to address the same thing as
+> the patch you said you were testing [1] is the correct approach.  You
+> had already sent suggestions on mremap changes - why send this patch set
+> instead of making another suggestion?
+>
+As indicated in the cover letter, this patch aims to improve mremap
+performance while preserving existing mseal's semantics. And this
+patch can go in-dependantly regardless of in-loop out-loop discussion.
 
-...
+[1] link in your email is broken, but I assume you meant Pedro's V1/V2
+of in-loop change. In-loop change has a semantic/regression risk to
+mseal, and will take longer time to review/test/prove and bake.
 
-> [3] https://godbolt.org/z/cKee95777
+We can leave in-loop discussion in Pedro's thread, I hope the V3 of
+Pedro's patch adds more testing coverage and addresses existing
+comments in V2.
 
-This is user space.
-I'm not asking about generic description of the counted_by feature.
-I want to see the actual runtime report from the kernel.
-Can it even compile the kernel with -fsanitize=3Dundefined ?
+Thanks
+-Jeff
 
-pw-bot: cr
+-Jeff
