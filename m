@@ -1,137 +1,157 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61B993BBCB;
-	Wed, 14 Aug 2024 06:00:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A81A13ACC
+	for <linux-hardening@vger.kernel.org>; Wed, 14 Aug 2024 07:14:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723615240; cv=none; b=ZMNsFncHxS22u1otyK/BUt3thKhzQu96a4pWjD6Pbu+dxP60y1KuAenbG/lc4AMDmR+y+Q3lr9lNE/jXIbdtYzPc+ZT+IGy5n4N+kqsYonL9TJanNn94cVNUk+5Xeoo0hMJO/+c7Beyj91xACv6Gic7s4hUjMTL4AY6rqcJlBwI=
+	t=1723619674; cv=none; b=iuwPBSQhI/Hc+QNnTFfUfxYR1zOakF1CtMGTHwEW5rFsHuzVb6w/IE7ytrl7Y5Xqhz6qeX86khtuEjmkntyTSmHA2NUCtwl7TrYu+vp+Toi3/9SOXC17qLecNqmL/3cSCmUCIvYiLkBdgykZvfWgdyplEHvEFUB5aPggG79dGBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723615240; c=relaxed/simple;
-	bh=vPB9aaa+NH2aM+GbnFplcTW145Xj1DSko+ugGJ+uzAk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=B2hbwF/NaINVEnMnpc2Au6Ew85XtYoZDpsk6vkiDmTEk3HQYU+D+j/w6Ky3mDnTk2wwu/T28zFiX8vB8ixe3Og1+I/LNZ7kWXrwmajtsj+dncOGR477K3YcDuvLyIOHk8ZI8UQKrqp+Uzm/ndgZj5zQ+Z8lv4/bKD6ZAyabTEaE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G1TxCe7h; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1723619674; c=relaxed/simple;
+	bh=brPAjMdAxyVmTtvLRIgAXuSdAuoKek9fo+ninmBAJ3s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pHrvM8n5xO+aZrBduoy6mRdVzaEYUtw3C6uZ68ijgUFkrDhj+Qnyq8QVL/DMspTb/1SPMZOl+ALtA1bW8ckSu74Zu763j168CrUYEctusGFqny/ydiY9KQn/I4w4WGDnUnvRQQH/frCbBjCQt7HnZae0VIXtz5Q6XVynv0pUd3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=mM4rHg8L; arc=none smtp.client-ip=209.85.167.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G1TxCe7h"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4769C32786;
-	Wed, 14 Aug 2024 06:00:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723615239;
-	bh=vPB9aaa+NH2aM+GbnFplcTW145Xj1DSko+ugGJ+uzAk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=G1TxCe7hKST2UA30Ng0QNrkNwG8SNfQRQwh3lYDsaZafbeuAIel1K7C6Eh2xqVwP0
-	 oFK2MjNq9V0wawxJ0hvN+K3d0h7g6S11JjmPVsI1lBExBYTImOqIFfLQWcNOPidYo3
-	 1shipepfsAGLk8BKPjIxEr/BVjHDlT4xfpgQM5Dt9n+n77IgM7BNkPd9I/05KdWHXS
-	 xqg6f6i9BV44TCaLhE6oNMMz6HaoIrHYuTvCIK7WlYE6kN/JGv9he9bo8TI5Rh46et
-	 UcNaJEFfixi1pXOU61bw/rH7ddkOCaUGL6haYPrv6eS/CzMARCkEGTPag7mN5tyPea
-	 LRb7fvLg3M0+g==
-Message-ID: <662e1236-84cb-4090-8fc8-dd77943726c9@kernel.org>
-Date: Wed, 14 Aug 2024 08:00:29 +0200
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mM4rHg8L"
+Received: by mail-oi1-f169.google.com with SMTP id 5614622812f47-3dab336717fso4039677b6e.0
+        for <linux-hardening@vger.kernel.org>; Wed, 14 Aug 2024 00:14:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1723619670; x=1724224470; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=VwReknVIrDSfw0EPNLA7Z9rOAS1qkGFQa9Wg0CMwvkc=;
+        b=mM4rHg8LBJJ0dGlbU3RSKAYUnHCOdik2y0Z6E3RYL0yuzsIV/A+db3cruBzjJPzVPS
+         tMv+jQdlxhxvmHKbjcSjbsfXkw0pdHOrJnjNyKw/6pYHQJnukWVIsdJAOeqrMooPemXZ
+         GdUmJgqRkQddJ0O0bw0b2KAi2+gqpGNQAZs2s=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723619670; x=1724224470;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VwReknVIrDSfw0EPNLA7Z9rOAS1qkGFQa9Wg0CMwvkc=;
+        b=YYghkUSHjbuebhA1SeO76nKjT6Dc5IbZCekxOIM4dtJEomKxx1duZKGST1Z6kbnB9F
+         cKMT7fbk6ADbyp9JjYXPnXFP1R/fbS5R5FPnz4/KM1gYyuVg9uV0Ef2y/UURF6vnEKs1
+         dQC1PKv48d+LyT/AIsog/VZdCWKekuQZKVSMxQX1TkjBRiTVnmYLGnV5LkwXJ7M+oe+4
+         vSsy13juJlQxjLxs8Nf83NI1fdcXonNnNdUGXcg1MewsyhTjPg1k43+z1F/9ZkoQYwKC
+         cggL77hXfFdnLILMjGR/UoGZV27atC3KCgx9/378PC1TvIo3ZlSkkEltbl4FrFxB8bsi
+         nHuQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUbmWookQv4P0ed3XMSWqCKGibctWL/qXMl0yw4/7faM+L3x1b5uSuox/qDqA715cE4nk3oUFum1HkuPPq9oI7cHTIMT60xNXPvoZBQypPN
+X-Gm-Message-State: AOJu0Yx3Gq+oKuLNyIV+CbDU/Z6F616Qt3358whbnY6klQw8Tb3Y9ezv
+	RSLujtXoYCjho2E2d0i7ugQ/agpvdxp0Ao9sYwJCBPDpa6q/wVLLVtS/y2B7Kw==
+X-Google-Smtp-Source: AGHT+IHYwRGCLISGoy8hJhOKkAgqX6DtlBOZAVZZqhX4BMHm8h57bmHw97vihcaDfkE2jw2NCAP0Jw==
+X-Received: by 2002:a05:6870:3508:b0:268:9642:aa08 with SMTP id 586e51a60fabf-26fe59da324mr1981775fac.10.1723619670385;
+        Wed, 14 Aug 2024 00:14:30 -0700 (PDT)
+Received: from localhost (150.12.83.34.bc.googleusercontent.com. [34.83.12.150])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-710e5873ad4sm6962870b3a.15.2024.08.14.00.14.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 14 Aug 2024 00:14:29 -0700 (PDT)
+From: jeffxu@chromium.org
+To: akpm@linux-foundation.org,
+	willy@infradead.org,
+	torvalds@linux-foundation.org,
+	Liam.Howlett@oracle.com,
+	pedro.falcato@gmail.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-hardening@vger.kernel.org,
+	jeffxu@google.com,
+	lorenzo.stoakes@oracle.com,
+	mpe@ellerman.id.au,
+	oliver.sang@intel.com,
+	vbabka@suse.cz,
+	keescook@chromium.org,
+	Jeff Xu <jeffxu@chromium.org>
+Subject: [PATCH v1 0/2] mremap refactor: check src address for vma boundaries first.
+Date: Wed, 14 Aug 2024 07:14:22 +0000
+Message-ID: <20240814071424.2655666-1-jeffxu@chromium.org>
+X-Mailer: git-send-email 2.46.0.76.ge559c4bf1a-goog
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 06/11] dt-bindings: nfc: nxp,nci: Document PN553
- compatible
-To: Rob Herring <robh@kernel.org>
-Cc: Danila Tikhonov <danila@jiaxyga.com>, krzk+dt@kernel.org,
- conor+dt@kernel.org, andersson@kernel.org, konradybcio@kernel.org,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, rafael@kernel.org, viresh.kumar@linaro.org,
- kees@kernel.org, tony.luck@intel.com, gpiccoli@igalia.com,
- ulf.hansson@linaro.org, andre.przywara@arm.com, quic_rjendra@quicinc.com,
- davidwronek@gmail.com, neil.armstrong@linaro.org, heiko.stuebner@cherry.de,
- rafal@milecki.pl, macromorgan@hotmail.com, linus.walleij@linaro.org,
- lpieralisi@kernel.org, dmitry.baryshkov@linaro.org, fekz115@gmail.com,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20240808184048.63030-1-danila@jiaxyga.com>
- <20240808184048.63030-7-danila@jiaxyga.com>
- <493466e6-d83b-4d91-93a5-233d6da1fdd8@kernel.org>
- <20240813193315.GA1614564-robh@kernel.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20240813193315.GA1614564-robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 13/08/2024 21:33, Rob Herring wrote:
-> On Fri, Aug 09, 2024 at 07:39:53AM +0200, Krzysztof Kozlowski wrote:
->> On 08/08/2024 20:40, Danila Tikhonov wrote:
->>> The PN553 is another NFC chip from NXP, document the compatible in the
->>> bindings.
->>>
->>> Signed-off-by: Danila Tikhonov <danila@jiaxyga.com>
->>> ---
->>>  Documentation/devicetree/bindings/net/nfc/nxp,nci.yaml | 1 +
->>>  1 file changed, 1 insertion(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/net/nfc/nxp,nci.yaml b/Documentation/devicetree/bindings/net/nfc/nxp,nci.yaml
->>> index 6924aff0b2c5..364b36151180 100644
->>> --- a/Documentation/devicetree/bindings/net/nfc/nxp,nci.yaml
->>> +++ b/Documentation/devicetree/bindings/net/nfc/nxp,nci.yaml
->>> @@ -17,6 +17,7 @@ properties:
->>>            - enum:
->>>                - nxp,nq310
->>>                - nxp,pn547
->>> +              - nxp,pn553
->>
->> Keep the list ordered.
-> 
-> Looks ordered to me. n before p...
+From: Jeff Xu <jeffxu@chromium.org>
 
-Now it is... I think I misread 5->3.
+mremap doesn't allow relocate, expand, shrink across VMA boundaries,
+refactor the code to check src address range before doing anything on
+the destination, i.e. destination won't be unmapped, if src address
+failed the boundaries check.
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+This also allows us to remove can_modify_mm from mremap.c, since
+the src address must be single VMA, can_modify_vma is used.
 
-Best regards,
-Krzysztof
+It is likely this will improve the performance on mremap, previously 
+the code does sealing check using can_modify_mm for the src address range,
+and the new code removed the loop (used by can_modify_mm).
+
+In order to verify this patch doesn't regress on mremap, I added tests in
+mseal_test, the test patch can be applied before mremap refactor patch or
+checkin independently.
+
+Also this patch doesn't change mseal's existing schematic: if sealing fail,
+user can expect the src/dst address isn't updated. So this patch can be
+applied regardless if we decided to go with current out-of-loop approach 
+or in-loop approach currently in discussion.
+
+Regarding the perf test report by stress-ng [1] title:
+8be7258aad: stress-ng.pagemove.page_remaps_per_sec -4.4% regression
+
+The test is using below for testing:
+stress-ng --timeout 60 --times --verify --metrics --no-rand-seed --pagemove 64
+
+I can't repro this using ChromeOS, the pagemove test shows large value
+of stddev and stderr, and can't reasonably refect the performance impact.
+
+For example: I write a c program [2] to run the above pagemove test 10 times
+and calculate the stddev, stderr, for 3 commits:
+
+1> before mseal feature is added:
+Ops/sec:
+  Mean     : 3564.40
+  Std Dev  : 2737.35 (76.80% of Mean)
+  Std Err  : 865.63 (24.29% of Mean)
+
+2> after mseal feature is added:
+Ops/sec:
+  Mean     : 2703.84
+  Std Dev  : 2085.13 (77.12% of Mean)
+  Std Err  : 659.38 (24.39% of Mean)
+
+3> after current patch (mremap refactor)
+Ops/sec:
+  Mean     : 3603.67
+  Std Dev  : 2422.22 (67.22% of Mean)
+  Std Err  : 765.97 (21.26% of Mean)
+
+The result shows 21%-24% stderr, this means whatever perf improvment/impact
+there might be won't be measured correctly by this test.
+
+This test machine has 32G memory,  Intel(R) Celeron(R) 7305, 5 CPU.
+And I reboot the machine before each test, and take the first 10 runs with
+run_stress_ng 10 
+
+(I will run longer duration to see if test still shows large stdDev,StdErr)
+
+[1] https://lore.kernel.org/lkml/202408041602.caa0372-oliver.sang@intel.com/
+[2] https://github.com/peaktocreek/mmperf/blob/main/run_stress_ng.c
+
+
+Jeff Xu (2):
+  mseal:selftest mremap across VMA boundaries.
+  mseal: refactor mremap to remove can_modify_mm
+
+ mm/internal.h                           |  24 ++
+ mm/mremap.c                             |  77 +++----
+ mm/mseal.c                              |  17 --
+ tools/testing/selftests/mm/mseal_test.c | 293 +++++++++++++++++++++++-
+ 4 files changed, 353 insertions(+), 58 deletions(-)
+
+-- 
+2.46.0.76.ge559c4bf1a-goog
 
