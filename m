@@ -1,106 +1,83 @@
-Received: from mail-oo1-f42.google.com (mail-oo1-f42.google.com [209.85.161.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8CF71BA89E
-	for <linux-hardening@vger.kernel.org>; Wed, 14 Aug 2024 16:57:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF41E33D8;
+	Wed, 14 Aug 2024 17:00:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723654643; cv=none; b=Ic7nO5UIYQrjPABguLiT98adhB4DfYLsbjjzanjKWO+X6YQzGKvr2kEMZSTAiMDMZ0Z+lOoP3SnM5A57g4456xjp8DKGcnO+IOZnm5UyFBTl7hu0F++qCIbyxU1T24+ORUlaCQy4/iAeB73eAlMFWKT3HYlJZ5Y5l0nZhaZj3pk=
+	t=1723654849; cv=none; b=UyiglXebOoP4VCcyqsXMVcYZfmjO2FBR1xjzKsiOb1lsviXVWYDB8oYVq9bLGgcibtn1UoQyimwGb5YNdaq9TfRh04r5FX+9BGMFAeyCVyx0UFkMMK7MQSRuPv7j1YNOFKAu46pE3w9+q8U4Who0idhzwaak5mibWgkaO/QGyTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723654643; c=relaxed/simple;
-	bh=ZKpdMlwy1Vuuc8abJVg8YoHUbcl+6GvtZq48vUrGLY8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=lnC1fBeHpMjQVRj2Cb3AvE+pRvAFlaqAXaOCul12nSRSY0TpvouuelsALETIzkuan4pQrpXMLDFZmbxgTih+oFcU4ErdI3+YncQT4PE6T1orRYVwU2r4waIO06XZwKKHZET0abcF8mbVByH9HKIp5kQG2GaX9OUNWu0wlqixoCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=fnrvC043; arc=none smtp.client-ip=209.85.161.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1723654849; c=relaxed/simple;
+	bh=wbO7ucUoXvbBcCVpFMs1yHhmKcKeSaruFWxVAtNHZV0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hur3gMNRX/9P3/+ziCLSsSHGYCqzYbO+YYmNviXjPLgmdWHYXo3Z14z0wI4QL4SZ0MdbSMrae/diDSfJNKy1q7/vMrsvFO1TPG6Kq05AV0agB4x+uDmNDolNagC788nVl6ciUakHnCjj6KDmwIspkAN4dcyxM3zYpv46m7XiHYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FsXbUB8V; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fnrvC043"
-Received: by mail-oo1-f42.google.com with SMTP id 006d021491bc7-5d5f9d68805so63633eaf.3
-        for <linux-hardening@vger.kernel.org>; Wed, 14 Aug 2024 09:57:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1723654641; x=1724259441; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Q3V7sI5wa59RYo+sZ7xurVHGqINhPxAhasnZ5W2BayU=;
-        b=fnrvC0432wJJexqO+555N8ww1qFWm9nFbI1szZyw4ev+x4vkFE0q2l37yrM/ohaa7m
-         AAbV5SOEXiYz4UHtb3zj3S9vWGbRhe3/mCdBBjnI1iz4hahFKTMNlc0t68DXFUpAcjmU
-         XonN6AfAI0RP8MQQy6KPd3GKPmLYVhDU8S7kk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723654641; x=1724259441;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Q3V7sI5wa59RYo+sZ7xurVHGqINhPxAhasnZ5W2BayU=;
-        b=r9wFzMuCH6EejQ0dKVr9H8sfrn6yGeAzCN3pM58QIHRYUu1zn3ZfKBqMUTQ5j1ywNh
-         80WU2PM5Ii4L2tg0sEG2TtRCShJnuxh6C4JrYJ6sGOOsReE4NIr++diVHJ4QXvl5Z9kD
-         8EijLnTU0ftmlhpvXWLxcHg3EFzkh5hrH+zq3V3D91ZkUap++n+SCN+2OVyoz69dC/sy
-         C5pQijQcmzWAyIkGWQ1edKYRH8p+j0dWTVOyeb3eBxO5DrT1aOmQfpmMf9IMS26V+z03
-         sXPINGytOF2G/1lxvR+llA+ko8wqgsmq8U9UOZslevvr+CRFgAX+rZFf24+uGCjl3Kou
-         jpfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWEIWcWQFNukxozvaKGcmzmD3aViWmyusuPbTxJCTBQ02609NuQ9aLZYesLRFoPRDv4jObmJ68UtIzJSqQ6HH1gWZNfBGxv/18oeSMDS3Jm
-X-Gm-Message-State: AOJu0YxtHnRO4fh+LSzmPTSFED1PaLLSi0OFnun9euej2NwCxJQDafKF
-	mNApuo/qOGodMEDNgVROQBxHQSjW0u3eeAfs598fz6ikBZl1BztY9oJOQuEKd8Htd//DdtTp9Gz
-	kAPIPA+AGlgFQ5c3YhgQUGD3TAMt5sUSP6Seb
-X-Google-Smtp-Source: AGHT+IFrRfkhR2XduT5ByCnGofWNAIRptASixgPkXKhJgovUeEbG9xWDO8oNJsdQPuXoITtCyftAROEZJLTwNudxnuI=
-X-Received: by 2002:a05:6870:5b88:b0:260:ed20:dcb3 with SMTP id
- 586e51a60fabf-26fe5aea2camr4053360fac.30.1723654640802; Wed, 14 Aug 2024
- 09:57:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FsXbUB8V"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E575C116B1;
+	Wed, 14 Aug 2024 17:00:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1723654849;
+	bh=wbO7ucUoXvbBcCVpFMs1yHhmKcKeSaruFWxVAtNHZV0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=FsXbUB8VFtAetBwRuYuGCoVKoxpVYqgY6o2qHu8JOG3AKt9dmzTpF83knu/kC/C6o
+	 BKDOVSEKYXwL3zE7zVqrGxJy7/mmfr3p0QjVCOkoFUJWPFJuLkwFcNGqHCUB6k8EP4
+	 QWIr38ZQKo1ECDHjN/FKYfdGK5Q/vhs8P3ZvBYVQOxUx6YSyzOLqSttY/6rSX58i7i
+	 7Lz2vbNSVhgg9t03gzjKa0ZGt4Z5dhPWrJcKuwx6cVN8FrGKhNb2j9izeGs3/vF9V0
+	 8ExF5/7+RPe0rRQ/f6qLQJAuxyaP5L1PQU8ZmrZNuPQjQtoLUKrCWXRjrKMuREuNnz
+	 ABJuj2L+tXrFQ==
+From: Kees Cook <kees@kernel.org>
+To: akpm@linux-foundation.org,
+	jannh@google.com,
+	sroettger@google.com,
+	adhemerval.zanella@linaro.org,
+	ojeda@kernel.org,
+	adobriyan@gmail.com,
+	Kees Cook <kees@kernel.org>,
+	jeffxu@chromium.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	jorgelo@chromium.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 0/1] binfmt_elf: seal address zero
+Date: Wed, 14 Aug 2024 09:59:47 -0700
+Message-Id: <172365478431.4159848.371478248517217096.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240806214931.2198172-1-jeffxu@google.com>
+References: <20240806214931.2198172-1-jeffxu@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240814071424.2655666-1-jeffxu@chromium.org> <slrsrycj73xrph5o2poicpt4cogpqw36bbwi5iqykvyce4pve3@suldmmv2mmo5>
-In-Reply-To: <slrsrycj73xrph5o2poicpt4cogpqw36bbwi5iqykvyce4pve3@suldmmv2mmo5>
-From: Jeff Xu <jeffxu@chromium.org>
-Date: Wed, 14 Aug 2024 09:57:09 -0700
-Message-ID: <CABi2SkV2LcrkYOGzkGm80eYw-mhPNN=Q=P3aKGm0j8_gAwXjog@mail.gmail.com>
-Subject: Re: [PATCH v1 0/2] mremap refactor: check src address for vma
- boundaries first.
-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, jeffxu@chromium.org, akpm@linux-foundation.org, 
-	willy@infradead.org, torvalds@linux-foundation.org, pedro.falcato@gmail.com, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-mm@kvack.org, linux-hardening@vger.kernel.org, jeffxu@google.com, 
-	lorenzo.stoakes@oracle.com, mpe@ellerman.id.au, oliver.sang@intel.com, 
-	vbabka@suse.cz, keescook@chromium.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Wed, Aug 14, 2024 at 7:40=E2=80=AFAM Liam R. Howlett <Liam.Howlett@oracl=
-e.com> wrote:
->
-> * jeffxu@chromium.org <jeffxu@chromium.org> [240814 03:14]:
-> > From: Jeff Xu <jeffxu@chromium.org>
-> >
-> > mremap doesn't allow relocate, expand, shrink across VMA boundaries,
-> > refactor the code to check src address range before doing anything on
-> > the destination, i.e. destination won't be unmapped, if src address
-> > failed the boundaries check.
-> >
-> > This also allows us to remove can_modify_mm from mremap.c, since
-> > the src address must be single VMA, can_modify_vma is used.
->
-> I don't think sending out a separate patch to address the same thing as
-> the patch you said you were testing [1] is the correct approach.  You
-> had already sent suggestions on mremap changes - why send this patch set
-> instead of making another suggestion?
->
-As indicated in the cover letter, this patch aims to improve mremap
-performance while preserving existing mseal's semantics. And this
-patch can go in-dependantly regardless of in-loop out-loop discussion.
+On Tue, 06 Aug 2024 21:49:26 +0000, jeffxu@chromium.org wrote:
+> From: Jeff Xu <jeffxu@chromium.org>
+> 
+> In load_elf_binary as part of the execve(),  when the current
+> task’s personality has MMAP_PAGE_ZERO set, the kernel allocates
+> one page at address 0. According to the comment:
+> 
+> /* Why this, you ask???  Well SVr4 maps page 0 as read-only,
+>     and some applications "depend" upon this behavior.
+>     Since we do not have the power to recompile these, we
+>      emulate the SVr4 behavior. Sigh. */
+> 
+> [...]
 
-[1] link in your email is broken, but I assume you meant Pedro's V1/V2
-of in-loop change. In-loop change has a semantic/regression risk to
-mseal, and will take longer time to review/test/prove and bake.
+I added the cover letter details to the commit log and changed pr_warn()
+to pr_warn_ratelimited(), but otherwise, looked good.
 
-We can leave in-loop discussion in Pedro's thread, I hope the V3 of
-Pedro's patch adds more testing coverage and addresses existing
-comments in V2.
+Applied to for-next/execve, thanks!
 
-Thanks
--Jeff
+[1/1] binfmt_elf: mseal address zero
+      https://git.kernel.org/kees/c/44f65d900698
 
--Jeff
+Take care,
+
+-- 
+Kees Cook
+
