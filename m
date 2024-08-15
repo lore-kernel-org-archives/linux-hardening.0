@@ -1,197 +1,176 @@
-Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AD13433DC
-	for <linux-hardening@vger.kernel.org>; Thu, 15 Aug 2024 18:17:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB21C3A8CB;
+	Thu, 15 Aug 2024 18:36:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723745827; cv=none; b=T1ztv+tphLRzkzOGlAA2pKQFLV9PDCUqZPqriuAzgnolhrwne9lIfsI8/RFoXCoo6Dg9VW64p9KEuuNMMZ96etOig80GSUl2mj9BcdXpcsyAX2qmpPb7YP4nBlb8vVmvxhIvdazR1je1xyZwWudkaZq4+40LmZHWmG6JacyheJ0=
+	t=1723746997; cv=none; b=d1MGn2bom8nB8wO07kZLKSb6uZyeUfxMKkvYbch1UbfNRMBT411P12ZZDxl5HABgLVohDdxq5B0LQC+VSlx7mXJshPx5OsQeHchL0w33pP8D1DX2PMCoG4Ps2N5Fgee6ZSvqUUQ+hxA4u13wZPIKPTGijUVhuP1XUDjR/zgui7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723745827; c=relaxed/simple;
-	bh=QM7w3vndpXDCo19LqYkFiF0aa1J4O7C5aYAOahTEwUk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oZPrhu0jAuqWq3f+1iElbUoN1ahRZxQKdmraCnti7WpNxqHL/n/j715odu3tA/0ZvuBVVONksZQnavNhPy5fe6uJ7BJ9wrfuT1Wi0VbdSJ3nljzKaIe39LRybo9wqrXSmdtZxLDHEn4ikASpjH/Ph3zddoaBHKF6cdVsYBdob/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Uu2QJBR7; arc=none smtp.client-ip=209.85.160.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1723746997; c=relaxed/simple;
+	bh=+jqHWnrAC2O9xkqoGcAs5UI8rRiAGafwD+uBErFpfQc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=dlAfLLdWKSYPGGU71nsv4RvGOtXJDAEqe46A50XIe68Rxnt1uytQXOwcllkYsiroiU3ZMtNO4SeINtfocjlgEwy7NsC+SeKIrlJDPCMZh3ZK4z7+dWXtqD69G08Lhj6vMU9nkPt0K/CXWdbgRRcTZU8RgiisbjfrdPuTNbjY0N0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n79Jc737; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Uu2QJBR7"
-Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-2681941eae0so760985fac.0
-        for <linux-hardening@vger.kernel.org>; Thu, 15 Aug 2024 11:17:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1723745825; x=1724350625; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WulVhf/lbrXtVuEvrtHRPg80DRz2GQqwnIZEq09+IRc=;
-        b=Uu2QJBR7mBFV2dMvwzQUyb2ZH5PKKfCUxzwsHq8wRKBkHYB4jowOY+uqVwBK730z78
-         E/R0U0zWodhmVKnYVFJu2YXUuyMye1K0GMhAIWrMhsfW4J9kTUSizfL5Nhq/41WFC3QI
-         bjnQTVvLxHEu/SnEMsWDcGfR1aCELW1wfLY8w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723745825; x=1724350625;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WulVhf/lbrXtVuEvrtHRPg80DRz2GQqwnIZEq09+IRc=;
-        b=CqDB7rmfaF1YdM55z3cKflJ14mucAUgeXJxlPN0+TNkDsAlKujPHyy9hucR8kMIjFy
-         jsK4Eg1qzwehx1sDoc116/ZIHjg8zYLYxdVPSATgRBr2FgHED84QqvErSrkTFkHxlnNP
-         IVoD9AGbtCZxMcOvQXFa0IM4/xO3arKMRYt0BrfULKp6WNOos1RUaBq35FMxtoimzIgy
-         yciQ7cT+81nfYAvPZ3PUgiT+mREqyOQTplvmGmNlvwfFadPTMTiC1JNWAfRIQnjvxT3g
-         oIW5+TkTPtLEdk5GhiHeCkKCoO2pWP5a6E6fGCaHEd+kc1IxBIHHy0aNXnUMh7JXMGza
-         oxCw==
-X-Forwarded-Encrypted: i=1; AJvYcCXU8iO5HCq3tKLipmuq7exfBAGr34ebfJZpzjUjPvO2hOvYCeY27hawm+68mflZX4FIwmazf9yj50eHOeywD/IjCI/h6ngbSxuoJAghyAJx
-X-Gm-Message-State: AOJu0YzOx0uTXzH1AdBOBBdpsGze64VpqLMSHs56CYQB9dQ7crXWyaoU
-	YOcmWTRc8Sd8M5HY3AgEzO6jzvwkRn3aHnTZbqJhZHQVemMWp09loRYFuXc1omO70CP7EMXaXLk
-	93LaKvJmIzcZz/SyPf7fVPicJduroUzH4mZ9r
-X-Google-Smtp-Source: AGHT+IFBzd2labGfip0TWIus/Lddyszo/RVNbmgY3SlorSK9faJ6vZdtzGx4sbNKmzII4n+Xp0V1AtaK3L5PzzXifXs=
-X-Received: by 2002:a05:687c:2bea:b0:270:1cee:ab9 with SMTP id
- 586e51a60fabf-2701cee16d2mr297534fac.16.1723745824775; Thu, 15 Aug 2024
- 11:17:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n79Jc737"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE3ABC32786;
+	Thu, 15 Aug 2024 18:36:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1723746997;
+	bh=+jqHWnrAC2O9xkqoGcAs5UI8rRiAGafwD+uBErFpfQc=;
+	h=Date:From:To:Cc:Subject:From;
+	b=n79Jc737FXakegcozT8/VHwb/i3TUEX58hqd7ItVtzRsD2mnRK4HaUZEKTK4VQ3pS
+	 /EYAAvNx9pUUG+pA8/O0HvYj8tDySrit+h16/ODNTRDLZqBgLY9scaEf0u3NET7o9F
+	 lIEnsgwC/D4f3ZVIl/eHqzW8+bvrYcXvfwvPea/wbm1qyiqKCTb/tFEN0HBLohjM4Y
+	 U8T7PAoXAIycnEFYyA1ws+pc4xEZosU2G7bOpMvArlObtZzbIMnXPynZ6cnYxTCZFj
+	 MKrxy/78xynyXAMY94MyPa9wwgrFFiruuHA9fd9lzeYTJz53917DP9FQH2LAoQKvJI
+	 hLlzeMQ04+RwA==
+Date: Thu, 15 Aug 2024 12:36:33 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>,
+	Ryder Lee <ryder.lee@mediatek.com>,
+	Shayne Chen <shayne.chen@mediatek.com>,
+	Sean Wang <sean.wang@mediatek.com>, Kalle Valo <kvalo@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH][next] wifi: mt76: Avoid multiple
+ -Wflex-array-member-not-at-end warnings
+Message-ID: <Zr5KsZugaEXrApQJ@elsanto>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240814071424.2655666-1-jeffxu@chromium.org>
-In-Reply-To: <20240814071424.2655666-1-jeffxu@chromium.org>
-From: Jeff Xu <jeffxu@chromium.org>
-Date: Thu, 15 Aug 2024 11:16:52 -0700
-Message-ID: <CABi2SkX+3JrDk6b59vgvjb8XAkC7_p3-cSkFHOotra1Yh6dv1Q@mail.gmail.com>
-Subject: Re: [PATCH v1 0/2] mremap refactor: check src address for vma
- boundaries first.
-To: akpm@linux-foundation.org, willy@infradead.org, 
-	torvalds@linux-foundation.org, Liam.Howlett@oracle.com, 
-	pedro.falcato@gmail.com
-Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-mm@kvack.org, linux-hardening@vger.kernel.org, jeffxu@google.com, 
-	lorenzo.stoakes@oracle.com, mpe@ellerman.id.au, oliver.sang@intel.com, 
-	vbabka@suse.cz, keescook@chromium.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Wed, Aug 14, 2024 at 12:14=E2=80=AFAM <jeffxu@chromium.org> wrote:
->
-> From: Jeff Xu <jeffxu@chromium.org>
->
-> mremap doesn't allow relocate, expand, shrink across VMA boundaries,
-> refactor the code to check src address range before doing anything on
-> the destination, i.e. destination won't be unmapped, if src address
-> failed the boundaries check.
->
-> This also allows us to remove can_modify_mm from mremap.c, since
-> the src address must be single VMA, can_modify_vma is used.
->
-> It is likely this will improve the performance on mremap, previously
-> the code does sealing check using can_modify_mm for the src address range=
-,
-> and the new code removed the loop (used by can_modify_mm).
->
-> In order to verify this patch doesn't regress on mremap, I added tests in
-> mseal_test, the test patch can be applied before mremap refactor patch or
-> checkin independently.
->
-> Also this patch doesn't change mseal's existing schematic: if sealing fai=
-l,
-> user can expect the src/dst address isn't updated. So this patch can be
-> applied regardless if we decided to go with current out-of-loop approach
-> or in-loop approach currently in discussion.
->
-> Regarding the perf test report by stress-ng [1] title:
-> 8be7258aad: stress-ng.pagemove.page_remaps_per_sec -4.4% regression
->
-> The test is using below for testing:
-> stress-ng --timeout 60 --times --verify --metrics --no-rand-seed --pagemo=
-ve 64
->
-> I can't repro this using ChromeOS, the pagemove test shows large value
-> of stddev and stderr, and can't reasonably refect the performance impact.
->
-> For example: I write a c program [2] to run the above pagemove test 10 ti=
-mes
-> and calculate the stddev, stderr, for 3 commits:
->
-> 1> before mseal feature is added:
-> Ops/sec:
->   Mean     : 3564.40
->   Std Dev  : 2737.35 (76.80% of Mean)
->   Std Err  : 865.63 (24.29% of Mean)
->
-> 2> after mseal feature is added:
-> Ops/sec:
->   Mean     : 2703.84
->   Std Dev  : 2085.13 (77.12% of Mean)
->   Std Err  : 659.38 (24.39% of Mean)
->
-> 3> after current patch (mremap refactor)
-> Ops/sec:
->   Mean     : 3603.67
->   Std Dev  : 2422.22 (67.22% of Mean)
->   Std Err  : 765.97 (21.26% of Mean)
->
-> The result shows 21%-24% stderr, this means whatever perf improvment/impa=
-ct
-> there might be won't be measured correctly by this test.
->
-> This test machine has 32G memory,  Intel(R) Celeron(R) 7305, 5 CPU.
-> And I reboot the machine before each test, and take the first 10 runs wit=
-h
-> run_stress_ng 10
->
-> (I will run longer duration to see if test still shows large stdDev,StdEr=
-r)
->
-I took more samples (100 run ), the stddev/stderr is smaller, however
-still not at a range that can reasonably measure the perf improvement
-here.
+-Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+getting ready to enable it, globally.
 
-The tests were taken using the same machine as (10 times run above)
-and exact the same steps: i.e. change to certain kernel commit, reboot
-test device, take the first test result.
+So, in order to avoid ending up with a flexible-array member in the
+middle of multiple other structs, we use the `struct_group_tagged()`
+helper to create a new tagged `struct mt76_connac2_mcu_rxd_hdr`.
+This structure groups together all the members of the flexible
+`struct mt76_connac2_mcu_rxd` except the flexible array.
 
-1> Before mseal feature is added:
-Statistics:
-Ops/sec:
-  Mean     : 1733.26
-  Std Dev  : 842.13 (48.59% of Mean)
-  Std Err  : 84.21 (4.86% of Mean)
+As a result, the array is effectively separated from the rest of the
+members without modifying the memory layout of the flexible structure.
+We then change the type of the middle struct members currently causing
+trouble from `struct mt76_connac2_mcu_rxd` to `struct
+mt76_connac2_mcu_rxd_hdr`.
 
-2> After mseal feature is added
-Statistics:
-Ops/sec:
-  Mean     : 1701.53
-  Std Dev  : 1017.29 (59.79% of Mean)
-  Std Err  : 101.73 (5.98% of Mean)
+We also want to ensure that when new members need to be added to the
+flexible structure, they are always included within the newly created
+tagged struct. For this, we use `static_assert()`. This ensures that the
+memory layout for both the flexible structure and the new tagged struct
+is the same after any changes.
 
-3> After mremap refactor (this patch)
-Statistics:
-Ops/sec:
-  Mean     : 1097.04
-  Std Dev  : 860.67 (78.45% of Mean)
-  Std Err  : 86.07 (7.85% of Mean)
+This approach avoids having to implement `struct mt76_connac2_mcu_rxd_hdr`
+as a completely separate structure, thus preventing having to maintain
+two independent but basically identical structures, closing the door
+to potential bugs in the future.
 
-Summary: even when the stderr is down to 4%-%8 percentage range, the
-stddev is still too big.
+So, with these changes, fix the following warnings:
 
-Hence, there are other unknown, random variables that impact this test.
+drivers/net/wireless/mediatek/mt76/mt7915/mcu.h:32:37: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/wireless/mediatek/mt76/mt7915/mcu.h:40:37: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/wireless/mediatek/mt76/mt7915/mcu.h:49:37: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/wireless/mediatek/mt76/mt7915/mcu.h:58:37: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
--Jeff
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ .../wireless/mediatek/mt76/mt76_connac_mcu.h  | 25 +++++++++++--------
+ .../net/wireless/mediatek/mt76/mt7915/mcu.h   |  8 +++---
+ 2 files changed, 19 insertions(+), 14 deletions(-)
 
-> [1] https://lore.kernel.org/lkml/202408041602.caa0372-oliver.sang@intel.c=
-om/
-> [2] https://github.com/peaktocreek/mmperf/blob/main/run_stress_ng.c
->
->
-> Jeff Xu (2):
->   mseal:selftest mremap across VMA boundaries.
->   mseal: refactor mremap to remove can_modify_mm
->
->  mm/internal.h                           |  24 ++
->  mm/mremap.c                             |  77 +++----
->  mm/mseal.c                              |  17 --
->  tools/testing/selftests/mm/mseal_test.c | 293 +++++++++++++++++++++++-
->  4 files changed, 353 insertions(+), 58 deletions(-)
->
-> --
-> 2.46.0.76.ge559c4bf1a-goog
->
+diff --git a/drivers/net/wireless/mediatek/mt76/mt76_connac_mcu.h b/drivers/net/wireless/mediatek/mt76/mt76_connac_mcu.h
+index 4242d436de26..16689aefa227 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt76_connac_mcu.h
++++ b/drivers/net/wireless/mediatek/mt76/mt76_connac_mcu.h
+@@ -115,21 +115,26 @@ struct mt76_connac2_mcu_uni_txd {
+ } __packed __aligned(4);
+ 
+ struct mt76_connac2_mcu_rxd {
+-	__le32 rxd[6];
++	/* New members MUST be added within the struct_group() macro below. */
++	struct_group_tagged(mt76_connac2_mcu_rxd_hdr, hdr,
++		__le32 rxd[6];
+ 
+-	__le16 len;
+-	__le16 pkt_type_id;
++		__le16 len;
++		__le16 pkt_type_id;
+ 
+-	u8 eid;
+-	u8 seq;
+-	u8 option;
+-	u8 rsv;
+-	u8 ext_eid;
+-	u8 rsv1[2];
+-	u8 s2d_index;
++		u8 eid;
++		u8 seq;
++		u8 option;
++		u8 rsv;
++		u8 ext_eid;
++		u8 rsv1[2];
++		u8 s2d_index;
++	);
+ 
+ 	u8 tlv[];
+ };
++static_assert(offsetof(struct mt76_connac2_mcu_rxd, tlv) == sizeof(struct mt76_connac2_mcu_rxd_hdr),
++	      "struct member likely outside of struct_group_tagged()");
+ 
+ struct mt76_connac2_patch_hdr {
+ 	char build_date[16];
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7915/mcu.h b/drivers/net/wireless/mediatek/mt76/mt7915/mcu.h
+index b41ac4aaced7..49476a4182fd 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7915/mcu.h
++++ b/drivers/net/wireless/mediatek/mt76/mt7915/mcu.h
+@@ -29,7 +29,7 @@ struct mt7915_mcu_thermal_ctrl {
+ } __packed;
+ 
+ struct mt7915_mcu_thermal_notify {
+-	struct mt76_connac2_mcu_rxd rxd;
++	struct mt76_connac2_mcu_rxd_hdr rxd;
+ 
+ 	struct mt7915_mcu_thermal_ctrl ctrl;
+ 	__le32 temperature;
+@@ -37,7 +37,7 @@ struct mt7915_mcu_thermal_notify {
+ } __packed;
+ 
+ struct mt7915_mcu_csa_notify {
+-	struct mt76_connac2_mcu_rxd rxd;
++	struct mt76_connac2_mcu_rxd_hdr rxd;
+ 
+ 	u8 omac_idx;
+ 	u8 csa_count;
+@@ -46,7 +46,7 @@ struct mt7915_mcu_csa_notify {
+ } __packed;
+ 
+ struct mt7915_mcu_bcc_notify {
+-	struct mt76_connac2_mcu_rxd rxd;
++	struct mt76_connac2_mcu_rxd_hdr rxd;
+ 
+ 	u8 band_idx;
+ 	u8 omac_idx;
+@@ -55,7 +55,7 @@ struct mt7915_mcu_bcc_notify {
+ } __packed;
+ 
+ struct mt7915_mcu_rdd_report {
+-	struct mt76_connac2_mcu_rxd rxd;
++	struct mt76_connac2_mcu_rxd_hdr rxd;
+ 
+ 	u8 band_idx;
+ 	u8 long_detected;
+-- 
+2.34.1
+
