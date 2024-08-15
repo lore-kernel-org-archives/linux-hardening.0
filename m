@@ -1,176 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB21C3A8CB;
-	Thu, 15 Aug 2024 18:36:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC3D15A7AA
+	for <linux-hardening@vger.kernel.org>; Thu, 15 Aug 2024 18:40:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723746997; cv=none; b=d1MGn2bom8nB8wO07kZLKSb6uZyeUfxMKkvYbch1UbfNRMBT411P12ZZDxl5HABgLVohDdxq5B0LQC+VSlx7mXJshPx5OsQeHchL0w33pP8D1DX2PMCoG4Ps2N5Fgee6ZSvqUUQ+hxA4u13wZPIKPTGijUVhuP1XUDjR/zgui7Q=
+	t=1723747216; cv=none; b=VahGg40uUcRnthVBxVhWkmYg7xC98wlmtYSEyzp3VSKPYYau51OpWcSzJK6ckiv7o9xj1VyTxMBpFtZqnRuNyZnIdz6Q4SrbN81yVinw3nIErouFWue5nIFwMEhzgZqb1En2voXER8sLHIato9r4X/gHQveFiebEu3rKbL6q1gQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723746997; c=relaxed/simple;
-	bh=+jqHWnrAC2O9xkqoGcAs5UI8rRiAGafwD+uBErFpfQc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=dlAfLLdWKSYPGGU71nsv4RvGOtXJDAEqe46A50XIe68Rxnt1uytQXOwcllkYsiroiU3ZMtNO4SeINtfocjlgEwy7NsC+SeKIrlJDPCMZh3ZK4z7+dWXtqD69G08Lhj6vMU9nkPt0K/CXWdbgRRcTZU8RgiisbjfrdPuTNbjY0N0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n79Jc737; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1723747216; c=relaxed/simple;
+	bh=ZE4Zz5osrC49M/vXSCOxNNjmTAzpqaBfhvQtNfarPYI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=F1Ktv6k0Uc+OlKzrslmIBJkasfYSmK+UXHaO95Sf5X3P+QvUYMnP88m9tvSXH01K7hdLubhLq1DKVbsFXKnQhxzjrvRUJDWAypVeokSGkdAeONgM0BOpN2T7Oh03cCstoVVgCN762T8U+ZYWw/atNRzsV6Q91kHUoBmiuB1H0wQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=gjBqoKQ6; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n79Jc737"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE3ABC32786;
-	Thu, 15 Aug 2024 18:36:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723746997;
-	bh=+jqHWnrAC2O9xkqoGcAs5UI8rRiAGafwD+uBErFpfQc=;
-	h=Date:From:To:Cc:Subject:From;
-	b=n79Jc737FXakegcozT8/VHwb/i3TUEX58hqd7ItVtzRsD2mnRK4HaUZEKTK4VQ3pS
-	 /EYAAvNx9pUUG+pA8/O0HvYj8tDySrit+h16/ODNTRDLZqBgLY9scaEf0u3NET7o9F
-	 lIEnsgwC/D4f3ZVIl/eHqzW8+bvrYcXvfwvPea/wbm1qyiqKCTb/tFEN0HBLohjM4Y
-	 U8T7PAoXAIycnEFYyA1ws+pc4xEZosU2G7bOpMvArlObtZzbIMnXPynZ6cnYxTCZFj
-	 MKrxy/78xynyXAMY94MyPa9wwgrFFiruuHA9fd9lzeYTJz53917DP9FQH2LAoQKvJI
-	 hLlzeMQ04+RwA==
-Date: Thu, 15 Aug 2024 12:36:33 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>,
-	Ryder Lee <ryder.lee@mediatek.com>,
-	Shayne Chen <shayne.chen@mediatek.com>,
-	Sean Wang <sean.wang@mediatek.com>, Kalle Valo <kvalo@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] wifi: mt76: Avoid multiple
- -Wflex-array-member-not-at-end warnings
-Message-ID: <Zr5KsZugaEXrApQJ@elsanto>
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="gjBqoKQ6"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-201e2fe323aso829965ad.2
+        for <linux-hardening@vger.kernel.org>; Thu, 15 Aug 2024 11:40:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1723747214; x=1724352014; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=7G23jOysGth/FGYl0E61txbtZGC7pVkDJVfmjAiyIyQ=;
+        b=gjBqoKQ6LjgERViBhLxF4dtLkLUs9u4dM4mtmBwxxZjkqjj8Ty+rGeLrYqV+ycrG7P
+         2Oazrcz97rWoKtn6Iqtn4uKIWmUURYtBt0WJTKtpXZn0w4xOVvSyQDFbu8FywDD0nXwR
+         x6LvpcUPXUSrsMVwPEVqm1iJdUWjPIlt+wmSRH3K2hGRegepbsDQdI/GSgEjldgpVQpX
+         cak+uULLThN64MHfXp8kFJW2AKaGBx+rEhAv5eGtvrd4p1kugAzndN1vftXdP/XOyoEU
+         OoIEyl2S5FMSJ6S8Sz5gI5KxS8gEXBbf1wS9vZdablK5Qo7rDgwGVd4dxkDeWtDG8D7C
+         PaEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723747214; x=1724352014;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7G23jOysGth/FGYl0E61txbtZGC7pVkDJVfmjAiyIyQ=;
+        b=TjU14wCsBpdRYj7x+tdBI5XmdV86kE4Fl2icf2RRp/SNBgHL04KLIuyfMMlAK5TdNW
+         8t0+WiAuIW7JC6fjqP1bvJuSFgboHsVrWj5LAqoKAPf0t0hE4k8QD2GKQFqKWuyN5oiY
+         oT0zperDuVGGs8+t7SMZMbKTkQiLpPI2ebRSxbke+e7HCNrEcKnU1+xWKgqsozAU/k/k
+         XLn7M5XKd1dd2i8UkVg/f9RIuXnu+jUau2LKjyJ8as9dpaukYE0DOsG89NAt0ZXJamcB
+         +oA6pdfQNckKsO8F/yzSAs/3sBjlNwslIHAmZ0d15Nlz1KOszKDzeHN6FAwVESOPOK3b
+         7Hfg==
+X-Forwarded-Encrypted: i=1; AJvYcCUzwyuFTC8cqvgzaHxdJY6zM23hKxBY5O6QliUaCn8iHqKng6Ij+Gkzr/smZXHCB+SyvvILQzRImOW0hPS7mF3uHQhyH7Oi2k4xJhlRiF1x
+X-Gm-Message-State: AOJu0Yz8yINu2Y2MPP6zHuBYnM/6IrgBmloRT+nrCEJR8AxtlqoVEDsn
+	tuoWe50ttsti0myTQY7Y9Pc+KtJlTSskun9WSHRPhTDEMYdRtcjokG5kYqiliWE=
+X-Google-Smtp-Source: AGHT+IGOntniUG4ZVlSqTpFpIJZ+pJk0zhBjp0RK1k01rfRL/yPln2Wx1vv0rBpcdb2aXIxs9xW8tA==
+X-Received: by 2002:a17:903:2291:b0:1fd:a54e:bc41 with SMTP id d9443c01a7336-2020624daebmr1154665ad.8.1723747213972;
+        Thu, 15 Aug 2024 11:40:13 -0700 (PDT)
+Received: from [192.168.1.150] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-201f03a565bsm12995635ad.263.2024.08.15.11.40.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 15 Aug 2024 11:40:13 -0700 (PDT)
+Message-ID: <1019eec3-3b1c-42b4-9649-65f58284bfec@kernel.dk>
+Date: Thu, 15 Aug 2024 12:40:12 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: UBSAN: annotation to skip sanitization in variable that will wrap
+To: Breno Leitao <leitao@debian.org>, Justin Stitt <justinstitt@google.com>
+Cc: kees@kernel.org, elver@google.com, andreyknvl@gmail.com,
+ ryabinin.a.a@gmail.com, kasan-dev@googlegroups.com,
+ linux-hardening@vger.kernel.org, asml.silence@gmail.com,
+ netdev@vger.kernel.org
+References: <Zrzk8hilADAj+QTg@gmail.com>
+ <CAFhGd8oowe7TwS88SU1ETJ1qvBP++MOL1iz3GrqNs+CDUhKbzg@mail.gmail.com>
+ <Zr5B4Du+GTUVTFV9@gmail.com>
+Content-Language: en-US
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <Zr5B4Du+GTUVTFV9@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
--Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-getting ready to enable it, globally.
+On 8/15/24 11:58 AM, Breno Leitao wrote:
+>> 1) There exists some new-ish macros in overflow.h that perform
+>> wrapping arithmetic without triggering sanitizer splats -- check out
+>> the wrapping_* suite of macros.
+> 
+> do they work for atomic? I suppose we also need to have them added to
+> this_cpu_add(), this_cpu_sub() helpers.
 
-So, in order to avoid ending up with a flexible-array member in the
-middle of multiple other structs, we use the `struct_group_tagged()`
-helper to create a new tagged `struct mt76_connac2_mcu_rxd_hdr`.
-This structure groups together all the members of the flexible
-`struct mt76_connac2_mcu_rxd` except the flexible array.
+I don't think so, it's the bias added specifically to the atomic_long_t
+that's the issue with the percpu refs.
 
-As a result, the array is effectively separated from the rest of the
-members without modifying the memory layout of the flexible structure.
-We then change the type of the middle struct members currently causing
-trouble from `struct mt76_connac2_mcu_rxd` to `struct
-mt76_connac2_mcu_rxd_hdr`.
-
-We also want to ensure that when new members need to be added to the
-flexible structure, they are always included within the newly created
-tagged struct. For this, we use `static_assert()`. This ensures that the
-memory layout for both the flexible structure and the new tagged struct
-is the same after any changes.
-
-This approach avoids having to implement `struct mt76_connac2_mcu_rxd_hdr`
-as a completely separate structure, thus preventing having to maintain
-two independent but basically identical structures, closing the door
-to potential bugs in the future.
-
-So, with these changes, fix the following warnings:
-
-drivers/net/wireless/mediatek/mt76/mt7915/mcu.h:32:37: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/net/wireless/mediatek/mt76/mt7915/mcu.h:40:37: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/net/wireless/mediatek/mt76/mt7915/mcu.h:49:37: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/net/wireless/mediatek/mt76/mt7915/mcu.h:58:37: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- .../wireless/mediatek/mt76/mt76_connac_mcu.h  | 25 +++++++++++--------
- .../net/wireless/mediatek/mt76/mt7915/mcu.h   |  8 +++---
- 2 files changed, 19 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/net/wireless/mediatek/mt76/mt76_connac_mcu.h b/drivers/net/wireless/mediatek/mt76/mt76_connac_mcu.h
-index 4242d436de26..16689aefa227 100644
---- a/drivers/net/wireless/mediatek/mt76/mt76_connac_mcu.h
-+++ b/drivers/net/wireless/mediatek/mt76/mt76_connac_mcu.h
-@@ -115,21 +115,26 @@ struct mt76_connac2_mcu_uni_txd {
- } __packed __aligned(4);
- 
- struct mt76_connac2_mcu_rxd {
--	__le32 rxd[6];
-+	/* New members MUST be added within the struct_group() macro below. */
-+	struct_group_tagged(mt76_connac2_mcu_rxd_hdr, hdr,
-+		__le32 rxd[6];
- 
--	__le16 len;
--	__le16 pkt_type_id;
-+		__le16 len;
-+		__le16 pkt_type_id;
- 
--	u8 eid;
--	u8 seq;
--	u8 option;
--	u8 rsv;
--	u8 ext_eid;
--	u8 rsv1[2];
--	u8 s2d_index;
-+		u8 eid;
-+		u8 seq;
-+		u8 option;
-+		u8 rsv;
-+		u8 ext_eid;
-+		u8 rsv1[2];
-+		u8 s2d_index;
-+	);
- 
- 	u8 tlv[];
- };
-+static_assert(offsetof(struct mt76_connac2_mcu_rxd, tlv) == sizeof(struct mt76_connac2_mcu_rxd_hdr),
-+	      "struct member likely outside of struct_group_tagged()");
- 
- struct mt76_connac2_patch_hdr {
- 	char build_date[16];
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7915/mcu.h b/drivers/net/wireless/mediatek/mt76/mt7915/mcu.h
-index b41ac4aaced7..49476a4182fd 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7915/mcu.h
-+++ b/drivers/net/wireless/mediatek/mt76/mt7915/mcu.h
-@@ -29,7 +29,7 @@ struct mt7915_mcu_thermal_ctrl {
- } __packed;
- 
- struct mt7915_mcu_thermal_notify {
--	struct mt76_connac2_mcu_rxd rxd;
-+	struct mt76_connac2_mcu_rxd_hdr rxd;
- 
- 	struct mt7915_mcu_thermal_ctrl ctrl;
- 	__le32 temperature;
-@@ -37,7 +37,7 @@ struct mt7915_mcu_thermal_notify {
- } __packed;
- 
- struct mt7915_mcu_csa_notify {
--	struct mt76_connac2_mcu_rxd rxd;
-+	struct mt76_connac2_mcu_rxd_hdr rxd;
- 
- 	u8 omac_idx;
- 	u8 csa_count;
-@@ -46,7 +46,7 @@ struct mt7915_mcu_csa_notify {
- } __packed;
- 
- struct mt7915_mcu_bcc_notify {
--	struct mt76_connac2_mcu_rxd rxd;
-+	struct mt76_connac2_mcu_rxd_hdr rxd;
- 
- 	u8 band_idx;
- 	u8 omac_idx;
-@@ -55,7 +55,7 @@ struct mt7915_mcu_bcc_notify {
- } __packed;
- 
- struct mt7915_mcu_rdd_report {
--	struct mt76_connac2_mcu_rxd rxd;
-+	struct mt76_connac2_mcu_rxd_hdr rxd;
- 
- 	u8 band_idx;
- 	u8 long_detected;
 -- 
-2.34.1
+Jens Axboe
 
