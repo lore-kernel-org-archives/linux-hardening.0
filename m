@@ -1,55 +1,108 @@
-Received: from mail.hotelshavens.com (mail.hotelshavens.com [217.156.64.234])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19D971B9B29
-	for <linux-hardening@vger.kernel.org>; Fri, 16 Aug 2024 13:21:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.156.64.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B4311BBBD2
+	for <linux-hardening@vger.kernel.org>; Fri, 16 Aug 2024 14:01:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723814476; cv=none; b=OJOX3uLaopqG8YexSepfjnKtsbV0/0to+1xzMCzCWJP8S/QoFSBjH/tI5b/3DYgX+1Ao6QWl54kBV9SI899Q2wwg1Fxo0tPsqmazkEG6pQm9Sjkx7pd88zKLS7s8O1uUzcMxG46ngHjww6XXIqwg/baXXSyP1t18ruUXWyWfsNI=
+	t=1723816875; cv=none; b=AjmjC9O8XlBGqhEtwZPvSXd9GbORq+oF8IKYupfQYeACrs2omMYl8dJRQFHMrETndwx7lJ+qfnAyBxFchhvzr/tRTlbUcIW/l1oVAxXV+dK+SOXRpxeboyz2CkLR74jeDNMPGv+xTzAogF+008sq//LrjkogiPC9ZQh4fXUT6LU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723814476; c=relaxed/simple;
-	bh=lGbWBbMJj7MjaOP5qF+bbdFlvqbbMYDgzvEYdWaBLrs=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=E2DiwIMiiZL1I8Y15EhSSTy8KdWaA1MWui/0VEq4jQexQTN19FSiRFYrLDfTMLtibqv5n/cEiVkjdKnxymkggxrCaU/WYZYVBb7+zeT1+3/YrcS/LMJfGQkSeCWNjKxMo8UGnpND70KhnN3Dl0cgHcsnb3hYo0CLFwyG1X8npWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotelshavens.com; spf=pass smtp.mailfrom=hotelshavens.com; dkim=pass (4096-bit key) header.d=hotelshavens.com header.i=admin@hotelshavens.com header.b=oCJh30tj; arc=none smtp.client-ip=217.156.64.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotelshavens.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hotelshavens.com
+	s=arc-20240116; t=1723816875; c=relaxed/simple;
+	bh=4xMB4wV0bzU1rWl4OnYy2ycpN99cfvkyKF68IIjc4nY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mCDI0JxiFVfTiidkVYWJJfMxTejpPA+b6IgJkdJbJgVPBCjggij4NHBL3CIr4UjHS7ZqiGSLaJIWWCpAhszMDpHcaofzDYeRzLlNPxX79piF0ecY1i1fVqUZU0iPJZNOAiPVmyg4jjNZgAM0FkShrT5vGw6P1uE576ojkmKOM88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=VNV60IEG; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=hotelshavens.com header.i=admin@hotelshavens.com header.b="oCJh30tj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=dkim; d=hotelshavens.com;
- h=Reply-To:From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:
- Content-Transfer-Encoding; i=admin@hotelshavens.com;
- bh=lGbWBbMJj7MjaOP5qF+bbdFlvqbbMYDgzvEYdWaBLrs=;
- b=oCJh30tjmHW9rHKfCpziVZ1zeojq5c96OZHlD4Ewsx14+xURU/2O8qotrOUj1IVYOi6Q43hDd9lR
-   mwSBMFTSw4/Lm10kW8jlXynLT7rPr4y/kcHVELQN6GlJPBTpzwSE294e5WXTueVV9A46Iou2/ZrA
-   ZIbdmUOQlfo1xVd8ix2qknyTvI56aB0sqhQlrIkX8BmPxErDGd48VBSVTRmf9f9jVUsjtB61fYtG
-   d19ntEM6idy/IZbyl/zGuEyL+sqtnJNbpIp4OYbk4R8z1QH18CcqeDU8alF3lUtoD0bFuZXCPYqL
-   83a+Y/s+rmG0isak97hTu58076H/k3QF2LHWni2qDNYO5Xmcgjs5dy+b7I91oyaShdDHO1msXKnO
-   VmHODK2nSU0MJ2j81edVNEE8T6ImCjuGNv1FS5LNzGZ6A+QQ2HXnXSQRcUS3uLulxhfCu2FeMpE8
-   XlmnGSF/GauzFOA/nKxd/w1lS8weR6yd7uGAgvKNnNzzDcwXW0GwUInk/hMgPHaWthpkKf4jPp9q
-   rc2ejbn5xrS2ujahFMju0W+8O8PeovnaqNlGkETkhNqhSVeCqnQ/p1wSJzc8BxTjhuP4G8NzJvPc
-   9N6cjKZxIcDjSgE19pcYet4M15ZrUW8N0Mi1sPk1llo7ES8QtCBVUVqJ+8+HC41ylXFSK4OZVIQ=
-Reply-To: boris@undpkh.com
-From: Boris Soroka <admin@hotelshavens.com>
-To: linux-hardening@vger.kernel.org
-Subject: HI DEAR !
-Date: 16 Aug 2024 15:16:11 +0200
-Message-ID: <20240816134828.662E8F971369B970@hotelshavens.com>
+	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="VNV60IEG"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-429d2d7be1eso10581445e9.1
+        for <linux-hardening@vger.kernel.org>; Fri, 16 Aug 2024 07:01:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1723816871; x=1724421671; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=9/5X1k16EYpBBKIpPGRfGv59lkLEqMb9uiWXLCIOeeY=;
+        b=VNV60IEGT3jiUfTVlRFSFRE8Gr1dcGpq79zJEti8jTtlq8ZzwZBJDrVHWJd3CYkmMy
+         GIV7fZltBET8WaMOvQDT3n4y9YpHVioQX9TMxd21vZYLgCVJAygDYY4d8YXDqBxLI/MF
+         XpzzzxF9L+IwL+LmUOPSewtP8YKywGIFQY74n0TUMIPg95AxvZk6nJBcw2MyXqRLNCR8
+         pVfqcR2VY/s75NarnCWhOgC0o8cdama1rvLfFQ431fCLc6gTXKzAapZWf2B6LYGXoDgW
+         00A7UO1n7IomTHMz2H+ELHNqT4GdkM0y/ZGMeyUltLEDd0SE1iXmjHK031BAgIDwQB0+
+         uQ6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723816871; x=1724421671;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9/5X1k16EYpBBKIpPGRfGv59lkLEqMb9uiWXLCIOeeY=;
+        b=MSZpepWk7qyy3E+caSI6piDeQRvM8/qnuoWTxEd/39iAknfyFz5p4cj5GvPkqb2I/H
+         VDchlhlBuq80ZZ1HieXnqB9vz8aCLt9cnHoMXRfRggpHVQotf4YjcQT/aoMJxqsnG6vr
+         eUsrX6heHK7uNhSc+0MC2taSBo0Kt+RN8wwVZ43weHaZUXKiq1BkqIqUSlDMp6zgN0b6
+         zJOiLSp4wvWs2IoPNxnejlJIfie07NYJQZzwn+/OVjswOw0F/8YvzBKD6QYasNXk8JZr
+         2fQJKABqzwUzKKo+FfsBBpOU1uqKBmF0YwzJXP7Nc3Zbb5KyF7IEObLRJYgxiL9HvrX3
+         gYSw==
+X-Forwarded-Encrypted: i=1; AJvYcCVzYiLtrVGxuH8pxujpH0s4SXR7s1RBaPfyubQLy0EZU11Ckb2VVLXzB58OUiDCUP42zaI10HWdocaUNmiKxZ0F3cRbBJd76NUfrFL0AZfz
+X-Gm-Message-State: AOJu0YxrJOLK6bN+ZKGNUNKP3NbeUxgY73RhK9kgoWr38dviHNwOdje0
+	o8PXKjTFPfdFTksQegSoMXu0aY6aA5pLtLdePq0RemAfbHh3rYn2O5X34DgYsU6bsCEJVqAJwNg
+	oARE=
+X-Google-Smtp-Source: AGHT+IHx+E8JE/2sKI2lQ5yIMDh/ro+6Qr4zAjLgFJ8mSlWxe20T5N1HUAwL8t2W9oFxj9a6JIvJCQ==
+X-Received: by 2002:a1c:7909:0:b0:42a:a6dc:3083 with SMTP id 5b1f17b1804b1-42aa6dc3617mr3806105e9.13.1723816871234;
+        Fri, 16 Aug 2024 07:01:11 -0700 (PDT)
+Received: from debian.fritz.box. (aftr-62-216-208-163.dynamic.mnet-online.de. [62.216.208.163])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-429ded299a9sm76182895e9.18.2024.08.16.07.01.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Aug 2024 07:01:10 -0700 (PDT)
+From: Thorsten Blum <thorsten.blum@toblux.com>
+To: linkinjeon@kernel.org,
+	sfrench@samba.org,
+	senozhatsky@chromium.org,
+	tom@talpey.com
+Cc: linux-cifs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	Thorsten Blum <thorsten.blum@toblux.com>
+Subject: [PATCH] ksmbd: Replace one-element arrays with flexible-array members
+Date: Fri, 16 Aug 2024 15:58:25 +0200
+Message-Id: <20240816135823.87543-1-thorsten.blum@toblux.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
-	charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Greetings,
+Replace the deprecated one-element arrays with flexible-array members
+in the structs filesystem_attribute_info and filesystem_device_info.
 
-Did you receive my last email message I sent to this Email=20
-address: ( linux-hardening@vger.kernel.org ) concerning=20
-relocating my investment to your country due to the on going war=20
-in my country Russia.
+Link: https://github.com/KSPP/linux/issues/79
+Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+---
+ fs/smb/server/smb_common.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Best Regards,
-Mr.Boris Soroka.
+diff --git a/fs/smb/server/smb_common.h b/fs/smb/server/smb_common.h
+index 4a3148b0167f..cc1d6dfe29d5 100644
+--- a/fs/smb/server/smb_common.h
++++ b/fs/smb/server/smb_common.h
+@@ -213,7 +213,7 @@ struct filesystem_attribute_info {
+ 	__le32 Attributes;
+ 	__le32 MaxPathNameComponentLength;
+ 	__le32 FileSystemNameLen;
+-	__le16 FileSystemName[1]; /* do not have to save this - get subset? */
++	__le16 FileSystemName[]; /* do not have to save this - get subset? */
+ } __packed;
+ 
+ struct filesystem_device_info {
+@@ -226,7 +226,7 @@ struct filesystem_vol_info {
+ 	__le32 SerialNumber;
+ 	__le32 VolumeLabelSize;
+ 	__le16 Reserved;
+-	__le16 VolumeLabel[1];
++	__le16 VolumeLabel[];
+ } __packed;
+ 
+ struct filesystem_info {
+-- 
+2.39.2
+
