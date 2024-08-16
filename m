@@ -1,163 +1,68 @@
-Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B24652F62
-	for <linux-hardening@vger.kernel.org>; Fri, 16 Aug 2024 19:20:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 597D476F17;
+	Fri, 16 Aug 2024 19:47:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723836060; cv=none; b=hiyFM4R7xVyc4Q7JAJXo70x+O17yu4e0n7v4Et0KQff/s9PiKIR7GWAXnrNHrCYV9qDEJC6tm0PGIjNMjZq869MIvlWtB0jgKQ0LuGsjqHP7uuOPnbqBHirDZXloq2MK+GZwSuA7Igwal3TKIKSbCgv/pAXX0g/mSiXxjfQE6Fg=
+	t=1723837621; cv=none; b=uTsgsZlrJnqeWoJa1VhQe+m7YvUVdj4QqOAM+GJxYBiFkTlIDitJ80dHBYVpSzQ4s4jKiQxmWeNbGemwQwv7I89pK5Bw4emLVNX/iC691+/iJX4OgoLGqxOInjx6mwCiIjvpJ8k/skNjlKPWQe2L69YEn/7omxn3mXTG16jKqyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723836060; c=relaxed/simple;
-	bh=Q9DpMv+if1CmKf2ixK4q2lvGb4jtNSOrHPK87jbMl8c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aRu0oQGcFCutxZtYt9c08utthnCjSceSr6m6ipJsXFnew0di5VPlB9mPBggWnht39s7RhMhjSUBq+OdJQKjfjLpzSMPS9CO3hD2uladwEF/9avvpz5h8OOyGD/RY6JhkgTffSa6Qb0TSGWd/LBf9p+d8JylzQv6d+YFVKuTg+wY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=pVqpwAi5; arc=none smtp.client-ip=44.202.169.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1723837621; c=relaxed/simple;
+	bh=H8Y81IQWzbYq2YBb+mZ8tpO2qPzX+woWH5fF4c1cPd0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KyZp3DnxuWddB8ssay1Srk1Mnn6Xw9O3EvdvjTkD/HN0vtmiHgbu+XyTz50wqM4sw3/O3n28gOkYStxtSr4sSgwP+eanT7CWlKvUbsPSy/egeCdnv6kk/Ty25ohZR+vO94RAgrO0cz3Vkpl0jYmRR9Hzp1n8MFXy865BTaneaS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sv+EH4aM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="pVqpwAi5"
-Received: from eig-obgw-6002a.ext.cloudfilter.net ([10.0.30.222])
-	by cmsmtp with ESMTPS
-	id ejoTsAaCJiA19f2VNsKoMy; Fri, 16 Aug 2024 19:20:57 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id f2VMsJTNxX56wf2VMssOIA; Fri, 16 Aug 2024 19:20:56 +0000
-X-Authority-Analysis: v=2.4 cv=MY6nuI/f c=1 sm=1 tr=0 ts=66bfa698
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=frY+GlAHrI6frpeK1MvySw==:17
- a=IkcTkHD0fZMA:10 a=yoJbH4e0A30A:10 a=NEAV23lmAAAA:8 a=ZI_cG6RJAAAA:8
- a=VwQbUJbxAAAA:8 a=ZFko2LWrkM6SFP1H4WMA:9 a=QEXdDO2ut3YA:10
- a=CiASUvFRIoiJKylo2i9u:22 a=AjGcO6oz07-iQ99wixmX:22 a=Xt_RvD8W3m28Mn_h3AK8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=y71hsJuD1WvZjKeA1zp1KFv5H3E6TbghnCUkerfbnQY=; b=pVqpwAi5Tp1jSNMbjUaPbdJ7V7
-	4R5HZnDypRsQJEY6ltkcbub/GFIfy3Fdk108WCYLuOhwJteE0TIrbBR2f8TFmye5sexvbWbHpOtN5
-	Ixw88FuTqiE/Otl06YQE4pfGTYqNCNCpO6zbmfEILBtNnqyFlh0ID+hg2BSZ+guDMitI73l+Cjztv
-	iO3w+TEIeFt7T+CXck/9yWDFyM0DV8TJW+9jdgqn7vjN90Xc4EZ53QnPQ4FbBc5dcS99LDKzaSQrr
-	i6iO/MSOC1mCMDgkTdHLcbHel2IdyhSx+dNZ6pRRV/VmE4AQS8d3UnTWllVZIACvZlv6EWJIDZiLJ
-	XhgQZeQg==;
-Received: from [201.172.173.139] (port=50158 helo=[192.168.15.5])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1sf2VL-000d2Z-2p;
-	Fri, 16 Aug 2024 14:20:55 -0500
-Message-ID: <a5663c6f-8061-4682-ab89-e4dec40ce9a3@embeddedor.com>
-Date: Fri, 16 Aug 2024 13:20:53 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sv+EH4aM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9411C32782;
+	Fri, 16 Aug 2024 19:47:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1723837620;
+	bh=H8Y81IQWzbYq2YBb+mZ8tpO2qPzX+woWH5fF4c1cPd0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Sv+EH4aMx1LGLQqLz+vizNIef7ewswCmP3Ts0SYX1Qx8t33g1MU05giqvdaOHWedX
+	 cn1qFtJjUl/IyEHuu0FdYcDtCCMWDRUriPXUkJLoORPTxaXeLfSyzNhnl8zICzNPSw
+	 T9CB69puz/Qcq936Oqg9IzAhv7rdxoT2mMie74T+OtCcagiCJX0mco3QZsXPLMFq8K
+	 X42hiKkhwP6cMdhNZSFjabZQdVmKtZE6DpPxPoy2qfXj39vYVuv9hu+3zFIUB/YIup
+	 xYBGuCEqOgqBq9LKp9E1Su9qvRM/LQa/b7WxW49wDvk3wfwniHeOU2zLC+MfFovOmA
+	 pSEszsCbvopgA==
+Date: Fri, 16 Aug 2024 12:47:00 -0700
+From: Kees Cook <kees@kernel.org>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: Breno Leitao <leitao@debian.org>, Justin Stitt <justinstitt@google.com>,
+	elver@google.com, andreyknvl@gmail.com, ryabinin.a.a@gmail.com,
+	kasan-dev@googlegroups.com, linux-hardening@vger.kernel.org,
+	asml.silence@gmail.com, netdev@vger.kernel.org
+Subject: Re: UBSAN: annotation to skip sanitization in variable that will wrap
+Message-ID: <202408151400.614790C62@keescook>
+References: <Zrzk8hilADAj+QTg@gmail.com>
+ <CAFhGd8oowe7TwS88SU1ETJ1qvBP++MOL1iz3GrqNs+CDUhKbzg@mail.gmail.com>
+ <Zr5B4Du+GTUVTFV9@gmail.com>
+ <1019eec3-3b1c-42b4-9649-65f58284bfec@kernel.dk>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] ksmbd: Replace one-element arrays with flexible-array
- members
-To: Thorsten Blum <thorsten.blum@toblux.com>, linkinjeon@kernel.org,
- sfrench@samba.org, senozhatsky@chromium.org, tom@talpey.com
-Cc: linux-cifs@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20240816173338.151113-2-thorsten.blum@toblux.com>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20240816173338.151113-2-thorsten.blum@toblux.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.173.139
-X-Source-L: No
-X-Exim-ID: 1sf2VL-000d2Z-2p
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.5]) [201.172.173.139]:50158
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfLyZ+P7I5AEeYnxAFT/YJgEgpWEf/EmFCpWKZqwFAdSzTxzL580YEGYz/PHMz0ajeXpJbtwXq9sye2lh1c3q2ksfqbAaffY8SLIqGGYOOgvgqtU8VH+A
- 65/T6QmfsLzjCe2V914VtFi+cVxN1Dckn7qe7EQE8Dhy2wuaFoYRHIHKCOdnMGrKay/Q3rXdFmoPfRI7aXdPck78N57PtZ+rHApwW74q3dMEJCCi7YT72QBq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1019eec3-3b1c-42b4-9649-65f58284bfec@kernel.dk>
 
-
-
-On 16/08/24 11:33, Thorsten Blum wrote:
-> Replace the deprecated one-element arrays with flexible-array members
-> in the structs filesystem_attribute_info and filesystem_device_info.
+On Thu, Aug 15, 2024 at 12:40:12PM -0600, Jens Axboe wrote:
+> On 8/15/24 11:58 AM, Breno Leitao wrote:
+> >> 1) There exists some new-ish macros in overflow.h that perform
+> >> wrapping arithmetic without triggering sanitizer splats -- check out
+> >> the wrapping_* suite of macros.
+> > 
+> > do they work for atomic? I suppose we also need to have them added to
+> > this_cpu_add(), this_cpu_sub() helpers.
 > 
-> There are no binary differences after this conversion.
-> 
-> Link: https://github.com/KSPP/linux/issues/79
-> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+> I don't think so, it's the bias added specifically to the atomic_long_t
+> that's the issue with the percpu refs.
 
-Looks good.
+Yeah, the future annotations will be variable attributes, so it should
+be much nicer to apply.
 
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-
-Thanks
--Gustavo
-
-> ---
-> Changes in v2:
-> - Take struct size changes into account and do not subtract 2 additional
->    bytes after feedback from Gustavo A. R. Silva
-> - Compare the binaries before and after the conversion and add a note
->    that there are no differences
-> - Link to v1: https://lore.kernel.org/linux-kernel/20240816135823.87543-1-thorsten.blum@toblux.com/
-> ---
->   fs/smb/server/smb2pdu.c    | 4 ++--
->   fs/smb/server/smb_common.h | 4 ++--
->   2 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/fs/smb/server/smb2pdu.c b/fs/smb/server/smb2pdu.c
-> index 2df1354288e6..1ce747b4636b 100644
-> --- a/fs/smb/server/smb2pdu.c
-> +++ b/fs/smb/server/smb2pdu.c
-> @@ -5357,7 +5357,7 @@ static int smb2_get_info_filesystem(struct ksmbd_work *work,
->   					"NTFS", PATH_MAX, conn->local_nls, 0);
->   		len = len * 2;
->   		info->FileSystemNameLen = cpu_to_le32(len);
-> -		sz = sizeof(struct filesystem_attribute_info) - 2 + len;
-> +		sz = sizeof(struct filesystem_attribute_info) + len;
->   		rsp->OutputBufferLength = cpu_to_le32(sz);
->   		break;
->   	}
-> @@ -5383,7 +5383,7 @@ static int smb2_get_info_filesystem(struct ksmbd_work *work,
->   		len = len * 2;
->   		info->VolumeLabelSize = cpu_to_le32(len);
->   		info->Reserved = 0;
-> -		sz = sizeof(struct filesystem_vol_info) - 2 + len;
-> +		sz = sizeof(struct filesystem_vol_info) + len;
->   		rsp->OutputBufferLength = cpu_to_le32(sz);
->   		break;
->   	}
-> diff --git a/fs/smb/server/smb_common.h b/fs/smb/server/smb_common.h
-> index 4a3148b0167f..cc1d6dfe29d5 100644
-> --- a/fs/smb/server/smb_common.h
-> +++ b/fs/smb/server/smb_common.h
-> @@ -213,7 +213,7 @@ struct filesystem_attribute_info {
->   	__le32 Attributes;
->   	__le32 MaxPathNameComponentLength;
->   	__le32 FileSystemNameLen;
-> -	__le16 FileSystemName[1]; /* do not have to save this - get subset? */
-> +	__le16 FileSystemName[]; /* do not have to save this - get subset? */
->   } __packed;
->   
->   struct filesystem_device_info {
-> @@ -226,7 +226,7 @@ struct filesystem_vol_info {
->   	__le32 SerialNumber;
->   	__le32 VolumeLabelSize;
->   	__le16 Reserved;
-> -	__le16 VolumeLabel[1];
-> +	__le16 VolumeLabel[];
->   } __packed;
->   
->   struct filesystem_info {
+-- 
+Kees Cook
