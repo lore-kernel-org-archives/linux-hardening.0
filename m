@@ -1,77 +1,140 @@
-Received: from smtprelay05.ispgateway.de (smtprelay05.ispgateway.de [80.67.31.93])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA6B4558A5;
-	Fri, 16 Aug 2024 17:11:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.67.31.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FCBE1C231F
+	for <linux-hardening@vger.kernel.org>; Fri, 16 Aug 2024 17:34:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723828290; cv=none; b=lrEEzMbGCb7Cfwbe7x6qJ5dq2MI7TyeC+ozrEumfnSZZ58qUfbeJrGKfQwmwbEjp2e02TC/dbujV/fAmkcfy97AormjdBl5zDSvbegkyz4qitlQcaRctO3y/cZB64FVN22wFkCq6AUaphU5QFifYtBSKjp79A7rh1+VBcB31ftA=
+	t=1723829694; cv=none; b=ME8kB9s597v79kjUddWc+A/APXY9jQv4cnR1A36R194wqt/A7eZVEls5f96EUFdcGZAl2na96bsQtFrDG0PKQFBK1fwSALkROaRnv3+lOs8QNz53DAYk7fEBXALh2YuAsjC/X09+W0UA/DAeSZ4H6QzVDnoJUd/+vE9CuCwtBhA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723828290; c=relaxed/simple;
-	bh=OQj9aflFz5/1xZELeYBBSnRGJvXqvpt8ZmmFo5/oPpY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=TyXODleqR4kTyuHbIiKD6E1f0+IGmqagq618CU38c2sYGmO8BJxL7XWMw60/XJXR2RQhV4KbWsxQtVgdDLvJeUS65e2Yse2V1bQVBsJAV2Gk/DV/tNeR7olKfoH2pPxlqMrzvvJ6SpoZi3EJ/YqpQBE6i3deIOmz/V9X7lm4IiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=apitzsch.eu; spf=pass smtp.mailfrom=apitzsch.eu; arc=none smtp.client-ip=80.67.31.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=apitzsch.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=apitzsch.eu
-Received: from [77.64.252.82] (helo=framework.lan)
-	by smtprelay05.ispgateway.de with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98)
-	(envelope-from <git@apitzsch.eu>)
-	id 1sf0TS-000000000nw-3QWQ;
-	Fri, 16 Aug 2024 19:10:50 +0200
-Message-ID: <f50d7129b6023d89d7c83820d9f69075800fe1ae.camel@apitzsch.eu>
-Subject: Re: [PATCH RESEND v6] arm64: dts: qcom: msm8939-longcheer-l9100:
- Add rear flash
-From: =?ISO-8859-1?Q?Andr=E9?= Apitzsch <git@apitzsch.eu>
-To: Bjorn Andersson <andersson@kernel.org>, Pavel Machek <pavel@ucw.cz>, Lee
- Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>,  "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Christophe JAILLET <christophe.jaillet@wanadoo.fr>,  Trilok Soni
- <quic_tsoni@quicinc.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Kees
- Cook <kees@kernel.org>,  Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht, 
-	phone-devel@vger.kernel.org
-Date: Fri, 16 Aug 2024 19:11:29 +0200
-In-Reply-To: <172375444816.1011236.9460813836275052885.b4-ty@kernel.org>
-References: <20240729-sy7802-v6-1-86bb9083e40b@apitzsch.eu>
-	 <172375444816.1011236.9460813836275052885.b4-ty@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 
+	s=arc-20240116; t=1723829694; c=relaxed/simple;
+	bh=ED8DTCbEuJGR/Qrj7G35OmNMRR6zwgFllY5EeapZTSE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=g3gDyw9hIOrYFhZhYtIrkZnUNGGYswJ0/4PTTA9GeKyiaxizgvZYzr9AFs13/XnWquvMzhH+E44QZuYas4H+jSUnXwFfmrZbEvWGVKigcYkiwk2zXCe3JBD4G0+xkRfATPwxaj3CDbEAXT9banAbameG9miM1A1FPa/3uZWZE1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=QiRIvu3d; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="QiRIvu3d"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3717de33d58so1290038f8f.1
+        for <linux-hardening@vger.kernel.org>; Fri, 16 Aug 2024 10:34:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1723829689; x=1724434489; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LH9zkbruVaTK2T8VrF+INwjApVFGd69kX5TNyUTdefo=;
+        b=QiRIvu3dlDAwXQC6o5yBk8QxvjlMU4oyrjyfkqDzuOp5aBhWIgvQ6S/hunQuQCEFqV
+         1pJxCfcMT8WoKiJaSWpS1clSkqiD/aAcxqeVh+AiS7IMGTrEIzEp1A5AdamNuoz50j6+
+         QXCeXMQkUwaANZ/5vS0xUhs3DKlx9hVj7q+MTsa0QhpRmNRv/yJPtDrhZDtqHKSlltX6
+         XVgicbsSYXAb1QL0Ut8WWRwKgQvIhVCShlzmIKKSgVGdKL6nNZoBZhLD50mg9rEAC/dB
+         v7kXRZqmoyTEh/JegQtTeaauz1utVhxrmTSBDC0ZvzQfv75GcehZ9RmqOI3BmlWJ+9jB
+         G/iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723829689; x=1724434489;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LH9zkbruVaTK2T8VrF+INwjApVFGd69kX5TNyUTdefo=;
+        b=GihazYMqgjKP9qkAGJOl/hXaNYNhqKmV2bYBd+Ps+nnBVlTTxa6qJopoyKqKXezovI
+         tx81tnW9XM2TLRPSWnHGV8lwxYMAMfivXPK9FwmK/dWbQ+MYVtbgK+3L/E2RJ8da7vnt
+         JJHDk5qkHkN36Lf2W3R4hjzUbTm2uKXoZ2SmNqJWaxogCgXW/R2LlzPYiAFOAOmTVPdZ
+         lIJLhlv/2ZQS5hs3ny/N7w/1WH8DMVjIw23QoLpNGtUjhhGXy+m8GDO1ZfjErTcYNc20
+         lxhx7xRkRBP/5VKFx8LUjDTM0NrPuHgntYAC+fHQrzprPz9gJlM9i0CGR9XD5KXe6KZ4
+         KHHA==
+X-Forwarded-Encrypted: i=1; AJvYcCVipRKdvUEj7NoxVo0xllwo94Xc7tBoA5FEmlKOfNeQXnHq3J9iTI/GTSEvOlB9yuwDOh7n+N0Vfz3aWTFGAQJiMj+dVBHZFQ9a+Cuz7tNn
+X-Gm-Message-State: AOJu0YyLg8L4/3B9M53p5zmdVZJjQbU3vEKiNiNrBUlA4pD4F0weGcQ5
+	D+jzRUIE2QM78fgQCZToUaCOGdmQKS53Al9rKqtKovtzinGQqFCY71asjc4R+dc=
+X-Google-Smtp-Source: AGHT+IGN42EAJKGBhdo/IeZPjK3jFArcaSeanEHDDGTyTD5dIAoLpRaJvaU+vPeGoLsfplwhRUt/hg==
+X-Received: by 2002:adf:9bd9:0:b0:368:4b61:7197 with SMTP id ffacd0b85a97d-37194453122mr1995338f8f.24.1723829689066;
+        Fri, 16 Aug 2024 10:34:49 -0700 (PDT)
+Received: from fedora.fritz.box (aftr-62-216-208-163.dynamic.mnet-online.de. [62.216.208.163])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-371898ac074sm4031492f8f.106.2024.08.16.10.34.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Aug 2024 10:34:48 -0700 (PDT)
+From: Thorsten Blum <thorsten.blum@toblux.com>
+To: gustavo@embeddedor.com,
+	linkinjeon@kernel.org,
+	sfrench@samba.org,
+	senozhatsky@chromium.org,
+	tom@talpey.com
+Cc: linux-cifs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	Thorsten Blum <thorsten.blum@toblux.com>
+Subject: [PATCH v2] ksmbd: Replace one-element arrays with flexible-array members
+Date: Fri, 16 Aug 2024 19:33:39 +0200
+Message-ID: <20240816173338.151113-2-thorsten.blum@toblux.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Df-Sender: YW5kcmVAYXBpdHpzY2guZXU=
+Content-Transfer-Encoding: 8bit
 
-Am Donnerstag, dem 15.08.2024 um 15:40 -0500 schrieb Bjorn Andersson:
->=20
-> On Mon, 29 Jul 2024 23:23:04 +0200, Andr=C3=A9 Apitzsch wrote:
-> > The phone has a Silergy SY7802 flash LED controller.
-> >=20
-> >=20
->=20
-> Applied, thanks!
->=20
-> [1/1] arm64: dts: qcom: msm8939-longcheer-l9100: Add rear flash
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 commit: 04b2f8d5aec32973d34839ae9838218579=
-24cc66
->=20
-> Best regards,
+Replace the deprecated one-element arrays with flexible-array members
+in the structs filesystem_attribute_info and filesystem_device_info.
 
-Hi Bjorn,
+There are no binary differences after this conversion.
 
-It looks like you applied the patch twice (two different version)[1,2].
+Link: https://github.com/KSPP/linux/issues/79
+Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+---
+Changes in v2:
+- Take struct size changes into account and do not subtract 2 additional
+  bytes after feedback from Gustavo A. R. Silva
+- Compare the binaries before and after the conversion and add a note
+  that there are no differences
+- Link to v1: https://lore.kernel.org/linux-kernel/20240816135823.87543-1-thorsten.blum@toblux.com/
+---
+ fs/smb/server/smb2pdu.c    | 4 ++--
+ fs/smb/server/smb_common.h | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-Best regards,
-Andr=C3=A9
+diff --git a/fs/smb/server/smb2pdu.c b/fs/smb/server/smb2pdu.c
+index 2df1354288e6..1ce747b4636b 100644
+--- a/fs/smb/server/smb2pdu.c
++++ b/fs/smb/server/smb2pdu.c
+@@ -5357,7 +5357,7 @@ static int smb2_get_info_filesystem(struct ksmbd_work *work,
+ 					"NTFS", PATH_MAX, conn->local_nls, 0);
+ 		len = len * 2;
+ 		info->FileSystemNameLen = cpu_to_le32(len);
+-		sz = sizeof(struct filesystem_attribute_info) - 2 + len;
++		sz = sizeof(struct filesystem_attribute_info) + len;
+ 		rsp->OutputBufferLength = cpu_to_le32(sz);
+ 		break;
+ 	}
+@@ -5383,7 +5383,7 @@ static int smb2_get_info_filesystem(struct ksmbd_work *work,
+ 		len = len * 2;
+ 		info->VolumeLabelSize = cpu_to_le32(len);
+ 		info->Reserved = 0;
+-		sz = sizeof(struct filesystem_vol_info) - 2 + len;
++		sz = sizeof(struct filesystem_vol_info) + len;
+ 		rsp->OutputBufferLength = cpu_to_le32(sz);
+ 		break;
+ 	}
+diff --git a/fs/smb/server/smb_common.h b/fs/smb/server/smb_common.h
+index 4a3148b0167f..cc1d6dfe29d5 100644
+--- a/fs/smb/server/smb_common.h
++++ b/fs/smb/server/smb_common.h
+@@ -213,7 +213,7 @@ struct filesystem_attribute_info {
+ 	__le32 Attributes;
+ 	__le32 MaxPathNameComponentLength;
+ 	__le32 FileSystemNameLen;
+-	__le16 FileSystemName[1]; /* do not have to save this - get subset? */
++	__le16 FileSystemName[]; /* do not have to save this - get subset? */
+ } __packed;
+ 
+ struct filesystem_device_info {
+@@ -226,7 +226,7 @@ struct filesystem_vol_info {
+ 	__le32 SerialNumber;
+ 	__le32 VolumeLabelSize;
+ 	__le16 Reserved;
+-	__le16 VolumeLabel[1];
++	__le16 VolumeLabel[];
+ } __packed;
+ 
+ struct filesystem_info {
+-- 
+2.46.0
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/qcom/linux.git/commit/?=
-h=3Dfor-next&id=3Df98bdb21cfc94cb7733a5c3216e8f1dec1c06023 (v5)
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/qcom/linux.git/commit/?=
-h=3Dfor-next&id=3D04b2f8d5aec32973d34839ae983821857924cc66 (v6)
