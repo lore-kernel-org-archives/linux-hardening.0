@@ -1,111 +1,119 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout12.his.huawei.com (frasgout12.his.huawei.com [14.137.139.154])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBD15558A5
-	for <linux-hardening@vger.kernel.org>; Fri, 16 Aug 2024 02:59:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 900F41991BB;
+	Fri, 16 Aug 2024 12:46:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723777201; cv=none; b=M7Dy0jfVKJ2hW4n3kzwVrfaHldsviHUO33Bfke86eL6VQJ3+KnoNEBn3JHjj1S76rD6VW9US1A0K05LCwNww7uyMqlHxgRsYAqA+eE9Z6BmTeffvRgLQB4lByHqyvH4j4g3WGHOLCUROiuc7/lfq+LgF9fJHkaTcwQXFT+xNLNQ=
+	t=1723812419; cv=none; b=Ghcb3e8ZjtD39Q8wCC/FZE8Nmi97Nnbn3uB90PFDk2Dxq75JNx2hpoWQc/C5fbC+J/3Nc/fI7IzY0JbvJJ5vd0VWwpUihXO4t5R95ER8PHWrrHtcSaWeY1T4D9QB0EdvuA0Eo5HYpkZzr9XmmHNAmqekHoUVAVQebMV4j0gKdxA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723777201; c=relaxed/simple;
-	bh=9HJ9mLsvE9hBdnzRmPMog4Duyb12/MBm70Ijnu1zd8g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oEiZISp3MkYEbtDuWncMErldE05/OZEQsbU49ByokoKQ1i+mjPxtd+F+paSetSfjIUqLI0oLIa/q5GdO1SUVJsZQNAK8jaolDx3KeOkxTVOvXpZWKOOvmJCgXdSWnzkatlm7Udqtopn7ZOEd52ixDgTOna8bxxcXPGiknLZH0+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=u+ZCR744; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="u+ZCR744"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2d3d0b06a2dso774167a91.0
-        for <linux-hardening@vger.kernel.org>; Thu, 15 Aug 2024 19:59:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1723777199; x=1724381999; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=N3bMIBZKvJVfw9dWJhuewSKLJF4MA9XhsG885+6Ljg0=;
-        b=u+ZCR744batxOalIF5E3s712s1CwOo8FHO61hdi2DSkDOTcW854NkWko3wsp8OPXV2
-         /Xsz65MKcJhiFcET8f4KyEXJLFsZlgHcaWqpb/a1nskj7HZUdassP76pamTQxbIPMegt
-         XCJBZ9gXNWZC6/kb/7wFZipOwpCAOMTqYFJV3nfZiQ6r/IXV+Dn4Aca8jEfFL1IN4Rak
-         LRg8G4FSAfHV/VcSSclkfpqEXqfA14f3IJKl10cg3bQqD7uAskgGwXUVdjNL5DAqKI9+
-         pnhby6jCUzleU8Y5u+ZJjYf7s6DSrvQzZ2ADdORQUApG9xs575sUr++pYRvCa9sVaguL
-         2/Tg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723777199; x=1724381999;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=N3bMIBZKvJVfw9dWJhuewSKLJF4MA9XhsG885+6Ljg0=;
-        b=k3JPdStM/2wMqJtXHK9JJqEY+Ir43bH7eeNi3YXQ1diQHgkx1MDnAZ6Q71JYfLzY4/
-         QzBIdtLBpTsMPAw72Mqs3CLdEHfuKxRR8dQdX9jUNbaG9hLSll+rYeaHdPF/7lif4wph
-         VliM+vUSQYrG64mt7lzaajIaWZuiCTFfRjF/4P5jQH6X1+Wt+YzmJCDwxS+RQAw6gHAo
-         Hnx78OEkTRqiNe2OeyOYmyP7jJZ77r9hraQDW9gAa5WmcKJ2dfpN2Oq3oMPy0wi89xeW
-         i8w42koHvA8/J90ikhkFsrGJz1YJQDEXmCs1d7N0VXhc13iKGDMw+C4bMrCjkazsWRW5
-         HqoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWY5e3+cZ1fzxQD/dMn9rlCN2IRr+FOFf6yhLX81UTFHAn+xHUv+46PDsBDUCt5IwcKV6izM8xwdALbhX+DvCzB9Ljg1q2Z4R/nK0QQEqF2
-X-Gm-Message-State: AOJu0YxsNsyUqziB2vDW8tjULBEGKhWvthaAXNETuxTwY8EsxSC3i+7m
-	OClXl4GLRCPjiJ29LvVpnCH5VQGvJ3T2lQZD3cGz0mMGfEoZ6PXgTD6r0Rgp8f4=
-X-Google-Smtp-Source: AGHT+IG41cmUunEpRo1YEW6i7VN78sorKRs9Ia30Ow8a4NnlLWJDOlmrrRZ7+f/r5YWbnu3bUTT4Ig==
-X-Received: by 2002:a17:90a:ca89:b0:2c9:754d:2cba with SMTP id 98e67ed59e1d1-2d3dfc2aa3amr1975748a91.3.1723777199224;
-        Thu, 15 Aug 2024 19:59:59 -0700 (PDT)
-Received: from localhost ([122.172.84.129])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2d3e2330f26sm626022a91.0.2024.08.15.19.59.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Aug 2024 19:59:58 -0700 (PDT)
-Date: Fri, 16 Aug 2024 08:29:56 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Danila Tikhonov <danila@jiaxyga.com>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	andersson@kernel.org, konradybcio@kernel.org, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	rafael@kernel.org, kees@kernel.org, tony.luck@intel.com,
-	gpiccoli@igalia.com, ulf.hansson@linaro.org, andre.przywara@arm.com,
-	quic_rjendra@quicinc.com, davidwronek@gmail.com,
-	neil.armstrong@linaro.org, heiko.stuebner@cherry.de,
-	rafal@milecki.pl, macromorgan@hotmail.com, linus.walleij@linaro.org,
-	lpieralisi@kernel.org, dmitry.baryshkov@linaro.org,
-	fekz115@gmail.com, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	netdev@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 03/11] cpufreq: Add SM7325 to cpufreq-dt-platdev
- blocklist
-Message-ID: <20240816025956.utm7w2djq5ukvoxx@vireshk-i7>
-References: <20240808184048.63030-1-danila@jiaxyga.com>
- <20240808184048.63030-4-danila@jiaxyga.com>
+	s=arc-20240116; t=1723812419; c=relaxed/simple;
+	bh=jFD73xGsQIz18ke3m88ajT/gZe74KPkUJca2QFGcGLU=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ptGzsmjsUa0RMlXC4IRYBZCn+Lcv2FtHDiO3UCHCfJt0RT+9uvQzsw6yz6kNe0o6QzHNOGBYy0GU765grj25IDsbFRm5f6gNqgE/nPnxWEOK0c+pQidERgQIzT1WL5yykcfONs17Xd4v166y6xs7HLccEYdsNSj7JLXx6URqGW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.18.186.29])
+	by frasgout12.his.huawei.com (SkyGuard) with ESMTP id 4WlgdN2WLLz9v7Jf;
+	Fri, 16 Aug 2024 20:04:08 +0800 (CST)
+Received: from mail02.huawei.com (unknown [7.182.16.47])
+	by mail.maildlp.com (Postfix) with ESMTP id B6534140B34;
+	Fri, 16 Aug 2024 20:28:28 +0800 (CST)
+Received: from [127.0.0.1] (unknown [10.204.63.22])
+	by APP1 (Coremail) with SMTP id LxC2BwCHCoXjRb9mHDdNAQ--.2087S2;
+	Fri, 16 Aug 2024 13:28:28 +0100 (CET)
+Message-ID: <3b04a8fc177eee5ce2eaa24ae8164140188478c0.camel@huaweicloud.com>
+Subject: Re: [PATCH][next] integrity: Use static_assert() to check struct
+ sizes
+From: Roberto Sassu <roberto.sassu@huaweicloud.com>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>, Mimi Zohar
+ <zohar@linux.ibm.com>, Roberto Sassu <roberto.sassu@huawei.com>, Dmitry
+ Kasatkin <dmitry.kasatkin@gmail.com>, Eric Snowberg
+ <eric.snowberg@oracle.com>, Paul Moore <paul@paul-moore.com>, James Morris
+ <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>
+Cc: linux-integrity@vger.kernel.org, linux-security-module@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Date: Fri, 16 Aug 2024 14:28:16 +0200
+In-Reply-To: <ZrVBC9dGwukjfhet@cute>
+References: <ZrVBC9dGwukjfhet@cute>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240808184048.63030-4-danila@jiaxyga.com>
+X-CM-TRANSID:LxC2BwCHCoXjRb9mHDdNAQ--.2087S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7CFWDAFWUuF1UAF43ZFyxZrb_yoW8Ar1fpF
+	yqga4UCrWjqr1I9FnrAFW3ZF4Sg3y0qr1UXr45Jw1FyFnIyr10qF9YyryrCa43KrWDKr1S
+	yFs0qr45AwsrtFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxV
+	AFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAaw2AF
+	wI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
+	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
+	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
+	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUF1
+	v3UUUUU
+X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAgARBGa+tfgJSAAAsD
 
-On 08-08-24, 21:40, Danila Tikhonov wrote:
-> The Qualcomm SM7325 platform uses the qcom-cpufreq-hw driver, so add
-> it to the cpufreq-dt-platdev driver's blocklist.
-> 
-> Signed-off-by: Danila Tikhonov <danila@jiaxyga.com>
-> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+On Thu, 2024-08-08 at 16:04 -0600, Gustavo A. R. Silva wrote:
+> Commit 38aa3f5ac6d2 ("integrity: Avoid -Wflex-array-member-not-at-end
+> warnings") introduced tagged `struct evm_ima_xattr_data_hdr` and
+> `struct ima_digest_data_hdr`. We want to ensure that when new members
+> need to be added to the flexible structures, they are always included
+> within these tagged structs.
+>=20
+> So, we use `static_assert()` to ensure that the memory layout for
+> both the flexible structure and the tagged struct is the same after
+> any changes.
+
+Looks good to me.
+
+Tested-by: Roberto Sassu <roberto.sassu@huawei.com>
+Reviewed-by: Roberto Sassu <roberto.sassu@huawei.com>
+
+Thanks
+
+Roberto
+
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 > ---
->  drivers/cpufreq/cpufreq-dt-platdev.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/cpufreq/cpufreq-dt-platdev.c b/drivers/cpufreq/cpufreq-dt-platdev.c
-> index cac379ba006d..18942bfe9c95 100644
-> --- a/drivers/cpufreq/cpufreq-dt-platdev.c
-> +++ b/drivers/cpufreq/cpufreq-dt-platdev.c
-> @@ -166,6 +166,7 @@ static const struct of_device_id blocklist[] __initconst = {
->  	{ .compatible = "qcom,sm6350", },
->  	{ .compatible = "qcom,sm6375", },
->  	{ .compatible = "qcom,sm7225", },
-> +	{ .compatible = "qcom,sm7325", },
->  	{ .compatible = "qcom,sm8150", },
->  	{ .compatible = "qcom,sm8250", },
->  	{ .compatible = "qcom,sm8350", },
+>  security/integrity/integrity.h | 4 ++++
+>  1 file changed, 4 insertions(+)
+>=20
+> diff --git a/security/integrity/integrity.h b/security/integrity/integrit=
+y.h
+> index 660f76cb69d3..c2c2da691123 100644
+> --- a/security/integrity/integrity.h
+> +++ b/security/integrity/integrity.h
+> @@ -37,6 +37,8 @@ struct evm_ima_xattr_data {
+>  	);
+>  	u8 data[];
+>  } __packed;
+> +static_assert(offsetof(struct evm_ima_xattr_data, data) =3D=3D sizeof(st=
+ruct evm_ima_xattr_data_hdr),
+> +	      "struct member likely outside of __struct_group()");
+> =20
+>  /* Only used in the EVM HMAC code. */
+>  struct evm_xattr {
+> @@ -65,6 +67,8 @@ struct ima_digest_data {
+>  	);
+>  	u8 digest[];
+>  } __packed;
+> +static_assert(offsetof(struct ima_digest_data, digest) =3D=3D sizeof(str=
+uct ima_digest_data_hdr),
+> +	      "struct member likely outside of __struct_group()");
+> =20
+>  /*
+>   * Instead of wrapping the ima_digest_data struct inside a local structu=
+re
 
-Applied. Thanks.
-
--- 
-viresh
