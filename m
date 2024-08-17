@@ -1,138 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1839D1C32;
-	Sat, 17 Aug 2024 11:31:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AAA81EEE6
+	for <linux-hardening@vger.kernel.org>; Sat, 17 Aug 2024 14:21:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723894270; cv=none; b=bdB44T9dOP9Z/P+JIBazV+7Ug2y32qxVYj3UyYzEDv9tu9LKBP2wQlFpMBerVC/W9ZyIAxZYV7fUFQ9YMztPTQinrEJTM8b9iJetPtHT51kr4yhK+fDkXN3tVKnr0GqAqrz1DKEYCrwFSS1MqgCWNJ4HG4pIZ3UFouQBb+dD6yU=
+	t=1723904490; cv=none; b=bSmPwBsEG/5tHQs123JCMU/xkoLUDHVAw1HO07RPXG0aMRJOeOTftbKe2obbVtRbFv02nk05vjksGzvE2qoB/eREq+EVQHDiNtshOnYdvKBdY1M9KPQzR/XOICgcMNn2cDu1QlDnWyyLuFFzng5yyjiFpf9WN8o526qVdpwRwAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723894270; c=relaxed/simple;
-	bh=9W4Gme6cRtTBuHzg8OfLvT8gAuHsq9xsw3bjbF+Womo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ayc662l+eNr198PT4SJzdosm3opmEuy2iJ24Opqjt8yDZ4zvuw9+XyzuEb0IzO1v0lWzJpfSNNIZaR2t2t7UqxZW1rQ2v7fispD/2njYicBwr6GXLek/HeyWysWO4Z/tBAqYRMm64wJkqQA66NV7K5EQPz2DrYXiiC1rpc2g4ms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p8CUDtQ6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1723904490; c=relaxed/simple;
+	bh=vjjnpzw4xihlbZ0brAqP1VmfV3dyscnLMEfBKjis4LQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FRpuSi7y9dg7/hikMCKInupzyqRXpc1ddnzHJM0QgXn7Xxpd4RaIs6iFfA/1WPs0OcPTjonR+q2HRDelUqaja4mpfIAzLOWSXVhUhQfX4OmzwZ7JOoyY99QUkpG7wjcNyuFpLdT04SSlcSSU8S72z0e627+1eyY7qtAJSA1DZcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=kevwTIZs; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p8CUDtQ6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DFA0C116B1;
-	Sat, 17 Aug 2024 11:30:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723894269;
-	bh=9W4Gme6cRtTBuHzg8OfLvT8gAuHsq9xsw3bjbF+Womo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=p8CUDtQ681W4xtaNkTIpmYJZ4CMeaZoZ6RlrZKQeeCGfBZUBcbZfTvJ9VHmj1jOiI
-	 +18A/oAONog7tEq0AV8lp8IviHxyIJc+wYG3ZhqSQ+swff6x141Sf88NRfZ+Kl40U9
-	 u708dy7LSIKxIVgnbW6c2FDbShmWc1GyPynDNAcH+8uk3oL5HzN2MiuCTGClZ24Ina
-	 M1tbx7I+ReeVSaVGvl5P7alPyRwTWeeDaq6VbgS6UQojDykMf8sfFHvi4HqqsNn06p
-	 DpX7Lv+UlPoL2gz+a/A7KvneQq4twN10xlFU1dLuSzElhGLrncXEaALyfGLxVjE1/+
-	 4eRfKNs5nwlMg==
-Date: Sat, 17 Aug 2024 12:30:34 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: wangshuaijie@awinic.com
-Cc: lars@metafoo.de, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, kees@kernel.org, gustavoars@kernel.org,
- linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
- liweilei@awinic.com, kangjiajun@awinic.com, Krzysztof Kozlowski
- <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH V7 1/2] dt-bindings: iio: aw96103: Add bindings for
- aw96103/aw96105 sensor
-Message-ID: <20240817123034.30cc300e@jic23-huawei>
-In-Reply-To: <20240814031808.2852418-2-wangshuaijie@awinic.com>
-References: <20240814031808.2852418-1-wangshuaijie@awinic.com>
-	<20240814031808.2852418-2-wangshuaijie@awinic.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="kevwTIZs"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-42812945633so23686055e9.0
+        for <linux-hardening@vger.kernel.org>; Sat, 17 Aug 2024 07:21:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1723904486; x=1724509286; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=+yIPvpn5RiREIdWEvUL9xddN+rBBaKKA9WfA/vQhO7s=;
+        b=kevwTIZsWgb0Qcn2pajoUNJYXd3+lCvWBB/kOAZldjJs+JfystjbSlqbSFjdz4O4MK
+         Y4vWHy5BrpH/8SUyf7TmwjoiiJxkSRdHR0HO3IBEP1ckCddjnLnPuTKmn/V93UwPusY4
+         A47AyBEWe+biq3jAAg4KSzF3z4jMgJs24wTPveuN53SSUrGuv996w5EFo9GAyRE5+N2m
+         cG2v5JvgLVe4R0EodLIhlS19LLQgYHTWZnONHshiaidY8luqkec4rUlWXkxldsZpkHs0
+         LkmxfMmmUwtgwNDt9/9F61Ek2Fsyb9jgtrSp+c2MF4qdpaR6fhkEaJFj18FNJ1sWYwQ1
+         a/Aw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723904486; x=1724509286;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+yIPvpn5RiREIdWEvUL9xddN+rBBaKKA9WfA/vQhO7s=;
+        b=WKYzF6fzjfYc3/9FkYyTllDganDizo/4AbBkq6lSD1/25s5Gdrr9abgbf/E0MDBJok
+         GmTEwDg05WyOvFnYsY0G93scJlkuBRJjFyCIughYZSfp2U+/xVEQB6S2Cy9aX1GIlKtJ
+         7E1Nc7g8mfbyqxVO+r8n7oUcnc/ZkHUOQv77aeSqbACU/E5WkrEKTvY5LQWVTgZIApjH
+         1tvuMDyuQHqOfKQVfUtmpcfTb64oY7IjmgcSI9kLw84ZuLJqVe/V1KmneSZausbJFT7T
+         16g4npVaV1FtS6Tv/foNy8feWXl1e62LOiB32Bh+H8eOZT2/i5D9XUGaT+euSxzE7RRR
+         bPlQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXdiBtdxdsJWtziQCtZmtTCHhyQvuitWABGjmdXg8C8Czeojj1EVZDNRJb4ZIc4j/TIhZOpUfYtzVnXPrh6jDi1ZYITAM4cwiSONow+FysS
+X-Gm-Message-State: AOJu0YzAf2PX/0C69q1YS6InlAcV7ELGGu+7Ti7+1WgOGQ6jWGsLXDQ9
+	Q/zLvzalkHkJVNokQQFr/R8Lmd4eQ2LGhIzbDV9GgHAcZxLy297jEj1zFgsoCvE=
+X-Google-Smtp-Source: AGHT+IGTnbsZzhgA30HV1nq4jUBYXpBcMACaAMCY4g0TJpzNpkhYWLeLKT8kVFN1sqa4jKwuB/P+pA==
+X-Received: by 2002:adf:a2da:0:b0:371:8e8b:39d4 with SMTP id ffacd0b85a97d-3719464cd9dmr4721751f8f.28.1723904486056;
+        Sat, 17 Aug 2024 07:21:26 -0700 (PDT)
+Received: from fedora.fritz.box (aftr-62-216-208-163.dynamic.mnet-online.de. [62.216.208.163])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3718983a397sm6008530f8f.24.2024.08.17.07.21.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 17 Aug 2024 07:21:25 -0700 (PDT)
+From: Thorsten Blum <thorsten.blum@toblux.com>
+To: anna@kernel.org,
+	jlayton@kernel.org,
+	bcodding@redhat.com,
+	kolga@netapp.com,
+	josef@toxicpanda.com,
+	gustavoars@kernel.org,
+	kees@kernel.org
+Cc: linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	Thorsten Blum <thorsten.blum@toblux.com>
+Subject: [PATCH] NFS/flexfiles: Replace one-element array with flexible-array member
+Date: Sat, 17 Aug 2024 16:20:23 +0200
+Message-ID: <20240817142022.68411-2-thorsten.blum@toblux.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Wed, 14 Aug 2024 03:18:07 +0000
-wangshuaijie@awinic.com wrote:
+Replace the deprecated one-element array with a modern flexible-array
+member in the struct nfs4_flexfile_layoutreturn_args.
 
-> From: shuaijie wang <wangshuaijie@awinic.com>
-> 
-> Add device tree bindings for aw96103/aw96105 proximity sensor.
-> 
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Signed-off-by: shuaijie wang <wangshuaijie@awinic.com>
-> ---
->  .../iio/proximity/awinic,aw96103.yaml         | 63 +++++++++++++++++++
->  1 file changed, 63 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/proximity/awinic,aw96103.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/proximity/awinic,aw96103.yaml b/Documentation/devicetree/bindings/iio/proximity/awinic,aw96103.yaml
-> new file mode 100644
-> index 000000000000..54b5bc176d5c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/proximity/awinic,aw96103.yaml
-> @@ -0,0 +1,63 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/proximity/awinic,aw96103.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Awinic's AW96103 capacitive proximity sensor and similar
-> +
-> +maintainers:
-> +  - Wang Shuaijie <wangshuaijie@awinic.com>
-> +
-> +description: |
-> +  Awinic's AW96103/AW96105 proximity sensor.
-> +  The specific absorption rate (SAR) is a metric that measures
-> +  the degree of absorption of electromagnetic radiation emitted by
-> +  wireless devices, such as mobile phones and tablets, by human tissue.
-> +  In mobile phone applications, the proximity sensor is primarily
-> +  used to detect the proximity of the human body to the phone. When the
-> +  phone approaches the human body, it will actively reduce the transmit
-> +  power of the antenna to keep the SAR within a safe range. Therefore,
-> +  we also refer to the proximity sensor as a SAR sensor.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - awinic,aw96103
-> +      - awinic,aw96105
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    description:
-> +      Generated by the device to announce that a close/far
-> +      proximity event has happened.
-> +    maxItems: 1
-> +
-> +  vcc-supply:
-> +    description:
-> +      Optional regulator for chip, 1.7V-3.6V.
-See comment on v6 which I sent before noticing there was a v7.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - vcc-supply
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    i2c {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +        proximity@12 {
-> +            compatible = "awinic,aw96103";
-> +            reg = <0x12>;
-> +            interrupt-parent = <&gpio>;
-> +            interrupts = <23 IRQ_TYPE_EDGE_FALLING>;
-> +            vcc-supply = <&pp1800_prox>;
-> +        };
-> +    };
+Adjust the struct size accordingly.
+
+There are no binary differences after this conversion.
+
+Link: https://github.com/KSPP/linux/issues/79
+Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+---
+ fs/nfs/flexfilelayout/flexfilelayout.c | 2 +-
+ fs/nfs/flexfilelayout/flexfilelayout.h | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
+index 39ba9f4208aa..fc698fa9aaea 100644
+--- a/fs/nfs/flexfilelayout/flexfilelayout.c
++++ b/fs/nfs/flexfilelayout/flexfilelayout.c
+@@ -2224,7 +2224,7 @@ ff_layout_prepare_layoutreturn(struct nfs4_layoutreturn_args *args)
+ 	struct nfs4_flexfile_layoutreturn_args *ff_args;
+ 	struct nfs4_flexfile_layout *ff_layout = FF_LAYOUT_FROM_HDR(args->layout);
+ 
+-	ff_args = kmalloc(sizeof(*ff_args), nfs_io_gfp_mask());
++	ff_args = kmalloc(struct_size(ff_args, pages, 1), nfs_io_gfp_mask());
+ 	if (!ff_args)
+ 		goto out_nomem;
+ 	ff_args->pages[0] = alloc_page(nfs_io_gfp_mask());
+diff --git a/fs/nfs/flexfilelayout/flexfilelayout.h b/fs/nfs/flexfilelayout/flexfilelayout.h
+index f84b3fb0dddd..a269753f9a46 100644
+--- a/fs/nfs/flexfilelayout/flexfilelayout.h
++++ b/fs/nfs/flexfilelayout/flexfilelayout.h
+@@ -115,7 +115,7 @@ struct nfs4_flexfile_layoutreturn_args {
+ 	struct nfs42_layoutstat_devinfo devinfo[FF_LAYOUTSTATS_MAXDEV];
+ 	unsigned int num_errors;
+ 	unsigned int num_dev;
+-	struct page *pages[1];
++	struct page *pages[];
+ };
+ 
+ static inline struct nfs4_flexfile_layout *
+-- 
+2.46.0
 
