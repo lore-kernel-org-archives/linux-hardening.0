@@ -1,153 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49BC91429A;
-	Tue, 20 Aug 2024 15:53:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 375AA18CC1D
+	for <linux-hardening@vger.kernel.org>; Tue, 20 Aug 2024 16:33:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724169226; cv=none; b=daP/80VMPBonhmV/+tVXPr6llR1Esz3SAt9gpMsVA1dEyI39eqyh4K5Oz1FCAvmGouOruH2UVTtzsheqnEyHk8XrDLuUl5dk878U/bmZqPEQdLeIhY8v1POwwN9x+3biwTCT6PIM7i6HNmW3clmaGaGaoslNCovmzbR1el0zQwI=
+	t=1724171623; cv=none; b=eV6ymSx3IFf7F3YzNs7YhPx07yzv5BjCR2/OXX04BId0GRPQIKIq4UsaDGgO3XH/2BmxjfBacIuYUoGcN4xUWrh4XpwWOhmnJExma48YCNIQs/kZ8oN+LM/GrtGM+/sGyuS6WLopNBu82NS0+F7EMgfexKG+rEqIccaUBmpZ8t4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724169226; c=relaxed/simple;
-	bh=89yWqSR5zqHtjO5oldJ8WLay8k8NoBtt3nMJQjdVkqw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O/1+f0JN2RFDjbRUnBgvv7hf+foK3YexYseQnnc26Hk/PWI9ulUnqG54as2RkWN79F+pU4e7w5abD4eGVbi3lVTTIASFG6iwRHKgE6+SywAZLKq4A457KocTe/NjxNHZ2xYaY9Y42wvzagHMDp8PJlk50w4KncG3GN+WAoT0njA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f65TeiWr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1724171623; c=relaxed/simple;
+	bh=8IUmNoZ2LJs/D02xDzhAIKyPjOG9w7KqiGiDPMEZnb0=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=XnZiGNBAvf4Yq/DQcpQFRn876BdhOB3TtcZrLWA+CNGbSRlf82Qdsif+3xaWxpnOkzzCygsDcUeEZDi0X7xZPuDT39M4kEvT4Hov/de9c6JZH2HjWxNcim+QTnKDZNUI6G/wYaa1M1mUpe5hNPvPTZKZSaXyecGQVahX29PRqNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=e/BZaEaf; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f65TeiWr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88643C4AF11;
-	Tue, 20 Aug 2024 15:53:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724169225;
-	bh=89yWqSR5zqHtjO5oldJ8WLay8k8NoBtt3nMJQjdVkqw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=f65TeiWrkcM+DWfmF7opRhNCKAS5FhJiX97mGpHzWxay2l/pZcQhhymHHHxHMJA3d
-	 oGwAV9dgLobUk4Ll573zRN9x0H+ICqHzwLvGnx/CztoDgsCEnafFiy2RLonx+TOQns
-	 KUk/NIixr3IWuzVoE6kyKinkeJB6+1GGgnPuIYD7VL10bDLuNCxU3NQn31fX73xkYb
-	 OcdWS6y09gqvUn/yXX6zx4Gek3jU/ns8qo2P5u+uiW8BVL275jNL2Gg+JCYm/HiNyd
-	 /En8bzFwKe7GUitPbN3ruiEeCbSg0eFtrQzfYBTHxQa7aoaNRagqN/0CkvazMHA44O
-	 4MGC76VatqhYA==
-Date: Tue, 20 Aug 2024 16:53:39 +0100
-From: Will Deacon <will@kernel.org>
-To: Doug Anderson <dianders@chromium.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Sumit Garg <sumit.garg@linaro.org>, Yu Zhao <yuzhao@google.com>,
-	Misono Tomohiro <misono.tomohiro@fujitsu.com>,
-	Stephen Boyd <swboyd@chromium.org>, Chen-Yu Tsai <wens@csie.org>,
-	Marc Zyngier <maz@kernel.org>,
-	Daniel Thompson <daniel.thompson@linaro.org>,
-	D Scott Phillips <scott@os.amperecomputing.com>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	James Morse <james.morse@arm.com>, Kees Cook <kees@kernel.org>,
-	Tony Luck <tony.luck@intel.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] arm64: smp: smp_send_stop() and crash_smp_send_stop()
- should try non-NMI first
-Message-ID: <20240820155338.GB28750@willie-the-truck>
-References: <20240625160718.v2.1.Id4817adef610302554b8aa42b090d57270dc119c@changeid>
- <20240805165336.GA10196@willie-the-truck>
- <CAD=FV=WGfQeJr2CuA7J5XgytAVpVxZPpH4EY8e8y63wMOaHRwA@mail.gmail.com>
- <20240805172419.GD10196@willie-the-truck>
- <CAD=FV=UQMvHvXJUsSZgW1NEATXE3pi4PUr9XKRzgjMnQYm2-0A@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="e/BZaEaf"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-53345676179so69240e87.0
+        for <linux-hardening@vger.kernel.org>; Tue, 20 Aug 2024 09:33:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1724171620; x=1724776420; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=biPyWwHKsPSI9hwI1NGCkM/td/JJyPTqnLUN9w0DGw0=;
+        b=e/BZaEafvmEuRz4bgLthW+pm5Bkkfnk2ekujPQCNsDr0RSHgygBQpMVf4WJlmraQco
+         nCIh9JkWIoEqCltzWne6tJxEmddGbTyelV8MTjQr6ZkgzAt9NqnEBi/BIgREoCE8srQ/
+         C4zBwcp4pFNLTHe0FbqkQJzWi0rcNgGhTh4kwqScgUd8Kbb5f17q3tPlSDuTgGp/qXBh
+         m0CWuxav/4nP6Gg2+nuha0i9eJ2Jt+fya6pYUjzM8vGxO8ZFmwUK7YnkRQQqprwdCqlU
+         VDAnrDReBwrn0s1Q5w2CZK4nTKgeSHy4zz8ihIx+jhYdZNvvtBINrbfLbjyyCpp6V/Hf
+         p1sg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724171620; x=1724776420;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=biPyWwHKsPSI9hwI1NGCkM/td/JJyPTqnLUN9w0DGw0=;
+        b=YdbmbHfot1bWbdPgKMBHZYlyy6QAoah4qQsYxxqq9qQBFu0VIZuBSIP6dIwGmGB6kR
+         o1MVlPHvDHIF//lvCK5UaRFuXSOZLbal9V+tIlPGcm8O6VYE9ZYnkpv9RSCvJUdB5J60
+         7I1gHRYnt/20tPyYkhx9yRyJMNogp1TVR4LweGS+ZeQp0yrTZI1TsOnDrJAvnc4EXH5L
+         FQ/Uju0kp8rtbH7xWphK2nTw7Q2YvyAoU+8A0ruMmtaMvCbJMCd9HKl0pJC2/WmvH144
+         DasPOvU1lNiwD9yw/e2wSBWo5WK6ByRaBZcUxvaVbjyfz6F5BwBBy7H+HrvzPjZHmCtn
+         fvtw==
+X-Forwarded-Encrypted: i=1; AJvYcCVozP2llX34wD+nsSfPc1MwDRg3kNV2f9Y1i92XFA6cpVsxBnHLPHX1/r5kCfysOxeIAOa7V7FgGUO2kgjwqA69ikiEiMOaz6GHUxOU85ZK
+X-Gm-Message-State: AOJu0YyDu27KZ0wXxyRjSSMuJiZr7zYlZn42cAW7sFsEpjud+vyHix9T
+	fxw5Bvlir6yk5MyVDgmP/38sbacJYz1DLmxj38aqYUzXEfggMJgXKTV/MwpHfos=
+X-Google-Smtp-Source: AGHT+IFJ0EkS4Si8mnRKbGimFnHHXb9uxbbTNcEVpKkFeoNxOaYbItrqrNcNmDbkUzRLo8NcVRHEUw==
+X-Received: by 2002:a05:6512:401c:b0:52c:ce28:82bf with SMTP id 2adb3069b0e04-5331c6d4bcfmr6106461e87.5.1724171619972;
+        Tue, 20 Aug 2024 09:33:39 -0700 (PDT)
+Received: from smtpclient.apple ([2001:a61:1050:bb01:8164:778c:a10:dcfc])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a83838c65e7sm781546266b.20.2024.08.20.09.33.38
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 20 Aug 2024 09:33:39 -0700 (PDT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAD=FV=UQMvHvXJUsSZgW1NEATXE3pi4PUr9XKRzgjMnQYm2-0A@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51\))
+Subject: Re: [PATCH] ksmbd: Replace one-element arrays with flexible-array
+ members
+From: Thorsten Blum <thorsten.blum@toblux.com>
+In-Reply-To: <d7a30cff-e08f-453e-84f2-4584031e3d29@talpey.com>
+Date: Tue, 20 Aug 2024 18:33:28 +0200
+Cc: Namjae Jeon <linkinjeon@kernel.org>,
+ sfrench@samba.org,
+ senozhatsky@chromium.org,
+ linux-cifs@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <05A23230-C800-4693-AB69-273A0B10C822@toblux.com>
+References: <20240818162136.268325-2-thorsten.blum@toblux.com>
+ <CAKYAXd-pm01ietA1+Z4J8tDcLM6fUkAwQ69j9XZs9uhrBbdDQQ@mail.gmail.com>
+ <d7a30cff-e08f-453e-84f2-4584031e3d29@talpey.com>
+To: Tom Talpey <tom@talpey.com>
+X-Mailer: Apple Mail (2.3776.700.51)
 
-On Mon, Aug 05, 2024 at 01:14:12PM -0700, Doug Anderson wrote:
-> On Mon, Aug 5, 2024 at 10:24 AM Will Deacon <will@kernel.org> wrote:
-> > On Mon, Aug 05, 2024 at 10:13:11AM -0700, Doug Anderson wrote:
-> > > On Mon, Aug 5, 2024 at 9:53 AM Will Deacon <will@kernel.org> wrote:
-> > > > On Tue, Jun 25, 2024 at 04:07:22PM -0700, Douglas Anderson wrote:
-> > > > > @@ -1084,79 +1088,87 @@ static inline unsigned int num_other_online_cpus(void)
-> > > > >
-> > > > >  void smp_send_stop(void)
-> > > > >  {
-> > > > > +     static unsigned long stop_in_progress;
-> > > > > +     cpumask_t mask;
-> > > > >       unsigned long timeout;
-> > > > >
-> > > > > -     if (num_other_online_cpus()) {
-> > > > > -             cpumask_t mask;
-> > > > > +     /*
-> > > > > +      * If this cpu is the only one alive at this point in time, online or
-> > > > > +      * not, there are no stop messages to be sent around, so just back out.
-> > > > > +      */
-> > > > > +     if (num_other_online_cpus() == 0)
-> > > > > +             goto skip_ipi;
-> > > > >
-> > > > > -             cpumask_copy(&mask, cpu_online_mask);
-> > > > > -             cpumask_clear_cpu(smp_processor_id(), &mask);
-> > > > > +     /* Only proceed if this is the first CPU to reach this code */
-> > > > > +     if (test_and_set_bit(0, &stop_in_progress))
-> > > > > +             return;
-> > > > >
-> > > > > -             if (system_state <= SYSTEM_RUNNING)
-> > > > > -                     pr_crit("SMP: stopping secondary CPUs\n");
-> > > > > -             smp_cross_call(&mask, IPI_CPU_STOP);
-> > > > > -     }
-> > > > > +     cpumask_copy(&mask, cpu_online_mask);
-> > > > > +     cpumask_clear_cpu(smp_processor_id(), &mask);
-> > > > >
-> > > > > -     /* Wait up to one second for other CPUs to stop */
-> > > > > +     if (system_state <= SYSTEM_RUNNING)
-> > > > > +             pr_crit("SMP: stopping secondary CPUs\n");
-> > > > > +
-> > > > > +     /*
-> > > > > +      * Start with a normal IPI and wait up to one second for other CPUs to
-> > > > > +      * stop. We do this first because it gives other processors a chance
-> > > > > +      * to exit critical sections / drop locks and makes the rest of the
-> > > > > +      * stop process (especially console flush) more robust.
-> > > > > +      */
-> > > > > +     smp_cross_call(&mask, IPI_CPU_STOP);
-> > > >
-> > > > I realise you've moved this out of crash_smp_send_stop() and it looks
-> > > > like we inherited the code from x86, but do you know how this serialise
-> > > > against CPU hotplug operations? I've spent the last 20m looking at the
-> > > > code and I can't see what prevents other CPUs from coming and going
-> > > > while we're trying to IPI a non-atomic copy of 'cpu_online_mask'.
-> > >
-> > > I don't think there is anything. ...and it's not just this code
-> > > either. It sure looks like nmi_trigger_cpumask_backtrace() has the
-> > > same problem.
-> > >
-> > > I guess maybe in the case of nmi_trigger_cpumask_backtrace() it's not
-> > > such a big deal because:
-> > > 1. If a CPU goes away then we'll just time out
-> > > 2. If a CPU shows up then we'll skip backtracing it, but we were
-> > > sending backtraces at an instant in time anyway.
-> > >
-> > > In the case of smp_send_stop() it's probably fine if a CPU goes away
-> > > because, again, we'll just timeout. ...but if a CPU shows up then
-> > > that's not super ideal. Maybe it doesn't cause problems in practice
-> > > but it does feel like it should be fixed.
-> >
-> > On the other hand, I really don't fancy taking a CPU hotplug mutex on
-> > the panic() path, so it's hard to know what's best.
-> >
-> > I suppose one thing we could do is recompute the mask before sending the
-> > NMI, which should make it a little more robust in that case. It still
-> > feels fragile, but it's no worse than the existing code, I suppose.
-> 
-> Happy to do this and send a new version if you want. Just let me know.
-> Basically it's just replacing `cpumask_and(&mask, &mask,
-> cpu_online_mask)`  with `cpumask_copy(&mask, cpu_online_mask);
-> cpumask_clear_cpu(smp_processor_id(), &mask);` in the case where we
-> fallback to NMI. If you're happy with the patch I'm also happy if you
-> make this change while applying.
+On 20. Aug 2024, at 16:52, Tom Talpey <tom@talpey.com> wrote:
+> On 8/20/2024 10:11 AM, Namjae Jeon wrote:
+>> On Mon, Aug 19, 2024 at 1:22=E2=80=AFAM Thorsten Blum =
+<thorsten.blum@toblux.com> wrote:
+>>>=20
+>>> Replace the deprecated one-element arrays with flexible-array =
+members
+>>> in the structs copychunk_ioctl_req and smb2_ea_info_req.
+>>>=20
+>>> There are no binary differences after this conversion.
+>>>=20
+>>> Link: https://github.com/KSPP/linux/issues/79
+>>> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+>>> ---
+>>>  fs/smb/server/smb2pdu.c | 4 ++--
+>>>  fs/smb/server/smb2pdu.h | 4 ++--
+>>>  2 files changed, 4 insertions(+), 4 deletions(-)
+>>>=20
+>>> diff --git a/fs/smb/server/smb2pdu.c b/fs/smb/server/smb2pdu.c
+>>> index 2df1354288e6..83667cb78fa6 100644
+>>> --- a/fs/smb/server/smb2pdu.c
+>>> +++ b/fs/smb/server/smb2pdu.c
+>>> @@ -4580,7 +4580,7 @@ static int smb2_get_ea(struct ksmbd_work =
+*work, struct ksmbd_file *fp,
+>>>         /* single EA entry is requested with given user.* name */
+>>>         if (req->InputBufferLength) {
+>>>                 if (le32_to_cpu(req->InputBufferLength) <
+>>> -                   sizeof(struct smb2_ea_info_req))
+>>> +                   sizeof(struct smb2_ea_info_req) + 1)
+>> We can use <=3D instead of +1.
+>=20
+> This is better, but maybe this test was actually not right in
+> the first place.
+>=20
+> I think a strict "<" is correct here, because the ea name
+> field is a counted array of length EaNameLength. So, it's
+> a layering issue to fail with EINVAL this early in the
+> processing. All that should be checked up front is
+> that a complete smb2_ea_info_req header is present.
 
-Please send a v3 with that along with a little comment summarising this
-discussion so I don't confuse myself again when I look at next time :)
+Just to clarify before I submit a v2: Is a strict "<" and without "+1"=20=
+
+correct?
+
+>>>                         return -EINVAL;
+>>>=20
+>>>                 ea_req =3D (struct smb2_ea_info_req *)((char *)req +
+>>> @@ -8083,7 +8083,7 @@ int smb2_ioctl(struct ksmbd_work *work)
+>>>                         goto out;
+>>>                 }
+>>>=20
+>>> -               if (in_buf_len < sizeof(struct copychunk_ioctl_req)) =
+{
+>>> +               if (in_buf_len < sizeof(struct copychunk_ioctl_req) =
++ 1) {
+>> Ditto.
+>=20
+> And ditto.
+
+Same here, strict "<" and without "+ 1"? Or just a refactor to "<=3D"=20
+without changing the condition?
 
 Thanks,
-
-Will
+Thorsten=
