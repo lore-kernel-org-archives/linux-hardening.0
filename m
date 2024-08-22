@@ -1,146 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 090F61CC8A7;
-	Thu, 22 Aug 2024 17:47:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CE7738F9A
+	for <linux-hardening@vger.kernel.org>; Thu, 22 Aug 2024 17:50:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724348857; cv=none; b=UrIrOi0dz/kPR9lZT+4khnMRyd8f3h4/oiSL2vUaJUYgJPdXgpBsZNDU+JI+AFHb84TJFquxTuJT14g9JGyzYuIuVQaSK4U/or+txBOf+H3denU/DIWVf02UbzFZgJ5k9xfmTEzFbAXejp5Dohmnx7FoYTJPVTa2YHI1oLtxYvc=
+	t=1724349027; cv=none; b=Y4zSCx5/JiZvXZeTVG/wNxJeL6aX39hXkcFvd+a2sp8niDsN4V3f9G6ObpYPtUBKMcuzz/qZT63QN/yBheF9iEj5VBBtkqs5yIo9h728feClikDxf0z3lwU2wEP7c3OnpkV2MyWz3XBmHwZLKYPJyRFmPHBCiZVF1hGuJBWDtqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724348857; c=relaxed/simple;
-	bh=ZouLq/8pIc7NL+u1I+/tJejA2tHWdm7Eju6gVChwW7A=;
+	s=arc-20240116; t=1724349027; c=relaxed/simple;
+	bh=dvjLhd87vCdRo/xiVsfDDYj5ouJ7dOsDPOl5m/jQnB8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n9b55dJCXRNIzSAi6IODFnXLylsrHkpnaKwcYPc96QwxDkXv0Iy7XLx69p7Pduw1euQZOHfZWAZV2PzoxAeqMYEmDUPFyxxVBo9Uw8lfIcBPDcZJqM0DSIS6e0pSh6Y6vCEvOqKA/GGmSO2Tx+MzKAjb4OzIOHU8XdLmu+uIR6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=msg14e4d; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Lzck3invs3pd6vE7cMOtv0gTfjy/CRKN8ZGkSn2blb4s8JgGN0tmn7ZZB8H43TXID/Kr3nAJSJ9Ju7b9PS7i1Of2Fuhcy5I/rzKU0u6AFwRBFtGGa0iutJ/r68+Gf1A9Ep/ulEqcQWUD9yAbQMXQznZuNy/ijfOgLcY7HV1eemg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=HdmhTDMH; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="msg14e4d"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EA2BC32782;
-	Thu, 22 Aug 2024 17:47:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724348856;
-	bh=ZouLq/8pIc7NL+u1I+/tJejA2tHWdm7Eju6gVChwW7A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=msg14e4dBoOafgRZOQLJtri9GIzzLAjE4gYBSa0vsNow1AgY8EWoFGYqDkXhgpHno
-	 nd4RQVEugGo4Z5ngysg38vftiVVt/kBfz/+xJGLm5/G6HVHyRKM9A9fT3hCZ23ONAN
-	 5HUcn9/XfoHa/V7O7LE99EljsIzy/O3cxBNjd9HXWWpNsWWj3JFNxd0txkJKjNfpDX
-	 Jvv6FeKzf0dNW+OdsdyP9aEeeOEt0k29cwSTV0/jE+atQHdMrIq6TP8UnL96xSFWqy
-	 DHbP8OmmSHFf2LuOqFtcmjhm3kgGSrxamTYwaVOykr38HaUHenqmEirH4bb272mSHS
-	 6zqbO5OFxWFDA==
-Date: Thu, 22 Aug 2024 10:47:36 -0700
-From: Kees Cook <kees@kernel.org>
-To: Xiu Jianfeng <xiujianfeng@huaweicloud.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
-	David Rientjes <rientjes@google.com>,
-	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org,
-	"GONG, Ruiqi" <gongruiqi@huaweicloud.com>,
-	Jann Horn <jannh@google.com>, Matteo Rizzo <matteorizzo@google.com>,
-	jvoisin <julien.voisin@dustri.org>, linux-kernel@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HdmhTDMH"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-714302e7285so938472b3a.2
+        for <linux-hardening@vger.kernel.org>; Thu, 22 Aug 2024 10:50:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1724349025; x=1724953825; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=tCVHnlO2pIa86JaK5QjGr85qfeXpWfBdUE9lyP9m+/o=;
+        b=HdmhTDMHdO0Cld6OncFcPIZAjg/uddeimxjulI3Ld4XVDE5G+5872NDI0wXrAVpx51
+         uGbPsNkdAXEOyZfWZNgTi//CDbasczllkNQiMCBZ0gblO9nFUTXxjfYLfVyJVB4Aq7n7
+         owSWzVTi64B+XpCgePSRh/V277TT/NWvHyv9Q=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724349025; x=1724953825;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tCVHnlO2pIa86JaK5QjGr85qfeXpWfBdUE9lyP9m+/o=;
+        b=EkhVT9KiHNwZUg0NTm+U1PxlapndkZueIc467AC3IJIuyR/qMgCevzycB+C6/GPCu9
+         qSSRuWXXCxCH2SItceogYVY5PacyOXsFzUhq9WqIEDlsUJVq4RWd0XpoDhEw4how+C2H
+         cS3qGhEdRqt+ZT/NG6pzx004Z6rkjRrS1p34DF6z96EANZY4UcC3+mvB5ih3ZSj3k4eP
+         dGr+sMFHBVcjT1lroGL6RicqYy2+7gE5/HUtR+FrDZP/Z33MxTpAyFY8jJhwXjxH7V+B
+         1lvtbftlzPzPA3nn39FM65KVwQFijbO7UbPZbC0+2vsvTfqr1ZqYFDGhD2KfcGnfjq5k
+         MEoQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVjDR6graLIhUZb1+gRcjcbAdXH2UICYhURlflvquL7yCj73vbV/KdKOoURkSJ/3pIyups4RBpxAWhi6otAkIY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzPUwSJfFakLGeOceX0KPGlgldTZoMHEmhutrV8Cy1HbeCQRPa9
+	92kmiMRpPqYUuES0B+81JXekX9c8VysgTzoEZ2Woa/RK7ESSyJkL3ej+bP4cFg==
+X-Google-Smtp-Source: AGHT+IGfoGIJeQ5mwpQoLfvcD1BDbE9Q0hdoNktosEIXDb7FIO+5WC0W5xfEfFjtY5088xV28XfHJg==
+X-Received: by 2002:a05:6a21:3418:b0:1c6:f043:693f with SMTP id adf61e73a8af0-1cada054f37mr7146439637.17.1724349025477;
+        Thu, 22 Aug 2024 10:50:25 -0700 (PDT)
+Received: from localhost ([2a00:79e0:2e14:7:414c:5b44:2fea:fb6e])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-7143577090fsm1537422b3a.137.2024.08.22.10.50.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 Aug 2024 10:50:25 -0700 (PDT)
+Date: Thu, 22 Aug 2024 10:50:24 -0700
+From: Brian Norris <briannorris@chromium.org>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Francesco Dolcini <francesco@dolcini.it>, Kalle Valo <kvalo@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 5/5] slab: Allocate and use per-call-site caches
-Message-ID: <202408221046.808356D202@keescook>
-References: <20240809072532.work.266-kees@kernel.org>
- <20240809073309.2134488-5-kees@kernel.org>
- <1ddb539a-79ed-d992-76cf-061acb4df11e@huaweicloud.com>
+Subject: Re: [PATCH][next] wifi: mwifiex: Fix memcpy() field-spanning write
+ warning in mwifiex_cmd_802_11_scan_ext()
+Message-ID: <Zsd6YE6z5CNWQocz@google.com>
+References: <ZsZa5xRcsLq9D+RX@elsanto>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1ddb539a-79ed-d992-76cf-061acb4df11e@huaweicloud.com>
+In-Reply-To: <ZsZa5xRcsLq9D+RX@elsanto>
 
-On Sat, Aug 17, 2024 at 09:30:58AM +0800, Xiu Jianfeng wrote:
-> Hi Kees,
+On Wed, Aug 21, 2024 at 03:23:51PM -0600, Gustavo A. R. Silva wrote:
+> Replace one-element array with a flexible-array member in
+> `struct host_cmd_ds_802_11_scan_ext`.
 > 
-> On 2024/8/9 15:33, Kees Cook wrote:
-> > Use separate per-call-site kmem_cache or kmem_buckets. These are
-> > allocated on demand to avoid wasting memory for unused caches.
-> > 
-> > A few caches need to be allocated very early to support allocating the
-> > caches themselves: kstrdup(), kvasprintf(), and pcpu_mem_zalloc(). Any
-> > GFP_ATOMIC allocations are currently left to be allocated from
-> > KMALLOC_NORMAL.
-> > 
-> > With a distro config, /proc/slabinfo grows from ~400 entries to ~2200.
-> > 
-> > Since this feature (CONFIG_SLAB_PER_SITE) is redundant to
-> > CONFIG_RANDOM_KMALLOC_CACHES, mark it a incompatible. Add Kconfig help
-> > text that compares the features.
-> > 
-> > Improvements needed:
-> > - Retain call site gfp flags in alloc_tag meta field to:
-> >   - pre-allocate all GFP_ATOMIC caches (since their caches cannot
-> >     be allocated on demand unless we want them to be GFP_ATOMIC
-> >     themselves...)
-> >   - Separate MEMCG allocations as well
-> > - Allocate individual caches within kmem_buckets on demand to
-> >   further reduce memory usage overhead.
-> > 
-> > Signed-off-by: Kees Cook <kees@kernel.org>
-> > ---
-> > Cc: Suren Baghdasaryan <surenb@google.com>
-> > Cc: Kent Overstreet <kent.overstreet@linux.dev>
-> > Cc: Vlastimil Babka <vbabka@suse.cz>
-> > Cc: Christoph Lameter <cl@linux.com>
-> > Cc: Pekka Enberg <penberg@kernel.org>
-> > Cc: David Rientjes <rientjes@google.com>
-> > Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-> > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > Cc: Roman Gushchin <roman.gushchin@linux.dev>
-> > Cc: Hyeonggon Yoo <42.hyeyoo@gmail.com>
-> > Cc: linux-mm@kvack.org
-> > ---
-> >  include/linux/alloc_tag.h |   8 +++
-> >  lib/alloc_tag.c           | 121 +++++++++++++++++++++++++++++++++++---
-> >  mm/Kconfig                |  19 +++++-
-> >  mm/slab_common.c          |   1 +
-> >  mm/slub.c                 |  31 +++++++++-
-> >  5 files changed, 170 insertions(+), 10 deletions(-)
-> > 
+> With this, fix the following warning:
 > 
-> [...]
+> elo 16 17:51:58 surfacebook kernel: ------------[ cut here ]------------
+> elo 16 17:51:58 surfacebook kernel: memcpy: detected field-spanning write (size 243) of single field "ext_scan->tlv_buffer" at drivers/net/wireless/marvell/mwifiex/scan.c:2239 (size 1)
+> elo 16 17:51:58 surfacebook kernel: WARNING: CPU: 0 PID: 498 at drivers/net/wireless/marvell/mwifiex/scan.c:2239 mwifiex_cmd_802_11_scan_ext+0x83/0x90 [mwifiex]
 > 
-> > diff --git a/mm/slub.c b/mm/slub.c
-> > index 3520acaf9afa..d14102c4b4d7 100644
-> > --- a/mm/slub.c
-> > +++ b/mm/slub.c
-> > @@ -4135,6 +4135,35 @@ void *__kmalloc_large_node_noprof(size_t size, gfp_t flags, int node)
-> >  }
-> >  EXPORT_SYMBOL(__kmalloc_large_node_noprof);
-> >  
-> > +static __always_inline
-> > +struct kmem_cache *choose_slab(size_t size, kmem_buckets *b, gfp_t flags,
-> > +			       unsigned long caller)
-> > +{
-> > +#ifdef CONFIG_SLAB_PER_SITE
-> > +	struct alloc_tag *tag = current->alloc_tag;
-> 
-> There is a compile error here if CONFIG_MEM_ALLOC_PROFILING is disabled
-> when I test this patchset.
-> 
-> mm/slub.c: In function ‘choose_slab’:
-> mm/slub.c:4187:40: error: ‘struct task_struct’ has no member named
-> ‘alloc_tag’
->  4187 |         struct alloc_tag *tag = current->alloc_tag;
->       |                                        ^~
->   CC      mm/page_reporting.o
-> 
-> maybe CONFIG_SLAB_PER_SITE should depend on CONFIG_MEM_ALLOC_PROFILING
+> Reported-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Closes: https://lore.kernel.org/linux-hardening/ZsZNgfnEwOcPdCly@black.fi.intel.com/
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Thanks! I tried to make the Kconfig use the right dependencies, but I
-clearly missed something. There is also some weird behavior between
-"depends" and "select". I will get this fixed for the next version.
-
--Kees
-
--- 
-Kees Cook
+Acked-by: Brian Norris <briannorris@chromium.org>
