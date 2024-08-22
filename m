@@ -1,75 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75BE61C943E;
-	Thu, 22 Aug 2024 12:01:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D2BB1C9ED7;
+	Thu, 22 Aug 2024 13:24:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724328103; cv=none; b=SOum+1WCdX3SpZz7eVmZloiM3ijRE1ouE2mx1lg8kn0MRFvKk019onJlg+/enzJzWjU588q8p1ya+3Mf+5OBzAHSB9vyR5nzSBiqIFig9H5QquhzS2AZVXCXrPh9NNn+auiSym4rVqsQe3SUvwOcDfOH0Y8WTt/C1dRPrVnQ50c=
+	t=1724333090; cv=none; b=aumW4aLxK6dr6kBqBaCmUOLSECV8yijkWSW8/OqhLekKU7rZJBLVjDhr0AR9jHFvxQsojxYEDLvIgs1W4K3AobEXXCtNyv5WtmmxNMhcoa3RDzv/8Oz0wVqY6j4pS1JwUcA68r33PRpXnny3QD8QWTWeHQHyWYMuA39Bid+7quM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724328103; c=relaxed/simple;
-	bh=rnP3ScPpv0mfReICPxXjJIQ5VK/7m9rc8+Ri/xWWkts=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aPn2v7QDssebGyX2mynEcz/1mLOgq3TuPQ7z0hNYphkpuIiD1e/UnXm9iIpWiMwB734NzMWVk2OuOV0MqOes6ciXfkekFxj6H5QmvgBP4hXLPX09FA3v5VHn5IbVun+YBeZU3xq4yUjyrRVqwG5k0B3FIkxso4MfzqvVT6Zx8nA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oTryvd1j; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1724333090; c=relaxed/simple;
+	bh=hMKTAFPMmnp5ENGpfIiTVO92Kxs1Ls8UZuBvyv6u6KA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ChTkaJWqjl44FZj5Rcf0a/FKG/HVu+2r/RzGxxH9qcTbBJLzwItYnUUhWiKFjSpdaRDYgO0whlLYYmKAhJaNmTxa3j/8kwD4/+oW2pxdAuHKvq0YeakFGzYaLrpf4h8++/74Fq0kZ+JWoUT9/z1rVkjvXogmf8nQtk/aSo+KKR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HhqxQj7r; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oTryvd1j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 016E4C4AF09;
-	Thu, 22 Aug 2024 12:01:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724328103;
-	bh=rnP3ScPpv0mfReICPxXjJIQ5VK/7m9rc8+Ri/xWWkts=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=oTryvd1j5i5/vd3LWNElkGFGkV+uolwxL8EuAeh7LniqG8h4U5RcxD6CksULdFJ0Y
-	 m8eu5yR25fIUNh5x4q18o8BgHa8Cam3q4rJB5BgnVSeWvP5FLp6YxKC6qYkvV0i20I
-	 cLCT2bRr3SuG8qFH7h0INAMgnispijpyM9dOdskU5jcoa9hdYTOidlt8OtMwmXVERi
-	 mab9jQQxeVutniGSPb66/qbd5fABL0frxOOyj3XN2OZkiQBeeGUJUjdBfX0/bLpauF
-	 ZFC8yuqsWj7RY5CoLyKff+jViDsS6Uj1LFT12muoOJIy3yz+NZe2Wtqdm02JyFIBot
-	 j9rVxHWYEABqA==
-Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-27018df4ff3so478580fac.1;
-        Thu, 22 Aug 2024 05:01:42 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVoxe63FoulYKbvxWW4tFFcyNzDuBzgSf34hhNkBeUX9YzjtfZ2jmC5XqAyoIdjCdkxoCufnXjgjGL3@vger.kernel.org, AJvYcCX4bHKmdmern+RLfsacLgknrrZfhHVNK/PwHK1Z3v+23lDNRnnsUaI4jgCaC7D5JeNlVJIPMd365hQRIWHis1fX@vger.kernel.org, AJvYcCXRwGYM98CGbBk1k2FhtB2HJfii+A0luj9zwFXYMItUml4DFvwr0T3x1tjL9wjxetWqiVEuXdGIFYc5eEMp@vger.kernel.org
-X-Gm-Message-State: AOJu0YyBvJu7lQRcgLzOjFsk4b4ZQtdyXTV2r/T/QsBkMjsa7I4DMHbd
-	T5H8Txt7ZTCIMMJY4jDzXmT80os2NTkHCcK5fos42DaGvGxSReJhxOGuzvLjJ9FVFNopIDumQtq
-	xwsYiyvJFme4XTv11inP2BS+I6vQ=
-X-Google-Smtp-Source: AGHT+IFoXcfXn7ZzU3WuwPr4w1SrdkIUcw0L0cr2GQE3IvzOhU9bm8FeIdTzdcRaquclfLgsRsz5pxESttvywdHkfrU=
-X-Received: by 2002:a05:6870:332c:b0:260:e3fa:ab8d with SMTP id
- 586e51a60fabf-273cff2117bmr1798113fac.37.1724328102315; Thu, 22 Aug 2024
- 05:01:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HhqxQj7r"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1724333088; x=1755869088;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=hMKTAFPMmnp5ENGpfIiTVO92Kxs1Ls8UZuBvyv6u6KA=;
+  b=HhqxQj7rwDahoVuVpjlvWkcrpk39tb+03h9Dn4PR7MmbOlMwXMqjcZwu
+   lJwLXnAunPNBa6yihlADvCXSaC7oHOVh58j01Sb7AC9CNDJqILw9hmjf7
+   SU4OeytI1DW6Y78DfiCFEd1EUBz1TsUiba2PHtmgfx2NlhLcJ603JgAlo
+   Yf3KrAoGnmf/J0TfoDGDtY4gmcv5uY7SftkJLhI5Ifbczic6pmFNccmhl
+   j2GaT+1ur/lojDPJjZPM/KGJNwoHMqI3wiX3hlt8H8cpYOFVtvw/6Cw5h
+   cL1X4CPeSZTNvfrlI77VrVG7daqukkJQCj51PWOdiR6aj4umVEGHLRW4t
+   A==;
+X-CSE-ConnectionGUID: q5gDb6TsRBuEveF95PECFw==
+X-CSE-MsgGUID: okOYYW7DSNiDyNTyHuphdw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11172"; a="22614292"
+X-IronPort-AV: E=Sophos;i="6.10,167,1719903600"; 
+   d="scan'208";a="22614292"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2024 06:24:47 -0700
+X-CSE-ConnectionGUID: NjfhMLZNRSWmH0Sokx28yQ==
+X-CSE-MsgGUID: NR8tqyPZTBOZ7ScQOTO1OA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,167,1719903600"; 
+   d="scan'208";a="61596395"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2024 06:24:46 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1sh7nv-00000000SjU-2eDK;
+	Thu, 22 Aug 2024 16:24:43 +0300
+Date: Thu, 22 Aug 2024 16:24:43 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Brian Norris <briannorris@chromium.org>,
+	Francesco Dolcini <francesco@dolcini.it>,
+	Kalle Valo <kvalo@kernel.org>, linux-wireless@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] wifi: mwifiex: Fix memcpy() field-spanning write
+ warning in mwifiex_cmd_802_11_scan_ext()
+Message-ID: <Zsc8G-c6xW982XLU@smile.fi.intel.com>
+References: <ZsZa5xRcsLq9D+RX@elsanto>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240820191520.100224-2-thorsten.blum@toblux.com>
-In-Reply-To: <20240820191520.100224-2-thorsten.blum@toblux.com>
-From: Namjae Jeon <linkinjeon@kernel.org>
-Date: Thu, 22 Aug 2024 21:01:31 +0900
-X-Gmail-Original-Message-ID: <CAKYAXd_T4JzjOVFqxSt=RQG7w0yzPX62-AihQHUepvS+80BZJQ@mail.gmail.com>
-Message-ID: <CAKYAXd_T4JzjOVFqxSt=RQG7w0yzPX62-AihQHUepvS+80BZJQ@mail.gmail.com>
-Subject: Re: [PATCH v2] ksmbd: Replace one-element arrays with flexible-array members
-To: Thorsten Blum <thorsten.blum@toblux.com>
-Cc: sfrench@samba.org, senozhatsky@chromium.org, tom@talpey.com, 
-	linux-cifs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZsZa5xRcsLq9D+RX@elsanto>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Wed, Aug 21, 2024 at 4:15=E2=80=AFAM Thorsten Blum <thorsten.blum@toblux=
-.com> wrote:
->
-> Replace the deprecated one-element arrays with flexible-array members
-> in the structs copychunk_ioctl_req and smb2_ea_info_req.
->
-> There are no binary differences after this conversion.
->
-> Link: https://github.com/KSPP/linux/issues/79
-> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
-> ---
-> Changes in v2:
-> - Use <=3D instead of < and +1 as suggested by Namjae Jeon and Tom Talpey
-> - Link to v1: https://lore.kernel.org/linux-kernel/20240818162136.268325-=
-2-thorsten.blum@toblux.com/
-Applied it to #ksmbd-for-next-next.
-Thanks!
+On Wed, Aug 21, 2024 at 03:23:51PM -0600, Gustavo A. R. Silva wrote:
+> Replace one-element array with a flexible-array member in
+> `struct host_cmd_ds_802_11_scan_ext`.
+> 
+> With this, fix the following warning:
+> 
+> elo 16 17:51:58 surfacebook kernel: ------------[ cut here ]------------
+> elo 16 17:51:58 surfacebook kernel: memcpy: detected field-spanning write (size 243) of single field "ext_scan->tlv_buffer" at drivers/net/wireless/marvell/mwifiex/scan.c:2239 (size 1)
+> elo 16 17:51:58 surfacebook kernel: WARNING: CPU: 0 PID: 498 at drivers/net/wireless/marvell/mwifiex/scan.c:2239 mwifiex_cmd_802_11_scan_ext+0x83/0x90 [mwifiex]
+
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+Thank you!
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
