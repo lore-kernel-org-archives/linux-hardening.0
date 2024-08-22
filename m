@@ -1,106 +1,75 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82ACE171E69;
-	Thu, 22 Aug 2024 08:41:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75BE61C943E;
+	Thu, 22 Aug 2024 12:01:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724316080; cv=none; b=LTI9Qdop1f6kH4VGRQ7u0BgiXZb5N1hTaGGVgXftH78oZUS6zGM+GxY9sg6WrH43iidNQ2zlfA6RGVL//pnEBy4oOC0aaRt1Yjl/h0h/C/wg1Ck0R+ymxgtrkfIdPTGKpwpckzk628wcjGKHBrROwWkH49Ar6ArDmGCQN9ohEE8=
+	t=1724328103; cv=none; b=SOum+1WCdX3SpZz7eVmZloiM3ijRE1ouE2mx1lg8kn0MRFvKk019onJlg+/enzJzWjU588q8p1ya+3Mf+5OBzAHSB9vyR5nzSBiqIFig9H5QquhzS2AZVXCXrPh9NNn+auiSym4rVqsQe3SUvwOcDfOH0Y8WTt/C1dRPrVnQ50c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724316080; c=relaxed/simple;
-	bh=i00HcFXRrH3Z3fH5KHwO9JspjwGn2hyKWDlaT1RHe1o=;
-	h=Content-Type:MIME-Version:Subject:From:In-Reply-To:References:To:
-	 Cc:Message-ID:Date; b=dBYnouwGfJ+JlgKHJ4E2Vue+7nYZ3kZzinGfLWVw40Kh3R6lBij+xXB+Xf/4M7h8lcvuPRBGm9hYD1Kt2JJLkk5obacLu6FSF4bZgPtrj2qcIq8ARpgcy82gQWNkPG+5gv4cwTtP/b+8bHTbyRreMHeZqNvz6q4AxHc9Lj9mkDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mbXTnILI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1724328103; c=relaxed/simple;
+	bh=rnP3ScPpv0mfReICPxXjJIQ5VK/7m9rc8+Ri/xWWkts=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aPn2v7QDssebGyX2mynEcz/1mLOgq3TuPQ7z0hNYphkpuIiD1e/UnXm9iIpWiMwB734NzMWVk2OuOV0MqOes6ciXfkekFxj6H5QmvgBP4hXLPX09FA3v5VHn5IbVun+YBeZU3xq4yUjyrRVqwG5k0B3FIkxso4MfzqvVT6Zx8nA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oTryvd1j; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mbXTnILI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3704C4AF0B;
-	Thu, 22 Aug 2024 08:41:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oTryvd1j"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 016E4C4AF09;
+	Thu, 22 Aug 2024 12:01:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724316080;
-	bh=i00HcFXRrH3Z3fH5KHwO9JspjwGn2hyKWDlaT1RHe1o=;
-	h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-	b=mbXTnILIyCdhiQBj80T4M94CK5cGt8hU/CQbmwU8wCN4ULItmmc6mXtRXDRPCkikh
-	 EUSdvw487/ACOu8EA/Mnh2Bx57d08n3SB4YhcDr2Lpak16kWqdl3Jz1U9dWwW5jzys
-	 4wcO2wMP4oqVFiEbV999TkG8Er2oMbralP35nZgvtF+0v5V5ZZ+de9JDdKx9bQVH54
-	 oX1t90B7yGzbXh39cLrpYYlK8kKjz1QdRMlHJnio2rQo6BviD2Eu+jiZtIqbJLD4/g
-	 Q5zo3GzdGL6CyFDl7Coh8MFb8U4m35gxp4KiqTHScCA9KwpWPp/BXzRHv4gkJq43pf
-	 IIqYaIH9ae0Mw==
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1724328103;
+	bh=rnP3ScPpv0mfReICPxXjJIQ5VK/7m9rc8+Ri/xWWkts=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=oTryvd1j5i5/vd3LWNElkGFGkV+uolwxL8EuAeh7LniqG8h4U5RcxD6CksULdFJ0Y
+	 m8eu5yR25fIUNh5x4q18o8BgHa8Cam3q4rJB5BgnVSeWvP5FLp6YxKC6qYkvV0i20I
+	 cLCT2bRr3SuG8qFH7h0INAMgnispijpyM9dOdskU5jcoa9hdYTOidlt8OtMwmXVERi
+	 mab9jQQxeVutniGSPb66/qbd5fABL0frxOOyj3XN2OZkiQBeeGUJUjdBfX0/bLpauF
+	 ZFC8yuqsWj7RY5CoLyKff+jViDsS6Uj1LFT12muoOJIy3yz+NZe2Wtqdm02JyFIBot
+	 j9rVxHWYEABqA==
+Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-27018df4ff3so478580fac.1;
+        Thu, 22 Aug 2024 05:01:42 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVoxe63FoulYKbvxWW4tFFcyNzDuBzgSf34hhNkBeUX9YzjtfZ2jmC5XqAyoIdjCdkxoCufnXjgjGL3@vger.kernel.org, AJvYcCX4bHKmdmern+RLfsacLgknrrZfhHVNK/PwHK1Z3v+23lDNRnnsUaI4jgCaC7D5JeNlVJIPMd365hQRIWHis1fX@vger.kernel.org, AJvYcCXRwGYM98CGbBk1k2FhtB2HJfii+A0luj9zwFXYMItUml4DFvwr0T3x1tjL9wjxetWqiVEuXdGIFYc5eEMp@vger.kernel.org
+X-Gm-Message-State: AOJu0YyBvJu7lQRcgLzOjFsk4b4ZQtdyXTV2r/T/QsBkMjsa7I4DMHbd
+	T5H8Txt7ZTCIMMJY4jDzXmT80os2NTkHCcK5fos42DaGvGxSReJhxOGuzvLjJ9FVFNopIDumQtq
+	xwsYiyvJFme4XTv11inP2BS+I6vQ=
+X-Google-Smtp-Source: AGHT+IFoXcfXn7ZzU3WuwPr4w1SrdkIUcw0L0cr2GQE3IvzOhU9bm8FeIdTzdcRaquclfLgsRsz5pxESttvywdHkfrU=
+X-Received: by 2002:a05:6870:332c:b0:260:e3fa:ab8d with SMTP id
+ 586e51a60fabf-273cff2117bmr1798113fac.37.1724328102315; Thu, 22 Aug 2024
+ 05:01:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH][next] wifi: iwlegacy: Avoid multiple
- -Wflex-array-member-not-at-end warnings
-From: Kalle Valo <kvalo@kernel.org>
-In-Reply-To: <Zr2gxERA3RL3EwRe@elsanto>
-References: <Zr2gxERA3RL3EwRe@elsanto>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Stanislaw Gruszka <stf_xl@wp.pl>, linux-wireless@vger.kernel.org,
- linux-kernel@vger.kernel.org, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- linux-hardening@vger.kernel.org
-User-Agent: pwcli/0.1.1-git (https://github.com/kvalo/pwcli/) Python/3.11.2
-Message-ID: <172431607671.2217900.17688660521871057596.kvalo@kernel.org>
-Date: Thu, 22 Aug 2024 08:41:18 +0000 (UTC)
+References: <20240820191520.100224-2-thorsten.blum@toblux.com>
+In-Reply-To: <20240820191520.100224-2-thorsten.blum@toblux.com>
+From: Namjae Jeon <linkinjeon@kernel.org>
+Date: Thu, 22 Aug 2024 21:01:31 +0900
+X-Gmail-Original-Message-ID: <CAKYAXd_T4JzjOVFqxSt=RQG7w0yzPX62-AihQHUepvS+80BZJQ@mail.gmail.com>
+Message-ID: <CAKYAXd_T4JzjOVFqxSt=RQG7w0yzPX62-AihQHUepvS+80BZJQ@mail.gmail.com>
+Subject: Re: [PATCH v2] ksmbd: Replace one-element arrays with flexible-array members
+To: Thorsten Blum <thorsten.blum@toblux.com>
+Cc: sfrench@samba.org, senozhatsky@chromium.org, tom@talpey.com, 
+	linux-cifs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-"Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
-
-> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-> getting ready to enable it, globally.
-> 
-> So, in order to avoid ending up with a flexible-array member in the
-> middle of multiple other structs, we use the `__struct_group()`
-> helper to create new tagged structures with the suffix `_hdr`.
-> These structures group together all the members of the original
-> flexible structures except the flexible arrays.
-> 
-> As a result, the arrays are effectively separated from the rest of the
-> members without modifying the memory layout of the flexible structures.
-> We then change the type of the middle struct members currently causing
-> trouble from the original flex struct to the newly created structs with
-> suffix `_hdr`.
-> 
-> We also want to ensure that when new members need to be added to the
-> flexible structures, they are always included within the newly created
-> tagged structs. For this, we use `static_assert()`. This ensures that the
-> memory layout for both the flexible structure and the new tagged struct
-> is the same after any changes.
-> 
-> This approach avoids having to implement the `_hdr` structures as
-> completely separate structures, thus preventing having to maintain
-> two independent but basically identical structures, closing the door
-> to potential bugs in the future.
-> 
-> We also use `container_of()` whenever we need to retrieve a pointer to
-> the flexible structure, through which we can access the flexible-array
-> member, if necessary.
-> 
-> Also, remove a couple of unused zero-length arrays and flexible-array
-> members.
-> 
-> So, with these changes, fix the following warnings:
-> 
-> drivers/net/wireless/intel/iwlegacy/commands.h:1196:38: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> drivers/net/wireless/intel/iwlegacy/commands.h:1197:36: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> drivers/net/wireless/intel/iwlegacy/commands.h:2505:30: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> drivers/net/wireless/intel/iwlegacy/commands.h:2549:26: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> drivers/net/wireless/intel/iwlegacy/commands.h:2654:31: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> drivers/net/wireless/intel/iwlegacy/commands.h:2665:30: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> drivers/net/wireless/intel/iwlegacy/commands.h:2673:26: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> drivers/net/wireless/intel/iwlegacy/commands.h:3349:30: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-
-Patch applied to wireless-next.git, thanks.
-
-a7e8997ae18c wifi: iwlegacy: Avoid multiple -Wflex-array-member-not-at-end warnings
-
--- 
-https://patchwork.kernel.org/project/linux-wireless/patch/Zr2gxERA3RL3EwRe@elsanto/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
-
+On Wed, Aug 21, 2024 at 4:15=E2=80=AFAM Thorsten Blum <thorsten.blum@toblux=
+.com> wrote:
+>
+> Replace the deprecated one-element arrays with flexible-array members
+> in the structs copychunk_ioctl_req and smb2_ea_info_req.
+>
+> There are no binary differences after this conversion.
+>
+> Link: https://github.com/KSPP/linux/issues/79
+> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+> ---
+> Changes in v2:
+> - Use <=3D instead of < and +1 as suggested by Namjae Jeon and Tom Talpey
+> - Link to v1: https://lore.kernel.org/linux-kernel/20240818162136.268325-=
+2-thorsten.blum@toblux.com/
+Applied it to #ksmbd-for-next-next.
+Thanks!
