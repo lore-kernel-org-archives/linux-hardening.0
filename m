@@ -1,97 +1,146 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC12C487AE;
-	Thu, 22 Aug 2024 17:41:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 090F61CC8A7;
+	Thu, 22 Aug 2024 17:47:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724348512; cv=none; b=ZxR95+q2kWgbmtdoO6Q4i7gFcajdPNMFl2j1FuKJAP0yq5eb9U5JQ+kZ5Ukr60+8rGcdFJD/yWZn9pyGgPJIQrc4/BWDNvHEkf/YdHaD39X939vMblDbMh5xMTCm33sQufnj/yEb7E0V4a2tkjrSd+gSCJid2+IiKrJ5Ry96z8M=
+	t=1724348857; cv=none; b=UrIrOi0dz/kPR9lZT+4khnMRyd8f3h4/oiSL2vUaJUYgJPdXgpBsZNDU+JI+AFHb84TJFquxTuJT14g9JGyzYuIuVQaSK4U/or+txBOf+H3denU/DIWVf02UbzFZgJ5k9xfmTEzFbAXejp5Dohmnx7FoYTJPVTa2YHI1oLtxYvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724348512; c=relaxed/simple;
-	bh=EIA1hEYwm1C2TI9GOWGiHROnOXNDw/yWFqOCejDP7oo=;
+	s=arc-20240116; t=1724348857; c=relaxed/simple;
+	bh=ZouLq/8pIc7NL+u1I+/tJejA2tHWdm7Eju6gVChwW7A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BQFT0RRuc3XPuqrZjNVm8CNcF2iCjQ5oxjFc8ZA/aYpWDMt34UjIJmSGtTWCt3I8E+gbqfB3QVhbJgcgtarzBZxeF6spBzb81uFFIwCTUhRw+1Vn8JmLga5MvRkln5AjABGj5ayMp1vNt1UbsdZq17Ea/6l2ogn9XhfTKXGfI64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gr6enR+3; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=n9b55dJCXRNIzSAi6IODFnXLylsrHkpnaKwcYPc96QwxDkXv0Iy7XLx69p7Pduw1euQZOHfZWAZV2PzoxAeqMYEmDUPFyxxVBo9Uw8lfIcBPDcZJqM0DSIS6e0pSh6Y6vCEvOqKA/GGmSO2Tx+MzKAjb4OzIOHU8XdLmu+uIR6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=msg14e4d; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gr6enR+3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63DECC32782;
-	Thu, 22 Aug 2024 17:41:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="msg14e4d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EA2BC32782;
+	Thu, 22 Aug 2024 17:47:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724348511;
-	bh=EIA1hEYwm1C2TI9GOWGiHROnOXNDw/yWFqOCejDP7oo=;
+	s=k20201202; t=1724348856;
+	bh=ZouLq/8pIc7NL+u1I+/tJejA2tHWdm7Eju6gVChwW7A=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Gr6enR+36v6pPq8NzbStvk6GTD120FWyjr6SQHOSZ7oQZpGhHbE+1VFa7NmXzNFnV
-	 qi9pD51GM1eorajAlFle0jVSHC7W6LbGVrGiREVBiuNEiHH3B3qNcmrRVlqKJFaMQV
-	 p+i9fSRcqakGYyoDrlBKXgaSoNXToyXX3zswYTJ20xS6GPs5aBC6JREBgC7bYxuKty
-	 samd23N8OLvgX9JLDVN5PkLwpLwejSwKlmXBzsTjJMNECaEERrZ62oEo0ixmayO4bF
-	 15Btlg/GzTisTXtSygtdIZjkZssPtoTcuZ/ZMqLpfh/QuoIHPe63hDWTmkKR9w5q7e
-	 RFUJdoo4HNANg==
-Date: Thu, 22 Aug 2024 10:41:50 -0700
+	b=msg14e4dBoOafgRZOQLJtri9GIzzLAjE4gYBSa0vsNow1AgY8EWoFGYqDkXhgpHno
+	 nd4RQVEugGo4Z5ngysg38vftiVVt/kBfz/+xJGLm5/G6HVHyRKM9A9fT3hCZ23ONAN
+	 5HUcn9/XfoHa/V7O7LE99EljsIzy/O3cxBNjd9HXWWpNsWWj3JFNxd0txkJKjNfpDX
+	 Jvv6FeKzf0dNW+OdsdyP9aEeeOEt0k29cwSTV0/jE+atQHdMrIq6TP8UnL96xSFWqy
+	 DHbP8OmmSHFf2LuOqFtcmjhm3kgGSrxamTYwaVOykr38HaUHenqmEirH4bb272mSHS
+	 6zqbO5OFxWFDA==
+Date: Thu, 22 Aug 2024 10:47:36 -0700
 From: Kees Cook <kees@kernel.org>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Juergen Gross <jgross@suse.com>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
-	xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
+To: Xiu Jianfeng <xiujianfeng@huaweicloud.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org,
+	"GONG, Ruiqi" <gongruiqi@huaweicloud.com>,
+	Jann Horn <jannh@google.com>, Matteo Rizzo <matteorizzo@google.com>,
+	jvoisin <julien.voisin@dustri.org>, linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] xen/pci: Avoid -Wflex-array-member-not-at-end
- warning
-Message-ID: <202408221040.2961A81@keescook>
-References: <ZsU58MvoYEEqBHZl@elsanto>
+Subject: Re: [PATCH 5/5] slab: Allocate and use per-call-site caches
+Message-ID: <202408221046.808356D202@keescook>
+References: <20240809072532.work.266-kees@kernel.org>
+ <20240809073309.2134488-5-kees@kernel.org>
+ <1ddb539a-79ed-d992-76cf-061acb4df11e@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <ZsU58MvoYEEqBHZl@elsanto>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1ddb539a-79ed-d992-76cf-061acb4df11e@huaweicloud.com>
 
-On Tue, Aug 20, 2024 at 06:50:56PM -0600, Gustavo A. R. Silva wrote:
-> Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
-> a flexible structure where the size of the flexible-array member
-> is known at compile-time, and refactor the rest of the code,
-> accordingly.
+On Sat, Aug 17, 2024 at 09:30:58AM +0800, Xiu Jianfeng wrote:
+> Hi Kees,
 > 
-> So, with this, fix the following warning:
+> On 2024/8/9 15:33, Kees Cook wrote:
+> > Use separate per-call-site kmem_cache or kmem_buckets. These are
+> > allocated on demand to avoid wasting memory for unused caches.
+> > 
+> > A few caches need to be allocated very early to support allocating the
+> > caches themselves: kstrdup(), kvasprintf(), and pcpu_mem_zalloc(). Any
+> > GFP_ATOMIC allocations are currently left to be allocated from
+> > KMALLOC_NORMAL.
+> > 
+> > With a distro config, /proc/slabinfo grows from ~400 entries to ~2200.
+> > 
+> > Since this feature (CONFIG_SLAB_PER_SITE) is redundant to
+> > CONFIG_RANDOM_KMALLOC_CACHES, mark it a incompatible. Add Kconfig help
+> > text that compares the features.
+> > 
+> > Improvements needed:
+> > - Retain call site gfp flags in alloc_tag meta field to:
+> >   - pre-allocate all GFP_ATOMIC caches (since their caches cannot
+> >     be allocated on demand unless we want them to be GFP_ATOMIC
+> >     themselves...)
+> >   - Separate MEMCG allocations as well
+> > - Allocate individual caches within kmem_buckets on demand to
+> >   further reduce memory usage overhead.
+> > 
+> > Signed-off-by: Kees Cook <kees@kernel.org>
+> > ---
+> > Cc: Suren Baghdasaryan <surenb@google.com>
+> > Cc: Kent Overstreet <kent.overstreet@linux.dev>
+> > Cc: Vlastimil Babka <vbabka@suse.cz>
+> > Cc: Christoph Lameter <cl@linux.com>
+> > Cc: Pekka Enberg <penberg@kernel.org>
+> > Cc: David Rientjes <rientjes@google.com>
+> > Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Cc: Roman Gushchin <roman.gushchin@linux.dev>
+> > Cc: Hyeonggon Yoo <42.hyeyoo@gmail.com>
+> > Cc: linux-mm@kvack.org
+> > ---
+> >  include/linux/alloc_tag.h |   8 +++
+> >  lib/alloc_tag.c           | 121 +++++++++++++++++++++++++++++++++++---
+> >  mm/Kconfig                |  19 +++++-
+> >  mm/slab_common.c          |   1 +
+> >  mm/slub.c                 |  31 +++++++++-
+> >  5 files changed, 170 insertions(+), 10 deletions(-)
+> > 
 > 
-> drivers/xen/pci.c:48:55: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> [...]
 > 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->  drivers/xen/pci.c | 14 +++++---------
->  1 file changed, 5 insertions(+), 9 deletions(-)
+> > diff --git a/mm/slub.c b/mm/slub.c
+> > index 3520acaf9afa..d14102c4b4d7 100644
+> > --- a/mm/slub.c
+> > +++ b/mm/slub.c
+> > @@ -4135,6 +4135,35 @@ void *__kmalloc_large_node_noprof(size_t size, gfp_t flags, int node)
+> >  }
+> >  EXPORT_SYMBOL(__kmalloc_large_node_noprof);
+> >  
+> > +static __always_inline
+> > +struct kmem_cache *choose_slab(size_t size, kmem_buckets *b, gfp_t flags,
+> > +			       unsigned long caller)
+> > +{
+> > +#ifdef CONFIG_SLAB_PER_SITE
+> > +	struct alloc_tag *tag = current->alloc_tag;
 > 
-> diff --git a/drivers/xen/pci.c b/drivers/xen/pci.c
-> index 72d4e3f193af..a2facd8f7e51 100644
-> --- a/drivers/xen/pci.c
-> +++ b/drivers/xen/pci.c
-> @@ -44,15 +44,11 @@ static int xen_add_device(struct device *dev)
->  	}
->  #endif
->  	if (pci_seg_supported) {
-> -		struct {
-> -			struct physdev_pci_device_add add;
-> -			uint32_t pxm;
-> -		} add_ext = {
-> -			.add.seg = pci_domain_nr(pci_dev->bus),
-> -			.add.bus = pci_dev->bus->number,
-> -			.add.devfn = pci_dev->devfn
-> -		};
-> -		struct physdev_pci_device_add *add = &add_ext.add;
-> +		DEFINE_RAW_FLEX(struct physdev_pci_device_add, add, optarr, 1);
-> +
-> +		add->seg = pci_domain_nr(pci_dev->bus);
-> +		add->bus = pci_dev->bus->number;
-> +		add->devfn = pci_dev->devfn;
->  
->  #ifdef CONFIG_ACPI
->  		acpi_handle handle;
+> There is a compile error here if CONFIG_MEM_ALLOC_PROFILING is disabled
+> when I test this patchset.
+> 
+> mm/slub.c: In function ‘choose_slab’:
+> mm/slub.c:4187:40: error: ‘struct task_struct’ has no member named
+> ‘alloc_tag’
+>  4187 |         struct alloc_tag *tag = current->alloc_tag;
+>       |                                        ^~
+>   CC      mm/page_reporting.o
+> 
+> maybe CONFIG_SLAB_PER_SITE should depend on CONFIG_MEM_ALLOC_PROFILING
 
-Looks correct to me!
+Thanks! I tried to make the Kconfig use the right dependencies, but I
+clearly missed something. There is also some weird behavior between
+"depends" and "select". I will get this fixed for the next version.
 
-Reviewed-by: Kees Cook <kees@kernel.org>
+-Kees
 
 -- 
 Kees Cook
