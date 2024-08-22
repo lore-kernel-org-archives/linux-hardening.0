@@ -1,107 +1,115 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68BF12C190;
-	Thu, 22 Aug 2024 17:01:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 270011CB33A;
+	Thu, 22 Aug 2024 17:27:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724346089; cv=none; b=WsWlg/uV+R9TdKqWdgP2pDoxud58ACjxWssDXNXjA0ECcQsC5vtZXYR6PlilobWK+GGjxmW5oIfy4ARhMkxUmQdB7YoHf2+l7iZFHRJQE4tMytxZ6bkfkVasEiEhwcSbfNm4VfVq+gbLk1n1VUm926CQNe7yM/T7TgVO1OsxvGk=
+	t=1724347659; cv=none; b=H70dyTpwZ0CAGgP/y0cmTrrMw9SZ2eYvtkQkACr/pLJK0YU6WLHBKfiU1Bi4GIjL5IpZFv2Gy0Jey00NJ5qxkdwwwLtZEnJHApxnesgsfz8lsnyl/pZdct3JAgVGZyA5mnciWhKjOa4vAn3KZFyT1EdV5WV53JzJlrGIZswTBEw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724346089; c=relaxed/simple;
-	bh=KtA4oYSVp+tCFeIPBkDZAv1Ibin4JPG/1Qu6dMmoIg0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=MesIUQwZI2+/Z/66G3/kacEZHLFe4A5aWJzyDtlDPcmwz0NFtkMMGyant2c8FgBwjEAwiurk6NlVnTSbsJfzxFxWsmAxRFO1rU20xCdbZ8zEjaPZhfZFzbwhJFn/J9By6OSwc9azgNgCYWwnvGafx0JKmzBo72i0f7o3vFcci74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=B50uwlNE; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1724347659; c=relaxed/simple;
+	bh=TWiJ93HyAJ88G0js0Qu5sBOlvCmAqny+80HmOjGUBgk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LDcVXLGqnWxL5v2d0+07V7JCI1nFA8rrq44jw+srzBQK1UV74T1RvNWA4q9DqNgpH2kawmwofajRbWxO9JvI/ZyiLqSkZIzOd1aS/JFuGAdfgMGzh371iXXi1+6mmvrfSHRnEzOFV/ooxsVP86uIJu2hM5tKojQZlZ4H2L5Trlc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H7ZbSPhX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="B50uwlNE"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47M9v9O1030906;
-	Thu, 22 Aug 2024 17:01:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	xl7miFXgrV2201IWVkxgpac+HCQbuJB8WNU4Rg/Ckmo=; b=B50uwlNEKirzCWvv
-	vmtAiKsqegjmF0BDQUB6DLqouaTJXcf42MIbMBI/GNtCRsnqOchLnZUKAZz5vHMG
-	edTED7b3WvaxTlMnOKpOn+xBLlqcudgZ+0HPxBC36sqTv82eqNkOKMBXibGY7UYK
-	Xm/W6arm0cNc8qlq0aad69+INiPt3M5EPDmPRIBgLYixEE8VWkhDsdN7OH0YM0aW
-	peSSKMuAy4sc9cwyXY4J+n++eRfC/VkfU3E6/JV/Jh+gHwxYdT8aDifd4QtvdXWf
-	8oYBBl437CIzBTRitFkHTpxWtvruwI0L2Jj27Jhha7YYWZ0zoq5MLtadvuS00tBu
-	iWyRkw==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 415ck9d0bx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 Aug 2024 17:01:22 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 47MH1LmO022640
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 Aug 2024 17:01:21 GMT
-Received: from [10.227.110.203] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 22 Aug
- 2024 10:01:20 -0700
-Message-ID: <547af05e-0110-425e-be11-2cea261776fa@quicinc.com>
-Date: Thu, 22 Aug 2024 10:01:20 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H7ZbSPhX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA9D1C32782;
+	Thu, 22 Aug 2024 17:27:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724347658;
+	bh=TWiJ93HyAJ88G0js0Qu5sBOlvCmAqny+80HmOjGUBgk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=H7ZbSPhXCKuat5wa5m3ssacTGsb9R32fPXdGVtGmibM4WFj96ciyCVM5fbxhjKaNA
+	 mcOR8rp2o3bBdepLAV9HlpAo4rJrTWGSNuSYW25mKjEZzhKkdjNUGMFvcTTzx+2kSj
+	 UovTM8gRRX0ZqrB5cFi430wanYTzkgqHIKHyvExTgLR61IiQvfDFBiF7HcUXcerDqq
+	 6SatQL0hhLTWfpX+uQRHkZ5obtIXtitWc5nIJIEJMGs5otVrcY4v+lpnhowNMR30/i
+	 nQtG/vqqUkPecvMe+p4hS8qODiaoyAorTIhMRBCeOgdcLxnRuDnB+kNdkiPVv5DWPE
+	 TZohJE5eH3FKQ==
+Date: Thu, 22 Aug 2024 10:27:38 -0700
+From: Kees Cook <kees@kernel.org>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
+	Danilo Krummrich <dakr@redhat.com>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] drm/nouveau: Avoid -Wflex-array-member-not-at-end
+ warning
+Message-ID: <202408221011.82876DA0C4@keescook>
+References: <ZsZLFS1CsHkKjw+C@elsanto>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] wifi: ath12k: Avoid -Wflex-array-member-not-at-end
- warnings
-To: Kalle Valo <kvalo@kernel.org>,
-        "Gustavo A. R. Silva"
-	<gustavoars@kernel.org>
-CC: Jeff Johnson <jjohnson@kernel.org>, <linux-wireless@vger.kernel.org>,
-        <ath12k@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-hardening@vger.kernel.org>
-References: <ZrZEuxJihMzAaTVh@cute>
- <172434545943.2469785.15733185765753701476.kvalo@kernel.org>
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-Content-Language: en-US
-In-Reply-To: <172434545943.2469785.15733185765753701476.kvalo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: oCJUQw1zs7xtFFqKa0Fj5N_3BbPK-AtB
-X-Proofpoint-ORIG-GUID: oCJUQw1zs7xtFFqKa0Fj5N_3BbPK-AtB
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-08-22_10,2024-08-22_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- lowpriorityscore=0 malwarescore=0 priorityscore=1501 mlxlogscore=777
- suspectscore=0 mlxscore=0 spamscore=0 bulkscore=0 adultscore=0
- clxscore=1011 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2407110000 definitions=main-2408220127
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZsZLFS1CsHkKjw+C@elsanto>
 
-On 8/22/2024 9:51 AM, Kalle Valo wrote:
-> "Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
+On Wed, Aug 21, 2024 at 02:16:21PM -0600, Gustavo A. R. Silva wrote:
+> Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
+> a flexible structure where the size of the flexible-array member
+> is known at compile-time, and refactor the rest of the code,
+> accordingly.
 > 
->> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
->> getting ready to enable it, globally.
->>
->> Move the conflicting declaration to the end of the structure. Notice
->> that `struct ieee80211_chanctx_conf` is a flexible structure --a
->> structure that contains a flexible-array member.
->>
->> Also, remove an unused structure.
->>
->> Fix the following warnings:
->> drivers/net/wireless/ath/ath12k/core.h:290:39: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
->> drivers/net/wireless/ath/ath12k/dp.h:1499:24: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
->>
->> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->> Signed-off-by: Kalle Valo <quic_kvalo@quicinc.com>
+> So, with this, fix the following warning:
 > 
-> Should I add a similar comment as with the ath11k patch:
+> drivers/gpu/drm/nouveau/dispnv50/disp.c:779:47: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 > 
-> https://patchwork.kernel.org/project/linux-wireless/patch/ZrZB3Rjswe0ZXtug@cute/
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  drivers/gpu/drm/nouveau/dispnv50/disp.c | 20 +++++++++-----------
+>  1 file changed, 9 insertions(+), 11 deletions(-)
 > 
+> diff --git a/drivers/gpu/drm/nouveau/dispnv50/disp.c b/drivers/gpu/drm/nouveau/dispnv50/disp.c
+> index eed579a6c858..ddddc69640be 100644
+> --- a/drivers/gpu/drm/nouveau/dispnv50/disp.c
+> +++ b/drivers/gpu/drm/nouveau/dispnv50/disp.c
+> @@ -774,11 +774,9 @@ nv50_hdmi_enable(struct drm_encoder *encoder, struct nouveau_crtc *nv_crtc,
+>  	struct drm_hdmi_info *hdmi = &nv_connector->base.display_info.hdmi;
+>  	union hdmi_infoframe infoframe = { 0 };
+>  	const u8 rekey = 56; /* binary driver, and tegra, constant */
+> +	DEFINE_RAW_FLEX(struct nvif_outp_infoframe_v0, args, data, 17);
+> +	const u8 data_len = 17; /* same length as in DEFINE_RAW_FLEX above. */
 
-Sounds reasonable to me
+To avoid repeating the open-coded "17", this could either be a define:
+
+nv50_hdmi_enable(...)
+{
+...
+#define data_len	17
+	DEFINE_RAW_FLEX(struct nvif_outp_infoframe_v0, args, data, data_len);
+...rest of function...
+#undef data_len
+}
+
+or an ungainly but compile-time calculated value that exposes some
+DEFINE_FLEX internals:
+
+	const u8 data_len = (sizeof(args_u) - sizeof(*args)) / sizeof(*args->data);
+
+(Maybe a helper is needed for that?)
+
+#define STACK_FLEX_COUNT(name, member)	\
+	((sizeof(name##_u) = sizeof(*(name))) / sizeof(*(name)->member))
+
+> @@ -815,29 +813,29 @@ nv50_hdmi_enable(struct drm_encoder *encoder, struct nouveau_crtc *nv_crtc,
+>  		return;
+>  
+>  	/* AVI InfoFrame. */
+> -	args.infoframe.version = 0;
+> -	args.infoframe.head = nv_crtc->index;
+> +	args->version = 0;
+> +	args->head = nv_crtc->index;
+
+The stack variable (was before and is again) already zero-initialized,
+so the "= 0" line shouldn't be needed.
+
+But neither of these comments are show-stoppers, IMO.
+
+Reviewed-by: Kees Cook <kees@kernel.org>
+
+-- 
+Kees Cook
