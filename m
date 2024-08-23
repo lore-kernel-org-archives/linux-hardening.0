@@ -1,91 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out28-148.mail.aliyun.com (out28-148.mail.aliyun.com [115.124.28.148])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5BA213D2B2;
-	Fri, 23 Aug 2024 07:42:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A2523BBC2;
+	Fri, 23 Aug 2024 09:50:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.28.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724398936; cv=none; b=tghzWtdlW88sMM4DqBPAmTGpvAjyU/TgG8IyIG3hp5A+t3G5kZBGPlk9ZH+p++w2wxanZs4EM7rNuO8Am4WXrC0qQSW0XWyF4HvOpxvQe8TYNvcC/YPMDWNGCEALxz6qpFXPhkq+d2VPWBCPMC8FjbWzDu1AgRbBoDpGRifxDFQ=
+	t=1724406612; cv=none; b=VzaMqkydKoBk15qWSvOHe+5N6NMUxhK19HhHwMQmfkw50GjThBNSt4YOo2VUDYieQ6CIdcfLdPy60QxFPjM2qY1bhmHEhz0j6KzZr7NS1GMvPVQXUD/7DcuytGTzjHKt6YFgZZlzbF9/x2Z89ueyGz4wPesr084+CdKb5CtwlCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724398936; c=relaxed/simple;
-	bh=S+HKVrDbu0nCl1VGQWHp5XpmJZSWQdry+gMoS52FIsA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R1lnwzn9ncVK8oefWFHfI1IS8wz//EWhqVTuekTljNazs+dJ3rtbHoQ0h7AzLq4g5NXV4ATSWRfykPxwVcddshuvSkC2KlV9AxbnyyARi4M3zBrSit8ab+w6cemCuHS0XrWGOrTjvsDVaag3ZwnZQht8wldrH4sZ3n2q+TUIMxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lKSOfxt/; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lKSOfxt/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A14A0C4AF0B;
-	Fri, 23 Aug 2024 07:42:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724398936;
-	bh=S+HKVrDbu0nCl1VGQWHp5XpmJZSWQdry+gMoS52FIsA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lKSOfxt//A4mZB8WzpqzqZ+7Q6/QLjvhgUemBQwAkVL6VCoHWXM3ibt+hSxEbiKof
-	 uMzKVxwn5YStd2tbqk/jbs//tpNZIlbZ/mLL74mRx9OsenI1OvYd9DAaaDFH+LDl6x
-	 HiS0kdV3s2qKik5wBJarDt+RwIUFqjHY2Gclsunisd9FRbdkUjy1PJQOiqBM3NzhpM
-	 nzNOLYdBYljvRzuvuFiqGa4HkFUcouAACQ+LtjPKIrLKQ87zH5+suUkRylGfSQ5cDi
-	 hpwPTS6Dw/xhhK04rlSOd9zKrCRt61Bo1TYpcYHsiBBWx4I4JQn1GjzMnmdjDz+NR2
-	 d/5/JND3Uh0tw==
-Date: Fri, 23 Aug 2024 08:42:11 +0100
-From: Lee Jones <lee@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-	Pavel Machek <pavel@ucw.cz>, linux-leds@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] leds: gpio: Set num_leds after allocation
-Message-ID: <20240823074211.GM6858@google.com>
-References: <20240716212455.work.809-kees@kernel.org>
- <c16715ff-1e47-4a73-8fcb-87462069b5ca@embeddedor.com>
- <20240725102240.GE501857@google.com>
- <202408221713.77EF78D1@keescook>
+	s=arc-20240116; t=1724406612; c=relaxed/simple;
+	bh=C6duMpSDvRjWg9U/QynDC5ewoCqeJ2at9ZD1JLGn8kI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QcSxdWUUE99PFUvGITMfr+LVxm4oxIDk+zgjJzQwNZTNhLkXktDKajqydzP2AavKwCBO07xf+A7FeEG1wOpgdZ8rmnyHHPWWcGkun+KtnYQj91B0eePhBepRF8q8K7ni/6908Y6BRMZOvjTsST/89NJa6piqa+ew7AmaPTXFz6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=awinic.com; spf=pass smtp.mailfrom=awinic.com; arc=none smtp.client-ip=115.124.28.148
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=awinic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=awinic.com
+Received: from awinic..(mailfrom:wangshuaijie@awinic.com fp:SMTPD_---.Z.nW34p_1724406591)
+          by smtp.aliyun-inc.com;
+          Fri, 23 Aug 2024 17:49:57 +0800
+From: wangshuaijie@awinic.com
+To: jic23@kernel.org,
+	lars@metafoo.de,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	kees@kernel.org,
+	gustavoars@kernel.org,
+	linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Cc: wangshuaijie@awinic.com,
+	liweilei@awinic.com,
+	kangjiajun@awinic.com
+Subject: [PATCH V8 0/2] Add support for aw96103/aw96105 proximity sensor
+Date: Fri, 23 Aug 2024 09:49:44 +0000
+Message-ID: <20240823094947.3511730-1-wangshuaijie@awinic.com>
+X-Mailer: git-send-email 2.41.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <202408221713.77EF78D1@keescook>
 
-On Thu, 22 Aug 2024, Kees Cook wrote:
+From: shuaijie wang <wangshuaijie@awinic.com>
 
-> On Thu, Jul 25, 2024 at 11:22:40AM +0100, Lee Jones wrote:
-> > On Tue, 16 Jul 2024, Gustavo A. R. Silva wrote:
-> > 
-> > > 
-> > > 
-> > > On 16/07/24 15:24, Kees Cook wrote:
-> > > > With the new __counted_by annotation, the "num_leds" variable needs to
-> > > > valid for accesses to the "leds" array. This requirement is not met in
-> > > > gpio_leds_create(), since "num_leds" starts at "0", so "leds" index "0"
-> > > > will not be considered valid (num_leds would need to be "1" to access
-> > > > index "0").
-> > > > 
-> > > > Fix this by setting the allocation size after allocation, and then update
-> > > > the final count based on how many were actually added to the array.
-> > > > 
-> > > > Fixes: 52cd75108a42 ("leds: gpio: Annotate struct gpio_leds_priv with __counted_by")
-> > > > Signed-off-by: Kees Cook <kees@kernel.org>
-> > > 
-> > > Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> > > 
-> > > Thanks
-> > > -- 
-> > 
-> > Using the signature tag in the middle of an email turns the remainder of
-> > the body into a signature block, which is odd to say the least.  By all
-> > means sign-off in the middle of a mail, but please refrain from
-> > converting the rest of the mail.
-> 
-> Ping. Shall I take this via the hardening tree?
+Add drivers that support Awinic aw96103/aw96105 proximity sensors.
 
-Certainly not. :)
+The aw9610x series are high-sensitivity capacitive proximity detection
+sensors. This device detects human proximity and assists electronic devices
+in reducing specific absorption rate (SAR) to pass SAR related certifications.
+The device reduces RF power and reduces harm when detecting human proximity. 
+Increase power and improve signal quality when the human body is far away.
 
-Apologies, looks like I relied to Gustavo then marked the submission as
-reviewed.  Applied to the LED tree now, thanks.
+The specific absorption rate (SAR) is a metric that measures the degree of
+absorption of electromagnetic radiation emitted by wireless devices,
+such as mobile phones and tablets, by human tissue.
 
+This patch implements device initialization, registration,
+I/O operation handling and interrupt handling, and passed basic testing.
+
+v1->v2:
+-------
+ - Remove unnecessary log printing.
+ - Optimize comment style.
+ - Issues with modifying the device tree.
+ - Optimize code style.
+
+v2->v3:
+-------
+ - Add a description about the hardware device.
+ - Remove inappropriate configuration items.
+ - Modify the formatting issues.
+ - Modify the structure of the driver.
+ - Change the style of the driver's comments.
+ - Remove unnecessary log printing.
+ - Modify the function used for memory allocation.
+ - Modify the driver registration process.
+ - Remove the functionality related to updating firmware.
+ - Change the input subsystem in the driver to the iio subsystem.
+ - Modify the usage of the interrupt pin.
+ 
+v3->v4:
+-------
+The changes in this patch version are quite significant, and I concur
+with Krzysztof's viewpoint that this driver is indeed overly complex for
+the proximity sensor. Therefore, I have removed the compatibility for the
+aw963xx series, and the driver will now exclusively support the aw9610x series.
+
+ - Modify the software architecture to remove compatibility for
+   the aw963xx series.
+ - Optimize the parsing of register configuration files (.bin).
+ - Remove unnecessary log printing.
+ - Delete redefinition of true and false.
+ - Remove unnecessary interfaces.
+ - Optimize regulator usage.
+ - Convert the I2C communication interface to regmap.
+
+v4->v5:
+-------
+ - Solve errors that occur when executing the make dt_binding_check DT_SCHEMA_FILES.
+
+v5->v6:
+-------
+ - Rename AW9610X to aw96103.
+ - Remove the encapsulation of the i2c communication interface.
+ - Delete the update node.
+ - Modify the usage of regulator.
+ - Delete the remove and shutdown interfaces.
+ - Add iio's event-related interfaces.
+ - Modify the initialization process of iio.
+ - Delete power_supply-related operations.
+ - Modify the register names.
+
+v6->v7:
+-------
+ - Use __free(kfree) when allocating memory.
+ - Modify the way to request the register configuration file,
+   using request_firmware_nowait to request the configuration file.
+
+v7->v8:
+-------
+ - Delete aw96103.h.
+ - Remove the function of dynamically allocating IIO-related resources.
+ - Remove non-essential members from the aw96103 structure.
+ - Add some comments.
+ - Delete the aw96103_interrupt_clear function.
+ - Delete the aw96103_version_init function.
+ - Optimize code logic.
+ - Modify attribute descriptions in the YAML file.
+
+shuaijie wang (2):
+  dt-bindings: iio: aw96103: Add bindings for aw96103/aw96105 sensor
+  iio: proximity: aw96103: Add support for aw96103/aw96105 proximity
+    sensor
+
+ .../iio/proximity/awinic,aw96103.yaml         |  61 ++
+ drivers/iio/proximity/Kconfig                 |  11 +
+ drivers/iio/proximity/Makefile                |   1 +
+ drivers/iio/proximity/aw96103.c               | 880 ++++++++++++++++++
+ 4 files changed, 953 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/proximity/awinic,aw96103.yaml
+ create mode 100644 drivers/iio/proximity/aw96103.c
+
+
+base-commit: b78b25f69a1dfa79798f684ad34707b1da10a48f
 -- 
-Lee Jones [李琼斯]
+2.45.1
+
