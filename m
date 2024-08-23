@@ -1,106 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC20A38389;
-	Fri, 23 Aug 2024 10:46:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D240B1428E3
+	for <linux-hardening@vger.kernel.org>; Fri, 23 Aug 2024 11:48:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724409962; cv=none; b=K1dRB6lDHHt7CKwmNYu+a97BjBQ2m2Zb/iN57FvSh74T/ne5zugyRo0ylFVyMooSsXPU527J1mxr/7/Mhbvi31M63kbXBylQaMgYPH8fygEYBdegH13QHQZlWhg/Zn0MzqguHiPFTvrgLBGkOcIhvO7rwBZIggCIe1DXYSTSrEQ=
+	t=1724413712; cv=none; b=SKz4GszjSFZ7V6ch2YoY4GeUL+jEsueGS4VVe1r17zNF/VoG/pF3IUjPz+WsTFB6ytLZo3IjKNb6w+87qf42eVzskc3lJ2eyjeQ7ZZpZbv1lMw1TfeiYFIyqRp62qJiD1Exzb4PTjTnhIbslSFOZ454h037YEx4dwbwAFES4VTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724409962; c=relaxed/simple;
-	bh=LsNwryL4D4cEnfjSJUgR2u1heISZxF4oMLMF+8a0FfE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H4C8hxcWNAZ25hP1wXMACXlxx+GTFF4HgDfeiFi85wr0cSSo/lCdQbY7KVsL7MHIaJPxv5rPLWGjS4RC/svdqTpUMAgoXePtrPrtOo6B9zQ0WTvPeXItyes94TNeLbavkeFRKbMgFq6ljolIDCey/yYIa24SNUF6hdJlhcCccoQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BK/5VEqE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1724413712; c=relaxed/simple;
+	bh=11ILqV9sSgq0vkEVufLxFfVQ6nYnNN8UZZN3WnBLcD4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mpGfa5O9LbbdxfLG9+OyI8fCfGaf6E1O4bhM56fQ6GZit/9p/mu2ZnukS0wQEoUXrPWp3nryvbKFmppVkbLw4hpIrrRBDnGRQ0GWgqcNX53a1QjS+dglVHk1Ii+WOQPq2kVdAzlSlfqX8DieUqFR8GHUMGVbmtEnUWmDJT4wj0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=AZKkonMy; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BK/5VEqE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D41A7C32786;
-	Fri, 23 Aug 2024 10:45:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724409960;
-	bh=LsNwryL4D4cEnfjSJUgR2u1heISZxF4oMLMF+8a0FfE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BK/5VEqEc/3Pj7QI5DRa0etTJxeZ2bj2pbbA9ODIq/pL7N80sxtTebnp2OPHw+4jb
-	 bIJbKJdxxI7K/7dW6bROozJr0MC6xJtp0i54RQKOSEiHtQtmDIDS2GqqCQKRlJtVxx
-	 XGZkWLMSquhyIR/xjJBFUrKeBjGkDFTItupPVMmEZQiHdT43QgAcLJfn4Cpn/fK982
-	 s1fBrOiT3mvotVg5YFRrse9dQxbVGHgGptfYar0UXPdrSfm53egulnDRjymi9666eL
-	 HBbTFQ+Ir3Rf6Tjst1TyH5370KNqLfDpfDhGiHQ2kU82TIhEJyKGZSO7yb73wQFxap
-	 osOby9xsh9EVg==
-Date: Fri, 23 Aug 2024 11:45:53 +0100
-From: Will Deacon <will@kernel.org>
-To: Douglas Anderson <dianders@chromium.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Yu Zhao <yuzhao@google.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Misono Tomohiro <misono.tomohiro@fujitsu.com>,
-	Marc Zyngier <maz@kernel.org>, Sumit Garg <sumit.garg@linaro.org>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Daniel Thompson <daniel.thompson@linaro.org>,
-	Stephen Boyd <swboyd@chromium.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	James Morse <james.morse@arm.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Kees Cook <kees@kernel.org>, Puranjay Mohan <puranjay@kernel.org>,
-	Tony Luck <tony.luck@intel.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] arm64: smp: smp_send_stop() and crash_smp_send_stop()
- should try non-NMI first
-Message-ID: <20240823104552.GB31866@willie-the-truck>
-References: <20240821145353.v3.1.Id4817adef610302554b8aa42b090d57270dc119c@changeid>
+	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="AZKkonMy"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-368633ca4ffso297215f8f.0
+        for <linux-hardening@vger.kernel.org>; Fri, 23 Aug 2024 04:48:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1724413709; x=1725018509; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ygPOJ3kbG5t8D2/jn0UHkCqAj6NFUwKnva9LPsAtkzU=;
+        b=AZKkonMy8i7PFqtuiKOUTjeaJRBrsfID0OJh+zautkDij5nLwE/czWsj4clZxcIvz/
+         35GZqKE3ejs5s7g2o3VVXcU3Mt3/xxShkTuZGCgor9VCci9opqvKD6djTNXxz+6HK9jA
+         nrRkOiYyfhSjWsP6CxgiGywu+AvOitqMVlCpw82H6BBZjqpFhXcY6rt+89eCvSbbPvZx
+         vPUPdrx7YXfV8ddpkM6wx3M6wok1wpxv7uZEFKJrCM76gbsX9ngTT4lZA3xkAbKxlMbW
+         RDZleCG1iZLsBYscwALlgznuNwgfTx7kyZuj6Y8A6hXlxaXn2FLZKcPAddQC5R7yGa1l
+         zRDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724413709; x=1725018509;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ygPOJ3kbG5t8D2/jn0UHkCqAj6NFUwKnva9LPsAtkzU=;
+        b=c9wxcX2gMyhTJ6koVqYf/BGejTZnAJaOzZHACUzyaaxOyp88RU9OaGW3ziU+KFGXvC
+         QaFVbvd3GjACWyhHOeMaM364R/hcZjNcHiqtrSXHTVC+r8YDodMTmHyBKW05LLiSCYqn
+         TdxLFIk7ar9WJM9ZlHQotbQwJJXT32oKynwWHuVrohKFThjnhBm6Sz+K4IuR/heBIOWz
+         gh5/8mKUtPKKNrSzGcMxD7ehBd4R3SehUFEsX67jZJotvmv7bEeFlzAj1seuvbQEmLT1
+         OgSbE4l9xPIaMvETJZlJ1R4aKsiFtySDah3AXBW2Y7hZeUfc1rTX/FtOvWyFl3UMToI9
+         vU8A==
+X-Forwarded-Encrypted: i=1; AJvYcCVrKxY04nS8SerLPxYG+Hc4J4ZxpdiUc5fHgM/UdC9tnz+qb+ni8QiY2dWvzB3M1zQL6p9BA/isJBx1FCZB8DA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz3cDtRF6QD5MuZ1iQRW0eLWJBlNQVAibRiVkYWikuQJnjp1bDM
+	6dpwoJYlzCwpD+DjEmz78iVuLgV/dHzSYshp3zejQMIZbK4lYoU6N58zjWLAAv8=
+X-Google-Smtp-Source: AGHT+IFvhMPt4pZpbccUkBs0Hi2KJQJSJKqluPpvVcpUWiDsTdhGl+ARhILSf+az3WKIMMtfz04o9g==
+X-Received: by 2002:a05:6000:1788:b0:368:5bf:82ab with SMTP id ffacd0b85a97d-3731192c2a5mr558203f8f.10.1724413708910;
+        Fri, 23 Aug 2024 04:48:28 -0700 (PDT)
+Received: from fedora.fritz.box (aftr-82-135-80-228.dynamic.mnet-online.de. [82.135.80.228])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a868f299d8fsm248894366b.62.2024.08.23.04.48.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Aug 2024 04:48:28 -0700 (PDT)
+From: Thorsten Blum <thorsten.blum@toblux.com>
+To: linkinjeon@kernel.org,
+	sfrench@samba.org,
+	senozhatsky@chromium.org,
+	tom@talpey.com,
+	kees@kernel.org,
+	gustavoars@kernel.org
+Cc: linux-cifs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	Thorsten Blum <thorsten.blum@toblux.com>
+Subject: [PATCH] smb: Annotate struct xattr_smb_acl with __counted_by()
+Date: Fri, 23 Aug 2024 13:47:05 +0200
+Message-ID: <20240823114704.36967-2-thorsten.blum@toblux.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240821145353.v3.1.Id4817adef610302554b8aa42b090d57270dc119c@changeid>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 
-Hi Doug,
+Add the __counted_by compiler attribute to the flexible array member
+entries to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
+CONFIG_FORTIFY_SOURCE.
 
-On Wed, Aug 21, 2024 at 02:53:57PM -0700, Douglas Anderson wrote:
-> When testing hard lockup handling on my sc7180-trogdor-lazor device
-> with pseudo-NMI enabled, with serial console enabled and with kgdb
-> disabled, I found that the stack crawls printed to the serial console
-> ended up as a jumbled mess. After rebooting, the pstore-based console
-> looked fine though. Also, enabling kgdb to trap the panic made the
-> console look fine and avoided the mess.
+Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+---
+ fs/smb/server/xattr.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Just a small nit:
+diff --git a/fs/smb/server/xattr.h b/fs/smb/server/xattr.h
+index 16499ca5c82d..fa3e27d6971b 100644
+--- a/fs/smb/server/xattr.h
++++ b/fs/smb/server/xattr.h
+@@ -76,7 +76,7 @@ struct xattr_acl_entry {
+ struct xattr_smb_acl {
+ 	int count;
+ 	int next;
+-	struct xattr_acl_entry entries[];
++	struct xattr_acl_entry entries[] __counted_by(count);
+ };
+ 
+ /* 64bytes hash in xattr_ntacl is computed with sha256 */
+-- 
+2.46.0
 
->  	while (num_other_online_cpus() && timeout--)
->  		udelay(1);
->  
-> -	if (num_other_online_cpus())
-> +	/*
-> +	 * If CPUs are still online, try an NMI. There's no excuse for this to
-> +	 * be slow, so we only give them an extra 10 ms to respond.
-> +	 */
-> +	if (num_other_online_cpus() && ipi_should_be_nmi(IPI_CPU_STOP_NMI)) {
-
-We probably want an smp_rmb() here...
-
-> +		cpumask_copy(&mask, cpu_online_mask);
-> +		cpumask_clear_cpu(smp_processor_id(), &mask);
-> +
-> +		pr_info("SMP: retry stop with NMI for CPUs %*pbl\n",
-> +			cpumask_pr_args(&mask));
-> +
-> +		smp_cross_call(&mask, IPI_CPU_STOP_NMI);
-> +		timeout = USEC_PER_MSEC * 10;
-> +		while (num_other_online_cpus() && timeout--)
-> +			udelay(1);
-> +	}
-> +
-> +	if (num_other_online_cpus()) {
-
-
-... and again here, just to make sure that the re-read of cpu_online_mask
-is ordered after the read of __num_online_cpus in num_other_online_cpus().
-
-I can add those when applying.
-
-Will
