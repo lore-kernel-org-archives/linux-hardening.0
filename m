@@ -1,77 +1,176 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68F8712B6C;
-	Fri, 23 Aug 2024 00:18:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD31126AF6;
+	Fri, 23 Aug 2024 03:44:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724372296; cv=none; b=jZGNaZfwXQr9bBeu+8bsthj02cQOsSHoqfcZaqgiB28vAH+QYsMKXwWD1ZJYsR6syMMnI92l6H21xota+lfM3Z6v1b6btEX/rFzI1j/HC29X10avDdxTgYgX+OtdcL+4PJPvDHBEunIgGfXjbNxsnWS8YaRyqWsx98dSoJ7qrvA=
+	t=1724384677; cv=none; b=fvwDhoJC5BfFhSqBpIgQlBwJ3xJJ7BZuW1uGaRxzlkC65YI4MhbwSS0xpdAC+fqcFnOdhBxDdm9hlRcQ15ONbPjLCk61f3anorvA7AdyjvyhadL6cRftDgkHfK5V7wcGJyXmJL1X5hyQ1359UvF9wHHEtM6Kp6NEuyVpz4d/t7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724372296; c=relaxed/simple;
-	bh=2HVUjJT8ysAAiOf7lEZcT9lCdiA5BBbCXrDdPmIUcNU=;
+	s=arc-20240116; t=1724384677; c=relaxed/simple;
+	bh=/YUaBwcec+lGu7wuHBNGfUXqG9aF13coT4vqLy/uLxQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RoTxT0emSmSo/7CLKJ6rOvUmHFOk1BwnLWl7au2nSuzzCR4f37HvHV0dRQGFt36lLAfGjAExSQE2lA5y1CurytB6hH3tkRvOgiInAhWY/Iw66cg2yI/zwxjzSIHZHRZQvfWT9ZNbi2zjFeWE+tZ1DDH+iO8m2MPQE43Wc0Jd7zI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PQAvZtuz; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=nO0QvCHDghG7TXEgu4OFdI8QWuQn9xhwBFxoEI6qIlAzgV2qCXv0iKIqW/GiV7sHjIImybJCO9femyx8gboZH/H9ee1gZanrMUh5opLuxffzUo+5GEglnb9SYKupxh/stJUBY9ifbRgzpGGs5oov1Vxd6c0dK6/OS05fqBIFkUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pQ0lsDik; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PQAvZtuz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 434A5C4AF09;
-	Fri, 23 Aug 2024 00:18:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pQ0lsDik"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33E1FC32786;
+	Fri, 23 Aug 2024 03:44:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724372296;
-	bh=2HVUjJT8ysAAiOf7lEZcT9lCdiA5BBbCXrDdPmIUcNU=;
+	s=k20201202; t=1724384677;
+	bh=/YUaBwcec+lGu7wuHBNGfUXqG9aF13coT4vqLy/uLxQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PQAvZtuzpNYxB2uELf0d5qDY3obDWfFhPA0o45PDaSrQD3a8FQYcWes6DKm7l1XEF
-	 VR2Rfe6xpQ31NRd3yHh3tdCi8OixGO+Ewj19j91vYid1HQ7nSaiFoIbIrQbAwuNrfU
-	 omAQI3dNoZ4qpnc7NLt+wN/rw0BBaVbKtuXVeD5NhLJLpvcTOL0+vxVfVryVgxTqKL
-	 t1sTZC8e842HNFwELMwFhVuhAtjrwbEDNnPd4b4NvJsjexeveJW1HhsJeha55320Pi
-	 vezfQflMJ9wzQpd1AmvQHjsJMoPwbi2Nf4W+nK5vrSvu42XfAaCFEAjopzRQYffii5
-	 w9v0VgIxCEEcQ==
-Date: Thu, 22 Aug 2024 17:18:15 -0700
+	b=pQ0lsDikQfwmRiAXX26XCNq+KbzGnGjP+d/3x4ap9M3ZWC3AeyUwBguPfcFysHm1p
+	 ECnnBb/N+gPRi0t1NG7yrZKQNSpqG/FMSxXsr1xPPIME8rLlG69UdqAdUzYP0CbG90
+	 XrtFPyGfzCTbXJiH16D8Xqqkp5fBmbPLHEMb62jVnC2ZnbwCUmW+FunkSkouCIs+Wi
+	 kEyuxp5HFVrfJzV24khXoW2t1RPLMbcUiLcHHCrOq0G5h+OWQOI2LsENGmwYPa9QzG
+	 W4zsnMdPmqlTaECNBFAnOZ4yIH3FB9/2mfBej4M1UCri5noQCgRRoPvwvQdudL1Afp
+	 5DXBNYHkZvsIA==
+Date: Thu, 22 Aug 2024 20:44:36 -0700
 From: Kees Cook <kees@kernel.org>
-To: David Gow <davidgow@google.com>
-Cc: John Hubbard <jhubbard@nvidia.com>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	Rae Moar <rmoar@google.com>, Jonathan Corbet <corbet@lwn.net>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+To: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: Erick Archer <erick.archer@outlook.com>, Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	Justin Stitt <justinstitt@google.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3] Documentation: KUnit: Update filename best practices
-Message-ID: <202408221717.1138DB3D1C@keescook>
-References: <20240724201354.make.730-kees@kernel.org>
- <CABVgOSmXqv_+20OKjVAPJoqrP1EvBk+1WUqF4wBsefegxYNiWA@mail.gmail.com>
+Subject: Re: [RFC] HID: ishtp-hid-client: replace fake-flex arrays with
+ flex-array members
+Message-ID: <202408222044.7EA51146E@keescook>
+References: <AS8PR02MB723760CB93942370E92F00638BF72@AS8PR02MB7237.eurprd02.prod.outlook.com>
+ <80976997acb82fe3e6ba54fa2708c8f40fb3eb00.camel@linux.intel.com>
+ <AS8PR02MB723798FF6CEF28DCB62FAC958BC42@AS8PR02MB7237.eurprd02.prod.outlook.com>
+ <4e68c0164022ca41494c6d577766dd4b66c93e9f.camel@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CABVgOSmXqv_+20OKjVAPJoqrP1EvBk+1WUqF4wBsefegxYNiWA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <4e68c0164022ca41494c6d577766dd4b66c93e9f.camel@linux.intel.com>
 
-On Fri, Jul 26, 2024 at 03:14:36PM +0800, David Gow wrote:
-> On Thu, 25 Jul 2024 at 04:14, Kees Cook <kees@kernel.org> wrote:
-> >
-> > Based on feedback from Linus[1] and follow-up discussions, change the
-> > suggested file naming for KUnit tests.
-> >
-> > Link: https://lore.kernel.org/lkml/CAHk-=wgim6pNiGTBMhP8Kd3tsB7_JTAuvNJ=XYd3wPvvk=OHog@mail.gmail.com/ [1]
-> > Reviewed-by: John Hubbard <jhubbard@nvidia.com>
-> > Signed-off-by: Kees Cook <kees@kernel.org>
-> > ---
+On Tue, Jun 11, 2024 at 11:26:25PM -0700, srinivas pandruvada wrote:
+> On Sat, 2024-06-08 at 11:56 +0200, Erick Archer wrote:
+> > Hi Srinivas,
+> > First of all, thanks for looking at this ;)
+> > 
+> > On Sat, Jun 08, 2024 at 01:42:54AM -0700, srinivas pandruvada wrote:
+> > > On Sun, 2024-05-26 at 15:32 +0200, Erick Archer wrote:
+> > > > One-element arrays as fake flex arrays are deprecated [1] and we
+> > > > are
+> > > > moving towards adopting C99 flexible-array members, instead. This
+> > > > case
+> > > > also has more complexity because it is a flexible array of
+> > > > flexible
+> > > > arrays and this patch needs to be ready to enable the new
+> > > > compiler
+> > > > flag
+> > > > -Wflex-array-member-not-at-end (coming in GCC-14) globally.
+> > > > 
+> > > > So, define a new struct type for the single reports:
+> > > > 
+> > > > struct report {
+> > > > 	uint16_t size;
+> > > > 	struct hostif_msg_hdr msg;
+> > > > } __packed;
+> > > > 
+> > > > but without the payload (flex array) in it. And add this payload
+> > > > to
+> > > > the
+> > > > "hostif_msg" structure. This way, in the "report_list" structure
+> > > > we
+> > > > can
+> > > > declare a flex array of single reports which now do not contain
+> > > > another
+> > > > flex array.
+> > > > 
+> > > > struct report_list {
+> > > > 	[...]
+> > > >         struct report reports[];
+> > > > } __packed;
+> > > > 
+> > > > Also, use "container_of()" whenever we need to retrieve a pointer
+> > > > to
+> > > > the flexible structure, through which we can access the flexible
+> > > > array
+> > > > if needed.
+> > > > 
+> > > > Moreover, refactor the code accordingly to use the new structures
+> > > > and
+> > > > take advantage of this avoiding some pointer arithmetic and using
+> > > > the
+> > > > "struct_size" helper when possible.
+> > > > 
+> > > > This way, the code is more readable and safer.
+> > > 
+> > > Applied and tested, atleast didn't break anything.
+> > > 
+> > > But the explanation above didn't give me enough clue. You have
+> > > added a
+> > > payload[] in the  struct hostif_msg {} then using that as a message
+> > > pointer following the header. I think this description needs to be
+> > > better.
+> > 
+> > Yeah, I will try to improve the commit message. What do you think
+> > about
+> > the following parragrafs?
+> > 
+> > [I have copied part of the message to show where the new info will
+> > be]
+> > > > declare a flex array of single reports which now do not contain
+> > > > another flex array.
+> > > > 
+> > > > struct report_list {
+> > > > 	[...]
+> > > >         struct report reports[];
+> > > > } __packed;
+> > 
+> > Therefore, the "struct hostif_msg" is now made up of a header and a
+> > payload. And the "struct report" uses only the "hostif_msg" header.
+> > The perfect solution would be for the "report" structure to use the
+> > whole "hostif_msg" structure but this is not possible due to nested
+> > flexible arrays. Anyway, the end result is equivalent since this
+> > patch
+> > does attemp to change the behaviour of the code.
+> > 
+> > Now as well, we have more clarity after the cast from the raw bytes
+> > to
+> > the new structures.
+> > 
+> > > > 
+> > > > Also, use "container_of()" whenever we need to retrieve a pointer
+> > > > to
+> > > > the flexible structure, through which we can access the flexible
+> > > > array
+> > > > if needed.
+> > 
+> > I would like to know if it is enough :)
 > 
-> Looks good to me. (And it seems like sphinx is okay with it, too,
-> which is always nice.)
-> 
-> We normally take these changes in via the kunit tree, but if you want
-> to try to push it through along with the naming changes, that's fine
-> by me.
-> 
-> Reviewed-by: David Gow <davidgow@google.com>
+> The apporoach is fine. But I don't like clubbing other changes like
+> struct_size(). That make code difficult to follow.
 
-Hi! Just a quick check: I haven't seen this land in -next yet. Are you
-still planning to take this?
+Erick, can you respin this patch without the struct_size() change? I
+think it looks like it could land otherwise.
+
+-Kees
+
+> 
+> Thanks,
+> Srinivas
+> 
+> 
+> 
+> > 
+> > Regards,
+> > Erick
+> > > 
+> > > Thanks,
+> > > Srinivas
+> 
 
 -- 
 Kees Cook
