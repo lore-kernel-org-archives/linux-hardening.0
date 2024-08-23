@@ -1,69 +1,68 @@
-Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D12B180C09
-	for <linux-hardening@vger.kernel.org>; Fri, 23 Aug 2024 06:13:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6037613D2B2;
+	Fri, 23 Aug 2024 07:41:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724393605; cv=none; b=UScGOjzK+WoXTj7LnjFGaiKiaWEnYD9g0U1sryHMKcP93jKN15fFK9Ly3CY7EvyaVKhZybytRMjTlSeKpuC1EKwfwWsVJsgNX4mW73kryUCiEY7l5rr0TnPSckPrch4VHK/XNmKOM4zZGgJKR9+1YbzAVFuwiS6JP3cTiIwsVIg=
+	t=1724398873; cv=none; b=FCvEtjjC+64EnbQg63K70mcGgcnR5NiuGvvLh7GbwjvCuuOJbZlHIkBvfyqpCIiZ70PfhtcVfBzANGy7hCFoMJ0PIHITUfBXe3oWVg5+K5kDXUl/DZD4dhfMZ7Y32yzO1aPYdHKteDurztC7/wlq/vO7hnUsSXCLGnIMA2xgz0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724393605; c=relaxed/simple;
-	bh=WjDBsigCCcP9S6Yhdk5Gu6NGO/HMqeYksqHbI10BQ9c=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dvWsD7QYrLOndYL+fr81QeRkD1x03g0WLc088Ui+eLA8t9e+V/eDsZreBAFKO/T1da892QWOh4bPdrWy8J8G3Wk7dOHTbYbzGbHanN04MLffzt6W7kohUuW+jGJP0DnUFE+aHQw6k6x3zJOhyLVnCsG1bmOzcLmcczzc/P0A37Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4WqqT460vBz1xvpp;
-	Fri, 23 Aug 2024 14:11:20 +0800 (CST)
-Received: from dggpeml500022.china.huawei.com (unknown [7.185.36.66])
-	by mail.maildlp.com (Postfix) with ESMTPS id 30F5A14013B;
-	Fri, 23 Aug 2024 14:13:16 +0800 (CST)
-Received: from huawei.com (10.90.53.73) by dggpeml500022.china.huawei.com
- (7.185.36.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 23 Aug
- 2024 14:13:15 +0800
-From: Hongbo Li <lihongbo22@huawei.com>
-To: <kees@kernel.org>, <andy@kernel.org>
-CC: <lihongbo22@huawei.com>, <linux-hardening@vger.kernel.org>
-Subject: [PATCH -next 2/2] lib/string_choices: Add wrapper for str_false_true()
-Date: Fri, 23 Aug 2024 14:20:46 +0800
-Message-ID: <20240823062046.3323694-3-lihongbo22@huawei.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240823062046.3323694-1-lihongbo22@huawei.com>
-References: <20240823062046.3323694-1-lihongbo22@huawei.com>
+	s=arc-20240116; t=1724398873; c=relaxed/simple;
+	bh=LEc7ufxrhcN1HJyOFVCDMFftQ/9roKH6uSCkqJjLpTc=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=d7LRjHsWGTj4wmlLDKUw7lYplK0fM/qEXfulgwrSv8+6CpLDW8HM8n3KDLmQHlKwkAruI5bfIUkdWpReL+wOEn0st57bNtHRllP8DMTwphbYH/L8lmJUgR7KP4JauVSyBjBmQ2XKsMnlsxR+BFu7es/ka2k4JOLzV5CCFLqB+B0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sHESa5Z+; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sHESa5Z+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9119CC4AF09;
+	Fri, 23 Aug 2024 07:41:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724398872;
+	bh=LEc7ufxrhcN1HJyOFVCDMFftQ/9roKH6uSCkqJjLpTc=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=sHESa5Z+d3l7GDV2fNjh+qgxKYmZqE6RurfjmM3jEXLZcW9/ASaV+Gr+cYwMosrZp
+	 JGbtZ21BLwHRCsfTnynFDSs7NwH7/4Pr5h/jtLgaKXRJV9JWtbkMPZZRRMZT309FK6
+	 7TKEKvNMXk5VUvcuGTNibiAmoLF2gbJGLHui1fqHOLIwGdF8TUmSSKoV5bVZPOik+I
+	 bh2JXx+HAPi1DiDdRnHXFWcmVy0DO1ebNYnwTKquSXFqYAVeeAeEU5M+H3ygSn4iHY
+	 8k/+pN9wvzldkcZ2RT06khidd5ReYWo4Oe67hvPrjqnHuhveRfw31xixaTEKe1rOMv
+	 OPx23M0XlyNQQ==
+From: Lee Jones <lee@kernel.org>
+To: Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>
+Cc: Pavel Machek <pavel@ucw.cz>, linux-leds@vger.kernel.org, 
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-kernel@vger.kernel.org, 
+ linux-hardening@vger.kernel.org
+In-Reply-To: <20240716212455.work.809-kees@kernel.org>
+References: <20240716212455.work.809-kees@kernel.org>
+Subject: Re: (subset) [PATCH] leds: gpio: Set num_leds after allocation
+Message-Id: <172439887133.2069692.5497848773911564354.b4-ty@kernel.org>
+Date: Fri, 23 Aug 2024 08:41:11 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- dggpeml500022.china.huawei.com (7.185.36.66)
+X-Mailer: b4 0.13.0
 
-There are many "false" : "true" format in the kernel tree,
-so we add str_false_true() as well.
+On Tue, 16 Jul 2024 14:24:59 -0700, Kees Cook wrote:
+> With the new __counted_by annotation, the "num_leds" variable needs to
+> valid for accesses to the "leds" array. This requirement is not met in
+> gpio_leds_create(), since "num_leds" starts at "0", so "leds" index "0"
+> will not be considered valid (num_leds would need to be "1" to access
+> index "0").
+> 
+> Fix this by setting the allocation size after allocation, and then update
+> the final count based on how many were actually added to the array.
+> 
+> [...]
 
-Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
----
- include/linux/string_choices.h | 1 +
- 1 file changed, 1 insertion(+)
+Applied, thanks!
 
-diff --git a/include/linux/string_choices.h b/include/linux/string_choices.h
-index 7c74497caf2b..ebcc56b28ede 100644
---- a/include/linux/string_choices.h
-+++ b/include/linux/string_choices.h
-@@ -52,6 +52,7 @@ static inline const char *str_true_false(bool v)
- {
- 	return v ? "true" : "false";
- }
-+#define str_false_true(v)		str_true_false(!(v))
- 
- /**
-  * str_plural - Return the simple pluralization based on English counts
--- 
-2.34.1
+[1/1] leds: gpio: Set num_leds after allocation
+      commit: 045391a02bd971d431c83ad03f7cc51b6e2fe331
+
+--
+Lee Jones [李琼斯]
 
