@@ -1,43 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AEEBEDC;
-	Fri, 23 Aug 2024 00:14:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68F8712B6C;
+	Fri, 23 Aug 2024 00:18:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724372057; cv=none; b=mBMBNIlPB7aDvAc67wnwMc4PvLRTVCjQhX8GW0UTYGcG5A1bcObJ+N0VNUn5TUoNHq4YFuYlGe+Nn36hxMNpegSqI5HhnTHSwb1OCi0rwq0/YPTdh00aWBJBhqgJv3pm+KjEVOAJX6NHubMm3RqIBX9ExaL5vKId8v+k606JfFQ=
+	t=1724372296; cv=none; b=jZGNaZfwXQr9bBeu+8bsthj02cQOsSHoqfcZaqgiB28vAH+QYsMKXwWD1ZJYsR6syMMnI92l6H21xota+lfM3Z6v1b6btEX/rFzI1j/HC29X10avDdxTgYgX+OtdcL+4PJPvDHBEunIgGfXjbNxsnWS8YaRyqWsx98dSoJ7qrvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724372057; c=relaxed/simple;
-	bh=meO8NYG/0DI1pJK9vfEpszXIYCnr9inA4xoCf3jcfXY=;
+	s=arc-20240116; t=1724372296; c=relaxed/simple;
+	bh=2HVUjJT8ysAAiOf7lEZcT9lCdiA5BBbCXrDdPmIUcNU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JhQbwGm75yBvFx+AydimHHyBLETKZv/c1xwlZD+Eu5F/6Rme7mIq5lWprawnmr8MVMXifgz9E4+22KUjvwSJkF/x5rd6eM78olGiCByLWG7zXyGdb2pm357Xrx1o8DzPtYnDW93xoApDR/huAd/Nc6XrcIquwEgNl8jN12rll6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d1eH4Sa4; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=RoTxT0emSmSo/7CLKJ6rOvUmHFOk1BwnLWl7au2nSuzzCR4f37HvHV0dRQGFt36lLAfGjAExSQE2lA5y1CurytB6hH3tkRvOgiInAhWY/Iw66cg2yI/zwxjzSIHZHRZQvfWT9ZNbi2zjFeWE+tZ1DDH+iO8m2MPQE43Wc0Jd7zI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PQAvZtuz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d1eH4Sa4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3118C4AF09;
-	Fri, 23 Aug 2024 00:14:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PQAvZtuz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 434A5C4AF09;
+	Fri, 23 Aug 2024 00:18:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724372056;
-	bh=meO8NYG/0DI1pJK9vfEpszXIYCnr9inA4xoCf3jcfXY=;
+	s=k20201202; t=1724372296;
+	bh=2HVUjJT8ysAAiOf7lEZcT9lCdiA5BBbCXrDdPmIUcNU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=d1eH4Sa4L+UzeLInQKU4pRBhyc+98WZAR36gCuvWkt9NUmTRzfyzvwgjfbwMBYeto
-	 To2mimmiFyMWLLu6okO5gp+hqWza/f1hbG1xsL2lvFlisv82N7chnOnK7n4FXuwlQQ
-	 SITPe9Ahjrdo+8hBTNZDuYX7MixksxdbgPxeXQ4rZ7Kvgbw9ctg0xv55fwFVTulKmc
-	 PyjkieTRtr/2pu7HI8J9iXeIXIq9JuCAB5pD0V1ES58aa/5fChFyoiC6GVBlI4xY5y
-	 5AXJG8RTo+B8eH3Wa/GtAJ3/K/pvMNUcfMdHB9TVCr13Lt3gaT7BvrALXfM1vZ42rg
-	 M497XnzNC9fEg==
-Date: Thu, 22 Aug 2024 17:14:16 -0700
+	b=PQAvZtuzpNYxB2uELf0d5qDY3obDWfFhPA0o45PDaSrQD3a8FQYcWes6DKm7l1XEF
+	 VR2Rfe6xpQ31NRd3yHh3tdCi8OixGO+Ewj19j91vYid1HQ7nSaiFoIbIrQbAwuNrfU
+	 omAQI3dNoZ4qpnc7NLt+wN/rw0BBaVbKtuXVeD5NhLJLpvcTOL0+vxVfVryVgxTqKL
+	 t1sTZC8e842HNFwELMwFhVuhAtjrwbEDNnPd4b4NvJsjexeveJW1HhsJeha55320Pi
+	 vezfQflMJ9wzQpd1AmvQHjsJMoPwbi2Nf4W+nK5vrSvu42XfAaCFEAjopzRQYffii5
+	 w9v0VgIxCEEcQ==
+Date: Thu, 22 Aug 2024 17:18:15 -0700
 From: Kees Cook <kees@kernel.org>
-To: Lee Jones <lee@kernel.org>
-Cc: "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-	Pavel Machek <pavel@ucw.cz>, linux-leds@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] leds: gpio: Set num_leds after allocation
-Message-ID: <202408221713.77EF78D1@keescook>
-References: <20240716212455.work.809-kees@kernel.org>
- <c16715ff-1e47-4a73-8fcb-87462069b5ca@embeddedor.com>
- <20240725102240.GE501857@google.com>
+To: David Gow <davidgow@google.com>
+Cc: John Hubbard <jhubbard@nvidia.com>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	Rae Moar <rmoar@google.com>, Jonathan Corbet <corbet@lwn.net>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3] Documentation: KUnit: Update filename best practices
+Message-ID: <202408221717.1138DB3D1C@keescook>
+References: <20240724201354.make.730-kees@kernel.org>
+ <CABVgOSmXqv_+20OKjVAPJoqrP1EvBk+1WUqF4wBsefegxYNiWA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -46,39 +48,30 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240725102240.GE501857@google.com>
+In-Reply-To: <CABVgOSmXqv_+20OKjVAPJoqrP1EvBk+1WUqF4wBsefegxYNiWA@mail.gmail.com>
 
-On Thu, Jul 25, 2024 at 11:22:40AM +0100, Lee Jones wrote:
-> On Tue, 16 Jul 2024, Gustavo A. R. Silva wrote:
+On Fri, Jul 26, 2024 at 03:14:36PM +0800, David Gow wrote:
+> On Thu, 25 Jul 2024 at 04:14, Kees Cook <kees@kernel.org> wrote:
+> >
+> > Based on feedback from Linus[1] and follow-up discussions, change the
+> > suggested file naming for KUnit tests.
+> >
+> > Link: https://lore.kernel.org/lkml/CAHk-=wgim6pNiGTBMhP8Kd3tsB7_JTAuvNJ=XYd3wPvvk=OHog@mail.gmail.com/ [1]
+> > Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+> > Signed-off-by: Kees Cook <kees@kernel.org>
+> > ---
 > 
-> > 
-> > 
-> > On 16/07/24 15:24, Kees Cook wrote:
-> > > With the new __counted_by annotation, the "num_leds" variable needs to
-> > > valid for accesses to the "leds" array. This requirement is not met in
-> > > gpio_leds_create(), since "num_leds" starts at "0", so "leds" index "0"
-> > > will not be considered valid (num_leds would need to be "1" to access
-> > > index "0").
-> > > 
-> > > Fix this by setting the allocation size after allocation, and then update
-> > > the final count based on how many were actually added to the array.
-> > > 
-> > > Fixes: 52cd75108a42 ("leds: gpio: Annotate struct gpio_leds_priv with __counted_by")
-> > > Signed-off-by: Kees Cook <kees@kernel.org>
-> > 
-> > Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> > 
-> > Thanks
-> > -- 
+> Looks good to me. (And it seems like sphinx is okay with it, too,
+> which is always nice.)
 > 
-> Using the signature tag in the middle of an email turns the remainder of
-> the body into a signature block, which is odd to say the least.  By all
-> means sign-off in the middle of a mail, but please refrain from
-> converting the rest of the mail.
+> We normally take these changes in via the kunit tree, but if you want
+> to try to push it through along with the naming changes, that's fine
+> by me.
+> 
+> Reviewed-by: David Gow <davidgow@google.com>
 
-Ping. Shall I take this via the hardening tree?
-
--Kees
+Hi! Just a quick check: I haven't seen this land in -next yet. Are you
+still planning to take this?
 
 -- 
 Kees Cook
