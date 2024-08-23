@@ -1,50 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 443B019E;
-	Fri, 23 Aug 2024 00:12:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AEEBEDC;
+	Fri, 23 Aug 2024 00:14:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724371958; cv=none; b=LFWqCdtEiCZbYiqYUP4M/pLH9H6aM5W3cnwQDXyLPi3Hx4KdbOpN2oe3sJQ+M9VtTDP6QfELP2Uv7ocQBVgOl4C+QQzMzdO/Uof73aDh05qdE9fHYoXke3MVgdjd4ts4im/qjlrDWh+nMAJpgCjgzKY9hFkVlylb/W/MvwSdvZ0=
+	t=1724372057; cv=none; b=mBMBNIlPB7aDvAc67wnwMc4PvLRTVCjQhX8GW0UTYGcG5A1bcObJ+N0VNUn5TUoNHq4YFuYlGe+Nn36hxMNpegSqI5HhnTHSwb1OCi0rwq0/YPTdh00aWBJBhqgJv3pm+KjEVOAJX6NHubMm3RqIBX9ExaL5vKId8v+k606JfFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724371958; c=relaxed/simple;
-	bh=8clxRUF3beC9N/kDrAYpJXurCOaFpHqIVwlbhvPhZ3Q=;
+	s=arc-20240116; t=1724372057; c=relaxed/simple;
+	bh=meO8NYG/0DI1pJK9vfEpszXIYCnr9inA4xoCf3jcfXY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c6SHU/w669j08Z1KBRQQO772IwkwZLhBF46aoSuyQ06MJRDqk9IGPPBfY4frwHCnFSWh8OhAavAVYCEtlU+T11ZRR7/rG27LXYMr2KPD+C/Rxbn2QdfRupBEMzrnjVtaKmDR5eCj/5W/0PGZ79spBr2FrMSN3vk+qCzmJesX8NE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qIqeUo97; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=JhQbwGm75yBvFx+AydimHHyBLETKZv/c1xwlZD+Eu5F/6Rme7mIq5lWprawnmr8MVMXifgz9E4+22KUjvwSJkF/x5rd6eM78olGiCByLWG7zXyGdb2pm357Xrx1o8DzPtYnDW93xoApDR/huAd/Nc6XrcIquwEgNl8jN12rll6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d1eH4Sa4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qIqeUo97"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFE7CC32782;
-	Fri, 23 Aug 2024 00:12:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d1eH4Sa4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3118C4AF09;
+	Fri, 23 Aug 2024 00:14:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724371957;
-	bh=8clxRUF3beC9N/kDrAYpJXurCOaFpHqIVwlbhvPhZ3Q=;
+	s=k20201202; t=1724372056;
+	bh=meO8NYG/0DI1pJK9vfEpszXIYCnr9inA4xoCf3jcfXY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qIqeUo97omLg8jkf89PXA1rOZipTUyvSQtem2frcLErpT/zp5EUJuu7kC9CiV946o
-	 Xmrisj2z6WX/DLTfF/Zaf01mCn3rgKzP6bXCNnQRcDicics2i2QPPV7SgRXb7WL4dB
-	 3SkOgmaTIiey2A2KUrq2/J5d20xk20qHhbShQc9VoSsR88wjTagUUjXv6yPKEFXyo/
-	 Mg2AWlZkuvkIOPJdTuxK1liodPMBiCTA666e6872+fU6Vp49wSQlaXQOJmla/G6xB9
-	 tUYAVht4cTHV95sBUXcUVHNrjzd2jC49Xop+20cRwKp/FhLCXC0xtFAAwU2IIT+x4r
-	 XX7PNKhZ/c4zA==
-Date: Thu, 22 Aug 2024 17:12:37 -0700
+	b=d1eH4Sa4L+UzeLInQKU4pRBhyc+98WZAR36gCuvWkt9NUmTRzfyzvwgjfbwMBYeto
+	 To2mimmiFyMWLLu6okO5gp+hqWza/f1hbG1xsL2lvFlisv82N7chnOnK7n4FXuwlQQ
+	 SITPe9Ahjrdo+8hBTNZDuYX7MixksxdbgPxeXQ4rZ7Kvgbw9ctg0xv55fwFVTulKmc
+	 PyjkieTRtr/2pu7HI8J9iXeIXIq9JuCAB5pD0V1ES58aa/5fChFyoiC6GVBlI4xY5y
+	 5AXJG8RTo+B8eH3Wa/GtAJ3/K/pvMNUcfMdHB9TVCr13Lt3gaT7BvrALXfM1vZ42rg
+	 M497XnzNC9fEg==
+Date: Thu, 22 Aug 2024 17:14:16 -0700
 From: Kees Cook <kees@kernel.org>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Mirsad Todorovac <mtodorovac69@gmail.com>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Daniel Sneddon <daniel.sneddon@linux.intel.com>,
-	Arnd Bergmann <arnd@arndb.de>, Brian Gerst <brgerst@gmail.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Peter Collingbourne <pcc@google.com>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] x86/syscall: Avoid memcpy() for ia32
- syscall_get_arguments()
-Message-ID: <202408221712.DC796105C@keescook>
-References: <20240708202202.work.477-kees@kernel.org>
- <842a88e0-90ae-48be-91c9-8a7c3a8359a9@intel.com>
+To: Lee Jones <lee@kernel.org>
+Cc: "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+	Pavel Machek <pavel@ucw.cz>, linux-leds@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] leds: gpio: Set num_leds after allocation
+Message-ID: <202408221713.77EF78D1@keescook>
+References: <20240716212455.work.809-kees@kernel.org>
+ <c16715ff-1e47-4a73-8fcb-87462069b5ca@embeddedor.com>
+ <20240725102240.GE501857@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -53,35 +46,39 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <842a88e0-90ae-48be-91c9-8a7c3a8359a9@intel.com>
+In-Reply-To: <20240725102240.GE501857@google.com>
 
-On Thu, Jul 11, 2024 at 02:01:53PM -0700, Dave Hansen wrote:
-> On 7/8/24 13:22, Kees Cook wrote:
-> ...
-> > diff --git a/arch/x86/include/asm/syscall.h b/arch/x86/include/asm/syscall.h
-> > index 2fc7bc3863ff..7c488ff0c764 100644
-> > --- a/arch/x86/include/asm/syscall.h
-> > +++ b/arch/x86/include/asm/syscall.h
-> > @@ -82,7 +82,12 @@ static inline void syscall_get_arguments(struct task_struct *task,
-> >  					 struct pt_regs *regs,
-> >  					 unsigned long *args)
-> >  {
-> > -	memcpy(args, &regs->bx, 6 * sizeof(args[0]));
-> > +	args[0] = regs->bx;
-> > +	args[1] = regs->cx;
-> > +	args[2] = regs->dx;
-> > +	args[3] = regs->si;
-> > +	args[4] = regs->di;
-> > +	args[5] = regs->bp;
-> >  }
-> >  
+On Thu, Jul 25, 2024 at 11:22:40AM +0100, Lee Jones wrote:
+> On Tue, 16 Jul 2024, Gustavo A. R. Silva wrote:
 > 
-> Yeah, that's much less magic.  I'll stick this in the queue to go in to
-> the tree in a few weeks.
+> > 
+> > 
+> > On 16/07/24 15:24, Kees Cook wrote:
+> > > With the new __counted_by annotation, the "num_leds" variable needs to
+> > > valid for accesses to the "leds" array. This requirement is not met in
+> > > gpio_leds_create(), since "num_leds" starts at "0", so "leds" index "0"
+> > > will not be considered valid (num_leds would need to be "1" to access
+> > > index "0").
+> > > 
+> > > Fix this by setting the allocation size after allocation, and then update
+> > > the final count based on how many were actually added to the array.
+> > > 
+> > > Fixes: 52cd75108a42 ("leds: gpio: Annotate struct gpio_leds_priv with __counted_by")
+> > > Signed-off-by: Kees Cook <kees@kernel.org>
+> > 
+> > Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> > 
+> > Thanks
+> > -- 
 > 
-> Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
+> Using the signature tag in the middle of an email turns the remainder of
+> the body into a signature block, which is odd to say the least.  By all
+> means sign-off in the middle of a mail, but please refrain from
+> converting the rest of the mail.
 
-Ping. I can take it via the hardening tree if you want, though?
+Ping. Shall I take this via the hardening tree?
+
+-Kees
 
 -- 
 Kees Cook
