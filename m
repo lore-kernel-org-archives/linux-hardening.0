@@ -1,142 +1,159 @@
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD076188A26
-	for <linux-hardening@vger.kernel.org>; Fri, 23 Aug 2024 15:29:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D5B6189B8F
+	for <linux-hardening@vger.kernel.org>; Fri, 23 Aug 2024 16:35:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724427001; cv=none; b=i+bJ1hE1VYkTyx08oFLqpfDPhai3S4JUbJfAJz803+k2YJzGWX1yLCV+gPdFpev0X8NVY+ceYF7IFxCWVqpqc7RNjFetF0JbiBBpUnyuzAjdc44H8b7BLgNLP1aZaEOclXBPrUXxU+BKn9KPZVCssy8BHcstbVnArZIPDHoOBBs=
+	t=1724430922; cv=none; b=GPe1uU0baiZWjWlRKVF2SOFLQ6RhuZ5AGMuKA5+ZCqETu6YHQVNShdSfGx4irjsiFfLwWhesQs3dKO9MPGWV8gganrK1/RUHxl8SStmLDGQi4c+ORfKIH+zRavVvanfFZRYLv4SSyaqy1bKx3QjQopZhZ0SY56bqgjNUMiplfMU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724427001; c=relaxed/simple;
-	bh=oNfQ4tia5EGE6ACUTEBJMYDZJ9v/LW5wX588X1lUppw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HWPSiWgg7aEIDe+2SnVfv6/b2cZbaAP8iYvzpPLKsRhiNqyOjlcZ8RyMFtlN4VR7/FDtZ12SSRLchhADTgwnjXdFtS6TyIPoopTP2inWhW412OE8DEIm/BL2iZUsXyy7zf2fC35tKzkrWnTJ/RqQ3Z6zc2Ke/mh8HLb4hO7Kjrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=iQN7pBsZ; arc=none smtp.client-ip=209.85.219.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1724430922; c=relaxed/simple;
+	bh=8RdcJvVv3gShrKDsP0JLU8Wsg0kuGNpupzjo7uvrHe8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oA54PdWDG2AjUc5agVGJ2jyup71kvGJqMhweG0GlBVAtY1G1Vt415JxFLIhdFHga0S+fs1PMUvcslSXRp9qGGpyubb0ZEBEcylSka87qMs5ZA0Iyf20csO8lrRXMlyiKopjZkYXH6Nx7Orb7l+M1U2V0z2sKByPz+GgmKfAGuwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=lfOoUhxn; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iQN7pBsZ"
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6bd6f2c9d52so10283866d6.3
-        for <linux-hardening@vger.kernel.org>; Fri, 23 Aug 2024 08:29:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="lfOoUhxn"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-53343652ec0so172038e87.2
+        for <linux-hardening@vger.kernel.org>; Fri, 23 Aug 2024 09:35:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1724426996; x=1725031796; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1l5A3SKIR/YWwP2aJcT73ZHnLsJzRksHrml/jGPsy9k=;
-        b=iQN7pBsZJxdRLS65shHFNdfA4clGBHIn22iCALi08T990jK+18GwpLqMiE/icyJLXi
-         q2DrcoYC4uQh9mTuq377grkcgtnQB0Ep1LzsSDisK2KwOdXGdPH4CO5bIsFCG9lnGabl
-         EYhLHF0W0dqKI1GOLfLh//vaXS7TuUnno+yJk=
+        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1724430917; x=1725035717; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=rjrTEbgn235rhvAj96iSdJKR0hzx2vUIB4UjFS1NRO8=;
+        b=lfOoUhxnIojgZ6SKsAbGEr0AGMxptBKWzy64KxtZF1u7/bI4w5AVQQe19u95IjRVdd
+         tsJvB5KaR+sgUGidRUnnG9CHX5GQcHcl2sZeCUxH2vkg2BphVrspHnYhEI/nZ65WmH4m
+         XDy2ujWGuz3XqCgADC/1CrY1DpSjX3yRrbAAW73Hvj1nrBWsefnsfwSRs73b+WUuDttY
+         EKI5/7zpjg8sPkDGfAd3v4RvlHjkfMxhTwAgc7prV+lVMc23YfoZ6I+XX344plcGM/ES
+         eGivgesTG6YkMfzZ38oeV8v8cvJupRILh13Gv6HMpj1YA2Qi2vw0F9ko5PDNz5hBspE2
+         AyyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724426996; x=1725031796;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1l5A3SKIR/YWwP2aJcT73ZHnLsJzRksHrml/jGPsy9k=;
-        b=V6XadGZcPr2UsEDqCE8mqe+LVmU45301cozmF0jluwjTvhCB+6lKldnugy0wZ/NAAx
-         sbfWI8trQePL0XbVJUxVNmizTFQ4gwHBdjL0sp/mPS9739LhOP+4MHxN1eQqNJ/7LP9z
-         yFYAKKbUlT5DT3trbWZrkszbB96IIBBeD0v4hnrW+eJN8tSb51xlN0BJZv5O5O4NvXkO
-         tg92q4tHo+D87mir1tqeCEWVXP4NynnVzg+2+YMnbdwVvoQTdjBX9Z+F2OTkIaJ8u5KJ
-         VPjW9pbnK94olWG4kCdB+3dEWWvRPt7S26WDwIT2q1KXJQ45z7quCeQOT8MT/iiUCWzS
-         zRJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXCpOWa4rnu01xXNFUvxDzae0ydkLNRNAMtYAiLjz071EHdeQEJm4vsHqbmYB7AkWgKP9hA0Yi39I3CM7ZyToA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBdcGpqpDN7Q9xJ4MZQ/aMv0iZga9OIdImiyC55rNuypcMbBMX
-	WfwHyNPgBS6RUgaWvWj56LBRcBaPd4tRdXoHX/BHi9T3mtqTPKQfi/rbRQdYbFt3Rq2WkmNwb1Q
-	=
-X-Google-Smtp-Source: AGHT+IEstGp1WZ0SmsTfZnSlZ5kXsb+WXdilwqv1NPkKKVvWJ72unWKDlcjw7eO9vwP+EpDPEqnSKw==
-X-Received: by 2002:a05:6214:311a:b0:6c1:6085:f118 with SMTP id 6a1803df08f44-6c16dc259bdmr28969656d6.5.1724426995836;
-        Fri, 23 Aug 2024 08:29:55 -0700 (PDT)
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com. [209.85.219.51])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6c162db5d23sm19429526d6.103.2024.08.23.08.29.54
-        for <linux-hardening@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 23 Aug 2024 08:29:54 -0700 (PDT)
-Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-6bf6ea1d34aso10457286d6.1
-        for <linux-hardening@vger.kernel.org>; Fri, 23 Aug 2024 08:29:54 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXcvNFHsOnfCwiX5PsVHcQobPZ4dxj2VJRdn8RZqsr0EVGbHyp9SGUnLmz3j7V4tDu8xe3hWv5PzWQsHlwiGtY=@vger.kernel.org
-X-Received: by 2002:a05:6214:5882:b0:6bf:5d4c:32d8 with SMTP id
- 6a1803df08f44-6c16dcb7b44mr27582606d6.39.1724426994067; Fri, 23 Aug 2024
- 08:29:54 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1724430917; x=1725035717;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rjrTEbgn235rhvAj96iSdJKR0hzx2vUIB4UjFS1NRO8=;
+        b=IxbSptKy4WWND6O8LH7ygUHXrUOkdNuBLORIUGBmV0A2Bx0J2cPxxp2jpJQrFSymfI
+         AV+zwv6SE94yhow5GMgzfUI0OSJvV5yOFyCuuCJv1wzaPWyye4g2BMSCYo48Y8skEXCD
+         pbaOvWmjBKS3S4RfxtmkEXwV6MzJHSMs0wB8TxbKOoyuQGcwb4rmk823a8K1xCVDTLx/
+         trgG+cco/l40TL3FfqAFOXKL5WRx99UJhxMK2Hid9g0lzqIqr1SiWSKHFHWCDfagfDri
+         rzo8O9H7Xb08G48nnYf7byADIU09AS4YLi8+Q/2RqoKG7bMuqGuG57RklL/eFixT0b2T
+         Wlug==
+X-Forwarded-Encrypted: i=1; AJvYcCU3rhJv7D2mx4UteGW9BScbCkwguuAldygTvIgvLd7u65ffV4v7qDq3PUyzaBhT1ovkGB402W1PuOhFMZpcoqM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxvMkeUhkRgHgsIIvooIcYYz3QOcF7nvNwkQ/Gl3RCpkPRnpHbv
+	AftDVdq8usvKtS+/eN9NT15VfUTH83HywDi5y/3DfMDuFcC09llmWhBFrldboho=
+X-Google-Smtp-Source: AGHT+IEG+5HzmoKtxYv7K5mHJzlZfGPcBhD6/5HldN1KYcznaq5LdMfnwge5FilF0SAzHPozeP4Adw==
+X-Received: by 2002:a05:6512:3ba7:b0:52e:9b87:2340 with SMTP id 2adb3069b0e04-534387be0d3mr1104239e87.6.1724430917206;
+        Fri, 23 Aug 2024 09:35:17 -0700 (PDT)
+Received: from fedora.fritz.box (aftr-82-135-80-228.dynamic.mnet-online.de. [82.135.80.228])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a868f48a5dcsm282423166b.172.2024.08.23.09.35.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Aug 2024 09:35:16 -0700 (PDT)
+From: Thorsten Blum <thorsten.blum@toblux.com>
+To: kees@kernel.org,
+	gustavoars@kernel.org,
+	andriy.shevchenko@linux.intel.com,
+	mcgrof@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	Thorsten Blum <thorsten.blum@toblux.com>
+Subject: [PATCH v2] params: Annotate struct module_param_attrs with __counted_by()
+Date: Fri, 23 Aug 2024 16:59:33 +0200
+Message-ID: <20240823145931.107964-3-thorsten.blum@toblux.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240821145353.v3.1.Id4817adef610302554b8aa42b090d57270dc119c@changeid>
- <20240823104552.GB31866@willie-the-truck>
-In-Reply-To: <20240823104552.GB31866@willie-the-truck>
-From: Doug Anderson <dianders@chromium.org>
-Date: Fri, 23 Aug 2024 08:29:38 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=W2NDBCwTbLtuknejMhHeqgGc86Hb4RRWEsQc9BBasETg@mail.gmail.com>
-Message-ID: <CAD=FV=W2NDBCwTbLtuknejMhHeqgGc86Hb4RRWEsQc9BBasETg@mail.gmail.com>
-Subject: Re: [PATCH v3] arm64: smp: smp_send_stop() and crash_smp_send_stop()
- should try non-NMI first
-To: Will Deacon <will@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Yu Zhao <yuzhao@google.com>, 
-	Mark Rutland <mark.rutland@arm.com>, Misono Tomohiro <misono.tomohiro@fujitsu.com>, 
-	Marc Zyngier <maz@kernel.org>, Sumit Garg <sumit.garg@linaro.org>, Chen-Yu Tsai <wens@csie.org>, 
-	Daniel Thompson <daniel.thompson@linaro.org>, Stephen Boyd <swboyd@chromium.org>, 
-	Frederic Weisbecker <frederic@kernel.org>, "Guilherme G. Piccoli" <gpiccoli@igalia.com>, 
-	James Morse <james.morse@arm.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-	Kees Cook <kees@kernel.org>, Puranjay Mohan <puranjay@kernel.org>, Tony Luck <tony.luck@intel.com>, 
-	linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Will,
+Add the __counted_by compiler attribute to the flexible array member
+attrs to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
+CONFIG_FORTIFY_SOURCE.
 
-On Fri, Aug 23, 2024 at 3:46=E2=80=AFAM Will Deacon <will@kernel.org> wrote=
-:
->
-> Hi Doug,
->
-> On Wed, Aug 21, 2024 at 02:53:57PM -0700, Douglas Anderson wrote:
-> > When testing hard lockup handling on my sc7180-trogdor-lazor device
-> > with pseudo-NMI enabled, with serial console enabled and with kgdb
-> > disabled, I found that the stack crawls printed to the serial console
-> > ended up as a jumbled mess. After rebooting, the pstore-based console
-> > looked fine though. Also, enabling kgdb to trap the panic made the
-> > console look fine and avoided the mess.
->
-> Just a small nit:
->
-> >       while (num_other_online_cpus() && timeout--)
-> >               udelay(1);
-> >
-> > -     if (num_other_online_cpus())
-> > +     /*
-> > +      * If CPUs are still online, try an NMI. There's no excuse for th=
-is to
-> > +      * be slow, so we only give them an extra 10 ms to respond.
-> > +      */
-> > +     if (num_other_online_cpus() && ipi_should_be_nmi(IPI_CPU_STOP_NMI=
-)) {
->
-> We probably want an smp_rmb() here...
->
-> > +             cpumask_copy(&mask, cpu_online_mask);
-> > +             cpumask_clear_cpu(smp_processor_id(), &mask);
-> > +
-> > +             pr_info("SMP: retry stop with NMI for CPUs %*pbl\n",
-> > +                     cpumask_pr_args(&mask));
-> > +
-> > +             smp_cross_call(&mask, IPI_CPU_STOP_NMI);
-> > +             timeout =3D USEC_PER_MSEC * 10;
-> > +             while (num_other_online_cpus() && timeout--)
-> > +                     udelay(1);
-> > +     }
-> > +
-> > +     if (num_other_online_cpus()) {
->
->
-> ... and again here, just to make sure that the re-read of cpu_online_mask
-> is ordered after the read of __num_online_cpus in num_other_online_cpus()=
-.
->
-> I can add those when applying.
+Increment num before adding a new param_attribute to the attrs array and
+adjust the array index accordingly. Increment num immediately after the
+first reallocation such that the reallocation for the NULL terminator
+only needs to add 1 (instead of 2) to mk->mp->num.
 
-Sounds like a plan to me. Thanks!
+Use struct_size() instead of manually calculating the size for the
+reallocation.
 
--Doug
+Use krealloc_array() for the additional NULL terminator.
+
+Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+---
+Changes in v2:
+- Use krealloc_array() as suggested by Andy Shevchenko
+- Link to v1: https://lore.kernel.org/linux-kernel/20240823123300.37574-1-thorsten.blum@toblux.com/
+---
+ kernel/params.c | 29 +++++++++++++----------------
+ 1 file changed, 13 insertions(+), 16 deletions(-)
+
+diff --git a/kernel/params.c b/kernel/params.c
+index 2e447f8ae183..5f6643676697 100644
+--- a/kernel/params.c
++++ b/kernel/params.c
+@@ -551,7 +551,7 @@ struct module_param_attrs
+ {
+ 	unsigned int num;
+ 	struct attribute_group grp;
+-	struct param_attribute attrs[];
++	struct param_attribute attrs[] __counted_by(num);
+ };
+ 
+ #ifdef CONFIG_SYSFS
+@@ -651,35 +651,32 @@ static __modinit int add_sysfs_param(struct module_kobject *mk,
+ 	}
+ 
+ 	/* Enlarge allocations. */
+-	new_mp = krealloc(mk->mp,
+-			  sizeof(*mk->mp) +
+-			  sizeof(mk->mp->attrs[0]) * (mk->mp->num + 1),
++	new_mp = krealloc(mk->mp, struct_size(mk->mp, attrs, mk->mp->num + 1),
+ 			  GFP_KERNEL);
+ 	if (!new_mp)
+ 		return -ENOMEM;
+ 	mk->mp = new_mp;
++	mk->mp->num++;
+ 
+ 	/* Extra pointer for NULL terminator */
+-	new_attrs = krealloc(mk->mp->grp.attrs,
+-			     sizeof(mk->mp->grp.attrs[0]) * (mk->mp->num + 2),
+-			     GFP_KERNEL);
++	new_attrs = krealloc_array(mk->mp->grp.attrs, mk->mp->num + 1,
++				   sizeof(mk->mp->grp.attrs[0]), GFP_KERNEL);
+ 	if (!new_attrs)
+ 		return -ENOMEM;
+ 	mk->mp->grp.attrs = new_attrs;
+ 
+ 	/* Tack new one on the end. */
+-	memset(&mk->mp->attrs[mk->mp->num], 0, sizeof(mk->mp->attrs[0]));
+-	sysfs_attr_init(&mk->mp->attrs[mk->mp->num].mattr.attr);
+-	mk->mp->attrs[mk->mp->num].param = kp;
+-	mk->mp->attrs[mk->mp->num].mattr.show = param_attr_show;
++	memset(&mk->mp->attrs[mk->mp->num - 1], 0, sizeof(mk->mp->attrs[0]));
++	sysfs_attr_init(&mk->mp->attrs[mk->mp->num - 1].mattr.attr);
++	mk->mp->attrs[mk->mp->num - 1].param = kp;
++	mk->mp->attrs[mk->mp->num - 1].mattr.show = param_attr_show;
+ 	/* Do not allow runtime DAC changes to make param writable. */
+ 	if ((kp->perm & (S_IWUSR | S_IWGRP | S_IWOTH)) != 0)
+-		mk->mp->attrs[mk->mp->num].mattr.store = param_attr_store;
++		mk->mp->attrs[mk->mp->num - 1].mattr.store = param_attr_store;
+ 	else
+-		mk->mp->attrs[mk->mp->num].mattr.store = NULL;
+-	mk->mp->attrs[mk->mp->num].mattr.attr.name = (char *)name;
+-	mk->mp->attrs[mk->mp->num].mattr.attr.mode = kp->perm;
+-	mk->mp->num++;
++		mk->mp->attrs[mk->mp->num - 1].mattr.store = NULL;
++	mk->mp->attrs[mk->mp->num - 1].mattr.attr.name = (char *)name;
++	mk->mp->attrs[mk->mp->num - 1].mattr.attr.mode = kp->perm;
+ 
+ 	/* Fix up all the pointers, since krealloc can move us */
+ 	for (i = 0; i < mk->mp->num; i++)
+-- 
+2.46.0
+
