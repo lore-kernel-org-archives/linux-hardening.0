@@ -1,152 +1,81 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD5C514F9D4
-	for <linux-hardening@vger.kernel.org>; Fri, 23 Aug 2024 12:33:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 425A6186E5A
+	for <linux-hardening@vger.kernel.org>; Fri, 23 Aug 2024 13:23:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724416394; cv=none; b=D51IJynQ+QYly8dYBLDDQDnCalYMyf7UjrdYmUGtTRHgXcBrY8HUBYu+EehBXDZE9zc2eOPYO+hoOd7N77iY8rFd1Qn8CGqQkyfYXadZMWzVHrz1xAzYLJFCYTUn5Haim5KA4OdFkfQF5a5rorSKh5PkVngxFOkKgTTqWPFxFVE=
+	t=1724419392; cv=none; b=NOq4RlFTN/WBVqDPd0Jrjzy5mLrECg70dwzPv+iqdIJ4bgPhIibnesQ98izV7kyu0W9Eltm7JevAQJPtTfby4dkykOdZgTw3BFWWwJhSlE6jOqC7/uxO845f20EvfMbUQW+qkWorMB6B9uFDqcl5/lL7vTMUqNzOlVDpGQv5pkw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724416394; c=relaxed/simple;
-	bh=KaWzfTx7aivUj5r4qnX69PVpWi6RJY06+4V84ASbd40=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ESJNEuRpouV3sLWbb7aEti3U0uCPkOpquxMkWsEQZkg5dTfNMdbnjGVxqIgzotHW0N/63+rNUyBLNakCgGFxUGL9xNNK/WHdnnUBUs+M/Teya1LyBWByQFx/lUa4fMjEM2GKPayaK865Dwxv1QkTz9uvlqG01MDSVuR6aM60DDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=JDzLukDl; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+	s=arc-20240116; t=1724419392; c=relaxed/simple;
+	bh=G68pP7poO8UUcT3gFTDxE4bYBPQUpzdr5Sd4qRM0BaA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rIIu/RJVP3W+DINe7P1LMMW24W/lFqvbVaUsArds6PvaiGqsYef0jin9o3JZlaRAKFH3IykLn8pOeMvsYcMwrhHfH++nBUF+sWGpcBiDUbrDrtTp5dDasDI7sFYmMsni5ndADL7FYDH7XbQ1h68IeUr8o8bj7JNgF5P0YX2Gt8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BtzQDRFe; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="JDzLukDl"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5befecad20eso277535a12.2
-        for <linux-hardening@vger.kernel.org>; Fri, 23 Aug 2024 05:33:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BtzQDRFe"
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2f3f68dd44bso22812981fa.3
+        for <linux-hardening@vger.kernel.org>; Fri, 23 Aug 2024 06:23:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1724416390; x=1725021190; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ze74uMNv/Wj8RDboLKvxC9QND1isMlgj04bWbL5LCXI=;
-        b=JDzLukDlW9RM9kTleyicm5EbXzEmeIKaJUCbmqWtfAWh52qDNjDtmIZqDZr4ufdIIj
-         /LxX/7Y0eVgzwXrcKJfgLLOM9KN3EwecZICaU4yUwTLlgbIkbGHW4tuXZUMpLJUPAL4/
-         tUzo2L5yWYQY3F1L2K3QRAEGngv4Fkuxo9MKEbX0fZq2caNiR46j6ZoIPzxc3sHKs8Li
-         p7IQRCioQHUd7EcImJaM63GDGZgphYFabZCsw5R2w8+3y6Dq3AHtqlH7RcC85od5gEXt
-         tRbPVOHhkrP5pK8VUM8cMWeX+0Ro9IECuzk/wILfhoWOtP6Gq/QuZnl7y09uxwpT1LDD
-         U+Mw==
+        d=gmail.com; s=20230601; t=1724419389; x=1725024189; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=G68pP7poO8UUcT3gFTDxE4bYBPQUpzdr5Sd4qRM0BaA=;
+        b=BtzQDRFeIv+ZiJ+Pw+vmfff1HrQhQqyp4JyeFDDJ4gVNSGDOHgnVMKU3147z5VcBVZ
+         oNksMYWjggmy6SvhLloZDm/o7E99dExoHhmv1dyHtk2u2jdKDRDz6JqPbxJ6n8NFrLtY
+         71/Ej+L18JuDCLY76JQ0KBnd6EiMCeKDNFZPKEHdBg/VQvcSUuTPi4XFh/44o/FsWgP0
+         rqtaeIi397zvvFbxG3RObcrG0gyJR1h5OSp3S7pn0edKIFBr3J+K0tZnxjrSCqwTXrYD
+         nJHExXP3WQoz76wLoXH5nvD68AdmY+Jg+tx2IfXUzDOxe+P//yRt9zlIs/QaWf1ybUhy
+         ifTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724416390; x=1725021190;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Ze74uMNv/Wj8RDboLKvxC9QND1isMlgj04bWbL5LCXI=;
-        b=eNzM66w/Gmkw2WNCszfcP8CH8PSP3mhyD7Tim4FlYFIYaINy8m70dBSK0Yt1H6HNEu
-         Z0cpWOLa6/jynx+I3unjc7YtTM+TDJqyz+desV5CuC2V3g0MSFZyTkjMOopgVJW53kXp
-         KbAE+urX6K/4tf5wABjHtqs9d1GV6AUDqwl65URpmzXTvGPfd2i7IY+EGvSvEQXBVOGL
-         9GCSO+rKYxnwnpLsV8PJRUcp5CZjDB3ZXpUOLHqHZnY9S0tTRbtJxn+rWvqJmDB7lJoS
-         /23zipgbVdhXZJiqZLMAYv+2EdVWDolvBO7esX5P5Xy1FzsAiFjVUg+E9rzFCDe4hVKh
-         HYmA==
-X-Forwarded-Encrypted: i=1; AJvYcCWah3tpdJUXZa+rMwWzfyoPABxRuqhua8/xijVbWjqJMy00/gVnxzTLDpHfLRP26rZt+HSe3hP1w1UH8jb38v0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/O7jiyIzXel+mKUv2yi07mf4Q/wQTKPRt+d59790/T6XGOmsn
-	I8iAZjHVv+nZ/Rahndj8nABZLHuiuAfYWvSyhb1jCBs9UiN1hwwyRPi2o5OeUHI=
-X-Google-Smtp-Source: AGHT+IFi8C2ckvVTPaFMb3zoPvCuBmWultnoZJdb41ih83dnKe7kJzFBdBe3Ht+YJJpk2SuhYxJOug==
-X-Received: by 2002:a17:906:c105:b0:a86:a4cf:a197 with SMTP id a640c23a62f3a-a86a54a8e30mr87749766b.5.1724416390033;
-        Fri, 23 Aug 2024 05:33:10 -0700 (PDT)
-Received: from fedora.fritz.box (aftr-82-135-80-228.dynamic.mnet-online.de. [82.135.80.228])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a868f4f437bsm252713466b.197.2024.08.23.05.33.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Aug 2024 05:33:09 -0700 (PDT)
-From: Thorsten Blum <thorsten.blum@toblux.com>
-To: kees@kernel.org,
-	gustavoars@kernel.org,
-	andriy.shevchenko@linux.intel.com,
-	mcgrof@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	Thorsten Blum <thorsten.blum@toblux.com>
-Subject: [PATCH] params: Annotate struct module_param_attrs with __counted_by()
-Date: Fri, 23 Aug 2024 14:33:00 +0200
-Message-ID: <20240823123300.37574-1-thorsten.blum@toblux.com>
-X-Mailer: git-send-email 2.46.0
+        d=1e100.net; s=20230601; t=1724419389; x=1725024189;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=G68pP7poO8UUcT3gFTDxE4bYBPQUpzdr5Sd4qRM0BaA=;
+        b=s7ePhkj7qEmW5UtIaeMJ/t437iF69slBqWeltTzACIltvRxlZ/ebksmjhOdrp9mqx0
+         YFSCD36RTc9gwSObm645hyYkBqag+jx37fBTkIuodaLCtthaT5/eCKpzFZh+DzprTYN0
+         ifTiAUOh0jNteuSXCBuLMVWc9Fi6Ttx8gahyoUUrf2meVFXiNl9BlLUI0sxl7FhXT2cF
+         L8msFDEXcRJR51myH9BSOAyVyUP5eO63OC8t30ZW8vq9j/MN0AEgkMDvcCuRjkVU4cr8
+         +x6C4wFtL14X/CO3oeUHSvMjVXMxAVFIjaViWbokrpKPLlgGaQT3sygMIvUHUMYnZMSL
+         E9hA==
+X-Forwarded-Encrypted: i=1; AJvYcCXVan3GYT+JKJMLhIU748cQQjp7xr4y2+u0zdHfLBqCNuBSnqdFN2IFdxawpkod+e+5affHlj946Yl0Bw8Xna8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxkVliwZvrHWBSbeBEwCGJgCh1Db94JRKfK8R6uy0pEHTnmkTba
+	bGPaphsOXfa5tHl8jPYbk+PU10Ua6gP+fLrF5Sq9HFX5vndy6DDX0SBJ+EMFNkQ3PEidFBEFZ1I
+	m4Wc9jl5gJDaezOjKWNqWsNzaU2k=
+X-Google-Smtp-Source: AGHT+IGZb58uZJN27rp/ud8fNh3RV3o67BkHKUuFHZ9Kz3A+PzWA96T21XU3lpd+ECMTMdnquUvlBkj6NEVq/Xx1wVY=
+X-Received: by 2002:a2e:b894:0:b0:2f3:f193:d2d0 with SMTP id
+ 38308e7fff4ca-2f4f4937908mr18252461fa.33.1724419389081; Fri, 23 Aug 2024
+ 06:23:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240823062046.3323694-1-lihongbo22@huawei.com>
+In-Reply-To: <20240823062046.3323694-1-lihongbo22@huawei.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Fri, 23 Aug 2024 16:22:32 +0300
+Message-ID: <CAHp75VdYbG32auRF3KgP15wA-5bDgTMTO24itTu1tdjdW3CqXQ@mail.gmail.com>
+Subject: Re: [PATCH -next 0/2] Add str_true_false()/str_false_true() helper
+To: Hongbo Li <lihongbo22@huawei.com>
+Cc: kees@kernel.org, andy@kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add the __counted_by compiler attribute to the flexible array member
-attrs to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
-CONFIG_FORTIFY_SOURCE.
+On Fri, Aug 23, 2024 at 9:13=E2=80=AFAM Hongbo Li <lihongbo22@huawei.com> w=
+rote:
+>
+> Add str_true_false()/str_false_true() helper to "true" or "false"
+> string literal. And we found more than 10 cases currently exist
+> in the tree. So these helpers can be used for these cases.
 
-Increment num before adding a new param_attribute to the attrs array and
-adjust the array index accordingly. Increment num immediately after the
-first reallocation such that krealloc() for the NULL terminator only
-needs to add 1 (instead of 2) to mk->mp->num.
+Squash them into a single patch. There is no need to split these.
 
-Use struct_size() instead of manually calculating the size for the
-reallocation.
-
-Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
----
- kernel/params.c | 26 ++++++++++++--------------
- 1 file changed, 12 insertions(+), 14 deletions(-)
-
-diff --git a/kernel/params.c b/kernel/params.c
-index 2e447f8ae183..160b66dbc0b0 100644
---- a/kernel/params.c
-+++ b/kernel/params.c
-@@ -551,7 +551,7 @@ struct module_param_attrs
- {
- 	unsigned int num;
- 	struct attribute_group grp;
--	struct param_attribute attrs[];
-+	struct param_attribute attrs[] __counted_by(num);
- };
- 
- #ifdef CONFIG_SYSFS
-@@ -651,35 +651,33 @@ static __modinit int add_sysfs_param(struct module_kobject *mk,
- 	}
- 
- 	/* Enlarge allocations. */
--	new_mp = krealloc(mk->mp,
--			  sizeof(*mk->mp) +
--			  sizeof(mk->mp->attrs[0]) * (mk->mp->num + 1),
-+	new_mp = krealloc(mk->mp, struct_size(mk->mp, attrs, mk->mp->num + 1),
- 			  GFP_KERNEL);
- 	if (!new_mp)
- 		return -ENOMEM;
- 	mk->mp = new_mp;
-+	mk->mp->num++;
- 
- 	/* Extra pointer for NULL terminator */
- 	new_attrs = krealloc(mk->mp->grp.attrs,
--			     sizeof(mk->mp->grp.attrs[0]) * (mk->mp->num + 2),
-+			     sizeof(mk->mp->grp.attrs[0]) * (mk->mp->num + 1),
- 			     GFP_KERNEL);
- 	if (!new_attrs)
- 		return -ENOMEM;
- 	mk->mp->grp.attrs = new_attrs;
- 
- 	/* Tack new one on the end. */
--	memset(&mk->mp->attrs[mk->mp->num], 0, sizeof(mk->mp->attrs[0]));
--	sysfs_attr_init(&mk->mp->attrs[mk->mp->num].mattr.attr);
--	mk->mp->attrs[mk->mp->num].param = kp;
--	mk->mp->attrs[mk->mp->num].mattr.show = param_attr_show;
-+	memset(&mk->mp->attrs[mk->mp->num - 1], 0, sizeof(mk->mp->attrs[0]));
-+	sysfs_attr_init(&mk->mp->attrs[mk->mp->num - 1].mattr.attr);
-+	mk->mp->attrs[mk->mp->num - 1].param = kp;
-+	mk->mp->attrs[mk->mp->num - 1].mattr.show = param_attr_show;
- 	/* Do not allow runtime DAC changes to make param writable. */
- 	if ((kp->perm & (S_IWUSR | S_IWGRP | S_IWOTH)) != 0)
--		mk->mp->attrs[mk->mp->num].mattr.store = param_attr_store;
-+		mk->mp->attrs[mk->mp->num - 1].mattr.store = param_attr_store;
- 	else
--		mk->mp->attrs[mk->mp->num].mattr.store = NULL;
--	mk->mp->attrs[mk->mp->num].mattr.attr.name = (char *)name;
--	mk->mp->attrs[mk->mp->num].mattr.attr.mode = kp->perm;
--	mk->mp->num++;
-+		mk->mp->attrs[mk->mp->num - 1].mattr.store = NULL;
-+	mk->mp->attrs[mk->mp->num - 1].mattr.attr.name = (char *)name;
-+	mk->mp->attrs[mk->mp->num - 1].mattr.attr.mode = kp->perm;
- 
- 	/* Fix up all the pointers, since krealloc can move us */
- 	for (i = 0; i < mk->mp->num; i++)
--- 
-2.46.0
-
+--=20
+With Best Regards,
+Andy Shevchenko
