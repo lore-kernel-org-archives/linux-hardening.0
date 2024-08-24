@@ -1,68 +1,55 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-175.mta0.migadu.com (out-175.mta0.migadu.com [91.218.175.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A12251714CD;
-	Sat, 24 Aug 2024 14:11:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A9C76EB7D
+	for <linux-hardening@vger.kernel.org>; Sat, 24 Aug 2024 17:59:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724508700; cv=none; b=uA1qIUC+vUxTlSNGnJ9/bNzrsn70iklrxv9jn3nA6R+1ef1pa2/RElbC7ABXqHIiV5vMQ071/abYHq2ocBtdNa+rJMz1VZGi0IE4xW0FYBKSaOpWyBBavCmmPV3BLMMUYyllJaCxofWQhFNrJ93xK3N7FVW7HzD+/fL6gGPF1TY=
+	t=1724522365; cv=none; b=cRcywxTewvKtrYfmmOMBM18S+rMnIeflnYCxe1KcMg0pLGg/zeIaKxM/sQuD8L4Z3iIgC+K38jwarXNpUnKRTbpCJcf2poGiSmzKZozqFiN9C9Z/Mk/eyHdnyQwwyeKHhTGpWFY17P94+joDITUlRkKxi4iyBf84yMEU9cuiI98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724508700; c=relaxed/simple;
-	bh=W8M1Zi7aIkrnWh6ARqbPqJasZDK1TBAZj6azA4K8n94=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=O27XdEZR98/UIXGJHfJZNwMJEmpXJhPLotZHowBppDIFsTqCyqHUxNMxULa8QNQXOyIImLQ+MvS3q+XGCerYiIZfJ/qw9J0TYB8/LWGsUxw+kqeiheV7Sm14xZ8u5XLs9kbNwI0TC9I5lHv0QptaoCqYggPoeHkidX4M8JRlpvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fMnOZsyj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1724522365; c=relaxed/simple;
+	bh=EfxGkLvlnQVophhgVpZIEwOn6vYeBOCx1Ac+KXmpIsA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=btKbknDQvC1ZpW8+5zyPdgDBO96tKXlGJvWHzbtgjuKpm/PWnK6RtkQUP7BMoxjdzRWj2fyLUML2R35i+EXEdejvu4sjsMKNs72jSN44fevctF/czZmE0WxiohQv0q2ZTAeHB57Qy9WycBt6xukTKmJz7p4aAmn0alYZPMhpetc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=iOilqeaz; arc=none smtp.client-ip=91.218.175.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fMnOZsyj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B0BDC4AF14;
-	Sat, 24 Aug 2024 14:11:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724508700;
-	bh=W8M1Zi7aIkrnWh6ARqbPqJasZDK1TBAZj6azA4K8n94=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=fMnOZsyjIiSxIULNhEWT/Ul07nlCs8OYwZme5p9C7CQlZiZPz5cpX1tNBJWSGcHfw
-	 j1cjZVi5d21gfqPPUqh0N1uX490iESrbFRaDDK0M/GinI65JezNsj+OekIU7C0Z1ej
-	 qtqcfKDvbldzIOTOMslOhJ5HyRiq8ayb4DnAQAf9XvKYzKhIQHZudCEmchVvh53ORV
-	 SUiBIbYmomaQA/vXcWPmSnTASrXOWNr5GQcdxDsM9H+jVnxH71GPKTHeaStlH5/u/m
-	 AKX/uVWlVHGTzREhQaoUp3NgKkhW0VdQ6sDb74Z4poWEAZT/Yb5Umb401IUuN2+vIl
-	 Vd4Qx/FhAY+vA==
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-2700d796019so2027195fac.2;
-        Sat, 24 Aug 2024 07:11:39 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV7rpzaR8Z/l9wD/UIkNM/BKNIeVDrJhyifsht3uyPLxgEkfH4mj4aCjErDE2BJ5Jb++IG6zo/uTJ3NXc4b@vger.kernel.org, AJvYcCWX85Txa0uZnjFf74yiLVnTm+kRQOsPyM56dV1zEI5A5GronK0gHlWX5WVwxfAHyxMwIQLcnAXKopTt@vger.kernel.org, AJvYcCXrZb/ciIaukeaJHuOYpND1Qvs8LfY1FeEr6JFQnqAggszPyKimAuzghnBJ34WzodxjBQ99VuZJume8miBeryK3@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz1UmMjC8i6p3GYzutYOU4JIblCMyMXg05U9k0ok6ZTzrFLcqS0
-	t0BDgmOm91DbmD3KJl7gDQwXcwUEDSVvKYFTxELq0Xkc0umviXfYBuCLfEk/Z6T9tu5dX9H7H8c
-	uDFd9s8TjpqpGCPtRyKrudxzGnac=
-X-Google-Smtp-Source: AGHT+IHHjnn/NHqyorxcVuvXZ/XIEXAghoMCVWNt0SCheWsoSq/amxNqcMs9jWYY2l892xnrSusMBO+qGcwQZ044Tr4=
-X-Received: by 2002:a05:6870:4713:b0:260:f75c:c28b with SMTP id
- 586e51a60fabf-273e646d7a8mr5832277fac.8.1724508699291; Sat, 24 Aug 2024
- 07:11:39 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="iOilqeaz"
+Date: Sat, 24 Aug 2024 13:59:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1724522361;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EYobkU7jwthVopRG5e6pdzVo4QhQPLczqWczkGXdKLY=;
+	b=iOilqeazH09s7oLyjIcETAmrMU1OcrK5zdr10GW2DQcoW3WWHcoYZFD0sZYQqn3yya15vz
+	AbxYeyIqyCEZ3QJwWXfqHRu1lAb4SKbqZsnZtQ0WFV3bpDSzGhSqdRvCRDRg7PX+uQwUQs
+	GhgswRb2Ud6WbfGlZ4bJ28bHkivpdp4=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Thorsten Blum <thorsten.blum@toblux.com>
+Cc: kees@kernel.org, gustavoars@kernel.org, linux-bcachefs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] bcachefs: Annotate struct bch_xattr with __counted_by()
+Message-ID: <ncavolexjlz5j2uaiklynoeiuoqatwrqy3elop5f6dg3444m3e@pegucwwr57bc>
+References: <20240824135740.1971-2-thorsten.blum@toblux.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240823114704.36967-2-thorsten.blum@toblux.com>
-In-Reply-To: <20240823114704.36967-2-thorsten.blum@toblux.com>
-From: Namjae Jeon <linkinjeon@kernel.org>
-Date: Sat, 24 Aug 2024 23:11:28 +0900
-X-Gmail-Original-Message-ID: <CAKYAXd8x0Q1BPPUvL1FD-kYMyubj1pZuF-G6krfsttEKz-4Z6g@mail.gmail.com>
-Message-ID: <CAKYAXd8x0Q1BPPUvL1FD-kYMyubj1pZuF-G6krfsttEKz-4Z6g@mail.gmail.com>
-Subject: Re: [PATCH] smb: Annotate struct xattr_smb_acl with __counted_by()
-To: Thorsten Blum <thorsten.blum@toblux.com>
-Cc: sfrench@samba.org, senozhatsky@chromium.org, tom@talpey.com, 
-	kees@kernel.org, gustavoars@kernel.org, linux-cifs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240824135740.1971-2-thorsten.blum@toblux.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, Aug 23, 2024 at 8:48=E2=80=AFPM Thorsten Blum <thorsten.blum@toblux=
-.com> wrote:
->
+On Sat, Aug 24, 2024 at 03:57:41PM GMT, Thorsten Blum wrote:
 > Add the __counted_by compiler attribute to the flexible array member
-> entries to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
+> x_name to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
 > CONFIG_FORTIFY_SOURCE.
->
+> 
 > Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
-Applied it to #ksmbd-for-next-next.
-Thanks!
+
+Applied
