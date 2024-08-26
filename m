@@ -1,170 +1,125 @@
-Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3410F198A3B
-	for <linux-hardening@vger.kernel.org>; Mon, 26 Aug 2024 17:12:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02C7D19412F
+	for <linux-hardening@vger.kernel.org>; Mon, 26 Aug 2024 17:40:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724692323; cv=none; b=e8kEOu+jmIR0wdxauq4ZnUFcS5oovtAjQC8UxmGUqlEvarVCZrkuPCjGDG+vLGy+pdyo1s+gFU32KI9fS0opiQjrqLTjDmURhlyZomCHJT9/24bk3QN1pt5cq9R7Zhxmm6t/X/TeaIdAf1TV9TdmYhwvUYdEwFvY2qFIa/ilO/U=
+	t=1724694054; cv=none; b=urucqhAzHBjQ5DkdUmFjbEzYf+FlUGc+kZ1gGzNTfrQCEzWA1Gw585mSVrIox6Zxe6Yu4ZltdXuXFIuLSMAF7ChTWM/UHs2ZajS6kTRRa2LFbuCuYdIh+UkN13fpTeiIwiPCg5HeZQXulSNeuqhwnsu9LkYtlI6x8UvFPlOErk8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724692323; c=relaxed/simple;
-	bh=tlHm13fgtMH8ly1SsTRgtIahTsWSmWRhdvxw3HaNPVE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f/ivcRnVw5m/CxoUfNXFanOiPcb8u6JeE7bYJj/5TufZzpfDqnbnU9F2dzuCLBDfqWkcXZ5tHjyRLcdALgCF9/yS5ef/E+C8HnrVOou3oJ90wXFpWXcdJuLpx7VcoML+u0La1+e8hlX/noIB8dhlaNyyb8OXJtAGKkiCJqfkrDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=MKdWwRY2; arc=none smtp.client-ip=95.215.58.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1724694054; c=relaxed/simple;
+	bh=38RYpX0itHRcFlvcfwO20AY1tm82Tl6U3bOwLFm4DaM=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=uNpf+L28GhLsgWoZ9mI1orxmuGpw7rsymf5jN5Leogzwy5V3zqqpzq/+lT6Y0qA52Pd15GX1anHIaGMLmiKar2vTu3pb5kuR2WHIUf0VmeBwaja8LwUtLMqNNFFKfIoBo1sA7SkyZOOkb0C3eSQ6sHSniq091yr4uQvHtJXqxaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=euz5BZ4s; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="MKdWwRY2"
-Date: Mon, 26 Aug 2024 13:11:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1724692319;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vc3eD739P9v0p0HMmCHQneJWpFHCNMD2wlv0iI6W7R8=;
-	b=MKdWwRY26aViDAXinmokETST9r/D0vANUfTI8c3HK/PumRcvtpZJUSqLJjJMPjXJ35I6J+
-	DRFUuNtZw0NI6wGdZIV6iLuxMaLVxMIIfXnyW3fzcgbuUIIxAbjiLU5V+igdnParCmseik
-	iaoEudgUPp4VbOTG84qR20ho4x3JGg8=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Thorsten Blum <thorsten.blum@toblux.com>
-Cc: kees@kernel.org, gustavoars@kernel.org, linux-bcachefs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] bcachefs: Annotate bch_replicas_entry_{v0,v1} with
- __counted_by()
-Message-ID: <rhiuwwxo3yfr6gpltzqraenammvpfzohdjavhacng6bxec62cj@sklevlpi5mto>
-References: <20240826101135.31482-2-thorsten.blum@toblux.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="euz5BZ4s"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e11703f1368so6756162276.1
+        for <linux-hardening@vger.kernel.org>; Mon, 26 Aug 2024 10:40:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1724694052; x=1725298852; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=IRpbKT8eDTs2jbkcv3eRtpU9kxct2vnPfTcDOFQv4ew=;
+        b=euz5BZ4scNKSHoGCtSlVDrqDx8VVtRJwj96AUO7t96IIB/iWnUwzmG/RKfqCiNfygT
+         zsGR3LXLx9R4ut+BNjZrHa70OgFxfrlN1ly0+fuJo90n9KI/1sR9rjhEBEdFYnfXImtA
+         Y1d0PaDoz7nmB/s6q4V3T48CMNGAds2T62QRePZptmwG5eAB/Cc7abxwkt40GXSSBTnh
+         ptYCCLvn0Darm0QohULf08XquWfSp2UT9mnHjm/C3kbQXmAfo1jk22VSiF2O9PA5AeZk
+         OBmtvEldei1GoqMiebfOR4W2Jg7nrRBlCJFQoCb24OGAz70h3vkJpJCnJzQXqlqYl9n6
+         7KZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724694052; x=1725298852;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=IRpbKT8eDTs2jbkcv3eRtpU9kxct2vnPfTcDOFQv4ew=;
+        b=KQymyaetlR9oL9RjWspOpg2r51+0BSkG0UuuY5oqrk9zeXxUKtVDB0TLRebtBUB3B+
+         MmCWerYeMZDaKfQUWi0daraKTuhEoVfC/sGSiyrIUl0i9VlKSeLGPivopwkyNMSkBvpa
+         zSg4U7QqqntS87DfxcB6JCiIDcHB18iQc++ruPpDSeIWlYkUOZsAbmr68XU2wqvyNaPC
+         xAJuZTKMsC/F6K2aGwoILJ/Gyb/PGdb4h/GUxDbBDdTyQE44CWld71+nCYeypHVoAiNv
+         SOvsDxGSFtJ9n2NsOkK+QwCxlP+tEHTEbrtE5FAHNnkbK1JZc/T708syImzvlxtU7Urq
+         e/yg==
+X-Forwarded-Encrypted: i=1; AJvYcCVU47eq9hMxvBBqFaUBL9GnbtGJmLSbVhhhii0LP60RYAUfDMhx/HG7dS54fv2CX7G6ylFKZBBGgTKcQzdIP+0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyMPvf6YbpTehvyfoJa9XFQibnePuMpkir3/9EOk1HkvrtZ44uJ
+	29SFztQIERvwpaih4vmVmYEoS7HJUsQ1OOuZwvV/DeQU/9SiAaeK3p6jX+3Ekfz6CIYdoPrS7i5
+	n2kFlJnwiyvTy9UExLJLv6g==
+X-Google-Smtp-Source: AGHT+IFLZCvHUGimXlZ9eOrIm8DbE3Ww2SBM+aysI+wCSClXo8gNSrTZOIhqS+2PU6aHWHPOxJN8b0j1y3mqiL6SmQ==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a05:6902:32a1:b0:e0b:bd79:3077 with
+ SMTP id 3f1490d57ef6-e17a8630eb5mr18971276.9.1724694051919; Mon, 26 Aug 2024
+ 10:40:51 -0700 (PDT)
+Date: Mon, 26 Aug 2024 10:40:49 -0700
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240826101135.31482-2-thorsten.blum@toblux.com>
-X-Migadu-Flow: FLOW_OUT
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIACC+zGYC/yWN0QqCQBBFf0XmuYF1K9B+JSLW8aqDMcmsRCH+e
+ 0u9HDgv52yU4YpMl2ojx0uzPq1IfahIpmQjWPviFEM8hSYGzqubLB+e4YYHr54Ef947TyYTC4f Uno/opB9QUyktjkHfv8v1tu9ffCLlGXUAAAA=
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1724694050; l=1750;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=38RYpX0itHRcFlvcfwO20AY1tm82Tl6U3bOwLFm4DaM=; b=32tkeynr+w56sMQwNB1tcARgQrlhZTXteUye/hSpgeKtvOHvrqN6XgA5kAqwRGXZOfaLNFjlS
+ 51LpAtw4U4DAT7JN8z2LQFtfXpDQBxQQDYAfrpEifJOGQgHXif6GjEO
+X-Mailer: b4 0.12.3
+Message-ID: <20240826-strncpy-kernel-trace-trace_branch-c-v1-1-b2c14f2e9e84@google.com>
+Subject: [PATCH] tracing: replace deprecated strncpy with strscpy
+From: Justin Stitt <justinstitt@google.com>
+To: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org, 
+	Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-On Mon, Aug 26, 2024 at 12:11:36PM GMT, Thorsten Blum wrote:
-> Add the __counted_by compiler attribute to the flexible array members
-> devs to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
-> CONFIG_FORTIFY_SOURCE.
-> 
-> Increment nr_devs before adding a new device to the devs array and
-> adjust the array indexes accordingly. Add a helper macro for adding a
-> new device.
-> 
-> In bch2_journal_read(), explicitly set nr_devs to 0.
-> 
-> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+strncpy() is deprecated for use on NUL-terminated destination strings
+[1] and as such we should prefer more robust and less ambiguous string
+interfaces.
 
-Applied
+Both of these fields want to be NUL-terminated as per their use in
+printk:
 
-> ---
->  fs/bcachefs/buckets.c         | 2 +-
->  fs/bcachefs/journal_io.c      | 3 ++-
->  fs/bcachefs/replicas.c        | 6 +++---
->  fs/bcachefs/replicas_format.h | 9 +++++++--
->  4 files changed, 13 insertions(+), 7 deletions(-)
-> 
-> diff --git a/fs/bcachefs/buckets.c b/fs/bcachefs/buckets.c
-> index be2bbd248631..eda397c562f5 100644
-> --- a/fs/bcachefs/buckets.c
-> +++ b/fs/bcachefs/buckets.c
-> @@ -740,7 +740,7 @@ static int __trigger_extent(struct btree_trans *trans,
->  				return ret;
->  		} else if (!p.has_ec) {
->  			replicas_sectors       += disk_sectors;
-> -			acc_replicas_key.replicas.devs[acc_replicas_key.replicas.nr_devs++] = p.ptr.dev;
-> +			replicas_entry_add_dev(&acc_replicas_key.replicas, p.ptr.dev);
->  		} else {
->  			ret = bch2_trigger_stripe_ptr(trans, k, p, data_type, disk_sectors, flags);
->  			if (ret)
-> diff --git a/fs/bcachefs/journal_io.c b/fs/bcachefs/journal_io.c
-> index 32b886feb2ca..30460bce04be 100644
-> --- a/fs/bcachefs/journal_io.c
-> +++ b/fs/bcachefs/journal_io.c
-> @@ -1353,6 +1353,7 @@ int bch2_journal_read(struct bch_fs *c,
->  	genradix_for_each(&c->journal_entries, radix_iter, _i) {
->  		struct bch_replicas_padded replicas = {
->  			.e.data_type = BCH_DATA_journal,
-> +			.e.nr_devs = 0,
->  			.e.nr_required = 1,
->  		};
->  
-> @@ -1379,7 +1380,7 @@ int bch2_journal_read(struct bch_fs *c,
->  			goto err;
->  
->  		darray_for_each(i->ptrs, ptr)
-> -			replicas.e.devs[replicas.e.nr_devs++] = ptr->dev;
-> +			replicas_entry_add_dev(&replicas.e, ptr->dev);
->  
->  		bch2_replicas_entry_sort(&replicas.e);
->  
-> diff --git a/fs/bcachefs/replicas.c b/fs/bcachefs/replicas.c
-> index 12b1d28b7eb4..e0880cb79345 100644
-> --- a/fs/bcachefs/replicas.c
-> +++ b/fs/bcachefs/replicas.c
-> @@ -122,7 +122,7 @@ static void extent_to_replicas(struct bkey_s_c k,
->  			continue;
->  
->  		if (!p.has_ec)
-> -			r->devs[r->nr_devs++] = p.ptr.dev;
-> +			replicas_entry_add_dev(r, p.ptr.dev);
->  		else
->  			r->nr_required = 0;
->  	}
-> @@ -139,7 +139,7 @@ static void stripe_to_replicas(struct bkey_s_c k,
->  	for (ptr = s.v->ptrs;
->  	     ptr < s.v->ptrs + s.v->nr_blocks;
->  	     ptr++)
-> -		r->devs[r->nr_devs++] = ptr->dev;
-> +		replicas_entry_add_dev(r, ptr->dev);
->  }
->  
->  void bch2_bkey_to_replicas(struct bch_replicas_entry_v1 *e,
-> @@ -180,7 +180,7 @@ void bch2_devlist_to_replicas(struct bch_replicas_entry_v1 *e,
->  	e->nr_required	= 1;
->  
->  	darray_for_each(devs, i)
-> -		e->devs[e->nr_devs++] = *i;
-> +		replicas_entry_add_dev(e, *i);
->  
->  	bch2_replicas_entry_sort(e);
->  }
-> diff --git a/fs/bcachefs/replicas_format.h b/fs/bcachefs/replicas_format.h
-> index b97208195d06..b7eff904acdb 100644
-> --- a/fs/bcachefs/replicas_format.h
-> +++ b/fs/bcachefs/replicas_format.h
-> @@ -5,7 +5,7 @@
->  struct bch_replicas_entry_v0 {
->  	__u8			data_type;
->  	__u8			nr_devs;
-> -	__u8			devs[];
-> +	__u8			devs[] __counted_by(nr_devs);
->  } __packed;
->  
->  struct bch_sb_field_replicas_v0 {
-> @@ -17,7 +17,7 @@ struct bch_replicas_entry_v1 {
->  	__u8			data_type;
->  	__u8			nr_devs;
->  	__u8			nr_required;
-> -	__u8			devs[];
-> +	__u8			devs[] __counted_by(nr_devs);
->  } __packed;
->  
->  struct bch_sb_field_replicas {
-> @@ -28,4 +28,9 @@ struct bch_sb_field_replicas {
->  #define replicas_entry_bytes(_i)					\
->  	(offsetof(typeof(*(_i)), devs) + (_i)->nr_devs)
->  
-> +#define replicas_entry_add_dev(e, d) ({					\
-> +	(e)->nr_devs++;							\
-> +	(e)->devs[(e)->nr_devs - 1] = (d);				\
-> +})
-> +
->  #endif /* _BCACHEFS_REPLICAS_FORMAT_H */
-> -- 
-> 2.46.0
-> 
+    F_printk("%u:%s:%s (%u)%s",
+      __entry->line,
+      __entry->func, __entry->file, __entry->correct,
+      __entry->constant ? " CONSTANT" : "")
+
+Use strscpy() as it NUL-terminates the destination buffer, so it doesn't
+have to be done manually.
+
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
+ kernel/trace/trace_branch.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/kernel/trace/trace_branch.c b/kernel/trace/trace_branch.c
+index e47fdb4c92fb..aa63548873c3 100644
+--- a/kernel/trace/trace_branch.c
++++ b/kernel/trace/trace_branch.c
+@@ -74,10 +74,8 @@ probe_likely_condition(struct ftrace_likely_data *f, int val, int expect)
+ 		p--;
+ 	p++;
+ 
+-	strncpy(entry->func, f->data.func, TRACE_FUNC_SIZE);
+-	strncpy(entry->file, p, TRACE_FILE_SIZE);
+-	entry->func[TRACE_FUNC_SIZE] = 0;
+-	entry->file[TRACE_FILE_SIZE] = 0;
++	strscpy(entry->func, f->data.func);
++	strscpy(entry->file, p);
+ 	entry->constant = f->constant;
+ 	entry->line = f->data.line;
+ 	entry->correct = val == expect;
+
+---
+base-commit: 521b1e7f4cf0b05a47995b103596978224b380a8
+change-id: 20240820-strncpy-kernel-trace-trace_branch-c-0a953ebcdfe1
+
+Best regards,
+--
+Justin Stitt <justinstitt@google.com>
+
