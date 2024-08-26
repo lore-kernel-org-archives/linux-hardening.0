@@ -1,125 +1,92 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02C7D19412F
-	for <linux-hardening@vger.kernel.org>; Mon, 26 Aug 2024 17:40:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A94F219AA68;
+	Mon, 26 Aug 2024 20:33:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724694054; cv=none; b=urucqhAzHBjQ5DkdUmFjbEzYf+FlUGc+kZ1gGzNTfrQCEzWA1Gw585mSVrIox6Zxe6Yu4ZltdXuXFIuLSMAF7ChTWM/UHs2ZajS6kTRRa2LFbuCuYdIh+UkN13fpTeiIwiPCg5HeZQXulSNeuqhwnsu9LkYtlI6x8UvFPlOErk8=
+	t=1724704413; cv=none; b=bQvbEtwaO3TH7Uwle4nHmfhaYm5RwDRh1Qyz4DULdpOa4uoYYPDnGgPmnYe0Wp14s0RXX3k5XbFRh6Fwnhl66M55Gxf55+khEAOOeTsqMmWnJbc+Rb9ncAwKE6eDU7GTjqXmo5r/L5GO8gA/nZFBU/UBVfW48DD3celgWMevy0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724694054; c=relaxed/simple;
-	bh=38RYpX0itHRcFlvcfwO20AY1tm82Tl6U3bOwLFm4DaM=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=uNpf+L28GhLsgWoZ9mI1orxmuGpw7rsymf5jN5Leogzwy5V3zqqpzq/+lT6Y0qA52Pd15GX1anHIaGMLmiKar2vTu3pb5kuR2WHIUf0VmeBwaja8LwUtLMqNNFFKfIoBo1sA7SkyZOOkb0C3eSQ6sHSniq091yr4uQvHtJXqxaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=euz5BZ4s; arc=none smtp.client-ip=209.85.219.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
+	s=arc-20240116; t=1724704413; c=relaxed/simple;
+	bh=6Ujl2G5gIrien3C3SbfeSa+BffaoHLb0DPf+NbVfzzY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OaR8suAe0dpls2zRPbCibo8UFxDQfU6XEG4zE1fgNp0pd/b/WiMP9wNXyOusXAtB0GeiANNh+rTq5PGFBw5SGjzng4qaml3/mQIdNN01AKWJ4Yr1CilPZkVEuC7Jh4NV+n3jMjZLtTL6kdFKpcHJD4RnAsjYRVyXa9NWBsYgfLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TqRmg//D; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="euz5BZ4s"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e11703f1368so6756162276.1
-        for <linux-hardening@vger.kernel.org>; Mon, 26 Aug 2024 10:40:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1724694052; x=1725298852; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=IRpbKT8eDTs2jbkcv3eRtpU9kxct2vnPfTcDOFQv4ew=;
-        b=euz5BZ4scNKSHoGCtSlVDrqDx8VVtRJwj96AUO7t96IIB/iWnUwzmG/RKfqCiNfygT
-         zsGR3LXLx9R4ut+BNjZrHa70OgFxfrlN1ly0+fuJo90n9KI/1sR9rjhEBEdFYnfXImtA
-         Y1d0PaDoz7nmB/s6q4V3T48CMNGAds2T62QRePZptmwG5eAB/Cc7abxwkt40GXSSBTnh
-         ptYCCLvn0Darm0QohULf08XquWfSp2UT9mnHjm/C3kbQXmAfo1jk22VSiF2O9PA5AeZk
-         OBmtvEldei1GoqMiebfOR4W2Jg7nrRBlCJFQoCb24OGAz70h3vkJpJCnJzQXqlqYl9n6
-         7KZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724694052; x=1725298852;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=IRpbKT8eDTs2jbkcv3eRtpU9kxct2vnPfTcDOFQv4ew=;
-        b=KQymyaetlR9oL9RjWspOpg2r51+0BSkG0UuuY5oqrk9zeXxUKtVDB0TLRebtBUB3B+
-         MmCWerYeMZDaKfQUWi0daraKTuhEoVfC/sGSiyrIUl0i9VlKSeLGPivopwkyNMSkBvpa
-         zSg4U7QqqntS87DfxcB6JCiIDcHB18iQc++ruPpDSeIWlYkUOZsAbmr68XU2wqvyNaPC
-         xAJuZTKMsC/F6K2aGwoILJ/Gyb/PGdb4h/GUxDbBDdTyQE44CWld71+nCYeypHVoAiNv
-         SOvsDxGSFtJ9n2NsOkK+QwCxlP+tEHTEbrtE5FAHNnkbK1JZc/T708syImzvlxtU7Urq
-         e/yg==
-X-Forwarded-Encrypted: i=1; AJvYcCVU47eq9hMxvBBqFaUBL9GnbtGJmLSbVhhhii0LP60RYAUfDMhx/HG7dS54fv2CX7G6ylFKZBBGgTKcQzdIP+0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMPvf6YbpTehvyfoJa9XFQibnePuMpkir3/9EOk1HkvrtZ44uJ
-	29SFztQIERvwpaih4vmVmYEoS7HJUsQ1OOuZwvV/DeQU/9SiAaeK3p6jX+3Ekfz6CIYdoPrS7i5
-	n2kFlJnwiyvTy9UExLJLv6g==
-X-Google-Smtp-Source: AGHT+IFLZCvHUGimXlZ9eOrIm8DbE3Ww2SBM+aysI+wCSClXo8gNSrTZOIhqS+2PU6aHWHPOxJN8b0j1y3mqiL6SmQ==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:6902:32a1:b0:e0b:bd79:3077 with
- SMTP id 3f1490d57ef6-e17a8630eb5mr18971276.9.1724694051919; Mon, 26 Aug 2024
- 10:40:51 -0700 (PDT)
-Date: Mon, 26 Aug 2024 10:40:49 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TqRmg//D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B5E3C8B7B8;
+	Mon, 26 Aug 2024 20:33:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724704412;
+	bh=6Ujl2G5gIrien3C3SbfeSa+BffaoHLb0DPf+NbVfzzY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TqRmg//DS/iIlzGfhj1EwZDxczhSLCcIJBMVzbQUoCKOEQmkb/P5WCN3f46IDGbFw
+	 HtEmaOBkuoJibOb+gcGrwvMWbltYiqq+r8aLx8YowBKpsGyifLaWwDQnMLHEWgzIuA
+	 CXWCXjqpJ/RXTlC67WbB2bKGvXFLCAP3AMSicCa59y7LIdDI4bb8Vr8Ca9+4s45CCQ
+	 nxbJeX4QelP21ZtGd9WBTpARfNrwu+s/u+RJDOV42web6HNz40KLT83qfgyXjSBT+D
+	 4K5uS3HLXVY/1vqggUGfxRQaVUXoL9/gg2SuAiOfmNyKPYK7LE69vqZPfRYTE5DD+A
+	 X98B7/Z/0RBhw==
+Date: Mon, 26 Aug 2024 13:33:31 -0700
+From: Kees Cook <kees@kernel.org>
+To: Wen Yang <wen.yang@linux.dev>
+Cc: Greg KH <gregkh@linuxfoundation.org>, Tony Luck <tony.luck@intel.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pstore: replace spinlock_t by raw_spinlock_t
+Message-ID: <202408261332.84DE549F0@keescook>
+References: <20240819145945.61274-1-wen.yang@linux.dev>
+ <2024081925-opposite-pessimist-9b98@gregkh>
+ <e7b031d7-3916-4d6d-8dfd-70412c5d24b6@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIACC+zGYC/yWN0QqCQBBFf0XmuYF1K9B+JSLW8aqDMcmsRCH+e
- 0u9HDgv52yU4YpMl2ojx0uzPq1IfahIpmQjWPviFEM8hSYGzqubLB+e4YYHr54Ef947TyYTC4f Uno/opB9QUyktjkHfv8v1tu9ffCLlGXUAAAA=
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1724694050; l=1750;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=38RYpX0itHRcFlvcfwO20AY1tm82Tl6U3bOwLFm4DaM=; b=32tkeynr+w56sMQwNB1tcARgQrlhZTXteUye/hSpgeKtvOHvrqN6XgA5kAqwRGXZOfaLNFjlS
- 51LpAtw4U4DAT7JN8z2LQFtfXpDQBxQQDYAfrpEifJOGQgHXif6GjEO
-X-Mailer: b4 0.12.3
-Message-ID: <20240826-strncpy-kernel-trace-trace_branch-c-v1-1-b2c14f2e9e84@google.com>
-Subject: [PATCH] tracing: replace deprecated strncpy with strscpy
-From: Justin Stitt <justinstitt@google.com>
-To: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org, 
-	Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e7b031d7-3916-4d6d-8dfd-70412c5d24b6@linux.dev>
 
-strncpy() is deprecated for use on NUL-terminated destination strings
-[1] and as such we should prefer more robust and less ambiguous string
-interfaces.
+On Sat, Aug 24, 2024 at 03:25:04PM +0800, Wen Yang wrote:
+> 
+> 
+> On 2024/8/20 01:45, Greg KH wrote:
+> > On Mon, Aug 19, 2024 at 10:59:45PM +0800, Wen Yang wrote:
+> > > pstore_dump() is called when both preemption and local IRQ are disabled,
+> > > and a spinlock is obtained, which is problematic for the RT kernel because
+> > > in this configuration, spinlocks are sleep locks.
+> > > 
+> > > Replace the spinlock_t with raw_spinlock_t to avoid sleeping in atomic context.
+> > 
+> > This feels odd, is it only an out-of-tree RT thing?  Or does this affect
+> > in-kernel code as well?  What prevents any normal spinlock from sleeping
+> > in your system configuration as well?
+> > 
+> 
+> Thank you for your comment.
+> 
+> If we enable PREEMPT_RT, it will also affect in-kernel code, such as in the
+> following scenario:
+> 
+> echo b > /proc/sysrq-trigger
+>   - sysrq_handle_reboot
+>   - emergency_restart
+>   - kmsg_dump
+>   - pstore_dump
+> Obtained psinfo->buf_lock, if there is a lot of error log in the kernel, it
+> will last for a long time
+> 
+> If the system unexpectedly crashes at this time:
+>   - panic()
+>   - kmsg_dump
+>   - pstore_dump
+> Attempting to obtain psinfo->buf_lock while disabling interrupts and
+> preemption, but since this lock is already held by the above process, it
+> will result in illegal sleep.
 
-Both of these fields want to be NUL-terminated as per their use in
-printk:
+Reading Documentation/locking/locktypes.rst seems to suggest pstore does
+want the raw version. I'm surprised there aren't many more cases where
+this is a problem. :P
 
-    F_printk("%u:%s:%s (%u)%s",
-      __entry->line,
-      __entry->func, __entry->file, __entry->correct,
-      __entry->constant ? " CONSTANT" : "")
-
-Use strscpy() as it NUL-terminates the destination buffer, so it doesn't
-have to be done manually.
-
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
- kernel/trace/trace_branch.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/kernel/trace/trace_branch.c b/kernel/trace/trace_branch.c
-index e47fdb4c92fb..aa63548873c3 100644
---- a/kernel/trace/trace_branch.c
-+++ b/kernel/trace/trace_branch.c
-@@ -74,10 +74,8 @@ probe_likely_condition(struct ftrace_likely_data *f, int val, int expect)
- 		p--;
- 	p++;
- 
--	strncpy(entry->func, f->data.func, TRACE_FUNC_SIZE);
--	strncpy(entry->file, p, TRACE_FILE_SIZE);
--	entry->func[TRACE_FUNC_SIZE] = 0;
--	entry->file[TRACE_FILE_SIZE] = 0;
-+	strscpy(entry->func, f->data.func);
-+	strscpy(entry->file, p);
- 	entry->constant = f->constant;
- 	entry->line = f->data.line;
- 	entry->correct = val == expect;
-
----
-base-commit: 521b1e7f4cf0b05a47995b103596978224b380a8
-change-id: 20240820-strncpy-kernel-trace-trace_branch-c-0a953ebcdfe1
-
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
-
+-- 
+Kees Cook
