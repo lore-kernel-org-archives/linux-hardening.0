@@ -1,65 +1,40 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEFF36F31E;
-	Mon, 26 Aug 2024 13:20:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3410F198A3B
+	for <linux-hardening@vger.kernel.org>; Mon, 26 Aug 2024 17:12:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724678412; cv=none; b=N45YzDI0PVx2jnX7P2gBbyodCViORpbzjbf6LJgCtV0duUKVc1KrMxsTMERrJgB+WkeKdPvUGPKU9Dbd7O6cA44DLafEYM3Z7elxxbu2xl75TQ/gyvyjyu/VQSgC6q7HZsr96qhBh05c5orhV972Hr/gq0E6w5kw6cHt9tiQNhI=
+	t=1724692323; cv=none; b=e8kEOu+jmIR0wdxauq4ZnUFcS5oovtAjQC8UxmGUqlEvarVCZrkuPCjGDG+vLGy+pdyo1s+gFU32KI9fS0opiQjrqLTjDmURhlyZomCHJT9/24bk3QN1pt5cq9R7Zhxmm6t/X/TeaIdAf1TV9TdmYhwvUYdEwFvY2qFIa/ilO/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724678412; c=relaxed/simple;
-	bh=E/nqc4BLdLsFKqzhu3d2msnxyG42N32dKLB28MAm2Ck=;
+	s=arc-20240116; t=1724692323; c=relaxed/simple;
+	bh=tlHm13fgtMH8ly1SsTRgtIahTsWSmWRhdvxw3HaNPVE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=faoWh3LcXAyL/MjsQ2v0YC6eNTzwAxYpjmduszF3PyQqQ5UzBGPxSD7I1sQiUZ5F7AhKN1n4ysEj557sJxSn4CvwfkjKVOB5mRGGCn9seVnvjKJxxzZ2MZRx+eHBhGChpFvh0y9LSEsRep4+WyJ3LSgHbt81mJ6F1CHLO6k2NyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gXrKgXJK; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=f/ivcRnVw5m/CxoUfNXFanOiPcb8u6JeE7bYJj/5TufZzpfDqnbnU9F2dzuCLBDfqWkcXZ5tHjyRLcdALgCF9/yS5ef/E+C8HnrVOou3oJ90wXFpWXcdJuLpx7VcoML+u0La1+e8hlX/noIB8dhlaNyyb8OXJtAGKkiCJqfkrDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=MKdWwRY2; arc=none smtp.client-ip=95.215.58.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gXrKgXJK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1724678410; x=1756214410;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=E/nqc4BLdLsFKqzhu3d2msnxyG42N32dKLB28MAm2Ck=;
-  b=gXrKgXJKn2+hXYH/FbQqW/e4KLW+b9IE7qY4tUwfPAk6DjEWLkemJfsl
-   qlW/Rez83RLLz7YgkI5X0bQdplVIgE6QT3yIZNB5dhSwkA2C22PJWswto
-   kp5x5xYi4TnfHdFxHCHmHLoYV1ir/pv3tiyiIQIzPpMVQE7isLcX49k3C
-   gSUTQWFNinfMTcRz0t+i38gD8rj7FIXzYjyzw5RiO1Z9SNpPCPn9ci6iB
-   NfcE32hcs2YK9JacM9I9nSq/XdyChSNBsrMTdzqTE9RR9BxQk/NBdaOXh
-   AFSjFFJ5CW1skYKnHbBPuBl2+g39LKLgnBqMDDlCZFsYB7ZHQeJrEH7qs
-   A==;
-X-CSE-ConnectionGUID: 6RF1c5i9Tym+NhFGOle5uw==
-X-CSE-MsgGUID: 2ehrpcDzRmydzvYVkrq7wg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11176"; a="23266499"
-X-IronPort-AV: E=Sophos;i="6.10,177,1719903600"; 
-   d="scan'208";a="23266499"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2024 06:20:09 -0700
-X-CSE-ConnectionGUID: Di3szpdjS/yXVeNlb//s2A==
-X-CSE-MsgGUID: vsJrk7u9TFSCMSkXYA39Hg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,177,1719903600"; 
-   d="scan'208";a="93233608"
-Received: from lkp-server01.sh.intel.com (HELO 9a732dc145d3) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 26 Aug 2024 06:20:05 -0700
-Received: from kbuild by 9a732dc145d3 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1siZdb-000H78-0b;
-	Mon, 26 Aug 2024 13:20:03 +0000
-Date: Mon, 26 Aug 2024 21:19:16 +0800
-From: kernel test robot <lkp@intel.com>
-To: wangshuaijie@awinic.com, jic23@kernel.org, lars@metafoo.de,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	kees@kernel.org, gustavoars@kernel.org, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	wangshuaijie@awinic.com, liweilei@awinic.com, kangjiajun@awinic.com
-Subject: Re: [PATCH V8 2/2] iio: proximity: aw96103: Add support for
- aw96103/aw96105 proximity sensor
-Message-ID: <202408262043.ZgqewPIH-lkp@intel.com>
-References: <20240823094947.3511730-3-wangshuaijie@awinic.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="MKdWwRY2"
+Date: Mon, 26 Aug 2024 13:11:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1724692319;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vc3eD739P9v0p0HMmCHQneJWpFHCNMD2wlv0iI6W7R8=;
+	b=MKdWwRY26aViDAXinmokETST9r/D0vANUfTI8c3HK/PumRcvtpZJUSqLJjJMPjXJ35I6J+
+	DRFUuNtZw0NI6wGdZIV6iLuxMaLVxMIIfXnyW3fzcgbuUIIxAbjiLU5V+igdnParCmseik
+	iaoEudgUPp4VbOTG84qR20ho4x3JGg8=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Thorsten Blum <thorsten.blum@toblux.com>
+Cc: kees@kernel.org, gustavoars@kernel.org, linux-bcachefs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] bcachefs: Annotate bch_replicas_entry_{v0,v1} with
+ __counted_by()
+Message-ID: <rhiuwwxo3yfr6gpltzqraenammvpfzohdjavhacng6bxec62cj@sklevlpi5mto>
+References: <20240826101135.31482-2-thorsten.blum@toblux.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -68,185 +43,128 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240823094947.3511730-3-wangshuaijie@awinic.com>
+In-Reply-To: <20240826101135.31482-2-thorsten.blum@toblux.com>
+X-Migadu-Flow: FLOW_OUT
 
-Hi,
+On Mon, Aug 26, 2024 at 12:11:36PM GMT, Thorsten Blum wrote:
+> Add the __counted_by compiler attribute to the flexible array members
+> devs to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
+> CONFIG_FORTIFY_SOURCE.
+> 
+> Increment nr_devs before adding a new device to the devs array and
+> adjust the array indexes accordingly. Add a helper macro for adding a
+> new device.
+> 
+> In bch2_journal_read(), explicitly set nr_devs to 0.
+> 
+> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
 
-kernel test robot noticed the following build errors:
+Applied
 
-[auto build test ERROR on b78b25f69a1dfa79798f684ad34707b1da10a48f]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/wangshuaijie-awinic-com/dt-bindings-iio-aw96103-Add-bindings-for-aw96103-aw96105-sensor/20240826-130421
-base:   b78b25f69a1dfa79798f684ad34707b1da10a48f
-patch link:    https://lore.kernel.org/r/20240823094947.3511730-3-wangshuaijie%40awinic.com
-patch subject: [PATCH V8 2/2] iio: proximity: aw96103: Add support for aw96103/aw96105 proximity sensor
-config: s390-allmodconfig (https://download.01.org/0day-ci/archive/20240826/202408262043.ZgqewPIH-lkp@intel.com/config)
-compiler: clang version 20.0.0git (https://github.com/llvm/llvm-project 08e5a1de8227512d4774a534b91cb2353cef6284)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240826/202408262043.ZgqewPIH-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202408262043.ZgqewPIH-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from drivers/iio/proximity/aw96103.c:13:
-   In file included from include/linux/i2c.h:13:
-   In file included from include/linux/acpi.h:14:
-   In file included from include/linux/device.h:32:
-   In file included from include/linux/device/driver.h:21:
-   In file included from include/linux/module.h:19:
-   In file included from include/linux/elf.h:6:
-   In file included from arch/s390/include/asm/elf.h:181:
-   In file included from arch/s390/include/asm/mmu_context.h:11:
-   In file included from arch/s390/include/asm/pgalloc.h:18:
-   In file included from include/linux/mm.h:2228:
-   include/linux/vmstat.h:503:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     503 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     504 |                            item];
-         |                            ~~~~
-   include/linux/vmstat.h:510:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     510 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     511 |                            NR_VM_NUMA_EVENT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/vmstat.h:517:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
-     517 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
-         |                               ~~~~~~~~~~~ ^ ~~~
-   include/linux/vmstat.h:523:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     523 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     524 |                            NR_VM_NUMA_EVENT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~~
-   In file included from drivers/iio/proximity/aw96103.c:18:
-   In file included from include/linux/regmap.h:20:
-   In file included from include/linux/iopoll.h:14:
-   In file included from include/linux/io.h:14:
-   In file included from arch/s390/include/asm/io.h:93:
-   include/asm-generic/io.h:548:31: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     548 |         val = __raw_readb(PCI_IOBASE + addr);
-         |                           ~~~~~~~~~~ ^
-   include/asm-generic/io.h:561:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     561 |         val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
-         |                                                         ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/big_endian.h:37:59: note: expanded from macro '__le16_to_cpu'
-      37 | #define __le16_to_cpu(x) __swab16((__force __u16)(__le16)(x))
-         |                                                           ^
-   include/uapi/linux/swab.h:102:54: note: expanded from macro '__swab16'
-     102 | #define __swab16(x) (__u16)__builtin_bswap16((__u16)(x))
-         |                                                      ^
-   In file included from drivers/iio/proximity/aw96103.c:18:
-   In file included from include/linux/regmap.h:20:
-   In file included from include/linux/iopoll.h:14:
-   In file included from include/linux/io.h:14:
-   In file included from arch/s390/include/asm/io.h:93:
-   include/asm-generic/io.h:574:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     574 |         val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
-         |                                                         ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/big_endian.h:35:59: note: expanded from macro '__le32_to_cpu'
-      35 | #define __le32_to_cpu(x) __swab32((__force __u32)(__le32)(x))
-         |                                                           ^
-   include/uapi/linux/swab.h:115:54: note: expanded from macro '__swab32'
-     115 | #define __swab32(x) (__u32)__builtin_bswap32((__u32)(x))
-         |                                                      ^
-   In file included from drivers/iio/proximity/aw96103.c:18:
-   In file included from include/linux/regmap.h:20:
-   In file included from include/linux/iopoll.h:14:
-   In file included from include/linux/io.h:14:
-   In file included from arch/s390/include/asm/io.h:93:
-   include/asm-generic/io.h:585:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     585 |         __raw_writeb(value, PCI_IOBASE + addr);
-         |                             ~~~~~~~~~~ ^
-   include/asm-generic/io.h:595:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     595 |         __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
-         |                                                       ~~~~~~~~~~ ^
-   include/asm-generic/io.h:605:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     605 |         __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
-         |                                                       ~~~~~~~~~~ ^
-   include/asm-generic/io.h:693:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     693 |         readsb(PCI_IOBASE + addr, buffer, count);
-         |                ~~~~~~~~~~ ^
-   include/asm-generic/io.h:701:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     701 |         readsw(PCI_IOBASE + addr, buffer, count);
-         |                ~~~~~~~~~~ ^
-   include/asm-generic/io.h:709:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     709 |         readsl(PCI_IOBASE + addr, buffer, count);
-         |                ~~~~~~~~~~ ^
-   include/asm-generic/io.h:718:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     718 |         writesb(PCI_IOBASE + addr, buffer, count);
-         |                 ~~~~~~~~~~ ^
-   include/asm-generic/io.h:727:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     727 |         writesw(PCI_IOBASE + addr, buffer, count);
-         |                 ~~~~~~~~~~ ^
-   include/asm-generic/io.h:736:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     736 |         writesl(PCI_IOBASE + addr, buffer, count);
-         |                 ~~~~~~~~~~ ^
->> drivers/iio/proximity/aw96103.c:806:21: error: assigning to 'struct aw_chip_info *' from 'const void *' discards qualifiers [-Werror,-Wincompatible-pointer-types-discards-qualifiers]
-     806 |         aw96103->chip_info = i2c_get_match_data(i2c);
-         |                            ^ ~~~~~~~~~~~~~~~~~~~~~~~
-   16 warnings and 1 error generated.
-
-
-vim +806 drivers/iio/proximity/aw96103.c
-
-   793	
-   794	static int aw96103_i2c_probe(struct i2c_client *i2c)
-   795	{
-   796		struct iio_dev *aw_iio_dev;
-   797		struct aw96103 *aw96103;
-   798		int ret;
-   799	
-   800		aw_iio_dev = devm_iio_device_alloc(&i2c->dev, sizeof(*aw96103));
-   801		if (!aw_iio_dev)
-   802			return -ENOMEM;
-   803	
-   804		aw96103 = iio_priv(aw_iio_dev);
-   805		aw96103->dev = &i2c->dev;
- > 806		aw96103->chip_info = i2c_get_match_data(i2c);
-   807		aw96103->max_channels = aw96103->chip_info->num_channels;
-   808	
-   809		aw96103->regmap = devm_regmap_init_i2c(i2c, &aw96103_regmap_confg);
-   810		if (IS_ERR(aw96103->regmap))
-   811			return PTR_ERR(aw96103->regmap);
-   812	
-   813		ret = devm_regulator_get_enable(aw96103->dev, "vcc");
-   814		if (ret < 0)
-   815			return ret;
-   816	
-   817		ret = aw96103_read_chipid(aw96103);
-   818		if (ret)
-   819			return ret;
-   820	
-   821		ret = aw96103_sw_reset(aw96103);
-   822		if (ret)
-   823			return ret;
-   824	
-   825		ret = aw96103_wait_chip_init(aw96103);
-   826		if (ret)
-   827			return ret;
-   828	
-   829		ret = request_firmware_nowait(THIS_MODULE, true, "aw96103_0.bin",
-   830					      aw96103->dev, GFP_KERNEL, aw96103,
-   831					      aw96103_cfg_update);
-   832		if (ret)
-   833			return ret;
-   834	
-   835		ret = aw96103_interrupt_init(aw_iio_dev, i2c);
-   836		if (ret)
-   837			return ret;
-   838		aw_iio_dev->modes = INDIO_DIRECT_MODE;
-   839		aw_iio_dev->num_channels = aw96103->chip_info->num_channels;
-   840		aw_iio_dev->channels = aw96103->chip_info->channels;
-   841		aw_iio_dev->info = &iio_info;
-   842		aw_iio_dev->name = aw96103->chip_info->name;
-   843		aw_iio_dev->dev.parent = aw96103->dev;
-   844	
-   845		return devm_iio_device_register(aw96103->dev, aw_iio_dev);
-   846	}
-   847	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> ---
+>  fs/bcachefs/buckets.c         | 2 +-
+>  fs/bcachefs/journal_io.c      | 3 ++-
+>  fs/bcachefs/replicas.c        | 6 +++---
+>  fs/bcachefs/replicas_format.h | 9 +++++++--
+>  4 files changed, 13 insertions(+), 7 deletions(-)
+> 
+> diff --git a/fs/bcachefs/buckets.c b/fs/bcachefs/buckets.c
+> index be2bbd248631..eda397c562f5 100644
+> --- a/fs/bcachefs/buckets.c
+> +++ b/fs/bcachefs/buckets.c
+> @@ -740,7 +740,7 @@ static int __trigger_extent(struct btree_trans *trans,
+>  				return ret;
+>  		} else if (!p.has_ec) {
+>  			replicas_sectors       += disk_sectors;
+> -			acc_replicas_key.replicas.devs[acc_replicas_key.replicas.nr_devs++] = p.ptr.dev;
+> +			replicas_entry_add_dev(&acc_replicas_key.replicas, p.ptr.dev);
+>  		} else {
+>  			ret = bch2_trigger_stripe_ptr(trans, k, p, data_type, disk_sectors, flags);
+>  			if (ret)
+> diff --git a/fs/bcachefs/journal_io.c b/fs/bcachefs/journal_io.c
+> index 32b886feb2ca..30460bce04be 100644
+> --- a/fs/bcachefs/journal_io.c
+> +++ b/fs/bcachefs/journal_io.c
+> @@ -1353,6 +1353,7 @@ int bch2_journal_read(struct bch_fs *c,
+>  	genradix_for_each(&c->journal_entries, radix_iter, _i) {
+>  		struct bch_replicas_padded replicas = {
+>  			.e.data_type = BCH_DATA_journal,
+> +			.e.nr_devs = 0,
+>  			.e.nr_required = 1,
+>  		};
+>  
+> @@ -1379,7 +1380,7 @@ int bch2_journal_read(struct bch_fs *c,
+>  			goto err;
+>  
+>  		darray_for_each(i->ptrs, ptr)
+> -			replicas.e.devs[replicas.e.nr_devs++] = ptr->dev;
+> +			replicas_entry_add_dev(&replicas.e, ptr->dev);
+>  
+>  		bch2_replicas_entry_sort(&replicas.e);
+>  
+> diff --git a/fs/bcachefs/replicas.c b/fs/bcachefs/replicas.c
+> index 12b1d28b7eb4..e0880cb79345 100644
+> --- a/fs/bcachefs/replicas.c
+> +++ b/fs/bcachefs/replicas.c
+> @@ -122,7 +122,7 @@ static void extent_to_replicas(struct bkey_s_c k,
+>  			continue;
+>  
+>  		if (!p.has_ec)
+> -			r->devs[r->nr_devs++] = p.ptr.dev;
+> +			replicas_entry_add_dev(r, p.ptr.dev);
+>  		else
+>  			r->nr_required = 0;
+>  	}
+> @@ -139,7 +139,7 @@ static void stripe_to_replicas(struct bkey_s_c k,
+>  	for (ptr = s.v->ptrs;
+>  	     ptr < s.v->ptrs + s.v->nr_blocks;
+>  	     ptr++)
+> -		r->devs[r->nr_devs++] = ptr->dev;
+> +		replicas_entry_add_dev(r, ptr->dev);
+>  }
+>  
+>  void bch2_bkey_to_replicas(struct bch_replicas_entry_v1 *e,
+> @@ -180,7 +180,7 @@ void bch2_devlist_to_replicas(struct bch_replicas_entry_v1 *e,
+>  	e->nr_required	= 1;
+>  
+>  	darray_for_each(devs, i)
+> -		e->devs[e->nr_devs++] = *i;
+> +		replicas_entry_add_dev(e, *i);
+>  
+>  	bch2_replicas_entry_sort(e);
+>  }
+> diff --git a/fs/bcachefs/replicas_format.h b/fs/bcachefs/replicas_format.h
+> index b97208195d06..b7eff904acdb 100644
+> --- a/fs/bcachefs/replicas_format.h
+> +++ b/fs/bcachefs/replicas_format.h
+> @@ -5,7 +5,7 @@
+>  struct bch_replicas_entry_v0 {
+>  	__u8			data_type;
+>  	__u8			nr_devs;
+> -	__u8			devs[];
+> +	__u8			devs[] __counted_by(nr_devs);
+>  } __packed;
+>  
+>  struct bch_sb_field_replicas_v0 {
+> @@ -17,7 +17,7 @@ struct bch_replicas_entry_v1 {
+>  	__u8			data_type;
+>  	__u8			nr_devs;
+>  	__u8			nr_required;
+> -	__u8			devs[];
+> +	__u8			devs[] __counted_by(nr_devs);
+>  } __packed;
+>  
+>  struct bch_sb_field_replicas {
+> @@ -28,4 +28,9 @@ struct bch_sb_field_replicas {
+>  #define replicas_entry_bytes(_i)					\
+>  	(offsetof(typeof(*(_i)), devs) + (_i)->nr_devs)
+>  
+> +#define replicas_entry_add_dev(e, d) ({					\
+> +	(e)->nr_devs++;							\
+> +	(e)->devs[(e)->nr_devs - 1] = (d);				\
+> +})
+> +
+>  #endif /* _BCACHEFS_REPLICAS_FORMAT_H */
+> -- 
+> 2.46.0
+> 
