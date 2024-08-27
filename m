@@ -1,130 +1,121 @@
-Received: from out198-6.us.a.mail.aliyun.com (out198-6.us.a.mail.aliyun.com [47.90.198.6])
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3CDB1EA90;
-	Tue, 27 Aug 2024 08:08:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.198.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 906721547C5;
+	Tue, 27 Aug 2024 08:12:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724746111; cv=none; b=k4NK51SXoEMXJYJyEdg3yN43Sma9vNsDkkSCw4l8icR7XSG/iV6SciB3S0ToFE0zfSri/AQF0wYsVg1uVtbAuamRoM+SVIeGZOLPcs7108xhH2fnlxlaZ9F1LS11pJ5ngw/amkC37+j2XOU7qzAiO0tzkp9M1pDsmVnWZI2ccGk=
+	t=1724746352; cv=none; b=XxOp1n833OLseORc8dc2kbtGbSQHmmbHr+/fwA9nxsKh3Mg23c8PCCOrSymlgOcmobOe3PJ23rN9dCm8lfW8Xq0HPSqM3kRBH0Op6y5viOmNZI3F8edJ+kOeetd09oseLqUfTcGTQOhxnkPSNHsg56Y0J/3wDd4cd9Sr/zbfhj0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724746111; c=relaxed/simple;
-	bh=gTFTfF6n925J8myKa6tcmyHBgVTz3ksgT5RIHT1Cu84=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HazDfsrbZ/sTet9hlm7j2kV4SPBBpOaat3bXJR+jHW1C/qLVMwheJzNLSu8Bp7m4zML/7d7RUsbq8bZ6sv08TFTcitu28hPs9DOAAwH4S0OrP3zEUBPqT/QcUyajf72AMvpziY6XXDTPbGBTMR1nvElasy6WkWJPzQNVIUpE5D0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=awinic.com; spf=pass smtp.mailfrom=awinic.com; arc=none smtp.client-ip=47.90.198.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=awinic.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=awinic.com
-Received: from awinic..(mailfrom:wangshuaijie@awinic.com fp:SMTPD_---.Z3WL9h-_1724745762)
-          by smtp.aliyun-inc.com;
-          Tue, 27 Aug 2024 16:02:44 +0800
-From: wangshuaijie@awinic.com
-To: jic23@kernel.org,
-	lars@metafoo.de,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	kees@kernel.org,
-	gustavoars@kernel.org,
-	linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Cc: wangshuaijie@awinic.com,
-	liweilei@awinic.com,
-	kangjiajun@awinic.com,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH V9 1/2] dt-bindings: iio: aw96103: Add bindings for aw96103/aw96105 sensor
-Date: Tue, 27 Aug 2024 08:02:28 +0000
-Message-ID: <20240827080229.1431784-2-wangshuaijie@awinic.com>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20240827080229.1431784-1-wangshuaijie@awinic.com>
-References: <20240827080229.1431784-1-wangshuaijie@awinic.com>
+	s=arc-20240116; t=1724746352; c=relaxed/simple;
+	bh=9BqyGH8iAhe32SVuitbdCgtpdlnjGAHT4QTJcbWTgCc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=OW6ouWHsUtkt3IpyriGyeuyhB+/G9OH+mV0bucyGqDy2ONkSGMSgwAhLWjHg73Hl9I3dtJennu9exlQREcguXXxE8ndg5xJoAVzuF76Jp6iSZr9uvS8eLG8+rdIz270kCGrs7V3uPBw1BhgfWlC6ews0cURN2QpYWb3IbfQ+gy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=fv6mrZYy; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="fv6mrZYy"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=bL+QrbENSMemW12aF0eJeo0zf2iwnZiHHlBbEDCmT6I=;
+	t=1724746350; x=1725955950; b=fv6mrZYye3jaEjhM/Spyd1TG2Bhur/IbLZYELiXZ61EiPMt
+	P9MCVnQIKElbW2DyeMlll/PyiNfaFsuJ9cNVmq1QO6HL5uKkD/0USgeKARpp7IdzCcxO/y19XUyAc
+	nYZ40PJOi3QInvZmfvNtmPmBVKB36K8FAeB+S66/kmw/8SXDwcRU68tFSnIv3uW22jSOU6gmitnLF
+	92G7eAUFTsy1q8A+o6BxGckYpLcpgkxSLxzlCXUo4NBaF4ajDecKrImZLc3P+xPegBU3efkik2sm/
+	DCV5oWUqEfau34SPYKwuofcMpmfjxjRC3S80aTaaR08mW3mD4fd0PTF/w78OWVvw==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.97)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1sirJT-00000004SPU-39aB;
+	Tue, 27 Aug 2024 10:12:27 +0200
+Message-ID: <3ddcf25ba09bf99c973c46ef1944c079be2753eb.camel@sipsolutions.net>
+Subject: Re: [PATCH] wifi: wireless: fix more UBSAN noise in
+ cfg80211_conn_scan()
+From: Johannes Berg <johannes@sipsolutions.net>
+To: Dmitry Antipov <dmantipov@yandex.ru>
+Cc: Kees Cook <kees@kernel.org>, linux-wireless@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, lvc-project@linuxtesting.org
+Date: Tue, 27 Aug 2024 10:12:26 +0200
+In-Reply-To: <20240716174011.236849-1-dmantipov@yandex.ru>
+References: <20240716174011.236849-1-dmantipov@yandex.ru>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-malware-bazaar: not-scanned
 
-From: shuaijie wang <wangshuaijie@awinic.com>
+Hmm.
 
-Add device tree bindings for aw96103/aw96105 proximity sensor.
+On Tue, 2024-07-16 at 20:40 +0300, Dmitry Antipov wrote:
+> diff --git a/net/wireless/sme.c b/net/wireless/sme.c
+> index a8ad55f11133..f5da45331847 100644
+> --- a/net/wireless/sme.c
+> +++ b/net/wireless/sme.c
+> @@ -77,12 +77,16 @@ static int cfg80211_conn_scan(struct wireless_dev *wd=
+ev)
+>  	else
+>  		n_channels =3D ieee80211_get_num_supported_channels(wdev->wiphy);
+> =20
+> -	request =3D kzalloc(sizeof(*request) + sizeof(request->ssids[0]) +
+> -			  sizeof(request->channels[0]) * n_channels,
+> -			  GFP_KERNEL);
+> +	request =3D kzalloc(struct_size(request, channels, n_channels) +
+> +			  sizeof(request->ssids[0]), GFP_KERNEL);
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Signed-off-by: shuaijie wang <wangshuaijie@awinic.com>
----
- .../iio/proximity/awinic,aw96103.yaml         | 61 +++++++++++++++++++
- 1 file changed, 61 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/proximity/awinic,aw96103.yaml
+That makes sense, sure.
 
-diff --git a/Documentation/devicetree/bindings/iio/proximity/awinic,aw96103.yaml b/Documentation/devicetree/bindings/iio/proximity/awinic,aw96103.yaml
-new file mode 100644
-index 000000000000..7a83ceced11c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/proximity/awinic,aw96103.yaml
-@@ -0,0 +1,61 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/proximity/awinic,aw96103.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Awinic's AW96103 capacitive proximity sensor and similar
-+
-+maintainers:
-+  - Wang Shuaijie <wangshuaijie@awinic.com>
-+
-+description: |
-+  Awinic's AW96103/AW96105 proximity sensor.
-+  The specific absorption rate (SAR) is a metric that measures
-+  the degree of absorption of electromagnetic radiation emitted by
-+  wireless devices, such as mobile phones and tablets, by human tissue.
-+  In mobile phone applications, the proximity sensor is primarily
-+  used to detect the proximity of the human body to the phone. When the
-+  phone approaches the human body, it will actively reduce the transmit
-+  power of the antenna to keep the SAR within a safe range. Therefore,
-+  we also refer to the proximity sensor as a SAR sensor.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - awinic,aw96103
-+      - awinic,aw96105
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    description:
-+      Generated by the device to announce that a close/far
-+      proximity event has happened.
-+    maxItems: 1
-+
-+  vcc-supply: true
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - vcc-supply
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        proximity@12 {
-+            compatible = "awinic,aw96103";
-+            reg = <0x12>;
-+            interrupt-parent = <&gpio>;
-+            interrupts = <23 IRQ_TYPE_EDGE_FALLING>;
-+            vcc-supply = <&pp1800_prox>;
-+        };
-+    };
--- 
-2.45.1
+>  	if (!request)
+>  		return -ENOMEM;
+> =20
+> +	/* None of the channels are actually set
+> +	 * up but let UBSAN know the boundaries.
+> +	 */
+> +	request->n_channels =3D n_channels;
 
+Also makes sense, so we tell it how many we allocated early.
+
+Note netdev we dropped the special comment style requirement, so
+wouldn't mind
+
+ /*
+  * None of ...
+  * ...
+  */
+
+here either.
+
+> +
+>  	if (wdev->conn->params.channel) {
+>  		enum nl80211_band band =3D wdev->conn->params.channel->band;
+>  		struct ieee80211_supported_band *sband =3D
+> @@ -112,9 +116,9 @@ static int cfg80211_conn_scan(struct wireless_dev *wd=
+ev)
+>  			}
+>  			request->rates[band] =3D (1 << bands->n_bitrates) - 1;
+>  		}
+> -		n_channels =3D i;
+> +		request->n_channels =3D i;
+
+So this tells it how many were actually used, in this branch, makes
+sense.
+
+Functionally, all of this seems OK.
+
+However,
+
+>  	request->ssids =3D (void *)&request->channels[n_channels];
+
+is this not checked? I mean, if you have n_channels=3D5 and then take
+&channels[5] I can see how that makes sense, but arguably the compiler
+might complain if you have &channels[10] for an array you told it has 5
+entries?
+
+johannes
