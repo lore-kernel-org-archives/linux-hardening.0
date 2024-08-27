@@ -1,76 +1,64 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D20B7171AF;
-	Tue, 27 Aug 2024 02:37:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A83117BD6;
+	Tue, 27 Aug 2024 03:33:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724726253; cv=none; b=ffD6vTA80zdwhfzNxk78W7mt9pvtv5dzAB5HGS1QOFkpebABQqWaCGM17ztM3kJrDP3apJqOsGpSZH+8xhlngHeJ2ctwF3L5hoIbyPSbFj7AAz97cwMybfO3rT35vwd+JxSHqmlEncV397cVx7hjotkoUDhPRZ4ZY64U2/DW5xQ=
+	t=1724729607; cv=none; b=Z6m8ISkSnwtcrxHHMyeZ9JEQPW5B38kxYkz9tarsBWbTA1fCmEBXTfwPncOi3ur3n4ZzZi104H4y+XkZGd55hzFmbXGZTrG/Nqngu8WJlSHWkFCj44iOXtrdauYcj+byuv0+xfzyxA6A3wi2C7gEXMAZ4sjNFk4Xj16uywrlJpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724726253; c=relaxed/simple;
-	bh=HlCYNVV+ZYEU/IX37+aSnawheDXViiIVFCyOubw06a0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XsPoL4+fQkKrLUtM7aWklNoU9ddknptNEpygaHgrEn0y6+JksUBXzVFsVYOFvH354z0e3OCD9cJjm2Kuoq2yyLMeX4XO5aSJlTaGgxjNnoqC8lOjySk8CyAjwtD9G5IuQSoeCfYTZheAJ5UQuo4N7C1EluIzJOpJqa3D6O46KwQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.17])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4WtBXB04wrz1j7HJ;
-	Tue, 27 Aug 2024 10:37:14 +0800 (CST)
-Received: from dggpeml500022.china.huawei.com (unknown [7.185.36.66])
-	by mail.maildlp.com (Postfix) with ESMTPS id 696DC1A0188;
-	Tue, 27 Aug 2024 10:37:23 +0800 (CST)
-Received: from huawei.com (10.90.53.73) by dggpeml500022.china.huawei.com
- (7.185.36.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 27 Aug
- 2024 10:37:23 +0800
-From: Hongbo Li <lihongbo22@huawei.com>
-To: <kees@kernel.org>, <andy@kernel.org>, <akpm@linux-foundation.org>,
-	<trondmy@kernel.org>, <anna@kernel.org>, <gregkh@linuxfoundation.org>
-CC: <linux-hardening@vger.kernel.org>, <linux-mm@kvack.org>,
-	<linux-nfs@vger.kernel.org>, <lihongbo22@huawei.com>
-Subject: [PATCH -next v3 1/3] lib/string_choices: Add str_true_false()/str_false_true() helper
-Date: Tue, 27 Aug 2024 10:45:15 +0800
-Message-ID: <20240827024517.914100-2-lihongbo22@huawei.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240827024517.914100-1-lihongbo22@huawei.com>
+	s=arc-20240116; t=1724729607; c=relaxed/simple;
+	bh=cijOwHKpKAsGe2raRwTDNWk6X/WEHh5CmaToPYhrWqM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hL4n2rvd5Fgx8bO4IET7ppF1Z0XVBG4ogctqfn1nh4p12rXvZKUIIcROCQ8r6j7aFF91hrokitwiVF+gURGGcq1rJLqXpx9aTDLRua+59X0AxVR/vh44QflCnsNC7vghIhXH6yUqDtz+CeveAnxsN67yUYzzpuqO758UK2zzu80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=fnDQ7Grv; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fnDQ7Grv"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=NU1cB0bm9+5+AnigtBB6FgsC6ItxiV1eaE/bQA93zmk=; b=fnDQ7Grvw+WZwRewFPWS/1Z4Ln
+	3US/Lw0slAVAWlbW+48FxNcnQn3wl3fRkzoVxo0kWcajcVMhw4oyKxxjkmAM7yIlNJhtXbwBKBwux
+	VJuUw44ZQQs5GSriT3vnM530i/Zs91Y6smbbXFCWjE/IZA97ExYxzXEYLr+5kzNTMB+f82+X/d8c7
+	GUkNfufPKEiFrguQJI2j1taL2auDCz27XrdWL7RkJrAj7eTwpfqe8+1sIJ4HH/A20kkC3xB3CsFOQ
+	tSdrTHY4HLKyb1spQ3lDIU2/zhKDImTJQzzTR5SHOOtwuFsKYP4vdCzXB99BiRAawtQ3b/ae5tJ5g
+	gbI3YM8A==;
+Received: from willy by casper.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1simxN-0000000GKhn-10lI;
+	Tue, 27 Aug 2024 03:33:21 +0000
+Date: Tue, 27 Aug 2024 04:33:21 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Hongbo Li <lihongbo22@huawei.com>
+Cc: kees@kernel.org, andy@kernel.org, akpm@linux-foundation.org,
+	trondmy@kernel.org, anna@kernel.org, gregkh@linuxfoundation.org,
+	linux-hardening@vger.kernel.org, linux-mm@kvack.org,
+	linux-nfs@vger.kernel.org
+Subject: Re: [PATCH -next v3 3/3] nfs make use of str_false_true helper
+Message-ID: <Zs1JAfGWQOZMfHKT@casper.infradead.org>
 References: <20240827024517.914100-1-lihongbo22@huawei.com>
+ <20240827024517.914100-4-lihongbo22@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpeml500022.china.huawei.com (7.185.36.66)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240827024517.914100-4-lihongbo22@huawei.com>
 
-Add str_true_false()/str_false_true() helper to return "true" or
-"false" string literal.
+On Tue, Aug 27, 2024 at 10:45:17AM +0800, Hongbo Li wrote:
+> The helper str_false_true is introduced to reback "false/true"
+> string literal. We can simplify this format by str_false_true.
 
-Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
----
- include/linux/string_choices.h | 6 ++++++
- 1 file changed, 6 insertions(+)
+This seems unnecessarily verbose & complex.  How about:
 
-diff --git a/include/linux/string_choices.h b/include/linux/string_choices.h
-index 1320bcdcb89c..ebcc56b28ede 100644
---- a/include/linux/string_choices.h
-+++ b/include/linux/string_choices.h
-@@ -48,6 +48,12 @@ static inline const char *str_up_down(bool v)
- }
- #define str_down_up(v)		str_up_down(!(v))
- 
-+static inline const char *str_true_false(bool v)
-+{
-+	return v ? "true" : "false";
-+}
-+#define str_false_true(v)		str_true_false(!(v))
-+
- /**
-  * str_plural - Return the simple pluralization based on English counts
-  * @num: Number used for deciding pluralization
--- 
-2.34.1
+	dprintk("%s: link support=%s\n", __func__, strbool(*res != 0));
 
+> -	dprintk("%s: link support=%s\n", __func__, *res == 0 ? "false" : "true");
+> +	dprintk("%s: link support=%s\n", __func__, str_false_true(*res == 0));
+
+(do we have a convention for the antonym of kstrtoX?)
