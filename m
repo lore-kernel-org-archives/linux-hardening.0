@@ -1,33 +1,56 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71BDD176AC7;
-	Tue, 27 Aug 2024 10:45:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C0D51B9B4A
+	for <linux-hardening@vger.kernel.org>; Tue, 27 Aug 2024 12:34:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724755519; cv=none; b=p/cJzNI7wlhMmsRDFKh4MFsD0Yb0tRHDWV8Ud2TqC8UJx8Ih/NJ49czKKgD8jskIHXRndTT6Knypy8P7onOXSrmOmEm1NXOQDSc+sBKUOq2vEUI4UDDEi16XDuFWZNJ+IlcNAu7KDpOVf20QMJmvQ4kf2JJm/eCU/Fc2RktQshM=
+	t=1724762083; cv=none; b=dTx/hgkrRqKrHEvhzyXrmr0K7qgxwRIra0057s2wdzm8AfAfOLXU0MLYXdWgvvJFkJEiFX4vwj5qkAd61iFQw/WG1FF0XNcIxZYw7TQwY0c1eyfqGA0y9P6gNmwtuTKv47Ef0yA4YeA/x2huyoYtxi2hyM5soOLtZOJxQnYjG9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724755519; c=relaxed/simple;
-	bh=Q970sNHoTRg2QJusl8JkgL6SI098FZHOU84TccyQ3A0=;
+	s=arc-20240116; t=1724762083; c=relaxed/simple;
+	bh=rIfujnRm2V1RobBJwbb3mPgwma8W9Db1vHV/ES1fRgs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VcaLGEDe7HOiSamDjL5D+5pRSgjyDmkvkT1IGhlTBGgD8wryXXH+icez7wp1Kbm0T7gjweZ+7QY6ViCnbAAOOx8/NiJxgDVcMGWhSS/Laf93PlFmcWpDyJ5yt3FDDCIsbDTLHJ0hU0awvENoCHe1JDlOsYaY8XvLF038xo5EKys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hp5f5H5N; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=SGnue3Yx+rF4HJHdIFcqIINBQN/TnDFwrZJBQpAQYcF6JoXfMbZ9/ebOqIZSeUY+XuUEfA/8dONJluvKinaC5fFhwWhaM4XwZt86c55sjrDRG+ardUrGdzNjNeFBXWWL84qyETO8MDC6eKdFAUwtC8vibPDXUvWOc6bAxY3WVW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=PjJlJ55r; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hp5f5H5N"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D1A4C4FF0A;
-	Tue, 27 Aug 2024 10:45:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724755519;
-	bh=Q970sNHoTRg2QJusl8JkgL6SI098FZHOU84TccyQ3A0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=hp5f5H5N6RqxinGujQ27yTs1ZW0rnHvhsowsiXs/FRzecTRtaUIj7uoSvZ1Ms7Zc1
-	 Cujk7QTUkXnFMkWd+lwlyrHPSnp0l8EG3+tRZCx33Y9rWpIrynzcVlTcfhxRGMwk1G
-	 H9yl981kfVw8mvPFZy2ulLxruGKPzvVfeP3rzEU3t5mGesm+otEbqVssCS7YGB9At8
-	 fMLQ93GtQ2zLAaTdTS15FxmHsWY7mKwQciwbA3ekqS5+ATmWwdwDeFHzrucC3owsxx
-	 h6yLctLOwGeqYYIabEGmnT/WEB2fyOd0TYBGibey3CsBzK4joTi5BavosgUZQJbMFv
-	 8mfF50Oq0nu6g==
-Message-ID: <36e775f9-b17f-4979-91a8-227931f6c4ea@kernel.org>
-Date: Tue, 27 Aug 2024 12:45:06 +0200
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="PjJlJ55r"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2020ac89cabso48846545ad.1
+        for <linux-hardening@vger.kernel.org>; Tue, 27 Aug 2024 05:34:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1724762079; x=1725366879; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=KyXAJapJSnZ2dDDvQaQcnKrD5eisnLa1o6mBBkyryV8=;
+        b=PjJlJ55rpNKFW9G00mcIygkEVVUP2NnDBU80iyfWCb4lJaIvko5k7/l60puYbVP/vs
+         lCWdUihky4dmbz3BNUkvfH4+E5GkRBC4AhTcONb5eRLNNQYL9yTJ6cWvWnqM8+dzgogU
+         4hMyVm3tv8GprHhLVpJ5YQh76Oejtv7cR9Bn0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724762079; x=1725366879;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KyXAJapJSnZ2dDDvQaQcnKrD5eisnLa1o6mBBkyryV8=;
+        b=fNUPSyD5AOSvM2OOGd+HYvVI02iuOWAThPY2XnLcjmg9jijUN6tRGluN+VfmUSQh1R
+         IPaQKAHkycFIR0iDJOkaT79Ct7lmcYuhWSJU74p+SMuAuoCoUZgaPrz8evXQW2ELXD+I
+         X1G/SU7qgfMzJE72mie9GBegZpel1uvvxcVh0fEEvKKVi9YQk+RbFO3f+KWDoZyx9NOZ
+         3dqx1PigPtMUNT1lqTf6NATAwI71CIsD+SGkgaKnspY5IBArV7xNIB60ujvPLU4pOfCg
+         ZjIzzNWH0K4n5AIh2MiiU011zEFR7lSKatVJWOz7lLL/7Bo/K6zjOOxx3K/F+vDgvbMp
+         TmMw==
+X-Forwarded-Encrypted: i=1; AJvYcCVMSEh8SLJv6A/usTSoYMYvu1N4RRfgUMG4S7Oo7ViiX7s55sT9ZH/Nbc7uTbf+qni9VOgA0jMzTRAw5d+iCIg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzngO/tJU6HLXgCd5S1DMdjd4CQa2UINg3bZjoBdLStJEX943t3
+	lp0xBsQWguWnJgOxANy7Az0iD5wFkfg0/pRquoL+U6Rwj8teWIg6Cnbd0zIDeNI=
+X-Google-Smtp-Source: AGHT+IGjiYKK2pg00dNbHQgAvQ/REQmd5g9wxQNuwUyB/YkBILqbu4Jg6AxTKtpIKWtECuFZJ2DiWw==
+X-Received: by 2002:a17:902:e541:b0:202:2b7:9c7f with SMTP id d9443c01a7336-2039e534e0emr143411945ad.65.1724762079307;
+        Tue, 27 Aug 2024 05:34:39 -0700 (PDT)
+Received: from [192.168.121.153] ([218.49.71.194])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20385fcf525sm82694515ad.300.2024.08.27.05.34.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 Aug 2024 05:34:37 -0700 (PDT)
+Message-ID: <b274a725-03f6-4a65-a998-75f10026f2e3@linuxfoundation.org>
+Date: Tue, 27 Aug 2024 06:34:31 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -35,90 +58,50 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 08/11] arm64: dts: qcom: Add SM7325 device tree
-To: Danila Tikhonov <danila@jiaxyga.com>, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, andersson@kernel.org,
- konradybcio@kernel.org, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, rafael@kernel.org,
- viresh.kumar@linaro.org, kees@kernel.org, tony.luck@intel.com,
- gpiccoli@igalia.com, ulf.hansson@linaro.org, andre.przywara@arm.com,
- quic_rjendra@quicinc.com, davidwronek@gmail.com, neil.armstrong@linaro.org,
- heiko.stuebner@cherry.de, rafal@milecki.pl, macromorgan@hotmail.com,
- linus.walleij@linaro.org, lpieralisi@kernel.org,
- dmitry.baryshkov@linaro.org, fekz115@gmail.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20240808184048.63030-1-danila@jiaxyga.com>
- <20240808184048.63030-9-danila@jiaxyga.com>
- <90a95443-65c5-44e8-8737-26145cda1e35@gmail.com>
- <16b934a2-790a-4ac4-8ff5-40371bba17fc@jiaxyga.com>
+Subject: Re: [PATCH v3] Documentation: KUnit: Update filename best practices
+To: Kees Cook <kees@kernel.org>, David Gow <davidgow@google.com>
+Cc: John Hubbard <jhubbard@nvidia.com>,
+ Brendan Higgins <brendan.higgins@linux.dev>, Rae Moar <rmoar@google.com>,
+ Jonathan Corbet <corbet@lwn.net>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
+References: <20240724201354.make.730-kees@kernel.org>
+ <CABVgOSmXqv_+20OKjVAPJoqrP1EvBk+1WUqF4wBsefegxYNiWA@mail.gmail.com>
+ <202408221717.1138DB3D1C@keescook>
 Content-Language: en-US
-From: Konrad Dybcio <konradybcio@kernel.org>
-In-Reply-To: <16b934a2-790a-4ac4-8ff5-40371bba17fc@jiaxyga.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <202408221717.1138DB3D1C@keescook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 21.08.2024 12:53 AM, Danila Tikhonov wrote:
-> On 8/20/24 03:48, Konrad Dybcio wrote:
->> On 8.08.2024 8:40 PM, Danila Tikhonov wrote:
->>> From: Eugene Lepshy <fekz115@gmail.com>
+On 8/22/24 18:18, Kees Cook wrote:
+> On Fri, Jul 26, 2024 at 03:14:36PM +0800, David Gow wrote:
+>> On Thu, 25 Jul 2024 at 04:14, Kees Cook <kees@kernel.org> wrote:
 >>>
->>> The Snapdragon 778G (SM7325) / 778G+ (SM7325-AE) / 782G (SM7325-AF)
->>> is software-wise very similar to the Snapdragon 7c+ Gen 3 (SC7280).
+>>> Based on feedback from Linus[1] and follow-up discussions, change the
+>>> suggested file naming for KUnit tests.
 >>>
->>> It uses the Kryo670.
->>>
->>> Signed-off-by: Eugene Lepshy <fekz115@gmail.com>
->>> Signed-off-by: Danila Tikhonov <danila@jiaxyga.com>
->>> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+>>> Link: https://lore.kernel.org/lkml/CAHk-=wgim6pNiGTBMhP8Kd3tsB7_JTAuvNJ=XYd3wPvvk=OHog@mail.gmail.com/ [1]
+>>> Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+>>> Signed-off-by: Kees Cook <kees@kernel.org>
 >>> ---
->>>   arch/arm64/boot/dts/qcom/sm7325.dtsi | 17 +++++++++++++++++
->>>   1 file changed, 17 insertions(+)
->>>   create mode 100644 arch/arm64/boot/dts/qcom/sm7325.dtsi
->>>
->>> diff --git a/arch/arm64/boot/dts/qcom/sm7325.dtsi b/arch/arm64/boot/dts/qcom/sm7325.dtsi
->>> new file mode 100644
->>> index 000000000000..5b4574484412
->>> --- /dev/null
->>> +++ b/arch/arm64/boot/dts/qcom/sm7325.dtsi
->>> @@ -0,0 +1,17 @@
->>> +// SPDX-License-Identifier: BSD-3-Clause
->>> +/*
->>> + * Copyright (c) 2024, Eugene Lepshy <fekz115@gmail.com>
->>> + * Copyright (c) 2024, Danila Tikhonov <danila@jiaxyga.com>
->>> + */
->>> +
->>> +#include "sc7280.dtsi"
->>> +
->>> +/* SM7325 uses Kryo 670 */
->>> +&CPU0 { compatible = "qcom,kryo670"; };
->>> +&CPU1 { compatible = "qcom,kryo670"; };
->>> +&CPU2 { compatible = "qcom,kryo670"; };
->>> +&CPU3 { compatible = "qcom,kryo670"; };
->>> +&CPU4 { compatible = "qcom,kryo670"; };
->>> +&CPU5 { compatible = "qcom,kryo670"; };
->>> +&CPU6 { compatible = "qcom,kryo670"; };
->>> +&CPU7 { compatible = "qcom,kryo670"; };
->> This is a meaningless marketing name. As you mentioned in your
->> reply, cpu0-3 and cpu4-7 are wholly different (maybe cpu7 even
->> has a different MIDR part num?), we should do something about it :/
 >>
->> Please post the output of `dmesg | grep "Booted secondary processor"`
+>> Looks good to me. (And it seems like sphinx is okay with it, too,
+>> which is always nice.)
 >>
->> Konrad
-> Sure:
-> [    0.000000] Booting Linux on physical CPU 0x0000000000 [0x412fd050]
-> [    0.020670] CPU1: Booted secondary processor 0x0000000100 [0x412fd050]
-> [    0.036781] CPU2: Booted secondary processor 0x0000000200 [0x412fd050]
-> [    0.052717] CPU3: Booted secondary processor 0x0000000300 [0x412fd050]
-> [    0.070194] CPU4: Booted secondary processor 0x0000000400 [0x411fd411]
-> [    0.089236] CPU5: Booted secondary processor 0x0000000500 [0x411fd411]
-> [    0.109298] CPU6: Booted secondary processor 0x0000000600 [0x411fd411]
-> [    0.126140] CPU7: Booted secondary processor 0x0000000700 [0x411fd411]
+>> We normally take these changes in via the kunit tree, but if you want
+>> to try to push it through along with the naming changes, that's fine
+>> by me.
+>>
+>> Reviewed-by: David Gow <davidgow@google.com>
+> 
+> Hi! Just a quick check: I haven't seen this land in -next yet. Are you
+> still planning to take this?
+> 
 
-0x41 is Arm Ltd
+I applied it yesterday to kunit next.
 
-0xd41 is CA78, 0xd05 is CA55
-
-Konrad
+thanks,
+-- Shuah
