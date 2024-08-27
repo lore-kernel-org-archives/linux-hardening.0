@@ -1,77 +1,170 @@
-Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
+Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 714AD1C460A
-	for <linux-hardening@vger.kernel.org>; Tue, 27 Aug 2024 12:47:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0664148FE5
+	for <linux-hardening@vger.kernel.org>; Tue, 27 Aug 2024 19:11:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724762880; cv=none; b=qEA+z1SWxRE8A+Uq6+n/SBx218JvNu//FmV8oVokZREza1tkg61MqLXxTK6/whv9sRpHDMeh0I2cDDsVDsjow0dmucdjtE0XL43MBRiN36nerCozK4s9Fo26o4lPPrAoZdo32A5SbEa72D6WgHD5f1Zbjw4IJkSwIUj/PEvk3T0=
+	t=1724785889; cv=none; b=ouwFy4mgYIl7aVm0vWRLhV5T1+RpVI51MNMLdZ4zvxw70mN8OkizkEYFQN6tu8QOV7MjsjVtQxmSJFnf+uGWhbCmaaKjm8xMEwfY4hvzsb3Es8oqod4TzFkUUvfaTQiE3H+OwHyLW63KWbCCMnN8cZ+Ej2TQ2w53xFCcWYBAb0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724762880; c=relaxed/simple;
-	bh=R6D7+qQnQm3jzPsIpmE3Q9GrFtEYUrdUsuVPo5UPswk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=vD8O2zEIlCAPY0ER6/L7I86mKvM6O8cV9Fg+D8QbYTiCFbANF+a4PyZ2YNtSM4P6HyCg/cG/426qSIKUzZov84UjIGp1M7eRuIjn6l9Ut8J0ihiJEw6WWsnlFzQ3z2LH7jTJG3rBx3G1F7xmwsS34v7QvYK8ZJvWVJq6VVN2iGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=bfNh6WBO; arc=none smtp.client-ip=18.9.28.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
+	s=arc-20240116; t=1724785889; c=relaxed/simple;
+	bh=du9RCy7d+nEJokh8lbqxk895BSXsrw4YoLlDSYKoblk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Dt1vqhgljT0mn5WSNSTuFsmIOLlSoItTwHymsBt67QjS5YOKpyTe/oIenPcstExSZ327DKGS2EoJtjwnhB0fLBBKCCUYNVRaBgmhjrOqrYZcT252Kp/j/3sk9cK2VirzOeHjkCqWvCIi6GMEtX/JUr3bRFg0KNuwzAsUvLQyrAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=RTZ+VO4E; arc=none smtp.client-ip=44.202.169.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="bfNh6WBO"
-Received: from cwcc.thunk.org (pool-173-48-112-93.bstnma.fios.verizon.net [173.48.112.93])
-	(authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 47RClf7P021540
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 27 Aug 2024 08:47:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
-	t=1724762864; bh=U19LhhR9iTB/RKGBv97tak0iv7y0eTeJ8XQThvjLR/c=;
-	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	b=bfNh6WBOqcmJ2065PFYfR423gWY/0Ik/9ZgBbHhi0PPjmMHHqhuDbn8zWs9exiNxA
-	 y/D0wiAHCkFM9IBjFARNoW9Usc943BIUP89R1Ezfog2zfwY58FTTFg2+77EptQXInB
-	 oi5xA+tg8OtbcOMOtM5TGtJCABt6T0/gQHEbTElhhlmDjqafdoiliQzit+3ArDGj4/
-	 jsI3ZYbMZcM+SmK9yc6AEi/Axkq/v/ONIj0/D6GOK8+tNEF1br289GqTLkgt7IOUh1
-	 q0QXHKapovmLjFt+i91ZUdVo2j0qIoyfCYUWQifYMO3ayw3O5YhTRHSad/ZWjnC/Jl
-	 qYbYLxSW59zWA==
-Received: by cwcc.thunk.org (Postfix, from userid 15806)
-	id C34E415C1C63; Tue, 27 Aug 2024 08:47:38 -0400 (EDT)
-From: "Theodore Ts'o" <tytso@mit.edu>
-To: adilger.kernel@dilger.ca, kees@kernel.org, gustavoars@kernel.org,
-        Thorsten Blum <thorsten.blum@toblux.com>
-Cc: "Theodore Ts'o" <tytso@mit.edu>, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v4] ext4: Annotate struct ext4_xattr_inode_array with __counted_by()
-Date: Tue, 27 Aug 2024 08:47:32 -0400
-Message-ID: <172476284022.635532.12692920677759695178.b4-ty@mit.edu>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240730220200.410939-3-thorsten.blum@toblux.com>
-References: <20240730220200.410939-3-thorsten.blum@toblux.com>
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="RTZ+VO4E"
+Received: from eig-obgw-6008a.ext.cloudfilter.net ([10.0.30.227])
+	by cmsmtp with ESMTPS
+	id ib6TsojiaiA19j1ZfsZA1N; Tue, 27 Aug 2024 19:09:51 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id j1ZdsofenGbsEj1Zes1FrU; Tue, 27 Aug 2024 19:09:50 +0000
+X-Authority-Analysis: v=2.4 cv=bq5KBlai c=1 sm=1 tr=0 ts=66ce247e
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=frY+GlAHrI6frpeK1MvySw==:17
+ a=IkcTkHD0fZMA:10 a=yoJbH4e0A30A:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
+ a=Oxluwhmp6ld3uWlGNnkA:9 a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22
+ a=Xt_RvD8W3m28Mn_h3AK8:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=5JZFmEEhU0UCbr2plbMpHOf5fhdfzfk/fS6XDm2beLk=; b=RTZ+VO4E54YAFXBis0O/nkgeD4
+	vBNHhkiSEg8EkMDsoZGceB3t80ydoOZOc8D+0mG6lihVYVhzjAfz5KKnxuWJCtrUGrs3OOEL2k5HQ
+	KKVNuj+tQvQsOCtSfd5nc0EPqpdrZcg9y2PkyWjwicaMxFCYIoQLzKCBdLd6njnDi9+0t96l5uSR6
+	V6RKSu0SqYDpxao7RefLsBT+ZUWavtN4LQ7dVRjIDdKjmpqXFCumab0Z6x0G+0YeWCBlf1gRULKOg
+	8NjcKNjM0+DNGHRlNIG7sfwRz1cZjXp78JV3Z+ITDq0WNDffFK2sVQcTMHJEoIwgd5BQCoCnd6JOY
+	KnbkUGYQ==;
+Received: from [201.172.173.139] (port=47538 helo=[192.168.15.5])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1sj1Zc-002X62-0C;
+	Tue, 27 Aug 2024 14:09:48 -0500
+Message-ID: <2065d0f6-660e-4647-95b4-8d1a9a7eaefe@embeddedor.com>
+Date: Tue, 27 Aug 2024 13:09:46 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH][next] drm/nouveau: Avoid -Wflex-array-member-not-at-end
+ warning
+To: Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
+ Danilo Krummrich <dakr@redhat.com>, David Airlie <airlied@gmail.com>,
+ Daniel Vetter <daniel@ffwll.ch>, dri-devel@lists.freedesktop.org,
+ nouveau@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <ZsZLFS1CsHkKjw+C@elsanto> <202408221011.82876DA0C4@keescook>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <202408221011.82876DA0C4@keescook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.172.173.139
+X-Source-L: No
+X-Exim-ID: 1sj1Zc-002X62-0C
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.15.5]) [201.172.173.139]:47538
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfFiTQuc1SPPbNnq2741yLhCYTvAyks0/G7RHPSJxbXJI980RW6m7ufMeNA/W8bmVQxcwLbJar6a4Askp9s2n+RyLQAD+Vgs5l3Invvq+txUgcuH7qfpY
+ YT4KgY/tceobgbjPbvMVoXgB9+4AI9eHEfYguHfAUYWzsO7/rnjVTJqWTDc7wJZ2jG8UME489cUhx70BnoVUC3k6QWu3pYi1IT14M5P6AJMx8+X+R6zKY3lc
 
 
-On Wed, 31 Jul 2024 00:02:02 +0200, Thorsten Blum wrote:
-> Add the __counted_by compiler attribute to the flexible array member
-> inodes to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
-> CONFIG_FORTIFY_SOURCE.
+
+On 22/08/24 11:27, Kees Cook wrote:
+> On Wed, Aug 21, 2024 at 02:16:21PM -0600, Gustavo A. R. Silva wrote:
+>> Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
+>> a flexible structure where the size of the flexible-array member
+>> is known at compile-time, and refactor the rest of the code,
+>> accordingly.
+>>
+>> So, with this, fix the following warning:
+>>
+>> drivers/gpu/drm/nouveau/dispnv50/disp.c:779:47: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+>>
+>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>> ---
+>>   drivers/gpu/drm/nouveau/dispnv50/disp.c | 20 +++++++++-----------
+>>   1 file changed, 9 insertions(+), 11 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/nouveau/dispnv50/disp.c b/drivers/gpu/drm/nouveau/dispnv50/disp.c
+>> index eed579a6c858..ddddc69640be 100644
+>> --- a/drivers/gpu/drm/nouveau/dispnv50/disp.c
+>> +++ b/drivers/gpu/drm/nouveau/dispnv50/disp.c
+>> @@ -774,11 +774,9 @@ nv50_hdmi_enable(struct drm_encoder *encoder, struct nouveau_crtc *nv_crtc,
+>>   	struct drm_hdmi_info *hdmi = &nv_connector->base.display_info.hdmi;
+>>   	union hdmi_infoframe infoframe = { 0 };
+>>   	const u8 rekey = 56; /* binary driver, and tegra, constant */
+>> +	DEFINE_RAW_FLEX(struct nvif_outp_infoframe_v0, args, data, 17);
+>> +	const u8 data_len = 17; /* same length as in DEFINE_RAW_FLEX above. */
 > 
-> Remove the now obsolete comment on the count field.
+> To avoid repeating the open-coded "17", this could either be a define:
 > 
-> In ext4_expand_inode_array(), use struct_size() instead of offsetof()
-> and remove the local variable count. Increment the count field before
-> adding a new inode to the inodes array.
+> nv50_hdmi_enable(...)
+> {
+> ...
+> #define data_len	17
+> 	DEFINE_RAW_FLEX(struct nvif_outp_infoframe_v0, args, data, data_len);
+> ...rest of function...
+> #undef data_len
+> }
 > 
-> [...]
+> or an ungainly but compile-time calculated value that exposes some
+> DEFINE_FLEX internals:
+> 
+> 	const u8 data_len = (sizeof(args_u) - sizeof(*args)) / sizeof(*args->data);
 
-Applied, thanks!
+Yeah, I actually thought of something more like just __struct_size(args) - sizeof(*args),
+as the flex array member is `__u8 data[]`.
 
-[1/1] ext4: Annotate struct ext4_xattr_inode_array with __counted_by()
-      commit: 01cdf03b1378f2d860d4eb5951895a92002226a3
+> 
+> (Maybe a helper is needed for that?)
+> 
+> #define STACK_FLEX_COUNT(name, member)	\
+> 	((sizeof(name##_u) = sizeof(*(name))) / sizeof(*(name)->member))
 
-Best regards,
--- 
-Theodore Ts'o <tytso@mit.edu>
+I don't like this `sizeof(name##_u)` part as it is detached from the DEFINE_RAW_FLEX()
+internals. Probably use `__struct_size(args)` instead, as in the example above.
+
+> 
+>> @@ -815,29 +813,29 @@ nv50_hdmi_enable(struct drm_encoder *encoder, struct nouveau_crtc *nv_crtc,
+>>   		return;
+>>   
+>>   	/* AVI InfoFrame. */
+>> -	args.infoframe.version = 0;
+>> -	args.infoframe.head = nv_crtc->index;
+>> +	args->version = 0;
+>> +	args->head = nv_crtc->index;
+> 
+> The stack variable (was before and is again) already zero-initialized,
+> so the "= 0" line shouldn't be needed.
+> 
+> But neither of these comments are show-stoppers, IMO.
+> 
+> Reviewed-by: Kees Cook <kees@kernel.org>
+> 
+
+Thanks!
+
+--
+Gustavo
