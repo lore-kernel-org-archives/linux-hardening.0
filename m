@@ -1,52 +1,51 @@
-Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
+Received: from omta034.useast.a.cloudfilter.net (omta034.useast.a.cloudfilter.net [44.202.169.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0664148FE5
-	for <linux-hardening@vger.kernel.org>; Tue, 27 Aug 2024 19:11:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1F541D2F72
+	for <linux-hardening@vger.kernel.org>; Tue, 27 Aug 2024 19:25:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724785889; cv=none; b=ouwFy4mgYIl7aVm0vWRLhV5T1+RpVI51MNMLdZ4zvxw70mN8OkizkEYFQN6tu8QOV7MjsjVtQxmSJFnf+uGWhbCmaaKjm8xMEwfY4hvzsb3Es8oqod4TzFkUUvfaTQiE3H+OwHyLW63KWbCCMnN8cZ+Ej2TQ2w53xFCcWYBAb0c=
+	t=1724786737; cv=none; b=KHxaTaXGOh5Aqe9uK6FI+JjzYAt6MViCjdYzin+ZrHBj5bJ+X3dr1YwDJh7DiEChkgcgXec3l/5hPX9PSdWc2gEZJHvkGeM8LZrhhAeibnCWvBoLrx5TMq0CFLZF0qy0ly509F9XDOW+VlxXfNN/c4aEwbLGDh0LoMRY4oae828=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724785889; c=relaxed/simple;
-	bh=du9RCy7d+nEJokh8lbqxk895BSXsrw4YoLlDSYKoblk=;
+	s=arc-20240116; t=1724786737; c=relaxed/simple;
+	bh=mxj3TsiD3sfGe1HxG9X61aMNFlQRwWdk1FPkE3ozNRw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Dt1vqhgljT0mn5WSNSTuFsmIOLlSoItTwHymsBt67QjS5YOKpyTe/oIenPcstExSZ327DKGS2EoJtjwnhB0fLBBKCCUYNVRaBgmhjrOqrYZcT252Kp/j/3sk9cK2VirzOeHjkCqWvCIi6GMEtX/JUr3bRFg0KNuwzAsUvLQyrAs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=RTZ+VO4E; arc=none smtp.client-ip=44.202.169.35
+	 In-Reply-To:Content-Type; b=N6yEuhjLmP88tkiXTbHmrt4yDcAQgLVTZovjx3tZCUUHps0tZP4r1ZFfgYFFoQ0JnLM66I4825nJ2b4AkhCqdhJSTMgzh137k1e95Jv2uZWN0wPJmj5WIHFZ/Tsxb5u7wSS/4y2Lf4oyNjZ5w28Oyrxqi8GdczXpm0yHaM2gGog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=ammnqpY1; arc=none smtp.client-ip=44.202.169.33
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="RTZ+VO4E"
-Received: from eig-obgw-6008a.ext.cloudfilter.net ([10.0.30.227])
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="ammnqpY1"
+Received: from eig-obgw-6002a.ext.cloudfilter.net ([10.0.30.222])
 	by cmsmtp with ESMTPS
-	id ib6TsojiaiA19j1ZfsZA1N; Tue, 27 Aug 2024 19:09:51 +0000
+	id j0k1s4GPZ1zuHj1onsuczg; Tue, 27 Aug 2024 19:25:29 +0000
 Received: from gator4166.hostgator.com ([108.167.133.22])
 	by cmsmtp with ESMTPS
-	id j1ZdsofenGbsEj1Zes1FrU; Tue, 27 Aug 2024 19:09:50 +0000
-X-Authority-Analysis: v=2.4 cv=bq5KBlai c=1 sm=1 tr=0 ts=66ce247e
+	id j1omsc9h1X56wj1onspeku; Tue, 27 Aug 2024 19:25:29 +0000
+X-Authority-Analysis: v=2.4 cv=MY6nuI/f c=1 sm=1 tr=0 ts=66ce2829
  a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=frY+GlAHrI6frpeK1MvySw==:17
- a=IkcTkHD0fZMA:10 a=yoJbH4e0A30A:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
- a=Oxluwhmp6ld3uWlGNnkA:9 a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22
- a=Xt_RvD8W3m28Mn_h3AK8:22
+ a=IkcTkHD0fZMA:10 a=yoJbH4e0A30A:10 a=7T7KSl7uo7wA:10
+ a=cOUt0ba47Qy8L9BmtKEA:9 a=QEXdDO2ut3YA:10 a=Xt_RvD8W3m28Mn_h3AK8:22
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
 	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
 	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
 	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=5JZFmEEhU0UCbr2plbMpHOf5fhdfzfk/fS6XDm2beLk=; b=RTZ+VO4E54YAFXBis0O/nkgeD4
-	vBNHhkiSEg8EkMDsoZGceB3t80ydoOZOc8D+0mG6lihVYVhzjAfz5KKnxuWJCtrUGrs3OOEL2k5HQ
-	KKVNuj+tQvQsOCtSfd5nc0EPqpdrZcg9y2PkyWjwicaMxFCYIoQLzKCBdLd6njnDi9+0t96l5uSR6
-	V6RKSu0SqYDpxao7RefLsBT+ZUWavtN4LQ7dVRjIDdKjmpqXFCumab0Z6x0G+0YeWCBlf1gRULKOg
-	8NjcKNjM0+DNGHRlNIG7sfwRz1cZjXp78JV3Z+ITDq0WNDffFK2sVQcTMHJEoIwgd5BQCoCnd6JOY
-	KnbkUGYQ==;
-Received: from [201.172.173.139] (port=47538 helo=[192.168.15.5])
+	bh=8xv0a0awLlFOIkKNP/kzkxKfLITwaLOKFUsw8WiXk2g=; b=ammnqpY1D4Owcnx6/x/0fKQl3z
+	7ey4Dk0JjmBBUf3iMqKG1AjhOGV9Q6BR9lu0KFd0LHGk1GCExI8+7flSdIN8PVDazZFlfL47sWmYM
+	HskIlwXw3sY/HvI3yro9Ia4jUePAnX6NFROAQ+8ExP4JNM5cLGxDSgZQEvZvn91o7Zb5Hc+h0FLTT
+	X59UJpc1rbekPNHi87hUFmTRISxJxIpc74DcH3ODhIbgCihrIhFeN2O0TLRjB2zjFSk1G+xBb6wuW
+	yy6JcAUFH488J1PQ92CbQvoo7e6YT/lztzWWYDEDuDjIlM1k4NiQ/9Jldm1ijBi0b6Uwtv6RJhDL3
+	L+V6ONQQ==;
+Received: from [201.172.173.139] (port=55200 helo=[192.168.15.5])
 	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 	(Exim 4.96.2)
 	(envelope-from <gustavo@embeddedor.com>)
-	id 1sj1Zc-002X62-0C;
-	Tue, 27 Aug 2024 14:09:48 -0500
-Message-ID: <2065d0f6-660e-4647-95b4-8d1a9a7eaefe@embeddedor.com>
-Date: Tue, 27 Aug 2024 13:09:46 -0600
+	id 1sj1ok-002mCT-2O;
+	Tue, 27 Aug 2024 14:25:26 -0500
+Message-ID: <37a70b40-0952-4a87-b583-8915a2206a11@embeddedor.com>
+Date: Tue, 27 Aug 2024 13:25:22 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -54,18 +53,23 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] drm/nouveau: Avoid -Wflex-array-member-not-at-end
- warning
-To: Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
- Danilo Krummrich <dakr@redhat.com>, David Airlie <airlied@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>, dri-devel@lists.freedesktop.org,
- nouveau@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+Subject: Re: [PATCH][next] wifi: radiotap: Avoid
+ -Wflex-array-member-not-at-end warnings
+To: Johannes Berg <johannes@sipsolutions.net>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, Kalle Valo
+ <kvalo@kernel.org>, Stanislav Yakovlev <stas.yakovlev@gmail.com>,
+ Ajay Singh <ajay.kathat@microchip.com>,
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+ libertas-dev@lists.infradead.org, netdev@vger.kernel.org,
  linux-hardening@vger.kernel.org
-References: <ZsZLFS1CsHkKjw+C@elsanto> <202408221011.82876DA0C4@keescook>
+References: <ZrJmjM4izqDqwIrc@cute>
+ <6ae3908c182664496784b1f1a86dd5bfd72fbc62.camel@sipsolutions.net>
 Content-Language: en-US
 From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <202408221011.82876DA0C4@keescook>
+In-Reply-To: <6ae3908c182664496784b1f1a86dd5bfd72fbc62.camel@sipsolutions.net>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
@@ -76,95 +80,68 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 201.172.173.139
 X-Source-L: No
-X-Exim-ID: 1sj1Zc-002X62-0C
+X-Exim-ID: 1sj1ok-002mCT-2O
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: ([192.168.15.5]) [201.172.173.139]:47538
+X-Source-Sender: ([192.168.15.5]) [201.172.173.139]:55200
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
+X-Email-Count: 12
 X-Org: HG=hgshared;ORG=hostgator;
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfFiTQuc1SPPbNnq2741yLhCYTvAyks0/G7RHPSJxbXJI980RW6m7ufMeNA/W8bmVQxcwLbJar6a4Askp9s2n+RyLQAD+Vgs5l3Invvq+txUgcuH7qfpY
- YT4KgY/tceobgbjPbvMVoXgB9+4AI9eHEfYguHfAUYWzsO7/rnjVTJqWTDc7wJZ2jG8UME489cUhx70BnoVUC3k6QWu3pYi1IT14M5P6AJMx8+X+R6zKY3lc
+X-CMAE-Envelope: MS4xfLjTAj+vwpjLoZZ7ov6+sp1KJrZORKuadFD574BpgEgvBuPy6XpkfjDN9AMQ2QusNmh3ElyfvYeN6vE48jHpPu8AOte0pKApVibrgd+QKME0ntbIhSXJ
+ 8sAqxmtujX00l24WZVz4fxw2gfwkxbF76ZQHnpa7mqi+JsZqv9wEf3QXojdWPulgCAUewK5dbGvOaP0KCULWa1L0qYvLWIBNPLWsxCYk9kPQ5qClkDUkykxC
 
 
 
-On 22/08/24 11:27, Kees Cook wrote:
-> On Wed, Aug 21, 2024 at 02:16:21PM -0600, Gustavo A. R. Silva wrote:
->> Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
->> a flexible structure where the size of the flexible-array member
->> is known at compile-time, and refactor the rest of the code,
->> accordingly.
+On 27/08/24 02:22, Johannes Berg wrote:
+> On Tue, 2024-08-06 at 12:08 -0600, Gustavo A. R. Silva wrote:
 >>
->> So, with this, fix the following warning:
->>
->> drivers/gpu/drm/nouveau/dispnv50/disp.c:779:47: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
->>
->> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->> ---
->>   drivers/gpu/drm/nouveau/dispnv50/disp.c | 20 +++++++++-----------
->>   1 file changed, 9 insertions(+), 11 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/nouveau/dispnv50/disp.c b/drivers/gpu/drm/nouveau/dispnv50/disp.c
->> index eed579a6c858..ddddc69640be 100644
->> --- a/drivers/gpu/drm/nouveau/dispnv50/disp.c
->> +++ b/drivers/gpu/drm/nouveau/dispnv50/disp.c
->> @@ -774,11 +774,9 @@ nv50_hdmi_enable(struct drm_encoder *encoder, struct nouveau_crtc *nv_crtc,
->>   	struct drm_hdmi_info *hdmi = &nv_connector->base.display_info.hdmi;
->>   	union hdmi_infoframe infoframe = { 0 };
->>   	const u8 rekey = 56; /* binary driver, and tegra, constant */
->> +	DEFINE_RAW_FLEX(struct nvif_outp_infoframe_v0, args, data, 17);
->> +	const u8 data_len = 17; /* same length as in DEFINE_RAW_FLEX above. */
+>> +++ b/include/net/ieee80211_radiotap.h
+>> @@ -24,31 +24,36 @@
+>>    * struct ieee80211_radiotap_header - base radiotap header
+>>    */
+>>   struct ieee80211_radiotap_header {
+>> -	/**
+>> -	 * @it_version: radiotap version, always 0
+>> -	 */
+>> -	uint8_t it_version;
+>> -
+>> -	/**
+>> -	 * @it_pad: padding (or alignment)
+>> -	 */
+>> -	uint8_t it_pad;
+>> -
+>> -	/**
+>> -	 * @it_len: overall radiotap header length
+>> -	 */
+>> -	__le16 it_len;
+>> -
+>> -	/**
+>> -	 * @it_present: (first) present word
+>> -	 */
+>> -	__le32 it_present;
+>> +	/* New members MUST be added within the __struct_group() macro below. */
 > 
-> To avoid repeating the open-coded "17", this could either be a define:
-> 
-> nv50_hdmi_enable(...)
-> {
-> ...
-> #define data_len	17
-> 	DEFINE_RAW_FLEX(struct nvif_outp_infoframe_v0, args, data, data_len);
-> ...rest of function...
-> #undef data_len
-> }
-> 
-> or an ungainly but compile-time calculated value that exposes some
-> DEFINE_FLEX internals:
-> 
-> 	const u8 data_len = (sizeof(args_u) - sizeof(*args)) / sizeof(*args->data);
+> There cannot be new members without breaking interop with the radiotap
+> spec, that comment isn't really useful ;-)
 
-Yeah, I actually thought of something more like just __struct_size(args) - sizeof(*args),
-as the flex array member is `__u8 data[]`.
+Ah yes; the comment is not meant to be an invitation to add members to
+the struct just for the sake of it. It's there to indicate where they
+should be added if needed.
 
 > 
-> (Maybe a helper is needed for that?)
+>> +	__struct_group(ieee80211_radiotap_header_hdr, hdr, __packed,
 > 
-> #define STACK_FLEX_COUNT(name, member)	\
-> 	((sizeof(name##_u) = sizeof(*(name))) / sizeof(*(name)->member))
+> And also, "header header" sounds odd to me really. The header of the
+> header? What's what?
+> 
+> I think perhaps better to call this ieee80211_radiotap_hdr_fixed or so?
 
-I don't like this `sizeof(name##_u)` part as it is detached from the DEFINE_RAW_FLEX()
-internals. Probably use `__struct_size(args)` instead, as in the example above.
+Sounds good to me. :)
 
-> 
->> @@ -815,29 +813,29 @@ nv50_hdmi_enable(struct drm_encoder *encoder, struct nouveau_crtc *nv_crtc,
->>   		return;
->>   
->>   	/* AVI InfoFrame. */
->> -	args.infoframe.version = 0;
->> -	args.infoframe.head = nv_crtc->index;
->> +	args->version = 0;
->> +	args->head = nv_crtc->index;
-> 
-> The stack variable (was before and is again) already zero-initialized,
-> so the "= 0" line shouldn't be needed.
-> 
-> But neither of these comments are show-stoppers, IMO.
-> 
-> Reviewed-by: Kees Cook <kees@kernel.org>
-> 
-
-Thanks!
-
+Thanks for the feedback!
 --
 Gustavo
+
