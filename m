@@ -1,107 +1,77 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C0D51B9B4A
-	for <linux-hardening@vger.kernel.org>; Tue, 27 Aug 2024 12:34:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 714AD1C460A
+	for <linux-hardening@vger.kernel.org>; Tue, 27 Aug 2024 12:47:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724762083; cv=none; b=dTx/hgkrRqKrHEvhzyXrmr0K7qgxwRIra0057s2wdzm8AfAfOLXU0MLYXdWgvvJFkJEiFX4vwj5qkAd61iFQw/WG1FF0XNcIxZYw7TQwY0c1eyfqGA0y9P6gNmwtuTKv47Ef0yA4YeA/x2huyoYtxi2hyM5soOLtZOJxQnYjG9g=
+	t=1724762880; cv=none; b=qEA+z1SWxRE8A+Uq6+n/SBx218JvNu//FmV8oVokZREza1tkg61MqLXxTK6/whv9sRpHDMeh0I2cDDsVDsjow0dmucdjtE0XL43MBRiN36nerCozK4s9Fo26o4lPPrAoZdo32A5SbEa72D6WgHD5f1Zbjw4IJkSwIUj/PEvk3T0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724762083; c=relaxed/simple;
-	bh=rIfujnRm2V1RobBJwbb3mPgwma8W9Db1vHV/ES1fRgs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SGnue3Yx+rF4HJHdIFcqIINBQN/TnDFwrZJBQpAQYcF6JoXfMbZ9/ebOqIZSeUY+XuUEfA/8dONJluvKinaC5fFhwWhaM4XwZt86c55sjrDRG+ardUrGdzNjNeFBXWWL84qyETO8MDC6eKdFAUwtC8vibPDXUvWOc6bAxY3WVW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=PjJlJ55r; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1724762880; c=relaxed/simple;
+	bh=R6D7+qQnQm3jzPsIpmE3Q9GrFtEYUrdUsuVPo5UPswk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=vD8O2zEIlCAPY0ER6/L7I86mKvM6O8cV9Fg+D8QbYTiCFbANF+a4PyZ2YNtSM4P6HyCg/cG/426qSIKUzZov84UjIGp1M7eRuIjn6l9Ut8J0ihiJEw6WWsnlFzQ3z2LH7jTJG3rBx3G1F7xmwsS34v7QvYK8ZJvWVJq6VVN2iGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=bfNh6WBO; arc=none smtp.client-ip=18.9.28.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="PjJlJ55r"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2020ac89cabso48846545ad.1
-        for <linux-hardening@vger.kernel.org>; Tue, 27 Aug 2024 05:34:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1724762079; x=1725366879; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=KyXAJapJSnZ2dDDvQaQcnKrD5eisnLa1o6mBBkyryV8=;
-        b=PjJlJ55rpNKFW9G00mcIygkEVVUP2NnDBU80iyfWCb4lJaIvko5k7/l60puYbVP/vs
-         lCWdUihky4dmbz3BNUkvfH4+E5GkRBC4AhTcONb5eRLNNQYL9yTJ6cWvWnqM8+dzgogU
-         4hMyVm3tv8GprHhLVpJ5YQh76Oejtv7cR9Bn0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724762079; x=1725366879;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KyXAJapJSnZ2dDDvQaQcnKrD5eisnLa1o6mBBkyryV8=;
-        b=fNUPSyD5AOSvM2OOGd+HYvVI02iuOWAThPY2XnLcjmg9jijUN6tRGluN+VfmUSQh1R
-         IPaQKAHkycFIR0iDJOkaT79Ct7lmcYuhWSJU74p+SMuAuoCoUZgaPrz8evXQW2ELXD+I
-         X1G/SU7qgfMzJE72mie9GBegZpel1uvvxcVh0fEEvKKVi9YQk+RbFO3f+KWDoZyx9NOZ
-         3dqx1PigPtMUNT1lqTf6NATAwI71CIsD+SGkgaKnspY5IBArV7xNIB60ujvPLU4pOfCg
-         ZjIzzNWH0K4n5AIh2MiiU011zEFR7lSKatVJWOz7lLL/7Bo/K6zjOOxx3K/F+vDgvbMp
-         TmMw==
-X-Forwarded-Encrypted: i=1; AJvYcCVMSEh8SLJv6A/usTSoYMYvu1N4RRfgUMG4S7Oo7ViiX7s55sT9ZH/Nbc7uTbf+qni9VOgA0jMzTRAw5d+iCIg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzngO/tJU6HLXgCd5S1DMdjd4CQa2UINg3bZjoBdLStJEX943t3
-	lp0xBsQWguWnJgOxANy7Az0iD5wFkfg0/pRquoL+U6Rwj8teWIg6Cnbd0zIDeNI=
-X-Google-Smtp-Source: AGHT+IGjiYKK2pg00dNbHQgAvQ/REQmd5g9wxQNuwUyB/YkBILqbu4Jg6AxTKtpIKWtECuFZJ2DiWw==
-X-Received: by 2002:a17:902:e541:b0:202:2b7:9c7f with SMTP id d9443c01a7336-2039e534e0emr143411945ad.65.1724762079307;
-        Tue, 27 Aug 2024 05:34:39 -0700 (PDT)
-Received: from [192.168.121.153] ([218.49.71.194])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20385fcf525sm82694515ad.300.2024.08.27.05.34.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 Aug 2024 05:34:37 -0700 (PDT)
-Message-ID: <b274a725-03f6-4a65-a998-75f10026f2e3@linuxfoundation.org>
-Date: Tue, 27 Aug 2024 06:34:31 -0600
+	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="bfNh6WBO"
+Received: from cwcc.thunk.org (pool-173-48-112-93.bstnma.fios.verizon.net [173.48.112.93])
+	(authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 47RClf7P021540
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 27 Aug 2024 08:47:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
+	t=1724762864; bh=U19LhhR9iTB/RKGBv97tak0iv7y0eTeJ8XQThvjLR/c=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type;
+	b=bfNh6WBOqcmJ2065PFYfR423gWY/0Ik/9ZgBbHhi0PPjmMHHqhuDbn8zWs9exiNxA
+	 y/D0wiAHCkFM9IBjFARNoW9Usc943BIUP89R1Ezfog2zfwY58FTTFg2+77EptQXInB
+	 oi5xA+tg8OtbcOMOtM5TGtJCABt6T0/gQHEbTElhhlmDjqafdoiliQzit+3ArDGj4/
+	 jsI3ZYbMZcM+SmK9yc6AEi/Axkq/v/ONIj0/D6GOK8+tNEF1br289GqTLkgt7IOUh1
+	 q0QXHKapovmLjFt+i91ZUdVo2j0qIoyfCYUWQifYMO3ayw3O5YhTRHSad/ZWjnC/Jl
+	 qYbYLxSW59zWA==
+Received: by cwcc.thunk.org (Postfix, from userid 15806)
+	id C34E415C1C63; Tue, 27 Aug 2024 08:47:38 -0400 (EDT)
+From: "Theodore Ts'o" <tytso@mit.edu>
+To: adilger.kernel@dilger.ca, kees@kernel.org, gustavoars@kernel.org,
+        Thorsten Blum <thorsten.blum@toblux.com>
+Cc: "Theodore Ts'o" <tytso@mit.edu>, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v4] ext4: Annotate struct ext4_xattr_inode_array with __counted_by()
+Date: Tue, 27 Aug 2024 08:47:32 -0400
+Message-ID: <172476284022.635532.12692920677759695178.b4-ty@mit.edu>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240730220200.410939-3-thorsten.blum@toblux.com>
+References: <20240730220200.410939-3-thorsten.blum@toblux.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] Documentation: KUnit: Update filename best practices
-To: Kees Cook <kees@kernel.org>, David Gow <davidgow@google.com>
-Cc: John Hubbard <jhubbard@nvidia.com>,
- Brendan Higgins <brendan.higgins@linux.dev>, Rae Moar <rmoar@google.com>,
- Jonathan Corbet <corbet@lwn.net>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
-References: <20240724201354.make.730-kees@kernel.org>
- <CABVgOSmXqv_+20OKjVAPJoqrP1EvBk+1WUqF4wBsefegxYNiWA@mail.gmail.com>
- <202408221717.1138DB3D1C@keescook>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <202408221717.1138DB3D1C@keescook>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On 8/22/24 18:18, Kees Cook wrote:
-> On Fri, Jul 26, 2024 at 03:14:36PM +0800, David Gow wrote:
->> On Thu, 25 Jul 2024 at 04:14, Kees Cook <kees@kernel.org> wrote:
->>>
->>> Based on feedback from Linus[1] and follow-up discussions, change the
->>> suggested file naming for KUnit tests.
->>>
->>> Link: https://lore.kernel.org/lkml/CAHk-=wgim6pNiGTBMhP8Kd3tsB7_JTAuvNJ=XYd3wPvvk=OHog@mail.gmail.com/ [1]
->>> Reviewed-by: John Hubbard <jhubbard@nvidia.com>
->>> Signed-off-by: Kees Cook <kees@kernel.org>
->>> ---
->>
->> Looks good to me. (And it seems like sphinx is okay with it, too,
->> which is always nice.)
->>
->> We normally take these changes in via the kunit tree, but if you want
->> to try to push it through along with the naming changes, that's fine
->> by me.
->>
->> Reviewed-by: David Gow <davidgow@google.com>
+
+On Wed, 31 Jul 2024 00:02:02 +0200, Thorsten Blum wrote:
+> Add the __counted_by compiler attribute to the flexible array member
+> inodes to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
+> CONFIG_FORTIFY_SOURCE.
 > 
-> Hi! Just a quick check: I haven't seen this land in -next yet. Are you
-> still planning to take this?
+> Remove the now obsolete comment on the count field.
 > 
+> In ext4_expand_inode_array(), use struct_size() instead of offsetof()
+> and remove the local variable count. Increment the count field before
+> adding a new inode to the inodes array.
+> 
+> [...]
 
-I applied it yesterday to kunit next.
+Applied, thanks!
 
-thanks,
--- Shuah
+[1/1] ext4: Annotate struct ext4_xattr_inode_array with __counted_by()
+      commit: 01cdf03b1378f2d860d4eb5951895a92002226a3
+
+Best regards,
+-- 
+Theodore Ts'o <tytso@mit.edu>
