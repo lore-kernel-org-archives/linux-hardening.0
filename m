@@ -1,70 +1,73 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 627F274C1B;
-	Mon, 26 Aug 2024 20:34:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E04B414A8B;
+	Tue, 27 Aug 2024 02:37:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724704460; cv=none; b=X5ofZ526OVdH/HeRJfJ5/B+2j2tZYpignXjecgE6Zqb084eMR5nYL/Yit91YT7lNwT2wDcc0USJ4Iq99cOl0dw73mOiUU+osyJJY2NuEVOIBBgpQ0x1d9juCDHjxW/6TbhO70AMGVtbgI1pyn+0JKoxFzLR2xgcDaFYZ9tNBYJw=
+	t=1724726248; cv=none; b=W1qUffLGXXBh0q/SnKLxeh0HxmDK4yDJBLQLb89HyVP1AYnmidK9VudpwoYDwQUsujzR5FQFJRIqAYVqTsNwRjkQbXniS8bvHQhh2PxUMEhhhkZn2onjtEVHBp4zjDe6EihPu0WAaFpZgosjBR9ohdcEQCoZwQQX6vEX6JurJco=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724704460; c=relaxed/simple;
-	bh=wuPo3kRQj8FfUmGnwgmSG7R2ndV7ZyokQSyJ4uU4X7A=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CAUmkzKcLFL6SSl2omll+2fc8VoPo6hfV/Y0076Y+9sf5EWkdU6bTJizCFjFAEPthxReR3Vqut6A2GrAARd4CwK8iWraY3V2WxXCoKchxwQdQfA+ZHTR9GpWBmOMLmUoebEfmmZO8cYwc+F21ZGqy+6xzvo2hY+iEmfAjE//nhc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HT1hnZtO; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HT1hnZtO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF0FBC8B7B8;
-	Mon, 26 Aug 2024 20:34:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724704459;
-	bh=wuPo3kRQj8FfUmGnwgmSG7R2ndV7ZyokQSyJ4uU4X7A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HT1hnZtOMeNxHopz7TlDblBoLnAc2b+4ni9n/ScKqQ4Xd+6ZyUXuKHNuVobNMVkp3
-	 BXK9H5gKXjU5xshi+/jI9ANyIT4Ez9UvgW5BW2/k8O3FrXpXAI85xuPyQCYcjjU14+
-	 4VPtJKUgpCn+ias7rYRtgqJ67jvaQb3vd56ak02vK1d+W3z8zw8uMvbwrHHLgnhKct
-	 xxLV4e4QR4C64Z38dAXdHV8MEtevzaIRASqQvannzEaL1/xmgZhfAb5KuGguqwIJcS
-	 TjgnpZcWo6NbdUsU7qOWWj4mo9ZwSnOszkozZe8+5adk/2312zhBKlL32jaw7eajeS
-	 aQ1Pzfem+ghmg==
-From: Kees Cook <kees@kernel.org>
-To: Tony Luck <tony.luck@intel.com>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	Wen Yang <wen.yang@linux.dev>
-Cc: Kees Cook <kees@kernel.org>,
-	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pstore: replace spinlock_t by raw_spinlock_t
-Date: Mon, 26 Aug 2024 13:34:16 -0700
-Message-Id: <172470445402.1124964.5756101166185708381.b4-ty@kernel.org>
+	s=arc-20240116; t=1724726248; c=relaxed/simple;
+	bh=94q1IxgnDlbGmOsZaC7Jqd196CY59EzdBy0PqI7hpGI=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VbJNbmMYRm6dwIi1GHTFklVERfBEICKEamQ0fYmdykzQhDcsXQvOX/nZu0m3PUFi3TNDflEMmVCQtVjf/0oMHnb2mtYMk2IPmGcehSjk+D7LU7kj3UcKDz6Zb6inEWKB9wOBkY6RuGa9j7sEuHKFCnd6lnrI2mMUsaw4zPFPdXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4WtBWS6H3rzyQTf;
+	Tue, 27 Aug 2024 10:36:36 +0800 (CST)
+Received: from dggpeml500022.china.huawei.com (unknown [7.185.36.66])
+	by mail.maildlp.com (Postfix) with ESMTPS id 8EF5118007C;
+	Tue, 27 Aug 2024 10:37:23 +0800 (CST)
+Received: from huawei.com (10.90.53.73) by dggpeml500022.china.huawei.com
+ (7.185.36.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 27 Aug
+ 2024 10:37:23 +0800
+From: Hongbo Li <lihongbo22@huawei.com>
+To: <kees@kernel.org>, <andy@kernel.org>, <akpm@linux-foundation.org>,
+	<trondmy@kernel.org>, <anna@kernel.org>, <gregkh@linuxfoundation.org>
+CC: <linux-hardening@vger.kernel.org>, <linux-mm@kvack.org>,
+	<linux-nfs@vger.kernel.org>, <lihongbo22@huawei.com>
+Subject: [PATCH -next v3 2/3] mm: make use of str_true_false helper
+Date: Tue, 27 Aug 2024 10:45:16 +0800
+Message-ID: <20240827024517.914100-3-lihongbo22@huawei.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240819145945.61274-1-wen.yang@linux.dev>
-References: <20240819145945.61274-1-wen.yang@linux.dev>
+In-Reply-To: <20240827024517.914100-1-lihongbo22@huawei.com>
+References: <20240827024517.914100-1-lihongbo22@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ dggpeml500022.china.huawei.com (7.185.36.66)
 
-On Mon, 19 Aug 2024 22:59:45 +0800, Wen Yang wrote:
-> pstore_dump() is called when both preemption and local IRQ are disabled,
-> and a spinlock is obtained, which is problematic for the RT kernel because
-> in this configuration, spinlocks are sleep locks.
-> 
-> Replace the spinlock_t with raw_spinlock_t to avoid sleeping in atomic context.
-> 
-> 
-> [...]
+The helper str_true_false is introduced to reback "true/false"
+string literal. We can simplify this format by str_true_false.
 
-Applied to for-next/pstore, thanks!
+Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
+---
+ mm/memory-tiers.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-[1/1] pstore: replace spinlock_t by raw_spinlock_t
-      https://git.kernel.org/kees/c/1bf8012fc699
-
-Take care,
-
+diff --git a/mm/memory-tiers.c b/mm/memory-tiers.c
+index 2a642ea86cb2..66ea9099dd63 100644
+--- a/mm/memory-tiers.c
++++ b/mm/memory-tiers.c
+@@ -940,8 +940,7 @@ bool numa_demotion_enabled = false;
+ static ssize_t demotion_enabled_show(struct kobject *kobj,
+ 				     struct kobj_attribute *attr, char *buf)
+ {
+-	return sysfs_emit(buf, "%s\n",
+-			  numa_demotion_enabled ? "true" : "false");
++	return sysfs_emit(buf, "%s\n", str_true_false(numa_demotion_enabled));
+ }
+ 
+ static ssize_t demotion_enabled_store(struct kobject *kobj,
 -- 
-Kees Cook
+2.34.1
 
