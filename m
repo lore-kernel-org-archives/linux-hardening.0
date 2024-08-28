@@ -1,135 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A27D15749A;
-	Wed, 28 Aug 2024 20:25:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57F1F1AB512
+	for <linux-hardening@vger.kernel.org>; Wed, 28 Aug 2024 21:43:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724876711; cv=none; b=m17B+1aIL28JM+mFtXBb5rNOQNGstQWPUnX0PR3vLkFdt0NgkLGctRpPx7qbxLnvCZaOe5A0+JJfllfTy8riH/54y+/n31EjuYJMCq7ovpfuYrB0p+EStzsX6dfjm3ZTp8mJxD5tHQ/XS01EGlxmz7EaBibQP0jzxIZc/g/Iz1U=
+	t=1724881428; cv=none; b=SqtQkohq9lhIO4dtyp/zZXIq8Czvi1uESqNnm4B2+wehHeuiBqlgWe+zypybfScnacsQZg20wpopxv71Qu9c/s40TehqExJKKY4KZTwEHj++/ILkca8Xhm+E3S/aXxdCB1gUUlW82NhkWtHhvdZtU3ynTSiDxDEdrJn65Fiqy0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724876711; c=relaxed/simple;
-	bh=uBzK29h3Wh6e0YeFL9zV/5o5Il6973lCrLvdGTFVRkw=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=DLVsS6kEGWkvgRGPkDcHF19G+LWSbjveq9Z67LD3J+n9wagb4B5CXbipsqfmghDUR2Km6fz+SBdcshSXismYUrvi6iBL35PjnkDYib1Q262msCRh3+nWVmDt9CGFhwrfPXh9ixS2bRTe9jYi/BX6FAKUuybUg5BQxhz22teXB6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=kESqIMtE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1724881428; c=relaxed/simple;
+	bh=Ow2Oa4aH4/GHsxj85ciXs/uy/FkW9Ju27sF6MW2bpcI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gu+EQli3mVUd/WokgJ0vcJZ3ANhLc9eN/QcIDVfa89jL7sYVBHu0fie03IeZeD+R6g+cDlt/BPC91fyn+MDSRbfczA6C4kUjw5ckoepjUOdWcv4AUQ7pSKhhI2hWIvl5vdNrkau05dxoh2VlLJrUaWOnU/MOqa9V//A1lnex5vk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=vfWXKgX+; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="kESqIMtE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31981C4CEC0;
-	Wed, 28 Aug 2024 20:25:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1724876710;
-	bh=uBzK29h3Wh6e0YeFL9zV/5o5Il6973lCrLvdGTFVRkw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=kESqIMtEyaI6zQPj+eFkdX2qp6FfujEgsyeUTXA8nqaZVEDggX0J7y2PWqdjnzzdd
-	 DzbuD0A2ZUpJ1bnu0jyPugCnINMWbwSVcWndrHgYBhQ4mtp6i+P+khKFFJDtXv4Ovr
-	 Js/dyblXotDccUNnKDO5Ql519VNFNhYtsiVi8eTo=
-Date: Wed, 28 Aug 2024 13:25:09 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Hongbo Li <lihongbo22@huawei.com>
-Cc: <kees@kernel.org>, <andy@kernel.org>, <trondmy@kernel.org>,
- <anna@kernel.org>, <gregkh@linuxfoundation.org>,
- <linux-hardening@vger.kernel.org>, <linux-mm@kvack.org>,
- <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH -next v3 1/3] lib/string_choices: Add
- str_true_false()/str_false_true() helper
-Message-Id: <20240828132509.4447ff09665fa0d7b8020294@linux-foundation.org>
-In-Reply-To: <a6ea03c9-f92b-4faa-b924-8df58484fb13@huawei.com>
-References: <20240827024517.914100-1-lihongbo22@huawei.com>
-	<20240827024517.914100-2-lihongbo22@huawei.com>
-	<20240827164218.c45407bf2f2ef828975c1eff@linux-foundation.org>
-	<8d19aece-3a33-4667-8bcf-635a3a861d1d@huawei.com>
-	<20240827202204.b76c0510bf44cdfb6d3a74bd@linux-foundation.org>
-	<a6ea03c9-f92b-4faa-b924-8df58484fb13@huawei.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="vfWXKgX+"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5beceb61e62so987044a12.3
+        for <linux-hardening@vger.kernel.org>; Wed, 28 Aug 2024 14:43:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1724881425; x=1725486225; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=BgIVeN+hwaa3Zj0bf1QjMz6FtGwxuk1uApKAVTuU21M=;
+        b=vfWXKgX+2K5KPbnS608WoYeqWciqY8iHwgd8Xu7QlXUmoIOt0jH294T7jtaxn19/NO
+         x59rv06Pzh6QwE7b5ZvxOqjBiuRRksNMUucoSO4OqkTTrBv5CfHmE8cnJ6MoWUk/4VN3
+         5PXgQxxw30aT8rD1mAi7t4sRmPgElGmjqL5DHe7NE1iBzYikRCxG0NKq4DY+IyaMXlmW
+         68VWITSE/RglbUljesTD3Eo+G8/UMpxGSNjXAhLZdwrKUMc9r6xhVWMhO8GH3kLfbnn/
+         RoaQ5mXXyn3CgucplE5wvRHngmen+AMjH0rw11wbjy5XxUYpTd+/UK7smVh2dWLrYwtF
+         m6PA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724881425; x=1725486225;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BgIVeN+hwaa3Zj0bf1QjMz6FtGwxuk1uApKAVTuU21M=;
+        b=cxZILMilwv0uI5eQu3NAVPeDRo5nr9gDXDuUaucdnjBoectBn3kuaChBSraS0Rywvy
+         +l/rK3PnFMNA+RGVuBr4ZTtYgGkNjwqQ3NHstZTylDmfcvaMVOPPlcujeS1fZZhQMEeu
+         76u0icEd78Vpe9LFIymwRxYNv2np6tP/zc9zwg85LIJw/RrB/zkQBTBLVNyD/803rctU
+         Vl/2O8NElM7ynyrpGTlvbdazVF6Se2xXIb66c9grf1NTaZGZ6puFXy/R7t6v6k4F8ivI
+         OMY391SmxdnbKNT4CtAj2ab0BA/jiavbbbr0Zo24khJuqI/67wq/L8Es2La2df4lJQzl
+         QQVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUjzlEWy/utKFsY5vcwmPOYNLwdVUtN3iGlAAHTCFFQQSiUWsDog8pd4W4NIwPZ563+BOoo72bDVWRnOINxjzU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxuwqOqJUwgG4N3apu5O7MdhK3nKQuXqU/wgGgFQkb53EtNJLba
+	qICsbETY4pljoV78siO8tnNKZz+lSkG0hGHtCivCmm0lzBQa/fcQrZQDvLaBQ+E=
+X-Google-Smtp-Source: AGHT+IGDaFnNlopk9OtBsTjpt60u8SdH1IppPU/d0oIAgCIrSzY8jx0IxHyYFQ2PotXqk9B0nC9M4g==
+X-Received: by 2002:a05:6402:4314:b0:5be:9bc5:f698 with SMTP id 4fb4d7f45d1cf-5c21ec639e9mr406264a12.0.1724881425416;
+        Wed, 28 Aug 2024 14:43:45 -0700 (PDT)
+Received: from fedora.fritz.box (aftr-82-135-80-228.dynamic.mnet-online.de. [82.135.80.228])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5c0bb21399bsm2739670a12.50.2024.08.28.14.43.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Aug 2024 14:43:45 -0700 (PDT)
+From: Thorsten Blum <thorsten.blum@toblux.com>
+To: chuck.lever@oracle.com,
+	jlayton@kernel.org,
+	neilb@suse.de,
+	okorniev@redhat.com,
+	Dai.Ngo@oracle.com,
+	tom@talpey.com,
+	kees@kernel.org,
+	gustavoars@kernel.org
+Cc: linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	Thorsten Blum <thorsten.blum@toblux.com>
+Subject: [PATCH] NFSD: Annotate struct pnfs_block_deviceaddr with __counted_by()
+Date: Wed, 28 Aug 2024 23:42:55 +0200
+Message-ID: <20240828214254.2407-2-thorsten.blum@toblux.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Wed, 28 Aug 2024 11:49:51 +0800 Hongbo Li <lihongbo22@huawei.com> wrote:
+Add the __counted_by compiler attribute to the flexible array member
+volumes to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
+CONFIG_FORTIFY_SOURCE.
 
-> > Anything which is calling these functions is not performance-sensitive,
-> > so optimizing for space is preferred.  An out-of-line function which
-> > returns a const char * will achieve this?
-> I think this helper can achieve this. Because it is tiny enough, the 
-> compiler will handle this like #define macro (do the replacement) 
-> without allocating extra functional stack. On the contrary, if it is 
-> implemented as a non-inline function, it will cause extra functional 
-> stack when it was called every time. And it also should be implemented 
-> in a source file (.c file), not in header file(.h file).
+Use struct_size() instead of manually calculating the number of bytes to
+allocate for a pnfs_block_deviceaddr with a single volume.
 
-No, my concern is that if, for example, str_high_low() gets used in 100
-.c files then we get 100 copies of the strings "high" and "low" in
-vmlinux.  Making str_high_low() uninlined would fix this.
+Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+---
+ fs/nfsd/blocklayout.c    | 6 ++----
+ fs/nfsd/blocklayoutxdr.h | 2 +-
+ 2 files changed, 3 insertions(+), 5 deletions(-)
 
-However a quick experiment tells me that the compiler and linker are
-indeed able to perform this cross-object-file optimization:
-
---- a/fs/open.c~a
-+++ a/fs/open.c
-@@ -34,6 +34,8 @@
- #include <linux/mnt_idmapping.h>
- #include <linux/filelock.h>
+diff --git a/fs/nfsd/blocklayout.c b/fs/nfsd/blocklayout.c
+index 3c040c81c77d..08a20e5bcf7f 100644
+--- a/fs/nfsd/blocklayout.c
++++ b/fs/nfsd/blocklayout.c
+@@ -147,8 +147,7 @@ nfsd4_block_get_device_info_simple(struct super_block *sb,
+ 	struct pnfs_block_deviceaddr *dev;
+ 	struct pnfs_block_volume *b;
  
-+#include <linux/string_choices.h>
-+
- #include "internal.h"
- 
- int do_truncate(struct mnt_idmap *idmap, struct dentry *dentry,
-@@ -42,6 +44,8 @@ int do_truncate(struct mnt_idmap *idmap,
+-	dev = kzalloc(sizeof(struct pnfs_block_deviceaddr) +
+-		      sizeof(struct pnfs_block_volume), GFP_KERNEL);
++	dev = kzalloc(struct_size(dev, volumes, 1), GFP_KERNEL);
+ 	if (!dev)
+ 		return -ENOMEM;
+ 	gdp->gd_device = dev;
+@@ -255,8 +254,7 @@ nfsd4_block_get_device_info_scsi(struct super_block *sb,
+ 	const struct pr_ops *ops;
  	int ret;
- 	struct iattr newattrs;
  
-+	printk("%s\n", frozzle(dentry == NULL));
-+
- 	/* Not pretty: "inode->i_size" shouldn't really be signed. But it is. */
- 	if (length < 0)
- 		return -EINVAL;
---- a/fs/inode.c~a
-+++ a/fs/inode.c
-@@ -22,6 +22,9 @@
- #include <linux/iversion.h>
- #include <linux/rw_hint.h>
- #include <trace/events/writeback.h>
-+
-+#include <linux/string_helpers.h>
-+
- #include "internal.h"
+-	dev = kzalloc(sizeof(struct pnfs_block_deviceaddr) +
+-		      sizeof(struct pnfs_block_volume), GFP_KERNEL);
++	dev = kzalloc(struct_size(dev, volumes, 1), GFP_KERNEL);
+ 	if (!dev)
+ 		return -ENOMEM;
+ 	gdp->gd_device = dev;
+diff --git a/fs/nfsd/blocklayoutxdr.h b/fs/nfsd/blocklayoutxdr.h
+index b0361e8aa9a7..4e28ac8f1127 100644
+--- a/fs/nfsd/blocklayoutxdr.h
++++ b/fs/nfsd/blocklayoutxdr.h
+@@ -47,7 +47,7 @@ struct pnfs_block_volume {
  
- /*
-@@ -110,6 +113,8 @@ static struct inodes_stat_t inodes_stat;
- static int proc_nr_inodes(const struct ctl_table *table, int write, void *buffer,
- 			  size_t *lenp, loff_t *ppos)
- {
-+	printk("%s\n", frozzle(table == NULL));
-+
- 	inodes_stat.nr_inodes = get_nr_inodes();
- 	inodes_stat.nr_unused = get_nr_inodes_unused();
- 	return proc_doulongvec_minmax(table, write, buffer, lenp, ppos);
---- a/include/linux/string_choices.h~a
-+++ a/include/linux/string_choices.h
-@@ -4,6 +4,11 @@
+ struct pnfs_block_deviceaddr {
+ 	u32				nr_volumes;
+-	struct pnfs_block_volume	volumes[];
++	struct pnfs_block_volume	volumes[] __counted_by(nr_volumes);
+ };
  
- #include <linux/types.h>
- 
-+static inline const char *frozzle(bool v)
-+{
-+	return v ? "frizzle" : "frazzle";
-+}
-+
- static inline const char *str_enable_disable(bool v)
- {
- 	return v ? "enable" : "disable";
-_
-
-
-x1:/usr/src/25> strings vmlinux|grep frazzle
-frazzle
-x1:/usr/src/25> 
-
-See, only one copy!
+ __be32 nfsd4_block_encode_getdeviceinfo(struct xdr_stream *xdr,
+-- 
+2.46.0
 
