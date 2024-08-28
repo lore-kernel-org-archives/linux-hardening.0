@@ -1,71 +1,135 @@
-Received: from gentwo.org (gentwo.org [62.72.0.81])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2D961A38D5;
-	Wed, 28 Aug 2024 15:49:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.72.0.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A27D15749A;
+	Wed, 28 Aug 2024 20:25:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724860181; cv=none; b=s5cqwuNXhpIIm1uOnjW/ewEFtqPUsHG8UhabhTOrcxvTFqSr/6qaCynx4xNLG0a7NYCgBKALlssoPHKcU2EiyA6QcFGuotjZOFMTAcytNNM+qYX2ReGAfVA351Aq59715dIMqh6CvOS4dg9NrB6G6GinXs+hyV0i9roYv8Tz7Kg=
+	t=1724876711; cv=none; b=m17B+1aIL28JM+mFtXBb5rNOQNGstQWPUnX0PR3vLkFdt0NgkLGctRpPx7qbxLnvCZaOe5A0+JJfllfTy8riH/54y+/n31EjuYJMCq7ovpfuYrB0p+EStzsX6dfjm3ZTp8mJxD5tHQ/XS01EGlxmz7EaBibQP0jzxIZc/g/Iz1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724860181; c=relaxed/simple;
-	bh=6jKtNo+KDR/piWngR9TIg2HXPVoyQjTr0NtoJ9E7HQA=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=XIOQC6sPl/m2q3tdgLyVasb+D+C1Tn19MlT/UEi/NnqT9BsAZXjIAWH9H6jgu6HTPnFAs4EcVhIp4HHhU2nmSnHzctbXYy6VMHUfPpxsxpeR28tDrfAEDjyCpN/xn9yP23u1tAq5pTc9dxGam1/DYyCSQ9BPyCp/v4Xtciheb6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gentwo.org; spf=pass smtp.mailfrom=gentwo.org; dkim=pass (1024-bit key) header.d=gentwo.org header.i=@gentwo.org header.b=jM0oZuwD; arc=none smtp.client-ip=62.72.0.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gentwo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentwo.org
+	s=arc-20240116; t=1724876711; c=relaxed/simple;
+	bh=uBzK29h3Wh6e0YeFL9zV/5o5Il6973lCrLvdGTFVRkw=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=DLVsS6kEGWkvgRGPkDcHF19G+LWSbjveq9Z67LD3J+n9wagb4B5CXbipsqfmghDUR2Km6fz+SBdcshSXismYUrvi6iBL35PjnkDYib1Q262msCRh3+nWVmDt9CGFhwrfPXh9ixS2bRTe9jYi/BX6FAKUuybUg5BQxhz22teXB6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=kESqIMtE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=gentwo.org header.i=@gentwo.org header.b="jM0oZuwD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gentwo.org;
-	s=default; t=1724859449;
-	bh=6jKtNo+KDR/piWngR9TIg2HXPVoyQjTr0NtoJ9E7HQA=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=jM0oZuwDkTxthXgKyO7cbAbfFUAMVTPEMIDrbW6z7k43krUuQIO6vAPQvanQpqBpj
-	 zQi83aKD8IMEtL216eIG3JEK9l7krTmA/nqD35zzRayC/C3ERjIPwq3bI9m/pYiJSI
-	 LQbmM9i28oRhinMZ6ii34Wc9nOcK4v24ZgRBBwuk=
-Received: by gentwo.org (Postfix, from userid 1003)
-	id 06701404BB; Wed, 28 Aug 2024 08:37:29 -0700 (PDT)
-Received: from localhost (localhost [127.0.0.1])
-	by gentwo.org (Postfix) with ESMTP id 05102404BA;
-	Wed, 28 Aug 2024 08:37:29 -0700 (PDT)
-Date: Wed, 28 Aug 2024 08:37:28 -0700 (PDT)
-From: "Christoph Lameter (Ampere)" <cl@gentwo.org>
-To: Kees Cook <kees@kernel.org>
-cc: Vlastimil Babka <vbabka@suse.cz>, 
-    Linus Torvalds <torvalds@linux-foundation.org>, 
-    Pekka Enberg <penberg@kernel.org>, David Rientjes <rientjes@google.com>, 
-    Joonsoo Kim <iamjoonsoo.kim@lge.com>, 
-    Andrew Morton <akpm@linux-foundation.org>, 
-    Roman Gushchin <roman.gushchin@linux.dev>, 
-    Hyeonggon Yoo <42.hyeyoo@gmail.com>, 
-    "Gustavo A . R . Silva" <gustavoars@kernel.org>, 
-    Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
-    Jann Horn <jannh@google.com>, 
-    Przemek Kitszel <przemyslaw.kitszel@intel.com>, 
-    Marco Elver <elver@google.com>, linux-mm@kvack.org, 
-    Nathan Chancellor <nathan@kernel.org>, 
-    Nick Desaulniers <ndesaulniers@google.com>, linux-kernel@vger.kernel.org, 
-    llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3] slab: Introduce kmalloc_obj() and family
-In-Reply-To: <202408271709.31D322019@keescook>
-Message-ID: <81a4ed8c-7758-b295-e68b-ecc0372cc956@gentwo.org>
-References: <20240822231324.make.666-kees@kernel.org> <5c3852e6-4a6a-42d8-85ff-8c1605939454@suse.cz> <202408271709.31D322019@keescook>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="kESqIMtE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31981C4CEC0;
+	Wed, 28 Aug 2024 20:25:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1724876710;
+	bh=uBzK29h3Wh6e0YeFL9zV/5o5Il6973lCrLvdGTFVRkw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=kESqIMtEyaI6zQPj+eFkdX2qp6FfujEgsyeUTXA8nqaZVEDggX0J7y2PWqdjnzzdd
+	 DzbuD0A2ZUpJ1bnu0jyPugCnINMWbwSVcWndrHgYBhQ4mtp6i+P+khKFFJDtXv4Ovr
+	 Js/dyblXotDccUNnKDO5Ql519VNFNhYtsiVi8eTo=
+Date: Wed, 28 Aug 2024 13:25:09 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Hongbo Li <lihongbo22@huawei.com>
+Cc: <kees@kernel.org>, <andy@kernel.org>, <trondmy@kernel.org>,
+ <anna@kernel.org>, <gregkh@linuxfoundation.org>,
+ <linux-hardening@vger.kernel.org>, <linux-mm@kvack.org>,
+ <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH -next v3 1/3] lib/string_choices: Add
+ str_true_false()/str_false_true() helper
+Message-Id: <20240828132509.4447ff09665fa0d7b8020294@linux-foundation.org>
+In-Reply-To: <a6ea03c9-f92b-4faa-b924-8df58484fb13@huawei.com>
+References: <20240827024517.914100-1-lihongbo22@huawei.com>
+	<20240827024517.914100-2-lihongbo22@huawei.com>
+	<20240827164218.c45407bf2f2ef828975c1eff@linux-foundation.org>
+	<8d19aece-3a33-4667-8bcf-635a3a861d1d@huawei.com>
+	<20240827202204.b76c0510bf44cdfb6d3a74bd@linux-foundation.org>
+	<a6ea03c9-f92b-4faa-b924-8df58484fb13@huawei.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, 27 Aug 2024, Kees Cook wrote:
+On Wed, 28 Aug 2024 11:49:51 +0800 Hongbo Li <lihongbo22@huawei.com> wrote:
 
-> > Since that could be feasible to apply only if Linus ran that directly
-> > himself, including him now. Because doing it any other way would leave us
-> > semi-converted forever and not bring the full benefits?
->
-> Right -- I'd want to do a mass conversion and follow it up with any
-> remaining ones. There are a lot in the style of "return k*alloc(...)"
-> for example.
+> > Anything which is calling these functions is not performance-sensitive,
+> > so optimizing for space is preferred.  An out-of-line function which
+> > returns a const char * will achieve this?
+> I think this helper can achieve this. Because it is tiny enough, the 
+> compiler will handle this like #define macro (do the replacement) 
+> without allocating extra functional stack. On the contrary, if it is 
+> implemented as a non-inline function, it will cause extra functional 
+> stack when it was called every time. And it also should be implemented 
+> in a source file (.c file), not in header file(.h file).
 
-I believe Andrew has dealt with these issues in the past?
+No, my concern is that if, for example, str_high_low() gets used in 100
+.c files then we get 100 copies of the strings "high" and "low" in
+vmlinux.  Making str_high_low() uninlined would fix this.
+
+However a quick experiment tells me that the compiler and linker are
+indeed able to perform this cross-object-file optimization:
+
+--- a/fs/open.c~a
++++ a/fs/open.c
+@@ -34,6 +34,8 @@
+ #include <linux/mnt_idmapping.h>
+ #include <linux/filelock.h>
+ 
++#include <linux/string_choices.h>
++
+ #include "internal.h"
+ 
+ int do_truncate(struct mnt_idmap *idmap, struct dentry *dentry,
+@@ -42,6 +44,8 @@ int do_truncate(struct mnt_idmap *idmap,
+ 	int ret;
+ 	struct iattr newattrs;
+ 
++	printk("%s\n", frozzle(dentry == NULL));
++
+ 	/* Not pretty: "inode->i_size" shouldn't really be signed. But it is. */
+ 	if (length < 0)
+ 		return -EINVAL;
+--- a/fs/inode.c~a
++++ a/fs/inode.c
+@@ -22,6 +22,9 @@
+ #include <linux/iversion.h>
+ #include <linux/rw_hint.h>
+ #include <trace/events/writeback.h>
++
++#include <linux/string_helpers.h>
++
+ #include "internal.h"
+ 
+ /*
+@@ -110,6 +113,8 @@ static struct inodes_stat_t inodes_stat;
+ static int proc_nr_inodes(const struct ctl_table *table, int write, void *buffer,
+ 			  size_t *lenp, loff_t *ppos)
+ {
++	printk("%s\n", frozzle(table == NULL));
++
+ 	inodes_stat.nr_inodes = get_nr_inodes();
+ 	inodes_stat.nr_unused = get_nr_inodes_unused();
+ 	return proc_doulongvec_minmax(table, write, buffer, lenp, ppos);
+--- a/include/linux/string_choices.h~a
++++ a/include/linux/string_choices.h
+@@ -4,6 +4,11 @@
+ 
+ #include <linux/types.h>
+ 
++static inline const char *frozzle(bool v)
++{
++	return v ? "frizzle" : "frazzle";
++}
++
+ static inline const char *str_enable_disable(bool v)
+ {
+ 	return v ? "enable" : "disable";
+_
+
+
+x1:/usr/src/25> strings vmlinux|grep frazzle
+frazzle
+x1:/usr/src/25> 
+
+See, only one copy!
+
