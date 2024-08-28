@@ -1,90 +1,66 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFB68B67A;
-	Wed, 28 Aug 2024 01:48:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D08264A;
+	Wed, 28 Aug 2024 03:22:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724809714; cv=none; b=q8YyI5pQUvHayc99/gfArYMKG4e+iwrrKEtzjcDDbxHCmZoJrtdShEKtzymRLRvejVdO/X7l9K5lIgXzyU9JIm/pRrOTvBCvGWQ1FLZJEwPLEscvaRD4BvcoGQijoZF4q8jWmctM47Lrj0eflR4t5Df6e04dWnVMsTcqdA2zBKY=
+	t=1724815325; cv=none; b=HiihKJ0jQcblyyz/uDmhsH5Ofma3HhdjQryTO6Pu9ms3ITMAkqYNli+zfO8sYftLZ/BbrVES+GyeGRxE6jJCR2BEShYpoiI5Gpdj0xVfrD2NVoc8QOzhSu3PPt//lCXgd7FTBFtTwZbbha5BJOF7A+9JJQ2X+uaFw1oj1NgPBJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724809714; c=relaxed/simple;
-	bh=TQ8O4vpCHfr+3CcQJpPW9JrJQzHXZ5rxi4sVdjuTWoA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=dmXAXBVN0AIJjHInyop2TT897PWw8VWyA4xqwyvYI5f6obaAKcT70SgFO4xOg5BkQ7bzlhrE9StqmiZkg1Yc39YGzlFrBpeAYvI8wX0/BEGNKnuyt8CLhZWUhPoJvH0sosH//ifESH1Fy6SGewSSV53pMmNzxijiVT92F0ydFMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4WtnMT3mLBzpTqg;
-	Wed, 28 Aug 2024 09:46:45 +0800 (CST)
-Received: from dggpeml500022.china.huawei.com (unknown [7.185.36.66])
-	by mail.maildlp.com (Postfix) with ESMTPS id F3DC414035E;
-	Wed, 28 Aug 2024 09:48:26 +0800 (CST)
-Received: from [10.67.111.104] (10.67.111.104) by
- dggpeml500022.china.huawei.com (7.185.36.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Wed, 28 Aug 2024 09:48:21 +0800
-Message-ID: <8d19aece-3a33-4667-8bcf-635a3a861d1d@huawei.com>
-Date: Wed, 28 Aug 2024 09:48:21 +0800
+	s=arc-20240116; t=1724815325; c=relaxed/simple;
+	bh=fHlyJ35eZVClM0QqaCWAspv3ePgLlC9CUj+DFPnZ10o=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=E/S/8lY7vKjYxHpCZ9paXLPVV2fw7wGGvAzKM3POCVM7FoODsfmkPyRtbvEJ7MVL/tEatwAf0dFgLANoX1KyIdemcEZB8+4aqrXCOUhh43B1rYzXdYqvfndiZe71l9LEvOd38DDygLATQRV6p3RLREtoioAbSH2Q14DiVZDNwsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=VDLLivFs; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="VDLLivFs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C0E6C4AF0F;
+	Wed, 28 Aug 2024 03:22:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1724815324;
+	bh=fHlyJ35eZVClM0QqaCWAspv3ePgLlC9CUj+DFPnZ10o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=VDLLivFsVLVyHuaPTqL7XSbOAh8R1qdmYIA5oCA71qf1zrjWwgfwMDY0cOnLC+4Mo
+	 XrlkuR70OeBoI3b+2E1+afWj0JQkSEECIMSkxW2OZ/ZFNZqNVC85UMTQEQqUfRU5IZ
+	 iQ7lFQKzsg8G0p7QJNTua/Gv4Hs3mDBxgav9YqRs=
+Date: Tue, 27 Aug 2024 20:22:04 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Hongbo Li <lihongbo22@huawei.com>
+Cc: <kees@kernel.org>, <andy@kernel.org>, <trondmy@kernel.org>,
+ <anna@kernel.org>, <gregkh@linuxfoundation.org>,
+ <linux-hardening@vger.kernel.org>, <linux-mm@kvack.org>,
+ <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH -next v3 1/3] lib/string_choices: Add
+ str_true_false()/str_false_true() helper
+Message-Id: <20240827202204.b76c0510bf44cdfb6d3a74bd@linux-foundation.org>
+In-Reply-To: <8d19aece-3a33-4667-8bcf-635a3a861d1d@huawei.com>
+References: <20240827024517.914100-1-lihongbo22@huawei.com>
+	<20240827024517.914100-2-lihongbo22@huawei.com>
+	<20240827164218.c45407bf2f2ef828975c1eff@linux-foundation.org>
+	<8d19aece-3a33-4667-8bcf-635a3a861d1d@huawei.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH -next v3 1/3] lib/string_choices: Add
- str_true_false()/str_false_true() helper
-Content-Language: en-US
-To: Andrew Morton <akpm@linux-foundation.org>
-CC: <kees@kernel.org>, <andy@kernel.org>, <trondmy@kernel.org>,
-	<anna@kernel.org>, <gregkh@linuxfoundation.org>,
-	<linux-hardening@vger.kernel.org>, <linux-mm@kvack.org>,
-	<linux-nfs@vger.kernel.org>
-References: <20240827024517.914100-1-lihongbo22@huawei.com>
- <20240827024517.914100-2-lihongbo22@huawei.com>
- <20240827164218.c45407bf2f2ef828975c1eff@linux-foundation.org>
-From: Hongbo Li <lihongbo22@huawei.com>
-In-Reply-To: <20240827164218.c45407bf2f2ef828975c1eff@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggpeml500022.china.huawei.com (7.185.36.66)
 
+On Wed, 28 Aug 2024 09:48:21 +0800 Hongbo Li <lihongbo22@huawei.com> wrote:
 
+> > This might result in copies of the strings "true" and "false" being
+> > generated for every .c file which uses this function, resulting in
+> > unnecessary bloat.
+> > 
+> > It's possible that the compiler/linker can eliminate this duplication.
+> > If not, I suggest that every function in string_choices.h be uninlined.
+> The inline function is in header file, it will cause code expansion. It 
+> should avoid the the copies of the strings.
 
-On 2024/8/28 7:42, Andrew Morton wrote:
-> On Tue, 27 Aug 2024 10:45:15 +0800 Hongbo Li <lihongbo22@huawei.com> wrote:
-> 
->> Add str_true_false()/str_false_true() helper to return "true" or
->> "false" string literal.
->>
->> ...
->>
->> --- a/include/linux/string_choices.h
->> +++ b/include/linux/string_choices.h
->> @@ -48,6 +48,12 @@ static inline const char *str_up_down(bool v)
->>   }
->>   #define str_down_up(v)		str_up_down(!(v))
->>   
->> +static inline const char *str_true_false(bool v)
->> +{
->> +	return v ? "true" : "false";
->> +}
->> +#define str_false_true(v)		str_true_false(!(v))
->> +
->>   /**
->>    * str_plural - Return the simple pluralization based on English counts
->>    * @num: Number used for deciding pluralization
-> 
-> This might result in copies of the strings "true" and "false" being
-> generated for every .c file which uses this function, resulting in
-> unnecessary bloat.
-> 
-> It's possible that the compiler/linker can eliminate this duplication.
-> If not, I suggest that every function in string_choices.h be uninlined.
-The inline function is in header file, it will cause code expansion. It 
-should avoid the the copies of the strings.
+Sorry, I don't understand your reply.
 
-Thanks,
-Hongbo
+Anything which is calling these functions is not performance-sensitive,
+so optimizing for space is preferred.  An out-of-line function which
+returns a const char * will achieve this?
