@@ -1,112 +1,152 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E37341AED2B;
-	Wed, 28 Aug 2024 23:38:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 596101C6B4
+	for <linux-hardening@vger.kernel.org>; Thu, 29 Aug 2024 00:00:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724888306; cv=none; b=t9/wCx4jQY9jFccUB6KWbJvexA6frHp2jVdBcvU9in5hIMHp9jp+ZuR+YdryZ7+uwzC+WqTzeWP3AIzXkgu1rjEFKoomxa8c6NtScfwV2PWf9yDbmhkTSvCgtyTrble291mG1YwWAWtnHULsZvZgq38p1UiE5jpOf7kZ/s8zQmE=
+	t=1724889638; cv=none; b=MF6aZLBBTJrFmJbL1F/zY9N6b5c+Ol8SU8zUAz8Gfa3FdCAI0DetFVvWqoSSX59MesXGuYQWHc713/ccI1/RjpifXDsN1P8pT0umixTwMOGrwBm5oZCAinf6XYtkf062An0AwM3kg+dRb3ciuKr8m0cu5tt3cuWnUsnI/XZpa2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724888306; c=relaxed/simple;
-	bh=KXNRip9T1NpjH/FC1tS186H85OnP7eRtBnItU+WbbKo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JiN4VvuQMsqJ/fNsO4C9Msh0HxP8vasN/pIphCRlSfkoUbE8KebQUUxqLWbh6QsWbQdbIpQ3XC3dwatQhsk/rnnB3EcwP/gW3SSpgwD2yzQIRmcHQaUTcQLiLfzofBkD2HdiKcFApaS6M6GxuC9In+G9U9Y7/PkamxGDJ6dM774=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YFWixOpi; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1724889638; c=relaxed/simple;
+	bh=HMYfC/hI9S7Sen9hqERBXwkm2HY3AHiQThzMVQy+2nA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DC9b4wA937UpZxP4jnuXQNoDKdbTjxguSlVCTUbG+D2vhvwCp8qwldO0cTNGuPnp8eADtI/XXBbAq9sQNvnPiORYk5PafzGTqvKcI3eQROhCjF2Y1UI0XNec8QzMRVdk1JdnMA4NOQWwOtqn1mLAtbHOKFQVD91PuHQhFoYxNnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=xFvgCuNI; arc=none smtp.client-ip=35.89.44.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YFWixOpi"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-428141be2ddso349505e9.2;
-        Wed, 28 Aug 2024 16:38:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724888303; x=1725493103; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=IB1r80w0tSniiEQsoRZPgz9PdJTE/Shx5Zcwt2Wg6DQ=;
-        b=YFWixOpie6vhAhSVeJcNECxK5KoW+iUyULiXXdw5tnuNgKIC8Nt/t/88D036Ob6FsE
-         DvkaISAyocH2ILgNbhVUpk4NWjdeVik6voz4GDHizHQwRKrjlmHoVv1XJ9guPjtFnHXM
-         HXYJyTbne+lQ33wqR+OYyMpJbk/JQN+jn6EhJFxxnTrWgMLdPlUlu4L493R7rbOwL7li
-         aRPjsp11D1GtnjoemdvMuMGSyXZ0ZhKxjV2y90ks2OfuBZaCQ9RKX0ftoE4SgHCvZfzN
-         Ni6aSOgj/vT/nUUrf+OJ3BFWw6p/KgmQAGlpZxsOLf/hbClqe4MFliRpxvWIYuRPFeTA
-         bp2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724888303; x=1725493103;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IB1r80w0tSniiEQsoRZPgz9PdJTE/Shx5Zcwt2Wg6DQ=;
-        b=PlHFuU25Vd3drbCSH4CWhZfZ9lZ+oM5JeFgVV4dKcUyOmRiJ/lvbPif9iCEA/0cj/F
-         uFFW1yHZmuOpgMx/VlXrnZ8zd4UVaRxqLwu3JKlF4ua/mVCygPd6O7EM/cBklUOupviM
-         sad0JISP/KGDNnPNw0Z4FzZq2b4GfjgeZ5TosPnfFrmmPhEzZJKloVCgZqBwchHM6b/J
-         pNbNnpJCbl1S6juJi6T2vQR8b1LEj/8rLFVrJR69QRh32q8QPJp0e2pJ6SwBajfk7XeH
-         dmkulU0NYZei+JNmU1APWvB6RiMlxHOVkhl3vTirgLkrZLAVfcdt4wmPjqaRcT7Gvjbb
-         +KSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWPMDbQNQv3Fp/q5Pz3v+p3/vVXOix4RMBUwzzVXLQkQCBa/8UdTpAM2KN98inJSowW7aQm1+XqpNhu56oY4t0=@vger.kernel.org, AJvYcCXrn1H7cBxdkwgVl5PpHT/wGv+XPdtW6ZyhFuC5EFoxWk6Nl1ZFewVx/wrhSROXGm6ZhRTZz7zv5W4KGLrN4Y2g@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXX6g1pJXvfIWiKktUMT3WXuufc74Wgd70HCkCPrmuoeO68m/e
-	PGHtgQiNFCl8umHQVYbs+lL3oA2ykqvs7vQmrj5TDLS5oWslq/NM
-X-Google-Smtp-Source: AGHT+IGE1Tr+5K8rbiq3aX2JG+RGnBONvXmau7cJ8JCt6fwWWs0mojGwXLpROhTgTUD7IBRMv3s2Qg==
-X-Received: by 2002:a05:600c:1389:b0:426:6326:4cec with SMTP id 5b1f17b1804b1-42bb01e6befmr7932745e9.29.1724888302650;
-        Wed, 28 Aug 2024 16:38:22 -0700 (PDT)
-Received: from PC-PEDRO-ARCH ([2001:8a0:7862:ea00:1d36:5f53:3f57:14ad])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42ba639da86sm33548165e9.20.2024.08.28.16.38.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Aug 2024 16:38:22 -0700 (PDT)
-Date: Thu, 29 Aug 2024 00:38:19 +0100
-From: Pedro Falcato <pedro.falcato@gmail.com>
-To: jeffxu@chromium.org
-Cc: akpm@linux-foundation.org, linux-kselftest@vger.kernel.org, 
-	linux-mm@kvack.org, linux-hardening@vger.kernel.org, rientjes@google.com, 
-	keescook@chromium.org, Liam.Howlett@oracle.com, vbabka@suse.cz, 
-	lorenzo.stoakes@oracle.com
-Subject: Re: [PATCH v1 1/2] mseal: fix mmap(FIXED) error code.
-Message-ID: <jxov546uro5lffibw5asff3m25pfnondbp3nrqc3fde322h3on@ypkdkju4xaho>
-References: <20240828225522.684774-1-jeffxu@chromium.org>
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="xFvgCuNI"
+Received: from eig-obgw-6003a.ext.cloudfilter.net ([10.0.30.151])
+	by cmsmtp with ESMTPS
+	id jLiIsDbVDumtXjSZ3sj5Fm; Wed, 28 Aug 2024 23:59:01 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id jSZ2sC9nvV2ivjSZ2s5fAz; Wed, 28 Aug 2024 23:59:00 +0000
+X-Authority-Analysis: v=2.4 cv=OLns3jaB c=1 sm=1 tr=0 ts=66cfb9c4
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=frY+GlAHrI6frpeK1MvySw==:17
+ a=IkcTkHD0fZMA:10 a=yoJbH4e0A30A:10 a=7T7KSl7uo7wA:10 a=ZI_cG6RJAAAA:8
+ a=VwQbUJbxAAAA:8 a=G7Ig5-h-x50up4Ig-zsA:9 a=QEXdDO2ut3YA:10
+ a=CiASUvFRIoiJKylo2i9u:22 a=AjGcO6oz07-iQ99wixmX:22 a=Xt_RvD8W3m28Mn_h3AK8:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=gwdyghKD5k5c4CmERZykpZYJC0ag0Sw3dcYPpvLrdIM=; b=xFvgCuNIWC/Sg1fvGEywaCv1mi
+	iYaQCsEvOtKAzDiYAKtDkWBpKYp7CnJ4+4d4TTDo4I+alED8eaP9S2hrhlI4Ovgw+Snq40TPCLCy8
+	nBv2gnEtiXixU4AfjYjLRo6YEqkRRr3X0WJtVl9beaU/rCH4iG+UOsWy5rLMCGjiQC0mX+k5/9W2u
+	tLQoeq7Es0zmm/qtkcdXxPX5BvDOucjJvQM+cE1J+TKrAq/w6Fm3USeZ0roXQvd87rnzjblrpOsM5
+	5XFMQteyzyX2aZG733D7NRsmHE/g8vU/PPeslFlm/bqOz82QHa/956dNNgyF/NPXah5IZnNA4IELL
+	bm7NNutw==;
+Received: from [201.172.173.139] (port=35262 helo=[192.168.15.5])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1sjSZ0-003R6C-0Z;
+	Wed, 28 Aug 2024 18:58:58 -0500
+Message-ID: <bde519c9-c95d-4275-a89b-50e628446206@embeddedor.com>
+Date: Wed, 28 Aug 2024 17:58:56 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240828225522.684774-1-jeffxu@chromium.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] NFSD: Annotate struct pnfs_block_deviceaddr with
+ __counted_by()
+To: Thorsten Blum <thorsten.blum@toblux.com>, chuck.lever@oracle.com,
+ jlayton@kernel.org, neilb@suse.de, okorniev@redhat.com, Dai.Ngo@oracle.com,
+ tom@talpey.com, kees@kernel.org, gustavoars@kernel.org
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20240828214254.2407-2-thorsten.blum@toblux.com>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20240828214254.2407-2-thorsten.blum@toblux.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.172.173.139
+X-Source-L: No
+X-Exim-ID: 1sjSZ0-003R6C-0Z
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.15.5]) [201.172.173.139]:35262
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfCgJoLPGT/wrREBsy/5Q3/2eSHwEiGlhaXmgZadApDc/Co9pUuBouCIRqSBfLf2yIhR/5w2JPwjCS+FarhmUY6pQpkUjtpyGkZeFJf2ygVkVwk2t21QJ
+ 9WY/aCVN+2TRYz9Xi8K6A+VEZ8z5aTlGtrF28Psv8tXj+aUvShqMt0UQyQ8lnoPvDwrnO4gzo9NAvKffzBv5HPPt3U6XjhRCcoPTFwJK+s+SJiJknF3XZSO6
 
-+CC vma reviewers
-On Wed, Aug 28, 2024 at 10:55:21PM GMT, jeffxu@chromium.org wrote:
-> From: Jeff Xu <jeffxu@chromium.org>
+
+
+On 28/08/24 15:42, Thorsten Blum wrote:
+> Add the __counted_by compiler attribute to the flexible array member
+> volumes to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
+> CONFIG_FORTIFY_SOURCE.
 > 
-> mmap(MAP_FIXED) should return EPERM when memory is sealed.
+> Use struct_size() instead of manually calculating the number of bytes to
+> allocate for a pnfs_block_deviceaddr with a single volume.
 > 
-> Fixes: 4205a39e06da ("mm/munmap: replace can_modify_mm with can_modify_vma")
+> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
 
-Thank you for the patch!
-This Fixes: is wrong, the bug was added during Liam's rebasing of his munmap patch
-set on mine.
+Looks good --`nr_volumes` is updated just before accessing `volumes[]`.
 
-> Signed-off-by: Jeff Xu <jeffxu@chromium.org>
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+
+Thanks
+--
+Gustavo
+
 > ---
->  mm/mmap.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+>   fs/nfsd/blocklayout.c    | 6 ++----
+>   fs/nfsd/blocklayoutxdr.h | 2 +-
+>   2 files changed, 3 insertions(+), 5 deletions(-)
 > 
-> diff --git a/mm/mmap.c b/mm/mmap.c
-> index 80d70ed099cf..0cd0c0ef03c7 100644
-> --- a/mm/mmap.c
-> +++ b/mm/mmap.c
-> @@ -1386,7 +1386,10 @@ unsigned long mmap_region(struct file *file, unsigned long addr,
->  		mt_on_stack(mt_detach);
->  		mas_init(&mas_detach, &mt_detach, /* addr = */ 0);
->  		/* Prepare to unmap any existing mapping in the area */
-> -		if (vms_gather_munmap_vmas(&vms, &mas_detach))
-> +		error = vms_gather_munmap_vmas(&vms, &mas_detach);
-> +		if (error == -EPERM)
-> +			return -EPERM;
-
-Not sure if it makes sense to special case this. We should probably deal with this inside
-vms_gather_munmap_vmas and just pass through the error we get.
-
-Otherwise LGTM. Liam?
-
-(we should also squash this into the offending commit)
-
--- 
-Pedro
+> diff --git a/fs/nfsd/blocklayout.c b/fs/nfsd/blocklayout.c
+> index 3c040c81c77d..08a20e5bcf7f 100644
+> --- a/fs/nfsd/blocklayout.c
+> +++ b/fs/nfsd/blocklayout.c
+> @@ -147,8 +147,7 @@ nfsd4_block_get_device_info_simple(struct super_block *sb,
+>   	struct pnfs_block_deviceaddr *dev;
+>   	struct pnfs_block_volume *b;
+>   
+> -	dev = kzalloc(sizeof(struct pnfs_block_deviceaddr) +
+> -		      sizeof(struct pnfs_block_volume), GFP_KERNEL);
+> +	dev = kzalloc(struct_size(dev, volumes, 1), GFP_KERNEL);
+>   	if (!dev)
+>   		return -ENOMEM;
+>   	gdp->gd_device = dev;
+> @@ -255,8 +254,7 @@ nfsd4_block_get_device_info_scsi(struct super_block *sb,
+>   	const struct pr_ops *ops;
+>   	int ret;
+>   
+> -	dev = kzalloc(sizeof(struct pnfs_block_deviceaddr) +
+> -		      sizeof(struct pnfs_block_volume), GFP_KERNEL);
+> +	dev = kzalloc(struct_size(dev, volumes, 1), GFP_KERNEL);
+>   	if (!dev)
+>   		return -ENOMEM;
+>   	gdp->gd_device = dev;
+> diff --git a/fs/nfsd/blocklayoutxdr.h b/fs/nfsd/blocklayoutxdr.h
+> index b0361e8aa9a7..4e28ac8f1127 100644
+> --- a/fs/nfsd/blocklayoutxdr.h
+> +++ b/fs/nfsd/blocklayoutxdr.h
+> @@ -47,7 +47,7 @@ struct pnfs_block_volume {
+>   
+>   struct pnfs_block_deviceaddr {
+>   	u32				nr_volumes;
+> -	struct pnfs_block_volume	volumes[];
+> +	struct pnfs_block_volume	volumes[] __counted_by(nr_volumes);
+>   };
+>   
+>   __be32 nfsd4_block_encode_getdeviceinfo(struct xdr_stream *xdr,
