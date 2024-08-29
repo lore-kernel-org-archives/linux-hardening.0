@@ -1,52 +1,52 @@
-Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com [209.85.160.46])
+Received: from mail-oa1-f51.google.com (mail-oa1-f51.google.com [209.85.160.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE8121BA27A
-	for <linux-hardening@vger.kernel.org>; Thu, 29 Aug 2024 19:40:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 695E81B5EDB
+	for <linux-hardening@vger.kernel.org>; Thu, 29 Aug 2024 19:54:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724960458; cv=none; b=fUrL+idwVhBJJZqtmS8IrR2wDCLRwAKxV6F7rZ9/iwPib0+hnUYdRgsTBiK4DA39jF8vNH+2kxOV8XI/HReJUTsuufwCl5zmmvCeAuVG0VI5cA1Ne8U2/awG/XU3hKMftEHy7lwdFS3h1tpLwyPBOH+y5O0Xi1x+7PsOlNBXPSI=
+	t=1724961263; cv=none; b=Izvkzi8HHDUTHoV5wu1shPROAmkh+BiCI7ZP6LzkGdGBGTa386P357eZ+l874afrKcb3WpQank3HertafSvnV3wuL2uzEh0gzsroImahkVlic+I4AXK07LFiqapb0ViURdvssGt2ZX8Bbp//zNSWEfqgItaqfujBOpulraC7Bro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724960458; c=relaxed/simple;
-	bh=qeP7+7zu3T/79b4rxXTTPMEgHAIHkf2ZJ7OCPpbIZfY=;
+	s=arc-20240116; t=1724961263; c=relaxed/simple;
+	bh=guVxu9HxEDSLtaNB6zapABbY8BPidXJ8qvB9HSCs1b4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Hljw9zorl0pfx2wdZoAIjLsYu+RKrDwAzjP/ZEPJLiItFRFa6QCuimSmtbvBIW5yxmsslXzw4AxoIKRjUQeEm+S5aNmDOdwWhtLoDzJdv7W/tZnlaI8oGayL1nZp++y4ZfJbUdx2mmcRZTQVEydXOa+MomoMmSm2vfJXCvcmdGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=dTM9ZmZw; arc=none smtp.client-ip=209.85.160.46
+	 To:Cc:Content-Type; b=aD7jjjp3r4J3X3VdutU9zJeARIwuJKffMMzv5fcxjgBA3NviaKX6Pq+1zDoInNLCITbi6GowIoQddZkLa2IHeCqzckFee+Ea+9lDgYTKKK1G+/CsGituM91JaBzA+sBJqmzgwuHKsoE1r8CA/V4cqy8aVUQvhtgGfoMkVRrZJV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Bk+JaODB; arc=none smtp.client-ip=209.85.160.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dTM9ZmZw"
-Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-277abd2df3aso14317fac.2
-        for <linux-hardening@vger.kernel.org>; Thu, 29 Aug 2024 12:40:56 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Bk+JaODB"
+Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-26456710cfdso80376fac.0
+        for <linux-hardening@vger.kernel.org>; Thu, 29 Aug 2024 12:54:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1724960456; x=1725565256; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1724961261; x=1725566061; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=qeP7+7zu3T/79b4rxXTTPMEgHAIHkf2ZJ7OCPpbIZfY=;
-        b=dTM9ZmZwmcy63o+MDio8c2X3BNgWQ1wll/BOSL4XDXXAzSpOLpAzXGcO+skb0Vzy0K
-         aV8N7iuFUHgVGxxxZdOAhxcRz3ONy9Dks3Xy+YvN2q1EyNEvg652QMjOV9T4fU1v4iAh
-         +Sn1XgFgJFA6u7U7wY85sXwnVOrLY+kGmNCb4=
+        bh=guVxu9HxEDSLtaNB6zapABbY8BPidXJ8qvB9HSCs1b4=;
+        b=Bk+JaODB/0OHRkcroTeTsHNL5sOjGHKhXIqPuyHkj0m8ORBiRd03qZyTS/HiGI0e4x
+         H9Olr/h5SLMWEimLzz8M48h20/QKV4GTA1NkAd0zG4fbLC9fI3nF9UlwzXKttubxzsVQ
+         0I86QweIed+z6C8Yx30z7rr8aYzjre7SOtLSM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724960456; x=1725565256;
+        d=1e100.net; s=20230601; t=1724961261; x=1725566061;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=qeP7+7zu3T/79b4rxXTTPMEgHAIHkf2ZJ7OCPpbIZfY=;
-        b=puAgmecrLfp93tm37SQ+atMgC20BqKiiSjgOQpi5X5NgYuhKE+jeHQFnbAUj0WUqib
-         gOju18K3qYMamYEN2S43aKCbKqix0o2XQ5cvLC3q3r4CncQ4hUP+pI8ZsIU9h8lXfc4k
-         u0BqKGnztye+R1xOpotGzN/S5FijEuMKVtPjugc85zdvYz7pQxpLkWwX+YnKYDthI1AI
-         bP4MiWyXUtXULr9i3uX9ijz6D/Pszn1gRtaZkR9WL4PbXEYqNidoW9V830GHwZE9rbbT
-         vZOsu2rJdMTB5WMyMOEN4Ycr8IsfP83KdwVD1zmhEWVAwzdFmasfhB8srPJmxoEN5lTs
-         X9FQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUXTFiKZtETSzu6mvQuJBVWL/O9IEBenZoUSuNA4yhdsW8r+2cKxlZl5COkKjwRnHpOBaMw7fntSH5THUBzPLk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxaewhtUPKKU40V4y6+aD4UBQHO0NEu0K2TgibKwJZloJ6lEYmb
-	LbRbTpfmfgwvOUbKk4sBzPdgRw2dDtM2h65VfRoQ7BxjD40ZLofb05yRHodcaS0Aa6mpVfjtLnM
-	W5zfg84nUwhGhpFBy/Qwatq4IM4xXYzk8HxFf
-X-Google-Smtp-Source: AGHT+IHrhliVtgaPcNwC1VORZquYe127iapzTLMkWCuU1MGSlwiVFEIhF+6O72+5oERawbaaGrKqSENthMbSR8WELjA=
-X-Received: by 2002:a05:6870:8a26:b0:26f:de62:7d8a with SMTP id
- 586e51a60fabf-277903bdf4cmr2113653fac.10.1724960455702; Thu, 29 Aug 2024
- 12:40:55 -0700 (PDT)
+        bh=guVxu9HxEDSLtaNB6zapABbY8BPidXJ8qvB9HSCs1b4=;
+        b=Og3E3lLymwtTH6gGMtu0pk5QCGasNiV1+7Fo5BEetn0qJTQjuaHZMO4lz7ICbpq21W
+         2WBoYixxrXtl5YmSKYuWS6CcIGVUk9EuWt2barCISozIjJSD9hcvjRZ+Y/mD9lw+jGSv
+         e0VF8tw8Yuk9QoIPh/ZPJIHyspyNVKE8OTKuYjQSjpXpKxEBUsyBVTMD3mEr4ThXKlke
+         esnJFv+adR/h4HASb8vPMtl4OQAlfCTlNtfpvBH/0V/SX/1Pc+eygejVOF1dJhWl++i8
+         2RIrbPP94xtL1wMO3KB3VDnCp18eFIFVPALclPRykTUzE9CsgbGnYZteLc0Ex2Iouv4M
+         saPg==
+X-Forwarded-Encrypted: i=1; AJvYcCVkGNNdOmn0WfBWnGSRJs0R+YvqtK/B0bbaoCkTfApU1O1pWmoSDXLgV/qnUXLJTU2+ZamioRi0vumNq0h0Kjg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxF9Dz9gPBWWKnU5hJPzukbB6AId3tIey3GUecfTnTjcv6aeURf
+	IN6UmOaHvHni4PrWW/v1L4AEXCMMTyh7d49sqayyD4KJ8MR8lNoUwGpt5gLVxuBDJo5R+Vfsruo
+	Dh8KBr9PTfFtmUrdxYIJ4d4v0PTVFhCalAABYh+qvJhLxEW4=
+X-Google-Smtp-Source: AGHT+IHRaSJMxiiEHHnyyPMW+E6Zchvcl2ZBtiZzi3ND4sx5NZsr8zR9UFo54QC6zM0irr40VOAnC+AYh5/ejQvMlDw=
+X-Received: by 2002:a05:6870:fb89:b0:260:ccfd:1eff with SMTP id
+ 586e51a60fabf-2779031ccd4mr2354479fac.7.1724961261302; Thu, 29 Aug 2024
+ 12:54:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -54,36 +54,47 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20240828225522.684774-1-jeffxu@chromium.org> <20240828225522.684774-2-jeffxu@chromium.org>
- <293ce8ff-10c3-46b8-a56b-a1bddc7aa37c@sirena.org.uk>
-In-Reply-To: <293ce8ff-10c3-46b8-a56b-a1bddc7aa37c@sirena.org.uk>
+ <CABi2SkW9qEOx1FAcWeBLx_EA8LT2V_U6OS1GmEP433oA6t35pw@mail.gmail.com>
+ <097a3458-0126-48e3-ba0d-d7dc7b9069d2@lucifer.local> <CABi2SkVe6Y4xypBw0n8QbqKJgsfy9YRNJWvBZ3bjTa=-Z5Zn2g@mail.gmail.com>
+ <5a312d38-4591-47b1-9a6c-4a7242dbe20d@lucifer.local>
+In-Reply-To: <5a312d38-4591-47b1-9a6c-4a7242dbe20d@lucifer.local>
 From: Jeff Xu <jeffxu@chromium.org>
-Date: Thu, 29 Aug 2024 12:40:44 -0700
-Message-ID: <CABi2SkXHqbOJM_A=m2n2AzH-1DY2NQPOVn66A9QYyhYCxLeQZA@mail.gmail.com>
+Date: Thu, 29 Aug 2024 12:54:09 -0700
+Message-ID: <CABi2SkXDVgiUeC1StbfggvtiYG_kDxQJsZPpDw-NDPNv6-dwmg@mail.gmail.com>
 Subject: Re: [PATCH v1 2/2] selftests/mm: mseal_test add more tests
-To: Mark Brown <broonie@kernel.org>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 Cc: akpm@linux-foundation.org, linux-kselftest@vger.kernel.org, 
 	linux-mm@kvack.org, linux-hardening@vger.kernel.org, pedro.falcato@gmail.com, 
-	rientjes@google.com, keescook@chromium.org
+	rientjes@google.com, keescook@chromium.org, 
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Mark
+Hi Lorenzo
 
-On Thu, Aug 29, 2024 at 9:16=E2=80=AFAM Mark Brown <broonie@kernel.org> wro=
-te:
->
-> On Wed, Aug 28, 2024 at 10:55:22PM +0000, jeffxu@chromium.org wrote:
->
-> > Add more testcases and increase test coverage, e.g. add
-> > get_vma_size to check VMA size and prot bits.
->
-> I think this needs to be split into multiple patches, for example the
-> new test cases done separately to the additions to the existing ones,
-> possibly as multiple patches (eg, should the size changes be split from
-> the prot ones?).
-The size check should go with prot., because it is part of verifying
-the sealed VMAs.
-I will split the patch into updating existing tests and adding new tests.
+On Thu, Aug 29, 2024 at 8:44=E2=80=AFAM Lorenzo Stoakes
+<lorenzo.stoakes@oracle.com> wrote:
+
+> > >
+> > > Also, this is a really unusual way to send a series - why is this a 2=
+/2 in
+> > > reply to the 1/2 and no cover letter? Why is this change totally unre=
+lated
+> > > to the other patch?
+> > >
+1/2 has a fix that 2/2 is depending on. That is the reason they are togethe=
+r.
+
+> > > Can you send this as a separate patch, preferably as an RFC so we can
+> > > ensure that we all agree on how mseal() should behave?
+> > >
+It is not an RFC because it doesn't change any semanic to mseal. The
+updated test will pass on linux main as well as 6.10. The increased
+coverage will help to prevent future regression, i.e. during
+refactoring.
+
+I will add a cover letter, split the tests and add more comments to
+help the review.
 
 Thanks
 -Jeff
