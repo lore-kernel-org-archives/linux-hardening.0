@@ -1,160 +1,160 @@
-Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEAF41AC8AB
-	for <linux-hardening@vger.kernel.org>; Thu, 29 Aug 2024 15:30:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6070B1B372F
+	for <linux-hardening@vger.kernel.org>; Thu, 29 Aug 2024 15:39:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724945427; cv=none; b=t0H9JVcMiMmbWpVc7CrCjhGasnyCypH/i4q6CAs9PxLdEz1QZRP6Hnf7zijlDQk6Pd7A0m3fb9sZA0ActvWRdQ/w2uqmSQs9QqyF6Bpuvja27upzEqalud4FFQe0ASA/1nwDhWTdqjOLcPpxEHutmRFtFVqcZiyneYuPXc2NRIE=
+	t=1724945985; cv=none; b=q31H2/m1/pQu2uUrcnjCfFkrKJe6/rQfM46RZYb4pVeGUJeBKpFkpe+l5qsSnA88tKtrDlytnH54O+CcpIyp97wRFqx7R6PKJW9TXETNJEKjalwLskbJ5oF09PQc4wNxO6Veo3oibminHXbj3WeHtfkObo3cyhulSfV3Ag/6uqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724945427; c=relaxed/simple;
-	bh=ah5xq0XzWgR3wqwzNeXrdDAaDaOFMa4cDEh8tekvkco=;
+	s=arc-20240116; t=1724945985; c=relaxed/simple;
+	bh=v3OcNkfLnfG25Gk8ZY6Wtd6ik89Ax7YMmcRQdVTMIFo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Q7KmSvU9sybvO24ANFSJDXBAvlY0bIJFTJW8gwY24MTHROJ7l82BJKI9cMK7bX778v3kTRlSAl+o6VFsOaTW3DLbFXr45v5G1QVga3wOnldqYJANrGeNddw6NPhiiP2J46xhv993EDGRHfTKqh2k1Jtxv2sIMGApO/LaOoR7+X0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Gxth0b/4; arc=none smtp.client-ip=209.85.167.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	 To:Cc:Content-Type; b=JBq3AyiqKX1Q+LDJGFtKyg7M1VVrpo5cxKGVoiqOEUsfI4oep3fn1g7jnknf4U4yFP8xtW3OXgrWsGQ0KnMwaBZ/qB39gOoDQ2nYOZYQj13zruuUM+vWs89sArrOTCF0ppEwctuoaG3xpiVevR2jnRODD3NdqhMhr+36Cr0qYDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=B7O+dWA/; arc=none smtp.client-ip=209.85.160.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Gxth0b/4"
-Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-3dc39305ed6so59436b6e.2
-        for <linux-hardening@vger.kernel.org>; Thu, 29 Aug 2024 08:30:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B7O+dWA/"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-4567deb9f9dso281721cf.1
+        for <linux-hardening@vger.kernel.org>; Thu, 29 Aug 2024 08:39:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1724945424; x=1725550224; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1724945982; x=1725550782; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=GfirTw1c0aIcYb4weoxcT30+5e5JZv0jxRwuMnAz9/A=;
-        b=Gxth0b/4021iOeaKj1n0nQpVgr+Sgm7FXvOCMe9NhsRM8dRvlrl7IRiUnZkSOPzMfc
-         lkaPudCPNmv9MaJOWtJbBx/zPtt+iWQI7nhbJbl8SswguqA1pMQpbedzFJBcqsMl9FhP
-         qC7Al9NZe5IHiDUAtqLM4hjuTrXCn63aqPan4=
+        bh=8D74+30M1YnAgX4+r14pJtBtSFBM+4hW1bBlbUxfhno=;
+        b=B7O+dWA/gQbAaP8YodfBHBNYSYN6yTUEYmA2CQ5hGNVUQfLL1oMn+VuWJZxn6RXYX9
+         jut9PE2n6HtM3hlu1FLJsL+M4/fSDRIRwn53UvJBTq7FJevnr+f5n9AsOOoNV5psD2Yy
+         ewHvuL8KDMUCXwJ/FhovsNGWnvoW5pGJNrU+0jB2RnTJ4jfEPPbZTIQR1aFnFyE+Mv13
+         8HTSeZXI/IywlepxgL6SktJkQI8RveDZo5YeJOcgaCnVnNfsuVuRxIROVJNaRroh0MXs
+         6fDazr9wrKRDMO17gbXfPuxiCi1eFsU5dz0XpK3NO/4dPC2+nD3pH+gHOAflTomAYp9O
+         qcjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724945424; x=1725550224;
+        d=1e100.net; s=20230601; t=1724945982; x=1725550782;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=GfirTw1c0aIcYb4weoxcT30+5e5JZv0jxRwuMnAz9/A=;
-        b=VRACbUXrnbGDSakF4cmObiSkxx8zM1zzbqMWhFuwY08ettZv5IHB05RZ/OTWvZINYn
-         rR3oGPBQYnFnE6bB2z3A9+/nTcajx3P+SSAyh4pN6zdK50AYnEVFHoZRTwmF9/JdnHwW
-         go3yBmSZTT8aw+buSWz/6hvjWBhG5rE0gXcsOSOjrtdabvDxjFexFWt7yUHAmYFKeFqq
-         H3/R65uAVjfomPX1DsygAola6BTGl3dyE8Y9FgBMBG8Le3EbCrzXt9hAN6QPcAfg9W3k
-         U82vNbSk8UtCPbAF/ONU/RTKoOwo8PckffIiuJqTlP1XnSZV2djCStSNfSC/cXh/u9Et
-         H0Gg==
-X-Forwarded-Encrypted: i=1; AJvYcCWnb2dnCWCpNB6zHAQ/ClEZbkV8djJq58RXT8xmHextBNzXZd7GurbDJGsVgMMQPk/OoeLuYo/4lKanZ9Oe/dg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFkASBOAuRQe2glUT0pSmHcTObifophdQBtBFXbdeGMNRRqonW
-	eBtrqNuycoxTe9KXJDmJhHVkQfxb18Xmtgq4LORM9Z1YAm9zFidQK6p5xeYZMHkAPMQjZL2po3o
-	jmNqM83vlcF7huQGTvNIe8hEuVZmSP0UaaJ0W
-X-Google-Smtp-Source: AGHT+IGEUawEh3mfQp6LCKeSaw+tM4JS/Jg17r0MLTtyYvI0UVg00MKhSKv4na3gy4ai0yuC2fEh+dcYDGEE1VVcg80=
-X-Received: by 2002:a05:6808:34b:b0:3db:421c:1bce with SMTP id
- 5614622812f47-3df05c28735mr1735969b6e.1.1724945423657; Thu, 29 Aug 2024
- 08:30:23 -0700 (PDT)
+        bh=8D74+30M1YnAgX4+r14pJtBtSFBM+4hW1bBlbUxfhno=;
+        b=mnNUksBLRkY+Lclus9j0RscDAjlkNSQs/6fprVdkNmYG/xFgDuBX+pqMzM1Y/VHqMd
+         lkO5FnVLzKlDrZ/fGHDLMA3/lv3hhKGLVsfLc8Ac6skR+vwPIy7f3XKekTINzT2TTtlS
+         yJHfcYWxlvUUMhCSmTkP19ZATtFkycIRFl/Y5DqQSteAZ8BbLaEC1PHiS2hvPo+0BMiF
+         NarB8nI//rEux9SLleibXv3r6fawpAXe6pWQc9ICY59WdUxgkVpdcBFlZo87nxG/5bd/
+         2JMSkFYrHdvh9/CTkUpb88MfUltacLxf/nI1PkxsgLKd7tOuSZ82/L67mtfMe/RzlOON
+         +b9g==
+X-Forwarded-Encrypted: i=1; AJvYcCUTMXqib6ZwkNd7Yge794Ed7tVUZPjmtDsj6X4X88ENjIH+2+u4+6JmNLf2mdWVPESWWkxjXWxSo0+2z/1Dq8w=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy1YzEqYKgnSg94CE665LFJ6EdoMw472pg94FdL75pFkiAV5c9+
+	TOsx4SwVIDy/tBbQhOu9tQpSVIJLvTHNl803jGU38ZqzKJuro6q3ZF82yG5s+QQ8TKTjPHgwx+W
+	cdoPpyZ3qqXkB7HGfNbzS5XpoLpbYYQq6q8t+
+X-Google-Smtp-Source: AGHT+IHUDTzW+IIm6ItotC2tMRbqdsyv1SRDW9WKLnf6aOtEqex4+UOqP5ebw6vSHRryEwjlG6iOoV85JmC6QmNZCt8=
+X-Received: by 2002:ac8:5e4c:0:b0:456:7f71:ca78 with SMTP id
+ d75a77b69052e-4567fbb875cmr4356491cf.4.1724945981739; Thu, 29 Aug 2024
+ 08:39:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240828225522.684774-1-jeffxu@chromium.org> <20240828225522.684774-2-jeffxu@chromium.org>
- <CABi2SkW9qEOx1FAcWeBLx_EA8LT2V_U6OS1GmEP433oA6t35pw@mail.gmail.com> <097a3458-0126-48e3-ba0d-d7dc7b9069d2@lucifer.local>
-In-Reply-To: <097a3458-0126-48e3-ba0d-d7dc7b9069d2@lucifer.local>
-From: Jeff Xu <jeffxu@chromium.org>
-Date: Thu, 29 Aug 2024 08:30:11 -0700
-Message-ID: <CABi2SkVe6Y4xypBw0n8QbqKJgsfy9YRNJWvBZ3bjTa=-Z5Zn2g@mail.gmail.com>
-Subject: Re: [PATCH v1 2/2] selftests/mm: mseal_test add more tests
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: akpm@linux-foundation.org, linux-kselftest@vger.kernel.org, 
-	linux-mm@kvack.org, linux-hardening@vger.kernel.org, pedro.falcato@gmail.com, 
-	rientjes@google.com, keescook@chromium.org, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>
+References: <20240809072532.work.266-kees@kernel.org> <20240809073309.2134488-3-kees@kernel.org>
+In-Reply-To: <20240809073309.2134488-3-kees@kernel.org>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Thu, 29 Aug 2024 08:39:29 -0700
+Message-ID: <CAJuCfpHLD=rK_xPpZ89t+E=S77dr=0Gq7+L9BLkojiqN+TC0FQ@mail.gmail.com>
+Subject: Re: [PATCH 3/5] codetag: Introduce codetag_early_walk()
+To: Kees Cook <kees@kernel.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>, Kent Overstreet <kent.overstreet@linux.dev>, 
+	Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>, David Rientjes <rientjes@google.com>, 
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org, 
+	"GONG, Ruiqi" <gongruiqi@huaweicloud.com>, Jann Horn <jannh@google.com>, 
+	Matteo Rizzo <matteorizzo@google.com>, jvoisin <julien.voisin@dustri.org>, 
+	Xiu Jianfeng <xiujianfeng@huawei.com>, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Lorenzo
+On Fri, Aug 9, 2024 at 12:33=E2=80=AFAM Kees Cook <kees@kernel.org> wrote:
+>
+> In order to process builtin alloc_tags much earlier during boot (before
+> register_codetag() is processed), provide codetag_early_walk() that
+> perform a lockless walk with a specified callback function. This will be
+> used to allocate required caches that cannot be allocated on demand.
+>
+> Signed-off-by: Kees Cook <kees@kernel.org>
+> ---
+> Cc: Suren Baghdasaryan <surenb@google.com>
+> Cc: Kent Overstreet <kent.overstreet@linux.dev>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Cc: Christoph Lameter <cl@linux.com>
+> Cc: Pekka Enberg <penberg@kernel.org>
+> Cc: David Rientjes <rientjes@google.com>
+> Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Roman Gushchin <roman.gushchin@linux.dev>
+> Cc: Hyeonggon Yoo <42.hyeyoo@gmail.com>
+> Cc: linux-mm@kvack.org
+> ---
+>  include/linux/codetag.h |  2 ++
+>  lib/codetag.c           | 16 ++++++++++++++++
+>  2 files changed, 18 insertions(+)
+>
+> diff --git a/include/linux/codetag.h b/include/linux/codetag.h
+> index c2a579ccd455..9eb1fcd90570 100644
+> --- a/include/linux/codetag.h
+> +++ b/include/linux/codetag.h
+> @@ -64,6 +64,8 @@ void codetag_lock_module_list(struct codetag_type *ctty=
+pe, bool lock);
+>  bool codetag_trylock_module_list(struct codetag_type *cttype);
+>  struct codetag_iterator codetag_get_ct_iter(struct codetag_type *cttype)=
+;
+>  struct codetag *codetag_next_ct(struct codetag_iterator *iter);
+> +void codetag_early_walk(const struct codetag_type_desc *desc,
+> +                       void (*callback)(struct codetag *ct));
+>
+>  void codetag_to_text(struct seq_buf *out, struct codetag *ct);
+>
+> diff --git a/lib/codetag.c b/lib/codetag.c
+> index ef7634c7ee18..9d563c8c088a 100644
+> --- a/lib/codetag.c
+> +++ b/lib/codetag.c
+> @@ -154,6 +154,22 @@ static struct codetag_range get_section_range(struct=
+ module *mod,
+>         };
+>  }
+>
+> +void codetag_early_walk(const struct codetag_type_desc *desc,
+> +                       void (*callback)(struct codetag *ct))
+> +{
+> +       struct codetag_range range;
+> +       struct codetag *ct;
+> +
+> +       range =3D get_section_range(NULL, desc->section);
+> +       if (!range.start || !range.stop ||
+> +           range.start =3D=3D range.stop ||
+> +           range.start > range.stop)
+> +               return;
 
-On Thu, Aug 29, 2024 at 8:14=E2=80=AFAM Lorenzo Stoakes
-<lorenzo.stoakes@oracle.com> wrote:
->
-> On Thu, Aug 29, 2024 at 07:45:56AM GMT, Jeff Xu wrote:
-> > HI Andrew
-> >
-> > On Wed, Aug 28, 2024 at 3:55=E2=80=AFPM <jeffxu@chromium.org> wrote:
-> > >
-> > > From: Jeff Xu <jeffxu@chromium.org>
-> > >
-> > > Add more testcases and increase test coverage, e.g. add
-> > > get_vma_size to check VMA size and prot bits.
->
-> This commit message is ridiculously short for such a massive change, even=
- for
-> test code.
->
-> > >
-> >
-> > Could you please pull the self-test part of this patch series to mm-uns=
-table ?
-> > It will help to prevent regression.
->
-> No, please don't.
->
-> This needs review.
->
-> These tests establish a precedent as to how mseal should behave, this is
-> something that needs community review, not to just be taken.
->
-> There's already been a great deal of confusion/contentious discussion
-> around mseal() and its implementation.
->
-> Pushing in ~800 lines of test code asserting how mseal() should behave
-> without review isn't helping things.
->
-> Also, this is a really unusual way to send a series - why is this a 2/2 i=
-n
-> reply to the 1/2 and no cover letter? Why is this change totally unrelate=
-d
-> to the other patch?
->
-> Can you send this as a separate patch, preferably as an RFC so we can
-> ensure that we all agree on how mseal() should behave?
->
-> Sorry to be contentious here, but I think we need to find a more
-> constructive, collaborative way forward with mseal() and to act with a
-> little more caution, given the problems that the original series has caus=
-ed
-> I'd think this is in the best interests of all.
->
-> Thanks for understanding!
->
-There have been two bugs I found recently on mseal.
-One during V2 of in-loop change and the other mentioned in 1/2 of this patc=
-h.
+I think this check can be simplified to:
 
-These additional tests will increase the test coverage of mseal and
-ensure the functionality of in-loop change is correct, also help to
-detect future regression.
+        if (!range.start || range.start >=3D range.stop)
+                return;
 
-If you feel it will take time to review the test case, please do so
-and comment on the tests itself directly, I will send V2 after that.
+nit: Technically (!range.start) should also never trigger. In a valid
+image these symbols are either missing (range.start =3D=3D range.stop =3D=
+=3D
+NULL) or both are defined and (range.start < range.stop).
 
-Thanks
--Jeff
-
-
-> >
-> > The first part ([PATCH v1 1/2] mseal: fix mmap(FIXED) error code) can
-> > be ignored as Liam proposed to fix it differently.
-> >
-> > Thanks
-> > -Jeff
-> >
-> > -Jeff
-> >
-> > > Signed-off-by: Jeff Xu <jeffxu@chromium.org>
-> > > ---
-> > >  tools/testing/selftests/mm/mseal_test.c | 826 ++++++++++++++++++++++=
---
-> > >  1 file changed, 759 insertions(+), 67 deletions(-)
-> > >
-> > > diff --git a/tools/testing/selftests/mm/mseal_test.c b/tools/testing/=
-selftests/mm/mseal_test.c
-> > > index e7991e5fdcf3..4b3f883aae17 100644
-> > > --- a/tools/testing/selftests/mm/mseal_test.c
-> > > +++ b/tools/testing/selftests/mm/mseal_test.c
+> +
+> +       for (ct =3D range.start; ct < range.stop; ct =3D ((void *)ct + de=
+sc->tag_size))
+> +               callback(ct);
+> +}
+> +
+>  static int codetag_module_init(struct codetag_type *cttype, struct modul=
+e *mod)
+>  {
+>         struct codetag_range range;
+> --
+> 2.34.1
+>
