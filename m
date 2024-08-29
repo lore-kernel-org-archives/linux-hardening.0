@@ -1,319 +1,207 @@
-Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA7811BB6BD
-	for <linux-hardening@vger.kernel.org>; Thu, 29 Aug 2024 21:44:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D85218CC13
+	for <linux-hardening@vger.kernel.org>; Thu, 29 Aug 2024 22:31:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724967854; cv=none; b=WP7iG6N0dxwgi/zzi0oyTzrUDD2gpiAQdu7Vx5uizh275G3oM6+ALCJBNKTiUvobk4n2vPxTOYbjqunqE4yPir52OdImIUlShRKZOHG5poatLN7fdj8BZpvU4MaoYHe9b12dpCYI9oRWivuIzI7uDYUpOGvWUD1tuldb5gy6OtE=
+	t=1724970687; cv=none; b=WpSw2J3kMRiqT8GfTRA/olft/kLBDVNJ/8dKL2j4paroiOT2GOZAWGw4TQ0OfYm3F4uC1v7L9K8NjNkDMNh0yEFvhzOI1ba9Cs5jmeJlSOHlUtScX4BfW+GAs260rgdFQIqiDYvdjn9yw0aVTa21q4y24YQIbo5bi2Q8BUIa/1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724967854; c=relaxed/simple;
-	bh=ACgdkIlvnRhZ7PHc5BWlTN2Eo+ik0nzcD6MIX1rROxc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TUP2gMMwBUekdzinqzF5SLDll8UMQxsbxVhTB5kUinmFc4u8tmd+b8A6OJfLdZNWHDu6uZUzSG13eqbJ24LZMdkHVi7BY/H1I7XU7yRAz6iIzv0pzpHJdyTHtN/lYgfRLgcvQ1A2QsCMxzWb01/wIfAMYuSzuvm0dIpEBdxwd+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=i9NMRfNF; arc=none smtp.client-ip=209.85.167.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1724970687; c=relaxed/simple;
+	bh=hCsnmX1TO1Jl5SZuHp8i7ncm4eIJYVN/kFtrlWGwotM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Ngax/XWnFGRbHX+qnXBWVqBm+G69b/RvvUcT2tKl13ThStrVVbYwCQ1Sk5spCtKCRl13ciW3ntj5H86hMliLq3mrl42nYsvDrgBcrZb7jy3CvAyVoBMFsj+cBgQiMuz7fekHijq8X3bnplwYcdnVFvV0MAItr+E1kEcd176Et9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GUkJQ1K9; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="i9NMRfNF"
-Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-3df075ef43cso91999b6e.3
-        for <linux-hardening@vger.kernel.org>; Thu, 29 Aug 2024 14:44:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GUkJQ1K9"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-7142448aaf9so869961b3a.1
+        for <linux-hardening@vger.kernel.org>; Thu, 29 Aug 2024 15:31:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1724967851; x=1725572651; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1724970686; x=1725575486; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hAPF+mFWkE9aMPYn9qrkTRHhUapPOCqVhxefhrunDUc=;
-        b=i9NMRfNFMGr3JCOXXE3q6gYMg8F8eTQZNKu1z/77/140ymVMZ4KjNAtJ9h+MhXDNLs
-         pqj/Ts5TC3ije71bkF2NVNOykOfrdmnjyzxTCjWVQG2+kTuI0exNSGw5U1wM3lLtjH2a
-         HIdvlo8cSQnYTW6Z4tcsLWXkPXdt53BJK5bmY=
+        bh=vw046BlQwqp0kheY735NpnzKZV77Hf8iJa45ZBjddEo=;
+        b=GUkJQ1K931EcQoK5WiDRpvaGRyiz8hVZ4O1Rr3RnQqHXvP4aulRqkcdyrA6wS+d6xM
+         hromyVwMKir5MhRsKUe4WZLKwnFGgF24FBWksRw2aEJEYPHEHRyHL7v91EToQhF+vcjw
+         cufKp/2A2vfNIwPulSMjwZpqEkn9uWGAfWGwaPN2IzjPUMeciR8N3tFp/LAszjVM54cS
+         75GN0yn4EmguqsEhLUkYefGastPQZS9SbaOiJ9vbvDpeKNFgn31TBKo2Z8NdbWyE4oMY
+         CPYgy4hnJdU3SD0dbifW1a1ppedispad4bc2Zf5lCPq8TI3iFTDUOJqOnY4vScHXHqlY
+         mucg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724967851; x=1725572651;
+        d=1e100.net; s=20230601; t=1724970686; x=1725575486;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hAPF+mFWkE9aMPYn9qrkTRHhUapPOCqVhxefhrunDUc=;
-        b=lp9aEPt5Wcb+m8D2SkW8xGGhuu2fXj6mO0bv+HKBG0R5LB1mTHX9mqI2GyxO6eicKA
-         DMuqD5Z1M5CUzfjrgmdDXPUaKNZBrfTWbCgm6IGa0ISa9nqhJ42Npb7Q9XwPjHAWC443
-         YYRxILR3+kXKnqpxFlgmJQyD9ht+V7aVc9gLbdxzsqLbRo9dXYVhTFwSY0hRfTqTW54M
-         LAmhzVFJ2rVy3KW44PRB2as+r0JPqiC3sKh6ysDZnlb/8Jtnn/HVd4TJ1ArA0renQky1
-         b1oJcZsCxI4XrvYbj0D46KsHGLeax9cIEju2OJ0quvFtemyXnOt7rHwwLJ9j4iMgGDKm
-         OveQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWPuTrnlMv7wPYZsNATq7nlza4PEkf2w9D+qJDBoqn1vejCzJO1YbxsCe2kSv3eMLbAEy59BKNzD5aCOrViHXM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy98Y1+7wIfvDv83aXoQ1gHT33rDfKKr5GxPn/wkNvGaYvIi5OJ
-	GLSdDN3179aVy7vBy7yNzl3s14mMN/yvqdmEBxc+gYC9Ewk3ZW9cImBoVQevXg==
-X-Google-Smtp-Source: AGHT+IHtVngpZOZlZonUTLqOqg/y/b0gvT/st7+gVnwMaqdrCOVHCIfjFfjqHOSo+TMO91gZzOvYCQ==
-X-Received: by 2002:a05:6871:5226:b0:260:ccfd:2e52 with SMTP id 586e51a60fabf-27790377431mr2564127fac.7.1724967850809;
-        Thu, 29 Aug 2024 14:44:10 -0700 (PDT)
-Received: from localhost (150.12.83.34.bc.googleusercontent.com. [34.83.12.150])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-715e56d7593sm1585108b3a.168.2024.08.29.14.44.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 29 Aug 2024 14:44:10 -0700 (PDT)
-From: jeffxu@chromium.org
-To: akpm@linux-foundation.org
-Cc: linux-kselftest@vger.kernel.org,
-	linux-mm@kvack.org,
+        bh=vw046BlQwqp0kheY735NpnzKZV77Hf8iJa45ZBjddEo=;
+        b=UzkCNuVEXt0V44NgcBXmZN7M+3BO2HlRa5U3rZJyV0dfqV9pEfZ6JpNW78nCpnr3+i
+         gYXvV+/ozjuf93AbGrd8ozPe1RuS1kH3RzVJEU9/iPY15Fr76LBOZYm4tunKST+EMWJZ
+         lG8pRmDscJAMADAgPhogQSX2KSWNjOqIn9cDNtXbXkCoqeOf2ibFtWJYPyJ6d40eVtzT
+         jpKyrxs+YdUEW0o69efD/F5xuDyBaFV2Lk9F9/1Z/zV21SR2rd9FWQYC5pG83ijqoPNm
+         5baAAeECyAa8++BX8CkgofYxV/SfuHIyM0dK0Qr9ZXP/BYxD3VeRETT+vwmXYpSuv85M
+         NPQg==
+X-Forwarded-Encrypted: i=1; AJvYcCVaPV4BzxALAK1x5PPH9SlR9juoPBM3XCzx8K8JHq7LeDwM+YiYeZSjeLftMlUyXIMLiI4w+tBpqIdWEWhHUDs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyyBiaS9UcwSnF7B+u9YZN/q2yjC9RXb22LgXinQ3CLLIN5l7fE
+	a6k9ZOgAIVpd1X1rjdfqBd0gQ75lK7x/S9eX2XFCMqW7I97PEhEb
+X-Google-Smtp-Source: AGHT+IFhau0GMb2+jI99unqrHoqo79ZPnsK5Fim1Ct1lLVzqOoXbfgd/rqPMQHsW9L0qYnI9rWHF1w==
+X-Received: by 2002:aa7:8650:0:b0:70e:cf99:adc7 with SMTP id d2e1a72fcca58-715e0f74250mr5263419b3a.3.1724970685474;
+        Thu, 29 Aug 2024 15:31:25 -0700 (PDT)
+Received: from Barrys-MBP.hub ([2407:7000:8942:5500:b087:5dce:99f9:294b])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-715e569f1edsm1614198b3a.128.2024.08.29.15.31.18
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Thu, 29 Aug 2024 15:31:25 -0700 (PDT)
+From: Barry Song <21cnbao@gmail.com>
+To: 21cnbao@gmail.com,
+	mhocko@suse.com,
+	vbabka@suse.cz
+Cc: 42.hyeyoo@gmail.com,
+	akpm@linux-foundation.org,
+	cl@linux.com,
+	david@redhat.com,
+	hailong.liu@oppo.com,
+	hch@infradead.org,
+	iamjoonsoo.kim@lge.com,
+	laoar.shao@gmail.com,
 	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	pedro.falcato@gmail.com,
-	willy@infradead.org,
-	lorenzo.stoakes@oracle.com,
-	broonie@kernel.org,
-	vbabka@suse.cz,
-	Liam.Howlett@oracle.com,
+	linux-mm@kvack.org,
+	penberg@kernel.org,
 	rientjes@google.com,
-	keescook@chromium.org,
-	Jeff Xu <jeffxu@chromium.org>
-Subject: [PATCH v2 4/4] selftests/mm: mseal_test add more tests for mremap
-Date: Thu, 29 Aug 2024 21:43:52 +0000
-Message-ID: <20240829214352.963001-5-jeffxu@chromium.org>
-X-Mailer: git-send-email 2.46.0.469.g59c65b2a67-goog
-In-Reply-To: <20240829214352.963001-1-jeffxu@chromium.org>
-References: <20240829214352.963001-1-jeffxu@chromium.org>
+	roman.gushchin@linux.dev,
+	torvalds@linux-foundation.org,
+	urezki@gmail.com,
+	v-songbaohua@oppo.com,
+	virtualization@lists.linux.dev
+Subject: Re: [PATCH v3 0/4] mm: clarify nofail memory allocation
+Date: Fri, 30 Aug 2024 10:31:14 +1200
+Message-Id: <20240829223114.1102-1-21cnbao@gmail.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+In-Reply-To: <CAGsJ_4wZiE08XDjNAPENwH=KQEzdm2FB_bMDi0b7PJx+e7ydrA@mail.gmail.com>
+References: <CAGsJ_4wZiE08XDjNAPENwH=KQEzdm2FB_bMDi0b7PJx+e7ydrA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Jeff Xu <jeffxu@chromium.org>
+> > > Patch 4/4: We will move the order > 1 check from the current fast path
+> > > to the slow path and extend
+> > >                  the check of gfp_direct_reclaim flag also in the slow path.
+> >
+> > OK, let's have that go in now as well.
 
-Add sealing test to cover mremap for
-Expand/shrink/move across vmas.
+Hi Michal and Vlastimil,
+Could you please review the changes below before I send v4 for patch 4/4?
 
-Signed-off-by: Jeff Xu <jeffxu@chromium.org>
----
- tools/testing/selftests/mm/mseal_test.c | 202 +++++++++++++++++++++++-
- 1 file changed, 201 insertions(+), 1 deletion(-)
+1. We should consolidate all warnings in one place. Currently, the order > 1 warning is
+in the hotpath, while others are in less likely scenarios. Moving all warnings to the
+slowpath will reduce the overhead for order > 1 and increase the visibility of other
+warnings.
 
-diff --git a/tools/testing/selftests/mm/mseal_test.c b/tools/testing/selftests/mm/mseal_test.c
-index d83538039e76..494035129d65 100644
---- a/tools/testing/selftests/mm/mseal_test.c
-+++ b/tools/testing/selftests/mm/mseal_test.c
-@@ -2338,6 +2338,197 @@ static void test_seal_mmap_reuse_addr(bool seal)
- 	REPORT_TEST_PASS();
- }
- 
-+static void test_seal_mremap_shrink_multiple_vmas(bool seal)
-+{
-+	void *ptr;
-+	unsigned long page_size = getpagesize();
-+	unsigned long size = 12 * page_size;
-+	int ret;
-+	void *ret2;
-+	int prot;
-+
-+	setup_single_address(size, &ptr);
-+	FAIL_TEST_IF_FALSE(ptr != (void *)-1);
-+
-+	ret = sys_mprotect(ptr + 4 * page_size, 4 * page_size, PROT_NONE);
-+	FAIL_TEST_IF_FALSE(!ret);
-+
-+	size = get_vma_size(ptr, &prot);
-+	FAIL_TEST_IF_FALSE(size == 4 * page_size);
-+
-+	size = get_vma_size(ptr + 4 * page_size, &prot);
-+	FAIL_TEST_IF_FALSE(size == 4 * page_size);
-+
-+	if (seal) {
-+		ret = sys_mseal(ptr + 4 * page_size, 4 * page_size);
-+		FAIL_TEST_IF_FALSE(!ret);
-+	}
-+
-+	ret2 = sys_mremap(ptr, 12 * page_size, 6 * page_size, 0, 0);
-+	if (seal) {
-+		FAIL_TEST_IF_FALSE(ret2 == (void *) MAP_FAILED);
-+		FAIL_TEST_IF_FALSE(errno == EPERM);
-+
-+		size = get_vma_size(ptr, &prot);
-+		FAIL_TEST_IF_FALSE(size == 4 * page_size);
-+
-+		size = get_vma_size(ptr + 4 * page_size, &prot);
-+		FAIL_TEST_IF_FALSE(size == 4 * page_size);
-+	} else {
-+		FAIL_TEST_IF_FALSE(ret2 == ptr);
-+
-+		size = get_vma_size(ptr, &prot);
-+		FAIL_TEST_IF_FALSE(size == 4 * page_size);
-+
-+		size = get_vma_size(ptr + 4 * page_size, &prot);
-+		FAIL_TEST_IF_FALSE(size == 2 * page_size);
-+	}
-+
-+	REPORT_TEST_PASS();
-+}
-+
-+static void test_seal_mremap_expand_multiple_vmas(bool seal)
-+{
-+	void *ptr;
-+	unsigned long page_size = getpagesize();
-+	unsigned long size = 12 * page_size;
-+	int ret;
-+	void *ret2;
-+	int prot;
-+
-+	setup_single_address(size, &ptr);
-+	FAIL_TEST_IF_FALSE(ptr != (void *)-1);
-+
-+	ret = sys_mprotect(ptr + 4 * page_size, 4 * page_size, PROT_NONE);
-+	FAIL_TEST_IF_FALSE(!ret);
-+
-+	/* ummap last 4 pages. */
-+	ret = sys_munmap(ptr + 8 * page_size, 4 * page_size);
-+	FAIL_TEST_IF_FALSE(!ret);
-+
-+	size = get_vma_size(ptr, &prot);
-+	FAIL_TEST_IF_FALSE(size == 4 * page_size);
-+
-+	size = get_vma_size(ptr + 4 * page_size, &prot);
-+	FAIL_TEST_IF_FALSE(size == 4 * page_size);
-+
-+	if (seal) {
-+		ret = sys_mseal(ptr + 4 * page_size, 4 * page_size);
-+		FAIL_TEST_IF_FALSE(!ret);
-+	}
-+
-+	ret2 = sys_mremap(ptr, 8 * page_size, 12 * page_size, 0, 0);
-+	FAIL_TEST_IF_FALSE(ret2 == (void *) MAP_FAILED);
-+
-+	size = get_vma_size(ptr, &prot);
-+	FAIL_TEST_IF_FALSE(size == 4 * page_size);
-+
-+	size = get_vma_size(ptr + 4 * page_size, &prot);
-+	FAIL_TEST_IF_FALSE(size == 4 * page_size);
-+
-+	REPORT_TEST_PASS();
-+}
-+
-+static void test_seal_mremap_move_expand_multiple_vmas(bool seal)
-+{
-+	void *ptr;
-+	unsigned long page_size = getpagesize();
-+	unsigned long size = 12 * page_size;
-+	int ret;
-+	void *ret2;
-+	int prot;
-+	void *ptr2;
-+
-+	setup_single_address(size, &ptr);
-+	FAIL_TEST_IF_FALSE(ptr != (void *)-1);
-+
-+	setup_single_address(size, &ptr2);
-+	FAIL_TEST_IF_FALSE(ptr2 != (void *)-1);
-+
-+	ret = sys_munmap(ptr2, 12 * page_size);
-+	FAIL_TEST_IF_FALSE(!ret);
-+
-+	ret = sys_mprotect(ptr + 4 * page_size, 4 * page_size, PROT_NONE);
-+	FAIL_TEST_IF_FALSE(!ret);
-+
-+	/* ummap last 4 pages. */
-+	ret = sys_munmap(ptr + 8 * page_size, 4 * page_size);
-+	FAIL_TEST_IF_FALSE(!ret);
-+
-+	size = get_vma_size(ptr, &prot);
-+	FAIL_TEST_IF_FALSE(size == 4 * page_size);
-+
-+	size = get_vma_size(ptr + 4 * page_size, &prot);
-+	FAIL_TEST_IF_FALSE(size == 4 * page_size);
-+
-+	if (seal) {
-+		ret = sys_mseal(ptr + 4 * page_size, 4 * page_size);
-+		FAIL_TEST_IF_FALSE(!ret);
-+	}
-+
-+	/* move and expand cross VMA boundary will fail */
-+	ret2 = sys_mremap(ptr, 8 * page_size, 10 * page_size, MREMAP_FIXED | MREMAP_MAYMOVE, ptr2);
-+	FAIL_TEST_IF_FALSE(ret2 == (void *) MAP_FAILED);
-+
-+	size = get_vma_size(ptr, &prot);
-+	FAIL_TEST_IF_FALSE(size == 4 * page_size);
-+
-+	size = get_vma_size(ptr + 4 * page_size, &prot);
-+	FAIL_TEST_IF_FALSE(size == 4 * page_size);
-+
-+	REPORT_TEST_PASS();
-+}
-+
-+static void test_seal_mremap_move_shrink_multiple_vmas(bool seal)
-+{
-+	void *ptr;
-+	unsigned long page_size = getpagesize();
-+	unsigned long size = 12 * page_size;
-+	int ret;
-+	void *ret2;
-+	int prot;
-+	void *ptr2;
-+
-+	setup_single_address(size, &ptr);
-+	FAIL_TEST_IF_FALSE(ptr != (void *)-1);
-+
-+	setup_single_address(size, &ptr2);
-+	FAIL_TEST_IF_FALSE(ptr2 != (void *)-1);
-+
-+	ret = sys_munmap(ptr2, 12 * page_size);
-+	FAIL_TEST_IF_FALSE(!ret);
-+
-+	ret = sys_mprotect(ptr + 4 * page_size, 4 * page_size, PROT_NONE);
-+	FAIL_TEST_IF_FALSE(!ret);
-+
-+	size = get_vma_size(ptr, &prot);
-+	FAIL_TEST_IF_FALSE(size == 4 * page_size);
-+	FAIL_TEST_IF_FALSE(prot == 4);
-+
-+	size = get_vma_size(ptr + 4 * page_size, &prot);
-+	FAIL_TEST_IF_FALSE(size == 4 * page_size);
-+	FAIL_TEST_IF_FALSE(prot == 0);
-+
-+	if (seal) {
-+		ret = sys_mseal(ptr + 4 * page_size, 4 * page_size);
-+		FAIL_TEST_IF_FALSE(!ret);
-+	}
-+
-+	/* move and shrink cross VMA boundary is NOK */
-+	ret2 = sys_mremap(ptr, 12 * page_size, 8 * page_size, MREMAP_FIXED | MREMAP_MAYMOVE, ptr2);
-+	FAIL_TEST_IF_FALSE(ret2 == (void *) MAP_FAILED);
-+
-+	size = get_vma_size(ptr, &prot);
-+	FAIL_TEST_IF_FALSE(size == 4 * page_size);
-+	FAIL_TEST_IF_FALSE(prot == 4);
-+
-+	size = get_vma_size(ptr + 4 * page_size, &prot);
-+	FAIL_TEST_IF_FALSE(size == 4 * page_size);
-+	FAIL_TEST_IF_FALSE(prot == 0);
-+
-+	REPORT_TEST_PASS();
-+}
-+
- int main(int argc, char **argv)
+2. We currently have two warnings for order: one for order > 1 in the hotpath and another
+for order > costly_order in the laziest path. I suggest standardizing on order > 1 since
+it’s been in use for a long time.
+
+3.I don't think we need to check for __GFP_NOWARN in this case. __GFP_NOWARN is
+meant to suppress allocation failure reports, but here we're dealing with bug detection, not
+allocation failures.
+So I'd rather use WARN_ON_ONCE than WARN_ON_ONCE_GFP.
+
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index c81ee5662cc7..0d3dd679d0ab 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -3033,12 +3033,6 @@ struct page *rmqueue(struct zone *preferred_zone,
  {
- 	bool test_seal = seal_support();
-@@ -2359,7 +2550,7 @@ int main(int argc, char **argv)
- 	if (!get_vma_size_supported())
- 		ksft_exit_skip("get_vma_size not supported\n");
+ 	struct page *page;
  
--	ksft_set_plan(97);
-+	ksft_set_plan(105);
+-	/*
+-	 * We most definitely don't want callers attempting to
+-	 * allocate greater than order-1 page units with __GFP_NOFAIL.
+-	 */
+-	WARN_ON_ONCE((gfp_flags & __GFP_NOFAIL) && (order > 1));
+-
+ 	if (likely(pcp_allowed_order(order))) {
+ 		page = rmqueue_pcplist(preferred_zone, zone, order,
+ 				       migratetype, alloc_flags);
+@@ -4174,6 +4168,7 @@ __alloc_pages_slowpath(gfp_t gfp_mask, unsigned int order,
+ 						struct alloc_context *ac)
+ {
+ 	bool can_direct_reclaim = gfp_mask & __GFP_DIRECT_RECLAIM;
++	bool nofail = gfp_mask & __GFP_DIRECT_RECLAIM;
+ 	bool can_compact = gfp_compaction_allowed(gfp_mask);
+ 	const bool costly_order = order > PAGE_ALLOC_COSTLY_ORDER;
+ 	struct page *page = NULL;
+@@ -4187,6 +4182,25 @@ __alloc_pages_slowpath(gfp_t gfp_mask, unsigned int order,
+ 	unsigned int zonelist_iter_cookie;
+ 	int reserve_flags;
  
- 	test_seal_addseal();
- 	test_seal_unmapped_start();
-@@ -2480,5 +2671,14 @@ int main(int argc, char **argv)
- 	test_seal_mmap_reuse_addr(false);
- 	test_seal_mmap_reuse_addr(true);
- 
-+	test_seal_mremap_shrink_multiple_vmas(false);
-+	test_seal_mremap_shrink_multiple_vmas(true);
-+	test_seal_mremap_expand_multiple_vmas(false);
-+	test_seal_mremap_expand_multiple_vmas(true);
-+	test_seal_mremap_move_expand_multiple_vmas(false);
-+	test_seal_mremap_move_expand_multiple_vmas(true);
-+	test_seal_mremap_move_shrink_multiple_vmas(false);
-+	test_seal_mremap_move_shrink_multiple_vmas(true);
++	if (nofail) {
++		/*
++		 * We most definitely don't want callers attempting to
++		 * allocate greater than order-1 page units with __GFP_NOFAIL.
++		 */
++		WARN_ON_ONCE(order > 1);
++		/*
++		 * Also we don't support __GFP_NOFAIL without __GFP_DIRECT_RECLAIM,
++		 * otherwise, we may result in lockup.
++		 */
++		WARN_ON_ONCE(!can_direct_reclaim);
++		/*
++		 * PF_MEMALLOC request from this context is rather bizarre
++		 * because we cannot reclaim anything and only can loop waiting
++		 * for somebody to do a work for us.
++		 */
++		WARN_ON_ONCE(current->flags & PF_MEMALLOC);
++	}
 +
- 	ksft_finished();
- }
--- 
-2.46.0.469.g59c65b2a67-goog
+ restart:
+ 	compaction_retries = 0;
+ 	no_progress_loops = 0;
+@@ -4404,29 +4418,15 @@ __alloc_pages_slowpath(gfp_t gfp_mask, unsigned int order,
+ 	 * Make sure that __GFP_NOFAIL request doesn't leak out and make sure
+ 	 * we always retry
+ 	 */
+-	if (gfp_mask & __GFP_NOFAIL) {
++	if (nofail) {
+ 		/*
+-		 * All existing users of the __GFP_NOFAIL are blockable, so warn
+-		 * of any new users that actually require GFP_NOWAIT
++		 * Lacking direct_reclaim we can't do anything to reclaim memory,
++		 * we disregard these unreasonable nofail requests and still
++		 * return NULL
+ 		 */
+-		if (WARN_ON_ONCE_GFP(!can_direct_reclaim, gfp_mask))
++		if (!can_direct_reclaim)
+ 			goto fail;
+ 
+-		/*
+-		 * PF_MEMALLOC request from this context is rather bizarre
+-		 * because we cannot reclaim anything and only can loop waiting
+-		 * for somebody to do a work for us
+-		 */
+-		WARN_ON_ONCE_GFP(current->flags & PF_MEMALLOC, gfp_mask);
+-
+-		/*
+-		 * non failing costly orders are a hard requirement which we
+-		 * are not prepared for much so let's warn about these users
+-		 * so that we can identify them and convert them to something
+-		 * else.
+-		 */
+-		WARN_ON_ONCE_GFP(costly_order, gfp_mask);
+-
+ 		/*
+ 		 * Help non-failing allocations by giving some access to memory
+ 		 * reserves normally used for high priority non-blocking
 
+> >
+> > --
+> > Michal Hocko
+> > SUSE Labs
+
+Thanks
+Barry
