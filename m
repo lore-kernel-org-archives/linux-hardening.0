@@ -1,105 +1,114 @@
-Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64BA61BAECF
-	for <linux-hardening@vger.kernel.org>; Thu, 29 Aug 2024 21:34:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0280F1B86FE
+	for <linux-hardening@vger.kernel.org>; Thu, 29 Aug 2024 21:44:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724967294; cv=none; b=VUdYqvLtF5ml1IBRywyfW3+oOKvg+T62/4XGxZknnB7REXaeq1zcJmWBJ6ZCVz0nCmo5v/fHgqvtICGfWNJGMZYKrCIfYtH8n7XaZ+qwOqNRqsw22BPTZhqYsRUKkQinFBaj407wFbcxJh7DkwDHSdeaJEje8LElc8Nzuibpsgo=
+	t=1724967844; cv=none; b=ugZ3eu1a++d0EZpFvPSs66H4osQQS888WxqSdVI4l2xpnqfb5zvFocq3CSMUfwvmz5kiMrZU9s+3tSsSmG9UEhEu4cUpJxEPwgyHgnKgFNJ7xjhnS2XH/wCMDS6ZSe11yWHqZlZxTgp2pXDr866GnKhiZTWem8MQNy5Rcm7msYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724967294; c=relaxed/simple;
-	bh=bJxYo/loYzTMctQyY3/qVqz2BwxaM68ocLwyaWudvJU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rKQayp6kaGdv9J+hiLhQ++YgPHFPCCQfLRKUvYawnGRh1LVTcfRfh5ZtRlrBPoAXGEyf/n/Flo1VMmbxZ7unPZVq4dnhmcmtchlKNiuyCGO3I5ab9eiqt2U1Daukr7HRAE9pTqZtt1aTRbZw/ZdxvsIluwbYDEfAKluoNpX2dps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Z/sBTx3T; arc=none smtp.client-ip=209.85.160.48
+	s=arc-20240116; t=1724967844; c=relaxed/simple;
+	bh=eHI+f1Eqovx5OQwndHYsw55wZ2XeQdOu0E/2/hhAMrk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bJDShN3zFyea1czfhk8XPvdGgqeH6Jm9hXxL+qOMtbCERyEEeEr3vz1H2tnfFSiAWujST7sCD/qok7My5+kaTmzWoc5RLQNZu4qJnOye8WkDdUubGRAO0BQIMqGTKszSVQQXjGnpVxu8BW6DU4vE3oB2VGHhSxNNMcbH4uOm63g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=gfsC/wlx; arc=none smtp.client-ip=209.85.216.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Z/sBTx3T"
-Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-2610c095ea1so141621fac.3
-        for <linux-hardening@vger.kernel.org>; Thu, 29 Aug 2024 14:34:53 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gfsC/wlx"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2d3ba4e6ad9so181711a91.2
+        for <linux-hardening@vger.kernel.org>; Thu, 29 Aug 2024 14:44:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1724967292; x=1725572092; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0JtBxizp2xk+cb6j8tpy+Jh/K4VTYG9aTNZKmyMd4xs=;
-        b=Z/sBTx3TF5UZc2P84DpALWNZ9Igzg3JvSIV9b8E/PkUK6Hi9scUHdoNZQ9FzjzIiS4
-         3M1bv944aw/sO6YWarRdJq80NYpvXzuiFCatSdC30GQnmsJcp4K9XlBs0MGmgSkSVo7B
-         rV5mm8TFWdN+KlD4pQ1umHgeK+lneQleTcYlo=
+        d=chromium.org; s=google; t=1724967842; x=1725572642; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=IK5nX6Fz7aZSj3TONXgJWUNXXUeXSM9VDMyRB+JVgZA=;
+        b=gfsC/wlxKr5iTDLhfzCIHcbSHCHv195llFGSCvkAkx1aNgUZcAGC/O/kw8dtMJW6iJ
+         VSGADQrtFQYtgD7Ybt3oRSCsPuPxtZ0rRHAyRSVb5Nhjz6aCNfgpc+bMfYP9BWuk4Azz
+         IYPiBTfDf+7Awn7m2u11n51DE3l7SEeYWyXhs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724967292; x=1725572092;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0JtBxizp2xk+cb6j8tpy+Jh/K4VTYG9aTNZKmyMd4xs=;
-        b=hpq4Xq2mykNrzDYmU2Owl9/3j3qG73yRX0cqZ3Ppqnyza1z7sjTnUpYPXDgQ1kwqvE
-         xlvo+hs+qCYZTbpNDFnf7Q05AhBM7cW9BfC1hAAzs14xWYCCQiLnZCUQKIIIQu0xPcwQ
-         kkG+216kNo7HI/5ytqKKiVndw4cMf1HUq0RIhKL6wwkc5BpNw6hB/imuXZo9m0jVsUaN
-         b0cCJJ8vP/dDA1VN/sB0aJSSqYl9/3PvfE4DDXJMU98TVoZVEeG6HxQD6gOy9gk3eX3U
-         /QyyddGawZjHGmtPvLqq2GsW+hsMCrks47UpfPfCD4AKd7yXvBSOBcHH5Emj0l58Y+5X
-         Z3VA==
-X-Forwarded-Encrypted: i=1; AJvYcCUD5ph3WrPky4aDw4AKSMVMv2JX/TfF0JcJs22x8iYmTXhPu16qXeCGUHRoHMWyrWNXwi2ghbBOg0Omeafqows=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8o7SylpsFECUcfiKdphq+hq4oeiUruPXdFS1eek3ZH4+dTNyZ
-	u4gLotnB83IK2+YeZaOPRX5ZROyag5DlXBfKFVjBCy5jIYyAKblwX48Cz/zifXs8j5SRhq7FrF0
-	Gm/rMo4b5rQZOtoyflzDG/Pjrm3PLt5925k8A
-X-Google-Smtp-Source: AGHT+IF8S+GO7dEufmTmvxbO4vM2RK3AOgSOXWQtC8IWIc2+VslrOR7pjLdfmxtOCWGYxQmolXhTV6/tS12h6+WLD3s=
-X-Received: by 2002:a05:6870:c186:b0:268:99df:437c with SMTP id
- 586e51a60fabf-2779008e247mr2378244fac.2.1724967292019; Thu, 29 Aug 2024
- 14:34:52 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1724967842; x=1725572642;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IK5nX6Fz7aZSj3TONXgJWUNXXUeXSM9VDMyRB+JVgZA=;
+        b=bsA1BALh+M+wJ8biJK1HBja446DvmJ9I1IwXkOsPbJBTZRrwFKJ8DnCkCfokQpMDwj
+         Pqa6+hcHmBXDROxGAlUg/6Xp64br1XvEfdU5DjySHmryrxcRUaDuVCgdhkVRrBJIcCTs
+         D9pfC7Bu1u9YCTclKj+c3X0rz4EPOGNlh7QHRuwsozLZXOE3IzXGyn903I1bTmmDFNk4
+         /BiSXlpMyApuc1jTVVox6FPL9DnxavGLhlOLfMqzEj/Cr0cClt+XuHtJcY1lakb3flDF
+         h0HX/5xrClSqHiBaSkT8ASTujOL5xednn7I72LXM7T0ZT7XjFGfxfWnoPe/QTSLPQE6D
+         tsEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUgaL4xnph9h9SKa8obYeeDkLX0HeUw1oZEV9GzWs95sx3KZHOHL+cQd62RJtM61kgQgFWIpBtGRWr6FzMlAEM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHiEqMpodwzh2dQxstZabuxMAW7Z4Y7HwnREwjgGW3cDRBOj8A
+	F3GPkxpYjfnEN7D15yzAgYiUr4QqItGZ4tC7d6N0olLsdYk2C39wJdlChilKfg==
+X-Google-Smtp-Source: AGHT+IGFvjpKVKwU+AAy50ZE59B8TjM2zpkvqC2OVhuQeRtuultPa+ORe7Ydhsh/c2eWukZ+bzk+sg==
+X-Received: by 2002:a05:6a20:6a27:b0:1c4:dba6:9eff with SMTP id adf61e73a8af0-1ccee3a8b83mr193225637.1.1724967842061;
+        Thu, 29 Aug 2024 14:44:02 -0700 (PDT)
+Received: from localhost (150.12.83.34.bc.googleusercontent.com. [34.83.12.150])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-715e55a94casm1592892b3a.70.2024.08.29.14.44.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 29 Aug 2024 14:44:01 -0700 (PDT)
+From: jeffxu@chromium.org
+To: akpm@linux-foundation.org
+Cc: linux-kselftest@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	pedro.falcato@gmail.com,
+	willy@infradead.org,
+	lorenzo.stoakes@oracle.com,
+	broonie@kernel.org,
+	vbabka@suse.cz,
+	Liam.Howlett@oracle.com,
+	rientjes@google.com,
+	keescook@chromium.org,
+	Jeff Xu <jeffxu@chromium.org>
+Subject: [PATCH v2 0/4] Increase mseal test coverage
+Date: Thu, 29 Aug 2024 21:43:48 +0000
+Message-ID: <20240829214352.963001-1-jeffxu@chromium.org>
+X-Mailer: git-send-email 2.46.0.469.g59c65b2a67-goog
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240828225522.684774-1-jeffxu@chromium.org> <20240828225522.684774-2-jeffxu@chromium.org>
- <CABi2SkW9qEOx1FAcWeBLx_EA8LT2V_U6OS1GmEP433oA6t35pw@mail.gmail.com>
- <097a3458-0126-48e3-ba0d-d7dc7b9069d2@lucifer.local> <CABi2SkVe6Y4xypBw0n8QbqKJgsfy9YRNJWvBZ3bjTa=-Z5Zn2g@mail.gmail.com>
- <5a312d38-4591-47b1-9a6c-4a7242dbe20d@lucifer.local> <CABi2SkXDVgiUeC1StbfggvtiYG_kDxQJsZPpDw-NDPNv6-dwmg@mail.gmail.com>
- <ZtDS3AP9Ejt31EbU@casper.infradead.org>
-In-Reply-To: <ZtDS3AP9Ejt31EbU@casper.infradead.org>
+Content-Transfer-Encoding: 8bit
+
 From: Jeff Xu <jeffxu@chromium.org>
-Date: Thu, 29 Aug 2024 14:34:40 -0700
-Message-ID: <CABi2SkUfKO6ptg8qwWgYMEfmJ2wGpff4kAV25yNPQDFOivVQkg@mail.gmail.com>
-Subject: Re: [PATCH v1 2/2] selftests/mm: mseal_test add more tests
-To: Matthew Wilcox <willy@infradead.org>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, akpm@linux-foundation.org, 
-	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
-	linux-hardening@vger.kernel.org, pedro.falcato@gmail.com, rientjes@google.com, 
-	keescook@chromium.org, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	Vlastimil Babka <vbabka@suse.cz>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi Matthew
+This series increase the test coverage of mseal_test by:
 
-On Thu, Aug 29, 2024 at 12:58=E2=80=AFPM Matthew Wilcox <willy@infradead.or=
-g> wrote:
-> > > > > Can you send this as a separate patch, preferably as an RFC so we=
- can
-> > > > > ensure that we all agree on how mseal() should behave?
-> > > > >
-> > It is not an RFC because it doesn't change any semanic to mseal. The
-> > updated test will pass on linux main as well as 6.10. The increased
-> > coverage will help to prevent future regression, i.e. during
-> > refactoring.
->
-> You seem to not understand that there is disagreement on the semantics
-> of mseal().  I mean, ther's been a lot of arguing about that over the
-> last week.  There's understanable reluctance to accept a large pile of
-> tests saying "this just ensures that mseal behaves the way I think it
-> should", when there is substantial disagreement that the way you think
-> it should behave is in fact the way it should behave.  Be prepared to
-> argue for each semantic that you think it should have.
->
-If this is about in-loop discussion, this patch also passes the latest
-mm-unstable branch which has in-loop change (pending Liam's fix on
-mmap). The increased test coverage also helps to ensure the in-loop
-change's correctness on sealing.
+Add check for vma_size, prot, and error code for existing tests.
+Add more testcases for madvise, munmap, mmap and mremap to cover
+sealing in different scenarios.
 
-I'm not aware there are other semantic changes on mseal, we can
-continue this discussion on V2 patch, if necessary.
+The increase test coverage hopefully help to prevent future regression.
+It doesn't change any existing mm api's semantics, i.e. it will pass on
+linux main and 6.10 branch.
 
-Thanks
--Jeff
+Note: in order to pass this test in mm-unstable, mm-unstable must have
+Liam's fix on mmap [1]
+
+[1] https://lore.kernel.org/linux-kselftest/vyllxuh5xbqmaoyl2mselebij5ox7cseekjcvl5gmzoxxwd2he@hxi4mpjanxzt/#t
+
+History:
+V2:
+- remove the mmap fix (Liam R. Howlett will fix it separately)
+- Add cover letter (Lorenzo Stoakes)
+- split the testcase for ease of review (Mark Brown)
+
+V1:
+- https://lore.kernel.org/linux-kselftest/20240828225522.684774-1-jeffxu@chromium.org/
+
+Jeff Xu (4):
+  selftests/mm: mseal_test, add vma size check
+  selftests/mm: mseal_test add sealed madvise type
+  selftests/mm: mseal_test add more tests for mmap
+  selftests/mm: mseal_test add more tests for mremap
+
+ tools/testing/selftests/mm/mseal_test.c | 829 ++++++++++++++++++++++--
+ 1 file changed, 762 insertions(+), 67 deletions(-)
+
+-- 
+2.46.0.469.g59c65b2a67-goog
+
