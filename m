@@ -1,97 +1,103 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31F72148FF0;
-	Thu, 29 Aug 2024 19:58:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B96CC1B5EDB
+	for <linux-hardening@vger.kernel.org>; Thu, 29 Aug 2024 20:10:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724961504; cv=none; b=fsVbu8mryBeVgml7s8BE0ok428CDKkf9IREaeYCIW7vq7hXqvt6fp1XN0U8SoEPLwU7sH8KRxNLj5njd9y13wQaZzCZ9rSSCW5tVq94qeMRzX80dpGcmwX1LBUe2Zxf3kV1E3154E/GqsWA2ygAfh6+QuglmPVjbDPqe/5OFEx0=
+	t=1724962235; cv=none; b=RMySeEf04ExRigK2VY3Vn94iKsU9d5PtMc+7EJs6tRfCc5p78Yy+6b786RKtyYCGyudTIjDsIjQsI107CtMHwUNSD3raqPKOYthx/vY3bvhtcI5NhOj3MPcr/SJw1S6S74bLux5+seGWlEUL46ZnpNG6OW5M6eIHMHyZrhlKlEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724961504; c=relaxed/simple;
-	bh=5ZJO21J7u88izzuci2C208UHwROGrNt3osb4f9ZFkdg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FC7YeLcOTk+ZfjYB/SyZxCxGuVBiTtqNHCqywpgaehg7tYKXYeOSdOdPMkDHRN8sEZ+3yq4R0I6NCjqUxITy+ldfuM+G6aJbrLuQKhPb9e24R/mlt4iyP6u/81n0zvyTFbxAti0tJSq5G46kLmLfduafu10biFPMbFsJU2zWQ5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=oJiF1HZe; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1724962235; c=relaxed/simple;
+	bh=5KVDQSRJqn1uLOrwPqOnPp59IExMMYu9Go6kY04yP5E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Uuwzf2Pb/VRzK29yN1sRuUBxFTPplBaw5e3p25Sj8s2cOAGM4OIP1Ftw0fv7HJm9kQWN853XB3uX47vEahM/RHiD573d1NpOXp5YxR23isIQMCEBMK3ZpkOntViMemUW2JU4pfqVV7K0NqOlYweCIFlKIuAXG8KhML8TMFRxxR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JHnp7tBX; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oJiF1HZe"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=2y1Q6Z5FNb1Px58aZg62B3qtSMZPeJoICzrTDFXz/eo=; b=oJiF1HZeObZH20BOyCNMGtmWAs
-	IO1Rwzl99g6OHDbdJ+L3srXUg5bjrIgdPietSUfnzQ2pi9I9J8fzFRowOoMltDOrG06t97zKOq5YE
-	6nj3v7fvizoEY0BM7r1ybz3vnWNE/t63bfgy1cG7odCAfP7TfzhfiviOVttKOf93PisNO40zVNoiM
-	3qR41XcAI+LOyA7JHB3xmJOA/RBGb16jotT0XAiGb70IQc6iYQ5TC1JiKxu2tLd/STAagMUCeJF0f
-	UfexAuysX3JVXrtdzM76fq5UWtJ8JV/whXRLHa9hFkqcm6J01WGm0i6Mnn9HISpnJV6UW/Bjp0c8e
-	LjoMQ/VQ==;
-Received: from willy by casper.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1sjlHg-00000002T5Y-3Lzf;
-	Thu, 29 Aug 2024 19:58:20 +0000
-Date: Thu, 29 Aug 2024 20:58:20 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Jeff Xu <jeffxu@chromium.org>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, akpm@linux-foundation.org,
-	linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
-	linux-hardening@vger.kernel.org, pedro.falcato@gmail.com,
-	rientjes@google.com, keescook@chromium.org,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>
-Subject: Re: [PATCH v1 2/2] selftests/mm: mseal_test add more tests
-Message-ID: <ZtDS3AP9Ejt31EbU@casper.infradead.org>
-References: <20240828225522.684774-1-jeffxu@chromium.org>
- <20240828225522.684774-2-jeffxu@chromium.org>
- <CABi2SkW9qEOx1FAcWeBLx_EA8LT2V_U6OS1GmEP433oA6t35pw@mail.gmail.com>
- <097a3458-0126-48e3-ba0d-d7dc7b9069d2@lucifer.local>
- <CABi2SkVe6Y4xypBw0n8QbqKJgsfy9YRNJWvBZ3bjTa=-Z5Zn2g@mail.gmail.com>
- <5a312d38-4591-47b1-9a6c-4a7242dbe20d@lucifer.local>
- <CABi2SkXDVgiUeC1StbfggvtiYG_kDxQJsZPpDw-NDPNv6-dwmg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JHnp7tBX"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-20353e5de9cso48195ad.0
+        for <linux-hardening@vger.kernel.org>; Thu, 29 Aug 2024 13:10:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1724962232; x=1725567032; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5KVDQSRJqn1uLOrwPqOnPp59IExMMYu9Go6kY04yP5E=;
+        b=JHnp7tBXqmcw9d2ybPEhuJbzHspZn6y79KTFnWRZhAYoCX9VSD7uwNzTxvLu5CSdC6
+         fs+DZkaeuz9T3XzIAbW8Vf9d/1BSjH+KhFlZ2zCS+VtcCfEcdOfzv+Cpci/TRdXDp22K
+         GzNqBj9uWk2oxMO4qQp4fu2ynndCEYNQelI1sQCV2xTzFJBHhPki+yNf37vhDIrX15U7
+         Irfe1mNd8bXxMfqce6Suv7nwm5MEdBx+unOwZQYYKmPH7rH220WRFM4q8UfRL1/sd9g4
+         IMT8kTrSzmsIfX6NC8SBA9uKwMh/tTWC/nxTNYaeAuXU8ZTqq1hp9QPH/pRzSHCGKBtQ
+         tLkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724962232; x=1725567032;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5KVDQSRJqn1uLOrwPqOnPp59IExMMYu9Go6kY04yP5E=;
+        b=jxhedh1Qi56MaZsE7XkBB2AM4mAuinD8PyxunCMWPRyCOmshbp/mcC1BAUe/6GRHYS
+         q3FJamxiIyBxgEFQrWB/Qw8xLMLYUvFME4m/+G39qw5m20xNnrM7WZynQAtccXHuTBts
+         4mL113WUtbx9QZDCxqBFfOx8p1f3ZFwYsGKxG6C1KYEs0sIPi9fKJyueJCqJx61eWkYO
+         usK9lDcvaN0njTvjCwnTRpLyMfWeYzpORPqfmqEjjVlhqvZJMkNGtpxP1H7EW21fOTdv
+         S56gTRMAVubVdz4fjK7kBuvHqTpkZhh1khtIFgtjGKjq8r3RhMO1ApMZXCUK1Ox+ZZwG
+         LYeA==
+X-Forwarded-Encrypted: i=1; AJvYcCW/BT36pMCAzJvM9lsMLru5xquj1EetMpQ2YBYeXShtnAC5tjuhIHLZrCsHc8xP/3bAlFa4EZdpSlR0UFl1x5E=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzt6mv/bOSX0vXx4eCsGJLyTq/5M70MhOkHWZwk8xw2hsZc4WS4
+	9aHzs9bzi3EexwcDQId7nGnoNu3n4eqkWm5qpqZv4bxHpRT3ti0XXZg5lXEsuEV52HsqhAByPv2
+	Nnl3L1gWxGwig00R/kfJ0F5UnVRpv0bL5pWja
+X-Google-Smtp-Source: AGHT+IFQRNbNGLHbbGCo2uMEpZQ8l/Z8Qfl7lbbo3l69mIFsmK7QVww06v7HFuoldRojF6blnNbqjyk2g2kuM7Aop/A=
+X-Received: by 2002:a17:903:2282:b0:1fb:19fb:a1f0 with SMTP id
+ d9443c01a7336-2052388c8f1mr664215ad.4.1724962231569; Thu, 29 Aug 2024
+ 13:10:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CABi2SkXDVgiUeC1StbfggvtiYG_kDxQJsZPpDw-NDPNv6-dwmg@mail.gmail.com>
+References: <CANikGpeQuBKj89rTkaAs5ADrz0+YLQ54g-0CshYzE3h06G0U5g@mail.gmail.com>
+ <202408281719.8BBA257@keescook>
+In-Reply-To: <202408281719.8BBA257@keescook>
+From: Jann Horn <jannh@google.com>
+Date: Thu, 29 Aug 2024 22:09:51 +0200
+Message-ID: <CAG48ez3bxCBtWbMG7eooSivNQtb+kTixk6Z2EaEQbmLPB+G=bg@mail.gmail.com>
+Subject: Re: BUG: null pointer dereference in seccomp
+To: Juefei Pu <juefei.pu@email.ucr.edu>
+Cc: Kees Cook <kees@kernel.org>, luto@amacapital.net, wad@chromium.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Aug 29, 2024 at 12:54:09PM -0700, Jeff Xu wrote:
-> Hi Lorenzo
-> 
-> On Thu, Aug 29, 2024 at 8:44 AM Lorenzo Stoakes
-> <lorenzo.stoakes@oracle.com> wrote:
-> 
-> > > >
-> > > > Also, this is a really unusual way to send a series - why is this a 2/2 in
-> > > > reply to the 1/2 and no cover letter? Why is this change totally unrelated
-> > > > to the other patch?
-> > > >
-> 1/2 has a fix that 2/2 is depending on. That is the reason they are together.
+On Thu, Aug 29, 2024 at 2:38=E2=80=AFAM Kees Cook <kees@kernel.org> wrote:
+> On Tue, Aug 27, 2024 at 09:09:49PM -0700, Juefei Pu wrote:
+> > Hello,
+> > We found the following null-pointer-dereference issue using syzkaller
+> > on Linux v6.10.
+>
+> In seccomp! Yikes.
+>
+> > Unfortunately, the syzkaller failed to generate a reproducer.
+>
+> That's a bummer.
+>
+> > But at least we have the report:
+> >
+> > Oops: general protection fault, probably for non-canonical address
+> > 0xdffffc0000000006: 0000 [#1] PREEMPT SMP KASAN PTI
+> > KASAN: null-ptr-deref in range [0x0000000000000030-0x0000000000000037]
+> > CPU: 0 PID: 4493 Comm: systemd-journal Not tainted 6.10.0 #13
+> > Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04=
+/01/2014
+> > RIP: 0010:__bpf_prog_run include/linux/filter.h:691 [inline]
 
-The normal way to send out these patches is as three emails; a 0/2 cover
-letter, 1/2 replying to 0/2 and 2/2 also replying to 0/2.  That's what
-has Lorenzo confused.
+So, the issue can't be that we went through the seccomp filter setup
+path properly and the bpf_prog was never actually installed, because
+in that case we would've crashed in seccomp_cache_prepare_bitmap().
 
-> > > > Can you send this as a separate patch, preferably as an RFC so we can
-> > > > ensure that we all agree on how mseal() should behave?
-> > > >
-> It is not an RFC because it doesn't change any semanic to mseal. The
-> updated test will pass on linux main as well as 6.10. The increased
-> coverage will help to prevent future regression, i.e. during
-> refactoring.
+I'm pretty confused how we could've possibly gotten into this situation...
 
-You seem to not understand that there is disagreement on the semantics
-of mseal().  I mean, ther's been a lot of arguing about that over the
-last week.  There's understanable reluctance to accept a large pile of
-tests saying "this just ensures that mseal behaves the way I think it
-should", when there is substantial disagreement that the way you think
-it should behave is in fact the way it should behave.  Be prepared to
-argue for each semantic that you think it should have.
-
-> I will add a cover letter, split the tests and add more comments to
-> help the review.
-
-Thank you.
+What kind of test setup are you using - is this QEMU in TCG mode or in
+KVM mode? Can you share your vmlinux binary, so we can see if there's
+a clue left in the register state of the crash?
