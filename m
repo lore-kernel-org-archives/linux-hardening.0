@@ -1,267 +1,237 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0D901B373E;
-	Thu, 29 Aug 2024 15:44:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724946281; cv=fail; b=kea7v0VdAzY99FvU6U59CCYzN9jRMUs6+L6UkiozDFc6oL3g1YddU1QX/k/m4WDBnpf9pkb7LvU+CJD0MtmVvGR5IpNw2mom0UAotSRBE75JZXyeHIP45/NdGDzZ1j602r3xHDvEyDrejwzsOcYbxnNJsYbs3COCgYNafaACE20=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724946281; c=relaxed/simple;
-	bh=rOYQdvMI7O2aapgJjHnrhBqKIYBGpRV1IqYHJp49O5w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Wns/FW6PbbVgOkzs3MfHGUB8fQhNgY65fj1fJNjgUCSW4AXjXsrEP/mSuxNfsG9dFjDZEey0HvHdsm+l/z/4j5EX5jw/IMXHRc/W033ifbQerUcU4pOArI7YLhwlbE+075rXxzBJVPUm/tDh+sB74noIUoJrhG2ldCNQJNQakU0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=PkjbVBGx; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=CyOh1Jnn; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7295D1B3B3B
+	for <linux-hardening@vger.kernel.org>; Thu, 29 Aug 2024 15:50:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1724946624; cv=none; b=J48ZuEfcRa+15ZkFM1Ff82HOUuZ+gFrgYT+CxNlQcUg1fP4a95IVzxzRaC5YyK3BuUV59lBOkCJ/tgKnp1TKCqPULrg99kMHD0Ol9jbjmhoRE83hIuJ9nyCsWuy5zH31hskL/g/Velz+svrdBQNNi8Eoxss0wW7/W5vEFeHloK4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1724946624; c=relaxed/simple;
+	bh=Mt9oXi+cRCWoO6vQGhdRGWzq9CIvR1tzuQnaO9MknOs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YOHe7TMc7EKeLBbqhcSL8Cp2VrVikscJG8/RFLHILhyWZshtl/I7lsPuzsw1kyMaqJz46zQeivg4Gk5LyPK9+D4KEScV8fD7V1CfiYTm0PDYjONEU7xG8hxxPBMFtfXB5D/4mQ/gUk3owf73KfHVWQmpcRj3dXgumSWdQSoGXvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gUs8ZMi7; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="PkjbVBGx";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="CyOh1Jnn"
-Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47TDsZtv019023;
-	Thu, 29 Aug 2024 15:44:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
-	date:from:to:cc:subject:message-id:references:content-type
-	:content-transfer-encoding:in-reply-to:mime-version; s=
-	corp-2023-11-20; bh=rOYQdvMI7O2aapgJjHnrhBqKIYBGpRV1IqYHJp49O5w=; b=
-	PkjbVBGxr8cOIC+T465MKlBvjT/pnsgDMKIV8lAlTfxqrdK7kkAFGrW7s/JbIVoE
-	srkgBLpcI2bS6qtD5IF9fvEHc6sfrRgUKhEtqKsPK+3DQ9kBQ7iUikWUvFQ3bK7f
-	N9GEsV361cGB1+r6G+ttpP5lnMxQvJxVq/fWgmN3ey8YuEWH/hGkv+hMIBsVzlp+
-	hKMFzYX4A7HwcES5SZt0Zq73DtR3aum9yD1EDcMVLkGFlEARvG77v6a0GzCgrNlh
-	YeK54+rs1aKyzen7/XyU3X2rlRnSJiErrB3+84PVn57i9LuFCTUGmaLpiCvVpV+0
-	W2bF1nAsHDQXpFrbEaQ24g==
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 419pugvk09-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 29 Aug 2024 15:44:22 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 47TFMdq3036621;
-	Thu, 29 Aug 2024 15:44:21 GMT
-Received: from nam04-bn8-obe.outbound.protection.outlook.com (mail-bn8nam04lp2041.outbound.protection.outlook.com [104.47.74.41])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 4189jndjjh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 29 Aug 2024 15:44:21 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=VnLy1dP8ilHMf93hNSwE4pCieWIUqaIuDjCgfBq39M4zLhAHpT2Kjzcft7O1Vt0CFVYh1tl1/1+uqcGcM/5bs6AA3ltaG+AVSzRS8w8TAYJ28hNuSAXdeIEMgl0AHUwYTv8zUyfIlYWDIJ2pOuQo0zOzV87L33GFJNyDWFypTKpeoIul2XH/kaLzjfKs5qpftFZUr42U7+VjzmiWGCWX+MIBHgjUGKSiLuaJiAZYvahSULfV2CPIrd3jWEdQRB79BQSBAl8fYLSuLHgVZEN0nRvDrPo4+hhGCjnF2fdgT9nnvgucpgCz+YBa7u/Kduh8ND3F63Gehlhguo7B7lrrIw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=rOYQdvMI7O2aapgJjHnrhBqKIYBGpRV1IqYHJp49O5w=;
- b=sPfcPF1/l3uw4pozgkoXpjfslzBSvOwQ4MozwSToqfaRhda1grmoat+NvumO1YiaLyaERr3ixD1PbKktKvq1XI4lBFmWqMk1s+gS3OCzgj3shse31tWyMWEcsGFQHuxQNyeL4dtC2gUnDrPptIjxd2aubc7Y2oU+0vINCmdO1o34J+muuvfCD04iQVA+Ge3TfiSjH0Drczr1jjO1zSDRc7WSFwj4Kv9hxyMFGUjp3ufv+pzZkrDhOvtkQRP5otxy9JMY7qfxygAepiF6nkSDub9evXoQioQ8a0Nzii3eSox2ee9COmPWvA+ZHAntOyW1JdODDeEnji2WaZjw9ydo5g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gUs8ZMi7"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-42ba8928f1dso68005e9.1
+        for <linux-hardening@vger.kernel.org>; Thu, 29 Aug 2024 08:50:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rOYQdvMI7O2aapgJjHnrhBqKIYBGpRV1IqYHJp49O5w=;
- b=CyOh1JnnNpmwM9xmMzD/Qog7I/bu0/+ZMlY0jGx6F2sA0LVLW2NR7/KBUj0YTNVOaoH//db6THHGzNouWPxa5vAvybFQbqmD9NVx+f9UuLzFljs5rUWaP1j85Zz4YL4qnW/24QF0/wEgyHfRtgRVQQgDwnGs9E1ixsc6ZwTpNS0=
-Received: from SJ0PR10MB5613.namprd10.prod.outlook.com (2603:10b6:a03:3d0::5)
- by MW4PR10MB6419.namprd10.prod.outlook.com (2603:10b6:303:20f::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7918.17; Thu, 29 Aug
- 2024 15:44:19 +0000
-Received: from SJ0PR10MB5613.namprd10.prod.outlook.com
- ([fe80::4239:cf6f:9caa:940e]) by SJ0PR10MB5613.namprd10.prod.outlook.com
- ([fe80::4239:cf6f:9caa:940e%5]) with mapi id 15.20.7918.017; Thu, 29 Aug 2024
- 15:44:19 +0000
-Date: Thu, 29 Aug 2024 16:44:15 +0100
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-To: Jeff Xu <jeffxu@chromium.org>
-Cc: akpm@linux-foundation.org, linux-kselftest@vger.kernel.org,
-        linux-mm@kvack.org, linux-hardening@vger.kernel.org,
-        pedro.falcato@gmail.com, rientjes@google.com, keescook@chromium.org,
-        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
-        Vlastimil Babka <vbabka@suse.cz>
-Subject: Re: [PATCH v1 2/2] selftests/mm: mseal_test add more tests
-Message-ID: <5a312d38-4591-47b1-9a6c-4a7242dbe20d@lucifer.local>
-References: <20240828225522.684774-1-jeffxu@chromium.org>
- <20240828225522.684774-2-jeffxu@chromium.org>
- <CABi2SkW9qEOx1FAcWeBLx_EA8LT2V_U6OS1GmEP433oA6t35pw@mail.gmail.com>
- <097a3458-0126-48e3-ba0d-d7dc7b9069d2@lucifer.local>
- <CABi2SkVe6Y4xypBw0n8QbqKJgsfy9YRNJWvBZ3bjTa=-Z5Zn2g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CABi2SkVe6Y4xypBw0n8QbqKJgsfy9YRNJWvBZ3bjTa=-Z5Zn2g@mail.gmail.com>
-X-ClientProxiedBy: LO2P265CA0370.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:a3::22) To SJ0PR10MB5613.namprd10.prod.outlook.com
- (2603:10b6:a03:3d0::5)
+        d=google.com; s=20230601; t=1724946621; x=1725551421; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fLlpduslb3Nup0YapZ+XHfrA6gZyOTFlQOWFXdv5DXc=;
+        b=gUs8ZMi7jXTd4cfM/PBUaLz8mz7C7e3reZdlerpK1iO7rHIPga2vd6Ssgn7nPx8zMS
+         IV8CDwfH47dgml7+u3K+8puZIXGQTgKX1BjtneYVklIbxrpAzIprwptaRVIDqX7L99sV
+         it/DBDNSdjGDwhepA1uy5z7IlaVqQJKjqom7dDQN+ueWmROMuHSjFUzUa8vykgX2CwfQ
+         iUD6G/rPqap+8MABhmuXRwIYsBzHjwxBJmLK0IrcRfnPJbDa56O4rgpPG/SlMJFwU1U+
+         idXClpcoDq/rNaeMw3xkGbyanMaLeqd1o9zoGkNtcbQ0STw2kCUCEfDWQfwj/HHnQtEo
+         Rxbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724946621; x=1725551421;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fLlpduslb3Nup0YapZ+XHfrA6gZyOTFlQOWFXdv5DXc=;
+        b=KfgL891LOulamaVe7fpSzFh9Wl6EaaEXUmimH99xlVLCv4jAci6s9uFUiEey1cD3xq
+         27+ad1YPjaUQCulYx4X9PChuDaSZFPRW6AHiJ8qnQaqMxK+l18mH6edZzsrSdlX5xRnj
+         FY133BxvQUA0Uo+Pi2BQS+AEFqsgy1Pg1jKjTrzHn8i7Fv7GIqrQrgbNHYiOyoLLKZVk
+         njOFkkCPSauPikATVS0gHEV0N+XR3KPzNPL2ltNNXOSB2fcBjtaSEytujnI24ZB0g5E2
+         tmDoXeepKhoDsY1h3OlNyJT6Jidq31yWqeyTH31alPf03cgCJfFxFLcd60zw2CoZdNJo
+         5r4w==
+X-Forwarded-Encrypted: i=1; AJvYcCUsMjTyhRYe3rPqH8HpbiaX1Qh2XoztNYCX1EqB00zLdftzsk35IAyYxf3Biix/dRo+pdqx+UUvGVRiZs04MaQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxq3+g/sMC0vd8DqCIy54AkMir9vvlBLJQymuOeqBJroj+3Ukvp
+	G8Cb5BL2HYhtovmoXXZIlctpORSNeWkkcRIju+1gQM+NxrtxxLc1tJyUGjtZ7CnPvMkO3w+b583
+	cwy1iaEDiPFMiC7wF6Uk2YKdSL+7RbXehP6Ec6J4NFqv4qfixoxqP
+X-Google-Smtp-Source: AGHT+IHQhDGF7YPprlvR4k07dqcjERElj7mv89A99GAbXZwAJdXs2wLoqYZVZqW9oM+scb9rMPKMaXRZYIrBdd69EVk=
+X-Received: by 2002:a05:600c:3d16:b0:426:5d89:896d with SMTP id
+ 5b1f17b1804b1-42bb5fcc333mr1360945e9.1.1724946620213; Thu, 29 Aug 2024
+ 08:50:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ0PR10MB5613:EE_|MW4PR10MB6419:EE_
-X-MS-Office365-Filtering-Correlation-Id: de59a755-12e8-419e-e34d-08dcc84171fc
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?bGczZHhVMmxZeFpWcHZES3V3ZGZmNjRrV3F3b1hodDlwNElXRGlEc20xZS9h?=
- =?utf-8?B?aGd1WXVPTWtZZ1hzZmgyUThUYXJuMWJyK0xUWE94T20wSDlMaDdiSHA2N2ZP?=
- =?utf-8?B?cmN4REFoNFdaSHVTOUF2TktHSGJDaHp1ckRKa1dENkpjbHhEdERmUUdCVEhn?=
- =?utf-8?B?akZrdS80Z3VnYm8zR2srRGMwZkx4QnBTN08rbWVhTGlZMURXOEg3QnpvTEww?=
- =?utf-8?B?dFpwRWFyVjJrOVh0aHBpT0ZKSitQdFdFYjJrODM0Sis1MmhHWXhxTWFxemdu?=
- =?utf-8?B?WmNIMHRaaGs4VmZPTXFSMWE5aVVJODFFY3NIZCtrZTk3UXhzdWxTNVMxZkZ5?=
- =?utf-8?B?R09IK2tpS09zSWRHVHlPTXFiR1JpTGMxQWV3bmJCdlFvNEZCK3VVRThIenVW?=
- =?utf-8?B?WGIzWW9XTVhJb0dBVWpUdlRIMHhIdmJuKys0Rk1Bdk1sakJ3aFBFMmF6aHpq?=
- =?utf-8?B?S0VnMkkxMnl5T29tUHNjSU9LTGdGcWJUSnB0QzNmSFo1YnBVRVk3ZzNXckpr?=
- =?utf-8?B?TnBzZmdmY2M5SjFiWjhFU3F2UE9LVjVXRnVjcmpCVEFkV0VIWGNmNVFLQ0JT?=
- =?utf-8?B?b2pyOGlsYS9pYkRKWjE4cUlZK1lXMDRVYnd5cndkRkl0cFViemFPTkJrYTMv?=
- =?utf-8?B?L3ZBM0FZQ1AvUWpGd3oxWHBOSWFQVGplWGdIK1JsZmJBNSs1bkNGM3g1SzZr?=
- =?utf-8?B?RVpUMUdFaGN1S1JMdi9YcWR1MkNRcEMwVGhJMU9yVVRLeE5ncG1hQTE1dVIz?=
- =?utf-8?B?NUJ6cFZWMUovQytvU3daWWRsNkpPRHo1b3hFbEFXMnZ2cG4yeENseWtWUG1E?=
- =?utf-8?B?Rkl5bklUd2UwcEpHdUdBZkVhekxVdTQvcktCZGQrMCtHYlpHZVNMK2RoZ0E4?=
- =?utf-8?B?cEV5cmdUMk5TY3FiTTJkbHVvVTRhWnExSTQ1Unk0NVJUdDVpSGxicGhrSHpp?=
- =?utf-8?B?L0JhQ1Y1Q3EwN3Z3VUsvcFlwMElya2R6bE9xaFM2ck03YzFaZXNIa0tXQllj?=
- =?utf-8?B?QjNZWVlSUEI0WDVCQ0llNGVRYjdXVVNOZ01OUmwxeE1YUkdKU2F2eHhTVEdZ?=
- =?utf-8?B?ajNKZzlPZUxYTkUwR0RJZjR4Q29UelRCVy9qQVMvd0tDaVRJU2hUZ1k5QTRa?=
- =?utf-8?B?OFpldXFLRm5WL2w5Y0RYV2c4QUVRQklieWIzWmlrcmszWTBrcmQyTUp4OW84?=
- =?utf-8?B?K3liU0I5bmowcHk3SlBLZFNxSmVBSHJQa3Z6c3pLZEp4RmF1bm5rVDMrOGps?=
- =?utf-8?B?TzN3V0NzNkZuSjc2b0RyU0VpTzhCNWVzNTY1dGJ4MzQ0Z1NFLzE3VnZUL2NH?=
- =?utf-8?B?cWhLckhKcHhNcWlObm9vK2JHWlRPc0x6dkl2Tzk2T0xWUitzdG83TTRrKzB2?=
- =?utf-8?B?S2ZxdEZqWEJaOUlXZXdrajUvZzBYek5SUDFhOFVyZk9SWGdCR2lZUGVSYXpT?=
- =?utf-8?B?a2tiOWJUa1lMOE9mNjh2RHJyRjZQWG0yMU9oY1BDcnRnQzEycm1qd21rWGFV?=
- =?utf-8?B?WTBjdk9pK05NTWhyc3A1REhJSEF2eVlLZEcvYjVDQnkvZ3FTZzBCUHR3aVlp?=
- =?utf-8?B?QkdYMm9Gcmp0WUFZMENaTFd3dWs5WW90cnJUeHVZRW4wNitTdVFMNkZ0Z3dS?=
- =?utf-8?B?b3hob0JORnY0dmZvM3I4UlFBUmcybFBxdUJHUi9UOWtzbjlNSmhTU2JKTzhX?=
- =?utf-8?B?UTVLL2Y2WXBZMTBxSjUzQVVEZXQwRXlSUU1sWDlFRVl1Nm80bGZRdW1JZmtK?=
- =?utf-8?B?VkNPenIxMVJmKzlXdjMwc0ZJMFNMUURoR29FU2UwT1BVWUc1Q2tjZFdCd0Vo?=
- =?utf-8?B?VTJFRXNQY0dzSE1sbnVUZz09?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR10MB5613.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?RjJ4TGMzWWw2ZjMvcnp1YWlpWHlnejJuM3JrMHd0cTFxMEs3Q2dDTW1IU2JD?=
- =?utf-8?B?QWJab0dQK080ejZGZ0d3c0gwNXFWZVJtOE51NE9RRDd0azNwekFqNDQrTTRn?=
- =?utf-8?B?QVU4UWVQa2p1ME4wLzNHeWw5eHpnUTFyY0VWOGk0UmVXejFoQVd2bmVnSTZK?=
- =?utf-8?B?SGQ1SkpBN1JMZ1paWk1URWIxakUrTFY3OFh1ckdyZ09sRHQ5T0xpUFhPdGw4?=
- =?utf-8?B?UkxSR3ZrejNBbXMvbEhWZHJQMU1qbGRMeS91V0FyUzVnYkcxUGpsejQ1MGlP?=
- =?utf-8?B?QlRPMjVUcU13U2VQd3ltMnhOVGZ1N1BUbnFZdEdVSi9pVTRDbkRKUkZUZnB1?=
- =?utf-8?B?RDRaeTdrZFExZEtBS2dCK2hwUU5EMUJxdGdrYWpSNjJXbXVScTZoRXlpeklU?=
- =?utf-8?B?ZkpLdENFTWo2UmwySDlkTnBWTWpZTUlGS1VYV05CbW1CMHZMQ082TXlOYUFL?=
- =?utf-8?B?Kzcxanl3eEpwQlBMWDFBODhKeVovMDk1QzU4dDN4eDgvbVUzdUhPRE9DM2pa?=
- =?utf-8?B?RThFMHN2MFZ6WjE3RmtTbkhUVVFSSHVpSTJ6VGZualRoYnNBUGpuNDREcWVu?=
- =?utf-8?B?TFZmemNlUlAzMFp2LzBQS21NVzBzNEpVUHNqaFJBemR3WWdyUmFHVkZVL29i?=
- =?utf-8?B?dUF3SDAvKzZxTDlRU2ZsSjR3emx5WUtpTUE4TmVCUm9XaDVmNlVkeHBWeGl6?=
- =?utf-8?B?MHNCajFWK0Juc25za1VxTG5taUhkY25RYkt2NW9UYjUxWVV1K094dzA5WDhz?=
- =?utf-8?B?UXNPL3pCN3VteXI0YjNGaWFYbnN4SkZMamFyaEFlcmNGWkpvNmlSYjZFK1VT?=
- =?utf-8?B?emJBa2VtTVJFRjlxS1R4OUtXcW5aTm1QNnFDYktTSjZZZm9OSDIram9qU0Yz?=
- =?utf-8?B?czRubCtaM3hFbkE0UzhwTURoYUxQQVJYekhRV3NuS0ZUdER5UnAxMzNYY29J?=
- =?utf-8?B?amFHMTdzVFBVV3RiNG4yS3lpWjBzUXY1bWZDZjM3TGpwUjQyUkxDVWtZb1RR?=
- =?utf-8?B?SytReEpVWk9tRTFXZXZoZEVrRlRMLzFtd2RQVCtKQlUyeXRQZlk1MjU5d25p?=
- =?utf-8?B?MXJPYXR0SlhkVGZEK2NiR1pReDJ5bVNXaTFGRk1TVnp1aXRta2kySDlBL0lk?=
- =?utf-8?B?TWR4dVo0YzRucmM2L3pIN201QXVqRTJWaU9OUUFETjFQQjdyRjBNekhNYjZQ?=
- =?utf-8?B?Y3pnbFlvU0kyTURTL2dmemNOQVl3b0JJNm5QMkwzcjNYWng3MHJ3QW5RaHE4?=
- =?utf-8?B?S2xvaUcrZDFtMXBnSm5GN2RqVFFhbkFMNjU5dTlONHp2S3RTNlJOQytVM1RW?=
- =?utf-8?B?VHJXd3ZyZDVDM0VBSDM5aHI3aC9QNnRtOWpJWWM3Z1VENXNHQm5pR1dYVXZT?=
- =?utf-8?B?ZmQyT3FrdEtybGJTNUExUUd2Tzd4WWtlbkJVTCtNbGRBSDArc2JIY2cyLzNY?=
- =?utf-8?B?a2hQNm0xOERCak03S2RXTXZBcERIVWROZXB4bTdjSnQ5Ump2K09FT0JNUlZy?=
- =?utf-8?B?Z015NmJTVmhORmEzUUpwdDJKSy9CQVhpaUpTRUxiR3BNU3lpdzBHRGQvdEZG?=
- =?utf-8?B?NGhqN1EyYWZ0bEdXWEJneFpCZTNROUlOeVowWWZaTVpHd0t4ZUxWb3M3VStn?=
- =?utf-8?B?N0hXZ1k0VDdTMTVaZjlzWU1wTytSMlJFd0JFRW5HZkxJc1NJTGVZNldWZ2do?=
- =?utf-8?B?bGFHeWsraVVXOGQzZ0V0MXozRTQ1b2MrMWNNc3hXMitUM1hEb1c2RmdpcWhL?=
- =?utf-8?B?UVVSSGRTR1RKRkZVdkxPMjFldDBydDR1OUpyUlRCclBtNXBOdzl5eCs0Qm5X?=
- =?utf-8?B?NGgrVlpSTlVrUDdJR05KR0VJQVkyYTFFMzdXcGYwb1ZQb2Zha0lrKzRNeHpi?=
- =?utf-8?B?cEhoV24wYUxKOVhNTUhZdElzcUZkd2VIcVZrTWkveitjK1gyRFY4MXE0VVNk?=
- =?utf-8?B?R0VUNllOOU9aNkJyL1hLUE1nb3RsQlhXQ0pEcUJybXE0ZFhoSzF3eDJ4cThQ?=
- =?utf-8?B?WXZzMXdTU1krYm9rUGo0YnFrKy9FZzFleVFvRWxXN2daSTVMOW05MWgzWTZH?=
- =?utf-8?B?RWZpL0ZiVDZwcytnWGwvMGZOSFZpQjZiOUpZZmpOelRUVU5wc1FoZGQyemhJ?=
- =?utf-8?B?RzA3eWgwTXhwRkFYYmtHMWVwOENTcGdPVEprVmZ3eTNoZi9QK3BESitGakNP?=
- =?utf-8?B?Y2c9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	3ffuoWNC7qbNQhJbPI/zUOqdGOZqP8yZ5WCODE02/KYZhkMaK2Qf1RpknU2tRzNwcTkDzWe5Nz/ybG7gzimtfaqMwtYANJyxTHuS/dgeMPFCuAgIZuuF82M8zvtcGTbgXF31dtCFglFeo44v7FBVF8gZjCEA3vMmtqnPL7XGuwls4wbT1kBlCsLssmsfvfQra8Y5S93vHvuT4OM5BASl29VBvoy6iNJAoEzPgkuiSJkOcdUKeCB6NDog41Z2LAD0MurYfTuvYXAFKHO95lsx76zggK+oF+fKwuw89kl5/QdZH3PvzLhodZTlOzTNfFtp1V2IN+71AaOFngRMPdLw99gfWufA7btwt7B9pl7+KOv7jvfLDwsZQ+ZLmtBG4rtBXhfA1q7MZpW4+EvG82qG4fzsOSL0GbUWUkftfb5vY96zi6RTNsiJ7iOdxtisf2sJZ5FR/tETsy3OFdG18l20k3+jC9c9etnZPeXhbYDqdQkfrc4Ce3anQX/GdIsqWZnWXhUWmayeZ1zEGYMwb5M00Iirx6dTO0zI2XouatKKth1hck3AJouxBiLloi/TcDkjszeg/VJWSWED+2d2lsQdAuvp8bamFcPz9b3NhYfZgvs=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: de59a755-12e8-419e-e34d-08dcc84171fc
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR10MB5613.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Aug 2024 15:44:19.1387
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 9FTpnITIeer798eLCqka4wkmRgXJU7mKC1gM+QICzMESVQonP9V60A+CBp0EVLAgYsUn0txItaalxWwVYNApRo2tgcGsnP6eLMXVjSDIsDk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR10MB6419
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-08-29_04,2024-08-29_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 suspectscore=0
- phishscore=0 malwarescore=0 bulkscore=0 mlxlogscore=715 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2407110000
- definitions=main-2408290110
-X-Proofpoint-GUID: 5aCy0niCN7035NcpDTI2xridMgYgoRKi
-X-Proofpoint-ORIG-GUID: 5aCy0niCN7035NcpDTI2xridMgYgoRKi
+References: <CANikGpeQuBKj89rTkaAs5ADrz0+YLQ54g-0CshYzE3h06G0U5g@mail.gmail.com>
+ <202408281719.8BBA257@keescook>
+In-Reply-To: <202408281719.8BBA257@keescook>
+From: Jann Horn <jannh@google.com>
+Date: Thu, 29 Aug 2024 17:49:42 +0200
+Message-ID: <CAG48ez26ot6z0swcqrR7Z6Eho73BObz-5zO4ts=Qqtn78ZUBYQ@mail.gmail.com>
+Subject: Re: BUG: null pointer dereference in seccomp
+To: Kees Cook <kees@kernel.org>
+Cc: Juefei Pu <juefei.pu@email.ucr.edu>, luto@amacapital.net, wad@chromium.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Aug 29, 2024 at 08:30:11AM GMT, Jeff Xu wrote:
-> Hi Lorenzo
+On Thu, Aug 29, 2024 at 2:38=E2=80=AFAM Kees Cook <kees@kernel.org> wrote:
+> On Tue, Aug 27, 2024 at 09:09:49PM -0700, Juefei Pu wrote:
+> > Hello,
+> > We found the following null-pointer-dereference issue using syzkaller
+> > on Linux v6.10.
 >
-> On Thu, Aug 29, 2024 at 8:14 AM Lorenzo Stoakes
-> <lorenzo.stoakes@oracle.com> wrote:
-> >
-> > On Thu, Aug 29, 2024 at 07:45:56AM GMT, Jeff Xu wrote:
-> > > HI Andrew
-> > >
-> > > On Wed, Aug 28, 2024 at 3:55 PM <jeffxu@chromium.org> wrote:
-> > > >
-> > > > From: Jeff Xu <jeffxu@chromium.org>
-> > > >
-> > > > Add more testcases and increase test coverage, e.g. add
-> > > > get_vma_size to check VMA size and prot bits.
-> >
-> > This commit message is ridiculously short for such a massive change, even for
-> > test code.
-> >
-> > > >
-> > >
-> > > Could you please pull the self-test part of this patch series to mm-unstable ?
-> > > It will help to prevent regression.
-> >
-> > No, please don't.
-> >
-> > This needs review.
-> >
-> > These tests establish a precedent as to how mseal should behave, this is
-> > something that needs community review, not to just be taken.
-> >
-> > There's already been a great deal of confusion/contentious discussion
-> > around mseal() and its implementation.
-> >
-> > Pushing in ~800 lines of test code asserting how mseal() should behave
-> > without review isn't helping things.
-> >
-> > Also, this is a really unusual way to send a series - why is this a 2/2 in
-> > reply to the 1/2 and no cover letter? Why is this change totally unrelated
-> > to the other patch?
-> >
-> > Can you send this as a separate patch, preferably as an RFC so we can
-> > ensure that we all agree on how mseal() should behave?
-> >
-> > Sorry to be contentious here, but I think we need to find a more
-> > constructive, collaborative way forward with mseal() and to act with a
-> > little more caution, given the problems that the original series has caused
-> > I'd think this is in the best interests of all.
-> >
-> > Thanks for understanding!
-> >
-> There have been two bugs I found recently on mseal.
-> One during V2 of in-loop change and the other mentioned in 1/2 of this patch.
+> In seccomp! Yikes.
 >
+> > Unfortunately, the syzkaller failed to generate a reproducer.
+>
+> That's a bummer.
+>
+> > But at least we have the report:
+> >
+> > Oops: general protection fault, probably for non-canonical address
+> > 0xdffffc0000000006: 0000 [#1] PREEMPT SMP KASAN PTI
+> > KASAN: null-ptr-deref in range [0x0000000000000030-0x0000000000000037]
+> > CPU: 0 PID: 4493 Comm: systemd-journal Not tainted 6.10.0 #13
+> > Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04=
+/01/2014
+> > RIP: 0010:__bpf_prog_run include/linux/filter.h:691 [inline]
+>
+> This doesn't look like a NULL deref, this looks like a corrupted
+> pointer: 0xdffffc0000000006.
 
-Jeff you've ignored pretty much everything I've said here. This is not
-collaboration. And you keep doing this + causing disharmony among other
-devleopers. It's getting tiresome, and you need to do better.
+No, it really is a NULL deref - in a non-KASAN build, you'd see a page
+fault at virtual address 0x30. KASAN builds with inline
+instrumentation cause a GPF on NULL deref because they try to first
+check the KASAN shadow mapping for that address, and applying the
+shadow address calculation to NULL (or addresses in the low address
+space half) gives non-canonical addresses.
 
-If you insist on review for this patch as it stands - NACK.
+This line directly below the oops message is supposed to point this
+out (it works by decoding the faulting instruction, calculating the
+effective address of the access, and then having KASAN calculate
+backwards from the shadow address what the original address could have
+been):
 
-The commit message is ludicriously short, you've not sent the series
-correctly, and you are ignoring feedback.
+KASAN: null-ptr-deref in range [0x0000000000000030-0x0000000000000037]
 
-Resend this with a substantially improved commit message and ideally some
-actual comments in your tests rather than a giant lump of code which
-constitutes 'how Jeff feels mseal() should work'.
+> Is prog bad or dfunc bad? I assume the
+> former, as dfunc is hard-coded below...
+>
+>                 ret =3D dfunc(ctx, prog->insnsi, prog->bpf_func);
+>
+> > RIP: 0010:bpf_prog_run include/linux/filter.h:698 [inline]
+>
+>         return __bpf_prog_run(prog, ctx, bpf_dispatcher_nop_func);
+>
+> > RIP: 0010:bpf_prog_run_pin_on_cpu include/linux/filter.h:715 [inline]
+>
+>         ret =3D bpf_prog_run(prog, ctx);
+>
+> > RIP: 0010:seccomp_run_filters+0x17a/0x3f0 kernel/seccomp.c:426
+>
+>                 u32 cur_ret =3D bpf_prog_run_pin_on_cpu(f->prog, sd);
+>
+> > Code: 00 00 e8 99 36 d2 ff 0f 1f 44 00 00 e8 cf 58 ff ff 48 8d 5d 48
+> > 48 83 c5 30 48 89 e8 48 c1 e8 03 48 b9 00 00 00 00 00 fc ff df <80> 3c
+> > 08 00 74 08 48 89 ef e8 c8 63 62 00 4c 8b 5d 00 48 8b 3c 24
+> > RSP: 0018:ffffc90002cb7be0 EFLAGS: 00010206
+> > RAX: 0000000000000006 RBX: 0000000000000048 RCX: dffffc0000000000
+> > RDX: 0000000000000000 RSI: 00000000000002a4 RDI: ffffffff8b517360
+> > RBP: 0000000000000030 R08: ffffffff8191f8eb R09: 1ffff11004039e86
+> > R10: dffffc0000000000 R11: ffffffffa00016d0 R12: 000000007fff0000
+> > R13: ffff88801f84a800 R14: ffffc90002cb7df0 R15: 000000007fff0000
+> > FS:  00007f897e849900(0000) GS:ffff888063a00000(0000) knlGS:00000000000=
+00000
+> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > CR2: 00007f897d771b08 CR3: 00000000195fe000 CR4: 0000000000350ef0
+> > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > Call Trace:
+> >  <TASK>
+> >  __seccomp_filter+0x46f/0x1c70 kernel/seccomp.c:1222
+> >  syscall_trace_enter+0xa4/0x140 kernel/entry/common.c:52
+> >  syscall_enter_from_user_mode_work include/linux/entry-common.h:168 [in=
+line]
+> >  syscall_enter_from_user_mode include/linux/entry-common.h:198 [inline]
+> >  do_syscall_64+0x5d/0x150 arch/x86/entry/common.c:79
+> >  entry_SYSCALL_64_after_hwframe+0x67/0x6f
+>
+> Has anything changed in BPF in this area lately?
+>
+> > RIP: 0033:0x7f897ed171e4
+> > Code: 84 00 00 00 00 00 44 89 54 24 0c e8 36 58 f9 ff 44 8b 54 24 0c
+> > 44 89 e2 48 89 ee 41 89 c0 bf 9c ff ff ff b8 01 01 00 00 0f 05 <48> 3d
+> > 00 f0 ff ff 77 34 44 89 c7 89 44 24 0c e8 68 58 f9 ff 8b 44
+> > RSP: 002b:00007ffd4ae74a60 EFLAGS: 00000293 ORIG_RAX: 0000000000000101
+> > RAX: ffffffffffffffda RBX: 00005627cd785ed0 RCX: 00007f897ed171e4
+> > RDX: 0000000000290000 RSI: 00007f897f010d0a RDI: 00000000ffffff9c
+> > RBP: 00007f897f010d0a R08: 0000000000000000 R09: 0034353132303865
+> > R10: 0000000000000000 R11: 0000000000000293 R12: 0000000000290000
+> > R13: 00007ffd4ae74d20 R14: 0000000000000000 R15: 00007ffd4ae74e28
+> >  </TASK>
+> > Modules linked in:
+> > ---[ end trace 0000000000000000 ]---
+> > RIP: 0010:__bpf_prog_run include/linux/filter.h:691 [inline]
+> > RIP: 0010:bpf_prog_run include/linux/filter.h:698 [inline]
+> > RIP: 0010:bpf_prog_run_pin_on_cpu include/linux/filter.h:715 [inline]
+> > RIP: 0010:seccomp_run_filters+0x17a/0x3f0 kernel/seccomp.c:426
+> > Code: 00 00 e8 99 36 d2 ff 0f 1f 44 00 00 e8 cf 58 ff ff 48 8d 5d 48
+> > 48 83 c5 30 48 89 e8 48 c1 e8 03 48 b9 00 00 00 00 00 fc ff df <80> 3c
+> > 08 00 74 08 48 89 ef e8 c8 63 62 00 4c 8b 5d 00 48 8b 3c 24
+> > RSP: 0018:ffffc90002cb7be0 EFLAGS: 00010206
+> > RAX: 0000000000000006 RBX: 0000000000000048 RCX: dffffc0000000000
+> > RDX: 0000000000000000 RSI: 00000000000002a4 RDI: ffffffff8b517360
+> > RBP: 0000000000000030 R08: ffffffff8191f8eb R09: 1ffff11004039e86
+> > R10: dffffc0000000000 R11: ffffffffa00016d0 R12: 000000007fff0000
+> > R13: ffff88801f84a800 R14: ffffc90002cb7df0 R15: 000000007fff0000
+> > FS:  00007f897e849900(0000) GS:ffff888063a00000(0000) knlGS:00000000000=
+00000
+> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > CR2: 00007f521f8ca000 CR3: 00000000195fe000 CR4: 0000000000350ef0
+> > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > ----------------
+> > Code disassembly (best guess):
+> >    0: 00 00                 add    %al,(%rax)
+> >    2: e8 99 36 d2 ff       call   0xffd236a0
+> >    7: 0f 1f 44 00 00       nopl   0x0(%rax,%rax,1)
+> >    c: e8 cf 58 ff ff       call   0xffff58e0
+> >   11: 48 8d 5d 48           lea    0x48(%rbp),%rbx
 
-Then when people give feedback - listen.
+This LEA looks like it's calculating the address of prog->insnsi.
+
+> >   15: 48 83 c5 30           add    $0x30,%rbp
+> >   19: 48 89 e8             mov    %rbp,%rax
+> >   1c: 48 c1 e8 03           shr    $0x3,%rax
+> >   20: 48 b9 00 00 00 00 00 movabs $0xdffffc0000000000,%rcx
+> >   27: fc ff df
+> > * 2a: 80 3c 08 00           cmpb   $0x0,(%rax,%rcx,1) <-- trapping inst=
+ruction
+
+Here you can see - the access happens at rax+rcx, which is
+(rbp>>3)+0xdffffc0000000000. rbp is the actual pointer that will be
+accessed; this shift-right-and-add-0xdffffc0000000000 pattern is how
+inline KASAN instrumentation determines the shadow address.
+
+> >   2e: 74 08                 je     0x38
+
+Normally we jump over the next two instructions, if the KASAN shadow
+is 0 (which means fully accessible)...
+
+> >   30: 48 89 ef             mov    %rbp,%rdi
+> >   33: e8 c8 63 62 00       call   0x626400
+
+... continue here:
+
+> >   38: 4c 8b 5d 00           mov    0x0(%rbp),%r11
+
+And here's the actual access to rbp, which is probably loading the
+prog->bpf_func.
+
+> >   3c: 48 8b 3c 24           mov    (%rsp),%rdi
+>
+> What's the movabs? I don't have anything like that in my vmlinux binary
+> output. Is this KASAN perhaps?
+
+Yes, inline KASAN.
+
+
+>
+> Regardless, I don't see how prog could be NULL. :( It shouldn't be
+> possible without some kind of major refcounting bug.
