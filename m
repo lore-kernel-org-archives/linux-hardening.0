@@ -1,54 +1,54 @@
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com [209.85.160.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 441801BAED8
-	for <linux-hardening@vger.kernel.org>; Thu, 29 Aug 2024 21:44:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C6941BA286
+	for <linux-hardening@vger.kernel.org>; Thu, 29 Aug 2024 21:44:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724967849; cv=none; b=VzSj1zDzDJydLpwJbJ2ogW1Ty6HDLMPFwmzzbrEMofcKd2jt4A7nbOuyXPpi1N7Qb5mFskCNZYMafXTB48cPylAMhGrbDvB56aaCiHiUcvPWAXDCFs6QmoizXYZ+lc5VU0/RbfKzNbK/BlQXf+kSS+h17wLRECDdfsWSzMphi/Y=
+	t=1724967851; cv=none; b=QRd1T0A362uWjSxHHzWxvQq4FM1ekEa3QsdIxQgqERS+Yy9KNqrYK27mmBBkWchdMif3VtXTyvEOHoZnhiZ3ASdgEyThjMbPbYzxAJku+C7TfcEvMfhLGpw9L4uYU/eo66UU+IheQaPkCEnR2MOL1sscaZU+HgBLwNwu7qJizrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724967849; c=relaxed/simple;
-	bh=/IMNJ95SpejvcUBxNqKXzFolTjM9jYB1KqtTg3owDqw=;
+	s=arc-20240116; t=1724967851; c=relaxed/simple;
+	bh=j5DIz/FwohbXIbAOYNtL4lsH2nx4Cd5E1K3MEN4JHG4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hu+jZFUZKpmeo0+Li92f+eMpeYEOjolxxWPZFJRTy2QJv8lwShdkJblPLxVvVC6/E03Lr0pMXO0TsPizfz06ygT9Yp/0e9NmhmT7wwwRKTOXHmq7JbiDJcKRgp+tnLKixe4NGwwS9XLw3sVfXRBrh7LSX92VcWnO6BY3a97ImyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=RUk41ce4; arc=none smtp.client-ip=209.85.215.182
+	 MIME-Version; b=hHPk/Nc9Z9F9kvbuue6mrvmQRL3CQrtXZjfqMCcIS4aTQQbMg7PFuCJZxmsDCt1KAhLEoGW2tkbVFy8Zc+xfV1CrYqQ2lhYCviJswDncWG8Gw2wVGHHbd4Yh/zc4w/csWYb0UdzphdLsKzHPVGDgLhgHowiBGxeaQaafz+eN6RY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Vdihf0KT; arc=none smtp.client-ip=209.85.160.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RUk41ce4"
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-7cd85502a34so35242a12.2
-        for <linux-hardening@vger.kernel.org>; Thu, 29 Aug 2024 14:44:07 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Vdihf0KT"
+Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-2702920904bso141860fac.0
+        for <linux-hardening@vger.kernel.org>; Thu, 29 Aug 2024 14:44:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1724967846; x=1725572646; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1724967848; x=1725572648; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=qngXRj3l1V5w2+Tk+0qChrUc0VPNj8YHKUhOOfdL/8E=;
-        b=RUk41ce4GTZcfQNQ5jQ6IdTUD1C9NU5KJHte9pmHqksLBkLUgpHn81h1tHOmnscD4Y
-         2BJxb9rJVdrVtRjAIhz1744DgzJ65bR19CiYITJpB8WlvshCSCaWb8Dy1P844XxVCALz
-         vz6NnMoRUvKXO0tlXFrGzrsUwyKV9ik/IPRTo=
+        bh=pOFHefv5origwTURYhXBdEyQH2l+L4eXRhYcbCi88yk=;
+        b=Vdihf0KTL5G8F2ERjwy0ZOXENyZVsW4MVBZXPRWFwiZytZamcKr84ShU4RPD+C/TPe
+         6sec6OMT3RTy4zCmCi6tl0iJutZv6NA+jlfk9p/wh2mFRk4IR+P/oQce95LqUaFgBjLW
+         fEDsqIdii1lyOuUeqeUFmOml6vZdLL18ctdqk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724967846; x=1725572646;
+        d=1e100.net; s=20230601; t=1724967848; x=1725572648;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=qngXRj3l1V5w2+Tk+0qChrUc0VPNj8YHKUhOOfdL/8E=;
-        b=qM/oNhaIlNGqhlvVYRC6QtT4kPGMdxqMHZRYoAQHMecy8E/CFFTXiQR+Z1domOorPG
-         tl9EFEdebhN4krPtVpDCDNjM2AO3lMgBlmSy4i+z+S0MtmYk1/iqQ5RoHwzQW8HXaOTE
-         EbnQPSRSlBBaPJOcbabxU99Ye6rx4efzfhfj8TyejBnghgH3lsrjUMamejuGm5Igplmt
-         XncfXGB9loQFEVINAtDknbIZAi9RAehj4bnhHmTFxk/dGR/+BSM151Cz+CJ5WIcXXv73
-         ocVIwiC7m+UjxWe4Gifi8CSuoiezVMhkqUhsd57Ie24Qd2ryvgidzJ12z4TfCHbmpF8d
-         VagQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXPtyyMKr+Q2/522Z9a6C6MydHcvWppLP057d8Ygrm1zi0w016QaNyheA8njOblTt59KHeHAn3sECpkakLd2TI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxdFWcjo4K4P57EGb0WOcrvC6q54WWGE8RHoaIcyUbQ9pILSNaJ
-	KkmMM3t84jTcZkBNJPLi25cvVDtnOVzXRAM3u4YwVJDx8lLjyzxA0N48C4o7EA==
-X-Google-Smtp-Source: AGHT+IGw6LhTiqcHA4wOD2hbInscY7fZlLpfvydbHUPkI3AUpW/gqVA9D8kpvdBYJgGdQzekGp3weg==
-X-Received: by 2002:a17:903:2350:b0:1fa:a9f5:64b1 with SMTP id d9443c01a7336-2052761fcd8mr1316265ad.3.1724967846304;
-        Thu, 29 Aug 2024 14:44:06 -0700 (PDT)
+        bh=pOFHefv5origwTURYhXBdEyQH2l+L4eXRhYcbCi88yk=;
+        b=rqBMZDWKgoXCRhE0f6AubCDgoD7j6X/CeWx4mCPIVEsZKmF2JhHHEpeyH5YklXIiQ6
+         rO1fkTQ9U7yiq7BTLIrEDgvgZfjl8x9J30DLxhyc4w7QHRbY+SedvUFD+ZKT1fM/+OI+
+         OHmYx8ESALO1f0Nm3bpVgfmlwwYfb2brs0aOuraaBiWAqHM520oiKxnPoGlNBBdYE4Rj
+         bYEv3EM70crV317o0eaPq3pyD971QJO1kNb77ZemUmxKpKaoGt/f1WJTMb9UzlUkhsWK
+         iKX315cLWmv6EwrrEelE7AooYXHcqgNRaDNxJj/5nb4IOir7uRNOTpbszyBHXPxAMTtH
+         fA1g==
+X-Forwarded-Encrypted: i=1; AJvYcCUbneJ3Go3QUnjlLnTqjxjE7BuayKWYZ2MUdcEFmyz6p6fc5DBquZUxtq85ffvGPL7JzquHlbs/odxdhJ/UwFc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4bGY/do2TGNXa7D5YjxPBin5VLNpk4QgYerAVtEs28V7PO5Ls
+	aHQACzxxP/MIieyc+stihzAfq+WwWBviTb247nRB3vD6NWD0TlzHOJRWOTbfQw==
+X-Google-Smtp-Source: AGHT+IFyc3ebYhYoxmlTy374CXmH+6Huc2oIlQtKye5oZuLAVTm63hVpSqGBNKx/nJcUYkxMgJL0wg==
+X-Received: by 2002:a05:6870:8a26:b0:26f:de62:7d8a with SMTP id 586e51a60fabf-277903bdf4cmr2281204fac.10.1724967848269;
+        Thu, 29 Aug 2024 14:44:08 -0700 (PDT)
 Received: from localhost (150.12.83.34.bc.googleusercontent.com. [34.83.12.150])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-205152b26b2sm15882985ad.6.2024.08.29.14.44.05
+        by smtp.gmail.com with UTF8SMTPSA id 41be03b00d2f7-7d22e771c48sm1709417a12.23.2024.08.29.14.44.07
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 29 Aug 2024 14:44:05 -0700 (PDT)
+        Thu, 29 Aug 2024 14:44:07 -0700 (PDT)
 From: jeffxu@chromium.org
 To: akpm@linux-foundation.org
 Cc: linux-kselftest@vger.kernel.org,
@@ -64,9 +64,9 @@ Cc: linux-kselftest@vger.kernel.org,
 	rientjes@google.com,
 	keescook@chromium.org,
 	Jeff Xu <jeffxu@chromium.org>
-Subject: [PATCH v2 2/4] selftests/mm: mseal_test add sealed madvise type
-Date: Thu, 29 Aug 2024 21:43:50 +0000
-Message-ID: <20240829214352.963001-3-jeffxu@chromium.org>
+Subject: [PATCH v2 3/4] selftests/mm: mseal_test add more tests for mmap
+Date: Thu, 29 Aug 2024 21:43:51 +0000
+Message-ID: <20240829214352.963001-4-jeffxu@chromium.org>
 X-Mailer: git-send-email 2.46.0.469.g59c65b2a67-goog
 In-Reply-To: <20240829214352.963001-1-jeffxu@chromium.org>
 References: <20240829214352.963001-1-jeffxu@chromium.org>
@@ -80,118 +80,135 @@ Content-Transfer-Encoding: 8bit
 
 From: Jeff Xu <jeffxu@chromium.org>
 
-Add a testcase to cover all sealed madvise type.
+Add sealing test to cover mmap for
+Expand/shrink across vmas.
+Reuse the same address in !MAP_FIXED case.
 
 Signed-off-by: Jeff Xu <jeffxu@chromium.org>
 ---
- tools/testing/selftests/mm/mseal_test.c | 108 +++++++++++++++++++++++-
- 1 file changed, 107 insertions(+), 1 deletion(-)
+ tools/testing/selftests/mm/mseal_test.c | 125 +++++++++++++++++++++++-
+ 1 file changed, 124 insertions(+), 1 deletion(-)
 
 diff --git a/tools/testing/selftests/mm/mseal_test.c b/tools/testing/selftests/mm/mseal_test.c
-index adc646cf576c..ae06c354220d 100644
+index ae06c354220d..d83538039e76 100644
 --- a/tools/testing/selftests/mm/mseal_test.c
 +++ b/tools/testing/selftests/mm/mseal_test.c
-@@ -2121,6 +2121,107 @@ static void test_seal_madvise_nodiscard(bool seal)
+@@ -2222,6 +2222,122 @@ static void test_munmap_free_multiple_ranges(bool seal)
  	REPORT_TEST_PASS();
  }
  
-+static void test_seal_discard_madvise_advice(void)
++static void test_seal_mmap_expand_seal_middle(bool seal)
 +{
 +	void *ptr;
 +	unsigned long page_size = getpagesize();
-+	unsigned long size = 4 * page_size;
++	unsigned long size = 12 * page_size;
 +	int ret;
-+	int sealed_advice[] = {MADV_FREE, MADV_DONTNEED,
-+		MADV_DONTNEED_LOCKED, MADV_REMOVE,
-+		MADV_DONTFORK, MADV_WIPEONFORK};
-+	int size_sealed_advice = sizeof(sealed_advice) / sizeof(int);
++	void *ret2;
++	int prot;
 +
 +	setup_single_address(size, &ptr);
 +	FAIL_TEST_IF_FALSE(ptr != (void *)-1);
-+
-+	ret = seal_single_address(ptr, size);
++	/* ummap last 4 pages. */
++	ret = sys_munmap(ptr + 8 * page_size, 4 * page_size);
 +	FAIL_TEST_IF_FALSE(!ret);
 +
-+	for (int i = 0; i < size_sealed_advice; i++) {
-+		ret = sys_madvise(ptr, size, sealed_advice[i]);
-+		FAIL_TEST_IF_FALSE(ret < 0);
-+		FAIL_TEST_IF_FALSE(errno == EPERM);
++	size = get_vma_size(ptr, &prot);
++	FAIL_TEST_IF_FALSE(size == 8 * page_size);
++	FAIL_TEST_IF_FALSE(prot == 0x4);
++
++	if (seal) {
++		ret = sys_mseal(ptr + 4 * page_size, 4 * page_size);
++		FAIL_TEST_IF_FALSE(!ret);
 +	}
++
++	/* use mmap to expand. */
++	ret2 = mmap(ptr, 12 * page_size, PROT_READ,
++			MAP_ANONYMOUS | MAP_PRIVATE | MAP_FIXED, -1, 0);
++	if (seal) {
++		FAIL_TEST_IF_FALSE(ret2 == MAP_FAILED);
++		FAIL_TEST_IF_FALSE(errno == EPERM);
++
++		size = get_vma_size(ptr, &prot);
++		FAIL_TEST_IF_FALSE(size == 4 * page_size);
++		FAIL_TEST_IF_FALSE(prot == 0x4);
++
++		size = get_vma_size(ptr + 4 * page_size, &prot);
++		FAIL_TEST_IF_FALSE(size == 4 * page_size);
++		FAIL_TEST_IF_FALSE(prot == 0x4);
++	} else
++		FAIL_TEST_IF_FALSE(ret2 == ptr);
 +
 +	REPORT_TEST_PASS();
 +}
 +
-+static void test_munmap_free_multiple_ranges(bool seal)
++static void test_seal_mmap_shrink_seal_middle(bool seal)
 +{
 +	void *ptr;
 +	unsigned long page_size = getpagesize();
-+	unsigned long size = 8 * page_size;
++	unsigned long size = 12 * page_size;
 +	int ret;
++	void *ret2;
 +	int prot;
 +
 +	setup_single_address(size, &ptr);
 +	FAIL_TEST_IF_FALSE(ptr != (void *)-1);
 +
-+	/* unmap one page from beginning. */
-+	ret = sys_munmap(ptr, page_size);
-+	FAIL_TEST_IF_FALSE(!ret);
-+
-+	/* unmap one page from middle. */
-+	ret = sys_munmap(ptr + 4 * page_size, page_size);
-+	FAIL_TEST_IF_FALSE(!ret);
-+
-+	size = get_vma_size(ptr + page_size, &prot);
-+	FAIL_TEST_IF_FALSE(size == 3 * page_size);
-+	FAIL_TEST_IF_FALSE(prot == 4);
-+
-+	size = get_vma_size(ptr +  5 * page_size, &prot);
-+	FAIL_TEST_IF_FALSE(size == 3 * page_size);
-+	FAIL_TEST_IF_FALSE(prot == 4);
-+
-+
-+	/* seal the last page */
 +	if (seal) {
-+		ret = sys_mseal(ptr + 7 * page_size, page_size);
++		ret = sys_mseal(ptr + 4 * page_size, 4 * page_size);
 +		FAIL_TEST_IF_FALSE(!ret);
-+
-+		size = get_vma_size(ptr +  1 * page_size, &prot);
-+		FAIL_TEST_IF_FALSE(size == 3 * page_size);
-+		FAIL_TEST_IF_FALSE(prot == 4);
-+
-+		size = get_vma_size(ptr +  5 * page_size, &prot);
-+		FAIL_TEST_IF_FALSE(size == 2 * page_size);
-+		FAIL_TEST_IF_FALSE(prot == 4);
-+
-+		size = get_vma_size(ptr +  7 * page_size, &prot);
-+		FAIL_TEST_IF_FALSE(size == 1 * page_size);
-+		FAIL_TEST_IF_FALSE(prot == 4);
 +	}
 +
-+	/* munmap all 8  pages from beginning */
-+	ret = sys_munmap(ptr, 8 * page_size);
++	/* use mmap to shrink. */
++	ret2 = mmap(ptr, 7 * page_size, PROT_READ,
++			MAP_ANONYMOUS | MAP_PRIVATE | MAP_FIXED, -1, 0);
 +	if (seal) {
-+		FAIL_TEST_IF_FALSE(ret);
++		FAIL_TEST_IF_FALSE(ret2 == MAP_FAILED);
++		FAIL_TEST_IF_FALSE(errno == EPERM);
 +
-+		/* verify mapping are not changed */
-+		size = get_vma_size(ptr + 1 * page_size, &prot);
-+		FAIL_TEST_IF_FALSE(size == 3 * page_size);
-+		FAIL_TEST_IF_FALSE(prot == 4);
++		size = get_vma_size(ptr, &prot);
++		FAIL_TEST_IF_FALSE(size == 4 * page_size);
++		FAIL_TEST_IF_FALSE(prot == 0x4);
 +
-+		size = get_vma_size(ptr +  5 * page_size, &prot);
-+		FAIL_TEST_IF_FALSE(size == 2 * page_size);
-+		FAIL_TEST_IF_FALSE(prot == 4);
++		size = get_vma_size(ptr + 4 * page_size, &prot);
++		FAIL_TEST_IF_FALSE(size == 4 * page_size);
++		FAIL_TEST_IF_FALSE(prot == 0x4);
 +
-+		size = get_vma_size(ptr +  7 * page_size, &prot);
-+		FAIL_TEST_IF_FALSE(size == 1 * page_size);
-+		FAIL_TEST_IF_FALSE(prot == 4);
-+	} else {
++		size = get_vma_size(ptr + 4 * page_size, &prot);
++		FAIL_TEST_IF_FALSE(size == 4 * page_size);
++		FAIL_TEST_IF_FALSE(prot == 0x4);
++	} else
++		FAIL_TEST_IF_FALSE(ret2 == ptr);
++
++	REPORT_TEST_PASS();
++}
++
++static void test_seal_mmap_reuse_addr(bool seal)
++{
++	void *ptr;
++	unsigned long page_size = getpagesize();
++	unsigned long size = page_size;
++	int ret;
++	void *ret2;
++	int prot;
++
++	setup_single_address(size, &ptr);
++	FAIL_TEST_IF_FALSE(ptr != (void *)-1);
++
++	if (seal) {
++		ret = sys_mseal(ptr, size);
 +		FAIL_TEST_IF_FALSE(!ret);
-+
-+		for (int i = 0; i < 8; i++) {
-+			size = get_vma_size(ptr, &prot);
-+			FAIL_TEST_IF_FALSE(size == 0);
-+		}
 +	}
++
++	/* use mmap to change protection. */
++	ret2 = mmap(ptr, size, PROT_NONE,
++			MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
++
++	FAIL_TEST_IF_FALSE(!(ret2 == MAP_FAILED));
++	FAIL_TEST_IF_FALSE(ret2 != ptr);
++
++	size = get_vma_size(ptr, &prot);
++	FAIL_TEST_IF_FALSE(size == page_size);
++	FAIL_TEST_IF_FALSE(prot == 0x4);
 +
 +	REPORT_TEST_PASS();
 +}
@@ -199,23 +216,25 @@ index adc646cf576c..ae06c354220d 100644
  int main(int argc, char **argv)
  {
  	bool test_seal = seal_support();
-@@ -2142,7 +2243,7 @@ int main(int argc, char **argv)
+@@ -2243,7 +2359,7 @@ int main(int argc, char **argv)
  	if (!get_vma_size_supported())
  		ksft_exit_skip("get_vma_size not supported\n");
  
--	ksft_set_plan(88);
-+	ksft_set_plan(91);
+-	ksft_set_plan(91);
++	ksft_set_plan(97);
  
  	test_seal_addseal();
  	test_seal_unmapped_start();
-@@ -2251,5 +2352,10 @@ int main(int argc, char **argv)
- 	test_seal_discard_ro_anon_on_pkey(false);
- 	test_seal_discard_ro_anon_on_pkey(true);
+@@ -2357,5 +2473,12 @@ int main(int argc, char **argv)
+ 	test_munmap_free_multiple_ranges(false);
+ 	test_munmap_free_multiple_ranges(true);
  
-+	test_seal_discard_madvise_advice();
-+
-+	test_munmap_free_multiple_ranges(false);
-+	test_munmap_free_multiple_ranges(true);
++	test_seal_mmap_expand_seal_middle(false);
++	test_seal_mmap_expand_seal_middle(true);
++	test_seal_mmap_shrink_seal_middle(false);
++	test_seal_mmap_shrink_seal_middle(true);
++	test_seal_mmap_reuse_addr(false);
++	test_seal_mmap_reuse_addr(true);
 +
  	ksft_finished();
  }
