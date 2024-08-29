@@ -1,169 +1,151 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1314536B;
-	Thu, 29 Aug 2024 00:38:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D85D2134D1;
+	Thu, 29 Aug 2024 01:12:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724891918; cv=none; b=DThHXNR0dfbiyhq9FC+QylZ0hcH+/NKWFuaRNkECeCBSaS0MlDmAotGBpBaYv6Fl+L8fMdLx9liEs8vIDm7lFnZzceVTwZ6IsExjci/Mkho1q3gI1yclulUshQGnNDifysFOYJf1nye8sAyB1nDlx2Xca8ywclfD3ZII6eKjhIY=
+	t=1724893973; cv=none; b=XyeQYJWeRI8IZbKnkMk/Nwxbzh8cR0KaajeYqlfN8irK8I+Z6wGWuRn89KJN/wLPLSdb3qutC3IgAKKDBysegpTcjg/Advswuag9sUjaKZINFvIxI66efvecJAiQcgYZQPD9w11NGstvhSNaSrH1ZVdwMqZU+yrK9fg2/krmKT8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724891918; c=relaxed/simple;
-	bh=H/Us5usGxDS5wVRR+GqgLPHopjD00i4j8HH8GeuvDEo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VBlGFMBx8oobWUF8td2am5c3lwOSpFPqlqAoSvJUB78V7ZYFUr3/V5yN0DOIzJlqAzMGJ1uPjC+8SJ2rH/Kt8zcts7SpJfFIypLb5x0XshaeJEu4LFsJ1OAiO6wPGaFNg0vvk7f9oS/EaSOf8j50xkM45pucIXwcHul5KCl6qyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o+39IN8v; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o+39IN8v"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28EE3C4CEC0;
-	Thu, 29 Aug 2024 00:38:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724891917;
-	bh=H/Us5usGxDS5wVRR+GqgLPHopjD00i4j8HH8GeuvDEo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=o+39IN8v8PiE2fCMazeCrm6GKNThs9g20kxKk9yyAC5UgyXNrRT6lnMBjGcGhwInV
-	 AdCb2q7qy7XkyeAGCtJe79ZbI4QnkrjTriMxVolZ5Cbqd53LwBW9z0kAT5vaLItSVg
-	 0+LfFlPgiuGvFmFr5eYLeGsVSPSs+9RsuIvY9eoVHXiCFp7Mu64SlxByT4T1l9ZOw/
-	 P15osE9Zqd6RMnO0MH6UrjzymJDQaguyNynrVtxNNCb5THpWKG2yALm4Mp7jym1vZD
-	 DZ9H08x/jvLaqxW+5Gq6KxOaTbMAvwzwuuDTnU5d2aoOtKVIZ/2z3EYD58LHA8IPUq
-	 2X9NRwX0ox25Q==
-Date: Wed, 28 Aug 2024 17:38:36 -0700
-From: Kees Cook <kees@kernel.org>
-To: Juefei Pu <juefei.pu@email.ucr.edu>
-Cc: luto@amacapital.net, wad@chromium.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: BUG: null pointer dereference in seccomp
-Message-ID: <202408281719.8BBA257@keescook>
-References: <CANikGpeQuBKj89rTkaAs5ADrz0+YLQ54g-0CshYzE3h06G0U5g@mail.gmail.com>
+	s=arc-20240116; t=1724893973; c=relaxed/simple;
+	bh=EBah3YTcsWvYHErDqJV7akZ4qINwmKVAArOHjcuwmsk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=EDT4GkNQdDONWGYYV5R6izGLUYhAqrtn4Sp+PJWH0ObiobZ5M3Pb3p2zWdFP0RoMZB6qPk/ORvx5nNMBvcX0mJi1Sbh818OOwebRKVKObqvdiHIalPQC8YtuQjAUro3wT8P2woESGAu9TUJwFNaJs8Ifz/pcbrr8cEY7ZNxu030=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.112])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4WvNSD0H7Rz20mvZ;
+	Thu, 29 Aug 2024 09:07:56 +0800 (CST)
+Received: from dggpeml500022.china.huawei.com (unknown [7.185.36.66])
+	by mail.maildlp.com (Postfix) with ESMTPS id 0FB5F140257;
+	Thu, 29 Aug 2024 09:12:46 +0800 (CST)
+Received: from [10.67.111.104] (10.67.111.104) by
+ dggpeml500022.china.huawei.com (7.185.36.66) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Thu, 29 Aug 2024 09:12:45 +0800
+Message-ID: <3f40ff3c-0f66-49cc-806f-1cab6c8a8c50@huawei.com>
+Date: Thu, 29 Aug 2024 09:12:45 +0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANikGpeQuBKj89rTkaAs5ADrz0+YLQ54g-0CshYzE3h06G0U5g@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH -next v3 1/3] lib/string_choices: Add
+ str_true_false()/str_false_true() helper
+To: Andrew Morton <akpm@linux-foundation.org>
+CC: <kees@kernel.org>, <andy@kernel.org>, <trondmy@kernel.org>,
+	<anna@kernel.org>, <gregkh@linuxfoundation.org>,
+	<linux-hardening@vger.kernel.org>, <linux-mm@kvack.org>,
+	<linux-nfs@vger.kernel.org>
+References: <20240827024517.914100-1-lihongbo22@huawei.com>
+ <20240827024517.914100-2-lihongbo22@huawei.com>
+ <20240827164218.c45407bf2f2ef828975c1eff@linux-foundation.org>
+ <8d19aece-3a33-4667-8bcf-635a3a861d1d@huawei.com>
+ <20240827202204.b76c0510bf44cdfb6d3a74bd@linux-foundation.org>
+ <a6ea03c9-f92b-4faa-b924-8df58484fb13@huawei.com>
+ <20240828132509.4447ff09665fa0d7b8020294@linux-foundation.org>
+Content-Language: en-US
+From: Hongbo Li <lihongbo22@huawei.com>
+In-Reply-To: <20240828132509.4447ff09665fa0d7b8020294@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggpeml500022.china.huawei.com (7.185.36.66)
 
-On Tue, Aug 27, 2024 at 09:09:49PM -0700, Juefei Pu wrote:
-> Hello,
-> We found the following null-pointer-dereference issue using syzkaller
-> on Linux v6.10.
 
-In seccomp! Yikes.
 
-> Unfortunately, the syzkaller failed to generate a reproducer.
-
-That's a bummer.
-
-> But at least we have the report:
+On 2024/8/29 4:25, Andrew Morton wrote:
+> On Wed, 28 Aug 2024 11:49:51 +0800 Hongbo Li <lihongbo22@huawei.com> wrote:
 > 
-> Oops: general protection fault, probably for non-canonical address
-> 0xdffffc0000000006: 0000 [#1] PREEMPT SMP KASAN PTI
-> KASAN: null-ptr-deref in range [0x0000000000000030-0x0000000000000037]
-> CPU: 0 PID: 4493 Comm: systemd-journal Not tainted 6.10.0 #13
-> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
-> RIP: 0010:__bpf_prog_run include/linux/filter.h:691 [inline]
+>>> Anything which is calling these functions is not performance-sensitive,
+>>> so optimizing for space is preferred.  An out-of-line function which
+>>> returns a const char * will achieve this?
+>> I think this helper can achieve this. Because it is tiny enough, the
+>> compiler will handle this like #define macro (do the replacement)
+>> without allocating extra functional stack. On the contrary, if it is
+>> implemented as a non-inline function, it will cause extra functional
+>> stack when it was called every time. And it also should be implemented
+>> in a source file (.c file), not in header file(.h file).
+> 
+> No, my concern is that if, for example, str_high_low() gets used in 100
+> .c files then we get 100 copies of the strings "high" and "low" in
+> vmlinux.  Making str_high_low() uninlined would fix this.
 
-This doesn't look like a NULL deref, this looks like a corrupted
-pointer: 0xdffffc0000000006. Is prog bad or dfunc bad? I assume the
-former, as dfunc is hard-coded below...
+At first, I didn't consider these aspects.
 
-                ret = dfunc(ctx, prog->insnsi, prog->bpf_func);
+> 
+> However a quick experiment tells me that the compiler and linker are
+> indeed able to perform this cross-object-file optimization:
+> 
+That's very good!
 
-> RIP: 0010:bpf_prog_run include/linux/filter.h:698 [inline]
+Thanks,
+Hongbo
 
-        return __bpf_prog_run(prog, ctx, bpf_dispatcher_nop_func);
-
-> RIP: 0010:bpf_prog_run_pin_on_cpu include/linux/filter.h:715 [inline]
-
-        ret = bpf_prog_run(prog, ctx);
-
-> RIP: 0010:seccomp_run_filters+0x17a/0x3f0 kernel/seccomp.c:426
-
-                u32 cur_ret = bpf_prog_run_pin_on_cpu(f->prog, sd);
-
-> Code: 00 00 e8 99 36 d2 ff 0f 1f 44 00 00 e8 cf 58 ff ff 48 8d 5d 48
-> 48 83 c5 30 48 89 e8 48 c1 e8 03 48 b9 00 00 00 00 00 fc ff df <80> 3c
-> 08 00 74 08 48 89 ef e8 c8 63 62 00 4c 8b 5d 00 48 8b 3c 24
-> RSP: 0018:ffffc90002cb7be0 EFLAGS: 00010206
-> RAX: 0000000000000006 RBX: 0000000000000048 RCX: dffffc0000000000
-> RDX: 0000000000000000 RSI: 00000000000002a4 RDI: ffffffff8b517360
-> RBP: 0000000000000030 R08: ffffffff8191f8eb R09: 1ffff11004039e86
-> R10: dffffc0000000000 R11: ffffffffa00016d0 R12: 000000007fff0000
-> R13: ffff88801f84a800 R14: ffffc90002cb7df0 R15: 000000007fff0000
-> FS:  00007f897e849900(0000) GS:ffff888063a00000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00007f897d771b08 CR3: 00000000195fe000 CR4: 0000000000350ef0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->  <TASK>
->  __seccomp_filter+0x46f/0x1c70 kernel/seccomp.c:1222
->  syscall_trace_enter+0xa4/0x140 kernel/entry/common.c:52
->  syscall_enter_from_user_mode_work include/linux/entry-common.h:168 [inline]
->  syscall_enter_from_user_mode include/linux/entry-common.h:198 [inline]
->  do_syscall_64+0x5d/0x150 arch/x86/entry/common.c:79
->  entry_SYSCALL_64_after_hwframe+0x67/0x6f
-
-Has anything changed in BPF in this area lately?
-
-> RIP: 0033:0x7f897ed171e4
-> Code: 84 00 00 00 00 00 44 89 54 24 0c e8 36 58 f9 ff 44 8b 54 24 0c
-> 44 89 e2 48 89 ee 41 89 c0 bf 9c ff ff ff b8 01 01 00 00 0f 05 <48> 3d
-> 00 f0 ff ff 77 34 44 89 c7 89 44 24 0c e8 68 58 f9 ff 8b 44
-> RSP: 002b:00007ffd4ae74a60 EFLAGS: 00000293 ORIG_RAX: 0000000000000101
-> RAX: ffffffffffffffda RBX: 00005627cd785ed0 RCX: 00007f897ed171e4
-> RDX: 0000000000290000 RSI: 00007f897f010d0a RDI: 00000000ffffff9c
-> RBP: 00007f897f010d0a R08: 0000000000000000 R09: 0034353132303865
-> R10: 0000000000000000 R11: 0000000000000293 R12: 0000000000290000
-> R13: 00007ffd4ae74d20 R14: 0000000000000000 R15: 00007ffd4ae74e28
->  </TASK>
-> Modules linked in:
-> ---[ end trace 0000000000000000 ]---
-> RIP: 0010:__bpf_prog_run include/linux/filter.h:691 [inline]
-> RIP: 0010:bpf_prog_run include/linux/filter.h:698 [inline]
-> RIP: 0010:bpf_prog_run_pin_on_cpu include/linux/filter.h:715 [inline]
-> RIP: 0010:seccomp_run_filters+0x17a/0x3f0 kernel/seccomp.c:426
-> Code: 00 00 e8 99 36 d2 ff 0f 1f 44 00 00 e8 cf 58 ff ff 48 8d 5d 48
-> 48 83 c5 30 48 89 e8 48 c1 e8 03 48 b9 00 00 00 00 00 fc ff df <80> 3c
-> 08 00 74 08 48 89 ef e8 c8 63 62 00 4c 8b 5d 00 48 8b 3c 24
-> RSP: 0018:ffffc90002cb7be0 EFLAGS: 00010206
-> RAX: 0000000000000006 RBX: 0000000000000048 RCX: dffffc0000000000
-> RDX: 0000000000000000 RSI: 00000000000002a4 RDI: ffffffff8b517360
-> RBP: 0000000000000030 R08: ffffffff8191f8eb R09: 1ffff11004039e86
-> R10: dffffc0000000000 R11: ffffffffa00016d0 R12: 000000007fff0000
-> R13: ffff88801f84a800 R14: ffffc90002cb7df0 R15: 000000007fff0000
-> FS:  00007f897e849900(0000) GS:ffff888063a00000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00007f521f8ca000 CR3: 00000000195fe000 CR4: 0000000000350ef0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> ----------------
-> Code disassembly (best guess):
->    0: 00 00                 add    %al,(%rax)
->    2: e8 99 36 d2 ff       call   0xffd236a0
->    7: 0f 1f 44 00 00       nopl   0x0(%rax,%rax,1)
->    c: e8 cf 58 ff ff       call   0xffff58e0
->   11: 48 8d 5d 48           lea    0x48(%rbp),%rbx
->   15: 48 83 c5 30           add    $0x30,%rbp
->   19: 48 89 e8             mov    %rbp,%rax
->   1c: 48 c1 e8 03           shr    $0x3,%rax
->   20: 48 b9 00 00 00 00 00 movabs $0xdffffc0000000000,%rcx
->   27: fc ff df
-> * 2a: 80 3c 08 00           cmpb   $0x0,(%rax,%rcx,1) <-- trapping instruction
->   2e: 74 08                 je     0x38
->   30: 48 89 ef             mov    %rbp,%rdi
->   33: e8 c8 63 62 00       call   0x626400
->   38: 4c 8b 5d 00           mov    0x0(%rbp),%r11
->   3c: 48 8b 3c 24           mov    (%rsp),%rdi
-
-What's the movabs? I don't have anything like that in my vmlinux binary
-output. Is this KASAN perhaps?
-
-Regardless, I don't see how prog could be NULL. :( It shouldn't be
-possible without some kind of major refcounting bug.
-
--Kees
-
--- 
-Kees Cook
+> --- a/fs/open.c~a
+> +++ a/fs/open.c
+> @@ -34,6 +34,8 @@
+>   #include <linux/mnt_idmapping.h>
+>   #include <linux/filelock.h>
+>   
+> +#include <linux/string_choices.h>
+> +
+>   #include "internal.h"
+>   
+>   int do_truncate(struct mnt_idmap *idmap, struct dentry *dentry,
+> @@ -42,6 +44,8 @@ int do_truncate(struct mnt_idmap *idmap,
+>   	int ret;
+>   	struct iattr newattrs;
+>   
+> +	printk("%s\n", frozzle(dentry == NULL));
+> +
+>   	/* Not pretty: "inode->i_size" shouldn't really be signed. But it is. */
+>   	if (length < 0)
+>   		return -EINVAL;
+> --- a/fs/inode.c~a
+> +++ a/fs/inode.c
+> @@ -22,6 +22,9 @@
+>   #include <linux/iversion.h>
+>   #include <linux/rw_hint.h>
+>   #include <trace/events/writeback.h>
+> +
+> +#include <linux/string_helpers.h>
+> +
+>   #include "internal.h"
+>   
+>   /*
+> @@ -110,6 +113,8 @@ static struct inodes_stat_t inodes_stat;
+>   static int proc_nr_inodes(const struct ctl_table *table, int write, void *buffer,
+>   			  size_t *lenp, loff_t *ppos)
+>   {
+> +	printk("%s\n", frozzle(table == NULL));
+> +
+>   	inodes_stat.nr_inodes = get_nr_inodes();
+>   	inodes_stat.nr_unused = get_nr_inodes_unused();
+>   	return proc_doulongvec_minmax(table, write, buffer, lenp, ppos);
+> --- a/include/linux/string_choices.h~a
+> +++ a/include/linux/string_choices.h
+> @@ -4,6 +4,11 @@
+>   
+>   #include <linux/types.h>
+>   
+> +static inline const char *frozzle(bool v)
+> +{
+> +	return v ? "frizzle" : "frazzle";
+> +}
+> +
+>   static inline const char *str_enable_disable(bool v)
+>   {
+>   	return v ? "enable" : "disable";
+> _
+> 
+> 
+> x1:/usr/src/25> strings vmlinux|grep frazzle
+> frazzle
+> x1:/usr/src/25>
+> 
+> See, only one copy!
+> 
