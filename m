@@ -1,104 +1,154 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE0372B9CD
-	for <linux-hardening@vger.kernel.org>; Thu, 29 Aug 2024 11:16:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27BF919048F
+	for <linux-hardening@vger.kernel.org>; Thu, 29 Aug 2024 11:53:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724930218; cv=none; b=Nq2+0rHkOQWgUEDBz12nXlxbpFUQkH2UN6Ri13E0nD932NJ4T0qsyaUeoBkJE14PeEyHN5iQZ8+XQJ/1JBA4Ee+F2Mh+VpUzhvpwvG7pJk4BgJlZ2Lvw5YhURJpbxCB58jl5p+YRQ2roojiJkG3DFmx9YBl883+KgeKj/UQ2Vjw=
+	t=1724932427; cv=none; b=h1AV2biQDQ8w/sjSQgZxPvc/qEAybAwIxxle3d3lrxOm9FHAc9tE6X2if+11dKNJbYmgF9BxjGwIutjFkJXBtRLYuc8CVNsOsAS60E89q7rFTzzDlSCFI0Uznv12+z2p4dj4THDpIWyCVmdyFrepOi9tca5vRsReug4vDg7jtHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724930218; c=relaxed/simple;
-	bh=lbT8wY1WLNTiEqM372mxT1DNFh6kMW+/tis5jCTR4p0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JSE3Jd28zqTy96BVbZwcIV8BMR4QtSD7KgkLqmP3PTg2Ihxd8pv0zEA0d1bYJstRhIiwOeVXzufeNdEfA9eTvv+ODqcQFXHHAlrqjmlZEWqUPZ1MZ24pUa3uhS7KgfXpuRADgtXy5Ic/jdtTvf77W597ZCbSG2W5Dv+RhQykblQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.17])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4Wvdyf04JNz2Dbb4;
-	Thu, 29 Aug 2024 19:16:42 +0800 (CST)
-Received: from dggpeml500022.china.huawei.com (unknown [7.185.36.66])
-	by mail.maildlp.com (Postfix) with ESMTPS id A3B921A0188;
-	Thu, 29 Aug 2024 19:16:54 +0800 (CST)
-Received: from huawei.com (10.90.53.73) by dggpeml500022.china.huawei.com
- (7.185.36.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 29 Aug
- 2024 19:16:54 +0800
-From: Hongbo Li <lihongbo22@huawei.com>
-To: <kees@kernel.org>, <andy@kernel.org>, <Julia.Lawall@inria.fr>,
-	<nicolas.palix@imag.fr>
-CC: <linux-hardening@vger.kernel.org>, <cocci@inria.fr>,
-	<lihongbo22@huawei.com>
-Subject: [PATCH -next 1/2] coccinelle: Add rules to find str_true_false() replacements
-Date: Thu, 29 Aug 2024 19:24:54 +0800
-Message-ID: <20240829112455.232263-2-lihongbo22@huawei.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240829112455.232263-1-lihongbo22@huawei.com>
-References: <20240829112455.232263-1-lihongbo22@huawei.com>
+	s=arc-20240116; t=1724932427; c=relaxed/simple;
+	bh=czZ1dOQVLY8OB5JMNo/yLksck3ZTgdf6lscTaUaWhyA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=K+w+yhJ4p/g3bEoiiKpxDd6Mp8ty2ntq1ybElc87Xqt6z6vVsErfwts2DHrJaij9scyZ+UlBIsilTzqGUA9C3l/4v9tGUvlOkedtAWeuRr5ZinpFW9+Yj0k4pBNsU0BwhIJmwAAmO2EY4FB78kLt0bhA8/kakTE/pAhpsB4C4f0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VNOblFmh; arc=none smtp.client-ip=209.85.217.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VNOblFmh"
+Received: by mail-vs1-f47.google.com with SMTP id ada2fe7eead31-498c4d5a912so248529137.2
+        for <linux-hardening@vger.kernel.org>; Thu, 29 Aug 2024 04:53:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1724932425; x=1725537225; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=u8n1UFj1Q+wM5iePo02UkDVC+29Y7BUbYM34gTWJxTE=;
+        b=VNOblFmhGZIM9Zkzji6+qL6yBrf2F6zttY7GN6ss7KeAFALMiNNX1I5o+jA9GZwE46
+         wpsvowz8abuhNcPUidfQZffp4SNnYS5Q7xmQDjvwCE/dJDNCRWTDFvCz1gGtAXeLSO8i
+         GLUx2j1ZwXDw2mEAu0LPIlu8LYCzhzGP/jBug90qg3ebEp9+iGnXj14UbxanuoVdHvu5
+         /pKNYtpR9bTsYfXMLSM1GJSfiPFCUo6KvfWe1Sa0W7Ne/3I533htwhsMxW1LYyBZBsul
+         0N8RAIG4wanIMerakCbLyVnVzxwf9cF+hIslK7Xreyt19xhPP6sEZjjPpWeel58ltDXD
+         naBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724932425; x=1725537225;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=u8n1UFj1Q+wM5iePo02UkDVC+29Y7BUbYM34gTWJxTE=;
+        b=S60kR+V0kkVZb+09RMEpiAyzr99f0bBtqV8gCeAs69AslSek53n+vVW2pNCw4XRu29
+         /A7gJLYDmHER3XA7VcTTO6i/5Ul4tZWhzvysCOoF8N+XU/nrs71CnCIwQgUoaUDgmq+M
+         vwC4hlwlkC2oOKoyZBEl8hwKtDkMWPZdY5SyMaE8ueDpA7Gatq9kA9zBNFI62/2hH7Z6
+         tsKvuShKd34b2v5woBblRBwiaGEHCHUjZOtskNHAmd8nzTxEbufaOVdTzX/5PlFkUEmM
+         mfxPI0BHZi0oxOJEaBQcq6ambJN7sxse7CL/WGeb6DNMqdiJYHlx2az/c6kMDKJ9zgFQ
+         yp4A==
+X-Forwarded-Encrypted: i=1; AJvYcCW72FHLZ6HvhIvP/Qps2TulJgkKCSWkc+CHBi9S90sM75k6tiSt427aptJGoraYpXj2XauXsKlg5qCIn6t5nW8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywv55nN7byAZRnxZ48o6G2XNJ+4BsQ0rKnNU6SCdCorOTaatiD+
+	garwM2VzU1WXigB9cM+AKTrx78husmKf+pI6lpb11dSZYniyHYyor7YgbfcaxSi+KIczhxrQQBf
+	ahqFDXj6sU5r+1myNar5C7WswOt0=
+X-Google-Smtp-Source: AGHT+IFRqcSUwe4ES9Z3J6iwBOoWu0IKyMK1mGG/uCxzyYADeSDjgNDnl/+yRGY4XWsjM+0Q8viLj81bGzymvDCeYqw=
+X-Received: by 2002:a05:6102:50a:b0:498:d3b7:be39 with SMTP id
+ ada2fe7eead31-49a5af7bae1mr2287830137.29.1724932424886; Thu, 29 Aug 2024
+ 04:53:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpeml500022.china.huawei.com (7.185.36.66)
+References: <CAHk-=wgv2-=Bm16Gtn5XHWj9J6xiqriV56yamU+iG07YrN28SQ@mail.gmail.com>
+ <CALOAHbDP9d6GNNhjB30zKiaMh_HvToKDGZ3sO9tkxRu5+HpEZQ@mail.gmail.com>
+ <CAHk-=wi9Z4QmmfeYo6aynRFbCA-_+FG83HYxXz2wVWfxjPyXSA@mail.gmail.com>
+ <ZsbY5pNhDqGoxJG_@tiehlicka> <CAHk-=wgmHOrhCGU=vOkcsZy5rE0rRZcH2U0zg6HkJxzxUEJgTA@mail.gmail.com>
+ <CAHk-=wiNCkgsrdNii7EwEXjt_47wF7YBJYWMhdsZJS8yVFDR=Q@mail.gmail.com>
+ <ZsbtGClLMtaeakdo@tiehlicka> <CAGsJ_4zM4tACW=8FrEVF6fhwke5BLHCXOb0O3xBoVsF9Rb7+9w@mail.gmail.com>
+ <Zsb1rM-azd_0gFzg@tiehlicka> <bc952d89-1219-41e9-9a8b-cfe2a758d585@redhat.com>
+ <ZscAtVskxgONe3gT@tiehlicka> <59e90825-4efa-4384-8286-06c0235304dc@redhat.com>
+ <CAHk-=wiyq9vF-L7NXakadGdQ4TvFLrEwds-NzkByDSb2F2YUkQ@mail.gmail.com>
+ <be4c9110-72d0-4749-941e-797a861d8319@suse.cz> <CAGsJ_4znRBscU8FWMZL7Z9qLUMxCPtupRcJqu+PXz260p-S6MA@mail.gmail.com>
+ <c258403c-afc5-4969-b7c5-fa2a6c257371@suse.cz> <CAGsJ_4wu3theWe0iyXdBK-JvLfuBh7Qw-B+9Wztm2XyrU1Uzeg@mail.gmail.com>
+ <2663352f-ecef-4e5b-bee5-e31d2b286c63@suse.cz>
+In-Reply-To: <2663352f-ecef-4e5b-bee5-e31d2b286c63@suse.cz>
+From: Barry Song <21cnbao@gmail.com>
+Date: Thu, 29 Aug 2024 23:53:33 +1200
+Message-ID: <CAGsJ_4zY5jwCsJh94OFMi1UqzFu5Ji3OeJZz91p2YKT5jxBc5A@mail.gmail.com>
+Subject: Re: [PATCH v3 0/4] mm: clarify nofail memory allocation
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, David Hildenbrand <david@redhat.com>, 
+	Michal Hocko <mhocko@suse.com>, Yafang Shao <laoar.shao@gmail.com>, akpm@linux-foundation.org, 
+	linux-mm@kvack.org, 42.hyeyoo@gmail.com, cl@linux.com, hailong.liu@oppo.com, 
+	hch@infradead.org, iamjoonsoo.kim@lge.com, penberg@kernel.org, 
+	rientjes@google.com, roman.gushchin@linux.dev, urezki@gmail.com, 
+	v-songbaohua@oppo.com, virtualization@lists.linux.dev, 
+	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-After str_true_false() has been introduced in the tree,
-we can add rules for finding places where str_true_false()
-can be used. A simple test can find over 10 locations.
+On Thu, Aug 29, 2024 at 10:24=E2=80=AFPM Vlastimil Babka <vbabka@suse.cz> w=
+rote:
+>
+> On 8/27/24 09:50, Barry Song wrote:
+> > On Tue, Aug 27, 2024 at 7:38=E2=80=AFPM Vlastimil Babka <vbabka@suse.cz=
+> wrote:
+> >>
+> >>
+> >> Ugh, wasn't aware, well spotted. So it means there at least shouldn't =
+be
+> >> existing users of __GFP_NOFAIL with order > 1 :)
+> >>
+> >> But also the check is in the hotpath, even before trying the pcplists,=
+ so we
+> >> could move it to __alloc_pages_slowpath() while extending it?
+> >
+> > Agreed. I don't think it is reasonable to check the order and flags in
+> > two different places especially rmqueue() has already had
+> > gfp_flags & __GFP_NOFAIL operation and order > 1
+> > overhead.
+> >
+> > We can at least extend the current check to make some improvement
+> > though I still believe Michal's suggestion of implementing OOPS_ON is a
+> > better approach to pursue, as it doesn't crash the entire system
+> > while ensuring the problematic process is terminated.
+>
+> Linus made clear it's not a mm concern. If e.g. hardening people want to
+> pursuit that instead, they can.
+>
+> BTW I think BUG_ON already works like this, if possible only the calling
+> process is terminated. panic happens in case of being in a irq context, o=
+r
 
-Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
----
-drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c:910:40-44: opportunity for str_true_false(drop)
-drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c:543:20-56: opportunity for str_true_false(conf -> flags & IEEE80211_CONF_MONITOR)
-drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c:547:15-46: opportunity for str_true_false(conf -> flags & IEEE80211_CONF_PS)
-drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c:718:15-35: opportunity for str_true_false(vif -> cfg . ibss_joined)
-drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c:699:5-24: opportunity for str_true_false(info -> enable_beacon)
-drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c:733:15-24: opportunity for str_true_false(info -> qos)
-drivers/net/wireless/ath/ath9k/link.c:393:24-43: opportunity for str_true_false(common -> ani . caldone)
-drivers/net/arcnet/com20020-pci.c:104:29-42: opportunity for str_true_false(lp -> backplane)
-drivers/net/ethernet/intel/ice/ice_switch.c:2100:19-37: opportunity for str_true_false(params -> mask_valid)
-drivers/net/wireless/ath/wil6210/interrupt.c:102:6-15: opportunity for str_true_false(mask_halp)
-drivers/net/wireless/ath/wil6210/interrupt.c:154:6-17: opportunity for str_true_false(unmask_halp)
-drivers/net/ethernet/intel/ice/ice_vlan_mode.c:257:6-24: opportunity for str_true_false(params -> mask_valid)
----
- scripts/coccinelle/api/string_choices.cocci | 23 +++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+you are right. This is a detail I overlooked in the last discussion.
+BUG_ON has already been exactly the case to only terminate the bad
+process if it can
+(panic_on_oops=3DN and not in irq context).
 
-diff --git a/scripts/coccinelle/api/string_choices.cocci b/scripts/coccinelle/api/string_choices.cocci
-index 5e729f187f22..50329c4c8acd 100644
---- a/scripts/coccinelle/api/string_choices.cocci
-+++ b/scripts/coccinelle/api/string_choices.cocci
-@@ -85,3 +85,26 @@ e << str_down_up_r.E;
- @@
- 
- coccilib.report.print_report(p[0], "opportunity for str_down_up(%s)" % e)
-+
-+@str_true_false depends on patch@
-+expression E;
-+@@
-+(
-+-      ((E) ? "true" : "false")
-++      str_true_false(E)
-+)
-+
-+@str_true_false_r depends on !patch exists@
-+expression E;
-+position P;
-+@@
-+(
-+*      ((E@P) ? "true" : "false")
-+)
-+
-+@script:python depends on report@
-+p << str_true_false_r.P;
-+e << str_true_false_r.E;
-+@@
-+
-+coccilib.report.print_report(p[0], "opportunity for str_true_false(%s)" % e)
--- 
-2.34.1
+> due to panic_on_oops. Which the security people are setting to 1 anyway a=
+nd
+> OOPS_ON would have to observe it too. So AFAICS the only difference from
+> BUG_ON would be not panic in the irq context, if panic_on_oops isn't set.
 
+right.
+
+> (as for "no mm locks held" I think it's already satisfied at the points w=
+e
+> check for __GFP_NOFAIL).
+
+Let me summarize the discussion:
+
+Patch 1/4, which fixes the misuse of combining gfp_nofail and atomic
+in vdpa driver, is necessary.
+Patch 2/4, which updates the documentation to clarify that
+non-blockable gfp_nofail is not
+                  supported, is needed.
+Patch 3/4: We will replace BUG_ON with WARN_ON_ONCE to warn when the
+size is too large,
+                 where gfp_nofail will return NULL.
+Patch 4/4: We will move the order > 1 check from the current fast path
+to the slow path and extend
+                 the check of gfp_direct_reclaim flag also in the slow path=
+.
+
+If nobody has an objection, I will prepare v4 as above.
+
+Thanks
+Barry
