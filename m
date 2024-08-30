@@ -1,52 +1,54 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE0F81B3B01
-	for <linux-hardening@vger.kernel.org>; Fri, 30 Aug 2024 18:02:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84C921BBBF7
+	for <linux-hardening@vger.kernel.org>; Fri, 30 Aug 2024 18:02:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725040964; cv=none; b=F/EC5IvHA1YYXzTNM6NqoAhPk5zlwOlqYw32S4sZZBwqJnNhQyfFhwnugm+bpxMor2Wbsu0QeipgFepNmPTqEKo7mL20lG/UPl8LX9UT7b2hG4xZNUc1v4ya6U2oSYSwJKfYj9/L6nQ67IOKPwpoh61vUVRDCPGOk9SMmiUYmTc=
+	t=1725040966; cv=none; b=dAt+L7DOua+jxesJP+/T/R6bqvjeVjT7qvanv4Cr3+rm0lZqNlpY5S0d6Sw36Gx4OldowIaZBjvz+BZ5E+uOYXjb7IqoGrJijA4deU3kLoEm0KT8JYKOAm0KugsQx9jA0rjRtIGF5Y6EEbDTFaDFET4939fMM8OqTjRhbwkOrnw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725040964; c=relaxed/simple;
-	bh=T3aBJ9fnmYj5an6GZeg3uLH3LGkl+XZDCDWyiQZyo/k=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JrK//Vy/XIv2hOSTNaoALftDnnNjv7a/xokhaBW/OX+YZnB7qhT/04Yy6WJ8Oz8vOiJHRxmFDuwrFyLd+Lx0j+N8Z5p+koZ78DzNR8fghRAYPbDRgcYF4H/n4W6AQWLYUDtiIlfRKZfOLSlZdY0IhiI1J0Ai8gwwd94OJUuEkI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=AnHHLPis; arc=none smtp.client-ip=209.85.214.174
+	s=arc-20240116; t=1725040966; c=relaxed/simple;
+	bh=43bJiScg9S0+2a59vw6ENrMPRMP4sp01lRmumuKJSQY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ZB6TDh01VcoTMZr3VFMtFgbzNbiOF9mZhGN8LwcpjQIvXQ1sFmjFewNksyQJjz0YC7UuBzZlsAmAln8hplZ9dR2R8yJs0d7US6At/YH3F7/w9XntRNPMU3v4So7DjOwy9UHxn1/FySotw5iSPrRefgG05kKce05s2PauRxHbj4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=TcvTW5Ns; arc=none smtp.client-ip=209.85.215.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AnHHLPis"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-20543c6f3b5so191675ad.0
-        for <linux-hardening@vger.kernel.org>; Fri, 30 Aug 2024 11:02:42 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TcvTW5Ns"
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-7c3e70fb6dfso70354a12.1
+        for <linux-hardening@vger.kernel.org>; Fri, 30 Aug 2024 11:02:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1725040962; x=1725645762; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=w7BWq7oVdU2RJCnx+Dm004xyt6dkCplP5f/XTiAPqqc=;
-        b=AnHHLPisqQVt//9IJIJ9+MsSngY4EUwaI5DB71ABvYgKXN4aNizEdQ6rImw6azABbz
-         s+PLk4LK+MrOiI8o39XrQHQhEtM1SppV08pGYrRpALXcaaPZfDNa0wlLbJuqVfYRZl90
-         SLSF5mO6BgLfyIZkNxChrA+TZ7Rgv/56ZCQ30=
+        d=chromium.org; s=google; t=1725040964; x=1725645764; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=O/lLriAP27R5nHPgsK9ypk/521J0I4x/lWwi5ADQ+zA=;
+        b=TcvTW5NszHJoTNak4uL+xbjNopz2etxhfKDqVOftECGQhPV52SNaThSXfbAox+h0g4
+         SP6luZW91W9BSkjDsf8f45OHZULi7pu8SNBkIbFaPVt2acOW4hVrQca0I4+uYZQ4e0dg
+         UDZTMCHHD3LPQ/tuSmmSogz2OhCZ1O0e6+IKs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725040962; x=1725645762;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=w7BWq7oVdU2RJCnx+Dm004xyt6dkCplP5f/XTiAPqqc=;
-        b=v4HnHCSxExEBmXO2sQDYhyqHgkGOf74xhDGYlgcLKYJ8MG+3Zki2Tf1yTDVcDq7TTX
-         IYehKsp0CAI8srI7i42s1Ezs/SNfwA8nU666JQvGeE38w45X+sy6sGkE3uN39jeBGVms
-         m/gUlI9NJ+owzVugyHYvKbYxHdSej3OSeaSLDA5w8ajvsfm2Tdc92HU02ClHq6T7ErTG
-         KQ6tZxOLt/gN5w9vJZ6ZEHC6MriSWs5ZRBon1VfUJd+p2XEil2b4Fu1D966WYgI+SwtP
-         eI0voqT6ApuyVrQ6G85910wLNmCzSq3KIimkW5FkBhGE8YgF9i5ufERNB7YOw1jRPhiJ
-         4aWA==
-X-Forwarded-Encrypted: i=1; AJvYcCXK1zAhvZal2JugXw+vzsjk/7QsJWFXKDo8IaIVrcrapMyJ0w6ge0k+M/kE1bAoupZ5w7JNacnRdHX9AaKUHzQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUa45Eifn40gQqZuABvMoTE9LZ/t6ANoFKKT46cCdonl5P8Eud
-	SrwPGd2c1ZPCAchlSyc6YmP1hFyiZh1+avA50xBhFoBdsJuFox/aZCAnQT9DNQ==
-X-Google-Smtp-Source: AGHT+IFfg3nmCpS6l8tCSIgiK8ygtmcd3GUg9HFT26UxW+AIXZxfWCUoJstGo9qdujnZ6B7n8WVNZQ==
-X-Received: by 2002:a17:902:cecd:b0:1fc:5cc8:bb1b with SMTP id d9443c01a7336-2052773ab73mr19021075ad.7.1725040961241;
-        Fri, 30 Aug 2024 11:02:41 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1725040964; x=1725645764;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=O/lLriAP27R5nHPgsK9ypk/521J0I4x/lWwi5ADQ+zA=;
+        b=In0dIUYQ3w0v8Or+jNyqgVkJHNxElS1WJgx5iPyUIY07+EMlri2JMlSmKFtpW6WUyJ
+         YnajQAkaZDCAurml7WSeiULtv13aNCCTcX3S/EHFBumiTf3ecotFFNtq/RtmLYvQOMbn
+         e9ljif6XrkQriRYXz0F6oiLAKT95b1214WiyaVIdK21wCStCmMpYk2TAa6eZEV02xvNb
+         b86mXDk6WOcwdukm2jwPonX/zkQbGD+PgwpQieV6G9oZGqagi2KyCI01caQBvXeg5kl1
+         MNbqCW8feE2Wgj/f1FTpnO8MFmet0wxNAdZ1HC1cna6Y/l5sDAWpWtcATj8tzrG67981
+         nC9A==
+X-Forwarded-Encrypted: i=1; AJvYcCU/1HZsiLDbEEMLnUrOagBsOun75LPhVDyFm8snR2Ijz/kZ2jGE9Y5aHY3QmcHIaDRs6zTZpOVxODhf+zIxPJc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzmu9e2G8QQ3P12nBsnmXcMkRchbec8GGPOuVxiHQoskvlWQ+h1
+	EyR48Zk/XEIV7iR41GnlmTakEjBX/91zl/IdC7KjR2XXE5Foq1ahhpQqs2gV9A==
+X-Google-Smtp-Source: AGHT+IF7ss5vHuxDy95Wgb4WUGPyZvgp4tHfy8UO1MWvFABXKWvo/BydPzQQ6FPcavBSzZ5iLhUHAQ==
+X-Received: by 2002:a05:6a00:3e0a:b0:710:5243:4161 with SMTP id d2e1a72fcca58-7173078b724mr1724291b3a.5.1725040963782;
+        Fri, 30 Aug 2024 11:02:43 -0700 (PDT)
 Received: from localhost (150.12.83.34.bc.googleusercontent.com. [34.83.12.150])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-205155671bdsm29574215ad.302.2024.08.30.11.02.40
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-715e575d087sm3037827b3a.207.2024.08.30.11.02.42
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 30 Aug 2024 11:02:40 -0700 (PDT)
+        Fri, 30 Aug 2024 11:02:42 -0700 (PDT)
 From: jeffxu@chromium.org
 To: akpm@linux-foundation.org
 Cc: linux-kselftest@vger.kernel.org,
@@ -62,10 +64,12 @@ Cc: linux-kselftest@vger.kernel.org,
 	rientjes@google.com,
 	keescook@chromium.org,
 	Jeff Xu <jeffxu@chromium.org>
-Subject: [PATCH v3 0/5] Increase mseal test coverage
-Date: Fri, 30 Aug 2024 18:02:32 +0000
-Message-ID: <20240830180237.1220027-1-jeffxu@chromium.org>
+Subject: [PATCH v3 2/5] selftests/mseal: add sealed madvise type
+Date: Fri, 30 Aug 2024 18:02:34 +0000
+Message-ID: <20240830180237.1220027-3-jeffxu@chromium.org>
 X-Mailer: git-send-email 2.46.0.469.g59c65b2a67-goog
+In-Reply-To: <20240830180237.1220027-1-jeffxu@chromium.org>
+References: <20240830180237.1220027-1-jeffxu@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -76,45 +80,67 @@ Content-Transfer-Encoding: 8bit
 
 From: Jeff Xu <jeffxu@chromium.org>
 
-This series increase the test coverage of mseal_test by:
+Add a testcase to cover all sealed madvise type.
 
-Add check for vma_size, prot, and error code for existing tests.
-Add more testcases for madvise, munmap, mmap and mremap to cover
-sealing in different scenarios.
+Signed-off-by: Jeff Xu <jeffxu@chromium.org>
+---
+ tools/testing/selftests/mm/mseal_test.c | 30 ++++++++++++++++++++++++-
+ 1 file changed, 29 insertions(+), 1 deletion(-)
 
-The increase test coverage hopefully help to prevent future regression.
-It doesn't change any existing mm api's semantics, i.e. it will pass on
-linux main and 6.10 branch.
-
-Note: in order to pass this test in mm-unstable, mm-unstable must have
-Liam's fix on mmap [1]
-
-[1] https://lore.kernel.org/linux-kselftest/vyllxuh5xbqmaoyl2mselebij5ox7cseekjcvl5gmzoxxwd2he@hxi4mpjanxzt/#t
-
-History:
-V3:
-- no-functional change, incooperate feedback from Pedro Falcato
-
-V2:
-- https://lore.kernel.org/linux-kselftest/20240829214352.963001-1-jeffxu@chromium.org/
-- remove the mmap fix (Liam R. Howlett will fix it separately)
-- Add cover letter (Lorenzo Stoakes)
-- split the testcase for ease of review (Mark Brown)
-
-V1:
-- https://lore.kernel.org/linux-kselftest/20240828225522.684774-1-jeffxu@chromium.org/
-
-
-Jeff Xu (5):
-  selftests/mseal_test: Check vma_size, prot, error code.
-  selftests/mseal: add sealed madvise type
-  selftests/mseal: munmap across multiple vma ranges.
-  selftests/mseal: add more tests for mmap
-  selftests/mseal: add more tests for mremap
-
- tools/testing/selftests/mm/mseal_test.c | 830 ++++++++++++++++++++++--
- 1 file changed, 763 insertions(+), 67 deletions(-)
-
+diff --git a/tools/testing/selftests/mm/mseal_test.c b/tools/testing/selftests/mm/mseal_test.c
+index 7198f2314f9b..6d77dc9b5442 100644
+--- a/tools/testing/selftests/mm/mseal_test.c
++++ b/tools/testing/selftests/mm/mseal_test.c
+@@ -2121,6 +2121,32 @@ static void test_seal_madvise_nodiscard(bool seal)
+ 	REPORT_TEST_PASS();
+ }
+ 
++static void test_seal_discard_madvise_advice(void)
++{
++	void *ptr;
++	unsigned long page_size = getpagesize();
++	unsigned long size = 4 * page_size;
++	int ret;
++	int sealed_advice[] = {MADV_FREE, MADV_DONTNEED,
++		MADV_DONTNEED_LOCKED, MADV_REMOVE,
++		MADV_DONTFORK, MADV_WIPEONFORK};
++	int size_sealed_advice = sizeof(sealed_advice) / sizeof(int);
++
++	setup_single_address(size, &ptr);
++	FAIL_TEST_IF_FALSE(ptr != (void *)-1);
++
++	ret = seal_single_address(ptr, size);
++	FAIL_TEST_IF_FALSE(!ret);
++
++	for (int i = 0; i < size_sealed_advice; i++) {
++		ret = sys_madvise(ptr, size, sealed_advice[i]);
++		FAIL_TEST_IF_FALSE(ret < 0);
++		FAIL_TEST_IF_FALSE(errno == EPERM);
++	}
++
++	REPORT_TEST_PASS();
++}
++
+ int main(int argc, char **argv)
+ {
+ 	bool test_seal = seal_support();
+@@ -2142,7 +2168,7 @@ int main(int argc, char **argv)
+ 	if (!get_vma_size_supported())
+ 		ksft_exit_skip("get_vma_size not supported\n");
+ 
+-	ksft_set_plan(88);
++	ksft_set_plan(89);
+ 
+ 	test_seal_addseal();
+ 	test_seal_unmapped_start();
+@@ -2251,5 +2277,7 @@ int main(int argc, char **argv)
+ 	test_seal_discard_ro_anon_on_pkey(false);
+ 	test_seal_discard_ro_anon_on_pkey(true);
+ 
++	test_seal_discard_madvise_advice();
++
+ 	ksft_finished();
+ }
 -- 
 2.46.0.469.g59c65b2a67-goog
 
