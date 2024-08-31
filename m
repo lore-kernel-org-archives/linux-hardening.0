@@ -1,54 +1,73 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD6381B285;
-	Sat, 31 Aug 2024 01:15:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CA1716A940;
+	Sat, 31 Aug 2024 09:50:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725066947; cv=none; b=LSFZ0oIn3mKsoSDpumKGuhEFs0porxsOj+vH/nc6qJQ1FetE3/2MkBfXkTpEguqsjFekeBZpmBS3oaGxgSymTjWW6q1hVkVeCn6X2TW+1A4rAWUdWE7T7ANowey82s6yFor67ZDrs41G5i1R8TDvPzVDAGT1rjrG7CgLZNLxxPY=
+	t=1725097830; cv=none; b=IBDclx1JakBmgsPFOw8vvlUEvPv8b3lgWjFKbtLICUJcoiXYCtDFX1KjHNY/DFONuSChe2vTySxQK7GzcZqH1aOOUIyi1bF1NqFv9ui1QYQ5kcS7haxuNKmHIJ0hyeqF0HSM7MSsLWYGhPYpIHXwrVwzMlOgOnDrau2yl8pOyhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725066947; c=relaxed/simple;
-	bh=6TajnYQXjGVJdcQsjKHHnRAbJygQ2x906o/4aOXb+6U=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=nDTj955a2EF2RhruQpoUDnsWy6rdgtqUdMofvUy8kiZgOuJmaXQw4M+a1SRNAU9hIMnmwf7x2gS0K44Xf1I1N2GBH3cXTfdLH4Vg9AWtUo52dbROlGbbcOZl5XXD1bkTwQQA4zagsX4YlBLyJGqDAxvCpQz8H9WnPyNXZrrD4W8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Mw/PB2Bn; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Mw/PB2Bn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7274C4CEC2;
-	Sat, 31 Aug 2024 01:15:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1725066947;
-	bh=6TajnYQXjGVJdcQsjKHHnRAbJygQ2x906o/4aOXb+6U=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Mw/PB2BnVdtFCsl3mopjrD2DZNtNTfWOgGcjv92Oky0rT22MjPYFJk9xd8NMnie2u
-	 c4WmZ6yS/6YbqD3b8woZc5pTaHjFuJFTFChHSfTrXUG2+khu6/5JLrAKkfVByrqOZz
-	 GB4YEfeq/WFOxC2RvR6ZFVAxMMdLbQNk6OeMTbWc=
-Date: Fri, 30 Aug 2024 18:15:46 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: jeffxu@chromium.org, linux-kselftest@vger.kernel.org,
- linux-mm@kvack.org, linux-hardening@vger.kernel.org,
- pedro.falcato@gmail.com, rientjes@google.com, keescook@chromium.org, Liam
- Howlett <liam.howlett@oracle.com>, vbabka@suse.cz
-Subject: Re: [PATCH v1 1/2] mseal: fix mmap(FIXED) error code.
-Message-Id: <20240830181546.43ed8e62c9f28d6f77dfd1e3@linux-foundation.org>
-In-Reply-To: <58e47a2e-6556-4a41-9fe5-1378f5257534@lucifer.local>
-References: <20240828225522.684774-1-jeffxu@chromium.org>
-	<58e47a2e-6556-4a41-9fe5-1378f5257534@lucifer.local>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1725097830; c=relaxed/simple;
+	bh=NWu+3d+EFWxvZX2D3cz5F6KfdfVMO/Eefxcr/hop1bU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OJW5OVR66qSdT0qrzylDXhDuIAChweWdvyPdzIM9twjbMzzSoVdHYmb7kAImHglAjKUSWGzCyaofHF48vZQ6a6RvRbF+fF6cFm1KBYtj4ggTUL+UQKGFL/KefnMXWb607LnFm+vl+gvbtGzw1P7qZN32/+MBmo6ZVeWFO88UlUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Wwqx95T0BzyQwv;
+	Sat, 31 Aug 2024 17:49:33 +0800 (CST)
+Received: from dggpeml500022.china.huawei.com (unknown [7.185.36.66])
+	by mail.maildlp.com (Postfix) with ESMTPS id 23B7A18006C;
+	Sat, 31 Aug 2024 17:50:26 +0800 (CST)
+Received: from huawei.com (10.90.53.73) by dggpeml500022.china.huawei.com
+ (7.185.36.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Sat, 31 Aug
+ 2024 17:50:25 +0800
+From: Hongbo Li <lihongbo22@huawei.com>
+To: <kees@kernel.org>, <andy@kernel.org>, <willemdebruijn.kernel@gmail.com>,
+	<jasowang@redhat.com>, <davem@davemloft.net>, <edumazet@google.com>,
+	<kuba@kernel.org>, <pabeni@redhat.com>, <akpm@linux-foundation.org>
+CC: <linux-hardening@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<linux-mm@kvack.org>, <lihongbo22@huawei.com>
+Subject: [PATCH -next 0/4] Introduce several opposite string choice helpers
+Date: Sat, 31 Aug 2024 17:58:36 +0800
+Message-ID: <20240831095840.4173362-1-lihongbo22@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ dggpeml500022.china.huawei.com (7.185.36.66)
 
-On Thu, 29 Aug 2024 13:09:41 +0100 Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
+Similar to the exists helper: str_enable_disable/
+str_enabled_disabled/str_on_off/str_yes_no helpers, we can
+add the opposite helpers. That's str_disable_enable,
+str_disabled_enabled, str_off_on and str_no_yes.
 
-> Relevant section from MAINTAINERS:
-> 
-> MEMORY MAPPING
+There are more than 10 cases currently (expect
+str_disable_enable now has 3 use cases) exist in the code
+can be replaced with these helper.
 
-I always thought it meant "memory management" ;)
+Patch 1: Introduce the string choice helpers
+Patch 2~4: Give the relative use cases to use these helpers.
+
+Hongbo Li (4):
+  lib/string_choices: Introduce several opposite string choice helpers
+  tun: Make use of str_disabled_enabled helper
+  mm: page_alloc: Make use of str_off_on helper
+  net: sock: Make use of str_no_yes() helper
+
+ drivers/net/tun.c              | 2 +-
+ include/linux/string_choices.h | 4 ++++
+ mm/page_alloc.c                | 3 +--
+ net/core/sock.c                | 2 +-
+ 4 files changed, 7 insertions(+), 4 deletions(-)
+
+-- 
+2.34.1
+
