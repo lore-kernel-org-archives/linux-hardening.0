@@ -1,149 +1,111 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE4F41865F6;
-	Mon,  2 Sep 2024 13:55:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 080D71A2635;
+	Mon,  2 Sep 2024 14:30:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725285358; cv=none; b=Tu5TN27ghw2FCU6PfgHIyZdWbE0g9QD0kUBkprhJri8l2FGPiRrwhHnNRnA+CyLfJ+9X7nSrLXLZYKaEvgwTyKnJbw38g9dT0pitbvGiJs8Id6DKXlSxoUUoXgiyBt1hzEqPOmm7uOb7bFux2QQwb7jv0Ui4x56k68O3u/YIccQ=
+	t=1725287453; cv=none; b=MTPvydc/VgqGLHxbYOAG1sac0qYbwrLUlsJnfUyLxqRoZbyUYMgg4Q7ZXDIJTp7PV1ErKP7PAwlcyJOZ+ePJArCknHahQnOVEVXhThWhapfLLuN3nhCqVa8Mnj1BnWWHbbU2+c04lcFfWy+uceVTsPeVIa7uqK84xqGTxV8lcXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725285358; c=relaxed/simple;
-	bh=qDwgUgA6BFRCJnZk2ZnLHYuW6GNf5pmOBpojoH40Qpc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hBHr62ebSEuvPILSZJF7A2GuLgJwiWHmBneg4ReYoM1GyM7JIakourLK4R3dC7QyBa+wZkImumaSgILqQ42pUmlNEQqcJG+kW10VSHlcq8zqIhPnUE6EDy/QPGx7gNwjgKwRI+oN+9h5VWugUoASwIZVrOJrGRVU4QC3c6llym4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=UeIlEDAM; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=5db7eGO6; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=UeIlEDAM; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=5db7eGO6; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1725287453; c=relaxed/simple;
+	bh=2hAH5QkrAb4QGYhA4EW70+aq6QJZeVXXuzVsNX5k9L8=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=oUFzaUVPsYPB0BwK+ppFoZxIRuDCqIQ+2UuwbD/s08cd8xvCAugZLIhjWuPHlUYe5NOCvUcnkjJiDcTT7z2zsd35yKK9UtfFkCSnzIhyPVdJhPgVDywaRl8iyf/ayeXJSOKBDM4JowHyubp+wCY+t/0QSJBhkxpH1XUQ+Q9olcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AMNzTTtH; arc=none smtp.client-ip=209.85.160.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="UeIlEDAM";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="5db7eGO6";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="UeIlEDAM";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="5db7eGO6"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 45E8D21B0B;
-	Mon,  2 Sep 2024 13:55:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1725285355; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4038p6ypsmLl7oHu34zkmir0R68SGXAAGBzY5mWGhqw=;
-	b=UeIlEDAMemVjcNiNR2XZIBkOuzlMrD71xDt00PUzZf5Wjkd45qZPRdZS+OGciG7ETVp2fz
-	hMzwuutDQ6Q2+0Jvl1riItgaADkLdWEJoxx8NxIR5HAlDVN6njerpCzacZhR3pak2zizBC
-	WGEMdpMJ1ie+KPCnbQt4En454mFxePU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1725285355;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4038p6ypsmLl7oHu34zkmir0R68SGXAAGBzY5mWGhqw=;
-	b=5db7eGO6LpwPt3n0kG/UGeHdTQKtl1dYeIRY0muRmv/GvMoWpV5MX641WDS88/kqwMF6d8
-	ayytcXT5Sppv/BCQ==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1725285355; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4038p6ypsmLl7oHu34zkmir0R68SGXAAGBzY5mWGhqw=;
-	b=UeIlEDAMemVjcNiNR2XZIBkOuzlMrD71xDt00PUzZf5Wjkd45qZPRdZS+OGciG7ETVp2fz
-	hMzwuutDQ6Q2+0Jvl1riItgaADkLdWEJoxx8NxIR5HAlDVN6njerpCzacZhR3pak2zizBC
-	WGEMdpMJ1ie+KPCnbQt4En454mFxePU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1725285355;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4038p6ypsmLl7oHu34zkmir0R68SGXAAGBzY5mWGhqw=;
-	b=5db7eGO6LpwPt3n0kG/UGeHdTQKtl1dYeIRY0muRmv/GvMoWpV5MX641WDS88/kqwMF6d8
-	ayytcXT5Sppv/BCQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3A5F513AE0;
-	Mon,  2 Sep 2024 13:55:55 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id K6c8DuvD1WZCKwAAD6G6ig
-	(envelope-from <jack@suse.cz>); Mon, 02 Sep 2024 13:55:55 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id E0E8BA0965; Mon,  2 Sep 2024 15:55:54 +0200 (CEST)
-Date: Mon, 2 Sep 2024 15:55:54 +0200
-From: Jan Kara <jack@suse.cz>
-To: Thorsten Blum <thorsten.blum@toblux.com>
-Cc: jack@suse.cz, kees@kernel.org, gustavoars@kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] isofs: Annotate struct SL_component with __counted_by()
-Message-ID: <20240902135554.xpeqg724t2hsqx2u@quack3>
-References: <20240830164902.112682-2-thorsten.blum@toblux.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AMNzTTtH"
+Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-457ce5fda1aso8589141cf.1;
+        Mon, 02 Sep 2024 07:30:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1725287451; x=1725892251; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nWWTjaMW9Ko+2AruYroLKFk93sCipLt90Wh5KGJSmPQ=;
+        b=AMNzTTtH32vyFKbcnumdQyOCoRtucP/HuR/6A07DNJYLeIjDKHGFTphQlnh8BNuKz5
+         0YnyM3nHauVowjyEL6XvPwiigqPsa2ejVQ62yKetRdrafBrWGRbzFvrPI+O53WJFptTd
+         d/EA5WFds5+CxbAYh9p2BXBOwlSZ3/DFBCxjQi6EsiA9RWXi6OAd4eiLBI8MnKCREmZm
+         TA9ooRG3ygWHfJjjNhGizB0/uRlOnUUQwGFG++1L3h4QkRVLPKr8syYchzY/vKntWq3D
+         N1VFT/RD8io1JwUxTIjmXhOS4b/2SnJvAUj4tWnSUPVCfh8ACYLmBLMbkNkIHRQQqGRK
+         yzew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725287451; x=1725892251;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=nWWTjaMW9Ko+2AruYroLKFk93sCipLt90Wh5KGJSmPQ=;
+        b=qf0cmJowcqq/azIXbo3Vl0yP1nkE1fdiFKHI4eIGFfA698WjdDmk2rtf54DFvrkfvU
+         E15eQky60z+75KqW5gUn8hmzgy5QG5PeExcwd5TbDqEl8nTcMWKT7m0wsPyPSr4c5bIY
+         pirNeOkiiEsT6xRRBDWg8i/+waMnVAuoVZGAOfDmefE6pPjqG3b24/+i/Q23mq3p/SII
+         5dFFzTMu31yeQ4QLT89WtDmgtT8ymV7jNGcI03HaE9lPTIGra3tNGQZr1A0xI0G5QpA7
+         Uo6pMfKqqG7i6kBKkyCQ3HlDp/2mLD7/KMnyGK6F162ij9bfq8RZXf1O+pQRu5uh51cZ
+         YBzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUOIxEDai5WBk9/YoWQsmleDjbMbE5/L9MDGhQAD/DQ+V3QNKt3i2AAAAUDaLMyjIfb372LfMSF@vger.kernel.org, AJvYcCXiJC05Q9dd6mfEIT96kgjSOzbVDL/ZMOMZpUZWjrcD790RlxxVXgpxTqO2+PaCBhYXbWmCJppbdgNXugtFMMw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywff39tI3JpHENfNfzyl86RSLWY1JkM1GBU1LFe5PEdinFfnUYE
+	duZvg2SLXiAlxzLHBKXlvUT+qW+1oRwKKwA1TJc3B2Ivb+zInYXW
+X-Google-Smtp-Source: AGHT+IGv/l7eBJBzS0r0UAuzxt/6jjUp/xvP4dsSMZSBjT+uXKNWAJ1q1y5viRm6+kzthjCbx6pc/g==
+X-Received: by 2002:a05:622a:5cd:b0:457:c851:8b0f with SMTP id d75a77b69052e-457c8518f3amr91501291cf.53.1725287450619;
+        Mon, 02 Sep 2024 07:30:50 -0700 (PDT)
+Received: from localhost (193.132.150.34.bc.googleusercontent.com. [34.150.132.193])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-45682db8326sm39983191cf.95.2024.09.02.07.30.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Sep 2024 07:30:50 -0700 (PDT)
+Date: Mon, 02 Sep 2024 10:30:49 -0400
+From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+To: Andy Shevchenko <andy@kernel.org>, 
+ Jakub Kicinski <kuba@kernel.org>
+Cc: Hongbo Li <lihongbo22@huawei.com>, 
+ kees@kernel.org, 
+ willemdebruijn.kernel@gmail.com, 
+ jasowang@redhat.com, 
+ davem@davemloft.net, 
+ edumazet@google.com, 
+ pabeni@redhat.com, 
+ akpm@linux-foundation.org, 
+ linux-hardening@vger.kernel.org, 
+ netdev@vger.kernel.org, 
+ linux-mm@kvack.org
+Message-ID: <66d5cc19d34c6_613882942a@willemb.c.googlers.com.notmuch>
+In-Reply-To: <ZtWYO-atol0Qx58h@smile.fi.intel.com>
+References: <20240831095840.4173362-1-lihongbo22@huawei.com>
+ <20240831095840.4173362-3-lihongbo22@huawei.com>
+ <20240831130741.768da6da@kernel.org>
+ <ZtWYO-atol0Qx58h@smile.fi.intel.com>
+Subject: Re: [PATCH -next 2/4] tun: Make use of str_disabled_enabled helper
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240830164902.112682-2-thorsten.blum@toblux.com>
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.80 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	RCVD_COUNT_THREE(0.00)[3];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_LAST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email]
-X-Spam-Score: -3.80
-X-Spam-Flag: NO
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 7bit
 
-On Fri 30-08-24 18:49:03, Thorsten Blum wrote:
-> Add the __counted_by compiler attribute to the flexible array member
-> text to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
-> CONFIG_FORTIFY_SOURCE.
+Andy Shevchenko wrote:
+> On Sat, Aug 31, 2024 at 01:07:41PM -0700, Jakub Kicinski wrote:
+> > On Sat, 31 Aug 2024 17:58:38 +0800 Hongbo Li wrote:
+> > > Use str_disabled_enabled() helper instead of open
+> > > coding the same.
 > 
-> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
-
-Thanks. I've added the patch to my tree.
-
-								Honza
-
-> ---
->  fs/isofs/rock.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> ...
 > 
-> diff --git a/fs/isofs/rock.h b/fs/isofs/rock.h
-> index ee9660e9671c..7755e587f778 100644
-> --- a/fs/isofs/rock.h
-> +++ b/fs/isofs/rock.h
-> @@ -44,7 +44,7 @@ struct RR_PN_s {
->  struct SL_component {
->  	__u8 flags;
->  	__u8 len;
-> -	__u8 text[];
-> +	__u8 text[] __counted_by(len);
->  } __attribute__ ((packed));
->  
->  struct RR_SL_s {
-> -- 
-> 2.46.0
+> > >  		netif_info(tun, drv, tun->dev, "ignored: set checksum %s\n",
+> > > -			   arg ? "disabled" : "enabled");
+> > > +			   str_disabled_enabled(arg));
+> > 
+> > You don't explain the 'why'. How is this an improvement?
+> > nack on this and 2 similar networking changes you sent
 > 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+> Side opinion: This makes the messages more unified and not prone to typos
+> and/or grammatical mistakes. Unification allows to shrink binary due to
+> linker efforts on string literals deduplication.
+
+This adds a layer of indirection.
+
+The original code is immediately obvious. When I see the new code I
+have to take a detour through cscope to figure out what it does.
+
+To me, in this case, the benefit is too marginal to justify that.
