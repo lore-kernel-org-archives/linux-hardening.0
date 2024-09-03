@@ -1,93 +1,111 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D29E8A5F;
-	Tue,  3 Sep 2024 06:25:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93E05200116;
+	Tue,  3 Sep 2024 08:36:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725344761; cv=none; b=sIQ9tEnvvEHLqwCqsLeni3MFVhH5nzC1EBbKiuI2V19ys/J94WTrWo8H3rPE+LlXO7KVegJ/x/AtrlsyjIIN0/iWL0P+c0cVpABOng5Fq0/4tcYfujCvM4zrGcp06+qQaEX43aEMuz5FypSBdfH9NrZlDvkkQSoM8h/gZJgPkho=
+	t=1725352579; cv=none; b=OaYb9oFZILIFaX9OfRoewoDZITwvbTlrIfKMh+5aUUu0kpT5HHrilmthR09ig+ShtZdFqRK3+qLeNazutVdSBs6TJTQmR/smnuI/TRYrE+BhzQiUOTUwcQzlbLh2I+nqriGBKSlUyCNMsNmEZEfM4QMHpd+6T6E49w+9GXk/+to=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725344761; c=relaxed/simple;
-	bh=RveC8/MtBdXkAVZAvb4sx93mHUq7TmZDF/eGhgAu8Js=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=XMNz2vaUIVOVyz+I8NvSEz+vbEbl6vBYmny9L6GniVWxU9JiFEXowwXDtFwg4/U+30bHuh1aV85lM2AHy0MZdW5ZwhAx/7UztK7xpIAEMbpG0mJz+I5YHPo1iGELBoQ313H5vrZ/VPw7rDyN4EnNJPf48XfLU45qwL566/oBtFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+	s=arc-20240116; t=1725352579; c=relaxed/simple;
+	bh=2+C1JwNOInUIAA1rNB1sOdcsewGTgxK0O8vupNv4API=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=N+gWthCnyozknq8j7c0DDCEwidio5bqQvck2uMSUCuzmOmk5orJsXcmYMmgxgiq56wUmoDeJlWjXGymM7JR9/qzADDJ1975Ljdabl22jh+AdCaZreZ+CxeS4NsHJ76X/NeaJ3DSSZmCITrSBRVAmrBYupjBZFMSktbLjjo2H7l0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4WybBr3K9dz1HHkC;
-	Tue,  3 Sep 2024 14:22:28 +0800 (CST)
-Received: from dggpeml500022.china.huawei.com (unknown [7.185.36.66])
-	by mail.maildlp.com (Postfix) with ESMTPS id A1EC81A016C;
-	Tue,  3 Sep 2024 14:25:54 +0800 (CST)
-Received: from [10.67.111.104] (10.67.111.104) by
- dggpeml500022.china.huawei.com (7.185.36.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Tue, 3 Sep 2024 14:25:54 +0800
-Message-ID: <9d844c72-bda6-4e28-b48c-63c4f8855ae7@huawei.com>
-Date: Tue, 3 Sep 2024 14:25:53 +0800
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Wyf491JC8z6K603;
+	Tue,  3 Sep 2024 16:31:53 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id B6E84140B55;
+	Tue,  3 Sep 2024 16:36:13 +0800 (CST)
+Received: from localhost (10.203.177.66) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 3 Sep
+ 2024 09:36:13 +0100
+Date: Tue, 3 Sep 2024 09:36:11 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: <wangshuaijie@awinic.com>
+CC: <jic23@kernel.org>, <conor+dt@kernel.org>, <devicetree@vger.kernel.org>,
+	<gustavoars@kernel.org>, <kangjiajun@awinic.com>, <kees@kernel.org>,
+	<krzk+dt@kernel.org>, <lars@metafoo.de>, <linux-hardening@vger.kernel.org>,
+	<linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<liweilei@awinic.com>, <robh@kernel.org>
+Subject: Re: [PATCH V9 0/2] Add support for aw96103/aw96105 proximity sensor
+Message-ID: <20240903093611.0000637f@Huawei.com>
+In-Reply-To: <20240903060304.910863-1-wangshuaijie@awinic.com>
+References: <20240831150724.201e7d73@jic23-huawei>
+	<20240903060304.910863-1-wangshuaijie@awinic.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH -next 2/4] tun: Make use of str_disabled_enabled helper
-To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Andy Shevchenko
-	<andy@kernel.org>, Jakub Kicinski <kuba@kernel.org>
-CC: <kees@kernel.org>, <jasowang@redhat.com>, <davem@davemloft.net>,
-	<edumazet@google.com>, <pabeni@redhat.com>, <akpm@linux-foundation.org>,
-	<linux-hardening@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<linux-mm@kvack.org>
-References: <20240831095840.4173362-1-lihongbo22@huawei.com>
- <20240831095840.4173362-3-lihongbo22@huawei.com>
- <20240831130741.768da6da@kernel.org> <ZtWYO-atol0Qx58h@smile.fi.intel.com>
- <66d5cc19d34c6_613882942a@willemb.c.googlers.com.notmuch>
-Content-Language: en-US
-From: Hongbo Li <lihongbo22@huawei.com>
-In-Reply-To: <66d5cc19d34c6_613882942a@willemb.c.googlers.com.notmuch>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- dggpeml500022.china.huawei.com (7.185.36.66)
+X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
+On Tue, 3 Sep 2024 06:03:04 +0000
+<wangshuaijie@awinic.com> wrote:
 
-
-On 2024/9/2 22:30, Willem de Bruijn wrote:
-> Andy Shevchenko wrote:
->> On Sat, Aug 31, 2024 at 01:07:41PM -0700, Jakub Kicinski wrote:
->>> On Sat, 31 Aug 2024 17:58:38 +0800 Hongbo Li wrote:
->>>> Use str_disabled_enabled() helper instead of open
->>>> coding the same.
->>
->> ...
->>
->>>>   		netif_info(tun, drv, tun->dev, "ignored: set checksum %s\n",
->>>> -			   arg ? "disabled" : "enabled");
->>>> +			   str_disabled_enabled(arg));
->>>
->>> You don't explain the 'why'. How is this an improvement?
->>> nack on this and 2 similar networking changes you sent
->>
->> Side opinion: This makes the messages more unified and not prone to typos
->> and/or grammatical mistakes. Unification allows to shrink binary due to
->> linker efforts on string literals deduplication.
+> On Sat, 31 Aug 2024 15:07:24 +0100, jic23@kernel.org wrote:
+> >On Tue, 27 Aug 2024 08:02:27 +0000
+> >wangshuaijie@awinic.com wrote:
+> >  
+> >> From: shuaijie wang <wangshuaijie@awinic.com>
+> >> 
+> >> Add drivers that support Awinic aw96103/aw96105 proximity sensors.
+> >> 
+> >> The aw9610x series are high-sensitivity capacitive proximity detection
+> >> sensors. This device detects human proximity and assists electronic devices
+> >> in reducing specific absorption rate (SAR) to pass SAR related certifications.
+> >> The device reduces RF power and reduces harm when detecting human proximity. 
+> >> Increase power and improve signal quality when the human body is far away.
+> >> 
+> >> The specific absorption rate (SAR) is a metric that measures the degree of
+> >> absorption of electromagnetic radiation emitted by wireless devices,
+> >> such as mobile phones and tablets, by human tissue.
+> >> 
+> >> This patch implements device initialization, registration,
+> >> I/O operation handling and interrupt handling, and passed basic testing.  
+> >I made one trivial tweak to add static to the iio_info declaration and
+> >applied to the togreg branch of iio.git, initially pushed out as testing
+> >for 0-day to see if it can find any issues we missed.
+> >
+> >Thanks,
+> >
+> >Jonathan  
 > 
-> This adds a layer of indirection.
+> Hi Jonathan,
 > 
-> The original code is immediately obvious. When I see the new code I
-> have to take a detour through cscope to figure out what it does.
-If they have used it once, there is no need for more jumps, because it's 
-relatively simple.
+> Thank you very much for your help and suggestions, which have been very
+> beneficial to me. May I ask if I need to continue modifying my patch?
+> If not, please inform me of the approximate time for review and merging.
 
-Using a dedicated function seems very elegant and unified, especially 
-for some string printing situations, such as disable/enable. Even in 
-today's kernel tree, there are several different formats that appear: 
-'enable/disable', 'enabled/disabled', 'en/dis'.
+It's already merged.
+https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git/commit/?h=testing&id=a369e1d1a10790f63b4b858dc74b53730146754f
 
-Thanks,
-Hongbo
+That will be tested by the autobuilders + I need to rebase the whole
+tree on char-misc once Greg (hopefully) takes a pull request that is outstanding.
+
+That isn't relevant for your patch, but there is some other work queued
+up that has dependencies on fixes that went upstream quicker.
+
+This 'should' make the coming merge window so should be in v6.12 in
+about 3 months time.  You can develop additional features on top of it
+now but they are unlikely to make the 6.12 cycle as there is only about
+a week left.
+
+Jonathan
 
 > 
-> To me, in this case, the benefit is too marginal to justify that.
+> I look forward to your reply so that I can better plan my subsequent work.
+> 
+> Kind regards,
+> Wang Shuaijie
+
