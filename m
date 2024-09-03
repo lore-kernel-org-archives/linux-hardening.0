@@ -1,63 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out28-50.mail.aliyun.com (out28-50.mail.aliyun.com [115.124.28.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC9C41A2659;
-	Mon,  2 Sep 2024 16:11:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3428A15575F;
+	Tue,  3 Sep 2024 06:08:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.28.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725293462; cv=none; b=kvN0ZAt/GTuXZDxuNmd5aprVJF4ExflK/C2aXE1AkfezSuCaPr08bLadB/ILEkLb5USpr2WieaGO+S3Zd/goXwuOhWsuMqOxqCQ4wila3RwzgJQLj5BYcDVTDBh72f5TFUNbadijREP/aDjfHEcSeopLVfkQ1ATORK4zl/AE7cc=
+	t=1725343726; cv=none; b=ljITEyOfba7/a/oMiiuKBUGYH/IyTRd18dXW3kCGS8NDbpDCrNtRoncLb3/ANnR0D8Af5IXjhWKhMgJKT1u4uU+0+Dsu0Oiiad5DTOpnctTE2Z5+V2pXs0q6b01W8OyaExL6xgFWFTIeUKExDXRmmmgOthaUsuPc6DxqlBJ+gOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725293462; c=relaxed/simple;
-	bh=YF7BiudXlR2XGJ2GK/rIdAsgWsAxRRE5v7AiFUk78a4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UMJ8oLU+504bNBnsqZ+xlSIG1FefNS2wC9ng1SZd0kn1i8a1gEVCdEeLyJS/F0iHHUsvmLUneakjm2fK8Vg1eJVG/K5GcExcWXiheyI6Btb3H8BTDWO2Sp9jiVVGjn9ASG/AGT1LzJ0rAf5SgylM5WIXS6FIDfohnoBqayWY33M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BMhHnx7x; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BMhHnx7x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC042C4CEC7;
-	Mon,  2 Sep 2024 16:11:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725293462;
-	bh=YF7BiudXlR2XGJ2GK/rIdAsgWsAxRRE5v7AiFUk78a4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=BMhHnx7x8b8kq0VOMRBNCVJjDrnqSNZSJ9GR+NXIwyjxvYtqNyEKBdYw6at50Jxeh
-	 yWlu4mW2x/lQS/UV1PPQDnXdzGw9i9fJB9pXKlOMunIu5ZrZSILfOIw4eh6xH0Atpz
-	 qRINOxktkivRZAn4rEdUJkf7USoMhaPocuwjTEbMnrF9hbwydPN/jKuzrC51bovn7J
-	 bK38o52sLSVNZa/SfIGWOB/6yPhLCwWBgF/PiK3d2X1ee5dCrQ2qAZoUQGSJPJVRB2
-	 rSYOrgM6eTpNPP4NijB1oM/FJ6C4imoszscZargiEfZmmVl9eAuaMIJCKK6jW6tG/X
-	 zcOMgywRmQg9A==
-Date: Mon, 2 Sep 2024 09:11:00 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Gal Pressman <gal@nvidia.com>
-Cc: Hongbo Li <lihongbo22@huawei.com>, kees@kernel.org, andy@kernel.org,
- willemdebruijn.kernel@gmail.com, jasowang@redhat.com, davem@davemloft.net,
- edumazet@google.com, pabeni@redhat.com, akpm@linux-foundation.org,
- linux-hardening@vger.kernel.org, netdev@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH -next 2/4] tun: Make use of str_disabled_enabled helper
-Message-ID: <20240902091100.1fa07b84@kernel.org>
-In-Reply-To: <3360d021-6290-4d6a-9d83-cd4c2d47fd0d@nvidia.com>
-References: <20240831095840.4173362-1-lihongbo22@huawei.com>
-	<20240831095840.4173362-3-lihongbo22@huawei.com>
-	<20240831130741.768da6da@kernel.org>
-	<3360d021-6290-4d6a-9d83-cd4c2d47fd0d@nvidia.com>
+	s=arc-20240116; t=1725343726; c=relaxed/simple;
+	bh=e8wcEXurxfiJAMMrN1NhfnJxzWiWb3tiYI04c1qXU/I=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=PXNkKJi643p1k0VWOz7oV0x5vk7xyyntCZTtJ0h3KwITeWDkUyuIZsAVEGZlJHcfeWRKlY7BG42GSpdJ2xuJ32B342mc5sryctiidO2FeFZYOU5RN235bKAntJTyVhh76Mvm+dPERpAx6rQmyz0ecjMs9jr4PSqqN4jJC2tBQYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=awinic.com; spf=pass smtp.mailfrom=awinic.com; arc=none smtp.client-ip=115.124.28.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=awinic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=awinic.com
+Received: from awinic..(mailfrom:wangshuaijie@awinic.com fp:SMTPD_---.Z9L6.2j_1725343383)
+          by smtp.aliyun-inc.com;
+          Tue, 03 Sep 2024 14:03:10 +0800
+From: wangshuaijie@awinic.com
+To: jic23@kernel.org
+Cc: conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	gustavoars@kernel.org,
+	kangjiajun@awinic.com,
+	kees@kernel.org,
+	krzk+dt@kernel.org,
+	lars@metafoo.de,
+	linux-hardening@vger.kernel.org,
+	linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	liweilei@awinic.com,
+	robh@kernel.org,
+	wangshuaijie@awinic.com
+Subject: Re: [PATCH V9 0/2] Add support for aw96103/aw96105 proximity sensor
+Date: Tue,  3 Sep 2024 06:03:04 +0000
+Message-ID: <20240903060304.910863-1-wangshuaijie@awinic.com>
+X-Mailer: git-send-email 2.41.0
+In-Reply-To: <20240831150724.201e7d73@jic23-huawei>
+References: <20240831150724.201e7d73@jic23-huawei>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2 Sep 2024 09:10:33 +0300 Gal Pressman wrote:
-> > You don't explain the 'why'. How is this an improvement?
-> > nack on this and 2 similar networking changes you sent
-> 
-> Are you against the concept of string_choices in general, or this
-> specific change?
-
-Willem verbalized my opinion better than I can.
-
-If a (driver|subsystem) maintainer likes string_choices that's
-perfectly fine, but IMHO they are not worth converting to, and
-not something we should suggest during review.
+On Sat, 31 Aug 2024 15:07:24 +0100, jic23@kernel.org wrote:=0D
+>On Tue, 27 Aug 2024 08:02:27 +0000=0D
+>wangshuaijie@awinic.com wrote:=0D
+>=0D
+>> From: shuaijie wang <wangshuaijie@awinic.com>=0D
+>> =0D
+>> Add drivers that support Awinic aw96103/aw96105 proximity sensors.=0D
+>> =0D
+>> The aw9610x series are high-sensitivity capacitive proximity detection=0D
+>> sensors. This device detects human proximity and assists electronic devi=
+ces=0D
+>> in reducing specific absorption rate (SAR) to pass SAR related certifica=
+tions.=0D
+>> The device reduces RF power and reduces harm when detecting human proxim=
+ity. =0D
+>> Increase power and improve signal quality when the human body is far awa=
+y.=0D
+>> =0D
+>> The specific absorption rate (SAR) is a metric that measures the degree =
+of=0D
+>> absorption of electromagnetic radiation emitted by wireless devices,=0D
+>> such as mobile phones and tablets, by human tissue.=0D
+>> =0D
+>> This patch implements device initialization, registration,=0D
+>> I/O operation handling and interrupt handling, and passed basic testing.=
+=0D
+>I made one trivial tweak to add static to the iio_info declaration and=0D
+>applied to the togreg branch of iio.git, initially pushed out as testing=0D
+>for 0-day to see if it can find any issues we missed.=0D
+>=0D
+>Thanks,=0D
+>=0D
+>Jonathan=0D
+=0D
+Hi Jonathan,=0D
+=0D
+Thank you very much for your help and suggestions, which have been very=0D
+beneficial to me. May I ask if I need to continue modifying my patch?=0D
+If not, please inform me of the approximate time for review and merging.=0D
+=0D
+I look forward to your reply so that I can better plan my subsequent work.=
+=0D
+=0D
+Kind regards,=0D
+Wang Shuaijie=
