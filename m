@@ -1,111 +1,112 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93E05200116;
-	Tue,  3 Sep 2024 08:36:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBCE71885A0;
+	Tue,  3 Sep 2024 15:09:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725352579; cv=none; b=OaYb9oFZILIFaX9OfRoewoDZITwvbTlrIfKMh+5aUUu0kpT5HHrilmthR09ig+ShtZdFqRK3+qLeNazutVdSBs6TJTQmR/smnuI/TRYrE+BhzQiUOTUwcQzlbLh2I+nqriGBKSlUyCNMsNmEZEfM4QMHpd+6T6E49w+9GXk/+to=
+	t=1725376149; cv=none; b=bPw8yI31ptXxtfg2qrGUSQkT6PhNIu+7Iqv2RMUnHwcs7z5+bTNvA6IfOoE85zBNLaIAaQbgIMtwIokJIBLwPtxBlXTNJlJ8fb8xCE/UDIz5OlaOFZmF0OgIF0B2E8qttkBEIPv5Y13/DlE8MF6NHlx9COYAvb/96MqaGSrJHh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725352579; c=relaxed/simple;
-	bh=2+C1JwNOInUIAA1rNB1sOdcsewGTgxK0O8vupNv4API=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=N+gWthCnyozknq8j7c0DDCEwidio5bqQvck2uMSUCuzmOmk5orJsXcmYMmgxgiq56wUmoDeJlWjXGymM7JR9/qzADDJ1975Ljdabl22jh+AdCaZreZ+CxeS4NsHJ76X/NeaJ3DSSZmCITrSBRVAmrBYupjBZFMSktbLjjo2H7l0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Wyf491JC8z6K603;
-	Tue,  3 Sep 2024 16:31:53 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id B6E84140B55;
-	Tue,  3 Sep 2024 16:36:13 +0800 (CST)
-Received: from localhost (10.203.177.66) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 3 Sep
- 2024 09:36:13 +0100
-Date: Tue, 3 Sep 2024 09:36:11 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: <wangshuaijie@awinic.com>
-CC: <jic23@kernel.org>, <conor+dt@kernel.org>, <devicetree@vger.kernel.org>,
-	<gustavoars@kernel.org>, <kangjiajun@awinic.com>, <kees@kernel.org>,
-	<krzk+dt@kernel.org>, <lars@metafoo.de>, <linux-hardening@vger.kernel.org>,
-	<linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<liweilei@awinic.com>, <robh@kernel.org>
-Subject: Re: [PATCH V9 0/2] Add support for aw96103/aw96105 proximity sensor
-Message-ID: <20240903093611.0000637f@Huawei.com>
-In-Reply-To: <20240903060304.910863-1-wangshuaijie@awinic.com>
-References: <20240831150724.201e7d73@jic23-huawei>
-	<20240903060304.910863-1-wangshuaijie@awinic.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1725376149; c=relaxed/simple;
+	bh=B7aDdTXMk0Qrpb0aFrz/n4ezzXaHtINJL0/Z/0t08V4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EGB9YWwHjEyrXWR2CS8BJukQY10gdGf1mZpdAFZYeqIBUjq5vAllSgZ2If9TYcJNNXJlppha1UQj/4PBgAU+wTx8ZrdS6uBm2XieutRRg/kVYMwoB3Cn828W93LaesQwjVe5jjMzrt6OvPgOpr8F5BZPlSp/MRjr07SObLEB7Ag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: aup8Ek5GTbCDBo8JO6asxA==
+X-CSE-MsgGUID: gs842ZGaThSZv7XL86bSrw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11184"; a="41453772"
+X-IronPort-AV: E=Sophos;i="6.10,199,1719903600"; 
+   d="scan'208";a="41453772"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2024 08:09:07 -0700
+X-CSE-ConnectionGUID: iVinaASRSkSiO4U2LiTn/g==
+X-CSE-MsgGUID: FvYmrQO5SBWgR1VrURNeQg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,199,1719903600"; 
+   d="scan'208";a="69799370"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2024 08:09:04 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andy@kernel.org>)
+	id 1slV9R-00000004kPt-0R69;
+	Tue, 03 Sep 2024 18:09:01 +0300
+Date: Tue, 3 Sep 2024 18:09:00 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: Hongbo Li <lihongbo22@huawei.com>
+Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+	Jakub Kicinski <kuba@kernel.org>, kees@kernel.org,
+	jasowang@redhat.com, davem@davemloft.net, edumazet@google.com,
+	pabeni@redhat.com, akpm@linux-foundation.org,
+	linux-hardening@vger.kernel.org, netdev@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: Re: [PATCH -next 2/4] tun: Make use of str_disabled_enabled helper
+Message-ID: <ZtcmjI-C3zfqjooc@smile.fi.intel.com>
+References: <20240831095840.4173362-1-lihongbo22@huawei.com>
+ <20240831095840.4173362-3-lihongbo22@huawei.com>
+ <20240831130741.768da6da@kernel.org>
+ <ZtWYO-atol0Qx58h@smile.fi.intel.com>
+ <66d5cc19d34c6_613882942a@willemb.c.googlers.com.notmuch>
+ <9d844c72-bda6-4e28-b48c-63c4f8855ae7@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9d844c72-bda6-4e28-b48c-63c4f8855ae7@huawei.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Tue, 3 Sep 2024 06:03:04 +0000
-<wangshuaijie@awinic.com> wrote:
+On Tue, Sep 03, 2024 at 02:25:53PM +0800, Hongbo Li wrote:
+> On 2024/9/2 22:30, Willem de Bruijn wrote:
+> > Andy Shevchenko wrote:
+> > > On Sat, Aug 31, 2024 at 01:07:41PM -0700, Jakub Kicinski wrote:
+> > > > On Sat, 31 Aug 2024 17:58:38 +0800 Hongbo Li wrote:
 
-> On Sat, 31 Aug 2024 15:07:24 +0100, jic23@kernel.org wrote:
-> >On Tue, 27 Aug 2024 08:02:27 +0000
-> >wangshuaijie@awinic.com wrote:
-> >  
-> >> From: shuaijie wang <wangshuaijie@awinic.com>
-> >> 
-> >> Add drivers that support Awinic aw96103/aw96105 proximity sensors.
-> >> 
-> >> The aw9610x series are high-sensitivity capacitive proximity detection
-> >> sensors. This device detects human proximity and assists electronic devices
-> >> in reducing specific absorption rate (SAR) to pass SAR related certifications.
-> >> The device reduces RF power and reduces harm when detecting human proximity. 
-> >> Increase power and improve signal quality when the human body is far away.
-> >> 
-> >> The specific absorption rate (SAR) is a metric that measures the degree of
-> >> absorption of electromagnetic radiation emitted by wireless devices,
-> >> such as mobile phones and tablets, by human tissue.
-> >> 
-> >> This patch implements device initialization, registration,
-> >> I/O operation handling and interrupt handling, and passed basic testing.  
-> >I made one trivial tweak to add static to the iio_info declaration and
-> >applied to the togreg branch of iio.git, initially pushed out as testing
-> >for 0-day to see if it can find any issues we missed.
-> >
-> >Thanks,
-> >
-> >Jonathan  
+...
+
+> > > > >   		netif_info(tun, drv, tun->dev, "ignored: set checksum %s\n",
+> > > > > -			   arg ? "disabled" : "enabled");
+> > > > > +			   str_disabled_enabled(arg));
+> > > > 
+> > > > You don't explain the 'why'. How is this an improvement?
+> > > > nack on this and 2 similar networking changes you sent
+> > > 
+> > > Side opinion: This makes the messages more unified and not prone to typos
+> > > and/or grammatical mistakes. Unification allows to shrink binary due to
+> > > linker efforts on string literals deduplication.
+> > 
+> > This adds a layer of indirection.
+> > 
+> > The original code is immediately obvious. When I see the new code I
+> > have to take a detour through cscope to figure out what it does.
+> If they have used it once, there is no need for more jumps, because it's
+> relatively simple.
 > 
-> Hi Jonathan,
-> 
-> Thank you very much for your help and suggestions, which have been very
-> beneficial to me. May I ask if I need to continue modifying my patch?
-> If not, please inform me of the approximate time for review and merging.
+> Using a dedicated function seems very elegant and unified, especially for
+> some string printing situations, such as disable/enable. Even in today's
+> kernel tree, there are several different formats that appear:
+> 'enable/disable', 'enabled/disabled', 'en/dis'.
 
-It's already merged.
-https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git/commit/?h=testing&id=a369e1d1a10790f63b4b858dc74b53730146754f
+Not to mention that the longer word is the more error prone the spelling.
 
-That will be tested by the autobuilders + I need to rebase the whole
-tree on char-misc once Greg (hopefully) takes a pull request that is outstanding.
+> > To me, in this case, the benefit is too marginal to justify that.
 
-That isn't relevant for your patch, but there is some other work queued
-up that has dependencies on fixes that went upstream quicker.
+Hongbo, perhaps you need to add a top comment to the string_choices.h to
+explain the following:
+1) the convention to use is str_$TRUE_$FALSE(), where $TRUE and $FALSE the
+respective words printed;
+2) the pros of having unified output,
+3) including but not limited to the linker deduplication facilities, making
+the binary smaller.
 
-This 'should' make the coming merge window so should be in v6.12 in
-about 3 months time.  You can develop additional features on top of it
-now but they are unlikely to make the 6.12 cycle as there is only about
-a week left.
+With that you may always point people to the ad-hoc documentation.
 
-Jonathan
+-- 
+With Best Regards,
+Andy Shevchenko
 
-> 
-> I look forward to your reply so that I can better plan my subsequent work.
-> 
-> Kind regards,
-> Wang Shuaijie
 
