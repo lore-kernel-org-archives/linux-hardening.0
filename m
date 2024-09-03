@@ -1,93 +1,93 @@
-Received: from out28-50.mail.aliyun.com (out28-50.mail.aliyun.com [115.124.28.50])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3428A15575F;
-	Tue,  3 Sep 2024 06:08:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.28.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D29E8A5F;
+	Tue,  3 Sep 2024 06:25:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725343726; cv=none; b=ljITEyOfba7/a/oMiiuKBUGYH/IyTRd18dXW3kCGS8NDbpDCrNtRoncLb3/ANnR0D8Af5IXjhWKhMgJKT1u4uU+0+Dsu0Oiiad5DTOpnctTE2Z5+V2pXs0q6b01W8OyaExL6xgFWFTIeUKExDXRmmmgOthaUsuPc6DxqlBJ+gOM=
+	t=1725344761; cv=none; b=sIQ9tEnvvEHLqwCqsLeni3MFVhH5nzC1EBbKiuI2V19ys/J94WTrWo8H3rPE+LlXO7KVegJ/x/AtrlsyjIIN0/iWL0P+c0cVpABOng5Fq0/4tcYfujCvM4zrGcp06+qQaEX43aEMuz5FypSBdfH9NrZlDvkkQSoM8h/gZJgPkho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725343726; c=relaxed/simple;
-	bh=e8wcEXurxfiJAMMrN1NhfnJxzWiWb3tiYI04c1qXU/I=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PXNkKJi643p1k0VWOz7oV0x5vk7xyyntCZTtJ0h3KwITeWDkUyuIZsAVEGZlJHcfeWRKlY7BG42GSpdJ2xuJ32B342mc5sryctiidO2FeFZYOU5RN235bKAntJTyVhh76Mvm+dPERpAx6rQmyz0ecjMs9jr4PSqqN4jJC2tBQYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=awinic.com; spf=pass smtp.mailfrom=awinic.com; arc=none smtp.client-ip=115.124.28.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=awinic.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=awinic.com
-Received: from awinic..(mailfrom:wangshuaijie@awinic.com fp:SMTPD_---.Z9L6.2j_1725343383)
-          by smtp.aliyun-inc.com;
-          Tue, 03 Sep 2024 14:03:10 +0800
-From: wangshuaijie@awinic.com
-To: jic23@kernel.org
-Cc: conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	gustavoars@kernel.org,
-	kangjiajun@awinic.com,
-	kees@kernel.org,
-	krzk+dt@kernel.org,
-	lars@metafoo.de,
-	linux-hardening@vger.kernel.org,
-	linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	liweilei@awinic.com,
-	robh@kernel.org,
-	wangshuaijie@awinic.com
-Subject: Re: [PATCH V9 0/2] Add support for aw96103/aw96105 proximity sensor
-Date: Tue,  3 Sep 2024 06:03:04 +0000
-Message-ID: <20240903060304.910863-1-wangshuaijie@awinic.com>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20240831150724.201e7d73@jic23-huawei>
-References: <20240831150724.201e7d73@jic23-huawei>
+	s=arc-20240116; t=1725344761; c=relaxed/simple;
+	bh=RveC8/MtBdXkAVZAvb4sx93mHUq7TmZDF/eGhgAu8Js=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=XMNz2vaUIVOVyz+I8NvSEz+vbEbl6vBYmny9L6GniVWxU9JiFEXowwXDtFwg4/U+30bHuh1aV85lM2AHy0MZdW5ZwhAx/7UztK7xpIAEMbpG0mJz+I5YHPo1iGELBoQ313H5vrZ/VPw7rDyN4EnNJPf48XfLU45qwL566/oBtFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4WybBr3K9dz1HHkC;
+	Tue,  3 Sep 2024 14:22:28 +0800 (CST)
+Received: from dggpeml500022.china.huawei.com (unknown [7.185.36.66])
+	by mail.maildlp.com (Postfix) with ESMTPS id A1EC81A016C;
+	Tue,  3 Sep 2024 14:25:54 +0800 (CST)
+Received: from [10.67.111.104] (10.67.111.104) by
+ dggpeml500022.china.huawei.com (7.185.36.66) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Tue, 3 Sep 2024 14:25:54 +0800
+Message-ID: <9d844c72-bda6-4e28-b48c-63c4f8855ae7@huawei.com>
+Date: Tue, 3 Sep 2024 14:25:53 +0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH -next 2/4] tun: Make use of str_disabled_enabled helper
+To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Andy Shevchenko
+	<andy@kernel.org>, Jakub Kicinski <kuba@kernel.org>
+CC: <kees@kernel.org>, <jasowang@redhat.com>, <davem@davemloft.net>,
+	<edumazet@google.com>, <pabeni@redhat.com>, <akpm@linux-foundation.org>,
+	<linux-hardening@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<linux-mm@kvack.org>
+References: <20240831095840.4173362-1-lihongbo22@huawei.com>
+ <20240831095840.4173362-3-lihongbo22@huawei.com>
+ <20240831130741.768da6da@kernel.org> <ZtWYO-atol0Qx58h@smile.fi.intel.com>
+ <66d5cc19d34c6_613882942a@willemb.c.googlers.com.notmuch>
+Content-Language: en-US
+From: Hongbo Li <lihongbo22@huawei.com>
+In-Reply-To: <66d5cc19d34c6_613882942a@willemb.c.googlers.com.notmuch>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ dggpeml500022.china.huawei.com (7.185.36.66)
 
-On Sat, 31 Aug 2024 15:07:24 +0100, jic23@kernel.org wrote:=0D
->On Tue, 27 Aug 2024 08:02:27 +0000=0D
->wangshuaijie@awinic.com wrote:=0D
->=0D
->> From: shuaijie wang <wangshuaijie@awinic.com>=0D
->> =0D
->> Add drivers that support Awinic aw96103/aw96105 proximity sensors.=0D
->> =0D
->> The aw9610x series are high-sensitivity capacitive proximity detection=0D
->> sensors. This device detects human proximity and assists electronic devi=
-ces=0D
->> in reducing specific absorption rate (SAR) to pass SAR related certifica=
-tions.=0D
->> The device reduces RF power and reduces harm when detecting human proxim=
-ity. =0D
->> Increase power and improve signal quality when the human body is far awa=
-y.=0D
->> =0D
->> The specific absorption rate (SAR) is a metric that measures the degree =
-of=0D
->> absorption of electromagnetic radiation emitted by wireless devices,=0D
->> such as mobile phones and tablets, by human tissue.=0D
->> =0D
->> This patch implements device initialization, registration,=0D
->> I/O operation handling and interrupt handling, and passed basic testing.=
-=0D
->I made one trivial tweak to add static to the iio_info declaration and=0D
->applied to the togreg branch of iio.git, initially pushed out as testing=0D
->for 0-day to see if it can find any issues we missed.=0D
->=0D
->Thanks,=0D
->=0D
->Jonathan=0D
-=0D
-Hi Jonathan,=0D
-=0D
-Thank you very much for your help and suggestions, which have been very=0D
-beneficial to me. May I ask if I need to continue modifying my patch?=0D
-If not, please inform me of the approximate time for review and merging.=0D
-=0D
-I look forward to your reply so that I can better plan my subsequent work.=
-=0D
-=0D
-Kind regards,=0D
-Wang Shuaijie=
+
+
+On 2024/9/2 22:30, Willem de Bruijn wrote:
+> Andy Shevchenko wrote:
+>> On Sat, Aug 31, 2024 at 01:07:41PM -0700, Jakub Kicinski wrote:
+>>> On Sat, 31 Aug 2024 17:58:38 +0800 Hongbo Li wrote:
+>>>> Use str_disabled_enabled() helper instead of open
+>>>> coding the same.
+>>
+>> ...
+>>
+>>>>   		netif_info(tun, drv, tun->dev, "ignored: set checksum %s\n",
+>>>> -			   arg ? "disabled" : "enabled");
+>>>> +			   str_disabled_enabled(arg));
+>>>
+>>> You don't explain the 'why'. How is this an improvement?
+>>> nack on this and 2 similar networking changes you sent
+>>
+>> Side opinion: This makes the messages more unified and not prone to typos
+>> and/or grammatical mistakes. Unification allows to shrink binary due to
+>> linker efforts on string literals deduplication.
+> 
+> This adds a layer of indirection.
+> 
+> The original code is immediately obvious. When I see the new code I
+> have to take a detour through cscope to figure out what it does.
+If they have used it once, there is no need for more jumps, because it's 
+relatively simple.
+
+Using a dedicated function seems very elegant and unified, especially 
+for some string printing situations, such as disable/enable. Even in 
+today's kernel tree, there are several different formats that appear: 
+'enable/disable', 'enabled/disabled', 'en/dis'.
+
+Thanks,
+Hongbo
+
+> 
+> To me, in this case, the benefit is too marginal to justify that.
