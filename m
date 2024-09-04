@@ -1,72 +1,107 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFC526FB0;
-	Wed,  4 Sep 2024 01:41:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A647BE49;
+	Wed,  4 Sep 2024 02:26:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725414096; cv=none; b=WXhS3iI3phxErs3vskl95EzCb3reOTIpwIQurvWs6Ek3IVDCfA7YAtVUwtn5Cuq6vm2fNkXdl8yCgwsR6++CXwV1yg3UfaxptFXa5qhHRguXKgNPXY8IndAgd4xFNy65EwZ3jyht0cmk0CeYGYbMaXRAguPvK1RIhs26eEEDEY8=
+	t=1725416785; cv=none; b=CqGlwhINudVa1UhS82VLNar9HOSDGde/ovdNdPvYL5rvrlM19Do0nbc1nEx8KN/2NwTuRD9WoJSnGEENrT+7D4f5LGpRmgjBpPRJXXqGHBzWFV8MjQxJ6Q2RWcT9WUlsNuxpB5U4zRCNFeZZh+PJVWydx8BREYTI3ofXIyYrcco=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725414096; c=relaxed/simple;
-	bh=vz+2uzOAuKiK2Hy6nY/X6Bn4ROHbWI9apDYSJefU4SY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=VjPin7bQzKajpSBHZpHe82vS/0MKIhJDzH9MKfEZoVlPjabDuQVOOf4+UyHs0vuvhje2NihofI3nclIECHCVkErGei4KWMUnUr6vgpewyB6BPyYqzw8nqQx+1S+dRVseRQzM+D+YmpglqbPZb24GHFp4r74zV3DV6kq2ak5YKeI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Wz4vj0BgSz1j87V;
-	Wed,  4 Sep 2024 09:41:05 +0800 (CST)
-Received: from dggpeml500022.china.huawei.com (unknown [7.185.36.66])
-	by mail.maildlp.com (Postfix) with ESMTPS id AC9341401E9;
-	Wed,  4 Sep 2024 09:41:24 +0800 (CST)
-Received: from huawei.com (10.90.53.73) by dggpeml500022.china.huawei.com
- (7.185.36.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 4 Sep
- 2024 09:41:24 +0800
-From: Hongbo Li <lihongbo22@huawei.com>
-To: <vladimir.oltean@nxp.com>, <claudiu.manoil@nxp.com>,
-	<alexandre.belloni@bootlin.com>, <andrew@lunn.ch>, <f.fainelli@gmail.com>,
-	<davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-	<pabeni@redhat.com>, <kees@kernel.org>, <gustavoars@kernel.org>
-CC: <netdev@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-	<lihongbo22@huawei.com>
-Subject: [PATCH -next] net: dsa: felix: Annotate struct action_gate_entry with __counted_by
-Date: Wed, 4 Sep 2024 09:49:56 +0800
-Message-ID: <20240904014956.2035117-1-lihongbo22@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1725416785; c=relaxed/simple;
+	bh=fGqcaUGD7w63fzDnkRodwcT5MdyQ1hCOZd4iEMWLs8M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gk6H5BN1oDwb5ZofKlJTdIrQH5cMtGEPGmcbGSGyETJNOkPLzeBT4eJOpuEN5hkasX6ST0GGeM+N+GXW+82okYnwW63l3FZ7fXqz27QAomRfNRbrz85+V+2pTvCZmFoi1QETbpHK8wIOeh3S+5MUR8pb1RAphlyZGfNlrlG5MbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C0OFcP9m; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C0OFcP9m"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-374c4d4f219so2080714f8f.1;
+        Tue, 03 Sep 2024 19:26:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1725416782; x=1726021582; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FSBdS1j11Zy+2xCDBIJ9EylWTf0s1FdTfmv9gHVQNOg=;
+        b=C0OFcP9mCOzkX3TBmuAN/mKGTnTdTA9NcCdidYBx+np5RhrEFrKu33SlXSY0Hz+e56
+         YEYfdUnOPtvt4JakE82Irlns8Yn8QaECSsQH3PsRM60WvJ0wcDY9VvNdF2POLxRKZtMq
+         yZ7P61QtFpOBXsBfuArvfDSAxAMp/xYDD38fXzSJ7bQBY4igJFFZ5btKFsZj0s++gy+z
+         5QmfiTjvyTuFAKQWhp2wXNeaZhY3ANW7cJWeHp4Y35fetPbBoGz7utXrIitt7bc/2g4U
+         s+r6dbWAceqp6l3cUbPhpqjV3B0yjaO6vYX5Gq4avnyBeolfipgwzHAWVus/Rg+aHzfz
+         eE7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725416782; x=1726021582;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FSBdS1j11Zy+2xCDBIJ9EylWTf0s1FdTfmv9gHVQNOg=;
+        b=O0KhuvGf7mekzkMWaq07HIkqEEVNTgOLeIK5zwA54YUj5d29gKfxm2ZeGHgYMXzhZW
+         nUoWIlgeoTGLpTYNzhViadTaB6IwZyDw9L8CNIpufvbdk31VLbAUMMK63Fpv0ZDnSL5a
+         cgAAs19P8/MhzWsYqFWpqtzY8FexuH7jWLSzdS3MO8eVPZB+1eLbPnl4kEuuZpfHCGo1
+         xuKRQYKjK+CxWR7sP6izq1Gobo7rMB+kbntRpbl7Jyus7R27GnyPVdOvE7Xfn7htCBgf
+         c/i/4u2RmN/wudKiTvat1rWLfUnP0RMZyESn+X3czGqyVAzRB7l+M/KsWhdibldS4+pd
+         PuMA==
+X-Forwarded-Encrypted: i=1; AJvYcCUbi90L9DDIw3ReZRdOzcE6kKe+GBzBQ0BlpTabaQjEGaRQOnBfS9ViZU0UYSBcN3hJALrDVcpkXluyTQ==@vger.kernel.org, AJvYcCVUVuOyba1hcrg0kJYcPhqXYI4dSuF6O2JPQzAWRbtKBlGUiAnrf0K/MmFC3TFoqSlpoYBD3ZLWyPfA2tq/Slu+@vger.kernel.org, AJvYcCW0gLvU5TD8dO1VbzQDZpQ/H7Z1U9V1lg9OfLZ2WvuSb1JwVOi9rG/9Au1a4M26jp/+EtK0Ptg6gjk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+JsKVJGgWAuHRUlDcakhfFWR3HnWIhdQbTgz1VcBMES9R1QAL
+	Qsd9fR4Qk9S5yBSjoJf4x3m+xyD2H0BsHj+WgJ4lL7vbr7Kqm6yvjhiVTqIbYTLcBgXHabA8HUa
+	NHGn13lOlAUsKo4eBBI1abkloJTE=
+X-Google-Smtp-Source: AGHT+IGhzYhL4tArFqipUAT+kGGdRT0RgYSWXwyvMi268koMsgcW5NLg9Ennz8x3rZhCa17/E99QMWrsaKEDcAY6vBM=
+X-Received: by 2002:a5d:59a4:0:b0:368:75:2702 with SMTP id ffacd0b85a97d-374ecc6774bmr4935282f8f.13.1725416781590;
+ Tue, 03 Sep 2024 19:26:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- dggpeml500022.china.huawei.com (7.185.36.66)
+References: <20240904014803.2034939-1-lihongbo22@huawei.com>
+In-Reply-To: <20240904014803.2034939-1-lihongbo22@huawei.com>
+From: Keguang Zhang <keguang.zhang@gmail.com>
+Date: Wed, 4 Sep 2024 10:25:45 +0800
+Message-ID: <CAJhJPsV75K=yawL-vV1MHbXNZssB3sphPjN4gPZN3EbASgzG4A@mail.gmail.com>
+Subject: Re: [PATCH -next] dmaengine: Loongson1: Annotate struct ls1x_dma_chan
+ with __counted_by()
+To: Hongbo Li <lihongbo22@huawei.com>
+Cc: vkoul@kernel.org, kees@kernel.org, gustavoars@kernel.org, 
+	linux-mips@vger.kernel.org, dmaengine@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add the __counted_by compiler attribute to the flexible array member
-entries to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
-CONFIG_FORTIFY_SOURCE.
+On Wed, Sep 4, 2024 at 9:39=E2=80=AFAM Hongbo Li <lihongbo22@huawei.com> wr=
+ote:
+>
+> Add the __counted_by compiler attribute to the flexible array member
+> entries to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
+> CONFIG_FORTIFY_SOURCE.
+>
+> Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
+> ---
+>  drivers/dma/loongson1-apb-dma.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/dma/loongson1-apb-dma.c b/drivers/dma/loongson1-apb-=
+dma.c
+> index ca43c67a8203..be0dbda84dd2 100644
+> --- a/drivers/dma/loongson1-apb-dma.c
+> +++ b/drivers/dma/loongson1-apb-dma.c
+> @@ -78,7 +78,7 @@ struct ls1x_dma_chan {
+>  struct ls1x_dma {
+>         struct dma_device ddev;
+>         unsigned int nr_chans;
+> -       struct ls1x_dma_chan chan[];
+> +       struct ls1x_dma_chan chan[] __counted_by(nr_chans);
+>  };
+>
+>  static irqreturn_t ls1x_dma_irq_handler(int irq, void *data);
+> --
+> 2.34.1
+>
 
-Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
----
- drivers/net/dsa/ocelot/felix_vsc9959.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Reviewed-by: Keguang Zhang <keguang.zhang@gmail.com>
 
-diff --git a/drivers/net/dsa/ocelot/felix_vsc9959.c b/drivers/net/dsa/ocelot/felix_vsc9959.c
-index ba37a566da39..73d053501fb1 100644
---- a/drivers/net/dsa/ocelot/felix_vsc9959.c
-+++ b/drivers/net/dsa/ocelot/felix_vsc9959.c
-@@ -1733,7 +1733,7 @@ struct felix_stream_gate {
- 	u64 cycletime;
- 	u64 cycletime_ext;
- 	u32 num_entries;
--	struct action_gate_entry entries[];
-+	struct action_gate_entry entries[] __counted_by(num_entries);
- };
- 
- struct felix_stream_gate_entry {
--- 
-2.34.1
+--=20
+Best regards,
 
+Keguang Zhang
