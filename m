@@ -1,69 +1,103 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E3AE146A97
-	for <linux-hardening@vger.kernel.org>; Wed,  4 Sep 2024 07:42:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82EBA14659B
+	for <linux-hardening@vger.kernel.org>; Wed,  4 Sep 2024 09:06:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725435746; cv=none; b=vE6Kc/FjWKM4pA6HWBLAgEmeLFRlQEtT+xz899bVj0/sQC1saRHPyqJrN9MlrgWRJP6r+oMSUg3K35dJCfz+BDPJ3TSAEVUM9z4c6Ch/4jVm9IoaQ04XnxxQVbVKlqAJI42LGNaC4XWT4BsxKVS+WJKy9hxDUNWCdGxwhGIi84Q=
+	t=1725440790; cv=none; b=fStqvDnDciuIbPwjOenK7zAnPUzjtSgcS6mimX5XZ5MI5z8ExLMrytzkr3+Fn2zg9nSsG1mhpfwVQDgPl66renIRKupt4PI/MrUAjqCE9xBvZgnzt7Ly1q+uo2/b3wSqv+YJiHj8b13YMJm3FIZked2oI7HcCTvKdQeR1zHXaRY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725435746; c=relaxed/simple;
-	bh=gSXYlgNNLWCDKHClQerj3c+lGh8d8v7kQMto5z12hGw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=UCeAZzGex73XD4UnqgheTAPfvZXdrkoDjlglh/7eVlkLsw32aj0OTQHB0HhlkL3qzb+VlaqB1cAVYnieuZIvIHRQ87Zu1UD3+V4PG7q+EbRbM/VBejiZ4KdGO9ogCZ71hN8rb90NKC1SmWOp4dz2mMpZJcJ8f/VzIFVsWg9RqGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
+	s=arc-20240116; t=1725440790; c=relaxed/simple;
+	bh=ujyESnDyExprrFScrh0w8MreVLjRF5ZvteIqZFMmTfk=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=SghRnH/OuKfyRyN20VarBPvXe7YWbwidND9OrP+T2hNtv1+WNf7V9AcIrhOe6hJ2nd+t0WsUvDHyL5fzLOI9UCxwMVuUs8zeH8yPhIBY1eAWrWdDEGySFkHFrJx2CNgdpJYcCLN/Nv04zBQrCycnYumF+gmsCYXEqXEaWBEtHr8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4WzDvQ2F52z13S81;
-	Wed,  4 Sep 2024 15:41:22 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.44])
+	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4WzGlD5MNVz1xwf4;
+	Wed,  4 Sep 2024 17:04:24 +0800 (CST)
 Received: from dggpeml500022.china.huawei.com (unknown [7.185.36.66])
-	by mail.maildlp.com (Postfix) with ESMTPS id 88006180087;
-	Wed,  4 Sep 2024 15:42:19 +0800 (CST)
-Received: from [10.67.111.104] (10.67.111.104) by
- dggpeml500022.china.huawei.com (7.185.36.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Wed, 4 Sep 2024 15:42:19 +0800
-Message-ID: <1b9c1d9d-b9c1-4583-83dc-a331b56b85f9@huawei.com>
-Date: Wed, 4 Sep 2024 15:42:18 +0800
+	by mail.maildlp.com (Postfix) with ESMTPS id 7CD1014011D;
+	Wed,  4 Sep 2024 17:06:25 +0800 (CST)
+Received: from huawei.com (10.90.53.73) by dggpeml500022.china.huawei.com
+ (7.185.36.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 4 Sep
+ 2024 17:06:25 +0800
+From: Hongbo Li <lihongbo22@huawei.com>
+To: <kees@kernel.org>, <andy@kernel.org>, <Julia.Lawall@inria.fr>,
+	<nicolas.palix@imag.fr>
+CC: <linux-hardening@vger.kernel.org>, <cocci@inria.fr>,
+	<lihongbo22@huawei.com>
+Subject: [PATCH -next v2 0/9] coccinelle: Add some rules for string_chioces helpers.
+Date: Wed, 4 Sep 2024 17:14:42 +0800
+Message-ID: <20240904091451.3328272-1-lihongbo22@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH -next 0/2] coccinelle: Add rules to find
- str_true_false/str_false_true replacements
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-CC: <kees@kernel.org>, <andy@kernel.org>, <Julia.Lawall@inria.fr>,
-	<nicolas.palix@imag.fr>, <linux-hardening@vger.kernel.org>, <cocci@inria.fr>
-References: <20240829112455.232263-1-lihongbo22@huawei.com>
- <1c8dbb13-e7c1-4031-8c85-a5a676eb8fd4@huawei.com>
- <CAHp75VcEhn8gv_aGGsTF_FkhqStqSWcR_rUr+BwtQ5305g=cnA@mail.gmail.com>
-Content-Language: en-US
-From: Hongbo Li <lihongbo22@huawei.com>
-In-Reply-To: <CAHp75VcEhn8gv_aGGsTF_FkhqStqSWcR_rUr+BwtQ5305g=cnA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+Content-Type: text/plain
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
  dggpeml500022.china.huawei.com (7.185.36.66)
 
+We found that many of the detection rules for helpers in
+string_choices.h are missing. This series of patches is
+intended to complete these rules. We have verified in the
+latest kernel tree that these rules can detect many places
+where the string choices helper can be used as a replacement.
 
+Here are some of the examples:
 
-On 2024/9/4 15:37, Andy Shevchenko wrote:
-> On Wed, Sep 4, 2024 at 5:36 AM Hongbo Li <lihongbo22@huawei.com> wrote:
->> On 2024/8/29 19:24, Hongbo Li wrote:
-> 
-> ...
-> 
->> I found that there are still a few function rules that are not complete,
->> such as str_on_off, str_enable_disable, str_yes_no. How about adding
->> these rules as well?
-> 
-> Why not?
-> 
-Fine. I'll add these rules in v2
+```
+drivers/gpio/gpio-mvebu.c:917:6-18: opportunity for str_lo_hi(in_pol & msk)
+drivers/pinctrl/nomadik/pinctrl-nomadik.c:1109:16-19: opportunity for str_high_low(val)
+drivers/pinctrl/nomadik/pinctrl-nomadik.c:1116:13-16: opportunity for str_high_low(val
+drivers/gpio/gpio-wcove.c:396:6-16: opportunity for str_hi_lo(ctli & 0x1)
+drivers/pci/hotplug/pnv_php.c:367:10-41: opportunity for str_on_off(state == OPAL_PCI_SLOT_POWER_ON)
+drivers/mtd/nand/raw/brcmnand/brcmnand.c:1844:40-63: opportunity for str_read_write(edu_cmd == EDU_CMD_READ)
+drivers/mtd/nand/raw/brcmnand/brcmnand.c:1437:33-35: opportunity for str_on_off(wp)
+drivers/mtd/nand/raw/brcmnand/brcmnand.c:1467:9-11: opportunity for str_on_off(wp)
+drivers/greybus/svc.c:76:9-37: opportunity for str_enabled_disabled(gb_svc_watchdog_enabled ( svc ))
+drivers/thermal/thermal_sysfs.c:59:29-36: opportunity for str_enabled_disabled(enabled)
+drivers/dma-buf/st-dma-fence.c:508:10-35: opportunity for str_yes_no(dma_fence_is_signaled ( f2 ))
+drivers/mmc/host/omap_hsmmc.c:1644:7-43: opportunity for str_enabled_disabled(host -> flags & HSMMC_SDIO_IRQ_ENABLED)
+drivers/input/mouse/elan_i2c_core.c:202:2-4: opportunity for str_on_off(on)
+drivers/macintosh/via-pmu.c:626:10-28: opportunity for str_enabled_disabled(option_server_mode)
+drivers/usb/mtu3/mtu3_debugfs.c:482:5-39: opportunity for str_on_off(regulator_is_enabled ( otg_sx -> vbus ))
+drivers/net/wireless/intel/iwlwifi/mvm/tt.c:355:4-10: opportunity for str_enable_disable(enable)
+drivers/nfc/pn544/i2c.c:215:7-20: opportunity for str_low_high(polarity == 0)
+drivers/media/tuners/tda18250.c:110:3-12: opportunity for str_true_false(triggered)
+drivers/mtd/tests/torturetest.c:191:30-35: opportunity for str_enabled_disabled(check)
+drivers/bus/intel-ixp4xx-eb.c:225:5-8: opportunity for str_enabled_disabled(val)
+drivers/net/ethernet/huawei/hinic/hinic_port.c:1133:3-9: opportunity for str_enable_disable(enable)
+drivers/net/ethernet/huawei/hinic/hinic_port.c:1245:3-9: opportunity for str_enable_disable(pfc_en)
+drivers/media/pci/cx23885/cimax2.c:227:4-8: opportunity for str_read_write(read)
+drivers/media/usb/em28xx/em28xx-video.c:941:4-9: opportunity for str_enabled_disabled(flags)
+```
+
+Changes since v1:
+  - Add more rules for helpers in string_choices.h.
 
 Thanks,
-Hongbo
+Hongbo.
+
+Hongbo Li (9):
+  coccinelle: Add rules to find str_true_false() replacements
+  coccinelle: Add rules to find str_false_true() replacements
+  coccinelle: Add rules to find str_hi{gh}_lo{w}() replacements
+  coccinelle: Add rules to find str_lo{w}_hi{gh}() replacements
+  coccinelle: Add rules to find str_enable{d}_disable{d}() replacements
+  coccinelle: Add rules to find str_read_write() replacements
+  coccinelle: Add rules to find str_write_read() replacements
+  coccinelle: Add rules to find str_on_off() replacements
+  coccinelle: Add rules to find str_yes_no() replacements
+
+ scripts/coccinelle/api/string_choices.cocci | 276 ++++++++++++++++++++
+ 1 file changed, 276 insertions(+)
+
+-- 
+2.34.1
+
