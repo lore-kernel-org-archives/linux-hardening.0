@@ -1,454 +1,369 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from fgw21-7.mail.saunalahti.fi (fgw21-7.mail.saunalahti.fi [62.142.5.82])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5A8318BC22;
-	Tue,  3 Sep 2024 18:30:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F678944E
+	for <linux-hardening@vger.kernel.org>; Wed,  4 Sep 2024 00:30:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.82
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725388253; cv=none; b=prLQHd+nwF2VPtGnfMVIupCFth57jWoNWw7cjp9PUs77TnLDG3qy1lrs3OBhOOCHBhkdp92n1oDdkBnMTMKavc578gQNP4VKurB1wy9qCauCM4DSZMqiuRl6O+8Zj5DmVqP/oXViEJbr9d6ZQzMcVS/I3IPHSsrZNMVkxoEa5xk=
+	t=1725409843; cv=none; b=Xc/XBu/tJPPtehVmF90qzU8K9P8Is/WzRgtSU5XA/Zvx2bep77e6CEy/vCXIX83iFeyvWsr2XlybR3j9cWjEknLLmvQDp/ECFqFDecIFm4Qc3KHugYSpl90j+MhP1klFwQwgb/Lf8PCR4PyxGvz1ZmP21a4k5QAqDlkYhttPUb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725388253; c=relaxed/simple;
-	bh=cnQBfTWNFQ26ykKYB3U0wkOFGtCWe2yyomMc67rHuoQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GPBhMpxm9ZJXzGokoSd6LyD75KOiQPZ2jGqtfmnw7wb+jSzEBf73cNtyaolVvQqH402/iY3qbOEwrxc01nicMlE4J5iWgd6P2HhYEBAD0D5+2BsUgbqjCO++IxYl3hQXMFfssujfWdD1hTd9sHcmPRImEeDoqWUxhnoxWig/ePU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZSzobNLO; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZSzobNLO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1725388251; x=1756924251;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=cnQBfTWNFQ26ykKYB3U0wkOFGtCWe2yyomMc67rHuoQ=;
-  b=ZSzobNLOprj9+439a5mtduI3jCoBm2Wzv6Wb+TxctJIoWecvehxLMCHK
-   znJvk28uUr2BecYZRP6xVa9gnLCBQp0Mz378VoZiefiXJA3lv+aYZOV5f
-   PcAW3XEMPAIqBFz+qY5JZfTwkdw3Em+wDwGG0sDCzdYWTytN9Mt64GAdR
-   LwXxTLSAkntmgi3psRl//6O0yreN//mvcdzdcScCmAfd/zzcc4NLwYcox
-   QFgfl9cUugxGu+Yyd6FZGUGykLef1mmCHFVX2ObU3d+fQg/0NZknUH+e3
-   acIDNoUopWnx/99K1Eyui9GEN3NkFyeMJB2GVAycFJ25JP2XX0h4cxwUx
-   g==;
-X-CSE-ConnectionGUID: kLuZ9Pi+SF6N9iYYcxdQWg==
-X-CSE-MsgGUID: iZ3JJKiVRC6fNoP4dheOTw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11184"; a="24146991"
-X-IronPort-AV: E=Sophos;i="6.10,199,1719903600"; 
-   d="scan'208";a="24146991"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2024 11:30:49 -0700
-X-CSE-ConnectionGUID: jSAE1ghZTOyXWyQjfPmKgQ==
-X-CSE-MsgGUID: h5QsuTqvRF6qHd992K+Kaw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,199,1719903600"; 
-   d="scan'208";a="88250215"
-Received: from anguy11-upstream.jf.intel.com ([10.166.9.133])
-  by fmviesa002.fm.intel.com with ESMTP; 03 Sep 2024 11:30:48 -0700
-From: Tony Nguyen <anthony.l.nguyen@intel.com>
-To: davem@davemloft.net,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	edumazet@google.com,
-	netdev@vger.kernel.org
-Cc: Larysa Zaremba <larysa.zaremba@intel.com>,
-	anthony.l.nguyen@intel.com,
-	wojciech.drewek@intel.com,
-	michal.kubiak@intel.com,
-	jacob.e.keller@intel.com,
-	amritha.nambiar@intel.com,
-	przemyslaw.kitszel@intel.com,
-	sridhar.samudrala@intel.com,
-	maciej.fijalkowski@intel.com,
-	magnus.karlsson@intel.com,
-	ast@kernel.org,
-	daniel@iogearbox.net,
-	hawk@kernel.org,
-	john.fastabend@gmail.com,
-	bpf@vger.kernel.org,
-	kees@kernel.org,
-	gustavoars@kernel.org,
-	linux-hardening@vger.kernel.org,
-	George Kuruvinakunnel <george.kuruvinakunnel@intel.com>
-Subject: [PATCH net 1/6] ice: move netif_queue_set_napi to rtnl-protected sections
-Date: Tue,  3 Sep 2024 11:30:27 -0700
-Message-ID: <20240903183034.3530411-2-anthony.l.nguyen@intel.com>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20240903183034.3530411-1-anthony.l.nguyen@intel.com>
-References: <20240903183034.3530411-1-anthony.l.nguyen@intel.com>
+	s=arc-20240116; t=1725409843; c=relaxed/simple;
+	bh=q1OPzRiBqf2s83WMT3Cm/d2xWVGIk+c7EBJrtdVY8qA=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZPVGhixQ2DAjivgFOOXKD+ZTPZuvpYxrzqExDRpJ5T1/xkRKgdnlWjpaF7U6D+5JrTHcNttNTs/ie5GrzzcjCpsbea+tzlceTvIVl45mfwLJtSAr1cAPdt9u9p+eAdRkYIWtLW/bM8OY70QgUh4fjHTnG59WscmX/2FdMD/Mt+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.82
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+Received: from localhost (88-113-25-87.elisa-laajakaista.fi [88.113.25.87])
+	by fgw21.mail.saunalahti.fi (Halon) with ESMTP
+	id e6097ca3-6a54-11ef-abaf-005056bdd08f;
+	Wed, 04 Sep 2024 03:30:34 +0300 (EEST)
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Wed, 4 Sep 2024 03:30:34 +0300
+To: wangshuaijie@awinic.com
+Cc: jic23@kernel.org, lars@metafoo.de, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, kees@kernel.org, gustavoars@kernel.org,
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	liweilei@awinic.com, kangjiajun@awinic.com
+Subject: Re: [PATCH V9 2/2] iio: proximity: aw96103: Add support for
+ aw96103/aw96105 proximity sensor
+Message-ID: <ZteqKroYjYKETqn7@surfacebook.localdomain>
+References: <20240827080229.1431784-1-wangshuaijie@awinic.com>
+ <20240827080229.1431784-3-wangshuaijie@awinic.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240827080229.1431784-3-wangshuaijie@awinic.com>
 
-From: Larysa Zaremba <larysa.zaremba@intel.com>
+Tue, Aug 27, 2024 at 08:02:29AM +0000, wangshuaijie@awinic.com kirjoitti:
+> From: shuaijie wang <wangshuaijie@awinic.com>
+> 
+> AW96103 is a low power consumption capacitive touch and proximity controller.
+> Each channel can be independently config as sensor input, shield output.
+> 
+> Channel Information:
+>   aw96103: 3-channel
+>   aw96105: 5-channel
 
-Currently, netif_queue_set_napi() is called from ice_vsi_rebuild() that is
-not rtnl-locked when called from the reset. This creates the need to take
-the rtnl_lock just for a single function and complicates the
-synchronization with .ndo_bpf. At the same time, there no actual need to
-fill napi-to-queue information at this exact point.
+Instead of review the below is the diff that I think makes sense to apply
+(in any convenient form, e.g., squash to the existing commit, splitting
+ and making followups)
 
-Fill napi-to-queue information when opening the VSI and clear it when the
-VSI is being closed. Those routines are already rtnl-locked.
-
-Also, rewrite napi-to-queue assignment in a way that prevents inclusion of
-XDP queues, as this leads to out-of-bounds writes, such as one below.
-
-[  +0.000004] BUG: KASAN: slab-out-of-bounds in netif_queue_set_napi+0x1c2/0x1e0
-[  +0.000012] Write of size 8 at addr ffff889881727c80 by task bash/7047
-[  +0.000006] CPU: 24 PID: 7047 Comm: bash Not tainted 6.10.0-rc2+ #2
-[  +0.000004] Hardware name: Intel Corporation S2600WFT/S2600WFT, BIOS SE5C620.86B.02.01.0014.082620210524 08/26/2021
-[  +0.000003] Call Trace:
-[  +0.000003]  <TASK>
-[  +0.000002]  dump_stack_lvl+0x60/0x80
-[  +0.000007]  print_report+0xce/0x630
-[  +0.000007]  ? __pfx__raw_spin_lock_irqsave+0x10/0x10
-[  +0.000007]  ? __virt_addr_valid+0x1c9/0x2c0
-[  +0.000005]  ? netif_queue_set_napi+0x1c2/0x1e0
-[  +0.000003]  kasan_report+0xe9/0x120
-[  +0.000004]  ? netif_queue_set_napi+0x1c2/0x1e0
-[  +0.000004]  netif_queue_set_napi+0x1c2/0x1e0
-[  +0.000005]  ice_vsi_close+0x161/0x670 [ice]
-[  +0.000114]  ice_dis_vsi+0x22f/0x270 [ice]
-[  +0.000095]  ice_pf_dis_all_vsi.constprop.0+0xae/0x1c0 [ice]
-[  +0.000086]  ice_prepare_for_reset+0x299/0x750 [ice]
-[  +0.000087]  pci_dev_save_and_disable+0x82/0xd0
-[  +0.000006]  pci_reset_function+0x12d/0x230
-[  +0.000004]  reset_store+0xa0/0x100
-[  +0.000006]  ? __pfx_reset_store+0x10/0x10
-[  +0.000002]  ? __pfx_mutex_lock+0x10/0x10
-[  +0.000004]  ? __check_object_size+0x4c1/0x640
-[  +0.000007]  kernfs_fop_write_iter+0x30b/0x4a0
-[  +0.000006]  vfs_write+0x5d6/0xdf0
-[  +0.000005]  ? fd_install+0x180/0x350
-[  +0.000005]  ? __pfx_vfs_write+0x10/0xA10
-[  +0.000004]  ? do_fcntl+0x52c/0xcd0
-[  +0.000004]  ? kasan_save_track+0x13/0x60
-[  +0.000003]  ? kasan_save_free_info+0x37/0x60
-[  +0.000006]  ksys_write+0xfa/0x1d0
-[  +0.000003]  ? __pfx_ksys_write+0x10/0x10
-[  +0.000002]  ? __x64_sys_fcntl+0x121/0x180
-[  +0.000004]  ? _raw_spin_lock+0x87/0xe0
-[  +0.000005]  do_syscall_64+0x80/0x170
-[  +0.000007]  ? _raw_spin_lock+0x87/0xe0
-[  +0.000004]  ? __pfx__raw_spin_lock+0x10/0x10
-[  +0.000003]  ? file_close_fd_locked+0x167/0x230
-[  +0.000005]  ? syscall_exit_to_user_mode+0x7d/0x220
-[  +0.000005]  ? do_syscall_64+0x8c/0x170
-[  +0.000004]  ? do_syscall_64+0x8c/0x170
-[  +0.000003]  ? do_syscall_64+0x8c/0x170
-[  +0.000003]  ? fput+0x1a/0x2c0
-[  +0.000004]  ? filp_close+0x19/0x30
-[  +0.000004]  ? do_dup2+0x25a/0x4c0
-[  +0.000004]  ? __x64_sys_dup2+0x6e/0x2e0
-[  +0.000002]  ? syscall_exit_to_user_mode+0x7d/0x220
-[  +0.000004]  ? do_syscall_64+0x8c/0x170
-[  +0.000003]  ? __count_memcg_events+0x113/0x380
-[  +0.000005]  ? handle_mm_fault+0x136/0x820
-[  +0.000005]  ? do_user_addr_fault+0x444/0xa80
-[  +0.000004]  ? clear_bhb_loop+0x25/0x80
-[  +0.000004]  ? clear_bhb_loop+0x25/0x80
-[  +0.000002]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-[  +0.000005] RIP: 0033:0x7f2033593154
-
-Fixes: 080b0c8d6d26 ("ice: Fix ASSERT_RTNL() warning during certain scenarios")
-Fixes: 91fdbce7e8d6 ("ice: Add support in the driver for associating queue with napi")
-Reviewed-by: Wojciech Drewek <wojciech.drewek@intel.com>
-Reviewed-by: Jacob Keller <jacob.e.keller@intel.com>
-Reviewed-by: Amritha Nambiar <amritha.nambiar@intel.com>
-Signed-off-by: Larysa Zaremba <larysa.zaremba@intel.com>
-Reviewed-by: Maciej Fijalkowski <maciej.fijalkowski@intel.com>
-Tested-by: George Kuruvinakunnel <george.kuruvinakunnel@intel.com>
-Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
----
- drivers/net/ethernet/intel/ice/ice_base.c |  11 +-
- drivers/net/ethernet/intel/ice/ice_lib.c  | 129 ++++++----------------
- drivers/net/ethernet/intel/ice/ice_lib.h  |  10 +-
- drivers/net/ethernet/intel/ice/ice_main.c |  17 ++-
- 4 files changed, 49 insertions(+), 118 deletions(-)
-
-diff --git a/drivers/net/ethernet/intel/ice/ice_base.c b/drivers/net/ethernet/intel/ice/ice_base.c
-index f448d3a84564..c158749a80e0 100644
---- a/drivers/net/ethernet/intel/ice/ice_base.c
-+++ b/drivers/net/ethernet/intel/ice/ice_base.c
-@@ -190,16 +190,11 @@ static void ice_free_q_vector(struct ice_vsi *vsi, int v_idx)
- 	}
- 	q_vector = vsi->q_vectors[v_idx];
- 
--	ice_for_each_tx_ring(tx_ring, q_vector->tx) {
--		ice_queue_set_napi(vsi, tx_ring->q_index, NETDEV_QUEUE_TYPE_TX,
--				   NULL);
-+	ice_for_each_tx_ring(tx_ring, vsi->q_vectors[v_idx]->tx)
- 		tx_ring->q_vector = NULL;
--	}
--	ice_for_each_rx_ring(rx_ring, q_vector->rx) {
--		ice_queue_set_napi(vsi, rx_ring->q_index, NETDEV_QUEUE_TYPE_RX,
--				   NULL);
-+
-+	ice_for_each_rx_ring(rx_ring, vsi->q_vectors[v_idx]->rx)
- 		rx_ring->q_vector = NULL;
--	}
- 
- 	/* only VSI with an associated netdev is set up with NAPI */
- 	if (vsi->netdev)
-diff --git a/drivers/net/ethernet/intel/ice/ice_lib.c b/drivers/net/ethernet/intel/ice/ice_lib.c
-index f559e60992fa..6676596df88b 100644
---- a/drivers/net/ethernet/intel/ice/ice_lib.c
-+++ b/drivers/net/ethernet/intel/ice/ice_lib.c
-@@ -2286,9 +2286,6 @@ static int ice_vsi_cfg_def(struct ice_vsi *vsi)
- 
- 		ice_vsi_map_rings_to_vectors(vsi);
- 
--		/* Associate q_vector rings to napi */
--		ice_vsi_set_napi_queues(vsi);
--
- 		vsi->stat_offsets_loaded = false;
- 
- 		/* ICE_VSI_CTRL does not need RSS so skip RSS processing */
-@@ -2628,6 +2625,7 @@ void ice_vsi_close(struct ice_vsi *vsi)
- 	if (!test_and_set_bit(ICE_VSI_DOWN, vsi->state))
- 		ice_down(vsi);
- 
-+	ice_vsi_clear_napi_queues(vsi);
- 	ice_vsi_free_irq(vsi);
- 	ice_vsi_free_tx_rings(vsi);
- 	ice_vsi_free_rx_rings(vsi);
-@@ -2694,120 +2692,55 @@ void ice_dis_vsi(struct ice_vsi *vsi, bool locked)
- }
- 
- /**
-- * __ice_queue_set_napi - Set the napi instance for the queue
-- * @dev: device to which NAPI and queue belong
-- * @queue_index: Index of queue
-- * @type: queue type as RX or TX
-- * @napi: NAPI context
-- * @locked: is the rtnl_lock already held
-- *
-- * Set the napi instance for the queue. Caller indicates the lock status.
-- */
--static void
--__ice_queue_set_napi(struct net_device *dev, unsigned int queue_index,
--		     enum netdev_queue_type type, struct napi_struct *napi,
--		     bool locked)
--{
--	if (!locked)
--		rtnl_lock();
--	netif_queue_set_napi(dev, queue_index, type, napi);
--	if (!locked)
--		rtnl_unlock();
--}
--
--/**
-- * ice_queue_set_napi - Set the napi instance for the queue
-- * @vsi: VSI being configured
-- * @queue_index: Index of queue
-- * @type: queue type as RX or TX
-- * @napi: NAPI context
-+ * ice_vsi_set_napi_queues - associate netdev queues with napi
-+ * @vsi: VSI pointer
+diff --git a/drivers/iio/proximity/aw96103.c b/drivers/iio/proximity/aw96103.c
+index 89f7e1bde928..eabbb6b08e67 100644
+--- a/drivers/iio/proximity/aw96103.c
++++ b/drivers/iio/proximity/aw96103.c
+@@ -6,19 +6,24 @@
   *
-- * Set the napi instance for the queue. The rtnl lock state is derived from the
-- * execution path.
-+ * Associate queue[s] with napi for all vectors.
-+ * The caller must hold rtnl_lock.
+  * Copyright (c) 2024 awinic Technology CO., LTD
   */
--void
--ice_queue_set_napi(struct ice_vsi *vsi, unsigned int queue_index,
--		   enum netdev_queue_type type, struct napi_struct *napi)
-+void ice_vsi_set_napi_queues(struct ice_vsi *vsi)
- {
--	struct ice_pf *pf = vsi->back;
-+	struct net_device *netdev = vsi->netdev;
-+	int q_idx, v_idx;
- 
--	if (!vsi->netdev)
-+	if (!netdev)
- 		return;
- 
--	if (current_work() == &pf->serv_task ||
--	    test_bit(ICE_PREPARED_FOR_RESET, pf->state) ||
--	    test_bit(ICE_DOWN, pf->state) ||
--	    test_bit(ICE_SUSPENDED, pf->state))
--		__ice_queue_set_napi(vsi->netdev, queue_index, type, napi,
--				     false);
--	else
--		__ice_queue_set_napi(vsi->netdev, queue_index, type, napi,
--				     true);
--}
-+	ice_for_each_rxq(vsi, q_idx)
-+		netif_queue_set_napi(netdev, q_idx, NETDEV_QUEUE_TYPE_RX,
-+				     &vsi->rx_rings[q_idx]->q_vector->napi);
- 
--/**
-- * __ice_q_vector_set_napi_queues - Map queue[s] associated with the napi
-- * @q_vector: q_vector pointer
-- * @locked: is the rtnl_lock already held
-- *
-- * Associate the q_vector napi with all the queue[s] on the vector.
-- * Caller indicates the lock status.
-- */
--void __ice_q_vector_set_napi_queues(struct ice_q_vector *q_vector, bool locked)
--{
--	struct ice_rx_ring *rx_ring;
--	struct ice_tx_ring *tx_ring;
--
--	ice_for_each_rx_ring(rx_ring, q_vector->rx)
--		__ice_queue_set_napi(q_vector->vsi->netdev, rx_ring->q_index,
--				     NETDEV_QUEUE_TYPE_RX, &q_vector->napi,
--				     locked);
--
--	ice_for_each_tx_ring(tx_ring, q_vector->tx)
--		__ice_queue_set_napi(q_vector->vsi->netdev, tx_ring->q_index,
--				     NETDEV_QUEUE_TYPE_TX, &q_vector->napi,
--				     locked);
-+	ice_for_each_txq(vsi, q_idx)
-+		netif_queue_set_napi(netdev, q_idx, NETDEV_QUEUE_TYPE_TX,
-+				     &vsi->tx_rings[q_idx]->q_vector->napi);
- 	/* Also set the interrupt number for the NAPI */
--	netif_napi_set_irq(&q_vector->napi, q_vector->irq.virq);
--}
-+	ice_for_each_q_vector(vsi, v_idx) {
-+		struct ice_q_vector *q_vector = vsi->q_vectors[v_idx];
- 
--/**
-- * ice_q_vector_set_napi_queues - Map queue[s] associated with the napi
-- * @q_vector: q_vector pointer
-- *
-- * Associate the q_vector napi with all the queue[s] on the vector
-- */
--void ice_q_vector_set_napi_queues(struct ice_q_vector *q_vector)
--{
--	struct ice_rx_ring *rx_ring;
--	struct ice_tx_ring *tx_ring;
--
--	ice_for_each_rx_ring(rx_ring, q_vector->rx)
--		ice_queue_set_napi(q_vector->vsi, rx_ring->q_index,
--				   NETDEV_QUEUE_TYPE_RX, &q_vector->napi);
--
--	ice_for_each_tx_ring(tx_ring, q_vector->tx)
--		ice_queue_set_napi(q_vector->vsi, tx_ring->q_index,
--				   NETDEV_QUEUE_TYPE_TX, &q_vector->napi);
--	/* Also set the interrupt number for the NAPI */
--	netif_napi_set_irq(&q_vector->napi, q_vector->irq.virq);
-+		netif_napi_set_irq(&q_vector->napi, q_vector->irq.virq);
-+	}
- }
- 
- /**
-- * ice_vsi_set_napi_queues
-+ * ice_vsi_clear_napi_queues - dissociate netdev queues from napi
-  * @vsi: VSI pointer
-  *
-- * Associate queue[s] with napi for all vectors
-+ * Clear the association between all VSI queues queue[s] and napi.
-+ * The caller must hold rtnl_lock.
-  */
--void ice_vsi_set_napi_queues(struct ice_vsi *vsi)
-+void ice_vsi_clear_napi_queues(struct ice_vsi *vsi)
- {
--	int i;
-+	struct net_device *netdev = vsi->netdev;
-+	int q_idx;
- 
--	if (!vsi->netdev)
-+	if (!netdev)
- 		return;
- 
--	ice_for_each_q_vector(vsi, i)
--		ice_q_vector_set_napi_queues(vsi->q_vectors[i]);
-+	ice_for_each_txq(vsi, q_idx)
-+		netif_queue_set_napi(netdev, q_idx, NETDEV_QUEUE_TYPE_TX, NULL);
++#include <linux/array_size.h>
+ #include <linux/bits.h>
+ #include <linux/bitfield.h>
++#include <linux/cleanup.h>
+ #include <linux/delay.h>
+ #include <linux/firmware.h>
+ #include <linux/i2c.h>
+ #include <linux/interrupt.h>
+-#include <linux/iio/events.h>
+-#include <linux/iio/iio.h>
+ #include <linux/regulator/consumer.h>
+ #include <linux/regmap.h>
+ #include <linux/slab.h>
++#include <linux/types.h>
 +
-+	ice_for_each_rxq(vsi, q_idx)
-+		netif_queue_set_napi(netdev, q_idx, NETDEV_QUEUE_TYPE_RX, NULL);
- }
+ #include <asm/unaligned.h>
  
- /**
-diff --git a/drivers/net/ethernet/intel/ice/ice_lib.h b/drivers/net/ethernet/intel/ice/ice_lib.h
-index 94ce8964dda6..36d86535695d 100644
---- a/drivers/net/ethernet/intel/ice/ice_lib.h
-+++ b/drivers/net/ethernet/intel/ice/ice_lib.h
-@@ -44,16 +44,10 @@ void ice_vsi_cfg_netdev_tc(struct ice_vsi *vsi, u8 ena_tc);
- struct ice_vsi *
- ice_vsi_setup(struct ice_pf *pf, struct ice_vsi_cfg_params *params);
- 
--void
--ice_queue_set_napi(struct ice_vsi *vsi, unsigned int queue_index,
--		   enum netdev_queue_type type, struct napi_struct *napi);
--
--void __ice_q_vector_set_napi_queues(struct ice_q_vector *q_vector, bool locked);
--
--void ice_q_vector_set_napi_queues(struct ice_q_vector *q_vector);
--
- void ice_vsi_set_napi_queues(struct ice_vsi *vsi);
- 
-+void ice_vsi_clear_napi_queues(struct ice_vsi *vsi);
++#include <linux/iio/events.h>
++#include <linux/iio/iio.h>
 +
- int ice_vsi_release(struct ice_vsi *vsi);
+ #define AW_DATA_PROCESS_FACTOR			1024
+ #define AW96103_CHIP_ID				0xa961
+ #define AW96103_BIN_VALID_DATA_OFFSET		64
+@@ -94,8 +99,8 @@ enum aw96103_sensor_type {
+ };
  
- void ice_vsi_close(struct ice_vsi *vsi);
-diff --git a/drivers/net/ethernet/intel/ice/ice_main.c b/drivers/net/ethernet/intel/ice/ice_main.c
-index 46d3c5a34d6a..263833346d3a 100644
---- a/drivers/net/ethernet/intel/ice/ice_main.c
-+++ b/drivers/net/ethernet/intel/ice/ice_main.c
-@@ -3558,11 +3558,9 @@ static void ice_napi_add(struct ice_vsi *vsi)
- 	if (!vsi->netdev)
- 		return;
+ struct aw_channels_info {
+-	bool used;
+ 	unsigned int old_irq_status;
++	bool used;
+ };
  
--	ice_for_each_q_vector(vsi, v_idx) {
-+	ice_for_each_q_vector(vsi, v_idx)
- 		netif_napi_add(vsi->netdev, &vsi->q_vectors[v_idx]->napi,
- 			       ice_napi_poll);
--		__ice_q_vector_set_napi_queues(vsi->q_vectors[v_idx], false);
--	}
+ struct aw_chip_info {
+@@ -254,8 +259,8 @@ static int aw96103_get_diff_raw(struct aw96103 *aw96103, unsigned int chan,
+ 			  AW96103_REG_DIFF_CH0 + chan * 4, &data);
+ 	if (ret)
+ 		return ret;
+-	*buf = (int)(data / AW_DATA_PROCESS_FACTOR);
+ 
++	*buf = data / AW_DATA_PROCESS_FACTOR;
+ 	return 0;
  }
  
- /**
-@@ -5540,7 +5538,9 @@ static int ice_reinit_interrupt_scheme(struct ice_pf *pf)
+@@ -302,8 +307,8 @@ static int aw96103_read_out_debounce(struct aw96103 *aw96103,
+ 			  AW96103_REG_PROXCTRL_CH(chan->channel), &reg_val);
+ 	if (ret)
+ 		return ret;
+-	*val = FIELD_GET(AW96103_OUTDEB_MASK, reg_val);
+ 
++	*val = FIELD_GET(AW96103_OUTDEB_MASK, reg_val);
+ 	return IIO_VAL_INT;
+ }
+ 
+@@ -317,8 +322,8 @@ static int aw96103_read_in_debounce(struct aw96103 *aw96103,
+ 			  AW96103_REG_PROXCTRL_CH(chan->channel), &reg_val);
+ 	if (ret)
+ 		return ret;
+-	*val = FIELD_GET(AW96103_INDEB_MASK, reg_val);
+ 
++	*val = FIELD_GET(AW96103_INDEB_MASK, reg_val);
+ 	return IIO_VAL_INT;
+ }
+ 
+@@ -332,8 +337,8 @@ static int aw96103_read_hysteresis(struct aw96103 *aw96103,
+ 			  AW96103_REG_PROXCTRL_CH(chan->channel), &reg_val);
+ 	if (ret)
+ 		return ret;
+-	*val = FIELD_GET(AW96103_THHYST_MASK, reg_val);
+ 
++	*val = FIELD_GET(AW96103_THHYST_MASK, reg_val);
+ 	return IIO_VAL_INT;
+ }
+ 
+@@ -454,11 +459,10 @@ static int aw96103_channel_scan_start(struct aw96103 *aw96103)
+ 			    aw96103->hostirqen);
+ }
+ 
+-static int aw96103_reg_version_comp(struct aw96103 *aw96103,
+-				    struct aw_bin *aw_bin)
++static int aw96103_reg_version_comp(struct aw96103 *aw96103, struct aw_bin *aw_bin)
+ {
+ 	u32 blfilt1_data, fw_ver;
+-	unsigned char i;
++	unsigned int i;
+ 	int ret;
+ 
+ 	ret = regmap_read(aw96103->regmap, AW96103_REG_FWVER2, &fw_ver);
+@@ -474,16 +478,17 @@ static int aw96103_reg_version_comp(struct aw96103 *aw96103,
+ 
+ 	for (i = 0; i < aw96103->max_channels; i++) {
+ 		ret = regmap_read(aw96103->regmap,
+-			AW96103_REG_BLFILT_CH0 + (AW96103_BLFILT_CH_STEP * i),
++			AW96103_REG_BLFILT_CH0 + AW96103_BLFILT_CH_STEP * i,
+ 			&blfilt1_data);
  		if (ret)
- 			goto err_reinit;
- 		ice_vsi_map_rings_to_vectors(pf->vsi[v]);
-+		rtnl_lock();
- 		ice_vsi_set_napi_queues(pf->vsi[v]);
-+		rtnl_unlock();
- 	}
- 
- 	ret = ice_req_irq_msix_misc(pf);
-@@ -5554,8 +5554,12 @@ static int ice_reinit_interrupt_scheme(struct ice_pf *pf)
- 
- err_reinit:
- 	while (v--)
--		if (pf->vsi[v])
-+		if (pf->vsi[v]) {
-+			rtnl_lock();
-+			ice_vsi_clear_napi_queues(pf->vsi[v]);
-+			rtnl_unlock();
- 			ice_vsi_free_q_vectors(pf->vsi[v]);
-+		}
- 
- 	return ret;
- }
-@@ -5620,6 +5624,9 @@ static int ice_suspend(struct device *dev)
- 	ice_for_each_vsi(pf, v) {
- 		if (!pf->vsi[v])
- 			continue;
-+		rtnl_lock();
-+		ice_vsi_clear_napi_queues(pf->vsi[v]);
-+		rtnl_unlock();
- 		ice_vsi_free_q_vectors(pf->vsi[v]);
- 	}
- 	ice_clear_interrupt_scheme(pf);
-@@ -7455,6 +7462,8 @@ int ice_vsi_open(struct ice_vsi *vsi)
- 		err = netif_set_real_num_rx_queues(vsi->netdev, vsi->num_rxq);
- 		if (err)
- 			goto err_set_qs;
+ 			return ret;
 +
-+		ice_vsi_set_napi_queues(vsi);
+ 		if (FIELD_GET(AW96103_BLERRTRIG_MASK, blfilt1_data) != 1)
+ 			return 0;
+ 
+ 		return regmap_update_bits(aw96103->regmap,
+-			AW96103_REG_BLRSTRNG_CH0 + (AW96103_BLFILT_CH_STEP * i),
+-			AW96103_BLRSTRNG_MASK, 1 << i);
++			AW96103_REG_BLRSTRNG_CH0 + AW96103_BLFILT_CH_STEP * i,
++			AW96103_BLRSTRNG_MASK, BIT(i));
  	}
  
- 	err = ice_up_complete(vsi);
+ 	return 0;
+@@ -493,25 +498,22 @@ static int aw96103_bin_valid_loaded(struct aw96103 *aw96103,
+ 				    struct aw_bin *aw_bin_data_s)
+ {
+ 	unsigned int start_addr = aw_bin_data_s->valid_data_addr;
+-	u32 i, reg_data;
++	unsigned int i;
++	u32 reg_data;
+ 	u16 reg_addr;
+ 	int ret;
+ 
+-	for (i = 0; i < aw_bin_data_s->valid_data_len;
+-	     i += 6, start_addr += 6) {
++	for (i = 0; i < aw_bin_data_s->valid_data_len; i += 6, start_addr += 6) {
+ 		reg_addr = get_unaligned_le16(aw_bin_data_s->data + start_addr);
+-		reg_data = get_unaligned_le32(aw_bin_data_s->data +
+-					      start_addr + 2);
+-		if ((reg_addr == AW96103_REG_EEDA0) ||
+-		    (reg_addr == AW96103_REG_EEDA1))
++		reg_data = get_unaligned_le32(aw_bin_data_s->data + start_addr + 2);
++		if ((reg_addr == AW96103_REG_EEDA0) || (reg_addr == AW96103_REG_EEDA1))
+ 			continue;
+ 		if (reg_addr == AW96103_REG_IRQEN) {
+ 			aw96103->hostirqen = reg_data;
+ 			continue;
+ 		}
+ 		if (reg_addr == AW96103_REG_SCANCTRL0)
+-			aw96103->chan_en = FIELD_GET(AW96103_CHAN_EN_MASK,
+-						     reg_data);
++			aw96103->chan_en = FIELD_GET(AW96103_CHAN_EN_MASK, reg_data);
+ 
+ 		ret = regmap_write(aw96103->regmap, reg_addr, reg_data);
+ 		if (ret < 0)
+@@ -527,19 +529,21 @@ static int aw96103_bin_valid_loaded(struct aw96103 *aw96103,
+ 
+ static int aw96103_para_loaded(struct aw96103 *aw96103)
+ {
+-	int i, ret;
++	unsigned int i;
++	int ret;
+ 
+ 	for (i = 0; i < ARRAY_SIZE(aw96103_reg_default); i += 2) {
+-		ret = regmap_write(aw96103->regmap,
+-				   (u16)aw96103_reg_default[i],
+-				   (u32)aw96103_reg_default[i + 1]);
++		u16 offset = aw96103_reg_default[i];
++		u32 value = aw96103_reg_default[i + 1];
++
++		ret = regmap_write(aw96103->regmap, offset, value);
+ 		if (ret)
+ 			return ret;
+-		if (aw96103_reg_default[i] == AW96103_REG_IRQEN)
+-			aw96103->hostirqen = aw96103_reg_default[i + 1];
+-		else if (aw96103_reg_default[i] == AW96103_REG_SCANCTRL0)
+-			aw96103->chan_en = FIELD_GET(AW96103_CHAN_EN_MASK,
+-					   aw96103_reg_default[i + 1]);
++
++		if (offset == AW96103_REG_IRQEN)
++			aw96103->hostirqen = value;
++		else if (offset == AW96103_REG_SCANCTRL0)
++			aw96103->chan_en = FIELD_GET(AW96103_CHAN_EN_MASK, value);
+ 	}
+ 
+ 	return aw96103_channel_scan_start(aw96103);
+@@ -567,7 +571,8 @@ static int aw96103_cfg_all_loaded(const struct firmware *cont,
+ static void aw96103_cfg_update(const struct firmware *fw, void *data)
+ {
+ 	struct aw96103 *aw96103 = data;
+-	int ret, i;
++	unsigned int i;
++	int ret;
+ 
+ 	if (!fw || !fw->data) {
+ 		dev_err(aw96103->dev, "No firmware.\n");
+@@ -588,12 +593,9 @@ static void aw96103_cfg_update(const struct firmware *fw, void *data)
+ 		}
+ 	}
+ 
+-	for (i = 0; i < aw96103->max_channels; i++) {
+-		if ((aw96103->chan_en >> i) & 0x01)
+-			aw96103->channels_arr[i].used = true;
+-		else
++	for (i = 0; i < aw96103->max_channels; i++)
++		aw96103->channels_arr[i].used = aw96103->chan_en & BIT(i);
+ 			aw96103->channels_arr[i].used = false;
+-	}
+ }
+ 
+ static int aw96103_sw_reset(struct aw96103 *aw96103)
+@@ -603,7 +605,7 @@ static int aw96103_sw_reset(struct aw96103 *aw96103)
+ 	ret = regmap_write(aw96103->regmap, AW96103_REG_RESET, 0);
+ 	/*
+ 	 * After reset, the initialization process starts to perform and
+-	 * it will last for a bout 20ms.
++	 * it will last for about 20ms.
+ 	 */
+ 	msleep(20);
+ 
+@@ -611,7 +613,7 @@ static int aw96103_sw_reset(struct aw96103 *aw96103)
+ }
+ 
+ enum aw96103_irq_trigger_position {
+-	FAR = 0,
++	FAR         = 0x00,
+ 	TRIGGER_TH0 = 0x01,
+ 	TRIGGER_TH1 = 0x03,
+ 	TRIGGER_TH2 = 0x07,
+@@ -623,7 +625,8 @@ static irqreturn_t aw96103_irq(int irq, void *data)
+ 	unsigned int irq_status, curr_status_val, curr_status;
+ 	struct iio_dev *indio_dev = data;
+ 	struct aw96103 *aw96103 = iio_priv(indio_dev);
+-	int ret, i;
++	unsigned int i;
++	int ret;
+ 
+ 	ret = regmap_read(aw96103->regmap, AW96103_REG_IRQSRC, &irq_status);
+ 	if (ret)
+@@ -641,10 +644,12 @@ static irqreturn_t aw96103_irq(int irq, void *data)
+ 		if (!aw96103->channels_arr[i].used)
+ 			continue;
+ 
+-		curr_status = (((curr_status_val >> (24 + i)) & 0x1)) |
+-			      (((curr_status_val >> (16 + i)) & 0x1) << 1) |
+-			      (((curr_status_val >> (8 + i)) & 0x1) << 2) |
+-			      (((curr_status_val >> i) & 0x1) << 3);
++		curr_status = curr_status_val >> i;
++		curr_status = ((curr_status >> 24 + 0) & BIT(0)) |
++			      ((curr_status >> 16 + 1) & BIT(0)) |
++			      ((curr_status >>  8 + 2) & BIT(0)) |
++			      ((curr_status >>  0 + 3) & BIT(0));
++
+ 		if (aw96103->channels_arr[i].old_irq_status == curr_status)
+ 			continue;
+ 
+@@ -675,8 +680,7 @@ static irqreturn_t aw96103_irq(int irq, void *data)
+ 	return IRQ_HANDLED;
+ }
+ 
+-static int aw96103_interrupt_init(struct iio_dev *indio_dev,
+-				  struct i2c_client *i2c)
++static int aw96103_interrupt_init(struct iio_dev *indio_dev, struct i2c_client *i2c)
+ {
+ 	struct aw96103 *aw96103 = iio_priv(indio_dev);
+ 	unsigned int irq_status;
+@@ -685,9 +689,11 @@ static int aw96103_interrupt_init(struct iio_dev *indio_dev,
+ 	ret = regmap_write(aw96103->regmap, AW96103_REG_IRQEN, 0);
+ 	if (ret)
+ 		return ret;
++
+ 	ret = regmap_read(aw96103->regmap, AW96103_REG_IRQSRC, &irq_status);
+ 	if (ret)
+ 		return ret;
++
+ 	ret = devm_request_threaded_irq(aw96103->dev, i2c->irq, NULL,
+ 					aw96103_irq, IRQF_ONESHOT,
+ 					"aw96103_irq", indio_dev);
+@@ -700,26 +706,17 @@ static int aw96103_interrupt_init(struct iio_dev *indio_dev,
+ 
+ static int aw96103_wait_chip_init(struct aw96103 *aw96103)
+ {
+-	unsigned int cnt = 20;
+ 	u32 reg_data;
+ 	int ret;
+ 
+-	while (cnt--) {
+-		/*
+-		 * The device should generate an initialization completion
+-		 * interrupt within 20ms.
+-		 */
+-		ret = regmap_read(aw96103->regmap, AW96103_REG_IRQSRC,
+-				  &reg_data);
+-		if (ret)
+-			return ret;
+-
+-		if (FIELD_GET(AW96103_INITOVERIRQ_MASK, reg_data))
+-			return 0;
+-		fsleep(1000);
+-	}
+-
+-	return -ETIMEDOUT;
++	/*
++	 * The device should generate an initialization completion
++	 * interrupt within 20ms.
++	 */
++	return regmap_read_poll_timeout(aw96103->regmap, AW96103_REG_IRQSRC,
++				       reg_data,
++				       FIELD_GET(AW96103_INITOVERIRQ_MASK, reg_data),
++				       1000, 20000);
+ }
+ 
+ static int aw96103_read_chipid(struct aw96103 *aw96103)
+
 -- 
-2.42.0
+With Best Regards,
+Andy Shevchenko
+
 
