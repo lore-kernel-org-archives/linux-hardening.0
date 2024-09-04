@@ -1,36 +1,36 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 456936FB0;
-	Wed,  4 Sep 2024 01:38:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA888F9D6;
+	Wed,  4 Sep 2024 01:39:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725413889; cv=none; b=BqEedwe2vvQlMgvCQ+ZXepTooDIQ/uNx4kf8CkUnG9F15wBy4f4mTUVA0HjO+xZmXo1jcLMXmcTad71HdGHDEwwttcAWcks3l88WbDK8T7BbJ+AT0zXPXvRxAJH515BxGbY4eCQLd2UpBU2MXPo1qcJ3CdLYXm+zR/ZwtkFuYL0=
+	t=1725413977; cv=none; b=LFADtbbtARMohx1oK+GhDbs/6+aMCd96lopbJJGbbEcWB+xl9btwMpIfUKgBpme4ry31FDu15vGmRT1nakzWddobanBvhYCaQp0uA0iL4l5BQeog/IPiCRVWiJxQOz4YivlkZDKFsmumLtaZUMKo4lNIyD4crHr7l7EPL++o840=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725413889; c=relaxed/simple;
-	bh=Aja1O6PAMokZW0to6KKT/oc52hf5QRLToddF8g94+T8=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=a9mnSrqfRJpOsqphWcLeaXbKccA6Ko9ojgDzi8SAfyoVtUzT/YH6DYW1l8uxaHq9BFA1zEoLlt2LVipylIG3VfRWd/R7DYs+PXoqMgTJJQFOipz327qr7GtnBgCZfHR+x4FYeRsYixMC/W3BaKK4d+BJ6xaBQL6ZGkaPiyhXfbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+	s=arc-20240116; t=1725413977; c=relaxed/simple;
+	bh=Vl2Jueui8WuuV+afnam8Z9S1LDufVv4JxtLtkZA8wBc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=oFkE/iltL156QF8xn45p3GDH0oIvLqHjqNo6nbhozq7RS3bFat4FmNs+cnb+M76zyn2kGMb1Fy3FP3fKtr7Hr08vpTUMN+2HuO6VM/YY5cZsUG11S1kzV3YcmZynUdXvjgL54h7xSg+lUnw+/P3Cq/MwIU88xl8CdhVtq3AWrRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Wz4nm5X3wzgYtK;
-	Wed,  4 Sep 2024 09:35:56 +0800 (CST)
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4Wz4rp3GPVz1P7qM;
+	Wed,  4 Sep 2024 09:38:34 +0800 (CST)
 Received: from dggpeml500022.china.huawei.com (unknown [7.185.36.66])
-	by mail.maildlp.com (Postfix) with ESMTPS id CEB5818005F;
-	Wed,  4 Sep 2024 09:38:03 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 344F71800A0;
+	Wed,  4 Sep 2024 09:39:31 +0800 (CST)
 Received: from huawei.com (10.90.53.73) by dggpeml500022.china.huawei.com
  (7.185.36.66) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 4 Sep
- 2024 09:38:03 +0800
+ 2024 09:39:30 +0800
 From: Hongbo Li <lihongbo22@huawei.com>
-To: <adrian.hunter@intel.com>, <ulf.hansson@linaro.org>, <kees@kernel.org>,
+To: <keguang.zhang@gmail.com>, <vkoul@kernel.org>, <kees@kernel.org>,
 	<gustavoars@kernel.org>
-CC: <linux-mmc@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-	<lihongbo22@huawei.com>
-Subject: [PATCH -next] mmc: sdhci-cadence: Annotate struct sdhci_cdns_phy_param with __counted_by()
-Date: Wed, 4 Sep 2024 09:46:36 +0800
-Message-ID: <20240904014636.2033138-1-lihongbo22@huawei.com>
+CC: <linux-mips@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+	<linux-hardening@vger.kernel.org>, <lihongbo22@huawei.com>
+Subject: [PATCH -next] dmaengine: Loongson1: Annotate struct ls1x_dma_chan with __counted_by()
+Date: Wed, 4 Sep 2024 09:48:03 +0800
+Message-ID: <20240904014803.2034939-1-lihongbo22@huawei.com>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -49,22 +49,22 @@ CONFIG_FORTIFY_SOURCE.
 
 Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
 ---
- drivers/mmc/host/sdhci-cadence.c | 2 +-
+ drivers/dma/loongson1-apb-dma.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mmc/host/sdhci-cadence.c b/drivers/mmc/host/sdhci-cadence.c
-index be1505e8c536..2690bcaeaad5 100644
---- a/drivers/mmc/host/sdhci-cadence.c
-+++ b/drivers/mmc/host/sdhci-cadence.c
-@@ -73,7 +73,7 @@ struct sdhci_cdns_priv {
- 	void (*priv_writel)(struct sdhci_cdns_priv *priv, u32 val, void __iomem *reg);
- 	struct reset_control *rst_hw;
- 	unsigned int nr_phy_params;
--	struct sdhci_cdns_phy_param phy_params[];
-+	struct sdhci_cdns_phy_param phy_params[] __counted_by(count);
+diff --git a/drivers/dma/loongson1-apb-dma.c b/drivers/dma/loongson1-apb-dma.c
+index ca43c67a8203..be0dbda84dd2 100644
+--- a/drivers/dma/loongson1-apb-dma.c
++++ b/drivers/dma/loongson1-apb-dma.c
+@@ -78,7 +78,7 @@ struct ls1x_dma_chan {
+ struct ls1x_dma {
+ 	struct dma_device ddev;
+ 	unsigned int nr_chans;
+-	struct ls1x_dma_chan chan[];
++	struct ls1x_dma_chan chan[] __counted_by(nr_chans);
  };
  
- struct sdhci_cdns_phy_cfg {
+ static irqreturn_t ls1x_dma_irq_handler(int irq, void *data);
 -- 
 2.34.1
 
