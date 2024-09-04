@@ -1,107 +1,114 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A647BE49;
-	Wed,  4 Sep 2024 02:26:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82F1838385;
+	Wed,  4 Sep 2024 02:27:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725416785; cv=none; b=CqGlwhINudVa1UhS82VLNar9HOSDGde/ovdNdPvYL5rvrlM19Do0nbc1nEx8KN/2NwTuRD9WoJSnGEENrT+7D4f5LGpRmgjBpPRJXXqGHBzWFV8MjQxJ6Q2RWcT9WUlsNuxpB5U4zRCNFeZZh+PJVWydx8BREYTI3ofXIyYrcco=
+	t=1725416845; cv=none; b=q8qIBUA9dXWyGoj1OZgU5fDuju9jVeYmUtgO+XDjM9vqSGh7FDgztKff/S9wakzhHhXqi7pCX9p9VVSr75jyQhqmaOyj90zpN0PnEftjiOokB9+B2XJ1wfA4zrXuW8OINM30i1L+FRGtT0o1ymfjAzgATfxdQuJtYhyKlEzA+f0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725416785; c=relaxed/simple;
-	bh=fGqcaUGD7w63fzDnkRodwcT5MdyQ1hCOZd4iEMWLs8M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gk6H5BN1oDwb5ZofKlJTdIrQH5cMtGEPGmcbGSGyETJNOkPLzeBT4eJOpuEN5hkasX6ST0GGeM+N+GXW+82okYnwW63l3FZ7fXqz27QAomRfNRbrz85+V+2pTvCZmFoi1QETbpHK8wIOeh3S+5MUR8pb1RAphlyZGfNlrlG5MbQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C0OFcP9m; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C0OFcP9m"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-374c4d4f219so2080714f8f.1;
-        Tue, 03 Sep 2024 19:26:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1725416782; x=1726021582; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FSBdS1j11Zy+2xCDBIJ9EylWTf0s1FdTfmv9gHVQNOg=;
-        b=C0OFcP9mCOzkX3TBmuAN/mKGTnTdTA9NcCdidYBx+np5RhrEFrKu33SlXSY0Hz+e56
-         YEYfdUnOPtvt4JakE82Irlns8Yn8QaECSsQH3PsRM60WvJ0wcDY9VvNdF2POLxRKZtMq
-         yZ7P61QtFpOBXsBfuArvfDSAxAMp/xYDD38fXzSJ7bQBY4igJFFZ5btKFsZj0s++gy+z
-         5QmfiTjvyTuFAKQWhp2wXNeaZhY3ANW7cJWeHp4Y35fetPbBoGz7utXrIitt7bc/2g4U
-         s+r6dbWAceqp6l3cUbPhpqjV3B0yjaO6vYX5Gq4avnyBeolfipgwzHAWVus/Rg+aHzfz
-         eE7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725416782; x=1726021582;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FSBdS1j11Zy+2xCDBIJ9EylWTf0s1FdTfmv9gHVQNOg=;
-        b=O0KhuvGf7mekzkMWaq07HIkqEEVNTgOLeIK5zwA54YUj5d29gKfxm2ZeGHgYMXzhZW
-         nUoWIlgeoTGLpTYNzhViadTaB6IwZyDw9L8CNIpufvbdk31VLbAUMMK63Fpv0ZDnSL5a
-         cgAAs19P8/MhzWsYqFWpqtzY8FexuH7jWLSzdS3MO8eVPZB+1eLbPnl4kEuuZpfHCGo1
-         xuKRQYKjK+CxWR7sP6izq1Gobo7rMB+kbntRpbl7Jyus7R27GnyPVdOvE7Xfn7htCBgf
-         c/i/4u2RmN/wudKiTvat1rWLfUnP0RMZyESn+X3czGqyVAzRB7l+M/KsWhdibldS4+pd
-         PuMA==
-X-Forwarded-Encrypted: i=1; AJvYcCUbi90L9DDIw3ReZRdOzcE6kKe+GBzBQ0BlpTabaQjEGaRQOnBfS9ViZU0UYSBcN3hJALrDVcpkXluyTQ==@vger.kernel.org, AJvYcCVUVuOyba1hcrg0kJYcPhqXYI4dSuF6O2JPQzAWRbtKBlGUiAnrf0K/MmFC3TFoqSlpoYBD3ZLWyPfA2tq/Slu+@vger.kernel.org, AJvYcCW0gLvU5TD8dO1VbzQDZpQ/H7Z1U9V1lg9OfLZ2WvuSb1JwVOi9rG/9Au1a4M26jp/+EtK0Ptg6gjk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+JsKVJGgWAuHRUlDcakhfFWR3HnWIhdQbTgz1VcBMES9R1QAL
-	Qsd9fR4Qk9S5yBSjoJf4x3m+xyD2H0BsHj+WgJ4lL7vbr7Kqm6yvjhiVTqIbYTLcBgXHabA8HUa
-	NHGn13lOlAUsKo4eBBI1abkloJTE=
-X-Google-Smtp-Source: AGHT+IGhzYhL4tArFqipUAT+kGGdRT0RgYSWXwyvMi268koMsgcW5NLg9Ennz8x3rZhCa17/E99QMWrsaKEDcAY6vBM=
-X-Received: by 2002:a5d:59a4:0:b0:368:75:2702 with SMTP id ffacd0b85a97d-374ecc6774bmr4935282f8f.13.1725416781590;
- Tue, 03 Sep 2024 19:26:21 -0700 (PDT)
+	s=arc-20240116; t=1725416845; c=relaxed/simple;
+	bh=lccjj/bVgVammQjpy/xfBs7vvJklhqIWZwiQmaIEHIQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=g7C/6nabEPOifRuC66JGQSODMJAMaTCrIF9C+lIUhGMPEsEi+EvilkkvzKCh/MZBWxOXXOuLP92QFIY1mh00Bg+n6BecEJPY2LZ3+DLb+eCcZkv2blQx6pSegREDHdNA3HKoTe1YiWnVVHguiJWASqjPXfH8VCsIoyV6SSjoGGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.17])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4Wz5wg2TTNz2CpPc;
+	Wed,  4 Sep 2024 10:26:59 +0800 (CST)
+Received: from dggpeml500022.china.huawei.com (unknown [7.185.36.66])
+	by mail.maildlp.com (Postfix) with ESMTPS id 3FD621A0188;
+	Wed,  4 Sep 2024 10:27:19 +0800 (CST)
+Received: from [10.67.111.104] (10.67.111.104) by
+ dggpeml500022.china.huawei.com (7.185.36.66) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Wed, 4 Sep 2024 10:27:18 +0800
+Message-ID: <56a4c8ec-2cc1-4078-b5d9-fb128be3efeb@huawei.com>
+Date: Wed, 4 Sep 2024 10:27:18 +0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240904014803.2034939-1-lihongbo22@huawei.com>
-In-Reply-To: <20240904014803.2034939-1-lihongbo22@huawei.com>
-From: Keguang Zhang <keguang.zhang@gmail.com>
-Date: Wed, 4 Sep 2024 10:25:45 +0800
-Message-ID: <CAJhJPsV75K=yawL-vV1MHbXNZssB3sphPjN4gPZN3EbASgzG4A@mail.gmail.com>
-Subject: Re: [PATCH -next] dmaengine: Loongson1: Annotate struct ls1x_dma_chan
- with __counted_by()
-To: Hongbo Li <lihongbo22@huawei.com>
-Cc: vkoul@kernel.org, kees@kernel.org, gustavoars@kernel.org, 
-	linux-mips@vger.kernel.org, dmaengine@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH -next 2/4] tun: Make use of str_disabled_enabled helper
+Content-Language: en-US
+To: Andy Shevchenko <andy@kernel.org>, Jakub Kicinski <kuba@kernel.org>,
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+CC: <kees@kernel.org>, <jasowang@redhat.com>, <davem@davemloft.net>,
+	<edumazet@google.com>, <pabeni@redhat.com>, <akpm@linux-foundation.org>,
+	<linux-hardening@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<linux-mm@kvack.org>
+References: <20240831095840.4173362-1-lihongbo22@huawei.com>
+ <20240831095840.4173362-3-lihongbo22@huawei.com>
+ <20240831130741.768da6da@kernel.org> <ZtWYO-atol0Qx58h@smile.fi.intel.com>
+ <66d5cc19d34c6_613882942a@willemb.c.googlers.com.notmuch>
+ <9d844c72-bda6-4e28-b48c-63c4f8855ae7@huawei.com>
+ <ZtcmjI-C3zfqjooc@smile.fi.intel.com>
+From: Hongbo Li <lihongbo22@huawei.com>
+In-Reply-To: <ZtcmjI-C3zfqjooc@smile.fi.intel.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ dggpeml500022.china.huawei.com (7.185.36.66)
 
-On Wed, Sep 4, 2024 at 9:39=E2=80=AFAM Hongbo Li <lihongbo22@huawei.com> wr=
-ote:
->
-> Add the __counted_by compiler attribute to the flexible array member
-> entries to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
-> CONFIG_FORTIFY_SOURCE.
->
-> Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
-> ---
->  drivers/dma/loongson1-apb-dma.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/dma/loongson1-apb-dma.c b/drivers/dma/loongson1-apb-=
-dma.c
-> index ca43c67a8203..be0dbda84dd2 100644
-> --- a/drivers/dma/loongson1-apb-dma.c
-> +++ b/drivers/dma/loongson1-apb-dma.c
-> @@ -78,7 +78,7 @@ struct ls1x_dma_chan {
->  struct ls1x_dma {
->         struct dma_device ddev;
->         unsigned int nr_chans;
-> -       struct ls1x_dma_chan chan[];
-> +       struct ls1x_dma_chan chan[] __counted_by(nr_chans);
->  };
->
->  static irqreturn_t ls1x_dma_irq_handler(int irq, void *data);
-> --
-> 2.34.1
->
 
-Reviewed-by: Keguang Zhang <keguang.zhang@gmail.com>
 
---=20
-Best regards,
+On 2024/9/3 23:09, Andy Shevchenko wrote:
+> On Tue, Sep 03, 2024 at 02:25:53PM +0800, Hongbo Li wrote:
+>> On 2024/9/2 22:30, Willem de Bruijn wrote:
+>>> Andy Shevchenko wrote:
+>>>> On Sat, Aug 31, 2024 at 01:07:41PM -0700, Jakub Kicinski wrote:
+>>>>> On Sat, 31 Aug 2024 17:58:38 +0800 Hongbo Li wrote:
+> 
+> ...
+> 
+>>>>>>    		netif_info(tun, drv, tun->dev, "ignored: set checksum %s\n",
+>>>>>> -			   arg ? "disabled" : "enabled");
+>>>>>> +			   str_disabled_enabled(arg));
+>>>>>
+>>>>> You don't explain the 'why'. How is this an improvement?
+>>>>> nack on this and 2 similar networking changes you sent
+>>>>
+>>>> Side opinion: This makes the messages more unified and not prone to typos
+>>>> and/or grammatical mistakes. Unification allows to shrink binary due to
+>>>> linker efforts on string literals deduplication.
+>>>
+>>> This adds a layer of indirection.
+>>>
+>>> The original code is immediately obvious. When I see the new code I
+>>> have to take a detour through cscope to figure out what it does.
+>> If they have used it once, there is no need for more jumps, because it's
+>> relatively simple.
+>>
+>> Using a dedicated function seems very elegant and unified, especially for
+>> some string printing situations, such as disable/enable. Even in today's
+>> kernel tree, there are several different formats that appear:
+>> 'enable/disable', 'enabled/disabled', 'en/dis'.
+> 
+> Not to mention that the longer word is the more error prone the spelling.
+> 
+>>> To me, in this case, the benefit is too marginal to justify that.
+> 
+> Hongbo, perhaps you need to add a top comment to the string_choices.h to
+> explain the following:
+> 1) the convention to use is str_$TRUE_$FALSE(), where $TRUE and $FALSE the
+> respective words printed;
+> 2) the pros of having unified output,
+> 3) including but not limited to the linker deduplication facilities, making
+> the binary smaller.
+> 
+> With that you may always point people to the ad-hoc documentation.
+> 
 
-Keguang Zhang
+ok, thank you, and I can try it.
+
+However, with these modifications, I'm not sure whether Willem and Jakub 
+agree with the changes. If they don't agree, then I'll have to remove 
+this example in the next version. In the future, we can guide other 
+developers to use these helpers directly instead of rewriting it themselves.
+
+Thanks,
+Hongbo
