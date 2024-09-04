@@ -1,25 +1,25 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07947198E7F
-	for <linux-hardening@vger.kernel.org>; Wed,  4 Sep 2024 09:06:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66E9319AD56
+	for <linux-hardening@vger.kernel.org>; Wed,  4 Sep 2024 09:06:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725440791; cv=none; b=DAcS1EHNSajd4cm6gAWPj60DL3nfXzYnnIiyEC68rxs5iXE+ouIVduStc7k5vPu5uCKGimjuH8CHUoJz/jxc0rLPi4clXi/VekJy5v7fXGQ2Hf0iwhQB6UFNvvSyHlkz5x4BFpRzptNvOfSMxIXbm18XQ1jXS1F4Lkgqbu9c9wY=
+	t=1725440792; cv=none; b=UY+YIzQzAa0xsp3Hka7pOf43biS0Orq4h2082BDBkoW/ilrmRXnJxpysr5fA0OCPFhcqaiGF7VLbsx5OofYahv6SNOXAEh9LTKAygh/8URtdlm2uadU3MObMYmuL10T4Vy4idxUtlL0z+T1dNanDKEi19dl68GoTHuHJ3JJNq9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725440791; c=relaxed/simple;
-	bh=Q1rHAD2z4v1f75mfg2BtbNE9kcDKvP3+crmva8tW2Z4=;
+	s=arc-20240116; t=1725440792; c=relaxed/simple;
+	bh=fVA4X7cFT3m7GzoI5QwZDoNZJpB3g0fRWQ39lp8KD8Y=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UzfbpCszzPMMzZ+hPiL3ytMx4sahwPj49vZibL8M++mvdugHw0uKngsl+96lxWUn1GXp7JVC/IjSRwIx6zelQBkw+bnpjTj7QB64Kn1znCrpao7Fk8/hwtzia1IQhAG8yoIq46EYrgZzeqZY9kWfTLDAUx7ms4aw7pmHYe7ugsk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+	 MIME-Version:Content-Type; b=d1ltqh1ZpbQYKFIoZpa5RPQjhsKEPVNlM5VH5mY+CvbuX9T2C/HoTnwfSweUhf8stgmJYFiZ6gSN34hXkFDes2CUi4kwzEduWXxXRTrIxidN6862QkGz48TcI/zRAGCPfufmiVcVLSCYTBjWshWaJokN5n11UG1u7TMNWsmVwng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.17])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4WzGjc3Bsqz1HJ8Y;
-	Wed,  4 Sep 2024 17:03:00 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.88.234])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4WzGgv11j6z20nMt;
+	Wed,  4 Sep 2024 17:01:31 +0800 (CST)
 Received: from dggpeml500022.china.huawei.com (unknown [7.185.36.66])
-	by mail.maildlp.com (Postfix) with ESMTPS id D49061A0188;
-	Wed,  4 Sep 2024 17:06:27 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 2733F1402CC;
+	Wed,  4 Sep 2024 17:06:28 +0800 (CST)
 Received: from huawei.com (10.90.53.73) by dggpeml500022.china.huawei.com
  (7.185.36.66) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 4 Sep
@@ -29,9 +29,9 @@ To: <kees@kernel.org>, <andy@kernel.org>, <Julia.Lawall@inria.fr>,
 	<nicolas.palix@imag.fr>
 CC: <linux-hardening@vger.kernel.org>, <cocci@inria.fr>,
 	<lihongbo22@huawei.com>
-Subject: [PATCH -next v2 4/9] coccinelle: Add rules to find str_lo{w}_hi{gh}() replacements
-Date: Wed, 4 Sep 2024 17:14:46 +0800
-Message-ID: <20240904091451.3328272-5-lihongbo22@huawei.com>
+Subject: [PATCH -next v2 6/9] coccinelle: Add rules to find str_read_write() replacements
+Date: Wed, 4 Sep 2024 17:14:48 +0800
+Message-ID: <20240904091451.3328272-7-lihongbo22@huawei.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240904091451.3328272-1-lihongbo22@huawei.com>
 References: <20240904091451.3328272-1-lihongbo22@huawei.com>
@@ -46,68 +46,45 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
  dggpeml500022.china.huawei.com (7.185.36.66)
 
-As other rules done, we add rules for str_lo{w}_hi{gh}()
+As other rules done, we add rules for str_read_write()
 to check the relative opportunities.
 
 Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
 ---
- scripts/coccinelle/api/string_choices.cocci | 46 +++++++++++++++++++++
- 1 file changed, 46 insertions(+)
+ scripts/coccinelle/api/string_choices.cocci | 23 +++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
 diff --git a/scripts/coccinelle/api/string_choices.cocci b/scripts/coccinelle/api/string_choices.cocci
-index 67818cd6ee09..53fd34a0fcb4 100644
+index 7400eafdf040..f9ee0352cc3b 100644
 --- a/scripts/coccinelle/api/string_choices.cocci
 +++ b/scripts/coccinelle/api/string_choices.cocci
-@@ -177,3 +177,49 @@ e << str_high_low_r.E;
+@@ -269,3 +269,26 @@ e << str_enabled_disabled_r.E;
  @@
  
- coccilib.report.print_report(p[0], "opportunity for str_high_low(%s)" % e)
+ coccilib.report.print_report(p[0], "opportunity for str_enabled_disabled(%s)" % e)
 +
-+@str_lo_hi depends on patch@
++@str_read_write depends on patch@
 +expression E;
 +@@
 +(
-+-      ((E) ? "lo" : "hi")
-++      str_lo_hi(E)
++-      ((E) ? "read" : "write")
+++      str_read_write(E)
 +)
 +
-+@str_lo_hi_r depends on !patch exists@
-+expression E;
-+position P;
-+@@
-+(
-+*      ((E@P) ? "lo" : "hi")
-+)
-+
-+@script:python depends on report@
-+p << str_lo_hi_r.P;
-+e << str_lo_hi_r.E;
-+@@
-+
-+coccilib.report.print_report(p[0], "opportunity for str_lo_hi(%s)" % e)
-+
-+@str_low_high depends on patch@
-+expression E;
-+@@
-+(
-+-      ((E) ? "low" : "high")
-++      str_low_high(E)
-+)
-+
-+@str_low_high_r depends on !patch exists@
++@str_read_write_r depends on !patch exists@
 +expression E;
 +position P;
 +@@
 +(
-+*      ((E@P) ? "low" : "high")
++*      ((E@P) ? "read" : "write")
 +)
 +
 +@script:python depends on report@
-+p << str_low_high_r.P;
-+e << str_low_high_r.E;
++p << str_read_write_r.P;
++e << str_read_write_r.E;
 +@@
 +
-+coccilib.report.print_report(p[0], "opportunity for str_low_high(%s)" % e)
++coccilib.report.print_report(p[0], "opportunity for str_read_write(%s)" % e)
 -- 
 2.34.1
 
