@@ -1,39 +1,35 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 344E51974FE
-	for <linux-hardening@vger.kernel.org>; Thu,  5 Sep 2024 09:17:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4465199EA7;
+	Thu,  5 Sep 2024 11:30:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725527835; cv=none; b=k3Kk0Lf7UlKivHEzm6U8ov6SpMAfaQr9CumxOqY1Evs2Qolhz/uzSmE9JCJm657r94/D22bWX3ZB8UV8wTycMG/CJ0yf3YDfwdtWH4wIIKCZC3sI8xu2Aem4KTlhDHX6h3V+EIN3YEGSOIuag+hwrhotEHRAcIuT1xeGNUrdjYg=
+	t=1725535831; cv=none; b=bYmZTgprVYdqylo9l1ZkC7RfllBE6BU5dijuGPOSEZznx6GDFrlPh4NqBrJmaSRmk/kGiAXaKdSOUHq+NSO9Xz0BN5MFZD//VhDkJW7je5A4yAW7Uug2lLFnfI0jd/o9LzDph8pLARjR+ygA4l7fGco8LJDmDPhBieemCUIMI6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725527835; c=relaxed/simple;
-	bh=yXFV9kxjDtuf8D75RcUN9npkhbqNaK2uQv+W214LqnA=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gA2UAea49cDTksvTX3WtgNN8I50nMHwolkUSpRNW9/LzJ0GksVNBW/NAPuXbSBmhh1PTbWtBg6Q5EpebQne7O19XpJgeo5F5VNvPeYQA356AzO1xwzoFEBE2PGcj/SiQffaaPjmTbJiBHx/9pc80YCqvj/+m4kIbxTMCK4Nt7mw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4WztxB3xNNzpVGt;
-	Thu,  5 Sep 2024 17:15:10 +0800 (CST)
-Received: from dggpeml500022.china.huawei.com (unknown [7.185.36.66])
-	by mail.maildlp.com (Postfix) with ESMTPS id 9D0691800CF;
-	Thu,  5 Sep 2024 17:17:04 +0800 (CST)
-Received: from huawei.com (10.90.53.73) by dggpeml500022.china.huawei.com
- (7.185.36.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 5 Sep
- 2024 17:17:04 +0800
-From: Hongbo Li <lihongbo22@huawei.com>
-To: <kees@kernel.org>, <andy@kernel.org>
-CC: <linux-hardening@vger.kernel.org>, <lihongbo22@huawei.com>,
-	<chris.zjh@huawei.com>
-Subject: [PATCH -next v2 1/2] lib/string_choices: Introduce several opposite string choice helpers
-Date: Thu, 5 Sep 2024 17:25:39 +0800
-Message-ID: <20240905092540.2962122-2-lihongbo22@huawei.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240905092540.2962122-1-lihongbo22@huawei.com>
-References: <20240905092540.2962122-1-lihongbo22@huawei.com>
+	s=arc-20240116; t=1725535831; c=relaxed/simple;
+	bh=3KBDMRhKBiKoS2oBNaYjWMKIz+MDkWgGXsEUMwFCMTo=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=c5JYFsx6Hl0u2jBNnbu74XcFGbNW+8LCogpHeowkXNFHDFOG5P8wfJXMXxHfBFEPE95PuotJi5w7SdLfze4Ea/BFssLzdPlzqD4S30CxQT6MUoEd5HdMpOZO59W+eA1kRaX/GWukY1ThLBaQMoGkqH1+HYywd2t4ilPga5yrMC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=icvAo9sz; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="icvAo9sz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D75BC4CECA;
+	Thu,  5 Sep 2024 11:30:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725535830;
+	bh=3KBDMRhKBiKoS2oBNaYjWMKIz+MDkWgGXsEUMwFCMTo=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=icvAo9szxLR+tQeYWaIIvlZWotha7L5EP+5EXBoMuUkSEvlzkh3qpKBrEMx+fehCQ
+	 h2z6GMTU1zcmQImoioMGZ5CZtdgSaDSswm2lVKso3x06Wq5+UMHNrsC38fxmSlSpRu
+	 W7gc/xbJX4sE92k0j9gaWA4nyIXsNppWzldPTrHarISSePFHAtoQxv/pcfMMNnhmi3
+	 mooQGthV6Pw/4y2xRVnPc3IZfdA2IUWurhDZYl8r3qF+/Fr8vWlCzFQU5FwHnEgtIy
+	 NpzO1Drv5vO2+Xog4SCgpBBDAM6/Nto+Hn6D8rNDlTuKqWZzw52hTZf7T/eln6VsWt
+	 C5YvlxKR/kUiA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33C883806644;
+	Thu,  5 Sep 2024 11:30:32 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -41,56 +37,43 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggpeml500022.china.huawei.com (7.185.36.66)
+Subject: Re: [PATCH -next] net: dsa: felix: Annotate struct action_gate_entry with
+ __counted_by
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <172553583075.1653140.16718879512076834238.git-patchwork-notify@kernel.org>
+Date: Thu, 05 Sep 2024 11:30:30 +0000
+References: <20240904014956.2035117-1-lihongbo22@huawei.com>
+In-Reply-To: <20240904014956.2035117-1-lihongbo22@huawei.com>
+To: Hongbo Li <lihongbo22@huawei.com>
+Cc: vladimir.oltean@nxp.com, claudiu.manoil@nxp.com,
+ alexandre.belloni@bootlin.com, andrew@lunn.ch, f.fainelli@gmail.com,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ kees@kernel.org, gustavoars@kernel.org, netdev@vger.kernel.org,
+ linux-hardening@vger.kernel.org
 
-Similar to the exists helper: str_enable_disable/
-str_enabled_disabled/str_on_off/str_yes_no helpers, we can
-add the opposite helpers. That's str_disable_enable,
-str_disabled_enabled, str_off_on and str_no_yes.
+Hello:
 
-There are more than 10 cases currently (expect
-str_disable_enable now has 3 use cases) exist in the code
-can be replaced with these helper.
+This patch was applied to netdev/net-next.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
 
-Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
----
- include/linux/string_choices.h | 4 ++++
- 1 file changed, 4 insertions(+)
+On Wed, 4 Sep 2024 09:49:56 +0800 you wrote:
+> Add the __counted_by compiler attribute to the flexible array member
+> entries to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
+> CONFIG_FORTIFY_SOURCE.
+> 
+> Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
+> ---
+>  drivers/net/dsa/ocelot/felix_vsc9959.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/string_choices.h b/include/linux/string_choices.h
-index f3670dbd1169..c2134eeda1fd 100644
---- a/include/linux/string_choices.h
-+++ b/include/linux/string_choices.h
-@@ -8,11 +8,13 @@ static inline const char *str_enable_disable(bool v)
- {
- 	return v ? "enable" : "disable";
- }
-+#define str_disable_enable(v)		str_enable_disable(!(v))
- 
- static inline const char *str_enabled_disabled(bool v)
- {
- 	return v ? "enabled" : "disabled";
- }
-+#define str_disabled_enabled(v)		str_enabled_disabled(!(v))
- 
- static inline const char *str_hi_lo(bool v)
- {
-@@ -36,11 +38,13 @@ static inline const char *str_on_off(bool v)
- {
- 	return v ? "on" : "off";
- }
-+#define str_off_on(v)		str_on_off(!(v))
- 
- static inline const char *str_yes_no(bool v)
- {
- 	return v ? "yes" : "no";
- }
-+#define str_no_yes(v)		str_yes_no(!(v))
- 
- static inline const char *str_true_false(bool v)
- {
+Here is the summary with links:
+  - [-next] net: dsa: felix: Annotate struct action_gate_entry with __counted_by
+    https://git.kernel.org/netdev/net-next/c/50ddaedeae75
+
+You are awesome, thank you!
 -- 
-2.34.1
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
