@@ -1,82 +1,88 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFA5C1A0705;
-	Thu,  5 Sep 2024 16:58:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 707F48821;
+	Thu,  5 Sep 2024 18:31:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725555507; cv=none; b=c8pVFIUi6YgtW4GFVMPzFio1fxjh/ul/noY0/JFqdWUbytL7jkB5+vLpcFJ30fL0CXfMNIFba7nrwY7o5L0fk+qX/jHavzIxITW+npW5M7voFfmiJE7pr4/yednSBdnbohmlfK/L/f+YQaRf2iMUPC7qFwKOpzyf/K0IsskGWPY=
+	t=1725561074; cv=none; b=ePusA8AdqpfdrpuR6v1UBYb9U4oKxugbmkt5W/46QJSFUvzd6uhxXTCenuLAcJ4lvXzMsPvnPWxwocYnHGdZ8/5T2VTbp8OU9BfumqsicV60p+muJw+xwb0GtJ+VpcmGglkyeNiDUc5sIIkyky/PplCIilY9rjLDp3JSfNaOlKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725555507; c=relaxed/simple;
-	bh=s/RccFZtWPrlWr4dMm8WghMOj8DiuyM1E3+ipiCvMFQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UFyLqTBpRr7F2bOvPdbreiksjlZPYfebxhz0Gmrbxi3SmhEtPKvqnFpEpxvvArmS5cIVMsT1KTCsyEhPLd2517skklkAy4lbFW8YjSPBlVvms783i+uRSuosDXtmB/A2nJfX4RR509xXbpkhWL2zDtFa+eve0KKgXaBTB+Xms0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ClnVUUww; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1725561074; c=relaxed/simple;
+	bh=GwzqxSiTBCO2xewW5t4Ce9dzQXimbeoRoVoQ9B8E/ak=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=g/3xXogL1Efgy1KPYIEOTz2dhZFAcH6GxNQVLECDb61kzgRqZkWqqRjgbN54HcTrnri2tzb5AWMaumlaXyddS3uvYWT1Z6Lr809Nsni/6xJ4eH1XlwlfwXzpmFyEQ/eMogvh1qW0jblmm6YHN7rZHV8vzJoYWQoUiFTOgCyaEkI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E+RAfAm5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ClnVUUww"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A585DC4CEC3;
-	Thu,  5 Sep 2024 16:58:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E+RAfAm5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 285D9C4CEC3;
+	Thu,  5 Sep 2024 18:31:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725555505;
-	bh=s/RccFZtWPrlWr4dMm8WghMOj8DiuyM1E3+ipiCvMFQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ClnVUUwwveWTZtV9n/rMtiNDFjBU+fGI0FXIK2HUQGw6FYi1rYoqNa91xEoLx/UY1
-	 5Im/Mca1QANX4h6Ur2WEZCobbXhMeisLzmLeRBUJMdrARhg67LR9KOPT4HjyhL4FH5
-	 zmOWTMQSGdeRwUGG2V99G9NNANnNAC01PhP/u/N91GV8NzWW+5gyeAg2RgseDhzQAk
-	 EYhAUkQRfm5AN/6ZfA2BE+aX413kE9tRSWf83zTB7YfmCYB1E+q+5i93YlIXN+yIKn
-	 olS09ehNNlbIcDTv3jtOvF1tnmkasl2wnIRptihqacWKvo4DEr6/4UGNmlehpROZaS
-	 DIYNg13VPSsbQ==
-Date: Thu, 5 Sep 2024 09:58:25 -0700
-From: Kees Cook <kees@kernel.org>
-To: Dmitry Antipov <dmantipov@yandex.ru>
-Cc: Johannes Berg <johannes.berg@intel.com>, Kalle Valo <kvalo@kernel.org>,
-	linux-wireless@vger.kernel.org, linux-hardening@vger.kernel.org,
-	lvc-project@linuxtesting.org
-Subject: Re: [PATCH] wifi: cfg80211: fix UBSAN noise in
- cfg80211_wext_siwscan()
-Message-ID: <202409050957.7DD6B23EA@keescook>
-References: <20240905150400.126386-1-dmantipov@yandex.ru>
+	s=k20201202; t=1725561074;
+	bh=GwzqxSiTBCO2xewW5t4Ce9dzQXimbeoRoVoQ9B8E/ak=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=E+RAfAm5cQBVNXZdMrsjq6gwsZuC3EWvdoUmfw9T2Wkf6vVSOMa2KE16cVTZIGxG8
+	 EJOSkzuFTXtZBBnTXupoTZaUMiZGDGw5z6EBml0jzmX7turzzjVOtWnSvN7jDMhTDN
+	 ZhPsV32kElFn1dYVfnqT+ojyg4OsZtBmyemb8JoIORxHdSCXNLS2wHte0VI7YdlEZb
+	 Aa/ncee9R/jifzXi5e/KoCtHcw1tCapb3BEeAmggImskDS1WFh88mRy/5aayN02/my
+	 pl+XwT+Dr+nYK0dQ4sMddKBHJi54+EfxX/KuS+wJZz04n0LHpDYwpc1FVHvqIHk68y
+	 28rMhFYEk3n9w==
+Date: Thu, 5 Sep 2024 19:31:05 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: wangshuaijie@awinic.com
+Cc: lars@metafoo.de, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, kees@kernel.org, gustavoars@kernel.org,
+ linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+ andy.shevchenko@gmail.com, liweilei@awinic.com, kangjiajun@awinic.com
+Subject: Re: [PATCH V10 2/2] iio: proximity: aw96103: Add support for
+ aw96103/aw96105 proximity sensor
+Message-ID: <20240905193105.16a4a060@jic23-huawei>
+In-Reply-To: <20240904113555.1538635-3-wangshuaijie@awinic.com>
+References: <20240904113555.1538635-1-wangshuaijie@awinic.com>
+	<20240904113555.1538635-3-wangshuaijie@awinic.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240905150400.126386-1-dmantipov@yandex.ru>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Sep 05, 2024 at 06:04:00PM +0300, Dmitry Antipov wrote:
-> Looking at https://syzkaller.appspot.com/bug?extid=1a3986bbd3169c307819
-> and running reproducer with CONFIG_UBSAN_BOUNDS, I've noticed the
-> following:
+On Wed,  4 Sep 2024 11:35:55 +0000
+wangshuaijie@awinic.com wrote:
+
+> From: shuaijie wang <wangshuaijie@awinic.com>
 > 
-> [ T4985] UBSAN: array-index-out-of-bounds in net/wireless/scan.c:3479:25
-> [ T4985] index 164 is out of range for type 'struct ieee80211_channel *[]'
-> <...skipped...>
-> [ T4985] Call Trace:
-> [ T4985]  <TASK>
-> [ T4985]  dump_stack_lvl+0x1c2/0x2a0
-> [ T4985]  ? __pfx_dump_stack_lvl+0x10/0x10
-> [ T4985]  ? __pfx__printk+0x10/0x10
-> [ T4985]  __ubsan_handle_out_of_bounds+0x127/0x150
-> [ T4985]  cfg80211_wext_siwscan+0x11a4/0x1260
-> <...the rest is not too useful...>
+> AW96103 is a low power consumption capacitive touch and proximity controller.
+> Each channel can be independently config as sensor input, shield output.
 > 
-> Even if we do 'creq->n_channels = n_channels' before 'creq->ssids =
-> (void *)&creq->channels[n_channels]', UBSAN treats the latter as
-> off-by-one error. Fix this by using pointer arithmetic rather than
-> an expression with explicit array indexing and use convenient
-> 'struct_size()' to simplify the math here and in 'kzalloc()' above.
+> Channel Information:
+>   aw96103: 3-channel
+>   aw96105: 5-channel
 > 
-> Fixes: 5ba63533bbf6 ("cfg80211: fix alignment problem in scan request")
-> Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
+> Signed-off-by: shuaijie wang <wangshuaijie@awinic.com>
+Once a series had been applied, send patches on top.
+That means if you want to adopt Andy's suggestions then break
+it up into a series where each patch is a particular type of change.
 
-This looks correct -- the offset is based on the allocation base, not
-the array within the struct, so no array-out-of-bounds warning will
-happen.
+That allows rapid review in comparison with sending the thing
+all over again. As such I've just fixed the early return issue directly.
 
-Reviewed-by: Kees Cook <kees@kernel.org>
 
--- 
-Kees Cook
+Some of the changes would be rejected.
+> +
+> +#define FAR			0x00
+> +#define TRIGGER_TH0		BIT(24)
+> +#define TRIGGER_TH1		(BIT(24) | BIT(16))
+> +#define TRIGGER_TH2		(BIT(24) | BIT(16) | BIT(8))
+> +#define TRIGGER_TH3		(BIT(24) | BIT(16) | BIT(8) | BIT(0))
+> +#define TRIGGER_TH_MASK		(BIT(24) | BIT(16) | BIT(8) | BIT(0))
+No. If you want to use BIT then each BIT needs a meaningful define.
+If the bit's on their own convey no useful meaning then define these
+differently.
+
+Jonathan
+
+
