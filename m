@@ -1,108 +1,80 @@
-Received: from forward204d.mail.yandex.net (forward204d.mail.yandex.net [178.154.239.217])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 302E62F870;
-	Thu,  5 Sep 2024 15:04:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.217
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 640F9101DE;
+	Thu,  5 Sep 2024 16:20:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725548698; cv=none; b=K8f9YV6WvcQtss4ACQp6wjSNt0Fe1OOnh4o1wgw+xZSpPBiUOhoC4yZounxLJd7hUDSPh+x77BioDlhOV9lzKPYVwpZ7LICNXJvKehQFptiijp1VATLzGt0Pb4K8o89wlN17JgoqAMGxVvTU8vygKIfaQ0+GOf2buNCcJ+6M2c0=
+	t=1725553202; cv=none; b=Fh+HOG8GKG/X1fWQUL0wD6myCXFAQZiA+0QZdFxzdLJWgDKL3tSePfGP8jSi4PxRlRw8ZFUnEcTLm2B5pXBAspCRq6sy80QvbH2lzx6Xa1qevRARc8048HfW7U2++b8Ern0hT0U7q7UsrH8euwAJOqn8vEH34ZLZz9BT0MyrSwE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725548698; c=relaxed/simple;
-	bh=vruifMt9jJV41i0HP2Eom4MO7+B2BqcVmvMVRs8z1rA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ri8JmBH3RE64/XCUejPDIen5Auf3J1c4AkQDx8Nsn8d9OYX9XoMq4sr/zlptAfgkqFrZlqgPEWJ07wxYpdeypRwL2fiEnELRlhu4TrunWC1FaRiwW9h/9bIub+SYlqYHZ1MKVfrWM1aukAELm8LVekNxHdxJQSilq+uT9ZaKINU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=vRTFRtqy; arc=none smtp.client-ip=178.154.239.217
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
+	s=arc-20240116; t=1725553202; c=relaxed/simple;
+	bh=nwAsYYrguqDxU9no8Long5e3xKJoCmijbR2bx/gDFhw=;
+	h=Content-Type:MIME-Version:Subject:From:In-Reply-To:References:To:
+	 Cc:Message-ID:Date; b=jjUWisqebuvjikxD6rB6Rqxz4AAItWrZ9cr3/fghdhNiFugN5NGXI5CwmWoKstqlpkjRJRx5l/j5OAygWMi3T9m22Tm8RjTG5Uvi9L5njggiWI19PHp0rF6gheKzgs9mfO2Zl+eIOC2lNAvsScn4AX5nv5ONy1/QJF1P9YXnvFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A4+fjJZF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="vRTFRtqy"
-Received: from forward100d.mail.yandex.net (forward100d.mail.yandex.net [IPv6:2a02:6b8:c41:1300:1:45:d181:d100])
-	by forward204d.mail.yandex.net (Yandex) with ESMTPS id CDFCB616B4;
-	Thu,  5 Sep 2024 18:04:51 +0300 (MSK)
-Received: from mail-nwsmtp-smtp-production-main-42.klg.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-42.klg.yp-c.yandex.net [IPv6:2a02:6b8:c42:4749:0:640:7137:0])
-	by forward100d.mail.yandex.net (Yandex) with ESMTPS id D2B72608EC;
-	Thu,  5 Sep 2024 18:04:43 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-42.klg.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id g4fVLnGMoeA0-s7lnmQ6c;
-	Thu, 05 Sep 2024 18:04:42 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
-	t=1725548682; bh=BRAkwj4fTjxySbhtRhCHYyGmhowE49Q+BsiYDKJ038E=;
-	h=Message-ID:Date:Cc:Subject:To:From;
-	b=vRTFRtqy/YpKJ9h4hL/hN3PnssvFkz382LJM3s+6FW1MyI2KlPeNlRtByh6Tx2Tnk
-	 nG/k/8ah6diAKXN7LUl/pfuS+jS7SZxQpTee9cB5AD+YbaRPqn40sXRAE2hJ0qUWxH
-	 lV7GPyvVzBaCJGJzUY7HeiT+CdvfrdVHLnQFF+ng=
-Authentication-Results: mail-nwsmtp-smtp-production-main-42.klg.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
-From: Dmitry Antipov <dmantipov@yandex.ru>
-To: Johannes Berg <johannes.berg@intel.com>
-Cc: Kalle Valo <kvalo@kernel.org>,
-	linux-wireless@vger.kernel.org,
-	Kees Cook <kees@kernel.org>,
-	linux-hardening@vger.kernel.org,
-	lvc-project@linuxtesting.org,
-	Dmitry Antipov <dmantipov@yandex.ru>
-Subject: [PATCH] wifi: cfg80211: fix UBSAN noise in cfg80211_wext_siwscan()
-Date: Thu,  5 Sep 2024 18:04:00 +0300
-Message-ID: <20240905150400.126386-1-dmantipov@yandex.ru>
-X-Mailer: git-send-email 2.46.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A4+fjJZF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65F62C4CEC3;
+	Thu,  5 Sep 2024 16:20:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725553201;
+	bh=nwAsYYrguqDxU9no8Long5e3xKJoCmijbR2bx/gDFhw=;
+	h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+	b=A4+fjJZFwxZXIo+Fp5KBmDUo2y8g0G56NQINFwik/ZW1ZyjTGwrdRn9STiEXVyVY2
+	 VjTUTVFupBsrGajsyjKRxBgUf8IumTRm6MHPUol60y26FYd87vP1C8RhO+OBRqiXBj
+	 jZ+XzQsLEqY4Y3jtZtW5WjGvWwM9F6WkNlcEBxikDq/RBZD7Njx8itpS9b+z8cUNf5
+	 XlEP4WNQxRONaj55fjBf7dAu5F125t6WdSaWAfUJmf+uYQXjYnUBhSbixMqLCiUWwR
+	 rZRa3YA2DyD4EUlSdGSHDRUCHHDahfrINjGED/WAEvXs5nfnWwGb8/yNlapHEFdmFt
+	 qQt0bvT+3424w==
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH][next] wifi: ath11k: Avoid -Wflex-array-member-not-at-end
+ warnings
+From: Kalle Valo <kvalo@kernel.org>
+In-Reply-To: <ZrZB3Rjswe0ZXtug@cute>
+References: <ZrZB3Rjswe0ZXtug@cute>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Jeff Johnson <jjohnson@kernel.org>, linux-wireless@vger.kernel.org,
+ ath11k@lists.infradead.org, linux-kernel@vger.kernel.org,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ linux-hardening@vger.kernel.org
+User-Agent: pwcli/0.1.1-git (https://github.com/kvalo/pwcli/) Python/3.11.2
+Message-ID: <172555319846.1740680.15884701557144481853.kvalo@kernel.org>
+Date: Thu,  5 Sep 2024 16:20:00 +0000 (UTC)
 
-Looking at https://syzkaller.appspot.com/bug?extid=1a3986bbd3169c307819
-and running reproducer with CONFIG_UBSAN_BOUNDS, I've noticed the
-following:
+"Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
 
-[ T4985] UBSAN: array-index-out-of-bounds in net/wireless/scan.c:3479:25
-[ T4985] index 164 is out of range for type 'struct ieee80211_channel *[]'
-<...skipped...>
-[ T4985] Call Trace:
-[ T4985]  <TASK>
-[ T4985]  dump_stack_lvl+0x1c2/0x2a0
-[ T4985]  ? __pfx_dump_stack_lvl+0x10/0x10
-[ T4985]  ? __pfx__printk+0x10/0x10
-[ T4985]  __ubsan_handle_out_of_bounds+0x127/0x150
-[ T4985]  cfg80211_wext_siwscan+0x11a4/0x1260
-<...the rest is not too useful...>
+> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> getting ready to enable it, globally.
+> 
+> Move the conflicting declaration to the end of the structure. Notice
+> that `struct ieee80211_chanctx_conf` is a flexible structure --a
+> structure that contains a flexible-array member.
+> 
+> Also, remove a couple of unused structures.
+> 
+> Fix the following warnings:
+> drivers/net/wireless/ath/ath11k/core.h:409:39: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> drivers/net/wireless/ath/ath11k/dp.h:1309:24: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> drivers/net/wireless/ath/ath11k/dp.h:1368:24: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Acked-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+> Signed-off-by: Kalle Valo <quic_kvalo@quicinc.com>
 
-Even if we do 'creq->n_channels = n_channels' before 'creq->ssids =
-(void *)&creq->channels[n_channels]', UBSAN treats the latter as
-off-by-one error. Fix this by using pointer arithmetic rather than
-an expression with explicit array indexing and use convenient
-'struct_size()' to simplify the math here and in 'kzalloc()' above.
+Patch applied to ath-next branch of ath.git, thanks.
 
-Fixes: 5ba63533bbf6 ("cfg80211: fix alignment problem in scan request")
-Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
----
- net/wireless/scan.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+820aa897837f wifi: ath11k: Avoid -Wflex-array-member-not-at-end warnings
 
-diff --git a/net/wireless/scan.c b/net/wireless/scan.c
-index 64eeed82d43d..d747d5f63278 100644
---- a/net/wireless/scan.c
-+++ b/net/wireless/scan.c
-@@ -3467,8 +3467,8 @@ int cfg80211_wext_siwscan(struct net_device *dev,
- 		n_channels = ieee80211_get_num_supported_channels(wiphy);
- 	}
- 
--	creq = kzalloc(sizeof(*creq) + sizeof(struct cfg80211_ssid) +
--		       n_channels * sizeof(void *),
-+	creq = kzalloc(struct_size(creq, channels, n_channels)
-+		       + sizeof(struct cfg80211_ssid),
- 		       GFP_ATOMIC);
- 	if (!creq)
- 		return -ENOMEM;
-@@ -3476,7 +3476,7 @@ int cfg80211_wext_siwscan(struct net_device *dev,
- 	creq->wiphy = wiphy;
- 	creq->wdev = dev->ieee80211_ptr;
- 	/* SSIDs come after channels */
--	creq->ssids = (void *)&creq->channels[n_channels];
-+	creq->ssids = (void *)creq + struct_size(creq, channels, n_channels);
- 	creq->n_channels = n_channels;
- 	creq->n_ssids = 1;
- 	creq->scan_start = jiffies;
 -- 
-2.46.0
+https://patchwork.kernel.org/project/linux-wireless/patch/ZrZB3Rjswe0ZXtug@cute/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+https://docs.kernel.org/process/submitting-patches.html
 
