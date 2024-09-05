@@ -1,70 +1,108 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from forward204d.mail.yandex.net (forward204d.mail.yandex.net [178.154.239.217])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EABCF199934
-	for <linux-hardening@vger.kernel.org>; Thu,  5 Sep 2024 11:32:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 302E62F870;
+	Thu,  5 Sep 2024 15:04:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.217
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725535960; cv=none; b=Ob6fhHt/GiKGUQn8dqc9/7t8D3itQTNkXGR+o2en7gOt5ut1gFk0E1tBa/j0zh9y6qM9Mtx8BdQw1nOJj1ZaquBHxH0L3XJ0Xhtd2S78BEDvZ8NphSLfFytiuLXA/Do+kLkdxgzimhAhdMNMSR/Mk3ThDG5M6RSWYAKKYsThGBc=
+	t=1725548698; cv=none; b=K8f9YV6WvcQtss4ACQp6wjSNt0Fe1OOnh4o1wgw+xZSpPBiUOhoC4yZounxLJd7hUDSPh+x77BioDlhOV9lzKPYVwpZ7LICNXJvKehQFptiijp1VATLzGt0Pb4K8o89wlN17JgoqAMGxVvTU8vygKIfaQ0+GOf2buNCcJ+6M2c0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725535960; c=relaxed/simple;
-	bh=eltSm83KZ6cgwIakRTZsRBT6XtYFQUFyrrshOhssA5U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sJeMkVg3kX4Dm0zDFTXDcd9jW2khi4uezF94996V3CSmr+JnBnK4sJ7fpe7anuECCGabqnmIQ0ULyPvVQyeIhBjk5zew8OpDpLC+c8r1DM4KAUmLZmIl19QZi5WZkfpp3H319VfkOltni8um4jWMUumKHvkfcCgbU0kubamnGNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: hqOA8ZcQRkSzQn/H9yjXaw==
-X-CSE-MsgGUID: i3Xt903xTr+hMI96VPAaHQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11185"; a="41722023"
-X-IronPort-AV: E=Sophos;i="6.10,204,1719903600"; 
-   d="scan'208";a="41722023"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2024 04:32:39 -0700
-X-CSE-ConnectionGUID: Pz/9VDjYQIyAk9srGCU7IA==
-X-CSE-MsgGUID: luvy4VXiRzeT9vulX5q2fQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,204,1719903600"; 
-   d="scan'208";a="70191548"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2024 04:32:37 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andy@kernel.org>)
-	id 1smAj5-00000005NSK-0Wn8;
-	Thu, 05 Sep 2024 14:32:35 +0300
-Date: Thu, 5 Sep 2024 14:32:20 +0300
-From: Andy Shevchenko <andy@kernel.org>
-To: Hongbo Li <lihongbo22@huawei.com>
-Cc: kees@kernel.org, linux-hardening@vger.kernel.org, chris.zjh@huawei.com
-Subject: Re: [PATCH -next v2 0/2] Introduce several opposite string choice
- helpers
-Message-ID: <ZtmWxFG9RrKilRee@smile.fi.intel.com>
-References: <20240905092540.2962122-1-lihongbo22@huawei.com>
+	s=arc-20240116; t=1725548698; c=relaxed/simple;
+	bh=vruifMt9jJV41i0HP2Eom4MO7+B2BqcVmvMVRs8z1rA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ri8JmBH3RE64/XCUejPDIen5Auf3J1c4AkQDx8Nsn8d9OYX9XoMq4sr/zlptAfgkqFrZlqgPEWJ07wxYpdeypRwL2fiEnELRlhu4TrunWC1FaRiwW9h/9bIub+SYlqYHZ1MKVfrWM1aukAELm8LVekNxHdxJQSilq+uT9ZaKINU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=vRTFRtqy; arc=none smtp.client-ip=178.154.239.217
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="vRTFRtqy"
+Received: from forward100d.mail.yandex.net (forward100d.mail.yandex.net [IPv6:2a02:6b8:c41:1300:1:45:d181:d100])
+	by forward204d.mail.yandex.net (Yandex) with ESMTPS id CDFCB616B4;
+	Thu,  5 Sep 2024 18:04:51 +0300 (MSK)
+Received: from mail-nwsmtp-smtp-production-main-42.klg.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-42.klg.yp-c.yandex.net [IPv6:2a02:6b8:c42:4749:0:640:7137:0])
+	by forward100d.mail.yandex.net (Yandex) with ESMTPS id D2B72608EC;
+	Thu,  5 Sep 2024 18:04:43 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-42.klg.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id g4fVLnGMoeA0-s7lnmQ6c;
+	Thu, 05 Sep 2024 18:04:42 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
+	t=1725548682; bh=BRAkwj4fTjxySbhtRhCHYyGmhowE49Q+BsiYDKJ038E=;
+	h=Message-ID:Date:Cc:Subject:To:From;
+	b=vRTFRtqy/YpKJ9h4hL/hN3PnssvFkz382LJM3s+6FW1MyI2KlPeNlRtByh6Tx2Tnk
+	 nG/k/8ah6diAKXN7LUl/pfuS+jS7SZxQpTee9cB5AD+YbaRPqn40sXRAE2hJ0qUWxH
+	 lV7GPyvVzBaCJGJzUY7HeiT+CdvfrdVHLnQFF+ng=
+Authentication-Results: mail-nwsmtp-smtp-production-main-42.klg.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
+From: Dmitry Antipov <dmantipov@yandex.ru>
+To: Johannes Berg <johannes.berg@intel.com>
+Cc: Kalle Valo <kvalo@kernel.org>,
+	linux-wireless@vger.kernel.org,
+	Kees Cook <kees@kernel.org>,
+	linux-hardening@vger.kernel.org,
+	lvc-project@linuxtesting.org,
+	Dmitry Antipov <dmantipov@yandex.ru>
+Subject: [PATCH] wifi: cfg80211: fix UBSAN noise in cfg80211_wext_siwscan()
+Date: Thu,  5 Sep 2024 18:04:00 +0300
+Message-ID: <20240905150400.126386-1-dmantipov@yandex.ru>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240905092540.2962122-1-lihongbo22@huawei.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Thu, Sep 05, 2024 at 05:25:38PM +0800, Hongbo Li wrote:
-> Similar to the exists helper: str_enable_disable/
-> str_enabled_disabled/str_on_off/str_yes_no helpers, we can
-> add the opposite helpers. That's str_disable_enable,
-> str_disabled_enabled, str_off_on and str_no_yes.
-> 
-> There are more than 10 cases currently (expect
-> str_disable_enable now has 3 use cases) exist in the code
-> can be replaced with these helper.
+Looking at https://syzkaller.appspot.com/bug?extid=1a3986bbd3169c307819
+and running reproducer with CONFIG_UBSAN_BOUNDS, I've noticed the
+following:
 
-Acked-by: Andy Shevchenko <andy@kernel.org>
+[ T4985] UBSAN: array-index-out-of-bounds in net/wireless/scan.c:3479:25
+[ T4985] index 164 is out of range for type 'struct ieee80211_channel *[]'
+<...skipped...>
+[ T4985] Call Trace:
+[ T4985]  <TASK>
+[ T4985]  dump_stack_lvl+0x1c2/0x2a0
+[ T4985]  ? __pfx_dump_stack_lvl+0x10/0x10
+[ T4985]  ? __pfx__printk+0x10/0x10
+[ T4985]  __ubsan_handle_out_of_bounds+0x127/0x150
+[ T4985]  cfg80211_wext_siwscan+0x11a4/0x1260
+<...the rest is not too useful...>
 
+Even if we do 'creq->n_channels = n_channels' before 'creq->ssids =
+(void *)&creq->channels[n_channels]', UBSAN treats the latter as
+off-by-one error. Fix this by using pointer arithmetic rather than
+an expression with explicit array indexing and use convenient
+'struct_size()' to simplify the math here and in 'kzalloc()' above.
+
+Fixes: 5ba63533bbf6 ("cfg80211: fix alignment problem in scan request")
+Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
+---
+ net/wireless/scan.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/net/wireless/scan.c b/net/wireless/scan.c
+index 64eeed82d43d..d747d5f63278 100644
+--- a/net/wireless/scan.c
++++ b/net/wireless/scan.c
+@@ -3467,8 +3467,8 @@ int cfg80211_wext_siwscan(struct net_device *dev,
+ 		n_channels = ieee80211_get_num_supported_channels(wiphy);
+ 	}
+ 
+-	creq = kzalloc(sizeof(*creq) + sizeof(struct cfg80211_ssid) +
+-		       n_channels * sizeof(void *),
++	creq = kzalloc(struct_size(creq, channels, n_channels)
++		       + sizeof(struct cfg80211_ssid),
+ 		       GFP_ATOMIC);
+ 	if (!creq)
+ 		return -ENOMEM;
+@@ -3476,7 +3476,7 @@ int cfg80211_wext_siwscan(struct net_device *dev,
+ 	creq->wiphy = wiphy;
+ 	creq->wdev = dev->ieee80211_ptr;
+ 	/* SSIDs come after channels */
+-	creq->ssids = (void *)&creq->channels[n_channels];
++	creq->ssids = (void *)creq + struct_size(creq, channels, n_channels);
+ 	creq->n_channels = n_channels;
+ 	creq->n_ssids = 1;
+ 	creq->scan_start = jiffies;
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.46.0
 
