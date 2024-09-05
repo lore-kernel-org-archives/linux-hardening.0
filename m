@@ -1,78 +1,83 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C73919E96D;
-	Thu,  5 Sep 2024 16:20:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC384C2FD;
+	Thu,  5 Sep 2024 16:51:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725553230; cv=none; b=P77pERrJCmsJPrXNCIjjhRoIa3J5VduyvEEU9DtSA8Vvu8CFX3B6dQgUmod9gk3dhULWTN/vR8Wef0fzjNlHSLpj8KGLkSadGy/Ocf1nd+Sal7P7dKTUMYNUR7DMs9u9rTTKt0vgP2ClsJY81ZiXV4qGrzuyrnE37XrupvPX/RI=
+	t=1725555109; cv=none; b=jw+x9h0kb+oD4a2Ni+P885ECGWEWtp5n0ixYNMsC+4KkNMQxjGxi5ZySlqO5VrvAB9/gL/6OR7qrS9X7iuC1T5DMPohZmsHsX7zELeCRs5wmE8fJdtY7atfyaSZrI2OvqQEEgoxv2pTFph/vt1gwSwQiDejKmZ/piGB05GfpkOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725553230; c=relaxed/simple;
-	bh=qusHqJLOWjw7pUwleJIWBOfj0NWh22390XqDHGqnV8s=;
-	h=Content-Type:MIME-Version:Subject:From:In-Reply-To:References:To:
-	 Cc:Message-ID:Date; b=depwtyQ1o4eGF7S+HDszHDaBFwVajx8A1x7BjLSnYMaUUHXW0/hSeeCDxV+Kx41XLWLylF+mwCwJ7a7na0K5u3sSrqnKKln2rmxKuoERvKHIsmbFIs4FfKiYCYS95JRMX2BKk7l3zrZLXVF9qXmHy/pfIe8gAmImiaAPVvlj2bE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u9Gox4+E; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1725555109; c=relaxed/simple;
+	bh=0y0h16uEOrJ8vHCIrO+tdDreN+rQGphbGRKdlzR0ON8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JjAMCzAq0eXVtG6LZf4tb7vwZMlduIVNUCDxEn4TqUNeK2qlrFJUf34a//1PJDRjjKpcJzg4R98EfAPpnEc1cpWTAs/ZpUarNiaOhxaWM/YNW87QUL38piatYgGguw1ObXmuDCml3wSRIJRCF0yBYOw99Y4YSIVvZIYk3ec3EZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S+dn4IzX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u9Gox4+E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A6B2C4CEC3;
-	Thu,  5 Sep 2024 16:20:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S+dn4IzX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 309EEC4CEC6;
+	Thu,  5 Sep 2024 16:51:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725553230;
-	bh=qusHqJLOWjw7pUwleJIWBOfj0NWh22390XqDHGqnV8s=;
-	h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-	b=u9Gox4+ENg+5bDZQr5wkDzAyb79a0pTAFY3xI+V/xvYcrcIB42f1zZUtNaI9+TTEr
-	 55Wmog8B7A/JP6ZOH2m1aJWueoJ4v+9V09QZ/e27YnKhNl3xUAEqTN8xagYBVuhEVo
-	 mIGuuAfUNoxQ5H53IRq4dOVeBFTK84FXQxAkeob4qrQpvEm5+HoCRIzfeWfCx37qqj
-	 hyTGsm/jvC53kbwtPHb8YJMDK+KP7K9NRC4x2i4zWRbF0XYW18+XchrL9VD97SoD6A
-	 1d2E3+NwgVIItCShSfnE+ahVof65qwvqwU9hTaFAUPuMZLFudpSypHPYDgRliTyuZv
-	 C8bzMNVnENptg==
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1725555109;
+	bh=0y0h16uEOrJ8vHCIrO+tdDreN+rQGphbGRKdlzR0ON8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=S+dn4IzXJsgfMnrm+5s77GeQYbKNPeZIvVrIKJyW/SaPQ0NO+XGqNA4mTmCDEAoiC
+	 +Xp4nDtBLhMUXxScjGm4nUic9F7m4aMHr2Az/ZlULNUSbb6u4yD85PLi4v5R0XeBpa
+	 vXv4ge6MaNSFhg4TVTu4FW5n7iifrtJ1G1/gzzgGTd7JHL7zXS0/mVzIE5OaXtKrSR
+	 Slj1J+wEX/u4FTC1gyfJBPoFm8Kz9FnSVA97gHPcLqc+aN1qODMDAhPi8fk1ZLqxSp
+	 VFcizZuecLvb14fVgp8AICv7nIDCGoe2aAuQLXdHTcZfS/CehOwVMWykxrY+XxtDa3
+	 nB2Pdx/E1wGQA==
+From: Kees Cook <kees@kernel.org>
+To: Hongbo Li <lihongbo22@huawei.com>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: Kees Cook <kees@kernel.org>,
+	andy@kernel.org,
+	trondmy@kernel.org,
+	anna@kernel.org,
+	gregkh@linuxfoundation.org,
+	linux-hardening@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-nfs@vger.kernel.org
+Subject: Re: (subset) [PATCH -next v3 1/3] lib/string_choices: Add str_true_false()/str_false_true() helper
+Date: Thu,  5 Sep 2024 09:51:14 -0700
+Message-Id: <172555507039.1959022.16303899697737520578.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240828132509.4447ff09665fa0d7b8020294@linux-foundation.org>
+References: <20240827024517.914100-1-lihongbo22@huawei.com> <20240827024517.914100-2-lihongbo22@huawei.com> <20240827164218.c45407bf2f2ef828975c1eff@linux-foundation.org> <8d19aece-3a33-4667-8bcf-635a3a861d1d@huawei.com> <20240827202204.b76c0510bf44cdfb6d3a74bd@linux-foundation.org> <a6ea03c9-f92b-4faa-b924-8df58484fb13@huawei.com> <20240828132509.4447ff09665fa0d7b8020294@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH][next] wifi: ath12k: Avoid -Wflex-array-member-not-at-end
- warnings
-From: Kalle Valo <kvalo@kernel.org>
-In-Reply-To: <ZrZEuxJihMzAaTVh@cute>
-References: <ZrZEuxJihMzAaTVh@cute>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Jeff Johnson <jjohnson@kernel.org>, linux-wireless@vger.kernel.org,
- ath12k@lists.infradead.org, linux-kernel@vger.kernel.org,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- linux-hardening@vger.kernel.org
-User-Agent: pwcli/0.1.1-git (https://github.com/kvalo/pwcli/) Python/3.11.2
-Message-ID: <172555322675.1740680.5516276191783582303.kvalo@kernel.org>
-Date: Thu,  5 Sep 2024 16:20:28 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-"Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
+On Wed, 28 Aug 2024 13:25:09 -0700, Andrew Morton wrote:
+> On Wed, 28 Aug 2024 11:49:51 +0800 Hongbo Li <lihongbo22@huawei.com> wrote:
+> 
+> > > Anything which is calling these functions is not performance-sensitive,
+> > > so optimizing for space is preferred.  An out-of-line function which
+> > > returns a const char * will achieve this?
+> > I think this helper can achieve this. Because it is tiny enough, the
+> > compiler will handle this like #define macro (do the replacement)
+> > without allocating extra functional stack. On the contrary, if it is
+> > implemented as a non-inline function, it will cause extra functional
+> > stack when it was called every time. And it also should be implemented
+> > in a source file (.c file), not in header file(.h file).
+> 
+> [...]
 
-> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-> getting ready to enable it, globally.
-> 
-> Move the conflicting declaration to the end of the structure. Notice
-> that `struct ieee80211_chanctx_conf` is a flexible structure --a
-> structure that contains a flexible-array member.
-> 
-> Also, remove an unused structure.
-> 
-> Fix the following warnings:
-> drivers/net/wireless/ath/ath12k/core.h:290:39: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> drivers/net/wireless/ath/ath12k/dp.h:1499:24: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> Signed-off-by: Kalle Valo <quic_kvalo@quicinc.com>
+Since I've taken over string maintainership, I've applied this to my
+tree (where other similar changes are appearing). This should reduce
+conflicts here...
 
-Patch applied to ath-next branch of ath.git, thanks.
+Applied to for-next/hardening, thanks!
 
-02f454f9aa62 wifi: ath12k: Avoid -Wflex-array-member-not-at-end warnings
+[1/3] lib/string_choices: Add str_true_false()/str_false_true() helper
+      https://git.kernel.org/kees/c/6ff4cd1160af
+
+Take care,
 
 -- 
-https://patchwork.kernel.org/project/linux-wireless/patch/ZrZEuxJihMzAaTVh@cute/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
-https://docs.kernel.org/process/submitting-patches.html
+Kees Cook
 
