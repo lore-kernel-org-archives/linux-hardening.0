@@ -1,119 +1,136 @@
-Received: from mail3-relais-sop.national.inria.fr (mail3-relais-sop.national.inria.fr [192.134.164.104])
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 758C1136663
-	for <linux-hardening@vger.kernel.org>; Mon,  9 Sep 2024 16:03:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.134.164.104
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7225113A879
+	for <linux-hardening@vger.kernel.org>; Mon,  9 Sep 2024 16:20:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.86.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725897816; cv=none; b=alwKfGK+9spfrgtd5Gve9dCZWDWMfUIG1+Ej503lfTqpfAmeQPLmdEM22TMHaYFdaRPKU9S2Midk5Jtg2I+Ar0CyuDNWSDshWuQH07hk5NOzjhUAiSa7S2c5uhd4in71jKiHXC4hyIVimthQs0jio+pDyVgVk/tJuuEQ6Arxgz0=
+	t=1725898857; cv=none; b=nEmYRre6qFxOSmM8J8A3xsSS65vhaE9B74naoo5iw9w8a6E+Gtae48zNFIK9YFDSWBYDedSRW7v3zaqRnvIh5nCC47WPsMTZTUw9StC+dtWa5G7MtXh/CVmHZlZfVdMJukWtZdhIFbw5MNdI+qaTLF135EAxoGnyrvXF+1nohc4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725897816; c=relaxed/simple;
-	bh=o3SSCjaXCkkah5AqXDB8haQ3D8O4a/RXpvGj13mt1to=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Opq0NzOGbEp7j77O4fCp7LG2ajFPP2GmbSBwzEOtj9Fho6GL5Y6YCSddn3qEahUCEb1qx/U0DBIjyDG5nt4w4suLmPJmaT+gKq6gozUDZE5wKeVm4DR45tEU83zhBNm3ovDhZtbxzpzxp4G6G3MOzLZXmyS7qhvlsu7b9227lBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr; spf=pass smtp.mailfrom=inria.fr; dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b=Hr1eXHBG; arc=none smtp.client-ip=192.134.164.104
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="Hr1eXHBG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=inria.fr; s=dc;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=pHF8/FVUT/A4fNzBJtZbLpJxlNxFJURRlKXj0h2hW60=;
-  b=Hr1eXHBGn8imV1lFkUM6D13Ek1nJKNh9gDCEls85kyP5WQ6W4CEXGdzb
-   aeYpv3s2Odu0Fpd9Bggi3rFgUbSBULFnsKAk+IxXxwcTxcIIYBQwVc/Qo
-   hBVkVlOs2eWagFpordG+5nflXoHZ8SqSpEC6JLDPljNPjmILabEokEOst
-   Y=;
-Authentication-Results: mail3-relais-sop.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
-X-IronPort-AV: E=Sophos;i="6.10,214,1719871200"; 
-   d="scan'208";a="95839067"
-Received: from dt-lawall.paris.inria.fr ([128.93.67.65])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2024 18:03:33 +0200
-Date: Mon, 9 Sep 2024 18:03:32 +0200 (CEST)
-From: Julia Lawall <julia.lawall@inria.fr>
-To: Hongbo Li <lihongbo22@huawei.com>
-cc: kees@kernel.org, andy@kernel.org, nicolas.palix@imag.fr, 
-    linux-hardening@vger.kernel.org, cocci@inria.fr
-Subject: Re: [PATCH -next v2 0/9] coccinelle: Add some rules for string_chioces
- helpers.
-In-Reply-To: <20240904091451.3328272-1-lihongbo22@huawei.com>
-Message-ID: <b494bc69-a790-b939-d1bf-29968dfd75e8@inria.fr>
-References: <20240904091451.3328272-1-lihongbo22@huawei.com>
+	s=arc-20240116; t=1725898857; c=relaxed/simple;
+	bh=FJpHA0amwFa8fwMqJbpZ6J7qECXZWoFy2ADPLU+Pipc=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 MIME-Version:Content-Type; b=AtxZJ6Omci8lAgRtPNEBxPWw/VZCjKw040z2Rkbl3FD6DXnF6yaw1QtQLhdCsgn/6bvl2+MawRFVVBfripsclhkDC6iT8G+8wJG1BVFkfcG91LNrHLVbdPDOEg/acjME7SQ+naeoKAjJPLlXtCDXHyQm06+8BvdIFOlHDsGq9LU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.86.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-117-77voFV8_M_GOh6WcdcqWzg-1; Mon, 09 Sep 2024 17:20:49 +0100
+X-MC-Unique: 77voFV8_M_GOh6WcdcqWzg-1
+Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
+ (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Mon, 9 Sep
+ 2024 17:19:55 +0100
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.048; Mon, 9 Sep 2024 17:19:55 +0100
+From: David Laight <David.Laight@ACULAB.COM>
+To: 'Vincent Mailhol' <mailhol.vincent@wanadoo.fr>, Kees Cook
+	<kees@kernel.org>
+CC: "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] overflow: optimize struct_size() calculation
+Thread-Topic: [PATCH] overflow: optimize struct_size() calculation
+Thread-Index: AQHbAq7chQPnkDLYlEibiVH2n79D27JPn5pQ
+Date: Mon, 9 Sep 2024 16:19:55 +0000
+Message-ID: <20d6a62f083d47828b3d5f49000d5e2b@AcuMS.aculab.com>
+References: <20240909115221.1298010-1-mailhol.vincent@wanadoo.fr>
+In-Reply-To: <20240909115221.1298010-1-mailhol.vincent@wanadoo.fr>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 
+RnJvbTogVmluY2VudCBNYWlsaG9sDQo+IFNlbnQ6IDA5IFNlcHRlbWJlciAyMDI0IDEyOjUyDQo+
+IA0KPiBJZiB0aGUgb2Zmc2V0b2YoKSBvZiBhIGdpdmVuIGZsZXhpYmxlIGFycmF5IG1lbWJlciAo
+ZmFtKSBpcyBzbWFsbGVyDQo+IHRoYW4gdGhlIHNpemVvZigpIG9mIHRoZSBjb250YWluaW5nIHN0
+cnVjdCwgdGhlbiB0aGUgc3RydWN0X3NpemUoKQ0KPiBtYWNybyByZXBvcnRzIGEgc2l6ZSB3aGlj
+aCBpcyB0b28gYmlnLg0KPiANCj4gVGhpcyBvY2N1cnMgd2hlbiB0aGUgdHdvIGNvbmRpdGlvbnMg
+YmVsb3cgYXJlIG1ldDoNCj4gDQo+ICAgLSB0aGVyZSBhcmUgcGFkZGluZyBieXRlcyBhZnRlciB0
+aGUgcGVudWx0aW1hdGUgbWVtYmVyICh0aGUgbWVtYmVyDQo+ICAgICBwcmVjZWRpbmcgdGhlIGZh
+bSkNCj4gICAtIHRoZSBhbGlnbm1lbnQgb2YgdGhlIGZhbSBpcyBsZXNzIHRoYW4gdGhlIHBlbnVs
+dGltYXRlIG1lbWJlcidzDQo+ICAgICBhbGlnbm1lbnQNCj4gDQo+IEluIHRoYXQgY2FzZSwgdGhl
+IGZhbSBvdmVybGFwcyB3aXRoIHRoZSBwYWRkaW5nIGJ5dGVzIG9mIHRoZQ0KPiBwZW51bHRpbWF0
+ZSBtZW1iZXIuIFRoaXMgYmVoYXZpb3VyIGlzIG5vdCBjYXB0dXJlZCBpbiB0aGUgY3VycmVudA0K
+PiBzdHJ1Y3Rfc2l6ZSgpIG1hY3JvLCBwb3RlbnRpYWxseSByZXN1bHRpbmcgaW4gYW4gb3ZlcmVz
+dGltYXRlZCBzaXplLg0KPiANCj4gQmVsb3cgZXhhbXBsZSBpbGx1c3RyYXRlcyB0aGUgaXNzdWU6
+DQo+IA0KPiAgIHN0cnVjdCBzIHsNCj4gICAJdTY0IGZvbzsNCj4gICAJdTMyIGNvdW50Ow0KPiAg
+IAl1OCBmYW1bXSBfX2NvdW50ZWRfYnkoY291bnQpOw0KPiAgIH07DQo+IA0KPiBBc3N1bWluZyBh
+IDY0IGJpdHMgYXJjaGl0ZWN0dXJlOg0KPiANCj4gICAtIHRoZXJlIGFyZSA0IGJ5dGVzIG9mIHBh
+ZGRpbmcgYWZ0ZXIgcy5jb3VudCAodGhlIHBlbnVsdGltYXRlDQo+ICAgICBtZW1iZXIpDQo+ICAg
+LSBzaXplb2Yoc3RydWN0IHMpIGlzIDE2IGJ5dGVzDQo+ICAgLSB0aGUgb2Zmc2V0IG9mIHMuZmFt
+IGlzIDEyIGJ5dGVzDQo+ICAgLSB0aGUgYWxpZ25tZW50IG9mIHMuZmFtIGlzIDEgYnl0ZQ0KPiAN
+Cj4gVGhlIHNpemVzIGFyZSBhcyBiZWxvdzoNCj4gDQo+ICAgIHMuY291bnQJY3VycmVudCBzdHJ1
+Y3Rfc2l6ZSgpCWFjdHVhbCBzaXplDQo+ICAgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gICAgMAkJMTYJCQkx
+Ng0KPiAgICAxCQkxNwkJCTE2DQo+ICAgIDIJCTE4CQkJMTYNCj4gICAgMwkJMTkJCQkxNg0KPiAg
+ICA0CQkyMAkJCTE2DQo+ICAgIDUJCTIxCQkJMTcNCj4gICAgLgkJLgkJCS4NCj4gICAgLgkJLgkJ
+CS4NCj4gICAgLgkJLgkJCS4NCj4gICAgbgkJc2l6ZW9mKHN0cnVjdCBzKSArIG4JbWF4KHNpemVv
+ZihzdHJ1Y3QgcyksDQo+IAkJCQkJICAgIG9mZnNldG9mKHN0cnVjdCBzLCBmYW0pICsgbikNCg0K
+SSBhY3R1YWxseSBzdXNwZWN0IHRoYXQgaXQgbWF0dGVycyBzbyBpbmZyZXF1ZW50bHkgaXQgaXNu
+J3Qgd29ydGggdGhlIGVmZm9ydC4NCk5vdCBvbmx5IGRvIHlvdSBuZWVkIGEgc3RydWN0dXJlIHdp
+dGggJ3RhaWwgcGFkZGluZycgYnV0IHlvdSBhbHNvIG5lZWQNCnRoZSBzaXplIHRvIGdvIGZyb20g
+b25lIGttYWxsb2MoKSBidWNrZXQgdG8gYW5vdGhlci4NCg0KPiANCj4gQ2hhbmdlIHN0cnVjdF9z
+aXplKCkgZnJvbSB0aGlzIHBzZXVkbyBjb2RlIGxvZ2ljOg0KPiANCj4gICBzaXplb2Yoc3RydWN0
+IHMpICsgc2l6ZW9mKCpzLmZhbSkgKiBzLmNvdW50DQo+IA0KPiB0byB0aGF0IHBzZXVkbyBjb2Rl
+IGxvZ2ljOg0KPiANCj4gICBtYXgoc2l6ZW9mKHN0cnVjdCBzKSwgb2Zmc2V0b2Yoc3RydWN0IHMs
+IGZhbSkgKyBzaXplb2YoKnMuZmFtKSAqIHMuY291bnQpDQo+IA0KPiBIZXJlLCB0aGUgbG93ZXJj
+YXNlIG1heCooKSBtYWNyb3MgY2FuIGNhdXNlIHN0cnVjdF9zaXplKCkgdG8gcmV0dXJuIGENCj4g
+bm9uIGNvbnN0YW50IGludGVnZXIgZXhwcmVzc2lvbiB3aGljaCB3b3VsZCBicmVhayB0aGUgREVG
+SU5FX0ZMRVgoKQ0KPiBtYWNybyBieSBtYWtpbmcgaXQgZGVjbGFyZSBhIHZhcmlhYmxlIGxlbmd0
+aCBhcnJheS4gQmVjYXVzZSBvZiB0aGF0LA0KPiB1c2UgdGhlIHVuc2FmZSBNQVgoKSBtYWNybyBv
+bmx5IGlmIHRoZSBleHByZXNzaW9uIGlzIGNvbnN0YW50IGFuZCB1c2UNCj4gdGhlIHNhZmVyIG1h
+eF90KCkgb3RoZXJ3aXNlLg0KPiANCj4gUmVmZXJlbmNlOiBJU08vSUVDIDk4OTk6MjAxOCDCpzYu
+Ny4yLjEgIlN0cnVjdHVyZSBhbmQgdW5pb24gc3BlY2lmaWVycyIgwrYxOA0KPiANCj4gU2lnbmVk
+LW9mZi1ieTogVmluY2VudCBNYWlsaG9sIDxtYWlsaG9sLnZpbmNlbnRAd2FuYWRvby5mcj4NCj4g
+LS0tDQo+IA0KPiBJIGFsc28gdHJpZWQgdG8gdGhpbmsgb2Ygd2hldGhlciB0aGUgY3VycmVudCBz
+dHJ1Y3Rfc2l6ZSgpIG1hY3JvIGNvdWxkDQo+IGJlIGEgc2VjdXJpdHkgaXNzdWUuDQo+IA0KPiBU
+aGUgb25seSBleGFtcGxlIEkgY2FuIHRoaW5rIG9mIGlzIGlmIHNvbWVvbmUgbWFudWFsbHkgYWxs
+b2NhdGVzIHRoZQ0KPiBleGFjdCBzaXplIGJ1dCB0aGVuIHVzZSB0aGUgY3VycmVudCBzdHJ1Y3Rf
+c2l6ZSgpIG1hY3JvLg0KPiANCj4gRm9yIGV4YW1wbGUgKHJldXNpbmcgdGhlIHN0cnVjdCBzIGZy
+b20gYWJvdmUpOg0KPiANCj4gICB1MzIgY291bnQgPSA1Ow0KPiAgIHN0cnVjdCBzICpzID0ga2Fs
+bG9jKG9mZnNldG9mKHR5cGVvZigqcyksIGZhbSkgKyBjb3VudCk7DQo+ICAgcy0+Y291bnQgPSBj
+b3VudDsNCj4gICBtZW1zZXQocywgMCwgc3RydWN0X3NpemUocywgZmFtLCBjb3VudCkpOyAvKiA0
+IGJ5dGVzIGJ1ZmZlciBvdmVyZmxvdyAqLw0KPiANCj4gSWYgd2UgaGF2ZSBjb25jZXJucyB0aGF0
+IGFib3ZlIHBhdHRlcm4gbWF5IGFjdHVhbGx5IGV4aXN0LCB0aGVuIHRoaXMNCj4gcGF0Y2ggc2hv
+dWxkIGFsc28gZ28gdG8gc3RhYmxlLiBJIHBlcnNvbmFsbHkgdGhpbmsgdGhhdCB0aGUgYWJvdmUg
+aXMgYQ0KPiBiaXQgY29udm9sdXRlZCBhbmQsIGFzIHN1Y2gsIEkgb25seSBzdWdnZXN0IHRoaXMg
+cGF0Y2ggdG8gZ28gdG8gbmV4dC4NCj4gLS0tDQo+ICBpbmNsdWRlL2xpbnV4L292ZXJmbG93Lmgg
+fCA5ICsrKysrKystLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDcgaW5zZXJ0aW9ucygrKSwgMiBkZWxl
+dGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L292ZXJmbG93LmggYi9p
+bmNsdWRlL2xpbnV4L292ZXJmbG93LmgNCj4gaW5kZXggMGM3ZTNkY2ZlODY3Li4xMzg0ODg3ZjM2
+ODQgMTAwNjQ0DQo+IC0tLSBhL2luY2x1ZGUvbGludXgvb3ZlcmZsb3cuaA0KPiArKysgYi9pbmNs
+dWRlL2xpbnV4L292ZXJmbG93LmgNCj4gQEAgLTUsNiArNSw3IEBADQo+ICAjaW5jbHVkZSA8bGlu
+dXgvY29tcGlsZXIuaD4NCj4gICNpbmNsdWRlIDxsaW51eC9saW1pdHMuaD4NCj4gICNpbmNsdWRl
+IDxsaW51eC9jb25zdC5oPg0KPiArI2luY2x1ZGUgPGxpbnV4L21pbm1heC5oPg0KPiANCj4gIC8q
+DQo+ICAgKiBXZSBuZWVkIHRvIGNvbXB1dGUgdGhlIG1pbmltdW0gYW5kIG1heGltdW0gdmFsdWVz
+IHJlcHJlc2VudGFibGUgaW4gYSBnaXZlbg0KPiBAQCAtMzY5LDggKzM3MCwxMiBAQCBzdGF0aWMg
+aW5saW5lIHNpemVfdCBfX211c3RfY2hlY2sgc2l6ZV9zdWIoc2l6ZV90IG1pbnVlbmQsIHNpemVf
+dCBzdWJ0cmFoZW5kKQ0KPiAgICovDQo+ICAjZGVmaW5lIHN0cnVjdF9zaXplKHAsIG1lbWJlciwg
+Y291bnQpCQkJCQlcDQo+ICAJX19idWlsdGluX2Nob29zZV9leHByKF9faXNfY29uc3RleHByKGNv
+dW50KSwJCQlcDQo+IC0JCXNpemVvZigqKHApKSArIGZsZXhfYXJyYXlfc2l6ZShwLCBtZW1iZXIs
+IGNvdW50KSwJXA0KPiAtCQlzaXplX2FkZChzaXplb2YoKihwKSksIGZsZXhfYXJyYXlfc2l6ZShw
+LCBtZW1iZXIsIGNvdW50KSkpDQo+ICsJCU1BWChzaXplb2YoKihwKSksCQkJCQlcDQo+ICsJCSAg
+ICBvZmZzZXRvZih0eXBlb2YoKihwKSksIG1lbWJlcikgKwkJCVwNCj4gKwkJCWZsZXhfYXJyYXlf
+c2l6ZShwLCBtZW1iZXIsIGNvdW50KSksCQlcDQo+ICsJCW1heF90KHNpemVfdCwgc2l6ZW9mKCoo
+cCkpLAkJCQlcDQo+ICsJCSAgICAgIHNpemVfYWRkKG9mZnNldG9mKHR5cGVvZigqKHApKSwgbWVt
+YmVyKSwJCVwNCj4gKwkJCSAgICAgICBmbGV4X2FycmF5X3NpemUocCwgbWVtYmVyLCBjb3VudCkp
+KSkNCg0KSSBkb24ndCB0aGluayB5b3UgbmVlZCBtYXhfdCgpIGhlcmUsIGEgcGxhaW4gbWF4KCkg
+c2hvdWxkIHN1ZmZpY2UuDQoNCglEYXZpZA0KDQo+IA0KPiAgLyoqDQo+ICAgKiBzdHJ1Y3Rfc2l6
+ZV90KCkgLSBDYWxjdWxhdGUgc2l6ZSBvZiBzdHJ1Y3R1cmUgd2l0aCB0cmFpbGluZyBmbGV4aWJs
+ZSBhcnJheQ0KPiAtLQ0KPiAyLjI1LjENCj4gDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtl
+c2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBV
+Sw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCg==
 
-
-On Wed, 4 Sep 2024, Hongbo Li wrote:
-
-> We found that many of the detection rules for helpers in
-> string_choices.h are missing. This series of patches is
-> intended to complete these rules. We have verified in the
-> latest kernel tree that these rules can detect many places
-> where the string choices helper can be used as a replacement.
-
-Thanks for the changes.  The comment about the unneeded column 0 ()
-applies to all of the patches.
-
-julia
-
->
-> Here are some of the examples:
->
-> ```
-> drivers/gpio/gpio-mvebu.c:917:6-18: opportunity for str_lo_hi(in_pol & msk)
-> drivers/pinctrl/nomadik/pinctrl-nomadik.c:1109:16-19: opportunity for str_high_low(val)
-> drivers/pinctrl/nomadik/pinctrl-nomadik.c:1116:13-16: opportunity for str_high_low(val
-> drivers/gpio/gpio-wcove.c:396:6-16: opportunity for str_hi_lo(ctli & 0x1)
-> drivers/pci/hotplug/pnv_php.c:367:10-41: opportunity for str_on_off(state == OPAL_PCI_SLOT_POWER_ON)
-> drivers/mtd/nand/raw/brcmnand/brcmnand.c:1844:40-63: opportunity for str_read_write(edu_cmd == EDU_CMD_READ)
-> drivers/mtd/nand/raw/brcmnand/brcmnand.c:1437:33-35: opportunity for str_on_off(wp)
-> drivers/mtd/nand/raw/brcmnand/brcmnand.c:1467:9-11: opportunity for str_on_off(wp)
-> drivers/greybus/svc.c:76:9-37: opportunity for str_enabled_disabled(gb_svc_watchdog_enabled ( svc ))
-> drivers/thermal/thermal_sysfs.c:59:29-36: opportunity for str_enabled_disabled(enabled)
-> drivers/dma-buf/st-dma-fence.c:508:10-35: opportunity for str_yes_no(dma_fence_is_signaled ( f2 ))
-> drivers/mmc/host/omap_hsmmc.c:1644:7-43: opportunity for str_enabled_disabled(host -> flags & HSMMC_SDIO_IRQ_ENABLED)
-> drivers/input/mouse/elan_i2c_core.c:202:2-4: opportunity for str_on_off(on)
-> drivers/macintosh/via-pmu.c:626:10-28: opportunity for str_enabled_disabled(option_server_mode)
-> drivers/usb/mtu3/mtu3_debugfs.c:482:5-39: opportunity for str_on_off(regulator_is_enabled ( otg_sx -> vbus ))
-> drivers/net/wireless/intel/iwlwifi/mvm/tt.c:355:4-10: opportunity for str_enable_disable(enable)
-> drivers/nfc/pn544/i2c.c:215:7-20: opportunity for str_low_high(polarity == 0)
-> drivers/media/tuners/tda18250.c:110:3-12: opportunity for str_true_false(triggered)
-> drivers/mtd/tests/torturetest.c:191:30-35: opportunity for str_enabled_disabled(check)
-> drivers/bus/intel-ixp4xx-eb.c:225:5-8: opportunity for str_enabled_disabled(val)
-> drivers/net/ethernet/huawei/hinic/hinic_port.c:1133:3-9: opportunity for str_enable_disable(enable)
-> drivers/net/ethernet/huawei/hinic/hinic_port.c:1245:3-9: opportunity for str_enable_disable(pfc_en)
-> drivers/media/pci/cx23885/cimax2.c:227:4-8: opportunity for str_read_write(read)
-> drivers/media/usb/em28xx/em28xx-video.c:941:4-9: opportunity for str_enabled_disabled(flags)
-> ```
->
-> Changes since v1:
->   - Add more rules for helpers in string_choices.h.
->
-> Thanks,
-> Hongbo.
->
-> Hongbo Li (9):
->   coccinelle: Add rules to find str_true_false() replacements
->   coccinelle: Add rules to find str_false_true() replacements
->   coccinelle: Add rules to find str_hi{gh}_lo{w}() replacements
->   coccinelle: Add rules to find str_lo{w}_hi{gh}() replacements
->   coccinelle: Add rules to find str_enable{d}_disable{d}() replacements
->   coccinelle: Add rules to find str_read_write() replacements
->   coccinelle: Add rules to find str_write_read() replacements
->   coccinelle: Add rules to find str_on_off() replacements
->   coccinelle: Add rules to find str_yes_no() replacements
->
->  scripts/coccinelle/api/string_choices.cocci | 276 ++++++++++++++++++++
->  1 file changed, 276 insertions(+)
->
-> --
-> 2.34.1
->
->
