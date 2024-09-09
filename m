@@ -1,136 +1,158 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7225113A879
-	for <linux-hardening@vger.kernel.org>; Mon,  9 Sep 2024 16:20:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.86.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 049E92C87A
+	for <linux-hardening@vger.kernel.org>; Mon,  9 Sep 2024 16:28:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725898857; cv=none; b=nEmYRre6qFxOSmM8J8A3xsSS65vhaE9B74naoo5iw9w8a6E+Gtae48zNFIK9YFDSWBYDedSRW7v3zaqRnvIh5nCC47WPsMTZTUw9StC+dtWa5G7MtXh/CVmHZlZfVdMJukWtZdhIFbw5MNdI+qaTLF135EAxoGnyrvXF+1nohc4=
+	t=1725899333; cv=none; b=Vy18A36qg3UG6QeNwWUNTJl6/PV4PE/cbAHMStu2w7xS9AvU48Y0vC3ZJj9XhfyPXxjMGOkq9J4GPa7cd+E8XyHq/j8ZSze7wNYOlGSDoCfHdfkbC3Hvu8f6D0t+gTcj0kImsmbl7O2vMSXXpt0IuiZwpodTnj/XSNeBU7fL9EA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725898857; c=relaxed/simple;
-	bh=FJpHA0amwFa8fwMqJbpZ6J7qECXZWoFy2ADPLU+Pipc=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 MIME-Version:Content-Type; b=AtxZJ6Omci8lAgRtPNEBxPWw/VZCjKw040z2Rkbl3FD6DXnF6yaw1QtQLhdCsgn/6bvl2+MawRFVVBfripsclhkDC6iT8G+8wJG1BVFkfcG91LNrHLVbdPDOEg/acjME7SQ+naeoKAjJPLlXtCDXHyQm06+8BvdIFOlHDsGq9LU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.86.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-117-77voFV8_M_GOh6WcdcqWzg-1; Mon, 09 Sep 2024 17:20:49 +0100
-X-MC-Unique: 77voFV8_M_GOh6WcdcqWzg-1
-Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
- (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Mon, 9 Sep
- 2024 17:19:55 +0100
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Mon, 9 Sep 2024 17:19:55 +0100
-From: David Laight <David.Laight@ACULAB.COM>
-To: 'Vincent Mailhol' <mailhol.vincent@wanadoo.fr>, Kees Cook
-	<kees@kernel.org>
-CC: "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] overflow: optimize struct_size() calculation
-Thread-Topic: [PATCH] overflow: optimize struct_size() calculation
-Thread-Index: AQHbAq7chQPnkDLYlEibiVH2n79D27JPn5pQ
-Date: Mon, 9 Sep 2024 16:19:55 +0000
-Message-ID: <20d6a62f083d47828b3d5f49000d5e2b@AcuMS.aculab.com>
-References: <20240909115221.1298010-1-mailhol.vincent@wanadoo.fr>
-In-Reply-To: <20240909115221.1298010-1-mailhol.vincent@wanadoo.fr>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
+	s=arc-20240116; t=1725899333; c=relaxed/simple;
+	bh=8RdcJvVv3gShrKDsP0JLU8Wsg0kuGNpupzjo7uvrHe8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GnjeVcJlXOVCIQcx7w2gveiekuuEzHLrhGCOR6tvmH5S9M26Q637LQItliCpb4zhUl8ivNMBUsjQPQpZ8caWOHtEYeby5ahJUfvHJGSP8BEiE1Q5O29ADYDesKPvB0eTcv0I3mrP4uoj4mrjHofeKXyBcp+C24j/tiNDcVe8ZjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=0mCeY7U9; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="0mCeY7U9"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-42cb0d0311fso3131395e9.1
+        for <linux-hardening@vger.kernel.org>; Mon, 09 Sep 2024 09:28:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1725899329; x=1726504129; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=rjrTEbgn235rhvAj96iSdJKR0hzx2vUIB4UjFS1NRO8=;
+        b=0mCeY7U9+v8Yaxk+q7lB5Ts7Hc1XKx75LhJs4qILill8Ly9ZDkqZfrcgSzkXDTB5fz
+         dPJErt0l4vGGLZYOnfk+HVbBs15fxIKR/Oc64B96oWiWKT/AGY9dOTWnGm98/M7rMLd5
+         7Y2+XoYvpgnf7N5Lbfj+AtlYC8kOmcSm05hJt6IBGfVI5EiKV4PYxhTFV6ijZKZvNoW0
+         MJeL+crYTJBSxHGcYgmqTDjp+Kz3L0fWzF/uEjuyT+cqAs/+PKL4xMkjUSfXEwtG3yry
+         k7GapwyGu7p47uWwd/6MAUd9TlIxNjhRCL6kH5vBvznE6BmkeNOPq8rjz90XC2nstxrM
+         yHBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725899329; x=1726504129;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rjrTEbgn235rhvAj96iSdJKR0hzx2vUIB4UjFS1NRO8=;
+        b=G6Y6QLOMij8HBctyPForUN0tfUO1xiYIZ9Smx1qB+ct9zd29Zwx2wcwEne1Ay4DRvw
+         G2BO2+pZ9IVpLM5ngfTCFEXZpog//HCtdX9Iwz3AGPdoSy+nZmi7Ao1qWRUVK101u42k
+         bBU31rIzSut26zVeWL6yQD4aJy7P1lNdTC3+0x5Pe+aq/p/wNOryUuMSD76ZjB1Bdczv
+         NITpm+iw1iPHm3bwXGx0DFlvImIBpMeAxUGvA7u6ETIGS+iw6Ce9k/CfGdNbeDidxrXL
+         t1Zv4s+NjTQRkcw1r5TL9qJzPvqO7vfO4UlwxPwR4526zjB040XHqaTG3y+Xy861Xhrr
+         8+cg==
+X-Gm-Message-State: AOJu0YxQHmvCeix9fXHj1Nr05LSG8LG33kc6vJ9khm0YwTo9p4alyVCS
+	MVk//cGDtoUvj323ON+rw5oEKbRnTuUfzad9yD5LJVjo7UFTkMTqFLo+uBz9r4g=
+X-Google-Smtp-Source: AGHT+IHMA7sheFihP/wz+0UUpBWh26J4I+Iug17IMwFpurdhQTex0X62Km8uClHjOvSiTwLEzsQfGg==
+X-Received: by 2002:a05:600c:4707:b0:426:6fc0:5910 with SMTP id 5b1f17b1804b1-42c9f97bde0mr41860165e9.1.1725899329044;
+        Mon, 09 Sep 2024 09:28:49 -0700 (PDT)
+Received: from fedora.fritz.box (aftr-62-216-208-120.dynamic.mnet-online.de. [62.216.208.120])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42caeb8182dsm82078765e9.36.2024.09.09.09.28.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Sep 2024 09:28:48 -0700 (PDT)
+From: Thorsten Blum <thorsten.blum@toblux.com>
+To: kees@kernel.org,
+	gustavoars@kernel.org,
+	andriy.shevchenko@linux.intel.com,
+	mcgrof@kernel.org
+Cc: linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Thorsten Blum <thorsten.blum@toblux.com>
+Subject: [RESEND PATCH v2] params: Annotate struct module_param_attrs with __counted_by()
+Date: Mon,  9 Sep 2024 18:27:26 +0200
+Message-ID: <20240909162725.1805-2-thorsten.blum@toblux.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 
-RnJvbTogVmluY2VudCBNYWlsaG9sDQo+IFNlbnQ6IDA5IFNlcHRlbWJlciAyMDI0IDEyOjUyDQo+
-IA0KPiBJZiB0aGUgb2Zmc2V0b2YoKSBvZiBhIGdpdmVuIGZsZXhpYmxlIGFycmF5IG1lbWJlciAo
-ZmFtKSBpcyBzbWFsbGVyDQo+IHRoYW4gdGhlIHNpemVvZigpIG9mIHRoZSBjb250YWluaW5nIHN0
-cnVjdCwgdGhlbiB0aGUgc3RydWN0X3NpemUoKQ0KPiBtYWNybyByZXBvcnRzIGEgc2l6ZSB3aGlj
-aCBpcyB0b28gYmlnLg0KPiANCj4gVGhpcyBvY2N1cnMgd2hlbiB0aGUgdHdvIGNvbmRpdGlvbnMg
-YmVsb3cgYXJlIG1ldDoNCj4gDQo+ICAgLSB0aGVyZSBhcmUgcGFkZGluZyBieXRlcyBhZnRlciB0
-aGUgcGVudWx0aW1hdGUgbWVtYmVyICh0aGUgbWVtYmVyDQo+ICAgICBwcmVjZWRpbmcgdGhlIGZh
-bSkNCj4gICAtIHRoZSBhbGlnbm1lbnQgb2YgdGhlIGZhbSBpcyBsZXNzIHRoYW4gdGhlIHBlbnVs
-dGltYXRlIG1lbWJlcidzDQo+ICAgICBhbGlnbm1lbnQNCj4gDQo+IEluIHRoYXQgY2FzZSwgdGhl
-IGZhbSBvdmVybGFwcyB3aXRoIHRoZSBwYWRkaW5nIGJ5dGVzIG9mIHRoZQ0KPiBwZW51bHRpbWF0
-ZSBtZW1iZXIuIFRoaXMgYmVoYXZpb3VyIGlzIG5vdCBjYXB0dXJlZCBpbiB0aGUgY3VycmVudA0K
-PiBzdHJ1Y3Rfc2l6ZSgpIG1hY3JvLCBwb3RlbnRpYWxseSByZXN1bHRpbmcgaW4gYW4gb3ZlcmVz
-dGltYXRlZCBzaXplLg0KPiANCj4gQmVsb3cgZXhhbXBsZSBpbGx1c3RyYXRlcyB0aGUgaXNzdWU6
-DQo+IA0KPiAgIHN0cnVjdCBzIHsNCj4gICAJdTY0IGZvbzsNCj4gICAJdTMyIGNvdW50Ow0KPiAg
-IAl1OCBmYW1bXSBfX2NvdW50ZWRfYnkoY291bnQpOw0KPiAgIH07DQo+IA0KPiBBc3N1bWluZyBh
-IDY0IGJpdHMgYXJjaGl0ZWN0dXJlOg0KPiANCj4gICAtIHRoZXJlIGFyZSA0IGJ5dGVzIG9mIHBh
-ZGRpbmcgYWZ0ZXIgcy5jb3VudCAodGhlIHBlbnVsdGltYXRlDQo+ICAgICBtZW1iZXIpDQo+ICAg
-LSBzaXplb2Yoc3RydWN0IHMpIGlzIDE2IGJ5dGVzDQo+ICAgLSB0aGUgb2Zmc2V0IG9mIHMuZmFt
-IGlzIDEyIGJ5dGVzDQo+ICAgLSB0aGUgYWxpZ25tZW50IG9mIHMuZmFtIGlzIDEgYnl0ZQ0KPiAN
-Cj4gVGhlIHNpemVzIGFyZSBhcyBiZWxvdzoNCj4gDQo+ICAgIHMuY291bnQJY3VycmVudCBzdHJ1
-Y3Rfc2l6ZSgpCWFjdHVhbCBzaXplDQo+ICAgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gICAgMAkJMTYJCQkx
-Ng0KPiAgICAxCQkxNwkJCTE2DQo+ICAgIDIJCTE4CQkJMTYNCj4gICAgMwkJMTkJCQkxNg0KPiAg
-ICA0CQkyMAkJCTE2DQo+ICAgIDUJCTIxCQkJMTcNCj4gICAgLgkJLgkJCS4NCj4gICAgLgkJLgkJ
-CS4NCj4gICAgLgkJLgkJCS4NCj4gICAgbgkJc2l6ZW9mKHN0cnVjdCBzKSArIG4JbWF4KHNpemVv
-ZihzdHJ1Y3QgcyksDQo+IAkJCQkJICAgIG9mZnNldG9mKHN0cnVjdCBzLCBmYW0pICsgbikNCg0K
-SSBhY3R1YWxseSBzdXNwZWN0IHRoYXQgaXQgbWF0dGVycyBzbyBpbmZyZXF1ZW50bHkgaXQgaXNu
-J3Qgd29ydGggdGhlIGVmZm9ydC4NCk5vdCBvbmx5IGRvIHlvdSBuZWVkIGEgc3RydWN0dXJlIHdp
-dGggJ3RhaWwgcGFkZGluZycgYnV0IHlvdSBhbHNvIG5lZWQNCnRoZSBzaXplIHRvIGdvIGZyb20g
-b25lIGttYWxsb2MoKSBidWNrZXQgdG8gYW5vdGhlci4NCg0KPiANCj4gQ2hhbmdlIHN0cnVjdF9z
-aXplKCkgZnJvbSB0aGlzIHBzZXVkbyBjb2RlIGxvZ2ljOg0KPiANCj4gICBzaXplb2Yoc3RydWN0
-IHMpICsgc2l6ZW9mKCpzLmZhbSkgKiBzLmNvdW50DQo+IA0KPiB0byB0aGF0IHBzZXVkbyBjb2Rl
-IGxvZ2ljOg0KPiANCj4gICBtYXgoc2l6ZW9mKHN0cnVjdCBzKSwgb2Zmc2V0b2Yoc3RydWN0IHMs
-IGZhbSkgKyBzaXplb2YoKnMuZmFtKSAqIHMuY291bnQpDQo+IA0KPiBIZXJlLCB0aGUgbG93ZXJj
-YXNlIG1heCooKSBtYWNyb3MgY2FuIGNhdXNlIHN0cnVjdF9zaXplKCkgdG8gcmV0dXJuIGENCj4g
-bm9uIGNvbnN0YW50IGludGVnZXIgZXhwcmVzc2lvbiB3aGljaCB3b3VsZCBicmVhayB0aGUgREVG
-SU5FX0ZMRVgoKQ0KPiBtYWNybyBieSBtYWtpbmcgaXQgZGVjbGFyZSBhIHZhcmlhYmxlIGxlbmd0
-aCBhcnJheS4gQmVjYXVzZSBvZiB0aGF0LA0KPiB1c2UgdGhlIHVuc2FmZSBNQVgoKSBtYWNybyBv
-bmx5IGlmIHRoZSBleHByZXNzaW9uIGlzIGNvbnN0YW50IGFuZCB1c2UNCj4gdGhlIHNhZmVyIG1h
-eF90KCkgb3RoZXJ3aXNlLg0KPiANCj4gUmVmZXJlbmNlOiBJU08vSUVDIDk4OTk6MjAxOCDCpzYu
-Ny4yLjEgIlN0cnVjdHVyZSBhbmQgdW5pb24gc3BlY2lmaWVycyIgwrYxOA0KPiANCj4gU2lnbmVk
-LW9mZi1ieTogVmluY2VudCBNYWlsaG9sIDxtYWlsaG9sLnZpbmNlbnRAd2FuYWRvby5mcj4NCj4g
-LS0tDQo+IA0KPiBJIGFsc28gdHJpZWQgdG8gdGhpbmsgb2Ygd2hldGhlciB0aGUgY3VycmVudCBz
-dHJ1Y3Rfc2l6ZSgpIG1hY3JvIGNvdWxkDQo+IGJlIGEgc2VjdXJpdHkgaXNzdWUuDQo+IA0KPiBU
-aGUgb25seSBleGFtcGxlIEkgY2FuIHRoaW5rIG9mIGlzIGlmIHNvbWVvbmUgbWFudWFsbHkgYWxs
-b2NhdGVzIHRoZQ0KPiBleGFjdCBzaXplIGJ1dCB0aGVuIHVzZSB0aGUgY3VycmVudCBzdHJ1Y3Rf
-c2l6ZSgpIG1hY3JvLg0KPiANCj4gRm9yIGV4YW1wbGUgKHJldXNpbmcgdGhlIHN0cnVjdCBzIGZy
-b20gYWJvdmUpOg0KPiANCj4gICB1MzIgY291bnQgPSA1Ow0KPiAgIHN0cnVjdCBzICpzID0ga2Fs
-bG9jKG9mZnNldG9mKHR5cGVvZigqcyksIGZhbSkgKyBjb3VudCk7DQo+ICAgcy0+Y291bnQgPSBj
-b3VudDsNCj4gICBtZW1zZXQocywgMCwgc3RydWN0X3NpemUocywgZmFtLCBjb3VudCkpOyAvKiA0
-IGJ5dGVzIGJ1ZmZlciBvdmVyZmxvdyAqLw0KPiANCj4gSWYgd2UgaGF2ZSBjb25jZXJucyB0aGF0
-IGFib3ZlIHBhdHRlcm4gbWF5IGFjdHVhbGx5IGV4aXN0LCB0aGVuIHRoaXMNCj4gcGF0Y2ggc2hv
-dWxkIGFsc28gZ28gdG8gc3RhYmxlLiBJIHBlcnNvbmFsbHkgdGhpbmsgdGhhdCB0aGUgYWJvdmUg
-aXMgYQ0KPiBiaXQgY29udm9sdXRlZCBhbmQsIGFzIHN1Y2gsIEkgb25seSBzdWdnZXN0IHRoaXMg
-cGF0Y2ggdG8gZ28gdG8gbmV4dC4NCj4gLS0tDQo+ICBpbmNsdWRlL2xpbnV4L292ZXJmbG93Lmgg
-fCA5ICsrKysrKystLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDcgaW5zZXJ0aW9ucygrKSwgMiBkZWxl
-dGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L292ZXJmbG93LmggYi9p
-bmNsdWRlL2xpbnV4L292ZXJmbG93LmgNCj4gaW5kZXggMGM3ZTNkY2ZlODY3Li4xMzg0ODg3ZjM2
-ODQgMTAwNjQ0DQo+IC0tLSBhL2luY2x1ZGUvbGludXgvb3ZlcmZsb3cuaA0KPiArKysgYi9pbmNs
-dWRlL2xpbnV4L292ZXJmbG93LmgNCj4gQEAgLTUsNiArNSw3IEBADQo+ICAjaW5jbHVkZSA8bGlu
-dXgvY29tcGlsZXIuaD4NCj4gICNpbmNsdWRlIDxsaW51eC9saW1pdHMuaD4NCj4gICNpbmNsdWRl
-IDxsaW51eC9jb25zdC5oPg0KPiArI2luY2x1ZGUgPGxpbnV4L21pbm1heC5oPg0KPiANCj4gIC8q
-DQo+ICAgKiBXZSBuZWVkIHRvIGNvbXB1dGUgdGhlIG1pbmltdW0gYW5kIG1heGltdW0gdmFsdWVz
-IHJlcHJlc2VudGFibGUgaW4gYSBnaXZlbg0KPiBAQCAtMzY5LDggKzM3MCwxMiBAQCBzdGF0aWMg
-aW5saW5lIHNpemVfdCBfX211c3RfY2hlY2sgc2l6ZV9zdWIoc2l6ZV90IG1pbnVlbmQsIHNpemVf
-dCBzdWJ0cmFoZW5kKQ0KPiAgICovDQo+ICAjZGVmaW5lIHN0cnVjdF9zaXplKHAsIG1lbWJlciwg
-Y291bnQpCQkJCQlcDQo+ICAJX19idWlsdGluX2Nob29zZV9leHByKF9faXNfY29uc3RleHByKGNv
-dW50KSwJCQlcDQo+IC0JCXNpemVvZigqKHApKSArIGZsZXhfYXJyYXlfc2l6ZShwLCBtZW1iZXIs
-IGNvdW50KSwJXA0KPiAtCQlzaXplX2FkZChzaXplb2YoKihwKSksIGZsZXhfYXJyYXlfc2l6ZShw
-LCBtZW1iZXIsIGNvdW50KSkpDQo+ICsJCU1BWChzaXplb2YoKihwKSksCQkJCQlcDQo+ICsJCSAg
-ICBvZmZzZXRvZih0eXBlb2YoKihwKSksIG1lbWJlcikgKwkJCVwNCj4gKwkJCWZsZXhfYXJyYXlf
-c2l6ZShwLCBtZW1iZXIsIGNvdW50KSksCQlcDQo+ICsJCW1heF90KHNpemVfdCwgc2l6ZW9mKCoo
-cCkpLAkJCQlcDQo+ICsJCSAgICAgIHNpemVfYWRkKG9mZnNldG9mKHR5cGVvZigqKHApKSwgbWVt
-YmVyKSwJCVwNCj4gKwkJCSAgICAgICBmbGV4X2FycmF5X3NpemUocCwgbWVtYmVyLCBjb3VudCkp
-KSkNCg0KSSBkb24ndCB0aGluayB5b3UgbmVlZCBtYXhfdCgpIGhlcmUsIGEgcGxhaW4gbWF4KCkg
-c2hvdWxkIHN1ZmZpY2UuDQoNCglEYXZpZA0KDQo+IA0KPiAgLyoqDQo+ICAgKiBzdHJ1Y3Rfc2l6
-ZV90KCkgLSBDYWxjdWxhdGUgc2l6ZSBvZiBzdHJ1Y3R1cmUgd2l0aCB0cmFpbGluZyBmbGV4aWJs
-ZSBhcnJheQ0KPiAtLQ0KPiAyLjI1LjENCj4gDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtl
-c2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBV
-Sw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCg==
+Add the __counted_by compiler attribute to the flexible array member
+attrs to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
+CONFIG_FORTIFY_SOURCE.
+
+Increment num before adding a new param_attribute to the attrs array and
+adjust the array index accordingly. Increment num immediately after the
+first reallocation such that the reallocation for the NULL terminator
+only needs to add 1 (instead of 2) to mk->mp->num.
+
+Use struct_size() instead of manually calculating the size for the
+reallocation.
+
+Use krealloc_array() for the additional NULL terminator.
+
+Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+---
+Changes in v2:
+- Use krealloc_array() as suggested by Andy Shevchenko
+- Link to v1: https://lore.kernel.org/linux-kernel/20240823123300.37574-1-thorsten.blum@toblux.com/
+---
+ kernel/params.c | 29 +++++++++++++----------------
+ 1 file changed, 13 insertions(+), 16 deletions(-)
+
+diff --git a/kernel/params.c b/kernel/params.c
+index 2e447f8ae183..5f6643676697 100644
+--- a/kernel/params.c
++++ b/kernel/params.c
+@@ -551,7 +551,7 @@ struct module_param_attrs
+ {
+ 	unsigned int num;
+ 	struct attribute_group grp;
+-	struct param_attribute attrs[];
++	struct param_attribute attrs[] __counted_by(num);
+ };
+ 
+ #ifdef CONFIG_SYSFS
+@@ -651,35 +651,32 @@ static __modinit int add_sysfs_param(struct module_kobject *mk,
+ 	}
+ 
+ 	/* Enlarge allocations. */
+-	new_mp = krealloc(mk->mp,
+-			  sizeof(*mk->mp) +
+-			  sizeof(mk->mp->attrs[0]) * (mk->mp->num + 1),
++	new_mp = krealloc(mk->mp, struct_size(mk->mp, attrs, mk->mp->num + 1),
+ 			  GFP_KERNEL);
+ 	if (!new_mp)
+ 		return -ENOMEM;
+ 	mk->mp = new_mp;
++	mk->mp->num++;
+ 
+ 	/* Extra pointer for NULL terminator */
+-	new_attrs = krealloc(mk->mp->grp.attrs,
+-			     sizeof(mk->mp->grp.attrs[0]) * (mk->mp->num + 2),
+-			     GFP_KERNEL);
++	new_attrs = krealloc_array(mk->mp->grp.attrs, mk->mp->num + 1,
++				   sizeof(mk->mp->grp.attrs[0]), GFP_KERNEL);
+ 	if (!new_attrs)
+ 		return -ENOMEM;
+ 	mk->mp->grp.attrs = new_attrs;
+ 
+ 	/* Tack new one on the end. */
+-	memset(&mk->mp->attrs[mk->mp->num], 0, sizeof(mk->mp->attrs[0]));
+-	sysfs_attr_init(&mk->mp->attrs[mk->mp->num].mattr.attr);
+-	mk->mp->attrs[mk->mp->num].param = kp;
+-	mk->mp->attrs[mk->mp->num].mattr.show = param_attr_show;
++	memset(&mk->mp->attrs[mk->mp->num - 1], 0, sizeof(mk->mp->attrs[0]));
++	sysfs_attr_init(&mk->mp->attrs[mk->mp->num - 1].mattr.attr);
++	mk->mp->attrs[mk->mp->num - 1].param = kp;
++	mk->mp->attrs[mk->mp->num - 1].mattr.show = param_attr_show;
+ 	/* Do not allow runtime DAC changes to make param writable. */
+ 	if ((kp->perm & (S_IWUSR | S_IWGRP | S_IWOTH)) != 0)
+-		mk->mp->attrs[mk->mp->num].mattr.store = param_attr_store;
++		mk->mp->attrs[mk->mp->num - 1].mattr.store = param_attr_store;
+ 	else
+-		mk->mp->attrs[mk->mp->num].mattr.store = NULL;
+-	mk->mp->attrs[mk->mp->num].mattr.attr.name = (char *)name;
+-	mk->mp->attrs[mk->mp->num].mattr.attr.mode = kp->perm;
+-	mk->mp->num++;
++		mk->mp->attrs[mk->mp->num - 1].mattr.store = NULL;
++	mk->mp->attrs[mk->mp->num - 1].mattr.attr.name = (char *)name;
++	mk->mp->attrs[mk->mp->num - 1].mattr.attr.mode = kp->perm;
+ 
+ 	/* Fix up all the pointers, since krealloc can move us */
+ 	for (i = 0; i < mk->mp->num; i++)
+-- 
+2.46.0
 
