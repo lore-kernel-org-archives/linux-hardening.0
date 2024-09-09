@@ -1,112 +1,94 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from forward102d.mail.yandex.net (forward102d.mail.yandex.net [178.154.239.213])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0706216631C
-	for <linux-hardening@vger.kernel.org>; Mon,  9 Sep 2024 08:07:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6B0B1B1502;
+	Mon,  9 Sep 2024 08:25:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.213
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725869281; cv=none; b=U6tTvt6RpRzPrvOVgIc/EwVx0XwpI+wX4RZh5T1l2GSl3EnY9kqatOH4ghM6P4hkf6rSMCeOt51F1FnQSirE2cd3Ipn6JKz9SKDmXwlAhpgMI6e1OVtAPCl/3RLCQPhc9VixT3tm1A7sZL0QQzeReqOxHPRz9aSpfl57MdIZUQA=
+	t=1725870323; cv=none; b=cmkBlUxGJG8SpKur8OY7JYFjfNB1nAhgsGeZeu0BANgcj8uFQx5iKsa9ZSoQWE1xNaKPhSt2gSSO/W/qn5jPUb4g6y4wbtPLOaVMGZtzEtYhR9AlpvgQFNVfoHsyKhikX5yYnC8n30+ibR7w4t7HuHvq0gg1bYEpGMsY3x0vRhI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725869281; c=relaxed/simple;
-	bh=FwYL72zPCeaYPhZaaTOiWCt3b2JcvUOUEMvOkx5AAH8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=M9BrJed8rx57vR4PSX4XJeEHx7tDFhwuwrog1iwoZQWTO8UZzX7PbdbO/2FX6JIgMqQZKMyqeFGibvI5SJih16hYc0yi/iSYGmlp4UWDW8QhSNL/gelqESeREyWy4/alR9QfaCVvJOWF/EUpGkcaC+JNNbdKa2HddXmioHVyUNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4X2KDW1cyDz1P9NG;
-	Mon,  9 Sep 2024 16:06:51 +0800 (CST)
-Received: from dggpeml500022.china.huawei.com (unknown [7.185.36.66])
-	by mail.maildlp.com (Postfix) with ESMTPS id 0C370180AE7;
-	Mon,  9 Sep 2024 16:07:55 +0800 (CST)
-Received: from [10.67.111.104] (10.67.111.104) by
- dggpeml500022.china.huawei.com (7.185.36.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Mon, 9 Sep 2024 16:07:54 +0800
-Message-ID: <67e5c363-5768-42cb-8dd0-3bab35aa38f5@huawei.com>
-Date: Mon, 9 Sep 2024 16:07:54 +0800
+	s=arc-20240116; t=1725870323; c=relaxed/simple;
+	bh=bm1LV9qtp3nNMqBUb5X5BLerwxqFNzr+qcd8+fYzMAE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IgcspaneDig2s8ASULI8zLKCjptMeJPi6IYBW8hXIApfzdLySgKXsMbVL2FCKDaERdGR5Nw51D7W5dE4K8l7PaX6Qh6w2VFVv7tgiVukc7Gn08LrpqpZd9Hdy3LNwhYFAomRrmdmPxD4sTdPLcWZLQ0CDEs3OI0tw4HChWJUF7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=RMoTpGVQ; arc=none smtp.client-ip=178.154.239.213
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="RMoTpGVQ"
+Received: from mail-nwsmtp-smtp-production-main-24.iva.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-24.iva.yp-c.yandex.net [IPv6:2a02:6b8:c0c:9a26:0:640:21cf:0])
+	by forward102d.mail.yandex.net (Yandex) with ESMTPS id 5FB8960952;
+	Mon,  9 Sep 2024 11:25:11 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-24.iva.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id APciWrbOeSw0-j93roYy6;
+	Mon, 09 Sep 2024 11:25:10 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
+	t=1725870310; bh=x/7HsQnXUHIdB1XBeM+5CtEP7DgTHgT0oB6Ls1mjLgQ=;
+	h=Message-ID:Date:Cc:Subject:To:From;
+	b=RMoTpGVQCqRDUhenZySkkLkW1FRL47CjTKBuxHOi3+Xz8DRaGJ+NEchxMfgg0HPpq
+	 4YjE9pqfWYRtXOsgjshQ4xNAZTeGP56kPlG+BYKu0JN1K/mZQgw8NawpgDpVbBf3YN
+	 oQYiRbS6t3zcTPlUJYXeQTKAxBr4fE0iMJabtz40=
+Authentication-Results: mail-nwsmtp-smtp-production-main-24.iva.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
+From: Dmitry Antipov <dmantipov@yandex.ru>
+To: Johannes Berg <johannes.berg@intel.com>
+Cc: Kalle Valo <kvalo@kernel.org>,
+	linux-wireless@vger.kernel.org,
+	Kees Cook <kees@kernel.org>,
+	linux-hardening@vger.kernel.org,
+	lvc-project@linuxtesting.org,
+	Dmitry Antipov <dmantipov@yandex.ru>
+Subject: [PATCH] wifi: wireless: fix two more possible UBSAN-detected off-by-one errors
+Date: Mon,  9 Sep 2024 11:23:48 +0300
+Message-ID: <20240909082348.1080511-1-dmantipov@yandex.ru>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH -next v2 0/9] coccinelle: Add some rules for
- string_chioces helpers.
-To: <kees@kernel.org>, <andy@kernel.org>, <Julia.Lawall@inria.fr>,
-	<nicolas.palix@imag.fr>
-CC: <linux-hardening@vger.kernel.org>, <cocci@inria.fr>
-References: <20240904091451.3328272-1-lihongbo22@huawei.com>
-Content-Language: en-US
-From: Hongbo Li <lihongbo22@huawei.com>
-In-Reply-To: <20240904091451.3328272-1-lihongbo22@huawei.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- dggpeml500022.china.huawei.com (7.185.36.66)
+Content-Transfer-Encoding: 8bit
 
+Although not reproduced in practice, these two cases may be
+considered by UBSAN as off-by-one errors. So fix them in the
+same way as in commit a26a5107bc52 ("wifi: cfg80211: fix UBSAN
+noise in cfg80211_wext_siwscan()").
 
-On 2024/9/4 17:14, Hongbo Li wrote:
-> We found that many of the detection rules for helpers in
-> string_choices.h are missing. This series of patches is
-> intended to complete these rules. We have verified in the
-> latest kernel tree that these rules can detect many places
-> where the string choices helper can be used as a replacement.
-> 
-> Here are some of the examples:
-> 
-> ```
-> drivers/gpio/gpio-mvebu.c:917:6-18: opportunity for str_lo_hi(in_pol & msk)
-> drivers/pinctrl/nomadik/pinctrl-nomadik.c:1109:16-19: opportunity for str_high_low(val)
-> drivers/pinctrl/nomadik/pinctrl-nomadik.c:1116:13-16: opportunity for str_high_low(val
-> drivers/gpio/gpio-wcove.c:396:6-16: opportunity for str_hi_lo(ctli & 0x1)
-> drivers/pci/hotplug/pnv_php.c:367:10-41: opportunity for str_on_off(state == OPAL_PCI_SLOT_POWER_ON)
-> drivers/mtd/nand/raw/brcmnand/brcmnand.c:1844:40-63: opportunity for str_read_write(edu_cmd == EDU_CMD_READ)
-> drivers/mtd/nand/raw/brcmnand/brcmnand.c:1437:33-35: opportunity for str_on_off(wp)
-> drivers/mtd/nand/raw/brcmnand/brcmnand.c:1467:9-11: opportunity for str_on_off(wp)
-> drivers/greybus/svc.c:76:9-37: opportunity for str_enabled_disabled(gb_svc_watchdog_enabled ( svc ))
-> drivers/thermal/thermal_sysfs.c:59:29-36: opportunity for str_enabled_disabled(enabled)
-> drivers/dma-buf/st-dma-fence.c:508:10-35: opportunity for str_yes_no(dma_fence_is_signaled ( f2 ))
-> drivers/mmc/host/omap_hsmmc.c:1644:7-43: opportunity for str_enabled_disabled(host -> flags & HSMMC_SDIO_IRQ_ENABLED)
-> drivers/input/mouse/elan_i2c_core.c:202:2-4: opportunity for str_on_off(on)
-> drivers/macintosh/via-pmu.c:626:10-28: opportunity for str_enabled_disabled(option_server_mode)
-> drivers/usb/mtu3/mtu3_debugfs.c:482:5-39: opportunity for str_on_off(regulator_is_enabled ( otg_sx -> vbus ))
-> drivers/net/wireless/intel/iwlwifi/mvm/tt.c:355:4-10: opportunity for str_enable_disable(enable)
-> drivers/nfc/pn544/i2c.c:215:7-20: opportunity for str_low_high(polarity == 0)
-> drivers/media/tuners/tda18250.c:110:3-12: opportunity for str_true_false(triggered)
-> drivers/mtd/tests/torturetest.c:191:30-35: opportunity for str_enabled_disabled(check)
-> drivers/bus/intel-ixp4xx-eb.c:225:5-8: opportunity for str_enabled_disabled(val)
-> drivers/net/ethernet/huawei/hinic/hinic_port.c:1133:3-9: opportunity for str_enable_disable(enable)
-> drivers/net/ethernet/huawei/hinic/hinic_port.c:1245:3-9: opportunity for str_enable_disable(pfc_en)
-> drivers/media/pci/cx23885/cimax2.c:227:4-8: opportunity for str_read_write(read)
-> drivers/media/usb/em28xx/em28xx-video.c:941:4-9: opportunity for str_enabled_disabled(flags)
-> ```
-> 
-> Changes since v1:
->    - Add more rules for helpers in string_choices.h.
-> 
-> Thanks,
-> Hongbo.
-> 
-> Hongbo Li (9):
->    coccinelle: Add rules to find str_true_false() replacements
->    coccinelle: Add rules to find str_false_true() replacements
->    coccinelle: Add rules to find str_hi{gh}_lo{w}() replacements
->    coccinelle: Add rules to find str_lo{w}_hi{gh}() replacements
->    coccinelle: Add rules to find str_enable{d}_disable{d}() replacements
->    coccinelle: Add rules to find str_read_write() replacements
->    coccinelle: Add rules to find str_write_read() replacements
->    coccinelle: Add rules to find str_on_off() replacements
->    coccinelle: Add rules to find str_yes_no() replacements
-> 
+Fixes: 807f8a8c3004 ("cfg80211/nl80211: add support for scheduled scans")
+Fixes: 5ba63533bbf6 ("cfg80211: fix alignment problem in scan request")
+Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
+---
+ net/wireless/nl80211.c | 3 ++-
+ net/wireless/sme.c     | 3 ++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
-Sorry for the interruption. Can these rules be added to for-next/hardening?
+diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
+index 8bad3c6db39d..9ab777e0bd4d 100644
+--- a/net/wireless/nl80211.c
++++ b/net/wireless/nl80211.c
+@@ -9778,7 +9778,8 @@ nl80211_parse_sched_scan(struct wiphy *wiphy, struct wireless_dev *wdev,
+ 		return ERR_PTR(-ENOMEM);
+ 
+ 	if (n_ssids)
+-		request->ssids = (void *)&request->channels[n_channels];
++		request->ssids = (void *)request +
++			struct_size(request, channels, n_channels);
+ 	request->n_ssids = n_ssids;
+ 	if (ie_len) {
+ 		if (n_ssids)
+diff --git a/net/wireless/sme.c b/net/wireless/sme.c
+index d9d7bf8bb5c1..431da30817a6 100644
+--- a/net/wireless/sme.c
++++ b/net/wireless/sme.c
+@@ -115,7 +115,8 @@ static int cfg80211_conn_scan(struct wireless_dev *wdev)
+ 		n_channels = i;
+ 	}
+ 	request->n_channels = n_channels;
+-	request->ssids = (void *)&request->channels[n_channels];
++	request->ssids = (void *)request +
++		struct_size(request, channels, n_channels);
+ 	request->n_ssids = 1;
+ 
+ 	memcpy(request->ssids[0].ssid, wdev->conn->params.ssid,
+-- 
+2.46.0
 
-Thanks,
-Hongbo
-
->   scripts/coccinelle/api/string_choices.cocci | 276 ++++++++++++++++++++
->   1 file changed, 276 insertions(+)
-> 
