@@ -1,67 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from forward102d.mail.yandex.net (forward102d.mail.yandex.net [178.154.239.213])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FE2D1AC88E;
-	Mon,  9 Sep 2024 09:01:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01E122582;
+	Mon,  9 Sep 2024 09:08:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.213
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725872480; cv=none; b=V7WfgGU1iDGRyQc4aiqtBWmusybghC/L0k+bA0dIyKuGTXCBs3dVuIPcTBU9KO5TQtydWx1RIifeQEIsWZKH7edIL4GYZli733nb5EFdofROu34LZVppRKUq9O8vgeL/D+TvY0IvxA9wy063h6WZ+3j0ecYLUU7Y+R5sniznOOU=
+	t=1725872925; cv=none; b=jB4rU8NlnG871GITTmtB6pnd1PtM+SfDxET0L6fuaLRekCHW7kIKYHJPA68idt/0/YzZ5pR76oDwP89UI1QBgz9+H12XoLxVMPCKvCCjCMftfhttOYeEKYjOpfSSSt0CZ92gSn1u4ubFU2HrUYOsJeqbuCHp5sSP+8AhuRg6L3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725872480; c=relaxed/simple;
-	bh=4d9kNtPYicQpBDwPC3UVFcQ+JcCZq+LdEgthPNhOu4U=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
-	 MIME-Version:Content-Type; b=Dly9KFl7CfyLNhHPz/goejSYTWkaFGw2DM6AbSyLyMZnoSLGeBtiIPJRjFGOqVUdJW/NIh1V2HzVd6n8KozPRIuXYoGGiYM/C7o+NOBxMbevW/sxR+amBGDtgXU5rsoYiLnewHmCDjr95w+xwBuOGEME2csE/6G3zS+JK/7jt/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K5YHHcDu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1725872925; c=relaxed/simple;
+	bh=33hAWHkSpBt7ODHZtQgbCNFOdiQ+Yfj/4Z7436WAEiM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YviiEJ2vnB204fN0EIwwy09xlo7U+lpKLvGidXe5pHlg0QQ9qGpNPD5vBt3HH7rON7/tK5Kfzb+BMs012zZeN0eOoNyjVXjf+tr/5Xo6rOx8DuJoB/OSTYjDphdSfuF5lQzKkW174KhuNwHX5mfzKeVTQjwPhFWoyKKT45uwLns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=YaGaPqhE; arc=none smtp.client-ip=178.154.239.213
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K5YHHcDu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A442DC4CEC8;
-	Mon,  9 Sep 2024 09:01:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725872480;
-	bh=4d9kNtPYicQpBDwPC3UVFcQ+JcCZq+LdEgthPNhOu4U=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=K5YHHcDuf7FUVpd+cokb79EzUJ68K6X6euqr/DgSBXNtX00rncScPRJGeUmn4WCIc
-	 BakduMd2qwp3nuIFxx+a56jUD3X3u7CLQXOCZ3RJL9FKOmvNqIQb839eSP7cj82NCh
-	 139Z8FUupDwIUF7DuoA9W6aTvJIlzJNlEYk9aA8oqlrV7fpwtmngH2sHDD4rXTxo74
-	 jPue54+VyZSCgTNWTG6eVhLszQHoPk7rOmY8aDdj4eBddrpY89VeycoaFBPpJtazhQ
-	 laQoxCqsjQv8KLk3iWpIvCbUo0mspJRqZT2Qcjc08r+aJh5sD8XB9KVmssQVmRar4I
-	 inXx0UzMEl8cQ==
-From: Kalle Valo <kvalo@kernel.org>
-To: Dmitry Antipov <dmantipov@yandex.ru>
-Cc: Johannes Berg <johannes.berg@intel.com>,
-  linux-wireless@vger.kernel.org,  Kees Cook <kees@kernel.org>,
-  linux-hardening@vger.kernel.org,  lvc-project@linuxtesting.org
-Subject: Re: [PATCH] wifi: wireless: fix two more possible UBSAN-detected
- off-by-one errors
-References: <20240909082348.1080511-1-dmantipov@yandex.ru>
-Date: Mon, 09 Sep 2024 12:01:16 +0300
-In-Reply-To: <20240909082348.1080511-1-dmantipov@yandex.ru> (Dmitry Antipov's
-	message of "Mon, 9 Sep 2024 11:23:48 +0300")
-Message-ID: <87r09tgq03.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="YaGaPqhE"
+Received: from mail-nwsmtp-smtp-production-main-39.myt.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-39.myt.yp-c.yandex.net [IPv6:2a02:6b8:c12:3294:0:640:b20b:0])
+	by forward102d.mail.yandex.net (Yandex) with ESMTPS id 00A766092E;
+	Mon,  9 Sep 2024 12:08:39 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-39.myt.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id b8dULblOhSw0-RQ1Kd2M8;
+	Mon, 09 Sep 2024 12:08:38 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
+	t=1725872918; bh=C5pECD2oCP4o024Adfiz7aio3NrLsxgmJpTXnnuNr5E=;
+	h=Message-ID:Date:Cc:Subject:To:From;
+	b=YaGaPqhEpKSi+tu8O8RMkSjVjqDv5D2GBVeTL+eSF93Qcd2NvHHwm5o/RQj8D1hwB
+	 aX40eg+GCg6fjSPrQbyz6jKg/LqbWmTI0ijO2CFV5/74IYAYUMMUqVAlD8xUpgkAco
+	 CZywU6/iEdKgN16YYexeqHO6+dvnC8PelBfgE19I=
+Authentication-Results: mail-nwsmtp-smtp-production-main-39.myt.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
+From: Dmitry Antipov <dmantipov@yandex.ru>
+To: Johannes Berg <johannes.berg@intel.com>
+Cc: Kalle Valo <kvalo@kernel.org>,
+	linux-wireless@vger.kernel.org,
+	Kees Cook <kees@kernel.org>,
+	linux-hardening@vger.kernel.org,
+	lvc-project@linuxtesting.org,
+	Dmitry Antipov <dmantipov@yandex.ru>
+Subject: [PATCH v2] wifi: cfg80211: fix two more possible UBSAN-detected off-by-one errors
+Date: Mon,  9 Sep 2024 12:08:06 +0300
+Message-ID: <20240909090806.1091956-1-dmantipov@yandex.ru>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-Dmitry Antipov <dmantipov@yandex.ru> writes:
+Although not reproduced in practice, these two cases may be
+considered by UBSAN as off-by-one errors. So fix them in the
+same way as in commit a26a5107bc52 ("wifi: cfg80211: fix UBSAN
+noise in cfg80211_wext_siwscan()").
 
-> Although not reproduced in practice, these two cases may be
-> considered by UBSAN as off-by-one errors. So fix them in the
-> same way as in commit a26a5107bc52 ("wifi: cfg80211: fix UBSAN
-> noise in cfg80211_wext_siwscan()").
->
-> Fixes: 807f8a8c3004 ("cfg80211/nl80211: add support for scheduled scans")
-> Fixes: 5ba63533bbf6 ("cfg80211: fix alignment problem in scan request")
-> Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
+Fixes: 807f8a8c3004 ("cfg80211/nl80211: add support for scheduled scans")
+Fixes: 5ba63533bbf6 ("cfg80211: fix alignment problem in scan request")
+Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
+---
+v2: fix title prefix as noticed by Kalle
+---
+ net/wireless/nl80211.c | 3 ++-
+ net/wireless/sme.c     | 3 ++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
-The title prefix should be "wifi: cfg80211:", not sure if Johannes can
-fix that or not.
-
+diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
+index 8bad3c6db39d..9ab777e0bd4d 100644
+--- a/net/wireless/nl80211.c
++++ b/net/wireless/nl80211.c
+@@ -9778,7 +9778,8 @@ nl80211_parse_sched_scan(struct wiphy *wiphy, struct wireless_dev *wdev,
+ 		return ERR_PTR(-ENOMEM);
+ 
+ 	if (n_ssids)
+-		request->ssids = (void *)&request->channels[n_channels];
++		request->ssids = (void *)request +
++			struct_size(request, channels, n_channels);
+ 	request->n_ssids = n_ssids;
+ 	if (ie_len) {
+ 		if (n_ssids)
+diff --git a/net/wireless/sme.c b/net/wireless/sme.c
+index d9d7bf8bb5c1..431da30817a6 100644
+--- a/net/wireless/sme.c
++++ b/net/wireless/sme.c
+@@ -115,7 +115,8 @@ static int cfg80211_conn_scan(struct wireless_dev *wdev)
+ 		n_channels = i;
+ 	}
+ 	request->n_channels = n_channels;
+-	request->ssids = (void *)&request->channels[n_channels];
++	request->ssids = (void *)request +
++		struct_size(request, channels, n_channels);
+ 	request->n_ssids = 1;
+ 
+ 	memcpy(request->ssids[0].ssid, wdev->conn->params.ssid,
 -- 
-https://patchwork.kernel.org/project/linux-wireless/list/
+2.46.0
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
