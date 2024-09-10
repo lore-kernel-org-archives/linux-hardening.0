@@ -1,95 +1,79 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B67B418A6DF;
-	Tue, 10 Sep 2024 09:37:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E85A130495;
+	Tue, 10 Sep 2024 15:00:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725961075; cv=none; b=mY2y6benNNyc31jtFz6kJI+AoXIbCsc9GT/lI84f3C7338G30z8jBIMnC76dwpCnMl9rn0NWXFTG1Xm7ge9UOtl65CJ/JrG1WcgDQ450sOtM42kKExIShnIBQHDjeBQz4Waicz3+LJ5w8IrUq6aMQi1yjV1Fg0gzXzXi/Mt8lY4=
+	t=1725980431; cv=none; b=CXdeKMASVxIbYB1N5E9JjqK1Fw7x9SJvtiYs23XL7bS98Bx8CEBRSXF3yoW30krjOkRG/WoCVerfsYIfCnWphPpAdmP6iVh9BK+0mow/R81fzQyPOP6hzFBMz3cr/96RyvydroHtcaP3WP6Cjlc2oUJVZWu9jy2aHgZjmJisMms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725961075; c=relaxed/simple;
-	bh=yjDJud8W9puFv5VkCEq64ew6K8UyJBnq0jOKzD0rCwQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iEnbPwH2XRHGw2k5YGVf3E4FcwgXteBxb50Oa13YZosJXBO38LDe+JkVZEE1I59OhQQFTB1NpRaIXspUsm1MR/Jq6alXcLKlleNUR41Cunswv9n+AqhrpIs0kvsTRAuH4nz55fbvpKskUcZ6bgB2vduntPtzkQm6zFby/DmnYRY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nkjg8dTC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1725980431; c=relaxed/simple;
+	bh=7vVe+kPQm7LdEuy1q3f3ICanaOlQ9fti1HVs2FHxLLk=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=uZ1Oo4EzfeckR8WuO6xUL/0hLvHjEsA7n/p/Vqh6yUDYRdcskMR0aPoayd2hmFJY5SpTK6wo7CXq/gZuzE7K86KG9vmIcoEk5grDSwhFe/v5Sdh0PVsxWD0nfFhyNTFvZmabWZrX0vfVO5rpgz+Gl1ORYD8bgCJJglcPu0ReqY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tA8SZ7g/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nkjg8dTC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81CB0C4CEC3;
-	Tue, 10 Sep 2024 09:37:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tA8SZ7g/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5D34C4CEC3;
+	Tue, 10 Sep 2024 15:00:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725961075;
-	bh=yjDJud8W9puFv5VkCEq64ew6K8UyJBnq0jOKzD0rCwQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nkjg8dTCx7cKeL+RgZG6evo0MhXjZs8TLK80v5xpfB0AXZRPQFE7YSoKx6uMHKDKn
-	 r1yw6w2euGfXTuDzJqbVK2ByZGotyU2JZqVxC689ea6YS/bootdkn1YEd64ZN/IDzm
-	 FJthGYb8u4xAEoSiqCD73qWYHmm+7E/IXK1Xwuj0zWcyyVYFMxcQNEZ756ZmwYdOCB
-	 bFZmS3vYYngNRkiRq04/HL3/f/Ov0ZpLUctgZT4OqWd8uM+tXx8jH4/ikF+IvHdlJl
-	 KRd2OHpUBuM3pTrrMyNop4+oARU+j/UlkRpmM+SEPxBcJutraQc94yf2ZBQbjFoPzp
-	 KAXDEju9zT7ww==
-Date: Tue, 10 Sep 2024 10:37:51 +0100
-From: Simon Horman <horms@kernel.org>
-To: Justin Stitt <justinstitt@google.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, Kees Cook <kees@kernel.org>
-Subject: Re: [PATCH] caif: replace deprecated strncpy with strscpy_pad
-Message-ID: <20240910093751.GA572255@kernel.org>
-References: <20240909-strncpy-net-caif-chnl_net-c-v1-1-438eb870c155@google.com>
+	s=k20201202; t=1725980431;
+	bh=7vVe+kPQm7LdEuy1q3f3ICanaOlQ9fti1HVs2FHxLLk=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=tA8SZ7g/4QP4sGbMqHiBbBzbBV/Rh+DoYKeKl5Ii/YQyZRIRUUMHOxFfCVaBrJXiE
+	 natEnmjxUIDJwPaXy6LLAjlX6s/4RIVGmPhnsh4Ca+S8X4e/TJR9DKaHq6WLBCYXkU
+	 oSI8ZciywI9mPw/B3+7+jYWZKExbXcWbNceUU6c0cqw49SXtZTpesQomckLpDeC5AR
+	 LDQtvzeZjkcHSFZ9WNgNL4XiQ690k3WNf93muaFhn62LBreMaql3JaR5UhgMe975KA
+	 6SJmDVW7lB5powxsHmPdmfWUMYz4MLJvzjz8vV4lzE+VVCFlVDPWF1gv0HrIP1DG6D
+	 t9D2lGbAuJauw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 3400A3804CAB;
+	Tue, 10 Sep 2024 15:00:33 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240909-strncpy-net-caif-chnl_net-c-v1-1-438eb870c155@google.com>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] Bluetooth: replace deprecated strncpy with strscpy_pad
+From: patchwork-bot+bluetooth@kernel.org
+Message-Id: 
+ <172598043203.283578.7669553872558102167.git-patchwork-notify@kernel.org>
+Date: Tue, 10 Sep 2024 15:00:32 +0000
+References: <20240905-strncpy-net-bluetooth-cmtp-capi-c-v1-1-c2d49caa2d36@google.com>
+In-Reply-To: <20240905-strncpy-net-bluetooth-cmtp-capi-c-v1-1-c2d49caa2d36@google.com>
+To: Justin Stitt <justinstitt@google.com>
+Cc: isdn@linux-pingi.de, marcel@holtmann.org, johan.hedberg@gmail.com,
+ luiz.dentz@gmail.com, netdev@vger.kernel.org,
+ linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kees@kernel.org, linux-hardening@vger.kernel.org
 
-On Mon, Sep 09, 2024 at 04:39:28PM -0700, Justin Stitt wrote:
-> strncpy() is deprecated for use on NUL-terminated destination strings [1] and
-> as such we should prefer more robust and less ambiguous string interfaces.
-> 
-> Towards the goal of [2], replace strncpy() with an alternative that
-> guarantees NUL-termination and NUL-padding for the destination buffer.
+Hello:
 
-Hi Justin,
+This patch was applied to bluetooth/bluetooth-next.git (master)
+by Luiz Augusto von Dentz <luiz.von.dentz@intel.com>:
 
-I am curious to know why the _pad variant was chosen.
+On Thu, 05 Sep 2024 15:54:40 -0700 you wrote:
+> strncpy() is deprecated for use on NUL-terminated destination strings [0]
+> and as such we should prefer more robust and less ambiguous string interfaces.
+> 
+> The CAPI (part II) [1] states that the manufacturer id should be a
+> "zero-terminated ASCII string" and should "always [be] zero-terminated."
+> 
+> Much the same for the serial number: "The serial number, a seven-digit
+> number coded as a zero-terminated ASCII string".
+> 
+> [...]
 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://github.com/KSPP/linux/issues/90 [2]
-> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
-> ---
-> Note: build-tested only.
-> ---
->  net/caif/chnl_net.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/net/caif/chnl_net.c b/net/caif/chnl_net.c
-> index 47901bd4def1..ff37dceefa26 100644
-> --- a/net/caif/chnl_net.c
-> +++ b/net/caif/chnl_net.c
-> @@ -347,7 +347,7 @@ static int chnl_net_init(struct net_device *dev)
->  	struct chnl_net *priv;
->  	ASSERT_RTNL();
->  	priv = netdev_priv(dev);
-> -	strncpy(priv->name, dev->name, sizeof(priv->name));
-> +	strscpy_pad(priv->name, dev->name);
->  	INIT_LIST_HEAD(&priv->list_field);
->  	return 0;
->  }
-> 
-> ---
-> base-commit: bc83b4d1f08695e85e85d36f7b803da58010161d
-> change-id: 20240909-strncpy-net-caif-chnl_net-c-a505e955e697
-> 
-> Best regards,
-> --
-> Justin Stitt <justinstitt@google.com>
-> 
-> 
+Here is the summary with links:
+  - Bluetooth: replace deprecated strncpy with strscpy_pad
+    https://git.kernel.org/bluetooth/bluetooth-next/c/278dcc36b992
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
