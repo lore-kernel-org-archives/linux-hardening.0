@@ -1,214 +1,143 @@
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout1-smtp.messagingengine.com (fout1-smtp.messagingengine.com [103.168.172.144])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C46198F6C;
-	Wed, 11 Sep 2024 04:46:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 427E418C3E
+	for <linux-hardening@vger.kernel.org>; Wed, 11 Sep 2024 07:06:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.144
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726029964; cv=none; b=BOd3JrgBAtwsXDroSTbopCNEKvR4U44iYrnGzDqGsPys7bZSPEq0YH4yoUQ3JH7KTp4SgAjTfaR1Q3MBrrD/B+TZDR24/E11huvrRDRgPe06vhnWHkmF0QfvBhkaOAElukMiLpOttsG37uAqTTCm8t0JxF6axhybPtFgp7k7hi8=
+	t=1726038369; cv=none; b=MlW7HdeaCx933u1INxZQ343g0rI7J/7t+D9a+aSZfmpXGdV6gtfBxoH2zhLvMzlIB6hqBX1poOnpL228rzg5RVvL2MEBlDyTc1Kh9FepT7M4jfsKTFRyFb8Bg9eqx1r67+xefKY8F18Rk0kqOoCqULSywh/LXu4F9eoDO4vf730=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726029964; c=relaxed/simple;
-	bh=Lq1oXz0gkmgIU1u6krv/9+X0gSEq95JULA+kVd5E14I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SHx7HX8yLQa3soIZf+1m0WvfWeC1oAtnbBlnTEmZn7/zb4GFtkjNAOEIsmpySagluBAe48VfbHvGmEcTAKcOQ4iK2MyDufS95XnbFhfiUE0MXOELh2S5qTEYvdIjzaffl654RnJEGY99kx7XCFHNWD2DbpohFdedfG5IgLfNdRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-7c3ebba7fbbso5297776a12.1;
-        Tue, 10 Sep 2024 21:46:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726029962; x=1726634762;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eUz8ozbOx96dq0NpB/mix4VjJOdTobXha/wl0Htocfk=;
-        b=XKRz0IdDEuPNCmQp8QNQiwv/zUs95YJ/6QTzLb4CgkiWqlJwhdS90pzEkPSM40lHmR
-         h3gmPKC1qU9C0Jg9MdOlux0QMTIZxOmbxxBvnxb/lGJVZ2Kko7VF9fCpkiST1nxmIJxK
-         boRpaP6I5Ri3JRYP4khA/o/DSLF3zRCLjxjOJWw+hoLgNoOjiO7uorK/AM5TB0N92hXo
-         6AnXALOwHPo/c4DoEVj+va87rDTkd4f2Dk9PhX5xyMFKcHNiKOIWkbNmhtjSriNM0DhK
-         2CGVinllzpC/cl7G5i65h+VAeJ8m5J1hGSkeFV5lA6Q0oK6kukZ7O4HAggiAdya4VKI9
-         dD+w==
-X-Forwarded-Encrypted: i=1; AJvYcCUhMXUm+DKl/pHKp8JVYpr2rg4QCBaa7pjchrdajIs1DJcLkUBFFTh2lnp9UEGKRGa+LbaA9I/ppXs0Sk63@vger.kernel.org, AJvYcCUuYKY8/uRzJYAYfddwU8qq39l1EoCJP8cRC8bbXyhDsPT2S36qhEPsjA4i01qfjG+G96r8dn9V0fXvryGfYy4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3mdGZU3QM1KhXTub/lGt+Jgw/pr3zobwjz8cpO3iMnkYejWFX
-	3Oa4S/iY+aMjRI0kVwp7wCGKKx04bc4jJapLthYeJCs+aqnx59dwAxz+hy1VGz0aONPn++CpxKB
-	mrxNPtmaKVeT+qJIBGrOJUZn6RuVgBQbC
-X-Google-Smtp-Source: AGHT+IHQsP68oyoc64PQVzm920uafjXEnHkFGRdl+sDX53OEec/wkjt5bPatoI2rtQXfUx+AmXmZwIPMLF9MLe86q/4=
-X-Received: by 2002:a17:902:d4c2:b0:207:1828:3570 with SMTP id
- d9443c01a7336-2074c379fe2mr39716155ad.0.1726029961878; Tue, 10 Sep 2024
- 21:46:01 -0700 (PDT)
+	s=arc-20240116; t=1726038369; c=relaxed/simple;
+	bh=0b+H/BE+jApyTxPRgbovf2DWpRDM7wW4dD4QlgiHhjo=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=rfyju+v5KxMTGZhddA3oIxPO8B/5/7lexjRq/7rUnzcIiQsN+DHoVp6C9CqBT6MIIxfIXb4irRTU6SW5Fbec7rn3KSbe9vpY1Hr2essQTHfhPIci5ThXIfPT3ax3xl+vHp8g4PVpeeGs1+SIIsUoLEIqbF6rxLKAuEzlfGywsGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=ffEDCzUQ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=B2rHOgsD; arc=none smtp.client-ip=103.168.172.144
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="ffEDCzUQ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="B2rHOgsD"
+Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
+	by mailfout.phl.internal (Postfix) with ESMTP id 3ECBC1380366;
+	Wed, 11 Sep 2024 03:06:05 -0400 (EDT)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-10.internal (MEProxy); Wed, 11 Sep 2024 03:06:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1726038365;
+	 x=1726124765; bh=bHII3Cm6loFpZp6H7Gnl7+gXCQ5l/Em9b9Bg0DcZJZM=; b=
+	ffEDCzUQ20rFSfskf0dH5Cu7gyV4ZkXGJRVRoRYl3E+9NljpjOxdF2nQFqv1PVEl
+	uT3O7bynjqpSizNHtMwbcAP9wAlmorwlDaKbbqRzsTnlvq0jIqg/AQb0MxWHBQ3Q
+	rnl3jr6RVbW3Yd9EAUAadfiaI/LLZByhHbbVR1FVD0VZNt+X5buMP4Czf2AOSGzd
+	4NHKJQD7NGD9aVaF1AntgkPreajnCWFSLnw3gKwEAD8q19B5x/QnRFneAtkAg1Au
+	ZWn0SVnINkpI8z8WRhZnE0xQrvMSt2e6mXlhrqdTdnvrEZtlADA3F7shPMPCCPZO
+	u4hkHR/iY+0nkeXCtQBJgw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1726038365; x=
+	1726124765; bh=bHII3Cm6loFpZp6H7Gnl7+gXCQ5l/Em9b9Bg0DcZJZM=; b=B
+	2rHOgsDKZZyBHu4WSyAZ9FurG2j7JzJvcu3alhgdyMZcmMqAbLaP5thdEYSDQ5DN
+	JQ91iMegtXjhnpaScyv6bYzF1eQxLOSSlk3yZEGc8Bq2Vb6AvUE7R4pc+zGgY8M4
+	Uyme5mvdpx8b74YpoSrNH2scmC9z4wVtGUid36qpOLaxDMH1s6Ts1KMnedY6EAi4
+	nsTeAuC63Wr4nfBPJtYbqxB926kunQeUyOVxZrG9GG2AbvdbLkA/Iw/Cr5PmOLMC
+	1l1aDeiB0mscyzV+3K70zkGPlCf+vlQqw1IgJDRMwr88TYyoKgVY+/nWp150J7ij
+	oup72vbKWAmIcuy7Q1hkQ==
+X-ME-Sender: <xms:XEHhZvdnA56IDPHJHgjoGpXIlnhKQCWg2rB_94wXw4jfxX-NlxhIOA>
+    <xme:XEHhZlNKhaiAlDJtbzwUMYPsZ33JtF9G6hLG3_3yzkgOGbFxYXgNwOrvOq3fFiri9
+    b6bp8_tEhB5b015l_M>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrudejtddgudduhecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
+    tdenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusg
+    druggvqeenucggtffrrghtthgvrhhnpeekleevvdekgeekuddtleeuieeltedtteeludff
+    vdegkeevleejieeuffefjeefleenucffohhmrghinhepuggvsghirghnrdhnvghtnecuve
+    hluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnhgusegr
+    rhhnuggsrdguvgdpnhgspghrtghpthhtohepfedpmhhouggvpehsmhhtphhouhhtpdhrtg
+    hpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkohesihhnthgvlhdrtghomhdprhgt
+    phhtthhopehkvggvsheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqhh
+    grrhguvghnihhnghesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:XEHhZoiPa_d7WoRy3Du8KGesqZEnxHMTFMwNfGDm_h0Br0BKDSdTKQ>
+    <xmx:XEHhZg-5A4Ip1irYPEHHZT-KRw8YvW_xPh5e51Y80_-Muf3M79icPQ>
+    <xmx:XEHhZrsJ8YtdhooXCWZQFaHspLCxUBiMy2hOXnRC5Df5O4vwem2g7A>
+    <xmx:XEHhZvHCqcd0DAvC_7e1z_QEydh5tsaumem85fjtd1tNWetvk2m3Yw>
+    <xmx:XUHhZk5z7wgIinJwj291WmREJDmUKJEzGO_SFhrfzy6k34spOTlbm-Jg>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id C65472220071; Wed, 11 Sep 2024 03:06:04 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240910024952.1590207-1-mailhol.vincent@wanadoo.fr> <202409101729.C242EEC@keescook>
-In-Reply-To: <202409101729.C242EEC@keescook>
-From: Vincent MAILHOL <mailhol.vincent@wanadoo.fr>
-Date: Wed, 11 Sep 2024 13:45:50 +0900
-Message-ID: <CAMZ6RqJ1N9E=yqJLcreVsqk5xtoHWQghBaezB+=TzjC3ChxxGA@mail.gmail.com>
-Subject: Re: [PATCH v2] overflow: optimize struct_size() calculation
-To: Kees Cook <kees@kernel.org>
-Cc: David Laight <David.Laight@aculab.com>, 
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>, linux-hardening@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Date: Wed, 11 Sep 2024 07:05:44 +0000
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Kees Cook" <kees@kernel.org>,
+ "Andy Shevchenko" <andriy.shevchenko@intel.com>
+Cc: linux-hardening@vger.kernel.org
+Message-Id: <ea7a604f-b3b7-40ef-bea2-27c2e83ceef1@app.fastmail.com>
+In-Reply-To: <202409101722.C8E47DF@keescook>
+References: <Zt73a3t8Y8uH5MHG@smile.fi.intel.com>
+ <202409101722.C8E47DF@keescook>
+Subject: Re: -Wformat-trunctation with `make W=1`
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Wed. 11 Sep. 2024 at 09:36, Kees Cook <kees@kernel.org> wrote:
-> On Tue, Sep 10, 2024 at 11:49:52AM +0900, Vincent Mailhol wrote:
-> > If the offsetof() of a given flexible array member (fam) is smaller
-> > than the sizeof() of the containing struct, then the struct_size()
-> > macro reports a size which is too big.
-> >
-> > This occurs when the two conditions below are met:
-> >
-> >   - there are padding bytes after the penultimate member (the member
-> >     preceding the fam)
-> >   - the alignment of the fam is less than or equal to the penultimate
-> >     member's alignment
-> >
-> > In that case, the fam overlaps with the padding bytes of the
-> > penultimate member. This behaviour is not captured in the current
-> > struct_size() macro, potentially resulting in an overestimated size.
-> >
-> > Below example illustrates the issue:
-> >
-> >   struct s {
-> >       u64 foo;
-> >       u32 count;
-> >       u8 fam[] __counted_by(count);
-> >   };
-> >
-> > Assuming a 64 bits architecture:
-> >
-> >   - there are 4 bytes of padding after s.count (the penultimate
-> >     member)
-> >   - sizeof(struct s) is 16 bytes
-> >   - the offset of s.fam is 12 bytes
-> >   - the alignment of s.fam is 1 byte
-> >
-> > The sizes are as below:
-> >
-> >    s.count    current struct_size()   actual size
-> >   ---------------------------------------------------------------------=
---
-> >    0          16                      16
-> >    1          17                      16
-> >    2          18                      16
-> >    3          19                      16
-> >    4          20                      16
-> >    5          21                      17
-> >    .          .                       .
-> >    .          .                       .
-> >    .          .                       .
-> >    n          sizeof(struct s) + n    max(sizeof(struct s),
-> >                                           offsetof(struct s, fam) + n)
-> >
-> > Change struct_size() from this pseudo code logic:
-> >
-> >   sizeof(struct s) + sizeof(*s.fam) * s.count
-> >
-> > to that pseudo code logic:
-> >
-> >   max(sizeof(struct s), offsetof(struct s, fam) + sizeof(*s.fam) * s.co=
-unt)
-> >
-> > Here, the lowercase max*() macros can cause struct_size() to return a
-> > non constant integer expression which would break the DEFINE_FLEX()
-> > macro by making it declare a variable length array. Because of that,
-> > use the unsafe MAX() macro only if the expression is constant and use
-> > the safer max() otherwise.
-> >
-> > Reference: ISO/IEC 9899:2018 =C2=A76.7.2.1 "Structure and union specifi=
-ers" =C2=B618
-> >
-> > Signed-off-by: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-> > ---
-> >
-> > I also tried to think of whether the current struct_size() macro could
-> > be a security issue.
-> >
-> > The only example I can think of is if someone manually allocates the
-> > exact size but then use the current struct_size() macro.
-> >
-> > For example (reusing the struct s from above):
-> >
-> >   u32 count =3D 5;
-> >   struct s *s =3D kalloc(offsetof(typeof(*s), fam) + count);
-> >   s->count =3D count;
-> >   memset(s, 0, struct_size(s, fam, count)); /* 4 bytes buffer overflow =
-*/
-> >
-> > If we have concerns that above pattern may actually exist, then this
-> > patch should also go to stable. I personally think that the above is a
-> > bit convoluted and, as such, I only suggest this patch to go to next.
+On Wed, Sep 11, 2024, at 00:26, Kees Cook wrote:
+> On Mon, Sep 09, 2024 at 04:26:03PM +0300, Andy Shevchenko wrote:
+>> Recently I'm trying to compile my (almost) x86_64_defconfig based kernel with
+>> `make W=1` while having CONFIG_WERROR=y. With a handful of patches I was able
+>> to achieve that with clang-18, however GCC 14.2.0 issues a lot of additional
+>> warnings that are mostly related to -Wformat-truncation [1]. Any suggestions,
+>> plans, comments on how to address them?
+>> 
+>> [1]: https://paste.debian.net/hidden/46106f2a/
 >
-> Yeah, this "over-estimation" has come up before, and my thinking as been
-> that while the above situation is certainly possible (but unlikely),
-> I've worried that the reverse situation (after this patch) is
-> potentially worse, where we allocate very precisely, but then manually
-> index too far:
+> Since it's behind W=1, fixing those issues hasn't been a very high
+> priority. That said, I would love to see it done. Patches have slowly
+> been landing for various W=1 things related to the -Wstringop-... and
+> -Wformat... options, though. But I don't think there has been a
+> concerted effort to wipe them out completely. And at least sometimes
+> these warnings are effectively false positives, related to unexpected
+> behaviors in GCC's value range tracking, though that has mostly been an
+> issue for getting -Warray-bounds to build cleanly.
 >
->         struct s *s =3D kmalloc(struct_size(s, fam, count), gfp);
->         typeof(*s->fam) *element;
->         element =3D (void *)s + sizeof(*s);
->         for (i =3D 0; i < count; i++)
->                 element[i] =3D ...;
+> As for fixing them, I think one will need to just look at each instance
+> one at a time to figure out the best solution.
 
-To me, this pointer arithmetic is just a bug. Anyone in his right mind
-would write:
+I have a series from earlier this year, let me see what I had
+in there:
 
-        typeof(*s->fam) *element =3D s->fam;
+ -Wformat-truncation triggers in 133 files with arm64 allmodconfig,
+  which is more than any other W=1 warnings. Addressing them
+  individually is probably a good idea, but most of the other
+  W=1 warnings seem more helpful if we can just enable them
+  after a few patches.
+ -Wformat-truncation-non-kprintf only happens in a single file
+  and we should fix that. We can probably just enable the
+  default -Wformat warnings on clang at last..
+ -Wunused-const-variable=2 needs a lot of patches but they are
+  all trivial (mostly extraneous of_match_ptr()), just need to
+  be split up better. My tree builds  randconfig cleanly with
+  this enabled.
+ -Wtautological-constant-out-of-range-compare needs four
+  more patches that I have sent previously
+ -Wstringop-truncation can be enabled globally
+ -Woverride-init just needs to be disabled in a couple of
+  key places that intentionally use defaults
+ -Wmissing-format-attribute triggers in only 9 files, but
+  I don't think I have patches for those.
+ -Wformat-overflow= triggers in 15 files with gcc but 35 with
+  clang, I don't have patches for these.
+ -Wunused-but-set-variable triggers in 8 files, I sent some
+  patches for these in the past.
+ -Wenum-enum-conversion has 93 files with warnings in clang-20
+ -Wvoid-pointer-to-enum-cast shows up in 19 files with clang-20
 
-When I compare your example to my example, I think that both are
-convoluted and unrealistic but with the *huge* difference that:
-
- - in my example, the code logic is correct and the thing breaks
-   because of the current overestimation in struct_size(). See the
-   clang documentation:
-
-      https://clang.llvm.org/docs/AttributeReference.html#counted-by
-
-    The clang guys are using the same calculation as in my patch. So I
-    can think of a world in which someone with good intent would copy
-    this example, and then (for example because of a collaborative
-    work), someone else would use the struct_size() to do a copy or a
-    memset resulting in an out of bound as illustrated  in my example.
-
- - in your example, the code is incorrect. If we start to apply that
-   "what if users do random pointer arithmetic" reasoning, then
-   anything can be proven to be a security risk.
-
-To repeat, I think that my example was convoluted, but I see yours as
-even more convoluted.
-
-So, with this said, what do you think is the good trade-off? Return
-the exact size so that code with correct logic works as intended or
-keep the extra bytes in case someone does some crazy pointer
-arithmetic?
-
-> And for a max 7 byte savings, I'm concerned we can get bit much worse in
-> the above situation. It *should* be unlikely, but I've especially seen a
-> lot of manually calculated games especially for structs that have
-> effectively multiple trailing flexible arrays (wifi likes to do this,
-> for example).
-
-How does a struct with "multiple trailing flexible arrays" look like? By
-the C standard, structures can only have one single fam, so this isn't
-something I am aware of.
-
-Would the struct_size() macro still be relevant for those "multiple
-fam" structures or would the structure size also be hand calculated?
-Isn't this argument out of scope of this patch discussion?
-
-> So while I don't have very concrete evidence, my sensation is that we're
-> in a more defensive position leaving it over-estimated.
-
-So far, I think that my example is more concrete than your pointer
-arithmetic argument. Not by a lot, and this is why I just put that
-security argument at the end after the --- cutter.
-
-
-Yours sincerely,
-Vincent Mailhol
+       Arnd
