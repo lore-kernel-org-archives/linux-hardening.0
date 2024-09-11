@@ -1,79 +1,70 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E85A130495;
-	Tue, 10 Sep 2024 15:00:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F9652F30
+	for <linux-hardening@vger.kernel.org>; Wed, 11 Sep 2024 00:26:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725980431; cv=none; b=CXdeKMASVxIbYB1N5E9JjqK1Fw7x9SJvtiYs23XL7bS98Bx8CEBRSXF3yoW30krjOkRG/WoCVerfsYIfCnWphPpAdmP6iVh9BK+0mow/R81fzQyPOP6hzFBMz3cr/96RyvydroHtcaP3WP6Cjlc2oUJVZWu9jy2aHgZjmJisMms=
+	t=1726014375; cv=none; b=ffwd3ozGp8sNasfbsU70RINg//HZrGgZ4Jj1z8nBC5fm7IRKedWaAvUy6GShk18xT49QHV7nD+0UzrXizF7V0pGoCIRpIwYsAqZBWagSwi6ZzFJXxLS3RLGatmN3hOVjWj9D1jnYEcZGIBcAZG6OUiA6Lz4Bg41i8AegrRVTd64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725980431; c=relaxed/simple;
-	bh=7vVe+kPQm7LdEuy1q3f3ICanaOlQ9fti1HVs2FHxLLk=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=uZ1Oo4EzfeckR8WuO6xUL/0hLvHjEsA7n/p/Vqh6yUDYRdcskMR0aPoayd2hmFJY5SpTK6wo7CXq/gZuzE7K86KG9vmIcoEk5grDSwhFe/v5Sdh0PVsxWD0nfFhyNTFvZmabWZrX0vfVO5rpgz+Gl1ORYD8bgCJJglcPu0ReqY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tA8SZ7g/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1726014375; c=relaxed/simple;
+	bh=fdRZz3fSGogavw9XdqwzRbJxXyg4vhX9XzftvBciH7o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=envDzLYrGsWFVlf53RRCkySdipGakB+Hev8V9XBXyBzfEsmiKfZzkTn1ldI3Te7FSJe/LF53UCfm+lcofsNBB8QR1jbMqs+F8T20tst9EVoe1EkrdDUrFcjWqaFWsyYLXOY3Ctuw+4/SHEt5VoecMKkKABQmkrJJG2iAPSOPRNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NWR1HBbw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tA8SZ7g/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5D34C4CEC3;
-	Tue, 10 Sep 2024 15:00:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NWR1HBbw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79FE8C4CEC3;
+	Wed, 11 Sep 2024 00:26:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725980431;
-	bh=7vVe+kPQm7LdEuy1q3f3ICanaOlQ9fti1HVs2FHxLLk=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=tA8SZ7g/4QP4sGbMqHiBbBzbBV/Rh+DoYKeKl5Ii/YQyZRIRUUMHOxFfCVaBrJXiE
-	 natEnmjxUIDJwPaXy6LLAjlX6s/4RIVGmPhnsh4Ca+S8X4e/TJR9DKaHq6WLBCYXkU
-	 oSI8ZciywI9mPw/B3+7+jYWZKExbXcWbNceUU6c0cqw49SXtZTpesQomckLpDeC5AR
-	 LDQtvzeZjkcHSFZ9WNgNL4XiQ690k3WNf93muaFhn62LBreMaql3JaR5UhgMe975KA
-	 6SJmDVW7lB5powxsHmPdmfWUMYz4MLJvzjz8vV4lzE+VVCFlVDPWF1gv0HrIP1DG6D
-	 t9D2lGbAuJauw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 3400A3804CAB;
-	Tue, 10 Sep 2024 15:00:33 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1726014374;
+	bh=fdRZz3fSGogavw9XdqwzRbJxXyg4vhX9XzftvBciH7o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NWR1HBbw7xkRU8MbS1GvekBf+ZtR3CkUBY6d3UDFpbbNt7K7WpSOQUNhYJMPPRe0w
+	 z3yffn4k/4KTLduGVVnBtgPPqoXbpZtnyl69n1a7OMXs4A80EC2BAMYzpy2hdWTR0+
+	 i29LbjXK29ZAadKOVXSY9z5fO9EuVZVTgxqDdLgQw5gfn18OAb80O05v3U3gw9/ifZ
+	 4EuiDzByTwl3zxYZyZFDQudS8pcoZUqkFcGV0zE76RGUGdnFmCo9NRJxYcKCG34YaZ
+	 XRa0zGzBzzpNM0juGM9muFFj7g8dIOc2xb/Ag/X4ST/j7P+Jn6R3mWPt49av8H+ikO
+	 5GyDdzlLlLydg==
+Date: Tue, 10 Sep 2024 17:26:14 -0700
+From: Kees Cook <kees@kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: linux-hardening@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Subject: Re: -Wformat-trunctation with `make W=1`
+Message-ID: <202409101722.C8E47DF@keescook>
+References: <Zt73a3t8Y8uH5MHG@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] Bluetooth: replace deprecated strncpy with strscpy_pad
-From: patchwork-bot+bluetooth@kernel.org
-Message-Id: 
- <172598043203.283578.7669553872558102167.git-patchwork-notify@kernel.org>
-Date: Tue, 10 Sep 2024 15:00:32 +0000
-References: <20240905-strncpy-net-bluetooth-cmtp-capi-c-v1-1-c2d49caa2d36@google.com>
-In-Reply-To: <20240905-strncpy-net-bluetooth-cmtp-capi-c-v1-1-c2d49caa2d36@google.com>
-To: Justin Stitt <justinstitt@google.com>
-Cc: isdn@linux-pingi.de, marcel@holtmann.org, johan.hedberg@gmail.com,
- luiz.dentz@gmail.com, netdev@vger.kernel.org,
- linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
- kees@kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zt73a3t8Y8uH5MHG@smile.fi.intel.com>
 
-Hello:
-
-This patch was applied to bluetooth/bluetooth-next.git (master)
-by Luiz Augusto von Dentz <luiz.von.dentz@intel.com>:
-
-On Thu, 05 Sep 2024 15:54:40 -0700 you wrote:
-> strncpy() is deprecated for use on NUL-terminated destination strings [0]
-> and as such we should prefer more robust and less ambiguous string interfaces.
+On Mon, Sep 09, 2024 at 04:26:03PM +0300, Andy Shevchenko wrote:
+> Recently I'm trying to compile my (almost) x86_64_defconfig based kernel with
+> `make W=1` while having CONFIG_WERROR=y. With a handful of patches I was able
+> to achieve that with clang-18, however GCC 14.2.0 issues a lot of additional
+> warnings that are mostly related to -Wformat-truncation [1]. Any suggestions,
+> plans, comments on how to address them?
 > 
-> The CAPI (part II) [1] states that the manufacturer id should be a
-> "zero-terminated ASCII string" and should "always [be] zero-terminated."
-> 
-> Much the same for the serial number: "The serial number, a seven-digit
-> number coded as a zero-terminated ASCII string".
-> 
-> [...]
+> [1]: https://paste.debian.net/hidden/46106f2a/
 
-Here is the summary with links:
-  - Bluetooth: replace deprecated strncpy with strscpy_pad
-    https://git.kernel.org/bluetooth/bluetooth-next/c/278dcc36b992
+Since it's behind W=1, fixing those issues hasn't been a very high
+priority. That said, I would love to see it done. Patches have slowly
+been landing for various W=1 things related to the -Wstringop-... and
+-Wformat... options, though. But I don't think there has been a
+concerted effort to wipe them out completely. And at least sometimes
+these warnings are effectively false positives, related to unexpected
+behaviors in GCC's value range tracking, though that has mostly been an
+issue for getting -Warray-bounds to build cleanly.
 
-You are awesome, thank you!
+As for fixing them, I think one will need to just look at each instance
+one at a time to figure out the best solution.
+
+-Kees
+
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Kees Cook
