@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1398224CF;
-	Wed, 11 Sep 2024 22:23:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2690E1BBBE4;
+	Wed, 11 Sep 2024 22:30:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726093381; cv=none; b=PDItI7Cd7SGPMBgC65iBUIr8I8/KU5DbABkMXwLe/VSQUsMMsPGlBuQa/EoeFSb++RKLlKxYGZJsLqmAKxTEr0WHRFlZpFwx7fY9Y1dTQdkrxGvhxG/rWCKsz7068x/s+kkBikuGxPrGmZ/dvy08T8HgMAN71WMSF1QE4t4xvbY=
+	t=1726093843; cv=none; b=Z4MNeJVMUoGQrQPb9vqX35ogagBWWKhnPNwGbO4Z3jQHimEh1JSc0IRQErrIy5TQ7ZeWKzIsllPjp4oMzL0Cjq36cfDOiFH3rdDcdwsjMbCEwvtvz5pRjEFxwt96i6EJ+1ufRP99X7MWami9Nsah1mBLmzl7d+X2G8DbkGKdDvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726093381; c=relaxed/simple;
-	bh=CeTttMY+Q4kBmD++wQT3MC8a2EQVjkLZY1H2aiNffnI=;
+	s=arc-20240116; t=1726093843; c=relaxed/simple;
+	bh=WwOTVKODLlsieEew/9/eTn6ygyv4nmybvgfiewsHUcY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NgtLcQCiUAueI50Viu/LH1443+uiCtNML16vCjK+lsmZBU3Z14w6C2hBiYeesWqG4rjzjCTrGHaqw4/GnKmpOXu3ioyWpTzMJ5Fg/1SlxW0TmFRtavJCH7xuEcgp8LPZcreOliU2cOH65ZDCmizB4wXqPMC654Vym6/7zDK6OXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ru1n3iJ/; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=WvtTqPyXRdqlzfxAxMxJo+Eq+O8WjysIDGKh58m/FwNjHelO4tCz1nGeIz+WIfWEqGUykh9J9NKIChJY+ly7iZQEEUdRxvESe+YQpfxloLtB5/b9WbVe9EbqonPc0UaFzE8jmIf524l4aBfOX6F1S7hLQuHUpK1cDe5eJvCT2LU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lRt2ljNa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ru1n3iJ/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C602C4CEC0;
-	Wed, 11 Sep 2024 22:23:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lRt2ljNa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98552C4CEC6;
+	Wed, 11 Sep 2024 22:30:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726093381;
-	bh=CeTttMY+Q4kBmD++wQT3MC8a2EQVjkLZY1H2aiNffnI=;
+	s=k20201202; t=1726093840;
+	bh=WwOTVKODLlsieEew/9/eTn6ygyv4nmybvgfiewsHUcY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Ru1n3iJ/B8YJ1ZpgyY7IPBFRjhOFSewXm+3nGEPbUuOBmiMrGjYq2F/mpQA2TxToG
-	 fpljZNIoepfHYLq2EN5kI3d4T4LCCyjpNzyJOY5kgy5RoOygkrCa8mST66x1vNK/NP
-	 iHyqEoFEfqLFjM0kMM9B8ak0y9EAlthfn4+4qAzLeX+KoHAWlJLu+UNrJSVGirLU7E
-	 QQuTI4YAN6T9W1DmjiX/MtTNyjOothx/MqXh6vb1A7qmAUnIiclq/rvdg1RpskTB1X
-	 LByUYumU0YY6Wc7JI+n7ueaRFXSxbXtj1VIYc1U549v9P4WRf4X4tcwZQTKX2UZzXx
-	 4hBeueanl4QCw==
-Date: Wed, 11 Sep 2024 15:23:00 -0700
+	b=lRt2ljNawjLRvP1xHwUY0yv3IT4FjV2TPZwX7H05+br38UTe5ED8PEDv/WdFDYAtu
+	 5w4/hWH7WRayR1m9YhQe7NTnTAyXF1A/DPxLXdkGtUHnnQCptZ62gTzEBz1amNZAo1
+	 NjUNCe0SI8b6EY2SjOtUEViQXlhbskLlZsmDue1QsALVpDPPCnIA5MuGl0AI7AREpe
+	 /yvcp79v5i1jLBznkX2McANWnLKEE2YU3fsMT2mhNOzs6gnyAmiBxlfrnvgaoYW1zg
+	 shxMqjz63CIJcPI6sOIEXscIdDtoPHQ3FnMM17T9z3LSPf3UCU2eqMcoKqGSlhIuyq
+	 KGVy5dRKo/6XQ==
+Date: Wed, 11 Sep 2024 15:30:40 -0700
 From: Kees Cook <kees@kernel.org>
 To: Suren Baghdasaryan <surenb@google.com>
 Cc: Vlastimil Babka <vbabka@suse.cz>,
@@ -42,11 +42,11 @@ Cc: Vlastimil Babka <vbabka@suse.cz>,
 	jvoisin <julien.voisin@dustri.org>,
 	Xiu Jianfeng <xiujianfeng@huawei.com>, linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 4/5] alloc_tag: Track fixed vs dynamic sized kmalloc calls
-Message-ID: <202409111518.9D90EE197@keescook>
+Subject: Re: [PATCH 5/5] slab: Allocate and use per-call-site caches
+Message-ID: <202409111523.AEAEE48@keescook>
 References: <20240809072532.work.266-kees@kernel.org>
- <20240809073309.2134488-4-kees@kernel.org>
- <CAJuCfpFXTDnqZphJ1z37KkqMt5nuOqaoWMJMRBOkA8Dnf1Dh2g@mail.gmail.com>
+ <20240809073309.2134488-5-kees@kernel.org>
+ <CAJuCfpHOqKPzbbkULpWU5g1-8mTLXraQM4taHzajY_cJ-YFWgQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -56,57 +56,146 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJuCfpFXTDnqZphJ1z37KkqMt5nuOqaoWMJMRBOkA8Dnf1Dh2g@mail.gmail.com>
+In-Reply-To: <CAJuCfpHOqKPzbbkULpWU5g1-8mTLXraQM4taHzajY_cJ-YFWgQ@mail.gmail.com>
 
-On Thu, Aug 29, 2024 at 09:00:37AM -0700, Suren Baghdasaryan wrote:
+On Thu, Aug 29, 2024 at 10:03:56AM -0700, Suren Baghdasaryan wrote:
 > On Fri, Aug 9, 2024 at 12:33 AM Kees Cook <kees@kernel.org> wrote:
-> [...]
-> > -#define kmem_cache_alloc(...)                  alloc_hooks(kmem_cache_alloc_noprof(__VA_ARGS__))
-> > +#define kmem_cache_alloc(...)          alloc_hooks(kmem_cache_alloc_noprof(__VA_ARGS__))
-> 
-> nit: seems like an unnecessary churn.
-
-Whoops, yes. This was left over from an earlier pass and I failed to get
-the whitespace correctly restored. I will fix this this.
-
-> > diff --git a/lib/alloc_tag.c b/lib/alloc_tag.c
-> > index 81e5f9a70f22..6d2cb72bf269 100644
-> > --- a/lib/alloc_tag.c
-> > +++ b/lib/alloc_tag.c
-> > @@ -78,6 +78,14 @@ static void alloc_tag_to_text(struct seq_buf *out, struct codetag *ct)
 > >
-> >         seq_buf_printf(out, "%12lli %8llu ", bytes, counter.calls);
-> >         codetag_to_text(out, ct);
+> > Use separate per-call-site kmem_cache or kmem_buckets. These are
+> > allocated on demand to avoid wasting memory for unused caches.
+> >
+> > A few caches need to be allocated very early to support allocating the
+> > caches themselves: kstrdup(), kvasprintf(), and pcpu_mem_zalloc(). Any
+> > GFP_ATOMIC allocations are currently left to be allocated from
+> > KMALLOC_NORMAL.
+> >
+> > With a distro config, /proc/slabinfo grows from ~400 entries to ~2200.
+> >
+> > Since this feature (CONFIG_SLAB_PER_SITE) is redundant to
+> > CONFIG_RANDOM_KMALLOC_CACHES, mark it a incompatible. Add Kconfig help
+> > text that compares the features.
+> >
+> > Improvements needed:
+> > - Retain call site gfp flags in alloc_tag meta field to:
+> >   - pre-allocate all GFP_ATOMIC caches (since their caches cannot
+> >     be allocated on demand unless we want them to be GFP_ATOMIC
+> >     themselves...)
+> 
+> I'm currently working on a feature to identify allocations with
+> __GFP_ACCOUNT known at compile time (similar to how you handle the
+> size in the previous patch). Might be something you can reuse/extend.
+
+Great, yes! I'd love to check it out.
+
+> >   - Separate MEMCG allocations as well
+> 
+> Do you mean allocations with __GFP_ACCOUNT or something else?
+
+I do, yes.
+
+> > +static void alloc_tag_site_init_early(struct codetag *ct)
+> > +{
+> > +       /* Explicitly initialize the caches needed to initialize caches. */
+> > +       if (strcmp(ct->function, "kstrdup") == 0 ||
+> > +           strcmp(ct->function, "kvasprintf") == 0 ||
+> > +           strcmp(ct->function, "pcpu_mem_zalloc") == 0)
+> 
+> I hope we can find a better way to distinguish these allocations.
+> Maybe have a specialized hook for them, like alloc_hooks_early() which
+> sets a bit inside ct->flags to distinguish them?
+
+That might be possible. I'll see how that ends up looking. I don't want
+to even further fragment the alloc_hooks_... variants.
+
+> 
+> > +               alloc_tag_site_init(ct, false);
+> > +
+> > +       /* TODO: pre-allocate GFP_ATOMIC caches here. */
+> 
+> You could pre-allocate GFP_ATOMIC caches during
+> alloc_tag_module_load() only if gfp_flags are known at compile time I
+> think. I guess for the dynamic case choose_slab() will fall back to
+> kmalloc_slab()?
+
+Right, yes. I'd do it like the size checking: if we know at compile
+time, we can depend on it, otherwise it's a run-time fallback.
+
+> 
+> > @@ -175,8 +258,21 @@ static bool alloc_tag_module_unload(struct codetag_type *cttype,
+> >
+> >                 if (WARN(counter.bytes,
+> >                          "%s:%u module %s func:%s has %llu allocated at module unload",
+> > -                        ct->filename, ct->lineno, ct->modname, ct->function, counter.bytes))
+> > +                        ct->filename, ct->lineno, ct->modname, ct->function, counter.bytes)) {
+> >                         module_unused = false;
+> > +               }
 > > +#ifdef CONFIG_SLAB_PER_SITE
-> > +       seq_buf_putc(out, ' ');
-> > +       seq_buf_printf(out, "size:%s(%zu) slab:%s",
-> > +                               tag->meta.sized == 0 ? "non-slab" :
+> > +               else if (tag->meta.sized) {
+> > +                       /* Remove the allocated caches, if possible. */
+> > +                       void *p = READ_ONCE(tag->meta.cache);
+> > +
+> > +                       WRITE_ONCE(tag->meta.cache, NULL);
 > 
-> "non-slab" term sounds overly specific and we might extend this to
-> some other allocations as well in the future. I would suggest
-> "unknown" instead.
+> I'm guessing you are not using try_cmpxchg() the same way you did in
+> alloc_tag_site_init() because a race with any other user is impossible
+> at the module unload time? If so, a comment mentioning that would be
+> good.
 
-Heh, yeah. I went back and forth on the name for this and went with
-non-slab because we do know what it isn't. It's not some kind of
-unexpected state. Maybe "untracked", or "unsized", though both seem
-inaccurate from certain perspectives.
+Correct. It should not be possible. But yes, I will add a comment.
 
+> > diff --git a/mm/Kconfig b/mm/Kconfig
+> > index 855c63c3270d..4f01cb6dd32e 100644
+> > --- a/mm/Kconfig
+> > +++ b/mm/Kconfig
+> > @@ -302,7 +302,20 @@ config SLAB_PER_SITE
+> >         default SLAB_FREELIST_HARDENED
+> >         select SLAB_BUCKETS
+> >         help
+> > -         Track sizes of kmalloc() call sites.
+> > +         As a defense against shared-cache "type confusion" use-after-free
+> > +         attacks, every kmalloc()-family call allocates from a separate
+> > +         kmem_cache (or when dynamically sized, kmem_buckets). Attackers
+> > +         will no longer be able to groom malicious objects via similarly
+> > +         sized allocations that share the same cache as the target object.
+> > +
+> > +         This increases the "at rest" kmalloc slab memory usage by
+> > +         roughly 5x (around 7MiB), and adds the potential for greater
+> > +         long-term memory fragmentation. However, some workloads
+> > +         actually see performance improvements when single allocation
+> > +         sites are hot.
 > 
-> > +                                       tag->meta.sized == SIZE_MAX ? "dynamic" : "fixed",
-> > +                               tag->meta.sized == SIZE_MAX ? 0 : tag->meta.sized,
-> > +                               tag->meta.cache ? "ready" : "unused");
+> I hope you provide the performance and overhead data in the cover
+> letter when you post v1.
+
+That's my plan. It's always odd choosing workloads, but we do seem to
+have a few 'regular' benchmarks (hackbench, kernel builds, etc). Is
+there anything in particular you'd want to see?
+
+> > +static __always_inline
+> > +struct kmem_cache *choose_slab(size_t size, kmem_buckets *b, gfp_t flags,
+> > +                              unsigned long caller)
+> > +{
+> > +#ifdef CONFIG_SLAB_PER_SITE
+> > +       struct alloc_tag *tag = current->alloc_tag;
+> > +
+> > +       if (!b && tag && tag->meta.sized &&
+> > +           kmalloc_type(flags, caller) == KMALLOC_NORMAL &&
+> > +           (flags & GFP_ATOMIC) != GFP_ATOMIC) {
 > 
-> I don't see "struct alloc_meta" having a "cache" member...
+> What if allocation is GFP_ATOMIC but a previous allocation from the
+> same location (same tag) happened without GFP_ATOMIC and
+> tag->meta.cache was allocated. Why not use that existing cache?
+> Same if the tag->meta.cache was pre-allocated.
 
-Oops, yes, as you found this should have been associated with the next
-patch that adds "cache".
+Maybe I was being too conservative in my understanding -- I thought that
+I couldn't use those caches on the chance that they may already be full?
+Or is that always the risk, ad GFP_ATOMIC deals with that? If it would
+be considered safe attempt the allocation from the existing cache, then
+yeah, I can adjust this check.
 
-> Since you are changing the format of this file, you want to also bump
-> up the file version inside print_allocinfo_header().
+Thanks for looking these over!
 
-Okay, yeah. In that case I'll probably split the report into a separate
-patch after "cache" is added so there's only a single bump in allocinfo
-versioning.
+-Kees
 
 -- 
 Kees Cook
