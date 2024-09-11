@@ -1,155 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B3DFAD5E;
-	Wed, 11 Sep 2024 00:36:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05EA312E7F
+	for <linux-hardening@vger.kernel.org>; Wed, 11 Sep 2024 01:00:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726015008; cv=none; b=hWkQcHxd72ptBiVgozQEqXOHHQeBJMTWU4XLKoDHYRdsC9o4mCaCXuFIkkB8IoaWnzY0E4imyxrr6F0OUPNoUuiwnu6brMVe9stLK/VCe6zb1g9hLXbf0EYOTX2gOYZFPtzB8VmxrvH9RSS7irIYbBUqx+z1qIJdFMQLbZDai58=
+	t=1726016431; cv=none; b=b4Nkbn07MG9Tjn3hdjQj4O48T/Trf9F/GWeMlFa5L7AzN8qOj0pKNpGwpkbjrEVbveoOXWDpGIF5jaihH6dQ+iVK+WAxKw3Z4VcDTyhPq1NEVGLShQ91nbHdlJBxlhc/WmOpsbzSRsEbqgJ3Lqgyg6bD8cGxjUDtXRs5FdSmCH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726015008; c=relaxed/simple;
-	bh=lVIXiehzAanvFHirmdt6NzjYfXl6qFXb+nmuhJdAX4E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iXLPDYMFN6I6Asx8Qt1cD4UFM4zkzKICzvGQ72jzwnM4JOcIYiLNg3EppAYdEyi6WlELpCS55DCtC3XU5iVOtpS3SJ9XtgEpt8OfZwOWiLofcsqB49iHD3yzGmrpN5wax/ug89tADzXqTuThJU5V5wkf45sYbfQBkyzmldw4aeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QlfAGEOa; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QlfAGEOa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC997C4CEC3;
-	Wed, 11 Sep 2024 00:36:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726015007;
-	bh=lVIXiehzAanvFHirmdt6NzjYfXl6qFXb+nmuhJdAX4E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QlfAGEOaz1hBI8fLcdxGf9dVkxeYse+IDiAxi0LmabNTkIfIVm+0fOKT2wyWdiQPC
-	 usIFQemfDKDnxK9U8Db37DnK8v075gNcjZqDqgS7wZS2p0gnzZHP8Xx68oGtEdhIqE
-	 uJbYaTOx+uMbe/3kOQL++3W4ipWbJU/K9V5ruIktOVd/3qGdknZbQ+7qU9ToYuSmox
-	 c33Hqa4BuFlGnZZvDa5fXhH9GEcXtquvA//tlKjpR2bjrWhaQwyI01xixN8WIaAt69
-	 78pLggOBY/yC7ZfRzDhbIElKJ0LuZq1WQghgT/sUWn641t632srqQm2753L1LjIXEc
-	 XsJFsYRFL/B1Q==
-Date: Tue, 10 Sep 2024 17:36:47 -0700
-From: Kees Cook <kees@kernel.org>
-To: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-Cc: David Laight <David.Laight@aculab.com>,
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] overflow: optimize struct_size() calculation
-Message-ID: <202409101729.C242EEC@keescook>
-References: <20240910024952.1590207-1-mailhol.vincent@wanadoo.fr>
+	s=arc-20240116; t=1726016431; c=relaxed/simple;
+	bh=ZsS1GRm95KYXmzT6L9MeDz2+xcSedcLekQdsZDZxPnk=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ox4QAtawyM3di8mlikK5fpy4X7ojE8LHCsb2FUb+HUyx68dD55ZeupC4g8MEmdmWnYx85jEzORQmf2Op7eVMoBuZnu4SIV4l5wk9fMSLGbFbP+fDChdiRIKkaYa3strTDivAMc9BHxlvu9x+fMHgrp8kpAWKGfoLSZf1bcVgo1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.163])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4X3Mg16mVpz1j8PP;
+	Wed, 11 Sep 2024 08:59:57 +0800 (CST)
+Received: from dggpeml500022.china.huawei.com (unknown [7.185.36.66])
+	by mail.maildlp.com (Postfix) with ESMTPS id 8FFDC180042;
+	Wed, 11 Sep 2024 09:00:26 +0800 (CST)
+Received: from huawei.com (10.90.53.73) by dggpeml500022.china.huawei.com
+ (7.185.36.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 11 Sep
+ 2024 09:00:26 +0800
+From: Hongbo Li <lihongbo22@huawei.com>
+To: <kees@kernel.org>, <andy@kernel.org>, <Julia.Lawall@inria.fr>,
+	<nicolas.palix@imag.fr>
+CC: <linux-hardening@vger.kernel.org>, <cocci@inria.fr>
+Subject: [PATCH -next v3 01/10] coccinelle: Add rules to find str_true_false() replacements
+Date: Wed, 11 Sep 2024 09:09:18 +0800
+Message-ID: <20240911010927.741343-2-lihongbo22@huawei.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240911010927.741343-1-lihongbo22@huawei.com>
+References: <20240911010927.741343-1-lihongbo22@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240910024952.1590207-1-mailhol.vincent@wanadoo.fr>
+Content-Type: text/plain
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggpeml500022.china.huawei.com (7.185.36.66)
 
-On Tue, Sep 10, 2024 at 11:49:52AM +0900, Vincent Mailhol wrote:
-> If the offsetof() of a given flexible array member (fam) is smaller
-> than the sizeof() of the containing struct, then the struct_size()
-> macro reports a size which is too big.
-> 
-> This occurs when the two conditions below are met:
-> 
->   - there are padding bytes after the penultimate member (the member
->     preceding the fam)
->   - the alignment of the fam is less than or equal to the penultimate
->     member's alignment
-> 
-> In that case, the fam overlaps with the padding bytes of the
-> penultimate member. This behaviour is not captured in the current
-> struct_size() macro, potentially resulting in an overestimated size.
-> 
-> Below example illustrates the issue:
-> 
->   struct s {
->   	u64 foo;
->   	u32 count;
->   	u8 fam[] __counted_by(count);
->   };
-> 
-> Assuming a 64 bits architecture:
-> 
->   - there are 4 bytes of padding after s.count (the penultimate
->     member)
->   - sizeof(struct s) is 16 bytes
->   - the offset of s.fam is 12 bytes
->   - the alignment of s.fam is 1 byte
-> 
-> The sizes are as below:
-> 
->    s.count	current struct_size()	actual size
->   -----------------------------------------------------------------------
->    0		16			16
->    1		17			16
->    2		18			16
->    3		19			16
->    4		20			16
->    5		21			17
->    .		.			.
->    .		.			.
->    .		.			.
->    n		sizeof(struct s) + n	max(sizeof(struct s),
-> 					    offsetof(struct s, fam) + n)
-> 
-> Change struct_size() from this pseudo code logic:
-> 
->   sizeof(struct s) + sizeof(*s.fam) * s.count
-> 
-> to that pseudo code logic:
-> 
->   max(sizeof(struct s), offsetof(struct s, fam) + sizeof(*s.fam) * s.count)
-> 
-> Here, the lowercase max*() macros can cause struct_size() to return a
-> non constant integer expression which would break the DEFINE_FLEX()
-> macro by making it declare a variable length array. Because of that,
-> use the unsafe MAX() macro only if the expression is constant and use
-> the safer max() otherwise.
-> 
-> Reference: ISO/IEC 9899:2018 §6.7.2.1 "Structure and union specifiers" ¶18
-> 
-> Signed-off-by: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-> ---
-> 
-> I also tried to think of whether the current struct_size() macro could
-> be a security issue.
-> 
-> The only example I can think of is if someone manually allocates the
-> exact size but then use the current struct_size() macro.
-> 
-> For example (reusing the struct s from above):
-> 
->   u32 count = 5;
->   struct s *s = kalloc(offsetof(typeof(*s), fam) + count);
->   s->count = count;
->   memset(s, 0, struct_size(s, fam, count)); /* 4 bytes buffer overflow */
-> 
-> If we have concerns that above pattern may actually exist, then this
-> patch should also go to stable. I personally think that the above is a
-> bit convoluted and, as such, I only suggest this patch to go to next.
+After str_true_false() has been introduced in the tree,
+we can add rules for finding places where str_true_false()
+can be used. A simple test can find over 10 locations.
 
-Yeah, this "over-estimation" has come up before, and my thinking as been
-that while the above situation is certainly possible (but unlikely),
-I've worried that the reverse situation (after this patch) is
-potentially worse, where we allocate very precisely, but then manually
-index too far:
+Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
+---
+ scripts/coccinelle/api/string_choices.cocci | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-	struct s *s = kmalloc(struct_size(s, fam, count), gfp);
-	typeof(*s->fam) *element;
-	element = (void *)s + sizeof(*s);
-	for (i = 0; i < count; i++)
-		element[i] = ...;
-
-And for a max 7 byte savings, I'm concerned we can get bit much worse in
-the above situation. It *should* be unlikely, but I've especially seen a
-lot of manually calculated games especially for structs that have
-effectively multiple trailing flexible arrays (wifi likes to do this,
-for example).
-
-So while I don't have very concrete evidence, my sensation is that we're
-in a more defensive position leaving it over-estimated.
-
+diff --git a/scripts/coccinelle/api/string_choices.cocci b/scripts/coccinelle/api/string_choices.cocci
+index 5e729f187f22..6942ad7c4224 100644
+--- a/scripts/coccinelle/api/string_choices.cocci
++++ b/scripts/coccinelle/api/string_choices.cocci
+@@ -85,3 +85,22 @@ e << str_down_up_r.E;
+ @@
+ 
+ coccilib.report.print_report(p[0], "opportunity for str_down_up(%s)" % e)
++
++@str_true_false depends on patch@
++expression E;
++@@
++-      ((E) ? "true" : "false")
+++      str_true_false(E)
++
++@str_true_false_r depends on !patch exists@
++expression E;
++position P;
++@@
++*      ((E@P) ? "true" : "false")
++
++@script:python depends on report@
++p << str_true_false_r.P;
++e << str_true_false_r.E;
++@@
++
++coccilib.report.print_report(p[0], "opportunity for str_true_false(%s)" % e)
 -- 
-Kees Cook
+2.34.1
+
