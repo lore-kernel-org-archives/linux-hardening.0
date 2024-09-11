@@ -1,38 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F9652F30
-	for <linux-hardening@vger.kernel.org>; Wed, 11 Sep 2024 00:26:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BFF5B644;
+	Wed, 11 Sep 2024 00:27:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726014375; cv=none; b=ffwd3ozGp8sNasfbsU70RINg//HZrGgZ4Jj1z8nBC5fm7IRKedWaAvUy6GShk18xT49QHV7nD+0UzrXizF7V0pGoCIRpIwYsAqZBWagSwi6ZzFJXxLS3RLGatmN3hOVjWj9D1jnYEcZGIBcAZG6OUiA6Lz4Bg41i8AegrRVTd64=
+	t=1726014479; cv=none; b=NLR6mFvR81z7wbe9GQJjZmFf3YwI4Dq8rUJ2Bxq2ihDz/qrLa5fsq/3PJVB/1N97d2Q2gU9ytLNToYxpctRU2d8P+yW7dHvHy1DT74d3jXdMfpfydjl6kA8tOf79aNEWe2DEz9Y8zFCQhRgnHBoaPh5TiVvu8i2dQYdZ9a7PnYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726014375; c=relaxed/simple;
-	bh=fdRZz3fSGogavw9XdqwzRbJxXyg4vhX9XzftvBciH7o=;
+	s=arc-20240116; t=1726014479; c=relaxed/simple;
+	bh=wb6hWZRQtM77iwkbrSTFhPYBWYbIJLnpcJlbNlYBUC0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=envDzLYrGsWFVlf53RRCkySdipGakB+Hev8V9XBXyBzfEsmiKfZzkTn1ldI3Te7FSJe/LF53UCfm+lcofsNBB8QR1jbMqs+F8T20tst9EVoe1EkrdDUrFcjWqaFWsyYLXOY3Ctuw+4/SHEt5VoecMKkKABQmkrJJG2iAPSOPRNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NWR1HBbw; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=GY7DWdemOH1zGi+pmpge6dIJsWHcks/S0kfdiP64/GPf8DAVDHxqQGL0rYVWk24GQ9o4uoG8NOITGpZV12gpjOhxBo6sNl6//yqa7T/fD1gSYBREUuSj2z5khfF3pZW/FO2flob7gH+2oDze1JFv/avc/tHp5dxU1jePo4PMaag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NJx6f/m4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NWR1HBbw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79FE8C4CEC3;
-	Wed, 11 Sep 2024 00:26:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NJx6f/m4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA5D2C4CEC3;
+	Wed, 11 Sep 2024 00:27:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726014374;
-	bh=fdRZz3fSGogavw9XdqwzRbJxXyg4vhX9XzftvBciH7o=;
+	s=k20201202; t=1726014477;
+	bh=wb6hWZRQtM77iwkbrSTFhPYBWYbIJLnpcJlbNlYBUC0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NWR1HBbw7xkRU8MbS1GvekBf+ZtR3CkUBY6d3UDFpbbNt7K7WpSOQUNhYJMPPRe0w
-	 z3yffn4k/4KTLduGVVnBtgPPqoXbpZtnyl69n1a7OMXs4A80EC2BAMYzpy2hdWTR0+
-	 i29LbjXK29ZAadKOVXSY9z5fO9EuVZVTgxqDdLgQw5gfn18OAb80O05v3U3gw9/ifZ
-	 4EuiDzByTwl3zxYZyZFDQudS8pcoZUqkFcGV0zE76RGUGdnFmCo9NRJxYcKCG34YaZ
-	 XRa0zGzBzzpNM0juGM9muFFj7g8dIOc2xb/Ag/X4ST/j7P+Jn6R3mWPt49av8H+ikO
-	 5GyDdzlLlLydg==
-Date: Tue, 10 Sep 2024 17:26:14 -0700
+	b=NJx6f/m4c+myCVZz7bfmxM9P2B20lWP2CXCFwqkr3CL7D9cRX07VzUxn2BbabZf4d
+	 qpleUyhJMqEaAFYUU/81JVbN2rwTw47IPPDNbwHiGwW5yJfJVP3TLGLuWXow1E3bFu
+	 XJqZ0yChAkRBUK5Kfe2tNUuXgYkKVsovdDDtc1ILOxzIeGD7iVCvPzvTTbCiDUCXKh
+	 cwm76PpLf9h8AA/Yrixbkki/CLE7AkPGeqjXRDT8pyAsx90kh4+IoDlzk/arEiVioq
+	 InNaCBUsDMCTJ5NKX70ZbN4L47Ewt+mazWobWuEIV2vBpYtM24t6tPCOXHWy8He8jI
+	 O2gx+alHpZqKQ==
+Date: Tue, 10 Sep 2024 17:27:57 -0700
 From: Kees Cook <kees@kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: linux-hardening@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
-Subject: Re: -Wformat-trunctation with `make W=1`
-Message-ID: <202409101722.C8E47DF@keescook>
-References: <Zt73a3t8Y8uH5MHG@smile.fi.intel.com>
+To: Dmitry Antipov <dmantipov@yandex.ru>
+Cc: Johannes Berg <johannes.berg@intel.com>, Kalle Valo <kvalo@kernel.org>,
+	linux-wireless@vger.kernel.org, linux-hardening@vger.kernel.org,
+	lvc-project@linuxtesting.org
+Subject: Re: [PATCH v2] wifi: cfg80211: fix two more possible UBSAN-detected
+ off-by-one errors
+Message-ID: <202409101727.2104D50D85@keescook>
+References: <20240909090806.1091956-1-dmantipov@yandex.ru>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -41,30 +44,21 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Zt73a3t8Y8uH5MHG@smile.fi.intel.com>
+In-Reply-To: <20240909090806.1091956-1-dmantipov@yandex.ru>
 
-On Mon, Sep 09, 2024 at 04:26:03PM +0300, Andy Shevchenko wrote:
-> Recently I'm trying to compile my (almost) x86_64_defconfig based kernel with
-> `make W=1` while having CONFIG_WERROR=y. With a handful of patches I was able
-> to achieve that with clang-18, however GCC 14.2.0 issues a lot of additional
-> warnings that are mostly related to -Wformat-truncation [1]. Any suggestions,
-> plans, comments on how to address them?
+On Mon, Sep 09, 2024 at 12:08:06PM +0300, Dmitry Antipov wrote:
+> Although not reproduced in practice, these two cases may be
+> considered by UBSAN as off-by-one errors. So fix them in the
+> same way as in commit a26a5107bc52 ("wifi: cfg80211: fix UBSAN
+> noise in cfg80211_wext_siwscan()").
 > 
-> [1]: https://paste.debian.net/hidden/46106f2a/
+> Fixes: 807f8a8c3004 ("cfg80211/nl80211: add support for scheduled scans")
+> Fixes: 5ba63533bbf6 ("cfg80211: fix alignment problem in scan request")
+> Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
 
-Since it's behind W=1, fixing those issues hasn't been a very high
-priority. That said, I would love to see it done. Patches have slowly
-been landing for various W=1 things related to the -Wstringop-... and
--Wformat... options, though. But I don't think there has been a
-concerted effort to wipe them out completely. And at least sometimes
-these warnings are effectively false positives, related to unexpected
-behaviors in GCC's value range tracking, though that has mostly been an
-issue for getting -Warray-bounds to build cleanly.
+Thanks for finding these!
 
-As for fixing them, I think one will need to just look at each instance
-one at a time to figure out the best solution.
-
--Kees
+Reviewed-by: Kees Cook <kees@kernel.org>
 
 -- 
 Kees Cook
