@@ -1,118 +1,83 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 965151865EC
-	for <linux-hardening@vger.kernel.org>; Fri, 13 Sep 2024 11:01:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AB56187849;
+	Fri, 13 Sep 2024 11:17:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726225285; cv=none; b=s3z1Iy9LEQG+JnBySPRhGLVRrLNjdh54i1I2wRyzufgPu4RuZ0Q8QMZYIeNwqZaz2cts2CVFGd8wdWcG03sGVfzN1kqwYPg5WGaOmUGJOcxGJwU+ZEOJLdeZuIdQabfE/dxNqmogfub+son4fGGm3lO7eNPg855+BjA/TY3467I=
+	t=1726226257; cv=none; b=dh+41aGd94teP+KrbuY22ODLuj+9WNcHZqqSejS+i2G76pQi1/DrJ8y+UpunryCM3FZnDggQW+Qynjx3mgT14FWTkOmP4cu9oZV3oePwXBKgn0Dknnlne0TJA7IS87yz4tgFdMUGfMpjdngEP1zfqzHNkkpA2hMsU4k+fw1VLVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726225285; c=relaxed/simple;
-	bh=6cTHjuS7EBHBD4xtZqJfXECj5rtdnxI2Mext/1qxcOg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lCOF59VRjd2Fj9UPOCFzgleqZU7e5MhcnWb0LkjVjOZxPlh2sUVHrGSTLNE3BWRDyCi9ppvsiy7rAWNkkbFu4r67h4IIH6pk8DG7ZBvsxC2CHLMzupom+lhp5q7FKEZVp1372h5vmvdRMNwWbMSUF5C89OgZqUVwAfQ1WtwPRrI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=3ZFnPrBn; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+	s=arc-20240116; t=1726226257; c=relaxed/simple;
+	bh=68sScwS5SIib1G11p6Hu/7v3V+LPBdR0qoLi2atvoIk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XF8GjSYQJd6huP5QRv3HPVixeYTMJCDABfhhSSNYAvB1tQWHMprG3TZIkk4P/irDv9Mai1L5yW+HCTZM0GglvkthbsdszAX9v1LGP30xde4HUZryMGWIGyZdzHH6uf7j2dF4ikmgyAXAB/nHfp4lgYgZDUrixQ7eKwaF3/pN1FM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=amSm8OHH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="3ZFnPrBn"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5c3df1a3cb6so358330a12.2
-        for <linux-hardening@vger.kernel.org>; Fri, 13 Sep 2024 04:01:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1726225282; x=1726830082; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=b6x+FbPBr6LOLetSJiGWO7sMy2gp7jD6h7M3aIAswxc=;
-        b=3ZFnPrBnyanINfPLnYAtBudE5xd3tCt592o+CnE8XH9GZ4OXdCRiUUKtVbQTFknxwS
-         NkrvTKa2Lxm4GMWstXztXxECMLVUthnDC2tPxe6JCa87j/d4yhqQ8U4w8DDeRJTSj0BN
-         OeGYoiYYmaJ6Bt3y+tQ6WD6GjrG4hvMIC+Ba4fofDZtBY4Eq6bIOvZjElQntm1eabNa2
-         +gLX+mE6vwZoYHTtrtZokHRV+5QtFYwQkjROJgzUZNXIFRU0/muzcLl/gr+VDpgegEMd
-         FRuNPfpIr9E41gOZgjpbYXYgWuRjGhrtiHCWn2saEma+/cAAoxoH0EokIddKWVGt7YDf
-         p37A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726225282; x=1726830082;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=b6x+FbPBr6LOLetSJiGWO7sMy2gp7jD6h7M3aIAswxc=;
-        b=Hx2PYPWasxzC8fh24i4AotA4mmTF//1XBdZh3spL9uzQEBLV8xEv2GUDChy9IoLbXl
-         7p9PwK8f6VzX2La9+UpM8BldzFA/BWZqw0plsJ155ymah3fY6n1K4OeJaF/i44t39JZm
-         +gws0pwZ0l2nLSaND4uPK9FpPRRExsKeWpe+dH4lapFXUCdoBGx3dU08kbvcfb2xrojd
-         vhs4ZusbwpAV+3NXapmI1Ig7kVOhaxC6Gq1jvEhslg2RaaordSiMzA8McdcVUuIoHt0C
-         KmUweIO6NoDjoc2OMa1+lvG9LR0uv5Unho7dfiwZkrsAkIQ48NMpQYRMgu4L2oNL8eZK
-         BoZA==
-X-Forwarded-Encrypted: i=1; AJvYcCVIlAbIDLpZnlgLN8asRUSbqaWKbLxoQEEnScgOzGjhSAoS7e72d6eHnSB+x4muNgjCeO/Lhy8OvgSW4mIyj+s=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4j5LRjF9o569rXLKzZx/ioquYovEA3wvL5lHo5yznBnmij/1U
-	PSrbq22CwopvMq6X4SrPfG3WQkTWeNc3ofkv2kq/6dpEQ64y19W+uXzGuydvWNU=
-X-Google-Smtp-Source: AGHT+IGIsdWg7O3qlfv6WqCrKkIhGhaWd9vPtXUZRebQ9smyngb4xqLB6yJC4zM5VZ5puQwM7VOsnw==
-X-Received: by 2002:a05:6402:26c3:b0:5c4:bb1:6491 with SMTP id 4fb4d7f45d1cf-5c413e123b3mr1767817a12.3.1726225281653;
-        Fri, 13 Sep 2024 04:01:21 -0700 (PDT)
-Received: from fedora.fritz.box (aftr-62-216-208-245.dynamic.mnet-online.de. [62.216.208.245])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5c3ebd51f84sm7459257a12.41.2024.09.13.04.01.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Sep 2024 04:01:21 -0700 (PDT)
-From: Thorsten Blum <thorsten.blum@toblux.com>
-To: tytso@mit.edu,
-	adilger.kernel@dilger.ca,
-	kees@kernel.org,
-	gustavoars@kernel.org
-Cc: linux-ext4@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	Thorsten Blum <thorsten.blum@toblux.com>
-Subject: [PATCH] ext4: Annotate struct fname with __counted_by()
-Date: Fri, 13 Sep 2024 13:00:14 +0200
-Message-ID: <20240913110013.151331-2-thorsten.blum@toblux.com>
-X-Mailer: git-send-email 2.46.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="amSm8OHH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B20DC4CEC0;
+	Fri, 13 Sep 2024 11:17:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1726226257;
+	bh=68sScwS5SIib1G11p6Hu/7v3V+LPBdR0qoLi2atvoIk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=amSm8OHHk+ZZCy+kx4/gf8t7jUfsLnkxhQlFtLTDaCKn+QzykUnNG+XJB9rBtuZds
+	 X8bSX10FjTrLNrsbwqvjo7co4kImG/ZuMW+Di4dxeywgBZhPeU19cDCp6R7ikPSVX7
+	 apgaBHrguVmIbc7fu4VB4L4kElXaYwav9vknxzAOMMT7rUQ82cBT+mIqhGROeTK2kx
+	 k7WXCdd7nDv3NTTrlGAh5YoJ4qWY+TXVfwMPqDX0K7x0WNx5jNQ1XHbcCIz/S6v1c3
+	 AHFWXFnKoeENM6P4pEh6/bckzbJT2otXItn+RUPyvMphWwUlKCe+Sa2MMsrjgA50y5
+	 bAAWqNThLGWuQ==
+Date: Fri, 13 Sep 2024 12:17:32 +0100
+From: Simon Horman <horms@kernel.org>
+To: Justin Stitt <justinstitt@google.com>
+Cc: Pablo Neira Ayuso <pablo@netfilter.org>,
+	Jozsef Kadlecsik <kadlec@netfilter.org>,
+	Roopa Prabhu <roopa@nvidia.com>,
+	Nikolay Aleksandrov <razor@blackwall.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+	bridge@lists.linux.dev, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	Kees Cook <kees@kernel.org>
+Subject: Re: [PATCH] netfilter: nf_tables: replace deprecated strncpy with
+ strscpy_pad
+Message-ID: <20240913111732.GV572255@kernel.org>
+References: <20240909-strncpy-net-bridge-netfilter-nft_meta_bridge-c-v1-1-946180aa7909@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240909-strncpy-net-bridge-netfilter-nft_meta_bridge-c-v1-1-946180aa7909@google.com>
 
-Add the __counted_by compiler attribute to the flexible array member
-name to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
-CONFIG_FORTIFY_SOURCE.
+On Mon, Sep 09, 2024 at 03:48:39PM -0700, Justin Stitt wrote:
+> strncpy() is deprecated for use on NUL-terminated destination strings [1] and
+> as such we should prefer more robust and less ambiguous string interfaces.
+> 
+> In this particular instance, the usage of strncpy() is fine and works as
+> expected. However, towards the goal of [2], we should consider replacing
+> it with an alternative as many instances of strncpy() are bug-prone. Its
+> removal from the kernel promotes better long term health for the
+> codebase.
+> 
+> The current usage of strncpy() likely just wants the NUL-padding
+> behavior offered by strncpy() and doesn't care about the
+> NUL-termination. Since the compiler doesn't know the size of @dest, we
+> can't use strtomem_pad(). Instead, use strscpy_pad() which behaves
+> functionally the same as strncpy() in this context -- as we expect
+> br_dev->name to be NUL-terminated itself.
+> 
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://github.com/KSPP/linux/issues/90 [2]
+> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
+> ---
+> Note: build-tested only.
 
-Inline and use struct_size() to calculate the number of bytes to
-allocate for new_fn and remove the local variable len.
-
-Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
----
- fs/ext4/dir.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
-
-diff --git a/fs/ext4/dir.c b/fs/ext4/dir.c
-index ff4514e4626b..8e7df15bb971 100644
---- a/fs/ext4/dir.c
-+++ b/fs/ext4/dir.c
-@@ -408,7 +408,7 @@ struct fname {
- 	__u32		inode;
- 	__u8		name_len;
- 	__u8		file_type;
--	char		name[];
-+	char		name[] __counted_by(name_len);
- };
- 
- /*
-@@ -464,14 +464,13 @@ int ext4_htree_store_dirent(struct file *dir_file, __u32 hash,
- 	struct rb_node **p, *parent = NULL;
- 	struct fname *fname, *new_fn;
- 	struct dir_private_info *info;
--	int len;
- 
- 	info = dir_file->private_data;
- 	p = &info->root.rb_node;
- 
- 	/* Create and allocate the fname structure */
--	len = sizeof(struct fname) + ent_name->len + 1;
--	new_fn = kzalloc(len, GFP_KERNEL);
-+	new_fn = kzalloc(struct_size(new_fn, name, ent_name->len + 1),
-+			 GFP_KERNEL);
- 	if (!new_fn)
- 		return -ENOMEM;
- 	new_fn->hash = hash;
--- 
-2.46.0
-
+Reviewed-by: Simon Horman <horms@kernel.org>
