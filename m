@@ -1,31 +1,31 @@
-Received: from omta040.useast.a.cloudfilter.net (omta040.useast.a.cloudfilter.net [44.202.169.39])
+Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6E171BB6AB
-	for <linux-hardening@vger.kernel.org>; Fri, 13 Sep 2024 08:09:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4DE21D58BD
+	for <linux-hardening@vger.kernel.org>; Fri, 13 Sep 2024 08:10:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726214973; cv=none; b=Mn80LGxH5/TQzDXnVdheJZGrapdc5BoEPZOUnoH7vptbWDKATCPybCv3Yjfcg5LyIbmwHDsy6Qxoa0t5EN80AGXlsc1J0KekDXKTd3yotghquxTyvZnrbWpq/pErWjvqCDOPKGCItMh0wGa8TJhdRwAt5g7JfsdhYfBMuc2i1hU=
+	t=1726215053; cv=none; b=Uxf1GExuJy46y1iU/B5Y9CilCgI5maZGWrbcLomuDhfLprZMjRX3pligWd4sZ+GWsKisGqW3+N0TsCAGzN91WIX3w7HrVrAi9hSjAw8p1qdJrmQs+qLxiHRv1IdPXlDnB8ptaCeiBtljG0YadwZafw8pXxEPRt3PwxvyP9RIrZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726214973; c=relaxed/simple;
-	bh=P8sSvWEEzSTLJt0Sy3CkDaE+8o1jNAo9/MmMCZ53ijY=;
+	s=arc-20240116; t=1726215053; c=relaxed/simple;
+	bh=bm0JrAOh22eMu3dJ7cStSs9X0hitNAj/hOSXsbUVBd0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sqbeWmEEiBz4od6qBIhTMn5cgir/TDaO5ZeZulfzwmfxjRMe2UdjJw9uBm9GgEezvR8xxIcqZJomNrwVE/0uIaTDgtcb3QkUNx5/nIXnrugduuEkB+tIqoPOaXTAnpti9rIfuMp/5aLc427puHw+NF4RI9+2C3EbzZ+54uIMFow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=eqFRaqaL; arc=none smtp.client-ip=44.202.169.39
+	 In-Reply-To:Content-Type; b=u+LpYlNjEQarNQOpm3unjowfphmHLvjUI6ByBratk5BbN3e1ZId+91TRGTIKCG8Bg3HdR3CUV+wKaHGS1LEnqUwF1RWYUpE2ILMM21aP1GXTmQU3es58CalyqyGZ/kSoz02E9XWrMmCjCf7Ioszr85TwuAFPJs+kFIZJ0our4vc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=YBSvwQun; arc=none smtp.client-ip=44.202.169.35
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="eqFRaqaL"
-Received: from eig-obgw-5003a.ext.cloudfilter.net ([10.0.29.159])
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="YBSvwQun"
+Received: from eig-obgw-6007a.ext.cloudfilter.net ([10.0.30.247])
 	by cmsmtp with ESMTPS
-	id oyIBsj840nNFGp1MqsnK8o; Fri, 13 Sep 2024 08:09:24 +0000
+	id oUdCstFHwiA19p1O9safpm; Fri, 13 Sep 2024 08:10:45 +0000
 Received: from gator4166.hostgator.com ([108.167.133.22])
 	by cmsmtp with ESMTPS
-	id p1MpsUawdO7Crp1Mps21j3; Fri, 13 Sep 2024 08:09:23 +0000
-X-Authority-Analysis: v=2.4 cv=Pco0hThd c=1 sm=1 tr=0 ts=66e3f333
+	id p1O8sUK6vkvhOp1O8s8sIR; Fri, 13 Sep 2024 08:10:44 +0000
+X-Authority-Analysis: v=2.4 cv=ILYECBvG c=1 sm=1 tr=0 ts=66e3f384
  a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=rpUMG24A1zG+UrzXDtAMsg==:17
  a=IkcTkHD0fZMA:10 a=EaEq8P2WXUwA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
- a=1NbDYHN2ElJTStc2awIA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=9OA2k-xDzDUK-BUy8SkA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
  a=Xt_RvD8W3m28Mn_h3AK8:22
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
@@ -33,20 +33,20 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
 	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=ioUqqHWbZA3ZxtqcF1IJZFQ0PDlv9LdpcpzewA1m3Os=; b=eqFRaqaLU7ofpW1I2KdGDkAT0G
-	86CwVyJZZA0DQhQ3D+0MTRNIk+P7tQBxWOVf7gxioiPQLlK5yLBb8kn26pVn0oiEM7raxVXb9xLV/
-	oJ2wtveKcWytzcKOn/qY4lwODhdOyyUSJujA9sAAj+NsbbdknhAslTaAnDrQeN7Y+yt+G2nfrCUBb
-	xwbLo4YNFuGVeMU0PT4xtTEwLPSxT/ot2z7WgJYOJ5kmYn8Yzyja965S95psRvpIdaxfMmdto06SY
-	UGduZDn/p6fXNtBAyIKdZ1QOgYMEU0EfY+bnDfEC67ssmTVMtTJut6sxvwEgYhvThnb093TPZBkKa
-	AQRdd36g==;
-Received: from [185.44.53.103] (port=38116 helo=[192.168.1.187])
+	bh=1G59LJMSYivR08X+18CcLBybb5tZQUn1LSKdgrtgB30=; b=YBSvwQunKc8b9LdviI/QHVj+1t
+	X5fVKu0Ox2tyTnevFtmhS0YDWNy1EioVVaJ0mtpfxlhcU7RkOMTKzcB6N/X80qMZxAPLHD5O2vQt7
+	LYs9OB42/E40q0iCdZZeH/g2LBWWDdVYC7p5NC236pfEky/z+v57lQCUa0bjOp6XuFgo6JrWqVams
+	yIyd0GSgHv6Hrtbo4YF/svTpnR8UwrwHavQmRwyiqBS5eH17r7yESkNqLwrHdktpr6cGuFQF2R9PU
+	j/lKJ0HnIFCMoE1TrKpK6BLubY6nHNfTGnL7TbgoqVF7GS0A8R900PMD/bcedfGKCZmCzBmJyw0XC
+	GXlKuCtQ==;
+Received: from [185.44.53.103] (port=32866 helo=[192.168.1.187])
 	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 	(Exim 4.96.2)
 	(envelope-from <gustavo@embeddedor.com>)
-	id 1sp1Mo-003kZT-0Q;
-	Fri, 13 Sep 2024 03:09:22 -0500
-Message-ID: <ef5a8e6d-cb97-4872-901c-cf4bbec23be6@embeddedor.com>
-Date: Fri, 13 Sep 2024 10:09:17 +0200
+	id 1sp1O7-003nYS-2g;
+	Fri, 13 Sep 2024 03:10:44 -0500
+Message-ID: <5a438394-ae88-4d72-a56e-6886d06b0a84@embeddedor.com>
+Date: Fri, 13 Sep 2024 10:10:40 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -54,18 +54,17 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] drm/nouveau: Avoid -Wflex-array-member-not-at-end
- warning
+Subject: Re: [PATCH][next] rpmsg: glink: Avoid -Wflex-array-member-not-at-end
+ warnings
 To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
- Danilo Krummrich <dakr@redhat.com>, David Airlie <airlied@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>
-Cc: dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+ Bjorn Andersson <andersson@kernel.org>,
+ Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <ZsZLFS1CsHkKjw+C@elsanto>
+References: <ZrOQa2gew5yadyt3@cute>
 Content-Language: en-US
 From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <ZsZLFS1CsHkKjw+C@elsanto>
+In-Reply-To: <ZrOQa2gew5yadyt3@cute>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
@@ -76,18 +75,18 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 185.44.53.103
 X-Source-L: No
-X-Exim-ID: 1sp1Mo-003kZT-0Q
+X-Exim-ID: 1sp1O7-003nYS-2g
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: ([192.168.1.187]) [185.44.53.103]:38116
+X-Source-Sender: ([192.168.1.187]) [185.44.53.103]:32866
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 20
+X-Email-Count: 30
 X-Org: HG=hgshared;ORG=hostgator;
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfN/DoTMu4mLwwGMoxGaCb48FtWqdItcucHbA62cU9HBnOl6hVhmGhlKbNSmeeHTZfuIJMKBtwHOOOb1sbXZOX3O6HmTNjGGDTtPpED5I970gI5oU3oQT
- eij77sgMIQ/gzgayWjDOLL1SwrOsxqLlEBNOdulj1Ebp9U3oFPGa/BUgdXq9DbcoqJCzCLomYYE1rzOzzOkEHcgz/ISBQKjLBZDI9jyIw3CHDa7q5pN7hCSN
+X-CMAE-Envelope: MS4xfKl+Ww8oY7Mk7GWAWC1apNAssnIiqQY9A09B8JGrI7aONNbxR4Xpk08njhDLgBNaL9AFj2xbY8vY9FFsY7M1qGLO2HT3C/uX9yMCm84BFOXmlkapkzHv
+ gXtP/ODlMtxsrOv4oE221IvOwpBKlGeQ41X4I1DvJgjO2VKegAYKpIAnwNy4wfU+qckYnr+cYZ0F0xu0zyBxM5C6mcBPRdYn17w3+zEKcZuMytRtl75RUEF1
 
 Hi all,
 
@@ -96,73 +95,162 @@ Friendly ping: who can take this, please? 🙂
 Thanks
 -Gustavo
 
-On 21/08/24 22:16, Gustavo A. R. Silva wrote:
-> Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
-> a flexible structure where the size of the flexible-array member
-> is known at compile-time, and refactor the rest of the code,
-> accordingly.
+On 07/08/24 17:19, Gustavo A. R. Silva wrote:
+> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> getting ready to enable it, globally.
 > 
-> So, with this, fix the following warning:
+> So, in order to avoid ending up with a flexible-array member in the
+> middle of multiple other structs, we use the `__struct_group()`
+> helper to create a new tagged `struct glink_msg_hdr`. This structure
+> groups together all the members of the flexible `struct glink_msg`
+> except the flexible array.
 > 
-> drivers/gpu/drm/nouveau/dispnv50/disp.c:779:47: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> As a result, the array is effectively separated from the rest of the
+> members without modifying the memory layout of the flexible structure.
+> We then change the type of the middle struct members currently causing
+> trouble from `struct glink_msg` to `struct glink_msg_hdr`.
+> 
+> We also want to ensure that when new members need to be added to the
+> flexible structure, they are always included within the newly created
+> tagged struct. For this, we use `static_assert()`. This ensures that the
+> memory layout for both the flexible structure and the new tagged struct
+> is the same after any changes.
+> 
+> This approach avoids having to implement `struct glink_msg_hdr` as a
+> completely separate structure, thus preventing having to maintain two
+> independent but basically identical structures, closing the door to
+> potential bugs in the future.
+> 
+> We also use `container_of()` whenever we need to retrieve a pointer to
+> the flexible structure, through which we can access the flexible-array
+> member, if necessary.
+> 
+> Additionally, we use the `DEFINE_RAW_FLEX()` helper for an on-stack
+> definition of a flexible structure where the size for the flexible-array
+> member is known at compile-time.
+> 
+> So, with these changes, fix the following warnings:
+> drivers/rpmsg/qcom_glink_native.c:51:26: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> drivers/rpmsg/qcom_glink_native.c:459:34: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> drivers/rpmsg/qcom_glink_native.c:846:34: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> drivers/rpmsg/qcom_glink_native.c:968:34: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> drivers/rpmsg/qcom_glink_native.c:1380:34: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 > 
 > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 > ---
->   drivers/gpu/drm/nouveau/dispnv50/disp.c | 20 +++++++++-----------
->   1 file changed, 9 insertions(+), 11 deletions(-)
+>   drivers/rpmsg/qcom_glink_native.c | 42 +++++++++++++++++--------------
+>   1 file changed, 23 insertions(+), 19 deletions(-)
 > 
-> diff --git a/drivers/gpu/drm/nouveau/dispnv50/disp.c b/drivers/gpu/drm/nouveau/dispnv50/disp.c
-> index eed579a6c858..ddddc69640be 100644
-> --- a/drivers/gpu/drm/nouveau/dispnv50/disp.c
-> +++ b/drivers/gpu/drm/nouveau/dispnv50/disp.c
-> @@ -774,11 +774,9 @@ nv50_hdmi_enable(struct drm_encoder *encoder, struct nouveau_crtc *nv_crtc,
->   	struct drm_hdmi_info *hdmi = &nv_connector->base.display_info.hdmi;
->   	union hdmi_infoframe infoframe = { 0 };
->   	const u8 rekey = 56; /* binary driver, and tegra, constant */
-> +	DEFINE_RAW_FLEX(struct nvif_outp_infoframe_v0, args, data, 17);
-> +	const u8 data_len = 17; /* same length as in DEFINE_RAW_FLEX above. */
->   	u32 max_ac_packet;
+> diff --git a/drivers/rpmsg/qcom_glink_native.c b/drivers/rpmsg/qcom_glink_native.c
+> index 82d460ff4777..ed89b810f262 100644
+> --- a/drivers/rpmsg/qcom_glink_native.c
+> +++ b/drivers/rpmsg/qcom_glink_native.c
+> @@ -30,11 +30,16 @@
+>   #define RPM_GLINK_CID_MAX	65536
+>   
+>   struct glink_msg {
+> -	__le16 cmd;
+> -	__le16 param1;
+> -	__le32 param2;
+> +	/* New members MUST be added within the __struct_group() macro below. */
+> +	__struct_group(glink_msg_hdr, hdr, __packed,
+> +		__le16 cmd;
+> +		__le16 param1;
+> +		__le32 param2;
+> +	);
+>   	u8 data[];
+>   } __packed;
+> +static_assert(offsetof(struct glink_msg, data) == sizeof(struct glink_msg_hdr),
+> +	      "struct member likely outside of __struct_group()");
+>   
+>   /**
+>    * struct glink_defer_cmd - deferred incoming control message
+> @@ -48,7 +53,7 @@ struct glink_msg {
+>   struct glink_defer_cmd {
+>   	struct list_head node;
+>   
+> -	struct glink_msg msg;
+> +	struct glink_msg_hdr msg;
+>   	u8 data[];
+>   };
+>   
+> @@ -455,12 +460,9 @@ static void qcom_glink_intent_req_abort(struct glink_channel *channel)
+>   static int qcom_glink_send_open_req(struct qcom_glink *glink,
+>   				    struct glink_channel *channel)
+>   {
 > -	struct {
-> -		struct nvif_outp_infoframe_v0 infoframe;
-> -		u8 data[17];
-> -	} args = { 0 };
->   	int ret, size;
+> -		struct glink_msg msg;
+> -		u8 name[GLINK_NAME_SIZE];
+> -	} __packed req;
+> +	DEFINE_RAW_FLEX(struct glink_msg, req, data, GLINK_NAME_SIZE);
+>   	int name_len = strlen(channel->name) + 1;
+> -	int req_len = ALIGN(sizeof(req.msg) + name_len, 8);
+> +	int req_len = ALIGN(sizeof(*req) + name_len, 8);
+>   	int ret;
+>   	unsigned long flags;
 >   
->   	max_ac_packet  = mode->htotal - mode->hdisplay;
-> @@ -815,29 +813,29 @@ nv50_hdmi_enable(struct drm_encoder *encoder, struct nouveau_crtc *nv_crtc,
->   		return;
+> @@ -476,12 +478,12 @@ static int qcom_glink_send_open_req(struct qcom_glink *glink,
 >   
->   	/* AVI InfoFrame. */
-> -	args.infoframe.version = 0;
-> -	args.infoframe.head = nv_crtc->index;
-> +	args->version = 0;
-> +	args->head = nv_crtc->index;
+>   	channel->lcid = ret;
 >   
->   	if (!drm_hdmi_avi_infoframe_from_display_mode(&infoframe.avi, &nv_connector->base, mode)) {
->   		drm_hdmi_avi_infoframe_quant_range(&infoframe.avi, &nv_connector->base, mode,
->   						   HDMI_QUANTIZATION_RANGE_FULL);
+> -	req.msg.cmd = cpu_to_le16(GLINK_CMD_OPEN);
+> -	req.msg.param1 = cpu_to_le16(channel->lcid);
+> -	req.msg.param2 = cpu_to_le32(name_len);
+> -	strcpy(req.name, channel->name);
+> +	req->cmd = cpu_to_le16(GLINK_CMD_OPEN);
+> +	req->param1 = cpu_to_le16(channel->lcid);
+> +	req->param2 = cpu_to_le32(name_len);
+> +	strcpy(req->data, channel->name);
 >   
-> -		size = hdmi_infoframe_pack(&infoframe, args.data, ARRAY_SIZE(args.data));
-> +		size = hdmi_infoframe_pack(&infoframe, args->data, data_len);
->   	} else {
->   		size = 0;
->   	}
+> -	ret = qcom_glink_tx(glink, &req, req_len, NULL, 0, true);
+> +	ret = qcom_glink_tx(glink, req, req_len, NULL, 0, true);
+>   	if (ret)
+>   		goto remove_idr;
 >   
-> -	nvif_outp_infoframe(&nv_encoder->outp, NVIF_OUTP_INFOFRAME_V0_AVI, &args.infoframe, size);
-> +	nvif_outp_infoframe(&nv_encoder->outp, NVIF_OUTP_INFOFRAME_V0_AVI, args, size);
+> @@ -826,7 +828,9 @@ static int qcom_glink_rx_defer(struct qcom_glink *glink, size_t extra)
 >   
->   	/* Vendor InfoFrame. */
-> -	memset(&args.data, 0, sizeof(args.data));
-> +	memset(args->data, 0, data_len);
->   	if (!drm_hdmi_vendor_infoframe_from_display_mode(&infoframe.vendor.hdmi,
->   							 &nv_connector->base, mode))
-> -		size = hdmi_infoframe_pack(&infoframe, args.data, ARRAY_SIZE(args.data));
-> +		size = hdmi_infoframe_pack(&infoframe, args->data, data_len);
->   	else
->   		size = 0;
+>   	INIT_LIST_HEAD(&dcmd->node);
 >   
-> -	nvif_outp_infoframe(&nv_encoder->outp, NVIF_OUTP_INFOFRAME_V0_VSI, &args.infoframe, size);
-> +	nvif_outp_infoframe(&nv_encoder->outp, NVIF_OUTP_INFOFRAME_V0_VSI, args, size);
+> -	qcom_glink_rx_peek(glink, &dcmd->msg, 0, sizeof(dcmd->msg) + extra);
+> +	qcom_glink_rx_peek(glink,
+> +			   container_of(&dcmd->msg, struct glink_msg, hdr), 0,
+> +			   sizeof(dcmd->msg) + extra);
 >   
->   	nv_encoder->hdmi.enabled = true;
->   }
+>   	spin_lock(&glink->rx_lock);
+>   	list_add_tail(&dcmd->node, &glink->rx_queue);
+> @@ -843,7 +847,7 @@ static int qcom_glink_rx_data(struct qcom_glink *glink, size_t avail)
+>   	struct glink_core_rx_intent *intent;
+>   	struct glink_channel *channel;
+>   	struct {
+> -		struct glink_msg msg;
+> +		struct glink_msg_hdr msg;
+>   		__le32 chunk_size;
+>   		__le32 left_size;
+>   	} __packed hdr;
+> @@ -965,7 +969,7 @@ static void qcom_glink_handle_intent(struct qcom_glink *glink,
+>   	};
+>   
+>   	struct {
+> -		struct glink_msg msg;
+> +		struct glink_msg_hdr msg;
+>   		struct intent_pair intents[];
+>   	} __packed * msg;
+>   
+> @@ -1377,7 +1381,7 @@ static int __qcom_glink_send(struct glink_channel *channel,
+>   	struct glink_core_rx_intent *tmp;
+>   	int iid = 0;
+>   	struct {
+> -		struct glink_msg msg;
+> +		struct glink_msg_hdr msg;
+>   		__le32 chunk_size;
+>   		__le32 left_size;
+>   	} __packed req;
+> @@ -1685,7 +1689,7 @@ static void qcom_glink_work(struct work_struct *work)
+>   		list_del(&dcmd->node);
+>   		spin_unlock_irqrestore(&glink->rx_lock, flags);
+>   
+> -		msg = &dcmd->msg;
+> +		msg = container_of(&dcmd->msg, struct glink_msg, hdr);
+>   		cmd = le16_to_cpu(msg->cmd);
+>   		param1 = le16_to_cpu(msg->param1);
+>   		param2 = le32_to_cpu(msg->param2);
