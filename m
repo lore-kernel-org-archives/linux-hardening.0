@@ -1,145 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 236381C244C;
-	Fri, 13 Sep 2024 10:23:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 965151865EC
+	for <linux-hardening@vger.kernel.org>; Fri, 13 Sep 2024 11:01:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726223027; cv=none; b=IDbxcPzSLYnUpNzTzn2p3/UyDTVkU38tvyktTnXhGuIZc7HGngXaaTJTkHWuMhGJl+KU0fPsSDxf/aZOk4i7tR/Ib6QrBW4aQPL7/6HFMID87gYaa9YJGq2pvEOMqHnx0BXJ85OxGnBrvwlG0SwZ0dUaTLwWIKNTdQ6iOIcrrrE=
+	t=1726225285; cv=none; b=s3z1Iy9LEQG+JnBySPRhGLVRrLNjdh54i1I2wRyzufgPu4RuZ0Q8QMZYIeNwqZaz2cts2CVFGd8wdWcG03sGVfzN1kqwYPg5WGaOmUGJOcxGJwU+ZEOJLdeZuIdQabfE/dxNqmogfub+son4fGGm3lO7eNPg855+BjA/TY3467I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726223027; c=relaxed/simple;
-	bh=x1MBeyP7N4yaRObxjhsKUbVfVi9XKlw7sC0IJuwAqfg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=spSbdekDl66jwzVnC5KakumedWsUCTxEOrldFtGAUTbd80wahKClIsQSAsNzV3GvkM4QwCYZZcq2CEIpKR5bpnKHtDi3D8JFj7zbwDaKRziB1sc1CstnDUZbKIrouvPgMO8If5YxY4Gxl83YVfmWSA4xlGqhk4qJ/rBCsyRjXNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZigbP11U; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1726225285; c=relaxed/simple;
+	bh=6cTHjuS7EBHBD4xtZqJfXECj5rtdnxI2Mext/1qxcOg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lCOF59VRjd2Fj9UPOCFzgleqZU7e5MhcnWb0LkjVjOZxPlh2sUVHrGSTLNE3BWRDyCi9ppvsiy7rAWNkkbFu4r67h4IIH6pk8DG7ZBvsxC2CHLMzupom+lhp5q7FKEZVp1372h5vmvdRMNwWbMSUF5C89OgZqUVwAfQ1WtwPRrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=3ZFnPrBn; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZigbP11U"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4C7CC4CEC0;
-	Fri, 13 Sep 2024 10:23:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726223026;
-	bh=x1MBeyP7N4yaRObxjhsKUbVfVi9XKlw7sC0IJuwAqfg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ZigbP11UUROE9s0HakSjgNZ2KZDQq86pTtJSmidvc8Sx06hyeyJa8keckQd0fL9Zi
-	 DKwTEnFkoOII3BOnz+WGR3NRW7BdeOskqiw4etGe41G5U1lLyZgrU31ceqmwmfA/EE
-	 67akcNNE2NU0rYIl140iRSwTOY46yiTfnTe+ItMh9G73NzJBTOxXJD1RMnXimNBCw7
-	 oNX/xwNLi/0T7pld54V+3bqPEcG58OV3r3katpYa/qzz6M6DT9gRXN70wm76IVPA9r
-	 OSGZnHIwriNmm7yUCCdvPi4QKPF6+nxCWhaAfMhSagb/F6C10tFFenF4nTQb+lcpZg
-	 t+/2c1gN0Wvog==
-Message-ID: <30530165-0ea9-4f02-9d8c-e8abc9eda5a7@kernel.org>
-Date: Fri, 13 Sep 2024 12:23:38 +0200
+	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="3ZFnPrBn"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5c3df1a3cb6so358330a12.2
+        for <linux-hardening@vger.kernel.org>; Fri, 13 Sep 2024 04:01:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1726225282; x=1726830082; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=b6x+FbPBr6LOLetSJiGWO7sMy2gp7jD6h7M3aIAswxc=;
+        b=3ZFnPrBnyanINfPLnYAtBudE5xd3tCt592o+CnE8XH9GZ4OXdCRiUUKtVbQTFknxwS
+         NkrvTKa2Lxm4GMWstXztXxECMLVUthnDC2tPxe6JCa87j/d4yhqQ8U4w8DDeRJTSj0BN
+         OeGYoiYYmaJ6Bt3y+tQ6WD6GjrG4hvMIC+Ba4fofDZtBY4Eq6bIOvZjElQntm1eabNa2
+         +gLX+mE6vwZoYHTtrtZokHRV+5QtFYwQkjROJgzUZNXIFRU0/muzcLl/gr+VDpgegEMd
+         FRuNPfpIr9E41gOZgjpbYXYgWuRjGhrtiHCWn2saEma+/cAAoxoH0EokIddKWVGt7YDf
+         p37A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726225282; x=1726830082;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=b6x+FbPBr6LOLetSJiGWO7sMy2gp7jD6h7M3aIAswxc=;
+        b=Hx2PYPWasxzC8fh24i4AotA4mmTF//1XBdZh3spL9uzQEBLV8xEv2GUDChy9IoLbXl
+         7p9PwK8f6VzX2La9+UpM8BldzFA/BWZqw0plsJ155ymah3fY6n1K4OeJaF/i44t39JZm
+         +gws0pwZ0l2nLSaND4uPK9FpPRRExsKeWpe+dH4lapFXUCdoBGx3dU08kbvcfb2xrojd
+         vhs4ZusbwpAV+3NXapmI1Ig7kVOhaxC6Gq1jvEhslg2RaaordSiMzA8McdcVUuIoHt0C
+         KmUweIO6NoDjoc2OMa1+lvG9LR0uv5Unho7dfiwZkrsAkIQ48NMpQYRMgu4L2oNL8eZK
+         BoZA==
+X-Forwarded-Encrypted: i=1; AJvYcCVIlAbIDLpZnlgLN8asRUSbqaWKbLxoQEEnScgOzGjhSAoS7e72d6eHnSB+x4muNgjCeO/Lhy8OvgSW4mIyj+s=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4j5LRjF9o569rXLKzZx/ioquYovEA3wvL5lHo5yznBnmij/1U
+	PSrbq22CwopvMq6X4SrPfG3WQkTWeNc3ofkv2kq/6dpEQ64y19W+uXzGuydvWNU=
+X-Google-Smtp-Source: AGHT+IGIsdWg7O3qlfv6WqCrKkIhGhaWd9vPtXUZRebQ9smyngb4xqLB6yJC4zM5VZ5puQwM7VOsnw==
+X-Received: by 2002:a05:6402:26c3:b0:5c4:bb1:6491 with SMTP id 4fb4d7f45d1cf-5c413e123b3mr1767817a12.3.1726225281653;
+        Fri, 13 Sep 2024 04:01:21 -0700 (PDT)
+Received: from fedora.fritz.box (aftr-62-216-208-245.dynamic.mnet-online.de. [62.216.208.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5c3ebd51f84sm7459257a12.41.2024.09.13.04.01.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Sep 2024 04:01:21 -0700 (PDT)
+From: Thorsten Blum <thorsten.blum@toblux.com>
+To: tytso@mit.edu,
+	adilger.kernel@dilger.ca,
+	kees@kernel.org,
+	gustavoars@kernel.org
+Cc: linux-ext4@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	Thorsten Blum <thorsten.blum@toblux.com>
+Subject: [PATCH] ext4: Annotate struct fname with __counted_by()
+Date: Fri, 13 Sep 2024 13:00:14 +0200
+Message-ID: <20240913110013.151331-2-thorsten.blum@toblux.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] drm/nouveau: Avoid -Wflex-array-member-not-at-end
- warning
-To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <ZsZLFS1CsHkKjw+C@elsanto>
- <ef5a8e6d-cb97-4872-901c-cf4bbec23be6@embeddedor.com>
-From: Danilo Krummrich <dakr@kernel.org>
-Content-Language: en-US
-In-Reply-To: <ef5a8e6d-cb97-4872-901c-cf4bbec23be6@embeddedor.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Hi,
+Add the __counted_by compiler attribute to the flexible array member
+name to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
+CONFIG_FORTIFY_SOURCE.
 
-On 9/13/24 10:09 AM, Gustavo A. R. Silva wrote:
-> Hi all,
-> 
-> Friendly ping: who can take this, please? 🙂
+Inline and use struct_size() to calculate the number of bytes to
+allocate for new_fn and remove the local variable len.
 
-Usually, that's me. But I thought you might want to send a v2 based on Kees'
-comments?
+Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+---
+ fs/ext4/dir.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-- Danilo
+diff --git a/fs/ext4/dir.c b/fs/ext4/dir.c
+index ff4514e4626b..8e7df15bb971 100644
+--- a/fs/ext4/dir.c
++++ b/fs/ext4/dir.c
+@@ -408,7 +408,7 @@ struct fname {
+ 	__u32		inode;
+ 	__u8		name_len;
+ 	__u8		file_type;
+-	char		name[];
++	char		name[] __counted_by(name_len);
+ };
+ 
+ /*
+@@ -464,14 +464,13 @@ int ext4_htree_store_dirent(struct file *dir_file, __u32 hash,
+ 	struct rb_node **p, *parent = NULL;
+ 	struct fname *fname, *new_fn;
+ 	struct dir_private_info *info;
+-	int len;
+ 
+ 	info = dir_file->private_data;
+ 	p = &info->root.rb_node;
+ 
+ 	/* Create and allocate the fname structure */
+-	len = sizeof(struct fname) + ent_name->len + 1;
+-	new_fn = kzalloc(len, GFP_KERNEL);
++	new_fn = kzalloc(struct_size(new_fn, name, ent_name->len + 1),
++			 GFP_KERNEL);
+ 	if (!new_fn)
+ 		return -ENOMEM;
+ 	new_fn->hash = hash;
+-- 
+2.46.0
 
-> 
-> Thanks
-> -Gustavo
-> 
-> On 21/08/24 22:16, Gustavo A. R. Silva wrote:
->> Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
->> a flexible structure where the size of the flexible-array member
->> is known at compile-time, and refactor the rest of the code,
->> accordingly.
->>
->> So, with this, fix the following warning:
->>
->> drivers/gpu/drm/nouveau/dispnv50/disp.c:779:47: warning: structure containing 
->> a flexible array member is not at the end of another structure 
->> [-Wflex-array-member-not-at-end]
->>
->> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->> ---
->>   drivers/gpu/drm/nouveau/dispnv50/disp.c | 20 +++++++++-----------
->>   1 file changed, 9 insertions(+), 11 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/nouveau/dispnv50/disp.c 
->> b/drivers/gpu/drm/nouveau/dispnv50/disp.c
->> index eed579a6c858..ddddc69640be 100644
->> --- a/drivers/gpu/drm/nouveau/dispnv50/disp.c
->> +++ b/drivers/gpu/drm/nouveau/dispnv50/disp.c
->> @@ -774,11 +774,9 @@ nv50_hdmi_enable(struct drm_encoder *encoder, struct 
->> nouveau_crtc *nv_crtc,
->>       struct drm_hdmi_info *hdmi = &nv_connector->base.display_info.hdmi;
->>       union hdmi_infoframe infoframe = { 0 };
->>       const u8 rekey = 56; /* binary driver, and tegra, constant */
->> +    DEFINE_RAW_FLEX(struct nvif_outp_infoframe_v0, args, data, 17);
->> +    const u8 data_len = 17; /* same length as in DEFINE_RAW_FLEX above. */
->>       u32 max_ac_packet;
->> -    struct {
->> -        struct nvif_outp_infoframe_v0 infoframe;
->> -        u8 data[17];
->> -    } args = { 0 };
->>       int ret, size;
->>       max_ac_packet  = mode->htotal - mode->hdisplay;
->> @@ -815,29 +813,29 @@ nv50_hdmi_enable(struct drm_encoder *encoder, struct 
->> nouveau_crtc *nv_crtc,
->>           return;
->>       /* AVI InfoFrame. */
->> -    args.infoframe.version = 0;
->> -    args.infoframe.head = nv_crtc->index;
->> +    args->version = 0;
->> +    args->head = nv_crtc->index;
->>       if (!drm_hdmi_avi_infoframe_from_display_mode(&infoframe.avi, 
->> &nv_connector->base, mode)) {
->>           drm_hdmi_avi_infoframe_quant_range(&infoframe.avi, 
->> &nv_connector->base, mode,
->>                              HDMI_QUANTIZATION_RANGE_FULL);
->> -        size = hdmi_infoframe_pack(&infoframe, args.data, 
->> ARRAY_SIZE(args.data));
->> +        size = hdmi_infoframe_pack(&infoframe, args->data, data_len);
->>       } else {
->>           size = 0;
->>       }
->> -    nvif_outp_infoframe(&nv_encoder->outp, NVIF_OUTP_INFOFRAME_V0_AVI, 
->> &args.infoframe, size);
->> +    nvif_outp_infoframe(&nv_encoder->outp, NVIF_OUTP_INFOFRAME_V0_AVI, args, 
->> size);
->>       /* Vendor InfoFrame. */
->> -    memset(&args.data, 0, sizeof(args.data));
->> +    memset(args->data, 0, data_len);
->>       if (!drm_hdmi_vendor_infoframe_from_display_mode(&infoframe.vendor.hdmi,
->>                                &nv_connector->base, mode))
->> -        size = hdmi_infoframe_pack(&infoframe, args.data, 
->> ARRAY_SIZE(args.data));
->> +        size = hdmi_infoframe_pack(&infoframe, args->data, data_len);
->>       else
->>           size = 0;
->> -    nvif_outp_infoframe(&nv_encoder->outp, NVIF_OUTP_INFOFRAME_V0_VSI, 
->> &args.infoframe, size);
->> +    nvif_outp_infoframe(&nv_encoder->outp, NVIF_OUTP_INFOFRAME_V0_VSI, args, 
->> size);
->>       nv_encoder->hdmi.enabled = true;
->>   }
-> 
