@@ -1,126 +1,121 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C12D2107
-	for <linux-hardening@vger.kernel.org>; Sat, 14 Sep 2024 00:23:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62EE620E6
+	for <linux-hardening@vger.kernel.org>; Sat, 14 Sep 2024 08:04:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726273412; cv=none; b=oGJIdih3yXzZQ8ftSveTcn1qxOncyA6lmKHFCEUyPLTG3NWrfvBmLPJv6qTflc6Xle37fJYY+efYRIC7wY76ASeLnvYVoVyMhBbNGkYOmlspCxupP+EIDezWgbzKhpgCcP8LjT6TOYRsbAUBtXHNrNCrebEToV5p78UeC00wxK0=
+	t=1726301071; cv=none; b=GZF3AQTFFcj5EIpjgb7mrcK9UD/DS0Gt6zzjX5HiZ7btkTNdvjd71F4B5GHCxyIhFeAkiKxnBAyUD6HVBmUyjR+xFMgdpFxmZ1CsDMpORJHo8yVt6JYEOi3jjije88cFJTIWaL5vhmTAhbGv9Iybg90t/48wOGxOvogJdvDDmvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726273412; c=relaxed/simple;
-	bh=AxVG7RUK2kMrkxSkKPsXEsHSN3IPGF3HMxZVEFbkgvs=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=LeI1MKmppGzbH5NUmHygv3fIzCla8V2HLra7xzfaNvluW6JcdxsJ7/01+yk7hn4XgekOOCVrfFjY+85vkV4dX7GLbFicUSA2WYe2k4s3ATEl7yGSx2ibLjpbTGSefVr3aGukjHeeB5lrcYvGJ7+JgFIqit2FQ5I4ZfjLH8WW6rk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=vBjau/Iu; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="vBjau/Iu"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a8629ddffbaso33566466b.1
-        for <linux-hardening@vger.kernel.org>; Fri, 13 Sep 2024 17:23:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1726273409; x=1726878209; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sWRpDEvf1ffrH3KJKnl7mhymuRwMfVVLoo/Ecw4leuQ=;
-        b=vBjau/IuEtAiESABVwsfrFkvjVa/31ASSKjMqsKRyiwq8OhVbdQrJRM5zq0EF99htr
-         cubFSj1acFJSJkg6X/VqDz46TJ7HLAAqb6L4J6Z4RUF+bN/CWdpHcgypY+TaXyVVFuhL
-         G8O2Aetb9T9NjqQg7H0DgelLHf15AbRoNYRcSsQKYwCWfBdsyqOrb4wiATqxUnkiYXqC
-         dto8WRsQ/XrsqCqxUAOcCg/5CpUflKbBN8S0rTxVHvxzvKMh8GSg+S2NibDmA2dV4A2L
-         HTphhDw1ao2jmuPcmUZzXTmFju1Xa6YS31kWZ6zULb95quJDaBES0aKKO4NBZ3Ao9B1F
-         MoRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726273409; x=1726878209;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sWRpDEvf1ffrH3KJKnl7mhymuRwMfVVLoo/Ecw4leuQ=;
-        b=E/upwcpvBvYWdhY7l9O98zPxEYF35OD/BYTzmkO74aTpIFYxFNKW1dUQ2mi7nqksHQ
-         LICUjwk7bg9bVooJ2Q3I1ifUwlX/1/SH783hkrt0b47SxUfvNtx46TJ1IM5Vk30zChzb
-         pldtUz+xU7eEeklMMFqwqy1sykTqD5FGWrNG+oUPzUrfX6NOnR8OOO1RHbgBAv40ghEF
-         9sUqV6xk3iw+9NCHNDRCVaYSill6Th6smJsMV/BJmLHlUyKxZ12ObGDog2DlyLSDM9Vb
-         TPlO0WvRkVx2jK9S7+kCSuuHroWHt2PTbkFpG8FY0fLvYPV41MYD0ZbvRY/KrtbTctBJ
-         16cQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX+4RRrWogS+eknDKZXWD/F5NyAlWXEAwp2iVQs2KWtzSY5BOHMCJyM904JuJwSAWeJP0+lQXPDYQ+oZbZcO0A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwrFMIyEkUw91qvAstwz7vUz69COrBjCPKteDNujD9qIrczIUqd
-	Est+fiBsza+H1JHQAfjQlKPmxFCGX9O8QV2Ir+QTI73zqx9TUTFqbc/lJRe72n+90hGJAfbsCgI
-	Yuh0=
-X-Google-Smtp-Source: AGHT+IF1OGipcMGwWA2sIIBq/L+WNET7lcZnCMksx7OWbrLoqL0oCoYV1qzB98m0pWgOBpBPVReK4Q==
-X-Received: by 2002:a17:906:4a58:b0:a90:34ba:506e with SMTP id a640c23a62f3a-a9034ba512dmr259352066b.8.1726273409210;
-        Fri, 13 Sep 2024 17:23:29 -0700 (PDT)
-Received: from smtpclient.apple ([2001:a61:a4f:301:c80a:ca57:56fa:ebff])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a90612e573csm14118366b.180.2024.09.13.17.23.28
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 13 Sep 2024 17:23:28 -0700 (PDT)
-Content-Type: text/plain;
-	charset=us-ascii
+	s=arc-20240116; t=1726301071; c=relaxed/simple;
+	bh=3QBNuadO5XqRVpguekgC5wgET+ue8QI1ogy7lNiClic=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
+	 In-Reply-To:Content-Type; b=jYuHI8THKnOijpOoppqF81wQMdij1UqOce50x2xNCaIxHyWOnJuIlsTAu9kpMXyodFOCsvQ8g93gJZT7Kno5uxUmo0fFTqz/tB0Nv824K2r6VGTVtNQXwtMga9P1zrhNgBYobDjBFCHUaU4vtZUH+jdGffiIioSNd/E7ZRonmog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.234])
+	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4X5Nwl3HNbz1S9QP;
+	Sat, 14 Sep 2024 16:03:51 +0800 (CST)
+Received: from dggpeml500022.china.huawei.com (unknown [7.185.36.66])
+	by mail.maildlp.com (Postfix) with ESMTPS id 1DA42140412;
+	Sat, 14 Sep 2024 16:04:25 +0800 (CST)
+Received: from [10.67.111.104] (10.67.111.104) by
+ dggpeml500022.china.huawei.com (7.185.36.66) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Sat, 14 Sep 2024 16:04:24 +0800
+Message-ID: <adb55c38-fb5e-4d1b-9bf7-d29d827172b4@huawei.com>
+Date: Sat, 14 Sep 2024 16:04:23 +0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51\))
-Subject: Re: [RESEND PATCH v2] params: Annotate struct module_param_attrs with
- __counted_by()
-From: Thorsten Blum <thorsten.blum@toblux.com>
-In-Reply-To: <20240913234455.GA1842841@thelio-3990X>
-Date: Sat, 14 Sep 2024 02:23:17 +0200
-Cc: kees@kernel.org,
- gustavoars@kernel.org,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- mcgrof@kernel.org,
- linux-hardening@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- Bill Wendling <morbo@google.com>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH -next v3 00/10] coccinelle: Add some rules for
+ string_chioces helpers.
+From: Hongbo Li <lihongbo22@huawei.com>
+To: <kees@kernel.org>, <andy@kernel.org>, <Julia.Lawall@inria.fr>,
+	<nicolas.palix@imag.fr>
+CC: <linux-hardening@vger.kernel.org>, <cocci@inria.fr>,
+	<lihongbo22@huawei.com>, "zhangjianhua (E)" <chris.zjh@huawei.com>
+References: <20240911010927.741343-1-lihongbo22@huawei.com>
+Content-Language: en-US
+In-Reply-To: <20240911010927.741343-1-lihongbo22@huawei.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <FF37A337-32B0-4951-B13F-2EFB1734B6DE@toblux.com>
-References: <20240909162725.1805-2-thorsten.blum@toblux.com>
- <20240913164630.GA4091534@thelio-3990X>
- <60B48C52-12A6-4810-8C8C-9CC1C1E77E68@toblux.com>
- <20240913234455.GA1842841@thelio-3990X>
-To: Nathan Chancellor <nathan@kernel.org>
-X-Mailer: Apple Mail (2.3776.700.51)
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggpeml500022.china.huawei.com (7.185.36.66)
 
-On 14. Sep 2024, at 01:44, Nathan Chancellor <nathan@kernel.org> wrote:
-> On Sat, Sep 14, 2024 at 01:32:19AM +0200, Thorsten Blum wrote:
->> Thanks for reporting this.
->> 
->> Changing
->> 
->> memset(&mk->mp->attrs[mk->mp->num - 1], 0, sizeof(mk->mp->attrs[0]));
->> 
->> to
->> 
->> memset(mk->mp->attrs + mk->mp->num - 1, 0, sizeof(mk->mp->attrs[0]));
->> 
->> fixes the false-positive warning
->> 
->> memset: detected buffer overflow: 32 byte write of buffer size 0
->> 
->> even though the pointers have the same value. Does anyone know why?
+
+Hi,
+
+Gently ping for this.
+
+Thanks,
+Hongbo
+
+On 2024/9/11 9:09, Hongbo Li wrote:
+> We found that many of the detection rules for helpers in
+> string_choices.h are missing. This series of patches is
+> intended to complete these rules. We have verified in the
+> latest kernel tree that these rules can detect many places
+> where the string choices helper can be used as a replacement.
 > 
-> Might be a good question for Bill? The full context is available
-> starting at:
+> Here are some of the examples:
 > 
-> https://lore.kernel.org/all/20240913164630.GA4091534@thelio-3990X/
+> ```
+> drivers/gpio/gpio-mvebu.c:917:6-18: opportunity for str_lo_hi(in_pol & msk)
+> drivers/pinctrl/nomadik/pinctrl-nomadik.c:1109:16-19: opportunity for str_high_low(val)
+> drivers/pinctrl/nomadik/pinctrl-nomadik.c:1116:13-16: opportunity for str_high_low(val
+> drivers/gpio/gpio-wcove.c:396:6-16: opportunity for str_hi_lo(ctli & 0x1)
+> drivers/pci/hotplug/pnv_php.c:367:10-41: opportunity for str_on_off(state == OPAL_PCI_SLOT_POWER_ON)
+> drivers/mtd/nand/raw/brcmnand/brcmnand.c:1844:40-63: opportunity for str_read_write(edu_cmd == EDU_CMD_READ)
+> drivers/mtd/nand/raw/brcmnand/brcmnand.c:1437:33-35: opportunity for str_on_off(wp)
+> drivers/mtd/nand/raw/brcmnand/brcmnand.c:1467:9-11: opportunity for str_on_off(wp)
+> drivers/greybus/svc.c:76:9-37: opportunity for str_enabled_disabled(gb_svc_watchdog_enabled ( svc ))
+> drivers/thermal/thermal_sysfs.c:59:29-36: opportunity for str_enabled_disabled(enabled)
+> drivers/dma-buf/st-dma-fence.c:508:10-35: opportunity for str_yes_no(dma_fence_is_signaled ( f2 ))
+> drivers/mmc/host/omap_hsmmc.c:1644:7-43: opportunity for str_enabled_disabled(host -> flags & HSMMC_SDIO_IRQ_ENABLED)
+> drivers/input/mouse/elan_i2c_core.c:202:2-4: opportunity for str_on_off(on)
+> drivers/macintosh/via-pmu.c:626:10-28: opportunity for str_enabled_disabled(option_server_mode)
+> drivers/usb/mtu3/mtu3_debugfs.c:482:5-39: opportunity for str_on_off(regulator_is_enabled ( otg_sx -> vbus ))
+> drivers/net/wireless/intel/iwlwifi/mvm/tt.c:355:4-10: opportunity for str_enable_disable(enable)
+> drivers/nfc/pn544/i2c.c:215:7-20: opportunity for str_low_high(polarity == 0)
+> drivers/media/tuners/tda18250.c:110:3-12: opportunity for str_true_false(triggered)
+> drivers/mtd/tests/torturetest.c:191:30-35: opportunity for str_enabled_disabled(check)
+> drivers/bus/intel-ixp4xx-eb.c:225:5-8: opportunity for str_enabled_disabled(val)
+> drivers/net/ethernet/huawei/hinic/hinic_port.c:1133:3-9: opportunity for str_enable_disable(enable)
+> drivers/net/ethernet/huawei/hinic/hinic_port.c:1245:3-9: opportunity for str_enable_disable(pfc_en)
+> drivers/media/pci/cx23885/cimax2.c:227:4-8: opportunity for str_read_write(read)
+> drivers/media/usb/em28xx/em28xx-video.c:941:4-9: opportunity for str_enabled_disabled(flags)
+> ```
 > 
-> I wonder if the krealloc() has something to do with it? I should try GCC
-> but I don't have a tip of tree copy handy at the moment and I am also
-> rushing at the end of my day to pack for my travels to LPC :)
-
-I think the problem is with __builtin_dynamic_object_size().
-
-memset(p,,) calls __struct_size(p), which calls
-__builtin_dynamic_object_size(p, 0) and this behaves weirdly:
-
- __builtin_dynamic_object_size(&mk->mp->attrs[mk->mp->num - 1], 0);
-
-evaluates to 0, but
-
- __builtin_dynamic_object_size(mk->mp->attrs + mk->mp->num - 1, 0);
-
-evaluates to 4294967295.
-
-Both values are wrong, but the latter doesn't trigger the
-false-positive warning.
+> Changes since v2: https://patchwork.kernel.org/project/linux-hardening/cover/20240904091451.3328272-1-lihongbo22@huawei.com/
+>    - Remove unnecessary outer parentheses for new rules as suggested by julia, thanks.
+>    - Remove unnecessary outer parentheses for old rules.
+> 
+> 
+> Changes since v1: https://patchwork.kernel.org/project/linux-hardening/cover/20240829112455.232263-1-lihongbo22@huawei.com/
+>    - Add more rules for helpers in string_choices.h.
+> 
+> Thanks,
+> Hongbo.
+> 
+> Hongbo Li (10):
+>    coccinelle: Add rules to find str_true_false() replacements
+>    coccinelle: Add rules to find str_false_true() replacements
+>    coccinelle: Add rules to find str_hi{gh}_lo{w}() replacements
+>    coccinelle: Add rules to find str_lo{w}_hi{gh}() replacements
+>    coccinelle: Add rules to find str_enable{d}_disable{d}() replacements
+>    coccinelle: Add rules to find str_read_write() replacements
+>    coccinelle: Add rules to find str_write_read() replacements
+>    coccinelle: Add rules to find str_on_off() replacements
+>    coccinelle: Add rules to find str_yes_no() replacements
+>    coccinelle: Remove unnecessary parentheses for only one possible
+>      change.
+> 
+>   scripts/coccinelle/api/string_choices.cocci | 240 +++++++++++++++++++-
+>   1 file changed, 232 insertions(+), 8 deletions(-)
+> 
