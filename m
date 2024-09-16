@@ -1,121 +1,89 @@
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62EE620E6
-	for <linux-hardening@vger.kernel.org>; Sat, 14 Sep 2024 08:04:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC78D148FF6;
+	Mon, 16 Sep 2024 08:24:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726301071; cv=none; b=GZF3AQTFFcj5EIpjgb7mrcK9UD/DS0Gt6zzjX5HiZ7btkTNdvjd71F4B5GHCxyIhFeAkiKxnBAyUD6HVBmUyjR+xFMgdpFxmZ1CsDMpORJHo8yVt6JYEOi3jjije88cFJTIWaL5vhmTAhbGv9Iybg90t/48wOGxOvogJdvDDmvE=
+	t=1726475076; cv=none; b=rfaLK+pi13Edt2pfnUBhzTrb7WNVqPiLG/SWNcMRzVSgVZfuN0Jl4MrT50OyiN/Y3Inh4CUxBYFnhQRCHbTlbmb2pScbPnoP+tNsyn1lXEarr7XhpguPzT7kzCwO1CfeptSxZVhUfhxejcA+UMoyXr+OL0oO4FPeWlUJxpgsy+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726301071; c=relaxed/simple;
-	bh=3QBNuadO5XqRVpguekgC5wgET+ue8QI1ogy7lNiClic=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
-	 In-Reply-To:Content-Type; b=jYuHI8THKnOijpOoppqF81wQMdij1UqOce50x2xNCaIxHyWOnJuIlsTAu9kpMXyodFOCsvQ8g93gJZT7Kno5uxUmo0fFTqz/tB0Nv824K2r6VGTVtNQXwtMga9P1zrhNgBYobDjBFCHUaU4vtZUH+jdGffiIioSNd/E7ZRonmog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.234])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4X5Nwl3HNbz1S9QP;
-	Sat, 14 Sep 2024 16:03:51 +0800 (CST)
-Received: from dggpeml500022.china.huawei.com (unknown [7.185.36.66])
-	by mail.maildlp.com (Postfix) with ESMTPS id 1DA42140412;
-	Sat, 14 Sep 2024 16:04:25 +0800 (CST)
-Received: from [10.67.111.104] (10.67.111.104) by
- dggpeml500022.china.huawei.com (7.185.36.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Sat, 14 Sep 2024 16:04:24 +0800
-Message-ID: <adb55c38-fb5e-4d1b-9bf7-d29d827172b4@huawei.com>
-Date: Sat, 14 Sep 2024 16:04:23 +0800
+	s=arc-20240116; t=1726475076; c=relaxed/simple;
+	bh=yTaXG3XmH49je7AUVkCQ/15ltlmjIkXHzXzzjvYajeQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=iIQ9kEjUI0eOCVRGv3DuwR1tR7b/1XKakfHRtaO/+90eVhLg5WP+LpqV1OFy7MHfL9ooWWrEvHWoUj3tK0y+kVOgJs8EPGGlvxj4X0QRhS5A/0OpdYhMa5YtlXc5nQ6J5kU5JrwDfwVPVPSbIs459C/nfoCzGmZhzlM3wVPVMiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Omd5NAXD; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Omd5NAXD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 407D2C4CEC4;
+	Mon, 16 Sep 2024 08:24:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1726475076;
+	bh=yTaXG3XmH49je7AUVkCQ/15ltlmjIkXHzXzzjvYajeQ=;
+	h=Date:From:To:Cc:Subject:From;
+	b=Omd5NAXDc8LIvBIZl6gYn55ONaP5l5gN6ji5cvrwgpFXk9l5evz+74fzO11sGbjMF
+	 Bw2FKTO6l0nk80b7Ah6bhFv7xICxkIZ2hMP6ZqIbwftnSCGD6wlNqUfyfuB2V/M5iX
+	 VgBKECZImlUBdPkCOQr0stVJ312//+zRcfc68ZJMEHhOIX3TE/oav29mOY7T/mhXhZ
+	 uc2JHIXZcM2W+kO+URtTZln0XrxVaLqzBy8TF7QM0aCcndpPV86/rExJD71ZvlZIxz
+	 NQPQsNYzjsLT0UPslEKsi+UKdV0GRn37YgUG3kUWYtz8W4JISEg3tP0xynWL7ogxB2
+	 M5yM1o+/eCFXQ==
+Date: Mon, 16 Sep 2024 01:24:35 -0700
+From: Kees Cook <kees@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org,
+	Mike Rapoport <rppt@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Tony Luck <tony.luck@intel.com>, Wen Yang <wen.yang@linux.dev>
+Subject: [GIT PULL] pstore updates for v6.12-rc1
+Message-ID: <202409160124.07E708A@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH -next v3 00/10] coccinelle: Add some rules for
- string_chioces helpers.
-From: Hongbo Li <lihongbo22@huawei.com>
-To: <kees@kernel.org>, <andy@kernel.org>, <Julia.Lawall@inria.fr>,
-	<nicolas.palix@imag.fr>
-CC: <linux-hardening@vger.kernel.org>, <cocci@inria.fr>,
-	<lihongbo22@huawei.com>, "zhangjianhua (E)" <chris.zjh@huawei.com>
-References: <20240911010927.741343-1-lihongbo22@huawei.com>
-Content-Language: en-US
-In-Reply-To: <20240911010927.741343-1-lihongbo22@huawei.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- dggpeml500022.china.huawei.com (7.185.36.66)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+Hi Linus,
 
-Hi,
+Please pull these pstore updates for v6.12-rc1.
 
-Gently ping for this.
+Thanks!
 
-Thanks,
-Hongbo
+-Kees
 
-On 2024/9/11 9:09, Hongbo Li wrote:
-> We found that many of the detection rules for helpers in
-> string_choices.h are missing. This series of patches is
-> intended to complete these rules. We have verified in the
-> latest kernel tree that these rules can detect many places
-> where the string choices helper can be used as a replacement.
-> 
-> Here are some of the examples:
-> 
-> ```
-> drivers/gpio/gpio-mvebu.c:917:6-18: opportunity for str_lo_hi(in_pol & msk)
-> drivers/pinctrl/nomadik/pinctrl-nomadik.c:1109:16-19: opportunity for str_high_low(val)
-> drivers/pinctrl/nomadik/pinctrl-nomadik.c:1116:13-16: opportunity for str_high_low(val
-> drivers/gpio/gpio-wcove.c:396:6-16: opportunity for str_hi_lo(ctli & 0x1)
-> drivers/pci/hotplug/pnv_php.c:367:10-41: opportunity for str_on_off(state == OPAL_PCI_SLOT_POWER_ON)
-> drivers/mtd/nand/raw/brcmnand/brcmnand.c:1844:40-63: opportunity for str_read_write(edu_cmd == EDU_CMD_READ)
-> drivers/mtd/nand/raw/brcmnand/brcmnand.c:1437:33-35: opportunity for str_on_off(wp)
-> drivers/mtd/nand/raw/brcmnand/brcmnand.c:1467:9-11: opportunity for str_on_off(wp)
-> drivers/greybus/svc.c:76:9-37: opportunity for str_enabled_disabled(gb_svc_watchdog_enabled ( svc ))
-> drivers/thermal/thermal_sysfs.c:59:29-36: opportunity for str_enabled_disabled(enabled)
-> drivers/dma-buf/st-dma-fence.c:508:10-35: opportunity for str_yes_no(dma_fence_is_signaled ( f2 ))
-> drivers/mmc/host/omap_hsmmc.c:1644:7-43: opportunity for str_enabled_disabled(host -> flags & HSMMC_SDIO_IRQ_ENABLED)
-> drivers/input/mouse/elan_i2c_core.c:202:2-4: opportunity for str_on_off(on)
-> drivers/macintosh/via-pmu.c:626:10-28: opportunity for str_enabled_disabled(option_server_mode)
-> drivers/usb/mtu3/mtu3_debugfs.c:482:5-39: opportunity for str_on_off(regulator_is_enabled ( otg_sx -> vbus ))
-> drivers/net/wireless/intel/iwlwifi/mvm/tt.c:355:4-10: opportunity for str_enable_disable(enable)
-> drivers/nfc/pn544/i2c.c:215:7-20: opportunity for str_low_high(polarity == 0)
-> drivers/media/tuners/tda18250.c:110:3-12: opportunity for str_true_false(triggered)
-> drivers/mtd/tests/torturetest.c:191:30-35: opportunity for str_enabled_disabled(check)
-> drivers/bus/intel-ixp4xx-eb.c:225:5-8: opportunity for str_enabled_disabled(val)
-> drivers/net/ethernet/huawei/hinic/hinic_port.c:1133:3-9: opportunity for str_enable_disable(enable)
-> drivers/net/ethernet/huawei/hinic/hinic_port.c:1245:3-9: opportunity for str_enable_disable(pfc_en)
-> drivers/media/pci/cx23885/cimax2.c:227:4-8: opportunity for str_read_write(read)
-> drivers/media/usb/em28xx/em28xx-video.c:941:4-9: opportunity for str_enabled_disabled(flags)
-> ```
-> 
-> Changes since v2: https://patchwork.kernel.org/project/linux-hardening/cover/20240904091451.3328272-1-lihongbo22@huawei.com/
->    - Remove unnecessary outer parentheses for new rules as suggested by julia, thanks.
->    - Remove unnecessary outer parentheses for old rules.
-> 
-> 
-> Changes since v1: https://patchwork.kernel.org/project/linux-hardening/cover/20240829112455.232263-1-lihongbo22@huawei.com/
->    - Add more rules for helpers in string_choices.h.
-> 
-> Thanks,
-> Hongbo.
-> 
-> Hongbo Li (10):
->    coccinelle: Add rules to find str_true_false() replacements
->    coccinelle: Add rules to find str_false_true() replacements
->    coccinelle: Add rules to find str_hi{gh}_lo{w}() replacements
->    coccinelle: Add rules to find str_lo{w}_hi{gh}() replacements
->    coccinelle: Add rules to find str_enable{d}_disable{d}() replacements
->    coccinelle: Add rules to find str_read_write() replacements
->    coccinelle: Add rules to find str_write_read() replacements
->    coccinelle: Add rules to find str_on_off() replacements
->    coccinelle: Add rules to find str_yes_no() replacements
->    coccinelle: Remove unnecessary parentheses for only one possible
->      change.
-> 
->   scripts/coccinelle/api/string_choices.cocci | 240 +++++++++++++++++++-
->   1 file changed, 232 insertions(+), 8 deletions(-)
-> 
+The following changes since commit de9c2c66ad8e787abec7c9d7eff4f8c3cdd28aed:
+
+  Linux 6.11-rc2 (2024-08-04 13:50:53 -0700)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/pstore-v6.12-rc1
+
+for you to fetch changes up to 1bf8012fc6997f2117f6919369cde16659db60e0:
+
+  pstore: replace spinlock_t by raw_spinlock_t (2024-08-26 13:33:50 -0700)
+
+----------------------------------------------------------------
+pstore updates for v6.12-rc1
+
+- ramoops: Fix .rst typo (Steven Rostedt)
+
+- pstore: replace spinlock_t by raw_spinlock_t (Wen Yang)
+
+----------------------------------------------------------------
+Steven Rostedt (1):
+      pstore/ramoops: Fix typo as there is no "reserver"
+
+Wen Yang (1):
+      pstore: replace spinlock_t by raw_spinlock_t
+
+ Documentation/admin-guide/ramoops.rst | 2 +-
+ fs/pstore/platform.c                  | 8 ++++----
+ include/linux/pstore.h                | 2 +-
+ 3 files changed, 6 insertions(+), 6 deletions(-)
+
+-- 
+Kees Cook
