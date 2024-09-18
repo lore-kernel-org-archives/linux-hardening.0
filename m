@@ -1,86 +1,69 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3F322BAEB;
-	Tue, 17 Sep 2024 12:33:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13CDE13792B;
+	Wed, 18 Sep 2024 05:09:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726576406; cv=none; b=lIXxr8EwbWhvhwc3N4EAlLrKtd7wnu19ruGAAMDjudW+4ZJU84fnxDLkycDxhzT5ASk84XXe0LtSxAn4unXUNuzdKPnD0lTkHezgWdimVQv3kajwiPEnrEGxZryaRCdBjNI9W/sRVeLcbJc3iw9Y6G6k15DHSOmaR0BSIm2/jgo=
+	t=1726636146; cv=none; b=j6GSes9crPFJzvI0owhXqO8yxCEc5LRkjDBYVAanEy4wRf8z7wBUr9IcAbvN2/x/7wLNhFcLNRAct1GIFu4AcVr/FepUAml8bNxNijg0ybgjL2/YjGCUBX1pjQTxpNmKYd30ZSW5J+tZ8QxkPqDpIsyj+psC5iLaCpgJI6+NZxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726576406; c=relaxed/simple;
-	bh=wui/ZUOoOmIWC9sU2kxiGayhDoDZligC6DIdni7/nzE=;
+	s=arc-20240116; t=1726636146; c=relaxed/simple;
+	bh=As9YAcSfIVcVorbigO5cjdtcP7FT++p9qmX0oJ0wRCQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jA5Gq+RoeebHAO2jU9Gd6J1vfAMHIRJA5YVYjwUIYS/koAoRBmyeU3M/z0BpweDWgz+0bPipV449st47xQ1NqPrRuq9+NRZGRK2wa0JwMQuunYImbPZ1CPMkHa7BasdQjtVdEo4zLStHd51CaW4ik4DSy3qvyLoboohmxOwoUWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=PNDm7dee; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=TVZvAQNd; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=YEFB+KhC; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Qa//7uSy; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 Content-Type:Content-Disposition:In-Reply-To; b=ai9KcWU7PkYVb8AaP8RRY4jF5HCr3ixZjZuopr/zaAKrs8zFwdfSomBrAQhkFxw7fqmqdjwSExY7ZWk9S0ZdwqmT5tBI35rMSu5zAKHZAXoeNZW29wB1iETwLN6j9axUwSIo0cMG0JKQ3VJnyb7AHmiVTej7Rih6LA95OA3mExg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eAG1H8us; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="PNDm7dee";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="TVZvAQNd";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="YEFB+KhC";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Qa//7uSy"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id E606C221D9;
-	Tue, 17 Sep 2024 12:33:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1726576402; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SqiTc/6rJz2xOTDJDdGyME6zy5fT6lpOKLr82cV+5mg=;
-	b=PNDm7deewFy7U48HTCVLbguwDBDT9EnwH0Iz6y5GSDGHpc3PBdWOtz3UgSxuPdWYfaMCGo
-	6Qt2njtewTil2xnS/J5qA2cR6EsqRN+7auioaxGLJNBUbme59i1JfbNn1TIFJ9Hfon/Ksp
-	nvPh3UHgaggA9U3hg3wNPVxHczCdDBk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1726576402;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SqiTc/6rJz2xOTDJDdGyME6zy5fT6lpOKLr82cV+5mg=;
-	b=TVZvAQNdAgiUvTaFPZ9565VfrH01xPjXYxy1ulUNBAQZrs5bk9n2l4dFV9r8thA7AH132p
-	h2MIMc/MhrUmUgCA==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=YEFB+KhC;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b="Qa//7uSy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1726576401; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SqiTc/6rJz2xOTDJDdGyME6zy5fT6lpOKLr82cV+5mg=;
-	b=YEFB+KhCZ+rwYiixc04ciMaAELaDC1UGGK7srCBcIpOiJIXRg435wMfiysDWxlcGtdONpo
-	j7/icPnq+OOpb+uPmIZt97z16yN4yEpnb+z6/K8nmOwlyzYS+ASqdw0NUWFPVPSTEFJcje
-	ort/BrCRTzTsNg7Tuc6uC8PNh03JcJ8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1726576401;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SqiTc/6rJz2xOTDJDdGyME6zy5fT6lpOKLr82cV+5mg=;
-	b=Qa//7uSyEy6b9nJPBCiP7rsJV66w+brPRf2rhU1goCKL+acCxSFYxOJCIAyHymxaF5vcwi
-	4BDJqFkFrmOinYBg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A725C13AB6;
-	Tue, 17 Sep 2024 12:33:21 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 80O8KBF36WahHgAAD6G6ig
-	(envelope-from <jack@suse.cz>); Tue, 17 Sep 2024 12:33:21 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 8AC57A0989; Tue, 17 Sep 2024 14:25:29 +0200 (CEST)
-Date: Tue, 17 Sep 2024 14:25:29 +0200
-From: Jan Kara <jack@suse.cz>
-To: Thorsten Blum <thorsten.blum@toblux.com>
-Cc: tytso@mit.edu, adilger.kernel@dilger.ca, kees@kernel.org,
-	gustavoars@kernel.org, linux-ext4@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] ext4: Annotate struct fname with __counted_by()
-Message-ID: <20240917122529.lmikh56cfbjr3lsz@quack3>
-References: <20240913110013.151331-2-thorsten.blum@toblux.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eAG1H8us"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1726636145; x=1758172145;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=As9YAcSfIVcVorbigO5cjdtcP7FT++p9qmX0oJ0wRCQ=;
+  b=eAG1H8usHg8/n08bFZ85faWQwSPOc6SFKKlvbHy+1KW5/8FIhKDKCEsI
+   CL9TqV/6l42dXQGFz3co2W4xg0cB0Z9VlbBcGou8FXd6hsBKH0VbQv2bS
+   RNuWEHkpk1BeGo8wmfmg4EQ/snlG/71HNHbHN84rVdoXV6YPP/VwcODoa
+   M+7a/YFGXMuv4vCGRFa3rK5H7oRw0m5n0HmNtozYmAQqOVC5XZ2sBLR4a
+   GNd9suj1PiXi75gF95jkgCgAo/RxtPUM65OPT7pbcvNm91F8GQ05eLeOq
+   NbD8uPF4ta0mmm4GRlnRBq2O4I8AF2JEaUasy1TvTuXxI+1ol41tEwqf8
+   w==;
+X-CSE-ConnectionGUID: /7d10skPSn2rAIic22H4LA==
+X-CSE-MsgGUID: hqym9ymLTX+24XfwvNo9Fw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11198"; a="25685993"
+X-IronPort-AV: E=Sophos;i="6.10,235,1719903600"; 
+   d="scan'208";a="25685993"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2024 22:09:04 -0700
+X-CSE-ConnectionGUID: Cy3mqgGyTzamROZvS8CXGw==
+X-CSE-MsgGUID: fdUzLaH/TGeu2Fmg+0hK+w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,235,1719903600"; 
+   d="scan'208";a="73779548"
+Received: from lkp-server01.sh.intel.com (HELO 53e96f405c61) ([10.239.97.150])
+  by fmviesa005.fm.intel.com with ESMTP; 17 Sep 2024 22:08:58 -0700
+Received: from kbuild by 53e96f405c61 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sqmvv-000Bt8-24;
+	Wed, 18 Sep 2024 05:08:55 +0000
+Date: Wed, 18 Sep 2024 13:08:09 +0800
+From: kernel test robot <lkp@intel.com>
+To: Md Sadre Alam <quic_mdalam@quicinc.com>, axboe@kernel.dk,
+	song@kernel.org, yukuai3@huawei.com, agk@redhat.com,
+	snitzer@kernel.org, mpatocka@redhat.com, adrian.hunter@intel.com,
+	quic_asutoshd@quicinc.com, ritesh.list@gmail.com,
+	ulf.hansson@linaro.org, andersson@kernel.org,
+	konradybcio@kernel.org, kees@kernel.org, gustavoars@kernel.org,
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-raid@vger.kernel.org, dm-devel@lists.linux.dev,
+	linux-mmc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, quic_srichara@quicinc.com,
+	quic_varada@quicinc.com, quic_mdalam@quicinc.com
+Subject: Re: [PATCH v2 1/3] dm-inlinecrypt: Add inline encryption support
+Message-ID: <202409181233.1FrQNVtU-lkp@intel.com>
+References: <20240916085741.1636554-2-quic_mdalam@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -89,95 +72,56 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240913110013.151331-2-thorsten.blum@toblux.com>
-X-Rspamd-Queue-Id: E606C221D9
-X-Spam-Score: -4.01
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.01 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_COUNT_THREE(0.00)[3];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+In-Reply-To: <20240916085741.1636554-2-quic_mdalam@quicinc.com>
 
-On Fri 13-09-24 13:00:14, Thorsten Blum wrote:
-> Add the __counted_by compiler attribute to the flexible array member
-> name to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
-> CONFIG_FORTIFY_SOURCE.
-> 
-> Inline and use struct_size() to calculate the number of bytes to
-> allocate for new_fn and remove the local variable len.
-> 
-> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+Hi Md,
 
-Looks good. Feel free to add:
+kernel test robot noticed the following build warnings:
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+[auto build test WARNING on device-mapper-dm/for-next]
+[also build test WARNING on axboe-block/for-next linus/master song-md/md-next v6.11 next-20240917]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-								Honza
+url:    https://github.com/intel-lab-lkp/linux/commits/Md-Sadre-Alam/dm-inlinecrypt-Add-inline-encryption-support/20240916-170452
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.git for-next
+patch link:    https://lore.kernel.org/r/20240916085741.1636554-2-quic_mdalam%40quicinc.com
+patch subject: [PATCH v2 1/3] dm-inlinecrypt: Add inline encryption support
+config: csky-randconfig-r111-20240918 (https://download.01.org/0day-ci/archive/20240918/202409181233.1FrQNVtU-lkp@intel.com/config)
+compiler: csky-linux-gcc (GCC) 14.1.0
+reproduce: (https://download.01.org/0day-ci/archive/20240918/202409181233.1FrQNVtU-lkp@intel.com/reproduce)
 
-> ---
->  fs/ext4/dir.c | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
-> 
-> diff --git a/fs/ext4/dir.c b/fs/ext4/dir.c
-> index ff4514e4626b..8e7df15bb971 100644
-> --- a/fs/ext4/dir.c
-> +++ b/fs/ext4/dir.c
-> @@ -408,7 +408,7 @@ struct fname {
->  	__u32		inode;
->  	__u8		name_len;
->  	__u8		file_type;
-> -	char		name[];
-> +	char		name[] __counted_by(name_len);
->  };
->  
->  /*
-> @@ -464,14 +464,13 @@ int ext4_htree_store_dirent(struct file *dir_file, __u32 hash,
->  	struct rb_node **p, *parent = NULL;
->  	struct fname *fname, *new_fn;
->  	struct dir_private_info *info;
-> -	int len;
->  
->  	info = dir_file->private_data;
->  	p = &info->root.rb_node;
->  
->  	/* Create and allocate the fname structure */
-> -	len = sizeof(struct fname) + ent_name->len + 1;
-> -	new_fn = kzalloc(len, GFP_KERNEL);
-> +	new_fn = kzalloc(struct_size(new_fn, name, ent_name->len + 1),
-> +			 GFP_KERNEL);
->  	if (!new_fn)
->  		return -ENOMEM;
->  	new_fn->hash = hash;
-> -- 
-> 2.46.0
-> 
-> 
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202409181233.1FrQNVtU-lkp@intel.com/
+
+sparse warnings: (new ones prefixed by >>)
+>> drivers/md/dm-inline-crypt.c:120:26: sparse: sparse: cast to restricted __le64
+   drivers/md/dm-inline-crypt.c:214:32: sparse: sparse: self-comparison always evaluates to false
+
+vim +120 drivers/md/dm-inline-crypt.c
+
+   109	
+   110	static void crypt_inline_encrypt_submit(struct dm_target *ti, struct bio *bio)
+   111	{
+   112		struct inlinecrypt_config *cc = ti->private;
+   113		u64 dun[BLK_CRYPTO_DUN_ARRAY_SIZE];
+   114	
+   115		bio_set_dev(bio, cc->dev->bdev);
+   116		if (bio_sectors(bio)) {
+   117			memset(dun, 0, BLK_CRYPTO_MAX_IV_SIZE);
+   118			bio->bi_iter.bi_sector = cc->start +
+   119				dm_target_offset(ti, bio->bi_iter.bi_sector);
+ > 120			dun[0] = le64_to_cpu(bio->bi_iter.bi_sector + cc->iv_offset);
+   121			bio_crypt_set_ctx(bio, cc->blk_key, dun, GFP_KERNEL);
+   122		}
+   123	
+   124		submit_bio_noacct(bio);
+   125	}
+   126	
+
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
