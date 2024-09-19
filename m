@@ -1,79 +1,116 @@
-Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46EA1197558;
-	Thu, 19 Sep 2024 07:51:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.97
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96C1C19D07F
+	for <linux-hardening@vger.kernel.org>; Thu, 19 Sep 2024 09:12:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726732319; cv=none; b=i/RjnVQsxngi9fAXXhnXoMLO1/1QqtjBErAcKs0yKr5b/h8OGBXl1n6FxvDXO7li2O9RJPhLbG/HkRmr8Mj4OMmC14UnfYpNv6UWeyLXsrIiKx1W53JzH5B674ERLuGVzNpOPH/65xQFL7TN+oIq7XKTH0gq7RSiVftr6Ws33J8=
+	t=1726737146; cv=none; b=TYVzS8Q2yTE2FPhgtWWYTAJz62pET9srfdtLxO79zisLUVhaEiZlu8ZMcqVfVRhkkoWgjsOOINZodFr+1UEPPSeiLjfsL2ztdVVJFGzJ63OdpUotaZoI9dfuP9ZOifTQQ+2c4LtIpSz1h2H5GNoWnULz4b6kHN1gIZKczWWILW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726732319; c=relaxed/simple;
-	bh=SgvktaSbY1wXb2zaTpAsjhTPg5SD8FBxz6PlEsvj4Us=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rLykzZlSd/SXlzZlBHNtLg/Wn3BlZwbsUY2Hc7VSPOazUJMXGKrf/HWMT00eqsnVE4vlyetyjtheyX+7mEkEU+p7HI2WsXZL6gfDoHZiTOH61pxLYWEtuQa1AjSaqppsd/Q8EvfXyBEvH7isVuPIN1o5JbT4o6qTFTsQwS8Fw7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=E30YBvZx; arc=none smtp.client-ip=115.124.30.97
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1726737146; c=relaxed/simple;
+	bh=ci4sk1LEbnysVz/IKAlVvXTgrB6BZ41n5MN03ljpfoU=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=K27FcV5yWnqZqFH2thc7HJVfbOViD4dq3s6eOpp/NUteEvRTUkeHIzegQzID8zW8qzWUlmDdVbecLGz4Xlx3VMMCdGJA+1BKWKxYRJChdjUrQD2ucuo31OSCc0Pc5EkgkktQW4DPW8mR7oUee/a3NWevpBOMA3CY7YSlti63SLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=d9QeqI4F; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="E30YBvZx"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1726732307; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=lTcVeuscBw7CVeUwxMc63YO9Eu03zbMzzUDs/m4Pfds=;
-	b=E30YBvZxHrwrGRLdT9QH6iKAVuCnrvbn7pK4Ztf5zTFNahObvJTtB+vqaHhvtiDe2Pc2fGdYVv7Gq2BtQICHj06nCy5+ZAvNY0v1FT3GVYnFelsbDmhBa5bFb42KhSbsJQ2NY0xlUzzzwVqgwgmBwbp1ASejB5h5btSIcDWTVEg=
-Received: from 30.74.144.121(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WFGzjNa_1726732306)
-          by smtp.aliyun-inc.com;
-          Thu, 19 Sep 2024 15:51:47 +0800
-Message-ID: <6a689c83-24de-4d3c-afc1-107439f66130@linux.alibaba.com>
-Date: Thu, 19 Sep 2024 15:51:46 +0800
+	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="d9QeqI4F"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-42cacd90ee4so999145e9.3
+        for <linux-hardening@vger.kernel.org>; Thu, 19 Sep 2024 02:12:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1726737143; x=1727341943; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ci4sk1LEbnysVz/IKAlVvXTgrB6BZ41n5MN03ljpfoU=;
+        b=d9QeqI4F9blbID7FeLB5K+9X6A2uIq5A5g/yFmP4gJSlVfB58KjNLI7ED2tfMAXkqm
+         twVolBux/PL9bzQen1UXKvUQ1i/Is7WYCIGcBaz+jXzQ9X0s5qmxeJ//c98VoE/QmOx8
+         Lc/aSsahsJVdfOqGdLfFmpEhE8uOqTSaRhBEan4gdSraJ0iyojifscMG6I4V9LLnz3HQ
+         vgZcPo8WNP7AuhifT+FmzHcpQCakGtOgIJe/IIlt5SRWTfVHAmeJdWLYp8W5dRj9J4pI
+         J2BrwWIXWnFMz8BW0cFSXAm2g00uPG0R0XKi+e86/+rPGR5fKPM52WwT9L84kib9yL4e
+         3riQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726737143; x=1727341943;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ci4sk1LEbnysVz/IKAlVvXTgrB6BZ41n5MN03ljpfoU=;
+        b=WTH3UDkEBKjGiZSbiaPZqwJ1+FfrJ/bl/XlTTtM3JyeEnv8dMGQCWDxingwX1xDPv6
+         6TynkPizUyMF55agtzLDSJ09H4z1En7AtL9+v7b+NxP/svD67bPQydRzKDL3Sc533Hny
+         8KTHofxs8UJ5W2Schfbx/PAyoRSWczQCLCk/GqTHqt9Mtuwr5OF2rwWgzsBvUh5NRUhX
+         QRaGXvWwIY2IWV1QCREezFSvoLxku4mtN17wWfWWHdIK1PXjIECNZwisiO3tdeEGvQ7N
+         bmD7k2HDo6MPUM79WI1B1QBVnEZbJ96Br99lyhnQvX1oG09osKyiBAJm8+Dy0SIG7eLl
+         MSJg==
+X-Forwarded-Encrypted: i=1; AJvYcCUopff4yqiGQORF3s/txw6QF8NznC/6Z/ntc+T+G18fgHL0HbTmWjpBvRgrDcrfv/iuDmOt4Rj0Bp/M7p0ynBo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzKZTzCn2Ix85Sw7LAJvKPH6kXotmBbdl7fmb7l6v4XB/MKf7QV
+	uEqwaVBHWu51d/HN7Pqr3ppaYiRflngMmO6maQgcuaQtbL1CXyQSNnWh0DQ0Gp8=
+X-Google-Smtp-Source: AGHT+IEkur/2TMh3nHuCwbzuDMOeSBOL2CoeT6JJvsVoc4YY3rIbNXOfhuMtLzWrvW4ipUCr8hmyQA==
+X-Received: by 2002:a05:600c:3ba9:b0:42c:b995:20d2 with SMTP id 5b1f17b1804b1-42cdb538612mr85896745e9.3.1726737142780;
+        Thu, 19 Sep 2024 02:12:22 -0700 (PDT)
+Received: from smtpclient.apple ([2001:a61:a4f:301:6884:c2fb:6f00:dfa0])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42e754095c7sm16809875e9.2.2024.09.19.02.12.21
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 19 Sep 2024 02:12:22 -0700 (PDT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] clocksource/drivers/timer-sprd: Select driver on ARM and
- ARM64
-To: Enlin Mu <enlin.mu@outlook.com>, daniel.lezcano@linaro.org,
- tglx@linutronix.de, orsonzhai@gmail.com, zhang.lyra@gmail.com,
- linux-kernel@vger.kernel.org, enlin.mu@unisoc.com, enlinmu@gmail.com
-Cc: linux-hardening@vger.kernel.org
-References: <TYSPR04MB70840448562705C21BA8DCCF8A632@TYSPR04MB7084.apcprd04.prod.outlook.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <TYSPR04MB70840448562705C21BA8DCCF8A632@TYSPR04MB7084.apcprd04.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51\))
+Subject: Re: [PATCH v2] ksmbd: Replace one-element arrays with flexible-array
+ members
+From: Thorsten Blum <thorsten.blum@toblux.com>
+In-Reply-To: <CAKYAXd_T4JzjOVFqxSt=RQG7w0yzPX62-AihQHUepvS+80BZJQ@mail.gmail.com>
+Date: Thu, 19 Sep 2024 11:12:10 +0200
+Cc: sfrench@samba.org,
+ senozhatsky@chromium.org,
+ tom@talpey.com,
+ linux-cifs@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <4881D699-9109-47B5-927F-B048479C48B8@toblux.com>
+References: <20240820191520.100224-2-thorsten.blum@toblux.com>
+ <CAKYAXd_T4JzjOVFqxSt=RQG7w0yzPX62-AihQHUepvS+80BZJQ@mail.gmail.com>
+To: Namjae Jeon <linkinjeon@kernel.org>
+X-Mailer: Apple Mail (2.3776.700.51)
 
+Hi Namjae,
 
+On 22. Aug 2024, at 14:01, Namjae Jeon <linkinjeon@kernel.org> wrote:
+> On Wed, Aug 21, 2024 at 4:15=E2=80=AFAM Thorsten Blum =
+<thorsten.blum@toblux.com> wrote:
+>>=20
+>> Replace the deprecated one-element arrays with flexible-array members
+>> in the structs copychunk_ioctl_req and smb2_ea_info_req.
+>>=20
+>> There are no binary differences after this conversion.
+>>=20
+>> Link: https://github.com/KSPP/linux/issues/79
+>> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+>> ---
+>> Changes in v2:
+>> - Use <=3D instead of < and +1 as suggested by Namjae Jeon and Tom =
+Talpey
+>> - Link to v1: =
+https://lore.kernel.org/linux-kernel/20240818162136.268325-2-thorsten.blum=
+@toblux.com/
+> Applied it to #ksmbd-for-next-next.
+> Thanks!
 
-On 2024/9/19 15:25, Enlin Mu wrote:
-> From: Enlin Mu <enlin.mu@unisoc.com>
-> 
-> sprd timer is currently available on ARM and ARM64 based devices.
-> Thus select it for ARM and ARM64
-> 
-> Signed-off-by: Enlin Mu <enlin.mu@unisoc.com>
-> ---
->   drivers/clocksource/Kconfig | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-> index 95dd4660b5b6..296c5f664583 100644
-> --- a/drivers/clocksource/Kconfig
-> +++ b/drivers/clocksource/Kconfig
-> @@ -494,8 +494,8 @@ config MTK_CPUX_TIMER
->   config SPRD_TIMER
->   	bool "Spreadtrum timer driver" if EXPERT
->   	depends on HAS_IOMEM
-> -	depends on (ARCH_SPRD || COMPILE_TEST)
-> -	default ARCH_SPRD
-> +	depends on (ARM || ARM64 || COMPILE_TEST)
+I just noticed this patch never made it to linux-next and I can't find=20=
 
-I don't understand, if this driver is available on ARM, why ARCH_SPRD is 
-not enabled on ARM architecture?
+it anywhere else (also not in #ksmbd-for-next-next).
 
-> +	default y
->   	select TIMER_OF
->   	help
->   	  Enables support for the Spreadtrum timer driver.
+Maybe it got lost because it has the same subject and a very similar=20
+commit message as [1] (I submitted both around the same time)?
+
+Thanks,
+Thorsten
+
+[1] =
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/=
+?id=3D7c525dddbee71880e654ad44f3917787a4f6042c=
