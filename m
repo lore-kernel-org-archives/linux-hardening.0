@@ -1,118 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail3-relais-sop.national.inria.fr (mail3-relais-sop.national.inria.fr [192.134.164.104])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DB25189F5B;
-	Wed, 18 Sep 2024 13:18:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC04B2B9AD
+	for <linux-hardening@vger.kernel.org>; Thu, 19 Sep 2024 06:26:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.134.164.104
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726665506; cv=none; b=axCe8GqD6pFSedZGDi6Ta8rVX5bW2/TII2YXubtda1iFmj2yTMV9OjpP/uIOGrrPh0aEj67/c0LKB8Lay+HvGxKzlKlS2iGN6wj2ske927PM/wnK/H8dskPxOZjlst/kTsQMpGRHTBJ5FTqVc4kbqqfYVXxb06so38ebr0cTga8=
+	t=1726727220; cv=none; b=MRzz0kZE3vj4nPjJLGcV7ZA33SV+jnCTaDYULs9zlqxIa4FOG95jKkV5R4pNZIpOVv3nUWWYInqEkWZIK81L5wHzBmt+3Fziw0+7ASFvV1a3l1qx8AbuyBgtYv8MAwwo8ab+pC1e1bUhj5/3vAUjpVMZl8Uj3CSZ/BDZP949fpg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726665506; c=relaxed/simple;
-	bh=KOHe4DkxWPpMPzEVfB3CEawAqwmw6QSxmlJeI52pIoA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z8cA/NIcLLSCCc7rglKnzSrgHKVWjHDWY4RXlYbgAO4yaYJ2SViM84F2s6KTl7N9H6fLR0bfrx5h286yk61rXXYmeYIggVGX5Dcu9N52ojxA4g0CSSSuNZIfYdrvF64EkRYUVVyI+8yOhkJNcGDzRoE280GDAU6CFiSAtw0HnlI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dh/xU5S1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1726727220; c=relaxed/simple;
+	bh=lUpe7mEKt4IKqjVaiYnO3rC7ndMa6lJfLy9odGtnUtE=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=nB/VaVf+awZb2drg/sRPUklJdHWkFuDYOjxdE7o4IgcG7/NYgW8iz6WQGYxggUAo76r2K0TfhvL7qZJH4SnfDAkKdlFpWTerXMusxO03lea7Bh4ndy7icHmglcAmyVXD9bf3wnIE7uU/LN732JEUxlquH7Av7yItGLpnJF2UUqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr; spf=pass smtp.mailfrom=inria.fr; dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b=Uaor4ODM; arc=none smtp.client-ip=192.134.164.104
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dh/xU5S1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D423C4CEC3;
-	Wed, 18 Sep 2024 13:18:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726665505;
-	bh=KOHe4DkxWPpMPzEVfB3CEawAqwmw6QSxmlJeI52pIoA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dh/xU5S18W8bmrdGiQsgjQDFh4MbnzV/26SPABn5L+f1AudLfNt6FLiTfsMkwixGj
-	 j2zyQMnjx5cZFcHyqoZ82ScavkOJmoyuVI7BAbyqsjDBnfmoQyAGO9IfM/2tUVLkSZ
-	 w+CtaxZ+UvzYAWq6Jw9AM6Mz4HymaXyBrWwi7b9OQbZk0zkiuFH2RzsXPf52LLXUwz
-	 3F7QjcbmMUgq+HB2OXZUevnlcKG/czdIg4IBj5ys8AHNbdL4a6yYJCscSkNit+DHcO
-	 zk6bkd87G2iKnBPDcVJ28BvlOlqQJTZN8uIX/txubNN6KWF+k2pFxcjAfwzphYat2t
-	 Mg8jKMjEH0Zag==
-Date: Wed, 18 Sep 2024 15:18:21 +0200
-From: Mark Brown <broonie@kernel.org>
-To: Jeff Xu <jeffxu@chromium.org>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Muhammad Usama Anjum <usama.anjum@collabora.com>,
-	akpm@linux-foundation.org, linux-kselftest@vger.kernel.org,
-	linux-mm@kvack.org, linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org, pedro.falcato@gmail.com,
-	willy@infradead.org, vbabka@suse.cz, Liam.Howlett@oracle.com,
-	rientjes@google.com, keescook@chromium.org
-Subject: Re: [PATCH v3 4/5] selftests/mseal: add more tests for mmap
-Message-ID: <ZurTHc1C27iqofjp@finisterre.sirena.org.uk>
-References: <20240830180237.1220027-1-jeffxu@chromium.org>
- <20240830180237.1220027-5-jeffxu@chromium.org>
- <e7ea2b84-8d10-40fe-a14f-837bca851ea9@lucifer.local>
- <fd927106-2fc3-4b96-8014-2c517229bc99@lucifer.local>
- <CABi2SkUpCf+aOa2sPED8CosG5ccqjFd7ouot8gXi9ECqsHiZhw@mail.gmail.com>
- <4944ce41-9fe1-4e22-8967-f6bd7eafae3f@lucifer.local>
- <CABi2SkUgDZtJtRJe+J9UNdtZn=EQzZcbMB685P=1rR7DUhg=6Q@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="Uaor4ODM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=inria.fr; s=dc;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=OZuqA97ej9SOaI/vTpBcIYBQJ5KlkVSZ9zI8F+YYuaU=;
+  b=Uaor4ODMo0xIGJjysiw9ZeyqHd/Ux+wD8s1CRB0biQYN+mIK8HIJ4vI+
+   JILyBGZmvCsX4UfM7PstDlIeFb4j4qLBYQX9wFR7Yt+teQOyRh1fN6TzO
+   Nq2nQ7mHTbvKIjQtJAk12lLfUzg26A/cDC17eJlGzxwvdJVNq9vRuCXxC
+   Q=;
+Authentication-Results: mail3-relais-sop.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
+X-IronPort-AV: E=Sophos;i="6.10,241,1719871200"; 
+   d="scan'208";a="96784530"
+Received: from 81-223-29-78.static.upcbusiness.at (HELO hadrien) ([81.223.29.78])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2024 08:25:46 +0200
+Date: Thu, 19 Sep 2024 08:25:45 +0200 (CEST)
+From: Julia Lawall <julia.lawall@inria.fr>
+To: Hongbo Li <lihongbo22@huawei.com>
+cc: kees@kernel.org, andy@kernel.org, nicolas.palix@imag.fr, 
+    linux-hardening@vger.kernel.org, cocci@inria.fr
+Subject: Re: [PATCH -next v3 01/10] coccinelle: Add rules to find str_true_false()
+ replacements
+In-Reply-To: <20240911010927.741343-2-lihongbo22@huawei.com>
+Message-ID: <2aefba9e-f04e-4ee6-60cb-a139c0641ff1@inria.fr>
+References: <20240911010927.741343-1-lihongbo22@huawei.com> <20240911010927.741343-2-lihongbo22@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="t9zZ3Q/TxVJgOE8I"
-Content-Disposition: inline
-In-Reply-To: <CABi2SkUgDZtJtRJe+J9UNdtZn=EQzZcbMB685P=1rR7DUhg=6Q@mail.gmail.com>
-X-Cookie: Editing is a rewording activity.
+Content-Type: text/plain; charset=US-ASCII
 
 
---t9zZ3Q/TxVJgOE8I
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Fri, Sep 13, 2024 at 03:50:00PM -0700, Jeff Xu wrote:
+On Wed, 11 Sep 2024, Hongbo Li wrote:
 
-> Even though the number of lines is large in these patches, its main
-> intention is to test Pedro's in-place change (from can_modify_mm to
-> can_modify_vma). Before this patch,  the test had a common pattern:
-> setup memory layout, seal the memory, perform a few mm-api steps, verify
-> return code (not zero).  Because of the nature of out-of-loop,  it is
-> sufficient to just verify the error code in a few cases.
+> After str_true_false() has been introduced in the tree,
+> we can add rules for finding places where str_true_false()
+> can be used. A simple test can find over 10 locations.
+>
+> Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
+> ---
+>  scripts/coccinelle/api/string_choices.cocci | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+>
+> diff --git a/scripts/coccinelle/api/string_choices.cocci b/scripts/coccinelle/api/string_choices.cocci
+> index 5e729f187f22..6942ad7c4224 100644
+> --- a/scripts/coccinelle/api/string_choices.cocci
+> +++ b/scripts/coccinelle/api/string_choices.cocci
+> @@ -85,3 +85,22 @@ e << str_down_up_r.E;
+>  @@
+>
+>  coccilib.report.print_report(p[0], "opportunity for str_down_up(%s)" % e)
+> +
+> +@str_true_false depends on patch@
+> +expression E;
+> +@@
+> +-      ((E) ? "true" : "false")
+> ++      str_true_false(E)
+> +
+> +@str_true_false_r depends on !patch exists@
+> +expression E;
+> +position P;
+> +@@
+> +*      ((E@P) ? "true" : "false")
 
-> With Pedro's in-loop change, the sealing check happens later in the
-> stack, thus there are more things and scenarios to verify. And there were
-> feedback to me during in-loop change that selftest should be extensive
-> enough to discover all regressions.  Even though this viewpoint is subject
-> to debate. Since none would want to do it, I thought I would just do it.
+Hello,
 
-> So the Patch V3 1/5 is dedicated entirely to increasing the verification
-> for existing scenarios, this including checking return code code, vma-size,
-> etc after mm api return.
+The semantic patch is quite slow.  Actually it tests a large number of
+cases, eg where the parentheses are present and where they are not.
 
-> Patch V3 3/5 are for unmap(), during review of V2 of Pedro's in-loop
-> change, we discovered a bug in unmap(), and unmap() is not atomic.
-> This leads to 4/5(mmap), 5/5(mremap), which calls munmap().
-> In addition, I add scenarios to cover cross-multiple-vma cases.
+A small optimization is possible in the non-patch case.  The outer
+parentheses are not needed, because you will already get the same
+information whether they are there or not.
 
-> The  high-level goal of mseal test are two folds:
-> 1> make sure sealing is working correctly under different scenarios,
-> i.e. sealed mapping are not modified.
-> 2> For unsealed memory, added mseal code  doesn't regress on regular mm API.
+In contrast, for the patch case, the outer parentheses are needed, because
+if they are there we want to remove them, since they are not needed for
+the function call.
 
-> The goal 2 is as important as 1, that is why tests usually are done in
-> two phases, one with sealing, the other without.
+Could you update the depends on !patch cases to remove the outer
+parentheses?
 
-That's vastly more detail than is in the changelogs for the actual
-patches (which are just a few lines each) or the cover letter of the
-series.  I don't have the MM knowledge to assess the detail of what
-you're saying but I can't help but think that it'd help a lot with
-review if all this detail were part of the actual submission.
+Also, just one patch would be fine.  There are many changes, but they are
+all sort of the same, so it would be easier just to see them all at once.
 
---t9zZ3Q/TxVJgOE8I
-Content-Type: application/pgp-signature; name="signature.asc"
+thanks,
+julia
 
------BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmbq0xwACgkQJNaLcl1U
-h9Bb5gf9HvuDNv8AbcGEzO+8ZQVVGlBGUXahiFFNylLhIRpt0rJ+ZSpxamPviKMX
-Z8Ab8ByYPhR6dkRdKHPFdKf1oe2EVQ2vEZjygtPbrrKHmV6oVj3syK69kTvacQUC
-Q9+6cm1vsKi5BgaTB3JFrqVbVce5h9hB5++WnLtz/B4Eg+d9Phvbk/YS9nzfN0wS
-MbB8DV5Xg2UOnV22hDua2WGQ48IY0pY8RUKgnZxpOwSSXDNJDJ3RJIkXF6s/RqC/
-ck4M9EcxicevWhGI6TnO5k5enDRPLMPstK94jpbamYSswPTOZLrzaZPha8H6euES
-h7L14up0NhGMSHaZAXsuAVP3yb0lCw==
-=n6h7
------END PGP SIGNATURE-----
-
---t9zZ3Q/TxVJgOE8I--
+> +
+> +@script:python depends on report@
+> +p << str_true_false_r.P;
+> +e << str_true_false_r.E;
+> +@@
+> +
+> +coccilib.report.print_report(p[0], "opportunity for str_true_false(%s)" % e)
+> --
+> 2.34.1
+>
+>
