@@ -1,88 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01B1F14BF86;
-	Fri, 20 Sep 2024 12:50:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B837441A84
+	for <linux-hardening@vger.kernel.org>; Fri, 20 Sep 2024 16:37:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726836609; cv=none; b=aEG57+UM3iN+ChylxP6BuRR6ZXoednTeWByj3E6mYGJynQQjrg9qkpL7YsVY6RH7AkRbXLsiOwsWSKPgdzpFH8cwh6Q//C8fPaDyCqfTAze6ky9Y9uGlV6XF6fjAGyTXyLov6huJrajX8csSlCTPV91oVZOrFAQdh9XLZQihL4w=
+	t=1726850253; cv=none; b=ONrSdROnNzDU7pk0i5fgNN1ZXSMF64zp41MvPFP0xwGDniEAfJYgLKkzuwyrU+UjOHxOxSdEhrlvqhZxfNnALeK+YsjA+c0OhI8nuQOoE7xHxycs2VQbQcvniOEJDlnJiFXGx3AyplbJsc055Sn1sC/5NXLhFDogIHqBnNLbPNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726836609; c=relaxed/simple;
-	bh=p6YLJWz9U/S9OuyWWjwWAe0NXusxHGsFmbOEZJtk/3E=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Lp3zEN8ar9e2cWu6GCtO0QqxS7v9oFnHDrDsXHHpkGLwNCztEtS71wPm9UPPvG+UEQLL+Lqn2LyPWIA3m6UJXqzd7oSoJM9UpoDeeFvODO0Xmk28ZUwd0WZKjiQITWB5aVaNKtcrddsvYuJlqMAvGF85vo8fXImpJ8eUbIM+paE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QbiBChjB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1726850253; c=relaxed/simple;
+	bh=CLdeFhcXjFW/Rn670pgZvMahwb04Xg2afg6QSLEsW9M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HNs/HjUA+cjCQSEGfFAmtB1RmG8fPOFLBhl/odU9E3739mF66fNwth2znomINOyNQ+tEgTTAOYC3Vl1ayVG6nPViE/lmidgRZ58C2c1lqQ7IPRC1mP4Hy3I5XUa1oedDfdjznSYvd2TSgcMMT1vBnfHDh/eyRuUZV/x8V2J+7CQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=JGIwn20b; arc=none smtp.client-ip=209.85.167.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QbiBChjB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 621D4C4CEC3;
-	Fri, 20 Sep 2024 12:50:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726836608;
-	bh=p6YLJWz9U/S9OuyWWjwWAe0NXusxHGsFmbOEZJtk/3E=;
-	h=Date:From:To:Cc:Subject:From;
-	b=QbiBChjBccXSW/CVzTNDj8R/OSmQP/T8VNxwtjcCrj/OLhh+tgu57zMV+qQLx2wU5
-	 beMuZogRRdczrT7J9/0CLQBFp2wpVap2asHUJz2ODIHZ2btYJ/9mMdWxn6D6KjB4r4
-	 myK0cb5PWvh89yQY6Jm+tjhlObV16JHn4kzGMq5Pr2L4ad9skx4svVHNQUzvcybEXn
-	 rLL0lDYm8b8Cy3NVUZujPtDOTmjnogi+uJRxCjPRd4/fF7ake9RiVvbqHitHPUaEPn
-	 US4avSxL5zyRt4trWSwDA1TuzLa/URmVXoiVT+4W90xFCLZGQRBKxVKrWP7wi9p6mx
-	 32BiGPEL8Vi+Q==
-Date: Fri, 20 Sep 2024 14:50:02 +0200
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Greg KH <gregkh@linuxfoundation.org>,
-	Dan Carpenter <dan.carpenter@linaro.org>
-Cc: linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] container_of: add container_first() macro
-Message-ID: <Zu1vekikKNR5oUoM@elsanto>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JGIwn20b"
+Received: by mail-oi1-f169.google.com with SMTP id 5614622812f47-3e27a0c723fso9868b6e.1
+        for <linux-hardening@vger.kernel.org>; Fri, 20 Sep 2024 09:37:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1726850251; x=1727455051; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aeUoiC4xV3CiCxio8wPUbYZ9DxOg+zY+E1xCmjqF+qE=;
+        b=JGIwn20bV1Jl3+RqvTu6eBnUUzjlhm69/EXrjM1sItTAwffQkPpUm2xD0+k/P9zNEU
+         EcrkwBbhaTnRZGqj1CjUveQ68nYirkXhWFqXVmnLNAGOacknExPmHBQouGr+aAwVMwov
+         ULan7rNbT5Bmf+8sm1xkHP7+epfKPqeqbiGS8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726850251; x=1727455051;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aeUoiC4xV3CiCxio8wPUbYZ9DxOg+zY+E1xCmjqF+qE=;
+        b=XcwMImQbTsm/ah9IXlDpHb52Rbau49GiKeP/u0a2dsk8Ax1EQjyF7itam8mclJZ+ln
+         ci5iSHigAkY/uSxqPE/S/7dN89poDHXvfvTA70oYA9K44JASdaG4H3z/EbZxj5jAU4ig
+         S6p/W3rg/xAk3AEMTnyHFOIeuMYwZmaS0TV77cudmU20jOpfOIkK+MJvM20F3a6LmqQP
+         jmAs4fRdjzQcPRzFMFnazYkILd11elnw5ybDE1PhPiZfgu90Qpg3m2VaVhRWmHDTf/lY
+         TbpCFOZpImqLrl9BRzgdsUKvF/Dgp0oUu7zcXRXtj//tO0jY9mnZImlhAb0ieqoixKAo
+         uyMA==
+X-Forwarded-Encrypted: i=1; AJvYcCUIh6yIbARueBgh/hsncF5j97r08pNKkcbzWb3Yt1dCkZf0UgvQtRGD6NILqNzEsn2gX3AkAfjk1/+sAXBSnG8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YybE5FC5ZygLENFptrzsT787TB4HbI5mz+8dbt5Pge3QMmP3+ei
+	aYq3o6YiPzqB+1fznYxeI507iqnYI7i5esfImXs7/7221fiJs5CDf+3sQI9uO2Qsz2mTtBkMrVV
+	afsFopi3SU/p+/Exh+TPJ4pcR8Hxv75SKqQTH
+X-Google-Smtp-Source: AGHT+IEgc6oFjG/AVNeyCwNJdiZ7/4I53v5fqxBfmjiWXrV2OLBvKIkIyisPGyrs125247P4H7Q2d819NzxIHSA2I1E=
+X-Received: by 2002:a05:6870:870c:b0:277:db1c:7c6a with SMTP id
+ 586e51a60fabf-2803a62c744mr749865fac.7.1726850250833; Fri, 20 Sep 2024
+ 09:37:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20240830180237.1220027-1-jeffxu@chromium.org> <20240830180237.1220027-5-jeffxu@chromium.org>
+ <e7ea2b84-8d10-40fe-a14f-837bca851ea9@lucifer.local> <fd927106-2fc3-4b96-8014-2c517229bc99@lucifer.local>
+ <CABi2SkUpCf+aOa2sPED8CosG5ccqjFd7ouot8gXi9ECqsHiZhw@mail.gmail.com>
+ <4944ce41-9fe1-4e22-8967-f6bd7eafae3f@lucifer.local> <CABi2SkUgDZtJtRJe+J9UNdtZn=EQzZcbMB685P=1rR7DUhg=6Q@mail.gmail.com>
+ <ZurTHc1C27iqofjp@finisterre.sirena.org.uk>
+In-Reply-To: <ZurTHc1C27iqofjp@finisterre.sirena.org.uk>
+From: Jeff Xu <jeffxu@chromium.org>
+Date: Fri, 20 Sep 2024 09:37:17 -0700
+Message-ID: <CABi2SkUQM8girk31jDYMfx8kVoG0xXMwaSDWmu90b4ZmtdmHHQ@mail.gmail.com>
+Subject: Re: [PATCH v3 4/5] selftests/mseal: add more tests for mmap
+To: Mark Brown <broonie@kernel.org>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	Muhammad Usama Anjum <usama.anjum@collabora.com>, akpm@linux-foundation.org, 
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	pedro.falcato@gmail.com, willy@infradead.org, vbabka@suse.cz, 
+	Liam.Howlett@oracle.com, rientjes@google.com, keescook@chromium.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This is like container_of() but it has an assert to ensure that it's
-using the first struct member.
+Hi Mark
 
-Co-developed-by: Dan Carpenter <dan.carpenter@linaro.org>
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- include/linux/container_of.h | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+On Wed, Sep 18, 2024 at 6:18=E2=80=AFAM Mark Brown <broonie@kernel.org> wro=
+te:
+>
+> On Fri, Sep 13, 2024 at 03:50:00PM -0700, Jeff Xu wrote:
+>
+> > Even though the number of lines is large in these patches, its main
+> > intention is to test Pedro's in-place change (from can_modify_mm to
+> > can_modify_vma). Before this patch,  the test had a common pattern:
+> > setup memory layout, seal the memory, perform a few mm-api steps, verif=
+y
+> > return code (not zero).  Because of the nature of out-of-loop,  it is
+> > sufficient to just verify the error code in a few cases.
+>
+> > With Pedro's in-loop change, the sealing check happens later in the
+> > stack, thus there are more things and scenarios to verify. And there we=
+re
+> > feedback to me during in-loop change that selftest should be extensive
+> > enough to discover all regressions.  Even though this viewpoint is subj=
+ect
+> > to debate. Since none would want to do it, I thought I would just do it=
+.
+>
+> > So the Patch V3 1/5 is dedicated entirely to increasing the verificatio=
+n
+> > for existing scenarios, this including checking return code code, vma-s=
+ize,
+> > etc after mm api return.
+>
+> > Patch V3 3/5 are for unmap(), during review of V2 of Pedro's in-loop
+> > change, we discovered a bug in unmap(), and unmap() is not atomic.
+> > This leads to 4/5(mmap), 5/5(mremap), which calls munmap().
+> > In addition, I add scenarios to cover cross-multiple-vma cases.
+>
+> > The  high-level goal of mseal test are two folds:
+> > 1> make sure sealing is working correctly under different scenarios,
+> > i.e. sealed mapping are not modified.
+> > 2> For unsealed memory, added mseal code  doesn't regress on regular mm=
+ API.
+>
+> > The goal 2 is as important as 1, that is why tests usually are done in
+> > two phases, one with sealing, the other without.
+>
+> That's vastly more detail than is in the changelogs for the actual
+> patches (which are just a few lines each) or the cover letter of the
+> series.  I don't have the MM knowledge to assess the detail of what
+> you're saying but I can't help but think that it'd help a lot with
+> review if all this detail were part of the actual submission.
+Agreed, will update and give more detail in the next version of the patch.
 
-diff --git a/include/linux/container_of.h b/include/linux/container_of.h
-index 713890c867be..928c5865c1b4 100644
---- a/include/linux/container_of.h
-+++ b/include/linux/container_of.h
-@@ -22,6 +22,24 @@
- 		      "pointer type mismatch in container_of()");	\
- 	((type *)(__mptr - offsetof(type, member))); })
- 
-+/**
-+ * container_first - cast first member of a structure out to the containing
-+ *		     structure
-+ * @ptr:	     the pointer to the member.
-+ * @type:	     the type of the container struct this is embedded in.
-+ * @member:	     the name of the member within the struct.
-+ *
-+ * WARNING: any const qualifier of @ptr is lost.
-+ */
-+#define container_first(ptr, type, member) ({				\
-+	void *__mptr = (void *)(ptr);                                   \
-+	static_assert(__same_type(*(ptr), ((type *)0)->member) ||       \
-+		      __same_type(*(ptr), void),                        \
-+		      "pointer type mismatch in container_of()");       \
-+	static_assert(offsetof(type, member) == 0, "not first member");	\
-+	((type *)(__mptr - offsetof(type, member))); })
-+
-+
- /**
-  * container_of_const - cast a member of a structure out to the containing
-  *			structure and preserve the const-ness of the pointer
--- 
-2.34.1
-
+Thanks
+-Jeff
