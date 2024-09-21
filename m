@@ -1,86 +1,143 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3788C171066
-	for <linux-hardening@vger.kernel.org>; Sat, 21 Sep 2024 17:42:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FEA72207A;
+	Sat, 21 Sep 2024 18:55:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726940549; cv=none; b=FvOnZfYsVlnvVG6CAjMEq7c2Li+au1WhdlcB00LNKDRdoqoBPhcdwOPoFITZzcs0Jnge6Kgz4eDTVUfI7CEEsTskpLNJVr9knHq+tfU5BILyQFylLMkDk3MPV5mVyJr9QkTwcXos58wfo5AbJijcKn9mBc9lMc2FoUc1D60kT4A=
+	t=1726944924; cv=none; b=Km0EpnsHLPXXdNl/jGmDWLwtAqb6zw2uVmCy1azo4ZftWAJsWajGs3lfg5ulegOannHPZIzyYd192aVK9yvKiDjZvjTiUsCq8TGKb2VYPtSCDMyBk1sBADzP2VqHqdwKCOW0kyhfcLL6aZl7y0tAezgnHN8k4gL8WTIAbIp++aM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726940549; c=relaxed/simple;
-	bh=JgrYoAupbc8OvNFMx54RNgfQybMF51dGHAZ6mKbefj0=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=nWnFkvlmqAdedmk8galrW2eJmFg6mb1xkiSgDuAOicqizJNZNnV1Qq5AUKqQLbDNwyzQ2CHVpRCtp1RQbWnKGJULyt5vBPpmj2n3lp63OWtFCBqKbsFNP1IaOQtPfySK1Qq0vRCDwJuuPNvf8CeXAx+P9rCCKHmP/Uu3MZojjco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Va2EzS7n; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1726944924; c=relaxed/simple;
+	bh=EW3RqMHmcEVsqOD5+PwtqaAXSNldoK2gO0jXhV+18kA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OeIBBLiA+fg/1kM4bCwBExEVs9ydUrpdn++DrSIFXIz0OrUZUyqSxi3gWoll1Zn+eMKS25IX/E0n2AhW8IaS6HJEJMpb/CuezddZ6iMSvJGyGdvNP7kkx6dz+qknwIGiK82MqgaYVOXhGXgwja2XNR6Fve90gmsiSBrssjYepec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RjPywhe5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Va2EzS7n"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1726940547;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=JgrYoAupbc8OvNFMx54RNgfQybMF51dGHAZ6mKbefj0=;
-	b=Va2EzS7n1ckkVNjjUSo34Es65gK5HMeBPLs/IqTAThW6/hZ4wSZTQdaJ3tE3oPo6OB+4BO
-	nxwFCgJEUoZMLiY/4Asq+5lozMTfxn5KPlK5LbwB4k4n1DQ9SGjZL9rXwkNxcMjg/qMnpT
-	5enN1P+NHYRL3BtZngvlWk6dUpTCwlg=
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com
- [209.85.216.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-396-7Sb7R7E8O7mbb-zQ2EGS4Q-1; Sat, 21 Sep 2024 13:42:25 -0400
-X-MC-Unique: 7Sb7R7E8O7mbb-zQ2EGS4Q-1
-Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-2db5d285f7cso3068813a91.1
-        for <linux-hardening@vger.kernel.org>; Sat, 21 Sep 2024 10:42:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726940543; x=1727545343;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=JgrYoAupbc8OvNFMx54RNgfQybMF51dGHAZ6mKbefj0=;
-        b=BP+nJALk9z7Nc6AYIszL4M+AIEnWNSKsLsLXh66O3b/uNwNsX4zZtj7qQyViauw2Ht
-         0dLBxMDK2oOqi/r3pJRZU3FWtidVWTBDcPDRHI8UKno7HTQDxtp9o/1Ru/yzkogf64lV
-         ETue8ZiVZkrqK+h+5dC0dSpMCZcUHK3FcOoPytUV/icpsIVWIG4SS0Iaa4o4jpy7c2gh
-         uRrVDCgKITmdSvfQHKH1A5McR+2qygTek4KG212kQaNn7sDZVcd9CUU3sWl3C5GK6zp2
-         VRMYUOv2IIe/RDiWiawUT2NgCR980Xe8jNWsl5MoA2JTQICYpRzeOZ6Wpr3eJbUhwpPr
-         LLUg==
-X-Gm-Message-State: AOJu0YzOG6YILOpfP4Io7zKoFtvTZweO1QAIKb6blu0O4WTvDJw/6d0/
-	C60rSJY6RwS7rWonqUpNvTDpY76HM9cjlWPwIUuqphQe64j9cBIE1ddwW9SvQ+XLU0dg5Ef1DXp
-	EHZvT4d2dKiz6woE7zz8F9saRTLKkY7/8MQnTt/xfILlFVrSGWM7tPdp05NREnyt1HOh68reTQB
-	zBEUshzDX20hwy6e8JTmXIdpPUTuXC+gRsnyvBzJ3IMz10k0Jqgh8=
-X-Received: by 2002:a17:902:e54b:b0:202:13ca:d73e with SMTP id d9443c01a7336-208d83b93fbmr96970215ad.28.1726940543362;
-        Sat, 21 Sep 2024 10:42:23 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGwKUefUGhW4P9+SPQMWxP6OdoTY4qumCwbgll/jbfjtlKNhI1zFL0C4CRiW+QJV0IQYuCYE57e7UXcnCMnUK8=
-X-Received: by 2002:a17:902:e54b:b0:202:13ca:d73e with SMTP id
- d9443c01a7336-208d83b93fbmr96970035ad.28.1726940543063; Sat, 21 Sep 2024
- 10:42:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RjPywhe5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3ABA3C4CEC2;
+	Sat, 21 Sep 2024 18:55:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1726944924;
+	bh=EW3RqMHmcEVsqOD5+PwtqaAXSNldoK2gO0jXhV+18kA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RjPywhe58rjvE4SbSbM1Npo55fwjBx5SLQftNBpgzlj0/V6ahO8ptaZKylyPqONha
+	 w/lbemqX0tGsVB7Odo/aIKA7Kk0ffms22xNqzLEhAKznt7F2W5OJJbt1wrxIrWKStR
+	 l/3q0oJ+882ddwqXdm3p6DfA/t5u5VGZNluqJLKf8pihowiEgogxQ85KjlxatQXb/T
+	 yz6tCz3Ph/+Ql8f2CNfsd7+72n0Qu0xDFii00dpuT6kWdr/aN5OIbqVi5QbdSoKFPP
+	 aEKejnbbmA+lg8AiOANAHpXRNzndXwZBYRCyPthQZqfAxwK0wS7BCSX+NaU9rsNmES
+	 S1ar0JM1+9iOw==
+Date: Sat, 21 Sep 2024 11:55:19 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Md Sadre Alam <quic_mdalam@quicinc.com>
+Cc: axboe@kernel.dk, song@kernel.org, yukuai3@huawei.com, agk@redhat.com,
+	snitzer@kernel.org, mpatocka@redhat.com, adrian.hunter@intel.com,
+	quic_asutoshd@quicinc.com, ritesh.list@gmail.com,
+	ulf.hansson@linaro.org, andersson@kernel.org,
+	konradybcio@kernel.org, kees@kernel.org, gustavoars@kernel.org,
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-raid@vger.kernel.org, dm-devel@lists.linux.dev,
+	linux-mmc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-hardening@vger.kernel.org, quic_srichara@quicinc.com,
+	quic_varada@quicinc.com
+Subject: Re: [PATCH v2 1/3] dm-inlinecrypt: Add inline encryption support
+Message-ID: <20240921185519.GA2187@quark.localdomain>
+References: <20240916085741.1636554-1-quic_mdalam@quicinc.com>
+ <20240916085741.1636554-2-quic_mdalam@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Jason Montleon <jmontleo@redhat.com>
-Date: Sat, 21 Sep 2024 13:42:11 -0400
-Message-ID: <CAJD_bPJes4QhmXY5f63GHV9B9HFkSCoaZjk-qCT2NGS7Q9HODg@mail.gmail.com>
-Subject: [REGRESSION][BISECTED] Cannot boot Lichee Pi 4A with FORTIFY_SOURCE enabled
-To: linux-hardening@vger.kernel.org
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>, kees@kernel.org, 
-	linux-riscv@lists.infradead.org
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240916085741.1636554-2-quic_mdalam@quicinc.com>
 
-Starting with 6.11-rc1 I can no longer boot the Lichee Pi 4A with
-FORTIFY_SOURCE enabled. This works on 6.10 up to at least 6.10.11.
-However, with 6.11 I get no output at all from the kernel on the
-serial console with FORTIFY_SOURCE enabled and the system never comes
-online on network or otherwise as far as I can tell.
+Hi,
 
-I did a bisect which led to:
-2003e483a81cc235e29f77da3f6b256cb4b348e7
-fortify: Do not special-case 0-sized destinations
+On Mon, Sep 16, 2024 at 02:27:39PM +0530, Md Sadre Alam wrote:
+> QCOM SDCC controller supports Inline Crypto Engine
+> This driver will enables inline encryption/decryption
+> for ICE. The algorithm supported by ICE are XTS(AES)
+> and CBC(AES).
+> 
+> Signed-off-by: Md Sadre Alam <quic_mdalam@quicinc.com>
+> ---
+> 
+> Change in [v2]
+> 
+> * Added dm-inlinecrypt driver support
+> 
+> * squash the patch blk-crypto: Add additional algo modes for Inline
+>   encryption and md: dm-crypt: Add additional algo modes for inline
+>   encryption and added in this
+> 
+> Change in [v1]
+> 
+> * This patch was not included in [v1]
+> 
+>  block/blk-crypto.c           |  21 +++
+>  drivers/md/Kconfig           |   8 +
+>  drivers/md/Makefile          |   1 +
+>  drivers/md/dm-inline-crypt.c | 316 +++++++++++++++++++++++++++++++++++
+>  include/linux/blk-crypto.h   |   3 +
+>  5 files changed, 349 insertions(+)
+>  create mode 100644 drivers/md/dm-inline-crypt.c
 
-If I revert this commit I can once again boot the Lichee Pi 4A with
-FORTIFY_SOURCE enabled.
+Thanks for working on this!  Android uses a similar device-mapper target called
+dm-default-key
+(https://android.googlesource.com/kernel/common/+/refs/heads/android-mainline/drivers/md/dm-default-key.c),
+and I've been looking for the best way to get the functionality upstream.  The
+main challenge is that dm-default-key is integrated with fscrypt, such that if
+fscrypt encrypts the data, then the data isn't also encrypted with the block
+device key.  There are also cases such as f2fs garbage collection in which
+filesystems read/write raw data without en/decryption by any key.  So
+essentially a passthrough mode is supported on individual I/O requests.
 
-Thank you,
-Jason Montleon
+It looks like this patch not only does not support that, but it ignores the
+existence of fscrypt (or any other use of inline encryption by filesystems)
+entirely, and overrides any filesystem-provided key with the block device's.  At
+the very least, this case would need to be explicitly not supported initially,
+i.e. dm-inlinecrypt would error out if the upper layer already provided a key.
 
+But I would like there to be an agreed-upon way to extend the code to support
+the pass-through mode, so that filesystem and block device level encryption work
+properly together.  It can indeed be done with a device-mapper target (as
+Android does already), whether it's called "dm-inlinecrypt" or "dm-default-key",
+but not in a standalone way: pass-through requests also require an addition to
+struct bio and some support in block and filesystem code.  Previously, people
+have said that supporting this functionality natively in the block layer would
+be a better fit than a dm target (e.g., see the thread
+https://lore.kernel.org/all/1658316391-13472-1-git-send-email-israelr@nvidia.com/T/#u).
+I'd appreciate people's feedback on which approach they'd prefer.
+
+Anyway, assuming the device-mapper target approach, I also have some other
+feedback on this patch:
+
+New algorithms should not be added in the same patch as a new dm target.  Also,
+I do not see why there is any need for the new algorithms you are adding
+(AES-128-XTS, AES-128-CBC, and AES-256-CBC).  XTS is preferable to CBC, and
+AES-256 is preferable to AES-128.  AES-256-XTS is already supported, both by
+blk-crypto and by Qualcomm ICE.  So you should just use AES-256-XTS.
+
+There are also a lot of miscellaneous issues with the proposed code.  Missing
+->io_hints and ->status methods, truncating IVs to 32 bits, unnecessarily using
+a custom algorithm name syntax that doesn't make the IV generation method
+explicit, unnecessarily splitting bios, incrementing IVs every 512 bytes instead
+of each sector, etc.  I can comment on all of these in detail if you want, but
+to start it might be helpful to just check out dm-default-key
+(https://android.googlesource.com/kernel/common/+/refs/heads/android-mainline/drivers/md/dm-default-key.c)
+and maybe base your code on that, as it has handled these issues already.  E.g.,
+its syntax is aligned with dm-crypt's, it implements ->io_hints and ->status,
+and it calculates the maximum DUN correctly so that it can be determined
+correctly whether the inline encryption hardware can be used or not.
+
+Finally, the commit message needs to summarize what the patch does and what its
+motivation is.  Currently it just talks about the Qualcomm ICE driver and
+doesn't actually say anything about dm-inlinecrypt.  Yes, the motivation for
+dm-inlinecrypt involves being able to take advantage of inline encryption
+hardware such as Qualcomm ICE, but it's not explained.
+
+Thanks,
+
+- Eric
