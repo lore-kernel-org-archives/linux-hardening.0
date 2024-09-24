@@ -1,123 +1,85 @@
-Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6A3C84A46
-	for <linux-hardening@vger.kernel.org>; Mon, 23 Sep 2024 21:39:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51436224EA;
+	Tue, 24 Sep 2024 07:45:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727127546; cv=none; b=WJTFUV7KdKrWfOR+Eqk6XmVfKVBgHojVVwCu3uOKn/4mlgvEhZ58j40xglSRUXtmE7m5n+Mn+L4kcllAV8KutQdJLt4AZ+0dGg+lVLMsHspjuIB//2/NIh0wXi4KqJQlNr1zl0vErDDtM1Rkd5yImgyGk+t0wuCk3xsENc5e3Fk=
+	t=1727163901; cv=none; b=p0IcrlSl5zMH9LzGBJRxmVRfwOce0u9jFSkh8WmVNyqN4AMt8E2+eXMWCT2aUL9+Oc9mJ8q0DcbUgNJOk6ESfn/PUPKlufU2gGTYT+GiM1S73dB147oryAVlZRxKSVCBCGlWAmxmui5WP2q2mq4ejyuDpHtnMOzmvsKJ4moOB0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727127546; c=relaxed/simple;
-	bh=CIAmwH5w2lemgVuk+LSWKZ7kjucZ30DR67FASCJrLFU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dUmfJukWsnD/KJkKewWVTdKw6kQNsc0gteJhkoqtgKNvpLzppVydPVaxeKKLWcVLzlr3T8UTvUS/di151DadQ9xjtYlDc5ePoM1F0zveYSEV4nG+PkyYZ1JYsK150eDw9cFiu4Q1erZCujXbxUdshmcXaucX7uWWLHipGfT1l/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=uglJm802; arc=none smtp.client-ip=91.218.175.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1727163901; c=relaxed/simple;
+	bh=KLJAg8LEAPMGZJuG/KhSybXNlWLQIRi/+4OZ9O9a/XQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aWLIajIGu3tVjLiaXpMNb5rGf5dgbWdRfH6M0e9FkPGf3zF6lXxE/ww7E+Wocd9q0Mx888NW4VrataM9Xpu4LKUeat1Qe3hKFsRXx1pSNbCXpswjGJhw04xk9S7MvM58dop4Oy8fIbhui4gQz7AOyGwKatZ1G6OBCRAS+hWaBFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Hca81bFp; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="uglJm802"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1727127541;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=62KlqbPZ9Ib5OCAMDtbI8BWE4ivcuPsfM3EIKFb3Nzg=;
-	b=uglJm802VKhrOMUKbCyDm4eKbiUfgy86PP75GCLuKzvde/YDYNxQ8Ee8caoPCqL4MAPTKj
-	HwbXkJOqCy8hBHAWfjaSysqJ5dr1VEMwZ4nrKgQO9HXVzjQtjcKHhcFFox5DFGeZM+vBJ0
-	d30AeKp7zVgMNzybZL2hGZhTXM4yHv4=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Jan Kara <jack@suse.cz>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] acl: Annotate struct posix_acl with __counted_by()
-Date: Mon, 23 Sep 2024 23:38:05 +0200
-Message-ID: <20240923213809.235128-2-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Hca81bFp"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=fT8t09p6erN3pDvzXMMBDzSN+OtEWMEQMRtR+c1AOX8=; b=Hca81bFp34vjVqqCSPc4FQw+/z
+	2pJW2t6D2slXOGZ/jwr4f3rL51d8T0OkQ5Pp8txkDx2MptwGnfl15NSfAOdtDMTsYQqqcFISprD5r
+	RG4q953GwKaPKnxF5JoupU6x4NoWRDi0ehK3H/H/Z12cE4H4Bb5Nt4v/AoTEZQ3rDCcZfgUh81BZq
+	gU2Ig+hCG1yCPiCNOhawBhj64CGm4Ib3/QxMT99XPRel8yV5fI8gDIldqpHDKqCFwrhPZ9ikKibFp
+	rbyEYqwS8PFuleCukeWwuKKMts2ytXcQ9QczU6L3MBKymVvLqgo15FyeJrV0iIzLGzvuqFDpChOny
+	y6odS+Dw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1st0E9-00000001TIz-3VJj;
+	Tue, 24 Sep 2024 07:44:53 +0000
+Date: Tue, 24 Sep 2024 00:44:53 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: Md Sadre Alam <quic_mdalam@quicinc.com>, axboe@kernel.dk,
+	song@kernel.org, yukuai3@huawei.com, agk@redhat.com,
+	snitzer@kernel.org, mpatocka@redhat.com, adrian.hunter@intel.com,
+	quic_asutoshd@quicinc.com, ritesh.list@gmail.com,
+	ulf.hansson@linaro.org, andersson@kernel.org,
+	konradybcio@kernel.org, kees@kernel.org, gustavoars@kernel.org,
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-raid@vger.kernel.org, dm-devel@lists.linux.dev,
+	linux-mmc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-hardening@vger.kernel.org, quic_srichara@quicinc.com,
+	quic_varada@quicinc.com
+Subject: Re: [PATCH v2 1/3] dm-inlinecrypt: Add inline encryption support
+Message-ID: <ZvJt9ceeL18XKrTc@infradead.org>
+References: <20240916085741.1636554-1-quic_mdalam@quicinc.com>
+ <20240916085741.1636554-2-quic_mdalam@quicinc.com>
+ <20240921185519.GA2187@quark.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240921185519.GA2187@quark.localdomain>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Add the __counted_by compiler attribute to the flexible array member
-a_entries to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
-CONFIG_FORTIFY_SOURCE.
+On Sat, Sep 21, 2024 at 11:55:19AM -0700, Eric Biggers wrote:
+> (https://android.googlesource.com/kernel/common/+/refs/heads/android-mainline/drivers/md/dm-default-key.c),
+> and I've been looking for the best way to get the functionality upstream.  The
+> main challenge is that dm-default-key is integrated with fscrypt, such that if
+> fscrypt encrypts the data, then the data isn't also encrypted with the block
+> device key.  There are also cases such as f2fs garbage collection in which
+> filesystems read/write raw data without en/decryption by any key.  So
+> essentially a passthrough mode is supported on individual I/O requests.
 
-Use struct_size() to calculate the number of bytes to allocate for new
-and cloned acls and remove the local size variables.
+Adding a default key is not the job of a block remapping driver.  You'll
+need to fit that into the file system and/or file system level helpers.
 
-Change the posix_acl_alloc() function parameter count from int to
-unsigned int to match posix_acl's a_count data type. Add identifier
-names to the function definition to silence two checkpatch warnings.
+> 
+> It looks like this patch not only does not support that, but it ignores the
+> existence of fscrypt (or any other use of inline encryption by filesystems)
+> entirely, and overrides any filesystem-provided key with the block device's.  At
+> the very least, this case would need to be explicitly not supported initially,
+> i.e. dm-inlinecrypt would error out if the upper layer already provided a key.
 
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
- fs/posix_acl.c            | 13 ++++++-------
- include/linux/posix_acl.h |  4 ++--
- 2 files changed, 8 insertions(+), 9 deletions(-)
-
-diff --git a/fs/posix_acl.c b/fs/posix_acl.c
-index 6c66a37522d0..4050942ab52f 100644
---- a/fs/posix_acl.c
-+++ b/fs/posix_acl.c
-@@ -200,11 +200,11 @@ EXPORT_SYMBOL(posix_acl_init);
-  * Allocate a new ACL with the specified number of entries.
-  */
- struct posix_acl *
--posix_acl_alloc(int count, gfp_t flags)
-+posix_acl_alloc(unsigned int count, gfp_t flags)
- {
--	const size_t size = sizeof(struct posix_acl) +
--	                    count * sizeof(struct posix_acl_entry);
--	struct posix_acl *acl = kmalloc(size, flags);
-+	struct posix_acl *acl;
-+
-+	acl = kmalloc(struct_size(acl, a_entries, count), flags);
- 	if (acl)
- 		posix_acl_init(acl, count);
- 	return acl;
-@@ -220,9 +220,8 @@ posix_acl_clone(const struct posix_acl *acl, gfp_t flags)
- 	struct posix_acl *clone = NULL;
- 
- 	if (acl) {
--		int size = sizeof(struct posix_acl) + acl->a_count *
--		           sizeof(struct posix_acl_entry);
--		clone = kmemdup(acl, size, flags);
-+		clone = kmemdup(acl, struct_size(acl, a_entries, acl->a_count),
-+				flags);
- 		if (clone)
- 			refcount_set(&clone->a_refcount, 1);
- 	}
-diff --git a/include/linux/posix_acl.h b/include/linux/posix_acl.h
-index 0e65b3d634d9..83b2c5fba1d9 100644
---- a/include/linux/posix_acl.h
-+++ b/include/linux/posix_acl.h
-@@ -30,7 +30,7 @@ struct posix_acl {
- 	refcount_t		a_refcount;
- 	struct rcu_head		a_rcu;
- 	unsigned int		a_count;
--	struct posix_acl_entry	a_entries[];
-+	struct posix_acl_entry	a_entries[] __counted_by(a_count);
- };
- 
- #define FOREACH_ACL_ENTRY(pa, acl, pe) \
-@@ -62,7 +62,7 @@ posix_acl_release(struct posix_acl *acl)
- /* posix_acl.c */
- 
- extern void posix_acl_init(struct posix_acl *, int);
--extern struct posix_acl *posix_acl_alloc(int, gfp_t);
-+extern struct posix_acl *posix_acl_alloc(unsigned int count, gfp_t flags);
- extern struct posix_acl *posix_acl_from_mode(umode_t, gfp_t);
- extern int posix_acl_equiv_mode(const struct posix_acl *, umode_t *);
- extern int __posix_acl_create(struct posix_acl **, gfp_t, umode_t *);
--- 
-2.46.1
+I agree that we have an incompatibility here, but simply erroring out
+feels like the wrong way to approach the stacking.  If a stacking driver
+consumes the inline encryption capability it must not advertise it to
+the upper layers.
 
