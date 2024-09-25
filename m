@@ -1,89 +1,82 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86308146A87;
-	Tue, 24 Sep 2024 22:04:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3EFD15666B;
+	Wed, 25 Sep 2024 08:00:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727215477; cv=none; b=BW2MhH/pgwE8H+q8nXwHn+/mxm0YpiAw9dlbFcPTgxeUUzysWzBtbkv2aRbkeeFiwwR6MFj+v+tBR+Io+hF6EYj1N6R82/hk9QvQA93QN9JTXL1p7ekkoTTLiszoGPfOg7CFXbhida7BhiXMy99QTpXhbOm01clnoWFnzMOzmHw=
+	t=1727251249; cv=none; b=CelQLgogVUnOHtcJsXpcc4h4pR/OnD+Z2t6Ccze4vTru0J4C2LwjvtyUHs/C7fE4NbyxgUyxF8STJIReBBB5ypgqgf1v15XbkrWKvLdHl80bB8q9pc8uiO5GIdQ8np9JuiIlJZiWfLCAIsgBmjwa7l+h/oihX2Nwy/MCtTl1n0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727215477; c=relaxed/simple;
-	bh=ph7TAmMw39B3nL4g9AnJGmFDqgpNUh2Ues8UMkyvezM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Izsbm4Bja7r9Lke8BFpPkq+NO+1NOHwe6Hd4BOz81toboZnIQUDbF02hMW4zw+6lKNgpHZqfkL0J4L78a+3i5lSkjVBjZbSQU5shDwYY81TnojVetQjJ9FE8I7JGr+FYqWPzrMiDM7gOuVSnPPh5L4ntkRO5NRTvnlfXuGLsbGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YHSE/qt0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1727251249; c=relaxed/simple;
+	bh=zXEAFz7Q7RoUiIW7ZL5q+2ystQGk8UlUo9zBOm80IOw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=b7AX+UEbvkUXMPTMyVtjb5uEBjlCLSu+yMeBRkHUCc950IS72U86mCHboaLrlJwv+d1s3bSzCDWqoM3I8dQN4fiVRinUWXNMpQOQkZxwNd2NymwluIq7GhifszDmWkF3h7XKVcoa81tQf/cQBDYMIJihvSBRFw279uwmHiVAaXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IBefCkJU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YHSE/qt0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BD6CC4CEC4;
-	Tue, 24 Sep 2024 22:04:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IBefCkJU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 849FBC4CEC6;
+	Wed, 25 Sep 2024 08:00:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727215477;
-	bh=ph7TAmMw39B3nL4g9AnJGmFDqgpNUh2Ues8UMkyvezM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YHSE/qt0AiT8AlwY1uSTrM4Z+ddSgOQ1IG50S21mOHCh5+bAm0FTiaj8U0tsSSsTY
-	 O2kH8wsJaPK9PB92jyQVw/lhH+5Jbye96igquHgFjB4OjUO8QZ81XWKyH+MfvQyTS2
-	 RdpMxn6MU3xPwqTU8MrZPY3VPdPRmSyRL9av7qiJhInMfvBKuynohB07s0T08Nbj7d
-	 lmPdObo40LTaycX8ebXQTapeJK/rULYRm/TJvFhl37j60cjcRl62ZDMWCaIKuF2Jgx
-	 p/6Di08hH6mRYEqPHHbE3jfXR+rHUKYV6+UymboTU/cEi164hzevz4dtd1IagSNl2M
-	 Pzod9bdNwPm+A==
-Date: Tue, 24 Sep 2024 15:04:34 -0700
-From: Eric Biggers <ebiggers@kernel.org>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Md Sadre Alam <quic_mdalam@quicinc.com>, axboe@kernel.dk,
-	song@kernel.org, yukuai3@huawei.com, agk@redhat.com,
-	snitzer@kernel.org, mpatocka@redhat.com, adrian.hunter@intel.com,
-	quic_asutoshd@quicinc.com, ritesh.list@gmail.com,
-	ulf.hansson@linaro.org, andersson@kernel.org,
-	konradybcio@kernel.org, kees@kernel.org, gustavoars@kernel.org,
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-raid@vger.kernel.org, dm-devel@lists.linux.dev,
-	linux-mmc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-hardening@vger.kernel.org, quic_srichara@quicinc.com,
-	quic_varada@quicinc.com
-Subject: Re: [PATCH v2 1/3] dm-inlinecrypt: Add inline encryption support
-Message-ID: <20240924220434.GB1585@sol.localdomain>
-References: <20240916085741.1636554-1-quic_mdalam@quicinc.com>
- <20240916085741.1636554-2-quic_mdalam@quicinc.com>
- <20240921185519.GA2187@quark.localdomain>
- <ZvJt9ceeL18XKrTc@infradead.org>
+	s=k20201202; t=1727251248;
+	bh=zXEAFz7Q7RoUiIW7ZL5q+2ystQGk8UlUo9zBOm80IOw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=IBefCkJUPC4m68EMvyyGVNd0R3zupnHFovKJDUWkFCLpsRONbAmbFn3t2+t3lduu0
+	 MM91AbXvufxdyfFRY8tjADGD7Sug26Kvwq1h4jj97Q9BqDTgk+1EYH0EBHKRE6BAgk
+	 BuB4FvpY9dei9jR0aWDczFwFf/0EFf/zXd06QzFiYmI8TOXYYKqRj2eyzm2of7Iw/x
+	 xxALJycvom98PTzGCRufMpboSpD7BGXxNG/tmX/bmZUNT+HAcie3axY8ZdCgv9YYg3
+	 zXKklMCidRSmDoywAbYmAko0tTx7CQWwVYsmTwnp3UrTcZh2xyP/8CODBOCZZaZnKf
+	 VNoYe0+k0x8YA==
+From: Christian Brauner <brauner@kernel.org>
+To: Thorsten Blum <thorsten.blum@linux.dev>
+Cc: Christian Brauner <brauner@kernel.org>,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Jan Kara <jack@suse.cz>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: Re: [PATCH] acl: Annotate struct posix_acl with __counted_by()
+Date: Wed, 25 Sep 2024 10:00:41 +0200
+Message-ID: <20240925-besoldung-befragen-d6a9095c6d88@brauner>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240923213809.235128-2-thorsten.blum@linux.dev>
+References: <20240923213809.235128-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZvJt9ceeL18XKrTc@infradead.org>
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1158; i=brauner@kernel.org; h=from:subject:message-id; bh=zXEAFz7Q7RoUiIW7ZL5q+2ystQGk8UlUo9zBOm80IOw=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaR9PqyVEc31UO38yjv7ZLStXe3fGV5MXVO/P0svrr1pZ tbj7rjNHaUsDGJcDLJiiiwO7Sbhcst5KjYbZWrAzGFlAhnCwMUpABPZ+ZmR4auiYc1JQf0FsjNf 3Zn+onqap37HI35ziQ0m0g6XXi0v38Xwv8y/4s8GOxfp7Ilrdd0v39h9QE8jcuKUB+7i9QumbLn 4hgUA
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-On Tue, Sep 24, 2024 at 12:44:53AM -0700, Christoph Hellwig wrote:
-> On Sat, Sep 21, 2024 at 11:55:19AM -0700, Eric Biggers wrote:
-> > (https://android.googlesource.com/kernel/common/+/refs/heads/android-mainline/drivers/md/dm-default-key.c),
-> > and I've been looking for the best way to get the functionality upstream.  The
-> > main challenge is that dm-default-key is integrated with fscrypt, such that if
-> > fscrypt encrypts the data, then the data isn't also encrypted with the block
-> > device key.  There are also cases such as f2fs garbage collection in which
-> > filesystems read/write raw data without en/decryption by any key.  So
-> > essentially a passthrough mode is supported on individual I/O requests.
+On Mon, 23 Sep 2024 23:38:05 +0200, Thorsten Blum wrote:
+> Add the __counted_by compiler attribute to the flexible array member
+> a_entries to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
+> CONFIG_FORTIFY_SOURCE.
 > 
-> Adding a default key is not the job of a block remapping driver.  You'll
-> need to fit that into the file system and/or file system level helpers.
-
-What about a block device ioctl, as was previously proposed
-(https://lore.kernel.org/linux-block/1658316391-13472-1-git-send-email-israelr@nvidia.com/T/#u)?
-
-> > It looks like this patch not only does not support that, but it ignores the
-> > existence of fscrypt (or any other use of inline encryption by filesystems)
-> > entirely, and overrides any filesystem-provided key with the block device's.  At
-> > the very least, this case would need to be explicitly not supported initially,
-> > i.e. dm-inlinecrypt would error out if the upper layer already provided a key.
+> Use struct_size() to calculate the number of bytes to allocate for new
+> and cloned acls and remove the local size variables.
 > 
-> I agree that we have an incompatibility here, but simply erroring out
-> feels like the wrong way to approach the stacking.  If a stacking driver
-> consumes the inline encryption capability it must not advertise it to
-> the upper layers.
+> [...]
 
-Right, I missed that's actually already how it works.  The crypto capabilities
-are only passed through if the target sets DM_TARGET_PASSES_CRYPTO.
+Applied to the vfs.misc.v6.13 branch of the vfs/vfs.git tree.
+Patches in the vfs.misc.v6.13 branch should appear in linux-next soon.
 
-- Eric
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
+
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
+
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs.misc.v6.13
+
+[1/1] acl: Annotate struct posix_acl with __counted_by()
+      https://git.kernel.org/vfs/vfs/c/822fa32058a8
