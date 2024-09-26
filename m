@@ -1,316 +1,272 @@
-Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
+Received: from fout-a3-smtp.messagingengine.com (fout-a3-smtp.messagingengine.com [103.168.172.146])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DC911714BD
-	for <linux-hardening@vger.kernel.org>; Thu, 26 Sep 2024 12:21:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 839BE14D2AC;
+	Thu, 26 Sep 2024 15:14:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.146
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727353321; cv=none; b=cQX/DTlfJJCEutHDLUgJVZiW492M6fb9tVRn41k0BvH4MNvvia/Sv/2t1HjHmixfYzpKSWDxUVCcdroX0agKxls+mAizRPG1PAaI0dzIiFKBOaZxsotCTenY3D0345eQzhyJ8RHSJrKvy+w58Q1M7V+KnZzOatE+y+abY60Bg2A=
+	t=1727363686; cv=none; b=iKIHuDR5BazChevi5RFIm8jin/ZT/xvNjPYSj0QmayydlLTMx9EGS6uN5zbctadobMcTQST06+yAIw2weEzRtkxK8jxoEfZ3V+lJIMa/6oztHgHotMKGUwKmlSEUnzm1wN6ZvneyueHEOv9W2g7DGqiyB12+ceskkVoTGclvC0I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727353321; c=relaxed/simple;
-	bh=TY64XsXmzlCG/6Nj4XRinWqGfayqHO8amL6Qj6J8hFE=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=QpQZMKf3ZJYLeGIseny6Mc8KwfFnS8W1rMAZKf134k7kZxOg2LpqTXzVn1T7h6nw/on3gd/JDLHnfRC7UPtacw0axkM8Pct3Tv9FinSlSuMeVnJEMqqp4fT2ySHT84R1mD1RcpV0j0FFVb/QylI3ix3lo00wDVo3BdQ9kQ7id+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Omc/ZinP; arc=none smtp.client-ip=95.215.58.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1727363686; c=relaxed/simple;
+	bh=oD0KetFqzImm6YqyQK7j6erfD0j6+NQYDgJBUTSSa/g=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=WQYLmywbTwosbRHbMlyHQzap0HhLpcti9fesctRIUheBxU++HDm77fzOM+21C3K8AyO+9jT70xaJSSnVaD0e5RgsSBF/MAArzhwwtaif/PD2aEr1ZgIaWkCN7nMes8PxATuY7mEK5QT2v8FabnH7sNVUFfhRsSIF9WH2NSf9EAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jfarr.cc; spf=pass smtp.mailfrom=jfarr.cc; dkim=pass (2048-bit key) header.d=jfarr.cc header.i=@jfarr.cc header.b=q+y2XI0t; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=OIb4ly90; arc=none smtp.client-ip=103.168.172.146
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jfarr.cc
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jfarr.cc
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Omc/ZinP"
-Content-Type: text/plain;
-	charset=us-ascii
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1727353317;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1t9krFW89KGiM2utLiIwlb6OXva9KrXH2zl+JHAtl7g=;
-	b=Omc/ZinPbwHs+x45EfKQpag2L7k0CLDnnEbH16aM6ULP7Fxvc+9qB+4BS7vVp8OVh4eEJR
-	dffR9S1PW9wfabKAiDgiLeflAlzotUiu8CHawgbnAyC/WDnU+ZRtYTWkMf4fMcqZazayBu
-	Ugx6ka+FpRK5WyS5iDS9dB45dZI3z2E=
+	dkim=pass (2048-bit key) header.d=jfarr.cc header.i=@jfarr.cc header.b="q+y2XI0t";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="OIb4ly90"
+Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
+	by mailfout.phl.internal (Postfix) with ESMTP id A97DB1380128;
+	Thu, 26 Sep 2024 11:14:42 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-06.internal (MEProxy); Thu, 26 Sep 2024 11:14:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jfarr.cc; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:message-id:mime-version:reply-to:subject:subject:to:to; s=fm1;
+	 t=1727363682; x=1727450082; bh=ku6sIPz5PeT7EPPJmtdRdU16MTUqX82X
+	ZDEq364bwbI=; b=q+y2XI0tpmpc+7eTiBqvEaZu634GjJJIE3CCJp8Cx8ue1QPn
+	aXqLl/a+bgXaDTArQwEWZ5ziTU9rQK2o9ZZukcfCV/e6Sxlb2cEaeUWlMS7sfw9j
+	Y14bY8KXt3kn07Dztys9I8F2AFL6QITL++93Fk3BnYxFE10uSWSGxFCGWWZj8mLx
+	dnOLO+uYE0UCsPQt0/JxqVzeA6cGae4niziY8nmRItdOTWq6juqVXZJcAoz2qrnC
+	0sj0gm86EGDo6OwD6pk3a9VQiGmgRQ/RssZjOcVzvaui/5W5Dosj6SdXk3pJ0mno
+	YAGRCwsa7S410AmcYiYMzFKv4E0MqLQSUZIidg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:message-id
+	:mime-version:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+	1727363682; x=1727450082; bh=ku6sIPz5PeT7EPPJmtdRdU16MTUqX82XZDE
+	q364bwbI=; b=OIb4ly90ypp3UMO8CPZ3BFk19/d0EHxrnf0rG3VJR8nWxruiV1u
+	4xi0XR/em+S7Bk4WE1L2m8EXyW0ok8ndM1Jb/PeTGvfuIPtg+9+YhullbLLTh2Zl
+	Ti2b3hnM9EMjG04bLDNhzZnivIxbLWqY/hKhmPMGlsBcCmAGVYVL/X1zzZMPgXHk
+	l7JkaL7vqn5hs4L4hwfXYo0JGy+9mB/20PbZ1eKyTZ39BfeiOjQKGLs7smt16Jpd
+	1/wgRhxhz9MGZH941ccVd3HMkBJTpCllwd24eTN2HpIAx9ruKhs9wt+TfcUpj3yO
+	rBk+uQahq/EpBcvItdxPHZprLXUSDwaqJ/A==
+X-ME-Sender: <xms:Ynr1Zo9MzdWnHuEZ_2rk9YvSnkjC-9RWs1YKj2szveROXHY2B8KxZw>
+    <xme:Ynr1Zgsv_FhmRpIGWX6TltdDjGr_eqaqbzcTnx29wogkcSEwCudkg_rV29WiUMxZw
+    cfSVypjjBSUP3aCU6A>
+X-ME-Received: <xmr:Ynr1ZuBBKFWUxdwP1EwRlxEmOX5OYVVSlOAO1nCTryt6wkJsrIZCLtqQWclQdu48JLU3bfwaxfRH8HZc6c6UFCY3Ri_8>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvddtjedgkeejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucgfrhhlucfvnfffucdlud
+    ehmdenucfjughrpeffhffvvefukfggtggusehttdertddttddvnecuhfhrohhmpeflrghn
+    ucfjvghnughrihhkucfhrghrrhcuoehkvghrnhgvlhesjhhfrghrrhdrtggtqeenucggtf
+    frrghtthgvrhhnpefhleffuedvueekgeetgedukeeiheejtdfhfeefveeukedugfefjeet
+    udejgefgkeenucffohhmrghinhepghhithhhuhgsrdgtohhmnecuvehluhhsthgvrhfuih
+    iivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepkhgvrhhnvghlsehjfhgrrhhrrdgt
+    tgdpnhgspghrtghpthhtohepiedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepkh
+    gvnhhtrdhovhgvrhhsthhrvggvtheslhhinhhugidruggvvhdprhgtphhtthhopehthhho
+    rhhsthgvnhdrsghluhhmsehtohgslhhugidrtghomhdprhgtphhtthhopehrvghgrhgvsh
+    hsihhonhhssehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtoheplhhinhhugidq
+    sggtrggthhgvfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinh
+    hugidqhhgrrhguvghnihhnghesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthho
+    pehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:Ynr1Zoe4tqymgUvVpHXcvoswfv0dzMgeWWHvMi0jnn35YWusGWsjCg>
+    <xmx:Ynr1ZtOfTR47i5UxrqBdUtlur7q_udAkOYcvqtvzyKOSIXU2xtWl6g>
+    <xmx:Ynr1Zik7D3a-7GV66fLE4RwSndm-X1JjZ5tq2WfXGcsmMDWkKtz2nw>
+    <xmx:Ynr1ZvuXDH4yozW0W-yoSeo4pX7K7UPfO1aG29hkFn6yTEwEn_hyLw>
+    <xmx:Ynr1ZpDz8t-pw1c8V6dnQyGLa0WpUGwMYATgTip5YTZaKR6ndde19gkv>
+Feedback-ID: i01d149f8:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 26 Sep 2024 11:14:41 -0400 (EDT)
+Date: Thu, 26 Sep 2024 17:14:39 +0200
+From: Jan Hendrik Farr <kernel@jfarr.cc>
+To: kent.overstreet@linux.dev
+Cc: thorsten.blum@toblux.com, regressions@lists.linux.dev,
+	linux-bcachefs@vger.kernel.org, linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [REGRESSION][BISECTED] erroneous buffer overflow detected in
+ bch2_xattr_validate
+Message-ID: <ZvV6X5FPBBW7CO1f@archlinux>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51\))
-Subject: Re: [PATCH] acl: Annotate struct posix_acl with __counted_by()
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Thorsten Blum <thorsten.blum@linux.dev>
-In-Reply-To: <202409260949.a1254989-oliver.sang@intel.com>
-Date: Thu, 26 Sep 2024 14:21:42 +0200
-Cc: oe-lkp@lists.linux.dev,
- lkp@intel.com,
- linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>,
- Jan Kara <jack@suse.cz>,
- Kees Cook <kees@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- linux-hardening@vger.kernel.org,
- morbo@google.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <3D0816D1-0807-4D37-8D5F-3C55CA910FAA@linux.dev>
-References: <202409260949.a1254989-oliver.sang@intel.com>
-To: kernel test robot <oliver.sang@intel.com>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 26. Sep 2024, at 03:46, kernel test robot <oliver.sang@intel.com> =
-wrote:
->=20
-> Hello,
->=20
-> kernel test robot noticed =
-"WARNING:at_lib/string_helpers.c:#__fortify_report" on:
->=20
-> commit: 3d2d832826325210abb9849ee96634bf5a197517 ("[PATCH] acl: =
-Annotate struct posix_acl with __counted_by()")
-> url: =
-https://github.com/intel-lab-lkp/linux/commits/Thorsten-Blum/acl-Annotate-=
-struct-posix_acl-with-__counted_by/20240924-054002
-> base: https://git.kernel.org/cgit/linux/kernel/git/vfs/vfs.git vfs.all
-> patch link: =
-https://lore.kernel.org/all/20240923213809.235128-2-thorsten.blum@linux.de=
-v/
-> patch subject: [PATCH] acl: Annotate struct posix_acl with =
-__counted_by()
->=20
-> in testcase: boot
->=20
-> compiler: clang-18
-> test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 =
--m 16G
->=20
-> (please refer to attached dmesg/kmsg for entire log/backtrace)
->=20
->=20
-> =
-+---------------------------------------------------+------------+--------=
-----+
-> |                                                   | c72f8f06a2 | =
-3d2d832826 |
-> =
-+---------------------------------------------------+------------+--------=
-----+
-> | boot_successes                                    | 18         | 0   =
-       |
-> | boot_failures                                     | 0          | 18  =
-       |
-> | WARNING:at_lib/string_helpers.c:#__fortify_report | 0          | 18  =
-       |
-> | RIP:__fortify_report                              | 0          | 18  =
-       |
-> | kernel_BUG_at_lib/string_helpers.c                | 0          | 18  =
-       |
-> | Oops:invalid_opcode:#[##]KASAN                    | 0          | 18  =
-       |
-> | RIP:__fortify_panic                               | 0          | 18  =
-       |
-> | Kernel_panic-not_syncing:Fatal_exception          | 0          | 18  =
-       |
-> =
-+---------------------------------------------------+------------+--------=
-----+
->=20
->=20
-> If you fix the issue in a separate patch/commit (i.e. not just a new =
-version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <oliver.sang@intel.com>
-> | Closes: =
-https://lore.kernel.org/oe-lkp/202409260949.a1254989-oliver.sang@intel.com=
+Hi Kent,
 
->=20
->=20
-> [   25.825642][  T121] ------------[ cut here ]------------
-> [   25.826209][  T121] kmemdup: detected buffer overflow: 72 byte read =
-of buffer size 68
-> [ 25.826866][ T121] WARNING: CPU: 0 PID: 121 at =
-lib/string_helpers.c:1030 __fortify_report (lib/string_helpers.c:1029)=20=
+found a strange regression in the patch set for 6.12.
 
-> [   25.827588][  T121] Modules linked in:
-> [   25.827895][  T121] CPU: 0 UID: 0 PID: 121 Comm: systemd-tmpfile =
-Not tainted 6.11.0-rc6-00294-g3d2d83282632 #1
-> [   25.828870][  T121] Hardware name: QEMU Standard PC (i440FX + PIIX, =
-1996), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
-> [ 25.829661][ T121] RIP: 0010:__fortify_report =
-(lib/string_helpers.c:1029)=20
-> [ 25.830093][ T121] Code: f6 c5 01 49 8b 37 48 c7 c0 00 8a 56 86 48 c7 =
-c1 20 8a 56 86 48 0f 44 c8 48 c7 c7 80 87 56 86 4c 89 f2 49 89 d8 e8 d1 =
-37 dd fe <0f> 0b 5b 41 5e 41 5f 5d 31 c0 31 c9 31 ff 31 d2 31 f6 45 31 =
-c0 c3
-> All code
-> =3D=3D=3D=3D=3D=3D=3D=3D
->   0: f6 c5 01              test   $0x1,%ch
->   3: 49 8b 37              mov    (%r15),%rsi
->   6: 48 c7 c0 00 8a 56 86 mov    $0xffffffff86568a00,%rax
->   d: 48 c7 c1 20 8a 56 86 mov    $0xffffffff86568a20,%rcx
->  14: 48 0f 44 c8           cmove  %rax,%rcx
->  18: 48 c7 c7 80 87 56 86 mov    $0xffffffff86568780,%rdi
->  1f: 4c 89 f2              mov    %r14,%rdx
->  22: 49 89 d8              mov    %rbx,%r8
->  25: e8 d1 37 dd fe        call   0xfffffffffedd37fb
->  2a:* 0f 0b                 ud2 <-- trapping instruction
->  2c: 5b                    pop    %rbx
->  2d: 41 5e                 pop    %r14
->  2f: 41 5f                 pop    %r15
->  31: 5d                    pop    %rbp
->  32: 31 c0                 xor    %eax,%eax
->  34: 31 c9                 xor    %ecx,%ecx
->  36: 31 ff                 xor    %edi,%edi
->  38: 31 d2                 xor    %edx,%edx
->  3a: 31 f6                 xor    %esi,%esi
->  3c: 45 31 c0              xor    %r8d,%r8d
->  3f: c3                    ret
->=20
-> Code starting with the faulting instruction
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->   0: 0f 0b                 ud2
->   2: 5b                    pop    %rbx
->   3: 41 5e                 pop    %r14
->   5: 41 5f                 pop    %r15
->   7: 5d                    pop    %rbp
->   8: 31 c0                 xor    %eax,%eax
->   a: 31 c9                 xor    %ecx,%ecx
->   c: 31 ff                 xor    %edi,%edi
->   e: 31 d2                 xor    %edx,%edx
->  10: 31 f6                 xor    %esi,%esi
->  12: 45 31 c0              xor    %r8d,%r8d
->  15: c3                    ret
-> [   25.831566][  T121] RSP: 0018:ffffc90001e6f8a0 EFLAGS: 00010246
-> [   25.832052][  T121] RAX: 0000000000000000 RBX: 0000000000000044 =
-RCX: 0000000000000000
-> [   25.832705][  T121] RDX: 0000000000000000 RSI: 0000000000000000 =
-RDI: 0000000000000000
-> [   25.833348][  T121] RBP: 000000000000001c R08: 0000000000000000 =
-R09: 0000000000000000
-> [   25.833964][  T121] R10: 0000000000000000 R11: 0000000000000000 =
-R12: 1ffff920003cdf27
-> [   25.834570][  T121] R13: dffffc0000000000 R14: 0000000000000048 =
-R15: ffffffff86568730
-> [   25.835152][  T121] FS:  00007f994a290440(0000) =
-GS:ffffffff87eba000(0000) knlGS:0000000000000000
-> [   25.835834][  T121] CS:  0010 DS: 0000 ES: 0000 CR0: =
-0000000080050033
-> [   25.836385][  T121] CR2: 0000561875daa188 CR3: 0000000160dd0000 =
-CR4: 00000000000406f0
-> [   25.837005][  T121] DR0: 0000000000000000 DR1: 0000000000000000 =
-DR2: 0000000000000000
-> [   25.837609][  T121] DR3: 0000000000000000 DR6: 00000000fffe0ff0 =
-DR7: 0000000000000400
-> [   25.838212][  T121] Call Trace:
-> [   25.838482][  T121]  <TASK>
-> [ 25.838717][ T121] ? __warn (kernel/panic.c:242)=20
-> [ 25.839053][ T121] ? __fortify_report (lib/string_helpers.c:1029)=20
-> [ 25.839436][ T121] ? __fortify_report (lib/string_helpers.c:1029)=20
-> [ 25.839816][ T121] ? report_bug (lib/bug.c:?)=20
-> [ 25.840206][ T121] ? handle_bug (arch/x86/kernel/traps.c:239)=20
-> [ 25.840551][ T121] ? exc_invalid_op (arch/x86/kernel/traps.c:260)=20
-> [ 25.840932][ T121] ? asm_exc_invalid_op =
-(arch/x86/include/asm/idtentry.h:621)=20
-> [ 25.841336][ T121] ? __fortify_report (lib/string_helpers.c:1029)=20
-> [ 25.841732][ T121] __fortify_panic (lib/string_helpers.c:1037)=20
-> [ 25.842094][ T121] __posix_acl_chmod =
-(include/linux/fortify-string.h:751)=20
-> [ 25.842493][ T121] ? make_vfsgid (fs/mnt_idmapping.c:122)=20
-> [ 25.842837][ T121] ? capable_wrt_inode_uidgid =
-(include/linux/mnt_idmapping.h:193 kernel/capability.c:480 =
-kernel/capability.c:499)=20
-> [ 25.843285][ T121] posix_acl_chmod (fs/posix_acl.c:624)=20
-> [ 25.843671][ T121] shmem_setattr (mm/shmem.c:1240)=20
-> [ 25.844039][ T121] ? ns_to_timespec64 (include/linux/math64.h:29 =
-kernel/time/time.c:529)=20
-> [ 25.844456][ T121] ? inode_set_ctime_current (fs/inode.c:2331)=20
-> [ 25.844894][ T121] ? shmem_xattr_handler_set (mm/shmem.c:1173)=20
-> [ 25.845322][ T121] ? rcu_read_lock_any_held (kernel/rcu/update.c:388)=20=
+First bad commit is: 86e92eeeb23741a072fe7532db663250ff2e726a
+bcachefs: Annotate struct bch_xattr with __counted_by()
 
-> [ 25.845736][ T121] ? security_inode_setattr (security/security.c:?)=20=
+When compiling with clang 18.1.8 (also with latest llvm main branch) and
+CONFIG_FORTIFY_SOURCE=y my rootfs does not mount because there is an erroneous
+detection of a buffer overflow.
 
-> [ 25.846157][ T121] ? shmem_xattr_handler_set (mm/shmem.c:1173)=20
-> [ 25.846582][ T121] notify_change (fs/attr.c:?)=20
-> [ 25.846952][ T121] chmod_common (fs/open.c:653)=20
-> [ 25.847315][ T121] ? __ia32_sys_chroot (fs/open.c:637)=20
-> [ 25.847709][ T121] ? user_path_at (fs/namei.c:3019)=20
-> [ 25.848068][ T121] ? kmem_cache_free (mm/slub.c:4474)=20
-> [ 25.848489][ T121] do_fchmodat (fs/open.c:701)=20
-> [ 25.848842][ T121] ? do_faccessat (fs/open.c:686)=20
-> [ 25.849210][ T121] ? print_irqtrace_events =
-(kernel/locking/lockdep.c:4311)=20
-> [ 25.849640][ T121] __x64_sys_chmod (fs/open.c:725 fs/open.c:723 =
-fs/open.c:723)=20
-> [ 25.850010][ T121] do_syscall_64 (arch/x86/entry/common.c:?)=20
-> [ 25.850371][ T121] ? tracer_hardirqs_on =
-(kernel/trace/trace_irqsoff.c:?)=20
-> [ 25.850790][ T121] ? tracer_hardirqs_off =
-(kernel/trace/trace_irqsoff.c:?)=20
-> [ 25.851208][ T121] ? tracer_hardirqs_on =
-(kernel/trace/trace_irqsoff.c:?)=20
-> [ 25.851621][ T121] ? tracer_hardirqs_on =
-(kernel/trace/trace_irqsoff.c:619)=20
-> [ 25.852040][ T121] ? print_irqtrace_events =
-(kernel/locking/lockdep.c:4311)=20
-> [ 25.852522][ T121] ? do_syscall_64 (arch/x86/entry/common.c:102)=20
-> [ 25.852917][ T121] ? do_syscall_64 (arch/x86/entry/common.c:102)=20
-> [ 25.853285][ T121] ? do_syscall_64 (arch/x86/entry/common.c:102)=20
-> [ 25.853667][ T121] ? do_syscall_64 (arch/x86/entry/common.c:102)=20
-> [ 25.854053][ T121] ? exc_page_fault (arch/x86/mm/fault.c:1543)=20
-> [ 25.854445][ T121] entry_SYSCALL_64_after_hwframe =
-(arch/x86/entry/entry_64.S:130)=20
-> [   25.854921][  T121] RIP: 0033:0x7f994adcdc47
-> [ 25.855282][ T121] Code: eb d9 e8 9c 04 02 00 66 2e 0f 1f 84 00 00 00 =
-00 00 66 90 b8 5f 00 00 00 0f 05 c3 0f 1f 84 00 00 00 00 00 b8 5a 00 00 =
-00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 89 a1 0d 00 f7 d8 64 89 =
-01 48
-> All code
-> =3D=3D=3D=3D=3D=3D=3D=3D
->   0: eb d9                 jmp    0xffffffffffffffdb
->   2: e8 9c 04 02 00        call   0x204a3
->   7: 66 2e 0f 1f 84 00 00 cs nopw 0x0(%rax,%rax,1)
->   e: 00 00 00=20
->  11: 66 90                 xchg   %ax,%ax
->  13: b8 5f 00 00 00        mov    $0x5f,%eax
->  18: 0f 05                 syscall
->  1a: c3                    ret
->  1b: 0f 1f 84 00 00 00 00 nopl   0x0(%rax,%rax,1)
->  22: 00=20
->  23: b8 5a 00 00 00        mov    $0x5a,%eax
->  28: 0f 05                 syscall
->  2a:* 48 3d 01 f0 ff ff     cmp    $0xfffffffffffff001,%rax <-- =
-trapping instruction
->  30: 73 01                 jae    0x33
->  32: c3                    ret
->  33: 48 8b 0d 89 a1 0d 00 mov    0xda189(%rip),%rcx        # 0xda1c3
->  3a: f7 d8                 neg    %eax
->  3c: 64 89 01              mov    %eax,%fs:(%rcx)
->  3f: 48                    rex.W
->=20
-> Code starting with the faulting instruction
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->   0: 48 3d 01 f0 ff ff     cmp    $0xfffffffffffff001,%rax
->   6: 73 01                 jae    0x9
->   8: c3                    ret
->   9: 48 8b 0d 89 a1 0d 00 mov    0xda189(%rip),%rcx        # 0xda199
->  10: f7 d8                 neg    %eax
->  12: 64 89 01              mov    %eax,%fs:(%rcx)
->  15: 48                    rex.W
->=20
->=20
-> The kernel config and materials to reproduce are available at:
-> =
-https://download.01.org/0day-ci/archive/20240926/202409260949.a1254989-oli=
-ver.sang@intel.com
+The __counted_by attribute is supposed to be supported starting with gcc 15,
+not sure if it is implemented yet so I haven't tested with gcc trunk yet.
 
-This seems to be related to [1] and __builtin_dynamic_object_size().
+Here's the relevant section of dmesg:
 
-Compared to GCC, Clang's __bdos() is off by 4 bytes.
+[    6.248736] bcachefs (nvme1n1p2): starting version 1.12: rebalance_work_acct_fix
+[    6.248744] bcachefs (nvme1n1p2): recovering from clean shutdown, journal seq 1305969
+[    6.252374] ------------[ cut here ]------------
+[    6.252375] memchr: detected buffer overflow: 12 byte read of buffer size 0
+[    6.252379] WARNING: CPU: 18 PID: 511 at lib/string_helpers.c:1033 __fortify_report+0x45/0x50
+[    6.252383] Modules linked in: bcachefs lz4hc_compress lz4_compress hid_generic usbhid btrfs crct10dif_pclmul libcrc32c crc32_pclmul crc32c_generic polyval_clmulni crc32c_intel polyval_generic raid6_pq ghash_clmulni_intel xor sha512_ssse3 sha256_ssse3 sha1_ssse3 aesni_intel gf128mul nvme crypto_simd ccp xhci_pci cryptd sp5100_tco xhci_pci_renesas nvme_core nvme_auth video wmi ip6_tables ip_tables x_tables i2c_dev
+[    6.252404] CPU: 18 UID: 0 PID: 511 Comm: mount Not tainted 6.11.0-10065-g6fa6588e5964 #98 d8e0beb515d91b387aa60970de7203f35ddd182c
+[    6.252406] Hardware name: Micro-Star International Co., Ltd. MS-7D78/PRO B650-P WIFI (MS-7D78), BIOS 1.C0 02/06/2024
+[    6.252407] RIP: 0010:__fortify_report+0x45/0x50
+[    6.252409] Code: 48 8b 34 c5 30 92 21 87 40 f6 c7 01 48 c7 c0 75 1b 0a 87 48 c7 c1 e1 93 07 87 48 0f 44 c8 48 c7 c7 ef 03 10 87 e8 0b c2 9b ff <0f> 0b e9 cf 5d 9e 00 cc cc cc cc 90 90 90 90 90 90 90 90 90 90 90
+[    6.252410] RSP: 0018:ffffbb3d03aff350 EFLAGS: 00010246
+[    6.252412] RAX: 4ce590fb7c372800 RBX: ffff98d559a400e8 RCX: 0000000000000027
+[    6.252413] RDX: 0000000000000002 RSI: 00000000ffffdfff RDI: ffff98e43db21a08
+[    6.252414] RBP: ffff98d559a400d0 R08: 0000000000001fff R09: ffff98e47ddcd000
+[    6.252415] R10: 0000000000005ffd R11: 0000000000000004 R12: ffff98d559a40000
+[    6.252416] R13: ffff98d54abf1320 R14: ffffbb3d03aff430 R15: 0000000000000000
+[    6.252417] FS:  00007efc82117800(0000) GS:ffff98e43db00000(0000) knlGS:0000000000000000
+[    6.252418] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    6.252419] CR2: 000055d96658ea80 CR3: 000000010a12c000 CR4: 0000000000f50ef0
+[    6.252420] PKRU: 55555554
+[    6.252421] Call Trace:
+[    6.252423]  <TASK>
+[    6.252425]  ? __warn+0xd5/0x1d0
+[    6.252427]  ? __fortify_report+0x45/0x50
+[    6.252429]  ? report_bug+0x144/0x1f0
+[    6.252431]  ? __fortify_report+0x45/0x50
+[    6.252433]  ? handle_bug+0x6a/0x90
+[    6.252435]  ? exc_invalid_op+0x1a/0x50
+[    6.252436]  ? asm_exc_invalid_op+0x1a/0x20
+[    6.252440]  ? __fortify_report+0x45/0x50
+[    6.252441]  __fortify_panic+0x9/0x10
+[    6.252443]  bch2_xattr_validate+0x13b/0x140 [bcachefs 8361179bbfcc59e669df38aec976f02d7211a659]
+[    6.252463]  bch2_btree_node_read_done+0x125a/0x17a0 [bcachefs 8361179bbfcc59e669df38aec976f02d7211a659]
+[    6.252482]  btree_node_read_work+0x202/0x4a0 [bcachefs 8361179bbfcc59e669df38aec976f02d7211a659]
+[    6.252499]  bch2_btree_node_read+0xa8d/0xb20 [bcachefs 8361179bbfcc59e669df38aec976f02d7211a659]
+[    6.252514]  ? srso_alias_return_thunk+0x5/0xfbef5
+[    6.252515]  ? pcpu_alloc_noprof+0x741/0xb50
+[    6.252517]  ? srso_alias_return_thunk+0x5/0xfbef5
+[    6.252519]  ? time_stats_update_one+0x75/0x1f0 [bcachefs 8361179bbfcc59e669df38aec976f02d7211a659]
 
-I made a small PoC: https://godbolt.org/z/vvK9PE1Yq
+...
 
-Thanks,
-Thorsten
 
-[1] https://lore.kernel.org/all/20240913164630.GA4091534@thelio-3990X/
-Cc: Bill Wendling=
+The memchr in question is at:
+https://github.com/torvalds/linux/blob/11a299a7933e03c83818b431e6a1c53ad387423d/fs/bcachefs/xattr.c#L99
+
+There is not actually a buffer overflow here, I checked with gdb that
+xattr.v->x_name does actually contain a string of the correct length and
+xattr.v->x_name_len contains the correct length and should be used to determine
+the length when memchr uses __struct_size for bounds-checking due to the
+__counted_by annotation.
+
+I'm at the point where I think this is probably a bug in clang. I have a patch
+that does fix (more like bandaid) the problem and adds some print statements:
+
+--
+diff --git a/fs/bcachefs/xattr.c b/fs/bcachefs/xattr.c
+index 56c8d3fe55a4..8d7e749b7dda 100644
+--- a/fs/bcachefs/xattr.c
++++ b/fs/bcachefs/xattr.c
+@@ -74,6 +74,7 @@ int bch2_xattr_validate(struct bch_fs *c, struct bkey_s_c k,
+ 		       enum bch_validate_flags flags)
+ {
+ 	struct bkey_s_c_xattr xattr = bkey_s_c_to_xattr(k);
++	const struct bch_xattr *v = (void *)k.v;
+ 	unsigned val_u64s = xattr_val_u64s(xattr.v->x_name_len,
+ 					   le16_to_cpu(xattr.v->x_val_len));
+ 	int ret = 0;
+@@ -94,9 +95,12 @@ int bch2_xattr_validate(struct bch_fs *c, struct bkey_s_c k,
+ 
+ 	bkey_fsck_err_on(!bch2_xattr_type_to_handler(xattr.v->x_type),
+ 			 c, xattr_invalid_type,
+-			 "invalid type (%u)", xattr.v->x_type);
++			 "invalid type (%u)", v->x_type);
+ 
+-	bkey_fsck_err_on(memchr(xattr.v->x_name, '\0', xattr.v->x_name_len),
++	pr_info("x_name_len: %d", v->x_name_len);
++	pr_info("__struct_size(x_name): %ld", __struct_size(v->x_name));
++	pr_info("__struct_size(x_name): %ld", __struct_size(xattr.v->x_name));
++	bkey_fsck_err_on(memchr(v->x_name, '\0', v->x_name_len),
+ 			 c, xattr_name_invalid_chars,
+ 			 "xattr name has invalid characters");
+ fsck_err:
+ --
+
+
+Making memchr access via a pointer created with
+const struct bch_xattr *v = (void *)k.v fixes it. From the print statements I
+can see that __struct_size(xattr.v->x_name) incorrectly returns 0, while
+__struct_size(v->x_name) correctly returns 10 in this case (the value of
+x_name_len).
+
+The generated assembly illustrates what is going wrong. Below is an excerpt
+of the assembly clang generated for the bch2_xattr_validate function:
+
+	mov	r13d, ecx
+	mov	r15, rdi
+	mov	r14, rsi
+	mov	rdi, offset .L.str.3
+	mov	rsi, offset .L__func__.bch2_xattr_validate
+	mov	rbx, rdx
+	mov	edx, eax
+	call	_printk
+	movzx	edx, byte ptr [rbx + 1]
+	mov	rdi, offset .L.str.4
+	mov	rsi, offset .L__func__.bch2_xattr_validate
+	call	_printk
+	movzx	edx, bh
+	mov	rdi, offset .L.str.4
+	mov	rsi, offset .L__func__.bch2_xattr_validate
+	call	_printk
+	lea	rdi, [rbx + 4]
+	mov	r12, rbx
+	movzx	edx, byte ptr [rbx + 1]
+	xor	ebx, ebx
+	xor	esi, esi
+	call	memchr
+
+At the start of this rdx contains k.v (and is moved into rbx). The three calls
+to printk are the ones you can see in my patch. You can see that for the
+print that uses __struct_size(v->x_name) the compiler correctly uses
+	movzx	edx, byte ptr [rbx + 1]
+to load x_name_len into edx.
+
+For the printk call that uses __struct_size(xattr.v->x_name) however the
+compiler uses
+	movzx	edx, bh
+So it will print the high 8 bits of the lower 16 bits (second least
+significant byte) of the memory address of xattr.v->x_type. This is obviously
+completely wrong.
+
+It is then doing the correct call of memchr because this is using my patch.
+Without my patch it would be doing the same thing for the call to memchr where
+it uses the second least significant byte of the memory address of x_type as the
+length used for the bounds-check.
+
+
+
+The LLVM IR also shows the same problem:
+
+define internal zeroext i1 @xattr_cmp_key(ptr nocapture readnone %0, ptr %1, ptr nocapture noundef readonly %2) #0 align 16 {
+  [...]
+  %51 = ptrtoint ptr %2 to i64
+  %52 = lshr i64 %51, 8
+  %53 = and i64 %52, 255
+
+This is the IR for the incorrect behavior. It simply converts the pointer to an
+int, shifts right by 8 bits, then and with 0xFF. If it did a load (to i64)
+instead of ptrtoint this would actually work, as the second least significant
+bit of an i64 loaded from that memory address does contain the value of
+x_name_len. It's as if clang forgot to dereference a pointer here.
+
+Correct IR does this (for the other printk invocation):
+
+define internal zeroext i1 @xattr_cmp_key(ptr nocapture readnone %0, ptr %1, ptr nocapture noundef readonly %2) #0 align 16 {
+  [...]
+  %4 = getelementptr inbounds %struct.bch_xattr, ptr %1, i64 0, i32 1
+  %5 = load i8, ptr %4, align 8
+  [...]
+  %48 = load i8, ptr %5, align 4
+  %49 = zext i8 %48 to i64
+
+Best Regards
+Jan
+
