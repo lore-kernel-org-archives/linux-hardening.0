@@ -1,151 +1,108 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C15C92AD31
-	for <linux-hardening@vger.kernel.org>; Fri, 27 Sep 2024 09:56:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D02819ABD4;
+	Fri, 27 Sep 2024 13:41:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727430977; cv=none; b=rX3ITCylNzn9f5M6HNBmaixhd2LPQu+txzpBmVeRYlwas3Urs0IHOTzlXVsOt9VgGb94zuqTR1WEfF+LXfA9QoZkvPw0Ik/BeoPafES0qfxOxDRgD1cwOYgMqjYaBjJQE/XAJ1dU6a0AxL5PZys2vsPU+dUhMvrxtSNERVL0oME=
+	t=1727444478; cv=none; b=W1LFO0KzMEf6T5d/xhsj3eSXpsQ6qV5gOq88nRSlDqaKtayYJEXftkoElB5qPs97hy/D8O+0oc65wCIDOCFGXK6CT7DbcEHbyBO4KzVj8BsH/jHLa8St7o0UiMuEciA6hgZC6zzdrMtPzJu8/8UWVub168AbviB4FOlwuyesvZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727430977; c=relaxed/simple;
-	bh=TH2P1vacEUzwoEgPUbETg2ADMNbc/3RQ1838A92juA8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=nsCq29ZkWhAqInrlRTgkCHhDQH1JxS2mYfcln71olGZhai01jsrLNWXgASuRa8/08NgcSU5t++RLDSH0dbKRHf/Eeke/sCgRo2H51iWVdaHer9qrejsGAi42u4jdszcGPdHHCAG4SrC6/8EzPPS0Ca+1RcNy7DAHtu8+uVsn4k0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4XFQlg6n4yzWf0W;
-	Fri, 27 Sep 2024 17:53:51 +0800 (CST)
-Received: from dggpeml500022.china.huawei.com (unknown [7.185.36.66])
-	by mail.maildlp.com (Postfix) with ESMTPS id 0FCB61401E9;
-	Fri, 27 Sep 2024 17:56:10 +0800 (CST)
-Received: from [10.67.111.104] (10.67.111.104) by
- dggpeml500022.china.huawei.com (7.185.36.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Fri, 27 Sep 2024 17:56:09 +0800
-Message-ID: <21356a02-c49d-4afe-a14c-f96fdb5342ed@huawei.com>
-Date: Fri, 27 Sep 2024 17:56:09 +0800
+	s=arc-20240116; t=1727444478; c=relaxed/simple;
+	bh=gI6HCMfYo206j1dF/5CqQAMvd9oA/DGlIIqu3b41Yos=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ec0WsHbbRPdQpkXlMbw0Wvqpu6tfJo3V59cD1wge2LVA2BJ3Q+KEQ40/qYXXYwbqBynrS/y3JTy2HhldaiAEWXGjU/MV5i3+BSZvMSgXj0AtIbcDWzQriwJekA5S52anEHQmlWAd/d6FUboT4PDwcBtgPy2xu0QigPBwvXgGHyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oizr7bw8; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oizr7bw8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFEC8C4CEC4;
+	Fri, 27 Sep 2024 13:41:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1727444478;
+	bh=gI6HCMfYo206j1dF/5CqQAMvd9oA/DGlIIqu3b41Yos=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oizr7bw8C023CNIijNEfxbcwsbjUfgO4j6eKmgW1/LZRUqQDepkin/cxM8byxF5yg
+	 aJkp/GxicAgWn7KP7JxzxJ4fMhxeq9Pc74RqTHs1MY+DiEqF4bHIRvxqTAsheXhaR4
+	 6WSiLPWiyaFBIBJx5Fgg/wzqxwBzpfmkOLwvXvVUU9ar5Ql8FsY5loy+cPkxg0Uk7g
+	 Uvu33nyIjbfkSF9s8efqeOEgu1VoWefuSbNgOW5tQ+7tkwnnAEVCyb2usrE++X/BJr
+	 BKJCwhPNUjCfBX1fzhnGHfwW3vzfGQHg1d3NjNo/IxolggjeHC/Mtb3hCGJg+J42+u
+	 0h3IUT+2EBS/Q==
+Date: Fri, 27 Sep 2024 06:41:16 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: kernel test robot <lkp@intel.com>
+Cc: Dave Jiang <dave.jiang@intel.com>, llvm@lists.linux.dev,
+	oe-kbuild-all@lists.linux.dev, Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: Re: [djiang:cxl/fwctl 13/25] drivers/cxl/cxlmem.h:798:44: error:
+ 'counted_by' argument must be a simple declaration reference
+Message-ID: <20240927134116.GA3695247@thelio-3990X>
+References: <202409270908.NJPL38kw-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH -next v3 01/10] coccinelle: Add rules to find
- str_true_false() replacements
-To: Julia Lawall <Julia.Lawall@inria.fr>
-CC: <kees@kernel.org>, <andy@kernel.org>, <nicolas.palix@imag.fr>,
-	<linux-hardening@vger.kernel.org>, <cocci@inria.fr>
-References: <952c42aa-001f-42f0-8ec5-eb7e592b2629@huawei.com>
- <466D6A21-0E18-4FC3-9A92-6B3EA58C273D@inria.fr>
-Content-Language: en-US
-From: Hongbo Li <lihongbo22@huawei.com>
-In-Reply-To: <466D6A21-0E18-4FC3-9A92-6B3EA58C273D@inria.fr>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- dggpeml500022.china.huawei.com (7.185.36.66)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202409270908.NJPL38kw-lkp@intel.com>
 
-
-
-On 2024/9/23 18:24, Julia Lawall wrote:
-> Thanks for testing it. I will see if there is some other way to improve the performance.
-
-May be every rules in the same file are executed sequentially cost a lot?
-
-Thanks,
-Hongbo
-
-> Sent from my iPhone
+On Fri, Sep 27, 2024 at 09:39:54AM +0800, kernel test robot wrote:
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/djiang/linux.git cxl/fwctl
+> head:   b4f2900f53c72de8fc639b62e44763c6a9695d3b
+> commit: 5a0496c19151d83cd0d926f8a1488eeaab27509b [13/25] cxl: Add Get Supported Features command for kernel usage
+> config: arm-randconfig-004-20240927 (https://download.01.org/0day-ci/archive/20240927/202409270908.NJPL38kw-lkp@intel.com/config)
+> compiler: clang version 20.0.0git (https://github.com/llvm/llvm-project 7773243d9916f98ba0ffce0c3a960e4aa9f03e81)
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240927/202409270908.NJPL38kw-lkp@intel.com/reproduce)
 > 
->> On 23 Sep 2024, at 09:01, Hongbo Li <lihongbo22@huawei.com> wrote:
->>
->> ﻿
->>
->>> On 2024/9/19 14:25, Julia Lawall wrote:
->>>> On Wed, 11 Sep 2024, Hongbo Li wrote:
->>>> After str_true_false() has been introduced in the tree,
->>>> we can add rules for finding places where str_true_false()
->>>> can be used. A simple test can find over 10 locations.
->>>>
->>>> Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
->>>> ---
->>>>   scripts/coccinelle/api/string_choices.cocci | 19 +++++++++++++++++++
->>>>   1 file changed, 19 insertions(+)
->>>>
->>>> diff --git a/scripts/coccinelle/api/string_choices.cocci b/scripts/coccinelle/api/string_choices.cocci
->>>> index 5e729f187f22..6942ad7c4224 100644
->>>> --- a/scripts/coccinelle/api/string_choices.cocci
->>>> +++ b/scripts/coccinelle/api/string_choices.cocci
->>>> @@ -85,3 +85,22 @@ e << str_down_up_r.E;
->>>>   @@
->>>>
->>>>   coccilib.report.print_report(p[0], "opportunity for str_down_up(%s)" % e)
->>>> +
->>>> +@str_true_false depends on patch@
->>>> +expression E;
->>>> +@@
->>>> +-      ((E) ? "true" : "false")
->>>> ++      str_true_false(E)
->>>> +
->>>> +@str_true_false_r depends on !patch exists@
->>>> +expression E;
->>>> +position P;
->>>> +@@
->>>> +*      ((E@P) ? "true" : "false")
->>> Hello,
->>> The semantic patch is quite slow.  Actually it tests a large number of
->>> cases, eg where the parentheses are present and where they are not.
->>> A small optimization is possible in the non-patch case.  The outer
->>> parentheses are not needed, because you will already get the same
->>> information whether they are there or not.
->>> In contrast, for the patch case, the outer parentheses are needed, because
->>> if they are there we want to remove them, since they are not needed for
->>> the function call.
->>> Could you update the depends on !patch cases to remove the outer
->>> parentheses?
->>
->> You mean in non-patch case, we could just write like the following?:
->>
->> +@str_true_false_r depends on !patch exists@
->> +expression E;
->> +position P;
->> +@@
->> +*      (E@P) ? "true" : "false"
->>
->> I have tested in my machine. The impact of this parenthesis on performance is very minimal.
->>
->> With parentheses, the time on driver/ costs:
->>
->> real    1m41.696s
->> user    85m24.069s
->> sys    1m8.891s
->>
->> Without parentheses, the time on driver/ costs:
->>
->> real    1m40.438s
->> user    85m53.987s
->> sys    1m7.981s
->>
->>
->> Thanks,
->> Hongbo
->>
->>> Also, just one patch would be fine.  There are many changes, but they are
->>> all sort of the same, so it would be easier just to see them all at once.
->>> thanks,
->>> julia
->>>> +
->>>> +@script:python depends on report@
->>>> +p << str_true_false_r.P;
->>>> +e << str_true_false_r.E;
->>>> +@@
->>>> +
->>>> +coccilib.report.print_report(p[0], "opportunity for str_true_false(%s)" % e)
->>>> --
->>>> 2.34.1
->>>>
->>>>
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202409270908.NJPL38kw-lkp@intel.com/
+> 
+> All errors (new ones prefixed by >>):
+> 
+>    In file included from drivers/cxl/port.c:7:
+>    In file included from drivers/cxl/cxlmem.h:6:
+>    In file included from include/linux/pci.h:1646:
+>    In file included from include/linux/dmapool.h:14:
+>    In file included from include/linux/scatterlist.h:8:
+>    In file included from include/linux/mm.h:2232:
+>    include/linux/vmstat.h:517:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
+>      517 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
+>          |                               ~~~~~~~~~~~ ^ ~~~
+>    In file included from drivers/cxl/port.c:7:
+> >> drivers/cxl/cxlmem.h:798:44: error: 'counted_by' argument must be a simple declaration reference
+>      798 |         struct cxl_feat_entry ents[] __counted_by(le32_to_cpu(supported_feats));
+>          |                                      ~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+It seems like this should likely use the __counted_by_le() macro so that
+it is only used for tracking on little endian targets?
+
+>    include/linux/byteorder/generic.h:89:21: note: expanded from macro 'le32_to_cpu'
+>       89 | #define le32_to_cpu __le32_to_cpu
+>          |                     ^
+>    include/uapi/linux/byteorder/little_endian.h:35:26: note: expanded from macro '__le32_to_cpu'
+>       35 | #define __le32_to_cpu(x) ((__force __u32)(__le32)(x))
+>          |                          ^
+>    include/linux/compiler_attributes.h:105:62: note: expanded from macro '__counted_by'
+>      105 | # define __counted_by(member)           __attribute__((__counted_by__(member)))
+>          |                                                                       ^~~~~~
+>    1 warning and 1 error generated.
+> 
+> 
+> vim +/counted_by +798 drivers/cxl/cxlmem.h
+> 
+>    793	
+>    794	struct cxl_mbox_get_sup_feats_out {
+>    795		__le16 num_entries;
+>    796		__le16 supported_feats;
+>    797		u8 reserved[4];
+>  > 798		struct cxl_feat_entry ents[] __counted_by(le32_to_cpu(supported_feats));
+>    799	} __packed;
+>    800	
+> 
+> -- 
+> 0-DAY CI Kernel Test Service
+> https://github.com/intel/lkp-tests/wiki
 > 
