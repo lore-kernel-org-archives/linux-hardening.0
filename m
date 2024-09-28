@@ -1,79 +1,180 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fhigh-a3-smtp.messagingengine.com (fhigh-a3-smtp.messagingengine.com [103.168.172.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 359C313A40C;
-	Sat, 28 Sep 2024 21:51:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F1B41DFF0;
+	Sat, 28 Sep 2024 23:33:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727560267; cv=none; b=GIhO3IgZYfKE1Pkk27yPDLD0EEqihWKDurk5ZeOFX6Wpypd6fdw5aiUz7pw51Huxeg6LezwE6f3ZDFOfr6EfNlNiBUvWJ9VwpE3lxPgPqAJSUzQarLf5GNdApfYv+yCweKKbmOE87QwnEFFZBF+6F+1w+juCnpU8mWFJBMheO5o=
+	t=1727566424; cv=none; b=Sc1/2uvvR0MY20ciT3Th0srE5Xu2Vr82Jpr+2ofg9b8VTyKxq/oIXUKQY+St3QCUnjY+fXFZ5+tOA4Wcsf3PpY3nb4xcAN84mcKLHsBOUmLanNfjPXcNgQUnhA/kS+DSwfNm++4I5Kx3/XcrgnYEjdLshQV6DADPYcwVBmAVGVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727560267; c=relaxed/simple;
-	bh=Ieu/6NBrjDmKc+A6Qg2WBZVQaHkRzHU5QOcz9DyXwJA=;
+	s=arc-20240116; t=1727566424; c=relaxed/simple;
+	bh=PHkkvQkJc6JI2zl2MnZr30jDS4ppY8cDh4JJQ5fr6Uk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LIGah8eRcT12HIL2DIgrqkV1I0dY6sxJSIBP9hIjfUGqbJUuZqJQQODOCAft86qCtgfU05zIHHYVEMXSCyRRF2WS9MKy3RuH4JJ3wLnaF32+vzpzWevnGY39WfKYMRw8Zvk2SFwBoDU6QwPXITS4IXPF18aN/bVZJcN0T+S03Ps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q4tI913n; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=RIQxiId1dGDQnN1xMdnAMr2T8wzSikQ1ULiUFvDNjOK9HU+JTx2JWR4MgZT0+mnsF6s4rsrxYX5B9wnVDYWRpGm2QPnLs0wXPgT25ph0JCU+EOQBBAUMa3skmU4yZjfRGuMrr1LQX4rN/mbMpTiIjlsqYu+Ky2TTOgTx4xc4qiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jfarr.cc; spf=pass smtp.mailfrom=jfarr.cc; dkim=pass (2048-bit key) header.d=jfarr.cc header.i=@jfarr.cc header.b=qUTEZf4Q; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=n3q8vA2p; arc=none smtp.client-ip=103.168.172.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jfarr.cc
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jfarr.cc
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q4tI913n"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BABF3C4CEC3;
-	Sat, 28 Sep 2024 21:51:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727560266;
-	bh=Ieu/6NBrjDmKc+A6Qg2WBZVQaHkRzHU5QOcz9DyXwJA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Q4tI913nkPwTsnIeECD78nRW6tqHiRHJEgCzoFI8GWF7K+LIJ9tjF8MBAr8xvQ+kj
-	 Eymlpgo1BHjzRmSuod/TKN+p9ajG2OJ2ceWpBA1E9HTZjBqi2QxKb1y/oYD4sb2BtP
-	 1ne/hBpgB40VgIMpd6Qg1L8lIIGyAnHPugTWXHxqr9QTpkWMUSCK1Y8wzLnWnHLgK/
-	 fqxmsUsg9OvRx/sHWoBxSjIqVAbUVA2XcMGc52jNyMIqmhP7IVP+duCPVmrw7oldNd
-	 G2WVgCXkaSRKdiEV2kW2vEiMMZ0fl4ZgwtT3JW4Rdzbc7iKMko8FEMxbCimf9Fb/aN
-	 HnVvrFh/YZdNg==
-Date: Sat, 28 Sep 2024 14:51:06 -0700
-From: Kees Cook <kees@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Vegard Nossum <vegard.nossum@oracle.com>,
-	"Eric W. Biederman" <ebiederm@xmission.com>,
-	Allen Pais <apais@linux.microsoft.com>,
-	Roman Kisel <romank@linux.microsoft.com>,
-	Xiaoming Ni <nixiaoming@huawei.com>,
-	Vijay Nag <nagvijay@microsoft.com>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] coredump: Do not lock during 'comm' reporting
-Message-ID: <202409281449.B228D0C1E7@keescook>
-References: <20240928210830.work.307-kees@kernel.org>
- <20240928143532.39559729f9eceee468358abe@linux-foundation.org>
- <202409281438.EAC4B88C@keescook>
- <20240928144636.d1964e6c6bb77c3e9123fc64@linux-foundation.org>
+	dkim=pass (2048-bit key) header.d=jfarr.cc header.i=@jfarr.cc header.b="qUTEZf4Q";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="n3q8vA2p"
+Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 332B91140196;
+	Sat, 28 Sep 2024 19:33:40 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-06.internal (MEProxy); Sat, 28 Sep 2024 19:33:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jfarr.cc; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1727566420;
+	 x=1727652820; bh=1on8eXvP9p4hIW54Ypcwhpe4cMgbbs7J3C6kLOiZgm8=; b=
+	qUTEZf4QOqUd2E7oesIN9tYG29skZIXDSHpNQ8W3BNS03CrU5hlkEnZ5ClpLF5mW
+	qAFfA5SXPgfXMEIIjzqr+vcST8HWJWK7ytfxuqFKJShvZEYivY3jQdUUW1yDnZV9
+	b3YwYTmeHJYyYlnpeW+LbHQKUXJMDyFpfJWTU7NalvuPYQ7yzhFg0OBgkBOtePsT
+	M87Gj8IeuihijeM4mz3sqM6tdDNs2YgQY/fXCLV+L/HTrDysX0Y3PgDNZWLR+JRR
+	aiNxA3c601zbbg/gfDjJpqQxAD60aFNSHO77SY5GLxRd/fTwJe+zRWluaGFA9UzP
+	X9Yy9Mw6Z87LumVHls/7pQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1727566420; x=
+	1727652820; bh=1on8eXvP9p4hIW54Ypcwhpe4cMgbbs7J3C6kLOiZgm8=; b=n
+	3q8vA2pMOqyXpFgZm6cZpZxnEUgjXHrXJ6NtqlWFYA/rniVivatLjJnN42NMEyE1
+	Ciems5PkAkKwQtf9ioaNJNL/KzNGCjaUOB+8FgkYqVzaQlYc3wZqi9Wd2IBFNirL
+	a+TEhUdcJCLd7ZScJ8thQOJVqUm05mBYbUszG/eexj8+CqYbo2HSMekAm6LMdVzJ
+	xkOba8kziwHu07z8DVhLQ20hv9mTEJq0oWpL4rvmA6gUelkYSqaOooROLMbCR5HU
+	EhijjzqZoosL6MQh2uWLDLNVB0s/2VBcitwU+qD/3kpszedVwbqJr3K4pxdtoeiM
+	fpSKvrfCWq9RNIoOhye/Q==
+X-ME-Sender: <xms:U5L4Zk6QcaDcOYNljw1R3a6bHEs5F9rbWRcZOc28ARQdetmX8WpzbA>
+    <xme:U5L4Zl6h3ktl4MmZBVC3nxOyzlYGAjnJLJgs6T15P-ZYvasKkKDTs4v42_QXJIS99
+    Sxk878WcQxx5rS6WZ0>
+X-ME-Received: <xmr:U5L4ZjeBzZChNmOc0zKsrdsQnCn06okR3H18vBUssn27b8_1wN_gq8CtoZIObAZ_YbzvkTDahbkAiqG8a0jHz2btUCKh>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvdduvddgvdehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnegfrhhlucfvnfffucdluddtmdenucfjughrpeffhffvvefukfhf
+    gggtugfgjgesthekredttddtjeenucfhrhhomheplfgrnhcujfgvnhgurhhikhcuhfgrrh
+    hruceokhgvrhhnvghlsehjfhgrrhhrrdgttgeqnecuggftrfgrthhtvghrnhepfeejieet
+    gfegiedtkeeigffgkeelvddtfedttddtleelffdtudevjedvleelvdelnecuffhomhgrih
+    hnpehkvghrnhgvlhdrohhrghdpghhithhhuhgsrdgtohhmnecuvehluhhsthgvrhfuihii
+    vgeptdenucfrrghrrghmpehmrghilhhfrhhomhepkhgvrhhnvghlsehjfhgrrhhrrdgttg
+    dpnhgspghrtghpthhtohepledpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepkhgv
+    vghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmohhrsghosehgohhoghhlvgdrtg
+    homhdprhgtphhtthhopegrrhgusgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthhh
+    ohhrshhtvghnrdgslhhumhesthhosghluhigrdgtohhmpdhrtghpthhtohepkhgvnhhtrd
+    hovhgvrhhsthhrvggvtheslhhinhhugidruggvvhdprhgtphhtthhopehrvghgrhgvshhs
+    ihhonhhssehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtoheplhhinhhugidqsg
+    gtrggthhgvfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhu
+    gidqhhgrrhguvghnihhnghesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhope
+    hlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:VJL4ZpLaLl8NOmgesctsC_FDuzNISvh79vR7kHZU9tpQoOsL0vmRJQ>
+    <xmx:VJL4ZoIALvZ97TQHVo1UdZgcyzy2iB-vjvQNqsnrBkhhAWZvA5v7Aw>
+    <xmx:VJL4ZqyfydrCxw56U2_4A0YqVvDB0eFPeNASkj5Haz2Ef9y6frTL-A>
+    <xmx:VJL4ZsIVexrPqsAvTmJDIFlGU39_YcoszMf5ryLIjL7JIxf6d-Z2yQ>
+    <xmx:VJL4ZtXD129tY4ai2UbKnJsXeOT43nIOBUsrL2rWcyiTzrQFEKg4xcLV>
+Feedback-ID: i01d149f8:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
+ 28 Sep 2024 19:33:38 -0400 (EDT)
+Date: Sun, 29 Sep 2024 01:33:37 +0200
+From: Jan Hendrik Farr <kernel@jfarr.cc>
+To: Kees Cook <kees@kernel.org>
+Cc: Bill Wendling <morbo@google.com>, Ard Biesheuvel <ardb@kernel.org>,
+	Thorsten Blum <thorsten.blum@toblux.com>, kent.overstreet@linux.dev,
+	regressions@lists.linux.dev, linux-bcachefs@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [REGRESSION][BISECTED] erroneous buffer overflow detected in
+ bch2_xattr_validate
+Message-ID: <ZviSURL7kaxZPkSN@archlinux>
+References: <ZvV6X5FPBBW7CO1f@archlinux>
+ <3E304FB2-799D-478F-889A-CDFC1A52DCD8@toblux.com>
+ <A499F119-5F0C-43FC-9058-7AB92057F9B3@toblux.com>
+ <ZvWTXaqkmxP2E2dc@archlinux>
+ <ZvWd0aK7p_1rkb7E@archlinux>
+ <CAMj1kXFV+Jck9Yf4w18rOzHckXvpXkhPhL-KrpBC8hqgXusw2g@mail.gmail.com>
+ <CAGG=3QXG+Vsm7mjLV42Q-uA-EvgfOehSUeNQjKA3QQbw8vqSCg@mail.gmail.com>
+ <CAGG=3QVWCQB-3sM=iwgTmX8zrU81H+F_A1icJwROvW_DSvsBeA@mail.gmail.com>
+ <202409281335.5EE231B9C7@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240928144636.d1964e6c6bb77c3e9123fc64@linux-foundation.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <202409281335.5EE231B9C7@keescook>
 
-On Sat, Sep 28, 2024 at 02:46:36PM -0700, Andrew Morton wrote:
-> On Sat, 28 Sep 2024 14:39:45 -0700 Kees Cook <kees@kernel.org> wrote:
+On 28 13:50:12, Kees Cook wrote:
+> On Thu, Sep 26, 2024 at 06:30:15PM -0700, Bill Wendling wrote:
+> > On Thu, Sep 26, 2024 at 3:18 PM Bill Wendling <morbo@google.com> wrote:
+> > >
+> > > On Thu, Sep 26, 2024 at 12:58 PM Ard Biesheuvel <ardb@kernel.org> wrote:
+> > > >
+> > > > (cc Kees and Bill)
+> > > >
+> > > > On Thu, 26 Sept 2024 at 19:46, Jan Hendrik Farr <kernel@jfarr.cc> wrote:
+> > > > >
+> > > > > On 26 19:01:20, Jan Hendrik Farr wrote:
+> > > > > > On 26 18:09:57, Thorsten Blum wrote:
+> > > > > > > On 26. Sep 2024, at 17:28, Thorsten Blum <thorsten.blum@toblux.com> wrote:
+> > > > > > > > On 26. Sep 2024, at 17:14, Jan Hendrik Farr <kernel@jfarr.cc> wrote:
+> > [...]
+> > > > > > > >> [    6.252375] memchr: detected buffer overflow: 12 byte read of buffer size 0
+> > [...]
+> > > > > >       bkey_fsck_err_on(memchr(xattr.v->x_name, '\0', xattr.v->x_name_len),
+> > > > > >                        c, xattr_name_invalid_chars,
+> > > > > >                        "xattr name has invalid characters");
+> > [...]
 > 
-> > On Sat, Sep 28, 2024 at 02:35:32PM -0700, Andrew Morton wrote:
-> > > On Sat, 28 Sep 2024 14:08:31 -0700 Kees Cook <kees@kernel.org> wrote:
-> > > 
-> > > > The 'comm' member will always be NUL terminated,
-> > > 
-> > > Why is this?  I thought this is only true if the caller holds task_lock()?
-> > 
-> > Because it's always written with strscpy_pad(). The final byte will
-> > always be NUL. (And this has been true for a very long time.)
+> The thing going wrong is that __bdos(xattr.v->x_name, 0) is returning 0.
+> This looks exactly like the bug I minimized here:
+> https://lore.kernel.org/all/202409170436.C3C6E7F7A@keescook/
 > 
-> So why does __get_task_comm() need to take task_lock()?
+> Since there wasn't an LLVM open bug yet, I've created:
+> https://github.com/llvm/llvm-project/issues/110385
+> 
+> -Kees
+> 
 
-That was to make sure we didn't end up with garbled results, but
-discussions have determined that we don't care:
-https://lore.kernel.org/all/20240828030321.20688-1-laoar.shao@gmail.com/
+I found a fix for the issue. Fixes both the issue in this thread as well
+as your reproducer. First thought they might not actually be the same
+issue, but they indeed are. Haven't tested against the issue Thorsten
+linked.
 
-But just for safety's sake, I'll change this memcpy to:
+Havn't run the clang tests on it yet, but it does successfully compile
+my kernel and fix the issue.
 
-    memcpy_and_pad(comm, sizeof(comm), current->comm, sizeof(comm) - 1, 0);
+I'll open a PR and give more explanation tomorrow, it's getting
+pretty late over here in CEST.
 
--- 
-Kees Cook
+
+Here's the patch to be applied on top of
+https://github.com/llvm/llvm-project
+
+--
+diff --git a/clang/lib/CodeGen/CGExpr.cpp b/clang/lib/CodeGen/CGExpr.cpp
+index 9166db4c7412..143dd3fcfcf8 100644
+--- a/clang/lib/CodeGen/CGExpr.cpp
++++ b/clang/lib/CodeGen/CGExpr.cpp
+@@ -1164,15 +1164,15 @@ llvm::Value *CodeGenFunction::EmitLoadOfCountedByField(
+     Res = EmitDeclRefLValue(DRE).getPointer(*this);
+     Res = Builder.CreateAlignedLoad(ConvertType(DRE->getType()), Res,
+                                     getPointerAlign(), "dre.load");
+-  } else if (const MemberExpr *ME = dyn_cast<MemberExpr>(StructBase)) {
+-    LValue LV = EmitMemberExpr(ME);
+-    Address Addr = LV.getAddress();
+-    Res = Addr.emitRawPointer(*this);
+   } else if (StructBase->getType()->isPointerType()) {
+     LValueBaseInfo BaseInfo;
+     TBAAAccessInfo TBAAInfo;
+     Address Addr = EmitPointerWithAlignment(StructBase, &BaseInfo, &TBAAInfo);
+     Res = Addr.emitRawPointer(*this);
++  } else if (const MemberExpr *ME = dyn_cast<MemberExpr>(StructBase)) {
++    LValue LV = EmitMemberExpr(ME);
++    Address Addr = LV.getAddress();
++    Res = Addr.emitRawPointer(*this);
+   } else {
+     return nullptr;
+   }
