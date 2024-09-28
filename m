@@ -1,250 +1,349 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-a8-smtp.messagingengine.com (fhigh-a8-smtp.messagingengine.com [103.168.172.159])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6481C186E56;
-	Sat, 28 Sep 2024 13:43:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 982A813E40F;
+	Sat, 28 Sep 2024 17:36:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727531020; cv=none; b=ixd1GmOP15yXhlO3uPhy7gN4ZHUC9KF9G00uCkV3a1ym+L4DgK+9Wd3yPrqFxBUsWBKRVtKYS27jmCacZXHRL4tsvTHs+M8+II4gl5LDlsj9VEH9QO27Nhf1tlcgJcPUrp/+URQjB4L30l7CuW4QwtXGqQaazsVq5nwZKUXSWoI=
+	t=1727544990; cv=none; b=rZwmDm6Djciecvn9rJu4xoEVntbeTJ4fexv5PJMnINeMpJx69e6VuuSv92t9Qer6fyS356rFPNBIPGdg+0YOWuPQtV+eWLxsTCqUPdRFbfrckUo6BxQFqahoisNndnsVxxXcLYmQ9/l/cp3aRn9SSq+0UmunyBwRMATcGOF4pxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727531020; c=relaxed/simple;
-	bh=sLfgk5twSJOiwBgJQI3IQescTOVT51zRwUUlPqXvzv0=;
+	s=arc-20240116; t=1727544990; c=relaxed/simple;
+	bh=HXGhUK8FrKk0WuWa4qJqST0XST+En12lPnXxvx8pW74=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Hq7WhkUs4vk3tsOTfeoKTrnJMSoIoF2JcxCn4kxm0Ri1cKnBhhXod9REaSlxpDEmo4Xf44qMnxC1Z5IEeZu4cLXyHkXAVp1XK0Xkg1et4ElJKMExfHj1zy3Y+WNSZIDEzdPg6xF7gUn2wKCzrepChlV9HTxcWioEZsm/kSts/NE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J2pwjq+z; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=tGzN5vYNdGDYkhZ4JV3BAzvvsjhQxGeOO/Xh63357u+K8/N4yOL5TpCF++ejmkkX52tUnHI50oGrO/z4U4DLkxVMGKhs6NWd3C6KpaTywGlA6RSJ4kbw79XZ7jLRXWm9zmKp+nrmVpjC3UiAb5tlSNYi0tcAVdfdaV4geIWwtW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jfarr.cc; spf=pass smtp.mailfrom=jfarr.cc; dkim=pass (2048-bit key) header.d=jfarr.cc header.i=@jfarr.cc header.b=FFTUc8tW; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=FFnNkRbP; arc=none smtp.client-ip=103.168.172.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jfarr.cc
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jfarr.cc
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J2pwjq+z"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-42cacabd2e0so24168445e9.3;
-        Sat, 28 Sep 2024 06:43:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1727531017; x=1728135817; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=3s38JrVlJwg1WQYaaoheQOJoYWoLobns9br/Lt2jT7o=;
-        b=J2pwjq+zmH9qcbJuw6EODo2OhUzKXYtnx0bYFJFfkNpwILHRf2MJzkuZwg47IwlVeG
-         3bl9r/eceCVsWR0N2+YbQ26s8PVXC64877Vhd9/TTefJxQ/HmvSrV3fJlLPreta5tHLP
-         osWSBxT6rv0n64BRC3JLrupmf+DYz2Vlb73e8BBMScFCF1bUQBJg2fS6/R8S8dhkfoxC
-         IeftE44Z8q+EuvJmjxNODhblxfQvl20IXVBUxvvBLdtmTVh7xSY2bPPppJPUlF3U4Rop
-         1nR0M/qYmYGFlYpqUegOSPy5SkjgAlCjggVqD+qDo/QB8J+l8io59BJ9H2qJqjwF/xUq
-         GCPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727531017; x=1728135817;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3s38JrVlJwg1WQYaaoheQOJoYWoLobns9br/Lt2jT7o=;
-        b=oLDd8RL2PDcvRLVFtjYMGE7QyK/3wg+yX5Judj/hEWAUOrXCIwQAt/N9kCaOnywMmK
-         YV77shLznHigtP9ujtMTPgwqvCStnVm7CKN39RHasTqnJlH5FMiLk/r/VEAYR4Npxcgi
-         OJbtEm0IXoGEluDO1sWVu/dvDDkdptTPylKI8YGEP6xi/zZU0rw8ZTkbI3in4JVLREiO
-         bZwwgpdo7dZ3XS9ajWLqmHVpXA3/5zZou1k+0w9G00jVXmHM90cxQ5NLU9M9LgayjZK2
-         VIUy47A8LuF3BUw+voXYa8At8kDD+6ablXogMYmPzExQpPDGbN3NsVZjwfvw7H3o1T0G
-         wTyg==
-X-Forwarded-Encrypted: i=1; AJvYcCUGvqpWm2lRgm5gyy3OmGGB0C9fO4CIvCwaWz1rwqG1rAQRPgDQP48HuYN6vKGfJbh7BKbtqbX88H/SQAXMkFir@vger.kernel.org, AJvYcCXMpawk90jVsz1TeEtIwwz3MJ0EpgFvKpRCLl2BPkAuN3ji5EOjhQAEMkyt/9a6nCglLBYSvcxQnciMMqE32a8=@vger.kernel.org, AJvYcCXuV7MuQOWSTQ/wIULMGf6hXfsdbP4eX0Bmb9CmnNYQ62f+2+oSV4DrXkXQhBtf4iaU0Eb+dU+frqDcuXsL@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3LZcUjxWKQDM2gmNw4LsiDiZqN9kuF2EcJtjlg6VBsCgvOZPy
-	2uQpsbuhoQaWiHYM9mhUThLKHGvrM2FKiidviyYcIZGixZvMc5Tn
-X-Google-Smtp-Source: AGHT+IFGUKO5013Sb8JyGdP0f2V1TKX6TsoTcMpl4IW5QI8cJKrtpoajVcXdij2ZYEOxA9/r2P3PyA==
-X-Received: by 2002:a05:600c:4f96:b0:42c:b22e:fc23 with SMTP id 5b1f17b1804b1-42f58439301mr48708085e9.15.1727531016260;
-        Sat, 28 Sep 2024 06:43:36 -0700 (PDT)
-Received: from PC-PEDRO-ARCH ([2001:818:e92f:6400:a118:25f3:b27f:9f34])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37cd5730fc6sm4875210f8f.76.2024.09.28.06.43.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Sep 2024 06:43:35 -0700 (PDT)
-Date: Sat, 28 Sep 2024 14:43:33 +0100
-From: Pedro Falcato <pedro.falcato@gmail.com>
-To: Jeff Xu <jeffxu@chromium.org>
-Cc: akpm@linux-foundation.org, keescook@chromium.org, corbet@lwn.net, 
-	jeffxu@google.com, jorgelo@chromium.org, groeck@chromium.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
-	jannh@google.com, sroettger@google.com, linux-hardening@vger.kernel.org, 
-	willy@infradead.org, gregkh@linuxfoundation.org, torvalds@linux-foundation.org, 
-	deraadt@openbsd.org, usama.anjum@collabora.com, surenb@google.com, merimus@google.com, 
-	rdunlap@infradead.org, lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, 
-	enh@google.com
-Subject: Re: [PATCH v1 1/1] mseal: update mseal.rst
-Message-ID: <2q6hzkvep2g3z6m2jrwbw2j3sbydf6tgj2obwd6hgmm7xzgsg3@ddr5ghmsia5k>
-References: <20240927185211.729207-1-jeffxu@chromium.org>
- <20240927185211.729207-2-jeffxu@chromium.org>
- <2vkppisejac42wnawjkd7qzyybuycu667yxwmsd4pfk5rwhiqc@gszyo5lu24ge>
- <CABi2SkU62r8bLCeitzVwAW-r7L8-Lfmy8Cp73DE2HaeLzUXVXQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=jfarr.cc header.i=@jfarr.cc header.b="FFTUc8tW";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="FFnNkRbP"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id C646811400F8;
+	Sat, 28 Sep 2024 13:36:27 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-05.internal (MEProxy); Sat, 28 Sep 2024 13:36:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jfarr.cc; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm1; t=1727544987; x=1727631387; bh=JnumIukBSe
+	ev0nlJ/SGcgw51UJmk81utBDPPldgQUR0=; b=FFTUc8tWqjfaNyYE6D4arxZoTD
+	wisZzlR7FPBGCXWzKueXHoLfoKxtFFsW3oth2fDO5uupss1ELZ2VMuM0gQsFQGTK
+	enbn91eElhb0ukYxqzleUPRMsXR+GrGftmA5J8gbVIrw9LWVpOSNFIhTF5idKM/u
+	DheFdNis1/CmK2sGfhE8sikSB6Hog87jjeyB26d5ARxLFTfZ+empoNlB/oVpSo8i
+	JvL0/K4TmiPduaAfiCH39BTXW6s8WTrzBiGMGphta4YDBnSGzotbDYx36/woBjNc
+	G5ByIUGjjXzOgJeIlm1fNhz6ArVJthINn88iXfHGb+yFvUTdQHOlI1d8/uyw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1727544987; x=1727631387; bh=JnumIukBSeev0nlJ/SGcgw51UJmk
+	81utBDPPldgQUR0=; b=FFnNkRbP31a65+B5mdSUHfqfkz6BxwH2nXuHcUvopJDo
+	GxTFtsLWKkvTGTomfn4JyPNtqpHLC4ME63rLpRzFY9iKAiGHgcmYZXmCnU5cxJCf
+	EgdXYJjJQkKWBE91ivfUiO9AfkAtHmdhvwXg9oU/Ms8mm1BPD7y6DlByXdTPDIOZ
+	12PgAlU6sgghr8gOp35EVVO6GvMLYn3r0YXJvTyVWzkq5930y7srE8PRyHNBR5l8
+	6ZXxSt25Rk+QyfJbSKcwAzxKeqhnL1wJLIlT0DXclHJCwI/djlJTzgyFLW4V0qHt
+	NGxAjOj2p7qdy1cFFcrGIkobNiLmKgVMIRosZbeAdA==
+X-ME-Sender: <xms:mz74ZhOUOfoeagD1XC-Y8abx4Zsm-y_FLVeIrU60x3m_scG0hwofCg>
+    <xme:mz74Zj86B4nupxGZgDgt0vr2_4FdksN90BYK7q6UqQJeXnguLTH2vy3CsMLW2LJQS
+    VWVxQbuKqcLiVdyEOE>
+X-ME-Received: <xmr:mz74ZgS_3CH-YO7NY-3FxgQ9pULaALswU1s6trD6wZ07Yq23tUPkcTd_NuJCsR_68TwFJb3mlCzmIoBJV9Vlfmr_LGvp>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvdduuddgledtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnegfrhhlucfvnfffucdluddtmdenucfjughrpeffhffvvefukfhf
+    gggtuggjsehttdertddttddvnecuhfhrohhmpeflrghnucfjvghnughrihhkucfhrghrrh
+    cuoehkvghrnhgvlhesjhhfrghrrhdrtggtqeenucggtffrrghtthgvrhhnpeffudettdei
+    udduteejgeejueejgeejueehtedtteeivedvveffkeejjeeuheeghfenucffohhmrghinh
+    epghhithhhuhgsrdgtohhmpdhkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigv
+    pedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehkvghrnhgvlhesjhhfrghrrhdrtggtpd
+    hnsggprhgtphhtthhopeelpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehthhho
+    rhhsthgvnhdrsghluhhmsehtohgslhhugidrtghomhdprhgtphhtthhopehkvghnthdroh
+    hvvghrshhtrhgvvghtsehlihhnuhigrdguvghvpdhrtghpthhtoheprhgvghhrvghsshhi
+    ohhnsheslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopehlihhnuhigqdgstg
+    grtghhvghfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhig
+    qdhhrghruggvnhhinhhgsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplh
+    hinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohep
+    khgvvghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrrhgusgeskhgvrhhnvghlrd
+    horhhgpdhrtghpthhtohepmhhorhgsohesghhoohhglhgvrdgtohhm
+X-ME-Proxy: <xmx:mz74ZttYLpOf5GxB9Lph7ToXdH6_DJ6p0oj6cSAFFucVYa-2qyjkug>
+    <xmx:mz74ZpdbuF7m5enR3JqZhWOHckuTavGEy0_Wiekz8VzTCvhTQBJz3A>
+    <xmx:mz74Zp1F49gdMfn1a0BajruwTcrKYrpZxdyK6tirP_e1YYYXtezJSw>
+    <xmx:mz74Zl9DqU7vXEIJFyK6RkhdHLUD-5XesH3DE5M1idrrVHVet2zHpw>
+    <xmx:mz74Zl5mxztye5GycLtfSZaNFUCvA4ojJz_p4NX2eGNYds2_ES0pztRK>
+Feedback-ID: i01d149f8:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
+ 28 Sep 2024 13:36:25 -0400 (EDT)
+Date: Sat, 28 Sep 2024 19:36:24 +0200
+From: Jan Hendrik Farr <kernel@jfarr.cc>
+To: Thorsten Blum <thorsten.blum@toblux.com>
+Cc: kent.overstreet@linux.dev, regressions@lists.linux.dev,
+	linux-bcachefs@vger.kernel.org, linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kees@kernel.org, ardb@kernel.org,
+	morbo@google.com
+Subject: Re: [REGRESSION][BISECTED] erroneous buffer overflow detected in
+ bch2_xattr_validate
+Message-ID: <Zvg-mDsvvOueGpzs@archlinux>
+References: <ZvV6X5FPBBW7CO1f@archlinux>
+ <3E304FB2-799D-478F-889A-CDFC1A52DCD8@toblux.com>
+ <A499F119-5F0C-43FC-9058-7AB92057F9B3@toblux.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CABi2SkU62r8bLCeitzVwAW-r7L8-Lfmy8Cp73DE2HaeLzUXVXQ@mail.gmail.com>
+In-Reply-To: <A499F119-5F0C-43FC-9058-7AB92057F9B3@toblux.com>
 
-On Fri, Sep 27, 2024 at 06:29:30PM GMT, Jeff Xu wrote:
-> Hi Pedro,
+On 26 18:09:57, Thorsten Blum wrote:
+> On 26. Sep 2024, at 17:28, Thorsten Blum <thorsten.blum@toblux.com> wrote:
+> > On 26. Sep 2024, at 17:14, Jan Hendrik Farr <kernel@jfarr.cc> wrote:
+> >> 
+> >> Hi Kent,
+> >> 
+> >> found a strange regression in the patch set for 6.12.
+> >> 
+> >> First bad commit is: 86e92eeeb23741a072fe7532db663250ff2e726a
+> >> bcachefs: Annotate struct bch_xattr with __counted_by()
+> >> 
+> >> When compiling with clang 18.1.8 (also with latest llvm main branch) and
+> >> CONFIG_FORTIFY_SOURCE=y my rootfs does not mount because there is an erroneous
+> >> detection of a buffer overflow.
+> >> 
+> >> The __counted_by attribute is supposed to be supported starting with gcc 15,
+> >> not sure if it is implemented yet so I haven't tested with gcc trunk yet.
+> >> 
+> >> Here's the relevant section of dmesg:
+> >> 
+> >> [    6.248736] bcachefs (nvme1n1p2): starting version 1.12: rebalance_work_acct_fix
+> >> [    6.248744] bcachefs (nvme1n1p2): recovering from clean shutdown, journal seq 1305969
+> >> [    6.252374] ------------[ cut here ]------------
+> >> [    6.252375] memchr: detected buffer overflow: 12 byte read of buffer size 0
+> >> [    6.252379] WARNING: CPU: 18 PID: 511 at lib/string_helpers.c:1033 __fortify_report+0x45/0x50
+> >> [    6.252383] Modules linked in: bcachefs lz4hc_compress lz4_compress hid_generic usbhid btrfs crct10dif_pclmul libcrc32c crc32_pclmul crc32c_generic polyval_clmulni crc32c_intel polyval_generic raid6_pq ghash_clmulni_intel xor sha512_ssse3 sha256_ssse3 sha1_ssse3 aesni_intel gf128mul nvme crypto_simd ccp xhci_pci cryptd sp5100_tco xhci_pci_renesas nvme_core nvme_auth video wmi ip6_tables ip_tables x_tables i2c_dev
+> >> [    6.252404] CPU: 18 UID: 0 PID: 511 Comm: mount Not tainted 6.11.0-10065-g6fa6588e5964 #98 d8e0beb515d91b387aa60970de7203f35ddd182c
+> >> [    6.252406] Hardware name: Micro-Star International Co., Ltd. MS-7D78/PRO B650-P WIFI (MS-7D78), BIOS 1.C0 02/06/2024
+> >> [    6.252407] RIP: 0010:__fortify_report+0x45/0x50
+> >> [    6.252409] Code: 48 8b 34 c5 30 92 21 87 40 f6 c7 01 48 c7 c0 75 1b 0a 87 48 c7 c1 e1 93 07 87 48 0f 44 c8 48 c7 c7 ef 03 10 87 e8 0b c2 9b ff <0f> 0b e9 cf 5d 9e 00 cc cc cc cc 90 90 90 90 90 90 90 90 90 90 90
+> >> [    6.252410] RSP: 0018:ffffbb3d03aff350 EFLAGS: 00010246
+> >> [    6.252412] RAX: 4ce590fb7c372800 RBX: ffff98d559a400e8 RCX: 0000000000000027
+> >> [    6.252413] RDX: 0000000000000002 RSI: 00000000ffffdfff RDI: ffff98e43db21a08
+> >> [    6.252414] RBP: ffff98d559a400d0 R08: 0000000000001fff R09: ffff98e47ddcd000
+> >> [    6.252415] R10: 0000000000005ffd R11: 0000000000000004 R12: ffff98d559a40000
+> >> [    6.252416] R13: ffff98d54abf1320 R14: ffffbb3d03aff430 R15: 0000000000000000
+> >> [    6.252417] FS:  00007efc82117800(0000) GS:ffff98e43db00000(0000) knlGS:0000000000000000
+> >> [    6.252418] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> >> [    6.252419] CR2: 000055d96658ea80 CR3: 000000010a12c000 CR4: 0000000000f50ef0
+> >> [    6.252420] PKRU: 55555554
+> >> [    6.252421] Call Trace:
+> >> [    6.252423]  <TASK>
+> >> [    6.252425]  ? __warn+0xd5/0x1d0
+> >> [    6.252427]  ? __fortify_report+0x45/0x50
+> >> [    6.252429]  ? report_bug+0x144/0x1f0
+> >> [    6.252431]  ? __fortify_report+0x45/0x50
+> >> [    6.252433]  ? handle_bug+0x6a/0x90
+> >> [    6.252435]  ? exc_invalid_op+0x1a/0x50
+> >> [    6.252436]  ? asm_exc_invalid_op+0x1a/0x20
+> >> [    6.252440]  ? __fortify_report+0x45/0x50
+> >> [    6.252441]  __fortify_panic+0x9/0x10
+> >> [    6.252443]  bch2_xattr_validate+0x13b/0x140 [bcachefs 8361179bbfcc59e669df38aec976f02d7211a659]
+> >> [    6.252463]  bch2_btree_node_read_done+0x125a/0x17a0 [bcachefs 8361179bbfcc59e669df38aec976f02d7211a659]
+> >> [    6.252482]  btree_node_read_work+0x202/0x4a0 [bcachefs 8361179bbfcc59e669df38aec976f02d7211a659]
+> >> [    6.252499]  bch2_btree_node_read+0xa8d/0xb20 [bcachefs 8361179bbfcc59e669df38aec976f02d7211a659]
+> >> [    6.252514]  ? srso_alias_return_thunk+0x5/0xfbef5
+> >> [    6.252515]  ? pcpu_alloc_noprof+0x741/0xb50
+> >> [    6.252517]  ? srso_alias_return_thunk+0x5/0xfbef5
+> >> [    6.252519]  ? time_stats_update_one+0x75/0x1f0 [bcachefs 8361179bbfcc59e669df38aec976f02d7211a659]
+> >> 
+> >> ...
+> >> 
+> >> 
+> >> The memchr in question is at:
+> >> https://github.com/torvalds/linux/blob/11a299a7933e03c83818b431e6a1c53ad387423d/fs/bcachefs/xattr.c#L99
+> >> 
+> >> There is not actually a buffer overflow here, I checked with gdb that
+> >> xattr.v->x_name does actually contain a string of the correct length and
+> >> xattr.v->x_name_len contains the correct length and should be used to determine
+> >> the length when memchr uses __struct_size for bounds-checking due to the
+> >> __counted_by annotation.
+> >> 
+> >> I'm at the point where I think this is probably a bug in clang. I have a patch
+> >> that does fix (more like bandaid) the problem and adds some print statements:
+> >> 
+> >> --
+> >> diff --git a/fs/bcachefs/xattr.c b/fs/bcachefs/xattr.c
+> >> index 56c8d3fe55a4..8d7e749b7dda 100644
+> >> --- a/fs/bcachefs/xattr.c
+> >> +++ b/fs/bcachefs/xattr.c @@ -74,6 +74,7 @@ int bch2_xattr_validate(struct bch_fs *c, struct bkey_s_c k,
+> >>      enum bch_validate_flags flags)
+> >> {
+> >> struct bkey_s_c_xattr xattr = bkey_s_c_to_xattr(k);
+> >> + const struct bch_xattr *v = (void *)k.v;
+> >> unsigned val_u64s = xattr_val_u64s(xattr.v->x_name_len,
+> >>  le16_to_cpu(xattr.v->x_val_len));
+> >> int ret = 0;
+> >> @@ -94,9 +95,12 @@ int bch2_xattr_validate(struct bch_fs *c, struct bkey_s_c k,
+> >> 
+> >> bkey_fsck_err_on(!bch2_xattr_type_to_handler(xattr.v->x_type),
+> >> c, xattr_invalid_type,
+> >> - "invalid type (%u)", xattr.v->x_type);
+> >> + "invalid type (%u)", v->x_type);
+> >> 
+> >> - bkey_fsck_err_on(memchr(xattr.v->x_name, '\0', xattr.v->x_name_len),
+> >> + pr_info("x_name_len: %d", v->x_name_len);
+> >> + pr_info("__struct_size(x_name): %ld", __struct_size(v->x_name));
+> >> + pr_info("__struct_size(x_name): %ld", __struct_size(xattr.v->x_name));
+> >> + bkey_fsck_err_on(memchr(v->x_name, '\0', v->x_name_len),
+> >> c, xattr_name_invalid_chars,
+> >> "xattr name has invalid characters");
+> >> fsck_err:
+> >> --
+> >> 
+> >> 
+> >> Making memchr access via a pointer created with
+> >> const struct bch_xattr *v = (void *)k.v fixes it. From the print statements I
+> >> can see that __struct_size(xattr.v->x_name) incorrectly returns 0, while
+> >> __struct_size(v->x_name) correctly returns 10 in this case (the value of
+> >> x_name_len).
+> >> 
+> >> The generated assembly illustrates what is going wrong. Below is an excerpt
+> >> of the assembly clang generated for the bch2_xattr_validate function:
+> >> 
+> >> mov r13d, ecx
+> >> mov r15, rdi
+> >> mov r14, rsi
+> >> mov rdi, offset .L.str.3
+> >> mov rsi, offset .L__func__.bch2_xattr_validate
+> >> mov rbx, rdx
+> >> mov edx, eax
+> >> call _printk
+> >> movzx edx, byte ptr [rbx + 1]
+> >> mov rdi, offset .L.str.4
+> >> mov rsi, offset .L__func__.bch2_xattr_validate
+> >> call _printk
+> >> movzx edx, bh
+> >> mov rdi, offset .L.str.4
+> >> mov rsi, offset .L__func__.bch2_xattr_validate
+> >> call _printk
+> >> lea rdi, [rbx + 4]
+> >> mov r12, rbx
+> >> movzx edx, byte ptr [rbx + 1]
+> >> xor ebx, ebx
+> >> xor esi, esi
+> >> call memchr
+> >> 
+> >> At the start of this rdx contains k.v (and is moved into rbx). The three calls
+> >> to printk are the ones you can see in my patch. You can see that for the
+> >> print that uses __struct_size(v->x_name) the compiler correctly uses
+> >> movzx edx, byte ptr [rbx + 1]
+> >> to load x_name_len into edx.
+> >> 
+> >> For the printk call that uses __struct_size(xattr.v->x_name) however the
+> >> compiler uses
+> >> movzx edx, bh
+> >> So it will print the high 8 bits of the lower 16 bits (second least
+> >> significant byte) of the memory address of xattr.v->x_type. This is obviously
+> >> completely wrong.
+> >> 
+> >> It is then doing the correct call of memchr because this is using my patch.
+> >> Without my patch it would be doing the same thing for the call to memchr where
+> >> it uses the second least significant byte of the memory address of x_type as the
+> >> length used for the bounds-check.
+> >> 
+> >> 
+> >> 
+> >> The LLVM IR also shows the same problem:
+> >> 
+> >> define internal zeroext i1 @xattr_cmp_key(ptr nocapture readnone %0, ptr %1, ptr nocapture noundef readonly %2) #0 align 16 {
+> >> [...]
+> >> %51 = ptrtoint ptr %2 to i64
+> >> %52 = lshr i64 %51, 8
+> >> %53 = and i64 %52, 255
+> >> 
+> >> This is the IR for the incorrect behavior. It simply converts the pointer to an
+> >> int, shifts right by 8 bits, then and with 0xFF. If it did a load (to i64)
+> >> instead of ptrtoint this would actually work, as the second least significant
+> >> bit of an i64 loaded from that memory address does contain the value of
+> >> x_name_len. It's as if clang forgot to dereference a pointer here.
+> >> 
+> >> Correct IR does this (for the other printk invocation):
+> >> 
+> >> define internal zeroext i1 @xattr_cmp_key(ptr nocapture readnone %0, ptr %1, ptr nocapture noundef readonly %2) #0 align 16 {
+> >> [...]
+> >> %4 = getelementptr inbounds %struct.bch_xattr, ptr %1, i64 0, i32 1
+> >> %5 = load i8, ptr %4, align 8
+> >> [...]
+> >> %48 = load i8, ptr %5, align 4
+> >> %49 = zext i8 %48 to i64
+> >> 
+> >> Best Regards
+> >> Jan
+> > 
+> > I suspect it's the same Clang __bdos() "bug" as in [1] and [2].
+> > 
+> > [1] https://lore.kernel.org/linux-kernel/3D0816D1-0807-4D37-8D5F-3C55CA910FAA@linux.dev/
+> > [2] https://lore.kernel.org/all/20240913164630.GA4091534@thelio-3990X/
 > 
-> On Fri, Sep 27, 2024 at 3:59 PM Pedro Falcato <pedro.falcato@gmail.com> wrote:
-<snip>
-> > > +
-> > > +   Blocked mm syscall:
-> > > +      - munmap
-> > > +      - mmap
-> > > +      - mremap
-> > > +      - mprotect and pkey_mprotect
-> > > +      - some destructive madvise behaviors: MADV_DONTNEED, MADV_FREE,
-> > > +        MADV_DONTNEED_LOCKED, MADV_FREE, MADV_DONTFORK, MADV_WIPEONFORK
-> > > +
-> > > +   The first set of syscall to block is munmap, mremap, mmap. They can
-> > > +   either leave an empty space in the address space, therefore allow
-> > > +   replacement with a new mapping with new set of attributes, or can
-> > > +   overwrite the existing mapping with another mapping.
-> > > +
-> > > +   mprotect and pkey_mprotect are blocked because they changes the
-> >                                                           change
-> > > +   protection bits (rwx) of the mapping.
-> > > +
-> > > +   Some destructive madvice behaviors (MADV_DONTNEED, MADV_FREE,
-> > > +   MADV_DONTNEED_LOCKED, MADV_FREE, MADV_DONTFORK, MADV_WIPEONFORK)
-> > > +   for anonymous memory, when users don't have write permission to the
-> > > +   memory. Those behaviors can alter region contents by discarding pages,
-> > > +   effectively a memset(0) for anonymous memory.
-> >
-> > What's the difference between anonymous memory and MAP_PRIVATE | MAP_FILE?
-> >
-> MAP_FILE seems not used ?
-> anonymous mapping is the mapping that is not backed by a file.
-
-MAP_FILE is actually defined as 0 usually :) But I meant file-backed private mappings.
-
-> > The feature now, as is (as far as I understand!) will allow you to do things like MADV_DONTNEED
-> > on a read-only file mapping. e.g .text. This is obviously wrong?
-> >
-> When a MADV_DONTNEED is called, pages will be freed, on file-backed
-> mapping,  if the process reads from the mapping again, the content
-> will be retrieved from the file.
+> Could you try this and see if it resolves the problem?
 > 
+> diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
+> index 1a957ea2f4fe..b09759f31789 100644
+> --- a/include/linux/compiler_types.h
+> +++ b/include/linux/compiler_types.h
+> @@ -413,7 +413,7 @@ struct ftrace_likely_data {
+>   * When the size of an allocated object is needed, use the best available
+>   * mechanism to find it. (For cases where sizeof() cannot be used.)
+>   */
+> -#if __has_builtin(__builtin_dynamic_object_size)
+> +#if __has_builtin(__builtin_dynamic_object_size) && !defined(__clang__)
+>  #define __struct_size(p)	__builtin_dynamic_object_size(p, 0)
+>  #define __member_size(p)	__builtin_dynamic_object_size(p, 1)
+>  #else
 
-Sorry, it was late and I gave you a crap example. Consider this:
-a file-backed MAP_PRIVATE vma is marked RW. I write to it, then RO-it + mseal.
 
-The attacker later gets me to MADV_DONTNEED that VMA. You've just lost data.
+Alright, figured out why this fix doesn't work. The function signature
+of memchr is:
 
-The big problem here is with anon _pages_, not anon vmas.
+void *memchr(const void * const POS0 p, int c, __kernel_size_t size)
 
-> For anonymous mapping, since  there is no file backup, if process
-> reads from the mapping, 0 is filled, hence equivalent to memset(0)
-> 
-> > > +
-> > > +   Kernel will return -EPERM for blocked syscalls.
-> > > +
-> > > +   When blocked syscall return -EPERM due to sealing, the memory regions may or may not be changed, depends on the syscall being blocked:
-> > > +      - munmap: munmap is atomic. If one of VMAs in the given range is
-> > > +        sealed, none of VMAs are updated.
-> > > +      - mprotect, pkey_mprotect, madvise: partial update might happen, e.g.
-> > > +        when mprotect over multiple VMAs, mprotect might update the beginning
-> > > +        VMAs before reaching the sealed VMA and return -EPERM.
-> > > +      - mmap and mremap: undefined behavior.
-> >
-> > mmap and mremap are actually not undefined as they use munmap semantics for their unmapping.
-> > Whether this is something we'd want to document, I don't know honestly (nor do I think is ever written down in POSIX?)
-> >
-> I'm not sure if I can declare mmap/mremap as atomic.
-> 
-> Although, it might be possible to achieve this due to munmap being
-> atomic. I'm not sure  as I didn't test this. Would you like to find
-> out ?
+The POS0 is the culprit. It's defined as __pass_object_size(0), which
+leads to the call to __builtin_object_size being upgraded to
+__builtin_dynamic_object_size.
 
-I just told you they use munmap under the hood. It's just that the requirement isn't actually
-written down anywhere.
+So to make this work the POS0 definition needs the same
+!defined(__clang__) on it. There's also two more
+__has_builtin(__builtin_dynamic_object_size) checks in
+lib/fortify_kunit.c. But they have no impact.
 
-> 
-> > >
-> > >  Use cases:
-> > >  ==========
-> > >  - glibc:
-> > >    The dynamic linker, during loading ELF executables, can apply sealing to
-> > > -  non-writable memory segments.
-> > > +  mapping segments.
-> > >
-> > >  - Chrome browser: protect some security sensitive data-structures.
-> > >
-> > > -Notes on which memory to seal:
-> > > -==============================
-> > > -
-> > > -It might be important to note that sealing changes the lifetime of a mapping,
-> > > -i.e. the sealed mapping won’t be unmapped till the process terminates or the
-> > > -exec system call is invoked. Applications can apply sealing to any virtual
-> > > -memory region from userspace, but it is crucial to thoroughly analyze the
-> > > -mapping's lifetime prior to apply the sealing.
-> > > +Don't use mseal on:
-> > > +===================
-> > > +Applications can apply sealing to any virtual memory region from userspace,
-> > > +but it is *crucial to thoroughly analyze the mapping's lifetime* prior to
-> > > +apply the sealing. This is because the sealed mapping *won’t be unmapped*
-> > > +till the process terminates or the exec system call is invoked.
-> >
-> > There should probably be a nice disclaimer as to how most people don't need this or shouldn't use this.
-> > At least in its current form.
-> >
-> Ya, the mseal is not for most apps. I mention the malloc example to stress that.
-> 
-> > <snip>
-> > > -
-> > > -
-> > > -Additional notes:
-> > > -=================
-> > >  As Jann Horn pointed out in [3], there are still a few ways to write
-> > > -to RO memory, which is, in a way, by design. Those cases are not covered
-> > > -by mseal(). If applications want to block such cases, sandbox tools (such as
-> > > -seccomp, LSM, etc) might be considered.
-> > > +to RO memory, which is, in a way, by design. And those could be blocked
-> > > +by different security measures.
-> > >
-> > >  Those cases are:
-> > > -
-> > > -- Write to read-only memory through /proc/self/mem interface.
-> > > -- Write to read-only memory through ptrace (such as PTRACE_POKETEXT).
-> > > -- userfaultfd.
-> > > +   - Write to read-only memory through /proc/self/mem interface (FOLL_FORCE).
-> > > +   - Write to read-only memory through ptrace (such as PTRACE_POKETEXT).
-> > > +   - userfaultfd.
-> >
-> > I don't understand how this is not a problem, but MADV_DONTNEED is.
-> > To me it seems that what we have now is completely useless, because you can trivially
-> > bypass it using /proc/self/mem, which is enabled on most Linux systems.
-> >
-> > Before you mention ChromeOS or Chrome, I don't care. Kernel features aren't designed
-> > for Chrome. They need to work with every other distro and application as well.
-> >
-> > It seems to me that the most sensible change is blocking/somehow distinguishing between /proc/self/mem and
-> > /proc/<pid>/mem (some other process) and ptrace. As in blocking /proc/self/mem but allowing the other FOLL_FORCE's
-> > as the traditional UNIX permission model allows.
-> >
-> IMO, it is a matter of  Divide and Conquer.  In a nutshell, mseal only
-> prevents VMA's certain attributes (such as prot bits) from changing.
-> It doesn't mean to say that sealed RO memory is immutable. To achieve
-> that, the system needs to apply multiple security measures.
+Now the fix works:
 
-No, it's a matter of providing a sane API without tons of edgecases. Making a VMA immutable should make a VMA
-immutable, and not require you to provide a crap ton of other mechanisms in order to truly make it immutable.
-If I call mseal, I expect it to be sealed, not "sealed except when it's not, lol".
 
-You haven't been able to quite specify what semantics are desirable out of this whole thing. Making
-prot flags "immutable" is completely worthless if you can simply write to a random pseudofile and
-have it bypass the whole thing (where a write to /proc/self/mem is semantically equivalent to
-mprotect RW + write + mprotect RO). Making the vma immutable is completely worthless
-if I can simply wipe anon pages. There has to be some end goal here (make contents immutable?
-make sure VMA protection can't be changed? both?) which seems to be unclear from the kernel mmap-side.
-
-If you insist on providing half-baked APIs (and waving off any concerns), I'm sure this would've been better
-implemented as a random bpf program for chrome. Maybe we could revert this whole thing and give eBPF one
-or two bits of vma flags for their own uses :)
-
-> 
-> For writing to /proc/pid/mem, it can be disabled via [1].  SELINUX and
-> Landlock can achieve the same protection too.
-
-I'm not blocking /proc/pid/mem, and my distro doesn't run any of those security modules :/
-
--- 
-Pedro
+--
+diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
+index f14c275950b5..43ac0bca485d 100644
+--- a/include/linux/compiler_types.h
++++ b/include/linux/compiler_types.h
+@@ -413,7 +413,7 @@ struct ftrace_likely_data {
+  * When the size of an allocated object is needed, use the best available
+  * mechanism to find it. (For cases where sizeof() cannot be used.)
+  */
+-#if __has_builtin(__builtin_dynamic_object_size)
++#if __has_builtin(__builtin_dynamic_object_size) && !defined(__clang__)
+ #define __struct_size(p)	__builtin_dynamic_object_size(p, 0)
+ #define __member_size(p)	__builtin_dynamic_object_size(p, 1)
+ #else
+diff --git a/include/linux/fortify-string.h b/include/linux/fortify-string.h
+index 0d99bf11d260..7235655d9b80 100644
+--- a/include/linux/fortify-string.h
++++ b/include/linux/fortify-string.h
+@@ -148,7 +148,7 @@ extern char *__underlying_strncpy(char *p, const char *q, __kernel_size_t size)
+  * size, rather than struct size), but there remain some stragglers using
+  * type 0 that will be converted in the future.
+  */
+-#if __has_builtin(__builtin_dynamic_object_size)
++#if __has_builtin(__builtin_dynamic_object_size) && !defined(__clang__)
+ #define POS			__pass_dynamic_object_size(1)
+ #define POS0			__pass_dynamic_object_size(0)
+ #else
