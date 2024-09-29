@@ -1,191 +1,110 @@
-Received: from fout-a2-smtp.messagingengine.com (fout-a2-smtp.messagingengine.com [103.168.172.145])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 753557BAEC;
-	Sun, 29 Sep 2024 19:59:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D63618EAB
+	for <linux-hardening@vger.kernel.org>; Sun, 29 Sep 2024 20:21:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727639972; cv=none; b=i1cTiEH9CoYDIJ2o2OEiCAFBQ+CtAbs4+abiOLqhJInIcfFm75yfVF50dTCYbEAsQCbANt+Jf2YVT4vQxRHbFcDT9Ux7O1lzmLHOybrpznZTzZHfoKKNnUnA4UKbE6zKhLCVSpn/VabElac+GspUYBv8Y3G9/8q6tMRkG/sYSO8=
+	t=1727641265; cv=none; b=L4/CjnirAR0Fnzxk/LfsLSVaQhueAyk5Iq1Bg9r4ER8CVk9XmHR3gdEZ/HPT8PiCax0FT7lIYqBpWY5td0YWXfM2XmgKTWUn3YLRmOCePikDd3N2pSrS8KizJAqD2vKHitLnDBMKsn5dCC+nGQkN2hu7PNV8Q33+2SDWtVLLsUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727639972; c=relaxed/simple;
-	bh=ZEiw6Vdio/TP2WrUL+Vf/mhXL1ax469ODYxcNdnlWC0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pxK4K+Qm39a8/1BnIKpmzcBqotOttI/VI+cZg99YSqqOoV2e26H30njqb4JyVTxpDJVdzxTNe3oWBNpUoxdNVv+obJXY28yfMp6OoT5fMCcMbzn/N7kNvAIZQ5E3MMGJRT/aWLDB9c4kEyantZacs1Vjr01KklMVi/QL5o4rS2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jfarr.cc; spf=pass smtp.mailfrom=jfarr.cc; dkim=pass (2048-bit key) header.d=jfarr.cc header.i=@jfarr.cc header.b=zLO1xvhU; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=SUqLrlSG; arc=none smtp.client-ip=103.168.172.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jfarr.cc
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jfarr.cc
+	s=arc-20240116; t=1727641265; c=relaxed/simple;
+	bh=NCMujOi7gIknHs127h5m38WVgd6G0xciBwWlyhI04G4=;
+	h=From:To:CC:Date:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=JR/bcxiUBtFP039TTJmjmP/MVQ6EY11V9r6w8KLY4hWurOQyQ2uGCw+OyH5HWI+KohMp8/2xj9gr2WYxdnvW8VTbLESHQoWUdhOzhA+R/qvZd9I93Io77CO+WxJo6O02hT/nXoatbfVSTxbR5fVXIoyPwzLuOHWr95B0mPMBpZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=FbirAg/Z; arc=none smtp.client-ip=209.85.222.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jfarr.cc header.i=@jfarr.cc header.b="zLO1xvhU";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="SUqLrlSG"
-Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
-	by mailfout.phl.internal (Postfix) with ESMTP id 8C3A8138025B;
-	Sun, 29 Sep 2024 15:59:29 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-10.internal (MEProxy); Sun, 29 Sep 2024 15:59:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jfarr.cc; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1727639969;
-	 x=1727726369; bh=wjelk38W9mGSPjR1nvLcSCdYm0WK8pYBKRnjg05bhwE=; b=
-	zLO1xvhUNtnuTskHs4uOir8G6dEbx5fsn4gxqD6rvf4GKH8r+vsrmwY/eiM/kync
-	BgV3oztllypRlAUzpDaxtFGsTsID9xNM4kgHMZtHD9rpSIefylUlWF3MFs3sHGeU
-	N7yNn/Jr/ZzR71uYcgrdcCi/4otvAwlBMLF1lGiKgUg8PaZrXW5s9aLANRvk0Ytv
-	ZiGp6yURW77t7EX893gYsH3B0lihri8oRDvVx6lQI6NxWVBzOLI3cEMJKU7bhY5Z
-	wLywFNbOA0Mj5gvXk9kMWdQvSCYW8pnjoPLX6WIlq6vAwDbX7PJo3gu9XV3Ykvdg
-	5l2dtPuxVCmsp7StUONKPA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1727639969; x=
-	1727726369; bh=wjelk38W9mGSPjR1nvLcSCdYm0WK8pYBKRnjg05bhwE=; b=S
-	UqLrlSGqUSSppwfVYPyb0sLAaYSr16qH8ASkKYZG3USwVfkvQND8AHiXdQZqhDJh
-	2I80BdgDND2JXs/7rIloFk0W2Q7hgZJL5fJvH04+BNOnvhy4kNTSwZr6dE1Z3kai
-	4L/p6uv22jf/QGrGW6AxDG5TQuPmh28yPSB/LYb5yoDnWV4iR9UOrCJevz00JOi/
-	xWwHBMD1l4a2e9t2nK2YV+FbAjK9MnWH+EriFgp4PTGyr+FPpV+BhQo9dOqvipUg
-	JE2bEfO3u2VLu/Lh5rJ4UVpCgvTTQ8WOj4tuWsEZXkSzxI1+lh8Rq3GljV89MSmf
-	LY1rBUhgV3zB6hnevriMQ==
-X-ME-Sender: <xms:obH5ZncGYFwsveKawsM78ViPH6JfgId4eMEmBZYrCOiQlZCGLydozw>
-    <xme:obH5ZtPGWwrg165XAdOEOKMiFpcJehegDSAOJ82PQ8njgnnl3UXOBoXvKALV8bzZa
-    NxJNbFhf_fQOGBGTL4>
-X-ME-Received: <xmr:obH5ZgiSmRkdSgJjtSNdKHK4tEg4hkible3M4a45ijNym1jqTJ27tduZFcNECyWDWgcwaZCl4SeIvsd9XOdPtQn9EHT7>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvddufedgudegiecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenfghrlhcuvffnffculddutddmnecujfgurhepfffhvfevuffk
-    fhggtggugfgjsehtkeortddttdejnecuhfhrohhmpeflrghnucfjvghnughrihhkucfhrg
-    hrrhcuoehkvghrnhgvlhesjhhfrghrrhdrtggtqeenucggtffrrghtthgvrhhnpeetjeej
-    udefveetgeehgfetleduudfhieegleetjeffudehkeeukeeigffffeeuffenucffohhmrg
-    hinhepkhgvrhhnvghlrdhorhhgpdhgihhthhhusgdrtghomhenucevlhhushhtvghrufhi
-    iigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehkvghrnhgvlhesjhhfrghrrhdrtg
-    gtpdhnsggprhgtphhtthhopeelpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehk
-    vggvsheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhhorhgsohesghhoohhglhgvrd
-    gtohhmpdhrtghpthhtoheprghruggssehkvghrnhgvlhdrohhrghdprhgtphhtthhopeht
-    hhhorhhsthgvnhdrsghluhhmsehtohgslhhugidrtghomhdprhgtphhtthhopehkvghnth
-    drohhvvghrshhtrhgvvghtsehlihhnuhigrdguvghvpdhrtghpthhtoheprhgvghhrvghs
-    shhiohhnsheslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopehlihhnuhigqd
-    gstggrtghhvghfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhn
-    uhigqdhhrghruggvnhhinhhgsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoh
-    eplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:obH5Zo_J2bN6ZDT_QjZLHe0tV1PBChCnX9RvagpE0YQBCI_dw5IEKA>
-    <xmx:obH5ZjsQ6UxCA3TG2LqiAJHhTuPwouIpxY7d3REw0va0FdGp_UOnDA>
-    <xmx:obH5ZnGHG8Utf5lRr7LwHSRFMxC9ei0kT46jQMS_fCT5zMk5yYJO0Q>
-    <xmx:obH5ZqPCMfVdVjsbvlnaFCdWrxem_tgGk-U3-BMIpomliV-nEbMJNg>
-    <xmx:obH5ZhJswG8A-TuWonqtoZRfoRAkni790OVx25gFhrEZoqjGyM_T0m-7>
-Feedback-ID: i01d149f8:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 29 Sep 2024 15:59:28 -0400 (EDT)
-Date: Sun, 29 Sep 2024 21:59:26 +0200
-From: Jan Hendrik Farr <kernel@jfarr.cc>
-To: Kees Cook <kees@kernel.org>
-Cc: Bill Wendling <morbo@google.com>, Ard Biesheuvel <ardb@kernel.org>,
-	Thorsten Blum <thorsten.blum@toblux.com>, kent.overstreet@linux.dev,
-	regressions@lists.linux.dev, linux-bcachefs@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [REGRESSION][BISECTED] erroneous buffer overflow detected in
- bch2_xattr_validate
-Message-ID: <ZvmxntpAHrAwcKaH@archlinux>
-References: <ZvV6X5FPBBW7CO1f@archlinux>
- <3E304FB2-799D-478F-889A-CDFC1A52DCD8@toblux.com>
- <A499F119-5F0C-43FC-9058-7AB92057F9B3@toblux.com>
- <ZvWTXaqkmxP2E2dc@archlinux>
- <ZvWd0aK7p_1rkb7E@archlinux>
- <CAMj1kXFV+Jck9Yf4w18rOzHckXvpXkhPhL-KrpBC8hqgXusw2g@mail.gmail.com>
- <CAGG=3QXG+Vsm7mjLV42Q-uA-EvgfOehSUeNQjKA3QQbw8vqSCg@mail.gmail.com>
- <CAGG=3QVWCQB-3sM=iwgTmX8zrU81H+F_A1icJwROvW_DSvsBeA@mail.gmail.com>
- <202409281335.5EE231B9C7@keescook>
- <ZviSURL7kaxZPkSN@archlinux>
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="FbirAg/Z"
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7a9ac0092d9so434834285a.1
+        for <linux-hardening@vger.kernel.org>; Sun, 29 Sep 2024 13:21:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1727641262; x=1728246062; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:subject:user-agent
+         :references:in-reply-to:message-id:date:cc:to:from:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=j730t5RgznBmQZu3lvSO1ELFYrR4fxxSXPbfDnOL7lc=;
+        b=FbirAg/ZSZj+9IbidxOvv4MW2hjAtpLYy2R2whBxT9uCtH9/Z19joik6o+0vayOTDK
+         JyiywBmlX8zVIQeo9Dx8dTRucpMdbGaoWhwPVDDrxbEnEJd8jKAWSfQRr7KU2aP0jE66
+         +uWhs5/IrpkAtzBoL5YynpwdN/bDtOQoEFUircp/TPvet9dejhkLD+loPdJCyMDFuuYS
+         UZEWO2HrewotMsOigrcRKTe9qDW1CrGwtF7doS+bH/ZT2GthiJQLQqyN4UvMa9LZggME
+         ww1cYsohwGHfz6ZTHqk32J9xXGeSMZY2cR/z7EcIdKJcKCRwYbK5GBydd28Gzop+4DTO
+         JP+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727641262; x=1728246062;
+        h=content-transfer-encoding:mime-version:subject:user-agent
+         :references:in-reply-to:message-id:date:cc:to:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=j730t5RgznBmQZu3lvSO1ELFYrR4fxxSXPbfDnOL7lc=;
+        b=LGrELH/YkgSY3qp7gqRO5eRn1jngL1/hO/p/SayUoX/zHW33oMOO2kKCqTECTRbRM+
+         b4/apSkUphVxPZcBMVX5SHloCA+fGZQ8vnKSR1SQ5R0YMz5pKexF/zoIDfKvaZu+L0or
+         igsfUlNhkIX3KQpBvLQ+UDc8DaR3L6y4FZw5j6TAoAGLzmwFFDFkbaFsnGrrOD84wfvW
+         p1TBwJ/RNWXynm2ReGKDBvTpZ2zKY7Cvrzx1yCXYgg11Z9aurVUw+6yBHxK9DlkNOvyI
+         fils7S6LHWI0khy+3Rb2jrOLgzyoDqayojDRcBt7RaxG9wBlwQ6OuWxaRWQzcBjJtTxT
+         yUFg==
+X-Gm-Message-State: AOJu0Ywtr9ZN/gXQ73+X3Uo9DhqXNJbZDNAlEA4PzpBZTR3G5pPSh08P
+	pCqQc474413P7Tc/QP3iIhNWiOFFIvttYnAMSOr/8o77Jd1aZJa4GHpBoSfdJUvhzszf3SsfeKD
+	TZQ==
+X-Google-Smtp-Source: AGHT+IE3rPnUiHlGZpJAiiSi2r8ITRz1wB3lhzsgmG3CaQpGo6aFcM3Rt59tO+884CFfrtoXeBewRA==
+X-Received: by 2002:a05:620a:24d3:b0:7a9:b114:4704 with SMTP id af79cd13be357-7ae3783849dmr1387092785a.22.1727641262161;
+        Sun, 29 Sep 2024 13:21:02 -0700 (PDT)
+Received: from [192.168.22.104] ([62.156.169.180])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-45c9f33a4c9sm31021261cf.73.2024.09.29.13.21.00
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 29 Sep 2024 13:21:01 -0700 (PDT)
+From: Paul Moore <paul@paul-moore.com>
+To: Nathan Chancellor <nathan@kernel.org>, Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
+CC: <linux-hardening@vger.kernel.org>, <linux-kernel@vger.kernel.org>, <patches@lists.linux.dev>
+Date: Sun, 29 Sep 2024 22:20:59 +0200
+Message-ID: <1923f716100.28a7.85c95baa4474aabc7814e68940a78392@paul-moore.com>
+In-Reply-To: <20240928-maintainers-security-kconfig-hardening-v1-1-c8c64071cc02@kernel.org>
+References: <20240928-maintainers-security-kconfig-hardening-v1-1-c8c64071cc02@kernel.org>
+User-Agent: AquaMail/1.52.0 (build: 105200518)
+Subject: Re: [PATCH] MAINTAINERS: Add security/Kconfig.hardening to hardening section
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; format=flowed; charset="us-ascii"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZviSURL7kaxZPkSN@archlinux>
 
-On 29 01:33:40, Jan Hendrik Farr wrote:
-> On 28 13:50:12, Kees Cook wrote:
-> > On Thu, Sep 26, 2024 at 06:30:15PM -0700, Bill Wendling wrote:
-> > > On Thu, Sep 26, 2024 at 3:18 PM Bill Wendling <morbo@google.com> wrote:
-> > > >
-> > > > On Thu, Sep 26, 2024 at 12:58 PM Ard Biesheuvel <ardb@kernel.org> wrote:
-> > > > >
-> > > > > (cc Kees and Bill)
-> > > > >
-> > > > > On Thu, 26 Sept 2024 at 19:46, Jan Hendrik Farr <kernel@jfarr.cc> wrote:
-> > > > > >
-> > > > > > On 26 19:01:20, Jan Hendrik Farr wrote:
-> > > > > > > On 26 18:09:57, Thorsten Blum wrote:
-> > > > > > > > On 26. Sep 2024, at 17:28, Thorsten Blum <thorsten.blum@toblux.com> wrote:
-> > > > > > > > > On 26. Sep 2024, at 17:14, Jan Hendrik Farr <kernel@jfarr.cc> wrote:
-> > > [...]
-> > > > > > > > >> [    6.252375] memchr: detected buffer overflow: 12 byte read of buffer size 0
-> > > [...]
-> > > > > > >       bkey_fsck_err_on(memchr(xattr.v->x_name, '\0', xattr.v->x_name_len),
-> > > > > > >                        c, xattr_name_invalid_chars,
-> > > > > > >                        "xattr name has invalid characters");
-> > > [...]
-> > 
-> > The thing going wrong is that __bdos(xattr.v->x_name, 0) is returning 0.
-> > This looks exactly like the bug I minimized here:
-> > https://lore.kernel.org/all/202409170436.C3C6E7F7A@keescook/
-> > 
-> > Since there wasn't an LLVM open bug yet, I've created:
-> > https://github.com/llvm/llvm-project/issues/110385
-> > 
-> > -Kees
-> > 
-> I found a fix for the issue. Fixes both the issue in this thread as well
-> as your reproducer. First thought they might not actually be the same
-> issue, but they indeed are. Haven't tested against the issue Thorsten
-> linked.
-> 
-> Havn't run the clang tests on it yet, but it does successfully compile
-> my kernel and fix the issue.
-> 
-> I'll open a PR and give more explanation tomorrow, it's getting
-> pretty late over here in CEST.
-> 
-> 
-> Here's the patch to be applied on top of
-> https://github.com/llvm/llvm-project
-> 
-> --
-> diff --git a/clang/lib/CodeGen/CGExpr.cpp b/clang/lib/CodeGen/CGExpr.cpp
-> index 9166db4c7412..143dd3fcfcf8 100644
-> --- a/clang/lib/CodeGen/CGExpr.cpp
-> +++ b/clang/lib/CodeGen/CGExpr.cpp
-> @@ -1164,15 +1164,15 @@ llvm::Value *CodeGenFunction::EmitLoadOfCountedByField(
->      Res = EmitDeclRefLValue(DRE).getPointer(*this);
->      Res = Builder.CreateAlignedLoad(ConvertType(DRE->getType()), Res,
->                                      getPointerAlign(), "dre.load");
-> -  } else if (const MemberExpr *ME = dyn_cast<MemberExpr>(StructBase)) {
-> -    LValue LV = EmitMemberExpr(ME);
-> -    Address Addr = LV.getAddress();
-> -    Res = Addr.emitRawPointer(*this);
->    } else if (StructBase->getType()->isPointerType()) {
->      LValueBaseInfo BaseInfo;
->      TBAAAccessInfo TBAAInfo;
->      Address Addr = EmitPointerWithAlignment(StructBase, &BaseInfo, &TBAAInfo);
->      Res = Addr.emitRawPointer(*this);
-> +  } else if (const MemberExpr *ME = dyn_cast<MemberExpr>(StructBase)) {
-> +    LValue LV = EmitMemberExpr(ME);
-> +    Address Addr = LV.getAddress();
-> +    Res = Addr.emitRawPointer(*this);
->    } else {
->      return nullptr;
->    }
+On September 28, 2024 8:26:28 PM Nathan Chancellor <nathan@kernel.org> wrote:
+> When running get_maintainer.pl on security/Kconfig.hardening, only the
+> security subsystem folks show up, even though they have never taken
+> patches to this file:
+>
+>  $ scripts/get_maintainer.pl security/Kconfig.hardening
+>  Paul Moore <...> (supporter:SECURITY SUBSYSTEM)
+>  James Morris <...> (supporter:SECURITY SUBSYSTEM)
+>  "Serge E. Hallyn" <...> (supporter:SECURITY SUBSYSTEM)
+>  linux-security-module@vger.kernel.org (open list:SECURITY SUBSYSTEM)
+>  linux-kernel@vger.kernel.org (open list)
+>
+>  $ git log --format=%cn --no-merges security/Kconfig.hardening | sort | uniq -c
+>        3 Andrew Morton
+>        1 Greg Kroah-Hartman
+>       18 Kees Cook
+>        2 Linus Torvald
+>
+> Add it to the hardening section so that the KSPP folks are also shown,
+> which matches reality over who should comment on and take said patches
+> if necessary.
+>
+> Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+> ---
+> MAINTAINERS | 1 +
+> 1 file changed, 1 insertion(+)
+
+For the sake of casual observers, the reason James, Serge, or I haven't 
+merged anything in Kconfig.hardening isn't due to any malicious intent or 
+lack of appreciation, rather it is out of respect for KSPP and not wanting 
+to step on Kees' toes.  I've happily merged KSPP related patches to those 
+subsystems which I'm tasked with looking after and I plan to continue to do so.
+
+--
+paul-moore.com
 
 
-Here's the PR: https://github.com/llvm/llvm-project/pull/110437
 
-I hope the way I added the CHECK tags in the test is good and that they if
-they don't need manual cleanup, not familiar with the llvm test system.
-
-
-Best Regards
-Jan
