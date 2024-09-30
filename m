@@ -1,140 +1,75 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9B0A193067
-	for <linux-hardening@vger.kernel.org>; Mon, 30 Sep 2024 14:00:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C895F1925B3
+	for <linux-hardening@vger.kernel.org>; Mon, 30 Sep 2024 17:45:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727704811; cv=none; b=YtG9Ec8n4xxniC5VfcQNEx858mSAt6uYyB/OoeHpUp3a7ki9WWo4J1w096zXyOo9mYgkDR3eJD9nO20Qhc4+aqcUh+TU1d98GA2E8XT+MQfRFItqFIvDzrKxWsei/3gPuz0CPb7cUINK403mixmh0Wr8ipPvsoJc8g6RWJa75yw=
+	t=1727718329; cv=none; b=uHLK61sq9sa77PYtq1pI++Ah5EHHfLKlClKW9gBcLY4aM4+AqDufiBAqWmvjr3FES/FtznsrT3zNjb4/r9HV0GrkSJeheSPtXBMwOpVhVc/6evuK7e452j4UR9hDNyxHXqUGR9869JdK1bvR35TyELpZAIAVgiZKDXDQN5a7JQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727704811; c=relaxed/simple;
-	bh=3ijB4GlXO+25BXCSGu/vsofAjiikfjurTHWwB9A1V40=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=ax+ny3aYLLbVSrq8U/JQo2lxlnBKRc9kVWYfVU9r3gnPTSTYBJuoovQiyOWpZJ9lU8YFCLU1g8yUGTf5a6xWWhfbEX+/r0PIaPj0VHZqcDSRcj7XNrNeetUGm2egl3EJ+imNTV7LxnZn3QnTe00KPWx297NO03ycLZ7KSQV9Ng8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rasmusvillemoes.dk; spf=pass smtp.mailfrom=rasmusvillemoes.dk; dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b=Rt3Lqz4X; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rasmusvillemoes.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rasmusvillemoes.dk
+	s=arc-20240116; t=1727718329; c=relaxed/simple;
+	bh=OW970fbTbZEClTdWgY0zip4Z6bYYxeUrLXyoiOqtzXQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jjzuxGjew8S09NuAzQfWr57LrtpF4Kb8G/Y4In87R1IO12lchS8m8UfLAzMllcLIqFDF6VqBXh/2fY7sazoknN+dD9L9t2aHch6cUjAJwaJd/0iyxqRZxKlmNxiGKfNiKceh7k7LMsRyq6vMyxQ/QGhzvPp+55WkBgw0HB0ZgFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=swlaiiIf; arc=none smtp.client-ip=95.215.58.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="Rt3Lqz4X"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5398e33155fso2060168e87.3
-        for <linux-hardening@vger.kernel.org>; Mon, 30 Sep 2024 07:00:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google; t=1727704808; x=1728309608; darn=vger.kernel.org;
-        h=mime-version:user-agent:message-id:date:references:in-reply-to
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=GUVJY0IXomTgT+0Kh65kRbP76txfvO137vhXRmIMRvY=;
-        b=Rt3Lqz4XgiL7D7bZ0SIfI8aBV6Eu8GO4FH52yelW3pR6okq/L/tK08af8uCtSp1+0E
-         74lFjpua28iIw8uN6EN4fhKfn1Ab5WahH6FiiFshnUNwCj9KaFh5ORDk4t1RMuj6J5zu
-         Ta3qKuFKLDApCpg7lq/M7n55oOdIXJFd/wdn4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727704808; x=1728309608;
-        h=mime-version:user-agent:message-id:date:references:in-reply-to
-         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GUVJY0IXomTgT+0Kh65kRbP76txfvO137vhXRmIMRvY=;
-        b=HU4WbDcBsywD2sCIPuD7VtUzuwYHZvfMoL4lPy8ywxxoLD0yTGUZZNKvIlqtHRRwsC
-         K2tPsZlqkgUFdCVq7NAQmsevu+AX4sQRcjih09pnDYIrYHwA1nND7KjN11ydytXfy3vm
-         7sboLBzJg8USkBjDDG1/m9GqPSqVEe7dL4qXqcaaQlWk7dwi3dS8ne6ZrlZnKa5H6yKW
-         u0Vkslx5RNwKfd61yrMS+E6Od9vT1afouQjCuAyh7FMuZSl/y7VppafEn9FJS/YIFp/k
-         j26BpEyJbcZHGUXEKlzidlfTzl277fm3ZyCJGs05H35KYP2ILfL4JZQqxq1CsXMUOEth
-         1KUg==
-X-Forwarded-Encrypted: i=1; AJvYcCUyLvMeosWoR05HmkGPT2uYJybSfSxjmpkiAP/2Ww2BtAy2DEmKVETxclxe4Mt0Vvd3GZUTlH/kRHaNq/qS1w4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwpbZAq/CmEYDDKRPj7E1GuQiNJkCxEO9ASLEjB/vzbdrUXJNUf
-	1x/QAXPwlfqXuT5xq23lwUDmFpUgTfpKB14OvYOYzb2MzRvmLqUAVULP56q2TXw=
-X-Google-Smtp-Source: AGHT+IEKI7Weq7GjSrmgYABMSBw8sViHYEBtfUq5wTxEWLE74jtGdVLHWUX/PFqWZwy723EiPNA5iQ==
-X-Received: by 2002:a05:6512:398d:b0:530:daeb:c1d4 with SMTP id 2adb3069b0e04-5389fc35936mr5226141e87.12.1727704807805;
-        Mon, 30 Sep 2024 07:00:07 -0700 (PDT)
-Received: from localhost ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5389fd5df47sm1233224e87.78.2024.09.30.07.00.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Sep 2024 07:00:07 -0700 (PDT)
-From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>,  Jens Axboe
- <axboe@kernel.dk>,  Jonathan Corbet <corbet@lwn.net>,  Ulf Hansson
- <ulf.hansson@linaro.org>,  Rob Herring <robh@kernel.org>,  Krzysztof
- Kozlowski <krzk+dt@kernel.org>,  Conor Dooley <conor+dt@kernel.org>,  Kees
- Cook <kees@kernel.org>,  Andy Shevchenko <andy@kernel.org>,  Daniel Golle
- <daniel@makrotopia.org>,  INAGAKI Hiroshi <musashino.open@gmail.com>,
-  Christian Brauner <brauner@kernel.org>,  Al Viro
- <viro@zeniv.linux.org.uk>,  Li Lingfeng <lilingfeng3@huawei.com>,  Ming
- Lei <ming.lei@redhat.com>,  Christian Heusel <christian@heusel.eu>,
-  linux-block@vger.kernel.org,  linux-doc@vger.kernel.org,
-  linux-kernel@vger.kernel.org,  linux-mmc@vger.kernel.org,
-  devicetree@vger.kernel.org,  linux-hardening@vger.kernel.org,  Miquel
- Raynal <miquel.raynal@bootlin.com>,  Lorenzo Bianconi
- <lorenzo@kernel.org>,  upstream@airoha.com
-Subject: Re: [PATCH v4 5/5] dt-bindings: mmc: Document support for partition
- table in mmc-card
-In-Reply-To: <66fa9810.050a0220.3b136f.bc29@mx.google.com> (Christian
-	Marangi's message of "Mon, 30 Sep 2024 14:22:32 +0200")
-References: <20240930113045.28616-1-ansuelsmth@gmail.com>
-	<20240930113045.28616-6-ansuelsmth@gmail.com>
-	<87y139jpx5.fsf@prevas.dk>
-	<66fa9810.050a0220.3b136f.bc29@mx.google.com>
-Date: Mon, 30 Sep 2024 16:00:10 +0200
-Message-ID: <87ikudjl79.fsf@prevas.dk>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="swlaiiIf"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1727718324;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=ANXDtTTV9RG9Ua0g7qN66Rxbf8kV+/6kDcxaqIEYfh4=;
+	b=swlaiiIfKrln14SR7tkLuj8smc97k6Djl/tHGZqj52gRv9cDmkHg0jKWZQQ+2DyxmHcBr6
+	RxZGJQeoqItybDlU5k+37Wy/Jj2xBCPC23G91iLtFVQE5mDRRADfHIOOrt+xdNxVYjumuQ
+	DL2ylCHvVz84k8IKpRN3kYVCXFCfl3E=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] nfs: Annotate struct pnfs_commit_array with __counted_by()
+Date: Mon, 30 Sep 2024 19:33:54 +0200
+Message-ID: <20240930173352.136553-4-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Christian Marangi <ansuelsmth@gmail.com> writes:
+Add the __counted_by compiler attribute to the flexible array member
+buckets to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
+CONFIG_FORTIFY_SOURCE.
 
-> On Mon, Sep 30, 2024 at 02:18:14PM +0200, Rasmus Villemoes wrote:
->> Christian Marangi <ansuelsmth@gmail.com> writes:
->> 
->> > Document support for defining a partition table in the mmc-card node.
->> >
->> > This is needed if the eMMC doesn't have a partition table written and
->> > the bootloader of the device load data by using absolute offset of the
->> > block device. This is common on embedded device that have eMMC installed
->> > to save space and have non removable block devices.
->> >
->> > If an OF partition table is detected, any partition table written in the
->> > eMMC will be ignored and won't be parsed.
->> >
->> > eMMC provide a generic disk for user data and if supported (JEDEC 4.4+)
->> > also provide two additional disk ("boot0" and "boot1") for special usage
->> > of boot operation where normally is stored the bootloader or boot info.
->> >
->> 
->> This looks quite useful.
->> 
->> Could this be extended to also be applicable to the four "general
->> purpose" hardware partitions, i.e. what is exposed as /dev/mmcblkXgpY ?
->> These would often also contain some fundamental boot data at various
->> offsets but also, as for the boot partitions, often without a regular
->> partition table.
->> 
->> The eMMC spec consistently refers to the boot partitions as "boot
->> partition 1" and "boot partition 2"; the boot0/boot1 naming is kind of a
->> linux'ism. Similarly, the general purpose partitions are _almost_
->> exclusively referred to as 1 through 4, except (at least in my copy),
->> the heading for 7.4.89 says GP_SIZE_MULT_GP0 - GP_SIZE_MULT_GP3, but
->> then goes on to describe GP_SIZE_MULT_1_y through GP_SIZE_MULT_4_y. So I
->> wonder if on the binding level one should use partitions-{boot1,boot2}
->> and, if implemented, partitions-{gp1,gp2,gp3,gp4} ?
->>
->
-> Just to make sure, they are exposed as disk or char device? This is the
-> case of rpmb.
->
+Compile-tested only.
 
-They are block devices, just as the so-called "user area" (the main
-mmcblkX) and the boot partitions.
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+---
+ include/linux/nfs_xdr.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> Adding support for this should be no-brainer as it's just a matter of
-> more case of the strends and more regex case on the binding.
+diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
+index 12d8e47bc5a3..559273a0f16d 100644
+--- a/include/linux/nfs_xdr.h
++++ b/include/linux/nfs_xdr.h
+@@ -1336,7 +1336,7 @@ struct pnfs_commit_array {
+ 	struct rcu_head rcu;
+ 	refcount_t refcount;
+ 	unsigned int nbuckets;
+-	struct pnfs_commit_bucket buckets[];
++	struct pnfs_commit_bucket buckets[] __counted_by(nbuckets);
+ };
+ 
+ struct pnfs_ds_commit_info {
+-- 
+2.46.2
 
-Yes, that's what I thought as well.
-
-> I also notice the conflicting names, to adapt to JEDEC naming I will rename
-> the property to boot1 and boot2.
-
-Thanks,
-Rasmus
