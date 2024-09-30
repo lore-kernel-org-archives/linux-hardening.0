@@ -1,111 +1,184 @@
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D40C42ABE
-	for <linux-hardening@vger.kernel.org>; Sun, 29 Sep 2024 23:16:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F05618E74C;
+	Mon, 30 Sep 2024 11:31:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727651787; cv=none; b=ER6HWjuXvp47XXesFZSGN/bTn+U7KYvddnjWcAwfybOkF7raX5fHWNmTiBfjsD5twQTwW1gntY/G308t9gb4YApbS8CpSazbxsp9BhuVtcwP1ZAoTPVsdP21Y0d4/0LU5VS/NnuWZpRs03rO/8C/J8QUxRaMDlJjlP9OrKfIVmw=
+	t=1727695889; cv=none; b=c9dsf+L40WIuwQi7pZuKud2yxAxRVMHWQakW83nbVe/wnbeMCVRTHJG0Rtwcd4s6bzYHieJKLWthHfVCSFXYGqOoOFYZ9txmr/mGt2QIw/qoCusoFQg+9TMrOAkJzG4X7v+w53lcmsoX/XN7/jLt01ugtyHxA81gxgr0FOYl++M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727651787; c=relaxed/simple;
-	bh=CVMut0vhqxDD8F+O7e+L0P5g6KEti08kYXU2eWNqF6Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mZc8zTRWO94dLyP6Xunoe+gJl87CeSioSa33pxhZIW2YlNeU1A9GdojyXK4YXWHPEnOVlUMDi/cOWUXzYK3aJQJ2I/1q0nyP/Q25BSu6WLnD6ym8FvvmwmINLqIj6hsWhm1aBGYjx9+2mhkrhJmCiOillh5Ky2lkBPXqJUPwz/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu; spf=pass smtp.mailfrom=umich.edu; dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b=KjJ2Cbsn; arc=none smtp.client-ip=209.85.219.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=umich.edu
+	s=arc-20240116; t=1727695889; c=relaxed/simple;
+	bh=Gz5KW5hALie3z9g2VJENb2IHqaJJS+XfH8IpYkcxYQY=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=bYNOX2LRhcBN0nXvBR9neK2c7iuxUKcWdJStRch2dLxRUjYUZZOPh5bSmKwFihrFWpdNzd7nYQxiuRj8pVr0uJNdMLu46uOmxjpVydrW3eGkMY+/tMSqxq8ozCfe9tad0HxQXU3VGEnVu5tSor08b8dSb68IbVQA4UbV3GtMk+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cWAt2evQ; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="KjJ2Cbsn"
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-e25cf3c7278so3249224276.3
-        for <linux-hardening@vger.kernel.org>; Sun, 29 Sep 2024 16:16:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cWAt2evQ"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-37ce8458ae3so894668f8f.1;
+        Mon, 30 Sep 2024 04:31:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03; t=1727651785; x=1728256585; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Olzj/nziXIeAVjOpf48E0PyOdDGI5T4nUGRWBH7zAjM=;
-        b=KjJ2CbsnYo+g8z2sKmSadMFGL89V/lZv7QPAJmbn5I+unXXyMXVQoK8pxtdVY0yyOB
-         knx+pbUbyA9zs2uQAPCIgioRaFfLki3eB7MBkuPl6LMsDTOJM1KbBE1dWlBjqw5EVpSm
-         xuOwEsU6UsbIGnhcaaUpTf92My3Kpr0E/v12sZGq4JTFSaBrRovwuC3rulJuHcI1IAqL
-         FxAbx9xDcTPKtVNCRPh1Wpk7JGv/+OheWKbgQ9/SqcBeqs1Ca4fYGo5p0trKsho6I6xg
-         eZaal7SPq4r2aXYbSg6E6EMG6qkD+/StuzThGdz8b6h6SG8A9L49+jinl1Iv3G0JlnCX
-         aVDg==
+        d=gmail.com; s=20230601; t=1727695886; x=1728300686; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=3YiIs3bHOwFCglJ1XZ2b3oRoZl2j5PvNMKUkUk+rZC0=;
+        b=cWAt2evQBB3goeNESmR75n9KNr0dQ8Rm7DhK6O3oU9FgWULR8f3WYpq1YO6ZbbsqKn
+         JEsk9u48hbq9rnVRG7H5No4E8DPVb8T+0JFneWqnDdxZvbXP2jQv5CadDy/wIKMPcNXu
+         l389UeP/+gw//oF3g5HGXDwqPF8o22uFrmundkJGuWySFrxi8XKd6aT/DtwnB7Ehenrc
+         h435MpMZLBZUiJOGGWKEbV6Z67IELWCcNp+mWwiWH6OQq5aN9bmCbKK5jLwzDDqi3JmI
+         BaE1cSzFWaK5pkDbsnPZfaHqSuDJhXjwyWlB79sG46htibBWlxSu+NzW04dPclWnjqS/
+         8EMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727651785; x=1728256585;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Olzj/nziXIeAVjOpf48E0PyOdDGI5T4nUGRWBH7zAjM=;
-        b=Q4pGKMGsucga/hDM5B0gOPYLyB+fikaiiUbTQXtq8uMxadt386wU0T7aS6ZwpoKmvY
-         HUOaC5xdO6TgOuB3+WZEstwn1cx7OtoOo59uQR8z4r8Lt4wXtG20yRQkJedH82LBrH+U
-         SvadXMDO/xpfFlKnhiUHm8zoMokaJNu3c6lAbY9AEm7sxwr7oW4vmj3opQGoSaqqu0z9
-         bIbzzHd53doptvNhvqPey3dSmRB92nJN/UG3MEV8T/9g4OiVFr8es78P7PkYscuUR40O
-         oZc8JaQsnzrOP8gsyQkN5Ime878s6MXJKp3OIs+iqnsB1uXXfg/j55fp99DCXErbVoQz
-         bozg==
-X-Forwarded-Encrypted: i=1; AJvYcCVBQnxkE8YyyV3TDV58JTCz96T22a4brGb5lat5c1MVS6pdYLgqD15DqdncmqsSTTlo29uPk1eK1B8tALgx/aM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyASYeZnYDYSNM/8XJRnwrGjiG2DhGWIyawoHYjlFjSAPI155pM
-	ZF5qrWEkQU+JE/5d+ck22W1M9iRyMVu7LZIB5kZ0wlRfEE0U3s9GOKEOTltgXnqOrviScwPY0zs
-	D8ht2nM2MPC6ykBSTYrkYTruBcierlJqo/9tmoA==
-X-Google-Smtp-Source: AGHT+IFeKSsL3sBYdIW+H3vNO3HcRRrBNS2Ix2MP2UrQuSmTFembdSNTZqDfQ1oEnyy+S5cX2VXzUAjixtH/QzImxPI=
-X-Received: by 2002:a05:6902:2681:b0:e20:805b:9678 with SMTP id
- 3f1490d57ef6-e2604c97361mr7575035276.48.1727651784843; Sun, 29 Sep 2024
- 16:16:24 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1727695886; x=1728300686;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3YiIs3bHOwFCglJ1XZ2b3oRoZl2j5PvNMKUkUk+rZC0=;
+        b=M1ZIXYIz3NgUcdTKPSH9v9TqVeS4elmwyXYmw22wn/YCxBnYj70uQ8+457G2H6ynBq
+         BbXCAKF3glIlpU0dmM0EwYpE6yxwKdT/GRIvQ+k2Ku56UOvhC/0zDA5+ph2eGwcQaMEm
+         o4Y1N3p0ec6c/Fey7lf4ePuLrnj+Vs46DDOw8j6hWmsyM7s86U6aDSvIf10NmbYJfUYL
+         7v01OAWCACLLu/6wr1P3aJyJ5b9fL6/05YiWap4wOImwRCm+KllCjrnfnJsG1glxN5rV
+         iXAPdjglu6NYWdMbqNwkmJ8Ixi0CrDTFy33ICAtVclgMELS4ohA8/qI+jCFZCJyuQXAC
+         Ge5g==
+X-Forwarded-Encrypted: i=1; AJvYcCUDuem/bf7r6R/+CWNpynymmJjAbqdVbHb8wB4A/zW25sFfT07kJC86aV8H5/B01ewVos/NUDYidSQr@vger.kernel.org, AJvYcCUS1HDjggyRhvL5HCDxa20gl6Ql3ubQwzPynntXo5f1RGi2l7z9vD6ySgFxTbLW5Aywp/OeiE+w9arJb04=@vger.kernel.org, AJvYcCUfix8eqNATeOivlL395nnZ7Oy7Nov0hkibH/Uvai1mLkPdaC//WGsMB/YbrCyUCMXAj2G2Xo4M4iGP@vger.kernel.org, AJvYcCVD78MNkrJw9mbJSeTUkvvcllQ4Rf32h1Jxt5nYK2N69PMKxs8mzj2XTIU53uJS8bO8cPwSohkw8torIInQ@vger.kernel.org, AJvYcCVEigZmhzPGkcCEZxdXr2Xj2lg9IaJqD+SJsUjaK1dUeoI0DwY2Dv+MQSY1qpoZfW9K7VwkqGHSeuftwRHEINwS@vger.kernel.org, AJvYcCXPZfKJnYhFYyOoodMm2sU5U4qZlZkI/Hx8oRDet5k6qFkHc/n/2yGdAXEzB7I2g3RyAdokApv78arS@vger.kernel.org
+X-Gm-Message-State: AOJu0YxlGWf9BtJdQ1g2b6/PSNIYskTdEqfpCj7Dm6sxBCKzv5on5Fvb
+	/HSNlCby+QyWAJmmxi/H8MpzqKo2D4uL9HK6JZLnzTF6AWw139Rx
+X-Google-Smtp-Source: AGHT+IEIsdcRgsyK864MeREGM2feJVQach96Q/sGvKiTG2PTKeFbkb9eida+L8WPLH+9ZNFVIrSS3Q==
+X-Received: by 2002:a5d:5447:0:b0:378:8b84:4de9 with SMTP id ffacd0b85a97d-37cd5a69798mr10450453f8f.12.1727695885496;
+        Mon, 30 Sep 2024 04:31:25 -0700 (PDT)
+Received: from localhost.localdomain (93-34-90-105.ip49.fastwebnet.it. [93.34.90.105])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-37cd57427c6sm8889363f8f.96.2024.09.30.04.31.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Sep 2024 04:31:24 -0700 (PDT)
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: Jens Axboe <axboe@kernel.dk>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Christian Marangi <ansuelsmth@gmail.com>,
+	Daniel Golle <daniel@makrotopia.org>,
+	INAGAKI Hiroshi <musashino.open@gmail.com>,
+	Christian Brauner <brauner@kernel.org>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Li Lingfeng <lilingfeng3@huawei.com>,
+	Ming Lei <ming.lei@redhat.com>,
+	Christian Heusel <christian@heusel.eu>,
+	linux-block@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mmc@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	upstream@airoha.com
+Subject: [PATCH v4 0/5] block: partition table OF support
+Date: Mon, 30 Sep 2024 13:30:07 +0200
+Message-ID: <20240930113045.28616-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240913210031.20802-1-aliceryhl@google.com>
-In-Reply-To: <20240913210031.20802-1-aliceryhl@google.com>
-From: Trevor Gross <tmgross@umich.edu>
-Date: Sun, 29 Sep 2024 19:16:14 -0400
-Message-ID: <CALNs47sMJzeZ0yEF9sc-VO_QEu4=jc3QBa1_fhnhX9gdETYaNA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] rust: harden index manipulation using ownership
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Kees Cook <kees@kernel.org>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
-	Carlos Llamas <cmllamas@google.com>, rust-for-linux@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Sep 13, 2024 at 5:01=E2=80=AFPM Alice Ryhl <aliceryhl@google.com> w=
-rote:
+Hi,
+this is an initial proposal to complete support for manually defining
+partition table.
 
-> +//! Utilities for working with ranges of indices.
-> +
-> +/// A range of indices.
-> +///
-> +/// This utility is useful for ensuring that no index in the range is us=
-ed more than once.
-> +#[derive(Debug)]
-> +pub struct Range {
-> +    offset: usize,
-> +    length: usize,
-> +}
+Some background on this. Many OEM on embedded device (modem, router...)
+are starting to migrate from NOR/NAND flash to eMMC. The reason for this
+is that OEM are starting to require more and more space for the firmware
+and price difference is becoming so little that using eMMC is only benefits
+and no cons.
 
-Would a name like "DataRange" or "CheckedRange" be better here, to
-avoid confusion with core::ops::Range?
+Given these reason, OEM are also using very custom way to provide a
+partition table and doesn't relay on common method like writing a table
+on the eMMC.
 
-> +    /// Use this range of indices.
-> +    ///
-> +    /// This destroys the `Range` object, so these indices cannot be use=
-d again after this call.
-> +    pub fn use_range(self) -> UsedRange {
+One way that is commonly used is to hardcode the partition table and
+pass it to the system via various way (cmdline, special glue driver,
+block2mtd...)
+This way is also used on Android where the partition table
+is passed from the bootloader via cmdline.
 
-Maybe just `.use()`?
+One reason to use this method is to save space on the device and to
+permit more flexibility on partition handling.
 
-> +    /// Assert that this range is aligned properly.
-> +    pub fn assert_aligned(&self, alignment: usize) -> Result<(), RangeEr=
-ror> {
+What this series does is complete support for this feature.
+It's possible to use the cmdline to define a partition table similar
+to how it's done for MTD but this is problematic for a number of device
+where tweaking the cmdline is not possible. This series adds OF support
+to make it possible to define a partition table in the Device Tree.
 
-It would probably be good to warn that this alignment is relative to
-the offset, i.e. if you split a range at an unaligned point then this
-may not be useful.
+We implement a similar schema to the MTD fixed-partition, where we define
+a "label" and a "reg" with "offset" and "size".
 
-This is a pretty cool API idea.
+A new block partition parser is introduced that check if the block device
+have an OF node attached and check if a fixed-partition table is defined.
 
-- Trevor
+If a correct node is found, then partition table is filled. cmdline will
+still have priority to this new parser.
+
+Some block device also implement boot1 and boot2 additional disk. Similar
+to the cmdline parser, these disk can have OF support using the
+"partitions-boot0" and "partitions-boot1" additional node.
+
+It's also completed support for declaring partition as read-only as this
+feature was introduced but never finished in the cmdline parser.
+
+Posting as RFC for any comments or additional checks on OF parser code.
+
+I hope this solution is better accepted as downstream this is becoming
+a real problem with a growing number of strange solution for the simple
+task of providing a fixed partition table.
+
+Changes v4:
+- Fix wrong description and title in Kconfig
+- Validate reg len with addr and size cells
+- Drop offset 0 constraint (not needed)
+- Rework bytes to sector conversion
+- Follow common logic with ignore partitions after state->limit
+- Better handle device_node put
+- Add suggested strends string helper
+Changes v3:
+- Out of RFC
+- Drop partition schema generalization and simplify it
+- Require fixed-partitions compatible to adapt to MTD schema
+- Make label property optional and fallback to node name
+Changes v2:
+- Reference bytes in DT instead of Sector Size
+- Validate offset and size after Sector Size conversion
+- Limit boot0 and boot1 to eMMC and add comments about JEDEC spec
+- Generalize MTD partition schema and introduce block partitions schema
+- Add missing code to actually attach the OF parser to block partition core
+- Add reviewed by tag for read-only patch
+
+Christian Marangi (5):
+  block: add support for defining read-only partitions
+  docs: block: Document support for read-only partition in cmdline part
+  string: add strends() helper to check if a string ends with a suffix
+  block: add support for partition table defined in OF
+  dt-bindings: mmc: Document support for partition table in mmc-card
+
+ Documentation/block/cmdline-partition.rst     |   5 +-
+ .../devicetree/bindings/mmc/mmc-card.yaml     |  52 ++++++
+ block/blk.h                                   |   1 +
+ block/partitions/Kconfig                      |   9 ++
+ block/partitions/Makefile                     |   1 +
+ block/partitions/check.h                      |   1 +
+ block/partitions/cmdline.c                    |   3 +
+ block/partitions/core.c                       |   6 +
+ block/partitions/of.c                         | 151 ++++++++++++++++++
+ include/linux/string.h                        |  13 ++
+ 10 files changed, 241 insertions(+), 1 deletion(-)
+ create mode 100644 block/partitions/of.c
+
+-- 
+2.45.2
+
