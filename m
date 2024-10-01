@@ -1,52 +1,52 @@
-Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
+Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEA314A07
-	for <linux-hardening@vger.kernel.org>; Tue,  1 Oct 2024 00:11:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D89BD2E5
+	for <linux-hardening@vger.kernel.org>; Tue,  1 Oct 2024 00:24:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727741467; cv=none; b=WBxNeV8EeUYOS4QChb32wBmmyaeI94RGh12Eo7m9OjyEebwrcx/7dXy5UU3PK+/REKgxCUKqveuioupgdv+XEAW6NN2+LT66spEpn960+GlpgEKCnBiNbg/pl9U96/K7YrM5bREN7Qv36aztLT7kKaMzu6SRkmmlgYg17kgx70I=
+	t=1727742295; cv=none; b=uNAok6LLig7YV23hHbLqUNny2oHlO9ohJwK0DmENxIYGOsAAxnkLHMrBMxdOiDOc/Fh6zReGrjnXbpDa1tFUZZMFvbt47oS0feUMy7O4pNknhXTopvP7VqG9PcPWFoRSsZgWMS9kENjjCfOUoK3wrVKt+WRoXISgOE7MR65UEe4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727741467; c=relaxed/simple;
-	bh=VPBRk92HDYW10Wejmj93MDvgygR226kHsSR/g2AsYZs=;
+	s=arc-20240116; t=1727742295; c=relaxed/simple;
+	bh=CzCmRVE+9q41GiS39woWM81gxTD6PlkEfZ/hZf27/JQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=a8MRUX/FxJNHywupqQ76ltN/CGuxLFq2TMDsNzZBKXHCCl5UZCycsfpY85LU11oxSE48FIcOh2IcdTZXejhMsRfJ0Ymk075ctQZC1PYhC7wynv6J9sqYLhYu0s+SarTeUk4U1MR/1tOVi3Xgx+66lOi65dLNg5xUeU2QINIlZwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=XmLQFkMj; arc=none smtp.client-ip=209.85.210.53
+	 To:Cc:Content-Type; b=nUVb+627Y5OKdGLiJfarisHRFlOa24sksG6Q6ZMwnq9aOMer1+qWLG9QqfhD2o/E6LAuvIn7CMYMk5e6olkK/NmupMyACzikxybR5FYoM90DQlgGg1aPS5eBVXEhwOJbwwVyWdxaHb5l1MQScYvnSfUApznGAW1jzByRAShIdnU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ODAl5FWT; arc=none smtp.client-ip=209.85.167.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XmLQFkMj"
-Received: by mail-ot1-f53.google.com with SMTP id 46e09a7af769-710ea84098fso221248a34.2
-        for <linux-hardening@vger.kernel.org>; Mon, 30 Sep 2024 17:11:04 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ODAl5FWT"
+Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-3e27a0d7819so451624b6e.0
+        for <linux-hardening@vger.kernel.org>; Mon, 30 Sep 2024 17:24:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1727741464; x=1728346264; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1727742292; x=1728347092; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=rYIhQuQyrgIb71lFMbyvqR0+xGcABu5yqY0eNiGeS9I=;
-        b=XmLQFkMjR0eyWs2kMy39OJ5ZIFHyk8Re4HJNPhmEmYnrHcy/DTc+Bgs79BlsCQDgCV
-         7WmzCcwZ59powP2SeiTJ84PRv9+rYBiYqPeMhBOae7IztFWcLHSZ+8qZ5FirumZKJEQp
-         +MM1wwlwVtbD32TXcbtlvdRNGMsy717e0jx/E=
+        bh=GRjyf8DNLWw+FQRgr1LU0I9O1VNiCFlWqQFNhlCICtY=;
+        b=ODAl5FWTOeiJADDyQnbl1JFEhuibGgVGZl1eL59tEZKXhkFa97mUlJUyeMwcmszjeI
+         G53pHAxYvx60tVOnv34p1vMGiTpsnxg7RxY/g36GGyWLzscTz42rlIIlhnoTrOd4hWN/
+         ygayVcEJTaIHodh7bDW5gbyFp/fl2TDoXtuXI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727741464; x=1728346264;
+        d=1e100.net; s=20230601; t=1727742292; x=1728347092;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=rYIhQuQyrgIb71lFMbyvqR0+xGcABu5yqY0eNiGeS9I=;
-        b=ISA5MId0w7J5iwwYGom3UU21ncEoed8osW//LUzx7WPUwIu+ubFPBN1SBHQZsL/HT+
-         SjoQnt11CXqOnly5emSyeVwC0lBLbekzPqi4X2BNqdztkt+R2n6Zni0tFHGqMDx99biE
-         5mWWsKHAv2LfkIOPFmOv5h1a1xkmzwra1PdLqRUe6UD3k7jD0ysVnibuE+MyniSeaN+f
-         IWuiOKSeTB8ioE9BISqQIeupaxiXpqGAVTvgttSI1lnA8CIbYF+60oRGMgQKCdmDMC0P
-         O1EP3MfvSYzpY7f04xcnnRpB0TqLpzyY5J2FAA9Jh741OzYev8p8j+DEtGNeiGn0Q6Dy
-         yrFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXkaqZnw5zPeteRFGOXfFw+xKGzNumBZhXugqif3+V2/0uweE+D4ckWI9VOcngbYwmNktCKJ4IsJW7LXhOizyg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzT8Bc/oSrNBax1JWghJsp+ODNCeEs0rgyojchDzJAy5ltpV1a2
-	5s+E7j8gKu+KsgH14LXrFtvieo33+/1Pex9bS96TerFYrpTVAlOQLTP4WVL1HCuwR/5+0ZKtBPl
-	4PsAd/4IMVrhY/rMLsubqE7pn2H/wZ7vX7G7w
-X-Google-Smtp-Source: AGHT+IHkTC67kdtitJmTweBhFIvxD1KyNztOpZA9ELwxb4wHBh1nfykCot+x+dbjbIDOdkC/k4Y48MpuCCd5YOMD+vU=
-X-Received: by 2002:a05:6871:610:b0:260:e5e1:2411 with SMTP id
- 586e51a60fabf-2872aa4c7f3mr1565240fac.6.1727741463534; Mon, 30 Sep 2024
- 17:11:03 -0700 (PDT)
+        bh=GRjyf8DNLWw+FQRgr1LU0I9O1VNiCFlWqQFNhlCICtY=;
+        b=wVaWtJPtYYV3OrFKEH2PRLWczd+U21bMhmxj3FUNbes5xW7ytTo84eA2BZwjQeDsIH
+         ZzV6bvIHvE+gay7ULsEcTxPHlXMFRDAmIGJK3OHhZKY2V2myIS951tEidyP+oEE1tYdw
+         M5UHrqScv9wsuk+KBrVLib89BLTePo/y/xCxQM+T4Xbtfp1vzD/QsDBSC2/4QcfuagHN
+         SL2aeG+WCCu7QBVSwvZHdMMUj1bwXStQ1CM9bVPGbWZG/HzNZugB6sGmganDP8rcHFsO
+         wLuR7CNU0YTgs7MJQPzPGGXOXwqqsxKSwaQyHuAo7T8PhygBvhR70jc78hjGdvnmooMB
+         pspw==
+X-Forwarded-Encrypted: i=1; AJvYcCUktPR8qkUvq0FEPUDHrc4tqoA3AMd9aFbybIUJlmS0Tp1qF54W6p8Rx44CYEAhDfHgQerM2YuuvUZvsdwWgxA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwmEXonhdw7Qulsmo4ehVomYUPUD2jFAKexTpyXhmETniEGzSTJ
+	8q90VTkZQhjMZwBOa2/hNcvhVrF9blvL/BzKtnEKBf5LCGSH4mE/1rawAEJMHmrU0fYc9ywOGTf
+	+u0d87iIvnoQ7KO63ZnGcpMBwuw6fMhFuAZEt
+X-Google-Smtp-Source: AGHT+IFCsfySBWujRZtWHM3rWdTyMvEGDNIuSvn9PACkABfd+R8ovsObosCVlzhPRk2UblrlgRoo1AHxGo6PyxdmkeM=
+X-Received: by 2002:a05:6870:3112:b0:27c:df37:9e0c with SMTP id
+ 586e51a60fabf-2872ab08c4dmr1819194fac.8.1727742292181; Mon, 30 Sep 2024
+ 17:24:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -54,510 +54,300 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20240927185211.729207-1-jeffxu@chromium.org> <20240927185211.729207-2-jeffxu@chromium.org>
- <b7864e63-bb74-4ab2-a7ae-48662b27e234@infradead.org>
-In-Reply-To: <b7864e63-bb74-4ab2-a7ae-48662b27e234@infradead.org>
+ <2vkppisejac42wnawjkd7qzyybuycu667yxwmsd4pfk5rwhiqc@gszyo5lu24ge>
+ <CABi2SkU62r8bLCeitzVwAW-r7L8-Lfmy8Cp73DE2HaeLzUXVXQ@mail.gmail.com> <2q6hzkvep2g3z6m2jrwbw2j3sbydf6tgj2obwd6hgmm7xzgsg3@ddr5ghmsia5k>
+In-Reply-To: <2q6hzkvep2g3z6m2jrwbw2j3sbydf6tgj2obwd6hgmm7xzgsg3@ddr5ghmsia5k>
 From: Jeff Xu <jeffxu@chromium.org>
-Date: Mon, 30 Sep 2024 17:10:50 -0700
-Message-ID: <CABi2SkUrvCcfydP9ejbeCxNms4BcgbhjOHgmvQyPBa_kgdUMPw@mail.gmail.com>
+Date: Mon, 30 Sep 2024 17:24:39 -0700
+Message-ID: <CABi2SkUUdbzgGkfr3YjvfUywkC7ciumwMPdLsCCHscr8uJPUeQ@mail.gmail.com>
 Subject: Re: [PATCH v1 1/1] mseal: update mseal.rst
-To: Randy Dunlap <rdunlap@infradead.org>
+To: Pedro Falcato <pedro.falcato@gmail.com>
 Cc: akpm@linux-foundation.org, keescook@chromium.org, corbet@lwn.net, 
 	jorgelo@chromium.org, groeck@chromium.org, linux-kernel@vger.kernel.org, 
 	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, jannh@google.com, 
-	sroettger@google.com, pedro.falcato@gmail.com, 
-	linux-hardening@vger.kernel.org, willy@infradead.org, 
+	sroettger@google.com, linux-hardening@vger.kernel.org, willy@infradead.org, 
 	gregkh@linuxfoundation.org, torvalds@linux-foundation.org, 
 	deraadt@openbsd.org, usama.anjum@collabora.com, surenb@google.com, 
-	merimus@google.com, lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, 
-	enh@google.com
+	merimus@google.com, rdunlap@infradead.org, lorenzo.stoakes@oracle.com, 
+	Liam.Howlett@oracle.com, enh@google.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Randy,
+Hi Pedro
 
-On Sat, Sep 28, 2024 at 11:28=E2=80=AFAM Randy Dunlap <rdunlap@infradead.or=
-g> wrote:
+On Sat, Sep 28, 2024 at 6:43=E2=80=AFAM Pedro Falcato <pedro.falcato@gmail.=
+com> wrote:
 >
->
->
-> On 9/27/24 11:52 AM, jeffxu@chromium.org wrote:
-> > From: Jeff Xu <jeffxu@chromium.org>
+> On Fri, Sep 27, 2024 at 06:29:30PM GMT, Jeff Xu wrote:
+> > Hi Pedro,
 > >
-> > Update doc after in-loop change: mprotect/madvise can have
-> > partially updated and munmap is atomic.
-> >
-> > Fix indentation and clarify some sections to improve readability.
-> >
-> > Signed-off-by: Jeff Xu <jeffxu@chromium.org>
-> > ---
-> >  Documentation/userspace-api/mseal.rst | 290 ++++++++++++--------------
-> >  1 file changed, 136 insertions(+), 154 deletions(-)
-> >
-> > diff --git a/Documentation/userspace-api/mseal.rst b/Documentation/user=
-space-api/mseal.rst
-> > index 4132eec995a3..68986084e191 100644
-> > --- a/Documentation/userspace-api/mseal.rst
-> > +++ b/Documentation/userspace-api/mseal.rst
-> > @@ -23,177 +23,159 @@ applications can additionally seal security criti=
-cal data at runtime.
-> >  A similar feature already exists in the XNU kernel with the
-> >  VM_FLAGS_PERMANENT flag [1] and on OpenBSD with the mimmutable syscall=
- [2].
-> >
-> > -User API
-> > -=3D=3D=3D=3D=3D=3D=3D=3D
-> > -mseal()
-> > ------------
-> > -The mseal() syscall has the following signature:
-> > -
-> > -``int mseal(void addr, size_t len, unsigned long flags)``
-> > -
-> > -**addr/len**: virtual memory address range.
-> > -
-> > -The address range set by ``addr``/``len`` must meet:
-> > -   - The start address must be in an allocated VMA.
-> > -   - The start address must be page aligned.
-> > -   - The end address (``addr`` + ``len``) must be in an allocated VMA.
-> > -   - no gap (unallocated memory) between start and end address.
-> > -
-> > -The ``len`` will be paged aligned implicitly by the kernel.
-> > -
-> > -**flags**: reserved for future use.
-> > -
-> > -**return values**:
-> > -
-> > -- ``0``: Success.
-> > -
-> > -- ``-EINVAL``:
-> > -    - Invalid input ``flags``.
-> > -    - The start address (``addr``) is not page aligned.
-> > -    - Address range (``addr`` + ``len``) overflow.
-> > -
-> > -- ``-ENOMEM``:
-> > -    - The start address (``addr``) is not allocated.
-> > -    - The end address (``addr`` + ``len``) is not allocated.
-> > -    - A gap (unallocated memory) between start and end address.
-> > -
-> > -- ``-EPERM``:
-> > -    - sealing is supported only on 64-bit CPUs, 32-bit is not supporte=
-d.
-> > -
-> > -- For above error cases, users can expect the given memory range is
-> > -  unmodified, i.e. no partial update.
-> > -
-> > -- There might be other internal errors/cases not listed here, e.g.
-> > -  error during merging/splitting VMAs, or the process reaching the max
-> > -  number of supported VMAs. In those cases, partial updates to the giv=
-en
-> > -  memory range could happen. However, those cases should be rare.
-> > -
-> > -**Blocked operations after sealing**:
-> > -    Unmapping, moving to another location, and shrinking the size,
-> > -    via munmap() and mremap(), can leave an empty space, therefore
-> > -    can be replaced with a VMA with a new set of attributes.
-> > -
-> > -    Moving or expanding a different VMA into the current location,
-> > -    via mremap().
-> > -
-> > -    Modifying a VMA via mmap(MAP_FIXED).
-> > -
-> > -    Size expansion, via mremap(), does not appear to pose any
-> > -    specific risks to sealed VMAs. It is included anyway because
-> > -    the use case is unclear. In any case, users can rely on
-> > -    merging to expand a sealed VMA.
-> > -
-> > -    mprotect() and pkey_mprotect().
-> > -
-> > -    Some destructive madvice() behaviors (e.g. MADV_DONTNEED)
-> > -    for anonymous memory, when users don't have write permission to th=
-e
-> > -    memory. Those behaviors can alter region contents by discarding pa=
-ges,
-> > -    effectively a memset(0) for anonymous memory.
-> > -
-> > -    Kernel will return -EPERM for blocked operations.
-> > -
-> > -    For blocked operations, one can expect the given address is unmodi=
-fied,
-> > -    i.e. no partial update. Note, this is different from existing mm
-> > -    system call behaviors, where partial updates are made till an erro=
-r is
-> > -    found and returned to userspace. To give an example:
-> > -
-> > -    Assume following code sequence:
-> > -
-> > -    - ptr =3D mmap(null, 8192, PROT_NONE);
-> > -    - munmap(ptr + 4096, 4096);
-> > -    - ret1 =3D mprotect(ptr, 8192, PROT_READ);
-> > -    - mseal(ptr, 4096);
-> > -    - ret2 =3D mprotect(ptr, 8192, PROT_NONE);
-> > -
-> > -    ret1 will be -ENOMEM, the page from ptr is updated to PROT_READ.
-> > -
-> > -    ret2 will be -EPERM, the page remains to be PROT_READ.
-> > -
-> > -**Note**:
-> > -
-> > -- mseal() only works on 64-bit CPUs, not 32-bit CPU.
-> > -
-> > -- users can call mseal() multiple times, mseal() on an already sealed =
-memory
-> > -  is a no-action (not error).
-> > -
-> > -- munseal() is not supported.
-> > +SYSCALL
-> > +=3D=3D=3D=3D=3D=3D=3D
-> > +mseal syscall signature
-> > +-----------------------
-> > +   **int** mseal(**void \*** addr, **size_t** len, **unsigned long** f=
-lags)
->
-> ugh. totally unreadable for people who just look at .rst files.
->
-Right!
-The ** (bold) in rst collides with a pointer in c. it does make it
-unreadable. I will  remove them.
-
-> Does other documentation go to this extreme?
->
-> > +
-> > +   **addr**/**len**: virtual memory address range.
-> > +      The address range set by **addr**/**len** must meet:
-> > +         - The start address must be in an allocated VMA.
-> > +         - The start address must be page aligned.
-> > +         - The end address (**addr** + **len**) must be in an allocate=
-d VMA.
-> > +         - no gap (unallocated memory) between start and end address.
-> > +
-> > +      The ``len`` will be paged aligned implicitly by the kernel.
-> > +
-> > +   **flags**: reserved for future use.
-> > +
-> > +   **Return values**:
-> > +      - **0**: Success.
-> > +      - **-EINVAL**:
-> > +         * Invalid input ``flags``.
-> > +         * The start address (``addr``) is not page aligned.
-> > +         * Address range (``addr`` + ``len``) overflow.
-> > +      - **-ENOMEM**:
-> > +         * The start address (``addr``) is not allocated.
-> > +         * The end address (``addr`` + ``len``) is not allocated.
-> > +         * A gap (unallocated memory) between start and end address.
-> > +      - **-EPERM**:
-> > +         * sealing is supported only on 64-bit CPUs, 32-bit is not sup=
-ported.
-> > +
-> > +   **Note about error return**:
-> > +      - For above error cases, users can expect the given memory range=
- is
-> > +        unmodified, i.e. no partial update.
-> > +      - There might be other internal errors/cases not listed here, e.=
-g.
-> > +        error during merging/splitting VMAs, or the process reaching t=
-he max
-> > +        number of supported VMAs. In those cases, partial updates to t=
-he given
-> > +        memory range could happen. However, those cases should be rare=
-.
-> > +
-> > +   **Architecture support**:
-> > +      mseal only works on 64-bit CPUs, not 32-bit CPU.
->
->                                                      CPUs.
->
-Done, thanks.
-
-> > +
-> > +   **Idempotent**:
-> > +      users can call mseal multiple times, mseal on an already sealed =
-memory
->
->                                        times. mseal
->
-Done, thanks.
-
-> > +      is a no-action (not error).
-> > +
-> > +   **no munseal**
-> > +      Once mapping is sealed, it can't be unsealed. kernel should neve=
-r
-> > +      have munseal, this is consistent with other sealing feature, e.g=
-.
-> > +      F_SEAL_SEAL for file.
-> > +
-> > +Blocked mm syscall for sealed mapping
-> > +-------------------------------------
-> > +   It might be imporant to note: **once the mapping is sealed, it will
->
->                   important
->
-Done, thanks.
-
-> > +   stay in the process's memory till the process terminates**.
-> > +
-> > +   Example::
-> > +
-> > +         *ptr =3D mmap(0, 4096, PROT_READ, MAP_ANONYMOUS | MAP_PRIVATE=
-, 0, 0);
-> > +         rc =3D mseal(ptr, 4096, 0);
-> > +         /* munmap will fail */
-> > +         rc =3D munmap(ptr, 4096);
-> > +         assert(rc < 0);
-> > +
-> > +   Blocked mm syscall:
-> > +      - munmap
-> > +      - mmap
-> > +      - mremap
-> > +      - mprotect and pkey_mprotect
-> > +      - some destructive madvise behaviors: MADV_DONTNEED, MADV_FREE,
-> > +        MADV_DONTNEED_LOCKED, MADV_FREE, MADV_DONTFORK, MADV_WIPEONFOR=
-K
-> > +
-> > +   The first set of syscall to block is munmap, mremap, mmap. They can
-> > +   either leave an empty space in the address space, therefore allow
-> > +   replacement with a new mapping with new set of attributes, or can
-> > +   overwrite the existing mapping with another mapping.
-> > +
-> > +   mprotect and pkey_mprotect are blocked because they changes the
-> > +   protection bits (rwx) of the mapping.
->
-> preferably            (RWX)
->
-Done.
-
-> > +
-> > +   Some destructive madvice behaviors (MADV_DONTNEED, MADV_FREE,
->
->                        madvise
->
-Done.
-
-> > +   MADV_DONTNEED_LOCKED, MADV_FREE, MADV_DONTFORK, MADV_WIPEONFORK)
-> > +   for anonymous memory, when users don't have write permission to the
-> > +   memory. Those behaviors can alter region contents by discarding pag=
-es,
-> > +   effectively a memset(0) for anonymous memory.
-> > +
-> > +   Kernel will return -EPERM for blocked syscalls.
-> > +
-> > +   When blocked syscall return -EPERM due to sealing, the memory regio=
-ns may or may not be changed, depends on the syscall being blocked:
-> > +      - munmap: munmap is atomic. If one of VMAs in the given range is
-> > +        sealed, none of VMAs are updated.
-> > +      - mprotect, pkey_mprotect, madvise: partial update might happen,=
- e.g.
-> > +        when mprotect over multiple VMAs, mprotect might update the be=
-ginning
-> > +        VMAs before reaching the sealed VMA and return -EPERM.
-> > +      - mmap and mremap: undefined behavior.
-> >
-> >  Use cases:
-> >  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> >  - glibc:
-> >    The dynamic linker, during loading ELF executables, can apply sealin=
-g to
-> > -  non-writable memory segments.
-> > +  mapping segments.
-> >
-> >  - Chrome browser: protect some security sensitive data-structures.
->
->                                                      data structures.
->
-Done. Thanks.
-
-> >
-> > -Notes on which memory to seal:
-> > -=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D
-> > -
-> > -It might be important to note that sealing changes the lifetime of a m=
-apping,
-> > -i.e. the sealed mapping won=E2=80=99t be unmapped till the process ter=
-minates or the
-> > -exec system call is invoked. Applications can apply sealing to any vir=
-tual
-> > -memory region from userspace, but it is crucial to thoroughly analyze =
-the
-> > -mapping's lifetime prior to apply the sealing.
-> > +Don't use mseal on:
->
-> Drop the ':'. Headings should not uses trailing colons.
-> (throughout this file)
->
-Done everywhere. Thanks.
-
-> Maybe change the heading to "When not to use mseal".
->
-> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > +Applications can apply sealing to any virtual memory region from users=
-pace,
-> > +but it is *crucial to thoroughly analyze the mapping's lifetime* prior=
- to
-> > +apply the sealing. This is because the sealed mapping *won=E2=80=99t b=
-e unmapped*
-> > +till the process terminates or the exec system call is invoked.
->
-> s/till/until/ preferably.
->
-ok.
-
-> >
-> >  For example:
-> > +   - aio/shm
-> > +     aio/shm can call mmap and  munmap on behalf of userspace, e.g.
-> > +     ksys_shmdt() in shm.c. The lifetime of those mapping are not tied=
- to
-> > +     the lifetime of the process. If those memories are sealed from us=
-erspace,
-> > +     then munmap will fail, causing leaks in VMA address space during =
-the
-> > +     lifetime of the process.
-> > +
-> > +   - ptr allocated by malloc (heap)
-> > +     Don't use mseal on the memory ptr return from malloc().
-> > +     malloc() is implemented by allocator, e.g. by glibc. Heap manager=
- might
-> > +     allocate a ptr from brk or mapping created by mmap.
-> > +     If app calls mseal on ptr returned from malloc(), this can affect=
- the heap
->
->         If an app calls mseal on a ptr
->
-Done. thanks
-
->
-> > +     manager's ability to manage the mappings, the outcome is non-dete=
-rministic.
->
->                                         mappings; the outcome
->
-Done, thanks.
-
-> > +     Example::
-> > +
-> > +        ptr =3D malloc(size);
-> > +        /* don't call mseal on ptr return from malloc. */
-> > +        mseal(ptr, size);
-> > +        /* free will success, allocator can't shrink heap lower than p=
-tr */
-> > +        free(ptr);
-> > +
-> > +mseal doesn't block:
-> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > +In a nutshell, mseal blocks certain mm syscall from modifying some of =
-VMA's
-> > +attributes, such as protection bits (rwx). Sealed mappings doesn't mea=
-n the
->
-> preferably                             (RWX).
->
-Done, thanks.
-
-> > +memory is immutable.
-> >
-> > -- aio/shm
-> > -
-> > -  aio/shm can call mmap()/munmap() on behalf of userspace, e.g. ksys_s=
-hmdt() in
-> > -  shm.c. The lifetime of those mapping are not tied to the lifetime of=
+> > On Fri, Sep 27, 2024 at 3:59=E2=80=AFPM Pedro Falcato <pedro.falcato@gm=
+ail.com> wrote:
+> <snip>
+> > > > +
+> > > > +   Blocked mm syscall:
+> > > > +      - munmap
+> > > > +      - mmap
+> > > > +      - mremap
+> > > > +      - mprotect and pkey_mprotect
+> > > > +      - some destructive madvise behaviors: MADV_DONTNEED, MADV_FR=
+EE,
+> > > > +        MADV_DONTNEED_LOCKED, MADV_FREE, MADV_DONTFORK, MADV_WIPEO=
+NFORK
+> > > > +
+> > > > +   The first set of syscall to block is munmap, mremap, mmap. They=
+ can
+> > > > +   either leave an empty space in the address space, therefore all=
+ow
+> > > > +   replacement with a new mapping with new set of attributes, or c=
+an
+> > > > +   overwrite the existing mapping with another mapping.
+> > > > +
+> > > > +   mprotect and pkey_mprotect are blocked because they changes the
+> > >                                                           change
+> > > > +   protection bits (rwx) of the mapping.
+> > > > +
+> > > > +   Some destructive madvice behaviors (MADV_DONTNEED, MADV_FREE,
+> > > > +   MADV_DONTNEED_LOCKED, MADV_FREE, MADV_DONTFORK, MADV_WIPEONFORK=
+)
+> > > > +   for anonymous memory, when users don't have write permission to=
  the
+> > > > +   memory. Those behaviors can alter region contents by discarding=
+ pages,
+> > > > +   effectively a memset(0) for anonymous memory.
+> > >
+> > > What's the difference between anonymous memory and MAP_PRIVATE | MAP_=
+FILE?
+> > >
+> > MAP_FILE seems not used ?
+> > anonymous mapping is the mapping that is not backed by a file.
 >
->                 lifetimes
-OK.
-> ?
+> MAP_FILE is actually defined as 0 usually :) But I meant file-backed priv=
+ate mappings.
 >
-> > -  process. If those memories are sealed from userspace, then munmap() =
-will fail,
-> > -  causing leaks in VMA address space during the lifetime of the proces=
+OK, we are on the same page for this.
+
+> > > The feature now, as is (as far as I understand!) will allow you to do=
+ things like MADV_DONTNEED
+> > > on a read-only file mapping. e.g .text. This is obviously wrong?
+> > >
+> > When a MADV_DONTNEED is called, pages will be freed, on file-backed
+> > mapping,  if the process reads from the mapping again, the content
+> > will be retrieved from the file.
+> >
+>
+> Sorry, it was late and I gave you a crap example. Consider this:
+> a file-backed MAP_PRIVATE vma is marked RW. I write to it, then RO-it + m=
+seal.
+>
+> The attacker later gets me to MADV_DONTNEED that VMA. You've just lost da=
+ta.
+>
+> The big problem here is with anon _pages_, not anon vmas.
+>
+That depends on the app's threat-model. What you described seems to be
+a case below
+1. The file is rw
+2. The process opens the file as rw
+3. the process mmap the fd as rw
+4 The process writes the memory, and the change isn't flushed to the
+file on disk.
+5 The process  changes the mapping to RO
+6. The process seals the mapping
+7. The process is called MADV_DONTNEED , and because the change isn't
+flush to file on disk, so it loses the change, (retrieve the old data
+from disk when read from the mapped address later)
+
+I'm not sure this is a valid use case, the problem here seems to be
+that the app needs to flush the change from memory to disk if the
+expectation is writing is permanent.
+
+In any case, the mseal currently just blocks a subset of madvise, those
+we know with a security implication.  If there is something mseal needs
+to block additionally, one can always extend it by using the "flags" field.
+I do think the bar is high though, e.g. a valid use case to support that.
+
+> > For anonymous mapping, since  there is no file backup, if process
+> > reads from the mapping, 0 is filled, hence equivalent to memset(0)
+> >
+> > > > +
+> > > > +   Kernel will return -EPERM for blocked syscalls.
+> > > > +
+> > > > +   When blocked syscall return -EPERM due to sealing, the memory r=
+egions may or may not be changed, depends on the syscall being blocked:
+> > > > +      - munmap: munmap is atomic. If one of VMAs in the given rang=
+e is
+> > > > +        sealed, none of VMAs are updated.
+> > > > +      - mprotect, pkey_mprotect, madvise: partial update might hap=
+pen, e.g.
+> > > > +        when mprotect over multiple VMAs, mprotect might update th=
+e beginning
+> > > > +        VMAs before reaching the sealed VMA and return -EPERM.
+> > > > +      - mmap and mremap: undefined behavior.
+> > >
+> > > mmap and mremap are actually not undefined as they use munmap semanti=
+cs for their unmapping.
+> > > Whether this is something we'd want to document, I don't know honestl=
+y (nor do I think is ever written down in POSIX?)
+> > >
+> > I'm not sure if I can declare mmap/mremap as atomic.
+> >
+> > Although, it might be possible to achieve this due to munmap being
+> > atomic. I'm not sure  as I didn't test this. Would you like to find
+> > out ?
+>
+> I just told you they use munmap under the hood. It's just that the requir=
+ement isn't actually
+> written down anywhere.
+>
+I knew about mmap/mremap calling munmap. I don't know what exactly you
+are asking though. In your patch and its discussion, you did not mention
+the mmap/mremap (for sealing) is or should be atomic.
+
+My point is: since there isn't a clear statement from your patch descriptio=
+n
+or POSIX, that mremap/mmap is atomic,  and I haven't tested it myself with
+regards to sealing, let's  leave them as "undefined" for now. (I could get =
+back
+to this later after the merging window)
+
+> >
+> > > >
+> > > >  Use cases:
+> > > >  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > > >  - glibc:
+> > > >    The dynamic linker, during loading ELF executables, can apply se=
+aling to
+> > > > -  non-writable memory segments.
+> > > > +  mapping segments.
+> > > >
+> > > >  - Chrome browser: protect some security sensitive data-structures.
+> > > >
+> > > > -Notes on which memory to seal:
+> > > > -=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D
+> > > > -
+> > > > -It might be important to note that sealing changes the lifetime of=
+ a mapping,
+> > > > -i.e. the sealed mapping won=E2=80=99t be unmapped till the process=
+ terminates or the
+> > > > -exec system call is invoked. Applications can apply sealing to any=
+ virtual
+> > > > -memory region from userspace, but it is crucial to thoroughly anal=
+yze the
+> > > > -mapping's lifetime prior to apply the sealing.
+> > > > +Don't use mseal on:
+> > > > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > > > +Applications can apply sealing to any virtual memory region from u=
+serspace,
+> > > > +but it is *crucial to thoroughly analyze the mapping's lifetime* p=
+rior to
+> > > > +apply the sealing. This is because the sealed mapping *won=E2=80=
+=99t be unmapped*
+> > > > +till the process terminates or the exec system call is invoked.
+> > >
+> > > There should probably be a nice disclaimer as to how most people don'=
+t need this or shouldn't use this.
+> > > At least in its current form.
+> > >
+> > Ya, the mseal is not for most apps. I mention the malloc example to str=
+ess that.
+> >
+> > > <snip>
+> > > > -
+> > > > -
+> > > > -Additional notes:
+> > > > -=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > > >  As Jann Horn pointed out in [3], there are still a few ways to wri=
+te
+> > > > -to RO memory, which is, in a way, by design. Those cases are not c=
+overed
+> > > > -by mseal(). If applications want to block such cases, sandbox tool=
+s (such as
+> > > > -seccomp, LSM, etc) might be considered.
+> > > > +to RO memory, which is, in a way, by design. And those could be bl=
+ocked
+> > > > +by different security measures.
+> > > >
+> > > >  Those cases are:
+> > > > -
+> > > > -- Write to read-only memory through /proc/self/mem interface.
+> > > > -- Write to read-only memory through ptrace (such as PTRACE_POKETEX=
+T).
+> > > > -- userfaultfd.
+> > > > +   - Write to read-only memory through /proc/self/mem interface (F=
+OLL_FORCE).
+> > > > +   - Write to read-only memory through ptrace (such as PTRACE_POKE=
+TEXT).
+> > > > +   - userfaultfd.
+> > >
+> > > I don't understand how this is not a problem, but MADV_DONTNEED is.
+> > > To me it seems that what we have now is completely useless, because y=
+ou can trivially
+> > > bypass it using /proc/self/mem, which is enabled on most Linux system=
 s.
-> > -
-> > -- Brk (heap)
-> > -
-> > -  Currently, userspace applications can seal parts of the heap by call=
-ing
-> > -  malloc() and mseal().
-> > -  let's assume following calls from user space:
-> > -
-> > -  - ptr =3D malloc(size);
-> > -  - mprotect(ptr, size, RO);
-> > -  - mseal(ptr, size);
-> > -  - free(ptr);
-> > -
-> > -  Technically, before mseal() is added, the user can change the protec=
-tion of
-> > -  the heap by calling mprotect(RO). As long as the user changes the pr=
-otection
-> > -  back to RW before free(), the memory range can be reused.
-> > -
-> > -  Adding mseal() into the picture, however, the heap is then sealed pa=
-rtially,
-> > -  the user can still free it, but the memory remains to be RO. If the =
-address
-> > -  is re-used by the heap manager for another malloc, the process might=
- crash
-> > -  soon after. Therefore, it is important not to apply sealing to any m=
-emory
-> > -  that might get recycled.
-> > -
-> > -  Furthermore, even if the application never calls the free() for the =
-ptr,
-> > -  the heap manager may invoke the brk system call to shrink the size o=
-f the
-> > -  heap. In the kernel, the brk-shrink will call munmap(). Consequently=
-,
-> > -  depending on the location of the ptr, the outcome of brk-shrink is
-> > -  nondeterministic.
-> > -
-> > -
-> > -Additional notes:
-> > -=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> >  As Jann Horn pointed out in [3], there are still a few ways to write
-> > -to RO memory, which is, in a way, by design. Those cases are not cover=
-ed
-> > -by mseal(). If applications want to block such cases, sandbox tools (s=
-uch as
-> > -seccomp, LSM, etc) might be considered.
-> > +to RO memory, which is, in a way, by design. And those could be blocke=
-d
-> > +by different security measures.
+> > >
+> > > Before you mention ChromeOS or Chrome, I don't care. Kernel features =
+aren't designed
+> > > for Chrome. They need to work with every other distro and application=
+ as well.
+> > >
+> > > It seems to me that the most sensible change is blocking/somehow dist=
+inguishing between /proc/self/mem and
+> > > /proc/<pid>/mem (some other process) and ptrace. As in blocking /proc=
+/self/mem but allowing the other FOLL_FORCE's
+> > > as the traditional UNIX permission model allows.
+> > >
+> > IMO, it is a matter of  Divide and Conquer.  In a nutshell, mseal only
+> > prevents VMA's certain attributes (such as prot bits) from changing.
+> > It doesn't mean to say that sealed RO memory is immutable. To achieve
+> > that, the system needs to apply multiple security measures.
+>
+> No, it's a matter of providing a sane API without tons of edgecases. Maki=
+ng a VMA immutable should make a VMA
+> immutable, and not require you to provide a crap ton of other mechanisms =
+in order to truly make it immutable.
+> If I call mseal, I expect it to be sealed, not "sealed except when it's n=
+ot, lol".
+>
+> You haven't been able to quite specify what semantics are desirable out o=
+f this whole thing. Making
+> prot flags "immutable" is completely worthless if you can simply write to=
+ a random pseudofile and
+> have it bypass the whole thing (where a write to /proc/self/mem is semant=
+ically equivalent to
+> mprotect RW + write + mprotect RO). Making the vma immutable is completel=
+y worthless
+> if I can simply wipe anon pages. There has to be some end goal here (make=
+ contents immutable?
+> make sure VMA protection can't be changed? both?) which seems to be uncle=
+ar from the kernel mmap-side.
+>
+> If you insist on providing half-baked APIs (and waving off any concerns),=
+ I'm sure this would've been better
+> implemented as a random bpf program for chrome. Maybe we could revert thi=
+s whole thing and give eBPF one
+> or two bits of vma flags for their own uses :)
+>
 > >
-> >  Those cases are:
-> > -
-> > -- Write to read-only memory through /proc/self/mem interface.
-> > -- Write to read-only memory through ptrace (such as PTRACE_POKETEXT).
-> > -- userfaultfd.
-> > +   - Write to read-only memory through /proc/self/mem interface (FOLL_=
-FORCE).
-> > +   - Write to read-only memory through ptrace (such as PTRACE_POKETEXT=
-).
-> > +   - userfaultfd.
-> >
-> >  The idea that inspired this patch comes from Stephen R=C3=B6ttger=E2=
-=80=99s work in V8
-> >  CFI [4]. Chrome browser in ChromeOS will be the first user of this API=
-.
-> >
-> >  Reference:
-> >  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > -[1] https://github.com/apple-oss-distributions/xnu/blob/1031c584a5e37a=
-ff177559b9f69dbd3c8c3fd30a/osfmk/mach/vm_statistics.h#L274
-> > -
-> > -[2] https://man.openbsd.org/mimmutable.2
-> > -
-> > -[3] https://lore.kernel.org/lkml/CAG48ez3ShUYey+ZAFsU2i1RpQn0a5eOs2hzQ=
-426FkcgnfUGLvA@mail.gmail.com
-> > -
-> > -[4] https://docs.google.com/document/d/1O2jwK4dxI3nRcOJuPYkonhTkNQfbmw=
-dvxQMyXgeaRHo/edit#heading=3Dh.bvaojj9fu6hc
-> > +- [1] https://github.com/apple-oss-distributions/xnu/blob/1031c584a5e3=
-7aff177559b9f69dbd3c8c3fd30a/osfmk/mach/vm_statistics.h#L274
-> > +- [2] https://man.openbsd.org/mimmutable.2
-> > +- [3] https://lore.kernel.org/lkml/CAG48ez3ShUYey+ZAFsU2i1RpQn0a5eOs2h=
-zQ426FkcgnfUGLvA@mail.gmail.com
-> > +- [4] https://docs.google.com/document/d/1O2jwK4dxI3nRcOJuPYkonhTkNQfb=
-mwdvxQMyXgeaRHo/edit#heading=3Dh.bvaojj9fu6hc
+> > For writing to /proc/pid/mem, it can be disabled via [1].  SELINUX and
+> > Landlock can achieve the same protection too.
+>
+> I'm not blocking /proc/pid/mem, and my distro doesn't run any of those se=
+curity modules :/
+>
+It is a choice you can make :-)
 
-I will update and send v2.
+Linux is diverse, from desktop to mobile to cloud hosting to embedded syste=
+ms.
+For a safe-by-default system, some of them might like those security
+enhancements.
 
-Appreciate the review comments.
+Thanks
 -Jeff
+
+
+-Jeff
+
+> --
+> Pedro
