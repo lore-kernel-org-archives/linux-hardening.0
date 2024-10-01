@@ -1,189 +1,142 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A12619D06E
-	for <linux-hardening@vger.kernel.org>; Tue,  1 Oct 2024 14:28:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 832811C6F61;
+	Tue,  1 Oct 2024 14:34:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727792930; cv=none; b=OYK7If/quyjHo7nctiZNgSceTzhB/HCNj4k9khnjeUXKjf/xIpxs4ypvgdF8e/0LPL6LqTtVQVUxI7uIdAhXjYiyQDBAJIonU8sRWxXLC0fmeLMvEWK4ZvearYREL0oIhR7SB+G562cX/hge+9SxJ5c9JKoKKsd9BwYzGAIQOV8=
+	t=1727793269; cv=none; b=KTYUFCv5RRlNo2QHwex2XhFYXJ53tY7Uuh4ajM/ACbDj1yHoVvfoCmnHvRv/exEKNYlvZrssDfcMLaJ0jMKqZBnozI7X3KhnNQVWCIV4X/fjJjeOL5ARhuhnFtfMiG1+uHsuX+JOvzhtlPIUpUUi53I52RAIPl/iQ/K723QbjLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727792930; c=relaxed/simple;
-	bh=F/YLFP6/0c6drwukWFfkh31m8jzGAO9Mmmtzh7lMT/g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SWeOptpQYhCI4+oAzcmqJsPTyqydbk7bdSHSkFFYaCSX6Z+R/cq8BMm2uqhhUwOnOSD/3HC90kwPdlksdqCf7PuF+Yd1YlKhlQ8p5saBbX+KLUueMRw74pNp4RPPaaquj83e61gRaaI3BoKCu+NerH0XmDgC5gNj1rK0/chirI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 8CA3E1C0003;
-	Tue,  1 Oct 2024 14:28:44 +0000 (UTC)
-Message-ID: <eb7354f6-98bd-45c6-a616-733637848a14@ghiti.fr>
-Date: Tue, 1 Oct 2024 16:28:43 +0200
+	s=arc-20240116; t=1727793269; c=relaxed/simple;
+	bh=MJJbugmM7odwoRbXpKB1hsqqSBdhArseeVwNZ793jek=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Tw7gA5M7A68s/6SHAJNl4BEVBZ6N3/lB7kRN1fKIXx2bEh1RZIyYBu+d5ZCCioHRvZYSd6udObCM5E+3e/ohdkMTMEhtKtWOupla32PWt5lHbHyEZqyVzR0CgdsyA+Htht1wq1IXDqxfvZXgF1M8PZNpGjHVDkA8IB9eqStTrKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KLe3oRNz; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KLe3oRNz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1727793267; x=1759329267;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=MJJbugmM7odwoRbXpKB1hsqqSBdhArseeVwNZ793jek=;
+  b=KLe3oRNzuFPj3ibEJJxp25cwVNcXaqcb199SGi1qGt6gZtfXghXHvBMa
+   RuuW33yFGrcEtMngy5EeYdNek56aFKIMY11mMhEHZLGLY6w2uqaRmAl3N
+   sknMi8PgIiXMY4AL9b1C0TUaUYlgiGfykzlFILY4BPiy9DvL+knVy6Euf
+   CeMJq4Nd1AdmhBVTA7tV6tMC6lr7isLIMBONVnSqECZjFahhVsQBKfZmm
+   QvXIdK3P7k/ojmxn+Q4y+U2eUTaDIl6u4y3HZR2YuBsRlD731mRsoy5D/
+   ntoa0231Q98Q7EPLaffHYF/YcyTyk3GfRpOC13vX/vJ2hWuVMWdXuzSp0
+   g==;
+X-CSE-ConnectionGUID: ZGwKFmycRbCU+PG1Sa1wyg==
+X-CSE-MsgGUID: WwXdaCDgTc6maVo+UIoZzw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11212"; a="49453565"
+X-IronPort-AV: E=Sophos;i="6.11,167,1725346800"; 
+   d="scan'208";a="49453565"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2024 07:34:26 -0700
+X-CSE-ConnectionGUID: IfogJOA3T2SDDvZ2ZGNcTA==
+X-CSE-MsgGUID: AqoDEJpFQFauxKQ5jPkGDA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,167,1725346800"; 
+   d="scan'208";a="78439207"
+Received: from lkp-server01.sh.intel.com (HELO 53e96f405c61) ([10.239.97.150])
+  by orviesa005.jf.intel.com with ESMTP; 01 Oct 2024 07:34:20 -0700
+Received: from kbuild by 53e96f405c61 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1svdxC-000Qmb-0m;
+	Tue, 01 Oct 2024 14:34:18 +0000
+Date: Tue, 1 Oct 2024 22:33:24 +0800
+From: kernel test robot <lkp@intel.com>
+To: Christian Marangi <ansuelsmth@gmail.com>, Jens Axboe <axboe@kernel.dk>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Kees Cook <kees@kernel.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Daniel Golle <daniel@makrotopia.org>,
+	INAGAKI Hiroshi <musashino.open@gmail.com>,
+	Christian Brauner <brauner@kernel.org>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Li Lingfeng <lilingfeng3@huawei.com>,
+	Ming Lei <ming.lei@redhat.com>,
+	Christian Heusel <christian@heusel.eu>, linux-block@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Lorenzo Bianconi <lorenzo@kernel.org>, upstream@airoha.com
+Cc: oe-kbuild-all@lists.linux.dev,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Subject: Re: [PATCH v4 3/5] string: add strends() helper to check if a string
+ ends with a suffix
+Message-ID: <202410012202.g0GogVZR-lkp@intel.com>
+References: <20240930113045.28616-4-ansuelsmth@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION][BISECTED] Cannot boot Lichee Pi 4A with
- FORTIFY_SOURCE enabled
-Content-Language: en-US
-To: Jason Montleon <jmontleo@redhat.com>, Kees Cook <kees@kernel.org>
-Cc: linux-hardening@vger.kernel.org,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- linux-riscv@lists.infradead.org
-References: <CAJD_bPJes4QhmXY5f63GHV9B9HFkSCoaZjk-qCT2NGS7Q9HODg@mail.gmail.com>
- <B2A62C7F-45BA-43E1-975F-5AF0197CD2C3@kernel.org>
- <CAJD_bP+43=XXD7p3fRfDxCbj=_YedgVLv38XO4iOAw94a+4PHg@mail.gmail.com>
- <202409221511.9AF49BD@keescook>
- <CAJD_bP+6qCgseo9of-cKW3+nH_UbGFwPo6WRbqqcneOZ+EEtOw@mail.gmail.com>
- <800CC050-E858-409C-A565-A6EF430E1B25@kernel.org>
- <CAJD_bPKNbKo5tj4OV4MpgtSN6_FXfmQtBFgVFzZeZapCPNT6PA@mail.gmail.com>
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <CAJD_bPKNbKo5tj4OV4MpgtSN6_FXfmQtBFgVFzZeZapCPNT6PA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: alex@ghiti.fr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240930113045.28616-4-ansuelsmth@gmail.com>
 
-Hi Jason,
+Hi Christian,
 
-On 25/09/2024 16:32, Jason Montleon wrote:
-> On Tue, Sep 24, 2024 at 1:36 PM Kees Cook <kees@kernel.org> wrote:
->>
->>
->> On September 24, 2024 8:58:57 AM PDT, Jason Montleon <jmontleo@redhat.com> wrote:
->>> On Sun, Sep 22, 2024 at 6:38 PM Kees Cook <kees@kernel.org> wrote:
->>>> Can you try this patch? It should avoid using the "WARN" infrastructure
->>>> (if that is the source of blocking boot), but should still provide some
->>>> detail about what tripped it up (via the "regular" pr_*() logging). And
->>>> if it boots, can you look at the log to find what it reports for the
->>>> "Wanted to write ..." line(s)?
->>>>
->>>> Thanks!
->>>>
->>>> -Kees
->>>>
->>>>
->>>> diff --git a/include/linux/fortify-string.h b/include/linux/fortify-string.h
->>>> index 0d99bf11d260..469a3439959d 100644
->>>> --- a/include/linux/fortify-string.h
->>>> +++ b/include/linux/fortify-string.h
->>>> @@ -549,7 +549,8 @@ __FORTIFY_INLINE bool fortify_memcpy_chk(__kernel_size_t size,
->>>>                                           const size_t q_size,
->>>>                                           const size_t p_size_field,
->>>>                                           const size_t q_size_field,
->>>> -                                        const u8 func)
->>>> +                                        const u8 func,
->>>> +                                        const char *field)
->>>>   {
->>>>          if (__builtin_constant_p(size)) {
->>>>                  /*
->>>> @@ -610,8 +611,13 @@ __FORTIFY_INLINE bool fortify_memcpy_chk(__kernel_size_t size,
->>>>           * https://gcc.gnu.org/bugzilla/show_bug.cgi?id=101832
->>>>           */
->>>>          if (p_size_field != SIZE_MAX &&
->>>> -           p_size != p_size_field && p_size_field < size)
->>>> -               return true;
->>>> +           p_size != p_size_field && p_size_field < size) {
->>>> +               if (p_size_field == 0)
->>>> +                       pr_warn("Wanted to write %zu to a 0-sized destination: %s\n",
->>>> +                               size, field);
->>>> +               else
->>>> +                       return true;
->>>> +       }
->>>>
->>>>          return false;
->>>>   }
->>>> @@ -625,7 +631,8 @@ __FORTIFY_INLINE bool fortify_memcpy_chk(__kernel_size_t size,
->>>>          const size_t __q_size_field = (q_size_field);                   \
->>>>          fortify_warn_once(fortify_memcpy_chk(__fortify_size, __p_size,  \
->>>>                                       __q_size, __p_size_field,          \
->>>> -                                    __q_size_field, FORTIFY_FUNC_ ##op), \
->>>> +                                    __q_size_field, FORTIFY_FUNC_ ##op,\
->>>> +                                    #p " at " FILE_LINE), \
->>>>                    #op ": detected field-spanning write (size %zu) of single %s (size %zu)\n", \
->>>>                    __fortify_size,                                       \
->>>>                    "field \"" #p "\" at " FILE_LINE,                     \
->>>>
->>>>
->>>> --
->>>> Kees Cook
->>>>
->>> Hi Kees,
->>> Sorry for the delay in responding. Your patch also caused the system
->>> to hang booting, but I took it as inspiration to try some things.
->>> TL;DR I see these two print several times:
->>>
->>> Wanted to write 8 to a 0-sized destination: oldptr at
->>> arch/riscv/errata/thead/errata.c:185
->>> Wanted to write 28 to a 0-sized destination: oldptr at
->>> arch/riscv/errata/thead/errata.c:185
->>>
->>> Since I suspected CONFIG_ERRATA_THEAD_MAE which relies on
->>> CONFIG_RISCV_ALTERNATIVE_EARLY I suspected it is just too early for
->>> pr_*, etc. I tried trace_printk but that didn't produce any traces,
->>> and then I found a comment which makes me think we're too early for
->>> that too.
->>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/riscv/kernel/alternative.c?h=v6.11#n214
->>>
->>> I didn't want to give up so I wrote a simple module to figure out how
->>> to use sbi_ecall and then incorporated that idea into your patch,
->>> although even that was not straightforward:
->>> https://gist.github.com/jmontleon/f3536ad70dc92bed992139ad5b266d5c
->> Oh nice work! Probably something riscv-specific needs to be wired up to the printk routines to do what you have there until printk is fully available  But that's a separate issue, I guess.
->>
->>> Full output: https://gist.github.com/jmontleon/823facff38e28b717f153e38adcfd7fe
->> Does the system boot with your patch?
-> Yes. It boots fully. It also booted with trace_printk, it just didn't
-> produce a trace, which again I think is expected at that stage. It
-> seems as long as there are no 'normal' print attempts, pr_()*, etc. it
-> works.
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on axboe-block/for-next]
+[also build test ERROR on kees/for-next/hardening robh/for-next lwn/docs-next linus/master v6.12-rc1 next-20241001]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Christian-Marangi/block-add-support-for-defining-read-only-partitions/20240930-193609
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git for-next
+patch link:    https://lore.kernel.org/r/20240930113045.28616-4-ansuelsmth%40gmail.com
+patch subject: [PATCH v4 3/5] string: add strends() helper to check if a string ends with a suffix
+config: s390-randconfig-001-20241001 (https://download.01.org/0day-ci/archive/20241001/202410012202.g0GogVZR-lkp@intel.com/config)
+compiler: s390-linux-gcc (GCC) 14.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241001/202410012202.g0GogVZR-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202410012202.g0GogVZR-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from arch/s390/purgatory/../lib/string.c:16,
+                    from arch/s390/purgatory/string.c:3:
+   include/linux/string.h: In function 'strends':
+>> include/linux/string.h:366:27: error: implicit declaration of function 'memcmp' [-Wimplicit-function-declaration]
+     366 |         return n >= m && !memcmp(str + n - m, suffix, m);
+         |                           ^~~~~~
+   include/linux/string.h:65:1: note: 'memcmp' is defined in header '<string.h>'; this is probably fixable by adding '#include <string.h>'
+      64 | #include <asm/string.h>
+     +++ |+#include <string.h>
+      65 | 
 
 
-Hmmm I don't see what in your patch would fix your issue.
+vim +/memcmp +366 include/linux/string.h
 
-I sent a patch 
-(https://lore.kernel.org/linux-riscv/20240829165048.49756-1-alexghiti@rivosinc.com/) 
-that was merged in v6.11-rc7 which fixes something similar, could that 
-be what fixed your problem?
+   355	
+   356	/**
+   357	 * strends - does @str end with @suffix?
+   358	 * @str: string to examine
+   359	 * @suffix: suffix to look for.
+   360	 */
+   361	static inline bool strends(const char *str, const char *suffix)
+   362	{
+   363		size_t n = strlen(str);
+   364		size_t m = strlen(suffix);
+   365	
+ > 366		return n >= m && !memcmp(str + n - m, suffix, m);
+   367	}
+   368	
 
-The problem with this early code is that the MMU is not enabled yet and 
-if your kernel is relocatable, the relocations are set "virtually" and 
-then without the MMU, a call to an external function results in a 
-trap...Which happens way too often, I have a few ideas to fix that, I 
-need to find time to tackle this though.
-
-I don't know FORTIFY_SOURCE, but I guess this could cause a call to an 
-external function and then cause the issue I describe above right? We 
-already remove all instrumentations from this early code so maybe we 
-should remove FORTIFY_SOURCE too?
-
-Thanks for digging into this,
-
-Alex
-
-
->
->> I would guess that this line at arch/riscv/errata/thead/errata.c:168:
->>
->> void *oldptr, *altptr;
->>
->> Should be:
->>
->> u8 *oldptr, *altptr;
-> I tried this, but it didn't appear to make a difference, I will try
-> some more today, though I admit to being out of my element.
->
->
->
->> But maybe __ALT_PTR needs adjustment too? Hmm. I would have expected void * to have a size of SIZE_MAX here, though, so something else might be confusing the check.
->>
->>
->> --
->> Kees Cook
->>
->
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
