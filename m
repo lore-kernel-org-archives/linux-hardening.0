@@ -1,120 +1,135 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66C871BE844
-	for <linux-hardening@vger.kernel.org>; Tue,  1 Oct 2024 10:58:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0BFC1CC141
+	for <linux-hardening@vger.kernel.org>; Tue,  1 Oct 2024 14:13:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727780283; cv=none; b=XZBNtZM8XIMHffjldozL9VGlyCKOulrnr18DkPO5F0EoJRgtJX4X7zJSNPYUj+Z8E3h/Fa1tCkR2lxksVapkRyhISXdAAGNIYv97dPEnlr7SeWEPHGe5HRcAofeB0urQ247+qhHKQ06UsgDcwHV5lf3oQ/pUnSTy1oV5IbiW9q8=
+	t=1727792040; cv=none; b=Wpyahha+Vm635eKJROsDDaVt6n3mo52DVh9vOvHhOhZv8npN5Sjy2KPjaOsFhlaNDTLmkQydio1ZIJc2x108xuLY1a78VY32C7otO1oenw+4eL0RKcH9F3MIejPu3vSYA6LiFOww8mL1w7qFLSVWsonydvs/0KjByY3OTU/RDA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727780283; c=relaxed/simple;
-	bh=60EhXKAteHv2MPzzdgUAD7FikabFpPaPZwrLroTEnQg=;
+	s=arc-20240116; t=1727792040; c=relaxed/simple;
+	bh=+FKUddij/gxQNpHjW2/b65NyFWE/k6zemBV6DcE0H+k=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Qe5ztS9JanJ9S00Q+FdoC3fqeau3sxJeWK2Ykw0En6Br2n+9HnOQCRBr8exIo1xVFcZNeXbwKsls0ah+3iQFwqvv22ZCaX/+2HAewJHvZ4uR5/0UBEf6E3EHL5pK+4pyOzX33ut9B6ZBqIlC4roSz3JOkj/YgzBZfNoR1CFFiTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=efNyB8Z+; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=T2X9GxNLuwRoA6GTCK9sUpxPwvkeVHh5Rh3lD4fyH7BJGA9qs8/KtwTAD0hSnNypy8PByRpK4NrTXLEeCXj4n9rTbouon3/oX/hGSKkQ5iY6IiLA+wpVDcoXTWqUzi5WvpD4i1FTxLFfE9oBHSHaIWfP5o2cifCwtGjoZPmORQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=dyogwqtd; arc=none smtp.client-ip=209.85.160.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="efNyB8Z+"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-37cdb6ebc1cso1985790f8f.1
-        for <linux-hardening@vger.kernel.org>; Tue, 01 Oct 2024 03:58:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="dyogwqtd"
+Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-27b7a1480bdso2310118fac.2
+        for <linux-hardening@vger.kernel.org>; Tue, 01 Oct 2024 07:13:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1727780281; x=1728385081; darn=vger.kernel.org;
+        d=paul-moore.com; s=google; t=1727792038; x=1728396838; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=a1/SnEV7GpnCmA2f8SClpEwW0fcraNKH9MQf0vKkPjQ=;
-        b=efNyB8Z+AvCwCkWkdL4h24U/TWX5Xmp4VJ2RIHSU9QUZq10Id9xKOA+YeAxKOonZW3
-         N4rMc0/lYeVT6M95i6G5Yt1SfO3gBVE/ICwXCEkuhh0GmFyYLCNGTErEGPHWhr3Nkej4
-         sK5r1Q9W/6vRsdu9BUXDIXvweyGRDHbczIK96DFbtJyvDuNTU1fdqd0nChksFaqqqA37
-         0UgaQbZce0AD9LJX/4VZk1SYcJUgGAo5T9t7wFA8ijFvVvAfnJa5l/HknFFT5lzb5mZA
-         1d87CEOFJwW2P7GDILhzwWM1tS9tIksUCAQnSNM++s1mGlXcpxE9gb87k1qzreuE1zfo
-         kzJg==
+        bh=GXNRv4R5VmvPOl/Xct8Si1vB9z90P2avYuEV2rget7M=;
+        b=dyogwqtdJI+LlS0daZLSNAMAJ90w8SGN41+FrMpOhYZreH7cjHVHH67oHW3PpW9vAZ
+         BV+V51kLsIqgZO/tvdA1fJvgA1fOlDSB7XVLvmCZ2rG5OOhkJ/7Pqy/ePb+tSZ8P+5R6
+         zr/q8Y1+540E7zboQjbw8oMap3Th2/iskpg26WwPoqV4seBHdJXJzEMY1gBDQnutqhAm
+         +23MPgfegtZJGVwVq/BGfYJ22e9t25xG5w94P3n9GG5Vf2pITUBMIjxR5avLZfuuGBBE
+         kK4G8B/nTV24q2plJF6TQDdaAf76qa09aESrb1ta2LiV3cp/4PeHBVz7YJAxP3uMwD3k
+         QLng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727780281; x=1728385081;
+        d=1e100.net; s=20230601; t=1727792038; x=1728396838;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=a1/SnEV7GpnCmA2f8SClpEwW0fcraNKH9MQf0vKkPjQ=;
-        b=lcbaGiQJvwCa7c+zv87QCnx7ql3lCTobkz3Xad7Or5ksjVXz1w61pdCh2jWl1VzNBz
-         ElGoAgXIKiqTN9XyBSwJVnw0XhsuG9hPo+59GlEaIlEgRVV91jcIZJOM/22lz9CBPMi1
-         xsWjsQe996VTzL6vYKqWzVLgIv0yTfzS7UjhU+Yln28s8BepYm58kc7W5Xw7R3WA2UI6
-         yetTStbeqOWDuXwaHch4S4QGfP8dvB2mY9vW4YCM2r4NLdRviiDvHOhnqeasnQbbwRfH
-         O8dKWjWh8HMPnDowjspMBAuLkTyWeVSLeY1WAjspNbz3vyPdk8ap3zFrG/BB9rn54vrF
-         TfeA==
-X-Forwarded-Encrypted: i=1; AJvYcCXvtJO/5sh+uHPOeJas4LZ8tdotcVximSPXa0mU2p16ed7UlwOgZbY19kanWFUV81zVyXrFXFWi7S9MJjhf3yQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7Fa1/IDAJeJ0rxwZwci08PmBp1Tpg+yicjh+EE+SykaWRLHoo
-	xJ5J6nS/P8oSV04WqeCVtEme9yuDCSEYXz24sMg2Sx7DeB+HMcJO5A80NWug9Aa1h3RRlF/EmDi
-	XxvdztfZlzIuQavujnA0QjBuBTGK9jJvjcALN
-X-Google-Smtp-Source: AGHT+IG/OuMrpizTXMK9ykXj5tQizpl0H0yQsEL9StHtl8bSdqhVYJ82YEbwzDkAtDBmCQuH6QaI4BhD+/admbTQT6g=
-X-Received: by 2002:a5d:4a92:0:b0:37c:d21a:3d61 with SMTP id
- ffacd0b85a97d-37cd5b319b6mr9097510f8f.39.1727780280536; Tue, 01 Oct 2024
- 03:58:00 -0700 (PDT)
+        bh=GXNRv4R5VmvPOl/Xct8Si1vB9z90P2avYuEV2rget7M=;
+        b=je1ioyKhe/OCoZrTfWqL5FSW4VTIllFxOuqkPrJt6eziW/SqWKls36gRX8XIX8UVzj
+         b5XMwKFzKlz0pHCpoVv4HDjaUp60rKz5mAFtq3ZsUoRh8n0qArwtpcEaBofNt3y4s4Hl
+         EWtvTLHJIagFIks0Ju+7vBh97U1abRe9l2Q90DBx2CWUhv2gQcQ0b63TMrgxeV+WoKWZ
+         jqA6+o9cd1Bobj25CYgvM2HEFaoqy7H0Ii/6cN90eYAoQFMmkbVr66BaZRRAKIKVrTg9
+         7MqPUGABBwGKCzpVFtXN0vf1mPSVJx+/qJ/vfOdrLTF8C4huzhsWFPKieaGlpuPaTIwH
+         d9vw==
+X-Forwarded-Encrypted: i=1; AJvYcCXSZ38quA5jSFdhLWClEdIqr+7pn5LF30bxBowKkjMOatdFb6wdAvlGsTbcjPWRhy5iR9N8XFOwC0XXTNvkKPw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyd0n6VQi85BbqSpv/Ikdm0PRtO7W22Pkd63noTArFm/+t9SFkZ
+	upyJar6s31CZiwz8LsA741uOvdOJTMqBxjEnapAjR8Pq9mkMz6e5huUlhq66uwQm8YE/MfoRovh
+	teQA+r+Eur+KVZ4n6UdB74G7UhfEmG1zxk/MQ
+X-Google-Smtp-Source: AGHT+IFMGvyp3IY12n2ve9jQjiLs86OcN1H193F2bZNg+PAFq+kScDkFEWvxGnsgYNZpsi7YFM4vdBKzpoYT5KslJgA=
+X-Received: by 2002:a05:6870:5b88:b0:261:1f7d:cf6e with SMTP id
+ 586e51a60fabf-28710c45c43mr8810649fac.41.1727792037867; Tue, 01 Oct 2024
+ 07:13:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240913210031.20802-1-aliceryhl@google.com> <CALNs47sMJzeZ0yEF9sc-VO_QEu4=jc3QBa1_fhnhX9gdETYaNA@mail.gmail.com>
-In-Reply-To: <CALNs47sMJzeZ0yEF9sc-VO_QEu4=jc3QBa1_fhnhX9gdETYaNA@mail.gmail.com>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Tue, 1 Oct 2024 12:57:47 +0200
-Message-ID: <CAH5fLgi4YNsLHFoKw7UsGbmpEaqeG4o5yMQAodZ1KwfExAPL3w@mail.gmail.com>
-Subject: Re: [PATCH 1/2] rust: harden index manipulation using ownership
-To: Trevor Gross <tmgross@umich.edu>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Kees Cook <kees@kernel.org>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
-	Carlos Llamas <cmllamas@google.com>, rust-for-linux@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240928-maintainers-security-kconfig-hardening-v1-1-c8c64071cc02@kernel.org>
+ <1923f716100.28a7.85c95baa4474aabc7814e68940a78392@paul-moore.com> <20240929210004.GA1300946@thelio-3990X>
+In-Reply-To: <20240929210004.GA1300946@thelio-3990X>
+From: Paul Moore <paul@paul-moore.com>
+Date: Tue, 1 Oct 2024 10:13:43 -0400
+Message-ID: <CAHC9VhRqevog8t4+D=t+d7+bvMs9jrW99Kvd_JF-1LSH0YN2VA@mail.gmail.com>
+Subject: Re: [PATCH] MAINTAINERS: Add security/Kconfig.hardening to hardening section
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	patches@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Sep 30, 2024 at 1:16=E2=80=AFAM Trevor Gross <tmgross@umich.edu> wr=
-ote:
+On Sun, Sep 29, 2024 at 5:00=E2=80=AFPM Nathan Chancellor <nathan@kernel.or=
+g> wrote:
+> On Sun, Sep 29, 2024 at 10:20:59PM +0200, Paul Moore wrote:
+> > On September 28, 2024 8:26:28 PM Nathan Chancellor <nathan@kernel.org> =
+wrote:
+> > > When running get_maintainer.pl on security/Kconfig.hardening, only th=
+e
+> > > security subsystem folks show up, even though they have never taken
+> > > patches to this file:
+> > >
+> > >  $ scripts/get_maintainer.pl security/Kconfig.hardening
+> > >  Paul Moore <...> (supporter:SECURITY SUBSYSTEM)
+> > >  James Morris <...> (supporter:SECURITY SUBSYSTEM)
+> > >  "Serge E. Hallyn" <...> (supporter:SECURITY SUBSYSTEM)
+> > >  linux-security-module@vger.kernel.org (open list:SECURITY SUBSYSTEM)
+> > >  linux-kernel@vger.kernel.org (open list)
+> > >
+> > >  $ git log --format=3D%cn --no-merges security/Kconfig.hardening | so=
+rt | uniq -c
+> > >        3 Andrew Morton
+> > >        1 Greg Kroah-Hartman
+> > >       18 Kees Cook
+> > >        2 Linus Torvald
+> > >
+> > > Add it to the hardening section so that the KSPP folks are also shown=
+,
+> > > which matches reality over who should comment on and take said patche=
+s
+> > > if necessary.
+> > >
+> > > Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+> > > ---
+> > > MAINTAINERS | 1 +
+> > > 1 file changed, 1 insertion(+)
+> >
+> > For the sake of casual observers, the reason James, Serge, or I haven't
+> > merged anything in Kconfig.hardening isn't due to any malicious intent =
+or
+> > lack of appreciation, rather it is out of respect for KSPP and not want=
+ing
+> > to step on Kees' toes.
 >
-> On Fri, Sep 13, 2024 at 5:01=E2=80=AFPM Alice Ryhl <aliceryhl@google.com>=
- wrote:
+> Right, I did not mean for this to come off in an accusatory way, so my
+> apologies if it did. I merely wanted to codify this arrangement so that
+> patches get picked up or acked by the correct people in the future since
+> I had to send one earlier and I noticed it did not match reality (with
+> the data to prove it heh) ...
+
+No worries, I had hoped to make it clear I wasn't too bothered by this
+with the 'for casual observers' remark, but I guess I should have been
+more explicit.  I wrote my original reply simply because I've seen
+people take snippets out of context far too many times and I didn't
+want anyone to think there was a problem here.
+
+> > I've happily merged KSPP related patches to those subsystems which I'm
+> > tasked with looking after and I plan to continue to do so.
 >
-> > +//! Utilities for working with ranges of indices.
-> > +
-> > +/// A range of indices.
-> > +///
-> > +/// This utility is useful for ensuring that no index in the range is =
-used more than once.
-> > +#[derive(Debug)]
-> > +pub struct Range {
-> > +    offset: usize,
-> > +    length: usize,
-> > +}
->
-> Would a name like "DataRange" or "CheckedRange" be better here, to
-> avoid confusion with core::ops::Range?
+> Always happy to have as many KSPP allies as possible :)
 
-Probably a good idea. I've had collisions on those types.
+Hopefully the LSM folks can consider KSPP as an ally too ;)
 
-> > +    /// Use this range of indices.
-> > +    ///
-> > +    /// This destroys the `Range` object, so these indices cannot be u=
-sed again after this call.
-> > +    pub fn use_range(self) -> UsedRange {
->
-> Maybe just `.use()`?
-
-Makes sense to me.
-
-> > +    /// Assert that this range is aligned properly.
-> > +    pub fn assert_aligned(&self, alignment: usize) -> Result<(), Range=
-Error> {
->
-> It would probably be good to warn that this alignment is relative to
-> the offset, i.e. if you split a range at an unaligned point then this
-> may not be useful.
->
-> This is a pretty cool API idea.
-
-Thanks!
-
-Alice
+--=20
+paul-moore.com
