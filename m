@@ -1,53 +1,53 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 832811C6F61;
-	Tue,  1 Oct 2024 14:34:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A14B199FCE;
+	Tue,  1 Oct 2024 21:48:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727793269; cv=none; b=KTYUFCv5RRlNo2QHwex2XhFYXJ53tY7Uuh4ajM/ACbDj1yHoVvfoCmnHvRv/exEKNYlvZrssDfcMLaJ0jMKqZBnozI7X3KhnNQVWCIV4X/fjJjeOL5ARhuhnFtfMiG1+uHsuX+JOvzhtlPIUpUUi53I52RAIPl/iQ/K723QbjLI=
+	t=1727819296; cv=none; b=VeQoCbVshKH+fTwTsmA+rdS+bGdGWkc3j5Kt20iT0Uz9vZ8lW5Kv5H+fGEdsn+mHKvHo9nPQ3/V0osP1yEZ1M9mtQbrcqN+CJcOf0Rdu4qlt4nai2YR0Ih/PEocTTC/FPBKsCTT00XOKsTf+I5ZzWaE1u0P7oT60XTFWADYw+LM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727793269; c=relaxed/simple;
-	bh=MJJbugmM7odwoRbXpKB1hsqqSBdhArseeVwNZ793jek=;
+	s=arc-20240116; t=1727819296; c=relaxed/simple;
+	bh=mMUExZQ+EvnU7XLWDsD1aa5LRPKUL7dBR3emnkPwhDE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Tw7gA5M7A68s/6SHAJNl4BEVBZ6N3/lB7kRN1fKIXx2bEh1RZIyYBu+d5ZCCioHRvZYSd6udObCM5E+3e/ohdkMTMEhtKtWOupla32PWt5lHbHyEZqyVzR0CgdsyA+Htht1wq1IXDqxfvZXgF1M8PZNpGjHVDkA8IB9eqStTrKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KLe3oRNz; arc=none smtp.client-ip=198.175.65.9
+	 Content-Type:Content-Disposition:In-Reply-To; b=ppNZFCZkp+762i44xosNGmfoFWq1LFp5QZ4cW89xxsH3B0ZKY/dwa4+ODHciDDX+fNmu/EwemvJuiPLQlLL6RLQIqyH7MIw7veccN/HPxZDHIir3HmdmvSjh7dwTHaV28tLTfdQx+P2yN7cdtcA1k4aKibGlMwEfu1J62+Rf8QQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l9weqt/R; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KLe3oRNz"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l9weqt/R"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1727793267; x=1759329267;
+  t=1727819295; x=1759355295;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=MJJbugmM7odwoRbXpKB1hsqqSBdhArseeVwNZ793jek=;
-  b=KLe3oRNzuFPj3ibEJJxp25cwVNcXaqcb199SGi1qGt6gZtfXghXHvBMa
-   RuuW33yFGrcEtMngy5EeYdNek56aFKIMY11mMhEHZLGLY6w2uqaRmAl3N
-   sknMi8PgIiXMY4AL9b1C0TUaUYlgiGfykzlFILY4BPiy9DvL+knVy6Euf
-   CeMJq4Nd1AdmhBVTA7tV6tMC6lr7isLIMBONVnSqECZjFahhVsQBKfZmm
-   QvXIdK3P7k/ojmxn+Q4y+U2eUTaDIl6u4y3HZR2YuBsRlD731mRsoy5D/
-   ntoa0231Q98Q7EPLaffHYF/YcyTyk3GfRpOC13vX/vJ2hWuVMWdXuzSp0
-   g==;
-X-CSE-ConnectionGUID: ZGwKFmycRbCU+PG1Sa1wyg==
-X-CSE-MsgGUID: WwXdaCDgTc6maVo+UIoZzw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11212"; a="49453565"
-X-IronPort-AV: E=Sophos;i="6.11,167,1725346800"; 
-   d="scan'208";a="49453565"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2024 07:34:26 -0700
-X-CSE-ConnectionGUID: IfogJOA3T2SDDvZ2ZGNcTA==
-X-CSE-MsgGUID: AqoDEJpFQFauxKQ5jPkGDA==
+  bh=mMUExZQ+EvnU7XLWDsD1aa5LRPKUL7dBR3emnkPwhDE=;
+  b=l9weqt/Rl7Fr/uirgRGXXlURxJQQ8lvryO5rAlFhc+o9PGyFzHIQRLOr
+   jJZtnIifLnmXw6KPgt4PMCHrZszc28xWDWriURGlqcWv5G8fSZSjuUaIE
+   ghzrj2oGV0fgSTHsshg4hyEZfty8OuLQlcbTbERrHHdTeffTP9URvrOdC
+   gLrrScYBMMq0Gbr6G6eMLUA2IQeemHRwMNGGhaMF3f4f7zMfK3wQoShmk
+   mwjDJLIE55xin1wIeSK+CKs6upOz3ze/s950QQntG9kTzpwLiX5N9PYwK
+   zgw29M5fogThr+dLhMfRgxwHmECDe6bBc9ESinzIowpZoigDSFjjSqKjl
+   A==;
+X-CSE-ConnectionGUID: 7MdkgM5qSv6XBwVBhQOmqA==
+X-CSE-MsgGUID: HtHeXpiWSFa7DMe620vrUQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11212"; a="37536479"
+X-IronPort-AV: E=Sophos;i="6.11,169,1725346800"; 
+   d="scan'208";a="37536479"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2024 14:48:14 -0700
+X-CSE-ConnectionGUID: y2fAfsQlTzuDYDQiHGjUJA==
+X-CSE-MsgGUID: Zj22m4xJSb+txgUc2smUsQ==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,167,1725346800"; 
-   d="scan'208";a="78439207"
+X-IronPort-AV: E=Sophos;i="6.11,169,1725346800"; 
+   d="scan'208";a="78671028"
 Received: from lkp-server01.sh.intel.com (HELO 53e96f405c61) ([10.239.97.150])
-  by orviesa005.jf.intel.com with ESMTP; 01 Oct 2024 07:34:20 -0700
+  by orviesa003.jf.intel.com with ESMTP; 01 Oct 2024 14:48:08 -0700
 Received: from kbuild by 53e96f405c61 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1svdxC-000Qmb-0m;
-	Tue, 01 Oct 2024 14:34:18 +0000
-Date: Tue, 1 Oct 2024 22:33:24 +0800
+	id 1svkiz-000RDN-23;
+	Tue, 01 Oct 2024 21:48:05 +0000
+Date: Wed, 2 Oct 2024 05:47:11 +0800
 From: kernel test robot <lkp@intel.com>
 To: Christian Marangi <ansuelsmth@gmail.com>, Jens Axboe <axboe@kernel.dk>,
 	Jonathan Corbet <corbet@lwn.net>,
@@ -71,7 +71,7 @@ Cc: oe-kbuild-all@lists.linux.dev,
 	Rasmus Villemoes <linux@rasmusvillemoes.dk>
 Subject: Re: [PATCH v4 3/5] string: add strends() helper to check if a string
  ends with a suffix
-Message-ID: <202410012202.g0GogVZR-lkp@intel.com>
+Message-ID: <202410020546.DL6BnsOs-lkp@intel.com>
 References: <20240930113045.28616-4-ansuelsmth@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -97,27 +97,23 @@ url:    https://github.com/intel-lab-lkp/linux/commits/Christian-Marangi/block-a
 base:   https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git for-next
 patch link:    https://lore.kernel.org/r/20240930113045.28616-4-ansuelsmth%40gmail.com
 patch subject: [PATCH v4 3/5] string: add strends() helper to check if a string ends with a suffix
-config: s390-randconfig-001-20241001 (https://download.01.org/0day-ci/archive/20241001/202410012202.g0GogVZR-lkp@intel.com/config)
-compiler: s390-linux-gcc (GCC) 14.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241001/202410012202.g0GogVZR-lkp@intel.com/reproduce)
+config: s390-randconfig-r061-20241001 (https://download.01.org/0day-ci/archive/20241002/202410020546.DL6BnsOs-lkp@intel.com/config)
+compiler: clang version 20.0.0git (https://github.com/llvm/llvm-project 7773243d9916f98ba0ffce0c3a960e4aa9f03e81)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241002/202410020546.DL6BnsOs-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202410012202.g0GogVZR-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202410020546.DL6BnsOs-lkp@intel.com/
 
 All errors (new ones prefixed by >>):
 
-   In file included from arch/s390/purgatory/../lib/string.c:16,
-                    from arch/s390/purgatory/string.c:3:
-   include/linux/string.h: In function 'strends':
->> include/linux/string.h:366:27: error: implicit declaration of function 'memcmp' [-Wimplicit-function-declaration]
+   In file included from arch/s390/purgatory/string.c:3:
+   In file included from arch/s390/purgatory/../lib/string.c:16:
+>> include/linux/string.h:366:20: error: call to undeclared function 'memcmp'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
      366 |         return n >= m && !memcmp(str + n - m, suffix, m);
-         |                           ^~~~~~
-   include/linux/string.h:65:1: note: 'memcmp' is defined in header '<string.h>'; this is probably fixable by adding '#include <string.h>'
-      64 | #include <asm/string.h>
-     +++ |+#include <string.h>
-      65 | 
+         |                           ^
+   1 error generated.
 
 
 vim +/memcmp +366 include/linux/string.h
