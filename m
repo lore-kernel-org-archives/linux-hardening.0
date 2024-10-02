@@ -1,110 +1,125 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EA18197556
-	for <linux-hardening@vger.kernel.org>; Wed,  2 Oct 2024 09:19:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4090F197A67
+	for <linux-hardening@vger.kernel.org>; Wed,  2 Oct 2024 09:20:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727860752; cv=none; b=CMR2J1J4KCu8iv7jSitd1VHzNF40Xjzy/PSjvwFQ8fGL+fqQV7ep0xQc7RGCTPkIcFPSsMTNdE31tYr9O82bCh2NiID6idVbGNyT/OLyKPOFoUlTkPZE8IXEXN738l3LxiqktjI5UVosTG/ETOWlV4MJw8D6d6Fz3a8bsLqJqkE=
+	t=1727860839; cv=none; b=KBSGc3ldd3JflzpixvNRChXOB6vyzjbm0I9kY66dGqC5QLak3kDv1oaG6JEX4UJS0S3txNMF4/jZ2u+6pcNNMI0cH4B4GHPZFIN7ffZSoPGVGH2JJeYUDpEOS6vTjsUzZIJLtfY2/EpYjukTe65hXBhY/4jHWEmbPEh9h6KZbeo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727860752; c=relaxed/simple;
-	bh=jFPfAagBlJdQ9SyZKWMbHOeAJZ9ce6m+cLeMK6+fiFM=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=QbH/B8nWmzz+O8hzz++EwnRAEqyx/KE8n9fFbEzVYKqVsJRvqMAHvoE0+SsGSJBwvPZ32rJ3jJXQQOK0JW8Yvx4SeK5ZVH/8wUK5XgMYc+GwtDiaVL0nOX7vusbzNQpEDKjbZnlRqY5ACIai2ZELvSetCnU7eza0AlJC7XOa7sk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=lHaD6wF/; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+	s=arc-20240116; t=1727860839; c=relaxed/simple;
+	bh=mzDHbmnmSbZgPh/ZeldgAOMha3PtMlQ6ANgxAOBY+Lo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=e1lcSo3E+gtP3SCuWbk757/qCCJwkhd9DsMz1nqGumP6uf9slm4dVSGbgiVtgoEWaDBgQaMdNsAWuhlyttIzeyWYw9/Ss/Y0TNcwQAMoGJxUKqNWg35ItwQvSy7NbBh35bkhBtm8iFOA+y1NSk2AHyjew+I2Ke/lm6PpAM30QsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rasmusvillemoes.dk; spf=pass smtp.mailfrom=rasmusvillemoes.dk; dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b=QogGA6z5; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rasmusvillemoes.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rasmusvillemoes.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="lHaD6wF/"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-42ee66c2c49so9556535e9.0
-        for <linux-hardening@vger.kernel.org>; Wed, 02 Oct 2024 02:19:11 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="QogGA6z5"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5398b2f43b9so567848e87.1
+        for <linux-hardening@vger.kernel.org>; Wed, 02 Oct 2024 02:20:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1727860750; x=1728465550; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jFPfAagBlJdQ9SyZKWMbHOeAJZ9ce6m+cLeMK6+fiFM=;
-        b=lHaD6wF/HrEUUpFWylvMg26t3V01+iwdcXibK8PN4hGXRTugOajSAMJ2Gq73Pnd2j+
-         Cd7Hljlups4ejgXHzZxXX+2f6jm3AbHlEUE0JK/zAet/8m0Y0LKKHbrCEY/RC6IJX5jK
-         gGV+zGypMptGBqEtKNs3UPPTu29YM0ZrhZBIdRZbqqizson8UN5lFz1xfS0UcwoX+Oxq
-         aiSQt7+fxRR1v4eCCxjYpGTWgIgu6HPg31cC2zJCdy8/P0RAwTmLiq/KLuMMsLmLtwIg
-         dhBEgxkBAqdkiq0KTmnJ82P+9nl/0JOn6ybqKk9iN2BBFm3VZu38V/uuQWKBeajDlHfZ
-         sPbA==
+        d=rasmusvillemoes.dk; s=google; t=1727860835; x=1728465635; darn=vger.kernel.org;
+        h=mime-version:user-agent:message-id:date:references:in-reply-to
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=3ZO0Y8/ubh1XnuZPCq0ksaN5wnj9mPknfJDM/0u+lyg=;
+        b=QogGA6z5eZVmTANsamaQycj17E5dDAmzrgR5aS6Kh4VQ5qH5zJu85Gb1n+oG1R9AdY
+         gUiF9TQ0oudqONW3Wsz3a5wzIuekzBQ1FFmLB+IIbB2Gy75b/0PlVcnOsKgzAB4uIACp
+         /8t61Cbl4CgKgBh9+Y9IX45DcjEJRlDc+Ksik=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727860750; x=1728465550;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jFPfAagBlJdQ9SyZKWMbHOeAJZ9ce6m+cLeMK6+fiFM=;
-        b=P6Y5rUeBgWDuhMDg69zrc9tBFMJBWBQKaohsl3f8X9362ghC/nnCIDRWrO7+g8a9+7
-         yzO7cDehAge9Er8NGsKfl5CEJFUKc3OFr7ri1JZNbiCSJts8L3GGd40dK5cERUScwBzg
-         xuJDzFzAZlUlvZkt8nNe92SpqmxjsZfJTnaYu+5RfUT2hyrzPo9K96/NC5lyI8U7Fggf
-         cm0gLA/rO/SUD9ZWzCicXY1AR8oosyr15MODAEToTJa8e0YdZNABWLZzEQI7dc3rM+kb
-         013R3PYmY4mAafPSBtObzubO1CIwsK3r3KDUIJS1lH4QYeWU07FLj81mNipVFgFA02NY
-         Y0CQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW+1GStb35d5DV6WAqWe/nub4CrAXYChJqU08Xop1+xVUnAuY0BbpyVgknliUXHQVWtunG7JuQNbzF72xY5zlM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzohL/EP5HFMsWQO9XOqLPKYWwb0WbaMHGQSyL4eixUMg29b42D
-	lvYL2qmlN+Q/eXWzJx1M1nEL3rfh+1wcSndG/ikYhiTDTwPrXAYs4MbIH9zPqPw=
-X-Google-Smtp-Source: AGHT+IHWV7mV6w1yfuYNSbBDoDmOfkbxchm61Fu5e/nGx6AlXWl4Fno0/aWgzeJagffw9rTAISDAYw==
-X-Received: by 2002:a05:600c:5126:b0:42c:bfd6:9d2f with SMTP id 5b1f17b1804b1-42f777af1camr8361385e9.1.1727860749493;
-        Wed, 02 Oct 2024 02:19:09 -0700 (PDT)
-Received: from smtpclient.apple ([2001:a61:a4f:301:4862:84b0:b69f:936b])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42f79d8d409sm13410225e9.1.2024.10.02.02.19.08
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 02 Oct 2024 02:19:08 -0700 (PDT)
-Content-Type: text/plain;
-	charset=us-ascii
+        d=1e100.net; s=20230601; t=1727860835; x=1728465635;
+        h=mime-version:user-agent:message-id:date:references:in-reply-to
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3ZO0Y8/ubh1XnuZPCq0ksaN5wnj9mPknfJDM/0u+lyg=;
+        b=qlGTw13oO+tJqdtBqzcaZiTNC5cloLXuxbrjqbqy4i1bWBnOT7Rbhz1/Ox4e8qO9wF
+         P2LMS2S7Ee8E/WWPF95p6bLU5+QBtjtafidtHZUDrLGRtVts/yGgmEvrJdPleHtFdlLm
+         PP8PJHaBQVXqnlKhlcNN7JF4+2gzWYya4iB89f8BpFx/vHW93TcoEMQAle0xrTTApERx
+         BwZGz5MLgk3uvEx2JCvXCPQx1y1bhZEckyAugJE+8bmTMgVlegLVhyWRJ51nvnIz4siz
+         XgglOsCx4pb5nQpww+JHhZrWNJLisBEKq8u7reTU208eZXMDFQpVNcCtQUUzfTvcRQVu
+         GX2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU/r7wwcrJHLmES2VpitCVmvrpWspLPDMvSMkHUhRdn3Oih7kSChCga8brVi7El/kqU705D+NMNp/E72ELVsIE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywa+z5LasuuK4spnfJAvQyWLDiAdXq08x/apRpEuWrnUo9TKi+K
+	PkcwlYwpL16rxbtCme4IY8rkcy3KOmdo523TVnKjyPVzndH+og2VZktIT55nSJc=
+X-Google-Smtp-Source: AGHT+IGtXJvrufAFjd2v/2BhFG3gRzFXYZPIU0TWOYK8Da9d0sVChTE0gL9gdkfIYnsbyV2u2l+F+A==
+X-Received: by 2002:a05:6512:12ca:b0:539:950b:139c with SMTP id 2adb3069b0e04-5399a24664bmr2042373e87.12.1727860835200;
+        Wed, 02 Oct 2024 02:20:35 -0700 (PDT)
+Received: from localhost ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-538a043220csm1817735e87.156.2024.10.02.02.20.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Oct 2024 02:20:34 -0700 (PDT)
+From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+To: Andy Shevchenko <andy@kernel.org>
+Cc: Christian Marangi <ansuelsmth@gmail.com>,  Jens Axboe <axboe@kernel.dk>,
+  Jonathan Corbet <corbet@lwn.net>,  Ulf Hansson <ulf.hansson@linaro.org>,
+  Rob Herring <robh@kernel.org>,  Krzysztof Kozlowski <krzk+dt@kernel.org>,
+  Conor Dooley <conor+dt@kernel.org>,  Kees Cook <kees@kernel.org>,  Daniel
+ Golle <daniel@makrotopia.org>,  INAGAKI Hiroshi
+ <musashino.open@gmail.com>,  Christian Brauner <brauner@kernel.org>,  Al
+ Viro <viro@zeniv.linux.org.uk>,  Li Lingfeng <lilingfeng3@huawei.com>,
+  Ming Lei <ming.lei@redhat.com>,  Christian Heusel <christian@heusel.eu>,
+  linux-block@vger.kernel.org,  linux-doc@vger.kernel.org,
+  linux-kernel@vger.kernel.org,  linux-mmc@vger.kernel.org,
+  devicetree@vger.kernel.org,  linux-hardening@vger.kernel.org,  Miquel
+ Raynal <miquel.raynal@bootlin.com>,  Lorenzo Bianconi
+ <lorenzo@kernel.org>,  upstream@airoha.com
+Subject: Re: [PATCH v4 0/5] block: partition table OF support
+In-Reply-To: <ZvqfbNDfI2QWZEBg@smile.fi.intel.com> (Andy Shevchenko's message
+	of "Mon, 30 Sep 2024 15:54:04 +0300")
+References: <20240930113045.28616-1-ansuelsmth@gmail.com>
+	<ZvqfbNDfI2QWZEBg@smile.fi.intel.com>
+Date: Wed, 02 Oct 2024 11:20:37 +0200
+Message-ID: <87setej1y2.fsf@prevas.dk>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51\))
-Subject: Re: [REGRESSION][BISECTED] erroneous buffer overflow detected in
- bch2_xattr_validate
-From: Thorsten Blum <thorsten.blum@toblux.com>
-In-Reply-To: <202409281331.1F04259@keescook>
-Date: Wed, 2 Oct 2024 11:18:57 +0200
-Cc: Jan Hendrik Farr <kernel@jfarr.cc>,
- kent.overstreet@linux.dev,
- regressions@lists.linux.dev,
- linux-bcachefs@vger.kernel.org,
- linux-hardening@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- ardb@kernel.org,
- morbo@google.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <21D2A2BB-F442-480D-8B66-229E8C4A63D3@toblux.com>
-References: <ZvV6X5FPBBW7CO1f@archlinux>
- <3E304FB2-799D-478F-889A-CDFC1A52DCD8@toblux.com>
- <A499F119-5F0C-43FC-9058-7AB92057F9B3@toblux.com>
- <Zvg-mDsvvOueGpzs@archlinux> <202409281331.1F04259@keescook>
-To: Kees Cook <kees@kernel.org>
-X-Mailer: Apple Mail (2.3776.700.51)
+MIME-Version: 1.0
+Content-Type: text/plain
 
-On 28. Sep 2024, at 22:34, Kees Cook <kees@kernel.org> wrote:
-> [...]
->=20
-> Sorry, I've been out of commission with covid. Globally disabling this
-> macro for clang is not the right solution (way too big a hammer).
->=20
-> Until Bill has a fix, we can revert commit
-> 86e92eeeb23741a072fe7532db663250ff2e726a, as the problem is limited to
-> certain situations where 'counted_by' is in use.
+Andy Shevchenko <andy@kernel.org> writes:
 
-I already encountered two other related __counted_by() issues [1][2]
-that are now being reverted. Would it be an option to disable it
-globally, but only for Clang < v19 (where it looks like it'll be fixed)?
+> On Mon, Sep 30, 2024 at 01:30:07PM +0200, Christian Marangi wrote:
+>> Hi,
+>> this is an initial proposal to complete support for manually defining
+>> partition table.
+>> 
+>> 
+>> Some block device also implement boot1 and boot2 additional disk. Similar
+>> to the cmdline parser, these disk can have OF support using the
+>> "partitions-boot0" and "partitions-boot1" additional node.
+>> 
+>> It's also completed support for declaring partition as read-only as this
+>> feature was introduced but never finished in the cmdline parser.
+>
+>
+> I'm not sure I fully understood the problem you are trying to solve.
+> I have a device at hand that uses eMMC (and was produced almost ten years ago).
+> This device has a regular GPT on eMMC and no kernel needs to be patched for that.
+> So, why is it a problem for the mentioned OEMs to use standard GPT approach?
 
-Otherwise adding __counted_by() might be a slippery slope for a long
-time and the edge cases don't seem to be that rare anymore.
+For the user area (main block device), yes, a GPT can often be used, but
+not always. For the boot partitions, the particular SOC/cpu/bootrom may
+make it impossible to use a standard partition table, because the
+bootrom expects to find a bootloader at offset 0 on the active boot
+partition. In such a case, there's no way you can write a regular MBR or
+GPT, but it is nevertheless nice to have a machine-readable definition
+of which data goes where in the boot partitions. With these patches, one
+can do
 
-Thanks,
-Thorsten
+  partitions-boot0 {
+    partition@0 {
+      label = "bootloader";
+      reg = <0 0x...>; // 2 MB
+    }
+    partition@... {
+      label = "device-data";
+      reg = <...> // 4 MB
+    }
+  }
 
-[1] =
-https://lore.kernel.org/all/20240909162725.1805-2-thorsten.blum@toblux.com=
-/
-[2] =
-https://lore.kernel.org/all/20240923213809.235128-2-thorsten.blum@linux.de=
-v/=
+and describe that layout.
+
+Rasmus
