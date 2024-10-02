@@ -1,112 +1,274 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B68DC1D04B8;
-	Wed,  2 Oct 2024 14:52:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA69D1D07BF
+	for <linux-hardening@vger.kernel.org>; Wed,  2 Oct 2024 15:14:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727880750; cv=none; b=RvT8iORABlvDtAyKdx7/cd+53dAyrnsbxhJ2SydSKYWJDSK4v7WbyaD7DYcwhqr21q5rPIEejDxnZg3fEd89Mu7s6L7LIm1FCEStBaC+Hhj1jcd8IntU9rs6njTavh6kRH8YM3hM2ZTqOeeHL7u3Efs+UipQ+8cLlvIlTyOey4E=
+	t=1727882090; cv=none; b=DgQma2Q3ie0Or3X/Z1ldnx80S4O1dWLJlU8sVMHImwFsd1ZpoLh/j+oD/KQkwi5fJYCbg4I67Hz7/NklpkxD6rQiUueXXZfhclLmg9ZTGWV7Si1mfaHzFD8t8/gFnoaafH423dALCD+r3sixaLCnQXQS8zZvEhlRNl1JMwmuPxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727880750; c=relaxed/simple;
-	bh=MU9+R9Kvl7CAykXh043qkbjzvCIiYkmaJANF1Yea/O0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ItqwmtKmUO60JoMFZJyl/sipKdrJGcCxR+IO5eIQQTdviUfCCyRenesyWcsaiUZBRFYxYMKJ+Jm58TVrmeh7ymDUlxPpNM3eRmkVJoiY7IJtF4VrYsQipeh247sHBbG0DofdvHLmU8DmJ2hs67+p96XjfJvFNLKlpv83cghoypI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=h5mn6BSj; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1727882090; c=relaxed/simple;
+	bh=QUDhjg2BB1fAQvC+jY5ECEnUXOJHYoEWYS+9Oj9rdEY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=e1/vaUwEZGaCn98VI4+WASOxuGuxVRCKE+fa7wmWRWlWYkQjjqFBg3nbWTljzri9PILedAeUYWGk7Eor9KhMTKViIKoGhYrzNj6R7FYuWfbh25XJ9JfB1pt61JffdzkGVCoiXPnCd5fRkhBwL3qRHRxJFPkLZxzDtUFJ6Q0pH0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=D0GuXQjf; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="h5mn6BSj"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
-	:Subject; bh=GI3RiPDGhmzNSN8i/+FL+Bxe+r6gMoOsPDsMSIAkf64=; b=h5mn6BSjY/6e8B96
-	kPyAMHyMGCQt5p5sp0qI/Sq+lJwEdJOO7FheXm6KC5O22mdM25IGVGi97hnlO67I9WO+Eaathpnlj
-	WeuzfWRs8xSs99fvvzsX6aHM/KIq2hINe6PGanyAORuj8XK+QqBJ09kkA8sjkiKjaaSfzLLtIstr7
-	WVM1E2Jcb8mPFbfMhJ/V6C/iO0jPN+ruAGSOKT1bM7hlw28RpuSf1/dYwwcjMdLp4W//obXyOmHPh
-	L1jBeaX2iXIDi/2o/n3I6ZPCzXE2qaSxV5cl1CyPsaePfnr8aOsKT75OowyqqB1pZ4peh41edJQWH
-	4Vik0yo8XeKeIYD4uw==;
-Received: from dg by mx.treblig.org with local (Exim 4.96)
-	(envelope-from <dg@treblig.org>)
-	id 1sw0iF-008TMg-0r;
-	Wed, 02 Oct 2024 14:52:23 +0000
-Date: Wed, 2 Oct 2024 14:52:23 +0000
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
-To: Andy Shevchenko <andy@kernel.org>
-Cc: kees@kernel.org, akpm@linux-foundation.org, pmladek@suse.com,
-	rostedt@goodmis.org, linux@rasmusvillemoes.dk,
-	senozhatsky@chromium.org, linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] printf: Remove unused 'bprintf'
-Message-ID: <Zv1eJ-07dY2Drmh_@gallifrey>
-References: <20241002012125.405368-1-linux@treblig.org>
- <Zv1Uk_3W2hu1M8-9@smile.fi.intel.com>
- <Zv1ZN8XZmSZTD-78@gallifrey>
- <Zv1chIuTlOdu-ved@smile.fi.intel.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D0GuXQjf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1727882087;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4vDfvl8sq0hjV+/ccjH8f99YPMDb9k3uRc8ixspRqpE=;
+	b=D0GuXQjfdr7wy4w8djKv4qhu6D1Q1Im1M2FQI/cLfgDQL7xszH7GBLYu5fuqquXB6Y7WQK
+	bZ+pXUtVB5rYjcwlvI1rVbP1M1DZkw6tXf49vNuA6P+z7MyaOjsbqUSx0QU8H0pJOonZfe
+	pwDhUr3FZMHBDslS4H+3jWpVgsUxFQA=
+Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com
+ [209.85.215.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-440-HwGf6aG7O5i4uZNnziOF-w-1; Wed, 02 Oct 2024 11:14:46 -0400
+X-MC-Unique: HwGf6aG7O5i4uZNnziOF-w-1
+Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-7d904fe9731so6122236a12.3
+        for <linux-hardening@vger.kernel.org>; Wed, 02 Oct 2024 08:14:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727882085; x=1728486885;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4vDfvl8sq0hjV+/ccjH8f99YPMDb9k3uRc8ixspRqpE=;
+        b=L4sWDxO3udG9nrETRc3DNxOjzixCbyy1YVb7dCNGh8juDUr0+Lz+EfORVEvix58YF1
+         3zLyZiOBokO/Os++Tg+wQPdw5/IS4CAA5MCi2n62b0yn+Pra+u42P8pn5GazgJUXRaQ0
+         5c2PVoyTfZ6inzQP6lhwvR/vqNhmeb6YVKfw1m3hu+0SvWTdgIS3xg+P74CtyDcvYdXY
+         EqsyXxVzbslr57X99JNyBLwkhlnhMFjKBij9EaR7nA11oofq1Qeb2y2jIQPmYw0zyhFu
+         PJbUiuEhgLhVkNjwJM1BMLg7RztxF76WoSt9ZHDzBnxAAi6csc1IDXI4xf3i53JC6cV5
+         og2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUkyMlqpBbAF6dC+KM2+eovlZiciq2eOPV6emsJBVrPiXMVxFlrzLyUbTbcf31y+C8lBHAQI3EfTjY7C8xwBhI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPBFx7Utwu17nHd24mt9aMHbuiOTSBquLk1E1YfFqQLGr6B730
+	1DFkxlOhq9YOwg8lNOKy5f78eWV8Po90QOx+scTLe+RzHQy1ln0sdNJAQdjvqfhGCdyYv0MQ7Cf
+	We+geCc45/2ELlU1SOOK8625Hzc7wXP8Va/EYpKloFFhsXcNDG9ktHeEO9lmR6siYXO+VlGC1Zk
+	S/8gnIA6CzJvY8BhzcvWoTDZJ0rVrQuTVd1RGbj9n1av6hhfkU2+E=
+X-Received: by 2002:a17:90a:8f03:b0:2d3:d68e:e8d8 with SMTP id 98e67ed59e1d1-2e1849e48bemr3374003a91.40.1727882085321;
+        Wed, 02 Oct 2024 08:14:45 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHFi58lvd+1ylmMny4MXsv0GeGbXQggxrNrlp5663034F31N80QJIO125EWfMpu9MJQevIIP3BmA1iyUJmzsLA=
+X-Received: by 2002:a17:90a:8f03:b0:2d3:d68e:e8d8 with SMTP id
+ 98e67ed59e1d1-2e1849e48bemr3373981a91.40.1727882084868; Wed, 02 Oct 2024
+ 08:14:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <Zv1chIuTlOdu-ved@smile.fi.intel.com>
-X-Chocolate: 70 percent or better cocoa solids preferably
-X-Operating-System: Linux/6.1.0-21-amd64 (x86_64)
-X-Uptime: 14:51:26 up 147 days,  2:05,  1 user,  load average: 0.07, 0.02,
- 0.00
-User-Agent: Mutt/2.2.12 (2023-09-09)
+References: <CAJD_bPJes4QhmXY5f63GHV9B9HFkSCoaZjk-qCT2NGS7Q9HODg@mail.gmail.com>
+ <B2A62C7F-45BA-43E1-975F-5AF0197CD2C3@kernel.org> <CAJD_bP+43=XXD7p3fRfDxCbj=_YedgVLv38XO4iOAw94a+4PHg@mail.gmail.com>
+ <202409221511.9AF49BD@keescook> <CAJD_bP+6qCgseo9of-cKW3+nH_UbGFwPo6WRbqqcneOZ+EEtOw@mail.gmail.com>
+ <800CC050-E858-409C-A565-A6EF430E1B25@kernel.org> <CAJD_bPKNbKo5tj4OV4MpgtSN6_FXfmQtBFgVFzZeZapCPNT6PA@mail.gmail.com>
+ <eb7354f6-98bd-45c6-a616-733637848a14@ghiti.fr>
+In-Reply-To: <eb7354f6-98bd-45c6-a616-733637848a14@ghiti.fr>
+From: Jason Montleon <jmontleo@redhat.com>
+Date: Wed, 2 Oct 2024 11:14:33 -0400
+Message-ID: <CAJD_bPKHA5+Ta1vzokN-TXJU4bk4OA5QTXEEvAwmzLzmW8YtTQ@mail.gmail.com>
+Subject: Re: [REGRESSION][BISECTED] Cannot boot Lichee Pi 4A with
+ FORTIFY_SOURCE enabled
+To: Alexandre Ghiti <alex@ghiti.fr>
+Cc: Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org, 
+	Linux regressions mailing list <regressions@lists.linux.dev>, linux-riscv@lists.infradead.org
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-* Andy Shevchenko (andy@kernel.org) wrote:
-> On Wed, Oct 02, 2024 at 02:31:19PM +0000, Dr. David Alan Gilbert wrote:
-> > * Andy Shevchenko (andy@kernel.org) wrote:
-> > > On Wed, Oct 02, 2024 at 02:21:25AM +0100, linux@treblig.org wrote:
-> > > > From: "Dr. David Alan Gilbert" <linux@treblig.org>
-> > > > 
-> > > > bprintf is unused.  Remove it.
-> > > 
-> > > bprintf()
-> > 
-> > OK.
-> > 
-> > > > It was added in
-> > > > commit 4370aa4aa753 ("vsprintf: add binary printf")
-> > > > 
-> > > > but as far as I can see was never used, unlike the other
-> > > > two functions in that patch.
-> > > 
-> > > Please, rewrap these lines to use more room on each line.
-> > 
-> > Something like this? :
-> 
-> > bprintf() is unused.  Remove it.  It was added in
-> > 
-> > commit 4370aa4aa753 ("vsprintf: add binary printf")
-> > 
-> > but as far as I can see was never used, unlike the other two functions in
-> > that patch.
-> 
-> You have two blank lines in the middle, do you really need them?
+On Tue, Oct 1, 2024 at 10:53=E2=80=AFAM Alexandre Ghiti <alex@ghiti.fr> wro=
+te:
+>
+> Hi Jason,
+>
+> On 25/09/2024 16:32, Jason Montleon wrote:
+> > On Tue, Sep 24, 2024 at 1:36=E2=80=AFPM Kees Cook <kees@kernel.org> wro=
+te:
+> >>
+> >>
+> >> On September 24, 2024 8:58:57 AM PDT, Jason Montleon <jmontleo@redhat.=
+com> wrote:
+> >>> On Sun, Sep 22, 2024 at 6:38=E2=80=AFPM Kees Cook <kees@kernel.org> w=
+rote:
+> >>>> Can you try this patch? It should avoid using the "WARN" infrastruct=
+ure
+> >>>> (if that is the source of blocking boot), but should still provide s=
+ome
+> >>>> detail about what tripped it up (via the "regular" pr_*() logging). =
+And
+> >>>> if it boots, can you look at the log to find what it reports for the
+> >>>> "Wanted to write ..." line(s)?
+> >>>>
+> >>>> Thanks!
+> >>>>
+> >>>> -Kees
+> >>>>
+> >>>>
+> >>>> diff --git a/include/linux/fortify-string.h b/include/linux/fortify-=
+string.h
+> >>>> index 0d99bf11d260..469a3439959d 100644
+> >>>> --- a/include/linux/fortify-string.h
+> >>>> +++ b/include/linux/fortify-string.h
+> >>>> @@ -549,7 +549,8 @@ __FORTIFY_INLINE bool fortify_memcpy_chk(__kerne=
+l_size_t size,
+> >>>>                                           const size_t q_size,
+> >>>>                                           const size_t p_size_field,
+> >>>>                                           const size_t q_size_field,
+> >>>> -                                        const u8 func)
+> >>>> +                                        const u8 func,
+> >>>> +                                        const char *field)
+> >>>>   {
+> >>>>          if (__builtin_constant_p(size)) {
+> >>>>                  /*
+> >>>> @@ -610,8 +611,13 @@ __FORTIFY_INLINE bool fortify_memcpy_chk(__kern=
+el_size_t size,
+> >>>>           * https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D101832
+> >>>>           */
+> >>>>          if (p_size_field !=3D SIZE_MAX &&
+> >>>> -           p_size !=3D p_size_field && p_size_field < size)
+> >>>> -               return true;
+> >>>> +           p_size !=3D p_size_field && p_size_field < size) {
+> >>>> +               if (p_size_field =3D=3D 0)
+> >>>> +                       pr_warn("Wanted to write %zu to a 0-sized de=
+stination: %s\n",
+> >>>> +                               size, field);
+> >>>> +               else
+> >>>> +                       return true;
+> >>>> +       }
+> >>>>
+> >>>>          return false;
+> >>>>   }
+> >>>> @@ -625,7 +631,8 @@ __FORTIFY_INLINE bool fortify_memcpy_chk(__kerne=
+l_size_t size,
+> >>>>          const size_t __q_size_field =3D (q_size_field);            =
+       \
+> >>>>          fortify_warn_once(fortify_memcpy_chk(__fortify_size, __p_si=
+ze,  \
+> >>>>                                       __q_size, __p_size_field,     =
+     \
+> >>>> -                                    __q_size_field, FORTIFY_FUNC_ #=
+#op), \
+> >>>> +                                    __q_size_field, FORTIFY_FUNC_ #=
+#op,\
+> >>>> +                                    #p " at " FILE_LINE), \
+> >>>>                    #op ": detected field-spanning write (size %zu) o=
+f single %s (size %zu)\n", \
+> >>>>                    __fortify_size,                                  =
+     \
+> >>>>                    "field \"" #p "\" at " FILE_LINE,                =
+     \
+> >>>>
+> >>>>
+> >>>> --
+> >>>> Kees Cook
+> >>>>
+> >>> Hi Kees,
+> >>> Sorry for the delay in responding. Your patch also caused the system
+> >>> to hang booting, but I took it as inspiration to try some things.
+> >>> TL;DR I see these two print several times:
+> >>>
+> >>> Wanted to write 8 to a 0-sized destination: oldptr at
+> >>> arch/riscv/errata/thead/errata.c:185
+> >>> Wanted to write 28 to a 0-sized destination: oldptr at
+> >>> arch/riscv/errata/thead/errata.c:185
+> >>>
+> >>> Since I suspected CONFIG_ERRATA_THEAD_MAE which relies on
+> >>> CONFIG_RISCV_ALTERNATIVE_EARLY I suspected it is just too early for
+> >>> pr_*, etc. I tried trace_printk but that didn't produce any traces,
+> >>> and then I found a comment which makes me think we're too early for
+> >>> that too.
+> >>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tr=
+ee/arch/riscv/kernel/alternative.c?h=3Dv6.11#n214
+> >>>
+> >>> I didn't want to give up so I wrote a simple module to figure out how
+> >>> to use sbi_ecall and then incorporated that idea into your patch,
+> >>> although even that was not straightforward:
+> >>> https://gist.github.com/jmontleon/f3536ad70dc92bed992139ad5b266d5c
+> >> Oh nice work! Probably something riscv-specific needs to be wired up t=
+o the printk routines to do what you have there until printk is fully avail=
+able  But that's a separate issue, I guess.
+> >>
+> >>> Full output: https://gist.github.com/jmontleon/823facff38e28b717f153e=
+38adcfd7fe
+> >> Does the system boot with your patch?
+> > Yes. It boots fully. It also booted with trace_printk, it just didn't
+> > produce a trace, which again I think is expected at that stage. It
+> > seems as long as there are no 'normal' print attempts, pr_()*, etc. it
+> > works.
+>
+>
+> Hmmm I don't see what in your patch would fix your issue.
+>
+> I sent a patch
+> (https://lore.kernel.org/linux-riscv/20240829165048.49756-1-alexghiti@riv=
+osinc.com/)
+> that was merged in v6.11-rc7 which fixes something similar, could that
+> be what fixed your problem?
+>
 
-No, I was just trying to keep the commit reference separate, I'm never
-quite sure what checkpatch gets upset by.
+Hi Alex, Thank you for having a look.
 
-> I would put it like this
-> 
-> bprintf() is unused. Remove it. It was added in the commit 4370aa4aa753
-> ("vsprintf: add binary printf") but as far as I can see was never used,
-> unlike the other two functions in that patch.
+Although I narrowed it down to starting with 6.11-rc1, the first time
+I encountered this was actually with an rc7 Fedora build.
+http://riscv.rocks/koji/buildinfo?buildID=3D338433
 
-Sure, I can send a v2 like that.
+I also did a build from upstream 6.11.1 last night and still see the
+problem trying to boot with it this morning.
 
-Dave
+> The problem with this early code is that the MMU is not enabled yet and
+> if your kernel is relocatable, the relocations are set "virtually" and
+> then without the MMU, a call to an external function results in a
+> trap...Which happens way too often, I have a few ideas to fix that, I
+> need to find time to tackle this though.
+>
+> I don't know FORTIFY_SOURCE, but I guess this could cause a call to an
+> external function and then cause the issue I describe above right? We
+> already remove all instrumentations from this early code so maybe we
+> should remove FORTIFY_SOURCE too?
+>
+What you are describing here does not seem unreasonable to me, but I
+simply do not know enough to say one way or the other.
+Is there something I can do to collect more information to determine
+if this is the cause?
 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
--- 
- -----Open up your eyes, open up your mind, open up your code -------   
-/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
-\        dave @ treblig.org |                               | In Hex /
- \ _________________________|_____ http://www.treblig.org   |_______/
+Thank you again for having a look,
+Jason
+
+> Thanks for digging into this,
+>
+> Alex
+>
+>
+> >
+> >> I would guess that this line at arch/riscv/errata/thead/errata.c:168:
+> >>
+> >> void *oldptr, *altptr;
+> >>
+> >> Should be:
+> >>
+> >> u8 *oldptr, *altptr;
+> > I tried this, but it didn't appear to make a difference, I will try
+> > some more today, though I admit to being out of my element.
+> >
+> >
+> >
+> >> But maybe __ALT_PTR needs adjustment too? Hmm. I would have expected v=
+oid * to have a size of SIZE_MAX here, though, so something else might be c=
+onfusing the check.
+> >>
+> >>
+> >> --
+> >> Kees Cook
+> >>
+> >
+> > _______________________________________________
+> > linux-riscv mailing list
+> > linux-riscv@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-riscv
+>
+
