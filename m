@@ -1,115 +1,95 @@
 Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27C6B1D0B9B;
-	Wed,  2 Oct 2024 17:31:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36CF11854;
+	Wed,  2 Oct 2024 17:33:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727890317; cv=none; b=qksDRINqQf5J57EuPqZ7ZpSq5G4iFrxI13xTu8DGOmm/GIMdDGs4cSW5TtZq18o3NTBSTP5YNL6bsykygzyMMieNhhVrCCl+FkyXJKPo1+T6ISR3NAdlBQaX/QIIzSQQk1ke+9aFuXKE5yGcM2/UziU/VGeEiuy9SpJx/t5xdVw=
+	t=1727890385; cv=none; b=Klx4VwpOmFfWLJDQQx8cPiHRu82qgDtHJ+RBSZil0vylnzgXKwIk2y0x6/rePaFtiB0fdoIMu1Q/XDZ6kY7WyhyKirVdwCF4kvei7EJwYGmpyY6bcJd6V3Yo6IK9gFRh4P1pkezOHD2XvXqe10Ymfo72FOK8ZjJvNvYEOhinI6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727890317; c=relaxed/simple;
-	bh=Xb/OoSDrrxytgvaYVAYYF+2fPew456qVNHvt4A+Ka4M=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SYSf9MdI45AbRxr5CKOVbtL3SipjzHdbNVjsHlwZYM7yErnbUmWcthsiVHTQ2t3N4VunSlDC9xKm8RrsI0ACh3xw4ckNosPabkoGmUTtLtGn856Jmn7C+lT+bqpT/ruQLviJrpJEKLoWeBvnHzvzDaDWbmAjjlWaZFDYK0M57Os=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=hhXmT0Zb; arc=none smtp.client-ip=46.235.229.95
+	s=arc-20240116; t=1727890385; c=relaxed/simple;
+	bh=i7GRzl/3sSWdkBx9pufC2TJAg3hYOaw3cLkl6ZOXBFg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BSYYxdYL9WlxcaoFRnfoJMqUdMp/+vB9Qwl6tVeRVHbxlbkGaG8pGjH1jAomIVimhV8bZ8es1bdVeu3ub5DvdHpjbsfXXe4BVylA1Yn7ccPyExUuD7YilUi46XbWbdiP4Xgu3lKZgxyXOTE8lYeD4MyyGo8XJJE5+eV+8hT/aBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=jYfSaEgl; arc=none smtp.client-ip=46.235.229.95
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="hhXmT0Zb"
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="jYfSaEgl"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
-	:Subject; bh=ME7Pc2+Q6XZhFMk8YNwfMNEQkh6kUYcbO1U84+cEdHA=; b=hhXmT0ZbD8NUz/2R
-	otMdwqKPqrELQzre8fqVI39ODzjJY64S6s+0FCX8xNUZEcmjFtQtxiG1cXAMATv+Eugele6AfTXsp
-	zvCnlkxdNlZXhzILVl/6wbIgQB/vKBlzQRPZhp46FSnNTJdD+mO5J/VRLimp2B7EHUODP1E+zd3Ox
-	2iV5v6NrTJS0o4y58ORAojmxTZqxi8I+Zyia4ujD2hhofdEywIkg1JwaQlEDyGk4n/DL333d2rwAE
-	BrJJ3On1SQR/jX0NG9RSZe/2M4G6TH6eY+reGXyvZ9KZwl1I8sicF0riN+SHzQEt5CLv5wdsxVpUL
-	fyWjf65+XY0DtLJVLQ==;
-Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
-	by mx.treblig.org with esmtp (Exim 4.96)
-	(envelope-from <linux@treblig.org>)
-	id 1sw3CW-008Vr0-0D;
-	Wed, 02 Oct 2024 17:31:48 +0000
-From: linux@treblig.org
-To: kees@kernel.org,
-	andy@kernel.org,
-	akpm@linux-foundation.org,
-	pmladek@suse.com,
-	rostedt@goodmis.org,
-	linux@rasmusvillemoes.dk,
-	senozhatsky@chromium.org
-Cc: linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Dr. David Alan Gilbert" <linux@treblig.org>
-Subject: [PATCH v2] printf: Remove unused 'bprintf'
-Date: Wed,  2 Oct 2024 18:31:47 +0100
-Message-ID: <20241002173147.210107-1-linux@treblig.org>
-X-Mailer: git-send-email 2.46.2
+	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
+	:Subject; bh=V/R2GvgTvKCAcd3eeTKrMrkj7TbMYRQtWWjqtRw2w2U=; b=jYfSaEglLMsm0OYu
+	LTkZupPCXvSqlDqyBJ+t43xzZkchklL7JVKdJbPvmWtDOep+KhRhmHtXgyMB3VJswjFEGS2w61Io7
+	Vxait0b7wBb6gUMKplZprbTdMJZdxEyw8IN7D/eEd4M+u3hTaNCJHUMWBx+CtIBFMKGLvLkusNlQO
+	vArlRZW1sUsk6xas3kNJsGSLUDxGJWTGMh0PEjmQgNwOmdCAqsmAtvpVGF/13JLoR3XP0d2h/pw9Y
+	9C/jtYnfetttrDfohQWd2VfoI9l50xg5pkK1YC0eh/bIuppFTQFvC4RXwbPEfxLAM6UoJuBoUSmMo
+	lgIKG8LowhnDvjJ3/A==;
+Received: from dg by mx.treblig.org with local (Exim 4.96)
+	(envelope-from <dg@treblig.org>)
+	id 1sw3Df-008Vsp-19;
+	Wed, 02 Oct 2024 17:32:59 +0000
+Date: Wed, 2 Oct 2024 17:32:59 +0000
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Andy Shevchenko <andy@kernel.org>, kees@kernel.org,
+	akpm@linux-foundation.org, pmladek@suse.com,
+	linux@rasmusvillemoes.dk, senozhatsky@chromium.org,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] printf: Remove unused 'bprintf'
+Message-ID: <Zv2Dy7RST8Q-pzL5@gallifrey>
+References: <20241002012125.405368-1-linux@treblig.org>
+ <Zv1Uk_3W2hu1M8-9@smile.fi.intel.com>
+ <Zv1ZN8XZmSZTD-78@gallifrey>
+ <20241002104807.42b4b64e@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+In-Reply-To: <20241002104807.42b4b64e@gandalf.local.home>
+X-Chocolate: 70 percent or better cocoa solids preferably
+X-Operating-System: Linux/6.1.0-21-amd64 (x86_64)
+X-Uptime: 17:32:00 up 147 days,  4:46,  1 user,  load average: 0.06, 0.02,
+ 0.00
+User-Agent: Mutt/2.2.12 (2023-09-09)
 
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
+* Steven Rostedt (rostedt@goodmis.org) wrote:
+> On Wed, 2 Oct 2024 14:31:19 +0000
+> "Dr. David Alan Gilbert" <linux@treblig.org> wrote:
+> 
+> > > I am not familiar with tricks in BPF or ftrace code where this actually might
+> > > be implicitly called via a macro, but brief grep gives nothing that might point
+> > > to that.  
+> > 
+> > I've got an all-yes build (well, most after I took out broken stuff) booting
+> > with it, and it has CONFIG_BINARY_PRINTF=y and CONFIG_FTRACE=y .
+> > 
+> > trace_seq.c uses seq_buf_bprintf which uses bstr_printf rather than the plain
+> > bprintf() that I've deleted.
+> > Not sure where to dig in BPF, but I've had a fairly good grep around.
+> 
+> I believe it is safe to delete. It looks like bprintf() was added for
+> completeness, where as everything is just using the vbin_printf() directly.
+> bprintf() is nothing more than a wrapper around it in case someone wanted
+> to use binary prints directly. But I'm not sure there's a good use case for
+> it, as all users would likely need to add some code around it for
+> processing (like trace.c does).
+> 
+> Send a v2 and I could take it for v6.13.
 
-bprintf() is unused. Remove it. It was added in the commit 4370aa4aa753
-("vsprintf: add binary printf") but as far as I can see was never used,
-unlike the other two functions in that patch.
+Thanks,
 
-Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
-Reviewed-by: Andy Shevchenko <andy@kernel.org>
----
- include/linux/string.h |  1 -
- lib/vsprintf.c         | 23 -----------------------
- 2 files changed, 24 deletions(-)
+Just posted, message-id 20241002173147.210107-1-linux@treblig.org
 
-diff --git a/include/linux/string.h b/include/linux/string.h
-index 0dd27afcfaf7..493ac4862c77 100644
---- a/include/linux/string.h
-+++ b/include/linux/string.h
-@@ -335,7 +335,6 @@ int __sysfs_match_string(const char * const *array, size_t n, const char *s);
- #ifdef CONFIG_BINARY_PRINTF
- int vbin_printf(u32 *bin_buf, size_t size, const char *fmt, va_list args);
- int bstr_printf(char *buf, size_t size, const char *fmt, const u32 *bin_buf);
--int bprintf(u32 *bin_buf, size_t size, const char *fmt, ...) __printf(3, 4);
- #endif
- 
- extern ssize_t memory_read_from_buffer(void *to, size_t count, loff_t *ppos,
-diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-index 09f022ba1c05..d072cd59eb6a 100644
---- a/lib/vsprintf.c
-+++ b/lib/vsprintf.c
-@@ -3383,29 +3383,6 @@ int bstr_printf(char *buf, size_t size, const char *fmt, const u32 *bin_buf)
- }
- EXPORT_SYMBOL_GPL(bstr_printf);
- 
--/**
-- * bprintf - Parse a format string and place args' binary value in a buffer
-- * @bin_buf: The buffer to place args' binary value
-- * @size: The size of the buffer(by words(32bits), not characters)
-- * @fmt: The format string to use
-- * @...: Arguments for the format string
-- *
-- * The function returns the number of words(u32) written
-- * into @bin_buf.
-- */
--int bprintf(u32 *bin_buf, size_t size, const char *fmt, ...)
--{
--	va_list args;
--	int ret;
--
--	va_start(args, fmt);
--	ret = vbin_printf(bin_buf, size, fmt, args);
--	va_end(args);
--
--	return ret;
--}
--EXPORT_SYMBOL_GPL(bprintf);
--
- #endif /* CONFIG_BINARY_PRINTF */
- 
- /**
+Dave
+
+> -- Steve
+> 
 -- 
-2.46.2
-
+ -----Open up your eyes, open up your mind, open up your code -------   
+/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
+\        dave @ treblig.org |                               | In Hex /
+ \ _________________________|_____ http://www.treblig.org   |_______/
