@@ -1,97 +1,63 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 263E41D078B;
-	Wed,  2 Oct 2024 14:45:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3FCB3D994;
+	Wed,  2 Oct 2024 14:47:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727880331; cv=none; b=ZD3cL5TeFUuS7dY8EulxHQ0uBptQ8a29N5vGxTdKCQpjRND4N63OSVd8xxRPSxxbipKNQeF1pWPehwS2jWfMkV74wBjLMh+LeCVD42tmVLUvYyDud9EIGfbEAPabmrragDVpyMPtgieO0gz3ZAdzDkasmak6rJVdJ8Nbi2SEI3k=
+	t=1727880439; cv=none; b=ilS4Kjubcj1mVWmO/B+qsaDKncdvwXsaG1+serEMtyHQ/b9tfqJ2RWoJVufUppDhz1LmRo2JQInUiGRqw2BvNEYGraEt0nAwgcls3+9mod3KvB0wjkc9JrViffBbGL3Oxlvc6clDV4DWyEJ0Z+pPtIXvqKCEcnxzOVHiAFimqeQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727880331; c=relaxed/simple;
-	bh=sFxZjljjSXBgJC8LqT/w4yAiyxCVhdFMZpVnVU5PYlY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mpF0b09co3YwvOeoxerKFs5gtUMc3oAmMZj7exU/doG8IkxIB9/yEb/CaQMS/PJ5qQxncw7a7Y+s9a8lfPW9I7VLQw/gddhThQaa8/H2Nq+Frd92XV6VbPv6vEDTFneedlaySk2AoYZfvBFA7cwTgVvNXyu8KgIC8MR9mw87ulM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: s5B6Iqv3Rp6glSYdEd/3Xg==
-X-CSE-MsgGUID: gsKTfV4ZTBywkoSQbcWmjQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11213"; a="30837951"
-X-IronPort-AV: E=Sophos;i="6.11,171,1725346800"; 
-   d="scan'208";a="30837951"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Oct 2024 07:45:30 -0700
-X-CSE-ConnectionGUID: th2POc9bTdSb8UA2ju9N5Q==
-X-CSE-MsgGUID: vZ4xxf2eS965SesFLI5JNw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,171,1725346800"; 
-   d="scan'208";a="74324416"
-Received: from unknown (HELO smile.fi.intel.com) ([10.237.72.154])
-  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Oct 2024 07:45:27 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andy@kernel.org>)
-	id 1sw0bU-0000000FhxU-3YTD;
-	Wed, 02 Oct 2024 17:45:24 +0300
-Date: Wed, 2 Oct 2024 17:45:24 +0300
-From: Andy Shevchenko <andy@kernel.org>
+	s=arc-20240116; t=1727880439; c=relaxed/simple;
+	bh=H/ZGFmonr7OdzlsK71vUaWahQwMo8iTYkBup05km8R0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KSCl5xxxrthW8JjeQdlr/96RPhjlPeZa/8GJDsHmq2MCRHKgLK/CmlbNrcUgoHp1Y0kFN75GmHDUrEjxokaXcvDNBjYkYNGDQrg1du7RIHgCQG7O3TYh4yuSTtyorFN9WpVwWqDDUsjp5c6ooF8xdF58goZiuYH/sJssW0vb8iE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7845BC4CEC5;
+	Wed,  2 Oct 2024 14:47:16 +0000 (UTC)
+Date: Wed, 2 Oct 2024 10:48:07 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
 To: "Dr. David Alan Gilbert" <linux@treblig.org>
-Cc: kees@kernel.org, akpm@linux-foundation.org, pmladek@suse.com,
-	rostedt@goodmis.org, linux@rasmusvillemoes.dk,
-	senozhatsky@chromium.org, linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org
+Cc: Andy Shevchenko <andy@kernel.org>, kees@kernel.org,
+ akpm@linux-foundation.org, pmladek@suse.com, linux@rasmusvillemoes.dk,
+ senozhatsky@chromium.org, linux-hardening@vger.kernel.org,
+ linux-kernel@vger.kernel.org
 Subject: Re: [PATCH] printf: Remove unused 'bprintf'
-Message-ID: <Zv1chIuTlOdu-ved@smile.fi.intel.com>
+Message-ID: <20241002104807.42b4b64e@gandalf.local.home>
+In-Reply-To: <Zv1ZN8XZmSZTD-78@gallifrey>
 References: <20241002012125.405368-1-linux@treblig.org>
- <Zv1Uk_3W2hu1M8-9@smile.fi.intel.com>
- <Zv1ZN8XZmSZTD-78@gallifrey>
+	<Zv1Uk_3W2hu1M8-9@smile.fi.intel.com>
+	<Zv1ZN8XZmSZTD-78@gallifrey>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zv1ZN8XZmSZTD-78@gallifrey>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Oct 02, 2024 at 02:31:19PM +0000, Dr. David Alan Gilbert wrote:
-> * Andy Shevchenko (andy@kernel.org) wrote:
-> > On Wed, Oct 02, 2024 at 02:21:25AM +0100, linux@treblig.org wrote:
-> > > From: "Dr. David Alan Gilbert" <linux@treblig.org>
-> > > 
-> > > bprintf is unused.  Remove it.
-> > 
-> > bprintf()
+On Wed, 2 Oct 2024 14:31:19 +0000
+"Dr. David Alan Gilbert" <linux@treblig.org> wrote:
+
+> > I am not familiar with tricks in BPF or ftrace code where this actually might
+> > be implicitly called via a macro, but brief grep gives nothing that might point
+> > to that.  
 > 
-> OK.
+> I've got an all-yes build (well, most after I took out broken stuff) booting
+> with it, and it has CONFIG_BINARY_PRINTF=y and CONFIG_FTRACE=y .
 > 
-> > > It was added in
-> > > commit 4370aa4aa753 ("vsprintf: add binary printf")
-> > > 
-> > > but as far as I can see was never used, unlike the other
-> > > two functions in that patch.
-> > 
-> > Please, rewrap these lines to use more room on each line.
-> 
-> Something like this? :
+> trace_seq.c uses seq_buf_bprintf which uses bstr_printf rather than the plain
+> bprintf() that I've deleted.
+> Not sure where to dig in BPF, but I've had a fairly good grep around.
 
-> bprintf() is unused.  Remove it.  It was added in
-> 
-> commit 4370aa4aa753 ("vsprintf: add binary printf")
-> 
-> but as far as I can see was never used, unlike the other two functions in
-> that patch.
+I believe it is safe to delete. It looks like bprintf() was added for
+completeness, where as everything is just using the vbin_printf() directly.
+bprintf() is nothing more than a wrapper around it in case someone wanted
+to use binary prints directly. But I'm not sure there's a good use case for
+it, as all users would likely need to add some code around it for
+processing (like trace.c does).
 
-You have two blank lines in the middle, do you really need them?
-I would put it like this
+Send a v2 and I could take it for v6.13.
 
-bprintf() is unused. Remove it. It was added in the commit 4370aa4aa753
-("vsprintf: add binary printf") but as far as I can see was never used,
-unlike the other two functions in that patch.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+-- Steve
