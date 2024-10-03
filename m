@@ -1,33 +1,51 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8344E1A4E8C;
-	Thu,  3 Oct 2024 19:09:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB124768FD
+	for <linux-hardening@vger.kernel.org>; Thu,  3 Oct 2024 19:14:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727982546; cv=none; b=N0kTt5SztW2JdKAIsTVuGp7pzQhuqyr8xE51UHc9Vk3vnspzZO2RQ55dU80eDuesqu+Mk+Yi64c6b/EJrb6YlYKhWU1YUfZ0INaB3jakfjHFG5Fbe++hXrHRVFXRSyts1DD9GVZmi0Av0KziW5OBlG1Zerb99fbyJktZuIIsbnc=
+	t=1727982850; cv=none; b=ffVEpRrxLP7rdTVPolFWYhZ5bs1/5Wfm/J8FqZUXchPJFBYqQsxG2L+/YVA2EeagUPlSPTVROssSkrluFy15jCss/LRMeudPWH9kQ8fFiPkH8G1J5TDFAGjpBMz+bijxml1jZMe6wXXEHOvsZ0G3mt+vSDQstALxlMf1sjLRfUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727982546; c=relaxed/simple;
-	bh=A1mk0jpO/HJnFIGMhh2gBHVnCw9aebL7CYqdU1X6hUU=;
+	s=arc-20240116; t=1727982850; c=relaxed/simple;
+	bh=nvgZo8v/XwYx8CMN/Kd1Zf4q3oflbE/LLAS2ci7oBH0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DU6CFKIrgmfyncjS9puAqzbhOGrLBM/SaxuKM4TZsQWXRY5xDPwOAtklp/T7VSxUX6eo8rh6pwosEQFgmw2CIbsWkb+6Jjm9UiYDhCBh7ZZQG8H0hEqQdgh7Ny0+x0IE0Mp0ylvbERjsuYmlovlYjIP+g91tL5qkjcf2vMvJpHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VZbyYNRi; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=hDZ28zJsfwGFlZYvtV1+69Bs9Ct4pGL0bbIuW2lEHzda4GS5jvxY/7//V4EAsYdy0fYwaWTr8mWTOPmyjUMyJ4/JeHzp9TK+LujrtYjWLzbUKp6DrOzf3CAbKHJqFTarO9OggDSjkz4+T/Nf8HiTFp4Hvxg5USom/9o7U/1ey6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=KpKctKFK; arc=none smtp.client-ip=44.202.169.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VZbyYNRi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 397E3C4CEC5;
-	Thu,  3 Oct 2024 19:09:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727982546;
-	bh=A1mk0jpO/HJnFIGMhh2gBHVnCw9aebL7CYqdU1X6hUU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=VZbyYNRi1lCjV8blElcJnTdLnmfLBhbJsJSoklWSGdL+QYNm5c+S3tEiJNrz8ArAw
-	 xO5kQx9pnEMbsTfI2QP4m/mUzpFeWykvl195M3G0g4IUakSvZDCuEeOsOS6c2DYtb3
-	 7NGdR9Smj/2tQ8wb6LvermzG1+iSjJMMsXNL1FWB1Ek+UD45GGgbufxzKA59enfDxP
-	 N6+6Sd1brk9wH3EfYW4EmLP0Wsr0geK+vcNxDK4ftGp23HhpvN0zAelGktAqBanSSH
-	 KQ3qh60kICSftkZQ/0Dwv2xvwuyEkoaroYusMOUqjP7V8ymA5UGb2R3e6a4QpIeupZ
-	 oiwNNchrhcgQw==
-Message-ID: <e9a05386-54d8-4a18-8b16-4e871de094a4@kernel.org>
-Date: Thu, 3 Oct 2024 21:09:02 +0200
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="KpKctKFK"
+Received: from eig-obgw-6007a.ext.cloudfilter.net ([10.0.30.247])
+	by cmsmtp with ESMTPS
+	id w2TdsMwZNiA19wRH0s4kmD; Thu, 03 Oct 2024 19:14:02 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id wRGzshxUW0HwOwRGzsZtxL; Thu, 03 Oct 2024 19:14:01 +0000
+X-Authority-Analysis: v=2.4 cv=HtNwGVTS c=1 sm=1 tr=0 ts=66feecf9
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=B3fuDwYyW55wTQKIj88FGw==:17
+ a=IkcTkHD0fZMA:10 a=DAUX931o1VcA:10 a=7T7KSl7uo7wA:10
+ a=BXEf9FEPToR6foY5dqUA:9 a=QEXdDO2ut3YA:10 a=Xt_RvD8W3m28Mn_h3AK8:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=8pMJywXUdYNAihC5TeN69Uh5MH5fG8t9KLIBI2MlI90=; b=KpKctKFK35P0YCMvSWT+sDdjBR
+	S49MB/OwSRxhMHyKQzkm4mLkOY0yZHshVfRBf0AY0BFViLUNC08SO8w1jXjl7y+0KzB9DFdj+vbPw
+	MmAGihM9RAA3YEMgGTcd6+ilQw5AKaai3h7xjfPDQQ0ANcVxXAWYkKGPpfBUM5W8wS7WdRRQ+pdAc
+	JFL8R+8EWyIaw5eu45YKh8hS06cB2Yt3X2bLkTkyT5ftdpfv9Xabi3y9V9qnMIqbx9R4ZJz8hSJMu
+	MMJz5IZDwQvgp7IakU5sBGIJJ9upuZllwauGX34r35lvqfIaVqM9mFR5YjNBwQUhj/nWlsq4RQm+o
+	wEU8h5Uw==;
+Received: from [201.172.174.147] (port=34444 helo=[192.168.15.5])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1swRGy-001ha2-1j;
+	Thu, 03 Oct 2024 14:14:00 -0500
+Message-ID: <a276cecb-ae71-4ae2-8c9b-362403dbc367@embeddedor.com>
+Date: Thu, 3 Oct 2024 13:13:58 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -37,7 +55,7 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH][next] drm/nouveau: Avoid -Wflex-array-member-not-at-end
  warning
-To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To: Danilo Krummrich <dakr@kernel.org>
 Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
  Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
  David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
@@ -48,47 +66,40 @@ References: <ZsZLFS1CsHkKjw+C@elsanto>
  <30530165-0ea9-4f02-9d8c-e8abc9eda5a7@kernel.org>
  <035ae74b-5df5-493f-9835-02c1c30ccfcc@kernel.org>
  <45560975-7215-4205-8d3b-a01009c9b4f5@embeddedor.com>
-From: Danilo Krummrich <dakr@kernel.org>
+ <e9a05386-54d8-4a18-8b16-4e871de094a4@kernel.org>
 Content-Language: en-US
-In-Reply-To: <45560975-7215-4205-8d3b-a01009c9b4f5@embeddedor.com>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <e9a05386-54d8-4a18-8b16-4e871de094a4@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.172.174.147
+X-Source-L: No
+X-Exim-ID: 1swRGy-001ha2-1j
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.15.5]) [201.172.174.147]:34444
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfBoJkDmdQY1hUqHoeYIvViUdoMYzwN6BmBiGMuxJWG6WH5hzRgAB2SV1u1tVaDALTVW5cckjI4oPmQZ+Q+MO+e3c1KrICheFcXa/fHYpARyMGjVzIwH4
+ /2iyKus3dO4vw1caklK4EgrUWlaD1XG1/Am/Obnbb6VGM4YMW0QHfmEEoSds0IX5bIvlzeloeis0wCIMyBAPQQo2xCnrQv0+ASt09FucjiWD9Jvp0uU1aeRL
 
-On 10/3/24 8:44 PM, Gustavo A. R. Silva wrote:
-> 
-> 
-> On 03/10/24 12:36, Danilo Krummrich wrote:
->> On 9/13/24 12:23 PM, Danilo Krummrich wrote:
->>> Hi,
->>>
->>> On 9/13/24 10:09 AM, Gustavo A. R. Silva wrote:
->>>> Hi all,
->>>>
->>>> Friendly ping: who can take this, please? 🙂
->>>
->>> Usually, that's me. But I thought you might want to send a v2 based on Kees'
->>> comments?
->>
->> Do you plan to follow up on this? I'd prefer if we could get rid of the open-
->> coded "17". So, maybe just go with the define until we have something like
->> STACK_FLEX_COUNT()?
-> 
-> Do you mean the following define...?>
-> nv50_hdmi_enable(...)
-> {
-> ...
-> #define data_len    17
->      DEFINE_RAW_FLEX(struct nvif_outp_infoframe_v0, args, data, data_len);
-> ...rest of function...
-> #undef data_len
-> }
-
-Yes, it's not great, but I think it's better than having the length in two
-places.
 
 > 
-> Thanks
-> -- 
-> Gustavo
-> 
+> Yes, it's not great, but I think it's better than having the length in two
+> places.
 
+Agreed. I'll respin. :)
+
+Thanks
+--
+Gustavo
