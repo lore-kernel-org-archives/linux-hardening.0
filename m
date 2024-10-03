@@ -1,62 +1,95 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from fhigh-a6-smtp.messagingengine.com (fhigh-a6-smtp.messagingengine.com [103.168.172.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9373028370;
-	Thu,  3 Oct 2024 09:59:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B92531474C5;
+	Thu,  3 Oct 2024 11:33:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727949570; cv=none; b=p54EO0vxA5S8eX/VRzydiiZ5iVUEQefs973PZFlKPap27WLk6QdS4HMXt7WmjhsHSSfBhnijukV1L/vaXkE+USZOTWjQ4QzL3Qe587D/VYbRtv5zt4W0SGFtYnDwAO4zNLEFq+o70CLKB4RrEDVnvtXv7t5WjX8HSkTkdDc8YQo=
+	t=1727955222; cv=none; b=pQKzDVgbq7yf/Q9VsnlNyQk0E2P430kQCdcmCd3kb+CLW0o+4d9H+/wFhyzYTpkR1slpVH3rFGiKxkuvcnTVm2YjD1JcYoUy1gkV2Ccz9AvwRZNzdEzcHcswoC1b9yk9p/79sMWPFZwSDtmPzBvhmjlp83EXIglYvZxiVKYkzPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727949570; c=relaxed/simple;
-	bh=GAvgnDYbIpJ8EztU1XXyYsFYyamS+ZKbGL4mJyafhNw=;
+	s=arc-20240116; t=1727955222; c=relaxed/simple;
+	bh=9uwwMRWujgBj6NRSriDYtGiLD2SYNxubjA2LiQchzk8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iJDYcOZ5EjZbcUEe0sA92Isitsa9llCIrISLVGDO77gJOjgKUV46ZLD5cvdFGnLatbNBphWkONR4AVKnGaQtmBLXUy+GSoH0BOgzu9snRzJJUPhCtCwMFManvAYo9P0fGAIlmSHl7StSZIC7S5gD8aJo4U+6bvBpXpKBM8ejqVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: JSxS/CNDQjaeoEm8LJ3OHQ==
-X-CSE-MsgGUID: RCGoF4pKTaSIuJvgiL+dqA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11213"; a="44604905"
-X-IronPort-AV: E=Sophos;i="6.11,174,1725346800"; 
-   d="scan'208";a="44604905"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2024 02:59:28 -0700
-X-CSE-ConnectionGUID: sAT+PtLZQ5icH7Km736sXg==
-X-CSE-MsgGUID: 2r+uLvUiSDOn+6O7WPYLxw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,174,1725346800"; 
-   d="scan'208";a="74155166"
-Received: from unknown (HELO smile.fi.intel.com) ([10.237.72.154])
-  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2024 02:59:23 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andy@kernel.org>)
-	id 1swIcB-0000000G4lR-3KKf;
-	Thu, 03 Oct 2024 12:59:19 +0300
-Date: Thu, 3 Oct 2024 12:59:19 +0300
-From: Andy Shevchenko <andy@kernel.org>
-To: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: Christian Marangi <ansuelsmth@gmail.com>, Jens Axboe <axboe@kernel.dk>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Kees Cook <kees@kernel.org>,
-	Daniel Golle <daniel@makrotopia.org>,
-	INAGAKI Hiroshi <musashino.open@gmail.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	Li Lingfeng <lilingfeng3@huawei.com>,
-	Ming Lei <ming.lei@redhat.com>,
-	Christian Heusel <christian@heusel.eu>, linux-block@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Lorenzo Bianconi <lorenzo@kernel.org>, upstream@airoha.com
-Subject: Re: [PATCH v4 0/5] block: partition table OF support
-Message-ID: <Zv5q90Dc_VzA4xs3@smile.fi.intel.com>
-References: <20240930113045.28616-1-ansuelsmth@gmail.com>
- <ZvqfbNDfI2QWZEBg@smile.fi.intel.com>
- <87setej1y2.fsf@prevas.dk>
+	 Content-Type:Content-Disposition:In-Reply-To; b=NtIKQ+DT62/UB9DBEoT5AYKgMLF0kLaA9hFOLwoEfa9MWBgoh6fnzGQ+tXjfOPFZlFK//I8mKNnja4bwxmXxE6bW0TU2gXle9TvnvVFRS21sNzwG0Y3XAF80MJzqTWFMqJNznzVnJQWFQNUqyaX2IPmNKs7Yzfqo33TFQY9Lo/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jfarr.cc; spf=pass smtp.mailfrom=jfarr.cc; dkim=pass (2048-bit key) header.d=jfarr.cc header.i=@jfarr.cc header.b=W44WT1+y; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=OnScxk2U; arc=none smtp.client-ip=103.168.172.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jfarr.cc
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jfarr.cc
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=jfarr.cc header.i=@jfarr.cc header.b="W44WT1+y";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="OnScxk2U"
+Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id E23CC1140098;
+	Thu,  3 Oct 2024 07:33:39 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-09.internal (MEProxy); Thu, 03 Oct 2024 07:33:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jfarr.cc; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm1; t=1727955219; x=1728041619; bh=ITwStiI4Uo
+	IxQN/WOjmxMxGF8QBDYiDTW6WbZmMaBUc=; b=W44WT1+yzOf701vtK11mLHw+nr
+	/QlH5RkPNP2rnV6y0LMYt98Eo0zitZUbyxdtYi69B0zW/cY5kzxKmQG5YiRIs7nI
+	C4j7AIvayXbKr9MybkObbjmPlWJc0TSThzkq/f7U9qzIN1IxNKm044C23p2RS6kU
+	Eod8BNM4uLvIAGhRiIUI/+AqfdLoaOoDV1Z1ugMQR5PwmdNqvS+JQjDiJqy3noF5
+	0rZ1AvVrw825sB4tjdwSImIZjb+b0JFiikuGA4N7esi0lsYeeW2UWDz2cMpZ+6Hn
+	Nv7GkO8PkosSS+EGJTjueT9TurEG5RxavUkRlYzyLQkzfe4MiV9+caYJi51A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1727955219; x=1728041619; bh=ITwStiI4UoIxQN/WOjmxMxGF8QBD
+	YiDTW6WbZmMaBUc=; b=OnScxk2U5zkrv1nL/n86Q4gLSGu1YC74mSZS2zC3nU8I
+	npRQ/VeeL0stjxeOljzCp6fYjkCU6cT0hhY2aXdCL4OeFdfQU2zR6uTqTqng0twI
+	m/P9RZLiU+hbRO8ArMmNqj8O7vUiU39k3nNw8mY1ctgTu2x35ne7AIC0UWL9wVxo
+	lyfgWc6Qr2c9bwV+H6iYpVt6LyLz31QbxjdPw9W3zR37WawMnKDbw7+EGfktcCaG
+	y5/xDiQ7ZuWgDzYoRwSi1U/XTwEsoi0+md3GBXReteD4n89Yj7yJ/mTVtH2hFlZZ
+	Mx3Q9km4NWe+kwQZHR9o4H0o8zQAQyzyULpFZgFeOw==
+X-ME-Sender: <xms:E4H-ZkenS-dxJs5EhlarKw9_6--U7dpLoXUagVbaeQYLQJc0RGHhCw>
+    <xme:E4H-ZmMf6oJLPyZDsWNZfVeub15A_mjR_LC9Zv_BwGsinlototgmESNw5w6cyquyP
+    tMuuMKvv4PAiLtnU8k>
+X-ME-Received: <xmr:E4H-ZlinhtZ0HECTHwBzHO579WsoqRAWcyKStJHuIEF35gO3woQkBCscd4iOM_tC0zG8_WLq3e-_x42C8iBM6rm8Enps>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvddvuddggedvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnegfrhhlucfvnfffucdluddtmdenucfjughrpeffhffvvefukfhf
+    gggtuggjsehttdertddttddvnecuhfhrohhmpeflrghnucfjvghnughrihhkucfhrghrrh
+    cuoehkvghrnhgvlhesjhhfrghrrhdrtggtqeenucggtffrrghtthgvrhhnpeejleeljeev
+    veffieefhfdtleetveehhfeuudfgffekkeefgedvfefggeeljeefhfenucffohhmrghinh
+    epkhgvrhhnvghlrdhorhhgpdhgihhthhhusgdrtghomhenucevlhhushhtvghrufhiiigv
+    pedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehkvghrnhgvlhesjhhfrghrrhdrtggtpd
+    hnsggprhgtphhtthhopeelpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehthhho
+    rhhsthgvnhdrsghluhhmsehtohgslhhugidrtghomhdprhgtphhtthhopehkvggvsheskh
+    gvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgvnhhtrdhovhgvrhhsthhrvggvtheslhhi
+    nhhugidruggvvhdprhgtphhtthhopehrvghgrhgvshhsihhonhhssehlihhsthhsrdhlih
+    hnuhigrdguvghvpdhrtghpthhtoheplhhinhhugidqsggtrggthhgvfhhssehvghgvrhdr
+    khgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqhhgrrhguvghnihhnghesvh
+    hgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhes
+    vhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegrrhgusgeskhgvrhhnvghlrd
+    horhhgpdhrtghpthhtohepmhhorhgsohesghhoohhglhgvrdgtohhm
+X-ME-Proxy: <xmx:E4H-Zp-8sStNb5B0XiPXhFNjDmSuiLLtdT_BxYoKmRtPwLGcKvXE3g>
+    <xmx:E4H-Zgvu-0r0tiJETo3urgqAL9TfxM7vCG8wV7XuYGwIYnxD0cbcjQ>
+    <xmx:E4H-ZgHZLMKTIG-p1vQ4NWFlmIjaup-jb1DZkB3x2ZYELEK1ysl0bg>
+    <xmx:E4H-ZvPcmFXim2EvGxt7v0qXX4a9kWBZW40gJcYfj7lR2l2PnoLLyQ>
+    <xmx:E4H-ZiJDu7CJLyJc9IzDApfkpGP8wubig_qzGsEr7hrd7EDGaF-N5Pgd>
+Feedback-ID: i01d149f8:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 3 Oct 2024 07:33:38 -0400 (EDT)
+Date: Thu, 3 Oct 2024 13:33:36 +0200
+From: Jan Hendrik Farr <kernel@jfarr.cc>
+To: Thorsten Blum <thorsten.blum@toblux.com>
+Cc: Kees Cook <kees@kernel.org>, kent.overstreet@linux.dev,
+	regressions@lists.linux.dev, linux-bcachefs@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	ardb@kernel.org, morbo@google.com
+Subject: Re: [REGRESSION][BISECTED] erroneous buffer overflow detected in
+ bch2_xattr_validate
+Message-ID: <Zv6BEO-1Y0oJ3krr@archlinux>
+References: <ZvV6X5FPBBW7CO1f@archlinux>
+ <3E304FB2-799D-478F-889A-CDFC1A52DCD8@toblux.com>
+ <A499F119-5F0C-43FC-9058-7AB92057F9B3@toblux.com>
+ <Zvg-mDsvvOueGpzs@archlinux>
+ <202409281331.1F04259@keescook>
+ <21D2A2BB-F442-480D-8B66-229E8C4A63D3@toblux.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -65,57 +98,39 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87setej1y2.fsf@prevas.dk>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <21D2A2BB-F442-480D-8B66-229E8C4A63D3@toblux.com>
 
-On Wed, Oct 02, 2024 at 11:20:37AM +0200, Rasmus Villemoes wrote:
-> Andy Shevchenko <andy@kernel.org> writes:
-> > On Mon, Sep 30, 2024 at 01:30:07PM +0200, Christian Marangi wrote:
-
-...
-
-> >> this is an initial proposal to complete support for manually defining
-> >> partition table.
-> >> 
-> >> Some block device also implement boot1 and boot2 additional disk. Similar
-> >> to the cmdline parser, these disk can have OF support using the
-> >> "partitions-boot0" and "partitions-boot1" additional node.
-> >> 
-> >> It's also completed support for declaring partition as read-only as this
-> >> feature was introduced but never finished in the cmdline parser.
-> >
-> > I'm not sure I fully understood the problem you are trying to solve.
-> > I have a device at hand that uses eMMC (and was produced almost ten years ago).
-> > This device has a regular GPT on eMMC and no kernel needs to be patched for that.
-> > So, why is it a problem for the mentioned OEMs to use standard GPT approach?
+On 02 11:18:57, Thorsten Blum wrote:
+> On 28. Sep 2024, at 22:34, Kees Cook <kees@kernel.org> wrote:
+> > [...]
+> > 
+> > Sorry, I've been out of commission with covid. Globally disabling this
+> > macro for clang is not the right solution (way too big a hammer).
+> > 
+> > Until Bill has a fix, we can revert commit
+> > 86e92eeeb23741a072fe7532db663250ff2e726a, as the problem is limited to
+> > certain situations where 'counted_by' is in use.
 > 
-> For the user area (main block device), yes, a GPT can often be used, but
-> not always. For the boot partitions, the particular SOC/cpu/bootrom may
-> make it impossible to use a standard partition table, because the
-> bootrom expects to find a bootloader at offset 0 on the active boot
-> partition. In such a case, there's no way you can write a regular MBR or
-> GPT, but it is nevertheless nice to have a machine-readable definition
-> of which data goes where in the boot partitions. With these patches, one
-> can do
+> I already encountered two other related __counted_by() issues [1][2]
+> that are now being reverted. Would it be an option to disable it
+> globally, but only for Clang < v19 (where it looks like it'll be fixed)?
 > 
->   partitions-boot0 {
->     partition@0 {
->       label = "bootloader";
->       reg = <0 0x...>; // 2 MB
->     }
->     partition@... {
->       label = "device-data";
->       reg = <...> // 4 MB
->     }
->   }
+> Otherwise adding __counted_by() might be a slippery slope for a long
+> time and the edge cases don't seem to be that rare anymore.
 > 
-> and describe that layout.
+> Thanks,
+> Thorsten
+> 
+> [1] https://lore.kernel.org/all/20240909162725.1805-2-thorsten.blum@toblux.com/
+> [2] https://lore.kernel.org/all/20240923213809.235128-2-thorsten.blum@linux.dev/
 
-I see now, on the device I mentioned the firmware is located on a boot
-partition, so the user ones are being used for bootloader and the OS.
+This issue is now fixed on the llvm main branch:
+https://github.com/llvm/llvm-project/commit/882457a2eedbe6d53161b2f78fcf769fc9a93e8a
 
--- 
-With Best Regards,
-Andy Shevchenko
+So presumably this will go into 19.1.2, not sure what this means for
+distros that ship clang 18. Will they have to be notified to backport
+this?
 
+Best Regards
+Jan
 
