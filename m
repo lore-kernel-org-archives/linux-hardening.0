@@ -1,127 +1,245 @@
-Received: from fout-a1-smtp.messagingengine.com (fout-a1-smtp.messagingengine.com [103.168.172.144])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91A5C19993F;
-	Thu,  3 Oct 2024 13:12:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.144
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2E2B19F421
+	for <linux-hardening@vger.kernel.org>; Thu,  3 Oct 2024 14:41:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727961128; cv=none; b=kCgGgMSM/8issKkT+XnLguFr1FyJcCUVJfLgfCTSEJS9W4k81G0jcyCUvkQQBsM8uqK1XPE7R94HQ0vA+Zj4tqKweg7CnR6Y3hKWnbsrAjQc0FmG8ugZeqVtFwrU4OnGgIuhHA+hkTUgMcQ86qyoJ+0FSyE+IgEtABd+wYjDzxg=
+	t=1727966493; cv=none; b=mP78SkeiEqWXMGRZV/Hxv/ysffdXSxz0U3ApVPM7AGpdNHuUbbe0E8nEZzNNRbxgcpkbjYvFDMJU/nOiZxVXXSRY6N/idY2Udt/rAWVJuHqfDJQj68/behbw0R+Eo1B/dlXlRomHpMUoNo/v3m9hqEcHW4rBoxaXPUDmJGz+enk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727961128; c=relaxed/simple;
-	bh=anPbyQlBgh9VpTHjRNAUTppoGA6/xk4P7jIPoVh1bC4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l0YYl49QG3XN1QYn+NmKrcQ8V4vEDx5w379Xbolp4LDCmENyfa4UAkT4Bp4R3eu+8NGt2zoJTOIM43Z80/6WOv/FnegBf2qouEDO3rI2Rs0kKJnIpf+dVGYuvjZkvVijDSegrzas13/2jlT/2jBCbDwHg4UwUt/R0lO2RDPfKvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jfarr.cc; spf=pass smtp.mailfrom=jfarr.cc; dkim=pass (2048-bit key) header.d=jfarr.cc header.i=@jfarr.cc header.b=n7ahmMHf; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=kk2buC7w; arc=none smtp.client-ip=103.168.172.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jfarr.cc
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jfarr.cc
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jfarr.cc header.i=@jfarr.cc header.b="n7ahmMHf";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="kk2buC7w"
-Received: from phl-compute-08.internal (phl-compute-08.phl.internal [10.202.2.48])
-	by mailfout.phl.internal (Postfix) with ESMTP id C054E138024F;
-	Thu,  3 Oct 2024 09:12:05 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-08.internal (MEProxy); Thu, 03 Oct 2024 09:12:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jfarr.cc; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm1; t=1727961125; x=1728047525; bh=Q5l4C3MPLh
-	Nagoi/hfCHiiMD9hszfuXKcIBy0Z/kEpc=; b=n7ahmMHfQhciEkHutSmwxCDeMO
-	camtxzI5v/65etjb6r8YLBYZCfz/BF40Z1mz8zFP4caVO2MfpksvzbcfJRlgkimX
-	UGjS8guVkPT/E76Tjc+xeG6H1Gpwrvrz4sKmsmHCnwBAfXvPRGzVdNRJrdP56QE9
-	XK1VBgcnQvJ+cBEgilbyJk44k6C071EbLJXDJAxS1Sw5lqGho+kek1QHigPPToZz
-	qncHklgZoMcWTs+oBaAZ0K+ZJr8yukX1hjBWCl6wr+kox0EUdvommfR6UvVXviqm
-	zIXbl+zSxSpWfJ3ceDn6ELtiZ+6QYXYGTUBrnE3YLDZJ3qgUnkkvsAqBRxlA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1727961125; x=1728047525; bh=Q5l4C3MPLhNagoi/hfCHiiMD9hsz
-	fuXKcIBy0Z/kEpc=; b=kk2buC7wrmtEB2AIuUu7PBSTaahtGpQ4SQkJDe9J8Rqt
-	ygvSeOafNQGZJEFs3vCuEnEg9nXu+tPIqiiB02DIwu45VxQkX9tW/q9+vOFAzWJ6
-	MmdgqtK3JqJZ61nv8RlivmOq5lyUDQisWo3Ug8rm57JN/vMZsLzyVc8fU9NTWv1t
-	t25PMUNcqE4ZOjbJ2hX2pmlTFZ05Sqq3I4FEepnhdJ4Apr87vImFB/eGL6ILBqTS
-	Ua79XaHURpCB1pyjoKGm2nNXaB+hxi68Dg+ukUHq+ouJ0tSa06wTFnCUNlSmJG3Z
-	/pzFJxcvh3+WvPiex1zECSpNgmKkNuVtbG0jDxx2WQ==
-X-ME-Sender: <xms:JZj-Zh7Ot7tz0lH9WC8kVQ18RN0GoE6gu1LCTpov4uzQz75EalcF-A>
-    <xme:JZj-Zu7SD2B2OjYRvY8bnCJoTAd9vbmhRD1eFsJYg27cFr8L7dcRJIh1MBcq550bE
-    vczrSLztdiWgjSKw-w>
-X-ME-Received: <xmr:JZj-Zof7Bu3_FZHu98cy7GZkocIE2Pl43uGUn1UhhlgCIKrBsdwiYY96A0qwnxr_1ONXVrRCrpzyrGWjyAFX75vLnt-o>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvddvuddgieduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnegfrhhlucfvnfffucdluddtmdenucfjughrpeffhffvvefukfhf
-    gggtuggjsehttdertddttddvnecuhfhrohhmpeflrghnucfjvghnughrihhkucfhrghrrh
-    cuoehkvghrnhgvlhesjhhfrghrrhdrtggtqeenucggtffrrghtthgvrhhnpeeftdffuddv
-    geekueeivdeguddvueeffeevgeetgfeiueeuhfevffeutddvgfekvdenucffohhmrghinh
-    epghhithhhuhgsrdgtohhmpdhgohgusgholhhtrdhorhhgnecuvehluhhsthgvrhfuihii
-    vgeptdenucfrrghrrghmpehmrghilhhfrhhomhepkhgvrhhnvghlsehjfhgrrhhrrdgttg
-    dpnhgspghrtghpthhtohepledpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepthhh
-    ohhrshhtvghnrdgslhhumhesthhosghluhigrdgtohhmpdhrtghpthhtohepkhgvvghsse
-    hkvghrnhgvlhdrohhrghdprhgtphhtthhopehkvghnthdrohhvvghrshhtrhgvvghtsehl
-    ihhnuhigrdguvghvpdhrtghpthhtoheprhgvghhrvghsshhiohhnsheslhhishhtshdrlh
-    hinhhugidruggvvhdprhgtphhtthhopehlihhnuhigqdgstggrtghhvghfshesvhhgvghr
-    rdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhhrghruggvnhhinhhgse
-    hvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghl
-    sehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghruggssehkvghrnhgvlh
-    drohhrghdprhgtphhtthhopehmohhrsghosehgohhoghhlvgdrtghomh
-X-ME-Proxy: <xmx:JZj-ZqLOS2moWssrXhgOdaNuT4T2FXOx2aO57NZAaCu4h86xIHpJmg>
-    <xmx:JZj-ZlJLiCYvXvLxTIINRntJElKr2bd7EV6aWFmyGUdotyGTvzXtFg>
-    <xmx:JZj-ZjxaMuiTGQKwspIxxXf4dJyvF7o8J-7cLSe_j_1FWWjdUO0rsg>
-    <xmx:JZj-ZhLlb8S9ms1BWCNjorX0UES7Sjp3eoltDjXocGu0ho5uXfcGSg>
-    <xmx:JZj-ZuXbWdJ1fF298xeAlsMAokO2EBTh0olLMzcUPlaeLWTeJYuHUEJ9>
-Feedback-ID: i01d149f8:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 3 Oct 2024 09:12:04 -0400 (EDT)
-Date: Thu, 3 Oct 2024 15:12:02 +0200
-From: Jan Hendrik Farr <kernel@jfarr.cc>
-To: Thorsten Blum <thorsten.blum@toblux.com>
-Cc: Kees Cook <kees@kernel.org>, kent.overstreet@linux.dev,
-	regressions@lists.linux.dev, linux-bcachefs@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	ardb@kernel.org, morbo@google.com
-Subject: Re: [REGRESSION][BISECTED] erroneous buffer overflow detected in
- bch2_xattr_validate
-Message-ID: <Zv6YInHiwjLeBC3D@archlinux>
-References: <ZvV6X5FPBBW7CO1f@archlinux>
- <3E304FB2-799D-478F-889A-CDFC1A52DCD8@toblux.com>
- <A499F119-5F0C-43FC-9058-7AB92057F9B3@toblux.com>
- <Zvg-mDsvvOueGpzs@archlinux>
- <202409281331.1F04259@keescook>
- <21D2A2BB-F442-480D-8B66-229E8C4A63D3@toblux.com>
- <Zv6BEO-1Y0oJ3krr@archlinux>
- <E8E64A72-3C1C-40D2-9F07-415F6B8F476E@toblux.com>
+	s=arc-20240116; t=1727966493; c=relaxed/simple;
+	bh=/4DwEZ+ACr45IflPZarQF4Ugol0X5PbJ9rDDOy4zFeI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AKE7T3bymk11f+OJzZF/rFnhR8I6Av6UroMvtlbU1nCbXZ+nvf2e0sWcKYaqncacJMu9b9qI+/pzr7ZnQW/luPGg1V/wOz5NVwS5XbbeK+JtR3DOoXRIRoIXUnkHAlc0tK7Oail6SG1/RuRqmah1kutlJG45vJcq7p7dHP4CZHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 4993CE0004;
+	Thu,  3 Oct 2024 14:41:27 +0000 (UTC)
+Message-ID: <f9d17698-0c74-42b7-acc8-3ca3adf3ba4d@ghiti.fr>
+Date: Thu, 3 Oct 2024 16:41:26 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <E8E64A72-3C1C-40D2-9F07-415F6B8F476E@toblux.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION][BISECTED] Cannot boot Lichee Pi 4A with
+ FORTIFY_SOURCE enabled
+To: Jason Montleon <jmontleo@redhat.com>
+Cc: Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ linux-riscv@lists.infradead.org
+References: <CAJD_bPJes4QhmXY5f63GHV9B9HFkSCoaZjk-qCT2NGS7Q9HODg@mail.gmail.com>
+ <B2A62C7F-45BA-43E1-975F-5AF0197CD2C3@kernel.org>
+ <CAJD_bP+43=XXD7p3fRfDxCbj=_YedgVLv38XO4iOAw94a+4PHg@mail.gmail.com>
+ <202409221511.9AF49BD@keescook>
+ <CAJD_bP+6qCgseo9of-cKW3+nH_UbGFwPo6WRbqqcneOZ+EEtOw@mail.gmail.com>
+ <800CC050-E858-409C-A565-A6EF430E1B25@kernel.org>
+ <CAJD_bPKNbKo5tj4OV4MpgtSN6_FXfmQtBFgVFzZeZapCPNT6PA@mail.gmail.com>
+ <eb7354f6-98bd-45c6-a616-733637848a14@ghiti.fr>
+ <CAJD_bPKHA5+Ta1vzokN-TXJU4bk4OA5QTXEEvAwmzLzmW8YtTQ@mail.gmail.com>
+Content-Language: en-US
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <CAJD_bPKHA5+Ta1vzokN-TXJU4bk4OA5QTXEEvAwmzLzmW8YtTQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: alex@ghiti.fr
 
-On 03 15:07:52, Thorsten Blum wrote:
-> On 3. Oct 2024, at 13:33, Jan Hendrik Farr <kernel@jfarr.cc> wrote:
-> >> [...]
-> > 
-> > This issue is now fixed on the llvm main branch:
-> > https://github.com/llvm/llvm-project/commit/882457a2eedbe6d53161b2f78fcf769fc9a93e8a
-> 
-> Thanks!
-> 
-> Do you know if it also fixes the different sizes here:
-> https://godbolt.org/z/vvK9PE1Yq
+Hi Jason,
 
-Unfortunately this still prints 36.
+On 02/10/2024 17:14, Jason Montleon wrote:
+> On Tue, Oct 1, 2024 at 10:53 AM Alexandre Ghiti <alex@ghiti.fr> wrote:
+>> Hi Jason,
+>>
+>> On 25/09/2024 16:32, Jason Montleon wrote:
+>>> On Tue, Sep 24, 2024 at 1:36 PM Kees Cook <kees@kernel.org> wrote:
+>>>>
+>>>> On September 24, 2024 8:58:57 AM PDT, Jason Montleon <jmontleo@redhat.com> wrote:
+>>>>> On Sun, Sep 22, 2024 at 6:38 PM Kees Cook <kees@kernel.org> wrote:
+>>>>>> Can you try this patch? It should avoid using the "WARN" infrastructure
+>>>>>> (if that is the source of blocking boot), but should still provide some
+>>>>>> detail about what tripped it up (via the "regular" pr_*() logging). And
+>>>>>> if it boots, can you look at the log to find what it reports for the
+>>>>>> "Wanted to write ..." line(s)?
+>>>>>>
+>>>>>> Thanks!
+>>>>>>
+>>>>>> -Kees
+>>>>>>
+>>>>>>
+>>>>>> diff --git a/include/linux/fortify-string.h b/include/linux/fortify-string.h
+>>>>>> index 0d99bf11d260..469a3439959d 100644
+>>>>>> --- a/include/linux/fortify-string.h
+>>>>>> +++ b/include/linux/fortify-string.h
+>>>>>> @@ -549,7 +549,8 @@ __FORTIFY_INLINE bool fortify_memcpy_chk(__kernel_size_t size,
+>>>>>>                                            const size_t q_size,
+>>>>>>                                            const size_t p_size_field,
+>>>>>>                                            const size_t q_size_field,
+>>>>>> -                                        const u8 func)
+>>>>>> +                                        const u8 func,
+>>>>>> +                                        const char *field)
+>>>>>>    {
+>>>>>>           if (__builtin_constant_p(size)) {
+>>>>>>                   /*
+>>>>>> @@ -610,8 +611,13 @@ __FORTIFY_INLINE bool fortify_memcpy_chk(__kernel_size_t size,
+>>>>>>            * https://gcc.gnu.org/bugzilla/show_bug.cgi?id=101832
+>>>>>>            */
+>>>>>>           if (p_size_field != SIZE_MAX &&
+>>>>>> -           p_size != p_size_field && p_size_field < size)
+>>>>>> -               return true;
+>>>>>> +           p_size != p_size_field && p_size_field < size) {
+>>>>>> +               if (p_size_field == 0)
+>>>>>> +                       pr_warn("Wanted to write %zu to a 0-sized destination: %s\n",
+>>>>>> +                               size, field);
+>>>>>> +               else
+>>>>>> +                       return true;
+>>>>>> +       }
+>>>>>>
+>>>>>>           return false;
+>>>>>>    }
+>>>>>> @@ -625,7 +631,8 @@ __FORTIFY_INLINE bool fortify_memcpy_chk(__kernel_size_t size,
+>>>>>>           const size_t __q_size_field = (q_size_field);                   \
+>>>>>>           fortify_warn_once(fortify_memcpy_chk(__fortify_size, __p_size,  \
+>>>>>>                                        __q_size, __p_size_field,          \
+>>>>>> -                                    __q_size_field, FORTIFY_FUNC_ ##op), \
+>>>>>> +                                    __q_size_field, FORTIFY_FUNC_ ##op,\
+>>>>>> +                                    #p " at " FILE_LINE), \
+>>>>>>                     #op ": detected field-spanning write (size %zu) of single %s (size %zu)\n", \
+>>>>>>                     __fortify_size,                                       \
+>>>>>>                     "field \"" #p "\" at " FILE_LINE,                     \
+>>>>>>
+>>>>>>
+>>>>>> --
+>>>>>> Kees Cook
+>>>>>>
+>>>>> Hi Kees,
+>>>>> Sorry for the delay in responding. Your patch also caused the system
+>>>>> to hang booting, but I took it as inspiration to try some things.
+>>>>> TL;DR I see these two print several times:
+>>>>>
+>>>>> Wanted to write 8 to a 0-sized destination: oldptr at
+>>>>> arch/riscv/errata/thead/errata.c:185
+>>>>> Wanted to write 28 to a 0-sized destination: oldptr at
+>>>>> arch/riscv/errata/thead/errata.c:185
+>>>>>
+>>>>> Since I suspected CONFIG_ERRATA_THEAD_MAE which relies on
+>>>>> CONFIG_RISCV_ALTERNATIVE_EARLY I suspected it is just too early for
+>>>>> pr_*, etc. I tried trace_printk but that didn't produce any traces,
+>>>>> and then I found a comment which makes me think we're too early for
+>>>>> that too.
+>>>>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/riscv/kernel/alternative.c?h=v6.11#n214
+>>>>>
+>>>>> I didn't want to give up so I wrote a simple module to figure out how
+>>>>> to use sbi_ecall and then incorporated that idea into your patch,
+>>>>> although even that was not straightforward:
+>>>>> https://gist.github.com/jmontleon/f3536ad70dc92bed992139ad5b266d5c
+>>>> Oh nice work! Probably something riscv-specific needs to be wired up to the printk routines to do what you have there until printk is fully available  But that's a separate issue, I guess.
+>>>>
+>>>>> Full output: https://gist.github.com/jmontleon/823facff38e28b717f153e38adcfd7fe
+>>>> Does the system boot with your patch?
+>>> Yes. It boots fully. It also booted with trace_printk, it just didn't
+>>> produce a trace, which again I think is expected at that stage. It
+>>> seems as long as there are no 'normal' print attempts, pr_()*, etc. it
+>>> works.
+>>
+>> Hmmm I don't see what in your patch would fix your issue.
+>>
+>> I sent a patch
+>> (https://lore.kernel.org/linux-riscv/20240829165048.49756-1-alexghiti@rivosinc.com/)
+>> that was merged in v6.11-rc7 which fixes something similar, could that
+>> be what fixed your problem?
+>>
+> Hi Alex, Thank you for having a look.
+>
+> Although I narrowed it down to starting with 6.11-rc1, the first time
+> I encountered this was actually with an rc7 Fedora build.
+> http://riscv.rocks/koji/buildinfo?buildID=338433
+>
+> I also did a build from upstream 6.11.1 last night and still see the
+> problem trying to boot with it this morning.
+>
+>> The problem with this early code is that the MMU is not enabled yet and
+>> if your kernel is relocatable, the relocations are set "virtually" and
+>> then without the MMU, a call to an external function results in a
+>> trap...Which happens way too often, I have a few ideas to fix that, I
+>> need to find time to tackle this though.
+>>
+>> I don't know FORTIFY_SOURCE, but I guess this could cause a call to an
+>> external function and then cause the issue I describe above right? We
+>> already remove all instrumentations from this early code so maybe we
+>> should remove FORTIFY_SOURCE too?
 
-> 
-> I ran out of disk space when compiling llvm :0
-> 
-> > So presumably this will go into 19.1.2, not sure what this means for
-> > distros that ship clang 18. Will they have to be notified to backport
-> > this?
-> > 
-> > Best Regards
-> > Jan
+
+So I was able to reproduce the issue on qemu by adding a few tweaks, and 
+indeed we trap in __warn_printk() on a virtual address but MMU is not 
+enabled yet.
+
+The following diff though allows me to pass this failure but I can't get 
+much further in the boot since the tweaks I added won't allow it, can 
+you give the following a try?
+
+diff --git a/arch/riscv/errata/Makefile b/arch/riscv/errata/Makefile
+index 8a27394851233..4913f3b3f198c 100644
+--- a/arch/riscv/errata/Makefile
++++ b/arch/riscv/errata/Makefile
+@@ -2,6 +2,10 @@ ifdef CONFIG_RELOCATABLE
+  KBUILD_CFLAGS += -fno-pie
+  endif
+
++ifdef CONFIG_RISCV_ALTERNATIVE_EARLY
++KBUILD_CFLAGS += -D__NO_FORTIFY
++endif
++
+  obj-$(CONFIG_ERRATA_ANDES) += andes/
+  obj-$(CONFIG_ERRATA_SIFIVE) += sifive/
+  obj-$(CONFIG_ERRATA_THEAD) += thead/
+
+
+Thanks,
+
+Alex
+
+
+>>
+> What you are describing here does not seem unreasonable to me, but I
+> simply do not know enough to say one way or the other.
+> Is there something I can do to collect more information to determine
+> if this is the cause?
+>
+> Thank you again for having a look,
+> Jason
+>
+>> Thanks for digging into this,
+>>
+>> Alex
+>>
+>>
+>>>> I would guess that this line at arch/riscv/errata/thead/errata.c:168:
+>>>>
+>>>> void *oldptr, *altptr;
+>>>>
+>>>> Should be:
+>>>>
+>>>> u8 *oldptr, *altptr;
+>>> I tried this, but it didn't appear to make a difference, I will try
+>>> some more today, though I admit to being out of my element.
+>>>
+>>>
+>>>
+>>>> But maybe __ALT_PTR needs adjustment too? Hmm. I would have expected void * to have a size of SIZE_MAX here, though, so something else might be confusing the check.
+>>>>
+>>>>
+>>>> --
+>>>> Kees Cook
+>>>>
+>>> _______________________________________________
+>>> linux-riscv mailing list
+>>> linux-riscv@lists.infradead.org
+>>> http://lists.infradead.org/mailman/listinfo/linux-riscv
+>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
