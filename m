@@ -1,51 +1,53 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E34011E377D;
-	Fri,  4 Oct 2024 17:13:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1B451E378D;
+	Fri,  4 Oct 2024 17:23:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728062004; cv=none; b=gPBEnuYAd5W2W3Iz346v5vcTIEa4CCzAr05kdKp89+XCPMQTv48zF8qg7MrWqFLTEVTKGP5LFhZD3x/L83NF7C54xzBMUJPDCoB2xdtECt6umDq8R6dww/Mu504gqmsokm2HZpIuFw3H8tiJB4FGah7c4twzMyXfVepLNeCvCQw=
+	t=1728062629; cv=none; b=ZdnBnUtW3BSPtp4NNg9iiPEDnP0cL6O7/GcIIVUr/8pGxrRpmFmoiIaHH2APIHfHho2dxXAp0e9QgNfTU7/lNISIu7A2dFHpg7U1SZa6HCl1Qwbc/taSbOxALZ7nxr6HJh/wR4G1NmRVn40zqYXINZlF4Ht8tZzd3k6yl2cPERk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728062004; c=relaxed/simple;
-	bh=LHqprxKT11QQbqhmJEZLGqpjDxBSH8wKedLsZeJ9SFg=;
+	s=arc-20240116; t=1728062629; c=relaxed/simple;
+	bh=Ck04ZwAJLUC52xG8xW/cvhMb6CgIDBwDNggWk8T5Z6M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t9EF+H6jjqdniNT4J/nN6kUxT/B102w4g8hjJ1wvdma/wx1CyrtSvxilUDqH63zfA4tbgMzDQcsw+feu60iEip3uDySCshDqtcQC8wsENhAbs+RHaNhH/1Yan4qnkF+cB6T5XpfPopUiSCJ41qdJEkGQ2m8Acu8Bks6z8Djq9Sk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X6r2BjFf; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=q40Uzpe5+nK8FpJjhhi74OUtL4ew3Pp9OtHME3vyQo8WEJuf+f0bceVYKBnSk8svaypEmZ+ZxPFQux0yUPZNaEgA5Oqb7qYaOl4LzJaLK5kBBbwZ8EWIgz8zbdX9ctJ4cudHV/F1NSm/NIobftqi5qZfQ5AeLF9n7Eb+rkVm3Cs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qRnK+Hc8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X6r2BjFf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77FC8C4CEC6;
-	Fri,  4 Oct 2024 17:13:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qRnK+Hc8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 459D2C4CEC6;
+	Fri,  4 Oct 2024 17:23:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728062003;
-	bh=LHqprxKT11QQbqhmJEZLGqpjDxBSH8wKedLsZeJ9SFg=;
+	s=k20201202; t=1728062629;
+	bh=Ck04ZwAJLUC52xG8xW/cvhMb6CgIDBwDNggWk8T5Z6M=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=X6r2BjFfRCr0TwxhIfOZo85dwkHZ7eA4brv7n52yDVjDmU2ObBGfmw+OD/84qH3aw
-	 OxBMrc9dtCJt7/GeqOImJ2rpZXD/VS7kK3L9lVuC/8RBKAdZK+NNSWcVLL5B2BGbug
-	 Cvcqz3iznVBbrC2JAutYRWcKW+pQoARP7VQQddfVszeRqc0rC6cqPKoO/Go4GNLk2s
-	 ketrT9wSomi4uouunvddXrzSMmy383L9RkLF3ruq/85r06UNmGn3bU1DYFbrdQ39Fq
-	 wiRFYceVT149BYmlTNe2Q2B97mbTDqf54If1ia3uMpy9RPzhhf2AIjk49kRQLZ8hlc
-	 w3U1aDXzvyhqw==
-Date: Fri, 4 Oct 2024 10:13:20 -0700
+	b=qRnK+Hc8fbZvqSga/zsdsMP74yY2Pz6jVlLqCCHwKxGGmm8KNdEr4zdpu2IAhCLPb
+	 lRaZbchE7zyY27Ol9Hnw1uWRbliPl8I/+/zilZPSKXUzKJC12bSV7HSlWpl5DiSMLB
+	 HEtpGPskvn2MfPZvV+vmD81CeSXVEr7PaNhTPCm2Rkd2jjSIGGFWJfsUKASwbMQNHs
+	 uP2JSq3E6dNWwubN3+b+dfKgeVeIX661LoHrOpwP6Zyl5LE3pLKdri5Mk8VL0E2nli
+	 COSe9o3f5MkB154n+3I+MJydU/ZNq9U612HB6Fs44DljKJXML+LxDLyynurnyC1mM5
+	 lmi9vJ1Zilt0g==
+Date: Fri, 4 Oct 2024 10:23:46 -0700
 From: Kees Cook <kees@kernel.org>
-To: Jan Hendrik Farr <kernel@jfarr.cc>
-Cc: Thorsten Blum <thorsten.blum@toblux.com>, kent.overstreet@linux.dev,
-	regressions@lists.linux.dev, linux-bcachefs@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	ardb@kernel.org, morbo@google.com
-Subject: Re: [REGRESSION][BISECTED] erroneous buffer overflow detected in
- bch2_xattr_validate
-Message-ID: <202410040958.C19D3B9E48@keescook>
-References: <3E304FB2-799D-478F-889A-CDFC1A52DCD8@toblux.com>
- <A499F119-5F0C-43FC-9058-7AB92057F9B3@toblux.com>
- <Zvg-mDsvvOueGpzs@archlinux>
- <202409281331.1F04259@keescook>
- <21D2A2BB-F442-480D-8B66-229E8C4A63D3@toblux.com>
- <Zv6BEO-1Y0oJ3krr@archlinux>
- <E8E64A72-3C1C-40D2-9F07-415F6B8F476E@toblux.com>
- <Zv61dCaxScXuOjZg@archlinux>
- <202410031424.45E5D19@keescook>
- <Zv8RIs-htdc-PtXB@archlinux>
+To: Przemek Kitszel <przemyslaw.kitszel@intel.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>, Christoph Lameter <cl@linux.com>,
+	Pekka Enberg <penberg@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, Jann Horn <jannh@google.com>,
+	Marco Elver <elver@google.com>, linux-mm@kvack.org,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3] slab: Introduce kmalloc_obj() and family
+Message-ID: <202410041014.7DE8981@keescook>
+References: <20240822231324.make.666-kees@kernel.org>
+ <eae36648-6f9f-486d-b352-c92a315431a1@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -54,141 +56,114 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Zv8RIs-htdc-PtXB@archlinux>
+In-Reply-To: <eae36648-6f9f-486d-b352-c92a315431a1@intel.com>
 
-On Thu, Oct 03, 2024 at 11:48:18PM +0200, Jan Hendrik Farr wrote:
-> On 03 14:28:01, Kees Cook wrote:
-> > On Thu, Oct 03, 2024 at 05:17:08PM +0200, Jan Hendrik Farr wrote:
-> > > gcc currently says that the __bdos of struct containing a flexible array
-> > > member is:
-> > > 
-> > > sizeof(<whole struct>) + sizeof(<flexible array element>) * <count>
-> > > 
-> > > clang however does the following:
-> > > 
-> > > max(sizeof(<whole struct>), offsetof(<flexible array member>) + sizeof(<flexible array element>) * <count>)
+On Fri, Aug 23, 2024 at 06:27:58AM +0200, Przemek Kitszel wrote:
+> On 8/23/24 01:13, Kees Cook wrote:
+> 
+> > (...) For cases where the total size of the allocation is needed,
+> > the kmalloc_obj_sz(), kmalloc_objs_sz(), and kmalloc_flex_sz() family
+> > of macros can be used. For example:
 > > 
-> > Clang's calculation seems very wrong. I would expect it to match GCC's.
+> > 	info->size = struct_size(ptr, flex_member, count);
+> > 	ptr = kmalloc(info->size, gfp);
 > > 
+> > becomes:
+> > 
+> > 	kmalloc_flex_sz(ptr, flex_member, count, gfp, &info->size);
+> > 
+> > Internal introspection of allocated type now becomes possible, allowing
+> > for future alignment-aware choices and hardening work. For example,
+> > adding __alignof(*ptr) as an argument to the internal allocators so that
+> > appropriate/efficient alignment choices can be made, or being able to
+> > correctly choose per-allocation offset randomization within a bucket
+> > that does not break alignment requirements.
+> > 
+> > Introduces __flex_count() for when __builtin_get_counted_by() is added
+> > by GCC[1] and Clang[2]. The internal use of __flex_count() allows for
+> > automatically setting the counter member of a struct's flexible array
+> > member when it has been annotated with __counted_by(), avoiding any
+> > missed early size initializations while __counted_by() annotations are
+> > added to the kernel. Additionally, this also checks for "too large"
+> > allocations based on the type size of the counter variable. For example:
+> > 
+> > 	if (count > type_max(ptr->flex_count))
+> > 		fail...;
+> > 	info->size = struct_size(ptr, flex_member, count);
+> > 	ptr = kmalloc(info->size, gfp);
+> > 	ptr->flex_count = count;
+> > 
+> > becomes (i.e. unchanged from earlier example):
+> > 
+> > 	kmalloc_flex_sz(ptr, flex_member, count, gfp, &info->size);
 > 
-> I was on the very same train of thought, but I have since changed my
-> mind a bit. A struct containing a flexible array member can be allocated in
-> two ways:
+> As there could be no __builtin_get_counted_by() available, caller still
+> needs to fill the counted-by variable, right? So it is possible to just
+> pass the in the struct pointer to fill? (last argument "&f->cnt" of the
+> snippet below):
 > 
-> (1):
+> struct foo {
+> 	int cnt;
+> 	struct bar[] __counted_by(cnt);
+> };
 > 
-> struct posix_acl *acl = malloc(sizeof(struct posix_acl) + sizeof(struct posix_acl_entry) * 1);
-> acl.a_count = 1;
+> //...
+> 	struct foo *f;
 > 
-> or (2):
-> 
-> struct posix_acl *acl = malloc(offsetof(struct posix_acl, a_entries) + sizeof(struct posix_acl_entry) * 1);
-> acl.a_count = 1;
-> 
-> Both are valid ways to allocate it. __bdos does not know which of these
-> methods was used to allocate the struct whose size it has to determine,
-> so it's giving the lower bound that doesn't include the (potential)
-> padding at the end.
+> 	kmalloc_flex_sz(f, cnt, 42, gfp, &f->cnt);
 
-I want to separate several easily confused issues. Instead of just
-saying __bdos, let's clearly refer to what calculation within bdos is
-being used. There are 3 choices currently:
-- alloc_size attribute
-- counted_by attribute
-- fallback to __bos (which is similar to sizeof(), except that FAMs are 0 sized)
+I specifically want to avoid this because it makes adding the
+counted_by attribute more difficult -- requiring manual auditing of
+all allocation sites, even if we switch all the alloc macros. But if
+allocation macros are all replaced with a treewide change, it becomes
+trivial to add counted_by annotations without missing "too late" counter
+assignments. (And note that the "too late" counter assignments are only
+a problem for code built with compilers that support counted_by, so
+there's no problem that __builtin_get_counted_by() isn't available.)
 
-Additionally there are (for all intents and purposes) 2 size
-determinations to be made by __bos and __bdos, via argument 2:
-- containing object size (type 0) ("maximum size")
-- specific object size (type 1) ("minimum size")
+Right now we have two cases in kernel code:
 
-For example, consider:
+case 1:
+- allocate
+- assign counter
+- access array
 
-struct posix_acl *acl = malloc(1024);
-acl->a_count = 1;
+case 2:
+- allocate
+- access array
+- assign counter
 
-what should these return:
+When we add a counted_by annotation, all "case 2" code but be found and
+refactored into "case 1". This has proven error-prone already, and we're
+still pretty early in adding annotations. The reason refactoring is
+needed is because when the compiler supports counted_by instrumentation,
+at run-time, we get:
 
-	__bos(acl, 0)
-	__bos(acl, 1)
-	__bdos(acl, 0)
-	__bdos(acl, 1)
-	__bos(acl->a_entries, 0)
-	__bos(acl->a_entries, 1)
-	__bdos(acl->a_entries, 0)
-	__bdos(acl->a_entries, 1)
+case 1:
+- allocate
+- assign counter
+- access array // no problem!
 
-> So it comes down to false positives vs false negatives...
-> More details here:
-> https://github.com/llvm/llvm-project/pull/111015
-> 
-> Clangs current behavior would essentially force kernel code to always
-> assume option (2) is used. So
-> 
-> struct posix_acl *
-> posix_acl_clone(const struct posix_acl *acl, gfp_t flags)
-> {
-> 	struct posix_acl *clone = NULL;
-> 
-> 	if (acl) {
-> 		int size = sizeof(struct posix_acl) + acl->a_count *
-> 		           sizeof(struct posix_acl_entry);
-> 		clone = kmemdup(acl, size, flags);
-> 		if (clone)
-> 			refcount_set(&clone->a_refcount, 1);
-> 	}
-> 	return clone;
-> }
-> EXPORT_SYMBOL_GPL(posix_acl_clone);
-> 
-> from linux/fs/posix_acl.c would have to turn into something like:
-> 
-> struct posix_acl *
-> posix_acl_clone(const struct posix_acl *acl, gfp_t flags)
-> {
-> 	struct posix_acl *clone = NULL;
-> 
-> 	if (acl) {
-> 		int size = offsetof(struct posix_acl, a_entries) + acl->a_count *
-> 		           sizeof(struct posix_acl_entry);
-> 		clone = kmemdup(acl, size, flags);
-> 		if (clone)
-> 			refcount_set(&clone->a_refcount, 1);
-> 	}
-> 	return clone;
-> }
-> EXPORT_SYMBOL_GPL(posix_acl_clone);
-> 
-> Which is actually safer, because can you actually be sure this posix_acl
-> wasn't allocated using method (2)?
+case 2:
+- allocate
+- access array // trap!
+- assign counter
 
-First, this should not be using an open coded calculation at all; it
-should use the struct_size() macro.
+I want to change this to be:
 
-Secondly, if we want to change struct_size(), then we must (via
-allmodconfig builds) determine all the places in the kernel
-where the calculated size changes, and audit those for safety.
+case 1:
+- allocate & assign counter
+- assign counter
+- access array
 
-Right now, struct_size() over-estimates in the face of padding.
+case 2:
+- allocate & assign counter
+- access array
+- assign counter
 
-We're already moving the kernel toward not even calling struct_size()
-externally from the allocation, and instead using the it within the
-allocation macros themselves:
-https://lore.kernel.org/lkml/20240822231324.make.666-kees@kernel.org/
-
-> After looking at the assembly produced by gcc more, it actually looks
-> like it's using the allocation size if it's known in the current context
-> (for example if the struct was just malloced in the same function)
-> and otherwise returns INT_MAX for the __bdos of a struct containing a
-> flexible array member. It's only returning the size based on the
-> __counted_by attribute of you ask it for the __bdos of the flexible
-> array member itself.
-
-Here is my test case for all the corner cases we've found so far:
-https://github.com/kees/kernel-tools/blob/trunk/fortify/array-bounds.c
-
-I'd prefer we add cases there so we can all be talking about the same
-things. :)
+Once the kernel reaches a minimum compiler version where counted_by is
+universally available, we can remove all the "open coded" counter
+assignments.
 
 -Kees
 
