@@ -1,111 +1,154 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32E8D155733
-	for <linux-hardening@vger.kernel.org>; Fri,  4 Oct 2024 11:37:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 097FF155C8A
+	for <linux-hardening@vger.kernel.org>; Fri,  4 Oct 2024 16:32:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728041872; cv=none; b=rGX+o+KM6lN3F+U1e/5T8qbrdVx/UBiWSSrVLl0ZTsPowEsKeZUnx0UwKmsuCZW2Ovt/OL7lumPiPRSM5fJUjYQzK8NxjH7+z3cJ6scrhwYFQNDtZrHjXWCqb2vegY8sa6YvNENh1UoZRG4vuvgtM+yKnil9l1vauhXcTtUUj14=
+	t=1728059523; cv=none; b=nmZdqRjnBRsen1rpdQGqWqc8A8biev19YD2SMLdY9lrZkuRQcrJ7+wgo0m01VkSsXMAYstUwWsTfutqSkKRSdypdHhupvl93MVWmoic0QwrVRYUESDOSZD5IZIFtu8xoYJPkUb4c5Xkx6fb0G35QjCM//HEcZ6SA7qviNAg+WYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728041872; c=relaxed/simple;
-	bh=sH3VJvUt/ZZiYrCq6joa70NKvu6D+uNYLHx6ls09DW0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ISRR/KcHpCADyl5S8nqSOELiSucTfCRD/tYhLIx+Qeh1lz0KQKHSHaTIF1nfcPs/y6bqzzSSBxyB5oIg8hidFC9RhX3NOKFPRbRg4eBjhVDhkp6Q+4Ji3+0vgL93pxR/nLJW3z/630sOOVZoBQHfjo3Yf1ysc4nmcT43+lSir/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 109F3FF803;
-	Fri,  4 Oct 2024 11:37:44 +0000 (UTC)
-Message-ID: <0c9371f2-e8e9-479f-856d-408a81213747@ghiti.fr>
-Date: Fri, 4 Oct 2024 13:37:44 +0200
+	s=arc-20240116; t=1728059523; c=relaxed/simple;
+	bh=sBj7fTJoQaZYxklmzS3W4vzzZjdBvQS/D7Q3yJhEUYM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kYVRaZZG6Vkmegeox45TY2zstBLiFiIAEEGxQ8TORiyAKDQzKVFowD1UJVLkqTi0OPfNJOiYF7LiHysCEFQ7SIebR/Q/8bkF6C75VbT9+Xoav4q6gF5Jt22eXb+oZJol5oyKj5wZjRsS4+Bzy5B6TEhewjtK98NOfEMkKO0eZ3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=G3iHADMx; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="G3iHADMx"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-20b533c6865so2131015ad.2
+        for <linux-hardening@vger.kernel.org>; Fri, 04 Oct 2024 09:32:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1728059521; x=1728664321; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=K60b0HU9ftXyJtge8qd284Y8viY6O8DUlfpDN9STjVM=;
+        b=G3iHADMx83xrnbpKDkaz8RmodhKhdpA83XgTyAgXGX1Ojva1ntISNIUSkyQ6pYv1CG
+         aa0315KZUx1fHBc/TwX7m1jqJrfVvDdYnDA1+Ck4nD7CFh233WUexay/K0BrhsVkePiN
+         hEOw+SnVaWAcXaArtxMV7BoytJ4G3WPuKvD5E=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728059521; x=1728664321;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=K60b0HU9ftXyJtge8qd284Y8viY6O8DUlfpDN9STjVM=;
+        b=auYKb27a21ccSPoVYm4DkvWmRiwCAeXqtl0FkzGKW9Adw2sTx6WE7yCk0XCyxdikO2
+         ImYpz1b3OD87Bd2dqu6qjjuYPzqNEsT+21XvyOcBP5/x3+7dZ8qLz2ybla2WTF+8vHqz
+         Qne9rf4KD7jTNCGKFsYV/+oYA5xbiXvIo1IGi4Nb3/tIh/NV6nT2h49C7TISkybmHYaJ
+         bvSieH3TH+hfCoE11/VQqmUxqAr3bXFvxd0nDL16QtO4MJnBi+nuH+Jd5j+I5odZUNT/
+         uFZwwFYw9QAgXmUV+kDJ22rokZ0BGXZcwxeH4NtodRYf2S2aaihybciV3SOqI3ch6zJq
+         wmpg==
+X-Forwarded-Encrypted: i=1; AJvYcCW7WZ7qQkTvGaybgH2giDR6hPVN6g95PjW9ox+d5wBL0f5tEHm0U7l2qfKfcHG4o9jpzdHDC1YESNdTIfLAap4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzb4kTstMAg+fUfYKSwP3w43LndWi5wECJeSwtskmX3/9DEdxMb
+	FDms4m8e5xFi+8PeKecXaLeTd+vnFg5CG3Cr4OgCG52eereDzRrDk+368foQeg==
+X-Google-Smtp-Source: AGHT+IFSrVTmBEuZDVkZdKrrQvLg1DhltJ6h+f4mR5YU4xMyntpg8h23nyzBrsG074u46Uhkd92ffg==
+X-Received: by 2002:a17:903:32cc:b0:206:9f2e:1029 with SMTP id d9443c01a7336-20bfdf72cd1mr18918805ad.2.1728059521290;
+        Fri, 04 Oct 2024 09:32:01 -0700 (PDT)
+Received: from localhost (99.34.197.35.bc.googleusercontent.com. [35.197.34.99])
+        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-2e20b0f6380sm100765a91.40.2024.10.04.09.32.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Oct 2024 09:32:00 -0700 (PDT)
+From: jeffxu@chromium.org
+To: akpm@linux-foundation.org,
+	keescook@chromium.org,
+	jannh@google.com,
+	torvalds@linux-foundation.org,
+	adhemerval.zanella@linaro.org,
+	oleg@redhat.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-mm@kvack.org,
+	jorgelo@chromium.org,
+	sroettger@google.com,
+	ojeda@kernel.org,
+	adobriyan@gmail.com,
+	anna-maria@linutronix.de,
+	mark.rutland@arm.com,
+	linus.walleij@linaro.org,
+	mike.kravetz@oracle.com,
+	Jason@zx2c4.com,
+	deller@gmx.de,
+	rdunlap@infradead.org,
+	davem@davemloft.net,
+	hch@lst.de,
+	peterx@redhat.com,
+	hca@linux.ibm.com,
+	f.fainelli@gmail.com,
+	gerg@kernel.org,
+	dave.hansen@linux.intel.com,
+	mingo@kernel.org,
+	ardb@kernel.org,
+	nathan_lynch@mentor.com,
+	dsafonov@virtuozzo.com,
+	Liam.Howlett@Oracle.com,
+	mhocko@suse.com,
+	42.hyeyoo@gmail.com,
+	peterz@infradead.org,
+	ardb@google.com,
+	enh@google.com,
+	rientjes@google.com,
+	groeck@chromium.org,
+	lorenzo.stoakes@oracle.com,
+	Jeff Xu <jeffxu@google.com>
+Subject: [RFC PATCH v1 0/1] seal system mappings
+Date: Fri,  4 Oct 2024 16:31:54 +0000
+Message-ID: <20241004163155.3493183-1-jeffxu@google.com>
+X-Mailer: git-send-email 2.47.0.rc0.187.ge670bccf7e-goog
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION][BISECTED] Cannot boot Lichee Pi 4A with
- FORTIFY_SOURCE enabled
-To: Kees Cook <kees@kernel.org>, Jason Montleon <jmontleo@redhat.com>
-Cc: linux-hardening@vger.kernel.org,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- linux-riscv@lists.infradead.org
-References: <B2A62C7F-45BA-43E1-975F-5AF0197CD2C3@kernel.org>
- <CAJD_bP+43=XXD7p3fRfDxCbj=_YedgVLv38XO4iOAw94a+4PHg@mail.gmail.com>
- <202409221511.9AF49BD@keescook>
- <CAJD_bP+6qCgseo9of-cKW3+nH_UbGFwPo6WRbqqcneOZ+EEtOw@mail.gmail.com>
- <800CC050-E858-409C-A565-A6EF430E1B25@kernel.org>
- <CAJD_bPKNbKo5tj4OV4MpgtSN6_FXfmQtBFgVFzZeZapCPNT6PA@mail.gmail.com>
- <eb7354f6-98bd-45c6-a616-733637848a14@ghiti.fr>
- <CAJD_bPKHA5+Ta1vzokN-TXJU4bk4OA5QTXEEvAwmzLzmW8YtTQ@mail.gmail.com>
- <f9d17698-0c74-42b7-acc8-3ca3adf3ba4d@ghiti.fr>
- <CAJD_bP+ZYKFaeZ2hQXjAZda=RhLkfnXfGLW-ZYTrOV4GfNRzpA@mail.gmail.com>
- <202410031417.A5AB8BA5@keescook>
-Content-Language: en-US
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <202410031417.A5AB8BA5@keescook>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-GND-Sasl: alex@ghiti.fr
 
-Hi Kees, Jason,
+From: Jeff Xu <jeffxu@google.com>
 
-On 03/10/2024 23:21, Kees Cook wrote:
-> On Thu, Oct 03, 2024 at 01:12:59PM -0400, Jason Montleon wrote:
->> On Thu, Oct 3, 2024 at 10:41 AM Alexandre Ghiti <alex@ghiti.fr> wrote:
->>> So I was able to reproduce the issue on qemu by adding a few tweaks, and
->>> indeed we trap in __warn_printk() on a virtual address but MMU is not
->>> enabled yet.
->>>
->>> The following diff though allows me to pass this failure but I can't get
->>> much further in the boot since the tweaks I added won't allow it, can
->>> you give the following a try?
->>>
->>> diff --git a/arch/riscv/errata/Makefile b/arch/riscv/errata/Makefile
->>> index 8a27394851233..4913f3b3f198c 100644
->>> --- a/arch/riscv/errata/Makefile
->>> +++ b/arch/riscv/errata/Makefile
->>> @@ -2,6 +2,10 @@ ifdef CONFIG_RELOCATABLE
->>>    KBUILD_CFLAGS += -fno-pie
->>>    endif
->>>
->>> +ifdef CONFIG_RISCV_ALTERNATIVE_EARLY
->>> +KBUILD_CFLAGS += -D__NO_FORTIFY
->>> +endif
->>> +
->>>    obj-$(CONFIG_ERRATA_ANDES) += andes/
->>>    obj-$(CONFIG_ERRATA_SIFIVE) += sifive/
->>>    obj-$(CONFIG_ERRATA_THEAD) += thead/
->> Yes, this worked.
+Seal vdso, vvar, sigpage, uprobes and vsyscall.
 
+Those mappings are readonly or executable only, sealing can protect
+them from ever changing during the life time of the process.
 
-Great; thanks!
+System mappings such as vdso, vvar, and sigpage (for arm) are
+generated by the kernel during program initialization. These mappings
+are designated as non-writable, and sealing them will prevent them
+from ever becoming writeable.
 
+Unlike the aforementioned mappings, the uprobe mapping is not
+established during program startup. However, its lifetime is the same
+as the process's lifetime [1], thus sealable.
 
-> Thanks for testing!
->
-> Yeah, this matches similar fortify disabling in other early boot areas.
-> Usually it's part of a common header, but setting it via the Makefile
-> also works. I'll leave it up to the riscv maintainers! :)
+The vdso, vvar, sigpage, and uprobe mappings all invoke the
+_install_special_mapping() function. As no other mappings utilize this
+function, it is logical to incorporate sealing logic within
+_install_special_mapping(). This approach avoids the necessity of
+modifying code across various architecture-specific implementations.
 
+The vsyscall mapping, which has its own initialization function, is
+sealed in the XONLY case, it seems to be the most common and secure
+case of using vsyscall.
 
-I found a few other spots where we did not disable fortify, the easiest 
-path I found was indeed to do that in the Makefile.
+It is important to note that the CHECKPOINT_RESTORE feature (CRIU) may
+alter the mapping of vdso, vvar, and sigpage during restore
+operations. Consequently, this feature cannot be universally enabled
+across all systems. To address this, a kernel configuration option has
+been introduced to enable or disable this functionality. I tested
+CONFIG_SEAL_SYSTEM_MAPPINGS_ALWAYS with ChromeOS, which doesn’t use
+CHECKPOINT_RESTORE, to verify the sealing works.
 
-I have a question though: should we do something about the following 
-warnings? Is there something wrong somewhere?
+[1] https://lore.kernel.org/all/CABi2SkU9BRUnqf70-nksuMCQ+yyiWjo3fM4XkRkL-NrCZxYAyg@mail.gmail.com/
 
-Wanted to write 8 to a 0-sized destination: oldptr at 
-arch/riscv/errata/thead/errata.c:185
-Wanted to write 28 to a 0-sized destination: oldptr at 
-arch/riscv/errata/thead/errata.c:185
+Jeff Xu (1):
+  exec: seal system mappings
 
-Thanks,
+ .../admin-guide/kernel-parameters.txt         |  9 ++++
+ arch/x86/entry/vsyscall/vsyscall_64.c         |  9 +++-
+ fs/exec.c                                     | 53 +++++++++++++++++++
+ include/linux/fs.h                            |  1 +
+ mm/mmap.c                                     |  1 +
+ security/Kconfig                              | 26 +++++++++
+ 6 files changed, 97 insertions(+), 2 deletions(-)
 
-Alex
+-- 
+2.47.0.rc0.187.ge670bccf7e-goog
 
-
->
-> -Kees
->
