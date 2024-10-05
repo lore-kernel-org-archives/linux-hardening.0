@@ -1,93 +1,69 @@
-Received: from cvs.openbsd.org (cvs.openbsd.org [199.185.137.3])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 440C54C7E;
-	Sat,  5 Oct 2024 01:04:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.185.137.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A445413C3D3;
+	Sat,  5 Oct 2024 16:04:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728090274; cv=none; b=fZ0kaNVJcaaKNxK1P52jKXY3hl0uYS7FVkbOs5hZ0x2m5vLbNqU141yFUAM8VsTGYFQa5OldhTFdCLCaoNhkBpVaJDgnxKgI7QGlFalT/70s035njvdKmPCFwO7AzyxwzZzcR7oO3VoXEpAlMGshJ794JlO0tmQTalJUnN3+hqc=
+	t=1728144255; cv=none; b=nMIgYhP9fzM5KkgtenZTCLNa1Ym8+NDCpbbgMsQrAQ2uFssMMdVgfkbS78smBYfYDXSc6o3U8TvcVsih98apnhuSlLqTuhPAzcleGX+dV6eCTiwJPFoF+WrY63i/tDXWKpN0gI9CMxrBV+YnmGjjUHcM/ZxQlxNReeaLPSmeb5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728090274; c=relaxed/simple;
-	bh=ceoFgBtwxSZTjATveYnv5yYpnEyiSYI8ibzvGyRpUcM=;
-	h=From:To:cc:Subject:In-reply-to:References:MIME-Version:
-	 Content-Type:Date:Message-ID; b=nOEzMAly1tLMuTYl452I5Puyjks8A4zduELGT1C1DgNK7rG/U9OhtNLUGQCyI2c1yg7OGV1XGtJYvi2Bod1QCiIdRwXkSsJqrmcoZI6xaatfo3w8EyBDj0qwBVpjn+Ms8WRO93egchMOx5oHWy+yTq8KXggAyDyvJGZdWAwLHTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=openbsd.org; spf=pass smtp.mailfrom=openbsd.org; dkim=pass (2048-bit key) header.d=openbsd.org header.i=@openbsd.org header.b=sHZb4/K1; arc=none smtp.client-ip=199.185.137.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=openbsd.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=openbsd.org
+	s=arc-20240116; t=1728144255; c=relaxed/simple;
+	bh=3kAl7AjYTqaiWlIoDOVi3hSGnrwStWTjPrjLj2tI724=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=DstL5PqIBwzBTVcbQrS9hmIbKXAU/dwYG/syJA2FmIk0KHX+IhOycSBdJrAFXxLKllsISi0vWUrqv4DHrlKFYTA5UpVfeNzL0Uny/jyRRBqspz5iZ1RSA6G4VumQLd1jUKRdKjhvl9y5JctYPLNISUrXTpQIpxwXBFnnoJmN1fc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eLMvt9Sr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=openbsd.org header.i=@openbsd.org header.b="sHZb4/K1"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; s=selector1; bh=ceoFgBtwxS
-	ZTjATveYnv5yYpnEyiSYI8ibzvGyRpUcM=; h=date:references:in-reply-to:
-	subject:cc:to:from; d=openbsd.org; b=sHZb4/K17HQLUj6Xf/aoweZ8SPSWlEkj+
-	iV16cjKudM8yAAyPqYXrNHvHu0kOTJ/nvVS2Wk3cb3IrycxbZu8vCPoru0j0Mly5TudqT2
-	OI26Yo+0YGCoxM2LQfAqDTKn3RqzEYhI4D3yRT/F3pgdRXHlaZDjFLQajYZX3+ho2cpsTa
-	HA5iZ+5T78uBxzIJepR5g1JZdE563fvq0OccznuEDbI2jykoruB+5CachkoWmmW5k4MH8B
-	96kd1Ack+hrPxlZSJtMihZOVRFJNyBBpSjsNsQfTr1xu4gIGhLikyhac2t9Td47ucORQon
-	7xrqkLBQAE2Fep/ijnW261s9gXt2Q==
-Received: from cvs.openbsd.org (localhost [127.0.0.1])
-	by cvs.openbsd.org (OpenSMTPD) with ESMTP id a9f35afe;
-	Fri, 4 Oct 2024 19:04:31 -0600 (MDT)
-From: "Theo de Raadt" <deraadt@openbsd.org>
-To: Randy Dunlap <rdunlap@infradead.org>
-cc: Jeff Xu <jeffxu@chromium.org>, akpm@linux-foundation.org,
-    keescook@chromium.org, corbet@lwn.net, jorgelo@chromium.org,
-    groeck@chromium.org, linux-kernel@vger.kernel.org,
-    linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
-    jannh@google.com, sroettger@google.com, pedro.falcato@gmail.com,
-    linux-hardening@vger.kernel.org, willy@infradead.org,
-    gregkh@linuxfoundation.org, torvalds@linux-foundation.org,
-    usama.anjum@collabora.com, surenb@google.com, merimus@google.com,
-    lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, enh@google.com
-Subject: Re: [PATCH v2 1/1] mseal: update mseal.rst
-In-reply-to: <78f05735-cca3-491e-b2d6-c673427efa07@infradead.org>
-References: <20241001002628.2239032-1-jeffxu@chromium.org> <20241001002628.2239032-2-jeffxu@chromium.org> <4544a4b3-d5b6-4f6b-b3d5-6c309eb8fa9d@infradead.org> <CABi2SkUhcEY7KxuRX3edOHJZbo2kZOZfa0sWrcG2_T0rnvHCWQ@mail.gmail.com> <78f05735-cca3-491e-b2d6-c673427efa07@infradead.org>
-Comments: In-reply-to Randy Dunlap <rdunlap@infradead.org>
-   message dated "Fri, 04 Oct 2024 16:52:06 -0700."
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eLMvt9Sr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE239C4CEC2;
+	Sat,  5 Oct 2024 16:04:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728144255;
+	bh=3kAl7AjYTqaiWlIoDOVi3hSGnrwStWTjPrjLj2tI724=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=eLMvt9SrhuO+7e/pS/H9lQjX2AqV059uevEzfrx+Dw+iuWn+LOJbwklOMYNL+a3QD
+	 zoDlXuPx9dWYCDbmMdEZ6GPvMZPl2UeOwym082tTGhnmbwlsTT4RTHXdxXiJl/yDrl
+	 f8SU9tvLHwjnmJ+FcMDjgiKzomkn3GDpjCLnzhURhh5c9X/ZYJz/A1tknReLKn6QNR
+	 xsV49DEm6eWuiOjUE1qbpPapztLqHTtfvXkpWiWpQSxy3NqZB0BMFbSMNhDE2445CZ
+	 e0Lp477VZJ8v1xun5OhT0MF7asrTfTf0v2JrxyHLA3m4y/IPvwaOWaka3vE9gqeC4J
+	 BvqcMf7nPW56Q==
+Date: Sat, 05 Oct 2024 09:04:11 -0700
+From: Kees Cook <kees@kernel.org>
+To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+ Danilo Krummrich <dakr@kernel.org>
+CC: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH=5D=5Bnext=5D_drm/nouveau=3A_Avoid_?=
+ =?US-ASCII?Q?-Wflex-array-member-not-at-end_warning?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <45560975-7215-4205-8d3b-a01009c9b4f5@embeddedor.com>
+References: <ZsZLFS1CsHkKjw+C@elsanto> <ef5a8e6d-cb97-4872-901c-cf4bbec23be6@embeddedor.com> <30530165-0ea9-4f02-9d8c-e8abc9eda5a7@kernel.org> <035ae74b-5df5-493f-9835-02c1c30ccfcc@kernel.org> <45560975-7215-4205-8d3b-a01009c9b4f5@embeddedor.com>
+Message-ID: <81E112F0-51CA-4171-8DA7-59EC8AE14510@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <25904.1728090271.1@cvs.openbsd.org>
-Date: Fri, 04 Oct 2024 19:04:31 -0600
-Message-ID: <15868.1728090271@cvs.openbsd.org>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Randy Dunlap <rdunlap@infradead.org> wrote:
 
-> On 10/4/24 9:52 AM, Jeff Xu wrote:
-> >> above is not a sentence but I don't know how to fix it.
-> >>
-> > Would below work ?
-> > 
-> > Certain destructive madvise behaviors, specifically MADV_DONTNEED,
-> > MADV_FREE, MADV_DONTNEED_LOCKED, MADV_FREE, MADV_DONTFORK,
-> > MADV_WIPEONFORK, can pose risks when applied to anonymous memory by
-> > threads without write permissions. These behaviors have the potential
-> > to modify region contents by discarding pages, effectively performing
-> > a memset(0) operation on the anonymous memory.
-> 
-> Yes, that works.
-> Or at least it explains the problem, like Theo said.
 
-In OpenBSD, mimmutable() solves this problem (in later code iterations).
 
-In Linux, does mseal() solve the problem or not?  The statement doesn't
-answer this question.  It only explains the problem.
+>On 03/10/24 12:36, Danilo Krummrich wrote:
+>> On 9/13/24 12:23 PM, Danilo Krummrich wrote:
 
-If it doesn't solve the problem, that's pretty surprising (weaker than
-mimmutable).
+I am reminded that I should check all my MUAs to render the date as YYYY-M=
+M-DD so my brain doesn't explode when I see people "time traveling"=2E ;)
 
-During development I wrote a fake little program which placed an 'int =
-1' resided into a zone of readonly memory (.data), and then imagined "an
-attacker gets enough control to perform an madvise(), but only had
-enough control, and has to return to normal control flow immediately".
-The madvise() operations was able to trash the int, altering the
-program's later behaviour.  So I researched the matter more, and adapted
-mimmutable() to block ALL system-call variations similar to 'write to a
-not-permitted region'.
+(BTW, what MUAs do you both use? I use Mutt and K-9 Mail, and I need to ch=
+eck the quote prefix settings in both=2E=2E=2E)
 
-So the question remains:  Does mseal() block such a (rare) pattern or not.
-The sentence doesn't indicate that mseal() has a response to the stated
-problem.
+-Kees
+
+--=20
+Kees Cook
