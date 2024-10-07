@@ -1,126 +1,378 @@
-Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-a5-smtp.messagingengine.com (fout-a5-smtp.messagingengine.com [103.168.172.148])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 994FA1D86CE
-	for <linux-hardening@vger.kernel.org>; Mon,  7 Oct 2024 15:03:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A206A1D8E0F;
+	Mon,  7 Oct 2024 15:10:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728313416; cv=none; b=qNrYxehbcIX/Y5fF26+uhxthWNM3mJa7XQaCrMFyIJQpenujvD6bZXATVHxNlP0Y3RiLUOAzUvYf+q08glmoq/dpoq4F/m7M5IryAxlaicEQevPUba5ToDAKlekUPjN/lriFc+aF46/ItZYBokq/tiwowWKuliPNJmZJHdUUdBo=
+	t=1728313859; cv=none; b=AS8iiRLWDxMUJvXCsgkyVIDkLVlYwLsrM0azzLOSVHsCG1YMUS7FprbX03N3Q1hHORgFGlSiUIbqrdCim2zHX0B08ECM8oms2jWpHrbZcLSy2k+6z3Z4KNyMtj9viQHCGEF2bSqKEaTfeajY02dpSMNX7uKpVrKmM9jLIr6eKGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728313416; c=relaxed/simple;
-	bh=UoZJgnOU+cpZzaO1kTH0rbuTDby7trtHXlUaN8PNeeU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AUViM9AfSPhuxg8+P3EgGmUKBjiGLJutxo+3lZ5hNFvaAq3RuP9hKxfKrED22HpOSAccwY3ZHKznZvvroUQLc5Q/6ATv/pbjfjkg0HuxzFTA4KnWLvuXewrNwI214SPA2lbO6t+lf6Jq6tM0TunRcYUfEwmOGcgRvIqyj2pL2pQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Fe8RzgCv; arc=none smtp.client-ip=209.85.210.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1728313859; c=relaxed/simple;
+	bh=XEuAoDA28eZWrQB1KO+yEH2exwXORDf0aYHspiLbRE8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Sp910be2kYGAgTC6qW8QGl68Avmhd6dOaWKCy6mtsVHVlkYwCRMeQdVzKlh0kDKjvSBkw3ZPnCe6Fkp4f/xntlNFq0l8AOhe6MEan/CZVldkhLv7RCeaCCChMcPbsU3rbLlK78jeSmLHEYg4hplBSugXW6m0ZUtaCesk7saoXM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jfarr.cc; spf=pass smtp.mailfrom=jfarr.cc; dkim=pass (2048-bit key) header.d=jfarr.cc header.i=@jfarr.cc header.b=W9b+YG2H; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=TeYJdBHx; arc=none smtp.client-ip=103.168.172.148
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jfarr.cc
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jfarr.cc
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Fe8RzgCv"
-Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-710e6ea4782so244817a34.0
-        for <linux-hardening@vger.kernel.org>; Mon, 07 Oct 2024 08:03:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1728313413; x=1728918213; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XnMYpMSi30pRgprxZcWHtApA7E1/LbOK6iJZCnWy7fY=;
-        b=Fe8RzgCvKb9YEG/FNP5YtFDQGyGm7iKeq/kXDFCi4ndhGE38v8B7u/Wckt0WUkOC5i
-         7AJdoAtpZ7/ruO/vBTTkog4h9IuFHhV9shvvcKpKWCzPdmV2VO7xUb7ifpFaq2U25mtH
-         A4Xs83THGfHP5HP5jMt/nbNqPC+ckadE0QOnw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728313413; x=1728918213;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XnMYpMSi30pRgprxZcWHtApA7E1/LbOK6iJZCnWy7fY=;
-        b=gUDyHW9XNdYsK8j9NbXWmNJjufuFTuHfxcstok3N0b1YxakOs1nptPrAZSCxUa6P77
-         LBJZGxA2QF1HhHTBkiDrY0WY4QgiyBUuJpLlu/D1jAuocVbrkD4khz2Qte3klR3ta17a
-         SdkaJAYIwNBwYtXDK0qEH6lcSf5C/oVca5hjVNWUZDOb1+YkbY88BBn2KgTXqIiSJyq9
-         BGMWxw+tIgQtDegtyMuYJtxpXfFmFHJhmIrAfQvPoK4xblKKR7HJ11Xej7yEQUzGWl/M
-         tWSn7dTDQGXNIGRVSvi/Uh6naEd7Y90iPovYlgI32IOKoyvuJXCnzMJnuKli5Svvxjl4
-         SvZA==
-X-Forwarded-Encrypted: i=1; AJvYcCWqjHJ8HfL3NpO6U51xXDrVbd5tQKr1E10/TVSrlLROakB+8FvqwP7CK+u939BSipSB2zbwr5H1k2QVdYN/9wA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz58B4vhH6E2PPcS7HlSz0oPnmJqghULBgyYXAMBEgpKH8f3eF8
-	3fcxi1ur12Zlzcun0FgN3GnzWfKOpjuWb6T+EdhkmGh+FtpuvQDL/gMcmdDAPxQg5rK2Tn4e/U5
-	iVt753GyF1RXNkwJ9yxKDPZKRRTlaCWFF/hnk
-X-Google-Smtp-Source: AGHT+IHoAnc3BjGBILjnmbLFo2ofO9yLKDc28NITtzSSbSlwUCHw83CVP6hL/oqAJSRlAtNEV3l5YeF2ABjLV48sw9s=
-X-Received: by 2002:a05:6870:8a2a:b0:260:e5e1:2411 with SMTP id
- 586e51a60fabf-287c1e57f76mr2249422fac.6.1728313413483; Mon, 07 Oct 2024
- 08:03:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=jfarr.cc header.i=@jfarr.cc header.b="W9b+YG2H";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="TeYJdBHx"
+Received: from phl-compute-07.internal (phl-compute-07.phl.internal [10.202.2.47])
+	by mailfout.phl.internal (Postfix) with ESMTP id D659A1380192;
+	Mon,  7 Oct 2024 11:10:56 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-07.internal (MEProxy); Mon, 07 Oct 2024 11:10:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jfarr.cc; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm1; t=1728313856; x=1728400256; bh=kuvSqriivn
+	NgK6AIiVZD/5xvniRb2qg4j0ZnsKQstIo=; b=W9b+YG2HN+qc2vwGoWLTNsrRYD
+	xAlJjUABoFeKiBPrpktw783bBlR9cOtNa6+d5Z2WoOyFLdV3mEUu/KbcWpMeak7z
+	CBznSraGYSUbVHa+R0MBOV/3j5v9VXCskH5OlpMiUN32NkoAXcmUw7x4pEI6m8xg
+	zZaYNecUs6tUlzgh7RFTEl6YVt7HA5lqLuqUBYw148MDqozwfD85qX1zGZes1CQt
+	++YEY73GpFaeAEQQuM4cV0jl6M8F3DTGlReX1yz1Y3RfVnYw0v4w10j/Ld5hs1y6
+	dD7SqiPFn27BtxsbsPpSjfHYB3AflRBsxzwUmrMlbDlFBXp6xc+Sps8oGaZw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1728313856; x=1728400256; bh=kuvSqriivnNgK6AIiVZD/5xvniRb
+	2qg4j0ZnsKQstIo=; b=TeYJdBHxv8tRiZeqlg0bYOLvthED/UeWkBwMzQvwhqYu
+	zxM48DWAzxKDD12hVUx+8vWgsLBX+QQGQu6+YMeWFa5F9ODlVoFnu0KFtqFaAtsE
+	1JLrheHRcu2PQy6Ga5+x6E4vHAEv++s2sxDhFgfLdXgSzcfabr4sbtUMd0Y5uc2j
+	BJT+bz98+D4lh7EvdzaM0pkngHWdM3/Rp4fIBfIyHcU2i4FxlZmOt9hA6q+J4rU3
+	8QAq0zTVdOnTzy0jhj4+oi+mvMD8DjoIx+hMdg1WwE+QX9AFfOpMmGQ9Nz1A9Cz6
+	d+h5xkHv9BbcxlejPNnzCsZkqAkHXbeVs2N5FA8jbw==
+X-ME-Sender: <xms:APoDZ21KAHGHENcW6PylbixOVDrRjigf13lYPKlhQuOsKZHVYCHZHg>
+    <xme:APoDZ5G6b8pCr15-HAIsidVgODEAP8lxoiaUTtsEXRXRV_Zvq0vmSPdZy9iQSnBAw
+    EyAgnqPtE6m3-MAAxQ>
+X-ME-Received: <xmr:APoDZ-4NPUYemQOpeMaSN-sOBK2FflNnuEu-gKYsqNo6dkopg4oEjH8f8UhvALVwUqc5O30Lnr-Mr1O0RAyyDVDcxYKR>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvddvledgkeeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnegfrhhlucfvnfffucdludehmdenucfjughrpeffhffvvefukfhf
+    gggtuggjsehttdertddttddvnecuhfhrohhmpeflrghnucfjvghnughrihhkucfhrghrrh
+    cuoehkvghrnhgvlhesjhhfrghrrhdrtggtqeenucggtffrrghtthgvrhhnpeeiheevudei
+    gffftdeghedvtedugeffjeduheeugeehgeeiveetkeevhfeivdefgeenucffohhmrghinh
+    epghhouggsohhlthdrohhrghdpohhpvghnqdhsthgurdhorhhgnecuvehluhhsthgvrhfu
+    ihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepkhgvrhhnvghlsehjfhgrrhhrrd
+    gttgdpnhgspghrtghpthhtohepledpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohep
+    khgvvghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehthhhorhhsthgvnhdrsghluh
+    hmsehtohgslhhugidrtghomhdprhgtphhtthhopehkvghnthdrohhvvghrshhtrhgvvght
+    sehlihhnuhigrdguvghvpdhrtghpthhtoheprhgvghhrvghsshhiohhnsheslhhishhtsh
+    drlhhinhhugidruggvvhdprhgtphhtthhopehlihhnuhigqdgstggrtghhvghfshesvhhg
+    vghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhhrghruggvnhhinh
+    hgsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhn
+    vghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghruggssehkvghrnh
+    gvlhdrohhrghdprhgtphhtthhopehmohhrsghosehgohhoghhlvgdrtghomh
+X-ME-Proxy: <xmx:APoDZ30uzkKobUTzsjuny2QK1rFznOOxDAxXQPvkzOEHck8-iy1sIw>
+    <xmx:APoDZ5HdDS2Mta8AeKgJSemIFtRhXH3V8UtwCpAPFtGeFvdvBxBXww>
+    <xmx:APoDZw85iiQY4hb8MPWfLpqNPknl6AXDxGe_6VOE-3qMvpUeQ1_4jA>
+    <xmx:APoDZ-lWj8xdFS3vcmq8MM1ZawWfkdzSBHFZ6dgW2zMT38tan13FCQ>
+    <xmx:APoDZ4Dob6B53znLo0vH3q7-o6NcTIrrRqj6QHAQnWFt1I6Dl09k6I7U>
+Feedback-ID: i01d149f8:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 7 Oct 2024 11:10:55 -0400 (EDT)
+Date: Mon, 7 Oct 2024 17:10:53 +0200
+From: Jan Hendrik Farr <kernel@jfarr.cc>
+To: Kees Cook <kees@kernel.org>
+Cc: Thorsten Blum <thorsten.blum@toblux.com>, kent.overstreet@linux.dev,
+	regressions@lists.linux.dev, linux-bcachefs@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	ardb@kernel.org, morbo@google.com
+Subject: Re: [REGRESSION][BISECTED] erroneous buffer overflow detected in
+ bch2_xattr_validate
+Message-ID: <ZwP5_bY-AmN91_YB@archlinux>
+References: <Zvg-mDsvvOueGpzs@archlinux>
+ <202409281331.1F04259@keescook>
+ <21D2A2BB-F442-480D-8B66-229E8C4A63D3@toblux.com>
+ <Zv6BEO-1Y0oJ3krr@archlinux>
+ <E8E64A72-3C1C-40D2-9F07-415F6B8F476E@toblux.com>
+ <Zv61dCaxScXuOjZg@archlinux>
+ <202410031424.45E5D19@keescook>
+ <Zv8RIs-htdc-PtXB@archlinux>
+ <202410040958.C19D3B9E48@keescook>
+ <ZwNb-_UPL9BPSg9N@archlinux>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241001002628.2239032-1-jeffxu@chromium.org> <20241001002628.2239032-2-jeffxu@chromium.org>
- <4544a4b3-d5b6-4f6b-b3d5-6c309eb8fa9d@infradead.org> <CABi2SkUhcEY7KxuRX3edOHJZbo2kZOZfa0sWrcG2_T0rnvHCWQ@mail.gmail.com>
- <78f05735-cca3-491e-b2d6-c673427efa07@infradead.org> <15868.1728090271@cvs.openbsd.org>
-In-Reply-To: <15868.1728090271@cvs.openbsd.org>
-From: Jeff Xu <jeffxu@chromium.org>
-Date: Mon, 7 Oct 2024 08:02:00 -0700
-Message-ID: <CABi2SkWOz8fX1M6Jx0Xh1y-866Zsn6fweK9-ZB30PRkPPgdgEQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] mseal: update mseal.rst
-To: Theo de Raadt <deraadt@openbsd.org>
-Cc: Randy Dunlap <rdunlap@infradead.org>, akpm@linux-foundation.org, keescook@chromium.org, 
-	corbet@lwn.net, jorgelo@chromium.org, groeck@chromium.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-mm@kvack.org, jannh@google.com, sroettger@google.com, 
-	pedro.falcato@gmail.com, linux-hardening@vger.kernel.org, willy@infradead.org, 
-	gregkh@linuxfoundation.org, torvalds@linux-foundation.org, 
-	usama.anjum@collabora.com, surenb@google.com, merimus@google.com, 
-	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, enh@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZwNb-_UPL9BPSg9N@archlinux>
 
-Hi Theo
+On 07 05:56:46, Jan Hendrik Farr wrote:
+> > I want to separate several easily confused issues. Instead of just
+> > saying __bdos, let's clearly refer to what calculation within bdos is
+> > being used. There are 3 choices currently:
+> > - alloc_size attribute
+> > - counted_by attribute
+> > - fallback to __bos (which is similar to sizeof(), except that FAMs are 0 sized)
+> > 
+> > Additionally there are (for all intents and purposes) 2 size
+> > determinations to be made by __bos and __bdos, via argument 2:
+> > - containing object size (type 0) ("maximum size")
+> > - specific object size (type 1) ("minimum size")
+> 
+> "maximum" vs "minimum" size would by type 0 vs type 2, but I think you
+> do mean type 0 and type 1 as those are the types currently used by
+> __struct_size and __member_size. Those are both "maximum" sizes.
+> 
+> > 
+> > For example, consider:
+> > 
+> > struct posix_acl *acl = malloc(1024);
+> > acl->a_count = 1;
+> > 
+> > what should these return:
+> > 
+> > 	__bos(acl, 0)
+> > 	__bos(acl, 1)
+> > 	__bdos(acl, 0)
+> > 	__bdos(acl, 1)
+> > 	__bos(acl->a_entries, 0)
+> > 	__bos(acl->a_entries, 1)
+> > 	__bdos(acl->a_entries, 0)
+> > 	__bdos(acl->a_entries, 1)
+> > 
+> 
+> I gathered some data from clang and gcc on all for all these cases and
+> additionally varied whether the allocation size is a compile time known
+> constant, runtime known, or not known. I also varied whether
+> __counted_by was used.
+> 
+> Source code: [1]
+> 
+> 
+> Abbreviations:
+> 
+> FAM      = flexible array member
+> -1       = SIZE_MAX
+> p->a_ent = p->a_entries
+> comp.    = allocation size is compile time known
+> run.     = allocation size is compile time known
+> none     = allocation size is unknown
+> count    = __counted_by attribute in use
+> correct  = What I think the correct answers should be. In some places I
+> have two answers. In that case the second number is what the kernel
+> currently expects.
+> 
+> 
+> And here's the data:
+> 
+> function        |comp.|run.|none|count| gcc  |clang |correct
+> ----------------|-----|----|----|-----|------|------|-----
+> bos(p, 0)       |  x  |    |    |     | 1024 | 1024 | 1024
+> bos(p, 0)       |     | x  |    |     |  -1  |  -1  | -1
+> bos(p, 0)       |     |    | x  |     |  -1  |  -1  | -1
+> bos(p, 0)       |  x  |    |    |  x  | 1024 | 1024 | 1024
+> bos(p, 0)       |     | x  |    |  x  |  -1  |  -1  | -1
+> bos(p, 0)       |     |    | x  |  x  |  -1  |  -1  | -1
+> ----------------|-----|----|----|-----|------|------|-----
+> bos(p, 1)       |  x  |    |    |     | 1024 | 1024 | 1024
+> bos(p, 1)       |     | x  |    |     |  -1  |  -1  | -1
+> bos(p, 1)       |     |    | x  |     |  -1  |  -1  | -1
+> bos(p, 1)       |  x  |    |    |  x  | 1024 | 1024 | 1024
+> bos(p, 1)       |     | x  |    |  x  |  -1  |  -1  | -1
+> bos(p, 1)       |     |    | x  |  x  |  -1  |  -1  | -1
+> ----------------|-----|----|----|-----|------|------|-----
+> bdos(p, 0)      |  x  |    |    |     | 1024 | 1024 | 1024
+> bdos(p, 0)      |     | x  |    |     | 1024 | 1024 | 1024
+> bdos(p, 0)      |     |    | x  |     |  -1  |  -1  | -1
+> bdos(p, 0)      |  x  |    |    |  x  | 1024 |  36  | 43 / 40
+> bdos(p, 0)      |     | x  |    |  x  | 1024 |  36  | 43 / 40
+> bdos(p, 0)      |     |    | x  |  x  |  -1  |  36  | 43 / 40
+> ----------------|-----|----|----|-----|------|------|-----
+> bdos(p, 1)      |  x  |    |    |     | 1024 | 1024 | 1024
+> bdos(p, 1)      |     | x  |    |     | 1024 | 1024 | 1024
+> bdos(p, 1)      |     |    | x  |     |  -1  |  -1  | -1
+> bdos(p, 1)      |  x  |    |    |  x  | 1024 |  36  | 43 / 40
+> bdos(p, 1)      |     | x  |    |  x  | 1024 |  36  | 43 / 40
+> bdos(p, 1)      |     |    | x  |  x  |  -1  |  36  | 43 / 40
+> ----------------|-----|----|----|-----|------|------|-----
+> bos(p->a_ent, 0)|  x  |    |    |     |  996 | 996  | 996
+> bos(p->a_ent, 0)|     | x  |    |     |  -1  |  -1  | -1
+> bos(p->a_ent, 0)|     |    | x  |     |  -1  |  -1  | -1
+> bos(p->a_ent, 0)|  x  |    |    |  x  |  996 | 996  | 996
+> bos(p->a_ent, 0)|     | x  |    |  x  |  -1  |  -1  | -1
+> bos(p->a_ent, 0)|     |    | x  |  x  |  -1  |  -1  | -1
+> ----------------|-----|----|----|-----|------|------|-----
+> bos(p->a_ent, 1)|  x  |    |    |     |  996 | 996  | 992
+> bos(p->a_ent, 1)|     | x  |    |     |  -1  |  -1  | -1
+> bos(p->a_ent, 1)|     |    | x  |     |  -1  |  -1  | -1
+> bos(p->a_ent, 1)|  x  |    |    |  x  |  996 | 996  | 992
+> bos(p->a_ent, 1)|     | x  |    |  x  |  -1  |  -1  | -1
+> bos(p->a_ent, 1)|     |    | x  |  x  |  -1  |  -1  | -1
+> ----------------|-----|----|----|-----|------|------|-----
+> bdos(p->a_ent,0)|  x  |    |    |     |  996 | 996  | 996
+> bdos(p->a_ent,0)|     | x  |    |     |  996 | 996  | 996
+> bdos(p->a_ent,0)|     |    | x  |     |  -1  |  -1  | -1
+> bdos(p->a_ent,0)|  x  |    |    |  x  |   8  |  8   |  8
+> bdos(p->a_ent,0)|     | x  |    |  x  |   8  |  8   |  8
+> bdos(p->a_ent,0)|     |    | x  |  x  |   8  |  8   |  8
 
-On Fri, Oct 4, 2024 at 6:04=E2=80=AFPM Theo de Raadt <deraadt@openbsd.org> =
-wrote:
->
-> Randy Dunlap <rdunlap@infradead.org> wrote:
->
-> > On 10/4/24 9:52 AM, Jeff Xu wrote:
-> > >> above is not a sentence but I don't know how to fix it.
-> > >>
-> > > Would below work ?
-> > >
-> > > Certain destructive madvise behaviors, specifically MADV_DONTNEED,
-> > > MADV_FREE, MADV_DONTNEED_LOCKED, MADV_FREE, MADV_DONTFORK,
-> > > MADV_WIPEONFORK, can pose risks when applied to anonymous memory by
-> > > threads without write permissions. These behaviors have the potential
-> > > to modify region contents by discarding pages, effectively performing
-> > > a memset(0) operation on the anonymous memory.
-> >
-> > Yes, that works.
-> > Or at least it explains the problem, like Theo said.
->
-> In OpenBSD, mimmutable() solves this problem (in later code iterations).
->
-> In Linux, does mseal() solve the problem or not?  The statement doesn't
-> answer this question.  It only explains the problem.
->
-> If it doesn't solve the problem, that's pretty surprising (weaker than
-> mimmutable).
->
-> During development I wrote a fake little program which placed an 'int =3D
-> 1' resided into a zone of readonly memory (.data), and then imagined "an
-> attacker gets enough control to perform an madvise(), but only had
-> enough control, and has to return to normal control flow immediately".
-> The madvise() operations was able to trash the int, altering the
-> program's later behaviour.  So I researched the matter more, and adapted
-> mimmutable() to block ALL system-call variations similar to 'write to a
-> not-permitted region'.
->
-> So the question remains:  Does mseal() block such a (rare) pattern or not=
-.
 
-Apology  for delay.
-Yes, mseal does block such patterns.
+These previous three should probably actually be like this:
+bdos(p->a_ent,0)|  x  |    |    |  x  |   8  |  8   |  15
+bdos(p->a_ent,0)|     | x  |    |  x  |   8  |  8   |  15
+bdos(p->a_ent,0)|     |    | x  |  x  |   8  |  8   |  15
 
-Thanks
--Jeff
+They should include the allowed padding after the FAM, as this is a type
+0 bdos. Not really an issue here, as the kernel expects 8 here.
 
-> The sentence doesn't indicate that mseal() has a response to the stated
-> problem.
->
+
+> ----------------|-----|----|----|-----|------|------|-----
+> bdos(p->a_ent,1)|  x  |    |    |     |  996 | 996  | 992
+> bdos(p->a_ent,1)|     | x  |    |     |  996 | 996  | 992
+> bdos(p->a_ent,1)|     |    | x  |     |  -1  |  -1  | -1
+> bdos(p->a_ent,1)|  x  |    |    |  x  |   8  |  8   |  8
+> bdos(p->a_ent,1)|     | x  |    |  x  |   8  |  8   |  8
+> bdos(p->a_ent,1)|     |    | x  |  x  |   8  |  8   |  8
+> ----------------|-----|----|----|-----|------|------|-----
+> 
+> bos only uses the allocation size to give it's answers. It only works if
+> it is a compile time known constant. bos also does not utilize the
+> __counted_by attribute.
+> 
+> bdos on the other hand allows the allocation size to be runtime known.
+> It also makes use of the __counted_by attribute if present, which always
+> takes precedence over the allocation size when the compiler supports it
+> for the particular case. So in those cases you can "lie" to the compiler
+> about the size of an object.
+> 
+> clang supports the __counted_by attribute for both cases (p and
+> p->a_entries). gcc only supports it for p->a_entries cases.
+> 
+> 
+> 
+> Issue A (clang)
+> =======
+> 
+> function        |comp.|run.|none|count| gcc  |clang |correct
+> ----------------|-----|----|----|-----|------|------|-----
+> bdos(p, 0)      |  x  |    |    |  x  | 1024 |  36  | 43 / 40
+> bdos(p, 0)      |     | x  |    |  x  | 1024 |  36  | 43 / 40
+> bdos(p, 0)      |     |    | x  |  x  |  -1  |  36  | 43 / 40
+> bdos(p, 1)      |  x  |    |    |  x  | 1024 |  36  | 43 / 40
+> bdos(p, 1)      |     | x  |    |  x  | 1024 |  36  | 43 / 40
+> bdos(p, 1)      |     |    | x  |  x  |  -1  |  36  | 43 / 40
+> 
+> These cases also represent the "bdos off by 4" issue in clang. clang
+> will compute these results using:
+> 
+> max(sizeof(struct posix_acl), offsetof(struct posix_acl, a_entries) +
+> count * sizeof(struct posix_acl_entries)) = 36
+> 
+> The kernel on the other hand expects this behavior:
+> 
+> sizeof(struct posix_acl) + count * sizeof(struct posix_acl_entries) = 40
+> 
+> 
+> I think the correct calculation would actually be this:
+> 
+> offsetof(struct posix_acl, a_entries)
+> + (acl->a_count + 1) * sizeof(struct posix_acl_entry) - 1 = 43
+> 
+> The C11 standard says that when the . or -> operator is used on a struct
+> with an FAM it behaves like the FAM was replaced with the largest array
+> (with the same element type) that would not make the object any larger
+> (see page 113 and 114 of [2]).
+> So there are actually multiple sizes of the object that are consistent
+> with a count of 1.
+> 
+> malloc-max = maximum size of the object
+> malloc-min = minimum size of the object
+> FAME = flexible array member element
+> (FAME) = hypothetical 2nd FAME
+> 
+> <-----------------malloc-max-------------->
+> <-----------------malloc-min------->
+> <------sizeof(posix_acl)------->
+>                             <-FAME-><(FAME)>
+> 
+> The clang documentation of type 0 (vs type 2) bdos says this:
+> 
+> If ``type & 2 == 0``, the least ``n`` is returned such that accesses to 
+>    ``(const char*)ptr + n`` and beyond are known to be out of bounds.
+> 
+> We only _know_ that that access to the last byte of a 2nd hypothetical FAME
+> would be out of bounds. All the bytes before that are padding that is
+> allowed by the standard.
+> 
+> 
+> However, also this calculation doesn't get the kernel out
+> of trouble here. While this would fix the issue for this particular
+> struct it does not solve it for all structs:
+> 
+> What if the elements of the FAM were chars instead of
+> struct posix_acl_entries here? In that case the kernel is back to
+> overestimating the size of the struct / underreporting the count to the
+> compiler. So while I think this answer is more correct it doesn't
+> actually solve the issue.
+> 
+> Example:
+> Let's say the kernel allocates one of these posix_acl_char structs for a
+> single char in the array:
+> 
+> malloc(sizeof(posix_acl_char) + 1 * sizeof(char)) = 33
+> 
+> The C standard actually says that this object will behave like this when
+> the FAM is accessed:
+> 
+> struct posix_acl {
+>     refcount_t a_refcount;
+>     struct rcu_head a_rcu;
+>     unsigned int a_count;
+>     char a_entries[5];
+> };
+> 
+> a_count should be set to 5, not 1!
+> 
+> 
+> So we would really need an option to tell the compiler to use the same
+> size calculation as the kernel expects here, or maybe be able to specify
+> an offset in the __counted_by attribute. Alternatively clang could use
+> an option to disable the use of __counted_by for cases where the whole
+> struct is passed. This would make it behave like gcc.
+> 
+> 
+> 
+> Issue B (clang + gcc)
+> =======
+> 
+> A less serious issue happens with these cases:
+> 
+> function        |comp.|run.|none|count| gcc  |clang |correct
+> ----------------|-----|----|----|-----|------|------|-----
+> bos(p->a_ent, 1)|  x  |    |    |     |  996 | 996  | 992
+> bos(p->a_ent, 1)|  x  |    |    |  x  |  996 | 996  | 992
+> bdos(p->a_ent,1)|  x  |    |    |     |  996 | 996  | 992
+> bdos(p->a_ent,1)|     | x  |    |     |  996 | 996  | 992
+> 
+> In this case the size returned by bos/bdos is too large, so this won't
+> lead to false positives. Both clang and gcc simply compute the difference
+> between the pointer from the start of the FAM to the end of the whole
+> struct. I believe this is wrong. According to the C standard the object
+> should behave like the FAM was replaced with the largest array that does
+> not make the object any larger. The size of that array is 124 elements.
+> So the posix_acl becomes:
+> 
+> struct posix_acl {
+>     refcount_t a_refcount;
+>     struct rcu_head a_rcu;
+>     unsigned int a_count;
+>     struct posix_acl_entry a_entries[124];
+> };
+> 
+> Since this is a type 1 bos/bdos it should return the size of just the
+> array, which is 124 * 8 = 992, and not 124.5 * 8 = 996.
+> 
+> [1] https://godbolt.org/z/a5eM3z8PY
+> [2] https://www.open-std.org/jtc1/sc22/wg14/www/docs/n1548.pdf
+> 
+> Best Regards
+> Jan
+> 
