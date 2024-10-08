@@ -1,75 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com [209.85.222.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 776C91FA244;
-	Tue,  8 Oct 2024 17:23:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A6B51E0E0D;
+	Tue,  8 Oct 2024 17:48:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728408204; cv=none; b=iwu6Cz+EL6Jls8xAZgkx9TFqQrxf+0HV84blPQvPusXgCUFqZS5ShjNGHsxEJzPMm0Kfdg6ViDUtvcPKxtviMQoEK8B+ReGJkcnXAuXk/lcxPGY5yLErErVTYiGUaZJbJJam2T7NEIMRLidyHOkJMRVuoyjkFc6yR8l3vqKjfRg=
+	t=1728409697; cv=none; b=EnjA80Q7LRvwbnB6LAKJ5RiSl9bZe1rsF4e4HZAQnEvKkWZxuIICSlvt5FJRK2L4O9MZEQTbB8GrJEV7q12VmNfV3j6l4BNbWNKq3qGOAc9McU5vjkIsFik+0YVs8ZR9zIRZu8ZA4e8KzS/BmkRBUJ3IFVDOzPTYSsXbhbqehQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728408204; c=relaxed/simple;
-	bh=DuHTSfJlmC1hp6ca5DIHmFBllQ1ImR0t39fiVgQb/dI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Pl92zFXYKifT3if+3aqxyVoz2RD19eTNiKqV+QNZlHlPi8fCMfxJK7tS85DGEpJ+5wWfx/GWyUpndzFa3MEPejtQ16YQq/VLdq+2lVFNpwkZrCFTZk2obPlaWPPiwTOh/a7jdUpN9UxX0pDPVWkGDjN0t3Xe7p0C6yIHmtevQk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Okmxnov0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1728409697; c=relaxed/simple;
+	bh=HhXUWNyCd7lrYs51HTyxgHt+jQ/qZ23wBJfVorotGVU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cLv6jiG+FRvlnQzttAFeZfLU6iK7oEDSXUwWgbLWm4qrhqSMLTO2+Lmv3fh/tyPfGTDspGrGEHwAdgMQU4utT8Tu3vcUwfTuoGwrX/OZH+EgZwTZocEAmAcgjmxIXHVEhCeQjejNkFtO/CJNGFyTrE9qmJ/pof2Hz4JfTi5TM4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Lys32wBd; arc=none smtp.client-ip=209.85.222.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Okmxnov0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 082CFC4CEC7;
-	Tue,  8 Oct 2024 17:23:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728408204;
-	bh=DuHTSfJlmC1hp6ca5DIHmFBllQ1ImR0t39fiVgQb/dI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Okmxnov0uc+NFjHx21W6Gujd1idTmAlVJsKNZ5flBTKyg3e6SCKt1bkihvDSzgj0g
-	 X9vT0yttzVHPH8W+np1B28njjElN7rMLqW25WzUELP+/G1cZhbKWA/8lyoPpZY5bO1
-	 pLGtxTDRnsX6Aeh5rZGPrASWKvFdamVVTVQXSrQNzMuov3n/MtMzLk2R6hbpjXoN52
-	 /2bkkwOe9Gc1y0MNxAtVpKzpALeXqyNBRyu12jyVcb0AmO3g47ZZ1VBnvR6aG6iqUD
-	 5im0/YICPqJ0WfUZN5qAvIRAx935V4w75fnN2E1Ol1f6lCsNQgH47WzzGg51v1hDgA
-	 1SXsDVOpQjx0Q==
-Date: Tue, 8 Oct 2024 10:23:20 -0700
-From: Kees Cook <kees@kernel.org>
-To: Zach Wade <zachwade.k@gmail.com>
-Cc: tony.luck@intel.com, gpiccoli@igalia.com,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org, lixingyang1@qq.com
-Subject: Re: [PATCH] pstore: Fix uaf when backend is unregistered
-Message-ID: <202410081019.0E9DE76A@keescook>
-References: <2bf30957-ad04-473a-a72e-8baab648fb56@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lys32wBd"
+Received: by mail-ua1-f43.google.com with SMTP id a1e0cc1a2514c-84ea6ddb972so1490065241.1;
+        Tue, 08 Oct 2024 10:48:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1728409695; x=1729014495; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HhXUWNyCd7lrYs51HTyxgHt+jQ/qZ23wBJfVorotGVU=;
+        b=Lys32wBdOJK8mpKWThm53yA62Fa8735pO24SLzIyKorXFkdUtfU4oF09b1UFisvkb5
+         IkXU3Uaf8daYvX3qYbGplUW3Cy0qPw56qvJaUXveJymsk8ip+AWpve6frExFwDOpTrgA
+         FsXE7IuPO2Nb1unIgaJSmZxvdQOhvHXcmrNX2sL9C05menADpV1goQo5P2RbEmKaPyA7
+         YIaRCpHoAL6m+WneY+pWmzgMO227FN4geDzfiC0ZxowdXOLlbIld5x3YplXLC2MYGflV
+         5Va1dfbct0R++T37XtJmTOY8iE8+qx/qXvflUVfKCEbiE1yeMOD0Raloq/mih0b5fckW
+         Ph6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728409695; x=1729014495;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HhXUWNyCd7lrYs51HTyxgHt+jQ/qZ23wBJfVorotGVU=;
+        b=Yout0miGnwl+ZIJMj2empgRkzdpsHUUZq6wEwoL20jm3twT2X7E5Mt9MzEHzQEFKgm
+         OoO2L8BHdayrOju1kmYFDEKRzuuMv70I9Cz0d2h2KGKHFYofyCtpqM1wNnZTuqM/8Yim
+         VRJz0vJCjCwS6COCIM654K5bOH64FSPhodQWmGlv5oEJvSegLxf7lHPtXE2acwldvLz/
+         znaPbbAVBDmPuKPD8u+UUXQjqHr2F4VGLfOYB43ObDVY383ILAAa8jLTqY5nQDMczrbP
+         FkSuhmxKPE4SB03L2FkHFtqUmgX450Pf3ZEna0Vwz4yoU2eFeH8av2dl/nYHMMMQFHbr
+         U/SQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWIoieTewJ+F4E7YLf0+bhQjSsN2SS3dwUfjTD4mh2kqmyiWn4ut0uq49NE4XDS9vN9xvoVx01rWzegS9sC@vger.kernel.org, AJvYcCWWW020AgnEROZBpTgYU8ozps0aZRz+vzaf5rLvJAaZgDXVvyNQz3l1yqmQHwbaPdsY7oQTtdLZA3uSpbi8WGoQ@vger.kernel.org, AJvYcCXSbidrR2h7AX3H9qf82yJSSHcb/gNIpcSNaiYJdUXKZuXwQWUlkXVrVffVN8vzMctskwBJEFkHZYDhySL1pBw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxY+1mzxy6PdyQusIb/s50DJmxwBperXtn0TAySYo0hR34znUxy
+	ASCzv0yIjNEQ4BP4zNIGs/VRloyC4zCBYYIQQ1AXcO8aYDKzn3PizOQ3UuUtMaNAimyAMQg+L3d
+	ArEZ3sOVqZbf8Wqw9ckguKXmKmPI=
+X-Google-Smtp-Source: AGHT+IE8DwFUrBVwR9yu8xxyR0diuB6FJKrvPkKyJpldYZwYMONMxddkQUAXPqwt2kCf4OmdefDHRCj+Zs5EpQhOwys=
+X-Received: by 2002:a05:6122:a09:b0:50a:b5a3:e00c with SMTP id
+ 71dfb90a1353d-50c8544edb9mr10418552e0c.1.1728409695131; Tue, 08 Oct 2024
+ 10:48:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2bf30957-ad04-473a-a72e-8baab648fb56@gmail.com>
+References: <20241008040942.1478931-1-jeffxu@chromium.org> <20241008040942.1478931-2-jeffxu@chromium.org>
+In-Reply-To: <20241008040942.1478931-2-jeffxu@chromium.org>
+From: Pedro Falcato <pedro.falcato@gmail.com>
+Date: Tue, 8 Oct 2024 18:48:03 +0100
+Message-ID: <CAKbZUD1uyzhS6C0T_F_U+4gfuOcHFMJ-82XsFaLZQj91F-BKZw@mail.gmail.com>
+Subject: Re: [PATCH v3 1/1] mseal: update mseal.rst
+To: jeffxu@chromium.org
+Cc: akpm@linux-foundation.org, keescook@chromium.org, corbet@lwn.net, 
+	jorgelo@chromium.org, groeck@chromium.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, jannh@google.com, 
+	sroettger@google.com, linux-hardening@vger.kernel.org, willy@infradead.org, 
+	gregkh@linuxfoundation.org, torvalds@linux-foundation.org, 
+	deraadt@openbsd.org, usama.anjum@collabora.com, surenb@google.com, 
+	merimus@google.com, rdunlap@infradead.org, lorenzo.stoakes@oracle.com, 
+	Liam.Howlett@oracle.com, enh@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Oct 09, 2024 at 01:10:14AM +0800, Zach Wade wrote:
-> when unload pstore_blk, we will unlink the pstore file and
-> set pos->dentry to NULL, but simple_unlink(d_inode(root), pos->dentry)
-> may free inode of pos->dentry and free pos by free_pstore_private,
-> this may trigger uaf. kasan report:
+On Tue, Oct 8, 2024 at 5:09=E2=80=AFAM <jeffxu@chromium.org> wrote:
+>
+> From: Jeff Xu <jeffxu@chromium.org>
+>
+> Update doc after in-loop change: mprotect/madvise can have
+> partially updated and munmap is atomic.
+>
+> Fix indentation and clarify some sections to improve readability.
+>
+> Signed-off-by: Jeff Xu <jeffxu@chromium.org>
 
-Thanks for this! I need to double check what happening here a bit more
-closely, as maybe some ordering changed after a43e0fc5e913 ("pstore:
-inode: Only d_invalidate() is needed")
+Please reply to the points I raised:
+https://lore.kernel.org/all/uwwg47m4mwo3g32qavzr2mjmh4r6lcm3irr3wtlvedlylbq=
+74z@flcq2kwvmh46/
 
-> @@ -316,9 +316,10 @@ int pstore_put_backend_records(struct pstore_info *psi)
->  		list_for_each_entry_safe(pos, tmp, &records_list, list) {
->  			if (pos->record->psi == psi) {
->  				list_del_init(&pos->list);
-> -				d_invalidate(pos->dentry);
-> -				simple_unlink(d_inode(root), pos->dentry);
-> +				unlink_dentry = pos->dentry;
->  				pos->dentry = NULL;
-> +				d_invalidate(unlink_dentry);
-> +				simple_unlink(d_inode(root), unlink_dentry);
+They're actually instrumental and something that *needs* to be written down=
+.
 
-But on the face of it, this does solve the UAF. I'll double-check that
-this isn't a result of the mentioned commit.
-
--Kees
-
--- 
-Kees Cook
+--=20
+Pedro
