@@ -1,125 +1,258 @@
-Received: from mail-pl1-f193.google.com (mail-pl1-f193.google.com [209.85.214.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EA1E1E4A4;
-	Wed,  9 Oct 2024 13:36:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62EF219DF9E;
+	Wed,  9 Oct 2024 15:18:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728480999; cv=none; b=bOJAh5bThbwwSDSd94CdtpH0FVTFrlgmsAy2qy37DYrG7MjLLnvoqmAF8phz+CvnxyfCbh+0us7dY8CYfDbLr3hFMI7luPtPnAPga1gYT46hm9ILRUh1CuGpAxSA9nJX1kQAVoBDj57NSuKGtmfL15gJTvXLVqmA7jua+hYy8l4=
+	t=1728487130; cv=none; b=d7ITojDMI4yMA6kf6b8B4Q0eoM8KCZC7ESjz6RIzIK9HPzCanV5kbPc8YAY19bXQImF9xHLc1cJK2SZ0lHijtAJc4rojB0axrkSQxP/hGY2IcOO5TWxQwrFkCi4XK566DBCXcJXg+4NzcUG1vFO6oR7J5SF5eI7PpHsNJJUGozE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728480999; c=relaxed/simple;
-	bh=F4JINcttXjoVRn5HH5wMT/sa4Wz40gFGrwTMgVB2Avo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fb9ACU3fuCNrjG8UhyzJYes2HFPxY/XXM/c4zLSGBRNd8UhN3PKZEqT3JmjagPgiFp6ANI3RSALaDajx5gzl2qi/prKvXmIx49LaOuVrwU8j3fHR1XvUTC67tQ1MFtEUOdmdDkLXTVLTqlsWAmxmmoJPT+1hE11eHUah6hqb07I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lMCcRcVC; arc=none smtp.client-ip=209.85.214.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1728487130; c=relaxed/simple;
+	bh=TkTZF61Dm4geyGJUBrcOgExSip9VIIuFuCW1rSsvTXk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DdchWUPk3jRxuO7xlkjHE5n31wFhwWKzufvPNNByKD6V58md988VV75wAZhj7UWxlh6VQj0jo9AeS+QXRrHb2+sIntuXUx9fhptBtB1yy5KtkODNmHtycI7dwgu0GyhgGS2/0TUaw87zaV642myu4RAAXhBFMVzZ+uOntu4dITs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Had75Z5w; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lMCcRcVC"
-Received: by mail-pl1-f193.google.com with SMTP id d9443c01a7336-20c593d6b1cso17166615ad.0;
-        Wed, 09 Oct 2024 06:36:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728480997; x=1729085797; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7z1XFRx5WAa767478931DIH4cHF8X+E+L1pl0+bzJ/o=;
-        b=lMCcRcVC1JJVqKen8VsAwwuuENlMJXRdlaGcUEV0WynvvTJ23U2wd8iGyZUzGEaGvl
-         u6iZRBXR5gbF53uTNjq5d9DyGBShRvwYk1abb+B3PLGwdNaeRQ6/jwr0I6kcCxckmdq0
-         1weF/9UeI3CZ46NB7Uz7Jf6yrBtdUPZHiqklFnV8bJPg8SFXCIDDy9b+M/4UiapRt3qe
-         8/ibaJ1dxw+4PTBzbYXwHAPGeNXQWLyMpZnBumgWqLXc/diuINjH4X+CgUkU2j9upBwq
-         AF4rjIuiu+IPlGcbvw7CrhoGdEE3Epf/Pte0Do7N0yJDzXAm8YRqVffEhICcJAsy4lYO
-         8T0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728480997; x=1729085797;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=7z1XFRx5WAa767478931DIH4cHF8X+E+L1pl0+bzJ/o=;
-        b=VrOfirJMetpEAHaeYG1pY+PHVq8o0J5DiCqdVDtRPuxBt0NFvj9lU/9R23sWeYOh0m
-         vCc5dDxYTJPFs74EK7bwIQpUXfAtQkSwg5BaMLW0cObUYhl7bdLz0ctYFDW/ROPaqw+S
-         osMbVBlGXzqgWLkISQjUmK2fWA0JbzsGy+zMWw+XooafqPAMfbyT8BldAqz3JHFjJqLj
-         PDeuds0zGniTGK/+JHojUILDa+NG6vD3Df574xCxcVEPlhOi/QglVeNp5gzdiMVfGY87
-         you/Npnwe6cFzdrGKO7g6nd7oZVfrhcTyprOpWvkmyxKMPKdGHFLp1ahcBTm1/zhWoWZ
-         pMww==
-X-Forwarded-Encrypted: i=1; AJvYcCU/+wuQ6/8eCIA2EisArwodFGrbLOOZg+xHVqYe0kleFBBIZwdhox5VbvOypyvWm2e3ocRuORL0G/rIXP3J@vger.kernel.org, AJvYcCV/v4gxzakByvpRM0XJb589KqpdjDnd4Ea5TLiaLCxyThSMGj3XPXlJlUHyZ4/xT6CafeD8n4yPR6pHiQ/9Om8=@vger.kernel.org, AJvYcCXoY+ftzfvk/mNzffP02pVKf5X4wp4yyz7asoY3m+h/+h1Sa0HS164NDGGCc0yVfFLOY6EoG/xy@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8XGwXKWSq5/Qc/KGDccghS/d7W8v0vrRMaOzUJ9AeEgNUOlLf
-	8XlDYwQ8zYI9tSEMqP733XdTRfyCqo9OEaIPaYxsBs37fnanBC1epq7wk0pX
-X-Google-Smtp-Source: AGHT+IGsJEvxXtIb2li7iBcEDRdYWRnBXohOlYLYdxfwN6aIP8lCJDyFvh91ETVg4QWOgukM5r1bFA==
-X-Received: by 2002:a17:903:110c:b0:1fa:9c04:946a with SMTP id d9443c01a7336-20c636e1892mr47017035ad.1.1728480997420;
-        Wed, 09 Oct 2024 06:36:37 -0700 (PDT)
-Received: from [198.18.0.1] (n220246094186.netvigator.com. [220.246.94.186])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20c7749c9d6sm5128645ad.28.2024.10.09.06.36.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Oct 2024 06:36:36 -0700 (PDT)
-Message-ID: <6077c924-f975-49a0-8ee4-4e481664ac38@gmail.com>
-Date: Wed, 9 Oct 2024 21:36:33 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Had75Z5w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10F47C4CECE;
+	Wed,  9 Oct 2024 15:18:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728487130;
+	bh=TkTZF61Dm4geyGJUBrcOgExSip9VIIuFuCW1rSsvTXk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Had75Z5wgbmd/egQQY3HEvYNHmKqZ+puE8z0PwERZLBwgMjMS1aXEwFc+phw3X9V7
+	 87mvKKfMiIc1dSuZvbxmh6yVS6DuMM4ksjyP2a44SDl5B2WXS1kUYLG0zeazcg9+3v
+	 Iol1UPP4RzmWZTQypVSTyhlqlgPtwk9m0wFmMX2Dydt5f2yz5R/JRqzwvflBDjsQNx
+	 MnBL2ghZxt3Y5+qNoVTIINJzyLDZRqP3PqW7NQ9UCsN1Puiv76rz3LzjVFcndNG47q
+	 88PFdpZ7cSMMl/xWu88Gw89jV/M2ScPXfEORaBll8Zd058KgrduNAp0XRFCL1KwzRX
+	 u5ebe2i39oFJA==
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2fac3f20f1dso76370511fa.3;
+        Wed, 09 Oct 2024 08:18:49 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV89+ZgCj2tXmdDjXlcBX6ZCsaU8Y6ksM1HOqN2DY9sQPLUxagZUioiqOsYSs0t/xAd5lw0dt5Yblx3e+bXC48=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVdDmiyHYHOQvcxQsdODTzETbRlQs9yQVuo9zKvipGYZ0VicC1
+	SvLxA2psNHQYGBw9TtnI9ZIN3uftvl2ZR6cyLuqB20BkCOT5whffVb3hxUsnBes1llnuKpVYy8E
+	YrZ6neaEj4nhXmaB4U1VnfMJBrVQ=
+X-Google-Smtp-Source: AGHT+IFyXVekuST3emLrAwDiziwfH3jcPUTJ8r+uaK2VNyULsaOucoAWsgJGCcBIELm+IDvVgmZ0VQ94P6Ec3LVD1+w=
+X-Received: by 2002:a2e:8e6f:0:b0:2fa:bb5d:db67 with SMTP id
+ 38308e7fff4ca-2fb187aeb2emr15501101fa.32.1728487128346; Wed, 09 Oct 2024
+ 08:18:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] pstore: Fix uaf when backend is unregistered
-To: Kees Cook <kees@kernel.org>
-Cc: tony.luck@intel.com, gpiccoli@igalia.com,
- linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org, lixingyang1@qq.com
-References: <2bf30957-ad04-473a-a72e-8baab648fb56@gmail.com>
- <202410081019.0E9DE76A@keescook>
-From: Zach Wade <zachwade.k@gmail.com>
-In-Reply-To: <202410081019.0E9DE76A@keescook>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20241007224747.3973322-2-ardb+git@google.com> <20241008174201.b23zrrvqv26ihq4t@treble>
+In-Reply-To: <20241008174201.b23zrrvqv26ihq4t@treble>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Wed, 9 Oct 2024 17:18:36 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXHBccOwtLWuT9P1ozpVm7bTcfPfjfXTVzJnCzsCYm1RfQ@mail.gmail.com>
+Message-ID: <CAMj1kXHBccOwtLWuT9P1ozpVm7bTcfPfjfXTVzJnCzsCYm1RfQ@mail.gmail.com>
+Subject: Re: [PATCH] objtool: Deal with relative jump tables correctly
+To: Josh Poimboeuf <jpoimboe@kernel.org>, Kees Cook <kees@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+
+On Tue, 8 Oct 2024 at 19:42, Josh Poimboeuf <jpoimboe@kernel.org> wrote:
+>
+> On Tue, Oct 08, 2024 at 12:47:48AM +0200, Ard Biesheuvel wrote:
+> > -     /*
+> > -      * Use of RIP-relative switch jumps is quite rare, and
+> > -      * indicates a rare GCC quirk/bug which can leave dead
+> > -      * code behind.
+> > -      */
+> > -     if (reloc_type(text_reloc) == R_X86_64_PC32)
+> > -             file->ignore_unreachables = true;
+> > -
+>
+> I'm not sure if this bug still exists on current GCC versions.  If so,
+> it will start reporting "unreachable instruction" warnings again and
+> we'll have to figure out a way to resolve that.
+>
+
+Ah, I mistook this for a check against the first entry in the table,
+but it is the reference *to* the table from the code.
+
+So I'll just leave this alone.
+
+> Otherwise the patch looks ok.
+>
+
+Thanks. I've added another tweak locally so validate_ibt_data_reloc()
+uses the corrected offset as well, or I end up with !ENDBR warnings.
+So with that in place, objtool can decipher the jump table if it
+manages to recognize it as one.
+
+However, there are pathological cases (see one below) where the LEA
+that takes the address of the jump table is ridiculously far away from
+the indirect jump, resulting in a warning like
+
+vmlinux.o: warning: objtool: fdt_pmu_probe_pmu_dev.isra.0+0x229:
+sibling call from callable instruction with modified stack frame
+
+
+This is with GCC 14 (it is the only warning introduced by PIC codegen
+in an allmodconfig build), and I suspect that this might happen with
+non-PIC codegen too, right?
+
+So how important is jump table support now that it is turned off in
+most cases? And has there been any movement on compiler annotations?
+If this is worth while, it is something I could look into: Kees and I
+work very closely with both the GCC and the Clang folks, and have
+contributed other features that are specific to the kernel.
 
 
 
-On 2024/10/9 1:23, Kees Cook wrote:
-> On Wed, Oct 09, 2024 at 01:10:14AM +0800, Zach Wade wrote:
->> when unload pstore_blk, we will unlink the pstore file and
->> set pos->dentry to NULL, but simple_unlink(d_inode(root), pos->dentry)
->> may free inode of pos->dentry and free pos by free_pstore_private,
->> this may trigger uaf. kasan report:
-> 
-> Thanks for this! I need to double check what happening here a bit more
-> closely, as maybe some ordering changed after a43e0fc5e913 ("pstore:
-> inode: Only d_invalidate() is needed")
-> 
->> @@ -316,9 +316,10 @@ int pstore_put_backend_records(struct pstore_info *psi)
->>   		list_for_each_entry_safe(pos, tmp, &records_list, list) {
->>   			if (pos->record->psi == psi) {
->>   				list_del_init(&pos->list);
->> -				d_invalidate(pos->dentry);
->> -				simple_unlink(d_inode(root), pos->dentry);
->> +				unlink_dentry = pos->dentry;
->>   				pos->dentry = NULL;
->> +				d_invalidate(unlink_dentry);
->> +				simple_unlink(d_inode(root), unlink_dentry);
-> 
-> But on the face of it, this does solve the UAF. I'll double-check that
-> this isn't a result of the mentioned commit.
 
-Hi Cook,
 
-However, I think a more appropriate solution to the problem here is to
-check the reference count when uninstalling the mount point.
 
-At the same time, the test script is attached:
-#!/bin/bash
-modprobe pstore_blk
-blkdev=/dev/sda2
-best_effort=on
-mount -t pstore pstore /sys/fs/pstore
-sleep 2
-umount /sys/fs/pstore
-modprobe -r pstore_blk
 
-Thanks,
-Zach
-
-> 
-
-> -Kees
-> 
-
+ffffffff83203a40 <fdt_pmu_probe_pmu_dev.isra.0>:
+3a40:  nopl   0x0(%rax,%rax,1)
+3a45:  push   %r15
+3a47:  push   %r14
+3a49:  lea    0x597a98(%rip),%r14  <--- load of jump table address
+3a50:  push   %r13
+3a52:  mov    %rsi,%r13
+3a55:  push   %r12
+3a57:  lea    0x530(%r13),%r15
+3a5e:  push   %rbp
+3a5f:  push   %rbx
+3a60:  mov    %rdi,%rbx
+3a63:  sub    $0x10,%rsp
+3a67:  mov    0x40(%rsp),%rdi
+3a6c:  call   ffffffff81745c00 <__tsan_func_entry>
+3a71:  call   ffffffff814ae4c0 <__sanitizer_cov_trace_pc>
+3a76:  mov    %r15,%rdi
+3a79:  call   ffffffff81747a00 <__tsan_read8>
+3a7e:  mov    0x530(%r13),%rdi
+3a85:  xor    %esi,%esi
+3a87:  call   ffffffff82a25800 <of_get_next_child>
+3a8c:  mov    %rax,%r12
+3a8f:  call   ffffffff814ae4c0 <__sanitizer_cov_trace_pc>
+3a94:  test   %r12,%r12
+3a97:  je     ffffffff83203d55 <fdt_pmu_probe_pmu_dev.isra.0+0x315>
+3a9d:  call   ffffffff814ae4c0 <__sanitizer_cov_trace_pc>
+3aa2:  mov    %r12,%rdi
+3aa5:  call   ffffffff82a26e00 <of_device_is_available>
+3aaa:  xor    %edi,%edi
+3aac:  mov    %eax,%ebp
+3aae:  mov    %eax,%esi
+3ab0:  call   ffffffff814ae740 <__sanitizer_cov_trace_const_cmp1>
+3ab5:  test   %bpl,%bpl
+3ab8:  je     ffffffff83203d31 <fdt_pmu_probe_pmu_dev.isra.0+0x2f1>
+3abe:  call   ffffffff814ae4c0 <__sanitizer_cov_trace_pc>
+3ac3:  lea    0x68e996(%rip),%rsi        # ffffffff83892460 <.LC29>
+3aca:  mov    %r12,%rdi
+3acd:  call   ffffffff82a26180 <of_device_is_compatible>
+3ad2:  xor    %edi,%edi
+3ad4:  mov    %eax,%ebp
+3ad6:  mov    %eax,%esi
+3ad8:  call   ffffffff814ae7c0 <__sanitizer_cov_trace_const_cmp4>
+3add:  test   %ebp,%ebp
+3adf:  je     ffffffff83203b03 <fdt_pmu_probe_pmu_dev.isra.0+0xc3>
+3ae1:  call   ffffffff814ae4c0 <__sanitizer_cov_trace_pc>
+3ae6:  mov    %rbx,%rdi
+3ae9:  call   ffffffff81747a00 <__tsan_read8>
+3aee:  mov    (%rbx),%rdi
+3af1:  xor    %edx,%edx
+3af3:  mov    %r12,%rsi
+3af6:  call   ffffffff83203800 <fdt_get_pmu_hw_inf.isra.0>
+3afb:  mov    %rax,%rbp
+3afe:  jmp    ffffffff83203bd7 <fdt_pmu_probe_pmu_dev.isra.0+0x197>
+3b03:  call   ffffffff814ae4c0 <__sanitizer_cov_trace_pc>
+3b08:  lea    0x68e963(%rip),%rsi        # ffffffff83892472 <.LC30>
+3b0f:  mov    %r12,%rdi
+3b12:  call   ffffffff82a26180 <of_device_is_compatible>
+3b17:  xor    %edi,%edi
+3b19:  mov    %eax,%ebp
+3b1b:  mov    %eax,%esi
+3b1d:  call   ffffffff814ae7c0 <__sanitizer_cov_trace_const_cmp4>
+3b22:  test   %ebp,%ebp
+3b24:  je     ffffffff83203b4b <fdt_pmu_probe_pmu_dev.isra.0+0x10b>
+3b26:  call   ffffffff814ae4c0 <__sanitizer_cov_trace_pc>
+3b2b:  mov    %rbx,%rdi
+3b2e:  call   ffffffff81747a00 <__tsan_read8>
+3b33:  mov    (%rbx),%rdi
+3b36:  mov    $0x1,%edx
+3b3b:  mov    %r12,%rsi
+3b3e:  call   ffffffff83203800 <fdt_get_pmu_hw_inf.isra.0>
+3b43:  mov    %rax,%rbp
+3b46:  jmp    ffffffff83203bd7 <fdt_pmu_probe_pmu_dev.isra.0+0x197>
+3b4b:  call   ffffffff814ae4c0 <__sanitizer_cov_trace_pc>
+3b50:  lea    0x68e92d(%rip),%rsi        # ffffffff83892484 <.LC31>
+3b57:  mov    %r12,%rdi
+3b5a:  call   ffffffff82a26180 <of_device_is_compatible>
+3b5f:  xor    %edi,%edi
+3b61:  mov    %eax,%ebp
+3b63:  mov    %eax,%esi
+3b65:  call   ffffffff814ae7c0 <__sanitizer_cov_trace_const_cmp4>
+3b6a:  test   %ebp,%ebp
+3b6c:  je     ffffffff83203b90 <fdt_pmu_probe_pmu_dev.isra.0+0x150>
+3b6e:  call   ffffffff814ae4c0 <__sanitizer_cov_trace_pc>
+3b73:  mov    %rbx,%rdi
+3b76:  call   ffffffff81747a00 <__tsan_read8>
+3b7b:  mov    (%rbx),%rdi
+3b7e:  mov    $0x3,%edx
+3b83:  mov    %r12,%rsi
+3b86:  call   ffffffff83203800 <fdt_get_pmu_hw_inf.isra.0>
+3b8b:  mov    %rax,%rbp
+3b8e:  jmp    ffffffff83203bd7 <fdt_pmu_probe_pmu_dev.isra.0+0x197>
+3b90:  call   ffffffff814ae4c0 <__sanitizer_cov_trace_pc>
+3b95:  lea    0x68e8fa(%rip),%rsi        # ffffffff83892496 <.LC32>
+3b9c:  mov    %r12,%rdi
+3b9f:  call   ffffffff82a26180 <of_device_is_compatible>
+3ba4:  xor    %edi,%edi
+3ba6:  mov    %eax,%ebp
+3ba8:  mov    %eax,%esi
+3baa:  call   ffffffff814ae7c0 <__sanitizer_cov_trace_const_cmp4>
+3baf:  test   %ebp,%ebp
+3bb1:  je     ffffffff83203d31 <fdt_pmu_probe_pmu_dev.isra.0+0x2f1>
+3bb7:  call   ffffffff814ae4c0 <__sanitizer_cov_trace_pc>
+3bbc:  mov    %rbx,%rdi
+3bbf:  call   ffffffff81747a00 <__tsan_read8>
+3bc4:  mov    (%rbx),%rdi
+3bc7:  mov    $0x4,%edx
+3bcc:  mov    %r12,%rsi
+3bcf:  call   ffffffff83203800 <fdt_get_pmu_hw_inf.isra.0>
+3bd4:  mov    %rax,%rbp
+3bd7:  call   ffffffff814ae4c0 <__sanitizer_cov_trace_pc>
+3bdc:  test   %rbp,%rbp
+3bdf:  je     ffffffff83203d31 <fdt_pmu_probe_pmu_dev.isra.0+0x2f1>
+3be5:  call   ffffffff814ae4c0 <__sanitizer_cov_trace_pc>
+3bea:  mov    %rbp,%rsi
+3bed:  mov    %rbx,%rdi
+3bf0:  call   ffffffff82a864c0 <xgene_pmu_dev_add>
+3bf5:  xor    %edi,%edi
+3bf7:  mov    %eax,%esi
+3bf9:  mov    %eax,(%rsp)
+3bfc:  call   ffffffff814ae7c0 <__sanitizer_cov_trace_const_cmp4>
+3c01:  mov    (%rsp),%eax
+3c04:  test   %eax,%eax
+3c06:  je     ffffffff83203c25 <fdt_pmu_probe_pmu_dev.isra.0+0x1e5>
+3c08:  call   ffffffff814ae4c0 <__sanitizer_cov_trace_pc>
+3c0d:  mov    %rbx,%rdi
+3c10:  call   ffffffff81747a00 <__tsan_read8>
+3c15:  mov    (%rbx),%rdi
+3c18:  mov    %rbp,%rsi
+3c1b:  call   ffffffff8283d3c0 <devm_kfree>
+3c20:  jmp    ffffffff83203d31 <fdt_pmu_probe_pmu_dev.isra.0+0x2f1>
+3c25:  call   ffffffff814ae4c0 <__sanitizer_cov_trace_pc>
+3c2a:  lea    0x20(%rbp),%rdi
+3c2e:  call   ffffffff817474c0 <__tsan_read4>
+3c33:  mov    0x20(%rbp),%eax
+3c36:  lea    0x597923(%rip),%rsi
+3c3d:  mov    %rax,%rdi
+3c40:  mov    %eax,0xc(%rsp)
+3c44:  mov    %rax,(%rsp)
+3c48:  call   ffffffff814ae840 <__sanitizer_cov_trace_switch>
+3c4d:  mov    0xc(%rsp),%edx
+3c51:  cmp    $0x4,%edx
+3c54:  ja     ffffffff83203d31 <fdt_pmu_probe_pmu_dev.isra.0+0x2f1>
+3c5a:  mov    (%rsp),%rax
+3c5e:  add    $0x8,%rbp
+3c62:  movslq (%r14,%rax,4),%rax
+3c66:  add    %r14,%rax
+3c69:  jmp    *%rax
+3c6b:  int3
