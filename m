@@ -1,45 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD6D41CBEAB;
-	Thu, 10 Oct 2024 20:34:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B4E41CBEAB;
+	Thu, 10 Oct 2024 20:36:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728592443; cv=none; b=Y+3TeYIBUp6n8o8ez99eKUtit6MTaLhrBcn2s/WV5HsquqsTCchT4K39LC63UrDOJU1PNKMIkMgz39udmtRFPP5eUokNnJmkHe8odOEWdF7TSS1Y0s4QVp4cjiTOiXJHeT/01+mWBzLd1p7iKwPoUHBjQ+FE/roH07wtZbDd9yM=
+	t=1728592579; cv=none; b=Su8th4pe80Pt6o4bfZh+CNH+W5rfi77jTizrQXl0Uvg509Nu9XLXDnR/izP1CuzsfV+oyVCN8oqxw2SMpTxhBJHLVDexIvoN98NkhgHqTltx5i1n8A3BAVFRvbifQ+kDQoMP37vjZ4KvK6MJ3NmD/OHVGPGZkORRo5IBE9D8eH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728592443; c=relaxed/simple;
-	bh=YKZj/XTEQO6/ExapwB6E61thnS2N1ToVPwf4sDQ08PY=;
+	s=arc-20240116; t=1728592579; c=relaxed/simple;
+	bh=sdA8aU3qMJHXuA4j+Zh5kdQvXBoT7eGPim3lJix5Dqk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KmWLhrJ9sZEULNUqrBVF9GJh5i9gN2+5JbGQo2Z6yOeZsu5Yy2vHVVlus0HZuMWkME/VrN/DzBjwnI5cJFCugKCAkXZsBdYguk5rVpKN/LYTMSaiwkHcdN0B3gQvS0QwhlX8/cxy71EsoXlGEMyffqnpRxMMP2KEb38Abfs8p9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jZlPvTIh; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=a5vS3ttvhnI3j5dMsg8GPmT9zGVvxDYHmzsSE3dgJaeCBst9xVpcvCfxksfNx77aqLlLj5RBxGS/7Uq35rydCRIxkHf+lujHMaQrtwKMBIAcQqlHaPNbLWhrzYRi9TpixSZJP/8cSSuoqPfEkKZ2r5VMyYxaaJP0yULrvcKmaJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nGpZKrHF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jZlPvTIh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA8AFC4CEC5;
-	Thu, 10 Oct 2024 20:34:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nGpZKrHF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEB80C4CEC5;
+	Thu, 10 Oct 2024 20:36:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728592443;
-	bh=YKZj/XTEQO6/ExapwB6E61thnS2N1ToVPwf4sDQ08PY=;
+	s=k20201202; t=1728592579;
+	bh=sdA8aU3qMJHXuA4j+Zh5kdQvXBoT7eGPim3lJix5Dqk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jZlPvTIhyqc+fXAUZICy/X/w2oe70HN42HsHd2MHL2csiZL8TtKP8e96QVq/gZCYq
-	 uRmqKpGHpmzBrCwc+EKngcQVaWocI6qTBk1C3P9PDaqloImSuW9lCy162oQPSxApWz
-	 mK7e4/YCF4hvzlJ0B1Wz7oCFM6b078UZfuvCyJX+LpzSRN9w4Ek7C+ZtG4qmdmnwW5
-	 kmYXovtN5byVqHh7oz0LzJTqCb37b2VJ75pAyKva4MGVy5J8QGffvSFgsavDsR84dn
-	 vW9HED2Q8UgVHViMHbEKtkVTkAAdVmafO7fVqv1jVqHo/8GTtYKjcXMLD2XasFGaXt
-	 n95ssK0oN4rUw==
-Date: Thu, 10 Oct 2024 13:34:01 -0700
+	b=nGpZKrHFtkTrucYKaQAlDV0dOKdOnWkfFsDVKrvjA2joluqe40jfrfzrth1hfwkz5
+	 X7VqRJ6li6uRnjn3mxS3TKkYj/z2T5PL2x7it2bmlyW9jkWTdrKmFqR6/XLXR3uoWp
+	 QN5zQUXsaB2d6iC5b46MfvcHvc8Hjujzdbw8jwSfR7m1OSESVnzxK8iAKRaNX/LSaP
+	 xtK9jnPmvohm/Gau03MZY7BWir2aqvBn4VnWDpY5xSwZ6UwLIZ1C9zLRUpHTYoFc0c
+	 BxUnSIu/sdkrfpp7lQTXLCTF7BeAxEg0jzTnLTbWjywEz41AkjJWTWAh0Qqr4KhixP
+	 a2dorIMaOfNSw==
+Date: Thu, 10 Oct 2024 13:36:17 -0700
 From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Ard Biesheuvel <ardb+git@google.com>
-Cc: linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
-	keescook@chromium.org, linux-hardening@vger.kernel.org,
-	nathan@kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev, keescook@chromium.org,
+	linux-hardening@vger.kernel.org, nathan@kernel.org,
 	Peter Zijlstra <peterz@infradead.org>,
 	Jan Beulich <jbeulich@suse.com>,
 	"Jose E. Marchesi" <jemarch@gnu.org>, Kees Cook <kees@kernel.org>
-Subject: Re: [PATCH v2 5/5] crypto: x86/crc32c - Tweak jump table to validate
- objtool logic
-Message-ID: <20241010203401.45ds362dpx52ne5z@treble>
+Subject: Re: [PATCH v2 0/5] Improve objtool jump table handling
+Message-ID: <20241010203617.mlz76o5mxhyq6lxr@treble>
 References: <20241010122801.1321976-7-ardb+git@google.com>
- <20241010122801.1321976-12-ardb+git@google.com>
+ <CAMj1kXE_ZQG0B5fTTxQUWB5wUQPYVgP3TE5Z4ouEXZtyhs=CQQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -48,23 +47,39 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20241010122801.1321976-12-ardb+git@google.com>
+In-Reply-To: <CAMj1kXE_ZQG0B5fTTxQUWB5wUQPYVgP3TE5Z4ouEXZtyhs=CQQ@mail.gmail.com>
 
-On Thu, Oct 10, 2024 at 02:28:07PM +0200, Ard Biesheuvel wrote:
-> From: Ard Biesheuvel <ardb@kernel.org>
+On Thu, Oct 10, 2024 at 07:50:17PM +0200, Ard Biesheuvel wrote:
+> On Thu, 10 Oct 2024 at 14:28, Ard Biesheuvel <ardb+git@google.com> wrote:
+> >
+> > From: Ard Biesheuvel <ardb@kernel.org>
+> >
+> > Jump table handling has faded into the background a little due to the
+> > fact that jump tables are [currently] disabled when enabling retpoline
+> > mitigations and/or IBT on x86.
+> >
+> > However, this is likely to come back and bite us later, so it still
+> > needs to be addressed. Given the difficulty in identifying jump tables
+> > from .rodata references and indirect jump instructions that often have
+> > no obvious correlation, it would be better to do this in the compiler.
+> >
+> > This series implements [on the objtool side] the suggestion made at GNU
+> > Cauldron this year to annotate the indirect jump with a R_X86_64_NONE
+> > relocation that refers to the jump table, and ensure that it is covered
+> > by a STT_OBJECT symbol whose size accurately reflects the size of the
+> > jump table.
+> >
 > 
-> Tweak the jump table so
-> - the address is taken far way from its use
-> - its offset from the start of .rodata is != 0x0
-> - its type is STT_OBJECT and its size is set to the size of the actual
->   table
-> - the indirect jump is annotated with a R_X86_64_NONE relocation
->   pointing to the jump table
+> For the adventurous, I have a branch [0] that implements the first
+> part of this in Clang.
 > 
-> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> Getting the jump table emitted as a STT_OBJECT with a proper size
+> shouldn't be too hard either, but I'll look into that later.
+> 
+> 
+> [0] https://github.com/ardbiesheuvel/llvm-project/tree/jump-table-annotations
 
-This needs more "why", I assume the goals are to add the annotations +
-confuse objtool if it doesn't read them properly?
+That was fast!  This is good stuff, thank you for working on this.
 
 -- 
 Josh
