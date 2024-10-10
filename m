@@ -1,70 +1,78 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8184198831
-	for <linux-hardening@vger.kernel.org>; Thu, 10 Oct 2024 17:55:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B959E1CF2A8;
+	Thu, 10 Oct 2024 19:52:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728582944; cv=none; b=iMbR1yt7VrQEFZP79X+Pq4CUzLTrKC9yuT6k1NSlxP2NDFGuZ9VYgFUjs5aFNqkP62mLGA3txeGt2GjqQge5HrcMFhPKav734LPV3UlXc+NFWhB9It9fdcYktXrUK4+ALxotxqUXjw8je0cg8i6anw8VMywcOKkHnubCXhmOqHY=
+	t=1728589933; cv=none; b=P3Wa1Y7K9HNIU82He1am57RFUJVqp/xCdUizxBVA/+p5nF508ZiE5GdBnxN0xrynTCfB1XGi41GuldHSXfhrgDzKP9R7IBnkPzFv+9r0nMrrxYS4eEK/jaSkUP9M2RjacAEv63u5V5C/rmJYToIGDmldZUwOsc4tSodJOwOb8mQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728582944; c=relaxed/simple;
-	bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=rUgOkSXkDP6WzljmWkI9wu/8TIOChpT+4n8ELFBh6bfn5GSlvp3AEJTjPGY3jcTA0vqc4RhP+WKqj9WEyYUL7HxawSF+GMRsJtJowO/uqH2nYo935hQdn8pbsInWus7CdOCTupckwdTY2nXpBBMbq1AHfe4Qi2uLWWu2Cr1zvco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R5dS2KVa; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1728589933; c=relaxed/simple;
+	bh=4PcPSnVpQIAzuHLA5cB0arAiAYZDpuk3RRZJZU+n8+4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PwGgwYahTXLSToQmZYv9ay+/+ypwXyPxCGtYhiuNQAw8p8zL5327RmouGZAXaY9Anjw4ApxTDvbnCVHNKTDzt33FuR1qHYzs270DULHHc3DwD4y7ex/wmJpVBr+3NhWhZRAhY+dFjOKtOx9e84FQj9LeymGvLaxNe5inJz9BtGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bSFCUWI+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R5dS2KVa"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-71def8af0d9so77020b3a.1
-        for <linux-hardening@vger.kernel.org>; Thu, 10 Oct 2024 10:55:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728582942; x=1729187742; darn=vger.kernel.org;
-        h=content-transfer-encoding:subject:from:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=;
-        b=R5dS2KVaVxfWzm7GHgl/3fUm5jSumEjxl61Y4wL7VE6LugMVInFls0d12IPjnLXsDs
-         Zt/+bCsnj2mtXShjqrq9RVFGoZmg4+suW0q499WI1HY2WqwF/nw8t7Mdj36DNwiELo94
-         jbx5WtQozc0dtKJR+ryzHI5RCE/AAuuyIkvQPha23o5TS471/H383kEkaojceC7ayXEv
-         2OyFw70q3YuV+h58FgXfhMMWIKh5QZnR3aPkKVfs7T0Oghgq9Doe6sZR5MVx6R6CjEgO
-         ufiAEw2nkQy7aN3275viPzqHLQ937XO1rk0e0mZPMJNszVsAPBPZdLCoMaX/6RxN2Kkj
-         o86g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728582942; x=1729187742;
-        h=content-transfer-encoding:subject:from:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=;
-        b=XSUjbSrXwCjNyif2fRQUShCUxVycmi8+CehZu2NGW/bHfloLXY++c9EKgFdK4SGuA+
-         vKMGpIHYn8msYXGq/+6n+0Lf5FbCJZ+tcFQ3XRLSQk25KjFG0Q4SVs/c47+nv6ZPgife
-         QTWB1FsD3yTB/bE9/DY+iOq580P6xvgBYar3xhHSg02tbMwiLpQ0GqBw8WDWrzscHfph
-         Isq2PAyZgweBsaKpk2QMmmErhywsbc62hvABcuqjWUmNaIaYXyUAtfffHF0dTHPciI78
-         i4qphfie2dN9ovGpKAYxxd5geZuwsBN0fidpCeGymjALyVbVZwdw5Wkg568FIbpF2Hnf
-         qvUg==
-X-Gm-Message-State: AOJu0YzEb4CQINdOG9HJmFhuLWknldI6KlcvlGEhXE+MQnvGz0L8cZP/
-	wx42aGC4LLHiPU7Z5ly6PwRMjq4Gcii8uOFv4cUdc11DZGSa9r0KikW/oVUB
-X-Google-Smtp-Source: AGHT+IGYTG33enErRjzQCnrWmZb4sVuZ70gHTMrrJP7h2jFKhUaPrQBuW8YveTM5ZPaPmmZcJ7viiw==
-X-Received: by 2002:a05:6a00:2d05:b0:714:1bcf:adbe with SMTP id d2e1a72fcca58-71e1daa8177mr4883095b3a.0.1728582942251;
-        Thu, 10 Oct 2024 10:55:42 -0700 (PDT)
-Received: from ?IPV6:2601:204:df00:9cd0:290d:e8e:18ee:9ae5? ([2601:204:df00:9cd0:290d:e8e:18ee:9ae5])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-71e2ab105f9sm1285655b3a.216.2024.10.10.10.55.41
-        for <linux-hardening@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Oct 2024 10:55:41 -0700 (PDT)
-Message-ID: <2dd541a7-1311-4a7f-ab5a-cd01b1f92ca4@gmail.com>
-Date: Thu, 10 Oct 2024 10:55:40 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bSFCUWI+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD793C4CECC;
+	Thu, 10 Oct 2024 19:52:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728589933;
+	bh=4PcPSnVpQIAzuHLA5cB0arAiAYZDpuk3RRZJZU+n8+4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bSFCUWI+MdFcSN3r/7YfKB6VNMbt0lYSJIPOz9eXkpo6v1/8cjn1/GRntzZ/JH08c
+	 A3Nur2bM20wNuLTlf3ICoNtbFzWGGSY/X0/6g0K6HVT/zcwdLrYQPCoKW8HBFtZaVo
+	 OepEv3EBsJfq/acl5v4+F/Rz2jvCpZLZB8zcpuB6PTEY+RqZooM3EicuThe240zB0W
+	 udHht+k41/slouJxu45H4xI3sZb2FV5dRs2tiyzfw5m/aYHlUnbTprx/0YpqoxtPfD
+	 VpC28ZpWMlXYfbXVKbvQA/wf9tJ4g7md5fm8KHYuRDz8u7maB1yoRIp4gLhqO/y/I3
+	 Ye6I7NjeQMiTw==
+Date: Thu, 10 Oct 2024 12:52:11 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Ard Biesheuvel <ardb+git@google.com>
+Cc: linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
+	keescook@chromium.org, linux-hardening@vger.kernel.org,
+	nathan@kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Jan Beulich <jbeulich@suse.com>,
+	"Jose E. Marchesi" <jemarch@gnu.org>, Kees Cook <kees@kernel.org>
+Subject: Re: [PATCH v2 2/5] objtool: Allow arch code to discover jump table
+ size
+Message-ID: <20241010195211.n22geblzb4ogxqcz@treble>
+References: <20241010122801.1321976-7-ardb+git@google.com>
+ <20241010122801.1321976-9-ardb+git@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: linux-hardening@vger.kernel.org
-From: Atul Raut <rauji.arm@gmail.com>
-Subject: subscribe
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20241010122801.1321976-9-ardb+git@google.com>
 
+On Thu, Oct 10, 2024 at 02:28:04PM +0200, Ard Biesheuvel wrote:
+> @@ -2222,7 +2234,6 @@ static void mark_func_jump_tables(struct objtool_file *file,
+>  				    struct symbol *func)
+>  {
+>  	struct instruction *insn, *last = NULL;
+> -	struct reloc *reloc;
+>  
+>  	func_for_each_insn(file, func, insn) {
+>  		if (!last)
+> @@ -2245,9 +2256,7 @@ static void mark_func_jump_tables(struct objtool_file *file,
+>  		if (insn->type != INSN_JUMP_DYNAMIC)
+>  			continue;
+>  
+> -		reloc = find_jump_table(file, func, insn);
+> -		if (reloc)
+> -			insn->_jump_table = reloc;
+> +		find_jump_table(file, func, insn);
 
+Can we detect the annotation here, and if it exists, pivot to a separate
+generic implementation which skips all the arch-specific code and hacks?
+
+That way we could keep the "ugly" separate, and also have all arches
+supported by default.
+
+-- 
+Josh
