@@ -1,93 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE810199381;
-	Fri, 11 Oct 2024 16:51:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4943519F41A
+	for <linux-hardening@vger.kernel.org>; Fri, 11 Oct 2024 17:09:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728665468; cv=none; b=eY37/P8Cv7xMAgPt2qfOyNOcCDXqF9Fcqc5UQi+k2KMYB0sntu76YCxYv/dkDILW2K/BZq7e54PgFw3Dqa9Brr7fKSD1GwNv9nQxbwdnazsIpZ0I5i8FgJ0T4Ar5Ou3M8eaCCepVNOpa3YZ3wCJRmVfeujWbTBLFnWu1y81y37Y=
+	t=1728666546; cv=none; b=ONiQXxPnClMK2JALsGolZhBu6AWnJbsVEE+yK/uo50dOSQcCzHRIFV+8dfmLtZVk4ALQv2vp3pnmvKLXYsjrU+n4/t/GjuBJc8GjEpaYJ/DW6hWfC21KQfBE+PD9yhWrQ9gaFrhpUCsiHZzzGVV/O78azouhuT06Wu39dXLjsA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728665468; c=relaxed/simple;
-	bh=VXG/GpcD4ZaPugyfbuMxoUDkz9d8ii6cVFf3ZaBPB70=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FI8KondbhWgmqGUVMrShZ7+HQyF8nmrVFR6trNlYFb+rxsT4gWXPay6ZfNmVHgExnKo9DsmbMF+pB+/mRYQnBmJjN5Cwypk4wUJMmE7aTnNIGdt5zLoUwKXxQfcugM9hneyb+Y1UjBTwSYDhn948AD9fBtQl1PIucT3spIe8bkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l1yr6sdO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1728666546; c=relaxed/simple;
+	bh=WdW0H/xkNo4OXqWwtiG+9yuctWMezfpXNh+DbKjHzYk=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=WwpbXSFGEkR2OzBIPLuVhQDNOmg7+8Gu1BHRLC1cW9SDEI61RIKYHQ9bImBWwHKuGrFBn5v/VQV0CXVrU19U189/lmAwIOWf3iNkzkAAAiC4Xk2sdZmiIYMp0K522LkpPNqhTXIKTxfqX+UgE/tfbEYwHu2z0UDxyU9Mk475UCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Nk1j2uq9; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l1yr6sdO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5370AC4CEC3;
-	Fri, 11 Oct 2024 16:51:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728665468;
-	bh=VXG/GpcD4ZaPugyfbuMxoUDkz9d8ii6cVFf3ZaBPB70=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=l1yr6sdOtwtxKq6/CvpLss3HR9GL+5gW9//IS4hIuKQ3hKEw07J33H3cf+TUkFSn8
-	 XNLmchhs9V/FstEhmNAvNRQIcdXcsYMqTYqjjSkPljltKkXX8t30IO/yiOVV4rHpdf
-	 OuKl1+WS4NQaWVX7ShMFfLKTpD9iOZi+krbxzNmwiQAVN8yy3oBhl3LaluFdDnNVgt
-	 B5Flk0lUTGX1VnVzzl4KrVT97Tyz8A2ll5ZAF/j83ppBoNI4dqMhtiW7oYSb53dI/P
-	 EOO3VZEmaQRaH0Gyf0qJ0LCKyZ8XCfQa6IOzh4JELlOBTpd7gvDJ2yrJdxXJeSR4Ko
-	 TX5fAQ4ZOEsHg==
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5398996acbeso2683379e87.1;
-        Fri, 11 Oct 2024 09:51:08 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWg8tCuaNlHHC+6in6b1b41bA8YUtWjXTiwssjIq+T6u1pqUDoRLmlBc6lTBi2S0pEMvDhLyN2AYifYF6J4@vger.kernel.org, AJvYcCXFY+VaPNXgxSBPp2ENXOOx38tTVHoiYXQoz27QEgUUsyWqiVDGE2x6khR9bqhImHAp0C4fLo+UH4GlrSZDSBg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUcWc9IGU42vJY5iKeqNdLjAN+0MFHQKzfdvE13vDS9Pr8j3aW
-	sBpTiKLLGgWW9pSQFN++1CC6EbOxdUqdAmRmHXHNCoxok1RKvfRnzCEMgdCx8BoqV+yzHbjLblI
-	Q2OXnvLoc+Yu/OJud+/NC8uPZOpI=
-X-Google-Smtp-Source: AGHT+IFr4QA6SziiBfUmMc6IM6gCN+OvpGX21cJkCaQ5pNTmvRVSVpgDE8qM6X49xroZhvkO4gCrrlCdYmYQgYTgTdk=
-X-Received: by 2002:a05:6512:ad4:b0:52e:9b92:4990 with SMTP id
- 2adb3069b0e04-539da4eb2d2mr1588962e87.32.1728665466750; Fri, 11 Oct 2024
- 09:51:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Nk1j2uq9"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e24b43799e9so2187399276.2
+        for <linux-hardening@vger.kernel.org>; Fri, 11 Oct 2024 10:09:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1728666544; x=1729271344; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=s9z1hvvdUAobVv4WjCQwWo86syz2IIrtsIUrBscrDwg=;
+        b=Nk1j2uq9N9N4fUhu/PSniXU4HJQo5S3OHzxwEvFHn38Pn6bt/5lUckBRoFOwXRfP+E
+         hrZ0hKzARS6p5S3UflNioBc97QCThyvWvBphEpN8fH/rbuFqss9s79luRZk6sSENUiAN
+         0CdwvaBmprk23PvhmlWxsnX72xdbNEKvOoIMnKSNxJI+p1mdgD5wJPiB55RyajUqV/15
+         e8Mpt8I+cn0/qiXQYX3VSb5T/hJBksQIy81S0IJut/qQWpTPdV5KDmLNb8QRCVxBDMyN
+         w8cVShBA5EzanXSJnFclLE3iFbs5b2Q6lkb7S+nZ1ih6/sKzRCv63c4gFuPmjk9fk/ZI
+         w4RA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728666544; x=1729271344;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=s9z1hvvdUAobVv4WjCQwWo86syz2IIrtsIUrBscrDwg=;
+        b=TPE2cggisf+XmcOE7HgrljeCDsiDrGC1FadbyIPVmYqa5wrwVf6d7H8n8EtK6qMoeW
+         El24TqbO3sxvyeha9rrZaqkYM9NSVqxm9Y9vp9V7EnCxE8kVk8fyHTCgmVH/QD0fXur6
+         nTfLDME+dIDRxI0NDa//LvDh8hkNGh/OSnkF4fuAzSpB3yj3EHnQhKtCkyTZG8WKZfBU
+         XJTMAPFgOr5hRzGcfUZnCyW4+VJUiZl7Je8AKNaPUG0Kqx/1w/cVyFoPpjuf89IdXZ1Y
+         CmAWzW+8oolS/XrgL0PhtOS3WJ1WperfcAczjf+l0oZU2eAlPl8z1Tk0ypvByJHMI+pS
+         uZ1w==
+X-Forwarded-Encrypted: i=1; AJvYcCVebYMkjDDjhy4vlr/lJJ4VHv8XF04WuW/x4lSCHuruoqxpgLcFz8/zyJnUEeMLWcjXZdEWo6AB7S2ACecmRj0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz7hBv0hG1QL0/ei0tBgSs+b/Lye1WA1IKmL68CR2yasGneDoa6
+	qZDpeaZzMTGJ4pZkbrSQ6yXoCbYYJevlDlb6WPIOBpewlQ/EJy7B2Qk/hp01Y71em8wnKw==
+X-Google-Smtp-Source: AGHT+IFRxjOg1Z+Hw1i2OFyn/oUo9aBkCHaC4sUwZS7ofzyFJFGJOUCJFP6N9yslnShqPpJu2azrQL+8
+X-Received: from palermo.c.googlers.com ([fda3:e722:ac3:cc00:7b:198d:ac11:8138])
+ (user=ardb job=sendgmr) by 2002:a05:6902:504:b0:e16:4d66:982e with SMTP id
+ 3f1490d57ef6-e2919de7e0bmr14137276.5.1728666544035; Fri, 11 Oct 2024 10:09:04
+ -0700 (PDT)
+Date: Fri, 11 Oct 2024 19:08:48 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20241010122801.1321976-7-ardb+git@google.com> <20241010122801.1321976-9-ardb+git@google.com>
- <20241010195211.n22geblzb4ogxqcz@treble>
-In-Reply-To: <20241010195211.n22geblzb4ogxqcz@treble>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Fri, 11 Oct 2024 18:50:55 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXFaqij=OiJcPY7RcDd79V5qDKkXcxLbqNcnk7nBxiu=Bg@mail.gmail.com>
-Message-ID: <CAMj1kXFaqij=OiJcPY7RcDd79V5qDKkXcxLbqNcnk7nBxiu=Bg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/5] objtool: Allow arch code to discover jump table size
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
-	keescook@chromium.org, linux-hardening@vger.kernel.org, nathan@kernel.org, 
+Mime-Version: 1.0
+X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3214; i=ardb@kernel.org;
+ h=from:subject; bh=Q9oH1OOrEVEgRLR+ckXrU6IQwTgLEXl5029WwVYvjXI=;
+ b=owGbwMvMwCFmkMcZplerG8N4Wi2JIZ0zesGD9yrxjKphR73ZkjYwXTZ78ETvgFWk47Ln0qeNZ
+ muwL3jcUcrCIMbBICumyCIw+++7nacnStU6z5KFmcPKBDKEgYtTACayYAkjw+MuO70vp3bOdZk0
+ wfHeqmOJlaW2uxh6d9h6i7M/zTkW/Irhf3ip4a0pQUZzmfZ18P178nyzyaMIy587Tium/U6ObxD 8zgAA
+X-Mailer: git-send-email 2.47.0.rc1.288.g06298d1525-goog
+Message-ID: <20241011170847.334429-10-ardb+git@google.com>
+Subject: [PATCH v3 0/8] Improve objtool jump table handling
+From: Ard Biesheuvel <ardb+git@google.com>
+To: linux-kernel@vger.kernel.org
+Cc: llvm@lists.linux.dev, keescook@chromium.org, 
+	linux-hardening@vger.kernel.org, nathan@kernel.org, 
+	Ard Biesheuvel <ardb@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
 	Peter Zijlstra <peterz@infradead.org>, Jan Beulich <jbeulich@suse.com>, 
 	"Jose E. Marchesi" <jemarch@gnu.org>, Kees Cook <kees@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 10 Oct 2024 at 21:52, Josh Poimboeuf <jpoimboe@kernel.org> wrote:
->
-> On Thu, Oct 10, 2024 at 02:28:04PM +0200, Ard Biesheuvel wrote:
-> > @@ -2222,7 +2234,6 @@ static void mark_func_jump_tables(struct objtool_file *file,
-> >                                   struct symbol *func)
-> >  {
-> >       struct instruction *insn, *last = NULL;
-> > -     struct reloc *reloc;
-> >
-> >       func_for_each_insn(file, func, insn) {
-> >               if (!last)
-> > @@ -2245,9 +2256,7 @@ static void mark_func_jump_tables(struct objtool_file *file,
-> >               if (insn->type != INSN_JUMP_DYNAMIC)
-> >                       continue;
-> >
-> > -             reloc = find_jump_table(file, func, insn);
-> > -             if (reloc)
-> > -                     insn->_jump_table = reloc;
-> > +             find_jump_table(file, func, insn);
->
-> Can we detect the annotation here, and if it exists, pivot to a separate
-> generic implementation which skips all the arch-specific code and hacks?
->
-> That way we could keep the "ugly" separate, and also have all arches
-> supported by default.
->
+From: Ard Biesheuvel <ardb@kernel.org>
 
-I had a stab at this, and while the code changes are a bit intrusive,
-the end result is much better for it (IMHO).
+Jump table handling has faded into the background a little due to the
+fact that jump tables are [currently] disabled when enabling retpoline
+mitigations and/or IBT on x86.
 
-In the end, the logic in arch_find_switch_table() is mostly generic
-anyway, but it is the code traversal in check.c that is the "ugly". So
-I moved lots of things around. I'll send that out before signing off
-today.
+However, this is likely to come back and bite us later, so it still
+needs to be addressed. Given the difficulty in identifying jump tables
+from .rodata references and indirect jump instructions that often have
+no obvious correlation, it would be better to do this in the compiler.
+
+This series implements [on the objtool side] the suggestion made at GNU
+Cauldron this year to annotate the indirect jump with a R_X86_64_NONE
+relocation that refers to the jump table, and ensure that it is covered
+by a STT_OBJECT symbol whose size accurately reflects the size of the
+jump table.
+
+This can be wired up in objtool with minimal effort. The only
+complication is that indirect jumps may be direct jumps in disguise, if
+they target retpoline thunks. This will result in more than one
+relocation attached to the same instruction, which needs careful
+handling in objtool.
+
+Other than that, changes are rather straight-forward.
+
+Patches #6 - #8 update the CRC32C driver, which has a jump table
+implemented in assembler, to
+a) use a relative jump table, for compatibility with linking in PIE mode
+b) add the jump table annotation
+c) make the jump table more difficult to identify by objtool's existing
+   heuristics, so that it will fail to identify it without the
+   annotation.
+
+Changes since v2:
+- drastic refactoring of the annotation handling so that generic users
+  (non-x86) get it as well, with the x86 heuristics moved to a x86
+  specific source file
+- use generic reloc type identifiers where appropriate
+- update insn->no_reloc where appropriate
+
+Changes since v1:
+- tweak logic in patch #1 to ensure that all jump table entries are
+  covered by the same type of relocation
+- use the corrected addend when validating IBT targets
+- add patches #2 - #5
+
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Jan Beulich <jbeulich@suse.com>
+Cc: "Jose E. Marchesi" <jemarch@gnu.org>
+Cc: Kees Cook <kees@kernel.org>
+
+Ard Biesheuvel (8):
+  objtool: Deal with relative jump tables correctly
+  objtool: Allow arch code to discover jump table size
+  objtool: Make some helper functions globally accessible
+  objtool: Move jump table heuristics to a x86 specific source file
+  objtool: Add generic support for jump table annotations
+  crypto: x86/crc32c - Use idiomatic relative jump table
+  crypto: x86/crc32c - Add jump table annotation
+  crypto: x86/crc32c-intel - Tweaks to make objtool's life harder
+
+ arch/x86/crypto/crc32c-pcl-intel-asm_64.S |  50 +++--
+ tools/objtool/arch/loongarch/special.c    |   6 -
+ tools/objtool/arch/powerpc/special.c      |   6 -
+ tools/objtool/arch/x86/special.c          | 160 ++++++++++++----
+ tools/objtool/check.c                     | 199 ++++++++++----------
+ tools/objtool/include/objtool/check.h     |  25 ++-
+ tools/objtool/include/objtool/elf.h       |   6 +
+ tools/objtool/include/objtool/special.h   |   8 +-
+ 8 files changed, 287 insertions(+), 173 deletions(-)
+
+-- 
+2.47.0.rc1.288.g06298d1525-goog
+
