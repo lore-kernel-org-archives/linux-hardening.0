@@ -1,49 +1,55 @@
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DC1B21B45C;
-	Fri, 11 Oct 2024 14:14:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 980A728684;
+	Fri, 11 Oct 2024 15:22:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728656082; cv=none; b=ax2fM2bSK2rW+HGj1BYawU0+HV86mpK1KZizXmagqQZ8958hFnf7GTFHg0DhU2vANsBRhsNlj/nxtMgO0snlMcBO/0UBno35qiyMaF6BrdR5V1cdZCg17xlpcqFbMj/tZMIX1G05hrrXnIShnm0pTz7MpY4g36doRGZa+8McJy4=
+	t=1728660150; cv=none; b=cveuXBgtX+9SF49LqB5lERznl4D3Lo1hMXbNthvoO8ZY6nRyStWiILNRescZumPGWyzvRcqd5GtR5twCIVgnh45cWzc2qZewbbAf9aP1AJzO9VxNnvHceQFK6JaxVNsO7p9BVbmxs13lFEss//eh4gyqLr9tlSGjFt5/Up342ME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728656082; c=relaxed/simple;
-	bh=ryyL7dxIat+0r10d+WkpqRKV7UFPwxP7xx/GPr0VPuo=;
+	s=arc-20240116; t=1728660150; c=relaxed/simple;
+	bh=nxZsK46cUu2erd6rj4K0CR3q1zTnMCN9PUd+04mgaVg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=C1rPPbZIPj0dbHkAX9KTkjIw/LGEZDZDUHqvt3D9PvpohkxHK910iy7b4Rvr7nIXUdraXkV2CMH7FYE3hJ8em4RwQJYAE+eKI/x1g07Djh0h+Ev455DeGzAJFWTocwZ9KKsKTxT1TahpcUXeMhXUfnTQPswfh++dJi6oFE3GR6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+	 To:Cc:Content-Type; b=O43SUKkFZSA/cJt0cm8gz7pmuwFLbdLiL7EE2kt7nejaty8V/K226IPdEXa55D0fhdkVGgUDsS3soSXbbVYRRXC8xrnN+RyPhK+cWOE74GaQ4K5SbdWAMESXCJQrcurpZrN6kosvQINYCM+KiDQBNmyJNWMIcmeMaqAlIJsLErA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KtknwSQZ; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-e291b96a64dso801854276.3;
-        Fri, 11 Oct 2024 07:14:39 -0700 (PDT)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KtknwSQZ"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a99650da839so361434666b.2;
+        Fri, 11 Oct 2024 08:22:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1728660147; x=1729264947; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Zq9beYF4rIsjRUvsDJVJyZp04SMnaH+OieTyD7fM/mM=;
+        b=KtknwSQZFd0MgIEJ7mfR6xk1c+OF/NPSKaldmCbznjty2W7+5/UNIzdj/py4SB4bZ0
+         YV2Ttlkz3slFoADIUKaT75fvmkgKtJ+XYnq/NyXJNPvyWd+xXAbBJI6sYnLhq1/p9qdv
+         rrrVKgq5NwNKSFzESMCEVxMFUPcAukq9xbDo34V+Oeaojd+JGTumTsr60RDgjg4tkl5C
+         AKaR2RM219EBIy8UBjhDPvs5CRiZq0invOcgUyb8opFv7mxrOQn4P7eZ31jif2Us5UQN
+         ZTJJLDI+OUqDiRhrE9nNQLDdzya3wAaiOnWtqHr7zYWGySX4sYh8TgWD+lY9TxfcCXoE
+         SKDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728656077; x=1729260877;
+        d=1e100.net; s=20230601; t=1728660147; x=1729264947;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=gKxV6SBUpmC9EeWLExsOgYq7J6RKtlJifOwyXdEfMFs=;
-        b=bi5WIXRHq6KenqTi6MdjLUFe1o1I0TLBwnBuioAD/JdSakCWRgt57Yn1CI93W/qHIs
-         qO8g/9JVnm6PUCOmb7NnIlgk2lIoiKCc90GVEAoSaLKUrFkU87GUT24rxBUr2fJbqOp8
-         dFfEVDnt6NWNk/glhNIQ13VRlWqcm9+imvnZs9qqcil8XqFVbsseOLA1ovTv36D1NTtF
-         WIJcNEcmA/hrzGK+IQO7k+/Gl9CCqWF3yKLyvi1V6Qhn+PHw9UXNdVOAMLynu3aLtZ41
-         L33KKRdeqVbgh36fUOZtd0dAdvTXO1Cj+ZX58xswEDKvNu2/6i5b2t3IHbKuszRmh7oE
-         l4Bg==
-X-Forwarded-Encrypted: i=1; AJvYcCUGKNcG4V23JJwh55Ncmr1tFQVeiGGPfwSjStInJS26gFkBnIaBCCPUEMBsTE8uDBnMBOxFaF8/Xw4aKf0XD9XM@vger.kernel.org, AJvYcCUhnbxJ/AnobMAX60ymTxxVLegweX6+m1F18rUFfIAVsMXb4MgkJafyGg55OQzPGtqxx8Dmoz5pbqkjb72v7sc=@vger.kernel.org, AJvYcCVdNE4bjy9aunlHXd3H5ELPg7iXIL6pro5YjAFULn+kzD0vpGSfG+eOfUKDqId8PkukVywMYTJuqjxLB+IS@vger.kernel.org, AJvYcCVqX/PvNphbWwr0pnJSZuXvIqXIvsySMnPHgzKcX3W1W+yCPdl62fp1lSFIlcNhhyTGbZlQ3lyTD8FU4evjzVoaTbDI@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1Lgejb447dCFXw8cmu0hEpzzlGXcH0/nHiyaCNy/nBMN4Ssml
-	Y5IkFWfgj5ufT7Ic1fLmKNmA8VMfZzB5vosRAVPaMMtTXDJTNr/pa4P83eaC7s0=
-X-Google-Smtp-Source: AGHT+IGTGqF0lbsKbzdsjjpRLwPnSYvYN3jwWle7fZAE9967toH1WgDPgGhPoiX6its1dQztCIVWxQ==
-X-Received: by 2002:a05:6902:1503:b0:e20:2e8a:5b95 with SMTP id 3f1490d57ef6-e2919fe5e9cmr2674502276.39.1728656077261;
-        Fri, 11 Oct 2024 07:14:37 -0700 (PDT)
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com. [209.85.128.178])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e290ef7a8easm824512276.57.2024.10.11.07.14.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Oct 2024 07:14:36 -0700 (PDT)
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-6dbc9a60480so19562197b3.0;
-        Fri, 11 Oct 2024 07:14:36 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVNNb79bCN3NrwZKEUwrh1+s68GfEw82mFSRgW3uKgDPBAVdcKF+LjB04TUIgOAcFg0hA36LFRF3deARCkrwP0+VMhS@vger.kernel.org, AJvYcCWYC6+jIKC2JbcG/F/lB/QSGOXuz0G+UyHfuuseBWQuJZDIOx463MFWMRTjm/R2LhSWz6oKxlILTl1jaw7U@vger.kernel.org, AJvYcCWc94QVCG2PrRSiOjDjBYQQSeOHjoPbzE5PrMm45pOvGTbsE0NeQyd5WEoidCdfd8ua1flInUoD06AubJo8Ek0=@vger.kernel.org, AJvYcCXGlcFOwZCqOwNCnaSP3QT7yLiXG2l5852T/1C5xwLIBUb+UiyaeK5gyz0b0g0r7noWJNNag0h8RUba334wrGGS@vger.kernel.org
-X-Received: by 2002:a05:690c:d85:b0:6de:351:3e with SMTP id
- 00721157ae682-6e3477c0654mr20357467b3.8.1728656076179; Fri, 11 Oct 2024
- 07:14:36 -0700 (PDT)
+        bh=Zq9beYF4rIsjRUvsDJVJyZp04SMnaH+OieTyD7fM/mM=;
+        b=IifMFg215QR+HBbKoSOScA3siQ9O/aFSuj2KucmtOnAyjqDYKeVVADVfxlUFtlxmWN
+         iNBCr+HVii9kn9uweCO3tTYEwRa//u6hmHRDTTf5CjP39Bx/2a6HWx91GbzxDXxojYt7
+         eMVjVmDlNHulyt4/Jm8q0kwi2ls2AH0qxLi8M0lqpCKahJaLQG0OZD6FEqjfyc1yBwyY
+         vAN+dQj4/5oX50JxvOMqnj5Zl3L3MQp3eXNIPfZF/F8z7/71tyFtOOtNxpUqRjiAUMI4
+         MAGhlxkQk4rdIXXhY4Rx4z5L9ShA1hSFNx8satiOc7ZmY3a7IauQsflCa0mbnfRdSDwH
+         ymTA==
+X-Forwarded-Encrypted: i=1; AJvYcCUfNqWbUrSrWg1/hhKNzUiqXyD9LU2M7FizmY07XUldxhmkBeRIEWa+inKJ8Pi9jVWzQ5r2KSvzDo8J34PFGhA=@vger.kernel.org, AJvYcCV7Ea6s4zvNWtgDEcCmKk0Txdy9e+0DDby3RDvBlToiQBfaSUtofzQYBLhHNmfSnwbJ7uOsydW6SGgCCaUKw0QbX+uz@vger.kernel.org, AJvYcCVW5CwcXUDkFtttZZgwAaZNnc6VwNUQXr/qw0K+KgqT48rjmUWL8xL2jxWKve8+2pFG6QvDs+xyzG7KmSzn@vger.kernel.org, AJvYcCXdlMxTOHK+7gx75T3t9Elh3DYmy835nLS5oWkF+W8r18eiXbDaiAOudCWQn098XhEcl1qRpA/dhFTp0ScfLyGS@vger.kernel.org
+X-Gm-Message-State: AOJu0YwR6iBsv/8rjaF9C47NK/7UE0r4Bnri7OYja5PSR+ikQ3RoBVEn
+	1Lrr2hSb3teBF0LyfAVgeiKA+54B8+SR56Bp4JR84269N07sCM4VTkrc38rguUrvftH2N+EsrsR
+	g1MlnkTvrNuPJKNuQq2WjCVUK0Js=
+X-Google-Smtp-Source: AGHT+IFrHoTgP4o6sHrBkw7DExcje8jOXrDOjBnraVSEKs53UdDVw3zgXivEdhUu4/PeBxqp9ArcS0Gl1eVumd4/4U0=
+X-Received: by 2002:a17:907:94ca:b0:a8d:1303:2283 with SMTP id
+ a640c23a62f3a-a99e3b7c5a5mr4738466b.30.1728660146704; Fri, 11 Oct 2024
+ 08:22:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -52,17 +58,17 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20241011072509.3068328-2-davidgow@google.com> <20241011072509.3068328-5-davidgow@google.com>
  <ZwkBgkthcQM7rLl7@smile.fi.intel.com> <CAMuHMdW=MF0H8YVuY6moLomTaxFEeCHgut1fruRGEkn79sbuTA@mail.gmail.com>
- <ZwkuvKogPuik90fN@smile.fi.intel.com>
-In-Reply-To: <ZwkuvKogPuik90fN@smile.fi.intel.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 11 Oct 2024 16:14:24 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdU_1oZEeJ5Onrbtx-iZjrK_bQ6YWNMdRYp-E1_5E7rMSQ@mail.gmail.com>
-Message-ID: <CAMuHMdU_1oZEeJ5Onrbtx-iZjrK_bQ6YWNMdRYp-E1_5E7rMSQ@mail.gmail.com>
+ <ZwkuvKogPuik90fN@smile.fi.intel.com> <CAMuHMdU_1oZEeJ5Onrbtx-iZjrK_bQ6YWNMdRYp-E1_5E7rMSQ@mail.gmail.com>
+In-Reply-To: <CAMuHMdU_1oZEeJ5Onrbtx-iZjrK_bQ6YWNMdRYp-E1_5E7rMSQ@mail.gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Fri, 11 Oct 2024 18:21:50 +0300
+Message-ID: <CAHp75Vecwe_LaSKSprwfrdpDhoJbXgajQUVY23L+VyGoxtGH7A@mail.gmail.com>
 Subject: Re: [PATCH 3/6] lib: Move KUnit tests into tests/ subdirectory
-To: Andy Shevchenko <andy@kernel.org>
-Cc: David Gow <davidgow@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Shuah Khan <skhan@linuxfoundation.org>, Brendan Higgins <brendanhiggins@google.com>, 
-	Rae Moar <rmoar@google.com>, Kees Cook <kees@kernel.org>, linux-kselftest@vger.kernel.org, 
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Andy Shevchenko <andy@kernel.org>, David Gow <davidgow@google.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <skhan@linuxfoundation.org>, 
+	Brendan Higgins <brendanhiggins@google.com>, Rae Moar <rmoar@google.com>, 
+	Kees Cook <kees@kernel.org>, linux-kselftest@vger.kernel.org, 
 	kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org, 
 	Stephen Rothwell <sfr@canb.auug.org.au>, Yury Norov <yury.norov@gmail.com>, 
 	Rasmus Villemoes <linux@rasmusvillemoes.dk>, "Jason A . Donenfeld" <Jason@zx2c4.com>, 
@@ -82,81 +88,62 @@ Cc: David Gow <davidgow@google.com>, Andrew Morton <akpm@linux-foundation.org>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Andy,
+On Fri, Oct 11, 2024 at 5:20=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68=
+k.org> wrote:
+> On Fri, Oct 11, 2024 at 3:57=E2=80=AFPM Andy Shevchenko <andy@kernel.org>=
+ wrote:
+> > On Fri, Oct 11, 2024 at 03:38:00PM +0200, Geert Uytterhoeven wrote:
+> > > On Fri, Oct 11, 2024 at 12:44=E2=80=AFPM Andy Shevchenko <andy@kernel=
+.org> wrote:
+> > > > On Fri, Oct 11, 2024 at 03:25:07PM +0800, David Gow wrote:
 
-On Fri, Oct 11, 2024 at 3:57=E2=80=AFPM Andy Shevchenko <andy@kernel.org> w=
-rote:
-> On Fri, Oct 11, 2024 at 03:38:00PM +0200, Geert Uytterhoeven wrote:
-> > On Fri, Oct 11, 2024 at 12:44=E2=80=AFPM Andy Shevchenko <andy@kernel.o=
-rg> wrote:
-> > > On Fri, Oct 11, 2024 at 03:25:07PM +0800, David Gow wrote:
-> > > > From: Kees Cook <kees@kernel.org>
+...
+
+> > > > >  rename lib/{ =3D> tests}/bitfield_kunit.c (100%)
+> > > > >  rename lib/{ =3D> tests}/checksum_kunit.c (100%)
+> > > > >  rename lib/{ =3D> tests}/cmdline_kunit.c (100%)
+> > > > >  rename lib/{ =3D> tests}/cpumask_kunit.c (100%)
+> > > > >  rename lib/{ =3D> tests}/fortify_kunit.c (100%)
+> > > > >  rename lib/{ =3D> tests}/hashtable_test.c (100%)
+> > > > >  rename lib/{ =3D> tests}/is_signed_type_kunit.c (100%)
+> > > > >  rename lib/{ =3D> tests}/kunit_iov_iter.c (100%)
+> > > > >  rename lib/{ =3D> tests}/list-test.c (100%)
+> > > > >  rename lib/{ =3D> tests}/memcpy_kunit.c (100%)
+> > > > >  rename lib/{ =3D> tests}/overflow_kunit.c (100%)
+> > > > >  rename lib/{ =3D> tests}/siphash_kunit.c (100%)
+> > > > >  rename lib/{ =3D> tests}/slub_kunit.c (100%)
+> > > > >  rename lib/{ =3D> tests}/stackinit_kunit.c (100%)
+> > > > >  rename lib/{ =3D> tests}/string_helpers_kunit.c (100%)
+> > > > >  rename lib/{ =3D> tests}/string_kunit.c (100%)
+> > > > >  rename lib/{ =3D> tests}/test_bits.c (100%)
+> > > > >  rename lib/{ =3D> tests}/test_fprobe.c (100%)
+> > > > >  rename lib/{ =3D> tests}/test_hash.c (100%)
+> > > > >  rename lib/{ =3D> tests}/test_kprobes.c (100%)
+> > > > >  rename lib/{ =3D> tests}/test_linear_ranges.c (100%)
+> > > > >  rename lib/{ =3D> tests}/test_list_sort.c (100%)
+> > > > >  rename lib/{ =3D> tests}/test_sort.c (100%)
+> > > > >  rename lib/{ =3D> tests}/usercopy_kunit.c (100%)
 > > > >
-> > > > Following from the recent KUnit file naming discussion[1], move all
-> > > > KUnit tests in lib/ into lib/tests/.
-> > > >
-> > > > Link: https://lore.kernel.org/lkml/20240720165441.it.320-kees@kerne=
-l.org/ [1]
-> > > > Signed-off-by: Kees Cook <kees@kernel.org>
-> > > > Acked-by: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-> > > > Acked-by: Jakub Kicinski <kuba@kernel.org>
-> > > > Acked-by: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-> > > > Reviewed-by: David Gow <davidgow@google.com>
-> > > > [Rebased onto mm-nonmm-unstable, moved usercopy_kunit]
-> > > > Signed-off-by: David Gow <davidgow@google.com>
+> > > > While I support the idea, I think this adds an additional churn in =
+creating a
+> > > > duplicate 'test' in the filenames. Why they all can't be cut while =
+removing?
+> > > > (at least this question is not answered in the commit message)
 > > >
-> > > >  rename lib/{ =3D> tests}/bitfield_kunit.c (100%)
-> > > >  rename lib/{ =3D> tests}/checksum_kunit.c (100%)
-> > > >  rename lib/{ =3D> tests}/cmdline_kunit.c (100%)
-> > > >  rename lib/{ =3D> tests}/cpumask_kunit.c (100%)
-> > > >  rename lib/{ =3D> tests}/fortify_kunit.c (100%)
-> > > >  rename lib/{ =3D> tests}/hashtable_test.c (100%)
-> > > >  rename lib/{ =3D> tests}/is_signed_type_kunit.c (100%)
-> > > >  rename lib/{ =3D> tests}/kunit_iov_iter.c (100%)
-> > > >  rename lib/{ =3D> tests}/list-test.c (100%)
-> > > >  rename lib/{ =3D> tests}/memcpy_kunit.c (100%)
-> > > >  rename lib/{ =3D> tests}/overflow_kunit.c (100%)
-> > > >  rename lib/{ =3D> tests}/siphash_kunit.c (100%)
-> > > >  rename lib/{ =3D> tests}/slub_kunit.c (100%)
-> > > >  rename lib/{ =3D> tests}/stackinit_kunit.c (100%)
-> > > >  rename lib/{ =3D> tests}/string_helpers_kunit.c (100%)
-> > > >  rename lib/{ =3D> tests}/string_kunit.c (100%)
-> > > >  rename lib/{ =3D> tests}/test_bits.c (100%)
-> > > >  rename lib/{ =3D> tests}/test_fprobe.c (100%)
-> > > >  rename lib/{ =3D> tests}/test_hash.c (100%)
-> > > >  rename lib/{ =3D> tests}/test_kprobes.c (100%)
-> > > >  rename lib/{ =3D> tests}/test_linear_ranges.c (100%)
-> > > >  rename lib/{ =3D> tests}/test_list_sort.c (100%)
-> > > >  rename lib/{ =3D> tests}/test_sort.c (100%)
-> > > >  rename lib/{ =3D> tests}/usercopy_kunit.c (100%)
-> > >
-> > > While I support the idea, I think this adds an additional churn in cr=
-eating a
-> > > duplicate 'test' in the filenames. Why they all can't be cut while re=
-moving?
-> > > (at least this question is not answered in the commit message)
+> > > To avoid duplicate *.ko file names?
 > >
-> > To avoid duplicate *.ko file names?
+> > With what? Sorry, but I don't see how it's a problem. These are test ca=
+ses.
+> > Do they use kernel command line parameters? If so, shouldn't KUnit take=
+ care
+> > about it in a more proper way?
 >
-> With what? Sorry, but I don't see how it's a problem. These are test case=
-s.
-> Do they use kernel command line parameters? If so, shouldn't KUnit take c=
-are
-> about it in a more proper way?
+> If .e.g. lib/list_sort.o could be modular, its module would be called
+> "list_sort.ko", conflicting with the "list_sort.ko" test module.
 
-If .e.g. lib/list_sort.o could be modular, its module would be called
-"list_sort.ko", conflicting with the "list_sort.ko" test module.
-
-Gr{oetje,eeting}s,
-
-                        Geert
+Can't this be solved by automatically adding a prefix in Makefile for
+kunit tests, for example?
 
 --=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+With Best Regards,
+Andy Shevchenko
