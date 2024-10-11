@@ -1,161 +1,139 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97ECA81AD7;
-	Fri, 11 Oct 2024 17:23:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E19E1D1721
+	for <linux-hardening@vger.kernel.org>; Fri, 11 Oct 2024 21:59:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728667385; cv=none; b=Agivt58RmvLBbBJvDbqAJyC7kMGf1x3vUXpLlfDzmbcgZOcIO6kRBNCrmjjiuOrrD+PoIAxF0qjyABZgQiL30pWjsfAQn693CFKy9HaovO6E3M2Tkjun/60pIPfO7AuVevVGQtC5vBYX4Eq65GtDIusIned0ZM7dNbeb0kuFIxU=
+	t=1728683970; cv=none; b=nF/rBxjSZyL3PMkdwHaWHH/G4TG7/9C5tBQy2LF0JxXlXV+/EpF3LcI9YS/GaeGSxCV2DGMWvQclurJEvHYdJH/velQGp+6iGPiCSCXQJcrn+9B3vd8bgm4yXig2K12Yt2oHfMrVJgITeigWKbzYXMlg3D4B+dr/MH9RRvQmGCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728667385; c=relaxed/simple;
-	bh=18BtVOjyvnnHLDd5j0hRByjZMiG+iF1kHNIlumGHGZM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KjiZ5KuSJ2BwGqlF1Mf02xaoJZlkwVFE+Dbp2r0ZuAeBRs88fjFNsG+QfFgvzB/QS3xoaLb9AQs6dhUlq9QdrNUWWHIWYC//zlDwLfYHKDOR3ZYc8XoICsYYVDzuXLHuyHb+iAw5sWsQ2PSm7PaXMPK8iZK1HLnvE0b80hAR3r4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-X-CSE-ConnectionGUID: L3Ga3IuDS2uqaN1q23K2sg==
-X-CSE-MsgGUID: iXT8DvEKRfW8I5ttXueu/w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="27881798"
-X-IronPort-AV: E=Sophos;i="6.11,196,1725346800"; 
-   d="scan'208";a="27881798"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2024 10:23:03 -0700
-X-CSE-ConnectionGUID: ICfa8/EYTgKURgel5779rA==
-X-CSE-MsgGUID: lSMYAuD+QbO10JiMebE9ww==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,196,1725346800"; 
-   d="scan'208";a="76612540"
-Received: from smile.fi.intel.com ([10.237.72.154])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2024 10:22:54 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andy.shevchenko@gmail.com>)
-	id 1szJLm-00000001zNk-0VkT;
-	Fri, 11 Oct 2024 20:22:50 +0300
-Date: Fri, 11 Oct 2024 20:22:49 +0300
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-To: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
-	David Gow <davidgow@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Brendan Higgins <brendanhiggins@google.com>,
-	Rae Moar <rmoar@google.com>, Kees Cook <kees@kernel.org>,
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-	linux-kernel@vger.kernel.org,
-	Stephen Rothwell <sfr@canb.auug.org.au>,
-	Yury Norov <yury.norov@gmail.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	"Jason A . Donenfeld" <Jason@zx2c4.com>,
-	"Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Brown <broonie@kernel.org>, linux-hardening@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Palmer Dabbelt <palmer@rivosinc.com>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	Simon Horman <horms@kernel.org>, Jakub Kicinski <kuba@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>, Daniel Latypov <dlatypov@google.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	David Howells <dhowells@redhat.com>,
-	=?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-	Marco Elver <elver@google.com>, Mark Rutland <mark.rutland@arm.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Fangrui Song <maskray@google.com>,
-	"Steven Rostedt (Google)" <rostedt@goodmis.org>
-Subject: Re: [PATCH 3/6] lib: Move KUnit tests into tests/ subdirectory
-Message-ID: <Zwle6aDpkf_0ZCaX@smile.fi.intel.com>
-References: <20241011072509.3068328-2-davidgow@google.com>
- <20241011072509.3068328-5-davidgow@google.com>
- <ZwkBgkthcQM7rLl7@smile.fi.intel.com>
- <CAMuHMdW=MF0H8YVuY6moLomTaxFEeCHgut1fruRGEkn79sbuTA@mail.gmail.com>
- <ZwkuvKogPuik90fN@smile.fi.intel.com>
- <CAMuHMdU_1oZEeJ5Onrbtx-iZjrK_bQ6YWNMdRYp-E1_5E7rMSQ@mail.gmail.com>
- <CAHp75Vecwe_LaSKSprwfrdpDhoJbXgajQUVY23L+VyGoxtGH7A@mail.gmail.com>
- <600a11af-cf42-45d9-9be8-b7066d90c89f@csgroup.eu>
+	s=arc-20240116; t=1728683970; c=relaxed/simple;
+	bh=L3zF4Rcc2RuIq/gLEbQW4A7mBM+oakBixRF5GSvBQBY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Mm/ddaI9uCYuDPUePm2VNeLS5x/HSuICYiMW/RB5o/fHCgc54e7RAxxWec2INT+kFN9WJjv5oqTsvQfPeDxKL9AzPf1Og2risLFAuSWOE0wq4oLd9OvQXtX3m8MGkDGJQn+j+IFpLlWCl1DxlznFMfS2JWIFm2CcuEPTQkTuJgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=anPUP/G1; arc=none smtp.client-ip=209.85.217.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="anPUP/G1"
+Received: by mail-vs1-f41.google.com with SMTP id ada2fe7eead31-4a3a62bfda2so669624137.2
+        for <linux-hardening@vger.kernel.org>; Fri, 11 Oct 2024 14:59:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1728683968; x=1729288768; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7k7VDDT1YUOyH2lMqiN1RCUHYbTDQjQw36x/4vj46K8=;
+        b=anPUP/G1wfNi5G4oFSdiztYlYQjjYQhw5VLURh4DvweFzHa/7gP3ZHmOqdp4a1Yn6v
+         59o3lhCSJFXkhd0m2jAUfdMgpblAZr9HC4RyIrwqMcshPjUpUS4icTWwo4H+fup2F55Y
+         t/5GbCeU5p8Lr65vFeS2PYJKmOZtbuSE8XsSqtRWpHkpONGWTdytnmun+u20jNI6BhXC
+         T21dNmC3CxUhQxgpFSGMg1WFWu2tEjK8HYkBaaSJMMK74/GteOApFmxZHNVAs7lDHMJr
+         YjBttKK2DVPUQYzuU2o61lpmMneTA4ukiIZ6HfvV+nWue20Zh1h6M0ryJp6BoDnafSex
+         ATqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728683968; x=1729288768;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7k7VDDT1YUOyH2lMqiN1RCUHYbTDQjQw36x/4vj46K8=;
+        b=JE7LdG6WLMvD0AYQPSY1zCUM0wFTUWcetmAz4TYygY5SKG5Qo96wkPgxsPWsKJ09ql
+         9OHcrKgbCOJo7fl1N10QphUOYJ8+OxPuZ+WuiHmHfH7rC9yMrnzB3Aj5KrCQf07ZEuDA
+         Jn89IkBT7Nwofrtgpa+lU6NACYnPdT/XGyj/xTZ3IkSM3lRfTh69K2bcLEL0ooq3UNYs
+         k6nZvuxQwb3mKkA78aEHuvhwd5aGEZ3iRf2oI0zJj5OgodJbuJxkgAAVpSRnSchyHA7G
+         PBSKmDvonuBE3vv2CmafNs+5fetTurODwt9zRx6NKqiwHmkCHzWx3z6DNUIWUv2aE0WL
+         MzcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW6Obpt5+nciHGD6neB8zMLXscKk0MHJ0hvkRPA+WgSTG2NSFsPALEo4gzEDrr0uzgPf6vGmr+tATxXmBxsYVk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy921E9OHQhv7FvNJ0lv362RqKqCT+AsX//al9jgvFgZmhhKXYF
+	JbOcRmiqepf84jp71ID6iEYK69KYGXnND4lulZoF5nI9mk0GEAR2Te27PSRayjXi0dOtjD9yzQJ
+	FwdCh6OScn+EQIvMfgys4pI1AS74DWcC1hNnr/SjCXuuKvvbVAzJq
+X-Google-Smtp-Source: AGHT+IGtoLDRR+ZP2gKCjdPIyccQzAfSiQwzBOLIFIB8MF3Yp2GP8aKxafdurozbqAky4MiDKCwSpTVZPXNFO35cEsg=
+X-Received: by 2002:a05:6102:1620:b0:49b:cfbc:63ac with SMTP id
+ ada2fe7eead31-4a475f04481mr1020027137.6.1728683967980; Fri, 11 Oct 2024
+ 14:59:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <600a11af-cf42-45d9-9be8-b7066d90c89f@csgroup.eu>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20240930-strncpy-kernel-trace-trace_events_filter-c-v1-1-feed30820b83@google.com>
+ <20241008211257.6c9c9f88@rorschach.local.home>
+In-Reply-To: <20241008211257.6c9c9f88@rorschach.local.home>
+From: Justin Stitt <justinstitt@google.com>
+Date: Fri, 11 Oct 2024 14:59:16 -0700
+Message-ID: <CAFhGd8pGaMxXpsk5gMS98223FW5wq-vQPyt1srVCrP_Fg6Ex9g@mail.gmail.com>
+Subject: Re: [PATCH] tracing: replace multiple deprecated strncpy with strscpy
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Kees Cook <kees@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Oct 11, 2024 at 06:29:49PM +0200, Christophe Leroy wrote:
-> Le 11/10/2024 à 17:21, Andy Shevchenko a écrit :
-> > [Vous ne recevez pas souvent de courriers de andy.shevchenko@gmail.com. Découvrez pourquoi ceci est important à https://aka.ms/LearnAboutSenderIdentification ]
-> > 
-> > On Fri, Oct 11, 2024 at 5:20 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > On Fri, Oct 11, 2024 at 3:57 PM Andy Shevchenko <andy@kernel.org> wrote:
-> > > > On Fri, Oct 11, 2024 at 03:38:00PM +0200, Geert Uytterhoeven wrote:
-> > > > > On Fri, Oct 11, 2024 at 12:44 PM Andy Shevchenko <andy@kernel.org> wrote:
-> > > > > > On Fri, Oct 11, 2024 at 03:25:07PM +0800, David Gow wrote:
+On Tue, Oct 8, 2024 at 6:13=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org>=
+ wrote:
+>
+> So this breaks my tests. This is why I have trouble with taking changes
+> like this :-(
 
-...
+Shoot.
 
-> > > > > > >   rename lib/{ => tests}/bitfield_kunit.c (100%)
-> > > > > > >   rename lib/{ => tests}/checksum_kunit.c (100%)
-> > > > > > >   rename lib/{ => tests}/cmdline_kunit.c (100%)
-> > > > > > >   rename lib/{ => tests}/cpumask_kunit.c (100%)
-> > > > > > >   rename lib/{ => tests}/fortify_kunit.c (100%)
-> > > > > > >   rename lib/{ => tests}/hashtable_test.c (100%)
-> > > > > > >   rename lib/{ => tests}/is_signed_type_kunit.c (100%)
-> > > > > > >   rename lib/{ => tests}/kunit_iov_iter.c (100%)
-> > > > > > >   rename lib/{ => tests}/list-test.c (100%)
-> > > > > > >   rename lib/{ => tests}/memcpy_kunit.c (100%)
-> > > > > > >   rename lib/{ => tests}/overflow_kunit.c (100%)
-> > > > > > >   rename lib/{ => tests}/siphash_kunit.c (100%)
-> > > > > > >   rename lib/{ => tests}/slub_kunit.c (100%)
-> > > > > > >   rename lib/{ => tests}/stackinit_kunit.c (100%)
-> > > > > > >   rename lib/{ => tests}/string_helpers_kunit.c (100%)
-> > > > > > >   rename lib/{ => tests}/string_kunit.c (100%)
-> > > > > > >   rename lib/{ => tests}/test_bits.c (100%)
-> > > > > > >   rename lib/{ => tests}/test_fprobe.c (100%)
-> > > > > > >   rename lib/{ => tests}/test_hash.c (100%)
-> > > > > > >   rename lib/{ => tests}/test_kprobes.c (100%)
-> > > > > > >   rename lib/{ => tests}/test_linear_ranges.c (100%)
-> > > > > > >   rename lib/{ => tests}/test_list_sort.c (100%)
-> > > > > > >   rename lib/{ => tests}/test_sort.c (100%)
-> > > > > > >   rename lib/{ => tests}/usercopy_kunit.c (100%)
-> > > > > > 
-> > > > > > While I support the idea, I think this adds an additional churn in creating a
-> > > > > > duplicate 'test' in the filenames. Why they all can't be cut while removing?
-> > > > > > (at least this question is not answered in the commit message)
-> > > > > 
-> > > > > To avoid duplicate *.ko file names?
-> > > > 
-> > > > With what? Sorry, but I don't see how it's a problem. These are test cases.
-> > > > Do they use kernel command line parameters? If so, shouldn't KUnit take care
-> > > > about it in a more proper way?
-> > > 
-> > > If .e.g. lib/list_sort.o could be modular, its module would be called
-> > > "list_sort.ko", conflicting with the "list_sort.ko" test module.
-> 
-> But as it is now in lib/tests/, the module will also be installed in tests/
-> subdir, so it shouldn't clash anymore ?
-> 
-> You'd have:
-> 
-> /lib/modules/lib/list_sort.ko and
-> /lib/modules/lib/tests/list_sort.ko
-> 
-> Or did I miss something ?
+I think deprecated API cleanups are important but creating more bugs
+in the process is not helping anybody. I dropped the ball here... my
+patch has an off-by-one.
 
-I believe Geert is talking about `modprobe list-sort` in the userspace.
-Which one will be loaded?
+>
+> Before this patch, his worked:
+>
+>  # echo 'common_pid !=3D 0 && common_pid !=3D 120 && common_pid !=3D 1253=
+ && common_pid !=3D 17 && common_pid !=3D 394 && common_pid !=3D 81 && comm=
+on_pid !=3D 87' > /sys/kernel/tracing/events/sched/sched_switch/filter
 
-> > Can't this be solved by automatically adding a prefix in Makefile for
-> > kunit tests, for example?
+Thanks for providing the test case, this made triaging dead simple.
 
--- 
-With Best Regards,
-Andy Shevchenko
+>
+> But now it gives an error of:
+>
+>  -bash: echo: write error: Invalid argument
+>
+> I have to drop this.
 
+In many cases where folks are doing 1) strncpy and 2) manual NUL-byte
+assignment, the clear replacement is strscpy. However most of those
+cases look like this:
 
+  strncpy(dst, src, len);
+  dst[len-1] =3D '\0';
+
+and this case was just
+
+  strncpy(dst, src, len);
+  dst[len] =3D '\0';
+
+Since we have an explicit size check before the first copy, ensuring
+@len doesn't overflow @dst, this code is fine but I missed the
+off-by-one.
+
+So, assuming I haven't lost your faith, I can send a v2 along the lines of:
+
+1)
+  strscpy(num_buf, str + s, len + 1);
+
+  ... or
+2)
+  memcpy(num_buf, str + s, len);
+  num_buf[len] =3D 0;
+
+And if you're wondering about option 3: "Don't change anything because
+the code works". I'd reiterate that I think it's important to replace
+bad ambiguous APIs. There are many cases where folks use strncpy() as
+a glorified memcpy because they want the padding behavior, or they use
+it on non-null terminated destinations or tons of other "misuses".
+Ambiguous code like that poses a real danger to the maintainability of
+the codebase and opens threat vectors.
+
+>
+> -- Steve
+
+Thanks
+Justin
