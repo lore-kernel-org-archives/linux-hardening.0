@@ -1,85 +1,462 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83BB811187;
-	Fri, 11 Oct 2024 06:32:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7643C20ADD3
+	for <linux-hardening@vger.kernel.org>; Fri, 11 Oct 2024 07:31:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728628366; cv=none; b=c+ZDQB9Pr8H4jdf2a/zhJB9vv1HcD4TVaSVkgeKG9boRkdXB7Zt0EJeK47kVzy3x64hbCKN+tAIgxIEY0WT9GZ5Dgyg5nu1uJGpHdzJbNyVsXnGNCx9/b0oV0/CTmpR9GZ5DnyjUI5wH9xr5H6PQ05SA3Fznoo6R3jK4hkU/5KM=
+	t=1728631875; cv=none; b=twX54LND8nCgi2ecV90KY8wB/mQOROMWwg47w2qgILZq3wNNoNznYkIVV0rVBqLkfRjZbG42kYu8SeUGl4nM4D6vySE5gOJlath2oKcriC9huTxbn9WUPpuk3PfRagrddbSs/npFHGLRPl8vYCWA+h6L664cldQT7D7CDyfUWcw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728628366; c=relaxed/simple;
-	bh=AnL5GeFPQyjZfL3ql7vc0FPXzGCajzMT1GjLn2sCZzQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Xn70j/MEd5qqOietLKVRIiXmEpEDXjcZtPO/5S3q3e2TyDuBDWrl2hpNP3Wd41t5ZzUjugd8AJMXYIYMT+ifCjKpXyb/PDhrIXUnk8ovcNs36/9ul+vza6K8PcMKSeLpvjRhE7PC6Vo0sHzfGbS/GMR/9Sswm06l2VrV4lpGhhY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bSpFYioH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1728631875; c=relaxed/simple;
+	bh=YW58ht6CyiuZkFliYx0qFm95AAGfQIn/SYFw2I/6ruc=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=JPJ7Cm84qaDCemEjQlLjf8pl9UxEhtTOASS/zT7TVN1lrljX9VUQHRssIsdFkQYFm3Q9omXDm6XapO/aFcWWj1dN8HIl/mhh/G4EwGK3bsy3AHzqAYGM227Y6BjofrGZ2zVn/xqfxc2s6GjlMrcyrOP2Ts4H78F9lQlovCQPodA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--davidgow.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4c/2QQMX; arc=none smtp.client-ip=209.85.128.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--davidgow.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bSpFYioH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C5DDC4CEC3;
-	Fri, 11 Oct 2024 06:32:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728628366;
-	bh=AnL5GeFPQyjZfL3ql7vc0FPXzGCajzMT1GjLn2sCZzQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=bSpFYioHXvgvo64LbtZiF5aZufjwqLdz4sG6roNWUTDvW7VQFeleEid++JjdLl0+i
-	 NGDZBa2OheVIua1qlJzuTGP7PsEQYrE+HZQd7rahT4YwghyF8HJZ4ZaiN3N7JC1ZY7
-	 1pd/6XS7UKxpk15mvzDzNz+CNdTvKnYXAri6N4erc1qEvfY6KleQ6++djixPNXZiEv
-	 2Q6J2BRXz0G4kRqT3fIu920xyY2/8iyTGlW7b3O1Nx4t1e4Ojbpj7ZXZORJNqL5lCG
-	 54bPYJU8ZQnDe7jLt86PBPoXoIBkgh/i3+f4XgRE7t5ertF1AqTU9oyyt1+DQUz/AO
-	 Q1ftI0JWP0DBQ==
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5369f1c7cb8so2287103e87.1;
-        Thu, 10 Oct 2024 23:32:46 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVDnrrO87Hq5dB+vgK8yzhs0iaBykAtIKqLVSavvzxqWlRDK8IBV5o29uPb3P4t0/gSguXrPKmMzbtNYkoDzEk=@vger.kernel.org, AJvYcCVf1+68slt2uR7zbfJpfdu98AkfnhG7Aig/BsGvjVB9Hn+4VODet0c7YuvrRgdbn41ayunWXWcapmzug1mc@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzh2vvC4ZNqNa4BPXDd7H3id10O8cR0mZtJmLcLV1VJsMW0SBGf
-	PeH57U2uViwImXFv1GrP9iPylGsuLYB45HDMbG6osPriLDJANn0sELIjbKV9tp7cgFHdtkZUKjl
-	w+1ZW8Asvp6fJvq3EgTrRaLHLCzc=
-X-Google-Smtp-Source: AGHT+IEAUXKzjdMmeNguDYQVESVsGf3mVgAC7fcVfgrWwu9ShcvQNW53b+1p0KO6WvSGIt1o8n1nn2SYvX9O88RQ6Tw=
-X-Received: by 2002:a05:6512:3c98:b0:530:aa3e:f3c with SMTP id
- 2adb3069b0e04-539da3c4a5dmr686774e87.14.1728628364597; Thu, 10 Oct 2024
- 23:32:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4c/2QQMX"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6e347b1e29dso5754227b3.0
+        for <linux-hardening@vger.kernel.org>; Fri, 11 Oct 2024 00:31:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1728631869; x=1729236669; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=oEo/RIpbwWM3TDrwxpV43z65/ZOiBhGZMKP7K+QyLzo=;
+        b=4c/2QQMXtLvBuk0UBIAnCy5Gz7bd5BjB7MelCG8k7P04+4VZFqV0DgeGTchsfjLYEg
+         c2hmI6yA8QaoEEKGApBN5UbTTYAzwFZTT0YN9tzzzm558ppyT3jCUbLK9PSRwOZKcHJ5
+         /TRLfzEFqgLQGDI/DN6fdVDSSfn867IcPMEokwAP6Ykem7jb1yW6ucN7t4z47P6QB8nL
+         Y86phDXLB4skaHK0gBKMokzPBGlICnECHc/7elADmyZJBiDr5WqiuCC/jLFh/zYDno8z
+         7ViRI2I8qPKHR8SCjrLFuOfckJeTyurVzVx1cHpzgJZ0E08xNejeO+slj4cF399INebY
+         91Uw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728631869; x=1729236669;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oEo/RIpbwWM3TDrwxpV43z65/ZOiBhGZMKP7K+QyLzo=;
+        b=uvPbLL9m8nt9k43GROXU/A7pxbxeNzSomym4aOOvZdoelAjWbLr4eRd2AFQT/B8s/A
+         ToK/invTFU1rkz6d1YF5IDqm9Dg+e72HZ9fyYwJbR994FCKvK60ku++Q5WT8LOpr7uVH
+         8d4o4th4yOx3ar7rYC9jnnPeeeNUcGwMt13wB3Qs32VBux75w7oVO8HVnx1JeV8oyEZa
+         6gzWz2Xn7V8uPqE6ejKA1XNUKRUypOZL7q2cDBpeQeMskFjEpNrOMA0PJT/ITf22cpCP
+         yDj2cX4azV/cmmem9sSTwbuT3zgQsv0GE7v9V8v9zItdWaYOcoH/txy0NlYQeANI8N6m
+         UUcg==
+X-Forwarded-Encrypted: i=1; AJvYcCXqbB1j1kkSgf00t6txU2HORLFx+XwTa4RQsFYxq9BJ5tlzscFZ+fuUdmkcUSCon0VrfkETGaujwF00eIUSXRA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzy8Zz6oeCzamfiDcg+o2RjuZXdhBZC63Sb2fGa1eyipXlszBvF
+	0oxZMwgOuHfmYKeMLbGenedABtJK+49B0LmsNzdgjT6eRSwtAY13+qHEPhGVFFUNMry8RVK9uZ+
+	ujwa5ppjjaA==
+X-Google-Smtp-Source: AGHT+IGdqFCzf4VfBt+kJ7UuT23EboG4g5C752yNmlJ+lOYyUe/sQDWFfgg9Cath79/UvjftuMEFz9qfNUfSHQ==
+X-Received: from slicestar.c.googlers.com ([fda3:e722:ac3:cc00:b1:7045:ac11:6237])
+ (user=davidgow job=sendgmr) by 2002:a05:690c:dc2:b0:6e3:39e5:f0e8 with SMTP
+ id 00721157ae682-6e347c4e59fmr218467b3.6.1728631869517; Fri, 11 Oct 2024
+ 00:31:09 -0700 (PDT)
+Date: Fri, 11 Oct 2024 15:25:07 +0800
+In-Reply-To: <20241011072509.3068328-2-davidgow@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20241010122801.1321976-7-ardb+git@google.com> <20241010122801.1321976-12-ardb+git@google.com>
- <20241010203401.45ds362dpx52ne5z@treble>
-In-Reply-To: <20241010203401.45ds362dpx52ne5z@treble>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Fri, 11 Oct 2024 08:32:33 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXF_-wSM-rmxS5C_cG-srdUgzKQsSGxp54pZ4pMhXeNsfg@mail.gmail.com>
-Message-ID: <CAMj1kXF_-wSM-rmxS5C_cG-srdUgzKQsSGxp54pZ4pMhXeNsfg@mail.gmail.com>
-Subject: Re: [PATCH v2 5/5] crypto: x86/crc32c - Tweak jump table to validate
- objtool logic
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
-	keescook@chromium.org, linux-hardening@vger.kernel.org, nathan@kernel.org, 
-	Peter Zijlstra <peterz@infradead.org>, Jan Beulich <jbeulich@suse.com>, 
-	"Jose E. Marchesi" <jemarch@gnu.org>, Kees Cook <kees@kernel.org>
+Mime-Version: 1.0
+References: <20241011072509.3068328-2-davidgow@google.com>
+X-Mailer: git-send-email 2.47.0.rc1.288.g06298d1525-goog
+Message-ID: <20241011072509.3068328-5-davidgow@google.com>
+Subject: [PATCH 3/6] lib: Move KUnit tests into tests/ subdirectory
+From: David Gow <davidgow@google.com>
+To: Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <skhan@linuxfoundation.org>, 
+	Brendan Higgins <brendanhiggins@google.com>, Rae Moar <rmoar@google.com>, 
+	Kees Cook <kees@kernel.org>
+Cc: linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+	linux-kernel@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>, 
+	Yury Norov <yury.norov@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+	"Jason A . Donenfeld" <Jason@zx2c4.com>, Andy Shevchenko <andy@kernel.org>, 
+	"Naveen N . Rao" <naveen.n.rao@linux.ibm.com>, 
+	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>, "David S . Miller" <davem@davemloft.net>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mark Brown <broonie@kernel.org>, 
+	linux-hardening@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Palmer Dabbelt <palmer@rivosinc.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
+	Charlie Jenkins <charlie@rivosinc.com>, Simon Horman <horms@kernel.org>, 
+	Jakub Kicinski <kuba@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Daniel Latypov <dlatypov@google.com>, 
+	Guenter Roeck <linux@roeck-us.net>, David Howells <dhowells@redhat.com>, 
+	"=?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?=" <mic@digikod.net>, Marco Elver <elver@google.com>, Mark Rutland <mark.rutland@arm.com>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Vlastimil Babka <vbabka@suse.cz>, 
+	Geert Uytterhoeven <geert@linux-m68k.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Fangrui Song <maskray@google.com>, "Steven Rostedt (Google)" <rostedt@goodmis.org>, 
+	David Gow <davidgow@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 10 Oct 2024 at 22:34, Josh Poimboeuf <jpoimboe@kernel.org> wrote:
->
-> On Thu, Oct 10, 2024 at 02:28:07PM +0200, Ard Biesheuvel wrote:
-> > From: Ard Biesheuvel <ardb@kernel.org>
-> >
-> > Tweak the jump table so
-> > - the address is taken far way from its use
-> > - its offset from the start of .rodata is != 0x0
-> > - its type is STT_OBJECT and its size is set to the size of the actual
-> >   table
-> > - the indirect jump is annotated with a R_X86_64_NONE relocation
-> >   pointing to the jump table
-> >
-> > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
->
-> This needs more "why", I assume the goals are to add the annotations +
-> confuse objtool if it doesn't read them properly?
->
+From: Kees Cook <kees@kernel.org>
 
-As presented, this is just a vehicle to test the other changes in the
-series. That is why I split it off from the previous one.
+Following from the recent KUnit file naming discussion[1], move all
+KUnit tests in lib/ into lib/tests/.
 
-Whether or not we want this code in the tree is up for debate, but I
-guess it could be useful as a canary for objtool, given that most
-configs now disable jump tables entirely.
+Link: https://lore.kernel.org/lkml/20240720165441.it.320-kees@kernel.org/ [1]
+Signed-off-by: Kees Cook <kees@kernel.org>
+Acked-by: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+Acked-by: Jakub Kicinski <kuba@kernel.org>
+Acked-by: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Reviewed-by: David Gow <davidgow@google.com>
+[Rebased onto mm-nonmm-unstable, moved usercopy_kunit]
+Signed-off-by: David Gow <davidgow@google.com>
+---
+ MAINTAINERS                            | 19 +++++++------
+ lib/Makefile                           | 36 +-----------------------
+ lib/tests/Makefile                     | 38 ++++++++++++++++++++++++++
+ lib/{ => tests}/bitfield_kunit.c       |  0
+ lib/{ => tests}/checksum_kunit.c       |  0
+ lib/{ => tests}/cmdline_kunit.c        |  0
+ lib/{ => tests}/cpumask_kunit.c        |  0
+ lib/{ => tests}/fortify_kunit.c        |  0
+ lib/{ => tests}/hashtable_test.c       |  0
+ lib/{ => tests}/is_signed_type_kunit.c |  0
+ lib/{ => tests}/kunit_iov_iter.c       |  0
+ lib/{ => tests}/list-test.c            |  0
+ lib/{ => tests}/memcpy_kunit.c         |  0
+ lib/{ => tests}/overflow_kunit.c       |  0
+ lib/{ => tests}/siphash_kunit.c        |  0
+ lib/{ => tests}/slub_kunit.c           |  0
+ lib/{ => tests}/stackinit_kunit.c      |  0
+ lib/{ => tests}/string_helpers_kunit.c |  0
+ lib/{ => tests}/string_kunit.c         |  0
+ lib/{ => tests}/test_bits.c            |  0
+ lib/{ => tests}/test_fprobe.c          |  0
+ lib/{ => tests}/test_hash.c            |  0
+ lib/{ => tests}/test_kprobes.c         |  0
+ lib/{ => tests}/test_linear_ranges.c   |  0
+ lib/{ => tests}/test_list_sort.c       |  0
+ lib/{ => tests}/test_sort.c            |  0
+ lib/{ => tests}/usercopy_kunit.c       |  0
+ 27 files changed, 49 insertions(+), 44 deletions(-)
+ create mode 100644 lib/tests/Makefile
+ rename lib/{ => tests}/bitfield_kunit.c (100%)
+ rename lib/{ => tests}/checksum_kunit.c (100%)
+ rename lib/{ => tests}/cmdline_kunit.c (100%)
+ rename lib/{ => tests}/cpumask_kunit.c (100%)
+ rename lib/{ => tests}/fortify_kunit.c (100%)
+ rename lib/{ => tests}/hashtable_test.c (100%)
+ rename lib/{ => tests}/is_signed_type_kunit.c (100%)
+ rename lib/{ => tests}/kunit_iov_iter.c (100%)
+ rename lib/{ => tests}/list-test.c (100%)
+ rename lib/{ => tests}/memcpy_kunit.c (100%)
+ rename lib/{ => tests}/overflow_kunit.c (100%)
+ rename lib/{ => tests}/siphash_kunit.c (100%)
+ rename lib/{ => tests}/slub_kunit.c (100%)
+ rename lib/{ => tests}/stackinit_kunit.c (100%)
+ rename lib/{ => tests}/string_helpers_kunit.c (100%)
+ rename lib/{ => tests}/string_kunit.c (100%)
+ rename lib/{ => tests}/test_bits.c (100%)
+ rename lib/{ => tests}/test_fprobe.c (100%)
+ rename lib/{ => tests}/test_hash.c (100%)
+ rename lib/{ => tests}/test_kprobes.c (100%)
+ rename lib/{ => tests}/test_linear_ranges.c (100%)
+ rename lib/{ => tests}/test_list_sort.c (100%)
+ rename lib/{ => tests}/test_sort.c (100%)
+ rename lib/{ => tests}/usercopy_kunit.c (100%)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index f1e1cd652699..bbba5c760533 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3929,10 +3929,10 @@ F:	include/vdso/bits.h
+ F:	lib/bitmap-str.c
+ F:	lib/bitmap.c
+ F:	lib/cpumask.c
+-F:	lib/cpumask_kunit.c
+ F:	lib/find_bit.c
+ F:	lib/find_bit_benchmark.c
+ F:	lib/test_bitmap.c
++F:	lib/tests/cpumask_kunit.c
+ F:	tools/include/linux/bitfield.h
+ F:	tools/include/linux/bitmap.h
+ F:	tools/include/linux/bits.h
+@@ -8911,9 +8911,10 @@ L:	linux-hardening@vger.kernel.org
+ S:	Supported
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git for-next/hardening
+ F:	include/linux/fortify-string.h
+-F:	lib/fortify_kunit.c
+-F:	lib/memcpy_kunit.c
+ F:	lib/test_fortify/*
++F:	lib/tests/fortify_kunit.c
++F:	lib/tests/memcpy_kunit.c
++F:	scripts/test_fortify.sh
+ K:	\bunsafe_memcpy\b
+ K:	\b__NO_FORTIFY\b
+ 
+@@ -9578,9 +9579,9 @@ F:	include/linux/string.h
+ F:	include/linux/string_choices.h
+ F:	include/linux/string_helpers.h
+ F:	lib/string.c
+-F:	lib/string_kunit.c
+ F:	lib/string_helpers.c
+-F:	lib/string_helpers_kunit.c
++F:	lib/tests/string_helpers_kunit.c
++F:	lib/tests/string_kunit.c
+ F:	scripts/coccinelle/api/string_choices.cocci
+ 
+ GENERIC UIO DRIVER FOR PCI DEVICES
+@@ -12741,7 +12742,7 @@ F:	Documentation/trace/kprobes.rst
+ F:	include/asm-generic/kprobes.h
+ F:	include/linux/kprobes.h
+ F:	kernel/kprobes.c
+-F:	lib/test_kprobes.c
++F:	lib/tests/test_kprobes.c
+ F:	samples/kprobes
+ 
+ KS0108 LCD CONTROLLER DRIVER
+@@ -13091,7 +13092,7 @@ M:	Mark Brown <broonie@kernel.org>
+ R:	Matti Vaittinen <mazziesaccount@gmail.com>
+ F:	include/linux/linear_range.h
+ F:	lib/linear_ranges.c
+-F:	lib/test_linear_ranges.c
++F:	lib/tests/test_linear_ranges.c
+ 
+ LINUX FOR POWER MACINTOSH
+ L:	linuxppc-dev@lists.ozlabs.org
+@@ -13219,7 +13220,7 @@ M:	David Gow <davidgow@google.com>
+ L:	linux-kselftest@vger.kernel.org
+ L:	kunit-dev@googlegroups.com
+ S:	Maintained
+-F:	lib/list-test.c
++F:	lib/tests/list-test.c
+ 
+ LITEX PLATFORM
+ M:	Karol Gugala <kgugala@antmicro.com>
+@@ -21199,7 +21200,7 @@ M:	Jason A. Donenfeld <Jason@zx2c4.com>
+ S:	Maintained
+ F:	include/linux/siphash.h
+ F:	lib/siphash.c
+-F:	lib/siphash_kunit.c
++F:	lib/tests/siphash_kunit.c
+ 
+ SIS 190 ETHERNET DRIVER
+ M:	Francois Romieu <romieu@fr.zoreil.com>
+diff --git a/lib/Makefile b/lib/Makefile
+index 53f82de7cbe2..7f2ddbf03fe9 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -51,9 +51,7 @@ obj-y += bcd.o sort.o parser.o debug_locks.o random32.o \
+ 	 percpu-refcount.o rhashtable.o base64.o \
+ 	 once.o refcount.o rcuref.o usercopy.o errseq.o bucket_locks.o \
+ 	 generic-radix-tree.o bitmap-str.o
+-obj-$(CONFIG_STRING_KUNIT_TEST) += string_kunit.o
+ obj-y += string_helpers.o
+-obj-$(CONFIG_STRING_HELPERS_KUNIT_TEST) += string_helpers_kunit.o
+ obj-y += hexdump.o
+ obj-$(CONFIG_TEST_HEXDUMP) += test_hexdump.o
+ obj-y += kstrtox.o
+@@ -64,22 +62,17 @@ obj-$(CONFIG_TEST_DHRY) += test_dhry.o
+ obj-$(CONFIG_TEST_FIRMWARE) += test_firmware.o
+ obj-$(CONFIG_TEST_BITOPS) += test_bitops.o
+ CFLAGS_test_bitops.o += -Werror
+-obj-$(CONFIG_CPUMASK_KUNIT_TEST) += cpumask_kunit.o
+ obj-$(CONFIG_TEST_SYSCTL) += test_sysctl.o
+-obj-$(CONFIG_TEST_IOV_ITER) += kunit_iov_iter.o
+-obj-$(CONFIG_HASH_KUNIT_TEST) += test_hash.o
+ obj-$(CONFIG_TEST_IDA) += test_ida.o
+ obj-$(CONFIG_TEST_UBSAN) += test_ubsan.o
+ CFLAGS_test_ubsan.o += $(call cc-disable-warning, vla)
+ CFLAGS_test_ubsan.o += $(call cc-disable-warning, unused-but-set-variable)
+ UBSAN_SANITIZE_test_ubsan.o := y
+ obj-$(CONFIG_TEST_KSTRTOX) += test-kstrtox.o
+-obj-$(CONFIG_TEST_LIST_SORT) += test_list_sort.o
+ obj-$(CONFIG_TEST_MIN_HEAP) += test_min_heap.o
+ obj-$(CONFIG_TEST_LKM) += test_module.o
+ obj-$(CONFIG_TEST_VMALLOC) += test_vmalloc.o
+ obj-$(CONFIG_TEST_RHASHTABLE) += test_rhashtable.o
+-obj-$(CONFIG_TEST_SORT) += test_sort.o
+ obj-$(CONFIG_TEST_STATIC_KEYS) += test_static_keys.o
+ obj-$(CONFIG_TEST_STATIC_KEYS) += test_static_key_base.o
+ obj-$(CONFIG_TEST_DYNAMIC_DEBUG) += test_dynamic_debug.o
+@@ -105,10 +98,7 @@ obj-$(CONFIG_TEST_MEMINIT) += test_meminit.o
+ obj-$(CONFIG_TEST_LOCKUP) += test_lockup.o
+ obj-$(CONFIG_TEST_HMM) += test_hmm.o
+ obj-$(CONFIG_TEST_FREE_PAGES) += test_free_pages.o
+-obj-$(CONFIG_KPROBES_SANITY_TEST) += test_kprobes.o
+ obj-$(CONFIG_TEST_REF_TRACKER) += test_ref_tracker.o
+-CFLAGS_test_fprobe.o += $(CC_FLAGS_FTRACE)
+-obj-$(CONFIG_FPROBE_SANITY_TEST) += test_fprobe.o
+ obj-$(CONFIG_TEST_OBJPOOL) += test_objpool.o
+ 
+ obj-$(CONFIG_TEST_FPU) += test_fpu.o
+@@ -130,7 +120,7 @@ endif
+ obj-$(CONFIG_DEBUG_INFO_REDUCED) += debug_info.o
+ CFLAGS_debug_info.o += $(call cc-option, -femit-struct-debug-detailed=any)
+ 
+-obj-y += math/ crypto/
++obj-y += math/ crypto/ tests/
+ 
+ obj-$(CONFIG_GENERIC_IOMAP) += iomap.o
+ obj-$(CONFIG_HAS_IOMEM) += iomap_copy.o devres.o
+@@ -367,30 +357,6 @@ obj-$(CONFIG_OBJAGG) += objagg.o
+ # pldmfw library
+ obj-$(CONFIG_PLDMFW) += pldmfw/
+ 
+-# KUnit tests
+-CFLAGS_bitfield_kunit.o := $(DISABLE_STRUCTLEAK_PLUGIN)
+-obj-$(CONFIG_BITFIELD_KUNIT) += bitfield_kunit.o
+-obj-$(CONFIG_CHECKSUM_KUNIT) += checksum_kunit.o
+-obj-$(CONFIG_LIST_KUNIT_TEST) += list-test.o
+-obj-$(CONFIG_HASHTABLE_KUNIT_TEST) += hashtable_test.o
+-obj-$(CONFIG_LINEAR_RANGES_TEST) += test_linear_ranges.o
+-obj-$(CONFIG_BITS_TEST) += test_bits.o
+-obj-$(CONFIG_CMDLINE_KUNIT_TEST) += cmdline_kunit.o
+-obj-$(CONFIG_SLUB_KUNIT_TEST) += slub_kunit.o
+-obj-$(CONFIG_MEMCPY_KUNIT_TEST) += memcpy_kunit.o
+-obj-$(CONFIG_IS_SIGNED_TYPE_KUNIT_TEST) += is_signed_type_kunit.o
+-CFLAGS_overflow_kunit.o = $(call cc-disable-warning, tautological-constant-out-of-range-compare)
+-obj-$(CONFIG_OVERFLOW_KUNIT_TEST) += overflow_kunit.o
+-CFLAGS_stackinit_kunit.o += $(call cc-disable-warning, switch-unreachable)
+-obj-$(CONFIG_STACKINIT_KUNIT_TEST) += stackinit_kunit.o
+-CFLAGS_fortify_kunit.o += $(call cc-disable-warning, unsequenced)
+-CFLAGS_fortify_kunit.o += $(call cc-disable-warning, stringop-overread)
+-CFLAGS_fortify_kunit.o += $(call cc-disable-warning, stringop-truncation)
+-CFLAGS_fortify_kunit.o += $(DISABLE_STRUCTLEAK_PLUGIN)
+-obj-$(CONFIG_FORTIFY_KUNIT_TEST) += fortify_kunit.o
+-obj-$(CONFIG_SIPHASH_KUNIT_TEST) += siphash_kunit.o
+-obj-$(CONFIG_USERCOPY_KUNIT_TEST) += usercopy_kunit.o
+-
+ obj-$(CONFIG_GENERIC_LIB_DEVMEM_IS_ALLOWED) += devmem_is_allowed.o
+ 
+ obj-$(CONFIG_FIRMWARE_TABLE) += fw_table.o
+diff --git a/lib/tests/Makefile b/lib/tests/Makefile
+new file mode 100644
+index 000000000000..41689f0b7c97
+--- /dev/null
++++ b/lib/tests/Makefile
+@@ -0,0 +1,38 @@
++# SPDX-License-Identifier: GPL-2.0
++#
++# Makefile for tests of kernel library functions.
++
++# KUnit tests
++CFLAGS_bitfield_kunit.o := $(DISABLE_STRUCTLEAK_PLUGIN)
++obj-$(CONFIG_BITFIELD_KUNIT) += bitfield_kunit.o
++obj-$(CONFIG_BITS_TEST) += test_bits.o
++obj-$(CONFIG_CHECKSUM_KUNIT) += checksum_kunit.o
++obj-$(CONFIG_CMDLINE_KUNIT_TEST) += cmdline_kunit.o
++obj-$(CONFIG_CPUMASK_KUNIT_TEST) += cpumask_kunit.o
++CFLAGS_fortify_kunit.o += $(call cc-disable-warning, unsequenced)
++CFLAGS_fortify_kunit.o += $(call cc-disable-warning, stringop-overread)
++CFLAGS_fortify_kunit.o += $(call cc-disable-warning, stringop-truncation)
++CFLAGS_fortify_kunit.o += $(DISABLE_STRUCTLEAK_PLUGIN)
++obj-$(CONFIG_FORTIFY_KUNIT_TEST) += fortify_kunit.o
++CFLAGS_test_fprobe.o += $(CC_FLAGS_FTRACE)
++obj-$(CONFIG_FPROBE_SANITY_TEST) += test_fprobe.o
++obj-$(CONFIG_HASHTABLE_KUNIT_TEST) += hashtable_test.o
++obj-$(CONFIG_HASH_KUNIT_TEST) += test_hash.o
++obj-$(CONFIG_TEST_IOV_ITER) += kunit_iov_iter.o
++obj-$(CONFIG_IS_SIGNED_TYPE_KUNIT_TEST) += is_signed_type_kunit.o
++obj-$(CONFIG_KPROBES_SANITY_TEST) += test_kprobes.o
++obj-$(CONFIG_LIST_KUNIT_TEST) += list-test.o
++obj-$(CONFIG_TEST_LIST_SORT) += test_list_sort.o
++obj-$(CONFIG_LINEAR_RANGES_TEST) += test_linear_ranges.o
++obj-$(CONFIG_MEMCPY_KUNIT_TEST) += memcpy_kunit.o
++CFLAGS_overflow_kunit.o = $(call cc-disable-warning, tautological-constant-out-of-range-compare)
++obj-$(CONFIG_OVERFLOW_KUNIT_TEST) += overflow_kunit.o
++obj-$(CONFIG_SIPHASH_KUNIT_TEST) += siphash_kunit.o
++obj-$(CONFIG_SLUB_KUNIT_TEST) += slub_kunit.o
++obj-$(CONFIG_TEST_SORT) += test_sort.o
++CFLAGS_stackinit_kunit.o += $(call cc-disable-warning, switch-unreachable)
++obj-$(CONFIG_STACKINIT_KUNIT_TEST) += stackinit_kunit.o
++obj-$(CONFIG_STRING_KUNIT_TEST) += string_kunit.o
++obj-$(CONFIG_STRING_HELPERS_KUNIT_TEST) += string_helpers_kunit.o
++obj-$(CONFIG_USERCOPY_KUNIT_TEST) += usercopy_kunit.o
++
+diff --git a/lib/bitfield_kunit.c b/lib/tests/bitfield_kunit.c
+similarity index 100%
+rename from lib/bitfield_kunit.c
+rename to lib/tests/bitfield_kunit.c
+diff --git a/lib/checksum_kunit.c b/lib/tests/checksum_kunit.c
+similarity index 100%
+rename from lib/checksum_kunit.c
+rename to lib/tests/checksum_kunit.c
+diff --git a/lib/cmdline_kunit.c b/lib/tests/cmdline_kunit.c
+similarity index 100%
+rename from lib/cmdline_kunit.c
+rename to lib/tests/cmdline_kunit.c
+diff --git a/lib/cpumask_kunit.c b/lib/tests/cpumask_kunit.c
+similarity index 100%
+rename from lib/cpumask_kunit.c
+rename to lib/tests/cpumask_kunit.c
+diff --git a/lib/fortify_kunit.c b/lib/tests/fortify_kunit.c
+similarity index 100%
+rename from lib/fortify_kunit.c
+rename to lib/tests/fortify_kunit.c
+diff --git a/lib/hashtable_test.c b/lib/tests/hashtable_test.c
+similarity index 100%
+rename from lib/hashtable_test.c
+rename to lib/tests/hashtable_test.c
+diff --git a/lib/is_signed_type_kunit.c b/lib/tests/is_signed_type_kunit.c
+similarity index 100%
+rename from lib/is_signed_type_kunit.c
+rename to lib/tests/is_signed_type_kunit.c
+diff --git a/lib/kunit_iov_iter.c b/lib/tests/kunit_iov_iter.c
+similarity index 100%
+rename from lib/kunit_iov_iter.c
+rename to lib/tests/kunit_iov_iter.c
+diff --git a/lib/list-test.c b/lib/tests/list-test.c
+similarity index 100%
+rename from lib/list-test.c
+rename to lib/tests/list-test.c
+diff --git a/lib/memcpy_kunit.c b/lib/tests/memcpy_kunit.c
+similarity index 100%
+rename from lib/memcpy_kunit.c
+rename to lib/tests/memcpy_kunit.c
+diff --git a/lib/overflow_kunit.c b/lib/tests/overflow_kunit.c
+similarity index 100%
+rename from lib/overflow_kunit.c
+rename to lib/tests/overflow_kunit.c
+diff --git a/lib/siphash_kunit.c b/lib/tests/siphash_kunit.c
+similarity index 100%
+rename from lib/siphash_kunit.c
+rename to lib/tests/siphash_kunit.c
+diff --git a/lib/slub_kunit.c b/lib/tests/slub_kunit.c
+similarity index 100%
+rename from lib/slub_kunit.c
+rename to lib/tests/slub_kunit.c
+diff --git a/lib/stackinit_kunit.c b/lib/tests/stackinit_kunit.c
+similarity index 100%
+rename from lib/stackinit_kunit.c
+rename to lib/tests/stackinit_kunit.c
+diff --git a/lib/string_helpers_kunit.c b/lib/tests/string_helpers_kunit.c
+similarity index 100%
+rename from lib/string_helpers_kunit.c
+rename to lib/tests/string_helpers_kunit.c
+diff --git a/lib/string_kunit.c b/lib/tests/string_kunit.c
+similarity index 100%
+rename from lib/string_kunit.c
+rename to lib/tests/string_kunit.c
+diff --git a/lib/test_bits.c b/lib/tests/test_bits.c
+similarity index 100%
+rename from lib/test_bits.c
+rename to lib/tests/test_bits.c
+diff --git a/lib/test_fprobe.c b/lib/tests/test_fprobe.c
+similarity index 100%
+rename from lib/test_fprobe.c
+rename to lib/tests/test_fprobe.c
+diff --git a/lib/test_hash.c b/lib/tests/test_hash.c
+similarity index 100%
+rename from lib/test_hash.c
+rename to lib/tests/test_hash.c
+diff --git a/lib/test_kprobes.c b/lib/tests/test_kprobes.c
+similarity index 100%
+rename from lib/test_kprobes.c
+rename to lib/tests/test_kprobes.c
+diff --git a/lib/test_linear_ranges.c b/lib/tests/test_linear_ranges.c
+similarity index 100%
+rename from lib/test_linear_ranges.c
+rename to lib/tests/test_linear_ranges.c
+diff --git a/lib/test_list_sort.c b/lib/tests/test_list_sort.c
+similarity index 100%
+rename from lib/test_list_sort.c
+rename to lib/tests/test_list_sort.c
+diff --git a/lib/test_sort.c b/lib/tests/test_sort.c
+similarity index 100%
+rename from lib/test_sort.c
+rename to lib/tests/test_sort.c
+diff --git a/lib/usercopy_kunit.c b/lib/tests/usercopy_kunit.c
+similarity index 100%
+rename from lib/usercopy_kunit.c
+rename to lib/tests/usercopy_kunit.c
+-- 
+2.47.0.rc1.288.g06298d1525-goog
+
