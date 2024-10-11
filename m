@@ -1,108 +1,153 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EC7318027;
-	Fri, 11 Oct 2024 16:22:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88D76198E7F;
+	Fri, 11 Oct 2024 16:29:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728663753; cv=none; b=C+isUq2YwbQTMy7Yv9dqsZpSPjbRCBQV2TYTRM2yaJZ9TG9pVNgb42eJnnXgAkiSIHn+BzWj+4v3dCl8HBfCY0vHXbkv1TJEs7OZNf7FgYVy91g/3jOmNwhJqDDAsCbm8lHQmsNYoo6mOhFf+YnlLrQMIPedmz/pjDlOxZYFATs=
+	t=1728664196; cv=none; b=NR+auKQyjdsXfWBdX56W5UXcP7TaYBylknQKsr4Ndbt7VQEA1uUdps0GkI1iA/jV9VSOg48evwOWvTq2UAp0UzFOnkXInCv6QzuC0/fAaihuCocAEvfEqmEhUJmL+3J3DuNuVSDoLXbz164v7/kMWigIy+fke9d2vlSEy4GNX/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728663753; c=relaxed/simple;
-	bh=TG4DIBFJ6ZIC+aXyEtgwbCfPgPi21gFjo4WUj0JAeOQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Jpq4NGktO/qpTeve9NV/epvtAs+8aw8CcLXrHdzy0rkk6jBlW4YEncoss60CMuRU0WoxmwQNtFcW9242zPiOgQeuSMqLxCt5D6iLLlvl2TpVmtPID3ZdLDeKH70KgUsMjFegpTTOtSFHDVEnbNv/GgMfuv0GSHj0w5cjTp1wyJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DnjQXIBr; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DnjQXIBr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5551C4AF09;
-	Fri, 11 Oct 2024 16:22:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728663752;
-	bh=TG4DIBFJ6ZIC+aXyEtgwbCfPgPi21gFjo4WUj0JAeOQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=DnjQXIBrSidi4KTELiz5a9eA4Kq7xjj8adjeIwGIsEO3abMXc6xg3mavQlKbqZ32F
-	 GC08kA0qZ80qQbUAbI5R0NdS3V8jgcI3PMXFc+jds9KQGD0pezh85XvMhdUAsd8J6U
-	 isjN+b0RMWkvhgy9JxWSiIaJCoNL5qm0vnZvcmCnO6KQfLaZ8pNkTAiahhbLcmo3He
-	 9ACRwr7xct3Pupi1NGtK7j+rcNt0oSZCV0C9gngk8ng8FEcNWI5geZ/NSb+AMpwJ+S
-	 rEfGyFLo6rFfeCHRzNHKc+zKAae0kPkoiQ8+Q1o/ie8Skn1U7o4EDszvBFa3+vVhhx
-	 f6LWQ9tu7pvuQ==
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-5398b589032so3766082e87.1;
-        Fri, 11 Oct 2024 09:22:32 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUIOWT9Wam8fGT+XfZNzfekPJd6jR2B5CxbFvBkzZAqAufjZskRLqVgT1OEifTPQwdvwU6DFcbCFZ70l2Tc@vger.kernel.org, AJvYcCVKgMU08sNkM/aFiN/Zjz2KMe5KX7uybXEnTPlwudmtj9WFQ/FU4LR5AlpTTUiZp5UJ0uaHKpKyJ2II7kxZA8Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YymVPGGaPphkBQd9KDv4Lt2qE1rkqV+yItcNfcjPAHX5z8jUoZE
-	Ro2QFlEShHMAkjPeD2Vm8n1NUUitluIFqFdrO//JImNGSfFmv7CvloK0bvJOh2qDgkCKoqYtHIF
-	PrJx5foc6FA7NNZaFixaZtPiAYzE=
-X-Google-Smtp-Source: AGHT+IGBOD0uUl8CedMLDxOB5/KToVFNZdHF5xOTUxlpBw5ZkSYEhpFQTRBX7XMrDHDJlR2zXYKCVujoVelgfIoWcEo=
-X-Received: by 2002:a05:6512:3d23:b0:536:a4f1:d214 with SMTP id
- 2adb3069b0e04-539e54e819cmr64561e87.19.1728663751143; Fri, 11 Oct 2024
- 09:22:31 -0700 (PDT)
+	s=arc-20240116; t=1728664196; c=relaxed/simple;
+	bh=OHfpANVKIkXv9Qk/1cy7qsMazgVUChxy23FTwYhATI0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TxDZ1t712xgD8JzZXW0Zd9m221xpJvJ6E9eKRqAmxiV9G0EVHRv/b73u7sNxcB4f/rukG/5PsKMf+Md6gJ6ICHOReFO8WeLZctAnKInfNztFpLLkgUg3O/MBnMLR/dOP84lOQcb7lHwRE+mhlbK3iFtRgMssSkAb+vZCKkzJG2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
+	by localhost (Postfix) with ESMTP id 4XQBt84GpQz9sPd;
+	Fri, 11 Oct 2024 18:29:52 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 4qjGBmMA-A0S; Fri, 11 Oct 2024 18:29:52 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4XQBt831N1z9rvV;
+	Fri, 11 Oct 2024 18:29:52 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 4E3668B7AD;
+	Fri, 11 Oct 2024 18:29:52 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id heUADXsmncDT; Fri, 11 Oct 2024 18:29:52 +0200 (CEST)
+Received: from [192.168.232.203] (unknown [192.168.232.203])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id AF6E68B79E;
+	Fri, 11 Oct 2024 18:29:50 +0200 (CEST)
+Message-ID: <600a11af-cf42-45d9-9be8-b7066d90c89f@csgroup.eu>
+Date: Fri, 11 Oct 2024 18:29:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241010122801.1321976-7-ardb+git@google.com> <20241010122801.1321976-12-ardb+git@google.com>
- <20241010203401.45ds362dpx52ne5z@treble> <CAMj1kXF_-wSM-rmxS5C_cG-srdUgzKQsSGxp54pZ4pMhXeNsfg@mail.gmail.com>
- <20241011160445.7clmhtgywqmkuh4u@treble>
-In-Reply-To: <20241011160445.7clmhtgywqmkuh4u@treble>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Fri, 11 Oct 2024 18:22:19 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXEEYxDEJouXOHHUnGwOcGWc7c9HjNK=ubjvA2HMt9ONaA@mail.gmail.com>
-Message-ID: <CAMj1kXEEYxDEJouXOHHUnGwOcGWc7c9HjNK=ubjvA2HMt9ONaA@mail.gmail.com>
-Subject: Re: [PATCH v2 5/5] crypto: x86/crc32c - Tweak jump table to validate
- objtool logic
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
-	keescook@chromium.org, linux-hardening@vger.kernel.org, nathan@kernel.org, 
-	Peter Zijlstra <peterz@infradead.org>, Jan Beulich <jbeulich@suse.com>, 
-	"Jose E. Marchesi" <jemarch@gnu.org>, Kees Cook <kees@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/6] lib: Move KUnit tests into tests/ subdirectory
+To: Andy Shevchenko <andy.shevchenko@gmail.com>,
+ Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Andy Shevchenko <andy@kernel.org>, David Gow <davidgow@google.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Shuah Khan <skhan@linuxfoundation.org>,
+ Brendan Higgins <brendanhiggins@google.com>, Rae Moar <rmoar@google.com>,
+ Kees Cook <kees@kernel.org>, linux-kselftest@vger.kernel.org,
+ kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+ Stephen Rothwell <sfr@canb.auug.org.au>, Yury Norov <yury.norov@gmail.com>,
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+ "Jason A . Donenfeld" <Jason@zx2c4.com>,
+ "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
+ Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+ "David S . Miller" <davem@davemloft.net>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Mark Brown <broonie@kernel.org>,
+ linux-hardening@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ Palmer Dabbelt <palmer@rivosinc.com>, Charlie Jenkins
+ <charlie@rivosinc.com>, Simon Horman <horms@kernel.org>,
+ Jakub Kicinski <kuba@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+ Daniel Latypov <dlatypov@google.com>, Guenter Roeck <linux@roeck-us.net>,
+ David Howells <dhowells@redhat.com>, =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?=
+ <mic@digikod.net>, Marco Elver <elver@google.com>,
+ Mark Rutland <mark.rutland@arm.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Vlastimil Babka <vbabka@suse.cz>, Nathan Chancellor <nathan@kernel.org>,
+ Fangrui Song <maskray@google.com>,
+ "Steven Rostedt (Google)" <rostedt@goodmis.org>
+References: <20241011072509.3068328-2-davidgow@google.com>
+ <20241011072509.3068328-5-davidgow@google.com>
+ <ZwkBgkthcQM7rLl7@smile.fi.intel.com>
+ <CAMuHMdW=MF0H8YVuY6moLomTaxFEeCHgut1fruRGEkn79sbuTA@mail.gmail.com>
+ <ZwkuvKogPuik90fN@smile.fi.intel.com>
+ <CAMuHMdU_1oZEeJ5Onrbtx-iZjrK_bQ6YWNMdRYp-E1_5E7rMSQ@mail.gmail.com>
+ <CAHp75Vecwe_LaSKSprwfrdpDhoJbXgajQUVY23L+VyGoxtGH7A@mail.gmail.com>
+Content-Language: fr-FR
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+In-Reply-To: <CAHp75Vecwe_LaSKSprwfrdpDhoJbXgajQUVY23L+VyGoxtGH7A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, 11 Oct 2024 at 18:05, Josh Poimboeuf <jpoimboe@kernel.org> wrote:
->
-> On Fri, Oct 11, 2024 at 08:32:33AM +0200, Ard Biesheuvel wrote:
-> > On Thu, 10 Oct 2024 at 22:34, Josh Poimboeuf <jpoimboe@kernel.org> wrote:
-> > >
-> > > On Thu, Oct 10, 2024 at 02:28:07PM +0200, Ard Biesheuvel wrote:
-> > > > From: Ard Biesheuvel <ardb@kernel.org>
-> > > >
-> > > > Tweak the jump table so
-> > > > - the address is taken far way from its use
-> > > > - its offset from the start of .rodata is != 0x0
-> > > > - its type is STT_OBJECT and its size is set to the size of the actual
-> > > >   table
-> > > > - the indirect jump is annotated with a R_X86_64_NONE relocation
-> > > >   pointing to the jump table
-> > > >
-> > > > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> > >
-> > > This needs more "why", I assume the goals are to add the annotations +
-> > > confuse objtool if it doesn't read them properly?
-> > >
-> >
-> > As presented, this is just a vehicle to test the other changes in the
-> > series. That is why I split it off from the previous one.
-> >
-> > Whether or not we want this code in the tree is up for debate, but I
-> > guess it could be useful as a canary for objtool, given that most
-> > configs now disable jump tables entirely.
->
-> The annotations are definitely needed since that's the future of jump
-> table handling.
->
 
-Yeah, I'll split those off
 
-> The rest of the changes aren't worth the effort IMO.  In general we
-> don't compromise code quality to make objtool happy.
->
-> And "unit test for deprecated jump table detection" is even less of a
-> justification than would be something like "objtool can't otherwise
-> follow the code".
->
+Le 11/10/2024 à 17:21, Andy Shevchenko a écrit :
+> [Vous ne recevez pas souvent de courriers de andy.shevchenko@gmail.com. Découvrez pourquoi ceci est important à https://aka.ms/LearnAboutSenderIdentification ]
+> 
+> On Fri, Oct 11, 2024 at 5:20 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>> On Fri, Oct 11, 2024 at 3:57 PM Andy Shevchenko <andy@kernel.org> wrote:
+>>> On Fri, Oct 11, 2024 at 03:38:00PM +0200, Geert Uytterhoeven wrote:
+>>>> On Fri, Oct 11, 2024 at 12:44 PM Andy Shevchenko <andy@kernel.org> wrote:
+>>>>> On Fri, Oct 11, 2024 at 03:25:07PM +0800, David Gow wrote:
+> 
+> ...
+> 
+>>>>>>   rename lib/{ => tests}/bitfield_kunit.c (100%)
+>>>>>>   rename lib/{ => tests}/checksum_kunit.c (100%)
+>>>>>>   rename lib/{ => tests}/cmdline_kunit.c (100%)
+>>>>>>   rename lib/{ => tests}/cpumask_kunit.c (100%)
+>>>>>>   rename lib/{ => tests}/fortify_kunit.c (100%)
+>>>>>>   rename lib/{ => tests}/hashtable_test.c (100%)
+>>>>>>   rename lib/{ => tests}/is_signed_type_kunit.c (100%)
+>>>>>>   rename lib/{ => tests}/kunit_iov_iter.c (100%)
+>>>>>>   rename lib/{ => tests}/list-test.c (100%)
+>>>>>>   rename lib/{ => tests}/memcpy_kunit.c (100%)
+>>>>>>   rename lib/{ => tests}/overflow_kunit.c (100%)
+>>>>>>   rename lib/{ => tests}/siphash_kunit.c (100%)
+>>>>>>   rename lib/{ => tests}/slub_kunit.c (100%)
+>>>>>>   rename lib/{ => tests}/stackinit_kunit.c (100%)
+>>>>>>   rename lib/{ => tests}/string_helpers_kunit.c (100%)
+>>>>>>   rename lib/{ => tests}/string_kunit.c (100%)
+>>>>>>   rename lib/{ => tests}/test_bits.c (100%)
+>>>>>>   rename lib/{ => tests}/test_fprobe.c (100%)
+>>>>>>   rename lib/{ => tests}/test_hash.c (100%)
+>>>>>>   rename lib/{ => tests}/test_kprobes.c (100%)
+>>>>>>   rename lib/{ => tests}/test_linear_ranges.c (100%)
+>>>>>>   rename lib/{ => tests}/test_list_sort.c (100%)
+>>>>>>   rename lib/{ => tests}/test_sort.c (100%)
+>>>>>>   rename lib/{ => tests}/usercopy_kunit.c (100%)
+>>>>>
+>>>>> While I support the idea, I think this adds an additional churn in creating a
+>>>>> duplicate 'test' in the filenames. Why they all can't be cut while removing?
+>>>>> (at least this question is not answered in the commit message)
+>>>>
+>>>> To avoid duplicate *.ko file names?
+>>>
+>>> With what? Sorry, but I don't see how it's a problem. These are test cases.
+>>> Do they use kernel command line parameters? If so, shouldn't KUnit take care
+>>> about it in a more proper way?
+>>
+>> If .e.g. lib/list_sort.o could be modular, its module would be called
+>> "list_sort.ko", conflicting with the "list_sort.ko" test module.
 
-No, quite the opposite - the changes will confuse objtool and so it
-will only work correctly if the annotation is provided. That was the
-point of this patch, but as I said, I never intended those changes to
-be merged.
+But as it is now in lib/tests/, the module will also be installed in 
+tests/ subdir, so it shouldn't clash anymore ?
+
+You'd have:
+
+/lib/modules/lib/list_sort.ko and
+/lib/modules/lib/tests/list_sort.ko
+
+Or did I miss something ?
+> 
+> Can't this be solved by automatically adding a prefix in Makefile for
+> kunit tests, for example?
+> 
+> --
+> With Best Regards,
+> Andy Shevchenko
