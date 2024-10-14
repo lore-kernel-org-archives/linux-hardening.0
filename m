@@ -1,65 +1,75 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CF434683;
-	Mon, 14 Oct 2024 21:17:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97528156872;
+	Mon, 14 Oct 2024 21:31:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728940677; cv=none; b=V2aidpCVnbcg1WZp+ZYQfhvKX5hQnJyqil9ByN8CBum5ej+PTgHcNqplUQ0Z2YczvAMySCULMsEqI+IDs2uv+/AMro+63ZZ8/AcQGUld2m8+yGnEK1ny/1Vc1+c5mrBpk5Oj6L4nQY3tQmWZebhkPQO2464FYnnfXNV/rT8oTPw=
+	t=1728941492; cv=none; b=rrvdbRSPUgKQdkTh8571yAeZBsg+WRjoH3C3l993iJiUT1ZbZjmL7kU6MuPZh5Rs72UxbA2VPd+hhJMHY6waJoeTLlnT2P8LYHIaJvwyp7OI7Ui2fP3XTK/S1ziKlTmWZMFye4Aj4QPjIn6pa0pTTtATcBfigShG4YnXvsMTdIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728940677; c=relaxed/simple;
-	bh=fkA301EFhqYG3hUeWKpkodiMce8uxLv2tFX4uj6cbOk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YJamwijmKyPmjr6IhBJf2d3eQcsTToRKEAh2oNXeHp7L1tES7bM06S4tk35+1CdQu9hqp8dvqsYEb4B3N/puTZ9/d6Areu0UwwwREhVBrHY9ewr5OFwNk7SqN0Guu1HPtr5MKzuOlIvs/CAJ6Qk9lFmXvQzD0XMpA4ksVebShkg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=doARJRaY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1728941492; c=relaxed/simple;
+	bh=EgMQlfc0cmrFZVzE8nyOZnscIVnJZk6lOm9VCl01x7w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Kuj8Z5srRbOzxrLf4AbwlIrQ1Yguc+VmaYd6SfNcj1q5xoHY7FvtSFRCv4Sm5mYFGq5pNZwNnBsejNauO9aewGdPDz/l3JSd9UbDPRWSmrjb44ahZn8bwdFChNjKf5WDpTqhQxj09IRM5oYZVzWM3CAqfH3ZqLlF7RAUPqOTqkc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hgd+oAMG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="doARJRaY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40E98C4CEC3;
-	Mon, 14 Oct 2024 21:17:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hgd+oAMG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C263C4CEC3;
+	Mon, 14 Oct 2024 21:31:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728940677;
-	bh=fkA301EFhqYG3hUeWKpkodiMce8uxLv2tFX4uj6cbOk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=doARJRaYmlM3mH2FxYPQIo4MYZj5hJU1r5RJm9YJEqiSmUt1KuoPGoNM7CH0j3TLk
-	 bdidvGG6vIROUwvqJ/iiX1bzrP/7eFHhSGtROzfP3oaQfWaHK0XLy3x7/17XWhVGyI
-	 Tk8PuIllr2/oeRaGBHjnsF5x+JDTMnrgSeBisCttE9SUEVR2YQ5ZgUtovvLEaVjSCC
-	 noyw+zfe6d+gBU+aSAzawIVzXgprkSk+4slPLyUjKSW2forpUhf0gobUO/MTtIjahb
-	 ZOhYVzpZ+IdsprH/ix+NfkU1h+1hAvmPPirci9H7JClhx2BkPTnW+RpXVm4yUGbv43
-	 BEwKQjdIz/OUA==
+	s=k20201202; t=1728941492;
+	bh=EgMQlfc0cmrFZVzE8nyOZnscIVnJZk6lOm9VCl01x7w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hgd+oAMGq93Ttuj7W2ajGu3dzQ2KxgauThHh5ERDQah5zBX7eHC4JRNlV+bf0bmdK
+	 mW54ynU//45aGK2pJw4mXWLkBWJ0pt1bsOXztxkelP+9/AyjSZNlXhnfjfcz7y5t3g
+	 vOYjZEZYnaWfQLT0YJUBB9IPv2XC5eLoJSX0D7ZJFCmHdlPHXSkSVlbaSxFLu1HHb0
+	 b5oQJly/RtrhQIjrbC6u6Yl0FMeeqOYIB4K8OSgQRjgbBn/2QSP8AQWhfnyKm9wNd/
+	 h+tTQMfcm3UNYXkiJ01EZ000u9JpzbNHA6Ke68fBeRFYXWOWdPjkek7BQqWpwJttYx
+	 nGhimkwCOC03Q==
+Date: Mon, 14 Oct 2024 14:31:29 -0700
 From: Kees Cook <kees@kernel.org>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Thorsten Blum <thorsten.blum@linux.dev>
-Cc: Kees Cook <kees@kernel.org>,
-	linux-kernel@vger.kernel.org,
+To: Justin Stitt <justinstitt@google.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: Re: [RESEND PATCH] MAINTAINERS: Add kernel hardening keywords __counted_by{_le|_be}
-Date: Mon, 14 Oct 2024 14:17:52 -0700
-Message-Id: <172894067003.238908.8297424817395383569.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20241007114935.1647-2-thorsten.blum@linux.dev>
-References: <20241007114935.1647-2-thorsten.blum@linux.dev>
+Subject: Re: [PATCH v2] tracing: replace multiple deprecated strncpy with
+ memcpy
+Message-ID: <202410141423.2C30F35EE0@keescook>
+References: <20241014-strncpy-kernel-trace-trace_events_filter-c-v2-1-d821e81e371e@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241014-strncpy-kernel-trace-trace_events_filter-c-v2-1-d821e81e371e@google.com>
 
-On Mon, 07 Oct 2024 13:49:36 +0200, Thorsten Blum wrote:
-> In addition to __counted_by, also match the keywords __counted_by_le and
-> __counted_by_be.
+On Mon, Oct 14, 2024 at 02:13:14PM -0700, Justin Stitt wrote:
+> strncpy() is deprecated for use on NUL-terminated destination strings [1] and
+> as such we should prefer more robust and less ambiguous string interfaces.
 > 
+> String copy operations involving manual pointer offset and length
+> calculations followed by explicit NUL-byte assignments are best changed
+> to either strscpy or memcpy.
 > 
+> strscpy is not a drop-in replacement as @len would need a one subtracted
+> from it to avoid truncating the source string.
+> 
+> To not sabotage readability of the current code, use memcpy (retaining
+> the manual NUL assignment) as this unambiguously describes the desired
+> behavior.
 
-Applied to for-next/hardening, thanks!
+We know the destination must have a NUL-terminated string. Is the src
+NUL terminated? Looking at parse_pred(), it seems like no? And we can't
+use memtostr_pad() here because the source buffer size isn't known at
+compile time. Okay then. And there are no NUL bytes in the "str + s"
+span, so yeah, it looks like memcpy() is best.
 
-[1/1] MAINTAINERS: Add kernel hardening keywords __counted_by{_le|_be}
-      https://git.kernel.org/kees/c/0838c9ca0d76
-
-Take care,
+Reviewed-by: Kees Cook <kees@kernel.org>
 
 -- 
 Kees Cook
-
