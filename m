@@ -1,75 +1,249 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97528156872;
-	Mon, 14 Oct 2024 21:31:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E899915575E
+	for <linux-hardening@vger.kernel.org>; Mon, 14 Oct 2024 21:39:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728941492; cv=none; b=rrvdbRSPUgKQdkTh8571yAeZBsg+WRjoH3C3l993iJiUT1ZbZjmL7kU6MuPZh5Rs72UxbA2VPd+hhJMHY6waJoeTLlnT2P8LYHIaJvwyp7OI7Ui2fP3XTK/S1ziKlTmWZMFye4Aj4QPjIn6pa0pTTtATcBfigShG4YnXvsMTdIo=
+	t=1728941987; cv=none; b=Xh97MKwR0kL6x0reqdJ4FhrqGNJb/0LK54Jtw5sA+hODmidoxsssknVCldaQF60vRufF4scXFBWFCz7m0I4n5vPkz2edywKBZnEnaY7PmqT5fdRKYgGcrxLGaOagRgyBagsTALA6Sr2ZKXsnLdtTo54NTMqisLbxvQMk/oOd7MQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728941492; c=relaxed/simple;
-	bh=EgMQlfc0cmrFZVzE8nyOZnscIVnJZk6lOm9VCl01x7w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Kuj8Z5srRbOzxrLf4AbwlIrQ1Yguc+VmaYd6SfNcj1q5xoHY7FvtSFRCv4Sm5mYFGq5pNZwNnBsejNauO9aewGdPDz/l3JSd9UbDPRWSmrjb44ahZn8bwdFChNjKf5WDpTqhQxj09IRM5oYZVzWM3CAqfH3ZqLlF7RAUPqOTqkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hgd+oAMG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1728941987; c=relaxed/simple;
+	bh=N4ubeMxtZYY3hoTRTFgbOjAyVC5gCI706GptvR2plVE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bBGhU/u27NZRdH9WtHLiFlW971QTghfjzOYpWEjYSx78AxsbPFCvOhBcUeNiINmaSjBHneZKorHHe4FISBOviVTzOo6RsXF+phfAUiDkdbrijix1whB5cSGJL8WP5nPDwemIops+9XhhaDcjwhseg8SknTDvNWC/O9ZZjwJPqFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3LEmWi6K; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hgd+oAMG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C263C4CEC3;
-	Mon, 14 Oct 2024 21:31:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728941492;
-	bh=EgMQlfc0cmrFZVzE8nyOZnscIVnJZk6lOm9VCl01x7w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hgd+oAMGq93Ttuj7W2ajGu3dzQ2KxgauThHh5ERDQah5zBX7eHC4JRNlV+bf0bmdK
-	 mW54ynU//45aGK2pJw4mXWLkBWJ0pt1bsOXztxkelP+9/AyjSZNlXhnfjfcz7y5t3g
-	 vOYjZEZYnaWfQLT0YJUBB9IPv2XC5eLoJSX0D7ZJFCmHdlPHXSkSVlbaSxFLu1HHb0
-	 b5oQJly/RtrhQIjrbC6u6Yl0FMeeqOYIB4K8OSgQRjgbBn/2QSP8AQWhfnyKm9wNd/
-	 h+tTQMfcm3UNYXkiJ01EZ000u9JpzbNHA6Ke68fBeRFYXWOWdPjkek7BQqWpwJttYx
-	 nGhimkwCOC03Q==
-Date: Mon, 14 Oct 2024 14:31:29 -0700
-From: Kees Cook <kees@kernel.org>
-To: Justin Stitt <justinstitt@google.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] tracing: replace multiple deprecated strncpy with
- memcpy
-Message-ID: <202410141423.2C30F35EE0@keescook>
-References: <20241014-strncpy-kernel-trace-trace_events_filter-c-v2-1-d821e81e371e@google.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3LEmWi6K"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a99b1f43aceso667063666b.0
+        for <linux-hardening@vger.kernel.org>; Mon, 14 Oct 2024 14:39:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1728941984; x=1729546784; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9csY8Ut29tVJGEmLpxfSFZpuKt+NBF5m2ROuPwTQCh4=;
+        b=3LEmWi6K1eY3vNA3/AhfRVMD3UNv9cvK7yAxSPZNhuQAyy8KBc6lPl7l/8vCz529aC
+         So5XuMVe8j3XvyX1wcZKtFHTHitW94D861hr9BMz+tz1WO/345NG8byIZNHs6YiXrGUt
+         oc0Sl4Elm1U0gWSbiJBzHug20B2nOUmsh1eNJFbulcerl+NE11+jHZyfhrMRojii8Xga
+         uogPedcgjGYyKYU9hzyO8kYWYj/zziKhrHjWZIPvFkEQ7ML/yPLJDzmo9cyIcjj/ElDm
+         BsVwtUU9Y3nL6gGOklGqwvue/CvzHh1GM1KMQexto/zZ7BqctW3WcBXcGn3f87ty62aF
+         JFtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728941984; x=1729546784;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9csY8Ut29tVJGEmLpxfSFZpuKt+NBF5m2ROuPwTQCh4=;
+        b=vkKTOh3BCqlja8iNDtS92+av2gLzZVd9B1+qpTr7jwfBdQY1u3q75xSRIsRoMzxqQi
+         GtC6Hun3rwk3DirhPtpyy+IP7F7VqfgrsHMTdnfrEJc8Fd5nKKYY3EoXl8n0CkiQ6WOI
+         7izRExHZj4F4SdI8zZjZDiq8byJiBvRuI6M1rWkieV8HFRuuaOmZkH5JWWtxPP50k+MB
+         keAKr2StajTLS5kuSb1848FJMyyWuS1bc1A6u6VRXmOBwzuAn+ONOHUCqVFpH/Cwg9pw
+         fp8B6A1b93urvwWo0fKrQOzUPLXj1UEcUAMCXoO+fwAtmFY/fYeVzMiubFEa1tn6wb6O
+         Pl8A==
+X-Forwarded-Encrypted: i=1; AJvYcCVzfsowVmeYpWEpSqoTPnqhoVWbP1C82TwWiGl0gtjpbuGgGGmPc3RAO/EYhehgHegU4jmisnjtixB27FDNYHY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGDUFuTlGnSIfzbzdUdV/HVwZsakAWHFZ17P+vgE75rCod3/At
+	HY2yWCeF+sU7Oc0elXmUJKBBvvc1b9QWQzbmM03+aC2ZfzdE+Hp9jhm28K5d64FlOukUrW9UArB
+	eiP16XnVJxc+4Wi4s3qvATqdw8SLYL0NJPK4=
+X-Google-Smtp-Source: AGHT+IFezu5CuG2wy6vTwMe51sB4ras/WO24nsNQmzs/ECPU2E5UBEHIWzUwNkN76hqWAt+exwA5Vo+oEQmkGwO5hUQ=
+X-Received: by 2002:a17:907:7ba9:b0:a99:4566:cd42 with SMTP id
+ a640c23a62f3a-a99a0d092efmr1482503866b.0.1728941984105; Mon, 14 Oct 2024
+ 14:39:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241014-strncpy-kernel-trace-trace_events_filter-c-v2-1-d821e81e371e@google.com>
+References: <3E304FB2-799D-478F-889A-CDFC1A52DCD8@toblux.com>
+ <A499F119-5F0C-43FC-9058-7AB92057F9B3@toblux.com> <Zvg-mDsvvOueGpzs@archlinux>
+ <202409281331.1F04259@keescook> <21D2A2BB-F442-480D-8B66-229E8C4A63D3@toblux.com>
+ <Zv6BEO-1Y0oJ3krr@archlinux> <E8E64A72-3C1C-40D2-9F07-415F6B8F476E@toblux.com>
+ <Zv61dCaxScXuOjZg@archlinux> <202410031424.45E5D19@keescook>
+ <Zv8RIs-htdc-PtXB@archlinux> <202410040958.C19D3B9E48@keescook>
+In-Reply-To: <202410040958.C19D3B9E48@keescook>
+From: Bill Wendling <morbo@google.com>
+Date: Mon, 14 Oct 2024 14:39:26 -0700
+Message-ID: <CAGG=3QWw40ARPp9nPT5QEgkKMZ0i_Un_BBT7Th0nruizCRORtw@mail.gmail.com>
+Subject: Re: [REGRESSION][BISECTED] erroneous buffer overflow detected in bch2_xattr_validate
+To: Kees Cook <kees@kernel.org>
+Cc: Jan Hendrik Farr <kernel@jfarr.cc>, Thorsten Blum <thorsten.blum@toblux.com>, kent.overstreet@linux.dev, 
+	regressions@lists.linux.dev, linux-bcachefs@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	ardb@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Oct 14, 2024 at 02:13:14PM -0700, Justin Stitt wrote:
-> strncpy() is deprecated for use on NUL-terminated destination strings [1] and
-> as such we should prefer more robust and less ambiguous string interfaces.
-> 
-> String copy operations involving manual pointer offset and length
-> calculations followed by explicit NUL-byte assignments are best changed
-> to either strscpy or memcpy.
-> 
-> strscpy is not a drop-in replacement as @len would need a one subtracted
-> from it to avoid truncating the source string.
-> 
-> To not sabotage readability of the current code, use memcpy (retaining
-> the manual NUL assignment) as this unambiguously describes the desired
-> behavior.
+On Fri, Oct 4, 2024 at 10:13=E2=80=AFAM Kees Cook <kees@kernel.org> wrote:
+> On Thu, Oct 03, 2024 at 11:48:18PM +0200, Jan Hendrik Farr wrote:
+> > On 03 14:28:01, Kees Cook wrote:
+> > > On Thu, Oct 03, 2024 at 05:17:08PM +0200, Jan Hendrik Farr wrote:
+> > > > gcc currently says that the __bdos of struct containing a flexible =
+array
+> > > > member is:
+> > > >
+> > > > sizeof(<whole struct>) + sizeof(<flexible array element>) * <count>
+> > > >
+> > > > clang however does the following:
+> > > >
+> > > > max(sizeof(<whole struct>), offsetof(<flexible array member>) + siz=
+eof(<flexible array element>) * <count>)
+> > >
+> > > Clang's calculation seems very wrong. I would expect it to match GCC'=
+s.
+> > >
+> >
+> > I was on the very same train of thought, but I have since changed my
+> > mind a bit. A struct containing a flexible array member can be allocate=
+d in
+> > two ways:
+> >
+> > (1):
+> >
+> > struct posix_acl *acl =3D malloc(sizeof(struct posix_acl) + sizeof(stru=
+ct posix_acl_entry) * 1);
+> > acl.a_count =3D 1;
+> >
+> > or (2):
+> >
+> > struct posix_acl *acl =3D malloc(offsetof(struct posix_acl, a_entries) =
++ sizeof(struct posix_acl_entry) * 1);
+> > acl.a_count =3D 1;
+> >
+> > Both are valid ways to allocate it. __bdos does not know which of these
+> > methods was used to allocate the struct whose size it has to determine,
+> > so it's giving the lower bound that doesn't include the (potential)
+> > padding at the end.
+>
+Slightly off topic: while I was looking at the definition for
+struct_size, I noticed this:
 
-We know the destination must have a NUL-terminated string. Is the src
-NUL terminated? Looking at parse_pred(), it seems like no? And we can't
-use memtostr_pad() here because the source buffer size isn't known at
-compile time. Okay then. And there are no NUL bytes in the "str + s"
-span, so yeah, it looks like memcpy() is best.
+#define flex_array_size(p, member, count)                               \
+        __builtin_choose_expr(__is_constexpr(count),                    \
+                (count) * sizeof(*(p)->member) +
+__must_be_array((p)->member),  \
+                size_mul(count, sizeof(*(p)->member) +
+__must_be_array((p)->member)))
 
-Reviewed-by: Kees Cook <kees@kernel.org>
+In particular the 'size_mul' line. I realize that '__must_be_array'
+will return a '0' or static compiler error, but it seems inconsistent
+that it's included as part of 'size_mul'. Maybe something like this
+instead (notice the parens on the last line)?
 
--- 
-Kees Cook
+#define flex_array_size(p, member, count)                               \
+        __builtin_choose_expr(__is_constexpr(count),                    \
+                (count) * sizeof(*(p)->member) +
+__must_be_array((p)->member),  \
+                size_mul(count, sizeof(*(p)->member)) +
+__must_be_array((p)->member))
+
+
+> I want to separate several easily confused issues. Instead of just
+> saying __bdos, let's clearly refer to what calculation within bdos is
+> being used. There are 3 choices currently:
+> - alloc_size attribute
+> - counted_by attribute
+> - fallback to __bos (which is similar to sizeof(), except that FAMs are 0=
+ sized)
+>
+> Additionally there are (for all intents and purposes) 2 size
+> determinations to be made by __bos and __bdos, via argument 2:
+> - containing object size (type 0) ("maximum size")
+> - specific object size (type 1) ("minimum size")
+>
+> For example, consider:
+>
+> struct posix_acl *acl =3D malloc(1024);
+> acl->a_count =3D 1;
+>
+> what should these return:
+>
+>         __bos(acl, 0)
+>         __bos(acl, 1)
+>         __bdos(acl, 0)
+>         __bdos(acl, 1)
+>         __bos(acl->a_entries, 0)
+>         __bos(acl->a_entries, 1)
+>         __bdos(acl->a_entries, 0)
+>         __bdos(acl->a_entries, 1)
+>
+> > So it comes down to false positives vs false negatives...
+> > More details here:
+> > https://github.com/llvm/llvm-project/pull/111015
+> >
+> > Clangs current behavior would essentially force kernel code to always
+> > assume option (2) is used. So
+> >
+> > struct posix_acl *
+> > posix_acl_clone(const struct posix_acl *acl, gfp_t flags)
+> > {
+> >       struct posix_acl *clone =3D NULL;
+> >
+> >       if (acl) {
+> >               int size =3D sizeof(struct posix_acl) + acl->a_count *
+> >                          sizeof(struct posix_acl_entry);
+> >               clone =3D kmemdup(acl, size, flags);
+> >               if (clone)
+> >                       refcount_set(&clone->a_refcount, 1);
+> >       }
+> >       return clone;
+> > }
+> > EXPORT_SYMBOL_GPL(posix_acl_clone);
+> >
+> > from linux/fs/posix_acl.c would have to turn into something like:
+> >
+> > struct posix_acl *
+> > posix_acl_clone(const struct posix_acl *acl, gfp_t flags)
+> > {
+> >       struct posix_acl *clone =3D NULL;
+> >
+> >       if (acl) {
+> >               int size =3D offsetof(struct posix_acl, a_entries) + acl-=
+>a_count *
+> >                          sizeof(struct posix_acl_entry);
+> >               clone =3D kmemdup(acl, size, flags);
+> >               if (clone)
+> >                       refcount_set(&clone->a_refcount, 1);
+> >       }
+> >       return clone;
+> > }
+> > EXPORT_SYMBOL_GPL(posix_acl_clone);
+> >
+> > Which is actually safer, because can you actually be sure this posix_ac=
+l
+> > wasn't allocated using method (2)?
+>
+> First, this should not be using an open coded calculation at all; it
+> should use the struct_size() macro.
+>
+> Secondly, if we want to change struct_size(), then we must (via
+> allmodconfig builds) determine all the places in the kernel
+> where the calculated size changes, and audit those for safety.
+>
+> Right now, struct_size() over-estimates in the face of padding.
+>
+> We're already moving the kernel toward not even calling struct_size()
+> externally from the allocation, and instead using the it within the
+> allocation macros themselves:
+> https://lore.kernel.org/lkml/20240822231324.make.666-kees@kernel.org/
+>
+> > After looking at the assembly produced by gcc more, it actually looks
+> > like it's using the allocation size if it's known in the current contex=
+t
+> > (for example if the struct was just malloced in the same function)
+> > and otherwise returns INT_MAX for the __bdos of a struct containing a
+> > flexible array member. It's only returning the size based on the
+> > __counted_by attribute of you ask it for the __bdos of the flexible
+> > array member itself.
+>
+> Here is my test case for all the corner cases we've found so far:
+> https://github.com/kees/kernel-tools/blob/trunk/fortify/array-bounds.c
+>
+> I'd prefer we add cases there so we can all be talking about the same
+> things. :)
+>
+> -Kees
+>
+> --
+> Kees Cook
