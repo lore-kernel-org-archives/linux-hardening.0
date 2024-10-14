@@ -1,94 +1,62 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A497114A60F;
-	Mon, 14 Oct 2024 09:36:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 620BC4683;
+	Mon, 14 Oct 2024 20:59:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728898584; cv=none; b=JZhlx3HZ2QMDRM7DGE3IDSXLJcndEsMm03TmPD4Eq3yJcYNKzlYsBAJxRH98GWiQ1crOINYGZflkXikFhbIgW8cHGpoAcnE7pi4NxFL8RPEVWSVsY01ClkKGW5ixo7cRDIjbb7P9gHc+AQOwdQ3LsjmIi4vmiUBw87BVqX4DRz8=
+	t=1728939593; cv=none; b=AE+Sz/5aOFSZ5o+AICmt1DgKwzBsR0Q8IPgHB7PCWe93jcL7wzcB89e11b+XRoAVYH8XLIO3MmGFuVDndESb0yiSeHpoVnSGU2QgCT7wRzSDevtzqcJlzVmrKvMMO6d3Gv4BP59mXe+t/kAI9jMWX2whExm64eqz5veD4DmsWzo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728898584; c=relaxed/simple;
-	bh=qBsDQzAs7QP3X6cKNCdApLam/YNuSrGBVVymI8+/YI0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YxIIYOMzS128yBjSvvdeunuB0Uobe70HGZne3OuphLJk0Jtfvf83Wot6SNgxGHsmR8R25tAi/wRflvkw90Jjfwfba/8z+OQDQe1uON63WudPXQ78FzmNffLSBfYtRLashGBO9AZ58lOPlO+YMh/7SQH15GCZhWeUuvniAW1KO18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZZlqLdla; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1728939593; c=relaxed/simple;
+	bh=64JiN4LK453yYlyTEVc6A5l5hKQQdefneibH0xbetKs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Vmtu4wIMz9NZFmSUMDVHsYU7gcz9juVcbaBSkvdlMpPGZXShMx+b6lWzjMc1QdmUWHEZU/duO/ZAy+31FR37VxHEmXwAJcHG8wibWzYrgd5jjj0pv3EUQci5O25L4wB4gG2edd66nsXSNoSHqqgWfxYLq7cQu5p5/5DIKyJoybs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mSCe6BXM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZZlqLdla"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49524C4CEC3;
-	Mon, 14 Oct 2024 09:36:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mSCe6BXM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC7DBC4CEC3;
+	Mon, 14 Oct 2024 20:59:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728898584;
-	bh=qBsDQzAs7QP3X6cKNCdApLam/YNuSrGBVVymI8+/YI0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ZZlqLdlafNYwTQp3iI6kjWi2EgQo9Meag/2vRweHt4QP1snZ0W0Elr5wgiN4V+eEj
-	 qy6Hpp6Ditayif0vktZFh2pewpX/V7lBF+/TUzKpiyn2jJgNnwmD/JpcXnrBLTQXKM
-	 +ep1sq6jSo2Pia4oODy2Vhf5nwgbOIDIgz+JvUVujdVCjVnagGzZg7da9/HXPp36Uc
-	 h4teqzrRrPLRQRScFWwCzoPdw6aDnQF2dJYyoUFRxhHJmXJ8MwG9UeTF6i3jgjXzbi
-	 SE+JlhgpsqWKuGrJGJprdR75iIN7metAVc8dLRR0HddZp5EzgAm/SMlKRcced3a63e
-	 ghui9ZmMtkjfg==
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-539e690479cso1533499e87.3;
-        Mon, 14 Oct 2024 02:36:24 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVPrbMJpHijytl3NmLnHiNKMh0VzzoHTvVRms0iRmF7BCmUyig9gCopDPyy/HIETA2Rh3+NDNMxOURl9406bXY=@vger.kernel.org, AJvYcCWEDpy+KlwFffkb1aErAqHMz60TZnuqoCWw+c5zxoZH9DMmgRkT7kA/lnExQMVXtTT8GdmzVpjqEIa0Emcb@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRVDI626FL3yO1hFi0gbrL5pKz064Jv/r2COnA/cfbNXYWa8an
-	yVfzlvP/6pzFYkM6SDbywV29Aa4izUf85VEQpwyZAvCmZ40LSNPlhBfROWMGH4udmXeTnc0Aldb
-	ed6jfFtigxqHJXwI5vjnCJCNYKi8=
-X-Google-Smtp-Source: AGHT+IGt5EXUDsyicAY+SuCAlZVRwBl+6YpbpfCaQBaSxgEH6ByDW9QmHgxUn/tZZr9bNYXXcX0C91ipOf90HXHxHTA=
-X-Received: by 2002:ac2:4c46:0:b0:539:968a:91a8 with SMTP id
- 2adb3069b0e04-539e571da42mr3496869e87.47.1728898582693; Mon, 14 Oct 2024
- 02:36:22 -0700 (PDT)
+	s=k20201202; t=1728939592;
+	bh=64JiN4LK453yYlyTEVc6A5l5hKQQdefneibH0xbetKs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mSCe6BXMnOx7FDUAIn8waEDA/WZt0F1wrrmrxotrcoQ+Eyg/hRTEzeGtG+NKZSFQX
+	 puWljPl1Isas5r+5Cv8YIZO3n0+f1bfL3O7lRGIZz42fH7V0cTrExYPth1ffUUUD+M
+	 HbwyPa1zIg97TEW00vwiLhcnTIxAz14ItKdaF1/i0NHCfveeeJVMmlo63Ap+VZpsnQ
+	 UIt7jmU2zjB4+D+F8Oa8njSsjgNQKMImxNXQ+bPL+V0vRYAY79evESHTZx9TLNsgWL
+	 jdEX0FGsmFNRP98uo01EolcpbdvL++vW5jn9XnuHufSToJ+h56eOhaOCITj91MDU8n
+	 agHAGQmwowVlw==
+Date: Mon, 14 Oct 2024 13:59:49 -0700
+From: Kees Cook <kees@kernel.org>
+To: Ard Biesheuvel <ardb+git@google.com>
+Cc: x86@kernel.org, llvm@lists.linux.dev, linux-hardening@vger.kernel.org,
+	Ard Biesheuvel <ardb@kernel.org>, stable@vger.kernel.org,
+	Fangrui Song <i@maskray.me>, Brian Gerst <brgerst@gmail.com>,
+	Uros Bizjak <ubizjak@gmail.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCH v2] x86/stackprotector: Work around strict Clang TLS
+ symbol requirements
+Message-ID: <202410141357.3B2A71A340@keescook>
+References: <20241009124352.3105119-2-ardb+git@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241011170847.334429-10-ardb+git@google.com> <20241011170847.334429-16-ardb+git@google.com>
- <20241014042833.GA20015@sol.localdomain>
-In-Reply-To: <20241014042833.GA20015@sol.localdomain>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Mon, 14 Oct 2024 11:36:10 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXERhCiKMqCr7wCPitQCcPNj7uuEJsgC9jGxSdBWxAwqdg@mail.gmail.com>
-Message-ID: <CAMj1kXERhCiKMqCr7wCPitQCcPNj7uuEJsgC9jGxSdBWxAwqdg@mail.gmail.com>
-Subject: Re: [PATCH v3 6/8] crypto: x86/crc32c - Use idiomatic relative jump table
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
-	keescook@chromium.org, linux-hardening@vger.kernel.org, nathan@kernel.org, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Jan Beulich <jbeulich@suse.com>, "Jose E. Marchesi" <jemarch@gnu.org>, Kees Cook <kees@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241009124352.3105119-2-ardb+git@google.com>
 
-On Mon, 14 Oct 2024 at 06:28, Eric Biggers <ebiggers@kernel.org> wrote:
->
-> On Fri, Oct 11, 2024 at 07:08:54PM +0200, Ard Biesheuvel wrote:
-> > diff --git a/arch/x86/crypto/crc32c-pcl-intel-asm_64.S b/arch/x86/crypto/crc32c-pcl-intel-asm_64.S
-> > index bbcff1fb78cb..45b005935194 100644
-> > --- a/arch/x86/crypto/crc32c-pcl-intel-asm_64.S
-> > +++ b/arch/x86/crypto/crc32c-pcl-intel-asm_64.S
-> > @@ -53,7 +53,7 @@
-> >  .endm
-> >
-> >  .macro JMPTBL_ENTRY i
-> > -.quad .Lcrc_\i
-> > +.long .Lcrc_\i - jump_table
-> >  .endm
-> >
-> >  .macro JNC_LESS_THAN j
-> > @@ -169,7 +169,8 @@ SYM_FUNC_START(crc_pcl)
-> >
-> >       ## branch into array
-> >       leaq    jump_table(%rip), %bufp
-> > -     mov     (%bufp,%rax,8), %bufp
-> > +     movslq  (%bufp,%rax,4), len
-> > +     addq    len, %bufp
-> >       JMP_NOSPEC bufp
->
-> I think it would be much better to just get rid of the jump table here.
->
+On Wed, Oct 09, 2024 at 02:43:53PM +0200, Ard Biesheuvel wrote:
+> However, if a non-TLS definition of the symbol in question is visible in
+> the same compilation unit (which amounts to the whole of vmlinux if LTO
+> is enabled), it will drop the per-CPU prefix and emit a load from a
+> bogus address.
 
-Good point.
+I take this to mean that x86 32-bit kernels built with the stack
+protector and using Clang LTO will crash very quickly?
 
-> I have done this at
-> https://lore.kernel.org/linux-crypto/20241014042447.50197-4-ebiggers@kernel.org/
->
-
-I'll go and take a look - thanks.
+-- 
+Kees Cook
