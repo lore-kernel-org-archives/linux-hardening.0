@@ -1,123 +1,158 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5099E4683;
-	Mon, 14 Oct 2024 20:59:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE4521D150C
+	for <linux-hardening@vger.kernel.org>; Mon, 14 Oct 2024 21:13:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728939599; cv=none; b=dnYalKaDtG9wvvxDi3+FmMAuF5i3nCpcBcpjpO8cBAZtFWvYqYxYWO7HpB3Ee9IG2VL2ty2S/qb1waFzRTGcy8KtmmNihWuvKNoJYfUfV5r1Ic/oZTAn/d2MP2z/scAsgL/UzZK8ZjC6qSF9rxmrTze1Ohkz9d8RIJd3sJ7DuBc=
+	t=1728940398; cv=none; b=f0inLSktoQYHZtC8sZAumERGsvAZsm5PxibjPqVBdPdRBEhmndApb+6NCiJsL8rm7i+b4SjzY7R2r6DrweMBF9SYhL+kFMNU+r0iPNceYXf0kD5cx0TOEVz40gm9UHepTin6Ihu2adcFUMLZgvErbdvhuhJ+qqKISLE/n4dV9i4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728939599; c=relaxed/simple;
-	bh=O4DmmGylfXBJYiWsSMC4LbN9Qv8RP/S5E+FZsJP9sjM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=usdYM8HQcACstXbzpN0i+M86BjxsVOYBEkjOsE3l2FaZBQ1IanWjb70AlIfU0xWl26AysdahVRldrjKFDkBJ9q6z0TJ5jENsc8F9Ht0lM/pp3SIJLy6nE6nBzLjiHGyj7jUoYfwSbd7yq070AVJAGglrxYYK7ylzq6xWB5tJT0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=alsz2hBX; arc=none smtp.client-ip=209.85.215.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1728940398; c=relaxed/simple;
+	bh=uzGP3fTBfJEcisBlsf65F3JUyRpz1YsU0VQnyjjJC3Q=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=WLwUGrqLZs3GzFHEd/wY6aRLOQmHjARM+SafItLcYXlSlD2D2f/GR63za1O8WGqSvW5nwt5yS5mJyoOnu+JKQC3v4jgnjr4iYQPmefv3aITnhz/DKKXM6z4rukjUbV7Z05cTQE+YS+Jgpxr+UD9jrPWnkZCvdq++3zYlVZ5mfXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=S+VMjkUJ; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="alsz2hBX"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-7ea68af2f62so2097233a12.3;
-        Mon, 14 Oct 2024 13:59:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S+VMjkUJ"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e1159159528so8210331276.1
+        for <linux-hardening@vger.kernel.org>; Mon, 14 Oct 2024 14:13:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728939597; x=1729544397; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xx54rz5ibmRnwq2nw0OP3IaKu3j9E7Cgmn6RUjik8Ks=;
-        b=alsz2hBXWw6c2zjQj3FUK6RD3ImfHWKCv1WbzWM71i5oQm8Iknq27icgKYx7Qvd7EF
-         Mif20xV4yvOoJDBvK53rCiGeH3qoX3lo94pOOiA8DiX3UhWMpbttAEzP/9i5ev5D7gBC
-         ljhgBANsnoLsKXXyLtuDgrQjX2ICWmVItqzQ5uh2YD76PkMRFUptwlJQ6MLVaSAOGFRJ
-         FWotdYZRPlcay3u6vKLnjI3OOHnAoczRdMZ6zYj9lfakx/AddNlIZPpaviYbwz2NtmNo
-         F+9aURNy5U9sjdGbMBEpaAupjk48TyVe6J8TVMTRsfyKeNmMsuY3E02FJfHYgS3PJ+Qo
-         Shfw==
+        d=google.com; s=20230601; t=1728940395; x=1729545195; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=0/hwr21L5jvhIc5C9e7aZcC+JDoL+nMT8XwfIns1XuE=;
+        b=S+VMjkUJqJu5yI874W0IDiqncOcHDcR1BSCC5hG1MelVXHnGBXpo78OvNEuXvRdt8G
+         G4A/Q/VX2Ql4msdvh31CnHxw834C/s8wNeYE2s3qCPpnItK+e8xx58Ot+yoy2vG9bXUu
+         Vs4o6p3Y9ZYI6hwS9vqsp3rhqM/f0Ow4ULVETWWTPLd+egT9gWMhK11+ClglJnm+3t4R
+         2Hsv3ca6YqmZOi1OAkbyveivq7zXdqT+tWetEtEJvWokBljbRpOP5lT+AYJNKdAm3Unw
+         o0GpO2FrDuuU1FDtaGrAiiHhSVXgnqjB8WnbG5Vwbhmu6w9cuG0zXExjhArF3ej3181j
+         M1PA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728939597; x=1729544397;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xx54rz5ibmRnwq2nw0OP3IaKu3j9E7Cgmn6RUjik8Ks=;
-        b=wcw7u87QPKtAaHM/gQb1BGBqREwgMxBFjKFCbo3sU9naZmqA6hC0oQxDhCG+O0g/Cq
-         l4pIqd3ds6x1jJkV0qFM3VffV3sBEcUg/M1kTyTfR0JUxw+tR4Z/ni4flz2x1uTEx35m
-         x39Ap6SPIcRxsErfDF5qrt4POhhpbwFmF6bYNMfDSkKngwVe35dwOj1BD0yVxFvkOI+y
-         SMAqYjUKavd8iyvNrDhAb+D4wSMDtJH+j6QxnBIzXjk/OMMXmVyfbM29SH6xrDiiDUdI
-         eWRr5DF74BJTv/7UL1JMq726xAeIycywSOK6PlbVOYjp2ZrkMeCyuCw8a8mYYwda/US/
-         OVWw==
-X-Forwarded-Encrypted: i=1; AJvYcCVtSxO7lCAvgSLARshOscjG0Q2/Z3zVc0tw4hD5NiOH9EUuLL6PA/ckLcniiJVfXf2uzPdrVegNeSgLh3NObes=@vger.kernel.org, AJvYcCWPncGse30lBYMTOqYROvN5zvnV5jC/tCvPAAIxgPXKnH4BPYUGqvxWq7mqighJH3XWdnUFY9ufBX7t7olA@vger.kernel.org, AJvYcCWuLxdeRGFlDfg8T01znmTFHmoAVNgMgPxrlq1f437Ix6PCuH6NKw+rDv2Rf5H5Z2SloVrXqIhiWSZhhg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzPbVnRVkTrAiGcLa8m3wneMM2Y8o1vohXU4KvbAA89tIC6uoIM
-	hn7/jHmFgBOIH1ibvVCb0py7w75KXZ3fIF17PUCBstEIdpKS08Zf
-X-Google-Smtp-Source: AGHT+IGmHnwvYP8IMc9LpLCn8lOYKQ1Efh7zTS5BhoB84Q9SAPxjG77wgdouUdnz1rvJ2lCDNbih0g==
-X-Received: by 2002:a05:6a21:1698:b0:1cf:42e1:f61d with SMTP id adf61e73a8af0-1d8c95d5578mr18474983637.22.1728939597467;
-        Mon, 14 Oct 2024 13:59:57 -0700 (PDT)
-Received: from mail.google.com (125-239-144-11-fibre.sparkbb.co.nz. [125.239.144.11])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-71e5d1d396bsm3502968b3a.33.2024.10.14.13.59.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2024 13:59:57 -0700 (PDT)
-Date: Tue, 15 Oct 2024 09:59:49 +1300
-From: Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
-To: tsbogend@alpha.franken.de, gregkh@linuxfoundation.org,
-	zhanggenjian@kylinos.cn, ricardo@marliere.net, bvanassche@acm.org,
-	linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: paulo.miguel.almeida.rodenas@gmail.com, linux-hardening@vger.kernel.org
-Subject: [PATCH][next] mips: sgi-ip22: Replace "s[n]?printf" with sysfs_emit
- in sysfs callbacks
-Message-ID: <Zw2GRQkbx8Z8DlcS@mail.google.com>
+        d=1e100.net; s=20230601; t=1728940395; x=1729545195;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=0/hwr21L5jvhIc5C9e7aZcC+JDoL+nMT8XwfIns1XuE=;
+        b=df68tSpTMj68n3VGBdeZXPVbLYtngN2azCmg75z6fLC7JQbbaLqIcPrMZcuFOO8B7I
+         IPP/l/pFb5KpBdL8IbKPavKjSgc0nAQUzdp97nOUfQ4Ogaj1WbCY33wlYSMStm7dVlBo
+         rnwDCCeQQ/Bi7bJHBdAc3LJzRDW/RsyZNzqCUfXyKHUcDbMs9QWupPmPXHaPgkFaAoZu
+         RfsR4XvFNZDBCOmjCddu5IKhuFG1W5hW5wat3avntx+eYdTZQxN7bpnvT47SstLIRs8A
+         rWQbdRsSknL0CBwoKvY7O/SCqgzmL+jdpvmhUjgxHdwj54NeNSifrCRvI1UTvN7xBO9j
+         b8ag==
+X-Forwarded-Encrypted: i=1; AJvYcCVOGv4onhoqBBzpnDaQ5oUdq4S6YHgkev/Ynq+PAKIYeWhHsql8g0llU5g+iHomCLc/Mp8tWqdq2v5+NyRT6aI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxB65CjThhomL/TknawH3mkvhIPhdoODeFb43OfCO5t77KCmiSW
+	sj3ocwpoCIqVuEzyffcQH7Ykq9QLGRXeBzfufwPm6TlMJjbkLbGC4QymO8eJzJCc7Z3Ng+NvrU4
+	ypEJZK+azPA1t7heD0T8BFA==
+X-Google-Smtp-Source: AGHT+IEVKC+wG4wGouRbzL32A0moDAXPTQcMZCtANmaveTOGRNjnHIMmr3sCc3s8PDpq4sxnwiq3TrmSzLazj5jTeA==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:ba:c019:ac11:dacf])
+ (user=justinstitt job=sendgmr) by 2002:a25:6805:0:b0:e20:cfc2:a326 with SMTP
+ id 3f1490d57ef6-e29184333b9mr123460276.6.1728940394998; Mon, 14 Oct 2024
+ 14:13:14 -0700 (PDT)
+Date: Mon, 14 Oct 2024 14:13:14 -0700
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAGmJDWcC/52NSwrCMBRFt1Iy9kl+QnTkPqSUmr60wZqUlxAsp
+ Xs36g6cXDh3cM7GEpLHxC7NxgiLTz6GCvLQMDv1YUTwQ2UmudT8rDikTMEuKzyQAs6Qqbf42w4
+ Lhpw65+eMBBac1r1yRpuTMKwKF0LnX9/Yra08+ZQjrd92EZ/3r0wRIMAhDoobye9GXccYxxmPN j5Zu+/7G4UEiojlAAAA
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1728940393; l=2965;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=uzGP3fTBfJEcisBlsf65F3JUyRpz1YsU0VQnyjjJC3Q=; b=LexTwNo7Ijmd2xfyR7O6jramq59fng0ZxBNdR7gqur/w7C0LwKEsKgfpwgR7ClJd3t2EYjMK3
+ ZOjmBmNNaZ+Co+83EVktZTPpJ2thPrTRsf1ai1Gu6X561x6ozL5VS8R
+X-Mailer: b4 0.12.3
+Message-ID: <20241014-strncpy-kernel-trace-trace_events_filter-c-v2-1-d821e81e371e@google.com>
+Subject: [PATCH v2] tracing: replace multiple deprecated strncpy with memcpy
+From: Justin Stitt <justinstitt@google.com>
+To: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>, 
+	Kees Cook <kees@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 
-snprintf() has the documented, but still rather strange trait of
-returning the length of the data that *would have been* written to the
-array if space were available, rather than the arguably more useful
-length of data *actually* written, it is usually considered wise to use
-scnprintf()/vscnprintf() instead. In the case of sysfs call-backs,
-new wrappers exist that do just that while also being PAGE_SIZE aware
+strncpy() is deprecated for use on NUL-terminated destination strings [1] and
+as such we should prefer more robust and less ambiguous string interfaces.
 
-This patch updates the sysfs .show() callbacks to use the sysfs_emit()
-helper instead of snprintf() and sprintf().
+String copy operations involving manual pointer offset and length
+calculations followed by explicit NUL-byte assignments are best changed
+to either strscpy or memcpy.
 
-Link: https://lwn.net/Articles/69419/
-Link: https://github.com/KSPP/linux/issues/105
-Signed-off-by: Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
+strscpy is not a drop-in replacement as @len would need a one subtracted
+from it to avoid truncating the source string.
+
+To not sabotage readability of the current code, use memcpy (retaining
+the manual NUL assignment) as this unambiguously describes the desired
+behavior.
+
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+Link: https://github.com/KSPP/linux/issues/90 [2]
+Cc: Kees Cook <keescook@chromium.org>
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Justin Stitt <justinstitt@google.com>
 ---
- arch/mips/sgi-ip22/ip22-gio.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+Changes in v2:
+- use memcpy instead of strscpy (thanks Steven)
+- No longer breaks Steven's test:
 
-diff --git a/arch/mips/sgi-ip22/ip22-gio.c b/arch/mips/sgi-ip22/ip22-gio.c
-index d20eec742bfa..5893ea4e382c 100644
---- a/arch/mips/sgi-ip22/ip22-gio.c
-+++ b/arch/mips/sgi-ip22/ip22-gio.c
-@@ -165,9 +165,8 @@ static ssize_t modalias_show(struct device *dev, struct device_attribute *a,
- 			     char *buf)
- {
- 	struct gio_device *gio_dev = to_gio_device(dev);
--	int len = snprintf(buf, PAGE_SIZE, "gio:%x\n", gio_dev->id.id);
+$ echo 'common_pid != 0 && common_pid != 120 && common_pid != 1253 &&
+  common_pid != 17 && common_pid != 394 && common_pid != 81 &&
+  common_pid != 87' > /sys/kernel/tracing/events/sched/sched_switch/filter
+
+- Link to v1: https://lore.kernel.org/r/20240930-strncpy-kernel-trace-trace_events_filter-c-v1-1-feed30820b83@google.com
+---
+ kernel/trace/trace_events_filter.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
+index 0c611b281a5b..78051de581e7 100644
+--- a/kernel/trace/trace_events_filter.c
++++ b/kernel/trace/trace_events_filter.c
+@@ -1616,7 +1616,7 @@ static int parse_pred(const char *str, void *data,
+ 				goto err_free;
+ 			}
  
--	return (len >= PAGE_SIZE) ? (PAGE_SIZE - 1) : len;
-+	return sysfs_emit(buf, "gio:%x\n", gio_dev->id.id);
- }
- static DEVICE_ATTR_RO(modalias);
+-			strncpy(num_buf, str + s, len);
++			memcpy(num_buf, str + s, len);
+ 			num_buf[len] = 0;
  
-@@ -177,7 +176,7 @@ static ssize_t name_show(struct device *dev,
- 	struct gio_device *giodev;
+ 			ret = kstrtoul(num_buf, 0, &ip);
+@@ -1694,7 +1694,7 @@ static int parse_pred(const char *str, void *data,
+ 		if (!pred->regex)
+ 			goto err_mem;
+ 		pred->regex->len = len;
+-		strncpy(pred->regex->pattern, str + s, len);
++		memcpy(pred->regex->pattern, str + s, len);
+ 		pred->regex->pattern[len] = 0;
  
- 	giodev = to_gio_device(dev);
--	return sprintf(buf, "%s", giodev->name);
-+	return sysfs_emit(buf, "%s\n", giodev->name);
- }
- static DEVICE_ATTR_RO(name);
+ 	} else if (!strncmp(str + i, "CPUS", 4)) {
+@@ -1859,7 +1859,7 @@ static int parse_pred(const char *str, void *data,
+ 		if (!pred->regex)
+ 			goto err_mem;
+ 		pred->regex->len = len;
+-		strncpy(pred->regex->pattern, str + s, len);
++		memcpy(pred->regex->pattern, str + s, len);
+ 		pred->regex->pattern[len] = 0;
  
-@@ -187,7 +186,7 @@ static ssize_t id_show(struct device *dev,
- 	struct gio_device *giodev;
+ 		filter_build_regex(pred);
+@@ -1919,7 +1919,7 @@ static int parse_pred(const char *str, void *data,
+ 			goto err_free;
+ 		}
  
- 	giodev = to_gio_device(dev);
--	return sprintf(buf, "%x", giodev->id.id);
-+	return sysfs_emit(buf, "%x\n", giodev->id.id);
- }
- static DEVICE_ATTR_RO(id);
+-		strncpy(num_buf, str + s, len);
++		memcpy(num_buf, str + s, len);
+ 		num_buf[len] = 0;
  
--- 
-2.47.0
+ 		/* Make sure it is a value */
+
+---
+base-commit: bc83b4d1f08695e85e85d36f7b803da58010161d
+change-id: 20240930-strncpy-kernel-trace-trace_events_filter-c-f44a3f848518
+
+Best regards,
+--
+Justin Stitt <justinstitt@google.com>
 
