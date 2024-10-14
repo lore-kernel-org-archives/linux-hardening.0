@@ -1,249 +1,165 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E899915575E
-	for <linux-hardening@vger.kernel.org>; Mon, 14 Oct 2024 21:39:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 487311474B7
+	for <linux-hardening@vger.kernel.org>; Mon, 14 Oct 2024 21:50:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728941987; cv=none; b=Xh97MKwR0kL6x0reqdJ4FhrqGNJb/0LK54Jtw5sA+hODmidoxsssknVCldaQF60vRufF4scXFBWFCz7m0I4n5vPkz2edywKBZnEnaY7PmqT5fdRKYgGcrxLGaOagRgyBagsTALA6Sr2ZKXsnLdtTo54NTMqisLbxvQMk/oOd7MQ=
+	t=1728942630; cv=none; b=W4hSTFpzNMjsMakN+gqb0/Yb5LgGlcn4BggMhpdmbexxpftrPzwwG1IMkGSbS+zALYShk1XkCReGaLGBYK30AQvcahvMIltBAA8O5bRPKRgP5kzBU+Qp1ZG/zSTSowbgRlysIXcUOo/rV8nOalAKIMG8hfKjKB3OOM50uby9yvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728941987; c=relaxed/simple;
-	bh=N4ubeMxtZYY3hoTRTFgbOjAyVC5gCI706GptvR2plVE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bBGhU/u27NZRdH9WtHLiFlW971QTghfjzOYpWEjYSx78AxsbPFCvOhBcUeNiINmaSjBHneZKorHHe4FISBOviVTzOo6RsXF+phfAUiDkdbrijix1whB5cSGJL8WP5nPDwemIops+9XhhaDcjwhseg8SknTDvNWC/O9ZZjwJPqFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3LEmWi6K; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1728942630; c=relaxed/simple;
+	bh=Bn+0tgTQ26spkOkGeU3zIn5oIOy8xE8ehmLP1HtPYdM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=H4+l5kuhPVDX4otrsBkiiRYMcxNXf6pG3kvrXOdM1BxkWs3jXwuqTgqcABkybTm101NLBTLKGTtLlZEafz7d+vxgaT9pwclN0hWICuduKrfFdtAedWULL2PUM3gtAd21ja5+2o1/aZiwQmFDmCU1VaALs4VPEmpmG8I7ewb65TQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Ea26KL9A; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3LEmWi6K"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a99b1f43aceso667063666b.0
-        for <linux-hardening@vger.kernel.org>; Mon, 14 Oct 2024 14:39:45 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ea26KL9A"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-71e52582d28so106676b3a.1
+        for <linux-hardening@vger.kernel.org>; Mon, 14 Oct 2024 14:50:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1728941984; x=1729546784; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9csY8Ut29tVJGEmLpxfSFZpuKt+NBF5m2ROuPwTQCh4=;
-        b=3LEmWi6K1eY3vNA3/AhfRVMD3UNv9cvK7yAxSPZNhuQAyy8KBc6lPl7l/8vCz529aC
-         So5XuMVe8j3XvyX1wcZKtFHTHitW94D861hr9BMz+tz1WO/345NG8byIZNHs6YiXrGUt
-         oc0Sl4Elm1U0gWSbiJBzHug20B2nOUmsh1eNJFbulcerl+NE11+jHZyfhrMRojii8Xga
-         uogPedcgjGYyKYU9hzyO8kYWYj/zziKhrHjWZIPvFkEQ7ML/yPLJDzmo9cyIcjj/ElDm
-         BsVwtUU9Y3nL6gGOklGqwvue/CvzHh1GM1KMQexto/zZ7BqctW3WcBXcGn3f87ty62aF
-         JFtA==
+        d=chromium.org; s=google; t=1728942628; x=1729547428; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=iHgAeWx2Z6u/Rr4guiu2M1wSVbBmkz71ggb4GDq4zfk=;
+        b=Ea26KL9AtGCNZ5BGVBK/nx5HAK1eFUzaDZCXJqJc7durL5BbBZAiU3Z5L06KATkDGa
+         v6Lc+SwVFHtMKMJ8Ig6h5cVTd65Db2OyEm2ObGXxtFow+aVU+jWK0X6l2qmUupo42JcF
+         X1H9RVBRTov+sdBq3/5MdB2+DAelrnOSi/UN0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728941984; x=1729546784;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9csY8Ut29tVJGEmLpxfSFZpuKt+NBF5m2ROuPwTQCh4=;
-        b=vkKTOh3BCqlja8iNDtS92+av2gLzZVd9B1+qpTr7jwfBdQY1u3q75xSRIsRoMzxqQi
-         GtC6Hun3rwk3DirhPtpyy+IP7F7VqfgrsHMTdnfrEJc8Fd5nKKYY3EoXl8n0CkiQ6WOI
-         7izRExHZj4F4SdI8zZjZDiq8byJiBvRuI6M1rWkieV8HFRuuaOmZkH5JWWtxPP50k+MB
-         keAKr2StajTLS5kuSb1848FJMyyWuS1bc1A6u6VRXmOBwzuAn+ONOHUCqVFpH/Cwg9pw
-         fp8B6A1b93urvwWo0fKrQOzUPLXj1UEcUAMCXoO+fwAtmFY/fYeVzMiubFEa1tn6wb6O
-         Pl8A==
-X-Forwarded-Encrypted: i=1; AJvYcCVzfsowVmeYpWEpSqoTPnqhoVWbP1C82TwWiGl0gtjpbuGgGGmPc3RAO/EYhehgHegU4jmisnjtixB27FDNYHY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyGDUFuTlGnSIfzbzdUdV/HVwZsakAWHFZ17P+vgE75rCod3/At
-	HY2yWCeF+sU7Oc0elXmUJKBBvvc1b9QWQzbmM03+aC2ZfzdE+Hp9jhm28K5d64FlOukUrW9UArB
-	eiP16XnVJxc+4Wi4s3qvATqdw8SLYL0NJPK4=
-X-Google-Smtp-Source: AGHT+IFezu5CuG2wy6vTwMe51sB4ras/WO24nsNQmzs/ECPU2E5UBEHIWzUwNkN76hqWAt+exwA5Vo+oEQmkGwO5hUQ=
-X-Received: by 2002:a17:907:7ba9:b0:a99:4566:cd42 with SMTP id
- a640c23a62f3a-a99a0d092efmr1482503866b.0.1728941984105; Mon, 14 Oct 2024
- 14:39:44 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1728942628; x=1729547428;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=iHgAeWx2Z6u/Rr4guiu2M1wSVbBmkz71ggb4GDq4zfk=;
+        b=v2FW2sYIr1HKRZAXbTWxdHaDKyAmrPlGx33wvtJWQA9E4DSOPBFbpdtIiaB5XBKWWu
+         7YcYRFp0Gs1DQ8V7acY5ZgGU8M31mONpu4X4UcgSL1KZYXGW4WvZVH5wzzbq0eBYb9Ts
+         DvcnSJS0Yt7EVhnlma3s2BwEpIQX6R3UgCWKmhjzToBuIvpDQR1rxWLsUFZaJifLrbsf
+         nnST+LBGviAIXHcOGwP2Y+em/oyzYXHA8qjEKZ/Qxb1nxofS8cQDOs0BTTXY3W7Sjpm4
+         yDc40li4xzQeOKY0Y0ml/Xf2oGXwewmjC0o5lXgMOnAVboJ/8HhMeFTiwhbfCJs06SVV
+         N7Hg==
+X-Forwarded-Encrypted: i=1; AJvYcCV2hvs/KVxsGFgZItwNN5HkBPbog49jCv2o3ZhjKnwCocu2GQ3MK/1ayddkz+JIjC5qhjtSZJ1tKjh6LkCcRFw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyc1M5f1P+bmD1rBZJtVvar/U4iShdtqc9Xa+Um9O2q2sHwFpqF
+	GPB9H1I1LJ1X8hylcXRmbE4TZfdA9XryCaI/teLTxT+7/zKjV6ToF7Z51RwI1A==
+X-Google-Smtp-Source: AGHT+IGthjCd3HKvWtjJZwDzbVAakFkQKTTiDKfjfpQUEZRgXxs1pRU5IC3CwN8YbItLINHiJkWh6Q==
+X-Received: by 2002:a05:6a21:999f:b0:1cf:46ff:973d with SMTP id adf61e73a8af0-1d8bcfa83edmr9185549637.9.1728942628504;
+        Mon, 14 Oct 2024 14:50:28 -0700 (PDT)
+Received: from localhost (56.4.82.34.bc.googleusercontent.com. [34.82.4.56])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-71e625b63a2sm3035501b3a.159.2024.10.14.14.50.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 14 Oct 2024 14:50:28 -0700 (PDT)
+From: jeffxu@chromium.org
+To: akpm@linux-foundation.org,
+	keescook@chromium.org,
+	jannh@google.com,
+	torvalds@linux-foundation.org,
+	adhemerval.zanella@linaro.org,
+	oleg@redhat.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-mm@kvack.org,
+	jorgelo@chromium.org,
+	sroettger@google.com,
+	ojeda@kernel.org,
+	adobriyan@gmail.com,
+	anna-maria@linutronix.de,
+	mark.rutland@arm.com,
+	linus.walleij@linaro.org,
+	Jason@zx2c4.com,
+	deller@gmx.de,
+	rdunlap@infradead.org,
+	davem@davemloft.net,
+	hch@lst.de,
+	peterx@redhat.com,
+	hca@linux.ibm.com,
+	f.fainelli@gmail.com,
+	gerg@kernel.org,
+	dave.hansen@linux.intel.com,
+	mingo@kernel.org,
+	ardb@kernel.org,
+	Liam.Howlett@Oracle.com,
+	mhocko@suse.com,
+	42.hyeyoo@gmail.com,
+	peterz@infradead.org,
+	ardb@google.com,
+	enh@google.com,
+	rientjes@google.com,
+	groeck@chromium.org,
+	lorenzo.stoakes@oracle.com,
+	Jeff Xu <jeffxu@chromium.org>
+Subject: [RFC PATCH v2 0/1] seal system mappings
+Date: Mon, 14 Oct 2024 21:50:19 +0000
+Message-ID: <20241014215022.68530-1-jeffxu@google.com>
+X-Mailer: git-send-email 2.47.0.rc1.288.g06298d1525-goog
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <3E304FB2-799D-478F-889A-CDFC1A52DCD8@toblux.com>
- <A499F119-5F0C-43FC-9058-7AB92057F9B3@toblux.com> <Zvg-mDsvvOueGpzs@archlinux>
- <202409281331.1F04259@keescook> <21D2A2BB-F442-480D-8B66-229E8C4A63D3@toblux.com>
- <Zv6BEO-1Y0oJ3krr@archlinux> <E8E64A72-3C1C-40D2-9F07-415F6B8F476E@toblux.com>
- <Zv61dCaxScXuOjZg@archlinux> <202410031424.45E5D19@keescook>
- <Zv8RIs-htdc-PtXB@archlinux> <202410040958.C19D3B9E48@keescook>
-In-Reply-To: <202410040958.C19D3B9E48@keescook>
-From: Bill Wendling <morbo@google.com>
-Date: Mon, 14 Oct 2024 14:39:26 -0700
-Message-ID: <CAGG=3QWw40ARPp9nPT5QEgkKMZ0i_Un_BBT7Th0nruizCRORtw@mail.gmail.com>
-Subject: Re: [REGRESSION][BISECTED] erroneous buffer overflow detected in bch2_xattr_validate
-To: Kees Cook <kees@kernel.org>
-Cc: Jan Hendrik Farr <kernel@jfarr.cc>, Thorsten Blum <thorsten.blum@toblux.com>, kent.overstreet@linux.dev, 
-	regressions@lists.linux.dev, linux-bcachefs@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	ardb@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Oct 4, 2024 at 10:13=E2=80=AFAM Kees Cook <kees@kernel.org> wrote:
-> On Thu, Oct 03, 2024 at 11:48:18PM +0200, Jan Hendrik Farr wrote:
-> > On 03 14:28:01, Kees Cook wrote:
-> > > On Thu, Oct 03, 2024 at 05:17:08PM +0200, Jan Hendrik Farr wrote:
-> > > > gcc currently says that the __bdos of struct containing a flexible =
-array
-> > > > member is:
-> > > >
-> > > > sizeof(<whole struct>) + sizeof(<flexible array element>) * <count>
-> > > >
-> > > > clang however does the following:
-> > > >
-> > > > max(sizeof(<whole struct>), offsetof(<flexible array member>) + siz=
-eof(<flexible array element>) * <count>)
-> > >
-> > > Clang's calculation seems very wrong. I would expect it to match GCC'=
-s.
-> > >
-> >
-> > I was on the very same train of thought, but I have since changed my
-> > mind a bit. A struct containing a flexible array member can be allocate=
-d in
-> > two ways:
-> >
-> > (1):
-> >
-> > struct posix_acl *acl =3D malloc(sizeof(struct posix_acl) + sizeof(stru=
-ct posix_acl_entry) * 1);
-> > acl.a_count =3D 1;
-> >
-> > or (2):
-> >
-> > struct posix_acl *acl =3D malloc(offsetof(struct posix_acl, a_entries) =
-+ sizeof(struct posix_acl_entry) * 1);
-> > acl.a_count =3D 1;
-> >
-> > Both are valid ways to allocate it. __bdos does not know which of these
-> > methods was used to allocate the struct whose size it has to determine,
-> > so it's giving the lower bound that doesn't include the (potential)
-> > padding at the end.
->
-Slightly off topic: while I was looking at the definition for
-struct_size, I noticed this:
+From: Jeff Xu <jeffxu@chromium.org>
 
-#define flex_array_size(p, member, count)                               \
-        __builtin_choose_expr(__is_constexpr(count),                    \
-                (count) * sizeof(*(p)->member) +
-__must_be_array((p)->member),  \
-                size_mul(count, sizeof(*(p)->member) +
-__must_be_array((p)->member)))
+Seal vdso, vvar, sigpage, uprobes and vsyscall.
 
-In particular the 'size_mul' line. I realize that '__must_be_array'
-will return a '0' or static compiler error, but it seems inconsistent
-that it's included as part of 'size_mul'. Maybe something like this
-instead (notice the parens on the last line)?
+Those mappings are readonly or executable only, sealing can protect
+them from ever changing during the life time of the process. For
+complete descriptions of memory sealing, please see mseal.rst [1].
 
-#define flex_array_size(p, member, count)                               \
-        __builtin_choose_expr(__is_constexpr(count),                    \
-                (count) * sizeof(*(p)->member) +
-__must_be_array((p)->member),  \
-                size_mul(count, sizeof(*(p)->member)) +
-__must_be_array((p)->member))
+System mappings such as vdso, vvar, and sigpage (for arm) are
+generated by the kernel during program initialization. These mappings
+are designated as non-writable, and sealing them will prevent them
+from ever becoming writeable.
 
+Unlike the aforementioned mappings, the uprobe mapping is not
+established during program startup. However, its lifetime is the same
+as the process's lifetime [2], thus sealable.
 
-> I want to separate several easily confused issues. Instead of just
-> saying __bdos, let's clearly refer to what calculation within bdos is
-> being used. There are 3 choices currently:
-> - alloc_size attribute
-> - counted_by attribute
-> - fallback to __bos (which is similar to sizeof(), except that FAMs are 0=
- sized)
->
-> Additionally there are (for all intents and purposes) 2 size
-> determinations to be made by __bos and __bdos, via argument 2:
-> - containing object size (type 0) ("maximum size")
-> - specific object size (type 1) ("minimum size")
->
-> For example, consider:
->
-> struct posix_acl *acl =3D malloc(1024);
-> acl->a_count =3D 1;
->
-> what should these return:
->
->         __bos(acl, 0)
->         __bos(acl, 1)
->         __bdos(acl, 0)
->         __bdos(acl, 1)
->         __bos(acl->a_entries, 0)
->         __bos(acl->a_entries, 1)
->         __bdos(acl->a_entries, 0)
->         __bdos(acl->a_entries, 1)
->
-> > So it comes down to false positives vs false negatives...
-> > More details here:
-> > https://github.com/llvm/llvm-project/pull/111015
-> >
-> > Clangs current behavior would essentially force kernel code to always
-> > assume option (2) is used. So
-> >
-> > struct posix_acl *
-> > posix_acl_clone(const struct posix_acl *acl, gfp_t flags)
-> > {
-> >       struct posix_acl *clone =3D NULL;
-> >
-> >       if (acl) {
-> >               int size =3D sizeof(struct posix_acl) + acl->a_count *
-> >                          sizeof(struct posix_acl_entry);
-> >               clone =3D kmemdup(acl, size, flags);
-> >               if (clone)
-> >                       refcount_set(&clone->a_refcount, 1);
-> >       }
-> >       return clone;
-> > }
-> > EXPORT_SYMBOL_GPL(posix_acl_clone);
-> >
-> > from linux/fs/posix_acl.c would have to turn into something like:
-> >
-> > struct posix_acl *
-> > posix_acl_clone(const struct posix_acl *acl, gfp_t flags)
-> > {
-> >       struct posix_acl *clone =3D NULL;
-> >
-> >       if (acl) {
-> >               int size =3D offsetof(struct posix_acl, a_entries) + acl-=
->a_count *
-> >                          sizeof(struct posix_acl_entry);
-> >               clone =3D kmemdup(acl, size, flags);
-> >               if (clone)
-> >                       refcount_set(&clone->a_refcount, 1);
-> >       }
-> >       return clone;
-> > }
-> > EXPORT_SYMBOL_GPL(posix_acl_clone);
-> >
-> > Which is actually safer, because can you actually be sure this posix_ac=
-l
-> > wasn't allocated using method (2)?
->
-> First, this should not be using an open coded calculation at all; it
-> should use the struct_size() macro.
->
-> Secondly, if we want to change struct_size(), then we must (via
-> allmodconfig builds) determine all the places in the kernel
-> where the calculated size changes, and audit those for safety.
->
-> Right now, struct_size() over-estimates in the face of padding.
->
-> We're already moving the kernel toward not even calling struct_size()
-> externally from the allocation, and instead using the it within the
-> allocation macros themselves:
-> https://lore.kernel.org/lkml/20240822231324.make.666-kees@kernel.org/
->
-> > After looking at the assembly produced by gcc more, it actually looks
-> > like it's using the allocation size if it's known in the current contex=
-t
-> > (for example if the struct was just malloced in the same function)
-> > and otherwise returns INT_MAX for the __bdos of a struct containing a
-> > flexible array member. It's only returning the size based on the
-> > __counted_by attribute of you ask it for the __bdos of the flexible
-> > array member itself.
->
-> Here is my test case for all the corner cases we've found so far:
-> https://github.com/kees/kernel-tools/blob/trunk/fortify/array-bounds.c
->
-> I'd prefer we add cases there so we can all be talking about the same
-> things. :)
->
-> -Kees
->
-> --
-> Kees Cook
+The vdso, vvar, sigpage, and uprobe mappings all invoke the
+_install_special_mapping() function. As no other mappings utilize this
+function, it is logical to incorporate sealing logic within
+_install_special_mapping(). This approach avoids the necessity of
+modifying code across various architecture-specific implementations.
+
+The vsyscall mapping, which has its own initialization function, is
+sealed in the XONLY case, it seems to be the most common and secure
+case of using vsyscall.
+
+It is important to note that the CHECKPOINT_RESTORE feature (CRIU) may
+alter the mapping of vdso, vvar, and sigpage during restore
+operations. Consequently, this feature cannot be universally enabled
+across all systems. To address this, a kernel configuration option has
+been introduced to enable or disable this functionality. Note, uprobe
+is always sealed and not controlled by this kernel configuration.
+
+I tested CONFIG_SEAL_SYSTEM_MAPPINGS_ALWAYS with ChromeOS,
+which doesn’t use CHECKPOINT_RESTORE.
+
+[1] Documentation/userspace-api/mseal.rst
+[2] https://lore.kernel.org/all/CABi2SkU9BRUnqf70-nksuMCQ+yyiWjo3fM4XkRkL-NrCZxYAyg@mail.gmail.com/
+
+History:
+V2:
+  Seal uprobe always (Oleg Nesterov)
+  Update comments and description (Randy Dunlap, Liam R.Howlett, Oleg Nesterov)
+  Rebase to linux_main
+
+V1:
+https://lore.kernel.org/all/20241004163155.3493183-1-jeffxu@google.com/
+
+Jeff Xu (1):
+  exec: seal system mappings
+
+ .../admin-guide/kernel-parameters.txt         | 10 ++++
+ arch/x86/entry/vsyscall/vsyscall_64.c         |  9 +++-
+ fs/exec.c                                     | 53 +++++++++++++++++++
+ include/linux/fs.h                            |  1 +
+ kernel/events/uprobes.c                       |  2 +-
+ mm/mmap.c                                     |  1 +
+ security/Kconfig                              | 26 +++++++++
+ 7 files changed, 99 insertions(+), 3 deletions(-)
+
+-- 
+2.47.0.rc1.288.g06298d1525-goog
+
