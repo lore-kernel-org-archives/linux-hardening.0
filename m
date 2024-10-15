@@ -1,54 +1,54 @@
-Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBED11B0F02
-	for <linux-hardening@vger.kernel.org>; Tue, 15 Oct 2024 21:34:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04EEA21E3AC
+	for <linux-hardening@vger.kernel.org>; Tue, 15 Oct 2024 22:06:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729028053; cv=none; b=CHaSPlHnd/RGF4P4gLdlG4XKOH+2W7I5Or5yQJes9V27f8acC+BVk2nf00hcWZFKe31u97KUsyXAT0CEzXtF1qbLTv/QZXBhSRyFxM/PSAWMiK4BcgyD3Pf+DZBnZxGwvH00pZ61AasZc+o45rHIORlTgZSJGDXTNt6JT/5n92k=
+	t=1729030017; cv=none; b=hIfS3ygSWJQ0Zk5yOCgvcKv3L36yAIzBTsgYK/rPhaSsv92ocnpFTXh+1l8YnSNgOv/cyeiqoxnP49GVe5J6IDXcu/AWjjGekZWJS1IhkfxIUq6ps5vWUEq8AdeaTUnY9uvEUQ1Dn/eS454+UCJ3somzw98icRa1WmQeU6g//hU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729028053; c=relaxed/simple;
-	bh=knTgNecEkYKeM/JJuIkK3FnpRRBOBT0/xY6PnfCDNgA=;
+	s=arc-20240116; t=1729030017; c=relaxed/simple;
+	bh=4vRt+hJq2BeLpXAtOJSNUjTXAzJvtSSt2c04j5cz7M0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=goHo4ANyYgjMUdVCDbrMDNU/dZ6MZHUFuY3xus+ddt1NxGLjlu5ZB47rbIYWinXdnGuBctfYpxEJtdbXelw+Snk8xa8ZygchiofX0773QCbLjafFi4LGhf8B/fMuZuDK0LTTAvIECbhPFC+xMSjl+HgG6n5VJGCB9GXcvZqQVOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=PtWFFG5r; arc=none smtp.client-ip=209.85.215.170
+	 Content-Type:Content-Disposition:In-Reply-To; b=Sb+HmE6W4HeNGvdK7BuUwnwlGlMplDPAMjenOWUHrMo7GEXiECcLFUDGJLHDWXKTzHcG6Q52T5CMJ0XWUSqB6+uiZ1OQValiRbamJfQuew90FWWfzF6BKyjHiMCK9o21FoIdl3P//gjYyopmss9SpSU18krNY11tqx8QYqkYKBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=YpWxMC5j; arc=none smtp.client-ip=209.85.215.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PtWFFG5r"
-Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-7ea7d509e61so1240667a12.1
-        for <linux-hardening@vger.kernel.org>; Tue, 15 Oct 2024 14:34:10 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YpWxMC5j"
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-7db637d1e4eso4314249a12.2
+        for <linux-hardening@vger.kernel.org>; Tue, 15 Oct 2024 15:06:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1729028050; x=1729632850; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1729030015; x=1729634815; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=DKjBORgdklEf0VcX5F4hTKcBGHj5kwXdCtAfdZCcB54=;
-        b=PtWFFG5rP5EVlcOQHNmvJwMM5bZKj2qn7HBXaBvmSUg4cdzcDaaESuhDNjkpfF305g
-         /JZowdpoi/ZfEWNqjPw9IA6vzW1IaNC1/mYdQMy49BztjFdI0zGz2AR9kSVMVXEz9wyi
-         whUh6BatT7C4yEVnAMc8Wx35VLWfRM2924oxQ=
+        bh=hT0R9bqoxmercTe8FcIYej1AYkgMYBqJ5UzV5PqtWaI=;
+        b=YpWxMC5jG9VSSz6q7gKC8/h24hnHK9W3Mm5+t0Rp28PTjI9UAkUX/PNTMpCGDNBdmR
+         EU8c5vd9Ic1g7jYT4ySXqt/k1UrHnmpXYGMazhLJyQrV7d1qXkBmrlMexoXH/dngKq4N
+         ccd/JRgIRCn5fEJs1yXUUgNVKCsWXI8aj9hP0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729028050; x=1729632850;
+        d=1e100.net; s=20230601; t=1729030015; x=1729634815;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=DKjBORgdklEf0VcX5F4hTKcBGHj5kwXdCtAfdZCcB54=;
-        b=mVMLK0Sx/c35M3NU08RUSdlcDNy7HGnsYpYqCKMCbsgIEnEqWil1rqSAkXHk3us0qW
-         aQdvSeacvTAziXxwG2c4998M1w7ILL9vX7Pem5/UngVn00bijY92NJDI4H11XkhXiwpi
-         CuVWlLXt4L06GrpMBWg4XegHZue/6PF0HalVW4Eo2kjuT3QUjOklOldpT0lCs/L17jkj
-         gVrEm8U1q4MkDdbta1HfcaBjH/meYOwZEr964uGRcrqpqQA2aBpwyNQUyxsKtE5y1MLY
-         7IOwm6DIAAWfb1t80MTNQKNWyO4sr/JXO2vG4OvGaqBtkShSr7XKvm5w7AbaTtg7tsJA
-         Xiig==
-X-Forwarded-Encrypted: i=1; AJvYcCXDd9t5Ggau3fH303flXcV6iHz0e+d7GyDrhvqgYmZLglpYfzzUgXEoTBoO5y4mY/RDj0Muyqz/YgEYRqgJsFg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzBW/FtNvIJdWzUOd/UthCkIDBt4VflRPffuyOLe0I75TFUw7qL
-	uVp+I/15jL4RaCBzA0yjiYgr/AN/D/u0jnx/+dMIOcf8wOCkBiBfkXb5Ne9rEg==
-X-Google-Smtp-Source: AGHT+IHRze0IzcATBijgCp06ZoOiRkVXgkxhi7l6ZEkczzicwWYspql4/Tq/D7z2iq5VXHb4rA81kw==
-X-Received: by 2002:a17:90a:b017:b0:2e0:ab57:51ec with SMTP id 98e67ed59e1d1-2e2f0d7c939mr19519508a91.30.1729028050216;
-        Tue, 15 Oct 2024 14:34:10 -0700 (PDT)
+        bh=hT0R9bqoxmercTe8FcIYej1AYkgMYBqJ5UzV5PqtWaI=;
+        b=QGJhcFOsG5E8pZ7rE1+wOUfq0W/etqp0bkqva/ndqfagNkebkPhiEuTE0yqufHJBzk
+         +54nUmB0z9F9BcmL/S+xLeJfemCCkZhSdLdLFdvZYvmvcYhOmIhPHXq9LF9I4L953w6Y
+         53YnjEsVJ8hWUpyounxT9XaGwZ7jOBLMqJjNj1/DH5lFsDS22yL83Fkv6pfbYhXHCOmZ
+         wq/JHR3i046BvLGfD5UxTpBqnKfovbSxb9cxuzbM+/MdRSWVvOQqOhlE27qfjOHmYxmi
+         UKsUyCzSPh8t63eAWAeWmoXMiKoTMkvMl3bhMd1+mq6aiptDbXWGA1myaGaQYv2L3fKd
+         FreA==
+X-Forwarded-Encrypted: i=1; AJvYcCXxU044wki09+2GFV9RAzIcwVeNTbLGtX3T7iIYQWfjIxkLSwF5jOSvqVlw9RABEJliLTqB3SaBwF2pIsItFnQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzqtx7s2QsrcmIL4NXuq/+dsitNprBRDBjOnhCFnAAsJ7zyzS2L
+	uDR6h0l6x9pogQNMUZSpgRq7ODZEVi/DO70jsMIBslnF1RZrsKf8azRmFrMRdA==
+X-Google-Smtp-Source: AGHT+IEpVH6CVZlPWktmJt6DhI48M5bSXpnUMj7IEXnfgo2g4woJPHJ3BpNKBkT2LODRTvv8UgeTew==
+X-Received: by 2002:a05:6a21:4d8c:b0:1d2:eaca:4fa8 with SMTP id adf61e73a8af0-1d905f58e25mr2593674637.35.1729030015272;
+        Tue, 15 Oct 2024 15:06:55 -0700 (PDT)
 Received: from localhost ([2a00:79e0:2e14:7:eef3:dbf8:fbe3:ab12])
-        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-2e392f753b4sm2409874a91.49.2024.10.15.14.34.09
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-71e773716bbsm1882961b3a.13.2024.10.15.15.06.54
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Oct 2024 14:34:09 -0700 (PDT)
-Date: Tue, 15 Oct 2024 14:34:08 -0700
+        Tue, 15 Oct 2024 15:06:55 -0700 (PDT)
+Date: Tue, 15 Oct 2024 15:06:53 -0700
 From: Brian Norris <briannorris@chromium.org>
 To: Alper Nebi Yasak <alpernebiyasak@gmail.com>
 Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -61,10 +61,11 @@ Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
 	David Lin <yu-hao.lin@nxp.com>, linux-hardening@vger.kernel.org,
 	Kalle Valo <kvalo@kernel.org>,
 	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v2 1/2] wifi: mwifiex: Fix memcpy() field-spanning write
- warning in mwifiex_config_scan()
-Message-ID: <Zw7f0FTlGk__kE6e@google.com>
+Subject: Re: [PATCH v2 2/2] wifi: mwifiex: Annotate
+ mwifiex_ie_types_wildcard_ssid_params with __counted_by()
+Message-ID: <Zw7nfaYZHP-HIqWQ@google.com>
 References: <20241007222301.24154-1-alpernebiyasak@gmail.com>
+ <20241007222301.24154-2-alpernebiyasak@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -73,32 +74,88 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241007222301.24154-1-alpernebiyasak@gmail.com>
+In-Reply-To: <20241007222301.24154-2-alpernebiyasak@gmail.com>
 
-On Tue, Oct 08, 2024 at 01:20:54AM +0300, Alper Nebi Yasak wrote:
-> Replace one-element array with a flexible-array member in `struct
-> mwifiex_ie_types_wildcard_ssid_params` to fix the following warning
-> on a MT8173 Chromebook (mt8173-elm-hana):
+Hi Alper,
+
+On Tue, Oct 08, 2024 at 01:20:55AM +0300, Alper Nebi Yasak wrote:
+> Add the __counted_by compiler attribute to the flexible array member
+> `ssid` to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
+> CONFIG_FORTIFY_SOURCE.
 > 
-> [  356.775250] ------------[ cut here ]------------
-> [  356.784543] memcpy: detected field-spanning write (size 6) of single field "wildcard_ssid_tlv->ssid" at drivers/net/wireless/marvell/mwifiex/scan.c:904 (size 1)
-> [  356.813403] WARNING: CPU: 3 PID: 742 at drivers/net/wireless/marvell/mwifiex/scan.c:904 mwifiex_scan_networks+0x4fc/0xf28 [mwifiex]
-> 
-> The "(size 6)" above is exactly the length of the SSID of the network
-> this device was connected to. The source of the warning looks like:
+> Signed-off-by: Alper Nebi Yasak <alpernebiyasak@gmail.com>
+> ---
+> I've mimicked the commit messages from `git log -S"__counted_by("`.
+> Since they refer to UBSAN I tried testing with CONFIG_KASAN (w/
+> kasan_multi_shot), CONFIG_UBSAN and CONFIG_FORTIFY_SOURCE. I do not
+> get any errors relating to this module with those options, but have
+> others -- I even had to test on another board altogether.
+
+It's possible you don't have a new enough compiler to enable the
+improved array bounds checks? Supposedly, that's new in GCC 15 and Clang
+18. But I'm not too familiar.
+
+> This attribute was suggested in reviews, I don't fully understand it,
+> but I am not sure it is correct in the context of this comment from
+> scan.c (with irrelelvant parts omitted):
 > 
 >     ssid_len = user_scan_in->ssid_list[i].ssid_len;
->     [...]
+> 
+>     wildcard_ssid_tlv =
+>             (struct mwifiex_ie_types_wildcard_ssid_params *)
+>             tlv_pos;
+> 
+>     /*
+>      * max_ssid_length = 0 tells firmware to perform
+>      * specific scan for the SSID filled, whereas
+>      * max_ssid_length = IEEE80211_MAX_SSID_LEN is for
+>      * wildcard scan.
+>      */
+>     if (ssid_len)
+>             wildcard_ssid_tlv->max_ssid_length = 0;
+>     else
+>             wildcard_ssid_tlv->max_ssid_length =
+>                                     IEEE80211_MAX_SSID_LEN;
+> 
 >     memcpy(wildcard_ssid_tlv->ssid,
 >            user_scan_in->ssid_list[i].ssid, ssid_len);
 > 
-> There is a #define WILDCARD_SSID_TLV_MAX_SIZE that uses sizeof() on this
-> struct, but it already didn't account for the size of the one-element
-> array, so it doesn't need to be changed.
+> I expect we want to use __counted_by(ssid_len) instead, but do not have
+> it in the struct. And max_ssid_length = 0 when ssid[] is non-empty, so
+> is it really appropriate as the __counted_by()? But then again, I
+> couldn't get this to produce a warning.
+
+The correct length would be derived from header.len. But IIUC,
+__counted_by neither supports nested structs, nor derived values.
+
+But anyway, like you suspect, __counted_by(max_ssid_length) is actually
+wrong.
+
+I'd be happy to be enlighted by other experts on CC, but otherwise,
+that's a "NACK" for patch 2. Thanks for looking into this though!
+
+Regards,
+Brian
+
+> Changes in v2:
+> - Add patch to annotate ssid field with __counted_by(max_ssid_length)
 > 
-> Fixes: 5e6e3a92b9a4 ("wireless: mwifiex: initial commit for Marvell mwifiex driver")
-> Signed-off-by: Alper Nebi Yasak <alpernebiyasak@gmail.com>
-
-For patch 1:
-
-Acked-by: Brian Norris <briannorris@chromium.org>
+>  drivers/net/wireless/marvell/mwifiex/fw.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/wireless/marvell/mwifiex/fw.h b/drivers/net/wireless/marvell/mwifiex/fw.h
+> index 4a96281792cc..e4e35ba35454 100644
+> --- a/drivers/net/wireless/marvell/mwifiex/fw.h
+> +++ b/drivers/net/wireless/marvell/mwifiex/fw.h
+> @@ -875,7 +875,7 @@ struct mwifiex_ietypes_chanstats {
+>  struct mwifiex_ie_types_wildcard_ssid_params {
+>  	struct mwifiex_ie_types_header header;
+>  	u8 max_ssid_length;
+> -	u8 ssid[];
+> +	u8 ssid[] __counted_by(max_ssid_length);
+>  } __packed;
+>  
+>  #define TSF_DATA_SIZE            8
+> -- 
+> 2.45.2
+> 
