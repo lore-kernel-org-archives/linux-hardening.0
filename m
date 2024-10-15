@@ -1,113 +1,139 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f194.google.com (mail-pl1-f194.google.com [209.85.214.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 319F41E7C3C
-	for <linux-hardening@vger.kernel.org>; Tue, 15 Oct 2024 10:59:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B40071FC7C4;
+	Tue, 15 Oct 2024 14:45:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728989974; cv=none; b=SLuY80NoeT8/kI+PTD7J+5wfmaf0MSDfyQdEmDqghtCPSbxwXP5MdibKKSpwyA1G0T4h5IKzIEl8fXGDa8vCEyyvzFBQZYBoL79FY/h65BtZKPljCMVWb/S6IhRf32xjuyK9jXkkTVtq8cRMijkM7nA+EOgrMk0G4kd+8qyLSDI=
+	t=1729003541; cv=none; b=VMi59d+DGHERp5omRGzmDHTK+c/1tcOUM+lLhSR/ZRDv049dYtgJH3vpv6lDTMqQ68vmPQMgYykeNNOC+hrNqkzAZ5az7h8dJRr52N8buOP8452KQN6RUeoLLaA87iuusN+ocBgDVyVpLzVqXR2JSe5Sz8GtzmmG/KTN/16/Xus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728989974; c=relaxed/simple;
-	bh=ly/NC2kwZ3cRKwWiABDoQjTvFKH0kh1X0ePiMlqGNMA=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Nk4r3PJKleWpUaJc196Jf9jECO1YQBx8Uj/XQ4UlaiysbnCXDhpZvFZR6TGOftRSwFyhbWofQj+4wG9t1oDvoz7nHvFR/MMv5jX5MfAKaZZMHDymOFabXZvuKKvkaKXAJbKHy5GhM7nmkiMCkqTie/feMibnJ+UmWQCge8rFD44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AIFpXME9; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1729003541; c=relaxed/simple;
+	bh=c36HbQs0gJpyQFG4AYu2BErUBXyc17mTB5ULEPC4y3E=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=oZDt0IYxmgTDVEdz9cWPI1+NObo7609fuprwTSnAstlnk/R2rn3OAq2s0neLI5zzliJuOX/2XrClBLcokaaWud20hV6XTmIPByk7OENv8fvRIKtbG1IdUD0o/RwXTc9jmdcQGn/YJ9zyWDb1vCVi+KugAnPLco9CfZ1bMLhtTOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R6vjcvjW; arc=none smtp.client-ip=209.85.214.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AIFpXME9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1728989972;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ybTiS+fP0SSadAHt+F77jSZOWRj/uDfaIQfdA4Tihlk=;
-	b=AIFpXME92W0tsakp05HOWNfyEAuTDyO4Jspk/sTcZxYK+AWrefUIs3KoNOwnCRzKux0c8t
-	YY73tHK+oaMwz3w7u0lgzvyOEjcEqz6l7+NWV7De4KDx+twdBV1pRZ3KSJD/oiVlDTZxcw
-	tnwmIX9dTOWxCuzFOPY7aS3zVQe8E9M=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-614-MzYKfzDZNr6jLeY-LjMoDg-1; Tue,
- 15 Oct 2024 06:59:27 -0400
-X-MC-Unique: MzYKfzDZNr6jLeY-LjMoDg-1
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3150A1955D59;
-	Tue, 15 Oct 2024 10:59:23 +0000 (UTC)
-Received: from [10.45.226.64] (unknown [10.45.226.64])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 79B2330001A3;
-	Tue, 15 Oct 2024 10:59:16 +0000 (UTC)
-Date: Tue, 15 Oct 2024 12:59:13 +0200 (CEST)
-From: Mikulas Patocka <mpatocka@redhat.com>
-To: Md Sadre Alam <quic_mdalam@quicinc.com>
-cc: axboe@kernel.dk, song@kernel.org, yukuai3@huawei.com, agk@redhat.com, 
-    snitzer@kernel.org, adrian.hunter@intel.com, quic_asutoshd@quicinc.com, 
-    ritesh.list@gmail.com, ulf.hansson@linaro.org, andersson@kernel.org, 
-    konradybcio@kernel.org, kees@kernel.org, gustavoars@kernel.org, 
-    linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
-    linux-raid@vger.kernel.org, dm-devel@lists.linux.dev, 
-    linux-mmc@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-    linux-hardening@vger.kernel.org, quic_srichara@quicinc.com, 
-    quic_varada@quicinc.com
-Subject: Re: [PATCH v2 1/3] dm-inlinecrypt: Add inline encryption support
-In-Reply-To: <20240916085741.1636554-2-quic_mdalam@quicinc.com>
-Message-ID: <3161a67d-66f6-775e-c67e-3b5ca1aa2e1b@redhat.com>
-References: <20240916085741.1636554-1-quic_mdalam@quicinc.com> <20240916085741.1636554-2-quic_mdalam@quicinc.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R6vjcvjW"
+Received: by mail-pl1-f194.google.com with SMTP id d9443c01a7336-20c77459558so43154805ad.0;
+        Tue, 15 Oct 2024 07:45:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1729003539; x=1729608339; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:references:cc:to:from:subject
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ofgu3iXnCYSQ3sJFxlEFNmaN7sQ5lnXtot0dUpXtI6g=;
+        b=R6vjcvjWUPTOsFvw8T9GBv8TYGLY0UWwLyBdTeKV+mBtc5I+H8ecB5Fd1Lu58RjPIO
+         Eo6rBCZ1osTHMO80mQuCqUz3J51tQcl4Q4KRtRRo++0HqKiR4+B1VUzBKfKtA5RTPmP+
+         BH6Rq2e6VWvBTZUVLlUsnxS5dG50gdA0KovFKgkbEZ1QFwsVVrDb52dJWGJ9cstMVRhS
+         o6QC+5BI8ckltWSrpRTyCHkXzkHZuyPpGorYKLE3bKhyV/RQp313bNfi84Ri8Nnn7y2q
+         xEr10ugMTXJb4Ys+T8XdPiDZKCkX5ENpE7BdLDxihpRO9nD2BeoKNQi1/BhFXKgjBFDV
+         gA1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729003539; x=1729608339;
+        h=content-transfer-encoding:in-reply-to:references:cc:to:from:subject
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Ofgu3iXnCYSQ3sJFxlEFNmaN7sQ5lnXtot0dUpXtI6g=;
+        b=K2Sa9tO3Wh1QCCOh7wCWIoHKGsVLXnZs466YvrSRUNUbGdbq4O9XyNfAyA9ahGMgRa
+         w1/Vb1xclIk1MATvdqvsT3/6u0ZnXDmKZJOdfeJckIacOKq4r9w4ekWKhSWvsJgH+ag3
+         +FNuhMwfmqlzDDJROjiFHuRIp7KQj/gL8NPwOWt9AUrAxR7Kox25oSHRF2j0/adCDR+5
+         9KBb1NtMiyyctDV3ORhlSdLhhUwVYix/EjhyssKRg3IM6HvE6sO/zgsRrsXy5YLjGrhG
+         8WsanhxiyaygmsOp/yzKS/pniYO//wbqmCcixLQ9lNJfwNo/yRq07tO4qsmrXG3vcZeK
+         27sQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUw1QR2/W+UBX4Y1Ux+dof9HaQ/eY+GZ+yJtGPaSdwnsDJWzopQ2n62dpPWFvRd6iK/pzQ4Tf2bumaGAfdx@vger.kernel.org, AJvYcCWUwy0AiSP57Q06EVEM0XXZ4kImHStuqhLEdfDJ/nt5vprJowHxSOvG5Za4oywaDVDIOHzJFj0U+mSt2DoKWuc=@vger.kernel.org, AJvYcCXaBARHSOmiwVOSDFApLo9CRAoBRpmY7pt7C3+LeVmu093OljcwV5yN4U0zrpNXUrN8vguDRMQB@vger.kernel.org
+X-Gm-Message-State: AOJu0YxGVx324dg9EEM3hY8TeFmnmhaviA0Pq3Rnbf9DtZ5uNWY6Pnvl
+	aLreD3TYgPBALaDZlOESXWEuhvvHv99AcrEhz3Yo2QgzL3OJO0Ig
+X-Google-Smtp-Source: AGHT+IG8W36j/qtZDwW2WA2jb0i/BTgkc8ZJA0sEHueOn6qFxt+Kh7GFqBij7XyJqwymRVZNuB/RlQ==
+X-Received: by 2002:a17:902:da84:b0:20b:6458:ec83 with SMTP id d9443c01a7336-20ca144ea0fmr212260065ad.4.1729003538995;
+        Tue, 15 Oct 2024 07:45:38 -0700 (PDT)
+Received: from [198.18.0.1] (n220246094186.netvigator.com. [220.246.94.186])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7ea9c6bc015sm1412742a12.19.2024.10.15.07.45.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Oct 2024 07:45:38 -0700 (PDT)
+Message-ID: <b7b9fba3-819a-411f-9e67-d5eec9e63eaa@gmail.com>
+Date: Tue, 15 Oct 2024 22:45:34 +0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] pstore: Fix uaf when backend is unregistered
+From: Zach Wade <zachwade.k@gmail.com>
+To: Kees Cook <kees@kernel.org>
+Cc: tony.luck@intel.com, gpiccoli@igalia.com,
+ linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org, lixingyang1@qq.com
+References: <2bf30957-ad04-473a-a72e-8baab648fb56@gmail.com>
+ <202410081019.0E9DE76A@keescook>
+ <6077c924-f975-49a0-8ee4-4e481664ac38@gmail.com>
+In-Reply-To: <6077c924-f975-49a0-8ee4-4e481664ac38@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi
-
-The patch seems OK. Should it go in via the device mapper tree or the 
-block layer tree?
 
 
-On Mon, 16 Sep 2024, Md Sadre Alam wrote:
+On 2024/10/9 21:36, Zach Wade wrote:
+> 
+> 
+> On 2024/10/9 1:23, Kees Cook wrote:
+>> On Wed, Oct 09, 2024 at 01:10:14AM +0800, Zach Wade wrote:
+>>> when unload pstore_blk, we will unlink the pstore file and
+>>> set pos->dentry to NULL, but simple_unlink(d_inode(root), pos->dentry)
+>>> may free inode of pos->dentry and free pos by free_pstore_private,
+>>> this may trigger uaf. kasan report:
+>>
+>> Thanks for this! I need to double check what happening here a bit more
+>> closely, as maybe some ordering changed after a43e0fc5e913 ("pstore:
+>> inode: Only d_invalidate() is needed")
+>>
+>>> @@ -316,9 +316,10 @@ int pstore_put_backend_records(struct 
+>>> pstore_info *psi)
+>>>           list_for_each_entry_safe(pos, tmp, &records_list, list) {
+>>>               if (pos->record->psi == psi) {
+>>>                   list_del_init(&pos->list);
+>>> -                d_invalidate(pos->dentry);
+>>> -                simple_unlink(d_inode(root), pos->dentry);
+>>> +                unlink_dentry = pos->dentry;
+>>>                   pos->dentry = NULL;
+>>> +                d_invalidate(unlink_dentry);
+>>> +                simple_unlink(d_inode(root), unlink_dentry);
+>>
+>> But on the face of it, this does solve the UAF. I'll double-check that
+>> this isn't a result of the mentioned commit.
+> 
+> Hi Cook,
+> 
+> However, I think a more appropriate solution to the problem here is to
+> check the reference count when uninstalling the mount point.
+> 
+> At the same time, the test script is attached:
+> #!/bin/bash
+> modprobe pstore_blk
+> blkdev=/dev/sda2
+> best_effort=on
+> mount -t pstore pstore /sys/fs/pstore
+> sleep 2
+> umount /sys/fs/pstore
+> modprobe -r pstore_blk
+> 
+> Thanks,
+> Zach
+> 
+>>
+> 
+>> -Kees
+>>
+> 
 
-> +#define DM_CRYPT_DEFAULT_MAX_READ_SIZE		131072
-> +#define DM_CRYPT_DEFAULT_MAX_WRITE_SIZE		131072
-> +
-> +static unsigned int get_max_request_size(struct inlinecrypt_config *cc, bool wrt)
-> +{
-> +	unsigned int val, sector_align;
-> +
-> +	val = !wrt ? DM_CRYPT_DEFAULT_MAX_READ_SIZE : DM_CRYPT_DEFAULT_MAX_WRITE_SIZE;
-> +	if (wrt) {
-> +		if (unlikely(val > BIO_MAX_VECS << PAGE_SHIFT))
-> +			val = BIO_MAX_VECS << PAGE_SHIFT;
-> +	}
-> +	sector_align = max(bdev_logical_block_size(cc->dev->bdev), (unsigned int)cc->sector_size);
-> +	val = round_down(val, sector_align);
-> +	if (unlikely(!val))
-> +		val = sector_align;
-> +	return val >> SECTOR_SHIFT;
-> +}
+friendly ping.
 
-This piece of code was copied from the dm-crypt target. For dm-crypt, I 
-was actually benchmarking the performance for various 
-DM_CRYPT_DEFAULT_MAX_READ_SIZE and DM_CRYPT_DEFAULT_MAX_WRITE_SIZE values 
-and I selected the values that resulted in the best performance.
+Hi Cook,
 
-You should benchmark it too to find the optimal I/O size. Perhaps you find 
-out that there is no need to split big requests and this piece of code can 
-be dropped.
+How are you doing? I really hope we can solve this problem.
 
-> +               /* Omit the key for now. */
-> +               DMEMIT("%s - %llu %s %llu", ctx->cipher_string, ctx->iv_offset,
-> +                      ctx->dev->name, (unsigned long long)ctx->start);
-
-What if someone reloads the table? I think you should display the key. 
-dmsetup does not display the key if the "--showkeys" parameter is not 
-specified.
-
-Mikulas
-
+Thanks,
+Zach
