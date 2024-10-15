@@ -1,60 +1,77 @@
-Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A3DAC41C63;
-	Tue, 15 Oct 2024 02:01:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
+Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3A471D14FF
+	for <linux-hardening@vger.kernel.org>; Tue, 15 Oct 2024 10:19:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728957685; cv=none; b=gdTU5p/RarBeZ7mLWoFascg4no7BhM+3KAO2wSpOIotAKvRSwpBazs+URY/MdPxGYLlvuG6Qtc/yT7F2gUAmZTa1s9pHTad3Tcb1p0Id8oJVfnlRTUj/iTo/fzilrtep5egQjpuObV8fA4W7w1GSr8uhUh/h1CqYUNxu9mUFdkI=
+	t=1728987557; cv=none; b=ajfnWc4qrJoyyCvwesYq6PUMaoLzXOWk10wT4mjTbP5DHnSPQoMkGZnT1EijWoTLd7a0i4OAJPCg3T3wQCPOFM2F9qIqNc8cUhVNH46OLpRD9he0cyjg5AP0pp7q7NnZmBvPcLeUQuQu8h/AhQfXQ2rdsc4f28sX71eyl/RwiwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728957685; c=relaxed/simple;
-	bh=DTyI8SRxp7jPsONaFnChyUkuV4JPvnXIdwINlLHvqOQ=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=MX8viaAz6xy9CLUeX3CtV4s2ii9Aeecs0zSrpxomvKsWlOflZOF1kmX82nkscnmjyN08RSq+FYZLCz2lnG6lbnimKKAXhfjZAKPmo/MkqposE97khrlG6+R4CiSKl20PJU98bt7d60F/CeamV+VIPVF8e88SGqtCjj/Rj+6DtkY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
-Received: by angie.orcam.me.uk (Postfix, from userid 500)
-	id E6EE492009C; Tue, 15 Oct 2024 04:01:13 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by angie.orcam.me.uk (Postfix) with ESMTP id E00EB92009B;
-	Tue, 15 Oct 2024 03:01:13 +0100 (BST)
-Date: Tue, 15 Oct 2024 03:01:13 +0100 (BST)
-From: "Maciej W. Rozycki" <macro@orcam.me.uk>
-To: Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
-cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, zhanggenjian@kylinos.cn, 
-    ricardo@marliere.net, bvanassche@acm.org, linux-mips@vger.kernel.org, 
-    linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] mips: sgi-ip22: Replace "s[n]?printf" with sysfs_emit
- in sysfs callbacks
-In-Reply-To: <Zw2GRQkbx8Z8DlcS@mail.google.com>
-Message-ID: <alpine.DEB.2.21.2410150220160.40463@angie.orcam.me.uk>
-References: <Zw2GRQkbx8Z8DlcS@mail.google.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+	s=arc-20240116; t=1728987557; c=relaxed/simple;
+	bh=9kxCMO+ZKfdLpSe3ykZ9428rS0DuSJXVQQ17j+vf3bE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=k4mrXjHjdWRuNPyuZy5mE3P1qeKFi+XbChEeB4V0eMeSCqDJmkz5VBVY6UyTdjkLjBkrX+1MapFPl0mBtSl7R3ZnukVKyGQ9xeGuS/X6pxPuVAa7VG0kVWWz3RynQuFDdTizxJRQD4B27G82y5B5UtlqTBE158F0zEabl5OW3ko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Xq7ZBlNQ; arc=none smtp.client-ip=91.218.175.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Xq7ZBlNQ"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1728987551;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=pOwhazTNXJq9la23bs9AQS6qvy6I2WjnVd+IS9JBBEo=;
+	b=Xq7ZBlNQnUigAHx8FZkA722SNh81nb3PNNCW4C0yWvWmKHPUgMNxAa0YsqbE8Omq1gd2FQ
+	ukl0M0jVK2vyEklpEoDa2G2o9Wo8FidMd3smQb5H4DDUGWnuuL8qzo6gLFFo9OM2xnHAz1
+	EXPPTqk5mWwTmcJwI6Uu1jmtzGhbPtQ=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: "K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] hv: hyperv.h: Annotate vmbus_channel_gpadl_header with __counted_by()
+Date: Tue, 15 Oct 2024 12:18:29 +0200
+Message-ID: <20241015101829.94876-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, 15 Oct 2024, Paulo Miguel Almeida wrote:
+Add the __counted_by compiler attribute to the flexible array member
+range to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
+CONFIG_FORTIFY_SOURCE.
 
-> snprintf() has the documented, but still rather strange trait of
-> returning the length of the data that *would have been* written to the
-> array if space were available, rather than the arguably more useful
-> length of data *actually* written, [...]
+Compile-tested only.
 
- Why do you think that just returning `n - 1' in the case of a length 
-overflow would be more useful than returning the unmet buffer length 
-requirement?  I think the opposite is the case: the value returned lets 
-you reallocate the buffer for more space and retry, and there's no other 
-way to figure out how much this would be.  And if you need to know how 
-many characters were actually written, then `min(n - 1, snprintf(...))' 
-will do (and code you propose to replace does exactly that, open-coded).
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+---
+ include/linux/hyperv.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- The change itself makes sense to me, but not your proposed description 
-I'm afraid.  Just replacing open-coded pieces with calls to `sysfs_emit' 
-is enough justification.
+diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
+index 22c22fb91042..ec62d625c439 100644
+--- a/include/linux/hyperv.h
++++ b/include/linux/hyperv.h
+@@ -643,7 +643,7 @@ struct vmbus_channel_gpadl_header {
+ 	u32 gpadl;
+ 	u16 range_buflen;
+ 	u16 rangecount;
+-	struct gpa_range range[];
++	struct gpa_range range[] __counted_by(rangecount);
+ } __packed;
+ 
+ /* This is the followup packet that contains more PFNs. */
+-- 
+2.47.0
 
-  Maciej
