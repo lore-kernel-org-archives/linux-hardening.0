@@ -1,117 +1,107 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE028101C4
-	for <linux-hardening@vger.kernel.org>; Wed, 16 Oct 2024 01:23:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9FFF1586D3;
+	Wed, 16 Oct 2024 02:10:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729041792; cv=none; b=Xz8panaM7nN5LBxZMVYAaDxWu9Lj2ud7JHYThULZYg3WNJXbNCwuCilC0qNKZPXxuBtAvQJnh2O5KnJg4+bHZ7PsoPG4Z+zQsELiXDKfEhXT83MNOlN81H7L2dLbJA2a5GZz1QzEjAGLSJ4J263nJihuK/jvH2fXfPFRFZ378eY=
+	t=1729044648; cv=none; b=oQeHDqDZ6oIGY4GrmfVWfUApAreB3h9GgRBodt0YBvT7mXXp7H50XkPsQtBKoP8luH+ap6uEythI38gVcmqG88QVNPJj1aumflL7vuy4ulH+eHVEUH2JhrUfupTi9/Oja8vCVlGHQoDkIyLyeEqu7lBDyKQ7IR1rOa7p0f6LNAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729041792; c=relaxed/simple;
-	bh=aKMOa2lsMcZ+PzeFhDC9/s5MDDTvDylmgOWrFIZX/mc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Txuxy3JXTv8qEI6f2/2VcELHqX/Q9yAUsLdCErN3YQ+FU48Pw7hFuox9uh0vXFGf+HoDd2mU/ArURUHY3vkTToUt4xl6xiRfBkSOEqXDgYyFSiLlmueeskkTr4wqi5shbcQHT7G6nWRZbO4S2gdhroxDr4vrc/rxBNenApLQ4SI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MSFTIpZb; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1729044648; c=relaxed/simple;
+	bh=JkUIGZNfmaj7qem7eaChoukIOjSZILLEEE0eS94aM58=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HDMxkS19dn4ImeohZuvA2niG/6dm0vnOHWNNfZYBsgCzcfJKpUo56nTAscxZVlpTBmWelgZnAA/qpFBfwtY6tGYh2d5h4RilQdEbfmegul8+v8uJrmmecow3iR6LjiF0TB52xP1R1K5c59Mvhf7DtgdBJaVscTklCH0QQef60c8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J/gAVy8Y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MSFTIpZb"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a99f1fd20c4so572735366b.0
-        for <linux-hardening@vger.kernel.org>; Tue, 15 Oct 2024 18:23:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1729041788; x=1729646588; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aKMOa2lsMcZ+PzeFhDC9/s5MDDTvDylmgOWrFIZX/mc=;
-        b=MSFTIpZb2HNKhOW7IY+Mal7DtWGSFphZFEbUqc8O1ALbn6XUbKAmQrLfKAoJJJZXcR
-         HHjkfXpHK1dW75rtDd8OPNZO6kWdq8pDpzk0Yu3GXFly7jt/9XofjP6p5amIgYacnGsr
-         OYN/egF9ZoFKOXijHxyDIOw29I637Bmi14/UjGb1YpKNhbrjiP24/NGkU54xqSZ9w+ai
-         hS050iPK5X3ecAhWmeJJBjMRo5AG4McD/4et3ITfOFlwYsfajoNf9Z5A0cOBdI/JzM0x
-         bgG7Yfn37NkMEv4OTyZCuPOuLjyxh23sUJKFfqOpAo8yxkmCMP5nQ+bEOJyM0h4FvzT1
-         X7IQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729041788; x=1729646588;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aKMOa2lsMcZ+PzeFhDC9/s5MDDTvDylmgOWrFIZX/mc=;
-        b=cxvGOiQo5OWZgIXXruH7JOiLygSkC7yBged2lhzPG3oeJwGmVvCsSvj40Y+y/kwtOR
-         qwxPFE+sd3T/6xThY/o/1kvshAHF4gxEgeXoZnJYOiBywFlblbKkr9Q892R7g0d2XOnF
-         hJTOs1NXe3AasxljYTYFA0eU/mVCdQ2qgqjKtDENfw7itsayxDgBgFQKLpppgbvWRJxh
-         KIbPHD0PCuFX/drwruSytNw/OAzxQxRsoRplm3RYld9BkBwcN6P30J5ZGn9FTUo4xvaR
-         BGrQqCnRH+FczQqwyPv57eiHRa3iO4OXKlPMgm6JARHKF6vCuRxcjnliYMdhu9tEd67b
-         VTsQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWou1IpBarQnpu9YhnndP0IOeB9VMsuCd09VNDLbEjHsDfmCyJHfpnf5xV5MBdXKv4y2p70knJO04DlGEHO8ik=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZuGqnDISIak9GVcWlrNvwcibnhW+pMpxJLaKAJWK7YvNK48/A
-	tZvKPy0I3zNKRJ3RDyPnT7pi0c0+PteM1hOMWwoiACp3Cf8RzviwIa1ZHliOobskqMJyuBRn/2U
-	nHxxVdvoyMrVUNYFEy4gxoNjn4X4qQnfVXoM=
-X-Google-Smtp-Source: AGHT+IHdkfklJ4F1OwuM1/1DqBmbkhdk3WE3vsIugWlT33b5VzThcJq7LfO9xnbbLXiMKZS361OAmCHXw1jqbZb5Hjo=
-X-Received: by 2002:a17:907:9709:b0:a9a:4d1:460 with SMTP id
- a640c23a62f3a-a9a04d10662mr910288566b.63.1729041788043; Tue, 15 Oct 2024
- 18:23:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J/gAVy8Y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2835C4CEC6;
+	Wed, 16 Oct 2024 02:10:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729044648;
+	bh=JkUIGZNfmaj7qem7eaChoukIOjSZILLEEE0eS94aM58=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=J/gAVy8YxNjwbTlTatVY2kT3t/dj5nfy4x4C4clrwBwimQpbJSogH7LRb0ln/8dCF
+	 l3qajIB9MLDv2QJ0sUTAdnGEq8I+o1Dwf6OB2jg4TxhwEj1pxLNxKT/vuP8aZohrcb
+	 9rXoxOCm6JwsiVr5rFirbIPqrwCMSMQ0BsJVZXU37TIopDkfnYtFihl0/yDUAem5OI
+	 me1JGRAGo/kXVod9WsKl/BpoYw3RTIK8VquLdiXXi1fDtsb01mibFfipaemEfpgRnJ
+	 645IlC93qY0vVNpqJqPV0O7CPhRaciVqe7YSt93ZaZJ3RpOSOLmf//sHBCAwt2MYJu
+	 Lzpu8bTXRu1ug==
+Date: Tue, 15 Oct 2024 19:10:45 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Kees Cook <kees@kernel.org>, Ard Biesheuvel <ardb+git@google.com>,
+	x86@kernel.org, llvm@lists.linux.dev,
+	linux-hardening@vger.kernel.org, stable@vger.kernel.org,
+	Fangrui Song <i@maskray.me>, Brian Gerst <brgerst@gmail.com>,
+	Uros Bizjak <ubizjak@gmail.com>, Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCH v2] x86/stackprotector: Work around strict Clang TLS
+ symbol requirements
+Message-ID: <20241016021045.GA1000009@thelio-3990X>
+References: <20241009124352.3105119-2-ardb+git@google.com>
+ <202410141357.3B2A71A340@keescook>
+ <CAMj1kXF7aFyBOOxQQsvsAsnvo3FYrkU=KA1BiMeSuKq1KHC1qA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZvV6X5FPBBW7CO1f@archlinux> <3E304FB2-799D-478F-889A-CDFC1A52DCD8@toblux.com>
- <A499F119-5F0C-43FC-9058-7AB92057F9B3@toblux.com> <Zvg-mDsvvOueGpzs@archlinux>
- <202409281331.1F04259@keescook> <21D2A2BB-F442-480D-8B66-229E8C4A63D3@toblux.com>
- <Zv6BEO-1Y0oJ3krr@archlinux>
-In-Reply-To: <Zv6BEO-1Y0oJ3krr@archlinux>
-From: Bill Wendling <morbo@google.com>
-Date: Tue, 15 Oct 2024 18:22:50 -0700
-Message-ID: <CAGG=3QVecaZfoRrjToToq8=Azh8M0vQ5Q=V8dfhdBnDR8GWy5A@mail.gmail.com>
-Subject: Re: [REGRESSION][BISECTED] erroneous buffer overflow detected in bch2_xattr_validate
-To: Jan Hendrik Farr <kernel@jfarr.cc>
-Cc: Thorsten Blum <thorsten.blum@toblux.com>, Kees Cook <kees@kernel.org>, kent.overstreet@linux.dev, 
-	regressions@lists.linux.dev, linux-bcachefs@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	ardb@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXF7aFyBOOxQQsvsAsnvo3FYrkU=KA1BiMeSuKq1KHC1qA@mail.gmail.com>
 
-On Thu, Oct 3, 2024 at 4:33=E2=80=AFAM Jan Hendrik Farr <kernel@jfarr.cc> w=
-rote:
-> On 02 11:18:57, Thorsten Blum wrote:
-> > On 28. Sep 2024, at 22:34, Kees Cook <kees@kernel.org> wrote:
-> > > [...]
-> > >
-> > > Sorry, I've been out of commission with covid. Globally disabling thi=
-s
-> > > macro for clang is not the right solution (way too big a hammer).
-> > >
-> > > Until Bill has a fix, we can revert commit
-> > > 86e92eeeb23741a072fe7532db663250ff2e726a, as the problem is limited t=
-o
-> > > certain situations where 'counted_by' is in use.
+On Tue, Oct 15, 2024 at 12:56:57PM +0200, Ard Biesheuvel wrote:
+> On Mon, 14 Oct 2024 at 22:59, Kees Cook <kees@kernel.org> wrote:
 > >
-> > I already encountered two other related __counted_by() issues [1][2]
-> > that are now being reverted. Would it be an option to disable it
-> > globally, but only for Clang < v19 (where it looks like it'll be fixed)=
-?
+> > On Wed, Oct 09, 2024 at 02:43:53PM +0200, Ard Biesheuvel wrote:
+> > > However, if a non-TLS definition of the symbol in question is visible in
+> > > the same compilation unit (which amounts to the whole of vmlinux if LTO
+> > > is enabled), it will drop the per-CPU prefix and emit a load from a
+> > > bogus address.
 > >
-> > Otherwise adding __counted_by() might be a slippery slope for a long
-> > time and the edge cases don't seem to be that rare anymore.
+> > I take this to mean that x86 32-bit kernels built with the stack
+> > protector and using Clang LTO will crash very quickly?
 > >
-> > Thanks,
-> > Thorsten
-> >
-> > [1] https://lore.kernel.org/all/20240909162725.1805-2-thorsten.blum@tob=
-lux.com/
-> > [2] https://lore.kernel.org/all/20240923213809.235128-2-thorsten.blum@l=
-inux.dev/
->
-> This issue is now fixed on the llvm main branch:
-> https://github.com/llvm/llvm-project/commit/882457a2eedbe6d53161b2f78fcf7=
-69fc9a93e8a
->
-> So presumably this will go into 19.1.2, not sure what this means for
-> distros that ship clang 18. Will they have to be notified to backport
-> this?
->
-FYI, Clang 19.1.2 shipped with your fix in it.
+> 
+> Yeah. The linked issue is not quite clear, but it does suggest things
+> are pretty broken in that case.
 
--bw
+Yeah, i386_defconfig with CONFIG_LTO_CLANG_FULL=y explodes on boot for
+me without this change:
+
+  [    0.000000] Linux version 6.12.0-rc3-00044-g2f87d0916ce0 (nathan@thelio-3990X) (ClangBuiltLinux clang version 19.1.2 (https://github.com/llvm/llvm-project.git 7ba7d8e2f7b6445b60679da826210cdde29eaf8b), ClangBuiltLinux LLD 19.1.2 (https://github.com/llvm/llvm-project.git 7ba7d8e2f7b6445b60679da826210cdde29eaf8b)) #1 SMP PREEMPT_DYNAMIC Tue Oct 15 19:00:21 MST 2024
+  ...
+  [    0.631002] Freeing unused kernel image (initmem) memory: 936K
+  [    0.631613] Kernel panic - not syncing: stack-protector: Kernel stack is corrupted in: free_initmem+0x95/0x98
+  [    0.632606] CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.12.0-rc3-00044-g2f87d0916ce0 #1
+  [    0.633467] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
+  [    0.634583] Call Trace:
+  [    0.634837]  panic+0xd4/0x2cc
+  [    0.635146]  ? _vdso_rng_data+0xd80/0xd80
+  [    0.635550]  ? _vdso_rng_data+0xd80/0xd80
+  [    0.635965]  ? rest_init+0xb0/0xb0
+  [    0.636312]  __stack_chk_fail+0x10/0x10
+  [    0.636701]  ? free_initmem+0x95/0x98
+  [    0.637074]  free_initmem+0x95/0x98
+  [    0.637434]  ? _vdso_rng_data+0xd80/0xd80
+  [    0.637838]  ? rest_init+0xb0/0xb0
+  [    0.638196]  kernel_init+0x42/0x1e4
+  [    0.638558]  ret_from_fork+0x2b/0x40
+  [    0.638922]  ret_from_fork_asm+0x12/0x18
+  [    0.639331]  entry_INT80_32+0x108/0x108
+  [    0.639864] Kernel Offset: disabled
+  [    0.640224] ---[ end Kernel panic - not syncing: stack-protector: Kernel stack is corrupted in: free_initmem+0x95/0x98 ]---
+
+I can confirm that this patch resolves that issue for me and LKDTM's
+REPORT_STACK_CANARY test passes with that configuration.
+
+Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+Tested-by: Nathan Chancellor <nathan@kernel.org>
+
+I presume the '#ifndef CONFIG_X86_64' in arch/x86/entry/entry.S is
+present because only X86_32 uses '-mstack-protector-guard-reg='? I
+assume that will disappear when X86_64 supports this option (IIRC that
+was the plan)?
+
+Cheers,
+Nathan
