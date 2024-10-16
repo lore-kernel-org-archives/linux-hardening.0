@@ -1,297 +1,368 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1B1B14EC47;
-	Wed, 16 Oct 2024 23:19:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729120773; cv=fail; b=OIGkE30oDcBUqAZt81j8msQrRT9MirZcodO1JvQ7WJmEO4Ss7+DRSl2YMQLRborR4C4XnD/C0ufEYeGipTWpbkBOsaB3aJhH7AGxC72B/GK+X9OP2QjpqRm1tyD90s4018z5XU2qv7KeYO8CsdTzCFpy+mSINz5aqfhodff8zsE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729120773; c=relaxed/simple;
-	bh=7+3LRYVsmsP62QvLR26Yy7IHiRNDQdb0s2GGUSE4edk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Mzm0Az0rJ3HDzd4CP+0SoyygsQb4vGBbIGQf7mOjxJj4AaJwAizOFXFLjFj3bRhdadvNKDmr6aDySu9U8QmYo0UiPLZHW0GMSghVhrmXjvnPJutmJm3Ky1+MW3uRt18Zrgv3WUztHo7+sP2XQlOnYtvrCga54ftX2YpUS+t7tkA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=irnb3k2h; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=rbyXdm+w; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E375E1D279F
+	for <linux-hardening@vger.kernel.org>; Wed, 16 Oct 2024 23:41:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1729122093; cv=none; b=A1qtpk0/JM8K6i0TiyaUECgn9iV+XzZtp8VY+UhZPXbNQRytlg6AYBtNFQzWzEpaP9f2+9woRjgqbQKwUkALpXz+DnslWDSAJeB51hiB5+JTBJwbcCtXvSsw2vGW7cmJiXYplcLIXW79ObfC7Spe5nQFS/MdVzZ7uOv96zKBMd4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1729122093; c=relaxed/simple;
+	bh=RRswTXU4k/AnzFdLQe+coTcUgPkoL6Vo+dUI8tc4lAs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=l03wzDgUho6zO1fwF/n8l9YWBQoSzBtxxsVVylwVnihD3L5E2t6+U5muOGZgW/bljMZ9E0hpQuyRCImwl+qd9kLq2I29eq2U8DkqTG1o7OxlswWNYmqL0k8VwAkSzo5MyVHhhByThcdulV7aATaGuWMoj+xbKNYTIrHBagDujtc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JVl34fek; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="irnb3k2h";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="rbyXdm+w"
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49GKwabL007320;
-	Wed, 16 Oct 2024 23:18:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2023-11-20; bh=75IZ2WjjPSO4CoWci+58vlD9zlzYNtDsIBgOOOdoShI=; b=
-	irnb3k2h+5J0pjX69uBa4cCUwZIdCDYvUHtKFtiB8UmNBshfGWf7adR3bl6IJdhk
-	W+gf02MoG0kZOfNa7luNCbmAbOibgWKgzuYplHmvqexltIT2mwAGUXP4Kf1JhFnU
-	Urf3sDhsiqOP2IqzL7/lDEbxsq5zcaHP7j6x6EK9/wJMqmxJq2K0Y1J2B9f41RBJ
-	Y3wv807TPzYAGrj9Sd1NlswPR2aTPHWfqMnqdmEfuK/AkacUlowm2V0hXCnH/uZo
-	/xxMRpeHIswjWnaTh6moTe8cjkt/hGSgfR61uJ/qi7UQY6aWBtEquIFPyXgDaYaw
-	EILkOoJEczoI67PyD4HfMA==
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 427gqt52d1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 16 Oct 2024 23:18:51 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 49GMqABJ019938;
-	Wed, 16 Oct 2024 23:18:50 GMT
-Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2169.outbound.protection.outlook.com [104.47.56.169])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 427fj9g867-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 16 Oct 2024 23:18:50 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=sTxc4awsZt8DoP6eIu5EGyYfj7j8mwwvXa2hnnVg9x6qwzIpJBMR4/td5f2e9dTp8eL9R3VrRvzh6Z9fKGOnasgji8FmtcEhNSHqlkboeQ477SpK7jsvlMZpLsZzyG+AN/6bIHHDDbQV7KyJSpTNoqEXA0MQC9tKumFgAOSUHMRMjp3lT+w86Xdj9CnvatqFEF+gJ9GS/tErn9N9hAbMXTyYv7y9oSNxaBgRyJHYoPrehW8onvFAbrzcAP3kA8jCpFcZXzgqW2DMeBA6xHSln8YEJKBVm6HV4B/cjsO9XbbLAwweUKsTvgv8ruK+U/h+d/rh7ZHL2Af4cuRdXOnvzA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=75IZ2WjjPSO4CoWci+58vlD9zlzYNtDsIBgOOOdoShI=;
- b=v8BMkQLOHv1sReNPlwXhnAn2t1WSGTcQ5Cdb2hiN68OFcQrZp+zxw0X9ZEexO5fYrDli9f2PPW2Y4KngQC0PmBeVy3InQK53uYKIkGOi7G6uuKRAfaefQGeH7TqkvCWZLb5Kw6j5cQT81DPt18LFZ6blz14MjBmV8gPP57ww7R7IqFKIZDkMZFbv54w+NS2XZfJ9IFacPkcUPsklP1AGCZXuF6xtVlHrONMnpwD1QDDuKxopFBUeedwVINdy5nRD/506yDxuU+pMoFFbqOnWfS4trI4+2QB67K71ACzeTYpanNE2CCl2YF2KsUrQ26zQmJg5j4dHFl5lnxL9rqqT9w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JVl34fek"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5c9362c26d8so2541690a12.1
+        for <linux-hardening@vger.kernel.org>; Wed, 16 Oct 2024 16:41:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=75IZ2WjjPSO4CoWci+58vlD9zlzYNtDsIBgOOOdoShI=;
- b=rbyXdm+wnmFVD+6wNDzKK8Ww3/ItrDh0Js/tHd/pGz4LVA+1bsSPR+fGDDItjO1ArDf6jKZ7IU0fkr5qLgXSdcYLBi168hZUtZnAG4kz/SY0tBoglk+4eR44SEw35v6fxwscEvRjBHZMCku40offjolanfzaQ8JmCrKKNk9LVqU=
-Received: from DS0PR10MB7933.namprd10.prod.outlook.com (2603:10b6:8:1b8::15)
- by CO1PR10MB4514.namprd10.prod.outlook.com (2603:10b6:303:9d::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8069.18; Wed, 16 Oct
- 2024 23:18:46 +0000
-Received: from DS0PR10MB7933.namprd10.prod.outlook.com
- ([fe80::2561:85b0:ae8f:9490]) by DS0PR10MB7933.namprd10.prod.outlook.com
- ([fe80::2561:85b0:ae8f:9490%7]) with mapi id 15.20.8069.016; Wed, 16 Oct 2024
- 23:18:46 +0000
-Date: Wed, 16 Oct 2024 19:18:42 -0400
-From: "Liam R. Howlett" <Liam.Howlett@oracle.com>
-To: jeffxu@chromium.org
-Cc: akpm@linux-foundation.org, keescook@chromium.org, jannh@google.com,
-        torvalds@linux-foundation.org, adhemerval.zanella@linaro.org,
-        oleg@redhat.com, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-mm@kvack.org,
-        jorgelo@chromium.org, sroettger@google.com, ojeda@kernel.org,
-        adobriyan@gmail.com, anna-maria@linutronix.de, mark.rutland@arm.com,
-        linus.walleij@linaro.org, Jason@zx2c4.com, deller@gmx.de,
-        rdunlap@infradead.org, davem@davemloft.net, hch@lst.de,
-        peterx@redhat.com, hca@linux.ibm.com, f.fainelli@gmail.com,
-        gerg@kernel.org, dave.hansen@linux.intel.com, mingo@kernel.org,
-        ardb@kernel.org, mhocko@suse.com, 42.hyeyoo@gmail.com,
-        peterz@infradead.org, ardb@google.com, enh@google.com,
-        rientjes@google.com, groeck@chromium.org, lorenzo.stoakes@oracle.com
-Subject: Re: [RFC PATCH v2 0/1] seal system mappings
-Message-ID: <2durheir3u7uv7y5d3zsuxgkxbfhyj6gbef6xiktp2nybf7os2@zppt55ut7f57>
-Mail-Followup-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	jeffxu@chromium.org, akpm@linux-foundation.org, keescook@chromium.org, 
-	jannh@google.com, torvalds@linux-foundation.org, adhemerval.zanella@linaro.org, 
-	oleg@redhat.com, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	linux-mm@kvack.org, jorgelo@chromium.org, sroettger@google.com, ojeda@kernel.org, 
-	adobriyan@gmail.com, anna-maria@linutronix.de, mark.rutland@arm.com, 
-	linus.walleij@linaro.org, Jason@zx2c4.com, deller@gmx.de, rdunlap@infradead.org, 
-	davem@davemloft.net, hch@lst.de, peterx@redhat.com, hca@linux.ibm.com, 
-	f.fainelli@gmail.com, gerg@kernel.org, dave.hansen@linux.intel.com, mingo@kernel.org, 
-	ardb@kernel.org, mhocko@suse.com, 42.hyeyoo@gmail.com, peterz@infradead.org, 
-	ardb@google.com, enh@google.com, rientjes@google.com, groeck@chromium.org, 
-	lorenzo.stoakes@oracle.com
-References: <20241014215022.68530-1-jeffxu@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20241014215022.68530-1-jeffxu@google.com>
-User-Agent: NeoMutt/20240425
-X-ClientProxiedBy: YT4PR01CA0173.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:110::14) To DS0PR10MB7933.namprd10.prod.outlook.com
- (2603:10b6:8:1b8::15)
+        d=google.com; s=20230601; t=1729122090; x=1729726890; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3BEZJUSML+8CSCJJzTyo8d6sATot5pW+Vdg7IEDfwPQ=;
+        b=JVl34fek3RyPr7fft4WoesHhzaEirOIeuRJtEKyNM5ZvgUdTkNR3WPdyxpw13g5VUK
+         Cl0463c9HF7JjGD6F0OAMnSRF55THFB+y89wPoa/FGrRfD6lMYUt/QKC+UFrl8MBcLZf
+         0LFbbd8vo7ebRaZw0D8EZykd2G/rholTRzwrLZcTgEQmEe+TDsUJWT36dKsjlLCL3M6w
+         nmTqmZsbl4ZmD+EJ+URXohYvTzXAt/Y6OFHCmihkXHSuY2vXBvFYoPY1nW0eGZF2PSFN
+         irYD1gYrebiNouFtadD9eUCzcoEPoLFO2uSjw0QJSEBzNSb8vxEBMwpnxnfVBgGcRi/b
+         oRRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729122090; x=1729726890;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3BEZJUSML+8CSCJJzTyo8d6sATot5pW+Vdg7IEDfwPQ=;
+        b=wx3ADY+J7r6Z6I8HIzxWMVHdsIH8+srR+sbu3TOB0Ojr/ivYLnasFvpvp/+eInbSh6
+         AYUm+dSFqVDM/+6sPeJstZtfbYEOiKcZ/eSXjRB7dxGREyCRvgcbIvb7Jy4YFIT9jRYm
+         S82XZz4phfLmWLWucwvp4dZJQQtc7QxBjubYPwHC0VxtjwL7mr9lmMFkH63OOkA9ZSCs
+         5iA7CEhP7qjBUVZ0EPrC5WTmb6qy03b6APELzrQyPnAdAV9a+rD/fSyon5gqIm5VCKfm
+         c1NZqKTh4U8Q8Ora0RJkMEEmavGdmPKIHqNSPmQTyPtlimu6g/uv+qMTbX2tOpnpQN9v
+         xwLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWomSA+Le11eS3oO0qj7312lnzuM+XnHMxNEIvuUzvqSLYIXay+8bm0O2kljBD+V54wC9J6kPccmgc4fa6Q6X4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxYfNw1+Y5v9TU9c0Wn8GqhNiMFcKVGEAEeUqXZz2+OHEtGTt9C
+	XNxks9NgOLnJthQwcsIyiVftnF4VWycUxNtn8HgaQ+wwM5RAlqYTQOVUBN8WU/ePPTvJ/2rZAcB
+	dDoNLzFnMh8uklt9OnvuAPn5DDHUP2inY5EqcQ327rIgzh0HVdq0=
+X-Google-Smtp-Source: AGHT+IFpFNN1yQgdfY9Xjr7hFWqOdaR+k/29nfjRc/jI9+D6aolt4lqR3s1ONz+vmchDUvxgFPjIIg6QjPlmxW61zb8=
+X-Received: by 2002:a17:906:478a:b0:a99:f94b:f92e with SMTP id
+ a640c23a62f3a-a9a4cc58ef8mr98970966b.27.1729122089676; Wed, 16 Oct 2024
+ 16:41:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR10MB7933:EE_|CO1PR10MB4514:EE_
-X-MS-Office365-Filtering-Correlation-Id: 32f818ec-6d7a-44b8-cd2f-08dcee38e22a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?ZFJIV2FnVlNUMHN5QjBxaFpMT3lNV1FIUUw1L1hESUZpNklvT2w4VzV5UlJO?=
- =?utf-8?B?cWhzbytWRlZ1dUJzMmZpZ3dZWlVFMjNnRXJRdnVtbENFRnc2VFBQK25yQWdz?=
- =?utf-8?B?dzZYMXV5VittZENrdWlWTGhKMnlLNWRpWWlVczVyd003QkwxUHArdWovOEs5?=
- =?utf-8?B?UHQ4SlhQUnNqSjBMSWVuVkJzcFVaRXdrNFNFazJ0eXRadVk3dkdGaEhPU1hR?=
- =?utf-8?B?U3JRSmdEWkpZVm1JNXp1QzNHVE4reWdsTGlFTVdIVU1PNTdldlZxeUpTci9y?=
- =?utf-8?B?MkRoeDduR2JjNWtRaDF2eFFSWEhrc1NmNUQ0SDNGTW5GaHJKemh1c3pSYm5Q?=
- =?utf-8?B?NGs2MWRCMVlGV2JFd3lack5GS0k4UHB1ZkpNZmJSaTJiTFBCR0hjRlBaS3J6?=
- =?utf-8?B?VWN0bEt5SXlBR3g1eVNCTmE5c2l3T2Q5MzBqNmhDV2JJVVBoa285bnM2cS9z?=
- =?utf-8?B?RFFZWmN3YWxoTHdSbm5XVnlyaHFENXpYa2ZEWU1rcHdGcFVhTVJ5dFZWTzRZ?=
- =?utf-8?B?UHNzRmZzcTBjZmc1dnVwb0NyWWJjelc0UHV0Z2JTOE9IYWRlcmloRUdBZ0tP?=
- =?utf-8?B?VE5abEF0MTBOZHVzWkZ2Uy94QXBQNmVKbkNBMm9sUVBqeDFqVzM1SFgyZW9l?=
- =?utf-8?B?OE1NWmNaaVJzbjZOZDQ0aWNjQUlKS1RLaU1FV0RxWndnb1ZEWHRidGpPWlhy?=
- =?utf-8?B?ajI0ZTZMZkR1aGdiRmZETHdMNVlySmxHbGR2bSthaU1TQUtIaVdlaUlIall5?=
- =?utf-8?B?WllWN3FWdks3d1BPbUJSdnNWa3NaSjIvS3pJSXJvV3Q1RjZKbFNiSWh0MHhr?=
- =?utf-8?B?a3o4SWNEYnNaZ1Awckx2djVlM1RwWG5yWXpGa3p1bk84Nm0wN3k5NlZqSW5s?=
- =?utf-8?B?YmVmS01rRlkxV1A5bGNNUlJOei9BTkQyNG00aUFYSlYyQnllcTJQb0NUZ2R3?=
- =?utf-8?B?R0w5NTJQV1BvbjRVZ1J2UmE0UUFET3I0ZDZIWk1ua0tlWUVDUlNvRUozcVNW?=
- =?utf-8?B?WmlwSUF6NkZKUWZoNFM5cFJQeEFKRllJZTcxU1oxR1dCOUFaeHMyOHZMUTk0?=
- =?utf-8?B?VjV6eGowVTRTbUtiKytQR3V0VHJKcDI3QjhEOWJxKzRUZDlCRzRBT29vWGRC?=
- =?utf-8?B?YU9QRnlTTU1GSGY0ck1rNGUyMzhuUVVsbVoydFBQTFdlMkhMVHhKbU1hdFY4?=
- =?utf-8?B?b1dxYUZqa21sR01HK3g5OTd1M0lpMnFBVzJ6bWk1SmdzdmZ0enNLQTVVZUZP?=
- =?utf-8?B?UDZIRm5Wb3V4eXNvSDFBNEZwYXE3RVNiVE0zeXo1QWlBOXBmcTloNlBJYUJC?=
- =?utf-8?B?bGdqakZmc2FsNFVSbzh2ZzNkank1MnV5ZXdpNjhqRE5BWnNpQ1NrWmdQSlNZ?=
- =?utf-8?B?L0VZb3Boa2lqM1I4L2hxVlh5SjdHQjQ4di9Cc0xnOGtwR1JHTGFTSkE2NThO?=
- =?utf-8?B?MkhTV2FFaEE5eW9uSURJMzBFV0xPNmltT1F2V1oyb1NYbmwyUnh6YkErUnlS?=
- =?utf-8?B?SGxqOWoyNDFGbWk0WEZmUnBrSWVCRXNnSFlkOUNBOGovM2JtdHdtbjJHWkRM?=
- =?utf-8?B?VVAvdTZtRDBGclIrRVlYSzdITjRYNnlYNENrTitkVlNIYjBlRzc0YkZJeEJU?=
- =?utf-8?B?RkN1cWFxYVNHRXBVWS9tVXhaajYxR3VDaHcwUklrblZSQjBtQUxRWTFicmNN?=
- =?utf-8?B?RVZKZmpnYWgrcUY4WjZ2R2F4b2tUWlM4TUV5NC8zbjJlLyt2THdpYzZMbTd2?=
- =?utf-8?Q?RuFcJIBOdgJ3tqlajCWpP1QSAyIpQR9CoCP49uX?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR10MB7933.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?U29XU0dIeWgxYmxPOVFwS201Ym1nK1B6SzlIczZqWGh5U2ZNNGJtZ2RIMlU4?=
- =?utf-8?B?SHU4ZEVHdTIvSjBwSmFPS0xsMkZmWjJYZVJMWWxpc3F5RFNLbnY0a0MxdjNm?=
- =?utf-8?B?YlJuUjZWbWttMnR0NTA2dHJEZXNNQ3Rpd1NxaFFZaTE4WDBvckRjYVZPRjFm?=
- =?utf-8?B?anVYMnBKYWM4YThFS2x0YlVzWUI5U2FmWHhzSnpwdGg0djRaYUU5ekg3TEMr?=
- =?utf-8?B?Q0ptZE0xT2RmalNNM1hhb2ZQU2VVeHNYU3NaTGhlazNVV1dDVVl1MCt4bEND?=
- =?utf-8?B?dHNCd21RRnlYVlNBczFTR3poYWlZTUxUT1VaS2dQRXplTEMwSjNRaVlCZHpS?=
- =?utf-8?B?aDZuQ2J2TW5Sb1hxazlZbXhIazAzdXEyd1BRbUR2bXIxMU8xWjNSME1ZYlFt?=
- =?utf-8?B?ZzhvTDJSRTVoYmVicFowSWMrY2xLL05FZFNuS002dGFJOGtZblVLUEkzT2I1?=
- =?utf-8?B?YmYwdXFYczdORFp3d1llNFBzNFhhRlFlTTJnZmQrZFZsVTZnN0tKR3VnZ1Zy?=
- =?utf-8?B?QXUzVzkxRFRTbzh3WDIxUXhodTJSNGtKOVZGQ1EwQ1VRMVpUUW9odllEbldO?=
- =?utf-8?B?MEdRWnl6ZGZkMHRpZGVoSXJBd3RncHk4WU11ZGxKODZRNUJRK3Rjd0ZlZi9k?=
- =?utf-8?B?QUlqN0oxaDQrTzBFOTZQazhvTEJ6MUROT1J3bFc5WEdrQWJLcGxseVRTWUtZ?=
- =?utf-8?B?cEtidEdVbk41VHZJcXU5SVVLSllKTUdja2lZN3p0T2c1QnEwT2N6L1U0ZVhR?=
- =?utf-8?B?ZmJKaVN5OVlxRWNYZjRyVUttR2U2L0Zrd01ybXhieDd5UmZDc0Fkd0tQelFX?=
- =?utf-8?B?dEMzTVgwQ2ZsekxhMzFNS2F0bGdiSnFVWWV2MzVjdHgrMGVFT0xtQnRhVjd1?=
- =?utf-8?B?dXdScUhIcUNOMkg2UmxkWVBmSDBSTDNjRnR2WkdST2RUUDBGVkpLeXZ4bVhn?=
- =?utf-8?B?YStteUJMZU05dWhjSS9SaXZSdEVidUJWZ2VSMXBJMi8yZWwzNCtCYWZFcVFh?=
- =?utf-8?B?WVFab2JnakxEcmNYTnAyV2VmNWxXamN1N0w4SEIzbzhzK3kxVXBqSDhaanoz?=
- =?utf-8?B?bHM0RDJRRTVqTXZITUtCblg0Tkl6MEowUThJV29LRS9HOW5TckQ2RzlhakFE?=
- =?utf-8?B?ZkdjMmhDMEJLdXhRczkrbmNKL296d05qaFFRY29HWDFaUGsyUXZmbDZLMFd4?=
- =?utf-8?B?dVBFV1FkMStwTktucnArWDNLMUtGamVmZlFVK01RQUlYTUtkU3dhdGJNSTdM?=
- =?utf-8?B?MVJWQXR5bDNPV1J6dHB5Vk95Vk9CQUIxS0d1eXRxb1R3Rkx5aTNEdUVKeHd5?=
- =?utf-8?B?cjVFUEdYNE9tZWp0Y1I0enlqSi9BNUJqSDcrMjhITEYxb3J1RzdMQ0h5d3B1?=
- =?utf-8?B?RG14QnkvVm5Ybkx3NFFzVEo1OVpLeklZZzdUUnNKNkovaDNUbmc5SzBwVjM5?=
- =?utf-8?B?Ym4renF0Mk9aQkxxOTlQdjVPZi9VNWsyUlAyRDlpS096bHkyL1o5NzFrRVZK?=
- =?utf-8?B?VHIrR1MyL0xVYUU4ZklHOWdBcTY1SHc2dFMxSTQ0bkpkczNkV1NiQlYraCtl?=
- =?utf-8?B?ZU1ZeitrTEtIbTF6ZHpRNkl0S285cjRCQ3lETVlFei82UjlmSGZ0WDJyM0Ex?=
- =?utf-8?B?ZmdlYW9YSjBNR1NYSHZjWmUwR1p3MnhqYkdLanpVQ0NjaW9qWkNQZi9NWHZS?=
- =?utf-8?B?L2UyaWlsTGdDRFgvdWhrZ0xzUjIxdUJyd21lbzNzTEs1N3p2c01MZWFITHBh?=
- =?utf-8?B?VUVNVTBCVXlhZDdNSGdqT3JtSW5MemJwRWFkV3NhWmdsVUd1Q1lqZzdZQW04?=
- =?utf-8?B?aHBQd0hVSGtaYjN3VXhvc3BqenhkbVd2bWJUbVRTd0U3aVZHU3ZvaGRVaHdV?=
- =?utf-8?B?TkNaejljekIrTTFOVUVTNHBMc01YMnEyN1JjazJPd00rRE93aG9aZ2N5eTN6?=
- =?utf-8?B?V2FzMXR5YUxRaVl2a2wyaWg3NVdiU2czaE9LS3ZTV29sWDNBVDZNTVlydlRs?=
- =?utf-8?B?Vll3bTJkYWsycEFQUDh1VlNqM2NrNG1MRFhNZDBaVU12RzlvaHNHb3dXYmxm?=
- =?utf-8?B?d0I5SjA2K29XOTBKRlB3WTY3cG5DWlJreUpIdHdlQlpRYnB6djk4MzZGS09j?=
- =?utf-8?B?K3JHeFJTVnRrMkw2V2NodkdnSDFGT2I2bktvRTM4VVpuWTJCb1lZc3NVQXJa?=
- =?utf-8?B?R2c9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	AeU4njQUPX6/WUG/Z07DqynQjBvfwVQCxAX/it+W+Ae5xVuC0fGpxoHCmuDfYvGJgdzRfar3+hyX06G/GwjCzcnO7vTL4lgDAc+uypdS5tzs97rQdKe/aL+TTnxSR/5kDzQ/Ko16aCHzVEW8InZDQawR3qivw3TBXuRcWiiqEu5LApLcjnfG31EjGNGSq7HjMI80v/yYFQUYcxTFM7tDUBFZVI0gAhfhnHFos2ppp6eekgQw/iiiYjMFgVtmwkgDQeujjpidiYOP7T19/c1zYgfhiQY3empuaqBmoyxL7500+19LYIt2u6vljCfB+Br1ssHTv+wErhheUBqa8gAr1HlzGCVKxa/9UuW/u8S95VxcWSes7a/pff9ztkg3V+9cikTgAmoRMJHQQYtYqqhOsWOOuWxX3fLApkvIhiY6z+839BncLA7VzrVBHpVoq90ZvYVm3FGgZ0v/cIg8zYif/Eh3iF9SP2/x99+6H6dHD4YlmqtG67BKh/jgXniVrq5josdxvaq8/aiDEeJ7JrKyNDB1jT7LvbBx6TvtKBdqvg25fG1HHrbrnKn/tX/obgbVxyPx8Fh66uk9R00R+MuOu6rqsnO63iqUsclUsCXpNS0=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 32f818ec-6d7a-44b8-cd2f-08dcee38e22a
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR10MB7933.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Oct 2024 23:18:46.1014
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: t0XWjOxx3P0+6op2yXF9MMtzoBx3UCAQZTZwKxcSkWPQab+xhjsrV/EdM/FTtwzytZeVOWyzc2UOiis6GbST9Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR10MB4514
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-16_17,2024-10-16_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 mlxscore=0 phishscore=0
- adultscore=0 bulkscore=0 suspectscore=0 spamscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2409260000
- definitions=main-2410160149
-X-Proofpoint-GUID: QPm_TdMCVhPeTpKSRgum6sA1_mJVdMs7
-X-Proofpoint-ORIG-GUID: QPm_TdMCVhPeTpKSRgum6sA1_mJVdMs7
+References: <A499F119-5F0C-43FC-9058-7AB92057F9B3@toblux.com>
+ <Zvg-mDsvvOueGpzs@archlinux> <202409281331.1F04259@keescook>
+ <21D2A2BB-F442-480D-8B66-229E8C4A63D3@toblux.com> <Zv6BEO-1Y0oJ3krr@archlinux>
+ <E8E64A72-3C1C-40D2-9F07-415F6B8F476E@toblux.com> <Zv61dCaxScXuOjZg@archlinux>
+ <202410031424.45E5D19@keescook> <Zv8RIs-htdc-PtXB@archlinux>
+ <202410040958.C19D3B9E48@keescook> <ZwNb-_UPL9BPSg9N@archlinux>
+In-Reply-To: <ZwNb-_UPL9BPSg9N@archlinux>
+From: Bill Wendling <morbo@google.com>
+Date: Wed, 16 Oct 2024 16:41:11 -0700
+Message-ID: <CAGG=3QUatjhoDHdkDtZ+ftz7JvMhvaQ9XkFyyZSt_95V_nSN8A@mail.gmail.com>
+Subject: Re: [REGRESSION][BISECTED] erroneous buffer overflow detected in bch2_xattr_validate
+To: Jan Hendrik Farr <kernel@jfarr.cc>
+Cc: Kees Cook <kees@kernel.org>, Thorsten Blum <thorsten.blum@toblux.com>, kent.overstreet@linux.dev, 
+	regressions@lists.linux.dev, linux-bcachefs@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	ardb@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-* jeffxu@chromium.org <jeffxu@chromium.org> [241014 17:50]:
-> From: Jeff Xu <jeffxu@chromium.org>
->=20
-> Seal vdso, vvar, sigpage, uprobes and vsyscall.
->=20
-> Those mappings are readonly or executable only, sealing can protect
-> them from ever changing during the life time of the process. For
-> complete descriptions of memory sealing, please see mseal.rst [1].
->=20
-> System mappings such as vdso, vvar, and sigpage (for arm) are
-> generated by the kernel during program initialization. These mappings
-> are designated as non-writable, and sealing them will prevent them
-> from ever becoming writeable.
-                              ^ or ever removed.
+On Sun, Oct 6, 2024 at 8:56=E2=80=AFPM Jan Hendrik Farr <kernel@jfarr.cc> w=
+rote:
+> > I want to separate several easily confused issues. Instead of just
+> > saying __bdos, let's clearly refer to what calculation within bdos is
+> > being used. There are 3 choices currently:
+> > - alloc_size attribute
+> > - counted_by attribute
+> > - fallback to __bos (which is similar to sizeof(), except that FAMs are=
+ 0 sized)
+> >
+> > Additionally there are (for all intents and purposes) 2 size
+> > determinations to be made by __bos and __bdos, via argument 2:
+> > - containing object size (type 0) ("maximum size")
+> > - specific object size (type 1) ("minimum size")
+>
+> "maximum" vs "minimum" size would by type 0 vs type 2, but I think you
+> do mean type 0 and type 1 as those are the types currently used by
+> __struct_size and __member_size. Those are both "maximum" sizes.
+>
+> >
+> > For example, consider:
+> >
+> > struct posix_acl *acl =3D malloc(1024);
+> > acl->a_count =3D 1;
+> >
+> > what should these return:
+> >
+> >       __bos(acl, 0)
+> >       __bos(acl, 1)
+> >       __bdos(acl, 0)
+> >       __bdos(acl, 1)
+> >       __bos(acl->a_entries, 0)
+> >       __bos(acl->a_entries, 1)
+> >       __bdos(acl->a_entries, 0)
+> >       __bdos(acl->a_entries, 1)
+> >
+>
+Thank you for this detailed write-up! I'm sorry for my late response.
 
-This is a pretty big deal.  Platforms are trying to make it so that vdso
-is the fast path, but if they are removed then things stop using them
-and it's not a problem.  This description is robbing them of the
-information they need to know that, and it's not in your change log
-either.
+> I gathered some data from clang and gcc on all for all these cases and
+> additionally varied whether the allocation size is a compile time known
+> constant, runtime known, or not known. I also varied whether
+> __counted_by was used.
+>
+> Source code: [1]
+>
+>
+> Abbreviations:
+>
+> FAM      =3D flexible array member
+> -1       =3D SIZE_MAX
+> p->a_ent =3D p->a_entries
+> comp.    =3D allocation size is compile time known
+> run.     =3D allocation size is compile time known
+> none     =3D allocation size is unknown
+> count    =3D __counted_by attribute in use
+> correct  =3D What I think the correct answers should be. In some places I
+> have two answers. In that case the second number is what the kernel
+> currently expects.
+>
+>
+> And here's the data:
+>
+> function        |comp.|run.|none|count| gcc  |clang |correct
+> ----------------|-----|----|----|-----|------|------|-----
+> bos(p, 0)       |  x  |    |    |     | 1024 | 1024 | 1024
+> bos(p, 0)       |     | x  |    |     |  -1  |  -1  | -1
+> bos(p, 0)       |     |    | x  |     |  -1  |  -1  | -1
+> bos(p, 0)       |  x  |    |    |  x  | 1024 | 1024 | 1024
+> bos(p, 0)       |     | x  |    |  x  |  -1  |  -1  | -1
+> bos(p, 0)       |     |    | x  |  x  |  -1  |  -1  | -1
+> ----------------|-----|----|----|-----|------|------|-----
+> bos(p, 1)       |  x  |    |    |     | 1024 | 1024 | 1024
+> bos(p, 1)       |     | x  |    |     |  -1  |  -1  | -1
+> bos(p, 1)       |     |    | x  |     |  -1  |  -1  | -1
+> bos(p, 1)       |  x  |    |    |  x  | 1024 | 1024 | 1024
+> bos(p, 1)       |     | x  |    |  x  |  -1  |  -1  | -1
+> bos(p, 1)       |     |    | x  |  x  |  -1  |  -1  | -1
+> ----------------|-----|----|----|-----|------|------|-----
+> bdos(p, 0)      |  x  |    |    |     | 1024 | 1024 | 1024
+> bdos(p, 0)      |     | x  |    |     | 1024 | 1024 | 1024
+> bdos(p, 0)      |     |    | x  |     |  -1  |  -1  | -1
+> bdos(p, 0)      |  x  |    |    |  x  | 1024 |  36  | 43 / 40
+> bdos(p, 0)      |     | x  |    |  x  | 1024 |  36  | 43 / 40
+> bdos(p, 0)      |     |    | x  |  x  |  -1  |  36  | 43 / 40
+> ----------------|-----|----|----|-----|------|------|-----
+> bdos(p, 1)      |  x  |    |    |     | 1024 | 1024 | 1024
+> bdos(p, 1)      |     | x  |    |     | 1024 | 1024 | 1024
+> bdos(p, 1)      |     |    | x  |     |  -1  |  -1  | -1
+> bdos(p, 1)      |  x  |    |    |  x  | 1024 |  36  | 43 / 40
+> bdos(p, 1)      |     | x  |    |  x  | 1024 |  36  | 43 / 40
+> bdos(p, 1)      |     |    | x  |  x  |  -1  |  36  | 43 / 40
+> ----------------|-----|----|----|-----|------|------|-----
+> bos(p->a_ent, 0)|  x  |    |    |     |  996 | 996  | 996
+> bos(p->a_ent, 0)|     | x  |    |     |  -1  |  -1  | -1
+> bos(p->a_ent, 0)|     |    | x  |     |  -1  |  -1  | -1
+> bos(p->a_ent, 0)|  x  |    |    |  x  |  996 | 996  | 996
+> bos(p->a_ent, 0)|     | x  |    |  x  |  -1  |  -1  | -1
+> bos(p->a_ent, 0)|     |    | x  |  x  |  -1  |  -1  | -1
+> ----------------|-----|----|----|-----|------|------|-----
+> bos(p->a_ent, 1)|  x  |    |    |     |  996 | 996  | 992
+> bos(p->a_ent, 1)|     | x  |    |     |  -1  |  -1  | -1
+> bos(p->a_ent, 1)|     |    | x  |     |  -1  |  -1  | -1
+> bos(p->a_ent, 1)|  x  |    |    |  x  |  996 | 996  | 992
+> bos(p->a_ent, 1)|     | x  |    |  x  |  -1  |  -1  | -1
+> bos(p->a_ent, 1)|     |    | x  |  x  |  -1  |  -1  | -1
+> ----------------|-----|----|----|-----|------|------|-----
+> bdos(p->a_ent,0)|  x  |    |    |     |  996 | 996  | 996
+> bdos(p->a_ent,0)|     | x  |    |     |  996 | 996  | 996
+> bdos(p->a_ent,0)|     |    | x  |     |  -1  |  -1  | -1
+> bdos(p->a_ent,0)|  x  |    |    |  x  |   8  |  8   |  8
+> bdos(p->a_ent,0)|     | x  |    |  x  |   8  |  8   |  8
+> bdos(p->a_ent,0)|     |    | x  |  x  |   8  |  8   |  8
+> ----------------|-----|----|----|-----|------|------|-----
+> bdos(p->a_ent,1)|  x  |    |    |     |  996 | 996  | 992
+> bdos(p->a_ent,1)|     | x  |    |     |  996 | 996  | 992
+> bdos(p->a_ent,1)|     |    | x  |     |  -1  |  -1  | -1
+> bdos(p->a_ent,1)|  x  |    |    |  x  |   8  |  8   |  8
+> bdos(p->a_ent,1)|     | x  |    |  x  |   8  |  8   |  8
+> bdos(p->a_ent,1)|     |    | x  |  x  |   8  |  8   |  8
+> ----------------|-----|----|----|-----|------|------|-----
+>
+> bos only uses the allocation size to give it's answers. It only works if
+> it is a compile time known constant. bos also does not utilize the
+> __counted_by attribute.
+>
+> bdos on the other hand allows the allocation size to be runtime known.
+> It also makes use of the __counted_by attribute if present, which always
+> takes precedence over the allocation size when the compiler supports it
+> for the particular case. So in those cases you can "lie" to the compiler
+> about the size of an object.
+>
+> clang supports the __counted_by attribute for both cases (p and
+> p->a_entries). gcc only supports it for p->a_entries cases.
+>
+>
+>
+> Issue A (clang)
+> =3D=3D=3D=3D=3D=3D=3D
+>
+> function        |comp.|run.|none|count| gcc  |clang |correct
+> ----------------|-----|----|----|-----|------|------|-----
+> bdos(p, 0)      |  x  |    |    |  x  | 1024 |  36  | 43 / 40
+> bdos(p, 0)      |     | x  |    |  x  | 1024 |  36  | 43 / 40
+> bdos(p, 0)      |     |    | x  |  x  |  -1  |  36  | 43 / 40
+> bdos(p, 1)      |  x  |    |    |  x  | 1024 |  36  | 43 / 40
+> bdos(p, 1)      |     | x  |    |  x  | 1024 |  36  | 43 / 40
+> bdos(p, 1)      |     |    | x  |  x  |  -1  |  36  | 43 / 40
+>
+> These cases also represent the "bdos off by 4" issue in clang. clang
+> will compute these results using:
+>
+> max(sizeof(struct posix_acl), offsetof(struct posix_acl, a_entries) +
+> count * sizeof(struct posix_acl_entries)) =3D 36
+>
+> The kernel on the other hand expects this behavior:
+>
+> sizeof(struct posix_acl) + count * sizeof(struct posix_acl_entries) =3D 4=
+0
+>
+>
+> I think the correct calculation would actually be this:
+>
+> offsetof(struct posix_acl, a_entries)
+> + (acl->a_count + 1) * sizeof(struct posix_acl_entry) - 1 =3D 43
+>
+> The C11 standard says that when the . or -> operator is used on a struct
+> with an FAM it behaves like the FAM was replaced with the largest array
+> (with the same element type) that would not make the object any larger
+> (see page 113 and 114 of [2]).
+> So there are actually multiple sizes of the object that are consistent
+> with a count of 1.
+>
+> malloc-max =3D maximum size of the object
+> malloc-min =3D minimum size of the object
+> FAME =3D flexible array member element
+> (FAME) =3D hypothetical 2nd FAME
+>
+> <-----------------malloc-max-------------->
+> <-----------------malloc-min------->
+> <------sizeof(posix_acl)------->
+>                             <-FAME-><(FAME)>
+>
+> The clang documentation of type 0 (vs type 2) bdos says this:
+>
+> If ``type & 2 =3D=3D 0``, the least ``n`` is returned such that accesses =
+to
+>    ``(const char*)ptr + n`` and beyond are known to be out of bounds.
+>
+> We only _know_ that that access to the last byte of a 2nd hypothetical FA=
+ME
+> would be out of bounds. All the bytes before that are padding that is
+> allowed by the standard.
+>
+>
+> However, also this calculation doesn't get the kernel out
+> of trouble here. While this would fix the issue for this particular
+> struct it does not solve it for all structs:
+>
+> What if the elements of the FAM were chars instead of
+> struct posix_acl_entries here? In that case the kernel is back to
+> overestimating the size of the struct / underreporting the count to the
+> compiler. So while I think this answer is more correct it doesn't
+> actually solve the issue.
+>
+> Example:
+> Let's say the kernel allocates one of these posix_acl_char structs for a
+> single char in the array:
+>
+> malloc(sizeof(posix_acl_char) + 1 * sizeof(char)) =3D 33
+>
+> The C standard actually says that this object will behave like this when
+> the FAM is accessed:
+>
+> struct posix_acl {
+>     refcount_t a_refcount;
+>     struct rcu_head a_rcu;
+>     unsigned int a_count;
+>     char a_entries[5];
+> };
+>
+> a_count should be set to 5, not 1!
+>
+While the standard says that it should act as 5 instead of 1 and that
+it's not an error to access padding, the point of the __counted_by
+attribute is to check that the user isn't doing anything "bad" by
+going outside of whatever bounds have been put in place. So I wouldn't
+want __bdos(p->a_entries, 0) to return 5 when the initial allocation
+is for 1. It's confusing given the documentation for the attribute.
 
-I had said before that you need to be clear about the inability to
-remove the mappings that are sealed, as the description above heavily
-implies that it is only stopping them from becoming writeable.
+> So we would really need an option to tell the compiler to use the same
+> size calculation as the kernel expects here, or maybe be able to specify
+> an offset in the __counted_by attribute. Alternatively clang could use
+> an option to disable the use of __counted_by for cases where the whole
+> struct is passed. This would make it behave like gcc.
+>
+I would be in favor of disabling __bdos on a whole struct pointer if
+it will match the functionality between the compilers. I don't think
+Qing has that on her plate at the moment, but when / if she revisits
+that we can discuss exactly how to perform the calculations then.
 
->=20
-> Unlike the aforementioned mappings, the uprobe mapping is not
-> established during program startup. However, its lifetime is the same
-> as the process's lifetime [2], thus sealable.
->=20
-> The vdso, vvar, sigpage, and uprobe mappings all invoke the
-> _install_special_mapping() function. As no other mappings utilize this
-> function, it is logical to incorporate sealing logic within
-> _install_special_mapping(). This approach avoids the necessity of
-> modifying code across various architecture-specific implementations.
->=20
-> The vsyscall mapping, which has its own initialization function, is
-> sealed in the XONLY case, it seems to be the most common and secure
-> case of using vsyscall.
->=20
-> It is important to note that the CHECKPOINT_RESTORE feature (CRIU) may
-> alter the mapping of vdso, vvar, and sigpage during restore
-> operations. Consequently, this feature cannot be universally enabled
-> across all systems. To address this, a kernel configuration option has
-> been introduced to enable or disable this functionality. Note, uprobe
-> is always sealed and not controlled by this kernel configuration.
->=20
-> I tested CONFIG_SEAL_SYSTEM_MAPPINGS_ALWAYS with ChromeOS,
-> which doesn=E2=80=99t use CHECKPOINT_RESTORE.
->=20
-> [1] Documentation/userspace-api/mseal.rst
-> [2] https://lore.kernel.org/all/CABi2SkU9BRUnqf70-nksuMCQ+yyiWjo3fM4XkRkL=
--NrCZxYAyg@mail.gmail.com/
->=20
-> History:
-> V2:
->   Seal uprobe always (Oleg Nesterov)
->   Update comments and description (Randy Dunlap, Liam R.Howlett, Oleg Nes=
-terov)
+> Issue B (clang + gcc)
+> =3D=3D=3D=3D=3D=3D=3D
+>
+> A less serious issue happens with these cases:
+>
+> function        |comp.|run.|none|count| gcc  |clang |correct
+> ----------------|-----|----|----|-----|------|------|-----
+> bos(p->a_ent, 1)|  x  |    |    |     |  996 | 996  | 992
+> bos(p->a_ent, 1)|  x  |    |    |  x  |  996 | 996  | 992
+> bdos(p->a_ent,1)|  x  |    |    |     |  996 | 996  | 992
+> bdos(p->a_ent,1)|     | x  |    |     |  996 | 996  | 992
+>
+> In this case the size returned by bos/bdos is too large, so this won't
+> lead to false positives. Both clang and gcc simply compute the difference
+> between the pointer from the start of the FAM to the end of the whole
+> struct. I believe this is wrong. According to the C standard the object
+> should behave like the FAM was replaced with the largest array that does
+> not make the object any larger. The size of that array is 124 elements.
+> So the posix_acl becomes:
+>
+I reported a similar issue to GCC a while back. The response is that
+it's not incorrect, because the size is still valid (padding, etc.).
+Their view is that, even when asked for the size of the subobject,
+they want to return some value, even if it's larger than the
+subobject, but not outside the bounds of the full object. I strongly
+disagree that it's okay to do that, but I'm probably in the minority.
+Clang's support for 1 as the __bdos's second argument isn't great. I'm
+trying to fix it, but got sidetracked by higher priority issues.
 
-The only update to the comment I see is the pointer to mseal.rst for a
-complete description?
+So in conclusion, if turning off the calculation for a pointer to the
+whole struct works, then I'm okay with it.
 
->   Rebase to linux_main
->=20
-> V1:
-> https://lore.kernel.org/all/20241004163155.3493183-1-jeffxu@google.com/
->=20
-> Jeff Xu (1):
->   exec: seal system mappings
->=20
->  .../admin-guide/kernel-parameters.txt         | 10 ++++
->  arch/x86/entry/vsyscall/vsyscall_64.c         |  9 +++-
->  fs/exec.c                                     | 53 +++++++++++++++++++
->  include/linux/fs.h                            |  1 +
->  kernel/events/uprobes.c                       |  2 +-
->  mm/mmap.c                                     |  1 +
->  security/Kconfig                              | 26 +++++++++
->  7 files changed, 99 insertions(+), 3 deletions(-)
->=20
-> --=20
-> 2.47.0.rc1.288.g06298d1525-goog
->=20
+-bw
+
+> struct posix_acl {
+>     refcount_t a_refcount;
+>     struct rcu_head a_rcu;
+>     unsigned int a_count;
+>     struct posix_acl_entry a_entries[124];
+> };
+>
+> Since this is a type 1 bos/bdos it should return the size of just the
+> array, which is 124 * 8 =3D 992, and not 124.5 * 8 =3D 996.
+>
+> [1] https://godbolt.org/z/a5eM3z8PY
+> [2] https://www.open-std.org/jtc1/sc22/wg14/www/docs/n1548.pdf
+>
+> Best Regards
+> Jan
+>
