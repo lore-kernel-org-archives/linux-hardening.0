@@ -1,91 +1,93 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29F09134A8;
-	Wed, 16 Oct 2024 09:06:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 249C0208967;
+	Wed, 16 Oct 2024 12:30:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729069596; cv=none; b=igmpgqGfeTvo9IcwQojCzRlJGaZR/8+91qcxBgk3cYHTeK6463DUGX+0LF/URIeiZbsQX1AcY/dCddbtT65K/nZAkHyLQAjVRuYCbFj6J3dhWc7J7d6mkrrNZwn+c2nuEK/JEsF+dEZAvl6xRFHRtNgVEfQI2ySJdSxvDwHx2L0=
+	t=1729081814; cv=none; b=MnRf7OXQRQYeAbgSlAGQ/rn8h3VhLgLXRwgFkw/NesuoqKAOKpBts1oDHftWfkuSIJ57rlIeeNNBJ7ZqGmqCnCNGBRnmgyvyJU7m6k83aiqaeFgLMMJy/zaWw1LRir2U57n9R8/gdPi0wqQx+TnW/bK8uE1CCFDYS8pf3397Ubo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729069596; c=relaxed/simple;
-	bh=EP34Go3o3E+bVfi/rpZAtI5M56XbwKeVq+nRPe/KikU=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ok2zWZYO0rIVtt4FC/hGEiXONrFopGxbujLsHxIS3RLsbp57ZYpZ+pKVEvnhw//S4Hf8A9ey3CDXsf1lsw0nEv+Golm+l4ezcEoebWKnZpZg02RUU7J0iViRhFKigj2gKNMriEYWqiiKTybHQI09Nvhi1Ub6fa7apwCa5kBb6nk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=Nj3mVFA3; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1729081814; c=relaxed/simple;
+	bh=yfronMD/0sqfo2W00JFpXL5mPjECoj5aRC+oS3N63mM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ktYIojXQ2V38mbMadBKei/gthZeC0Iq0aPPftdTscwyPj1bLHnd//L37zxVCHiAcrUp9pyZgZ3I1b8Lbx4kAhmfd7wT9fW40MQCBrI/q+15TGr7BBZSHX6GYqI9kckSS1sJtRBott7zN6Zvx+86up0YKGADeeHPM0YeNoCND0hw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=NB23OE8e; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="Nj3mVFA3"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=EP34Go3o3E+bVfi/rpZAtI5M56XbwKeVq+nRPe/KikU=;
-	t=1729069595; x=1730279195; b=Nj3mVFA38TCc5AKuxZhT7CVaP54+1xb/i8XlBtKDRV8kqoQ
-	Z14S8c1s9pPYqL9T666QH8IMWbpLt4xeqiGLPd7gCusig+qLGh3E9HdSuisk5qvUt/0pwh8NlfDq5
-	IpSp/zoQsOd6UyhzeQHepQ5CdQevfImUEr7gtVFGAC5IZDf60gZ+OwXAXlVlCq2nxXTiH2uErE4Jf
-	cXDLJW+1RTUNbWUG7q4JZaJSHyLz9RYcK7X3C59/dexSmycyR4rNfN+ESrutjEv4xC6tzx1SW9qWL
-	V63bPFAd6zqiBi2YBu9Bjj2jujHn6Q2wkV7hDJiYVzjhGWfN7pJxaLOuGP2Qt0eg==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.98)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1t0zzE-0000000Cihs-3Vhq;
-	Wed, 16 Oct 2024 11:06:33 +0200
-Message-ID: <e4debfb8fff961e889cf333a95132f5ed6687928.camel@sipsolutions.net>
-Subject: Re: [PATCH 3/5][next] uapi: wireless: Avoid
- -Wflex-array-member-not-at-end warnings
-From: Johannes Berg <johannes@sipsolutions.net>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="NB23OE8e"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=VNZ0CnDCnif96FdXN4ThyG+lS+ftdhJNbhPPcNy6QXc=; b=NB23OE8ecI35qBQzMsiWAwzS8I
+	Q3DXbhMQ5cZqFFB+tHlV66LdfpBpb5kPNH0C6Z1lW1FWd7OieuaHYyVT+uD3/hao45L2HdnzaIXVW
+	zYpX0A0lKs9Cs1ATafGTIPVOBHmWVeBI/QNvNDQwUNPAOc/0TKyMSgMw6Gu6jM6lEi5c=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1t13AA-00A9Nv-4e; Wed, 16 Oct 2024 14:30:02 +0200
+Date: Wed, 16 Oct 2024 14:30:02 +0200
+From: Andrew Lunn <andrew@lunn.ch>
 To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, 
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, David Ahern <dsahern@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org, Kees Cook <kees@kernel.org>
-Date: Wed, 16 Oct 2024 11:06:31 +0200
-In-Reply-To: <d9e9d9c1ade33701172b069e7dea728b063b00ee.1729037131.git.gustavoars@kernel.org>
+Subject: Re: [PATCH 4/5][next] uapi: net: arp: Avoid
+ -Wflex-array-member-not-at-end warnings
+Message-ID: <ac2ea738-09fb-4d03-b91c-d54bcfb893c6@lunn.ch>
 References: <cover.1729037131.git.gustavoars@kernel.org>
-	 <d9e9d9c1ade33701172b069e7dea728b063b00ee.1729037131.git.gustavoars@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
+ <f04e61e1c69991559f5589080462320bf772499d.1729037131.git.gustavoars@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f04e61e1c69991559f5589080462320bf772499d.1729037131.git.gustavoars@kernel.org>
 
-On Tue, 2024-10-15 at 18:31 -0600, Gustavo A. R. Silva wrote:
+On Tue, Oct 15, 2024 at 06:32:43PM -0600, Gustavo A. R. Silva wrote:
 > -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
 > getting ready to enable it, globally.
->=20
+> 
 > Address the following warnings by changing the type of the middle struct
-> members in various composite structs, which are currently causing trouble=
-,
-> from `struct sockaddr` to `struct sockaddr_legacy`. Note that the latter
-> struct doesn't contain a flexible-array member.
->=20
-> include/uapi/linux/wireless.h:751:33: warning: structure containing a fle=
-xible array member is not at the end of another structure [-Wflex-array-mem=
-ber-not-at-end]
-> include/uapi/linux/wireless.h:776:25: warning: structure containing a fle=
-xible array member is not at the end of another structure [-Wflex-array-mem=
-ber-not-at-end]
-> include/uapi/linux/wireless.h:833:25: warning: structure containing a fle=
-xible array member is not at the end of another structure [-Wflex-array-mem=
-ber-not-at-end]
-> include/uapi/linux/wireless.h:857:25: warning: structure containing a fle=
-xible array member is not at the end of another structure [-Wflex-array-mem=
-ber-not-at-end]
-> include/uapi/linux/wireless.h:864:25: warning: structure containing a fle=
-xible array member is not at the end of another structure [-Wflex-array-mem=
-ber-not-at-end]
->=20
+> members in a couple of composite structs, which are currently causing
+> trouble, from `struct sockaddr` to `struct sockaddr_legacy`. Note that
+> the latter struct doesn't contain a flexible-array member.
+> 
+> include/uapi/linux/if_arp.h:118:25: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> include/uapi/linux/if_arp.h:119:25: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> include/uapi/linux/if_arp.h:121:25: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> include/uapi/linux/if_arp.h:126:25: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> include/uapi/linux/if_arp.h:127:25: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 
+> Also, update some related code, accordingly.
+> 
 > No binary differences are present after these changes.
 
-I don't see how this works if you introduce "struct sockaddr_legacy" in
-a non-UAPI header, but then use it in UAPI?!
+These are clearly UAPI files. It would be good to state in the commit
+message why this is a safe change, at the source level.
 
-Also, userspace might have pointers to it or whatnot, and warn/break if
-you change the type?
+Could user space code expect the type struct sockaddr and we are going
+to get warnings when struct sockaddr_legacy is found? Have you tried
+compiling an old arp binary, one that uses the IOCTL? The netfilter
+code also references it:
 
-johannes
+http://charette.no-ip.com:81/programming/doxygen/netfilter/structarpreq.html
 
+You also need to submit a patch to the man page:
+
+https://man7.org/linux/man-pages/man7/arp.7.html
+
+You might also want to build some Rust code:
+
+https://docs.diesel.rs/master/libc/struct.arpreq.html
+
+I've no idea what Rust does when a C structure has a type change.
+
+	Andrew
