@@ -1,60 +1,60 @@
-Received: from smtp-fw-9106.amazon.com (smtp-fw-9106.amazon.com [207.171.188.206])
+Received: from smtp-fw-80007.amazon.com (smtp-fw-80007.amazon.com [99.78.197.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 169E3157A41;
-	Wed, 16 Oct 2024 03:31:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.188.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2EEC148FED;
+	Wed, 16 Oct 2024 03:44:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729049466; cv=none; b=Z6AbgZJ/PhORZG6ng8n6svJW1eUoxh1rgV4UfQKrHUmr7cRMI1wGKIv5vU1jSQoznbx/3SpfjO8soKya1nQqh2DqILIjJwkUnozG0+q618OUc2f74HQAn8o4p6oBDhGG4Ev7vEywpc5vWaT7EknB28LTghEKy5s6prh61uJsPvk=
+	t=1729050281; cv=none; b=kedo6D987Ioi3pCYuptL/iXZkkZM9goRKDNHt2b59q7X4sizenDoOsjs3QIAUj7KOxdmiE8tNZ1JBX/kY3fIA5A/Z/xFULPBf/RWkmvhBq51F7DmsNqOCVWl9SNAz8tS39+ypMVBLWqPw6a5buacmNgMENtOYDBaxAcOa2n5kO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729049466; c=relaxed/simple;
-	bh=1RDWVfjt8CeM/x84cXRzvf+PJhV9JF8TakbxdEtOjaE=;
+	s=arc-20240116; t=1729050281; c=relaxed/simple;
+	bh=XKIX/PPjlVjz+E9X1RtcSZEjQ2SxFf5rGp/JXYet2g0=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CypFqG11Lyitr81pcvdq448H2VvJhgMUskyOTcLiinlGKtbd58tb6U83vuqFSyjUttWKKO1h2gefbmySyAbgcEulrQGcdOhBKQPA4IZ25ptWX26/QYdYqKFwpnObqL8mYcP1EHjesKUnyMjQgYiUX+4r1WgJ4Qw28ShFyQF4jpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=BQDhvSIt; arc=none smtp.client-ip=207.171.188.206
+	 MIME-Version:Content-Type; b=DVt1B4duxAYpDvF5IgFE04Etr/j9IvoeuWQguTlbLvkkUFBR/4dyAt0e8BfGIrhDX1nrjfRIny1SDscqrgTewmmfyeQUAjfN/i8J6L04uix90wqxkdEKRYeJsEyyT7JfRpugrGDDNpttQ+0elR3YNi4WZLrMWBrOtO7PRXJX23I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=JqdLQPKH; arc=none smtp.client-ip=99.78.197.218
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="BQDhvSIt"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="JqdLQPKH"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1729049465; x=1760585465;
+  t=1729050280; x=1760586280;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=R0CkBNDYdSm6bkTWLi6IG3qXSuk5UAVOE/HPqWHE6og=;
-  b=BQDhvSIt0P9SlewVzuRBf/3bNc7V6Uull7wSxcCse6kL8nruH/eXCgvh
-   FzUst9V8xTcMgKLF+3QSFPywAR3j4nFKv7S64yjl3TwkakbyckUUz2GOS
-   wST7iZ8fsZFW7tBQocYfaBpfjOH9qAp20Zy14c4qndVDQBlapZA1Q5Amk
-   Y=;
-X-IronPort-AV: E=Sophos;i="6.11,206,1725321600"; 
-   d="scan'208";a="766935707"
+  bh=kTefGyhsaXlGrGMS7ueF3RA+bgVcym7IGr4Wg2bFR9I=;
+  b=JqdLQPKH73Q5WoRRI58pyV+H8jZVNqN6jZZ01l+Em7lpLkPkhIOpx2BV
+   s2XzaXqimlEvxV3ijWx3c5rZEEwnWS8x6RIpOZNF3DeHgcq4Cf4pr/x8D
+   l4H4KtCZqfibvzAHNKttIRCRzeG0AsKvS5yO77xJ3NNK1+rZbkbsmGwIA
+   g=;
+X-IronPort-AV: E=Sophos;i="6.11,207,1725321600"; 
+   d="scan'208";a="343490900"
 Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.210])
-  by smtp-border-fw-9106.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2024 03:30:59 +0000
-Received: from EX19MTAUWA001.ant.amazon.com [10.0.7.35:34151]
+  by smtp-border-fw-80007.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2024 03:44:38 +0000
+Received: from EX19MTAUWB001.ant.amazon.com [10.0.7.35:55992]
  by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.59.23:2525] with esmtp (Farcaster)
- id 7a6e1911-5029-441d-8ce8-1b14b5d8e96d; Wed, 16 Oct 2024 03:30:57 +0000 (UTC)
-X-Farcaster-Flow-ID: 7a6e1911-5029-441d-8ce8-1b14b5d8e96d
+ id 70b42be6-3f9e-4b52-a24f-c1fbff175f87; Wed, 16 Oct 2024 03:44:37 +0000 (UTC)
+X-Farcaster-Flow-ID: 70b42be6-3f9e-4b52-a24f-c1fbff175f87
 Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWA001.ant.amazon.com (10.250.64.218) with Microsoft SMTP Server
+ EX19MTAUWB001.ant.amazon.com (10.250.64.248) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
- Wed, 16 Oct 2024 03:30:57 +0000
+ Wed, 16 Oct 2024 03:44:37 +0000
 Received: from 6c7e67c6786f.amazon.com (10.106.100.36) by
  EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.35;
- Wed, 16 Oct 2024 03:30:53 +0000
+ Wed, 16 Oct 2024 03:44:33 +0000
 From: Kuniyuki Iwashima <kuniyu@amazon.com>
 To: <gustavoars@kernel.org>
 CC: <andrew+netdev@lunn.ch>, <davem@davemloft.net>, <dsahern@kernel.org>,
-	<edumazet@google.com>, <johannes@sipsolutions.net>, <kees@kernel.org>,
-	<kuba@kernel.org>, <linux-hardening@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-wireless@vger.kernel.org>,
-	<netdev@vger.kernel.org>, <pabeni@redhat.com>, <kuniyu@amazon.com>
-Subject: Re: [PATCH 1/5][next] net: dev: Introduce struct sockaddr_legacy
-Date: Tue, 15 Oct 2024 20:30:42 -0700
-Message-ID: <20241016033042.89280-1-kuniyu@amazon.com>
+	<edumazet@google.com>, <kees@kernel.org>, <kuba@kernel.org>,
+	<linux-hardening@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<netdev@vger.kernel.org>, <pabeni@redhat.com>, Kuniyuki Iwashima
+	<kuniyu@amazon.com>
+Subject: Re: [PATCH 4/5][next] uapi: net: arp: Avoid -Wflex-array-member-not-at-end warnings
+Date: Tue, 15 Oct 2024 20:44:29 -0700
+Message-ID: <20241016034429.90455-1-kuniyu@amazon.com>
 X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <1c12601bea3e9c18da6adc106bfcf5b7569e5dfb.1729037131.git.gustavoars@kernel.org>
-References: <1c12601bea3e9c18da6adc106bfcf5b7569e5dfb.1729037131.git.gustavoars@kernel.org>
+In-Reply-To: <f04e61e1c69991559f5589080462320bf772499d.1729037131.git.gustavoars@kernel.org>
+References: <f04e61e1c69991559f5589080462320bf772499d.1729037131.git.gustavoars@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -63,93 +63,88 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: EX19D032UWB003.ant.amazon.com (10.13.139.165) To
+X-ClientProxiedBy: EX19D043UWC002.ant.amazon.com (10.13.139.222) To
  EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
 From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Date: Tue, 15 Oct 2024 18:27:16 -0600
-> We are currently working on enabling the -Wflex-array-member-not-at-end
-> compiler option. This option has helped us detect several objects of
-> the type `struct sockaddr` that appear in the middle of composite
-> structures like `struct rtentry`, `struct compat_rtentry`, and others:
+Date: Tue, 15 Oct 2024 18:32:43 -0600
+> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> getting ready to enable it, globally.
 > 
-> include/uapi/linux/wireless.h:751:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> include/uapi/linux/wireless.h:776:25: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> include/uapi/linux/wireless.h:833:25: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> include/uapi/linux/wireless.h:857:25: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> include/uapi/linux/wireless.h:864:25: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> include/uapi/linux/route.h:33:25: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> include/uapi/linux/route.h:34:25: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> include/uapi/linux/route.h:35:25: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> Address the following warnings by changing the type of the middle struct
+> members in a couple of composite structs, which are currently causing
+> trouble, from `struct sockaddr` to `struct sockaddr_legacy`. Note that
+> the latter struct doesn't contain a flexible-array member.
+> 
 > include/uapi/linux/if_arp.h:118:25: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 > include/uapi/linux/if_arp.h:119:25: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 > include/uapi/linux/if_arp.h:121:25: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 > include/uapi/linux/if_arp.h:126:25: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 > include/uapi/linux/if_arp.h:127:25: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> include/net/compat.h:34:25: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> include/net/compat.h:35:25: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> fs/nfsd/nfsd.h:74:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> fs/nfsd/nfsd.h:75:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 > 
-> In order to fix the warnings above, we introduce `struct sockaddr_legacy`.
-> The intention is to use it to replace the type of several struct members
-> in the middle of composite structures, currently of type `struct sockaddr`.
+> Also, update some related code, accordingly.
 > 
-> These middle struct members are currently causing thousands of warnings
-> because `struct sockaddr` contains a flexible-array member, introduced
-> by commit b5f0de6df6dce ("net: dev: Convert sa_data to flexible array in
-> struct sockaddr").
-> 
-> The new `struct sockaddr_legacy` doesn't include a flexible-array
-> member, making it suitable for use as the type of middle members
-> in composite structs that don't really require the flexible-array
-> member in `struct sockaddr`, thus avoiding -Wflex-array-member-not-at-end
-> warnings.
+> No binary differences are present after these changes.
 > 
 > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 > ---
->  include/linux/socket.h | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
+>  include/uapi/linux/if_arp.h | 18 +++++++++---------
+>  net/ipv4/arp.c              |  2 +-
+>  2 files changed, 10 insertions(+), 10 deletions(-)
 > 
-> diff --git a/include/linux/socket.h b/include/linux/socket.h
-> index d18cc47e89bd..f370ae0e6c82 100644
-> --- a/include/linux/socket.h
-> +++ b/include/linux/socket.h
-> @@ -40,6 +40,25 @@ struct sockaddr {
->  	};
+> diff --git a/include/uapi/linux/if_arp.h b/include/uapi/linux/if_arp.h
+> index 4783af9fe520..cb6813f7783a 100644
+> --- a/include/uapi/linux/if_arp.h
+> +++ b/include/uapi/linux/if_arp.h
+> @@ -115,18 +115,18 @@
+>  
+>  /* ARP ioctl request. */
+>  struct arpreq {
+> -	struct sockaddr	arp_pa;		/* protocol address		 */
+> -	struct sockaddr	arp_ha;		/* hardware address		 */
+> -	int		arp_flags;	/* flags			 */
+> -	struct sockaddr arp_netmask;    /* netmask (only for proxy arps) */
+> -	char		arp_dev[IFNAMSIZ];
+> +	struct sockaddr_legacy	arp_pa;		/* protocol address		 */
+> +	struct sockaddr_legacy	arp_ha;		/* hardware address		 */
+> +	int			arp_flags;	/* flags			 */
+> +	struct sockaddr_legacy	arp_netmask;    /* netmask (only for proxy arps) */
+> +	char			arp_dev[IFNAMSIZ];
 >  };
 >  
-> +/*
-> + * This is the legacy form of `struct sockaddr`. The original `struct sockaddr`
-> + * was modified in commit b5f0de6df6dce ("net: dev: Convert sa_data to flexible
-> + * array in struct sockaddR") due to the fact that "One of the worst offenders
+>  struct arpreq_old {
+> -	struct sockaddr	arp_pa;		/* protocol address		 */
+> -	struct sockaddr	arp_ha;		/* hardware address		 */
+> -	int		arp_flags;	/* flags			 */
+> -	struct sockaddr	arp_netmask;    /* netmask (only for proxy arps) */
+> +	struct sockaddr_legacy	arp_pa;		/* protocol address		 */
+> +	struct sockaddr_legacy	arp_ha;		/* hardware address		 */
+> +	int			arp_flags;	/* flags			 */
+> +	struct sockaddr		arp_netmask;    /* netmask (only for proxy arps) */
 
-s/sockaddR/sockaddr/
+I think we can use _legacy here too, 14 bytes are enough for ARP.
 
-The same typo? exists in the cover letter.
-
-With it fixed,
+But whichever is fine to me because arpreq_old is not used in
+kernel, so
 
 Reviewed-by: Kuniyuki Iwashima <kuniyu@amazon.com>
 
 
-> + * of "fake flexible arrays" is struct sockaddr". This means that the original
-> + * `char sa_data[14]` behaved as a flexible array at runtime, so a proper
-> + * flexible-array member was introduced.
-> + *
-> + * This caused several flexible-array-in-the-middle issues:
-> + * https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wflex-array-member-not-at-end
-> + *
-> + * `struct sockaddr_legacy` replaces `struct sockaddr` in all instances where
-> + * objects of this type do not appear at the end of composite structures.
-> + */
-> +struct sockaddr_legacy {
-> +	sa_family_t	sa_family;	/* address family, AF_xxx	*/
-> +	char 		sa_data[14];	/* 14 bytes of protocol address	*/
-> +};
-> +
->  struct linger {
->  	int		l_onoff;	/* Linger active		*/
->  	int		l_linger;	/* How long to linger for	*/
+>  };
+>  
+>  /* ARP Flag values. */
+> diff --git a/net/ipv4/arp.c b/net/ipv4/arp.c
+> index 11c1519b3699..3a97efe1587b 100644
+> --- a/net/ipv4/arp.c
+> +++ b/net/ipv4/arp.c
+> @@ -1185,7 +1185,7 @@ static int arp_req_get(struct net *net, struct arpreq *r)
+>  
+>  	read_lock_bh(&neigh->lock);
+>  	memcpy(r->arp_ha.sa_data, neigh->ha,
+> -	       min(dev->addr_len, sizeof(r->arp_ha.sa_data_min)));
+> +	       min(dev->addr_len, sizeof(r->arp_ha.sa_data)));
+>  	r->arp_flags = arp_state_to_flags(neigh);
+>  	read_unlock_bh(&neigh->lock);
+>  
 > -- 
 > 2.34.1
