@@ -1,40 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD3CBBA42;
-	Wed, 16 Oct 2024 00:31:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64C2910A2A;
+	Wed, 16 Oct 2024 00:32:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729038710; cv=none; b=k1ZiDWLfIF0tXB5zu2JI8NaJVcEkTlo9QVGZCv29KIa/oK8uBqYDhzp97qiej48WVDzQ81GM8lJmgUWgT8jzZpl+hoRJlownOYRiowVuDr5ekwlY7qYyODc7kNjl5CKdsCEdCpnQkQaxEpzwyuZBTPcg+ChlobAZPMhNH8LpuY4=
+	t=1729038767; cv=none; b=Uuz2HfCJuRbQjQecWM9guf7lVmJwkjH1SRL+AFjUTmPjsHns2eb/I8OFPVnRJeV0XgxtDwYb785G2hArHiGUfJK+vpQv94xQpZwXMZkzFwtfK8WMpsQtwIEwONyW0AxXXMo7w6jzeUb1EXxocVpaEC0fesJOt0aHlTqXB55iq7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729038710; c=relaxed/simple;
-	bh=h/0LiuTcJJi5xVByk4esB4Kk1MBKkOZ8H5VO5I5yi9Y=;
+	s=arc-20240116; t=1729038767; c=relaxed/simple;
+	bh=iHoB2CtxcbvJ6Ygv4kl5YbKNImTMb7GFaBl6ohxzF0A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BnHR4iKLl2BgzosGGmkl1YTHuaRVcWFFHM9Vimlw74vMLab1yCRrJiHKAIKpH8rQhFVoksocQRN+Hg3Hy1DCquU4jI63CPrm8PWcvXWFnMNRsstJDI3ewh4bImGaIAeJeUGcgvyIHHZPmPY43a3y2De95EgMqUOJmT0BWXoRXY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P5yhXm81; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=svGcvHHAcGAEE1P8I/Y7H2zxCVp17D+CI7mfjsBF4KDWsC0JgjPVLgXYxiogkJI0X5cwafcRBp6CXb4XBMuJKtKsLe6ozezZpUc/DOyGEh69jKGHiBXWmf/7/aZJxea/7rcw95nizAyLQzP9vqrZluwbHdc5pBq/skN+eUZ1XaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P6lznSgu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P5yhXm81"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9391AC4CEC6;
-	Wed, 16 Oct 2024 00:31:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P6lznSgu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B586FC4CEC6;
+	Wed, 16 Oct 2024 00:32:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729038710;
-	bh=h/0LiuTcJJi5xVByk4esB4Kk1MBKkOZ8H5VO5I5yi9Y=;
+	s=k20201202; t=1729038766;
+	bh=iHoB2CtxcbvJ6Ygv4kl5YbKNImTMb7GFaBl6ohxzF0A=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=P5yhXm81qTTez88jN3ABjVLKMZuhPgYT1WznUQP9fytzhr1WpV2EacUy2W/ntDLvF
-	 XSOE023SBjSuax5wOd+cLy31PTXWaSkDqE9ueABCxOyTUe2uoySVkpbAqyOTwLuSKw
-	 Ljj6tXz6Ut0+R/sTJhBtdN3GSe5f1poSnJhXTm1kAEay2jPRX0PSpPBEEuhet4mZXo
-	 d3ZppAXEUVAF6DEVZvSuW81Ube0ERuxUbtFfLJPwfhMn9Jqi3QVpogi/RRvNcnegxZ
-	 woQCnwII3KT91mcB+PNBOFE/M1TvstkiqEnPEhBwjPlQfn4pmhHcvzEm/XlSjQ9Yr/
-	 4UaGppmzvGUdw==
-Date: Tue, 15 Oct 2024 18:31:47 -0600
+	b=P6lznSguM+46Y9q2WGQsWzv5yGOriwtV/gu0pd2QmpsZD4AvrHIAcS0UAhi1fv+4w
+	 x3vsGaeV+LzGSVgfKr56Mfo7OVvLeYoQhaU+wo1G2U/PaOFbXtFb+HPI2e7fL503s9
+	 V1SWG5JwZ7Z56aVyDdy9c3+iKF+a6fuzZmtll2vxMvFzjzRoH3OmNSoqMSss1RkWwl
+	 CYo+TM7UTGxP4uO9D8arRN0TN5WEiJIM5y7OdR4vRc+E7FNnT0WNUVdySFODIr2oUf
+	 uYQzkDhAQoWcMtJeSybIu7oprak4XjKRMmrRFfSK9QO3rRz7K6PP97lfGEltIwpgfW
+	 Tg4dfAyPnM0IA==
+Date: Tue, 15 Oct 2024 18:32:43 -0600
 From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Johannes Berg <johannes@sipsolutions.net>
-Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+To: Andrew Lunn <andrew+netdev@lunn.ch>, David Ahern <dsahern@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	linux-hardening@vger.kernel.org, Kees Cook <kees@kernel.org>
-Subject: [PATCH 3/5][next] uapi: wireless: Avoid
+Subject: [PATCH 4/5][next] uapi: net: arp: Avoid
  -Wflex-array-member-not-at-end warnings
-Message-ID: <d9e9d9c1ade33701172b069e7dea728b063b00ee.1729037131.git.gustavoars@kernel.org>
+Message-ID: <f04e61e1c69991559f5589080462320bf772499d.1729037131.git.gustavoars@kernel.org>
 References: <cover.1729037131.git.gustavoars@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -50,109 +53,71 @@ In-Reply-To: <cover.1729037131.git.gustavoars@kernel.org>
 getting ready to enable it, globally.
 
 Address the following warnings by changing the type of the middle struct
-members in various composite structs, which are currently causing trouble,
-from `struct sockaddr` to `struct sockaddr_legacy`. Note that the latter
-struct doesn't contain a flexible-array member.
+members in a couple of composite structs, which are currently causing
+trouble, from `struct sockaddr` to `struct sockaddr_legacy`. Note that
+the latter struct doesn't contain a flexible-array member.
 
-include/uapi/linux/wireless.h:751:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-include/uapi/linux/wireless.h:776:25: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-include/uapi/linux/wireless.h:833:25: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-include/uapi/linux/wireless.h:857:25: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-include/uapi/linux/wireless.h:864:25: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+include/uapi/linux/if_arp.h:118:25: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+include/uapi/linux/if_arp.h:119:25: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+include/uapi/linux/if_arp.h:121:25: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+include/uapi/linux/if_arp.h:126:25: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+include/uapi/linux/if_arp.h:127:25: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+
+Also, update some related code, accordingly.
 
 No binary differences are present after these changes.
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- include/uapi/linux/wireless.h | 50 +++++++++++++++++------------------
- 1 file changed, 25 insertions(+), 25 deletions(-)
+ include/uapi/linux/if_arp.h | 18 +++++++++---------
+ net/ipv4/arp.c              |  2 +-
+ 2 files changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/include/uapi/linux/wireless.h b/include/uapi/linux/wireless.h
-index 3c2ad5fae17f..b29ab42fa2e2 100644
---- a/include/uapi/linux/wireless.h
-+++ b/include/uapi/linux/wireless.h
-@@ -748,7 +748,7 @@ struct iw_missed {
-  *	Quality range (for spy threshold)
-  */
- struct iw_thrspy {
--	struct sockaddr		addr;		/* Source address (hw/mac) */
-+	struct sockaddr_legacy	addr;		/* Source address (hw/mac) */
- 	struct iw_quality	qual;		/* Quality of the link */
- 	struct iw_quality	low;		/* Low threshold */
- 	struct iw_quality	high;		/* High threshold */
-@@ -766,15 +766,15 @@ struct iw_thrspy {
-  *	current BSS if the driver is in Managed mode and associated with an AP.
-  */
- struct iw_scan_req {
--	__u8		scan_type; /* IW_SCAN_TYPE_{ACTIVE,PASSIVE} */
--	__u8		essid_len;
--	__u8		num_channels; /* num entries in channel_list;
--				       * 0 = scan all allowed channels */
--	__u8		flags; /* reserved as padding; use zero, this may
--				* be used in the future for adding flags
--				* to request different scan behavior */
--	struct sockaddr	bssid; /* ff:ff:ff:ff:ff:ff for broadcast BSSID or
--				* individual address of a specific BSS */
-+	__u8			scan_type; /* IW_SCAN_TYPE_{ACTIVE,PASSIVE} */
-+	__u8			essid_len;
-+	__u8			num_channels; /* num entries in channel_list;
-+					       * 0 = scan all allowed channels */
-+	__u8			flags; /* reserved as padding; use zero, this may
-+					* be used in the future for adding flags
-+					* to request different scan behavior */
-+	struct sockaddr_legacy	bssid; /* ff:ff:ff:ff:ff:ff for broadcast BSSID or
-+					* individual address of a specific BSS */
+diff --git a/include/uapi/linux/if_arp.h b/include/uapi/linux/if_arp.h
+index 4783af9fe520..cb6813f7783a 100644
+--- a/include/uapi/linux/if_arp.h
++++ b/include/uapi/linux/if_arp.h
+@@ -115,18 +115,18 @@
  
- 	/*
- 	 * Use this ESSID if IW_SCAN_THIS_ESSID flag is used instead of using
-@@ -827,15 +827,15 @@ struct iw_scan_req {
-  *	debugging/testing.
-  */
- struct iw_encode_ext {
--	__u32		ext_flags; /* IW_ENCODE_EXT_* */
--	__u8		tx_seq[IW_ENCODE_SEQ_MAX_SIZE]; /* LSB first */
--	__u8		rx_seq[IW_ENCODE_SEQ_MAX_SIZE]; /* LSB first */
--	struct sockaddr	addr; /* ff:ff:ff:ff:ff:ff for broadcast/multicast
--			       * (group) keys or unicast address for
--			       * individual keys */
--	__u16		alg; /* IW_ENCODE_ALG_* */
--	__u16		key_len;
--	__u8		key[];
-+	__u32			ext_flags; /* IW_ENCODE_EXT_* */
-+	__u8			tx_seq[IW_ENCODE_SEQ_MAX_SIZE]; /* LSB first */
-+	__u8			rx_seq[IW_ENCODE_SEQ_MAX_SIZE]; /* LSB first */
-+	struct sockaddr_legacy	addr; /* ff:ff:ff:ff:ff:ff for broadcast/multicast
-+				       * (group) keys or unicast address for
-+				       * individual keys */
-+	__u16			alg; /* IW_ENCODE_ALG_* */
-+	__u16			key_len;
-+	__u8			key[];
+ /* ARP ioctl request. */
+ struct arpreq {
+-	struct sockaddr	arp_pa;		/* protocol address		 */
+-	struct sockaddr	arp_ha;		/* hardware address		 */
+-	int		arp_flags;	/* flags			 */
+-	struct sockaddr arp_netmask;    /* netmask (only for proxy arps) */
+-	char		arp_dev[IFNAMSIZ];
++	struct sockaddr_legacy	arp_pa;		/* protocol address		 */
++	struct sockaddr_legacy	arp_ha;		/* hardware address		 */
++	int			arp_flags;	/* flags			 */
++	struct sockaddr_legacy	arp_netmask;    /* netmask (only for proxy arps) */
++	char			arp_dev[IFNAMSIZ];
  };
  
- /* SIOCSIWMLME data */
-@@ -853,16 +853,16 @@ struct iw_mlme {
- #define IW_PMKID_LEN	16
- 
- struct iw_pmksa {
--	__u32		cmd; /* IW_PMKSA_* */
--	struct sockaddr	bssid;
--	__u8		pmkid[IW_PMKID_LEN];
-+	__u32			cmd; /* IW_PMKSA_* */
-+	struct sockaddr_legacy	bssid;
-+	__u8			pmkid[IW_PMKID_LEN];
+ struct arpreq_old {
+-	struct sockaddr	arp_pa;		/* protocol address		 */
+-	struct sockaddr	arp_ha;		/* hardware address		 */
+-	int		arp_flags;	/* flags			 */
+-	struct sockaddr	arp_netmask;    /* netmask (only for proxy arps) */
++	struct sockaddr_legacy	arp_pa;		/* protocol address		 */
++	struct sockaddr_legacy	arp_ha;		/* hardware address		 */
++	int			arp_flags;	/* flags			 */
++	struct sockaddr		arp_netmask;    /* netmask (only for proxy arps) */
  };
  
- /* IWEVMICHAELMICFAILURE data */
- struct iw_michaelmicfailure {
--	__u32		flags;
--	struct sockaddr	src_addr;
--	__u8		tsc[IW_ENCODE_SEQ_MAX_SIZE]; /* LSB first */
-+	__u32			flags;
-+	struct sockaddr_legacy	src_addr;
-+	__u8			tsc[IW_ENCODE_SEQ_MAX_SIZE]; /* LSB first */
- };
+ /* ARP Flag values. */
+diff --git a/net/ipv4/arp.c b/net/ipv4/arp.c
+index 11c1519b3699..3a97efe1587b 100644
+--- a/net/ipv4/arp.c
++++ b/net/ipv4/arp.c
+@@ -1185,7 +1185,7 @@ static int arp_req_get(struct net *net, struct arpreq *r)
  
- /* IWEVPMKIDCAND data */
+ 	read_lock_bh(&neigh->lock);
+ 	memcpy(r->arp_ha.sa_data, neigh->ha,
+-	       min(dev->addr_len, sizeof(r->arp_ha.sa_data_min)));
++	       min(dev->addr_len, sizeof(r->arp_ha.sa_data)));
+ 	r->arp_flags = arp_state_to_flags(neigh);
+ 	read_unlock_bh(&neigh->lock);
+ 
 -- 
 2.34.1
 
