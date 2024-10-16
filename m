@@ -1,71 +1,46 @@
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04EEA21E3AC
-	for <linux-hardening@vger.kernel.org>; Tue, 15 Oct 2024 22:06:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F3AB21E3D8;
+	Wed, 16 Oct 2024 00:25:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729030017; cv=none; b=hIfS3ygSWJQ0Zk5yOCgvcKv3L36yAIzBTsgYK/rPhaSsv92ocnpFTXh+1l8YnSNgOv/cyeiqoxnP49GVe5J6IDXcu/AWjjGekZWJS1IhkfxIUq6ps5vWUEq8AdeaTUnY9uvEUQ1Dn/eS454+UCJ3somzw98icRa1WmQeU6g//hU=
+	t=1729038341; cv=none; b=IAVIniYY7+m/jKbMGlRI4NNASqyy5B8G4/FlaUuR3hAIdHtnvYeGilPGuji6YkNEN3645wQZwmde4Y604a9IMLh7aL4RC6W7ksHOa1yyKWglVeBXY6Y7e6usfFKtGUNg9Z8mlITpT20gR/yjaJZIj6ZLkGmFvIQX5VKJO2IK3oA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729030017; c=relaxed/simple;
-	bh=4vRt+hJq2BeLpXAtOJSNUjTXAzJvtSSt2c04j5cz7M0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Sb+HmE6W4HeNGvdK7BuUwnwlGlMplDPAMjenOWUHrMo7GEXiECcLFUDGJLHDWXKTzHcG6Q52T5CMJ0XWUSqB6+uiZ1OQValiRbamJfQuew90FWWfzF6BKyjHiMCK9o21FoIdl3P//gjYyopmss9SpSU18krNY11tqx8QYqkYKBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=YpWxMC5j; arc=none smtp.client-ip=209.85.215.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1729038341; c=relaxed/simple;
+	bh=4tkLvYTJB2i9PrvH5uF6H6W5HXbiZmsTQ4xDNwK2hpg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=UunA41yVQOiifYAnelyT0uLJihx1hmxNdqXbXVIGS20X6a0N0IuvUgWqo6g1E+DCyiNrsvxuaR96F5dqxs5IZR3dGzauxmAs+jc0r+BkpxpbfwEvER0jAvvZSjuHPxtc5PG2cempmW6q81IZAhcRxt0TuYm0i5yIMeJWNs3sezg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kT0mHu/S; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YpWxMC5j"
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-7db637d1e4eso4314249a12.2
-        for <linux-hardening@vger.kernel.org>; Tue, 15 Oct 2024 15:06:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1729030015; x=1729634815; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hT0R9bqoxmercTe8FcIYej1AYkgMYBqJ5UzV5PqtWaI=;
-        b=YpWxMC5jG9VSSz6q7gKC8/h24hnHK9W3Mm5+t0Rp28PTjI9UAkUX/PNTMpCGDNBdmR
-         EU8c5vd9Ic1g7jYT4ySXqt/k1UrHnmpXYGMazhLJyQrV7d1qXkBmrlMexoXH/dngKq4N
-         ccd/JRgIRCn5fEJs1yXUUgNVKCsWXI8aj9hP0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729030015; x=1729634815;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hT0R9bqoxmercTe8FcIYej1AYkgMYBqJ5UzV5PqtWaI=;
-        b=QGJhcFOsG5E8pZ7rE1+wOUfq0W/etqp0bkqva/ndqfagNkebkPhiEuTE0yqufHJBzk
-         +54nUmB0z9F9BcmL/S+xLeJfemCCkZhSdLdLFdvZYvmvcYhOmIhPHXq9LF9I4L953w6Y
-         53YnjEsVJ8hWUpyounxT9XaGwZ7jOBLMqJjNj1/DH5lFsDS22yL83Fkv6pfbYhXHCOmZ
-         wq/JHR3i046BvLGfD5UxTpBqnKfovbSxb9cxuzbM+/MdRSWVvOQqOhlE27qfjOHmYxmi
-         UKsUyCzSPh8t63eAWAeWmoXMiKoTMkvMl3bhMd1+mq6aiptDbXWGA1myaGaQYv2L3fKd
-         FreA==
-X-Forwarded-Encrypted: i=1; AJvYcCXxU044wki09+2GFV9RAzIcwVeNTbLGtX3T7iIYQWfjIxkLSwF5jOSvqVlw9RABEJliLTqB3SaBwF2pIsItFnQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzqtx7s2QsrcmIL4NXuq/+dsitNprBRDBjOnhCFnAAsJ7zyzS2L
-	uDR6h0l6x9pogQNMUZSpgRq7ODZEVi/DO70jsMIBslnF1RZrsKf8azRmFrMRdA==
-X-Google-Smtp-Source: AGHT+IEpVH6CVZlPWktmJt6DhI48M5bSXpnUMj7IEXnfgo2g4woJPHJ3BpNKBkT2LODRTvv8UgeTew==
-X-Received: by 2002:a05:6a21:4d8c:b0:1d2:eaca:4fa8 with SMTP id adf61e73a8af0-1d905f58e25mr2593674637.35.1729030015272;
-        Tue, 15 Oct 2024 15:06:55 -0700 (PDT)
-Received: from localhost ([2a00:79e0:2e14:7:eef3:dbf8:fbe3:ab12])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-71e773716bbsm1882961b3a.13.2024.10.15.15.06.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Oct 2024 15:06:55 -0700 (PDT)
-Date: Tue, 15 Oct 2024 15:06:53 -0700
-From: Brian Norris <briannorris@chromium.org>
-To: Alper Nebi Yasak <alpernebiyasak@gmail.com>
-Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Francesco Dolcini <francesco@dolcini.it>,
-	Johannes Berg <johannes.berg@intel.com>,
-	Kees Cook <kees@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
-	Dmitry Antipov <dmantipov@yandex.ru>,
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	Jeff Johnson <quic_jjohnson@quicinc.com>,
-	David Lin <yu-hao.lin@nxp.com>, linux-hardening@vger.kernel.org,
-	Kalle Valo <kvalo@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v2 2/2] wifi: mwifiex: Annotate
- mwifiex_ie_types_wildcard_ssid_params with __counted_by()
-Message-ID: <Zw7nfaYZHP-HIqWQ@google.com>
-References: <20241007222301.24154-1-alpernebiyasak@gmail.com>
- <20241007222301.24154-2-alpernebiyasak@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kT0mHu/S"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5858BC4CEC6;
+	Wed, 16 Oct 2024 00:25:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729038340;
+	bh=4tkLvYTJB2i9PrvH5uF6H6W5HXbiZmsTQ4xDNwK2hpg=;
+	h=Date:From:To:Cc:Subject:From;
+	b=kT0mHu/SDGeeOejIZF+IY7/OqtYCEzec1nSfOoZRxASLE/uUj8LkBRjrEno9xUv1S
+	 5QWHlBjQcgqATX/NhcSviz+QhQMitwM2CNPcEK77A+JGxzzJCPP8VQCiHPC9V7t1fr
+	 LqoZUIwtG8VfRoURazf1VBAXm4P+fliO17Bv62LBBkPk6mr00deCKY/1HfdDbwEn/S
+	 KAnyNd7q9mLDZDg4GZuCvOPKiu0cEP7o7vgL7sT7+445/IL1OvT6rM/u+bUi2D62+r
+	 ZDuZmNvfyES50UebmzxJmfUkztIz6ZIH/gSQw/PbJdew+N8DI9b7bL5n57zZH/9726
+	 TiTxr7BOn1p9A==
+Date: Tue, 15 Oct 2024 18:25:37 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Andrew Lunn <andrew+netdev@lunn.ch>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	David Ahern <dsahern@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org, linux-wireless@vger.kernel.org,
+	Kees Cook <kees@kernel.org>
+Subject: [PATCH 0/5][next] net: Avoid thousands of
+ -Wflex-array-member-not-at-end warnings
+Message-ID: <cover.1729037131.git.gustavoars@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -74,88 +49,43 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241007222301.24154-2-alpernebiyasak@gmail.com>
 
-Hi Alper,
+This series aims to resolve thousands of -Wflex-array-member-not-at-end
+warnings by introducing `struct sockaddr_legacy`. The intention is to use
+it to replace the type of several struct members in the middle of composite
+structures, currently of type `struct sockaddr`.
 
-On Tue, Oct 08, 2024 at 01:20:55AM +0300, Alper Nebi Yasak wrote:
-> Add the __counted_by compiler attribute to the flexible array member
-> `ssid` to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
-> CONFIG_FORTIFY_SOURCE.
-> 
-> Signed-off-by: Alper Nebi Yasak <alpernebiyasak@gmail.com>
-> ---
-> I've mimicked the commit messages from `git log -S"__counted_by("`.
-> Since they refer to UBSAN I tried testing with CONFIG_KASAN (w/
-> kasan_multi_shot), CONFIG_UBSAN and CONFIG_FORTIFY_SOURCE. I do not
-> get any errors relating to this module with those options, but have
-> others -- I even had to test on another board altogether.
+These middle struct members are currently causing thousands of warnings
+because `struct sockaddr` contains a flexible-array member, introduced
+by commit b5f0de6df6dce ("net: dev: Convert sa_data to flexible array in
+struct sockaddR").
 
-It's possible you don't have a new enough compiler to enable the
-improved array bounds checks? Supposedly, that's new in GCC 15 and Clang
-18. But I'm not too familiar.
+The new `struct sockaddr_legacy` doesn't include a flexible-array
+member, making it suitable for use as the type of middle members
+in composite structs that don't really require the flexible-array
+member in `struct sockaddr`, thus avoiding -Wflex-array-member-not-at-end
+warnings.
 
-> This attribute was suggested in reviews, I don't fully understand it,
-> but I am not sure it is correct in the context of this comment from
-> scan.c (with irrelelvant parts omitted):
-> 
->     ssid_len = user_scan_in->ssid_list[i].ssid_len;
-> 
->     wildcard_ssid_tlv =
->             (struct mwifiex_ie_types_wildcard_ssid_params *)
->             tlv_pos;
-> 
->     /*
->      * max_ssid_length = 0 tells firmware to perform
->      * specific scan for the SSID filled, whereas
->      * max_ssid_length = IEEE80211_MAX_SSID_LEN is for
->      * wildcard scan.
->      */
->     if (ssid_len)
->             wildcard_ssid_tlv->max_ssid_length = 0;
->     else
->             wildcard_ssid_tlv->max_ssid_length =
->                                     IEEE80211_MAX_SSID_LEN;
-> 
->     memcpy(wildcard_ssid_tlv->ssid,
->            user_scan_in->ssid_list[i].ssid, ssid_len);
-> 
-> I expect we want to use __counted_by(ssid_len) instead, but do not have
-> it in the struct. And max_ssid_length = 0 when ssid[] is non-empty, so
-> is it really appropriate as the __counted_by()? But then again, I
-> couldn't get this to produce a warning.
+Gustavo A. R. Silva (5):
+  net: dev: Introduce struct sockaddr_legacy
+  nfsd: avoid -Wflex-array-member-not-at-end warnings
+  uapi: wireless: Avoid -Wflex-array-member-not-at-end warnings
+  uapi: net: arp: Avoid -Wflex-array-member-not-at-end warnings
+  uapi: net: Avoid -Wflex-array-member-not-at-end warnings
 
-The correct length would be derived from header.len. But IIUC,
-__counted_by neither supports nested structs, nor derived values.
+ fs/nfsd/nfsctl.c              |  4 +--
+ fs/nfsd/nfsd.h                |  4 +--
+ include/linux/socket.h        | 19 +++++++++++++
+ include/net/compat.h          | 30 ++++++++++-----------
+ include/uapi/linux/if_arp.h   | 18 ++++++-------
+ include/uapi/linux/route.h    | 28 ++++++++++----------
+ include/uapi/linux/wireless.h | 50 +++++++++++++++++------------------
+ net/appletalk/ddp.c           |  2 +-
+ net/ipv4/af_inet.c            |  2 +-
+ net/ipv4/arp.c                |  2 +-
+ net/ipv4/fib_frontend.c       |  2 +-
+ 11 files changed, 90 insertions(+), 71 deletions(-)
 
-But anyway, like you suspect, __counted_by(max_ssid_length) is actually
-wrong.
+-- 
+2.34.1
 
-I'd be happy to be enlighted by other experts on CC, but otherwise,
-that's a "NACK" for patch 2. Thanks for looking into this though!
-
-Regards,
-Brian
-
-> Changes in v2:
-> - Add patch to annotate ssid field with __counted_by(max_ssid_length)
-> 
->  drivers/net/wireless/marvell/mwifiex/fw.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/wireless/marvell/mwifiex/fw.h b/drivers/net/wireless/marvell/mwifiex/fw.h
-> index 4a96281792cc..e4e35ba35454 100644
-> --- a/drivers/net/wireless/marvell/mwifiex/fw.h
-> +++ b/drivers/net/wireless/marvell/mwifiex/fw.h
-> @@ -875,7 +875,7 @@ struct mwifiex_ietypes_chanstats {
->  struct mwifiex_ie_types_wildcard_ssid_params {
->  	struct mwifiex_ie_types_header header;
->  	u8 max_ssid_length;
-> -	u8 ssid[];
-> +	u8 ssid[] __counted_by(max_ssid_length);
->  } __packed;
->  
->  #define TSF_DATA_SIZE            8
-> -- 
-> 2.45.2
-> 
