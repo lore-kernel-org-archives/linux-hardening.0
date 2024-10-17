@@ -1,213 +1,315 @@
-Received: from fhigh-a7-smtp.messagingengine.com (fhigh-a7-smtp.messagingengine.com [103.168.172.158])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17E9D29405;
-	Thu, 17 Oct 2024 03:04:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1641018641
+	for <linux-hardening@vger.kernel.org>; Thu, 17 Oct 2024 03:43:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729134274; cv=none; b=Zss+EmuKrySFXrGZfuOr5buLtf/Bnwk+ksdFGKQzptfq3VovSr3IKuhFkSMFI2n7ZA68hCuw3FUkGf4A2/tESpCmDkskXj4VHkLFGdBj82D7Cp++JM6jYj155dxG80FHpi92/KcQ8MdiPtcDW/6u2/VHDh+pGv/QLcBRghv7IGM=
+	t=1729136597; cv=none; b=CXbUMUwd3mWkxoNxqMp2hZZ/Ml4C+rVAsz1EL1/e7YwdQzeccpAVosYY81gf8w5YdKxA1SmsQdAarknVe3XIp4WgPIcORSHRhv1LHvTGApHFU0ylzjVM3yjS5pcJONkTuHPLrof9aTaN5URIyem3cPVSQ2Ded6Os+cMqPgfwXjo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729134274; c=relaxed/simple;
-	bh=f4PJRLR/2fRgB4+Uq05RONoLYT4kehQXApRxwEsEiHU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u7isiSIhKyOfliLn2Y1pjb9AYuHDuzAbtAJnEM/mVhanxl0jHDMLCze2tYgotR1f4WiJ9nUa2wcCyLxhKrB+GofumfubLtVIqc0chqT/N0BLFBwe4felCvvcPqs9Rak3cOfpN5NcSk110WJF2xAf5GNRgyRdjoyf29hS86cQ8vM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jfarr.cc; spf=pass smtp.mailfrom=jfarr.cc; dkim=pass (2048-bit key) header.d=jfarr.cc header.i=@jfarr.cc header.b=iXIvJ4Jy; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=L9Cg9s/D; arc=none smtp.client-ip=103.168.172.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jfarr.cc
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jfarr.cc
+	s=arc-20240116; t=1729136597; c=relaxed/simple;
+	bh=yrnbPCiSsrZZgZYBtxcFt2bgcDeFUYXe6Dpt6KfrYtk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=Uvux+28iZ/PpWCckuhcpBJOsLxtMa3mZ2mhYPaGH+6qKba2oQk1BXYOzt9CrMX2QyZ+AH0nTb2MM3oxZFB2a+vwfqAZ+piz9wQkCGBFKpsJiQxbMbgyXm5K5sUNZLGbiczai4mWYedNOJ5eIhwxnI2W4ZdaRgRN2+JdDAGcL6Ng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Yhcy9D7y; arc=none smtp.client-ip=209.85.161.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jfarr.cc header.i=@jfarr.cc header.b="iXIvJ4Jy";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="L9Cg9s/D"
-Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 207B2114017E;
-	Wed, 16 Oct 2024 23:04:30 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-11.internal (MEProxy); Wed, 16 Oct 2024 23:04:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jfarr.cc; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1729134270;
-	 x=1729220670; bh=EFckjBgGmy34eVKuGSlvBNUk1hLb5Yr8WVXfUlVn8BU=; b=
-	iXIvJ4JyZVFzxcRvmifpF1tP0Wmy0LOzjlLJlaQaQAnDwqpzHVukzH82ijDt36lf
-	zZygntsKq4H0Jp3kVzxTW2UXwCBliRjrcYFq9hS1xgSMP1ra3w1Ha6mUPnx5nsT4
-	bksuZhnzEdG2KwriQfuGG1uFvS5bBA1LgdpVJ/l+wGrvhcl6BzbK/+F18TG1tkpq
-	MMO3D0dHliS9fliXQnOUdLI+xpnPC83QdYzOWDUSFE3GaNox1jIR7LCOmR9fQ+1O
-	soYOQVUsTOTJEF1uj2GlPpUNbqgrbIbdAhiAj2q3i0PpfSDUxxaS4B+JkHWIpWyw
-	53i3tOUe3L1d4bvOhiOFNQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1729134270; x=
-	1729220670; bh=EFckjBgGmy34eVKuGSlvBNUk1hLb5Yr8WVXfUlVn8BU=; b=L
-	9Cg9s/DIcofGUVDtGjYlDVNAsecduxsOxQPFNVHW7wg2niw0LV1xux7Ui1GXIJqe
-	0jgAKY5c/KEcAOoMi9gh1ByrWbqPVPndkFFmmfBaUle3wwz3zc5oSRBQih2WaDP4
-	FphR1KGxSsDvh8l502r44R9dmpP+4vrGI4y+/Vbe97fSKi4IuENssIywO7o/2lYT
-	GT3fFuhNrSM76IhUw2riw4NF2ypQBqrX0RfGr99Bse9QtkBBr3CwU2sujFJRsVvq
-	MGeNjaxs/dwjQ5HnUwLpunW+GhkDwpCHpbHxuMPdwItvL3+SumV6MJEqrukvFf6W
-	fa2zOj0Y0L2L255HTh67g==
-X-ME-Sender: <xms:vX4QZ6rThT3hdFcDly4nSvNzqlQEcRZHLDHkAk23JT15WaWk6i6g3A>
-    <xme:vX4QZ4r300K0AtljHgxtqnQ-l7raqbGv6YyyJxp5pUmo0QW6HyZuDKpxr10J5e3aD
-    SOcc8vYZNBhq7ciGak>
-X-ME-Received: <xmr:vX4QZ_O5Pruv93vTqy-da-nRK7dycO0_m6xQpSDkpc_nhTdz-w6gaUoKi8UV-tcxdke3LLO-Xip6Oj-cVoIVtAezZUk2>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvdehtddgieeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnegfrhhlucfvnfffucdluddtmdenucfjughrpeffhffvvefukfhf
-    gggtugfgjgesthekredttddtjeenucfhrhhomheplfgrnhcujfgvnhgurhhikhcuhfgrrh
-    hruceokhgvrhhnvghlsehjfhgrrhhrrdgttgeqnecuggftrfgrthhtvghrnhepheeigeet
-    tdegvddvieejjeegiefgtddugfeiieekieegjedvtdehteevffelhedtnecuffhomhgrih
-    hnpehgihhthhhusgdrtghomhdpkhgvrhhnvghlrdhorhhgpdhgnhhurdhorhhgnecuvehl
-    uhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepkhgvrhhnvghlse
-    hjfhgrrhhrrdgttgdpnhgspghrtghpthhtohepledpmhhouggvpehsmhhtphhouhhtpdhr
-    tghpthhtohepmhhorhgsohesghhoohhglhgvrdgtohhmpdhrtghpthhtohepkhgvvghsse
-    hkvghrnhgvlhdrohhrghdprhgtphhtthhopehthhhorhhsthgvnhdrsghluhhmsehtohgs
-    lhhugidrtghomhdprhgtphhtthhopehkvghnthdrohhvvghrshhtrhgvvghtsehlihhnuh
-    igrdguvghvpdhrtghpthhtoheprhgvghhrvghsshhiohhnsheslhhishhtshdrlhhinhhu
-    gidruggvvhdprhgtphhtthhopehlihhnuhigqdgstggrtghhvghfshesvhhgvghrrdhkvg
-    hrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhhrghruggvnhhinhhgsehvghgv
-    rhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvgh
-    gvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghruggssehkvghrnhgvlhdrohhr
-    gh
-X-ME-Proxy: <xmx:vX4QZ57qrH_-8Js7q1bAfXkb5wm_jbFCBogrMVGpx7cHEddAfoyu1A>
-    <xmx:vX4QZ56dVUFy39TsqzQfGKKAtawlGg2T43JfRyKH7ohmXAt-priStw>
-    <xmx:vX4QZ5isno_GRzq_tyPWDwXxtup9agGHJD5eL-Hnl3pLAdWYKs_F2w>
-    <xmx:vX4QZz6eXRSFWOMEPD2cYbhl7TMo8ACo4yUkarKX3CybGE2O7GNsog>
-    <xmx:vn4QZ-HuaXHMa5Rit1UycTRV9V8nvCvNVLcpjLc1i8ii5G4K7hRxXSp7>
-Feedback-ID: i01d149f8:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 16 Oct 2024 23:04:28 -0400 (EDT)
-Date: Thu, 17 Oct 2024 05:04:26 +0200
-From: Jan Hendrik Farr <kernel@jfarr.cc>
-To: Bill Wendling <morbo@google.com>
-Cc: Kees Cook <kees@kernel.org>, Thorsten Blum <thorsten.blum@toblux.com>,
-	kent.overstreet@linux.dev, regressions@lists.linux.dev,
-	linux-bcachefs@vger.kernel.org, linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org, ardb@kernel.org
-Subject: Re: [REGRESSION][BISECTED] erroneous buffer overflow detected in
- bch2_xattr_validate
-Message-ID: <ZxB-uh1KzfD4ww2a@archlinux>
-References: <21D2A2BB-F442-480D-8B66-229E8C4A63D3@toblux.com>
- <Zv6BEO-1Y0oJ3krr@archlinux>
- <E8E64A72-3C1C-40D2-9F07-415F6B8F476E@toblux.com>
- <Zv61dCaxScXuOjZg@archlinux>
- <202410031424.45E5D19@keescook>
- <Zv8RIs-htdc-PtXB@archlinux>
- <202410040958.C19D3B9E48@keescook>
- <ZwNb-_UPL9BPSg9N@archlinux>
- <CAGG=3QUatjhoDHdkDtZ+ftz7JvMhvaQ9XkFyyZSt_95V_nSN8A@mail.gmail.com>
- <CAGG=3QVcsuN0Sk79oZWjY_nNTo_XfGYsDT3gc7vEmLyS8OK3rA@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Yhcy9D7y"
+Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-5eb644561ecso21443eaf.1
+        for <linux-hardening@vger.kernel.org>; Wed, 16 Oct 2024 20:43:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1729136595; x=1729741395; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=H2Yz5mj+Rbj1K0ofec49O0C3W0tcEFu1ZJqWT+jEV9A=;
+        b=Yhcy9D7yBQslEANZJuRJz0yMX0uBMYruKEb8nZpCGY8XNa45dXVHeEM8Tk17m271Kw
+         7KJ5Mvo1LnuBHTq5w4dpKgkVM/sqLRkZpBTwDOAvEBXPl+1PjY8TZdzcG2UC4I9+PDqs
+         fRBdiBDDUFJWsq3QC2DeNTPHadNEX7YW4xLlg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729136595; x=1729741395;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=H2Yz5mj+Rbj1K0ofec49O0C3W0tcEFu1ZJqWT+jEV9A=;
+        b=YYm3q/tX0Kj6sOwxlVVaFVwGApJN/pf8yIslTe4WvTPdcAjZr4syk2MGorP5mmbwLY
+         NFktQ25YCEV/EsVIbZCyYfZmpsJpFAQrdrSCJpDhYFaFU1jRNXt2/QA4Egt4pb2Tv+tB
+         RAedEv1BlxTB4Xl/9JcIcbZ2e6aAGRwLFNfVuNymSgJNth6HHiPZqrIVcDbBK/xl6KBO
+         qfC6ZXonkPjpEu7Wgm02UffRVVKje/VMZjZdUwRKDN3YXjYaWxVYxkvO/7jJjCMKAABr
+         ZPBRAdiVEQht/sM/5qizH+YcfePzT42brSeThCWUUxRLmjql5beRDT0cqrT59V80eA36
+         MjLA==
+X-Forwarded-Encrypted: i=1; AJvYcCV5IyZ1bIXiGsZmGw3iQlCcwa90jTm8B89kEGPqkzkW8CRZOt9vULnagJdRn2pareXzIC2ExQFP/ohuZeNHa/Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxkUe9zgP/FM9/X1UHmgPaRCWeYyn0Qp0DoMxSmdJyX+R2D3Yr/
+	ba/Wl4YyZQDEPlrqV6Kk+iK9PjPXiz13uSgYOufPkAae1zEFIRe8ZM1I2sUFBBwhMKlyFtI5R4K
+	lb26Icno4BeHQkFjujTT/B/TJyxRwFGq4rt42
+X-Google-Smtp-Source: AGHT+IFIDwAMziEhtxc5Z3IqIkm/cNDE2Wqi7oMxVyC4pSWiLeauh/2ofoov3ZF4ZqPNUp5m2v24KlhvxjrxavNvb3k=
+X-Received: by 2002:a05:6870:c386:b0:288:2955:3efb with SMTP id
+ 586e51a60fabf-2890c6ce2f0mr480823fac.8.1729136594968; Wed, 16 Oct 2024
+ 20:43:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAGG=3QVcsuN0Sk79oZWjY_nNTo_XfGYsDT3gc7vEmLyS8OK3rA@mail.gmail.com>
+References: <20241014215022.68530-1-jeffxu@google.com> <20241014215022.68530-2-jeffxu@google.com>
+ <6r5sxlhfujr2expiscsfpdjtraqlvy6k3cznmv25lo6usmyw7x@igmuywngc5xi>
+In-Reply-To: <6r5sxlhfujr2expiscsfpdjtraqlvy6k3cznmv25lo6usmyw7x@igmuywngc5xi>
+From: Jeff Xu <jeffxu@chromium.org>
+Date: Wed, 16 Oct 2024 20:43:02 -0700
+Message-ID: <CABi2SkUfXrRLg7+ZrLjMEQzh4FtU0EAfckdiDuza1mFKzi0SAg@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 1/1] exec: seal system mappings
+To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, jeffxu@chromium.org, akpm@linux-foundation.org, 
+	keescook@chromium.org, jannh@google.com, torvalds@linux-foundation.org, 
+	adhemerval.zanella@linaro.org, oleg@redhat.com, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, linux-mm@kvack.org, jorgelo@chromium.org, 
+	sroettger@google.com, ojeda@kernel.org, adobriyan@gmail.com, 
+	anna-maria@linutronix.de, mark.rutland@arm.com, linus.walleij@linaro.org, 
+	Jason@zx2c4.com, deller@gmx.de, rdunlap@infradead.org, davem@davemloft.net, 
+	hch@lst.de, peterx@redhat.com, hca@linux.ibm.com, f.fainelli@gmail.com, 
+	gerg@kernel.org, dave.hansen@linux.intel.com, mingo@kernel.org, 
+	ardb@kernel.org, mhocko@suse.com, 42.hyeyoo@gmail.com, peterz@infradead.org, 
+	ardb@google.com, enh@google.com, rientjes@google.com, groeck@chromium.org, 
+	lorenzo.stoakes@oracle.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 16 17:09:42, Bill Wendling wrote:
-> On Wed, Oct 16, 2024 at 4:41 PM Bill Wendling <morbo@google.com> wrote:
+On Wed, Oct 16, 2024 at 6:10=E2=80=AFPM Liam R. Howlett <Liam.Howlett@oracl=
+e.com> wrote:
+>
+> > +     exec.seal_system_mappings =3D [KNL]
+> > +                     Format: { never | always }
+> > +                     Seal system mappings: vdso, vvar, sigpage, uprobe=
+s,
+> > +                     vsyscall.
+> > +                     This overwrites KCONFIG CONFIG_SEAL_SYSTEM_MAPPIN=
+GS_*
+> > +                     - 'never':  never seal system mappings.
+>
+> Not true, uprobes are sealed when 'never' is selected.
+>
+Thanks. I forgot to uprobes from the description in Kconfig and
+kernel-parameters.txt, will update.
+
+> > +                     - 'always': always seal system mappings.
+> > +                     If not specified or invalid, default is the KCONF=
+IG value.
+> > +                     This option has no effect if CONFIG_64BIT=3Dn
+> > +
+> >       early_page_ext [KNL,EARLY] Enforces page_ext initialization to ea=
+rlier
+> >                       stages so cover more early boot allocations.
+> >                       Please note that as side effect some optimization=
+s
+> > diff --git a/arch/x86/entry/vsyscall/vsyscall_64.c b/arch/x86/entry/vsy=
+scall/vsyscall_64.c
+> > index 2fb7d53cf333..20a3000550d2 100644
+> > --- a/arch/x86/entry/vsyscall/vsyscall_64.c
+> > +++ b/arch/x86/entry/vsyscall/vsyscall_64.c
+> > @@ -32,6 +32,7 @@
+> >  #include <linux/mm_types.h>
+> >  #include <linux/syscalls.h>
+> >  #include <linux/ratelimit.h>
+> > +#include <linux/fs.h>
 > >
-> > On Sun, Oct 6, 2024 at 8:56 PM Jan Hendrik Farr <kernel@jfarr.cc> wrote:
-> > > > I want to separate several easily confused issues. Instead of just
-> > > > saying __bdos, let's clearly refer to what calculation within bdos is
-> > > > being used. There are 3 choices currently:
-> > > > - alloc_size attribute
-> > > > - counted_by attribute
-> > > > - fallback to __bos (which is similar to sizeof(), except that FAMs are 0 sized)
-> > > >
-> > > > Additionally there are (for all intents and purposes) 2 size
-> > > > determinations to be made by __bos and __bdos, via argument 2:
-> > > > - containing object size (type 0) ("maximum size")
-> > > > - specific object size (type 1) ("minimum size")
-> > >
-> > > "maximum" vs "minimum" size would by type 0 vs type 2, but I think you
-> > > do mean type 0 and type 1 as those are the types currently used by
-> > > __struct_size and __member_size. Those are both "maximum" sizes.
-> > >
-> > > >
-> > > > For example, consider:
-> > > >
-> > > > struct posix_acl *acl = malloc(1024);
-> > > > acl->a_count = 1;
-> > > >
-> > > > what should these return:
-> > > >
-> > > >       __bos(acl, 0)
-> > > >       __bos(acl, 1)
-> > > >       __bdos(acl, 0)
-> > > >       __bdos(acl, 1)
-> > > >       __bos(acl->a_entries, 0)
-> > > >       __bos(acl->a_entries, 1)
-> > > >       __bdos(acl->a_entries, 0)
-> > > >       __bdos(acl->a_entries, 1)
-> > > >
-> > >
-> > Thank you for this detailed write-up! I'm sorry for my late response.
+> >  #include <asm/vsyscall.h>
+> >  #include <asm/unistd.h>
+> > @@ -366,8 +367,12 @@ void __init map_vsyscall(void)
+> >               set_vsyscall_pgtable_user_bits(swapper_pg_dir);
+> >       }
 > >
-> [snip]
+> > -     if (vsyscall_mode =3D=3D XONLY)
+> > -             vm_flags_init(&gate_vma, VM_EXEC);
+> > +     if (vsyscall_mode =3D=3D XONLY) {
+> > +             unsigned long vm_flags =3D VM_EXEC;
+> > +
+> > +             update_seal_exec_system_mappings(&vm_flags);
+> > +             vm_flags_init(&gate_vma, vm_flags);
+> > +     }
 > >
-> > So in conclusion, if turning off the calculation for a pointer to the
-> > whole struct works, then I'm okay with it.
+> >       BUILD_BUG_ON((unsigned long)__fix_to_virt(VSYSCALL_PAGE) !=3D
+> >                    (unsigned long)VSYSCALL_ADDR);
+> > diff --git a/fs/exec.c b/fs/exec.c
+> > index 77364806b48d..5030879cda47 100644
+> > --- a/fs/exec.c
+> > +++ b/fs/exec.c
+>
+> Does it make sense for this to live in exec?  Couldn't you put it in the
+> mm/mseal.c file?  It's vma flags for mappings and you've put it in
+> fs/exec?
+>
+If you are referring to utilities related to kernel cmdline, they
+should be in this file.
+
+> > @@ -68,6 +68,7 @@
+> >  #include <linux/user_events.h>
+> >  #include <linux/rseq.h>
+> >  #include <linux/ksm.h>
+> > +#include <linux/fs_parser.h>
 > >
-> Here's a potential fix:
-> 
->   https://github.com/llvm/llvm-project/pull/112636
+> >  #include <linux/uaccess.h>
+> >  #include <asm/mmu_context.h>
+> > @@ -2159,3 +2160,55 @@ fs_initcall(init_fs_exec_sysctls);
+> >  #ifdef CONFIG_EXEC_KUNIT_TEST
+> >  #include "tests/exec_kunit.c"
+> >  #endif
+> > +
+> > +#ifdef CONFIG_64BIT
+> > +/*
+> > + * Kernel cmdline overwrite for CONFIG_SEAL_SYSTEM_MAPPINGS_X
+> > + */
+> > +enum seal_system_mappings_type {
+> > +     SEAL_SYSTEM_MAPPINGS_NEVER,
+> > +     SEAL_SYSTEM_MAPPINGS_ALWAYS
+> > +};
+> > +
+> > +static enum seal_system_mappings_type seal_system_mappings __ro_after_=
+init =3D
+> > +     IS_ENABLED(CONFIG_SEAL_SYSTEM_MAPPINGS_ALWAYS) ? SEAL_SYSTEM_MAPP=
+INGS_ALWAYS :
+> > +     SEAL_SYSTEM_MAPPINGS_NEVER;
+> > +
+> > +static const struct constant_table value_table_sys_mapping[] __initcon=
+st =3D {
+> > +     { "never", SEAL_SYSTEM_MAPPINGS_NEVER},
+> > +     { "always", SEAL_SYSTEM_MAPPINGS_ALWAYS},
+> > +     { }
+> > +};
+> > +
+> > +static int __init early_seal_system_mappings_override(char *buf)
+> > +{
+> > +     if (!buf)
+> > +             return -EINVAL;
+> > +
+> > +     seal_system_mappings =3D lookup_constant(value_table_sys_mapping,
+> > +                     buf, seal_system_mappings);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +early_param("exec.seal_system_mappings", early_seal_system_mappings_ov=
+erride);
+> > +
+> > +static bool seal_system_mappings_enabled(void)
+> > +{
+> > +     if (seal_system_mappings =3D=3D SEAL_SYSTEM_MAPPINGS_ALWAYS)
+> > +             return true;
+> > +
+> > +     return false;
+> > +}
+>
+> This function seems unnecessary, it is called from another 3-4 line
+> function only.
+>
+It is more readable this way.
 
-Here's the patch to disable __counted_by for clang < 19.1.3. I'll submit
-it properly when your PR is merged. I hope I got all the correct tags in
-there as there were multiple reports of these issues. Let me know if
-anything should be added, I'm new to the process.
+> > +
+> > +void update_seal_exec_system_mappings(unsigned long *vm_flags)
+> > +{
+> > +     if (!(*vm_flags & VM_SEALED) && seal_system_mappings_enabled())
+>
+> Why !(*vm_flags & VM_SEALED) here?
+>
+If vm_flags is already sealed, then there is no need to check
+seal_system_mappings_enabled.
 
-From: Jan Hendrik Farr <kernel@jfarr.cc>
-Date: Thu, 17 Oct 2024 04:39:40 +0200
-Subject: [PATCH] Compiler Attributes: disable __counted_by for clang < 19.1.3
+> > +             *vm_flags |=3D VM_SEALED;
+> > +
+> > +}
+>
+> Instead of passing a pointer around and checking enabled, why don't you
+> have a function that just returns the VM_SEALED or 0 and just or it into
+> the flags?  This seems very heavy for what it does, why did you do it
+> this way?
+>
+Why is that heavy ? passing a pointer for updating variables is natural.
 
-This patch disables __counted_by for clang versions < 19.1.3 because of
-two issues.
+> The name is also very long and a bit odd, it could be used for other
+> reasons, but you have _system_mappings on the end, and you use seal but
+> it's mseal (or vm_seal)?  Would mseal_flag() work?
+>
+It could be longer :-)
+ it means update_sealing_flag_for_executable_system_mappings.
+mseal_flag is too short and not descriptive.
 
-1. clang versions < 19.1.2 have a bug that can lead to __bdos returning 0:
-https://github.com/llvm/llvm-project/pull/110497
+> > +#else
+> > +void update_seal_exec_system_mappings(unsigned long *vm_flags)
+> > +{
+> > +}
+> > +#endif /* CONFIG_64BIT */
+> > diff --git a/include/linux/fs.h b/include/linux/fs.h
+> > index 42444ec95c9b..6e44aca4b24b 100644
+> > --- a/include/linux/fs.h
+> > +++ b/include/linux/fs.h
+>
+> Again, I don't understand why fs.h is the place for mseal definitions?
+>
+include/linux/fs.h contains other exec related function signatures. So
+it is better to keep them at the same header.
 
-2. clang versions < 19.1.3 have a bug that can lead to __bdos being off by 4:
-https://github.com/llvm/llvm-project/pull/112636
+> > @@ -3079,6 +3079,7 @@ ssize_t __kernel_read(struct file *file, void *bu=
+f, size_t count, loff_t *pos);
+> >  extern ssize_t kernel_write(struct file *, const void *, size_t, loff_=
+t *);
+> >  extern ssize_t __kernel_write(struct file *, const void *, size_t, lof=
+f_t *);
+> >  extern struct file * open_exec(const char *);
+> > +extern void update_seal_exec_system_mappings(unsigned long *vm_flags);
+>
+> We are dropping extern where possible now.
+>
+extern can be dropped, it appears not causing link error.
+> >
+> >  /* fs/dcache.c -- generic fs support functions */
+> >  extern bool is_subdir(struct dentry *, struct dentry *);
+> > diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> > index c47a0bf25e58..e9876fae8887 100644
+> > --- a/kernel/events/uprobes.c
+> > +++ b/kernel/events/uprobes.c
+> > @@ -1506,7 +1506,7 @@ static int xol_add_vma(struct mm_struct *mm, stru=
+ct xol_area *area)
+> >       }
+> >
+> >       vma =3D _install_special_mapping(mm, area->vaddr, PAGE_SIZE,
+> > -                             VM_EXEC|VM_MAYEXEC|VM_DONTCOPY|VM_IO,
+> > +                             VM_EXEC|VM_MAYEXEC|VM_DONTCOPY|VM_IO|VM_S=
+EALED,
+> >                               &xol_mapping);
+>
+> Changing all uprobes seems like something that should probably be
+> mentioned more than just the note at the end of the change log, even if
+> you think it won't have any impact.  The note is even hidden at the end
+> of a paragraph.
+>
+> I would go as far as splitting this patch out as its own so that the
+> subject line specifies that all uprobes will be VM_SEALED now.
+>
+> Maybe it's fine but maybe it isn't and you've buried it so that it will
+> be missed by virtually everyone.
+>
+I will  add "It is sealed from creation." in the above "uprobe" section.
 
-Cc: stable@vger.kernel.org
-Reported-by: Nathan Chancellor <nathan@kernel.org>
-Reported-by: kernel test robot <oliver.sang@intel.com>
-Closes: https://lore.kernel.org/oe-lkp/202409260949.a1254989-oliver.sang@intel.com
-Link: https://lore.kernel.org/all/Zw8iawAF5W2uzGuh@archlinux/T/#m204c09f63c076586a02d194b87dffc7e81b8de7b
-Signed-off-by: Jan Hendrik Farr <kernel@jfarr.cc>
----
- include/linux/compiler_attributes.h | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+>
+> >       if (IS_ERR(vma)) {
+> >               ret =3D PTR_ERR(vma);
+> > diff --git a/mm/mmap.c b/mm/mmap.c
+> > index 57fd5ab2abe7..d4717e34a60d 100644
+> > --- a/mm/mmap.c
+> > +++ b/mm/mmap.c
+> > @@ -2133,6 +2133,7 @@ struct vm_area_struct *_install_special_mapping(
+> >       unsigned long addr, unsigned long len,
+> >       unsigned long vm_flags, const struct vm_special_mapping *spec)
+> >  {
+> > +     update_seal_exec_system_mappings(&vm_flags);
+> >       return __install_special_mapping(mm, addr, len, vm_flags, (void *=
+)spec,
+> >                                       &special_mapping_vmops);
+>
+> If you were to return a flag, you could change the vm_flags argument to
+> vm_flags | mseal_flag()
+>
+passing pointer seems to be the most efficient way.
 
-diff --git a/include/linux/compiler_attributes.h b/include/linux/compiler_attributes.h
-index 32284cd26d52..7966a533aaec 100644
---- a/include/linux/compiler_attributes.h
-+++ b/include/linux/compiler_attributes.h
-@@ -100,8 +100,17 @@
-  *
-  *   gcc: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=108896
-  * clang: https://github.com/llvm/llvm-project/pull/76348
-+ *
-+ * clang versions < 19.1.2 have a bug that can lead to __bdos returning 0:
-+ * https://github.com/llvm/llvm-project/pull/110497
-+ *
-+ * clang versions < 19.1.3 have a bug that can lead to __bdos being off by 4:
-+ * https://github.com/llvm/llvm-project/pull/112636
-  */
--#if __has_attribute(__counted_by__)
-+#if __has_attribute(__counted_by__) && \
-+	(!defined(__clang__) || (__clang_major__ > 19) || \
-+	(__clang_major__ == 19 && (__clang_minor__ > 1 || \
-+	(__clang_minor__ == 1 && __clang_patchlevel__ >= 3))))
- # define __counted_by(member)		__attribute__((__counted_by__(member)))
- #else
- # define __counted_by(member)
--- 
-2.47.0
-
+Thanks
+-Jeff
