@@ -1,214 +1,170 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 100AB8F6D;
-	Thu, 17 Oct 2024 00:51:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B233225A8
+	for <linux-hardening@vger.kernel.org>; Thu, 17 Oct 2024 00:59:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729126280; cv=none; b=tQc/O1HzD4eDdgOlT8vSUgcL/LjYYjFlYjkHECJri/T8B8ul2CaTzu2QqcMaYCNdwDHA40H0Nfcgx6DlVsHZoHpeuDoGPqiCF2uYQYoSOWepW2P/gdJwrf0mS4x9p+rrah390AbH4A2MLfDnO53mFw3LSX/PLrNKbTE9isHnyro=
+	t=1729126744; cv=none; b=k+RViNWVriWcwW5m0ov7rpEmLIApLewBXPuH3XqCPU0JXz6xuKMiSfhmsEcJsuxbICjUyOpaVnlxbzoI8jKtyxqgnnylSG38CdC9n8J7mwx5i3U7golp5yvzUpnJvGeVpNI6GLmQBG/p7uO7RvSPuBXvlZg5x7GXkXDlhIda/Uk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729126280; c=relaxed/simple;
-	bh=cKIZ51gEzSoGE7kPaiN2lX3PPuwPlGCxoH0L2PppxQE=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=B9YdEdO6w9jcJkUzou9FI9lsZVKpeVlfXB9+Wdwh0lN8QOGohb9Xve1u0pMlIDZ908Tz0aovr7pADyuJECpZk9KE3gAnBnV+4zEOeLlOmIRqcR6wx1M6B/J8J1xURhCPsDOlsh0XMJg8ctPLtRiMYwpawj1/qMru9ju62envxAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=u0zc3567; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=1Xy4yewY; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=u0zc3567; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=1Xy4yewY; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1729126744; c=relaxed/simple;
+	bh=7K2XnUuy0P9E7s03f1J6KqIgknJ/o4Rj/QxnU/BuOfU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=pSFl/KD9nw9ucdqJxQjeoMkhxuOHD+quI0v7+ktpKNqayUOU9OZ0l3IdzzOPV1VhlBML8V9kfSd0/FxT/Dsc3BlikySNpv7kUYdEaITMEIwu083wfNopv33tN/ZsljJy47Ac3T9e0h5EX4+ev+iRpH5XEWiKsn761MgWiaZUz0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=GtI6jT6q; arc=none smtp.client-ip=209.85.167.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="u0zc3567";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="1Xy4yewY";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="u0zc3567";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="1Xy4yewY"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 267B221AC8;
-	Thu, 17 Oct 2024 00:51:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1729126276; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JeSM4EngDjY2OynP+TSahx2kcNPoWmoIPyvLW6nocqQ=;
-	b=u0zc356797/MmyPFnEmvK12kFY6CK/HoK1iXDkZZ4GaK6PPdpv68njQg6SkYKqLqq9MowT
-	UDy3XeopUhXgNVCqD3TEHnb09DnTTXH8ZpN7qQ5E+hoob6+Pt8MuxdQvuJz4z8Hy9gk67s
-	wHfNdf1BtTKVwwPV/PgPMIrRGnwgE9g=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1729126276;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JeSM4EngDjY2OynP+TSahx2kcNPoWmoIPyvLW6nocqQ=;
-	b=1Xy4yewYWfjGTNV77HB+4mGWmmVTjIzMUm/scBi6aq+u4BYzRW1QdL/7Tp3u9kZv2SpuUQ
-	IFEOcE2sC8BZQLBQ==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=u0zc3567;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=1Xy4yewY
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1729126276; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JeSM4EngDjY2OynP+TSahx2kcNPoWmoIPyvLW6nocqQ=;
-	b=u0zc356797/MmyPFnEmvK12kFY6CK/HoK1iXDkZZ4GaK6PPdpv68njQg6SkYKqLqq9MowT
-	UDy3XeopUhXgNVCqD3TEHnb09DnTTXH8ZpN7qQ5E+hoob6+Pt8MuxdQvuJz4z8Hy9gk67s
-	wHfNdf1BtTKVwwPV/PgPMIrRGnwgE9g=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1729126276;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JeSM4EngDjY2OynP+TSahx2kcNPoWmoIPyvLW6nocqQ=;
-	b=1Xy4yewYWfjGTNV77HB+4mGWmmVTjIzMUm/scBi6aq+u4BYzRW1QdL/7Tp3u9kZv2SpuUQ
-	IFEOcE2sC8BZQLBQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id DD45313433;
-	Thu, 17 Oct 2024 00:51:12 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id b3EUJIBfEGf2QgAAD6G6ig
-	(envelope-from <neilb@suse.de>); Thu, 17 Oct 2024 00:51:12 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GtI6jT6q"
+Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-3e5ed3807ceso8350b6e.2
+        for <linux-hardening@vger.kernel.org>; Wed, 16 Oct 2024 17:59:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1729126740; x=1729731540; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0vVJYK2PYMGKwOP4Lxha8ImE5MYqQ8EQdHVxhSS48hw=;
+        b=GtI6jT6qv8Ox8tLdeHWru0Chkmr939qqw8twApAEHGMoI3sPX1r1cvAAyMRyFQVP58
+         K5Q1yBC33sG+slYCB7qwePmXujnWNLhdUH1DP1frk+vN4Ta6PyVIw1V7oAxkyKsxB/y9
+         hGObUX05LSB11s1HP84Tg2y/4FDnhmJzS/oUY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729126740; x=1729731540;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0vVJYK2PYMGKwOP4Lxha8ImE5MYqQ8EQdHVxhSS48hw=;
+        b=NAMcp/mn07vC46hVQvRVCrqf52+JzgHzHsx0RqA3yIX5DimpJhVLbDNb/SIflUbgQ/
+         tS4vqqmEF6xJEDe3izdWPX3dYAxZLv8T7AynnA4QwSHqOBl4EWrclmJVE133KKFsL93D
+         1bipHGQkXMVHxxBHayeKf8n3j4FbHzdltr5Nf3d/OUYV2rEm+gdHKGij/Ra71Ry+Qws2
+         G1+E4lGZ0wUxtuEIO7JyjqjXH0WYxlNqP6dFMnchjKgMbKlOxJK0LEPuhbtreIej7qnf
+         XqzRUa1jSdmyEbBUsUJqYvznVsD1KtJbATBBErXETtQeSd7ibx7c+MMazRxnoAe8F7h1
+         M2kw==
+X-Forwarded-Encrypted: i=1; AJvYcCULWWltIn4yhAAn05BQzBTJ5bS09gfGl4rVjSTFeo9xu/6P4/0LopPpza/UGixxqEAui7WSqSW707vdMPIoLKg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YznpinIFFtcuUoI6RftWCX9EVT10plun6XlHdxPJHK9SF3XOdgo
+	PVmsJdW4FpHI96k1t+iW+R+rZjyWhTil5ixNptUe1MdKFnw1FKjoUnD9PEO9NQh/l6H7Q7vaD4p
+	eI30usTh+zXlt9NPVyrueWNIftMbA32uL4MQ7
+X-Google-Smtp-Source: AGHT+IFkJK5vW7UTiyaQakVeuzZ8LAyOMeE0oL/OgRN/Lgn0cZ0pGepPtXKIgu6x4o4k21vyPhR1shJYcp3eX+BVu+c=
+X-Received: by 2002:a05:6870:2012:b0:287:2cbc:6c9 with SMTP id
+ 586e51a60fabf-2890c6d885cmr432437fac.8.1729126740267; Wed, 16 Oct 2024
+ 17:59:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Chuck Lever" <chuck.lever@oracle.com>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- "Jeff Layton" <jlayton@kernel.org>, "Olga Kornievskaia" <okorniev@redhat.com>,
- "Dai Ngo" <Dai.Ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>,
- linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org, "Kees Cook" <kees@kernel.org>
-Subject:
- Re: [PATCH 2/5][next] nfsd: avoid -Wflex-array-member-not-at-end warnings
-In-reply-to: <Zw/KoQRfBl5Y9xyS@tissot.1015granger.net>
-References: <>, <Zw/KoQRfBl5Y9xyS@tissot.1015granger.net>
-Date: Thu, 17 Oct 2024 11:51:01 +1100
-Message-id: <172912626140.81717.18213359690044489488@noble.neil.brown.name>
-X-Rspamd-Queue-Id: 267B221AC8
-X-Spam-Score: -4.51
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	MISSING_XM_UA(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_ALL(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+References: <20241014215022.68530-1-jeffxu@google.com> <2durheir3u7uv7y5d3zsuxgkxbfhyj6gbef6xiktp2nybf7os2@zppt55ut7f57>
+In-Reply-To: <2durheir3u7uv7y5d3zsuxgkxbfhyj6gbef6xiktp2nybf7os2@zppt55ut7f57>
+From: Jeff Xu <jeffxu@chromium.org>
+Date: Wed, 16 Oct 2024 17:58:48 -0700
+Message-ID: <CABi2SkX3YjU-soYqRahjV07cAw1bB0ukUNiUFkc-APNN3DvJ6A@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 0/1] seal system mappings
+To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, jeffxu@chromium.org, akpm@linux-foundation.org, 
+	keescook@chromium.org, jannh@google.com, torvalds@linux-foundation.org, 
+	adhemerval.zanella@linaro.org, oleg@redhat.com, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, linux-mm@kvack.org, jorgelo@chromium.org, 
+	sroettger@google.com, ojeda@kernel.org, adobriyan@gmail.com, 
+	anna-maria@linutronix.de, mark.rutland@arm.com, linus.walleij@linaro.org, 
+	Jason@zx2c4.com, deller@gmx.de, rdunlap@infradead.org, davem@davemloft.net, 
+	hch@lst.de, peterx@redhat.com, hca@linux.ibm.com, f.fainelli@gmail.com, 
+	gerg@kernel.org, dave.hansen@linux.intel.com, mingo@kernel.org, 
+	ardb@kernel.org, mhocko@suse.com, 42.hyeyoo@gmail.com, peterz@infradead.org, 
+	ardb@google.com, enh@google.com, rientjes@google.com, groeck@chromium.org, 
+	lorenzo.stoakes@oracle.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 17 Oct 2024, Chuck Lever wrote:
-> On Tue, Oct 15, 2024 at 06:29:31PM -0600, Gustavo A. R. Silva wrote:
-> > -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-> > getting ready to enable it, globally.
-> >=20
-> > Address the following warnings by changing the type of the middle struct
-> > members in `struct nfsd_genl_rqstp`, which are currently causing trouble,
-> > from `struct sockaddr` to `struct sockaddr_legacy`. Note that the latter
-> > struct doesn't contain a flexible-array member.
-> >=20
-> > fs/nfsd/nfsd.h:74:33: warning: structure containing a flexible array memb=
-er is not at the end of another structure [-Wflex-array-member-not-at-end]
-> > fs/nfsd/nfsd.h:75:33: warning: structure containing a flexible array memb=
-er is not at the end of another structure [-Wflex-array-member-not-at-end]
-> >=20
-> > Also, update some related code, accordingly.
-> >=20
-> > No binary differences are present after these changes.
-> >=20
-> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> > ---
-> >  fs/nfsd/nfsctl.c | 4 ++--
-> >  fs/nfsd/nfsd.h   | 4 ++--
-> >  2 files changed, 4 insertions(+), 4 deletions(-)
-> >=20
-> > diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-> > index 3adbc05ebaac..884bfdc7a255 100644
-> > --- a/fs/nfsd/nfsctl.c
-> > +++ b/fs/nfsd/nfsctl.c
-> > @@ -1599,9 +1599,9 @@ int nfsd_nl_rpc_status_get_dumpit(struct sk_buff *s=
-kb,
-> >  			genl_rqstp.rq_stime =3D rqstp->rq_stime;
-> >  			genl_rqstp.rq_opcnt =3D 0;
-> >  			memcpy(&genl_rqstp.rq_daddr, svc_daddr(rqstp),
-> > -			       sizeof(struct sockaddr));
-> > +			       sizeof(struct sockaddr_legacy));
-> >  			memcpy(&genl_rqstp.rq_saddr, svc_addr(rqstp),
-> > -			       sizeof(struct sockaddr));
-> > +			       sizeof(struct sockaddr_legacy));
-> > =20
-> >  #ifdef CONFIG_NFSD_V4
-> >  			if (rqstp->rq_vers =3D=3D NFS4_VERSION &&
-> > diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
-> > index 004415651295..44be32510595 100644
-> > --- a/fs/nfsd/nfsd.h
-> > +++ b/fs/nfsd/nfsd.h
-> > @@ -71,8 +71,8 @@ struct readdir_cd {
-> >  #define NFSD_MAX_OPS_PER_COMPOUND	50
-> > =20
-> >  struct nfsd_genl_rqstp {
-> > -	struct sockaddr		rq_daddr;
-> > -	struct sockaddr		rq_saddr;
-> > +	struct sockaddr_legacy	rq_daddr;
-> > +	struct sockaddr_legacy	rq_saddr;
->=20
-> I was hoping to find a struct definition that was simply a union of
-> sockaddr_in and sockaddr_in6, which we have in nfs-utils but I guess
-> not here in the kernel.
->=20
-> Can we use "struct sockaddr_storage" safely here? Then above,
-> replace the raw memcpy() with rpc_copy_addr() ?
+On Wed, Oct 16, 2024 at 4:18=E2=80=AFPM Liam R. Howlett <Liam.Howlett@oracl=
+e.com> wrote:
+>
+> * jeffxu@chromium.org <jeffxu@chromium.org> [241014 17:50]:
+> > From: Jeff Xu <jeffxu@chromium.org>
+> >
+> > Seal vdso, vvar, sigpage, uprobes and vsyscall.
+> >
+> > Those mappings are readonly or executable only, sealing can protect
+> > them from ever changing during the life time of the process. For
+> > complete descriptions of memory sealing, please see mseal.rst [1].
+> >
+> > System mappings such as vdso, vvar, and sigpage (for arm) are
+> > generated by the kernel during program initialization. These mappings
+> > are designated as non-writable, and sealing them will prevent them
+> > from ever becoming writeable.
+>                               ^ or ever removed.
+>
+> This is a pretty big deal.  Platforms are trying to make it so that vdso
+> is the fast path, but if they are removed then things stop using them
+> and it's not a problem.  This description is robbing them of the
+> information they need to know that, and it's not in your change log
+> either.
+>
+> I had said before that you need to be clear about the inability to
+> remove the mappings that are sealed, as the description above heavily
+> implies that it is only stopping them from becoming writeable.
+>
+The mseal.rst has the full description about memory sealing, I don't
+see the point to repeat all the blocked operations in the commit
+message here.
 
-sockaddr_storage is conceptually the right solution.  It is 128 bytes so
-2 of them will waste about 200 bytes on the stack.  Does that matter
-these days?  Probably not.
+I don't know why you would think this heavily implies that only
+stopping them from becoming writable, There is already reminder: **
+For complete descriptions ** of memory sealing, please see mseal.rst
 
-I do like using rpc_copy_addr().
-
-NeilBrown
-
-
->=20
->=20
-> >  	unsigned long		rq_flags;
-> >  	ktime_t			rq_stime;
-> >  	__be32			rq_xid;
-> > --=20
-> > 2.34.1
-> >=20
->=20
-> --=20
-> Chuck Lever
->=20
-
+> >
+> > Unlike the aforementioned mappings, the uprobe mapping is not
+> > established during program startup. However, its lifetime is the same
+> > as the process's lifetime [2], thus sealable.
+> >
+> > The vdso, vvar, sigpage, and uprobe mappings all invoke the
+> > _install_special_mapping() function. As no other mappings utilize this
+> > function, it is logical to incorporate sealing logic within
+> > _install_special_mapping(). This approach avoids the necessity of
+> > modifying code across various architecture-specific implementations.
+> >
+> > The vsyscall mapping, which has its own initialization function, is
+> > sealed in the XONLY case, it seems to be the most common and secure
+> > case of using vsyscall.
+> >
+> > It is important to note that the CHECKPOINT_RESTORE feature (CRIU) may
+> > alter the mapping of vdso, vvar, and sigpage during restore
+> > operations. Consequently, this feature cannot be universally enabled
+> > across all systems. To address this, a kernel configuration option has
+> > been introduced to enable or disable this functionality. Note, uprobe
+> > is always sealed and not controlled by this kernel configuration.
+> >
+> > I tested CONFIG_SEAL_SYSTEM_MAPPINGS_ALWAYS with ChromeOS,
+> > which doesn=E2=80=99t use CHECKPOINT_RESTORE.
+> >
+> > [1] Documentation/userspace-api/mseal.rst
+> > [2] https://lore.kernel.org/all/CABi2SkU9BRUnqf70-nksuMCQ+yyiWjo3fM4XkR=
+kL-NrCZxYAyg@mail.gmail.com/
+> >
+> > History:
+> > V2:
+> >   Seal uprobe always (Oleg Nesterov)
+> >   Update comments and description (Randy Dunlap, Liam R.Howlett, Oleg N=
+esterov)
+>
+> The only update to the comment I see is the pointer to mseal.rst for a
+> complete description?
+>
+> >   Rebase to linux_main
+> >
+> > V1:
+> > https://lore.kernel.org/all/20241004163155.3493183-1-jeffxu@google.com/
+> >
+> > Jeff Xu (1):
+> >   exec: seal system mappings
+> >
+> >  .../admin-guide/kernel-parameters.txt         | 10 ++++
+> >  arch/x86/entry/vsyscall/vsyscall_64.c         |  9 +++-
+> >  fs/exec.c                                     | 53 +++++++++++++++++++
+> >  include/linux/fs.h                            |  1 +
+> >  kernel/events/uprobes.c                       |  2 +-
+> >  mm/mmap.c                                     |  1 +
+> >  security/Kconfig                              | 26 +++++++++
+> >  7 files changed, 99 insertions(+), 3 deletions(-)
+> >
+> > --
+> > 2.47.0.rc1.288.g06298d1525-goog
+> >
