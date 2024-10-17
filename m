@@ -1,65 +1,63 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D01191442F6;
-	Thu, 17 Oct 2024 09:13:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B06B913AA4E;
+	Thu, 17 Oct 2024 09:39:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729156432; cv=none; b=bIOoUazGk3+k1737gCvbBLJoVd4+U9xDVFQzdi28JJgEWnPzP26lIXlO1Zpzznv5rFSsIth6/rEI1YncDdLF0EDHr/YE9/hEn75eYpdBi7Z1fEkCyjMU6HvyQykJLvxUwbDChCJIdzKfNCRbb/RNvLqi5QyvhHiYfx7h4LekJuA=
+	t=1729157982; cv=none; b=AdnPAaebtQ9PJA1dDZzkrlABIPow+4jU8+I+KZWDSH0RL3BmZSasoMRSGVvOo8E9X2OqkDBOI4WmvvHUkXcST7As1u+4A7WwknQ5k1X/8qNUeg9qg7fLJkvDqg8+u1aBpoRZG5bGL1LoDFdHcbJuaJJUOej52B2kwhtjuKI4SSU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729156432; c=relaxed/simple;
-	bh=6B56F/7gGKWcaxA+AMvOG3Bsj/8V7vGGsAc06OtW1Xw=;
+	s=arc-20240116; t=1729157982; c=relaxed/simple;
+	bh=C42URS24IogOW1s8SLEGZKkfR7gnux1L4ZhNjBL9Ipo=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=sxVMiuNhXns1td8t3ACgbyVGxvrdQhnoK7AH4OYzh1QWmh3WjpnzibcLT8bFR5VB2+lzCQQz4sdo+MrcabBuAo6I/rOmLcWnAkjijSITS+VxHWj5TcvX5NKbkzZjb0caUU3f0ScI8CGCsBfqkiJOP4xVHU6FkKC/oPDUCyYiLkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DzhZNiFH; arc=none smtp.client-ip=209.85.214.169
+	 Content-Disposition; b=LFi/k+CsiAVkpkbhi4cgf3gGRPdrW4aY0k/pG/A2/8JvQbga2vkF6OxGSPVb9S91jed35NpVXmdWrpVZu5nUyebzOLRtEnGzOC8H32T3UwpfObYZLRoJWA2kwMVSWQzfQCm5Uwyxh+NrHBQ6HxeCGL8kEsR3rQzpCAqnIqbAVv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aClISKUz; arc=none smtp.client-ip=209.85.215.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DzhZNiFH"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-20c77459558so6345635ad.0;
-        Thu, 17 Oct 2024 02:13:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aClISKUz"
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-7db238d07b3so641647a12.2;
+        Thu, 17 Oct 2024 02:39:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729156430; x=1729761230; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1729157980; x=1729762780; darn=vger.kernel.org;
         h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=QnDW4UWPXXutZ1QDoKHkijshs1CsONS/w/tjSEp29Ow=;
-        b=DzhZNiFHW37dxR4aJ8kO4lALUm86VGsztXgJpqCLoRQVU5H3RlFHUiIfVP7NBvQEdA
-         NNKdmTbL9Qi6nlxs9ZlPDszpuZm1tH7oboN8yJzLqkfdILPplJq6S65iri+7VozmTQpv
-         ku0HbrpptrxMER01Swp4RNtaDmAH0338g7pdgnUegRF7qM5HYjWpLGCX28/0GQ1f05cJ
-         1nCbAyPWJcphXb2eUvulgia4g7BZUUc8eXlk+Pp3+i+1ewSIkT1vlc8l4GzOeaZJ+X+3
-         EopZXAFBcybnBcD3tI2Mtf1L9jGPMwzHguT9FmTS9rD3F+ZXIrGSME5NUDgRqRknPGad
-         lTmg==
+        bh=ydf94IBLCbwdFZiD8hQTnCOX05UKhFgbH1jfcRWJdnM=;
+        b=aClISKUz+K3uJEBxIl8r6++G2+R8UM1y8HoTQx+i9HtLxFBq67kFLfMygB31apM7Tz
+         TP6QNZXXW/e4G6HuXP7aXLi3nEsa9aiK0GAsy2H48zGjAuJaXBd7kCQfkGEgNHgPnrgP
+         NGgCBk4YK3K1dLjCYZvk4JXAvrVGQ7PejNKUMMwWOHre4uan9vMJ3OsVKGHQipwcUEVi
+         FL9FZPlFvNWRu2bRe7V8iLCiSL2remOTg20fn71U6N8hPYs3FM8uT9lV9qbZqbkyshXX
+         LI2zcb+ICiPsvD1B9w6p4F7kd6kxGeEo7eVl7vISJYqYOI7pSG5i4MGj3gjNF74fWxB+
+         7yYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729156430; x=1729761230;
+        d=1e100.net; s=20230601; t=1729157980; x=1729762780;
         h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QnDW4UWPXXutZ1QDoKHkijshs1CsONS/w/tjSEp29Ow=;
-        b=TDE8kcQaejCeamrCmYz6ZiaPIzmnTpyvP+Lr08RhFlvCpMAq7K/M2hHEybzlsPkhk9
-         pqxY9eww21ZjLAcxVGnTXT3VZe+8VGlkvM19gqdNwR0IUuvBy+JXyNyJt8klelvoU/QH
-         AKkcnPWoDJVab6lwd8kwm3aApZMZeMFl350TCFXM0xu6csgJwJlnGLqBtVN35gLuyGAs
-         lEpq3Q/CuOXlh8CAW8DojiSy3R15mN2YEUx0rjh+r2e2fialQJxnB8I1XxA1Z9PluSoo
-         PJcaWfs30FMJDpoi2+weGFxaCFnkFghva7wBHmSUeBW/FQ1EMFsymFcI49q0dWEDCzCe
-         LthQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVNl5CPhjTK/896b2xtQTnpzBHu1NqVH4FtHXhXP1SAy/z00kLRrPbeWPupHRfjXpSB88jN6ZXy8/Ih42Bg@vger.kernel.org, AJvYcCW4M4dTJsjJG4Ojf9LJoTa555GqXrg/Nm9i9L62NXzLgp+FfCyO0CjWxG7o0eqtmwjWrQWlLfOdyyeK9Q==@vger.kernel.org, AJvYcCXt0ooazqIs70I1ApKYO6pg4H1M+7AgXC9dsFRsrsAU6m5M4sVdbol4qoc0wdzxNXID2oT6aHVCcO7NrbcMzus=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzBnVJzwWoS4lBx0IBTNr82aXqop2MInZhSA/ET5DLmjGgq6EtM
-	78O4/fu/fBaNYam5QGQSj5miAINzkFqNEFcYZFIGRk0HDIPiphdf
-X-Google-Smtp-Source: AGHT+IE4YIqZAjh2RM9aiRS2XVdzVST4w+5ARVIJ4Q6/br7ZWK8Q0aQUqsm0LCRu9Uf9AOOjGTnjcQ==
-X-Received: by 2002:a17:903:190:b0:20c:f648:e39e with SMTP id d9443c01a7336-20cf648e4f7mr165674215ad.58.1729156430094;
-        Thu, 17 Oct 2024 02:13:50 -0700 (PDT)
+        bh=ydf94IBLCbwdFZiD8hQTnCOX05UKhFgbH1jfcRWJdnM=;
+        b=u9oxhSjp33BEeWn+5ygWivKpXxrdUKbCpA+OGBK8QjxMkeeY6j83SOstR3SZooy2ri
+         TPRN3Nc9svqWUitv220+/2MTlVOjmvHf/d1MwrzMsM4/kGEawKWceb2BURPVQNBu6Kxo
+         mlg6skqUC9qwObQ3jxxhToUYtbJDYus4pV0cLoKeT3QTGV1SxL17ZU3SbpWpSaf6ryCK
+         edH/hkD2undaSfjRfH2cV0U/W5YYFJoo2iI6ia6ntdddzesXHEOeap0x9inavD6MzcuU
+         5cS0uiUO+/+A0AaNrxPgRt5OTd/mPaGAOZOyMsJFqB/70yWDnwd1TZb1iVdiJj6WDTKE
+         yWWA==
+X-Forwarded-Encrypted: i=1; AJvYcCVxVNkngfmFeogdb3lXebIcaKl4/vrnEw0Vt/Su3x0lQQKaOL3uJxnSnVrKuC+VEup7GUcNH41iv4ceyxRq@vger.kernel.org, AJvYcCXZU/HuVRqmTD6kDaPcgUjMyzSNz3b/a6hDnYiyJFKv2ScGhu6sxxJHuRZyU7nBRLPFlB9KU8UK6MdQvk2zd9Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3u6Ssp6hfkma0OnZYSCtyv+h6cwC41sIoSaT9SJu5sADwPkAX
+	P+94u59q3fqLq6KpXEaf3T0njSOrlryRPz3lb8wSXDRKDVpdGple
+X-Google-Smtp-Source: AGHT+IEBqVbyOoExw0Cg7ddiHiTaN0dPOHmp4wNIiX3iPqa2LS2/M7QxhxM8sS6KNZx8IP8F0Lj+NA==
+X-Received: by 2002:a05:6a20:d818:b0:1cf:2a35:6d21 with SMTP id adf61e73a8af0-1d905f69115mr11651591637.45.1729157979950;
+        Thu, 17 Oct 2024 02:39:39 -0700 (PDT)
 Received: from mail.google.com (125-239-144-11-fibre.sparkbb.co.nz. [125.239.144.11])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20d1804b5e5sm40592205ad.197.2024.10.17.02.13.45
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7ea9c6d3eb7sm4027821a12.45.2024.10.17.02.39.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2024 02:13:49 -0700 (PDT)
-Date: Thu, 17 Oct 2024 22:13:42 +1300
+        Thu, 17 Oct 2024 02:39:39 -0700 (PDT)
+Date: Thu, 17 Oct 2024 22:39:34 +1300
 From: Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
-To: tsbogend@alpha.franken.de, bvanassche@acm.org,
-	paulo.miguel.almeida.rodenas@gmail.com, gregkh@linuxfoundation.org,
-	ricardo@marliere.net, zhanggenjian@kylinos.cn,
-	linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+To: linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
 Cc: paulo.miguel.almeida.rodenas@gmail.com, linux-hardening@vger.kernel.org
-Subject: [PATCH v2][next] mips: sgi-ip22: Replace "s[n]?printf" with
- sysfs_emit in sysfs callbacks
-Message-ID: <ZxDVRru_o_5nqGl5@mail.google.com>
+Subject: [PATCH] ARM: 8611/1: l2x0: replace snprintf with sysfs_emit helper
+ function
+Message-ID: <ZxDbVt6QGzXRBn2v@mail.google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -69,51 +67,30 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-Replace open-coded pieces with sysfs_emit() helper in sysfs .show()
-callbacks.
+sysfs_emit() helper function should be used when formatting the value to
+be returned to user space.
+
+This patch replaces open-coded snprint with sysfs_emit() helper in
+sysfs .show() callbacks.
 
 Signed-off-by: Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
 ---
-Changelog:
-- v2: amend commit message (Req: Maciej W. Rozycki)
-- v1: https://lore.kernel.org/lkml/Zw2GRQkbx8Z8DlcS@mail.google.com/
----
- arch/mips/sgi-ip22/ip22-gio.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ arch/arm/mm/cache-l2x0-pmu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/mips/sgi-ip22/ip22-gio.c b/arch/mips/sgi-ip22/ip22-gio.c
-index d20eec742bfa..5893ea4e382c 100644
---- a/arch/mips/sgi-ip22/ip22-gio.c
-+++ b/arch/mips/sgi-ip22/ip22-gio.c
-@@ -165,9 +165,8 @@ static ssize_t modalias_show(struct device *dev, struct device_attribute *a,
- 			     char *buf)
- {
- 	struct gio_device *gio_dev = to_gio_device(dev);
--	int len = snprintf(buf, PAGE_SIZE, "gio:%x\n", gio_dev->id.id);
+diff --git a/arch/arm/mm/cache-l2x0-pmu.c b/arch/arm/mm/cache-l2x0-pmu.c
+index 993fefdc167a..a9bd05b82003 100644
+--- a/arch/arm/mm/cache-l2x0-pmu.c
++++ b/arch/arm/mm/cache-l2x0-pmu.c
+@@ -343,7 +343,7 @@ static ssize_t l2x0_pmu_event_show(struct device *dev,
+ 	struct l2x0_event_attribute *lattr;
  
--	return (len >= PAGE_SIZE) ? (PAGE_SIZE - 1) : len;
-+	return sysfs_emit(buf, "gio:%x\n", gio_dev->id.id);
+ 	lattr = container_of(attr, typeof(*lattr), attr);
+-	return snprintf(buf, PAGE_SIZE, "config=0x%x\n", lattr->config);
++	return sysfs_emit(buf, "config=0x%x\n", lattr->config);
  }
- static DEVICE_ATTR_RO(modalias);
  
-@@ -177,7 +176,7 @@ static ssize_t name_show(struct device *dev,
- 	struct gio_device *giodev;
- 
- 	giodev = to_gio_device(dev);
--	return sprintf(buf, "%s", giodev->name);
-+	return sysfs_emit(buf, "%s\n", giodev->name);
- }
- static DEVICE_ATTR_RO(name);
- 
-@@ -187,7 +186,7 @@ static ssize_t id_show(struct device *dev,
- 	struct gio_device *giodev;
- 
- 	giodev = to_gio_device(dev);
--	return sprintf(buf, "%x", giodev->id.id);
-+	return sysfs_emit(buf, "%x\n", giodev->id.id);
- }
- static DEVICE_ATTR_RO(id);
- 
+ static umode_t l2x0_pmu_event_attr_is_visible(struct kobject *kobj,
 -- 
 2.47.0
 
