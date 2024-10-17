@@ -1,78 +1,102 @@
-Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
+Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com [209.85.160.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 699A95FDA7
-	for <linux-hardening@vger.kernel.org>; Thu, 17 Oct 2024 16:17:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED0F91DF24C
+	for <linux-hardening@vger.kernel.org>; Thu, 17 Oct 2024 16:20:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729181846; cv=none; b=RBOCLaGf6zcgSdGds6OdC5N+3f1eqaPERnhPrt89pVCROEp8tQWFsTUshPxvx4CMvDyM8ObE2XeGAam1Sl1Kuh+u6pL/Vmbze5vgLAissuaxdPgWVXs7cmsvZMBoqGK5Q2r1+vzqzN1Vf1ExNZiwrdOHN5sZ6kgiYR5eeGqur6I=
+	t=1729182039; cv=none; b=ZIxbYn2unOL1ijzhdAY97+VrTz7rGLHf2pfy0KHQeIMEEayt6BZtkbyZEhHOC9kVH6A7FESOVSzEG0CU4b8flzDFRCjmn1WfZwlO8clAHKo3xGGj20FAFxF5zPLWhwzuSFmuBAokasWeVZ0+Z3OdWOPPoagO4gIGAaK0GipNzqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729181846; c=relaxed/simple;
-	bh=REpSbRLHRT+bYqXXqi34yOmCcGBN1SLrOxSF29WYjxc=;
+	s=arc-20240116; t=1729182039; c=relaxed/simple;
+	bh=mBNQcJGarZlgLJSxTPWeDEc/pcZ4v2cyQ0d1mNFRZi0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ouce/Ee5su/sHlPxqAJFJJv9A3e+BMGxuN5I3yCYGhpiJBgJPtsq4/8lmHL1B8YaeAcwmetw0eykvIU9N79AFI9TtCpovQCYN5IzZ6PMcM0YYSv8iE7Zlt4leubA9E4i7DUidvt55QOrqNCBuQ56HJnn87FrvCBCihbVghvdiDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=PR3eE2t6; arc=none smtp.client-ip=209.85.167.176
+	 To:Cc:Content-Type; b=ufrrKn6X0ILycqlg/Dzaxd60Qn8kV6UUxqpp3RzG2m9rggo3mr3T7iuX8UAij/jpAcvmHPGU3u8cFFildg/oDKEbI7BYJp81DOPONgtv+VnE7cwG2I0D0gM8RvIl+faYJCfC8BooN+5SCrtcNVvA0joQJLxWOJFCsfrAfcXjC+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=H0HNBfs8; arc=none smtp.client-ip=209.85.160.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PR3eE2t6"
-Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-3e6005659caso30515b6e.3
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Oct 2024 09:17:21 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="H0HNBfs8"
+Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-26456710cfdso83154fac.0
+        for <linux-hardening@vger.kernel.org>; Thu, 17 Oct 2024 09:20:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1729181840; x=1729786640; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1729182032; x=1729786832; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0JW21AChuGIHXm/a0oYaXopY0qylbrYU6FFGsXgb1P4=;
-        b=PR3eE2t6IXV2MrJvQxNrF9rNWeIy3xX7vW8k05PbO806DDKzepz0koC7YzOCeDz/B6
-         BeW7gBOPtrnLty5clWaWTW0hAtDNCiSJ/8N4uEMiMlHcpy1IISpk4XUO7KI9Vb3vk4oG
-         QduM9PYdrInH3SHvj3oJwKOzKn5Of1ACw+QHE=
+        bh=QymMmt19qYyptlPRJSRQk64je7D5NwoBdyyf/N0dpQM=;
+        b=H0HNBfs8mprioFB8NaCegyrlCOAjb9zJ7UzxN2uJ5gCPQCDe1RraICbjwTtG/xv/g0
+         AnMw3A9DiyDPzE7GvC/UEcvEcrMzkKKIMNEe/s4qtD+UiOrX9uhye1gPQc0VB6cYQGD0
+         fbGDurljAuswxPfrYkJjAFmaecUdeQ/6gOszU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729181840; x=1729786640;
+        d=1e100.net; s=20230601; t=1729182032; x=1729786832;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=0JW21AChuGIHXm/a0oYaXopY0qylbrYU6FFGsXgb1P4=;
-        b=Gf0I5eV2WNEqJ7Wix1j3ocEmIhuHLDnh5o4siNym6qF/aTLhAfdKZ9eX9slEodJ3Du
-         2rTlzayhQCfeYlh12CWnVcyJIqdFMsXok/ftT4P2jfJj6Cx0i4+viulU3EyUQFp4kfRB
-         m2tkgaexn+BnC1UVJLfaRlr62yZ+F3xwqu8IkU6aY6DdPuXtLN4cSwYVK/95pwdVfKCV
-         LSF+9W+2/YmvrwdmmS0dwvqzMgeYsewddKxH5qnoIj9MotIbv9YX+JfYAPNYkqmsYdir
-         owMPQOd9U0mMcynbei5WLBAm1jQRHJNmYQYZaOTL80fCQ6xPSH/Nccoli+p1q5/sAg52
-         vnjA==
-X-Forwarded-Encrypted: i=1; AJvYcCUCL4kmseUzZhACbfKozOz+LPHbD1cMDpE3iXk4kgZqcZXzyZya2EotXxU6d2vj1K61m/7TH3Q2jgT5RBu8yi4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwoZbrY0R/lu2lTAkclrU/pQ1kya/plZOrOwndiePZEypO4WEGy
-	2iDUkFAwsyuojdq6tUyvpZuIiKtHYOe8Jk1XZ0IlorJsAXPSBJwAbpZEnNEeNugaV3/DGhLYZ/w
-	C/7r586h8ZZi0beCIxW2uEkqMfx1yUlPExFVk
-X-Google-Smtp-Source: AGHT+IHkJFKWi2HwImyhXcWCHDzPIt0NtMmH7KPRIsgXi23zIJJa5MFWOze9uSBgvefBr1YXz4/XAw/TpbeM1TFd/00=
-X-Received: by 2002:a05:6870:5591:b0:285:82b3:6313 with SMTP id
- 586e51a60fabf-288f78c3509mr1471296fac.6.1729181840481; Thu, 17 Oct 2024
- 09:17:20 -0700 (PDT)
+        bh=QymMmt19qYyptlPRJSRQk64je7D5NwoBdyyf/N0dpQM=;
+        b=O/ONAfXhTq7XYq2e3iEDzCAKUQtG5u6PKYUGm2g0z9Oh3MmysuMx3Q6AbnTA3JdCdA
+         yXkXN2CmRlJT2W1VGWQ9vEs0Uczpi2FZH5nT07uryGR9qtBuBExekXMhkmaIDdHHNWoO
+         Sfn7rUxUYWdxmoerrP7vd9L5RSJcTm8/eQtSP8kNjm72kGHCH/tqWibnAe2ThMmBkIzk
+         bzoJnhRjGtVFwAQdr9lsfNtb2bZXZ+TvzhMO6XMnPf8vrfxLWslvKBv01BiAInx/ULT/
+         nY+5HnyDGAsja4WrqLZedWPopB2QnpWPIQCBh6rQzA78SPKYOj+njqO9UTJ3SWTCQYL6
+         JewA==
+X-Forwarded-Encrypted: i=1; AJvYcCV9z3mWlhF5NIAGWRD9D5vIzuaAqF8onuNbWI4jLbnJUd8vUHaILNDKa273NXTTKwRBcZE50xw5Qt8dVzHTRok=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQfC7QZGOJ21o2W/vW5GtypcISQX0a528zwYX8sYW0LU5Xl8h5
+	nFihM1E1Cxava92rr9DJYCaajsB+w9wjWXFHuR1moGklb/SK+qucp+LedaEYtj1vzB4kDE1QjJi
+	VnQNNZk/PxxaA34wTuyze49mjxQKk54d0i8Lj
+X-Google-Smtp-Source: AGHT+IEAm4HkCe9fIJHtz5qGXaYcmz/2XucghwW7VoOOeqPX9ksuhDwSqQ6czP4kSZBu+AN3pwdMvWnVobwSCyu8uSM=
+X-Received: by 2002:a05:6870:2101:b0:26f:d381:fd31 with SMTP id
+ 586e51a60fabf-2890c62049fmr974665fac.1.1729182032028; Thu, 17 Oct 2024
+ 09:20:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241017022627.3112811-1-jeffxu@chromium.org> <2024101722-diligent-baritone-b211@gregkh>
-In-Reply-To: <2024101722-diligent-baritone-b211@gregkh>
+References: <20241017022627.3112811-1-jeffxu@chromium.org> <3a1bbbdf-1281-4f44-857d-58cba583e3da@lucifer.local>
+In-Reply-To: <3a1bbbdf-1281-4f44-857d-58cba583e3da@lucifer.local>
 From: Jeff Xu <jeffxu@chromium.org>
-Date: Thu, 17 Oct 2024 09:17:08 -0700
-Message-ID: <CABi2SkXhHxW9kO2QeM81XCAvqFbQPfra9ApGDi9nuxPuJP5jYw@mail.gmail.com>
+Date: Thu, 17 Oct 2024 09:20:20 -0700
+Message-ID: <CABi2SkU2yX_Pbr6=6uEiQnro88O5Mhq3NLwOsy=A=Qa5xeC6Yw@mail.gmail.com>
 Subject: Re: [PATCH] munmap sealed memory cause memory to split (bug)
-To: Greg KH <gregkh@linuxfoundation.org>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 Cc: akpm@linux-foundation.org, keescook@chromium.org, 
 	torvalds@linux-foundation.org, usama.anjum@collabora.com, corbet@lwn.net, 
-	Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, jeffxu@google.com, 
-	jorgelo@chromium.org, groeck@chromium.org, linux-kernel@vger.kernel.org, 
+	Liam.Howlett@oracle.com, jeffxu@google.com, jorgelo@chromium.org, 
+	groeck@chromium.org, linux-kernel@vger.kernel.org, 
 	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, jannh@google.com, 
 	sroettger@google.com, pedro.falcato@gmail.com, 
-	linux-hardening@vger.kernel.org, willy@infradead.org, deraadt@openbsd.org, 
-	surenb@google.com, merimus@google.com, rdunlap@infradead.org
+	linux-hardening@vger.kernel.org, willy@infradead.org, 
+	gregkh@linuxfoundation.org, deraadt@openbsd.org, surenb@google.com, 
+	merimus@google.com, rdunlap@infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Oct 16, 2024 at 11:04=E2=80=AFPM Greg KH <gregkh@linuxfoundation.or=
-g> wrote:
+On Thu, Oct 17, 2024 at 1:18=E2=80=AFAM Lorenzo Stoakes
+<lorenzo.stoakes@oracle.com> wrote:
+>
+> NACK. Greg's bot got to it but...
+>
+> As per Greg's bot, no signed-off-by line.
+>
+Sorry for confusion, I wasn't meant to send this as a PATCH, but
+reporting the issue.
+The diff was just sent as reference to repro the bug, and I forgot to
+remove PATCH from the title. I apologize for the confusion.
+
+-Jeff
+
+
+> The subject should be something about adding a test.
+>
+> You later say you are somehow dependning on things (what?) to make this w=
+ork but
+> it's broken.
+>
+> Jeff - you're doing things that were raised on previous reviews as if we
+> never said them. It's starting to get annoying now. Please try to listen =
+to
+> upstream.
 >
 > On Thu, Oct 17, 2024 at 02:26:27AM +0000, jeffxu@chromium.org wrote:
 > > From: Jeff Xu <jeffxu@google.com>
@@ -80,45 +104,127 @@ g> wrote:
 > > It appears there is a regression on the latest mm,
 > > when munmap sealed memory, it can cause unexpected VMA split.
 > > E.g. repro use this test.
+>
+> This is an unacceptably short commit message. You've been told about this
+> before.
+>
 > > ---
 > >  tools/testing/selftests/mm/mseal_test.c | 76 +++++++++++++++++++++++++
 > >  1 file changed, 76 insertions(+)
 > >
+> > diff --git a/tools/testing/selftests/mm/mseal_test.c b/tools/testing/se=
+lftests/mm/mseal_test.c
+> > index fa74dbe4a684..0af33e13b606 100644
+> > --- a/tools/testing/selftests/mm/mseal_test.c
+> > +++ b/tools/testing/selftests/mm/mseal_test.c
+> > @@ -1969,6 +1969,79 @@ static void test_madvise_filebacked_was_writable=
+(bool seal)
+> >       REPORT_TEST_PASS();
+> >  }
+> >
+> > +static void test_munmap_free_multiple_ranges_with_split(bool seal)
+> > +{
+> > +     void *ptr;
+> > +     unsigned long page_size =3D getpagesize();
+> > +     unsigned long size =3D 12 * page_size;
+> > +     int ret;
+> > +     int prot;
+> > +
+> > +     setup_single_address(size, &ptr);
+> > +     FAIL_TEST_IF_FALSE(ptr !=3D (void *)-1);
 >
-> Hi,
+> I'm not going to accept any test where you do:
 >
-> This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-> a patch that has triggered this response.  He used to manually respond
-> to these common problems, but in order to save his sanity (he kept
-> writing the same thing over and over, yet to different people), I was
-> created.  Hopefully you will not take offence and will fix the problem
-> in your patch and resubmit it so that it can be accepted into the Linux
-> kernel tree.
+>         FAIL_TEST_IF_FALSE(<negation>)
 >
-> You are receiving this message because of the following common error(s)
-> as indicated below:
+> As that's totally unreadable. I asked you before for justification and yo=
+u
+> didn't provide it, no other tests appear to do this, I wrote thousands of
+> lines of tests recently without doing this - stop it.
 >
-> - Your patch does not have a Signed-off-by: line.  Please read the
->   kernel file, Documentation/process/submitting-patches.rst and resend
->   it after adding that line.  Note, the line needs to be in the body of
->   the email, before the patch, not at the bottom of the patch or in the
->   email signature.
+> Also referene MAP_FAILED here please. You've been told before.
 >
-> - You did not write a descriptive Subject: for the patch, allowing Greg,
->   and everyone else, to know what this patch is all about.  Please read
->   the section entitled "The canonical patch format" in the kernel file,
->   Documentation/process/submitting-patches.rst for what a proper
->   Subject: line should look like.
+> > +
+> > +     /* seal the middle 4 page */
+> > +     if (seal) {
+> > +             ret =3D sys_mseal(ptr + 4 * page_size, 4 * page_size);
+> > +             FAIL_TEST_IF_FALSE(!ret);
+> > +
+> > +             size =3D get_vma_size(ptr, &prot);
+> > +             FAIL_TEST_IF_FALSE(size =3D=3D 4 * page_size);
+> > +             FAIL_TEST_IF_FALSE(prot =3D=3D 4);
 >
-> If you wish to discuss this problem further, or you have questions about
-> how to resolve this issue, please feel free to respond to this email and
-> Greg will reply once he has dug out from the pending patches received
-> from other developers.
+> Again, you've been told before, stop referencing numbers instead of
+> PROT_... flags.
 >
-Sorry, the title is wrong, it shouldn't start with PATCH, I was trying
-to send a test case to help debug this issue.
-
-
-> thanks,
+> OK I'm stopping at this point, you _must listen to review_ Jeff.
 >
-> greg k-h's patch email bot
+> > +
+> > +             size =3D get_vma_size(ptr +  4 * page_size, &prot);
+> > +             FAIL_TEST_IF_FALSE(size =3D=3D 4 * page_size);
+> > +             FAIL_TEST_IF_FALSE(prot =3D=3D 4);
+> > +
+> > +             size =3D get_vma_size(ptr +  8 * page_size, &prot);
+> > +             FAIL_TEST_IF_FALSE(size =3D=3D 4 * page_size);
+> > +             FAIL_TEST_IF_FALSE(prot =3D=3D 4);
+> > +     }
+> > +
+> > +     /* munmap 4  pages from the third page */
+> > +     ret =3D sys_munmap(ptr + 2 * page_size, 4 * page_size);
+> > +     if (seal) {
+> > +             FAIL_TEST_IF_FALSE(ret);
+> > +             FAIL_TEST_IF_FALSE(errno =3D=3D EPERM);
+> > +
+> > +             size =3D get_vma_size(ptr, &prot);
+> > +             FAIL_TEST_IF_FALSE(size =3D=3D 4 * page_size);
+> > +             FAIL_TEST_IF_FALSE(prot =3D=3D 4);
+> > +
+> > +             size =3D get_vma_size(ptr +  4 * page_size, &prot);
+> > +             FAIL_TEST_IF_FALSE(size =3D=3D 4 * page_size);
+> > +             FAIL_TEST_IF_FALSE(prot =3D=3D 4);
+> > +
+> > +             size =3D get_vma_size(ptr +  8 * page_size, &prot);
+> > +             FAIL_TEST_IF_FALSE(size =3D=3D 4 * page_size);
+> > +             FAIL_TEST_IF_FALSE(prot =3D=3D 4);
+> > +     } else
+> > +             FAIL_TEST_IF_FALSE(!ret);
+> > +
+> > +     /* munmap 4 pages from the sealed page */
+> > +     ret =3D sys_munmap(ptr + 6 * page_size, 4 * page_size);
+> > +     if (seal) {
+> > +             FAIL_TEST_IF_FALSE(ret);
+> > +             FAIL_TEST_IF_FALSE(errno =3D=3D EPERM);
+> > +
+> > +             size =3D get_vma_size(ptr + 4 * page_size, &prot);
+> > +             FAIL_TEST_IF_FALSE(size =3D=3D 4 * page_size);
+> > +             FAIL_TEST_IF_FALSE(prot =3D=3D 4);
+> > +
+> > +             size =3D get_vma_size(ptr +  4 * page_size, &prot);
+> > +             FAIL_TEST_IF_FALSE(size =3D=3D 4 * page_size);
+> > +             FAIL_TEST_IF_FALSE(prot =3D=3D 4);
+> > +
+> > +             size =3D get_vma_size(ptr +  8 * page_size, &prot);
+> > +             FAIL_TEST_IF_FALSE(size =3D=3D 4 * page_size);
+> > +             FAIL_TEST_IF_FALSE(prot =3D=3D 4);
+> > +     } else
+> > +             FAIL_TEST_IF_FALSE(!ret);
+> > +
+> > +     REPORT_TEST_PASS();
+> > +}
+> > +
+> > +
+> >  int main(int argc, char **argv)
+> >  {
+> >       bool test_seal =3D seal_support();
+> > @@ -2099,5 +2172,8 @@ int main(int argc, char **argv)
+> >       test_madvise_filebacked_was_writable(false);
+> >       test_madvise_filebacked_was_writable(true);
+> >
+> > +     test_munmap_free_multiple_ranges_with_split(false);
+> > +     test_munmap_free_multiple_ranges_with_split(true);
+> > +
+> >       ksft_finished();
+> >  }
+> > --
+> > 2.47.0.rc1.288.g06298d1525-goog
+> >
