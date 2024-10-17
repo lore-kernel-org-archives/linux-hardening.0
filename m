@@ -1,52 +1,52 @@
-Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
+Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1641018641
-	for <linux-hardening@vger.kernel.org>; Thu, 17 Oct 2024 03:43:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3F7513AD06
+	for <linux-hardening@vger.kernel.org>; Thu, 17 Oct 2024 03:56:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729136597; cv=none; b=CXbUMUwd3mWkxoNxqMp2hZZ/Ml4C+rVAsz1EL1/e7YwdQzeccpAVosYY81gf8w5YdKxA1SmsQdAarknVe3XIp4WgPIcORSHRhv1LHvTGApHFU0ylzjVM3yjS5pcJONkTuHPLrof9aTaN5URIyem3cPVSQ2Ded6Os+cMqPgfwXjo=
+	t=1729137411; cv=none; b=Vs0Y7DP7JKbb4h+Msew4GWxVY2fEFzCRJBcycujnc/zEiikg5c+mfuKVFXRggYfkEswskzaAzfsTVMs2PL9f1Pen/ShPk7yNXiRf+/Fvc+PukYyY2uarIWAttNTANKtTFOVpyuNLOhVX+DiXiHGT6QJWFVtfjxVsK8hMQAz2ksc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729136597; c=relaxed/simple;
-	bh=yrnbPCiSsrZZgZYBtxcFt2bgcDeFUYXe6Dpt6KfrYtk=;
+	s=arc-20240116; t=1729137411; c=relaxed/simple;
+	bh=2Sc+tjISrvqUTEFy0Kq866Vkx6YKhfGRK1exiXvwA98=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=Uvux+28iZ/PpWCckuhcpBJOsLxtMa3mZ2mhYPaGH+6qKba2oQk1BXYOzt9CrMX2QyZ+AH0nTb2MM3oxZFB2a+vwfqAZ+piz9wQkCGBFKpsJiQxbMbgyXm5K5sUNZLGbiczai4mWYedNOJ5eIhwxnI2W4ZdaRgRN2+JdDAGcL6Ng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Yhcy9D7y; arc=none smtp.client-ip=209.85.161.53
+	 To:Cc:Content-Type; b=r3CqoMtf/hgY1dY7c71qNwRuazmyBnbJdLLupuNEUK+o/leAYfc/z99OLUNSRzNDaHe96H05gp5laqez2zY9hunX8xr4Yj/ZCsRK6UrG5r9Mcve5hNcf1IulHKAm276v4c+6sH3qxstzz+QXhZUsTwo7hKXAgyT8LBrGZkstz6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=oabdYSpr; arc=none smtp.client-ip=209.85.160.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Yhcy9D7y"
-Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-5eb644561ecso21443eaf.1
-        for <linux-hardening@vger.kernel.org>; Wed, 16 Oct 2024 20:43:15 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oabdYSpr"
+Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-288a6df82ebso56349fac.2
+        for <linux-hardening@vger.kernel.org>; Wed, 16 Oct 2024 20:56:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1729136595; x=1729741395; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
+        d=chromium.org; s=google; t=1729137409; x=1729742209; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=H2Yz5mj+Rbj1K0ofec49O0C3W0tcEFu1ZJqWT+jEV9A=;
-        b=Yhcy9D7yBQslEANZJuRJz0yMX0uBMYruKEb8nZpCGY8XNa45dXVHeEM8Tk17m271Kw
-         7KJ5Mvo1LnuBHTq5w4dpKgkVM/sqLRkZpBTwDOAvEBXPl+1PjY8TZdzcG2UC4I9+PDqs
-         fRBdiBDDUFJWsq3QC2DeNTPHadNEX7YW4xLlg=
+        bh=+xDplWMnrkVDTOjcZzbsa+PFQJ46/uurWYdS279WZl4=;
+        b=oabdYSpreclV8vKQJB1QNe4xZIMlqe1Ow49iJ7tN5A0ocHM5grHFXYi+UQdFxRDZaK
+         SYYLOwMiWTmN6Z7OC82DrcudllMuGl4vtZE6BDLv2ceARYm4idHUFyXgmABV/Dxqkp7L
+         7qb68Q36BweKBkq8eRLuHoznA2W8b7LV2gVxM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729136595; x=1729741395;
-        h=content-transfer-encoding:to:subject:message-id:date:from
+        d=1e100.net; s=20230601; t=1729137409; x=1729742209;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=H2Yz5mj+Rbj1K0ofec49O0C3W0tcEFu1ZJqWT+jEV9A=;
-        b=YYm3q/tX0Kj6sOwxlVVaFVwGApJN/pf8yIslTe4WvTPdcAjZr4syk2MGorP5mmbwLY
-         NFktQ25YCEV/EsVIbZCyYfZmpsJpFAQrdrSCJpDhYFaFU1jRNXt2/QA4Egt4pb2Tv+tB
-         RAedEv1BlxTB4Xl/9JcIcbZ2e6aAGRwLFNfVuNymSgJNth6HHiPZqrIVcDbBK/xl6KBO
-         qfC6ZXonkPjpEu7Wgm02UffRVVKje/VMZjZdUwRKDN3YXjYaWxVYxkvO/7jJjCMKAABr
-         ZPBRAdiVEQht/sM/5qizH+YcfePzT42brSeThCWUUxRLmjql5beRDT0cqrT59V80eA36
-         MjLA==
-X-Forwarded-Encrypted: i=1; AJvYcCV5IyZ1bIXiGsZmGw3iQlCcwa90jTm8B89kEGPqkzkW8CRZOt9vULnagJdRn2pareXzIC2ExQFP/ohuZeNHa/Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxkUe9zgP/FM9/X1UHmgPaRCWeYyn0Qp0DoMxSmdJyX+R2D3Yr/
-	ba/Wl4YyZQDEPlrqV6Kk+iK9PjPXiz13uSgYOufPkAae1zEFIRe8ZM1I2sUFBBwhMKlyFtI5R4K
-	lb26Icno4BeHQkFjujTT/B/TJyxRwFGq4rt42
-X-Google-Smtp-Source: AGHT+IFIDwAMziEhtxc5Z3IqIkm/cNDE2Wqi7oMxVyC4pSWiLeauh/2ofoov3ZF4ZqPNUp5m2v24KlhvxjrxavNvb3k=
-X-Received: by 2002:a05:6870:c386:b0:288:2955:3efb with SMTP id
- 586e51a60fabf-2890c6ce2f0mr480823fac.8.1729136594968; Wed, 16 Oct 2024
- 20:43:14 -0700 (PDT)
+        bh=+xDplWMnrkVDTOjcZzbsa+PFQJ46/uurWYdS279WZl4=;
+        b=bCz5x/ux/+/v6xd2J6nsIsQ0ttydQzWOnEA7fq9iB9x/9tPn7pXFPPxsbpfqaLalbb
+         5ceUFWzrVZFteUrXimC2ojUPskAtdl9j3JeqAweErCv/63uUO1O9aHmEvbACH+wcs11i
+         r5EOt+z+zy3qBA6ysRouPueZnW1vSyLSC0viRvaWn+m8koZN+58vpqJe071q8zv/q6oz
+         gFTcG0U87+vBJRgpyAl5CVkn2dmIhRnBnq+JOm52WoUlz43RP/NI3LSmBbVcJWSw6Q5c
+         hRmtCeV2b0jCfCr4kTEJBA549fmhTkoO9tljLRBdfILc11HqhOZY9dYCYGlrPMGe9vEA
+         imsg==
+X-Forwarded-Encrypted: i=1; AJvYcCVWL/0Cp0TpfZa7hlZ4vn9G/mODRqeL99VoOV7BxflnWjjEWovBsvMX8xdFZ/cID9Vvt1ksdIiMAQ4I3Ca4/+I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxUEbUY7EQ9nuUZ0oWyit8Kw/07CJluVQncIXBgz6V2pY9qBJvG
+	M9KBYQjHRoaV+RbSELpBeoZjBPibFlV+4FwUFhJZmv6cw0ukcyAGCw6J4s1uBTPSlloCGCy7lRH
+	OlqJTMZW0w+acskXltrb1l0TMtnS7bL833FKs
+X-Google-Smtp-Source: AGHT+IE4fYg26EfQyIf9BSs4rRYOM6MlrMuoB3kGUvuKZrktYleCB72ksfvspyqDROopedVLIoje8kkW2ksT2pf691A=
+X-Received: by 2002:a05:6870:2012:b0:268:bd85:ff9a with SMTP id
+ 586e51a60fabf-2890c60b148mr504819fac.3.1729137408676; Wed, 16 Oct 2024
+ 20:56:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -54,14 +54,14 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20241014215022.68530-1-jeffxu@google.com> <20241014215022.68530-2-jeffxu@google.com>
- <6r5sxlhfujr2expiscsfpdjtraqlvy6k3cznmv25lo6usmyw7x@igmuywngc5xi>
-In-Reply-To: <6r5sxlhfujr2expiscsfpdjtraqlvy6k3cznmv25lo6usmyw7x@igmuywngc5xi>
+ <202410161424.FA6DBA7D91@keescook> <CABi2SkXKWGuvttUWHH+CL-MnKDvF=o6i2nGz55r+-6WvSJex5Q@mail.gmail.com>
+In-Reply-To: <CABi2SkXKWGuvttUWHH+CL-MnKDvF=o6i2nGz55r+-6WvSJex5Q@mail.gmail.com>
 From: Jeff Xu <jeffxu@chromium.org>
-Date: Wed, 16 Oct 2024 20:43:02 -0700
-Message-ID: <CABi2SkUfXrRLg7+ZrLjMEQzh4FtU0EAfckdiDuza1mFKzi0SAg@mail.gmail.com>
+Date: Wed, 16 Oct 2024 20:56:36 -0700
+Message-ID: <CABi2SkUfKzutFJLv0q42LRU-YDjNzMBmmZ0NKXNwGhQVoJ_bfg@mail.gmail.com>
 Subject: Re: [RFC PATCH v2 1/1] exec: seal system mappings
-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, jeffxu@chromium.org, akpm@linux-foundation.org, 
-	keescook@chromium.org, jannh@google.com, torvalds@linux-foundation.org, 
+To: Kees Cook <kees@kernel.org>
+Cc: akpm@linux-foundation.org, jannh@google.com, torvalds@linux-foundation.org, 
 	adhemerval.zanella@linaro.org, oleg@redhat.com, linux-kernel@vger.kernel.org, 
 	linux-hardening@vger.kernel.org, linux-mm@kvack.org, jorgelo@chromium.org, 
 	sroettger@google.com, ojeda@kernel.org, adobriyan@gmail.com, 
@@ -69,247 +69,112 @@ To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, jeffxu@chromium.org, akpm@linux
 	Jason@zx2c4.com, deller@gmx.de, rdunlap@infradead.org, davem@davemloft.net, 
 	hch@lst.de, peterx@redhat.com, hca@linux.ibm.com, f.fainelli@gmail.com, 
 	gerg@kernel.org, dave.hansen@linux.intel.com, mingo@kernel.org, 
-	ardb@kernel.org, mhocko@suse.com, 42.hyeyoo@gmail.com, peterz@infradead.org, 
-	ardb@google.com, enh@google.com, rientjes@google.com, groeck@chromium.org, 
-	lorenzo.stoakes@oracle.com
+	ardb@kernel.org, Liam.Howlett@oracle.com, mhocko@suse.com, 
+	42.hyeyoo@gmail.com, peterz@infradead.org, ardb@google.com, enh@google.com, 
+	rientjes@google.com, groeck@chromium.org, lorenzo.stoakes@oracle.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Oct 16, 2024 at 6:10=E2=80=AFPM Liam R. Howlett <Liam.Howlett@oracl=
-e.com> wrote:
+On Wed, Oct 16, 2024 at 3:06=E2=80=AFPM Jeff Xu <jeffxu@chromium.org> wrote=
+:
 >
-> > +     exec.seal_system_mappings =3D [KNL]
-> > +                     Format: { never | always }
-> > +                     Seal system mappings: vdso, vvar, sigpage, uprobe=
-s,
-> > +                     vsyscall.
-> > +                     This overwrites KCONFIG CONFIG_SEAL_SYSTEM_MAPPIN=
-GS_*
-> > +                     - 'never':  never seal system mappings.
->
-> Not true, uprobes are sealed when 'never' is selected.
->
-Thanks. I forgot to uprobes from the description in Kconfig and
-kernel-parameters.txt, will update.
-
-> > +                     - 'always': always seal system mappings.
-> > +                     If not specified or invalid, default is the KCONF=
-IG value.
-> > +                     This option has no effect if CONFIG_64BIT=3Dn
-> > +
-> >       early_page_ext [KNL,EARLY] Enforces page_ext initialization to ea=
-rlier
-> >                       stages so cover more early boot allocations.
-> >                       Please note that as side effect some optimization=
+> On Wed, Oct 16, 2024 at 2:26=E2=80=AFPM Kees Cook <kees@kernel.org> wrote=
+:
+> >
+> > (I don't think this needs "RFC" any more)
+> >
+> > On Mon, Oct 14, 2024 at 09:50:20PM +0000, jeffxu@chromium.org wrote:
+> > > From: Jeff Xu <jeffxu@chromium.org>
+> > >
+> > > Seal vdso, vvar, sigpage, uprobes and vsyscall.
+> > >
+> > > Those mappings are readonly or executable only, sealing can protect
+> > > them from ever changing during the life time of the process. For
+> > > complete descriptions of memory sealing, please see mseal.rst [1].
+> > >
+> > > System mappings such as vdso, vvar, and sigpage (for arm) are
+> > > generated by the kernel during program initialization. These mappings
+> > > are designated as non-writable, and sealing them will prevent them
+> > > from ever becoming writeable.
+> > >
+> > > Unlike the aforementioned mappings, the uprobe mapping is not
+> > > established during program startup. However, its lifetime is the same
+> > > as the process's lifetime [2], thus sealable.
+> > >
+> > > The vdso, vvar, sigpage, and uprobe mappings all invoke the
+> > > _install_special_mapping() function. As no other mappings utilize thi=
 s
-> > diff --git a/arch/x86/entry/vsyscall/vsyscall_64.c b/arch/x86/entry/vsy=
-scall/vsyscall_64.c
-> > index 2fb7d53cf333..20a3000550d2 100644
-> > --- a/arch/x86/entry/vsyscall/vsyscall_64.c
-> > +++ b/arch/x86/entry/vsyscall/vsyscall_64.c
-> > @@ -32,6 +32,7 @@
-> >  #include <linux/mm_types.h>
-> >  #include <linux/syscalls.h>
-> >  #include <linux/ratelimit.h>
-> > +#include <linux/fs.h>
+> > > function, it is logical to incorporate sealing logic within
+> > > _install_special_mapping(). This approach avoids the necessity of
+> > > modifying code across various architecture-specific implementations.
+> > >
+> > > The vsyscall mapping, which has its own initialization function, is
+> > > sealed in the XONLY case, it seems to be the most common and secure
+> > > case of using vsyscall.
+> > >
+> > > It is important to note that the CHECKPOINT_RESTORE feature (CRIU) ma=
+y
+> > > alter the mapping of vdso, vvar, and sigpage during restore
+> > > operations. Consequently, this feature cannot be universally enabled
+> > > across all systems. To address this, a kernel configuration option ha=
+s
+> > > been introduced to enable or disable this functionality. Note, uprobe
+> > > is always sealed and not controlled by this kernel configuration.
+> > >
+> > > [1] Documentation/userspace-api/mseal.rst
+> > > [2] https://lore.kernel.org/all/CABi2SkU9BRUnqf70-nksuMCQ+yyiWjo3fM4X=
+kRkL-NrCZxYAyg@mail.gmail.com/
+> > >
+> > > Signed-off-by: Jeff Xu <jeffxu@chromium.org>
+> > > ---
+> > >  .../admin-guide/kernel-parameters.txt         | 10 ++++
+> > >  arch/x86/entry/vsyscall/vsyscall_64.c         |  9 +++-
+> > >  fs/exec.c                                     | 53 +++++++++++++++++=
+++
+> > >  include/linux/fs.h                            |  1 +
+> > >  kernel/events/uprobes.c                       |  2 +-
+> > >  mm/mmap.c                                     |  1 +
+> > >  security/Kconfig                              | 26 +++++++++
+> > >  7 files changed, 99 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Docume=
+ntation/admin-guide/kernel-parameters.txt
+> > > index e7bfe1bde49e..02e5eb23d76f 100644
+> > > --- a/Documentation/admin-guide/kernel-parameters.txt
+> > > +++ b/Documentation/admin-guide/kernel-parameters.txt
+> > > @@ -1538,6 +1538,16 @@
+> > >                       Permit 'security.evm' to be updated regardless =
+of
+> > >                       current integrity status.
+> > >
+> > > +     exec.seal_system_mappings =3D [KNL]
+> > > +                     Format: { never | always }
+> > > +                     Seal system mappings: vdso, vvar, sigpage, upro=
+bes,
+> > > +                     vsyscall.
+> > > +                     This overwrites KCONFIG CONFIG_SEAL_SYSTEM_MAPP=
+INGS_*
+> > > +                     - 'never':  never seal system mappings.
+> > > +                     - 'always': always seal system mappings.
+> > > +                     If not specified or invalid, default is the KCO=
+NFIG value.
+> > > +                     This option has no effect if CONFIG_64BIT=3Dn
+> > > +
 > >
-> >  #include <asm/vsyscall.h>
-> >  #include <asm/unistd.h>
-> > @@ -366,8 +367,12 @@ void __init map_vsyscall(void)
-> >               set_vsyscall_pgtable_user_bits(swapper_pg_dir);
-> >       }
+> > Any reason for "always"/"never" instead of the more traditional y/n
+> > enabled/disabled, etc?
 > >
-> > -     if (vsyscall_mode =3D=3D XONLY)
-> > -             vm_flags_init(&gate_vma, VM_EXEC);
-> > +     if (vsyscall_mode =3D=3D XONLY) {
-> > +             unsigned long vm_flags =3D VM_EXEC;
-> > +
-> > +             update_seal_exec_system_mappings(&vm_flags);
-> > +             vm_flags_init(&gate_vma, vm_flags);
-> > +     }
+> Yes. I like to leave room for  future extension, in case someone ever
+> needs a prctl for pre-process opt-in, e.g.
+> Format:{never|prctl|always}
+>
+I copied the pattern from:
+
+        proc_mem.force_override=3D [KNL]
+                        Format: {always | ptrace | never}
+
+
+> > Otherwise, this all makes sense to me.
 > >
-> >       BUILD_BUG_ON((unsigned long)__fix_to_virt(VSYSCALL_PAGE) !=3D
-> >                    (unsigned long)VSYSCALL_ADDR);
-> > diff --git a/fs/exec.c b/fs/exec.c
-> > index 77364806b48d..5030879cda47 100644
-> > --- a/fs/exec.c
-> > +++ b/fs/exec.c
->
-> Does it make sense for this to live in exec?  Couldn't you put it in the
-> mm/mseal.c file?  It's vma flags for mappings and you've put it in
-> fs/exec?
->
-If you are referring to utilities related to kernel cmdline, they
-should be in this file.
-
-> > @@ -68,6 +68,7 @@
-> >  #include <linux/user_events.h>
-> >  #include <linux/rseq.h>
-> >  #include <linux/ksm.h>
-> > +#include <linux/fs_parser.h>
-> >
-> >  #include <linux/uaccess.h>
-> >  #include <asm/mmu_context.h>
-> > @@ -2159,3 +2160,55 @@ fs_initcall(init_fs_exec_sysctls);
-> >  #ifdef CONFIG_EXEC_KUNIT_TEST
-> >  #include "tests/exec_kunit.c"
-> >  #endif
-> > +
-> > +#ifdef CONFIG_64BIT
-> > +/*
-> > + * Kernel cmdline overwrite for CONFIG_SEAL_SYSTEM_MAPPINGS_X
-> > + */
-> > +enum seal_system_mappings_type {
-> > +     SEAL_SYSTEM_MAPPINGS_NEVER,
-> > +     SEAL_SYSTEM_MAPPINGS_ALWAYS
-> > +};
-> > +
-> > +static enum seal_system_mappings_type seal_system_mappings __ro_after_=
-init =3D
-> > +     IS_ENABLED(CONFIG_SEAL_SYSTEM_MAPPINGS_ALWAYS) ? SEAL_SYSTEM_MAPP=
-INGS_ALWAYS :
-> > +     SEAL_SYSTEM_MAPPINGS_NEVER;
-> > +
-> > +static const struct constant_table value_table_sys_mapping[] __initcon=
-st =3D {
-> > +     { "never", SEAL_SYSTEM_MAPPINGS_NEVER},
-> > +     { "always", SEAL_SYSTEM_MAPPINGS_ALWAYS},
-> > +     { }
-> > +};
-> > +
-> > +static int __init early_seal_system_mappings_override(char *buf)
-> > +{
-> > +     if (!buf)
-> > +             return -EINVAL;
-> > +
-> > +     seal_system_mappings =3D lookup_constant(value_table_sys_mapping,
-> > +                     buf, seal_system_mappings);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +early_param("exec.seal_system_mappings", early_seal_system_mappings_ov=
-erride);
-> > +
-> > +static bool seal_system_mappings_enabled(void)
-> > +{
-> > +     if (seal_system_mappings =3D=3D SEAL_SYSTEM_MAPPINGS_ALWAYS)
-> > +             return true;
-> > +
-> > +     return false;
-> > +}
->
-> This function seems unnecessary, it is called from another 3-4 line
-> function only.
->
-It is more readable this way.
-
-> > +
-> > +void update_seal_exec_system_mappings(unsigned long *vm_flags)
-> > +{
-> > +     if (!(*vm_flags & VM_SEALED) && seal_system_mappings_enabled())
->
-> Why !(*vm_flags & VM_SEALED) here?
->
-If vm_flags is already sealed, then there is no need to check
-seal_system_mappings_enabled.
-
-> > +             *vm_flags |=3D VM_SEALED;
-> > +
-> > +}
->
-> Instead of passing a pointer around and checking enabled, why don't you
-> have a function that just returns the VM_SEALED or 0 and just or it into
-> the flags?  This seems very heavy for what it does, why did you do it
-> this way?
->
-Why is that heavy ? passing a pointer for updating variables is natural.
-
-> The name is also very long and a bit odd, it could be used for other
-> reasons, but you have _system_mappings on the end, and you use seal but
-> it's mseal (or vm_seal)?  Would mseal_flag() work?
->
-It could be longer :-)
- it means update_sealing_flag_for_executable_system_mappings.
-mseal_flag is too short and not descriptive.
-
-> > +#else
-> > +void update_seal_exec_system_mappings(unsigned long *vm_flags)
-> > +{
-> > +}
-> > +#endif /* CONFIG_64BIT */
-> > diff --git a/include/linux/fs.h b/include/linux/fs.h
-> > index 42444ec95c9b..6e44aca4b24b 100644
-> > --- a/include/linux/fs.h
-> > +++ b/include/linux/fs.h
->
-> Again, I don't understand why fs.h is the place for mseal definitions?
->
-include/linux/fs.h contains other exec related function signatures. So
-it is better to keep them at the same header.
-
-> > @@ -3079,6 +3079,7 @@ ssize_t __kernel_read(struct file *file, void *bu=
-f, size_t count, loff_t *pos);
-> >  extern ssize_t kernel_write(struct file *, const void *, size_t, loff_=
-t *);
-> >  extern ssize_t __kernel_write(struct file *, const void *, size_t, lof=
-f_t *);
-> >  extern struct file * open_exec(const char *);
-> > +extern void update_seal_exec_system_mappings(unsigned long *vm_flags);
->
-> We are dropping extern where possible now.
->
-extern can be dropped, it appears not causing link error.
-> >
-> >  /* fs/dcache.c -- generic fs support functions */
-> >  extern bool is_subdir(struct dentry *, struct dentry *);
-> > diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> > index c47a0bf25e58..e9876fae8887 100644
-> > --- a/kernel/events/uprobes.c
-> > +++ b/kernel/events/uprobes.c
-> > @@ -1506,7 +1506,7 @@ static int xol_add_vma(struct mm_struct *mm, stru=
-ct xol_area *area)
-> >       }
-> >
-> >       vma =3D _install_special_mapping(mm, area->vaddr, PAGE_SIZE,
-> > -                             VM_EXEC|VM_MAYEXEC|VM_DONTCOPY|VM_IO,
-> > +                             VM_EXEC|VM_MAYEXEC|VM_DONTCOPY|VM_IO|VM_S=
-EALED,
-> >                               &xol_mapping);
->
-> Changing all uprobes seems like something that should probably be
-> mentioned more than just the note at the end of the change log, even if
-> you think it won't have any impact.  The note is even hidden at the end
-> of a paragraph.
->
-> I would go as far as splitting this patch out as its own so that the
-> subject line specifies that all uprobes will be VM_SEALED now.
->
-> Maybe it's fine but maybe it isn't and you've buried it so that it will
-> be missed by virtually everyone.
->
-I will  add "It is sealed from creation." in the above "uprobe" section.
-
->
-> >       if (IS_ERR(vma)) {
-> >               ret =3D PTR_ERR(vma);
-> > diff --git a/mm/mmap.c b/mm/mmap.c
-> > index 57fd5ab2abe7..d4717e34a60d 100644
-> > --- a/mm/mmap.c
-> > +++ b/mm/mmap.c
-> > @@ -2133,6 +2133,7 @@ struct vm_area_struct *_install_special_mapping(
-> >       unsigned long addr, unsigned long len,
-> >       unsigned long vm_flags, const struct vm_special_mapping *spec)
-> >  {
-> > +     update_seal_exec_system_mappings(&vm_flags);
-> >       return __install_special_mapping(mm, addr, len, vm_flags, (void *=
-)spec,
-> >                                       &special_mapping_vmops);
->
-> If you were to return a flag, you could change the vm_flags argument to
-> vm_flags | mseal_flag()
->
-passing pointer seems to be the most efficient way.
-
-Thanks
--Jeff
+> > --
+> > Kees Cook
