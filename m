@@ -1,120 +1,124 @@
-Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com [209.85.160.53])
+Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF747C147
-	for <linux-hardening@vger.kernel.org>; Thu, 17 Oct 2024 16:12:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 699A95FDA7
+	for <linux-hardening@vger.kernel.org>; Thu, 17 Oct 2024 16:17:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729181535; cv=none; b=t9WOJ1u/oI6ayYiGGdvXNTmFbw0K9r3n22KmqolgEHDjYjRsVtHXinjb+OW0r2HdQnjlvDMjtn9qgXkjtVy1rRU1kEtXp/wfNCK1iI9R1i3b3jLVs8Wtu4PCwN71JvqGxAv3u70Xm4OhJDvrPu1Ba0lwJuIUH9TTzG/SrYCDEfg=
+	t=1729181846; cv=none; b=RBOCLaGf6zcgSdGds6OdC5N+3f1eqaPERnhPrt89pVCROEp8tQWFsTUshPxvx4CMvDyM8ObE2XeGAam1Sl1Kuh+u6pL/Vmbze5vgLAissuaxdPgWVXs7cmsvZMBoqGK5Q2r1+vzqzN1Vf1ExNZiwrdOHN5sZ6kgiYR5eeGqur6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729181535; c=relaxed/simple;
-	bh=H7ByblHhvfkTHAIRxWG1YEC5DM7h3FKQHs+hFBtx9oc=;
+	s=arc-20240116; t=1729181846; c=relaxed/simple;
+	bh=REpSbRLHRT+bYqXXqi34yOmCcGBN1SLrOxSF29WYjxc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XAdNR831pQ+HdXsgVK/1O0lg/rKRTKiVPpbW4jv5W63bU9A7rkbOqa4KVOMtjzbg7YQ7hn6jrz81AzaChi3jd1Cx6Vk9/4m8g5Ph/59LFf9YpSfkmma+JKmAehOWTD8WZIIw6IC8wR90ukfhE/EB98Q2MNP6h681DSJPwrdiAlg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=dASKvPGW; arc=none smtp.client-ip=209.85.160.53
+	 To:Cc:Content-Type; b=ouce/Ee5su/sHlPxqAJFJJv9A3e+BMGxuN5I3yCYGhpiJBgJPtsq4/8lmHL1B8YaeAcwmetw0eykvIU9N79AFI9TtCpovQCYN5IzZ6PMcM0YYSv8iE7Zlt4leubA9E4i7DUidvt55QOrqNCBuQ56HJnn87FrvCBCihbVghvdiDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=PR3eE2t6; arc=none smtp.client-ip=209.85.167.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dASKvPGW"
-Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-268d0979e90so58314fac.3
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Oct 2024 09:12:13 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PR3eE2t6"
+Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-3e6005659caso30515b6e.3
+        for <linux-hardening@vger.kernel.org>; Thu, 17 Oct 2024 09:17:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1729181533; x=1729786333; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1729181840; x=1729786640; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Mnd/uBBD+EEhRp8rXkoooYzQt3SSgVvcLoqmhOm8/d8=;
-        b=dASKvPGWaniZmm18Hd1P0kQ2CIt68k+/G89RHhzkfTD1GNiGS+n5+8SAd7+aLVYp69
-         g59jIywJNrsiSrfdMxaf2CuGl5CtzyDPO+DFoPw/TxyaYtFyagXk/HJXV5VBgL6owtSq
-         VddsEf7VjH8OcP7Yn4ko9+Av3jR0XFV8AHYhQ=
+        bh=0JW21AChuGIHXm/a0oYaXopY0qylbrYU6FFGsXgb1P4=;
+        b=PR3eE2t6IXV2MrJvQxNrF9rNWeIy3xX7vW8k05PbO806DDKzepz0koC7YzOCeDz/B6
+         BeW7gBOPtrnLty5clWaWTW0hAtDNCiSJ/8N4uEMiMlHcpy1IISpk4XUO7KI9Vb3vk4oG
+         QduM9PYdrInH3SHvj3oJwKOzKn5Of1ACw+QHE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729181533; x=1729786333;
+        d=1e100.net; s=20230601; t=1729181840; x=1729786640;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Mnd/uBBD+EEhRp8rXkoooYzQt3SSgVvcLoqmhOm8/d8=;
-        b=ovz5Wy5t9YhfrTqgWz5TTG4McCwskc9IJ/PS/qHQCtFwNK9BS8LcuYWx4fU0VTrif/
-         bAzyOGZcoAN06JGMeYHXfOe6B8lPq/C1nSUzgRMQUkCk/5TnBhcuuIXNLASQUhIV2p1P
-         x+aRBAxnBO+Dx4+yjiuGu52bXNIxElBewNDQ6oSE0TyRpRhXjALAM98oe761gmi411sw
-         p9DN5dvfMzugSIYCb7ohES/nj/xaq30OTkd4xat8KWNJTa2qA1HAUJrCdu12o+lGFYML
-         zq9zAWKh6w02RkaAQQr8ukYkZXzbuN6JuDMRcGO43EqjJZf/VPHY/mSVqVblfTvbUBJM
-         LecQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXtVh/AJeQDz+8DSv7ABk0EalpLXi64ZdO0NwZ0XVDeT2Ke0fFuuvXJvdhAGMHn9W7sLUdmLQDRFpac+dp1Ti8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwxeH1meTVpGN2ZR2Rn09AYeNMbEmclHUvnuYrtrsMNI/IQAzdk
-	hKG6CMBa1g1sfQRtjyyOqZY/OTqAFU560ix8yBWllM40fk3cvbcYMlcL+0mGz38VjM6mv04CLlB
-	BA0jIq0MNQi4i4hLcxSDYRiqDTAtdn0kk2xjO
-X-Google-Smtp-Source: AGHT+IE3Fsi07N7Rh0MbMb6DVuEVuZxfPPNrlyT9dYEiNnKn8vIax41O2lEbT4g3Cv65s3OSySkf3Zds0w4WBJKsjCg=
-X-Received: by 2002:a05:6870:568b:b0:27b:9f8b:277d with SMTP id
- 586e51a60fabf-2890c8619a8mr1002074fac.12.1729181532946; Thu, 17 Oct 2024
- 09:12:12 -0700 (PDT)
+        bh=0JW21AChuGIHXm/a0oYaXopY0qylbrYU6FFGsXgb1P4=;
+        b=Gf0I5eV2WNEqJ7Wix1j3ocEmIhuHLDnh5o4siNym6qF/aTLhAfdKZ9eX9slEodJ3Du
+         2rTlzayhQCfeYlh12CWnVcyJIqdFMsXok/ftT4P2jfJj6Cx0i4+viulU3EyUQFp4kfRB
+         m2tkgaexn+BnC1UVJLfaRlr62yZ+F3xwqu8IkU6aY6DdPuXtLN4cSwYVK/95pwdVfKCV
+         LSF+9W+2/YmvrwdmmS0dwvqzMgeYsewddKxH5qnoIj9MotIbv9YX+JfYAPNYkqmsYdir
+         owMPQOd9U0mMcynbei5WLBAm1jQRHJNmYQYZaOTL80fCQ6xPSH/Nccoli+p1q5/sAg52
+         vnjA==
+X-Forwarded-Encrypted: i=1; AJvYcCUCL4kmseUzZhACbfKozOz+LPHbD1cMDpE3iXk4kgZqcZXzyZya2EotXxU6d2vj1K61m/7TH3Q2jgT5RBu8yi4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwoZbrY0R/lu2lTAkclrU/pQ1kya/plZOrOwndiePZEypO4WEGy
+	2iDUkFAwsyuojdq6tUyvpZuIiKtHYOe8Jk1XZ0IlorJsAXPSBJwAbpZEnNEeNugaV3/DGhLYZ/w
+	C/7r586h8ZZi0beCIxW2uEkqMfx1yUlPExFVk
+X-Google-Smtp-Source: AGHT+IHkJFKWi2HwImyhXcWCHDzPIt0NtMmH7KPRIsgXi23zIJJa5MFWOze9uSBgvefBr1YXz4/XAw/TpbeM1TFd/00=
+X-Received: by 2002:a05:6870:5591:b0:285:82b3:6313 with SMTP id
+ 586e51a60fabf-288f78c3509mr1471296fac.6.1729181840481; Thu, 17 Oct 2024
+ 09:17:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241014215022.68530-1-jeffxu@google.com> <20241014215022.68530-2-jeffxu@google.com>
- <6r5sxlhfujr2expiscsfpdjtraqlvy6k3cznmv25lo6usmyw7x@igmuywngc5xi>
- <CABi2SkUfXrRLg7+ZrLjMEQzh4FtU0EAfckdiDuza1mFKzi0SAg@mail.gmail.com> <20241017083752.GA15167@redhat.com>
-In-Reply-To: <20241017083752.GA15167@redhat.com>
+References: <20241017022627.3112811-1-jeffxu@chromium.org> <2024101722-diligent-baritone-b211@gregkh>
+In-Reply-To: <2024101722-diligent-baritone-b211@gregkh>
 From: Jeff Xu <jeffxu@chromium.org>
-Date: Thu, 17 Oct 2024 09:12:00 -0700
-Message-ID: <CABi2SkVAXhqb+r5HzD5fWnHs1g2tjg8CShXX0+xnagqeVXrttA@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 1/1] exec: seal system mappings
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>, akpm@linux-foundation.org, 
-	keescook@chromium.org, jannh@google.com, torvalds@linux-foundation.org, 
-	adhemerval.zanella@linaro.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-mm@kvack.org, jorgelo@chromium.org, 
-	sroettger@google.com, ojeda@kernel.org, adobriyan@gmail.com, 
-	anna-maria@linutronix.de, mark.rutland@arm.com, linus.walleij@linaro.org, 
-	Jason@zx2c4.com, deller@gmx.de, rdunlap@infradead.org, davem@davemloft.net, 
-	hch@lst.de, peterx@redhat.com, hca@linux.ibm.com, f.fainelli@gmail.com, 
-	gerg@kernel.org, dave.hansen@linux.intel.com, mingo@kernel.org, 
-	ardb@kernel.org, mhocko@suse.com, 42.hyeyoo@gmail.com, peterz@infradead.org, 
-	ardb@google.com, enh@google.com, rientjes@google.com, groeck@chromium.org, 
-	lorenzo.stoakes@oracle.com
+Date: Thu, 17 Oct 2024 09:17:08 -0700
+Message-ID: <CABi2SkXhHxW9kO2QeM81XCAvqFbQPfra9ApGDi9nuxPuJP5jYw@mail.gmail.com>
+Subject: Re: [PATCH] munmap sealed memory cause memory to split (bug)
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: akpm@linux-foundation.org, keescook@chromium.org, 
+	torvalds@linux-foundation.org, usama.anjum@collabora.com, corbet@lwn.net, 
+	Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, jeffxu@google.com, 
+	jorgelo@chromium.org, groeck@chromium.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, jannh@google.com, 
+	sroettger@google.com, pedro.falcato@gmail.com, 
+	linux-hardening@vger.kernel.org, willy@infradead.org, deraadt@openbsd.org, 
+	surenb@google.com, merimus@google.com, rdunlap@infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Oct 17, 2024 at 1:38=E2=80=AFAM Oleg Nesterov <oleg@redhat.com> wro=
-te:
+On Wed, Oct 16, 2024 at 11:04=E2=80=AFPM Greg KH <gregkh@linuxfoundation.or=
+g> wrote:
 >
-> On 10/16, Jeff Xu wrote:
+> On Thu, Oct 17, 2024 at 02:26:27AM +0000, jeffxu@chromium.org wrote:
+> > From: Jeff Xu <jeffxu@google.com>
 > >
-> > On Wed, Oct 16, 2024 at 6:10=E2=80=AFPM Liam R. Howlett <Liam.Howlett@o=
-racle.com> wrote:
-> > >
-> > > > +     exec.seal_system_mappings =3D [KNL]
-> > > > +                     Format: { never | always }
-> > > > +                     Seal system mappings: vdso, vvar, sigpage, up=
-robes,
-> > > > +                     vsyscall.
-> > > > +                     This overwrites KCONFIG CONFIG_SEAL_SYSTEM_MA=
-PPINGS_*
-> > > > +                     - 'never':  never seal system mappings.
-> > >
-> > > Not true, uprobes are sealed when 'never' is selected.
-> > >
-> > Thanks. I forgot to uprobes from the description in Kconfig and
-> > kernel-parameters.txt, will update.
+> > It appears there is a regression on the latest mm,
+> > when munmap sealed memory, it can cause unexpected VMA split.
+> > E.g. repro use this test.
+> > ---
+> >  tools/testing/selftests/mm/mseal_test.c | 76 +++++++++++++++++++++++++
+> >  1 file changed, 76 insertions(+)
+> >
 >
-> Jeff, I am sorry for confusion.
+> Hi,
 >
-> No need to make uprobes "special" and complicate the logic/documentation.
+> This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
+> a patch that has triggered this response.  He used to manually respond
+> to these common problems, but in order to save his sanity (he kept
+> writing the same thing over and over, yet to different people), I was
+> created.  Hopefully you will not take offence and will fix the problem
+> in your patch and resubmit it so that it can be accepted into the Linux
+> kernel tree.
 >
-> I just meant that, unlike vdso, it is always safe/good to mseal the "[upr=
-obes]"
-> vma, regardless of config/boot options.
+> You are receiving this message because of the following common error(s)
+> as indicated below:
 >
-> Please do what you think is right, I am fine either way.
+> - Your patch does not have a Signed-off-by: line.  Please read the
+>   kernel file, Documentation/process/submitting-patches.rst and resend
+>   it after adding that line.  Note, the line needs to be in the body of
+>   the email, before the patch, not at the bottom of the patch or in the
+>   email signature.
 >
-OK, in that case, V1 is a better approach, using the same config to
-control all system mappings.
-I will send V1 to revert that.
+> - You did not write a descriptive Subject: for the patch, allowing Greg,
+>   and everyone else, to know what this patch is all about.  Please read
+>   the section entitled "The canonical patch format" in the kernel file,
+>   Documentation/process/submitting-patches.rst for what a proper
+>   Subject: line should look like.
+>
+> If you wish to discuss this problem further, or you have questions about
+> how to resolve this issue, please feel free to respond to this email and
+> Greg will reply once he has dug out from the pending patches received
+> from other developers.
+>
+Sorry, the title is wrong, it shouldn't start with PATCH, I was trying
+to send a test case to help debug this issue.
 
-Thanks for clarifying.
--Jeff
 
-> Oleg.
+> thanks,
 >
+> greg k-h's patch email bot
