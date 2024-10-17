@@ -1,69 +1,65 @@
-Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DBA7762EB;
-	Thu, 17 Oct 2024 08:58:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D01191442F6;
+	Thu, 17 Oct 2024 09:13:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729155491; cv=none; b=EQ5NLeeXnmR4SqXfy0rGLzZOib23RwxfgXijCD4Jroj6SA6HEiXT6sQrDss/Y4BRXrDAsGSfea9yELPCyxjOsbaBHvVYA3xeHi+OtPhCmT6KiLk5/2suhF1djU9gixN6j3DehpNtJbSCZfjzLT2+bDipPXw5nTuvVHOzGM+yZgw=
+	t=1729156432; cv=none; b=bIOoUazGk3+k1737gCvbBLJoVd4+U9xDVFQzdi28JJgEWnPzP26lIXlO1Zpzznv5rFSsIth6/rEI1YncDdLF0EDHr/YE9/hEn75eYpdBi7Z1fEkCyjMU6HvyQykJLvxUwbDChCJIdzKfNCRbb/RNvLqi5QyvhHiYfx7h4LekJuA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729155491; c=relaxed/simple;
-	bh=Ag39IeYZIgnJP+0lKOwm8KkvB7IMVGZa6ut5/EY2Y5E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jKYRVgea9e1TDG9XcksVUpPxxHQXszuo6OWAdzzSMtjb6UwVyvREgftgabUPTCa1y77CyAWv6AgQfWt3QixzNSq5AtS6BsLdW5R9SWz9yh0q/edTPyXxDKaC5pueI8UdIXCfUEd8CQZ1fgszm8+vg2i0Y0nm2vEQoWaWL5lXRdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GUTEi/QD; arc=none smtp.client-ip=209.85.167.177
+	s=arc-20240116; t=1729156432; c=relaxed/simple;
+	bh=6B56F/7gGKWcaxA+AMvOG3Bsj/8V7vGGsAc06OtW1Xw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=sxVMiuNhXns1td8t3ACgbyVGxvrdQhnoK7AH4OYzh1QWmh3WjpnzibcLT8bFR5VB2+lzCQQz4sdo+MrcabBuAo6I/rOmLcWnAkjijSITS+VxHWj5TcvX5NKbkzZjb0caUU3f0ScI8CGCsBfqkiJOP4xVHU6FkKC/oPDUCyYiLkc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DzhZNiFH; arc=none smtp.client-ip=209.85.214.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GUTEi/QD"
-Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-3e4d624ac28so447625b6e.2;
-        Thu, 17 Oct 2024 01:58:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DzhZNiFH"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-20c77459558so6345635ad.0;
+        Thu, 17 Oct 2024 02:13:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729155489; x=1729760289; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=cS2ZrlCICBtkiBuIIXiYosXWwsFkqn4m2OZpO9F2lEg=;
-        b=GUTEi/QD9EfKz9cJ+kcdexLuT9hsJ3Qke5GFpqzn+D80X6t7JqBN/BLYluinWlnh02
-         oBtKsnnezq5Yd6KZYkCFhKmilvsMsxu88K3xFnpZYj0nORDa7CfpCOWSBWc4KR7plZY/
-         RsDDR5BFAwv9JuS2fSXdylHttvGzGXJKtK4eMgSdonnbk2pcJ46VRuzrJ1lotIJJp9Rq
-         qBGe3N9YQqWApuBABGRoPlQk+nNDYODw45MCRCZURU9DfT6Ephl/nXlNzyK0FgfbTMyV
-         MAd5+uwpVLiA3xGpv+TyYX331ZEoHS3x9V3qpyPxYwiMrQ26UM6afp7HQGvOHvznWR9y
-         E85g==
+        d=gmail.com; s=20230601; t=1729156430; x=1729761230; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=QnDW4UWPXXutZ1QDoKHkijshs1CsONS/w/tjSEp29Ow=;
+        b=DzhZNiFHW37dxR4aJ8kO4lALUm86VGsztXgJpqCLoRQVU5H3RlFHUiIfVP7NBvQEdA
+         NNKdmTbL9Qi6nlxs9ZlPDszpuZm1tH7oboN8yJzLqkfdILPplJq6S65iri+7VozmTQpv
+         ku0HbrpptrxMER01Swp4RNtaDmAH0338g7pdgnUegRF7qM5HYjWpLGCX28/0GQ1f05cJ
+         1nCbAyPWJcphXb2eUvulgia4g7BZUUc8eXlk+Pp3+i+1ewSIkT1vlc8l4GzOeaZJ+X+3
+         EopZXAFBcybnBcD3tI2Mtf1L9jGPMwzHguT9FmTS9rD3F+ZXIrGSME5NUDgRqRknPGad
+         lTmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729155489; x=1729760289;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cS2ZrlCICBtkiBuIIXiYosXWwsFkqn4m2OZpO9F2lEg=;
-        b=OYT8cvd8xLJ5HDToodEjdvsz8QNByiKJ1mViX/dzpys+cSce5jZEHlEEwIg1v7RWT+
-         /bBVDE0ZjehOvnLXrvwqYP8is9VnOhPV6q5i+PBsZEpOdzCV03e/tUgnPehncCgzt0mK
-         qSJU/bOy/suL+Md9xDzyf4Yc20bdJK+bToD95d+tIeGS4CRfeMuIk3Mbnqw8W/VOOi0g
-         UMu0sqrgf0Dhc91+01LszlCjVYVffeNBKB+90uNTOZ/pb9rscpoJKq2Sh8++D8Jnp70b
-         0bfDLxs73BjpX1lNnCKvd9OJQUkSkni7FSv/3Ot191DWEVS9Uqae+dNyF8EEQzxrpyt2
-         jhRg==
-X-Forwarded-Encrypted: i=1; AJvYcCVenPjU+FCZ0z8P5OWAOWc394vsbln6b7DRDLx4x2T8781MGKOnoPJJJ7w7U0D2io6huMa5FqgjJukuHw+HVAg=@vger.kernel.org, AJvYcCWDokyUd6hoNYslp2V4qzS3Lrkie8Q3poipWPXvki48l19ZWFfM5pML/aFXdXV/bGzV4pTRwGUryzmxjw==@vger.kernel.org, AJvYcCX0dkj5e+nN8NRMwCiy/piG3fvzC0h+CbxTFK8HIgtsp37L8gtsyY24zpExJ1VpMtM5A3UCkX0nTBGNalxZ@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWG1MLoerAY1tJkQt7fY+F50vKAgdx4o6H77o5nlWNS9N7hIMZ
-	lek0vtahGVn2k3ih3UQl7c63lxCVkZApBK5pt34uXgE+4LpMtiXXBoIRZSXq
-X-Google-Smtp-Source: AGHT+IGyolcDbGNV2mTosloiVV44sgC5UtlRgCP5m2wD8324zy9wGkRHfdWw5JtvnK5Y2cZZ4rDYJw==
-X-Received: by 2002:a05:6808:1a10:b0:3e4:d768:91ed with SMTP id 5614622812f47-3e5f0515174mr6294465b6e.41.1729155489333;
-        Thu, 17 Oct 2024 01:58:09 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1729156430; x=1729761230;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QnDW4UWPXXutZ1QDoKHkijshs1CsONS/w/tjSEp29Ow=;
+        b=TDE8kcQaejCeamrCmYz6ZiaPIzmnTpyvP+Lr08RhFlvCpMAq7K/M2hHEybzlsPkhk9
+         pqxY9eww21ZjLAcxVGnTXT3VZe+8VGlkvM19gqdNwR0IUuvBy+JXyNyJt8klelvoU/QH
+         AKkcnPWoDJVab6lwd8kwm3aApZMZeMFl350TCFXM0xu6csgJwJlnGLqBtVN35gLuyGAs
+         lEpq3Q/CuOXlh8CAW8DojiSy3R15mN2YEUx0rjh+r2e2fialQJxnB8I1XxA1Z9PluSoo
+         PJcaWfs30FMJDpoi2+weGFxaCFnkFghva7wBHmSUeBW/FQ1EMFsymFcI49q0dWEDCzCe
+         LthQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVNl5CPhjTK/896b2xtQTnpzBHu1NqVH4FtHXhXP1SAy/z00kLRrPbeWPupHRfjXpSB88jN6ZXy8/Ih42Bg@vger.kernel.org, AJvYcCW4M4dTJsjJG4Ojf9LJoTa555GqXrg/Nm9i9L62NXzLgp+FfCyO0CjWxG7o0eqtmwjWrQWlLfOdyyeK9Q==@vger.kernel.org, AJvYcCXt0ooazqIs70I1ApKYO6pg4H1M+7AgXC9dsFRsrsAU6m5M4sVdbol4qoc0wdzxNXID2oT6aHVCcO7NrbcMzus=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBnVJzwWoS4lBx0IBTNr82aXqop2MInZhSA/ET5DLmjGgq6EtM
+	78O4/fu/fBaNYam5QGQSj5miAINzkFqNEFcYZFIGRk0HDIPiphdf
+X-Google-Smtp-Source: AGHT+IE4YIqZAjh2RM9aiRS2XVdzVST4w+5ARVIJ4Q6/br7ZWK8Q0aQUqsm0LCRu9Uf9AOOjGTnjcQ==
+X-Received: by 2002:a17:903:190:b0:20c:f648:e39e with SMTP id d9443c01a7336-20cf648e4f7mr165674215ad.58.1729156430094;
+        Thu, 17 Oct 2024 02:13:50 -0700 (PDT)
 Received: from mail.google.com (125-239-144-11-fibre.sparkbb.co.nz. [125.239.144.11])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7ea9c6d41e3sm4518745a12.55.2024.10.17.01.58.05
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20d1804b5e5sm40592205ad.197.2024.10.17.02.13.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2024 01:58:08 -0700 (PDT)
-Date: Thu, 17 Oct 2024 21:58:02 +1300
+        Thu, 17 Oct 2024 02:13:49 -0700 (PDT)
+Date: Thu, 17 Oct 2024 22:13:42 +1300
 From: Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
-To: "Maciej W. Rozycki" <macro@orcam.me.uk>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	zhanggenjian@kylinos.cn, ricardo@marliere.net, bvanassche@acm.org,
-	linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] mips: sgi-ip22: Replace "s[n]?printf" with
+To: tsbogend@alpha.franken.de, bvanassche@acm.org,
+	paulo.miguel.almeida.rodenas@gmail.com, gregkh@linuxfoundation.org,
+	ricardo@marliere.net, zhanggenjian@kylinos.cn,
+	linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: paulo.miguel.almeida.rodenas@gmail.com, linux-hardening@vger.kernel.org
+Subject: [PATCH v2][next] mips: sgi-ip22: Replace "s[n]?printf" with
  sysfs_emit in sysfs callbacks
-Message-ID: <ZxDRmlDbtjEaTH8z@mail.google.com>
-References: <Zw2GRQkbx8Z8DlcS@mail.google.com>
- <alpine.DEB.2.21.2410150220160.40463@angie.orcam.me.uk>
+Message-ID: <ZxDVRru_o_5nqGl5@mail.google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -72,32 +68,52 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.2410150220160.40463@angie.orcam.me.uk>
 
-On Tue, Oct 15, 2024 at 03:01:13AM +0100, Maciej W. Rozycki wrote:
-> On Tue, 15 Oct 2024, Paulo Miguel Almeida wrote:
-> 
-> > snprintf() has the documented, but still rather strange trait of
-> > returning the length of the data that *would have been* written to the
-> > array if space were available, rather than the arguably more useful
-> > length of data *actually* written, [...]
-> 
->  Why do you think that just returning `n - 1' in the case of a length 
-> overflow would be more useful than returning the unmet buffer length 
-> requirement?  I think the opposite is the case: the value returned lets 
-> you reallocate the buffer for more space and retry, and there's no other 
-> way to figure out how much this would be.  And if you need to know how 
-> many characters were actually written, then `min(n - 1, snprintf(...))' 
-> will do (and code you propose to replace does exactly that, open-coded).
-> 
->  The change itself makes sense to me, but not your proposed description 
-> I'm afraid.  Just replacing open-coded pieces with calls to `sysfs_emit' 
-> is enough justification.
-> 
->   Maciej
+Replace open-coded pieces with sysfs_emit() helper in sysfs .show()
+callbacks.
 
-Thanks for taking the time to review this patch.
+Signed-off-by: Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
+---
+Changelog:
+- v2: amend commit message (Req: Maciej W. Rozycki)
+- v1: https://lore.kernel.org/lkml/Zw2GRQkbx8Z8DlcS@mail.google.com/
+---
+ arch/mips/sgi-ip22/ip22-gio.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-Will submit a v2 with the description you pointed out.
+diff --git a/arch/mips/sgi-ip22/ip22-gio.c b/arch/mips/sgi-ip22/ip22-gio.c
+index d20eec742bfa..5893ea4e382c 100644
+--- a/arch/mips/sgi-ip22/ip22-gio.c
++++ b/arch/mips/sgi-ip22/ip22-gio.c
+@@ -165,9 +165,8 @@ static ssize_t modalias_show(struct device *dev, struct device_attribute *a,
+ 			     char *buf)
+ {
+ 	struct gio_device *gio_dev = to_gio_device(dev);
+-	int len = snprintf(buf, PAGE_SIZE, "gio:%x\n", gio_dev->id.id);
+ 
+-	return (len >= PAGE_SIZE) ? (PAGE_SIZE - 1) : len;
++	return sysfs_emit(buf, "gio:%x\n", gio_dev->id.id);
+ }
+ static DEVICE_ATTR_RO(modalias);
+ 
+@@ -177,7 +176,7 @@ static ssize_t name_show(struct device *dev,
+ 	struct gio_device *giodev;
+ 
+ 	giodev = to_gio_device(dev);
+-	return sprintf(buf, "%s", giodev->name);
++	return sysfs_emit(buf, "%s\n", giodev->name);
+ }
+ static DEVICE_ATTR_RO(name);
+ 
+@@ -187,7 +186,7 @@ static ssize_t id_show(struct device *dev,
+ 	struct gio_device *giodev;
+ 
+ 	giodev = to_gio_device(dev);
+-	return sprintf(buf, "%x", giodev->id.id);
++	return sysfs_emit(buf, "%x\n", giodev->id.id);
+ }
+ static DEVICE_ATTR_RO(id);
+ 
+-- 
+2.47.0
 
-- Paulo A.
