@@ -1,54 +1,54 @@
 Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5AE118E3F
-	for <linux-hardening@vger.kernel.org>; Thu, 17 Oct 2024 00:51:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 403C31DDD1
+	for <linux-hardening@vger.kernel.org>; Thu, 17 Oct 2024 00:51:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729126275; cv=none; b=MbIw22QLk4VX0cnf5JRDHPYzw0v6NJ5b3qLgEE3IhKQKEzdnN2MSTXfYwoUHL/8EcOOEH0RcwuVjZQh/FDsrlla8YxZ5f2MdkgouJhlqqnCOAce6wz+hnuYRuCK/8XNE1RDpN1paipVzHnOJ0QhPO+lPIwitiUk5hsiQagJyZ4s=
+	t=1729126278; cv=none; b=sr4nEGWu7VCFOVjz0KZBCmrkWH3vBWmtM7zee0qCU/94LGOjY6VbIOQUTg4/ulJLyTq0tQ32Tq+OVl4XUYWrYIAcbmHYqeKCfF5WEWqio3P7MqRLLvnaAksxymywli0QGDpa/w225R+3xLcbVOUj26CuRF/02Lanl649NcTR3wk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729126275; c=relaxed/simple;
-	bh=IxD+p5GKEBnqW9bnHP0WW6feXUZp/DU4SEQgGZ6gu7E=;
+	s=arc-20240116; t=1729126278; c=relaxed/simple;
+	bh=sNhuepxauFrRXvVIMAtmTnGspOhtzLln68OH8rtsxSo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bidGm/UrOi9NU6lcoTwx1GLU49FsA9qOgRlJF094yjBkt0BfZrpRzWyEJlHO5PKRZyfvOYag0MNKV2b08z/yT2AkEi8Oaqqn4X9HZPUiljNuA8GQ0ArcXW9fkeF7cDJcSNfYV/9y8nwkoT1JuajedzpeCyFp4d/uhFcrHQwpoDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=YmcQoIeM; arc=none smtp.client-ip=209.85.216.52
+	 MIME-Version; b=d5ZDol/ZnXCf1aolj01PPvMT5Bwz0guN62O3XdZXm5ab4dmGXUyVgcc8ZID8Y/DYeYwX67u31dCNtcsL0eIWSkuGfaQEbhpBqNuWWwYmherjjDlUqq30qRBX8zDw/7c4nys23xo++vBtLRT/ZIQN0Ya7CtDyqk1PYPzTXQ/y8fk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=n/UC59oY; arc=none smtp.client-ip=209.85.216.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YmcQoIeM"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2e2b93d2da6so47442a91.0
-        for <linux-hardening@vger.kernel.org>; Wed, 16 Oct 2024 17:51:12 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="n/UC59oY"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2e2e31aacbbso44697a91.2
+        for <linux-hardening@vger.kernel.org>; Wed, 16 Oct 2024 17:51:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1729126272; x=1729731072; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1729126274; x=1729731074; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=qjKlw80hPOriNww9p0Da79oYC5cYurJRNqRcXEepGpg=;
-        b=YmcQoIeMX4SB/eIIlH/U0Do61TzJ88np1flWOZqqF7z1iMdH6pF+EV9EogNJt+duHF
-         rhr391nLukQ429h3dIysyitz0bbXnIovwknBf+5/vHQmIvxFblbuMlvJYFUiMr//hYP1
-         jlsQgSX2g61csAxjUR/xhmSGD9k9fSPg+KB5k=
+        bh=bkOjehUZhf9vTAiDfbTet38c6Gkgb8k55nqJSbDOZQY=;
+        b=n/UC59oYtrP9ZJ+NMk+ibXwz+qhvmWwuqxY0RyuZ4J3geAlf/bVHmHUCS6KCE1yDpE
+         Hfp6UNQEIxilZV/09kciyHzVJDofe7siwoWCO9JThepDr0dqG8ujSbW/mGCAqKeZnF7/
+         lzp04wgA8GezOGyi4dnLY/ks0B16KnruS8jxE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729126272; x=1729731072;
+        d=1e100.net; s=20230601; t=1729126274; x=1729731074;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=qjKlw80hPOriNww9p0Da79oYC5cYurJRNqRcXEepGpg=;
-        b=P14Gz18m7G+vORh/qvs8lZww5APFi9PZAlEfp2+PFSIvWBgY13bEzxhki2wNfaaYCV
-         /L0jBa/yxHeHtd9jYMTabeEwQZYj01QuX5/8roZJB8d0/iwevrUeSYRxsNaXs99xogZq
-         nfxcbY2o9rsWEBA8sHQhkVcgWDCdTR3AuDKJipiI9yPkzPtnMTdeYekhXmi4NnxqoHqL
-         Ck63OaVEwnSF2BQODxIuvcQPaUlgfaQP/p4RPIEZOIjGJS2xoWCk76Qai5N5LnKXszq8
-         0E+eVMt6I3ExJ1Vtm0CGMFeJfSVl3PrIo2+MZQ8OqekJLVLFZkjJTp4HdUUbwj7Gs05C
-         mCdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWBluwoiTADu3MGVOVfWdpc6OfDU5Jz+8ecqb/wWOd/YPWOkqrUtnxvS6KgeT988GKdxigGteJIl2xcoy6xpjc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzzIySNH2JiPKVKp4fDQS5kjNVWzGdRxeKwQ0UgVbUCbFiMqAQ+
-	LgXXgRLOqHau03as04TqQZeZBGUbEB/p19tb8jqTBv4rDQ+l9sf7PFhNd+mgeg==
-X-Google-Smtp-Source: AGHT+IG+nZEmIFxEMebL8zJk/ulSdARWGAMWNOvXhzs7CcDij4L3o5BGAmBhyFvsZhnXUwj/YuMYiQ==
-X-Received: by 2002:a17:903:32c4:b0:205:723f:23d4 with SMTP id d9443c01a7336-20d47e69b07mr7460455ad.5.1729126270776;
-        Wed, 16 Oct 2024 17:51:10 -0700 (PDT)
+        bh=bkOjehUZhf9vTAiDfbTet38c6Gkgb8k55nqJSbDOZQY=;
+        b=Pp9r93ohF2CscGacddaMy/x446S7VS49Zy1Xs9UYODIx7VX8GIvaFPXtMUBqwGDPaC
+         6h+2F5TTDV9HhzF0HZaKmmmkg9CJUkp+KvIQfcvCpADsVRLzimOZ6lJ1MMfaFKVAwjNY
+         nQlEbJhokW+tHQT+zo9KcV4Lmz9CpRFQ/qKR7w8MH7DcsP/oUdXC7jIy1hgqld/4bMR2
+         Ac4mIxgWASIkkysgZye8wXIGpSCEPoCgJjAolo/NF+9cx4Q7vUz3cl2WNHtnWhDHYrDA
+         MBzEqo4nGH+/d2J+3W5EmqceeUHrsEmpOjnYV6mlKCxSiGZnB+2H6p3v8o2g+VnXdtpx
+         jXRA==
+X-Forwarded-Encrypted: i=1; AJvYcCUnTsPR+G8vz9m94ukYxauDoU/9wyZz9IrtvhhKWVgO7GkK72hllMuDRR1NO3gNzb8uugXl23bpViVjw2m0aN4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyvWOR2DoAszOMN9lFPMqGgWmBi2qVnoHw19j6/qslYNp8krudU
+	JeRnc86A99L/dyoJsTq41mTHGNJ7tNZIxPR58DlpAUEiJdv4ApuO0Vvx40HtvQ==
+X-Google-Smtp-Source: AGHT+IHy9OceESdtYyqY6xLVtyPe+K9jcM7IV9Ttt1i23Ri9jkWXgMq2TJu6PP5Z70ZTIPLzN7qP/w==
+X-Received: by 2002:a17:902:dac7:b0:20c:a63e:b678 with SMTP id d9443c01a7336-20d47f829a5mr7401195ad.14.1729126274463;
+        Wed, 16 Oct 2024 17:51:14 -0700 (PDT)
 Received: from localhost (56.4.82.34.bc.googleusercontent.com. [34.82.4.56])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-20d1804c050sm34102105ad.216.2024.10.16.17.51.10
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-20d1804c68bsm34559025ad.185.2024.10.16.17.51.14
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 16 Oct 2024 17:51:10 -0700 (PDT)
+        Wed, 16 Oct 2024 17:51:14 -0700 (PDT)
 From: jeffxu@chromium.org
 To: akpm@linux-foundation.org,
 	keescook@chromium.org,
@@ -75,9 +75,9 @@ Cc: jeffxu@google.com,
 	rdunlap@infradead.org,
 	Jeff Xu <jeffxu@chromium.org>,
 	stable@vger.kernel.org
-Subject: [PATCH v1 1/2] mseal: Two fixes for madvise(MADV_DONTNEED) when sealed
-Date: Thu, 17 Oct 2024 00:51:04 +0000
-Message-ID: <20241017005105.3047458-2-jeffxu@chromium.org>
+Subject: [PATCH v1 2/2] selftest/mseal: Add tests for madvise fixes
+Date: Thu, 17 Oct 2024 00:51:05 +0000
+Message-ID: <20241017005105.3047458-3-jeffxu@chromium.org>
 X-Mailer: git-send-email 2.47.0.rc1.288.g06298d1525-goog
 In-Reply-To: <20241017005105.3047458-1-jeffxu@chromium.org>
 References: <20241017005105.3047458-1-jeffxu@chromium.org>
@@ -91,130 +91,176 @@ Content-Transfer-Encoding: 8bit
 
 From: Jeff Xu <jeffxu@chromium.org>
 
-Two fixes for madvise(MADV_DONTNEED) when sealed.
+Testcase for "Two fixes for madvise(MADV_DONTNEED) when sealed"
 
-For PROT_NONE mappings, the previous blocking of
-madvise(MADV_DONTNEED) is unnecessary. As PROT_NONE already prohibits
-memory access, madvise(MADV_DONTNEED) should be allowed to proceed in
-order to free the page.
+test_seal_madvise_prot_none
+  shall not block when mapping is PROT_NONE
 
-For file-backed, private, read-only memory mappings, we previously did
-not block the madvise(MADV_DONTNEED). This was based on
-the assumption that the memory's content, being file-backed, could be
-retrieved from the file if accessed again. However, this assumption
-failed to consider scenarios where a mapping is initially created as
-read-write, modified, and subsequently changed to read-only. The newly
-introduced VM_WASWRITE flag addresses this oversight.
+test_madvise_filebacked_writable
+  shall not block writeable private filebacked mapping.
 
-Reported-by: Pedro Falcato <pedro.falcato@gmail.com>
-Link:https://lore.kernel.org/all/CABi2SkW2XzuZ2-TunWOVzTEX1qc29LhjfNQ3hD4Nym8U-_f+ug@mail.gmail.com/
+test_madvise_filebacked_was_writable - shall block.
+  shall block read-only private filebacked mapping which
+  was previously writable.
+
 Fixes: 8be7258aad44 ("mseal: add mseal syscall")
-Cc: <stable@vger.kernel.org> # 6.11.y: 4d1b3416659b: mm: move can_modify_vma to mm/vma.h
-Cc: <stable@vger.kernel.org> # 6.11.y: 4a2dd02b0916: mm/mprotect: replace can_modify_mm with can_modify_vma
-Cc: <stable@vger.kernel.org> # 6.11.y: 23c57d1fa2b9: mseal: replace can_modify_mm_madv with a vma variant
+Cc: <stable@vger.kernel.org> # 6.11.y: 67203f3f2a63: selftests/mm: add mseal test for no-discard madvise
+Cc: <stable@vger.kernel.org> # 6.11.y: f28bdd1b17ec: selftests/mm: add more mseal traversal tests
 Cc: <stable@vger.kernel.org> # 6.11.y
 Signed-off-by: Jeff Xu <jeffxu@chromium.org>
 ---
- include/linux/mm.h |  2 ++
- mm/mprotect.c      |  3 +++
- mm/mseal.c         | 42 ++++++++++++++++++++++++++++++++++++------
- 3 files changed, 41 insertions(+), 6 deletions(-)
+ tools/testing/selftests/mm/mseal_test.c | 118 +++++++++++++++++++++++-
+ 1 file changed, 116 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 4c32003c8404..b402eca2565a 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -430,6 +430,8 @@ extern unsigned int kobjsize(const void *objp);
- #ifdef CONFIG_64BIT
- /* VM is sealed, in vm_flags */
- #define VM_SEALED	_BITUL(63)
-+/* VM was writable */
-+#define VM_WASWRITE	_BITUL(62)
- #endif
+diff --git a/tools/testing/selftests/mm/mseal_test.c b/tools/testing/selftests/mm/mseal_test.c
+index 01675c412b2a..fa74dbe4a684 100644
+--- a/tools/testing/selftests/mm/mseal_test.c
++++ b/tools/testing/selftests/mm/mseal_test.c
+@@ -1728,7 +1728,7 @@ static void test_seal_discard_ro_anon_on_filebacked(bool seal)
+ 		FAIL_TEST_IF_FALSE(!ret);
+ 	}
  
- /* Bits set in the VMA until the stack is in its final location */
-diff --git a/mm/mprotect.c b/mm/mprotect.c
-index 0c5d6d06107d..6397135ca526 100644
---- a/mm/mprotect.c
-+++ b/mm/mprotect.c
-@@ -821,6 +821,9 @@ static int do_mprotect_pkey(unsigned long start, size_t len,
- 			break;
- 		}
+-	/* sealing doesn't apply for file backed mapping. */
++	/* read-only private file-backed mapping, allow always */
+ 	ret = sys_madvise(ptr, size, MADV_DONTNEED);
+ 	FAIL_TEST_IF_FALSE(!ret);
  
-+		if ((vma->vm_flags & VM_WRITE) && !(newflags & VM_WRITE))
-+			newflags |= VM_WASWRITE;
-+
- 		error = security_file_mprotect(vma, reqprot, prot);
- 		if (error)
- 			break;
-diff --git a/mm/mseal.c b/mm/mseal.c
-index ece977bd21e1..28f28487be17 100644
---- a/mm/mseal.c
-+++ b/mm/mseal.c
-@@ -36,12 +36,8 @@ static bool is_madv_discard(int behavior)
- 	return false;
+@@ -1864,6 +1864,111 @@ static void test_seal_madvise_nodiscard(bool seal)
+ 	REPORT_TEST_PASS();
  }
  
--static bool is_ro_anon(struct vm_area_struct *vma)
-+static bool anon_is_ro(struct vm_area_struct *vma)
- {
--	/* check anonymous mapping. */
--	if (vma->vm_file || vma->vm_flags & VM_SHARED)
--		return false;
--
- 	/*
- 	 * check for non-writable:
- 	 * PROT=RO or PKRU is not writeable.
-@@ -53,6 +49,22 @@ static bool is_ro_anon(struct vm_area_struct *vma)
- 	return false;
- }
- 
-+static bool vma_is_prot_none(struct vm_area_struct *vma)
++static void test_seal_madvise_prot_none(bool seal)
 +{
-+	if ((vma->vm_flags & VM_ACCESS_FLAGS) == VM_NONE)
-+		return true;
++	void *ptr;
++	unsigned long page_size = getpagesize();
++	unsigned long size = 4 * page_size;
++	int ret;
 +
-+	return false;
-+}
++	setup_single_address(size, &ptr);
++	FAIL_TEST_IF_FALSE(ptr != (void *)-1);
 +
-+static bool vma_was_writable_turn_readonly(struct vm_area_struct *vma)
-+{
-+	if (!(vma->vm_flags & VM_WRITE) && vma->vm_flags & VM_WASWRITE)
-+		return true;
++	ret = sys_mprotect(ptr + page_size, page_size, PROT_NONE);
++	FAIL_TEST_IF_FALSE(!ret);
 +
-+	return false;
-+}
-+
- /*
-  * Check if a vma is allowed to be modified by madvise.
-  */
-@@ -61,7 +73,25 @@ bool can_modify_vma_madv(struct vm_area_struct *vma, int behavior)
- 	if (!is_madv_discard(behavior))
- 		return true;
- 
--	if (unlikely(!can_modify_vma(vma) && is_ro_anon(vma)))
-+	/* not sealed */
-+	if (likely(can_modify_vma(vma)))
-+		return true;
-+
-+	/* PROT_NONE mapping */
-+	if (vma_is_prot_none(vma))
-+		return true;
-+
-+	/* file-backed private mapping */
-+	if (vma->vm_file) {
-+		/* read-only but was writeable */
-+		if (vma_was_writable_turn_readonly(vma))
-+			return false;
-+
-+		return true;
++	if (seal) {
++		ret = seal_single_address(ptr + page_size, page_size);
++		FAIL_TEST_IF_FALSE(!ret);
 +	}
 +
-+	/* anonymous mapping is read-only */
-+	if (anon_is_ro(vma))
- 		return false;
++	/* madvise(DONTNEED) should pass on PROT_NONE sealed VMA */
++	ret = sys_madvise(ptr + page_size, page_size, MADV_DONTNEED);
++	FAIL_TEST_IF_FALSE(!ret);
++
++	REPORT_TEST_PASS();
++}
++
++static void test_madvise_filebacked_writable(bool seal)
++{
++	void *ptr;
++	unsigned long page_size = getpagesize();
++	unsigned long size = 4 * page_size;
++	int ret;
++	int fd;
++	unsigned long mapflags = MAP_PRIVATE;
++
++	fd = memfd_create("test", 0);
++	FAIL_TEST_IF_FALSE(fd > 0);
++
++	ret = fallocate(fd, 0, 0, size);
++	FAIL_TEST_IF_FALSE(!ret);
++
++	ptr = mmap(NULL, size, PROT_READ|PROT_WRITE, mapflags, fd, 0);
++	FAIL_TEST_IF_FALSE(ptr != MAP_FAILED);
++
++	if (seal) {
++		ret = sys_mseal(ptr, size);
++		FAIL_TEST_IF_FALSE(!ret);
++	}
++
++	/* sealing doesn't apply for writeable file-backed mapping. */
++	ret = sys_madvise(ptr, size, MADV_DONTNEED);
++	FAIL_TEST_IF_FALSE(!ret);
++
++	ret = sys_munmap(ptr, size);
++	if (seal)
++		FAIL_TEST_IF_FALSE(ret < 0);
++	else
++		FAIL_TEST_IF_FALSE(!ret);
++	close(fd);
++
++	REPORT_TEST_PASS();
++}
++
++static void test_madvise_filebacked_was_writable(bool seal)
++{
++	void *ptr;
++	unsigned long page_size = getpagesize();
++	unsigned long size = 4 * page_size;
++	int ret;
++	int fd;
++	unsigned long mapflags = MAP_PRIVATE;
++
++	fd = memfd_create("test", 0);
++	FAIL_TEST_IF_FALSE(fd > 0);
++
++	ret = fallocate(fd, 0, 0, size);
++	FAIL_TEST_IF_FALSE(!ret);
++
++	ptr = mmap(NULL, size, PROT_READ|PROT_WRITE, mapflags, fd, 0);
++	FAIL_TEST_IF_FALSE(ptr != MAP_FAILED);
++
++	ret = sys_mprotect(ptr, size, PROT_READ);
++	FAIL_TEST_IF_FALSE(!ret);
++
++	if (seal) {
++		ret = sys_mseal(ptr, size);
++		FAIL_TEST_IF_FALSE(!ret);
++	}
++
++	/* read-only file-backed mapping, was writable. */
++	ret = sys_madvise(ptr, size, MADV_DONTNEED);
++	if (seal)
++		FAIL_TEST_IF_FALSE(ret < 0);
++	else
++		FAIL_TEST_IF_FALSE(!ret);
++
++	ret = sys_munmap(ptr, size);
++	if (seal)
++		FAIL_TEST_IF_FALSE(ret < 0);
++	else
++		FAIL_TEST_IF_FALSE(!ret);
++	close(fd);
++
++	REPORT_TEST_PASS();
++}
++
+ int main(int argc, char **argv)
+ {
+ 	bool test_seal = seal_support();
+@@ -1876,7 +1981,7 @@ int main(int argc, char **argv)
+ 	if (!pkey_supported())
+ 		ksft_print_msg("PKEY not supported\n");
  
- 	/* Allow by default. */
+-	ksft_set_plan(88);
++	ksft_set_plan(94);
+ 
+ 	test_seal_addseal();
+ 	test_seal_unmapped_start();
+@@ -1985,5 +2090,14 @@ int main(int argc, char **argv)
+ 	test_seal_discard_ro_anon_on_pkey(false);
+ 	test_seal_discard_ro_anon_on_pkey(true);
+ 
++	test_seal_madvise_prot_none(false);
++	test_seal_madvise_prot_none(true);
++
++	test_madvise_filebacked_writable(false);
++	test_madvise_filebacked_writable(true);
++
++	test_madvise_filebacked_was_writable(false);
++	test_madvise_filebacked_was_writable(true);
++
+ 	ksft_finished();
+ }
 -- 
 2.47.0.rc1.288.g06298d1525-goog
 
