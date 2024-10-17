@@ -1,180 +1,94 @@
-Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3F7513AD06
-	for <linux-hardening@vger.kernel.org>; Thu, 17 Oct 2024 03:56:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0EB814A0B8;
+	Thu, 17 Oct 2024 06:04:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729137411; cv=none; b=Vs0Y7DP7JKbb4h+Msew4GWxVY2fEFzCRJBcycujnc/zEiikg5c+mfuKVFXRggYfkEswskzaAzfsTVMs2PL9f1Pen/ShPk7yNXiRf+/Fvc+PukYyY2uarIWAttNTANKtTFOVpyuNLOhVX+DiXiHGT6QJWFVtfjxVsK8hMQAz2ksc=
+	t=1729145042; cv=none; b=lPjlfBmVuTi0KgSJ1MVRiZ4zpMQwg0Cxi1+/KKwuhMNKKheD1X5IGnPm/T8Rmon+UR3naloO+4eFaUuXlbK90CoA8ak6F8LgxBoF5G2mqCXE5uYaK/IjFYzEbEu6ATaYwVv+yT5OwM7W08I8kLSSi0k0RHlOgNrMS2MjEem4h3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729137411; c=relaxed/simple;
-	bh=2Sc+tjISrvqUTEFy0Kq866Vkx6YKhfGRK1exiXvwA98=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=r3CqoMtf/hgY1dY7c71qNwRuazmyBnbJdLLupuNEUK+o/leAYfc/z99OLUNSRzNDaHe96H05gp5laqez2zY9hunX8xr4Yj/ZCsRK6UrG5r9Mcve5hNcf1IulHKAm276v4c+6sH3qxstzz+QXhZUsTwo7hKXAgyT8LBrGZkstz6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=oabdYSpr; arc=none smtp.client-ip=209.85.160.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1729145042; c=relaxed/simple;
+	bh=X2+GJH0HSRuttevd7H/GoUXpL9DzliRti/5gVBqOrmI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SyGQpgnPHVjmlcTtwI1H1n7fn09pq27ib0JQLtcg+2NM+/9YJiY694JGV1y/e546aVtKt2cU+NEsCRVhU7MuvMt+LYuxECH0f+vLfqFkLBvfsPrwb2tqe774skPCJdAj7rv1gSIGRv25xaGYbyvDG40MpB8t143NF3S0HMwMLYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=iHBVP/+L; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oabdYSpr"
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-288a6df82ebso56349fac.2
-        for <linux-hardening@vger.kernel.org>; Wed, 16 Oct 2024 20:56:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1729137409; x=1729742209; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+xDplWMnrkVDTOjcZzbsa+PFQJ46/uurWYdS279WZl4=;
-        b=oabdYSpreclV8vKQJB1QNe4xZIMlqe1Ow49iJ7tN5A0ocHM5grHFXYi+UQdFxRDZaK
-         SYYLOwMiWTmN6Z7OC82DrcudllMuGl4vtZE6BDLv2ceARYm4idHUFyXgmABV/Dxqkp7L
-         7qb68Q36BweKBkq8eRLuHoznA2W8b7LV2gVxM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729137409; x=1729742209;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+xDplWMnrkVDTOjcZzbsa+PFQJ46/uurWYdS279WZl4=;
-        b=bCz5x/ux/+/v6xd2J6nsIsQ0ttydQzWOnEA7fq9iB9x/9tPn7pXFPPxsbpfqaLalbb
-         5ceUFWzrVZFteUrXimC2ojUPskAtdl9j3JeqAweErCv/63uUO1O9aHmEvbACH+wcs11i
-         r5EOt+z+zy3qBA6ysRouPueZnW1vSyLSC0viRvaWn+m8koZN+58vpqJe071q8zv/q6oz
-         gFTcG0U87+vBJRgpyAl5CVkn2dmIhRnBnq+JOm52WoUlz43RP/NI3LSmBbVcJWSw6Q5c
-         hRmtCeV2b0jCfCr4kTEJBA549fmhTkoO9tljLRBdfILc11HqhOZY9dYCYGlrPMGe9vEA
-         imsg==
-X-Forwarded-Encrypted: i=1; AJvYcCVWL/0Cp0TpfZa7hlZ4vn9G/mODRqeL99VoOV7BxflnWjjEWovBsvMX8xdFZ/cID9Vvt1ksdIiMAQ4I3Ca4/+I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxUEbUY7EQ9nuUZ0oWyit8Kw/07CJluVQncIXBgz6V2pY9qBJvG
-	M9KBYQjHRoaV+RbSELpBeoZjBPibFlV+4FwUFhJZmv6cw0ukcyAGCw6J4s1uBTPSlloCGCy7lRH
-	OlqJTMZW0w+acskXltrb1l0TMtnS7bL833FKs
-X-Google-Smtp-Source: AGHT+IE4fYg26EfQyIf9BSs4rRYOM6MlrMuoB3kGUvuKZrktYleCB72ksfvspyqDROopedVLIoje8kkW2ksT2pf691A=
-X-Received: by 2002:a05:6870:2012:b0:268:bd85:ff9a with SMTP id
- 586e51a60fabf-2890c60b148mr504819fac.3.1729137408676; Wed, 16 Oct 2024
- 20:56:48 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="iHBVP/+L"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B107C4CEC3;
+	Thu, 17 Oct 2024 06:04:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1729145041;
+	bh=X2+GJH0HSRuttevd7H/GoUXpL9DzliRti/5gVBqOrmI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iHBVP/+L6v//F10lcFEdWtmIk7VaT9jpaMl/sjhNG7bGRxv7jSyy7qgQwZ28o1LZM
+	 A65P5MKddi2jx3K6WTUAlcumnMS2b87yQ6m2hpNBpBynvCxp/cQMtGpW7W1WaHO3jg
+	 gsllQKRbKQEP03AH0CGQkhI43/HOLTqa4Q6QzFyw=
+Date: Thu, 17 Oct 2024 08:03:57 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: jeffxu@chromium.org
+Cc: akpm@linux-foundation.org, keescook@chromium.org,
+	torvalds@linux-foundation.org, usama.anjum@collabora.com,
+	corbet@lwn.net, Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com,
+	jeffxu@google.com, jorgelo@chromium.org, groeck@chromium.org,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-mm@kvack.org, jannh@google.com, sroettger@google.com,
+	pedro.falcato@gmail.com, linux-hardening@vger.kernel.org,
+	willy@infradead.org, deraadt@openbsd.org, surenb@google.com,
+	merimus@google.com, rdunlap@infradead.org
+Subject: Re: [PATCH] munmap sealed memory cause memory to split (bug)
+Message-ID: <2024101722-diligent-baritone-b211@gregkh>
+References: <20241017022627.3112811-1-jeffxu@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241014215022.68530-1-jeffxu@google.com> <20241014215022.68530-2-jeffxu@google.com>
- <202410161424.FA6DBA7D91@keescook> <CABi2SkXKWGuvttUWHH+CL-MnKDvF=o6i2nGz55r+-6WvSJex5Q@mail.gmail.com>
-In-Reply-To: <CABi2SkXKWGuvttUWHH+CL-MnKDvF=o6i2nGz55r+-6WvSJex5Q@mail.gmail.com>
-From: Jeff Xu <jeffxu@chromium.org>
-Date: Wed, 16 Oct 2024 20:56:36 -0700
-Message-ID: <CABi2SkUfKzutFJLv0q42LRU-YDjNzMBmmZ0NKXNwGhQVoJ_bfg@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 1/1] exec: seal system mappings
-To: Kees Cook <kees@kernel.org>
-Cc: akpm@linux-foundation.org, jannh@google.com, torvalds@linux-foundation.org, 
-	adhemerval.zanella@linaro.org, oleg@redhat.com, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-mm@kvack.org, jorgelo@chromium.org, 
-	sroettger@google.com, ojeda@kernel.org, adobriyan@gmail.com, 
-	anna-maria@linutronix.de, mark.rutland@arm.com, linus.walleij@linaro.org, 
-	Jason@zx2c4.com, deller@gmx.de, rdunlap@infradead.org, davem@davemloft.net, 
-	hch@lst.de, peterx@redhat.com, hca@linux.ibm.com, f.fainelli@gmail.com, 
-	gerg@kernel.org, dave.hansen@linux.intel.com, mingo@kernel.org, 
-	ardb@kernel.org, Liam.Howlett@oracle.com, mhocko@suse.com, 
-	42.hyeyoo@gmail.com, peterz@infradead.org, ardb@google.com, enh@google.com, 
-	rientjes@google.com, groeck@chromium.org, lorenzo.stoakes@oracle.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241017022627.3112811-1-jeffxu@chromium.org>
 
-On Wed, Oct 16, 2024 at 3:06=E2=80=AFPM Jeff Xu <jeffxu@chromium.org> wrote=
-:
->
-> On Wed, Oct 16, 2024 at 2:26=E2=80=AFPM Kees Cook <kees@kernel.org> wrote=
-:
-> >
-> > (I don't think this needs "RFC" any more)
-> >
-> > On Mon, Oct 14, 2024 at 09:50:20PM +0000, jeffxu@chromium.org wrote:
-> > > From: Jeff Xu <jeffxu@chromium.org>
-> > >
-> > > Seal vdso, vvar, sigpage, uprobes and vsyscall.
-> > >
-> > > Those mappings are readonly or executable only, sealing can protect
-> > > them from ever changing during the life time of the process. For
-> > > complete descriptions of memory sealing, please see mseal.rst [1].
-> > >
-> > > System mappings such as vdso, vvar, and sigpage (for arm) are
-> > > generated by the kernel during program initialization. These mappings
-> > > are designated as non-writable, and sealing them will prevent them
-> > > from ever becoming writeable.
-> > >
-> > > Unlike the aforementioned mappings, the uprobe mapping is not
-> > > established during program startup. However, its lifetime is the same
-> > > as the process's lifetime [2], thus sealable.
-> > >
-> > > The vdso, vvar, sigpage, and uprobe mappings all invoke the
-> > > _install_special_mapping() function. As no other mappings utilize thi=
-s
-> > > function, it is logical to incorporate sealing logic within
-> > > _install_special_mapping(). This approach avoids the necessity of
-> > > modifying code across various architecture-specific implementations.
-> > >
-> > > The vsyscall mapping, which has its own initialization function, is
-> > > sealed in the XONLY case, it seems to be the most common and secure
-> > > case of using vsyscall.
-> > >
-> > > It is important to note that the CHECKPOINT_RESTORE feature (CRIU) ma=
-y
-> > > alter the mapping of vdso, vvar, and sigpage during restore
-> > > operations. Consequently, this feature cannot be universally enabled
-> > > across all systems. To address this, a kernel configuration option ha=
-s
-> > > been introduced to enable or disable this functionality. Note, uprobe
-> > > is always sealed and not controlled by this kernel configuration.
-> > >
-> > > [1] Documentation/userspace-api/mseal.rst
-> > > [2] https://lore.kernel.org/all/CABi2SkU9BRUnqf70-nksuMCQ+yyiWjo3fM4X=
-kRkL-NrCZxYAyg@mail.gmail.com/
-> > >
-> > > Signed-off-by: Jeff Xu <jeffxu@chromium.org>
-> > > ---
-> > >  .../admin-guide/kernel-parameters.txt         | 10 ++++
-> > >  arch/x86/entry/vsyscall/vsyscall_64.c         |  9 +++-
-> > >  fs/exec.c                                     | 53 +++++++++++++++++=
-++
-> > >  include/linux/fs.h                            |  1 +
-> > >  kernel/events/uprobes.c                       |  2 +-
-> > >  mm/mmap.c                                     |  1 +
-> > >  security/Kconfig                              | 26 +++++++++
-> > >  7 files changed, 99 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Docume=
-ntation/admin-guide/kernel-parameters.txt
-> > > index e7bfe1bde49e..02e5eb23d76f 100644
-> > > --- a/Documentation/admin-guide/kernel-parameters.txt
-> > > +++ b/Documentation/admin-guide/kernel-parameters.txt
-> > > @@ -1538,6 +1538,16 @@
-> > >                       Permit 'security.evm' to be updated regardless =
-of
-> > >                       current integrity status.
-> > >
-> > > +     exec.seal_system_mappings =3D [KNL]
-> > > +                     Format: { never | always }
-> > > +                     Seal system mappings: vdso, vvar, sigpage, upro=
-bes,
-> > > +                     vsyscall.
-> > > +                     This overwrites KCONFIG CONFIG_SEAL_SYSTEM_MAPP=
-INGS_*
-> > > +                     - 'never':  never seal system mappings.
-> > > +                     - 'always': always seal system mappings.
-> > > +                     If not specified or invalid, default is the KCO=
-NFIG value.
-> > > +                     This option has no effect if CONFIG_64BIT=3Dn
-> > > +
-> >
-> > Any reason for "always"/"never" instead of the more traditional y/n
-> > enabled/disabled, etc?
-> >
-> Yes. I like to leave room for  future extension, in case someone ever
-> needs a prctl for pre-process opt-in, e.g.
-> Format:{never|prctl|always}
->
-I copied the pattern from:
+On Thu, Oct 17, 2024 at 02:26:27AM +0000, jeffxu@chromium.org wrote:
+> From: Jeff Xu <jeffxu@google.com>
+> 
+> It appears there is a regression on the latest mm,
+> when munmap sealed memory, it can cause unexpected VMA split.
+> E.g. repro use this test.
+> ---
+>  tools/testing/selftests/mm/mseal_test.c | 76 +++++++++++++++++++++++++
+>  1 file changed, 76 insertions(+)
+> 
 
-        proc_mem.force_override=3D [KNL]
-                        Format: {always | ptrace | never}
+Hi,
 
+This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
+a patch that has triggered this response.  He used to manually respond
+to these common problems, but in order to save his sanity (he kept
+writing the same thing over and over, yet to different people), I was
+created.  Hopefully you will not take offence and will fix the problem
+in your patch and resubmit it so that it can be accepted into the Linux
+kernel tree.
 
-> > Otherwise, this all makes sense to me.
-> >
-> > --
-> > Kees Cook
+You are receiving this message because of the following common error(s)
+as indicated below:
+
+- Your patch does not have a Signed-off-by: line.  Please read the
+  kernel file, Documentation/process/submitting-patches.rst and resend
+  it after adding that line.  Note, the line needs to be in the body of
+  the email, before the patch, not at the bottom of the patch or in the
+  email signature.
+
+- You did not write a descriptive Subject: for the patch, allowing Greg,
+  and everyone else, to know what this patch is all about.  Please read
+  the section entitled "The canonical patch format" in the kernel file,
+  Documentation/process/submitting-patches.rst for what a proper
+  Subject: line should look like.
+
+If you wish to discuss this problem further, or you have questions about
+how to resolve this issue, please feel free to respond to this email and
+Greg will reply once he has dug out from the pending patches received
+from other developers.
+
+thanks,
+
+greg k-h's patch email bot
