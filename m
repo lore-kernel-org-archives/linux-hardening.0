@@ -1,230 +1,62 @@
-Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com [209.85.160.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED0F91DF24C
-	for <linux-hardening@vger.kernel.org>; Thu, 17 Oct 2024 16:20:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97EA01DE2DD
+	for <linux-hardening@vger.kernel.org>; Thu, 17 Oct 2024 16:23:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729182039; cv=none; b=ZIxbYn2unOL1ijzhdAY97+VrTz7rGLHf2pfy0KHQeIMEEayt6BZtkbyZEhHOC9kVH6A7FESOVSzEG0CU4b8flzDFRCjmn1WfZwlO8clAHKo3xGGj20FAFxF5zPLWhwzuSFmuBAokasWeVZ0+Z3OdWOPPoagO4gIGAaK0GipNzqc=
+	t=1729182209; cv=none; b=DgpPR9uiNHfElAr0RqN2R/hJLFjADkuxIIGB+NnuQndLgF0wFag8PktsjHi0pH2YdQLIutprC1TvY9A/3uqCxntoQ/z4P7PJcg1XQIXIKrbi3nJzLzdwNfZ5Q10O81Z6qYendq/wbr88ozdapb7Z2OE7rVIKrFJAk6WgcKShrKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729182039; c=relaxed/simple;
-	bh=mBNQcJGarZlgLJSxTPWeDEc/pcZ4v2cyQ0d1mNFRZi0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ufrrKn6X0ILycqlg/Dzaxd60Qn8kV6UUxqpp3RzG2m9rggo3mr3T7iuX8UAij/jpAcvmHPGU3u8cFFildg/oDKEbI7BYJp81DOPONgtv+VnE7cwG2I0D0gM8RvIl+faYJCfC8BooN+5SCrtcNVvA0joQJLxWOJFCsfrAfcXjC+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=H0HNBfs8; arc=none smtp.client-ip=209.85.160.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1729182209; c=relaxed/simple;
+	bh=Jhe+8yYKduRf0fDdopfaFN3/xAHL1pUMnMf840H+3xY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XAZFO6A4CGl5lNjbZreBSFaTi+YkoEhczn4dX2oPwgtLclOIxGfvQpe7xM+P9JncCbcz6Tk31IKCFZhbajreXiZv6S+JsU6Kcka8DCV7T2lddo9wzKUeJmVEHoAze5j9x6aB12IU3q2Hd1p1BEd4lM028LQTDtVVXwFCYAhQMeY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YjPFmGca; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="H0HNBfs8"
-Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-26456710cfdso83154fac.0
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Oct 2024 09:20:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1729182032; x=1729786832; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QymMmt19qYyptlPRJSRQk64je7D5NwoBdyyf/N0dpQM=;
-        b=H0HNBfs8mprioFB8NaCegyrlCOAjb9zJ7UzxN2uJ5gCPQCDe1RraICbjwTtG/xv/g0
-         AnMw3A9DiyDPzE7GvC/UEcvEcrMzkKKIMNEe/s4qtD+UiOrX9uhye1gPQc0VB6cYQGD0
-         fbGDurljAuswxPfrYkJjAFmaecUdeQ/6gOszU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729182032; x=1729786832;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QymMmt19qYyptlPRJSRQk64je7D5NwoBdyyf/N0dpQM=;
-        b=O/ONAfXhTq7XYq2e3iEDzCAKUQtG5u6PKYUGm2g0z9Oh3MmysuMx3Q6AbnTA3JdCdA
-         yXkXN2CmRlJT2W1VGWQ9vEs0Uczpi2FZH5nT07uryGR9qtBuBExekXMhkmaIDdHHNWoO
-         Sfn7rUxUYWdxmoerrP7vd9L5RSJcTm8/eQtSP8kNjm72kGHCH/tqWibnAe2ThMmBkIzk
-         bzoJnhRjGtVFwAQdr9lsfNtb2bZXZ+TvzhMO6XMnPf8vrfxLWslvKBv01BiAInx/ULT/
-         nY+5HnyDGAsja4WrqLZedWPopB2QnpWPIQCBh6rQzA78SPKYOj+njqO9UTJ3SWTCQYL6
-         JewA==
-X-Forwarded-Encrypted: i=1; AJvYcCV9z3mWlhF5NIAGWRD9D5vIzuaAqF8onuNbWI4jLbnJUd8vUHaILNDKa273NXTTKwRBcZE50xw5Qt8dVzHTRok=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQfC7QZGOJ21o2W/vW5GtypcISQX0a528zwYX8sYW0LU5Xl8h5
-	nFihM1E1Cxava92rr9DJYCaajsB+w9wjWXFHuR1moGklb/SK+qucp+LedaEYtj1vzB4kDE1QjJi
-	VnQNNZk/PxxaA34wTuyze49mjxQKk54d0i8Lj
-X-Google-Smtp-Source: AGHT+IEAm4HkCe9fIJHtz5qGXaYcmz/2XucghwW7VoOOeqPX9ksuhDwSqQ6czP4kSZBu+AN3pwdMvWnVobwSCyu8uSM=
-X-Received: by 2002:a05:6870:2101:b0:26f:d381:fd31 with SMTP id
- 586e51a60fabf-2890c62049fmr974665fac.1.1729182032028; Thu, 17 Oct 2024
- 09:20:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YjPFmGca"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35450C4CEC3;
+	Thu, 17 Oct 2024 16:23:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729182209;
+	bh=Jhe+8yYKduRf0fDdopfaFN3/xAHL1pUMnMf840H+3xY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YjPFmGcag2GLrPtLUuIpxiAoKW7jH2738mAKLSfuZZLFKUYECeuS/42OHMm9idhxY
+	 HSkubQyT9yx7TxIAAP7xq/ONAp5M3lZNwDGnqexoY61Zr9vG9Q9us5hmViqnjPcZ7U
+	 9QaT9iX7r1Oz4dUlolOyesofgK33t6HdqyR9q0PiKTcJCiCwSO2HcdS46ooroI+xsE
+	 B68RCN47BXCmJyYW6aST+1Rjy3I5/3rrTiPLhso6bgFleIVZsQAb1dsESsrkYnyUOw
+	 b6goRX9CNzXUQy2jN/W85iituKq3JbWkPVROfaBJMl5GW3YcnCMzZabMydyblS5BQJ
+	 Nn76A401QLoYw==
+Date: Thu, 17 Oct 2024 09:23:25 -0700
+From: Kees Cook <kees@kernel.org>
+To: Paul Moore <paul@paul-moore.com>
+Cc: Yafang Shao <laoar.shao@gmail.com>, linux-hardening@vger.kernel.org
+Subject: Re: Fwd: [linux-next:master 4380/4439]
+ include/linux/fortify-string.h:293:17: error: call to '__write_overflow'
+ declared with attribute error: detected write beyond size of object (1st
+ parameter)
+Message-ID: <202410170922.0B55ABC@keescook>
+References: <202410171420.1V00ICVG-lkp@intel.com>
+ <CAHC9VhQasYp3dkv5Mx4uEy7ZmtYWywU2wJrto_xvUAjgScXL5w@mail.gmail.com>
+ <202410170847.F6C111256F@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241017022627.3112811-1-jeffxu@chromium.org> <3a1bbbdf-1281-4f44-857d-58cba583e3da@lucifer.local>
-In-Reply-To: <3a1bbbdf-1281-4f44-857d-58cba583e3da@lucifer.local>
-From: Jeff Xu <jeffxu@chromium.org>
-Date: Thu, 17 Oct 2024 09:20:20 -0700
-Message-ID: <CABi2SkU2yX_Pbr6=6uEiQnro88O5Mhq3NLwOsy=A=Qa5xeC6Yw@mail.gmail.com>
-Subject: Re: [PATCH] munmap sealed memory cause memory to split (bug)
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: akpm@linux-foundation.org, keescook@chromium.org, 
-	torvalds@linux-foundation.org, usama.anjum@collabora.com, corbet@lwn.net, 
-	Liam.Howlett@oracle.com, jeffxu@google.com, jorgelo@chromium.org, 
-	groeck@chromium.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, jannh@google.com, 
-	sroettger@google.com, pedro.falcato@gmail.com, 
-	linux-hardening@vger.kernel.org, willy@infradead.org, 
-	gregkh@linuxfoundation.org, deraadt@openbsd.org, surenb@google.com, 
-	merimus@google.com, rdunlap@infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202410170847.F6C111256F@keescook>
 
-On Thu, Oct 17, 2024 at 1:18=E2=80=AFAM Lorenzo Stoakes
-<lorenzo.stoakes@oracle.com> wrote:
->
-> NACK. Greg's bot got to it but...
->
-> As per Greg's bot, no signed-off-by line.
->
-Sorry for confusion, I wasn't meant to send this as a PATCH, but
-reporting the issue.
-The diff was just sent as reference to repro the bug, and I forgot to
-remove PATCH from the title. I apologize for the confusion.
+On Thu, Oct 17, 2024 at 09:07:13AM -0700, Kees Cook wrote:
+> Something in the .config is causing the error. (!?) I will start a
+> CONFIG bisect...
 
--Jeff
+Well, I did a code bisect first, and it reported this which makes _no_
+sense:
+8afd8c8faa24 ("lsm: remove lsm_prop scaffolding")
 
+O_o
 
-> The subject should be something about adding a test.
->
-> You later say you are somehow dependning on things (what?) to make this w=
-ork but
-> it's broken.
->
-> Jeff - you're doing things that were raised on previous reviews as if we
-> never said them. It's starting to get annoying now. Please try to listen =
-to
-> upstream.
->
-> On Thu, Oct 17, 2024 at 02:26:27AM +0000, jeffxu@chromium.org wrote:
-> > From: Jeff Xu <jeffxu@google.com>
-> >
-> > It appears there is a regression on the latest mm,
-> > when munmap sealed memory, it can cause unexpected VMA split.
-> > E.g. repro use this test.
->
-> This is an unacceptably short commit message. You've been told about this
-> before.
->
-> > ---
-> >  tools/testing/selftests/mm/mseal_test.c | 76 +++++++++++++++++++++++++
-> >  1 file changed, 76 insertions(+)
-> >
-> > diff --git a/tools/testing/selftests/mm/mseal_test.c b/tools/testing/se=
-lftests/mm/mseal_test.c
-> > index fa74dbe4a684..0af33e13b606 100644
-> > --- a/tools/testing/selftests/mm/mseal_test.c
-> > +++ b/tools/testing/selftests/mm/mseal_test.c
-> > @@ -1969,6 +1969,79 @@ static void test_madvise_filebacked_was_writable=
-(bool seal)
-> >       REPORT_TEST_PASS();
-> >  }
-> >
-> > +static void test_munmap_free_multiple_ranges_with_split(bool seal)
-> > +{
-> > +     void *ptr;
-> > +     unsigned long page_size =3D getpagesize();
-> > +     unsigned long size =3D 12 * page_size;
-> > +     int ret;
-> > +     int prot;
-> > +
-> > +     setup_single_address(size, &ptr);
-> > +     FAIL_TEST_IF_FALSE(ptr !=3D (void *)-1);
->
-> I'm not going to accept any test where you do:
->
->         FAIL_TEST_IF_FALSE(<negation>)
->
-> As that's totally unreadable. I asked you before for justification and yo=
-u
-> didn't provide it, no other tests appear to do this, I wrote thousands of
-> lines of tests recently without doing this - stop it.
->
-> Also referene MAP_FAILED here please. You've been told before.
->
-> > +
-> > +     /* seal the middle 4 page */
-> > +     if (seal) {
-> > +             ret =3D sys_mseal(ptr + 4 * page_size, 4 * page_size);
-> > +             FAIL_TEST_IF_FALSE(!ret);
-> > +
-> > +             size =3D get_vma_size(ptr, &prot);
-> > +             FAIL_TEST_IF_FALSE(size =3D=3D 4 * page_size);
-> > +             FAIL_TEST_IF_FALSE(prot =3D=3D 4);
->
-> Again, you've been told before, stop referencing numbers instead of
-> PROT_... flags.
->
-> OK I'm stopping at this point, you _must listen to review_ Jeff.
->
-> > +
-> > +             size =3D get_vma_size(ptr +  4 * page_size, &prot);
-> > +             FAIL_TEST_IF_FALSE(size =3D=3D 4 * page_size);
-> > +             FAIL_TEST_IF_FALSE(prot =3D=3D 4);
-> > +
-> > +             size =3D get_vma_size(ptr +  8 * page_size, &prot);
-> > +             FAIL_TEST_IF_FALSE(size =3D=3D 4 * page_size);
-> > +             FAIL_TEST_IF_FALSE(prot =3D=3D 4);
-> > +     }
-> > +
-> > +     /* munmap 4  pages from the third page */
-> > +     ret =3D sys_munmap(ptr + 2 * page_size, 4 * page_size);
-> > +     if (seal) {
-> > +             FAIL_TEST_IF_FALSE(ret);
-> > +             FAIL_TEST_IF_FALSE(errno =3D=3D EPERM);
-> > +
-> > +             size =3D get_vma_size(ptr, &prot);
-> > +             FAIL_TEST_IF_FALSE(size =3D=3D 4 * page_size);
-> > +             FAIL_TEST_IF_FALSE(prot =3D=3D 4);
-> > +
-> > +             size =3D get_vma_size(ptr +  4 * page_size, &prot);
-> > +             FAIL_TEST_IF_FALSE(size =3D=3D 4 * page_size);
-> > +             FAIL_TEST_IF_FALSE(prot =3D=3D 4);
-> > +
-> > +             size =3D get_vma_size(ptr +  8 * page_size, &prot);
-> > +             FAIL_TEST_IF_FALSE(size =3D=3D 4 * page_size);
-> > +             FAIL_TEST_IF_FALSE(prot =3D=3D 4);
-> > +     } else
-> > +             FAIL_TEST_IF_FALSE(!ret);
-> > +
-> > +     /* munmap 4 pages from the sealed page */
-> > +     ret =3D sys_munmap(ptr + 6 * page_size, 4 * page_size);
-> > +     if (seal) {
-> > +             FAIL_TEST_IF_FALSE(ret);
-> > +             FAIL_TEST_IF_FALSE(errno =3D=3D EPERM);
-> > +
-> > +             size =3D get_vma_size(ptr + 4 * page_size, &prot);
-> > +             FAIL_TEST_IF_FALSE(size =3D=3D 4 * page_size);
-> > +             FAIL_TEST_IF_FALSE(prot =3D=3D 4);
-> > +
-> > +             size =3D get_vma_size(ptr +  4 * page_size, &prot);
-> > +             FAIL_TEST_IF_FALSE(size =3D=3D 4 * page_size);
-> > +             FAIL_TEST_IF_FALSE(prot =3D=3D 4);
-> > +
-> > +             size =3D get_vma_size(ptr +  8 * page_size, &prot);
-> > +             FAIL_TEST_IF_FALSE(size =3D=3D 4 * page_size);
-> > +             FAIL_TEST_IF_FALSE(prot =3D=3D 4);
-> > +     } else
-> > +             FAIL_TEST_IF_FALSE(!ret);
-> > +
-> > +     REPORT_TEST_PASS();
-> > +}
-> > +
-> > +
-> >  int main(int argc, char **argv)
-> >  {
-> >       bool test_seal =3D seal_support();
-> > @@ -2099,5 +2172,8 @@ int main(int argc, char **argv)
-> >       test_madvise_filebacked_was_writable(false);
-> >       test_madvise_filebacked_was_writable(true);
-> >
-> > +     test_munmap_free_multiple_ranges_with_split(false);
-> > +     test_munmap_free_multiple_ranges_with_split(true);
-> > +
-> >       ksft_finished();
-> >  }
-> > --
-> > 2.47.0.rc1.288.g06298d1525-goog
-> >
+-- 
+Kees Cook
