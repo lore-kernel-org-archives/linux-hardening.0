@@ -1,162 +1,206 @@
-Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89293227B8D
-	for <linux-hardening@vger.kernel.org>; Thu, 17 Oct 2024 20:57:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55CFB2A1CA
+	for <linux-hardening@vger.kernel.org>; Fri, 18 Oct 2024 01:05:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729198657; cv=none; b=Yk8NjAmpHLiUd0oG3LpB7AAv9Fmxs2jDVQ+EfgvoLAKF20E0KC2+Md8mesLe+QWRj0ErAWDckBoLabzXFo+HR8ilPb4pATIyQ1xRfCD1vPpIEvZqvirsBohHniYN+PcVFPIrdQAUk8dm312Hz64QrCEoEfn5krRB1dOGlA/zsic=
+	t=1729213538; cv=none; b=O4K0R8oaeoL82V6Btz8D6uYYor0R71eI/A0Hk2O8qhJfVK49HrCTFqFKK+D3ja5+D4hMwzrf3fCb2tR4kmr7dDN85tj6vx8PgjFkQQFMJOdCsHjiIA28F9pW374yTrhIlHyrbcjHBJpfTNgNqW7yd2BosnT4+34Nk06c4PMYCno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729198657; c=relaxed/simple;
-	bh=/F6YSLte3edSGWFheOgCWVPP3+prQu0BiAqqVtVwz34=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WR7a5HtJUjt2p9ieRtqKZIhxO915M+VG0VwdY/8oJa+cB4X9NIqyupCdrL0/yuf6R8rym4HhEKzPIR0+wAewvmXYf2eOZblEnq1O2lae4jWM1iGY4SyWW7zSW3NxLI2kYH1HF3Y4DkH7QIKvz7V93dK/9wpZaMPV7u8UlNERbCA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=U61jhv/B; arc=none smtp.client-ip=209.85.160.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1729213538; c=relaxed/simple;
+	bh=kowSXiXyruiDJjF7LO4J2w2r2fb4k0BptEpNJwqyAk4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 In-Reply-To:Content-Type:Content-Disposition; b=euy6QeOtknx3RiVPQ+ue6rd8fc3Ga9MvDSQs/dp9JzX/oftM57wjyev23fLy+uZnt3VQ/caPAF/qvyBTe7YvkiP2FO+H2TjwntvKrL5WIGtTad6xSyoCHgiebJKsNQfl+e2WtTO+g8vwt1VoNoS0UVaAcpTe5aHqiOl/FueNGu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FxxQdaEu; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="U61jhv/B"
-Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-28889dcca4dso75400fac.2
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Oct 2024 13:57:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1729198653; x=1729803453; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/F6YSLte3edSGWFheOgCWVPP3+prQu0BiAqqVtVwz34=;
-        b=U61jhv/BL2stVyitQBLV730XQP3c6I70twh+RVuNGBrNXweE0RHsrAb4hFMDs8zPK6
-         d44C/EbNr95Y0n8C28mhVhsdBEju0+kI+VuOmHOpYh2dpYd5abdhEyjkjCvj/QZb4uvu
-         3BahPcxTxsiwo8i56OTsZ8ekIoY+/wBpfErbo=
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FxxQdaEu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1729213535;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=im/8jDN85o8dpsjNllcDJZk4PVI/oCZ54YgWyke0Cv8=;
+	b=FxxQdaEu3g9SUIRhYISWxKhYg8lPvzdiMbaL5+/OwM3xL4ERVy8x7jhSOepO0wTUrm7Wir
+	Fq9s5mhFnA2JmBtjrf66m7yJz48nxBk22N3BqqrFwBiKt4LaE1PNkGufoWzsmt5I5uTmUk
+	IcPgsITrveeV1B69uqlYoTxceHpGlvI=
+Received: from mail-yb1-f199.google.com (mail-yb1-f199.google.com
+ [209.85.219.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-50-sAvUfhOqOFidy5ToX4r2Kw-1; Thu, 17 Oct 2024 21:05:34 -0400
+X-MC-Unique: sAvUfhOqOFidy5ToX4r2Kw-1
+Received: by mail-yb1-f199.google.com with SMTP id 3f1490d57ef6-e292a6bdd72so2656907276.0
+        for <linux-hardening@vger.kernel.org>; Thu, 17 Oct 2024 18:05:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729198653; x=1729803453;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/F6YSLte3edSGWFheOgCWVPP3+prQu0BiAqqVtVwz34=;
-        b=dmDdnGD1nrozJzzXaVLE1jBU85ELjkqcr5guQ1fOaEdWZhOUBA0Xm8xVW5cNkgUsx7
-         T0ZlR4Ma60flBikww1mu/qigymrkAVh0QS0kf3YowIGfgZwt7uNpfGtY+m0W6rRfz3WO
-         ORhlHHAL27Od7gvvhnNY3SA2HJvOLt8taQOg6ZJ+RxcRRIrJFIKwv/uAyFrTaEbPWTby
-         lw4+xSJy7WKGKD5J0i5d79D33kldR81Y52KiaEEc77GHECoMw8t9/cgzkvc2QM9pMeR5
-         /ciJQJY9zg7nmqmr1Q3zv7q1AXori6EZJs4Nu3F2S+Umkt+YeHQfwhggTLhyz7bTAs4q
-         y1ag==
-X-Forwarded-Encrypted: i=1; AJvYcCW/ywxcdlkG/UmGcXWOfviG7NMQHJ8rdi4Rp+hZrXP3UHeUx17G20Vj7hEvEsxHHu5Twv98Lywh4wSQlWD+zc0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxW+6+5L8mSwaPds0ILqHmu3Ed8cHHwKx+cs3DdI5JzLAvLpfm/
-	LFpnMOQqHEkH20m1qPJPEXhQi1AFhq0PRC+FhkVy0wOjZEi54hDnjFFVhpUVGY4qCzLEgZ70KFl
-	nTboKg4PIH5lnrKCOEuTbPsVs1EbsmG5pUeM0
-X-Google-Smtp-Source: AGHT+IHHUuQFxa/zQxSDrqiQJJZOsss48H0nptMvzFPNY8+qKBTv0db1Iu/UCYTZHYAYX2E0/f1IhYkLDQtjkPBNtko=
-X-Received: by 2002:a05:6871:3a12:b0:27b:56b1:9ded with SMTP id
- 586e51a60fabf-2892c2df315mr63608fac.5.1729198653583; Thu, 17 Oct 2024
- 13:57:33 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1729213533; x=1729818333;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=im/8jDN85o8dpsjNllcDJZk4PVI/oCZ54YgWyke0Cv8=;
+        b=dsNt5UpUORxV5UJnxqwC6d7q1E9EXzwj00UJhEzdKHOQTzs1ZdKojnC+M6F4cjJXnm
+         8ZoNMkfxuy0h1Qa96Fb0oZxbErfNpET8NNCdzAxpOoFU8bX9zcPJ51QaERXRL7AkHWiv
+         GxEBGFIQf9xyur1Ii2ef3Zxadhntd6I4YQTcD6Ga+AHqbiFblXbBQUAZnITf6KIZD5Ug
+         go3X0ylqSLJTjSYi8eew/GQCHPxH0JtZrbosoqx2guEXLwFDbu4IyjMwhV/Q+d0xQLFY
+         /BHRNVI8+II5Eugq+PZmzNHq1L4eHQSJwVjWSb/afJEfBFp3rZ0nEzylPDTYzH2a68Gv
+         gtww==
+X-Forwarded-Encrypted: i=1; AJvYcCX3SiuhrvrJPTHNcllO7/4qlaXYp/fV0IIPih1nXGpk5+L9mps9EljW1bZHj/b1CNKpFQK19SVxHUshH8KxCwI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6ULpsVX+mlKPmSdRv1YMqWvV0lJ0nA77056w34bfpJfWKxEY0
+	kF3qLdn9hhG4TGfD67cUPnlap7AUeUBfGPRIWMDGZ5seFGAuyIqf2RENTUKGWXbl3QhXE9ZTk/6
+	BUsJMg2fSJyWxKgVn3lVoKEnn/d4Xu9ENiMf+0lrDRnMG7Im+HDebZGdb6fjI73OwZYw9qGLsvt
+	UzmSEUXA==
+X-Received: by 2002:a05:6902:2402:b0:e29:110e:6262 with SMTP id 3f1490d57ef6-e2bb168cc75mr656423276.36.1729213533050;
+        Thu, 17 Oct 2024 18:05:33 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHDlBlNRTAwPlOe5LtFgMxaSDqQm867MYlk0mBbHAqo4GOqATrNJ9lNsl2cgC6uZOG0DEq5kA==
+X-Received: by 2002:a17:903:27c4:b0:20c:ad30:6b97 with SMTP id d9443c01a7336-20e5a90621dmr9397575ad.38.1729213521804;
+        Thu, 17 Oct 2024 18:05:21 -0700 (PDT)
+Received: from localhost ([43.228.180.230])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20e5a753378sm2444375ad.98.2024.10.17.18.05.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Oct 2024 18:05:21 -0700 (PDT)
+Date: Fri, 18 Oct 2024 09:02:41 +0800
+From: Coiby Xu <coxu@redhat.com>
+To: Baoquan He <bhe@redhat.com>
+Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>, 
+	Milan Broz <gmazyland@gmail.com>, Thomas Staudt <tstaudt@de.ibm.com>, 
+	Daniel P =?utf-8?B?LiBCZXJyYW5nw6k=?= <berrange@redhat.com>, Kairui Song <ryncsn@gmail.com>, 
+	Jan Pazdziora <jpazdziora@redhat.com>, Pingfan Liu <kernelfans@gmail.com>, 
+	Dave Young <dyoung@redhat.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
+	Dave Hansen <dave.hansen@intel.com>, Vitaly Kuznetsov <vkuznets@redhat.com>, 
+	Vivek Goyal <vgoyal@redhat.com>, Kees Cook <keescook@chromium.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_byb" <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH v4 2/7] crash_dump: make dm crypt keys persist for the
+ kdump kernel
+Message-ID: <wxsunpjqmro2ouupfvhkoc744jvfdx3g3fmg5zec6ouuibsnt5@ncdx66ndiaz2>
+References: <20240523050451.788754-1-coxu@redhat.com>
+ <20240523050451.788754-3-coxu@redhat.com>
+ <ZmAgNIXXa32Bv/Of@MiWiFi-R3L-srv>
+ <5gj3rxxf7tgolj72mxwnbjirxrlx3pezvqcegyiuenwr55njoo@6dg2toxu6vah>
+ <ZmZUfWKovZLkXpJn@MiWiFi-R3L-srv>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241017005105.3047458-1-jeffxu@chromium.org> <20241017005105.3047458-2-jeffxu@chromium.org>
- <5svaztlptf4gs4sp6zyzycwjm2fnpd2xw3oirsls67sq7gq7wv@pwcktbixrzdo>
- <CABi2SkXwOkoFcUUx=aALWVqurKhns+JKZqm2EyRTbHtROK8SKg@mail.gmail.com> <r5ljdglhtbapgqddtr6gxz5lszvq2yek2rd6bnllxk5i6difzv@imuu3pxh5fcc>
-In-Reply-To: <r5ljdglhtbapgqddtr6gxz5lszvq2yek2rd6bnllxk5i6difzv@imuu3pxh5fcc>
-From: Jeff Xu <jeffxu@chromium.org>
-Date: Thu, 17 Oct 2024 13:57:21 -0700
-Message-ID: <CABi2SkXArA+yfodoOxDbTTOpWCbU5Ce1p1HadSo0=CL23K4-dQ@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] mseal: Two fixes for madvise(MADV_DONTNEED) when sealed
-To: Pedro Falcato <pedro.falcato@gmail.com>
-Cc: akpm@linux-foundation.org, keescook@chromium.org, 
-	torvalds@linux-foundation.org, usama.anjum@collabora.com, corbet@lwn.net, 
-	Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, jeffxu@google.com, 
-	jorgelo@chromium.org, groeck@chromium.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, jannh@google.com, 
-	sroettger@google.com, linux-hardening@vger.kernel.org, willy@infradead.org, 
-	gregkh@linuxfoundation.org, deraadt@openbsd.org, surenb@google.com, 
-	merimus@google.com, rdunlap@infradead.org, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <ZmZUfWKovZLkXpJn@MiWiFi-R3L-srv>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
 
-On Thu, Oct 17, 2024 at 1:49=E2=80=AFPM Pedro Falcato <pedro.falcato@gmail.=
-com> wrote:
+On Mon, Jun 10, 2024 at 09:18:53AM +0800, Baoquan He wrote:
+>On 06/07/24 at 08:27pm, Coiby Xu wrote:
+>> On Wed, Jun 05, 2024 at 04:22:12PM +0800, Baoquan He wrote:
+>> > On 05/23/24 at 01:04pm, Coiby Xu wrote:
+>> > .....
+>> > > diff --git a/kernel/crash_dump_dm_crypt.c b/kernel/crash_dump_dm_crypt.c
+>> > > new file mode 100644
+>> > > index 000000000000..78809189084a
+>> > > --- /dev/null
+>> > > +++ b/kernel/crash_dump_dm_crypt.c
+>> > > @@ -0,0 +1,113 @@
+>> > > +// SPDX-License-Identifier: GPL-2.0-only
+>> [...]
+>> > > +
+>> > > +static unsigned int key_count;
+>> > > +static size_t keys_header_size;
+>> >
+>> > These two global variables seems not so necessary. Please see comment at
+>> > below.
+>>
+>> Thanks for the comment! But I think it's better to keep these two static
+>> variables for reasons as will be explained later.
+>>
+>> >
+>> > > +
+>> > > +struct dm_crypt_key {
+>> > > +	unsigned int key_size;
+>> > > +	char key_desc[KEY_DESC_LEN];
+>> > > +	u8 data[KEY_SIZE_MAX];
+>> > > +};
+>> > > +
+>> > > +static struct keys_header {
+>> > > +	unsigned int key_count;
+>> >                     ~~~~~~~~
+>> >                     This is the max number a system have from init();
+>> > You can add one field member to record how many key slots have been
+>> > used.
+>> > > +	struct dm_crypt_key keys[] __counted_by(key_count);
+>> > > +} *keys_header;
+>> >
+>> > Maybe we can rearrange the keys_header like below, the name may not be
+>> > very appropriate though.
+>> >
+>> > static struct keys_header {
+>> > 	unsigned int max_key_slots;
+>> > 	unsigned int used_key_slots;
+>> > 	struct dm_crypt_key keys[] __counted_by(key_count);
+>> > } *keys_header;
+>>
+>> Thanks for the suggestion! Since 1) KEY_NUM_MAX already defines the
+>> maximum number of dm crypt keys 2) we only need to let the kdump kernel
+>> now how many keys are saved, so I simply use total_keys instead of
+>> key_count in struct keys_header in v5,
+>>
+>> static struct keys_header {
+>> 	unsigned int total_keys;
+>> 	struct dm_crypt_key keys[] __counted_by(total_keys);
+>> } *keys_header;
+>>
+>> Hopefully this renaming will improve code readability.
 >
-> On Thu, Oct 17, 2024 at 01:34:53PM -0700, Jeff Xu wrote:
-> > Hi Pedro
-> >
-> > On Thu, Oct 17, 2024 at 12:37=E2=80=AFPM Pedro Falcato <pedro.falcato@g=
-mail.com> wrote:
-> > >
-> > > > For PROT_NONE mappings, the previous blocking of
-> > > > madvise(MADV_DONTNEED) is unnecessary. As PROT_NONE already prohibi=
-ts
-> > > > memory access, madvise(MADV_DONTNEED) should be allowed to proceed =
-in
-> > > > order to free the page.
-> > >
-> > > I don't get it. Is there an actual use case for this?
-> > >
-> > Sealing should not over-blocking API that it can allow to pass without
-> > security concern, this is a case in that principle.
->
-> Well, making the interface simple is also important. OpenBSD's mimmutable=
-()
-> doesn't do any of this and it Just Works(tm)...
->
-> >
-> > There is a user case for this as well: to seal NX stack on android,
-> > Android uses PROT_NONE/madvise to set up a guide page to prevent stack
-> > run over boundary. So we need to let madvise to pass.
->
-> And you need to MADV_DONTNEED this guard page?
->
-Yes.
+>If you add key_count into keys_header, then kdump kernel will know how
+>many keys are really saved and need be retrieved. What's your concern
+>when you have to put key_count outside and take it as a global variable?
 
-> >
-> > > > For file-backed, private, read-only memory mappings, we previously =
-did
-> > > > not block the madvise(MADV_DONTNEED). This was based on
-> > > > the assumption that the memory's content, being file-backed, could =
-be
-> > > > retrieved from the file if accessed again. However, this assumption
-> > > > failed to consider scenarios where a mapping is initially created a=
-s
-> > > > read-write, modified, and subsequently changed to read-only. The ne=
-wly
-> > > > introduced VM_WASWRITE flag addresses this oversight.
-> > >
-> > > We *do not* need this. It's sufficient to just block discard operatio=
-ns on read-only
-> > > private mappings.
-> > I think you meant blocking madvise(MADV_DONTNEED) on all read-only
-> > private file-backed mappings.
-> >
-> > I considered that option, but there is a use case for madvise on those
-> > mappings that never get modified.
-> >
-> > Apps can use that to free up RAM. e.g. Considering read-only .text
-> > section, which never gets modified, madvise( MADV_DONTNEED) can free
-> > up RAM when memory is in-stress, memory will be reclaimed from a
-> > backed-file on next read access. Therefore we can't just block all
-> > read-only private file-backed mapping, only those that really need to,
-> > such as mapping changed from rw=3D>r (what you described)
->
-> Does anyone actually do this? If so, why? WHYYYY?
->
-This is a legit use case, I can't argue that it isn't.
+Yes, the kdump kernel can know how many keys by reading keys_header. But
+1st kernel needs to know how many keys are recorded so far as user space
+is expected to tell the kernel which keys are needed one by one and the
+key_count will be increased witch each new key.
 
-> The kernel's page reclaim logic should be perfectly cromulent. Please don=
-'t do this.
-> MADV_DONTNEED will also not free any pages if those are shared (rather th=
-ey'll just be unmapped).
 >
-> If we really need to do this, I'd maybe suggest walking through page tabl=
-es, looking for
-> anon ptes or swap ptes (maybe inside the actual zap code?). But I would r=
-eally prefer if we
-> didn't need to do this.
+>>
+>> >
+>> > >
+>> >
+>> > > +
+>> > > +static size_t get_keys_header_size(struct keys_header *keys_header,
+>> > > +				   size_t key_count)
+>> > > +{
+>> > > +	return struct_size(keys_header, keys, key_count);
+>> > > +}
+>> >
+>> > I personally don't think get_keys_header_size is so necessary. If we
+>> > have to keep it, may be we can remove the global variable
+>> > keys_header_size, we can call get_keys_header_size() and use local
+>> > variable to record the value instead.
+>>
+>> Thanks for the suggestion! But the kdump kernel also need to call
+>> get_keys_header_size in later patches.
 >
-I also considered this route, but it is too complicated. The
-copy-on-write pages can be put into a swap file, also there is a huge
-page to consider, etc, The complication makes it really difficult to
-code it right, also scanning those pages on per VMA level will require
-lock and also impact performance.
+>If so, you can remove keys_header_size now. You can define local
+>variable to take the newly calculated value. keys_header_size seems not
+>so necesary.
 
+Sure, new version will have the global variable keys_header_size
+removed which can make the code a bit easier to reason about, thanks!
 
-> --
-> Pedro
+>
+>By the way, you don't need to rush to post v5. When people review
+>patches, agreement need be reached after discussion. Then next version
+>can be posted.
+
+Thanks for the suggestion! I'll wait for the consensus to be truly
+reached next time.
+
+And sorry, it takes longer time than I have expected to evaluate all the
+feedback. In retrospective, maybe it's better to respond to each
+feedback in a parallel manner than pondering over all the feedback
+first.
+
+-- 
+Best regards,
+Coiby
+
