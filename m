@@ -1,142 +1,386 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 286C67BAEC;
-	Fri, 18 Oct 2024 15:03:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 873A52038BE
+	for <linux-hardening@vger.kernel.org>; Fri, 18 Oct 2024 18:01:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729263837; cv=none; b=mFjxJc/MjcBx1SCh09RJLACPmKoTZy+WBX8hbShK5VpME0yOTUYYtK6OEHUW9npMcTfFpMp+zONnWU49jkpTb0KD1DswXHmuWSurstPOsk3XCL+P3WSo9Xlo5SBwMEBHDf1SEWNr71e90uMRCV5swCdKdR9sebqfVOldAD5+I6Q=
+	t=1729274520; cv=none; b=ej42Q7WeIfb4ynW6LcWrMHuCJS+AOM7p225zp2AN8/jiWk6eyLYF2X8YM/nv9L3okrhEvG0RXfi4uOHp49HXNPFOrbot7UvIycdMDFhXW7zrBpM+kRNw/Hw2TKGR5rmRTJdZMb6KRcrkJ7FEVoobhJUpsCcFWEZz8HduSTYST5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729263837; c=relaxed/simple;
-	bh=2bfs2UEwo6ToOh8FqCQeqUWi9lfpjMNVBp5cRaIPVyM=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=qOHg6NFxP9+OqpHXFgoEyImxuhHbj5Ye81pQi3wk9wtzNpg/BWtL7XmsG7HA1Vcvp9xFzG2Y5HXRl34Hsjjbs0JWRfVgzlXlSKM8yBxk3CdkoBjDwek1MK7q/RT+nRV7xSPaJ5/RE0oc59iJUkxsCU4D5tdI/wHhphv8ZcTwgHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ez7yx+zR; arc=none smtp.client-ip=209.85.160.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1729274520; c=relaxed/simple;
+	bh=8rcchnUfthLl38vpr9Vp7U+3St9EqoU1pWs8x/Ug5SQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VmHxmCT+n7JIH7NZHfQtvxSZe4l70ULHb+iDU1LTj/oyv6QPlgrj+jJ/qoXdsq8aT7gAnxfMPBob3z+hfyNovAUSYilnfN4NLMJoD7icH8xn4APqS+rMV7AT9RIV2OnmetC/ho2k/Z3Ek+msxwo0rxSTEMHveXruUKQNaHvmFu4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=j2D9p7Sl; arc=none smtp.client-ip=209.85.160.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ez7yx+zR"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-4603aced3a5so16855491cf.1;
-        Fri, 18 Oct 2024 08:03:54 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="j2D9p7Sl"
+Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-288824e9cc4so302354fac.1
+        for <linux-hardening@vger.kernel.org>; Fri, 18 Oct 2024 11:01:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729263834; x=1729868634; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=2bfs2UEwo6ToOh8FqCQeqUWi9lfpjMNVBp5cRaIPVyM=;
-        b=ez7yx+zR0cD5xTGSdsBViwj41n6ij5LFvlr809gs3Pqj5jiaQONjZ0TvKI14NOv2rD
-         fbtDc7PYJcNmtgIdFXl5MO8Xnj/mL++/TjLIolhw4e1/C2r+I5y7b3juoFrOVY+esD8U
-         L0/xTM76u8/BQxoHahMieWnTYcsh7gElxoDV9K1NnT/cmvXsIUeA4IRmN0/Gh++D6Nan
-         yqWaDwdAYDwv+2jPtFMKb6uJgFl+fw/9I5qYhlXoXJan20DZrE9HU51IRxbwPq/uT0aM
-         kGGG+MQzd3kpgomxbEUG0+HzyVf+h2+dCSks34G2k8/+4ajUM+BIeJd8xgcEy2NjMCS3
-         6Rgw==
+        d=chromium.org; s=google; t=1729274514; x=1729879314; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9OKp72oFdRRG8t+D/9JG91r+3KRfEXqiJBYSKDyOMOA=;
+        b=j2D9p7SlxpG0hbJm6mWvncKT+FihaATtJrSuCL1ixga68Rrhe0SCto80r/CMKCp8WT
+         sRdTIlz1baqqY5urpqWQ84KWyswMR6/C4SdZeAcLx/1+IVDA8FJ+wj00I7fMSyRx8f/t
+         nKiDfZ19O1BMOFy5unW//n5EruUj6+f/aLpAk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729263834; x=1729868634;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2bfs2UEwo6ToOh8FqCQeqUWi9lfpjMNVBp5cRaIPVyM=;
-        b=DgztNlIFSGvleZu1xB7H3zbHm1rTfc/h0QfwPn1WZiF50qRUh+acI1T5k3hrdnE3lS
-         NBCrRIm1t4cKqkFHX9ZpjgrGqSZCJGY1w5Sz0zvMcfuXj2wcvSuqSEI3D/KPgxq/9sNF
-         ByIhKxvfl9khDm+ZWp1+ZOqvOlhDAMXWq1XFlgnUwPVXAhpR9rcAXIQeEsGQXQTU0Apv
-         Fcxp0QCwdrgG9JUZSTH3t23Hk8Bc/KZYAwdlWaGNA5LTds+i2UtOO178qUerDA/TR+jH
-         xxnx3qhBVLCJ2LRkUlIy0pFK71BktMdbqsRUccMTMGKp0HqMIjvzn9GyG0UmbtvDITaY
-         cZeg==
-X-Forwarded-Encrypted: i=1; AJvYcCVHKZgzzZ/bAvoZCa/nenuBBBR9x7xvs1llYlqiCv7jtFbKeprhkgjE1m8f4t+9opxJc+o8WeaFIcEBBOd33y4o@vger.kernel.org, AJvYcCVLvOfMK+8FhI2E4iQ17WaQQEKe9KgaoIOcPE9acHCkwlL2LcEiNdVooYXyGrxTb3DyIEprBJR0H6CEJ2iz@vger.kernel.org, AJvYcCVlZ7oRwOQgSFgZDM986eLXjBQPVvVAuWK15pnav+RQLKeAB4FxiX0jPn/bIoq2+abMft/MBoezeUnOAQ==@vger.kernel.org, AJvYcCWCLZJJ2L3WHhpAK9wKyn7d1LiZE6Yz/eA7XvWz0O/MSSmlsMaUIUeuTrrsGgEKpRalfNOaosxdU9KR@vger.kernel.org, AJvYcCXVFpBHAtHErX2nf5opVVo1T0Imku4li7Y1Ril94azImZeS7TO4C8V5KR8gQjsCLP6bhqepnHMmIxYx/qfR@vger.kernel.org, AJvYcCXa+yIxV6JqKMN9qXSvJmkhPC0Z7W/O5Xty+eTUUNlxlLl2hjKlXXzJGOuOOxz5mL5gOn9NpQyvAfPvRiE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzggh6hO9be8tUQP1pVY5lRQhOffZKIM8RbgOS1dU63A9t261Gq
-	UkWoQS/PsFT9ECs4AqKAF65OHQpghR/VYZDx/c5QZBG775CryzQ2
-X-Google-Smtp-Source: AGHT+IFtSxqYQ+Uh1KxSL4gmbFP2b5u4RAOEyxYYnsypWhrbsVj/jXKkNnFmi1COXRELCZUTv+Zc5A==
-X-Received: by 2002:a05:622a:2309:b0:460:8be6:9b00 with SMTP id d75a77b69052e-460aede585bmr37176911cf.50.1729263833772;
-        Fri, 18 Oct 2024 08:03:53 -0700 (PDT)
-Received: from [127.0.0.1] (syn-076-188-177-122.res.spectrum.com. [76.188.177.122])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-460b818e356sm2189391cf.69.2024.10.18.08.03.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 18 Oct 2024 08:03:53 -0700 (PDT)
-Date: Fri, 18 Oct 2024 11:03:50 -0400
-From: Adrian Vovk <adrianvovk@gmail.com>
-To: Christoph Hellwig <hch@infradead.org>
-CC: Eric Biggers <ebiggers@kernel.org>, Md Sadre Alam <quic_mdalam@quicinc.com>,
- axboe@kernel.dk, song@kernel.org, yukuai3@huawei.com, agk@redhat.com,
- snitzer@kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
- adrian.hunter@intel.com, quic_asutoshd@quicinc.com, ritesh.list@gmail.com,
- ulf.hansson@linaro.org, andersson@kernel.org, konradybcio@kernel.org,
- kees@kernel.org, gustavoars@kernel.org, linux-block@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
- dm-devel@lists.linux.dev, linux-mmc@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-hardening@vger.kernel.org,
- quic_srichara@quicinc.com, quic_varada@quicinc.com
-Subject: Re: [PATCH v2 1/3] dm-inlinecrypt: Add inline encryption support
-User-Agent: Thunderbird for Android
-In-Reply-To: <ZxH4lnkQNhTP5fe6@infradead.org>
-References: <20240916085741.1636554-1-quic_mdalam@quicinc.com> <20240916085741.1636554-2-quic_mdalam@quicinc.com> <20240921185519.GA2187@quark.localdomain> <ZvJt9ceeL18XKrTc@infradead.org> <ef3c9a17-79f3-4937-965e-52e2b9e66ac2@gmail.com> <ZxHwgsm2iP2Z_3at@infradead.org> <CAAdYy_mVy3uXPqWbjPzK_i8w7Okq73wKBQyc95TbnonE36rPgQ@mail.gmail.com> <ZxH4lnkQNhTP5fe6@infradead.org>
-Message-ID: <D96294E2-F17A-4E58-90FB-1D17747048E5@gmail.com>
+        d=1e100.net; s=20230601; t=1729274514; x=1729879314;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9OKp72oFdRRG8t+D/9JG91r+3KRfEXqiJBYSKDyOMOA=;
+        b=jUCEOoecXhMhgUO94vNfOcKUcJ54JAutk4W7ECtOsw9yfZXfhx1yW25isH8zs6VDPE
+         RUJIm9s9g4mBb5DzmTXQ7+esdQe31NR8zpu64lCEhHSAzhIknn/L9QMbZl4am/ugbCW4
+         96fwUtvJRlSnRJX/F5C1rAT+/gORbpwJ9BTQXFbZ7p6zTNeoVvwAn9bA9vue7lBuTELu
+         dk51SFoLJTIVdImjh0/JK0OciTZoofEa+nvDKNUg3KAs7k36lyetrYzj1se0tvgBVGYX
+         qYYo6ALgshUCbtUcZeshklm9yQHJbsYyA90npy4PpabqJn9dJ4yWsmqLU4HeOpkOy5I0
+         uNWw==
+X-Forwarded-Encrypted: i=1; AJvYcCU7GXKFpnVCLmLDxabS/lEfEsYXNZKck2IAB5m7KFOcKKE32mJtFaEaX9ExnbQRcTbGh1fIxf0OPGKL8L1aKVI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwlXcynXpkGG4J2czS1Pb2gWoCBOOXThwCKO5F7DbDRLIkSUugT
+	Rod981t/mhxnwEgKHd5arO+upJ1VsIxDAxFp1/hHsF2DMSaDSLUjqYxrJgCD7+58aOrG5JTRLJP
+	uQI26i+CIaMKoKLXUeExsY8GpbthwhvRSfP3L
+X-Google-Smtp-Source: AGHT+IGKPvjDV4dZmtSKWkrmR0IHyPkLSBZLU0gQOTWtc6F9ygGetic1QXOrzVfdzggME43tb3cFYb+uxSD7ggykO7U=
+X-Received: by 2002:a05:6870:f115:b0:27c:df37:9e0c with SMTP id
+ 586e51a60fabf-2892c3426e3mr779683fac.8.1729274514353; Fri, 18 Oct 2024
+ 11:01:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
+References: <e7ea2b84-8d10-40fe-a14f-837bca851ea9@lucifer.local>
+ <fd927106-2fc3-4b96-8014-2c517229bc99@lucifer.local> <CABi2SkUpCf+aOa2sPED8CosG5ccqjFd7ouot8gXi9ECqsHiZhw@mail.gmail.com>
+ <4944ce41-9fe1-4e22-8967-f6bd7eafae3f@lucifer.local> <CABi2SkUgDZtJtRJe+J9UNdtZn=EQzZcbMB685P=1rR7DUhg=6Q@mail.gmail.com>
+ <CABi2SkVEMRHV3swrbb6M5RA6GQpFVVx855CGwdQ1xiz3tygiqA@mail.gmail.com>
+ <f9b9422c-216d-422e-94b4-d8814b0b277e@lucifer.local> <CABi2SkWAv4LXvR1Wb1e31eyZ35JfyieXhDOq1bp_ZvHPLLg-qA@mail.gmail.com>
+ <e0f440b0-5a45-4218-8c51-27f848c0617b@lucifer.local> <CABi2SkWNRTCC0LzDSuzgjC1tO=KF==5FXUnPHOrPzEG5abAeDg@mail.gmail.com>
+ <c56aac50-83b5-45f2-8ddb-6980c22c059b@lucifer.local>
+In-Reply-To: <c56aac50-83b5-45f2-8ddb-6980c22c059b@lucifer.local>
+From: Jeff Xu <jeffxu@chromium.org>
+Date: Fri, 18 Oct 2024 11:01:40 -0700
+Message-ID: <CABi2SkUiazcOnGZxVyb21jCa1gzOaQ1NPzjGJVX5a3kw1BBE0Q@mail.gmail.com>
+Subject: Re: [PATCH v3 4/5] selftests/mseal: add more tests for mmap
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>, akpm@linux-foundation.org, 
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	pedro.falcato@gmail.com, willy@infradead.org, broonie@kernel.org, 
+	vbabka@suse.cz, Liam.Howlett@oracle.com, rientjes@google.com, 
+	keescook@chromium.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
+HHi Lorenzo
 
-
-On October 18, 2024 1:56:38 AM EDT, Christoph Hellwig <hch@infradead=2Eorg=
-> wrote:
->On Fri, Oct 18, 2024 at 01:44:19AM -0400, Adrian Vovk wrote:
->> > So just run a target on each partition=2E
->>=20
->>=20
->> That has different semantics=2E If I encrypt each virtual partition the=
-re's
->> nothing encrypting the metadata around the virtual partitions=2E Of cou=
-rse,
->> this is a rather contrived example but point stands, the semantics are
->> different=2E
+On Thu, Oct 17, 2024 at 11:38=E2=80=AFPM Lorenzo Stoakes
+<lorenzo.stoakes@oracle.com> wrote:
 >
->Then you set up an dm-crype device mapper table for the partition table a=
+> On Thu, Oct 17, 2024 at 12:49:40PM -0700, Jeff Xu wrote:
+> > On Thu, Oct 17, 2024 at 12:00=E2=80=AFPM Lorenzo Stoakes
+> > <lorenzo.stoakes@oracle.com> wrote:
+> > >
+> > > On Thu, Oct 17, 2024 at 11:47:15AM -0700, Jeff Xu wrote:
+> > > > On Thu, Oct 17, 2024 at 11:29=E2=80=AFAM Lorenzo Stoakes
+> > > > <lorenzo.stoakes@oracle.com> wrote:
+> > > > >
+> > > > > On Thu, Oct 17, 2024 at 11:14:20AM -0700, Jeff Xu wrote:
+> > > > > > Hi Lorenzo and Muhammad
+> > > > > >
+> > > > > > Reviving this thread since the merging window is closed and we =
+have
+> > > > > > more time to review /work on this code in the next few weeks.
+> > > > > >
+> > > > > > On Fri, Sep 13, 2024 at 3:50=E2=80=AFPM Jeff Xu <jeffxu@chromiu=
+m.org> wrote:
+> > > > > > >
+> > > > > > > Hi Lorenzo
+> > > > > > >
+> > > > > > > On Sat, Sep 7, 2024 at 12:28=E2=80=AFPM Lorenzo Stoakes
+> > > > > > > <lorenzo.stoakes@oracle.com> wrote:
+> > > > > > > >
+> > > > > > > >
+> > > > > > > > I also suggest we figure out this FAIL_TEST_IF_FALSE() thin=
+g at this point
+> > > > > > > > too - I may be missing something, but I cannot for the life=
+ me understand
+> > > > > > > > why we have to assert negations only, and other self tests =
+do not do this.
+> > > > > > > >
+> > > > > > > My most test-infra related comments comes from Muhammad Usama=
+ Anjum
+> > > > > > > (added into this email), e.g. assert is not recommended.[1] ,
+> > > > > > >
+> > > > > > > [1] https://lore.kernel.org/all/148fc789-3c03-4490-a653-6a4e5=
+8f336b6@collabora.com/
+> > > > > > >
+> > > > > > Specifically regarding Lorenzo's comments about FAIL_TEST_IF_FA=
+LSE
+> > > > > >
+> > > > > > Muhammad Usama Anjum doesn't want assert being used in selftest=
+ (see
+> > > > > > [1] above), and I quote:
+> > > > > > "We don't want to terminate the test if one test fails because =
+of assert. We
+> > > > > > want the sub-tests to get executed in-dependent of other tests.
+> > > > > >
+> > > > > > ksft_test_result(condition, fmt, ...);
+> > > > > > ksft_test_result_pass(fmt, ...);"
+> > > > > >
+> > > > > > FAIL_TEST_IF_FALSE is a wrapper for ksft_test_result macro, and
+> > > > > > replacement of assert.
+> > > > > >
+> > > > > > Please let me know if you have questions on this and Muhammad m=
+ight
+> > > > > > also help to clarify the requirement if needed.
+> > > > > >
+> > > > > > Thanks
+> > > > > > -Jeff
+> > > > >
+> > > > > Right this is about not failing the test i.e. equivalent of an ex=
+pect
+> > > > > rather than an assert, which makes sense.
+> > > > >
+> > > > > What I'm saying is we should have something more like
+> > > > >
+> > > > > EXPECT_TRUE()
+> > > > > EXPECT_FALSE()
+> > > > >
+> > > > > etc.
+> > > > >
+> > > > > Which would avoid these confusing
+> > > > >
+> > > > >         FAIL_TEST_IF_FALSE(!expr)
+> > > >
+> > > > FAIL_TEST_IF_FALSE(expr) is the right way to use this macro.
+> > >
+> > > But you don't only test position conditions, you also test negative o=
+nes.
+> > >
+> > So it is not a problem with the MACRO, but where is it used ?
+> >
+> >         ret =3D sys_mseal(ptr, size);
+> >         FAIL_TEST_IF_FALSE(!ret);
+> >
+> > Take this example, it would be
+> > assert(!ret)
+> >
+> > The syscall return usually returns 0 to indicate success, where a
+> > negative comes from, but dev should be so used to (!ret), it is a
+> > common pattern to check syscall return code. e.g assert(!ret)
+> >
+> > Or do you have specific examples of code that caused confusion ?
+> >
+> >
+> > > 'Fail test if false false thing' is really confusing and hard to read=
+.
+> > >
+> > > I struggle to understand your tests as a result.
+> > >
+> > > I understand 'fail test if false' is expressive in a way, but it's re=
+ally hard
+> > > to parse.
+> > >
+> > If you just read it  as assert(), would that be easier ? (or you don't
+> > like assert() ?)
+> >
+> > > Obviously it's also misleading in that you're saying 'fail the test _=
+later_
+> > > if false', which I hadn't even realised...
+> > >
+> > > It's well established in basically all normal test suites that:
+> > >
+> > > * assert =3D fail test _here_ if this fails (actually a valid thing t=
+o do if
+> > >            you assert something that means the test simply cannot
+> > >            reasonably continue if that condition is false).
+> > > * expect =3D the test will now fail, but carry on.
+> > >
+> > > I mean you work for a company that does this :) [0] this is a very we=
+ll
+> > > established precedent.
+> > >
+> > > [0]:https://github.com/google/googletest
+> > >
+> > Let's use expect as an example, let's say I create a new Macro:
+> > TEST_EXPECT_TRUE, which basically is same syntax as
+> > FAIL_TEST_IF_FALSE, I'm not sure how it is different: you still have
+> > !ret in the code.
+> >
+> >  ret =3D sys_mseal(ptr, size);
+> >  TEST_EXPECT_TRUE(!ret);
+> >
+> > Or is the FAIL_xxx_IF_FALSE pattern more un-readable than  EXPECT_TURE
+> > ? maybe ..
+> >
+> > > >
+> > > > It is same syntax as assert(expr), e.g:
+> > > >
+> > > > man assert(expr)
+> > > >        assert - abort the program if assertion is false
+> > > >
+> > > > FAIL_TEST_IF_FALSE is a replacement for assert,  instead of abortin=
+g
+> > > > the program, it just reports failure in this test.
+> > >
+> > > So doesn't at all do what assert does, because that _does_ terminate
+> > > execution on failure...
+> > >
+> > I don't know what you mean, the test case will fail, but the next test
+> > case will run. This the point, the mseal_test continues to run all
+> > test cases to finish, even if one of the test cases is failed.
+> >
+> > > We are writing unit tests in a test framework, let's use very well
+> > > established industry practices please.
+> > >
+> > > Also note that you don't even need to reinvent the wheel, there is a
+> > > fully-featured test harness available in
+> > > tools/testing/selftests/kselftest_harness.h with both ASSERT_xxx() an=
+d
+> > > EXPECT_xxx() helpers.
+> > >
+> > The EXPECT_xxx() doesn't take care of reporting though,  or maybe it
+> > needs to be combined with FIXTURE_SETUP, FIXTURE_TEARDOWN. I haven't
+> > spent much time on those, but on brief look, it seems it is for
+> > repeating some tests, which doesn't exactly fit into what I needed,
+> > e.g. the sealed memory won't be unmapped.
+> > It is possible that those tests can be adopted to use test fixtures,
+> > but I don't see significant gain for that.
+> >
+> > > I've used it extensively myself and it works well.
+> > >
+> > > I'd basically suggest you use that. Though moving existing tests to t=
+hat
+> > > would be some churn.
+> > >
+> > > On the other hand I really can't accept patches which are totally
+> > > unreadable to me, so you'll need to fix this one way or another, and =
+the
+> > > churn is worth it as a one-time cost to be honest.
+> > >
+> > > >
+> > > > Is this still confusing ?
+> > > > (The FAIL_TEST_IF_FALSE is already a descriptive name, and the synt=
+ax
+> > > > of assert is well known.)
+> > >
+> > > It's a super misleading name as it says nothing about _WHEN_ the test
+> > > fails. Also the syntax of assert() may be well known but you don't ca=
+ll
+> > > this function assert, you don't reference assert anywhere, and you do=
+n't do what
+> > > assert() does so, you know, That's not a great example.
+> > >
+> > > The semantics of unit test frameworks are very well known, and alread=
+y
+> > > implemented for you, and also do not require you to do unreadable dou=
+ble
+> > > negations for no reason, so let's use those please.
+> > >
+> > As stated previously, I'm not sure whether the test fixture is
+> > benefiting mseal_test at this moment.  But I'm open for future
+> > conversion when I have time for this. For now, I like to get those
+> > tests in so we can properly detect  possible regression for memory
+> > sealing.
+> >
+> > What will help you better review this code? Would the below help ?
+> >
+> > s/FAIL_TEST_IF_FALSE/TEST_EXPECT_TRUE/g
+>
+> Jeff, you're falling into your usual pattern of being unreasonably
+> argumentative for apparently no reason and I really don't have time to
+> constantly respond inline when you're just ignoring what I tell you.
+>
+> You do this on nearly all code review and this just isn't working. If you
+> want to effectively be involved in mseal you need to LISTEN.
+>
+> The more you do this the less patient everybody gets with you and the les=
 s
->well=2E
-
-Sure, but then this way you're encrypting each partition twice=2E Once by =
-the dm-crypt inside of the partition, and again by the dm-crypt that's unde=
-r the partition table=2E This double encryption is ruinous for performance,=
- so it's just not a feasible solution and thus people don't do this=2E Woul=
-d be nice if we had the flexibility though=2E
-
-Plus, I'm not sure that such a double encryption approach is even feasible=
- with blk-crypto=2E Is the blk-crypto engine capable of receiving two keys =
-and encrypting twice with them?
-
+> likely your series will ever get merged. This is not good for mseal or
+> anybody involved.
 >
->> > This is the prime example of why allowing higher layers to skip
->> > encryption is a no-go=2E
->> >
->>=20
->> In what way does that break the file system's security model? Could you
->> elaborate on what's objectionable about the behavior here?
+> On this issue - either use sensible macros that YOU ARE DEFINING, not
+> assert.h, but YOU, that allow you to evaluate whether a condition is true
+> or false - or I will not accept your unreadable test code.
 >
->Because you are now bypassing encryption for certainl LBA ranges in
->the file system based on hints/flags for something sitting way above
->in the stack=2E
->
+> It's that simple and I'm done discussing this.
 
-Well the data is still encrypted=2E It's just encrypted with a different k=
-ey=2E If the attacker has a FDE dump of the disk, the data is still just as=
- inaccessible to them=2E
+Thanks for your time on discussing this.
 
-In fact, allowing for this will let us tighten up security instead of punc=
-hing holes=2E It would let us put encrypted home directories on top of full=
--disk encryption=2E So if an attacker has a disk image and the FDE key, the=
-y still wouldn't be able to decrypt the user's home directory because they'=
-d need more keys=2E We also want to put fscrypt on top of the encrypted hom=
-e directories to encrypt each app data directory, so if you have a banking =
-app the attacker wouldn't be able to get that app's data even if they manag=
-e to get your home directory key=2E Right now, doing something like this re=
-quires stacking encryption and is thus unfeasible and we can't do it, so we=
-'re stuck with one layer of full disk encryption and no isolation between u=
-sers and apps=2E
+Please, if I may say, when presenting your argument, keep it technical
+and avoid personal attack. Using personal attacks rather than using
+logic to refute your argument is =E2=80=9CAd Hominem Fallacy=E2=80=9D [1]  =
+and will
+make it harder to get your point across.
 
-Thanks,
-Adrian
+[1] https://www.txst.edu/philosophy/resources/fallacy-definitions/ad-homine=
+m.html#:~:text=3D(Attacking%20the%20person)%3A%20This,who%20is%20making%20t=
+he%20argument.
+
+Additionally, The mseal_test was reviewed-by Muhammad Usama Anjum
+during original RFC discussion. IIUC, Muhammad Usama Anjum has domain
+knowledge for selftest infra, and I have relied on Muhammad=E2=80=99s comme=
+nts
+and implemented all those comments.
+
+I'm not saying there is no room for improvement, but it should happen
+in more respectful and constructive ways. In any case, I hope we have
+common interest  and passion to  get more test coverage to avoid
+future regression.  Given that we had 2 regressions in the past during
+code reviews and a pending regression to fix at this moment in memory
+sealing area,  the benefit of additional test coverage is obvious.
+
+Specific on FAIL_TEST_IF_FALS macro, during the course of this
+discussion, your comments have started with, and I quote:
+
+=E2=80=9C Why do we not have a FAIL_TEST_IF_TRUE()? This is crazy.
+  Would be nice to have something human-readable like ASSERT_EQ() or
+ASSERT_TRUE() or ASSERT_FALSE().=E2=80=9D
+
+=E2=80=9CThis is beyond horrible. You really have to add more asserts.=E2=
+=80=9D
+
+TO my response:
+
+=E2=80=9CASSERT_EQ and ASSERT_TURE are not recommended by the self-test. Th=
+e
+FAIL_TEST_IF_FAIL wrap will take care of some of the admin tasks
+related to self-test infra, such as counting how many tests are
+failing.=E2=80=9D
+
+And your question:
+=E2=80=9Cwhy we have to assert negations only, and other self tests do not =
+do this.=E2=80=9D
+
+And my response:
+"My most test-infra related comments comes from Muhammad Usama Anjum"
+(added into this email), e.g. assert is not recommended.[1] ,
+[1] https://lore.kernel.org/all/148fc789-3c03-4490-a653-6a4e58f336b6@collab=
+ora.com/"
+
+And my additional  try to clarify about your question about negations:
+=E2=80=9CSo it is not a problem with the MACRO, but where is it used ?
+        ret =3D sys_mseal(ptr, size);
+        FAIL_TEST_IF_FALSE(!ret);
+Take this example, it would be
+assert(!ret)
+The syscall return usually returns 0 to indicate success, where a
+negative comes from, but dev should be so used to (!ret), it is a
+common pattern to check syscall return code. e.g assert(!ret)"
+
+And I offer an alternative approach for macro naming:
+"ret =3D sys_mseal(ptr, size);
+TEST_EXPECT_TRUE(!ret);"
+
+Which you didn=E2=80=99t respond to directly.
+
+Given the situation, I think it might be best to let domain experts
+from the testinfra team, such as Muhammad to suggestion a better
+replacement for this macro.
+
+Best regards,
+-Jeff
