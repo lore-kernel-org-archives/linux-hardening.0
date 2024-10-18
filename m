@@ -1,164 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65E4120E312;
-	Fri, 18 Oct 2024 18:37:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01A5B2038C2
+	for <linux-hardening@vger.kernel.org>; Fri, 18 Oct 2024 18:55:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729276648; cv=none; b=cRZDcFTPjdQ5xws8AYL3i8ZVlMn4gG/bsJVp1UuJoLo+iffylxc/pDmHxEq6UtEObmhiY8LhPEMWNsyZCRcd66PKUM67XYuie378kCuZJ2aHypiZpdWRZ/iSB8yfLR3R3x6cjxLv1fbgZgjdQZtwQEdiMcP9SMnkhCMq22A1Bo4=
+	t=1729277729; cv=none; b=EdfF0m8fr4JBYYFkdza5bACUsIq2+DUgG2oDoZDx7buHmFbL50wVf79790iUwtZaMcZSkBjjuhHRUfV8pxtvUcYWF1Di9lO3HsOAlLNSwo+qoQqNk500DsJvcP4j6Q7hJRFv5FQ7v979Ypo7C700zFPObDeq7Nbcn5GNL96o4G0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729276648; c=relaxed/simple;
-	bh=dSqi9IfAa5l3jYcAxFqh5y6voNSnsY/4yK4Ky+osyzY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eSMwehQuuKtg/pCUcD1S8FKio7mUomM4mVJmocj5ifnQ9D4ftk+iydByaM6QSY+b8vv8kycGpwI5dzQmMAosvhSYe9/pHX1OnwaNrVWe2smNQTl4TAn/Im10CSJIgkOyr3EWry0y5DSTXeX92CHNzvMAx5qkhGVat29lfTzlaTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KmF0Fi3m; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1729277729; c=relaxed/simple;
+	bh=FyxG8L0kTeJMBvFZ2TqpR7bCfzlRoydYJ1KvWJsuPAU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tD7w+yXTFxaixLhHNOznSqUKyg3gRF03ZanfWZIDATZ0YCshb4IhLBDpzj0ybJTksNHS+veKsVACEJZp94P/Vwn6dWOumlYQAOI06RNswzBjP7oSooWgdcLin6iFhxRqk+bhR7dpS7oiFDJoYTMTaXgJy4lcA7EBv2P/C9bGtb0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=sZGQoEts; arc=none smtp.client-ip=44.202.169.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KmF0Fi3m"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42D6FC4CEC3;
-	Fri, 18 Oct 2024 18:37:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729276648;
-	bh=dSqi9IfAa5l3jYcAxFqh5y6voNSnsY/4yK4Ky+osyzY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KmF0Fi3mLpV6GjbQaCRA6EA3/hmTHOuYNb0OlV7FM0aKT1stkxnb+6quUky7+IjhV
-	 L6o+NKUWoPLD0kfZrKO5Nb0eGG8/hecQqI500alUD6JS5TbiEX+cUIVFI690ETpBfr
-	 aSuR3sl03MMg5zFMW1AVohkqFFSrBrTDvdxUq+P5TWeIaX4iXhjZI0rWojBZSlTWN0
-	 D3tPgPmiXLxe7D8jCX6zsKKNtZg4G4AB6S+35NwFNVl4CNDHes91AISvxq1JAoQibD
-	 QBJl6sB+AlhRRTSEt3HTSH9Ldg2wQPdCNiEi91k5J1rNQEX29k3ixX7+dbWr9Ty8Du
-	 ijJKjWIrDr72A==
-Date: Fri, 18 Oct 2024 19:37:22 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Jeff Xu <jeffxu@chromium.org>
-Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	akpm@linux-foundation.org, linux-kselftest@vger.kernel.org,
-	linux-mm@kvack.org, linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org, pedro.falcato@gmail.com,
-	willy@infradead.org, vbabka@suse.cz, Liam.Howlett@oracle.com,
-	rientjes@google.com, keescook@chromium.org
-Subject: Re: [PATCH v3 4/5] selftests/mseal: add more tests for mmap
-Message-ID: <a2652ed4-ea8b-4b56-bac6-6479b3df6c14@sirena.org.uk>
-References: <CABi2SkUpCf+aOa2sPED8CosG5ccqjFd7ouot8gXi9ECqsHiZhw@mail.gmail.com>
- <4944ce41-9fe1-4e22-8967-f6bd7eafae3f@lucifer.local>
- <CABi2SkUgDZtJtRJe+J9UNdtZn=EQzZcbMB685P=1rR7DUhg=6Q@mail.gmail.com>
- <CABi2SkVEMRHV3swrbb6M5RA6GQpFVVx855CGwdQ1xiz3tygiqA@mail.gmail.com>
- <f9b9422c-216d-422e-94b4-d8814b0b277e@lucifer.local>
- <CABi2SkWAv4LXvR1Wb1e31eyZ35JfyieXhDOq1bp_ZvHPLLg-qA@mail.gmail.com>
- <e0f440b0-5a45-4218-8c51-27f848c0617b@lucifer.local>
- <CABi2SkWNRTCC0LzDSuzgjC1tO=KF==5FXUnPHOrPzEG5abAeDg@mail.gmail.com>
- <1f8eff74-005b-4fa9-9446-47f4cdbf3e8d@sirena.org.uk>
- <CABi2SkV38U-ZCAq9W091zYkOM1m5e-C27YmVXdTCi-t+p_W_fQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="sZGQoEts"
+Received: from eig-obgw-5005a.ext.cloudfilter.net ([10.0.29.234])
+	by cmsmtp with ESMTPS
+	id 1pKktUti9iA191s88twjjn; Fri, 18 Oct 2024 18:55:20 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id 1s87tIfswjcdm1s87tiRNG; Fri, 18 Oct 2024 18:55:19 +0000
+X-Authority-Analysis: v=2.4 cv=DrWd+3/+ c=1 sm=1 tr=0 ts=6712af17
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=OKg9RQrQ6+Y1xAlsUndU0w==:17
+ a=IkcTkHD0fZMA:10 a=DAUX931o1VcA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
+ a=1cCw6Q031rO_cLs8eM8A:9 a=QEXdDO2ut3YA:10 a=Xt_RvD8W3m28Mn_h3AK8:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=KrrHr3IraN34Z7RX5pMYVY2PbGjQrd0P+774MqXGDuM=; b=sZGQoEtsG0vy1dYKYMPwugisEF
+	6RFiB5MLfeCqdEgdeLf6elPw+zhdYUUFYR7g2xW7vi6MIQvzvngqrEHhEKC1yHicB+fqEKOsh2HYK
+	zdyy/Cv6DxRnSNE7mdCF0KJKfkDRalzdRGW3AGAx91xeMnX36z59pq+9b9jDaUKiaxowEoSEW+6HB
+	RGqUzVywxRLkD/4HbdA7eStG/bze7zndB8rWKS902vb1aGeoLxIC7DXv6RAdwal1S2OP286Qf5+Eq
+	cLg5LZQQKACAOHMTnjyx6fOMbl52j32doIYDiQeXbXHEaRDhbLFL2TPS8frIVVE1hrWKuLBHk1m9h
+	41rQWJ3g==;
+Received: from [201.172.173.7] (port=46946 helo=[192.168.15.5])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1t1s84-001YNE-32;
+	Fri, 18 Oct 2024 13:55:16 -0500
+Message-ID: <7bef8129-55b4-40e4-80c2-d319b8d6c251@embeddedor.com>
+Date: Fri, 18 Oct 2024 12:55:10 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="P9lxhlovMTxuF4jF"
-Content-Disposition: inline
-In-Reply-To: <CABi2SkV38U-ZCAq9W091zYkOM1m5e-C27YmVXdTCi-t+p_W_fQ@mail.gmail.com>
-X-Cookie: What is the sound of one hand clapping?
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/5][next] uapi: net: arp: Avoid
+ -Wflex-array-member-not-at-end warnings
+To: Kees Cook <kees@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+ Johannes Berg <johannes@sipsolutions.net>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, David Ahern <dsahern@kernel.org>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <cover.1729037131.git.gustavoars@kernel.org>
+ <f04e61e1c69991559f5589080462320bf772499d.1729037131.git.gustavoars@kernel.org>
+ <ac2ea738-09fb-4d03-b91c-d54bcfb893c6@lunn.ch>
+ <202410160942.000495E@keescook>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <202410160942.000495E@keescook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.172.173.7
+X-Source-L: No
+X-Exim-ID: 1t1s84-001YNE-32
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.15.5]) [201.172.173.7]:46946
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfE8RwkkabMeXM51aSKYzFQQelLBI1mCpqsx21Iq77yciJHBucx9gEuJBB2lv7EW350L9gzBrBQbv7XzWuw4j/35Z6GZ9veoCy5M0aQhbcQMH/8EGFBl6
+ TCwWIHR2zBhz9HnU8pP0FQHdLsIq7Lrg87V/02LoPXYvbf6wKxaf9U6Z3HzXZH8gsGROvVX1WVhwwSedx7u79iDAwdU80J6sDZXC6OZ7v9Bg2Mv/PRbrRLkL
 
 
---P9lxhlovMTxuF4jF
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+>> These are clearly UAPI files. It would be good to state in the commit
+>> message why this is a safe change, at the source level.
 
-On Fri, Oct 18, 2024 at 11:06:20AM -0700, Jeff Xu wrote:
-> On Fri, Oct 18, 2024 at 6:04=E2=80=AFAM Mark Brown <broonie@kernel.org> w=
-rote:
+Yes, I'll update it!
 
-> > The problem is that the macro name is confusing and not terribly
-> > consistent with how the rest of the selftests work.  The standard
-> > kselftest result reporting is
+> 
+> I think we can avoid complicating UAPI by doing something like this in
+> include/uapi/linux/socket.h:
+> 
+> #ifdef __KERNEL__
+> #define __kernel_sockaddr_legacy        sockaddr_legacy
+> #else
+> #define __kernel_sockaddr_legacy        sockaddr
+> #endif
+> 
+> And then the UAPI changes can use __kernel_sockaddr_legacy and userspace
+> will resolve to sockaddr (unchanged), and the kernel internals will
+> resolve to sockaddr_legacy (fixing the warnings).
 
-> >         ksft_test_result(bool result, char *name_format, ...);
-> >
-> > so the result of the test is a boolean flag which is passed in.  This
-> > macro on the other hand sounds like a double negative so you have to
-> > stop and think what the logic is, and it's not seen anywhere else so
-> > nobody is going to be familiar with it.  The main thing this is doing is
-> > burying a return statement in there, that's a bit surprising too.
+Here are a couple of test patches (Don't mind the changelog text):
 
-> Thanks for explaining the problem, naming is hard. Do you have a
-> suggestion on a better naming?
+https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git/commit/?h=testing/wfamnae-next20241015-2&id=c3b631a5036cbf45b3308d563bf74a518490f3e6
+https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git/commit/?h=testing/wfamnae-next20241015-2&id=66db096a530b95ce0ac33f9fdec66401ec5f2204
 
-Honestly I'd probably deal with this by refactoring such that the macro
-isn't needed and the tests follow a pattern more like:
+__kernel_sockaddr_legacy seems a bit too long, but at the same time
+it makes it quite clear what's going on.
 
-	if (ret !=3D 0) {
-		ksft_print_msg("$ACTION failed with %d\n", ret);
-		return false;
-	}
-
-when they encouter a failure, the pattern I sketched in my earlier
-message, or switch to kselftest_harness.h (like I say I don't know if
-the fork()ing is an issue for these tests).  If I had to have a macro
-it'd probably be something like mseal_assert().
-
-> > I'll also note that these macros are resulting in broken kselftest
-> > output, the name for a test has to be stable for automated systems to be
-> > able to associate test results between runs but these print
-
-=2E...
-
-> > which includes the line number of the test in the name which is an
-> > obvious problem, automated systems won't be able to tell that any two
-> > failures are related to each other never mind the passing test.  We
-> > should report why things failed but it's better to do that with a
-> > ksft_print_msg(), ideally one that's directly readable rather than
-> > requiring someone to go into the source code and look it up.
-
-> I don't know what  the issue you described is ? Are you saying that we
-> are missing line numbers ? it is not. here is the sample of output:
-
-No, I'm saying that having the line numbers is a problem.
-
-> Failure in the second test case from last:
-
-> ok 105 test_munmap_free_multiple_ranges
-> not ok 106 test_munmap_free_multiple_ranges_with_split: line:2573
-> ok 107 test_munmap_free_multiple_ranges_with_split
-
-Test 106 here is called "test_munmap_free_multiple_ranges_with_split:
-line:2573" which automated systems aren't going to be able to associate
-with the passing "test_munmap_free_multiple_ranges_with_split", nor with
-any failures that occur on any other lines in the function.
-
-> I would image the needs of something similar to FAIL_TEST_IF_FALSE is
-> common in selftest writing:
-
-> 1> lightweight enough so dev can pick up quickly and adapt to existing
-> tests, instead of rewriting everything from scratch.
-> 2> assert like syntax
-> 3> fail the current test case, but continue running the next test case
-> 4> take care of reporting test failures.
-
-Honestly this just sounds and looks like kselftest_harness.h, it's
-ASSERT_ and EXPECT_ macros sound exactly like what you're looking for
-for asserts.  The main gotchas with it are that it's not particularly
-elegant for test cases which need to enumerate system features (which I
-don't think is the case for mseal()?) and that it runs each test case in
-a fork()ed child which can be inconvenient for some tests.  The use of
-fork() is because that make the overall test program much more robust
-against breakage in individual tests and allows things like per test
-timeouts.
-
---P9lxhlovMTxuF4jF
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmcSquEACgkQJNaLcl1U
-h9Co7Qf+IFX02DfWKnGFQmrXx/BU2tcsHpr6ALzD+Pf5eVjuzGXP2trUWphjlykz
-xQ1iS/lr0f+4xBGnAVbjryUNyIyPqPJ1an4APNVoEBIb0H4PY6i5vQglTj4qxvVL
-8RUQx3bMWMrfok1duAFTMm/Kpl94uPCH5TYTdvdM2iwrQnOqCsKDnSUItG+n9jVh
-GnArZl82biCNbQfGUdB01rMmMohltm7xfOiu2ZGzT3H+yPf3WXsP0epX12oLOP6j
-13gOBbpJmARrQRdV14gUNl9WoRjblWTYGsjdVEL/m1eV+NC6Zq8QeSfs8MAiEU2v
-dvqGHf0ov9NhgPPLYl3TcjEhGRl7xw==
-=O77y
------END PGP SIGNATURE-----
-
---P9lxhlovMTxuF4jF--
+Thanks
+--
+Gustavo
