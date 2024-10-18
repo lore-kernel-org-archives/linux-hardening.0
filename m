@@ -1,157 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5CF84084C;
-	Fri, 18 Oct 2024 13:04:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 286C67BAEC;
+	Fri, 18 Oct 2024 15:03:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729256650; cv=none; b=TOqZwmoo0ZT33H0x7zseG/8n7tsazVzOLYeGlBn00jmC5XV6BTDU9det1/mrQwrl0GpTOcUNWxi/dwx3EEexXNGS0uXnlVkmyiBmmNRmXw93ogI27m5YFu1j3VmpM7F8hJihySsOK1u1sIOSCeCzP8PT/bIRENvPC8s9KazxN0U=
+	t=1729263837; cv=none; b=mFjxJc/MjcBx1SCh09RJLACPmKoTZy+WBX8hbShK5VpME0yOTUYYtK6OEHUW9npMcTfFpMp+zONnWU49jkpTb0KD1DswXHmuWSurstPOsk3XCL+P3WSo9Xlo5SBwMEBHDf1SEWNr71e90uMRCV5swCdKdR9sebqfVOldAD5+I6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729256650; c=relaxed/simple;
-	bh=g2CJxGpTFCOsw8YxyBZm5iz4MWqWWqjHA92Ubpkewfk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CWLq15S4Dp1QRcLmw+kkl0MRldkOig1z42dqdcUxdeUxr4z3Fymqr+zDnxs04ILVArdtVxiGqeHZMPSKrds9PMUSL2pdDQQqrpgZhLNcE6gbNi1nVJBn4bamXVU1ke+HKbUiSW7MFizMslaUeP3qf13hW8+ovL1K3IeTYRpv9no=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sy70iDxd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1729263837; c=relaxed/simple;
+	bh=2bfs2UEwo6ToOh8FqCQeqUWi9lfpjMNVBp5cRaIPVyM=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=qOHg6NFxP9+OqpHXFgoEyImxuhHbj5Ye81pQi3wk9wtzNpg/BWtL7XmsG7HA1Vcvp9xFzG2Y5HXRl34Hsjjbs0JWRfVgzlXlSKM8yBxk3CdkoBjDwek1MK7q/RT+nRV7xSPaJ5/RE0oc59iJUkxsCU4D5tdI/wHhphv8ZcTwgHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ez7yx+zR; arc=none smtp.client-ip=209.85.160.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sy70iDxd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B843C4CEC3;
-	Fri, 18 Oct 2024 13:04:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729256650;
-	bh=g2CJxGpTFCOsw8YxyBZm5iz4MWqWWqjHA92Ubpkewfk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sy70iDxdvegIxSpbXgc5l5sDisr1CZ4sC7k1lbpyMO3ps7QBlrYogssUkxA3itTq3
-	 AQEoQL9PclRAphMwOGvXczd3YP5474UnFMyGtofrV7wewmUhWgb36+D/mxX0TSNS9T
-	 f/lVPozmAReEZcHeTg1Kr5WVXMFXZYL56yvSNJocnM2MQT14uIf4KFaoaWuUmH2N9u
-	 j6TTPE83B54c0FIDFMWZnWB6v9ey8dIJiiRCeaLi84cRr3FGSDOSn6r3l8GdREAatz
-	 wjnSiM+Q3gG6VspsFgyIlOd22BZENkjey1+D1sWRaKBTI22bIf8/K8mo1mVq3sihH0
-	 aeBFQqweIx1hw==
-Date: Fri, 18 Oct 2024 14:04:04 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Jeff Xu <jeffxu@chromium.org>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Muhammad Usama Anjum <usama.anjum@collabora.com>,
-	akpm@linux-foundation.org, linux-kselftest@vger.kernel.org,
-	linux-mm@kvack.org, linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org, pedro.falcato@gmail.com,
-	willy@infradead.org, vbabka@suse.cz, Liam.Howlett@oracle.com,
-	rientjes@google.com, keescook@chromium.org
-Subject: Re: [PATCH v3 4/5] selftests/mseal: add more tests for mmap
-Message-ID: <1f8eff74-005b-4fa9-9446-47f4cdbf3e8d@sirena.org.uk>
-References: <e7ea2b84-8d10-40fe-a14f-837bca851ea9@lucifer.local>
- <fd927106-2fc3-4b96-8014-2c517229bc99@lucifer.local>
- <CABi2SkUpCf+aOa2sPED8CosG5ccqjFd7ouot8gXi9ECqsHiZhw@mail.gmail.com>
- <4944ce41-9fe1-4e22-8967-f6bd7eafae3f@lucifer.local>
- <CABi2SkUgDZtJtRJe+J9UNdtZn=EQzZcbMB685P=1rR7DUhg=6Q@mail.gmail.com>
- <CABi2SkVEMRHV3swrbb6M5RA6GQpFVVx855CGwdQ1xiz3tygiqA@mail.gmail.com>
- <f9b9422c-216d-422e-94b4-d8814b0b277e@lucifer.local>
- <CABi2SkWAv4LXvR1Wb1e31eyZ35JfyieXhDOq1bp_ZvHPLLg-qA@mail.gmail.com>
- <e0f440b0-5a45-4218-8c51-27f848c0617b@lucifer.local>
- <CABi2SkWNRTCC0LzDSuzgjC1tO=KF==5FXUnPHOrPzEG5abAeDg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ez7yx+zR"
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-4603aced3a5so16855491cf.1;
+        Fri, 18 Oct 2024 08:03:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1729263834; x=1729868634; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=2bfs2UEwo6ToOh8FqCQeqUWi9lfpjMNVBp5cRaIPVyM=;
+        b=ez7yx+zR0cD5xTGSdsBViwj41n6ij5LFvlr809gs3Pqj5jiaQONjZ0TvKI14NOv2rD
+         fbtDc7PYJcNmtgIdFXl5MO8Xnj/mL++/TjLIolhw4e1/C2r+I5y7b3juoFrOVY+esD8U
+         L0/xTM76u8/BQxoHahMieWnTYcsh7gElxoDV9K1NnT/cmvXsIUeA4IRmN0/Gh++D6Nan
+         yqWaDwdAYDwv+2jPtFMKb6uJgFl+fw/9I5qYhlXoXJan20DZrE9HU51IRxbwPq/uT0aM
+         kGGG+MQzd3kpgomxbEUG0+HzyVf+h2+dCSks34G2k8/+4ajUM+BIeJd8xgcEy2NjMCS3
+         6Rgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729263834; x=1729868634;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2bfs2UEwo6ToOh8FqCQeqUWi9lfpjMNVBp5cRaIPVyM=;
+        b=DgztNlIFSGvleZu1xB7H3zbHm1rTfc/h0QfwPn1WZiF50qRUh+acI1T5k3hrdnE3lS
+         NBCrRIm1t4cKqkFHX9ZpjgrGqSZCJGY1w5Sz0zvMcfuXj2wcvSuqSEI3D/KPgxq/9sNF
+         ByIhKxvfl9khDm+ZWp1+ZOqvOlhDAMXWq1XFlgnUwPVXAhpR9rcAXIQeEsGQXQTU0Apv
+         Fcxp0QCwdrgG9JUZSTH3t23Hk8Bc/KZYAwdlWaGNA5LTds+i2UtOO178qUerDA/TR+jH
+         xxnx3qhBVLCJ2LRkUlIy0pFK71BktMdbqsRUccMTMGKp0HqMIjvzn9GyG0UmbtvDITaY
+         cZeg==
+X-Forwarded-Encrypted: i=1; AJvYcCVHKZgzzZ/bAvoZCa/nenuBBBR9x7xvs1llYlqiCv7jtFbKeprhkgjE1m8f4t+9opxJc+o8WeaFIcEBBOd33y4o@vger.kernel.org, AJvYcCVLvOfMK+8FhI2E4iQ17WaQQEKe9KgaoIOcPE9acHCkwlL2LcEiNdVooYXyGrxTb3DyIEprBJR0H6CEJ2iz@vger.kernel.org, AJvYcCVlZ7oRwOQgSFgZDM986eLXjBQPVvVAuWK15pnav+RQLKeAB4FxiX0jPn/bIoq2+abMft/MBoezeUnOAQ==@vger.kernel.org, AJvYcCWCLZJJ2L3WHhpAK9wKyn7d1LiZE6Yz/eA7XvWz0O/MSSmlsMaUIUeuTrrsGgEKpRalfNOaosxdU9KR@vger.kernel.org, AJvYcCXVFpBHAtHErX2nf5opVVo1T0Imku4li7Y1Ril94azImZeS7TO4C8V5KR8gQjsCLP6bhqepnHMmIxYx/qfR@vger.kernel.org, AJvYcCXa+yIxV6JqKMN9qXSvJmkhPC0Z7W/O5Xty+eTUUNlxlLl2hjKlXXzJGOuOOxz5mL5gOn9NpQyvAfPvRiE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzggh6hO9be8tUQP1pVY5lRQhOffZKIM8RbgOS1dU63A9t261Gq
+	UkWoQS/PsFT9ECs4AqKAF65OHQpghR/VYZDx/c5QZBG775CryzQ2
+X-Google-Smtp-Source: AGHT+IFtSxqYQ+Uh1KxSL4gmbFP2b5u4RAOEyxYYnsypWhrbsVj/jXKkNnFmi1COXRELCZUTv+Zc5A==
+X-Received: by 2002:a05:622a:2309:b0:460:8be6:9b00 with SMTP id d75a77b69052e-460aede585bmr37176911cf.50.1729263833772;
+        Fri, 18 Oct 2024 08:03:53 -0700 (PDT)
+Received: from [127.0.0.1] (syn-076-188-177-122.res.spectrum.com. [76.188.177.122])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-460b818e356sm2189391cf.69.2024.10.18.08.03.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 18 Oct 2024 08:03:53 -0700 (PDT)
+Date: Fri, 18 Oct 2024 11:03:50 -0400
+From: Adrian Vovk <adrianvovk@gmail.com>
+To: Christoph Hellwig <hch@infradead.org>
+CC: Eric Biggers <ebiggers@kernel.org>, Md Sadre Alam <quic_mdalam@quicinc.com>,
+ axboe@kernel.dk, song@kernel.org, yukuai3@huawei.com, agk@redhat.com,
+ snitzer@kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
+ adrian.hunter@intel.com, quic_asutoshd@quicinc.com, ritesh.list@gmail.com,
+ ulf.hansson@linaro.org, andersson@kernel.org, konradybcio@kernel.org,
+ kees@kernel.org, gustavoars@kernel.org, linux-block@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
+ dm-devel@lists.linux.dev, linux-mmc@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-hardening@vger.kernel.org,
+ quic_srichara@quicinc.com, quic_varada@quicinc.com
+Subject: Re: [PATCH v2 1/3] dm-inlinecrypt: Add inline encryption support
+User-Agent: Thunderbird for Android
+In-Reply-To: <ZxH4lnkQNhTP5fe6@infradead.org>
+References: <20240916085741.1636554-1-quic_mdalam@quicinc.com> <20240916085741.1636554-2-quic_mdalam@quicinc.com> <20240921185519.GA2187@quark.localdomain> <ZvJt9ceeL18XKrTc@infradead.org> <ef3c9a17-79f3-4937-965e-52e2b9e66ac2@gmail.com> <ZxHwgsm2iP2Z_3at@infradead.org> <CAAdYy_mVy3uXPqWbjPzK_i8w7Okq73wKBQyc95TbnonE36rPgQ@mail.gmail.com> <ZxH4lnkQNhTP5fe6@infradead.org>
+Message-ID: <D96294E2-F17A-4E58-90FB-1D17747048E5@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="YLYxAeMluy/4woDv"
-Content-Disposition: inline
-In-Reply-To: <CABi2SkWNRTCC0LzDSuzgjC1tO=KF==5FXUnPHOrPzEG5abAeDg@mail.gmail.com>
-X-Cookie: What is the sound of one hand clapping?
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
 
---YLYxAeMluy/4woDv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Thu, Oct 17, 2024 at 12:49:40PM -0700, Jeff Xu wrote:
+On October 18, 2024 1:56:38 AM EDT, Christoph Hellwig <hch@infradead=2Eorg=
+> wrote:
+>On Fri, Oct 18, 2024 at 01:44:19AM -0400, Adrian Vovk wrote:
+>> > So just run a target on each partition=2E
+>>=20
+>>=20
+>> That has different semantics=2E If I encrypt each virtual partition the=
+re's
+>> nothing encrypting the metadata around the virtual partitions=2E Of cou=
+rse,
+>> this is a rather contrived example but point stands, the semantics are
+>> different=2E
+>
+>Then you set up an dm-crype device mapper table for the partition table a=
+s
+>well=2E
 
-> So it is not a problem with the MACRO, but where is it used ?
+Sure, but then this way you're encrypting each partition twice=2E Once by =
+the dm-crypt inside of the partition, and again by the dm-crypt that's unde=
+r the partition table=2E This double encryption is ruinous for performance,=
+ so it's just not a feasible solution and thus people don't do this=2E Woul=
+d be nice if we had the flexibility though=2E
 
->         ret = sys_mseal(ptr, size);
->         FAIL_TEST_IF_FALSE(!ret);
+Plus, I'm not sure that such a double encryption approach is even feasible=
+ with blk-crypto=2E Is the blk-crypto engine capable of receiving two keys =
+and encrypting twice with them?
 
-> Take this example, it would be
-> assert(!ret)
+>
+>> > This is the prime example of why allowing higher layers to skip
+>> > encryption is a no-go=2E
+>> >
+>>=20
+>> In what way does that break the file system's security model? Could you
+>> elaborate on what's objectionable about the behavior here?
+>
+>Because you are now bypassing encryption for certainl LBA ranges in
+>the file system based on hints/flags for something sitting way above
+>in the stack=2E
+>
 
-The problem is that the macro name is confusing and not terribly
-consistent with how the rest of the selftests work.  The standard
-kselftest result reporting is
+Well the data is still encrypted=2E It's just encrypted with a different k=
+ey=2E If the attacker has a FDE dump of the disk, the data is still just as=
+ inaccessible to them=2E
 
-	ksft_test_result(bool result, char *name_format, ...);
+In fact, allowing for this will let us tighten up security instead of punc=
+hing holes=2E It would let us put encrypted home directories on top of full=
+-disk encryption=2E So if an attacker has a disk image and the FDE key, the=
+y still wouldn't be able to decrypt the user's home directory because they'=
+d need more keys=2E We also want to put fscrypt on top of the encrypted hom=
+e directories to encrypt each app data directory, so if you have a banking =
+app the attacker wouldn't be able to get that app's data even if they manag=
+e to get your home directory key=2E Right now, doing something like this re=
+quires stacking encryption and is thus unfeasible and we can't do it, so we=
+'re stuck with one layer of full disk encryption and no isolation between u=
+sers and apps=2E
 
-so the result of the test is a boolean flag which is passed in.  This
-macro on the other hand sounds like a double negative so you have to
-stop and think what the logic is, and it's not seen anywhere else so
-nobody is going to be familiar with it.  The main thing this is doing is
-burying a return statement in there, that's a bit surprising too.
-
-I'll also note that these macros are resulting in broken kselftest
-output, the name for a test has to be stable for automated systems to be
-able to associate test results between runs but these print
-
-                        ksft_test_result_fail("%s: line:%d\n",          \
-                                                __func__, __LINE__);    \
-                        return;                                         \
-
-which includes the line number of the test in the name which is an
-obvious problem, automated systems won't be able to tell that any two
-failures are related to each other never mind the passing test.  We
-should report why things failed but it's better to do that with a
-ksft_print_msg(), ideally one that's directly readable rather than
-requiring someone to go into the source code and look it up.
-
-A more standard way to write what you've got here would be to have the
-tests return a bool then have a runner loop which iterates over the
-tests:
-
-	struct {
-		char *name;
-		bool (*func)(void);
-	} tests[];
-
-	...
-
-	for (i = 0; i < ARRAY_SIZE(tests); i++)
-		ksft_test_result(tests[i].test(), tests[i].name);
-
-then the tests can just have explicit return statements and don't need
-to worry about logging anything other than diagnostics.
-
-Depending on how much you need to share between tests you might also be
-able to use kselftest_harness.h which fork()s each test into a separate
-child and allows you to just fault to fail if that's easier.
-
-> > We are writing unit tests in a test framework, let's use very well
-> > established industry practices please.
-
-Plus also the fact that we have a framework here...
-
-> > Also note that you don't even need to reinvent the wheel, there is a
-> > fully-featured test harness available in
-> > tools/testing/selftests/kselftest_harness.h with both ASSERT_xxx() and
-> > EXPECT_xxx() helpers.
-
-> The EXPECT_xxx() doesn't take care of reporting though,  or maybe it
-
-I rather think people would've noticed if the test harness was so broken
-that it was unable to report failures.  If it is that broken we should
-fix it rather than open coding something else.
-
---YLYxAeMluy/4woDv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmcSXMMACgkQJNaLcl1U
-h9AmKAf/Tu4kW1hhmlXQ1Agr7BitWMDgVw9arn8ymLeyxIk/tu+VEoRY7AhaMvzd
-3J00TJc8rCiabRtgebGDooegImXGlwOPo+OozAKDSoqY+XL5NQxnakmMrk0vSUfQ
-jJzLnl2Bxo/43T6/xPQKzUdxMz8NY4uHDF3X0FPWWnvF4F/5XMZ44uDRMmFrL+aI
-FsP7ZEB4W1A7wn5bpj83e58whRSO5G2Y/3Z5kl5oh49cTIXBM4nNIVtOcOWt5976
-FWtpGPSQEHqtBj840j7dVwFCRAJ9aobcbBWt4lOhOVftuOf1fE0QeLgGaE9/tOHB
-gYLIyF/x8ZauAuQattbuUL3nOp6iqw==
-=r5Sq
------END PGP SIGNATURE-----
-
---YLYxAeMluy/4woDv--
+Thanks,
+Adrian
