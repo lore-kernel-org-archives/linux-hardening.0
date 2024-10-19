@@ -1,63 +1,68 @@
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7F97137E;
-	Sat, 19 Oct 2024 02:13:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7EBC1CF29D;
+	Sat, 19 Oct 2024 02:56:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729304039; cv=none; b=i8m876aBz+84d1mwHxF15H1oCZ0TUhijLWhxBJlhvtbql7dnNEzKnJAySl3LwkJY4laZEMbzvjGjBS0ZuCBQbrlja3naAtofJdTJ8NdezWL5EUvyH+cZdjWQ8Gl8YQiO9m7BW0V1EN6YAOkTcmCJxQmrZtlVDnmVbM913sx2zlE=
+	t=1729306562; cv=none; b=aaILDJCnumuy+vmD2V7/WEGGxJiYoXRFEO41EdCwzmgj1qkHh5TTUBjkDfA/fZ+1NT3D9sCzsb9fQPZw+AlAwL+5BfjRXQpNbpB+99idQhlP8NrMuVSpY3Hq6eA1lMdl86rPBS747Yr0nPcD/mmRreMEyF7Be1+DLq+0vYyKM1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729304039; c=relaxed/simple;
-	bh=hex4J5I3lxjPeyOhVGg+WdoyiHo81glgLww98b4OQmk=;
+	s=arc-20240116; t=1729306562; c=relaxed/simple;
+	bh=5/Q6mMEQKt/YqZpUFUqGN3VO5GRE3MysNt+6xXWT0ys=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=HWAPm1rfhVfteGQwCgW76UFR/UftzQCXjISuqOvdb+v3g0XuU/6VD+C56fQIeFv5x2HDx4ZJxRrDgVRpUu69piLfaStYjVM5IMWXi54wOfiE2wGdhowfDJEgP2oJFClTSigN7qr6V6rhElBfDYSh0tEzilfuXtXP2bOvEdIJmiw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mqOWwoio; arc=none smtp.client-ip=209.85.215.179
+	 Content-Disposition; b=KyZ2m9grBEp1NakdT+1oNJy4+AaZuvmNlcE8hr7qGWGWzKpInmbQh6uS2tUVu+/nDBwC1EbwT8/MQeLHeOVvy6lIczHiyBEZaGj27g4/Ygh2oKZGY53GyTfV3HOQueYWn9OrZieIAB8ggiEnNP88t/1W3dl/ZTIo1Q2jHYlLGqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ah6eMTly; arc=none smtp.client-ip=209.85.216.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mqOWwoio"
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-7ea80863f12so1341700a12.1;
-        Fri, 18 Oct 2024 19:13:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ah6eMTly"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2e2e23f2931so2259419a91.0;
+        Fri, 18 Oct 2024 19:56:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729304037; x=1729908837; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1729306560; x=1729911360; darn=vger.kernel.org;
         h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=m3OBhiG6hpLJQg9Qq6gvNx63LfPAP30OwnCahO0IdDw=;
-        b=mqOWwoiok6/Rw6mBaUIhW/sKOc8WyaXUwFVi1aWjCtb5dAc5XuyR+ImGQyVwzSnmgh
-         +TI3ANoX+W/mexGbNx1Ke2Hh4swiPktEXLMw6DJWxanWZJZoslqopp2nyghe4AyKvXXH
-         jg2b/zrAEYoaUEd3JI0Vl1xamgP9eMUy4GkrKau3c3vWYrdcCi7a1rN0NJXlPEYAlEat
-         xfGZePd+mUXKYFY8N/xjDWrJzn6I9u4ob8eol2uV/VthblsqOX0N1NY0ncYbIcnwnovW
-         qS1SbW5sxVYQ0qBK04RJ/fu5f19ZBhpS67SXSzP4fi+E4m/lEBMc4p0ZHG7HOhYw6nUD
-         aX9A==
+        bh=zjvn7HsbY/vgKPllNGPzOYRc5ty961DmQb25tJ1aZoI=;
+        b=Ah6eMTlyVEJVvgBTYjQPgmieI7BjIh0g/awujXCY/cKljD0njNGkZp0PoOkn4erYzh
+         sza+5tsyDNkwUXzaRH5iUnj58ha1Pklw6yl6ctmZQannXE9vEik7syW40EOGAMfqKg3o
+         c6ZJgXnHqCNTyHA2J/I5Odx+3Va72k4eyM7g60vIpaJo1RF70TCdEmlJhHnWycyj/V31
+         +IOJRCV64/oEnDXybWvrVj5ZXFtQBy1WEC+cgvdNE8jmjcszV0WvBy0bViRe6xXRkzWD
+         6XHyMs/ciX6qIxMM5qbOCO8o2W2fSSKee6IsXtSDxWQ12i8uiDVpm+w+EmNp2bXyjUwm
+         X+pQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729304037; x=1729908837;
+        d=1e100.net; s=20230601; t=1729306560; x=1729911360;
         h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=m3OBhiG6hpLJQg9Qq6gvNx63LfPAP30OwnCahO0IdDw=;
-        b=gzvQAToM1bL6eYKLtAIOc42KPSRNiSvc6dT4zB98MjvnV2vv1ho2YHkr7os67PHRRV
-         nIXwHyo3CaoXE8ichskKvHa8kqcBDVikr7GIrai+iP+n7KBui5TXYYd8cZjwnfGSXFQH
-         x0AJGgh7wM/rHmuKvE0YOuQQkcTeXAFzUj2GcAAv/8y17Wf7m/KiuajSzfLHMbAKKIQf
-         wob0GDJCZ46LQ5qSxJ704EeQ0MIA5s1I9OKVzAgDrVGXQAOVAB/nxzSKsXoaldyT9GlM
-         rIjXwF+5oGse+PWxeXstaPz51TqrbTaD2SPGKmUeMfJ6Ilx+ztqZN2fqaASDtE5hyRZV
-         C0jA==
-X-Forwarded-Encrypted: i=1; AJvYcCUotwf8NdOd2XwJSBYn0nbdlhES1TEtrpdsddfXbAD6ZUUGe5hg2HSW/KbrwWjWvaaNJZL4gHyA2IxWXlNq@vger.kernel.org, AJvYcCV58yUTCDsNQGE6ZdQfp9wChv5pzcgp38hvaI+vMwDMIZ8DZ5bJVV+kOgbUjikgchd1ozAqADHTr4QNhU+O1Wk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyVKpDSKKe654xHC0p2WpVAbF9UyJUoW82qSK51Vc+hDcq3kQUq
-	ZBT2s4OOPp6cbhVGSMs8oRKqC2GfqmJiYbOAxWpHMnrmlsYSTqTC
-X-Google-Smtp-Source: AGHT+IE4I/Iv1lLYcMF2ZZmIIaMutEWKICjcPsDAVtltpIWvp0LxjTcOiq0LVYwKdoAvk+M0c2j6qw==
-X-Received: by 2002:a05:6a21:a4c1:b0:1d8:d6b6:94c6 with SMTP id adf61e73a8af0-1d92c4ad359mr6963538637.2.1729304036708;
-        Fri, 18 Oct 2024 19:13:56 -0700 (PDT)
+        bh=zjvn7HsbY/vgKPllNGPzOYRc5ty961DmQb25tJ1aZoI=;
+        b=lO3B+WsF5tna2tzFRMJo4uYN8tVvWbt+MhpqIEmzmpDM1073QGCSvSfiT1ytVaPzZi
+         GC6o0BL6zS2X9qUhqdzwgw3hLUgNxXubmkP0sSUZ2GCufo3pNQHbkVQFfpKWCpIP0K64
+         HVbB24zt3WW7GAnmxXrKInHoyn5feLSaBWnQknPudo9aUDNhrU0wTf+AcXE0CNkU8N0Z
+         TuSfg1X1JzRiVMBmgIQzjuk9YDrmxN3z7HCsrILPKe46i+6NRSxjtZxsQY/gvqqiU8PR
+         PVtS1y/KyiVBQbf1PyIlDBD5gDGgaJSn6x2v2oZkha+tO8jR6gufQ3veZf3AzSYAiW4R
+         RhNg==
+X-Forwarded-Encrypted: i=1; AJvYcCUE1WW83p7wHeqD1uGtT5TS6QFEd1o+d48hToP+Ha9B1ttr5nFnVOdWSkYnYAepoZ8ZqzTQRUto3EgjZJEsAq0=@vger.kernel.org, AJvYcCVTTVgxJjEwQqVjLuefvaOv3CpGXWmFXFZh9xxPU54IGweTo8jjewKAIUDU5WOWlnQAtAQGrWkPSGQzsiXGR3lYIw==@vger.kernel.org, AJvYcCVs73llRcBxOfguq0HxYJnVTwqyZh/Q9D278ZV7UI6kKcrnIrWLkRa5PnsBqungB1ZnPEaeiPmRsXa2nyY+@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJd16nQHjzQW44sEyktdverM0hY6K5smAKMyoNBFPRA958C21m
+	zkHpjy4lEop8VbglWya1vAZa2N8+Aklmi9Vay4pFYPfRyR/lu1/J
+X-Google-Smtp-Source: AGHT+IEPqWiwtVaGplrYbUc0xpArNcC0LaqOO99PH7sLEakviT8UYNXgSidnH4I5Y7jc0N37OI9r7Q==
+X-Received: by 2002:a17:90a:8a83:b0:2e2:e2f1:aee with SMTP id 98e67ed59e1d1-2e5617487d7mr5072291a91.22.1729306559845;
+        Fri, 18 Oct 2024 19:55:59 -0700 (PDT)
 Received: from mail.google.com (125-239-144-11-fibre.sparkbb.co.nz. [125.239.144.11])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-71ea3311d59sm2229509b3a.16.2024.10.18.19.13.52
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2e58390d63bsm522052a91.0.2024.10.18.19.55.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Oct 2024 19:13:56 -0700 (PDT)
-Date: Sat, 19 Oct 2024 15:13:49 +1300
+        Fri, 18 Oct 2024 19:55:59 -0700 (PDT)
+Date: Sat, 19 Oct 2024 15:55:48 +1300
 From: Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
-To: geoff@infradead.org, mpe@ellerman.id.au, npiggin@gmail.com,
-	christophe.leroy@csgroup.eu, naveen@kernel.org, maddy@linux.ibm.com,
-	linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+	namhyung@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, tglx@linutronix.de, bp@alien8.de,
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: paulo.miguel.almeida.rodenas@gmail.com, linux-hardening@vger.kernel.org
-Subject: [PATCH][next] powerpc/ps3: replace open-coded sysfs_emit function
-Message-ID: <ZxMV3YvSulJFZ8rk@mail.google.com>
+Subject: [PATCH][next] perf/x86/amd: replace snprintf with sysfs_emit helper
+ function
+Message-ID: <ZxMftFRJ1b91KbRV@mail.google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -67,34 +72,31 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-sysfs_emit() helper function should be used when formatting the value
-to be returned to user space.
+sysfs_emit() helper function should be used when formatting the value to
+be returned to user space as per the documentation. No need to replicate
+logic in sysfs .show() callbacks.
 
-This patch replaces open-coded sysfs_emit() in sysfs .show() callbacks
+This patch replaces open-coded sysfs_emit() logic sysfs .show()
+callbacks.
 
-Link: https://github.com/KSPP/linux/issues/105
 Signed-off-by: Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
 ---
- arch/powerpc/platforms/ps3/system-bus.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ arch/x86/events/amd/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/platforms/ps3/system-bus.c b/arch/powerpc/platforms/ps3/system-bus.c
-index b9a7d9bae687..afbaabf182d0 100644
---- a/arch/powerpc/platforms/ps3/system-bus.c
-+++ b/arch/powerpc/platforms/ps3/system-bus.c
-@@ -453,10 +453,9 @@ static ssize_t modalias_show(struct device *_dev, struct device_attribute *a,
- 	char *buf)
+diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
+index b4a1a2576510..bbada8e3e491 100644
+--- a/arch/x86/events/amd/core.c
++++ b/arch/x86/events/amd/core.c
+@@ -1346,7 +1346,7 @@ static ssize_t branches_show(struct device *cdev,
+ 			      struct device_attribute *attr,
+ 			      char *buf)
  {
- 	struct ps3_system_bus_device *dev = ps3_dev_to_system_bus_dev(_dev);
--	int len = snprintf(buf, PAGE_SIZE, "ps3:%d:%d\n", dev->match_id,
--			   dev->match_sub_id);
- 
--	return (len >= PAGE_SIZE) ? (PAGE_SIZE - 1) : len;
-+	return sysfs_emit(buf, "ps3:%d:%d\n", dev->match_id,
-+			  dev->match_sub_id);
+-	return snprintf(buf, PAGE_SIZE, "%d\n", x86_pmu.lbr_nr);
++	return sysfs_emit(buf, "%d\n", x86_pmu.lbr_nr);
  }
- static DEVICE_ATTR_RO(modalias);
  
+ static DEVICE_ATTR_RO(branches);
 -- 
 2.47.0
 
