@@ -1,269 +1,184 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from fallback19.i.mail.ru (fallback19.i.mail.ru [79.137.243.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73E0B84E0A;
-	Sun, 20 Oct 2024 09:21:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAEB919755B;
+	Sun, 20 Oct 2024 20:56:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.137.243.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729416101; cv=none; b=Cl2/FypmQFunsqjkjsGfTYQ0wtXXTqVn4itASg+RWUVDzd2w+5fXEMwhh/Zu4682tN6zLmkofH61B5zJKsffftmc+76CFE60F5hzyl2xFwDqFrvK67//NvSy5Tmcf3REijGbGFdAMOZBijOlm4vjYZxaC4U+ok2mt493YNyYiIk=
+	t=1729457815; cv=none; b=f040uEiq8ixYeJJfJcROMVgw1f6GhXGnefuj4dZQ+wS58pFaaLqBP4rSOBiX68t9rLKcs5Z1ZgPJRav3Peb4XCGnCObJpFTqg32C6S1Vzl7cEcW6/0qm9INMCfrRj66aN4KEDNdkgf0HzKIfAIsXEnSe5SvazxG8hlEejfG9i9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729416101; c=relaxed/simple;
-	bh=0FjaOJikJqwtGL+Y9iaV7osiQQ6qFUvD/z2eON8YtPE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=alv9HYZvCkWwYIctfQx1FfNT43xQ1/5p2+KPe783Ik4MYArmK5fefTcEqrmqywUNDAOVT65QW9tAh4BKv4f/6nC5Je600L/CXIYz2NOS4jOsskFnytetKmX/Qgsj9ifzpboLq0Zi8SlF0ru/Z43eRgFJ7/tWygzHY30XhLK0DCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OFdnxIB6; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1729457815; c=relaxed/simple;
+	bh=05bx7gY4pHuTxZBauceo1CWv9fr1UnOtDHtE60VByXU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=X8pFLchwgn848OoneaewZoDm1+/S3lXSU0yrzShDQP6hsJhoRpkASPUrQ7S0hpQu3GK2SoqaPxwfTbpHNKTfc9YWpARere+jUHnb2QA1zSaf0FnztXqX/AcPhol81B6G5AA5bmaxT/rWUD5V1l3TCL+Qe4/T4hQZhnredZrFyFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jiaxyga.com; spf=pass smtp.mailfrom=jiaxyga.com; dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b=U9LJHEaI; dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b=LwW+MArs; arc=none smtp.client-ip=79.137.243.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jiaxyga.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jiaxyga.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OFdnxIB6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1729416100; x=1760952100;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=0FjaOJikJqwtGL+Y9iaV7osiQQ6qFUvD/z2eON8YtPE=;
-  b=OFdnxIB6dQT5B3f4Osh4G1881zHIJexQl0HwsKnOfL9O0azBpb49tbL5
-   I7VwqRlhfBoBgBsppPyn5ofvu276/nKq3OsfjrZHNhvSKAuK+Oif58pnl
-   gNBypY8aFOXiy79rtbcRQntYcMnn8uPZXvp08Nd3VJJCrNke2raQ6H0es
-   5+42ADgjs2xKtnbskjmJVX8yZFJ1PJzQL88FA1TuOiElqKDkKppGMMAuE
-   1WjhPNla7hoi1Sp3rFB/JTRmnozBir4t4jNPuYmkgJ2ssSmYhzjNn86T0
-   mjMMEcBVYSAUTQ9d9hrH1Le+kJVI4X9BZ4eHuP4V2Z+4ojOM1xjzEHy3V
-   g==;
-X-CSE-ConnectionGUID: WP4d/s5IQaesapM3pU6f9A==
-X-CSE-MsgGUID: cJqNOoXFQ92BLjV5A0CSaQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11230"; a="39528708"
-X-IronPort-AV: E=Sophos;i="6.11,218,1725346800"; 
-   d="scan'208";a="39528708"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2024 02:21:36 -0700
-X-CSE-ConnectionGUID: S96oavzKT2aa8bDdJHdbug==
-X-CSE-MsgGUID: ISIQzx7HTDKxdHRiAqcjcw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,218,1725346800"; 
-   d="scan'208";a="79183515"
-Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
-  by orviesa009.jf.intel.com with ESMTP; 20 Oct 2024 02:21:30 -0700
-Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1t2S7r-000Q9C-2Q;
-	Sun, 20 Oct 2024 09:21:27 +0000
-Date: Sun, 20 Oct 2024 17:20:40 +0800
-From: kernel test robot <lkp@intel.com>
-To: jeffxu@chromium.org, akpm@linux-foundation.org, keescook@chromium.org,
-	torvalds@linux-foundation.org, usama.anjum@collabora.com,
-	corbet@lwn.net, Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, jeffxu@google.com,
-	jorgelo@chromium.org, groeck@chromium.org,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-mm@kvack.org, jannh@google.com, sroettger@google.com,
-	pedro.falcato@gmail.com, linux-hardening@vger.kernel.org,
-	willy@infradead.org, gregkh@linuxfoundation.org,
-	deraadt@openbsd.org, surenb@google.com, merimus@google.com,
-	rdunlap@infradead.org, Jeff Xu <jeffxu@chromium.org>,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v1 1/2] mseal: Two fixes for madvise(MADV_DONTNEED) when
- sealed
-Message-ID: <202410201724.kKCsANsw-lkp@intel.com>
-References: <20241017005105.3047458-2-jeffxu@chromium.org>
+	dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b="U9LJHEaI";
+	dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b="LwW+MArs"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=jiaxyga.com; s=mailru;
+	h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:Cc:To:From:From:Subject:Content-Type:Content-Transfer-Encoding:To:Cc; bh=57J+vROhgOQl91BKGGCfelts0NdRgOSFNz4SMinUokU=;
+	t=1729457812;x=1729547812; 
+	b=U9LJHEaI7tF+WUuf09psPwH4yNEm3W5HnXnMNIlQS8fbftY/yvgoKbcJx2rUIciNNpavqzBEFXPGu4uwzKjYJ4bDUL0Ocpi3IgJr+SvOmmZMg0Sni55XzCawf2sMH0AbKKQV4zbn5s21TkjZmDyvXlZRslhY4HSwpuuojQKG3k8=;
+Received: from [10.113.104.13] (port=54220 helo=smtp3.i.mail.ru)
+	by fallback19.i.mail.ru with esmtp (envelope-from <danila@jiaxyga.com>)
+	id 1t2cyh-00D5aC-EL; Sun, 20 Oct 2024 23:56:43 +0300
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=jiaxyga.com
+	; s=mailru; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:
+	Date:Subject:Cc:To:From:From:Sender:Reply-To:To:Cc:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:
+	References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:
+	List-Owner:List-Archive:X-Cloud-Ids:Disposition-Notification-To;
+	bh=57J+vROhgOQl91BKGGCfelts0NdRgOSFNz4SMinUokU=; t=1729457803; x=1729547803; 
+	b=LwW+MArsoVzH8mG0KXOofBbW3jcFVPIWGfSzMQ/UfMlOFmJ2YlXf0xJhPhDniKt0XSmAmxwIsnJ
+	jgW1rjGX9j8Hpc2cRc1v/bEQp4oi7XEq7U7doslMNZd4X7RSe2xfSBm2bLQXkGA5jFWDQw3FVKwUV
+	WBZjHXTRA0FMQc/DZ/U=;
+Received: by exim-smtp-669df98d5-42lq6 with esmtpa (envelope-from <danila@jiaxyga.com>)
+	id 1t2cyO-00000000L55-47el; Sun, 20 Oct 2024 23:56:26 +0300
+From: Danila Tikhonov <danila@jiaxyga.com>
+To: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	andersson@kernel.org,
+	konradybcio@kernel.org,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	kees@kernel.org,
+	tony.luck@intel.com,
+	gpiccoli@igalia.com,
+	quic_rjendra@quicinc.com,
+	andre.przywara@arm.com,
+	quic_sibis@quicinc.com,
+	igor.belwon@mentallysanemainliners.org,
+	davidwronek@gmail.com,
+	ivo.ivanov.ivanov1@gmail.com,
+	neil.armstrong@linaro.org,
+	heiko.stuebner@cherry.de,
+	rafal@milecki.pl,
+	lpieralisi@kernel.org
+Cc: devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux@mainlining.org,
+	Danila Tikhonov <danila@jiaxyga.com>
+Subject: [PATCH v3 0/6] Add Nothing Phone (1) support
+Date: Sun, 20 Oct 2024 23:56:08 +0300
+Message-ID: <20241020205615.211256-1-danila@jiaxyga.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241017005105.3047458-2-jeffxu@chromium.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Mailru-Src: smtp
+X-7564579A: 646B95376F6C166E
+X-77F55803: 4F1203BC0FB41BD92EEB9808938F525BF6E977894D3F6F9BB118107C53DC8BE8182A05F53808504089D4964DE8583EA53DE06ABAFEAF670527C49733761D74A243A93D006BE7B5D5E93E1AEB4077C98C
+X-7FA49CB5: FF5795518A3D127A4AD6D5ED66289B5278DA827A17800CE737AE489DBC023F2AEA1F7E6F0F101C67BD4B6F7A4D31EC0BCC500DACC3FED6E28638F802B75D45FF8AA50765F79006370BEBC60587DC626C8638F802B75D45FF36EB9D2243A4F8B5A6FCA7DBDB1FC311F39EFFDF887939037866D6147AF826D8455C22EFDC9488D6718B8CE3092C92CBE407231B465A2235CC7F00164DA146DAFE8445B8C89999728AA50765F7900637F924B32C592EA89F389733CBF5DBD5E9C8A9BA7A39EFB766F5D81C698A659EA7CC7F00164DA146DA9985D098DBDEAEC8034D30FDF2F620DBF6B57BC7E6449061A352F6E88A58FB86F5D81C698A659EA73AA81AA40904B5D9A18204E546F3947C4CB6874B0BCFF0B8C0837EA9F3D197644AD6D5ED66289B523666184CF4C3C14F6136E347CC761E07725E5C173C3A84C3048DACD9C49003B6BA3038C0950A5D36B5C8C57E37DE458B330BD67F2E7D9AF16D1867E19FE14079C09775C1D3CA48CFE478A468B35FE7671DD303D21008E298D5E8D9A59859A8B64854413538E1713F75ECD9A6C639B01B78DA827A17800CE7DBBA001AFC1C4016731C566533BA786AA5CC5B56E945C8DA
+X-C1DE0DAB: 0D63561A33F958A536FD17B1B44FEAD65002B1117B3ED696CA2C2A905BB773FED57BAD45EC4C5DE1823CB91A9FED034534781492E4B8EEADADEF88395FA75C5FC79554A2A72441328621D336A7BC284946AD531847A6065A17B107DEF921CE79BDAD6C7F3747799A
+X-C8649E89: 1C3962B70DF3F0ADE00A9FD3E00BEEDF77DD89D51EBB7742D3581295AF09D3DF87807E0823442EA2ED31085941D9CD0AF7F820E7B07EA4CF7C1698EEA8EA884375D09146030D4ADB83B4C066F2B31134FB2A9B3411ECB492D1BAA24A4D7F85D80B1383DF4BE982FCE5BD1349DBF3A47B1B4999C0876C92957BE60F3DBEFC70AB3430F16D2888FC8A02C26D483E81D6BE72B480F99247062FEE42F474E8A1C6FD34D382445848F2F3
+X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2biojRqMkPUKL5s6lnr2pQjWAGg==
+X-Mailru-Sender: 9EB879F2C80682A0D0AE6A344B45275FCB02445A36FA45DA95D4C5B18C328FC0C70512527E4B940C01F02B2CF4A691EC2C62728BC403A049225EC17F3711B6CF1A6F2E8989E84EC137BFB0221605B344978139F6FA5A77F05FEEDEB644C299C0ED14614B50AE0675
+X-Mras: Ok
+X-7564579A: B8F34718100C35BD
+X-77F55803: 6242723A09DB00B4F4F76BB1214CC8D473077125497867BD7267364A997B362068F3CF0E9FE49B69586F9C8573CB553B6C71F2D3AFC53269D4E2AB64A46682710F021A02F9FAEE83
+X-7FA49CB5: 0D63561A33F958A51D77A178ADA1990B09AC25E7B18ABC42A3FC4520A10E3A468941B15DA834481FA18204E546F3947CCC237B8757437CD7F6B57BC7E64490618DEB871D839B7333395957E7521B51C2DFABB839C843B9C08941B15DA834481F8AA50765F7900637AD617F2306083EE9389733CBF5DBD5E9B5C8C57E37DE458BD96E472CDF7238E0725E5C173C3A84C3B0435DEF61AD690C35872C767BF85DA2F004C90652538430E4A6367B16DE6309
+X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2biojRqMkPUKL5s78/yN9Sbwung==
+X-Mailru-MI: 8000000000000800
+X-Mras: Ok
 
-Hi,
+This series of patches adds support for the Nothing Phone (1), identified
+as nothing,spacewar. The Nothing Phone (1) is built on the Qualcomm
+Snapdragon 778G+ (SM7325-AE, also known as yupik).
 
-kernel test robot noticed the following build errors:
+SM7325 is identical to SC7280 just as SM7125 is identical to SC7180, so
+SM7325 devicetree imports SC7280 devicetree as a base.
 
-[auto build test ERROR on akpm-mm/mm-everything]
-[also build test ERROR on linus/master v6.12-rc3 next-20241018]
-[cannot apply to kees/for-next/pstore kees/for-next/kspp linux/master]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Changes in v2:
+- Drop patches 1-5 (from v2), as were applied in the previous merge window
+for v6.12.
+- Add Krzysztof's A-b tag (patch no. 1)
+- Add Rob's A-b tag (patch no. 1)
+- Drop qcom,board-id & qcom,msm-id (patch no. 6)
+Note: PMUs fixes were applied in a separate series:
+commit <89f324ef54a2>
+arm64: dts: qcom: sc7280: Fix PMU nodes for Cortex A55 and A78
+- Link to v2:
+https://lore.kernel.org/all/20240808184048.63030-1-danila@jiaxyga.com/
 
-url:    https://github.com/intel-lab-lkp/linux/commits/jeffxu-chromium-org/mseal-Two-fixes-for-madvise-MADV_DONTNEED-when-sealed/20241017-085203
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
-patch link:    https://lore.kernel.org/r/20241017005105.3047458-2-jeffxu%40chromium.org
-patch subject: [PATCH v1 1/2] mseal: Two fixes for madvise(MADV_DONTNEED) when sealed
-config: i386-defconfig (https://download.01.org/0day-ci/archive/20241020/202410201724.kKCsANsw-lkp@intel.com/config)
-compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241020/202410201724.kKCsANsw-lkp@intel.com/reproduce)
+Changes in v2:
+- Add Krzysztof's R-b tag (patches no. 1, 2, 10)
+- Add Dmitry's R-b tag (patches no. 3, 4, 8)
+- Document SM7325 as fallback to QCM6490 (patch no. 5)
+- Drop patch no. 6 from v1
+- Document PN553 NFC IC as fallback to nxp-nci-i2c (patch no. 6)
+- Add Krzysztof's A-b tag (patches no. 7, 9)
+- Switch nl.nothing.tech/nothing.tech in commit msg (patch no. 9)
+- Add fallback compatibility for NFC (patch no. 10)
+- Fix interrupt type for NFC (patch no. 10)
+- Link to v1:
+https://lore.kernel.org/all/20240729201843.142918-1-danila@jiaxyga.com/
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202410201724.kKCsANsw-lkp@intel.com/
+To: Rob Herring <robh@kernel.org>
+To: Krzysztof Kozlowski <krzk+dt@kernel.org>
+To: Conor Dooley <conor+dt@kernel.org>
+To: Bjorn Andersson <andersson@kernel.org>
+To: Konrad Dybcio <konradybcio@kernel.org>
+To: Andrew Lunn <andrew+netdev@lunn.ch>
+To: "David S. Miller" <davem@davemloft.net>
+To: Eric Dumazet <edumazet@google.com>
+To: Jakub Kicinski <kuba@kernel.org>
+To: Paolo Abeni <pabeni@redhat.com>
+To: Kees Cook <kees@kernel.org>
+To: Tony Luck <tony.luck@intel.com>
+To: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+To: Sibi Sankar <quic_sibis@quicinc.com>
+To: Rajendra Nayak <quic_rjendra@quicinc.com>
+To: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
+To: Andre Przywara <andre.przywara@arm.com>
+To: David Wronek <davidwronek@gmail.com>
+To: Igor Belwon <igor.belwon@mentallysanemainliners.org>
+To: Neil Armstrong <neil.armstrong@linaro.org>
+To: Heiko Stuebner <heiko.stuebner@cherry.de>
+To: "Rafał Miłecki" <rafal@milecki.pl>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-arm-msm@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Cc: linux-hardening@vger.kernel.org
+Cc: linux@mainlining.org
+Signed-off-by: Danila Tikhonov <danila@jiaxyga.com>
 
-All errors (new ones prefixed by >>):
+Danila Tikhonov (4):
+  dt-bindings: nfc: nxp,nci: Document PN553 compatible
+  dt-bindings: arm: cpus: Add qcom kryo670 compatible
+  dt-bindings: vendor-prefixes: Add Nothing Technology Limited
+  dt-bindings: arm: qcom: Add SM7325 Nothing Phone 1
 
->> mm/mprotect.c:825:16: error: use of undeclared identifier 'VM_WASWRITE'
-     825 |                         newflags |= VM_WASWRITE;
-         |                                     ^
-   1 error generated.
+Eugene Lepshy (2):
+  arm64: dts: qcom: Add SM7325 device tree
+  arm64: dts: qcom: sm7325: Add device-tree for Nothing Phone 1
 
-
-vim +/VM_WASWRITE +825 mm/mprotect.c
-
-   705	
-   706	/*
-   707	 * pkey==-1 when doing a legacy mprotect()
-   708	 */
-   709	static int do_mprotect_pkey(unsigned long start, size_t len,
-   710			unsigned long prot, int pkey)
-   711	{
-   712		unsigned long nstart, end, tmp, reqprot;
-   713		struct vm_area_struct *vma, *prev;
-   714		int error;
-   715		const int grows = prot & (PROT_GROWSDOWN|PROT_GROWSUP);
-   716		const bool rier = (current->personality & READ_IMPLIES_EXEC) &&
-   717					(prot & PROT_READ);
-   718		struct mmu_gather tlb;
-   719		struct vma_iterator vmi;
-   720	
-   721		start = untagged_addr(start);
-   722	
-   723		prot &= ~(PROT_GROWSDOWN|PROT_GROWSUP);
-   724		if (grows == (PROT_GROWSDOWN|PROT_GROWSUP)) /* can't be both */
-   725			return -EINVAL;
-   726	
-   727		if (start & ~PAGE_MASK)
-   728			return -EINVAL;
-   729		if (!len)
-   730			return 0;
-   731		len = PAGE_ALIGN(len);
-   732		end = start + len;
-   733		if (end <= start)
-   734			return -ENOMEM;
-   735		if (!arch_validate_prot(prot, start))
-   736			return -EINVAL;
-   737	
-   738		reqprot = prot;
-   739	
-   740		if (mmap_write_lock_killable(current->mm))
-   741			return -EINTR;
-   742	
-   743		/*
-   744		 * If userspace did not allocate the pkey, do not let
-   745		 * them use it here.
-   746		 */
-   747		error = -EINVAL;
-   748		if ((pkey != -1) && !mm_pkey_is_allocated(current->mm, pkey))
-   749			goto out;
-   750	
-   751		vma_iter_init(&vmi, current->mm, start);
-   752		vma = vma_find(&vmi, end);
-   753		error = -ENOMEM;
-   754		if (!vma)
-   755			goto out;
-   756	
-   757		if (unlikely(grows & PROT_GROWSDOWN)) {
-   758			if (vma->vm_start >= end)
-   759				goto out;
-   760			start = vma->vm_start;
-   761			error = -EINVAL;
-   762			if (!(vma->vm_flags & VM_GROWSDOWN))
-   763				goto out;
-   764		} else {
-   765			if (vma->vm_start > start)
-   766				goto out;
-   767			if (unlikely(grows & PROT_GROWSUP)) {
-   768				end = vma->vm_end;
-   769				error = -EINVAL;
-   770				if (!(vma->vm_flags & VM_GROWSUP))
-   771					goto out;
-   772			}
-   773		}
-   774	
-   775		prev = vma_prev(&vmi);
-   776		if (start > vma->vm_start)
-   777			prev = vma;
-   778	
-   779		tlb_gather_mmu(&tlb, current->mm);
-   780		nstart = start;
-   781		tmp = vma->vm_start;
-   782		for_each_vma_range(vmi, vma, end) {
-   783			unsigned long mask_off_old_flags;
-   784			unsigned long newflags;
-   785			int new_vma_pkey;
-   786	
-   787			if (vma->vm_start != tmp) {
-   788				error = -ENOMEM;
-   789				break;
-   790			}
-   791	
-   792			/* Does the application expect PROT_READ to imply PROT_EXEC */
-   793			if (rier && (vma->vm_flags & VM_MAYEXEC))
-   794				prot |= PROT_EXEC;
-   795	
-   796			/*
-   797			 * Each mprotect() call explicitly passes r/w/x permissions.
-   798			 * If a permission is not passed to mprotect(), it must be
-   799			 * cleared from the VMA.
-   800			 */
-   801			mask_off_old_flags = VM_ACCESS_FLAGS | VM_FLAGS_CLEAR;
-   802	
-   803			new_vma_pkey = arch_override_mprotect_pkey(vma, prot, pkey);
-   804			newflags = calc_vm_prot_bits(prot, new_vma_pkey);
-   805			newflags |= (vma->vm_flags & ~mask_off_old_flags);
-   806	
-   807			/* newflags >> 4 shift VM_MAY% in place of VM_% */
-   808			if ((newflags & ~(newflags >> 4)) & VM_ACCESS_FLAGS) {
-   809				error = -EACCES;
-   810				break;
-   811			}
-   812	
-   813			if (map_deny_write_exec(vma, newflags)) {
-   814				error = -EACCES;
-   815				break;
-   816			}
-   817	
-   818			/* Allow architectures to sanity-check the new flags */
-   819			if (!arch_validate_flags(newflags)) {
-   820				error = -EINVAL;
-   821				break;
-   822			}
-   823	
-   824			if ((vma->vm_flags & VM_WRITE) && !(newflags & VM_WRITE))
- > 825				newflags |= VM_WASWRITE;
-   826	
-   827			error = security_file_mprotect(vma, reqprot, prot);
-   828			if (error)
-   829				break;
-   830	
-   831			tmp = vma->vm_end;
-   832			if (tmp > end)
-   833				tmp = end;
-   834	
-   835			if (vma->vm_ops && vma->vm_ops->mprotect) {
-   836				error = vma->vm_ops->mprotect(vma, nstart, tmp, newflags);
-   837				if (error)
-   838					break;
-   839			}
-   840	
-   841			error = mprotect_fixup(&vmi, &tlb, vma, &prev, nstart, tmp, newflags);
-   842			if (error)
-   843				break;
-   844	
-   845			tmp = vma_iter_end(&vmi);
-   846			nstart = tmp;
-   847			prot = reqprot;
-   848		}
-   849		tlb_finish_mmu(&tlb);
-   850	
-   851		if (!error && tmp < end)
-   852			error = -ENOMEM;
-   853	
-   854	out:
-   855		mmap_write_unlock(current->mm);
-   856		return error;
-   857	}
-   858	
+ .../devicetree/bindings/arm/cpus.yaml         |    1 +
+ .../devicetree/bindings/arm/qcom.yaml         |    6 +
+ .../devicetree/bindings/net/nfc/nxp,nci.yaml  |    1 +
+ .../devicetree/bindings/vendor-prefixes.yaml  |    2 +
+ arch/arm64/boot/dts/qcom/Makefile             |    1 +
+ .../boot/dts/qcom/sm7325-nothing-spacewar.dts | 1260 +++++++++++++++++
+ arch/arm64/boot/dts/qcom/sm7325.dtsi          |   17 +
+ 7 files changed, 1288 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/sm7325-nothing-spacewar.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/sm7325.dtsi
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.47.0
+
