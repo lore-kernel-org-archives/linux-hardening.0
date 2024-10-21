@@ -1,127 +1,93 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2389148FF9;
-	Mon, 21 Oct 2024 06:04:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6F611D0F41;
+	Mon, 21 Oct 2024 07:31:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729490659; cv=none; b=oAfEPmY/rr9M1tJaGQMzOBJySe5pHJkiR+Q3Sa/tQXcZIozYC/+hhgL9O1KfncQEnHYyH523ipBfscSar0YuMBscwdyEzKjQmEjLA4Gr96SSJvkLuUD9ct7nhmcJuGJuVXmAtZ7zIxoW3jcnrUl0Jua2nTNe/CLqC/74cYeSOOg=
+	t=1729495912; cv=none; b=QIOTRkM+eVJBkNQFHre61Z9hvM7g+O/NZYl5HB9Lk7rC3lNyIRCjGrLgfLxPdwr6Vchplfs3bOJkN2kIwVLjYD9hNHqhKxM6NUhErW4bw8CLozAUY7RuIwdX9OiPTacrmU8Dot7Y2Z5e/hqfhvzBHIQJIDUq9oaEZCLXkWHZbR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729490659; c=relaxed/simple;
-	bh=2fsWYvEi0IK73sUTq74gKefon2ZTtdpF9s5+XTn6UtY=;
+	s=arc-20240116; t=1729495912; c=relaxed/simple;
+	bh=x56QYfTtpSaW6T92GC+6kY8hsQt71XOAsUTiauRLXuA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ub4LaHjd5udBayINQ4EexrnXUkt8pDSPJT8qELDxVENkrUcPKj+lXvP0ddLDYkCSfhtYXmAyRqXmwDJiCf3g1Yt6tXuuaOg03sPW+ybea6hmleY4riYSYqr17meR8Uscphcb9yYNKgQhf3OcfbEv//iTpdhbgfQ8x7Nm81cagkE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bw3CfYMO; arc=none smtp.client-ip=209.85.216.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	 To:Cc:Content-Type; b=c3tZX+SbA56lMlkV4NcnuqJSQA2jUCLT2+VO8Q+h/xumu6N8yuPy1v2FwQ2OB7oCDpSrIHmIN8/tfpeXHlEjbfMAHa0cb4MxBqRETl1c7KJ3TeWOKVaLzligB4AFB9dmRj8otBM9csKllPLUZAoHjFf/c7ZlUuCLUW4Dlf5zdlU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bw3CfYMO"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2e2b720a0bbso840068a91.1;
-        Sun, 20 Oct 2024 23:04:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729490657; x=1730095457; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pg0JsnBu9cMvcgcmJc1G+uprIvIAEsIzBiz3R+FFLKw=;
-        b=bw3CfYMOnrcFF5cjS4i+Qh2P2w3wlxGCoaTu9xHYeHx2GiqGgxg8i7Nh9kJk/JdjLB
-         LHBHWbm70xL4nnx4crrVUPBCJvmH1pWT9j08BN46hfmpC+9hyU/ChwaVTBEbQzqWdDnK
-         fleNQ4nmfinUSYHs6PW7jJMvxVC3HFWNqFwld2wMQVMEjKWM6/W0/US2kW7UUifW7HGK
-         6FJsXinIr3f6J01uusQUSz2wed6D9pU+zeCLtHnH4HWDKCK/rzm6EWBZneqBlv8YOdd1
-         ZeyBwe3wJltRcSmLUyDSrKA8By+9VJozK9aRsHWOAill6zLuKLSCkdJinb8HTpYQMnXR
-         /Aqg==
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-6e2772f7df9so33923677b3.2;
+        Mon, 21 Oct 2024 00:31:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729490657; x=1730095457;
+        d=1e100.net; s=20230601; t=1729495909; x=1730100709;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=pg0JsnBu9cMvcgcmJc1G+uprIvIAEsIzBiz3R+FFLKw=;
-        b=g5WyX2sNWAaRs0VZBJSH9kpJq4y4BEgWtuQ8nMF0mH//pMdKhYgYx445eJ9svRG3KP
-         NVveTfjEF5weLHR2geLWw+LJ9b9Q5uhrsgOv0un5dJeHERHTC/yAd/Yl8EY+HJFXVusz
-         ms2dFZPq9tUXcZgHn4SY6oTNF/DxnpfdkpvdnNwMQpRaHMav7r8s1QTxKheEgwnoP3Lc
-         D0X7Hn8rZv8CQdQ4hzWV7jIrklVAKgN12m0W91qZF3cbiBNf/xAKW4TkMcA6xfW6mo+f
-         NHwjfnzZ/dHZlG3bFePbDeQ1nWi0vc74y1hDUDE5ab4u7kMRpISwGDKsXfsLsF4snZdP
-         nExw==
-X-Forwarded-Encrypted: i=1; AJvYcCUXnVaR+beYOKHZw/YCMN2qVqhA0T4Lkcc7fTF5plf3Twl0bLXMu/mwVeOeP23oO5wnooVH4Kv+yLJW0slB3A==@vger.kernel.org, AJvYcCV6uAKwXLef0qT3MfH5isB04aVzEc7OovDveHuo0UCxpbrYvFhsiwKmhTdTTRoOjlmBOFJlBGbNZZd4QVj5@vger.kernel.org, AJvYcCWaPVqNhXJMZinNEQdabn7iVA/83/N062Vysy9mNlo2Yp1SMAjGtqponDu0n6wQssQ6cPPKkdmtyQ5CV7eCcROG@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxr47xcTFH/TIhxJJ8Q7/muYtUOQbAB1v5blAPDzD+qOd0IF8tI
-	v6YbhD/JQSfvv0XS9hEJOX/WcUYqGMRm6abr3vHG9Qe7Pk6BpNczvBegfTtsp3Ui8akSCNI4kyW
-	YYKo4EnJPyZMQPfFr3CK4eHoSmyQ=
-X-Google-Smtp-Source: AGHT+IFTn6AyaH521mGGVsrVLQ1r+PtN4Lem3tmtd4HDqCECIc/0C2xjgjebgZGML6ZwL4dc7ldcwVwVP3BNKEybmnw=
-X-Received: by 2002:a17:902:d4c9:b0:20c:959e:f706 with SMTP id
- d9443c01a7336-20e5a76117dmr62142145ad.1.1729490656749; Sun, 20 Oct 2024
- 23:04:16 -0700 (PDT)
+        bh=jr+kpALnRUsAPIgtZFzgufk7e4vaGeioyiXEU/DOG3s=;
+        b=BirLM5eJI/qukBzZ/M6cFVTpCriHOGcp2mkUNGZcg2Z5PTwdiMKezZi6kin2lOCGpu
+         AKf7ELogO42W2fxqj7Bm1cfy15rejvMlUQksQqIgowpirIoNQQ4jh4h2vPR3v7Xl72+3
+         Mk87c7i+3AObZ74qM+59x14uZzUvO6XcjQELxWhsoRnh1v4Dwu06fAoaIg4Rpg/ITgKR
+         jNSppkX/EukU5ta2bZ6loniAhFST0iC5PgZt9f0MyUMlBji3IIYByFey18JPySGwCybB
+         O2DfBHLgb9j3Q9ObA03sbWEEr/QWlhxjfwIR82yOCL756a1BNWYpGRjJCcOMfencOvzW
+         xD2A==
+X-Forwarded-Encrypted: i=1; AJvYcCVny0ERBxpoCfNmRBgYOCWXq5ebYbvSePlEovehPa2gTDwGrHHCRcSa/SHWmOkF4pyqF0bQKgDBxKbpy4xa8LY=@vger.kernel.org, AJvYcCWh4R2KXT2YCBWwoIe1TLlpQqO7XUI3CO3a2HrC5IJZcGvRTXEX2TjMawy49vCXFlUJTPhBUP7/dld6CZjD@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy72y4qncqaSbqc14v1ZkuTZTANBwHkZVw0amu5m9aPHKNsRaQU
+	HpAMSwxslca+q/0Z7Hksqh6nvPjGAkDiN4znfTHivOPTdM0MhY2Sz6KRoUgA
+X-Google-Smtp-Source: AGHT+IHtIABokKmWrSV50XC1fSDO4GddECRooaJ1CM30ZWHXyXLK2XEsrLulrQIa2od777tS3j6Ynw==
+X-Received: by 2002:a05:690c:4b0c:b0:6db:d7c9:c97b with SMTP id 00721157ae682-6e5bfe887f3mr94928637b3.40.1729495909193;
+        Mon, 21 Oct 2024 00:31:49 -0700 (PDT)
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com. [209.85.128.181])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6e5f5ad5addsm5830597b3.72.2024.10.21.00.31.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 21 Oct 2024 00:31:49 -0700 (PDT)
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-6e5ef7527deso9672357b3.0;
+        Mon, 21 Oct 2024 00:31:48 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUMY+GMpMk6TPD3EtxiS0pVFUHRohyRp3/6fsTJ+jWndn7UPGYYa+ax0I7D9mxCAVa9k/1w7FMBQQhlC05G@vger.kernel.org, AJvYcCVgUf7pFj4YvXwGBLLBGuKi9uDP2//vzLQgT1sbxDyL8qAviqeGGtqd5FjGEd1xLFWfhKyr2QPhsGA5PtmiUVo=@vger.kernel.org
+X-Received: by 2002:a05:690c:3389:b0:6dd:e837:3596 with SMTP id
+ 00721157ae682-6e5bfc31904mr97889987b3.14.1729495908789; Mon, 21 Oct 2024
+ 00:31:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <E8E64A72-3C1C-40D2-9F07-415F6B8F476E@toblux.com>
- <Zv61dCaxScXuOjZg@archlinux> <202410031424.45E5D19@keescook>
- <Zv8RIs-htdc-PtXB@archlinux> <202410040958.C19D3B9E48@keescook>
- <ZwNb-_UPL9BPSg9N@archlinux> <CAGG=3QUatjhoDHdkDtZ+ftz7JvMhvaQ9XkFyyZSt_95V_nSN8A@mail.gmail.com>
- <CAGG=3QVcsuN0Sk79oZWjY_nNTo_XfGYsDT3gc7vEmLyS8OK3rA@mail.gmail.com>
- <ZxB-uh1KzfD4ww2a@archlinux> <20241017165522.GA370674@thelio-3990X> <ZxWvcAPHPaRxp9UE@archlinux>
-In-Reply-To: <ZxWvcAPHPaRxp9UE@archlinux>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Mon, 21 Oct 2024 08:04:03 +0200
-Message-ID: <CANiq72=yYDcG=ef9TxCCECwjSgW-5zFoTJqcjrWGOALCvaW0SA@mail.gmail.com>
-Subject: Re: [REGRESSION][BISECTED] erroneous buffer overflow detected in bch2_xattr_validate
-To: Jan Hendrik Farr <kernel@jfarr.cc>
-Cc: Nathan Chancellor <nathan@kernel.org>, Bill Wendling <morbo@google.com>, Kees Cook <kees@kernel.org>, 
-	Thorsten Blum <thorsten.blum@toblux.com>, kent.overstreet@linux.dev, 
-	regressions@lists.linux.dev, linux-bcachefs@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	ardb@kernel.org, ojeda@kernel.org
+References: <ZxMV3YvSulJFZ8rk@mail.google.com>
+In-Reply-To: <ZxMV3YvSulJFZ8rk@mail.google.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 21 Oct 2024 09:31:37 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUG7z0Qz=6GfeidmnrD_s_RQzMeC1wq0c2A1eQB7rG=Xg@mail.gmail.com>
+Message-ID: <CAMuHMdUG7z0Qz=6GfeidmnrD_s_RQzMeC1wq0c2A1eQB7rG=Xg@mail.gmail.com>
+Subject: Re: [PATCH][next] powerpc/ps3: replace open-coded sysfs_emit function
+To: Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
+Cc: geoff@infradead.org, mpe@ellerman.id.au, npiggin@gmail.com, 
+	christophe.leroy@csgroup.eu, naveen@kernel.org, maddy@linux.ibm.com, 
+	linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Oct 21, 2024 at 3:33=E2=80=AFAM Jan Hendrik Farr <kernel@jfarr.cc> =
-wrote:
+On Sat, Oct 19, 2024 at 4:14=E2=80=AFAM Paulo Miguel Almeida
+<paulo.miguel.almeida.rodenas@gmail.com> wrote:
+> sysfs_emit() helper function should be used when formatting the value
+> to be returned to user space.
 >
-> I think I prefer
+> This patch replaces open-coded sysfs_emit() in sysfs .show() callbacks
 >
->         depends on !(CC_IS_CLANG && CLANG_VERSION < 190103)
->
-> to make it more clear that the purpose is to disable this for clang
-> versions below 19.1.3, but keep it enabled for every other compiler
-> including pre-release gcc versions that pass the compile test.
+> Link: https://github.com/KSPP/linux/issues/105
+> Signed-off-by: Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.c=
+om>
 
-Do we want other tooling to see the attribute? i.e. if the build check
-gets removed, then that `depends on` would mean other tooling would
-see it, right?
+Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
 
-> Also after gcc 15 is released I don't think a version check for gcc
-> should be necessary. I only see an explicit version check as required
-> when we know a certain version is broken. Otherwise I would prefer using
-> the build test.
+Gr{oetje,eeting}s,
 
-Yeah, build tests are nice, although they require spawning a process
-and so on, which (as far as I understand) we try to minimize. Version
-checks also have the advantage that it is easy to remember/check when
-we can remove the checks themselves when we upgrade the minimum
-versions.
+                        Geert
 
-> I guess an alternative would be to just create a
-> CC_COUNTED_BY_BROKEN that is enabled for clang versions below 19.1.3
-> and continue to use __has_attribute together with that option. That
-> would make the build test unnecesarry. The downside is that it
-> will require checking both __has_attribute and
-> CONFIG_CC_COUNTED_BY_BROKEN for __counted_by support. So I think
-> CC_HAS_COUNTED_BY is better.
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
 
-Yeah, if we are going to need a new Kconfig symbol anyway, then let's
-make that the only thing to check. Otherwise we are in the "worst of
-both worlds", I would say.
-
-> I'll submit it once Bill's fix is in the release/19.x branch. Which
-> maintainer should I address this too? You (Nathan), Miguel, Kees, or
-> someone else?
-
-Sounds good -- if you want, you can send it to all of us and we can
-figure that out later.
-
-Thanks!
-
-Cheers,
-Miguel
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
