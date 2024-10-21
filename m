@@ -1,110 +1,83 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E56E41E766A
-	for <linux-hardening@vger.kernel.org>; Mon, 21 Oct 2024 10:05:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82C241E0DD7;
+	Mon, 21 Oct 2024 13:20:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729505125; cv=none; b=IDATA4+B9+TU9QkDblMJQpBDL6fjnud4ALXtGr0/nH9rGfqaFaRJl5FSQqLQqR+3t2GY/bLd5e4k9/KJsP+EwpZi1XG7ySzrOZ9r1mqdbBqlygubC8rUgGr1yCHs2P5L3Mo7UH/8JA2Im7p8Sv5hj9MRabJ6p/eZ6KJnpwLJato=
+	t=1729516811; cv=none; b=RpWUt4+zJ5A0u+614SuUGKjfcL0FxA87DbXBlu2XDNLEkd3e6MiLFjRt5xWXOpdb7ZRLsgI/kWcjkT4DzmLALvAu8cG5CzUbbumxJlZrM3Q6AN/+zNEAdaUKXLLVjaDjLTh/n2VWN91jTYp/1mxKTXOQRoFNVZBjjuNgA60L5Pk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729505125; c=relaxed/simple;
-	bh=E6P1aiZ4PNxlxIt/eSfDf1aGFNTvnsK/44ZRqs3l3Tk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NYWPULZ8R4qlQRKcHpSwYW9jXlaAaYssBRPMYs4ET9XAnhST23z05XdrvV88RZ3cW3UJpdpZREa29/whCr7S89FrXiwuj2zLj6iiYjX11gV9ccxTBQKse2EMXGW8Su1uUAdZPCN7ArZ/KxQ7z5a/rPDH65u/EyNgmdvJw97fbBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=IRX+5+Qh; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1729516811; c=relaxed/simple;
+	bh=4R/WKRARQw/4IlPbaQI7M3DPYBrwc9XcRDPFEX/AV7Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sqdNbuLa9Xyt3a85a2lYXshwxgLND0WUVf/Kwx92uqKguHf23sNs5hCNhRloAy0siallgRQ2c9GGv5fu9O6F2Mt2Abg3pBNb02E66+tVX90zu8LcN80PbDLACKuypYMVjcJ4jbc6BTYu5swjWhjj0G5T9AYXhLoJZXoyJRo4SqY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rfU7CQv4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="IRX+5+Qh"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-539f4d8ef84so4310101e87.0
-        for <linux-hardening@vger.kernel.org>; Mon, 21 Oct 2024 03:05:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1729505122; x=1730109922; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ubpo6S6NnJRiZloFHEIs004TDIT5EnWgHXwynKK1RNw=;
-        b=IRX+5+QhDA0eMMFvohTdyOd4v+d78Q7qPIFCLpRpSf+s1Tr1898hiMDXVTn1YLsDgf
-         SQRMQ1FuNnbBQrd1wGAk4NG1AYk6Qc/1W3O+PKMf37mHFlXHJNU4WY3NR8r0DC+Gipi8
-         rVNK2VJ/LpOcpJcGjn99/ifmYFejNijqY2X+c62jQI03xDavjaHLjuw2hkjof9bOHcGZ
-         O7Qv/FwflE9A3tXkDgfMWn91eOFDyuOKoZAh8teDzRmKUTewA9RG6f+Wf2a+AEv1L3xc
-         5RBXM8b+BMAPvPEJuvMiDZsLxySMC7oPIsQeqh1fFbVHeqaXFxUAwi+RUtd9lkk4fWAC
-         3IrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729505122; x=1730109922;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ubpo6S6NnJRiZloFHEIs004TDIT5EnWgHXwynKK1RNw=;
-        b=CrRBwbG/3PgU/6IaLr/Fm3pMUicow0qVrY9gmE4vcVFka6u8uOIERT6SYuQ7LEbbDY
-         A6Jm7mOgik1uwDDD2WXmy05sRsHxK6o4cH4ypffU6KTQk9iC336y5HYM3Av5LAFQEr+x
-         l56EPWz2s2PDU6XhNnBN8m3kxAGR2gGf/+ZKnka6MYAXqvTkSVzokolR7IUf3/o2QtCF
-         Tps56KhU2MzQIrssHy6bk4t+qtPkr9UxbK2Ja8TZxh9s6Ng9u6fqGqQjUw/yHqSjYPW6
-         gjd0SjrHPEneI8SAFtCUq0b6yhVytkAY4jGxLiekr4PmQJyukG7fWL66ZvjOOYijD8+q
-         RwmA==
-X-Gm-Message-State: AOJu0Yx3yf3TNAwDZlnKJj+Kn7ZG3yfRXwvjUIlwwtqWMsxfdiXnZXWo
-	quOb8jk0elg0GkAvc0i/ih3EYXd9R5M1+clqQjkUH4mIHbjxVdQH9p8LWT9s8F7oAJqMzk35KyG
-	mR3Ewcds+3LKMCDXAia6buT136dp2OeO2YJ0DwA==
-X-Google-Smtp-Source: AGHT+IFTo037Z1skIcXKzO5cwDAxFNKnzxbP+Sb3jV24EF83ny3xaXZBa8+M8OB9fSFHBSuFFLGmzMvjOyEf7v9KuHs=
-X-Received: by 2002:a05:6512:3b93:b0:539:fb49:c48e with SMTP id
- 2adb3069b0e04-53a15441716mr5327039e87.11.1729505121534; Mon, 21 Oct 2024
- 03:05:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rfU7CQv4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D866DC4CEC3;
+	Mon, 21 Oct 2024 13:20:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729516811;
+	bh=4R/WKRARQw/4IlPbaQI7M3DPYBrwc9XcRDPFEX/AV7Q=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=rfU7CQv4/Ex0Hm4HCwQgGues8xgjV4uUlbKKs6KE4dQK3Yfnkex+Cf6GceY1QGIqX
+	 couOKavPDfCgJI5IKQuFYwKAEPrVO6cAPjEMZI2O6W8KuQOYiD6snLXoRJ2kN1uGdw
+	 JSd0P6qs0Ce9AmIeo2YR0kWUb7lYYT/dmpfdZ+4wi6nQa/u10JfT9e7FaJTErq8f0Z
+	 Z/iHJtJ+3ro+ocX8JRMJekUcvc4wPEXe1e5oWxE3Zgqlk4lzS23xeEiob3SqtX6CNd
+	 BFdHC6Q/NEjxW1II4/+R9HEiEUPB/ssJvxOxWXHO0YQoB/ypyFdLIPtue4IquYgSzn
+	 IEq9DUPYwDK2w==
+From: Christian Brauner <brauner@kernel.org>
+To: Thorsten Blum <thorsten.blum@linux.dev>
+Cc: Christian Brauner <brauner@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Jan Kara <jack@suse.cz>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: Re: [PATCH v2] acl: Annotate struct posix_acl with __counted_by()
+Date: Mon, 21 Oct 2024 15:20:03 +0200
+Message-ID: <20241021-skalpell-kulant-6622b37fc93a@brauner>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20241018121426.155247-2-thorsten.blum@linux.dev>
+References: <20241018121426.155247-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241021100421.41734-1-brgl@bgdev.pl>
-In-Reply-To: <20241021100421.41734-1-brgl@bgdev.pl>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 21 Oct 2024 12:05:10 +0200
-Message-ID: <CAMRc=MezpJVQUaetodJbxn7VU5rLaZUFumVsmCcwgOYdLSk8-Q@mail.gmail.com>
-Subject: Re: [PATCH] lib: string_helpers: fix potential snprintf() output truncation
-To: Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, 
-	James Bottomley <James.Bottomley@hansenpartnership.com>, 
-	Greg KH <gregkh@linuxfoundation.org>
-Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1140; i=brauner@kernel.org; h=from:subject:message-id; bh=4R/WKRARQw/4IlPbaQI7M3DPYBrwc9XcRDPFEX/AV7Q=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaSLhbLs27gs1nVGgsHTtwyXmKQ+vWhh1Z9b6Prk4W8OH SV3u+CJHaUsDGJcDLJiiiwO7Sbhcst5KjYbZWrAzGFlAhnCwMUpABPhYWP47667nlc2e93rIzHb 1r0/WdDd8UurwK+yecexRLN7vLXWzowMx7+dqVqjLabsGbLud3tYPN/RS2szn/DNu78w+d++/VX L+QA=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-On Mon, Oct 21, 2024 at 12:04=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl=
-> wrote:
->
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> The output of ".%03u" with the unsigned int in range [0, 4294966295] may
-> get truncated if the target buffer is not 12 bytes.
->
-> Fixes: 3c9f3681d0b4 ("[SCSI] lib: add generic helper to print sizes round=
-ed to the correct SI range")
-> Cc: stable@vger.kernel.org
-> Reviewed-by: Andy Shevchenko <andy@kernel.org>
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> ---
->  lib/string_helpers.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/lib/string_helpers.c b/lib/string_helpers.c
-> index 4f887aa62fa0..91fa37b5c510 100644
-> --- a/lib/string_helpers.c
-> +++ b/lib/string_helpers.c
-> @@ -57,7 +57,7 @@ int string_get_size(u64 size, u64 blk_size, const enum =
-string_size_units units,
->         static const unsigned int rounding[] =3D { 500, 50, 5 };
->         int i =3D 0, j;
->         u32 remainder =3D 0, sf_cap;
-> -       char tmp[8];
-> +       char tmp[12];
->         const char *unit;
->
->         tmp[0] =3D '\0';
-> --
-> 2.43.0
->
+On Fri, 18 Oct 2024 14:14:21 +0200, Thorsten Blum wrote:
+> Add the __counted_by compiler attribute to the flexible array member
+> a_entries to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
+> CONFIG_FORTIFY_SOURCE.
+> 
+> Use struct_size() to calculate the number of bytes to allocate for new
+> and cloned acls and remove the local size variables.
+> 
+> [...]
 
-Sorry for the noise but the tag should have said [RESEND PATCH].
+Applied to the vfs.misc branch of the vfs/vfs.git tree.
+Patches in the vfs.misc branch should appear in linux-next soon.
 
-Bart
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
+
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
+
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs.misc
+
+[1/1] acl: Annotate struct posix_acl with __counted_by()
+      https://git.kernel.org/vfs/vfs/c/ac0812ef00c8
