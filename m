@@ -1,160 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 964041F8936;
-	Mon, 21 Oct 2024 14:59:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EAA02F4A;
+	Mon, 21 Oct 2024 16:30:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729522771; cv=none; b=CVGtYqmKzhvKarWAgJjDXsat0kNFFJl8gek/1fV8yEcR575HySReBBtoPwBfU7+InPe0lQJ++LkezcxjcfBaHzA5XgRL9AyfBe8u7Sd6jL1OtE6wAfTn8lL59QkNi03uYpFsAU1Ak+shKEjuALveTZUyxQ2LD091h+XDaO+Wjs4=
+	t=1729528241; cv=none; b=pZwDEjlSuXF6j5ICf8MnEUcEOE4m4U4VeuI52D+fwKk6NB3oPr1Ba8qGyZC3Y7hniotmFVb092vu7Qq5siyqZFyARA7VsvrZ1cF8bT4sywclBaztEznCHQW32dlH7/OeMstiKV5MOrKTfOwMZY3c1faSAZVEMP7lyVYFMyQhWxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729522771; c=relaxed/simple;
-	bh=albO36l24SFKiOm+yXAcpi7rfrjp7joQOfomUwb920c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LQuo/hpgii05BMOKQ5dp/KaXJIpW0aiSIDerlsEnucRVSGbbiXQsSrRTbIb0soXI38nqHSKK9wlj+wao94nGS1vDtmtxHP7HKTxeAgaDCbKFm7mnbwqe7eOhvGaXrFU8kNgAMZVKrqw1LfPPclefrvC01pExdG28mTu1PRRqUCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i0Ii4OXY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1729528241; c=relaxed/simple;
+	bh=wVHygHLX0rRBWh+MRDKlvnD+h8J3+q7ltadnmhMxdMA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=VgX2ib16HGIbjxWqSe0tVPaLevOeZeqXhmx1HjMunf/osq/kOS0zvUM1c+BOhHaLRjRmJ0nrM3Lp2CPCqKcWnIe2Lz081KNNDpgaEGtRYXpHC0oRgyyeH9RuYSxJieLI3FPgmjPELN5GYFwa6xdoyWohCSpiVimKiI4105IllaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=orfvX9tR; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i0Ii4OXY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C477C4CEC3;
-	Mon, 21 Oct 2024 14:59:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729522771;
-	bh=albO36l24SFKiOm+yXAcpi7rfrjp7joQOfomUwb920c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=i0Ii4OXYK3I8yRGtboVVVGKd4BxaOPScyZm4KX4qupSOZnr+P2JZB8hZNEDc4nNI7
-	 o5nH/bTrY0jxuNWE/J3FFUlQNEK90VBzMbmBTQRIbfv/QdqNZtVaVzMbCpmw6EOUep
-	 kDGDUBSzKPgy3qFwVoqEUXWhqQowew3les07r5VJZ2t3gpBxtnZ4ZmCcMUxVS+3061
-	 Qplyp9jHTIzNkdeLGJcRMP50OhEW09UBMelDCid0Xe7DpPu7x7ordT5W0xd5LXcBcD
-	 PPdmLNgPN/peOctn3WZJeaUC889Sy7qu/V9zHL0bW+rYtw4LMT0vP30yjKbsB4Rp/S
-	 V67SXlF4POitA==
-Date: Mon, 21 Oct 2024 15:59:25 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Jeff Xu <jeffxu@chromium.org>
-Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	akpm@linux-foundation.org, linux-kselftest@vger.kernel.org,
-	linux-mm@kvack.org, linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org, pedro.falcato@gmail.com,
-	willy@infradead.org, vbabka@suse.cz, Liam.Howlett@oracle.com,
-	rientjes@google.com, keescook@chromium.org
-Subject: Re: [PATCH v3 4/5] selftests/mseal: add more tests for mmap
-Message-ID: <a7b8f7a4-4202-489e-badf-6ef50463745e@sirena.org.uk>
-References: <f9b9422c-216d-422e-94b4-d8814b0b277e@lucifer.local>
- <CABi2SkWAv4LXvR1Wb1e31eyZ35JfyieXhDOq1bp_ZvHPLLg-qA@mail.gmail.com>
- <e0f440b0-5a45-4218-8c51-27f848c0617b@lucifer.local>
- <CABi2SkWNRTCC0LzDSuzgjC1tO=KF==5FXUnPHOrPzEG5abAeDg@mail.gmail.com>
- <1f8eff74-005b-4fa9-9446-47f4cdbf3e8d@sirena.org.uk>
- <CABi2SkV38U-ZCAq9W091zYkOM1m5e-C27YmVXdTCi-t+p_W_fQ@mail.gmail.com>
- <a2652ed4-ea8b-4b56-bac6-6479b3df6c14@sirena.org.uk>
- <CABi2SkVF3OtRcq9cCgLh_hOjxRnWq0owypw++xodrEfm=dt_qA@mail.gmail.com>
- <6aefd38b-d758-4e7c-a910-254251c2a294@sirena.org.uk>
- <CABi2SkUG8bhKQeHd_pvLw4y3ZY+Z8CvxZ_iV4YhTc+JQqe9TxA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="orfvX9tR"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49LGLcu4014411;
+	Mon, 21 Oct 2024 16:30:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	B7SbI7GfHWJG7zU0LfJLxgCILdUeybLhY9e6jy8p+wA=; b=orfvX9tReUZru0J/
+	X1GUjG45arnJtIoT/my1XoX/QkKRHR+DBibJCDwXeXPy/e0J/L9153JDdxBPLoVZ
+	nvCGUgopV2pklzo/ZGXZ2O9o2iWjyeRUC6oJim3NnYnvWcrkQrfPJMpS6QGWUNQI
+	p6WnptJjVdV+ay5XzLRevYZPw9iqm19h74Hwuzv0euBBaAPguYy4Hvsxs0Bwvuga
+	xNnMjttX7ft76paqz4ihYCyHKeWugZjXt0OYk4TCTUFeSONn2P/W1HGXSBT+IQ5O
+	G0W6TpgXDmYW5tHavBiqItM48HyKL6r1I7hHojDqjv/oahsnhd3It92JmdYHrDnj
+	o9nvww==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 42dkhd1jru-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 21 Oct 2024 16:30:32 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 49LGUVMQ011808
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 21 Oct 2024 16:30:31 GMT
+Received: from [10.48.241.209] (10.49.16.6) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 21 Oct
+ 2024 09:30:30 -0700
+Message-ID: <be969496-0c74-400c-b856-9524746a5ee2@quicinc.com>
+Date: Mon, 21 Oct 2024 09:30:30 -0700
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="2vh7jJ4clxa55i2K"
-Content-Disposition: inline
-In-Reply-To: <CABi2SkUG8bhKQeHd_pvLw4y3ZY+Z8CvxZ_iV4YhTc+JQqe9TxA@mail.gmail.com>
-X-Cookie: Most people prefer certainty to truth.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] wifi: ath11k: annotate skb of struct ath11k_ce_ring
+ with __counted_by
+To: Dmitry Antipov <dmantipov@yandex.ru>, Jeff Johnson <jjohnson@kernel.org>
+CC: Kalle Valo <kvalo@kernel.org>, Kees Cook <kees@kernel.org>,
+        <linux-hardening@vger.kernel.org>, <linux-wireless@vger.kernel.org>,
+        <lvc-project@linuxtesting.org>
+References: <20241021142745.585308-1-dmantipov@yandex.ru>
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+Content-Language: en-US
+In-Reply-To: <20241021142745.585308-1-dmantipov@yandex.ru>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: IRUHp4G_0wrYzE8DG4NQKUMqn40kwm2_
+X-Proofpoint-GUID: IRUHp4G_0wrYzE8DG4NQKUMqn40kwm2_
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
+ phishscore=0 spamscore=0 clxscore=1011 priorityscore=1501 impostorscore=0
+ mlxscore=0 suspectscore=0 lowpriorityscore=0 bulkscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2409260000
+ definitions=main-2410210118
 
+On 10/21/2024 7:27 AM, Dmitry Antipov wrote:
+> According to 'ath11k_ce_alloc_ring()', annotate flexible array
+> member 'skb' of 'struct ath11k_ce_ring' with '__counted_by()'
+> to improve runtime bounds checking when CONFIG_UBSAN_BOUNDS is
+> enabled. Compile tested only.
+> 
+> Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
+> ---
+>  drivers/net/wireless/ath/ath11k/ce.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/wireless/ath/ath11k/ce.h b/drivers/net/wireless/ath/ath11k/ce.h
+> index bcde2fcf02cf..9c54244970ce 100644
+> --- a/drivers/net/wireless/ath/ath11k/ce.h
+> +++ b/drivers/net/wireless/ath/ath11k/ce.h
+> @@ -162,7 +162,7 @@ struct ath11k_ce_ring {
+>  	u32 hal_ring_id;
+>  
+>  	/* keep last */
+> -	struct sk_buff *skb[];
+> +	struct sk_buff *skb[] __counted_by(nentries);
+>  };
+>  
+>  struct ath11k_ce_pipe {
 
---2vh7jJ4clxa55i2K
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I won't be taking any of these without testing. I don't want to introduce
+warnings due to the array being populated before setting the counter.
 
-On Fri, Oct 18, 2024 at 05:10:01PM -0700, Jeff Xu wrote:
-> On Fri, Oct 18, 2024 at 2:05=E2=80=AFPM Mark Brown <broonie@kernel.org> w=
-rote:
+At a minimum you need to document where the counter is being set and verify
+that is always done before accessing the flexible array.
 
-> > That's not the entire issue - it is also a problem that the test name
-> > is not the same between passes and failures so automated systems can't
-> > associate the failures with the passes.
+(If it isn't broken, don't fix it)
 
-> I failed to understand this part.
-> Maybe you meant the failing logging  is not the same across the
-> multiple versions of test code, by testname you meant "failing
-> logging"
-
-Tests are identified by the string given in the line reporting their
-result, that's not *really* a log message but rather a test name.  The
-strings for a given test need to be the same between different runs of
-the test program for tooling to be able to see that it's the same test.
-
-> >When a test starts failing they
-> > will see the passing test disappear and a new test appears that has nev=
-er
-> > worked.
->  > This will mean that for example if they have bisection support
-> > or UI for showing when a test started regressing those won't work.  The
-> > test name needs to be stable, diagnostics identifying why or where it
-> > failed should be separate prints.
-
-> If the test hasn't been changed for a while,  and start failing. Then
-
-Well, you'd hope that the tests never start failing but yet we still
-have tests and keep running them. =20
-
-> it is quite easy to run the same test on recent code changes. I think
-> you might agree with me on this. The only thing that bisec needs to
-> check is if the entire tests are failing or not.
-
-Unfortunately we're not in a position where people can reliably assume
-that every test program will always work everywhere so people work on
-individual tests, and it's certainly useful for UIs to be able to give
-an overview of what specifically failed.  A bunch of that is tests that
-just don't implement feature detection/skipping properly.
-
-> I haven't used the biset functionality, so I'm not sure how it works
-> exactly, e.g. when it runs on the old version of kernel, does it use
-> the test binary from the old kernel ? or the test binary provided by
-> dev ?
-
-That's up to whoever is doing the testing, but I think most people run
-the selftests from the version of the code they're testing.  Some of the
-subsystems aren't very enthusiastic about supporting running on older
-kernels.
-
-> > > how do I pass the "seal" flag to it ?
-> > > e.g. how do I run the same test twice, first seal =3D true, and secon=
-d seal=3Dfalse.
-> >
-> > >         test_seal_mmap_shrink(false);
-> > >         test_seal_mmap_shrink(true);
-
-> > That looks like fixture variants to me, using those with
-> > kselftest_harness.h will also fix the problem with duplicate test names
-> > being used since it generates different names for each instance of the
-> > test.  Something like:
-
-> Thanks! This is really helpful, I think the existing mseal_test can be
-> quickly converted using this example.
-
-Great!
-
-> (A side note: if selftest documentation is updated to include this
-> example, it will be much easier to future dev to follow)
-
-Possibly send a patch adding that wherever you were looking?  That was
-just a quick hack down of the gcs-locking program verifying that it had
-what I thought you needed.
-
---2vh7jJ4clxa55i2K
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmcWbEwACgkQJNaLcl1U
-h9D7kgf/Q8O65O7KSc2ZO90h5zDrTW5/re+yyLl6rrA33pKJ3+HBeThhcoovMeVD
-UGIP6+ppSvCsERN01Havz3+k+ekJefqaaZFRnRn7PKoD4SyxguuojkO6hJMASnsK
-QUSlPb7+jf+VjQA09AZO7Rt65pr3drmlPjZk7eVXh4Gi0y+oPsV/TZ3CZA74Tnc1
-3mGmetqcL4LsStRWPrO25RoJqkZrayX9P/WnjF5duR7r82pIIt7e5FdwyZIsWeia
-q3Reo7UQrCYnPWrZqJg64W1IKsVneN0FYMyUgtVBzlcQ2tR/Ncz5D/ySDxK6p+/r
-KZawNXyH8jQfs2HcpHmhVShtAw+/cQ==
-=ivod
------END PGP SIGNATURE-----
-
---2vh7jJ4clxa55i2K--
+/jeff
