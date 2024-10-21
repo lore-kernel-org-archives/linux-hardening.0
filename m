@@ -1,87 +1,88 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40DC11E32C6;
-	Mon, 21 Oct 2024 09:25:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFD851E0DD6;
+	Mon, 21 Oct 2024 09:34:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729502748; cv=none; b=TZ25Y8Y73q6bkSPR3e27iWUEGTtuOD+JVeYZoZmAP1sfR7cz/UvEtJdtVi1tpSqq22AKIaMgtqyBAWJd4By9oO1SWE/xPvJPw9dIULgKj7fKSpoHaaXBfJVl7aQpOLahUvAE316Gm/JzW/DxVeARaCAReT8WnsAHOmFSgJaL5I0=
+	t=1729503272; cv=none; b=EDvphpt7s/xuR4KALxNn1mbxD8yw+kk8JYuUjpgRyObuX12i94iv9ouNnml/b7l+ypsgVs7CGS6Y466UYjkoxfD81BASszKlBbqA3hofmnOXnQSjRRRgY3VI/gxByzctnjeEKWAB3dvj6bnReyAOzim9dgyZL2cW7ZHaIddM51Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729502748; c=relaxed/simple;
-	bh=oys9EWp0+ZDi6O702j7ITYfHMy36XMdPdEAfHWz8hWs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=f4/0SvGHSKtt3WAlJRCPWgB3m7GC4WJjHhcFT/n6L39WunCY4BjhhK4OiaNTYbT0DZ3IYTwyJEb955ZiJXyn7i+JnI09FZdicpDumSds7/ZuecCQn3927iyc6cyTVSp2FawhhuEyQwXvLr6OHSPLZw3Oi+Em9Irbcv8BILPv2t0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dMAeYRHf; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1729503272; c=relaxed/simple;
+	bh=u01+hcfeQkP1Lf6fJfGlgCbowj/JPXJjgVD0/eECaEc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ix7ubiNs8zdICCQzMJ7I9KV1oVjKxBZ6sXDjKTaPlmLoSpZ68Uvz7HrUMqAjo1upFUJRqS9ziTQq4Ux7bFOGFJd6+r5+ZwyPAM88PtOQFqCqSf7xPdMkEDR34ZYjp2K3pwN0YmWT3u2dNWLSGLAjFLlIZBz2E7hXmMR1bd2ki3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=LHcUhwvx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dMAeYRHf"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a93c1cc74fdso627423366b.3;
-        Mon, 21 Oct 2024 02:25:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729502744; x=1730107544; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oys9EWp0+ZDi6O702j7ITYfHMy36XMdPdEAfHWz8hWs=;
-        b=dMAeYRHfcE2p5Y0CydlA7XHaVHSniWNafzWPhGIPqamXZwEIgdoRt6ePHMBFwpMN0H
-         2g8XuV3HzhMrvAxXV5nmekHFHEOsk52iPHYuQZMRrj9wzh/tmf1SxGYzU/WKqIriLNK+
-         KF52Rrhip1Y3/U7gpXGnMo9+e3kEypNFpFymywfES0aBHN5FXa/E62vR3S9ZuY76Fd7K
-         fJJG1dGQPEvHiD/J/Uk2omHxgQie1uNaALRZT+fepvGUJBHu3a8GclHcTkZ4F7dvQ1Mj
-         waQ0spcS+cLe9lyxhdWYvIfZq6z9ffBC95YtznBJkd6savPcdZUX8sFS1uVYKCfQyaGn
-         LVmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729502744; x=1730107544;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oys9EWp0+ZDi6O702j7ITYfHMy36XMdPdEAfHWz8hWs=;
-        b=B198osq82WD3zr1PzjgcOh5hgpybSvdOsPnll8HgOcy4XNHUjJr5hOYw9CyBAXWFx+
-         fxS4o5cYGMyazO3WTppZgSZdpv0QFUluMTSyROklQp7Y6ELtjxAeAhxOKk73StmE347W
-         thr21jUwMTTY3AjgG5lKUKau63qvr3hfHc2vvZuMnlc1cIC54kb75YpeYsb+rlEM6P5c
-         5ZONSm+DPFHVgejeH2d2w9A6sskPI42UtDAiQn4CgV82QLjaf9xvTYNqhBXRq+13Zim7
-         TMIIIbUkxO/GYUncLfjTEx+fJY7FEyKWmBrlJkCEyF/qHJvrS4glbw6du9BjSOxPowrI
-         9rPA==
-X-Forwarded-Encrypted: i=1; AJvYcCU8zXPBCd5QBhoD/NKazvGg0dFxdIvtUEQMgGa3qBO/epZozGi0cnejiqMYMfXxc+HbnrI0wNbwuhxzbA0U@vger.kernel.org, AJvYcCVgFWL1mDk11Y9xv7RI8N9JsJgMpniLZPce10lPlVpOkVgxwkDA3PoL40H7f3jIOvHYof9oWvjWaEI5krR+ZB8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxRQESAp+XWyqmHpWZbAyPogErey4z0mFSz9P8sEu2tArEqO/bh
-	c70mlHPDyOMfGjt0ROA0fP6a0CJ+kWEauBXco89KRKsTzPizAsVLCIywkFVA3LVWkKutAZIqTMw
-	1Ve6GL2+FEAoFOsLmAF9Gu979rCw=
-X-Google-Smtp-Source: AGHT+IFm0gLisyhcjjngukS6vY82O8oUsw8+7BEJEc5i6j2uKOeRa+iIFgxIFXU1mwUV53zDxim0xYmh1qovBiBWu8o=
-X-Received: by 2002:a17:907:7296:b0:a9a:f84:fefd with SMTP id
- a640c23a62f3a-a9a69bad1admr1212265066b.36.1729502744282; Mon, 21 Oct 2024
- 02:25:44 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="LHcUhwvx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C23BFC4CEC3;
+	Mon, 21 Oct 2024 09:34:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1729503271;
+	bh=u01+hcfeQkP1Lf6fJfGlgCbowj/JPXJjgVD0/eECaEc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LHcUhwvxSpzlxIngQEywwHnB0/X2MkaYwhOSmKXQ8PS0IEOa+LJDFsUd2ahorWnsO
+	 6ijKgGGQR3FThJJGEnvDod/6cCU5coYt6z4v23Uk0tz1KCWKiDBfuQUYQ9sMH08xtj
+	 fjBS7TGpVDrX4LJr9wrVlJn98ViarEA4fqvaljbQ=
+Date: Mon, 21 Oct 2024 11:34:28 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	James Bottomley <James.Bottomley@hansenpartnership.com>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH] lib: string_helpers: fix potential snprintf() output
+ truncation
+Message-ID: <2024102113-shame-mooned-4f1b@gregkh>
+References: <20241021091417.37796-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241021091417.37796-1-brgl@bgdev.pl>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 In-Reply-To: <20241021091417.37796-1-brgl@bgdev.pl>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Mon, 21 Oct 2024 12:25:07 +0300
-Message-ID: <CAHp75VdOvcfp8ZiONr9viieT9JavvZYMfS+wX8x40JyZuzfyUg@mail.gmail.com>
-Subject: Re: [PATCH] lib: string_helpers: fix potential snprintf() output truncation
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, 
-	James Bottomley <James.Bottomley@hansenpartnership.com>, linux-hardening@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Oct 21, 2024 at 12:14=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl=
-> wrote:
->
+On Mon, Oct 21, 2024 at 11:14:17AM +0200, Bartosz Golaszewski wrote:
 > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
+> 
 > The output of ".%03u" with the unsigned int in range [0, 4294966295] may
 > get truncated if the target buffer is not 12 bytes.
+> 
+> Fixes: 3c9f3681d0b4 ("[SCSI] lib: add generic helper to print sizes rounded to the correct SI range")
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
+>  lib/string_helpers.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-I got the same warning last week, thanks for fixing it!
-Reviewed-by: Andy Shevchenko <andy@kernel.org>
+Hi,
 
---=20
-With Best Regards,
-Andy Shevchenko
+This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
+a patch that has triggered this response.  He used to manually respond
+to these common problems, but in order to save his sanity (he kept
+writing the same thing over and over, yet to different people), I was
+created.  Hopefully you will not take offence and will fix the problem
+in your patch and resubmit it so that it can be accepted into the Linux
+kernel tree.
+
+You are receiving this message because of the following common error(s)
+as indicated below:
+
+- You have marked a patch with a "Fixes:" tag for a commit that is in an
+  older released kernel, yet you do not have a cc: stable line in the
+  signed-off-by area at all, which means that the patch will not be
+  applied to any older kernel releases.  To properly fix this, please
+  follow the documented rules in the
+  Documentation/process/stable-kernel-rules.rst file for how to resolve
+  this.
+
+If you wish to discuss this problem further, or you have questions about
+how to resolve this issue, please feel free to respond to this email and
+Greg will reply once he has dug out from the pending patches received
+from other developers.
+
+thanks,
+
+greg k-h's patch email bot
