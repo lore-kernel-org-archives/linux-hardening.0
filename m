@@ -1,34 +1,33 @@
-Received: from forward102a.mail.yandex.net (forward102a.mail.yandex.net [178.154.239.85])
+Received: from forward101b.mail.yandex.net (forward101b.mail.yandex.net [178.154.239.148])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D05C71F5830;
-	Mon, 21 Oct 2024 14:28:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.85
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E66810A1E;
+	Mon, 21 Oct 2024 14:34:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729520884; cv=none; b=fTLK4bqO/ibJDlfQ6Qw4G6WFJdBEFFBjJz1dRysP58p47mn8j5RBAtq0ZXG3RXXVTGSKV/eDZy8ICJgq1C6xPGepS6P9LU8fDgNmjmElyjDMfA5nKJZsu2E0UIJyZ/oXT/iY5rTXU/GWkxIVNBHjRsiSAFyVBrIOcR7UqLxYRdQ=
+	t=1729521274; cv=none; b=GAeErpU+0QB7R7b8fEECcO2HAuwi8+ubOoPq/JsOpgSttyyhvvPV5wwp9VPZ1dJsRMRGjprhSyYQwPLyA1DTcSx52qgz1nq721i8plc0k/PbglSrQDSkj2MClYIhb9InEBsRaWZdS1IMHItWub8DXyQdrijG1GTSpHUq6dAQ1Os=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729520884; c=relaxed/simple;
-	bh=h1+84YaQh4EMr5rMIOVjvixJqy8wfeLILOSoKrH6zzk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kdcAxeD2A/HSnvCWOTYtdSy1R3DtQ/PYegXUPLGcb7EjRhidS9dWeN8PkGuQGDiMS6YDzPBiRA2ITIFmYoAWOl2ghpQxbD0w2HUOeZ6ycqF0jBEGSbH3L1S8p6O+gwqgSyyaoetjmGD/+8I18YW8BDKUkjFGIkerP5qtBCSMY64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=J7P96z7G; arc=none smtp.client-ip=178.154.239.85
+	s=arc-20240116; t=1729521274; c=relaxed/simple;
+	bh=yMAItFyhgpcqTSt4usJTGu4wJeWl8vY6+wsPHFvrQcs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mHWezZYPY57uuNGIXSQIqRVASZIppQVJPX0pKMCJWiHJjpP+wR5V/bMowoTVtxqKKaAtHgLLKskLz4lS68mJY8XgD0ODNSgHLK/BLFFavDYdAxMYw6Y4UVnhYGfdpW/gEtxq5lSd5hUw+tXupde4oGu91i9wD5fM6lh+H357uj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=jsdaLZuD; arc=none smtp.client-ip=178.154.239.148
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="J7P96z7G"
-Received: from mail-nwsmtp-smtp-production-main-84.vla.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-84.vla.yp-c.yandex.net [IPv6:2a02:6b8:c2a:1c1:0:640:adc:0])
-	by forward102a.mail.yandex.net (Yandex) with ESMTPS id 4D0DE60E44;
-	Mon, 21 Oct 2024 17:27:53 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-84.vla.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id lRSmp10RnW20-bhKMYR3U;
-	Mon, 21 Oct 2024 17:27:52 +0300
+	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="jsdaLZuD"
+Received: from mail-nwsmtp-smtp-production-main-25.sas.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-25.sas.yp-c.yandex.net [IPv6:2a02:6b8:c1c:2911:0:640:4396:0])
+	by forward101b.mail.yandex.net (Yandex) with ESMTPS id 73CCB60C70;
+	Mon, 21 Oct 2024 17:34:24 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-25.sas.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id KYSvOR0ZrOs0-EbiNDfsF;
+	Mon, 21 Oct 2024 17:34:23 +0300
 X-Yandex-Fwd: 1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
-	t=1729520872; bh=7xC2Q+d9ax4rPHn12docKqRl8Axozv0IMIx6OMTAbmU=;
-	h=Message-ID:Date:In-Reply-To:Cc:Subject:References:To:From;
-	b=J7P96z7GpM9VBvB30nNMYZGHZLwL7CWxXaZrmeeLX2Q7jVDccPiP9ZjXXXXLuGlkQ
-	 eiBbncnB+1KSIBV6IaszrQA2DEDUwNBIl23INhHPI8L+tHGxuFhkdYedeKMoTBugxB
-	 mBJ969EGiX4IY3XfG1R7S74Sgg5N2DptYC5NiQtY=
-Authentication-Results: mail-nwsmtp-smtp-production-main-84.vla.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
+	t=1729521263; bh=14zwWzswHzIcwUFXjbeP04U1XnUpSaYwD4URdYf6QW4=;
+	h=Message-ID:Date:Cc:Subject:To:From;
+	b=jsdaLZuD+Uu4KiVnFzmF4AtgLulIA9za2zriNc4zrGcEuOTtKxOkWRdwZdoVCWGJ8
+	 RovmcOy8KTfTmXXqA7KtnZq70hn/+lp1s7EjPTG5MheN9gEL3PsXShbSTsgDPswQjJ
+	 dW+ONP53WUTZO0xTvkWBjKox2XLxYZi7GdSYpMok=
+Authentication-Results: mail-nwsmtp-smtp-production-main-25.sas.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
 From: Dmitry Antipov <dmantipov@yandex.ru>
 To: Jeff Johnson <jjohnson@kernel.org>
 Cc: Kalle Valo <kvalo@kernel.org>,
@@ -37,12 +36,10 @@ Cc: Kalle Valo <kvalo@kernel.org>,
 	linux-wireless@vger.kernel.org,
 	lvc-project@linuxtesting.org,
 	Dmitry Antipov <dmantipov@yandex.ru>
-Subject: [PATCH 2/2] wifi: ath11k: annotate ch_param of struct scan_chan_list_params with __counted_by
-Date: Mon, 21 Oct 2024 17:27:45 +0300
-Message-ID: <20241021142745.585308-2-dmantipov@yandex.ru>
+Subject: [PATCH 1/2] wifi: ath12k: annotate skb of struct ath12k_ce_ring with __counted_by
+Date: Mon, 21 Oct 2024 17:34:18 +0300
+Message-ID: <20241021143419.587716-1-dmantipov@yandex.ru>
 X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20241021142745.585308-1-dmantipov@yandex.ru>
-References: <20241021142745.585308-1-dmantipov@yandex.ru>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -51,29 +48,29 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-According to 'ath11k_reg_update_chan_list()', annotate flexible
-array member 'ch_param' of 'struct scan_chan_list_params' with
-'__counted_by()' attribute to improve runtime bounds checking
-when CONFIG_UBSAN_BOUNDS is enabled. Compile tested only.
+Accorind to 'ath12k_ce_alloc_ring()', annotate flexible array
+member 'skb' of 'struct ath12k_ce_ring' with '__counted_by()'
+to improve runtime bounds checking when CONFIG_UBSAN_BOUNDS is
+enabled. Compile tested only.
 
 Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
 ---
- drivers/net/wireless/ath/ath11k/wmi.h | 2 +-
+ drivers/net/wireless/ath/ath12k/ce.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ath/ath11k/wmi.h b/drivers/net/wireless/ath/ath11k/wmi.h
-index 8982b909c821..58471da42087 100644
---- a/drivers/net/wireless/ath/ath11k/wmi.h
-+++ b/drivers/net/wireless/ath/ath11k/wmi.h
-@@ -3819,7 +3819,7 @@ struct wmi_stop_scan_cmd {
- struct scan_chan_list_params {
- 	u32 pdev_id;
- 	u16 nallchans;
--	struct channel_param ch_param[];
-+	struct channel_param ch_param[] __counted_by(nallchans);
+diff --git a/drivers/net/wireless/ath/ath12k/ce.h b/drivers/net/wireless/ath/ath12k/ce.h
+index 857bc5f9e946..6967e3891030 100644
+--- a/drivers/net/wireless/ath/ath12k/ce.h
++++ b/drivers/net/wireless/ath/ath12k/ce.h
+@@ -135,7 +135,7 @@ struct ath12k_ce_ring {
+ 	u32 hal_ring_id;
+ 
+ 	/* keep last */
+-	struct sk_buff *skb[];
++	struct sk_buff *skb[] __counted_by(nentries);
  };
  
- struct wmi_scan_chan_list_cmd {
+ struct ath12k_ce_pipe {
 -- 
 2.47.0
 
