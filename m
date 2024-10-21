@@ -1,113 +1,129 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from fhigh-b7-smtp.messagingengine.com (fhigh-b7-smtp.messagingengine.com [202.12.124.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EAA02F4A;
-	Mon, 21 Oct 2024 16:30:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C63151C330C;
+	Mon, 21 Oct 2024 17:01:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729528241; cv=none; b=pZwDEjlSuXF6j5ICf8MnEUcEOE4m4U4VeuI52D+fwKk6NB3oPr1Ba8qGyZC3Y7hniotmFVb092vu7Qq5siyqZFyARA7VsvrZ1cF8bT4sywclBaztEznCHQW32dlH7/OeMstiKV5MOrKTfOwMZY3c1faSAZVEMP7lyVYFMyQhWxM=
+	t=1729530100; cv=none; b=umxL/qsppxN59ayZd0akUNRkCTjTW69Whaw/n3OOJ65zf/o25llR5J2FCAY3LnuVfJv6o/6dHIq5XEjel7LbujY19dZcJgSImZFufkws0tkYTebtp8thMZ4miBsUBClX/ziw7iGjhYKITTtY/kHjFHpEorsiApS2SwlULeynCws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729528241; c=relaxed/simple;
-	bh=wVHygHLX0rRBWh+MRDKlvnD+h8J3+q7ltadnmhMxdMA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=VgX2ib16HGIbjxWqSe0tVPaLevOeZeqXhmx1HjMunf/osq/kOS0zvUM1c+BOhHaLRjRmJ0nrM3Lp2CPCqKcWnIe2Lz081KNNDpgaEGtRYXpHC0oRgyyeH9RuYSxJieLI3FPgmjPELN5GYFwa6xdoyWohCSpiVimKiI4105IllaE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=orfvX9tR; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1729530100; c=relaxed/simple;
+	bh=EdrW4QyQlhTewuPVfOLFcxOIGlObb6XfUuBmUv9yjPI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=spNbk9bKoraGFDyH3wf48fAyl6xtulL/5kZZ0eicXraU74FTkzxTjOyY/THK2d4jUwYYNZSjlDobUn/NKJ2+1/J9PnAwpywnw2vzTWXwT/O15+e3HORcj5soLGClfV/LEuFE5kKO8jDaWoqnwYnk424l4kH7BqAIubOA89RbKGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jfarr.cc; spf=pass smtp.mailfrom=jfarr.cc; dkim=pass (2048-bit key) header.d=jfarr.cc header.i=@jfarr.cc header.b=kA3gMl4h; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=MTLizXYG; arc=none smtp.client-ip=202.12.124.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jfarr.cc
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jfarr.cc
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="orfvX9tR"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49LGLcu4014411;
-	Mon, 21 Oct 2024 16:30:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	B7SbI7GfHWJG7zU0LfJLxgCILdUeybLhY9e6jy8p+wA=; b=orfvX9tReUZru0J/
-	X1GUjG45arnJtIoT/my1XoX/QkKRHR+DBibJCDwXeXPy/e0J/L9153JDdxBPLoVZ
-	nvCGUgopV2pklzo/ZGXZ2O9o2iWjyeRUC6oJim3NnYnvWcrkQrfPJMpS6QGWUNQI
-	p6WnptJjVdV+ay5XzLRevYZPw9iqm19h74Hwuzv0euBBaAPguYy4Hvsxs0Bwvuga
-	xNnMjttX7ft76paqz4ihYCyHKeWugZjXt0OYk4TCTUFeSONn2P/W1HGXSBT+IQ5O
-	G0W6TpgXDmYW5tHavBiqItM48HyKL6r1I7hHojDqjv/oahsnhd3It92JmdYHrDnj
-	o9nvww==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 42dkhd1jru-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 21 Oct 2024 16:30:32 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 49LGUVMQ011808
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 21 Oct 2024 16:30:31 GMT
-Received: from [10.48.241.209] (10.49.16.6) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 21 Oct
- 2024 09:30:30 -0700
-Message-ID: <be969496-0c74-400c-b856-9524746a5ee2@quicinc.com>
-Date: Mon, 21 Oct 2024 09:30:30 -0700
+	dkim=pass (2048-bit key) header.d=jfarr.cc header.i=@jfarr.cc header.b="kA3gMl4h";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="MTLizXYG"
+Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 92B6E25400DF;
+	Mon, 21 Oct 2024 13:01:37 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-11.internal (MEProxy); Mon, 21 Oct 2024 13:01:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jfarr.cc; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1729530097; x=1729616497; bh=0Cp/HfzuQ/
+	MdndVSy8g4lWxf16i11f2fUzT7z2EWKY0=; b=kA3gMl4hNlwQUJBN0El7vPwZmb
+	tHNQEyh8XFScbu4/dKOAZKsJ/znUd5g9YaXVDJ08hZVXzUGeOEVhSgvVvPculIvZ
+	9Hob6qPNMq2H50lkS6IukZQ/Yp7kOZGJKkQKl8d0b+yhfFeFkS/zXfVZst/jftLW
+	aAwlJd0LaXSA4xAYv3KZiMmo4SM+8FZ7/cfEiawfR4Yn//PWYki31yGhF2LvxNmQ
+	JwFCImqTX5sXW7MOQnggjH6fKf6v0A+R83Qt38yFyUwI7ai2StkrpZjOiFixDih2
+	fFfFt5k7OJKx9D3L+zDMIfiJcFhTQwWzX8d6hgPZzqj0cDZNKAOx4KfbPmdA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm3; t=1729530097; x=1729616497; bh=0Cp/HfzuQ/MdndVSy8g4lWxf16i1
+	1f2fUzT7z2EWKY0=; b=MTLizXYGUWuhuuU/jMFO7jL8+HFW3oNzCoLcTiFeeQIu
+	0PszXAa2/JI8o+npKACIgFtw2ErBC8xFGVO4qpBouQGZdXZv8aFfPpDqlcqza0kp
+	0NZPm4ey035NyASqfy6irrhn10R25ABcd94JGPdIlSMHsuGU8IKRR0ow6Id7ZCoJ
+	D/Zm4L6SfLPwVsMABITYKYXGQazU4z6dEK+SAG/wHpDPI8m7sttTLM6M9ZPp/nkt
+	T59c7TaZus8kwn61EUQpVVSmC2h2E99vYH40+i8C4wBZTYJERvnk2+eVtZ/Ey28A
+	GhdYGNKX3AdEkGHOweFCZPnCHHqULOCRar6pujWLRA==
+X-ME-Sender: <xms:8YgWZxi6EBu8QHK7JK8e0L8DEENnALhA4lYvrOOEtAxn8oJCtP7I7A>
+    <xme:8YgWZ2DoZjNXWfX-BTZklWzria2DPobpI8PeIVYVQeRpVoYXFgQybjb6AKmrAd5AF
+    T-rZlpgmx3q0biNagY>
+X-ME-Received: <xmr:8YgWZxGJd8d48xSgawyFbcjW6UykXpduMiaYrwmwyn1loG0s6sNV8godW5BTmwsCcGTRP0C5U3NEEmgsIlN7NJYc0Hwz>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvdehledguddtkecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenfghrlhcuvffnffculdeftddmnecujfgurhepfffhvfevuffk
+    fhggtggujgesthdtredttddtvdenucfhrhhomheplfgrnhcujfgvnhgurhhikhcuhfgrrh
+    hruceokhgvrhhnvghlsehjfhgrrhhrrdgttgeqnecuggftrfgrthhtvghrnhepudekgeff
+    tdefiefhheetvedvieeuteetlefgfedvhfelueefgeeiudeiudfhkeeinecuvehluhhsth
+    gvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepkhgvrhhnvghlsehjfhgr
+    rhhrrdgttgdpnhgspghrtghpthhtohepuddvpdhmohguvgepshhmthhpohhuthdprhgtph
+    htthhopehmihhguhgvlhdrohhjvggurgdrshgrnhguohhnihhssehgmhgrihhlrdgtohhm
+    pdhrtghpthhtohepnhgrthhhrghnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmoh
+    hrsghosehgohhoghhlvgdrtghomhdprhgtphhtthhopehkvggvsheskhgvrhhnvghlrdho
+    rhhgpdhrtghpthhtohepthhhohhrshhtvghnrdgslhhumhesthhosghluhigrdgtohhmpd
+    hrtghpthhtohepkhgvnhhtrdhovhgvrhhsthhrvggvtheslhhinhhugidruggvvhdprhgt
+    phhtthhopehrvghgrhgvshhsihhonhhssehlihhsthhsrdhlihhnuhigrdguvghvpdhrtg
+    hpthhtoheplhhinhhugidqsggtrggthhgvfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhg
+    pdhrtghpthhtoheplhhinhhugidqhhgrrhguvghnihhnghesvhhgvghrrdhkvghrnhgvlh
+    drohhrgh
+X-ME-Proxy: <xmx:8YgWZ2QOmrGfUKvIGQOhXPzkCkUkA5WQZWwAtqxnP5vfdWY7Ua79Ug>
+    <xmx:8YgWZ-y8-T8y4LGPB-fX5aS-l_a45_qUu7cG23eHMVk9M5z33qQRiA>
+    <xmx:8YgWZ84UiO9Dmon_rS2AhGrMK7fkPNOQma_aXQ05akDKqwyof0drEg>
+    <xmx:8YgWZzyBJ4Te7--8i8aHmuovxDme4klsNLJsQFiXndKRPAkZG_Nm_A>
+    <xmx:8YgWZ5pI5pLNLilpi0V_sU7_PJFarjt7RUm_rtTKX8VicfY4LkxckR7T>
+Feedback-ID: i01d149f8:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 21 Oct 2024 13:01:35 -0400 (EDT)
+Date: Mon, 21 Oct 2024 19:01:32 +0200
+From: Jan Hendrik Farr <kernel@jfarr.cc>
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Nathan Chancellor <nathan@kernel.org>, Bill Wendling <morbo@google.com>,
+	Kees Cook <kees@kernel.org>,
+	Thorsten Blum <thorsten.blum@toblux.com>, kent.overstreet@linux.dev,
+	regressions@lists.linux.dev, linux-bcachefs@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	ardb@kernel.org, ojeda@kernel.org
+Subject: Re: [REGRESSION][BISECTED] erroneous buffer overflow detected in
+ bch2_xattr_validate
+Message-ID: <ZxaI7EcpK3HIm0by@archlinux>
+References: <202410031424.45E5D19@keescook>
+ <Zv8RIs-htdc-PtXB@archlinux>
+ <202410040958.C19D3B9E48@keescook>
+ <ZwNb-_UPL9BPSg9N@archlinux>
+ <CAGG=3QUatjhoDHdkDtZ+ftz7JvMhvaQ9XkFyyZSt_95V_nSN8A@mail.gmail.com>
+ <CAGG=3QVcsuN0Sk79oZWjY_nNTo_XfGYsDT3gc7vEmLyS8OK3rA@mail.gmail.com>
+ <ZxB-uh1KzfD4ww2a@archlinux>
+ <20241017165522.GA370674@thelio-3990X>
+ <ZxWvcAPHPaRxp9UE@archlinux>
+ <CANiq72=yYDcG=ef9TxCCECwjSgW-5zFoTJqcjrWGOALCvaW0SA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] wifi: ath11k: annotate skb of struct ath11k_ce_ring
- with __counted_by
-To: Dmitry Antipov <dmantipov@yandex.ru>, Jeff Johnson <jjohnson@kernel.org>
-CC: Kalle Valo <kvalo@kernel.org>, Kees Cook <kees@kernel.org>,
-        <linux-hardening@vger.kernel.org>, <linux-wireless@vger.kernel.org>,
-        <lvc-project@linuxtesting.org>
-References: <20241021142745.585308-1-dmantipov@yandex.ru>
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-Content-Language: en-US
-In-Reply-To: <20241021142745.585308-1-dmantipov@yandex.ru>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: IRUHp4G_0wrYzE8DG4NQKUMqn40kwm2_
-X-Proofpoint-GUID: IRUHp4G_0wrYzE8DG4NQKUMqn40kwm2_
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
- phishscore=0 spamscore=0 clxscore=1011 priorityscore=1501 impostorscore=0
- mlxscore=0 suspectscore=0 lowpriorityscore=0 bulkscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2409260000
- definitions=main-2410210118
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANiq72=yYDcG=ef9TxCCECwjSgW-5zFoTJqcjrWGOALCvaW0SA@mail.gmail.com>
 
-On 10/21/2024 7:27 AM, Dmitry Antipov wrote:
-> According to 'ath11k_ce_alloc_ring()', annotate flexible array
-> member 'skb' of 'struct ath11k_ce_ring' with '__counted_by()'
-> to improve runtime bounds checking when CONFIG_UBSAN_BOUNDS is
-> enabled. Compile tested only.
+On 21 08:04:03, Miguel Ojeda wrote:
+> > Also after gcc 15 is released I don't think a version check for gcc
+> > should be necessary. I only see an explicit version check as required
+> > when we know a certain version is broken. Otherwise I would prefer using
+> > the build test.
 > 
-> Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
-> ---
->  drivers/net/wireless/ath/ath11k/ce.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Yeah, build tests are nice, although they require spawning a process
+> and so on, which (as far as I understand) we try to minimize. Version
+> checks also have the advantage that it is easy to remember/check when
+> we can remove the checks themselves when we upgrade the minimum
+> versions.
 > 
-> diff --git a/drivers/net/wireless/ath/ath11k/ce.h b/drivers/net/wireless/ath/ath11k/ce.h
-> index bcde2fcf02cf..9c54244970ce 100644
-> --- a/drivers/net/wireless/ath/ath11k/ce.h
-> +++ b/drivers/net/wireless/ath/ath11k/ce.h
-> @@ -162,7 +162,7 @@ struct ath11k_ce_ring {
->  	u32 hal_ring_id;
->  
->  	/* keep last */
-> -	struct sk_buff *skb[];
-> +	struct sk_buff *skb[] __counted_by(nentries);
->  };
->  
->  struct ath11k_ce_pipe {
 
-I won't be taking any of these without testing. I don't want to introduce
-warnings due to the array being populated before setting the counter.
+If the goal is to minimize the need for build tests, I think we should
+go with Nathan's suggestion of keeping the build test for now (to
+support pre-release gcc versions) and remove it and just go with
+versions checks for both gcc and clang once gcc 15 is released.
 
-At a minimum you need to document where the counter is being set and verify
-that is always done before accessing the flexible array.
+Best Regards
+Jan
 
-(If it isn't broken, don't fix it)
-
-/jeff
