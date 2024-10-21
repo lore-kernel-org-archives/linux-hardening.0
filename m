@@ -1,74 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from forward102a.mail.yandex.net (forward102a.mail.yandex.net [178.154.239.85])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 436CE1EABC4;
-	Mon, 21 Oct 2024 14:01:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47BBE1E0B96;
+	Mon, 21 Oct 2024 14:27:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.85
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729519286; cv=none; b=SpzLJPoZggwM9RIm3rGmjtJ/jkfXP2zTSeFhe2ShV9/UaXaIdbk47RjYLcBV3wLhkj6Avu2xjGYFUzfps/QHQILZ2kC3BwnjVK4URlLy+ZV73EXpq6NKSYZONxSxaNp/D8Q0cNIt3+PxBRUDP45FTUCmifJHotXKcpzOkAMF1g8=
+	t=1729520882; cv=none; b=DNyym2Z2bZN7bkH28vYNIW+oSVFiOU1wiVu2L5phr6XGiXN8XUtmSz1k1QEICrNpnd//olvYsKt4L1YUlGHgKrI/3amRW81iD17sfZpE2eR1ZHpe/0rkJT5ct3r0kFMNe2k4vu8o4m/9gp3Ad+xExR9wzDtSmRHkxjeildrUFYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729519286; c=relaxed/simple;
-	bh=FnatMlsWR8HNVRvD27PQukDVaOYbEhYZxP9yRQAEeiM=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=iYKUlWpXMBbUTUq4IhOqqemYVgX0Df7OIkWd8aeFgtNEjjz4rs3QnC+08KTlEZakvhYE7LaWVW3sczzliPReYmtE5ypY+hB1COddAwnaXhl3aF18vblWYJzsuqEkohJFahxh09W8i9hdElPm8B5/Twfh/rqi55LPVVmD1Y05qFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L/qUsyH2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1729520882; c=relaxed/simple;
+	bh=gG7Gb9EtRA3/IL6w124GoeryzwxF46nAfxADUAv7nLU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WQEQjJCMrdhN0YtdpX7pnVyckI/RtnILWqjfGHYABM+3f1zTtxnmGZ56UIymKlqTgq3+3WfZ/yAQk6qgo/dI3AaJVHVxJiF5ZEh9+kd6njoW5zSVRlWOosATGrm81DZ3JZY9yAUgPUBpTUmOKkvR9vADb9MkTCSmebUPe2WZqTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=Wurkv7Yy; arc=none smtp.client-ip=178.154.239.85
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L/qUsyH2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70FC7C4CEC3;
-	Mon, 21 Oct 2024 14:01:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729519285;
-	bh=FnatMlsWR8HNVRvD27PQukDVaOYbEhYZxP9yRQAEeiM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=L/qUsyH2EJpc48hNSUv+N7ygmzYckvdEGROuSPAxfADw7yTg1u0AKLcHMMlR6hSP6
-	 Yyomk7CL+L7aSFMn49J7hm5OHTg74PO0NHzx32auKXbGoao8znEsCkQaTT4xN2d3py
-	 QD7H2nabyDkPFzFlN9WcPc3ZHj92e/uE5ES0HqpDNwNg4Kzy2R/XXDinBnZiZORHsq
-	 sn2qNOwEYWbk0KbGIBroq0itVylb2MYYyTUkgTsloBGe8EEhYvnRHK+LjHXzMLcRWU
-	 +R7ccjtN1SLKGUR0aKFf08NAe8L5+stP6jWsixcbdh8DH/3Yee0cY+ICdqMnz3enY+
-	 us7m9vfVwfg+w==
-Date: Mon, 21 Oct 2024 23:01:21 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Jinjie Ruan <ruanjinjie@huawei.com>
-Cc: <naveen@kernel.org>, <anil.s.keshavamurthy@intel.com>,
- <davem@davemloft.net>, <kees@kernel.org>, <gustavoars@kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
- <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH 0/3] kprobes: Annotate structs with __counted_by()
-Message-Id: <20241021230121.a5a6c2f746d3141d9640c483@kernel.org>
-In-Reply-To: <20240813115334.3922580-1-ruanjinjie@huawei.com>
-References: <20240813115334.3922580-1-ruanjinjie@huawei.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="Wurkv7Yy"
+Received: from mail-nwsmtp-smtp-production-main-84.vla.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-84.vla.yp-c.yandex.net [IPv6:2a02:6b8:c2a:1c1:0:640:adc:0])
+	by forward102a.mail.yandex.net (Yandex) with ESMTPS id 1DEF460B4B;
+	Mon, 21 Oct 2024 17:27:51 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-84.vla.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id lRSmp10RnW20-TEZCJ34u;
+	Mon, 21 Oct 2024 17:27:50 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
+	t=1729520870; bh=6faOcTS6mFHEY4gygamW7D4tB4w3vk9ae3heHZMowuY=;
+	h=Message-ID:Date:Cc:Subject:To:From;
+	b=Wurkv7Yy5/Fo3n0sL1KEWmqIUsdsciCY3IDm5W5SviLt+HhWWklyljHexVF27rFPg
+	 YUwH9vakAwtpsfGsqolA+5iRjE8ofs+akT0MbwCd2PPB16FxaIE+1RoFBuyy8D6Zwz
+	 YkcrRHaZMHfSktjcE6XRS7EMzZ/xlNT2qJV/Igxo=
+Authentication-Results: mail-nwsmtp-smtp-production-main-84.vla.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
+From: Dmitry Antipov <dmantipov@yandex.ru>
+To: Jeff Johnson <jjohnson@kernel.org>
+Cc: Kalle Valo <kvalo@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	linux-hardening@vger.kernel.org,
+	linux-wireless@vger.kernel.org,
+	lvc-project@linuxtesting.org,
+	Dmitry Antipov <dmantipov@yandex.ru>
+Subject: [PATCH 1/2] wifi: ath11k: annotate skb of struct ath11k_ce_ring with __counted_by
+Date: Mon, 21 Oct 2024 17:27:44 +0300
+Message-ID: <20241021142745.585308-1-dmantipov@yandex.ru>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Tue, 13 Aug 2024 19:53:31 +0800
-Jinjie Ruan <ruanjinjie@huawei.com> wrote:
+According to 'ath11k_ce_alloc_ring()', annotate flexible array
+member 'skb' of 'struct ath11k_ce_ring' with '__counted_by()'
+to improve runtime bounds checking when CONFIG_UBSAN_BOUNDS is
+enabled. Compile tested only.
 
-> Annotate structs with __counted_by() for kprobe and do some cleanup.
-> 
-> Jinjie Ruan (3):
->   kprobes: Annotate structs with __counted_by()
->   kprobes: Cleanup the config comment
->   kprobes: Cleanup collect_one_slot() and __disable_kprobe()
-> 
->  kernel/kprobes.c | 87 ++++++++++++++++++++++++------------------------
->  1 file changed, 44 insertions(+), 43 deletions(-)
+Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
+---
+ drivers/net/wireless/ath/ath11k/ce.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-This series looks good to me.
-
-Thanks for cleaning up!
-
-> 
-> -- 
-> 2.34.1
-> 
-
-
+diff --git a/drivers/net/wireless/ath/ath11k/ce.h b/drivers/net/wireless/ath/ath11k/ce.h
+index bcde2fcf02cf..9c54244970ce 100644
+--- a/drivers/net/wireless/ath/ath11k/ce.h
++++ b/drivers/net/wireless/ath/ath11k/ce.h
+@@ -162,7 +162,7 @@ struct ath11k_ce_ring {
+ 	u32 hal_ring_id;
+ 
+ 	/* keep last */
+-	struct sk_buff *skb[];
++	struct sk_buff *skb[] __counted_by(nentries);
+ };
+ 
+ struct ath11k_ce_pipe {
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.47.0
+
