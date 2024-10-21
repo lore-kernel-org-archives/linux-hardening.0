@@ -1,98 +1,87 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A0861E2856
-	for <linux-hardening@vger.kernel.org>; Mon, 21 Oct 2024 09:14:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40DC11E32C6;
+	Mon, 21 Oct 2024 09:25:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729502067; cv=none; b=l/WP5u9AOxKtv0EFXAZadng/xg4lrYwYGDLueIQ03siGYKz5RJ+fzefr5k0k3nPp2LzGENJ+DAOEXM25wVfNFYlAI7R72EH94E4skBfxKsWo/mAU8DBj5XKQENS9a10ZxxR55V6QdimnTyjkTNH/+adwDPe6fI1mpiHCUdt9owk=
+	t=1729502748; cv=none; b=TZ25Y8Y73q6bkSPR3e27iWUEGTtuOD+JVeYZoZmAP1sfR7cz/UvEtJdtVi1tpSqq22AKIaMgtqyBAWJd4By9oO1SWE/xPvJPw9dIULgKj7fKSpoHaaXBfJVl7aQpOLahUvAE316Gm/JzW/DxVeARaCAReT8WnsAHOmFSgJaL5I0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729502067; c=relaxed/simple;
-	bh=ASWrvXnuLMsHbkqZnMajEVLcesZQBnkmFo5lh1TiMiY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=L081LnKyYo20Lu2EYUQ/2rEia4ZkKfG0EB45r0sczqtCCP6ZjdOVtRr0Dyl7cgWJ0LJqNRQ7473FSnHGKuhei+JDcpDYR7OoQBkZ87KCrRxoOxci6OrqSUejanHMyofe3pVL8545f0pg57xJ2iTBHMkwpKm0OusLtPrct8Du4eU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=HHlRO/MV; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1729502748; c=relaxed/simple;
+	bh=oys9EWp0+ZDi6O702j7ITYfHMy36XMdPdEAfHWz8hWs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=f4/0SvGHSKtt3WAlJRCPWgB3m7GC4WJjHhcFT/n6L39WunCY4BjhhK4OiaNTYbT0DZ3IYTwyJEb955ZiJXyn7i+JnI09FZdicpDumSds7/ZuecCQn3927iyc6cyTVSp2FawhhuEyQwXvLr6OHSPLZw3Oi+Em9Irbcv8BILPv2t0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dMAeYRHf; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="HHlRO/MV"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43169902057so17564295e9.0
-        for <linux-hardening@vger.kernel.org>; Mon, 21 Oct 2024 02:14:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dMAeYRHf"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a93c1cc74fdso627423366b.3;
+        Mon, 21 Oct 2024 02:25:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1729502064; x=1730106864; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=5raYV5vPxawZNarPbF7rVysyaAZqhzjtOUPOejyw3qk=;
-        b=HHlRO/MVX1dtUD+mxEsabbrRTsOQDjotwpVkIm4L4dD2R2TD2ocxYY/yTwNpjhluVo
-         LFSGyP6HylQp8Ziaf/SlLAJCCH3Cf97AqrQ9BpALpSxd8SO6O+rTYJB6XDmX4mNISlzB
-         d3m/Fa6iTxUUBvq+nNc95Dhvep/E6pZtFctRcRce0IlQpxlQcnL1PuLZx4XS1iRfVpX8
-         5yIAOJzU4pFh1MoCTEND2MstqW7DYuDcgwI4sRKl/nTwVEKZSC9eaMpBkopaUuRngK1m
-         H5wsz0KYlok0kqd41SEeU9mzW5hdHzSo9qd1dE0vz44THZX2/AQ95mJzjyUPOtxGofAd
-         wX/w==
+        d=gmail.com; s=20230601; t=1729502744; x=1730107544; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oys9EWp0+ZDi6O702j7ITYfHMy36XMdPdEAfHWz8hWs=;
+        b=dMAeYRHfcE2p5Y0CydlA7XHaVHSniWNafzWPhGIPqamXZwEIgdoRt6ePHMBFwpMN0H
+         2g8XuV3HzhMrvAxXV5nmekHFHEOsk52iPHYuQZMRrj9wzh/tmf1SxGYzU/WKqIriLNK+
+         KF52Rrhip1Y3/U7gpXGnMo9+e3kEypNFpFymywfES0aBHN5FXa/E62vR3S9ZuY76Fd7K
+         fJJG1dGQPEvHiD/J/Uk2omHxgQie1uNaALRZT+fepvGUJBHu3a8GclHcTkZ4F7dvQ1Mj
+         waQ0spcS+cLe9lyxhdWYvIfZq6z9ffBC95YtznBJkd6savPcdZUX8sFS1uVYKCfQyaGn
+         LVmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729502064; x=1730106864;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5raYV5vPxawZNarPbF7rVysyaAZqhzjtOUPOejyw3qk=;
-        b=vV1VVt2pW6O6k4lo9lE+oV7AcMbegvFtugBlgKpoIfulxvhKMT2jMNp3mrvNf6V7bk
-         S9crjfdMJb+OosRx9kiHQ6DA0IWr+ukETVRTW1nYcbK//Fuq2gbIepZpPDJTWv0v2GDd
-         hb5UvyrZtPXPZcsjeIDnZlx89MnGBHh0kVzibJkRsnfGYHZ7i5+X+LpkQflNdWy0Enre
-         /Dqo1b0SZNcyAxXg5VV0wI06DRzEUZuRID+G5rXWvj535OOkOrJ1RWGRL9WUuGtfHRx6
-         7U4n1BWB0QLfQeOxGFPpnBKH1JcDb9dRV6TeSqOERPhMy9H2XrlDiytzbswe2zMYshYz
-         FdFw==
-X-Gm-Message-State: AOJu0YwImzTRFtbU53Mt70+fYwEXFjBo6oGTZtZq5XZN8Jm8HHk5RkeN
-	rf/MKCh7Kz0kfTZ9Xh5bkah5A6MwKdoI/V4vCbcf9Je0TuI9kYwrJQtcCFUK6xM=
-X-Google-Smtp-Source: AGHT+IEYuZyLwzQfurWjEnYG8ZF9u47IIP/NoCY4w93Z6L4JxTaxu47mXeeN94UlMxTSaSPKDiwZYg==
-X-Received: by 2002:a05:600c:45d2:b0:431:5044:e388 with SMTP id 5b1f17b1804b1-4316168ee39mr77674285e9.22.1729502063773;
-        Mon, 21 Oct 2024 02:14:23 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:b40b:61e8:fa25:f97b])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4316f571201sm51099145e9.5.2024.10.21.02.14.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Oct 2024 02:14:23 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Kees Cook <kees@kernel.org>,
-	Andy Shevchenko <andy@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc: linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH] lib: string_helpers: fix potential snprintf() output truncation
-Date: Mon, 21 Oct 2024 11:14:17 +0200
-Message-ID: <20241021091417.37796-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20230601; t=1729502744; x=1730107544;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oys9EWp0+ZDi6O702j7ITYfHMy36XMdPdEAfHWz8hWs=;
+        b=B198osq82WD3zr1PzjgcOh5hgpybSvdOsPnll8HgOcy4XNHUjJr5hOYw9CyBAXWFx+
+         fxS4o5cYGMyazO3WTppZgSZdpv0QFUluMTSyROklQp7Y6ELtjxAeAhxOKk73StmE347W
+         thr21jUwMTTY3AjgG5lKUKau63qvr3hfHc2vvZuMnlc1cIC54kb75YpeYsb+rlEM6P5c
+         5ZONSm+DPFHVgejeH2d2w9A6sskPI42UtDAiQn4CgV82QLjaf9xvTYNqhBXRq+13Zim7
+         TMIIIbUkxO/GYUncLfjTEx+fJY7FEyKWmBrlJkCEyF/qHJvrS4glbw6du9BjSOxPowrI
+         9rPA==
+X-Forwarded-Encrypted: i=1; AJvYcCU8zXPBCd5QBhoD/NKazvGg0dFxdIvtUEQMgGa3qBO/epZozGi0cnejiqMYMfXxc+HbnrI0wNbwuhxzbA0U@vger.kernel.org, AJvYcCVgFWL1mDk11Y9xv7RI8N9JsJgMpniLZPce10lPlVpOkVgxwkDA3PoL40H7f3jIOvHYof9oWvjWaEI5krR+ZB8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxRQESAp+XWyqmHpWZbAyPogErey4z0mFSz9P8sEu2tArEqO/bh
+	c70mlHPDyOMfGjt0ROA0fP6a0CJ+kWEauBXco89KRKsTzPizAsVLCIywkFVA3LVWkKutAZIqTMw
+	1Ve6GL2+FEAoFOsLmAF9Gu979rCw=
+X-Google-Smtp-Source: AGHT+IFm0gLisyhcjjngukS6vY82O8oUsw8+7BEJEc5i6j2uKOeRa+iIFgxIFXU1mwUV53zDxim0xYmh1qovBiBWu8o=
+X-Received: by 2002:a17:907:7296:b0:a9a:f84:fefd with SMTP id
+ a640c23a62f3a-a9a69bad1admr1212265066b.36.1729502744282; Mon, 21 Oct 2024
+ 02:25:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20241021091417.37796-1-brgl@bgdev.pl>
+In-Reply-To: <20241021091417.37796-1-brgl@bgdev.pl>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Mon, 21 Oct 2024 12:25:07 +0300
+Message-ID: <CAHp75VdOvcfp8ZiONr9viieT9JavvZYMfS+wX8x40JyZuzfyUg@mail.gmail.com>
+Subject: Re: [PATCH] lib: string_helpers: fix potential snprintf() output truncation
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, 
+	James Bottomley <James.Bottomley@hansenpartnership.com>, linux-hardening@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Mon, Oct 21, 2024 at 12:14=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl=
+> wrote:
+>
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> The output of ".%03u" with the unsigned int in range [0, 4294966295] may
+> get truncated if the target buffer is not 12 bytes.
 
-The output of ".%03u" with the unsigned int in range [0, 4294966295] may
-get truncated if the target buffer is not 12 bytes.
+I got the same warning last week, thanks for fixing it!
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
 
-Fixes: 3c9f3681d0b4 ("[SCSI] lib: add generic helper to print sizes rounded to the correct SI range")
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- lib/string_helpers.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/lib/string_helpers.c b/lib/string_helpers.c
-index 4f887aa62fa0..91fa37b5c510 100644
---- a/lib/string_helpers.c
-+++ b/lib/string_helpers.c
-@@ -57,7 +57,7 @@ int string_get_size(u64 size, u64 blk_size, const enum string_size_units units,
- 	static const unsigned int rounding[] = { 500, 50, 5 };
- 	int i = 0, j;
- 	u32 remainder = 0, sf_cap;
--	char tmp[8];
-+	char tmp[12];
- 	const char *unit;
- 
- 	tmp[0] = '\0';
--- 
-2.43.0
-
+--=20
+With Best Regards,
+Andy Shevchenko
