@@ -1,103 +1,129 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF7421E0B86;
-	Mon, 21 Oct 2024 20:12:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 022611465BB;
+	Tue, 22 Oct 2024 07:15:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729541534; cv=none; b=TYnD7ti+jOQbj8xWRA9XlgzkGwUA2M7JvH7au0J0YcmOhAAhnDXu1p8Obw5g2PFQSHYKiJMaYFTvHpxK+rPMUYL7jlFeGLc7mjrEnHfGFTtQxDhJrdgQwVJleMQra7rhhVTZqKspr7pxRp5yXxJv7gIHb+e1yHxKZDpQNXzoIxk=
+	t=1729581318; cv=none; b=R20VyTXcxoCW1FFM0NS1nzt5/1tccuveNpYqa8i4qCaNr9J3e8SmLN3We4nppmdm2x8WOzUWMV1I/JPZA5Ehhahamdf9JVu1ZzxZskp6hUSSyOafZyiIzgXxLhj31WAFewPDTx8TelGt0DpNfrgSrkZfAmUN/4s84UtC2saC/W8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729541534; c=relaxed/simple;
-	bh=AYKAy8kRv/KlBYsd4552FKww1jl+KPz+UHnCXuIjWvk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C/HmNkMPJ22bYEpkPIiw2nGvcuWFOmD/EM0yVcNoRr21opUkOGBgc8n+MOIW4dGQa4i0anM2eHGVlp5t8ne8DsqmnRtacdF6pz4a9Bns3YkxgUZVLlociqCSRw5uW7SX7R6H2StdNmQYpcnQvm81/pQkK8WZTG16IYcL/NRDC4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=WbGovaSh; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1729581318; c=relaxed/simple;
+	bh=LoFoQKXKUVk/pCf19sC0PrOBcxYg31RRtFIIJGFy1yI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sNAltYzdKSDXPPMINCXxB/sx9ug1L/ebxdp/ZAd+Ds4DnaSbBIVUkUedXoO9nqHxX46Jyn1Y+D+CZWyExyNNfizrRFvHSkQqruqBLnISvhdl1Voswu7kE0d+yBbDZOmMOAVjENM2o1bV/jSIdGTdtjWkqqRpF8DmIi5aFMKVC+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HihK6JEX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="WbGovaSh"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=JiAR7jPGZVyniVYgsyzhTrVFkBxrsyzn+u1ozZll4gs=; b=WbGovaSh2+kETD4rZMBu4yuvou
-	kbrUuxWHfUIzYyQIoQjny4pF+wRtx9TQHjw3tOwM3FjgEs5Q29XT/+qt/AnMfA1+uIhDVU+zbeQ8a
-	8cKV5LL3HQ9fPRsmnvlJ/+dvafxINaVFDfonQeDQNZJZ2OV+l+kFDXT5/TiAtAifP3qQ=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1t2yko-00AlWw-5x; Mon, 21 Oct 2024 22:11:50 +0200
-Date: Mon, 21 Oct 2024 22:11:50 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Michael Chan <michael.chan@broadcom.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Potnuri Bharat Teja <bharat@chelsio.com>,
-	Christian Benvenuti <benve@cisco.com>,
-	Satish Kharat <satishkh@cisco.com>,
-	Manish Chopra <manishc@marvell.com>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 1/2][next] UAPI: ethtool: Use __struct_group() in struct
- ethtool_link_settings
-Message-ID: <53721db6-f4b1-4394-ab2a-045f214bd2fa@lunn.ch>
-References: <cover.1729536776.git.gustavoars@kernel.org>
- <e9ccb0cd7e490bfa270a7c20979e16ff84ac91e2.1729536776.git.gustavoars@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HihK6JEX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9EFFC4CEC3;
+	Tue, 22 Oct 2024 07:15:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729581317;
+	bh=LoFoQKXKUVk/pCf19sC0PrOBcxYg31RRtFIIJGFy1yI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=HihK6JEXfN3CtTHIqHzWwrpjTMyp4ZNYF1WdScEHdQo+tCovIqPPJJmx3+CNcP++4
+	 wdYJ4y7w2onq57h4U76PLrEjhTd/1loW9C1HwPnm/oLW3B9jPjfsw6SUBJNT9HUhTP
+	 AoSsg6azJHC6HQUWjQcxa6+hKJWpo6eWIN52alW5lv/zr7NLpaUFaDN5KnJrxqNQS1
+	 0csULKGhYTUrpIR92yUoynLsj/Fr65Ff6LjEmHM3foFIGpk9wSUGw9j3IbZOGNgMVs
+	 V9LQpmBuCbM+AUWP2EOp+rSxNBrqo2aSoqkNccEh25ABZ/3VezEzOm1jcuON+pjTDH
+	 5pnjXCx1Jfkeg==
+Message-ID: <bb705eb7-c61c-4da9-816e-cbb46c0c16e4@kernel.org>
+Date: Tue, 22 Oct 2024 09:15:12 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e9ccb0cd7e490bfa270a7c20979e16ff84ac91e2.1729536776.git.gustavoars@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] lib: string_helpers: fix potential snprintf() output
+ truncation
+To: Bartosz Golaszewski <brgl@bgdev.pl>, Kees Cook <kees@kernel.org>,
+ Andy Shevchenko <andy@kernel.org>, Andrew Morton
+ <akpm@linux-foundation.org>,
+ James Bottomley <James.Bottomley@HansenPartnership.com>,
+ Greg KH <gregkh@linuxfoundation.org>
+Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, stable@vger.kernel.org
+References: <20241021100421.41734-1-brgl@bgdev.pl>
+Content-Language: en-US
+From: Jiri Slaby <jirislaby@kernel.org>
+Autocrypt: addr=jirislaby@kernel.org; keydata=
+ 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
+In-Reply-To: <20241021100421.41734-1-brgl@bgdev.pl>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
->  struct ethtool_link_settings {
-> -	__u32	cmd;
-> -	__u32	speed;
-> -	__u8	duplex;
-> -	__u8	port;
-> -	__u8	phy_address;
-> -	__u8	autoneg;
-> -	__u8	mdio_support;
-> -	__u8	eth_tp_mdix;
-> -	__u8	eth_tp_mdix_ctrl;
-> -	__s8	link_mode_masks_nwords;
-> -	__u8	transceiver;
-> -	__u8	master_slave_cfg;
-> -	__u8	master_slave_state;
-> -	__u8	rate_matching;
-> -	__u32	reserved[7];
-> +	/* New members MUST be added within the __struct_group() macro below. */
-> +	__struct_group(ethtool_link_settings_hdr, hdr, /* no attrs */,
-> +		__u32	cmd;
-> +		__u32	speed;
-> +		__u8	duplex;
-> +		__u8	port;
-> +		__u8	phy_address;
-> +		__u8	autoneg;
-> +		__u8	mdio_support;
-> +		__u8	eth_tp_mdix;
-> +		__u8	eth_tp_mdix_ctrl;
-> +		__s8	link_mode_masks_nwords;
-> +		__u8	transceiver;
-> +		__u8	master_slave_cfg;
-> +		__u8	master_slave_state;
-> +		__u8	rate_matching;
-> +		__u32	reserved[7];
-> +	);
->  	__u32	link_mode_masks[];
+On 21. 10. 24, 12:04, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> The output of ".%03u" with the unsigned int in range [0, 4294966295] may
+> get truncated if the target buffer is not 12 bytes.
 
-Dumb C question. What are the padding rules for a union, compared to
-base types? Do we know for sure the compiler is not going pad this
-structure differently because of the union?
+Perhaps, if you elaborate on how 'remainder' can become > 999?
 
-It is however nicely constructed. The 12 __u8 making 3 32bit words, so
-we have a total of 12 32bit words, or 6 64bit words, before the
-link_mode_masks[], so i don't think padding is technically an issue,
-but it would be nice to know the C standard guarantees this.
+> Fixes: 3c9f3681d0b4 ("[SCSI] lib: add generic helper to print sizes rounded to the correct SI range")
+> Cc: stable@vger.kernel.org
+> Reviewed-by: Andy Shevchenko <andy@kernel.org>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
+>   lib/string_helpers.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/lib/string_helpers.c b/lib/string_helpers.c
+> index 4f887aa62fa0..91fa37b5c510 100644
+> --- a/lib/string_helpers.c
+> +++ b/lib/string_helpers.c
+> @@ -57,7 +57,7 @@ int string_get_size(u64 size, u64 blk_size, const enum string_size_units units,
+>   	static const unsigned int rounding[] = { 500, 50, 5 };
+>   	int i = 0, j;
+>   	u32 remainder = 0, sf_cap;
+> -	char tmp[8];
+> +	char tmp[12];
+>   	const char *unit;
+>   
+>   	tmp[0] = '\0';
 
-	Andrew
+-- 
+js
+suse labs
+
