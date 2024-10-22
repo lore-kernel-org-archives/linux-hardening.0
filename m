@@ -1,55 +1,55 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FFC219C54E;
-	Tue, 22 Oct 2024 09:16:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95E2B1990DC;
+	Tue, 22 Oct 2024 09:18:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729588581; cv=none; b=OS5dbY4Na0Y1SN3Fa6ko8HH1EGfPLkxtOtUkltm7yW8TsiuuPPT6DKArPuVfQgmumS1GqEohfrLWEFwYrVs+yyo7YZhizg1THDaYS06vLRwrytjNWBa8oRemeu9jKkpkGuOgfGPIBSXmWQY2LTF7o9OTXtC6Y4TnOoEvtqgwGyo=
+	t=1729588737; cv=none; b=Q2zI+IIvGBFFV7o/5B4VsaoTq65Not1E9MleXCcI5/43oeL4CzTw47MfObha64Sy7AEFQkMXVMIp3VDSxFPa1Oti3jnfASGd0z4VW9fxU85GGO5JcM8A2eXSU2ceGJrKT3BVZtUy0wIyq1tPHeMBVf1SUzZxC+6+lhTN+5Z83Ug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729588581; c=relaxed/simple;
-	bh=f6tcasghV506QA3EP3+wDP8QUMsnpvEhlIKLb9DBfk0=;
+	s=arc-20240116; t=1729588737; c=relaxed/simple;
+	bh=ktUntblqwbX11lE4VFhQvbDpXlY5dHHrgSDM8lr7qU8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gn5M0BHj5mfZa8lNcieSI9Er3uOJGFiDu3Dh8nAr+nPu3VNEG7dLxGAH3L2V3ResTY59cyfABhTDguJLhMxTsGE2rzGrp8kLvFjE6qy4ekfnSEwVOrq64ro5ePkxMmEn3GklK3NWwrMsUHue8I2KRpSh6bA48Lqp1EcgV1P/Hn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mUUC9jj0; arc=none smtp.client-ip=209.85.218.53
+	 To:Cc:Content-Type; b=AQ+lv7Al11cQjNLz67XTJrZ2n/grcAWxvh/w9QvvYd8tpw9wMGYTggKql1F+Mcprzjm0YbXqdqFH4kslgHWdaWbro4UtVbcM2uTeHFmln1wZcwZjbcGivFyoVET2dmIfLs73c1hE1ULXlC7BU5WvGIBozFLAXXm5xKw+yU46+PM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gSD++rOE; arc=none smtp.client-ip=209.85.218.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mUUC9jj0"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a93c1cc74fdso795644366b.3;
-        Tue, 22 Oct 2024 02:16:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gSD++rOE"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a9a628b68a7so699518466b.2;
+        Tue, 22 Oct 2024 02:18:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729588579; x=1730193379; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1729588734; x=1730193534; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=f6tcasghV506QA3EP3+wDP8QUMsnpvEhlIKLb9DBfk0=;
-        b=mUUC9jj0a82H5U+TaxHIBEGqT7C91SZm76tDdHIpyO7hxVvOL6FtXOyiD2DqpRKLD6
-         T530+KLxcqUe/GmbLypgBOPB4gxCg0yrzd0oAdsfdF+6w8F9db6vkqbxpyeP5Y3PUFLV
-         UgSE+y29oUI/jnflwbM0a2nRHmvEhQ0RTM6SaGQE2nIfiV2xfoI7g0s/P6yCCz1tJqbt
-         HbG0fneZozEjdgisu/0ZUEcGm56lRhXIbZ5X6RIhkoM8pUtnZ5OB0/UT42XoQuvtkDOu
-         sooAGm0giCxvhStY8xlI930HjHccrxqFEfcbQol75hWLQ+jkRqplqkgFKHHaoYYN8FOr
-         lcCQ==
+        bh=ktUntblqwbX11lE4VFhQvbDpXlY5dHHrgSDM8lr7qU8=;
+        b=gSD++rOE/qcNeRZkFQkVlCPKX/aN92S2nG04PEE+CZWVHrZH9QuQN4WjJivsKR1Cgv
+         VCSN7bt9suy/C4Uw+GjwHn4U7I/OpDvpU8ouxu+4gqcc3/6ZYk6wY1489NKtRLvFTxgb
+         uEJymQYzhmaplV8WKbFwtsZbxd3gqG4/w1OAAL8DNrRsPVkg38dWofO2vcrMbvFGJbl6
+         T9rQ7bK9a2/aS0DP6AAziPtncJefxdZvK0zPAqB84QcbVyOoeJ9GSc2IdIWPxp8/b5UK
+         I1MKxdO2bY0mbCNyscDF03wfOemC+CrN5Hd2Ib6akWdaWQ95GtTK0YtnOkA1BQ4ODf4u
+         EoPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729588579; x=1730193379;
+        d=1e100.net; s=20230601; t=1729588734; x=1730193534;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=f6tcasghV506QA3EP3+wDP8QUMsnpvEhlIKLb9DBfk0=;
-        b=AiYhjanMHQrAG0qatVWVPndpBSJzzrjL/qrlmQqGWar1Tvy2Zh+JbJ4PdlsI6EDCUA
-         C2uPwF7usBSxtDz0iOtNny36woW/tTywZL9KXCFugXEwzlYHiuYQrsxKdr2eUMhK8BIT
-         6mWvUa1gJb0S+QBuUlmkOQd1NNooRPUKe3FG4Vw9rEnaVAsOYi3qmPq6eKm/qCrD90N9
-         OsuUvNYG16SobKwQ2z+hSq2607Hw6aQ+gw2vP5oqCb0i/fv4+I/gWkLK25dtJd6E9ACL
-         EipifEAofneQxn5jSS+KKkF9WYxGzl3DeoScyTj7tp1I9toy2nBJQdbNmpP7m7VeHWNT
-         oCKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUPY0cFW5ZeVZDAULDCsnsKOtgMHpa3sj+bMaGa1NjW6sTjA0THs5dKnMDeO21IYN5Y6ZSqZGP7o7/8Ft/d@vger.kernel.org, AJvYcCUiLpURSBQLzX6HyYvhJCZVAuOw4veXZGjMSypdl5DzvFqZZVzwHHX9B7D7uL2R9H7SfKH4XPo4@vger.kernel.org, AJvYcCW8azuZ1yOxa2Eij5uVLTNRk+GEBuTNoiWqfnZZpQsNu63e8wHN/uECdpL2qmbWxQPscEsmhWqik1ieEUd/1vg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YznW7mcyZ094cFwukwcNoTJHdp7Nftc4ab9KPgi36RzuB3Yptqi
-	6cTtp9AvT8yp46XVmNc4rd+rmZCEFmZ8f7efce6yUpSKZ5nRmmiBNLtiisx1Kj3Ph1rQpiyiN7r
-	ZMJ2Wlu/bcs29K1pUIh6czGPC8bk=
-X-Google-Smtp-Source: AGHT+IEhXe5CPIvbNpaim7lA4Zyy9KDuP3cdxfKH+mUftW9Rv792YEOlvCA2BW1HJfaZHWYsrVkxZi5y7tPw7gAWhnI=
-X-Received: by 2002:a17:906:f594:b0:a86:94e2:2a47 with SMTP id
- a640c23a62f3a-a9a69a79c72mr1650018466b.15.1729588578301; Tue, 22 Oct 2024
- 02:16:18 -0700 (PDT)
+        bh=ktUntblqwbX11lE4VFhQvbDpXlY5dHHrgSDM8lr7qU8=;
+        b=kR4UQn6PePfLtaeMyTMDZPnQxtx3NCKLBQusmwWlh0ZpD4SIvTVPTYkxw8vz+gK6od
+         NlZ4oRTngt/Hwm20eYAnLfG8fXy75XDSrvxA6rctzfiEgER8r9MLWyIjekYrwXlCgUlh
+         PFmn3vCiiaJV2Y2F1hsX7m0d/zuRN3GFkZi6fiGRELwdkMW8489Ih25C2VIgZ2q7/Sop
+         W0/cRHgsE02p0+9HyeyVe/Cw0fymi+LDWbQTFwHIijHpn/cGttGeO6Z7sonnwHqox9XG
+         wGij7hOgqMVRvBWj1RFWDM9t+QXa6dPWti5o1syoZ1Q/wwJF13PECma0btNU3bz9lDze
+         slfw==
+X-Forwarded-Encrypted: i=1; AJvYcCUER0JRFobSThHTRk8VOg3qTBSzDkT02zjciCo6KDyyqZJomQoM3mery0rVd3Y1YM5dMq/pw4Jpd7PL9aWRby8=@vger.kernel.org, AJvYcCVsw3acpT/lPUThzKoy8zzlh7xGpc3Bxk3lkFSeHEEBzXTOvVy5GVTRp1gVkuuN3PKmWlmh8BQj@vger.kernel.org, AJvYcCXljo9jgp0f+Od212AsJfcAH8Ez5/4H0DXPSMC6TZ/TOyGs/XIqfqiil0i/H5aoaHYsq1QFgN+0R/336GV/@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4fr70pA8UuIjzIfZI+GwgY7x4vCJ75RMCnYnuRmCImsv2XCmm
+	lhsoDrZj4bLwucoiSZkxAcfu+mFdXLs2IJ3sWHKlx2UvWshE4OMaWFvkMtiKst5SKifzgmpF1uq
+	DUFQy5+2AovzwmI8mRZmN/RAHaaOGv9al2tw=
+X-Google-Smtp-Source: AGHT+IFT5NKjcwFGWBwUpT8dc+RxKHbxg2bHl0QeeeMrYyjueQBanQ3EjdvlH7HxVnRLfDQObus8JJ17e5hMw2M7/mw=
+X-Received: by 2002:a17:907:7293:b0:a99:ef5d:443e with SMTP id
+ a640c23a62f3a-a9a69773b2emr1500723866b.13.1729588733544; Tue, 22 Oct 2024
+ 02:18:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -57,14 +57,15 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20241021100421.41734-1-brgl@bgdev.pl> <bb705eb7-c61c-4da9-816e-cbb46c0c16e4@kernel.org>
-In-Reply-To: <bb705eb7-c61c-4da9-816e-cbb46c0c16e4@kernel.org>
+ <CAMRc=Mcp4LBj0ZZx=hUg9KBk04XXcAtiNv+QjQesN1iCpDC+KA@mail.gmail.com>
+In-Reply-To: <CAMRc=Mcp4LBj0ZZx=hUg9KBk04XXcAtiNv+QjQesN1iCpDC+KA@mail.gmail.com>
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 22 Oct 2024 12:15:41 +0300
-Message-ID: <CAHp75Ve1WUKYmv6sfGZ6amujs=C7MnxauLM+C2MeW8vxBV1NfQ@mail.gmail.com>
+Date: Tue, 22 Oct 2024 12:18:17 +0300
+Message-ID: <CAHp75VdLuxL4tqodoiWE_Pq7VjwxVLa-mXnnnOT-j8W=3jetCg@mail.gmail.com>
 Subject: Re: [PATCH] lib: string_helpers: fix potential snprintf() output truncation
-To: Jiri Slaby <jirislaby@kernel.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, 
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Jiri Slaby <jirislaby@kernel.org>, Kees Cook <kees@kernel.org>, 
+	Andy Shevchenko <andy@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
 	James Bottomley <James.Bottomley@hansenpartnership.com>, 
 	Greg KH <gregkh@linuxfoundation.org>, linux-hardening@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, 
@@ -72,24 +73,26 @@ Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Kees Cook <kees@kernel.org>, Andy Shevc
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Oct 22, 2024 at 10:15=E2=80=AFAM Jiri Slaby <jirislaby@kernel.org> =
-wrote:
+On Tue, Oct 22, 2024 at 10:30=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl=
+> wrote:
 >
-> On 21. 10. 24, 12:04, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> On Tue, Oct 22, 2024 at 9:15=E2=80=AFAM Jiri Slaby <jirislaby@kernel.org>=
+ wrote:
 > >
-> > The output of ".%03u" with the unsigned int in range [0, 4294966295] ma=
-y
-> > get truncated if the target buffer is not 12 bytes.
+> > On 21. 10. 24, 12:04, Bartosz Golaszewski wrote:
+> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > >
+> > > The output of ".%03u" with the unsigned int in range [0, 4294966295] =
+may
+> > > get truncated if the target buffer is not 12 bytes.
+> >
+> > Perhaps, if you elaborate on how 'remainder' can become > 999?
 >
-> Perhaps, if you elaborate on how 'remainder' can become > 999?
+> Yeah, I guess it can't. Not sure what we do about such false
+> positives, do we have some common way to suppress them?
 
-The problem here that we have a two-way road: on one hand we ought to
-fix the bugs in the kernel, on the other hand the compiler warnings
-(even false positives) better to be fixed as we don't know which
-compiler gets it fixed, but now we have a problem with building with
-`make W=3D1` for the default configurations (it prevents build due to
-compilation errors), so this change is definitely is an improvement.
+I already pointed out these kinds of warnings from GCC.
+https://lore.kernel.org/all/Zt73a3t8Y8uH5MHG@smile.fi.intel.com/
 
 --=20
 With Best Regards,
