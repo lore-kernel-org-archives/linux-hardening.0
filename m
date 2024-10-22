@@ -1,95 +1,96 @@
-Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95022132120
-	for <linux-hardening@vger.kernel.org>; Tue, 22 Oct 2024 07:54:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FFC219C54E;
+	Tue, 22 Oct 2024 09:16:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729583642; cv=none; b=X4Uo24ICAIBtfFvBJQxCIRiycBegV0r0C2yMbTMcSAIiHKjBkUmrM70Lk0Xj5129jjaEra6ut1RZMiP7T7iKApxB7d2EDOI9jeZKFi1nUR/7RTH6OgW8s5zfoxBxvglUzkv4c2UQqB0/Ih/r3OLI/RYRKD9JfoqRwSHUgTHRzu8=
+	t=1729588581; cv=none; b=OS5dbY4Na0Y1SN3Fa6ko8HH1EGfPLkxtOtUkltm7yW8TsiuuPPT6DKArPuVfQgmumS1GqEohfrLWEFwYrVs+yyo7YZhizg1THDaYS06vLRwrytjNWBa8oRemeu9jKkpkGuOgfGPIBSXmWQY2LTF7o9OTXtC6Y4TnOoEvtqgwGyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729583642; c=relaxed/simple;
-	bh=iIIvTHgFWcs4L02/4PWh5iLiyHx6s9FXGG4F2p+omkw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VC5Xj3H2BbrmcZj6h18Dsdrcrs38kMQZ02nwnJM5TZsk+M4N0UcLG3uQeUowAleIuDF6fthooR+9TgnAjtrB/jHJkeFZYuTOygARyCOkTjvfp9BWHAQJRSCuTW0N0nwgef3tokFiD/p+UWALcYqq+BRb1BXn7+1nn3jKPTv49HY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=sQMtidzE; arc=none smtp.client-ip=91.218.175.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1729588581; c=relaxed/simple;
+	bh=f6tcasghV506QA3EP3+wDP8QUMsnpvEhlIKLb9DBfk0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gn5M0BHj5mfZa8lNcieSI9Er3uOJGFiDu3Dh8nAr+nPu3VNEG7dLxGAH3L2V3ResTY59cyfABhTDguJLhMxTsGE2rzGrp8kLvFjE6qy4ekfnSEwVOrq64ro5ePkxMmEn3GklK3NWwrMsUHue8I2KRpSh6bA48Lqp1EcgV1P/Hn0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mUUC9jj0; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="sQMtidzE"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1729583638;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=eN7/9lTFH3drC1NWRnwey0aE0NlX+JngFZv69nq9QD4=;
-	b=sQMtidzEIgmJgfB4MOqXPEDgbF8UHLgWB4G8GKBRRafgQsNnE9DFDOoR/EmH5sgV4MHSxC
-	mUpY9pJMvcXI1PxVTF6j3qnl3cT5T7SGgJH4ec8W+VrxdHvvJUiPQiECVntIGD0AUfa+Eg
-	W84vVGkgTwPWsyd5qyHI6GFiKQJ9oF4=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: "Theodore Ts'o" <tytso@mit.edu>,
-	Andreas Dilger <adilger.kernel@dilger.ca>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	Jan Kara <jack@suse.cz>,
-	linux-ext4@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [RESEND PATCH] ext4: Annotate struct fname with __counted_by()
-Date: Tue, 22 Oct 2024 09:52:53 +0200
-Message-ID: <20241022075252.34308-2-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mUUC9jj0"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a93c1cc74fdso795644366b.3;
+        Tue, 22 Oct 2024 02:16:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1729588579; x=1730193379; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=f6tcasghV506QA3EP3+wDP8QUMsnpvEhlIKLb9DBfk0=;
+        b=mUUC9jj0a82H5U+TaxHIBEGqT7C91SZm76tDdHIpyO7hxVvOL6FtXOyiD2DqpRKLD6
+         T530+KLxcqUe/GmbLypgBOPB4gxCg0yrzd0oAdsfdF+6w8F9db6vkqbxpyeP5Y3PUFLV
+         UgSE+y29oUI/jnflwbM0a2nRHmvEhQ0RTM6SaGQE2nIfiV2xfoI7g0s/P6yCCz1tJqbt
+         HbG0fneZozEjdgisu/0ZUEcGm56lRhXIbZ5X6RIhkoM8pUtnZ5OB0/UT42XoQuvtkDOu
+         sooAGm0giCxvhStY8xlI930HjHccrxqFEfcbQol75hWLQ+jkRqplqkgFKHHaoYYN8FOr
+         lcCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729588579; x=1730193379;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=f6tcasghV506QA3EP3+wDP8QUMsnpvEhlIKLb9DBfk0=;
+        b=AiYhjanMHQrAG0qatVWVPndpBSJzzrjL/qrlmQqGWar1Tvy2Zh+JbJ4PdlsI6EDCUA
+         C2uPwF7usBSxtDz0iOtNny36woW/tTywZL9KXCFugXEwzlYHiuYQrsxKdr2eUMhK8BIT
+         6mWvUa1gJb0S+QBuUlmkOQd1NNooRPUKe3FG4Vw9rEnaVAsOYi3qmPq6eKm/qCrD90N9
+         OsuUvNYG16SobKwQ2z+hSq2607Hw6aQ+gw2vP5oqCb0i/fv4+I/gWkLK25dtJd6E9ACL
+         EipifEAofneQxn5jSS+KKkF9WYxGzl3DeoScyTj7tp1I9toy2nBJQdbNmpP7m7VeHWNT
+         oCKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUPY0cFW5ZeVZDAULDCsnsKOtgMHpa3sj+bMaGa1NjW6sTjA0THs5dKnMDeO21IYN5Y6ZSqZGP7o7/8Ft/d@vger.kernel.org, AJvYcCUiLpURSBQLzX6HyYvhJCZVAuOw4veXZGjMSypdl5DzvFqZZVzwHHX9B7D7uL2R9H7SfKH4XPo4@vger.kernel.org, AJvYcCW8azuZ1yOxa2Eij5uVLTNRk+GEBuTNoiWqfnZZpQsNu63e8wHN/uECdpL2qmbWxQPscEsmhWqik1ieEUd/1vg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YznW7mcyZ094cFwukwcNoTJHdp7Nftc4ab9KPgi36RzuB3Yptqi
+	6cTtp9AvT8yp46XVmNc4rd+rmZCEFmZ8f7efce6yUpSKZ5nRmmiBNLtiisx1Kj3Ph1rQpiyiN7r
+	ZMJ2Wlu/bcs29K1pUIh6czGPC8bk=
+X-Google-Smtp-Source: AGHT+IEhXe5CPIvbNpaim7lA4Zyy9KDuP3cdxfKH+mUftW9Rv792YEOlvCA2BW1HJfaZHWYsrVkxZi5y7tPw7gAWhnI=
+X-Received: by 2002:a17:906:f594:b0:a86:94e2:2a47 with SMTP id
+ a640c23a62f3a-a9a69a79c72mr1650018466b.15.1729588578301; Tue, 22 Oct 2024
+ 02:16:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+References: <20241021100421.41734-1-brgl@bgdev.pl> <bb705eb7-c61c-4da9-816e-cbb46c0c16e4@kernel.org>
+In-Reply-To: <bb705eb7-c61c-4da9-816e-cbb46c0c16e4@kernel.org>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Tue, 22 Oct 2024 12:15:41 +0300
+Message-ID: <CAHp75Ve1WUKYmv6sfGZ6amujs=C7MnxauLM+C2MeW8vxBV1NfQ@mail.gmail.com>
+Subject: Re: [PATCH] lib: string_helpers: fix potential snprintf() output truncation
+To: Jiri Slaby <jirislaby@kernel.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, 
+	James Bottomley <James.Bottomley@hansenpartnership.com>, 
+	Greg KH <gregkh@linuxfoundation.org>, linux-hardening@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add the __counted_by compiler attribute to the flexible array member
-name to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
-CONFIG_FORTIFY_SOURCE.
+On Tue, Oct 22, 2024 at 10:15=E2=80=AFAM Jiri Slaby <jirislaby@kernel.org> =
+wrote:
+>
+> On 21. 10. 24, 12:04, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > The output of ".%03u" with the unsigned int in range [0, 4294966295] ma=
+y
+> > get truncated if the target buffer is not 12 bytes.
+>
+> Perhaps, if you elaborate on how 'remainder' can become > 999?
 
-Inline and use struct_size() to calculate the number of bytes to
-allocate for new_fn and remove the local variable len.
+The problem here that we have a two-way road: on one hand we ought to
+fix the bugs in the kernel, on the other hand the compiler warnings
+(even false positives) better to be fixed as we don't know which
+compiler gets it fixed, but now we have a problem with building with
+`make W=3D1` for the default configurations (it prevents build due to
+compilation errors), so this change is definitely is an improvement.
 
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
-Reviewed-by: Jan Kara <jack@suse.cz>
----
- fs/ext4/dir.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
-
-diff --git a/fs/ext4/dir.c b/fs/ext4/dir.c
-index ef6a3c8f3a9a..02d47a64e8d1 100644
---- a/fs/ext4/dir.c
-+++ b/fs/ext4/dir.c
-@@ -418,7 +418,7 @@ struct fname {
- 	__u32		inode;
- 	__u8		name_len;
- 	__u8		file_type;
--	char		name[];
-+	char		name[] __counted_by(name_len);
- };
- 
- /*
-@@ -471,14 +471,13 @@ int ext4_htree_store_dirent(struct file *dir_file, __u32 hash,
- 	struct rb_node **p, *parent = NULL;
- 	struct fname *fname, *new_fn;
- 	struct dir_private_info *info;
--	int len;
- 
- 	info = dir_file->private_data;
- 	p = &info->root.rb_node;
- 
- 	/* Create and allocate the fname structure */
--	len = sizeof(struct fname) + ent_name->len + 1;
--	new_fn = kzalloc(len, GFP_KERNEL);
-+	new_fn = kzalloc(struct_size(new_fn, name, ent_name->len + 1),
-+			 GFP_KERNEL);
- 	if (!new_fn)
- 		return -ENOMEM;
- 	new_fn->hash = hash;
--- 
-2.47.0
-
+--=20
+With Best Regards,
+Andy Shevchenko
