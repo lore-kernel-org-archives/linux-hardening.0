@@ -1,100 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7139713C8F6;
-	Wed, 23 Oct 2024 04:16:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57FBD1537CB;
+	Wed, 23 Oct 2024 06:57:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729656972; cv=none; b=RlLlt1sCCbE5uUT7i1Rtk6JuR38SqjY12w0twso2YE9RRNiQs1lPPsynC3jHN2SFejJzQSlM8bePVr6AhIC2Ko/eehWiDDMWDxzFgCmKIaC8beAC1jvnS2LPbpXLEMBf1BW8tt+OcT7jgqvw6OJJZPD+yW8MaaKOkFRjNT/5Ehg=
+	t=1729666672; cv=none; b=jJaX+vrEffzfDsgUXIFo5YcA4rJ1spTJc5RcVzWQBtlcF+2ReX0oeeIYGH1bMra/dj1HPBlun6EKa9xM0NzQJU0EVhG3NLU8C41diPkhTU68Qdb1iucENdhjZisGpg5w0Naib2xfKqvb3sMdHu46Sf+di/23Z2UvFf+xQf6rXbY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729656972; c=relaxed/simple;
-	bh=Ssryh/DeScctPPrI9kLBjogfgqMCqhs16Pkd5Nr7TBA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LMcs7P5/c8equVxtLkzJgAa4pPqhZoEev/ZrwTIbGYH15IleKz83iLv/y6YssGNp6ITJTww6XI3gnTi2kyzRIJxZPIrUQIIEyr25QuJ7mnBr0tMjcbya0ClcohY1vUVnTex1jn/I+/1Oq0NC/IDLm6+G3iG/Lv/IXSnt8wkZRwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b7vMeJHS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1729666672; c=relaxed/simple;
+	bh=JM0QX+rcNcciycCq4cQEVeZ/Eg12wyw+gI6m5h++2PM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B23ngIcCoZzbYwLHDTROa+Joe48/UrVVPMoZ4hyHxXRZCmqIiNJ9ODDKzTxAuj4P2lApOvW6XGgS83kssSU+86cZ1PVrEe0tMR/+L+IpWnVyzDGS30B/nlhl5hIjPNixyEt/1cDtEEvLQU8iWQImI85J6ER8qVN11h7OIDQxKV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=4HpS1+iP; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b7vMeJHS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6553C4CEE6;
-	Wed, 23 Oct 2024 04:16:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729656972;
-	bh=Ssryh/DeScctPPrI9kLBjogfgqMCqhs16Pkd5Nr7TBA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=b7vMeJHST3VEyUf/HCoYwfOa6LyzIxDlyfbQrnhVhGMpZD3hkX+iWj8RR+LiGLrp5
-	 5E1NSMfagDJiRotNV80ljbcTSHIToTxxi1YdOJ8E1nMxp9cmvbdxJE5WCPP8hokSMz
-	 fro1zrCmom6LOsdpOe2nYCxKgOOASxm7TsP82nZFtflR4ArQ4VWnd5lD61BmX19Ne7
-	 eNcdGw/G3qPZcazLu4qKVScCwEHGj8WVTFRl/1Z9jLhLeNhIoAHU1J2xPDhJBMSXhw
-	 XhiTIuqRw5b8MZu+/O3GYihh4cMSj7aqi5CCvPIiGypjyBDdiw5fnM3Y8o82EvlxZa
-	 NNR3W4nUzirMw==
-From: Bjorn Andersson <andersson@kernel.org>
-To: robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	konradybcio@kernel.org,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	kees@kernel.org,
-	tony.luck@intel.com,
-	gpiccoli@igalia.com,
-	quic_rjendra@quicinc.com,
-	andre.przywara@arm.com,
-	quic_sibis@quicinc.com,
-	igor.belwon@mentallysanemainliners.org,
-	davidwronek@gmail.com,
-	ivo.ivanov.ivanov1@gmail.com,
-	neil.armstrong@linaro.org,
-	heiko.stuebner@cherry.de,
-	rafal@milecki.pl,
-	lpieralisi@kernel.org,
-	Danila Tikhonov <danila@jiaxyga.com>
-Cc: devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	linux@mainlining.org
-Subject: Re: (subset) [PATCH v3 0/6] Add Nothing Phone (1) support
-Date: Tue, 22 Oct 2024 23:15:48 -0500
-Message-ID: <172965696396.224417.9698703565242558835.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20241020205615.211256-1-danila@jiaxyga.com>
-References: <20241020205615.211256-1-danila@jiaxyga.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="4HpS1+iP"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=l/dIdLkpg3nY7mL+kOCv40XaN/+P5ZiBELHPID6DHIA=; b=4HpS1+iPtWu3Q6rWByBHg6zg1t
+	1JrA57T8qGLy/cN7tUE72nHaaV+hXcY7NKaOu2lwF5Sk4Vf8Y9Y9WZB1W1BbPt2NuqOn3gJohocEN
+	f9PsZyaA7pOeWgeIIKsi75KubAnO0mtLiUnx6idLonBZGG/rj3qcVP+5tv1+h9H8jcMBlW+pdcFV8
+	XpAcLjFgATy7mW7gDgV9b1TGTT8w6JYxd33LZfFcNIKE7byvcDEMecLyzGlzcBn0I3z6ZfN4bXvUZ
+	Qp3bmBRNjyEbdYyBKc6jK6NOF6ffCtsh+Ay7cBYCyQ2rXf5msRguvAu/zehYyBKpN9Hnc5WVx0grf
+	LB02Fw/g==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1t3VJM-0000000DHn8-1MMo;
+	Wed, 23 Oct 2024 06:57:40 +0000
+Date: Tue, 22 Oct 2024 23:57:40 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Adrian Vovk <adrianvovk@gmail.com>
+Cc: Christoph Hellwig <hch@infradead.org>,
+	Eric Biggers <ebiggers@kernel.org>,
+	Md Sadre Alam <quic_mdalam@quicinc.com>, axboe@kernel.dk,
+	song@kernel.org, yukuai3@huawei.com, agk@redhat.com,
+	snitzer@kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
+	adrian.hunter@intel.com, quic_asutoshd@quicinc.com,
+	ritesh.list@gmail.com, ulf.hansson@linaro.org, andersson@kernel.org,
+	konradybcio@kernel.org, kees@kernel.org, gustavoars@kernel.org,
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-raid@vger.kernel.org, dm-devel@lists.linux.dev,
+	linux-mmc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-hardening@vger.kernel.org, quic_srichara@quicinc.com,
+	quic_varada@quicinc.com
+Subject: Re: [PATCH v2 1/3] dm-inlinecrypt: Add inline encryption support
+Message-ID: <ZxieZPlH-S9pakYW@infradead.org>
+References: <20240916085741.1636554-1-quic_mdalam@quicinc.com>
+ <20240916085741.1636554-2-quic_mdalam@quicinc.com>
+ <20240921185519.GA2187@quark.localdomain>
+ <ZvJt9ceeL18XKrTc@infradead.org>
+ <ef3c9a17-79f3-4937-965e-52e2b9e66ac2@gmail.com>
+ <ZxHwgsm2iP2Z_3at@infradead.org>
+ <CAAdYy_mVy3uXPqWbjPzK_i8w7Okq73wKBQyc95TbnonE36rPgQ@mail.gmail.com>
+ <ZxH4lnkQNhTP5fe6@infradead.org>
+ <D96294E2-F17A-4E58-90FB-1D17747048E5@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <D96294E2-F17A-4E58-90FB-1D17747048E5@gmail.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
+On Fri, Oct 18, 2024 at 11:03:50AM -0400, Adrian Vovk wrote:
+> Sure, but then this way you're encrypting each partition twice. Once by the dm-crypt inside of the partition, and again by the dm-crypt that's under the partition table. This double encryption is ruinous for performance, so it's just not a feasible solution and thus people don't do this. Would be nice if we had the flexibility though.
 
-On Sun, 20 Oct 2024 23:56:08 +0300, Danila Tikhonov wrote:
-> This series of patches adds support for the Nothing Phone (1), identified
-> as nothing,spacewar. The Nothing Phone (1) is built on the Qualcomm
-> Snapdragon 778G+ (SM7325-AE, also known as yupik).
+Why do you assume the encryption would happen twice?
+
+> >Because you are now bypassing encryption for certainl LBA ranges in
+> >the file system based on hints/flags for something sitting way above
+> >in the stack.
+> >
 > 
-> SM7325 is identical to SC7280 just as SM7125 is identical to SC7180, so
-> SM7325 devicetree imports SC7280 devicetree as a base.
-> 
-> [...]
+> Well the data is still encrypted. It's just encrypted with a different key. If the attacker has a FDE dump of the disk, the data is still just as inaccessible to them.
 
-Applied, thanks!
-
-[2/6] dt-bindings: arm: cpus: Add qcom kryo670 compatible
-      commit: 82ead233e01042fecdfdee5b05c377c2a9e551f4
-[3/6] arm64: dts: qcom: Add SM7325 device tree
-      commit: ba978ce20f8134ea9e0e8f1acb16552b5106281d
-[4/6] dt-bindings: vendor-prefixes: Add Nothing Technology Limited
-      commit: 7e20ecc8de9354c1e8742d37f06e152549f4c439
-[5/6] dt-bindings: arm: qcom: Add SM7325 Nothing Phone 1
-      commit: 389df37da15a14fa218e86676f6f9a5470d38dfa
-[6/6] arm64: dts: qcom: sm7325: Add device-tree for Nothing Phone 1
-      commit: 6b3d104e52893493964a5eefa50dd0fdb472515a
-
-Best regards,
--- 
-Bjorn Andersson <andersson@kernel.org>
+No one knows that it actually is encryped.  The lower layer just knows
+the skip encryption flag was set, but it has zero assurance data
+actually was encrypted.
