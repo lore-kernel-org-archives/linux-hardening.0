@@ -1,61 +1,64 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57FBD1537CB;
-	Wed, 23 Oct 2024 06:57:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 338C51AB6F7;
+	Wed, 23 Oct 2024 12:09:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729666672; cv=none; b=jJaX+vrEffzfDsgUXIFo5YcA4rJ1spTJc5RcVzWQBtlcF+2ReX0oeeIYGH1bMra/dj1HPBlun6EKa9xM0NzQJU0EVhG3NLU8C41diPkhTU68Qdb1iucENdhjZisGpg5w0Naib2xfKqvb3sMdHu46Sf+di/23Z2UvFf+xQf6rXbY=
+	t=1729685395; cv=none; b=KDwOGiM8Ue86ybLRP5QvT5rAem9OjlLXbi4pjhzyPwBBkIUPZfNFNBWG5mG1kNofVvfHRgM4priBAHvYL4Urcn2kZdqE23ftR0QPMkob701ToBiyrWWAKGh2gQ11Q/Pie0iu5pStChQfkQRumG3L4/rT+gXlqLrdgn4vPkc041o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729666672; c=relaxed/simple;
-	bh=JM0QX+rcNcciycCq4cQEVeZ/Eg12wyw+gI6m5h++2PM=;
+	s=arc-20240116; t=1729685395; c=relaxed/simple;
+	bh=6kj6BGenSC46bCxZoBZ/KzUyflxUD6U1Ai0wmuCiTQ4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B23ngIcCoZzbYwLHDTROa+Joe48/UrVVPMoZ4hyHxXRZCmqIiNJ9ODDKzTxAuj4P2lApOvW6XGgS83kssSU+86cZ1PVrEe0tMR/+L+IpWnVyzDGS30B/nlhl5hIjPNixyEt/1cDtEEvLQU8iWQImI85J6ER8qVN11h7OIDQxKV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=4HpS1+iP; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=L3JzaTJ55sC7miUGkXywTqJQpSypTHe/6NVw4gdWsg+LmHqZhNDukbLhewpT3AxuB0Y+nGCjzayuiG17d6Ib+8XIh8Mv1qzQ85R3QMdBOcVNN/0Zqdsp3StBmzf4dc+zZXLY6K3rPzhB4ZkrsGLSq9ol5ggNbRKEtT2QCVDEpjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T4TrJn14; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="4HpS1+iP"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=l/dIdLkpg3nY7mL+kOCv40XaN/+P5ZiBELHPID6DHIA=; b=4HpS1+iPtWu3Q6rWByBHg6zg1t
-	1JrA57T8qGLy/cN7tUE72nHaaV+hXcY7NKaOu2lwF5Sk4Vf8Y9Y9WZB1W1BbPt2NuqOn3gJohocEN
-	f9PsZyaA7pOeWgeIIKsi75KubAnO0mtLiUnx6idLonBZGG/rj3qcVP+5tv1+h9H8jcMBlW+pdcFV8
-	XpAcLjFgATy7mW7gDgV9b1TGTT8w6JYxd33LZfFcNIKE7byvcDEMecLyzGlzcBn0I3z6ZfN4bXvUZ
-	Qp3bmBRNjyEbdYyBKc6jK6NOF6ffCtsh+Ay7cBYCyQ2rXf5msRguvAu/zehYyBKpN9Hnc5WVx0grf
-	LB02Fw/g==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1t3VJM-0000000DHn8-1MMo;
-	Wed, 23 Oct 2024 06:57:40 +0000
-Date: Tue, 22 Oct 2024 23:57:40 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Adrian Vovk <adrianvovk@gmail.com>
-Cc: Christoph Hellwig <hch@infradead.org>,
-	Eric Biggers <ebiggers@kernel.org>,
-	Md Sadre Alam <quic_mdalam@quicinc.com>, axboe@kernel.dk,
-	song@kernel.org, yukuai3@huawei.com, agk@redhat.com,
-	snitzer@kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
-	adrian.hunter@intel.com, quic_asutoshd@quicinc.com,
-	ritesh.list@gmail.com, ulf.hansson@linaro.org, andersson@kernel.org,
-	konradybcio@kernel.org, kees@kernel.org, gustavoars@kernel.org,
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-raid@vger.kernel.org, dm-devel@lists.linux.dev,
-	linux-mmc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-hardening@vger.kernel.org, quic_srichara@quicinc.com,
-	quic_varada@quicinc.com
-Subject: Re: [PATCH v2 1/3] dm-inlinecrypt: Add inline encryption support
-Message-ID: <ZxieZPlH-S9pakYW@infradead.org>
-References: <20240916085741.1636554-1-quic_mdalam@quicinc.com>
- <20240916085741.1636554-2-quic_mdalam@quicinc.com>
- <20240921185519.GA2187@quark.localdomain>
- <ZvJt9ceeL18XKrTc@infradead.org>
- <ef3c9a17-79f3-4937-965e-52e2b9e66ac2@gmail.com>
- <ZxHwgsm2iP2Z_3at@infradead.org>
- <CAAdYy_mVy3uXPqWbjPzK_i8w7Okq73wKBQyc95TbnonE36rPgQ@mail.gmail.com>
- <ZxH4lnkQNhTP5fe6@infradead.org>
- <D96294E2-F17A-4E58-90FB-1D17747048E5@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T4TrJn14"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1729685394; x=1761221394;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=6kj6BGenSC46bCxZoBZ/KzUyflxUD6U1Ai0wmuCiTQ4=;
+  b=T4TrJn14j/NecK89FiwQmLnlUxP9aLB+xhIuB7fsx57qk7jMFDSu570/
+   /QbE08+bXeRGUtrzvW/i8R1xYM/S0xrkJGiTeJUipVoQFn8npnInUs36J
+   0/jz30dpAfH+GrK7502b6OY+P/HGAQKhGeb/BkotQqwV1e4SCip3Jhx+N
+   y8oOAvpJco4c1Zxv4gIg+ay+Phiq1EY8uW6KpZivgNKHfmGR5J85veFyS
+   GrfQZr/IEqk9pKfPWbinbfV5djmYvdC2Iq6dm7czMqYrBrdNnakXuEWzv
+   nr8BmIbzZYXGphbNQW0pagqkEgho1+hDcUJqpKcZ3pPlRgjLH6iClHMHR
+   A==;
+X-CSE-ConnectionGUID: 6nbVpNzXRFiTENyp7fV/bA==
+X-CSE-MsgGUID: 86M5DqvOSpaSNE6qbrNKrg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11234"; a="29376755"
+X-IronPort-AV: E=Sophos;i="6.11,226,1725346800"; 
+   d="scan'208";a="29376755"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2024 05:09:54 -0700
+X-CSE-ConnectionGUID: OS2OaXAFR1OqMcN3P32kEg==
+X-CSE-MsgGUID: 9oVqrhNlQq2/IC1iIecNEA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,226,1725346800"; 
+   d="scan'208";a="117651569"
+Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
+  by orviesa001.jf.intel.com with ESMTP; 23 Oct 2024 05:09:51 -0700
+Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1t3aBR-000Uso-0U;
+	Wed, 23 Oct 2024 12:09:49 +0000
+Date: Wed, 23 Oct 2024 20:09:25 +0800
+From: kernel test robot <lkp@intel.com>
+To: Dmitry Antipov <dmantipov@yandex.ru>,
+	Jeff Johnson <jjohnson@kernel.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Kalle Valo <kvalo@kernel.org>, Kees Cook <kees@kernel.org>,
+	linux-hardening@vger.kernel.org, linux-wireless@vger.kernel.org,
+	lvc-project@linuxtesting.org, Dmitry Antipov <dmantipov@yandex.ru>
+Subject: Re: [PATCH 2/2] wifi: ath12k: annotate channel of struct
+ ath12k_wmi_scan_chan_list_arg with __counted_by
+Message-ID: <202410231916.Wjn5HeB6-lkp@intel.com>
+References: <20241021143419.587716-2-dmantipov@yandex.ru>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -64,21 +67,58 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <D96294E2-F17A-4E58-90FB-1D17747048E5@gmail.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20241021143419.587716-2-dmantipov@yandex.ru>
 
-On Fri, Oct 18, 2024 at 11:03:50AM -0400, Adrian Vovk wrote:
-> Sure, but then this way you're encrypting each partition twice. Once by the dm-crypt inside of the partition, and again by the dm-crypt that's under the partition table. This double encryption is ruinous for performance, so it's just not a feasible solution and thus people don't do this. Would be nice if we had the flexibility though.
+Hi Dmitry,
 
-Why do you assume the encryption would happen twice?
+kernel test robot noticed the following build errors:
 
-> >Because you are now bypassing encryption for certainl LBA ranges in
-> >the file system based on hints/flags for something sitting way above
-> >in the stack.
-> >
-> 
-> Well the data is still encrypted. It's just encrypted with a different key. If the attacker has a FDE dump of the disk, the data is still just as inaccessible to them.
+[auto build test ERROR on ath/ath-next]
+[also build test ERROR on wireless-next/main wireless/main linus/master v6.12-rc4 next-20241022]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-No one knows that it actually is encryped.  The lower layer just knows
-the skip encryption flag was set, but it has zero assurance data
-actually was encrypted.
+url:    https://github.com/intel-lab-lkp/linux/commits/Dmitry-Antipov/wifi-ath12k-annotate-channel-of-struct-ath12k_wmi_scan_chan_list_arg-with-__counted_by/20241021-223544
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/ath/ath.git ath-next
+patch link:    https://lore.kernel.org/r/20241021143419.587716-2-dmantipov%40yandex.ru
+patch subject: [PATCH 2/2] wifi: ath12k: annotate channel of struct ath12k_wmi_scan_chan_list_arg with __counted_by
+config: x86_64-allyesconfig (https://download.01.org/0day-ci/archive/20241023/202410231916.Wjn5HeB6-lkp@intel.com/config)
+compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241023/202410231916.Wjn5HeB6-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202410231916.Wjn5HeB6-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from drivers/net/wireless/ath/ath12k/core.c:12:
+   In file included from drivers/net/wireless/ath/ath12k/core.h:20:
+>> drivers/net/wireless/ath/ath12k/wmi.h:3749:55: error: use of undeclared identifier 'nallchains'; did you mean 'nallchans'?
+    3749 |         struct ath12k_wmi_channel_arg channel[] __counted_by(nallchains);
+         |                                                              ^~~~~~~~~~
+         |                                                              nallchans
+   include/linux/compiler_attributes.h:105:62: note: expanded from macro '__counted_by'
+     105 | # define __counted_by(member)           __attribute__((__counted_by__(member)))
+         |                                                                       ^
+   drivers/net/wireless/ath/ath12k/wmi.h:3748:6: note: 'nallchans' declared here
+    3748 |         u16 nallchans;
+         |             ^
+   1 error generated.
+
+
+vim +3749 drivers/net/wireless/ath/ath12k/wmi.h
+
+  3745	
+  3746	struct ath12k_wmi_scan_chan_list_arg {
+  3747		u32 pdev_id;
+  3748		u16 nallchans;
+> 3749		struct ath12k_wmi_channel_arg channel[] __counted_by(nallchains);
+  3750	};
+  3751	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
