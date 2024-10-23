@@ -1,51 +1,52 @@
-Received: from omta34.uswest2.a.cloudfilter.net (omta34.uswest2.a.cloudfilter.net [35.89.44.33])
+Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D907A14A4E7
-	for <linux-hardening@vger.kernel.org>; Wed, 23 Oct 2024 21:30:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7AF61F470D
+	for <linux-hardening@vger.kernel.org>; Wed, 23 Oct 2024 21:43:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729719038; cv=none; b=jardmgVcRUFQBlaLT7JpfliWCGM2FerqFFKRniiaz9Bme9Rc+kPRXpjoQ7ugr0cy5DxNGngBTiSNHxlFbgNe1ZPn4YROnmv5N2M8+TPPIJeLGwP5NYkgEz4H21SAhVFyXT8XhuEX9BZ2y8NRRgL4ra5wr7uUCThsoXzbLLdGrWQ=
+	t=1729719806; cv=none; b=ks2R2qA7pcDxuV3vtfUB5afQwdQN8QCBcR00qpp6t2Ak5uROpaL1VvvtCGstor43d0Up2NyH02WOl8gv98OD058pMb8SI9DFk1O5McleQ2PBGIUH3lHhxs1TGxV8hEBnLmv2D/8PnzqXcIMuvyr3hWsOSzyrZljFLRs01zg+5tY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729719038; c=relaxed/simple;
-	bh=fPqUfh5O1P7kOgNYUDI+Fyksx0nelMxwaPjPhfGk3yo=;
+	s=arc-20240116; t=1729719806; c=relaxed/simple;
+	bh=D0Tfqt5jcLVUkD6Q67v0hwF1VSxCNxhs/HDdCEwABZM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aJm9aINHV2ysBoZLerGNqenurEFxxmN06bT73znTO+VncQxjnnlBRwbZv/pDkiZJr4+rdA1gAfAxGOXI6kXMztt4tUqep5HTZRjkgCqpTTFctWi9XMpak0l2pEht/NOzNqa7K5S71g45wYvY28OOlgPyFYWibyRp9nDboua8+l8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=tA0gtF8F; arc=none smtp.client-ip=35.89.44.33
+	 In-Reply-To:Content-Type; b=au0GWOWBs1FX21Gffu+0LOaY7D3WDZPJaplQMBhBEbSSgQIRr3PYOmwEcD7smfqwdGFnzB1SsEbaKRvf6Y3O3mq3g4sFYdmlNR7K/cxT/oK0u7O+d1mjai/cRDLZzm2e/CnP9alHrPP/Oz9A+JW8LnRy70dNmWdLL/ReqXUJy2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=DdC9hlmC; arc=none smtp.client-ip=44.202.169.37
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="tA0gtF8F"
-Received: from eig-obgw-6003a.ext.cloudfilter.net ([10.0.30.151])
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="DdC9hlmC"
+Received: from eig-obgw-5010a.ext.cloudfilter.net ([10.0.29.199])
 	by cmsmtp with ESMTPS
-	id 3Hz4tWMakVpzp3iw2t3uow; Wed, 23 Oct 2024 21:30:30 +0000
+	id 3efAtDuhhg2lz3j8Qtobb2; Wed, 23 Oct 2024 21:43:18 +0000
 Received: from gator4166.hostgator.com ([108.167.133.22])
 	by cmsmtp with ESMTPS
-	id 3iw1t36ehCgT63iw1t1EaM; Wed, 23 Oct 2024 21:30:30 +0000
-X-Authority-Analysis: v=2.4 cv=XvwxOkF9 c=1 sm=1 tr=0 ts=67196af6
+	id 3j8Pt1H6UQB8q3j8QtP9Jp; Wed, 23 Oct 2024 21:43:18 +0000
+X-Authority-Analysis: v=2.4 cv=BZPe0Kt2 c=1 sm=1 tr=0 ts=67196df6
  a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=OKg9RQrQ6+Y1xAlsUndU0w==:17
- a=IkcTkHD0fZMA:10 a=DAUX931o1VcA:10 a=7T7KSl7uo7wA:10
- a=8Fy0PtBgQ4eIbHuuQ40A:9 a=QEXdDO2ut3YA:10 a=Xt_RvD8W3m28Mn_h3AK8:22
+ a=IkcTkHD0fZMA:10 a=DAUX931o1VcA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
+ a=QyXUC8HyAAAA:8 a=vaJtXVxTAAAA:8 a=iwwoO_9B2agcGiYlQ7MA:9 a=QEXdDO2ut3YA:10
+ a=Xt_RvD8W3m28Mn_h3AK8:22
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
 	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
 	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
 	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=QltWdEL6XPLcPOOTcEu6Kid18we0qiV6s7ZY3NrfNII=; b=tA0gtF8FeXh015sRfJhtppXcJ0
-	Ume2ncHkvHKQYzYPkSaV7zaNJQJutuV+LmS97twE/QxS+NyJN2Bzi8La/Mw/QDKVEe9zDD8Dmr+zw
-	Degt3VmfD9nmLpJ0o1qguLaamjP2mf+7Ub4B6s7dOoQblA/defMf9OydkGj5DaJKJ4UcRjQoT4PtC
-	seZLgcXNJOtF/mULIM+vm0vM/LzF8HfuE4XtoQ2vVVby/js+vfwo+IxGC1vEFY9v7YWT+QIRG2Djp
-	pScvr7acqkenafKLWHKOI7CpY0d19N57soacNsUU6HI17+PwAYAFzjtWMv4/s7ZtqCKNY/7/UqVbO
-	r5RS+diA==;
-Received: from [201.172.173.7] (port=42804 helo=[192.168.15.6])
+	bh=16Q14PDMblkrTX6HXayHmrPosS3yrk6wYHUNr9G8tFQ=; b=DdC9hlmCbxOMYomLHYhhthbaGx
+	T/pCCUXSbFOZ+S9cD7IpJAaaZVuA5uuG8yVA6RZgKxw6F9bfXV39r2ppXBex5nBYqisTZrirkxEzH
+	30y3DCx902J0B+ymLZHjJZU83Dx9M/ngd3OUXasP3t3NdWOvqTIDWZ2tC+pw53v8FISB57lisr8mM
+	GnVsdbAs+g06Ef3NS4SbBOO2o9SA97NUXKo4oJZTi965iZZqH9nLER/aLBfhpdvx7AJb1xRfkTsb+
+	4NYL2lvjX+hErHbrAY8ZzB0ruJJgd5g7Y9WazxlNYYbYtr/VagU4MUG86dCJO1ojRCJrvc1TqoDvW
+	qID9nuJQ==;
+Received: from [201.172.173.7] (port=55182 helo=[192.168.15.6])
 	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 	(Exim 4.96.2)
 	(envelope-from <gustavo@embeddedor.com>)
-	id 1t3ivz-000XxR-13;
-	Wed, 23 Oct 2024 16:30:27 -0500
-Message-ID: <2b7e1535-2d7a-4c7c-9687-9ddd42392802@embeddedor.com>
-Date: Wed, 23 Oct 2024 15:30:25 -0600
+	id 1t3j8P-000jzM-0A;
+	Wed, 23 Oct 2024 16:43:17 -0500
+Message-ID: <a51a9a11-02b4-4da5-a9cc-1317b6bc7526@embeddedor.com>
+Date: Wed, 23 Oct 2024 15:43:15 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -53,24 +54,17 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2][next] UAPI: ethtool: Use __struct_group() in struct
- ethtool_link_settings
-To: Andrew Lunn <andrew@lunn.ch>, "Gustavo A. R. Silva"
- <gustavoars@kernel.org>
-Cc: Michael Chan <michael.chan@broadcom.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Potnuri Bharat Teja <bharat@chelsio.com>,
- Christian Benvenuti <benve@cisco.com>, Satish Kharat <satishkh@cisco.com>,
- Manish Chopra <manishc@marvell.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <cover.1729536776.git.gustavoars@kernel.org>
- <e9ccb0cd7e490bfa270a7c20979e16ff84ac91e2.1729536776.git.gustavoars@kernel.org>
- <53721db6-f4b1-4394-ab2a-045f214bd2fa@lunn.ch>
+Subject: Re: [PATCH 2/2] wifi: ath12k: annotate channel of struct
+ ath12k_wmi_scan_chan_list_arg with __counted_by
+To: Dmitry Antipov <dmantipov@yandex.ru>, Jeff Johnson <jjohnson@kernel.org>
+Cc: Kalle Valo <kvalo@kernel.org>, Kees Cook <kees@kernel.org>,
+ linux-hardening@vger.kernel.org, linux-wireless@vger.kernel.org,
+ lvc-project@linuxtesting.org
+References: <20241021143419.587716-1-dmantipov@yandex.ru>
+ <20241021143419.587716-2-dmantipov@yandex.ru>
 Content-Language: en-US
 From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <53721db6-f4b1-4394-ab2a-045f214bd2fa@lunn.ch>
+In-Reply-To: <20241021143419.587716-2-dmantipov@yandex.ru>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
@@ -81,74 +75,49 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 201.172.173.7
 X-Source-L: No
-X-Exim-ID: 1t3ivz-000XxR-13
+X-Exim-ID: 1t3j8P-000jzM-0A
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: ([192.168.15.6]) [201.172.173.7]:42804
+X-Source-Sender: ([192.168.15.6]) [201.172.173.7]:55182
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
+X-Email-Count: 18
 X-Org: HG=hgshared;ORG=hostgator;
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfAblgzTwx2JF1vPNeuEs1tMnYU7RUF2QUK+tWFCpbfFzs8udvt5DNwiU3kbt4xI2KSRwLmPK0xdbLJ24V/q0DQ+cXUFJ35+dHrfYu2SHOr4YbyuXEdgr
- q0AIkxpSLdla/OJljHUVo6fDroK9LEGe6aYW7AaKKoTK0s0SqkHC4XtqgXzxyzfG8ux+fcvq8npe+9MVBPuZ33idSWYU5iE753TSVaviawDNWZ1cPHNOVUWP
+X-CMAE-Envelope: MS4xfPSccA78YPcBT7PL/J4dV0hPd05er8JfwXfCP1mxhwT1KLlRHRiOcqvh2fbn7+V8JoGVwPwD7VuZJj4aUuNzkPEXfOkcSZi7tOH0qg1os1RBDDqiTL7H
+ 1y/XGOa3z7rS/qXKPpxRKXPsu3/vO/KFg6w/ZCJhNfLpv6CceVN42/cZUWff4xa5XEoUzASmCMQce5YWkcdSrsV0NI1sV+Dr5xMiyYSN6P8TVgnsv7c6hZ80
 
 
 
-On 21/10/24 14:11, Andrew Lunn wrote:
->>   struct ethtool_link_settings {
->> -	__u32	cmd;
->> -	__u32	speed;
->> -	__u8	duplex;
->> -	__u8	port;
->> -	__u8	phy_address;
->> -	__u8	autoneg;
->> -	__u8	mdio_support;
->> -	__u8	eth_tp_mdix;
->> -	__u8	eth_tp_mdix_ctrl;
->> -	__s8	link_mode_masks_nwords;
->> -	__u8	transceiver;
->> -	__u8	master_slave_cfg;
->> -	__u8	master_slave_state;
->> -	__u8	rate_matching;
->> -	__u32	reserved[7];
->> +	/* New members MUST be added within the __struct_group() macro below. */
->> +	__struct_group(ethtool_link_settings_hdr, hdr, /* no attrs */,
->> +		__u32	cmd;
->> +		__u32	speed;
->> +		__u8	duplex;
->> +		__u8	port;
->> +		__u8	phy_address;
->> +		__u8	autoneg;
->> +		__u8	mdio_support;
->> +		__u8	eth_tp_mdix;
->> +		__u8	eth_tp_mdix_ctrl;
->> +		__s8	link_mode_masks_nwords;
->> +		__u8	transceiver;
->> +		__u8	master_slave_cfg;
->> +		__u8	master_slave_state;
->> +		__u8	rate_matching;
->> +		__u32	reserved[7];
->> +	);
->>   	__u32	link_mode_masks[];
-> 
-> Dumb C question. What are the padding rules for a union, compared to
-> base types? Do we know for sure the compiler is not going pad this
-> structure differently because of the union?
+On 21/10/24 08:34, Dmitry Antipov wrote:
+> According to 'ath12k_reg_update_chan_list()', annotate flexible
+> array member 'channel' of 'struct ath12k_wmi_scan_chan_list_arg'
+> with '__counted_by()' attribute to improve runtime bounds checking
+> when CONFIG_UBSAN_BOUNDS is enabled. Compile tested only.
 
-We've been using the struct_group() family of helpers in Linux for years,
-and we haven't seen any issues with padding an alignment. So, it seems
-to do its job just fine. :)
+It seems you didn't[1] actually build-test this changes. :/
 
-Thanks
---
-Gustavo
+-Gustavo
+
+[1] https://lore.kernel.org/linux-hardening/202410231916.Wjn5HeB6-lkp@intel.com/
 
 > 
-> It is however nicely constructed. The 12 __u8 making 3 32bit words, so
-> we have a total of 12 32bit words, or 6 64bit words, before the
-> link_mode_masks[], so i don't think padding is technically an issue,
-> but it would be nice to know the C standard guarantees this.
+> Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
+> ---
+>   drivers/net/wireless/ath/ath12k/wmi.h | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> 	Andrew
+> diff --git a/drivers/net/wireless/ath/ath12k/wmi.h b/drivers/net/wireless/ath/ath12k/wmi.h
+> index 6a913f9b8315..9a6e28142754 100644
+> --- a/drivers/net/wireless/ath/ath12k/wmi.h
+> +++ b/drivers/net/wireless/ath/ath12k/wmi.h
+> @@ -3746,7 +3746,7 @@ struct wmi_stop_scan_cmd {
+>   struct ath12k_wmi_scan_chan_list_arg {
+>   	u32 pdev_id;
+>   	u16 nallchans;
+> -	struct ath12k_wmi_channel_arg channel[];
+> +	struct ath12k_wmi_channel_arg channel[] __counted_by(nallchains);
+>   };
+>   
+>   struct wmi_scan_chan_list_cmd {
