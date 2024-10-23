@@ -1,139 +1,154 @@
-Received: from mail-oo1-f42.google.com (mail-oo1-f42.google.com [209.85.161.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from omta34.uswest2.a.cloudfilter.net (omta34.uswest2.a.cloudfilter.net [35.89.44.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 087001CACEF
-	for <linux-hardening@vger.kernel.org>; Wed, 23 Oct 2024 18:33:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D907A14A4E7
+	for <linux-hardening@vger.kernel.org>; Wed, 23 Oct 2024 21:30:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729708440; cv=none; b=KHKV0rZuRKfVgtsrEsjh6CU99s648IbIw0L1mBr1yG2nv+qVcz+57njUm0WtbDhjAo9R+uWj644m8zjg8YtWIs7R+r/GWadOQMeegciQtjqFtkl/aRU4d6SfRtyo0kd5zlLhjv134jn34/sBwE3JZ+rIGN/EracMoi10LsgsgQY=
+	t=1729719038; cv=none; b=jardmgVcRUFQBlaLT7JpfliWCGM2FerqFFKRniiaz9Bme9Rc+kPRXpjoQ7ugr0cy5DxNGngBTiSNHxlFbgNe1ZPn4YROnmv5N2M8+TPPIJeLGwP5NYkgEz4H21SAhVFyXT8XhuEX9BZ2y8NRRgL4ra5wr7uUCThsoXzbLLdGrWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729708440; c=relaxed/simple;
-	bh=46H7PDaCQ2mc9wWUN9y7o0ZuIliZ1TptrpK1yyyphmM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=W7hR7vB+T/kQ3dDYLI09molSU7ghjoroVUQgwmPKjoRAfI//fxdk0xpkxUyd1lf++2qVvkx++VVwidjf9wdIt4pmjKsygn29vzlbOVOxrzHvk/DdWrfrgKZJ0ob5y6yIF4lcbqjZx8oxsXrGwJe9z9NsqMGhGiBrz1m83VmEi54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=a7btn8rN; arc=none smtp.client-ip=209.85.161.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1729719038; c=relaxed/simple;
+	bh=fPqUfh5O1P7kOgNYUDI+Fyksx0nelMxwaPjPhfGk3yo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aJm9aINHV2ysBoZLerGNqenurEFxxmN06bT73znTO+VncQxjnnlBRwbZv/pDkiZJr4+rdA1gAfAxGOXI6kXMztt4tUqep5HTZRjkgCqpTTFctWi9XMpak0l2pEht/NOzNqa7K5S71g45wYvY28OOlgPyFYWibyRp9nDboua8+l8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=tA0gtF8F; arc=none smtp.client-ip=35.89.44.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="a7btn8rN"
-Received: by mail-oo1-f42.google.com with SMTP id 006d021491bc7-5eb84216a1cso1099eaf.3
-        for <linux-hardening@vger.kernel.org>; Wed, 23 Oct 2024 11:33:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1729708438; x=1730313238; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TVm15+JO2o8mM+w0yinyleN/ZVNf1YYgHDbnm3S0yro=;
-        b=a7btn8rNnH8nXRpDaDj2v3n/XNA91arJe1m8yIoWj6RL+eN+viwdqn3YgWCeG8nQu9
-         s4u8fzXpZNhf8cFEEYlNqJMa6Jqm3YWaUSWmFQ06gYV1Cen1RIeK79vybBbO3I/DqxPs
-         Vv2vyk408aPMYc5I2ubchlAnrtS1Y2DB1NQ7M=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729708438; x=1730313238;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TVm15+JO2o8mM+w0yinyleN/ZVNf1YYgHDbnm3S0yro=;
-        b=SIFRABzxcatx5vApAmNZgKH5jxnSRD8nw4eEKl5o90F9IDHYazbSbjlG1UjP5n37S2
-         hFGgK03ccm4JKoNDi1sTNmuVlqrwZB1HunWUWE9xiPsuztuR1SqGdy/uKw9xsshaXCtm
-         x09q3PjdlOzJNsHrs41fE0M4654SH1+QbqGvzIRkXPQqHsiohiUe+O5AOTx4RJcWmBwU
-         g833Mbet1+7LRLpjbKo5QXdajW4VE3BgNsZnOsmGu7TTnimp082ogBNjCoqmdNi+jpxY
-         SCP4b5otbT84y7dGWI+4J+Y5JMe56bgqXEBCVbVk9FegXkfFmZy2tsSvYFLkJqZX3li5
-         V5Eg==
-X-Forwarded-Encrypted: i=1; AJvYcCVjfkKaOsfzQ5KwPKBdlli139us6jX+G9Et0mgveTj6L0css+JzSS4YC4Nk4YeFQ2wODwlt+Za4FxjINyfqtKo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwpM9SaIWrn/YR9NqJ07A4XHPWOtmmZjCLuMbA1p8+e2n6cVcKE
-	DiRYnH2LM7h/AFT+nX96vHauGDy7ySEytDHfR4W0Z14PyPUgAZZUl3Cf5kYQOy6QeMH1kcB6XFD
-	/vkxgZwY4nseVL9D/tf0GVyvV3IpwXnriuair
-X-Google-Smtp-Source: AGHT+IHLGbkE5Oo4IYlY3tWegFIJ6lm7Wf/IIJ6qevixwoPKrt15CKBR9bfEkXM+gXkwnZyxMgOtkG3lSgqMgDT/5dQ=
-X-Received: by 2002:a05:6870:5590:b0:27b:b2e0:6af with SMTP id
- 586e51a60fabf-28ccb40e51emr1031801fac.2.1729708438196; Wed, 23 Oct 2024
- 11:33:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="tA0gtF8F"
+Received: from eig-obgw-6003a.ext.cloudfilter.net ([10.0.30.151])
+	by cmsmtp with ESMTPS
+	id 3Hz4tWMakVpzp3iw2t3uow; Wed, 23 Oct 2024 21:30:30 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id 3iw1t36ehCgT63iw1t1EaM; Wed, 23 Oct 2024 21:30:30 +0000
+X-Authority-Analysis: v=2.4 cv=XvwxOkF9 c=1 sm=1 tr=0 ts=67196af6
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=OKg9RQrQ6+Y1xAlsUndU0w==:17
+ a=IkcTkHD0fZMA:10 a=DAUX931o1VcA:10 a=7T7KSl7uo7wA:10
+ a=8Fy0PtBgQ4eIbHuuQ40A:9 a=QEXdDO2ut3YA:10 a=Xt_RvD8W3m28Mn_h3AK8:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=QltWdEL6XPLcPOOTcEu6Kid18we0qiV6s7ZY3NrfNII=; b=tA0gtF8FeXh015sRfJhtppXcJ0
+	Ume2ncHkvHKQYzYPkSaV7zaNJQJutuV+LmS97twE/QxS+NyJN2Bzi8La/Mw/QDKVEe9zDD8Dmr+zw
+	Degt3VmfD9nmLpJ0o1qguLaamjP2mf+7Ub4B6s7dOoQblA/defMf9OydkGj5DaJKJ4UcRjQoT4PtC
+	seZLgcXNJOtF/mULIM+vm0vM/LzF8HfuE4XtoQ2vVVby/js+vfwo+IxGC1vEFY9v7YWT+QIRG2Djp
+	pScvr7acqkenafKLWHKOI7CpY0d19N57soacNsUU6HI17+PwAYAFzjtWMv4/s7ZtqCKNY/7/UqVbO
+	r5RS+diA==;
+Received: from [201.172.173.7] (port=42804 helo=[192.168.15.6])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1t3ivz-000XxR-13;
+	Wed, 23 Oct 2024 16:30:27 -0500
+Message-ID: <2b7e1535-2d7a-4c7c-9687-9ddd42392802@embeddedor.com>
+Date: Wed, 23 Oct 2024 15:30:25 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241017005105.3047458-1-jeffxu@chromium.org> <20241017005105.3047458-2-jeffxu@chromium.org>
- <5svaztlptf4gs4sp6zyzycwjm2fnpd2xw3oirsls67sq7gq7wv@pwcktbixrzdo>
- <CABi2SkXwOkoFcUUx=aALWVqurKhns+JKZqm2EyRTbHtROK8SKg@mail.gmail.com>
- <r5ljdglhtbapgqddtr6gxz5lszvq2yek2rd6bnllxk5i6difzv@imuu3pxh5fcc>
- <CABi2SkXArA+yfodoOxDbTTOpWCbU5Ce1p1HadSo0=CL23K4-dQ@mail.gmail.com> <8f68ad82-2f60-49f8-b150-0cf183c9cc71@suse.cz>
-In-Reply-To: <8f68ad82-2f60-49f8-b150-0cf183c9cc71@suse.cz>
-From: Jeff Xu <jeffxu@chromium.org>
-Date: Wed, 23 Oct 2024 11:33:46 -0700
-Message-ID: <CABi2SkW6onjPipzhwqQ7iiOFJx3vtwnB2wFizqe01j1Wf3kqYQ@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] mseal: Two fixes for madvise(MADV_DONTNEED) when sealed
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Pedro Falcato <pedro.falcato@gmail.com>, akpm@linux-foundation.org, 
-	keescook@chromium.org, torvalds@linux-foundation.org, 
-	usama.anjum@collabora.com, corbet@lwn.net, Liam.Howlett@oracle.com, 
-	lorenzo.stoakes@oracle.com, jeffxu@google.com, jorgelo@chromium.org, 
-	groeck@chromium.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, jannh@google.com, 
-	sroettger@google.com, linux-hardening@vger.kernel.org, willy@infradead.org, 
-	gregkh@linuxfoundation.org, deraadt@openbsd.org, surenb@google.com, 
-	merimus@google.com, rdunlap@infradead.org, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2][next] UAPI: ethtool: Use __struct_group() in struct
+ ethtool_link_settings
+To: Andrew Lunn <andrew@lunn.ch>, "Gustavo A. R. Silva"
+ <gustavoars@kernel.org>
+Cc: Michael Chan <michael.chan@broadcom.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Potnuri Bharat Teja <bharat@chelsio.com>,
+ Christian Benvenuti <benve@cisco.com>, Satish Kharat <satishkh@cisco.com>,
+ Manish Chopra <manishc@marvell.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <cover.1729536776.git.gustavoars@kernel.org>
+ <e9ccb0cd7e490bfa270a7c20979e16ff84ac91e2.1729536776.git.gustavoars@kernel.org>
+ <53721db6-f4b1-4394-ab2a-045f214bd2fa@lunn.ch>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <53721db6-f4b1-4394-ab2a-045f214bd2fa@lunn.ch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.172.173.7
+X-Source-L: No
+X-Exim-ID: 1t3ivz-000XxR-13
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.15.6]) [201.172.173.7]:42804
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfAblgzTwx2JF1vPNeuEs1tMnYU7RUF2QUK+tWFCpbfFzs8udvt5DNwiU3kbt4xI2KSRwLmPK0xdbLJ24V/q0DQ+cXUFJ35+dHrfYu2SHOr4YbyuXEdgr
+ q0AIkxpSLdla/OJljHUVo6fDroK9LEGe6aYW7AaKKoTK0s0SqkHC4XtqgXzxyzfG8ux+fcvq8npe+9MVBPuZ33idSWYU5iE753TSVaviawDNWZ1cPHNOVUWP
 
-Hi Vlastimil
 
-On Tue, Oct 22, 2024 at 8:55=E2=80=AFAM Vlastimil Babka <vbabka@suse.cz> wr=
-ote:
->
-> On 10/17/24 22:57, Jeff Xu wrote:
-> > On Thu, Oct 17, 2024 at 1:49=E2=80=AFPM Pedro Falcato <pedro.falcato@gm=
-ail.com> wrote:
-> >> >
-> >> > > > For file-backed, private, read-only memory mappings, we previous=
-ly did
-> >> > > > not block the madvise(MADV_DONTNEED). This was based on
-> >> > > > the assumption that the memory's content, being file-backed, cou=
-ld be
-> >> > > > retrieved from the file if accessed again. However, this assumpt=
-ion
-> >> > > > failed to consider scenarios where a mapping is initially create=
-d as
-> >> > > > read-write, modified, and subsequently changed to read-only. The=
- newly
-> >> > > > introduced VM_WASWRITE flag addresses this oversight.
-> >> > >
-> >> > > We *do not* need this. It's sufficient to just block discard opera=
-tions on read-only
-> >> > > private mappings.
-> >> > I think you meant blocking madvise(MADV_DONTNEED) on all read-only
-> >> > private file-backed mappings.
-> >> >
-> >> > I considered that option, but there is a use case for madvise on tho=
-se
-> >> > mappings that never get modified.
-> >> >
-> >> > Apps can use that to free up RAM. e.g. Considering read-only .text
-> >> > section, which never gets modified, madvise( MADV_DONTNEED) can free
-> >> > up RAM when memory is in-stress, memory will be reclaimed from a
-> >> > backed-file on next read access. Therefore we can't just block all
-> >> > read-only private file-backed mapping, only those that really need t=
-o,
-> >> > such as mapping changed from rw=3D>r (what you described)
-> >>
-> >> Does anyone actually do this? If so, why? WHYYYY?
-> >>
-> > This is a legit use case, I can't argue that it isn't.
->
-> Could the same effect be simply achieved with MADV_COLD/MADV_PAGEOUT? Tha=
-t
-> should be able to reclaim the pages as well if they are indeed not used, =
-but
-> it's non-destructive and you don't want to allow destructive madvise anyw=
-ay
-> (i.e. no throwing away data that would be replaced by zeroes or original
-> file content on the next touch) so it seems overall a better fit for seal=
-ed
-> areas?
->
-Thanks for the suggestion. This opens a new way to solve this, I need
-to do some research and testing  to verify the solutions work for us.
-I will respond after I'm done with those.
 
-Best regards,
--Jeff
+On 21/10/24 14:11, Andrew Lunn wrote:
+>>   struct ethtool_link_settings {
+>> -	__u32	cmd;
+>> -	__u32	speed;
+>> -	__u8	duplex;
+>> -	__u8	port;
+>> -	__u8	phy_address;
+>> -	__u8	autoneg;
+>> -	__u8	mdio_support;
+>> -	__u8	eth_tp_mdix;
+>> -	__u8	eth_tp_mdix_ctrl;
+>> -	__s8	link_mode_masks_nwords;
+>> -	__u8	transceiver;
+>> -	__u8	master_slave_cfg;
+>> -	__u8	master_slave_state;
+>> -	__u8	rate_matching;
+>> -	__u32	reserved[7];
+>> +	/* New members MUST be added within the __struct_group() macro below. */
+>> +	__struct_group(ethtool_link_settings_hdr, hdr, /* no attrs */,
+>> +		__u32	cmd;
+>> +		__u32	speed;
+>> +		__u8	duplex;
+>> +		__u8	port;
+>> +		__u8	phy_address;
+>> +		__u8	autoneg;
+>> +		__u8	mdio_support;
+>> +		__u8	eth_tp_mdix;
+>> +		__u8	eth_tp_mdix_ctrl;
+>> +		__s8	link_mode_masks_nwords;
+>> +		__u8	transceiver;
+>> +		__u8	master_slave_cfg;
+>> +		__u8	master_slave_state;
+>> +		__u8	rate_matching;
+>> +		__u32	reserved[7];
+>> +	);
+>>   	__u32	link_mode_masks[];
+> 
+> Dumb C question. What are the padding rules for a union, compared to
+> base types? Do we know for sure the compiler is not going pad this
+> structure differently because of the union?
+
+We've been using the struct_group() family of helpers in Linux for years,
+and we haven't seen any issues with padding an alignment. So, it seems
+to do its job just fine. :)
+
+Thanks
+--
+Gustavo
+
+> 
+> It is however nicely constructed. The 12 __u8 making 3 32bit words, so
+> we have a total of 12 32bit words, or 6 64bit words, before the
+> link_mode_masks[], so i don't think padding is technically an issue,
+> but it would be nice to know the C standard guarantees this.
+> 
+> 	Andrew
