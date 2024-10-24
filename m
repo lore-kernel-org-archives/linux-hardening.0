@@ -1,79 +1,97 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from forward101a.mail.yandex.net (forward101a.mail.yandex.net [178.154.239.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B824B1B4F32;
-	Thu, 24 Oct 2024 09:04:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3F9E1CCEE0;
+	Thu, 24 Oct 2024 11:19:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729760651; cv=none; b=fvW/uFGIRuiDnZTaIq8MJfMo3qpREZMdNs/+bSMr7xKu7V4VKzUpg91t7bt2mkCbi/gkgNGzRURPDIRGNTCvdxbuNQP6e6lGdrzXE1nnEQgOP1BEjV0/jGcxRdbj4qQTddPJSftmS0mX9P4oG90kIbepyflprA5jk0+SRXQCTZk=
+	t=1729768787; cv=none; b=kisNimwUIzTbRdaqMtcXYMc3hiOz/CQ2JrfKs5jQ+5tZ/oUvF6hfQ2rdVptaaj7JrqU63zCsLRxNcFXzHUzFTCw9Vco7yGWvc3p2q4PfjsGfZ8ZGaxf3o0hNUrM99NtDLpTR4uuFtQY8QUjKhWypELMRuGX5h2EpyPHSk3SpluQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729760651; c=relaxed/simple;
-	bh=EyPmGCUfQ8Y6M9C7NmD4I3C5x0XLdLsYt0oZ7HJm5gg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V7kVIhswyZb0XoNifghbCZNT87RXM0BCMze9vjiAYfbdajzEoJMEH0AXTLBkWVbGqKRgk5jkULL0lxKCc8hUOV+mWaTIvFozNDgEaHXFmf8TE1q8eRNQTvLmkUfZcDeYOswnTSLviYjs5MtVxKFkqTeRiGh9JSn1uxWDfO5fkNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=2iCuWIsV; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	s=arc-20240116; t=1729768787; c=relaxed/simple;
+	bh=utpNps1/ZY6oW+MzyY2tkq5Q/ZXySUJ0sIocbr8mDgs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=bBkRgHje/v48h3pYh3oohAqBuz+wF0gsD3OdIPnLaY8un29KaMAdSbd0kMw9Kd0Sjx04KtRxcewOT24DMo0EzHR5qMPBVezhnnoCV8Jrv1ElAYZOZuQnTSF6BLtocQjQID3rcEnRGX+lDWFHXNJ+ALlEbJasSJNN5VhcyG2vITQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=SYR/8giV; arc=none smtp.client-ip=178.154.239.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="2iCuWIsV"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=gc7TIYx8RU4Q8PM3q2bw2LoJRKDeD/wqCcHiZkboyi8=; b=2iCuWIsV6og9kCCjBAMgNtgAFB
-	NkVgJ1lGp9IE//O8ftcsOdgO7RgipukKx3iKsr021YPA5+RsQyUC4SAv630Hlu3EVxBB+DHAptfMR
-	Ul4s2+O+ncSyqrwggtvEw4IU2TT8hENWji8jnJvzRs2ee5euvq9maSgxoSh2NBYtZKFtRdKQYH3xU
-	vJhnvjkafdLRVlqhx2oAfIcvpdYB0wP340JhJWwU2rFLBvIoofkMYsFlzVYQvFxNAnmuY7Bxo1I6f
-	voIPgQSJC+yCKsFA9deNbxXbEIkBfo+HsB5xI3Qg7mllvOhTISoueY2QJz1qfHbu1OReQ1sp7s+RF
-	H7pC19zg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1t3tlC-0000000HNxA-3eJc;
-	Thu, 24 Oct 2024 09:04:02 +0000
-Date: Thu, 24 Oct 2024 02:04:02 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Adrian Vovk <adrianvovk@gmail.com>
-Cc: Christoph Hellwig <hch@infradead.org>,
-	Eric Biggers <ebiggers@kernel.org>,
-	Md Sadre Alam <quic_mdalam@quicinc.com>, axboe@kernel.dk,
-	song@kernel.org, yukuai3@huawei.com, agk@redhat.com,
-	snitzer@kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
-	adrian.hunter@intel.com, quic_asutoshd@quicinc.com,
-	ritesh.list@gmail.com, ulf.hansson@linaro.org, andersson@kernel.org,
-	konradybcio@kernel.org, kees@kernel.org, gustavoars@kernel.org,
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-raid@vger.kernel.org, dm-devel@lists.linux.dev,
-	linux-mmc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-hardening@vger.kernel.org, quic_srichara@quicinc.com,
-	quic_varada@quicinc.com
-Subject: Re: [PATCH v2 1/3] dm-inlinecrypt: Add inline encryption support
-Message-ID: <ZxoNgmwFVCXivbd3@infradead.org>
-References: <ZvJt9ceeL18XKrTc@infradead.org>
- <ef3c9a17-79f3-4937-965e-52e2b9e66ac2@gmail.com>
- <ZxHwgsm2iP2Z_3at@infradead.org>
- <CAAdYy_mVy3uXPqWbjPzK_i8w7Okq73wKBQyc95TbnonE36rPgQ@mail.gmail.com>
- <ZxH4lnkQNhTP5fe6@infradead.org>
- <D96294E2-F17A-4E58-90FB-1D17747048E5@gmail.com>
- <ZxieZPlH-S9pakYW@infradead.org>
- <CAAdYy_ms=VmvxZy9QiMkwcNk21a2kVy73c8-NxUh4dNJuLefCg@mail.gmail.com>
- <Zxnl4VnD6K6No4UQ@infradead.org>
- <14126375-5F6F-484A-B34B-F0C011F3A9C5@gmail.com>
+	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="SYR/8giV"
+Received: from mail-nwsmtp-smtp-production-main-51.vla.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-51.vla.yp-c.yandex.net [IPv6:2a02:6b8:c0f:4c80:0:640:a0f:0])
+	by forward101a.mail.yandex.net (Yandex) with ESMTPS id 8D9EF60B5D;
+	Thu, 24 Oct 2024 14:19:35 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-51.vla.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id SJSJZc7btmI0-YBgQ4H2V;
+	Thu, 24 Oct 2024 14:19:34 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
+	t=1729768774; bh=Ujogf2n6d3xM51NjQgS1UgXmJyF3SKIBj1zGKPXG+uE=;
+	h=Message-ID:Date:In-Reply-To:Cc:Subject:References:To:From;
+	b=SYR/8giVvrCbXYTHDwxv0XDwR5fe7SCh/3YPvhI3YDKr0Gc10UMD3w6V1sUOyeAlv
+	 i5mru+Hsf1S+OPAGs8O3MAsK4gqxpVI8tXGHIGq8LgZ7n5Zfj7bqmM1gCX+Eq+PNGP
+	 38ryKNlAB0L3RFd7Ylhyf65NeYB2srH2NdXGB22w=
+Authentication-Results: mail-nwsmtp-smtp-production-main-51.vla.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
+From: Dmitry Antipov <dmantipov@yandex.ru>
+To: Jeff Johnson <jjohnson@kernel.org>
+Cc: Kalle Valo <kvalo@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
+	linux-wireless@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	lvc-project@linuxtesting.org,
+	Dmitry Antipov <dmantipov@yandex.ru>
+Subject: [PATCH v2 2/3] wifi: ath11k: annotate ch_param of struct scan_chan_list_params with __counted_by
+Date: Thu, 24 Oct 2024 14:19:20 +0300
+Message-ID: <20241024111921.93105-2-dmantipov@yandex.ru>
+X-Mailer: git-send-email 2.47.0
+In-Reply-To: <20241024111921.93105-1-dmantipov@yandex.ru>
+References: <20241024111921.93105-1-dmantipov@yandex.ru>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <14126375-5F6F-484A-B34B-F0C011F3A9C5@gmail.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
 
-On Thu, Oct 24, 2024 at 03:52:24AM -0400, Adrian Vovk wrote:
-> >
-> >Sure.  But why would you do that?
-> 
-> As mentioned earlier in the thread: I don't have a usecase specifically for this and it was an example of a situation where passthrough is necessary and no filesystem is involved at all. Though, as I also pointed out, a usecase where you're putting encrypted virtual partitions on an encrypted LVM setup isn't all that absurd.
+According to 'ath11k_reg_update_chan_list()', annotate flexible
+array member 'ch_param' of 'struct scan_chan_list_params' with
+'__counted_by()' attribute to improve runtime bounds checking
+when CONFIG_UBSAN_BOUNDS is enabled. Compile tested only.
 
-Can you please fix your mailer?  It's creating crazy long lines
-that are completely unreadable.
+Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
+---
+v2: add related comment in ath11k_reg_update_chan_list()
+---
+ drivers/net/wireless/ath/ath11k/reg.c | 3 +++
+ drivers/net/wireless/ath/ath11k/wmi.h | 2 +-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/wireless/ath/ath11k/reg.c b/drivers/net/wireless/ath/ath11k/reg.c
+index b0f289784dd3..0a8a0ea2bdc7 100644
+--- a/drivers/net/wireless/ath/ath11k/reg.c
++++ b/drivers/net/wireless/ath/ath11k/reg.c
+@@ -164,6 +164,9 @@ int ath11k_reg_update_chan_list(struct ath11k *ar, bool wait)
+ 		return -ENOMEM;
+ 
+ 	params->pdev_id = ar->pdev->pdev_id;
++	/* Note nallchans should be set before populating ch_param[],
++	 * otherwise __counted_by() might raise false positives.
++	 */
+ 	params->nallchans = num_channels;
+ 
+ 	ch = params->ch_param;
+diff --git a/drivers/net/wireless/ath/ath11k/wmi.h b/drivers/net/wireless/ath/ath11k/wmi.h
+index 8982b909c821..58471da42087 100644
+--- a/drivers/net/wireless/ath/ath11k/wmi.h
++++ b/drivers/net/wireless/ath/ath11k/wmi.h
+@@ -3819,7 +3819,7 @@ struct wmi_stop_scan_cmd {
+ struct scan_chan_list_params {
+ 	u32 pdev_id;
+ 	u16 nallchans;
+-	struct channel_param ch_param[];
++	struct channel_param ch_param[] __counted_by(nallchans);
+ };
+ 
+ struct wmi_scan_chan_list_cmd {
+-- 
+2.47.0
 
