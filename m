@@ -1,123 +1,127 @@
-Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7AF61F470D
-	for <linux-hardening@vger.kernel.org>; Wed, 23 Oct 2024 21:43:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0054C1CD3F;
+	Thu, 24 Oct 2024 02:52:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729719806; cv=none; b=ks2R2qA7pcDxuV3vtfUB5afQwdQN8QCBcR00qpp6t2Ak5uROpaL1VvvtCGstor43d0Up2NyH02WOl8gv98OD058pMb8SI9DFk1O5McleQ2PBGIUH3lHhxs1TGxV8hEBnLmv2D/8PnzqXcIMuvyr3hWsOSzyrZljFLRs01zg+5tY=
+	t=1729738340; cv=none; b=I17i4B56ThPZvzuQcE8q7DDyMwueSuZhBpegn5OAZgdc6oQwun4V5cyPAKZc/s9TQa14qLYpgXwp9W3EaOfCinu7u/oX/0uLR3MlQNfDobFhcGOC4BKRQqCK4owD0qbeMi0xq1/pmH8Md3xRU35/oGlzbEdENjeCXgtVuJBrZ/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729719806; c=relaxed/simple;
-	bh=D0Tfqt5jcLVUkD6Q67v0hwF1VSxCNxhs/HDdCEwABZM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=au0GWOWBs1FX21Gffu+0LOaY7D3WDZPJaplQMBhBEbSSgQIRr3PYOmwEcD7smfqwdGFnzB1SsEbaKRvf6Y3O3mq3g4sFYdmlNR7K/cxT/oK0u7O+d1mjai/cRDLZzm2e/CnP9alHrPP/Oz9A+JW8LnRy70dNmWdLL/ReqXUJy2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=DdC9hlmC; arc=none smtp.client-ip=44.202.169.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1729738340; c=relaxed/simple;
+	bh=e63VNaMSa5J1MM9PfLmc6REGdLxKMyEsmvWlF5WdUQM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EGfZNEx5zSMesTHheEfD3e82WP+2cOtVWzIOcygSvRPyBKNulArEWYjos+8+65kCM6aU5MkA0T5IRvwgxttmeSqqQb/NtnjJufEdTKsgC//KUCbwrC9+Ic91YNbedWUKxsFFpu7F9/Fyo9II69WWMCwPWVJGSoUZU2hMiYbRkIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LQZYfOsS; arc=none smtp.client-ip=209.85.128.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="DdC9hlmC"
-Received: from eig-obgw-5010a.ext.cloudfilter.net ([10.0.29.199])
-	by cmsmtp with ESMTPS
-	id 3efAtDuhhg2lz3j8Qtobb2; Wed, 23 Oct 2024 21:43:18 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id 3j8Pt1H6UQB8q3j8QtP9Jp; Wed, 23 Oct 2024 21:43:18 +0000
-X-Authority-Analysis: v=2.4 cv=BZPe0Kt2 c=1 sm=1 tr=0 ts=67196df6
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=OKg9RQrQ6+Y1xAlsUndU0w==:17
- a=IkcTkHD0fZMA:10 a=DAUX931o1VcA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
- a=QyXUC8HyAAAA:8 a=vaJtXVxTAAAA:8 a=iwwoO_9B2agcGiYlQ7MA:9 a=QEXdDO2ut3YA:10
- a=Xt_RvD8W3m28Mn_h3AK8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=16Q14PDMblkrTX6HXayHmrPosS3yrk6wYHUNr9G8tFQ=; b=DdC9hlmCbxOMYomLHYhhthbaGx
-	T/pCCUXSbFOZ+S9cD7IpJAaaZVuA5uuG8yVA6RZgKxw6F9bfXV39r2ppXBex5nBYqisTZrirkxEzH
-	30y3DCx902J0B+ymLZHjJZU83Dx9M/ngd3OUXasP3t3NdWOvqTIDWZ2tC+pw53v8FISB57lisr8mM
-	GnVsdbAs+g06Ef3NS4SbBOO2o9SA97NUXKo4oJZTi965iZZqH9nLER/aLBfhpdvx7AJb1xRfkTsb+
-	4NYL2lvjX+hErHbrAY8ZzB0ruJJgd5g7Y9WazxlNYYbYtr/VagU4MUG86dCJO1ojRCJrvc1TqoDvW
-	qID9nuJQ==;
-Received: from [201.172.173.7] (port=55182 helo=[192.168.15.6])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1t3j8P-000jzM-0A;
-	Wed, 23 Oct 2024 16:43:17 -0500
-Message-ID: <a51a9a11-02b4-4da5-a9cc-1317b6bc7526@embeddedor.com>
-Date: Wed, 23 Oct 2024 15:43:15 -0600
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LQZYfOsS"
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-6e3c3da5bcdso4562867b3.2;
+        Wed, 23 Oct 2024 19:52:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1729738338; x=1730343138; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rYASeKGsrTpRCjUsk5sbA5D7FM/sG/Zf4Yorg4QsRoE=;
+        b=LQZYfOsSkvGsGhxzjT9ois6SBT6ahbJxk5ThEm8rPrGtMe0ptmCbjYd1wvbAFLJQzG
+         jmG+RS0+Wcenl8Nw6JUsVoBwc+TNKAqrFkfe3ZWLUheB0wcv/7hrLKUA+paM2ZTRB0d2
+         +IDricPzHci9iOblC8zAIcgCVH/dKpX9wyIiUWhsI4k1VpUBjxQgSxzG1ZBGQEYV8HmP
+         2jy1Rkt1ThlPSR8R09NUA/09hxWg6PLbqU7iNgetUmDGAHVThe7cQYM9SCSbBFIa6LwF
+         tgtrZ/De1S3pFGr4cJO6raYxciFQfgT9rrs+gcLwFjWXVEvoI244CQj2chj2NUm5riIc
+         3ScQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729738338; x=1730343138;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rYASeKGsrTpRCjUsk5sbA5D7FM/sG/Zf4Yorg4QsRoE=;
+        b=ez9usyPv6O9b3daBBQtEJwqFOGlPhiI2BOc2enp2a4Fk6gLwf0mV8Vjdj+kKkjmgPO
+         wIS8gQKm7u7+q4r+HKCnwhDJ7fHP8haBvqEd4hD4bd7f4W53G9E/FlwuP1B7U6WWdloB
+         XWSfNHgw5lniQgm3xFIFU0Vd6Wi1InUavWIBCl5EQM5cUMSiuYeTJU8al97CdHxBLAw6
+         +WAhYiM/26ftYqxkfp24moddCR+4hV0dtl3yqVl91soFy5rafaSr8KAXI1OA3csITmkp
+         MUV/pnNfyRZF0poRu6sMNwlpproFejlhjwN2pWS+HSS0Qd/g73dghFtv2hPVz6oJ9abV
+         R3xQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU1IqmBophzEUsjLWCcmjChzsosR+rhxQAuwquOa+id/uAS0CTr7yjOZJhnuzpyBR1l4ElsGq1wfOF8FlA=@vger.kernel.org, AJvYcCUOddC5PhiZPolCTzEpe1PHLI2elpbIeCfzYguFMVEEsVIUHL5+hWWKG033Tz0riXsy+tmhrN4pLam4s+as@vger.kernel.org, AJvYcCUdkxi2ntqa5Zyh6f5lVCosWyNoy54hX7m6d6DZ0PAIJm6xOkEmUVo5IhPon/CmiQgxQsfxqEVMLfFIt3n7xQIv@vger.kernel.org, AJvYcCUl1UnaOBr6Jyxe8P3sFO8092LvALE4kKuu18kqEn/iJdpkMVhG/fZEVDhCxb7BL39WQOeEdiyzWi6N/Q==@vger.kernel.org, AJvYcCVywGxY+mZcAoeHDcvwccYkmwpnQkNTVAjdVNsaQl+odLjPnNhTWLp8BLgEXr3jySv4L6vis++M58nc@vger.kernel.org, AJvYcCWWJTQdlpb0SKMzsXrnCmMoN/fCe5hkBiBtzj4HeHMg1AyGg3LAF7Oo3cdq+kX/mKTV+tcNaVGB4DWEQJmd@vger.kernel.org
+X-Gm-Message-State: AOJu0YwjG7aj2GOCb2mcW79q1cFNSZvu1R/tG5DJmBEF7ZQlvm6m3Ti7
+	v0nAlpJHHXYp4ADdGL5CbvtnW+n78PqccUrR8scibLIOzuShvtfyt7cP8inw0/ifwltXjrqRFR8
+	8ai9S4Nfsrr+FAVgSDAspMkv0/vo=
+X-Google-Smtp-Source: AGHT+IEDx8M9M5NfSQJM7sAyVqEx9xZRtt9pauz51dGR+BiVqQQoapvIb1oapCtzf34De00rMCmJwCTHDkr7sJLMo74=
+X-Received: by 2002:a05:690c:f10:b0:6e3:1259:7ef2 with SMTP id
+ 00721157ae682-6e7f0df5ce6mr55492627b3.3.1729738337910; Wed, 23 Oct 2024
+ 19:52:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] wifi: ath12k: annotate channel of struct
- ath12k_wmi_scan_chan_list_arg with __counted_by
-To: Dmitry Antipov <dmantipov@yandex.ru>, Jeff Johnson <jjohnson@kernel.org>
-Cc: Kalle Valo <kvalo@kernel.org>, Kees Cook <kees@kernel.org>,
- linux-hardening@vger.kernel.org, linux-wireless@vger.kernel.org,
- lvc-project@linuxtesting.org
-References: <20241021143419.587716-1-dmantipov@yandex.ru>
- <20241021143419.587716-2-dmantipov@yandex.ru>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20241021143419.587716-2-dmantipov@yandex.ru>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.173.7
-X-Source-L: No
-X-Exim-ID: 1t3j8P-000jzM-0A
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.6]) [201.172.173.7]:55182
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 18
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfPSccA78YPcBT7PL/J4dV0hPd05er8JfwXfCP1mxhwT1KLlRHRiOcqvh2fbn7+V8JoGVwPwD7VuZJj4aUuNzkPEXfOkcSZi7tOH0qg1os1RBDDqiTL7H
- 1y/XGOa3z7rS/qXKPpxRKXPsu3/vO/KFg6w/ZCJhNfLpv6CceVN42/cZUWff4xa5XEoUzASmCMQce5YWkcdSrsV0NI1sV+Dr5xMiyYSN6P8TVgnsv7c6hZ80
+References: <20240916085741.1636554-1-quic_mdalam@quicinc.com>
+ <20240916085741.1636554-2-quic_mdalam@quicinc.com> <20240921185519.GA2187@quark.localdomain>
+ <ZvJt9ceeL18XKrTc@infradead.org> <ef3c9a17-79f3-4937-965e-52e2b9e66ac2@gmail.com>
+ <ZxHwgsm2iP2Z_3at@infradead.org> <CAAdYy_mVy3uXPqWbjPzK_i8w7Okq73wKBQyc95TbnonE36rPgQ@mail.gmail.com>
+ <ZxH4lnkQNhTP5fe6@infradead.org> <D96294E2-F17A-4E58-90FB-1D17747048E5@gmail.com>
+ <ZxieZPlH-S9pakYW@infradead.org>
+In-Reply-To: <ZxieZPlH-S9pakYW@infradead.org>
+From: Adrian Vovk <adrianvovk@gmail.com>
+Date: Wed, 23 Oct 2024 22:52:06 -0400
+Message-ID: <CAAdYy_ms=VmvxZy9QiMkwcNk21a2kVy73c8-NxUh4dNJuLefCg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] dm-inlinecrypt: Add inline encryption support
+To: Christoph Hellwig <hch@infradead.org>
+Cc: Eric Biggers <ebiggers@kernel.org>, Md Sadre Alam <quic_mdalam@quicinc.com>, axboe@kernel.dk, 
+	song@kernel.org, yukuai3@huawei.com, agk@redhat.com, snitzer@kernel.org, 
+	Mikulas Patocka <mpatocka@redhat.com>, adrian.hunter@intel.com, quic_asutoshd@quicinc.com, 
+	ritesh.list@gmail.com, ulf.hansson@linaro.org, andersson@kernel.org, 
+	konradybcio@kernel.org, kees@kernel.org, gustavoars@kernel.org, 
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-raid@vger.kernel.org, dm-devel@lists.linux.dev, 
+	linux-mmc@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, quic_srichara@quicinc.com, 
+	quic_varada@quicinc.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Oct 23, 2024 at 2:57=E2=80=AFAM Christoph Hellwig <hch@infradead.or=
+g> wrote:
+>
+> On Fri, Oct 18, 2024 at 11:03:50AM -0400, Adrian Vovk wrote:
+> > Sure, but then this way you're encrypting each partition twice. Once by=
+ the dm-crypt inside of the partition, and again by the dm-crypt that's und=
+er the partition table. This double encryption is ruinous for performance, =
+so it's just not a feasible solution and thus people don't do this. Would b=
+e nice if we had the flexibility though.
+>
+> Why do you assume the encryption would happen twice?
 
+I'm not assuming. That's the behavior of dm-crypt without passthrough.
+It just encrypts everything that moves through it. If I stack two
+layers of dm-crypt on top of each other my data is encrypted twice.
 
-On 21/10/24 08:34, Dmitry Antipov wrote:
-> According to 'ath12k_reg_update_chan_list()', annotate flexible
-> array member 'channel' of 'struct ath12k_wmi_scan_chan_list_arg'
-> with '__counted_by()' attribute to improve runtime bounds checking
-> when CONFIG_UBSAN_BOUNDS is enabled. Compile tested only.
+> > >Because you are now bypassing encryption for certainl LBA ranges in
+> > >the file system based on hints/flags for something sitting way above
+> > >in the stack.
+> > >
+> >
+> > Well the data is still encrypted. It's just encrypted with a different =
+key. If the attacker has a FDE dump of the disk, the data is still just as =
+inaccessible to them.
+>
+> No one knows that it actually is encryped.  The lower layer just knows
+> the skip encryption flag was set, but it has zero assurance data
+> actually was encrypted.
 
-It seems you didn't[1] actually build-test this changes. :/
+I think it makes sense to require that the data is actually encrypted
+whenever the flag is set. Of course there's no way to enforce that
+programmatically, but code that sets the flag without making sure the
+data gets encrypted some other way wouldn't pass review.
 
--Gustavo
+Alternatively, if I recall correctly it should be possible to just
+check if the bio has an attached encryption context. If it has one,
+then just pass-through. If it doesn't, then attach your own. No flag
+required this way, and dm-default-key would only add encryption iff
+the data isn't already encrypted.
 
-[1] https://lore.kernel.org/linux-hardening/202410231916.Wjn5HeB6-lkp@intel.com/
+Would either of those solutions be acceptable?
 
-> 
-> Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
-> ---
->   drivers/net/wireless/ath/ath12k/wmi.h | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/wireless/ath/ath12k/wmi.h b/drivers/net/wireless/ath/ath12k/wmi.h
-> index 6a913f9b8315..9a6e28142754 100644
-> --- a/drivers/net/wireless/ath/ath12k/wmi.h
-> +++ b/drivers/net/wireless/ath/ath12k/wmi.h
-> @@ -3746,7 +3746,7 @@ struct wmi_stop_scan_cmd {
->   struct ath12k_wmi_scan_chan_list_arg {
->   	u32 pdev_id;
->   	u16 nallchans;
-> -	struct ath12k_wmi_channel_arg channel[];
-> +	struct ath12k_wmi_channel_arg channel[] __counted_by(nallchains);
->   };
->   
->   struct wmi_scan_chan_list_cmd {
+Best,
+Adrian
