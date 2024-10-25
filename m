@@ -1,94 +1,234 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D64F510A0E;
-	Fri, 25 Oct 2024 00:53:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF84DBA3D;
+	Fri, 25 Oct 2024 01:15:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729817598; cv=none; b=gWtCfHxy4ZXCay+wnCPi/Mu2PBGaRH7PUgo4v5QyvLshrvw+5y1RpXV+8s3qIIPDYcvmdrIoILEXO9l7jEPv+lmg8REW1QuoQA0KBEpFry5eEs/Z2tjT7qJS+z3W1HTZh8m4nV67J3LgSiOOnnNM0zXzIdlMpIOjQ6oV9JsLX7g=
+	t=1729818930; cv=none; b=aeimM8m9G62jBVkVY3jCjmGNEHDo7CZ7bWknSgEUhAnaTwbl6g0gvOyZmh825Rn7T2q7jVhjZx0CofzYNxTIiWmCGKQ57oIoLfrSFMbTRObBmhoDM934T/XWFxRi6IxpVG0Ardsg0fXbnFGIGliHeOsUG7BrAOuuQDmcglc0stM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729817598; c=relaxed/simple;
-	bh=c0PlFJjYjoyNj2knuv5wFRhx7BljeEh0XdLIETP8K28=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=RaC8Py2C5G/5OSDBAbXtnbPZ+0XnE6chJie9JZUlbntXSjzJ6lyVCHguI5w5HOneXMB4aMFmcncjjvm2rmaIePsA+AaBUhJ7B5R1P9luF+Q3eGIYOzj0/EKAQOCEKnHD/50QneZr50uevyiRxXxrJgfhYE6eQTNmXmrTSFrvyds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=BXjV+xdU; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1729818930; c=relaxed/simple;
+	bh=vCt26z8Q/nN2hXXXf/3s0lEZ6H6OLpIZ1+pICKG3AHM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BTxcopAMNTBFXqa3QW+xXFfTqODuUQEGykoxr2Zkwp2YBF5T4Gb9qj8H/CstMj7VxstMllg+khvOHf7qV53TZ0KWlFjr0YJJbBBScbv7G7c/32xbtPFj2T/4tTpxIVaL91NamllRq4H0KoCP3R/rBxaFq6B6NpYEcqpz1/FwMeA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PSn2yBtu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="BXjV+xdU"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49OAgRaK027369;
-	Fri, 25 Oct 2024 00:53:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	c0PlFJjYjoyNj2knuv5wFRhx7BljeEh0XdLIETP8K28=; b=BXjV+xdUbSeJsHb4
-	GNAS7vg8vQ6HSQliX0QZ/bF8Q1pf3yJ4EiDPZ+1bHDoZzncS9KW4JIwtx9lKc4wb
-	yLp58oW4x3cX4G4WPeV12e+ZSWkWTOjgEG1QyIXeiEdRxLJvnqm9BZrQyrHkkKmn
-	oYREKL+mXy0rjOtz8rGtqsLUFa0xVg1wiDHzEZOtV2MLVnMyPtQsKU/pEJZP13Li
-	WFp1ujD70NbQOALZuSycSRMr8SLaXSAUb/3c2umRhkRKPGhCz9BnJyzfva+NF1El
-	DOgGehUAB/qif7rpcwdYsxWnGopsadx0gMyRbCgIRn6w+bIoj5jannxgR6TsrodT
-	DGewmg==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 42em41y8pn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 25 Oct 2024 00:53:11 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 49P0r9Y8020823
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 25 Oct 2024 00:53:09 GMT
-Received: from [10.48.242.80] (10.49.16.6) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 24 Oct
- 2024 17:53:09 -0700
-Message-ID: <8714e9ec-b519-488b-89f0-b181c79186c1@quicinc.com>
-Date: Thu, 24 Oct 2024 17:53:08 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PSn2yBtu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94518C4CEC7;
+	Fri, 25 Oct 2024 01:15:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729818930;
+	bh=vCt26z8Q/nN2hXXXf/3s0lEZ6H6OLpIZ1+pICKG3AHM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PSn2yBtugOSxaX05toB/b8OAh5VrwUNycHLUvvEz4qHqRZSCVYPypEiGTCLbH7qG/
+	 SXV3F0mCS6nuSk8hu3sF83c8oY/ze7ni1Khxz2sUffeCpyQtKjUrY5JK/u43wisVPl
+	 V90aRtm3YOCtWsTdxqWxXdYUcL5lB3YLYCdS0zBtVafo2j8KH2WM5t7EHfg3HZqaTa
+	 KItDCGuIldaKDsQLEhJbsOE2c55ZO4cygP7H3izitHqEO7W2zG5g2rEVCmTRs8KK6q
+	 jwwx3qa3lofx5rV7fwehxwD5r9UFvfxElbg9xpdTjGiLMKEiGtGZkCmwKBoVjBO+ky
+	 njjjYOyCkKhpg==
+Date: Thu, 24 Oct 2024 18:15:27 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Jan Hendrik Farr <kernel@jfarr.cc>
+Cc: Bill Wendling <morbo@google.com>, Kees Cook <kees@kernel.org>,
+	Thorsten Blum <thorsten.blum@toblux.com>, kent.overstreet@linux.dev,
+	regressions@lists.linux.dev, linux-bcachefs@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	ardb@kernel.org, ojeda@kernel.org
+Subject: Re: [REGRESSION][BISECTED] erroneous buffer overflow detected in
+ bch2_xattr_validate
+Message-ID: <20241025011527.GA740745@thelio-3990X>
+References: <Zv8RIs-htdc-PtXB@archlinux>
+ <202410040958.C19D3B9E48@keescook>
+ <ZwNb-_UPL9BPSg9N@archlinux>
+ <CAGG=3QUatjhoDHdkDtZ+ftz7JvMhvaQ9XkFyyZSt_95V_nSN8A@mail.gmail.com>
+ <CAGG=3QVcsuN0Sk79oZWjY_nNTo_XfGYsDT3gc7vEmLyS8OK3rA@mail.gmail.com>
+ <ZxB-uh1KzfD4ww2a@archlinux>
+ <20241017165522.GA370674@thelio-3990X>
+ <ZxWvcAPHPaRxp9UE@archlinux>
+ <20241021192557.GA2041610@thelio-3990X>
+ <ZxpIwkfg9_mHO3lq@archlinux>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] wifi: ath12k: annotate skb of struct
- ath12k_ce_ring with __counted_by
-To: Dmitry Antipov <dmantipov@yandex.ru>, Jeff Johnson <jjohnson@kernel.org>
-CC: Kalle Valo <kvalo@kernel.org>, Kees Cook <kees@kernel.org>,
-        "Gustavo A . R
- . Silva" <gustavoars@kernel.org>,
-        <linux-wireless@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-        <lvc-project@linuxtesting.org>
-References: <20241024112912.106104-1-dmantipov@yandex.ru>
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-Content-Language: en-US
-In-Reply-To: <20241024112912.106104-1-dmantipov@yandex.ru>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: lhxww_qn36ZJJT2ceqf7aXj9_n--BIlI
-X-Proofpoint-ORIG-GUID: lhxww_qn36ZJJT2ceqf7aXj9_n--BIlI
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 impostorscore=0
- adultscore=0 bulkscore=0 malwarescore=0 mlxlogscore=500 mlxscore=0
- spamscore=0 lowpriorityscore=0 priorityscore=1501 phishscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2409260000 definitions=main-2410250006
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZxpIwkfg9_mHO3lq@archlinux>
 
-Please use get_maintainer.pl to make sure all the affected lists are notified.
-Your ath11k/ath12k patches aren't hitting the ath11k/ath12k lists so they
-aren't on my immediate radar.
+Hi Jan,
 
-Also note I'm not taking any of these __counted_by() changes without actually
-either 1) testing with running code or 2) documenting all cases where the
-array is accessed and cross-referencing when the counting member is updated.
+On Thu, Oct 24, 2024 at 03:16:50PM +0200, Jan Hendrik Farr wrote:
+> Do you want me to add a Co-Developed-by tag for you? I feel bad just
+> taking it.
 
-I don't want to introduce any new warnings with your changes.
-"If the isn't broken, don't fix it."
+I would not be opposed to a Co-developed-by tag since it reflects the
+collaborative nature of the change but I do not need it just for the
+sake of credit because you have done a good amount of work analyzing and
+driving getting this problem resolved. I would argue I just
+"Kconfig-ified" your proposed change :) So you have my permission to add
+one but I will not be offended with just the Suggested-by!
 
-/jeff
+> For reference here is the current state of the patch, still waiting on
+> the merge into clang 19.1.x:
+> 
+> It needs three prerequisite commits on top of 6.6.x, but unfortunately
+> still requires a small amount of manual conflict resolution, but it's
+> easy enough
+> 
+> 1. include/linux/compiler_types.h:
+> 	use the incoming change until before (but not including) the
+> 	"Apply __counted_by() when the Endianness matches to increase test coverage."
+> 	comment)
+> 
+> 2. lib/overflow_kunit.c: 
+> 	HEAD is correct
 
+Good to know. If they cannot resolve the conflicts, we'll get notified
+that it has failed to apply so you (or one of us) can send a massaged
+backport as a reply.
+
+> From 6c667a43af0c57cd3f260fd75d5c4a198ba94220 Mon Sep 17 00:00:00 2001
+> From: Jan Hendrik Farr <kernel@jfarr.cc>
+> Date: Thu, 17 Oct 2024 04:39:40 +0200
+> Subject: [PATCH] Compiler Attributes: disable __counted_by for clang < 19.1.3
+> 
+> This patch disables __counted_by for clang versions < 19.1.3 because
+> of the two issues listed below. It does this by introducing
+> CONFIG_CC_HAS_COUNTED_BY.
+> 
+> 1. clang < 19.1.2 has a bug that can lead to __bdos returning 0:
+> https://github.com/llvm/llvm-project/pull/110497
+> 
+> 2. clang < 19.1.3 has a bug that can lead to __bdos being off by 4:
+> https://github.com/llvm/llvm-project/pull/112636
+> 
+> Fixes: c8248faf3ca2 ("Compiler Attributes: counted_by: Adjust name and identifier expansion")
+> Cc: stable@vger.kernel.org # 6.6.x: 16c31dd7fdf6: Compiler Attributes: counted_by: bump min gcc version
+> Cc: stable@vger.kernel.org # 6.6.x: 2993eb7a8d34: Compiler Attributes: counted_by: fixup clang URL
+> Cc: stable@vger.kernel.org # 6.6.x: 231dc3f0c936: lkdtm/bugs: Improve warning message for compilers without counted_by support
+> Cc: stable@vger.kernel.org # 6.6.x
+> Reported-by: Nathan Chancellor <nathan@kernel.org>
+> Closes: https://lore.kernel.org/all/20240913164630.GA4091534@thelio-3990X/
+> Reported-by: kernel test robot <oliver.sang@intel.com>
+> Closes: https://lore.kernel.org/oe-lkp/202409260949.a1254989-oliver.sang@intel.com
+> Link: https://lore.kernel.org/all/Zw8iawAF5W2uzGuh@archlinux/T/#m204c09f63c076586a02d194b87dffc7e81b8de7b
+> Signed-off-by: Jan Hendrik Farr <kernel@jfarr.cc>
+
+If you do not add the Co-developed-by, feel free to carry forward
+
+Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+Tested-by: Nathan Chancellor <nathan@kernel.org>
+
+on the official submission.
+
+> ---
+>  drivers/misc/lkdtm/bugs.c           |  2 +-
+>  include/linux/compiler_attributes.h | 13 -------------
+>  include/linux/compiler_types.h      | 19 +++++++++++++++++++
+>  init/Kconfig                        |  8 ++++++++
+>  lib/overflow_kunit.c                |  2 +-
+>  5 files changed, 29 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/misc/lkdtm/bugs.c b/drivers/misc/lkdtm/bugs.c
+> index 62ba01525479..376047beea3d 100644
+> --- a/drivers/misc/lkdtm/bugs.c
+> +++ b/drivers/misc/lkdtm/bugs.c
+> @@ -445,7 +445,7 @@ static void lkdtm_FAM_BOUNDS(void)
+>  
+>  	pr_err("FAIL: survived access of invalid flexible array member index!\n");
+>  
+> -	if (!__has_attribute(__counted_by__))
+> +	if (!IS_ENABLED(CONFIG_CC_HAS_COUNTED_BY))
+>  		pr_warn("This is expected since this %s was built with a compiler that does not support __counted_by\n",
+>  			lkdtm_kernel_info);
+>  	else if (IS_ENABLED(CONFIG_UBSAN_BOUNDS))
+> diff --git a/include/linux/compiler_attributes.h b/include/linux/compiler_attributes.h
+> index 32284cd26d52..c16d4199bf92 100644
+> --- a/include/linux/compiler_attributes.h
+> +++ b/include/linux/compiler_attributes.h
+> @@ -94,19 +94,6 @@
+>  # define __copy(symbol)
+>  #endif
+>  
+> -/*
+> - * Optional: only supported since gcc >= 15
+> - * Optional: only supported since clang >= 18
+> - *
+> - *   gcc: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=108896
+> - * clang: https://github.com/llvm/llvm-project/pull/76348
+> - */
+> -#if __has_attribute(__counted_by__)
+> -# define __counted_by(member)		__attribute__((__counted_by__(member)))
+> -#else
+> -# define __counted_by(member)
+> -#endif
+> -
+>  /*
+>   * Optional: not supported by gcc
+>   * Optional: only supported since clang >= 14.0
+> diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
+> index 1a957ea2f4fe..639be0f30b45 100644
+> --- a/include/linux/compiler_types.h
+> +++ b/include/linux/compiler_types.h
+> @@ -323,6 +323,25 @@ struct ftrace_likely_data {
+>  #define __no_sanitize_or_inline __always_inline
+>  #endif
+>  
+> +/*
+> + * Optional: only supported since gcc >= 15
+> + * Optional: only supported since clang >= 18
+> + *
+> + *   gcc: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=108896
+> + * clang: https://github.com/llvm/llvm-project/pull/76348
+> + *
+> + * __bdos on clang < 19.1.2 can erroneously return 0:
+> + * https://github.com/llvm/llvm-project/pull/110497
+> + *
+> + * __bdos on clang < 19.1.3 can be off by 4:
+> + * https://github.com/llvm/llvm-project/pull/112636
+> + */
+> +#ifdef CONFIG_CC_HAS_COUNTED_BY
+> +# define __counted_by(member)		__attribute__((__counted_by__(member)))
+> +#else
+> +# define __counted_by(member)
+> +#endif
+> +
+>  /*
+>   * Apply __counted_by() when the Endianness matches to increase test coverage.
+>   */
+> diff --git a/init/Kconfig b/init/Kconfig
+> index 530a382ee0fe..5f1fe3583f20 100644
+> --- a/init/Kconfig
+> +++ b/init/Kconfig
+> @@ -116,6 +116,14 @@ config CC_HAS_ASM_INLINE
+>  config CC_HAS_NO_PROFILE_FN_ATTR
+>  	def_bool $(success,echo '__attribute__((no_profile_instrument_function)) int x();' | $(CC) -x c - -c -o /dev/null -Werror)
+>  
+> +# clang needs to be at least 19.1.3 to avoid __bdos miscalculations
+> +# https://github.com/llvm/llvm-project/pull/110497
+> +# https://github.com/llvm/llvm-project/pull/112636
+> +# TODO: when gcc 15 is released remove the build test and add gcc version check
+> +config CC_HAS_COUNTED_BY
+> +	def_bool $(success,echo 'struct flex { int count; int array[] __attribute__((__counted_by__(count))); };' | $(CC) $(CLANG_FLAGS) -x c - -c -o /dev/null -Werror)
+> +	depends on !(CC_IS_CLANG && CLANG_VERSION < 190103)
+> +
+>  config PAHOLE_VERSION
+>  	int
+>  	default $(shell,$(srctree)/scripts/pahole-version.sh $(PAHOLE))
+> diff --git a/lib/overflow_kunit.c b/lib/overflow_kunit.c
+> index 2abc78367dd1..5222c6393f11 100644
+> --- a/lib/overflow_kunit.c
+> +++ b/lib/overflow_kunit.c
+> @@ -1187,7 +1187,7 @@ static void DEFINE_FLEX_test(struct kunit *test)
+>  {
+>  	/* Using _RAW_ on a __counted_by struct will initialize "counter" to zero */
+>  	DEFINE_RAW_FLEX(struct foo, two_but_zero, array, 2);
+> -#if __has_attribute(__counted_by__)
+> +#ifdef CONFIG_CC_HAS_COUNTED_BY
+>  	int expected_raw_size = sizeof(struct foo);
+>  #else
+>  	int expected_raw_size = sizeof(struct foo) + 2 * sizeof(s16);
+> -- 
+> 2.47.0
