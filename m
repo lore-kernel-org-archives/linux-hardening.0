@@ -1,104 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7661217F53;
-	Fri, 25 Oct 2024 22:05:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D753C7082C
+	for <linux-hardening@vger.kernel.org>; Sat, 26 Oct 2024 15:48:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729893954; cv=none; b=At1bHCcHCOJ5Nw0GIzN6zR/12B0YN5Bh4wXtsyWbI2ybhfNeiU8OsYp2Mv+GtA9TmO3lmxylEiU2stj95SQhjg7sSlxIu4nCGRfEEelMeUEI+ugz3iLR2WrQqpXlmO9c1S9h1Yu9W85PgeVz8pfe9oAKqZmI++mHGjIEPD/kh1U=
+	t=1729957717; cv=none; b=WJ3uc+LwU1oh6kS6kbq4ybNPCuEPaFUz19w50gdbKhIDpVIfwObYgjQQYWzb4+iR+xWB3iEDaR0IjXl5KAwu7gtD0uTTiw96veEf0z08BP1dFthwurvqi6JsxXAob+FKWGRHXkTrMVm2jFk/uqcpC8w23U3YMvTcn/ygbr5jIdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729893954; c=relaxed/simple;
-	bh=FC/t5CIaNNudWpigYqqneQEUamxykiRhAYd41d/2WrM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=ZWqkYOtePdadAj097c/GBJdIpYy9dt3EvcSzdbOesRqKJrFShq5hzC2NvVLAp+8c95oqRvuu0BwPIp3wg2/LwED8LXdlrhZ6OwULj5lLqYeTnXTf2oefZB5Pbm1uHoPA4Xu+aBOqREHD/6OXp39uAKKqa6tNzlO3Wq8849tDZZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SLWUMbE9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1729957717; c=relaxed/simple;
+	bh=vHbrUzCivC+0sWQpXeAfQQnaS30UkBa7QakQ5RLHjqs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oEa6SIx+2rIzuY3ztJszc/XoTqP6AM0zJj2LoA+LSGEQACFafp4G9lAHctrsm1iL3yaZ6xK03Bf7sVonlV2GxwUiU2B2xtR/6+KAxDXBYon2smn+EusgFYH1Mm/M1M3UpyTxi7kxMJeCxsGBzKN2xNsDi7EApkEpro5ys2vCPCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Hw3NxRwk; arc=none smtp.client-ip=91.218.175.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SLWUMbE9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E83B8C4CEC3;
-	Fri, 25 Oct 2024 22:05:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729893953;
-	bh=FC/t5CIaNNudWpigYqqneQEUamxykiRhAYd41d/2WrM=;
-	h=Date:From:To:Cc:Subject:From;
-	b=SLWUMbE9lrThVgyiRhzZA/O21a3GoxeJ1NYB5+De1PjiiAE+TLQBnjvyeHro9mRXi
-	 ROenmcDxUuPRGGpBq+7Lsa9WgRalgwpB7huiFNyxETiiQzUj1VBjuopd/9dw9koRjp
-	 ITxX48QD/+JcdBPdJQhQCbBDMB92M0R9IcVnx2QtWe0hjQ6GSsRoW2mzrx3WnudhXI
-	 Tiz/yn2QsCKxpkUXx4SAjDV1DcdqKryn1MBgmsugIuKpRM/QQphyW7HP9+39h5xezw
-	 lo/SOLWmjJI8OUNPfGAu0kpPYMvdWvwAR0a8z42SanywiEPJFXbOqP1zsHWYLNoaya
-	 9mtgZLWnsK6sw==
-Date: Fri, 25 Oct 2024 16:05:50 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Johannes Berg <johannes@sipsolutions.net>
-Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Hw3NxRwk"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1729957711;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=E217QekynhfdE7/Q5qRGmvGmw8LU4yrTMFD02WaTTdA=;
+	b=Hw3NxRwk0vxsMOqQWagvKrtS0gea7Gmj6AW8mUQgcWx50hiJeslGswHswroOJkbNSNbAMn
+	61o/Iu0v+urSeJ3A0caPW2LPl4TplMhG7QsNQ0WIiIq5ialrK9YChMMF0cq33zX50IFsZG
+	K0dkuOwjZ70bSMp3U0Owe3DyrOfC2OQ=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Kent Overstreet <kent.overstreet@linux.dev>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	linux-bcachefs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH v2] wifi: mac80211: ieee80211_i: Fix memory corruption bug in
- struct ieee80211_chanctx
-Message-ID: <ZxwWPrncTeSi1UTq@kspp>
+Subject: [RESEND PATCH] bcachefs: Annotate struct bucket_gens with __counted_by()
+Date: Sat, 26 Oct 2024 17:47:04 +0200
+Message-ID: <20241026154704.159305-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Move the `struct ieee80211_chanctx_conf conf` to the end of
-`struct ieee80211_chanctx` and fix a memory corruption bug
-triggered in `hwsim_set_chanctx_magic()`: `radar_detected`
-is being overwritten when `cp->magic = HWSIM_CHANCTX_MAGIC;`
-See the function call sequence below:
+Add the __counted_by compiler attribute to the flexible array member b
+to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
+CONFIG_FORTIFY_SOURCE.
 
-drv_add_chanctx(... struct ieee80211_chanctx *ctx) ->
-    local->ops->add_chanctx(&local->hw, &ctx->conf) ->
-	mac80211_hwsim_add_chanctx(... struct ieee80211_chanctx_conf *ctx) ->
-	    hwsim_set_chanctx_magic(ctx)
+Use struct_size() to calculate the number of bytes to be allocated.
 
-Also, add a code comment to try to prevent people from introducing
-new members after `struct ieee80211_chanctx_conf conf`. Notice that
-`struct ieee80211_chanctx_conf` is a flexible structure --a structure
-that contains a flexible-array member, so it should always be at
-the end of any other containing structures.
+Update bucket_gens->nbuckets and bucket_gens->nbuckets_minus_first when
+resizing.
 
-This change also fixes 50 of the following warnings:
+Compile-tested only.
 
-net/mac80211/ieee80211_i.h:895:39: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-
--Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-getting ready to enable it, globally.
-
-Fixes: bca8bc0399ac ("wifi: mac80211: handle ieee80211_radar_detected() for MLO")
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
 ---
-Changes in v2:
- - Add `Fixes:` tag. (Johannes)
- - Update Subject line and changelog text to better reflect
-   the severity of this change.
+ fs/bcachefs/buckets.c       | 13 ++++++++-----
+ fs/bcachefs/buckets_types.h |  2 +-
+ 2 files changed, 9 insertions(+), 6 deletions(-)
 
-v1:
- - Link: https://lore.kernel.org/linux-hardening/Zxv7KtPEy1kvnTPM@kspp/
-
- net/mac80211/ieee80211_i.h | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/net/mac80211/ieee80211_i.h b/net/mac80211/ieee80211_i.h
-index e7815ffeaf30..c65adbdf2166 100644
---- a/net/mac80211/ieee80211_i.h
-+++ b/net/mac80211/ieee80211_i.h
-@@ -892,9 +892,10 @@ struct ieee80211_chanctx {
- 	/* temporary data for search algorithm etc. */
- 	struct ieee80211_chan_req req;
+diff --git a/fs/bcachefs/buckets.c b/fs/bcachefs/buckets.c
+index ec7d9a59bea9..8bd17667e243 100644
+--- a/fs/bcachefs/buckets.c
++++ b/fs/bcachefs/buckets.c
+@@ -1266,8 +1266,9 @@ int bch2_dev_buckets_resize(struct bch_fs *c, struct bch_dev *ca, u64 nbuckets)
  
--	struct ieee80211_chanctx_conf conf;
+ 	BUG_ON(resize && ca->buckets_nouse);
+ 
+-	if (!(bucket_gens	= kvmalloc(sizeof(struct bucket_gens) + nbuckets,
+-					   GFP_KERNEL|__GFP_ZERO))) {
++	bucket_gens = kvmalloc(struct_size(bucket_gens, b, nbuckets),
++			       GFP_KERNEL|__GFP_ZERO);
++	if (!bucket_gens) {
+ 		ret = -BCH_ERR_ENOMEM_bucket_gens;
+ 		goto err;
+ 	}
+@@ -1285,11 +1286,13 @@ int bch2_dev_buckets_resize(struct bch_fs *c, struct bch_dev *ca, u64 nbuckets)
+ 	old_bucket_gens = rcu_dereference_protected(ca->bucket_gens, 1);
+ 
+ 	if (resize) {
+-		size_t n = min(bucket_gens->nbuckets, old_bucket_gens->nbuckets);
 -
- 	bool radar_detected;
-+
-+	/* MUST be last - ends in a flexible-array member. */
-+	struct ieee80211_chanctx_conf conf;
++		bucket_gens->nbuckets = min(bucket_gens->nbuckets,
++					    old_bucket_gens->nbuckets);
++		bucket_gens->nbuckets_minus_first =
++			bucket_gens->nbuckets - bucket_gens->first_bucket;
+ 		memcpy(bucket_gens->b,
+ 		       old_bucket_gens->b,
+-		       n);
++		       bucket_gens->nbuckets);
+ 	}
+ 
+ 	rcu_assign_pointer(ca->bucket_gens, bucket_gens);
+diff --git a/fs/bcachefs/buckets_types.h b/fs/bcachefs/buckets_types.h
+index 28bd09a253c8..7174047b8e92 100644
+--- a/fs/bcachefs/buckets_types.h
++++ b/fs/bcachefs/buckets_types.h
+@@ -24,7 +24,7 @@ struct bucket_gens {
+ 	u16			first_bucket;
+ 	size_t			nbuckets;
+ 	size_t			nbuckets_minus_first;
+-	u8			b[];
++	u8			b[] __counted_by(nbuckets);
  };
  
- struct mac80211_qos_map {
+ struct bch_dev_usage {
 -- 
-2.34.1
+2.47.0
 
