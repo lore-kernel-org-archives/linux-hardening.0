@@ -1,125 +1,112 @@
-Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
+Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBDD91362
-	for <linux-hardening@vger.kernel.org>; Sun, 27 Oct 2024 00:30:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCA201531F8
+	for <linux-hardening@vger.kernel.org>; Sun, 27 Oct 2024 12:59:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729989040; cv=none; b=NluFhqR1J3hQdlyaZyfnw+MSKtY9TVWFTbe9Inv9yBC8bPr7uDpsjMMF09xMjGzxnQ5heZkGvZ1W3LTAtYf8Lefpqg90kZtOT2ZukEC4kDSghigTDa2/4GQTXBwo4deGmV/S3FR6lC5/8AhEXQIjoovDqz2HV21HShu7iK2QqAA=
+	t=1730033985; cv=none; b=qll9lpwj0PuYEmRD2ucWn9PEuEGKmnsLxmVLbuCweU0Na3O40wm1hmZPMQVv6whH42TfSpE3SYo+rovX/TV6Xbj71roD/M0s7Ucj/ccnDtvm9GQVua7nkjaON1bvZ1b/lBXQhcmPCLd1DnacqPVajfhiWCYux7TIuly/S0YcVks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729989040; c=relaxed/simple;
-	bh=cFuIVbQy2B24Jp/ykmabzeKZiZBEkNzbXU/PvCrvMUA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P00OreH0DqgujK9uNEedKyaXfyF/KESZ8ngTX2y8KZ4/OftzeM2wJA2Mhmcmt3KpTIVfJcOVaXAVAyf5Z1o56j2of+MYie+CmZ0Hi607dvwhTSiruS4kBSGKyIP7ZNdt9IxeCMuByPlA02xHdFsthqQgrNIJ9S+CqzFT0AIcQ/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=oVXf50TQ; arc=none smtp.client-ip=91.218.175.181
+	s=arc-20240116; t=1730033985; c=relaxed/simple;
+	bh=+7HFqpPetYd0/9qVrvLQ6aY8jVUyHYCRGOtQfWsf5hA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AOfmqb6kycdT8MfVhgoPn7Hs4JApisQuaKDAkEfCGUKBIg7J3FaIh1aWfZrLH0Uwrw0otZoquMUOLbfXrzDT/A28XeOaUvdODW7+lPQUEMUmuIJcrsizjKKMUWwxO0OKbCacSa1mZw1R4bZmX6oxMb4LaDxA2vogr/R6p0dz/wU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=S4aY9y4j; arc=none smtp.client-ip=91.218.175.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="oVXf50TQ"
-Date: Sat, 26 Oct 2024 20:30:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1729989035;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oMtTkbAQEQRyJV9OAy1+Os+nlL7XX3CSHBY5FldPT/E=;
-	b=oVXf50TQsnDjAMApLzvVZsfu6a+WUgiThFgfrrLBnUjkuOLPoNuJHDU75iDvTj8CGlvl2o
-	OFhyJH/lcOn98cvLSIvZPuzcllXLbLZKbF2ca67eo/Tl5O2DhgeHwr3umAK2WLPT/TlSAh
-	u1AB/42zt7yxkYyiIwGkfROte1Pz30A=
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="S4aY9y4j"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Subject: Re: [RESEND PATCH] bcachefs: Annotate struct bucket_gens with
- __counted_by()
-Message-ID: <ctariwoo6do3ergs4p7smzjbil7mwq744spzyzcphu2apwnkjn@hndqzlxejzvz>
-References: <20241026154704.159305-2-thorsten.blum@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1730033980;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=YhO//bO621t7BGGosVsytQ78SLPgR+dQxqYbb4Ol6B8=;
+	b=S4aY9y4j2u25q+5w64LIMfW+SceTZ0oFz4KZJll4T/0CMfFDNLfMgUywZrDyUSrS9xE1yV
+	kYBIahAphc/lRjwveWm2dDeNIFoOoDU+cCzhG4LdAzylYwNV3lMopu0mPw7PZR3BZs8Xd/
+	27YuIyH3+PX3ep8Q0VsMbjCJUZrofX0=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Kees Cook <kees@kernel.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Julia Lawall <Julia.Lawall@inria.fr>,
+	Nicolas Palix <nicolas.palix@imag.fr>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	linux-hardening@vger.kernel.org,
+	cocci@inria.fr,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] coccinelle: Add str_off_on() and str_no_yes() rules
+Date: Sun, 27 Oct 2024 13:58:59 +0100
+Message-ID: <20241027125858.1804-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241026154704.159305-2-thorsten.blum@linux.dev>
+Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-On Sat, Oct 26, 2024 at 05:47:04PM +0200, Thorsten Blum wrote:
-> Add the __counted_by compiler attribute to the flexible array member b
-> to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
-> CONFIG_FORTIFY_SOURCE.
-> 
-> Use struct_size() to calculate the number of bytes to be allocated.
-> 
-> Update bucket_gens->nbuckets and bucket_gens->nbuckets_minus_first when
-> resizing.
-> 
-> Compile-tested only.
-> 
-> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+In addition to str_on_off() and str_yes_no(), add rules to search for
+str_off_on() and str_no_yes() replacements.
 
-I can take this patch without it being tested, but please have a look at
-ktest:
-https://evilpiepirate.org/git/ktest.git/
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+---
+ scripts/coccinelle/api/string_choices.cocci | 38 +++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
 
-that's where all the bcachefs tests live, and it's a nice testing and
-debugging tool. The CI runs the same tests, and I can give you an
-account there as well.
+diff --git a/scripts/coccinelle/api/string_choices.cocci b/scripts/coccinelle/api/string_choices.cocci
+index 375045086912..93de05aeded2 100644
+--- a/scripts/coccinelle/api/string_choices.cocci
++++ b/scripts/coccinelle/api/string_choices.cocci
+@@ -282,6 +282,25 @@ e << str_on_off_r.E;
+ 
+ coccilib.report.print_report(p[0], "opportunity for str_on_off(%s)" % e)
+ 
++@str_off_on depends on patch@
++expression E;
++@@
++-      ((E) ? "off" : "on")
+++      str_off_on(E)
++
++@str_off_on_r depends on !patch@
++expression E;
++position P;
++@@
++*      E@P ? "off" : "on"
++
++@script:python depends on report@
++p << str_off_on_r.P;
++e << str_off_on_r.E;
++@@
++
++coccilib.report.print_report(p[0], "opportunity for str_off_on(%s)" % e)
++
+ @str_yes_no depends on patch@
+ expression E;
+ @@
+@@ -300,3 +319,22 @@ e << str_yes_no_r.E;
+ @@
+ 
+ coccilib.report.print_report(p[0], "opportunity for str_yes_no(%s)" % e)
++
++@str_no_yes depends on patch@
++expression E;
++@@
++-      ((E) ? "no" : "yes")
+++      str_no_yes(E)
++
++@str_no_yes_r depends on !patch@
++expression E;
++position P;
++@@
++*      E@P ? "no" : "yes"
++
++@script:python depends on report@
++p << str_no_yes_r.P;
++e << str_no_yes_r.E;
++@@
++
++coccilib.report.print_report(p[0], "opportunity for str_no_yes(%s)" % e)
+-- 
+2.47.0
 
-> ---
->  fs/bcachefs/buckets.c       | 13 ++++++++-----
->  fs/bcachefs/buckets_types.h |  2 +-
->  2 files changed, 9 insertions(+), 6 deletions(-)
-> 
-> diff --git a/fs/bcachefs/buckets.c b/fs/bcachefs/buckets.c
-> index ec7d9a59bea9..8bd17667e243 100644
-> --- a/fs/bcachefs/buckets.c
-> +++ b/fs/bcachefs/buckets.c
-> @@ -1266,8 +1266,9 @@ int bch2_dev_buckets_resize(struct bch_fs *c, struct bch_dev *ca, u64 nbuckets)
->  
->  	BUG_ON(resize && ca->buckets_nouse);
->  
-> -	if (!(bucket_gens	= kvmalloc(sizeof(struct bucket_gens) + nbuckets,
-> -					   GFP_KERNEL|__GFP_ZERO))) {
-> +	bucket_gens = kvmalloc(struct_size(bucket_gens, b, nbuckets),
-> +			       GFP_KERNEL|__GFP_ZERO);
-> +	if (!bucket_gens) {
->  		ret = -BCH_ERR_ENOMEM_bucket_gens;
->  		goto err;
->  	}
-> @@ -1285,11 +1286,13 @@ int bch2_dev_buckets_resize(struct bch_fs *c, struct bch_dev *ca, u64 nbuckets)
->  	old_bucket_gens = rcu_dereference_protected(ca->bucket_gens, 1);
->  
->  	if (resize) {
-> -		size_t n = min(bucket_gens->nbuckets, old_bucket_gens->nbuckets);
-> -
-> +		bucket_gens->nbuckets = min(bucket_gens->nbuckets,
-> +					    old_bucket_gens->nbuckets);
-> +		bucket_gens->nbuckets_minus_first =
-> +			bucket_gens->nbuckets - bucket_gens->first_bucket;
->  		memcpy(bucket_gens->b,
->  		       old_bucket_gens->b,
-> -		       n);
-> +		       bucket_gens->nbuckets);
->  	}
->  
->  	rcu_assign_pointer(ca->bucket_gens, bucket_gens);
-> diff --git a/fs/bcachefs/buckets_types.h b/fs/bcachefs/buckets_types.h
-> index 28bd09a253c8..7174047b8e92 100644
-> --- a/fs/bcachefs/buckets_types.h
-> +++ b/fs/bcachefs/buckets_types.h
-> @@ -24,7 +24,7 @@ struct bucket_gens {
->  	u16			first_bucket;
->  	size_t			nbuckets;
->  	size_t			nbuckets_minus_first;
-> -	u8			b[];
-> +	u8			b[] __counted_by(nbuckets);
->  };
->  
->  struct bch_dev_usage {
-> -- 
-> 2.47.0
-> 
