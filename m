@@ -1,112 +1,85 @@
-Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCA201531F8
-	for <linux-hardening@vger.kernel.org>; Sun, 27 Oct 2024 12:59:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 537C61EA91;
+	Sun, 27 Oct 2024 15:07:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730033985; cv=none; b=qll9lpwj0PuYEmRD2ucWn9PEuEGKmnsLxmVLbuCweU0Na3O40wm1hmZPMQVv6whH42TfSpE3SYo+rovX/TV6Xbj71roD/M0s7Ucj/ccnDtvm9GQVua7nkjaON1bvZ1b/lBXQhcmPCLd1DnacqPVajfhiWCYux7TIuly/S0YcVks=
+	t=1730041643; cv=none; b=IdjnIMj4ci4nOuYr+3nF/J8C5h1B4/yjit/oxA6mSEL3F8x0KQaUkOzlLb9V1tEAXLPsvbaEn6nGh8qaAJg7o8ufYptS2KIVsd8nhad1++z/iw6jmg6FDi0J6qlW5COIlUkB1nivrETEziSCD9xT8hmLOHqf4NxTPZnNRvpF6C4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730033985; c=relaxed/simple;
-	bh=+7HFqpPetYd0/9qVrvLQ6aY8jVUyHYCRGOtQfWsf5hA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AOfmqb6kycdT8MfVhgoPn7Hs4JApisQuaKDAkEfCGUKBIg7J3FaIh1aWfZrLH0Uwrw0otZoquMUOLbfXrzDT/A28XeOaUvdODW7+lPQUEMUmuIJcrsizjKKMUWwxO0OKbCacSa1mZw1R4bZmX6oxMb4LaDxA2vogr/R6p0dz/wU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=S4aY9y4j; arc=none smtp.client-ip=91.218.175.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1730041643; c=relaxed/simple;
+	bh=DWVfrLiSQ1mLXzmeAJ2FQ1vcpLRRj7dDdM9zmE1eltc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZvE/Ek3BoIlTVdNMvRuAGhX/g/Asq5VFwXDXHemX9IZkQsE5cT8scjFprzQ+vlbWTuRC9DNtQDRu1F6DXwZqt+chRNiO/sSP8Udg/ctkonvuEE22otFP2XmJOHffky8efECl3YOIS8/oHap4Z1GmedjSu73aZzsNKlRppTZkoYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FI7HGfOK; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="S4aY9y4j"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1730033980;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=YhO//bO621t7BGGosVsytQ78SLPgR+dQxqYbb4Ol6B8=;
-	b=S4aY9y4j2u25q+5w64LIMfW+SceTZ0oFz4KZJll4T/0CMfFDNLfMgUywZrDyUSrS9xE1yV
-	kYBIahAphc/lRjwveWm2dDeNIFoOoDU+cCzhG4LdAzylYwNV3lMopu0mPw7PZR3BZs8Xd/
-	27YuIyH3+PX3ep8Q0VsMbjCJUZrofX0=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Kees Cook <kees@kernel.org>,
-	Andy Shevchenko <andy@kernel.org>,
-	Julia Lawall <Julia.Lawall@inria.fr>,
-	Nicolas Palix <nicolas.palix@imag.fr>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	linux-hardening@vger.kernel.org,
-	cocci@inria.fr,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] coccinelle: Add str_off_on() and str_no_yes() rules
-Date: Sun, 27 Oct 2024 13:58:59 +0100
-Message-ID: <20241027125858.1804-2-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FI7HGfOK"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a9a3dc089d8so519745466b.3;
+        Sun, 27 Oct 2024 08:07:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1730041640; x=1730646440; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DWVfrLiSQ1mLXzmeAJ2FQ1vcpLRRj7dDdM9zmE1eltc=;
+        b=FI7HGfOKWrRxjKyDkRjmD5++Ogux0tgmN2kOc3R7I3/oLYmFtCcIa+xehsLqw3JE9m
+         zBWEPq/H/JxLgJaXpwN3gn2pJ7INJT0coZCVl0rzozMTvy9EnfHNwcNmpzOiqv12RxNG
+         rQHHDaBFETGrhX3FLJn6cgmfkvJLP+oyPAQit2UtMIvepW9wCSjhbkRAaFJWyQm63blC
+         QDgL1t3Vhb/Ld1jqkj1jF94Bm7fL3ORXwevvv44jI3yp9QviS3nRwiNL1JUk3dGdZY/d
+         6R/eNdHIuIn1bUteLJx92DRQd9rnwd86efi42DnzPGTJ6tJR6llGThV4TP9f35Q4MJCU
+         pw/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730041640; x=1730646440;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DWVfrLiSQ1mLXzmeAJ2FQ1vcpLRRj7dDdM9zmE1eltc=;
+        b=S5CsZI3RxCDs2d30doOlZ7WJfQqNMgdyGLlDd8Y0bZcPpTlQeDk0axnu9/x0Df9MWb
+         aTkYxjMDwTWyVSh6rnPobWuCekeChDxLKTyDy24u92QKnflX1LNhC1Sm2fk/rcsfh2Z4
+         8HlzH8Wl30zEBqqmEvp5WaJfRMyOH4LcaW7+bVxcAVU6h2hQk6A1tfxzIingXvPAqalL
+         1UaOpCkCUf6jiqGyRCqdvcD36uTMBEVb3hgVDhJCEoOalkVbUw0d1fVBaEEKTnqYFuRg
+         jo3H26w6m5XKUAHl99oOZ970CJ1HYk8y0d5+t+8V5yKHtbnbTvXPumsPuyiDLAyOVMzY
+         5hVw==
+X-Forwarded-Encrypted: i=1; AJvYcCUxCjhDGDJPRTuBAjjZ91SNNIA0VwS1/eAtLwV/qSJwvBCsfRKw1xGtCf7bLkciY53JYSqZn91dkCOVvYDEFu8=@vger.kernel.org, AJvYcCXiQKwI5Am/rdPWArjsVXsiePjC9gB6ADBj8IOxkWvMCnVuluSHj42M14IsAOjJ0z9sgOhki8OzyJlruOfr@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHWkSHByHhdJcEfSeiwYhBD4D75mruWZTYFhDNCADW+h+tAOmJ
+	yZSwRrGCqm5VdiJffewaAfAicy4lQ68Jy4uoLaupmn86XUggZiOUu82JTjFSndjDV0Lq+bsgiRf
+	LUaSOwjBf56zbqHqnW1He+pTXR000La0b
+X-Google-Smtp-Source: AGHT+IHAMr1Prejw6UUMe3IADa5i/kKzZcgJeJyFLvdTQ0zMFs1aGYVL8QkXh0luqaJs01zHjAnHSrOxMr9J+/jUWMA=
+X-Received: by 2002:a17:907:961c:b0:a99:55ab:b666 with SMTP id
+ a640c23a62f3a-a9de5f27104mr510798466b.34.1730041639504; Sun, 27 Oct 2024
+ 08:07:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+References: <20241027125858.1804-2-thorsten.blum@linux.dev>
+In-Reply-To: <20241027125858.1804-2-thorsten.blum@linux.dev>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Sun, 27 Oct 2024 17:06:42 +0200
+Message-ID: <CAHp75VeeUKWakOWW7ft8BB9Gg=29_z93fCjDk_VGsqd8py878A@mail.gmail.com>
+Subject: Re: [PATCH] coccinelle: Add str_off_on() and str_no_yes() rules
+To: Thorsten Blum <thorsten.blum@linux.dev>
+Cc: Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>, 
+	Julia Lawall <Julia.Lawall@inria.fr>, Nicolas Palix <nicolas.palix@imag.fr>, 
+	linux-hardening@vger.kernel.org, cocci@inria.fr, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-In addition to str_on_off() and str_yes_no(), add rules to search for
-str_off_on() and str_no_yes() replacements.
+On Sun, Oct 27, 2024 at 2:59=E2=80=AFPM Thorsten Blum <thorsten.blum@linux.=
+dev> wrote:
+>
+> In addition to str_on_off() and str_yes_no(), add rules to search for
+> str_off_on() and str_no_yes() replacements.
 
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
- scripts/coccinelle/api/string_choices.cocci | 38 +++++++++++++++++++++
- 1 file changed, 38 insertions(+)
+I don't know cocci well enough, but this does simply not scale. We
+also have cases where "Yes"/"No", "YES"/"NO" and all possible
+variations of that.
 
-diff --git a/scripts/coccinelle/api/string_choices.cocci b/scripts/coccinelle/api/string_choices.cocci
-index 375045086912..93de05aeded2 100644
---- a/scripts/coccinelle/api/string_choices.cocci
-+++ b/scripts/coccinelle/api/string_choices.cocci
-@@ -282,6 +282,25 @@ e << str_on_off_r.E;
- 
- coccilib.report.print_report(p[0], "opportunity for str_on_off(%s)" % e)
- 
-+@str_off_on depends on patch@
-+expression E;
-+@@
-+-      ((E) ? "off" : "on")
-++      str_off_on(E)
-+
-+@str_off_on_r depends on !patch@
-+expression E;
-+position P;
-+@@
-+*      E@P ? "off" : "on"
-+
-+@script:python depends on report@
-+p << str_off_on_r.P;
-+e << str_off_on_r.E;
-+@@
-+
-+coccilib.report.print_report(p[0], "opportunity for str_off_on(%s)" % e)
-+
- @str_yes_no depends on patch@
- expression E;
- @@
-@@ -300,3 +319,22 @@ e << str_yes_no_r.E;
- @@
- 
- coccilib.report.print_report(p[0], "opportunity for str_yes_no(%s)" % e)
-+
-+@str_no_yes depends on patch@
-+expression E;
-+@@
-+-      ((E) ? "no" : "yes")
-++      str_no_yes(E)
-+
-+@str_no_yes_r depends on !patch@
-+expression E;
-+position P;
-+@@
-+*      E@P ? "no" : "yes"
-+
-+@script:python depends on report@
-+p << str_no_yes_r.P;
-+e << str_no_yes_r.E;
-+@@
-+
-+coccilib.report.print_report(p[0], "opportunity for str_no_yes(%s)" % e)
--- 
-2.47.0
 
+--=20
+With Best Regards,
+Andy Shevchenko
