@@ -1,37 +1,59 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F5691E0B7F;
-	Mon, 28 Oct 2024 22:19:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC3C218C02D
+	for <linux-hardening@vger.kernel.org>; Mon, 28 Oct 2024 22:50:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730153972; cv=none; b=mUh3xPXIhWr7+3+G7ckUCcv/teSIjw9nvKxqf7+FuMeH5HRvODE+MyYEI0eAuvPOKCdndlQIrLUyCa8hD6dQRpSaROIzVTm+Hi3GcB5dHZ2vlY2b0G2lIdfdl8sTQiq5fKgFav4DrCHbJUJDRCZGs2QPRxmv4UpGFNGa+nOtNMM=
+	t=1730155856; cv=none; b=jFWatdfL5hbEdNh/ruNLDrUmz2AHYsFKf+Jq8JfCUVy10PAIwrylgHgeckg916BsiCT8UkeJcrdqr5E0jVyhp/dsyy7zUPmjmzFPFazXH9adksFHptf3nz5/jCUKWYdnWa9jaPGd8QMQdf3noBQQmggHhufurIyQsrjN+bWM6jM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730153972; c=relaxed/simple;
-	bh=JRSA4dpwK26Ru8uzCDZ5U/2hQHPIbURI0Yl0IlzmWjc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=rxskNWg3QnJB/0oGPcGjdyvZVKNICW8A6rJcPo4vDflzGq8PbrpnLyp7q2fRb4gK79DUC849I5EGJjyxs9kW79wtEDWW9XS1Ot+oeVWVTD9L6B9nLO+NLsfd/IY6CenMguzk2ArEM5P9kOk6a1RuLJJVNweVreaRvOYya2FssHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ap1AIsDv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1730155856; c=relaxed/simple;
+	bh=0H8DFmF7y5ovlaHbJUj8X0ThVLF5mF7KlEW7bI+3/yk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=orC7JXOzTs8G3+9hmrCTw6FH6C/4OpFBKw1vEw6HwVHUzBilxxDGIvE+3vJpbiHhCvaHXyJsGUtJTMo64fCQXPLOWyclBiDXkLJ3ujWtOzdvnnD6fkATqDGKfrv4VfyKs4HP0QoP0EhJP8Je37QyIqClg8ok+PnbC2J/0iMHKI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=U7y0r8Hy; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ap1AIsDv"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 37D5CC4CEC3;
-	Mon, 28 Oct 2024 22:19:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730153972;
-	bh=JRSA4dpwK26Ru8uzCDZ5U/2hQHPIbURI0Yl0IlzmWjc=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=ap1AIsDvNldkGY3jO3qmvCR/siF3OM2GncLgV02F4YhHG0JIzl4GcbZJWj2axYJyB
-	 h7oTsGH53bPc/3RzoLW+dhMLez2/g2O+7qyD02cQdkdI8KLxzNGKWLsrFwfs2GoBSu
-	 BUb0EVBfE4NdgMsuRU7uetYGtTlxRVBNyP/qG4sYKViUUaFU778p2HfGFCr0/KoLuH
-	 4pKbzeXepg5oRQcKQg6pOSJmr51F2qcSvGcAWpmYVRNGmNjktjXNqp6d0jjwfjVGIN
-	 nkODRoizqBpT920LonrSFzqMFlLSoY/2B2k9tf9UIJb5eBcwHDObKjF/rlrpv3EXiH
-	 T5G84CGLjG8Bw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C17D5B845;
-	Mon, 28 Oct 2024 22:19:32 +0000 (UTC)
-From: Aleksei Vetrov via B4 Relay <devnull+vvvvvv.google.com@kernel.org>
-Date: Mon, 28 Oct 2024 22:18:40 +0000
-Subject: [PATCH] wifi: nl80211: fix bounds checker error in
- nl80211_parse_sched_scan
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="U7y0r8Hy"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-431616c23b5so34399595e9.0
+        for <linux-hardening@vger.kernel.org>; Mon, 28 Oct 2024 15:50:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1730155853; x=1730760653; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=AHbs6/0mSLooEm+thfv53bqPunINve7/jCO5kyMCTTk=;
+        b=U7y0r8HytB6IuSHagBWsa5QSd2XtxyawrsMPaUglcoT0Fbtxrm5M3jF9Unx5xo3eve
+         07fpmvGFvRif7bc9R8N239IIJbzBk2I6+d4TKm+6aMNTSmjuuWn8FKAMbLv2TmsFO86k
+         c+N069warQj7TmYCKNZed6rp+xcA4WHOAPulOiQoMCfCGYj8WiAKvA0xBU5yvKcZC0YU
+         uwKUMz+eryCvL5depHSqxbPyl6nXVfZeYQKdmjDnHAniZcUzowZuWds9biS9nM8unJRC
+         F0KN2V5xW0p1FWpYxddy7oXmLdl++8HCoCV6invy/M8duf3YqITeXmIq3a57lLAjMrBl
+         We9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730155853; x=1730760653;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AHbs6/0mSLooEm+thfv53bqPunINve7/jCO5kyMCTTk=;
+        b=Qv2JJeebmF2qjPkZYCUsQJ0ymzEnH6+h2lGBSEQW1hsaEyYR1A5lX9SOdkSIwX+Rh3
+         Xs7wA0TtwmWe3oc96RUls7X9R4EAsr1R0d5My8WGUuxocX7Yj1AT11FJdl7urJMW7fSs
+         Iosm77Q1rzMHXTN46rmn3oQqzGcbw6p/l2sul4BfEsgESYhwKwbUfJGGHherWAGj6HN/
+         beNDpMm3UOAqEwPXwTZ9uze1LjG5ef9PkGwc9AZQb+QxmaAjH22X/BuVYo1lewJxw7cZ
+         Uq5iM5iw3ALzloQXY/BXfZn1t1rYFQrrj5fLKI27PhIhVfSTAViAAxsegKDk9WUMOWAP
+         +vxA==
+X-Forwarded-Encrypted: i=1; AJvYcCVtdS9vkCwp0o4Racdu7SYV6bDKXUH7vjgFZYBEkmvrAbEtWUwoRaeA5urugitINCwdsxbqK3ah+au1HCwnxWU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy5fH5lPjB4mKOhp7cNmUEJj+JisHV/3F95oAvohwc//3qbUcS1
+	9B2xJAFuEtguOrA1xd9FnoqYEqV02fHW97Jz7Vlcebrs/oxLB/dKXPlQhAvRbg==
+X-Google-Smtp-Source: AGHT+IFMb4eytDVqC9RhangzDfmj4P9hfRrryG8fhKdC1BivhfX1vuTe3qToeQLtrAUMlF5BQg5i4w==
+X-Received: by 2002:a05:600c:5106:b0:431:3b80:6ca7 with SMTP id 5b1f17b1804b1-431b5630e8emr522865e9.13.1730155852938;
+        Mon, 28 Oct 2024 15:50:52 -0700 (PDT)
+Received: from localhost (65.0.187.35.bc.googleusercontent.com. [35.187.0.65])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-431935f6db9sm126894465e9.29.2024.10.28.15.50.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Oct 2024 15:50:52 -0700 (PDT)
+From: Aleksei Vetrov <vvvvvv@google.com>
+Date: Mon, 28 Oct 2024 22:50:30 +0000
+Subject: [PATCH] ASoC: dapm: fix bounds checker error in
+ dapm_widget_list_create
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -40,64 +62,60 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20241028-nl80211_parse_sched_scan-bounds-checker-fix-v1-1-bb640be0ebb7@google.com>
-X-B4-Tracking: v=1; b=H4sIAL8NIGcC/x2N0QqDMAxFf0XyvEAbu1H2K2NIbeMsG1USHAPx3
- w17uXDOw7k7KEtlhXu3g/C3al2agb90kOfUXoy1GAM5Ct5RxPaJjrwf1iTKg+aZi21qOC5bK4o
- m8psFp/rDfI2BpuDHeOvBiquw6f/b43kcJzdtLVt9AAAA
-X-Change-ID: 20241028-nl80211_parse_sched_scan-bounds-checker-fix-c5842f41b863
-To: Johannes Berg <johannes@sipsolutions.net>, Kees Cook <kees@kernel.org>, 
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, 
+Message-Id: <20241028-soc-dapm-bounds-checker-fix-v1-1-262b0394e89e@google.com>
+X-B4-Tracking: v=1; b=H4sIADUVIGcC/x3MTQqDMBBA4avIrDuQDKYUryIu8jM2QzGRDJWCe
+ PcGl99bvBOUm7DCNJzQ+BCVWjrsY4CYfXkzSuoGMjRaQy/UGjH5fcNQvyUpxszxww1X+aELnp9
+ kR+cCQT/sjXu+7/NyXX/VPWv2bQAAAA==
+X-Change-ID: 20241028-soc-dapm-bounds-checker-fix-5bae621455b2
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
  linux-hardening@vger.kernel.org, Aleksei Vetrov <vvvvvv@google.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1730153971; l=1312;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1730155848; l=1354;
  i=vvvvvv@google.com; s=20241028; h=from:subject:message-id;
- bh=iIxi2KLWI9wR0O0GYIDrc+V7xEplQHQGoi5qT4A15RA=;
- b=nTOEDZOton4avNlJ6GBQTWY3r29X14NRdFDJOLfoDH49KG2clQxQJmvJdqbubmFEyKHEVRiN4
- PyZlcBL9LotC8KqGQeQ4HeKzs+3geaLrffksSsD42ikKStOsGeu0SUB
+ bh=0H8DFmF7y5ovlaHbJUj8X0ThVLF5mF7KlEW7bI+3/yk=;
+ b=ud05c+Q/+5iy0MDJTuWQh8oNcHrqNgswkh3uuGHryM7n/yWqOZw/bfSZnx6hWMosFyHe1CkZ3
+ Yl1W/TmD3+mCAKIe1m1b/Rl4G4QWkNvxEghilO4Q50GvwEJEIBoCJuu
 X-Developer-Key: i=vvvvvv@google.com; a=ed25519;
  pk=b4c4Uc4EKDS3ie6P4xhkyobon88ZGFLMHyo8kw1IuM4=
-X-Endpoint-Received: by B4 Relay for vvvvvv@google.com/20241028 with
- auth_id=257
-X-Original-From: Aleksei Vetrov <vvvvvv@google.com>
-Reply-To: vvvvvv@google.com
 
-From: Aleksei Vetrov <vvvvvv@google.com>
-
-The channels array in the cfg80211_scan_request has a __counted_by
-attribute attached to it, which points to the n_channels variable. This
+The widgets array in the snd_soc_dapm_widget_list has a __counted_by
+attribute attached to it, which points to the num_widgets variable. This
 attribute is used in bounds checking, and if it is not set before the
 array is filled, then the bounds sanitizer will issue a warning or a
 kernel panic if CONFIG_UBSAN_TRAP is set.
 
-This patch sets the size of allocated memory as the initial value for
-n_channels. It is updated with the actual number of added elements after
-the array is filled.
+This patch sets the size of the widgets list calculated with
+list_for_each as the initial value for num_widgets as it is used for
+allocating memory for the array. It is updated with the actual number of
+added elements after the array is filled.
 
 Signed-off-by: Aleksei Vetrov <vvvvvv@google.com>
 ---
- net/wireless/nl80211.c | 1 +
- 1 file changed, 1 insertion(+)
+ sound/soc/soc-dapm.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
-index d7d099f7118ab5d5c745905abdea85d246c2b7b2..9b1b9dc5a7eb2a864da7b0212bc6a156b7757a9d 100644
---- a/net/wireless/nl80211.c
-+++ b/net/wireless/nl80211.c
-@@ -9776,6 +9776,7 @@ nl80211_parse_sched_scan(struct wiphy *wiphy, struct wireless_dev *wdev,
- 	request = kzalloc(size, GFP_KERNEL);
- 	if (!request)
- 		return ERR_PTR(-ENOMEM);
-+	request->n_channels = n_channels;
+diff --git a/sound/soc/soc-dapm.c b/sound/soc/soc-dapm.c
+index c34934c31ffec3970b34b24dcaa0826dfb7d8e86..99521c784a9b16a232a558029a2f3e88bd8ebfb1 100644
+--- a/sound/soc/soc-dapm.c
++++ b/sound/soc/soc-dapm.c
+@@ -1147,6 +1147,8 @@ static int dapm_widget_list_create(struct snd_soc_dapm_widget_list **list,
+ 	if (*list == NULL)
+ 		return -ENOMEM;
  
- 	if (n_ssids)
- 		request->ssids = (void *)request +
++	(*list)->num_widgets = size;
++
+ 	list_for_each_entry(w, widgets, work_list)
+ 		(*list)->widgets[i++] = w;
+ 
 
 ---
 base-commit: 81983758430957d9a5cb3333fe324fd70cf63e7e
-change-id: 20241028-nl80211_parse_sched_scan-bounds-checker-fix-c5842f41b863
+change-id: 20241028-soc-dapm-bounds-checker-fix-5bae621455b2
 
 Best regards,
 -- 
 Aleksei Vetrov <vvvvvv@google.com>
-
 
