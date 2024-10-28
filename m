@@ -1,93 +1,94 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43A811DE2A2
-	for <linux-hardening@vger.kernel.org>; Mon, 28 Oct 2024 15:19:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F6BF1534E9;
+	Mon, 28 Oct 2024 20:00:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730128752; cv=none; b=S0btSDyaw5tbSkMTOfR1Jk0PF0QfqLLYE28UZtbOOH6YJMuSTSEw2I9KIsGdenOzSzoxspfUk/r6bLIwSnHp2y7Og0kWG9VC519d/B84X1UzdKVr+9VAQi7RxxdFRLo6iCqCIRSY+oR2rEHmlABVZgTHGG1uJ5hin4r0CqczwPA=
+	t=1730145636; cv=none; b=oj+lZFBPYy6nqt45YTHrSa6zQTrWXEI2rcPyA4emVMegWfXPKkLiRQv3as1MXPjWNumsHoKtJIzu+PUMnYbdVcDVWvChWjGngjN7m8Ww36z6qyMn2CRiGkV06iLBq653t7GfeyE/ZEgP3e9baPzW2ybnFwjDWWRZlBNuC+PUYcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730128752; c=relaxed/simple;
-	bh=VllxgaeAxK8ya5awbEYif/GTv+HwiWvVjE+QOtBgID8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=q0D8E90/MgcHLkBPmFt1JO4mJAYRpD/PzlW/h1XysjRQMoXP5oNIG7xK32HnFa4yjZdaNbMbaBXD0UuPAVJQWGZq/h2Ia2LpFytjM29I4KZG7zjtCa7c5knpVscY+NVkr7IIF21Cu4gnbWtXSQFU2jPnLgs7YyeNPu5Z3XDzX+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bvu6EdRW; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1730145636; c=relaxed/simple;
+	bh=iy6cHdmKo7wCiSyYpGY1RBRuKgRlluXl0frCJL21vbs=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=W+shYpKUkFLbd0rjPgfj4P6uWkavHglMOn1CqUNCMKFVBm9OSmU/wmB67LRdOWGA9u/qRT8GxljW+X/xA7huGhY2F6GyAqnUqq9VXXEF1beN+bjmf3qgKtTjpQ2RtEyB/92gKBeKtsXdF2RQ0hWHOUNifem6mWAwXyTUds+vJU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bN4fG2rp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bvu6EdRW"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4315f24a6bbso43554935e9.1
-        for <linux-hardening@vger.kernel.org>; Mon, 28 Oct 2024 08:19:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1730128748; x=1730733548; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=YMehf1cmdH70vQG9fYSA+nflJUhXY7J4qMYXjLbnvAo=;
-        b=bvu6EdRWRLN8I9W+o1Ysnp8pqn0fQ5dZ2rM1c3tcMvX5XjFicL4WDT92YX0XihPKZZ
-         /LFaQWKdK7v6nvER9o+/np0eCCwOcVV0aXI/W7WCF9UX17z78gEjfYpG4+6CyCrx1RT2
-         OKnjl18xymnuIRuu1Cu4npO1cB549Ks3DLAkCr6qbtMURbvvs9RhyW1PCTc/4aRqaUoZ
-         SkesemltK91WcYBrhDXXsNWnSIlQ6srLFJ3+uLADyhw1HHJykxNVDhOfZiwIzSXHCW+I
-         jJGNjy3RSbf16PnD/5OLS/HvLgxM6HElIutIiWdVAl31+KYoNBFm7dAzx/I0e5xsssnK
-         5Liw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730128749; x=1730733549;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YMehf1cmdH70vQG9fYSA+nflJUhXY7J4qMYXjLbnvAo=;
-        b=HX4IB5Et6Cm3FeDGCHGj5VJvz2LhzQQLcYR4ovBlHdl4Kjm/ssQyO9l7ODYKl6cpeN
-         5FwhAJuIEQ1QRPINf6XTbTorzhg9/Stqq5ncaicVKqSNnSiTHfSl//oPV9QOntqNkSOm
-         e1sN9W/mgiDQn8H0F77zetkq8oPp6HkQPFy5wbq5VOw/YUU1FgXwi0Z5ydfXI96W0VI0
-         7SgDOLf0ehJ8PS3vTCXy9wdC78tYY76sTTjoUmd7wYIDOHSPprNSAwJ2S6DJxSe/EhkP
-         CthOFLt+SRsfQ8yh9Tq1038AuqiVONRFvvmM/Eg85dpLx0huGTT0cshexLU66Ws1uZVX
-         x6+Q==
-X-Gm-Message-State: AOJu0YwfufICAb9ko+9YuMcFeeFez/7fuqKrFQTjMPvPtZuITcgF2tqf
-	DfY+GINaeTQynJOMxccIJGEXkOQhASZ4qt4KVqB7Hh3RJlDRBRp37VHwzbHp4ac=
-X-Google-Smtp-Source: AGHT+IGqWBuggalF2VXXcJZ2EXD/713dHl0Cg5IYvuxKR1Y1NivxEcBCDFYslrN2INjSCJjCmJyyiw==
-X-Received: by 2002:a05:600c:4eca:b0:431:5c1c:71b6 with SMTP id 5b1f17b1804b1-4319acad842mr94286995e9.17.1730128748659;
-        Mon, 28 Oct 2024 08:19:08 -0700 (PDT)
-Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4318b58b79esm145072845e9.47.2024.10.28.08.19.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Oct 2024 08:19:07 -0700 (PDT)
-Message-ID: <56b07267-a192-42b7-a4e9-5fe7d86076f7@linaro.org>
-Date: Mon, 28 Oct 2024 16:19:06 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bN4fG2rp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10A00C4CEC3;
+	Mon, 28 Oct 2024 20:00:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730145635;
+	bh=iy6cHdmKo7wCiSyYpGY1RBRuKgRlluXl0frCJL21vbs=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=bN4fG2rpJm3/sOEiT84DBZqoW1a3L15EBPRGqoZxQhtP0cGEBcXJ3MVZsyZHua2Aa
+	 rAAK06mcvnVQAhfgXeiE+6hOGbp9rF8gRZnUnNExRm7IZyNthurcr+SUyY3LEBRLIB
+	 JK/FN58IshAykaHjkuNFqIJjp0JQ3CFN7rLf/5T0O2pWqMPZmh1w3a4Nmh4txZSSxd
+	 h5ZcKExekp/IC72vQcPoweFunKlC2ixtXtzxfvTGNRMJg8IZO1UhB3m7wgW1ndv+L2
+	 c4hxcBF7QRUYLP5LHv1f5bl3Sx4B81fVGOyQmvVQ2oIfhayG3lJjqzRmbTErq68iyv
+	 X+fBHX5SDNatw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE370380AC1C;
+	Mon, 28 Oct 2024 20:00:43 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] clocksource/drivers/timer-sprd: Select driver on ARM and
- ARM64
-To: Enlin Mu <enlin.mu@outlook.com>, tglx@linutronix.de, orsonzhai@gmail.com,
- baolin.wang@linux.alibaba.com, zhang.lyra@gmail.com,
- linux-kernel@vger.kernel.org, enlin.mu@unisoc.com, enlinmu@gmail.com
-Cc: linux-hardening@vger.kernel.org
-References: <TYSPR04MB70840448562705C21BA8DCCF8A632@TYSPR04MB7084.apcprd04.prod.outlook.com>
-Content-Language: en-US
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-In-Reply-To: <TYSPR04MB70840448562705C21BA8DCCF8A632@TYSPR04MB7084.apcprd04.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v3 0/6] Add Nothing Phone (1) support
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <173014564250.163218.2856395815785502378.git-patchwork-notify@kernel.org>
+Date: Mon, 28 Oct 2024 20:00:42 +0000
+References: <20241020205615.211256-1-danila@jiaxyga.com>
+In-Reply-To: <20241020205615.211256-1-danila@jiaxyga.com>
+To: Danila Tikhonov <danila@jiaxyga.com>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ andersson@kernel.org, konradybcio@kernel.org, andrew+netdev@lunn.ch,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ kees@kernel.org, tony.luck@intel.com, gpiccoli@igalia.com,
+ quic_rjendra@quicinc.com, andre.przywara@arm.com, quic_sibis@quicinc.com,
+ igor.belwon@mentallysanemainliners.org, davidwronek@gmail.com,
+ ivo.ivanov.ivanov1@gmail.com, neil.armstrong@linaro.org,
+ heiko.stuebner@cherry.de, rafal@milecki.pl, lpieralisi@kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
+ linux-hardening@vger.kernel.org, linux@mainlining.org
 
-On 19/09/2024 09:25, Enlin Mu wrote:
-> From: Enlin Mu <enlin.mu@unisoc.com>
+Hello:
+
+This series was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Sun, 20 Oct 2024 23:56:08 +0300 you wrote:
+> This series of patches adds support for the Nothing Phone (1), identified
+> as nothing,spacewar. The Nothing Phone (1) is built on the Qualcomm
+> Snapdragon 778G+ (SM7325-AE, also known as yupik).
 > 
-> sprd timer is currently available on ARM and ARM64 based devices.
-> Thus select it for ARM and ARM64
+> SM7325 is identical to SC7280 just as SM7125 is identical to SC7180, so
+> SM7325 devicetree imports SC7280 devicetree as a base.
+> 
+> [...]
 
+Here is the summary with links:
+  - [v3,1/6] dt-bindings: nfc: nxp,nci: Document PN553 compatible
+    https://git.kernel.org/netdev/net-next/c/05c9afb9bfa3
+  - [v3,2/6] dt-bindings: arm: cpus: Add qcom kryo670 compatible
+    (no matching commit)
+  - [v3,3/6] arm64: dts: qcom: Add SM7325 device tree
+    (no matching commit)
+  - [v3,4/6] dt-bindings: vendor-prefixes: Add Nothing Technology Limited
+    (no matching commit)
+  - [v3,5/6] dt-bindings: arm: qcom: Add SM7325 Nothing Phone 1
+    (no matching commit)
+  - [v3,6/6] arm64: dts: qcom: sm7325: Add device-tree for Nothing Phone 1
+    (no matching commit)
 
-Can you answer Baolin's question ?
-
-Or can you tell what is the rational behind this change ?
-
-
+You are awesome, thank you!
 -- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+
