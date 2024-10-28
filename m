@@ -1,50 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 619111925B3;
-	Mon, 28 Oct 2024 23:40:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB4001F9ED6;
+	Mon, 28 Oct 2024 23:45:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730158820; cv=none; b=MvfFzVD0UJcW6doxPYtmAzfDrkwn5SH5TL3xSKCKOgR7KpczUAeGXFNizz+p3lRBx5JL+ZLBDxc4vde91OWXe4eaX6kT6Lj8eEseF7VNAhMwM2ljnr2MtCY+RaheKqWRF2hKVmV6z3yFqj6QAvFv9Un+VuoaCVB7gUF4JqQ6274=
+	t=1730159101; cv=none; b=JnIeVzi+xmgOeqE8m6EB6UaNcbGGsFfim4cb4/XbdXE0I3Z6PERx/Onqiq3eZ0oLRMKplDmMq6ctN6JLZKiTuS+vtBmB7M5tqgYuUg5tEu475D/apawPppgNO4LSltYTkUBErdT1hXve3YN4EWDbzNP24jnn1MSn0Anj17RT37M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730158820; c=relaxed/simple;
-	bh=pQzl1y9h2xsU92uZtxx7jqh2VQjUzwEVlkfCH4GvCD0=;
+	s=arc-20240116; t=1730159101; c=relaxed/simple;
+	bh=5COAbv3VoIHsgbAwNn1ky7bzcLv3VohmsdFzVQBHrOc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Vhyu6Iu9T6Rm4NLOQ3Q/BrX/3mT8+81kaLcKfuRkvvekIGOAry3/OafRSq3FToqcSz54Ky4Y7YaEILMbb297+xTc5+1b8YNSRXoBBcwjI00hQKrof8+RPCOAyqxFWtqcDLo5psPKxQTmSD3JN2BTnWCXo3vsqJ3sEo8khIHthc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CKHCl6rs; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=dPh+Z6o+f7trTm6sc3WOe3Wlx1Ynn4E4PLxwkYlX4CFPGzB0+SaQ4ty3DbkKndORBSeHrDiqHUNw9hEkMD6ffRXY8V8udNVD+rAGto6Ay1uHFQ4weM4Tl/4Qp+PuLcg1bPxVWwUBNmjaYXEpp0kJ2/ONiRyu90RhIU6U9NRInv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H+NNTwvv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CKHCl6rs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3837C4CEC3;
-	Mon, 28 Oct 2024 23:40:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H+NNTwvv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 240FBC4CECD;
+	Mon, 28 Oct 2024 23:45:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730158819;
-	bh=pQzl1y9h2xsU92uZtxx7jqh2VQjUzwEVlkfCH4GvCD0=;
+	s=k20201202; t=1730159101;
+	bh=5COAbv3VoIHsgbAwNn1ky7bzcLv3VohmsdFzVQBHrOc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CKHCl6rs42Z1Ijgn7WEAnUb20e/btZs665SvomSIANBuBXzlHA1HjIBtgIEfLVUQq
-	 nwPVOZWGKEwWueNFd3wzc6DFjIgvT/9/X7FTpB+fRcpLcTrvjywW/6AjZJBcD6Fwme
-	 4QeUyVjjk+LbLu4aTpAS57AcEKNBSvtoagvkxoOk6c1RT2y8hqLicXf37HX+yEqSEy
-	 B6wg7WTzGHH5UXSP+YGwEPC0BP0C32H78AKuawPmUUGbAmGpZMiT+q5GUIbr7TLapy
-	 BkgZVzCtUyJYPzJptHCtzqIhTC/snZBuAa5zoLDHS8Uqag0uIG+DGpL//bPUp1XXgh
-	 AdRmlfVQKTv1Q==
-Date: Mon, 28 Oct 2024 16:40:16 -0700
+	b=H+NNTwvvL2PrGedyo8EhCWjLLnF3FekeUL33JewZHd3tJpDIbbCQquhagOvV8AkZu
+	 As3rZTXbM+naBTPSx2w+a98a1EBhB/Ormnnf10Sk+6B1T5NsQDfb7qo1nNkEJjzmZJ
+	 fHL3wSWM9HCI00zRU+8J/r9ncxZ6I6no3bmETD8JtBmMNqV2QHtwDB4A9jqLZw54K0
+	 xp5cMIhp5/d/fQEludaOh5SyJgGV8tK56W6ney2AvNSuqUjpKpiy6jgqVPXPt3wgFs
+	 aNtYDeVlEMWVCi0tf5hog5ToIW92Be3nxKiUknZqfY6C2LYP3xQBa113o0x2HgHx+U
+	 4XsIgL/KtGHbw==
+Date: Mon, 28 Oct 2024 16:44:58 -0700
 From: Kees Cook <kees@kernel.org>
-To: Johannes Berg <johannes@sipsolutions.net>
-Cc: Andrew Lunn <andrew@lunn.ch>,
+To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc: vvvvvv@google.com, Johannes Berg <johannes@sipsolutions.net>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	David Ahern <dsahern@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, Simon Horman <horms@kernel.org>
-Subject: Re: [PATCH v2 1/4][next] uapi: socket: Introduce struct
- sockaddr_legacy
-Message-ID: <202410281637.8CF1EA8AE7@keescook>
-References: <cover.1729802213.git.gustavoars@kernel.org>
- <23bd38a4bf024d4a92a8a634ddf4d5689cd3a67e.1729802213.git.gustavoars@kernel.org>
- <66641c32-a9fb-4cd6-b910-52d2872fad3d@lunn.ch>
- <bc7d77fdbe97edc3481f9f73a438742651bd4b8b.camel@sipsolutions.net>
+	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] wifi: nl80211: fix bounds checker error in
+ nl80211_parse_sched_scan
+Message-ID: <202410281644.77B7BEF8E@keescook>
+References: <20241028-nl80211_parse_sched_scan-bounds-checker-fix-v1-1-bb640be0ebb7@google.com>
+ <bf27a7bf-04ce-4720-a13c-f19e0069541a@embeddedor.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -53,27 +46,63 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <bc7d77fdbe97edc3481f9f73a438742651bd4b8b.camel@sipsolutions.net>
+In-Reply-To: <bf27a7bf-04ce-4720-a13c-f19e0069541a@embeddedor.com>
 
-On Mon, Oct 28, 2024 at 09:47:08PM +0100, Johannes Berg wrote:
-> On Mon, 2024-10-28 at 21:38 +0100, Andrew Lunn wrote:
-> > > As this new struct will live in UAPI, to avoid breaking user-space code
-> > > that expects `struct sockaddr`, the `__kernel_sockaddr_legacy` macro is
-> > > introduced. This macro allows us to use either `struct sockaddr` or
-> > > `struct sockaddr_legacy` depending on the context in which the code is
-> > > used: kernel-space or user-space.
-> > 
-> > Are there cases of userspace API structures where the flexiable array
-> > appears in the middle?
+On Mon, Oct 28, 2024 at 04:54:43PM -0600, Gustavo A. R. Silva wrote:
 > 
-> Clearly, it's the case for all the three other patches in this series.
+> 
+> On 28/10/24 16:18, Aleksei Vetrov via B4 Relay wrote:
+> > From: Aleksei Vetrov <vvvvvv@google.com>
+> > 
+> > The channels array in the cfg80211_scan_request has a __counted_by
+> > attribute attached to it, which points to the n_channels variable. This
+> > attribute is used in bounds checking, and if it is not set before the
+> > array is filled, then the bounds sanitizer will issue a warning or a
+> > kernel panic if CONFIG_UBSAN_TRAP is set.
+> > 
+> > This patch sets the size of allocated memory as the initial value for
+> > n_channels. It is updated with the actual number of added elements after
+> > the array is filled.
+> > 
+> 
+> This should include the following tag (and probably CC stable):
+> 
+> Fixes: aa4ec06c455d ("wifi: cfg80211: use __counted_by where appropriate")
 
-The issue is that the kernel uses these structures, and the kernel's view
-of sockaddr is that it (correctly) has a flexible array.  Userspace's view
-of sockaddr is the old struct (which comes from the libc, not the kernel)
-which ends with a fake flexible array. We need to correct the kernel's
-view of these structures to use the introduced legacy struct to avoid
-lying to the compiler about what's going on. :)
+Agreed.
+
+Reviewed-by: Kees Cook <kees@kernel.org>
+
+-Kees
+
+> 
+> Thanks
+> --
+> Gustavo
+> 
+> > Signed-off-by: Aleksei Vetrov <vvvvvv@google.com>
+> > ---
+> >   net/wireless/nl80211.c | 1 +
+> >   1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
+> > index d7d099f7118ab5d5c745905abdea85d246c2b7b2..9b1b9dc5a7eb2a864da7b0212bc6a156b7757a9d 100644
+> > --- a/net/wireless/nl80211.c
+> > +++ b/net/wireless/nl80211.c
+> > @@ -9776,6 +9776,7 @@ nl80211_parse_sched_scan(struct wiphy *wiphy, struct wireless_dev *wdev,
+> >   	request = kzalloc(size, GFP_KERNEL);
+> >   	if (!request)
+> >   		return ERR_PTR(-ENOMEM);
+> > +	request->n_channels = n_channels;
+> >   	if (n_ssids)
+> >   		request->ssids = (void *)request +
+> > 
+> > ---
+> > base-commit: 81983758430957d9a5cb3333fe324fd70cf63e7e
+> > change-id: 20241028-nl80211_parse_sched_scan-bounds-checker-fix-c5842f41b863
+> > 
+> > Best regards,
+> 
 
 -- 
 Kees Cook
