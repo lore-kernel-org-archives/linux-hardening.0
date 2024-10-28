@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12DE61DEFF3;
-	Mon, 28 Oct 2024 23:35:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F3271E0B62;
+	Mon, 28 Oct 2024 23:37:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730158557; cv=none; b=QdOzEXNYWdfAI+01YL+PS9/M7LG0xW3isrP8sZHMWb3TDDPrzZXmb1mS3k1y4+P/VVVXnsqS6YM84G0MXj7lA4lI7C40R1eW1Kx56zb/T+L/YOlUFM6c9z/wV8xyjUdqEp3EHZGCUrT7hPb5C18jeSVEv8V+H/EOEU6ZefhJmDA=
+	t=1730158637; cv=none; b=OFhFSa5sUaLTbJKii3ms2puFnDNu6KHWk1iUrD82LnbaglHNW3V0us+nGCo/YjImIbUuXq3pA41hfTGdILlkthR4kDeYeTatZ0btnjAMVv9kDZJsOV7OZ3M5jP3R8TjtKIz5wsdvPgbComaba+Wjt/WQlBpbo7F6OC5G58IsFyM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730158557; c=relaxed/simple;
-	bh=W8pfZA6viHHs7pAzU1HH7Szrm0NhNriF9ySxCegfBKU=;
+	s=arc-20240116; t=1730158637; c=relaxed/simple;
+	bh=S47lYuLvJr2byEk7lZ68+wZXEnpqqU3QlilyzPP2pTQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eTmMgTycpNnPZQKtx0Q8pQ7WAlpTUoOaIWoNl11htUZMHalTenbez0nnUuuhao1zD7Hq60eVjWkPVdfdaF75Lgbe9Gaj40oO8hlsvDsH63hXCR7YNMCixMrShB8UoVK5GTS3fwfZpZNugFp0WMmcijyeGxisUib0zYzBkEMSdoE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=prgVaey4; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=UtbY041V7S5HIB2xh448GbZph7AOpAh/HA3rwP/oeH8U90g3GVRaP5f34jICxgzKRJ6ZfoGmjsnvzq2E1w8SQFox+W7B275lSabGyjsrccNrXTTF1G5rOnPpAHw/30rYsQ0VPIPQ3F9Yw57e+a+D2J4sBFGQPhtg6uB4hiHOIp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oLZqu6YZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="prgVaey4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFB3FC4CEE4;
-	Mon, 28 Oct 2024 23:35:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oLZqu6YZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1313C4CEC3;
+	Mon, 28 Oct 2024 23:37:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730158556;
-	bh=W8pfZA6viHHs7pAzU1HH7Szrm0NhNriF9ySxCegfBKU=;
+	s=k20201202; t=1730158637;
+	bh=S47lYuLvJr2byEk7lZ68+wZXEnpqqU3QlilyzPP2pTQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=prgVaey474iHPt6HYLMSg2uJPxffSYIyIZvoqws18LwgAOyM2w7xP8dnzqK0mpYyt
-	 2SS9A5yjZIcn62mKMJc9vkfX2by1wXDsETO1LtO72QKZ4E/DF2HK2ETYS7y9GLea5J
-	 SAOldJdTRA8fBh46bBLA5gLLg222gcFFK3lerTx3qyytVOP1llYDUo8CCovsAG42N/
-	 RVZKlT43LETpa/eolyNkatl4rgz4Eb//Zla5rk/ChxPvxBQA83KboP8cZUej/d0g+n
-	 lN5h/AaZGzV9cHdItsW76mgIncNEQAjJS4ImO6LY6aIeEdnrwhj8yQU1/PgZLioHbZ
-	 JVBvTLAJupwoA==
-Date: Mon, 28 Oct 2024 16:35:53 -0700
+	b=oLZqu6YZKO6pIOVA84u2CXTBq/CHtCq7is5wPbCe6aEDMmS5kdRP6uXbjz0u9+Fwo
+	 P3ofV5oNNwlSvahrN2hCm+M7mWgv0NwNu112S5CWcRp2osulnb33UVoFVO/mvIqa+9
+	 Sc9/vfMJCLfS29o7yCvvPlU+eaSNQvGmOgkjJVPHIOdIJhQWX/nI4LLp8NXpH9Cq2z
+	 4vliL78nJRLeRV3A9MgXLpPhF8VojI3vbelczSz2RXq/rtSedS2WLNvf+Ko1T3n1BX
+	 MA9bHIBBARLbzpOnLFNcCUjmzuMpbbhoNKmUJahb2f6qVJ6fpQK6hr1lVqD+kNcpcK
+	 ZDeD1Hfb9Z4yQ==
+Date: Mon, 28 Oct 2024 16:37:14 -0700
 From: Kees Cook <kees@kernel.org>
 To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
 Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
@@ -35,13 +35,13 @@ Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
 	"David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
 	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, Simon Horman <horms@kernel.org>
-Subject: Re: [PATCH v2 3/4][next] uapi: net: arp: Avoid
+	Simon Horman <horms@kernel.org>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 4/4][next] uapi: net: Avoid
  -Wflex-array-member-not-at-end warnings
-Message-ID: <202410281635.3BC028D@keescook>
+Message-ID: <202410281637.68A4BCF7@keescook>
 References: <cover.1729802213.git.gustavoars@kernel.org>
- <903f37962945fe0aa46e1d05c2a05f39571a53fa.1729802213.git.gustavoars@kernel.org>
+ <cc80c778ce791f3f0a873b01aecb90934d6fd17a.1729802213.git.gustavoars@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -50,25 +50,28 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <903f37962945fe0aa46e1d05c2a05f39571a53fa.1729802213.git.gustavoars@kernel.org>
+In-Reply-To: <cc80c778ce791f3f0a873b01aecb90934d6fd17a.1729802213.git.gustavoars@kernel.org>
 
-On Thu, Oct 24, 2024 at 03:13:45PM -0600, Gustavo A. R. Silva wrote:
+On Thu, Oct 24, 2024 at 03:14:31PM -0600, Gustavo A. R. Silva wrote:
 > -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
 > getting ready to enable it, globally.
 > 
 > Address the following warnings by changing the type of the middle struct
 > members in a couple of composite structs, which are currently causing
-> trouble, from `struct sockaddr` to `struct __kernel_sockaddr_legacy`.
+> trouble, from `struct sockaddr` to `struct __kernel_sockaddr_legacy` in 
+> UAPI, and `struct sockaddr_legacy` for the rest of the kernel code.
 > 
-> include/uapi/linux/if_arp.h:118:25: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> include/uapi/linux/if_arp.h:119:25: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> include/uapi/linux/if_arp.h:121:25: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> include/uapi/linux/if_arp.h:126:25: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> include/uapi/linux/if_arp.h:127:25: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> include/uapi/linux/route.h:33:25: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> include/uapi/linux/route.h:34:25: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> include/uapi/linux/route.h:35:25: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end
+> include/net/compat.h:34:25: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> include/net/compat.h:35:25: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 > 
-> Also, refactor some related code, accordingly.
+> Also, update some related code, accordingly.
 > 
 > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+
+Looks right, including the helper prototype update.
 
 Reviewed-by: Kees Cook <kees@kernel.org>
 
