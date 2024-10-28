@@ -1,69 +1,83 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DF4C1E0B7A;
-	Mon, 28 Oct 2024 20:38:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D827618D649;
+	Mon, 28 Oct 2024 20:47:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730147934; cv=none; b=bHpusQkVitGE8apQdFyR5DmXexAiaH/HCVPdmMkxG9i1yof8kK7fRt2qMX1INjYyCSyYgaOqsVpi5ZYdLVkoVpoM2MnxKJjj1KBV6OSLMxLUV1HC24vE+w/5alCeI+AypURiG1krhmxsVH6+HqBfj9WDOxZWydO6nVfVrHsS1j0=
+	t=1730148437; cv=none; b=ViwFYPFe7scm3CTiBV+WlL6/gUxOMnAgP4aM+gTGxHJDS1tNL2uNuNwJuFyKBsXMRBN53ccTDMf/ieMUo9ZTj9ckkOrZ56TmNC+xNnnuTCK9ADRiVRvV/G5Wlk0KxPihNtItds+qFcdO+KJv2g0fctjXetpv+OWFb7+rDqS7SGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730147934; c=relaxed/simple;
-	bh=0SHhwMvBQ0R/VwzQbIYNd7Gy0atuINm9sxnfjq3nmGw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mbWHh+jC9LN0nSvI6/3sBAiMPPOJmeau7htCIRSyCxicuQuKznu9wgYYhLwmCwIRJfEA3H1roCvZMEQsPmpNm+1/ELcd1CNUD440sCWRRTXC4WrBPpPIDH1cO6XmXYSqFSZnaahrCCi8KDC/1Y5DJqY+NO6OFuu693BZxW/if1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=dC8/TwOH; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1730148437; c=relaxed/simple;
+	bh=9zhy4+xfsoY/yelPEXafdYgdMnBrE4lgFH5t3MkDVaM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ROxP7hAf1WQHn4PpZbeZEufbjULkI/yVJ982UrG1LMxbvgCBgJ6LBKdUMD7JCe9Pp/PmcQwttc4KuW4WLBHd0rCeVP28MOCvlFhVGrBzRa0sXTCCz+1A2BBFJw71IMvHQXany+zBQaRCH2v4lnH8bbgWXEAPMX9B3SNbkze80RY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=Zf8Q3oMW; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="dC8/TwOH"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=0cyChLLmUWYrZilbG+gZNOZFe7OHGrSoufugVIJy4Og=; b=dC8/TwOHMmChIkwoaPwsvpOWwg
-	n7VREjt24R6PPg8Ts918jTJqwKotUYuMH/bgWI03PrzGNq67+jWGDFi3Mei4ZSQqUpLRQmy2YmLB2
-	5s5WxtnD0nR8NbUt70pmG7UltPqWOcrdW+bUssN1YekgV4FCpBucJ90ka+XWsX50k4+M=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1t5WVi-00BULE-L0; Mon, 28 Oct 2024 21:38:46 +0100
-Date: Mon, 28 Oct 2024 21:38:46 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	David Ahern <dsahern@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, Kees Cook <kees@kernel.org>,
-	Simon Horman <horms@kernel.org>
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="Zf8Q3oMW"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=9zhy4+xfsoY/yelPEXafdYgdMnBrE4lgFH5t3MkDVaM=;
+	t=1730148434; x=1731358034; b=Zf8Q3oMWL6SkyN8ILTcgGD0wN0mDy94Rl5Lq150WXAFDUTV
+	CS0+fZ+m/C024Wgmc6yYhk4avlXq7RFSTe8zpOsRtw5TygawUJd2GdCJzl7HuP2XUQzqN+Tjw26zK
+	lYuO5hbv1zbjMNCAtV8HcXNIQnHnbJreea3JQNovW030nSvEYomgaEV7GLt5buVbKsWHZNHHpRe5o
+	veZI8sWEBqqNSF+AP499lB4w2q1Cfol+7VaReczhkjuBVxwi5KrWzXoROjCQH1PVmQK0fL8MFy7u1
+	0R+gxBQMl/WbINVh0VZ9T49Jbgw4AlNO02MUYHzmdlaSm8gA37uu+M9iKFxL4EMA==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.98)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1t5Wdp-00000007PAV-1Uhr;
+	Mon, 28 Oct 2024 21:47:09 +0100
+Message-ID: <bc7d77fdbe97edc3481f9f73a438742651bd4b8b.camel@sipsolutions.net>
 Subject: Re: [PATCH v2 1/4][next] uapi: socket: Introduce struct
  sockaddr_legacy
-Message-ID: <66641c32-a9fb-4cd6-b910-52d2872fad3d@lunn.ch>
+From: Johannes Berg <johannes@sipsolutions.net>
+To: Andrew Lunn <andrew@lunn.ch>, "Gustavo A. R. Silva"
+ <gustavoars@kernel.org>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, David Ahern <dsahern@kernel.org>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+ <pabeni@redhat.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-hardening@vger.kernel.org, Kees Cook <kees@kernel.org>, Simon Horman
+ <horms@kernel.org>
+Date: Mon, 28 Oct 2024 21:47:08 +0100
+In-Reply-To: <66641c32-a9fb-4cd6-b910-52d2872fad3d@lunn.ch>
 References: <cover.1729802213.git.gustavoars@kernel.org>
- <23bd38a4bf024d4a92a8a634ddf4d5689cd3a67e.1729802213.git.gustavoars@kernel.org>
+	 <23bd38a4bf024d4a92a8a634ddf4d5689cd3a67e.1729802213.git.gustavoars@kernel.org>
+	 <66641c32-a9fb-4cd6-b910-52d2872fad3d@lunn.ch>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <23bd38a4bf024d4a92a8a634ddf4d5689cd3a67e.1729802213.git.gustavoars@kernel.org>
+X-malware-bazaar: not-scanned
 
-> As this new struct will live in UAPI, to avoid breaking user-space code
-> that expects `struct sockaddr`, the `__kernel_sockaddr_legacy` macro is
-> introduced. This macro allows us to use either `struct sockaddr` or
-> `struct sockaddr_legacy` depending on the context in which the code is
-> used: kernel-space or user-space.
+On Mon, 2024-10-28 at 21:38 +0100, Andrew Lunn wrote:
+> > As this new struct will live in UAPI, to avoid breaking user-space code
+> > that expects `struct sockaddr`, the `__kernel_sockaddr_legacy` macro is
+> > introduced. This macro allows us to use either `struct sockaddr` or
+> > `struct sockaddr_legacy` depending on the context in which the code is
+> > used: kernel-space or user-space.
+>=20
+> Are there cases of userspace API structures where the flexiable array
+> appears in the middle?
 
-Are there cases of userspace API structures where the flexiable array
-appears in the middle? I assume this new compiler flag is not only for
-use in the kernel? When it gets turned on in user space, will the
-kernel headers will again produce warnings? Should we be considering
-allowing user space to opt in to using sockaddr_legacy?
+Clearly, it's the case for all the three other patches in this series.
 
-    Andrew
+> I assume this new compiler flag is not only for
+> use in the kernel? When it gets turned on in user space, will the
+> kernel headers will again produce warnings? Should we be considering
+> allowing user space to opt in to using sockaddr_legacy?
+
+For the userspace covered by patch 2 this will almost certainly never
+happen, and I suspect that might also be true for the others (arp and
+rtnetlink ioctls)? But it probably wouldn't be difficult either.
+
+johannes=20
