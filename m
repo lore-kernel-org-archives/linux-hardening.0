@@ -1,148 +1,165 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fhigh-a6-smtp.messagingengine.com (fhigh-a6-smtp.messagingengine.com [103.168.172.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABEE5205132;
-	Tue, 29 Oct 2024 13:58:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73C1F42A92;
+	Tue, 29 Oct 2024 14:01:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730210308; cv=none; b=U3K1xhG/cnAepwja+/AliKSCStGWfTi5Chrlqx4AhGcZ4UTQHh+1sR/gqhRAWK+jszJVOD/Z9tZQHuMeisc+HaOtW2QhNFtUsD8mM5vBGAj318v6sg+nN8zllxw5rNdB1lc9N/uTSc25Ia5ievxli6slAORbONABABpp1qBn8qI=
+	t=1730210502; cv=none; b=DsPWf//vdKIHMTNKB+ejnwv+2RiJxPSQ+lSUDtXO3oDnuT+E85O1jq7peyTZH1uN1W44GqRNnJ9+xBNNSjkJJt2XLLuErhCFg8OxQXI+DeOLJ/2AU/MHPN3muJqhiSC5iIw3n4L5Tks375Hf+weqi27M3aG1kTEVjn2W7ndS9Dw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730210308; c=relaxed/simple;
-	bh=vktD3GCLEQAMtQOzwOy/IRI7jk8/690oaYIIDrmfHZk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KmgDrNvA2UJMJUJtX6DUb3IXgRdOyQ+wp7dtZtgGz3muUeMW5sbH6at9KRpVPwfGZstc/cfJRkhxnmxWQHsTPrJhcN5HV9yEivfeSWrhSVg7gnPW0tIB3boYXRoY4+wuzexXZL0QXnBJhbvLyPS9LmS0KNzdpqaFwdBTPmh4PAA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vCR6xciX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1730210502; c=relaxed/simple;
+	bh=lrEcALA54EnYbsUNXZKeqw58RzvlXHhpQO01rUMxDn8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CfqZpWWKTGz8mXLbRYVuzBiTXxDn2MlwKdLoKje+OjlZJt9sGsQWp9O2KMJXeT7gY0tfCAZO7JSTqPmoEpI01ljcx0NSabWvTihhR4h9FhabrH7TnTbiXBV0YHU8CliY/yLiABJRsHQ3CQXp7CazWarQhuMbJpt5/9L4mG56aX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jfarr.cc; spf=pass smtp.mailfrom=jfarr.cc; dkim=pass (2048-bit key) header.d=jfarr.cc header.i=@jfarr.cc header.b=l1igGmFB; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=NGoSjQLb; arc=none smtp.client-ip=103.168.172.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jfarr.cc
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jfarr.cc
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vCR6xciX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9182CC4CECD;
-	Tue, 29 Oct 2024 13:58:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730210306;
-	bh=vktD3GCLEQAMtQOzwOy/IRI7jk8/690oaYIIDrmfHZk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=vCR6xciXAjtCf4uI69SdztBKpQ+3iTjlDKkNBe7eqBsFJgNXRVbqjHaGQnanWO+Q/
-	 0SSfLWntmcwrWPl7cQo8VXJB9enIvRHSYz0WL0Uc5y67h0lcvN0guLgWDVeDqTuhCw
-	 /uCcKXti/6kglCcwRCtuYPf0U1JSvwhSr9/9sqIbkSdN8Sc23gdfRFx1vCLLidPXmm
-	 7ikFxKSyIV1Ir+u7KI4Ors9VA5Zx1zRCccTCGWL+zGMrvEQZJ6k74nOhwt6B9/W6TZ
-	 eRjRBR5jnX25da9eDunnKGYUryq/g7ohz5cKc/ZlWABNBoLOY/1SJbck3RDCTMbVm7
-	 wiFoTOcNH2ZVQ==
-Date: Tue, 29 Oct 2024 06:58:24 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Michael Chan <michael.chan@broadcom.com>, Andrew Lunn
- <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Potnuri
- Bharat Teja <bharat@chelsio.com>, Christian Benvenuti <benve@cisco.com>,
- Satish Kharat <satishkh@cisco.com>, Manish Chopra <manishc@marvell.com>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 2/2][next] net: ethtool: Avoid thousands of
- -Wflex-array-member-not-at-end warnings
-Message-ID: <20241029065824.670f14fc@kernel.org>
-In-Reply-To: <f4f8ca5cd7f039bcab816194342c7b6101e891fe.1729536776.git.gustavoars@kernel.org>
-References: <cover.1729536776.git.gustavoars@kernel.org>
-	<f4f8ca5cd7f039bcab816194342c7b6101e891fe.1729536776.git.gustavoars@kernel.org>
+	dkim=pass (2048-bit key) header.d=jfarr.cc header.i=@jfarr.cc header.b="l1igGmFB";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="NGoSjQLb"
+Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id A096C11400FE;
+	Tue, 29 Oct 2024 10:01:38 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-12.internal (MEProxy); Tue, 29 Oct 2024 10:01:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jfarr.cc; h=cc
+	:cc:content-transfer-encoding:content-type:date:date:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to; s=fm2; t=1730210498; x=1730296898; bh=p4jsg3LM+d9z1ul1hzPOU
+	tHu1EHhd/xb0I4yaFVNKtI=; b=l1igGmFBYfP+rqdbAOk/oAjd+FpPgcJp7aYtx
+	FkhN7w/ste9oPDLfVkhLmW3MetFKSfSOCLI8o5CQw6Vt7U/OYk2YbMJm/VH7WoKU
+	LS74TjW7zSUcKsfzW0vfH9KWQ/ene7eIA9ijobdr0EyeU1tzFVK/SAV3YgjLRQ59
+	/PLftZ0HEebWv/7/aRpaJr7iA6LGUyQFRPemIIod+kv/p3xvNn9+UV4W4GI27JwO
+	d6zJ6SA2rINMlHMp3CiNphb7xvtnOI4ih5dqyGE+KoR7AraxYpguw6GODtZ6iddf
+	08M+eKJAVGpiNbXURf9kcb8aFPwyIv5kHTsrklpa+P8imr5Qg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1730210498; x=1730296898; bh=p4jsg3LM+d9z1ul1hzPOUtHu1EHhd/xb0I4
+	yaFVNKtI=; b=NGoSjQLbkYEqNFzwq/YrHsW1c2tdnR7KSbG1YCn/fSr8eEK+FcH
+	zTT3icvAUzVt5k3HfYfRovDpFEukd+qwbel9VIBPaROHhciq1RH6nnXxBMoF5RAV
+	gzD4lXGkZc9wNJNyNx2ZS5kCUrxwm+Twx4Cufy1L0G3db8as5Ro7fmzlOD1iyApc
+	d4fpr54l5CtOif8s6EJ++h+NHcCg2YMIA8etSvRATKQ5gdRBpsTxIS1s3XZd90lE
+	uGAgVQnzL2KIOBjM9P6u+7jH0WDiRMF0mO1swICpUXXukBcJASaX1veqhvb8a6UX
+	V1pUMpsSHTvjGSUwOQ3oKrKjRdCI13JeSkQ==
+X-ME-Sender: <xms:weogZ7E8p7NBxuD3kPFzIkAmIRS7BZNMCKkP8wzRN0yMnPyvie9eVw>
+    <xme:weogZ4X53XcWE1kA4vrKEMt_zCeneApyfQMv5zPXmdA9kkho5EvQMc3qnUUmG85HV
+    qKbrm1HJh1qZMF8xNo>
+X-ME-Received: <xmr:weogZ9ITrctCXhR1ptzuL_6VkKEnFMmYCHSIVAzlPXVo_voY39DUqP8jz1TkH69zw-MvHWqDS8_YsoW-d7TaBmgIM51KIGM>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvdekuddgheehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucgfrhhlucfvnfffucdlud
+    dtmdenucfjughrpefhvfevufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeflrghn
+    ucfjvghnughrihhkucfhrghrrhcuoehkvghrnhgvlhesjhhfrghrrhdrtggtqeenucggtf
+    frrghtthgvrhhnpeeluddtuedtieeguefhleefkefhieefkeetheehvdetieevhfethfet
+    uedtffegffenucffohhmrghinhepghhithhhuhgsrdgtohhmpdhkvghrnhgvlhdrohhrgh
+    enucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehkvghr
+    nhgvlhesjhhfrghrrhdrtggtpdhnsggprhgtphhtthhopedvtddpmhhouggvpehsmhhtph
+    houhhtpdhrtghpthhtohepkhgvvghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehn
+    rghthhgrnheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepohhjvggurgeskhgvrhhnvg
+    hlrdhorhhgpdhrtghpthhtohepnhguvghsrghulhhnihgvrhhssehgohhoghhlvgdrtgho
+    mhdprhgtphhtthhopehmohhrsghosehgohhoghhlvgdrtghomhdprhgtphhtthhopehjuh
+    hsthhinhhsthhithhtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehthhhorhhsthgv
+    nhdrsghluhhmsehtohgslhhugidrtghomhdprhgtphhtthhopegrrhgusgeskhgvrhhnvg
+    hlrdhorhhgpdhrtghpthhtohepohhlihhvvghrrdhsrghnghesihhnthgvlhdrtghomh
+X-ME-Proxy: <xmx:wuogZ5GI-95yAf4Kgun4ov5k7PqiQKHJOZXxuP90MF_8fhGIGjokVg>
+    <xmx:wuogZxUwu83Z9xKXf77HwVEG_-PC8JoBkeshapa23xitA8D8Fz3etA>
+    <xmx:wuogZ0PzKNBzklIe40wkwWlknpN6Ollo31QoEg6kEhIBiqLHhlwuRg>
+    <xmx:wuogZw1XXzoqbqnn_BatEnlyma0jZ2rGx10Cxw7Hm7dqKBFzp-Zgtw>
+    <xmx:wuogZ-2Rf-8fLb3RpDYIFujIuX9-fpK5utLlCzg7uN___qX4ifPObDTM>
+Feedback-ID: i01d149f8:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 29 Oct 2024 10:01:35 -0400 (EDT)
+From: Jan Hendrik Farr <kernel@jfarr.cc>
+To: kees@kernel.org
+Cc: nathan@kernel.org,
+	ojeda@kernel.org,
+	ndesaulniers@google.com,
+	morbo@google.com,
+	justinstitt@google.com,
+	thorsten.blum@toblux.com,
+	ardb@kernel.org,
+	oliver.sang@intel.com,
+	gustavoars@kernel.org,
+	kent.overstreet@linux.dev,
+	arnd@arndb.de,
+	gregkh@linuxfoundation.org,
+	akpm@linux-foundation.org,
+	tavianator@tavianator.com,
+	linux-hardening@vger.kernel.org,
+	llvm@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org,
+	kernel@jfarr.cc
+Subject: [PATCH 0/1] disable __counted_by for clang < 19.1.3
+Date: Tue, 29 Oct 2024 15:00:35 +0100
+Message-ID: <20241029140036.577804-1-kernel@jfarr.cc>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Mon, 21 Oct 2024 13:02:27 -0600 Gustavo A. R. Silva wrote:
-> @@ -3025,7 +3025,7 @@ static int bnxt_set_link_ksettings(struct net_device *dev,
->  {
->  	struct bnxt *bp = netdev_priv(dev);
->  	struct bnxt_link_info *link_info = &bp->link_info;
-> -	const struct ethtool_link_settings *base = &lk_ksettings->base;
-> +	const struct ethtool_link_settings_hdr *base = &lk_ksettings->base;
+Hi Kees,
 
-Please improve the variable ordering while at it. Longest list first,
-so move the @base definition first.
+Bill's PR to disable __counted_by for "whole struct" __bdos cases has now
+been merged into 19.1.3 [1], so here's the patch to disable __counted_by
+for clang versions < 19.1.3 in the kernel.
 
->  	bool set_pause = false;
->  	u32 speed, lanes = 0;
->  	int rc = 0;
-> diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ethtool.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ethtool.c
-> index 7f3f5afa864f..cc43294bdc96 100644
-> --- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ethtool.c
-> +++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ethtool.c
-> @@ -663,7 +663,7 @@ static int get_link_ksettings(struct net_device *dev,
->  			      struct ethtool_link_ksettings *link_ksettings)
->  {
->  	struct port_info *pi = netdev_priv(dev);
-> -	struct ethtool_link_settings *base = &link_ksettings->base;
-> +	struct ethtool_link_settings_hdr *base = &link_ksettings->base;
+Hopefully in the near future __counted_by for whole struct __bdos can be
+enabled once again in coordination between the kernel, gcc, and clang.
+There has been recent progress on this in [2] thanks to Tavian.
 
-ditto
+Also see previous discussion on the mailing list [3]
 
->  	/* For the nonce, the Firmware doesn't send up Port State changes
->  	 * when the Virtual Interface attached to the Port is down.  So
-> @@ -719,7 +719,7 @@ static int set_link_ksettings(struct net_device *dev,
->  {
->  	struct port_info *pi = netdev_priv(dev);
->  	struct link_config *lc = &pi->link_cfg;
-> -	const struct ethtool_link_settings *base = &link_ksettings->base;
-> +	const struct ethtool_link_settings_hdr *base = &link_ksettings->base;
+Thanks to everyone for moving this issue along. In particular, Bill for
+his PR to clang/llvm, Kees and Thorsten for reproducers of the two issues,
+Nathan for Kconfig-ifying this patch, and Miguel for reviewing.
 
-and here
 
->  	struct link_config old_lc;
->  	unsigned int fw_caps;
->  	int ret = 0;
-> diff --git a/drivers/net/ethernet/chelsio/cxgb4vf/cxgb4vf_main.c b/drivers/net/ethernet/chelsio/cxgb4vf/cxgb4vf_main.c
-> index 2fbe0f059a0b..0d85ac342ac7 100644
-> --- a/drivers/net/ethernet/chelsio/cxgb4vf/cxgb4vf_main.c
-> +++ b/drivers/net/ethernet/chelsio/cxgb4vf/cxgb4vf_main.c
-> @@ -1437,7 +1437,7 @@ static int cxgb4vf_get_link_ksettings(struct net_device *dev,
->  				  struct ethtool_link_ksettings *link_ksettings)
->  {
->  	struct port_info *pi = netdev_priv(dev);
-> -	struct ethtool_link_settings *base = &link_ksettings->base;
-> +	struct ethtool_link_settings_hdr *base = &link_ksettings->base;
+Info for the stable team:
 
-and here
+This patch should be backported to kernels >= 6.6 to make sure that those
+build correctly with the effected clang versions. This patch cherry-picks
+cleanly onto linux-6.11.y. For linux-6.6.y three prerequiste commits are
+neded:
 
->  	/* For the nonce, the Firmware doesn't send up Port State changes
->  	 * when the Virtual Interface attached to the Port is down.  So
-> diff --git a/drivers/net/ethernet/cisco/enic/enic_ethtool.c b/drivers/net/ethernet/cisco/enic/enic_ethtool.c
-> index f7986f2b6a17..8670eb394fad 100644
-> --- a/drivers/net/ethernet/cisco/enic/enic_ethtool.c
-> +++ b/drivers/net/ethernet/cisco/enic/enic_ethtool.c
-> @@ -130,7 +130,7 @@ static int enic_get_ksettings(struct net_device *netdev,
->  			      struct ethtool_link_ksettings *ecmd)
->  {
->  	struct enic *enic = netdev_priv(netdev);
-> -	struct ethtool_link_settings *base = &ecmd->base;
-> +	struct ethtool_link_settings_hdr *base = &ecmd->base;
+16c31dd7fdf6: Compiler Attributes: counted_by: bump min gcc version
+2993eb7a8d34: Compiler Attributes: counted_by: fixup clang URL
+231dc3f0c936: lkdtm/bugs: Improve warning message for compilers without counted_by support
 
-and here
+There are still two merge conflicts even with those prerequistes.
+Here's the correct resolution:
 
->  	ethtool_link_ksettings_add_link_mode(ecmd, supported,
->  					     10000baseT_Full);
+1. include/linux/compiler_types.h:
+	use the incoming change until before (but not including) the
+        "Apply __counted_by() when the Endianness matches to increase test coverage."
+        comment
 
-> @@ -62,7 +62,7 @@ static int linkmodes_reply_size(const struct ethnl_req_info *req_base,
->  {
->  	const struct linkmodes_reply_data *data = LINKMODES_REPDATA(reply_base);
->  	const struct ethtool_link_ksettings *ksettings = &data->ksettings;
-> -	const struct ethtool_link_settings *lsettings = &ksettings->base;
-> +	const struct ethtool_link_settings_hdr *lsettings = &ksettings->base;
+2. lib/overflow_kunit.c: 
+	HEAD is correct
 
-here it was correct and now its not
+[1] https://github.com/llvm/llvm-project/pull/112786
+[2] https://github.com/llvm/llvm-project/pull/112636
+[3] https://lore.kernel.org/lkml/3E304FB2-799D-478F-889A-CDFC1A52DCD8@toblux.com/T/#m204c09f63c076586a02d194b87dffc7e81b8de7b
 
->  	bool compact = req_base->flags & ETHTOOL_FLAG_COMPACT_BITSETS;
->  	int len, ret;
->  
-> @@ -103,7 +103,7 @@ static int linkmodes_fill_reply(struct sk_buff *skb,
->  {
->  	const struct linkmodes_reply_data *data = LINKMODES_REPDATA(reply_base);
->  	const struct ethtool_link_ksettings *ksettings = &data->ksettings;
-> -	const struct ethtool_link_settings *lsettings = &ksettings->base;
-> +	const struct ethtool_link_settings_hdr *lsettings = &ksettings->base;
+Best Regards
+Jan
 
-same
+Jan Hendrik Farr (1):
+  Compiler Attributes: disable __counted_by for clang < 19.1.3
 
->  	bool compact = req_base->flags & ETHTOOL_FLAG_COMPACT_BITSETS;
->  	int ret;
+ drivers/misc/lkdtm/bugs.c           |  2 +-
+ include/linux/compiler_attributes.h | 13 -------------
+ include/linux/compiler_types.h      | 19 +++++++++++++++++++
+ init/Kconfig                        |  9 +++++++++
+ lib/overflow_kunit.c                |  2 +-
+ 5 files changed, 30 insertions(+), 15 deletions(-)
+
+-- 
+2.47.0
+
