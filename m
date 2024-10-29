@@ -1,96 +1,208 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE7E5192D9E
-	for <linux-hardening@vger.kernel.org>; Tue, 29 Oct 2024 15:14:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 505891D7985
+	for <linux-hardening@vger.kernel.org>; Tue, 29 Oct 2024 16:55:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730214900; cv=none; b=HLrZ1vaIiCw0F/wRDQrSqcw5hqhDKvifgLduIV7y7rvB2XHVjgKjuyWA4qiIMLZkXKF+xSByMxJKy+uHGxM3tgWZlEU3erKKLgdr4nF29UjOBMstKrRw9jRLVR1biOX8KQV5ngEQ7v4ql5oTPM9qdlS5tmLk2/MKTGoi+9xQgDI=
+	t=1730220935; cv=none; b=AbtlYA7Pl19nRjD3mSA5/rI+FH3/rQkWzaksRg4P1xRN2S+2Dx4EqCwoc2fa2VcLARcv10Nn16SVesT5qCwNEJPc7MIab6CI0wLCi1mqUofO8ujoOch1HMblfSG9C1cvZqIUxJQkHZIYcY3hs2jn9Z+fviS4vU4X6QvFTumWjAE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730214900; c=relaxed/simple;
-	bh=WEVAFJYtA9Y8eRxcAvnLv1yBU6QJV9W9DD7V7ombfd0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cPUzR1i1Yx9AI9Vi0XJnDxZxd4Ug8nfVvgsnsSSx1hNMFhvgJXvyerdCECHWwZdZyKQ8G7U+zceuTJvGwfg6z3peLVHs3B5BoEhClgf7B4Gco0ODCoejEWeuAzmR9s4vJv5NVVumAuy4ASVl8oJ778FvZM40a4qqMXZeLWmgqrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sk/FAPPB; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1730220935; c=relaxed/simple;
+	bh=X0jaiMvCjJEEhd7RT+IguPkikO8YjtAW97ZeFQNx5/8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SXHNsYuzzGo9pU2HokEjs9tw8NbQLP8yHW9THZO0dwIBOxP7i3cypxGMbsk799/yAYUp+tjdIlM9liXeeaXmLgFMKcl+yGRgFmWHYenN+07GSAWZ/VjdXTEBZqKboM2nY3cktaj2Bs8j4pffCSKmjC1PqCX3I5g6Ge7Z0npnpRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=gPUqdL4C; arc=none smtp.client-ip=35.89.44.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sk/FAPPB"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-37d4d1b48f3so4108592f8f.1
-        for <linux-hardening@vger.kernel.org>; Tue, 29 Oct 2024 08:14:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1730214897; x=1730819697; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=WEVAFJYtA9Y8eRxcAvnLv1yBU6QJV9W9DD7V7ombfd0=;
-        b=sk/FAPPBMcanj6XgUuieuWg508jt0negFuv+PV4bmlG01OBOnPpZQGJlk36qdr7YFr
-         0J1/6zO6k86Q+7+hwY7z1DI1qggMXr9yWzSX0GvG9c/e8bDQTbGZmAfMLA0on0Zt6lga
-         Ilxmuta3u05IARzoERXiVfiwMgDin20efLFw7Bqjc8PDUlCWBQe+3L929VnYHvzfeFN2
-         N5p7ymEoAcZyxLg/AWvYn2MrURs0/J90kQF3l3BYGfxApiUcjTXOU/rVO0ATOW4es2C6
-         pVin2cIfpZN6HMMqA9loNJvDTYqvk9u7g/w+Nulsp2mEQcqmZr0q8WLgbKoOD1Y9gK9q
-         q+hQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730214897; x=1730819697;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WEVAFJYtA9Y8eRxcAvnLv1yBU6QJV9W9DD7V7ombfd0=;
-        b=NtERc8z8Dp6QicOze2j2BsBIPqMsiPBp9YoxARliBOhhm5TP5B8YvdGDMttThjDO0k
-         W+g4C1B5wg9GjIheq32BJWf1pBtnkCOZIv9O6GG/y7RRrt5r+ru33fm8TvNyGQe8pF3w
-         tXV6J0oOdKv0c5TLLktdw15TK9IewG9XDoonJxohIUp4NT4Bs+oENsVPYAc4QvGSUceD
-         lfToiiz8DMyv/ufELW6VLrpZ/2SwwuhQIP1H0SQcycBwPBKtZzUMRMUGkpUXG86VVRnJ
-         RyN04Nn2OhF4TAHR/iNWTFGaAs2A0bc9tS1t1PXH5w4tmUDewmjTRx/sJXPgyHpz7Lfr
-         CyKw==
-X-Forwarded-Encrypted: i=1; AJvYcCXhQcLGGLGlOePlGKoGsrShzICITGewOXg+Pk85vQ1UyvGfASl5vMK6UVnQ6Zrpu3jtmxNUqhJzldnUtKNwSdQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzqQa0XUP2+/TXZtDnMmCC3g54rt1TysWLGsGYXE+MORyaFthMa
-	eVnoDyPp0BfC/8KBigw0KLHmuY9i8nMJRb9/SxpPIIFX1LzLA9xETIwvFIoX8w==
-X-Google-Smtp-Source: AGHT+IEvPtGdVcRU8TyR3DvwW2u3wVv8xHoeVwhinPnFxDCWGaaWXCPAv9qcGbEX9d4Eegwr9M5sCw==
-X-Received: by 2002:a05:6000:118c:b0:374:c4c2:fc23 with SMTP id ffacd0b85a97d-381b710f70bmr1760f8f.56.1730214897028;
-        Tue, 29 Oct 2024 08:14:57 -0700 (PDT)
-Received: from localhost (65.0.187.35.bc.googleusercontent.com. [35.187.0.65])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38058b71479sm12702220f8f.69.2024.10.29.08.14.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2024 08:14:56 -0700 (PDT)
-Date: Tue, 29 Oct 2024 15:14:53 +0000
-From: Aleksei Vetrov <vvvvvv@google.com>
-To: Mark Brown <broonie@kernel.org>
-Cc: "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] ASoC: dapm: fix bounds checker error in
- dapm_widget_list_create
-Message-ID: <ZyD77Y8bIP3JCAZE@google.com>
-References: <20241028-soc-dapm-bounds-checker-fix-v1-1-262b0394e89e@google.com>
- <28ade5d1-d13a-4388-bd0b-f03211937abd@embeddedor.com>
- <ZyDlAd-Z26wnhZK5@google.com>
- <da230ccf-37b6-4e43-be12-9035c594e535@sirena.org.uk>
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="gPUqdL4C"
+Received: from eig-obgw-5002a.ext.cloudfilter.net ([10.0.29.215])
+	by cmsmtp with ESMTPS
+	id 5eEstaKjfumtX5pV9tEBjV; Tue, 29 Oct 2024 16:55:27 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id 5pV8tUBwecEKu5pV8trkio; Tue, 29 Oct 2024 16:55:26 +0000
+X-Authority-Analysis: v=2.4 cv=Z7YnH2RA c=1 sm=1 tr=0 ts=6721137e
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=OKg9RQrQ6+Y1xAlsUndU0w==:17
+ a=IkcTkHD0fZMA:10 a=DAUX931o1VcA:10 a=7T7KSl7uo7wA:10
+ a=hLRBkJ6lmyVDo42-feIA:9 a=QEXdDO2ut3YA:10 a=Xt_RvD8W3m28Mn_h3AK8:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=RI3obuqQ9kDWIuhA0WGes/O5kbrhm7V31zs2payIIG8=; b=gPUqdL4Cl1PAV31UvlNTxaY8qS
+	IT3XfBCwC0vS+hk18SE9jcXSkovV1MGXCdguYO1mhQtPhODfOHqFR7lVOXOnG7Uyv+ArdUMidI3mU
+	xxcgNSDusbyTogJ1AnzjbidAsqHCK+BBN0cB1r6Kev+9aw/rTmy9xT6CKHnT2dxtgGfkArftf+xkY
+	LdeFxq8WfB6m4Ep0vk8TwQ6ptRASZ1bxbgbD1Xv+tpcDfJVHBbSMu8r+ec+Yrx1H7OQchEiFK9EZ9
+	iH0YswiYu2vTIugfu1A+fhNxESR27o3ezqokwcqHshoM/YHEnlVCXnF4+2Slzk7w/N1sPKPW2GPWh
+	LiJbZ6Eg==;
+Received: from [201.172.173.7] (port=36540 helo=[192.168.15.6])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1t5pV5-003FnW-1l;
+	Tue, 29 Oct 2024 11:55:23 -0500
+Message-ID: <f6c90a57-0cd6-4e26-9250-8a63d043e252@embeddedor.com>
+Date: Tue, 29 Oct 2024 10:55:14 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <da230ccf-37b6-4e43-be12-9035c594e535@sirena.org.uk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2][next] net: ethtool: Avoid thousands of
+ -Wflex-array-member-not-at-end warnings
+To: Jakub Kicinski <kuba@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Michael Chan <michael.chan@broadcom.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Paolo Abeni <pabeni@redhat.com>, Potnuri Bharat Teja <bharat@chelsio.com>,
+ Christian Benvenuti <benve@cisco.com>, Satish Kharat <satishkh@cisco.com>,
+ Manish Chopra <manishc@marvell.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <cover.1729536776.git.gustavoars@kernel.org>
+ <f4f8ca5cd7f039bcab816194342c7b6101e891fe.1729536776.git.gustavoars@kernel.org>
+ <20241029065824.670f14fc@kernel.org>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20241029065824.670f14fc@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.172.173.7
+X-Source-L: No
+X-Exim-ID: 1t5pV5-003FnW-1l
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.15.6]) [201.172.173.7]:36540
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfMHyy7gYWq7eDXUYrqheqdl2wxhw0TMCS7XTc+hlMQXKfMqczxiM+cH/U6YeP4zBmLSHqDF6Dbv2Oq8HEuHOX/l1ncjM6mN/KkoSFC3z4y4IWebTtxMw
+ htZcbI/iJV4kokdeE7Dq7aA90wxuXhtNsYCS0SaCTgh8fUWa8PmcIDm9tMJQOKyMo8kUIFHQ69etZ9LCDB+egmMHgvRJqC7JYtr+7+mnWnPpxSAjk/6RCJUn
 
-On Tue, Oct 29, 2024 at 02:08:32PM +0000, Mark Brown wrote:
-> That doesn't seem to have shown up here?
 
-Sorry for the mix up, I've accidentally replied in the wrong thread.
-As I said in https://lore.kernel.org/all/ZyDndtgj5vKo-wvB@google.com/:
 
-> Actually, my reply above meant to be for the nl80211 fix
-> (https://lore.kernel.org/r/20241028-nl80211_parse_sched_scan-bounds-checker-fix-v1-1-bb640be0ebb7@google.com).
+On 29/10/24 07:58, Jakub Kicinski wrote:
+> On Mon, 21 Oct 2024 13:02:27 -0600 Gustavo A. R. Silva wrote:
+>> @@ -3025,7 +3025,7 @@ static int bnxt_set_link_ksettings(struct net_device *dev,
+>>   {
+>>   	struct bnxt *bp = netdev_priv(dev);
+>>   	struct bnxt_link_info *link_info = &bp->link_info;
+>> -	const struct ethtool_link_settings *base = &lk_ksettings->base;
+>> +	const struct ethtool_link_settings_hdr *base = &lk_ksettings->base;
+> 
+> Please improve the variable ordering while at it. Longest list first,
+> so move the @base definition first.
 
-> For this fix I couldn't send v2, because it has been already applied by
-> Mark Brown. Guess I would need to send a separate message to the stable
-> team asking them to pick this patch from git.
+OK. This would end up looking like:
 
-Cheers
---
-Aleksei Vetrov
+	const struct ethtool_link_settings_hdr *base = &lk_ksettings->base;
+	struct bnxt *bp = netdev_priv(dev);
+	struct bnxt_link_info *link_info = &bp->link_info;
+
+
+
+> 
+>>   	bool set_pause = false;
+>>   	u32 speed, lanes = 0;
+>>   	int rc = 0;
+>> diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ethtool.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ethtool.c
+>> index 7f3f5afa864f..cc43294bdc96 100644
+>> --- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ethtool.c
+>> +++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ethtool.c
+>> @@ -663,7 +663,7 @@ static int get_link_ksettings(struct net_device *dev,
+>>   			      struct ethtool_link_ksettings *link_ksettings)
+>>   {
+>>   	struct port_info *pi = netdev_priv(dev);
+>> -	struct ethtool_link_settings *base = &link_ksettings->base;
+>> +	struct ethtool_link_settings_hdr *base = &link_ksettings->base;
+> 
+> ditto
+> 
+>>   	/* For the nonce, the Firmware doesn't send up Port State changes
+>>   	 * when the Virtual Interface attached to the Port is down.  So
+>> @@ -719,7 +719,7 @@ static int set_link_ksettings(struct net_device *dev,
+>>   {
+>>   	struct port_info *pi = netdev_priv(dev);
+>>   	struct link_config *lc = &pi->link_cfg;
+>> -	const struct ethtool_link_settings *base = &link_ksettings->base;
+>> +	const struct ethtool_link_settings_hdr *base = &link_ksettings->base;
+> 
+> and here
+> 
+>>   	struct link_config old_lc;
+>>   	unsigned int fw_caps;
+>>   	int ret = 0;
+>> diff --git a/drivers/net/ethernet/chelsio/cxgb4vf/cxgb4vf_main.c b/drivers/net/ethernet/chelsio/cxgb4vf/cxgb4vf_main.c
+>> index 2fbe0f059a0b..0d85ac342ac7 100644
+>> --- a/drivers/net/ethernet/chelsio/cxgb4vf/cxgb4vf_main.c
+>> +++ b/drivers/net/ethernet/chelsio/cxgb4vf/cxgb4vf_main.c
+>> @@ -1437,7 +1437,7 @@ static int cxgb4vf_get_link_ksettings(struct net_device *dev,
+>>   				  struct ethtool_link_ksettings *link_ksettings)
+>>   {
+>>   	struct port_info *pi = netdev_priv(dev);
+>> -	struct ethtool_link_settings *base = &link_ksettings->base;
+>> +	struct ethtool_link_settings_hdr *base = &link_ksettings->base;
+> 
+> and here
+> 
+>>   	/* For the nonce, the Firmware doesn't send up Port State changes
+>>   	 * when the Virtual Interface attached to the Port is down.  So
+>> diff --git a/drivers/net/ethernet/cisco/enic/enic_ethtool.c b/drivers/net/ethernet/cisco/enic/enic_ethtool.c
+>> index f7986f2b6a17..8670eb394fad 100644
+>> --- a/drivers/net/ethernet/cisco/enic/enic_ethtool.c
+>> +++ b/drivers/net/ethernet/cisco/enic/enic_ethtool.c
+>> @@ -130,7 +130,7 @@ static int enic_get_ksettings(struct net_device *netdev,
+>>   			      struct ethtool_link_ksettings *ecmd)
+>>   {
+>>   	struct enic *enic = netdev_priv(netdev);
+>> -	struct ethtool_link_settings *base = &ecmd->base;
+>> +	struct ethtool_link_settings_hdr *base = &ecmd->base;
+> 
+> and here
+> 
+>>   	ethtool_link_ksettings_add_link_mode(ecmd, supported,
+>>   					     10000baseT_Full);
+> 
+>> @@ -62,7 +62,7 @@ static int linkmodes_reply_size(const struct ethnl_req_info *req_base,
+>>   {
+>>   	const struct linkmodes_reply_data *data = LINKMODES_REPDATA(reply_base);
+>>   	const struct ethtool_link_ksettings *ksettings = &data->ksettings;
+>> -	const struct ethtool_link_settings *lsettings = &ksettings->base;
+>> +	const struct ethtool_link_settings_hdr *lsettings = &ksettings->base;
+> 
+> here it was correct and now its not
+
+I don't think you want to change this. `lsettings` is based on `ksettings`. So,
+`ksettings` should go first. The same scenario for the one below.
+
+> 
+>>   	bool compact = req_base->flags & ETHTOOL_FLAG_COMPACT_BITSETS;
+>>   	int len, ret;
+>>   
+>> @@ -103,7 +103,7 @@ static int linkmodes_fill_reply(struct sk_buff *skb,
+>>   {
+>>   	const struct linkmodes_reply_data *data = LINKMODES_REPDATA(reply_base);
+>>   	const struct ethtool_link_ksettings *ksettings = &data->ksettings;
+>> -	const struct ethtool_link_settings *lsettings = &ksettings->base;
+>> +	const struct ethtool_link_settings_hdr *lsettings = &ksettings->base;
+> 
+> same
+> 
+>>   	bool compact = req_base->flags & ETHTOOL_FLAG_COMPACT_BITSETS;
+>>   	int ret;
+> 
+
