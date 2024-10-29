@@ -1,109 +1,119 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EACC205144
-	for <linux-hardening@vger.kernel.org>; Tue, 29 Oct 2024 11:09:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A64D1DF960;
+	Tue, 29 Oct 2024 12:11:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730200147; cv=none; b=I0k0NhyFdFo0OA5AXu9Cb/KitBnMrxWZJij7nY6QmNtPf2Rg18jjDnAeIA+mzrfYUV5zXAVkPwRo3D2RykCQe1o6FsOv1NzX3iemaia0hFtYFxOpCHGZuoYI0dglpxebE1sZzJQpM/Ps5k+Iiwk+507d3MT2bevuQXM5deI9Moo=
+	t=1730203907; cv=none; b=uq0vM1be5kWphQ4bAbaR/JfWzhiifckalwvdcEzDKH5wTG8WZTFpAOAFt5kOUOYtWdIde0AnNCk+zEDuwod0l6C8xwQA2IgnnCPR3dGkocZWWovUKgGOwsVsdq0e3rTKJ/H1n6YlIJz0/0OYsiODxVUamiQcjr9HkAvS69OdThM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730200147; c=relaxed/simple;
-	bh=rRAEgyNOWwhOyxMUbVEYKP+9w548eZ2zWldFy83pZag=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=spHs732HAOsWgRym/PJJkvbi1Bg/6nNQSpFLPq/i9rMQtIj8HnRoNaBiHahrrqfex9k48qkPOfXih4xN/qgj0JV1rIgftaHefCfJJ7AezY0/dN1t68pyaKFCpkdCbhgGOG36M+eTsYuIXMDAsF/0zFs14N4zERFu2uudrmT9zHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KMbDVKSg; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1730203907; c=relaxed/simple;
+	bh=iNNeGmZ/whg7z0Qy2x4NxLL1jI+rJGiNCT1foxcoXcA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=b4ifXbr/AQW8NsL0QXB3X40Bew+cU6So/oO2yBCkyVJikRgHGlrAiHha6LpgWrDDl2ydqqLVBF3tpaGrvZojOJnUpWh+IWZoDGPU0I9Wo+v3YY9lrhoZq4zIUQTWfrp51jWTQ6xxRyxd4ubzKfn3Mb463ETctuyxc2dEMCqGkPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JrMQmL5V; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KMbDVKSg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1730200144;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XNsXWr8C4+pGAB/ZzZscQZye/5tnLQlo7HFEntqVYd0=;
-	b=KMbDVKSgln1miomrl+sBU3FDZsOV2NME7JMHLDe8SagMdY6JxayJ61nWu+86BJ4dTpJwgP
-	jho0HU3I3/9QI1aZjfl9EY+07QkhiPc4EaTNGBuwoBMLWfmb007qPEAiS4V3FDxBN8Yr+0
-	LSPMG782Ch18uW93IVUzrjbA/dM6yLA=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-674-OiGAK7LwPRCg8Cw3M5RuZg-1; Tue,
- 29 Oct 2024 07:09:00 -0400
-X-MC-Unique: OiGAK7LwPRCg8Cw3M5RuZg-1
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 52DEC19560AA;
-	Tue, 29 Oct 2024 11:08:56 +0000 (UTC)
-Received: from [10.45.226.64] (unknown [10.45.226.64])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 81B7D1955F21;
-	Tue, 29 Oct 2024 11:08:49 +0000 (UTC)
-Date: Tue, 29 Oct 2024 12:08:44 +0100 (CET)
-From: Mikulas Patocka <mpatocka@redhat.com>
-To: Adrian Vovk <adrianvovk@gmail.com>
-cc: Christoph Hellwig <hch@infradead.org>, Eric Biggers <ebiggers@kernel.org>, 
-    Md Sadre Alam <quic_mdalam@quicinc.com>, axboe@kernel.dk, song@kernel.org, 
-    yukuai3@huawei.com, agk@redhat.com, snitzer@kernel.org, 
-    adrian.hunter@intel.com, quic_asutoshd@quicinc.com, ritesh.list@gmail.com, 
-    ulf.hansson@linaro.org, andersson@kernel.org, konradybcio@kernel.org, 
-    kees@kernel.org, gustavoars@kernel.org, linux-block@vger.kernel.org, 
-    linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org, 
-    dm-devel@lists.linux.dev, linux-mmc@vger.kernel.org, 
-    linux-arm-msm@vger.kernel.org, linux-hardening@vger.kernel.org, 
-    quic_srichara@quicinc.com, quic_varada@quicinc.com
-Subject: Re: [PATCH v2 1/3] dm-inlinecrypt: Add inline encryption support
-In-Reply-To: <14126375-5F6F-484A-B34B-F0C011F3A9C5@gmail.com>
-Message-ID: <74adbf13-c778-ee00-0cd6-3931a4a518ec@redhat.com>
-References: <20240916085741.1636554-2-quic_mdalam@quicinc.com> <20240921185519.GA2187@quark.localdomain> <ZvJt9ceeL18XKrTc@infradead.org> <ef3c9a17-79f3-4937-965e-52e2b9e66ac2@gmail.com> <ZxHwgsm2iP2Z_3at@infradead.org> <CAAdYy_mVy3uXPqWbjPzK_i8w7Okq73wKBQyc95TbnonE36rPgQ@mail.gmail.com>
- <ZxH4lnkQNhTP5fe6@infradead.org> <D96294E2-F17A-4E58-90FB-1D17747048E5@gmail.com> <ZxieZPlH-S9pakYW@infradead.org> <CAAdYy_ms=VmvxZy9QiMkwcNk21a2kVy73c8-NxUh4dNJuLefCg@mail.gmail.com> <Zxnl4VnD6K6No4UQ@infradead.org>
- <14126375-5F6F-484A-B34B-F0C011F3A9C5@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JrMQmL5V"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1730203905; x=1761739905;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=iNNeGmZ/whg7z0Qy2x4NxLL1jI+rJGiNCT1foxcoXcA=;
+  b=JrMQmL5VyOu5nuA/H10+cdtI6tjWbn5OPfNkICLRMrjZspXVOJ2BZWwu
+   PZ1RnXT0DVeXO4egb8EeypCartkyTCAF9bFunFAIxZp3MwSVOEyl6Y+YV
+   /W7jYVqHNRdej0CcuMj1DcEM7MTycia15H5D4DiAWEzoWckrkY/BpMeTD
+   XVa4q0LPiDWSrfFw0a8NZYMKh20GN0NnTWEvu0vqt76oLb7DEc3/2KC1M
+   vsD9pGNaT36n4Sxf6JH/6XLFDLK676PfgpF6uO+c+Xl8ACp08NonHtbWl
+   lOUIHrup2sKkHjyDRB+WRnHoxYRCpcBXRuWsy/Ghxfn9qj4026YuAsFmc
+   g==;
+X-CSE-ConnectionGUID: z7IkeBHZRf65lTp1s+ZEfQ==
+X-CSE-MsgGUID: 8IAwk8UOT2S1PRSa4/7IGw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11239"; a="29959256"
+X-IronPort-AV: E=Sophos;i="6.11,241,1725346800"; 
+   d="scan'208";a="29959256"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2024 05:11:43 -0700
+X-CSE-ConnectionGUID: UfnwoUnyRAaqyMAaoBzDqw==
+X-CSE-MsgGUID: wI4q/vKuSnOtVMPyCM83xw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,241,1725346800"; 
+   d="scan'208";a="86553696"
+Received: from aslawinx-mobl.ger.corp.intel.com (HELO [10.94.8.107]) ([10.94.8.107])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2024 05:11:35 -0700
+Message-ID: <c9002b28-77a9-4be0-94a6-bf700e0abaab@linux.intel.com>
+Date: Tue, 29 Oct 2024 13:11:32 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ASoC: dapm: fix bounds checker error in
+ dapm_widget_list_create
+To: Takashi Iwai <tiwai@suse.de>
+Cc: Aleksei Vetrov <vvvvvv@google.com>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, Kees Cook <kees@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-sound@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20241028-soc-dapm-bounds-checker-fix-v1-1-262b0394e89e@google.com>
+ <987b8806-2ec7-41f7-bdeb-8f843c34a993@linux.intel.com>
+ <87plnj19ry.wl-tiwai@suse.de>
+Content-Language: en-US
+From: =?UTF-8?Q?Amadeusz_S=C5=82awi=C5=84ski?=
+ <amadeuszx.slawinski@linux.intel.com>
+In-Reply-To: <87plnj19ry.wl-tiwai@suse.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-
-
-On Thu, 24 Oct 2024, Adrian Vovk wrote:
-
-> >Sure.  But why would you do that?
+On 10/29/2024 11:30 AM, Takashi Iwai wrote:
+> On Tue, 29 Oct 2024 10:50:21 +0100,
+> Amadeusz Sławiński wrote:
+>>
+>> On 10/28/2024 11:50 PM, Aleksei Vetrov wrote:
+>>> The widgets array in the snd_soc_dapm_widget_list has a __counted_by
+>>> attribute attached to it, which points to the num_widgets variable. This
+>>> attribute is used in bounds checking, and if it is not set before the
+>>> array is filled, then the bounds sanitizer will issue a warning or a
+>>> kernel panic if CONFIG_UBSAN_TRAP is set.
+>>>
+>>> This patch sets the size of the widgets list calculated with
+>>> list_for_each as the initial value for num_widgets as it is used for
+>>> allocating memory for the array. It is updated with the actual number of
+>>> added elements after the array is filled.
+>>>
+>>> Signed-off-by: Aleksei Vetrov <vvvvvv@google.com>
+>>> ---
+>>>    sound/soc/soc-dapm.c | 2 ++
+>>>    1 file changed, 2 insertions(+)
+>>>
+>>> diff --git a/sound/soc/soc-dapm.c b/sound/soc/soc-dapm.c
+>>> index c34934c31ffec3970b34b24dcaa0826dfb7d8e86..99521c784a9b16a232a558029a2f3e88bd8ebfb1 100644
+>>> --- a/sound/soc/soc-dapm.c
+>>> +++ b/sound/soc/soc-dapm.c
+>>> @@ -1147,6 +1147,8 @@ static int dapm_widget_list_create(struct snd_soc_dapm_widget_list **list,
+>>>    	if (*list == NULL)
+>>>    		return -ENOMEM;
+>>>    +	(*list)->num_widgets = size;
+>>> +
+>>>    	list_for_each_entry(w, widgets, work_list)
+>>>    		(*list)->widgets[i++] = w;
+>>>    
+>>
+>> and after that there is (*list)->num_widgets = i;
+>>
+>> Can this be somehow simplified to remove 'i', if it set before assignment?
 > 
-> As mentioned earlier in the thread: I don't have a usecase specifically 
-> for this and it was an example of a situation where passthrough is 
-> necessary and no filesystem is involved at all. Though, as I also 
-> pointed out, a usecase where you're putting encrypted virtual partitions 
-> on an encrypted LVM setup isn't all that absurd.
+> That line can be removed after this change, I suppose.
+> The size is calculated from the list at the beginning, and it must be
+> the exact size.
 > 
-> In my real-world case, I'm putting encrypted loop devices on top of a 
-> filesystem that holds its own sensitive data. Each loop device has 
-> dm-crypt inside and uses a unique key, but the filesystem needs to be 
-> encrypted too (because, again, it has its own sensitive data outside of 
-> the loop devices). The loop devices cannot be put onto their own 
-> separate partition because there's no good way to know ahead of time how 
-> much space either of the partitions would need: sometimes the loop 
-> devices need to take up loads of space on the partition, and other times 
-> the non-loop-device data needs to take up that space. And to top it all 
-> off, the distribution of allocated space needs to change dynamically.
-> 
-> The current Linux kernel does not support this use-case without double 
-> encryption. The loop devices are encrypted once with their own dm-crypt 
-> instance. Then that same data is encrypted a second time over by the 
-> partition.
 
-You can add a flag to an inode, then you can modify the page cache code so 
-that if it is reading/writing a flagged file, it will attach the flag to 
-the bio. Then, you can create a device-mapper target "dm-flag-switch" that 
-will forward unflagged bios to one underlying device and flagged bios to 
-another underlying device.
-
-I think this is not impossible. But this change needs to go through the 
-VFS tree, so I suggest that you start asking about it there.
-
-Mikulas
+Actually looking at this again, first iteration iterates through all 
+widgets, while second one, only through work_list, which looks to me 
+like it allocates more memory than needed in most cases.
 
