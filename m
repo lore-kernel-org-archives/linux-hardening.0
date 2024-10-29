@@ -1,208 +1,91 @@
-Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 505891D7985
-	for <linux-hardening@vger.kernel.org>; Tue, 29 Oct 2024 16:55:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 573541DB929;
+	Tue, 29 Oct 2024 18:08:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730220935; cv=none; b=AbtlYA7Pl19nRjD3mSA5/rI+FH3/rQkWzaksRg4P1xRN2S+2Dx4EqCwoc2fa2VcLARcv10Nn16SVesT5qCwNEJPc7MIab6CI0wLCi1mqUofO8ujoOch1HMblfSG9C1cvZqIUxJQkHZIYcY3hs2jn9Z+fviS4vU4X6QvFTumWjAE=
+	t=1730225327; cv=none; b=Q4r/Xwe0Fp/xNQnx6UC47S2mcEsnWv1KGDmy1h6KxVNdUDUxlvangX8cWPQHit7Ltx31qOYNDHDbob2Az8aZKrjiFFNXnnrnQrh5GjLqjYciYq4+oSqEHUUMEz2uaRJuhLasHafeM6ougm7HexHxm3m3iY2EKFDjyDotUKvFg6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730220935; c=relaxed/simple;
-	bh=X0jaiMvCjJEEhd7RT+IguPkikO8YjtAW97ZeFQNx5/8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SXHNsYuzzGo9pU2HokEjs9tw8NbQLP8yHW9THZO0dwIBOxP7i3cypxGMbsk799/yAYUp+tjdIlM9liXeeaXmLgFMKcl+yGRgFmWHYenN+07GSAWZ/VjdXTEBZqKboM2nY3cktaj2Bs8j4pffCSKmjC1PqCX3I5g6Ge7Z0npnpRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=gPUqdL4C; arc=none smtp.client-ip=35.89.44.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1730225327; c=relaxed/simple;
+	bh=iJLj11O4g41SPsxiCL9Pj63IUN3VrnEb2c1RDciZciU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LhBnQVD8m2RPQObH4uMXmasbkU/pd8fQZaI0rUznu2RNDI01Pwo2Km8b24k06KgoEVYUW+CIUsYeyzm2iK3Dn2BZM8q7VmV8pw5VX5Xi9/YL+//C2p+Za+GVcfX+zSX505jSk4pWPnTiubWFSIuCwGu0B5zmaArCoT58XUHABdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tOSSaaia; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="gPUqdL4C"
-Received: from eig-obgw-5002a.ext.cloudfilter.net ([10.0.29.215])
-	by cmsmtp with ESMTPS
-	id 5eEstaKjfumtX5pV9tEBjV; Tue, 29 Oct 2024 16:55:27 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id 5pV8tUBwecEKu5pV8trkio; Tue, 29 Oct 2024 16:55:26 +0000
-X-Authority-Analysis: v=2.4 cv=Z7YnH2RA c=1 sm=1 tr=0 ts=6721137e
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=OKg9RQrQ6+Y1xAlsUndU0w==:17
- a=IkcTkHD0fZMA:10 a=DAUX931o1VcA:10 a=7T7KSl7uo7wA:10
- a=hLRBkJ6lmyVDo42-feIA:9 a=QEXdDO2ut3YA:10 a=Xt_RvD8W3m28Mn_h3AK8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=RI3obuqQ9kDWIuhA0WGes/O5kbrhm7V31zs2payIIG8=; b=gPUqdL4Cl1PAV31UvlNTxaY8qS
-	IT3XfBCwC0vS+hk18SE9jcXSkovV1MGXCdguYO1mhQtPhODfOHqFR7lVOXOnG7Uyv+ArdUMidI3mU
-	xxcgNSDusbyTogJ1AnzjbidAsqHCK+BBN0cB1r6Kev+9aw/rTmy9xT6CKHnT2dxtgGfkArftf+xkY
-	LdeFxq8WfB6m4Ep0vk8TwQ6ptRASZ1bxbgbD1Xv+tpcDfJVHBbSMu8r+ec+Yrx1H7OQchEiFK9EZ9
-	iH0YswiYu2vTIugfu1A+fhNxESR27o3ezqokwcqHshoM/YHEnlVCXnF4+2Slzk7w/N1sPKPW2GPWh
-	LiJbZ6Eg==;
-Received: from [201.172.173.7] (port=36540 helo=[192.168.15.6])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1t5pV5-003FnW-1l;
-	Tue, 29 Oct 2024 11:55:23 -0500
-Message-ID: <f6c90a57-0cd6-4e26-9250-8a63d043e252@embeddedor.com>
-Date: Tue, 29 Oct 2024 10:55:14 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tOSSaaia"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23E05C4CECD;
+	Tue, 29 Oct 2024 18:08:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730225326;
+	bh=iJLj11O4g41SPsxiCL9Pj63IUN3VrnEb2c1RDciZciU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=tOSSaaiaWNoPAl+nKlkGkrJBdelh/1LB7gZ1HgrEAnpXCM4BLsnAIX1xrhOymWEp9
+	 lddeFvmBx0/JHKOx+ze17PmAYvSBntBmR/0wrwoQ1MOyQZxJTJdMfhBYJjZs3/n8pE
+	 nYnI7kHTFSUrtrUM/QYCuNFngoaHDvF+xwdK2xJF5qznxWC756r7fNUW0h9HLJwkT3
+	 WHleKVF23wqifyHtVmmVDQDM31QVvG5MwfXSDv7gOGX6Oq9Roku1J6TrPRuLpr4Fi9
+	 Bk8DzyvroAlbMLRqsqh5UyU3QRP8pzT3I0GZDivtwZ6YnfG56EnmYe3gOexetahgBx
+	 H+DGsGFQB653w==
+Date: Tue, 29 Oct 2024 11:08:45 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>, Michael Chan
+ <michael.chan@broadcom.com>, Andrew Lunn <andrew+netdev@lunn.ch>, "David S.
+ Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo
+ Abeni <pabeni@redhat.com>, Potnuri Bharat Teja <bharat@chelsio.com>,
+ Christian Benvenuti <benve@cisco.com>, Satish Kharat <satishkh@cisco.com>,
+ Manish Chopra <manishc@marvell.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 2/2][next] net: ethtool: Avoid thousands of
+ -Wflex-array-member-not-at-end warnings
+Message-ID: <20241029110845.0f9bb1cc@kernel.org>
+In-Reply-To: <f6c90a57-0cd6-4e26-9250-8a63d043e252@embeddedor.com>
+References: <cover.1729536776.git.gustavoars@kernel.org>
+	<f4f8ca5cd7f039bcab816194342c7b6101e891fe.1729536776.git.gustavoars@kernel.org>
+	<20241029065824.670f14fc@kernel.org>
+	<f6c90a57-0cd6-4e26-9250-8a63d043e252@embeddedor.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2][next] net: ethtool: Avoid thousands of
- -Wflex-array-member-not-at-end warnings
-To: Jakub Kicinski <kuba@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Michael Chan <michael.chan@broadcom.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Paolo Abeni <pabeni@redhat.com>, Potnuri Bharat Teja <bharat@chelsio.com>,
- Christian Benvenuti <benve@cisco.com>, Satish Kharat <satishkh@cisco.com>,
- Manish Chopra <manishc@marvell.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <cover.1729536776.git.gustavoars@kernel.org>
- <f4f8ca5cd7f039bcab816194342c7b6101e891fe.1729536776.git.gustavoars@kernel.org>
- <20241029065824.670f14fc@kernel.org>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20241029065824.670f14fc@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.173.7
-X-Source-L: No
-X-Exim-ID: 1t5pV5-003FnW-1l
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.6]) [201.172.173.7]:36540
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfMHyy7gYWq7eDXUYrqheqdl2wxhw0TMCS7XTc+hlMQXKfMqczxiM+cH/U6YeP4zBmLSHqDF6Dbv2Oq8HEuHOX/l1ncjM6mN/KkoSFC3z4y4IWebTtxMw
- htZcbI/iJV4kokdeE7Dq7aA90wxuXhtNsYCS0SaCTgh8fUWa8PmcIDm9tMJQOKyMo8kUIFHQ69etZ9LCDB+egmMHgvRJqC7JYtr+7+mnWnPpxSAjk/6RCJUn
 
+On Tue, 29 Oct 2024 10:55:14 -0600 Gustavo A. R. Silva wrote:
+> On 29/10/24 07:58, Jakub Kicinski wrote:
+> > On Mon, 21 Oct 2024 13:02:27 -0600 Gustavo A. R. Silva wrote:  
+> >> @@ -3025,7 +3025,7 @@ static int bnxt_set_link_ksettings(struct net_device *dev,
+> >>   {
+> >>   	struct bnxt *bp = netdev_priv(dev);
+> >>   	struct bnxt_link_info *link_info = &bp->link_info;
+> >> -	const struct ethtool_link_settings *base = &lk_ksettings->base;
+> >> +	const struct ethtool_link_settings_hdr *base = &lk_ksettings->base;  
+> > 
+> > Please improve the variable ordering while at it. Longest list first,
+> > so move the @base definition first.  
+> 
+> OK. This would end up looking like:
+> 
+> 	const struct ethtool_link_settings_hdr *base = &lk_ksettings->base;
+> 	struct bnxt *bp = netdev_priv(dev);
+> 	struct bnxt_link_info *link_info = &bp->link_info;
 
+Correct, one step at a time.
 
-On 29/10/24 07:58, Jakub Kicinski wrote:
-> On Mon, 21 Oct 2024 13:02:27 -0600 Gustavo A. R. Silva wrote:
->> @@ -3025,7 +3025,7 @@ static int bnxt_set_link_ksettings(struct net_device *dev,
->>   {
->>   	struct bnxt *bp = netdev_priv(dev);
->>   	struct bnxt_link_info *link_info = &bp->link_info;
->> -	const struct ethtool_link_settings *base = &lk_ksettings->base;
->> +	const struct ethtool_link_settings_hdr *base = &lk_ksettings->base;
+> >> @@ -62,7 +62,7 @@ static int linkmodes_reply_size(const struct ethnl_req_info *req_base,
+> >>   {
+> >>   	const struct linkmodes_reply_data *data = LINKMODES_REPDATA(reply_base);
+> >>   	const struct ethtool_link_ksettings *ksettings = &data->ksettings;
+> >> -	const struct ethtool_link_settings *lsettings = &ksettings->base;
+> >> +	const struct ethtool_link_settings_hdr *lsettings = &ksettings->base;  
+> > 
+> > here it was correct and now its not  
 > 
-> Please improve the variable ordering while at it. Longest list first,
-> so move the @base definition first.
+> I don't think you want to change this. `lsettings` is based on `ksettings`. So,
+> `ksettings` should go first. The same scenario for the one below.
 
-OK. This would end up looking like:
+In which case you need to move the init out of line.
 
-	const struct ethtool_link_settings_hdr *base = &lk_ksettings->base;
-	struct bnxt *bp = netdev_priv(dev);
-	struct bnxt_link_info *link_info = &bp->link_info;
-
-
-
-> 
->>   	bool set_pause = false;
->>   	u32 speed, lanes = 0;
->>   	int rc = 0;
->> diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ethtool.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ethtool.c
->> index 7f3f5afa864f..cc43294bdc96 100644
->> --- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ethtool.c
->> +++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ethtool.c
->> @@ -663,7 +663,7 @@ static int get_link_ksettings(struct net_device *dev,
->>   			      struct ethtool_link_ksettings *link_ksettings)
->>   {
->>   	struct port_info *pi = netdev_priv(dev);
->> -	struct ethtool_link_settings *base = &link_ksettings->base;
->> +	struct ethtool_link_settings_hdr *base = &link_ksettings->base;
-> 
-> ditto
-> 
->>   	/* For the nonce, the Firmware doesn't send up Port State changes
->>   	 * when the Virtual Interface attached to the Port is down.  So
->> @@ -719,7 +719,7 @@ static int set_link_ksettings(struct net_device *dev,
->>   {
->>   	struct port_info *pi = netdev_priv(dev);
->>   	struct link_config *lc = &pi->link_cfg;
->> -	const struct ethtool_link_settings *base = &link_ksettings->base;
->> +	const struct ethtool_link_settings_hdr *base = &link_ksettings->base;
-> 
-> and here
-> 
->>   	struct link_config old_lc;
->>   	unsigned int fw_caps;
->>   	int ret = 0;
->> diff --git a/drivers/net/ethernet/chelsio/cxgb4vf/cxgb4vf_main.c b/drivers/net/ethernet/chelsio/cxgb4vf/cxgb4vf_main.c
->> index 2fbe0f059a0b..0d85ac342ac7 100644
->> --- a/drivers/net/ethernet/chelsio/cxgb4vf/cxgb4vf_main.c
->> +++ b/drivers/net/ethernet/chelsio/cxgb4vf/cxgb4vf_main.c
->> @@ -1437,7 +1437,7 @@ static int cxgb4vf_get_link_ksettings(struct net_device *dev,
->>   				  struct ethtool_link_ksettings *link_ksettings)
->>   {
->>   	struct port_info *pi = netdev_priv(dev);
->> -	struct ethtool_link_settings *base = &link_ksettings->base;
->> +	struct ethtool_link_settings_hdr *base = &link_ksettings->base;
-> 
-> and here
-> 
->>   	/* For the nonce, the Firmware doesn't send up Port State changes
->>   	 * when the Virtual Interface attached to the Port is down.  So
->> diff --git a/drivers/net/ethernet/cisco/enic/enic_ethtool.c b/drivers/net/ethernet/cisco/enic/enic_ethtool.c
->> index f7986f2b6a17..8670eb394fad 100644
->> --- a/drivers/net/ethernet/cisco/enic/enic_ethtool.c
->> +++ b/drivers/net/ethernet/cisco/enic/enic_ethtool.c
->> @@ -130,7 +130,7 @@ static int enic_get_ksettings(struct net_device *netdev,
->>   			      struct ethtool_link_ksettings *ecmd)
->>   {
->>   	struct enic *enic = netdev_priv(netdev);
->> -	struct ethtool_link_settings *base = &ecmd->base;
->> +	struct ethtool_link_settings_hdr *base = &ecmd->base;
-> 
-> and here
-> 
->>   	ethtool_link_ksettings_add_link_mode(ecmd, supported,
->>   					     10000baseT_Full);
-> 
->> @@ -62,7 +62,7 @@ static int linkmodes_reply_size(const struct ethnl_req_info *req_base,
->>   {
->>   	const struct linkmodes_reply_data *data = LINKMODES_REPDATA(reply_base);
->>   	const struct ethtool_link_ksettings *ksettings = &data->ksettings;
->> -	const struct ethtool_link_settings *lsettings = &ksettings->base;
->> +	const struct ethtool_link_settings_hdr *lsettings = &ksettings->base;
-> 
-> here it was correct and now its not
-
-I don't think you want to change this. `lsettings` is based on `ksettings`. So,
-`ksettings` should go first. The same scenario for the one below.
-
-> 
->>   	bool compact = req_base->flags & ETHTOOL_FLAG_COMPACT_BITSETS;
->>   	int len, ret;
->>   
->> @@ -103,7 +103,7 @@ static int linkmodes_fill_reply(struct sk_buff *skb,
->>   {
->>   	const struct linkmodes_reply_data *data = LINKMODES_REPDATA(reply_base);
->>   	const struct ethtool_link_ksettings *ksettings = &data->ksettings;
->> -	const struct ethtool_link_settings *lsettings = &ksettings->base;
->> +	const struct ethtool_link_settings_hdr *lsettings = &ksettings->base;
-> 
-> same
-> 
->>   	bool compact = req_base->flags & ETHTOOL_FLAG_COMPACT_BITSETS;
->>   	int ret;
-> 
-
+Thanks.
