@@ -1,181 +1,109 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB121839E4;
-	Tue, 29 Oct 2024 10:29:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EACC205144
+	for <linux-hardening@vger.kernel.org>; Tue, 29 Oct 2024 11:09:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730197781; cv=none; b=UOJx2iVWQDSt55vpQccSNeOCY7yd8+ciKuE3CiG4bgnjif5BRnp2RhPa3Ud7I1woKJZ4NwzgHQ9roexrAOYdbG5MNSJ/01tS3QCySYRraks6A7oBp/OCDhHTbhnf/EL+PTC6wLhiWgXcBcz8m/NPqDQKOqJmVBqcxuFJv5vgvFo=
+	t=1730200147; cv=none; b=I0k0NhyFdFo0OA5AXu9Cb/KitBnMrxWZJij7nY6QmNtPf2Rg18jjDnAeIA+mzrfYUV5zXAVkPwRo3D2RykCQe1o6FsOv1NzX3iemaia0hFtYFxOpCHGZuoYI0dglpxebE1sZzJQpM/Ps5k+Iiwk+507d3MT2bevuQXM5deI9Moo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730197781; c=relaxed/simple;
-	bh=RWDTkc2mC5P9oWE8l7uS05yQr/bSQVafDmQClHceYUE=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HHO++xeouhEvPn0mfNmwepUzmVO/vvXWh45TtYmIEGEgyFzkTUWLhC6E1MEjCXiUadRIQGy23HnM0QQlg4m5Y8JTHxxUu/ke44OfaQE0wWBh2YupHdM1R+PVcuMTHd1rk/p/QJsfvAoIz11vI8NfDSwkXy1o9wnYV13EhYdhDT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=SDRXj+3D; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=zo9sl49Z; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=BHOU5eOh; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=A0q0vgG3; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1730200147; c=relaxed/simple;
+	bh=rRAEgyNOWwhOyxMUbVEYKP+9w548eZ2zWldFy83pZag=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=spHs732HAOsWgRym/PJJkvbi1Bg/6nNQSpFLPq/i9rMQtIj8HnRoNaBiHahrrqfex9k48qkPOfXih4xN/qgj0JV1rIgftaHefCfJJ7AezY0/dN1t68pyaKFCpkdCbhgGOG36M+eTsYuIXMDAsF/0zFs14N4zERFu2uudrmT9zHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KMbDVKSg; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="SDRXj+3D";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="zo9sl49Z";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="BHOU5eOh";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="A0q0vgG3"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KMbDVKSg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1730200144;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XNsXWr8C4+pGAB/ZzZscQZye/5tnLQlo7HFEntqVYd0=;
+	b=KMbDVKSgln1miomrl+sBU3FDZsOV2NME7JMHLDe8SagMdY6JxayJ61nWu+86BJ4dTpJwgP
+	jho0HU3I3/9QI1aZjfl9EY+07QkhiPc4EaTNGBuwoBMLWfmb007qPEAiS4V3FDxBN8Yr+0
+	LSPMG782Ch18uW93IVUzrjbA/dM6yLA=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-674-OiGAK7LwPRCg8Cw3M5RuZg-1; Tue,
+ 29 Oct 2024 07:09:00 -0400
+X-MC-Unique: OiGAK7LwPRCg8Cw3M5RuZg-1
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id D97821F393;
-	Tue, 29 Oct 2024 10:29:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1730197778; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=R0/vMU3FNM+TQ2c3PTiDPuUXc7T52Hqxj70/05xfkGk=;
-	b=SDRXj+3DCKpfnTglx0e6CGtJiuowuPG9k4IGYXzU3gE2jeS6ULv58wmC3yE9UGdqs6IWqe
-	2OubK89j6vWDRP1fzgeqRUf5A+rZQDf4oppjBahPdK2TuBHtvGPTmfdHOHCaHwxZzA2DjH
-	fDZ3gIMwl99epZ85jkQAw4IkfRjFCEg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1730197778;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=R0/vMU3FNM+TQ2c3PTiDPuUXc7T52Hqxj70/05xfkGk=;
-	b=zo9sl49ZlLvaQjowd/bE0EI1jfjJvgrffMpiIGI3gYNBQPc8A2vx34qcvmzL1zv9tUn1XW
-	e6ussS9lM8GjD/AA==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=BHOU5eOh;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=A0q0vgG3
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1730197777; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=R0/vMU3FNM+TQ2c3PTiDPuUXc7T52Hqxj70/05xfkGk=;
-	b=BHOU5eOhjSAIMQBwT9Bfn+JFdGk/Tf4LNJTTeQsoWV4RBVOyZQWjsJhypoZmWYqfMxVnB+
-	rcxhuB4b433clqcJCkeLB+XPTStQP8YiuvRtiKuXrO1fpG/Y7i/OmRa6Ib72HJzNM/dxej
-	dpWkrQJUe+Ovab0rWRSNLAT0gx38ICE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1730197777;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=R0/vMU3FNM+TQ2c3PTiDPuUXc7T52Hqxj70/05xfkGk=;
-	b=A0q0vgG32RIRG5TpXuO/0hPnD1bAqZJY/DnQ+okL8dT+x7YUeeVCJD11iXG3+FmLSAGJ+P
-	7C7kPEBo/8T339Cw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B5569139A2;
-	Tue, 29 Oct 2024 10:29:37 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id MaOaKxG5IGeQMwAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Tue, 29 Oct 2024 10:29:37 +0000
-Date: Tue, 29 Oct 2024 11:30:25 +0100
-Message-ID: <87plnj19ry.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Amadeusz =?ISO-8859-2?Q?S=B3awi=F1ski?=
- <amadeuszx.slawinski@linux.intel.com>
-Cc: Aleksei Vetrov <vvvvvv@google.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] ASoC: dapm: fix bounds checker error in dapm_widget_list_create
-In-Reply-To: <987b8806-2ec7-41f7-bdeb-8f843c34a993@linux.intel.com>
-References: <20241028-soc-dapm-bounds-checker-fix-v1-1-262b0394e89e@google.com>
-	<987b8806-2ec7-41f7-bdeb-8f843c34a993@linux.intel.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 52DEC19560AA;
+	Tue, 29 Oct 2024 11:08:56 +0000 (UTC)
+Received: from [10.45.226.64] (unknown [10.45.226.64])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 81B7D1955F21;
+	Tue, 29 Oct 2024 11:08:49 +0000 (UTC)
+Date: Tue, 29 Oct 2024 12:08:44 +0100 (CET)
+From: Mikulas Patocka <mpatocka@redhat.com>
+To: Adrian Vovk <adrianvovk@gmail.com>
+cc: Christoph Hellwig <hch@infradead.org>, Eric Biggers <ebiggers@kernel.org>, 
+    Md Sadre Alam <quic_mdalam@quicinc.com>, axboe@kernel.dk, song@kernel.org, 
+    yukuai3@huawei.com, agk@redhat.com, snitzer@kernel.org, 
+    adrian.hunter@intel.com, quic_asutoshd@quicinc.com, ritesh.list@gmail.com, 
+    ulf.hansson@linaro.org, andersson@kernel.org, konradybcio@kernel.org, 
+    kees@kernel.org, gustavoars@kernel.org, linux-block@vger.kernel.org, 
+    linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org, 
+    dm-devel@lists.linux.dev, linux-mmc@vger.kernel.org, 
+    linux-arm-msm@vger.kernel.org, linux-hardening@vger.kernel.org, 
+    quic_srichara@quicinc.com, quic_varada@quicinc.com
+Subject: Re: [PATCH v2 1/3] dm-inlinecrypt: Add inline encryption support
+In-Reply-To: <14126375-5F6F-484A-B34B-F0C011F3A9C5@gmail.com>
+Message-ID: <74adbf13-c778-ee00-0cd6-3931a4a518ec@redhat.com>
+References: <20240916085741.1636554-2-quic_mdalam@quicinc.com> <20240921185519.GA2187@quark.localdomain> <ZvJt9ceeL18XKrTc@infradead.org> <ef3c9a17-79f3-4937-965e-52e2b9e66ac2@gmail.com> <ZxHwgsm2iP2Z_3at@infradead.org> <CAAdYy_mVy3uXPqWbjPzK_i8w7Okq73wKBQyc95TbnonE36rPgQ@mail.gmail.com>
+ <ZxH4lnkQNhTP5fe6@infradead.org> <D96294E2-F17A-4E58-90FB-1D17747048E5@gmail.com> <ZxieZPlH-S9pakYW@infradead.org> <CAAdYy_ms=VmvxZy9QiMkwcNk21a2kVy73c8-NxUh4dNJuLefCg@mail.gmail.com> <Zxnl4VnD6K6No4UQ@infradead.org>
+ <14126375-5F6F-484A-B34B-F0C011F3A9C5@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=ISO-8859-2
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: D97821F393
-X-Spam-Score: -3.51
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_CONTAINS_FROM(1.00)[];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_TLS_ALL(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[google.com,gmail.com,kernel.org,perex.cz,suse.com,vger.kernel.org];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:dkim];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On Tue, 29 Oct 2024 10:50:21 +0100,
-Amadeusz S³awiñski wrote:
+
+
+On Thu, 24 Oct 2024, Adrian Vovk wrote:
+
+> >Sure.  But why would you do that?
 > 
-> On 10/28/2024 11:50 PM, Aleksei Vetrov wrote:
-> > The widgets array in the snd_soc_dapm_widget_list has a __counted_by
-> > attribute attached to it, which points to the num_widgets variable. This
-> > attribute is used in bounds checking, and if it is not set before the
-> > array is filled, then the bounds sanitizer will issue a warning or a
-> > kernel panic if CONFIG_UBSAN_TRAP is set.
-> > 
-> > This patch sets the size of the widgets list calculated with
-> > list_for_each as the initial value for num_widgets as it is used for
-> > allocating memory for the array. It is updated with the actual number of
-> > added elements after the array is filled.
-> > 
-> > Signed-off-by: Aleksei Vetrov <vvvvvv@google.com>
-> > ---
-> >   sound/soc/soc-dapm.c | 2 ++
-> >   1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/sound/soc/soc-dapm.c b/sound/soc/soc-dapm.c
-> > index c34934c31ffec3970b34b24dcaa0826dfb7d8e86..99521c784a9b16a232a558029a2f3e88bd8ebfb1 100644
-> > --- a/sound/soc/soc-dapm.c
-> > +++ b/sound/soc/soc-dapm.c
-> > @@ -1147,6 +1147,8 @@ static int dapm_widget_list_create(struct snd_soc_dapm_widget_list **list,
-> >   	if (*list == NULL)
-> >   		return -ENOMEM;
-> >   +	(*list)->num_widgets = size;
-> > +
-> >   	list_for_each_entry(w, widgets, work_list)
-> >   		(*list)->widgets[i++] = w;
-> >   
+> As mentioned earlier in the thread: I don't have a usecase specifically 
+> for this and it was an example of a situation where passthrough is 
+> necessary and no filesystem is involved at all. Though, as I also 
+> pointed out, a usecase where you're putting encrypted virtual partitions 
+> on an encrypted LVM setup isn't all that absurd.
 > 
-> and after that there is (*list)->num_widgets = i;
+> In my real-world case, I'm putting encrypted loop devices on top of a 
+> filesystem that holds its own sensitive data. Each loop device has 
+> dm-crypt inside and uses a unique key, but the filesystem needs to be 
+> encrypted too (because, again, it has its own sensitive data outside of 
+> the loop devices). The loop devices cannot be put onto their own 
+> separate partition because there's no good way to know ahead of time how 
+> much space either of the partitions would need: sometimes the loop 
+> devices need to take up loads of space on the partition, and other times 
+> the non-loop-device data needs to take up that space. And to top it all 
+> off, the distribution of allocated space needs to change dynamically.
 > 
-> Can this be somehow simplified to remove 'i', if it set before assignment?
+> The current Linux kernel does not support this use-case without double 
+> encryption. The loop devices are encrypted once with their own dm-crypt 
+> instance. Then that same data is encrypted a second time over by the 
+> partition.
 
-That line can be removed after this change, I suppose.
-The size is calculated from the list at the beginning, and it must be
-the exact size.
+You can add a flag to an inode, then you can modify the page cache code so 
+that if it is reading/writing a flagged file, it will attach the flag to 
+the bio. Then, you can create a device-mapper target "dm-flag-switch" that 
+will forward unflagged bios to one underlying device and flagged bios to 
+another underlying device.
 
+I think this is not impossible. But this change needs to go through the 
+VFS tree, so I suggest that you start asking about it there.
 
-thanks,
+Mikulas
 
-Takashi
