@@ -1,301 +1,104 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1DD420101D
-	for <linux-hardening@vger.kernel.org>; Tue, 29 Oct 2024 05:52:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EF5B20408C;
+	Tue, 29 Oct 2024 09:50:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730181172; cv=none; b=ncSRy00YKcw4zt5DsYQr++0QHqHmKqk2T9veAARn3oarcz88GNeXqwsSXU/EuUO+0Pu1m89NuwFrtQTJvBTTcKUn8A0K84PASt5P9D3E2SrPs9pCwtRhavsYAGBeKT7pnmjpv9lNiArOH4q8WD7nEpEeIOnximwUYMftMniGBEA=
+	t=1730195428; cv=none; b=O/wjRpqUhffSgpF2YKncbsOuyRBJUM0L7bcuP4T4MdfkupJDHJHRJBQvK09Kcy1c3RKZIEM1dKnjoPC7hbqBoYSOEqaeYZjMUpEvrCnRn9aZ1jc8x5x028NgbPwoa/kWe5LO4OQhIFmzWQU8UetSI0ckTu0ZmGLG07yZ+UI25v4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730181172; c=relaxed/simple;
-	bh=WoOyI9TXIoYQuqBxF4j5//164/5wwRcPWG9wIxPqrUI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=j3TQY1jjNJtcdBp3IyDQCQKtl9wcckYN8NNoQMC4obLVGOcJG4gcBUwoPu/McKJHci1MSLF8C/2Ff7ou7rCpqFDvAcXQ7uORgyU6mpo43nBMD9f6azyYshXbmRrhqRRS7lG+/aaxmCueenC9/ieUrfnFObK1QJgMOKxNLWEnPDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gp0TYcnr; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1730195428; c=relaxed/simple;
+	bh=l2eZ1x4L7FVeLGEx8M58IpKnMVCKjsvAwgQ0wKrSN6A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QTWXCamuo0L9w/S3q72dd8VY52GdLjZcEXNYniX51tbcLMJc5+sohmf2ScHgu+ZPWyP8KgFJdCXoKXT0hgLGougPDJrTFDvAuEC2L/ERrIYJk0zs/2Nzd8hEQXpC3GXJkQCDmt5b9MKZKejESAXjopfwwAjGuGPQq0dolHjXqZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g7RfndZD; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gp0TYcnr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1730181168;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ue6MNdOcnLTaMHu3j/S0yuX7xj3aU0+QyusUiHz2OBc=;
-	b=gp0TYcnrTVXhkc0tAUGZYuJjhBPShBJS7FZbJPPkZk4wRpXHoy7QS+3HVOiEF6zlfsy/5y
-	3ZLIWBUV+teL7h8byP45G8W6Vegbv5c6mIzGjQsRZ2h5wjo12mUXS6HE3na6I9y5fr55Jw
-	VAfUtzXm8+qKWyuAS7JzmSGN3Jy9HjU=
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
- [209.85.216.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-339-yu0UBSiQMm6IYegfsnGK6g-1; Tue, 29 Oct 2024 01:52:47 -0400
-X-MC-Unique: yu0UBSiQMm6IYegfsnGK6g-1
-Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-2e2ca4fb175so5065256a91.3
-        for <linux-hardening@vger.kernel.org>; Mon, 28 Oct 2024 22:52:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730181164; x=1730785964;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ue6MNdOcnLTaMHu3j/S0yuX7xj3aU0+QyusUiHz2OBc=;
-        b=KwfzJ5febZ2HWSf0WadSaKZ35swwy314etD1+avAqb/RHxCss5vAo0aqGQAhqF7OHy
-         2Kp+w4C+AymIG4TpnxIIZVBvpZNAOt/XypNEEK7AIt9s0sOipb1pIt5I9gsQsD5hln84
-         i8sqRr4tpxsrlI5dBm98hgHAtlvWl0hKrHEd9kvbY5n37isEbM97HkLRZa4fKziJpF2E
-         BNLaD4AdPndodMXUeTlVMu8kYrWHT3YPIjjxIq9e9/7uGGwKzmH259uR4l3uvRy0cYNW
-         h+53OLaGtEgie+M+Us4TL500C2jO+2ZGVhYG1wVCucBkhY3PbvB+EYvIRgK92LN47VQ/
-         RzHw==
-X-Forwarded-Encrypted: i=1; AJvYcCXUjlBC0Ik+7c90DZLvCmyafuJ1oyQpxMjKisqLjU2vWMK/MdPf/ouLj3GTkA6aVX7HYyO4eLOY9PDu1xxILqU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywt3svuEhan1yLvmMTnfsBB9GQmO+q1ecxr6RvA6xRK9mJIhPfH
-	9xzzv3yPE39kU5rq0q9qzGRKXcqCply+ZErljYW91M4LMz6iLbkvgPD/5yKjMfNBs+IBg0rtI31
-	Cb1uHy9NtPOI07YYvT3o0VGuLmsLMYO7NlbxykG22ZabCUe3noMC96laFrPDEhxM/cQ==
-X-Received: by 2002:a17:90a:780a:b0:2e0:cac6:15f7 with SMTP id 98e67ed59e1d1-2e8f0d5dc37mr12203225a91.0.1730181164369;
-        Mon, 28 Oct 2024 22:52:44 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHXNSApOHp5LxPu6upUbkZyjY7lVTpe+dj4/6+cnO8DL3RuJSlwTfDsx4oR9LJijhRuCmJCow==
-X-Received: by 2002:a17:90a:780a:b0:2e0:cac6:15f7 with SMTP id 98e67ed59e1d1-2e8f0d5dc37mr12203213a91.0.1730181164007;
-        Mon, 28 Oct 2024 22:52:44 -0700 (PDT)
-Received: from localhost ([43.228.180.230])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2e8e3555c71sm8472340a91.11.2024.10.28.22.52.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Oct 2024 22:52:43 -0700 (PDT)
-From: Coiby Xu <coxu@redhat.com>
-To: kexec@lists.infradead.org
-Cc: Ondrej Kozina <okozina@redhat.com>,
-	Milan Broz <gmazyland@gmail.com>,
-	Thomas Staudt <tstaudt@de.ibm.com>,
-	=?UTF-8?q?Daniel=20P=20=2E=20Berrang=C3=A9?= <berrange@redhat.com>,
-	Kairui Song <ryncsn@gmail.com>,
-	Jan Pazdziora <jpazdziora@redhat.com>,
-	Pingfan Liu <kernelfans@gmail.com>,
-	Baoquan He <bhe@redhat.com>,
-	Dave Young <dyoung@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	x86@kernel.org,
-	Dave Hansen <dave.hansen@intel.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Greg KH <gregkh@linuxfoundation.org>,
-	Vivek Goyal <vgoyal@redhat.com>,
-	Eric Biederman <ebiederm@xmission.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by\b)
-Subject: [PATCH v6 3/7] crash_dump: store dm crypt keys in kdump reserved memory
-Date: Tue, 29 Oct 2024 13:52:16 +0800
-Message-ID: <20241029055223.210039-4-coxu@redhat.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20241029055223.210039-1-coxu@redhat.com>
-References: <20241029055223.210039-1-coxu@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g7RfndZD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1730195427; x=1761731427;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=l2eZ1x4L7FVeLGEx8M58IpKnMVCKjsvAwgQ0wKrSN6A=;
+  b=g7RfndZDiyH666EoSqikuHhGEK4NoxhusGX8iJKOGMnfzjnWPPBTOMBk
+   CzjHVtO7+4FYqM+UbPJ79OURVur5dQmsEfMElkxeESbq46t7pszG2fh6u
+   Jge7Ppskyor/YC7Qz4E4RwuV6ZuZGiFLdsW4oRif8W3DG1klVQe+RW0x+
+   tPj35C4WO3vW1qot+DQLvQoetzmFncn+WcNB0GyKqV6DV3r3GDMsPIcoZ
+   YS/mGejxnj+lwyIJzq1rCrbOBQMpTG2iyVArKAY+bSQsySF6C+HmPqGl3
+   06MOkJGdOX2U23nCoWxdAgWCoOso0E8eSWCJgZxYl8sZTtOY3ugmmDPZE
+   Q==;
+X-CSE-ConnectionGUID: zvQQnV1NRAeJbOUWTPp7qQ==
+X-CSE-MsgGUID: JPTLWcJ4SG6bp03kP1Xedg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11239"; a="33620287"
+X-IronPort-AV: E=Sophos;i="6.11,241,1725346800"; 
+   d="scan'208";a="33620287"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2024 02:50:27 -0700
+X-CSE-ConnectionGUID: y6v2tymxTNmAPMdGKhTssA==
+X-CSE-MsgGUID: ZMGc0KROS5SN60Itnmn1wQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,241,1725346800"; 
+   d="scan'208";a="81835899"
+Received: from aslawinx-mobl.ger.corp.intel.com (HELO [10.94.8.107]) ([10.94.8.107])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2024 02:50:23 -0700
+Message-ID: <987b8806-2ec7-41f7-bdeb-8f843c34a993@linux.intel.com>
+Date: Tue, 29 Oct 2024 10:50:21 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"; x-default=true
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ASoC: dapm: fix bounds checker error in
+ dapm_widget_list_create
+To: Aleksei Vetrov <vvvvvv@google.com>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, Kees Cook <kees@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20241028-soc-dapm-bounds-checker-fix-v1-1-262b0394e89e@google.com>
+Content-Language: en-US
+From: =?UTF-8?Q?Amadeusz_S=C5=82awi=C5=84ski?=
+ <amadeuszx.slawinski@linux.intel.com>
+In-Reply-To: <20241028-soc-dapm-bounds-checker-fix-v1-1-262b0394e89e@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-When the kdump kernel image and initrd are loaded, the dm crypts keys
-will be read from keyring and then stored in kdump reserved memory.
+On 10/28/2024 11:50 PM, Aleksei Vetrov wrote:
+> The widgets array in the snd_soc_dapm_widget_list has a __counted_by
+> attribute attached to it, which points to the num_widgets variable. This
+> attribute is used in bounds checking, and if it is not set before the
+> array is filled, then the bounds sanitizer will issue a warning or a
+> kernel panic if CONFIG_UBSAN_TRAP is set.
+> 
+> This patch sets the size of the widgets list calculated with
+> list_for_each as the initial value for num_widgets as it is used for
+> allocating memory for the array. It is updated with the actual number of
+> added elements after the array is filled.
+> 
+> Signed-off-by: Aleksei Vetrov <vvvvvv@google.com>
+> ---
+>   sound/soc/soc-dapm.c | 2 ++
+>   1 file changed, 2 insertions(+)
+> 
+> diff --git a/sound/soc/soc-dapm.c b/sound/soc/soc-dapm.c
+> index c34934c31ffec3970b34b24dcaa0826dfb7d8e86..99521c784a9b16a232a558029a2f3e88bd8ebfb1 100644
+> --- a/sound/soc/soc-dapm.c
+> +++ b/sound/soc/soc-dapm.c
+> @@ -1147,6 +1147,8 @@ static int dapm_widget_list_create(struct snd_soc_dapm_widget_list **list,
+>   	if (*list == NULL)
+>   		return -ENOMEM;
+>   
+> +	(*list)->num_widgets = size;
+> +
+>   	list_for_each_entry(w, widgets, work_list)
+>   		(*list)->widgets[i++] = w;
+>   
 
-Assume a key won't exceed 256 bytes thus MAX_KEY_SIZE=256 according to
-"cryptsetup benchmark".
+and after that there is (*list)->num_widgets = i;
 
-Signed-off-by: Coiby Xu <coxu@redhat.com>
----
- include/linux/crash_core.h   |   6 +-
- include/linux/kexec.h        |   4 ++
- kernel/crash_dump_dm_crypt.c | 129 +++++++++++++++++++++++++++++++++++
- 3 files changed, 138 insertions(+), 1 deletion(-)
-
-diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
-index 44305336314e..2e6782239034 100644
---- a/include/linux/crash_core.h
-+++ b/include/linux/crash_core.h
-@@ -34,7 +34,11 @@ static inline void arch_kexec_protect_crashkres(void) { }
- static inline void arch_kexec_unprotect_crashkres(void) { }
- #endif
- 
--
-+#ifdef CONFIG_CRASH_DM_CRYPT
-+int crash_load_dm_crypt_keys(struct kimage *image);
-+#else
-+static inline int crash_load_dm_crypt_keys(struct kimage *image) {return 0; }
-+#endif
- 
- #ifndef arch_crash_handle_hotplug_event
- static inline void arch_crash_handle_hotplug_event(struct kimage *image, void *arg) { }
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 0dc66ca2506a..5bda0978bab3 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -396,6 +396,10 @@ struct kimage {
- 	void *elf_headers;
- 	unsigned long elf_headers_sz;
- 	unsigned long elf_load_addr;
-+
-+	/* dm crypt keys buffer */
-+	unsigned long dm_crypt_keys_addr;
-+	unsigned long dm_crypt_keys_sz;
- };
- 
- /* kexec interface functions */
-diff --git a/kernel/crash_dump_dm_crypt.c b/kernel/crash_dump_dm_crypt.c
-index 62a3c47d8b3b..ec2ec2967242 100644
---- a/kernel/crash_dump_dm_crypt.c
-+++ b/kernel/crash_dump_dm_crypt.c
-@@ -1,14 +1,62 @@
- // SPDX-License-Identifier: GPL-2.0-only
-+#include <linux/key.h>
-+#include <linux/keyctl.h>
- #include <keys/user-type.h>
- #include <linux/crash_dump.h>
- #include <linux/configfs.h>
- #include <linux/module.h>
- 
- #define KEY_NUM_MAX 128	/* maximum dm crypt keys */
-+#define KEY_SIZE_MAX 256	/* maximum dm crypt key size */
- #define KEY_DESC_MAX_LEN 128	/* maximum dm crypt key description size */
- 
- static unsigned int key_count;
- 
-+struct dm_crypt_key {
-+	unsigned int key_size;
-+	char key_desc[KEY_DESC_MAX_LEN];
-+	u8 data[KEY_SIZE_MAX];
-+};
-+
-+static struct keys_header {
-+	unsigned int total_keys;
-+	struct dm_crypt_key keys[] __counted_by(total_keys);
-+} *keys_header;
-+
-+static size_t get_keys_header_size(size_t total_keys)
-+{
-+	return struct_size(keys_header, keys, total_keys);
-+}
-+
-+static int read_key_from_user_keying(struct dm_crypt_key *dm_key)
-+{
-+	const struct user_key_payload *ukp;
-+	struct key *key;
-+
-+	kexec_dprintk("Requesting key %s", dm_key->key_desc);
-+	key = request_key(&key_type_logon, dm_key->key_desc, NULL);
-+
-+	if (IS_ERR(key)) {
-+		pr_warn("No such key %s\n", dm_key->key_desc);
-+		return PTR_ERR(key);
-+	}
-+
-+	ukp = user_key_payload_locked(key);
-+	if (!ukp)
-+		return -EKEYREVOKED;
-+
-+	if (ukp->datalen > KEY_SIZE_MAX) {
-+		pr_err("Key size %u exceeds maximum (%u)\n", ukp->datalen, KEY_SIZE_MAX);
-+		return -EINVAL;
-+	}
-+
-+	memcpy(dm_key->data, ukp->data, ukp->datalen);
-+	dm_key->key_size = ukp->datalen;
-+	kexec_dprintk("Get dm crypt key (size=%u) %s: %8ph\n", dm_key->key_size,
-+		      dm_key->key_desc, dm_key->data);
-+	return 0;
-+}
-+
- struct config_key {
- 	struct config_item item;
- 	const char *description;
-@@ -130,6 +178,87 @@ static struct configfs_subsystem config_keys_subsys = {
- 	},
- };
- 
-+static int build_keys_header(void)
-+{
-+	struct config_item *item = NULL;
-+	struct config_key *key;
-+	int i, r;
-+
-+	if (keys_header != NULL)
-+		kvfree(keys_header);
-+
-+	keys_header = kzalloc(get_keys_header_size(key_count), GFP_KERNEL);
-+	if (!keys_header)
-+		return -ENOMEM;
-+
-+	keys_header->total_keys = key_count;
-+
-+	i = 0;
-+	list_for_each_entry(item, &config_keys_subsys.su_group.cg_children,
-+			    ci_entry) {
-+		if (item->ci_type != &config_key_type)
-+			continue;
-+
-+		key = to_config_key(item);
-+
-+		strscpy(keys_header->keys[i].key_desc, key->description,
-+			KEY_DESC_MAX_LEN);
-+		r = read_key_from_user_keying(&keys_header->keys[i]);
-+		if (r != 0) {
-+			kexec_dprintk("Failed to read key %s\n",
-+				      keys_header->keys[i].key_desc);
-+			return r;
-+		}
-+		i++;
-+		kexec_dprintk("Found key: %s\n", item->ci_name);
-+	}
-+
-+	return 0;
-+}
-+
-+int crash_load_dm_crypt_keys(struct kimage *image)
-+{
-+	struct kexec_buf kbuf = {
-+		.image = image,
-+		.buf_min = 0,
-+		.buf_max = ULONG_MAX,
-+		.top_down = false,
-+		.random = true,
-+	};
-+	int r;
-+
-+
-+	if (key_count <= 0) {
-+		kexec_dprintk("No dm-crypt keys\n");
-+		return -EINVAL;
-+	}
-+
-+	image->dm_crypt_keys_addr = 0;
-+	r = build_keys_header();
-+	if (r)
-+		return r;
-+
-+	kbuf.buffer = keys_header;
-+	kbuf.bufsz = get_keys_header_size(key_count);
-+
-+	kbuf.memsz = kbuf.bufsz;
-+	kbuf.buf_align = ELF_CORE_HEADER_ALIGN;
-+	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
-+	r = kexec_add_buffer(&kbuf);
-+	if (r) {
-+		kvfree((void *)kbuf.buffer);
-+		return r;
-+	}
-+	image->dm_crypt_keys_addr = kbuf.mem;
-+	image->dm_crypt_keys_sz = kbuf.bufsz;
-+	kexec_dprintk(
-+		"Loaded dm crypt keys to kexec_buffer bufsz=0x%lx memsz=0x%lx\n",
-+		kbuf.bufsz, kbuf.bufsz);
-+
-+	return r;
-+}
-+
-+
- static int __init configfs_dmcrypt_keys_init(void)
- {
- 	int ret;
--- 
-2.47.0
-
+Can this be somehow simplified to remove 'i', if it set before assignment?
