@@ -1,86 +1,89 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F6271F4FAD;
-	Wed, 30 Oct 2024 14:48:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE30E1E573B;
+	Wed, 30 Oct 2024 16:15:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730299731; cv=none; b=WVqx319U3EE960CrFCW/Kx9BFhLJ8yknAwy4DdOkP09J7XdjFDADcP6hlAr5nGauC89VeJLjJj33/7LsqM2yNRlr2UcLdTeoAJozwTDrNk6VxpSvMUSYjIv4cR0xxMXCRQAdYNriGei8Q+WdPY+WSVMTGBsWqU6Ry2CustTjsGs=
+	t=1730304901; cv=none; b=hf5oAa+AA3DrGFir1+H8jTe2y8JTTUVwQER3ZjvUjrT2k52y53aQfouzyKV7p+zcFfBYmAQQutGKYZxguFERD4ochIG5mfo69FCoDDk0xipBD51rznTmtxOKeYuYxlBPxcsbPc3iGhMbo/7LuLzFKurfsNISrt3oM+s0j4nDeWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730299731; c=relaxed/simple;
-	bh=lQRfqcUFnh1Q9TAfFVHoDskiifmQlnSBJhbcwNY/6Zs=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BEcw7LdnDo9Ri7zBa3wHEpBtG/ZvLW2NuG0NtCAbVtsCJrli7veNsVa55IRLPLP0UZAQxBOqj+MngEaFquFE+U3WRZ+uvRvoWgyzQ/o23joPBFbSnw9HWHZ2UdY8jqSqRZNfewyqfE6pYylAigQxxaV3h3uSidFw0vc+LxCnWek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Xdqd53czYz6GFBq;
-	Wed, 30 Oct 2024 22:43:53 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id B55EB140593;
-	Wed, 30 Oct 2024 22:48:44 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 30 Oct
- 2024 15:48:43 +0100
-Date: Wed, 30 Oct 2024 14:48:41 +0000
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Ira Weiny <ira.weiny@intel.com>
-CC: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>, "Navneet
- Singh" <navneet.singh@intel.com>, Jonathan Corbet <corbet@lwn.net>, "Andrew
- Morton" <akpm@linux-foundation.org>, Dan Williams <dan.j.williams@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>, "Alison Schofield"
-	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
-	<linux-cxl@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-	<nvdimm@lists.linux.dev>, <linux-kernel@vger.kernel.org>, Chris Mason
-	<clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, David Sterba
-	<dsterba@suse.com>, <linux-btrfs@vger.kernel.org>, Johannes Thumshirn
-	<johannes.thumshirn@wdc.com>, Robert Moore <robert.moore@intel.com>, "Len
- Brown" <lenb@kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	<linux-acpi@vger.kernel.org>, <acpica-devel@lists.linux.dev>, Li Ming
-	<ming4.li@intel.com>, Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva"
-	<gustavoars@kernel.org>, <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH v5 00/27] DCD: Add support for Dynamic Capacity Devices
- (DCD)
-Message-ID: <20241030144841.00006746@Huawei.com>
-In-Reply-To: <20241029-dcd-type2-upstream-v5-0-8739cb67c374@intel.com>
-References: <20241029-dcd-type2-upstream-v5-0-8739cb67c374@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1730304901; c=relaxed/simple;
+	bh=N9werbf4NPq4LiWt3uHpAOCcksOcVaD4UmVzrTm7pkQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=byZBlXfppWDkEHrSSEudO0u6Qjhz3otOU+J/Ch1gELjlzxwkLV8toXcW5cqcyv2MmoBEmQTepRPDfNFPA3bn8S+BDJQDf1TSGH0W+y8YDGcDFAOdR0mdVVLTgH2DhjenmDfy5M4EDRSl6NYs2vawyca24k1QIV9XrK3PCb/+XVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RgjWmxk+; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RgjWmxk+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB6DCC4CECE;
+	Wed, 30 Oct 2024 16:15:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730304901;
+	bh=N9werbf4NPq4LiWt3uHpAOCcksOcVaD4UmVzrTm7pkQ=;
+	h=From:Subject:Date:To:Cc:From;
+	b=RgjWmxk+Ta/ZUEDhcnH9C0C5ZRjgiyQzdT+5BmFk7ppgAL8Us4vjU9vKAeZ/FeTXQ
+	 yMbrwccUMzIck74xpvaiyL2kauWNWEdOVT2ZOJk89fh3s5eDnNtTP7KPuVB42IRYff
+	 MjzkCg8hqwlhnb1dGmgEjMc4ooUTPS9OeTcz2IQP4ndjgVYPbtHcsoEeRnPoSPAeL8
+	 zErMvqG5Mx55yaHiQXzw281/tDBJ8Ad5NquUG0EG4SMf7QqX1ZC6/4kVHd3hXwCPdM
+	 mdINHTwUqJuKg5JnJKQz7vDUuv6Yr/NAzv/u+dWjeci3GdfqkevEGHsLm7y8rR9tfk
+	 nbo87a8Tzoicg==
+From: Nathan Chancellor <nathan@kernel.org>
+Subject: [PATCH 0/2] kprobes: Adjustments for __counted_by addition
+Date: Wed, 30 Oct 2024 09:14:47 -0700
+Message-Id: <20241030-kprobes-fix-counted-by-annotation-v1-0-8f266001fad0@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100011.china.huawei.com (7.191.174.247) To
- frapeml500008.china.huawei.com (7.182.85.71)
+X-B4-Tracking: v=1; b=H4sIAHdbImcC/x2N0QqDMAxFf0XyvIBGhblfGXtobdQwSKXthiL+u
+ 8HHA/fcc0DmJJzhVR2Q+C9Zoho0jwrGxenMKMEYqKauqWnA75qi54yTbDjGnxYO6Hd0qrG4Yja
+ GwH7oiZ6+JbCfNbGN78b7c54XfUuhw3MAAAA=
+X-Change-ID: 20241029-kprobes-fix-counted-by-annotation-ddeb95228b32
+To: Masami Hiramatsu <mhiramat@kernel.org>, 
+ Naveen N Rao <naveen@kernel.org>, 
+ Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>, 
+ "David S. Miller" <davem@davemloft.net>
+Cc: Kees Cook <kees@kernel.org>, 
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+ Jinjie Ruan <ruanjinjie@huawei.com>, linux-kernel@vger.kernel.org, 
+ linux-trace-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+ patches@lists.linux.dev, Nathan Chancellor <nathan@kernel.org>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=950; i=nathan@kernel.org;
+ h=from:subject:message-id; bh=N9werbf4NPq4LiWt3uHpAOCcksOcVaD4UmVzrTm7pkQ=;
+ b=owGbwMvMwCUmm602sfCA1DTG02pJDOlK0c1zP6c6qvn8SU5i3coa33LcfIrFhcmXy+e/Vb7i9
+ dY0ZDdbRykLgxgXg6yYIkv1Y9XjhoZzzjLeODUJZg4rE8gQBi5OAZjILndGho9Fpz/e0/l7TZK1
+ efu2K27/aw7M+Hg0m+f70uuNHzfv+MTO8D/6nNjpRy2lnJe+OTyR+CN4aDHn5S18WnMu3F21gFn
+ slTIjAA==
+X-Developer-Key: i=nathan@kernel.org; a=openpgp;
+ fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
 
-On Tue, 29 Oct 2024 15:34:35 -0500
-Ira Weiny <ira.weiny@intel.com> wrote:
+Hi all,
 
-> A git tree of this series can be found here:
-> 
-> 	https://github.com/weiny2/linux-kernel/tree/dcd-v4-2024-10-29
-> 
-> Series info
-> ===========
-> 
-> This series has 4 parts:
-> 
-> Patch 1: Add core range_overlaps() function
-> Patch 2-6: CXL clean up/prelim patches
-> Patch 7-25: Core DCD support
-> Patch 26-27: cxl_test support
+This series addresses the issues that I brought up at [1]. The first
+change is the actual functional fix and the second change is something I
+noticed while auditing this code, which is related but tangential to the
+actual fix, since the current code has a correct calculation.
 
-Other than a few trivial comments and that one build bot reported
-issue all looks good to me. Nice work Ira, Navneet etc.
+This resolves the issue for me when testing both clang 19 and GCC 15
+(tip of tree, which is the only version that has __counted_by support).
 
-Maybe optimistic to hit 6.13, but I'd love it if it did.
-If not, Dave, how about shaving a few off the front so at least
-there is less to remember for v6 onwards :)
+[1]: https://lore.kernel.org/20241022205557.GA3004519@thelio-3990X/
 
-Jonathan
+---
+Nathan Chancellor (2):
+      kprobes: Fix __get_insn_slot() after __counted_by annotation
+      kprobes: Use struct_size() in __get_insn_slot()
+
+ kernel/kprobes.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
+---
+base-commit: b5f348cbce367d5dcd34bf2b6c02c39a5be3fb97
+change-id: 20241029-kprobes-fix-counted-by-annotation-ddeb95228b32
+
+Best regards,
+-- 
+Nathan Chancellor <nathan@kernel.org>
+
