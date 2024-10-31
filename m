@@ -1,202 +1,138 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from omta40.uswest2.a.cloudfilter.net (omta40.uswest2.a.cloudfilter.net [35.89.44.39])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE1161A01C6;
-	Thu, 31 Oct 2024 14:49:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.8
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730386148; cv=fail; b=byJzvgFU4b0axtEvf/grWD/09jBGDZdIIHcd4QK9SnTDRDujGSZKHl7F+UJhuQByL6HrrDpzKPcJF9bIjHmUEjNOKqhgygZvgkC71b/pTYA992149rVShFEJFirEHu0PWxiivMf9b1Ho7NRz3GG37HbZlwwI8m+5Mux4vDpPMuE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730386148; c=relaxed/simple;
-	bh=QuK1olTQdxzJQMF5lGc3QldY7lfKvlbXpz13DJQG83Q=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=O8ReYN7Tsic21wsPGOUFtxRYCbPOLOyafjggCP2J4ozdvYMQrRMam3XI+Y5ip+U05t4ISJOHhhYiEkG0Fu8FPOsAzR1GAT6A0KdYb/unyDgo66R9iib385VGW0Yptzb251olVJvo5SMKhKDxfzL3GaamzKU9s7KPi4FLKQSfNgQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=V8o1ljCI; arc=fail smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58DC013AD26
+	for <linux-hardening@vger.kernel.org>; Thu, 31 Oct 2024 15:54:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.39
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1730390094; cv=none; b=vAisyoqxf++KXkkaNbO8419ugHkHMmA77JvX1ZE3CYti0i7TkcZSgweXCXmAstExT8W8SkgeSE1jlhhFtyvfyJqGyfvJyfuWMaP38D7hDwwzETf2n+bjMvsKrBMxMILTgdsIsR5IicVZaHZsrl8flRshm8YOANY7oyQF9/oqq00=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1730390094; c=relaxed/simple;
+	bh=Gxzfn2SF0QBAoVHOxro2ClMb4X/IGqeuFDTOdU7DiYU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nQGW5/K5QRO1WtwMzG51BcMh0uzuDdr/AflPK4stWM9XiZEDRHEcvW0HQ1n7mGDw6OM51ytDfZUQycteGn9bIAxfGFksxJSOd9AIjIdub/H6Gta4GuZRD4ojpssk8BdP7zbf57UBqFFq2xG8q+Xwibzpoe1ldyssTuglBStBBks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=GaUBPjV0; arc=none smtp.client-ip=35.89.44.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="V8o1ljCI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1730386146; x=1761922146;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=QuK1olTQdxzJQMF5lGc3QldY7lfKvlbXpz13DJQG83Q=;
-  b=V8o1ljCIeQUq2JXaatc1HIDBlYzY/1V08wJcOva6Qe1UUYcaJiSbgvJo
-   JmpeXkfIjThjGMTA58Bpao26C6JudDzRGuMVe0O3DzuCaN8V1l6UHvFZi
-   oUJVLiXBi4BgiVFCzgh/vkUTNFbb6aqg/1t/EgvdxByi3b0+oZ/CxzyYn
-   w/cOpePWtzDbtmr8ap6aId1W+bBfzfJTbaj7MI9qhPQ/0c/Oaq8zSYsz4
-   7ghxvJ3eKhVjwMTdNVpC38QyQMJ7QP1iT2ncpatmgMNMadk5+v27JxqQ5
-   VjIIVjkphI/34lKSc4O99zXz4jPMkwqHdUuHlXBucg7kMU76XTnRYCq5e
-   w==;
-X-CSE-ConnectionGUID: u3WVJLnvRD+DC+GUAxkbgw==
-X-CSE-MsgGUID: /nke67tDRVGZhgq9m/WFXw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11242"; a="47600525"
-X-IronPort-AV: E=Sophos;i="6.11,247,1725346800"; 
-   d="scan'208";a="47600525"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2024 07:49:04 -0700
-X-CSE-ConnectionGUID: ILAajtqpQsuUq/YXRHg/Tw==
-X-CSE-MsgGUID: 7FHBsGaCR++ycVQqU9QLeQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,247,1725346800"; 
-   d="scan'208";a="82806579"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by orviesa006.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 31 Oct 2024 07:49:03 -0700
-Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Thu, 31 Oct 2024 07:49:02 -0700
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Thu, 31 Oct 2024 07:49:02 -0700
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.175)
- by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Thu, 31 Oct 2024 07:49:02 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=gorOw5HkKTQo7Jo8MC7A9q2HC4AbVK63V7NaJR7+a4U5Pc/IEzvuz1EKpwgwWcT9fQZNGuR+8Yp65JeF5yvj4iYntDOEGhUgsbvzrOBxP9xm93q+vzzha5n9Fp+lFUBvTi84aNDW4SC5ZKmprHVCJTPiF8ln4MT5y//Grag5MMM2TP5p8yFa34evNGTByGi1ffAHarmt8Aka4HOp7z1bq8ORKNoGuoqO9xAxg+b16q4ufKSTe5i0QALdOybpr78UJWsW3sNY4u5wh78fdmujiK4uAsgxDame9k3YmfQsQ6VPYGxjJ/FTvVia55D9W7rCvWLefCYHkT6qaJ0z4hh4Fg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=uJ9X0Iiy/uKNDh/RiTEm6C+uMTW2Px1DUUhnAmVUPYo=;
- b=uiHcgnWs7bYb2gA49JoPTqX02FROEEkaDR8pU1FP7d6oSNwxSDXfNkZ04CdgZZIMrOGmj8xMDM7AWRH8Iyjh6lylX8pA8/RNf69i0sa6YCZNkMYYkCro766rCIQWf/Tqf5S9mOpTUUX4wA0ZudJ/KBGMWFRk645/ecC66Qo9An7cHCrn4TXd+4Y6BnshAjJ+z9TptYxPoryAaeWu3DB629Q2aBX/fW1nryqD2i07MDGM0qtaM/1aDH8pPj0glZZpmtlEDurCSJc1JibtDDQc+FgeaItoYKwNwvfem+chLJ2NmMG7AlYh1RYq0RMO4DYIWowXA423gYIsPxuiHuuAvA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
- by DM4PR11MB6263.namprd11.prod.outlook.com (2603:10b6:8:a6::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8114.24; Thu, 31 Oct
- 2024 14:48:59 +0000
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::cf7d:9363:38f4:8c57]) by SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::cf7d:9363:38f4:8c57%3]) with mapi id 15.20.8093.027; Thu, 31 Oct 2024
- 14:48:58 +0000
-Date: Thu, 31 Oct 2024 09:48:53 -0500
-From: Ira Weiny <ira.weiny@intel.com>
-To: Davidlohr Bueso <dave@stgolabs.net>, <ira.weiny@intel.com>
-CC: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>, "Jonathan
- Cameron" <Jonathan.Cameron@huawei.com>, Navneet Singh
-	<navneet.singh@intel.com>, Jonathan Corbet <corbet@lwn.net>, Andrew Morton
-	<akpm@linux-foundation.org>, Dan Williams <dan.j.williams@intel.com>, "Alison
- Schofield" <alison.schofield@intel.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, <linux-cxl@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>, <nvdimm@lists.linux.dev>,
-	<linux-kernel@vger.kernel.org>, Kees Cook <kees@kernel.org>, "Gustavo A. R.
- Silva" <gustavoars@kernel.org>, <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH v5 08/27] cxl/mem: Read dynamic capacity configuration
- from the device
-Message-ID: <672398d5caa17_7b1f129472@iweiny-mobl.notmuch>
-References: <20241029-dcd-type2-upstream-v5-0-8739cb67c374@intel.com>
- <20241029-dcd-type2-upstream-v5-8-8739cb67c374@intel.com>
- <20241031002422.cu53abpaimetzrdx@offworld>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20241031002422.cu53abpaimetzrdx@offworld>
-X-ClientProxiedBy: MW4PR04CA0213.namprd04.prod.outlook.com
- (2603:10b6:303:87::8) To SA1PR11MB6733.namprd11.prod.outlook.com
- (2603:10b6:806:25c::17)
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="GaUBPjV0"
+Received: from eig-obgw-6001a.ext.cloudfilter.net ([10.0.30.140])
+	by cmsmtp with ESMTPS
+	id 6B7ctj2WfvH7l6XVWtoS98; Thu, 31 Oct 2024 15:54:46 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id 6XVVt0krr2Zy06XVVtal8N; Thu, 31 Oct 2024 15:54:45 +0000
+X-Authority-Analysis: v=2.4 cv=Q4EZ4J2a c=1 sm=1 tr=0 ts=6723a845
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=GtNDhlRIH4u8wNL3EA3KcA==:17
+ a=IkcTkHD0fZMA:10 a=DAUX931o1VcA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
+ a=tQWGEp-pK8p0ZP6gKTUA:9 a=QEXdDO2ut3YA:10 a=Xt_RvD8W3m28Mn_h3AK8:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=KtvSriqj3Ua8SrbSVO6pQjRywNkkQJtFu2RPK0z3hdE=; b=GaUBPjV0nqaZ3rB8d1IqJKU9me
+	aZgmNVZ19chDRGDuqtqqyoo8fm0iCfj500Un3A1ABcVueJ2jbZLgHMAjPzUPeyV4rta356TpnsVrl
+	e850RsZPuDs+lR3HlemOZ+RUeBtTM1/xpGAja3fEl1m9Uak6Yp/UGDvkJZvwBTNKjEy4PQtvJlSOV
+	rI7C88Lr9ohYWcEY3PnkUXdgIVtfsM9wKv+/4/uyKCoLtl2m/u6iRwL4wByB6DXYwsGjQof+SjL6r
+	f5nDCRIwHPPirsxiHLPSFe59wBRcLZGA5pVSEEgRH+rpZdB67wIL19rd6Z19HcPt34/fVeAzXLl1q
+	QzmLZnQw==;
+Received: from [177.238.21.80] (port=39586 helo=[192.168.0.27])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1t6XVU-001e2z-2v;
+	Thu, 31 Oct 2024 10:54:45 -0500
+Message-ID: <fe0e9c86-fa44-425e-a955-aa9e401b6334@embeddedor.com>
+Date: Thu, 31 Oct 2024 09:54:36 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|DM4PR11MB6263:EE_
-X-MS-Office365-Filtering-Correlation-Id: 44741af5-40ce-412c-7b24-08dcf9bb26da
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?w2vg3ZbWysjdAonfNvtyMFah6bNBPlkqd/LydpnislZ7Eij+bmfwXaSjtR9E?=
- =?us-ascii?Q?XI6s+Fg7npAE19t8aNSUH+sDTXT1MnGFcjJ290rKcKBG/2cPMEcc0tPIpvaq?=
- =?us-ascii?Q?WBOF1Q643uO1fQqkBhf46GddJHCRLyjB0Wd7w3Osz7fltGKfkzycA0qjWmtD?=
- =?us-ascii?Q?GJiA0om4rZorXUEOPRGmq7gLLTknSEAdDppZx9N9BlZo2sWKBinw2P9k0pvH?=
- =?us-ascii?Q?YIRjqLIT4ZM6B7EIQNLUq+ukhTXi+JXui+NG/cU8GvMXEYot/yU1FOjCT6dr?=
- =?us-ascii?Q?akqurMHSv8dDAJCHTV6H2NSVIiwgqHNhaFOzZuDmebn40QrueXQm7v6FNMJg?=
- =?us-ascii?Q?cj3nrXJL+kYpt8GzfJsO8Yq3M4FM7LQMMLyHZOb12A/aUh1zBRfCOm6AnVr5?=
- =?us-ascii?Q?HbZ7Gmof+/WO61nq4xaf7ff/j9qG4fDdP9tVTt2trO/bhV+xfZGirB6IeaIu?=
- =?us-ascii?Q?bEHXI1NA6biFeOGdLOrjIH+uH3swuvfAZNaMX+va/I16He1fn6kpllrl4HRL?=
- =?us-ascii?Q?n1Asyf6dBS5M62OInKG8zuK/bxm8WrHH8K2OtPYcfe1Kwge6TVMbPU+XoFzM?=
- =?us-ascii?Q?L2vZ2fIDGp3KbN5IHFrymCQe+sNcD1BewcYWIPevSNVzou3sOUT6RgkxsT/d?=
- =?us-ascii?Q?nPnpgFErnrlOOPf/KLSPDgMi1AmHsokCzpihxjYtzlgREOKUYyz4H4ObP/pk?=
- =?us-ascii?Q?rmTmId84UAfFe714iextu6yauNQhHvDvC/8o2OpLNHUBFP4pWCTsQmGrEdZs?=
- =?us-ascii?Q?0cH0XoRwe5JeTOxyRagGX19x4xsF/aVq/UopweMIh/Dqy0xDWYuqzv0berVW?=
- =?us-ascii?Q?uZs96op0qhjA8wRSyYxg3+ulYzG0UoxReN2wibL5aL9gkuaZpJY7/fIgLmhp?=
- =?us-ascii?Q?lDFDrL6bP9NsBOW6sO38TKiCKxNTY0d6dUJo8s6atQJZlOV8/yZ+h/RwOFlf?=
- =?us-ascii?Q?eIMrWWHb1G8AwQrrNY5XYnk7yobW4hXL27GrkyAQfdnE9njor+yjYjxW3UWR?=
- =?us-ascii?Q?jDeaRGIrJEgq0SfVuPkWCxILHnTR8d1K4O3iKrfZSHbC0v7o8DC/DkvTbk0H?=
- =?us-ascii?Q?re5WGbY5TLeFqD1RW9m71u819TKAUW7dk0QK8+PgfOCEYwX9b46d/FmCV52M?=
- =?us-ascii?Q?+TSfXNxKDvJiME76+45ua+xJnNnAd0qCLePgwl4QKbqAJ5fhGEqKNNqPQfUB?=
- =?us-ascii?Q?CQ+/dBMBsxRKAPOVPJMs97BIemelisS4Fc2KC0Gg/YnlzwU7kTayIjcXLTfS?=
- =?us-ascii?Q?Dx/nV24uGCAk/OhfSVHiTR6pMnzGyNBwkjQU60M+Oq/5pGiIh2POOWFOj4J1?=
- =?us-ascii?Q?ZG9jHZqoHJyh9w38yej2w+x6?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Rfd1D2Wg5A6aHaAqM2vZOoJgeSDlZy/cWEibBpwczBq/H36LSMwGIhpVi4m6?=
- =?us-ascii?Q?r49ATNgKhpCLHulsbvQIxtqvlNZjvQEC58kNPhjgB6goUm0Pdgrg6zWlBum4?=
- =?us-ascii?Q?PbYTI7F9+OP8ZjKlZ/r/VIMkcXzGD2qRTERY3Jd0Bb/l1Xqdj9hAkaaa7xlO?=
- =?us-ascii?Q?5QOmHGltCfrsLgP5VsbXUI+tV7NXOK8g0TbdFaqD2qyjld1dH/06SOiiWaof?=
- =?us-ascii?Q?khvilGdA/oOvviJ/Ka1k3kCoI8p07auOTetG2+pXX8bLujx7x4WJ/PHUYvoH?=
- =?us-ascii?Q?LoBwQkWvNc6wpvKr7+k8YAQXi9WfUq7eJhy+c5Emza3aXuQYjpgnwkHCjl7z?=
- =?us-ascii?Q?vVW64wFIEUPU4GuGCN0y6sBka4IK0gVkjGy8cgtie0XFi/l2rJYm/Ysd9v0m?=
- =?us-ascii?Q?j2MKyZ1yC9E76B/cOQYe11ZgjtjjgXmbwfc+vZSkdNPGIwRsZd8iHMwfUBA8?=
- =?us-ascii?Q?kL0esRQWVj3hWxHSAZ1gzqmNztYWR1OnVyXQtoBGQ6qwjPcPHJ4WRBaoE2aE?=
- =?us-ascii?Q?alYpIv3vcmTMEnPmpFxsnovdqf4tbbyOecnsslDwcD6BjfHG3yeF9XXFtkaR?=
- =?us-ascii?Q?BH7g81wi7ACmrkulO8tumGTJL2l1J7vLOcwJoyJK1+GLhizDxPo489R3lubT?=
- =?us-ascii?Q?vLeDgINxo8PcIwp6a9KdXR/ZcnO3gRHixW/EbqMMKPpcfEnDImBbV5znFab2?=
- =?us-ascii?Q?p7p10qgebga/c2Q6Z9T/fSODMlqNcYQIY/ChD9SAipKAIbtY7/lpsaKWapR8?=
- =?us-ascii?Q?Gopb1NF2bwlgviJLw7k5saSDP+f9w0h4EkmqlW5vva8jtNBzOGtw+nhE/7om?=
- =?us-ascii?Q?NxM1/+c+MFvl8lKo2unfOsOA4xXR4+kHZr/6lSTGcq8QHUJDEdgRWvgzlUuR?=
- =?us-ascii?Q?RYE7Zp1DRa1GZy23Z2qsz5oRKRDXU6hLZGcPy3vf5esRlYBwg9RskPrbxdWK?=
- =?us-ascii?Q?9Jf2z8W8ncDicpGLTLQ1RJWIGO/1rUc2iot8VdKwrDOzfDJwdjWH5qs6OXxU?=
- =?us-ascii?Q?C0S2kLT98xvEI1lxOhbiWWQ46LpAVNZb/e79jCg6G7t7hji9XdLjVn0j+5tP?=
- =?us-ascii?Q?sFaa1kdh04noBHsAsMkJoKhlag5FnAmR153JRRI1peDV1lj+mt1VDWtSBylN?=
- =?us-ascii?Q?yE8xNmgjVb1L9kt3SJGlDIxI14M/Wu5E3SEq6/sM0eLzbs5clRuIF2cbseVy?=
- =?us-ascii?Q?aUU9/NjAPKgUOZKqeHq149wdHtaczs7GbnNUDaZALDbS/KDc9qOUXFgYg5et?=
- =?us-ascii?Q?eBLXpS4yXXGMWfUzooxoCddmMQNoyaOuL2Y2Urqa9I3PhWIyUqMGAOEd0isb?=
- =?us-ascii?Q?vWuiOj4zjMhYs5lKCYrRzGj1pVFdRZe9j00RaWMVw002FvblXqPk11sqxrwT?=
- =?us-ascii?Q?8Z1rt7AACAeEUDSrUoYyAqoi89Hi6aUxCzBsPcHpQ2JVbBUOfbWXhBVAHY+T?=
- =?us-ascii?Q?5GweBC9GwlrlvMJAxMtJtJhva1YrF9Gs5cAbAfWjXn/ZrJ6p9Uo1IdlkIE4S?=
- =?us-ascii?Q?d4bDy2tk308lzYeTE4HZuagT39HyfiXmMuPP9O7B+V08vNlewmEnEy5260aJ?=
- =?us-ascii?Q?nsxqMW9ImjW5p2QJzaVZpwBT97Rm9ROAVy4dmaNn?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 44741af5-40ce-412c-7b24-08dcf9bb26da
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Oct 2024 14:48:58.8588
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: TDDGYIJFtwHcjF06DkDjOgmTTATq0ldZaD1kgoCjgEI2/nU2v22+gi9/vbtIqBnZDfSlXRaiUXb0dqOVmtho1w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB6263
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH][next] jbd2: Avoid dozens of
+ -Wflex-array-member-not-at-end warnings
+To: Jan Kara <jack@suse.cz>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Theodore Ts'o <tytso@mit.edu>, Jan Kara <jack@suse.com>,
+ linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <ZxvyavDjXDaV9cNg@kspp> <20241031123313.dfcuttwzzs5f5i7a@quack3>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20241031123313.dfcuttwzzs5f5i7a@quack3>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 177.238.21.80
+X-Source-L: No
+X-Exim-ID: 1t6XVU-001e2z-2v
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.0.27]) [177.238.21.80]:39586
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfPEB587BCfDZMt4tLAMY65vs3IuU0CQf1Dd20I560LKFIil8B6AZ5wG8FXoUMTCRCgpnUvVimysxJ+RXAPxK5kh1VXQ4VdS05+0Rm6pUihbhk+ElS01Y
+ YLUFeSDAGWEZ+c/jU3zilvg9lbY8+l2S7+QLC/76tHrW00p8wUUqeU6wVPK6T4Ass+y7nmDt28GZxCdl/xMRZ+3zlxXv93kmaBrscWi5R1kEKAQMyhOVPMbc
 
-Davidlohr Bueso wrote:
-> On Tue, 29 Oct 2024, ira.weiny@intel.com wrote:
+
+
+On 31/10/24 06:33, Jan Kara wrote:
+> On Fri 25-10-24 13:32:58, Gustavo A. R. Silva wrote:
+>> -Wflex-array-member-not-at-end was introduced in GCC-14, and we
+>> are getting ready to enable it, globally.
+>>
+>> Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
+>> a flexible structure (`struct shash_desc`) where the size of the
+>> flexible-array member (`__ctx`) is known at compile-time, and
+>> refactor the rest of the code, accordingly.
+>>
+>> So, with this, fix 77 of the following warnings:
+>>
+>> include/linux/jbd2.h:1800:35: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+>>
+>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>> ---
+>>   include/linux/jbd2.h | 13 +++++--------
+>>   1 file changed, 5 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/include/linux/jbd2.h b/include/linux/jbd2.h
+>> index 8aef9bb6ad57..ce4560e62d3b 100644
+>> --- a/include/linux/jbd2.h
+>> +++ b/include/linux/jbd2.h
+>> @@ -1796,22 +1796,19 @@ static inline unsigned long jbd2_log_space_left(journal_t *journal)
+>>   static inline u32 jbd2_chksum(journal_t *journal, u32 crc,
+>>   			      const void *address, unsigned int length)
+>>   {
+>> -	struct {
+>> -		struct shash_desc shash;
+>> -		char ctx[JBD_MAX_CHECKSUM_SIZE];
+>> -	} desc;
+>> +	DEFINE_RAW_FLEX(struct shash_desc, desc, __ctx, 1);
 > 
-> >Linux has no use for the trailing fields of the Get Dynamic Capacity
-> >Configuration Output Payload (Total number of supported extents, number
-> >of available extents, total number of supported tags, and number of
-> >available tags).  Avoid defining those fields to use the more useful
-> >dynamic C array.
-> 
-> More of a general question, if anyone knows: why does the spec define
-> the fields in that order, and not put the region config structure(s)
-> at the end, as with all other cmds, afaik.
+> Am I missing some magic here or the 1 above should be
+> JBD_MAX_CHECKSUM_SIZE?
 
-Because the 3.0 spec only left 7 bytes of reserved space before the region
-config structure array.  One might argue that no one would ever implement
-the 3.0 spec for DCD but at the time it was seen as an unbreakable
-structure.
+This seems to be 32-bit code, and the element type of the flex-array
+member `__ctx` is `void *`. Therefore, we have:
 
-While it is not impossible to utilize those fields they are not required
-right now.  So in this implementation it was better to use the dynamic C
-array's and leave the use of those fields for another day.
+`sizeof(ctx) == 4` when `char ctx[JBD_MAX_CHECKSUM_SIZE];`
 
-Ira
+To maintain the same size, we tell `DEFINE_RAW_FLEX()` to allocate `1`
+element for the flex array, as in 32-bit `sizeof(void *) == 4`.
+
+--
+Gustavo
+
+
