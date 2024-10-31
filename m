@@ -1,60 +1,61 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56EB31953A2;
-	Thu, 31 Oct 2024 10:41:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 535A718593C;
+	Thu, 31 Oct 2024 10:47:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730371316; cv=none; b=INgEIhL8w0DWcZIKF3OzpSFGgM0T/9httRsCARgOboN2q6hTVSu5PmNZPem/5fmQVIXVMrZ29tXIdEq/o1PIncdoaKIWIFIqarc542vE0bdr9d8xOf41/HP9/4A6avt2lKwNqtWlu/2jcV7y0J5iamnFpCAX98JD8g0diA6v8bg=
+	t=1730371628; cv=none; b=Lv/lfmtloXmowpT3CWEGgMHc6L8qsrd76Ak4g+Ge8QFVj9CAiUYHYtnQIHCI006uJouVbOYCH4/H3ubuZBESnwTxOnLIkP4AGMwgaV0JV3oH5f/ANG3KzT5bBdgXY0+zcVZYwcisEdoWy5Km6CSSn8ZAyUxjcfDYUuIj6oycpVE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730371316; c=relaxed/simple;
-	bh=q2m+OHJQe9VEbpZccvcxyWYrsG45lMP+Rd3vJL1KHms=;
+	s=arc-20240116; t=1730371628; c=relaxed/simple;
+	bh=2MRXlISGofpJy6zOhWH0qDgXeEfKav+2/JB+H24ewGY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QkEhXis1RbKvlXm/XVt+4DGczv21uDuSo/7j/UT8ARTcqaU4tlYwJ0oaeA2KUnggkCyJYJMgWn2653NJlUDybVp2JKHGst9ApXVQA+EeCjKvlfPYZr6s/VSl9flP7f2sJ/dJN2l2/IPMq2/9zci+8wgQBhp/ZXIhxZcrNR2HiJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lWDERBAv; arc=none smtp.client-ip=209.85.214.177
+	 MIME-Version; b=so6EnnMCDv1bFvHC8IIei9cCNuUJWGWxRgLcq8iFuzmGBdwANnbG6Ke+BNVg9vBU10QZEsZBlgy9ev6LbsYDapiPq9jnVb7DgIA4WHgkb8641BIXYckt9dZ2GIlxDM5kEu29xhTzPzog2Da/yT0M9IVhK4IjJ74CtHG/pCjADtI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TntjoUqJ; arc=none smtp.client-ip=209.85.215.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lWDERBAv"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-20e6981ca77so8681045ad.2;
-        Thu, 31 Oct 2024 03:41:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TntjoUqJ"
+Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-7ee386ce3dfso945374a12.1;
+        Thu, 31 Oct 2024 03:47:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730371314; x=1730976114; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1730371625; x=1730976425; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=r5GNro7YWC/FjezeaKCH9xRHgSznLSEnftFlQE0TrdM=;
-        b=lWDERBAvcs16YHCtTdnWtu75E+sGf/YxzaJRFbEpZ5rma/jsYxaKsNHEIhNtXzbPFL
-         YgtvorLaxziu6Gx4YyFq3pm3TFLURiVzhnWVZFL68Pa35PNdrWujaIJg5rvFYsOy4Gje
-         08T1k9yh6B3NtY8mL3XMMf95wKPbctd5+kKfN6BR9IKs1ytmCjZ0itvnYlJh9MXC6Nfv
-         G3/lziIP75xqBQ/bnWPfkVh9RqzA+Zq3kF+8yjB12pNOd/vyKY+HhOHHg/87HC+ISwWQ
-         2dvPabZayxQ4AN7BNDVUMXglFzsJWZQgf72FAssCxV9xGv7c2kO1yBuI78xbPy0Yfvyc
-         yMcA==
+        bh=2MRXlISGofpJy6zOhWH0qDgXeEfKav+2/JB+H24ewGY=;
+        b=TntjoUqJZVU/V4Qj33IDDgfl0KS0W1UMZ+FS3VmnIylKLXY0ltAd5PyDWf2o6UZJQL
+         xpoo//29WjZAg0FJE/JGaCKT49FO0KsR7tcuC/1m89Ob5NAObrR4/xbzWuWKSWGEMVyu
+         OxXp/no6HZCNlVHRJNHS5WsNinXFIZj+0fAfYmjBxwr9JivLiJDwUfqVyvn2hyTVmdah
+         XJYuJBsSQlayshU8BA8FthSkPJDqStLmXAflukMlXg7iYzfkD0fy0cII1qeboSNp2lPj
+         wTdBNxL6/KUOxVbDFQOuLRcLlGdqXslBzyxLAOmLnxL0h1/a0uJydjZjJnZIHqdKHKcL
+         KVHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730371314; x=1730976114;
+        d=1e100.net; s=20230601; t=1730371625; x=1730976425;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=r5GNro7YWC/FjezeaKCH9xRHgSznLSEnftFlQE0TrdM=;
-        b=GiwA6xs21Sh8MdUYRFCXizuGwGBGvinC8QjTRMbmMpJsNewMgRDHC5sjNz//JELR/D
-         KpiZujG5QXq9Yin6MRYoa8D/kCOhHgQ6afpjpgvjFDhPHFNj1/b+Nhr47c+R3iaDqq5g
-         pw63SnMH66mECIIH9dKNIn3XOTUQTYAOx2Ot/s1N0RnSnV24qv2ikgT1/OQ2PVu+kDFD
-         QoYZANtCwJHRtuuvBgVgiENKx545vqPnyCMKqSxMBmxpID5RgKx9GggRXKjdd+QBtbZi
-         Hb2LU58q7WzlSr4YFj6qtmunDwHqAL/clRC31zxZeWYvhUEV7cKNjoiSjdLPPU4BnYSp
-         yeUw==
-X-Forwarded-Encrypted: i=1; AJvYcCUKVn6v4bbThuXYQPc/dpzXPKZFbqWY2++X1FfbHvGqFRucND+aqSFY9WL/18MBc3LphYpEy0UlZkSRjw==@vger.kernel.org, AJvYcCVQHJ9Z3hhhT9hY0lywcWSsiLLaE131Aa3nMscodGyCstDgAJ41dLs6N6EfsieQTpPOaGGCGMedVC9qZnTN@vger.kernel.org, AJvYcCVqOSlJgyo3gRVLyhtMO1tlHSpuf4yyb2DPq8+NWnnUxTxXdkqsLwC+T9zAnq1qXS59R6KEPstNvB8Q@vger.kernel.org, AJvYcCXTfzmcbnD9aEJnDUkmT4Qmw+Ehf9qBQijvbVRQ8Ulk62kQGmONR02TIXRkdDSzDyAb6gOCdEKozsV40NmMs4le@vger.kernel.org
-X-Gm-Message-State: AOJu0YzF4y+78KoqAFz4PLj8ckOCgwToecB6oOxauGDQI7HOcDylmnVG
-	6hTGIjj342bOIFlZiBouGnKdbqbR2yi67wNB32fsNmgl5QPxXc5Z
-X-Google-Smtp-Source: AGHT+IFxKgky6EqyTOIn7AIkk0TZ6xVCr1/Y3di4h7lNHH2Vcs437U3ctPeYZl6ScCv0XhCeKnA8vA==
-X-Received: by 2002:a17:902:ea04:b0:20c:f9ec:cd9e with SMTP id d9443c01a7336-21103c59c36mr32515255ad.41.1730371313557;
-        Thu, 31 Oct 2024 03:41:53 -0700 (PDT)
+        bh=2MRXlISGofpJy6zOhWH0qDgXeEfKav+2/JB+H24ewGY=;
+        b=DOR0N6c8f5tvzMRFmc24kWXMWRo1xnniT8qmKyCbn26xReBKwrnQM6CEkF9jvDWv8t
+         6vsJnK0ZXXLe7mKRxe+rtrfTRnvkS5uocTLaYkgGug/Oez2lIKW3M8UOtUgqrv/Iu0yw
+         m63jAdOUryMMDKrvT+197ODTNlWFaleEUT7i1DY8ek4Q1fliOmP+wQQua+zTdV5RcUNm
+         g9CQ9qx1K2JnIA19xzqA7xGiJoIUcTz+OuVNT+T/aIrNBxumsXEVUDH4zQRe7p90cVGN
+         OwhBCMRQnUkgsLFiapcY7BdnlnDmO3UUMmI/8mu1ACm5AregKbrUgQwAtXNjTIn3VCDT
+         tCow==
+X-Forwarded-Encrypted: i=1; AJvYcCU84faoaYSEzvwIu7/S8daEyVaDzkfYkbnioKPzqKIcQbtkqSg8ROen1yC/tux2pBXgj8aCB87phalQAWpQ@vger.kernel.org, AJvYcCUJjqEreKPmWo3wbF9H7FRH84kxecL1ocDj6GcWCAYNRd8Wbn2K4Cbe4c8Az7aSwWJDDD5SQSugt87B2it9xmEq@vger.kernel.org, AJvYcCVo8V9FViIAX+JX0Im2EgE0N5BpACi+CtCQDvFc/CnqFvOt1L+V6DlDSTk8+bRCnoPW9VU4v14GyLs0@vger.kernel.org, AJvYcCWEJQ0LlukVRb49+EIb2giIgWlCtSRr2bgFyqxeVkdesItaeF7TLZ5dWl/JgjhESN2IG8SkE5KZFCohAg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxMNhl7bGjrePfry1bFNNsUZ7Er+QYFP9jxGClnc9Lx8/7XFnzh
+	bnomhqwJb4PIAhnznOJF9OR8MlBmUQR//bmiNzlSiPHhklZkYYoc
+X-Google-Smtp-Source: AGHT+IHZV6eC22Bo2eCDMSor9E97BFyEdYp1eJ4AZtfisxfZOZWlRXG1K3+CB5e0rWgTxFoZq056BQ==
+X-Received: by 2002:a17:90b:38c6:b0:2d8:3f7a:edf2 with SMTP id 98e67ed59e1d1-2e93e0407bcmr2867863a91.12.1730371625623;
+        Thu, 31 Oct 2024 03:47:05 -0700 (PDT)
 Received: from mighty.kangaroo-insen.ts.net ([120.88.183.44])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-211056ed995sm7067045ad.39.2024.10.31.03.41.49
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7ee45a12337sm822291a12.91.2024.10.31.03.47.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 31 Oct 2024 03:41:52 -0700 (PDT)
+        Thu, 31 Oct 2024 03:47:05 -0700 (PDT)
 From: Mithil Bavishi <bavishimithil@gmail.com>
-To: andreas@kemnade.info
+To: krzk@kernel.org
 Cc: aaro.koskinen@iki.fi,
+	andreas@kemnade.info,
 	bavishimithil@gmail.com,
 	conor+dt@kernel.org,
 	devicetree@vger.kernel.org,
@@ -66,12 +67,12 @@ Cc: aaro.koskinen@iki.fi,
 	robh@kernel.org,
 	rogerq@kernel.org,
 	tony@atomide.com
-Subject: Re: [PATCH v2 2/6] arm/dts: Add common device tree for Samsung Galaxy Tab 2 series
-Date: Thu, 31 Oct 2024 10:41:45 +0000
-Message-ID: <20241031104146.4538-1-bavishimithil@gmail.com>
+Subject: Re: [PATCH v2 3/6] dt-bindings: omap: Add Samaung Galaxy Tab 2 7.0
+Date: Thu, 31 Oct 2024 10:46:57 +0000
+Message-ID: <20241031104657.5016-1-bavishimithil@gmail.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20241031083248.043d25d0@akair>
-References: <20241031083248.043d25d0@akair>
+In-Reply-To: <b3d51c31-3bcc-4319-8857-e16ddb636328@kernel.org>
+References: <b3d51c31-3bcc-4319-8857-e16ddb636328@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -80,38 +81,17 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-> well, that takes time, I wanted to start that on the right thing.
+> It's not attached to this thread. I don't have it in my mailbox. Neither
+> did b4 when applying entire thread for review. Sending something
+> separately or making it not accessible for review means it does not
+> exist.
 
-Yes indeed, I'll be more careful the next time, again sorry for the 
-trouble, I am not used to the process of mailing lists and may have done
-some mistakes there as well.
+I am not sure why was sent seperately, I'm trying to learn this workflow
+so it may have been a ametuer mistake from my side, apologies for that.
+I have notes the changes you requested and will try to apply them in v3
+along with others mentioned.
 
-> 1. make dtbs shows warnings
-
-> 2. make CHECK_DTBS=y ti/omap/omap4-samsung-espresso7.dtb is too noisy
-> (probably same for espresso10).
-
-> a lot comes from the dtsi files, so you need to ignore a lot, probably
-> either strip down the new dts to almost nothing besides dtsi includes
-> to determine the background noise or take a similar device, redirect
-> output and errors, diff that output with the full devicetree.
-> I am trying to clean that dtsi warning mess up, linux-next shows a lot
-> less warnings but that takes time.
-
-Oh, I was not aware of such tool, ran it and yeah there are a ton of
-warnings, where can I ask for assitance if I need it while fixing them.
-
-> One of the warnings that should be fixed:
-> dts/ti/omap/omap4-samsung-espresso7.dtb: lvds-encoder: compatible:
-> 'oneOf' conditional failed, one must be fixed: ['lvds-encoder'] is too
-> short 'lvds-encoder' is not one of ['ti,ds90c185', 'ti,ds90c187',
-> 'ti,sn75lvds83'] 'lvds-encoder' is not one of ['ti,ds90cf364a',
-> 'ti,ds90cf384a', 'ti,sn65lvds94'] 'lvds-encoder' is not one of
-> ['thine,thc63lvdm83d'] from schema $id:
-> 	http://devicetree.org/schemas/display/bridge/lvds-codec.yaml
-
-Ah right, I have to add the encoder (doestek, dtc34lm85am) in bindings and
-in vendor, this patchset may grow too big I assume.
+Thanks a lot for your patience.
 
 Best Regards,
 Mithil
