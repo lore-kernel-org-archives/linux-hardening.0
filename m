@@ -1,99 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AB6443173;
-	Thu, 31 Oct 2024 03:37:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84DC613B7B3;
+	Thu, 31 Oct 2024 06:55:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730345854; cv=none; b=Cc8OaotAhuSeJe44ZqaU6ybIPKc5dk5/iWbeBi6HiQNd2BBIyJSPqFHnPPopCTuooJ8PE9fcp0MRlTexEwWKk7Kr2YoUqKCYB7CpVmBVxTCbaJkg73f00Iy2d3ghd08Ubg80sSjyrrflOfc+tY7x6qDnMQyXhcfmnae8jHP/kpQ=
+	t=1730357736; cv=none; b=ZgoMnPtaNG6yZuc3il4SfYZaJ8kC980I/ko0Fh9WgdWARhw3elKc6DNjskITmytol6t/NNly3RNYPDw4kiS41DSy3NZiolEMYYILqKsnB8ARuDkDf5Ni5pWyf+aBNJk+L4slAfA0EYCVmjJHzVJI1VOQ1OCQO4wecMVQ+G8Nv3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730345854; c=relaxed/simple;
-	bh=nl24gnirAeRT6ICg5IzDTBd/x5bFHbr+jMPsT5ofn+Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n3jODeZbyBks0bI+v1OMT7chwEQtcx4cSfWeXgms+bPwUqeVqReBzL71UPjHIJOs5fxPDl74MmENyaBNeio4GgyAQNNUDc5lb0Uy8XfSDuYllg5YtDS75jX3jIQ1IquEWDZOlIRwyZfUu8XwsvdtwoaSTe2EmztLCTJ4+cGJHSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jJq4yMTV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1730357736; c=relaxed/simple;
+	bh=k5e7LBmNJeMJSZN6anErizq1fQ8yqtX6gXRt+viO/SA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=PoVDF8++dDYTGNXrdP74bujblqIJiXTCcfkY0F/r6Gdb6RcJUNYoafsRXAoidv8odVcrb0DrT06xtbwAYj3VyDi6sY7/d9pkWJL+GRPN5UTfInh1X1toMnFJ9ls8UaTpBXL+Phs2g2hnJN4VdRCZcvlEWlsbvqHc3cLW8vddnN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W7y22bqL; arc=none smtp.client-ip=209.85.215.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jJq4yMTV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75EE4C4CECE;
-	Thu, 31 Oct 2024 03:37:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730345854;
-	bh=nl24gnirAeRT6ICg5IzDTBd/x5bFHbr+jMPsT5ofn+Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jJq4yMTVr89KdBh8rJyEGqX2fuqDY7isRs1sKdolk+z4cqo0d9xaCgA11FRvHel11
-	 083zHjEll0Ex/L2AwUx90ca7E83i7MsGRbtElFTDLO7Yqkjjkw4dDGsXrvcHorGQIE
-	 TnyHcpA8ItfHkAK3+V2zgT2EAs4ac3GIUNhUKw1KFK9EYVn33AAyGgoOmDc4XwCOiT
-	 DNGqlz5oXfFzPVdba7qjS++3bO6Ighr/zMXyKZSvtBOCU7Oz2fA5V9ZO5/zE8rYvRy
-	 oiEBoIFk3g1/6Q9wstOnJzjQLx/P4sBrhzRlQVafcfcP/QzHNlAXyzypa08OrRmr28
-	 qHHgPYjH+DJvA==
-Date: Wed, 30 Oct 2024 20:37:31 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Naveen N Rao <naveen@kernel.org>,
-	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Jinjie Ruan <ruanjinjie@huawei.com>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	patches@lists.linux.dev
-Subject: Re: [PATCH 1/2] kprobes: Fix __get_insn_slot() after __counted_by
- annotation
-Message-ID: <20241031033731.GA2553234@thelio-3990X>
-References: <20241030-kprobes-fix-counted-by-annotation-v1-0-8f266001fad0@kernel.org>
- <20241030-kprobes-fix-counted-by-annotation-v1-1-8f266001fad0@kernel.org>
- <20241031105827.08b362cf0dcf558f9cf59ad8@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W7y22bqL"
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-7eae96e6624so521421a12.2;
+        Wed, 30 Oct 2024 23:55:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1730357734; x=1730962534; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=k5e7LBmNJeMJSZN6anErizq1fQ8yqtX6gXRt+viO/SA=;
+        b=W7y22bqLGtp/Y4aAkPmrQXwVRTb/UVHn8+mSD+NdS9WlI+v8jKIJmxdbpAaEIGEWXo
+         8tg+OcP9dMJZdolrNDnZ+LnIqZi3dnptVEAX3Xf+ptzNukirCnruG4gTlzuyqj4qD2kp
+         QmeUidyptpUyoYgoWOMsj/MGkYOBuxcblBw/VGx7ug2XHLWNtZDm7mvGxjb5iVb4iBLb
+         J90VHh9L4Hgnf8Ipf+mixrrSLNgP5ImAIFaG2SYjkNxMUNwwH5nGe5Sro4OwkRzXst+f
+         82xscRuluRtg/bH7JGq+qPe+Teuq6Xmoupv3kILH6VlFhFKonfpyeLWnec/ABgWkUl3N
+         pG7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730357734; x=1730962534;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=k5e7LBmNJeMJSZN6anErizq1fQ8yqtX6gXRt+viO/SA=;
+        b=qE6mNHIGPEO+J8eALR9RcZgzcDG6HW2ky3qdXqZUsIl9wxxaxCeWrtTIyn8MvKe7xF
+         maOHWR2qbsvKJ2K2bsgnf/y+Kcv0/d0d52+sqzI6IG3Vx7a9Zn1L7FDIIbCKfIYeyTFB
+         qoGsm+KH3rnSwdWkA1/odThrtV+qIoDMSMVR+IMTc9/+qcsF/+FCIhiI1LbABOMLdZvl
+         enewgoheBYUZSVn6/ZLc/oi9H6uon/pj2RIzdcrO47nHLB56VglyBr9FATZFuBkf/XwL
+         XRp7MWQ6d8V7UC+0iaXoRtn0mshcIEq7lf9+RCXNENsXH3qWVEkyojtAbN0KbTzBkuZs
+         P7qw==
+X-Forwarded-Encrypted: i=1; AJvYcCV2hxNwQPym63uzzra4euCJznRGinUDaWjqqeh0KRcdGYKg4/QL3aNptChSdzGTaAUL/t5yQ2jj9ruCsw==@vger.kernel.org, AJvYcCVVdu6tTC2BlLBXszNvv6qNO3yiIlBEMSq8HtFAAJrNq79EFUwlVnB0uojIIPe8I2qVVAgyOlFulBCF26yF@vger.kernel.org, AJvYcCVhxmi5Z4uidTTcZXyujViH8sm93EaUIEspA7sU5rTdPfXyW5yaKV6W/wc+TezQ9QXHet+hnE3KQjDNXeMrqg/w@vger.kernel.org, AJvYcCWJ9MRyKnFHVF6YQ00MdiHf8wGXK2c3f74ROSIFOn7O6G1OkJvhWDHuQykHCcGLZHbts6WCks/7YTV0@vger.kernel.org
+X-Gm-Message-State: AOJu0YwaNLYd3gzjlbu0fCP5/+HBsgloiDq4zNedaxKoB6+yyoK9NADw
+	Ov71a3F2R1L1o7D6pvlxjGNYEynwOTJoV3HULiRtNdSwg2ogBPg0
+X-Google-Smtp-Source: AGHT+IGbLyPOXx6DCrOUl7LkUJCGcD524sl54LQMtTqVyyY0tLYH9vOWU6iXIhcRrtmJZYzFvfe4gQ==
+X-Received: by 2002:a05:6a20:d74d:b0:1d8:ae90:c647 with SMTP id adf61e73a8af0-1d9a85130demr24773728637.42.1730357733815;
+        Wed, 30 Oct 2024 23:55:33 -0700 (PDT)
+Received: from mighty.kangaroo-insen.ts.net ([120.88.183.44])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-720bc1b8ce8sm626792b3a.35.2024.10.30.23.55.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Oct 2024 23:55:33 -0700 (PDT)
+From: Mithil Bavishi <bavishimithil@gmail.com>
+To: andreas@kemnade.info
+Cc: aaro.koskinen@iki.fi,
+	bavishimithil@gmail.com,
+	conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	khilman@baylibre.com,
+	krzk+dt@kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-omap@vger.kernel.org,
+	robh@kernel.org,
+	rogerq@kernel.org,
+	tony@atomide.com
+Subject: Re: [PATCH v2 2/6] arm/dts: Add common device tree for Samsung Galaxy Tab 2 series
+Date: Thu, 31 Oct 2024 06:55:24 +0000
+Message-ID: <20241031065524.546-1-bavishimithil@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20241030234219.2d918b34@akair>
+References: <20241030234219.2d918b34@akair>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241031105827.08b362cf0dcf558f9cf59ad8@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Oct 31, 2024 at 10:58:27AM +0900, Masami Hiramatsu wrote:
-> On Wed, 30 Oct 2024 09:14:48 -0700
-> Nathan Chancellor <nathan@kernel.org> wrote:
-> 
-> > Commit 0888460c9050 ("kprobes: Annotate structs with __counted_by()")
-> > added a __counted_by annotation without adjusting the code for the
-> > __counted_by requirements, resulting in a panic when UBSAN_BOUNDS and
-> > FORTIFY_SOURCE are enabled:
-> > 
-> >   | memset: detected buffer overflow: 512 byte write of buffer size 0
-> >   | WARNING: CPU: 0 PID: 1 at lib/string_helpers.c:1032 __fortify_report+0x64/0x80
-> >   | Call Trace:
-> >   |  __fortify_report+0x60/0x80 (unreliable)
-> >   |  __fortify_panic+0x18/0x1c
-> >   |  __get_insn_slot+0x33c/0x340
-> > 
-> > __counted_by requires that the counter be set before accessing the
-> > flexible array but ->nused is not set until after ->slot_used is
-> > accessed via memset(). Even if the current ->nused assignment were moved
-> > up before memset(), the value of 1 would be incorrect because the entire
-> > array is being accessed, not just one element.
-> 
-> Ah, I think I misunderstood the __counted_by(). If so, ->nused can be
-> smaller than the accessing element of slot_used[]. I should revert it.
-> The accessing index and ->nused should have no relationship.
-> 
-> for example, slots_per_page(c) is 10, and 10 kprobes are registered
-> and then, the 1st and 2nd kprobes are unregistered. At this moment,
-> ->nused is 8 but slot_used[9] is still used. To unregister this 10th
-> kprobe, we have to access slot_used[9].
+> this has to be system-power-controller;
 
-Ah, I totally missed that bit of the code, sorry about that. Thanks for
-the explanation!
+I am so sorry for the mess up, I was on the wrong branch which is almost the same as pmOS but a bit older, hence the entire mess up. I'll run a quick diff from pmOS and this patch and fix them accordingly.
 
-> So let's just revert the commit 0888460c9050.
+> There is still a lot other stuff to fix here but I want to make sure we are looking at the right thing.
 
-Reverting that change sounds totally reasonable to me based on the
-above. Will you take care of that?
+Could you please go ahead and mention them as well.
 
-For what it's worth, I think patch #2 should still be applicable, if you
-are okay with that one.
-
-Cheers,
-Nathan
+Best Regards,
+Mithil
