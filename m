@@ -1,86 +1,119 @@
-Received: from mail.andi.de1.cc (mail.andi.de1.cc [178.238.236.174])
+Received: from skyblue.cherry.relay.mailchannels.net (skyblue.cherry.relay.mailchannels.net [23.83.223.167])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 472331BD9EB;
-	Wed, 30 Oct 2024 22:42:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.238.236.174
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730328151; cv=none; b=Ob6WOsJw6jmHCkJ1Ghv3kX0lz6nORb4HUANLeyEkhQ3xDuNdU8g+3tLhYkAvgXnPQqGz6D40uvHlXJXHOXDzxC4lwKRlQKcbENPY3+1AlhiuIEQZ2EZCuUDyLGKki+oTGAAXpfHBIMZvUE2r3b/8i6b9iLxi5KKAeywzZC3WzFg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730328151; c=relaxed/simple;
-	bh=DT9pXJgvQX5AoW7dMqWsYEaIWt1s6GH3Zy1zRV6DS2o=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Mhm8sbcM+7aiIpUDsUnvi7QGeAHY3vXrayivWNKCcfq4nbLUGBuZxCskf9bKWD5sZjew1IyV1jpuyIn4xXs/qN++bs1rPGQ9edmdcDnxfctnkIaCVSpdHkYRgfQrOL79IqgAVMwIkTEQ9XyQDH1eNkFKJa4N58/42jxmYKXd0o4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kemnade.info; spf=pass smtp.mailfrom=kemnade.info; dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b=00GX5QV+; arc=none smtp.client-ip=178.238.236.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kemnade.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kemnade.info
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73A793D994;
+	Thu, 31 Oct 2024 00:24:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.167
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1730334276; cv=pass; b=Anok8sJt81WS+cLsci9SPjVRB7/T8CVldAJnEHp7LkY5ovqYx/stSCLAR5O+RmhQM+//pSGJr8JYXgX8Auat79ZJTIbG4cJK0EcUtypKLdiVk+41n9aiBIXTTg+nawn1nepp86cIntfoFl6kIBwoxZJWuMYq8MfLx8mH+1KYvbI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1730334276; c=relaxed/simple;
+	bh=WTl87RQkqlww/DZ/h7NLYjUuHdj+O5o9Q+Ag4BktaTQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IcibtL+X1akSOq7vmNKL1Obz3ObA1WGuvGIhPX/J2ZzSHjyhfnAIhl9NPn+WIDDGFVnuOh56ebBr9rdIFV/MZW8o0hT9+MsOmPtaOQlASRLXBXcSafoaZq4xQxJOFMZkH8iJiBNumdbJY5re87LLcTlPZ0K9wjaaUNc756uk+H8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=qICge/9E; arc=pass smtp.client-ip=23.83.223.167
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="00GX5QV+"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=kemnade.info; s=20220719; h=References:In-Reply-To:Cc:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=/W1gnm6AuW6BiVpiHLFOI6HfP0cwzclLuehGNTmJEiQ=; b=00GX5QV+tX1qkKGx+RyXSzKDho
-	Kux6Mjn7iGMuDxARmDJm0d5PuUapZC/Fnwq4sQf2idXitSJCTmFVK6aAk/hTOtIfPuJZUHY226XDd
-	w4XrFQmvzUM3OTv6QjO+S8R6QF9Rl2QtFsWLbo5aRyfZbvxoQ6hrFnxVO10nCaodXsdcFSaxeIlQ8
-	+YLrPqjE6RH4WG1j+dzm7EqT+GO2FUiff2Ewikwp0P8oSgFglSRX4/wGkJ8EQmt8Psmsy+NdTlSf9
-	uRXlumfQIe8zGBBmWGo+kJzVtb7V5erNALFp1lg7+1B93TZA8nRljUJxx+8SLqeu56aZnQYqrHMns
-	aAeMDHAg==;
-Date: Wed, 30 Oct 2024 23:42:19 +0100
-From: Andreas Kemnade <andreas@kemnade.info>
-To: Mithil Bavishi <bavishimithil@gmail.com>
-Cc: Aaro Koskinen <aaro.koskinen@iki.fi>, Kevin Hilman
- <khilman@baylibre.com>, Roger Quadros <rogerq@kernel.org>, Tony Lindgren
- <tony@atomide.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 2/6] arm/dts: Add common device tree for Samsung
- Galaxy Tab 2 series
-Message-ID: <20241030234219.2d918b34@akair>
-In-Reply-To: <20241030211215.347710-3-bavishimithil@gmail.com>
-References: <20241030211215.347710-1-bavishimithil@gmail.com>
-	<20241030211215.347710-3-bavishimithil@gmail.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="qICge/9E"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 35E38820457;
+	Thu, 31 Oct 2024 00:24:27 +0000 (UTC)
+Received: from pdx1-sub0-mail-a201.dreamhost.com (trex-2.trex.outbound.svc.cluster.local [100.103.135.51])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 9FF0C82045F;
+	Thu, 31 Oct 2024 00:24:26 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1730334266; a=rsa-sha256;
+	cv=none;
+	b=7eY8oWzwGOZvFx4gHG7kckh9Wt3nnJDBb+weuR/rbwkZOMejersBC9AuKJV1WKhaKqmVOE
+	rMi7CXEqc0KlHc5M6QP2yPGeVYhCwYzla1EwYIZkl0RODq8YYJF4haLnTvS6I8UHwX1lQm
+	q/l2U5vVAJXAlzJeHSmEOBlz+yviT85WpFKel2q+ye/0n1tMsRZnZGi15WVFuoCMqY2bsz
+	F71bJ8Hkw9kaOJe+HQMTXUIiR5kBcrynJK9r2dfRqU/ir0OkUD94jeHqOqx1Yu0tBDkXFm
+	y5rRtaFNMdZmi5LgaAbGRwg5uEmNj1Gqj77sYJhQgsyCWkQRyPekulM4LlXMBw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1730334266;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=CuXlpIw0PJXm36Lz6ZyNwU9vLZ39FakjoxZxnkGPBe8=;
+	b=KHg0+Xdgxgwg3lzoNZexY1CUE4S84vtpzWYDpyVHk5ueRxt9tNKEko/QKCD4iPBIOTyhTZ
+	kTJGgbgfPhEVeWFlQvCLZcrAj+GFarYWDh/742Zmr8AhmitYcP9ECxsDQjyK4H1xp2Qx5c
+	hj1X3OkzqbAhVEKXdVRRfkg9E/q3/DeLJn8DtbAN7KjkiBGVnscCVIA4LBTVMucU/2pJrD
+	FSSyKTG4fqSXY/V/nergpCxuB0CT4eRhoTdi0Ml4br4hv3fU+nuG48SWHorZ+rYcHP/fzp
+	fytsdWAjD1M53TuUT/ZDFFC8VxTzpuW7NFr4m9woNA5+Y9uuL8Q4YJ+tirPIXw==
+ARC-Authentication-Results: i=1;
+	rspamd-77cfccfb8-nfplw;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Bottle-Imminent: 360d44ef2cea4da7_1730334267004_1979216034
+X-MC-Loop-Signature: 1730334267004:410076141
+X-MC-Ingress-Time: 1730334267004
+Received: from pdx1-sub0-mail-a201.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.103.135.51 (trex/7.0.2);
+	Thu, 31 Oct 2024 00:24:27 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a201.dreamhost.com (Postfix) with ESMTPSA id 4Xf4Vx13whz2P;
+	Wed, 30 Oct 2024 17:24:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1730334266;
+	bh=CuXlpIw0PJXm36Lz6ZyNwU9vLZ39FakjoxZxnkGPBe8=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=qICge/9EGh1sCgjvu7Le9UN2Qg9MwAXZQ7t3F9WmJXBDrg5A4OntS2Gnz/mTB95PK
+	 sj+wYiXX4eWZLOMIvsbQPpNUxvau1dwiGjRMwNU1nTWfvkh2wftH34KF8v4jEe1+VL
+	 anHN52vVOsozgGduDVunzlYLUWSboCicy3e/tc7ENecFvKQvMARuoO+kklSlVfW87s
+	 kk4z6IZmCTj3idicHhZGhwN9WfKhjTfGMbt349s6AZ+XgebJM4+sMEghmx25VHS41I
+	 rmRS58xzqam2jX3oZ/1Z9BJamTyX6kGFW+SK6NU3Tg1cfcP1pNu1ZKY6shCUd9uaMw
+	 VecWxriZkradw==
+Date: Wed, 30 Oct 2024 17:24:22 -0700
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: ira.weiny@intel.com
+Cc: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Navneet Singh <navneet.singh@intel.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>, linux-cxl@vger.kernel.org,
+	linux-doc@vger.kernel.org, nvdimm@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v5 08/27] cxl/mem: Read dynamic capacity configuration
+ from the device
+Message-ID: <20241031002422.cu53abpaimetzrdx@offworld>
+References: <20241029-dcd-type2-upstream-v5-0-8739cb67c374@intel.com>
+ <20241029-dcd-type2-upstream-v5-8-8739cb67c374@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20241029-dcd-type2-upstream-v5-8-8739cb67c374@intel.com>
+User-Agent: NeoMutt/20220429
 
-Hi Mithil,
+On Tue, 29 Oct 2024, ira.weiny@intel.com wrote:
 
-Am Wed, 30 Oct 2024 21:12:11 +0000
-schrieb Mithil Bavishi <bavishimithil@gmail.com>:
+>Linux has no use for the trailing fields of the Get Dynamic Capacity
+>Configuration Output Payload (Total number of supported extents, number
+>of available extents, total number of supported tags, and number of
+>available tags).  Avoid defining those fields to use the more useful
+>dynamic C array.
 
-> +	twl: twl@48 {
-> +		reg = <0x48>;
-> +		#clock-cells = <1>;
-> +
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <
-> +			&twl6030_pins
-> +			&twl6030_wkup_pins
-> +		>;
-> +
-> +		/* SPI = 0, IRQ# = 7, 4 = active high
-> level-sensitive */
-> +		interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>; /*
-> IRQ_SYS_1N cascaded to gic */
-> +		interrupt-parent = <&gic>;
-> +		ti,system-power-controller;
-
-this has to be system-power-controller;
-
-And you have it correctly here:
-https://gitlab.postmarketos.org/postmarketOS/pmaports/-/blob/master/device/community/linux-postmarketos-omap/0002-arm-dts-Add-common-dtsi-for-espresso.patch?ref_type=heads#L532
-
-so, please double-check if you are trying to mainline the right branch.
-No need to respin just for this line. There is still a lot other stuff
-to fix here but I want to make sure we are looking at the right thing.
-
-Regards,
-Andreas
+More of a general question, if anyone knows: why does the spec define
+the fields in that order, and not put the region config structure(s)
+at the end, as with all other cmds, afaik.
