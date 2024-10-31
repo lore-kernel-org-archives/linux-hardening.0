@@ -1,51 +1,50 @@
-Received: from omta40.uswest2.a.cloudfilter.net (omta40.uswest2.a.cloudfilter.net [35.89.44.39])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58DC013AD26
-	for <linux-hardening@vger.kernel.org>; Thu, 31 Oct 2024 15:54:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0AD01A287E;
+	Thu, 31 Oct 2024 15:55:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730390094; cv=none; b=vAisyoqxf++KXkkaNbO8419ugHkHMmA77JvX1ZE3CYti0i7TkcZSgweXCXmAstExT8W8SkgeSE1jlhhFtyvfyJqGyfvJyfuWMaP38D7hDwwzETf2n+bjMvsKrBMxMILTgdsIsR5IicVZaHZsrl8flRshm8YOANY7oyQF9/oqq00=
+	t=1730390109; cv=none; b=gFfqP/SJoPkVesAY46Mxya+GEtjvQBgvFJ27gsQwU2xlhnuL6HdFfig9badYkRP25nOSxEHRAhPjFBoQKglftOE0Ele+NzAlY0CCiNWnqvlepDzw56KPyOJGbebjBPq0A3RAufTmijxNZs/KSs21KFgDki7N9f5i3CxCzvGvnlA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730390094; c=relaxed/simple;
-	bh=Gxzfn2SF0QBAoVHOxro2ClMb4X/IGqeuFDTOdU7DiYU=;
+	s=arc-20240116; t=1730390109; c=relaxed/simple;
+	bh=wlV3Rx5aKG704hWG8gNKyyb0F+JFaerl7qBcn2lQewo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nQGW5/K5QRO1WtwMzG51BcMh0uzuDdr/AflPK4stWM9XiZEDRHEcvW0HQ1n7mGDw6OM51ytDfZUQycteGn9bIAxfGFksxJSOd9AIjIdub/H6Gta4GuZRD4ojpssk8BdP7zbf57UBqFFq2xG8q+Xwibzpoe1ldyssTuglBStBBks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=GaUBPjV0; arc=none smtp.client-ip=35.89.44.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	 In-Reply-To:Content-Type; b=UXcRsOZshkOVAVs1wqmvPMg6cK4Ij3VFGj4DPFJfMDtKG0//wKh6cc1VU1IbMA4NqwOIk6O7euzVh8eKdlhIsHxp9239oAVdOxjnP6IER2Vwev9eFcvL8ZYzGsbE2KniV+qLuFKWZsGytCnlbz9xKobrk1vosxFanQahyGglHQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nRcYbMDw; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="GaUBPjV0"
-Received: from eig-obgw-6001a.ext.cloudfilter.net ([10.0.30.140])
-	by cmsmtp with ESMTPS
-	id 6B7ctj2WfvH7l6XVWtoS98; Thu, 31 Oct 2024 15:54:46 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id 6XVVt0krr2Zy06XVVtal8N; Thu, 31 Oct 2024 15:54:45 +0000
-X-Authority-Analysis: v=2.4 cv=Q4EZ4J2a c=1 sm=1 tr=0 ts=6723a845
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=GtNDhlRIH4u8wNL3EA3KcA==:17
- a=IkcTkHD0fZMA:10 a=DAUX931o1VcA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
- a=tQWGEp-pK8p0ZP6gKTUA:9 a=QEXdDO2ut3YA:10 a=Xt_RvD8W3m28Mn_h3AK8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=KtvSriqj3Ua8SrbSVO6pQjRywNkkQJtFu2RPK0z3hdE=; b=GaUBPjV0nqaZ3rB8d1IqJKU9me
-	aZgmNVZ19chDRGDuqtqqyoo8fm0iCfj500Un3A1ABcVueJ2jbZLgHMAjPzUPeyV4rta356TpnsVrl
-	e850RsZPuDs+lR3HlemOZ+RUeBtTM1/xpGAja3fEl1m9Uak6Yp/UGDvkJZvwBTNKjEy4PQtvJlSOV
-	rI7C88Lr9ohYWcEY3PnkUXdgIVtfsM9wKv+/4/uyKCoLtl2m/u6iRwL4wByB6DXYwsGjQof+SjL6r
-	f5nDCRIwHPPirsxiHLPSFe59wBRcLZGA5pVSEEgRH+rpZdB67wIL19rd6Z19HcPt34/fVeAzXLl1q
-	QzmLZnQw==;
-Received: from [177.238.21.80] (port=39586 helo=[192.168.0.27])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1t6XVU-001e2z-2v;
-	Thu, 31 Oct 2024 10:54:45 -0500
-Message-ID: <fe0e9c86-fa44-425e-a955-aa9e401b6334@embeddedor.com>
-Date: Thu, 31 Oct 2024 09:54:36 -0600
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nRcYbMDw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1730390107; x=1761926107;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=wlV3Rx5aKG704hWG8gNKyyb0F+JFaerl7qBcn2lQewo=;
+  b=nRcYbMDwUR7Qbx+yF4Lbw2VGRNVejdqKMYgmD8z4tj29yGH75A7KKsyQ
+   BbazPfyLqRwheHd1T32Bwv6w+kxpFeBsRGDEbgNhm+wB1Z4stXFy2nX0Q
+   mFfpJNzH0TIm1xKbySfRHsPYi2i0Nyb/9WnBk7NcYTYfAxFxOJ0d4Dfss
+   Gmi7kH9fWtgLgyRVohftGGPzLNJG68Nv57QfUnUqYpGXYahgTDa/6fQrE
+   roXCHv8shxpH1TeVGsQrJ3A3U1FPPGSrA3MbeI2kQlZbhengbAWkutza9
+   PoBG6jJ2qIm6F2l2HZMXlu9+yN0EaTqxk4KjypZEE7PYPRmawMULP5Jqi
+   g==;
+X-CSE-ConnectionGUID: tp3ALZ9mQPSbIyrUhKf+oA==
+X-CSE-MsgGUID: Li5EgCUfR2Kr4iefjQCbXw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11242"; a="41507963"
+X-IronPort-AV: E=Sophos;i="6.11,247,1725346800"; 
+   d="scan'208";a="41507963"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2024 08:55:06 -0700
+X-CSE-ConnectionGUID: rSnazU4oRDish+4AbsdK9A==
+X-CSE-MsgGUID: xHNWbduNRwO9xzz1Nz+KAQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,247,1725346800"; 
+   d="scan'208";a="82571183"
+Received: from dwoodwor-mobl2.amr.corp.intel.com (HELO [10.125.108.232]) ([10.125.108.232])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2024 08:55:04 -0700
+Message-ID: <880d28c7-7284-41b2-88dc-12498b473a86@intel.com>
+Date: Thu, 31 Oct 2024 08:55:03 -0700
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -53,86 +52,62 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] jbd2: Avoid dozens of
- -Wflex-array-member-not-at-end warnings
-To: Jan Kara <jack@suse.cz>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Theodore Ts'o <tytso@mit.edu>, Jan Kara <jack@suse.com>,
- linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+Subject: Re: [PATCH v5 00/27] DCD: Add support for Dynamic Capacity Devices
+ (DCD)
+To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+ Ira Weiny <ira.weiny@intel.com>
+Cc: Fan Ni <fan.ni@samsung.com>, Navneet Singh <navneet.singh@intel.com>,
+ Jonathan Corbet <corbet@lwn.net>, Andrew Morton <akpm@linux-foundation.org>,
+ Dan Williams <dan.j.williams@intel.com>, Davidlohr Bueso
+ <dave@stgolabs.net>, Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, linux-cxl@vger.kernel.org,
+ linux-doc@vger.kernel.org, nvdimm@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Chris Mason <clm@fb.com>,
+ Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+ linux-btrfs@vger.kernel.org, Johannes Thumshirn
+ <johannes.thumshirn@wdc.com>, Robert Moore <robert.moore@intel.com>,
+ Len Brown <lenb@kernel.org>, "Rafael J. Wysocki"
+ <rafael.j.wysocki@intel.com>, linux-acpi@vger.kernel.org,
+ acpica-devel@lists.linux.dev, Li Ming <ming4.li@intel.com>,
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
  linux-hardening@vger.kernel.org
-References: <ZxvyavDjXDaV9cNg@kspp> <20241031123313.dfcuttwzzs5f5i7a@quack3>
+References: <20241029-dcd-type2-upstream-v5-0-8739cb67c374@intel.com>
+ <20241030144841.00006746@Huawei.com>
 Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20241031123313.dfcuttwzzs5f5i7a@quack3>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20241030144841.00006746@Huawei.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 177.238.21.80
-X-Source-L: No
-X-Exim-ID: 1t6XVU-001e2z-2v
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.0.27]) [177.238.21.80]:39586
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfPEB587BCfDZMt4tLAMY65vs3IuU0CQf1Dd20I560LKFIil8B6AZ5wG8FXoUMTCRCgpnUvVimysxJ+RXAPxK5kh1VXQ4VdS05+0Rm6pUihbhk+ElS01Y
- YLUFeSDAGWEZ+c/jU3zilvg9lbY8+l2S7+QLC/76tHrW00p8wUUqeU6wVPK6T4Ass+y7nmDt28GZxCdl/xMRZ+3zlxXv93kmaBrscWi5R1kEKAQMyhOVPMbc
 
 
 
-On 31/10/24 06:33, Jan Kara wrote:
-> On Fri 25-10-24 13:32:58, Gustavo A. R. Silva wrote:
->> -Wflex-array-member-not-at-end was introduced in GCC-14, and we
->> are getting ready to enable it, globally.
->>
->> Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
->> a flexible structure (`struct shash_desc`) where the size of the
->> flexible-array member (`__ctx`) is known at compile-time, and
->> refactor the rest of the code, accordingly.
->>
->> So, with this, fix 77 of the following warnings:
->>
->> include/linux/jbd2.h:1800:35: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
->>
->> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->> ---
->>   include/linux/jbd2.h | 13 +++++--------
->>   1 file changed, 5 insertions(+), 8 deletions(-)
->>
->> diff --git a/include/linux/jbd2.h b/include/linux/jbd2.h
->> index 8aef9bb6ad57..ce4560e62d3b 100644
->> --- a/include/linux/jbd2.h
->> +++ b/include/linux/jbd2.h
->> @@ -1796,22 +1796,19 @@ static inline unsigned long jbd2_log_space_left(journal_t *journal)
->>   static inline u32 jbd2_chksum(journal_t *journal, u32 crc,
->>   			      const void *address, unsigned int length)
->>   {
->> -	struct {
->> -		struct shash_desc shash;
->> -		char ctx[JBD_MAX_CHECKSUM_SIZE];
->> -	} desc;
->> +	DEFINE_RAW_FLEX(struct shash_desc, desc, __ctx, 1);
+On 10/30/24 7:48 AM, Jonathan Cameron wrote:
+> On Tue, 29 Oct 2024 15:34:35 -0500
+> Ira Weiny <ira.weiny@intel.com> wrote:
 > 
-> Am I missing some magic here or the 1 above should be
-> JBD_MAX_CHECKSUM_SIZE?
+>> A git tree of this series can be found here:
+>>
+>> 	https://github.com/weiny2/linux-kernel/tree/dcd-v4-2024-10-29
+>>
+>> Series info
+>> ===========
+>>
+>> This series has 4 parts:
+>>
+>> Patch 1: Add core range_overlaps() function
+>> Patch 2-6: CXL clean up/prelim patches
+>> Patch 7-25: Core DCD support
+>> Patch 26-27: cxl_test support
+> 
+> Other than a few trivial comments and that one build bot reported
+> issue all looks good to me. Nice work Ira, Navneet etc.
+> 
+> Maybe optimistic to hit 6.13, but I'd love it if it did.
+> If not, Dave, how about shaving a few off the front so at least
+> there is less to remember for v6 onwards :)
 
-This seems to be 32-bit code, and the element type of the flex-array
-member `__ctx` is `void *`. Therefore, we have:
+I'd like to take it for 6.13. Just seeing if Dan has any last minute complaints :) We should be able to take 1-6 at least.
 
-`sizeof(ctx) == 4` when `char ctx[JBD_MAX_CHECKSUM_SIZE];`
-
-To maintain the same size, we tell `DEFINE_RAW_FLEX()` to allocate `1`
-element for the flex array, as in 32-bit `sizeof(void *) == 4`.
-
---
-Gustavo
-
+> 
+> Jonathan
 
