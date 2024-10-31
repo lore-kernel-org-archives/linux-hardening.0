@@ -1,130 +1,170 @@
-Received: from toucan.tulip.relay.mailchannels.net (toucan.tulip.relay.mailchannels.net [23.83.218.254])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 831621F5FD;
-	Thu, 31 Oct 2024 01:34:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.218.254
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730338489; cv=pass; b=k5OTCes2nJF5CqSqmXukjS8qkkUDNTtobGW+wu/O/92/We8+efG8G7BoBkOiXwS3UGhc5L+8183w+Be8i5EOIeaMvYNcugpuS7R0kcPIATkKZ2O7uIKSavzZdZWyq7hSI0DYz2U3LShabG7AGa8rYx+RP5N+yX+Ytx7aMh6R36o=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730338489; c=relaxed/simple;
-	bh=rNY4ZEsKz1XcAvfQ3B7Ej6wRo9eCFo6EpoMo41PYFgE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PwmnJTevWJeCSyvml1bAc/MWncPiC+JyItxgUfoxPfOJwOqUC9Y89zh/pkVIyeTQnSPukgHtv41ADhK7o3B7UjyliefEsK4arkDGcDWKu+Ex+rqtjbsIujO9JYmpXgQ5Rh+GvRLVALsgtFyxxq3mF5gwFIGUFZRBeDvndkK0f7M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=Rp5zyH0D; arc=pass smtp.client-ip=23.83.218.254
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BA6E53A7;
+	Thu, 31 Oct 2024 01:58:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1730339913; cv=none; b=MlZwKl4QkDGWYdxod/brM2iHdpWRpIAV0GJEjCZ2ecb7ki32lBlRlUx8drzGE1XhoeL+O1LnaQuc0ddpNRqMjRe1vFSgbuw8Po31tmifQxxIg+/Er6HKxghXvvjw2Y6QqocALD74O9DSz5Sx5S1AHo0GpLQjM4jO1rOoBbJIY88=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1730339913; c=relaxed/simple;
+	bh=9SAfMZKRAGCMzi6Bxf3p8pMoE4NEPe9FyWazsj+F8X4=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=ivmNcElfDPHP0DnILm0kdohIM7ZhZ+lVSj929SAbeCdJT3ZCDWCmjlDrQvNUQsaTxOSdVM8wteetHyzDClFrzJxccpRuxYj7RVTpgzbO3NVjZcdUdKQtboyf7fKHlZQvkGwpLqERamn4cr+F061VWDAYkKokhblgLImbemC8XOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dHjTWA/4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="Rp5zyH0D"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id C103D81DF2;
-	Thu, 31 Oct 2024 01:34:45 +0000 (UTC)
-Received: from pdx1-sub0-mail-a302.dreamhost.com (100-101-211-53.trex-nlb.outbound.svc.cluster.local [100.101.211.53])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 4793281AE1;
-	Thu, 31 Oct 2024 01:34:45 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1730338485; a=rsa-sha256;
-	cv=none;
-	b=pPgL2BH4D1O320WRi6wXpIm4KJqWpTYwnSyI/NsCy6j4rY7aL43kXomYW44GLv4B8SKUhe
-	NWeSH55Yg7C+XS7ImUXzL7TrqVj6tohceLFipOKCZE5QbEPiqxDxVVkd0w/6fpH6G4db27
-	Aegn26H/8mUh/uieaHjymY9ACVJZHtdSpZ4etO0+lLitzA+LmMempgAV66lW5DtJI7Hbf7
-	eIHrOVycZ5eEtn7ka9JSbgAHtd8maXtkZ6W5dszu7ka0ufylhhVsjxyBIjc+03tTHxMWrk
-	oW49OkigmiEuYlHwd4vt+1U0TwQiqe10vxCoIRlfKfYUiCQ4k5Nw1LyHd2iJtg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1730338485;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=RG/uXRPHc0RIEwtk48jA5QoUoXx5IObwxDejHafllLQ=;
-	b=DLRmi6oqmm6JypnXglUVRdlg1qEmpa5k2SHlcD1PzATs4hlPYKzOdky8/Ueanlv/qS/nxT
-	z8GvughOk5jDRq9SbgFOV1qaHlCzNEcx3NPdEY9WMdNqKZTyMqMl8M01TLzB8VovL8Ulza
-	e2Bm90Rv/vT6LLwhex9SrLodly38QuctaX2Q80gBJKEEkAa1PrHl7I4mnFQF/aGuhWf4V/
-	S5GeYENIKUum5h6UtGB5CK9BZlLf7SOTA1YSA5VetpDJxw2Apk/JCuVoUO+FKcftJh8wwv
-	zhTmLJlpvBYlFY9c3gb+LFE1Pebokr1dSeYJpeJfWy32BoEkME/fykwMLkJOKg==
-ARC-Authentication-Results: i=1;
-	rspamd-77cfccfb8-fr6hp;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Inform-Spot: 47ec64386e760ba2_1730338485657_2876808699
-X-MC-Loop-Signature: 1730338485657:1963751466
-X-MC-Ingress-Time: 1730338485657
-Received: from pdx1-sub0-mail-a302.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.101.211.53 (trex/7.0.2);
-	Thu, 31 Oct 2024 01:34:45 +0000
-Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a302.dreamhost.com (Postfix) with ESMTPSA id 4Xf6440KMnz4F;
-	Wed, 30 Oct 2024 18:34:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1730338485;
-	bh=RG/uXRPHc0RIEwtk48jA5QoUoXx5IObwxDejHafllLQ=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=Rp5zyH0D3vQoov9tU7mIKSQT3ghl2d8YMauHrveQ0Fn/uPNcGFDx1EHYSlguRW+7V
-	 uNiQ0JxdnCHDOq8hE9Pl0SvGVokt/2zHdkvt2UY3YlD90zBaQhbakgLm7Toz7TUjBw
-	 JkHUUcS+x0pnl8b5BFp9mjDzUGPOS0WkZZamOSJjWDcukGEpFUiUvhXvVHcvDLOgYR
-	 dOqbShMYCIe4FN7X2Hp26TcF5Gwz/XkVcBi78T6V0ynYzgWeo+RfyRnrmpWHVH6kGH
-	 O/qbDkjKSHF8osegaIexo0DUXnMl7c+z8W6HwXq3d+RC/agy81CSeT7EkbhQvRl0Ez
-	 t45epL8qEdlxw==
-Date: Wed, 30 Oct 2024 18:34:41 -0700
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: ira.weiny@intel.com
-Cc: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Navneet Singh <navneet.singh@intel.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>, linux-cxl@vger.kernel.org,
-	linux-doc@vger.kernel.org, nvdimm@lists.linux.dev,
-	linux-kernel@vger.kernel.org, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v5 08/27] cxl/mem: Read dynamic capacity configuration
- from the device
-Message-ID: <20241031013441.tsuqkrbqbhwsv2ui@offworld>
-References: <20241029-dcd-type2-upstream-v5-0-8739cb67c374@intel.com>
- <20241029-dcd-type2-upstream-v5-8-8739cb67c374@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dHjTWA/4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2FF6C4CECE;
+	Thu, 31 Oct 2024 01:58:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730339912;
+	bh=9SAfMZKRAGCMzi6Bxf3p8pMoE4NEPe9FyWazsj+F8X4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=dHjTWA/4fbuKkZx1m4MVHwwQdbEOzpIx4ZQjDSL3Kh2wLydPl/3JVPRki3hyhx7ZO
+	 gaPoOD76GCNbK3t+yQ4dKVZYB3TPX2Ym93kL1JKdaCcDzvlGyuNZzYH8+QkEqbL4mt
+	 GbnVv4na+Cr21mJHQELXRcNpR6M0DKgQJqDq3ZQHYIpXRZjikqWiwdjuZwxve5MocH
+	 Zl/SyBIPV3+PIcd9CMk9ksnp/AFeid6Al2P27BFtdhMYwFDHJJbXuvqzaAvAZExl+A
+	 v8H2nuHq6iHA0luRILqu/8iexfNeDSKJhO5u6KDfsO9eW2M0bhTDj+O+Zo6diDy+fw
+	 M54XO7df8esww==
+Date: Thu, 31 Oct 2024 10:58:27 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Naveen N Rao <naveen@kernel.org>, Anil S Keshavamurthy
+ <anil.s.keshavamurthy@intel.com>, "David S. Miller" <davem@davemloft.net>,
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Jinjie Ruan <ruanjinjie@huawei.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+ patches@lists.linux.dev
+Subject: Re: [PATCH 1/2] kprobes: Fix __get_insn_slot() after __counted_by
+ annotation
+Message-Id: <20241031105827.08b362cf0dcf558f9cf59ad8@kernel.org>
+In-Reply-To: <20241030-kprobes-fix-counted-by-annotation-v1-1-8f266001fad0@kernel.org>
+References: <20241030-kprobes-fix-counted-by-annotation-v1-0-8f266001fad0@kernel.org>
+	<20241030-kprobes-fix-counted-by-annotation-v1-1-8f266001fad0@kernel.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20241029-dcd-type2-upstream-v5-8-8739cb67c374@intel.com>
-User-Agent: NeoMutt/20220429
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, 29 Oct 2024, ira.weiny@intel.com wrote:
+On Wed, 30 Oct 2024 09:14:48 -0700
+Nathan Chancellor <nathan@kernel.org> wrote:
 
->+/* See CXL 3.1 Table 8-164 get dynamic capacity config Output Payload */
->+struct cxl_mbox_get_dc_config_out {
->+	u8 avail_region_count;
->+	u8 regions_returned;
->+	u8 rsvd[6];
->+	/* See CXL 3.1 Table 8-165 */
->+	struct cxl_dc_region_config {
->+		__le64 region_base;
->+		__le64 region_decode_length;
->+		__le64 region_length;
->+		__le64 region_block_size;
->+		__le32 region_dsmad_handle;
->+		u8 flags;
->+		u8 rsvd[3];
->+	} __packed region[] __counted_by(regions_retunred);
->+	/* Trailing fields unused */
->+} __packed;
->+#define CXL_DYNAMIC_CAPACITY_SANITIZE_ON_RELEASE_FLAG BIT(0)
+> Commit 0888460c9050 ("kprobes: Annotate structs with __counted_by()")
+> added a __counted_by annotation without adjusting the code for the
+> __counted_by requirements, resulting in a panic when UBSAN_BOUNDS and
+> FORTIFY_SOURCE are enabled:
+> 
+>   | memset: detected buffer overflow: 512 byte write of buffer size 0
+>   | WARNING: CPU: 0 PID: 1 at lib/string_helpers.c:1032 __fortify_report+0x64/0x80
+>   | Call Trace:
+>   |  __fortify_report+0x60/0x80 (unreliable)
+>   |  __fortify_panic+0x18/0x1c
+>   |  __get_insn_slot+0x33c/0x340
+> 
+> __counted_by requires that the counter be set before accessing the
+> flexible array but ->nused is not set until after ->slot_used is
+> accessed via memset(). Even if the current ->nused assignment were moved
+> up before memset(), the value of 1 would be incorrect because the entire
+> array is being accessed, not just one element.
 
-Fan, is this something qemu wants to support?
+Ah, I think I misunderstood the __counted_by(). If so, ->nused can be
+smaller than the accessing element of slot_used[]. I should revert it.
+The accessing index and ->nused should have no relationship.
+
+for example, slots_per_page(c) is 10, and 10 kprobes are registered
+and then, the 1st and 2nd kprobes are unregistered. At this moment,
+->nused is 8 but slot_used[9] is still used. To unregister this 10th
+kprobe, we have to access slot_used[9].
+
+So let's just revert the commit 0888460c9050.
+
+Thank you,
+
+> 
+> Set ->nused to the full number of slots from slots_per_page() before
+> calling memset() to resolve the panic. While it is not strictly
+> necessary because of the new assignment, move the existing ->nused
+> assignment above accessing ->slot_used[0] for visual consistency.
+> 
+> The value of slots_per_page() should not change throughout
+> __get_insn_slot() because ->insn_size is never modified after its
+> initial assignment (which has to be done by this point otherwise it
+> would be incorrect) and the other values are constants, so use a new
+> variable to reuse its value directly.
+> 
+> Fixes: 0888460c9050 ("kprobes: Annotate structs with __counted_by()")
+> Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+> ---
+>  kernel/kprobes.c | 16 ++++++++++------
+>  1 file changed, 10 insertions(+), 6 deletions(-)
+> 
+> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> index 98d71a5acb723ddfff3efcc44cc6754ee36ec1de..2cf4628bc97ce2ae18547b513cd75b6350e9cc9c 100644
+> --- a/kernel/kprobes.c
+> +++ b/kernel/kprobes.c
+> @@ -145,16 +145,18 @@ kprobe_opcode_t *__get_insn_slot(struct kprobe_insn_cache *c)
+>  {
+>  	struct kprobe_insn_page *kip;
+>  	kprobe_opcode_t *slot = NULL;
+> +	int num_slots;
+>  
+>  	/* Since the slot array is not protected by rcu, we need a mutex */
+>  	mutex_lock(&c->mutex);
+> +	num_slots = slots_per_page(c);
+>   retry:
+>  	rcu_read_lock();
+>  	list_for_each_entry_rcu(kip, &c->pages, list) {
+> -		if (kip->nused < slots_per_page(c)) {
+> +		if (kip->nused < num_slots) {
+>  			int i;
+>  
+> -			for (i = 0; i < slots_per_page(c); i++) {
+> +			for (i = 0; i < num_slots; i++) {
+>  				if (kip->slot_used[i] == SLOT_CLEAN) {
+>  					kip->slot_used[i] = SLOT_USED;
+>  					kip->nused++;
+> @@ -164,7 +166,7 @@ kprobe_opcode_t *__get_insn_slot(struct kprobe_insn_cache *c)
+>  				}
+>  			}
+>  			/* kip->nused is broken. Fix it. */
+> -			kip->nused = slots_per_page(c);
+> +			kip->nused = num_slots;
+>  			WARN_ON(1);
+>  		}
+>  	}
+> @@ -175,7 +177,7 @@ kprobe_opcode_t *__get_insn_slot(struct kprobe_insn_cache *c)
+>  		goto retry;
+>  
+>  	/* All out of space.  Need to allocate a new page. */
+> -	kip = kmalloc(KPROBE_INSN_PAGE_SIZE(slots_per_page(c)), GFP_KERNEL);
+> +	kip = kmalloc(KPROBE_INSN_PAGE_SIZE(num_slots), GFP_KERNEL);
+>  	if (!kip)
+>  		goto out;
+>  
+> @@ -185,9 +187,11 @@ kprobe_opcode_t *__get_insn_slot(struct kprobe_insn_cache *c)
+>  		goto out;
+>  	}
+>  	INIT_LIST_HEAD(&kip->list);
+> -	memset(kip->slot_used, SLOT_CLEAN, slots_per_page(c));
+> -	kip->slot_used[0] = SLOT_USED;
+> +	/* nused must be set before accessing slot_used */
+> +	kip->nused = num_slots;
+> +	memset(kip->slot_used, SLOT_CLEAN, num_slots);
+>  	kip->nused = 1;
+> +	kip->slot_used[0] = SLOT_USED;
+>  	kip->ngarbage = 0;
+>  	kip->cache = c;
+>  	list_add_rcu(&kip->list, &c->pages);
+> 
+> -- 
+> 2.47.0
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
