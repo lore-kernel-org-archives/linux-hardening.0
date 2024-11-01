@@ -1,135 +1,110 @@
-Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1C83154BFC
-	for <linux-hardening@vger.kernel.org>; Fri,  1 Nov 2024 20:47:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A57A1168DA
+	for <linux-hardening@vger.kernel.org>; Fri,  1 Nov 2024 20:55:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730494029; cv=none; b=qld2B4AaXPcQnqhHYozzo+BFGs3bT1CzQUqyTNEvWVc8KDlingOBNBsWgorl6Ji4vv2aV8oiKr4NrIEWTNDWMKepQ53B/I3Q0Xsv4zvFdHJIRtBopmLX1Ytbi7sGHrPHl3ktqzQrkItT3r74S5a9w+qN57QaKfEqpwJQV5mBGXw=
+	t=1730494503; cv=none; b=CKlU5IhxOXb8w6XbVtBdUgfiUuzh5kziwBRh05RIknI2XuecQUeOQBQXqdW8XdDJuJ1eSiYbVWRfwV6pDg4oFjXm8nLleAhTbJhRB0KSETVc6u2+um6Oo9T0oKg06jEG1d8ZsSmIHFjHPQF2nYG1ab+nJ9CyL86WfEnkAP8hi5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730494029; c=relaxed/simple;
-	bh=YjrdHHWPygCe3Tc91Skobz0JFEZpvAIk6PPlQqladDw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=M33FAGjVcfGpIT6mh9RH06sMV3rv9efhHwjtZYggXD5shCEJ9IkvGcIvb38aCPMRmngfpsvjSKpHz2aTi4h/Op1cVvCBeEavLpppQ+GFACE6wRda2fOpc22ueVkY1VtFxJYwqSDahjMgxbNCaGavC7yDqo20ckpH1LLuBnr6HWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=za8byT+J; arc=none smtp.client-ip=35.89.44.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1730494503; c=relaxed/simple;
+	bh=4RROoxRB8fpvFTHrKZ9NejmpNSX4yec1eT70eaOuSC4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZPw76Qzl8vkUGuET+Tn9UltOH+ts2woVsfnwsGHBG53bNDmTaSE6Fo7w129aPUfS0Cd9+APnvQXoQDTc+IedO2O/fbXCeMEIBfNNsO4J3mRpjLLJhRBPbnG7N9STXW69ozwZnX4oXrdAnI7nTWW0FfVeP4UHJ0Y9GKcpdqCxWU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=vX8Rsziq; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="za8byT+J"
-Received: from eig-obgw-6001a.ext.cloudfilter.net ([10.0.30.140])
-	by cmsmtp with ESMTPS
-	id 6nVktqER9umtX6yXttfDOh; Fri, 01 Nov 2024 20:47:01 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id 6yXstTcsY2Zy06yXstzsIu; Fri, 01 Nov 2024 20:47:00 +0000
-X-Authority-Analysis: v=2.4 cv=Q4EZ4J2a c=1 sm=1 tr=0 ts=67253e44
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=GtNDhlRIH4u8wNL3EA3KcA==:17
- a=IkcTkHD0fZMA:10 a=VlfZXiiP6vEA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
- a=wK7pc38KeiHN8xZw7ncA:9 a=QEXdDO2ut3YA:10 a=Xt_RvD8W3m28Mn_h3AK8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=xkm1nD8TrvBAERDn/msYL9E1SOOvU/GM4tbcKD0/Xvo=; b=za8byT+JHW/OuZ3qlgIE7q+J5H
-	XM0IdHIEEaEzP9eWLq7jLmsLp0GUCflqfKs5YAkBhwB75NBoZLgVQCNNxUIz3S+vANpzqrFSzCKuy
-	mQSXGAHZBEwPMo7B3T744Y0JgZTsCOyhxgHaHFtK2e5d6Gpmd1f/xNoIsuB7NSw0icDqLcnQBH5OM
-	F0T7bsq6EczEWJ7A9cxd2pAtT0mrnbO9npQZrxQiUmp/T863zc4ryRCDOM6Z5JsVc4VUV6UMrEs9/
-	lJw5roOdcGKfJZhj8TMS1r10kOIaPLZqa1QLIHyIsIZasjEGyV7Y1/0vQPI9ELE6CRVvIlbVxs2ba
-	0KjimPTQ==;
-Received: from [177.238.21.80] (port=22208 helo=[192.168.0.27])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1t6yXr-003xjs-1M;
-	Fri, 01 Nov 2024 15:46:59 -0500
-Message-ID: <cc312432-bc9b-4dea-8f99-9c2ebf0d47a7@embeddedor.com>
-Date: Fri, 1 Nov 2024 14:46:56 -0600
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="vX8Rsziq"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-37d49a7207cso1541837f8f.0
+        for <linux-hardening@vger.kernel.org>; Fri, 01 Nov 2024 13:55:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1730494500; x=1731099300; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=jLTdEDXvDx6C1+kdRWN0DBnWkM5vnWkdpplvs2TB8+4=;
+        b=vX8RsziqWL/e7Ct70aTRl07kmCtIghKq7bQ46IWWc+WBabbjSOAbSUsG4CvlKzJ+G0
+         KLtTJXY+5sfXVsISW22XNeDwbOSuIQgllkok1jePycHTJircSuXVmUCPnsvZt8M2wrgj
+         Ojb/Asq98n4VFs8bIW2kf228G0hw7OBp6CAnckOwiiI2ud5Ba2hoUBtCvnV4QLWh0yU0
+         IGUWczfA43tY5tur24rX6G/IlDyqBlYyhqwfo1XD6rq7Icyva/4lcJQvEbnRrdD379rw
+         uJ0tZrlWgyMqf54aB0M7X7jNT6lH4KqYy2T1sdF9HtgpTQ3+/SNG2N2u6kIBF5qeFHZH
+         BRfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730494500; x=1731099300;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jLTdEDXvDx6C1+kdRWN0DBnWkM5vnWkdpplvs2TB8+4=;
+        b=UbGIz6MsATQDkmS7ieGcN4GgLul+gQB1ovp5PzTx8PE2qAbPo+SrfPg1Hw1BXDdXr5
+         ftI0Sqf4Flk6/9B8rLg9c3EKBB4UcXq4Q1gTjvjVsdfOvJwQG80hxf4Ur4e+oES529E+
+         eyQzWENJAxLz5OG2M0Bm+unrtue3XyTTb/3+TUmaGr421csQwGVqBX6pCj7d0vl2ltOL
+         wPkR2yd8K7oWxF/gphMqrYjd4npDZB68YwHr27Ee1T88LrtNuCe3c8916XknJmHgTgL2
+         kg4cDC4P75VSid6B70MjXxLPtvJsAneL2Xbk4sxVt3jSo5nTDG2FdREFGC9/v//BnwHI
+         WgVg==
+X-Gm-Message-State: AOJu0YwH78ki9iZRicuE11Q0jcxdKKgtvpX6nQVYnpT2I8+TbyKEh25r
+	2GO4YL1SJq2LRiVsmy6UdMf3Vqx9hSzFoz3lyMbpS3aFDRoYA37UrVOVPXXhb/s=
+X-Google-Smtp-Source: AGHT+IF9SJTbl/9ym3H2HLLhqsElg5KmBrO4oJDVweH5FkNcn4aOm7mRNyiEG2gDz6qmQ/+JagSV1Q==
+X-Received: by 2002:a5d:59c7:0:b0:37d:4fb1:4fab with SMTP id ffacd0b85a97d-381c7ab739cmr4123785f8f.57.1730494499960;
+        Fri, 01 Nov 2024 13:54:59 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:7e52:b53c:229:e024])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-381c116af7esm6153480f8f.103.2024.11.01.13.54.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Nov 2024 13:54:59 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Kees Cook <kees@kernel.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	James Bottomley <James.Bottomley@HansenPartnership.com>
+Cc: linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	stable@vger.kernel.org
+Subject: [PATCH v2] lib: string_helpers: silence snprintf() output truncation warning
+Date: Fri,  1 Nov 2024 21:54:53 +0100
+Message-ID: <20241101205453.9353-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] jbd2: Avoid dozens of
- -Wflex-array-member-not-at-end warnings
-To: Jan Kara <jack@suse.cz>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Theodore Ts'o <tytso@mit.edu>, Jan Kara <jack@suse.com>,
- linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <ZxvyavDjXDaV9cNg@kspp> <20241031123313.dfcuttwzzs5f5i7a@quack3>
- <fe0e9c86-fa44-425e-a955-aa9e401b6334@embeddedor.com>
- <20241031213208.gzr5jv2kg5eobjuo@quack3>
- <ca7be9f4-3f33-48ba-b61a-0a40ea1f17a6@embeddedor.com>
- <20241101101512.eee2nkaqgffsoxe3@quack3>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20241101101512.eee2nkaqgffsoxe3@quack3>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 177.238.21.80
-X-Source-L: No
-X-Exim-ID: 1t6yXr-003xjs-1M
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.0.27]) [177.238.21.80]:22208
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfFDFlu+iY1w6UcUN5t1zJISJ0R8A5YD6swe9MacUtD9kefm4abzeYleQQSFoTMc+A9B8qLnZPEKRgje1+n0Sq860tQZJlGT8G5qr2hjZDFrfnehENS7c
- fqmYlSeSLrZyMTNa/MDZ2rKPPInUQKM2qgDc57a/Nef9d1MgyCALZ1x22MB//H/Hw6zTPTjKKmqkEd8EopoUJSJaMxPJLjuE6WMBn4fDkXFJUkMjspckGtP6
+Content-Transfer-Encoding: 8bit
 
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
+The output of ".%03u" with the unsigned int in range [0, 4294966295] may
+get truncated if the target buffer is not 12 bytes. This can't really
+happen here as the 'remainder' variable cannot exceed 999 but the
+compiler doesn't know it. To make it happy just increase the buffer to
+where the warning goes away.
 
-On 01/11/24 04:15, Jan Kara wrote:
-> On Thu 31-10-24 17:31:34, Gustavo A. R. Silva wrote:
->> On 31/10/24 15:32, Jan Kara wrote:
->>>
->>>> `sizeof(ctx) == 4` when `char ctx[JBD_MAX_CHECKSUM_SIZE];`
->>>>
->>>> To maintain the same size, we tell `DEFINE_RAW_FLEX()` to allocate `1`
->>>> element for the flex array, as in 32-bit `sizeof(void *) == 4`.
->>>
->>> So I agree we end up allocating enough space on stack but it is pretty
->>> subtle and if JBD_MAX_CHECKSUM_SIZE definition changes, we have a problem.
->>> I think we need something like (JBD_MAX_CHECKSUM_SIZE + sizeof(*desc->__ctx)
->>> - 1) / sizeof(*desc->__ctx))?
->>
->> I see. Well, in that case it'd be something more like:
->>
->> -       struct {
->> -               struct shash_desc shash;
->> -               char ctx[JBD_MAX_CHECKSUM_SIZE];
->> -       } desc;
->> +       DEFINE_RAW_FLEX(struct shash_desc, desc, __ctx,
->> +                       (JBD_MAX_CHECKSUM_SIZE +
->> +                        sizeof(*((struct shash_desc *)0)->__ctx)) /
->> +                        sizeof(*((struct shash_desc *)0)->__ctx));
->>
->> Notice that `desc` is created inside `DEFINE_RAW_FLEX()`
->    Right. Thanks for fixing this. The cleanest option then probably is:
-> 
-> 	DEFINE_RAW_FLEX(struct shash_desc, desc, __ctx,
-> 		DIV_ROUND_UP(JBD_MAX_CHECKSUM_SIZE,
-> 			     sizeof(*((struct shash_desc *)0)->__ctx)))
+Fixes: 3c9f3681d0b4 ("[SCSI] lib: add generic helper to print sizes rounded to the correct SI range")
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
+Cc: James E.J. Bottomley <James.Bottomley@HansenPartnership.com>
+Cc: Kees Cook <kees@kernel.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+---
+Changes in v2:
+- improve the commit message
 
-OK. There you go v2:
+ lib/string_helpers.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-https://lore.kernel.org/linux-hardening/ZyU94w0IALVhc9Jy@kspp/
-
-Thanks a lot for the feedback. :)
---
-Gustavo
+diff --git a/lib/string_helpers.c b/lib/string_helpers.c
+index 4f887aa62fa0..91fa37b5c510 100644
+--- a/lib/string_helpers.c
++++ b/lib/string_helpers.c
+@@ -57,7 +57,7 @@ int string_get_size(u64 size, u64 blk_size, const enum string_size_units units,
+ 	static const unsigned int rounding[] = { 500, 50, 5 };
+ 	int i = 0, j;
+ 	u32 remainder = 0, sf_cap;
+-	char tmp[8];
++	char tmp[12];
+ 	const char *unit;
+ 
+ 	tmp[0] = '\0';
+-- 
+2.45.2
 
