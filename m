@@ -1,60 +1,60 @@
 Received: from e2i702.smtp2go.com (e2i702.smtp2go.com [103.2.142.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E1AC15539A
-	for <linux-hardening@vger.kernel.org>; Sat,  2 Nov 2024 21:08:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79FDC1AB513
+	for <linux-hardening@vger.kernel.org>; Sat,  2 Nov 2024 21:08:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.2.142.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730581717; cv=none; b=V5Gjx9u9PcF4XV3Cg52xqAp7B9YEHJiqeADb47NDZoyz2VDq1ef+lnLCSi7oijHhilGu1zeMF23XuUphHCZu+hRchMLR4kGTUg470IJ+cngUkARqgrhl4l6bzc7X37ytk7yDKnU9OUrde1cTJCinlWln5JRj5VwQ64iX6CdcZGI=
+	t=1730581721; cv=none; b=WaKok8wuhFr4Ehw5FjA/LZ3v8kgqcj5n/p1HmV8iUpnnL3z/JCXVUJVXpKWN1oFM0JJtUqx/5YHbC30ZsVgsJ97Nnia/zdtLvDdFIc1h2ScTGd776B0b3rN0QUwgL5b0ZurqrkRNOBQExzbpkQPjSjm2028ClEUqUmKNRFaBnZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730581717; c=relaxed/simple;
-	bh=w81R0U1lIRsZHDXwni/3itjs5unPiJTxJyp8enMnTJk=;
+	s=arc-20240116; t=1730581721; c=relaxed/simple;
+	bh=S6N9ZGM2cfU20hr9WOcviqXD5oXVjBqaHStnNBvwVnc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MBsKHrXhycOMFWZmfz5HSe/r8hiq4vLZuwO6qZZYPXtBjPYZkp5keF207nFFXnsILIBXxegTYZ+IrwG3u/AOyEpiN9QHTP2D1FCVAz34dw7xmEMk7wpjVSagAql8etZ892VpxxuRLoTuMRhUOnIcOsGe4++sX3kQFwOLLLK3ZsI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fjasle.eu; spf=pass smtp.mailfrom=em1174286.fjasle.eu; dkim=fail (0-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b=Z/Im9XDE reason="unknown key version"; dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b=dfDr5yjz; dkim=pass (1024-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b=2eQpkgSU; arc=none smtp.client-ip=103.2.142.190
+	 Content-Type:Content-Disposition:In-Reply-To; b=VGhWSyYrsUdPqDXRE/EBNX2O4a7ZGxttaTgyFweGu0/DC1QtE2Z9uvZTBAgui6f9U40IyEKmLvUtSaDjQuxHV9Z/SnXV18lw0Qut++pHa4Eh4L+mF8fg2yS+xZ44gj0oiR3svRykwN8GSNWmqmH9mEQjaK0ypAtRslQllSydQ+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fjasle.eu; spf=pass smtp.mailfrom=em1174286.fjasle.eu; dkim=fail (0-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b=ENKzs7hR reason="unknown key version"; dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b=ahvAHSJq; dkim=pass (1024-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b=V46Jvjlf; arc=none smtp.client-ip=103.2.142.190
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fjasle.eu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=em1174286.fjasle.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="unknown key version" (0-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b="Z/Im9XDE";
-	dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b="dfDr5yjz";
-	dkim=pass (1024-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b="2eQpkgSU"
+	dkim=fail reason="unknown key version" (0-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b="ENKzs7hR";
+	dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b="ahvAHSJq";
+	dkim=pass (1024-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b="V46Jvjlf"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=smtpservice.net; s=mp6320.a1-4.dyn; x=1730582611; h=Feedback-ID:
+	d=smtpservice.net; s=mp6320.a1-4.dyn; x=1730582615; h=Feedback-ID:
 	X-Smtpcorp-Track:Message-ID:Subject:To:From:Date:Reply-To:Sender:
 	List-Unsubscribe:List-Unsubscribe-Post;
-	bh=FXtYzd58hIsejYDBwOty0zqxkAYRX7PGOZxbYr9Cx9Y=; b=Z/Im9XDEKoPNbBYraF6S6jP+By
-	ERYxkxQ2BX9WIvakTimgsTdk0wDgnKkbPgn3gtx6fPQUjk1nRqxOQpiO4G8S8EW6GfA/Z2MHC9Ef4
-	WLAryNyL7W75orkXj/o1NCnsJEEO2+tU9fSSXpFbUQsLQepxzs/Ew7R9Wr+pzQLwkk+/Yz5BaIfk8
-	yqxn/4KYckIh7r6PXW+6fz6jxHNdetN2fVNbTD38iP5SW1SSIkL+1qYljZuzaq5bSSJvihGL+lyUH
-	UXZTuU04vxYmJS1uXaKihDnHSa2vy96ppn0Y95ma01hNcLQ2+yFjJx2HSCSM6i/gPvn2oglwBXC2l
-	BAmWjzYg==;
+	bh=HLrkWZmy37z2+q6UvAJjqEXBZQvEVug9IkxNqJcixI8=; b=ENKzs7hRb/7kZfehx30yrGHu1n
+	gJnNwiIqBxSjEr4njpwtWZp2KRuGI4daexGvOR4t1HVbwtEVodV96bibsDG3m2GwgKsQB/ygJDRfa
+	yG6aeXfVv7TFjNpzaMHwjCbj7/7omO7bhhfyw/iKRUaSzWlzaMnYbJcKQyzeMUYsjAuQwbIXjvLFO
+	wJXcHJo9BjzCuBQbiWc9swDtT83CLPylJmfadqAMwxZ4mF6KzQPSHVdZLjKw1KNwdpMH9TFF7xAR1
+	5B6tGeg+w1WQigRUm/UHUKjMLNjgJVgPTyJ67oQyAVzewaOytTt9UigKCmnJaX4S7kJbydFb2khOj
+	k2PCOU+A==;
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fjasle.eu;
- i=@fjasle.eu; q=dns/txt; s=s1174286; t=1730581711; h=from : subject :
+ i=@fjasle.eu; q=dns/txt; s=s1174286; t=1730581715; h=from : subject :
  to : message-id : date;
- bh=FXtYzd58hIsejYDBwOty0zqxkAYRX7PGOZxbYr9Cx9Y=;
- b=dfDr5yjzHpoAUz3hZ7YJ+bmRVUkgh3+mUBcsb0Ov9FJTWkx2GN+A6eUJ5CDBopsMjVq/c
- 9Gjr5ads9HVf7Hosz1GnGIauCGeDjM4cNscl6E4rbL9UyVTQX2lob9/UorahVRbk3JA7XWA
- zFn+HyNvojePQxsz69BOI6hlGXaFcM8oamAOcSjSzt/VoiPyJNmxIwNCHUn/1Dt+kGoSsjU
- L97gFOt20wYPOKeXfzPsWgrKqpd+c+0LMN8LgrAdXRhxMV2CxFheDg5NmF10M0bLu98x/ZA
- Us6mKJDCGvV8tgFfHjNWLwOasJ+yUJ86B/AE952ojbZhQEIKgE6yZeoatPAg==
-Received: from [10.139.162.187] (helo=SmtpCorp) by smtpcorp.com with esmtpsa
+ bh=HLrkWZmy37z2+q6UvAJjqEXBZQvEVug9IkxNqJcixI8=;
+ b=ahvAHSJqtfFf5zxfD4Eww+/1el2aDADGvE8A+LnKJCMx/j4utxPzIDC7DzX1IS9dwdESz
+ /EtN5CH4aN6iebtvAqaw6kHz/vSv7sAKcbRKuNiEE3PAfX2nhPFcRAiJbFsG7RKm2wgcH5y
+ O327svKUSlsYORk3vZ2Uhvm9K+GD2gPkYbb5t7rmCXULPaFDCMQmzEpz1Vijzras0LfG8Ey
+ V/nza+P7rYV+19D6AMjCrBMAl5d8MBUZ0nphJgiNKQt9xFu0QhLjfpTRgbX+vUxy+yl+FY4
+ MkN1usOoogBdjeZQkZWwMznCtAXaB3ub8KDS+h296OxRFVEjhOoilIBn4paw==
+Received: from [10.172.233.45] (helo=SmtpCorp) by smtpcorp.com with esmtpsa
  (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
  (Exim 4.94.2-S2G) (envelope-from <nicolas@fjasle.eu>)
- id 1t7LL1-qt4Brl-EN; Sat, 02 Nov 2024 21:07:16 +0000
+ id 1t7LLV-qt4DSG-Eh; Sat, 02 Nov 2024 21:07:45 +0000
 Received: from [10.85.249.164] (helo=leknes.fjasle.eu)
  by smtpcorp.com with esmtpsa
  (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
  (Exim 4.97.1-S2G) (envelope-from <nicolas@fjasle.eu>)
- id 1t7LL0-4o5NDgrgPmC-nHlC; Sat, 02 Nov 2024 21:07:15 +0000
+ id 1t7LLU-AIkwcC8v3t7-KDch; Sat, 02 Nov 2024 21:07:44 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fjasle.eu; s=mail;
- t=1730581630; bh=w81R0U1lIRsZHDXwni/3itjs5unPiJTxJyp8enMnTJk=;
+ t=1730581664; bh=S6N9ZGM2cfU20hr9WOcviqXD5oXVjBqaHStnNBvwVnc=;
  h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
- b=2eQpkgSUh2CgKPU1dC4PN6kbmJqOtINCvj/U4OgPFEs6Gh6exe8pZoMVaKKxQ66RM
- nG7/b6ExJZqruT+qR1Vy96go7seA/kYAjljC4K+RevD+BdvKDh4g1Icqxtjs3PQ+MB
- E+OPSBnjRX29wyZ84xxpta7CGWw3kGvO1dPACPKI=
+ b=V46JvjlffE0FnQAi51MJR4LGCSgDKR3d3n8bNdPfvkttAFMBl3EKiYVsPEa4v/1zG
+ tByg80SaewjkEYADd33G1q/czS+0ScSWI4+MitbOP5D0tuUzGdPkXPLGRCZThvpKRD
+ SYTEL0TRoVB/Mb/VIVXYSq/NE59Vss1EpK3LrlWI=
 Received: by leknes.fjasle.eu (Postfix, from userid 1000)
- id 8D4783D7A0; Sat,  2 Nov 2024 22:07:09 +0100 (CET)
-Date: Sat, 2 Nov 2024 22:07:09 +0100
+ id 39AFA3D7A3; Sat,  2 Nov 2024 22:07:44 +0100 (CET)
+Date: Sat, 2 Nov 2024 22:07:44 +0100
 From: Nicolas Schier <nicolas@fjasle.eu>
 To: Vegard Nossum <vegard.nossum@oracle.com>
 Cc: Masahiro Yamada <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org,
@@ -65,188 +65,74 @@ Cc: Masahiro Yamada <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org,
  Kees Cook <kees@kernel.org>,
  James Bottomley <James.Bottomley@hansenpartnership.com>,
  Theodore Ts'o <tytso@mit.edu>, linux-hardening@vger.kernel.org
-Subject: Re: [RFC PATCH 00/11] output a valid shell script when running 'make
- -n'
-Message-ID: <ZyaUfcPt3OHztjc_@fjasle.eu>
+Subject: Re: [RFC PATCH 02/11] kbuild: document some prerequisites
+Message-ID: <ZyaUoGqu6bXDX26s@fjasle.eu>
 References: <20240819160309.2218114-1-vegard.nossum@oracle.com>
+ <20240819160309.2218114-3-vegard.nossum@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature"; boundary="Pmp/jzAoVQhTmg4c"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240819160309.2218114-1-vegard.nossum@oracle.com>
-X-UID: 191
-X-Smtpcorp-Track: EcOVa9qFFmBq.nWhKr9e_OtDL.NfgJVQYfThL
-Feedback-ID: 1174286m:1174286a9YXZ7r:1174286sdUJVp0lVq
+In-Reply-To: <20240819160309.2218114-3-vegard.nossum@oracle.com>
+X-UID: 186
+X-Smtpcorp-Track: 0a7_vKaSAiD5.JBPDhvVjrgcK.fJSj7AbWlco
+Feedback-ID: 1174286m:1174286a9YXZ7r:1174286shYHl4XWV8
 X-Report-Abuse: Please forward a copy of this message, including all headers,
  to <abuse-report@smtp2go.com>
 
+On Mon, Aug 19, 2024 at 06:02:59PM +0200 Vegard Nossum wrote:
+> When running 'make --dry-run', make will invoke itself recursively for
+> recipes using $(MAKE), but otherwise not execute the other commands in
+> a recipe.
+> 
+> However, if a prerequisite is missing and 'make' does not how to create it
+> (which will be the case when running 'make -n'), it will complain with an
+> error message like this:
+> 
+>   $ make -n
+>   ...
+>   make -f ./scripts/Makefile.modpost
+>   make[1]: *** No rule to make target 'modules.order', needed by 'modules-only.symvers'.  Stop.
+>   make: *** [Makefile:1868: modpost] Error 2
+> 
+> In this case, the top-level makefile has reached a recipe that ran 'make'
+> recursively on scripts/Makefile.modpost, which itself has a rule with
+> modules.order as a prerequisite. Since the file doesn't exist, and make
+> doesn't know how to create it, it errors out.
+> 
+> We can document such prerequisites (which are expected to be created by
+> the parent Makefile) by adding them to the PHONY list of each respective
+> Makefile.
+> 
+> Signed-off-by: Vegard Nossum <vegard.nossum@oracle.com>
+> ---
+>  arch/x86/boot/compressed/Makefile | 6 ++++++
+>  scripts/Makefile.modfinal         | 5 +++++
+>  scripts/Makefile.modpost          | 4 ++++
+>  scripts/Makefile.vmlinux          | 7 +++++++
+>  scripts/Makefile.vmlinux_o        | 3 +++
+>  5 files changed, 25 insertions(+)
+> 
+> diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+> index f2051644de943..ccef6f0e04bc7 100644
+> --- a/arch/x86/boot/compressed/Makefile
+> +++ b/arch/x86/boot/compressed/Makefile
+> @@ -80,6 +80,9 @@ quiet_cmd_voffset = VOFFSET $@
+>  
+>  targets += ../voffset.h
+>  
+> +# We don't know how to build this
 
---Pmp/jzAoVQhTmg4c
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+A comment for documentation is a good idea, but I think this one is not very
+helpful to those who don't know the patch description.  What about something
+like this?
 
-On Mon, Aug 19, 2024 at 06:02:57PM +0200 Vegard Nossum wrote:
-> This patch series lets 'make -n' output a shell script that can be
-> used to build the kernel without any further use of make. For example:
->=20
->     make defconfig
->=20
->     # ensure some build prerequisites are built
->     make prepare
->=20
->     # generate build script
->     make -n | tee build.sh
->=20
->     # excecute build script
->     bash -eux build.sh
->=20
-> The purpose of this is to take a step towards defeating the insertion of
-> backdoors at build time (see [1]). Some of the benefits of separating the
-> build script from the build system are:
->=20
->  - we can invoke make in a restricted environment (e.g. mostly read-only
->    kernel tree),
->=20
->  - we have an audit log of the exact commands that run during the build
->    process; although it's true that the build script wouldn't be useful
->    for either production or development builds (as it doesn't support
->    incremental rebuilds or parallel builds), it would allow you to
->    rebuild an existing kernel and compare the resulting binary for
->    discrepancies to the original build,
->=20
->  - the audit log can be stored (e.g. in git) and changes to it over time
->    can themselves be audited (e.g. by looking at diffs),
->=20
->  - there's a lot fewer places to hide malicious code in a straight-line
->    shell script that makes minimal use of variables and helper functions.
->    You also cannot inject fragments of Makefile code through environment
->    variables (again, see [1]).
->=20
-> Alternative ways to achieve some of the same things would be:
->=20
->  - the existing compile_commands.json infrastructure; unfortunately this
->    does not include most of the steps performed during a build (such as
->    linking vmlinux) and does not really allow you to reproduce/verify the
->    full build,
->=20
->  - simply running something like strace -f -e trace=3Dexecve make; howeve=
-r,
->    this also does not result in something that can be easily played back;
->    at the very least it would need to be heavily filtered and processed
->    to account for data passed in environment variables and things like
->    temporary files used by the compiler.
->=20
-> This implementation works as follows:
->=20
->  - 'make -n' (AKA --dry-run) by default prints out the commands that make
->    runs; this output is modified to be usable as a shell script,
->=20
->  - we output 'make() { :; }' at the start of the script in order to make
->    all 'make' invocations in the resulting build script no-ops (GNU Make
->    will actually execute -- and print -- all recipe lines that include
->    $(MAKE), even when invoked with -n).
->=20
->  - we simplify the makefile rules in some cases to make the shell script
->    more readable; for example, we don't need the logic that extracts
->    dependencies from .c files (since that is only used by 'make' itself
->    when determining what to rebuild) or the logic that generates .cmd
->    files,
->=20
-> This patch is WIP and may not produce a working shell script in all
-> circumstances. For example, while plain 'make -n' works for me, other
-> make targets (e.g. 'make -n htmldocs') are not at all guaranteed to
-> produce meaningful output; certain kernel configs may also not work,
-> especially those that rely on external tools like e.g. Rust.
+# Provided by a recursive-make predecessor
 
-Thanks for this patch set and all the thoughts laid out here in detail,
-especially for the write-up in [1], too!
-
-I think it is a good idea to work towards hardening the build system against
-known and difficult to spot attacks.  As the patch set integration needs a
-complete 'make -n' script (at least for a "simple", defined config) to be
-successful, I expect that it might become quite some work and patience, but=
- I
-think it is a meaningful goal.
-
-In order to prevent "degradation" of Make rules after a possible integratio=
-n,
-we need some (automated) testers, otherwise we will loose all the efforts a=
-gain.
-
-Please give me yet some days for a first rough round through the patches.
 
 Kind regards
 Nicolas
-
-
-
->=20
-> [1]: https://www.openwall.com/lists/oss-security/2024/04/17/3
-> [2]: https://www.gnu.org/software/make/manual/make.html#Testing-Flags
->=20
->=20
-> Vegard
->=20
-> ---
->=20
-> Vegard Nossum (11):
->   kbuild: ignore .config rule for make --always-make
->   kbuild: document some prerequisites
->   kbuild: pass KERNELVERSION and LOCALVERSION explicitly to
->     setlocalversion
->   kbuild: don't execute .ko recipe in --dry-run mode
->   kbuild: execute modules.order recipe in --dry-run mode
->   kbuild: set $dry_run when running in --dry-run mode
->   kbuild: define 'make' as a no-op in --dry-run mode
->   kbuild: make link-vmlinux.sh respect $dry_run
->   kbuild: simplify commands in --dry-run mode
->   kbuild: don't test for file presence in --dry-run mode
->   kbuild: suppress echoing of commands in --dry-run mode
->=20
->  Makefile                          | 28 +++++++++++++++++---
->  arch/x86/boot/compressed/Makefile |  6 +++++
->  scripts/Kbuild.include            | 27 +++++++++++++++++++
->  scripts/Makefile.build            |  2 +-
->  scripts/Makefile.modfinal         |  9 +++++--
->  scripts/Makefile.modpost          |  8 ++++--
->  scripts/Makefile.vmlinux          | 22 ++++++++++++++--
->  scripts/Makefile.vmlinux_o        |  3 +++
->  scripts/link-vmlinux.sh           | 44 ++++++++++++++++++++-----------
->  9 files changed, 123 insertions(+), 26 deletions(-)
->=20
-> --=20
-> 2.34.1
->=20
-
---=20
-epost|xmpp: nicolas@fjasle.eu          irc://oftc.net/nsc
-=E2=86=B3 gpg: 18ed 52db e34f 860e e9fb  c82b 7d97 0932 55a0 ce7f
-     -- frykten for herren er opphav til kunnskap --
-
---Pmp/jzAoVQhTmg4c
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEh0E3p4c3JKeBvsLGB1IKcBYmEmkFAmcmlHIACgkQB1IKcBYm
-Eml7shAAxFIYEaWxMQ0qvfZkqVzQYZHYmTzilt3O6e3MAmhxuuy8OS/a1zWHitzv
-dU1cqd06AiecDUu7JKVZmCLVt/afEwe1Tya1/ezcmAdrl6f7dcS3LwXEaZlKUoSG
-gzKmMURniJL2GQ8rZbeJavtl6lSIne9Jr5HTh7RZRFX7JCEtvjcHAkhtxvvXIH02
-WTo5pPufSmNzRkaVLAGTforuZHT9x20Dvi5EMspYPEcd8pAIhwBj84RUszHnhS3J
-NKT3CjtoND7xRI4joHK97DUVCvN5FFUdnmPyNLN7gRFNMXgoaC9m2n5OLpLH/zNo
-yATy1sRaso17XKMaL3TV3zCOfwgJPmJweLZ9R8s/V41fCfY4ICP8nij4a4AS24oF
-hUJN9KpU2t7/AgsGGAypqO8A3jkHJ1E4m+lbSjB/fnBAAsnTNKQIrQFZKAW/mtUj
-xrZSTLYkQ5lGmi7lCwZmrB4CTlfYnOg9R/MScI6u20JE424dj2e15HCMXwwnAd96
-j1oovLVCDdjxJpkzO9pZGWUnEke0o9aRA9x7LzLWiz7c53/ZrF6qo4Jrak63f+wD
-NlFpK2QOuk+H3EvnrG6gQzVqr6+rF3cM9HkjVV68ayIAbvIEw5GTk3y5CaML9u8o
-EE3JIat4rZDaKmRHNOTWf6nxC4moZ5q5oc17LMegdH5QdSYYAzI=
-=9a03
------END PGP SIGNATURE-----
-
---Pmp/jzAoVQhTmg4c--
