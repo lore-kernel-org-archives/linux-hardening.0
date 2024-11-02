@@ -1,60 +1,60 @@
 Received: from e2i702.smtp2go.com (e2i702.smtp2go.com [103.2.142.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACAAB14AD3F
-	for <linux-hardening@vger.kernel.org>; Sat,  2 Nov 2024 21:11:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D29714AD3F
+	for <linux-hardening@vger.kernel.org>; Sat,  2 Nov 2024 21:11:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.2.142.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730581876; cv=none; b=TkIIQEo8PKzAS15cD6v09cQfLJVwHyxdjIoRTW7BwIcGPPvnARL+DR4l+FWnPuyzBjWZE/IIVHffzLEu0TZ8kZJE/BZEK3nh6SYWfCYSffc8tCwlr6LmQCg3jz84OSxSuUpBy6YUaT2NzmmGe9UXEI7jUQpU9cTw0wc0GvOxXnI=
+	t=1730581920; cv=none; b=S6YBjxmHLyVxlEc0helPnCQMM7IvshasDBHZa5/KF4ZAJ8HZRy3Q6ncJXlyAq/7w2EKYeh2Bip0cgQhZsK7ptpQy+GapBZi2ONlPxVDMDyIa50cynbN2iBSiSWLBchy1Gdz1b51MRPrS8X4x7Up1GHs6Mu8YGo54Lzuw5DdRW9E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730581876; c=relaxed/simple;
-	bh=S+ftkDW+EolfF4nLXvY08UrrEM8BzHoTWikhA2a4CTQ=;
+	s=arc-20240116; t=1730581920; c=relaxed/simple;
+	bh=J07DlnM5y0IgSwLwOlgdAJoz6JVY1WPCt/oTAdL9wgQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jYZUw33vUdq8AUbmCGd1nul7voP36NDIEj0W+1QnAW4kJW98DCN26voGdJu9bXxdGb7qTZPscnTkLOUh5+yrQasS4bhVcfz+Vk8XKg9EJpDD8n0s49rqGz1bCwT7gZs60tXd44dp2fLErkYJkz4B+xdclRFCl9uw+7yFPSXg76U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fjasle.eu; spf=pass smtp.mailfrom=em1174286.fjasle.eu; dkim=fail (0-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b=Y4ploTQg reason="unknown key version"; dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b=cpC9I8lV; dkim=pass (1024-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b=1eVYB5TQ; arc=none smtp.client-ip=103.2.142.190
+	 Content-Type:Content-Disposition:In-Reply-To; b=GO0EySsBIz5zVgrYtu29GQa7LKUnSdnffNO9NMa/2GhHe68AhZhv/6K74OfheNl0gRqYIMXdqYJwsk2BsEmADKLaWg/sHg+/ajvQTQ8dwZif4rYxjSsEMh2isvG05W1wU4IMxJUXUA1bPW4TzQUM7MVhX/7pbMQ12ugmWZ/jl70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fjasle.eu; spf=pass smtp.mailfrom=em1174286.fjasle.eu; dkim=fail (0-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b=s7EKvZ9z reason="unknown key version"; dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b=IlU2+M6Z; dkim=pass (1024-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b=4Z1kFXD6; arc=none smtp.client-ip=103.2.142.190
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fjasle.eu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=em1174286.fjasle.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="unknown key version" (0-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b="Y4ploTQg";
-	dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b="cpC9I8lV";
-	dkim=pass (1024-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b="1eVYB5TQ"
+	dkim=fail reason="unknown key version" (0-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b="s7EKvZ9z";
+	dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b="IlU2+M6Z";
+	dkim=pass (1024-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b="4Z1kFXD6"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=smtpservice.net; s=mp6320.a1-4.dyn; x=1730582766; h=Feedback-ID:
+	d=smtpservice.net; s=mp6320.a1-4.dyn; x=1730582810; h=Feedback-ID:
 	X-Smtpcorp-Track:Message-ID:Subject:To:From:Date:Reply-To:Sender:
 	List-Unsubscribe:List-Unsubscribe-Post;
-	bh=n8zANEvJLM/G1kIHRS+1DDQaAHa0Nzk9++SIxtdojWc=; b=Y4ploTQgjiStNCwpxf+HNAThpv
-	dxqLuV9yqgc0J6ehwi2siim7l7DEE0G3GrRDbrjysU8TDRIeU1bT1W9e/LDl//AQjnqcsxMZ5n8E0
-	wMv4l/Ee4BOdY4FzRh3OsMJDG3CGsn2hejBRW5/lnOZ3rmOOHKo7sqzWJjnSiESOb1Gsd0PtXO5N4
-	Mak0O9BwMcwnOIYuuKrd2ebMenr87hEiwVLI7hB9EQOvHWVurUl/paB7UbREr4gYulTNN8HORxCcQ
-	p9HfoEVLmH1OVD7tQMvxPnoIKpJiyHakhL5g4ID6IVk4HTwBaomalzQPR9/4q0OF0lQnF7xpHkpcF
-	jxKssa9A==;
+	bh=zWaoI4SD49sleU/FrwHQLZPOqKSnr5NxHmOp5mAf5w4=; b=s7EKvZ9z7mVYSv0J1dvumENljA
+	jNpKCuVoPZZChbqBu1tprkO/UjXDFYgtkqLxVCnB/cSXcJfLsH+KxiO4yXqcJXNJOHwv8rS08Uf1t
+	3UNn5i03UGV8WOYWXrEqVNmB14wrPpHejrHQ4h+/B1uCWFerjNXS1gDcYjyVGXcZOeIycY+rbP5cl
+	pZpl6CLni7WewMyXDszQa6Ar4M9sRi7PdfTQEuuH+oYjwl4c8lagvpc62xup3ezgs9M1AM8YOMgU9
+	kOOeFC+vHTMzHSNZNo05Bv+H7c0I9jnUO8BEkgURXszmYDmsBA03SlhkMwl0at+fI9CJMZSO56V+Q
+	M3WDHWTw==;
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fjasle.eu;
- i=@fjasle.eu; q=dns/txt; s=s1174286; t=1730581866; h=from : subject :
+ i=@fjasle.eu; q=dns/txt; s=s1174286; t=1730581910; h=from : subject :
  to : message-id : date;
- bh=n8zANEvJLM/G1kIHRS+1DDQaAHa0Nzk9++SIxtdojWc=;
- b=cpC9I8lVfut5fM5xFBsBDbDS2A0FhjflVzbHYBd3FZK3D8A/23L1fhKfCzIECt4vC2kWs
- 7v4lk/Sx2DaAo41i1IhKTaHcbnP2UGHxJ3hb4Kxyf5oXQCLjQ6Pw7n3j2t9dFN9+BnW2P2M
- SYh+2wT7iRi4lWhEFwj08Ux3CEhOe8MY+ft6Di7BoHLkmCmwkKTMLKwALE4Fhqe46t5He23
- S+L57BWXCcwt8zv7qBww94azVGnJ0SjG+OKX1utiYq5C73AgQgf1IJUVVx9WkmUocRpaZlC
- QKBpblJeP5m6HGA8BgaDXw3CeANYyESwHix4B38BWUFYMAN4EGSp6mdJkDyA==
+ bh=zWaoI4SD49sleU/FrwHQLZPOqKSnr5NxHmOp5mAf5w4=;
+ b=IlU2+M6ZF81w7jg8K2bW+vrMrFaMGjLdgYlv/Y8k81Q5yQP2X2Z2rxqgWL+xLJk1/eLAX
+ sq1pUBW1SxYfCg6uRUDJfXsUnw0/FIw/AXUCD6vnybv/OV4ar8DzNZU9hJ7bfriD3iGcJxV
+ op88tuXIhaEYlT9BXYc/99glJf71t2TOUSptFfXkIMpCOn6iLt1yZ0dLkM72FWn+jyCsRAF
+ +/r6shga3mUVK9tlrCPDQlrZ7xaJpuu9rKQuQJAxZ6tpksACsQBuuU4yPeUqsQOsVmFKh9Z
+ dvuzBIM/BeoXabrNY9iixJZvBNy2VgqVrXgJtRT/a0I8yJXkesOBADd2GbDw==
 Received: from [10.172.233.58] (helo=SmtpCorp) by smtpcorp.com with esmtpsa
  (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
  (Exim 4.94.2-S2G) (envelope-from <nicolas@fjasle.eu>)
- id 1t7LNn-qt4K14-7W; Sat, 02 Nov 2024 21:10:07 +0000
+ id 1t7LOi-qt4D5j-CC; Sat, 02 Nov 2024 21:11:04 +0000
 Received: from [10.85.249.164] (helo=leknes.fjasle.eu)
  by smtpcorp.com with esmtpsa
  (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
  (Exim 4.97.1-S2G) (envelope-from <nicolas@fjasle.eu>)
- id 1t7LNm-FnQW0hQ0j5X-muyZ; Sat, 02 Nov 2024 21:10:06 +0000
+ id 1t7LOh-FnQW0hQ0jh2-nLIy; Sat, 02 Nov 2024 21:11:03 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fjasle.eu; s=mail;
- t=1730581802; bh=S+ftkDW+EolfF4nLXvY08UrrEM8BzHoTWikhA2a4CTQ=;
+ t=1730581863; bh=J07DlnM5y0IgSwLwOlgdAJoz6JVY1WPCt/oTAdL9wgQ=;
  h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
- b=1eVYB5TQeDufF9npVsPoeeXmKxebb162cfGGPzNiaqq0bYVD/yQSoWpmC6GQ/bBPr
- teEuctDed/3PkecGtmy382estuYal8Y5Cmn2Ms/e/kef1tJEpUOwaCNGwqMlOeJScS
- 1HLq1i1yPDTQFFn+Ild6VmqnbOed4IB3EqONdhm0=
+ b=4Z1kFXD6fDlw6UFcmD+MHH4viIDZhu9cPwxcbh9DQDxToKGZjKRQuFJfpqhOkDvSk
+ wnCEtU6T/6YFYB4emxOw7blQWKrZIdYQBByoDwMXen+tcqlUUC5wf1kvX8D2SHSMTb
+ D/gmmBfC1dAKCUo+pU/c1Qkp4iHLNqRqlSmFFavA=
 Received: by leknes.fjasle.eu (Postfix, from userid 1000)
- id D4B0C3D7A0; Sat,  2 Nov 2024 22:10:02 +0100 (CET)
-Date: Sat, 2 Nov 2024 22:10:02 +0100
+ id 0A9753D7A0; Sat,  2 Nov 2024 22:11:03 +0100 (CET)
+Date: Sat, 2 Nov 2024 22:11:02 +0100
 From: Nicolas Schier <nicolas@fjasle.eu>
 To: Vegard Nossum <vegard.nossum@oracle.com>
 Cc: Masahiro Yamada <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org,
@@ -65,11 +65,11 @@ Cc: Masahiro Yamada <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org,
  Kees Cook <kees@kernel.org>,
  James Bottomley <James.Bottomley@hansenpartnership.com>,
  Theodore Ts'o <tytso@mit.edu>, linux-hardening@vger.kernel.org
-Subject: Re: [RFC PATCH 05/11] kbuild: execute modules.order recipe in
- --dry-run mode
-Message-ID: <ZyaVKm2VaezpHWo5@fjasle.eu>
+Subject: Re: [RFC PATCH 06/11] kbuild: set $dry_run when running in --dry-run
+ mode
+Message-ID: <ZyaVZhPfiVszWhcp@fjasle.eu>
 References: <20240819160309.2218114-1-vegard.nossum@oracle.com>
- <20240819160309.2218114-6-vegard.nossum@oracle.com>
+ <20240819160309.2218114-7-vegard.nossum@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -78,36 +78,54 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240819160309.2218114-6-vegard.nossum@oracle.com>
-X-UID: 189
-X-Smtpcorp-Track: x2xzwjsplfIz.3uxzuZhNOIWR.01NlUg-nOLk
-Feedback-ID: 1174286m:1174286a9YXZ7r:1174286s-LvkLiyY-
+In-Reply-To: <20240819160309.2218114-7-vegard.nossum@oracle.com>
+X-UID: 190
+X-Smtpcorp-Track: vaHKhCcXIbZ8.MFGYCjnMM1S8.wVGYVg0VB_H
+Feedback-ID: 1174286m:1174286a9YXZ7r:1174286sZAV7eZdDs
 X-Report-Abuse: Please forward a copy of this message, including all headers,
  to <abuse-report@smtp2go.com>
 
-On Mon, Aug 19, 2024 at 06:03:02PM +0200 Vegard Nossum wrote:
-> modules.order is read by scripts/Makefile.modfinal to determine which
-> modules to build, so we need this recipe to execute if we want to be able
-> to output the recipes for building modules in dry-run mode.
+On Mon, Aug 19, 2024 at 06:03:03PM +0200 Vegard Nossum wrote:
+> Add a convenience variable that allows us to use 'ifdef dry_run...endif'
+> in Makefiles or '[ -v dry_run ]' in shell scripts to test whether make
+> was invoked with '-n'.
+> 
+> See [1] for an explanation of this particular construction.
+> 
+> [1]: https://www.gnu.org/software/make/manual/make.html#Testing-Flags
 > 
 > Signed-off-by: Vegard Nossum <vegard.nossum@oracle.com>
 > ---
->  scripts/Makefile.build | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  Makefile | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
-> diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-> index efacca63c8976..34f86dced67f3 100644
-> --- a/scripts/Makefile.build
-> +++ b/scripts/Makefile.build
-> @@ -417,7 +417,7 @@ cmd_gen_order = { $(foreach m, $(real-prereqs), \
->  	> $@
+> diff --git a/Makefile b/Makefile
+> index 58f3843ccfac6..953951157ec92 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -22,6 +22,11 @@ $(if $(filter __%, $(MAKECMDGOALS)), \
+>  PHONY := __all
+>  __all:
 >  
->  $(obj)/modules.order: $(obj-m) FORCE
-> -	$(call if_changed,gen_order)
-> +	+$(call if_changed,gen_order)
+> +# Was make invoked with --dry-run/-n? Record this in a convenience variable.
+> +ifeq (n,$(findstring n,$(firstword -$(MAKEFLAGS))))
+> +export dry_run := 1
+> +endif
 
-As it is a bit hacky to mark an always sequential command as 'recursive' [1] in
-order to circumvent the '--dry-run', I'd like to see a comment in the code,
-too.
+As in patch 1: 
+As we still also support make v3.80 to v4.0, please use $(short-opts)
+defined around line 27.
 
-[1]: https://www.gnu.org/software/make/manual/make.html#MAKE-Variable
+> +
+>  # We are using a recursive build, so we need to do a little thinking
+>  # to get the ordering right.
+>  #
+> -- 
+> 2.34.1
+> 
+
+I will have a look at the remaining patches within a few days.
+
+Thanks and kind regards,
+Nicolas
+
