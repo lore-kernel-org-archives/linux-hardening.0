@@ -1,60 +1,60 @@
 Received: from e2i702.smtp2go.com (e2i702.smtp2go.com [103.2.142.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79FDC1AB513
-	for <linux-hardening@vger.kernel.org>; Sat,  2 Nov 2024 21:08:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E79B215539A
+	for <linux-hardening@vger.kernel.org>; Sat,  2 Nov 2024 21:08:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.2.142.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730581721; cv=none; b=WaKok8wuhFr4Ehw5FjA/LZ3v8kgqcj5n/p1HmV8iUpnnL3z/JCXVUJVXpKWN1oFM0JJtUqx/5YHbC30ZsVgsJ97Nnia/zdtLvDdFIc1h2ScTGd776B0b3rN0QUwgL5b0ZurqrkRNOBQExzbpkQPjSjm2028ClEUqUmKNRFaBnZM=
+	t=1730581728; cv=none; b=THyF4I64PIn93HO+xM3iXLPxcbPXUPdhE3bx4w91n4+bKfXCN4Q538zS0x4GA2rIMjCcXN2JZjkG028HQHoswB76xQfK5ghyt6LpS0XCNU9/iS3emN7U1hKoo0ZSFCFijIKxnhJhxtRMFNdiJRX7md1ziacjGwCPVYbfWWukGcQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730581721; c=relaxed/simple;
-	bh=S6N9ZGM2cfU20hr9WOcviqXD5oXVjBqaHStnNBvwVnc=;
+	s=arc-20240116; t=1730581728; c=relaxed/simple;
+	bh=HMMX2lwn+yWZONXGGimkqS5HF8zoQ+40TkCJJptfbKg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VGhWSyYrsUdPqDXRE/EBNX2O4a7ZGxttaTgyFweGu0/DC1QtE2Z9uvZTBAgui6f9U40IyEKmLvUtSaDjQuxHV9Z/SnXV18lw0Qut++pHa4Eh4L+mF8fg2yS+xZ44gj0oiR3svRykwN8GSNWmqmH9mEQjaK0ypAtRslQllSydQ+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fjasle.eu; spf=pass smtp.mailfrom=em1174286.fjasle.eu; dkim=fail (0-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b=ENKzs7hR reason="unknown key version"; dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b=ahvAHSJq; dkim=pass (1024-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b=V46Jvjlf; arc=none smtp.client-ip=103.2.142.190
+	 Content-Type:Content-Disposition:In-Reply-To; b=mDKGJx3kI2AyjtQImvmYZghGBglp5S/B1TwSfQU3QSSj7yE+0K3rZkviCdsDO2NdosBAr9Tl8LAX8JRtDxcu0lzRpcU/l49Tzoe1L8Jd5QcaLBLncxsbN4XOVZdURAemXC1Zy7p2/uXwSMmR0kQ47JKCk9AwuJzj0BFTZ1r1lW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fjasle.eu; spf=pass smtp.mailfrom=em1174286.fjasle.eu; dkim=fail (0-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b=DfOIkrJg reason="unknown key version"; dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b=JWpWnL+X; dkim=pass (1024-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b=U1/gfyC9; arc=none smtp.client-ip=103.2.142.190
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fjasle.eu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=em1174286.fjasle.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="unknown key version" (0-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b="ENKzs7hR";
-	dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b="ahvAHSJq";
-	dkim=pass (1024-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b="V46Jvjlf"
+	dkim=fail reason="unknown key version" (0-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b="DfOIkrJg";
+	dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b="JWpWnL+X";
+	dkim=pass (1024-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b="U1/gfyC9"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=smtpservice.net; s=mp6320.a1-4.dyn; x=1730582615; h=Feedback-ID:
+	d=smtpservice.net; s=mp6320.a1-4.dyn; x=1730582624; h=Feedback-ID:
 	X-Smtpcorp-Track:Message-ID:Subject:To:From:Date:Reply-To:Sender:
 	List-Unsubscribe:List-Unsubscribe-Post;
-	bh=HLrkWZmy37z2+q6UvAJjqEXBZQvEVug9IkxNqJcixI8=; b=ENKzs7hRb/7kZfehx30yrGHu1n
-	gJnNwiIqBxSjEr4njpwtWZp2KRuGI4daexGvOR4t1HVbwtEVodV96bibsDG3m2GwgKsQB/ygJDRfa
-	yG6aeXfVv7TFjNpzaMHwjCbj7/7omO7bhhfyw/iKRUaSzWlzaMnYbJcKQyzeMUYsjAuQwbIXjvLFO
-	wJXcHJo9BjzCuBQbiWc9swDtT83CLPylJmfadqAMwxZ4mF6KzQPSHVdZLjKw1KNwdpMH9TFF7xAR1
-	5B6tGeg+w1WQigRUm/UHUKjMLNjgJVgPTyJ67oQyAVzewaOytTt9UigKCmnJaX4S7kJbydFb2khOj
-	k2PCOU+A==;
+	bh=Nj67AeiaPQEBqiINOFKnae9vYS4HDribcl5S/Fxqsqc=; b=DfOIkrJgTL6y29O9dCarAFB8o7
+	Y0ERFSfF1MPUEn479IOSu9Uta/gPg5qB2VfYUJTvzMN1boeQQOukvOV9tCFPXlydYcCGFRAzl8OLR
+	fn8vW9EViitD3JOWZ3COddlYJlZMm21JZ5l44XhSRfI0LmGnP/gJ7UHdrLSBUjPOjYVeNfAwRuVA+
+	5eGiaKiUEkSgtl0BuXL2L6fx7aRYIp2hjGp3lJ/m5Z6elndSh367cUQYUaDxvo5DIWmcnRBOG1BI4
+	FA9RTaTku/gsxiV4Gb2JKgerodsLBDPmBIkCAIrkdgg1nlUE+1acea6B8FLTHSmywJ0BpwKoiVGu7
+	DYQxOqfA==;
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fjasle.eu;
- i=@fjasle.eu; q=dns/txt; s=s1174286; t=1730581715; h=from : subject :
+ i=@fjasle.eu; q=dns/txt; s=s1174286; t=1730581724; h=from : subject :
  to : message-id : date;
- bh=HLrkWZmy37z2+q6UvAJjqEXBZQvEVug9IkxNqJcixI8=;
- b=ahvAHSJqtfFf5zxfD4Eww+/1el2aDADGvE8A+LnKJCMx/j4utxPzIDC7DzX1IS9dwdESz
- /EtN5CH4aN6iebtvAqaw6kHz/vSv7sAKcbRKuNiEE3PAfX2nhPFcRAiJbFsG7RKm2wgcH5y
- O327svKUSlsYORk3vZ2Uhvm9K+GD2gPkYbb5t7rmCXULPaFDCMQmzEpz1Vijzras0LfG8Ey
- V/nza+P7rYV+19D6AMjCrBMAl5d8MBUZ0nphJgiNKQt9xFu0QhLjfpTRgbX+vUxy+yl+FY4
- MkN1usOoogBdjeZQkZWwMznCtAXaB3ub8KDS+h296OxRFVEjhOoilIBn4paw==
-Received: from [10.172.233.45] (helo=SmtpCorp) by smtpcorp.com with esmtpsa
+ bh=Nj67AeiaPQEBqiINOFKnae9vYS4HDribcl5S/Fxqsqc=;
+ b=JWpWnL+XsuzxhPgD3rJGDIU+2/3Py6XVsrMUv8cvsYutO1oQuAKOYOxKvcK4XMU0vt5QG
+ g5fCzj2wVieR9I7wyKv7mBSNx/TJwVRcFmG0KkJ02CPbof2lm4zpqUhzpAZ1PHbeBc9HhBd
+ RXJX24J2rU2hDmCykRgfXO9B8ufktzw7vL+ntjhaNfKdwIVsGjThIlE2NmBe3Xh2/s6M8Vc
+ XFgvHVj1iSQ14bsSOzIWduvNpdpJiHx3juC9DuDVLJVaCHQhBfthtB3D3xfs8LqSCMhjAFC
+ 8tFvXw3ogsLbQ65miM4Y+cOzRWuyI0qenFhgsLMyj6505rjxQZqNp3S4rmPQ==
+Received: from [10.139.162.187] (helo=SmtpCorp) by smtpcorp.com with esmtpsa
  (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
  (Exim 4.94.2-S2G) (envelope-from <nicolas@fjasle.eu>)
- id 1t7LLV-qt4DSG-Eh; Sat, 02 Nov 2024 21:07:45 +0000
+ id 1t7LLi-qt4Dxk-5t; Sat, 02 Nov 2024 21:07:58 +0000
 Received: from [10.85.249.164] (helo=leknes.fjasle.eu)
  by smtpcorp.com with esmtpsa
  (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
  (Exim 4.97.1-S2G) (envelope-from <nicolas@fjasle.eu>)
- id 1t7LLU-AIkwcC8v3t7-KDch; Sat, 02 Nov 2024 21:07:44 +0000
+ id 1t7LLh-4o5NDgrgQ6c-mrPt; Sat, 02 Nov 2024 21:07:57 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fjasle.eu; s=mail;
- t=1730581664; bh=S6N9ZGM2cfU20hr9WOcviqXD5oXVjBqaHStnNBvwVnc=;
+ t=1730581677; bh=HMMX2lwn+yWZONXGGimkqS5HF8zoQ+40TkCJJptfbKg=;
  h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
- b=V46JvjlffE0FnQAi51MJR4LGCSgDKR3d3n8bNdPfvkttAFMBl3EKiYVsPEa4v/1zG
- tByg80SaewjkEYADd33G1q/czS+0ScSWI4+MitbOP5D0tuUzGdPkXPLGRCZThvpKRD
- SYTEL0TRoVB/Mb/VIVXYSq/NE59Vss1EpK3LrlWI=
+ b=U1/gfyC9by+/nynTWwEi4kx+/FUmZVdzL0mM9vPznDEFHG9btvCjh6ZL+yrs2Tqks
+ 0l6d3Dt2szx2MQIpiKFDqgAcvP6wgWvFiRXYa+1peOb3LH+lD9nLqozP7OOcNyhLXX
+ lHtoZw+RWntJDZWwiN0qqYSFeoOvYHMVuvOqCiX8=
 Received: by leknes.fjasle.eu (Postfix, from userid 1000)
- id 39AFA3D7A3; Sat,  2 Nov 2024 22:07:44 +0100 (CET)
-Date: Sat, 2 Nov 2024 22:07:44 +0100
+ id 095B73D7A0; Sat,  2 Nov 2024 22:07:57 +0100 (CET)
+Date: Sat, 2 Nov 2024 22:07:56 +0100
 From: Nicolas Schier <nicolas@fjasle.eu>
 To: Vegard Nossum <vegard.nossum@oracle.com>
 Cc: Masahiro Yamada <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org,
@@ -65,10 +65,11 @@ Cc: Masahiro Yamada <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org,
  Kees Cook <kees@kernel.org>,
  James Bottomley <James.Bottomley@hansenpartnership.com>,
  Theodore Ts'o <tytso@mit.edu>, linux-hardening@vger.kernel.org
-Subject: Re: [RFC PATCH 02/11] kbuild: document some prerequisites
-Message-ID: <ZyaUoGqu6bXDX26s@fjasle.eu>
+Subject: Re: [RFC PATCH 03/11] kbuild: pass KERNELVERSION and LOCALVERSION
+ explicitly to setlocalversion
+Message-ID: <ZyaUrD6XC7PcPTSz@fjasle.eu>
 References: <20240819160309.2218114-1-vegard.nossum@oracle.com>
- <20240819160309.2218114-3-vegard.nossum@oracle.com>
+ <20240819160309.2218114-4-vegard.nossum@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -77,62 +78,23 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240819160309.2218114-3-vegard.nossum@oracle.com>
-X-UID: 186
-X-Smtpcorp-Track: 0a7_vKaSAiD5.JBPDhvVjrgcK.fJSj7AbWlco
-Feedback-ID: 1174286m:1174286a9YXZ7r:1174286shYHl4XWV8
+In-Reply-To: <20240819160309.2218114-4-vegard.nossum@oracle.com>
+X-IMAPbase: 1553198760 0000000191 Old
+X-UID: 187
+X-Smtpcorp-Track: cfOVxBVj2wBX.oc5cZRpKfdN3.gyEKQwn0KRB
+Feedback-ID: 1174286m:1174286a9YXZ7r:1174286s-mEjfdzIe
 X-Report-Abuse: Please forward a copy of this message, including all headers,
  to <abuse-report@smtp2go.com>
 
-On Mon, Aug 19, 2024 at 06:02:59PM +0200 Vegard Nossum wrote:
-> When running 'make --dry-run', make will invoke itself recursively for
-> recipes using $(MAKE), but otherwise not execute the other commands in
-> a recipe.
-> 
-> However, if a prerequisite is missing and 'make' does not how to create it
-> (which will be the case when running 'make -n'), it will complain with an
-> error message like this:
-> 
->   $ make -n
->   ...
->   make -f ./scripts/Makefile.modpost
->   make[1]: *** No rule to make target 'modules.order', needed by 'modules-only.symvers'.  Stop.
->   make: *** [Makefile:1868: modpost] Error 2
-> 
-> In this case, the top-level makefile has reached a recipe that ran 'make'
-> recursively on scripts/Makefile.modpost, which itself has a rule with
-> modules.order as a prerequisite. Since the file doesn't exist, and make
-> doesn't know how to create it, it errors out.
-> 
-> We can document such prerequisites (which are expected to be created by
-> the parent Makefile) by adding them to the PHONY list of each respective
-> Makefile.
+On Mon, Aug 19, 2024 at 06:03:00PM +0200 Vegard Nossum wrote:
+> These environment variables are passed when invoking 'make', but if
+> running 'make -n' we need to pass them explicitly so they become part
+> of the printed command.
 > 
 > Signed-off-by: Vegard Nossum <vegard.nossum@oracle.com>
 > ---
->  arch/x86/boot/compressed/Makefile | 6 ++++++
->  scripts/Makefile.modfinal         | 5 +++++
->  scripts/Makefile.modpost          | 4 ++++
->  scripts/Makefile.vmlinux          | 7 +++++++
->  scripts/Makefile.vmlinux_o        | 3 +++
->  5 files changed, 25 insertions(+)
+>  Makefile | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 > 
-> diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-> index f2051644de943..ccef6f0e04bc7 100644
-> --- a/arch/x86/boot/compressed/Makefile
-> +++ b/arch/x86/boot/compressed/Makefile
-> @@ -80,6 +80,9 @@ quiet_cmd_voffset = VOFFSET $@
->  
->  targets += ../voffset.h
->  
-> +# We don't know how to build this
 
-A comment for documentation is a good idea, but I think this one is not very
-helpful to those who don't know the patch description.  What about something
-like this?
-
-# Provided by a recursive-make predecessor
-
-
-Kind regards
-Nicolas
+Reviewed-by: Nicolas Schier <nicolas@fjasle.eu>
