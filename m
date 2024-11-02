@@ -1,257 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from e2i702.smtp2go.com (e2i702.smtp2go.com [103.2.142.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16B2D4EB50;
-	Sat,  2 Nov 2024 20:43:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA58014AD3F
+	for <linux-hardening@vger.kernel.org>; Sat,  2 Nov 2024 21:08:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.2.142.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730580233; cv=none; b=SsYfiwpxFYcrxNAfGHTLkQ+Z4XgkcqRiVwPEk9ZRueAl0SAokxCsOwTPlUSI2DBQoEb2FSqhVBPS0m51DB8H5UMD1ktr3bueCmkwH9uxOv5mEKVLOrgAoIeXjucK6TucVg8B5MPH7jEQ0T2ymP17a92F1ciF+12zWkhs/AR0Ls4=
+	t=1730581714; cv=none; b=KFgqDL+UpoiuIsNCbGwOyQROs+IZcaFBC6V7q+uQHZuOv77l2AJGFXwZjHeTKSY88lYSJuSB7umN9rKRedgz2reqYukvwE3wJa9Ua4WfAyH6xSEidi9Ib1jRJ1nTRFNaGWng0FFUe8VtQuwLJ91+cAL8ryZPTPrwMgFPfN8uVc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730580233; c=relaxed/simple;
-	bh=R8Ity0l1+p963dlS/UV3AA4DyLL41Dth45YcI9GZVUk=;
+	s=arc-20240116; t=1730581714; c=relaxed/simple;
+	bh=cO3hWwEfMbIltEmTMaVHnNGUQNtuqAECidpRtsXGisY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FYgjnYuEQqPHascBq1WLhc5uau50+IKPUvF9T3gyvgYbQVuGhg47BhOKft62p9Zh3WgCKxQdx6x7Dqy2DrNvl2KBINKa3qGH1mxb2bnT+9ivKwlmMO4Wu1ct/yQanbPBtCQkmwR+ImwWaXnlLVoOKIBLWWn+XL8cfT67uOHPiZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oyOGDivG; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=adKcygK9iKS6Yj2WbPlVGmtp2gG4B1Sp6VG9FAtSgSVOIx8lkQmAP6QLdvHO4VSBP3g9OZbJ8aH7VmAxLfgjsrwBW2vvXxcpkajlnw2vx1Bl60lU5v1rldhM6wxfoWV1VEiiNiWi98qckGnWEBiF7ueHWk2xHbYakW9oMMZO7ac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fjasle.eu; spf=pass smtp.mailfrom=em1174286.fjasle.eu; dkim=fail (0-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b=NfITrkA2 reason="unknown key version"; dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b=i4jAHcIi; dkim=pass (1024-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b=mPxG+ZlL; arc=none smtp.client-ip=103.2.142.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fjasle.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=em1174286.fjasle.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oyOGDivG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AA60C4CEC3;
-	Sat,  2 Nov 2024 20:43:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730580232;
-	bh=R8Ity0l1+p963dlS/UV3AA4DyLL41Dth45YcI9GZVUk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oyOGDivGff3v0MBiBcrUq0W1uaAX8clrnMiwnlF8JexJKiXWL/7A9i7PT35QysCqB
-	 nfj1faOr4xhJRW8yuD7UoTit0bTqQy+05b2Is7ZtLb/uuqhR2l52oIyUSh8BtlLBwP
-	 adlJ+g6hZDi2O3mbz7L3V7q3o2sWcDN9KOFhj70pSk5D1TeDO+iGcYI3H66pv2J17j
-	 HuY21rm0VJ9JRKv7SHE4NQC8aH7cshj0hFuTKq2r3eqqU2mQWBAx7Z1GCCkbp/rSV2
-	 WI3X45fpVaE2BZUoX1FzxqH9Yfrhqvcz6ZphesbENLA7e4MIT+FdPu7DSdOyQXRrQw
-	 nVMooMTwNfaag==
-Date: Sat, 2 Nov 2024 13:43:48 -0700
-From: Kees Cook <kees@kernel.org>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
-Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: Fortify compilation warning in __padata_set_cpumask()
-Message-ID: <202411021337.85E9BB06@keescook>
-References: <db7190c8-d17f-4a0d-bc2f-5903c79f36c2@t-8ch.de>
+	dkim=fail reason="unknown key version" (0-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b="NfITrkA2";
+	dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b="i4jAHcIi";
+	dkim=pass (1024-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b="mPxG+ZlL"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=smtpservice.net; s=mp6320.a1-4.dyn; x=1730582609; h=Feedback-ID:
+	X-Smtpcorp-Track:Message-ID:Subject:To:From:Date:Reply-To:Sender:
+	List-Unsubscribe:List-Unsubscribe-Post;
+	bh=9ZmCQYZczcI9y3SOgBFfGiOqtjWhS7FouhMbjAYAatI=; b=NfITrkA2u74MrVungzjGbxSWN2
+	u6OdsdrbYBb6mnJct2fIZ8uylbw9GM1xNQMOEHS/2GpkBk0hiPhxMe53hWEOV25nkOjJkr+MPg8ac
+	Kew03SfcMNQo7ivDqpW044X3EhS3NuCOMa1aZ5dv0pO0zjTtCcycLHfFNhciq/BRxf8wZOfj0gYQp
+	dyep931IPkNYCXgBoaLQ0ex5H7t2C/zAl5nJ1/cfafaXapV9p5zZwQ0JSc8JOUfdDSt+H3QgWRSId
+	rqfaRpJL1A6f6TxlzTtLWelTJQ7r8PzIBZNWgCHk+4Pczvj+2wqaXq+Hcu5K9oKrGAOzPplvrDdV2
+	DHhEGL4g==;
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fjasle.eu;
+ i=@fjasle.eu; q=dns/txt; s=s1174286; t=1730581709; h=from : subject :
+ to : message-id : date;
+ bh=9ZmCQYZczcI9y3SOgBFfGiOqtjWhS7FouhMbjAYAatI=;
+ b=i4jAHcIiEcDoOX7QIkFghN3dRsrmPKYqMPNBcmaiA0viZofWj1EizFH6l8j/DYQLxxQmr
+ fh3Bgoy9N+NKZWKMVqIc+dLSKTTRrsYc6VllER2Z2O/RVF5mh0W1kYawZxPP/05Z6bbANOD
+ r3lW9ib84LeUob9TRZ6FU+IszB9JDKdoX8EhItij9ZO5ag9INDIn39qSoOC75Pmi7kJvsvd
+ xGcg85klazMaCN10zmLEZiJUD3RueZo5hRhQjJDSuInlxOsGihBb/UWpJPiP+nQjaV4z0Y4
+ 8ncRIXKsbMDdDEdNE2fKnuoP3ar7kbOCo601v/C/IZfZELetRA49dKiH0OrQ==
+Received: from [10.172.233.45] (helo=SmtpCorp) by smtpcorp.com with esmtpsa
+ (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+ (Exim 4.94.2-S2G) (envelope-from <nicolas@fjasle.eu>)
+ id 1t7LLK-qt4Cyy-OZ; Sat, 02 Nov 2024 21:07:34 +0000
+Received: from [10.85.249.164] (helo=leknes.fjasle.eu)
+ by smtpcorp.com with esmtpsa
+ (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+ (Exim 4.97.1-S2G) (envelope-from <nicolas@fjasle.eu>)
+ id 1t7LLJ-AIkwcC8v3at-K04Z; Sat, 02 Nov 2024 21:07:34 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fjasle.eu; s=mail;
+ t=1730581648; bh=cO3hWwEfMbIltEmTMaVHnNGUQNtuqAECidpRtsXGisY=;
+ h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+ b=mPxG+ZlL8bqGVknfqLdujlUASDBOQOdY8DG/4aZk22nnZVSafWjWDXp6ynN6fA6CN
+ a/A5iyF5W6+2iwPEOxmcX9hgZ1z1sXPxKFG7pjOqRSyOGv4fvnyRAg7RhXEmFkdLHZ
+ DQmWUllQlzwjQNNE602/pGND8odpJiRjI22kx7sA=
+Received: by leknes.fjasle.eu (Postfix, from userid 1000)
+ id 4186E3D7A2; Sat,  2 Nov 2024 22:07:28 +0100 (CET)
+Date: Sat, 2 Nov 2024 22:07:28 +0100
+From: Nicolas Schier <nicolas@fjasle.eu>
+To: Vegard Nossum <vegard.nossum@oracle.com>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org,
+ Nathan Chancellor <nathan@kernel.org>,
+ Michael Ellerman <mpe@ellerman.id.au>,
+ Morten Linderud <morten@linderud.pw>,
+ Haelwenn Monnier <contact@lanodan.eu>, Jann Horn <jannh@google.com>,
+ Kees Cook <kees@kernel.org>,
+ James Bottomley <James.Bottomley@hansenpartnership.com>,
+ Theodore Ts'o <tytso@mit.edu>, linux-hardening@vger.kernel.org
+Subject: Re: [RFC PATCH 01/11] kbuild: ignore .config rule for make
+ --always-make
+Message-ID: <ZyaUkK57P4sL2uqm@fjasle.eu>
+References: <20240819160309.2218114-1-vegard.nossum@oracle.com>
+ <20240819160309.2218114-2-vegard.nossum@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <db7190c8-d17f-4a0d-bc2f-5903c79f36c2@t-8ch.de>
+In-Reply-To: <20240819160309.2218114-2-vegard.nossum@oracle.com>
+X-IMAPbase: 1553198760 0000000191 Old
+X-UID: 185
+X-Smtpcorp-Track: 3txsd6kJuUTl.3mJ-OjCBdAaL.xi7zNgX5kSS
+Feedback-ID: 1174286m:1174286a9YXZ7r:1174286sJea5VhC7H
+X-Report-Abuse: Please forward a copy of this message, including all headers,
+ to <abuse-report@smtp2go.com>
 
-On Thu, Oct 31, 2024 at 08:40:33PM +0000, Thomas Weißschuh wrote:
-> Hi Kees,
+On Mon, Aug 19, 2024 at 06:02:58PM +0200 Vegard Nossum wrote:
+> Before this patch, using 'make --always-make' would always result in the
+> error message about the missing .config being displayed.
 > 
-> I'm running into compilation warnings/errors due to fortify-string.h.
+> Detect the -B/--always-make flag and leave this rule out, which allows the
+> rest of the build to proceed. See [1] for an explanation of this particular
+> construction.
+
+Nice catch, thanks.
+
 > 
-> Environment:
-> - Commit 0fc810ae3ae110f9e2fcccce80fc8c8d62f97907 (current mainline master)
-> - gcc (GCC) 14.2.1 20240910
-> - Relevant config (from an Arch Linux distro config):
-> 	CONFIG_64BIT=y
-> 	CONFIG_X86_64=y
-> 	CONFIG_NR_CPUS=320
->         CONFIG_NR_CPUS_RANGE_BEGIN=2
->         CONFIG_NR_CPUS_RANGE_END=512
->         CONFIG_NR_CPUS_RANGE_DEFAULT=64
-> 	CONFIG_PADATA=y
+> [1]: https://www.gnu.org/software/make/manual/make.html#Testing-Flags
 > 
-> Warning:
+> Signed-off-by: Vegard Nossum <vegard.nossum@oracle.com>
+> ---
+>  Makefile | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
->       CC      kernel/padata.o
->     In file included from ./include/linux/string.h:390,
->                      from ./include/linux/bitmap.h:13,
->                      from ./include/linux/cpumask.h:12,
->                      from ./arch/x86/include/asm/paravirt.h:21,
->                      from ./arch/x86/include/asm/irqflags.h:80,
->                      from ./include/linux/irqflags.h:18,
->                      from ./include/linux/spinlock.h:59,
->                      from ./include/linux/swait.h:7,
->                      from ./include/linux/completion.h:12,
->                      from kernel/padata.c:14:
->     In function ‘bitmap_copy’,
->         inlined from ‘cpumask_copy’ at ./include/linux/cpumask.h:839:2,
->         inlined from ‘__padata_set_cpumasks’ at kernel/padata.c:730:2:
->     ./include/linux/fortify-string.h:114:33: error: ‘__builtin_memcpy’ reading between 41 and 536870904 bytes from a region of size 40 [-Werror=stringop-overread]
->       114 | #define __underlying_memcpy     __builtin_memcpy
->           |                                 ^
->     ./include/linux/fortify-string.h:633:9: note: in expansion of macro ‘__underlying_memcpy’
->       633 |         __underlying_##op(p, q, __fortify_size);                        \
->           |         ^~~~~~~~~~~~~
->     ./include/linux/fortify-string.h:678:26: note: in expansion of macro ‘__fortify_memcpy_chk’
->       678 | #define memcpy(p, q, s)  __fortify_memcpy_chk(p, q, s,                  \
->           |                          ^~~~~~~~~~~~~~~~~~~~
->     ./include/linux/bitmap.h:259:17: note: in expansion of macro ‘memcpy’
->       259 |                 memcpy(dst, src, len);
->           |                 ^~~~~~
->     kernel/padata.c: In function ‘__padata_set_cpumasks’:
->     kernel/padata.c:713:48: note: source object ‘pcpumask’ of size [0, 40]
->       713 |                                  cpumask_var_t pcpumask,
->           |                                  ~~~~~~~~~~~~~~^~~~~~~~
->     In function ‘bitmap_copy’,
->         inlined from ‘cpumask_copy’ at ./include/linux/cpumask.h:839:2,
->         inlined from ‘__padata_set_cpumasks’ at kernel/padata.c:730:2:
->     ./include/linux/fortify-string.h:114:33: error: ‘__builtin_memcpy’ reading between 41 and 536870904 bytes from a region of size 40 [-Werror=stringop-overread]
->       114 | #define __underlying_memcpy     __builtin_memcpy
->           |                                 ^
->     ./include/linux/fortify-string.h:633:9: note: in expansion of macro ‘__underlying_memcpy’
->       633 |         __underlying_##op(p, q, __fortify_size);                        \
->           |         ^~~~~~~~~~~~~
->     ./include/linux/fortify-string.h:678:26: note: in expansion of macro ‘__fortify_memcpy_chk’
->       678 | #define memcpy(p, q, s)  __fortify_memcpy_chk(p, q, s,                  \
->           |                          ^~~~~~~~~~~~~~~~~~~~
->     ./include/linux/bitmap.h:259:17: note: in expansion of macro ‘memcpy’
->       259 |                 memcpy(dst, src, len);
->           |                 ^~~~~~
->     kernel/padata.c: In function ‘__padata_set_cpumasks’:
->     kernel/padata.c:713:48: note: source object ‘pcpumask’ of size [0, 40]
->       713 |                                  cpumask_var_t pcpumask,
->           |                                  ~~~~~~~~~~~~~~^~~~~~~~
->     cc1: all warnings being treated as errors
-> 
-> Code:
-> 
->    712	static int __padata_set_cpumasks(struct padata_instance *pinst,
->    713					 cpumask_var_t pcpumask,
->    714					 cpumask_var_t cbcpumask)
->    715	{
->    716		int valid;
->    717		int err;
->    718	
->    719		valid = padata_validate_cpumask(pinst, pcpumask);
->    720		if (!valid) {
->    721			__padata_stop(pinst);
->    722			goto out_replace;
->    723		}
->    724	
->    725		valid = padata_validate_cpumask(pinst, cbcpumask);
->    726		if (!valid)
->    727			__padata_stop(pinst);
->    728	
->    729	out_replace:
->    730		cpumask_copy(pinst->cpumask.pcpu, pcpumask);
->    731		cpumask_copy(pinst->cpumask.cbcpu, cbcpumask);
->    732	
->    733		err = padata_setup_cpumasks(pinst) ?: padata_replace(pinst);
->    734	
->    735		if (valid)
->    736			__padata_start(pinst);
->    737	
->    738		return err;
->    739	}
-> 
-> 
-> The weird thing is, that only the cpumask_copy() in line 730 triggers
-> this warning. The one in line 731 doesn't. Also this is the only
-> instance of the warning I see in the whole build.
-> 
-> The warning goes away with the following change, but that introduces
-> runtime overhead and feels wrong. Also it doesn't explain why this
-> specific call is different from all others.
-> 
-> diff --git a/include/linux/cpumask.h b/include/linux/cpumask.h
-> index 9278a50d514f..ded9d1bcef03 100644
-> --- a/include/linux/cpumask.h
-> +++ b/include/linux/cpumask.h
-> @@ -836,7 +838,7 @@ void cpumask_shift_left(struct cpumask *dstp, const struct cpumask *srcp, int n)
->  static __always_inline
->  void cpumask_copy(struct cpumask *dstp, const struct cpumask *srcp)
->  {
-> -	bitmap_copy(cpumask_bits(dstp), cpumask_bits(srcp), large_cpumask_bits);
-> +	bitmap_copy(cpumask_bits(dstp), cpumask_bits(srcp), MIN(NR_CPUS, large_cpumask_bits));
->  }
+> diff --git a/Makefile b/Makefile
+> index 44c02a6f60a14..f09c036daf2f5 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -757,6 +757,10 @@ ifdef may-sync-config
+>  # because some architectures define CROSS_COMPILE there.
+>  include include/config/auto.conf.cmd
 >  
->  /**
+> +ifeq (,$(findstring B,$(firstword -$(MAKEFLAGS))))
+
+As we still also support make v3.80 to v4.0, please use $(short-opts)
+defined around line 27.
+
+> +# This is a dummy target, only meant as a help for the user invoking make.
+> +# We don't want it to take effect when running 'make --always-make', since
+> +# that renders the --always-make option effectively useless.
+>  $(KCONFIG_CONFIG):
+>  	@echo >&2 '***'
+>  	@echo >&2 '*** Configuration file "$@" not found!'
+> @@ -765,6 +769,7 @@ $(KCONFIG_CONFIG):
+>  	@echo >&2 '*** "make menuconfig" or "make xconfig").'
+>  	@echo >&2 '***'
+>  	@/bin/false
+> +endif
+>  
+>  # The actual configuration files used during the build are stored in
+>  # include/generated/ and include/config/. Update them if .config is newer than
+> -- 
+> 2.34.1
 > 
-> Any ideas?
-
-My notes on looking at this:
-
-#define DECLARE_BITMAP(name,bits) \
-        unsigned long name[BITS_TO_LONGS(bits)]
-...
-typedef struct cpumask { DECLARE_BITMAP(bits, NR_CPUS); } cpumask_t;
-
-#ifdef CONFIG_CPUMASK_OFFSTACK
-typedef struct cpumask *cpumask_var_t;
-#else
-typedef struct cpumask cpumask_var_t[1];
-#endif /* CONFIG_CPUMASK_OFFSTACK */
-
-...
-#define cpumask_bits(maskp) ((maskp)->bits)
-...
-
-int padata_set_cpumask(struct padata_instance *pinst, int cpumask_type,
-                       cpumask_var_t cpumask)
-...
-        struct cpumask *serial_mask, *parallel_mask;
-...
-                parallel_mask = cpumask;
-        ...or...
-                parallel_mask = pinst->cpumask.pcpu;
-        ...
-        err =  __padata_set_cpumasks(pinst, parallel_mask, serial_mask);
-
-...
-static int __padata_set_cpumasks(struct padata_instance *pinst,
-                                 cpumask_var_t pcpumask,
-                                 cpumask_var_t cbcpumask)
-...
-        cpumask_copy(pinst->cpumask.cbcpu, cbcpumask);
-...
-static __always_inline
-void cpumask_copy(struct cpumask *dstp, const struct cpumask *srcp)
-{
-        bitmap_copy(cpumask_bits(dstp), cpumask_bits(srcp),
-large_cpumask_bits);
-}
-...
-extern unsigned int nr_cpu_ids;
-...
-#if NR_CPUS <= BITS_PER_LONG // false: 320 <= 64
-  #define small_cpumask_bits ((unsigned int)NR_CPUS)
-  #define large_cpumask_bits ((unsigned int)NR_CPUS)
-#elif NR_CPUS <= 4*BITS_PER_LONG // false: 320 <= 256
-  #define small_cpumask_bits nr_cpu_ids
-  #define large_cpumask_bits ((unsigned int)NR_CPUS)
-#else
-  #define small_cpumask_bits nr_cpu_ids
-  #define large_cpumask_bits nr_cpu_ids // not a compile-time constant
-#endif
-...
-static __always_inline
-void bitmap_copy(unsigned long *dst, const unsigned long *src, unsigned
-int nbits)
-{
-        unsigned int len = bitmap_size(nbits);
-
-        if (small_const_nbits(nbits))
-                *dst = *src;
-        else
-                memcpy(dst, src, len);
-}
-
-So the result is:
-
-memcpy(pcpumask->bits, cbcpumask->bits, nr_cpu_ids)
-
-And the error is that the compiler has determined that nc_cpu_ids got
-limited to possibly have a value between 41 and 536870904. This is an
-odd limit, though: 0x1FFFFFF8, but does feel constructable -- it's close
-to some magic numbers.
-
-There are some new diagnostics being added to GCC that might help track
-this down[1]. I'm waiting for a v4 before I take it for a spin.
-
--Kees
-
-[1] https://gcc.gnu.org/pipermail/gcc-patches/2024-October/666870.html
-
--- 
-Kees Cook
