@@ -1,89 +1,133 @@
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from e2i702.smtp2go.com (e2i702.smtp2go.com [103.2.142.190])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C1DB14AD20;
-	Sat,  2 Nov 2024 21:39:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96ABD800
+	for <linux-hardening@vger.kernel.org>; Sun,  3 Nov 2024 11:16:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.2.142.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730583563; cv=none; b=Mgw1mjr3khvABYtdK831gRmas8EGtTvfZwj0oRNP+bA0ZT5cZGzt0cjmk6sjyCKoLya4CmNniQMS71aIri5j52Yh8/beAXpUHbXtbQ26LSOhsG5OmniWUkwQAqH3WEif2ok4vdRBiNYWSHZs31gaY947YG4RcK4i3dGBq0IYDuw=
+	t=1730632619; cv=none; b=jobuR2OXyaBqR1u/+7UqV1utMgpk8C1x31MrGzHehZ+JK+OWtT414W5k4W6o82xmn7AJ5UlrN/eEpwQUrPvpgS+A7j7xauFmHY6l5kq0Q2qLLizvVTd47tR2zOGlgwnNJ4OMrmQYFhYe4tnK6F0XDgAjXKSDcat2yg6MizU4txY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730583563; c=relaxed/simple;
-	bh=v31RHX7zwuGILSi524dbs8vBY+KRnW+z/Mvu0ZwXAKs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pue7y+svg7915ZLOkIZy1CwZ0fnFK6Yo1dpULxKjAv0ofly/vy5ZH3Q2hROyp6otK9bT8adxN33MGdeSLpWGLSVTo3kC/ZhclVg5r2BqK4jcJLCBv2zYari8Bd5qaJ9g/+ECWPdJNfzjnFOp4TpR1kTyIWRSKHqX4uNA+JMagys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DNhuOeUo; arc=none smtp.client-ip=209.85.215.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1730632619; c=relaxed/simple;
+	bh=epNaclD40qMK6ns/PiFXxTWyIj3yUc5vZo9AfIb3Q48=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O911BWn6gG3HsgDbfA9VSyK7Q5wU0j9JblUPfK+RVvzl4/BePfda/tjDSboD+qSt+gsZtHu8ol+3auwsSqN1N7vXGeYJzyng1sdzMCiqu8mmlTsXvFfB3WnbnSJeyxdfYRYRdb6bAVG2GkjfD0xKrZycAWq8dp8tcuK6tIPypw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fjasle.eu; spf=pass smtp.mailfrom=em1174286.fjasle.eu; dkim=fail (0-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b=UOt9KiPB reason="unknown key version"; dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b=Yab7Lz1V; dkim=pass (1024-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b=eQaB+Tfp; arc=none smtp.client-ip=103.2.142.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fjasle.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=em1174286.fjasle.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DNhuOeUo"
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-7ee36621734so529414a12.3;
-        Sat, 02 Nov 2024 14:39:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730583560; x=1731188360; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=v31RHX7zwuGILSi524dbs8vBY+KRnW+z/Mvu0ZwXAKs=;
-        b=DNhuOeUoGl2cdm1c/mWroqf70Pj6xZnSZ81zwWsKuYCzlyiL9oZqYGMuODTHx0b6PT
-         yDBL7WIISASA+PzjlU6NgM+n+MhNb3xcdXMo2ZXLVpdrq4QOAXBSRNjyNuvtVh8+XL2b
-         dmZuGKNhCoey/WyBFgZxsgyIz9xLwOOibp2dE1SiZ2/NgbNpmtkyV83NavNF4b306dN8
-         6ZJmdwt/5FpOk/gUYObJy3FPXN4Mf/+RTJNU76tPUaho+evLbVucxVUa/+0AMz0bevYv
-         fhSsZIb/Csx5phdCrfXTvdh2hsCf+JzlA5EoGoBaM61P4f0qFm8jfk4w3CTpbcBtx+Pd
-         vCtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730583560; x=1731188360;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=v31RHX7zwuGILSi524dbs8vBY+KRnW+z/Mvu0ZwXAKs=;
-        b=QCP5gnEpTmHRypRkyepG6Vz5Njku5JLuiU9n9Pa3gS6Oe04rKVUB6emfIaIGbpuocN
-         zTB+yaTRElZoK7Gn3z04arX6y6t6YF5wWqVh+9aHKF+7UhCYka+Fq1gErjhdAw+kaeXP
-         vJJ3r9+HALDLX9zMUlA7dwOVZ07AjCJGXQ35Eno0PdqjTkM/b3yON4xaDWTAQMw2rn+u
-         wf3/1REY1xIXNtclKdw0HEODHeWiw03DjFpmp5GFOd8S7er/k5Y9lXrD0D+qN9N013Ca
-         mU9IVZbWdvzGX3x5cnW1N2g7M+C7iza9hmiD+4fXthHT8w/Urt0str/VvOrbjO4+En24
-         5/9w==
-X-Forwarded-Encrypted: i=1; AJvYcCUvODU6agSDGbgRPz0lf83aZZX+U4WZ0EuAg+uEB4ikzBbyiHlyQ0mBIwOI15KVSQSa9ET8SegQf8COKZCK@vger.kernel.org, AJvYcCVrdeC29B0gxxh5VeFaW3TMi944NNfiA5cJ2jLlSfN0+GQ4+K/jdhbFmB76rZgpDBEpQoCDN7hMEFD3pwf+acE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxnMiRTfcNWXbGAacaZM1yLRhZxGgQVti/EJ/EGtYF4Wao55eOd
-	swQ2mQC1lOWwGIHPyujRIj1cW4lO4xjoQwz0w6cR7bl/spH5dC09UDkh7JWiZ4CsdAVJgp3IZNo
-	KaEaAWWgUCqRqoHrAi7eCA7cg8mQ=
-X-Google-Smtp-Source: AGHT+IGTDQ78KZ9PYLKZS+mytEroKc5tLbkCIaArb9uL0Fb/3cBJwOS3qMJtGc88YNXaIBSQDu6+NYH4fhj8P8+kOUI=
-X-Received: by 2002:a17:90a:b38e:b0:2e2:af5b:a18d with SMTP id
- 98e67ed59e1d1-2e8f11ab185mr13252410a91.4.1730583560386; Sat, 02 Nov 2024
- 14:39:20 -0700 (PDT)
+	dkim=fail reason="unknown key version" (0-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b="UOt9KiPB";
+	dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b="Yab7Lz1V";
+	dkim=pass (1024-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b="eQaB+Tfp"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=smtpservice.net; s=mp6320.a1-4.dyn; x=1730633504; h=Feedback-ID:
+	X-Smtpcorp-Track:Message-ID:Subject:To:From:Date:Reply-To:Sender:
+	List-Unsubscribe:List-Unsubscribe-Post;
+	bh=epNaclD40qMK6ns/PiFXxTWyIj3yUc5vZo9AfIb3Q48=; b=UOt9KiPBwtLRVhRY67yQ4+fFRJ
+	/ekzcWEsHPa1K2P75dCvUTIduS51DQMFUtP28YKiH81s65DgjCBranG1kdJAlfFEQGnX0uuSyOZLF
+	t1C40xzyNU9nNvPhaQrkq/9E+WO1aqkkXYcuyVCgZUenOvrP5l5ly2OLTCR6yJTvI3rKUOY50XTek
+	GVBKn7LaG2x6LTZ1fM/fR2InBT86azIUn9+zBHUdP5vpHIvz4ODCCP8qL+ufxHm4VowiqpyShlszM
+	kAnjznyG8z2mnTaXP8zTJxEv8sSh5CGlWwdbLCGunLAuwNS5FYB+sZ+H20L511BrIh6u2QqEMC/a4
+	KxVeuNow==;
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fjasle.eu;
+ i=@fjasle.eu; q=dns/txt; s=s1174286; t=1730632604; h=from : subject :
+ to : message-id : date;
+ bh=epNaclD40qMK6ns/PiFXxTWyIj3yUc5vZo9AfIb3Q48=;
+ b=Yab7Lz1V44+q7k4TVDrWyK0aKdDapCtAPJkuSMFpZnwbnnEvnClIO+sjd6ue+gEWH/S5h
+ 6qRUCRm15binilEk1YJH02cd6BQxwP6s6zuncBf3yvmqVars9LgxuVRwtjr4PJKfFpC/oHb
+ vVfKvASihSdW74V5AoED1SeeiRbhCpYW83EceEPl7jKajhcHv6I69j6xjFAgMbv0gDZqYEc
+ KCrUXx/cXw0OdYDrgh8jxjoIXqhanAFWuNAQ4erVCCLYCMSvEOvDFpBtRsV9coNOUUK3TT7
+ jYowHw+3RQl+zens/Y5g64uIyB3Hz1Lm8COATz5mVtPwFFuPVLDMk/I356zw==
+Received: from [10.172.233.58] (helo=SmtpCorp) by smtpcorp.com with esmtpsa
+ (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+ (Exim 4.94.2-S2G) (envelope-from <nicolas@fjasle.eu>)
+ id 1t7YZj-qt4CHQ-PL; Sun, 03 Nov 2024 11:15:20 +0000
+Received: from [10.85.249.164] (helo=leknes.fjasle.eu)
+ by smtpcorp.com with esmtpsa
+ (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+ (Exim 4.97.1-S2G) (envelope-from <nicolas@fjasle.eu>)
+ id 1t7YZi-FnQW0hPu9qe-lfIC; Sun, 03 Nov 2024 11:15:19 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fjasle.eu; s=mail;
+ t=1730632512; bh=epNaclD40qMK6ns/PiFXxTWyIj3yUc5vZo9AfIb3Q48=;
+ h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+ b=eQaB+TfpTTRxWwJemmySS/Ao6+4lHvIUaBtC+lQVScK2pXMR1mLIHFH3DlWkz54Cx
+ 49EpSHZ+j1eHUtOTAM6qV/g0Tqyzkl0RtRioxieeNceuqqHHdthyOf0/9FuWBwCQbd
+ MsuxMkm6on3p6RrxlwNoYPC7EUXXenOk8Yrdz9TQ=
+Received: by leknes.fjasle.eu (Postfix, from userid 1000)
+ id 0E3513D7C2; Sun,  3 Nov 2024 12:15:11 +0100 (CET)
+Date: Sun, 3 Nov 2024 12:15:11 +0100
+From: Nicolas Schier <nicolas@fjasle.eu>
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Vegard Nossum <vegard.nossum@oracle.com>,
+ Masahiro Yamada <masahiroy@kernel.org>,
+ linux-kbuild@vger.kernel.org, Nathan Chancellor <nathan@kernel.org>,
+ Michael Ellerman <mpe@ellerman.id.au>,
+ Morten Linderud <morten@linderud.pw>,
+ Haelwenn Monnier <contact@lanodan.eu>, Jann Horn <jannh@google.com>,
+ Kees Cook <kees@kernel.org>,
+ James Bottomley <James.Bottomley@hansenpartnership.com>,
+ Theodore Ts'o <tytso@mit.edu>, linux-hardening@vger.kernel.org
+Subject: Re: [RFC PATCH 01/11] kbuild: ignore .config rule for make
+ --always-make
+Message-ID: <ZydbP_bQQXghWYSR@fjasle.eu>
+References: <20240819160309.2218114-1-vegard.nossum@oracle.com>
+ <20240819160309.2218114-2-vegard.nossum@oracle.com>
+ <ZyaUkK57P4sL2uqm@fjasle.eu>
+ <CANiq72kJDTaTy91+QN_STHf9ppeiWtzuVORX+Zp36zbFApZ8HA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240819160309.2218114-1-vegard.nossum@oracle.com>
- <20240819160309.2218114-2-vegard.nossum@oracle.com> <ZyaUkK57P4sL2uqm@fjasle.eu>
-In-Reply-To: <ZyaUkK57P4sL2uqm@fjasle.eu>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Sat, 2 Nov 2024 22:39:07 +0100
-Message-ID: <CANiq72kJDTaTy91+QN_STHf9ppeiWtzuVORX+Zp36zbFApZ8HA@mail.gmail.com>
-Subject: Re: [RFC PATCH 01/11] kbuild: ignore .config rule for make --always-make
-To: Nicolas Schier <nicolas@fjasle.eu>
-Cc: Vegard Nossum <vegard.nossum@oracle.com>, Masahiro Yamada <masahiroy@kernel.org>, 
-	linux-kbuild@vger.kernel.org, Nathan Chancellor <nathan@kernel.org>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Morten Linderud <morten@linderud.pw>, 
-	Haelwenn Monnier <contact@lanodan.eu>, Jann Horn <jannh@google.com>, Kees Cook <kees@kernel.org>, 
-	James Bottomley <James.Bottomley@hansenpartnership.com>, "Theodore Ts'o" <tytso@mit.edu>, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature"; boundary="AIf+jbmdOnB4tqTq"
+Content-Disposition: inline
+In-Reply-To: <CANiq72kJDTaTy91+QN_STHf9ppeiWtzuVORX+Zp36zbFApZ8HA@mail.gmail.com>
+X-Smtpcorp-Track: cdWmFX9G96OV.HrVwEGCb6Yqf.XNdC6AObNzj
+Feedback-ID: 1174286m:1174286a9YXZ7r:1174286sJea5VhC7H
+X-Report-Abuse: Please forward a copy of this message, including all headers,
+ to <abuse-report@smtp2go.com>
+
+
+--AIf+jbmdOnB4tqTq
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Nov 2, 2024 at 10:08=E2=80=AFPM Nicolas Schier <nicolas@fjasle.eu> =
-wrote:
->
-> As we still also support make v3.80 to v4.0, please use $(short-opts)
-> defined around line 27.
+On Sat, Nov 02, 2024 at 10:39:07PM +0100 Miguel Ojeda wrote:
+> On Sat, Nov 2, 2024 at 10:08=E2=80=AFPM Nicolas Schier <nicolas@fjasle.eu=
+> wrote:
+> >
+> > As we still also support make v3.80 to v4.0, please use $(short-opts)
+> > defined around line 27.
+>=20
+> We moved to 4.0 in 5f99665ee8f4 ("kbuild: raise the minimum GNU Make
+> requirement to 4.0") -- or do you mean something else / am I missing
+> something?
 
-We moved to 4.0 in 5f99665ee8f4 ("kbuild: raise the minimum GNU Make
-requirement to 4.0") -- or do you mean something else / am I missing
-something?
+oh yes, thanks. I missed that,
 
-Thanks!
+Kind regards
+Nicolas
 
-Cheers,
-Miguel
+--AIf+jbmdOnB4tqTq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEh0E3p4c3JKeBvsLGB1IKcBYmEmkFAmcnWzcACgkQB1IKcBYm
+EmnDLA/7BevexIawqKVjjAa84E6g7gL5tDLaiGM6EQbfnRQ95Id8RGiUY+kEnPT4
+b7djXVDqfo3XmA4VztyAFjV0HxdvyPo273IMrLxVI9/94H5R82FwvGxCXZEYU+Gk
+jb5gXGGDfGHWdGRMPArgxkr1dj3bunKoDljrwf8dYA6fc4Ik5qmkSNeL4zQdBLnl
+MnQIx6uVXVFeY9YC2JFt+/kWOieBtdW0EVxzM4n+YSoA1HAFU4eK0gVg8Nv9MBhR
+/xrVUTJpA0dk2N2W9Ppr4fu8IShtbnoUJwWEPXcaZxKXgdFnbbjsX6tO57y8f9v0
+yluVEFTpYuglAzD5WhY1hfKgNOqqNvsATh/9E8JJm8hitbBPHbnCmF5IsrJ1TrRM
+Y1MQG4/9uPXrf/+lvhHuanuLEFeRHDyYi6HVQU3/OitoWSou4DMXBMwJsNcUsOu2
+6+vs4T7nXcob5aFxcTYYaqa6d6bccxhJsG8Yrb2J0n2sRCddds2i1AVlpOLSv54Z
+mPU5w3bmaAtiUj9KSoTNMUqcorrXMSJB3j7emilmPWp5bpwfFARm4kPLt85yFC/R
+R/LeIzW+SN7bN9C27wi5Ss3D/SW0rSyCDkEMElpIbcniy8a657N7gtb8poSex3KD
+cKGSto2JeOuYOpn9jeHhczZKlsQEhU7rBeCQS0JtilXIdTtwBr4=
+=ReWd
+-----END PGP SIGNATURE-----
+
+--AIf+jbmdOnB4tqTq--
