@@ -1,105 +1,86 @@
-Received: from mail.andi.de1.cc (mail.andi.de1.cc [178.238.236.174])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DF8F13049E;
-	Sun,  3 Nov 2024 17:36:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.238.236.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44501189F48;
+	Sun,  3 Nov 2024 19:20:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730655406; cv=none; b=O4izUBSg1yZJjhy3Ixb0Oxrs9vgqoYDGHlvs/F1mkAdc8P4LaxzD84404p4RLYzT9+xzKThRvSIdQMgT6D+/QS3hdCdmYxm8s0KBL5eD7dDH4tH/E2V1IbTfW0KpapWhC6fc9xDjPMFVILwcWKOznpBN9BCIXxZVdkYkmSuu8iI=
+	t=1730661622; cv=none; b=A6gFHuR9T+Le5nb/Pd20cdpqpcLfZwhV8bB0tSAVU5vdRpYtbKnlTA/wNzHr8IZN0WM6qpuOXNzhV9ShHRQE3zU4OPlJy3P1uhxF10ml1ryEICNwX/MW4XU9oCc3OsO97VsYV9AQ+kzSLHhTlf783Dvek48tQR8pzTnsEBTe/lE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730655406; c=relaxed/simple;
-	bh=vG1dN2jvK4GPiTUTN7lh6GhShEszT/+pyjWmhMpifgw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MDTxVWA1VV4jM/HvBTH5xJMd3Ug7lb8hCuxUVGxFsymeB79F/onOuoz8YY09G5sTK/02C8bhoB8rR/vtJ3SeMp6S9KnG9DYideuuFcNX7BXQXSb27MpOUeFnrkhm6IA9pMKfUdVVVm80x3NYj+6JV2QhTKizGArtQppwzXP70OQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kemnade.info; spf=pass smtp.mailfrom=kemnade.info; dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b=s19XAgN7; arc=none smtp.client-ip=178.238.236.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kemnade.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kemnade.info
+	s=arc-20240116; t=1730661622; c=relaxed/simple;
+	bh=+SzG39M2jVZpdLMuDmKwxnI/V/yP9sxbrZFvVZCLlTs=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=ayDgTCieGoEI4YKxzjW1bAV1byJNx7XSr1XzTpYvMJtLFEkciXWM/bpfzQ5OYEO7tDvsEwtEGtumEX20D++eiGp6dZTGmNhNtkVvMQ2FT1ZjQcm+p0U52ywuJfbEweET34vOhvd0Q6awGi29nT2XZRNQbkVnie7101tUeABBaOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q13aoZBS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="s19XAgN7"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=kemnade.info; s=20220719; h=References:In-Reply-To:Cc:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=nyvL5hW9tmY/2ZluyWSap3lYfFpEuf8kt49tqGDLvnA=; b=s19XAgN7WqbV0BHsi5WaM4bDOm
-	JGBBm+7BlljD6UfjZsdpYjdy5WwyEQbkIjXNcGHLz5Klu6H/I8waWhTJkVUJ/53YvZIVHmgkz4Ok1
-	W4K9ScDj9s+4tGfDfG7J/gB+nIILhvFJ9BinAC7mxjNXtO8bY/tEHyyFzxB0eqORsri/ICRgDYbvO
-	+K6nh8T9YYZBsmq+ZOg3L9EydEudOJRIMFXuPgpvh7Xb+Ct0GT4LpBmWKkUhFjcQlTQGzgkHRldY3
-	bkhVJPS/8Gu+QrafZzsKCVOyFiliF5PU/UyB3/LL/7bVYXAHB0bFZ4HV69JQbRWFDZNmDy7vr5ON6
-	qB2mSxYw==;
-Date: Sun, 3 Nov 2024 18:36:36 +0100
-From: Andreas Kemnade <andreas@kemnade.info>
-To: Mithil Bavishi <bavishimithil@gmail.com>
-Cc: aaro.koskinen@iki.fi, conor+dt@kernel.org, devicetree@vger.kernel.org,
- khilman@baylibre.com, krzk+dt@kernel.org, linux-hardening@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, robh@kernel.org,
- rogerq@kernel.org, tony@atomide.com
-Subject: Re: [PATCH v2 2/6] arm/dts: Add common device tree for Samsung
- Galaxy Tab 2 series
-Message-ID: <20241103183636.40cc37fc@akair>
-In-Reply-To: <20241031104146.4538-1-bavishimithil@gmail.com>
-References: <20241031083248.043d25d0@akair>
-	<20241031104146.4538-1-bavishimithil@gmail.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q13aoZBS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFF32C4AF09;
+	Sun,  3 Nov 2024 19:20:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730661621;
+	bh=+SzG39M2jVZpdLMuDmKwxnI/V/yP9sxbrZFvVZCLlTs=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=q13aoZBS9AGtdfuBbyo8Q+abhoZ4nd8Q9FG2Rde4ggC4i7c6XaWGXYV45OOYYXbUp
+	 pdgVM3ltO59GjVGVVhm67WYCulVa9T95KHeZsDoDoRwps5XlyJlpjTKo2HFRBBFP1O
+	 4Z1ZA9GYfk3bGEwJiTKsU+OjNfgrTIVRRdd+sVb4i2qLfE24Sq2oGuyqKI6D8zegRa
+	 iB1AaUxAPRs4bvqRud4BAN/lPXJUwST0+AAVgRgTipVk2exzFWVJxqnuiCmxHM6kmu
+	 hdGhay11Fv6Kk+7+s+/y7gGAg9/qDGMyKvFJ5Ph0s8GQ7q6jkERnnvfppXKu8mTX2a
+	 vcxNA/EgvqAHg==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70E4138363C3;
+	Sun,  3 Nov 2024 19:20:31 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v2 0/2][next] UAPI: net/ethtool: Avoid thousands of
+ -Wflex-array-member-not-at-end warnings
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <173066163000.3236514.15893944925080913506.git-patchwork-notify@kernel.org>
+Date: Sun, 03 Nov 2024 19:20:30 +0000
+References: <cover.1730238285.git.gustavoars@kernel.org>
+In-Reply-To: <cover.1730238285.git.gustavoars@kernel.org>
+To: Gustavo A. R. Silva <gustavoars@kernel.org>
+Cc: michael.chan@broadcom.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, bharat@chelsio.com,
+ benve@cisco.com, satishkh@cisco.com, manishc@marvell.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
 
-Am Thu, 31 Oct 2024 10:41:45 +0000
-schrieb Mithil Bavishi <bavishimithil@gmail.com>:
+Hello:
 
-> > well, that takes time, I wanted to start that on the right thing.  
-> 
-> Yes indeed, I'll be more careful the next time, again sorry for the 
-> trouble, I am not used to the process of mailing lists and may have
-> done some mistakes there as well.
-> 
-probably you did not notice an error in make dtbs and the old
-devicetree on the device was still there and was used.
+This series was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-> > 1. make dtbs shows warnings  
+On Tue, 29 Oct 2024 15:55:02 -0600 you wrote:
+> Small patch series aimed at fixing thousands of -Wflex-array-member-not-at-end
+> warnings by creating a new tagged struct within a flexible structure. We then
+> use this new struct type to fix problematic middle-flex-array declarations in
+> multiple composite structs, as well as to update the type of some variables in
+> various functions.
 > 
-> > 2. make CHECK_DTBS=y ti/omap/omap4-samsung-espresso7.dtb is too
-> > noisy (probably same for espresso10).  
+> Changes in v2:
+>  - Update changelog text in patch 2/2 to better reflect the changes
+>    made. (Jakub)
+>  - Adjust variable declarations to follow the reverse xmas tree
+>    convention. (Jakub)
 > 
-> > a lot comes from the dtsi files, so you need to ignore a lot,
-> > probably either strip down the new dts to almost nothing besides
-> > dtsi includes to determine the background noise or take a similar
-> > device, redirect output and errors, diff that output with the full
-> > devicetree. I am trying to clean that dtsi warning mess up,
-> > linux-next shows a lot less warnings but that takes time.  
-> 
-> Oh, I was not aware of such tool, ran it and yeah there are a ton of
-> warnings, where can I ask for assitance if I need it while fixing
-> them.
-> 
-I hope you understood that warnings like this:
-arch/arm/boot/dts/ti/omap/omap4-samsung-espresso7.dtb:
-/ocp/interconnect@4a000000/segment@0/target-module@4000/cm1@0/clocks/pad_clks_ck@108:
-failed to match any schema with compatible: ['ti,gate-clock']
+> [...]
 
-are not the ones you need to fix, so just the diff between old and new.
+Here is the summary with links:
+  - [v2,1/2,next] UAPI: ethtool: Use __struct_group() in struct ethtool_link_settings
+    https://git.kernel.org/netdev/net-next/c/43d3487035e9
+  - [v2,2/2,next] net: ethtool: Avoid thousands of -Wflex-array-member-not-at-end warnings
+    https://git.kernel.org/netdev/net-next/c/3bd9b9abdf15
 
-> > One of the warnings that should be fixed:
-> > dts/ti/omap/omap4-samsung-espresso7.dtb: lvds-encoder: compatible:
-> > 'oneOf' conditional failed, one must be fixed: ['lvds-encoder'] is
-> > too short 'lvds-encoder' is not one of ['ti,ds90c185',
-> > 'ti,ds90c187', 'ti,sn75lvds83'] 'lvds-encoder' is not one of
-> > ['ti,ds90cf364a', 'ti,ds90cf384a', 'ti,sn65lvds94'] 'lvds-encoder'
-> > is not one of ['thine,thc63lvdm83d'] from schema $id:
-> > 	http://devicetree.org/schemas/display/bridge/lvds-codec.yaml
-> >  
-> 
-> Ah right, I have to add the encoder (doestek, dtc34lm85am) in
-> bindings and in vendor, this patchset may grow too big I assume.
->
-You can do the binding stuff separately, lvds-encoder/panel should be
-trivial, so one patch for vendor prefix if needed and one for the
-binding.
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-Regards,
-Andreas
+
