@@ -1,56 +1,56 @@
 Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EE091AF0B9;
-	Mon,  4 Nov 2024 09:48:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC37A1B2192;
+	Mon,  4 Nov 2024 09:49:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730713742; cv=none; b=aoQtM62ffIAmcq4v3tkmhCPlhVeffk69HbBPxZGX0jkdZ88a2C9zHT6A0QyrWivX+1fmnRP+1jetTMR74rRlPFivmBMN+B/VAxacIKA3o8nXP9tIHU33TdEXRcQVOtp8/lsyHGL8J48rnvBOcZGMGtFfu+CL9/y4QbSfkNG/jqA=
+	t=1730713745; cv=none; b=WH5BQPT02AqdkenUgVQvM71+wbxB25oFbYtaN2sTL8tpYXTOt2mMCHETIngsAjGYEWgBPH1S6+hpDgbnnVlGwtAp2V7n21Nl4upGuPynzgoXU325j+gZr8dQgSfidskWZkxBF7sYgJGiAKYVYmVGTI0vno35pEiBYZXAyR8pz8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730713742; c=relaxed/simple;
-	bh=xZ6wH9NwIJdn68zqaN4oUXhbnE7mcOvRn9YvuwvEp/0=;
+	s=arc-20240116; t=1730713745; c=relaxed/simple;
+	bh=SxUxoEGWPdZy6SOalehXXF5ftc8ixgDhH+j2aPtj21c=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cRToTcWg2srunKm/NKWcbKekBBtDh1LNqIbOi4gqo3nzfl9OuqnQMmaiIlPyjWgOXDU/zsdaP2taVHto1kHD7OeonKYB3SdVXxWZJehF0R18QqCNvAMyMAAyWh0mSrqUHbio61mC0knuN293ywIJVCKmzKjDczGfYk1/T/XJfWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=YHYq4vks; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=elA341p4 reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+	 MIME-Version:Content-Type; b=Xy0N5XblotFMB6VNlgTxRbci8TdsIpYCBCMg9pHHMs8hqfo7sSvedejcw+M9pqK0kWa8zPEvF+nNflA3n0mRMLsQ8y4IRtlQQzqbOvnb7lR02uUq9IpSXomkhtpfBNialhS90DXN8FZ8haO6qTYT+LisjXlFwGy7EGnlkQDLolk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=AceZ4ASr; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=Hd5cqe4J reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="YHYq4vks";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="elA341p4"
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="AceZ4ASr";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="Hd5cqe4J"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1730713740; x=1762249740;
+  t=1730713743; x=1762249743;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=ZrBMF+uepwwER16iMh3Tc9DMPJGlXiQwEYl2Z21Ai0s=;
-  b=YHYq4vksf+zSl+99E8W/ZrnySUxxjbJN6wdaM6/f5JEAobZiYhv+g7yK
-   25lqU2l+VmZzv9/Nz+jim52DJD/nZLc2vXkFdNRPIjHHf6UgKGHSvwY3E
-   LIPRRskD17yCP0KNm7UXhlYwQ2Lx/SAlEK+QNCUwgIpvpg0Skn0ZlVA0R
-   a/2vWTjZFZRufxyruX9JwOn/tks4QKCYatrE3IiQ1UvsaI0FIVXnNLi2l
-   xjPdC/ldxX47j3Tmw8NvVnPdEIjJ3gxzNbwfR2SnGBZvxlqbDMIiO40S+
-   UYrzZQX2Fc9sdvBrH9XbO3jlkSZeuB+GH7iHIq6rJJIEnfILYxQUkPbfK
+  bh=ZBTSAJVXid3MIQtg2BBLWs/I1t+jzrKm6A0/aL6KyAs=;
+  b=AceZ4ASr0BmE9215f8RdmVgk4CjMlDjeJmFWmx9Fl7O5HC9Z+wanWfzi
+   ZjqLB4qdQQhIIwVDTV2DIlUykJvW6UEj4dsY1Usba/xKiUZPjLZ4GVxoe
+   9lPQ8JD9uxKe+xpi63hmiiAwngWocykjXmmcbIHzK7UllhGjc5ktM2Rm+
+   lUt0jsxwNiucErJ1SqhAKZo0Gc+KQsIzKM497NJHQWGkvlnnn8MY+9Wc2
+   ghptPQnrHi8Ax6ILhBNFJ2DR9A259Z8gZaDgLtdHb6hGyO20wclxk0IOV
+   vhe1dDqS1S65ziUrY5ZKqpnkrig2R/Y5hCLI19YPmukpg1bXWL1j/rBLs
    Q==;
-X-CSE-ConnectionGUID: LIOKSFLDRy+Ivy51jVf4dA==
-X-CSE-MsgGUID: VrCq4X79RkySfycBxZbAYg==
+X-CSE-ConnectionGUID: a4QuwL1+RUqg7rke2wMldQ==
+X-CSE-MsgGUID: 9Oy5HxWCS7CMQvnISBSEPg==
 X-IronPort-AV: E=Sophos;i="6.11,256,1725314400"; 
-   d="scan'208";a="39827144"
+   d="scan'208";a="39827146"
 Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 04 Nov 2024 10:48:56 +0100
-X-CheckPoint: {67289888-36-1E10F2A5-CC0651E5}
-X-MAIL-CPID: 767AA39CC074AF12199F979CAE3A44A8_4
-X-Control-Analysis: str=0001.0A682F17.67289888.00F9,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id A58CD169DA4;
-	Mon,  4 Nov 2024 10:48:51 +0100 (CET)
+  by mx1.tq-group.com with ESMTP; 04 Nov 2024 10:49:01 +0100
+X-CheckPoint: {6728988D-22-F5DC7025-F79421CB}
+X-MAIL-CPID: 9EBC8F9B5B9B36D47A3FA86AAF017B77_0
+X-Control-Analysis: str=0001.0A682F17.6728988D.0113,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 91CD6169DDD;
+	Mon,  4 Nov 2024 10:48:56 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1730713732;
+	s=dkim; t=1730713737;
 	h=from:subject:date:message-id:to:cc:mime-version:content-type:
 	 content-transfer-encoding:in-reply-to:references;
-	bh=ZrBMF+uepwwER16iMh3Tc9DMPJGlXiQwEYl2Z21Ai0s=;
-	b=elA341p4HCyIFuBhl+0BplAXOHPm8VFR87oZJNAGTqWPuS7EwnpFrbHasGHqx0vz+xUz51
-	vUJ2zlZo40nDATGAFhhzEIvVsJzv9VuGo4lBAJKdDv9PSUWUX7k9mvgKkgI5puSKB47Mvt
-	11oMrL4GO3l9J+I2VJTmsF/s2LBuDkx+iEUxoD13jRntqwQE0pZQc93OnNQxV4Zlm/Y6UA
-	X8pEJJy9Zo7Fq1y/9b6/e8v69YWRLSpZXVvm0oIYtdiwAVh5KEB7Qfs6/tOsu0rhVVOmUO
-	USa7zDwD3B4oJcN0F2mh1hInylX6DtNaku6cMLDP98xPYHE9cgX+gtgC4PT6OA==
+	bh=ZBTSAJVXid3MIQtg2BBLWs/I1t+jzrKm6A0/aL6KyAs=;
+	b=Hd5cqe4JUcoeN/yaLmIR2qvjHQaP1Hag/PwvQ4ctbbH5N2YBwhNjw3ifwPatq9lUUxxv/b
+	hx9eaRHL6TiKh53SD0/v6+OZSatqVqxRqHnYXlveKmooxFCVhAKQOQEdXV+rjuOIVFnYCc
+	13UkZGJWChNaFrINBEerZB4jN2zG8dGNFnPT0c1bxjdUoBeWusSN7w4ks5yUNLXTkPCn4X
+	aXBVYZBvzA4HKaaM47G3RMjPjJbOA7GGKIQiB3nRaxiHe6pAE/bN3GCCqj52hvuPolLqt5
+	wIDONEW3bauxCgdYgQbINNadm8s1a3p2c69CdaaKVH8SvpcsqvX2Ocgz7WwMBg==
 From: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
 To: Nishanth Menon <nm@ti.com>,
 	Vignesh Raghavendra <vigneshr@ti.com>,
@@ -71,11 +71,10 @@ Cc: Rob Herring <robh@kernel.org>,
 	Devarsh Thakkar <devarsht@ti.com>,
 	Hari Nagalla <hnagalla@ti.com>,
 	linux@ew.tq-group.com,
-	Dhruva Gole <d-gole@ti.com>,
 	Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Subject: [PATCH 3/5] arm64: dts: ti: k3-am62: Add DM R5 ranges in cbass
-Date: Mon,  4 Nov 2024 10:47:26 +0100
-Message-ID: <08da3463b14d51c620292d574c01d29901987019.1730299760.git.matthias.schiffer@ew.tq-group.com>
+Subject: [PATCH 4/5] arm64: dts: ti: k3-am62-wakeup: Add R5F device node
+Date: Mon,  4 Nov 2024 10:47:27 +0100
+Message-ID: <b0b98b4377559f72bde58ac1ffb7833c17124175.1730299760.git.matthias.schiffer@ew.tq-group.com>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <cover.1730299760.git.matthias.schiffer@ew.tq-group.com>
 References: <cover.1730299760.git.matthias.schiffer@ew.tq-group.com>
@@ -89,43 +88,55 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Last-TLS-Session-Version: TLSv1.3
 
-From: Devarsh Thakkar <devarsht@ti.com>
+From: Hari Nagalla <hnagalla@ti.com>
 
-Add DM R5F ATCM and BTCM ranges in cbass_wakeup and cbass_main.
+AM62 SoCs have a single core R5F core in wakeup domain. This core is also
+used as a device manager for the SoC.
 
-Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
-Signed-off-by: Dhruva Gole <d-gole@ti.com>
+Co-authored-by: Devarsh Thakkar <devarsht@ti.com>
+Signed-off-by: Hari Nagalla <hnagalla@ti.com>
+[Matthias Schiffer: Updated to match latest submitted version v5 of "arm64:
+dts: k3-am62a-wakeup: Add R5F device node"]
 Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
 ---
- arch/arm64/boot/dts/ti/k3-am62.dtsi | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/ti/k3-am62-wakeup.dtsi | 24 ++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am62.dtsi b/arch/arm64/boot/dts/ti/k3-am62.dtsi
-index bfb55ca113239..f01a594ba7f89 100644
---- a/arch/arm64/boot/dts/ti/k3-am62.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am62.dtsi
-@@ -86,7 +86,9 @@ cbass_main: bus@f0000 {
- 			 /* Wakeup Domain Range */
- 			 <0x00 0x00b00000 0x00 0x00b00000 0x00 0x00002400>, /* VTM */
- 			 <0x00 0x2b000000 0x00 0x2b000000 0x00 0x00300400>,
--			 <0x00 0x43000000 0x00 0x43000000 0x00 0x00020000>;
-+			 <0x00 0x43000000 0x00 0x43000000 0x00 0x00020000>,
-+			 <0x00 0x78000000 0x00 0x78000000 0x00 0x00008000>, /* DM R5 ATCM */
-+			 <0x00 0x78100000 0x00 0x78100000 0x00 0x00008000>; /* DM R5 BTCM */
- 
- 		cbass_mcu: bus@4000000 {
- 			bootph-all;
-@@ -103,7 +105,9 @@ cbass_wakeup: bus@b00000 {
- 			#size-cells = <2>;
- 			ranges = <0x00 0x00b00000 0x00 0x00b00000 0x00 0x00002400>, /* VTM */
- 				 <0x00 0x2b000000 0x00 0x2b000000 0x00 0x00300400>, /* Peripheral Window */
--				 <0x00 0x43000000 0x00 0x43000000 0x00 0x00020000>;
-+				 <0x00 0x43000000 0x00 0x43000000 0x00 0x00020000>,
-+				 <0x00 0x78000000 0x00 0x78000000 0x00 0x00008000>, /* DM R5 ATCM */
-+				 <0x00 0x78100000 0x00 0x78100000 0x00 0x00008000>; /* DM R5 BTCM */
- 		};
+diff --git a/arch/arm64/boot/dts/ti/k3-am62-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-am62-wakeup.dtsi
+index e0afafd532a5c..cd9d2132009bb 100644
+--- a/arch/arm64/boot/dts/ti/k3-am62-wakeup.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am62-wakeup.dtsi
+@@ -101,6 +101,30 @@ wkup_rti0: watchdog@2b000000 {
+ 		status = "reserved";
  	};
  
++	wkup_r5fss0: r5fss@78000000 {
++		compatible = "ti,am62-r5fss";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0x78000000 0x00 0x78000000 0x8000>,
++			 <0x78100000 0x00 0x78100000 0x8000>;
++		power-domains = <&k3_pds 119 TI_SCI_PD_EXCLUSIVE>;
++
++		wkup_r5fss0_core0: r5f@78000000 {
++			compatible = "ti,am62-r5f";
++			reg = <0x78000000 0x00008000>,
++			      <0x78100000 0x00008000>;
++			reg-names = "atcm", "btcm";
++			resets = <&k3_reset 121 1>;
++			firmware-name = "am62-wkup-r5f0_0-fw";
++			ti,sci = <&dmsc>;
++			ti,sci-dev-id = <121>;
++			ti,sci-proc-ids = <0x01 0xff>;
++			ti,atcm-enable = <1>;
++			ti,btcm-enable = <1>;
++			ti,loczrama = <1>;
++		};
++	};
++
+ 	wkup_vtm0: temperature-sensor@b00000 {
+ 		compatible = "ti,j7200-vtm";
+ 		reg = <0x00 0xb00000 0x00 0x400>,
 -- 
 TQ-Systems GmbH | Mühlstraße 2, Gut Delling | 82229 Seefeld, Germany
 Amtsgericht München, HRB 105018
