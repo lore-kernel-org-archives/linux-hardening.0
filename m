@@ -1,199 +1,121 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DECB1B3945;
-	Mon,  4 Nov 2024 11:05:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E3C51BC9FE;
+	Mon,  4 Nov 2024 14:39:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730718313; cv=none; b=XqwTeqa4Wy+MLjr/1Q54zeFrphiY5MUbGdDz4wXp4EJv+hEmO0ILENGhZMB3K3uJ0KeN5Ub5FFsI6k7+07zW9bQGFls9TsvBkLqKS6KZrBkWHpqbW1PTzFof+sacxUcQbBax+EV87bpLcMDxVu6hfzGQbNHUovpGIWkShK5zS18=
+	t=1730731165; cv=none; b=bYAccXl1HL53i5GstnWeIIgGh4mvCVoG9ott/9YJKUC2eLNgoPMctTipcsdBhgafr4eJETHB3zzqG3A5ieup/YD5djx/ZJp+lkVCN+FHRTL2jA2mllffeKCv7RfNk2YCinFiPd+bqBRgU4q1ZW5G+ft+4Hd7hn37pZdTmMySg1g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730718313; c=relaxed/simple;
-	bh=f3pAOqk8IC3w0cLsAAhJK8VGcIR6Zcf9Dq7TLsqk0nk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GytNh/Ogj3W5ZvV0MuZP2VkxpzBiBOhqTMJS4/BMnMSUGnBffsrFIjPngZWjVDVSAD+ZmkRVnvDrq8Yeczr0PVQ25KdQ1TqkJvK3z8tfTe1quexiQ0Qq3zSkpY6XbIzoDQqdfp3pR/OZI0s/zIFs+R6m3X52vdo4+tSv9TjRLWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=nzhRX3ws; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=2KCUJ+9o; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=nzhRX3ws; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=2KCUJ+9o; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1730731165; c=relaxed/simple;
+	bh=uuNW8QkqgnaDeBYjYCEj/zDRiaDiB3NGiL194aT02nA=;
+	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
+	 Message-Id:Subject; b=sOe3qccXf6kBI+IbQvFUrTTZ6C+epx8SMc5nL31zb57rlIw9KT/sh0PHHMQ6dGczCB9NdZZ4Jt00doUp7/1WEV9GXdHy5v/6C7gaxCvLgiAS88XQS5oNB2QinJmQx3oStD7LC6Dj3vEN8Aue/hBeckSawh2MTp0izdArHg/pKb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cRn/+vtb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="nzhRX3ws";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="2KCUJ+9o";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="nzhRX3ws";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="2KCUJ+9o"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 8769D1F7ED;
-	Mon,  4 Nov 2024 11:05:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1730718309; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gUgU/TTvEr4qoByuVJVnHPP7dypTWalKUMSb1hzqpog=;
-	b=nzhRX3wsiMG6k866trksWO5gBrfNGC3q69wGSBhm2zkmc9r8CUNFMaFFa8ZehCyeYNxMSK
-	ES9wPRgAUhhptI9iKhuWK5XITedXa1JnkGMwdwnj5+tYwY1/CH17ThjmCPI3jhsiiBsnTW
-	Ui0vnUIuOre5hD2i/+YGFrdmZi6n20Y=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1730718309;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gUgU/TTvEr4qoByuVJVnHPP7dypTWalKUMSb1hzqpog=;
-	b=2KCUJ+9ogvVm6QL3rzDZg64ZTEj1hbMFcaZKjZiuUHykrg/iR62mfJXuUKdJwkmtPqCW1G
-	JKOluQFs6jSVgnDg==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=nzhRX3ws;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=2KCUJ+9o
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1730718309; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gUgU/TTvEr4qoByuVJVnHPP7dypTWalKUMSb1hzqpog=;
-	b=nzhRX3wsiMG6k866trksWO5gBrfNGC3q69wGSBhm2zkmc9r8CUNFMaFFa8ZehCyeYNxMSK
-	ES9wPRgAUhhptI9iKhuWK5XITedXa1JnkGMwdwnj5+tYwY1/CH17ThjmCPI3jhsiiBsnTW
-	Ui0vnUIuOre5hD2i/+YGFrdmZi6n20Y=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1730718309;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gUgU/TTvEr4qoByuVJVnHPP7dypTWalKUMSb1hzqpog=;
-	b=2KCUJ+9ogvVm6QL3rzDZg64ZTEj1hbMFcaZKjZiuUHykrg/iR62mfJXuUKdJwkmtPqCW1G
-	JKOluQFs6jSVgnDg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 74FF213736;
-	Mon,  4 Nov 2024 11:05:09 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id LqlEHGWqKGfCPAAAD6G6ig
-	(envelope-from <jack@suse.cz>); Mon, 04 Nov 2024 11:05:09 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 15CAEA0AFB; Mon,  4 Nov 2024 12:05:09 +0100 (CET)
-Date: Mon, 4 Nov 2024 12:05:09 +0100
-From: Jan Kara <jack@suse.cz>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Theodore Ts'o <tytso@mit.edu>, Jan Kara <jack@suse.com>,
-	linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2][next] jbd2: Avoid dozens of
- -Wflex-array-member-not-at-end warnings
-Message-ID: <20241104110509.4ioef4oqzvlg7u6e@quack3>
-References: <ZyU94w0IALVhc9Jy@kspp>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cRn/+vtb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3B03C4CED1;
+	Mon,  4 Nov 2024 14:39:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730731165;
+	bh=uuNW8QkqgnaDeBYjYCEj/zDRiaDiB3NGiL194aT02nA=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=cRn/+vtbSTam1Cs8Yl9oy23CvCJS08Zp0BZeig6G3nUi2Sm3Zl1DNOYMI+4ktZPVU
+	 eT930TVQMEqK5Z4NG2OCjLFwh5S3Q7K7cpKWRFeKa+KhZc+KYE7ruVB8f+A1YQex3W
+	 8G/qtAUPzZ9vLE63kJaYqThzf7mUqdGbIO4nRLCSOjNV7nZXteyaQWALOQOH0nF4YK
+	 0LvPU5O5h23KF8+dR30UxrV7llNQNvdCfOpM4mvCDoDHs++qWBA4Yx+n5bWMr++b19
+	 HVbS5pvttFfD2tlHSHnEHMbsxzU9kX2lCn7+N8t8icqFPq6EbjfZD8+JHurPSuurqM
+	 a//QVvoJooYzw==
+Date: Mon, 04 Nov 2024 08:39:23 -0600
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZyU94w0IALVhc9Jy@kspp>
-X-Rspamd-Queue-Id: 8769D1F7ED
-X-Spam-Score: -4.01
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_SOME(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RCVD_TLS_LAST(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Cc: Tero Kristo <kristo@kernel.org>, linux-usb@vger.kernel.org, 
+ Vignesh Raghavendra <vigneshr@ti.com>, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
+ Devarsh Thakkar <devarsht@ti.com>, Conor Dooley <conor+dt@kernel.org>, 
+ Felipe Balbi <balbi@kernel.org>, Hari Nagalla <hnagalla@ti.com>, 
+ linux@ew.tq-group.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>, Nishanth Menon <nm@ti.com>, 
+ Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, 
+ linux-hardening@vger.kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>
+In-Reply-To: <cover.1730299760.git.matthias.schiffer@ew.tq-group.com>
+References: <cover.1730299760.git.matthias.schiffer@ew.tq-group.com>
+Message-Id: <173072771143.3690742.7100697196468196200.robh@kernel.org>
+Subject: Re: [PATCH 0/5] TQ-Systems TQMa62xx SoM and MBa62xx board
 
-On Fri 01-11-24 14:45:23, Gustavo A. R. Silva wrote:
-> -Wflex-array-member-not-at-end was introduced in GCC-14, and we
-> are getting ready to enable it, globally.
-> 
-> Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
-> a flexible structure (`struct shash_desc`) where the size of the
-> flexible-array member (`__ctx`) is known at compile-time, and
-> refactor the rest of the code, accordingly.
-> 
-> So, with this, fix 77 of the following warnings:
-> 
-> include/linux/jbd2.h:1800:35: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Looks good. Feel free to add:
+On Mon, 04 Nov 2024 10:47:23 +0100, Matthias Schiffer wrote:
+> This adds Device Trees for out AM62x-based SoM TQMa62xx and its
+> reference carrier board MBa62xx.
+> 
+> Two of the patches are adapted from the TI vendor repo ti-linux-kernel to
+> add RemoteProc/RPMsg support for the R5F core. A similar patch has been
+> submitted for mainline by TI themselves for the closely related AM62A SoC.
+> 
+> Not yet included are overlays to enable LVDS display output and MIPI-CSI
+> camera input.
+> 
+> Devarsh Thakkar (1):
+>   arm64: dts: ti: k3-am62: Add DM R5 ranges in cbass
+> 
+> Hari Nagalla (1):
+>   arm64: dts: ti: k3-am62-wakeup: Add R5F device node
+> 
+> Matthias Schiffer (3):
+>   dt-bindings: usb: dwc3: Allow connector in USB controller node
+>   dt-bindings: arm: ti: Add compatible for AM625-based TQMa62xx SOM
+>     family and carrier board
+>   arm64: dts: ti: Add TQ-Systems TQMa62xx SoM and MBa62xx carrier board
+>     Device Trees
+> 
+>  .../devicetree/bindings/arm/ti/k3.yaml        |   7 +
+>  .../devicetree/bindings/usb/snps,dwc3.yaml    |   6 +
+>  arch/arm64/boot/dts/ti/Makefile               |   1 +
+>  arch/arm64/boot/dts/ti/k3-am62-wakeup.dtsi    |  24 +
+>  arch/arm64/boot/dts/ti/k3-am62.dtsi           |   8 +-
+>  .../boot/dts/ti/k3-am625-tqma62xx-mba62xx.dts | 917 ++++++++++++++++++
+>  arch/arm64/boot/dts/ti/k3-am625-tqma62xx.dtsi | 346 +++++++
+>  7 files changed, 1307 insertions(+), 2 deletions(-)
+>  create mode 100644 arch/arm64/boot/dts/ti/k3-am625-tqma62xx-mba62xx.dts
+>  create mode 100644 arch/arm64/boot/dts/ti/k3-am625-tqma62xx.dtsi
+> 
+> --
+> TQ-Systems GmbH | Mühlstraße 2, Gut Delling | 82229 Seefeld, Germany
+> Amtsgericht München, HRB 105018
+> Geschäftsführer: Detlef Schneider, Rüdiger Stahl, Stefan Schneider
+> https://www.tq-group.com/
+> 
+> 
 
-Reviewed-by: Jan Kara <jack@suse.cz>
 
-								Honza
+My bot found new DTB warnings on the .dts files added or changed in this
+series.
 
-> ---
-> Changes in v2:
->  - Use DIV_ROUND_UP() to compute the number of elements for the flex
->    array. (Jan Kara)
-> 
-> v1:
->  - Link: https://lore.kernel.org/linux-hardening/ZxvyavDjXDaV9cNg@kspp/
-> 
->  include/linux/jbd2.h | 15 +++++++--------
->  1 file changed, 7 insertions(+), 8 deletions(-)
-> 
-> diff --git a/include/linux/jbd2.h b/include/linux/jbd2.h
-> index 8aef9bb6ad57..50f7ea8714bf 100644
-> --- a/include/linux/jbd2.h
-> +++ b/include/linux/jbd2.h
-> @@ -1796,22 +1796,21 @@ static inline unsigned long jbd2_log_space_left(journal_t *journal)
->  static inline u32 jbd2_chksum(journal_t *journal, u32 crc,
->  			      const void *address, unsigned int length)
->  {
-> -	struct {
-> -		struct shash_desc shash;
-> -		char ctx[JBD_MAX_CHECKSUM_SIZE];
-> -	} desc;
-> +	DEFINE_RAW_FLEX(struct shash_desc, desc, __ctx,
-> +		DIV_ROUND_UP(JBD_MAX_CHECKSUM_SIZE,
-> +			     sizeof(*((struct shash_desc *)0)->__ctx)));
->  	int err;
->  
->  	BUG_ON(crypto_shash_descsize(journal->j_chksum_driver) >
->  		JBD_MAX_CHECKSUM_SIZE);
->  
-> -	desc.shash.tfm = journal->j_chksum_driver;
-> -	*(u32 *)desc.ctx = crc;
-> +	desc->tfm = journal->j_chksum_driver;
-> +	*(u32 *)desc->__ctx = crc;
->  
-> -	err = crypto_shash_update(&desc.shash, address, length);
-> +	err = crypto_shash_update(desc, address, length);
->  	BUG_ON(err);
->  
-> -	return *(u32 *)desc.ctx;
-> +	return *(u32 *)desc->__ctx;
->  }
->  
->  /* Return most recent uncommitted transaction */
-> -- 
-> 2.43.0
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+are fixed by another series. Ultimately, it is up to the platform
+maintainer whether these warnings are acceptable or not. No need to reply
+unless the platform maintainer has comments.
+
+If you already ran DT checks and didn't see these error(s), then
+make sure dt-schema is up to date:
+
+  pip3 install dtschema --upgrade
+
+
+New warnings running 'make CHECK_DTBS=y ti/k3-am625-tqma62xx-mba62xx.dtb' for cover.1730299760.git.matthias.schiffer@ew.tq-group.com:
+
+arch/arm64/boot/dts/ti/k3-am625-tqma62xx-mba62xx.dtb: syscon@43000000: compatible: ['syscon', 'simple-mfd'] is too short
+	from schema $id: http://devicetree.org/schemas/mfd/syscon-common.yaml#
+
+
+
+
+
