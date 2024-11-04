@@ -1,127 +1,97 @@
-Received: from weasel.tulip.relay.mailchannels.net (weasel.tulip.relay.mailchannels.net [23.83.218.247])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B523D17583;
-	Mon,  4 Nov 2024 17:27:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.218.247
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730741264; cv=pass; b=gvqR4leaVxFf0uDAVXZ+T4MJbHLmoab9C+0I0mlgOffx0zQBDmfoBJ2My+AFA/q2MzAtlu5Q0wSkOv0iMc32AgPgp/hY0mnM89pGmRREopWlK7QBQctPNIMfyD4njzeH05iDAVap1nfXClJ/pRxJlN8XUCpENQR0eovtxe6/eVU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730741264; c=relaxed/simple;
-	bh=Frw8kbtAjBVVCciXSX1r8i47gxNY6wwNd2Hun+4Z/ho=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7C4A1C75EB
+	for <linux-hardening@vger.kernel.org>; Mon,  4 Nov 2024 18:06:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1730743613; cv=none; b=GnU/OCRPHXPNsjXxOzhvlEdbeHACN5+9qEPyAMaOUple4e6rVKr8FUxUIydjhK4kHGR+hjGmZS1tP6uJsUDE3gOnBhZZejGt6iMHMmQ0NNyxQ6WNxe+ZZY11ohM/DdWEcPDOlXoUeTcZZKutDFFCNzTuBBFIf+MIo7PY6SENW58=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1730743613; c=relaxed/simple;
+	bh=f1LuNbWhHgohwcA9vB/DncE5CodJ8RZlb2iGhbl0WYs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LrT//jczYJPa79g9VZvSkwg7qtJdcXk8MEXAeSsTYUC4IFwHzTK1gFIEYq0DyXWDnxJaC66tXkdoHjPHUlCuv2xeS3wqkQxfo1MyxOAEaf5F7Ym0021Usrsor5Iw627Hwpi7oVVwFF8plK5T3uaSzkViReyyo29YkZHkzLH6l+I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=cLFkz6ds; arc=pass smtp.client-ip=23.83.218.247
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=rOxvurMSPfeZmFiCnJUoerbc8VamKy0C83ahH4p/faEU1tl/lTCxQkXwFt27pmA+MQh4l8zfK910OZqzQfUwgeOM3CArzg4EiOEW3++XI/F42VGFKLh1RPoN69YL4ka9O0tezejDfJildCVY6bVYfczprc+o7PiYzfsyEp5uXJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MVKp93oF; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="cLFkz6ds"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 9BCF5C40C1;
-	Mon,  4 Nov 2024 17:10:02 +0000 (UTC)
-Received: from pdx1-sub0-mail-a258.dreamhost.com (100-101-211-194.trex-nlb.outbound.svc.cluster.local [100.101.211.194])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 11A6EC5C46;
-	Mon,  4 Nov 2024 17:10:02 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1730740202; a=rsa-sha256;
-	cv=none;
-	b=jUkeV484MmCPZs/erbZ9d3nDS1wFv8nQNTjm/iJbIvuKvCdLCF/+e9ZhpBlVGJg2VXm1Hm
-	kTNX6F0h0OMT/AAuSuKZKwcL8jeB0A+xaMdfbFo9XrQqqp4vsMJhmYEzwx/0ej7pMPFG9+
-	csaHQq2CwdFcjhoUJVVWHejCC/TXArL7DRFRk837VE/RQvv3GqYGxNMug7zyUnb5ItVTrG
-	nxGA+NxtSFIZ3qgNibcqfezNEqG1WB463YpNBodknB6YBDzjH0OiEJXti4bmZY5+wZwzM6
-	Up1OmOGh26L0PlZLvi4iVATwhH8wvIPSm5bKWHiyHYGhMRG0LCaxjgU1VIuwwA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1730740202;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=djeiyArVI2uFrm3uwF32I+TnLqOcCdOJyErXRw8sf90=;
-	b=h625JFI/Hzg7GDPVBvGfKVPBPQRutobeArZAUUDN6s+sh8bIldFVyGrIZPDKHW2HNldMBs
-	HS/dQpnDKJjJ6qIegGkTBxyVp8oDgKLUfxjgHcd9LbJLNP9zlG3nRkQDqo7a1tYtqux5S1
-	XtKSeKbPF4i8rKHZX/KoeOh2g2dClEq7YYN1mdbiltcm6zAIcdFfTnw6apZAMuL88f5rAo
-	UOOuwPwffEBkWTFuWyUgonSUZmoxD9cWTmrK95lBRLKYnFJ089IoMw94km/MZRp+ue1foI
-	vlgMhwzm0MyL/wG2hU8Ce9TdUzyjsG/VNBiZ5o8UY7r7jeigVX+Wupkl79JCpg==
-ARC-Authentication-Results: i=1;
-	rspamd-57ff586b7f-9lkcj;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Suffer-Share: 50c4f2063b14fee1_1730740202439_5728283
-X-MC-Loop-Signature: 1730740202439:3750142550
-X-MC-Ingress-Time: 1730740202439
-Received: from pdx1-sub0-mail-a258.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.101.211.194 (trex/7.0.2);
-	Mon, 04 Nov 2024 17:10:02 +0000
-Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a258.dreamhost.com (Postfix) with ESMTPSA id 4XhydN5ZFdz7f;
-	Mon,  4 Nov 2024 09:10:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1730740201;
-	bh=djeiyArVI2uFrm3uwF32I+TnLqOcCdOJyErXRw8sf90=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=cLFkz6ds+WpTY5zg9wuuYvEd/NO/U3juHAI5RX5rIUR4sj7kLz3KjqBx5vgMqVoUv
-	 imO+VG9fMNwr1Z/3IAdZ7BdHrtr+M/rdYLJOcokuDvYLUO+szwMd8SlUwBfMc5nVU+
-	 3vqAdJJkOy9LibgPqcPx//DOhhwwdbjdJlkfhWM0YLrF7V9JFCLmRWk+kIGoEgmmQw
-	 tnNNEen2ZQyFSSdb1z5FsuOlWbp5ESuRkjwNefzdzyR/JsEzqJrPA+Hr1acZTugVMK
-	 bAjLPTDf7nCdgzIIwE0b04Kby1c4/D+0pXL5uTEd3msj9QK5se4nMkOy2Pr2sf+7Og
-	 bxWIBCsqYNQtw==
-Date: Mon, 4 Nov 2024 09:09:57 -0800
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: ira.weiny@intel.com
-Cc: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Navneet Singh <navneet.singh@intel.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>, linux-cxl@vger.kernel.org,
-	linux-doc@vger.kernel.org, nvdimm@lists.linux.dev,
-	linux-kernel@vger.kernel.org, Kees Cook <kees@kernel.org>,
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MVKp93oF"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4314f38d274so54777845e9.1
+        for <linux-hardening@vger.kernel.org>; Mon, 04 Nov 2024 10:06:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1730743610; x=1731348410; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=66XTrEb8XaLsaKj3AWJmhH0Y8WJaTZ1L7Zwc9s+LDGo=;
+        b=MVKp93oFGTl35Ou8Wv3WkQm9uiiGoD8FvV8KHqy47I74BVQN7tbcLj9mI6jiIh+9I0
+         p9pkgyWWW4NK42qr/95mx/KWuQ95HAwqpR0mz2wsJ3Pf4N1p4PDsy5FmQ5VMIMxKR+ip
+         cdMCAtGhWiORKjYtrDpwEG2Pi+YETFfUNWJH6556//bN6ThQVIDtbaiXh6OUUGW8cLEM
+         5nutSoo2omGfaRrwZvezv9q/EWBzDqcKTJq/pnW0zfH1RvW63OAiBOSC/IUbDA1a1gZ6
+         sUdQYjptMhjvRfzt9iJoyjw2QEA3iNP975e9Yr3QhB+D5h8rjfI6PS4Qp5w0fzrnDCeC
+         L+Jw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730743610; x=1731348410;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=66XTrEb8XaLsaKj3AWJmhH0Y8WJaTZ1L7Zwc9s+LDGo=;
+        b=TcMtZa1fHErWeT8RIZ1/uNY3Kv089ZHG0Z1OSUT78LgOIPX/vf744owKFkVuuNsU8T
+         QZel48BSlvXLZoFQaK9TPnP6Q4oayKNgsj2U6XbPUlNwJbh9Qlk2C5yRONm+sHt5IjcK
+         7yqXXvOMBU0MCo5aSOcGxADax5hVSA5Abtg66ogRDr4vZ38U8EXcxsZbDf6rWtEUR6pW
+         Q/CbQJw9ckLk10CNsHy+PyHiPQu5o8l+55wYJnHJYqug12hGjWSW7tqiHqMm6yAX9t5E
+         UiDFu6YuvTmTYMy4+wWOfO8ttcRY+cKLzSpN0TzqinG/41KOkJnpmOCcLUX7Iuhc0Nla
+         ahjA==
+X-Forwarded-Encrypted: i=1; AJvYcCXZ6ujDQifSYEOh5jaNjhwuqfdCGfHrlA48bt5cv46Rw5vxxWPtqXcea4DujiCH8edlROAKb5IoaEiBJ04i/3o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YznysY2jwBHQQurmYAmtMlQGQc6266hz5UQ3l3DryAZgEPqyrET
+	WVM6biYI/CQGaGBuqcGtaYAM/mbjrNBgKjUxSz9wWFEswu6NWGe/y6tuIZcAxg==
+X-Google-Smtp-Source: AGHT+IFp7IQDS2hXq6mWxig9ITdshgx9KZGNhtvynyA1yZU4S6SmADpBS/0Uu6xNlztEC4/gEjlquQ==
+X-Received: by 2002:a05:600c:a07:b0:431:4b88:d407 with SMTP id 5b1f17b1804b1-432868a5b83mr126649945e9.5.1730743610212;
+        Mon, 04 Nov 2024 10:06:50 -0800 (PST)
+Received: from localhost (65.0.187.35.bc.googleusercontent.com. [35.187.0.65])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-431bd9ca8eesm189508925e9.43.2024.11.04.10.06.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Nov 2024 10:06:49 -0800 (PST)
+Date: Mon, 4 Nov 2024 18:06:46 +0000
+From: Aleksei Vetrov <vvvvvv@google.com>
+To: Jeff Johnson <quic_jjohnson@quicinc.com>
+Cc: Johannes Berg <johannes@sipsolutions.net>, Kees Cook <kees@kernel.org>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v5 08/27] cxl/mem: Read dynamic capacity configuration
- from the device
-Message-ID: <20241104170957.2vxxpnjwvmaiwrt3@offworld>
-References: <20241029-dcd-type2-upstream-v5-0-8739cb67c374@intel.com>
- <20241029-dcd-type2-upstream-v5-8-8739cb67c374@intel.com>
+	Dmitry Antipov <dmantipov@yandex.ru>,
+	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v2] wifi: nl80211: fix bounds checker error in
+ nl80211_parse_sched_scan
+Message-ID: <ZykNNj30iMlB2KgZ@google.com>
+References: <20241029-nl80211_parse_sched_scan-bounds-checker-fix-v2-1-c804b787341f@google.com>
+ <ZyjyEl4kzFXz7tTB@google.com>
+ <83ba4f8e-44bb-4cc4-bf59-3e4051a67a9e@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241029-dcd-type2-upstream-v5-8-8739cb67c374@intel.com>
-User-Agent: NeoMutt/20220429
+In-Reply-To: <83ba4f8e-44bb-4cc4-bf59-3e4051a67a9e@quicinc.com>
 
-On Tue, 29 Oct 2024, ira.weiny@intel.com wrote:
+On Mon, Nov 04, 2024 at 09:10:15AM -0800, Jeff Johnson wrote:
+> It has not slipped through the cracks, it is being tracked in patchwork:
+> https://patchwork.kernel.org/project/linux-wireless/patch/20241029-nl80211_parse_sched_scan-bounds-checker-fix-v2-1-c804b787341f@google.com/
 
->+/* See CXL 3.1 Table 8-164 get dynamic capacity config Output Payload */
->+struct cxl_mbox_get_dc_config_out {
->+	u8 avail_region_count;
->+	u8 regions_returned;
->+	u8 rsvd[6];
->+	/* See CXL 3.1 Table 8-165 */
->+	struct cxl_dc_region_config {
->+		__le64 region_base;
->+		__le64 region_decode_length;
->+		__le64 region_length;
->+		__le64 region_block_size;
->+		__le32 region_dsmad_handle;
->+		u8 flags;
->+		u8 rsvd[3];
->+	} __packed region[] __counted_by(regions_retunred);
+Today I learned of a new tool, thank you!
 
-s/retunred/returned
+> The wireless maintainers have a lot of work and it can take weeks to process
+> new patches.
+> 
+> Have patience,
+> /jeff
+
+The initial response on v1 was almost instant, so I was surprised that
+v2 took much more time. However that response was from linux-hardening
+guys and I didn't took in account that now I need the maintainer
+response that will take much more time.
+
+Thank you again for taking your time to look into my patch!
+--
+Aleksei Vetrov
