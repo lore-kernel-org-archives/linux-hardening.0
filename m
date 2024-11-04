@@ -1,135 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EA3C6FC5;
-	Mon,  4 Nov 2024 03:43:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7CB41AC444;
+	Mon,  4 Nov 2024 09:48:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730691785; cv=none; b=FLgY2ECiwuiaOxblwWXE9zky8AvAb2GYPtq8YPR1x+5qKL6zmIyEYgiyf2NYib5NAHNa45t1uCVzfo96E/YsKl1CJoUDp13/jHvStJFn/W1QTOgYLveRWTAV3T21HkfKRj/dw+tsV3EnqAhekV7Gs/I6/Y3XJrVnShhW5UnEy1A=
+	t=1730713730; cv=none; b=X92ifcrUAyXM1HycNZdK4nnqKBj7I+cSLxlApP3S+YW6cksn8DqNjpvPzggWFHX3w/Ais+VuYQ4mW3EStAu9U1VwPMaWbvJ3NePwZLYIOtfzc+YykVJUdDDfV4yaH3cHHp9ttK8ttXr0MVOQWS+ll7cnfly5BXqokUSG/QcN6dg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730691785; c=relaxed/simple;
-	bh=/7BH8bZDCwVicNSomUye4PFPwYtszdNZKfdTvy6wRr4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g6awHcDr8WvyiPGHMCnsBrA0lw87wLGx+paRImFq+dJ/cU093Nlrf6ZNDy2i5uKD1gCfKErCuWMqRbimKuQpjgy95SiBvT7qfKXGPCPfvRO3RK+UmeDvz3Khsa3yTa0FKqRkzZv0Iu0PLFqSShYueIGbcrSmfrujX8KPm1QyhCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lr7oUvqY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1730713730; c=relaxed/simple;
+	bh=A7W7MDEi92BjvLCgszwMOJz8AfKtcu5tgI/KMzjYy8E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=lKfmjv8A0b34GnJOT8gNtpB7CEcfdzDoHwCVbbnAmlLrCM2BGZVNVviFUhM9eVTKcGCFpe5x4E2tDTovz9XqKVVZ90ump3fnih6p8qY6W27xlqtwDpVnK/rUfFzSlKBq29m3Vj88TQbMEMKsPTo4VcKADV1aloeXCgsvWdT+0tY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=RlrOnxdM; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=dJ+HnWEW reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lr7oUvqY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE0DDC4CED1;
-	Mon,  4 Nov 2024 03:43:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730691784;
-	bh=/7BH8bZDCwVicNSomUye4PFPwYtszdNZKfdTvy6wRr4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lr7oUvqYaTt5upeVK8/1qzKzXchsiKZ59rQ8If6x7PWlSm5Hn6pFj6vkx6nS+ALPA
-	 8Wtx2R0MR52HuGgXzAYmcSAa5vC5qun4YmrlOvGjxydUmxrYwe2El+47Q68wCyI/Fc
-	 au/+J33ia/o6zpURGOzoVjrvr6stuz4CSevDXuhPN6j++jjy6iQ9qIosLMUyuFo4bx
-	 TCp03XlFljBBUAyeMvq/ED6zmZxrjJSdrV9Wyp9/7a/6KhPRvuW7EUjdUE4nwjOjIs
-	 +LcC/ugv2k2w3sKnCUPiwPKbwqeZK6Dqj/BAAJcV3Qjj12aoQDpX+EVj7MyY9VNz7X
-	 kyjbkRsBcnmPw==
-Date: Sun, 3 Nov 2024 19:43:01 -0800
-From: Kees Cook <kees@kernel.org>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	David Ahern <dsahern@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, Simon Horman <horms@kernel.org>
-Subject: Re: [PATCH v2 1/4][next] uapi: socket: Introduce struct
- sockaddr_legacy
-Message-ID: <202411031920.BEF6CEBCD@keescook>
-References: <cover.1729802213.git.gustavoars@kernel.org>
- <23bd38a4bf024d4a92a8a634ddf4d5689cd3a67e.1729802213.git.gustavoars@kernel.org>
- <20241031180145.01e14e38@kernel.org>
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="RlrOnxdM";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="dJ+HnWEW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1730713725; x=1762249725;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=UuICAiXjI2F2FZ7Bp8hHTJ3HSlAaQYfbOcnrt69ITL0=;
+  b=RlrOnxdMompzhRw+ER2hjRIZMxrCBkUmUK4FYGZkBldBAKfsQ2oWXG0j
+   rJkd/NHh3Va3xoSa+dv4R2kbX2sQClYi2Yz9xzz+J4/sMya7xyyqIgJf9
+   HIHvrJhuglEqUKssVwF+tHjFh3V0WbFTIvxnLVQ6Z5zt2YrwL5cLL5kkt
+   HtsrVRxN9dY9+aJpOSfVj8ZVSClI6e7FcVVUth/9ppaAjAJOPzIwnZe+D
+   i1jffg/9MLoGe/X/kqExKvRWf8e9xj150emk5ZIqQj9/suM/tGKo6WEli
+   QK+sZv9W1EsMXKllert4p2H6laifh7ztgVd+YzANtXiS5cPQq//LVHOba
+   A==;
+X-CSE-ConnectionGUID: AX9g3WdTRRmwfGWeP6AMEg==
+X-CSE-MsgGUID: l8qAhk0iS3eaSMyVNSAXJw==
+X-IronPort-AV: E=Sophos;i="6.11,256,1725314400"; 
+   d="scan'208";a="39827136"
+Received: from vmailcow01.tq-net.de ([10.150.86.48])
+  by mx1.tq-group.com with ESMTP; 04 Nov 2024 10:48:42 +0100
+X-CheckPoint: {67289879-37-90CD5875-E0265C0B}
+X-MAIL-CPID: 52AC217FE19ABC40E7F5504158A6E480_3
+X-Control-Analysis: str=0001.0A682F1E.6728987A.0059,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 9B0F8168150;
+	Mon,  4 Nov 2024 10:48:35 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
+	s=dkim; t=1730713717;
+	h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding; bh=UuICAiXjI2F2FZ7Bp8hHTJ3HSlAaQYfbOcnrt69ITL0=;
+	b=dJ+HnWEW+KL3hZnB+0WamBID6ucVTyS01r63sBMeXhF16iLb60oDKT0/rsnOa5IgM2dBLt
+	rS8XKKA2y2QOQZ59WO0mb++iJTqSQva+HmHG2Mm9WpiFFAEag72VdX2l8s7wUU+k4lBvA7
+	Np5fFfEblAUW27tdAKP4h6xos5QWIeq+DBHWN6rtc8DTfIGbiNAmlsrRzmeJ0k9472QQhH
+	0ShCiFB+H5c0tjNtdmQ3MDR9NmaAZ5KI/a9Ng9AAXalBv34j9Gy61JRoGk8UTkAS0xqhZU
+	LDQPQzKtR6iuANDKrLO+GNA2++8tcxb9e4xUeUNMn5RXF9IuFddx3NAZHafYEA==
+From: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+To: Nishanth Menon <nm@ti.com>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Tero Kristo <kristo@kernel.org>
+Cc: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Kees Cook <kees@kernel.org>,
+	Tony Luck <tony.luck@intel.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	Felipe Balbi <balbi@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	Devarsh Thakkar <devarsht@ti.com>,
+	Hari Nagalla <hnagalla@ti.com>,
+	linux@ew.tq-group.com,
+	Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Subject: [PATCH 0/5] TQ-Systems TQMa62xx SoM and MBa62xx board
+Date: Mon,  4 Nov 2024 10:47:23 +0100
+Message-ID: <cover.1730299760.git.matthias.schiffer@ew.tq-group.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241031180145.01e14e38@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Thu, Oct 31, 2024 at 06:01:45PM -0700, Jakub Kicinski wrote:
-> On Thu, 24 Oct 2024 15:11:24 -0600 Gustavo A. R. Silva wrote:
-> > + * This is the legacy form of `struct sockaddr`. The original `struct sockaddr`
-> > + * was modified in commit b5f0de6df6dce ("net: dev: Convert sa_data to flexible
-> > + * array in struct sockaddr") due to the fact that "One of the worst offenders
-> > + * of "fake flexible arrays" is struct sockaddr". This means that the original
-> > + * `char sa_data[14]` behaved as a flexible array at runtime, so a proper
-> > + * flexible-array member was introduced.
-> 
-> This isn't spelled out in the commit messages AFACT so let me ask..
-> Why aren't we reverting b5f0de6df6dce, then?
-> Feels like the best solution would be to have a separate type with
-> the flex array to clearly annotate users who treat it as such.
-> Is that not going to work?
-> 
-> My noob reading of b5f0de6df6dce is that it was a simpler workaround
-> for the previous problem, avoided adding a new type (and the conversion
-> churn). But now we are adding a type and another workaround on top.
-> Sorry if I'm misunderstanding. No question that the struct is a mess,
-> but I don't feel like this is helping the messiness...
+This adds Device Trees for out AM62x-based SoM TQMa62xx and its
+reference carrier board MBa62xx.
 
-This is a pretty reasonable position. I think sockaddr turns out to be a
-really difficult problem, given its exposure to UAPI. Linux has been
-trying to deal with it for a while (e.g. sockaddr_storage), and perhaps
-b5f0de6df6dce wasn't the right solution. (It looked correct since it
-looks like what we've done in many other tricky places, but perhaps
-sockaddr should be dealt with differently yet.)
+Two of the patches are adapted from the TI vendor repo ti-linux-kernel to
+add RemoteProc/RPMsg support for the R5F core. A similar patch has been
+submitted for mainline by TI themselves for the closely related AM62A SoC.
 
-So, the rationale with b5f0de6df6dce was to change things as minimally
-as possible. The goal is to stop lying to the compiler about object
-sizes, with the big lie being "this object ends with a 14 byte array".
+Not yet included are overlays to enable LVDS display output and MIPI-CSI
+camera input.
 
-I think this results in two primary goals:
-1- make sockaddr-like objects unambiguously sized
-2- do not break userspace
+Devarsh Thakkar (1):
+  arm64: dts: ti: k3-am62: Add DM R5 ranges in cbass
 
-For 2, we cannot change the existing (and externally defined) struct
-sockaddr. It will stay the historical horrible thing that it is.
+Hari Nagalla (1):
+  arm64: dts: ti: k3-am62-wakeup: Add R5F device node
 
-The specific UAPI sockaddr-related things we have that are _fixed_ sizes
-are all fine. These can be seen with:
-	git grep '^struct sockaddr_' -- include/uapi/
+Matthias Schiffer (3):
+  dt-bindings: usb: dwc3: Allow connector in USB controller node
+  dt-bindings: arm: ti: Add compatible for AM625-based TQMa62xx SOM
+    family and carrier board
+  arm64: dts: ti: Add TQ-Systems TQMa62xx SoM and MBa62xx carrier board
+    Device Trees
 
-For 1, we cannot use (the externally defined) sockaddr as-is since we
-run into size problems. (Basically anything casting from sockaddr,
-anything copying out of sockaddr, etc.)
-
-The storage problem for sockaddr has been attempted to be addressed with
-the internally defined sockaddr_storage, but this doesn't capture the
-"I don't know how big this object is yet" issues associated with taking
-a buffer of arbitrary size from userspace that is initially defined
-as sockaddr.
-
-If we internally add struct sockaddr_unknown, or _bytes, or _unspec, or
-_flex, or _array, or _raw, we can use that everywhere in the kernel, but
-it is going to cause a lot of churn. This is why b5f0de6df6dce happened,
-and why we went the direction of thinking sockaddr_legacy would be
-workable: the kernel's view of sockaddr from userspace (sockaddr_legacy)
-would be the only change needed.
-
-Now, if we want to get to a place with the least ambiguity, we need to
-abolish sockaddr from the kernel internally, and I think that might take
-a while. I only think so because of what I went through just for doing a
-portion of NFS in cf0d7e7f4520 ("NFS: Avoid memcpy() run-time warning
-for struct sockaddr overflows").
-
-But maybe it won't be as bad all that since we already do a lot of "what
-is the family then cast to a fixed-size struct and carry on" stuff. But
-the passing things between layers (usually "up" from a family into the
-networking core) still depends on using sockaddr, and all of those APIs
-would need to switch to sockaddr_unknown both in the core and in all
-families. Maybe there is some Coccinelle magic that could be worked.
-
-I think it's worth spending the time to try and figure out the size of
-the effort needed to make that change.
-
--Kees
+ .../devicetree/bindings/arm/ti/k3.yaml        |   7 +
+ .../devicetree/bindings/usb/snps,dwc3.yaml    |   6 +
+ arch/arm64/boot/dts/ti/Makefile               |   1 +
+ arch/arm64/boot/dts/ti/k3-am62-wakeup.dtsi    |  24 +
+ arch/arm64/boot/dts/ti/k3-am62.dtsi           |   8 +-
+ .../boot/dts/ti/k3-am625-tqma62xx-mba62xx.dts | 917 ++++++++++++++++++
+ arch/arm64/boot/dts/ti/k3-am625-tqma62xx.dtsi | 346 +++++++
+ 7 files changed, 1307 insertions(+), 2 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/ti/k3-am625-tqma62xx-mba62xx.dts
+ create mode 100644 arch/arm64/boot/dts/ti/k3-am625-tqma62xx.dtsi
 
 -- 
-Kees Cook
+TQ-Systems GmbH | Mühlstraße 2, Gut Delling | 82229 Seefeld, Germany
+Amtsgericht München, HRB 105018
+Geschäftsführer: Detlef Schneider, Rüdiger Stahl, Stefan Schneider
+https://www.tq-group.com/
+
