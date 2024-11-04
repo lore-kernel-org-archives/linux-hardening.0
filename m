@@ -1,105 +1,127 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from weasel.tulip.relay.mailchannels.net (weasel.tulip.relay.mailchannels.net [23.83.218.247])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D2D81BC063;
-	Mon,  4 Nov 2024 17:12:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730740343; cv=none; b=N9gIxrcL1Gpk8rjkC+SJnmnQN3rDxUwZVxYwytbzIBii0ri6GEz+y5TOQ3bBzwzeP4hGcrsFjxUcnFTXBgAXp3jFmRTcHZunbKugzW3Yp8xc4FL8Q/6wg9v12Uhqhy5Iu/7CwgNaxTHGk2ZgVmST315Mkur7vBSXwDOKo7tRiXM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730740343; c=relaxed/simple;
-	bh=hlW3nIWVL5Db3nxpqovS/7E3UEXnG0/pFjbnueckOcY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=MXQ9OforHKDeVArRxSvll9epuEiwAGBE1Zi+SCwY7RswG12sFxuAHej13DP4HugBSBrSYRHZLct4SCedfuNY27dTyUdOCx/kitDGoAayUftADEIMV71aiP5qAOmAqXlgPZypZJekCRIFRzlMGfu0sURN68JmdKw03D5NMQXbFL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=iX2q3kly; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B523D17583;
+	Mon,  4 Nov 2024 17:27:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.218.247
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1730741264; cv=pass; b=gvqR4leaVxFf0uDAVXZ+T4MJbHLmoab9C+0I0mlgOffx0zQBDmfoBJ2My+AFA/q2MzAtlu5Q0wSkOv0iMc32AgPgp/hY0mnM89pGmRREopWlK7QBQctPNIMfyD4njzeH05iDAVap1nfXClJ/pRxJlN8XUCpENQR0eovtxe6/eVU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1730741264; c=relaxed/simple;
+	bh=Frw8kbtAjBVVCciXSX1r8i47gxNY6wwNd2Hun+4Z/ho=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LrT//jczYJPa79g9VZvSkwg7qtJdcXk8MEXAeSsTYUC4IFwHzTK1gFIEYq0DyXWDnxJaC66tXkdoHjPHUlCuv2xeS3wqkQxfo1MyxOAEaf5F7Ym0021Usrsor5Iw627Hwpi7oVVwFF8plK5T3uaSzkViReyyo29YkZHkzLH6l+I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=cLFkz6ds; arc=pass smtp.client-ip=23.83.218.247
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="iX2q3kly"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4A4BjYx4026443;
-	Mon, 4 Nov 2024 17:12:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	BeCnEGykaYEk4EgJ7ihgNRfZLqbRJA/d8HCeWrka304=; b=iX2q3kly++kBOFC7
-	Rwdlsb5OD/MZVjWQtKmUncEAamlRvKnAMLtcgP2xrLRpRCLxTkIo2WwSGapb+aON
-	t27rL2J2f4VTQmQ0EL60dN2GShRGYUpuenAnhtaLvtX7ItmP6giNNNdzZVOksHUn
-	MZshh057akq54CeXWDjKOMbdKae9RQMuLyrdFK+J7Y5doG/F9XDMBFGKCUAhYrZl
-	gZSneNADOLIRH6MVKD0ozc7B3jGJ/1mvhMPV/oUaLYSpy9oGbwdaLf64A4vR6ARE
-	NlvreKcHCv0bnUhW3x5spO6UBwYEa3plO0kerWfeju7j/myVh1M3xFhmPXXt1Gtf
-	N+Brxg==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 42nd1fmyra-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 04 Nov 2024 17:12:12 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4A4HCBSY009671
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 4 Nov 2024 17:12:11 GMT
-Received: from [10.48.242.250] (10.49.16.6) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 4 Nov 2024
- 09:12:10 -0800
-Message-ID: <0bc2e4b0-4dad-4341-a41e-a98fbc4b1658@quicinc.com>
-Date: Mon, 4 Nov 2024 09:12:09 -0800
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="cLFkz6ds"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 9BCF5C40C1;
+	Mon,  4 Nov 2024 17:10:02 +0000 (UTC)
+Received: from pdx1-sub0-mail-a258.dreamhost.com (100-101-211-194.trex-nlb.outbound.svc.cluster.local [100.101.211.194])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 11A6EC5C46;
+	Mon,  4 Nov 2024 17:10:02 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1730740202; a=rsa-sha256;
+	cv=none;
+	b=jUkeV484MmCPZs/erbZ9d3nDS1wFv8nQNTjm/iJbIvuKvCdLCF/+e9ZhpBlVGJg2VXm1Hm
+	kTNX6F0h0OMT/AAuSuKZKwcL8jeB0A+xaMdfbFo9XrQqqp4vsMJhmYEzwx/0ej7pMPFG9+
+	csaHQq2CwdFcjhoUJVVWHejCC/TXArL7DRFRk837VE/RQvv3GqYGxNMug7zyUnb5ItVTrG
+	nxGA+NxtSFIZ3qgNibcqfezNEqG1WB463YpNBodknB6YBDzjH0OiEJXti4bmZY5+wZwzM6
+	Up1OmOGh26L0PlZLvi4iVATwhH8wvIPSm5bKWHiyHYGhMRG0LCaxjgU1VIuwwA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1730740202;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=djeiyArVI2uFrm3uwF32I+TnLqOcCdOJyErXRw8sf90=;
+	b=h625JFI/Hzg7GDPVBvGfKVPBPQRutobeArZAUUDN6s+sh8bIldFVyGrIZPDKHW2HNldMBs
+	HS/dQpnDKJjJ6qIegGkTBxyVp8oDgKLUfxjgHcd9LbJLNP9zlG3nRkQDqo7a1tYtqux5S1
+	XtKSeKbPF4i8rKHZX/KoeOh2g2dClEq7YYN1mdbiltcm6zAIcdFfTnw6apZAMuL88f5rAo
+	UOOuwPwffEBkWTFuWyUgonSUZmoxD9cWTmrK95lBRLKYnFJ089IoMw94km/MZRp+ue1foI
+	vlgMhwzm0MyL/wG2hU8Ce9TdUzyjsG/VNBiZ5o8UY7r7jeigVX+Wupkl79JCpg==
+ARC-Authentication-Results: i=1;
+	rspamd-57ff586b7f-9lkcj;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Suffer-Share: 50c4f2063b14fee1_1730740202439_5728283
+X-MC-Loop-Signature: 1730740202439:3750142550
+X-MC-Ingress-Time: 1730740202439
+Received: from pdx1-sub0-mail-a258.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.101.211.194 (trex/7.0.2);
+	Mon, 04 Nov 2024 17:10:02 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a258.dreamhost.com (Postfix) with ESMTPSA id 4XhydN5ZFdz7f;
+	Mon,  4 Nov 2024 09:10:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1730740201;
+	bh=djeiyArVI2uFrm3uwF32I+TnLqOcCdOJyErXRw8sf90=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=cLFkz6ds+WpTY5zg9wuuYvEd/NO/U3juHAI5RX5rIUR4sj7kLz3KjqBx5vgMqVoUv
+	 imO+VG9fMNwr1Z/3IAdZ7BdHrtr+M/rdYLJOcokuDvYLUO+szwMd8SlUwBfMc5nVU+
+	 3vqAdJJkOy9LibgPqcPx//DOhhwwdbjdJlkfhWM0YLrF7V9JFCLmRWk+kIGoEgmmQw
+	 tnNNEen2ZQyFSSdb1z5FsuOlWbp5ESuRkjwNefzdzyR/JsEzqJrPA+Hr1acZTugVMK
+	 bAjLPTDf7nCdgzIIwE0b04Kby1c4/D+0pXL5uTEd3msj9QK5se4nMkOy2Pr2sf+7Og
+	 bxWIBCsqYNQtw==
+Date: Mon, 4 Nov 2024 09:09:57 -0800
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: ira.weiny@intel.com
+Cc: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Navneet Singh <navneet.singh@intel.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>, linux-cxl@vger.kernel.org,
+	linux-doc@vger.kernel.org, nvdimm@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v5 08/27] cxl/mem: Read dynamic capacity configuration
+ from the device
+Message-ID: <20241104170957.2vxxpnjwvmaiwrt3@offworld>
+References: <20241029-dcd-type2-upstream-v5-0-8739cb67c374@intel.com>
+ <20241029-dcd-type2-upstream-v5-8-8739cb67c374@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] wifi: nl80211: fix bounds checker error in
- nl80211_parse_sched_scan
-To: Aleksei Vetrov <vvvvvv@google.com>,
-        Johannes Berg
-	<johannes@sipsolutions.net>,
-        Kees Cook <kees@kernel.org>,
-        "Gustavo A. R.
- Silva" <gustavoars@kernel.org>,
-        Dmitry Antipov <dmantipov@yandex.ru>
-CC: <linux-wireless@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-hardening@vger.kernel.org>, <stable@vger.kernel.org>
-References: <20241029-nl80211_parse_sched_scan-bounds-checker-fix-v2-1-c804b787341f@google.com>
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-Content-Language: en-US
-In-Reply-To: <20241029-nl80211_parse_sched_scan-bounds-checker-fix-v2-1-c804b787341f@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: rDFkmgpesmK2zhLKJ52g5uHr2cbaeixx
-X-Proofpoint-ORIG-GUID: rDFkmgpesmK2zhLKJ52g5uHr2cbaeixx
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
- impostorscore=0 bulkscore=0 mlxlogscore=565 spamscore=0 phishscore=0
- malwarescore=0 mlxscore=0 clxscore=1015 lowpriorityscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2409260000 definitions=main-2411040143
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20241029-dcd-type2-upstream-v5-8-8739cb67c374@intel.com>
+User-Agent: NeoMutt/20220429
 
-On 10/29/2024 6:22 AM, Aleksei Vetrov wrote:
-> The channels array in the cfg80211_scan_request has a __counted_by
-> attribute attached to it, which points to the n_channels variable. This
-> attribute is used in bounds checking, and if it is not set before the
-> array is filled, then the bounds sanitizer will issue a warning or a
-> kernel panic if CONFIG_UBSAN_TRAP is set.
-> 
-> This patch sets the size of allocated memory as the initial value for
-> n_channels. It is updated with the actual number of added elements after
-> the array is filled.
-> 
-> Fixes: aa4ec06c455d ("wifi: cfg80211: use __counted_by where appropriate")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Aleksei Vetrov <vvvvvv@google.com>
-Reviewed-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+On Tue, 29 Oct 2024, ira.weiny@intel.com wrote:
 
-And it is exactly this kind of issue why I'm not accepting any __counted_by()
-changes in ath.git without actually testing the code that is modified.
+>+/* See CXL 3.1 Table 8-164 get dynamic capacity config Output Payload */
+>+struct cxl_mbox_get_dc_config_out {
+>+	u8 avail_region_count;
+>+	u8 regions_returned;
+>+	u8 rsvd[6];
+>+	/* See CXL 3.1 Table 8-165 */
+>+	struct cxl_dc_region_config {
+>+		__le64 region_base;
+>+		__le64 region_decode_length;
+>+		__le64 region_length;
+>+		__le64 region_block_size;
+>+		__le32 region_dsmad_handle;
+>+		u8 flags;
+>+		u8 rsvd[3];
+>+	} __packed region[] __counted_by(regions_retunred);
 
-/jeff
-
+s/retunred/returned
