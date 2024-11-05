@@ -1,124 +1,68 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57D0B1D2B22;
-	Tue,  5 Nov 2024 10:59:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 222671D278B;
+	Tue,  5 Nov 2024 11:23:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730804395; cv=none; b=X7i7152pnkwnI9wLmMyKk9vnGZuITSf8g1MhNz7eg32X6ohkoYZ4WUx3EPwGeV67nzupGB5ufwpuutcdofF07Znd96dn7NrhoHVxUnHgVZgX9gMFEBr/JYKrVQeHpFiCPBy+vyVv/p8B3ss8f7dUCfvfTvrh3iVUTpAlx9n3SDk=
+	t=1730805790; cv=none; b=FOaS0pnkkrhXYydY3bBDsmGxD3dOswY+5GmSDhuCKZNbk1GKjoI9gLXXxrq57TcBubImLt61QgbmGRvrlWF/WAAZI5WdkbS4YPNF6gQvYywrRhEnc7+IH9pFTDVWe1vTvJCCjhGd8etmD0sVORctCWwiQD2EMCG69flg34reWfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730804395; c=relaxed/simple;
-	bh=X2aiaB2QLjmzxEz4BJTmcz5/caU1jLhjakEdzScTUNo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WgYgmL7Y7cEMDILS1/yOkE84PWZhMz/IaYCV5ccBlgHi4YbHr7N/VDEyvE3YBaJScbn3iGu73V4M6ORnC6xAQwAJ2G342X6KbkgHbCgGw7ClovQFVvfljBhvOsfGopZkawpfZfoQnOB2n462RYJn8e5S2c24DWqiMxLSNu5HelY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EI1xhvXi; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1730805790; c=relaxed/simple;
+	bh=5ae+p5+Ub1paM3FEnfKdtjlDbD//SfcTuWxbLk6HRog=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jHLFdpaAD4L7JPpV0Yn60rUBLVzfGRrYY3eLw//wmlwlm8naDSJz8Qz8jhJ+3xy4rndTO8Jy3ADF3AmIQEnLpY1yI2kEWeDZWTwpJr+7to35TuE+dr4/Cr66H+JPsskPqy7i9/S3IpEvn0L0D4wwkMav3IoN+XuQ89xTAP9h3wk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=gOtyZrwy; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EI1xhvXi"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-539f1292a9bso6067725e87.2;
-        Tue, 05 Nov 2024 02:59:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730804391; x=1731409191; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Dxc2q9MRuwdMNmLTNPGQBcREWP4Y2xIFNTUX1iciaC4=;
-        b=EI1xhvXiq+qZH+OEBYJ3V1kR2lYkJfPbwqQu/TtWgcsEf+LPPWQIdONTvHtH6k+M9J
-         75f6HVODXmFoNZrLCNDGtHVbesVm3JxL2l27xrVIUKCKokvZjC6NzPvRkYuM1JbZ2hPX
-         pEtzQk51yjQS0TjdRlZWBtIfvMoQ+Dz+g5BYNkG86XWE1t+Cp4Ho8i54On4fRdKSZn5q
-         INi8AJnkQyST9hZ95WTZr+gWqcf0xbTWl37RFDXFV0W4pCMlxfd3PxK26iAGn6WzoOxn
-         5bTgsKJ4pBxn/Dm4rJGpw97PNtBw8+EuL0WQlzUi6vFZiUbDKJ3J8f4PfS3WftK3RFto
-         mVig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730804391; x=1731409191;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Dxc2q9MRuwdMNmLTNPGQBcREWP4Y2xIFNTUX1iciaC4=;
-        b=w3G+TiI01UFPk018ccXuiDUVOiB52IzSqxN4HLojKYdCxF8in4D6AvO7hJArikPOyi
-         iOq3oJcETA5zo4zBc3jtrIMBFkrQOBOg0O9w8dHC+VGYpiWhgnup4kSgnY1S8Iz8Ndo0
-         DpvW7vptks4saydCm+bSLTwB5nZgjCOcsvFUiVHLB5ajbmx3o/OZkeNsd7JnfBzeUhuW
-         87OwLBVRO9GfIyJdQT2TgFaWtGnmlP5MfwG9GYCd/v4CEm5zlZh7/PT+1GamDEHHHny2
-         lmcR7Dn1f34Fxp6SdXQIe96BoKWD3R9rol9k7n3066/B9av5Tvxsd8wxw3hzpH5rlbDf
-         hWCw==
-X-Forwarded-Encrypted: i=1; AJvYcCUr3ZtqsZ+XvFvPsf7EB15/V9D+Js5SNHDkgCK1QzfBiJ2/wtOA9RY3XRDJZDlRFgE24oE+Rgg1@vger.kernel.org, AJvYcCVKklOTX26mA4BGg62YIpT4Kfc2pqg2aDZkTq/3Go5YeyptdSR5gZZ9gH4kKfaCKHmHwuWfzfGJoJ3UN60XXJk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+EQaXqKeY9rVnHOPnQnRbL3taVMYGPizkCYLyCV2MLcqi4HnH
-	bVcTDGPlfBQTe9mtS1SvGCQOXixx3rTdBYHrVHhp4q7u48WTg66y0Y/1dw==
-X-Google-Smtp-Source: AGHT+IGq9JvfEkZmwPMa2lZzGZKak8jTwKZkT3pCyrwQTV+HHuGBoCtanFcoeGc8mG4qdJKn8Yefwg==
-X-Received: by 2002:a05:6512:2341:b0:536:554a:24c2 with SMTP id 2adb3069b0e04-53b348c8978mr18599811e87.13.1730804391074;
-        Tue, 05 Nov 2024 02:59:51 -0800 (PST)
-Received: from [10.0.0.4] ([37.170.92.119])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4327d5e7c8bsm188562115e9.26.2024.11.05.02.59.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 Nov 2024 02:59:50 -0800 (PST)
-Message-ID: <7a2e5da2-5122-4c73-9a94-20e7f21a26f5@gmail.com>
-Date: Tue, 5 Nov 2024 11:59:49 +0100
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gOtyZrwy"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=9cFr9pH6MNW7EsyB1sOEQ8kmC8hKx31uNi0G3s6RSKw=; b=gOtyZrwyaVqH2m3//nCztQ3N45
+	VBo3sG9gZHD6u2y71NhC5RT42D2lm4lvL6F9c6PgZyvYyv+aqQUoIyuqm1NZv15/WmGlSiLE+kQEF
+	9KKh0djg4mDszpbn7hrSicTsrfJ/mPP2Gfn8m8uyXzZtAfmfC7iDjWtb56M1TqmwfCEQheju1gMuq
+	hByY56R6TZYed42qVxWQaeefeA9eSSdYoQci7Qj1xjrIh4CoEAwi9MC0/RslY9kYHdqmRxKmi2n1E
+	xLacu3UmzsBXHq7uqeFZVJq9hdim3u18Iz08qmWkMCPaSBZ2ORdmYW06a9Y1ab15zCqFfjM2K70t7
+	fQMQ2M8A==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1t8HeM-0000000GqDi-3yXh;
+	Tue, 05 Nov 2024 11:23:06 +0000
+Date: Tue, 5 Nov 2024 03:23:06 -0800
+From: Christoph Hellwig <hch@infradead.org>
+To: Thorsten Blum <thorsten.blum@linux.dev>
+Cc: Christoph Hellwig <hch@infradead.org>, linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH] freevxfs: Replace one-element array with flexible array
+ member
+Message-ID: <ZyoAGsCAdWrGMQoj@infradead.org>
+References: <20241103121707.102838-3-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 3/5] rtnetlink: do_setlink: Use sockaddr_storage
-To: Kees Cook <kees@kernel.org>, Jakub Kicinski <kuba@kernel.org>
-Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20241104221450.work.053-kees@kernel.org>
- <20241104222513.3469025-3-kees@kernel.org>
-Content-Language: en-US
-From: Eric Dumazet <eric.dumazet@gmail.com>
-In-Reply-To: <20241104222513.3469025-3-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241103121707.102838-3-thorsten.blum@linux.dev>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
+On Sun, Nov 03, 2024 at 01:17:09PM +0100, Thorsten Blum wrote:
+> Replace the deprecated one-element array with a modern flexible array
+> member in the struct vxfs_dirblk.
+> 
+> Link: https://github.com/KSPP/linux/issues/79
+> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
 
-On 11/4/24 11:25 PM, Kees Cook wrote:
-> Instead of a heap allocation use a stack allocated sockaddr_storage to
-> support arbitrary length addr_len value (but bounds check it against the
-> maximum address length).
->
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
->   net/core/rtnetlink.c | 12 ++++--------
->   1 file changed, 4 insertions(+), 8 deletions(-)
->
-> diff --git a/net/core/rtnetlink.c b/net/core/rtnetlink.c
-> index f0a520987085..eddd10b74f06 100644
-> --- a/net/core/rtnetlink.c
-> +++ b/net/core/rtnetlink.c
-> @@ -2839,21 +2839,17 @@ static int do_setlink(const struct sk_buff *skb,
->   	}
->   
->   	if (tb[IFLA_ADDRESS]) {
-> -		struct sockaddr *sa;
-> -		int len;
-> +		struct sockaddr_storage addr;
-> +		struct sockaddr *sa = (struct sockaddr *)&addr;
+Might be worth adding that nothing does a sizeof of the type or
+variables of the type, so just hcanging it is fine.
 
+Otherwise looks good:
 
-We already use too much stack space.
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 
+Andrew, can you pick this up through -mm as there is no freevxfs tree?
 
-Please move addr into struct rtnl_newlink_tbs ?
-
-
->   
-> -		len = sizeof(sa_family_t) + max_t(size_t, dev->addr_len,
-> -						  sizeof(*sa));
-> -		sa = kmalloc(len, GFP_KERNEL);
-> -		if (!sa) {
-> +		if (dev->addr_len > sizeof(addr.__data)) {
->   			err = -ENOMEM;
->   			goto errout;
->   		}
->   		sa->sa_family = dev->type;
-> -		memcpy(sa->sa_data, nla_data(tb[IFLA_ADDRESS]),
-> +		memcpy(addr.__data, nla_data(tb[IFLA_ADDRESS]),
->   		       dev->addr_len);
->   		err = dev_set_mac_address_user(dev, sa, extack);
-> -		kfree(sa);
->   		if (err)
->   			goto errout;
->   		status |= DO_SETLINK_MODIFIED;
