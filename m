@@ -1,155 +1,80 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37B151D14E3;
-	Tue,  5 Nov 2024 10:40:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2453918DF89;
+	Tue,  5 Nov 2024 10:46:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730803240; cv=none; b=NuZKmgvvZ/VXRhTt5aIgUU5Xu5iDehpe/2J6E5L+LM6OItCP7JqFYMifmPpeYJd7Ulxa15fq/jx6RVPSv9UdR+azUrF/bo1HMafBxkJNH7+36yCz8bAAT21/eb3oDVQ2QFwu95nZTlERAmJOKuMQt6UEgL+Uz+4JJYB0hA1KzUA=
+	t=1730803602; cv=none; b=YxfVsTKRjPtDi70AL6Qj+g1qyWdgoyxj46hznoXBhc/hkgEy3w6xsoJaEqzxnPq26vKw/TDiF3186zY+3PlBh15LTsDO+YAfZ1hDQU8VnAX+cHCacXI2TYT+SwqLKlnMcDLcnj1HU7ydGxySWu/RNSphYl/c5RqZQVQazBUmAc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730803240; c=relaxed/simple;
-	bh=ZeGJ32onS1PAytPMeWyffNKx42P4Y5ebI72qKCfQPwY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=oF6Y8yozPkRjUp0wdn8hS/5BwhDBqgVaA5p3sQ5obY9sY2JxR8kiFzGP9M71lMrojhU9rIWI/qXGnLjV0fZB9+EUlGQTxYSkzfh/7C5wsnFHjAYkFgpKi4XMg3ZNAyHstncDiTGQ6Ym90KE9nLMvrN69JdQenT4aC4Klp/EC1Xo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=XDRTuwYl; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=f3iygS1G reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1730803602; c=relaxed/simple;
+	bh=VdcGAmlztfS3pzAXrj9ZpjnvuwLT/ZrczgsQ13dzYRI=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
+	 MIME-Version:Content-Type; b=qfKRl8VToytBMdyjy2ROcptGnZmPquf4kTx8WxbfAK51MY26rdHO7vGNbIZFGU3yiJjKQsWa8md3Kx4zU6JVusaF/HQOna/TlKRl29ezCGLxDNMFGtvGxioCmAfmjJbCX16CJHvOGN7lTAjDMgcesu8Bij1erp7MPZXiUQGqOj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=plUhP2C3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="XDRTuwYl";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="f3iygS1G"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1730803237; x=1762339237;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=HnhOcDqM62BM39XeYtBpS6hPjPuyhp80jJ6lENbc2lQ=;
-  b=XDRTuwYly0+xQ1keRhstg8Q+kyJL1bCPp5L16H+3VTrt1+sFKm7ETqkv
-   D3IFdmkXXDKHxmVkObXL1if3Bh1R4uPf/mF4r+TyeHCiVWpfbD16zz20H
-   E1s5neF9pYZD+a2FhNqIjwIFZ+hujVxiN4sLadVi68y4zN32ifXWLoIKC
-   8gjeEP9fm5a5Jt/fSfbGdjrF9tpLpu3CI1bjvmsiJCSFNGme77bKjzi//
-   fBni5qdH/IiFLJYjUVuzBruk5q9tqJlrfoumtWilo9xNBsqKfzjFc1v9N
-   +rDFl2g/xrSyL5mRiXaLpLdI5krsZIA+84eFigbuctGsIdP8sRP3blOCE
-   w==;
-X-CSE-ConnectionGUID: AIkgqKuXSf2GqGYxRnWDAw==
-X-CSE-MsgGUID: vkGBDWlmR2O3XtYPq2HK6g==
-X-IronPort-AV: E=Sophos;i="6.11,259,1725314400"; 
-   d="scan'208";a="39855291"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 05 Nov 2024 11:40:28 +0100
-X-CheckPoint: {6729F61B-23-5736D786-D50827BE}
-X-MAIL-CPID: 51C17FF78442E03FAB7181DB78149BC6_2
-X-Control-Analysis: str=0001.0A682F22.6729F61C.004F,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 62129161302;
-	Tue,  5 Nov 2024 11:40:21 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1730803223;
-	h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=HnhOcDqM62BM39XeYtBpS6hPjPuyhp80jJ6lENbc2lQ=;
-	b=f3iygS1GUJvasDTnbGPHuttJdMX/2lqYoS/6+vCQ3Th8WLd+VqtaZU/BSlaJ4s76JNRSAd
-	4AVJQzH467QFo8Vhb1O3Q5/0cXAPTZQXXN2QGfFk+aPT4ZCQgrqnmFE5SCCLwBv+oBHMKu
-	6ZgBPDlVNnTJG/RauHtIV6h7Hw7SFQBOFzIV31ro/lK61PgD3/x09ma3pA4vqtLyhubA/2
-	2ooJNAQpQUUkFORsFBckki5hutdrOo+0Zx488XI3HBHwWXZEsiofyFfZjFVGy6zF8DrFQT
-	bDsPF6dlPkdL//VXddmybEYk1ZSkiApd7QJAaMaD1mH6DRCGsI8wYfXoTAgp/w==
-Message-ID: <c73cac598788ccabd1791b1232e8fd9d7ce23ac6.camel@ew.tq-group.com>
-Subject: Re: [PATCH 2/5] dt-bindings: arm: ti: Add compatible for
- AM625-based TQMa62xx SOM family and carrier board
-From: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To: Conor Dooley <conor@kernel.org>
-Cc: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>, Tero
- Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, Kees Cook <kees@kernel.org>,
- Tony Luck <tony.luck@intel.com>, "Guilherme G. Piccoli"
- <gpiccoli@igalia.com>, Felipe Balbi <balbi@kernel.org>,
- linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
- linux-hardening@vger.kernel.org, Devarsh Thakkar <devarsht@ti.com>, Hari
- Nagalla <hnagalla@ti.com>, linux@ew.tq-group.com
-Date: Tue, 05 Nov 2024 11:40:20 +0100
-In-Reply-To: <20241104-floral-dexterous-7d3fee2ff616@spud>
-References: <cover.1730299760.git.matthias.schiffer@ew.tq-group.com>
-	 <4f5ad877f44df35a3b2c7f336647f057c4e6377d.1730299760.git.matthias.schiffer@ew.tq-group.com>
-	 <20241104-floral-dexterous-7d3fee2ff616@spud>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="plUhP2C3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC8E1C4CED0;
+	Tue,  5 Nov 2024 10:46:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730803601;
+	bh=VdcGAmlztfS3pzAXrj9ZpjnvuwLT/ZrczgsQ13dzYRI=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+	b=plUhP2C3q5UJFvR7SkoJu0skGSKd3Zydrusbb4zLzR+s4Rf8ogXEU9j49UIMaeqAT
+	 E6/63KVyAaUfXUnDLAM2xfTyhdB26M18/lm4UFbtZahe//vqJzE9mL2xCYJ8GAP5Dg
+	 gn4AV/2elGkC+4ApsIZfZBqApkDCSQLpeh/21eq2LgPp2osoAh+g8XL7hfHMA0VWY9
+	 2UjJrvwguhT4/QsKvOmnSKOKrzelhb/JqkOJn4pVk1EM6aFtLbwKf6k5jdgiTULfM2
+	 egGuBN8evTv0xyIFhIYALu+zN4iA0Jlcsu89UJ/EGa0JavoI61bW2UUBiZoHxM0apB
+	 a8GVm2IjwY0Zw==
+From: Kalle Valo <kvalo@kernel.org>
+To: Jeff Johnson <quic_jjohnson@quicinc.com>
+Cc: Aleksei Vetrov <vvvvvv@google.com>,  Johannes Berg
+ <johannes@sipsolutions.net>,  Kees Cook <kees@kernel.org>,  "Gustavo A. R.
+ Silva" <gustavoars@kernel.org>,  Dmitry Antipov <dmantipov@yandex.ru>,
+  <linux-wireless@vger.kernel.org>,  <linux-kernel@vger.kernel.org>,
+  <linux-hardening@vger.kernel.org>,  <stable@vger.kernel.org>
+Subject: Re: [PATCH v2] wifi: nl80211: fix bounds checker error in
+ nl80211_parse_sched_scan
+References: <20241029-nl80211_parse_sched_scan-bounds-checker-fix-v2-1-c804b787341f@google.com>
+	<0bc2e4b0-4dad-4341-a41e-a98fbc4b1658@quicinc.com>
+Date: Tue, 05 Nov 2024 12:46:37 +0200
+In-Reply-To: <0bc2e4b0-4dad-4341-a41e-a98fbc4b1658@quicinc.com> (Jeff
+	Johnson's message of "Mon, 4 Nov 2024 09:12:09 -0800")
+Message-ID: <87ses6x8j6.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain
 
-On Mon, 2024-11-04 at 18:47 +0000, Conor Dooley wrote:
-> On Mon, Nov 04, 2024 at 10:47:25AM +0100, Matthias Schiffer wrote:
-> > The TQMa62xx is a SoM family with a pluggable connector. The MBa62xx is
-> > the matching reference/starterkit carrier board.
->=20
-> Why all the wildcards? Why isn't there a compatible per device in the
-> family?
+Jeff Johnson <quic_jjohnson@quicinc.com> writes:
 
-For the compatible string we've chosen the TQMa6254 as the representative f=
-or the TQMa62xx family.
+> On 10/29/2024 6:22 AM, Aleksei Vetrov wrote:
+>> The channels array in the cfg80211_scan_request has a __counted_by
+>> attribute attached to it, which points to the n_channels variable. This
+>> attribute is used in bounds checking, and if it is not set before the
+>> array is filled, then the bounds sanitizer will issue a warning or a
+>> kernel panic if CONFIG_UBSAN_TRAP is set.
+>> 
+>> This patch sets the size of allocated memory as the initial value for
+>> n_channels. It is updated with the actual number of added elements after
+>> the array is filled.
+>> 
+>> Fixes: aa4ec06c455d ("wifi: cfg80211: use __counted_by where appropriate")
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: Aleksei Vetrov <vvvvvv@google.com>
+> Reviewed-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+>
+> And it is exactly this kind of issue why I'm not accepting any __counted_by()
+> changes in ath.git without actually testing the code that is modified.
 
-MBa62xx is the proper name of the baseboard; this board can be combined wit=
-h any TQMa62xx family
-SOM.
+That's a good rule. If we ever manage to write that "wireless cleanup
+policy" document this is something we should add there.
 
-Best,
-Matthias
+-- 
+https://patchwork.kernel.org/project/linux-wireless/list/
 
-
-
->=20
-> >=20
-> > Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-> > ---
-> >  Documentation/devicetree/bindings/arm/ti/k3.yaml | 7 +++++++
-> >  1 file changed, 7 insertions(+)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/arm/ti/k3.yaml b/Documen=
-tation/devicetree/bindings/arm/ti/k3.yaml
-> > index b0be02f9d1253..d8b52b95fba7b 100644
-> > --- a/Documentation/devicetree/bindings/arm/ti/k3.yaml
-> > +++ b/Documentation/devicetree/bindings/arm/ti/k3.yaml
-> > @@ -73,6 +73,13 @@ properties:
-> >            - const: toradex,verdin-am62          # Verdin AM62 Module
-> >            - const: ti,am625
-> > =20
-> > +      - description: K3 AM625 SoC on TQ-Systems TQMa62xx SoM
-> > +        items:
-> > +          - enum:
-> > +              - tq,am625-tqma6254-mba62xx # MBa62xx base board
-> > +          - const: tq,am625-tqma6254
-> > +          - const: ti,am625
-> > +
-> >        - description: K3 AM642 SoC
-> >          items:
-> >            - enum:
-> > --=20
-> > TQ-Systems GmbH | M=C3=BChlstra=C3=9Fe 2, Gut Delling | 82229 Seefeld, =
-Germany
-> > Amtsgericht M=C3=BCnchen, HRB 105018
-> > Gesch=C3=A4ftsf=C3=BChrer: Detlef Schneider, R=C3=BCdiger Stahl, Stefan=
- Schneider
-> > https://www.tq-group.com/
-> >=20
-> Achtung externe E-Mail:=C2=A0=C3=96ffnen Sie Anh=C3=A4nge und Links nur, =
-wenn Sie wissen, dass diese aus einer sicheren Quelle stammen und sicher si=
-nd. Leiten Sie die E-Mail im Zweifelsfall zur Pr=C3=BCfung an den IT-Helpde=
-sk weiter.
->   Attention external email:=C2=A0Open attachments and links only if you k=
-now that they are from a secure source and are safe. In doubt forward the e=
-mail to the IT-Helpdesk to check it.
->=20
-> =C2=A0
-
---=20
-TQ-Systems GmbH | M=C3=BChlstra=C3=9Fe 2, Gut Delling | 82229 Seefeld, Germ=
-any
-Amtsgericht M=C3=BCnchen, HRB 105018
-Gesch=C3=A4ftsf=C3=BChrer: Detlef Schneider, R=C3=BCdiger Stahl, Stefan Sch=
-neider
-https://www.tq-group.com/
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
