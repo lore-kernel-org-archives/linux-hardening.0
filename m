@@ -1,68 +1,99 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 222671D278B;
-	Tue,  5 Nov 2024 11:23:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B90541E7647;
+	Tue,  5 Nov 2024 18:19:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730805790; cv=none; b=FOaS0pnkkrhXYydY3bBDsmGxD3dOswY+5GmSDhuCKZNbk1GKjoI9gLXXxrq57TcBubImLt61QgbmGRvrlWF/WAAZI5WdkbS4YPNF6gQvYywrRhEnc7+IH9pFTDVWe1vTvJCCjhGd8etmD0sVORctCWwiQD2EMCG69flg34reWfk=
+	t=1730830761; cv=none; b=Ic6v86FIpCO2lWdt9bcComtSn6tVZivIq79dxDF+7MWegTAc7lEcarZg29jAjNlpyYxBSm8iR8q5kRC/8pOaz9NXqMZqli+EY+WOFE2j6T2M8EpZbFlPKxWsommyMXJI2wbyCcpEw+VvLR3F4Qo6rvhgVXPLCmGHMKiV6j8fg/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730805790; c=relaxed/simple;
-	bh=5ae+p5+Ub1paM3FEnfKdtjlDbD//SfcTuWxbLk6HRog=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jHLFdpaAD4L7JPpV0Yn60rUBLVzfGRrYY3eLw//wmlwlm8naDSJz8Qz8jhJ+3xy4rndTO8Jy3ADF3AmIQEnLpY1yI2kEWeDZWTwpJr+7to35TuE+dr4/Cr66H+JPsskPqy7i9/S3IpEvn0L0D4wwkMav3IoN+XuQ89xTAP9h3wk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=gOtyZrwy; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	s=arc-20240116; t=1730830761; c=relaxed/simple;
+	bh=KLo/rEHIE6am70Vo9zl892I6Woc0BURA4LAhcckibeU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=utdY3NG2K9a0yJtXEFf90u/Yji33LZg9ZcNG9N1C7cu+hz4m2ZnHlQzXCK3LoSdPmCVLaiOYgRwJxcZAqpeDmjDSuljUUW93Z9U57+m5LFXZATymw7okkSSWhwnnvKfhclHjj7vvujimw+oCIxDqBr7GEzwiwC8f9YrM/n/D3BA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wzta4frQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gOtyZrwy"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=9cFr9pH6MNW7EsyB1sOEQ8kmC8hKx31uNi0G3s6RSKw=; b=gOtyZrwyaVqH2m3//nCztQ3N45
-	VBo3sG9gZHD6u2y71NhC5RT42D2lm4lvL6F9c6PgZyvYyv+aqQUoIyuqm1NZv15/WmGlSiLE+kQEF
-	9KKh0djg4mDszpbn7hrSicTsrfJ/mPP2Gfn8m8uyXzZtAfmfC7iDjWtb56M1TqmwfCEQheju1gMuq
-	hByY56R6TZYed42qVxWQaeefeA9eSSdYoQci7Qj1xjrIh4CoEAwi9MC0/RslY9kYHdqmRxKmi2n1E
-	xLacu3UmzsBXHq7uqeFZVJq9hdim3u18Iz08qmWkMCPaSBZ2ORdmYW06a9Y1ab15zCqFfjM2K70t7
-	fQMQ2M8A==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1t8HeM-0000000GqDi-3yXh;
-	Tue, 05 Nov 2024 11:23:06 +0000
-Date: Tue, 5 Nov 2024 03:23:06 -0800
-From: Christoph Hellwig <hch@infradead.org>
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: Christoph Hellwig <hch@infradead.org>, linux-hardening@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wzta4frQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32F80C4CECF;
+	Tue,  5 Nov 2024 18:19:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730830760;
+	bh=KLo/rEHIE6am70Vo9zl892I6Woc0BURA4LAhcckibeU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Wzta4frQAfI+4x29xiW8d95oYiYMxDwzeUtVWVyxDS1oUTnFvakcknjMNjmV59u8x
+	 s6w5C7WqSSq5pm152rGl/d+Ns/2NXaRTkrTeFe4kMlW3/ugHTz/Iw9//DMH0TL043G
+	 WGWXmMW6T/oRX9lkWkk5VWWNEpssvtmrDa18Re9xeN/uOFm4VPEnrgIhkW2NCuSSTY
+	 sWg1NgdhxcjETb4r1O47SzSPTEFSihoziq/5Y5RVOuIjXFN5mHxzZ2Ik/lpoNU3T16
+	 ThWrqxS5f8u/XdkUPaRQZHRJsv/njGi9uL6/eE8elHb4k0J3eIRjmO22YfB29R3Qco
+	 tf6VjvAeNvy5g==
+From: Kees Cook <kees@kernel.org>
+To: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Kees Cook <kees@kernel.org>,
+	syzbot+03e1af5c332f7e0eb84b@syzkaller.appspotmail.com,
+	Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>,
+	Eric Biederman <ebiederm@xmission.com>,
+	linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
+	Tycho Andersen <tandersen@netflix.com>,
+	=?UTF-8?q?Zbigniew=20J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>,
 	linux-kernel@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH] freevxfs: Replace one-element array with flexible array
- member
-Message-ID: <ZyoAGsCAdWrGMQoj@infradead.org>
-References: <20241103121707.102838-3-thorsten.blum@linux.dev>
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] exec: NULL out bprm->argv0 when it is an ERR_PTR
+Date: Tue,  5 Nov 2024 10:19:11 -0800
+Message-Id: <20241105181905.work.462-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241103121707.102838-3-thorsten.blum@linux.dev>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1391; i=kees@kernel.org; h=from:subject:message-id; bh=KLo/rEHIE6am70Vo9zl892I6Woc0BURA4LAhcckibeU=; b=owGbwMvMwCVmps19z/KJym7G02pJDOlaifPnGyS82b/muRhXf1nrDL+nbivKFV8oKxtG8T/fs vIHt6hCRykLgxgXg6yYIkuQnXuci8fb9nD3uYowc1iZQIYwcHEKwES4rjL8lV0nvoYlzPJdBW/x 9vUhHHsKS4qPP2dLPv+y+69b4t/7mYwML71dr6nqdhzI+PWgVKKNuSjg68a+13YiemdmpygVVd7 mBAA=
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Sun, Nov 03, 2024 at 01:17:09PM +0100, Thorsten Blum wrote:
-> Replace the deprecated one-element array with a modern flexible array
-> member in the struct vxfs_dirblk.
-> 
-> Link: https://github.com/KSPP/linux/issues/79
-> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+Attempting to free an ERR_PTR will not work. ;)
 
-Might be worth adding that nothing does a sizeof of the type or
-variables of the type, so just hcanging it is fine.
+    process 'syz-executor210' launched '/dev/fd/3' with NULL argv: empty string added
+    kernel BUG at arch/x86/mm/physaddr.c:23!
 
-Otherwise looks good:
+Set bprm->argv0 to NULL if it fails to get a string from userspace so
+that bprm_free() will not try to free an invalid pointer when cleaning up.
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reported-by: syzbot+03e1af5c332f7e0eb84b@syzkaller.appspotmail.com
+Closes: https://lore.kernel.org/all/6729d8d1.050a0220.701a.0017.GAE@google.com
+Fixes: 7bdc6fc85c9a ("exec: fix up /proc/pid/comm in the execveat(AT_EMPTY_PATH) case")
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: Jan Kara <jack@suse.cz>
+Cc: Eric Biederman <ebiederm@xmission.com>
+Cc: linux-fsdevel@vger.kernel.org
+Cc: linux-mm@kvack.org
+---
+ fs/exec.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-Andrew, can you pick this up through -mm as there is no freevxfs tree?
+diff --git a/fs/exec.c b/fs/exec.c
+index 79045c1d1608..65448ea609a2 100644
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -1522,8 +1522,12 @@ static int bprm_add_fixup_comm(struct linux_binprm *bprm,
+ 		return 0;
+ 
+ 	bprm->argv0 = strndup_user(p, MAX_ARG_STRLEN);
+-	if (IS_ERR(bprm->argv0))
+-		return PTR_ERR(bprm->argv0);
++	if (IS_ERR(bprm->argv0)) {
++		int rc = PTR_ERR(bprm->argv0);
++
++		bprm->argv0 = NULL;
++		return rc;
++	}
+ 
+ 	return 0;
+ }
+-- 
+2.34.1
 
