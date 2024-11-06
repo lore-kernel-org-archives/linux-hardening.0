@@ -1,90 +1,40 @@
-Received: from fhigh-a8-smtp.messagingengine.com (fhigh-a8-smtp.messagingengine.com [103.168.172.159])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B63E01D5178;
-	Wed,  6 Nov 2024 08:22:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9271F1D9329;
+	Wed,  6 Nov 2024 09:39:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730881373; cv=none; b=swP+xQvylSSc0JMUM8GyA2NOw/5SMRiN9HwmmS/X9ABhsaZUzE7vEbp2ZyE9ULAN4G/onHHEojHCkOy0H0PM3W2nK1+yXMkChBF2iD4JKBLDzg8dYFvLgBGUHonKF283ZSdO0iXcgF0MSe0NlSHPGqTK7Q1g4VUVnsRYTFb/wlM=
+	t=1730885972; cv=none; b=p3cAN7spdWJ3L7EGwv+h6bjbTFhBsPhRHYoJfkXYSMhG99x+WxEEGFhfZ1jy3k8NeKvJYtqJI0IxL5zYQoC5n4iLLWC4mrPTLNaQlkqaPLX8POqr/EMhtZUctTB5bisXHVjhAR5k3rINmTxftfqGG141dnMxAj0sad3Gh785eIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730881373; c=relaxed/simple;
-	bh=A9mkpVGy4g8Gd1WTOi/LPIQNtCBmj80Bd2ZolAjz9pk=;
+	s=arc-20240116; t=1730885972; c=relaxed/simple;
+	bh=FU5AlX4RjaYJQlbyiNQ8jSLr6xTKlU0haYRHKYTKbpw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YTACn55iRzszyqw/ANDGAtb8MjOffrXi0mzdMcoIswinX990AHJ0Uj/3dbdpfpOk9sdscdxhDNwrdlimwhkWUo1voI3RxCj7nZmoRLJ/wtProyDzTTrypywlVzbiIkHUMFUgcZLYZc/zXSnP/RGBDtg2TRvCUdPsYg7um9OGzjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name; spf=pass smtp.mailfrom=shutemov.name; dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b=mfeqlBAU; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=YC+I0dR0; arc=none smtp.client-ip=103.168.172.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shutemov.name
+	 Content-Type:Content-Disposition:In-Reply-To; b=ljw9ESIoEgY+ljU0MZ1rATOwICuQArNp8F9RNG4VToQTYxv7aDPpSrEjSmRzKHG3YI2n0yHPqLm86+YaOzq9nx+/trU3t/MHyTq4xnQgSfCnMIAD/eDheC2qpZ30nsUt9Ak78WlE0n2jR5P8RY7PDkLn1zsPteudvzCJMWqGWn0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kt32r2/j; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b="mfeqlBAU";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="YC+I0dR0"
-Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id A6D84114014A;
-	Wed,  6 Nov 2024 03:22:49 -0500 (EST)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-01.internal (MEProxy); Wed, 06 Nov 2024 03:22:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
-	 h=cc:cc:content-type:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm1; t=1730881369; x=
-	1730967769; bh=cUJGhA+EqaCERMowqa0oAWZk0dGBxuPHW0azPfwVRNw=; b=m
-	feqlBAU/iRdSmfdsB5UznNsL9kCz2Dq17My1bH1J9tV2n2qyAc/Mi2SkHck5flN1
-	pGmdrNCFiU/YUX5hVZfaTLSkX10MFNxJBl31diQdOPt38pG96QXPiYh1aGCrt6ud
-	FJ6BDKv1RSaT6GDO7zWhcoZ9AuOnTl2FNElGXs1wX90p/kRLZy4HqA2+J/zmAYo1
-	yxkE1Ns353YcoFJhH4VBGm803+IazJBN76Qfvwgaf1yeyXxRryz100m9erfDOjey
-	uoqRfp5cJwhcCFKdBJflwYcTFNicaKY/3F8iU/SXG6RXZ7kW9sXVVs2Lwnrau+xR
-	lusnayucyjOmJOZCF9j2Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1730881369; x=1730967769; bh=cUJGhA+EqaCERMowqa0oAWZk0dGBxuPHW0a
-	zPfwVRNw=; b=YC+I0dR0vYSMIv6f2/J+h29yFAkRQqdJC86GOMPsxlFRYeoEmnz
-	kLANdnulyWGl5PSJsq6gY3+O+p6oriemCaJGLlyvaYe4KAnTw9OikVeJWR+km1Lm
-	rr8StFwphn7D/LYtgDNWW23lgORQomup8HJ8qI1CXtdSQt6aIMi+qQoiOJ7BVlgv
-	hU3oz6AA6wuDEB3LdtDb85iawnIbAmgn/KeP33jonTBvZQhSnSFiVIsl+2bCoWaZ
-	cu0Ui5IwYD+AH39UP2Ioqhj3Tfoz/9rDGmnwtnlANsSDH5APzl1YfCksKKks7Zfj
-	ykctJDvS4/y33i3VUcMOzc/nGNhm1TWX9SQ==
-X-ME-Sender: <xms:WScrZ2fnNVXF2KCr5opUNktBIyJed6Sh6ru4kqOBcD0sP7XeeIpjow>
-    <xme:WScrZwMtxKL91UO9u-AUWCs-tzCsR84DeoL3n4kxOWtrX9c_bJpRVu2B_LIq_0ww0
-    DJu2lXypk02i1tAR48>
-X-ME-Received: <xmr:WScrZ3g0HJ5ZYFoV2IpZQnTq2ltA2Yfvex32IUEZVuGvCIQvvvt-izHIBvLK5acGoYgaPQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrtddugdduvddtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtsfdttddtvden
-    ucfhrhhomhepfdfmihhrihhllhcutedrucfuhhhuthgvmhhovhdfuceokhhirhhilhhlse
-    hshhhuthgvmhhovhdrnhgrmhgvqeenucggtffrrghtthgvrhhnpeeltedugedtgfehuddu
-    hfetleeiuedvtdehieejjedufeejfeegteetuddtgefgudenucffohhmrghinhepkhgvrh
-    hnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhf
-    rhhomhepkhhirhhilhhlsehshhhuthgvmhhovhdrnhgrmhgvpdhnsggprhgtphhtthhope
-    duvddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepkhgvvghssehkvghrnhgvlhdr
-    ohhrghdprhgtphhtthhopehvihhrohesiigvnhhivhdrlhhinhhugidrohhrghdruhhkpd
-    hrtghpthhtohepshihiigsohhtoddtfegvudgrfhehtgeffedvfhejvgdtvggskeegsges
-    shihiihkrghllhgvrhdrrghpphhsphhothhmrghilhdrtghomhdprhgtphhtthhopegsrh
-    gruhhnvghrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehjrggtkhesshhushgvrdgt
-    iidprhgtphhtthhopegvsghivgguvghrmhesgihmihhsshhiohhnrdgtohhmpdhrtghpth
-    htoheplhhinhhugidqfhhsuggvvhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgt
-    phhtthhopehlihhnuhigqdhmmheskhhvrggtkhdrohhrghdprhgtphhtthhopehtrghnug
-    gvrhhsvghnsehnvghtfhhlihigrdgtohhm
-X-ME-Proxy: <xmx:WScrZz-TqVzchTIxabqBnD-hREhjsoD-9dlp1cU1cb3QJHNnIsNc6w>
-    <xmx:WScrZysQ1moPuR9BLb3ZA4UN4LCtq3OOzGNJTrNc-cgjSAgLC67RJg>
-    <xmx:WScrZ6EgNoK6mRi10czN4zJPM8ULH8uz7EZVGebH6PYjIDwYSnaGqA>
-    <xmx:WScrZxMcZjdc9qCjh8zqPl0TCWprccn-5-ZXe6yoPmCSMxNHiapR9Q>
-    <xmx:WScrZzFHbVw1xRUT4URxxH08R0sz3dZwCr-V_lOJiwXH7iLjVLZalIx0>
-Feedback-ID: ie3994620:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 6 Nov 2024 03:22:45 -0500 (EST)
-Date: Wed, 6 Nov 2024 10:22:37 +0200
-From: "Kirill A. Shutemov" <kirill@shutemov.name>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kt32r2/j"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8FC0C4CECD;
+	Wed,  6 Nov 2024 09:39:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730885972;
+	bh=FU5AlX4RjaYJQlbyiNQ8jSLr6xTKlU0haYRHKYTKbpw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kt32r2/jMsGs06RLAAi7ZO6XvgJUf/urcz/7ldxqPdV6rhxIK7w6n4C5IaqGNx350
+	 /qo/awgFtXMTvTRlCIY8fYkXn1xShDUM800/915kEtBHt/ifPO7fbriXr7ZYl1RjIa
+	 +9koIdf2WmuSWFYVXrvXul/usZWf6aOXpj/ok+LVua3AuRg4CN09dojuiPY0WEFDLG
+	 Pg4u1GHLptMHrXJpIjJrNsR7iGmNfWg49E8YPmnsn9gJhYA1smCkJZjEWTWJ4zBzgm
+	 8C86GtloqWFIe/U11YnUWQSHjt+kwo/nsmS9Xey5CL/pupmPHqPwp80ZLIxeCrk0HM
+	 L0U3758w7ZD6w==
+Date: Wed, 6 Nov 2024 10:39:25 +0100
+From: Christian Brauner <brauner@kernel.org>
 To: Kees Cook <kees@kernel.org>
 Cc: Al Viro <viro@zeniv.linux.org.uk>, 
-	syzbot+03e1af5c332f7e0eb84b@syzkaller.appspotmail.com, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Eric Biederman <ebiederm@xmission.com>, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
-	Tycho Andersen <tandersen@netflix.com>, Zbigniew =?utf-8?Q?J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+	syzbot+03e1af5c332f7e0eb84b@syzkaller.appspotmail.com, Jan Kara <jack@suse.cz>, Eric Biederman <ebiederm@xmission.com>, 
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, Tycho Andersen <tandersen@netflix.com>, 
+	Zbigniew =?utf-8?Q?J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 Subject: Re: [PATCH] exec: NULL out bprm->argv0 when it is an ERR_PTR
-Message-ID: <nx6v7xrlkq5svczxyxky3sfckkpnvuz3ifj4jcsordabyyy4sw@h7svrhdgcmft>
+Message-ID: <20241106-balsam-untragbar-1aa86b2bb7bb@brauner>
 References: <20241105181905.work.462-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -92,7 +42,7 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 In-Reply-To: <20241105181905.work.462-kees@kernel.org>
 
@@ -110,14 +60,5 @@ On Tue, Nov 05, 2024 at 10:19:11AM -0800, Kees Cook wrote:
 > Fixes: 7bdc6fc85c9a ("exec: fix up /proc/pid/comm in the execveat(AT_EMPTY_PATH) case")
 > Signed-off-by: Kees Cook <kees@kernel.org>
 > ---
-> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-> Cc: Christian Brauner <brauner@kernel.org>
-> Cc: Jan Kara <jack@suse.cz>
-> Cc: Eric Biederman <ebiederm@xmission.com>
-> Cc: linux-fsdevel@vger.kernel.org
-> Cc: linux-mm@kvack.org
 
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+Reviewed-by: Christian Brauner <brauner@kernel.org>
