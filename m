@@ -1,117 +1,70 @@
-Received: from fhigh-a8-smtp.messagingengine.com (fhigh-a8-smtp.messagingengine.com [103.168.172.159])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24FDB1E3796;
-	Tue,  5 Nov 2024 19:07:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C84331EA91;
+	Wed,  6 Nov 2024 01:16:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730833632; cv=none; b=G55ClKvf17GIrV6G0x/Wi3KCudNH3q9T162ZSJvhDYdd+gjrvzOQ1sqfdCFTGQAa7qcH5WA4/utWKkmVStzz0oYCeuOTc7nZVlgZefNSIa0FQO5jmmLHth+chK+wosrhLBr11JN7fp5sLLU+r6g19TFMves6J0p03rpbSExfbRA=
+	t=1730855768; cv=none; b=YORS+eyinxxTb2vlzvfmFscUBJYhbgzVdMK+hm8qV7uly1O/+15jTqAIbpNCh/rDVh6hJ7ChABA200K6FDRkdzAa8p2J8LppWw1J/FQIErF/aynf9GvMzC7yAf6pWdnykZpcAzsD1wyLTF7hj8nmk/LuJnobXNsg/mUqQbctirM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730833632; c=relaxed/simple;
-	bh=aiffeFvMny/3ip24X8IqMiW6IyxDHkiaOjg2GvouxGs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lELc5c+xjJARyWwLLOkgeCmVTMiHa+/sOjz6dJlSzDPJsLM5YlIkEFSW03/RvR3jJZaoSt+X1dNhVSOF8bwZ4dho7DAbz+bNur+QD9qeX6ENshcaupCpmfobs/OubUCt0vRw1e60Q/xpUkgOwV2Ylrgk/Ue/UjFSiznb2K9yz3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tycho.pizza; spf=pass smtp.mailfrom=tycho.pizza; dkim=pass (2048-bit key) header.d=tycho.pizza header.i=@tycho.pizza header.b=XjUd9H0H; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=hutAm7G1; arc=none smtp.client-ip=103.168.172.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tycho.pizza
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tycho.pizza
+	s=arc-20240116; t=1730855768; c=relaxed/simple;
+	bh=svZotiWug5mCuHoOIxCvTAaQdWf8Cc3c/+Eu+/tM+94=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=leULojPP9qI2PCgSycqnt6DtJXWsTgffE/EtVktH+zXQKpqa/KPIRjzlb1UutVbA6MFPn7Rdw801vA3AnUJiI11ODhCbrrtrWTcu7wzlozpQVfucGcjb4cbRh2fx772ivo6E0VHVFmO2qUzMThIhyy9p5wDVVRP0NZUQDWWBs/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fYcfJRGz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tycho.pizza header.i=@tycho.pizza header.b="XjUd9H0H";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="hutAm7G1"
-Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 2F811114016F;
-	Tue,  5 Nov 2024 14:07:09 -0500 (EST)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-04.internal (MEProxy); Tue, 05 Nov 2024 14:07:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tycho.pizza; h=
-	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1730833629; x=1730920029; bh=Q9TQIfEYCu
-	OxbtDhygMHBbUHqm0TEXM3xROT8eAMRoI=; b=XjUd9H0Hjyx3bxW0VQOY0EjHUX
-	NeYQy4WK+v6uMfTssEpxNlYur2iT12vAWeDBDvOyI4cscfX1WLRWSf/woYBIS+bt
-	AX75JrQwZhjSeiO7rysjv1RX//aKU2PVpIcEZkCrZXzKA1Hntz3mPuUDwDE6uwfr
-	bkLtM89Gul1rZ6DvyCpzh7ElJ2TRh0uhIA3if0lYbXxT8eHUgvjkgp2BxcvmEWQT
-	qgZpvvhh/B6eff7+WTJFb+tVxe8blWJuxgb+YicjsvTsJjhsIF+N4VaJHHJvNrxE
-	7KApXO1RHhCFK3X6WEL3q7hxZrDmbh8VZPSPDNHJS+IRkTZYQJLrK71YtTOA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1730833629; x=1730920029; bh=Q9TQIfEYCuOxbtDhygMHBbUHqm0TEXM3xRO
-	T8eAMRoI=; b=hutAm7G1P9CXmRmKK8aCmzFigdJ+MMn/u0E/EnMaSvaISC6tMWe
-	y8PGLb4eWZ66bKigepNC4cdlDJoVTQjcujhIlut9gUSmBZAPSR9xhe1r1GsDMJjk
-	JsBxIB0hULRGlcAHbLpmjWdC0025RNIuk8Zy9N1XuizXXCpv66AxfbntBshPG1L3
-	iFvpfaELpRrzMoxrovYm2W/rr/tVpmlFMlJLL0HEf/efDaQt+6kMBoIyVRqHJqEA
-	RTKx/snqbGy2nQqFd14eWTjN0HgRPaxLul0cg8PnycngBJ6+/T9Y8C6pO0pcJ8xN
-	LmKh2pYnZg6bYiFxpIpIjDxNnNqwAIsMcqw==
-X-ME-Sender: <xms:3GwqZ3fzQpjkT88lZeMQn9mZ2ZY7iq1ftwwtylalRIS0iNeGN5SqMA>
-    <xme:3GwqZ9Ov6OYqtODa-QmQn6_pviUuQ0HZWuc8_cbAtl32zO-xSnEUo1FW7Ss-LqPuz
-    n3yFwYfn6v7_ClHAy8>
-X-ME-Received: <xmr:3GwqZwjH7mZjYuHwZgXqDgncYU5dGnMkScY7p8kInDZUrNNw64ADNGhj0Q4>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrtddtgdelvdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdpuffr
-    tefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnth
-    hsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecu
-    hfhrohhmpefvhigthhhoucetnhguvghrshgvnhcuoehthigthhhosehthigthhhordhpih
-    iiiigrqeenucggtffrrghtthgvrhhnpeelveduteeghfehkeeukefhudfftefhheetfedt
-    hfevgfetleevvdduveetueefheenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuve
-    hluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepthihtghhohes
-    thihtghhohdrphhiiiiirgdpnhgspghrtghpthhtohepuddvpdhmohguvgepshhmthhpoh
-    huthdprhgtphhtthhopehkvggvsheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepvhhi
-    rhhoseiivghnihhvrdhlihhnuhigrdhorhhgrdhukhdprhgtphhtthhopehshiiisghoth
-    dotdefvgdurghfhegtfeefvdhfjegvtdgvsgekgegssehshiiikhgrlhhlvghrrdgrphhp
-    shhpohhtmhgrihhlrdgtohhmpdhrtghpthhtohepsghrrghunhgvrheskhgvrhhnvghlrd
-    horhhgpdhrtghpthhtohepjhgrtghksehsuhhsvgdrtgiipdhrtghpthhtohepvggsihgv
-    uggvrhhmseigmhhishhsihhonhdrtghomhdprhgtphhtthhopehlihhnuhigqdhfshguvg
-    hvvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqmhhm
-    sehkvhgrtghkrdhorhhgpdhrtghpthhtohepthgrnhguvghrshgvnhesnhgvthhflhhigi
-    drtghomh
-X-ME-Proxy: <xmx:3GwqZ49avwo1W3Rgj3aZxfRMQu7aqhrh-TFombce81ArUtINLs24mA>
-    <xmx:3GwqZzvN7TjGHw-Tl77RdC9Jg5BJO-6yBugpmO__gf6HdU5yUhfaiw>
-    <xmx:3GwqZ3EA7sB_dmqphjPZbOGFiY_JZCU2rGQ_VLtEoCfliM4vGCxkTw>
-    <xmx:3GwqZ6NHhdIlugi5hKfaAQfJUckgNKM9oC3R3hlZ-2D_z7UkEng1WA>
-    <xmx:3WwqZ8F27rqeEnSJxKXesKnj6KlbwYz6ygD6jOLUEIicqTF_7doad4Gy>
-Feedback-ID: i21f147d5:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 5 Nov 2024 14:07:06 -0500 (EST)
-Date: Tue, 5 Nov 2024 12:07:03 -0700
-From: Tycho Andersen <tycho@tycho.pizza>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fYcfJRGz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BB00C4CECF;
+	Wed,  6 Nov 2024 01:16:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730855768;
+	bh=svZotiWug5mCuHoOIxCvTAaQdWf8Cc3c/+Eu+/tM+94=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=fYcfJRGzrIilpwNtcxl1QEv4BG6Ov4XXCeQWZtVXXMvNecrf/8YlZIhJvPDsbbsS7
+	 m7dZL67p37MDREsqmxA3ru9hRG2QyiX5d+YHk44oK9mVIdYZy9BPzSGri3uO9Hyk6c
+	 TOJ5lHJL0pqod/14xjws6NzPV2ZBuPv2QboEmf0OQ5d/Mc0FWqvVeW189x6mbqg7uC
+	 B51qETkmpjwGX7Wd0qXStbNAo9mwTLkENGV+1O399Rc+wTcB1rfOWT+eAt7SKE3rGk
+	 ++AaztH2v+O5j4vqOq36hBounbR3krgcEOBBg5JLjZjPcRWAiRLBBvP/WQmTRHLL7n
+	 bNen9Q9tYHYfQ==
+Date: Tue, 5 Nov 2024 17:16:07 -0800
+From: Jakub Kicinski <kuba@kernel.org>
 To: Kees Cook <kees@kernel.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>,
-	syzbot+03e1af5c332f7e0eb84b@syzkaller.appspotmail.com,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Eric Biederman <ebiederm@xmission.com>,
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-	Tycho Andersen <tandersen@netflix.com>,
-	Zbigniew =?utf-8?Q?J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] exec: NULL out bprm->argv0 when it is an ERR_PTR
-Message-ID: <Zyps12C3+qvunTYp@tycho.pizza>
-References: <20241105181905.work.462-kees@kernel.org>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+Subject: Re: [PATCH RFC 0/5] sockaddr usage removal
+Message-ID: <20241105171607.48c0c24d@kernel.org>
+In-Reply-To: <20241104221450.work.053-kees@kernel.org>
+References: <20241104221450.work.053-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241105181905.work.462-kees@kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Nov 05, 2024 at 10:19:11AM -0800, Kees Cook wrote:
-> Attempting to free an ERR_PTR will not work. ;)
+On Mon,  4 Nov 2024 14:25:02 -0800 Kees Cook wrote:
+> I think for getname() (and similar interfaces) we *do* want to use
+> sockaddr_storage, but there is kind of an argument to instead use
+> a struct with a flexible array, e.g.:
 > 
->     process 'syz-executor210' launched '/dev/fd/3' with NULL argv: empty string added
->     kernel BUG at arch/x86/mm/physaddr.c:23!
+> struct sockaddr_unspec {
+>         sa_family_t	sa_family;
+> 	char		sa_data[];
+> };
 > 
-> Set bprm->argv0 to NULL if it fails to get a string from userspace so
-> that bprm_free() will not try to free an invalid pointer when cleaning up.
-> 
-> Reported-by: syzbot+03e1af5c332f7e0eb84b@syzkaller.appspotmail.com
-> Closes: https://lore.kernel.org/all/6729d8d1.050a0220.701a.0017.GAE@google.com
-> Fixes: 7bdc6fc85c9a ("exec: fix up /proc/pid/comm in the execveat(AT_EMPTY_PATH) case")
-> Signed-off-by: Kees Cook <kees@kernel.org>
+> If this was done, then all these APIs would switch their casts from
+> "(struct sockaddr *)" to "(struct sockaddr_unspec *)", even though in
+> most cases the object is actully a struct sockaddr_storage.
 
-Reviewed-by: Tycho Andersen <tycho@tycho.pizza.
+struct sockaddr_unspec was my knee-jerk reaction but looking at the code
+- indeed passing struct sockaddr_storage seems cleaner.
 
-Thanks.
+> What do folks think?
+
+Looks nice, and feels like the right direction :)
+
+FWIW if the conversion work is too tedious I think I can find some
+people that could help.
