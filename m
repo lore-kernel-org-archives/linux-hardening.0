@@ -1,149 +1,75 @@
-Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB72E1D2784;
-	Wed,  6 Nov 2024 09:39:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C1C41DCB0D;
+	Wed,  6 Nov 2024 09:43:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730885987; cv=none; b=su8ioCIgVRhqpHMufn5Sv/stFy/U7Knd3hlLoLJRpoabelYw8BoLDg3hNSBM8FPI4ktvEDLOycvm+wdg3oP1igcgdFh6UR3usTd5ehz39TrOzQUqe5uBZePXa6yRGM8AkMlZWTcbD4uWNNMQkFkckL6fhw9UDj7JOyMVsPD5D2o=
+	t=1730886186; cv=none; b=MzUFL+nW5pODQNEgg9q15F7Cy/+AimcWOf3/jp5kSCP3HUSjpLnUyoNT68DmHjlbPJkBeko9w7fPSSoLk41iCXZ1jbOW9Fa1mIUgWhsadexx2aITl38xMhLqmuaxQi5GQMoyHWXf5bP1Snso4UhgR68jqBDVZJZzmOpHrYBZ8M8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730885987; c=relaxed/simple;
-	bh=HqkSHPNzNxfWq47hs/mKT9Od0KoWzw5n3XoycMQEAb4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XwU0pDGsPEMQPwMWheBIneI/XZTuA0rb3LwVSEUs+4J/tVp39Oj5LXpYvK3PGc6Qtb9dU4ICQCgr9xLkypLTw/qSkC4VMzXgTNwBgTxuR4Dw9U+UJCJFk+e2VXfOP7yXEfaA84+3Tjq7oLTZNhuymBlKgUyutZpW0s9RVf3BNts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
-	by localhost (Postfix) with ESMTP id 4Xk0Xv5Scnz9sRr;
-	Wed,  6 Nov 2024 10:39:43 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase2.c-s.fr ([172.26.127.65])
-	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id HlDylVDbi0Jl; Wed,  6 Nov 2024 10:39:43 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase2.c-s.fr (Postfix) with ESMTP id 4Xk0Xv48Vfz9sRk;
-	Wed,  6 Nov 2024 10:39:43 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 7965A8B77B;
-	Wed,  6 Nov 2024 10:39:43 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id FLvIR2VzFJTV; Wed,  6 Nov 2024 10:39:43 +0100 (CET)
-Received: from [192.168.232.102] (unknown [192.168.232.102])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 436038B77A;
-	Wed,  6 Nov 2024 10:39:43 +0100 (CET)
-Message-ID: <8dcc739a-3fd4-434c-995c-1dce33cefe6f@csgroup.eu>
-Date: Wed, 6 Nov 2024 10:39:43 +0100
+	s=arc-20240116; t=1730886186; c=relaxed/simple;
+	bh=LqDtCaf6sT8Ul0pzrf9sK08uH+kCq9d0G0LPwtKU58s=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=AXwQwlJB+v4sPasUDSX9mmUt57+HtDokQmz0vS+YJeBh00+vcwAnnGaSSJvJPqN/71I/uDy15cqS8exzEsRAcSn78o3hC4aRCVhCbcqE6TvVBz1yTlDCmSboNTyUODui0uBsq9KcsO08Hyyybj1uQYfRTdE7Z9t6DEmivl9SgVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZJK6rSuJ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZJK6rSuJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97C40C4CED3;
+	Wed,  6 Nov 2024 09:43:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730886186;
+	bh=LqDtCaf6sT8Ul0pzrf9sK08uH+kCq9d0G0LPwtKU58s=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ZJK6rSuJmhyrEylgy/xRh1WvXJEwwu6Qc12bUOq99FAS2c/4yILcrPq/K9Q4Lgcpy
+	 mKMLJmXVy/Ruyo8cUkxBCj9Wochf7Hln/xc7/Oli02ZjK9HaWwcL2x04umAG52dnUk
+	 oI9Q/2NoMDvqvaHN5HiC79jESLNf2vbidUeCdxvdnJTaRrKetpQuDKyuLt7/Mv0Jlu
+	 Q72xtEPxC92PN0c1jhQGqpEwS79Q0oStog7N4dEoDTVqL6qfAHOvdRrkLi31GGO8nW
+	 pRz23e8BTt01/w0KVqYcepV0xAacGaAsRl9QAcZpiA421v/ZrV77sOKF27luOcS9a/
+	 1+JSGOh9YWQrA==
+From: Christian Brauner <brauner@kernel.org>
+To: Christoph Hellwig <hch@infradead.org>,
+	Thorsten Blum <thorsten.blum@linux.dev>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: Christian Brauner <brauner@kernel.org>,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] freevxfs: Replace one-element array with flexible array member
+Date: Wed,  6 Nov 2024 10:42:51 +0100
+Message-ID: <20241106-bauaufsicht-liberal-74a434043a7a@brauner>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20241103121707.102838-3-thorsten.blum@linux.dev>
+References: <20241103121707.102838-3-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] powerpc: Add __must_check to set_memory_...()
-To: Michael Ellerman <mpe@ellerman.id.au>
-Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- Naveen N Rao <naveen@kernel.org>, Nicholas Piggin <npiggin@gmail.com>,
- Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org
-References: <775dae48064a661554802ed24ed5bdffe1784724.1725723351.git.christophe.leroy@csgroup.eu>
-Content-Language: fr-FR
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-In-Reply-To: <775dae48064a661554802ed24ed5bdffe1784724.1725723351.git.christophe.leroy@csgroup.eu>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=950; i=brauner@kernel.org; h=from:subject:message-id; bh=LqDtCaf6sT8Ul0pzrf9sK08uH+kCq9d0G0LPwtKU58s=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaRrWyktf/Lyor24sLtmPIPok10hPFliYt+Pi7LyPP0vv 8mocbNpRykLgxgXg6yYIotDu0m43HKeis1GmRowc1iZQIYwcHEKwETytBj+Gf7Iv8cdY5H6x+H5 1kKF156/Duc/L1/9LT01LcclcUPRX0aGrw8PKE5VXvCeI98rb8LCimR3zoc+DA/nRRvdblvMb1/ LDQA=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
 
-Hi Michael,
-
-Le 07/09/2024 à 17:40, Christophe Leroy a écrit :
-> After the following powerpc commits, all calls to set_memory_...()
-> functions check returned value.
-> - Commit 8f17bd2f4196 ("powerpc: Handle error in mark_rodata_ro() and
-> mark_initmem_nx()")
-> - Commit f7f18e30b468 ("powerpc/kprobes: Handle error returned by
-> set_memory_rox()")
-> - Commit 009cf11d4aab ("powerpc: Don't ignore errors from
-> set_memory_{n}p() in __kernel_map_pages()")
-> - Commit 9cbacb834b4a ("powerpc: Don't ignore errors from
-> set_memory_{n}p() in __kernel_map_pages()")
-> - Commit 78cb0945f714 ("powerpc: Handle error in mark_rodata_ro() and
-> mark_initmem_nx()")
+On Sun, 03 Nov 2024 13:17:09 +0100, Thorsten Blum wrote:
+> Replace the deprecated one-element array with a modern flexible array
+> member in the struct vxfs_dirblk.
 > 
-> All calls in core parts of the kernel also always check returned value,
-> can be looked at with following query:
 > 
->    $ git grep -w -e set_memory_ro -e set_memory_rw -e set_memory_x -e set_memory_nx -e set_memory_rox `find . -maxdepth 1 -type d | grep -v arch | grep /`
-> 
-> It is now possible to flag those functions with __must_check to make
-> sure no new unchecked call it added.
-> 
-> Link: https://github.com/KSPP/linux/issues/7
-> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 
-Do you plan to take this patch anytime soon ?
+Applied to the vfs.misc branch of the vfs/vfs.git tree.
+Patches in the vfs.misc branch should appear in linux-next soon.
 
-The generic part of the same was already applied in previous cycle, see 
-https://github.com/torvalds/linux/commit/82ce8e2f31a1eb05b1527c3d807bea40031df913
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
-Discussion at 
-https://lore.kernel.org/all/b0fe75b4-c1bb-47f7-a7c3-2534b31c1780@csgroup.eu/T/ 
-suggests that it would be beneficial to enforce return checking.
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
 
-Christophe
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
 
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs.misc
 
-> ---
->   arch/powerpc/include/asm/set_memory.h | 14 +++++++-------
->   1 file changed, 7 insertions(+), 7 deletions(-)
-> 
-> diff --git a/arch/powerpc/include/asm/set_memory.h b/arch/powerpc/include/asm/set_memory.h
-> index 9a025b776a4b..9c8d5747755d 100644
-> --- a/arch/powerpc/include/asm/set_memory.h
-> +++ b/arch/powerpc/include/asm/set_memory.h
-> @@ -12,37 +12,37 @@
->   
->   int change_memory_attr(unsigned long addr, int numpages, long action);
->   
-> -static inline int set_memory_ro(unsigned long addr, int numpages)
-> +static inline int __must_check set_memory_ro(unsigned long addr, int numpages)
->   {
->   	return change_memory_attr(addr, numpages, SET_MEMORY_RO);
->   }
->   
-> -static inline int set_memory_rw(unsigned long addr, int numpages)
-> +static inline int __must_check set_memory_rw(unsigned long addr, int numpages)
->   {
->   	return change_memory_attr(addr, numpages, SET_MEMORY_RW);
->   }
->   
-> -static inline int set_memory_nx(unsigned long addr, int numpages)
-> +static inline int __must_check set_memory_nx(unsigned long addr, int numpages)
->   {
->   	return change_memory_attr(addr, numpages, SET_MEMORY_NX);
->   }
->   
-> -static inline int set_memory_x(unsigned long addr, int numpages)
-> +static inline int __must_check set_memory_x(unsigned long addr, int numpages)
->   {
->   	return change_memory_attr(addr, numpages, SET_MEMORY_X);
->   }
->   
-> -static inline int set_memory_np(unsigned long addr, int numpages)
-> +static inline int __must_check set_memory_np(unsigned long addr, int numpages)
->   {
->   	return change_memory_attr(addr, numpages, SET_MEMORY_NP);
->   }
->   
-> -static inline int set_memory_p(unsigned long addr, int numpages)
-> +static inline int __must_check set_memory_p(unsigned long addr, int numpages)
->   {
->   	return change_memory_attr(addr, numpages, SET_MEMORY_P);
->   }
->   
-> -static inline int set_memory_rox(unsigned long addr, int numpages)
-> +static inline int __must_check set_memory_rox(unsigned long addr, int numpages)
->   {
->   	return change_memory_attr(addr, numpages, SET_MEMORY_ROX);
->   }
+[1/1] freevxfs: Replace one-element array with flexible array member
+      https://git.kernel.org/vfs/vfs/c/fdfa4c02e6dd
