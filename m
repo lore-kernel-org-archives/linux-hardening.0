@@ -1,30 +1,30 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74D4418C903;
-	Wed,  6 Nov 2024 02:08:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C34418FDD2;
+	Wed,  6 Nov 2024 02:09:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730858919; cv=none; b=V4UPcfD1wSIf8Lzu+h/zUVdO1xiK6advLwoYtC6vXYQT002E4Hn7s6lueu1Cpw+0AqIP8LXC5ZTihVEWOchJVztOlIqq35n3PIXvqSkznkuh0lhshq4NdEzsqx7oi5nGnwt1mN+I5lvEWMtUC/fpQLPXsZFPOlZIjrM1BaEwXAg=
+	t=1730858948; cv=none; b=LyHuWPK1wdzH+/QYFcWfKH/8z7ZVbj2jBhbsaeYX0oFMiWocklWcBrXlLyKcMgJpVw5JaxTdwTE2uIGsVknB5fHC51QmyUrfqNm70joSkarMHcw6wTKYGYwoQpZmmq7XAJRg+KH2fnqKqx0wLCFmzPzco3WU7lC/pA8Xn9Vo+ng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730858919; c=relaxed/simple;
-	bh=16WZozry3IWIsN9qHKE/zH8myu5XP6InRSKDu/UUqTg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pDAcNjElW/+c3yCKNX5fzKHp+vezQAVZVi1cLmV3+8vy9hhdqnBbP86dWNAv2U6i2a+kIpjeZ0UUl6axU6X+6rb0FyFWbTO6EGO5czdQvO1jkaOre0eghEmoyJBgsAluwhWNlneEW2Kg0wjTi5EWW/9S9sMLCSBSp7e9FCFX+zA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=shU7kjBv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1730858948; c=relaxed/simple;
+	bh=B6UfHUEIWaWEcRpuQYHyphb64JFnYui36KlElCdvEMI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QLW4cCuJJ3XGEf8rkdV8KKaXVmWTmluiXADjEdQWONHG3HNc5j0m0gTWpWgDD262h+uU4m3t/+7IgnOzlhtEajtGaHWbSHeKHqbKhl2GULh9/eGTL4zjwBCfG6iFQRMk/GYw6edRk0s9+XVwtoU6ptixRo+O3TT4AxA4l7DM/PA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pp/6OczF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="shU7kjBv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E546C4CECF;
-	Wed,  6 Nov 2024 02:08:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pp/6OczF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFC2DC4CECF;
+	Wed,  6 Nov 2024 02:09:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730858919;
-	bh=16WZozry3IWIsN9qHKE/zH8myu5XP6InRSKDu/UUqTg=;
+	s=k20201202; t=1730858947;
+	bh=B6UfHUEIWaWEcRpuQYHyphb64JFnYui36KlElCdvEMI=;
 	h=From:To:Cc:Subject:Date:From;
-	b=shU7kjBvYA2U/QCdhlxDzXSurrYcAj00kcqUk8tUAYRZX1FY34mE7xS6lTQcyVST1
-	 YLhxwCSrCDxkS1b8KKPOhHqTfk4Y8yIkzVPj1CNnqtW7Yz4D0L/8QGTCMD25U7xBuZ
-	 aVjwk6oVrIpp/a/AubR4vbFDSduelfz+c/r8X/buUXrR4Fhq7AgbSkUKCcpQKGZBxF
-	 Fb/ZaeUre0qFvqQgjzFpvleo97Um0tTthMxPlN6Tr9qClzHZigmJQ+E53TAykvwCuR
-	 /x1vRSgGfCgYG6v2MHKPDDBlzygCS5vFyOxBjICB2sePBLyswUZZH61+0GtzNLMOp8
-	 tV81XoI7ab9IQ==
+	b=pp/6OczFTLqCbavqo5uroOck8H6ydjhl7AT2DlOHW2E3WqKmDVsAtMgYcxE7V/aJN
+	 LKKjhETSZ+55SPsE31ftzGwTPmxlDxLOjlHPNX6UaMabxT+0oGkMBgFT+xD/zQgagu
+	 x/4PaQve54ASACcSFg6VBqk1kNqDImCMVHNvgDv1eEt4vAVJadYFXoIM8KZjeuWwK6
+	 /RcpiTOTxfB9tAkQ+CBYZw3yX+I6OhbveqlbYHM8hlfIODOfOO64IOVfIBtuZu2lhQ
+	 Bc9zAAuxHNIhoCxUB/0u5ZNv5LVz3U8yLB5Z4lTYfu8zUKyt+hqYlOi/34+W1237UG
+	 URAaJsSu3MMzw==
 From: Sasha Levin <sashal@kernel.org>
 To: stable@vger.kernel.org,
 	alexghiti@rivosinc.com
@@ -33,9 +33,9 @@ Cc: Jason Montleon <jmontleo@redhat.com>,
 	linux-riscv@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: FAILED: Patch "riscv: Do not use fortify in early code" failed to apply to v6.11-stable tree
-Date: Tue,  5 Nov 2024 21:08:35 -0500
-Message-ID: <20241106020836.164319-1-sashal@kernel.org>
+Subject: FAILED: Patch "riscv: Do not use fortify in early code" failed to apply to v6.6-stable tree
+Date: Tue,  5 Nov 2024 21:09:04 -0500
+Message-ID: <20241106020905.164658-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -47,7 +47,7 @@ X-Patchwork-Hint: ignore
 X-stable: review
 Content-Transfer-Encoding: 8bit
 
-The patch below does not apply to the v6.11-stable tree.
+The patch below does not apply to the v6.6-stable tree.
 If someone wants it applied there, or to any other stable or longterm
 tree, then please email the backport, including the original git commit
 id to <stable@vger.kernel.org>.
