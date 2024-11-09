@@ -1,119 +1,90 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB49E1537D4;
-	Sat,  9 Nov 2024 10:35:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF93F198853;
+	Sat,  9 Nov 2024 18:02:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731148551; cv=none; b=Fs43z12HHTRzpr6blLdeIEygXOQ2tmbpHVeVX2immb+zwaKLhrklmWaScYKc6FB/f8SLsAsAfK1YVgmVzqzNqKrEiNmXZNccJ7pPmX5oza5pq7PrM4DLeLf9/Qt4TglEBKzqPnpWl7c0Y6ZhY+L/XrWkzqPp/2uCZbDVb4sIIeM=
+	t=1731175335; cv=none; b=aMkRGB9SvLHWjDDl2ELNAlg6jmHfYJjj+pcL+EDtqaEbYyJFSjAcjbFhU+VCBvmLs3xd7qB/JUAaixZmahg/AGTyfZ8n23tDMai7ocmf1kMfxpJHwFDL6QN3dw/X7CGepJq0P+YCzCaoPHBIpdqgJ6AVLzsPJnPblXvgEo89+ic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731148551; c=relaxed/simple;
-	bh=jIhhqs6M2vvkxbfLN6sNUL24IiqGNpQgqOkwJlhnBIQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bdQr+8t2nAzxMLn2nCrkfBdDyhbjluwquxH5GCgXbvhyGK3qb7KEiM3uMFBo7SMEv7w13J2hGiVe7G3jUF+O+Nec/ZcYAMXHvOLQ51PfjFDH5oc9CXQcqQH2zVN/b17tygeC+84hAphgtUJSOLp1bdCKHaFVIgrTARORBANnmqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DO/ZCDai; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1731175335; c=relaxed/simple;
+	bh=FeLyUZvTBHbl1C0zFRijuNwt1QEAj5jW9xwfnTT3mrM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ptzqT5KfqQPHr/MjHhgdcCW3Rn9B6Jodznmq6OXDpJ68R4PEDPkI9sWRQOJ1K77dF7dsinbgupL+4QFNLD92AELEdgmh4sfYqoRzQzfldkLKy7c2HyxWeRWEOsETMzGkv/jZ1a2J9RFzFQaBdvZtyJUL+IHRvYhyugAc4THa8lE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L+e7DHmJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DO/ZCDai"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBEC8C4CECE;
-	Sat,  9 Nov 2024 10:35:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L+e7DHmJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93906C4CECE;
+	Sat,  9 Nov 2024 18:02:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731148551;
-	bh=jIhhqs6M2vvkxbfLN6sNUL24IiqGNpQgqOkwJlhnBIQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=DO/ZCDai/slql9L4n2S5U0xfY7uG1mtFdk8AKkige9lN7O/iFyhBSzFrgGpyKomhY
-	 xZn3h5FWHCgAikgI8UYlajZDO8kn5ZQakmFtdTRbulHScaO6k5OjIEsHk7w8W7Y4T8
-	 SoTGqGH14+Gtp8p5cxWgCJr53O6AfiZye+0lXOaiMqAixi2lILNJestuErjgO4AWOr
-	 axS2zK1TdJ5rO/cbDsPj9eQVx4+8Hs3ZyeJ90iBlSDX3ALrU2hoeNnDvUk6xBi21dl
-	 xUrpqOmCPqJVqa8O/6lltE3AH8BcxLTPiLyuls2B1QatSw+heNlfKBCqATJH9j1JW2
-	 vj5CBQLtZkCGg==
-Message-ID: <f0c9cffe-e58f-4c1d-af64-cad04e0c5510@kernel.org>
-Date: Sat, 9 Nov 2024 11:35:41 +0100
+	s=k20201202; t=1731175335;
+	bh=FeLyUZvTBHbl1C0zFRijuNwt1QEAj5jW9xwfnTT3mrM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=L+e7DHmJVYAyyofeNoxC4kZ1nc1jlh98WKQNrZjUcek3tRXXxhUHg8u+fc25bFKgS
+	 CnYVXaDnQqx/3eryPpAXVgBbRurdQ1qYFHxsCoucB1ep0tEtW6IFDU3yWUpjaO4vDS
+	 XNadluKG342KLWiGr1MCNWSLHoo0BddV5TCN/W01tbWW4+X9eMs07jvHJbtakLaoRj
+	 38AqB3uEq5ht8gtQkX4lvg6PtJUY9cDUj8hRPzncLl5xDKQ0VZyDMzcqbmMSTMWVXA
+	 +uvdPuTnU4pEquXJyLvxab20pUhT0Ja0VL+A5ilmZvsKWMDmtLzRhN+I+VaEPxm9SA
+	 LQnF6vzDmq2RA==
+Date: Sat, 9 Nov 2024 10:02:13 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Michael Chan <michael.chan@broadcom.com>, Andrew Lunn
+ <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Potnuri
+ Bharat Teja <bharat@chelsio.com>, Christian Benvenuti <benve@cisco.com>,
+ Satish Kharat <satishkh@cisco.com>, Manish Chopra <manishc@marvell.com>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, Kees Cook <kees@kernel.org>
+Subject: Re: [PATCH v2 1/2][next] UAPI: ethtool: Use __struct_group() in
+ struct ethtool_link_settings
+Message-ID: <20241109100213.262a2fa0@kernel.org>
+In-Reply-To: <9e9fb0bd72e5ba1e916acbb4995b1e358b86a689.1730238285.git.gustavoars@kernel.org>
+References: <cover.1730238285.git.gustavoars@kernel.org>
+	<9e9fb0bd72e5ba1e916acbb4995b1e358b86a689.1730238285.git.gustavoars@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 09/10] dt-bindings: omap: Add Samsung Galaxy Tab 2 10.1
-To: Mithil Bavishi <bavishimithil@gmail.com>,
- Aaro Koskinen <aaro.koskinen@iki.fi>, Andreas Kemnade
- <andreas@kemnade.info>, Kevin Hilman <khilman@baylibre.com>,
- Roger Quadros <rogerq@kernel.org>, Tony Lindgren <tony@atomide.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Jessica Zhang <quic_jesszhan@quicinc.com>,
- Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
- Thierry Reding <thierry.reding@gmail.com>
-Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-hardening@vger.kernel.org
-References: <20241108200440.7562-1-bavishimithil@gmail.com>
- <20241108200440.7562-10-bavishimithil@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20241108200440.7562-10-bavishimithil@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 
-On 08/11/2024 21:04, Mithil Bavishi wrote:
-> Add samsung-espresso10 codename for the 10 inch variant
-> 
-> Signed-off-by: Mithil Bavishi <bavishimithil@gmail.com>
-> ---
->  Documentation/devicetree/bindings/arm/ti/omap.yaml | 1 +
+On Tue, 29 Oct 2024 15:55:35 -0600 Gustavo A. R. Silva wrote:
+> Use the `__struct_group()` helper to create a new tagged
+> `struct ethtool_link_settings_hdr`. This structure groups together
+> all the members of the flexible `struct ethtool_link_settings`
+> except the flexible array. As a result, the array is effectively
+> separated from the rest of the members without modifying the memory
+> layout of the flexible structure.
+>=20
+> This new tagged struct will be used to fix problematic declarations
+> of middle-flex-arrays in composite structs[1].
 
-Squash it. Really, these are just one liners for similar devices.
+Possibly a very noob question, but I'm updating a C++ library with=20
+new headers and I think this makes it no longer compile.
 
-Best regards,
-Krzysztof
+$ cat > /tmp/t.cpp<<EOF
+extern "C" {
+#include "include/uapi/linux/ethtool.h"
+}
+int func() { return 0; }
+EOF
 
+$ g++ /tmp/t.cpp -I../linux -o /dev/null -c -W -Wall -O2
+In file included from /usr/include/linux/posix_types.h:5,
+                 from /usr/include/linux/types.h:9,
+                 from ../linux/include/uapi/linux/ethtool.h:18,
+                 from /tmp/t.cpp:2:
+../linux/include/uapi/linux/ethtool.h:2515:24: error: =E2=80=98struct ethto=
+ol_link_settings::<unnamed union>::ethtool_link_settings_hdr=E2=80=99 inval=
+id; an anonymous union may only have public non-static data members [-fperm=
+issive]
+ 2515 |         __struct_group(ethtool_link_settings_hdr, hdr, /* no attrs =
+*/,
+      |                        ^~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+I don't know much about C++, tho, so quite possibly missing something
+obvious.
