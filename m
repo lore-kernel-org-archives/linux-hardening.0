@@ -1,58 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-184.mta1.migadu.com (out-184.mta1.migadu.com [95.215.58.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D03F13BC35;
-	Sat,  9 Nov 2024 18:49:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CA34132103
+	for <linux-hardening@vger.kernel.org>; Sun, 10 Nov 2024 15:22:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731178197; cv=none; b=s+OOEt4TTacBgLTtrpl4uIxKKCN/Uek45pYbByvJWIPmcBI1yvtQu+rpPG+ulAd9gjLDTmUkjh+3jGrh0OjD2LjQgMA6qQfLhNOFc1W8yP7kKNGuLUSVwscnVSr/PkHNFfMjNZP2kNSLhFGuyVTWs/Lh5K5V4MfMmqi9nqzo94E=
+	t=1731252150; cv=none; b=aXuwovBHiLimm66xoszkOLg7+F9cxwaI2Tzk/ZOUliBkNUtzumySRQ6rwwf5HTuyX7E1Vc/lsu5dW8VSAkNEiYccjpnvtWctAl9q/WFqbTRG6F39Y9dU810yuDRSKU1yhGcnsCtbJVqHkQ1MwuMLVdVFZmH1K1AKO8zbVAZZz/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731178197; c=relaxed/simple;
-	bh=DQ8D0EMVEKfoDRPi30lNWFPGWG1wzBXtILyN4sDibfk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jqcKx/zSr60oosyv7MAbSrU8xDjlvSUtMw+vsnZFopXXnqFNjzfCZdtUs3IAmmPiIRk0HroRXFSLVQFDBYKUVvkAejroh7HAZsKu04CQVcciruHt7m+7B0slZizyGnUBjX0GGca5wRJIilRLyAFzMSFEp7a2QJepiUA8RNKye/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cQqJN5ZM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1731252150; c=relaxed/simple;
+	bh=XZveZfdfEe7GHPTaQ+DcTl1LvudeUki6avQSeQ+cQak=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YLxOKPL6C1EHZCHPzH67+kkcP8P7TDtQy1QbKGG0Yim9cPThBhHZeZ3uJvkl9pXGISN6hk49jcOvOQUWsjs9tpMlHGL0V/fK65VXoFxsTzwFVqsXQbJG3n+b8JcnksqPL/36CB3Si12X/DTtiHQUDn8Eb0St91t8fMF6v/oOooE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=wQl8MDRS; arc=none smtp.client-ip=95.215.58.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cQqJN5ZM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C901FC4CED3;
-	Sat,  9 Nov 2024 18:49:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731178196;
-	bh=DQ8D0EMVEKfoDRPi30lNWFPGWG1wzBXtILyN4sDibfk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=cQqJN5ZMZlH6v1lX5fAX3kEYAquB4MmA8Gsx1Lm/Zj1usOUZP9rKwB9sKsU/UqJm5
-	 M7FMKR0d5yi+NKGhd+lfYuR/GGMFzwZQo3aHI1m3MYn0XWHIh/5jfXC5lKzj9aDY5e
-	 rlJ45MVaCSpuc4w+ebAmDtNG3/noI70FLf5w1hCYd2aIAm1L5H6fTULPlboqZeOLlx
-	 97DQFa3PdRYDbk5QLGuPemEGJpW45eEfa3tshNIh+1hsLr00HzEH/cN+chrr2KjM3O
-	 51MLpWsBRLlaIYohWc6GLKEK5ciSHL5oCSvYREbsJGnqxXTegiP7hv567OSDAE9hA0
-	 21HBufPOCuxVA==
-Date: Sat, 9 Nov 2024 10:49:54 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Michael Chan <michael.chan@broadcom.com>, Andrew Lunn
- <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Potnuri
- Bharat Teja <bharat@chelsio.com>, Christian Benvenuti <benve@cisco.com>,
- Satish Kharat <satishkh@cisco.com>, Manish Chopra <manishc@marvell.com>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org, Kees Cook <kees@kernel.org>
-Subject: Re: [PATCH v2 1/2][next] UAPI: ethtool: Use __struct_group() in
- struct ethtool_link_settings
-Message-ID: <20241109104954.5c4ddbc3@kernel.org>
-In-Reply-To: <20241109100213.262a2fa0@kernel.org>
-References: <cover.1730238285.git.gustavoars@kernel.org>
-	<9e9fb0bd72e5ba1e916acbb4995b1e358b86a689.1730238285.git.gustavoars@kernel.org>
-	<20241109100213.262a2fa0@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="wQl8MDRS"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1731252139;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=FwUaqcMHBb2izLMC05xKkduvRf6O7Ag76Km51G1JrLE=;
+	b=wQl8MDRSzbIH8ND6WyNyqtTXdUzSfo+PUp4KdZDyxld8wDdFe1c83gKvO2b5sdrNaDDxUo
+	O9NXcnrCqRclt7deb13hioUDjEQQSMflvAmKB5Phk4eUtoHX+DYYsOc2CEiYMvK7KxcT7c
+	5SktcsKV9soCQL+I7ktPmw03ZXMGmEM=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Lee Duncan <lduncan@suse.com>,
+	Chris Leech <cleech@redhat.com>,
+	Mike Christie <michael.christie@oracle.com>,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: linux-hardening@vger.kernel.org,
+	Thorsten Blum <thorsten.blum@linux.dev>,
+	open-iscsi@googlegroups.com,
+	linux-scsi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] scsi: Replace zero-length array with flexible array member
+Date: Sun, 10 Nov 2024 16:17:49 +0100
+Message-ID: <20241110151749.3311-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Sat, 9 Nov 2024 10:02:13 -0800 Jakub Kicinski wrote:
-> $ g++ /tmp/t.cpp -I../linux -o /dev/null -c -W -Wall -O2
+Replace the deprecated zero-length array with a modern flexible array
+member in the struct iscsi_bsg_host_vendor_reply.
 
-gcc version 14.2.1 20240912 (Red Hat 14.2.1-3) (GCC) 
+Link: https://github.com/KSPP/linux/issues/78
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+---
+ include/scsi/scsi_bsg_iscsi.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/scsi/scsi_bsg_iscsi.h b/include/scsi/scsi_bsg_iscsi.h
+index 9b1f0f424a79..df8083f12119 100644
+--- a/include/scsi/scsi_bsg_iscsi.h
++++ b/include/scsi/scsi_bsg_iscsi.h
+@@ -59,7 +59,7 @@ struct iscsi_bsg_host_vendor {
+  */
+ struct iscsi_bsg_host_vendor_reply {
+ 	/* start of vendor response area */
+-	uint32_t vendor_rsp[0];
++	uint32_t vendor_rsp[];
+ };
+ 
+ 
+-- 
+2.47.0
+
