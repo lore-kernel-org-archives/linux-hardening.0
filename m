@@ -1,146 +1,90 @@
-Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
+Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2EED1AA7B9
-	for <linux-hardening@vger.kernel.org>; Mon, 11 Nov 2024 20:20:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 343B21591EA
+	for <linux-hardening@vger.kernel.org>; Mon, 11 Nov 2024 20:46:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731356425; cv=none; b=nXnFr+XT7dqYNPUiBJOGiBuq0L+tcivAei9udH6uEXapz0P74KDS6lQkf8qoPIqdOf6K3eHWFP0v+E4CWClN70v7BCronVkNTv9FU11UIFKsXYJN8vrKYlo7XGWpyOVxI2fnBX6fmjic6vCSQPqN7jec7PCwAEjsiPtPhEqZrF8=
+	t=1731357976; cv=none; b=itGZfaW7VJEIUS8fcynsF1XPpI0Y1jNtJybIr3hg+NCs6iLeYUYBHEy9dvFRGEIj2vaTWuQWqQvEACbMhzqdgOni/J5Hi+3fCpWMAim22J05zEYKJQYYzhaLtzkAd9P1c0Ap303xEcH0P+ysgMj+1KBAZzd9wuvLjUoHBPJMZ0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731356425; c=relaxed/simple;
-	bh=5nObU1H3RQO5wQq2IQiPJN22sxHEe9cuBxTBHhohV7o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CLfb7am+KUmxbfzbinZi1+iGwZsDITgS6XWQfYu/m4Nx6ZApcyOHFAL5QbegmM11QPhLiCVSus0+ENjms6yq8wYUSoPCpX3CfTrytPm3bORTn/yDWmfs7qP3WN5+sh+zRG9iwztcWWjRplfCHvAi41u9LQ+DKpexSmj9cQid+6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=ZZX5ZGh4; arc=none smtp.client-ip=35.89.44.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1731357976; c=relaxed/simple;
+	bh=d1WjlRWC2HjFBoUqR+WxupbhC0i5CdNfScC+iOpBSpU=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=IwLn7oLZNnYz55gLx8unqtK6KBk2R5oyYUB+ZO+Qia8DGBLuf38NgfsWfx0b1Z4t00lFVho6q+j9LcAn04gEwIo2lDZHrod4jN2+mbM/V2bQw8SG0ZG9dpMh2Pps9TjNaKhAGO2Hk2aP45MMfAWnZsztMFVvTfMOmMeWAr7dhQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=DjUKYA1p; arc=none smtp.client-ip=91.218.175.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="ZZX5ZGh4"
-Received: from eig-obgw-5007a.ext.cloudfilter.net ([10.0.29.141])
-	by cmsmtp with ESMTPS
-	id AXF5tvFVcqvuoAatVtmY37; Mon, 11 Nov 2024 20:20:17 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id AatUtfgUyj0v4AatUtN9Qh; Mon, 11 Nov 2024 20:20:16 +0000
-X-Authority-Analysis: v=2.4 cv=MbJquY/f c=1 sm=1 tr=0 ts=67326700
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=GtNDhlRIH4u8wNL3EA3KcA==:17
- a=IkcTkHD0fZMA:10 a=VlfZXiiP6vEA:10 a=7T7KSl7uo7wA:10 a=NEAV23lmAAAA:8
- a=5KPgfr56f6HAAAPAhSEA:9 a=QEXdDO2ut3YA:10 a=Xt_RvD8W3m28Mn_h3AK8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=3eE4W7pHIfAEUaD5vYAx7ulLkMGc3zLHTAhLskNYybY=; b=ZZX5ZGh4j9ily6GGlWAQlXYRUQ
-	aLNVWhNBjVWSPWWA8xqTD+nR1ByBZXu2amFdiPOck7q6KqHeRS41EHObBYEPNTkGLWpllUdODW3VK
-	MVvmtSq1BKnwcMIrDKtWa4cpOOHCJwyJOw1Cf+LKv0Xc7k8pHeaIlykBFDrcuf3YHBzpqm+TFKUub
-	KUCYx/kh0axD7Oqz6wN60xxT15FharU31yu2nMNAJSXz2EPxqiluAltCEadyfoDNKKbffkzhI8TCP
-	fjfxWgshK5EDuV+lbdcfGncbvAdWlc4z4msSC1f7L+Gw/JYTWOGUxx35I06xn22RucYwYFdCoByyC
-	I2IJiWUA==;
-Received: from [177.238.21.80] (port=45958 helo=[192.168.0.21])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1tAatT-004DXv-0x;
-	Mon, 11 Nov 2024 14:20:15 -0600
-Message-ID: <83a95dfe-533b-468c-8dd4-439157c0e1cf@embeddedor.com>
-Date: Mon, 11 Nov 2024 14:20:12 -0600
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="DjUKYA1p"
+Content-Type: text/plain;
+	charset=us-ascii
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1731357971;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+IKrn757bzVDVKFEBdSAVFF37vPhDgDtCOyudYDcT1o=;
+	b=DjUKYA1pMZHERK1bhUDlEjJnJev8F0bDABvEeT3jxVd4AniHMR4TbYTqpFOsUBorhOjcnt
+	vvfxxd463eg/9wVBZKMwMcX2ME5upu5NtwVG9Pn5lo8CbivNkRxnJB4YizVREb0WPgoaib
+	CmzDkb+LVr3N2Xyjar5qcXw0HrmtGag=
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51.11.1\))
 Subject: Re: [PATCH] sparc: Replace one-element array with flexible array
  member
-To: Thorsten Blum <thorsten.blum@linux.dev>,
- "David S. Miller" <davem@davemloft.net>,
- Andreas Larsson <andreas@gaisler.com>, Sam Ravnborg <sam@ravnborg.org>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
- Arnd Bergmann <arnd@arndb.de>
-Cc: linux-hardening@vger.kernel.org, sparclinux@vger.kernel.org,
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Thorsten Blum <thorsten.blum@linux.dev>
+In-Reply-To: <83a95dfe-533b-468c-8dd4-439157c0e1cf@embeddedor.com>
+Date: Mon, 11 Nov 2024 21:45:56 +0100
+Cc: "David S. Miller" <davem@davemloft.net>,
+ Andreas Larsson <andreas@gaisler.com>,
+ Sam Ravnborg <sam@ravnborg.org>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@kernel.org>,
+ Arnd Bergmann <arnd@arndb.de>,
+ linux-hardening@vger.kernel.org,
+ sparclinux@vger.kernel.org,
  linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <7F05D8B9-E13A-4331-895A-65D92649B42B@linux.dev>
 References: <20241111200155.164621-3-thorsten.blum@linux.dev>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20241111200155.164621-3-thorsten.blum@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 177.238.21.80
-X-Source-L: No
-X-Exim-ID: 1tAatT-004DXv-0x
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.0.21]) [177.238.21.80]:45958
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 3
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfDq3iUnyCNpehy4B4PpO8jdN51VpzJWJpP1kKzwDv7ns4kpNeCJ+7ehwUpaMZjcb4AzxFDKsDJW8TvncksUcw2w396jEieJRAlIF0jy72hSdGhj+00ph
- GGk/DKWtkfXx5iQFZ053595XlWkBAGU3qMK4kWFmTyrPqPOYPAYYtC6ah0e1eJLGm8ZenvVaCMETlF5MCwJlr2EppJCm2/ZgH0NIje89yokaATPmadIfpdi8
+ <83a95dfe-533b-468c-8dd4-439157c0e1cf@embeddedor.com>
+To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+X-Migadu-Flow: FLOW_OUT
 
+On 11. Nov 2024, at 21:20, Gustavo A. R. Silva wrote:
+> On 11/11/24 14:01, Thorsten Blum wrote:
+>> Replace the deprecated one-element array with a modern flexible array
+>> member in the struct hvtramp_descr.
+>> Additionally, 15 unnecessary bytes are allocated for hdesc, but =
+instead
+>=20
+> 15? unnecessary?
 
+hvtramp_mapping is 16 bytes and the size is calculated as follows:
 
-On 11/11/24 14:01, Thorsten Blum wrote:
-> Replace the deprecated one-element array with a modern flexible array
-> member in the struct hvtramp_descr.
-> 
-> Additionally, 15 unnecessary bytes are allocated for hdesc, but instead
+  (16 * num_kernel_image_mappings - 1)
 
-15? unnecessary?
+which is 15 bytes too many for any number of mappings because hdesc
+includes the first map. It probably should have been:
 
-> of fixing the parentheses in the open-coded version, use struct_size()
-> to calculate the correct number of bytes.
-> 
-> Link: https://github.com/KSPP/linux/issues/79
-> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
-> ---
->   arch/sparc/include/asm/hvtramp.h | 2 +-
->   arch/sparc/kernel/smp_64.c       | 4 +---
->   2 files changed, 2 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/sparc/include/asm/hvtramp.h b/arch/sparc/include/asm/hvtramp.h
-> index 688ea43af0f5..ce2453ea4f2b 100644
-> --- a/arch/sparc/include/asm/hvtramp.h
-> +++ b/arch/sparc/include/asm/hvtramp.h
-> @@ -17,7 +17,7 @@ struct hvtramp_descr {
->   	__u64			fault_info_va;
->   	__u64			fault_info_pa;
->   	__u64			thread_reg;
-> -	struct hvtramp_mapping	maps[1];
-> +	struct hvtramp_mapping	maps[];
->   };
+  16 * (num_kernel_image_mappings - 1)
 
-It seems this struct is a candidate for `__counted_by()`
+unless I'm missing something.
 
->   
->   void hv_cpu_startup(unsigned long hvdescr_pa);
-> diff --git a/arch/sparc/kernel/smp_64.c b/arch/sparc/kernel/smp_64.c
-> index e40c395db202..24d980220bf1 100644
-> --- a/arch/sparc/kernel/smp_64.c
-> +++ b/arch/sparc/kernel/smp_64.c
-> @@ -297,9 +297,7 @@ static void ldom_startcpu_cpuid(unsigned int cpu, unsigned long thread_reg,
->   	unsigned long hv_err;
->   	int i;
->   
-> -	hdesc = kzalloc(sizeof(*hdesc) +
-> -			(sizeof(struct hvtramp_mapping) *
-> -			 num_kernel_image_mappings - 1),
-> +	hdesc = kzalloc(struct_size(hdesc, maps, num_kernel_image_mappings - 1),
->   			GFP_KERNEL);
+> It seems this struct is a candidate for `__counted_by()`
 
-Now the code is broken because it's allocating `num_kernel_image_mappings - 1`
-elements instead of `num_kernel_image_mappings`.
+Yes, but sparc doesn't seem to support it?
 
---
-Gustavo
+> Now the code is broken because it's allocating =
+`num_kernel_image_mappings - 1`
+> elements instead of `num_kernel_image_mappings`.
+
+Ah sorry, missed that and will fix in v2 shortly.
+
+Thanks,
+Thorsten
