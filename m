@@ -1,130 +1,104 @@
-Received: from omta034.useast.a.cloudfilter.net (omta034.useast.a.cloudfilter.net [44.202.169.33])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 723A41BCA01
-	for <linux-hardening@vger.kernel.org>; Mon, 11 Nov 2024 21:04:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FBDC1BBBC5;
+	Mon, 11 Nov 2024 21:23:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731359050; cv=none; b=pl7n1H9IZ85vHBsh+8qb2I7N2SwQ0Ap2XiSaplI4oNbr+iMWre8ZgTRl84JalAdjaSaCY6Srqd1Q0pS0UpuedlyGb+HJu9TsJRL4vIYGMRp6wDK9rBlHPz4jPvSgS3rGqhfPXC5eiHGlBuRpFQsngMaODMaCS7HX9FFgHdbnOGg=
+	t=1731360232; cv=none; b=ZCrmiXL9aISGNRhE2ZJGb8cbn7SlH58JQHpvrimzNPD01S/f62GpzrFhJsrgoKfayH1foNHoSsCfEMN+w6L/ML+mBqI23ax4Ie6Fi0tf3V61Jsq1YGbFii+D70WNK5QV130jlAM29bzZ5BT7drc6HXNLcX6JPpPrFWNQHubqe5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731359050; c=relaxed/simple;
-	bh=CcyrHtiCdpGxp1+G1hE2ZWOvMoT8IICiqmb9jA9nwm8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ppvwcMG5BHSU4rcbaLaFNdBTqfDXi/1+GdZrWNC+6XLDTmuDXcT2NFsPootuUL5KEGyNTIT69UNdv62J6HpjV1x6Cuc5lRKIsAZg2ggSj/cIF4/GY97avCedjoJQRea7vJAaWNBK+YKNknRyJPdMMvoza/zjs+JgjrtU1NhAdp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=eUAB3miH; arc=none smtp.client-ip=44.202.169.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1731360232; c=relaxed/simple;
+	bh=NaCDGDciMwXtP8AUG1ZAj+h2gJO6t1bPaGcNDVapqAk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tZapendPQvE7EBi8VAn3lj7jNYSmFxd7Iq31iAeTSSqBaLz3evLr7idp543obh8SRZnKm8D/rnNmRCimOI9xtgGNM/I650jNkXo7rUkFSYF3UPhOT8uTJsZGQh3x+jE+6EOrDQhU1F2AjZIFkVJH1kzv3LV+sF1XeauLtPwL0F4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UGeajZqh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="eUAB3miH"
-Received: from eig-obgw-6009a.ext.cloudfilter.net ([10.0.30.184])
-	by cmsmtp with ESMTPS
-	id AFyXtKo82rKrbAbZptLqfo; Mon, 11 Nov 2024 21:04:01 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id AbZotntugsWdkAbZotYiA1; Mon, 11 Nov 2024 21:04:00 +0000
-X-Authority-Analysis: v=2.4 cv=Pdz5hDhd c=1 sm=1 tr=0 ts=67327140
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=GtNDhlRIH4u8wNL3EA3KcA==:17
- a=IkcTkHD0fZMA:10 a=VlfZXiiP6vEA:10 a=7T7KSl7uo7wA:10
- a=HaXXRGzUH37Hqg1fP10A:9 a=QEXdDO2ut3YA:10 a=Xt_RvD8W3m28Mn_h3AK8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=3/QWkNiM7d6MQV5CTzi6B7p4uTQHyjQVd9bhUj5m0Kg=; b=eUAB3miH/q38+Ewlh2WdlqHP5p
-	6pbKGVsC+A+TdRJiKZs4PMoHE5juRgH3+VoX9dnOFRjKC1jGqdgqQXbZeHlJU24ow8sDTi4aW71nc
-	zaUg64HBwMhgkuTZZWFNCBQI/L+Z2lDyKxvj8c8NPLfY1vx3s7pOCme37IkqLmxS6L6aMgzER7/Rn
-	uNqgMwVbc0QdBOKq+/ku8nMl4prOs92wV9iPWkyURRiBsCDMytLi6UBnYptXxTpPyK2ARvYulV4yi
-	4SAOQZB2REIT83E6PrzdG8ACy/V9SZRtyX9e/iY4zd30P3XG7QQjoRH9YlLmZKGqpC06vf12jwt6v
-	BHimHIaw==;
-Received: from [177.238.21.80] (port=3392 helo=[192.168.0.21])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1tAbZm-000Ufm-35;
-	Mon, 11 Nov 2024 15:03:59 -0600
-Message-ID: <3fe26d01-d704-47a8-be65-750b6a945045@embeddedor.com>
-Date: Mon, 11 Nov 2024 15:03:52 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UGeajZqh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A315C4CECF;
+	Mon, 11 Nov 2024 21:23:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1731360231;
+	bh=NaCDGDciMwXtP8AUG1ZAj+h2gJO6t1bPaGcNDVapqAk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UGeajZqhjZasGKQm4q6r+WxsrNe2qCdR8p7pVfXpD/oW1Xy/qHoKXKF2ZVi7IlQEu
+	 bQznd75PmHJeMy1KncMfKpBjPnUWuIW6E7HgY45LfIiGB6Kv5JD76iOhJyovUAejMq
+	 NkgaEhkc6Y30Ax1HTcS1Zt5p1ubGbiory1TIjkjuqg8fW3AQ0HAlAEENZGfxpL9++c
+	 qilmeCsNN/1EveDny5370zOPFT0Ke5NnLmoAA4XLloX4IaWqbkpJ61W7Kn3qUmE/q3
+	 GNHKQV2ePkM5uhHrXDa4sgdWjj4Ifd3bWb1Bboe1IrcIBHPhIFKu+a0JGWnFNtNIZc
+	 RV4xF8d6+swXQ==
+Date: Mon, 11 Nov 2024 15:23:49 -0600
+From: Rob Herring <robh@kernel.org>
+To: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Cc: Conor Dooley <conor@kernel.org>, Nishanth Menon <nm@ti.com>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Tero Kristo <kristo@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	Felipe Balbi <balbi@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+	linux-hardening@vger.kernel.org, Devarsh Thakkar <devarsht@ti.com>,
+	Hari Nagalla <hnagalla@ti.com>, linux@ew.tq-group.com
+Subject: Re: [PATCH 2/5] dt-bindings: arm: ti: Add compatible for AM625-based
+ TQMa62xx SOM family and carrier board
+Message-ID: <20241111212349.GA1955710-robh@kernel.org>
+References: <cover.1730299760.git.matthias.schiffer@ew.tq-group.com>
+ <4f5ad877f44df35a3b2c7f336647f057c4e6377d.1730299760.git.matthias.schiffer@ew.tq-group.com>
+ <20241104-floral-dexterous-7d3fee2ff616@spud>
+ <c73cac598788ccabd1791b1232e8fd9d7ce23ac6.camel@ew.tq-group.com>
+ <20241105-tinsmith-countable-fbb51045bc98@spud>
+ <7286141141fe4930cd2581dac7a1fb36a98e62c4.camel@ew.tq-group.com>
+ <20241106-happy-anything-46f7293f6aca@spud>
+ <068c22af19c07a7c79bb4abb0366a2505b4b1aae.camel@ew.tq-group.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] sparc: Replace one-element array with flexible array
- member
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: "David S. Miller" <davem@davemloft.net>,
- Andreas Larsson <andreas@gaisler.com>, Sam Ravnborg <sam@ravnborg.org>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
- Arnd Bergmann <arnd@arndb.de>, linux-hardening@vger.kernel.org,
- sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20241111200155.164621-3-thorsten.blum@linux.dev>
- <83a95dfe-533b-468c-8dd4-439157c0e1cf@embeddedor.com>
- <7F05D8B9-E13A-4331-895A-65D92649B42B@linux.dev>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <7F05D8B9-E13A-4331-895A-65D92649B42B@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 177.238.21.80
-X-Source-L: No
-X-Exim-ID: 1tAbZm-000Ufm-35
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.0.21]) [177.238.21.80]:3392
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 3
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfIyoY6+dwteXeyKsh52qp23J2Z6C17syQ/pMVgy2jBuX4Lq9/gU8FRltkyDwCfwXC6l5SoffEWmoBOkNOubc5XYJhxGOpqPgNjMMeXWaouIZOorujbih
- /h/+42yThkUtzei7lxoz/HhLt/znRnpLruFweWtAHt3LInhJrkHFrC+ZfmvcG1nB57YDC9gBPo5vXg8/4X60q1l2CVNba/4ooK4aPNaFZO/AvqX1bq3d9jYZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <068c22af19c07a7c79bb4abb0366a2505b4b1aae.camel@ew.tq-group.com>
 
+On Mon, Nov 11, 2024 at 10:58:57AM +0100, Matthias Schiffer wrote:
+> On Wed, 2024-11-06 at 16:40 +0000, Conor Dooley wrote:
+> > On Wed, Nov 06, 2024 at 01:03:08PM +0100, Matthias Schiffer wrote:
+> > > On Tue, 2024-11-05 at 18:55 +0000, Conor Dooley wrote:
+> > > > On Tue, Nov 05, 2024 at 11:40:20AM +0100, Matthias Schiffer wrote:
+> > > > > On Mon, 2024-11-04 at 18:47 +0000, Conor Dooley wrote:
+> > > > > > On Mon, Nov 04, 2024 at 10:47:25AM +0100, Matthias Schiffer wrote:
+> > > > > > > The TQMa62xx is a SoM family with a pluggable connector. The MBa62xx is
+> > > > > > > the matching reference/starterkit carrier board.
+> > > > > > 
+> > > > > > Why all the wildcards? Why isn't there a compatible per device in the
+> > > > > > family?
+> > > 
+> > > Because all variants use the same Device Tree. There is also only one compatible and one (main) DTSI
+> > > for the AM62 SoC family, which our Device Trees are based on.
+> > 
+> > So what varies between the members of the family?
+> 
+> There are currently 6 SoCs in the family:
+> - AM6254
+> - AM6252
+> - AM6251
+> - AM6234
+> - AM6232
+> - AM6231
+> 
+> They differ in:
+> - Existence of GPU (AM625 vs AM623)
+> - Number of Cortex-A53 cores (last digit)
+>  
+> All of these use ti,am625 as their SoC-level compatible. The differences are currently handled by U-
+> Boot, which checks various feature flags in the SoC registers and patches the OS DTB accordingly by
+> removing CPU nodes and disabling the GPU node if necessary.
 
+That's how it should be. Most likely, those are all the same die. 
+Different die are expensive and it takes a high volume to justify the 
+cost.
 
-On 11/11/24 14:45, Thorsten Blum wrote:
-> On 11. Nov 2024, at 21:20, Gustavo A. R. Silva wrote:
->> On 11/11/24 14:01, Thorsten Blum wrote:
->>> Replace the deprecated one-element array with a modern flexible array
->>> member in the struct hvtramp_descr.
->>> Additionally, 15 unnecessary bytes are allocated for hdesc, but instead
->>
->> 15? unnecessary?
-> 
-> hvtramp_mapping is 16 bytes and the size is calculated as follows:
-> 
->    (16 * num_kernel_image_mappings - 1)
-> 
-> which is 15 bytes too many for any number of mappings because hdesc
-> includes the first map. It probably should have been:
-> 
->    16 * (num_kernel_image_mappings - 1)
-
-Ah yes, that opening parenthesis before `sizeof(struct hvtramp_mapping)`
-was misplaced.
-
-> 
-> unless I'm missing something.
-> 
->> It seems this struct is a candidate for `__counted_by()`
-> 
-> Yes, but sparc doesn't seem to support it?
-> 
->> Now the code is broken because it's allocating `num_kernel_image_mappings - 1`
->> elements instead of `num_kernel_image_mappings`.
-> 
-> Ah sorry, missed that and will fix in v2 shortly.
-
-Thanks
---
-Gustavo
+Rob
