@@ -1,79 +1,162 @@
-Received: from out-184.mta1.migadu.com (out-184.mta1.migadu.com [95.215.58.184])
+Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 600072144B5
-	for <linux-hardening@vger.kernel.org>; Tue, 12 Nov 2024 18:23:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 893DA3FC7
+	for <linux-hardening@vger.kernel.org>; Wed, 13 Nov 2024 01:08:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731435824; cv=none; b=IQxICfYNzYpdAFydn6ofyaKYGJCbpTfrqO5YovylBVDrXWTTtzqNfvQy6REUw9M0DANLTDQ+vioPFjnGsV60VWoRoJ7TEPCE8fAYTYu5OkPUw0/XBGigDfUfLTQp6dCJ2CVLvIuCNdf7I28Qjd+p5f3g5pvzMmLpL9s8onSMt5g=
+	t=1731460127; cv=none; b=OAyjEGhzBNZ5Vj/owI0mD6JyoBLENluXQQCI50WoDITZXZ70/vVFj07tdsjXkHGWlfnS+cWTNoIzBxCyPQTjiVsVZbovHiKlsGOS+1fa0kGiSCgeYQ2A1OocJHHfY3uJuDx3bjrRWAsa3QmaWI4/5Yy7smMWZVcucQsCiJ9++H8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731435824; c=relaxed/simple;
-	bh=0XMQ4cQcnyjFHC31knVVs2kRruBd+6RlpPXxm9B/kg4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=a6fmVg2M279LaFNvncupDo7x8NVet1RW/IWnEc8s33foMLl9PCz3qQMFteCrp8sh75nHBjr5E24s7rhdtiyNkmlkgm0szMGSi1f1ICxzAE6138AoOXtPW34n/gT76o/7lOrBjC9vp0C06vpj9pGa8EtBU7DWpATv26+FpHZ2GZw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=CZSZrn14; arc=none smtp.client-ip=95.215.58.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1731460127; c=relaxed/simple;
+	bh=e2q7MxvGZdJLXiB+3IUNQaYHOzFNtf7lsxszy3S4Ws8=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=T7LhskpnnV+foH3L03reK4gK6d/FeHQO7yoqW1ZsgzjqlzChDbVMXENLv+fj/fZxSDdlYCuoOOEDHgm6LVNaOzkcXNaumGeWeze0ZYtYYQZ+6PgVcjySqPEaxBZXAVcK87T6AVIozrIIAiD12Nl4Mq2g7CHbmYaujhkAktZSt/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=f/TOpQhj; arc=none smtp.client-ip=35.89.44.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="CZSZrn14"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1731435819;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=sXCLoR2Sxgn/x96OPNA8FzE5cwbUziXs2VVd+3qPYsU=;
-	b=CZSZrn14lNmeltt8QcXLCV7ThjQO+PLEfxx1bTb63NQ/f4TnBeah5KSk6f5k8WnHfXWMxg
-	5gzPMx0ZaCloYXIELwwzM4w5vytUNkMvp7ythH9x08nEI0t105vFAd9GII69/iyfEbKPuM
-	gwjmOlZDbsW44PEhP3vhTDzIe2OkEOY=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: "Theodore Ts'o" <tytso@mit.edu>,
-	Andreas Dilger <adilger.kernel@dilger.ca>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	Jan Kara <jack@suse.cz>,
-	linux-ext4@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [RESEND PATCH v2] ext4: Annotate struct fname with __counted_by()
-Date: Tue, 12 Nov 2024 19:22:57 +0100
-Message-ID: <20241112182257.172746-2-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="f/TOpQhj"
+Received: from eig-obgw-6002a.ext.cloudfilter.net ([10.0.30.222])
+	by cmsmtp with ESMTPS
+	id Az6Fte5zIumtXB1sDtz8Iw; Wed, 13 Nov 2024 01:08:45 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id B1sCt3lnl65gFB1sCtVitv; Wed, 13 Nov 2024 01:08:44 +0000
+X-Authority-Analysis: v=2.4 cv=Z58nH2RA c=1 sm=1 tr=0 ts=6733fc1c
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=GtNDhlRIH4u8wNL3EA3KcA==:17
+ a=IkcTkHD0fZMA:10 a=VlfZXiiP6vEA:10 a=7T7KSl7uo7wA:10 a=PeOOapuUAAAA:8
+ a=kARa8BiYBvYMqBh4rAwA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=0BaqRfgCL6CLbWgV2pdm:22 a=Xt_RvD8W3m28Mn_h3AK8:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:References:Cc:To:From:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=xXm4z4ddRPqAvfWilgUzgfk96JDKPImd8ktkXzI6+Vc=; b=f/TOpQhjLuaU3hSN5yDIeaKMpl
+	cDuIe/wGcz12a504x2D6ZOzfEhLAy3X1pLfj9r6OeY+hSCifmjjS27v0Ikm6FE9l9AmYa4B7EY2qx
+	zP6frS8aKVbUVWaBHe4j7qGjtVrOMQ7RAdvKVLi2quaBaiX9vT9Me50idZxQC+AVAkHAmP4As5Eh3
+	kSdAYEWUTxcfopBtv+cRF47j+lXIu7XCDJcJHDVJpg4ULx69CEvnfP933k2NMeLUJxXrhkmNS1AF7
+	7ufkegwwVBqtzHpn+NvpD4Tr2/CQlviU+YLvqzhO9PD6BWP258d1JEaju1eTwNtb+ozWtMBME5NXU
+	25uBJi3w==;
+Received: from [177.238.21.80] (port=51906 helo=[192.168.0.21])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1tB1sA-002vYr-0q;
+	Tue, 12 Nov 2024 19:08:42 -0600
+Message-ID: <55d62419-3a0c-4f26-a260-06cf2dc44ec1@embeddedor.com>
+Date: Tue, 12 Nov 2024 19:08:32 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2][next] UAPI: ethtool: Use __struct_group() in
+ struct ethtool_link_settings
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To: Jakub Kicinski <kuba@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Michael Chan <michael.chan@broadcom.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Paolo Abeni <pabeni@redhat.com>, Potnuri Bharat Teja <bharat@chelsio.com>,
+ Christian Benvenuti <benve@cisco.com>, Satish Kharat <satishkh@cisco.com>,
+ Manish Chopra <manishc@marvell.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+ Kees Cook <kees@kernel.org>
+References: <cover.1730238285.git.gustavoars@kernel.org>
+ <9e9fb0bd72e5ba1e916acbb4995b1e358b86a689.1730238285.git.gustavoars@kernel.org>
+ <20241109100213.262a2fa0@kernel.org>
+ <d4f0830f-d384-487a-8442-ca0c603d502b@embeddedor.com>
+Content-Language: en-US
+In-Reply-To: <d4f0830f-d384-487a-8442-ca0c603d502b@embeddedor.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 177.238.21.80
+X-Source-L: No
+X-Exim-ID: 1tB1sA-002vYr-0q
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.0.21]) [177.238.21.80]:51906
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 2
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfPsOG/bxXjkiB+HsYxNH8puVf3DE7ismRcldV0LJg0m2YqgCKLM2b/rOoe1PMg/A3FBnpqz665T4HJQd9WF9FvimeySGF5CaE+TRYdyHq4JndAuy+evQ
+ 0pam0hYaF0503ZsWH8O+Sypeyoh+uqWEj2M+N/QntV55GgU/+OcsIvd8KVpWjI+Th8YUjfr7zacMbj6G86Ygi0XH9RuHoz3avA365xGoih93U4ZGNj7vl45J
 
-Add the __counted_by compiler attribute to the flexible array member
-name to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
-CONFIG_FORTIFY_SOURCE.
 
-Reviewed-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
-Changes in v2:
-- Split the patch into two separate patches as suggested by Greg KH
-- Link to v1: https://lore.kernel.org/r/20241104234214.8094-2-thorsten.blum@linux.dev/
----
- fs/ext4/dir.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/ext4/dir.c b/fs/ext4/dir.c
-index ef6a3c8f3a9a..233479647f1b 100644
---- a/fs/ext4/dir.c
-+++ b/fs/ext4/dir.c
-@@ -418,7 +418,7 @@ struct fname {
- 	__u32		inode;
- 	__u8		name_len;
- 	__u8		file_type;
--	char		name[];
-+	char		name[] __counted_by(name_len);
- };
- 
- /*
--- 
-2.47.0
+On 11/11/24 16:22, Gustavo A. R. Silva wrote:
+> 
+> 
+> On 09/11/24 12:02, Jakub Kicinski wrote:
+>> On Tue, 29 Oct 2024 15:55:35 -0600 Gustavo A. R. Silva wrote:
+>>> Use the `__struct_group()` helper to create a new tagged
+>>> `struct ethtool_link_settings_hdr`. This structure groups together
+>>> all the members of the flexible `struct ethtool_link_settings`
+>>> except the flexible array. As a result, the array is effectively
+>>> separated from the rest of the members without modifying the memory
+>>> layout of the flexible structure.
+>>>
+>>> This new tagged struct will be used to fix problematic declarations
+>>> of middle-flex-arrays in composite structs[1].
+>>
+>> Possibly a very noob question, but I'm updating a C++ library with
+>> new headers and I think this makes it no longer compile.
+>>
+>> $ cat > /tmp/t.cpp<<EOF
+>> extern "C" {
+>> #include "include/uapi/linux/ethtool.h"
+>> }
+>> int func() { return 0; }
+>> EOF
+>>
+>> $ g++ /tmp/t.cpp -I../linux -o /dev/null -c -W -Wall -O2
+>> In file included from /usr/include/linux/posix_types.h:5,
+>>                   from /usr/include/linux/types.h:9,
+>>                   from ../linux/include/uapi/linux/ethtool.h:18,
+>>                   from /tmp/t.cpp:2:
+>> ../linux/include/uapi/linux/ethtool.h:2515:24: error: ‘struct ethtool_link_settings::<unnamed union>::ethtool_link_settings_hdr’ invalid; an anonymous union 
+>> may only have public non-static data members [-fpermissive]
+>>   2515 |         __struct_group(ethtool_link_settings_hdr, hdr, /* no attrs */,
+>>        |                        ^~~~~~~~~~~~~~~~~~~~~~~~~
+>>
+>>
+
+This seems to work with Clang:
+
+$ clang++-18 -fms-extensions /tmp/t.cpp -I../linux -o /dev/null -c -W -Wall -O2
+
+However, `-fms-extensions` doesn't seem to work for this case with GCC:
+
+https://godbolt.org/z/1shsPhz3s
+
+
+-Gustavo
+
+
+>> I don't know much about C++, tho, so quite possibly missing something
+>> obvious.
+> 
+> We are in the same situation here.
+> 
+> It seems C++ considers it ambiguous to define a struct with a tag such
+> as `struct TAG { MEMBERS } ATTRS NAME;` within an anonymous union.
+> 
+> Let me look into this further...
+> -- 
+> Gustavo
+> 
 
