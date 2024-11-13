@@ -1,162 +1,164 @@
-Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 893DA3FC7
-	for <linux-hardening@vger.kernel.org>; Wed, 13 Nov 2024 01:08:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD3A217BB16
+	for <linux-hardening@vger.kernel.org>; Wed, 13 Nov 2024 19:16:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731460127; cv=none; b=OAyjEGhzBNZ5Vj/owI0mD6JyoBLENluXQQCI50WoDITZXZ70/vVFj07tdsjXkHGWlfnS+cWTNoIzBxCyPQTjiVsVZbovHiKlsGOS+1fa0kGiSCgeYQ2A1OocJHHfY3uJuDx3bjrRWAsa3QmaWI4/5Yy7smMWZVcucQsCiJ9++H8=
+	t=1731525370; cv=none; b=LZZ2W6S3dDlZO3xxzGqz2nbUPD3rM9QdoydPVFB3OnvzzxfCs675HHLOq72oZcjtuPqpyIkbn4jreF7jFuXN5/87bd5Sn80uhyWqY0TjfnRZ6aNgyh61mIiu/F4Ph3TlVQZJuUhbNUyZmr6ZjAihLfbkpE0IbpzVc2xJpmIzw+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731460127; c=relaxed/simple;
-	bh=e2q7MxvGZdJLXiB+3IUNQaYHOzFNtf7lsxszy3S4Ws8=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=T7LhskpnnV+foH3L03reK4gK6d/FeHQO7yoqW1ZsgzjqlzChDbVMXENLv+fj/fZxSDdlYCuoOOEDHgm6LVNaOzkcXNaumGeWeze0ZYtYYQZ+6PgVcjySqPEaxBZXAVcK87T6AVIozrIIAiD12Nl4Mq2g7CHbmYaujhkAktZSt/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=f/TOpQhj; arc=none smtp.client-ip=35.89.44.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1731525370; c=relaxed/simple;
+	bh=YVhuCJBy/RTajvaqUqjmHV6sGbVXjJ01Js/Rc0hhCGU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SJ+DIfJ6KvXTYjzpE3rl5vmSE4BAa4/hjuKRJcseDN8zOVuuZszvEe2AOsdA/u4DwjYcj3rCnpkC47OE33j7+m8/pR9SXc3ZboRhRHXSFVPLsTJhsiqTCX9k47Gdg6Qq2qc+JMcGr8Od/tByGl7JqXDNQVupEGPiF096lDuMNnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=D+DSQ1l9; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="f/TOpQhj"
-Received: from eig-obgw-6002a.ext.cloudfilter.net ([10.0.30.222])
-	by cmsmtp with ESMTPS
-	id Az6Fte5zIumtXB1sDtz8Iw; Wed, 13 Nov 2024 01:08:45 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id B1sCt3lnl65gFB1sCtVitv; Wed, 13 Nov 2024 01:08:44 +0000
-X-Authority-Analysis: v=2.4 cv=Z58nH2RA c=1 sm=1 tr=0 ts=6733fc1c
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=GtNDhlRIH4u8wNL3EA3KcA==:17
- a=IkcTkHD0fZMA:10 a=VlfZXiiP6vEA:10 a=7T7KSl7uo7wA:10 a=PeOOapuUAAAA:8
- a=kARa8BiYBvYMqBh4rAwA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=0BaqRfgCL6CLbWgV2pdm:22 a=Xt_RvD8W3m28Mn_h3AK8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:Cc:To:From:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=xXm4z4ddRPqAvfWilgUzgfk96JDKPImd8ktkXzI6+Vc=; b=f/TOpQhjLuaU3hSN5yDIeaKMpl
-	cDuIe/wGcz12a504x2D6ZOzfEhLAy3X1pLfj9r6OeY+hSCifmjjS27v0Ikm6FE9l9AmYa4B7EY2qx
-	zP6frS8aKVbUVWaBHe4j7qGjtVrOMQ7RAdvKVLi2quaBaiX9vT9Me50idZxQC+AVAkHAmP4As5Eh3
-	kSdAYEWUTxcfopBtv+cRF47j+lXIu7XCDJcJHDVJpg4ULx69CEvnfP933k2NMeLUJxXrhkmNS1AF7
-	7ufkegwwVBqtzHpn+NvpD4Tr2/CQlviU+YLvqzhO9PD6BWP258d1JEaju1eTwNtb+ozWtMBME5NXU
-	25uBJi3w==;
-Received: from [177.238.21.80] (port=51906 helo=[192.168.0.21])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1tB1sA-002vYr-0q;
-	Tue, 12 Nov 2024 19:08:42 -0600
-Message-ID: <55d62419-3a0c-4f26-a260-06cf2dc44ec1@embeddedor.com>
-Date: Tue, 12 Nov 2024 19:08:32 -0600
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="D+DSQ1l9"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-71e49d5deeeso101647b3a.0
+        for <linux-hardening@vger.kernel.org>; Wed, 13 Nov 2024 11:16:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1731525368; x=1732130168; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=yJ1xBx06y8ZAnA3UnsQH/PtPZjuuHaBD+33LmtepObE=;
+        b=D+DSQ1l9bmOWQirbOUFsdqcv68sqAhCEsprYyIqB9Lx7fBPwQh4urSwFR82w0cCLuD
+         JgAUWr4OLhX4HpfIN0uKIQXbYqPqb6ky49dN8SIWqwas4XsZ6SFnJ17tDeJrb/UA7W5F
+         SFpEGAU1kzagyVKWWvTRaqZKBvAqeKnTkzWtw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1731525368; x=1732130168;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yJ1xBx06y8ZAnA3UnsQH/PtPZjuuHaBD+33LmtepObE=;
+        b=XzgEN5WY5bYDWLZlc9hnowSschKEK3OlRDiPStQ9iua7CYz8WxsUEJ/Wa1TmyvR08V
+         v/O8pDwvGfpMkOzRJoylxBAr6PdD1atmNPuYDK9yR8opfyC7HLLaKnQ8ZvuluN1zkbhZ
+         VmlYF41dWTpylfJ0mhaTgKHYZHk0OYQtBovSkecufGdtPZbJfR0p1FElIXITrLl9Rt6m
+         ufudu3rCMVx6Chl95cA2FUP9pHzFIRmUZ9ppyqnX6GoiCEDcGwNGruOdE8UIi98D+cjC
+         wTWeofVCQdCHZRGRWS5p+VCB7YwXa0YxEB93C9ngn76aUXcJR4GSVFOIKyvtAdnfUWw0
+         Yi5w==
+X-Forwarded-Encrypted: i=1; AJvYcCVJPMef3hk1tx/woxt0e6DFwv4NkWXeZ6rCe7VSDXF1vwJIDA9dILbodxj8ZMTnhGnkCoUCj2Kr80l+U1Ogwn8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJ13LZCZqVBwVEEE8Eup6DY2gQC2WaxmSwrp5FpOXGTcP5DXWt
+	hjY2Fdvh9znbwEgslmU1h0Rjbj10eJ7YBkk8JFhLKaqmG99rPba+zkYTV58VWA==
+X-Google-Smtp-Source: AGHT+IE57qKtu5zFu6AlasoUgUPGht35UyGvr0mAKtZBxlpo0wcpjfLve2+qn74cQ7eZo0jnCIbaSg==
+X-Received: by 2002:a05:6a00:b56:b0:71e:770d:2c00 with SMTP id d2e1a72fcca58-7241334b1c4mr11122411b3a.4.1731525367948;
+        Wed, 13 Nov 2024 11:16:07 -0800 (PST)
+Received: from localhost (238.76.127.34.bc.googleusercontent.com. [34.127.76.238])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-724078cd2bcsm13635731b3a.84.2024.11.13.11.16.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 13 Nov 2024 11:16:07 -0800 (PST)
+From: jeffxu@chromium.org
+To: akpm@linux-foundation.org,
+	keescook@chromium.org,
+	jannh@google.com,
+	torvalds@linux-foundation.org,
+	adhemerval.zanella@linaro.org,
+	oleg@redhat.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-mm@kvack.org,
+	jorgelo@chromium.org,
+	sroettger@google.com,
+	ojeda@kernel.org,
+	adobriyan@gmail.com,
+	anna-maria@linutronix.de,
+	mark.rutland@arm.com,
+	linus.walleij@linaro.org,
+	Jason@zx2c4.com,
+	deller@gmx.de,
+	rdunlap@infradead.org,
+	davem@davemloft.net,
+	hch@lst.de,
+	peterx@redhat.com,
+	hca@linux.ibm.com,
+	f.fainelli@gmail.com,
+	gerg@kernel.org,
+	dave.hansen@linux.intel.com,
+	mingo@kernel.org,
+	ardb@kernel.org,
+	Liam.Howlett@Oracle.com,
+	mhocko@suse.com,
+	42.hyeyoo@gmail.com,
+	peterz@infradead.org,
+	ardb@google.com,
+	enh@google.com,
+	rientjes@google.com,
+	groeck@chromium.org,
+	lorenzo.stoakes@oracle.com,
+	Jeff Xu <jeffxu@chromium.org>
+Subject: [PATCH v3 0/1] seal system mappings
+Date: Wed, 13 Nov 2024 19:16:01 +0000
+Message-ID: <20241113191602.3541870-1-jeffxu@google.com>
+X-Mailer: git-send-email 2.47.0.277.g8800431eea-goog
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2][next] UAPI: ethtool: Use __struct_group() in
- struct ethtool_link_settings
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To: Jakub Kicinski <kuba@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Michael Chan <michael.chan@broadcom.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Paolo Abeni <pabeni@redhat.com>, Potnuri Bharat Teja <bharat@chelsio.com>,
- Christian Benvenuti <benve@cisco.com>, Satish Kharat <satishkh@cisco.com>,
- Manish Chopra <manishc@marvell.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
- Kees Cook <kees@kernel.org>
-References: <cover.1730238285.git.gustavoars@kernel.org>
- <9e9fb0bd72e5ba1e916acbb4995b1e358b86a689.1730238285.git.gustavoars@kernel.org>
- <20241109100213.262a2fa0@kernel.org>
- <d4f0830f-d384-487a-8442-ca0c603d502b@embeddedor.com>
-Content-Language: en-US
-In-Reply-To: <d4f0830f-d384-487a-8442-ca0c603d502b@embeddedor.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 177.238.21.80
-X-Source-L: No
-X-Exim-ID: 1tB1sA-002vYr-0q
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.0.21]) [177.238.21.80]:51906
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 2
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfPsOG/bxXjkiB+HsYxNH8puVf3DE7ismRcldV0LJg0m2YqgCKLM2b/rOoe1PMg/A3FBnpqz665T4HJQd9WF9FvimeySGF5CaE+TRYdyHq4JndAuy+evQ
- 0pam0hYaF0503ZsWH8O+Sypeyoh+uqWEj2M+N/QntV55GgU/+OcsIvd8KVpWjI+Th8YUjfr7zacMbj6G86Ygi0XH9RuHoz3avA365xGoih93U4ZGNj7vl45J
 
+From: Jeff Xu <jeffxu@chromium.org>
 
+Seal vdso, vvar, sigpage, uprobes and vsyscall.
 
-On 11/11/24 16:22, Gustavo A. R. Silva wrote:
-> 
-> 
-> On 09/11/24 12:02, Jakub Kicinski wrote:
->> On Tue, 29 Oct 2024 15:55:35 -0600 Gustavo A. R. Silva wrote:
->>> Use the `__struct_group()` helper to create a new tagged
->>> `struct ethtool_link_settings_hdr`. This structure groups together
->>> all the members of the flexible `struct ethtool_link_settings`
->>> except the flexible array. As a result, the array is effectively
->>> separated from the rest of the members without modifying the memory
->>> layout of the flexible structure.
->>>
->>> This new tagged struct will be used to fix problematic declarations
->>> of middle-flex-arrays in composite structs[1].
->>
->> Possibly a very noob question, but I'm updating a C++ library with
->> new headers and I think this makes it no longer compile.
->>
->> $ cat > /tmp/t.cpp<<EOF
->> extern "C" {
->> #include "include/uapi/linux/ethtool.h"
->> }
->> int func() { return 0; }
->> EOF
->>
->> $ g++ /tmp/t.cpp -I../linux -o /dev/null -c -W -Wall -O2
->> In file included from /usr/include/linux/posix_types.h:5,
->>                   from /usr/include/linux/types.h:9,
->>                   from ../linux/include/uapi/linux/ethtool.h:18,
->>                   from /tmp/t.cpp:2:
->> ../linux/include/uapi/linux/ethtool.h:2515:24: error: ‘struct ethtool_link_settings::<unnamed union>::ethtool_link_settings_hdr’ invalid; an anonymous union 
->> may only have public non-static data members [-fpermissive]
->>   2515 |         __struct_group(ethtool_link_settings_hdr, hdr, /* no attrs */,
->>        |                        ^~~~~~~~~~~~~~~~~~~~~~~~~
->>
->>
+Those mappings are readonly or executable only, sealing can protect
+them from ever changing or unmapped during the life time of the process.
+For complete descriptions of memory sealing, please see mseal.rst [1].
 
-This seems to work with Clang:
+System mappings such as vdso, vvar, and sigpage (for arm) are
+generated by the kernel during program initialization, and are
+sealed after creation.
 
-$ clang++-18 -fms-extensions /tmp/t.cpp -I../linux -o /dev/null -c -W -Wall -O2
+Unlike the aforementioned mappings, the uprobe mapping is not
+established during program startup. However, its lifetime is the same
+as the process's lifetime [1]. It is sealed from creation.
 
-However, `-fms-extensions` doesn't seem to work for this case with GCC:
+The vdso, vvar, sigpage, and uprobe mappings all invoke the
+_install_special_mapping() function. As no other mappings utilize this
+function, it is logical to incorporate sealing logic within
+_install_special_mapping(). This approach avoids the necessity of
+modifying code across various architecture-specific implementations.
 
-https://godbolt.org/z/1shsPhz3s
+The vsyscall mapping, which has its own initialization function, is
+sealed in the XONLY case, it seems to be the most common and secure
+case of using vsyscall.
 
+It is important to note that the CHECKPOINT_RESTORE feature (CRIU) may
+alter the mapping of vdso, vvar, and sigpage during restore
+operations. Consequently, this feature cannot be universally enabled
+across all systems. To address this, a kernel configuration option has
+been introduced to enable or disable this functionality.
 
--Gustavo
+[1] Documentation/userspace-api/mseal.rst
+[2] https://lore.kernel.org/all/CABi2SkU9BRUnqf70-nksuMCQ+yyiWjo3fM4XkRkL-NrCZxYAyg@mail.gmail.com/
 
+History:
+V3:
+  Revert uprobe to v1 logic (Oleg Nesterov)
+  use CONFIG_SEAL_SYSTEM_MAPPINGS instead of _ALWAYS/_NEVER (Kees Cook)
+  Move kernel cmd line from fs/exec.c to mm/mseal.c and misc. refactor (Liam R. Howlett)
 
->> I don't know much about C++, tho, so quite possibly missing something
->> obvious.
-> 
-> We are in the same situation here.
-> 
-> It seems C++ considers it ambiguous to define a struct with a tag such
-> as `struct TAG { MEMBERS } ATTRS NAME;` within an anonymous union.
-> 
-> Let me look into this further...
-> -- 
-> Gustavo
-> 
+V2:
+  https://lore.kernel.org/all/20241014215022.68530-1-jeffxu@google.com/
+  Seal uprobe always (Oleg Nesterov)
+  Update comments and description (Randy Dunlap, Liam R.Howlett, Oleg Nesterov)
+  Rebase to linux_main
+
+V1:
+https://lore.kernel.org/all/20241004163155.3493183-1-jeffxu@google.com/
+
+Jeff Xu (1):
+  exec: seal system mappings
+
+ .../admin-guide/kernel-parameters.txt         | 10 +++++
+ arch/x86/entry/vsyscall/vsyscall_64.c         |  9 ++++-
+ include/linux/mm.h                            | 12 ++++++
+ mm/mmap.c                                     | 10 +++++
+ mm/mseal.c                                    | 39 +++++++++++++++++++
+ security/Kconfig                              | 11 ++++++
+ 6 files changed, 89 insertions(+), 2 deletions(-)
+
+-- 
+2.47.0.277.g8800431eea-goog
 
