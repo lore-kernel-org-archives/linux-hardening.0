@@ -1,116 +1,70 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1BF618B464;
-	Thu, 14 Nov 2024 22:49:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7619F1AF0AA
+	for <linux-hardening@vger.kernel.org>; Thu, 14 Nov 2024 23:01:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731624567; cv=none; b=AgtuL1xZy1flucbDvo+YRyH8FQ8XMjiJnbJoPDspqh6xpiiBUaxB2j5FWIhmJ/79PgCyTX87x+6K2El3VqU4hzG9HOSSd3ILq4iFFRz+L8P/vSrAGNo7wiyjVOvEmEm+mw4xgjuXwDCW9Zm4tuTmWsdTMK6OUZCq+J39igwGyDY=
+	t=1731625318; cv=none; b=T1sMpKjsq5ubaNfMutu+T0RW7tHHLOQ3DMhfouEAWDho5UDe8cJgYiCU9Wz/V9Jq1K78K1dPLhhlrnrQoeY1PvJHmsbMDReUMZfupkHLYPsTlBCxuyW3yNH4eb5MbE4S4TziftW7Mayuz84/ebk9nqn/4bNl8GLxIaVeFtmP9pU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731624567; c=relaxed/simple;
-	bh=lACSCrdzRLG5x1E+njLfHcgssYzowjsw+9YGqqUEk5I=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=JlyYFZNZfFDE4LB2SE5ESVovnN5KApf49rP8ejE6eadN5Ox9OgvoqV/4TUy4RSXJ4NAPLe3X/sHDmt8Nh+ES9++zGB5CIBQsjULIX3qJl16cxDMI7lLRP/Ab3DluM+KUqibfpHS5nGDOskrLzDPZ0+3BkScXZ4Oc1HzYZu+63Ao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jo1cRGUN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1731625318; c=relaxed/simple;
+	bh=MK2DhBLnwbG5e5ZmBE1yNvN+Cf6QzUUoBav5TZVEAPc=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=dMZBPlI7pSFIyyHFSz6WxYU8SpYWqELaONz62itJqDIYgvQ3GPzeAs+vo0nt+STBh6demru5J4ydt9pFD4KF9x65H55p5l/H6Wi4gtV51XhtjSonWsmZzCYHoaD7kW0cXiZI46EucioKM90gWqsExr8csQyEThE2sGC71gdbi00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Au6fWA35; arc=none smtp.client-ip=95.215.58.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jo1cRGUN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01D9AC4CECD;
-	Thu, 14 Nov 2024 22:49:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731624565;
-	bh=lACSCrdzRLG5x1E+njLfHcgssYzowjsw+9YGqqUEk5I=;
-	h=Date:From:To:Cc:Subject:From;
-	b=jo1cRGUNxfABfeEOZv9PLK4KjN69C/Kdsq3mfouhwGEWZuVFooQhG7JYRAKWI4txE
-	 Yz9jO0fFHl8ey2nqakGiyjnD8ynEsjMrvyBRw3nfGXjhtw8wb0VK2ZzLLHaogEQHUk
-	 SGD5WvzhU0xhmTTYl6JJ1yk21eXZ86bkJzw4Hm+Ebecb+XRrdgFkarvxcKq49myWPU
-	 nTA1Gu4RyMYBSb4Yn0VeKugjBCD5LUk7adNx+bMsst5C9YYNAa9VO15wCLLSzPCb6d
-	 +ARAQxl1WudwwxmejfVwgxRDWh4cDJI94LJ8fVaMw6JfFdJOV6/PAYBg1D/lTbwX37
-	 kEGJHmcyZufqQ==
-Date: Thu, 14 Nov 2024 16:49:21 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Yinbo Zhu <zhuyinbo@loongson.cn>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Binbin Zhou <zhoubinbin@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] clk: clk-loongson2: Fix memory corruption bug in struct
- loongson2_clk_provider
-Message-ID: <ZzZ-cd_EFXs6qFaH@kspp>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Au6fWA35"
+Content-Type: text/plain;
+	charset=us-ascii
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1731625313;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CO7x25wgzcGlKTf0gfOze2m5krBMIGAGOp6OTv9hDaA=;
+	b=Au6fWA35pD3FvvLpQaWGqq+FNgVJUAHQR4c3DtYegOTqI+CHx2z7Bvew4lFNAk7gi5lWMG
+	pQ+ZUrj4Fd+q8oEElPClgU3XFEn26rq5LqaaC0hNeGCXnM8Y9roKguQS0F8rooRvLvRfnL
+	oo9U/x5FeeuyCqSR++/CzIzrhbRiq5Y=
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51.11.1\))
+Subject: Re: [PATCH v2] ext4: Annotate struct fname with __counted_by()
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Thorsten Blum <thorsten.blum@linux.dev>
+In-Reply-To: <173159220757.521904.13348650494002839092.b4-ty@mit.edu>
+Date: Fri, 15 Nov 2024 00:01:39 +0100
+Cc: Andreas Dilger <adilger.kernel@dilger.ca>,
+ Kees Cook <kees@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Jan Kara <jack@suse.cz>,
+ linux-ext4@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Message-Id: <67B144E1-F6E4-402F-B6E7-95159815542C@linux.dev>
+References: <20241105101813.10864-2-thorsten.blum@linux.dev>
+ <173159220757.521904.13348650494002839092.b4-ty@mit.edu>
+To: Theodore Ts'o <tytso@mit.edu>
+X-Migadu-Flow: FLOW_OUT
 
-Some heap space is allocated for the flexible structure `struct
-clk_hw_onecell_data` and its flexible-array member `hws` through
-the composite structure `struct loongson2_clk_provider` in function
-`loongson2_clk_probe()`, as shown below:
+On 14. Nov 2024, at 14:53, Theodore Ts'o wrote:
+> By the way, in general, you don't need to resend patches unless you
+> need to rebase them to fix patch conflicts; I track requested patches
+> using patchwork, and I tend to process and review patches in batches.
+> 
+> If you are concerned that I might have missed a patch, feel free to
+> reply to the original patch with a ping.  I'll see it in my inbox, and
+> even if it had gotten lost in my inbox, I can find the original patch
+> using lore.kernel.org or patchwork.
 
-289         struct loongson2_clk_provider *clp;
-	...
-296         for (p = data; p->name; p++)
-297                 clks_num++;
-298
-299         clp = devm_kzalloc(dev, struct_size(clp, clk_data.hws, clks_num),
-300                            GFP_KERNEL);
+Thanks for letting me know.
 
-Then some data is written into the flexible array:
-
-350                 clp->clk_data.hws[p->id] = hw;
-
-This corrupts `clk_lock`, which is the spinlock variable immediately
-following the `clk_data` member in `struct loongson2_clk_provider`:
-
-struct loongson2_clk_provider {
-	void __iomem *base;
-	struct device *dev;
-	struct clk_hw_onecell_data clk_data;
-	spinlock_t clk_lock;	/* protect access to DIV registers */
-};
-
-The problem is that the flexible structure is currently placed in the
-middle of `struct loongson2_clk_provider` instead of at the end.
-
-Fix this by moving `struct clk_hw_onecell_data clk_data;` to the end of
-`struct loongson2_clk_provider`. Also, add a code comment to help
-prevent this from happening again in case new members are added to the
-structure in the future.
-
-This change also fixes the following -Wflex-array-member-not-at-end
-warning:
-
-drivers/clk/clk-loongson2.c:32:36: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-
-Fixes: 9796ec0bd04b ("clk: clk-loongson2: Refactor driver for adding new platforms")
-Cc: stable@vger.kernel.org
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/clk/clk-loongson2.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/clk/clk-loongson2.c b/drivers/clk/clk-loongson2.c
-index 820bb1e9e3b7..e99ba79feec6 100644
---- a/drivers/clk/clk-loongson2.c
-+++ b/drivers/clk/clk-loongson2.c
-@@ -29,8 +29,10 @@ enum loongson2_clk_type {
- struct loongson2_clk_provider {
- 	void __iomem *base;
- 	struct device *dev;
--	struct clk_hw_onecell_data clk_data;
- 	spinlock_t clk_lock;	/* protect access to DIV registers */
-+
-+	/* Must be last --ends in a flexible-array member. */
-+	struct clk_hw_onecell_data clk_data;
- };
- 
- struct loongson2_clk_data {
--- 
-2.43.0
+Best regards,
+Thorsten
 
