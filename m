@@ -1,95 +1,74 @@
-Received: from smtp.domeneshop.no (smtp.domeneshop.no [194.63.252.55])
+Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F7A71D95A1;
-	Thu, 14 Nov 2024 10:49:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.63.252.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B1463BBC5
+	for <linux-hardening@vger.kernel.org>; Thu, 14 Nov 2024 13:53:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731581393; cv=none; b=KvWfU3WkXyAko6yeUlulRYDIRPeTaL10n9kUgut/cv0yZa9pnSi+PG3sVCLLvKoagMtiSWYQYT4JGtFYNgXiddUUfw/UnO+rMZTy9imcW8Diubd1W67puX/mYm9mzea2vjl5tFi/SeYISgMO1GiMSNY2U0nYY5cdaPuWdCwGDf0=
+	t=1731592439; cv=none; b=RPgk52wt8ltuoTjoPwCIXHl0CVEAZ7K7Dg3ZNc9Ny6o/gXxwH5++D+Av9dWOwQNLX6b0oxzwmYkWix9yrTGDW2jZ/7XqCIfobz2U2n5jbk3Oq14o134v0ZSM18ANiLnH3q9HdQQwbXyF7xJ9diECtomtP2gaEKWs7MTno7KQzQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731581393; c=relaxed/simple;
-	bh=7W7eu2pygcDcLgnMABoonhLlgjl2lp1tEbeN4zKBNko=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B6EbIgBQFi8JB+wPDKUduOBRwAXrobCyZtnBuAGpniLXiKJspd3vloCuT8GyvL7MREOo5H6fQr8tIHmz9fJWo/a/p1nqjo/HpHsOgStHZuVZW0HCzQ/QVK/fOckLXJjIpkZEIaC5rxjcW25NtbDVfPgKAakSYpHj1D8igM8W/SE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fjasle.eu; spf=pass smtp.mailfrom=fjasle.eu; dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b=M+Yfspy3; arc=none smtp.client-ip=194.63.252.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fjasle.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fjasle.eu
+	s=arc-20240116; t=1731592439; c=relaxed/simple;
+	bh=2b8xKyOQ5Oj+r1rsPmsfhswWR7sy85VzeMpp9g7y4Hk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EEVm/ToiUtG/t/IkCJC+WpENlxTELUcOr9LXhrJtSHm/gz9yy/0wMRXLcVd+JcJiLA/jLPZXZaCX2cDIang4XYR6pCBj0x5erVAES8VCqGtiJCDc5Ica4jzq51wJOtwfssTCUwg9aieuQ3mfanDBbUqJ4hjllf45X6gQzVQ3VgE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=ZhLzCptR; arc=none smtp.client-ip=18.9.28.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b="M+Yfspy3"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=fjasle.eu;
-	s=ds202307; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:
-	MIME-Version:Content-Type:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=Uolk4UDksq7SR9H9F0AuamJpW1aIrmeVboAODXQPxw4=; b=M+Yfspy3OI4JGbvprvM94/qLVy
-	YO7gBsbuiAui6qNcOG+pYh2BAQPwvohwiJPdiCm3aH5kjUfzy5u8FbQ4ZrMWeqkxmDvjiQIhhCgc9
-	q3xdR0dsh3Vj0l393v8xfp+c/YXIvwNSXvw+QLFtW3AQGef3SPqvR2XSZoNjYWn9Cz6eNN7g9xHoI
-	PkZlwUTkyp6bcn2F1n9UD5MO6v9dWbN+XUtVu3OhRDEtizPAaX2gv1NQ7Z2kSR12ude3Q8Ng9oCfu
-	KT7UDElhj2Fgc8F7o5V4PEcIu9nnneg2KsxInVGhbMJqTCjuByHFCGPHWQPI81bIelAKcIS9YnrLu
-	GpKl7hGQ==;
-Received: from smtp
-	by smtp.domeneshop.no with esmtpsa (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	id 1tBXPs-00Buav-RA;
-	Thu, 14 Nov 2024 11:49:36 +0100
-Date: Thu, 14 Nov 2024 11:49:30 +0100
-From: Nicolas Schier <nicolas@fjasle.eu>
-To: Vegard Nossum <vegard.nossum@oracle.com>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org,
-	Nathan Chancellor <nathan@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Morten Linderud <morten@linderud.pw>,
-	Haelwenn Monnier <contact@lanodan.eu>, Jann Horn <jannh@google.com>,
-	Kees Cook <kees@kernel.org>,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	Theodore Ts'o <tytso@mit.edu>, linux-hardening@vger.kernel.org
-Subject: Re: [RFC PATCH 11/11] kbuild: suppress echoing of commands in
- --dry-run mode
-Message-ID: <20241114-rich-free-hound-6aa0bd@lindesnes>
-References: <20240819160309.2218114-1-vegard.nossum@oracle.com>
- <20240819160309.2218114-12-vegard.nossum@oracle.com>
+	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="ZhLzCptR"
+Received: from cwcc.thunk.org (pool-173-48-113-132.bstnma.fios.verizon.net [173.48.113.132])
+	(authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 4AEDrhTE001788
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 14 Nov 2024 08:53:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
+	t=1731592425; bh=PPHH19sz1b5FCEkrSRevlh2ewLvJRUjGu4Ppejh9IiY=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type;
+	b=ZhLzCptROjwMXgnjgie3ZjDaCXHk4z2GWi2PQnT2mmqN3NAHqLBkW61iPYNXCbE2s
+	 34zgRJpyHTHfvrNfskzbQdYBDisFILXF0SEPlR4eRwS5cQhJFdZQS4jMbB73hBs+0Q
+	 FJ3iwhDEz0L4Fom+EoqXmRQQBc6M3lqc/EdT1CYCwiniZ0UdNulQO8QFtXliItuFWm
+	 5eSdgX5JhCAZhjBxakgWuzmxOH1Oz8sezmbu2t92BHHoFi6KOUs3fZQd1vd1LDc7b3
+	 FnkmZd3KwbbRVejiz7jQRlDFlpcwG14BkZLz7UydBj4nRFQdHmB6lPq5PLpwnLUDSi
+	 wk5eGM/BehFCg==
+Received: by cwcc.thunk.org (Postfix, from userid 15806)
+	id 481E715C1942; Thu, 14 Nov 2024 08:53:43 -0500 (EST)
+From: "Theodore Ts'o" <tytso@mit.edu>
+To: Jan Kara <jack@suse.com>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: "Theodore Ts'o" <tytso@mit.edu>, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2][next] jbd2: Avoid dozens of -Wflex-array-member-not-at-end warnings
+Date: Thu, 14 Nov 2024 08:53:36 -0500
+Message-ID: <173159220756.521904.14770235209517754981.b4-ty@mit.edu>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <ZyU94w0IALVhc9Jy@kspp>
+References: <ZyU94w0IALVhc9Jy@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240819160309.2218114-12-vegard.nossum@oracle.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Mon, Aug 19, 2024 at 06:03:08PM +0200, Vegard Nossum wrote:
-> If the user ran 'make -n' then we will already print all commands.
-> 
-> Signed-off-by: Vegard Nossum <vegard.nossum@oracle.com>
-> ---
->  Makefile | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Makefile b/Makefile
-> index d08ade5791c2e..a1a3e96a10ea2 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -96,9 +96,10 @@ ifneq ($(findstring 1, $(KBUILD_VERBOSE)),)
->    Q =
->  endif
->  
-> -# If the user is running make -s (silent mode), suppress echoing of
-> -# commands
-> -ifneq ($(findstring s,$(firstword -$(MAKEFLAGS))),)
-> +# If the user is running make -s (silent mode) or -n (dry run mode),
-> +# suppress echoing of commands
-> +ifneq (,$(or $(findstring s,$(firstword -$(MAKEFLAGS))), \
-> +	$(findstring n,$(firstword -$(MAKEFLAGS)))))
->  quiet=silent_
->  override KBUILD_VERBOSE :=
->  endif
-> -- 
-> 2.34.1
-> 
 
-I think it makes sense to apply this patch earlier.
+On Fri, 01 Nov 2024 14:45:23 -0600, Gustavo A. R. Silva wrote:
+> -Wflex-array-member-not-at-end was introduced in GCC-14, and we
+> are getting ready to enable it, globally.
+> 
+> Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
+> a flexible structure (`struct shash_desc`) where the size of the
+> flexible-array member (`__ctx`) is known at compile-time, and
+> refactor the rest of the code, accordingly.
+> 
+> [...]
 
-Reviewed-by: Nicolas Schier <nicolas@fjasle.eu>
+Applied, thanks!
+
+[1/1] jbd2: Avoid dozens of -Wflex-array-member-not-at-end warnings
+      commit: 2bd9077b6261b8f1281d0fa74d51afe090319263
+
+Best regards,
+-- 
+Theodore Ts'o <tytso@mit.edu>
