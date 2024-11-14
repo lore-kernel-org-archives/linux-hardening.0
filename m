@@ -1,48 +1,51 @@
 Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B1463BBC5
-	for <linux-hardening@vger.kernel.org>; Thu, 14 Nov 2024 13:53:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97B2F2C190
+	for <linux-hardening@vger.kernel.org>; Thu, 14 Nov 2024 13:54:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731592439; cv=none; b=RPgk52wt8ltuoTjoPwCIXHl0CVEAZ7K7Dg3ZNc9Ny6o/gXxwH5++D+Av9dWOwQNLX6b0oxzwmYkWix9yrTGDW2jZ/7XqCIfobz2U2n5jbk3Oq14o134v0ZSM18ANiLnH3q9HdQQwbXyF7xJ9diECtomtP2gaEKWs7MTno7KQzQ4=
+	t=1731592459; cv=none; b=TKLHIRouV4hJFM4Vdemh7XhwKPhTOOpheiUW3cFVu4AN+igoM3aVIVOOPZ1p5JvkMT1ZdP7Mnp2Ja2SXJyLytHDZHWTw8rv1FF0G1N2mxh51xw+qTIMV+u6H/GJamEuzK6dQbBS1AGwnSnPYUKQYqmXo3tDDWjl0K+LRmBYu4Nk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731592439; c=relaxed/simple;
-	bh=2b8xKyOQ5Oj+r1rsPmsfhswWR7sy85VzeMpp9g7y4Hk=;
+	s=arc-20240116; t=1731592459; c=relaxed/simple;
+	bh=jNxc/YNXVLv9GMvRMQsXofvRMh9ptc13+13RL4iN23g=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EEVm/ToiUtG/t/IkCJC+WpENlxTELUcOr9LXhrJtSHm/gz9yy/0wMRXLcVd+JcJiLA/jLPZXZaCX2cDIang4XYR6pCBj0x5erVAES8VCqGtiJCDc5Ica4jzq51wJOtwfssTCUwg9aieuQ3mfanDBbUqJ4hjllf45X6gQzVQ3VgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=ZhLzCptR; arc=none smtp.client-ip=18.9.28.11
+	 MIME-Version:Content-Type; b=AsfeEGhwQxEGp6n5OcwBp+xtKvI3Q5AISLP7s6xu6mmQwnTxe2PMtV++h4EBj30H5lEoyDij8Jt/juKaJFM+gyYvO610NRupgPlxkxrjN9qb/urqlZVbdoVRMJS38CHxcIvEw6OqmSfXRREd1zMUAxotZDmEjyGUZu9nNRlVWTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=CVbX3jKs; arc=none smtp.client-ip=18.9.28.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="ZhLzCptR"
+	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="CVbX3jKs"
 Received: from cwcc.thunk.org (pool-173-48-113-132.bstnma.fios.verizon.net [173.48.113.132])
 	(authenticated bits=0)
         (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 4AEDrhTE001788
+	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 4AEDrjxD001835
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 14 Nov 2024 08:53:44 -0500
+	Thu, 14 Nov 2024 08:53:46 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
-	t=1731592425; bh=PPHH19sz1b5FCEkrSRevlh2ewLvJRUjGu4Ppejh9IiY=;
+	t=1731592427; bh=D0AAAvqZx7+5fRAYSOHJ+swO2Elyd+tG1w+ita9HvSw=;
 	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	b=ZhLzCptROjwMXgnjgie3ZjDaCXHk4z2GWi2PQnT2mmqN3NAHqLBkW61iPYNXCbE2s
-	 34zgRJpyHTHfvrNfskzbQdYBDisFILXF0SEPlR4eRwS5cQhJFdZQS4jMbB73hBs+0Q
-	 FJ3iwhDEz0L4Fom+EoqXmRQQBc6M3lqc/EdT1CYCwiniZ0UdNulQO8QFtXliItuFWm
-	 5eSdgX5JhCAZhjBxakgWuzmxOH1Oz8sezmbu2t92BHHoFi6KOUs3fZQd1vd1LDc7b3
-	 FnkmZd3KwbbRVejiz7jQRlDFlpcwG14BkZLz7UydBj4nRFQdHmB6lPq5PLpwnLUDSi
-	 wk5eGM/BehFCg==
+	b=CVbX3jKsbvkN+9OhGwkCfzUNbs69q52Y6Vn7jnGEELkCU5Ipa0lolM0vkLAgM20cu
+	 /YuH7dL4OUxT1j/KzFd/zeBrz89/kMcfv2CiTle/Ugxhn/JJ5fXMsh6Dn+7YYne7mI
+	 Xy4yDKgteIQfOnBOTxhIB5D8X1uCo5u0lz1YAI44ficHxK3EmxOqWj1Yh83xg/hvGa
+	 Fbz1Mf8A94ZqlmBckJrCwNqJXT9qdJFW0mZC9zDkJY+KCJTM7QUK6GQFT//duOLxT9
+	 jsLUekqCpTe5R+3X2ydfIwZO/sTmLa1tgZHFdQIH1mfs8xdEB7TBw9V3E+V1dCLgZC
+	 lKCHGXyANyHHw==
 Received: by cwcc.thunk.org (Postfix, from userid 15806)
-	id 481E715C1942; Thu, 14 Nov 2024 08:53:43 -0500 (EST)
+	id 5016515C1E39; Thu, 14 Nov 2024 08:53:43 -0500 (EST)
 From: "Theodore Ts'o" <tytso@mit.edu>
-To: Jan Kara <jack@suse.com>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: "Theodore Ts'o" <tytso@mit.edu>, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2][next] jbd2: Avoid dozens of -Wflex-array-member-not-at-end warnings
-Date: Thu, 14 Nov 2024 08:53:36 -0500
-Message-ID: <173159220756.521904.14770235209517754981.b4-ty@mit.edu>
+To: Andreas Dilger <adilger.kernel@dilger.ca>, Kees Cook <kees@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Thorsten Blum <thorsten.blum@linux.dev>
+Cc: "Theodore Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] ext4: Annotate struct fname with __counted_by()
+Date: Thu, 14 Nov 2024 08:53:40 -0500
+Message-ID: <173159220757.521904.13348650494002839092.b4-ty@mit.edu>
 X-Mailer: git-send-email 2.45.2
-In-Reply-To: <ZyU94w0IALVhc9Jy@kspp>
-References: <ZyU94w0IALVhc9Jy@kspp>
+In-Reply-To: <20241105101813.10864-2-thorsten.blum@linux.dev>
+References: <20241105101813.10864-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -53,21 +56,29 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
 
-On Fri, 01 Nov 2024 14:45:23 -0600, Gustavo A. R. Silva wrote:
-> -Wflex-array-member-not-at-end was introduced in GCC-14, and we
-> are getting ready to enable it, globally.
+On Tue, 05 Nov 2024 11:18:14 +0100, Thorsten Blum wrote:
+> Add the __counted_by compiler attribute to the flexible array member
+> name to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
+> CONFIG_FORTIFY_SOURCE.
 > 
-> Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
-> a flexible structure (`struct shash_desc`) where the size of the
-> flexible-array member (`__ctx`) is known at compile-time, and
-> refactor the rest of the code, accordingly.
 > 
-> [...]
 
 Applied, thanks!
 
-[1/1] jbd2: Avoid dozens of -Wflex-array-member-not-at-end warnings
-      commit: 2bd9077b6261b8f1281d0fa74d51afe090319263
+[1/1] ext4: Annotate struct fname with __counted_by()
+      commit: de183b2baf90f0acc1854a3998c14b8b228f9643
+
+By the way, in general, you don't need to resend patches unless you
+need to rebase them to fix patch conflicts; I track requested patches
+using patchwork, and I tend to process and review patches in batches.
+
+If you are concerned that I might have missed a patch, feel free to
+reply to the original patch with a ping.  I'll see it in my inbox, and
+even if it had gotten lost in my inbox, I can find the original patch
+using lore.kernel.org or patchwork.
+
+Thanks!
+
 
 Best regards,
 -- 
