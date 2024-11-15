@@ -1,31 +1,30 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29B6D1E2848;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29BC61E284B;
 	Fri, 15 Nov 2024 20:43:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731703392; cv=none; b=eDks5pnIM2BZenSvKg64N5J5UO7yQnQ8rdQ+XO1AP6kgAFCwbo5r6lzGf9EjFS30Fm3XzX+yDXThSVzII8d+UuqP0a4cw/D/+S24z1pp5y4k4dRv2+y4L7NIAxQvd6RUELK6BTDkHhoXBmK3k1oINiOPh1NYsSqYMLvuASP00PI=
+	t=1731703392; cv=none; b=Z/EEsM8J2UXwsFwGlb93HEV5ov/WvgKjJEuKjwIyv1lBT5B3C9sr+28HI5PoVjYoUiTcnjn16O8qkJ7SGSV/4SD1kypBvldz3Ir5Zc7f/qpT1sN+zRoYNtP7Cz/ji1SK+IoLdQc7s6PevMAWPDIjd1jGxsqseFHlGVUUrIoKyg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1731703392; c=relaxed/simple;
-	bh=HMpjdv/bdsXxaQkhI5GYNDu/DBHhpSw2rmWGbNPhfqc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=UuhwBUjCJuhTbl6mJptZYE4dnqSa+6d/6gXND5CqTuCxRA/nHWs8SHz4Ft3qLGfU+BQUTb9cdrEdt1937MCs48IwiQDHWbhCB39tkJwrbcGgHSwm9J4EYdFsXbsLymuG2O6MKjAzBG1ZkQczPHwkRJS6eZcQB4qzaEkef5QWhbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PeLpSbuE; arc=none smtp.client-ip=10.30.226.201
+	bh=Ccs4+fxbEG0SXm2z2piX1zTfr7x8e6ZLDBkf7LQCW0A=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ACVH3rqAV6HSBkZkHxyiu6h/LxPU6mvArFNAdpHcLvMjFs0s/1nEXJ4WNUUVEyyP+CZyM72ED3P9kPSlh+iOi3jmC9KC/zWUTiEVxaWLUJObKPuLqUxEDty5MKN9lGoKZHQJSW/+MzrQZeBVibWwTgU6nXG7jood59FQkF7nRHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KgnXoeXy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PeLpSbuE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7AEDC4CECF;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KgnXoeXy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9D32C4CED4;
 	Fri, 15 Nov 2024 20:43:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1731703391;
-	bh=HMpjdv/bdsXxaQkhI5GYNDu/DBHhpSw2rmWGbNPhfqc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PeLpSbuER+I2/r5q3PCIifda93s7fpLsXNBI4oQZu8p6/mR4+AboBV1Z3DydsHhPs
-	 PQSLm/ZAf14MkoGv4OkMWZmlYgnoXBavzf9DpnT/MyHRbPxar+SVRC94Rt9a+zBT3h
-	 Fh+eNi0KAM/BxRNfDQqKlD/KGmyghXBzLXNl6bkSdMMh0lQ0xr+nCOX/rXHwGI8rzj
-	 InrfH5SbefkXsWh7UW4fPaQn8pa82VgqMHRqOGQpqZHGdWVxlhpSTuNeBB0kmN1u8M
-	 OeCybIZUsn95+p9JjlvWIVjpOKdup/5D/FX57nf6Yq6JC4X5Zvc7OSLM5btdBtdEUe
-	 TLWqSbxCIQ8XA==
+	bh=Ccs4+fxbEG0SXm2z2piX1zTfr7x8e6ZLDBkf7LQCW0A=;
+	h=From:To:Cc:Subject:Date:From;
+	b=KgnXoeXyOJo2ZDRajin/E3J7ga/4Y72rL6+Oio1pyTuJArJsxFTfbzL+uRUbO0Rey
+	 /nUwu50ecx70AEdAn3UO0Cg8AtZlK4uYqKucFzUIk3pLMf4c/7SjDX4RanolvPYXok
+	 4XNh6cI3GmJwKqNIQ3yCioEXnBr9OeZOOUmjka6hIdFTEJHnOmhSJtLG3QC60ETbcN
+	 lAiVpXJmPS8oQth4ITqqj7pULcSk8JlqptS3N+W/+Dz1/oc/U4iQZWW4l8AA20MAif
+	 DtSDnaLvsRZmB8hFk71Msmf2t7cfVyE2DY1AQjEX32RTQzw8b7L4e9tTkFZKhUwVBg
+	 bREL38GLX1izg==
 From: Kees Cook <kees@kernel.org>
 To: Jakub Kicinski <kuba@kernel.org>
 Cc: Kees Cook <kees@kernel.org>,
@@ -54,77 +53,47 @@ Cc: Kees Cook <kees@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	netdev@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH 2/3] Revert "UAPI: ethtool: Use __struct_group() in struct ethtool_link_settings"
-Date: Fri, 15 Nov 2024 12:43:04 -0800
-Message-Id: <20241115204308.3821419-2-kees@kernel.org>
+Subject: [PATCH 0/3] UAPI: ethtool: Avoid flex-array in struct ethtool_link_settings
+Date: Fri, 15 Nov 2024 12:43:02 -0800
+Message-Id: <20241115204115.work.686-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20241115204115.work.686-kees@kernel.org>
-References: <20241115204115.work.686-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1676; i=kees@kernel.org; h=from:subject; bh=HMpjdv/bdsXxaQkhI5GYNDu/DBHhpSw2rmWGbNPhfqc=; b=owGbwMvMwCVmps19z/KJym7G02pJDOnmmyIk8r96VO2KE5lgtGfjl99Fb6peaZ7ktyqKmfJ+V jub01+fjlIWBjEuBlkxRZYgO/c4F4+37eHucxVh5rAygQxh4OIUgIlMZGP4w/3sYMXytXM8bpbd 28AvGNAnYnvCVYX3bE7P5ND56RLNrxgZji2dM/tCs+lu/kM8P/XCn80ySo9O2MSys6uepVv3CX8 bEwA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1101; i=kees@kernel.org; h=from:subject:message-id; bh=Ccs4+fxbEG0SXm2z2piX1zTfr7x8e6ZLDBkf7LQCW0A=; b=owGbwMvMwCVmps19z/KJym7G02pJDOnmmyKKYlbuD2BQyuOW2RWzxnWZtJ+M3Qz1lZt09tiJR ZvFbCztKGVhEONikBVTZAmyc49z8XjbHu4+VxFmDisTyBAGLk4BmMhqUYa/ssfXyZ/s3ae/ZFGU 8xn95deMgyQda/0T5gXkHpLxFVDqY/gfyF204Jj5EtXzfHGKtpuSF+6cz3In5wPv/V2Z00/WP+f mAAA=
 X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-This reverts commit 43d3487035e9a86fad952de4240a518614240d43. We cannot
-use tagged struct groups in UAPI because C++ will throw syntax errors
-even under "extern C".
+Hi,
 
-Signed-off-by: Kees Cook <kees@kernel.org>
----
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
----
- include/uapi/linux/ethtool.h | 33 +++++++++++++++------------------
- 1 file changed, 15 insertions(+), 18 deletions(-)
+This reverts the tagged struct group in struct ethtool_link_settings and
+instead just removes the flexible array member from Linux's view as it
+is entirely unused.
 
-diff --git a/include/uapi/linux/ethtool.h b/include/uapi/linux/ethtool.h
-index fc1f54b065f9..c405ed63acfa 100644
---- a/include/uapi/linux/ethtool.h
-+++ b/include/uapi/linux/ethtool.h
-@@ -2511,24 +2511,21 @@ enum ethtool_reset_flags {
-  *	autonegotiation; 0 if unknown or not applicable.  Read-only.
-  */
- struct ethtool_link_settings {
--	/* New members MUST be added within the __struct_group() macro below. */
--	__struct_group(ethtool_link_settings_hdr, hdr, /* no attrs */,
--		__u32	cmd;
--		__u32	speed;
--		__u8	duplex;
--		__u8	port;
--		__u8	phy_address;
--		__u8	autoneg;
--		__u8	mdio_support;
--		__u8	eth_tp_mdix;
--		__u8	eth_tp_mdix_ctrl;
--		__s8	link_mode_masks_nwords;
--		__u8	transceiver;
--		__u8	master_slave_cfg;
--		__u8	master_slave_state;
--		__u8	rate_matching;
--		__u32	reserved[7];
--	);
-+	__u32	cmd;
-+	__u32	speed;
-+	__u8	duplex;
-+	__u8	port;
-+	__u8	phy_address;
-+	__u8	autoneg;
-+	__u8	mdio_support;
-+	__u8	eth_tp_mdix;
-+	__u8	eth_tp_mdix_ctrl;
-+	__s8	link_mode_masks_nwords;
-+	__u8	transceiver;
-+	__u8	master_slave_cfg;
-+	__u8	master_slave_state;
-+	__u8	rate_matching;
-+	__u32	reserved[7];
- 	__u32	link_mode_masks[];
- 	/* layout of link_mode_masks fields:
- 	 * __u32 map_supported[link_mode_masks_nwords];
+-Kees
+
+Kees Cook (3):
+  Revert "net: ethtool: Avoid thousands of
+    -Wflex-array-member-not-at-end warnings"
+  Revert "UAPI: ethtool: Use __struct_group() in struct
+    ethtool_link_settings"
+  UAPI: ethtool: Avoid flex-array in struct ethtool_link_settings
+
+ .../net/ethernet/broadcom/bnxt/bnxt_ethtool.c |  6 +--
+ .../ethernet/chelsio/cxgb4/cxgb4_ethtool.c    |  4 +-
+ .../ethernet/chelsio/cxgb4vf/cxgb4vf_main.c   |  2 +-
+ .../net/ethernet/cisco/enic/enic_ethtool.c    |  2 +-
+ .../net/ethernet/qlogic/qede/qede_ethtool.c   |  4 +-
+ include/linux/ethtool.h                       |  2 +-
+ include/uapi/linux/ethtool.h                  | 40 ++++++++++---------
+ net/ethtool/ioctl.c                           |  2 +-
+ net/ethtool/linkinfo.c                        |  8 ++--
+ net/ethtool/linkmodes.c                       | 18 ++++-----
+ 10 files changed, 44 insertions(+), 44 deletions(-)
+
 -- 
 2.34.1
 
