@@ -1,99 +1,85 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29BC61E284B;
-	Fri, 15 Nov 2024 20:43:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 994701D5AC0;
+	Fri, 15 Nov 2024 21:51:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731703392; cv=none; b=Z/EEsM8J2UXwsFwGlb93HEV5ov/WvgKjJEuKjwIyv1lBT5B3C9sr+28HI5PoVjYoUiTcnjn16O8qkJ7SGSV/4SD1kypBvldz3Ir5Zc7f/qpT1sN+zRoYNtP7Cz/ji1SK+IoLdQc7s6PevMAWPDIjd1jGxsqseFHlGVUUrIoKyg8=
+	t=1731707460; cv=none; b=MRkiwzWeuEDTRJH7XQtlCqH55mXdpepQ+/iTBVKJBzhVM8xmtP8uLWi+pQCjVqisCF9YFNESpCzDmYRdH7MnklDp5JIw29cr9iMYAksW8jqpwCn3AcTJhg172PeST+uAZzu1rgoLoCC6C3WBitLjbGfTF5up65cighYuCuQI4v4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731703392; c=relaxed/simple;
-	bh=Ccs4+fxbEG0SXm2z2piX1zTfr7x8e6ZLDBkf7LQCW0A=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ACVH3rqAV6HSBkZkHxyiu6h/LxPU6mvArFNAdpHcLvMjFs0s/1nEXJ4WNUUVEyyP+CZyM72ED3P9kPSlh+iOi3jmC9KC/zWUTiEVxaWLUJObKPuLqUxEDty5MKN9lGoKZHQJSW/+MzrQZeBVibWwTgU6nXG7jood59FQkF7nRHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KgnXoeXy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1731707460; c=relaxed/simple;
+	bh=CoWsFVfyoNDdP+sDuo4UK0OuVO6qk8o69BlkEOSeKdY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Ucdos74pXRFQMsHssNetb2ucal72M75BEF3TYAZpqAGUkTWDl4cq16F/e5lQPmZFQYWVE7hLmJ+/nD/W9XYefm4MJaWtehi97wUQif03wLEs/u3rQE8No7brJxSF9itGTlrEMtsCybmBXIAR9hnSYqdcmJ9796zUVKLMtTr1feY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B58c+O0Y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KgnXoeXy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9D32C4CED4;
-	Fri, 15 Nov 2024 20:43:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B58c+O0Y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A78CC4CECF;
+	Fri, 15 Nov 2024 21:50:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731703391;
-	bh=Ccs4+fxbEG0SXm2z2piX1zTfr7x8e6ZLDBkf7LQCW0A=;
-	h=From:To:Cc:Subject:Date:From;
-	b=KgnXoeXyOJo2ZDRajin/E3J7ga/4Y72rL6+Oio1pyTuJArJsxFTfbzL+uRUbO0Rey
-	 /nUwu50ecx70AEdAn3UO0Cg8AtZlK4uYqKucFzUIk3pLMf4c/7SjDX4RanolvPYXok
-	 4XNh6cI3GmJwKqNIQ3yCioEXnBr9OeZOOUmjka6hIdFTEJHnOmhSJtLG3QC60ETbcN
-	 lAiVpXJmPS8oQth4ITqqj7pULcSk8JlqptS3N+W/+Dz1/oc/U4iQZWW4l8AA20MAif
-	 DtSDnaLvsRZmB8hFk71Msmf2t7cfVyE2DY1AQjEX32RTQzw8b7L4e9tTkFZKhUwVBg
-	 bREL38GLX1izg==
-From: Kees Cook <kees@kernel.org>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Andrew Lunn <andrew@lunn.ch>,
-	"Kory Maincent (Dent Project)" <kory.maincent@bootlin.com>,
-	Michael Chan <michael.chan@broadcom.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Potnuri Bharat Teja <bharat@chelsio.com>,
-	Christian Benvenuti <benve@cisco.com>,
-	Satish Kharat <satishkh@cisco.com>,
-	Manish Chopra <manishc@marvell.com>,
-	Simon Horman <horms@kernel.org>,
-	Edward Cree <ecree.xilinx@gmail.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Ahmed Zaki <ahmed.zaki@intel.com>,
-	Rahul Rameshbabu <rrameshbabu@nvidia.com>,
-	Ido Schimmel <idosch@nvidia.com>,
-	Maxime Chevallier <maxime.chevallier@bootlin.com>,
-	Takeru Hayasaka <hayatake396@gmail.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH 0/3] UAPI: ethtool: Avoid flex-array in struct ethtool_link_settings
-Date: Fri, 15 Nov 2024 12:43:02 -0800
-Message-Id: <20241115204115.work.686-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	s=k20201202; t=1731707460;
+	bh=CoWsFVfyoNDdP+sDuo4UK0OuVO6qk8o69BlkEOSeKdY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=B58c+O0YLZsaGUKS158WzIcWRpmUSdS+o0ksy5dTGxUyhuSJ6aGtl/Kgo5DzLGXiZ
+	 N9H3ht8Mayfu4tBRNA14YpSdTgv/ay1CKQ8Xzwa7uvivm4D+NzDTP1lDNQGZgV+lli
+	 fA4Ax7FE7iNC3m6FzqQ4SXOA/SMpIrGPTrc8vYf4WrFxXEnDtZYSBsIH5zl8L3wRjZ
+	 Ss0gXHXa+MmgNej0Kg9VgATTaAYAIXilgzIG+TqLLzwb+bhepNdfHDms5hHN6iwT2B
+	 voe7HfNUxPAxha9zNEmop8rK9oIWYr6WUEMoUOafG4S+x8HAqxdgosXHzKhSimUbXu
+	 65Z37oJfBUONA==
+Date: Fri, 15 Nov 2024 13:50:58 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Kees Cook <kees@kernel.org>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>, "David S. Miller"
+ <davem@davemloft.net>, Andrew Lunn <andrew@lunn.ch>, "Kory Maincent (Dent
+ Project)" <kory.maincent@bootlin.com>, Michael Chan
+ <michael.chan@broadcom.com>, Andrew Lunn <andrew+netdev@lunn.ch>, Eric
+ Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Potnuri
+ Bharat Teja <bharat@chelsio.com>, Christian Benvenuti <benve@cisco.com>,
+ Satish Kharat <satishkh@cisco.com>, Manish Chopra <manishc@marvell.com>,
+ Simon Horman <horms@kernel.org>, Edward Cree <ecree.xilinx@gmail.com>,
+ Przemek Kitszel <przemyslaw.kitszel@intel.com>, Heiner Kallweit
+ <hkallweit1@gmail.com>, Ahmed Zaki <ahmed.zaki@intel.com>, Rahul Rameshbabu
+ <rrameshbabu@nvidia.com>, Ido Schimmel <idosch@nvidia.com>, Maxime
+ Chevallier <maxime.chevallier@bootlin.com>, Takeru Hayasaka
+ <hayatake396@gmail.com>, Jonathan Corbet <corbet@lwn.net>,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 3/3] UAPI: ethtool: Avoid flex-array in struct
+ ethtool_link_settings
+Message-ID: <20241115135058.01065c04@kernel.org>
+In-Reply-To: <20241115204308.3821419-3-kees@kernel.org>
+References: <20241115204115.work.686-kees@kernel.org>
+	<20241115204308.3821419-3-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1101; i=kees@kernel.org; h=from:subject:message-id; bh=Ccs4+fxbEG0SXm2z2piX1zTfr7x8e6ZLDBkf7LQCW0A=; b=owGbwMvMwCVmps19z/KJym7G02pJDOnmmyKKYlbuD2BQyuOW2RWzxnWZtJ+M3Qz1lZt09tiJR ZvFbCztKGVhEONikBVTZAmyc49z8XjbHu4+VxFmDisTyBAGLk4BmMhqUYa/ssfXyZ/s3ae/ZFGU 8xn95deMgyQda/0T5gXkHpLxFVDqY/gfyF204Jj5EtXzfHGKtpuSF+6cz3In5wPv/V2Z00/WP+f mAAA=
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi,
+On Fri, 15 Nov 2024 12:43:05 -0800 Kees Cook wrote:
+> struct ethtool_link_settings tends to be used as a header for other
+> structures that have trailing bytes[1], but has a trailing flexible array
+> itself. Using this overlapped with other structures leads to ambiguous
+> object sizing in the compiler, so we want to avoid such situations (which
+> have caused real bugs in the past). Detecting this can be done with
+> -Wflex-array-member-not-at-end, which will need to be enabled globally.
+> 
+> Using a tagged struct_group() to create a new ethtool_link_settings_hdr
+> structure isn't possible as it seems we cannot use the tagged variant of
+> struct_group() due to syntax issues from C++'s perspective (even within
+> "extern C")[2]. Instead, we can just leave the offending member defined
+> in UAPI and remove it from the kernel's view of the structure, as Linux
+> doesn't actually use this member at all. There is also no change in
+> size since it was already a flexible array that didn't contribute to
+> size returned by any use of sizeof().
 
-This reverts the tagged struct group in struct ethtool_link_settings and
-instead just removes the flexible array member from Linux's view as it
-is entirely unused.
+Perfect. I was starting to doubt if user space needs the member,
+ethtool CLI doesn't but looks like NetworkManager does. 
+So as you say we'll cross that bridge...
 
--Kees
+Reviewed-by: Jakub Kicinski <kuba@kernel.org>
 
-Kees Cook (3):
-  Revert "net: ethtool: Avoid thousands of
-    -Wflex-array-member-not-at-end warnings"
-  Revert "UAPI: ethtool: Use __struct_group() in struct
-    ethtool_link_settings"
-  UAPI: ethtool: Avoid flex-array in struct ethtool_link_settings
-
- .../net/ethernet/broadcom/bnxt/bnxt_ethtool.c |  6 +--
- .../ethernet/chelsio/cxgb4/cxgb4_ethtool.c    |  4 +-
- .../ethernet/chelsio/cxgb4vf/cxgb4vf_main.c   |  2 +-
- .../net/ethernet/cisco/enic/enic_ethtool.c    |  2 +-
- .../net/ethernet/qlogic/qede/qede_ethtool.c   |  4 +-
- include/linux/ethtool.h                       |  2 +-
- include/uapi/linux/ethtool.h                  | 40 ++++++++++---------
- net/ethtool/ioctl.c                           |  2 +-
- net/ethtool/linkinfo.c                        |  8 ++--
- net/ethtool/linkmodes.c                       | 18 ++++-----
- 10 files changed, 44 insertions(+), 44 deletions(-)
-
--- 
-2.34.1
-
+Thanks!
