@@ -1,100 +1,123 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F4BF188CCA;
-	Fri, 15 Nov 2024 19:47:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22F2F1DA23;
+	Fri, 15 Nov 2024 20:38:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731700038; cv=none; b=SFVdICO+GKOJErl5c8nBSyHzp3HvfqcEmLbRr+hjo+s8LH13hzrkt9UrgeBeUzfVv8lKTXAOYnwxqDNRNLS/ezWL5cFwa68tcki1jr9XxLAYS5wvB4IOJfv1ZMbrj9h5iaGJbkLwwi9TobXo2FjZsrlVjnSSwG7gJfOUPuxUUs0=
+	t=1731703140; cv=none; b=AKg9dj5NS7OmyOD9wR3ehh4ZiKdMa7JJfRs0aRS1esULImmfIt/TZiU4Wepb4pmxmM8PlBxgF3zRzzDNWzaFTH2laAdZ/2sX9qWs1vPkYN2oPyyjwMdjmDzk4AyeeBeWwbGLCulKt2NaqI3uKh60xBMTSCpvvIIFXB2hS8dFll0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731700038; c=relaxed/simple;
-	bh=QyGNluIUTOwP4YSbRg+yS+Gxb3KvEi5akpCu4YFksdA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QPbIMwLN7ykAh43pLqKy5OtN64bTqk1rKP9zL62h4is+J3MHdhDm7cI9jJU6rmDeZuMy2d5rqTy58z1WXVtwTq+rgc0xXR5tTcHZoUe5uwxRmn8V3x/Bjo96hoTAueapkRuhVzmTnU6xlw0AlFmGzgB097SXDreIprrDi3RZMIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IjWuC1vo; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1731703140; c=relaxed/simple;
+	bh=HmEnM+iG5llMTrozjs2jeXTA5qHKx/9EjVtnDhmpmF4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IZK6TCybTGPn0QkaUAVguvexgu+iVlqvV/0aYEXC4P+a/ofmSroT3m9Ykg4V1PhBrusyCwbPj9dMJg3WUt8TKTb6EmCHauu8pR3fhxWf8Z3bfoKFalu7UcFWr+1qv0CbUGbOn0KRgi3d3uZajiq5qaTq+BwzePMkfEAWw67B3MY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MF3P6xWl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IjWuC1vo"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a9e8522445dso398683966b.1;
-        Fri, 15 Nov 2024 11:47:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1731700036; x=1732304836; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UT4z7vl48bcTH4YTj4a2K5SLXTtuIgfSnTwzWbYWdZQ=;
-        b=IjWuC1votpGqgRgh0qZri4lfJqIfhEvCTMhB0QKZN+vZyUH95WVDq1tEdZPIqFYyjU
-         wZqydT18pegfpW9naIpwHs9jiIamKLmFu1tJQnWQpZVsbltEHPkehRO3eo9+Cyoy1dn5
-         kZJOKW2j7Vay259guXFPqkrAaY4jAk9OT/xybD5hzpGcxtl9kK6HKilosdMJWDIty08y
-         Kfet4rxaxQ6K3fIHi7G0XMbSL3eQjaRY1AjfVaBF6uiI+FGsSGPdbzNypdNmoWvjBDgx
-         0+/VdewgBlHOEsx8V7b6Ljzb5cr4TU0gSCDgroEsNgjPX1B/+9YyAWvIoFp9BfxZ7tDM
-         0Bag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731700036; x=1732304836;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UT4z7vl48bcTH4YTj4a2K5SLXTtuIgfSnTwzWbYWdZQ=;
-        b=rd30lUBa+f8l8HVxRQFYlyM5Jl/5lNoeDrvjaAPO+cl7cjwOLmDLiWH7NL3SxxtQlU
-         E6ijr49raYuC6BiznsfvonAcs4BZKy4/OEihPcadJVuOHEhaSwA3+jXEZM+0JSA5ayt3
-         nI85slpY6GCzC+Krdk5icvCo26e4Q8dPdoLVIIGV5Z/nBP86u71NlPlEpd7P8TMomUWt
-         AvNORDrmi1cXa78kpgIUOkiTD8MuAffg20CX+Zy8b1fOz1nqFnLEnpAKDW+PoELA/sT+
-         J7fGL10qoDHaHS1mLAtWMBUPh58zyKsUxdDjrJVDaLNCIgtlIDHhJcqSvvDvkFx38ORZ
-         VkGA==
-X-Forwarded-Encrypted: i=1; AJvYcCUJnn3SOGgPOigwNphGhFa7WqlTPiNz1u8d4AYmAziR6QKESQ8f3kS2MavhsvDTp954xqNDk5f2I41cs4U8@vger.kernel.org, AJvYcCWxc1p1seTrOGo06nQbMYQXdp0GDJ4/XxBOfR1DS5NL6k7sZ0is1ywy01CMwr4l1LTGD06we6hn7jgyl9OBe8M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxfSYubETsChYvF7fzqgmyS7VM/FuZfcLEnKFL5b5ebfBplKi6L
-	nW9Rp3jj2omHuSHTBCsJYbTReS0B0hNnLbQpEc2ovsF23+iGII7tk2nwGboQckB/4coRqGPbFOY
-	rZXn0wYVylEO3wGB2o1wJXL8MVO4=
-X-Google-Smtp-Source: AGHT+IFAfImbLnvNyuZA00yGA5EBJ/zkL6tbilDt+jxgONMAQiVnR6JixTg8xfB8OYw4cYf2HglpNzBT9l32DM3TOzI=
-X-Received: by 2002:a17:907:3f05:b0:a99:7bc0:bca9 with SMTP id
- a640c23a62f3a-aa4833f6285mr344249566b.3.1731700035545; Fri, 15 Nov 2024
- 11:47:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MF3P6xWl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0DF2C4CECF;
+	Fri, 15 Nov 2024 20:38:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1731703138;
+	bh=HmEnM+iG5llMTrozjs2jeXTA5qHKx/9EjVtnDhmpmF4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MF3P6xWlLctWVYwhRcJK1gQEkGa6GA27rk6D8DLQqoU71lsoJzsgEeTa22ePavaDJ
+	 gZj5YYcS8xeJ5kHftOhvjFkDZgyOEnbj3eAUGyVNJ7NBhY/5/1ThLjcuX41pngs4ZI
+	 O5+wxn69e2O781qFGyLaITU8KOmUfu+kmbPjMaJy5EhBavUOg5JMsyNvsEljIeIWqD
+	 JCX65/jnCFc8d2ipsdSTcX1CBWxwWT29XTAUf1ITxYCJCZ6mpPWMYIoA09qqlhTBhT
+	 yCHsQT1Xo3/KNWH1Rgo6WQcRXTfDgz2XnXCF4WJXwbn4EXkZWnLEwaR/95EE+y8XCe
+	 fu3EfzW2Vcrsg==
+Date: Fri, 15 Nov 2024 12:38:55 -0800
+From: Kees Cook <kees@kernel.org>
+To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc: Jakub Kicinski <kuba@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Michael Chan <michael.chan@broadcom.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Potnuri Bharat Teja <bharat@chelsio.com>,
+	Christian Benvenuti <benve@cisco.com>,
+	Satish Kharat <satishkh@cisco.com>,
+	Manish Chopra <manishc@marvell.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 1/2][next] UAPI: ethtool: Use __struct_group() in
+ struct ethtool_link_settings
+Message-ID: <202411151215.B56D49E36@keescook>
+References: <cover.1730238285.git.gustavoars@kernel.org>
+ <9e9fb0bd72e5ba1e916acbb4995b1e358b86a689.1730238285.git.gustavoars@kernel.org>
+ <20241109100213.262a2fa0@kernel.org>
+ <d4f0830f-d384-487a-8442-ca0c603d502b@embeddedor.com>
+ <55d62419-3a0c-4f26-a260-06cf2dc44ec1@embeddedor.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241115144616.7453-1-prosunofficial@gmail.com> <CAHp75Vfp++XMr8VGjjFRBpJi+uAk8PRVPxMLmQciedBzS8gedQ@mail.gmail.com>
-In-Reply-To: <CAHp75Vfp++XMr8VGjjFRBpJi+uAk8PRVPxMLmQciedBzS8gedQ@mail.gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Fri, 15 Nov 2024 21:46:39 +0200
-Message-ID: <CAHp75VdD1KYh9KJWHwhxkXy-+jfh_o=Rn05AtL4QBb0HC-oz6g@mail.gmail.com>
-Subject: Re: [PATCH linux-next] lib/string_choices: Add str_locked_unlocked()/str_unlocked_locked()
- helper
-To: R Sundar <prosunofficial@gmail.com>
-Cc: Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>, linux-hardening@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Przemek Kitszel <przemyslaw.kitszel@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <55d62419-3a0c-4f26-a260-06cf2dc44ec1@embeddedor.com>
 
-On Fri, Nov 15, 2024 at 9:44=E2=80=AFPM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Fri, Nov 15, 2024 at 4:47=E2=80=AFPM R Sundar <prosunofficial@gmail.co=
-m> wrote:
+On Tue, Nov 12, 2024 at 07:08:32PM -0600, Gustavo A. R. Silva wrote:
+> 
+> 
+> On 11/11/24 16:22, Gustavo A. R. Silva wrote:
+> > 
+> > 
+> > On 09/11/24 12:02, Jakub Kicinski wrote:
+> > > On Tue, 29 Oct 2024 15:55:35 -0600 Gustavo A. R. Silva wrote:
+> > > > Use the `__struct_group()` helper to create a new tagged
+> > > > `struct ethtool_link_settings_hdr`. This structure groups together
+> > > > all the members of the flexible `struct ethtool_link_settings`
+> > > > except the flexible array. As a result, the array is effectively
+> > > > separated from the rest of the members without modifying the memory
+> > > > layout of the flexible structure.
+> > > > 
+> > > > This new tagged struct will be used to fix problematic declarations
+> > > > of middle-flex-arrays in composite structs[1].
+> > > 
+> > > Possibly a very noob question, but I'm updating a C++ library with
+> > > new headers and I think this makes it no longer compile.
+> > > 
+> > > $ cat > /tmp/t.cpp<<EOF
+> > > extern "C" {
+> > > #include "include/uapi/linux/ethtool.h"
+> > > }
+> > > int func() { return 0; }
+> > > EOF
+> > > 
+> > > $ g++ /tmp/t.cpp -I../linux -o /dev/null -c -W -Wall -O2
+> > > In file included from /usr/include/linux/posix_types.h:5,
+> > >                   from /usr/include/linux/types.h:9,
+> > >                   from ../linux/include/uapi/linux/ethtool.h:18,
+> > >                   from /tmp/t.cpp:2:
+> > > ../linux/include/uapi/linux/ethtool.h:2515:24: error: ‘struct
+> > > ethtool_link_settings::<unnamed union>::ethtool_link_settings_hdr’
+> > > invalid; an anonymous union may only have public non-static data
+> > > members [-fpermissive]
+> > >   2515 |         __struct_group(ethtool_link_settings_hdr, hdr, /* no attrs */,
+> > >        |                        ^~~~~~~~~~~~~~~~~~~~~~~~~
+> > > 
+> > > 
+> 
+> This seems to work with Clang:
+> 
+> $ clang++-18 -fms-extensions /tmp/t.cpp -I../linux -o /dev/null -c -W -Wall -O2
+> 
+> However, `-fms-extensions` doesn't seem to work for this case with GCC:
+> 
+> https://godbolt.org/z/1shsPhz3s
 
-...
+Hm, we can't break UAPI even for C++, so even if we had compiler options
+that would make it work, it's really unfriendly to userspace to make all
+the projects there suddenly start needing to use it.
 
-> > --- a/include/linux/string_choices.h
-> > +++ b/include/linux/string_choices.h
-> > @@ -82,4 +82,10 @@ static inline const char *str_plural(size_t num)
-> >         return num =3D=3D 1 ? "" : "s";
-> >  }
-> >
-> > +static inline const char *str_locked_unlocked(bool v)
-> > +{
-> > +       return v ? "locked" : "unlocked";
-> > +}
-> > +#define str_unlocked_locked(v)         str_locked_unlocked(!(v))
->
-> The rest is sorted (okay, read_write() seems to be misplaced, fix that
-> in a separate change if you wish), please keep it that way (I believe
-> it should go before on_off).
+I think this means we just can't use tagged struct groups in UAPI. :(
 
-Oh, I looked in v6.11 code, in v6.12 there are a couple of more
-misplacements. Can you fix them all, please?
+I have what I think is a much simpler solution. Sending it now...
 
---=20
-With Best Regards,
-Andy Shevchenko
+-Kees
+
+-- 
+Kees Cook
