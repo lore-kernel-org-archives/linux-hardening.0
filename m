@@ -1,117 +1,73 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E10F66AA7;
-	Sun, 17 Nov 2024 11:45:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7604013A24A;
+	Sun, 17 Nov 2024 12:25:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731843944; cv=none; b=QM/TDwgUpr74Ze5ec73jsYOTHW77ViH7RSZd6EyxLrPvJnlp62g4bRKbMnPpnh8EyISdJ11tU1ppeUya/Or1boN3inSE8BycFgxYZlBLX8NDqsH/stRwcHOxQ2bW7UYbm0WOAEsR+Jgzn7TDBHBXk3OEByf37cTbMegO/H9SucU=
+	t=1731846317; cv=none; b=sENFe3tVG8sXQIHd0f8bKy853xTNnNAwgCl7MKEGxIgwatWCWncch4YByux17JjfTUXMFahxS68yV+LM6BIoBl+SmCpGgA2ySbmUQQ6ljoW/RgjwaPJ0GlFRnXp26j6o3ZU8JkNJ+x4y5huMJIQzULIuIbaEpYHnBW6/b8FLsxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731843944; c=relaxed/simple;
-	bh=WaUpZJgl59YzipJ0kAPa5ZUnQ2h5lltdWBavhDkQf0M=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=X7PTx2F7twbA98UFplVTW177hFeyhd0OAmdO/ikowHSdB0evVrkjIwLDpmbkfJvTlSppi8sJrdj5Xvcr3WgBU4WggF9l1hmD3H80ZDzzX3Pkb+1h8IN3Eny1XyFnAxx6ChVeXEcNFFcS8kSQFcci9BdGr1mMyVdzstWccdZ4TDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eGUEgnSV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1731846317; c=relaxed/simple;
+	bh=N/P+v+MMv7iFCZsNSIVblmRk4iYG9/VOGvLNzCUrVuA=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=E2hh8r1cXHefdQuDfM4DCDkchopKjkp6GuVYCs4IYO++mxVx0Gc6xxUYkdlb9+8zstFniL5ko750ZBFsZ/BPrx71rpr5QOOjIWlDrFpX8RE8pu3mZgV+in3yS0GfH4UNPPcfLjnyhEDzxbvqENVGxpdWDQVdY0eKd8+aXU4hobI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b=KA9OlNcH; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eGUEgnSV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FD8FC4CED8;
-	Sun, 17 Nov 2024 11:45:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731843943;
-	bh=WaUpZJgl59YzipJ0kAPa5ZUnQ2h5lltdWBavhDkQf0M=;
-	h=From:To:Cc:Subject:Date:From;
-	b=eGUEgnSVL17XsKDEl+xI+13lYs6hsEHSWhiTNo9PwYvPuuuII/oTVCsODqD2h82Vy
-	 stqkD9tA+NibANaR0xiIO40MYVJJntPO9nJycF2HhgVzjp2qFhCf66bQ11h3I6CDIE
-	 4mT4PIQ8/aR74+2/pP4xiR674pcGWEoVnx1RyKyucAVDZ0NPCo/u2q9nESfOVPnStv
-	 KA3KIyEAc908v4q1nWIYnhjTGG6//y1gEuzjXJJPk+NI+eeI44gyoVuGN9ElNv/IXc
-	 hCOFH4CsnVKRhg441fDQyWLn4wcQtcU6gtLmWMna7NKGii/1MSixpqS/fQash9tRAB
-	 afPTnVMN371wg==
-From: Kees Cook <kees@kernel.org>
-To: Lorenzo Bianconi <lorenzo@kernel.org>
-Cc: Kees Cook <kees@kernel.org>,
-	Sean Wang <sean.wang@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-mediatek@lists.infradead.org,
-	linux-gpio@vger.kernel.org,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] pinctrl: airoha: Use unsigned long for bit search
-Date: Sun, 17 Nov 2024 03:45:38 -0800
-Message-Id: <20241117114534.work.292-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="KA9OlNcH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
+	s=201909; t=1731846309;
+	bh=qF2IDG5jDaK6lbCWpF3L9oneS42KDrLsFyhw6rcafTc=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=KA9OlNcHEDgUXSda7Y3LLmEkqpD0Bnm8E+qF4zoGGTaaVrKn/ACi3HGGDqAHDxJr0
+	 eo5kpgLKLV76wvSM4WF0O1PwOVqyUQz4trx598ovCRKNnpXK8njPxrEOwMGVEMX3q+
+	 Rojd2afOi5B1UgdkkiXtH2Vv2gJZqhg28rD0QL3af2bxneQz0ANLKq2FaInGHPG13v
+	 zrKy+1JJ2Bn+UUEzXt8lJ92tZB5QX7JiEEJ7ISXViN5uYrXgOMn9Y1yYCkCD+VDTcg
+	 6ZfHrh0WWlgVjncHQ8r3L9K8mnVbwx0pEVYXR7W1+4/hMmRljdnCi9+8RhRdCnAOTm
+	 MQlPuTypNSblg==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Xrqhj658dz4xdg;
+	Sun, 17 Nov 2024 23:25:09 +1100 (AEDT)
+From: Michael Ellerman <patch-notifications@ellerman.id.au>
+To: Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, Naveen N Rao <naveen@kernel.org>, Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org
+In-Reply-To: <775dae48064a661554802ed24ed5bdffe1784724.1725723351.git.christophe.leroy@csgroup.eu>
+References: <775dae48064a661554802ed24ed5bdffe1784724.1725723351.git.christophe.leroy@csgroup.eu>
+Subject: Re: [PATCH] powerpc: Add __must_check to set_memory_...()
+Message-Id: <173184539745.890800.1324374267982130078.b4-ty@ellerman.id.au>
+Date: Sun, 17 Nov 2024 23:09:57 +1100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2769; i=kees@kernel.org; h=from:subject:message-id; bh=WaUpZJgl59YzipJ0kAPa5ZUnQ2h5lltdWBavhDkQf0M=; b=owGbwMvMwCVmps19z/KJym7G02pJDOmW15OY+ArTEmyFrWfl7Re2OJn69UpMy3EDQ1cXuRt13 1MnzHrWUcrCIMbFICumyBJk5x7n4vG2Pdx9riLMHFYmkCEMXJwCMBHpI4wM3yJmvOF8+Y0h59rR 30xq5pGlQnqPBbZ8Leuqvnynb4FyGsM/mwsHM21iXz3xTfm8uUg6+Feka63IqT1HHFTnzA5c6b+ UGQA=
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-Instead of risking alignment problems and causing (false positive) array
-bound warnings when casting a u32 to (64-bit) unsigned long, just use a
-native unsigned long for doing bit searches. Avoids warning with GCC 15's
--Warray-bounds -fdiagnostics-details:
+On Sat, 07 Sep 2024 17:40:41 +0200, Christophe Leroy wrote:
+> After the following powerpc commits, all calls to set_memory_...()
+> functions check returned value.
+> - Commit 8f17bd2f4196 ("powerpc: Handle error in mark_rodata_ro() and
+> mark_initmem_nx()")
+> - Commit f7f18e30b468 ("powerpc/kprobes: Handle error returned by
+> set_memory_rox()")
+> - Commit 009cf11d4aab ("powerpc: Don't ignore errors from
+> set_memory_{n}p() in __kernel_map_pages()")
+> - Commit 9cbacb834b4a ("powerpc: Don't ignore errors from
+> set_memory_{n}p() in __kernel_map_pages()")
+> - Commit 78cb0945f714 ("powerpc: Handle error in mark_rodata_ro() and
+> mark_initmem_nx()")
+> 
+> [...]
 
-In file included from ../include/linux/bitmap.h:11,
-                 from ../include/linux/cpumask.h:12,
-                 from ../arch/x86/include/asm/paravirt.h:21,
-                 from ../arch/x86/include/asm/irqflags.h:80,
-                 from ../include/linux/irqflags.h:18,
-                 from ../include/linux/spinlock.h:59,
-                 from ../include/linux/irq.h:14,
-                 from ../include/linux/irqchip/chained_irq.h:10,
-                 from ../include/linux/gpio/driver.h:8,
-                 from ../drivers/pinctrl/mediatek/pinctrl-airoha.c:11:
-In function 'find_next_bit',
-    inlined from 'airoha_irq_handler' at ../drivers/pinctrl/mediatek/pinctrl-airoha.c:2394:3:
-../include/linux/find.h:65:23: error: array subscript 'long unsigned int[0]' is partly outside array bounds of 'u32[1]' {aka 'unsigned int[1]'} [-Werror=array-bounds=]
-   65 |                 val = *addr & GENMASK(size - 1, offset);
-      |                       ^~~~~
-../drivers/pinctrl/mediatek/pinctrl-airoha.c: In function 'airoha_irq_handler':
-../drivers/pinctrl/mediatek/pinctrl-airoha.c:2387:21: note: object 'status' of size 4
- 2387 |                 u32 status;
-      |                     ^~~~~~
+Applied to powerpc/next.
 
-Signed-off-by: Kees Cook <kees@kernel.org>
----
-Cc: Lorenzo Bianconi <lorenzo@kernel.org>
-Cc: Sean Wang <sean.wang@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-mediatek@lists.infradead.org
-Cc: linux-gpio@vger.kernel.org
----
- drivers/pinctrl/mediatek/pinctrl-airoha.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+[1/1] powerpc: Add __must_check to set_memory_...()
+      https://git.kernel.org/powerpc/c/2abbd6d5fbe0eae3752b44c963248e19292e5104
 
-diff --git a/drivers/pinctrl/mediatek/pinctrl-airoha.c b/drivers/pinctrl/mediatek/pinctrl-airoha.c
-index 7692e6d9b871..547a798b71c8 100644
---- a/drivers/pinctrl/mediatek/pinctrl-airoha.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-airoha.c
-@@ -2384,15 +2384,16 @@ static irqreturn_t airoha_irq_handler(int irq, void *data)
- 
- 	for (i = 0; i < ARRAY_SIZE(irq_status_regs); i++) {
- 		struct gpio_irq_chip *girq = &pinctrl->gpiochip.chip.irq;
--		u32 status;
-+		u32 regmap;
-+		unsigned long status;
- 		int irq;
- 
- 		if (regmap_read(pinctrl->regmap, pinctrl->gpiochip.status[i],
--				&status))
-+				&regmap))
- 			continue;
- 
--		for_each_set_bit(irq, (unsigned long *)&status,
--				 AIROHA_PIN_BANK_SIZE) {
-+		status = regmap;
-+		for_each_set_bit(irq, &status, AIROHA_PIN_BANK_SIZE) {
- 			u32 offset = irq + i * AIROHA_PIN_BANK_SIZE;
- 
- 			generic_handle_irq(irq_find_mapping(girq->domain,
--- 
-2.34.1
-
+cheers
