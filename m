@@ -1,121 +1,78 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F7C47DA68;
-	Sun, 17 Nov 2024 20:03:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6629B1DE2BB;
+	Sun, 17 Nov 2024 22:59:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731873840; cv=none; b=qAeNlFIlw9wYnwiU198k/i0AqjTJTFcasaHQeN5QNmmyrdGNSz5+Zr0hhLQBn+PjEPU1A4fD5B7Ck168XAPZKbmwXCJ2zOJKe0PQqb2Ga9IRx96FkaFtB+gKYVZAjFUA0TgvSk2PtxGFBswWMOOWi6/XXm7tit7Y20e1uBHUo98=
+	t=1731884373; cv=none; b=UTbIMjIxFlWCDHW6HDz0fqy/K9QMbGqoqRwdOirpkZYEXX8dxRsVytwmXKbxZG0aeapC7nIBa+NDyDa4v1mexsF/ClBmPIwdUpopSIeQK/ZI0YWRxxFHpO2h4is/haxBBO9sYTlpHA9xVG0b8HMW2QTrnivW8N6fg+YsldGk1NI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731873840; c=relaxed/simple;
-	bh=72Lu1o44HItdEzv5B2r9aHjBGnXSZdKV0BqqFhnB63Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=j0ONn/p+ynLM7+V0lu3RGbPsLbl/Hc8rFU+dnfJB5dDtZ3LcRUH8ABGDDFNbMgcvylxr/sR75TfYqR2KNkCjqvMCFBZmHi3vIi5DaGSdyqrZpWJIt3qrwH+0h6MaFp610xITG6ldrDbVhw8hyt/2rpe8W+DYgLP85o5Q/wMBb+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CBO5a2IF; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1731884373; c=relaxed/simple;
+	bh=k9mMIGPjAE7T/mIsbukE7MMsCOXGLM/F+Drb9ESSV2I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dgTi8uoPXoZ6WDv7V389qFtLIVxBqgyX5rC6VcQl6wL5Ep4o7ER8wofWdlM1x4LaNXN5AoVRzYd3do/iHNcbzg49pCpkP/ev0QEQimtSTDEjWRjJ5J6Ff55pTjJyV+usE9UbYg9ZghXt5ZinRBY1pzadMNesbDZSB7Dr3C+aYA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=xLq1cW3H; arc=none smtp.client-ip=85.214.62.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CBO5a2IF"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-aa20c733e92so360702466b.0;
-        Sun, 17 Nov 2024 12:03:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1731873837; x=1732478637; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AK+DiBN4CK5JwQubpBBSvmzj0hpDs8Mv8Z4W0yceMXo=;
-        b=CBO5a2IFnfT6ZzeZdaA9UzlLH9ECu/4sgjuF8/2mkBFtNy83N7rEcy3uWEKmUZzYQA
-         +2LCupEkhRxzd3TzaVZWOwttKW908+tpYquq7aXuJRu2MUzELteaG5H4kvmZMUep2/vM
-         7+XO6Bfd1j3fnGL9Gs54+lcqFPwAqxpGZ32opiaGEPksRJb1f4OC26W7FcfbHeVp1UqF
-         fb8gdhtImBa5N8isDnZUxUi0sq+ZrItrtpJsYVtb8n8lKMUra0Hu5QvIkkgKmXgoxc/I
-         c+R4ox2ejUEfAD8MtzvK58Qm5EwtMlReuaiw3X73MwWbJ8VW/fA71WDWXVr1Ptt2gcpr
-         ZMTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731873837; x=1732478637;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AK+DiBN4CK5JwQubpBBSvmzj0hpDs8Mv8Z4W0yceMXo=;
-        b=k2Ptd0PoUT+fRSAuZ5cKA+gIOiY1dNDDQB6Z0COwVM4g29XzOpDr8inUg5kbbf0k7f
-         OcYdJ8Td9B6Ye4uSOiWIzl5M2ZcsMMOVFWDLRsRAorjNXtE75xsuonl2T0BTtamxX7cT
-         tgChLkskaJgfT0JSRj7BQRSmyqkKZpkUR7hmqJ1u/eefuApu/8GVwEKwE97qeWIdlEHa
-         qIvDXhV8mUzPz4ssCYuhESVIaDYWMc6HvmJD5uryUtlzqMEM4nM9YU6HXaLWcEw6KzO2
-         K6LM1xVi+ZgK83YuqN8CMDL9KGK+lqhaNrJvFu+zsPmG5mZL8pmFe134cPAJj0kn/XG6
-         +faw==
-X-Forwarded-Encrypted: i=1; AJvYcCWCuq2FdL86x3my+nphrM/9NJMctBPXQk+pkxS7JO4xbwNn+MWyJfkS+VYWcObzVpu9RpOoY+t1Sj71Iqubi6U=@vger.kernel.org, AJvYcCWaSU3QnKOAExIKXmq6NetQcm5J+gDP0kRqZpYYPqZWgs7p400OqYhaD+NqRGuTq+Wc0Y5AYT4eHDohnSoF@vger.kernel.org
-X-Gm-Message-State: AOJu0YznSfLTKGXGFkK+j7Vtu4Kf/XDQ/FtYwApBPIuK5LuPKnCSdFzc
-	KljEPsHVtUuyzZRicbemMhY7cDa21yhBSzwR5kys7xvA6KzXFuS/BZrhwBaxPOSnn3dgIFTQrKX
-	HEq4k9LPiXzQTg8/sJtnWr8SeNO8=
-X-Google-Smtp-Source: AGHT+IEL3EyLHdOzdT3h0p13980U7qVvz1QDBUVycMczXLxUWvkeIzBkm12SwlempIHi328POYKFdfbuUSypJGxWgHI=
-X-Received: by 2002:a17:906:d542:b0:a99:f887:ec1d with SMTP id
- a640c23a62f3a-aa48354c913mr895299866b.49.1731873837212; Sun, 17 Nov 2024
- 12:03:57 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="xLq1cW3H"
+Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
+	(No client certificate requested)
+	(Authenticated sender: marex@denx.de)
+	by phobos.denx.de (Postfix) with ESMTPSA id B3E6689003;
+	Sun, 17 Nov 2024 23:59:22 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
+	s=phobos-20191101; t=1731884363;
+	bh=3IzmB2O3D7dIbxmRicxWETS2qqEUDSL6zS9NFg7l0sU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=xLq1cW3HNrTEtpH3mmvlcfKc4YFfVd40BwLlRhqIH5llADix1BEEhaV7p9lisZKNF
+	 N4xQ/l9rrr7qxCSi09HqygcD6pPwYz1mvtf2h4CdQ53jSSopCf6aBfXfsJc7PaAd60
+	 t9xy9tCpvGmfucChxJmXUmmHLpeoAcz5p4b6PSX+5hJ9IGKABkT29F+TKvgEqtbkWz
+	 28VxZeYdRE7nkqihG6seNDyYsv4UwG4LPQBy82BjWye0zK7FLMrRVo6cuEJQTRUs1c
+	 lAg1PSlHxXkRNyc8+xq4S/5u8XBjhTo0T8uXFrkpCon40tMMYmJ2vHv05RWvhDr5i1
+	 4mpjelopROc6Q==
+Message-ID: <5b203f2a-755a-448b-946a-f14d6060dbb7@denx.de>
+Date: Sun, 17 Nov 2024 23:06:27 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241115144616.7453-1-prosunofficial@gmail.com>
- <CAHp75Vfp++XMr8VGjjFRBpJi+uAk8PRVPxMLmQciedBzS8gedQ@mail.gmail.com>
- <CAHp75VdD1KYh9KJWHwhxkXy-+jfh_o=Rn05AtL4QBb0HC-oz6g@mail.gmail.com> <2a5500a5-c1b6-4c5c-bf37-4cfeda5a9e1e@gmail.com>
-In-Reply-To: <2a5500a5-c1b6-4c5c-bf37-4cfeda5a9e1e@gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Sun, 17 Nov 2024 22:03:20 +0200
-Message-ID: <CAHp75Vd9tm_QOYHJ2RgK3_vF_aztEkuf68yO7a=QLHKpJAH=cA@mail.gmail.com>
-Subject: Re: [PATCH linux-next] lib/string_choices: Add str_locked_unlocked()/str_unlocked_locked()
- helper
-To: R Sundar <prosunofficial@gmail.com>
-Cc: Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>, linux-hardening@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Przemek Kitszel <przemyslaw.kitszel@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Input: ads7846 - Expand xfer array to match usage
+To: Kees Cook <kees@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>,
+ Luca Ellero <l.ellero@asem.it>, linux-input@vger.kernel.org,
+ Alexander Stein <alexander.stein@ew.tq-group.com>,
+ Al Viro <viro@zeniv.linux.org.uk>, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20241117033445.work.274-kees@kernel.org>
+Content-Language: en-US
+From: Marek Vasut <marex@denx.de>
+In-Reply-To: <20241117033445.work.274-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
+X-Virus-Status: Clean
 
-On Sat, Nov 16, 2024 at 5:48=E2=80=AFAM R Sundar <prosunofficial@gmail.com>=
- wrote:
-> On 16/11/24 01:16, Andy Shevchenko wrote:
-> > On Fri, Nov 15, 2024 at 9:44=E2=80=AFPM Andy Shevchenko
-> > <andy.shevchenko@gmail.com> wrote:
-> >> On Fri, Nov 15, 2024 at 4:47=E2=80=AFPM R Sundar <prosunofficial@gmail=
-.com> wrote:
+On 11/17/24 4:34 AM, Kees Cook wrote:
+> Commit 781a07da9bb9 ("Input: ads7846 - add dummy command register
+> clearing cycle") added commands to struct ser_req::xfer without
+> expanding it to hold them. Expand the array to the correct size.
+> 
+> ../drivers/input/touchscreen/ads7846.c: In function 'ads7846_read12_ser':
+> ../drivers/input/touchscreen/ads7846.c:416:18: error: array subscript 7 is above array bounds of 'struct spi_transfer[6]' [-Werror=array-bounds=]
+>    416 |         req->xfer[7].rx_buf = &req->scratch;
+>        |         ~~~~~~~~~^~~
+> ../drivers/input/touchscreen/ads7846.c:334:33: note: while referencing 'xfer'
+>    334 |         struct spi_transfer     xfer[6];
+>        |                                 ^~~~
+> 
+> Fixes: 781a07da9bb9 ("Input: ads7846 - add dummy command register clearing cycle")
+> Signed-off-by: Kees Cook <kees@kernel.org>
+I think Nathan already sent a fix too.
 
-...
-
-> >>> +static inline const char *str_locked_unlocked(bool v)
-> >>> +{
-> >>> +       return v ? "locked" : "unlocked";
-> >>> +}
-> >>> +#define str_unlocked_locked(v)         str_locked_unlocked(!(v))
-> >>
-> >> The rest is sorted (okay, read_write() seems to be misplaced, fix that
-> >> in a separate change if you wish), please keep it that way (I believe
-> >> it should go before on_off).
->
-> Thanks for the Review and Comments provided.
->
-> Please correct me, If I am wrong.
->
-> The function name should be in sorted order means,  str_read_write()
-> will go after str_on_off().
->
-> For example, the sorted order of function will be like:
->
-> str_on_off()
-
-> str_plural()
-
-Leave this one to be last, it's special in comparison to the rest. See
-what the type of the parameter it has for the details.
-
-> str_read_write()
->
-> > Oh, I looked in v6.11 code, in v6.12 there are a couple of more
-> > misplacements. Can you fix them all, please?
-> >
-> Sure, Will sort it and send as seperate patch.
-
-Thank you!
-
---=20
-With Best Regards,
-Andy Shevchenko
+Thanks !
