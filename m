@@ -1,144 +1,121 @@
-Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A3161D95B3
-	for <linux-hardening@vger.kernel.org>; Sun, 17 Nov 2024 19:14:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F7C47DA68;
+	Sun, 17 Nov 2024 20:03:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731870901; cv=none; b=mBc/v0OvNmqUa9ggxjnNHXxMDZu5bsFcNrFN7ptWHqdzjkTS+gDUih7OIDuz1cicMmIEs+paecMfb8/H8b6tTiN6h/1A7yYIazlDM4c5kpoc5Avyn5nM+ZVJcEdaBMiq6+X1U+uHGHAmDex5x4AqmABLqWqEAsGiI2R+wgOdXU0=
+	t=1731873840; cv=none; b=qAeNlFIlw9wYnwiU198k/i0AqjTJTFcasaHQeN5QNmmyrdGNSz5+Zr0hhLQBn+PjEPU1A4fD5B7Ck168XAPZKbmwXCJ2zOJKe0PQqb2Ga9IRx96FkaFtB+gKYVZAjFUA0TgvSk2PtxGFBswWMOOWi6/XXm7tit7Y20e1uBHUo98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731870901; c=relaxed/simple;
-	bh=rXA/vPgxjUoqHgknDoFQDXruwjTp5SZhTnujywXzb2w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XQgWQFRi5kLMG1jV5LU+jeiRQhjJ2Ln60aJCDK+Azir1H05u7/N0acEcz4/XV59eo2VYlpH4kwMxGwKjCtv0lHKy6zLtkORYr8l7ZIwSRB8Pj9hqZTX7Gg7R3MGTjd+ndOjZym7JSCcqNZ3hyv/TWfP6gIyXYS2MetTZKFAqIMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=LMElTk6y; arc=none smtp.client-ip=35.89.44.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1731873840; c=relaxed/simple;
+	bh=72Lu1o44HItdEzv5B2r9aHjBGnXSZdKV0BqqFhnB63Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=j0ONn/p+ynLM7+V0lu3RGbPsLbl/Hc8rFU+dnfJB5dDtZ3LcRUH8ABGDDFNbMgcvylxr/sR75TfYqR2KNkCjqvMCFBZmHi3vIi5DaGSdyqrZpWJIt3qrwH+0h6MaFp610xITG6ldrDbVhw8hyt/2rpe8W+DYgLP85o5Q/wMBb+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CBO5a2IF; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="LMElTk6y"
-Received: from eig-obgw-5006a.ext.cloudfilter.net ([10.0.29.179])
-	by cmsmtp with ESMTPS
-	id CWmetv78AumtXCkjVtWI3c; Sun, 17 Nov 2024 19:14:53 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id CkjUtS0OFXVlKCkjUtOAoA; Sun, 17 Nov 2024 19:14:53 +0000
-X-Authority-Analysis: v=2.4 cv=E43Lp7dl c=1 sm=1 tr=0 ts=673a40ad
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=GtNDhlRIH4u8wNL3EA3KcA==:17
- a=IkcTkHD0fZMA:10 a=VlfZXiiP6vEA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
- a=hGzw-44bAAAA:8 a=Li1AiuEPAAAA:8 a=pGLkceISAAAA:8 a=yMhMjlubAAAA:8
- a=SEc3moZ4AAAA:8 a=nkaA2WqVLt1YesQtww0A:9 a=QEXdDO2ut3YA:10
- a=HvKuF1_PTVFglORKqfwH:22 a=qGKPP_lnpMOaqR3bcYHU:22 a=5oRCH6oROnRZc2VpWJZ3:22
- a=Xt_RvD8W3m28Mn_h3AK8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=q1wR3poj1XS/Qb3R0h3X2RGerMhs3utXQCxG307IBkM=; b=LMElTk6ywLN06KeZ5rxbAV2wY5
-	h1H0qYEIs6ppuXADxoTU9HQHzi4xhaSP147sdJV/hEwhrTttOmjbU2+rOBtAdin2UbHYypnTgdvzt
-	SWtqKUB3smLOvbZr+2jsjuwp9DCsAKXmNolPxv9eSfEbh4ih5M1bFq5xZxNWc89DhL3yzFDCC6jDt
-	4yq1oYC2zzOlBDlgQXbtVI6UgvP6dqTgqplDnqHPEbtHZ1VaTBIzNsVXOZMMuGMDU2tEg8ShZoOHv
-	o6yb7TylB+GhWGj/hPJNpThCJeXKLIzB8LpAyD7CXsOIwCjGGXjNMG0Cul8aqjKe6IusTC9b8DP0b
-	jrU6mmiA==;
-Received: from [177.238.21.80] (port=44616 helo=[192.168.0.21])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1tCkjS-000o5T-22;
-	Sun, 17 Nov 2024 13:14:50 -0600
-Message-ID: <bcd4fb0f-47ee-4676-8e71-6b06973e9b65@embeddedor.com>
-Date: Sun, 17 Nov 2024 13:14:41 -0600
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CBO5a2IF"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-aa20c733e92so360702466b.0;
+        Sun, 17 Nov 2024 12:03:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1731873837; x=1732478637; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AK+DiBN4CK5JwQubpBBSvmzj0hpDs8Mv8Z4W0yceMXo=;
+        b=CBO5a2IFnfT6ZzeZdaA9UzlLH9ECu/4sgjuF8/2mkBFtNy83N7rEcy3uWEKmUZzYQA
+         +2LCupEkhRxzd3TzaVZWOwttKW908+tpYquq7aXuJRu2MUzELteaG5H4kvmZMUep2/vM
+         7+XO6Bfd1j3fnGL9Gs54+lcqFPwAqxpGZ32opiaGEPksRJb1f4OC26W7FcfbHeVp1UqF
+         fb8gdhtImBa5N8isDnZUxUi0sq+ZrItrtpJsYVtb8n8lKMUra0Hu5QvIkkgKmXgoxc/I
+         c+R4ox2ejUEfAD8MtzvK58Qm5EwtMlReuaiw3X73MwWbJ8VW/fA71WDWXVr1Ptt2gcpr
+         ZMTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1731873837; x=1732478637;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AK+DiBN4CK5JwQubpBBSvmzj0hpDs8Mv8Z4W0yceMXo=;
+        b=k2Ptd0PoUT+fRSAuZ5cKA+gIOiY1dNDDQB6Z0COwVM4g29XzOpDr8inUg5kbbf0k7f
+         OcYdJ8Td9B6Ye4uSOiWIzl5M2ZcsMMOVFWDLRsRAorjNXtE75xsuonl2T0BTtamxX7cT
+         tgChLkskaJgfT0JSRj7BQRSmyqkKZpkUR7hmqJ1u/eefuApu/8GVwEKwE97qeWIdlEHa
+         qIvDXhV8mUzPz4ssCYuhESVIaDYWMc6HvmJD5uryUtlzqMEM4nM9YU6HXaLWcEw6KzO2
+         K6LM1xVi+ZgK83YuqN8CMDL9KGK+lqhaNrJvFu+zsPmG5mZL8pmFe134cPAJj0kn/XG6
+         +faw==
+X-Forwarded-Encrypted: i=1; AJvYcCWCuq2FdL86x3my+nphrM/9NJMctBPXQk+pkxS7JO4xbwNn+MWyJfkS+VYWcObzVpu9RpOoY+t1Sj71Iqubi6U=@vger.kernel.org, AJvYcCWaSU3QnKOAExIKXmq6NetQcm5J+gDP0kRqZpYYPqZWgs7p400OqYhaD+NqRGuTq+Wc0Y5AYT4eHDohnSoF@vger.kernel.org
+X-Gm-Message-State: AOJu0YznSfLTKGXGFkK+j7Vtu4Kf/XDQ/FtYwApBPIuK5LuPKnCSdFzc
+	KljEPsHVtUuyzZRicbemMhY7cDa21yhBSzwR5kys7xvA6KzXFuS/BZrhwBaxPOSnn3dgIFTQrKX
+	HEq4k9LPiXzQTg8/sJtnWr8SeNO8=
+X-Google-Smtp-Source: AGHT+IEL3EyLHdOzdT3h0p13980U7qVvz1QDBUVycMczXLxUWvkeIzBkm12SwlempIHi328POYKFdfbuUSypJGxWgHI=
+X-Received: by 2002:a17:906:d542:b0:a99:f887:ec1d with SMTP id
+ a640c23a62f3a-aa48354c913mr895299866b.49.1731873837212; Sun, 17 Nov 2024
+ 12:03:57 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] smb: client: memcpy() with surrounding object base
- address
-To: Kees Cook <kees@kernel.org>, Steve French <sfrench@samba.org>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Paulo Alcantara <pc@manguebit.com>,
- Ronnie Sahlberg <ronniesahlberg@gmail.com>,
- Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
- Bharath SM <bharathsm@microsoft.com>, linux-cifs@vger.kernel.org,
- samba-technical@lists.samba.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20241117113204.work.419-kees@kernel.org>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20241117113204.work.419-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 177.238.21.80
-X-Source-L: No
-X-Exim-ID: 1tCkjS-000o5T-22
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.0.21]) [177.238.21.80]:44616
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfGb6HWmuahHuaxfXvSGkdeHujm4XiwlUFkv25UCoviln5hnA8a1cwOD86uq2U0jYlFe2rML5Ch0Roj+tiOEttkOkIAIkd6aYNbSNlkSqWkiyYUNgQ1ml
- rFCWgU3gVMNBFH4g+YXJAKil77CxDsL3l57szWqR+OWgJus6nNqNJkyFJGPdt6tvEb8ohm47wMJSYHBFc1R3VTSaHuTZo3+63LnyXajs0zSZkXHXSRUJ/yE+
+References: <20241115144616.7453-1-prosunofficial@gmail.com>
+ <CAHp75Vfp++XMr8VGjjFRBpJi+uAk8PRVPxMLmQciedBzS8gedQ@mail.gmail.com>
+ <CAHp75VdD1KYh9KJWHwhxkXy-+jfh_o=Rn05AtL4QBb0HC-oz6g@mail.gmail.com> <2a5500a5-c1b6-4c5c-bf37-4cfeda5a9e1e@gmail.com>
+In-Reply-To: <2a5500a5-c1b6-4c5c-bf37-4cfeda5a9e1e@gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Sun, 17 Nov 2024 22:03:20 +0200
+Message-ID: <CAHp75Vd9tm_QOYHJ2RgK3_vF_aztEkuf68yO7a=QLHKpJAH=cA@mail.gmail.com>
+Subject: Re: [PATCH linux-next] lib/string_choices: Add str_locked_unlocked()/str_unlocked_locked()
+ helper
+To: R Sundar <prosunofficial@gmail.com>
+Cc: Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>, linux-hardening@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Przemek Kitszel <przemyslaw.kitszel@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Sat, Nov 16, 2024 at 5:48=E2=80=AFAM R Sundar <prosunofficial@gmail.com>=
+ wrote:
+> On 16/11/24 01:16, Andy Shevchenko wrote:
+> > On Fri, Nov 15, 2024 at 9:44=E2=80=AFPM Andy Shevchenko
+> > <andy.shevchenko@gmail.com> wrote:
+> >> On Fri, Nov 15, 2024 at 4:47=E2=80=AFPM R Sundar <prosunofficial@gmail=
+.com> wrote:
 
+...
 
-On 17/11/24 05:32, Kees Cook wrote:
-> Like commit f1f047bd7ce0 ("smb: client: Fix -Wstringop-overflow issues"),
-> adjust the memcpy() destination address to be based off the surrounding
-> object rather than based off the 4-byte "Protocol" member. This avoids a
-> build-time warning when compiling under CONFIG_FORTIFY_SOURCE with GCC 15:
-> 
-> In function 'fortify_memcpy_chk',
->      inlined from 'CIFSSMBSetPathInfo' at ../fs/smb/client/cifssmb.c:5358:2:
-> ../include/linux/fortify-string.h:571:25: error: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Werror=attribute-warning]
->    571 |                         __write_overflow_field(p_size_field, size);
->        |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> 
-> Signed-off-by: Kees Cook <kees@kernel.org>
+> >>> +static inline const char *str_locked_unlocked(bool v)
+> >>> +{
+> >>> +       return v ? "locked" : "unlocked";
+> >>> +}
+> >>> +#define str_unlocked_locked(v)         str_locked_unlocked(!(v))
+> >>
+> >> The rest is sorted (okay, read_write() seems to be misplaced, fix that
+> >> in a separate change if you wish), please keep it that way (I believe
+> >> it should go before on_off).
+>
+> Thanks for the Review and Comments provided.
+>
+> Please correct me, If I am wrong.
+>
+> The function name should be in sorted order means,  str_read_write()
+> will go after str_on_off().
+>
+> For example, the sorted order of function will be like:
+>
+> str_on_off()
 
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> str_plural()
 
-Thanks!
--Gustavo
+Leave this one to be last, it's special in comparison to the rest. See
+what the type of the parameter it has for the details.
 
-> ---
-> Cc: Steve French <sfrench@samba.org>
-> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-> Cc: Paulo Alcantara <pc@manguebit.com>
-> Cc: Ronnie Sahlberg <ronniesahlberg@gmail.com>
-> Cc: Shyam Prasad N <sprasad@microsoft.com>
-> Cc: Tom Talpey <tom@talpey.com>
-> Cc: Bharath SM <bharathsm@microsoft.com>
-> Cc: linux-cifs@vger.kernel.org
-> Cc: samba-technical@lists.samba.org
-> ---
->   fs/smb/client/cifssmb.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/smb/client/cifssmb.c b/fs/smb/client/cifssmb.c
-> index b96ca9be5352..026d6b5f23a9 100644
-> --- a/fs/smb/client/cifssmb.c
-> +++ b/fs/smb/client/cifssmb.c
-> @@ -5337,7 +5337,7 @@ CIFSSMBSetPathInfo(const unsigned int xid, struct cifs_tcon *tcon,
->   	param_offset = offsetof(struct smb_com_transaction2_spi_req,
->   				InformationLevel) - 4;
->   	offset = param_offset + params;
-> -	data_offset = (char *) (&pSMB->hdr.Protocol) + offset;
-> +	data_offset = (char *)pSMB + offsetof(typeof(*pSMB), hdr.Protocol) + offset;
->   	pSMB->ParameterOffset = cpu_to_le16(param_offset);
->   	pSMB->DataOffset = cpu_to_le16(offset);
->   	pSMB->SetupCount = 1;
+> str_read_write()
+>
+> > Oh, I looked in v6.11 code, in v6.12 there are a couple of more
+> > misplacements. Can you fix them all, please?
+> >
+> Sure, Will sort it and send as seperate patch.
 
+Thank you!
+
+--=20
+With Best Regards,
+Andy Shevchenko
