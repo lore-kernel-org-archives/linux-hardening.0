@@ -1,46 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC64D6FB0;
-	Sun, 17 Nov 2024 03:34:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5CE638C;
+	Sun, 17 Nov 2024 04:46:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731814497; cv=none; b=EEi4DIkJFD4XOD7OCSjG10tJOv7p2j7JFjsK3J/sfpvgxdpQpnFjwzZWxuQZH4noC+IJQ4D3rOLseYwj1YLtFtw7+qnwH6tCF9oeGjyaRzGisuqnxkbKX2yH+EoFUyJnIVEvUVOA4gCUri8EB+5ZCvLv9eqkmkIoqVvJs4kS2Gc=
+	t=1731818781; cv=none; b=NxURU2j/gQspGTkr2KpRfSSh7HvzoPU1Q/DUfF+eVRFaYvgPTN5WHB+/bOjZcTPvU/EOvR0CfbgooEpM9vOn3We+3e+/YLoq6vw+YSJzsY9m27yd1//DyGvRYLfYbcR+ta5+uRNPU64cod5STy9SxLtulNKAuQi9+16pF3Wtkvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731814497; c=relaxed/simple;
-	bh=Eku9wIx8SnL1CGEny2QkDwzzkpnkr/vdiw6LJHjH5X8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=faWB7m/p4UZfKqHZ8iMiVzyC3PSQ28TVK6FfUTjX3tLtXhPCwk3uFCTaMt2IuaUNnJI4EcNOwL257pQj8U7IFLAh4ZKWZSGUFhx5entKQ0HXHuMBxG7w832+huDfL5ZT5dVmfBz/rnxkA29yM9SF29jOHI5qxYDQlvIPliH6BWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZBg+Hny2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1731818781; c=relaxed/simple;
+	bh=OHcXoXPq450uatNuLe4GGpyGOzfLynl4qxHfnoHNk10=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=erVI01W1sshgj9rQOvJAS7SNQDmAVj0sXgWJPdBX+h4FkwmLhtUHv9MYj8x+LPdMmxUTL1ESIv+qj2IRCVizwCoSeX07X7zLbyu3Fp3j273zH3pONmY0vdllE7RNsevNbrfTpqvQizlZIuUsFty4ZEaKiX/4MUcTxUYw/00HA7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R/P5ol3k; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZBg+Hny2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3000FC4CECD;
-	Sun, 17 Nov 2024 03:34:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R/P5ol3k"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A95AC4CECD;
+	Sun, 17 Nov 2024 04:46:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731814497;
-	bh=Eku9wIx8SnL1CGEny2QkDwzzkpnkr/vdiw6LJHjH5X8=;
+	s=k20201202; t=1731818780;
+	bh=OHcXoXPq450uatNuLe4GGpyGOzfLynl4qxHfnoHNk10=;
 	h=From:To:Cc:Subject:Date:From;
-	b=ZBg+Hny2nGRD1sDLANX8Qql7LTzA1MxCWuKgM4tR4bOk+OUdaflBHmrkHkWU911f/
-	 1gBZvmYoBbfz0+UhW0QQxdKx/ZsDraqZxafCVdSHZHUBLOV/63+ChOSMJAezZ3/aIX
-	 SovKGoGqcaHJeRxBDuUai1nnpdhzE5Apn5A3kLmQOLRiUnv1PPzg6Gxoouqa7SddDW
-	 flOzSNVrDpF0EXoPbdWgBtrrsdMuN9HOL4/X0bzW6oaVTylHntclkRxlgLOMtIX4De
-	 /N5RD9pTpLOi406raLn9fl0LZSYHtnCTXkDVu7IkXgRM5LFnfWs8K7TKnF2UfrS/8f
-	 hvj50WR0SDRtA==
+	b=R/P5ol3k4/ZXyLPsPNAJGVZYM5hCf30Yyct3LQD9kzxSc/we9uoncvd+E5FUQHvfe
+	 tI9m6uBzTW25v72RTMY8//P8thbDwpNpjwJEqoxtldhCtEPC+p0ZFq2sQP9e0J1mAf
+	 ZwxocJROlUdJCJvPwsLUYXsQpqMztWof2PFXtjnuHiLAi/fzPrt7CxWelrf6OL1jD0
+	 B3ptFSFVPD5G53SkB4h6KaDdatL9NmLiL1a6TFSspQgPZgjnwqNVvcE35dd3vkM0BA
+	 9oCJx0PPw1VUOErw2G/G04Cuqe57UaQ1pv+daFBczzSqgjocdN6fFlWU6SVudtO5j4
+	 KWOqzjdW6HaRA==
 From: Kees Cook <kees@kernel.org>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Miklos Szeredi <miklos@szeredi.hu>
 Cc: Kees Cook <kees@kernel.org>,
-	Marek Vasut <marex@denx.de>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Luca Ellero <l.ellero@asem.it>,
-	linux-input@vger.kernel.org,
-	Alexander Stein <alexander.stein@ew.tq-group.com>,
-	Al Viro <viro@zeniv.linux.org.uk>,
+	Amir Goldstein <amir73il@gmail.com>,
+	linux-unionfs@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH] Input: ads7846 - Expand xfer array to match usage
-Date: Sat, 16 Nov 2024 19:34:50 -0800
-Message-Id: <20241117033445.work.274-kees@kernel.org>
+Subject: [PATCH] ovl: Check for NULL OVL_E() results
+Date: Sat, 16 Nov 2024 20:46:16 -0800
+Message-Id: <20241117044612.work.304-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -48,49 +42,69 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1718; i=kees@kernel.org; h=from:subject:message-id; bh=Eku9wIx8SnL1CGEny2QkDwzzkpnkr/vdiw6LJHjH5X8=; b=owGbwMvMwCVmps19z/KJym7G02pJDOmWKZF7LT4Zv2YW2e6kW+7X/eHx4s2vpioISRat6Z9z4 /vTg8afOkpZGMS4GGTFFFmC7NzjXDzetoe7z1WEmcPKBDKEgYtTACaSr83wP6DkrYFFnl/8w4se lnb824WXzNRom289pWZp89K42edmH2L4K7T6suKKB1bJ8/mnBi3a4SUU2buiIIbN+var8Dnpr+b s4QQA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2560; i=kees@kernel.org; h=from:subject:message-id; bh=OHcXoXPq450uatNuLe4GGpyGOzfLynl4qxHfnoHNk10=; b=owGbwMvMwCVmps19z/KJym7G02pJDOmWpeItjH37/iasu/l3luicC53x/BudnKt1X4i71OQe+ Ol7ZfHrjlIWBjEuBlkxRZYgO/c4F4+37eHucxVh5rAygQxh4OIUgIkEnGdk+LlL54REftsDjcDk Tw8uWpe8VwlcZtd7/LRC59cE/sMP7Rn+cG21jF1cohhhy6ewv6Zo75/e7p5bd7efl3P07bio7vW DCwA=
 X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-Commit 781a07da9bb9 ("Input: ads7846 - add dummy command register
-clearing cycle") added commands to struct ser_req::xfer without
-expanding it to hold them. Expand the array to the correct size.
+GCC notices that it is possible for OVL_E() to return NULL (which
+implies that d_inode(dentry) may be NULL). This would result in out
+of bounds reads via container_of(), seen with GCC 15's -Warray-bounds
+-fdiagnostics-details. For example:
 
-../drivers/input/touchscreen/ads7846.c: In function 'ads7846_read12_ser':
-../drivers/input/touchscreen/ads7846.c:416:18: error: array subscript 7 is above array bounds of 'struct spi_transfer[6]' [-Werror=array-bounds=]
-  416 |         req->xfer[7].rx_buf = &req->scratch;
-      |         ~~~~~~~~~^~~
-../drivers/input/touchscreen/ads7846.c:334:33: note: while referencing 'xfer'
-  334 |         struct spi_transfer     xfer[6];
-      |                                 ^~~~
+In file included from ./arch/x86/include/generated/asm/rwonce.h:1,
+                 from ../include/linux/compiler.h:339,
+                 from ../include/linux/export.h:5,
+                 from ../include/linux/linkage.h:7,
+                 from ../include/linux/fs.h:5,
+                 from ../fs/overlayfs/util.c:7:
+In function 'ovl_upperdentry_dereference',
+    inlined from 'ovl_dentry_upper' at ../fs/overlayfs/util.c:305:9,
+    inlined from 'ovl_path_type' at ../fs/overlayfs/util.c:216:6:
+../include/asm-generic/rwonce.h:44:26: error: array subscript 0 is outside array bounds of 'struct inode[7486503276667837]' [-Werror=array-bounds=]
+   44 | #define __READ_ONCE(x)  (*(const volatile __unqual_scalar_typeof(x) *)&(x))                       |                         ~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~                 ../include/asm-generic/rwonce.h:50:9: note: in expansion of macro '__READ_ONCE'
+   50 |         __READ_ONCE(x);                                                 \
+      |         ^~~~~~~~~~~
+../fs/overlayfs/ovl_entry.h:195:16: note: in expansion of macro 'READ_ONCE'                           195 |         return READ_ONCE(oi->__upperdentry);
+      |                ^~~~~~~~~
+  'ovl_path_type': event 1
+  185 |         return inode ? OVL_I(inode)->oe : NULL;
+  'ovl_path_type': event 2
 
-Fixes: 781a07da9bb9 ("Input: ads7846 - add dummy command register clearing cycle")
+Explicitly check the result of OVL_E() and return accordingly.
+
 Signed-off-by: Kees Cook <kees@kernel.org>
 ---
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Marek Vasut <marex@denx.de>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Luca Ellero <l.ellero@asem.it>
-Cc: linux-input@vger.kernel.org
+Cc: Miklos Szeredi <miklos@szeredi.hu>
+Cc: Amir Goldstein <amir73il@gmail.com>
+Cc: linux-unionfs@vger.kernel.org
 ---
- drivers/input/touchscreen/ads7846.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/overlayfs/util.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/input/touchscreen/ads7846.c b/drivers/input/touchscreen/ads7846.c
-index 75e5b2e4368d..066dc04003fa 100644
---- a/drivers/input/touchscreen/ads7846.c
-+++ b/drivers/input/touchscreen/ads7846.c
-@@ -331,7 +331,7 @@ struct ser_req {
- 	u8			ref_off;
- 	u16			scratch;
- 	struct spi_message	msg;
--	struct spi_transfer	xfer[6];
-+	struct spi_transfer	xfer[8];
- 	/*
- 	 * DMA (thus cache coherency maintenance) requires the
- 	 * transfer buffers to live in their own cache lines.
+diff --git a/fs/overlayfs/util.c b/fs/overlayfs/util.c
+index 3bb107471fb4..32ec5eec32fa 100644
+--- a/fs/overlayfs/util.c
++++ b/fs/overlayfs/util.c
+@@ -213,6 +213,9 @@ enum ovl_path_type ovl_path_type(struct dentry *dentry)
+ 	struct ovl_entry *oe = OVL_E(dentry);
+ 	enum ovl_path_type type = 0;
+ 
++	if (WARN_ON_ONCE(oe == NULL))
++		return 0;
++
+ 	if (ovl_dentry_upper(dentry)) {
+ 		type = __OVL_PATH_UPPER;
+ 
+@@ -1312,6 +1315,9 @@ bool ovl_is_metacopy_dentry(struct dentry *dentry)
+ {
+ 	struct ovl_entry *oe = OVL_E(dentry);
+ 
++	if (WARN_ON_ONCE(oe == NULL))
++		return false;
++
+ 	if (!d_is_reg(dentry))
+ 		return false;
+ 
 -- 
 2.34.1
 
