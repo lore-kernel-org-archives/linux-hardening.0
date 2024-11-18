@@ -1,163 +1,149 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BC101991BB
-	for <linux-hardening@vger.kernel.org>; Mon, 18 Nov 2024 12:54:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6B671D1F56;
+	Mon, 18 Nov 2024 18:01:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731934468; cv=none; b=aNXw83WGzikIuvmpRAnw4X1bdEWB/tuv/QiiwHb0SzmBvseUi47kvpRhe3q/+7I4adfCD2rZCOEfk+AbL4Sxt/7BJ09DuvAoquQmbCbXRwtzV0pf1BExb07R3TQH1TLj/W4X0c5L2v+8bLkzd9AmO4UAzsUUTGQQn8TpuAdOqFY=
+	t=1731952882; cv=none; b=YVDwO8bSVuARxsqT+cMpWeZigXtUky1+ISj3Rb4uxRSZ6CNph/KfakeQ8B5x1ekJt07R3xh3tvzCH+fQ013UO1zmuNk6H/AC76oKgezhUC48io9x5opbqtxm6cnrglJBJYnKAIKE90ffFquN1pVhXV/q8qHGlXRgkZccgZbeqKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731934468; c=relaxed/simple;
-	bh=RFZav5imPpDajhAmqlY2eOGgnED4NjQI6+JJoDQ71N0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gGOHa1tYGcaXMn6Q7mD2NIfMiKICWkFOOn011r7RFh5EjqK4H+k9Hd6euV1BkxPB46ayClKiwW0WFjCGAIIV1PU4rv4mSZ/VxVneUQo4bhR68V0su5CzRfscn+VFlnR0nY6nOD9YoRp6Qr3iR85hQoyNFILtU4OIdh6nfQ6HxSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TdOZWBTK; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1731952882; c=relaxed/simple;
+	bh=zfB93JeM7MiYyZSDcH+Cv62cIp0qVV5wlF6CFxF1K18=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=FlZ2cUBopiXuO1CwhtbGZmU/F5DbL5WPEVqLUfl1tfiI5zQN8yDHCQQKdquCAINL2NVxnLAOrnzF9fnMWFjL30kX3iV8gCMw9d+Vc2Ah3c1+QdSho5//Y+nI4YtU+d3EZs80/tM4oHgIo7JT03T72EYjraFDX8BWy9mL/X16IQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ADFMxlH5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TdOZWBTK"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5cfc18d5259so6160a12.1
-        for <linux-hardening@vger.kernel.org>; Mon, 18 Nov 2024 04:54:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1731934464; x=1732539264; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RFZav5imPpDajhAmqlY2eOGgnED4NjQI6+JJoDQ71N0=;
-        b=TdOZWBTKFiS5gRjdYjk9+2Hyj9TFvL1/Qx0tNNCB2IgLrmjW5yvKKbk73asRnnQBli
-         ilMGAV7y2yDGvQNZE4bFat/WU6KH4cC/dc0wRFGOrpcHzRy15FzIvt0K8feDzGZJXunG
-         JYao2hKg+OdPml5zil28vesqetiCcX7hhKuAYxEZ+Fzik8EvCKFEDUAJdkZcs6rvXfbj
-         t6zhTNj3KN/XtS2f/MLyfUKyacNLOcTiKc7K76Rjg/ZSmqpatC2ogaamGL89Knax+y7J
-         QV5IMcL/ymSOWYEtHO1ALD2b7i+Hxc4oHAOFMVyRSkPQq4awbdZZrXAFRiSEvY1Q0em9
-         rRlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731934464; x=1732539264;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RFZav5imPpDajhAmqlY2eOGgnED4NjQI6+JJoDQ71N0=;
-        b=w/xVvMCCPMrM+OIFZ2cEcOKAFSlUzAuYMKZzdN/6oX594qSP/X/AiwsWCHrsIn2C7M
-         fP8AYFItbHPKYZUuwcM/cGx/MF7itEd4KaHKDoHo418jAniBhDYSS0jA03cL1Bh7rSlX
-         VHYl4M7IWNhX25K/nxI7QrWHpV/foE/bs3exFTmfExtUqJ32KAeqMIznsWiMBqtaUjk1
-         9bPI86I+kIxMjJ8b7RIVbJ4ISW7MjByC+pQ4VrdipYEKtYweDx9TMmWCTjZbJjjh46eI
-         DpHrO5sIe+R6i+RtfIxTzRVW88BMrOSw86qobaQUvrf03nSuVTfyWk/hot9hZosL/dDJ
-         48ug==
-X-Forwarded-Encrypted: i=1; AJvYcCWOvUc+rFSCr/AiYXFfRHmXwAhG4zy0Q9NDVbfbmEXC4j8OhgI6Q+Dv9/3zQ7mYPjUckXG26PPQBWR+vmd+4/k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxMJE6AcB1qhigVdCF+8Coc86e/ddOm7XdHIMUSelOfQP3aOzC+
-	9BsRGMwoYRXy7JxoXEqtoBt1jnfenB/8GmZlaDVlZdW4nUe95bMwsuOkjUI6O0vTASj7nfDHsg0
-	xPWwWwVs6TpcUSq0sitD2EoJeq9FI6n7nGZoF
-X-Gm-Gg: ASbGncv1m2tQCFvA1iDiYJHuurl9qGyUedCzqUPk660/v8ZgUkgwbgOIXrlPInCEXxG
-	caBPOCMeEEdGTJ/UBghUxE53XKk2vOe3Oz9IuRtm4eh4CbTbm1tKuULdDpcw=
-X-Google-Smtp-Source: AGHT+IFWl9n8jfw906nl94a7cbMwHIP9Gd4TNcFZWOOm8Tvrj69mcd0XEdLXVwoqv6yIo+K1feYbwLqCVdza/E5/6V8=
-X-Received: by 2002:aa7:de84:0:b0:5cf:6f4d:c29c with SMTP id
- 4fb4d7f45d1cf-5cfa298afd6mr136645a12.4.1731934463854; Mon, 18 Nov 2024
- 04:54:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ADFMxlH5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43352C4CEDB;
+	Mon, 18 Nov 2024 18:01:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1731952882;
+	bh=zfB93JeM7MiYyZSDcH+Cv62cIp0qVV5wlF6CFxF1K18=;
+	h=Date:From:To:Cc:Subject:From;
+	b=ADFMxlH5rEq8MwweLsqJrwre6fEPPlvK7CfR5WASeU6ROG/lDPKs4cDH3pGwbh+L0
+	 2Cxs/HCqT8+pYR3g+KpjUwpu72SIMJRMsCm4mTnczc2KwtZC93Lc3Akrz6bRcw3NBv
+	 1gJtB1Df5vt1jxPkN1YHiWP6QPhdMgOkX2TktPc4n42dqyFVlwZtwD9fixO7UspKF1
+	 h1pTL//ZOUmRluUB6LBq5wS7vDbXIHyMtSlIL+Ew+si0+mYUuAGpVMPfoDdtlG0Ih0
+	 Vc9KchHneimofvsWYT/chcPV8espz8AFrjPSr0xH4sRyrxIW6lxw5ioC/dPiGU/fWo
+	 LmpLLNIi/tpwg==
+Date: Mon, 18 Nov 2024 12:01:17 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH][next] fs: nfs: acl: Avoid -Wflex-array-member-not-at-end
+ warning
+Message-ID: <ZzuA7SRUjFPK7Ayf@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241116175922.3265872-1-pasha.tatashin@soleen.com> <a0372f7f-9a85-4d3e-ba20-b5911a8189e3@lucifer.local>
-In-Reply-To: <a0372f7f-9a85-4d3e-ba20-b5911a8189e3@lucifer.local>
-From: Jann Horn <jannh@google.com>
-Date: Mon, 18 Nov 2024 13:53:46 +0100
-Message-ID: <CAG48ez2vG0tr=H8csGes7HN_5HPQAh4WZU8U1G945K1GKfABPg@mail.gmail.com>
-Subject: Re: [RFCv1 0/6] Page Detective
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	cgroups@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	akpm@linux-foundation.org, corbet@lwn.net, derek.kiernan@amd.com, 
-	dragan.cvetic@amd.com, arnd@arndb.de, gregkh@linuxfoundation.org, 
-	viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz, tj@kernel.org, 
-	hannes@cmpxchg.org, mhocko@kernel.org, roman.gushchin@linux.dev, 
-	shakeel.butt@linux.dev, muchun.song@linux.dev, Liam.Howlett@oracle.com, 
-	vbabka@suse.cz, shuah@kernel.org, vegard.nossum@oracle.com, 
-	vattunuru@marvell.com, schalla@marvell.com, david@redhat.com, 
-	willy@infradead.org, osalvador@suse.de, usama.anjum@collabora.com, 
-	andrii@kernel.org, ryan.roberts@arm.com, peterx@redhat.com, oleg@redhat.com, 
-	tandersen@netflix.com, rientjes@google.com, gthelen@google.com, 
-	linux-hardening@vger.kernel.org, 
-	Kernel Hardening <kernel-hardening@lists.openwall.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Mon, Nov 18, 2024 at 12:17=E2=80=AFPM Lorenzo Stoakes
-<lorenzo.stoakes@oracle.com> wrote:
-> On Sat, Nov 16, 2024 at 05:59:16PM +0000, Pasha Tatashin wrote:
-> > It operates through the Linux debugfs interface, with two files: "virt"
-> > and "phys".
-> >
-> > The "virt" file takes a virtual address and PID and outputs information
-> > about the corresponding page.
-> >
-> > The "phys" file takes a physical address and outputs information about
-> > that page.
-> >
-> > The output is presented via kernel log messages (can be accessed with
-> > dmesg), and includes information such as the page's reference count,
-> > mapping, flags, and memory cgroup. It also shows whether the page is
-> > mapped in the kernel page table, and if so, how many times.
->
-> I mean, even though I'm not a huge fan of kernel pointer hashing etc. thi=
-s
-> is obviously leaking as much information as you might want about kernel
-> internal state to the point of maybe making the whole kernel pointer
-> hashing thing moot.
->
-> I know this requires CAP_SYS_ADMIN, but there are things that also requir=
-e
-> that which _still_ obscure kernel pointers.
->
-> And you're outputting it all to dmesg.
->
-> So yeah, a security person (Jann?) would be better placed to comment on
-> this than me, but are we sure we want to do this when not in a
-> CONFIG_DEBUG_VM* kernel?
+-Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+getting ready to enable it, globally.
 
-I guess there are two parts to this - what root is allowed to do, and
-what information we're fine with exposing to dmesg.
+So, in order to avoid ending up with a flexible-array member in the
+middle of other structs, we use the `struct_group_tagged()` helper
+to create a new tagged `struct posix_acl_hdr`. This structure
+groups together all the members of the flexible `struct posix_acl`
+except the flexible array.
 
-If the lockdown LSM is not set to LOCKDOWN_CONFIDENTIALITY_MAX, the
-kernel allows root to read kernel memory through some interfaces - in
-particular, BPF allows reading arbitrary kernel memory, and perf
-allows reading at least some stuff (like kernel register states). With
-lockdown in the most restrictive mode, the kernel tries to prevent
-root from reading arbitrary kernel memory, but we don't really change
-how much information goes into dmesg. (And I imagine you could
-probably still get kernel pointers out of BPF somehow even in the most
-restrictive lockdown mode, but that's probably not relevant.)
+As a result, the array is effectively separated from the rest of the
+members without modifying the memory layout of the flexible structure.
+We then change the type of the middle struct member currently causing
+trouble from `struct posix_acl` to `struct posix_acl_hdr`.
 
-The main issue with dmesg is that some systems make its contents
-available to code that is not running with root privileges; and I
-think it is also sometimes stored persistently in unencrypted form
-(like in EFI pstore) even when everything else on the system is
-encrypted.
-So on one hand, we definitely shouldn't print the contents of random
-chunks of memory into dmesg without a good reason; on the other hand,
-for example we do already print kernel register state on WARN() (which
-often includes kernel pointers and could theoretically include more
-sensitive data too).
+We also want to ensure that when new members need to be added to the
+flexible structure, they are always included within the newly created
+tagged struct. For this, we use `static_assert()`. This ensures that the
+memory layout for both the flexible structure and the new tagged struct
+is the same after any changes.
 
-So I think showing page metadata to root when requested is probably
-okay as a tradeoff? And dumping that data into dmesg is maybe not
-great, but acceptable as long as only root can actually trigger this?
+This approach avoids having to implement `struct posix_acl_hdr` as a
+completely separate structure, thus preventing having to maintain two
+independent but basically identical structures, closing the door to
+potential bugs in the future.
 
-I don't really have a strong opinion on this...
+We also use `container_of()` whenever we need to retrieve a pointer to
+the flexible structure, through which we can access the flexible-array
+member, if necessary.
 
+So, with these changes, fix the following warning:
 
-To me, a bigger issue is that dump_page() looks like it might be racy,
-which is maybe not terrible in debugging code that only runs when
-something has already gone wrong, but bad if it is in code that root
-can trigger on demand? __dump_page() copies the given page with
-memcpy(), which I don't think guarantees enough atomicity with
-concurrent updates of page->mapping or such, so dump_mapping() could
-probably run on a bogus pointer. Even without torn pointers, I think
-there could be a UAF if the page's mapping is destroyed while we're
-going through dump_page(), since the page might not be locked. And in
-dump_mapping(), the strncpy_from_kernel_nofault() also doesn't guard
-against concurrent renaming of the dentry, which I think again would
-probably result in UAF.
-So I think dump_page() in its current form is not something we should
-expose to a userspace-reachable API.
+fs/nfs_common/nfsacl.c:45:26: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ fs/nfs_common/nfsacl.c    |  8 +++++---
+ include/linux/posix_acl.h | 11 ++++++++---
+ 2 files changed, 13 insertions(+), 6 deletions(-)
+
+diff --git a/fs/nfs_common/nfsacl.c b/fs/nfs_common/nfsacl.c
+index ea382b75b26c..e2eaac14fd8e 100644
+--- a/fs/nfs_common/nfsacl.c
++++ b/fs/nfs_common/nfsacl.c
+@@ -42,7 +42,7 @@ struct nfsacl_encode_desc {
+ };
+ 
+ struct nfsacl_simple_acl {
+-	struct posix_acl acl;
++	struct posix_acl_hdr acl;
+ 	struct posix_acl_entry ace[4];
+ };
+ 
+@@ -112,7 +112,8 @@ int nfsacl_encode(struct xdr_buf *buf, unsigned int base, struct inode *inode,
+ 	    xdr_encode_word(buf, base, entries))
+ 		return -EINVAL;
+ 	if (encode_entries && acl && acl->a_count == 3) {
+-		struct posix_acl *acl2 = &aclbuf.acl;
++		struct posix_acl *acl2 =
++			container_of(&aclbuf.acl, struct posix_acl, hdr);
+ 
+ 		/* Avoid the use of posix_acl_alloc().  nfsacl_encode() is
+ 		 * invoked in contexts where a memory allocation failure is
+@@ -177,7 +178,8 @@ bool nfs_stream_encode_acl(struct xdr_stream *xdr, struct inode *inode,
+ 		return false;
+ 
+ 	if (encode_entries && acl && acl->a_count == 3) {
+-		struct posix_acl *acl2 = &aclbuf.acl;
++		struct posix_acl *acl2 =
++			container_of(&aclbuf.acl, struct posix_acl, hdr);
+ 
+ 		/* Avoid the use of posix_acl_alloc().  nfsacl_encode() is
+ 		 * invoked in contexts where a memory allocation failure is
+diff --git a/include/linux/posix_acl.h b/include/linux/posix_acl.h
+index e2d47eb1a7f3..62d497763e25 100644
+--- a/include/linux/posix_acl.h
++++ b/include/linux/posix_acl.h
+@@ -27,11 +27,16 @@ struct posix_acl_entry {
+ };
+ 
+ struct posix_acl {
+-	refcount_t		a_refcount;
+-	unsigned int		a_count;
+-	struct rcu_head		a_rcu;
++	/* New members MUST be added within the struct_group() macro below. */
++	struct_group_tagged(posix_acl_hdr, hdr,
++		refcount_t		a_refcount;
++		unsigned int		a_count;
++		struct rcu_head		a_rcu;
++	);
+ 	struct posix_acl_entry	a_entries[] __counted_by(a_count);
+ };
++static_assert(offsetof(struct posix_acl, a_entries) == sizeof(struct posix_acl_hdr),
++	      "struct member likely outside of struct_group_tagged()");
+ 
+ #define FOREACH_ACL_ENTRY(pa, acl, pe) \
+ 	for(pa=(acl)->a_entries, pe=pa+(acl)->a_count; pa<pe; pa++)
+-- 
+2.43.0
+
