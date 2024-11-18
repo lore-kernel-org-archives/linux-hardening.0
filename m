@@ -1,146 +1,132 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B76A1D89E5;
-	Sun, 17 Nov 2024 23:08:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDACC139D;
+	Mon, 18 Nov 2024 03:10:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731884909; cv=none; b=rszqueViOgS6w7RMAw4bbF3UxOXbYmaKwwdN3e9R0gsxqWmo6zqCWQMu3217u+53iokKDNvkS8t8DOGmyOH0gHZRdK+kmZSsVA07x/VmNxJMKe7smAGrwncGzbPosBylOqn7F1EiSSmu9TNpXoP8TD1XG6ZZqqUBUFf137PPl+k=
+	t=1731899431; cv=none; b=DzLBqlwv1+uko/MZuYklIzHxNOp02BT+1C7o6tPZ/BOHJO9X4CHp69WpNuDF4wXw0MZ14la1vxzE9wHjb0LHrt1Pw381lzXHzZGGIZNxQZqU7w93o3OBqDoQ0/g/nhETQTdfCKCiO/pEMXy7idkgv5DFIbUtY0JK69VJxZknd8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731884909; c=relaxed/simple;
-	bh=qc//Rp6FgcU/OzykKOBKbEI0fB9iPhKctaTJW5N31Mg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pML2QmJnO/kFAEa4Gd2T4we15zWHJeXcw3EiAfqBSaSggekZUGsTWzXbvDVrH38V9SnP3FuAI0Uw3tgXuzXha+ARi3NkqO8wR3LjUbalwRxNDcICTtfLx3pu8ENzUX8ENgPMwxiCENY6+RfVPwDlHDVcMZdgLH7SyqaVukHoX+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eHK6hhMu; arc=none smtp.client-ip=209.85.167.47
+	s=arc-20240116; t=1731899431; c=relaxed/simple;
+	bh=uoqabqJHtaS3WL8HVCwPVeD9PvKlSZIfUGocqAz4BYo=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=tW+Coa21BIrWn75/wsyp1iEVQ/N5wQG+Ki5H+9KcUu4aaeVnl1Q6/6pmm7WF2VfN9rkmHCiWOpWGoHkiQoWfoqtT9cOVKRd5GE52FSV1aIqYukzT/n3esBfvPjbi50v62JRfiK+Xim9HU6T6HeAdNFFnR7PqmbMSEFslS8nqYM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZYZSRppU; arc=none smtp.client-ip=209.85.216.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eHK6hhMu"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-53b34ed38easo3591120e87.0;
-        Sun, 17 Nov 2024 15:08:27 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZYZSRppU"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2ea46465d69so34754a91.0;
+        Sun, 17 Nov 2024 19:10:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1731884906; x=1732489706; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MNN7ziIzHnkd18GYio7H3EiJ5Cg8s0kx1zTc8dpUr6c=;
-        b=eHK6hhMutEUnhXkbiJqwd3lYmt3Clrzs5DrfD+pCo1YbMxAAHAIJwVKB9GBD1NVTkg
-         ZWExkwWPCE5FNjvybQhbIEP126Kvnx3NAQtazuIVhN5xbqqmRGC0ATyNz8x2FDogAATi
-         rDvQBuNymvxafMzAdhI5Kn/Ih+naJGnM+JXE4x3aLAwRL3TB1GotmYrUSA0WrtepT9LJ
-         9V555bJpqFySjjx7N/WAW2uicj8kFbL1tdpZFJT5TcLX9FRd/BxrqAiOxlb/7w05ejAT
-         WT0enUo3QgS7ACD9LRdRIzxkmdE86WLqdOndGYwL5HmTleXYlwAhLRyRmq/KNdBBFoPZ
-         yqxg==
+        d=gmail.com; s=20230601; t=1731899429; x=1732504229; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=B7G620YEdRwkQ8csskloZqBOnEEpoMxFxGmYTocvfwk=;
+        b=ZYZSRppU6QW+1SVokozRX4X3EO4Y0I0yFZqp2R6sUfgXdlEBsLB3lzhlD+hvMAnpzw
+         UpDTi+w7YkWON1IIr+hiLRLbEZrOn6BHuwBccpJeBxizGUQnYD0jNwTCHGbXqKfkofze
+         MFO1IddRA1EeBPadUpmkOjRNZTA6Etm1dvGIvz1U7UurmhlxCWUuFjdiz6feuZCtiZpO
+         PhQmiDg0ypqw36x5tqirNPAv7f1jPf8wAbU7XAiXx/N7d+VtvMYCvzMolVGSm5HLX9Wn
+         gwcP1W9J9TclFrz0JR7H/7dBcbly1dI8hhGHtf5Utd7bCSOYR76Xo+LyucrOXMXSXZ4L
+         8h6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731884906; x=1732489706;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MNN7ziIzHnkd18GYio7H3EiJ5Cg8s0kx1zTc8dpUr6c=;
-        b=L/DYOB1Zbuls1z+3Zf2T9BHZ5TsB+C3myHdt5yTCHydgdmn4Vc/3pzuE1HQLpw/Rza
-         EeWdVzr1vlGtt/rcf/+8vj7AxX9wpoTiuCvSxNnjaTF4j5tt8Lyb7g4JTB2qcauRANrB
-         nGRSl1btusc3htRJGx8x1S/ylsbvqgFrSqUGrqsyqQQyehVOLmuDvYY8HLO7CiMMwowy
-         DJcnit7KLg5AgPjy216z4KlqGtwveML12+XJxw0kGoWFdOXU1t/v3i05yQuZpadRttiw
-         6Ux5ygghbC4RMfucOJHBoBpgJvtdqD5G4PTJgKQRm0TqeJBFLL3KXlowpCAP37F4cesN
-         QY8w==
-X-Forwarded-Encrypted: i=1; AJvYcCUuFs/g67o38gkHDmYotLYciSpd0AjLNnJd02TRHG18BYHEvlnQEgxFPdtgoI7yf5DHlVDgFk/s7v+tYLYyqj3B@vger.kernel.org, AJvYcCVJ2kIlbK/UZI74Nf0uP8ElWTj99JFA4Oqbmvd0tjnsA7wDzm58/RkTk3ZlSN5tzl6V3VXkMueiFt+V@vger.kernel.org, AJvYcCX8JNEYnxVjSRLRIM1Qeu3G6TaxeR94SlkNeOEevWbiEyYOtqDmsVwMmtxiGZRhdfwKlf5aUBaVXJIeHX5w@vger.kernel.org
-X-Gm-Message-State: AOJu0YxeZBLmw9iiFlMV4x3HUB78WScobf9t6XfUYlS8eI3yK2M5D6ch
-	hdDuD5Xfoez0cw1ukZCju77dJAZw9oD/JejGSwLgAlwa5L9koJLrEjBQNuyu1N5+l+Yg+MCxFGL
-	QqcQvgVvFyMBDVyeo4XfkWzpBFS0=
-X-Google-Smtp-Source: AGHT+IG/Q4t9zlJxo0SzEiq1OWyQAiH8D9mhKsLHtjK5w2rEQERHHK17Ean2SepEZ7MUtCVHaZhXmMnoKX3qNPyE0Gk=
-X-Received: by 2002:a05:6512:b83:b0:539:f9b9:e6d2 with SMTP id
- 2adb3069b0e04-53dab3b126amr4424699e87.35.1731884905418; Sun, 17 Nov 2024
- 15:08:25 -0800 (PST)
+        d=1e100.net; s=20230601; t=1731899429; x=1732504229;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=B7G620YEdRwkQ8csskloZqBOnEEpoMxFxGmYTocvfwk=;
+        b=qVfiW6XESnCrwUsS9uH7NAiobu875tqk5SkNAnWH00i3z6WxZcVLNRYQQvLdMAKL13
+         nlhjs7jBrdCyH2Xgp09UhzSHprUAN2v/aQrpvkHI8AxXmTJesLxOIpiwsZC3Hjy4QO7h
+         276AENY6sOHzZQLF2eJHLjkp471FF74T3bhWWiPZpV60aGNiD6kZYT2YUMFozjp2jhgr
+         WcxECOM6wJrefQf2ZeHN5PEF5QEnPFdOvYJFS/JmuKkRxVdmwYVEUObVMJzrFwUunMG+
+         IkA4/QYSkzzbQbLzTrr64dakjqA9QX7HLXlehv02ZklCmePUi4YjaodeG17E/qAYiXF9
+         +Lfw==
+X-Forwarded-Encrypted: i=1; AJvYcCW2eYsxLU4fPVHw0Kar347mzND8Pk4xeQG43q78IcmlKZf/wNYK0G465a3rGEj7LJyFatV+a8YBhpO7hRIG@vger.kernel.org, AJvYcCWlZBmcbqsza5izQaoeZCSksWSW0zqXLg5jPOhJQIPvgOYe4fqXNDImS9h+BWbOtcY07grOjzbDRqN0BmLTgGo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy5NO09xHH+8EOPVK3Qw5TkalPw2hjOFLzYDJMCKgL7LlIz/Jvz
+	kUZEJH37vd3rBC9S1f3nbRKL6J1cWHv9jwykoyX5DGWOP6CDilWeEIOh+w==
+X-Google-Smtp-Source: AGHT+IF+0VPFRuOgue6L/1CB9KUxscJTJXK2ORhni9pSMg3t6iKhfyd5Hjw4bIgl9bdAIsItfry5gg==
+X-Received: by 2002:a17:90b:1645:b0:2e2:da69:e3fa with SMTP id 98e67ed59e1d1-2ea154be694mr5258044a91.2.1731899429029;
+        Sun, 17 Nov 2024 19:10:29 -0800 (PST)
+Received: from ?IPV6:2402:e280:214c:86:89a5:5659:771a:757d? ([2402:e280:214c:86:89a5:5659:771a:757d])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2ea5832e629sm1707240a91.23.2024.11.17.19.10.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 17 Nov 2024 19:10:28 -0800 (PST)
+Message-ID: <ee215d32-477f-48d0-9a4c-c535fadcdfe5@gmail.com>
+Date: Mon, 18 Nov 2024 08:40:25 +0530
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241117113204.work.419-kees@kernel.org> <bcd4fb0f-47ee-4676-8e71-6b06973e9b65@embeddedor.com>
-In-Reply-To: <bcd4fb0f-47ee-4676-8e71-6b06973e9b65@embeddedor.com>
-From: Steve French <smfrench@gmail.com>
-Date: Sun, 17 Nov 2024 17:08:14 -0600
-Message-ID: <CAH2r5msDZjC_iktAhCn6jxhUVQZ2sXrD8KpbCs-woDriZNDmXw@mail.gmail.com>
-Subject: Re: [PATCH] smb: client: memcpy() with surrounding object base address
-To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc: Kees Cook <kees@kernel.org>, Steve French <sfrench@samba.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Paulo Alcantara <pc@manguebit.com>, 
-	Ronnie Sahlberg <ronniesahlberg@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, 
-	Tom Talpey <tom@talpey.com>, Bharath SM <bharathsm@microsoft.com>, linux-cifs@vger.kernel.org, 
-	samba-technical@lists.samba.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+From: R Sundar <prosunofficial@gmail.com>
+Subject: Re: [PATCH linux-next] lib/string_choices: Add
+ str_locked_unlocked()/str_unlocked_locked() helper
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>,
+ linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Przemek Kitszel <przemyslaw.kitszel@intel.com>
+References: <20241115144616.7453-1-prosunofficial@gmail.com>
+ <CAHp75Vfp++XMr8VGjjFRBpJi+uAk8PRVPxMLmQciedBzS8gedQ@mail.gmail.com>
+ <CAHp75VdD1KYh9KJWHwhxkXy-+jfh_o=Rn05AtL4QBb0HC-oz6g@mail.gmail.com>
+ <2a5500a5-c1b6-4c5c-bf37-4cfeda5a9e1e@gmail.com>
+ <CAHp75Vd9tm_QOYHJ2RgK3_vF_aztEkuf68yO7a=QLHKpJAH=cA@mail.gmail.com>
+Content-Language: en-US
+In-Reply-To: <CAHp75Vd9tm_QOYHJ2RgK3_vF_aztEkuf68yO7a=QLHKpJAH=cA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-merged into cifs-2.6.git for-next
+On 18/11/24 01:33, Andy Shevchenko wrote:
+> On Sat, Nov 16, 2024 at 5:48 AM R Sundar <prosunofficial@gmail.com> wrote:
+>> On 16/11/24 01:16, Andy Shevchenko wrote:
+>>> On Fri, Nov 15, 2024 at 9:44 PM Andy Shevchenko
+>>> <andy.shevchenko@gmail.com> wrote:
+>>>> On Fri, Nov 15, 2024 at 4:47 PM R Sundar <prosunofficial@gmail.com> wrote:
+> 
+> ...
+> 
+>>>>> +static inline const char *str_locked_unlocked(bool v)
+>>>>> +{
+>>>>> +       return v ? "locked" : "unlocked";
+>>>>> +}
+>>>>> +#define str_unlocked_locked(v)         str_locked_unlocked(!(v))
+>>>>
+>>>> The rest is sorted (okay, read_write() seems to be misplaced, fix that
+>>>> in a separate change if you wish), please keep it that way (I believe
+>>>> it should go before on_off).
+>>
+>> Thanks for the Review and Comments provided.
+>>
+>> Please correct me, If I am wrong.
+>>
+>> The function name should be in sorted order means,  str_read_write()
+>> will go after str_on_off().
+>>
+>> For example, the sorted order of function will be like:
+>>
+>> str_on_off()
+> 
+>> str_plural()
+> 
+> Leave this one to be last, it's special in comparison to the rest. See
+> what the type of the parameter it has for the details.
+> 
+Hi,
 
-On Sun, Nov 17, 2024 at 1:15=E2=80=AFPM Gustavo A. R. Silva
-<gustavo@embeddedor.com> wrote:
->
->
->
-> On 17/11/24 05:32, Kees Cook wrote:
-> > Like commit f1f047bd7ce0 ("smb: client: Fix -Wstringop-overflow issues"=
-),
-> > adjust the memcpy() destination address to be based off the surrounding
-> > object rather than based off the 4-byte "Protocol" member. This avoids =
-a
-> > build-time warning when compiling under CONFIG_FORTIFY_SOURCE with GCC =
-15:
-> >
-> > In function 'fortify_memcpy_chk',
-> >      inlined from 'CIFSSMBSetPathInfo' at ../fs/smb/client/cifssmb.c:53=
-58:2:
-> > ../include/linux/fortify-string.h:571:25: error: call to '__write_overf=
-low_field' declared with attribute warning: detected write beyond size of f=
-ield (1st parameter); maybe use struct_group()? [-Werror=3Dattribute-warnin=
-g]
-> >    571 |                         __write_overflow_field(p_size_field, s=
-ize);
-> >        |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~=
-~~~~
-> >
-> > Signed-off-by: Kees Cook <kees@kernel.org>
->
-> Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->
-> Thanks!
-> -Gustavo
->
-> > ---
-> > Cc: Steve French <sfrench@samba.org>
-> > Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-> > Cc: Paulo Alcantara <pc@manguebit.com>
-> > Cc: Ronnie Sahlberg <ronniesahlberg@gmail.com>
-> > Cc: Shyam Prasad N <sprasad@microsoft.com>
-> > Cc: Tom Talpey <tom@talpey.com>
-> > Cc: Bharath SM <bharathsm@microsoft.com>
-> > Cc: linux-cifs@vger.kernel.org
-> > Cc: samba-technical@lists.samba.org
-> > ---
-> >   fs/smb/client/cifssmb.c | 2 +-
-> >   1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/fs/smb/client/cifssmb.c b/fs/smb/client/cifssmb.c
-> > index b96ca9be5352..026d6b5f23a9 100644
-> > --- a/fs/smb/client/cifssmb.c
-> > +++ b/fs/smb/client/cifssmb.c
-> > @@ -5337,7 +5337,7 @@ CIFSSMBSetPathInfo(const unsigned int xid, struct=
- cifs_tcon *tcon,
-> >       param_offset =3D offsetof(struct smb_com_transaction2_spi_req,
-> >                               InformationLevel) - 4;
-> >       offset =3D param_offset + params;
-> > -     data_offset =3D (char *) (&pSMB->hdr.Protocol) + offset;
-> > +     data_offset =3D (char *)pSMB + offsetof(typeof(*pSMB), hdr.Protoc=
-ol) + offset;
-> >       pSMB->ParameterOffset =3D cpu_to_le16(param_offset);
-> >       pSMB->DataOffset =3D cpu_to_le16(offset);
-> >       pSMB->SetupCount =3D 1;
->
->
+Noted. Thanks for clarifying it.
 
+With Regards,
+Sundar
 
---=20
-Thanks,
+>> str_read_write()
+>>
+>>> Oh, I looked in v6.11 code, in v6.12 there are a couple of more
+>>> misplacements. Can you fix them all, please?
+>>>
+>> Sure, Will sort it and send as seperate patch.
+> 
+> Thank you!
+> 
 
-Steve
