@@ -1,72 +1,44 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD32828E8;
-	Mon, 18 Nov 2024 04:57:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4C3D33FD;
+	Mon, 18 Nov 2024 05:18:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731905842; cv=none; b=BIOGClrOIiCg/+pRwl2vDIidsFMGjnQpsmfHMsVDN8vx8bh+LbwOPsGqPPfoM0tFe4zQpeXGGnUwyxgxs/lfk05KMcVinJ+RTSb5zD13u7UBY21rjXG1LXE/sEDvT+Uf5hkrBSQbdAS2/d31FAVN33CGdFgir8SP2yMAlCqyXtM=
+	t=1731907082; cv=none; b=CvMlXGKYkkZX7FnAwoohAZ8V1OLDQrAkQxxR/fuyVfz481HrdAtMDErXxrCfWVq8Id9guHV37luP0rnRdKqaEW9UHQfwiIs7jagULMQLvNKSjMZIkSGRmIZneQfC02PWuDKa6pbvSDjj1ZRg2OBtmSZZzizL5rOogx6yWWKLkus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731905842; c=relaxed/simple;
-	bh=RDFoccmBbUG9mDMuNRjLsJp+c4tSDmLr0ljFQUAJiNU=;
+	s=arc-20240116; t=1731907082; c=relaxed/simple;
+	bh=hLm0PfJ8CsOP/dBT4PJ7eFSMP9294ogxujwILqAGDu4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fnEtZK6qRGObm81MCwJPun1Y62KguoyEKKN8UunG158sgIOitAnfLoAiFR5aCZNKQhkx7y8kAHkNcDbwy8jyuPJ89xHRox79+7rqREX5hCj9Z1IL4v7WccAPkzyC6fHma8rqHHYP7q4/rNGjergmr/pX26g0cvPcV4CmY9wIW1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Kwh29RCP; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=mSs4nE+ga+zYyakvtD/XTWNRQuNEF/k7mgPgva2KZ6eZNV2kdXaXIxZ94be5OJOwfHC9yJGypHs+mVM+zfhJpyeZCgX0aMlTm8yIJE4Ew9o2tc3Lxe7Gsw8M74Aua5Dr7RKX/Ai1X16Y85Q8DEeyoHBeJUp2UXmTzGxKu/d6bxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Ed+TMapr; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kwh29RCP"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-7248c1849bdso1061380b3a.3;
-        Sun, 17 Nov 2024 20:57:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1731905839; x=1732510639; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ivpk/6a9FVTK14LGJxyzJRLvkjX9z5WDNg6sgfAnKMA=;
-        b=Kwh29RCPTwrkczdt3Pkdz3EZMZUMj+iUmeQENd8pQtn1rc1wU4I0pa8+Sqbus5ymJv
-         e7sUeRmbgVkl4Q3O9evkHMY+KiW8wFTR6WWn1KkFP/U9i4gudb1xc4mPXs/p0a1VjeyI
-         KD1iXS3CBPJPL5D1NuQWw7+4xeV7gj1CpoTJhsgbTpgA3IhPfdIqjRmsiNNv8lJRNXwG
-         YHoJU7gMHHMvlpsLdDYA5NMtJt2tn0b6PEVSHsaC69NHA4kKe7TRJcFuW3Q6G/t9Gnea
-         XQbSQYNCZDTOynpCksTGYXg3lv7bwNRDcFHiQV8KhMMrDozGeCuL9auDCBuHDSZszIla
-         IZdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731905839; x=1732510639;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ivpk/6a9FVTK14LGJxyzJRLvkjX9z5WDNg6sgfAnKMA=;
-        b=QyB+tOH0AoBRw69qvCI4cDYwhH+LGuWA3WSrLMu4Uc9//+Xipy4Qju3dlq4p35v3vj
-         2/6MeMdzhB1eUID/+x7YTB55Ap1Vsv+wGzn29mowldp/lAbPEzN/LQgcvfdMTypy5+ff
-         sFdlPfaiEQ7BDeOxRBohvHh3HOfzwPNU+H4FlT2G9KHeEJqsFbvMcMNDC6NUTdrKsbQm
-         119k+UmlcsdRpzDgnuod/Rro0yC0n38m2VEeEIa8IvHT/FwHiPnftBnGVdu7jXEmDsYM
-         NZye+t/IVUKRCjYAbHWmGqT8lMmJ1ipos74nDAbz4py383BfDSrcjx3GGljpDgAlfvFd
-         /rOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUDlxhCRDnawAwuCRUsv7rkXV8LJ3Wny+A7zygEnwe50OWjvASNXO08zXyOeiJWKmCGhp1h3xQZth5I92Fjo0Q=@vger.kernel.org, AJvYcCWf8ARiCiN3+xOEr+FsVRSoH5UO/f7sQPsLa5ZCyb/7hB8eBja9yCU58ylnbk7OZGRUHsakfmhxSQ54DYc=@vger.kernel.org, AJvYcCX/mlGf7x+jy3HuJoVrYBoCe+P1hBqBREMlk+JghQxJKUnl9OcPCfSa7VaIj3YkSXq9GJyM+CeEwukgQC7e@vger.kernel.org
-X-Gm-Message-State: AOJu0YyiYk2Cpvs0Lec06A+uELDLxs/68dgWHxEj9ty3wimA20iYydU9
-	AnkrU8AbCFx4DKgVCH5+BsVSSDKOUmCJwBgXnSeoOWBxmkVj/g1o
-X-Google-Smtp-Source: AGHT+IFY/PEHeJv1qHCjVc9kKffOdgoPKdsLp+gjBkjeOi717Fmwl99g42EhrK4uTdUZIcA+VtE+Tw==
-X-Received: by 2002:a05:6a20:258f:b0:1db:d998:513e with SMTP id adf61e73a8af0-1dc90b55109mr18184479637.22.1731905839000;
-        Sun, 17 Nov 2024 20:57:19 -0800 (PST)
-Received: from google.com ([2401:fa00:8f:201:980d:1149:a629:ef93])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-724771c083dsm5388204b3a.103.2024.11.17.20.57.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 Nov 2024 20:57:18 -0800 (PST)
-Date: Mon, 18 Nov 2024 04:57:12 +0000
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ed+TMapr"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=peqYOp/kOx/yifFdOjd9YySi9e3SyW5omHPNT5yf1Cs=; b=Ed+TMapr8ayDLH6KxN5BuBGzoR
+	kpLGGewPmoJ/l1F/aUSobnitDFc74fd5RdZOoav/TIImaCo3N4SLrN7c+xtTdR43gCuApFQ1DAR75
+	4FGIhFm7uYsZfrr110VK/+V+U3OWk/L4V2qDikH1XgoKQMfHaz2q+8hE4ZxJbIrwNYJ5LvYimPkSG
+	jlyqslDYqR0Js8dEp5c+M2cKbs1YQcIw4gtGcb1B4cffWTV7hErDifkhAuyY70ODdZLpVsHLPq5Ky
+	C9YN6TDundt4UhRKGYscxagEB8xUb0BXwhz8QhLsq5twYeoyHvWC9BRrDaA2e6eeTQQo7RmWo/Sfg
+	K+tj0FxA==;
+Received: from willy by casper.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tCu96-00000002bHi-1PCb;
+	Mon, 18 Nov 2024 05:17:56 +0000
+Date: Mon, 18 Nov 2024 05:17:56 +0000
+From: Matthew Wilcox <willy@infradead.org>
 To: Kees Cook <kees@kernel.org>
-Cc: Marek Vasut <marex@denx.de>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Arnd Bergmann <arnd@arndb.de>, Luca Ellero <l.ellero@asem.it>,
-	linux-input@vger.kernel.org,
-	Alexander Stein <alexander.stein@ew.tq-group.com>,
-	Al Viro <viro@zeniv.linux.org.uk>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] Input: ads7846 - Expand xfer array to match usage
-Message-ID: <ZzrJKKoCr7cUNVwC@google.com>
-References: <20241117033445.work.274-kees@kernel.org>
- <5b203f2a-755a-448b-946a-f14d6060dbb7@denx.de>
- <202411172038.DF2CF9CD@keescook>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] mm: Handle compound pages better in __dump_page()
+Message-ID: <ZzrOBNjqZugUIIVt@casper.infradead.org>
+References: <20241117055243.work.907-kees@kernel.org>
+ <Zzq-TJlSKXoo80Fo@casper.infradead.org>
+ <202411172043.C19A3963@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -75,35 +47,34 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202411172038.DF2CF9CD@keescook>
+In-Reply-To: <202411172043.C19A3963@keescook>
 
-On Sun, Nov 17, 2024 at 08:39:01PM -0800, Kees Cook wrote:
-> On Sun, Nov 17, 2024 at 11:06:27PM +0100, Marek Vasut wrote:
-> > On 11/17/24 4:34 AM, Kees Cook wrote:
-> > > Commit 781a07da9bb9 ("Input: ads7846 - add dummy command register
-> > > clearing cycle") added commands to struct ser_req::xfer without
-> > > expanding it to hold them. Expand the array to the correct size.
-> > > 
-> > > ../drivers/input/touchscreen/ads7846.c: In function 'ads7846_read12_ser':
-> > > ../drivers/input/touchscreen/ads7846.c:416:18: error: array subscript 7 is above array bounds of 'struct spi_transfer[6]' [-Werror=array-bounds=]
-> > >    416 |         req->xfer[7].rx_buf = &req->scratch;
-> > >        |         ~~~~~~~~~^~~
-> > > ../drivers/input/touchscreen/ads7846.c:334:33: note: while referencing 'xfer'
-> > >    334 |         struct spi_transfer     xfer[6];
-> > >        |                                 ^~~~
-> > > 
-> > > Fixes: 781a07da9bb9 ("Input: ads7846 - add dummy command register clearing cycle")
-> > > Signed-off-by: Kees Cook <kees@kernel.org>
-> > I think Nathan already sent a fix too.
+On Sun, Nov 17, 2024 at 08:46:45PM -0800, Kees Cook wrote:
+> On Mon, Nov 18, 2024 at 04:10:52AM +0000, Matthew Wilcox wrote:
+> > folio_test_large() does not touch page[1].  Look:
 > 
-> Oh excellent! I did a search in lore before sending it but must have
-> failed to find it. Do you have a link to it?
+> It does, though. :( It's via the PageTail(), which calls page_is_fake_head():
 
-I am pretty sure I applied the fix already, but I might have forgotten
-to push it out. My workstation is offline at the moment, when it comes
-back online I'll make sure the fix is there.
+Oh.  It shouldn't; that's unnecessary.
 
-Thanks.
++++ b/include/linux/page-flags.h
+@@ -306,7 +306,7 @@ static const unsigned long *const_folio_flags(const struct folio *folio,
+ {
+        const struct page *page = &folio->page;
 
--- 
-Dmitry
+-       VM_BUG_ON_PGFLAGS(PageTail(page), page);
++       VM_BUG_ON_PGFLAGS(page->compound_head & 1, page);
+        VM_BUG_ON_PGFLAGS(n > 0 && !test_bit(PG_head, &page->flags), page);
+        return &page[n].flags;
+ }
+@@ -315,7 +315,7 @@ static unsigned long *folio_flags(struct folio *folio, unsigned n)
+ {
+        struct page *page = &folio->page;
+
+-       VM_BUG_ON_PGFLAGS(PageTail(page), page);
++       VM_BUG_ON_PGFLAGS(page->compound_head & 1, page);
+        VM_BUG_ON_PGFLAGS(n > 0 && !test_bit(PG_head, &page->flags), page);
+        return &page[n].flags;
+ }
+
+should fix that.
