@@ -1,149 +1,167 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6B671D1F56;
-	Mon, 18 Nov 2024 18:01:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01C2D1DFD1;
+	Mon, 18 Nov 2024 18:21:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731952882; cv=none; b=YVDwO8bSVuARxsqT+cMpWeZigXtUky1+ISj3Rb4uxRSZ6CNph/KfakeQ8B5x1ekJt07R3xh3tvzCH+fQ013UO1zmuNk6H/AC76oKgezhUC48io9x5opbqtxm6cnrglJBJYnKAIKE90ffFquN1pVhXV/q8qHGlXRgkZccgZbeqKc=
+	t=1731954066; cv=none; b=cWf7tFMSGW+LPNR6T5fCsndF6SVYEGZgeuCIS4Lbb85eatAcRk113ePZY4H9IGDBQqQCqqkI5YSXFpraVRcUhnFaiIeJDu7UP2fDe7bs1x0S572N96eFdOgSDz9RVqqzyGe2rjZko+Jh1fXexqjdggwhoM2HLUE+Vbn7k9bN3iU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731952882; c=relaxed/simple;
-	bh=zfB93JeM7MiYyZSDcH+Cv62cIp0qVV5wlF6CFxF1K18=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=FlZ2cUBopiXuO1CwhtbGZmU/F5DbL5WPEVqLUfl1tfiI5zQN8yDHCQQKdquCAINL2NVxnLAOrnzF9fnMWFjL30kX3iV8gCMw9d+Vc2Ah3c1+QdSho5//Y+nI4YtU+d3EZs80/tM4oHgIo7JT03T72EYjraFDX8BWy9mL/X16IQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ADFMxlH5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1731954066; c=relaxed/simple;
+	bh=Ifz6ll1kWwF6NqROMr2/4icSY3LHmpPaoSvVtk4lTJ0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=K/RTO7Uv1oLR1O/oLeVS0gb7Eg9+YLV+1ivPRH0/Jel/D5BBfLCHxiPN3dVqvRgNXSAVzLYfWJIsTvcxZxtVkFoMXkFaA9fAUBcPXw7y6bJtF5DulvtEPP2mCQjSOT2vD0hdKvwxBA5xxx4I6XcDdqIEAdAbhmh2/RHm3wivkic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RvWca04m; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ADFMxlH5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43352C4CEDB;
-	Mon, 18 Nov 2024 18:01:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731952882;
-	bh=zfB93JeM7MiYyZSDcH+Cv62cIp0qVV5wlF6CFxF1K18=;
-	h=Date:From:To:Cc:Subject:From;
-	b=ADFMxlH5rEq8MwweLsqJrwre6fEPPlvK7CfR5WASeU6ROG/lDPKs4cDH3pGwbh+L0
-	 2Cxs/HCqT8+pYR3g+KpjUwpu72SIMJRMsCm4mTnczc2KwtZC93Lc3Akrz6bRcw3NBv
-	 1gJtB1Df5vt1jxPkN1YHiWP6QPhdMgOkX2TktPc4n42dqyFVlwZtwD9fixO7UspKF1
-	 h1pTL//ZOUmRluUB6LBq5wS7vDbXIHyMtSlIL+Ew+si0+mYUuAGpVMPfoDdtlG0Ih0
-	 Vc9KchHneimofvsWYT/chcPV8espz8AFrjPSr0xH4sRyrxIW6lxw5ioC/dPiGU/fWo
-	 LmpLLNIi/tpwg==
-Date: Mon, 18 Nov 2024 12:01:17 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] fs: nfs: acl: Avoid -Wflex-array-member-not-at-end
- warning
-Message-ID: <ZzuA7SRUjFPK7Ayf@kspp>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RvWca04m"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a9a850270e2so461143866b.0;
+        Mon, 18 Nov 2024 10:21:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1731954063; x=1732558863; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4lKXYtHkcL95i4UI7uiZ3CUOmGk+PvyJuJo1wQg863E=;
+        b=RvWca04mOmx2aE2YOctyvlThBuXt1ZdGTDNzY5ieipXI/q4NiKJrnU9RZwTjeKR771
+         bgDOtusT0oeeM7iwRYRoFsokjmP2Xf62ewyEI4aznVWQfw8Aca2tIVRIEVP5ksTRIIrr
+         K8oGUfkK3N1x3bV4w/R1jBOM4tPxDCjL2jxKCHn6Z5ZSSDWc4y/SPhor89CTSNtsXJ0j
+         kzzi+iayfs0pBMnqXNW8NjKRM5wbjGaAym/MyniXa4i62NGPOUbIyncb0HduEN8/OoF9
+         I61piVG9Vi/k/GufZcWLBrGfJyx/cwWGRzg6XDPSJlMoa6OarT0FG3khR6heHq7X0oEx
+         ThKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1731954063; x=1732558863;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4lKXYtHkcL95i4UI7uiZ3CUOmGk+PvyJuJo1wQg863E=;
+        b=VJ/hZ5aL5UclUusNeJroj6xu/Uq7TaUPkb2KtPw41iH0nT2/11bmNuG6ikvLzyDmjb
+         EOvkZiToZMWhtPsMAkxP57HUu/9Fkz9Cs5kzeDUxRWCW6lXEFg/zFA+8tHeBTIZlgBBP
+         XJoxmdZ2GJ4ufQSac8ooHxj912r0jbLxYbda8apEMSAZCRJBN1ajNR/4Jci1RLo/JKdS
+         NCMbObS2f0zZUwx4zG6vlu0xap6egNpSOt7L0/95CbZqhoixmnmwJHqntF4x8TdDew7m
+         9htLhl2Mc2Kqq0B4wJaIF9L8ZtTf2PLm1C2ojWP69fmvUWpjP+zRh3q2rWXy32UqRgYx
+         BGYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWb4f9CIoU1ne6EvO6EFN5OkTTfkVbvkwFFJQEsgdk6m2niFIQgmQEA2ozarpxWpHrtkaBOr0KpKX915Jye/Q==@vger.kernel.org, AJvYcCWeg6axfaaVRpHkSmzf0yZC3NKSE0C60Bus3wPzYNo3soUl8Pizle4r9rpj6TD4DY4YBU1eDYWJ8HTqEvQJ@vger.kernel.org, AJvYcCXT9Xouq0b8Hf95Bx6Hagxqvor79ky7a1vTOCt8+EMG+Mo3y2r/gk42qXKoLPah8Hk1bMp04ni4vPnRMAFgzMs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwQAdMCnSQGo3cjO0dEkMkQFXb1hirUmpxTVPMMj0jgWXl/GlJL
+	Xj/TJxLI7kQDUbd9HnUArtp1kmYc5VAvWyZzotVB8d7K0UUDB1YzgOOpRDSJienWD2uw0n7Y+x0
+	GSXqSOeKH59+QeitNOhKmoeidxMg=
+X-Google-Smtp-Source: AGHT+IFSsZTy095W0foFVPdW/HtKWRBZITkWoNj6K/qYOyKdlRMA7EQr39EUOLvRkdOFYkUGKNlvJoMIO7FqCaee1LQ=
+X-Received: by 2002:a17:907:9802:b0:a9a:1778:7024 with SMTP id
+ a640c23a62f3a-aa483421c64mr1322039766b.20.1731954063079; Mon, 18 Nov 2024
+ 10:21:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20241117044612.work.304-kees@kernel.org>
+In-Reply-To: <20241117044612.work.304-kees@kernel.org>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Mon, 18 Nov 2024 19:20:52 +0100
+Message-ID: <CAOQ4uxg8rNPUTk8dqz2HmvT9Avy_6WMW4xOMPtG0b8tSUWAKcQ@mail.gmail.com>
+Subject: Re: [PATCH] ovl: Check for NULL OVL_E() results
+To: Kees Cook <kees@kernel.org>
+Cc: Miklos Szeredi <miklos@szeredi.hu>, linux-unionfs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
--Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-getting ready to enable it, globally.
+On Sun, Nov 17, 2024 at 5:46=E2=80=AFAM Kees Cook <kees@kernel.org> wrote:
+>
+> GCC notices that it is possible for OVL_E() to return NULL (which
+> implies that d_inode(dentry) may be NULL).
 
-So, in order to avoid ending up with a flexible-array member in the
-middle of other structs, we use the `struct_group_tagged()` helper
-to create a new tagged `struct posix_acl_hdr`. This structure
-groups together all the members of the flexible `struct posix_acl`
-except the flexible array.
+I cannot follow this logic.
 
-As a result, the array is effectively separated from the rest of the
-members without modifying the memory layout of the flexible structure.
-We then change the type of the middle struct member currently causing
-trouble from `struct posix_acl` to `struct posix_acl_hdr`.
+Yes, OVL_E() can be NULL, but
+it does not imply that inode is NULL, so if you think that
+code should to be fortified, what's wrong with:
 
-We also want to ensure that when new members need to be added to the
-flexible structure, they are always included within the newly created
-tagged struct. For this, we use `static_assert()`. This ensures that the
-memory layout for both the flexible structure and the new tagged struct
-is the same after any changes.
+ struct dentry *ovl_dentry_upper(struct dentry *dentry)
+ {
+-       return ovl_upperdentry_dereference(OVL_I(d_inode(dentry)));
++       struct inode *inode =3D d_inode(dentry);
++
++       return inode ? ovl_upperdentry_dereference(OVL_I(inode)) : NULL;
+ }
 
-This approach avoids having to implement `struct posix_acl_hdr` as a
-completely separate structure, thus preventing having to maintain two
-independent but basically identical structures, closing the door to
-potential bugs in the future.
+TBH, I don't know where the line should be drawn for fortifying against
+future bugs, but if the goal of this patch is to silene a compiler warning
+then please specify this in the commit message, because I don't think
+there is any evidence of an actual bug, is there?
 
-We also use `container_of()` whenever we need to retrieve a pointer to
-the flexible structure, through which we can access the flexible-array
-member, if necessary.
+Thanks,
+Amir.
 
-So, with these changes, fix the following warning:
-
-fs/nfs_common/nfsacl.c:45:26: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- fs/nfs_common/nfsacl.c    |  8 +++++---
- include/linux/posix_acl.h | 11 ++++++++---
- 2 files changed, 13 insertions(+), 6 deletions(-)
-
-diff --git a/fs/nfs_common/nfsacl.c b/fs/nfs_common/nfsacl.c
-index ea382b75b26c..e2eaac14fd8e 100644
---- a/fs/nfs_common/nfsacl.c
-+++ b/fs/nfs_common/nfsacl.c
-@@ -42,7 +42,7 @@ struct nfsacl_encode_desc {
- };
- 
- struct nfsacl_simple_acl {
--	struct posix_acl acl;
-+	struct posix_acl_hdr acl;
- 	struct posix_acl_entry ace[4];
- };
- 
-@@ -112,7 +112,8 @@ int nfsacl_encode(struct xdr_buf *buf, unsigned int base, struct inode *inode,
- 	    xdr_encode_word(buf, base, entries))
- 		return -EINVAL;
- 	if (encode_entries && acl && acl->a_count == 3) {
--		struct posix_acl *acl2 = &aclbuf.acl;
-+		struct posix_acl *acl2 =
-+			container_of(&aclbuf.acl, struct posix_acl, hdr);
- 
- 		/* Avoid the use of posix_acl_alloc().  nfsacl_encode() is
- 		 * invoked in contexts where a memory allocation failure is
-@@ -177,7 +178,8 @@ bool nfs_stream_encode_acl(struct xdr_stream *xdr, struct inode *inode,
- 		return false;
- 
- 	if (encode_entries && acl && acl->a_count == 3) {
--		struct posix_acl *acl2 = &aclbuf.acl;
-+		struct posix_acl *acl2 =
-+			container_of(&aclbuf.acl, struct posix_acl, hdr);
- 
- 		/* Avoid the use of posix_acl_alloc().  nfsacl_encode() is
- 		 * invoked in contexts where a memory allocation failure is
-diff --git a/include/linux/posix_acl.h b/include/linux/posix_acl.h
-index e2d47eb1a7f3..62d497763e25 100644
---- a/include/linux/posix_acl.h
-+++ b/include/linux/posix_acl.h
-@@ -27,11 +27,16 @@ struct posix_acl_entry {
- };
- 
- struct posix_acl {
--	refcount_t		a_refcount;
--	unsigned int		a_count;
--	struct rcu_head		a_rcu;
-+	/* New members MUST be added within the struct_group() macro below. */
-+	struct_group_tagged(posix_acl_hdr, hdr,
-+		refcount_t		a_refcount;
-+		unsigned int		a_count;
-+		struct rcu_head		a_rcu;
-+	);
- 	struct posix_acl_entry	a_entries[] __counted_by(a_count);
- };
-+static_assert(offsetof(struct posix_acl, a_entries) == sizeof(struct posix_acl_hdr),
-+	      "struct member likely outside of struct_group_tagged()");
- 
- #define FOREACH_ACL_ENTRY(pa, acl, pe) \
- 	for(pa=(acl)->a_entries, pe=pa+(acl)->a_count; pa<pe; pa++)
--- 
-2.43.0
-
+> This would result in out
+> of bounds reads via container_of(), seen with GCC 15's -Warray-bounds
+> -fdiagnostics-details. For example:
+>
+> In file included from ./arch/x86/include/generated/asm/rwonce.h:1,
+>                  from ../include/linux/compiler.h:339,
+>                  from ../include/linux/export.h:5,
+>                  from ../include/linux/linkage.h:7,
+>                  from ../include/linux/fs.h:5,
+>                  from ../fs/overlayfs/util.c:7:
+> In function 'ovl_upperdentry_dereference',
+>     inlined from 'ovl_dentry_upper' at ../fs/overlayfs/util.c:305:9,
+>     inlined from 'ovl_path_type' at ../fs/overlayfs/util.c:216:6:
+> ../include/asm-generic/rwonce.h:44:26: error: array subscript 0 is outsid=
+e array bounds of 'struct inode[7486503276667837]' [-Werror=3Darray-bounds=
+=3D]
+>    44 | #define __READ_ONCE(x)  (*(const volatile __unqual_scalar_typeof(=
+x) *)&(x))                       |                         ~^~~~~~~~~~~~~~~=
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~                 ../include/asm-generic/=
+rwonce.h:50:9: note: in expansion of macro '__READ_ONCE'
+>    50 |         __READ_ONCE(x);                                          =
+       \
+>       |         ^~~~~~~~~~~
+> ../fs/overlayfs/ovl_entry.h:195:16: note: in expansion of macro 'READ_ONC=
+E'                           195 |         return READ_ONCE(oi->__upperdent=
+ry);
+>       |                ^~~~~~~~~
+>   'ovl_path_type': event 1
+>   185 |         return inode ? OVL_I(inode)->oe : NULL;
+>   'ovl_path_type': event 2
+>
+> Explicitly check the result of OVL_E() and return accordingly.
+>
+> Signed-off-by: Kees Cook <kees@kernel.org>
+> ---
+> Cc: Miklos Szeredi <miklos@szeredi.hu>
+> Cc: Amir Goldstein <amir73il@gmail.com>
+> Cc: linux-unionfs@vger.kernel.org
+> ---
+>  fs/overlayfs/util.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/fs/overlayfs/util.c b/fs/overlayfs/util.c
+> index 3bb107471fb4..32ec5eec32fa 100644
+> --- a/fs/overlayfs/util.c
+> +++ b/fs/overlayfs/util.c
+> @@ -213,6 +213,9 @@ enum ovl_path_type ovl_path_type(struct dentry *dentr=
+y)
+>         struct ovl_entry *oe =3D OVL_E(dentry);
+>         enum ovl_path_type type =3D 0;
+>
+> +       if (WARN_ON_ONCE(oe =3D=3D NULL))
+> +               return 0;
+> +
+>         if (ovl_dentry_upper(dentry)) {
+>                 type =3D __OVL_PATH_UPPER;
+>
+> @@ -1312,6 +1315,9 @@ bool ovl_is_metacopy_dentry(struct dentry *dentry)
+>  {
+>         struct ovl_entry *oe =3D OVL_E(dentry);
+>
+> +       if (WARN_ON_ONCE(oe =3D=3D NULL))
+> +               return false;
+> +
+>         if (!d_is_reg(dentry))
+>                 return false;
+>
+> --
+> 2.34.1
+>
