@@ -1,121 +1,93 @@
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 455DB2745C
-	for <linux-hardening@vger.kernel.org>; Tue, 19 Nov 2024 01:30:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C48DC2C9;
+	Tue, 19 Nov 2024 02:17:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731979835; cv=none; b=TkFfjvZTX+Zxd8moTLg/Zo2SmZ0L2d4vFPmjE1lnrzmqKf9ilfGWu4AfEBwtyMDOe0Bfemf6EPBbJsO9W1cORcCAVOQ33O2T1RSR+WZpCuO0I0Prhy3yqVb0qQvZ+n7FiE26RuAwQe1wJzzML1pnOog2gaV4hXyHvTDhyAhbNZw=
+	t=1731982657; cv=none; b=eGJaAl6j769MAS+ymuExJu88ea2cCXVGl9s1Od7sb74+YjHvbSWmTyfpt+Q4GFZ7Qkvr2Nd91S245w86uv26Nx7ZdF+VmUygiFXZqxCsFMAUusHaNmID1HQnPI7SAj69pHtRtm1Q5YqCN8VsCr14m5CVhwZ7MMgWg6cXsyYSFvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731979835; c=relaxed/simple;
-	bh=dwhbrEEfePVbvJU2Ozddu2A4+flvh6qun9KERWZBa38=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MERQH5Eo1luiCuYSBPDoKsDEAQhFTy/w/C5uCDsFaebdkn5ye35iRKbhQpZi1Y9MbcPBJGccWYWlTfPAYk4fULjrSKPOhAbEUoT1YAuoiXpE9rvjdml/NPMANG+On1AaEsh68FWUZLU4BUDrEs2pfqEgKVWHAE4RPMQUnbC2O80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=k8lzIUIs; arc=none smtp.client-ip=209.85.222.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
+	s=arc-20240116; t=1731982657; c=relaxed/simple;
+	bh=6O77RkxE3gcXrVBgVFmaaxWoOJeYfwTGv5ddB9OMSo8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=j6/6lzBb/qcwrdrDUYSE//4xNjDsa9R7Sta7rcV21orPGJmlnGXBS/dyAJIFduo/38OmRm4Da8kr7qBq+ieJK6NDBG+pX+4yhPpj+oeYjQWLkJ1l8ODD4rrdiKIrAz9K3yOn/8U6suCPFYQh+gRhw2/2knzhD7dAReRtMSnNK+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hUaAXTvY; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="k8lzIUIs"
-Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-856e84170c3so1503592241.1
-        for <linux-hardening@vger.kernel.org>; Mon, 18 Nov 2024 17:30:33 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hUaAXTvY"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2ea46465d69so161415a91.0;
+        Mon, 18 Nov 2024 18:17:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1731979832; x=1732584632; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=dwhbrEEfePVbvJU2Ozddu2A4+flvh6qun9KERWZBa38=;
-        b=k8lzIUIsmYElffpbh57rlY3tRxUBQ7HRQZILiWErsvaby4Cd9m5Y+ixX0pOAIwxI2l
-         hMNomGeRJwFJKbhkwHbsRNBjw4hzfn5R5PCNTcoFkK6fVthKO3qRuOb2rU1QLV7Wgqps
-         MPjmY7qjE10pmxF2MCLONbn0lz7+5gMQWekRntaCbhGWP2TBjnIKAAnNfWvZS6D618RW
-         OPSb4YuDI1c0sQrKybSfkm25ptjvCJgvkgPcfU5oO+S8isODuIdUSm8inbfXJaRYqbzB
-         KTf42sNiJBhJeuNMw/ntrBARMYfNDUhQfgMhb8CrnEBpvT0MtUU4ePeoBKRe0L55X/PD
-         VlWQ==
+        d=gmail.com; s=20230601; t=1731982656; x=1732587456; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=M41CMe+QvqjaoJzwmSLJZ9eaj6N0XNl3L6DH/OPdGWg=;
+        b=hUaAXTvYB1OAzudmEC/FRxuf/pYl+Ld6p8oVE54ezRmNIFtA258GmjL0sbEuBEPQAt
+         OmVUbs8q/bfeA9WyPRET+Ft/Q/qPAbuvj/IwqelmdreaiKAfmWbmwvhw3tmhmQEIrv+V
+         AYBcrumm4/Hxmu0fGakrRYCzP9jEjLppcRlhkJPpgGoIb0clzLJHfnD+aYatnmoZxKfN
+         Q1Thb4WzC26QybBBhGFBP8lldfgvzA2Ill8I4lg12hIW1DMLMtnEqF/saz00ENqxkuuw
+         jwFuzpNu6/1tGCV5WWz3S0Ih1JmOyB8OH7HgHyyCYx+zJNwg13/MjLL2pik203dLyQ/7
+         KPvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731979832; x=1732584632;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1731982656; x=1732587456;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=dwhbrEEfePVbvJU2Ozddu2A4+flvh6qun9KERWZBa38=;
-        b=YwNv/TLKGnVAXS+zou6CTbrm6ZZ/SuXYOGoknywRP9YFdNFx1ubUWIm9u2g+0aGWrV
-         XTtF8pbFAzlXTnJCHVSpSE0GkYmCipB6oGqysebCMH6ihAOc/rxStNYdlBJAyTLXUX+n
-         kuK/yQH/78UStfMxTV5X8f5rLyRY/DlCBLJj2LYlXJwhLazpYtYa6moutWEwY0hX+BY4
-         AGh85kUkkkYiAnxBKJEn9BXcImajL4ElMesdLUH1N2UUiblCyJNfnVLDP8797oHZJk/h
-         LuQh+uDeo2Fe/54t8qFKCTXTt2IUzDniUDWY1Do1oz66WEBdQ92Y+zsdihWL3jo5TenY
-         Ef7A==
-X-Forwarded-Encrypted: i=1; AJvYcCUMGGzUAV0z6mcFOWCZo1T9Ehau2AFf/jQL7srGsZl0nNhGM/D37NKvk9WCSwPs+1bKinwr9hZ+QuFQp0QH6X4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yycrmy3Vd0/gKlKk3YDU6mpO/+Cth9AjGQV36kdTX1c6E/4G9+s
-	x4C3Tf793KUKW87rqbwJfv9q3kzjTswjiutYD+rcKJDiuT8H7XYW2klZiLPWfIP1BeKywDT7jUq
-	8F/wqSiaCTBmmNtK9DwaLrGOS4MS5lgHQkzA11w==
-X-Google-Smtp-Source: AGHT+IEnblF5WP9b6MMjtXTC6Vjj1Iy7OkpDZ4PeMU+Uc4InANfSMt/pice9eNGMRdH2BcrKEejfz0Ajo3xoxrMqxY0=
-X-Received: by 2002:a05:6102:3f04:b0:4a9:14:3ee9 with SMTP id
- ada2fe7eead31-4ad62d52711mr12363521137.23.1731979832190; Mon, 18 Nov 2024
- 17:30:32 -0800 (PST)
+        bh=M41CMe+QvqjaoJzwmSLJZ9eaj6N0XNl3L6DH/OPdGWg=;
+        b=SajCUaj3kEIquAz3yOiRSfZChvkijOxuKrz8CRgZbNHR9ndAljgTeVFR9a7KDpg/vY
+         MQU9PyD9xFczuRui0Um3nrcaHxWrnr7t3BIO62CJ4KWUOqk/PRA4wD2w/2/KdQ/1wgCi
+         y6wYnKB7070ZyXxG1VjR6AtsU+7kfObAPYQP9CMMTirJ0BI25rEifOOBRx3I4DbHRNrO
+         H90A2F/Q/1pqjljzk3s1MeUr6ZmUyRND5UVnZxdk+IvqjRuHcWaiB46V13AG6oJa5bSx
+         xoPolIHjXxZo+kFKj13xR055gvucskir92EVgFcxn6b68LGxEa/cQr2Hs5qLAr1HB0GP
+         RDTw==
+X-Forwarded-Encrypted: i=1; AJvYcCVWAOvWGMThhoXISLP6aB47sQM5fT3JwbcXvE1Kr2sX16JD6ApZKxaRJ1hXJGcp6dkA47K9WGo+08iV0I0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxfHBpBWNozCrC62FD+fghgg07JNWe0qDJBav5sJmQ9FuPHovFY
+	g6zV3OpEu7DWFgeEiljDSZfpAgmBeo3b27qWRzvOONpODMcQ0zGY
+X-Google-Smtp-Source: AGHT+IG0oyp4DRCOYL0HyeA4vsuupIRjL3169+A1W0USKRXUGtfuog7gaLvyxXI4p3JsHbZnEwH+bw==
+X-Received: by 2002:a17:90b:1e10:b0:2ea:5c01:c1a0 with SMTP id 98e67ed59e1d1-2ea5c01c415mr3622339a91.3.1731982655663;
+        Mon, 18 Nov 2024 18:17:35 -0800 (PST)
+Received: from dev.. ([2402:e280:214c:86:d61a:bb21:5b09:2d6b])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2ea024b82aasm8244129a91.33.2024.11.18.18.17.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Nov 2024 18:17:35 -0800 (PST)
+From: R Sundar <prosunofficial@gmail.com>
+To: Kees Cook <kees@kernel.org>,
+	Andy Shevchenko <andy@kernel.org>
+Cc: linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	R Sundar <prosunofficial@gmail.com>
+Subject: [PATCH v2 linux-next 0/2] lib/string_choices: Sorting function order
+Date: Tue, 19 Nov 2024 07:47:17 +0530
+Message-Id: <20241119021719.7659-1-prosunofficial@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241116175922.3265872-1-pasha.tatashin@soleen.com>
- <a0372f7f-9a85-4d3e-ba20-b5911a8189e3@lucifer.local> <CAG48ez2vG0tr=H8csGes7HN_5HPQAh4WZU8U1G945K1GKfABPg@mail.gmail.com>
- <CA+CK2bB0w=i1z78AJbr2gZE9ybYki4Vz_s53=8URrxwyPvvB+A@mail.gmail.com> <CAG48ez1KFFXzy5qcYVZLnUEztaZxDGY2+4GvwYq7Hb=Y=3FBxQ@mail.gmail.com>
-In-Reply-To: <CAG48ez1KFFXzy5qcYVZLnUEztaZxDGY2+4GvwYq7Hb=Y=3FBxQ@mail.gmail.com>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Mon, 18 Nov 2024 20:29:55 -0500
-Message-ID: <CA+CK2bCBwZFomepG-Pp6oiAwHQiKdsTLe3rYtE3hFSQ5spEDww@mail.gmail.com>
-Subject: Re: [RFCv1 0/6] Page Detective
-To: Jann Horn <jannh@google.com>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	cgroups@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	akpm@linux-foundation.org, corbet@lwn.net, derek.kiernan@amd.com, 
-	dragan.cvetic@amd.com, arnd@arndb.de, gregkh@linuxfoundation.org, 
-	viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz, tj@kernel.org, 
-	hannes@cmpxchg.org, mhocko@kernel.org, roman.gushchin@linux.dev, 
-	shakeel.butt@linux.dev, muchun.song@linux.dev, Liam.Howlett@oracle.com, 
-	vbabka@suse.cz, shuah@kernel.org, vegard.nossum@oracle.com, 
-	vattunuru@marvell.com, schalla@marvell.com, david@redhat.com, 
-	willy@infradead.org, osalvador@suse.de, usama.anjum@collabora.com, 
-	andrii@kernel.org, ryan.roberts@arm.com, peterx@redhat.com, oleg@redhat.com, 
-	tandersen@netflix.com, rientjes@google.com, gthelen@google.com, 
-	linux-hardening@vger.kernel.org, 
-	Kernel Hardening <kernel-hardening@lists.openwall.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-> Can you point me to where a refcounted reference to the page comes
-> from when page_detective_metadata() calls dump_page_lvl()?
+This patch series rearrange misplaced functions in sorted order and add 
+str_locked_unlocked() helper.
 
-I am sorry, I remembered incorrectly, we are getting reference right
-after dump_page_lvl() in page_detective_memcg() -> folio_try_get(); I
-will move the folio_try_get() to before dump_page_lvl().
+Signed-off-by: R Sundar <prosunofficial@gmail.com>                              
+---                                                                             
+                                                                                
+Changes in v2: Rearrange functions in sorted order as seperate patch.           
+                                                                                
+Changes in v1: Add str_locked_unlocked helper function alone.                   
+link to v1: https://lore.kernel.org/all/20241115144616.7453-1-prosunofficial@gmail.com/
+---  
 
-> > > So I think dump_page() in its current form is not something we should
-> > > expose to a userspace-reachable API.
-> >
-> > We use dump_page() all over WARN_ONs in MM code where pages might not
-> > be locked, but this is a good point, that while even the existing
-> > usage might be racy, providing a user-reachable API potentially makes
-> > it worse. I will see if I could add some locking before dump_page(),
-> > or make a dump_page variant that does not do dump_mapping().
->
-> To be clear, I am not that strongly opposed to racily reading data
-> such that the data may not be internally consistent or such; but this
-> is a case of racy use-after-free reads that might end up dumping
-> entirely unrelated memory contents into dmesg. I think we should
-> properly protect against that in an API that userspace can invoke.
-> Otherwise, if we race, we might end up writing random memory contents
-> into dmesg; and if we are particularly unlucky, those random memory
-> contents could be PII or authentication tokens or such.
->
-> I'm not entirely sure what the right approach is here; I guess it
-> makes sense that when the kernel internally detects corruption,
-> dump_page doesn't take references on pages it accesses to avoid
-> corrupting things further. If you are looking at a page based on a
-> userspace request, I guess you could access the page with the
-> necessary locking to access its properties under the normal locking
-> rules?
+R Sundar (2):
+  lib/string_choices: Rearrange functions in sorted order
+  lib/string_choices: Add str_locked_unlocked()/str_unlocked_locked()
+    helper
 
-I will take reference, as we already do that for memcg purpose, but
-have not included dump_page().
+ include/linux/string_choices.h | 28 +++++++++++++++++-----------
+ 1 file changed, 17 insertions(+), 11 deletions(-)
 
-Thank you,
-Pasha
+-- 
+2.34.1
+
