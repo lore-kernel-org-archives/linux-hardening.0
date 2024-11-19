@@ -1,70 +1,35 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B39B013A868;
-	Tue, 19 Nov 2024 02:17:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AAE514B06A;
+	Tue, 19 Nov 2024 04:00:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731982672; cv=none; b=LGEBeXzGrb86V0AsuUw/SWKsvk5Frv8qggPnjkvdKSQgEWob2BzObMfpmInxuzPpLzMU2o7+FhgDYtWWASz80GCs920rfVIFffJvy1FrHC4AZ+dWMH4k5qBNskQhEJGw+9m6TC1uxl4TFMuxYcBxjng2Ja/UYBpawWTBa3Z7tss=
+	t=1731988834; cv=none; b=ihAAUYwkm99xvIBb415pgXJKWgE2N9n90l4sFLr76Hii2o8sfkUfjydlejOdAwHFNVSWIdTYAJfuK7hudm3/40Jj95LYBj/CPwntBgTu5quEiD33iy57/MRuJyn0auat2vVgYxWJJRYb3OepeHxTvClZRE/gZXi+zdJNEJst2vI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731982672; c=relaxed/simple;
-	bh=7L6ua5/pSShMdfVFfn+0WaKr22hV7sw589mcoOtSbEM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=X7A3B7e84prpOwfnjhjxENHQHmfeptVMGUdRrNcWFHani7A9LRAXuIeQn0gRe8aZ4ritvQg075mJtZyAG+vdAUILmFYlGrWovHt25zLzunRw0z0wMCuMmqW7MF8a3quya7o56SYgz7NjNN2ta+I59PtEgRas4jbyQiRpb9GdH6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JpSyhPzU; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1731988834; c=relaxed/simple;
+	bh=oh+IX3k+C5979Zv7no9k810xDJ/vT/99kL2zrUcmP8E=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=Y4XyEoz9vKymMyrE6iZB9tFNgqguuT2AZakHJoFCWmetBkd3Tud7cMFJlVms4tKqJTxzbvli6FBzPFVpXKoDzh26/rXxCub4stuC2SMrgS0z2I49ouTjmNwBuZWCoF5KKhbChmC0jCadyEniSPuBtKV7qI2rxNxOYOlNew6Y85Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KtijRZKK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JpSyhPzU"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2ea456f1029so162502a91.2;
-        Mon, 18 Nov 2024 18:17:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1731982670; x=1732587470; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QhTqy3e/Sj/U+p3Gc3V7kqvNZvj2Ji0rTvyB0P5gl2c=;
-        b=JpSyhPzU1BFVS+hC+ye21HDCWt6VY+wTT3F/FVLHvrUXoRPaKO/zqzOvJRfQD+mh+w
-         JOhMnRbi/WCPjRwVTu40yzaKClXwov4BDyYbjG6I0/UHIH7yi7S+vKNfHgnvLUhwzC/4
-         U0ceTmQTXelXehnA6LEkfXVMav0K/rr7cv8XUVlYhJcvw2ycw7o1M/IIs/FdN/Hac53/
-         VDZDbuz8jpcEc9ivhDp3trlzKg9I9RM1AKnz1x/V3RmPfxr9MHkpeAWqxn9WxoasY48t
-         FMaCXYZcceC5xwlp2mE9+fz5uhcUhVxYhfQMCFzgo377cBS3cYKlCHemIj/O5UCaCCCV
-         2rCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731982670; x=1732587470;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QhTqy3e/Sj/U+p3Gc3V7kqvNZvj2Ji0rTvyB0P5gl2c=;
-        b=lRpA7LX2MIRlyu3SyhuVoWPmutYaWI+ZxOE1KezlYDPl8nB8XbkF66pE5XqWEjBoDu
-         A6greFzvqPlvJS/vTCHlAYKuqzCIsoEBn/hpFK4Z2Z579ktjAqbwIaI0kZEPEEhtUcxv
-         GUu2AK5qH8BFCcI3n5YTKGHguiTLAzZy+PBb8UmAfTobtpvPR+MNxp+kxZgCtqsSfqtl
-         25GzI8+7tadhW76RXBJgXNmVNpNjFpRauFsVa6TjRnaQLVw/UlJjJjY8yqpDuVzVmZQD
-         spEafgLYofAp7EE+vVvM4DzI9lUcSN2epwL8X7+wR7QgfJ3f4QB2APKdM/dWiMyg2DNb
-         547A==
-X-Forwarded-Encrypted: i=1; AJvYcCWRfEibxDYUQCZB90xclLnZhTQNym0ID5HokUDa4Rb/l2HIDdvzwLm592AnlCzfBJUKEQ1Pyqype9SR4Dc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzVhM3dtDN6GHiFMP1XmK+mWpHZjZLiIHwj99xaB8cd/xGLeJ60
-	2dMqwzo9AAhCrgthYlrwjh5GKNkWxPLKpNB0ghXyzWQ1/BWYE0ED
-X-Google-Smtp-Source: AGHT+IHfijkBqoan0rEFjO2OXxS5pt61GvLBYzkmcel+tYUWbNVEnbOYcpS83JH7mpm0kKLgzXZsFA==
-X-Received: by 2002:a17:90b:3b82:b0:2ea:8aac:6aab with SMTP id 98e67ed59e1d1-2ea8aac6be0mr2153020a91.1.1731982669918;
-        Mon, 18 Nov 2024 18:17:49 -0800 (PST)
-Received: from dev.. ([2402:e280:214c:86:d61a:bb21:5b09:2d6b])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2ea024b82aasm8244129a91.33.2024.11.18.18.17.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2024 18:17:49 -0800 (PST)
-From: R Sundar <prosunofficial@gmail.com>
-To: Kees Cook <kees@kernel.org>,
-	Andy Shevchenko <andy@kernel.org>
-Cc: linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	R Sundar <prosunofficial@gmail.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>
-Subject: [PATCH v2 linux-next 2/2] lib/string_choices: Add str_locked_unlocked()/str_unlocked_locked() helper
-Date: Tue, 19 Nov 2024 07:47:19 +0530
-Message-Id: <20241119021719.7659-3-prosunofficial@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20241119021719.7659-1-prosunofficial@gmail.com>
-References: <20241119021719.7659-1-prosunofficial@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KtijRZKK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1287C4DDEB;
+	Tue, 19 Nov 2024 04:00:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1731988833;
+	bh=oh+IX3k+C5979Zv7no9k810xDJ/vT/99kL2zrUcmP8E=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=KtijRZKKn0G6iqcSHsZMAPXxfcImh6EDFAQmQX1xQmrjA+CF61CbxyyQm/LypVBmt
+	 Fp5hNHlNwzgC7evqVsFC3PgfveNK5DgVEQ2mj3LCHOK14aVm3OxCf/mNpJX6a2Wiie
+	 xsW7m6O0BtOUoRjWkkSnkzNDr0f+Zal4pa6A0AP1mA6hQSx1/y/SlRc/xDxkiolPOV
+	 90x+dDy13qJpn/+l2Xo3zt2ng6xMFRChjc4fY6fIjku+Wb6uaEhLxGm0ZoAMNCP0CH
+	 JHT3nWx7kQpOBKpF1ZlmNgg3mV41aPojJ/ljTQ8hYN9xKWt7CEQZJHYj4tvy8VBEVQ
+	 hLdVOIaniSiqQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70EC13809A80;
+	Tue, 19 Nov 2024 04:00:46 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -72,33 +37,52 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH 0/3] UAPI: ethtool: Avoid flex-array in struct
+ ethtool_link_settings
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <173198884499.97799.13289755875116229867.git-patchwork-notify@kernel.org>
+Date: Tue, 19 Nov 2024 04:00:44 +0000
+References: <20241115204115.work.686-kees@kernel.org>
+In-Reply-To: <20241115204115.work.686-kees@kernel.org>
+To: Kees Cook <kees@kernel.org>
+Cc: kuba@kernel.org, gustavoars@kernel.org, davem@davemloft.net,
+ andrew@lunn.ch, kory.maincent@bootlin.com, michael.chan@broadcom.com,
+ andrew+netdev@lunn.ch, edumazet@google.com, pabeni@redhat.com,
+ bharat@chelsio.com, benve@cisco.com, satishkh@cisco.com, manishc@marvell.com,
+ horms@kernel.org, ecree.xilinx@gmail.com, przemyslaw.kitszel@intel.com,
+ hkallweit1@gmail.com, ahmed.zaki@intel.com, rrameshbabu@nvidia.com,
+ idosch@nvidia.com, maxime.chevallier@bootlin.com, hayatake396@gmail.com,
+ corbet@lwn.net, linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ linux-hardening@vger.kernel.org
 
-Add str_locked_unlocked()/str_unlocked_locked() helper to return
-"locked" or "unlocked" string literal.
+Hello:
 
-Suggested-by: Przemek Kitszel <przemyslaw.kitszel@intel.com>
-Signed-off-by: R Sundar <prosunofficial@gmail.com>
----
- include/linux/string_choices.h | 6 ++++++
- 1 file changed, 6 insertions(+)
+This series was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-diff --git a/include/linux/string_choices.h b/include/linux/string_choices.h
-index f3ba4f52ff26..a6bbf4e42c13 100644
---- a/include/linux/string_choices.h
-+++ b/include/linux/string_choices.h
-@@ -41,6 +41,12 @@ static inline const char *str_high_low(bool v)
- }
- #define str_low_high(v)		str_high_low(!(v))
- 
-+static inline const char *str_locked_unlocked(bool v)
-+{
-+	return v ? "locked" : "unlocked";
-+}
-+#define str_unlocked_locked(v)         str_locked_unlocked(!(v))
-+
- static inline const char *str_on_off(bool v)
- {
- 	return v ? "on" : "off";
+On Fri, 15 Nov 2024 12:43:02 -0800 you wrote:
+> Hi,
+> 
+> This reverts the tagged struct group in struct ethtool_link_settings and
+> instead just removes the flexible array member from Linux's view as it
+> is entirely unused.
+> 
+> -Kees
+> 
+> [...]
+
+Here is the summary with links:
+  - [1/3] Revert "net: ethtool: Avoid thousands of -Wflex-array-member-not-at-end warnings"
+    https://git.kernel.org/netdev/net-next/c/1cfb5e57886a
+  - [2/3] Revert "UAPI: ethtool: Use __struct_group() in struct ethtool_link_settings"
+    https://git.kernel.org/netdev/net-next/c/ebda123fe703
+  - [3/3] UAPI: ethtool: Avoid flex-array in struct ethtool_link_settings
+    https://git.kernel.org/netdev/net-next/c/96c677fca54a
+
+You are awesome, thank you!
 -- 
-2.34.1
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
