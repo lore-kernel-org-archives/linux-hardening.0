@@ -1,157 +1,84 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12E441CEABA
-	for <linux-hardening@vger.kernel.org>; Tue, 19 Nov 2024 15:53:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD69F1D04A5;
+	Tue, 19 Nov 2024 17:26:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732031630; cv=none; b=uuSjY4b9lPw0la3CIKiUcaSfWrlhiqkBh85MxbGUxIs5MMaew+D05c6nn+lC3bEwDhz7xBqVYU+GxGkBcVvJMHiMHfr8Z2Mycez9prqlLjt6hLyBorhsIv8YVHw+TRdOGgBL8TZ8JbYclGvuJhv3AfxrV4hohhvx7qXCeLFDr/s=
+	t=1732037195; cv=none; b=aCflfDykSd2g/sRos2WUTU8zB2/lYyoCq8GJFcUrKOOBfY4uhO6CbYlXVeQKcNejdE5+0MJDms0Fw3BK8CZSKg2sx8Jn9J6YpUgjpsf2I93RZCvA5AF4k7YIu3yEX1v634//TxHlGO8WP1TJyF2ZyKsiTAur2vNpeisjU/ooHgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732031630; c=relaxed/simple;
-	bh=oZBz6My2fl2cEQ/H4m7spItLuifNL3YkZ0yddOy41YQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=INuzgWwdV6KYwcl7U+MMcZcwJs7mom4AbSV0/O2dFbnGtpfZR7i8Yw61cG4ETcjG1Conm03OnxZw3yvEVUo+iiw7qtM08zpBk7MDi5/miAv7Q+KRpQQgG0zh6m9+g7mU7qL9ZQWOGvkHfb7nAT38tgwjBedPuRUELwcbSHujrBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oeA1y6+1; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1732037195; c=relaxed/simple;
+	bh=4FczEMCiPK8wpc3ODDtfIp947673ljSp+A5ZMU+Mb4E=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=t/ajTSYI3zrzJy7z2Iu789lz9Fwug8XouMa7i1UWJVQZ3ExUme57Kf2CQ8vAKfdwuqM6xsdoy51TcBYSPdXPfro6F13Ad+bDOyNua0D79ziUr5hnURE4S76nCYKCuquaAM9Qb56s4P3l/IDMrDZewfL/ZLa9dYD8OUrwYD0LfD8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AxZGSQzM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oeA1y6+1"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5cfc264b8b6so11899a12.0
-        for <linux-hardening@vger.kernel.org>; Tue, 19 Nov 2024 07:53:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1732031627; x=1732636427; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oZBz6My2fl2cEQ/H4m7spItLuifNL3YkZ0yddOy41YQ=;
-        b=oeA1y6+1eIa+KuXOu9qX7nu6h0bMz7NENQrNnJI47zwqpW6+yDIEi9QRdmjSgnaIlF
-         k/RYgwEKxtf6zHr6my7/5bGrZq3tgO7I+ucxLpTd8W5zSJn3Li/1SXONWmkZlkDCQ+kP
-         u6S6gbOFJLE3Yh2GTLsTZl5A06hCVjr5W5QMbMd0aYChC3jhaZuyHjCvmsgyZUx9uyUX
-         b3SE0BGt53TC5G9A2i25OLm5rBsDdSCt+5r7JV8s4+ApK57hz38jpa/6CBXvr1zyP4nS
-         uXNeMGxAn5LjJ+oaoSJ02f9gnaKTPk0kkRfForcsHfNuf2h/4jX9e/H1czJNFFLxMzBt
-         NrGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732031627; x=1732636427;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oZBz6My2fl2cEQ/H4m7spItLuifNL3YkZ0yddOy41YQ=;
-        b=uV5bJqX5svhryf1qk/Q4oMKe3gHB4ONV7DPRZrDJ7dwOuv8CPKaQX4Qt/A7AU87tC2
-         mjjEFW8r8UTo1tmYRO/iRTCev7ddTdC2uO6+lyu82TBKb8gnmW2eiP7hizN84F7iMVrC
-         4XPDwK+sm5GwclkGcElxCETzZSVnPumjYkQDv6rDFMenizepZ86OniTLxVXBiAyZ1wWR
-         APA/WyjMULi0pgrvnIxVi+avrMZmYDNz8taTpRwIN2d6N/Zz3VAj6uzNzoMGxmofN9wY
-         0AXT0Kr0kv5lrdqW8KxtG8/II4NKqsFdVzHXo0WMGtLmpcQe/k4TyNPjhTp6nFNXyYBy
-         DbiA==
-X-Forwarded-Encrypted: i=1; AJvYcCWOWccs3Oy7UHdNX/eZbkOel6hsTviNi3fFSGCTnk2ykudHdZh+PGiIEU72gwoX9homTtW4DnWoAuGVG3TYjzs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+gOap99eEF6ice7dyDKVN1OuNFg55z9yN+eXWILMYY11wY9kc
-	ha2dWPXt/CUrAgCHM/2HFQWK3vtjTbW5CdFFuEeqz/ln6w2LGZbK+TcTtbbzlyDTuXS+ejSlaJx
-	53nLKmQme127qF96W6Gff7+Jf3nO5oObP68hw
-X-Gm-Gg: ASbGnctXsZeFhuKvdjVXIAcY9642yemiN6kNAdW/SE1zB3zOenM/xJJJUxYcrTc42U4
-	ZMeFGDvDddK2VxPj35toJwk46lJAgDidH2V/S9/O87mnOS52EOG7Nrw9i50U=
-X-Google-Smtp-Source: AGHT+IGNsuMEPDGgLQcJBGgUTcQNAXs25llr0/NFfx7zpUAdIJ2qG87STQ6ogH4Jn3C0zEhl2cmBRbcH53+WD7m9EI4=
-X-Received: by 2002:aa7:c251:0:b0:5cf:f20c:bdf0 with SMTP id
- 4fb4d7f45d1cf-5cff20cbec4mr2276a12.4.1732031626961; Tue, 19 Nov 2024 07:53:46
- -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AxZGSQzM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6233FC4CED0;
+	Tue, 19 Nov 2024 17:26:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1732037193;
+	bh=4FczEMCiPK8wpc3ODDtfIp947673ljSp+A5ZMU+Mb4E=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=AxZGSQzMVCI6uEHu93dplVVkrsdTohR0WxM4WtEDq7AF2Mff4O8vkVSW0/WThUo5g
+	 y/ili1yUIiHysFTrFyFamiPgymnhVZCRyEdC00sU53EHw5FSGnt2DMjxaaVsarlycJ
+	 6eJTKGLrg6TWLP+XdAWZAD7jNvQQZ0wcG96LJl54NZ6N+auBP5RpPRHpu0LXdDDcJQ
+	 xJYo9rw6OOBgjIP7Ms2LuU+hIdPF3N+HbSyZKBt9vqKU0Gp1k13YvSWZpUgQ2HKFLR
+	 y2fwh0uRchZIEC3XY+bxEYRRlBCyV+pOH5mi351oqNrpbK0ZZueekGj0kKnYm+3W7F
+	 oZ+PYSOqM0DpQ==
+From: Kees Cook <kees@kernel.org>
+To: Jan Hendrik Farr <kernel@jfarr.cc>
+Cc: Kees Cook <kees@kernel.org>,
+	nathan@kernel.org,
+	ojeda@kernel.org,
+	ndesaulniers@google.com,
+	morbo@google.com,
+	justinstitt@google.com,
+	thorsten.blum@toblux.com,
+	ardb@kernel.org,
+	oliver.sang@intel.com,
+	gustavoars@kernel.org,
+	kent.overstreet@linux.dev,
+	arnd@arndb.de,
+	gregkh@linuxfoundation.org,
+	akpm@linux-foundation.org,
+	tavianator@tavianator.com,
+	linux-hardening@vger.kernel.org,
+	llvm@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH 1/1] Compiler Attributes: disable __counted_by for clang < 19.1.3
+Date: Tue, 19 Nov 2024 09:26:27 -0800
+Message-Id: <173203718634.3118906.4631874727014346327.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20241029140036.577804-2-kernel@jfarr.cc>
+References: <20241029140036.577804-1-kernel@jfarr.cc> <20241029140036.577804-2-kernel@jfarr.cc>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241116175922.3265872-1-pasha.tatashin@soleen.com>
- <a0372f7f-9a85-4d3e-ba20-b5911a8189e3@lucifer.local> <CAG48ez2vG0tr=H8csGes7HN_5HPQAh4WZU8U1G945K1GKfABPg@mail.gmail.com>
- <CA+CK2bB0w=i1z78AJbr2gZE9ybYki4Vz_s53=8URrxwyPvvB+A@mail.gmail.com>
- <CAG48ez1KFFXzy5qcYVZLnUEztaZxDGY2+4GvwYq7Hb=Y=3FBxQ@mail.gmail.com>
- <CA+CK2bCBwZFomepG-Pp6oiAwHQiKdsTLe3rYtE3hFSQ5spEDww@mail.gmail.com>
- <CAG48ez0NzMbwnbvMO7KbUROZq5ne7fhiau49v7oyxwPrYL=P6Q@mail.gmail.com> <CA+CK2bByXtm8sLyFzDDzm5xC6xb=DEutaRUeujGJdwf-kmK1gA@mail.gmail.com>
-In-Reply-To: <CA+CK2bByXtm8sLyFzDDzm5xC6xb=DEutaRUeujGJdwf-kmK1gA@mail.gmail.com>
-From: Jann Horn <jannh@google.com>
-Date: Tue, 19 Nov 2024 16:53:10 +0100
-Message-ID: <CAG48ez3zNWJY=3EcuS1n1cFyujUO7CXAYe7=H48Ja_WmdL_PYw@mail.gmail.com>
-Subject: Re: [RFCv1 0/6] Page Detective
-To: Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	cgroups@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	akpm@linux-foundation.org, corbet@lwn.net, derek.kiernan@amd.com, 
-	dragan.cvetic@amd.com, arnd@arndb.de, gregkh@linuxfoundation.org, 
-	viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz, tj@kernel.org, 
-	hannes@cmpxchg.org, mhocko@kernel.org, roman.gushchin@linux.dev, 
-	shakeel.butt@linux.dev, muchun.song@linux.dev, Liam.Howlett@oracle.com, 
-	vbabka@suse.cz, shuah@kernel.org, vegard.nossum@oracle.com, 
-	vattunuru@marvell.com, schalla@marvell.com, david@redhat.com, 
-	willy@infradead.org, osalvador@suse.de, usama.anjum@collabora.com, 
-	andrii@kernel.org, ryan.roberts@arm.com, peterx@redhat.com, oleg@redhat.com, 
-	tandersen@netflix.com, rientjes@google.com, gthelen@google.com, 
-	linux-hardening@vger.kernel.org, 
-	Kernel Hardening <kernel-hardening@lists.openwall.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, Nov 19, 2024 at 4:14=E2=80=AFPM Pasha Tatashin
-<pasha.tatashin@soleen.com> wrote:
-> On Tue, Nov 19, 2024 at 7:52=E2=80=AFAM Jann Horn <jannh@google.com> wrot=
-e:
-> > On Tue, Nov 19, 2024 at 2:30=E2=80=AFAM Pasha Tatashin
-> > <pasha.tatashin@soleen.com> wrote:
-> > > > Can you point me to where a refcounted reference to the page comes
-> > > > from when page_detective_metadata() calls dump_page_lvl()?
-> > >
-> > > I am sorry, I remembered incorrectly, we are getting reference right
-> > > after dump_page_lvl() in page_detective_memcg() -> folio_try_get(); I
-> > > will move the folio_try_get() to before dump_page_lvl().
-> > >
-> > > > > > So I think dump_page() in its current form is not something we =
-should
-> > > > > > expose to a userspace-reachable API.
-> > > > >
-> > > > > We use dump_page() all over WARN_ONs in MM code where pages might=
- not
-> > > > > be locked, but this is a good point, that while even the existing
-> > > > > usage might be racy, providing a user-reachable API potentially m=
-akes
-> > > > > it worse. I will see if I could add some locking before dump_page=
-(),
-> > > > > or make a dump_page variant that does not do dump_mapping().
-> > > >
-> > > > To be clear, I am not that strongly opposed to racily reading data
-> > > > such that the data may not be internally consistent or such; but th=
-is
-> > > > is a case of racy use-after-free reads that might end up dumping
-> > > > entirely unrelated memory contents into dmesg. I think we should
-> > > > properly protect against that in an API that userspace can invoke.
-> > > > Otherwise, if we race, we might end up writing random memory conten=
-ts
-> > > > into dmesg; and if we are particularly unlucky, those random memory
-> > > > contents could be PII or authentication tokens or such.
-> > > >
-> > > > I'm not entirely sure what the right approach is here; I guess it
-> > > > makes sense that when the kernel internally detects corruption,
-> > > > dump_page doesn't take references on pages it accesses to avoid
-> > > > corrupting things further. If you are looking at a page based on a
-> > > > userspace request, I guess you could access the page with the
-> > > > necessary locking to access its properties under the normal locking
-> > > > rules?
-> > >
-> > > I will take reference, as we already do that for memcg purpose, but
-> > > have not included dump_page().
-> >
-> > Note that taking a reference on the page does not make all of
-> > dump_page() fine; in particular, my understanding is that
-> > folio_mapping() requires that the page is locked in order to return a
-> > stable pointer, and some of the code in dump_mapping() would probably
-> > also require some other locks - probably at least on the inode and
-> > maybe also on the dentry, I think? Otherwise the inode's dentry list
-> > can probably change concurrently, and the dentry's name pointer can
-> > change too.
->
-> Agreed, once reference is taken, the page identity cannot change (i.e.
-> if it is a named page it will stay a named page), but dentry can be
-> renamed. I will look into what can be done to guarantee consistency in
-> the next version. There is also a fallback if locking cannot be
-> reliably resolved (i.e. for performance reasons) where we can make
-> dump_mapping() optionally disabled from dump_page_lvl() with a new
-> argument flag.
+On Tue, 29 Oct 2024 15:00:36 +0100, Jan Hendrik Farr wrote:
+> This patch disables __counted_by for clang versions < 19.1.3 because
+> of the two issues listed below. It does this by introducing
+> CONFIG_CC_HAS_COUNTED_BY.
+> 
+> 1. clang < 19.1.2 has a bug that can lead to __bdos returning 0:
+> https://github.com/llvm/llvm-project/pull/110497
+> 
+> [...]
 
-Yeah, I think if you don't need the details that dump_mapping() shows,
-skipping that for user-requested dumps might be a reasonable option.
+Applied to for-next/hardening, thanks!
+
+[1/1] Compiler Attributes: disable __counted_by for clang < 19.1.3
+      https://git.kernel.org/kees/c/f06e108a3dc5
+
+Take care,
+
+-- 
+Kees Cook
+
