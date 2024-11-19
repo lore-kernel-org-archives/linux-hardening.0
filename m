@@ -1,111 +1,230 @@
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 224531E7653
-	for <linux-hardening@vger.kernel.org>; Mon, 18 Nov 2024 22:58:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09A981CA84
+	for <linux-hardening@vger.kernel.org>; Tue, 19 Nov 2024 00:39:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731970703; cv=none; b=RMCUzuF40PLKFkBVAoCJP4Na2oEzxvB6azBj0CPBhQ0DPTeQNxK5b/C+A5b7C2BSx8ykv8BGXoLOVYpv3RXZxgcIEYUV9qRvBZvRoYHU/nWXLP10k+G6wb9oZkYb99OEhvB3A3FFtd+oCmoxfQK9jnYsLy/Ub2e0SNLnSzZY8iw=
+	t=1731976801; cv=none; b=Zxbv3ztEE2qJW4HRVAZbBijK8vN+7lSR2FX1s6xfxj4SbbmPIXG6vXMq9OnPYsNDbDSmxDZ1ujIKHqQwD5xckgGBsAgFisULJ+GV7dC6S67Rh9g46zltKZdcrb5uFIK+tfYRoN9cbxRGxj3Dj1e65lVK0viKabbW5uBTOlcvDfE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731970703; c=relaxed/simple;
-	bh=KY4WxOLcZt5kBfIvov7YUd866Ca+PDF3e+qAL9quvo4=;
+	s=arc-20240116; t=1731976801; c=relaxed/simple;
+	bh=YzMNvJAMgAye6FGH0t0zMVzWqRVdNrG+1sIZy8+p89A=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tWw1zQUtw69ktjMsyaBx0mI/wfIxUnMZzrs2hl1AKd4+SFCovKUaw1p6iwhtzZIyNtfEJvUkF4pYHkkoKv1eyuP/qTJW75gdBYH5HlDuAVYSG3eFpic5BXH+RQ5Cr6Jv2DL11rU36/9HtTvuMio5GxicAc22mlvcrEtTOnPXcBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=g2ecawth; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 To:Cc:Content-Type; b=TOHvtYV4/SwzqNuehK6pw+pbxfhml/C1hl+BCIbZkLKcuJ46PdjGy0gNxihqbuHHk4IDN1TOcwh/sGuddKuI0VFEnA3qFfklRGbJ2ezbMcFIkGWag8x1365k+W8gE9ipE/1cswzeBcPMZe8bbcS32UwpC7gfr+b/E2K3V0Y/WJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dTBQBxgK; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g2ecawth"
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-539f8490856so3870069e87.2
-        for <linux-hardening@vger.kernel.org>; Mon, 18 Nov 2024 14:58:21 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dTBQBxgK"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5cfc18d5259so1962a12.1
+        for <linux-hardening@vger.kernel.org>; Mon, 18 Nov 2024 16:39:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1731970700; x=1732575500; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1731976797; x=1732581597; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=x1MrAjucewY12Q379yzg+ry5RVZKlVViQuKVvFxefR8=;
-        b=g2ecawthztD1DIpRmOGozXTaqbTUk/n0SZTe5FzNxaMqexTubAnBKJY3EUm+nBeW/s
-         UVPquMpT/Hxxpa9D5wVs/T2Q4aVpYqB+v41TSI4kPRG5BKC+2CSkjX4dlTNuiRmAsPjd
-         15wNUxs8MSU4YWPX8/vr6KlsnjGhdCNfJcyuijc9ADkJtyj1lT9Ovcmj4DRv3jisyEzL
-         Mh8cLWEMuQia5Y289Suw9BqRkYR/f7Kri51yqlFCDrYryA8Eg00uwyLCBDMhsibWAj9l
-         T/d4GbRHtY3LswxBz7OzlalV4aWsxFz12SMAivVr3P9M8biWkx3FLr0jtgbxr3hs1SrY
-         wRnw==
+        bh=YzMNvJAMgAye6FGH0t0zMVzWqRVdNrG+1sIZy8+p89A=;
+        b=dTBQBxgKsBAZa/t6YBs62+MeMILN92Ktw2GxP4wsG6pwcy2I3XUjJCUvPcwQ5uEDoH
+         M76UgWhZDEloosLxerYCmxmHTaLBBV1h8CPtJQ5IF2ZAZC3m0sJM4RuUi3E15oyuMLhP
+         Y702b0F9Nk5HwYTsEjl1aKjNAIZ0GE9Wz7+KHzJPJ066KMeoPyK4ueFfDki79jdhOxyr
+         FELRF8w8+hIoTSCgw0dMQjL1kFYmmtgleaWvY501gAtxeOhPjTLpXU3Wu3gzkAflH68f
+         I6fF8c4m4mv081v8+S3QldhkjtuDfK40tkUzWJLKxAIrFSjSFwS5/M4RSYEDyQMORbFQ
+         Cq4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731970700; x=1732575500;
+        d=1e100.net; s=20230601; t=1731976797; x=1732581597;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=x1MrAjucewY12Q379yzg+ry5RVZKlVViQuKVvFxefR8=;
-        b=JUvwIRZiam6IakTQTtLA+8HiHZZd3NwfDuBs1SdMK3LARPFf75+jb+b+W0Y608fjJT
-         U4dfpkNKZDFclvqSBhsmNolvCldnTP+zfqIa8A+jQ8fYp1+MwJw7t6BdH01FnV07Lubo
-         CI+asULCF5nHi32FhSIEEKHkRBRsk3Md/SoaN3m7a+YHSPQrEN+wxrcOV/rlSiP+uuDr
-         X0bDyGZb0xRuTGA/xAvMlBbB/PFfZ3m3gb7P5WazbyvbjfkI5f2iXKjeZkIuO6e4v94C
-         geMHv4U+q2gVfdCFBDO+Z1z5x9sZnUTL31QE+SYAhfQ8z/Wf2pGeqyJo9tqCCJRFLSL/
-         /akw==
-X-Forwarded-Encrypted: i=1; AJvYcCWGg6z8JPnz8BegySo+utsX2ojkvXJJEHg1NTApQoBPB6ENLiYaRJLOsC3Pd2Rl1UQzJQTdSvC8pQZi/Cd5s70=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyW3Hoc+oA3ZQVCic2TSzfiLCvf6MbvgsKnq37eNgGytEJvOEJ7
-	iaDKjbusUulJQyjRPdOpcNNUMI3iru3KnZYx8y//V8VNKTzU3Pp6rx/8q9YuRu+SnF6h9JILqok
-	khWCkkT2TCN8cOlGfjffgKNSDeoiGxN682ImpLA==
-X-Google-Smtp-Source: AGHT+IEFiYb4rFpuGVaBbq8epNGwPhP6IH9nm6hyP3jkslxVQLOCjV/16xaXHTQ8qSTvbVzxGCpcSv4sYGDo3Nb1YqM=
-X-Received: by 2002:a05:651c:1b05:b0:2ff:4ce0:d268 with SMTP id
- 38308e7fff4ca-2ff6064e25fmr63970731fa.2.1731970700292; Mon, 18 Nov 2024
- 14:58:20 -0800 (PST)
+        bh=YzMNvJAMgAye6FGH0t0zMVzWqRVdNrG+1sIZy8+p89A=;
+        b=k1ekBsBJBWPpTZ+WyieTEBuYCiYjKA1M5DxIG7EbuPx5fSLXxO4CMMhT884Jn3l75H
+         2KLuqKAArRuatqGn6G9jUPwIoxau7PCUHz4/gAFiWGVTabNgbNq1mlJPyhg/ay3NJ+Vo
+         oYEbAbvSIb7Zf5DJHsZkWNjQANt6c9ySQOMqMEtlEg5i6yeWtfwz8qx0CJaO5w9o8Is7
+         Fuatzb1iIIATFl63PXlO7/91DG9NOx9u55qei90BiBjHVn7hjWenmUSbPiNH00xSbPfQ
+         5Jou3CaP15CsZ3syPC0bbFXBapy04kKmEt3HVsgDMizebGVlioZjNlkGGAwZWfSKOlo1
+         G0+g==
+X-Forwarded-Encrypted: i=1; AJvYcCXWzozzj7FhNP/hBFGq6CLxpdDNNnCQhBKxLtMlaDslfZOYEVammHIbxLOH8iw/4uuCVK/77eXwnmnT4iWNFac=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwBQeUtgQ+1Ss5uZnC89PEMMkA4AADqnb26W739GFurd+RSaCri
+	3pt8skr3QHrC1fmYFapsxKWZylP5RxRMEKMr4tKSlbjP968851cJIWe0Qqgl2fsdzb4Y7osNBQ5
+	gt2j639R+XmAPC/Fh6b/MscxyMOIgkXA+Q52/
+X-Gm-Gg: ASbGncsmJik3/y0iXB+H+hMDVbDbexsQupMHN2FRjpKizeopsKqTHfhThF0v2BJzvS9
+	jEzUmeklqlEdrzyJKLtdRaAHOf/EPyYGVIOxvoUr2L9INH7oNDeO+zcJ7oAvo
+X-Google-Smtp-Source: AGHT+IEqFrrGyfsezRMsp/X151aTE55F7rPkKrYZLMq7HZJ1MQF2NOGKpWL8huBQFIpX81LUzRGmY7/k9ZOF+cLi7qc=
+X-Received: by 2002:a05:6402:1351:b0:5cf:bd9a:41ec with SMTP id
+ 4fb4d7f45d1cf-5cfdec244d3mr32883a12.2.1731976796952; Mon, 18 Nov 2024
+ 16:39:56 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241117114534.work.292-kees@kernel.org>
-In-Reply-To: <20241117114534.work.292-kees@kernel.org>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Mon, 18 Nov 2024 23:58:09 +0100
-Message-ID: <CACRpkdaBErgRrFDWu2FSrnX9Hr=PnHvfccLgAzhOOwTdXuRjTg@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: airoha: Use unsigned long for bit search
-To: Kees Cook <kees@kernel.org>
-Cc: Lorenzo Bianconi <lorenzo@kernel.org>, Sean Wang <sean.wang@kernel.org>, 
-	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org
+References: <20241116175922.3265872-1-pasha.tatashin@soleen.com>
+ <a0372f7f-9a85-4d3e-ba20-b5911a8189e3@lucifer.local> <CAG48ez2vG0tr=H8csGes7HN_5HPQAh4WZU8U1G945K1GKfABPg@mail.gmail.com>
+ <CA+CK2bB0w=i1z78AJbr2gZE9ybYki4Vz_s53=8URrxwyPvvB+A@mail.gmail.com>
+In-Reply-To: <CA+CK2bB0w=i1z78AJbr2gZE9ybYki4Vz_s53=8URrxwyPvvB+A@mail.gmail.com>
+From: Jann Horn <jannh@google.com>
+Date: Tue, 19 Nov 2024 01:39:19 +0100
+Message-ID: <CAG48ez1KFFXzy5qcYVZLnUEztaZxDGY2+4GvwYq7Hb=Y=3FBxQ@mail.gmail.com>
+Subject: Re: [RFCv1 0/6] Page Detective
+To: Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	cgroups@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	akpm@linux-foundation.org, corbet@lwn.net, derek.kiernan@amd.com, 
+	dragan.cvetic@amd.com, arnd@arndb.de, gregkh@linuxfoundation.org, 
+	viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz, tj@kernel.org, 
+	hannes@cmpxchg.org, mhocko@kernel.org, roman.gushchin@linux.dev, 
+	shakeel.butt@linux.dev, muchun.song@linux.dev, Liam.Howlett@oracle.com, 
+	vbabka@suse.cz, shuah@kernel.org, vegard.nossum@oracle.com, 
+	vattunuru@marvell.com, schalla@marvell.com, david@redhat.com, 
+	willy@infradead.org, osalvador@suse.de, usama.anjum@collabora.com, 
+	andrii@kernel.org, ryan.roberts@arm.com, peterx@redhat.com, oleg@redhat.com, 
+	tandersen@netflix.com, rientjes@google.com, gthelen@google.com, 
+	linux-hardening@vger.kernel.org, 
+	Kernel Hardening <kernel-hardening@lists.openwall.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Nov 17, 2024 at 12:45=E2=80=AFPM Kees Cook <kees@kernel.org> wrote:
-
-> Instead of risking alignment problems and causing (false positive) array
-> bound warnings when casting a u32 to (64-bit) unsigned long, just use a
-> native unsigned long for doing bit searches. Avoids warning with GCC 15's
-> -Warray-bounds -fdiagnostics-details:
+On Mon, Nov 18, 2024 at 11:24=E2=80=AFPM Pasha Tatashin
+<pasha.tatashin@soleen.com> wrote:
+> On Mon, Nov 18, 2024 at 7:54=E2=80=AFAM Jann Horn <jannh@google.com> wrot=
+e:
+> >
+> > On Mon, Nov 18, 2024 at 12:17=E2=80=AFPM Lorenzo Stoakes
+> > <lorenzo.stoakes@oracle.com> wrote:
+> > > On Sat, Nov 16, 2024 at 05:59:16PM +0000, Pasha Tatashin wrote:
+> > > > It operates through the Linux debugfs interface, with two files: "v=
+irt"
+> > > > and "phys".
+> > > >
+> > > > The "virt" file takes a virtual address and PID and outputs informa=
+tion
+> > > > about the corresponding page.
+> > > >
+> > > > The "phys" file takes a physical address and outputs information ab=
+out
+> > > > that page.
+> > > >
+> > > > The output is presented via kernel log messages (can be accessed wi=
+th
+> > > > dmesg), and includes information such as the page's reference count=
+,
+> > > > mapping, flags, and memory cgroup. It also shows whether the page i=
+s
+> > > > mapped in the kernel page table, and if so, how many times.
+> > >
+> > > I mean, even though I'm not a huge fan of kernel pointer hashing etc.=
+ this
+> > > is obviously leaking as much information as you might want about kern=
+el
+> > > internal state to the point of maybe making the whole kernel pointer
+> > > hashing thing moot.
+> > >
+> > > I know this requires CAP_SYS_ADMIN, but there are things that also re=
+quire
+> > > that which _still_ obscure kernel pointers.
+> > >
+> > > And you're outputting it all to dmesg.
+> > >
+> > > So yeah, a security person (Jann?) would be better placed to comment =
+on
+> > > this than me, but are we sure we want to do this when not in a
+> > > CONFIG_DEBUG_VM* kernel?
+> >
+> > I guess there are two parts to this - what root is allowed to do, and
+> > what information we're fine with exposing to dmesg.
+> >
+> > If the lockdown LSM is not set to LOCKDOWN_CONFIDENTIALITY_MAX, the
+> > kernel allows root to read kernel memory through some interfaces - in
+> > particular, BPF allows reading arbitrary kernel memory, and perf
+> > allows reading at least some stuff (like kernel register states). With
+> > lockdown in the most restrictive mode, the kernel tries to prevent
+> > root from reading arbitrary kernel memory, but we don't really change
+> > how much information goes into dmesg. (And I imagine you could
+> > probably still get kernel pointers out of BPF somehow even in the most
+> > restrictive lockdown mode, but that's probably not relevant.)
+> >
+> > The main issue with dmesg is that some systems make its contents
+> > available to code that is not running with root privileges; and I
+> > think it is also sometimes stored persistently in unencrypted form
+> > (like in EFI pstore) even when everything else on the system is
+> > encrypted.
+> > So on one hand, we definitely shouldn't print the contents of random
+> > chunks of memory into dmesg without a good reason; on the other hand,
+> > for example we do already print kernel register state on WARN() (which
+> > often includes kernel pointers and could theoretically include more
+> > sensitive data too).
+> >
+> > So I think showing page metadata to root when requested is probably
+> > okay as a tradeoff? And dumping that data into dmesg is maybe not
+> > great, but acceptable as long as only root can actually trigger this?
+> >
+> > I don't really have a strong opinion on this...
+> >
+> >
+> > To me, a bigger issue is that dump_page() looks like it might be racy,
+> > which is maybe not terrible in debugging code that only runs when
+> > something has already gone wrong, but bad if it is in code that root
+> > can trigger on demand?
 >
-> In file included from ../include/linux/bitmap.h:11,
->                  from ../include/linux/cpumask.h:12,
->                  from ../arch/x86/include/asm/paravirt.h:21,
->                  from ../arch/x86/include/asm/irqflags.h:80,
->                  from ../include/linux/irqflags.h:18,
->                  from ../include/linux/spinlock.h:59,
->                  from ../include/linux/irq.h:14,
->                  from ../include/linux/irqchip/chained_irq.h:10,
->                  from ../include/linux/gpio/driver.h:8,
->                  from ../drivers/pinctrl/mediatek/pinctrl-airoha.c:11:
-> In function 'find_next_bit',
->     inlined from 'airoha_irq_handler' at ../drivers/pinctrl/mediatek/pinc=
-trl-airoha.c:2394:3:
-> ../include/linux/find.h:65:23: error: array subscript 'long unsigned int[=
-0]' is partly outside array bounds of 'u32[1]' {aka 'unsigned int[1]'} [-We=
-rror=3Darray-bounds=3D]
->    65 |                 val =3D *addr & GENMASK(size - 1, offset);
->       |                       ^~~~~
-> ../drivers/pinctrl/mediatek/pinctrl-airoha.c: In function 'airoha_irq_han=
-dler':
-> ../drivers/pinctrl/mediatek/pinctrl-airoha.c:2387:21: note: object 'statu=
-s' of size 4
->  2387 |                 u32 status;
->       |                     ^~~~~~
+> Hi Jann, thank you for reviewing this proposal.
 >
-> Signed-off-by: Kees Cook <kees@kernel.org>
+> Presumably, the interface should be used only when something has gone
+> wrong but has not been noticed by the kernel. That something is
+> usually checksums failures that are outside of the kernel: i.e. during
+> live migration, snapshotting, filesystem journaling, etc. We already
+> have interfaces that provide data from the live kernel that could be
+> racy, i.e. crash utility.
 
-Patch applied, thanks Kees!
+Ah, yes, I'm drawing a distinction here between "something has gone
+wrong internally in the kernel and the kernel does some kinda-broken
+best-effort self-diagnostics" and "userspace thinks something is
+broken and asks the kernel".
 
-Yours,
-Linus Walleij
+> > __dump_page() copies the given page with
+> > memcpy(), which I don't think guarantees enough atomicity with
+> > concurrent updates of page->mapping or such, so dump_mapping() could
+> > probably run on a bogus pointer. Even without torn pointers, I think
+> > there could be a UAF if the page's mapping is destroyed while we're
+> > going through dump_page(), since the page might not be locked. And in
+> > dump_mapping(), the strncpy_from_kernel_nofault() also doesn't guard
+> > against concurrent renaming of the dentry, which I think again would
+> > probably result in UAF.
+>
+> Since we are holding a reference on the page at the time of
+> dump_page(), the identity of the page should not really change, but
+> dentry can be renamed.
+
+Can you point me to where a refcounted reference to the page comes
+from when page_detective_metadata() calls dump_page_lvl()?
+
+> > So I think dump_page() in its current form is not something we should
+> > expose to a userspace-reachable API.
+>
+> We use dump_page() all over WARN_ONs in MM code where pages might not
+> be locked, but this is a good point, that while even the existing
+> usage might be racy, providing a user-reachable API potentially makes
+> it worse. I will see if I could add some locking before dump_page(),
+> or make a dump_page variant that does not do dump_mapping().
+
+To be clear, I am not that strongly opposed to racily reading data
+such that the data may not be internally consistent or such; but this
+is a case of racy use-after-free reads that might end up dumping
+entirely unrelated memory contents into dmesg. I think we should
+properly protect against that in an API that userspace can invoke.
+Otherwise, if we race, we might end up writing random memory contents
+into dmesg; and if we are particularly unlucky, those random memory
+contents could be PII or authentication tokens or such.
+
+I'm not entirely sure what the right approach is here; I guess it
+makes sense that when the kernel internally detects corruption,
+dump_page doesn't take references on pages it accesses to avoid
+corrupting things further. If you are looking at a page based on a
+userspace request, I guess you could access the page with the
+necessary locking to access its properties under the normal locking
+rules?
+
+(If anyone else has opinions either way on this line I'm trying to
+draw between kernel-internal debug paths and userspace-triggerable
+debugging, feel free to share; I hope my mental model makes sense but
+I could imagine other folks having a different model of this?)
