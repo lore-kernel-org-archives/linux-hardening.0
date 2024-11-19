@@ -1,84 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD69F1D04A5;
-	Tue, 19 Nov 2024 17:26:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EF421547C8;
+	Tue, 19 Nov 2024 18:51:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732037195; cv=none; b=aCflfDykSd2g/sRos2WUTU8zB2/lYyoCq8GJFcUrKOOBfY4uhO6CbYlXVeQKcNejdE5+0MJDms0Fw3BK8CZSKg2sx8Jn9J6YpUgjpsf2I93RZCvA5AF4k7YIu3yEX1v634//TxHlGO8WP1TJyF2ZyKsiTAur2vNpeisjU/ooHgw=
+	t=1732042291; cv=none; b=deS2XUFwU8DyFTdhI6BdGkU0XbmcRPKCSqLvjTqkQsyxHsocKTHlg42+npbeIU2N0jUUMEGJ1wG3Xad5kB5Dpoe9reDaMjnKPwENgSkyXiwO6ydYezO/LmNTDDwqSdvhciaNgyXrC1epDdoJB3mk4QWfZX6T2UBErW43GwTeyiQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732037195; c=relaxed/simple;
-	bh=4FczEMCiPK8wpc3ODDtfIp947673ljSp+A5ZMU+Mb4E=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=t/ajTSYI3zrzJy7z2Iu789lz9Fwug8XouMa7i1UWJVQZ3ExUme57Kf2CQ8vAKfdwuqM6xsdoy51TcBYSPdXPfro6F13Ad+bDOyNua0D79ziUr5hnURE4S76nCYKCuquaAM9Qb56s4P3l/IDMrDZewfL/ZLa9dYD8OUrwYD0LfD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AxZGSQzM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1732042291; c=relaxed/simple;
+	bh=Izhsq75g18QbzihAstecc5RgQNcsQpWPvNlpSv5wY/Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TvjhgYgTKYnnJaYPNZukiKoy0G3SALgTI/KRTYlsVO9nNpWlZ16EzPRZNOOR8SF/5R2hgWKcDjnSoCrIad8XX9NhpZQWd0fuSTJ0wZPwwkkCZJLSl9ns2HI7P2k6dXSOuZkGEtpD0A5yLa3J8PHC9zvBS2cqHAlFXPS7sg04Q+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=EvgMhu7T; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AxZGSQzM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6233FC4CED0;
-	Tue, 19 Nov 2024 17:26:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732037193;
-	bh=4FczEMCiPK8wpc3ODDtfIp947673ljSp+A5ZMU+Mb4E=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=AxZGSQzMVCI6uEHu93dplVVkrsdTohR0WxM4WtEDq7AF2Mff4O8vkVSW0/WThUo5g
-	 y/ili1yUIiHysFTrFyFamiPgymnhVZCRyEdC00sU53EHw5FSGnt2DMjxaaVsarlycJ
-	 6eJTKGLrg6TWLP+XdAWZAD7jNvQQZ0wcG96LJl54NZ6N+auBP5RpPRHpu0LXdDDcJQ
-	 xJYo9rw6OOBgjIP7Ms2LuU+hIdPF3N+HbSyZKBt9vqKU0Gp1k13YvSWZpUgQ2HKFLR
-	 y2fwh0uRchZIEC3XY+bxEYRRlBCyV+pOH5mi351oqNrpbK0ZZueekGj0kKnYm+3W7F
-	 oZ+PYSOqM0DpQ==
-From: Kees Cook <kees@kernel.org>
-To: Jan Hendrik Farr <kernel@jfarr.cc>
-Cc: Kees Cook <kees@kernel.org>,
-	nathan@kernel.org,
-	ojeda@kernel.org,
-	ndesaulniers@google.com,
-	morbo@google.com,
-	justinstitt@google.com,
-	thorsten.blum@toblux.com,
-	ardb@kernel.org,
-	oliver.sang@intel.com,
-	gustavoars@kernel.org,
-	kent.overstreet@linux.dev,
-	arnd@arndb.de,
-	gregkh@linuxfoundation.org,
-	akpm@linux-foundation.org,
-	tavianator@tavianator.com,
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EvgMhu7T"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=89rXTlyvwZf7wy1AENCo71hFPFgxU7iIh40Yvq9+ziw=; b=EvgMhu7TluBgBeWrE8nDe71+fU
+	A9TW71iacELiK7rlvJ+FONkzEyTxhuiOuOojwE55G0XCDYerbTnkDeLl21TLOOs+2Zv5qZrdn+wAK
+	S2LNeIqWba4oXI3yV/0S2u79Hv5T5bi8jccGMw09kFvwWR1domGUK5TDPKA+3wRRWKtn6GqbJlS+f
+	0vJTptsx3NpYYq/f1skl8VjkAZC5xpCI68xYV1zdM8Wkq9WZ4m59YG4Jh2/Ae88RhgFXOi9f2xEQ1
+	+iT6gbvy7MPbJUG16lAJlFSsgkL3qzyp/Z0Spi/lcuKDtoAGlwrPDbLeV7s0TcUOdQr85sqRgXOrI
+	YVUCngYQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tDTJr-00000004PU4-1HUc;
+	Tue, 19 Nov 2024 18:51:23 +0000
+Date: Tue, 19 Nov 2024 18:51:23 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: Jann Horn <jannh@google.com>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	cgroups@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	akpm@linux-foundation.org, corbet@lwn.net, derek.kiernan@amd.com,
+	dragan.cvetic@amd.com, arnd@arndb.de, gregkh@linuxfoundation.org,
+	viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz,
+	tj@kernel.org, hannes@cmpxchg.org, mhocko@kernel.org,
+	roman.gushchin@linux.dev, shakeel.butt@linux.dev,
+	muchun.song@linux.dev, Liam.Howlett@oracle.com, vbabka@suse.cz,
+	shuah@kernel.org, vegard.nossum@oracle.com, vattunuru@marvell.com,
+	schalla@marvell.com, david@redhat.com, osalvador@suse.de,
+	usama.anjum@collabora.com, andrii@kernel.org, ryan.roberts@arm.com,
+	peterx@redhat.com, oleg@redhat.com, tandersen@netflix.com,
+	rientjes@google.com, gthelen@google.com,
 	linux-hardening@vger.kernel.org,
-	llvm@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH 1/1] Compiler Attributes: disable __counted_by for clang < 19.1.3
-Date: Tue, 19 Nov 2024 09:26:27 -0800
-Message-Id: <173203718634.3118906.4631874727014346327.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20241029140036.577804-2-kernel@jfarr.cc>
-References: <20241029140036.577804-1-kernel@jfarr.cc> <20241029140036.577804-2-kernel@jfarr.cc>
+	Kernel Hardening <kernel-hardening@lists.openwall.com>
+Subject: Re: [RFCv1 0/6] Page Detective
+Message-ID: <ZzzeK8Fi_GlXPzjc@casper.infradead.org>
+References: <20241116175922.3265872-1-pasha.tatashin@soleen.com>
+ <a0372f7f-9a85-4d3e-ba20-b5911a8189e3@lucifer.local>
+ <CAG48ez2vG0tr=H8csGes7HN_5HPQAh4WZU8U1G945K1GKfABPg@mail.gmail.com>
+ <CA+CK2bB0w=i1z78AJbr2gZE9ybYki4Vz_s53=8URrxwyPvvB+A@mail.gmail.com>
+ <CAG48ez1KFFXzy5qcYVZLnUEztaZxDGY2+4GvwYq7Hb=Y=3FBxQ@mail.gmail.com>
+ <CA+CK2bCBwZFomepG-Pp6oiAwHQiKdsTLe3rYtE3hFSQ5spEDww@mail.gmail.com>
+ <CAG48ez0NzMbwnbvMO7KbUROZq5ne7fhiau49v7oyxwPrYL=P6Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAG48ez0NzMbwnbvMO7KbUROZq5ne7fhiau49v7oyxwPrYL=P6Q@mail.gmail.com>
 
-On Tue, 29 Oct 2024 15:00:36 +0100, Jan Hendrik Farr wrote:
-> This patch disables __counted_by for clang versions < 19.1.3 because
-> of the two issues listed below. It does this by introducing
-> CONFIG_CC_HAS_COUNTED_BY.
+On Tue, Nov 19, 2024 at 01:52:00PM +0100, Jann Horn wrote:
+> > I will take reference, as we already do that for memcg purpose, but
+> > have not included dump_page().
 > 
-> 1. clang < 19.1.2 has a bug that can lead to __bdos returning 0:
-> https://github.com/llvm/llvm-project/pull/110497
-> 
-> [...]
+> Note that taking a reference on the page does not make all of
+> dump_page() fine; in particular, my understanding is that
+> folio_mapping() requires that the page is locked in order to return a
+> stable pointer, and some of the code in dump_mapping() would probably
+> also require some other locks - probably at least on the inode and
+> maybe also on the dentry, I think? Otherwise the inode's dentry list
+> can probably change concurrently, and the dentry's name pointer can
+> change too.
 
-Applied to for-next/hardening, thanks!
+First important thing is that we snapshot the page.  So while we may
+have a torn snapshot of the page, it can't change under us any more,
+so we don't have to worry about it being swizzled one way and then
+swizzled back.
 
-[1/1] Compiler Attributes: disable __counted_by for clang < 19.1.3
-      https://git.kernel.org/kees/c/f06e108a3dc5
+Second thing is that I think using folio_mapping() is actually wrong.
+We don't want the swap mapping if it's an anon page that's in the
+swapcache.  We'd be fine just doing mapping = folio->mapping (we'd need
+to add a check for movable, but I think that's fine).  Anyway, we know
+the folio isn't ksm or anon at the point that we call dump_mapping()
+because there's a chain of "else" statements.  So I think we're fine
+because we can't switch between anon & file while holding a refcount.
 
-Take care,
+Having a refcount on the folio will prevent the folio from being allocated
+to anything else again.  It will not protect the mapping from being torn
+down (the folio can be truncated from the mapping, then the mapping can
+be freed, and the memory reused).  As you say, the dentry can be renamed
+as well.
 
--- 
-Kees Cook
-
+This patch series makes me nervous.  I'd rather see it done as a bpf
+script or drgn script, but if it is going to be done in C, I'd really
+like to see more auditing of the safety here.  It feels like the kind
+of hack that one deploys internally to debug a hard-to-hit condition,
+rather than the kind of code that we like to ship upstream.
