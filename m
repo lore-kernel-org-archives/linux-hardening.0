@@ -1,185 +1,135 @@
-Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E15661D2B21
-	for <linux-hardening@vger.kernel.org>; Tue, 19 Nov 2024 20:57:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C9CD1D415B;
+	Tue, 19 Nov 2024 22:15:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732049873; cv=none; b=YFKaFLRXZUsR475CfuafZ1JrT/EJXZLin1256rf5pf9rMTdyF25sP3Rlmc4qwYmWDtQ9ebnjKDM5ouGXQRqRryzV26TOMP6i3u4DQyT/vcb63iPAhA3CujAzE3aoFdMpVhi3RLBsKKawpN/CbJJHuZ0mWmJ4GFHz5Fa+F6NwgIw=
+	t=1732054511; cv=none; b=fFH2VC996MMIpmur1uaBRhoE3EcGzUY2007N3gyr74Y11A/Xpy/Sg7hpNZHzM5KONzSqLqRfod+ijEmnb1/iin5I1GBUmCb19BwKX9qdKzJim/NyurHWOTgw0Y1rbfOtJ2/905/EAmxLfxr51JHCTICLUMC7VZsvmLsdOswnv2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732049873; c=relaxed/simple;
-	bh=T9k6akBoWDnUL0LVwaHr9eD4/FLAcbYOjsPXB7IxjUk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=TVS4trcM78ltfsmhjEMI8eC+FUkOs9ObuzyhcGNdhUvJGR64PN5AdkyzVlIU0IAkl9sWaPVrpOw/kD0p5A5OhLwsZ3fmC61KKKjMKAzbYwyWMZDw9icuxTP1YNwW8Era7WqADqwrn/31YXc5LCPYXUhnfbGZyqN61uXnUrU4reg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Ez8OoD4a; arc=none smtp.client-ip=209.85.161.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1732054511; c=relaxed/simple;
+	bh=ldY6WBWPKHHhYPop1SiXo3e9JekM5N8ocuy8u2zGjI0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pSaSJJ0JzUlWnsCoQpLHzVsACxRtUUOnw8hQTr7IrCJMJBf8u/zQKDqVvRTBqyvPLNxKluVPjND+5N9Zo0miqvb+bro4qCHYw2w7Nc02BJZu8hBIXVm89YUk9QdG6XnYvJzInoxBVGJgeYPbd6p27RTMIVJljJK+d7e9V8/Dxdg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=plf8DAX9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ez8OoD4a"
-Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-5eb84216a1cso321331eaf.3
-        for <linux-hardening@vger.kernel.org>; Tue, 19 Nov 2024 12:57:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1732049871; x=1732654671; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IO9EX+rbjLtm8cqkrUr8HQs42GPnLgvoRuxnFLut8c0=;
-        b=Ez8OoD4aZx7RkQ6/PNXvJD3bVJV5EeVCHx8YP0cQ/xd8zRl4KarNjRTbKUfycKQyDU
-         1W2qRNLLq3liRcQrcEMyjhUZd2uZvO8vGl4fMcrVcqcV/5dWhlYqjtVq6iWlhsaWfqHg
-         bbD+N1MJ56kkPFXQeF5rflrR8HOK0hFc4GK6c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732049871; x=1732654671;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IO9EX+rbjLtm8cqkrUr8HQs42GPnLgvoRuxnFLut8c0=;
-        b=B5HZRR6BlMXoh316DRJV1Ml7FCg7ZbIBFWeMpgYU3JZ/+ZeO0rn0N9+2FrD8kuJI4N
-         gGBQbrts2Ip1Za3kfZ34jxeqtb2JhO3SHGPaV42cdz5SapjXvjrHpZDI4tI3oiNMGwRD
-         44gN2MAlqFS6sXAt4GPDblnqJBI6AVKZ5JGVkI9X2B7Yox7/NamlsOVF6+eq2VT7gxIG
-         eUSh5EMpZHlmT+buAqnKymffZoVlnaBRdi+cxXBTiY20eVfO5ccbAA86Bbb1HRX2kk17
-         1Vh+AFsImsYr4zlier+n2CrOOJHFhFWAsKjImjwCCZbHlZ84T52culJET3bKGbeaissZ
-         yUgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUxeLeinW+oxhxbtYmAwL53/nGjJu6ugtl4ElsKdgur1ciBxuaS48Ey47GCp5qASRc12LuoEzZZYkBZZf4fc/0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyhF8PyLkCzXZ7AY1Cq5t0XkviywVTWqzL2kpkp51rwhBdMHH2h
-	PIg+OqV7MKZ8SVX2dBz9q7O/+g8syfg7QtW96lA62Qm14buviSyirYKxAfGq6S65IgIHcySxzUZ
-	Kg6Xt9SGgZcJk8yC2XAn0scjZ+4NmU5QPFGMixvWpA7hBKPVOxw==
-X-Gm-Gg: ASbGncu0W/B5563kn/YwlZs4TvYdgPaTJuvIciTsaXrB3+4/Ne1uxYN/6D/Hdg+V+CT
-	TwIJfbD30h2P95n0jO1gAt3BS0WA4x7n/NSEZWXPe7KtN0ZwZ8xRLxoaPIr/I
-X-Google-Smtp-Source: AGHT+IFTrU1fA61t0Luh+9E+lP7gFvXHb60eu4Gw43LbPkNHC4l2jJzMO4RiOm3/mriXN7Czm3b797q73IggsHtNEWA=
-X-Received: by 2002:a4a:d342:0:b0:5eb:c1fe:881c with SMTP id
- 006d021491bc7-5eee7ee759bmr95103eaf.0.1732049870869; Tue, 19 Nov 2024
- 12:57:50 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="plf8DAX9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6501C4CECF;
+	Tue, 19 Nov 2024 22:15:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1732054510;
+	bh=ldY6WBWPKHHhYPop1SiXo3e9JekM5N8ocuy8u2zGjI0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=plf8DAX9AAyb/t+kWO7ybvtl8xgHZHU2wBMyBSe7T7MptghG1YljV+CMUnAdTZpZD
+	 B7naqHX+jsKVD9z5M0GXSGyybB3lczKbYDrOt19gonje9YusEFR6QhY3Jx+6VeYPgh
+	 ic4o/wwJHPZ6Sk8kSIiuNjxnGZfFYivEpUeO/J8o=
+Date: Tue, 19 Nov 2024 23:14:46 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Brian Johannesmeyer <bjohannesmeyer@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	Raphael Isemann <teemperor@gmail.com>,
+	Cristiano Giuffrida <giuffrida@cs.vu.nl>,
+	Herbert Bos <h.j.bos@vu.nl>
+Subject: Re: [RFC v2 0/2] dmapool: Mitigate device-controllable mem.
+ corruption
+Message-ID: <2024111914-overuse-cider-7734@gregkh>
+References: <20241119205529.3871048-1-bjohannesmeyer@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241113191602.3541870-1-jeffxu@google.com> <20241113191602.3541870-2-jeffxu@google.com>
- <w2kg2rvvp3vwgqlvvtnne2dccnhjamc2g5zxm2ko47khkodedw@ftzp7ekf4sft>
-In-Reply-To: <w2kg2rvvp3vwgqlvvtnne2dccnhjamc2g5zxm2ko47khkodedw@ftzp7ekf4sft>
-From: Jeff Xu <jeffxu@chromium.org>
-Date: Tue, 19 Nov 2024 12:57:39 -0800
-Message-ID: <CABi2SkUiJkqyT5=Dun8hHYEFVDcmjP0zz2No-EOm5GFMbLOSBQ@mail.gmail.com>
-Subject: Re: [PATCH v3 1/1] exec: seal system mappings
-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, jeffxu@chromium.org, akpm@linux-foundation.org, 
-	keescook@chromium.org, jannh@google.com, torvalds@linux-foundation.org, 
-	adhemerval.zanella@linaro.org, oleg@redhat.com, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-mm@kvack.org, jorgelo@chromium.org, 
-	sroettger@google.com, ojeda@kernel.org, adobriyan@gmail.com, 
-	anna-maria@linutronix.de, mark.rutland@arm.com, linus.walleij@linaro.org, 
-	Jason@zx2c4.com, deller@gmx.de, rdunlap@infradead.org, davem@davemloft.net, 
-	hch@lst.de, peterx@redhat.com, hca@linux.ibm.com, f.fainelli@gmail.com, 
-	gerg@kernel.org, dave.hansen@linux.intel.com, mingo@kernel.org, 
-	ardb@kernel.org, mhocko@suse.com, 42.hyeyoo@gmail.com, peterz@infradead.org, 
-	ardb@google.com, enh@google.com, rientjes@google.com, groeck@chromium.org, 
-	lorenzo.stoakes@oracle.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241119205529.3871048-1-bjohannesmeyer@gmail.com>
 
-Hi Liam,
+On Tue, Nov 19, 2024 at 09:55:27PM +0100, Brian Johannesmeyer wrote:
+> We discovered a security-related issue in the DMA pool allocator.
+> 
+> V1 of our RFC was submitted to the Linux kernel security team. They
+> recommended submitting it to the relevant subsystem maintainers and the
+> hardening mailing list instead, as they did not consider this an explicit
+> security issue. Their rationale was that Linux implicitly assumes hardware
+> can be trusted.
+> 
+> **Threat Model**: While Linux drivers typically trust their hardware, there
+> may be specific drivers that do not operate under this assumption. Hence,
+> this threat model assumes a malicious peripheral device capable of
+> corrupting DMA data to exploit the kernel. In this scenario, the device
+> manipulates kernel-initialized data (similar to the attack described in the
+> Thunderclap paper [0]) to achieve arbitrary kernel memory corruption. 
+> 
+> **DMA pool background**. A DMA pool aims to reduce the overhead of DMA
+> allocations by creating a large DMA buffer --- the "pool" --- from which
+> smaller buffers are allocated as needed. Fundamentally, a DMA pool
+> functions like a heap: it is a structure composed of linked memory
+> "blocks", which, in this context, are DMA buffers. When a driver employs a
+> DMA pool, it grants the device access not only to these blocks but also to
+> the pointers linking them.
+> 
+> **Vulnerability**. Similar to traditional heap corruption vulnerabilities
+> --- where a malicious program corrupts heap metadata to e.g., hijack
+> control flow --- a malicious device may corrupt DMA pool metadata. This
+> corruption can trivially lead to arbitrary kernel memory corruption from
+> any driver that uses it. Indeed, because the DMA pool API is extensively
+> used, this vulnerability is not confined to a single instance. In fact,
+> every usage of the DMA pool API is potentially vulnerable. An exploit
+> proceeds with the following steps:
+> 
+> 1. The DMA `pool` initializes its list of blocks, then points to the first
+> block.
+> 2. The malicious device overwrites the first 8 bytes of the first block ---
+> which contain its `next_block` pointer --- to an arbitrary kernel address,
+> `kernel_addr`.
+> 3. The driver makes its first call to `dma_pool_alloc()`, after which, the
+> pool should point to the second block. However, it instead points to
+> `kernel_addr`.
+> 4. The driver again calls `dma_pool_alloc()`, which incorrectly returns
+> `kernel_addr`. Therefore, anytime the driver writes to this "block", it may
+> corrupt sensitive kernel data.
+> 
+> I have a PDF document that illustrates how these steps work. Please let me
+> know if you would like me to share it with you.
 
-On Wed, Nov 13, 2024 at 4:54=E2=80=AFPM Liam R. Howlett <Liam.Howlett@oracl=
-e.com> wrote:
-> > Unlike the aforementioned mappings, the uprobe mapping is not
-> > established during program startup. However, its lifetime is the same
-> > as the process's lifetime [1]. It is sealed from creation.
->
-> Why are you referencing mseal.rst for the uprobe mapping lifetime?  I
-> can't find anything in there about uprobe.
->
-This should be [2], thanks for checking.
+I know I said it privately, but I'll say it here in public, very cool
+finding, this is nice work!
 
->
-> It also can't be used on 32 bit systems, as per your kernel-parameters
-> changes (and mseal specification).  This is missing from the changelog.
->
-sure, I will add that to the commit msg.
+> **Proposed mitigation**. To mitigate the corruption of DMA pool metadata
+> (i.e., the pointers linking the blocks), the metadata should be moved into
+> non-DMA memory, ensuring it cannot be altered by a device. I have included
+> a patch series that implements this change. Since I am not deeply familiar
+> with the DMA pool internals, I would appreciate any feedback on the
+> patches. I have tested the patches with the `DMAPOOL_TEST` test and my own
+> basic unit tests that ensure the DMA pool allocator is not vulnerable.
+> 
+> **Performance**. I evaluated the patch set's performance by running the
+> `DMAPOOL_TEST` test with `DMAPOOL_DEBUG` enabled and with/without the
+> patches applied. Here is its output *without* the patches applied:
+> ```
+> dmapool test: size:16   align:16   blocks:8192 time:3194110
+> dmapool test: size:64   align:64   blocks:8192 time:4730440
+> dmapool test: size:256  align:256  blocks:8192 time:5489630
+> dmapool test: size:1024 align:1024 blocks:2048 time:517150
+> dmapool test: size:4096 align:4096 blocks:1024 time:399616
+> dmapool test: size:68   align:32   blocks:8192 time:6156527
+> ```
+> 
+> And here is its output *with* the patches applied:
+> ```
+> dmapool test: size:16   align:16   blocks:8192 time:3541031
+> dmapool test: size:64   align:64   blocks:8192 time:4227262
+> dmapool test: size:256  align:256  blocks:8192 time:4890273
+> dmapool test: size:1024 align:1024 blocks:2048 time:515775
+> dmapool test: size:4096 align:4096 blocks:1024 time:523096
+> dmapool test: size:68   align:32   blocks:8192 time:3450830
+> ```
 
-> > +     exec.seal_system_mappings =3D [KNL]
-> > +                     Format: { no | yes }
-> > +                     Seal system mappings: vdso, vvar, sigpage, vsysca=
-ll,
-> > +                     uprobe.
-> > +                     This overwrites KCONFIG CONFIG_SEAL_SYSTEM_MAPPIN=
-GS
->                              ^^^^^^^^^ overrides ?
-sure.
+You had mentioned that the size:68 numbers were going to be re-run, has
+that happened and this really is that much of a boost to that size?  Or
+is this the original numbers?
 
+thanks,
 
-> > -     if (vsyscall_mode =3D=3D XONLY)
-> > -             vm_flags_init(&gate_vma, VM_EXEC);
-> > +     if (vsyscall_mode =3D=3D XONLY) {
-> > +             unsigned long vm_flags =3D VM_EXEC;
-> > +
-> > +             vm_flags |=3D seal_system_mappings();
-> > +
->
-> nit, extra line here.
->
-removed.
-
-> But.. this will add the VM_SEALED flag on any 64bit architecture that
-> enables the SEAL_SYSTEM_MAPPINGS config.  That will happen by bots with
-> random config builds.  I don't know if they have test cases that
-> specifically unmap the vmas you are sealing (ppc64 probably tries to
-> unmap the vdso).
->
-> I do know that I've had syzbot bugs that unmap _all_ vmas.  I'm guessing
-> you will get bot notification on these failures for any 64bit
-> architecture.  You may want to look into it to avoid such fuzzing
-> failures, but we still need this to be tested somehow.
->test_mremap_vdso.c
-I found one selftest that could fail:
-tools/testing/selftests/x86/test_mremap_vdso.c
-
-I could add tools/testing/selftests/x86/config and add
-CONFIG_SYSTEM_MAPPINGS=3Dn there.
-as instructed in selftest documentation [1]
-
-[1] https://docs.kernel.org/dev-tools/kselftest.html#contributing-new-tests=
--details
-
->
-> overwrite or override?  I think the difference is that overwrite implies
-> permanence where override doesn't.  I'm fine with either, it just reads
-> a bit odd to me.
->
-sure, changed to override
-
-> >
-> > +config SEAL_SYSTEM_MAPPINGS
-> > +     bool "seal system mappings"
-> > +     default n
-> > +     depends on 64BIT
-> > +     depends on !CHECKPOINT_RESTORE
-> > +     help
-> > +       Seal system mappings such as vdso, vvar, sigpage, vsyscall, upr=
-obes.
-> > +       Note: CHECKPOINT_RESTORE might relocate vdso mapping during res=
-tore,
-> > +       and remap will fail if the mapping is sealed, therefore
-> > +       !CHECKPOINT_RESTORE is added as dependency.
->
-> You could also add a portion here about your override functionality on
-> command line. "this can be disabled or enabled by..."
->
-sure.
-
-> I really think having something that can be found by searching for mseal
-> is really desirable here.  That is, make menuconfig, press / for search,
-> type mseal -> find this feature.  If this was MSEAL_SYSTEM_MAPPINGS,
-> searching for seal or mseal would work and would serve to link the
-> config option to the mseal document.
->
-using "seal" would work here. I will add a note here to mseal.rst for refer=
-ence.
-
-> Right now there is no information in the help that will allow it to be
-> found by 'mseal'.  There is also nothing in the documentation that
-> states this exists, which you should probably update with this feature?
->
-I will update mseal.rst to include this feature.
-
-Thanks for reviewing.
--Jeff
+greg k-h
