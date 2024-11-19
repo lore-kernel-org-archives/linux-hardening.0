@@ -1,88 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AAE514B06A;
-	Tue, 19 Nov 2024 04:00:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1209D19CD17;
+	Tue, 19 Nov 2024 08:35:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731988834; cv=none; b=ihAAUYwkm99xvIBb415pgXJKWgE2N9n90l4sFLr76Hii2o8sfkUfjydlejOdAwHFNVSWIdTYAJfuK7hudm3/40Jj95LYBj/CPwntBgTu5quEiD33iy57/MRuJyn0auat2vVgYxWJJRYb3OepeHxTvClZRE/gZXi+zdJNEJst2vI=
+	t=1732005360; cv=none; b=bouvEuO2o9xIjeIEyPbucyatCRZCXpoOYR7iHi4CD9VIFrABtwMlsd5QOyAkty+3bx2YVC0NoN8Hxbtjf3YTFUMpcLWVJqb0pGjW4s74CSpqqFp7aPJaU7G8/+yqv8+DW8NhMhBJgKgh4UltADN9nMQ//0Zy+BI+Aa9mKAa5gos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731988834; c=relaxed/simple;
-	bh=oh+IX3k+C5979Zv7no9k810xDJ/vT/99kL2zrUcmP8E=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=Y4XyEoz9vKymMyrE6iZB9tFNgqguuT2AZakHJoFCWmetBkd3Tud7cMFJlVms4tKqJTxzbvli6FBzPFVpXKoDzh26/rXxCub4stuC2SMrgS0z2I49ouTjmNwBuZWCoF5KKhbChmC0jCadyEniSPuBtKV7qI2rxNxOYOlNew6Y85Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KtijRZKK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1732005360; c=relaxed/simple;
+	bh=XH01imPv0mUK7wiVASyHVNO8L5toIV4S09y+kyvkR/8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Dm9UmLZfOl9JIxPlYzViaO6qZ9bF1MaANRkTbKu1Jv5mj8jRn/dfmPyJksvDmauHJ2ihT04iTcItbsprjfoWQA9lUSpE6/ldM+ULT80vGKPdjIC0wKqFMpYLj4DjQG58Dr82GU8NvOQR2HfhI3T8nkDLHXDmGZ8zP9aQmdD7+84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Tmk+CAE5; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KtijRZKK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1287C4DDEB;
-	Tue, 19 Nov 2024 04:00:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731988833;
-	bh=oh+IX3k+C5979Zv7no9k810xDJ/vT/99kL2zrUcmP8E=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=KtijRZKKn0G6iqcSHsZMAPXxfcImh6EDFAQmQX1xQmrjA+CF61CbxyyQm/LypVBmt
-	 Fp5hNHlNwzgC7evqVsFC3PgfveNK5DgVEQ2mj3LCHOK14aVm3OxCf/mNpJX6a2Wiie
-	 xsW7m6O0BtOUoRjWkkSnkzNDr0f+Zal4pa6A0AP1mA6hQSx1/y/SlRc/xDxkiolPOV
-	 90x+dDy13qJpn/+l2Xo3zt2ng6xMFRChjc4fY6fIjku+Wb6uaEhLxGm0ZoAMNCP0CH
-	 JHT3nWx7kQpOBKpF1ZlmNgg3mV41aPojJ/ljTQ8hYN9xKWt7CEQZJHYj4tvy8VBEVQ
-	 hLdVOIaniSiqQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70EC13809A80;
-	Tue, 19 Nov 2024 04:00:46 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tmk+CAE5"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a9f1d76dab1so872085066b.0;
+        Tue, 19 Nov 2024 00:35:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1732005357; x=1732610157; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XH01imPv0mUK7wiVASyHVNO8L5toIV4S09y+kyvkR/8=;
+        b=Tmk+CAE5WoxihEt8VHsKP0LpgtNessUTXtLQqDuyTaOGDXn5dHaesxvm+QyMjvVhgO
+         AoS8Y7MELO698AceocSUYvFT3rI/vdAcwJ5/u89k4QtVWM7kakE/OxlLbQns8Na5s/1J
+         tmDndVahEuhqq6Ft2/QvIRe4dTBKPQ3LWBHBAbUhStMGJkTHXnQ3TDwsoFgmZ2IX/Zi0
+         qw8XGVLUfYtZYGp5BFJYXK+0nL9ScboVewbCjgYYZA/bYFxXOIcmVAuer9rvQG+v6uA8
+         Zgxf/x/FXumfzV3+lDUGAWk+3PsYXtaljb8++9k8HMo2h50l4xTc91KyXHOxCj9502D7
+         //8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1732005357; x=1732610157;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XH01imPv0mUK7wiVASyHVNO8L5toIV4S09y+kyvkR/8=;
+        b=aqgWvfPID7JfVIurb5usrcb/d+wlnnOTqzieJ1arNBqGqOoPhLSHoD35QQC16I8fqy
+         ug8MX84a6FpmkfDSrYoT6fPH7Jh7hMI0p8yTPqDeVSVLmuFB7ryo5eLFvM2d1wVfqlhR
+         jsxJAChlxeNG5YVQI64s7ZTgcYSplolGlYw3W5IJCb3+L7XdRVbYO+k0R7+cvbLVca3g
+         tFWHU0AKN63CY4K5QfuIChXoZVF+Y8LWyILc7W8XUo25DueT+mg+YtxfgpbgYvbDNTIz
+         xbPZATBKSgUPDHebcNuTj+9Or9k1G4LopYQecHg5q4J9p1uAIT6SDBrwS5oqlJ/mg7/p
+         lyXg==
+X-Forwarded-Encrypted: i=1; AJvYcCUX2DWuRVL44faZjgK/IPfGdK/7rvxK9uMXOkzlS7oP9azOoFX1g5h33WNbO8m2xknYUtw4DzILIZEjaT47Fgc=@vger.kernel.org, AJvYcCVvTioI5tiKxstiAN7sNPr2EyXFiTBj/8ROp8qEn3EIaZvM/DCjr0ecunNuT+cCM+yUJYdjJg2dILorYXCs@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy52bOICirlb8tQQEMRWeLS2WxQcsAi/0YdAyYhfc2YWxvfb57P
+	ljXczyo1VHvO0bSvIecp4MBtlgOZ7iJH9gP+ufJ987ZBF1rNbwcwNVyeNQq/fw3EGbmO0rFiUQO
+	VpCgh8IYQu4376J+qR8hIm6WtznU=
+X-Google-Smtp-Source: AGHT+IFYaZeyEuXhJPY6zvB7VMX0yvUH3CyiNLAiSAU82nWk3gj2d9UXTDD/vlL//n+632YG26ttYZR2+UQ0UozMokc=
+X-Received: by 2002:a17:906:eb52:b0:aa4:a814:3f78 with SMTP id
+ a640c23a62f3a-aa4a814447amr664100266b.1.1732005357219; Tue, 19 Nov 2024
+ 00:35:57 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH 0/3] UAPI: ethtool: Avoid flex-array in struct
- ethtool_link_settings
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <173198884499.97799.13289755875116229867.git-patchwork-notify@kernel.org>
-Date: Tue, 19 Nov 2024 04:00:44 +0000
-References: <20241115204115.work.686-kees@kernel.org>
-In-Reply-To: <20241115204115.work.686-kees@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: kuba@kernel.org, gustavoars@kernel.org, davem@davemloft.net,
- andrew@lunn.ch, kory.maincent@bootlin.com, michael.chan@broadcom.com,
- andrew+netdev@lunn.ch, edumazet@google.com, pabeni@redhat.com,
- bharat@chelsio.com, benve@cisco.com, satishkh@cisco.com, manishc@marvell.com,
- horms@kernel.org, ecree.xilinx@gmail.com, przemyslaw.kitszel@intel.com,
- hkallweit1@gmail.com, ahmed.zaki@intel.com, rrameshbabu@nvidia.com,
- idosch@nvidia.com, maxime.chevallier@bootlin.com, hayatake396@gmail.com,
- corbet@lwn.net, linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- linux-hardening@vger.kernel.org
+References: <20241119021719.7659-1-prosunofficial@gmail.com>
+In-Reply-To: <20241119021719.7659-1-prosunofficial@gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Tue, 19 Nov 2024 10:35:21 +0200
+Message-ID: <CAHp75Vf_2+0wCsQWCUojzE_WQ4KfE6DCGKxURZ=s+Lsh4TdTfQ@mail.gmail.com>
+Subject: Re: [PATCH v2 linux-next 0/2] lib/string_choices: Sorting function order
+To: R Sundar <prosunofficial@gmail.com>
+Cc: Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>, linux-hardening@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello:
+On Tue, Nov 19, 2024 at 4:17=E2=80=AFAM R Sundar <prosunofficial@gmail.com>=
+ wrote:
+>
+> This patch series rearrange misplaced functions in sorted order and add
+> str_locked_unlocked() helper.
 
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+LGTM,
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
 
-On Fri, 15 Nov 2024 12:43:02 -0800 you wrote:
-> Hi,
-> 
-> This reverts the tagged struct group in struct ethtool_link_settings and
-> instead just removes the flexible array member from Linux's view as it
-> is entirely unused.
-> 
-> -Kees
-> 
-> [...]
-
-Here is the summary with links:
-  - [1/3] Revert "net: ethtool: Avoid thousands of -Wflex-array-member-not-at-end warnings"
-    https://git.kernel.org/netdev/net-next/c/1cfb5e57886a
-  - [2/3] Revert "UAPI: ethtool: Use __struct_group() in struct ethtool_link_settings"
-    https://git.kernel.org/netdev/net-next/c/ebda123fe703
-  - [3/3] UAPI: ethtool: Avoid flex-array in struct ethtool_link_settings
-    https://git.kernel.org/netdev/net-next/c/96c677fca54a
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+--=20
+With Best Regards,
+Andy Shevchenko
