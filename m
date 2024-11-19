@@ -1,57 +1,55 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E5C31384BF
-	for <linux-hardening@vger.kernel.org>; Tue, 19 Nov 2024 12:52:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 443EE1CF289
+	for <linux-hardening@vger.kernel.org>; Tue, 19 Nov 2024 15:14:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732020761; cv=none; b=SFmuKqO2RwQrsC7WypeoQPJxuWsSMqNKzIzfoqb4QhdSuRgWp3q0K7jd7jGGouC63PegtQfp8bTdOnAvClmW39m7jeieRWBtpR1E3wmTAbH5pEc+Ku3Mx/Iob7S1eHOgr60S1wGRYCAFsUjMyPN4mBSODM919wfjwAbTgxQZWiw=
+	t=1732029293; cv=none; b=a4k357Z+mwapJ2gRRxq5UEUrXCdNTSjWLwlazVDteaAqjyGNZDA/mMh3YIsclR3xT2KQ5DfvEV4NNIXQoXuClDym5m97h1qDR8tIjzK/tG8vr+P6bbMMHtDYD7uTBSpfxo2MGTKGzUGGVFL26YaqjPMBZO+H0dGkjC5rCQzCufg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732020761; c=relaxed/simple;
-	bh=yRauzgQtwAabGE/huRKr8PjySPrqwLknQlRBGuzARcE=;
+	s=arc-20240116; t=1732029293; c=relaxed/simple;
+	bh=RHwDnKru70pWnl/9WBuQ20Iik4fo0kZl81qP2ypGaJI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TPsaKfXCpLa96l/uIUhCiujnYm3n3ZYFQHb+gvjQ1V+gNl+hooC16JNeP94MEF6dwgznmHEJYJeyr3XTlq4TNisDtODycbARzUz0v/3OzAbSPBwkMQR3TfYQUR6FuxcU9qcQQzool9wWmkjw/9PeQdbb27dRC8h211vc2kkmozs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RvT4NPz5; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=P6x7/Rt7a57bCHdF337VcBlg+kDun6B4MGYWnLxXpjApFs4mFhuye8Xm44uayOg0AIrXV9vi6rCsc1OISYaNSUdgENFtvqjy8BTFTpZjffGCcnyZp7m7rydCrqsX8+khPYa5+iAVnrm1uf66TRAU/1FfAPvm6reUUaFlDeqsX64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=DTWcVmP3; arc=none smtp.client-ip=209.85.160.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RvT4NPz5"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5cfc18d5259so6716a12.1
-        for <linux-hardening@vger.kernel.org>; Tue, 19 Nov 2024 04:52:39 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="DTWcVmP3"
+Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-460ad98b043so44043531cf.1
+        for <linux-hardening@vger.kernel.org>; Tue, 19 Nov 2024 07:14:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1732020758; x=1732625558; darn=vger.kernel.org;
+        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1732029290; x=1732634090; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=yRauzgQtwAabGE/huRKr8PjySPrqwLknQlRBGuzARcE=;
-        b=RvT4NPz5IIaqR7prkmVJ8Sgp5VpdKTUwU47DZs+UBZzbbib344Z2g4YntUaZg9giCP
-         rVb7hRmfuCXsw/y9rCsyQyTQGsLOqqcNmFDecylZsZnBGJipOpnnQvzj8fJ2JC8DqTEg
-         l+Vfo/7gRDqNTSAoqeT3nEbvV7rlHynmMFt94jqjTHeqUN4xueoE8wdzAarJ/jVCJ4Oe
-         klkyv/iIT0vaQKaNwKLFHLlW+Kwyx5McFHZm6uoJUieglyAgFdIhfJ89mEACBF9yWVHT
-         e4Vyyme71D9eG8SQUXTlyt3YshjSS0TxFvFMXr9rgFTdOrAoCSnXodsCkaCtfkhyHQ5w
-         eZDg==
+        bh=RHwDnKru70pWnl/9WBuQ20Iik4fo0kZl81qP2ypGaJI=;
+        b=DTWcVmP35d2MfNGkG/F0tTzrF5ppMkhzpZfeGa1Esf8qHysk1JSwK5speXHBpjPkRr
+         jBOYm9NhFj3be1oVJ0Qy6Fql/D5sBT6O9X4QNapE6ii3q1OEOz3j6UDZhgiNA+sYElx2
+         8kiycjPi2Gw5zhQFvAEeJLY5vCtw22OHYWmWMN7Q1CW2mBHDYorHjaE7JgzPALgqHztR
+         kpx8ASR6CyxEA1/4rmiRVfRf/EgpvqQU8RubVUJUzTtXG6xxWK/QwlSFNMrKOzbT9R43
+         d2VQQuVPJd0vMSPx9/ZOiVF4AAml1XvnmDYFtyU3IpEKBCHvzfBeVk0c3sWUWJqcZ+s2
+         vLng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732020758; x=1732625558;
+        d=1e100.net; s=20230601; t=1732029290; x=1732634090;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=yRauzgQtwAabGE/huRKr8PjySPrqwLknQlRBGuzARcE=;
-        b=LIrjsgatDiG1EbU8lTZYKFTm5xlQTJvBJqMzwnspLaRZMwO0xnOr7GUtKq9e+99Q5x
-         XlbwFYiwrm95H5dPZF2fd52zb2LmifgqtYaAkOlwCHqfD6EKLmPo5rArSoGS/4HH7HXv
-         giDRZvq4wbLtLk6Ag6ziHZL07RXAz7j2pW8+f7VvdWNGNADxrsmzhHo9EkYVcwjlJCym
-         xr7F/ZJZ2RjJE4Dca8obEaj/nKHXMjtA6yK6DepaOUmsm/LpXcWAzShhzOhMdl4n9LJo
-         aAHYtB4J9/+A8qhaqby2JN+GFOap6bwTKnoi6FL/Zezb0L483uaAOztRCHh8FSRaAa6B
-         USjg==
-X-Forwarded-Encrypted: i=1; AJvYcCVG3ohQfUMuvCKxvGk8RYQgbk9bAJZW/CTXjy2EcpNofD4pc5xllPmQDK/roeaoSnZYIOeKgNlzxRmxicN2JUs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyzEn76ecBzPCBgd+Xx3/Qmz9qEfAdW1PqmtQHuBaqME+8ouGaW
-	c/n3Zf2+vZWm0B2gs/IOVInJsMR64SmDCDvE/mZ+nxEloRuzine9Dx2u4IIbeyCR1BVtBa53eBB
-	9UAw2x0IYK8k6s21rWW4vK9qrNuUIYSA0e2+Z
-X-Gm-Gg: ASbGncsnuwmRtlPIYOJecS6QxrhMJnRJHCQf7GGHpAbUQbW81srcTNEDcCpSOhObVFp
-	ZRsYiygWiZawhCzqz3DAaSOSbXixKSlzQuOKqQFGCKB2Tn+uv0D+fB509txU=
-X-Google-Smtp-Source: AGHT+IHrO5qfRHSlmQCwNzrJObJ8F+5vL3isZu6sEndbtNy8+TOZx/SUWI/RHP6UiYngvZBnewRWzZBX4xLAvWC6WJw=
-X-Received: by 2002:a05:6402:1351:b0:5cf:bd9a:41ec with SMTP id
- 4fb4d7f45d1cf-5cfdec244d3mr70875a12.2.1732020757739; Tue, 19 Nov 2024
- 04:52:37 -0800 (PST)
+        bh=RHwDnKru70pWnl/9WBuQ20Iik4fo0kZl81qP2ypGaJI=;
+        b=ncNaYB4FzXcfL41BpFhGfeM7BL3VCpDkLHxNJRPMqzF8hwik3XY4LPK7gNqq41lir2
+         QfIlWkOftWARUL6KDaCINpjUtF8i+SRtShflJ/PwYq7JJ2pdAy1V1XzxnIjFFl4GYNBZ
+         EyOCx2KphgDERl3buojSRjFtRBZbadWtcaF2d75fIRy7n/jC8T/XmTKwI+RoUDgxYA5J
+         WRx/DImzeAQuznlop9TQ86VDM4Im1ff5BVqfoof2KK8h464oSzse/L5wMmlaE+hnzKJr
+         WFDZY+x1o59DmdezfzJ81uQW1jP6eOeXDK16dj4kSB9FyqL/a0ZnZcsuRQ358AvAQYZl
+         46SA==
+X-Forwarded-Encrypted: i=1; AJvYcCXU2T/34b/Py6a242e5W4X/T/k9NMay7bL4YpoNX4kd0Y4Q/GCNy94WyH+NoVL7uEAHKQsPRL5EuZPQ/GRo4Wk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YybnSd9EtKvD/qGNqZ8I2MwYRTIq20SX3Rj+MR/vlHhE/kGOZ2g
+	1GSnyj3JEjuCIFA8bFdP4LD3BNlNuNdOM5khPXeT/NoScEXgc+EnFVmbMXXl5zwIBo5AWPRGZ7q
+	FhgfVY3/xEmHW7J/5Omv/i+ZMDQgwDmqWv3+PJw==
+X-Google-Smtp-Source: AGHT+IEJwBZlUovcinMC2W5fFA797qZwYwLBmxYXTBNzEM0XjyLH7M5le4TEh6FQXiXxZ5fybascQvNQ8dVlyHK3oWk=
+X-Received: by 2002:a05:622a:1b06:b0:462:b856:c8fe with SMTP id
+ d75a77b69052e-46392d511bcmr58315681cf.1.1732029290306; Tue, 19 Nov 2024
+ 07:14:50 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -61,13 +59,14 @@ MIME-Version: 1.0
 References: <20241116175922.3265872-1-pasha.tatashin@soleen.com>
  <a0372f7f-9a85-4d3e-ba20-b5911a8189e3@lucifer.local> <CAG48ez2vG0tr=H8csGes7HN_5HPQAh4WZU8U1G945K1GKfABPg@mail.gmail.com>
  <CA+CK2bB0w=i1z78AJbr2gZE9ybYki4Vz_s53=8URrxwyPvvB+A@mail.gmail.com>
- <CAG48ez1KFFXzy5qcYVZLnUEztaZxDGY2+4GvwYq7Hb=Y=3FBxQ@mail.gmail.com> <CA+CK2bCBwZFomepG-Pp6oiAwHQiKdsTLe3rYtE3hFSQ5spEDww@mail.gmail.com>
-In-Reply-To: <CA+CK2bCBwZFomepG-Pp6oiAwHQiKdsTLe3rYtE3hFSQ5spEDww@mail.gmail.com>
-From: Jann Horn <jannh@google.com>
-Date: Tue, 19 Nov 2024 13:52:00 +0100
-Message-ID: <CAG48ez0NzMbwnbvMO7KbUROZq5ne7fhiau49v7oyxwPrYL=P6Q@mail.gmail.com>
+ <CAG48ez1KFFXzy5qcYVZLnUEztaZxDGY2+4GvwYq7Hb=Y=3FBxQ@mail.gmail.com>
+ <CA+CK2bCBwZFomepG-Pp6oiAwHQiKdsTLe3rYtE3hFSQ5spEDww@mail.gmail.com> <CAG48ez0NzMbwnbvMO7KbUROZq5ne7fhiau49v7oyxwPrYL=P6Q@mail.gmail.com>
+In-Reply-To: <CAG48ez0NzMbwnbvMO7KbUROZq5ne7fhiau49v7oyxwPrYL=P6Q@mail.gmail.com>
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+Date: Tue, 19 Nov 2024 10:14:12 -0500
+Message-ID: <CA+CK2bByXtm8sLyFzDDzm5xC6xb=DEutaRUeujGJdwf-kmK1gA@mail.gmail.com>
 Subject: Re: [RFCv1 0/6] Page Detective
-To: Pasha Tatashin <pasha.tatashin@soleen.com>
+To: Jann Horn <jannh@google.com>
 Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, linux-kernel@vger.kernel.org, 
 	linux-mm@kvack.org, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
 	cgroups@vger.kernel.org, linux-kselftest@vger.kernel.org, 
@@ -86,50 +85,66 @@ Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, linux-kernel@vger.kernel.org,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Nov 19, 2024 at 2:30=E2=80=AFAM Pasha Tatashin
-<pasha.tatashin@soleen.com> wrote:
-> > Can you point me to where a refcounted reference to the page comes
-> > from when page_detective_metadata() calls dump_page_lvl()?
+On Tue, Nov 19, 2024 at 7:52=E2=80=AFAM Jann Horn <jannh@google.com> wrote:
 >
-> I am sorry, I remembered incorrectly, we are getting reference right
-> after dump_page_lvl() in page_detective_memcg() -> folio_try_get(); I
-> will move the folio_try_get() to before dump_page_lvl().
->
-> > > > So I think dump_page() in its current form is not something we shou=
-ld
-> > > > expose to a userspace-reachable API.
+> On Tue, Nov 19, 2024 at 2:30=E2=80=AFAM Pasha Tatashin
+> <pasha.tatashin@soleen.com> wrote:
+> > > Can you point me to where a refcounted reference to the page comes
+> > > from when page_detective_metadata() calls dump_page_lvl()?
+> >
+> > I am sorry, I remembered incorrectly, we are getting reference right
+> > after dump_page_lvl() in page_detective_memcg() -> folio_try_get(); I
+> > will move the folio_try_get() to before dump_page_lvl().
+> >
+> > > > > So I think dump_page() in its current form is not something we sh=
+ould
+> > > > > expose to a userspace-reachable API.
+> > > >
+> > > > We use dump_page() all over WARN_ONs in MM code where pages might n=
+ot
+> > > > be locked, but this is a good point, that while even the existing
+> > > > usage might be racy, providing a user-reachable API potentially mak=
+es
+> > > > it worse. I will see if I could add some locking before dump_page()=
+,
+> > > > or make a dump_page variant that does not do dump_mapping().
 > > >
-> > > We use dump_page() all over WARN_ONs in MM code where pages might not
-> > > be locked, but this is a good point, that while even the existing
-> > > usage might be racy, providing a user-reachable API potentially makes
-> > > it worse. I will see if I could add some locking before dump_page(),
-> > > or make a dump_page variant that does not do dump_mapping().
+> > > To be clear, I am not that strongly opposed to racily reading data
+> > > such that the data may not be internally consistent or such; but this
+> > > is a case of racy use-after-free reads that might end up dumping
+> > > entirely unrelated memory contents into dmesg. I think we should
+> > > properly protect against that in an API that userspace can invoke.
+> > > Otherwise, if we race, we might end up writing random memory contents
+> > > into dmesg; and if we are particularly unlucky, those random memory
+> > > contents could be PII or authentication tokens or such.
+> > >
+> > > I'm not entirely sure what the right approach is here; I guess it
+> > > makes sense that when the kernel internally detects corruption,
+> > > dump_page doesn't take references on pages it accesses to avoid
+> > > corrupting things further. If you are looking at a page based on a
+> > > userspace request, I guess you could access the page with the
+> > > necessary locking to access its properties under the normal locking
+> > > rules?
 > >
-> > To be clear, I am not that strongly opposed to racily reading data
-> > such that the data may not be internally consistent or such; but this
-> > is a case of racy use-after-free reads that might end up dumping
-> > entirely unrelated memory contents into dmesg. I think we should
-> > properly protect against that in an API that userspace can invoke.
-> > Otherwise, if we race, we might end up writing random memory contents
-> > into dmesg; and if we are particularly unlucky, those random memory
-> > contents could be PII or authentication tokens or such.
-> >
-> > I'm not entirely sure what the right approach is here; I guess it
-> > makes sense that when the kernel internally detects corruption,
-> > dump_page doesn't take references on pages it accesses to avoid
-> > corrupting things further. If you are looking at a page based on a
-> > userspace request, I guess you could access the page with the
-> > necessary locking to access its properties under the normal locking
-> > rules?
+> > I will take reference, as we already do that for memcg purpose, but
+> > have not included dump_page().
 >
-> I will take reference, as we already do that for memcg purpose, but
-> have not included dump_page().
+> Note that taking a reference on the page does not make all of
+> dump_page() fine; in particular, my understanding is that
+> folio_mapping() requires that the page is locked in order to return a
+> stable pointer, and some of the code in dump_mapping() would probably
+> also require some other locks - probably at least on the inode and
+> maybe also on the dentry, I think? Otherwise the inode's dentry list
+> can probably change concurrently, and the dentry's name pointer can
+> change too.
 
-Note that taking a reference on the page does not make all of
-dump_page() fine; in particular, my understanding is that
-folio_mapping() requires that the page is locked in order to return a
-stable pointer, and some of the code in dump_mapping() would probably
-also require some other locks - probably at least on the inode and
-maybe also on the dentry, I think? Otherwise the inode's dentry list
-can probably change concurrently, and the dentry's name pointer can
-change too.
+Agreed, once reference is taken, the page identity cannot change (i.e.
+if it is a named page it will stay a named page), but dentry can be
+renamed. I will look into what can be done to guarantee consistency in
+the next version. There is also a fallback if locking cannot be
+reliably resolved (i.e. for performance reasons) where we can make
+dump_mapping() optionally disabled from dump_page_lvl() with a new
+argument flag.
+
+Thank you,
+Pasha
