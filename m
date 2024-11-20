@@ -1,56 +1,55 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B76EB16F0CA;
-	Wed, 20 Nov 2024 21:59:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3E2F1E4A4;
+	Wed, 20 Nov 2024 23:46:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732139950; cv=none; b=gUoytCnLeHsrOhGm/blmZAcNv/vOQhFYPThKxRITefx1HZIAE4JwLRQPVgeJzRX6+NflQru6dLSLheLPBbFOH3OLzx1jjNhQlCmdQh4AGDZV1aRiM+lcpnSdWy+SPnxaPqIQhJIi67fF3hqfUUn+WrOucnuHQmJQRjGCoLwz0vQ=
+	t=1732146416; cv=none; b=tx7Wlmw6i+djeBW4RQUu5TfR9H/bm8wk8bW7DPx8whNxnei/Ajvt6buQRdlt1X5ovdaOju+GU8X/7L5dRQ7A/f1R6ehwzLZ7FzTllRmDYqXVM7W31vi1Niuf4uXrYTBznmhJXSq8ggNH3CvTLPkxofvGkCFCzYgT0+6gnPOVkjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732139950; c=relaxed/simple;
-	bh=vbCM/2Crg2zyuKNynG1p9LGYZ5isHcDZ8DKVO65fTCQ=;
+	s=arc-20240116; t=1732146416; c=relaxed/simple;
+	bh=OrlaZ8VnTHTr6wuAzTLHLrYRMcxnk8CCG52m+a1Go3s=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=evhu4mpFICFuOmni3YjR9RnNo98zpRuPRjLtBe2/i+QqCU74HMwOaiGOxuur3AhWc6lcjsZ9EtH3Zd+68njDT7MNGBPc/qBLOcK8qRDTfS+K5e286i5E8vlbEC7/5fUQLIfsOlNgZN9LFu2FiScCuir4M1CENYo9TrmeVU9TC9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mVItJtUo; arc=none smtp.client-ip=209.85.218.52
+	 To:Cc:Content-Type; b=iAeucL4m83AiJmDJpT3h85oj4DmUENqMMNXfLMEKcNMGHaIZLPc92F3aBUMk0OJ6yRzQfvo7pZ082Or1Y0y6elE0JO96WMne+SMGuIT7pNMtz6hcCOk2Q4xJTTx/+rEJYUX4lFZlZs5W5x0lltfhIiSvJeSMVMqWPuUTNAsmM4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CDYsGjPL; arc=none smtp.client-ip=209.85.208.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mVItJtUo"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a99f3a5a44cso33424966b.3;
-        Wed, 20 Nov 2024 13:59:08 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CDYsGjPL"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5ced377447bso355639a12.1;
+        Wed, 20 Nov 2024 15:46:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1732139947; x=1732744747; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Faap3VyEdC3wzioh+4CPsVXtj2eSEp6gz0ge1phVFWk=;
-        b=mVItJtUofZyG229SqIlJU4nBLhh2uRPchX1e0CFfsnmtuB7rwwg8utKZC7I3dEeuI8
-         o7EiHt6uIxx94KZv24GBgJzE/lo+0COZ7XpeQayFkgwZqFhPZ35D+XcigA05/GtgIwYP
-         O9R3owDiiIMCnewuxq4Uzsg2MFOKI/GehmAwbGR1gPEvmIVfwa97wDl3+FILxWM/v6aN
-         mFrriNyVoS2NHBWhxuEh2sPGkq3E1xuuTgiNIXMbVf6rWGiMsAacEknFmdd4IgJ1gf7A
-         iUkWc/oDnuhozNOxVwOd7ceJ7YfTLscbG/JB3KNF7fCFtapD2Jwg7QxTsc0RNwMHePRO
-         gHnA==
+        d=gmail.com; s=20230601; t=1732146413; x=1732751213; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZX6Gf+AddKQPYyrL3mtvV54D8Um1RsLjA/IT9zLDw0M=;
+        b=CDYsGjPLSt+hNK6f18kJ0jKR7rydQ+d1HIgzAzGKSnPN0LffJzVvOBUESXw9j7EX/I
+         ClvRRgRrAcNmf9WGpvkLUn1kpsCq6gOISAoIo06iwQ2jMUYI0E/yr7C33AQO0uwsTd6Z
+         6vvO2rApqvbItVL3B9CkOZ05N9fgVz+nANG1riDYQHPLqj3/tI1admBEERCTDvGCGSan
+         veBcEJvRHG24lAmO/cFpBOvIKyp7oTapX5x3uCRmsYbavhlLs7dtK4WupJIvbzzuzSFY
+         7935sBpXaHuvG+/Ohhta3KhnNncxflyslIeBmlUO0VEsg32LYgQUAokq+oVyVjNmjFx1
+         aPUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732139947; x=1732744747;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Faap3VyEdC3wzioh+4CPsVXtj2eSEp6gz0ge1phVFWk=;
-        b=o35bUhHXMsWF34R5GPr3iEWuxLL40GSiTnFxwTPBaRHSOzB1q+X/A2AZcFb+3bq8EL
-         RIdS/talQpKcnE86JqRX7CPRHqkoIrF6Tw225YyAtA6/iKm97j77/IgltJokhP6rkGfl
-         J4BiECqXmP1a3vD63Xs3FNGPn9HkSJ02wW4PgYKSMEORnSrhgow/lQFEYZYJ7fVEVAxS
-         QUKoDq6/+QlGJoNKPTdzOmH61jtFmFDuI/Cca6WqUuv+RvFh+AdfNEkJZVusGWZAILmf
-         q2fvn9q0PwzqVp/jenvxwtQCyhSGZ4vJJVuTpkEIzAGv27kSmuKaPE1hcq+6FR47c2fr
-         DpsA==
-X-Forwarded-Encrypted: i=1; AJvYcCU72a+pMUBv0Nwk7CW8UHJDvkQ4Q4hdynaSGSPG8T8ZLQTE3bU2D2i/jQ7wZmGBgpOg9oDOzHH5ED97z9I7rJU=@vger.kernel.org, AJvYcCUON/gkdFyKLR5TgD/5kzl+zdz5YiKre+ETbpiDmK+z29LhqtNnME4u44iS0pG53O0vH0Zd17LUZNQc6dJ/@vger.kernel.org
-X-Gm-Message-State: AOJu0YwSiH0g1Decqd7BILjxDU7/ZYliYi9yU6UA7DXFux1Fx/wXl7vo
-	aS4p+3yrmtoFnp3qsv3DHAqhFITpzgrtYEYaK5Nm4uGRr5OUQBAeB/dOu17PVKHvjoUKjSYOCVN
-	nxSDPPQ8OR9l7Oee4wbZ1qGbPQ/qixN0U28cadw==
-X-Gm-Gg: ASbGncsJbsSCXUnFTdnYIhX4EeUq7jwa2ICmC+UymRUC2DuQC5CAPOJFnNz4DUa8JvI
-	msyXRhhQgOjEYARGLyackGs7D5Bym7jGy
-X-Google-Smtp-Source: AGHT+IHluJPs2mffu5jOBAkShUEdZ9UhfbGkDRkJHNXVm15+4lFadUuU35lLsiKlOViUyZuNr1PrJYnEFbJa5qxoxEc=
-X-Received: by 2002:a17:907:a4b:b0:a99:eedd:6466 with SMTP id
- a640c23a62f3a-aa4dd552290mr466855366b.19.1732139946936; Wed, 20 Nov 2024
- 13:59:06 -0800 (PST)
+        d=1e100.net; s=20230601; t=1732146413; x=1732751213;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZX6Gf+AddKQPYyrL3mtvV54D8Um1RsLjA/IT9zLDw0M=;
+        b=tzl59D4I7ynuNV9TK1OlSNzFzJh5u/t0gkxP8sJ0FMmQnMSwGIZkGqN6cjdkURh7FU
+         I0zHnaSB3ywrdKJniys21nvCp0fy2k4C6GMLtg7XLsCDRrZyhjFXMPO7wlWXVi/+MDqG
+         QolcUnsyfoto9UMonqKgPTO2BnCTAZOMka1JGw8WYj7JQXjArqKTdDdxoHEduVchdiit
+         G7gTUH63iUL3NsNu92Lh0qC7j23bSKCkhUmEPYFlcyyBq2vUiHvD09JdBaPPEAfLOhm3
+         oICyYRE24S7r22rr9EKmwpcc/5y/7pLZMFcCaXtqyYGdDupzG0GoKEq3/dHyhy5VYUec
+         rvAw==
+X-Forwarded-Encrypted: i=1; AJvYcCWSTBjILjVtsABGoth0xvcOHwG1uOje/pzjKm4JiMU1x9kP2495ge4VVbvZZfvLAlEIwVdg78Fz7HilZcBW@vger.kernel.org, AJvYcCXBDbIGIpbW5RKkHtgj/QdjQreG0fUMcMnWeZbDa9J/IWGaMIxntPX9oEIa9Gqf/F17WLZK+MhZcFc4EeHaaJ0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGGDbGI7azxNUFyjRSxifnpfvwMMOph/kOQuZF64pwWiUIUptf
+	q/d5Td8vlm9uJR5KNZaPovmRMgjLdYMZV1VoA8tovlr1kl1NYUs03szo7kHlNX9L6Z1sEtvn2Z7
+	dnN5e9ra/lIgJSvHTMojekarrU10=
+X-Google-Smtp-Source: AGHT+IHxcfthi1A3D9ujn2fAxpaofW5+bukINivpXFmWyT9+hamEemQhOI4b+abCDV00kQZ4CJ9RBEv2x9OE9Gh3udk=
+X-Received: by 2002:a17:907:841:b0:a9e:b0a3:db75 with SMTP id
+ a640c23a62f3a-aa4dd59f9c1mr391988666b.35.1732146412734; Wed, 20 Nov 2024
+ 15:46:52 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -58,43 +57,41 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20241119205529.3871048-1-bjohannesmeyer@gmail.com>
- <Zz2r73CFtfuRmjup@infradead.org> <Zz4vzSRcdjvWNIgK@kbusch-mbp>
-In-Reply-To: <Zz4vzSRcdjvWNIgK@kbusch-mbp>
+ <20241119205529.3871048-2-bjohannesmeyer@gmail.com> <Zz2tzVqql2RMSFN4@infradead.org>
+In-Reply-To: <Zz2tzVqql2RMSFN4@infradead.org>
 From: Brian Johannesmeyer <bjohannesmeyer@gmail.com>
-Date: Wed, 20 Nov 2024 14:58:54 -0700
-Message-ID: <CAOZ5it1v3zxiavxctm-d32bT9aO701Os1-EnEeG0KCUhBPLMnw@mail.gmail.com>
-Subject: Re: [RFC v2 0/2] dmapool: Mitigate device-controllable mem. corruption
-To: Keith Busch <kbusch@kernel.org>
-Cc: Christoph Hellwig <hch@infradead.org>, Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
+Date: Wed, 20 Nov 2024 16:46:40 -0700
+Message-ID: <CAOZ5it2KXhBy0=ktgjAHMs8ut-Go2OXOt_vnWFiUBV7uBBH5HQ@mail.gmail.com>
+Subject: Re: [RFC v2 1/2] dmapool: Move pool metadata into non-DMA memory
+To: Christoph Hellwig <hch@infradead.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
 	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
 	Raphael Isemann <teemperor@gmail.com>, Cristiano Giuffrida <giuffrida@cs.vu.nl>, Herbert Bos <h.j.bos@vu.nl>, 
-	Greg KH <gregkh@linuxfoundation.org>
+	Greg KH <gregkh@linuxfoundation.org>, Keith Busch <kbusch@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> You should probably Cc Keith as the person who most recently did major
-> work on the dmpool code and might still remember how it works.
+> Given that you now need an array of the blocks anyway, it might make
+> sense to switch from a linked list to a bitmap for tracking free state,
+> which would be a lot more efficient as you only need a bit per block
+> as tracking overhead instead of a two pointers and a dma_addr_t.
+>
+> e.g. do a find_first_zero_bit() to find the =EF=AC=80ree slot, then calcu=
+late
+> the dma_addr and virt address by simple offseting into the dma_page
+> ones with bitnr * pool->size.
 
-Thank you for adding him, and apologies for not including him initially.
+Thank you for the suggestion. I hacked together a bitmap-based
+approach as you proposed, and while it does improve memory efficiency
+by reducing the per-block metadata overhead, it unfortunately appears
+to significantly impact the runtime performance.
 
-> The intrusive list was overlayed in the freed blocks for spatial
-> optimizations. If you're moving these field outside of it (I'll have to
-> review the patch on lore), you can probably relax the minimum dma block
-> size too since we don't need to hold the data structure information in
-> it.
+Here are the performance results, with DMAPOOL_DEBUG disabled. The
+first two sets of numbers are the same as my latest response in the
+other thread (i.e., [RFC v2 0/2]), and the last set of numbers is with
+the bitmap approach applied:
 
-I see. AFAICT, relaxing the minimum DMA block size would just mean
-removing these lines from `dma_pool_create()`:
-```
-    if (size < sizeof(struct dma_block))
-        size = sizeof(struct dma_block);
-```
-
-> Could you rerun your tests without DMAPOOL_DEBUG enabled? That's the
-> more interesting kernel setup for performance comparisions.
-
-Sure, that makes sense. Here are the results with DMAPOOL_DEBUG disabled:
-
-**Without the patches applied:**
+**Without no patches applied:**
 ```
 dmapool test: size:16   align:16   blocks:8192 time:11860
 dmapool test: size:64   align:64   blocks:8192 time:11951
@@ -104,7 +101,7 @@ dmapool test: size:4096 align:4096 blocks:1024 time:1686
 dmapool test: size:68   align:32   blocks:8192 time:12050
 ```
 
-**With the patches applied:**
+**With the submitted patches applied:**
 ```
 dmapool test: size:16   align:16   blocks:8192 time:34432
 dmapool test: size:64   align:64   blocks:8192 time:62262
@@ -114,10 +111,28 @@ dmapool test: size:4096 align:4096 blocks:1024 time:75342
 dmapool test: size:68   align:32   blocks:8192 time:88243
 ```
 
-These results are consistent across multiple runs. It seems that with
-DMAPOOL_DEBUG disabled, the patches introduce a significant
-performance hit. Let me know if you have any suggestions or further
-tests you'd like me to run.
+**With the submitted patches applied AND using a bitmap approach:**
+```
+dmapool test: size:16   align:16   blocks:8192 time:82733
+dmapool test: size:64   align:64   blocks:8192 time:198460
+dmapool test: size:256  align:256  blocks:8192 time:710316
+dmapool test: size:1024 align:1024 blocks:2048 time:177801
+dmapool test: size:4096 align:4096 blocks:1024 time:192297
+dmapool test: size:68   align:32   blocks:8192 time:274931
+```
+
+My guess as to why: The current linked list implementation allows us
+to find the next free block in constant time (`O(1)`) by directly
+dereferencing `pool->next_block`, and then following the `next_block`
+pointers for subsequent free blocks. In contrast, the bitmap approach
+requires iterating over all pages in `page->page_list` and, for each
+page, iterating through its bitmap to find the first zero bit. This
+results in a worst-case complexity of `O(n * b)`, where `n` is the
+number of pages and `b` is the number of bits in each page's bitmap.
+
+If you have ideas for mitigating this runtime overhead, I=E2=80=99d be happ=
+y
+to explore them further.
 
 Thanks,
 
