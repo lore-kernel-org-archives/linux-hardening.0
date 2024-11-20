@@ -1,161 +1,113 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97A171B5827;
-	Wed, 20 Nov 2024 15:56:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59BB785C5E;
+	Wed, 20 Nov 2024 18:12:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732118165; cv=none; b=br+Ub0MBJOYis5BYUj3JMR8v758ARaun0A9XL/LFn/44h10+YWy++PZErs/N86TWj0nlXgrCiCJjIivca41DrOS4dXjHv1h8Zl2e/0kZZq3jnLyA0GF7XYw7kts2nwds1QFAia76eaD0HR4cidQRkI05WJXH0w1qf3y5yvoZV6M=
+	t=1732126364; cv=none; b=UQFYjpVouBfm2mW4FAQjr9jXvhE0K26TYXJCsSNoNXZ0VBHZ409/R3TgghJo6ZP7y70efRn/FDrcD2EAXBmy9UZi3XgB/n5jsy3Se8szRygywFlVQUOSWRRYlpwpnzpKfOQUH/8oZxn4lhxq61jYOX4JOuwZhJ1EvPeYMeGfJ0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732118165; c=relaxed/simple;
-	bh=dTJy5yTaJCywCkIvTApsDa6gTTCYEhUQN23orW3/WDo=;
+	s=arc-20240116; t=1732126364; c=relaxed/simple;
+	bh=S3W6OYUtc6RpBtlWvHHDwkqdYqpCpCp9r9LAEi9WpgU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r3QhitN41pgAi6HhIp8XWcEXst8XBehEBRgUNI1NetSIMoJoKET52N0CWdav4SbYYRApXKsqhCD5FLEu4E3G+njR1w44NYdA1rCwZUb5N00rFExNZDohmTtZQyZ21wiV8BeEUkY4di/OC7sbAsQIOSjxfGCNAx7fGtp3swEqmos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BxEb/bkq; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=EtuF60OF2QlUNsPtFI6mBzLYqiWGTaV3t3oDi3rI46lvjNRRPjNcN056f3gXFYbEMCaLe+2X87BEw1RDCty8ROJbk3xSd9Jh9pDBXACHrov2K03gUPjjLX2+qvurq2wb2QgUIBx6h07m4Q08SFYVFN5qgDbyTk1zKfTFgZ2dzLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hRYmQAyd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BxEb/bkq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01076C4CECD;
-	Wed, 20 Nov 2024 15:56:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hRYmQAyd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4C9CC4CECD;
+	Wed, 20 Nov 2024 18:12:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732118165;
-	bh=dTJy5yTaJCywCkIvTApsDa6gTTCYEhUQN23orW3/WDo=;
+	s=k20201202; t=1732126364;
+	bh=S3W6OYUtc6RpBtlWvHHDwkqdYqpCpCp9r9LAEi9WpgU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BxEb/bkqBfGFJoP3WnWDQ1Ve0VkLDvG7ASQST/odICAMqQwl2qv0/prT5iHfa55aK
-	 WoSLIalsGlyZ6vMZTrZoL7TrylF/EQXmMGf8fyVmmdGITDXnWNVWq8XKfMHpXOnoVR
-	 aKF/GuWgFysXsawoOaDy/E9YT3tRca4M+sCSUl4uCPYhR6/ONkvUfmdP42ZLs8Hrgk
-	 j5n60HlhjHWJ4P8W4AxEyKyRuem2gyj4iukVtQerx0KV1Bb7VtOxFbWRbxrA8kLIuv
-	 mjEXhJItT2tL4Mn1uLSmumS23QQcGgj2GAREMVLZqkZVB8OW1wO04DQsjrquFODggA
-	 sjcLESVkroPVA==
-Date: Wed, 20 Nov 2024 08:56:03 -0700
-From: Keith Busch <kbusch@kernel.org>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Brian Johannesmeyer <bjohannesmeyer@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	Raphael Isemann <teemperor@gmail.com>,
-	Cristiano Giuffrida <giuffrida@cs.vu.nl>,
-	Herbert Bos <h.j.bos@vu.nl>, Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [RFC v2 0/2] dmapool: Mitigate device-controllable mem.
- corruption
-Message-ID: <Zz4GkyBC--Sb9ta4@kbusch-mbp>
-References: <20241119205529.3871048-1-bjohannesmeyer@gmail.com>
- <Zz2r73CFtfuRmjup@infradead.org>
+	b=hRYmQAyd08GsbH/gLhyi8jau4DK5NSWw8MSsmUwUYNimAAXMHBP4W13Tkd9AnUXrd
+	 oWt/XrM0p/F54/FqZWGb4FiGLxY/+79vAC1vMKxLMOr1OR3s2t7TMJrlV3XKvi2HoW
+	 OGe48ZJlFgDz/2E5WWdrjhwV5A0uqFXxvEhtv5TdOLawkySjdyF9uQre1njHo+PhBX
+	 kQKT4NxMGKF5z9VcMzcS8TE2h9lvtW3k0DgA10nzWkGOyNwS2APf+61tAcOaDeLg6a
+	 iOfPywR0bWlvze1iMt2Y3ymGyJ9JniMcWLLpXlSOFRYT9IHr2aLgDIE6WH4OWLrESY
+	 ZcqV/jCsuO42A==
+Date: Wed, 20 Nov 2024 10:12:40 -0800
+From: Kees Cook <kees@kernel.org>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: David Wang <00107082@163.com>, brgl@bgdev.pl, tglx@linutronix.de,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	geert@linux-m68k.org, linux-hardening@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH] Fix a potential abuse of seq_printf() format string in
+ drivers
+Message-ID: <202411201008.5262C14@keescook>
+References: <20241120053055.225195-1-00107082@163.com>
+ <CACRpkdZ0zwn0908LDqrfQJtF7M-WRcKA4qdJdwSXZNzm0L47CA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Zz2r73CFtfuRmjup@infradead.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACRpkdZ0zwn0908LDqrfQJtF7M-WRcKA4qdJdwSXZNzm0L47CA@mail.gmail.com>
 
-On Wed, Nov 20, 2024 at 01:29:19AM -0800, Christoph Hellwig wrote:
-> On Tue, Nov 19, 2024 at 09:55:27PM +0100, Brian Johannesmeyer wrote:
-> > We discovered a security-related issue in the DMA pool allocator.
-> > 
-> > V1 of our RFC was submitted to the Linux kernel security team. They
-> > recommended submitting it to the relevant subsystem maintainers and the
-> > hardening mailing list instead, as they did not consider this an explicit
-> > security issue. Their rationale was that Linux implicitly assumes hardware
-> > can be trusted.
+On Wed, Nov 20, 2024 at 08:35:38AM +0100, Linus Walleij wrote:
+> On Wed, Nov 20, 2024 at 6:31 AM David Wang <00107082@163.com> wrote:
 > 
-> You should probably Cc Keith as the person who most recently did major
-> work on the dmpool code and might still remember how it works.
+> > Using device name as format string of seq_printf() is proned to
+> > "Format string attack", opens possibility for exploitation.
+> > Seq_puts() is safer and more efficient.
+> >
+> > Signed-off-by: David Wang <00107082@163.com>
+> 
+> Okay better get Kees' eye on this, he looks after string vulnerabilities.
+> (But I think you're right.)
 
-Thanks.
+Agreed, this may lead to kernel memory content exposures. seq_puts()
+looks right.
 
-The intrusive list was overlayed in the freed blocks for spatial
-optimizations. If you're moving these field outside of it (I'll have to
-review the patch on lore), you can probably relax the minimum dma block
-size too since we don't need to hold the data structure information in
-it.
- 
-> > **Threat Model**: While Linux drivers typically trust their hardware, there
-> > may be specific drivers that do not operate under this assumption. Hence,
-> > this threat model assumes a malicious peripheral device capable of
-> > corrupting DMA data to exploit the kernel. In this scenario, the device
-> > manipulates kernel-initialized data (similar to the attack described in the
-> > Thunderclap paper [0]) to achieve arbitrary kernel memory corruption. 
-> > 
-> > **DMA pool background**. A DMA pool aims to reduce the overhead of DMA
-> > allocations by creating a large DMA buffer --- the "pool" --- from which
-> > smaller buffers are allocated as needed. Fundamentally, a DMA pool
-> > functions like a heap: it is a structure composed of linked memory
-> > "blocks", which, in this context, are DMA buffers. When a driver employs a
-> > DMA pool, it grants the device access not only to these blocks but also to
-> > the pointers linking them.
-> > 
-> > **Vulnerability**. Similar to traditional heap corruption vulnerabilities
-> > --- where a malicious program corrupts heap metadata to e.g., hijack
-> > control flow --- a malicious device may corrupt DMA pool metadata. This
-> > corruption can trivially lead to arbitrary kernel memory corruption from
-> > any driver that uses it. Indeed, because the DMA pool API is extensively
-> > used, this vulnerability is not confined to a single instance. In fact,
-> > every usage of the DMA pool API is potentially vulnerable. An exploit
-> > proceeds with the following steps:
-> > 
-> > 1. The DMA `pool` initializes its list of blocks, then points to the first
-> > block.
-> > 2. The malicious device overwrites the first 8 bytes of the first block ---
-> > which contain its `next_block` pointer --- to an arbitrary kernel address,
-> > `kernel_addr`.
-> > 3. The driver makes its first call to `dma_pool_alloc()`, after which, the
-> > pool should point to the second block. However, it instead points to
-> > `kernel_addr`.
-> > 4. The driver again calls `dma_pool_alloc()`, which incorrectly returns
-> > `kernel_addr`. Therefore, anytime the driver writes to this "block", it may
-> > corrupt sensitive kernel data.
-> > 
-> > I have a PDF document that illustrates how these steps work. Please let me
-> > know if you would like me to share it with you.
-> > 
-> > **Proposed mitigation**. To mitigate the corruption of DMA pool metadata
-> > (i.e., the pointers linking the blocks), the metadata should be moved into
-> > non-DMA memory, ensuring it cannot be altered by a device. I have included
-> > a patch series that implements this change. Since I am not deeply familiar
-> > with the DMA pool internals, I would appreciate any feedback on the
-> > patches. I have tested the patches with the `DMAPOOL_TEST` test and my own
-> > basic unit tests that ensure the DMA pool allocator is not vulnerable.
-> > 
-> > **Performance**. I evaluated the patch set's performance by running the
-> > `DMAPOOL_TEST` test with `DMAPOOL_DEBUG` enabled and with/without the
-> > patches applied. Here is its output *without* the patches applied:
-> > ```
-> > dmapool test: size:16   align:16   blocks:8192 time:3194110
-> > dmapool test: size:64   align:64   blocks:8192 time:4730440
-> > dmapool test: size:256  align:256  blocks:8192 time:5489630
-> > dmapool test: size:1024 align:1024 blocks:2048 time:517150
-> > dmapool test: size:4096 align:4096 blocks:1024 time:399616
-> > dmapool test: size:68   align:32   blocks:8192 time:6156527
-> > ```
-> > 
-> > And here is its output *with* the patches applied:
-> > ```
-> > dmapool test: size:16   align:16   blocks:8192 time:3541031
-> > dmapool test: size:64   align:64   blocks:8192 time:4227262
-> > dmapool test: size:256  align:256  blocks:8192 time:4890273
-> > dmapool test: size:1024 align:1024 blocks:2048 time:515775
-> > dmapool test: size:4096 align:4096 blocks:1024 time:523096
-> > dmapool test: size:68   align:32   blocks:8192 time:3450830
-> > ```
-> > 
-> > Based on my interpretation of the output, the patch set does not appear to
-> > negatively impact performance. In fact, it shows slight performance
-> > improvements in some tests (i.e., for sizes 64, 256, 1024, and 68).
-> > 
-> > I speculate that these performance gains may be due to improved spatial
-> > locality of the `next_block` pointers. With the patches applied, the
-> > `next_block` pointers are consistently spaced 24 bytes apart, matching the
-> > new size of `struct dma_block`. Previously, the spacing between
-> > `next_block` pointers depended on the block size, so for 1024-byte blocks,
-> > the pointers were spaced 1024 bytes apart. However, I am still unsure why
-> > the performance improvement for 68-byte blocks is so significant.
-> > 
-> > [0] Link: https://www.csl.sri.com/~neumann/ndss-iommu.pdf
-> > 
-> > Brian Johannesmeyer (2):
-> >   dmapool: Move pool metadata into non-DMA memory
-> >   dmapool: Use pool_find_block() in pool_block_err()
-> > 
-> >  mm/dmapool.c | 96 ++++++++++++++++++++++++++++++++++------------------
+Reviewed-by: Kees Cook <kees@kernel.org>
+
+To defend against this, it might be interesting to detect
+single-argument seq_printf() usage and aim it at seq_puts()
+automatically...
+
+> 
+> >  drivers/gpio/gpio-aspeed-sgpio.c            | 2 +-
+> >  drivers/gpio/gpio-aspeed.c                  | 2 +-
+> >  drivers/gpio/gpio-ep93xx.c                  | 2 +-
+> >  drivers/gpio/gpio-hlwd.c                    | 2 +-
+> >  drivers/gpio/gpio-mlxbf2.c                  | 2 +-
+> >  drivers/gpio/gpio-omap.c                    | 2 +-
+> >  drivers/gpio/gpio-pca953x.c                 | 2 +-
+> >  drivers/gpio/gpio-pl061.c                   | 2 +-
+> >  drivers/gpio/gpio-tegra.c                   | 2 +-
+> >  drivers/gpio/gpio-tegra186.c                | 2 +-
+> >  drivers/gpio/gpio-tqmx86.c                  | 2 +-
+> >  drivers/gpio/gpio-visconti.c                | 2 +-
+> >  drivers/gpio/gpio-xgs-iproc.c               | 2 +-
+> >  drivers/irqchip/irq-gic.c                   | 2 +-
+> >  drivers/irqchip/irq-mvebu-pic.c             | 2 +-
+> >  drivers/irqchip/irq-versatile-fpga.c        | 2 +-
+> >  drivers/pinctrl/bcm/pinctrl-iproc-gpio.c    | 2 +-
+> >  drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 2 +-
+> >  drivers/pinctrl/pinctrl-mcp23s08.c          | 2 +-
+> >  drivers/pinctrl/pinctrl-stmfx.c             | 2 +-
+> >  drivers/pinctrl/pinctrl-sx150x.c            | 2 +-
+> >  drivers/pinctrl/renesas/pinctrl-rzg2l.c     | 2 +-
+> 
+> Can you split this in three patches per-subsystem?
+> One for gpio, one for irqchip and one for pinctrl?
+> 
+> Then send to each subsystem maintainer and CC kees on
+> each.
+> 
+> I'm just the pinctrl maintainer. The rest can be found with
+> scripts/get_maintainer.pl.
+
+Oof. That's a lot of work for a mechanical change like this. Perhaps
+Greg KH can take it directly to the drivers tree instead?
+
+-Kees
+
+-- 
+Kees Cook
