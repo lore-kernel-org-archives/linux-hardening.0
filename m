@@ -1,78 +1,153 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36F88230986;
-	Thu, 21 Nov 2024 05:03:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28B8A1428F3;
+	Thu, 21 Nov 2024 17:31:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732165387; cv=none; b=QfwIrBmsHRnEjF4gQQxxjfTN6OrK7Jw7khOaa+kcaVXdq47wmMdDVUhW4tzVDawySjGpEpg6n5pCH1gMlS4QVadDbE8UchJCY3WVwkLTwioL0Y7nANnKif98YoIyXuq2nDb3Zav59sAZW/Vago786kCLw/Cjk8R7Unotz00h7fk=
+	t=1732210287; cv=none; b=gjYsMmeqPsDHEMHgXH8riUBVItzLkIldCZ3E01zST8D1tb+Hy1NXxUDx9+uXwpdJUGHe5WKWrhbSAHImPmbkOZNuiIhIRtkRDo+hzbvIndvVCU8xtE4rvXjNqNur0cb38kbh7M+6qk9RtxnRWwTlFZCzZ0mAhGJsEL/HQgJLcq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732165387; c=relaxed/simple;
-	bh=Wi/GnBJDvnLqmpp2/JvTi+0xEVSbX4UB3/kzi9egZNk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CSlow35TcFU+y4KfJUw+dHhZi6ke4T2C45HWvClhWkEuW/bINig7m2KjUuFmxof94pjldPHeNpVJ/cpPrJu92KAY/4246r+Ezp8BRt+rHf3LO0sUBDvJMKGGQAF8EnYsTE5lUuVkZOw8UUlEgubBxEDaqlVRFbcyL0bVCyLWgcI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=nR94WtE3; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	s=arc-20240116; t=1732210287; c=relaxed/simple;
+	bh=gWkFbuQhcFrLPoXAmYRoWDIpPlMZO4hJDf4QSAXnhe8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=k3rtWSHV0VyqHIvBe2QBGwi6yinqrdBvIzR4RkXq0yT8UlbnzeMMGx1GBdEJPQsjnw3hHzjri++evX3p1omrPy2iCGpeeNDmGfv5pfUJoIg1jJIu8TuHkWCYKRwCeZ6F9NEduH4YP0DRqtpV4toxUYc7LFyDaaWw0GwKAbgFF4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ms0QCcPR; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nR94WtE3"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=xWuHiVLKYZ8tLIpiuo5fwrJ4cJ7mDK/CegkNy5jzzAY=; b=nR94WtE3N8RXOXgMZorAw9x8Bd
-	zzwfDHLqNP660Vy62RsDnUQ4akzNYdSR2b9Oen5nKJLGR+5r3sRwJ3TMyQ+8OM2Kz64Lh2/H5E9T6
-	7esTWQ2TCmvRpqfHSmL8FmwzaFIOMj1LfNj4Y8QcU5I/1bL0BIVeDzveRb+QsbloxJyMgOaET57CC
-	0jnkcgvmeTsmkJ070u0yeFYDjQWlJX78QuhyipwQIaNMK02CCjvNKiaCEeP4E0F56NpB/AGy59kuY
-	Qn5VWejICH1tvhhQIB5utY3tD2QAdb3tFfKWnBUJNlTowfYB8NNPduStYmNrK2IaqDQ+AiWxAA6Ee
-	gL11oH1Q==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tDzLM-0000000Gq5N-0NKg;
-	Thu, 21 Nov 2024 05:03:04 +0000
-Date: Wed, 20 Nov 2024 21:03:04 -0800
-From: Christoph Hellwig <hch@infradead.org>
-To: Brian Johannesmeyer <bjohannesmeyer@gmail.com>
-Cc: Christoph Hellwig <hch@infradead.org>,
-	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	Raphael Isemann <teemperor@gmail.com>,
-	Cristiano Giuffrida <giuffrida@cs.vu.nl>,
-	Herbert Bos <h.j.bos@vu.nl>, Greg KH <gregkh@linuxfoundation.org>,
-	Keith Busch <kbusch@kernel.org>
-Subject: Re: [RFC v2 1/2] dmapool: Move pool metadata into non-DMA memory
-Message-ID: <Zz6_CFj-MiMk73Tm@infradead.org>
-References: <20241119205529.3871048-1-bjohannesmeyer@gmail.com>
- <20241119205529.3871048-2-bjohannesmeyer@gmail.com>
- <Zz2tzVqql2RMSFN4@infradead.org>
- <CAOZ5it2KXhBy0=ktgjAHMs8ut-Go2OXOt_vnWFiUBV7uBBH5HQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ms0QCcPR"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a9ed49edd41so217680066b.0;
+        Thu, 21 Nov 2024 09:31:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1732210284; x=1732815084; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1q0HSP14gsDRlQDPzMJwpcg2o9yYkTm2IHCEX1dby3U=;
+        b=Ms0QCcPR+P5aXq7DZ0MBuy6tH9i81vkPUu63J9XDlvNUXvysE2MSA9bERusuygaGAo
+         zteDPPzfqM6+LvFGEQw122kKSLs1II//4pXu3+8luYGBi/oApOdI6js9HXEt4H9qa2YW
+         FQfOlQbRiizw4ORJ3WNOshFGPC+uvW1s8kJedi7pYXfxNSN1DmFUrxLKbZz2Ekl2tWfE
+         RhazJcowPhZ4PUvOmyryG6Ua+klXOt2bLJLTKiph2mpb55gQk9SgPxMDLDmlrQD3Aq0Z
+         fvQFgoSP8+/TUxtP4RUKmsfHOtPwGZCMEejbP2bvOfC9BN8vSJYSOnSVLgEVEd3ygDnt
+         U5CQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1732210284; x=1732815084;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1q0HSP14gsDRlQDPzMJwpcg2o9yYkTm2IHCEX1dby3U=;
+        b=RfcO5n9yGXEpFteIZpDwgqnV6wBRo51gy+inPhwxhGywoyeI8NTdgAqGEZuaZcWhyA
+         0W4dokxSy4PjKnr5I7tex1Rukcm6TxGqebGI7rEbTBgX58fFojClzV6eAFuY3Luilwuq
+         64uBtnq/xKjrplNcsOqLn6FP2Sd4DvbhpoTELkDHGXtjrh57zuZklJ0uL9A2rFr63Bnc
+         vMQYesENyFev3bo07KtTf3wPaEhHd6Re+pBorwbGvonMN3owszdx9jtuLbVeHY/32UBa
+         j8kQI+gcvTACV9Y4WBtPpQzgTb/4y1hUlo337aUEwg3YIvUKmvQOLdExk/DOXxpzWOhp
+         0QjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUcbVeul8F1AM864oCcO1epCyMLw408JwZxXfGoBtZU+zdH0ZtWed7ncTI8Wb6J+hEZ2+Gs74DxqHa19c8c@vger.kernel.org, AJvYcCVOezOMvMZN2jKUUHm+DFB4+t8YIICSK4ReXoioLe1BJC8qUJP+CqPjVt8OE9OsyAncKOzwagmbIFd06WOOCL8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZVWCWazUe1d0JN5iMBBFuI+Ei0Ev6GIUBKEo12xoOFKPDs1/X
+	7JRLR7kCwdgquNBci2YOs2ZAydV6rpMrVMjYcKicqbg51FFlC4cuV/+HpKbZKls1GW2hKGIRdoq
+	hW0pRd96KepuLUWuhzPoFlt9wmMg=
+X-Gm-Gg: ASbGnctqkCCJCbMEKzdNkzq4NxTRW/X96tLobAhmArEGmXiM7haNKVzQ839rEcUQTjb
+	1t/NVEucrz92IgsVLdS/BIj0lh7ZVATQw
+X-Google-Smtp-Source: AGHT+IEAuXYouPzIxNe16bNiBXRZIrAokIEtDRgIVHICyfbrOcySGz2sZoUZttoPy6RQM8tiJGfABgF8q6ET0f019cA=
+X-Received: by 2002:a17:906:328f:b0:a9a:1e4d:856d with SMTP id
+ a640c23a62f3a-aa5099c0886mr1492966b.22.1732210284086; Thu, 21 Nov 2024
+ 09:31:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOZ5it2KXhBy0=ktgjAHMs8ut-Go2OXOt_vnWFiUBV7uBBH5HQ@mail.gmail.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+References: <20241119205529.3871048-1-bjohannesmeyer@gmail.com>
+ <Zz2r73CFtfuRmjup@infradead.org> <Zz4vzSRcdjvWNIgK@kbusch-mbp>
+ <CAOZ5it1v3zxiavxctm-d32bT9aO701Os1-EnEeG0KCUhBPLMnw@mail.gmail.com> <Zz6q85eMTko7P-Y3@kbusch-mbp>
+In-Reply-To: <Zz6q85eMTko7P-Y3@kbusch-mbp>
+From: Brian Johannesmeyer <bjohannesmeyer@gmail.com>
+Date: Thu, 21 Nov 2024 10:31:11 -0700
+Message-ID: <CAOZ5it3xiMwD4_HsgXR_7-ERTzoS+FG3W5Og4sKtgthFA7HsVQ@mail.gmail.com>
+Subject: Re: [RFC v2 0/2] dmapool: Mitigate device-controllable mem. corruption
+To: Keith Busch <kbusch@kernel.org>
+Cc: Christoph Hellwig <hch@infradead.org>, Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	Raphael Isemann <teemperor@gmail.com>, Cristiano Giuffrida <giuffrida@cs.vu.nl>, Herbert Bos <h.j.bos@vu.nl>, 
+	Greg KH <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 20, 2024 at 04:46:40PM -0700, Brian Johannesmeyer wrote:
-> Thank you for the suggestion. I hacked together a bitmap-based
-> approach as you proposed, and while it does improve memory efficiency
-> by reducing the per-block metadata overhead, it unfortunately appears
-> to significantly impact the runtime performance.
+> Here's my quick thoughts at this late hour, though I might have
+> something else tomorrow. If the links are external to the dma addr
+> being freed, then I think you need to change the entire alloc/free API
+> to replace the dma_addr_t handle with a new type, like a tuple of
 >
-> My guess as to why: The current linked list implementation allows us
-> to find the next free block in constant time (`O(1)`) by directly
-> dereferencing `pool->next_block`, and then following the `next_block`
-> pointers for subsequent free blocks. In contrast, the bitmap approach
-> requires iterating over all pages in `page->page_list` and, for each
-> page, iterating through its bitmap to find the first zero bit. This
-> results in a worst-case complexity of `O(n * b)`, where `n` is the
-> number of pages and `b` is the number of bits in each page's bitmap.
+>   { dma_addr_t, priv_list_link }
+>
+> That should make it possible to preserve the low constant time to alloc
+> and free in the critical section, which I think is a good thing to have.
+> I found 170 uses of dma_pool_alloc, and 360 dma_pool_free in the kernel,
+> so changing the API is no small task. :(
 
-Indeed.  You'd probably need to split the linkage of the pages into
-a list of those that have free blocks and those that don't as a minimum.
+Indeed, an API change like this might be the only way to move metadata
+out of the DMA blocks while maintaining its current performance.
 
-Can you share your current version?
+Regarding the performance hit of the submitted patches:
+- *Allocations* remain constant time (`O(1)`), as they simply check
+the `pool->next_block` pointer.
+- *Frees* are no longer constant time. Previously, `dma_pool_free()`
+converted a `vaddr` to its corresponding `block` by type casting, but
+now it calls `pool_find_block()`, which iterates over all pages
+(`O(n)`).
 
+Therefore, optimizing `dma_pool_free()` is key. While restructuring
+the API is the "best" solution, I implemented a compromise:
+introducing a `struct maple_tree block_map` field in `struct dma_pool`
+to save mappings of a `vaddr` to its corresponding `block`. A maple
+tree isn=E2=80=99t constant time, but it offers `O(log n)` performance, whi=
+ch
+is a significant improvement over the current `O(n)` iteration.
+
+Here are the performance results. I've already reported the first two
+sets of numbers, but I'll repeat them here:
+
+**Without no patches applied:**
+```
+dmapool test: size:16   align:16   blocks:8192 time:11860
+dmapool test: size:64   align:64   blocks:8192 time:11951
+dmapool test: size:256  align:256  blocks:8192 time:12287
+dmapool test: size:1024 align:1024 blocks:2048 time:3134
+dmapool test: size:4096 align:4096 blocks:1024 time:1686
+dmapool test: size:68   align:32   blocks:8192 time:12050
+```
+
+**With the submitted patches applied:**
+```
+dmapool test: size:16   align:16   blocks:8192 time:34432
+dmapool test: size:64   align:64   blocks:8192 time:62262
+dmapool test: size:256  align:256  blocks:8192 time:238137
+dmapool test: size:1024 align:1024 blocks:2048 time:61386
+dmapool test: size:4096 align:4096 blocks:1024 time:75342
+dmapool test: size:68   align:32   blocks:8192 time:88243
+```
+
+**With the submitted patches applied AND using a maple tree to improve
+the performance of vaddr-to-block translations:**
+```
+dmapool test: size:16   align:16   blocks:8192 time:43668
+dmapool test: size:64   align:64   blocks:8192 time:44746
+dmapool test: size:256  align:256  blocks:8192 time:45434
+dmapool test: size:1024 align:1024 blocks:2048 time:11013
+dmapool test: size:4096 align:4096 blocks:1024 time:5250
+dmapool test: size:68   align:32   blocks:8192 time:45900
+```
+
+The maple tree optimization reduces the performance hit for most block
+sizes, especially for larger blocks. While the performance is not
+fully back to baseline, it gives a reasonable trade-off between
+protection, runtime performance, and ease of deployment (i.e., not
+requiring an API change).
+
+If this approach looks acceptable, I can submit it as a V3 patch
+series for further review and discussion.
+
+Thanks,
+
+Brian Johannesmeyer
