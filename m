@@ -1,57 +1,57 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28B8A1428F3;
-	Thu, 21 Nov 2024 17:31:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0287155CBF;
+	Thu, 21 Nov 2024 17:48:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732210287; cv=none; b=gjYsMmeqPsDHEMHgXH8riUBVItzLkIldCZ3E01zST8D1tb+Hy1NXxUDx9+uXwpdJUGHe5WKWrhbSAHImPmbkOZNuiIhIRtkRDo+hzbvIndvVCU8xtE4rvXjNqNur0cb38kbh7M+6qk9RtxnRWwTlFZCzZ0mAhGJsEL/HQgJLcq8=
+	t=1732211313; cv=none; b=XD1LpsbeoMXOKHBcY9m6a8Qtnu/NO4HgJR450KRsl4uEBYevqk81uEiaiUwL7dZFPuERP73Hv2IVD8fQHXIpZK68Cupw2xNnRrRVDN8A669376SJ/+tJoNXRoQHZpvj+A/W+wCZgfy9CalgrGZVtFH8q6QOutUN96iWxiDKYaU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732210287; c=relaxed/simple;
-	bh=gWkFbuQhcFrLPoXAmYRoWDIpPlMZO4hJDf4QSAXnhe8=;
+	s=arc-20240116; t=1732211313; c=relaxed/simple;
+	bh=2j+yGxBfMrlFHjJHbtMVDYgDj+tpJCC/bnrxR9QYfLg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=k3rtWSHV0VyqHIvBe2QBGwi6yinqrdBvIzR4RkXq0yT8UlbnzeMMGx1GBdEJPQsjnw3hHzjri++evX3p1omrPy2iCGpeeNDmGfv5pfUJoIg1jJIu8TuHkWCYKRwCeZ6F9NEduH4YP0DRqtpV4toxUYc7LFyDaaWw0GwKAbgFF4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ms0QCcPR; arc=none smtp.client-ip=209.85.218.42
+	 To:Cc:Content-Type; b=dNjDs7kzL2drVyIB5oFDjAtccCe6enEPw3x80PJDCHrb9Rk/S3TkYEocOikVJL/Q8e+7lqoJJkU1QDNxsjt8yk+xEpDTClyuq+JoAfHULTDlY8k9rn6eGvxvwScHaF8fokNngvcQPdpmBHsrhY8f8drxWObRo+mdhXcXy6q0t8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AfQZS86k; arc=none smtp.client-ip=209.85.218.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ms0QCcPR"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a9ed49edd41so217680066b.0;
-        Thu, 21 Nov 2024 09:31:25 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AfQZS86k"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a9e44654ae3so183602166b.1;
+        Thu, 21 Nov 2024 09:48:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1732210284; x=1732815084; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1732211310; x=1732816110; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=1q0HSP14gsDRlQDPzMJwpcg2o9yYkTm2IHCEX1dby3U=;
-        b=Ms0QCcPR+P5aXq7DZ0MBuy6tH9i81vkPUu63J9XDlvNUXvysE2MSA9bERusuygaGAo
-         zteDPPzfqM6+LvFGEQw122kKSLs1II//4pXu3+8luYGBi/oApOdI6js9HXEt4H9qa2YW
-         FQfOlQbRiizw4ORJ3WNOshFGPC+uvW1s8kJedi7pYXfxNSN1DmFUrxLKbZz2Ekl2tWfE
-         RhazJcowPhZ4PUvOmyryG6Ua+klXOt2bLJLTKiph2mpb55gQk9SgPxMDLDmlrQD3Aq0Z
-         fvQFgoSP8+/TUxtP4RUKmsfHOtPwGZCMEejbP2bvOfC9BN8vSJYSOnSVLgEVEd3ygDnt
-         U5CQ==
+        bh=bnv6l3zsa4uYp4FLTUryoOp7s4l9kVPgSsBQVrp4UN0=;
+        b=AfQZS86kDcUinELz0BFzAItkSWYWS5JNSNdP/FZLUPkCKaKdMYK14K6fxCLxU0GoBm
+         28kaWy3bw5AkQQWOtOrN8feBm+HN2gv1t7PEOdhRiVYBMxq4KN4Xa1qA9m/5Vb8G3X3z
+         lGCiaRlfJHf87oTyk9wBZSIzubg90d4JV/B/34/bPz5gpfMZ3v92GdY0JjtLfEbpGWqB
+         SyyjjI/ltHvm+074+ZIm7o6YFOqKyE89FcvVEJWqtDPlxtQGC2K8C18QriuQ+LwhwtIv
+         Tsk+SfFIDiFzDQfhlvUcBarrh/kEmvFZpJbjBIrqN3To4g1VMraL3K29tRFp6Bs/2Khp
+         7kLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732210284; x=1732815084;
+        d=1e100.net; s=20230601; t=1732211310; x=1732816110;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=1q0HSP14gsDRlQDPzMJwpcg2o9yYkTm2IHCEX1dby3U=;
-        b=RfcO5n9yGXEpFteIZpDwgqnV6wBRo51gy+inPhwxhGywoyeI8NTdgAqGEZuaZcWhyA
-         0W4dokxSy4PjKnr5I7tex1Rukcm6TxGqebGI7rEbTBgX58fFojClzV6eAFuY3Luilwuq
-         64uBtnq/xKjrplNcsOqLn6FP2Sd4DvbhpoTELkDHGXtjrh57zuZklJ0uL9A2rFr63Bnc
-         vMQYesENyFev3bo07KtTf3wPaEhHd6Re+pBorwbGvonMN3owszdx9jtuLbVeHY/32UBa
-         j8kQI+gcvTACV9Y4WBtPpQzgTb/4y1hUlo337aUEwg3YIvUKmvQOLdExk/DOXxpzWOhp
-         0QjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUcbVeul8F1AM864oCcO1epCyMLw408JwZxXfGoBtZU+zdH0ZtWed7ncTI8Wb6J+hEZ2+Gs74DxqHa19c8c@vger.kernel.org, AJvYcCVOezOMvMZN2jKUUHm+DFB4+t8YIICSK4ReXoioLe1BJC8qUJP+CqPjVt8OE9OsyAncKOzwagmbIFd06WOOCL8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZVWCWazUe1d0JN5iMBBFuI+Ei0Ev6GIUBKEo12xoOFKPDs1/X
-	7JRLR7kCwdgquNBci2YOs2ZAydV6rpMrVMjYcKicqbg51FFlC4cuV/+HpKbZKls1GW2hKGIRdoq
-	hW0pRd96KepuLUWuhzPoFlt9wmMg=
-X-Gm-Gg: ASbGnctqkCCJCbMEKzdNkzq4NxTRW/X96tLobAhmArEGmXiM7haNKVzQ839rEcUQTjb
-	1t/NVEucrz92IgsVLdS/BIj0lh7ZVATQw
-X-Google-Smtp-Source: AGHT+IEAuXYouPzIxNe16bNiBXRZIrAokIEtDRgIVHICyfbrOcySGz2sZoUZttoPy6RQM8tiJGfABgF8q6ET0f019cA=
-X-Received: by 2002:a17:906:328f:b0:a9a:1e4d:856d with SMTP id
- a640c23a62f3a-aa5099c0886mr1492966b.22.1732210284086; Thu, 21 Nov 2024
- 09:31:24 -0800 (PST)
+        bh=bnv6l3zsa4uYp4FLTUryoOp7s4l9kVPgSsBQVrp4UN0=;
+        b=uhAEkPhueUrwt3hT+K0+vORpLBCPeQcwMV4ANQ2fhpkmTAyeNlu3AAJjRLVEQ+dVXM
+         Rpplw6AhJckwH08RTwZbkN9bZBUBxrHw3z7obENQIYEqqUfQpDybYH3fkgmwHwEyw0I8
+         ra+5q+j13IB4zyxYEtgrdtBE+j4f1rdkYnaQpwSlidPJFP/oYJ7zgO0vDvSseMNrfWkv
+         neH8eKv8lFKjUYcvPYwmjOPK0Rm5p7MK1sNjB/5Yp6c6S6Iu+6OWomPUPTcL/qiU04vm
+         nc3kYKsw3I1N5BjjKtp8B7WvpO3cLsz3B+DqQNtg0Qxe56ycx1+KJIDnwWDbhZAZ9WBl
+         ETlg==
+X-Forwarded-Encrypted: i=1; AJvYcCVUsTrN9lhb81f7tqXC4rIlEHlZy8+W+e1+n7U9ZW4yhjKFtQhztqMspqQedmWYilBpjVbaHIiHUnch55xJ@vger.kernel.org, AJvYcCWtVK4CzOWXlz+SZcx9S9zGC0BG5a8hqt9AP7WsFX61YS1D2PRDDAUljpjRlYX0USscN5ZrlmHZG9u3SvYl3PQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz9G9oR1ozCF9gZiw7M7R+fuWacOfWFehHVHKt7hXfFy7FqzeJ9
+	NZQpPWkOzVT6sj3zlYtX2mRIeyeqRHyxqOnnGVPdafRNMZGIzbUk477Vdl78KgRMnobp/Le4mUG
+	aNVRWFL855q/tXrAp042hY6A/JwcOHmdUSzA=
+X-Gm-Gg: ASbGncs1hZBQ1Mi+RKQCsJtCUZfb04c0etZGO0q8oWRpQiadGOcjH5iWjpaYOTlxQ97
+	TNpASSpV5Bj6S18KeSqbVi926tkDBTRYg
+X-Google-Smtp-Source: AGHT+IFIf76/m18OY4g7R3eEd4MmZoeaqRE4i/4+NasxdugQcUeImn0repBSl/Tiwsk+0tJruMOcKU366rRUjjCoD5k=
+X-Received: by 2002:a17:906:3101:b0:a9a:dc3:c86e with SMTP id
+ a640c23a62f3a-aa50990b1aamr6444766b.11.1732211309820; Thu, 21 Nov 2024
+ 09:48:29 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -59,94 +59,44 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20241119205529.3871048-1-bjohannesmeyer@gmail.com>
- <Zz2r73CFtfuRmjup@infradead.org> <Zz4vzSRcdjvWNIgK@kbusch-mbp>
- <CAOZ5it1v3zxiavxctm-d32bT9aO701Os1-EnEeG0KCUhBPLMnw@mail.gmail.com> <Zz6q85eMTko7P-Y3@kbusch-mbp>
-In-Reply-To: <Zz6q85eMTko7P-Y3@kbusch-mbp>
+ <20241119205529.3871048-2-bjohannesmeyer@gmail.com> <Zz2tzVqql2RMSFN4@infradead.org>
+ <CAOZ5it2KXhBy0=ktgjAHMs8ut-Go2OXOt_vnWFiUBV7uBBH5HQ@mail.gmail.com> <Zz6_CFj-MiMk73Tm@infradead.org>
+In-Reply-To: <Zz6_CFj-MiMk73Tm@infradead.org>
 From: Brian Johannesmeyer <bjohannesmeyer@gmail.com>
-Date: Thu, 21 Nov 2024 10:31:11 -0700
-Message-ID: <CAOZ5it3xiMwD4_HsgXR_7-ERTzoS+FG3W5Og4sKtgthFA7HsVQ@mail.gmail.com>
-Subject: Re: [RFC v2 0/2] dmapool: Mitigate device-controllable mem. corruption
-To: Keith Busch <kbusch@kernel.org>
-Cc: Christoph Hellwig <hch@infradead.org>, Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
+Date: Thu, 21 Nov 2024 10:48:17 -0700
+Message-ID: <CAOZ5it1H_bac-W7vptu5pAi=O6KhRWPCwLP8NgjD55+AyBvfwQ@mail.gmail.com>
+Subject: Re: [RFC v2 1/2] dmapool: Move pool metadata into non-DMA memory
+To: Christoph Hellwig <hch@infradead.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
 	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
 	Raphael Isemann <teemperor@gmail.com>, Cristiano Giuffrida <giuffrida@cs.vu.nl>, Herbert Bos <h.j.bos@vu.nl>, 
-	Greg KH <gregkh@linuxfoundation.org>
+	Greg KH <gregkh@linuxfoundation.org>, Keith Busch <kbusch@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-> Here's my quick thoughts at this late hour, though I might have
-> something else tomorrow. If the links are external to the dma addr
-> being freed, then I think you need to change the entire alloc/free API
-> to replace the dma_addr_t handle with a new type, like a tuple of
+On Wed, Nov 20, 2024 at 10:03=E2=80=AFPM Christoph Hellwig <hch@infradead.o=
+rg> wrote:
+> Indeed.  You'd probably need to split the linkage of the pages into
+> a list of those that have free blocks and those that don't as a minimum.
 >
->   { dma_addr_t, priv_list_link }
->
-> That should make it possible to preserve the low constant time to alloc
-> and free in the critical section, which I think is a good thing to have.
-> I found 170 uses of dma_pool_alloc, and 360 dma_pool_free in the kernel,
-> so changing the API is no small task. :(
+> Can you share your current version?
 
-Indeed, an API change like this might be the only way to move metadata
-out of the DMA blocks while maintaining its current performance.
+Sure, I can share the current version, though fair warning---it=E2=80=99s
+still quite messy.
 
-Regarding the performance hit of the submitted patches:
-- *Allocations* remain constant time (`O(1)`), as they simply check
-the `pool->next_block` pointer.
-- *Frees* are no longer constant time. Previously, `dma_pool_free()`
-converted a `vaddr` to its corresponding `block` by type casting, but
-now it calls `pool_find_block()`, which iterates over all pages
-(`O(n)`).
+FWIW, I wonder if the bitmap approach might be more suitable as a
+separate RFC. AFAICT, the primary issue with the currently submitted
+patches is their runtime overhead. I=E2=80=99ve proposed a way to address t=
+his
+in my recent response to [RFC v2 0/2]. Unfortunately, as I noted,
+improving the memory overhead without worsening the runtime
+performance is challenging---for example, removing the `next_block`
+pointers would require iterating over all pages to find a free
+`block`, which significantly impacts the runtime.
 
-Therefore, optimizing `dma_pool_free()` is key. While restructuring
-the API is the "best" solution, I implemented a compromise:
-introducing a `struct maple_tree block_map` field in `struct dma_pool`
-to save mappings of a `vaddr` to its corresponding `block`. A maple
-tree isn=E2=80=99t constant time, but it offers `O(log n)` performance, whi=
-ch
-is a significant improvement over the current `O(n)` iteration.
-
-Here are the performance results. I've already reported the first two
-sets of numbers, but I'll repeat them here:
-
-**Without no patches applied:**
-```
-dmapool test: size:16   align:16   blocks:8192 time:11860
-dmapool test: size:64   align:64   blocks:8192 time:11951
-dmapool test: size:256  align:256  blocks:8192 time:12287
-dmapool test: size:1024 align:1024 blocks:2048 time:3134
-dmapool test: size:4096 align:4096 blocks:1024 time:1686
-dmapool test: size:68   align:32   blocks:8192 time:12050
-```
-
-**With the submitted patches applied:**
-```
-dmapool test: size:16   align:16   blocks:8192 time:34432
-dmapool test: size:64   align:64   blocks:8192 time:62262
-dmapool test: size:256  align:256  blocks:8192 time:238137
-dmapool test: size:1024 align:1024 blocks:2048 time:61386
-dmapool test: size:4096 align:4096 blocks:1024 time:75342
-dmapool test: size:68   align:32   blocks:8192 time:88243
-```
-
-**With the submitted patches applied AND using a maple tree to improve
-the performance of vaddr-to-block translations:**
-```
-dmapool test: size:16   align:16   blocks:8192 time:43668
-dmapool test: size:64   align:64   blocks:8192 time:44746
-dmapool test: size:256  align:256  blocks:8192 time:45434
-dmapool test: size:1024 align:1024 blocks:2048 time:11013
-dmapool test: size:4096 align:4096 blocks:1024 time:5250
-dmapool test: size:68   align:32   blocks:8192 time:45900
-```
-
-The maple tree optimization reduces the performance hit for most block
-sizes, especially for larger blocks. While the performance is not
-fully back to baseline, it gives a reasonable trade-off between
-protection, runtime performance, and ease of deployment (i.e., not
-requiring an API change).
-
-If this approach looks acceptable, I can submit it as a V3 patch
-series for further review and discussion.
+That said, how would you prefer I share my bitmap approach? Should I
+submit it as a separate patch series or provide the patch directly in
+this thread?
 
 Thanks,
 
