@@ -1,139 +1,82 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3E2F1E4A4;
-	Wed, 20 Nov 2024 23:46:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8326923098E;
+	Thu, 21 Nov 2024 03:37:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732146416; cv=none; b=tx7Wlmw6i+djeBW4RQUu5TfR9H/bm8wk8bW7DPx8whNxnei/Ajvt6buQRdlt1X5ovdaOju+GU8X/7L5dRQ7A/f1R6ehwzLZ7FzTllRmDYqXVM7W31vi1Niuf4uXrYTBznmhJXSq8ggNH3CvTLPkxofvGkCFCzYgT0+6gnPOVkjQ=
+	t=1732160247; cv=none; b=W2qw4v300gtfaj3BFCju154G/rY9A3QH2lMPtK4OUCVK0p1W+K5xCM4YJ60pfvzHz/2mcYhE5Vv7lll9kGXmrw2PT/oM0ABk7OKjPolJrLHwcSPFlIT3a86vzuACLrijduiw+tLvrx/E8/049WUSRG00DghS0jrxmDnR9Mzxw1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732146416; c=relaxed/simple;
-	bh=OrlaZ8VnTHTr6wuAzTLHLrYRMcxnk8CCG52m+a1Go3s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iAeucL4m83AiJmDJpT3h85oj4DmUENqMMNXfLMEKcNMGHaIZLPc92F3aBUMk0OJ6yRzQfvo7pZ082Or1Y0y6elE0JO96WMne+SMGuIT7pNMtz6hcCOk2Q4xJTTx/+rEJYUX4lFZlZs5W5x0lltfhIiSvJeSMVMqWPuUTNAsmM4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CDYsGjPL; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1732160247; c=relaxed/simple;
+	bh=3UP2eHaDWDrJPiKnzRnbJl7JGs1fZg4KYMdG7Ofx+cA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jxYHZBQfNnaBzn0zAQtUKSNGsCktMOwiAl+b2dPLI0wVcRT0+f5CnvgPhvyAJQItTfHOWukZxcF3HARpBrRTTZTjYFG2gFaubaGZOv6HGk9j9lQe6DOrlsZ3apEwlWql04su2LKgNA3u3dPJ9SwRLNZcxDiLafOgFFqIAGgs4fM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QVpv6bUN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CDYsGjPL"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5ced377447bso355639a12.1;
-        Wed, 20 Nov 2024 15:46:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1732146413; x=1732751213; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZX6Gf+AddKQPYyrL3mtvV54D8Um1RsLjA/IT9zLDw0M=;
-        b=CDYsGjPLSt+hNK6f18kJ0jKR7rydQ+d1HIgzAzGKSnPN0LffJzVvOBUESXw9j7EX/I
-         ClvRRgRrAcNmf9WGpvkLUn1kpsCq6gOISAoIo06iwQ2jMUYI0E/yr7C33AQO0uwsTd6Z
-         6vvO2rApqvbItVL3B9CkOZ05N9fgVz+nANG1riDYQHPLqj3/tI1admBEERCTDvGCGSan
-         veBcEJvRHG24lAmO/cFpBOvIKyp7oTapX5x3uCRmsYbavhlLs7dtK4WupJIvbzzuzSFY
-         7935sBpXaHuvG+/Ohhta3KhnNncxflyslIeBmlUO0VEsg32LYgQUAokq+oVyVjNmjFx1
-         aPUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732146413; x=1732751213;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZX6Gf+AddKQPYyrL3mtvV54D8Um1RsLjA/IT9zLDw0M=;
-        b=tzl59D4I7ynuNV9TK1OlSNzFzJh5u/t0gkxP8sJ0FMmQnMSwGIZkGqN6cjdkURh7FU
-         I0zHnaSB3ywrdKJniys21nvCp0fy2k4C6GMLtg7XLsCDRrZyhjFXMPO7wlWXVi/+MDqG
-         QolcUnsyfoto9UMonqKgPTO2BnCTAZOMka1JGw8WYj7JQXjArqKTdDdxoHEduVchdiit
-         G7gTUH63iUL3NsNu92Lh0qC7j23bSKCkhUmEPYFlcyyBq2vUiHvD09JdBaPPEAfLOhm3
-         oICyYRE24S7r22rr9EKmwpcc/5y/7pLZMFcCaXtqyYGdDupzG0GoKEq3/dHyhy5VYUec
-         rvAw==
-X-Forwarded-Encrypted: i=1; AJvYcCWSTBjILjVtsABGoth0xvcOHwG1uOje/pzjKm4JiMU1x9kP2495ge4VVbvZZfvLAlEIwVdg78Fz7HilZcBW@vger.kernel.org, AJvYcCXBDbIGIpbW5RKkHtgj/QdjQreG0fUMcMnWeZbDa9J/IWGaMIxntPX9oEIa9Gqf/F17WLZK+MhZcFc4EeHaaJ0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGGDbGI7azxNUFyjRSxifnpfvwMMOph/kOQuZF64pwWiUIUptf
-	q/d5Td8vlm9uJR5KNZaPovmRMgjLdYMZV1VoA8tovlr1kl1NYUs03szo7kHlNX9L6Z1sEtvn2Z7
-	dnN5e9ra/lIgJSvHTMojekarrU10=
-X-Google-Smtp-Source: AGHT+IHxcfthi1A3D9ujn2fAxpaofW5+bukINivpXFmWyT9+hamEemQhOI4b+abCDV00kQZ4CJ9RBEv2x9OE9Gh3udk=
-X-Received: by 2002:a17:907:841:b0:a9e:b0a3:db75 with SMTP id
- a640c23a62f3a-aa4dd59f9c1mr391988666b.35.1732146412734; Wed, 20 Nov 2024
- 15:46:52 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QVpv6bUN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7413FC4CECD;
+	Thu, 21 Nov 2024 03:37:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1732160245;
+	bh=3UP2eHaDWDrJPiKnzRnbJl7JGs1fZg4KYMdG7Ofx+cA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QVpv6bUNY4qYtP9yhhbnckfD6mzXease6np9KXJhVUPOnNVdlCXNAOeYSdJJXswRD
+	 wPZx8UzBsQAaBbIZbIq0ZMfFFcRA0/Kvj2ezhYAS8KLMZaHHHKM4/VMWnkkfljYvon
+	 HcjpK7/1vajS2QvUwLELYTkHnSLuF1HR6XyBxoQJ1WyyVBfmZQDqkcLWxmMnwfH+86
+	 RC5bohq/nHs/iJYIDnIyBLnQEKTy0fKMgUlhUCzc7sOzCqquOJBuHbtjluz6l3Lrba
+	 K/pLV0nAHBFb75XpEYacCSyfiC5cVCLgFsJP00OLB41vP3G0EA12xezNFwFdpTx7qN
+	 d+GF25WnOusXQ==
+Date: Wed, 20 Nov 2024 20:37:23 -0700
+From: Keith Busch <kbusch@kernel.org>
+To: Brian Johannesmeyer <bjohannesmeyer@gmail.com>
+Cc: Christoph Hellwig <hch@infradead.org>,
+	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	Raphael Isemann <teemperor@gmail.com>,
+	Cristiano Giuffrida <giuffrida@cs.vu.nl>,
+	Herbert Bos <h.j.bos@vu.nl>, Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [RFC v2 0/2] dmapool: Mitigate device-controllable mem.
+ corruption
+Message-ID: <Zz6q85eMTko7P-Y3@kbusch-mbp>
+References: <20241119205529.3871048-1-bjohannesmeyer@gmail.com>
+ <Zz2r73CFtfuRmjup@infradead.org>
+ <Zz4vzSRcdjvWNIgK@kbusch-mbp>
+ <CAOZ5it1v3zxiavxctm-d32bT9aO701Os1-EnEeG0KCUhBPLMnw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241119205529.3871048-1-bjohannesmeyer@gmail.com>
- <20241119205529.3871048-2-bjohannesmeyer@gmail.com> <Zz2tzVqql2RMSFN4@infradead.org>
-In-Reply-To: <Zz2tzVqql2RMSFN4@infradead.org>
-From: Brian Johannesmeyer <bjohannesmeyer@gmail.com>
-Date: Wed, 20 Nov 2024 16:46:40 -0700
-Message-ID: <CAOZ5it2KXhBy0=ktgjAHMs8ut-Go2OXOt_vnWFiUBV7uBBH5HQ@mail.gmail.com>
-Subject: Re: [RFC v2 1/2] dmapool: Move pool metadata into non-DMA memory
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	Raphael Isemann <teemperor@gmail.com>, Cristiano Giuffrida <giuffrida@cs.vu.nl>, Herbert Bos <h.j.bos@vu.nl>, 
-	Greg KH <gregkh@linuxfoundation.org>, Keith Busch <kbusch@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOZ5it1v3zxiavxctm-d32bT9aO701Os1-EnEeG0KCUhBPLMnw@mail.gmail.com>
 
-> Given that you now need an array of the blocks anyway, it might make
-> sense to switch from a linked list to a bitmap for tracking free state,
-> which would be a lot more efficient as you only need a bit per block
-> as tracking overhead instead of a two pointers and a dma_addr_t.
->
-> e.g. do a find_first_zero_bit() to find the =EF=AC=80ree slot, then calcu=
-late
-> the dma_addr and virt address by simple offseting into the dma_page
-> ones with bitnr * pool->size.
+On Wed, Nov 20, 2024 at 02:58:54PM -0700, Brian Johannesmeyer wrote:
+> These results are consistent across multiple runs. It seems that with
+> DMAPOOL_DEBUG disabled, the patches introduce a significant
+> performance hit. Let me know if you have any suggestions or further
+> tests you'd like me to run.
 
-Thank you for the suggestion. I hacked together a bitmap-based
-approach as you proposed, and while it does improve memory efficiency
-by reducing the per-block metadata overhead, it unfortunately appears
-to significantly impact the runtime performance.
+That's what I was afraid of. I was working on the dma pool because it
+showed significant lock contention on the pool for storage heavy
+workloads, so cutting down the critical section was priority. With the
+current kernel, the dma pool doesn't even register on the profiles
+anymore, so it'd be great to keep it that way.
 
-Here are the performance results, with DMAPOOL_DEBUG disabled. The
-first two sets of numbers are the same as my latest response in the
-other thread (i.e., [RFC v2 0/2]), and the last set of numbers is with
-the bitmap approach applied:
+The idea for embedding the links in freed blocks was assuming a driver
+wouldn't ask the kernel to free a dma block if the mapped device was
+still using it. Untrustworthy hardware is why we can't have nice
+things...
 
-**Without no patches applied:**
-```
-dmapool test: size:16   align:16   blocks:8192 time:11860
-dmapool test: size:64   align:64   blocks:8192 time:11951
-dmapool test: size:256  align:256  blocks:8192 time:12287
-dmapool test: size:1024 align:1024 blocks:2048 time:3134
-dmapool test: size:4096 align:4096 blocks:1024 time:1686
-dmapool test: size:68   align:32   blocks:8192 time:12050
-```
+Here's my quick thoughts at this late hour, though I might have
+something else tomorrow. If the links are external to the dma addr
+being freed, then I think you need to change the entire alloc/free API
+to replace the dma_addr_t handle with a new type, like a tuple of
 
-**With the submitted patches applied:**
-```
-dmapool test: size:16   align:16   blocks:8192 time:34432
-dmapool test: size:64   align:64   blocks:8192 time:62262
-dmapool test: size:256  align:256  blocks:8192 time:238137
-dmapool test: size:1024 align:1024 blocks:2048 time:61386
-dmapool test: size:4096 align:4096 blocks:1024 time:75342
-dmapool test: size:68   align:32   blocks:8192 time:88243
-```
+  { dma_addr_t, priv_list_link }
 
-**With the submitted patches applied AND using a bitmap approach:**
-```
-dmapool test: size:16   align:16   blocks:8192 time:82733
-dmapool test: size:64   align:64   blocks:8192 time:198460
-dmapool test: size:256  align:256  blocks:8192 time:710316
-dmapool test: size:1024 align:1024 blocks:2048 time:177801
-dmapool test: size:4096 align:4096 blocks:1024 time:192297
-dmapool test: size:68   align:32   blocks:8192 time:274931
-```
-
-My guess as to why: The current linked list implementation allows us
-to find the next free block in constant time (`O(1)`) by directly
-dereferencing `pool->next_block`, and then following the `next_block`
-pointers for subsequent free blocks. In contrast, the bitmap approach
-requires iterating over all pages in `page->page_list` and, for each
-page, iterating through its bitmap to find the first zero bit. This
-results in a worst-case complexity of `O(n * b)`, where `n` is the
-number of pages and `b` is the number of bits in each page's bitmap.
-
-If you have ideas for mitigating this runtime overhead, I=E2=80=99d be happ=
-y
-to explore them further.
-
-Thanks,
-
-Brian Johannesmeyer
+That should make it possible to preserve the low constant time to alloc
+and free in the critical section, which I think is a good thing to have.
+I found 170 uses of dma_pool_alloc, and 360 dma_pool_free in the kernel,
+so changing the API is no small task. :(
