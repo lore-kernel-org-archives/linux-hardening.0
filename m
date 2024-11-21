@@ -1,47 +1,50 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8326923098E;
-	Thu, 21 Nov 2024 03:37:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36F88230986;
+	Thu, 21 Nov 2024 05:03:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732160247; cv=none; b=W2qw4v300gtfaj3BFCju154G/rY9A3QH2lMPtK4OUCVK0p1W+K5xCM4YJ60pfvzHz/2mcYhE5Vv7lll9kGXmrw2PT/oM0ABk7OKjPolJrLHwcSPFlIT3a86vzuACLrijduiw+tLvrx/E8/049WUSRG00DghS0jrxmDnR9Mzxw1Y=
+	t=1732165387; cv=none; b=QfwIrBmsHRnEjF4gQQxxjfTN6OrK7Jw7khOaa+kcaVXdq47wmMdDVUhW4tzVDawySjGpEpg6n5pCH1gMlS4QVadDbE8UchJCY3WVwkLTwioL0Y7nANnKif98YoIyXuq2nDb3Zav59sAZW/Vago786kCLw/Cjk8R7Unotz00h7fk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732160247; c=relaxed/simple;
-	bh=3UP2eHaDWDrJPiKnzRnbJl7JGs1fZg4KYMdG7Ofx+cA=;
+	s=arc-20240116; t=1732165387; c=relaxed/simple;
+	bh=Wi/GnBJDvnLqmpp2/JvTi+0xEVSbX4UB3/kzi9egZNk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jxYHZBQfNnaBzn0zAQtUKSNGsCktMOwiAl+b2dPLI0wVcRT0+f5CnvgPhvyAJQItTfHOWukZxcF3HARpBrRTTZTjYFG2gFaubaGZOv6HGk9j9lQe6DOrlsZ3apEwlWql04su2LKgNA3u3dPJ9SwRLNZcxDiLafOgFFqIAGgs4fM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QVpv6bUN; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=CSlow35TcFU+y4KfJUw+dHhZi6ke4T2C45HWvClhWkEuW/bINig7m2KjUuFmxof94pjldPHeNpVJ/cpPrJu92KAY/4246r+Ezp8BRt+rHf3LO0sUBDvJMKGGQAF8EnYsTE5lUuVkZOw8UUlEgubBxEDaqlVRFbcyL0bVCyLWgcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=nR94WtE3; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QVpv6bUN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7413FC4CECD;
-	Thu, 21 Nov 2024 03:37:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732160245;
-	bh=3UP2eHaDWDrJPiKnzRnbJl7JGs1fZg4KYMdG7Ofx+cA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QVpv6bUNY4qYtP9yhhbnckfD6mzXease6np9KXJhVUPOnNVdlCXNAOeYSdJJXswRD
-	 wPZx8UzBsQAaBbIZbIq0ZMfFFcRA0/Kvj2ezhYAS8KLMZaHHHKM4/VMWnkkfljYvon
-	 HcjpK7/1vajS2QvUwLELYTkHnSLuF1HR6XyBxoQJ1WyyVBfmZQDqkcLWxmMnwfH+86
-	 RC5bohq/nHs/iJYIDnIyBLnQEKTy0fKMgUlhUCzc7sOzCqquOJBuHbtjluz6l3Lrba
-	 K/pLV0nAHBFb75XpEYacCSyfiC5cVCLgFsJP00OLB41vP3G0EA12xezNFwFdpTx7qN
-	 d+GF25WnOusXQ==
-Date: Wed, 20 Nov 2024 20:37:23 -0700
-From: Keith Busch <kbusch@kernel.org>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nR94WtE3"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=xWuHiVLKYZ8tLIpiuo5fwrJ4cJ7mDK/CegkNy5jzzAY=; b=nR94WtE3N8RXOXgMZorAw9x8Bd
+	zzwfDHLqNP660Vy62RsDnUQ4akzNYdSR2b9Oen5nKJLGR+5r3sRwJ3TMyQ+8OM2Kz64Lh2/H5E9T6
+	7esTWQ2TCmvRpqfHSmL8FmwzaFIOMj1LfNj4Y8QcU5I/1bL0BIVeDzveRb+QsbloxJyMgOaET57CC
+	0jnkcgvmeTsmkJ070u0yeFYDjQWlJX78QuhyipwQIaNMK02CCjvNKiaCEeP4E0F56NpB/AGy59kuY
+	Qn5VWejICH1tvhhQIB5utY3tD2QAdb3tFfKWnBUJNlTowfYB8NNPduStYmNrK2IaqDQ+AiWxAA6Ee
+	gL11oH1Q==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tDzLM-0000000Gq5N-0NKg;
+	Thu, 21 Nov 2024 05:03:04 +0000
+Date: Wed, 20 Nov 2024 21:03:04 -0800
+From: Christoph Hellwig <hch@infradead.org>
 To: Brian Johannesmeyer <bjohannesmeyer@gmail.com>
 Cc: Christoph Hellwig <hch@infradead.org>,
 	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
 	Raphael Isemann <teemperor@gmail.com>,
 	Cristiano Giuffrida <giuffrida@cs.vu.nl>,
-	Herbert Bos <h.j.bos@vu.nl>, Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [RFC v2 0/2] dmapool: Mitigate device-controllable mem.
- corruption
-Message-ID: <Zz6q85eMTko7P-Y3@kbusch-mbp>
+	Herbert Bos <h.j.bos@vu.nl>, Greg KH <gregkh@linuxfoundation.org>,
+	Keith Busch <kbusch@kernel.org>
+Subject: Re: [RFC v2 1/2] dmapool: Move pool metadata into non-DMA memory
+Message-ID: <Zz6_CFj-MiMk73Tm@infradead.org>
 References: <20241119205529.3871048-1-bjohannesmeyer@gmail.com>
- <Zz2r73CFtfuRmjup@infradead.org>
- <Zz4vzSRcdjvWNIgK@kbusch-mbp>
- <CAOZ5it1v3zxiavxctm-d32bT9aO701Os1-EnEeG0KCUhBPLMnw@mail.gmail.com>
+ <20241119205529.3871048-2-bjohannesmeyer@gmail.com>
+ <Zz2tzVqql2RMSFN4@infradead.org>
+ <CAOZ5it2KXhBy0=ktgjAHMs8ut-Go2OXOt_vnWFiUBV7uBBH5HQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -50,33 +53,26 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAOZ5it1v3zxiavxctm-d32bT9aO701Os1-EnEeG0KCUhBPLMnw@mail.gmail.com>
+In-Reply-To: <CAOZ5it2KXhBy0=ktgjAHMs8ut-Go2OXOt_vnWFiUBV7uBBH5HQ@mail.gmail.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Wed, Nov 20, 2024 at 02:58:54PM -0700, Brian Johannesmeyer wrote:
-> These results are consistent across multiple runs. It seems that with
-> DMAPOOL_DEBUG disabled, the patches introduce a significant
-> performance hit. Let me know if you have any suggestions or further
-> tests you'd like me to run.
+On Wed, Nov 20, 2024 at 04:46:40PM -0700, Brian Johannesmeyer wrote:
+> Thank you for the suggestion. I hacked together a bitmap-based
+> approach as you proposed, and while it does improve memory efficiency
+> by reducing the per-block metadata overhead, it unfortunately appears
+> to significantly impact the runtime performance.
+>
+> My guess as to why: The current linked list implementation allows us
+> to find the next free block in constant time (`O(1)`) by directly
+> dereferencing `pool->next_block`, and then following the `next_block`
+> pointers for subsequent free blocks. In contrast, the bitmap approach
+> requires iterating over all pages in `page->page_list` and, for each
+> page, iterating through its bitmap to find the first zero bit. This
+> results in a worst-case complexity of `O(n * b)`, where `n` is the
+> number of pages and `b` is the number of bits in each page's bitmap.
 
-That's what I was afraid of. I was working on the dma pool because it
-showed significant lock contention on the pool for storage heavy
-workloads, so cutting down the critical section was priority. With the
-current kernel, the dma pool doesn't even register on the profiles
-anymore, so it'd be great to keep it that way.
+Indeed.  You'd probably need to split the linkage of the pages into
+a list of those that have free blocks and those that don't as a minimum.
 
-The idea for embedding the links in freed blocks was assuming a driver
-wouldn't ask the kernel to free a dma block if the mapped device was
-still using it. Untrustworthy hardware is why we can't have nice
-things...
+Can you share your current version?
 
-Here's my quick thoughts at this late hour, though I might have
-something else tomorrow. If the links are external to the dma addr
-being freed, then I think you need to change the entire alloc/free API
-to replace the dma_addr_t handle with a new type, like a tuple of
-
-  { dma_addr_t, priv_list_link }
-
-That should make it possible to preserve the low constant time to alloc
-and free in the critical section, which I think is a good thing to have.
-I found 170 uses of dma_pool_alloc, and 360 dma_pool_free in the kernel,
-so changing the API is no small task. :(
