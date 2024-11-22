@@ -1,60 +1,62 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6416E178CF6;
-	Fri, 22 Nov 2024 21:11:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7F42185936;
+	Fri, 22 Nov 2024 21:11:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732309909; cv=none; b=dLv27kOO4emKY/c/Z9YRbXI/ZyDAyhHGyclXadp3vGelT5owOY39nDsQln7VNNwquzF0n2fMsTnU3w6rkXKdzUQiPCOVIDh9w4fVf8bWtYL5M798PBZOKXwlBJQ8ihXpILlb2T+nXFqstyIVZIjwFd9HD3xvmScyOK0paV4ea60=
+	t=1732309910; cv=none; b=ksjC5FXT8T7pmI6GGnAYNP4uoElkzVzkxoOvhqwT8XAFJ/hn+nEA1MhrGjX44LUQz1j34Z9ARLwyl/IrjnrdKt+b/qat/p2i/5dMaWo5eEFLceySGEmqKyg4pcTu1y3erTS1F9wEnkFrtJyuXOlr8X7bhE8RBCk6Wf/on7JCA6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732309909; c=relaxed/simple;
-	bh=uatQ26xoa9JnUe6BtMBCf1GYdPKJDKcQaN4eKYx4P1I=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=b3brPZ2fr2WCObECRZ8x48AXNgZukVeuaie+Czb7jKafUWRFfGu9liGSVlmLWQHt56lNu1LAngh/LeJlKMqbarZ2eavwY9q7NTSNfs9nEGMUzVfn6WQarSIx3Zpje3lNNztBu4+ZQ66V6PRwznVtZMVvQkL6gwMtghdbicUmRvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PER1tzqh; arc=none smtp.client-ip=209.85.208.53
+	s=arc-20240116; t=1732309910; c=relaxed/simple;
+	bh=/QWk8Y0rnqv9K62giJa8DNzIs0t3l7bX5HbMJmPLR9U=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=lhUHxJWV6fvca5wIp/RK5omWsoi7wJi/psXD6pxaVhktvWbThHw2zlbbEjQncq3LagRFEKttofLHJQxdHmmZquXOuU4EViHaAIRl25JRDrIDNkFyuxxbfAQaXjUaTW8EszSaMXqjGcCEXO+SOcxV1gcKLKBCFvTX5uCywb0t7d8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Px6EHPvq; arc=none smtp.client-ip=209.85.208.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PER1tzqh"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5cfa90e04c2so2830636a12.1;
-        Fri, 22 Nov 2024 13:11:47 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Px6EHPvq"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5cfadf851e2so3241483a12.2;
+        Fri, 22 Nov 2024 13:11:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1732309906; x=1732914706; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=u+tcqNNysQkTc2dEl6EX4aObuUUjMDrPgVEtTOtJS3M=;
-        b=PER1tzqhRwjECp5aMBNF8X3DPS8zAv1hDfyM84xGVwr7TGwxvOW3nRU0hFLObNA4QM
-         YwDGkb1FccnLTWx8ngLkL8MhhFjnMu473jMAa7C3kacd/mR8mKfNrs+bvTRN0KVVzzME
-         YMNP6yz8jgnZr1nEr+FW52jNFXIwq1dY6erfqMZq3irs68o8iVkKPKR3XmtppFYuRnTF
-         oW8/1mW/u/wTHrborcgb/jH1n92KwbiJKyQduMyX8kBIqSeslxk1aFI0Sxx+yVS6Txdl
-         zsROriXIYWQU5cpvkIAFxJ1rF39LZtSP/qJw1gkxGQUYKGrJl960ZMGOrbcVoqfYHlzS
-         WFOg==
+        d=gmail.com; s=20230601; t=1732309907; x=1732914707; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ujlMhj3nrkjMEnTUfH0KLv8YxE/6CvGqSF8Yncy0GFs=;
+        b=Px6EHPvq4CpOxOMh+GMtQNq6XuZnSUi8NV5QOIeVWOH98rE3ZwbqRi59zm3sXkcKXm
+         /Vm5jyBPA8WHUl89cNF6YaZpLOkxplTX5RPiSosg5K8IAFpZ05srBa/hnC+7DGRJlcUo
+         Ny2YTrKSBi8tdaWLOcrbkA8+bFfnjfkcfr7d3/OCARLCDqcFXAp9AUr+LoZr0L2Iyp/8
+         40zg/NcaOsCzwqO9GaUqheA+gDLNvBDDD1kzvr2jmbZPHBEespbNKQi5kRaPNOeM4eQX
+         VDc6B7/BTIbIZYKGCz8UF/y+JDjE57E6gcnTLGETktK2g4plPNX7ICUFk6/S29zKzljA
+         opHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732309906; x=1732914706;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=u+tcqNNysQkTc2dEl6EX4aObuUUjMDrPgVEtTOtJS3M=;
-        b=szc5HYX36Lp4VtldfEugWJN7uluAKC4UhPhaUM4YHLk8R4M7JmuyKrzukW7okyXU1M
-         X/VvXUVC3IXnyv87HiqT6wxhTpyYKfRroZqrRmcHUjEMCXQ2GkER952nUlWiWP4Tr5Nu
-         L3qKwtyC78ZBPIVwr280kBdXiZdbvPjj2TnJuPfUWftIiVwq+WDEzbI17J8vvg5nlYoV
-         m+ZDRWhRX0f6f8A/a6vW+KkUN517nH7b7AfyURxeq0SzzQ3CD5X4VK+Tmf3G+R0KR9xL
-         WXSdzK8ufqcDSt/qpZz/z88tyX0osI0XRtzCw0SbyvEuSnOu0n4V1CDVoon5kNmLaQVy
-         hbCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVtR/v2dH1rqZasv7GIC9me6k4noZgBRJ2tsorSeBkzC1sjqNmb6oKFRF2BfaolsBB9SUVNzmYCw5t3sP/0@vger.kernel.org, AJvYcCWIgme0BrHBzbwK1b93nYLwkTe4u0K8n5nBZIDaZdrfDKkzl7C+usBN2omp1CijPUHERY3hL+ZRp3k8OI/k4+M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyFCQniwmcoLyOVGTdTKSDmR46ddKEhRgLiBVRGTHSR1mnz0vwd
-	aqTRYnYy9dDxD9VaETKcwBcuP28gmkq0xwS0AMIn+TJuFCNI0Oyq
-X-Gm-Gg: ASbGncs2E9CuAsn6UiMcUU/TCa6XfyCObHYMmriKw1LN7GN5j5/5ohz6fdkn1w45HgQ
-	A9EOA3NLSUNehIK89TIEyTP5ZKppP/2IGKLGx846K2nshW+4rYzPyZenUaZnkY+RG6pBMBT+Ubv
-	K526F+NM0GaX4xzX5uMWlEJ4M66idn1hdH0o0gsSucIF/5ep/DQNtXtdp6BhGoDFQUrtboX7L2O
-	8OShCUxYWexBxJizSevFtuaP8g3sN0NKVXH0lk69+nKpMG6N1pMD6Zok1fLowDe4GGPnZmxLsiN
-	zOg=
-X-Google-Smtp-Source: AGHT+IGEeoVa+pVRYbHHLYkUM3zI+FvCZ/MKAJa4ua0+3IKCCAjUzBlQr/GgpjHTIBVkdjwu7BjCMw==
-X-Received: by 2002:a50:ef18:0:b0:5d0:224b:d585 with SMTP id 4fb4d7f45d1cf-5d0224bd6b7mr2968510a12.31.1732309905574;
-        Fri, 22 Nov 2024 13:11:45 -0800 (PST)
+        d=1e100.net; s=20230601; t=1732309907; x=1732914707;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ujlMhj3nrkjMEnTUfH0KLv8YxE/6CvGqSF8Yncy0GFs=;
+        b=l6chJeR1u1zryN4LCVPRSnFQHMT4YyXJoScan9EFFuoxdtzlaTAIAMyxMq1Q6ODF/1
+         AXBmP/29E4lO6fF445Ys5FIpEvL8GhZ4VH9SmC0H7Ilh8/Bcb3L/zEkP4TiaP35gIktj
+         7MiaBtU9Jik2uDnoPSnXwqnILMHZ+MFoXOml4csQLE0mYGaRUscSsZiiTiiGFgliZRNs
+         xei3cXhan1hdGcPGIA8lbYsZAkW/IMVf/OlDLuZEjQFpx7tMrjTcqwLw4ySd0k6a0Ryw
+         i4d/v1onL9MuaXgbmU290mwgPwVW9FteZdJn12uL6sh87qxMTz234NC0BKRqKZItjvD/
+         7guA==
+X-Forwarded-Encrypted: i=1; AJvYcCUTTMjC3MaBL1UMVeoAGi8q89nO3L50zXLXvDn5f1PMUnnnfjCsQCM7V/qi/pmi91e74OSn01pbiOf6DpUmJfU=@vger.kernel.org, AJvYcCW+woLpDgin9qmw4VFJGIYUFdT5PYa/K8Wm9twCeTiGurT+48vu0MrrRetb/D536wRsarEn/HUidCmr+3Nh@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZriFzm8+Bv/mCwnO1AVH7SErifIMyDw+3TebI8+I++s4p0LU5
+	OaccmiDGgGcGobiBLRYwVSrsJEi8btwQU9Y0AzksIx0dTbKXdv0i
+X-Gm-Gg: ASbGncsBN/2nOQrCsgseigXvwS4urnxHngm4gsd8OIsFI/Nfzg8IlmWXxN/9RDaLEI1
+	8vzgwzaqG7xYIJLGVguaXgT20+YuBbWn4oYqM2gxELojNE5DkIVF2MCGjkHy8QK5ZJupVgpNSQy
+	clmGmWQXTpm8NPji/32XvkgWX1tLSHEQj+CWuDYc6AEuCX0xZgSGUExlP20lal2jCp/8CbVFG5/
+	GTAWvMtBFLO23YoOoI0HP0K4JU0WQ7sYhyY/n14f8XN4CgO2vf2kTKCqvn133vklNLj9VXnBDEJ
+	klo=
+X-Google-Smtp-Source: AGHT+IGxEcNdIJkavgQwkyu+9SNy7MVzcGeBojSJ6weJDwmHgDhnLOEF6/aIOKsiwU/UbCHwfH9hVw==
+X-Received: by 2002:a05:6402:5187:b0:5cf:d8ea:42d0 with SMTP id 4fb4d7f45d1cf-5d020601597mr3425670a12.12.1732309906975;
+        Fri, 22 Nov 2024 13:11:46 -0800 (PST)
 Received: from rex.hwlab.vusec.net (lab-4.lab.cs.vu.nl. [192.33.36.4])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5d01d3a3d77sm1276636a12.7.2024.11.22.13.11.45
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5d01d3a3d77sm1276636a12.7.2024.11.22.13.11.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Nov 2024 13:11:45 -0800 (PST)
+        Fri, 22 Nov 2024 13:11:46 -0800 (PST)
 From: Brian Johannesmeyer <bjohannesmeyer@gmail.com>
 To: Keith Busch <kbusch@kernel.org>,
 	Christoph Hellwig <hch@infradead.org>,
@@ -67,10 +69,12 @@ Cc: Brian Johannesmeyer <bjohannesmeyer@gmail.com>,
 	Cristiano Giuffrida <giuffrida@cs.vu.nl>,
 	Herbert Bos <h.j.bos@vu.nl>,
 	Greg KH <gregkh@linuxfoundation.org>
-Subject: [PATCH v3 3/3] dmapool: Use xarray for vaddr-to-block lookup
-Date: Fri, 22 Nov 2024 22:11:41 +0100
-Message-Id: <20241122211144.4186080-1-bjohannesmeyer@gmail.com>
+Subject: [PATCH v3 2/3] dmapool: Use pool_find_block() in pool_block_err()
+Date: Fri, 22 Nov 2024 22:11:42 +0100
+Message-Id: <20241122211144.4186080-2-bjohannesmeyer@gmail.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20241122211144.4186080-1-bjohannesmeyer@gmail.com>
+References: <20241122211144.4186080-1-bjohannesmeyer@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -79,116 +83,79 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Optimize the performance of `dma_pool_free()` by implementing an xarray to
-map a `vaddr` to its corresponding `block`. This eliminates the need to
-iterate through the entire `page_list` for vaddr-to-block translation,
-thereby improving performance.
+In the previous patch, the `pool_find_block()` function was added to
+translate a virtual address into the corresponding `struct dma_block`. The
+existing `pool_find_page()` function performs a similar role by translating
+a DMA address into the `struct dma_page` containing it.
 
-Performance results from the `DMAPOOL_TEST` test show the improvement.
-Before the patch:
-```
-dmapool test: size:16   align:16   blocks:8192 time:34432
-dmapool test: size:64   align:64   blocks:8192 time:62262
-dmapool test: size:256  align:256  blocks:8192 time:238137
-dmapool test: size:1024 align:1024 blocks:2048 time:61386
-dmapool test: size:4096 align:4096 blocks:1024 time:75342
-dmapool test: size:68   align:32   blocks:8192 time:88243
-```
-
-After the patch:
-```
-dmapool test: size:16   align:16   blocks:8192 time:37954
-dmapool test: size:64   align:64   blocks:8192 time:40036
-dmapool test: size:256  align:256  blocks:8192 time:41942
-dmapool test: size:1024 align:1024 blocks:2048 time:10964
-dmapool test: size:4096 align:4096 blocks:1024 time:6101
-dmapool test: size:68   align:32   blocks:8192 time:41307
-```
-
-This change reduces the runtime overhead, particularly for larger block
-sizes.
+To reduce redundant code and improve consistency, remove the
+`pool_find_page()` function and update `pool_block_err()` to use
+`pool_find_block()` instead. Doing so eliminates duplicate functionality
+and consolidates the block lookup process.
 
 Co-developed-by: Raphael Isemann <teemperor@gmail.com>
 Signed-off-by: Raphael Isemann <teemperor@gmail.com>
 Signed-off-by: Brian Johannesmeyer <bjohannesmeyer@gmail.com>
 ---
- mm/dmapool.c | 28 +++++++++++-----------------
- 1 file changed, 11 insertions(+), 17 deletions(-)
+ mm/dmapool.c | 38 ++++++++++++--------------------------
+ 1 file changed, 12 insertions(+), 26 deletions(-)
 
 diff --git a/mm/dmapool.c b/mm/dmapool.c
-index f2b96be25412..1cc2cc87ab93 100644
+index 3790ca4a631d..f2b96be25412 100644
 --- a/mm/dmapool.c
 +++ b/mm/dmapool.c
-@@ -35,6 +35,7 @@
- #include <linux/string.h>
- #include <linux/types.h>
- #include <linux/wait.h>
-+#include <linux/xarray.h>
- 
- #ifdef CONFIG_SLUB_DEBUG_ON
- #define DMAPOOL_DEBUG 1
-@@ -59,6 +60,7 @@ struct dma_pool {		/* the pool */
- 	unsigned int boundary;
- 	char name[32];
- 	struct list_head pools;
-+	struct xarray block_map;
- };
- 
- struct dma_page {		/* cacheable header for 'allocation' bytes */
-@@ -96,23 +98,7 @@ static DEVICE_ATTR_RO(pools);
- 
- static struct dma_block *pool_find_block(struct dma_pool *pool, void *vaddr)
- {
--	struct dma_page *page;
--	size_t offset, index;
--
--	list_for_each_entry(page, &pool->page_list, page_list) {
--		if (vaddr < page->vaddr)
--			continue;
--		offset = vaddr - page->vaddr;
--		if (offset >= pool->allocation)
--			continue;
--
--		index = offset / pool->size;
--		if (index >= page->blocks_per_page)
--			return NULL;
--
--		return &page->blocks[index];
--	}
--	return NULL;
-+	return xa_load(&pool->block_map, (unsigned long)vaddr);
+@@ -141,39 +141,25 @@ static void pool_check_block(struct dma_pool *pool, struct dma_block *block,
+ 		memset(block->vaddr, POOL_POISON_ALLOCATED, pool->size);
  }
  
- #ifdef DMAPOOL_DEBUG
-@@ -273,6 +259,7 @@ struct dma_pool *dma_pool_create(const char *name, struct device *dev,
- 	retval->boundary = boundary;
- 	retval->allocation = allocation;
- 	INIT_LIST_HEAD(&retval->pools);
-+	xa_init(&retval->block_map);
+-static struct dma_page *pool_find_page(struct dma_pool *pool, dma_addr_t dma)
+-{
+-	struct dma_page *page;
+-
+-	list_for_each_entry(page, &pool->page_list, page_list) {
+-		if (dma < page->dma)
+-			continue;
+-		if ((dma - page->dma) < pool->allocation)
+-			return page;
+-	}
+-	return NULL;
+-}
+-
+ static bool pool_block_err(struct dma_pool *pool, void *vaddr, dma_addr_t dma)
+ {
+-	struct dma_block *block = pool->next_block;
+-	struct dma_page *page;
++	struct dma_block *block = pool_find_block(pool, vaddr);
  
- 	/*
- 	 * pools_lock ensures that the ->dma_pools list does not get corrupted.
-@@ -324,6 +311,12 @@ static void pool_initialise_page(struct dma_pool *pool, struct dma_page *page)
- 		block->dma = page->dma + offset;
- 		block->next_block = NULL;
+-	page = pool_find_page(pool, dma);
+-	if (!page) {
+-		dev_err(pool->dev, "%s %s, %p/%pad (bad dma)\n",
+-			__func__, pool->name, vaddr, &dma);
++	if (!block) {
++		dev_err(pool->dev, "%s %s, invalid block %p\n",
++			__func__, pool->name, vaddr);
+ 		return true;
+ 	}
  
-+		if (xa_err(xa_store(&pool->block_map, (unsigned long)block->vaddr,
-+				    block, GFP_KERNEL))) {
-+			pr_err("dma_pool: Failed to store block in xarray\n");
-+			return;
-+		}
+-	while (block) {
+-		if (block->vaddr != vaddr) {
+-			block = block->next_block;
+-			continue;
++	struct dma_block *iter = pool->next_block;
 +
- 		if (last)
- 			last->next_block = block;
- 		else
-@@ -385,6 +378,7 @@ void dma_pool_destroy(struct dma_pool *pool)
- 	if (unlikely(!pool))
- 		return;
++	while (iter) {
++		if (iter == block) {
++			dev_err(pool->dev, "%s %s, dma %pad already free\n",
++				__func__, pool->name, &dma);
++			return true;
+ 		}
+-		dev_err(pool->dev, "%s %s, dma %pad already free\n",
+-			__func__, pool->name, &dma);
+-		return true;
++		iter = iter->next_block;
+ 	}
  
-+	xa_destroy(&pool->block_map);
- 	mutex_lock(&pools_reg_lock);
- 	mutex_lock(&pools_lock);
- 	list_del(&pool->pools);
+ 	memset(vaddr, POOL_POISON_FREED, pool->size);
 -- 
 2.34.1
 
