@@ -1,60 +1,60 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F67C1C07D3;
-	Thu, 21 Nov 2024 20:51:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AD49AD2F;
+	Fri, 22 Nov 2024 00:22:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732222312; cv=none; b=c3jrRErQMK+ClMqzNZx1tpldAG79HJdzG13Vq/qYfw/4arO9rh7xhRL2Vr4tqY9aWIQ0uVBiiT1AeCFVvjZnFpRTfje35e3qbT60BbP97Br7qXGtE9S3SeBQJtSb6qG0s5vpG8OKvBw0qtucU9wZIpI2shNL9i3MQqgxAEFTc+U=
+	t=1732234945; cv=none; b=mBaRD7ysm5/L0Rc/ERiKnMnXUCB8nYKiq5YMWyHoDoDcmqZOWpHYt3y06smJBC6mbDKA+Hx2wuQ4u7VlEJL/EfElwElSFGSLhfZ8qIJuHrHiQgpQglGioRegJMmTehJa8AKcwUTmSbYMd+7qPTgeVHjNisinovgn52A5Z9T6IKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732222312; c=relaxed/simple;
-	bh=taT9ePeQrxhiHDut79dVzLrgGpr1nEZJDb/ox09Aocs=;
+	s=arc-20240116; t=1732234945; c=relaxed/simple;
+	bh=M3R/QgwwsZHZDHopkmm+xaMOhBFaQd/h/zvjLeAkvHs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RXVhKkd52/fySjIVPUUsFoRoEAKU34DoHjE3lU5GDtxLMHDxKT5vslge1/3d6VoQpCAeTG89ZbpjSPc43KGu3uv0pJiMpzF21owO6KDRM8IB7+CTAw85wa9CFBTxlaw1XF05QVn4lohNBWs3qN5nWuTEds99CAXFarMj7owdnO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KpnQ65JT; arc=none smtp.client-ip=198.175.65.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=AXT4EnLu89Q1xUt6SwLNllAcWwxLOxdhB0r1dlibCGPkD3AY4qCtrUUzLhVAAABWIq8u8TXe9WWiEuTYBH7eJpG7FAybZsY/BOqtH1NU3p5PZVRjE3t5KptHy7cs/6hjICrfkWSTHXOjAOBXDGGTS724ancsIjTC7jfYo0vPWSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q9UtdnJ8; arc=none smtp.client-ip=192.198.163.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KpnQ65JT"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q9UtdnJ8"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1732222310; x=1763758310;
+  t=1732234943; x=1763770943;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=taT9ePeQrxhiHDut79dVzLrgGpr1nEZJDb/ox09Aocs=;
-  b=KpnQ65JTltTHjUcr7KH+HlGGzHUeWERuhw9LyckEcY/gOSe7WJ/HO86V
-   fB3U/GLTz3gxs/Lxy7giGwbTa0vQ8RGqwcPshIVrwXsDzS54HSeM71bPU
-   tMj0F5Xa2n3zqnegDd5A6sCcgrA8DsfcXUyR7VsAtVZjz58X8dI3b6jmp
-   KMqU4GJdp3K5MI+etRr1L6exs2ucChWDsfFnNc/Sgwb5MnPiI2fcpxdBf
-   kbeX0odIeILF/3rXXaM6ToHC+MSSv/30zSxSJhBJdWlhM9whwCXpRjpli
-   vWOsWH8aba/vhquhPWB3ot7ZaO7CcK7IjAric1PHSwZJo8vuiE3c/nd12
-   g==;
-X-CSE-ConnectionGUID: ohIYHGjWT9G4TIF5Gcy4JQ==
-X-CSE-MsgGUID: sp2A029VSRiFlo74oiLmUA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11263"; a="32508676"
-X-IronPort-AV: E=Sophos;i="6.12,173,1728975600"; 
-   d="scan'208";a="32508676"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2024 12:51:50 -0800
-X-CSE-ConnectionGUID: uDyqpQcJSv64qC4vtqakSQ==
-X-CSE-MsgGUID: Z0WAiq0sRcacnmPMNs7c/Q==
+  bh=M3R/QgwwsZHZDHopkmm+xaMOhBFaQd/h/zvjLeAkvHs=;
+  b=Q9UtdnJ85onMmsn59U2KvRlIC+kQ0d5VohMJChJhJU6DUYN1tYGGE5Bh
+   OObo6IgBl5AV1lm1z/gPd+n5lYvv1VZWlSqL2vl0ia5T09iAzD3TvP5F+
+   iQMwHxb7EhReih9CmAnY1lBcelEY2IMXttDARx0ZL8Rr642gdFgdYNBR/
+   Dmf6NYWz3rWXD8Z2On7S5/8q3R4+7VkeE/wOD+746jYAPaEDv9aGSzi0c
+   DqS/88fG8EzcbpGTg1fqT92lUpVuJdr5BrlY4CCFNeEQuRouXRde4a5Kz
+   joXr/7RptLYQQXi8O/f06TU4sap/oz1J9YmDrH7Lo/ZlwEGZW2FKHWEAl
+   A==;
+X-CSE-ConnectionGUID: /KHsTvw4Rqqeuop0V5ScxQ==
+X-CSE-MsgGUID: v4jIidT4SGWaL4gU0Ix91Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11263"; a="31734587"
+X-IronPort-AV: E=Sophos;i="6.12,174,1728975600"; 
+   d="scan'208";a="31734587"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2024 16:22:21 -0800
+X-CSE-ConnectionGUID: HxAOaIT1QueG2hobwByEeA==
+X-CSE-MsgGUID: ky2BBDDwT46nGfngUgQmQw==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,173,1728975600"; 
-   d="scan'208";a="90009499"
+X-IronPort-AV: E=Sophos;i="6.12,174,1728975600"; 
+   d="scan'208";a="90833920"
 Received: from lkp-server01.sh.intel.com (HELO 8122d2fc1967) ([10.239.97.150])
-  by fmviesa006.fm.intel.com with ESMTP; 21 Nov 2024 12:51:47 -0800
+  by fmviesa009.fm.intel.com with ESMTP; 21 Nov 2024 16:22:16 -0800
 Received: from kbuild by 8122d2fc1967 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1tEE9R-0003LD-17;
-	Thu, 21 Nov 2024 20:51:45 +0000
-Date: Fri, 22 Nov 2024 04:51:39 +0800
+	id 1tEHR7-0003VZ-2K;
+	Fri, 22 Nov 2024 00:22:13 +0000
+Date: Fri, 22 Nov 2024 08:21:23 +0800
 From: kernel test robot <lkp@intel.com>
 To: Dan Carpenter <error27@gmail.com>, Kees Cook <kees@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev,
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH] overflow: improve size_add/mul for 32bit systems
-Message-ID: <202411220409.0vrV1mjl-lkp@intel.com>
+Message-ID: <202411220837.yUJtt1Lg-lkp@intel.com>
 References: <ebdae636-11f3-4f02-a158-f15bbed2847f@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -68,10 +68,10 @@ In-Reply-To: <ebdae636-11f3-4f02-a158-f15bbed2847f@stanley.mountain>
 
 Hi Dan,
 
-kernel test robot noticed the following build warnings:
+kernel test robot noticed the following build errors:
 
-[auto build test WARNING on kees/for-next/hardening]
-[also build test WARNING on kees/for-next/pstore kees/for-next/kspp linus/master v6.12 next-20241121]
+[auto build test ERROR on kees/for-next/hardening]
+[also build test ERROR on kees/for-next/pstore kees/for-next/kspp linus/master v6.12 next-20241121]
 [If your patch is applied to the wrong git tree, kindly drop us a note.
 And when submitting patch, we suggest to use '--base' as documented in
 https://git-scm.com/docs/git-format-patch#_base_tree_information]
@@ -80,135 +80,470 @@ url:    https://github.com/intel-lab-lkp/linux/commits/Dan-Carpenter/overflow-im
 base:   https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git for-next/hardening
 patch link:    https://lore.kernel.org/r/ebdae636-11f3-4f02-a158-f15bbed2847f%40stanley.mountain
 patch subject: [PATCH] overflow: improve size_add/mul for 32bit systems
-config: arm-randconfig-004-20241122 (https://download.01.org/0day-ci/archive/20241122/202411220409.0vrV1mjl-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241122/202411220409.0vrV1mjl-lkp@intel.com/reproduce)
+config: i386-randconfig-002-20241122 (https://download.01.org/0day-ci/archive/20241122/202411220837.yUJtt1Lg-lkp@intel.com/config)
+compiler: clang version 19.1.3 (https://github.com/llvm/llvm-project ab51eccf88f5321e7c60591c5546b254b6afab99)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241122/202411220837.yUJtt1Lg-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202411220409.0vrV1mjl-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202411220837.yUJtt1Lg-lkp@intel.com/
 
-All warnings (new ones prefixed by >>):
+All error/warnings (new ones prefixed by >>):
 
-   In file included from include/linux/device.h:15,
-                    from include/linux/cdev.h:8,
-                    from include/linux/tty_driver.h:9,
-                    from include/linux/tty.h:9,
-                    from drivers/tty/serial/atmel_serial.c:12:
-   drivers/tty/serial/atmel_serial.c: In function 'atmel_prepare_rx_dma':
->> drivers/tty/serial/atmel_serial.c:1214:36: warning: format '%zu' expects argument of type 'size_t', but argument 5 has type 'long unsigned int' [-Wformat=]
-    1214 |                 dev_dbg(port->dev, "%s: mapped %zu@%p to %pad\n", __func__,
-         |                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/dev_printk.h:139:49: note: in definition of macro 'dev_no_printk'
-     139 |                         _dev_printk(level, dev, fmt, ##__VA_ARGS__);    \
-         |                                                 ^~~
-   include/linux/dev_printk.h:171:40: note: in expansion of macro 'dev_fmt'
-     171 |         dev_no_printk(KERN_DEBUG, dev, dev_fmt(fmt), ##__VA_ARGS__)
-         |                                        ^~~~~~~
-   drivers/tty/serial/atmel_serial.c:1214:17: note: in expansion of macro 'dev_dbg'
-    1214 |                 dev_dbg(port->dev, "%s: mapped %zu@%p to %pad\n", __func__,
-         |                 ^~~~~~~
-   drivers/tty/serial/atmel_serial.c:1214:50: note: format string is defined here
-    1214 |                 dev_dbg(port->dev, "%s: mapped %zu@%p to %pad\n", __func__,
-         |                                                ~~^
-         |                                                  |
-         |                                                  unsigned int
-         |                                                %lu
+   In file included from drivers/hv/vmbus_drv.c:21:
+   In file included from include/linux/hyperv.h:17:
+   In file included from include/linux/mm.h:2213:
+   include/linux/vmstat.h:518:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
+     518 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
+         |                               ~~~~~~~~~~~ ^ ~~~
+>> drivers/hv/vmbus_drv.c:1078:17: warning: result of comparison of constant 4294967295 with expression of type 'typeof (payload_size)' (aka 'unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+    1078 |                 ctx = kmalloc(struct_size(ctx, msg.payload, payload_size), GFP_ATOMIC);
+         |                       ~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:396:18: note: expanded from macro 'struct_size'
+     396 |                 sizeof(*(p)) + flex_array_size(p, member, count),       \
+         |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:381:3: note: expanded from macro 'flex_array_size'
+     381 |                 size_mul(count, sizeof(*(p)->member) + __must_be_array((p)->member)))
+         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:281:11: note: expanded from macro 'size_mul'
+     281 |             (__a >= (u64)SIZE_MAX || __b >= (u64)SIZE_MAX))             \
+         |              ~~~ ^
+   include/linux/slab.h:884:52: note: expanded from macro 'kmalloc'
+     884 | #define kmalloc(...)                            alloc_hooks(kmalloc_noprof(__VA_ARGS__))
+         |                                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~
+   include/linux/alloc_tag.h:210:31: note: expanded from macro 'alloc_hooks'
+     210 |         alloc_hooks_tag(&_alloc_tag, _do_alloc);                        \
+         |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~
+   include/linux/alloc_tag.h:202:27: note: expanded from macro 'alloc_hooks_tag'
+     202 |         typeof(_do_alloc) _res = _do_alloc;                             \
+         |                                  ^~~~~~~~~
+>> drivers/hv/vmbus_drv.c:1078:17: warning: result of comparison of constant 4294967295 with expression of type 'typeof (payload_size)' (aka 'unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+    1078 |                 ctx = kmalloc(struct_size(ctx, msg.payload, payload_size), GFP_ATOMIC);
+         |                       ~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:397:26: note: expanded from macro 'struct_size'
+     397 |                 size_add(sizeof(*(p)), flex_array_size(p, member, count)))
+         |                                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:381:3: note: expanded from macro 'flex_array_size'
+     381 |                 size_mul(count, sizeof(*(p)->member) + __must_be_array((p)->member)))
+         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:281:11: note: expanded from macro 'size_mul'
+     281 |             (__a >= (u64)SIZE_MAX || __b >= (u64)SIZE_MAX))             \
+         |              ~~~ ^
+   note: (skipping 1 expansions in backtrace; use -fmacro-backtrace-limit=0 to see all)
+   include/linux/slab.h:884:52: note: expanded from macro 'kmalloc'
+     884 | #define kmalloc(...)                            alloc_hooks(kmalloc_noprof(__VA_ARGS__))
+         |                                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~
+   include/linux/alloc_tag.h:210:31: note: expanded from macro 'alloc_hooks'
+     210 |         alloc_hooks_tag(&_alloc_tag, _do_alloc);                        \
+         |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~
+   include/linux/alloc_tag.h:202:27: note: expanded from macro 'alloc_hooks_tag'
+     202 |         typeof(_do_alloc) _res = _do_alloc;                             \
+         |                                  ^~~~~~~~~
+   3 warnings generated.
+--
+   In file included from drivers/scsi/mpt3sas/mpt3sas_warpdrive.c:47:
+   In file included from drivers/scsi/mpt3sas/mpt3sas_base.h:61:
+   In file included from include/scsi/scsi_cmnd.h:5:
+   In file included from include/linux/dma-mapping.h:11:
+   In file included from include/linux/scatterlist.h:8:
+   In file included from include/linux/mm.h:2213:
+   include/linux/vmstat.h:518:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
+     518 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
+         |                               ~~~~~~~~~~~ ^ ~~~
+>> drivers/scsi/mpt3sas/mpt3sas_warpdrive.c:144:7: warning: result of comparison of constant 4294967295 with expression of type 'typeof (num_pds)' (aka 'unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+     144 |         sz = struct_size(vol_pg0, PhysDisk, num_pds);
+         |              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:396:18: note: expanded from macro 'struct_size'
+     396 |                 sizeof(*(p)) + flex_array_size(p, member, count),       \
+         |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:381:3: note: expanded from macro 'flex_array_size'
+     381 |                 size_mul(count, sizeof(*(p)->member) + __must_be_array((p)->member)))
+         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:281:11: note: expanded from macro 'size_mul'
+     281 |             (__a >= (u64)SIZE_MAX || __b >= (u64)SIZE_MAX))             \
+         |              ~~~ ^  ~~~~~~~~~~~~~
+>> drivers/scsi/mpt3sas/mpt3sas_warpdrive.c:144:7: warning: result of comparison of constant 4294967295 with expression of type 'typeof (num_pds)' (aka 'unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+     144 |         sz = struct_size(vol_pg0, PhysDisk, num_pds);
+         |              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:397:26: note: expanded from macro 'struct_size'
+     397 |                 size_add(sizeof(*(p)), flex_array_size(p, member, count)))
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:381:3: note: expanded from macro 'flex_array_size'
+     381 |                 size_mul(count, sizeof(*(p)->member) + __must_be_array((p)->member)))
+         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:281:11: note: expanded from macro 'size_mul'
+     281 |             (__a >= (u64)SIZE_MAX || __b >= (u64)SIZE_MAX))             \
+         |              ~~~ ^
+   include/linux/overflow.h:309:19: note: expanded from macro 'size_add'
+     309 |         typeof(b) __b = (b);                                            \
+         |                          ^
+   3 warnings generated.
+--
+   In file included from drivers/scsi/mpt3sas/mpt3sas_transport.c:52:
+   In file included from include/linux/pci.h:1650:
+   In file included from include/linux/dmapool.h:14:
+   In file included from include/linux/scatterlist.h:8:
+   In file included from include/linux/mm.h:2213:
+   include/linux/vmstat.h:518:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
+     518 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
+         |                               ~~~~~~~~~~~ ^ ~~~
+>> drivers/scsi/mpt3sas/mpt3sas_transport.c:1791:7: warning: result of comparison of constant 4294967295 with expression of type 'typeof (ioc->sas_hba.num_phys)' (aka 'unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+    1791 |         sz = struct_size(sas_iounit_pg0, PhyData, ioc->sas_hba.num_phys);
+         |              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:396:18: note: expanded from macro 'struct_size'
+     396 |                 sizeof(*(p)) + flex_array_size(p, member, count),       \
+         |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:381:3: note: expanded from macro 'flex_array_size'
+     381 |                 size_mul(count, sizeof(*(p)->member) + __must_be_array((p)->member)))
+         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:281:11: note: expanded from macro 'size_mul'
+     281 |             (__a >= (u64)SIZE_MAX || __b >= (u64)SIZE_MAX))             \
+         |              ~~~ ^  ~~~~~~~~~~~~~
+>> drivers/scsi/mpt3sas/mpt3sas_transport.c:1791:7: warning: result of comparison of constant 4294967295 with expression of type 'typeof (ioc->sas_hba.num_phys)' (aka 'unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+    1791 |         sz = struct_size(sas_iounit_pg0, PhyData, ioc->sas_hba.num_phys);
+         |              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:397:26: note: expanded from macro 'struct_size'
+     397 |                 size_add(sizeof(*(p)), flex_array_size(p, member, count)))
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:381:3: note: expanded from macro 'flex_array_size'
+     381 |                 size_mul(count, sizeof(*(p)->member) + __must_be_array((p)->member)))
+         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:281:11: note: expanded from macro 'size_mul'
+     281 |             (__a >= (u64)SIZE_MAX || __b >= (u64)SIZE_MAX))             \
+         |              ~~~ ^
+   include/linux/overflow.h:309:19: note: expanded from macro 'size_add'
+     309 |         typeof(b) __b = (b);                                            \
+         |                          ^
+   drivers/scsi/mpt3sas/mpt3sas_transport.c:1831:7: warning: result of comparison of constant 4294967295 with expression of type 'typeof (ioc->sas_hba.num_phys)' (aka 'unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+    1831 |         sz = struct_size(sas_iounit_pg1, PhyData, ioc->sas_hba.num_phys);
+         |              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:396:18: note: expanded from macro 'struct_size'
+     396 |                 sizeof(*(p)) + flex_array_size(p, member, count),       \
+         |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:381:3: note: expanded from macro 'flex_array_size'
+     381 |                 size_mul(count, sizeof(*(p)->member) + __must_be_array((p)->member)))
+         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:281:11: note: expanded from macro 'size_mul'
+     281 |             (__a >= (u64)SIZE_MAX || __b >= (u64)SIZE_MAX))             \
+         |              ~~~ ^  ~~~~~~~~~~~~~
+   drivers/scsi/mpt3sas/mpt3sas_transport.c:1831:7: warning: result of comparison of constant 4294967295 with expression of type 'typeof (ioc->sas_hba.num_phys)' (aka 'unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+    1831 |         sz = struct_size(sas_iounit_pg1, PhyData, ioc->sas_hba.num_phys);
+         |              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:397:26: note: expanded from macro 'struct_size'
+     397 |                 size_add(sizeof(*(p)), flex_array_size(p, member, count)))
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:381:3: note: expanded from macro 'flex_array_size'
+     381 |                 size_mul(count, sizeof(*(p)->member) + __must_be_array((p)->member)))
+         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:281:11: note: expanded from macro 'size_mul'
+     281 |             (__a >= (u64)SIZE_MAX || __b >= (u64)SIZE_MAX))             \
+         |              ~~~ ^
+   include/linux/overflow.h:309:19: note: expanded from macro 'size_add'
+     309 |         typeof(b) __b = (b);                                            \
+         |                          ^
+   drivers/scsi/mpt3sas/mpt3sas_transport.c:1941:7: warning: result of comparison of constant 4294967295 with expression of type 'typeof (ioc->sas_hba.num_phys)' (aka 'unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+    1941 |         sz = struct_size(sas_iounit_pg1, PhyData, ioc->sas_hba.num_phys);
+         |              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:396:18: note: expanded from macro 'struct_size'
+     396 |                 sizeof(*(p)) + flex_array_size(p, member, count),       \
+         |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:381:3: note: expanded from macro 'flex_array_size'
+     381 |                 size_mul(count, sizeof(*(p)->member) + __must_be_array((p)->member)))
+         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:281:11: note: expanded from macro 'size_mul'
+     281 |             (__a >= (u64)SIZE_MAX || __b >= (u64)SIZE_MAX))             \
+         |              ~~~ ^  ~~~~~~~~~~~~~
+   drivers/scsi/mpt3sas/mpt3sas_transport.c:1941:7: warning: result of comparison of constant 4294967295 with expression of type 'typeof (ioc->sas_hba.num_phys)' (aka 'unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+    1941 |         sz = struct_size(sas_iounit_pg1, PhyData, ioc->sas_hba.num_phys);
+         |              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:397:26: note: expanded from macro 'struct_size'
+     397 |                 size_add(sizeof(*(p)), flex_array_size(p, member, count)))
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:381:3: note: expanded from macro 'flex_array_size'
+     381 |                 size_mul(count, sizeof(*(p)->member) + __must_be_array((p)->member)))
+         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:281:11: note: expanded from macro 'size_mul'
+     281 |             (__a >= (u64)SIZE_MAX || __b >= (u64)SIZE_MAX))             \
+         |              ~~~ ^
+   include/linux/overflow.h:309:19: note: expanded from macro 'size_add'
+     309 |         typeof(b) __b = (b);                                            \
+         |                          ^
+   7 warnings generated.
+--
+   In file included from drivers/scsi/mpt3sas/mpt3sas_base.c:52:
+   In file included from include/linux/pci.h:1650:
+   In file included from include/linux/dmapool.h:14:
+   In file included from include/linux/scatterlist.h:8:
+   In file included from include/linux/mm.h:2213:
+   include/linux/vmstat.h:518:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
+     518 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
+         |                               ~~~~~~~~~~~ ^ ~~~
+>> drivers/scsi/mpt3sas/mpt3sas_base.c:4912:7: warning: result of comparison of constant 4294967295 with expression of type 'typeof (num_phys)' (aka 'unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+    4912 |         sz = struct_size(sas_iounit_pg1, PhyData, num_phys);
+         |              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:396:18: note: expanded from macro 'struct_size'
+     396 |                 sizeof(*(p)) + flex_array_size(p, member, count),       \
+         |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:381:3: note: expanded from macro 'flex_array_size'
+     381 |                 size_mul(count, sizeof(*(p)->member) + __must_be_array((p)->member)))
+         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:281:11: note: expanded from macro 'size_mul'
+     281 |             (__a >= (u64)SIZE_MAX || __b >= (u64)SIZE_MAX))             \
+         |              ~~~ ^  ~~~~~~~~~~~~~
+>> drivers/scsi/mpt3sas/mpt3sas_base.c:4912:7: warning: result of comparison of constant 4294967295 with expression of type 'typeof (num_phys)' (aka 'unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+    4912 |         sz = struct_size(sas_iounit_pg1, PhyData, num_phys);
+         |              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:397:26: note: expanded from macro 'struct_size'
+     397 |                 size_add(sizeof(*(p)), flex_array_size(p, member, count)))
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:381:3: note: expanded from macro 'flex_array_size'
+     381 |                 size_mul(count, sizeof(*(p)->member) + __must_be_array((p)->member)))
+         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:281:11: note: expanded from macro 'size_mul'
+     281 |             (__a >= (u64)SIZE_MAX || __b >= (u64)SIZE_MAX))             \
+         |              ~~~ ^
+   include/linux/overflow.h:309:19: note: expanded from macro 'size_add'
+     309 |         typeof(b) __b = (b);                                            \
+         |                          ^
+   3 warnings generated.
+--
+   In file included from drivers/scsi/mpt3sas/mpt3sas_scsih.c:49:
+   In file included from include/linux/blkdev.h:9:
+   In file included from include/linux/blk_types.h:10:
+   In file included from include/linux/bvec.h:10:
+   In file included from include/linux/highmem.h:8:
+   In file included from include/linux/cacheflush.h:5:
+   In file included from arch/x86/include/asm/cacheflush.h:5:
+   In file included from include/linux/mm.h:2213:
+   include/linux/vmstat.h:518:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
+     518 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
+         |                               ~~~~~~~~~~~ ^ ~~~
+>> drivers/scsi/mpt3sas/mpt3sas_scsih.c:2434:7: warning: result of comparison of constant 4294967295 with expression of type 'typeof (num_pds)' (aka 'unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+    2434 |         sz = struct_size(vol_pg0, PhysDisk, num_pds);
+         |              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:396:18: note: expanded from macro 'struct_size'
+     396 |                 sizeof(*(p)) + flex_array_size(p, member, count),       \
+         |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:381:3: note: expanded from macro 'flex_array_size'
+     381 |                 size_mul(count, sizeof(*(p)->member) + __must_be_array((p)->member)))
+         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:281:11: note: expanded from macro 'size_mul'
+     281 |             (__a >= (u64)SIZE_MAX || __b >= (u64)SIZE_MAX))             \
+         |              ~~~ ^  ~~~~~~~~~~~~~
+>> drivers/scsi/mpt3sas/mpt3sas_scsih.c:2434:7: warning: result of comparison of constant 4294967295 with expression of type 'typeof (num_pds)' (aka 'unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+    2434 |         sz = struct_size(vol_pg0, PhysDisk, num_pds);
+         |              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:397:26: note: expanded from macro 'struct_size'
+     397 |                 size_add(sizeof(*(p)), flex_array_size(p, member, count)))
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:381:3: note: expanded from macro 'flex_array_size'
+     381 |                 size_mul(count, sizeof(*(p)->member) + __must_be_array((p)->member)))
+         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:281:11: note: expanded from macro 'size_mul'
+     281 |             (__a >= (u64)SIZE_MAX || __b >= (u64)SIZE_MAX))             \
+         |              ~~~ ^
+   include/linux/overflow.h:309:19: note: expanded from macro 'size_add'
+     309 |         typeof(b) __b = (b);                                            \
+         |                          ^
+>> drivers/scsi/mpt3sas/mpt3sas_scsih.c:5960:7: warning: result of comparison of constant 4294967295 with expression of type 'typeof (ioc->sas_hba.num_phys)' (aka 'unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+    5960 |         sz = struct_size(sas_iounit_pg0, PhyData, ioc->sas_hba.num_phys);
+         |              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:396:18: note: expanded from macro 'struct_size'
+     396 |                 sizeof(*(p)) + flex_array_size(p, member, count),       \
+         |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:381:3: note: expanded from macro 'flex_array_size'
+     381 |                 size_mul(count, sizeof(*(p)->member) + __must_be_array((p)->member)))
+         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:281:11: note: expanded from macro 'size_mul'
+     281 |             (__a >= (u64)SIZE_MAX || __b >= (u64)SIZE_MAX))             \
+         |              ~~~ ^  ~~~~~~~~~~~~~
+>> drivers/scsi/mpt3sas/mpt3sas_scsih.c:5960:7: warning: result of comparison of constant 4294967295 with expression of type 'typeof (ioc->sas_hba.num_phys)' (aka 'unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+    5960 |         sz = struct_size(sas_iounit_pg0, PhyData, ioc->sas_hba.num_phys);
+         |              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:397:26: note: expanded from macro 'struct_size'
+     397 |                 size_add(sizeof(*(p)), flex_array_size(p, member, count)))
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:381:3: note: expanded from macro 'flex_array_size'
+     381 |                 size_mul(count, sizeof(*(p)->member) + __must_be_array((p)->member)))
+         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:281:11: note: expanded from macro 'size_mul'
+     281 |             (__a >= (u64)SIZE_MAX || __b >= (u64)SIZE_MAX))             \
+         |              ~~~ ^
+   include/linux/overflow.h:309:19: note: expanded from macro 'size_add'
+     309 |         typeof(b) __b = (b);                                            \
+         |                          ^
+   drivers/scsi/mpt3sas/mpt3sas_scsih.c:6138:7: warning: result of comparison of constant 4294967295 with expression of type 'typeof (ioc->sas_hba.num_phys)' (aka 'unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+    6138 |         sz = struct_size(sas_iounit_pg0, PhyData, ioc->sas_hba.num_phys);
+         |              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:396:18: note: expanded from macro 'struct_size'
+     396 |                 sizeof(*(p)) + flex_array_size(p, member, count),       \
+         |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:381:3: note: expanded from macro 'flex_array_size'
+     381 |                 size_mul(count, sizeof(*(p)->member) + __must_be_array((p)->member)))
+         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:281:11: note: expanded from macro 'size_mul'
+     281 |             (__a >= (u64)SIZE_MAX || __b >= (u64)SIZE_MAX))             \
+         |              ~~~ ^  ~~~~~~~~~~~~~
+   drivers/scsi/mpt3sas/mpt3sas_scsih.c:6138:7: warning: result of comparison of constant 4294967295 with expression of type 'typeof (ioc->sas_hba.num_phys)' (aka 'unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+    6138 |         sz = struct_size(sas_iounit_pg0, PhyData, ioc->sas_hba.num_phys);
+         |              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:397:26: note: expanded from macro 'struct_size'
+     397 |                 size_add(sizeof(*(p)), flex_array_size(p, member, count)))
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:381:3: note: expanded from macro 'flex_array_size'
+     381 |                 size_mul(count, sizeof(*(p)->member) + __must_be_array((p)->member)))
+         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:281:11: note: expanded from macro 'size_mul'
+     281 |             (__a >= (u64)SIZE_MAX || __b >= (u64)SIZE_MAX))             \
+         |              ~~~ ^
+   include/linux/overflow.h:309:19: note: expanded from macro 'size_add'
+     309 |         typeof(b) __b = (b);                                            \
+         |                          ^
+   drivers/scsi/mpt3sas/mpt3sas_scsih.c:6571:7: warning: result of comparison of constant 4294967295 with expression of type 'typeof (ioc->sas_hba.num_phys)' (aka 'unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+    6571 |         sz = struct_size(sas_iounit_pg0, PhyData, ioc->sas_hba.num_phys);
+         |              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:396:18: note: expanded from macro 'struct_size'
+     396 |                 sizeof(*(p)) + flex_array_size(p, member, count),       \
+         |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:381:3: note: expanded from macro 'flex_array_size'
+     381 |                 size_mul(count, sizeof(*(p)->member) + __must_be_array((p)->member)))
+         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:281:11: note: expanded from macro 'size_mul'
+     281 |             (__a >= (u64)SIZE_MAX || __b >= (u64)SIZE_MAX))             \
+         |              ~~~ ^  ~~~~~~~~~~~~~
+   drivers/scsi/mpt3sas/mpt3sas_scsih.c:6571:7: warning: result of comparison of constant 4294967295 with expression of type 'typeof (ioc->sas_hba.num_phys)' (aka 'unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+    6571 |         sz = struct_size(sas_iounit_pg0, PhyData, ioc->sas_hba.num_phys);
+         |              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:397:26: note: expanded from macro 'struct_size'
+     397 |                 size_add(sizeof(*(p)), flex_array_size(p, member, count)))
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:381:3: note: expanded from macro 'flex_array_size'
+     381 |                 size_mul(count, sizeof(*(p)->member) + __must_be_array((p)->member)))
+         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:281:11: note: expanded from macro 'size_mul'
+     281 |             (__a >= (u64)SIZE_MAX || __b >= (u64)SIZE_MAX))             \
+         |              ~~~ ^
+   include/linux/overflow.h:309:19: note: expanded from macro 'size_add'
+     309 |         typeof(b) __b = (b);                                            \
+         |                          ^
+   drivers/scsi/mpt3sas/mpt3sas_scsih.c:6722:7: warning: result of comparison of constant 4294967295 with expression of type 'typeof (ioc->sas_hba.num_phys)' (aka 'unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+    6722 |         sz = struct_size(sas_iounit_pg0, PhyData, ioc->sas_hba.num_phys);
+         |              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:396:18: note: expanded from macro 'struct_size'
+     396 |                 sizeof(*(p)) + flex_array_size(p, member, count),       \
+         |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:381:3: note: expanded from macro 'flex_array_size'
+     381 |                 size_mul(count, sizeof(*(p)->member) + __must_be_array((p)->member)))
+         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:281:11: note: expanded from macro 'size_mul'
+     281 |             (__a >= (u64)SIZE_MAX || __b >= (u64)SIZE_MAX))             \
+         |              ~~~ ^  ~~~~~~~~~~~~~
+   drivers/scsi/mpt3sas/mpt3sas_scsih.c:6722:7: warning: result of comparison of constant 4294967295 with expression of type 'typeof (ioc->sas_hba.num_phys)' (aka 'unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+    6722 |         sz = struct_size(sas_iounit_pg0, PhyData, ioc->sas_hba.num_phys);
+         |              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:397:26: note: expanded from macro 'struct_size'
+     397 |                 size_add(sizeof(*(p)), flex_array_size(p, member, count)))
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:381:3: note: expanded from macro 'flex_array_size'
+     381 |                 size_mul(count, sizeof(*(p)->member) + __must_be_array((p)->member)))
+         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:281:11: note: expanded from macro 'size_mul'
+     281 |             (__a >= (u64)SIZE_MAX || __b >= (u64)SIZE_MAX))             \
+         |              ~~~ ^
+   include/linux/overflow.h:309:19: note: expanded from macro 'size_add'
+     309 |         typeof(b) __b = (b);                                            \
+         |                          ^
+   drivers/scsi/mpt3sas/mpt3sas_scsih.c:6744:7: warning: result of comparison of constant 4294967295 with expression of type 'typeof (ioc->sas_hba.num_phys)' (aka 'unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+    6744 |         sz = struct_size(sas_iounit_pg1, PhyData, ioc->sas_hba.num_phys);
+         |              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/overflow.h:396:18: note: expanded from macro 'struct_size'
+     396 |                 sizeof(*(p)) + flex_array_size(p, member, count),       \
+..
 
 
-vim +1214 drivers/tty/serial/atmel_serial.c
+vim +117 drivers/gpu/drm/nouveau/nvif/mmu.c
 
-34df42f59a6022 Elen Song          2013-07-22  1177  
-34df42f59a6022 Elen Song          2013-07-22  1178  static int atmel_prepare_rx_dma(struct uart_port *port)
-34df42f59a6022 Elen Song          2013-07-22  1179  {
-34df42f59a6022 Elen Song          2013-07-22  1180  	struct atmel_uart_port *atmel_port = to_atmel_uart_port(port);
-c24d25317a7c6b Radu Pirea         2018-07-13  1181  	struct device *mfd_dev = port->dev->parent;
-34df42f59a6022 Elen Song          2013-07-22  1182  	struct dma_async_tx_descriptor *desc;
-34df42f59a6022 Elen Song          2013-07-22  1183  	dma_cap_mask_t		mask;
-34df42f59a6022 Elen Song          2013-07-22  1184  	struct dma_slave_config config;
-34df42f59a6022 Elen Song          2013-07-22  1185  	struct circ_buf		*ring;
-ec9fc2cffa8d2f Christophe JAILLET 2023-11-19  1186  	struct dma_chan *chan;
-e51c3e1d236f8b Jiri Slaby (SUSE   2024-04-05  1187) 	int ret;
-34df42f59a6022 Elen Song          2013-07-22  1188  
-34df42f59a6022 Elen Song          2013-07-22  1189  	ring = &atmel_port->rx_ring;
-34df42f59a6022 Elen Song          2013-07-22  1190  
-34df42f59a6022 Elen Song          2013-07-22  1191  	dma_cap_zero(mask);
-34df42f59a6022 Elen Song          2013-07-22  1192  	dma_cap_set(DMA_CYCLIC, mask);
-34df42f59a6022 Elen Song          2013-07-22  1193  
-ec9fc2cffa8d2f Christophe JAILLET 2023-11-19  1194  	chan = dma_request_chan(mfd_dev, "rx");
-ec9fc2cffa8d2f Christophe JAILLET 2023-11-19  1195  	if (IS_ERR(chan)) {
-ec9fc2cffa8d2f Christophe JAILLET 2023-11-19  1196  		atmel_port->chan_rx = NULL;
-34df42f59a6022 Elen Song          2013-07-22  1197  		goto chan_err;
-ec9fc2cffa8d2f Christophe JAILLET 2023-11-19  1198  	}
-ec9fc2cffa8d2f Christophe JAILLET 2023-11-19  1199  	atmel_port->chan_rx = chan;
-34df42f59a6022 Elen Song          2013-07-22  1200  	dev_info(port->dev, "using %s for rx DMA transfers\n",
-34df42f59a6022 Elen Song          2013-07-22  1201  		dma_chan_name(atmel_port->chan_rx));
-34df42f59a6022 Elen Song          2013-07-22  1202  
-34df42f59a6022 Elen Song          2013-07-22  1203  	spin_lock_init(&atmel_port->lock_rx);
-34df42f59a6022 Elen Song          2013-07-22  1204  	/* UART circular rx buffer is an aligned page. */
-2c277054104031 Leilei Zhao        2015-02-27  1205  	BUG_ON(!PAGE_ALIGNED(ring->buf));
-e51c3e1d236f8b Jiri Slaby (SUSE   2024-04-05  1206) 	atmel_port->rx_phys = dma_map_single(port->dev, ring->buf,
-12bedddb67520d Jiri Slaby (SUSE   2024-04-05  1207) 					     ATMEL_SERIAL_RX_SIZE,
-48479148a2f531 Wolfram Sang       2014-07-21  1208  					     DMA_FROM_DEVICE);
-34df42f59a6022 Elen Song          2013-07-22  1209  
-e51c3e1d236f8b Jiri Slaby (SUSE   2024-04-05  1210) 	if (dma_mapping_error(port->dev, atmel_port->rx_phys)) {
-34df42f59a6022 Elen Song          2013-07-22  1211  		dev_dbg(port->dev, "need to release resource of dma\n");
-34df42f59a6022 Elen Song          2013-07-22  1212  		goto chan_err;
-34df42f59a6022 Elen Song          2013-07-22  1213  	} else {
-e51c3e1d236f8b Jiri Slaby (SUSE   2024-04-05 @1214) 		dev_dbg(port->dev, "%s: mapped %zu@%p to %pad\n", __func__,
-e51c3e1d236f8b Jiri Slaby (SUSE   2024-04-05  1215) 			ATMEL_SERIAL_RX_SIZE, ring->buf, &atmel_port->rx_phys);
-34df42f59a6022 Elen Song          2013-07-22  1216  	}
-34df42f59a6022 Elen Song          2013-07-22  1217  
-34df42f59a6022 Elen Song          2013-07-22  1218  	/* Configure the slave DMA */
-34df42f59a6022 Elen Song          2013-07-22  1219  	memset(&config, 0, sizeof(config));
-34df42f59a6022 Elen Song          2013-07-22  1220  	config.direction = DMA_DEV_TO_MEM;
-34df42f59a6022 Elen Song          2013-07-22  1221  	config.src_addr_width = DMA_SLAVE_BUSWIDTH_1_BYTE;
-34df42f59a6022 Elen Song          2013-07-22  1222  	config.src_addr = port->mapbase + ATMEL_US_RHR;
-a8d4e016379023 Ludovic Desroches  2015-04-16  1223  	config.src_maxburst = 1;
-34df42f59a6022 Elen Song          2013-07-22  1224  
-5483c10e03c6e3 Maxime Ripard      2014-10-22  1225  	ret = dmaengine_slave_config(atmel_port->chan_rx,
-5483c10e03c6e3 Maxime Ripard      2014-10-22  1226  				     &config);
-34df42f59a6022 Elen Song          2013-07-22  1227  	if (ret) {
-34df42f59a6022 Elen Song          2013-07-22  1228  		dev_err(port->dev, "DMA rx slave configuration failed\n");
-34df42f59a6022 Elen Song          2013-07-22  1229  		goto chan_err;
-34df42f59a6022 Elen Song          2013-07-22  1230  	}
-34df42f59a6022 Elen Song          2013-07-22  1231  	/*
-34df42f59a6022 Elen Song          2013-07-22  1232  	 * Prepare a cyclic dma transfer, assign 2 descriptors,
-34df42f59a6022 Elen Song          2013-07-22  1233  	 * each one is half ring buffer size
-34df42f59a6022 Elen Song          2013-07-22  1234  	 */
-34df42f59a6022 Elen Song          2013-07-22  1235  	desc = dmaengine_prep_dma_cyclic(atmel_port->chan_rx,
-e51c3e1d236f8b Jiri Slaby (SUSE   2024-04-05  1236) 					 atmel_port->rx_phys,
-e51c3e1d236f8b Jiri Slaby (SUSE   2024-04-05  1237) 					 ATMEL_SERIAL_RX_SIZE,
-e51c3e1d236f8b Jiri Slaby (SUSE   2024-04-05  1238) 					 ATMEL_SERIAL_RX_SIZE / 2,
-34df42f59a6022 Elen Song          2013-07-22  1239  					 DMA_DEV_TO_MEM,
-34df42f59a6022 Elen Song          2013-07-22  1240  					 DMA_PREP_INTERRUPT);
-c85be041065c0b Kangjie Lu         2019-03-15  1241  	if (!desc) {
-c85be041065c0b Kangjie Lu         2019-03-15  1242  		dev_err(port->dev, "Preparing DMA cyclic failed\n");
-c85be041065c0b Kangjie Lu         2019-03-15  1243  		goto chan_err;
-c85be041065c0b Kangjie Lu         2019-03-15  1244  	}
-34df42f59a6022 Elen Song          2013-07-22  1245  	desc->callback = atmel_complete_rx_dma;
-34df42f59a6022 Elen Song          2013-07-22  1246  	desc->callback_param = port;
-34df42f59a6022 Elen Song          2013-07-22  1247  	atmel_port->desc_rx = desc;
-34df42f59a6022 Elen Song          2013-07-22  1248  	atmel_port->cookie_rx = dmaengine_submit(desc);
-1e67bd2b8cb90b Tudor Ambarus      2021-11-25  1249  	if (dma_submit_error(atmel_port->cookie_rx)) {
-1e67bd2b8cb90b Tudor Ambarus      2021-11-25  1250  		dev_err(port->dev, "dma_submit_error %d\n",
-1e67bd2b8cb90b Tudor Ambarus      2021-11-25  1251  			atmel_port->cookie_rx);
-1e67bd2b8cb90b Tudor Ambarus      2021-11-25  1252  		goto chan_err;
-1e67bd2b8cb90b Tudor Ambarus      2021-11-25  1253  	}
-34df42f59a6022 Elen Song          2013-07-22  1254  
-4f4b9b5895614e Tudor Ambarus      2021-11-25  1255  	dma_async_issue_pending(atmel_port->chan_rx);
-4f4b9b5895614e Tudor Ambarus      2021-11-25  1256  
-34df42f59a6022 Elen Song          2013-07-22  1257  	return 0;
-34df42f59a6022 Elen Song          2013-07-22  1258  
-34df42f59a6022 Elen Song          2013-07-22  1259  chan_err:
-34df42f59a6022 Elen Song          2013-07-22  1260  	dev_err(port->dev, "RX channel not available, switch to pio\n");
-36ce7cff4f9361 Zheng Bin          2020-01-13  1261  	atmel_port->use_dma_rx = false;
-34df42f59a6022 Elen Song          2013-07-22  1262  	if (atmel_port->chan_rx)
-34df42f59a6022 Elen Song          2013-07-22  1263  		atmel_release_rx_dma(port);
-34df42f59a6022 Elen Song          2013-07-22  1264  	return -EINVAL;
-34df42f59a6022 Elen Song          2013-07-22  1265  }
-34df42f59a6022 Elen Song          2013-07-22  1266  
+eea5cf0f0170fb Ben Skeggs          2017-11-01   38  
+eea5cf0f0170fb Ben Skeggs          2017-11-01   39  int
+b495396cc9ccf5 Ben Skeggs          2020-03-30   40  nvif_mmu_ctor(struct nvif_object *parent, const char *name, s32 oclass,
+b495396cc9ccf5 Ben Skeggs          2020-03-30   41  	      struct nvif_mmu *mmu)
+eea5cf0f0170fb Ben Skeggs          2017-11-01   42  {
+f5650478ab07c0 Ben Skeggs          2018-05-08   43  	static const struct nvif_mclass mems[] = {
+f5650478ab07c0 Ben Skeggs          2018-05-08   44  		{ NVIF_CLASS_MEM_GF100, -1 },
+f5650478ab07c0 Ben Skeggs          2018-05-08   45  		{ NVIF_CLASS_MEM_NV50 , -1 },
+f5650478ab07c0 Ben Skeggs          2018-05-08   46  		{ NVIF_CLASS_MEM_NV04 , -1 },
+f5650478ab07c0 Ben Skeggs          2018-05-08   47  		{}
+f5650478ab07c0 Ben Skeggs          2018-05-08   48  	};
+eea5cf0f0170fb Ben Skeggs          2017-11-01   49  	struct nvif_mmu_v0 args;
+eea5cf0f0170fb Ben Skeggs          2017-11-01   50  	int ret, i;
+eea5cf0f0170fb Ben Skeggs          2017-11-01   51  
+eea5cf0f0170fb Ben Skeggs          2017-11-01   52  	args.version = 0;
+eea5cf0f0170fb Ben Skeggs          2017-11-01   53  	mmu->heap = NULL;
+eea5cf0f0170fb Ben Skeggs          2017-11-01   54  	mmu->type = NULL;
+eea5cf0f0170fb Ben Skeggs          2017-11-01   55  	mmu->kind = NULL;
+eea5cf0f0170fb Ben Skeggs          2017-11-01   56  
+b495396cc9ccf5 Ben Skeggs          2020-03-30   57  	ret = nvif_object_ctor(parent, name ? name : "nvifMmu", 0, oclass,
+b495396cc9ccf5 Ben Skeggs          2020-03-30   58  			       &args, sizeof(args), &mmu->object);
+eea5cf0f0170fb Ben Skeggs          2017-11-01   59  	if (ret)
+eea5cf0f0170fb Ben Skeggs          2017-11-01   60  		goto done;
+eea5cf0f0170fb Ben Skeggs          2017-11-01   61  
+eea5cf0f0170fb Ben Skeggs          2017-11-01   62  	mmu->dmabits = args.dmabits;
+eea5cf0f0170fb Ben Skeggs          2017-11-01   63  	mmu->heap_nr = args.heap_nr;
+eea5cf0f0170fb Ben Skeggs          2017-11-01   64  	mmu->type_nr = args.type_nr;
+eea5cf0f0170fb Ben Skeggs          2017-11-01   65  	mmu->kind_nr = args.kind_nr;
+eea5cf0f0170fb Ben Skeggs          2017-11-01   66  
+f5650478ab07c0 Ben Skeggs          2018-05-08   67  	ret = nvif_mclass(&mmu->object, mems);
+f5650478ab07c0 Ben Skeggs          2018-05-08   68  	if (ret < 0)
+f5650478ab07c0 Ben Skeggs          2018-05-08   69  		goto done;
+f5650478ab07c0 Ben Skeggs          2018-05-08   70  	mmu->mem = mems[ret].oclass;
+f5650478ab07c0 Ben Skeggs          2018-05-08   71  
+6da2ec56059c3c Kees Cook           2018-06-12   72  	mmu->heap = kmalloc_array(mmu->heap_nr, sizeof(*mmu->heap),
+6da2ec56059c3c Kees Cook           2018-06-12   73  				  GFP_KERNEL);
+6da2ec56059c3c Kees Cook           2018-06-12   74  	mmu->type = kmalloc_array(mmu->type_nr, sizeof(*mmu->type),
+6da2ec56059c3c Kees Cook           2018-06-12   75  				  GFP_KERNEL);
+eea5cf0f0170fb Ben Skeggs          2017-11-01   76  	if (ret = -ENOMEM, !mmu->heap || !mmu->type)
+eea5cf0f0170fb Ben Skeggs          2017-11-01   77  		goto done;
+eea5cf0f0170fb Ben Skeggs          2017-11-01   78  
+6da2ec56059c3c Kees Cook           2018-06-12   79  	mmu->kind = kmalloc_array(mmu->kind_nr, sizeof(*mmu->kind),
+6da2ec56059c3c Kees Cook           2018-06-12   80  				  GFP_KERNEL);
+eea5cf0f0170fb Ben Skeggs          2017-11-01   81  	if (!mmu->kind && mmu->kind_nr)
+eea5cf0f0170fb Ben Skeggs          2017-11-01   82  		goto done;
+eea5cf0f0170fb Ben Skeggs          2017-11-01   83  
+eea5cf0f0170fb Ben Skeggs          2017-11-01   84  	for (i = 0; i < mmu->heap_nr; i++) {
+eea5cf0f0170fb Ben Skeggs          2017-11-01   85  		struct nvif_mmu_heap_v0 args = { .index = i };
+eea5cf0f0170fb Ben Skeggs          2017-11-01   86  
+eea5cf0f0170fb Ben Skeggs          2017-11-01   87  		ret = nvif_object_mthd(&mmu->object, NVIF_MMU_V0_HEAP,
+eea5cf0f0170fb Ben Skeggs          2017-11-01   88  				       &args, sizeof(args));
+eea5cf0f0170fb Ben Skeggs          2017-11-01   89  		if (ret)
+eea5cf0f0170fb Ben Skeggs          2017-11-01   90  			goto done;
+eea5cf0f0170fb Ben Skeggs          2017-11-01   91  
+eea5cf0f0170fb Ben Skeggs          2017-11-01   92  		mmu->heap[i].size = args.size;
+eea5cf0f0170fb Ben Skeggs          2017-11-01   93  	}
+eea5cf0f0170fb Ben Skeggs          2017-11-01   94  
+eea5cf0f0170fb Ben Skeggs          2017-11-01   95  	for (i = 0; i < mmu->type_nr; i++) {
+eea5cf0f0170fb Ben Skeggs          2017-11-01   96  		struct nvif_mmu_type_v0 args = { .index = i };
+eea5cf0f0170fb Ben Skeggs          2017-11-01   97  
+eea5cf0f0170fb Ben Skeggs          2017-11-01   98  		ret = nvif_object_mthd(&mmu->object, NVIF_MMU_V0_TYPE,
+eea5cf0f0170fb Ben Skeggs          2017-11-01   99  				       &args, sizeof(args));
+eea5cf0f0170fb Ben Skeggs          2017-11-01  100  		if (ret)
+eea5cf0f0170fb Ben Skeggs          2017-11-01  101  			goto done;
+eea5cf0f0170fb Ben Skeggs          2017-11-01  102  
+eea5cf0f0170fb Ben Skeggs          2017-11-01  103  		mmu->type[i].type = 0;
+eea5cf0f0170fb Ben Skeggs          2017-11-01  104  		if (args.vram) mmu->type[i].type |= NVIF_MEM_VRAM;
+eea5cf0f0170fb Ben Skeggs          2017-11-01  105  		if (args.host) mmu->type[i].type |= NVIF_MEM_HOST;
+eea5cf0f0170fb Ben Skeggs          2017-11-01  106  		if (args.comp) mmu->type[i].type |= NVIF_MEM_COMP;
+eea5cf0f0170fb Ben Skeggs          2017-11-01  107  		if (args.disp) mmu->type[i].type |= NVIF_MEM_DISP;
+eea5cf0f0170fb Ben Skeggs          2017-11-01  108  		if (args.kind    ) mmu->type[i].type |= NVIF_MEM_KIND;
+eea5cf0f0170fb Ben Skeggs          2017-11-01  109  		if (args.mappable) mmu->type[i].type |= NVIF_MEM_MAPPABLE;
+eea5cf0f0170fb Ben Skeggs          2017-11-01  110  		if (args.coherent) mmu->type[i].type |= NVIF_MEM_COHERENT;
+eea5cf0f0170fb Ben Skeggs          2017-11-01  111  		if (args.uncached) mmu->type[i].type |= NVIF_MEM_UNCACHED;
+eea5cf0f0170fb Ben Skeggs          2017-11-01  112  		mmu->type[i].heap = args.heap;
+eea5cf0f0170fb Ben Skeggs          2017-11-01  113  	}
+eea5cf0f0170fb Ben Skeggs          2017-11-01  114  
+eea5cf0f0170fb Ben Skeggs          2017-11-01  115  	if (mmu->kind_nr) {
+eea5cf0f0170fb Ben Skeggs          2017-11-01  116  		struct nvif_mmu_kind_v0 *kind;
+7b97492555b106 Gustavo A. R. Silva 2019-05-24 @117  		size_t argc = struct_size(kind, data, mmu->kind_nr);
 
 -- 
 0-DAY CI Kernel Test Service
