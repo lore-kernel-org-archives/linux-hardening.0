@@ -1,62 +1,62 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5331C1DF98F;
-	Fri, 22 Nov 2024 21:11:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 961CE1DFE21;
+	Fri, 22 Nov 2024 21:11:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732309912; cv=none; b=MsIXSo3/eNNl0yx472ZwpT+bkPQcMeA+9TnqsIpSnlvbUiwGkwblpVr9okxJMQHi0AfLEqW31ft+BeuvXBLXaoSBH7iYGrGWsxgJYM1e27Te6EKYDTZiCe6pPcnWOEOkFwygWQKEFnDWtPecuKD2exT/67kjX9glmgnyhjFyxx0=
+	t=1732309913; cv=none; b=Boa4PKgPR60+RdQosrOV4X8wNdPByJHE+An2VUVmYQ2JFFCdacm3CJvfeCu6EiRuZgyzOlDlEcU6xjUBUvfzS16uZLzEayusEllNLVe1OFYKq6FtOyiEZyGwdM6p5J6VSZNgOsWin13YWWulAmMHSz1LeS14GRzINMhQG+7TMyk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732309912; c=relaxed/simple;
-	bh=oLND3jvHwK3cUWlcNguJReOoNM3JutAlqllWKH9Beew=;
+	s=arc-20240116; t=1732309913; c=relaxed/simple;
+	bh=U/ZT9qf7ZKkCSNGX+LQdpSzD1zHrMzhIdXfNFvInpZU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ENJxGllX51StU8CBxNhYkMJ2v/uGW/wZEatWbiKlRuDqBgd+LSkZ7K/PjHLgGK+5UvVHUKSD8+xca+ePMbEXZjQw8UlwFkrPFgNnp52pGnMi4cTvr0ay9Lt1hKEiofmo42ZV48H+8yJmrME7DCYbum23pABPBVHjoUG6XRkmuw0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Vf7/PHS8; arc=none smtp.client-ip=209.85.208.180
+	 MIME-Version; b=mvqc0oDR8FF2n8Q9Aycv2W1G+XSAsL3AGRmAVh3N7MStI9BMjW1w4RWZHctvUFq/JEmSJD0d2cbYf8FwdVOH51HVYa8K3/qddGpFMZepUkEZeqOxqpgE0EttrdCHOkJwikTFXWc4kO6CB58n8LxRY8v9Rr6LfNaC33kbD2++PEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M5BD0fz0; arc=none smtp.client-ip=209.85.221.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vf7/PHS8"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2fb5740a03bso30185891fa.1;
-        Fri, 22 Nov 2024 13:11:50 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M5BD0fz0"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-38246333e12so2355079f8f.1;
+        Fri, 22 Nov 2024 13:11:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1732309908; x=1732914708; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1732309910; x=1732914710; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ceOYRg+db2e1ipikZCFVwiN54lElh7G8dmSvY9RkE2I=;
-        b=Vf7/PHS8EYAKqhujn+jevnD293ccv5fgNWMPeoLlzb73P/oudfnco3AQyU0JcZJuLC
-         +MdQ+9VkZVGKRSlb5JYZr4ACBZUlPNHF7XQ+7aC9Zo1T+cKnGX0o8kB/tPsxcV7Wuvjt
-         paiqJaoIQFH8u75VQNxk2IjNQSqASPxgzmJEvgwXDhR/iRWRQehscTMKqhUNnH4azFTk
-         ba2EGNlWVdoMKPesqp4cmybiGtclfk2I0fhEEhPsOaLjxk+y7RcO4JHCINfK95S4He3e
-         SdqI17OUOSHgw0/eeNauGE9h2ASzeQ4FNqqLQ0ncrWaRDa726uqgTVmO5ksJEzKEdv27
-         kHEw==
+        bh=TcgVp28W6926MpWbVahmMBx6XNYuxWBUeQ7ocOEgbMk=;
+        b=M5BD0fz0OooUux1s50QO5dblP5yZLeNX9a5+zrYWotyDvpKKNiQlniQdYbg2Ozg8Uv
+         l/YbcMUs/Mwu66hYHG42KNhXLYHJbFc5iBHaEiMl+7KeJyn3KHtrbWEWM8TntPw2dscX
+         SlUxntLNBPO5Le1bZyfeyLRzlJDo4UOx0VLDgU0ctZRVVo1lWKIZ4EkokijXJvDJen6G
+         /F6yzJc63WEtUB8oCOV1RZszYQ5NQj2iIu6jwv9i6/N/HZMv9Hq0IEUzF8WcD0bzxZtp
+         n+qsQr9QuNeOPEhOW+8BaabYKGZbACW3Ee/nHQEF14nVJmqRwTkfxIRR5kRlIF4aC0rF
+         kz3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732309908; x=1732914708;
+        d=1e100.net; s=20230601; t=1732309910; x=1732914710;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ceOYRg+db2e1ipikZCFVwiN54lElh7G8dmSvY9RkE2I=;
-        b=dYm4B6eoKPqUIPri0xqSdpVtdMk5wsv9k1CkaZIv86WFVT2ZJhZ7Fdh07TGI8NJhH2
-         o6qpbumWxZXGzqbPKrwZeeY3xuyz27WX7zTnxwvwRIuT8l/b/Ldg/jef9JYhxuShKOeH
-         lEpyIJ2dKICvnDkcIFJvMkunJc+afLtyLjrPkLGPYrpJ5y7Lj4blHygUC4KYoXrbb/tb
-         /N5XZZ3U9ZlBZBOgSXfonekPDorlQVkuWTP14bzs+ioIhwCQrZ5xwGycOre8Fy8N82Cl
-         fZ/F3ph0UogiCQluauJMVpjDP4rZi2A6PJCUQf0PMFuOnNBTSe1h7SYlNs7MwJy6YPmB
-         3TQg==
-X-Forwarded-Encrypted: i=1; AJvYcCWa09J+/5dPhE21HZkQFNdAwVTWdXraidxGQ2Z83B3vKLqmS0LuJKRkzSzTih152nq7Zluy6vKki7UCVPoy@vger.kernel.org, AJvYcCX5/r7vYFGU2x0aRQASOEFGN6MLQbTb3wNFjmaoBRXWUoc/xl5nUXKHSrwQOJP0xwZxMDi9NpWFBOeRtnbXTk8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyev6PPNPUB92q4nwRKBL22t6kKvwlQpfEKQQvS4ZQ1KxXoZc5b
-	WoHNXuU0S7jVjrxtcll9gOIlrFEGgze4/a3426QzUIjsb1ZeTIew
-X-Gm-Gg: ASbGncs58sSdQQAmSxlmraSD1thruK+IUf6/uY18kSknNu74pHnSbG11kXXMuRwPVU2
-	+up8JOBrLkg1IkU5pqy27y7N4Nr65x3s0AW1nh/7Yil26mtVcwopAxwuZJgUSN8jy9UiePegTZ9
-	I/23juGVmSkhJEOf/pwrwLoJQ0TRg6Tx7c11a+74MHGDF2Kn3yeywebwB1Emb2J1chhkx0NE5r2
-	UA046krf+JV5GECFdcuN5IH7mQUCqI6kz84qlWEuVPR4BTJ1jpeK5N1xKfXBd2JTucP6/JjmqcB
-	8II=
-X-Google-Smtp-Source: AGHT+IHflXg42uO4arPQnjfIO/UofICtO5/JXuDET1ub2S+twpsY6z11Bye48LygEoeC+l1hYpSXag==
-X-Received: by 2002:a2e:9811:0:b0:2ff:a89b:4348 with SMTP id 38308e7fff4ca-2ffa89b4584mr20119431fa.1.1732309908285;
-        Fri, 22 Nov 2024 13:11:48 -0800 (PST)
+        bh=TcgVp28W6926MpWbVahmMBx6XNYuxWBUeQ7ocOEgbMk=;
+        b=eLcpRcsjLJa5SrRhL4fvPRXQ5DApJDXMnXVkbGv8NxKTSlyFukCweJ9qP4E/XqBnaa
+         5afUA+9B5r1Q2pJZDe/riY/O4y2ME75YPxUtZ3bagu+TB+Sr1eAC8KoGY9ptTTGi53L+
+         cDZ164tXt4yW7seILPy3TRFeWJNxCkmn+01xGa+66T8lnlKPC0okfNzpkXqP8GUSDg2Z
+         CaidehSCWyOxuSRE1XMZQROrgBzVaZkJ1yFn1TXaAbEsQvfJnW0qRv4AvPfN/qDW1p5s
+         JlUb+QG6H1X9MnOCrHkLTkjIz7GoV/5DbOReutWxw8qUNfODaRY3qAOduKe9BdeBUkqz
+         TT3A==
+X-Forwarded-Encrypted: i=1; AJvYcCUlTiS1K4v85oMGN/co7vxizdYITAPZNI05w9k+IRw/9SbOL4k0ncXrPnWwzQ4mGwHt+u3RIu/Cfjx2wB1Ric0=@vger.kernel.org, AJvYcCW7VBDmOPcfZ8gnIBKdYLf05vUtgkPyoTKR/pMXbKhrPz4QC2uv6g3ArxA6cetLqugzZ3aWpbm51IDOuESC@vger.kernel.org
+X-Gm-Message-State: AOJu0YwlB7kgkX8R+/aNWLK+6sStHcTpTWN1E8OoW4kG/NwOvX/PMVP1
+	QEhGSaT7GX2DwrWSY6v64gWlohsbUM2gFPW34Ba3G2EfPiOQP+I0
+X-Gm-Gg: ASbGnculE5vU38KuzawcK4Yk2KkcXqz8Oye80FfU35aE/neagqRuXWdxA2FwNofVOZG
+	jM0afBjKgUhGnXnUqZ0rFrx7+p0YKc2j1ulFTuK4w2EJtEXok1PCu/T86GPXtGg5AIYOD183r9A
+	ZsKURJljI4Q6Dtw742HUvmEbUODFQ6sludRIdHGqxpGL0810IR1XINraq5qNhibpjuYPc61w8QW
+	D0LDNRippKGh7LMVw6RjIqs3dDj6P3hPAb/lM13AUE8HOobqAaSC2nf5twnAYSSo5he13ltLhiI
+	VRw=
+X-Google-Smtp-Source: AGHT+IFSu94fAGe0a26RY9E0p3Dseadw4xr5xEPXQPPDLtYTllmCUrzyLNvFLTVBdweL0rlSUDFHig==
+X-Received: by 2002:a05:6000:154a:b0:382:3959:f429 with SMTP id ffacd0b85a97d-38260b3cebemr5197983f8f.5.1732309909675;
+        Fri, 22 Nov 2024 13:11:49 -0800 (PST)
 Received: from rex.hwlab.vusec.net (lab-4.lab.cs.vu.nl. [192.33.36.4])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5d01d3a3d77sm1276636a12.7.2024.11.22.13.11.47
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5d01d3a3d77sm1276636a12.7.2024.11.22.13.11.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Nov 2024 13:11:47 -0800 (PST)
+        Fri, 22 Nov 2024 13:11:49 -0800 (PST)
 From: Brian Johannesmeyer <bjohannesmeyer@gmail.com>
 To: Keith Busch <kbusch@kernel.org>,
 	Christoph Hellwig <hch@infradead.org>,
@@ -69,9 +69,9 @@ Cc: Brian Johannesmeyer <bjohannesmeyer@gmail.com>,
 	Cristiano Giuffrida <giuffrida@cs.vu.nl>,
 	Herbert Bos <h.j.bos@vu.nl>,
 	Greg KH <gregkh@linuxfoundation.org>
-Subject: [PATCH v3 1/3] dmapool: Move pool metadata into non-DMA memory
-Date: Fri, 22 Nov 2024 22:11:43 +0100
-Message-Id: <20241122211144.4186080-3-bjohannesmeyer@gmail.com>
+Subject: [PATCH v3 0/3] dmapool: Mitigate dev-controllable mem. corruption
+Date: Fri, 22 Nov 2024 22:11:44 +0100
+Message-Id: <20241122211144.4186080-4-bjohannesmeyer@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20241122211144.4186080-1-bjohannesmeyer@gmail.com>
 References: <20241122211144.4186080-1-bjohannesmeyer@gmail.com>
@@ -83,30 +83,63 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-If a `struct dma_block` object resides in DMA memory, a malicious
-peripheral device can corrupt its metadata --- specifically, its
-`next_block` pointer, which links blocks in a DMA pool. By corrupting these
-pointers, an attacker can manipulate `dma_pool_alloc()` into returning
-attacker-controllable pointers, which can lead to kernel memory corruption
-from a driver that calls it.
+We discovered a security-related issue in the DMA pool allocator.
 
-To prevent this, move the `struct dma_block` metadata into non-DMA memory,
-ensuring that devices cannot tamper with the internal pointers of the DMA
-pool allocator. Specifically:
+V1 of our RFC was submitted to the Linux kernel security team. They
+recommended submitting it to the relevant subsystem maintainers and the
+hardening mailing list instead, as they did not consider this an explicit
+security issue. Their rationale was that Linux implicitly assumes hardware
+can be trusted.
 
-- Add a `vaddr` field to `struct dma_block` to point to the actual
-  DMA-accessible block.
-- Maintain an array of `struct dma_block` objects in `struct dma_page` to
-  track the metadata of each block within an allocated page.
+**Threat Model**: While Linux drivers typically trust their hardware, there
+may be specific drivers that do not operate under this assumption. Hence,
+this threat model assumes a malicious peripheral device capable of
+corrupting DMA data to exploit the kernel. In this scenario, the device
+manipulates kernel-initialized data (similar to the attack described in the
+Thunderclap paper [0]) to achieve arbitrary kernel memory corruption. 
 
-This change secures the DMA pool allocator by keeping its metadata in
-kernel memory, inaccessible to peripheral devices, thereby preventing
-potential attacks that could corrupt kernel memory through DMA operations.
+**DMA pool background**. A DMA pool aims to reduce the overhead of DMA
+allocations by creating a large DMA buffer --- the "pool" --- from which
+smaller buffers are allocated as needed. Fundamentally, a DMA pool
+functions like a heap: it is a structure composed of linked memory
+"blocks", which, in this context, are DMA buffers. When a driver employs a
+DMA pool, it grants the device access not only to these blocks but also to
+the pointers linking them.
 
-**Performance Impact**
+**Vulnerability**. Similar to traditional heap corruption vulnerabilities
+--- where a malicious program corrupts heap metadata to e.g., hijack
+control flow --- a malicious device may corrupt DMA pool metadata. This
+corruption can trivially lead to arbitrary kernel memory corruption from
+any driver that uses it. Indeed, because the DMA pool API is extensively
+used, this vulnerability is not confined to a single instance. In fact,
+every usage of the DMA pool API is potentially vulnerable. An exploit
+proceeds with the following steps:
 
-Unfortunately, performance results from the `DMAPOOL_TEST` test show this
-negatively affects performance. Before the patch:
+1. The DMA `pool` initializes its list of blocks, then points to the first
+block.
+2. The malicious device overwrites the first 8 bytes of the first block ---
+which contain its `next_block` pointer --- to an arbitrary kernel address,
+`kernel_addr`.
+3. The driver makes its first call to `dma_pool_alloc()`, after which, the
+pool should point to the second block. However, it instead points to
+`kernel_addr`.
+4. The driver again calls `dma_pool_alloc()`, which incorrectly returns
+`kernel_addr`. Therefore, anytime the driver writes to this "block", it may
+corrupt sensitive kernel data.
+
+I have a PDF document that illustrates how these steps work. Please let me
+know if you would like me to share it with you.
+
+**Proposed mitigation**. To mitigate the corruption of DMA pool metadata
+(i.e., the pointers linking the blocks), the metadata should be moved into
+non-DMA memory, ensuring it cannot be altered by a device. I have included
+a patch series that implements this change. I have tested the patches with
+the `DMAPOOL_TEST` test and my own basic unit tests that ensure the DMA
+pool allocator is not vulnerable.
+
+**Performance**. I evaluated the patch set's performance by running the
+`DMAPOOL_TEST` test with/without the patches applied. Here is its output
+*without* the patches applied:
 ```
 dmapool test: size:16   align:16   blocks:8192 time:11860
 dmapool test: size:64   align:64   blocks:8192 time:11951
@@ -116,197 +149,46 @@ dmapool test: size:4096 align:4096 blocks:1024 time:1686
 dmapool test: size:68   align:32   blocks:8192 time:12050
 ```
 
-After the patch:
+And here is its output *with* the patches applied:
 ```
-dmapool test: size:16   align:16   blocks:8192 time:34432
-dmapool test: size:64   align:64   blocks:8192 time:62262
-dmapool test: size:256  align:256  blocks:8192 time:238137
-dmapool test: size:1024 align:1024 blocks:2048 time:61386
-dmapool test: size:4096 align:4096 blocks:1024 time:75342
-dmapool test: size:68   align:32   blocks:8192 time:88243
+dmapool test: size:16   align:16   blocks:8192 time:37954
+dmapool test: size:64   align:64   blocks:8192 time:40036
+dmapool test: size:256  align:256  blocks:8192 time:41942
+dmapool test: size:1024 align:1024 blocks:2048 time:10964
+dmapool test: size:4096 align:4096 blocks:1024 time:6101
+dmapool test: size:68   align:32   blocks:8192 time:41307
 ```
 
-While the performance impact is significant, this patch provides protection
-against malicious devices tampering with DMA pool metadata. A subsequent
-patch in this series introduces an optimization to mitigate the runtime
-overhead.
+The patch set results in a 2.2x--2.6x runtime overhead, as demonstrated in
+the performance results. AFAICT, most of this overhead originates from the
+change in dma_pool_free()'s vaddr-to-block translation. Previously, the
+translation was a simple typecast, but with the patches applied, it now
+requires a lookup in an xarray. As Keith noted [1], achieving baseline
+performance would likely require changing the API.
 
-Co-developed-by: Raphael Isemann <teemperor@gmail.com>
-Signed-off-by: Raphael Isemann <teemperor@gmail.com>
-Signed-off-by: Brian Johannesmeyer <bjohannesmeyer@gmail.com>
----
- mm/dmapool.c | 62 +++++++++++++++++++++++++++++++++++++++++++---------
- 1 file changed, 52 insertions(+), 10 deletions(-)
+**Changes**
+- V2 -> V3: (i) Use an xarray for vaddr-to-block translations, which
+  improves the
+performance of free operations. (ii) Remove the minimum DMA block size
+constraint, as it is no longer necessary.
+- V1 -> V2: Submit to public mailing lists.
 
-diff --git a/mm/dmapool.c b/mm/dmapool.c
-index f0bfc6c490f4..3790ca4a631d 100644
---- a/mm/dmapool.c
-+++ b/mm/dmapool.c
-@@ -43,6 +43,7 @@
- struct dma_block {
- 	struct dma_block *next_block;
- 	dma_addr_t dma;
-+	void *vaddr;
- };
- 
- struct dma_pool {		/* the pool */
-@@ -64,6 +65,8 @@ struct dma_page {		/* cacheable header for 'allocation' bytes */
- 	struct list_head page_list;
- 	void *vaddr;
- 	dma_addr_t dma;
-+	struct dma_block *blocks;
-+	size_t blocks_per_page;
- };
- 
- static DEFINE_MUTEX(pools_lock);
-@@ -91,14 +94,35 @@ static ssize_t pools_show(struct device *dev, struct device_attribute *attr, cha
- 
- static DEVICE_ATTR_RO(pools);
- 
-+static struct dma_block *pool_find_block(struct dma_pool *pool, void *vaddr)
-+{
-+	struct dma_page *page;
-+	size_t offset, index;
-+
-+	list_for_each_entry(page, &pool->page_list, page_list) {
-+		if (vaddr < page->vaddr)
-+			continue;
-+		offset = vaddr - page->vaddr;
-+		if (offset >= pool->allocation)
-+			continue;
-+
-+		index = offset / pool->size;
-+		if (index >= page->blocks_per_page)
-+			return NULL;
-+
-+		return &page->blocks[index];
-+	}
-+	return NULL;
-+}
-+
- #ifdef DMAPOOL_DEBUG
- static void pool_check_block(struct dma_pool *pool, struct dma_block *block,
- 			     gfp_t mem_flags)
- {
--	u8 *data = (void *)block;
-+	u8 *data = (void *)block->vaddr;
- 	int i;
- 
--	for (i = sizeof(struct dma_block); i < pool->size; i++) {
-+	for (i = 0; i < pool->size; i++) {
- 		if (data[i] == POOL_POISON_FREED)
- 			continue;
- 		dev_err(pool->dev, "%s %s, %p (corrupted)\n", __func__,
-@@ -114,7 +138,7 @@ static void pool_check_block(struct dma_pool *pool, struct dma_block *block,
- 	}
- 
- 	if (!want_init_on_alloc(mem_flags))
--		memset(block, POOL_POISON_ALLOCATED, pool->size);
-+		memset(block->vaddr, POOL_POISON_ALLOCATED, pool->size);
- }
- 
- static struct dma_page *pool_find_page(struct dma_pool *pool, dma_addr_t dma)
-@@ -143,7 +167,7 @@ static bool pool_block_err(struct dma_pool *pool, void *vaddr, dma_addr_t dma)
- 	}
- 
- 	while (block) {
--		if (block != vaddr) {
-+		if (block->vaddr != vaddr) {
- 			block = block->next_block;
- 			continue;
- 		}
-@@ -238,8 +262,6 @@ struct dma_pool *dma_pool_create(const char *name, struct device *dev,
- 
- 	if (size == 0 || size > INT_MAX)
- 		return NULL;
--	if (size < sizeof(struct dma_block))
--		size = sizeof(struct dma_block);
- 
- 	size = ALIGN(size, align);
- 	allocation = max_t(size_t, size, PAGE_SIZE);
-@@ -301,6 +323,7 @@ static void pool_initialise_page(struct dma_pool *pool, struct dma_page *page)
- {
- 	unsigned int next_boundary = pool->boundary, offset = 0;
- 	struct dma_block *block, *first = NULL, *last = NULL;
-+	size_t i = 0;
- 
- 	pool_init_page(pool, page);
- 	while (offset + pool->size <= pool->allocation) {
-@@ -310,7 +333,8 @@ static void pool_initialise_page(struct dma_pool *pool, struct dma_page *page)
- 			continue;
- 		}
- 
--		block = page->vaddr + offset;
-+		block = &page->blocks[i];
-+		block->vaddr = page->vaddr + offset;
- 		block->dma = page->dma + offset;
- 		block->next_block = NULL;
- 
-@@ -322,6 +346,7 @@ static void pool_initialise_page(struct dma_pool *pool, struct dma_page *page)
- 
- 		offset += pool->size;
- 		pool->nr_blocks++;
-+		i++;
- 	}
- 
- 	last->next_block = pool->next_block;
-@@ -339,9 +364,18 @@ static struct dma_page *pool_alloc_page(struct dma_pool *pool, gfp_t mem_flags)
- 	if (!page)
- 		return NULL;
- 
-+	page->blocks_per_page = pool->allocation / pool->size;
-+	page->blocks = kmalloc_array(page->blocks_per_page,
-+				     sizeof(struct dma_block), GFP_KERNEL);
-+	if (!page->blocks) {
-+		kfree(page);
-+		return NULL;
-+	}
-+
- 	page->vaddr = dma_alloc_coherent(pool->dev, pool->allocation,
- 					 &page->dma, mem_flags);
- 	if (!page->vaddr) {
-+		kfree(page->blocks);
- 		kfree(page);
- 		return NULL;
- 	}
-@@ -383,6 +417,7 @@ void dma_pool_destroy(struct dma_pool *pool)
- 		if (!busy)
- 			dma_free_coherent(pool->dev, pool->allocation,
- 					  page->vaddr, page->dma);
-+		kfree(page->blocks);
- 		list_del(&page->page_list);
- 		kfree(page);
- 	}
-@@ -432,9 +467,9 @@ void *dma_pool_alloc(struct dma_pool *pool, gfp_t mem_flags,
- 	*handle = block->dma;
- 	pool_check_block(pool, block, mem_flags);
- 	if (want_init_on_alloc(mem_flags))
--		memset(block, 0, pool->size);
-+		memset(block->vaddr, 0, pool->size);
- 
--	return block;
-+	return block->vaddr;
- }
- EXPORT_SYMBOL(dma_pool_alloc);
- 
-@@ -449,9 +484,16 @@ EXPORT_SYMBOL(dma_pool_alloc);
-  */
- void dma_pool_free(struct dma_pool *pool, void *vaddr, dma_addr_t dma)
- {
--	struct dma_block *block = vaddr;
-+	struct dma_block *block;
- 	unsigned long flags;
- 
-+	block = pool_find_block(pool, vaddr);
-+	if (!block) {
-+		dev_err(pool->dev, "%s %s, invalid vaddr %p\n",
-+			__func__, pool->name, vaddr);
-+		return;
-+	}
-+
- 	spin_lock_irqsave(&pool->lock, flags);
- 	if (!pool_block_err(pool, vaddr, dma)) {
- 		pool_block_push(pool, block, dma);
+Thanks,
+
+Brian Johannesmeyer
+
+[0] Link: https://www.csl.sri.com/~neumann/ndss-iommu.pdf
+[1] Link:
+https://patchwork.kernel.org/project/linux-mm/cover/20241119205529.3871048-1-bjohannesmeyer@gmail.com/#26130533
+
+Brian Johannesmeyer (3):
+  dmapool: Move pool metadata into non-DMA memory
+  dmapool: Use pool_find_block() in pool_block_err()
+  Use xarray for efficient vaddr-to-block translation
+
+ mm/dmapool.c | 92 ++++++++++++++++++++++++++++++++--------------------
+ 1 file changed, 57 insertions(+), 35 deletions(-)
+
 -- 
 2.34.1
 
