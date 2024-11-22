@@ -1,69 +1,69 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8920119BBA;
-	Fri, 22 Nov 2024 20:33:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE6ED18593A;
+	Fri, 22 Nov 2024 20:34:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732307613; cv=none; b=hfS7p0LAZsPo6K6BwhpAEMWLr7khYwyeL5UH1WdUd7hnzf+c628Usn1I9pdhm350umM3EOnKAExEVWr1+zM9vNS2On4VImtz5peFCPd+I9fFhAM6oaE1c0ql/G/wreCDpfOtbf/7SKoSVEkJl8Dye+JB3Hzcb91ve9fD2+cWd8g=
+	t=1732307677; cv=none; b=NujwqZLEzChh3GI/4Pv6uNb92wCyN+GgAYH3duX/58mntFRmBPBAxfqcUwgZgyNiUoCy2pw2D6Ge3SOyCctLP1xrTl7ujO9cSx/MoiOvJmex1PiRIm7jsDgci1rbELHySbxSxedh6i8SuWw2Dr7rhUvatPmYMHJjUvDHArF3Fd8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732307613; c=relaxed/simple;
-	bh=LITRt5K4nbGCelcHjyhzVoroqeJ/9JP38P5L6NZbAWM=;
+	s=arc-20240116; t=1732307677; c=relaxed/simple;
+	bh=tyVliHYoWPxTSuVUMXN5P0bi34BX74mjEspyucHncgo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mKaIY+KNiwGDBo87nF5nOYqIoAygI3eaoNih0LNC5Qh/QVjRoffOmoY/GmI1FyVdIOLSzcqd/38rgNX8An9ZxjTd1fbIdVbov9kFv45KgqeXGnmS4fu51X6c2KXQES1TnzDUm0XHtaMYN4xKdq9pEzxYu1m/PEahrt3L75OqDuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NiU/Bqcc; arc=none smtp.client-ip=209.85.218.41
+	 To:Cc:Content-Type; b=VLrm9mrzomkmL/gNsEK+UwmnQVkh4qM/1vi+17GdlXN7xuXpK35dJWi6ByjLC+mWWh7OMS1Lw46wCUe/qNzUHmyvXoxZlEIawbDv7cevNREwswXHKUuT+gN2w+t7MweVsk73wAhmXxuzlrgTun32abzbGu+80Oxt0l7xZF2hJRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PuRTD8nP; arc=none smtp.client-ip=209.85.167.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NiU/Bqcc"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-aa52edbcb63so37093466b.1;
-        Fri, 22 Nov 2024 12:33:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PuRTD8nP"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-539e8607c2aso2960334e87.3;
+        Fri, 22 Nov 2024 12:34:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1732307609; x=1732912409; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1732307674; x=1732912474; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=PdtIpBGI3WtRlHvfWANFY4rDk+3Kg9qCxLIyUfYO1ZA=;
-        b=NiU/BqcclcpKDdUtnztBSe9y+xT8Yd/MtSNPMZr2SekeJq7wClOCohU76sQdE7VHmw
-         HGIMypJsESYKhyw2WZ7S8J/5YpbosrXdQm/NZch0FK4kPBPyQ9uDFpmXdQagLIjH7rBz
-         8qrZ5HKO+rdG5GM2GcgoFr2XYmQIiOFax9Xp6/gJ8D6w78rnqUC1ukqAvmsgNPMkG+y/
-         C+6hWDsXdULtNnGzGC3DVdbwBeF4qsfmp/sJqUFeDALBvcrapJBdUqH5czrYDBemZgqS
-         fykE8SVHMXPRB9ZpWShSoejju/vmNxLxvHVIg8u6wri+zw7WQFHQmKxtkQKk6EiXzVec
-         dWCg==
+        bh=27/W48BXXkoR+L+LgIt1Vcffca5rx+DKUvYdFX1hBCs=;
+        b=PuRTD8nP98yOmGyvIGKcnR8n6AHLbCAVyVVkBRalFKsdf43gPRAZFcAErLS9MeCEtq
+         D+WaziEJAbyFI7YVuXJR/plnxMaohpFUFDhiY/8XrnneY8m5TDSdngzEoMKcpmTD2XuN
+         JTlSwPp3/mrmytILGeKdSGUfxpsITmnq2ZkAuoTCaZp1bNhgRW5AQ5Qz8S+dZaqaH0CG
+         lZWO9yHI/r95ZOZp4YqTaxzXYJkkPqIhSK1ViCw5V8MXhZKht5ykM+ZN3WtaDdxzI1yV
+         0UlSspCYeoDSiIonl+LMSt9McEdcgNsbGfI9w7dz0fvfDW7Oa+gYj7OfhjflPoh7XWY7
+         nAqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732307609; x=1732912409;
+        d=1e100.net; s=20230601; t=1732307674; x=1732912474;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=PdtIpBGI3WtRlHvfWANFY4rDk+3Kg9qCxLIyUfYO1ZA=;
-        b=fR3OoCvLf0pe551XbN5ka7kIXligg1eygN0Tu0F3GCqMiFQVmEIZCxLB9Pvwh0+QQx
-         2qjFf2D8zm99X9s8VCTB5eoRwEgf8dcWULS1ru99r+l6C+PxoF/A2rpSg6BMoCLt2T8P
-         wW8oODpBFhDT/GMjpXABRJDtx+x71v5hMZOxX8G2CmrM5+GR7kn5wC+4z4xkw8EPVCaf
-         h2SsBqtnlOtbda9yXG0ZX6XwtUdrWEG/g/Lq9l688q5sQevZEBQEdIOXESjo0YsmI4ZH
-         1snU5rdVxWO7OCgxTLEDZlXGwV216KfzObXWO7yUjp2EfPRK+VKd/OJf1ykTkC+NV20A
-         VpPA==
-X-Forwarded-Encrypted: i=1; AJvYcCUNKj1LCyJypQ3gAnigTjoWLpSxU7XiR6EbQs1Z0/U4EgQcjdbiRHW/fWLC1ND5w3NwpY7t1BbVnIPCZI/E@vger.kernel.org, AJvYcCWOj7Av6UBItvMcwZl/E02Q4xVLze193ktoLeIW8pasPv1zRttyWKdamKkVNGnjx2bi1ZD5VZ7fLoxmF0Konq8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw6utX9M4j8IcbROJ/KWo7eKAcU5IrbXNWkUTJoDS2WFtLZEsKq
-	Iu9welE05OM7YGCcdQrj4tykp0CqrN+iYSbScujZfENLl9ANPFsYCZXwPdbGiUfACVRHZ0tjdvK
-	EtssamPvax2+d2sIMw8YBFXPg/Sg=
-X-Gm-Gg: ASbGncul4Ilx1fPRmLa8F8ZIhrbzvffGMTCpatGTz+6Dqu3pnDOyR2N+CiEaSnFiZl2
-	asq8Y9jMOR+LKpTlD7v8DJftt99PHDXfy
-X-Google-Smtp-Source: AGHT+IETM9O9HSssquiq/42hR/1lGtNNI4BZqIYmPyKLfK2dsxTYDZg6JA+h2iTQDBGveNTqdzVDncZI23ek3LZoiGg=
-X-Received: by 2002:a17:907:31c5:b0:a9a:e0b8:5bac with SMTP id
- a640c23a62f3a-aa4efe2a1f6mr775060566b.23.1732307608637; Fri, 22 Nov 2024
- 12:33:28 -0800 (PST)
+        bh=27/W48BXXkoR+L+LgIt1Vcffca5rx+DKUvYdFX1hBCs=;
+        b=VUxhvyQdGL13woMmIARV2AaHBtyM94gcCcumUTVL8T5hvfFuWHG21m9/6QpZ/loacn
+         DpZgM7sVeEcKRT4tmDnM3Yu6zwoR0rjFRdSwurNmizjAbXB+eKQMEBIMssFZrXyVUhQ0
+         KlJf81hyNFCycG1PzgXYZulhw7FHffkbm4ge40ItO90CUHYPcY/BDsXgGpAD2YxeEWmM
+         lD12ugYACROKg9IFBNke/c67UaNwoLtai59CuUxCrUM0o+NuTCBQEBmUvKBSFkOtzMN+
+         +H/awQrwJfqvgjQPmhlOCNtuhUGSSmpaXwo6m9oOFSMh/SYj2j3q1oe6swfo30wz/Cfi
+         4pvA==
+X-Forwarded-Encrypted: i=1; AJvYcCVzUqQs4dm7pd2OaxUOrZY+INzQp6oYK5/aiZboJnfalPGJ2tLfWIlPGzmPMyr3LZnyA9/QgUnLfAHUeJciORo=@vger.kernel.org, AJvYcCWsleRbtjhNlAJ5bzfvOSrJW3xobTDObSyhWtGy+ZWhyDpST+p6Ho7cc0TZyErps2Wol/ujNOUxDbMXy+y7@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy8f5p2FDRjqdbz9n3/r+8+NW1N5XZmM3ojy2USvFJ6YFvOEK/8
+	ACZ7dEzOacXLQ/dgVlEY6Bjm+sGwDiVpw7zy64DFvpXxlxmcRm0+21zdvT+cS2nApKUpfTVjS4I
+	BUdI1Ytssizqj0o2dITtNdf8pIrQ=
+X-Gm-Gg: ASbGncv45yW/yqEBr2qMLeh9LdTHRQ7ktp0lyoLMRX1xwj5Q0y9Nvmu3kvQjL8+nqOX
+	zMAEV8CIPMvIO12ZVSqSD7lG9KJ0WGn/p
+X-Google-Smtp-Source: AGHT+IHgCi72nGTNGWZ1pUQriMQ3jhYTMfVH+ysIEbPbyi+hsGaA6LLZnk0LjVwQWBBdL43JWP5pFRZBbtpZN0Kb1R0=
+X-Received: by 2002:a05:6512:e85:b0:53d:d605:f8cb with SMTP id
+ 2adb3069b0e04-53dd605f911mr2471603e87.45.1732307673713; Fri, 22 Nov 2024
+ 12:34:33 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241122191304.4182642-1-bjohannesmeyer@gmail.com>
-In-Reply-To: <20241122191304.4182642-1-bjohannesmeyer@gmail.com>
+References: <20241122191304.4182642-1-bjohannesmeyer@gmail.com> <20241122191304.4182642-2-bjohannesmeyer@gmail.com>
+In-Reply-To: <20241122191304.4182642-2-bjohannesmeyer@gmail.com>
 From: Brian Johannesmeyer <bjohannesmeyer@gmail.com>
-Date: Fri, 22 Nov 2024 13:33:15 -0700
-Message-ID: <CAOZ5it0Yj8taexnFJiAqJhPP_8z5Dv_OjonyGXMbA3Tiu=9ugQ@mail.gmail.com>
-Subject: Re: [RFC 0/1] swiotlb: Mitigate potential DoS caused by BUG_ON()
+Date: Fri, 22 Nov 2024 13:34:20 -0700
+Message-ID: <CAOZ5it34Gk_MU-gYzL5iuiHCx6fohQFSJFDp2AKj7waUCNzLyA@mail.gmail.com>
+Subject: Re: [RFC 1/1] swiotlb: Replace BUG_ON() with graceful error handling
 To: Tianyu Lan <Tianyu.Lan@microsoft.com>, Christoph Hellwig <hch@lst.de>, 
 	Marek Szyprowski <m.szyprowski@samsung.com>, Robin Murphy <robin.murphy@arm.com>, iommu@lists.linux.dev, 
 	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
@@ -75,96 +75,37 @@ Content-Transfer-Encoding: quoted-printable
 On Fri, Nov 22, 2024 at 12:13=E2=80=AFPM Brian Johannesmeyer
 <bjohannesmeyer@gmail.com> wrote:
 >
-> We identified a security issue in the swiotlb unmapping operation, stemmi=
-ng
-> from the way some drivers save streaming DMA addresses. This issue can
-> potentially be exploited by a malicious peripheral device to cause a
-> denial-of-service (DoS) via a kernel panic.
+> Replace the BUG_ON() assertion in swiotlb_release_slots() with a
+> conditional check and return. This change prevents a corrupted tlb_addr
+> from causing a kernel panic.
 >
-> **Disclosure Context**
-> We previously reported a similar issue to the Linux kernel security team.
-> However, they advised submitting such cases directly to the relevant
-> subsystem maintainers and the hardening mailing list, because Linux
-> implicitly assumes hardware can be trusted.
->
-> **Threat Model**
-> While Linux drivers typically trust their hardware, there may be specific
-> drivers that do not operate under this assumption. Hence, we consider a
-> malicious peripheral device that corrupts DMA data to exploit the kernel.
-> In this scenario, the device manipulates driver-initialized data (similar
-> to the attack described in the Thunderclap paper [0]) to achieve a DoS.
->
-> **Background**
-> Streaming DMA is often used as follows:
-> (1) A driver maps a buffer to DMA using dma_map_single(), which returns a
-> DMA address. This address is then saved by the driver for later use.
-> (2) When the buffer is no longer needed, the driver unmaps it using
-> dma_unmap_single(), passing the previously saved DMA address.
-> (3) Under certain conditions---such as the driver using direct mapping
-> operations, and the mapped buffer requiring a swiotlb
-> buffer---dma_unmap_single() calls swiotlb_release_slots(). Here, the save=
-d
-> DMA address is passed as its tlb_addr argument.
->
-> **Vulnerability**
-> It is common for drivers to store the DMA address returned by
-> dma_map_single() into a coherent DMA region, which can be manipulated by =
-a
-> malicious device. For example, the E100 driver and RealTek 8139C+ driver
-> map socket buffers into streaming DMA and save their DMA addresses to
-> coherent DMA data. While these drivers might assume trusted hardware, thi=
-s
-> behavior is not necessarily unique to them.
->
-> If an untrusted device corrupts the DMA address, it can influence the
-> tlb_addr argument passed to swiotlb_release_slots(). Inside this function=
-,
-> tlb_addr is used to calculate aindex, which is validated via BUG_ON(ainde=
-x
-> >=3D mem->nareas). By manipulating the DMA address, an attacker can trigg=
-er
-> this assertion, resulting in a kernel panic and DoS.
->
-> I have a PDF document that illustrates how these steps work. Please let m=
-e
-> know if you would like me to share it with you.
->
-> **Proposed mitigation**
-> To address this issue, two potential approaches are possible:
->
-> (1) Mitigating the *initialization* of attacker data: Prevent drivers fro=
-m
-> saving critical data, such as DMA addresses, in attacker-controllable
-> regions.
-> (2) Mitigating the *use* of attacker data: Modify the handling of critica=
-l
-> data, such as in the BUG_ON() statement, to not result in catastrophic
-> outcomes like kernel panics.
->
-> While approach (1) is more complete, it is more challenging to deploy
-> universally. Hence, we propose mitigating this issue with approach (2):
-> i.e., replacing the BUG_ON() assertion with more graceful error handling.
-> The attached patch implements this change, ensuring the kernel can handle
-> the condition safely without triggering a panic.
->
-> **Request for Feedback**
-> I am not deeply familiar with the swiotlb internals, so I would appreciat=
-e
-> any feedback on the patch. In particular, is there a more graceful way to
-> handle the error than returning?
->
-> Thanks,
->
-> Brian Johannesmeyer
->
-> [0] Link: https://www.csl.sri.com/~neumann/ndss-iommu.pdf
->
-> Brian Johannesmeyer (1):
->   swiotlb: Replace BUG_ON() with graceful error handling
->
+> Co-developed-by: Raphael Isemann <teemperor@gmail.com>
+> Signed-off-by: Raphael Isemann <teemperor@gmail.com>
+> Signed-off-by: Brian Johannesmeyer <bjohannesmeyer@gmail.com>
+> ---
 >  kernel/dma/swiotlb.c | 6 +++++-
 >  1 file changed, 5 insertions(+), 1 deletion(-)
 >
+> diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
+> index aa0a4a220719..54b4f9665772 100644
+> --- a/kernel/dma/swiotlb.c
+> +++ b/kernel/dma/swiotlb.c
+> @@ -834,7 +834,11 @@ static void swiotlb_release_slots(struct device *dev=
+, phys_addr_t tlb_addr)
+>          * While returning the entries to the free list, we merge the ent=
+ries
+>          * with slots below and above the pool being returned.
+>          */
+> -       BUG_ON(aindex >=3D mem->nareas);
+> +       if (unlikely(aindex >=3D mem->nareas)) {
+> +               dev_err(dev, "%s: invalid area index (%d >=3D %d)\n", __f=
+unc__,
+> +                       aindex, mem->nareas);
+> +               return;
+> +       }
+>
+>         spin_lock_irqsave(&area->lock, flags);
+>         if (index + nslots < ALIGN(index + 1, IO_TLB_SEGSIZE))
 > --
 > 2.34.1
 >
