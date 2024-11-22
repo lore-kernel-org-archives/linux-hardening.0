@@ -1,126 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28E7513632B;
-	Fri, 22 Nov 2024 14:35:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44E1564A8F;
+	Fri, 22 Nov 2024 19:20:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732286137; cv=none; b=j8K6KaphYMBYyn3kdsFMfRoFnzIRdEAcH2twHEYBOOuZXF99itsWuOy5j8fcvZhfZjB1zWokxzq4fdNRWlQ22rqvqemwEt9WTkEs7em1diJ2xXfw3hF+4l9FJIDXVd7e8H7TnmyK0d+V8S9h4YR/Kxf6SvCxZpFpSNdqyRPLbXo=
+	t=1732303208; cv=none; b=I8KoAULkK53LHSYO61mzEiqHsj0mdJd4WAmGLRmIrz/KF/2ggNIwgos+VYq9pkkIOcgjK/aTk+GYuo94egMduysGQdgaK6Ckgps8D5OqsbP3k6YzXk4Hx4zC9QABKv17J5uzPbCtQSyi3KdXqZiADQGqoZLrHtfLb0v+70ohZ6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732286137; c=relaxed/simple;
-	bh=P3LpHamRarxbPekIwfEOuKQjsioKyb0VI61LrbiusJU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LHXt/7M8izQuwROVOGTiuJLkEOilvFm4+i9zEkcLJxWcEfRRv6EM23Zw+B/95GMhZLJHhIo7S9WqzqNOAHrwWU6khhFpWjgwzqB1B780ytOrfKXtCFrkLfIIiuedhFn5vB6tsIYQlkZb99Yv6QhfHwsHlKqEdUVluKUljX5NrLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=kk41hIxV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1732303208; c=relaxed/simple;
+	bh=IJqKO61TM9XP2RmB8ANgFC19LG4p96drIqNmJtPdHyk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nkIBSlA4VYJC2YyHZvHBXBCTUKk3vorg4ADPOwqoa5rMWc9F53kBWyPJFYFRhV3TZDVIRfqAcGJbfACTRPRnuf5UHPaA1kfN4IHez/4AWasIkjwgn6quJVtR88bVRaaU319ZMbofHS7UlzlaveQJ+mk7b698DKTbtcHJgwClbN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SEiUXj89; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="kk41hIxV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AD89C4CECE;
-	Fri, 22 Nov 2024 14:35:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1732286136;
-	bh=P3LpHamRarxbPekIwfEOuKQjsioKyb0VI61LrbiusJU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kk41hIxVbqJi+HRvUxayl8qy4FydMVYORD+YncMsakBNAFYyJfpT76T5jLcN/DJzn
-	 k5X4+fLtDEDUyLpF8dPpVUkaDqDYfO5sH776WqA+LWucQ0G1OF8HlmHnAUP5NIYyPw
-	 WTP8gvTV6a2Edgu8k5sL0gk5uT8FbTMcA6Tw6OJA=
-Date: Fri, 22 Nov 2024 15:35:10 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, David Wang <00107082@163.com>,
-	brgl@bgdev.pl, tglx@linutronix.de, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, geert@linux-m68k.org,
-	linux-hardening@vger.kernel.org,
-	"Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH] Fix a potential abuse of seq_printf() format string in
- drivers
-Message-ID: <2024112259-bagful-commend-89ff@gregkh>
-References: <20241120053055.225195-1-00107082@163.com>
- <CACRpkdZ0zwn0908LDqrfQJtF7M-WRcKA4qdJdwSXZNzm0L47CA@mail.gmail.com>
- <202411201008.5262C14@keescook>
- <2024112031-unreal-backslid-0c24@gregkh>
- <8BEA1444-469F-4276-AB04-0CF7C324916D@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SEiUXj89"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5cfaa02c716so3150584a12.3;
+        Fri, 22 Nov 2024 11:20:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1732303206; x=1732908006; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gmPHZq7NvbuC3A6VuT/FeDUicgcVWod/bDQW4ILw5hM=;
+        b=SEiUXj89nEBtsqNdI+GnhVbQr/8FVSBsfWodkym62OhLsj6drtnPhcktgGgw8czLpM
+         YalvnAsTGVCqr5LprR/yJr463u3zzsvTbDvfKctMcGOgsj+gbPTdKCy7RfuqibuFm58H
+         WVSsCdyhvIaMUavi1fKqje4aU0c5XkCPSRFESGNDtp4YHFA+Uvl/0v5q0ANB+ftyOg3M
+         1R/lLHLifjZ4nrsPKnj2OmrVoaYDl0J4iSzNUtddCqpMWtTxwq+tSi4ym67tccGOME4n
+         1L+ywpGmon4GWq4j9P75EyO67E/V4vTJK0ldF/KuzNons9VnUXrRItaQ588f8vK0a7G0
+         iOjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1732303206; x=1732908006;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gmPHZq7NvbuC3A6VuT/FeDUicgcVWod/bDQW4ILw5hM=;
+        b=tARJWxotBMUCHSMZ79V1/qo4KDR23lKSDZJmDyHCKO5C8X+kzWhqc2nh8bwOvBCs91
+         m0KwbeTkigqgxOSYNaYIsHxsPQ1E6bFY6BCA4PhrMVdDT5L2uXPEeoo7mfOFHNsn62yk
+         3DYpF2Mvipwm00XAhUMlRME83zGvFSyhhBXut0/lxcsUypiTWzJaBbPanKrFV1TZpzHX
+         KKZt9Tw+qyCetWorE/Zp9xA9dB+4aiyb5m2CekchP5snDW8BkWMDqAjyGDm66aD3Lwll
+         4EUwwPp637XPprGuT8lkq/rJQQaUdlXl/Ng9LbueHdjUTXg4iW2z4w6NSHGopRuI9bPY
+         ObNw==
+X-Forwarded-Encrypted: i=1; AJvYcCVNN8KGTgKzbXlNpj1nrEGiSb27BZlMXVG4fiZD1nvqSgzrUnOBOhaejDEw+dogXD4u0G3A/HzBVP/8P5luExQ=@vger.kernel.org, AJvYcCXhe1T+dwXT1ZijZdC7J0FQ5SeHDNbATVtc8MZt5hN3nkdnOBDzdqT9I5v44Eufj1naLGG5CF7JEJwmSicr@vger.kernel.org
+X-Gm-Message-State: AOJu0YyzIqgQWD9xBa0elnhdA7S+XPht95kOmpXZ/6/kVEBhWoW1Qr1L
+	9xsN+jxRplIoDI6qSo+Q5C08R0u61uYeBcqWOVxtDxXNV2H2M01cuAK7CVHPAO31VPA2rQFF0fQ
+	thSgMei0DhaegEM5d0cwh3/QoXbZxXYWbbMspYw==
+X-Gm-Gg: ASbGnctORCa3dyiwI87ngq0ABWSPbSg5Tl0o6jhvkv01eeJlfw5oCCTQbPUAy/YOtTA
+	nEgcIdhbPcnhyPYtJz6LLtYFHrurIlGpt
+X-Google-Smtp-Source: AGHT+IFXiqfnLVQ8D0j59J/GYxw4kf+YeOP932hoVzW/jRsfs6HEsvVxld6iWnpKMdecPrGAqrHYjlrI0xQ6I7taMUY=
+X-Received: by 2002:a17:907:7812:b0:a9e:d7e3:ccae with SMTP id
+ a640c23a62f3a-aa5099389d8mr369578766b.16.1732303205427; Fri, 22 Nov 2024
+ 11:20:05 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8BEA1444-469F-4276-AB04-0CF7C324916D@kernel.org>
+References: <20241119205529.3871048-1-bjohannesmeyer@gmail.com>
+ <Zz2r73CFtfuRmjup@infradead.org> <Zz4vzSRcdjvWNIgK@kbusch-mbp>
+ <CAOZ5it1v3zxiavxctm-d32bT9aO701Os1-EnEeG0KCUhBPLMnw@mail.gmail.com>
+ <Zz6q85eMTko7P-Y3@kbusch-mbp> <CAOZ5it3xiMwD4_HsgXR_7-ERTzoS+FG3W5Og4sKtgthFA7HsVQ@mail.gmail.com>
+ <Zz92l2gxYtK4SUC_@kbusch-mbp.dhcp.thefacebook.com> <CAOZ5it0LKViPsOJrfLXmB-zk1OGWhKT6XMrj03etV-MA8-HOkQ@mail.gmail.com>
+In-Reply-To: <CAOZ5it0LKViPsOJrfLXmB-zk1OGWhKT6XMrj03etV-MA8-HOkQ@mail.gmail.com>
+From: Brian Johannesmeyer <bjohannesmeyer@gmail.com>
+Date: Fri, 22 Nov 2024 12:19:52 -0700
+Message-ID: <CAOZ5it0L7D3sXpZkGVatvj1df_VUFWCX27aKgCkbK8T=1G1H9g@mail.gmail.com>
+Subject: Re: [RFC v2 0/2] dmapool: Mitigate device-controllable mem. corruption
+To: Keith Busch <kbusch@kernel.org>
+Cc: Christoph Hellwig <hch@infradead.org>, Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	Raphael Isemann <teemperor@gmail.com>, Cristiano Giuffrida <giuffrida@cs.vu.nl>, Herbert Bos <h.j.bos@vu.nl>, 
+	Greg KH <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Nov 21, 2024 at 08:38:27PM -0800, Kees Cook wrote:
-> 
-> 
-> On November 20, 2024 11:28:35 AM PST, Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
-> >On Wed, Nov 20, 2024 at 10:12:40AM -0800, Kees Cook wrote:
-> >> On Wed, Nov 20, 2024 at 08:35:38AM +0100, Linus Walleij wrote:
-> >> > On Wed, Nov 20, 2024 at 6:31 AM David Wang <00107082@163.com> wrote:
-> >> > 
-> >> > > Using device name as format string of seq_printf() is proned to
-> >> > > "Format string attack", opens possibility for exploitation.
-> >> > > Seq_puts() is safer and more efficient.
-> >> > >
-> >> > > Signed-off-by: David Wang <00107082@163.com>
-> >> > 
-> >> > Okay better get Kees' eye on this, he looks after string vulnerabilities.
-> >> > (But I think you're right.)
-> >> 
-> >> Agreed, this may lead to kernel memory content exposures. seq_puts()
-> >> looks right.
-> >> 
-> >> Reviewed-by: Kees Cook <kees@kernel.org>
-> >
-> >Wait, userspace "shouldn't" be controlling a device name, but odds are
-> >there are some paths/subsystems that do this, ugh.
-> >
-> >> To defend against this, it might be interesting to detect
-> >> single-argument seq_printf() usage and aim it at seq_puts()
-> >> automatically...
-> >
-> >Yeah, that would be good to squash this type of issue.
-> >
-> >> > >  drivers/gpio/gpio-aspeed-sgpio.c            | 2 +-
-> >> > >  drivers/gpio/gpio-aspeed.c                  | 2 +-
-> >> > >  drivers/gpio/gpio-ep93xx.c                  | 2 +-
-> >> > >  drivers/gpio/gpio-hlwd.c                    | 2 +-
-> >> > >  drivers/gpio/gpio-mlxbf2.c                  | 2 +-
-> >> > >  drivers/gpio/gpio-omap.c                    | 2 +-
-> >> > >  drivers/gpio/gpio-pca953x.c                 | 2 +-
-> >> > >  drivers/gpio/gpio-pl061.c                   | 2 +-
-> >> > >  drivers/gpio/gpio-tegra.c                   | 2 +-
-> >> > >  drivers/gpio/gpio-tegra186.c                | 2 +-
-> >> > >  drivers/gpio/gpio-tqmx86.c                  | 2 +-
-> >> > >  drivers/gpio/gpio-visconti.c                | 2 +-
-> >> > >  drivers/gpio/gpio-xgs-iproc.c               | 2 +-
-> >> > >  drivers/irqchip/irq-gic.c                   | 2 +-
-> >> > >  drivers/irqchip/irq-mvebu-pic.c             | 2 +-
-> >> > >  drivers/irqchip/irq-versatile-fpga.c        | 2 +-
-> >> > >  drivers/pinctrl/bcm/pinctrl-iproc-gpio.c    | 2 +-
-> >> > >  drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 2 +-
-> >> > >  drivers/pinctrl/pinctrl-mcp23s08.c          | 2 +-
-> >> > >  drivers/pinctrl/pinctrl-stmfx.c             | 2 +-
-> >> > >  drivers/pinctrl/pinctrl-sx150x.c            | 2 +-
-> >> > >  drivers/pinctrl/renesas/pinctrl-rzg2l.c     | 2 +-
-> >> > 
-> >> > Can you split this in three patches per-subsystem?
-> >> > One for gpio, one for irqchip and one for pinctrl?
-> >> > 
-> >> > Then send to each subsystem maintainer and CC kees on
-> >> > each.
-> >> > 
-> >> > I'm just the pinctrl maintainer. The rest can be found with
-> >> > scripts/get_maintainer.pl.
-> >> 
-> >> Oof. That's a lot of work for a mechanical change like this. Perhaps
-> >> Greg KH can take it directly to the drivers tree instead?
-> >
-> >I can take it all, as-is, right now, if you want me to.  Just let me
-> >know.
-> 
-> Yes, please do. I will send a patch for making seq_printf more defensive separately.
+I=E2=80=99ll go ahead and prepare a V3 patch series with the following upda=
+tes:
 
-Great, now queued up, let's make sure 0-day is ok with it...
+- Using an xarray for vaddr-to-block translations, which improves the
+performance of free operations.
+- Removing the minimum DMA block size constraint, as it is no longer necess=
+ary.
 
-greg k-h
+Let me know if there are any additional suggestions or concerns to
+address before submission.
+
+Thanks,
+
+Brian
+
+On Thu, Nov 21, 2024 at 12:07=E2=80=AFPM Brian Johannesmeyer
+<bjohannesmeyer@gmail.com> wrote:
+>
+> On Thu, Nov 21, 2024 at 11:06=E2=80=AFAM Keith Busch <kbusch@kernel.org> =
+wrote:
+> > If you have the time, could you compare with using xarray instead?
+>
+> Sure. Good idea.
+>
+> **With the submitted patches applied AND using an xarray for
+> vaddr-to-block translations:**
+> ```
+> dmapool test: size:16   align:16   blocks:8192 time:37954
+> dmapool test: size:64   align:64   blocks:8192 time:40036
+> dmapool test: size:256  align:256  blocks:8192 time:41942
+> dmapool test: size:1024 align:1024 blocks:2048 time:10964
+> dmapool test: size:4096 align:4096 blocks:1024 time:6101
+> dmapool test: size:68   align:32   blocks:8192 time:41307
+> ```
+>
+> The xarray approach shows a slight improvement in performance compared
+> to the maple tree approach.
+>
+> FWIW, I implemented the two with slightly different semantics:
+> - In the maple tree implementation, I saved the `block`'s entire
+> `vaddr` range, allowing any `vaddr` within the `block` to be passed to
+> `dma_pool_free()`.
+> - In the xarray implementation, I saved only the `block's` base
+> `vaddr`, requiring `dma_pool_free()` to be called with the exact
+> `vaddr` returned by `dma_pool_alloc()`. This aligns with the DMA pool
+> API documentation, which specifies that the `vaddr` returned by
+> `dma_pool_alloc()` should be passed to `dma_pool_free()`.
+>
+> Let me know if you'd like further adjustments.
+>
+> Thanks,
+>
+> Brian Johannesmeyer
