@@ -1,136 +1,199 @@
-Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DD861B4155
-	for <linux-hardening@vger.kernel.org>; Mon, 25 Nov 2024 16:50:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3B5B1B6D0F
+	for <linux-hardening@vger.kernel.org>; Mon, 25 Nov 2024 20:20:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732553430; cv=none; b=r1Po71GHfRZMMBwOs3dqLmqo8ATh84MsGscZ3mr9kEOUxsWS9iEL504AAMc4sujOF+oe46Cm66wo+1D3JI7DXxoLqHmdhAZZ9/mmomolEbXpXIzxcB6Vgbd/SEIuU2RpqtjnXiO5bYcNgwlHrk37zVA5N50kyAXKznrCA772U6A=
+	t=1732566031; cv=none; b=V+0NNjxhqb97I3Q4PKOxfXU4MDnDkx7iBMeataTZX2NbiL7Al3qQe8qzixj0Ge1cHkMUagRDgMWjpwaNPpl/x7zvMDn2Qm16stKaZvMHvCTfSqCuSntB4bnpv+eDNzz3/K+hVjlTvqlwRiVCBnL05ht2Yv9jd6KP4Ggt4SOFvoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732553430; c=relaxed/simple;
-	bh=Yu/+NP9AobvJs93H8yUtukZ0L4/B3zu9Nh3of63N92U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GZ9rG7+Lm/YPtIZijWxJpnuKlsZmg525ogWt/GrtjgR06E5HX26o8LtU1CHUccVJuCxbvQgDNxRdeNZWYSDu95YXVX7w63SrpmzqjiIm+kht2rh8sxeAhp0ZT6onSi+C6TkP5LwdYpQnn7q280yaNzcbWh9uotlqWj7Nrr5q5dk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=Ju4U8z5U; arc=none smtp.client-ip=35.89.44.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1732566031; c=relaxed/simple;
+	bh=Oo4v+HG1zO3N6WM7Pgry7iY5cnE/SrT42LHsUZJbp1w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tKVWmgZb8Ko5F3ZswBjNFCFmymlbrsPpo5f9HFj3fd17ymVSoifqmHFKLII9dm8AXxwm+mLRj12rr8tuscbkZNc/440bxHrd94brTy3IDw4f5zxIQPOTPi2DnliOxRk7pTVUfyS/+vGVdvWgWn+E/+UcbtTVgtFo3BRqS+Mh6HM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ecVGFPYH; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="Ju4U8z5U"
-Received: from eig-obgw-5004a.ext.cloudfilter.net ([10.0.29.221])
-	by cmsmtp with ESMTPS
-	id FNvUtOCJZumtXFcGZtSvqx; Mon, 25 Nov 2024 16:48:51 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id FcGXtQ3pGWvXpFcGYtSTUZ; Mon, 25 Nov 2024 16:48:50 +0000
-X-Authority-Analysis: v=2.4 cv=LtdZyWdc c=1 sm=1 tr=0 ts=6744aa72
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=GtNDhlRIH4u8wNL3EA3KcA==:17
- a=IkcTkHD0fZMA:10 a=VlfZXiiP6vEA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
- a=pGLkceISAAAA:8 a=12PADHrDYx-1QOupR7YA:9 a=QEXdDO2ut3YA:10
- a=Xt_RvD8W3m28Mn_h3AK8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=79KlrPkTs4rK20YKrDZnRsbA4oeLIskWUIi7/e1prQk=; b=Ju4U8z5UJHz+7Qa/ohUdgaRyQp
-	2MLPpMcTkQiq2skf1Wbftz3mSFhn/U+7KxOh3QIlX3GzcFMlSenMxBmS+gNyq1uEa99b9s1jZTwBG
-	A0uA6eWUy8AR3W/HZXxMMcuWUCaThjjqEiDRqSJlGRetRmCn++3BibgERjHfvMzz3WzfihZDx9e17
-	ftmYBlYa+foAnbcE4nHmFdO9Uo2FA+szyKQe+lWvzWrwBCZbyehyuTwhwp+XZwaHqmk22xDgesiyq
-	rSeQu7AE/WNOSGI7B+HCovz5UEsT5ZLlvWWhIe4TF3xgvZXi06UdJk+YiEB4KLZpW6ngvhOfc8AkS
-	BtA2e6rA==;
-Received: from [177.238.21.80] (port=33066 helo=[192.168.0.21])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1tFcGX-000OdC-11;
-	Mon, 25 Nov 2024 10:48:49 -0600
-Message-ID: <aefe4a2a-7adb-49b0-9d8a-32d129ad918d@embeddedor.com>
-Date: Mon, 25 Nov 2024 10:48:41 -0600
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ecVGFPYH"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-212631fcb1eso6207475ad.3
+        for <linux-hardening@vger.kernel.org>; Mon, 25 Nov 2024 12:20:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1732566029; x=1733170829; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2bPBR8Yw5Dhs7C/hFxnb3GEJDbYT54V2RImcN0+GcoI=;
+        b=ecVGFPYHfsCtk2HBuJEwT8Ju56GksTbtCHQR+JeO3Xy5BEJ0roffJns7yLp4HkZKWl
+         2LX6Z8+CR2wQunGYR8dhSFm4pTZpiKFyoQoYBvquIQZ9Db/gxsghl6nJ54TCW64eJlGO
+         ImcFMU4sq4vu1xH6NmPwHMQ8aLPi+2BV2hwz8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1732566029; x=1733170829;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2bPBR8Yw5Dhs7C/hFxnb3GEJDbYT54V2RImcN0+GcoI=;
+        b=sMlrF2xlL3iXcsDkuyhwY3wsAmuKUfBox9cWDrqoaLO02JLWNKBmSsLIa5F4BeO8Sc
+         qwpHmOVpJMPafv0Iz7I/4ceXNctfYI3YAWAacs2sjOt4qHeeMJVp7JxqtU1x46VvLvhT
+         1YBOIYq59LiIH8OFweJWAmfr2ciLByx7tT/0fpQ2ezWC0VkrqzVFEAD/ZoKpuw28igy2
+         Zw73HCgwypM0ujRK2o0HKNHIbYtqRDt81nV10tdmNVwHaWO6JkjkeIyqsc8eqPslhrzB
+         20Yt1Qa7Px3iqW+d169RJUfBFU+NaVHUL30/x7nJyVCD4kZBvU4iOoZrHDmv2f026q0w
+         6Xrw==
+X-Forwarded-Encrypted: i=1; AJvYcCVUZxTTjcSaoR5gsg0uWn2LswJKOtWoqJCPNziCsGoKdDeXOTHR0N/IKHIkNkrxLqx+joL3O3r7ZD1fwCjLGGs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzAb/A8VgYjEZXEfOk/sYQCd3t5H1E7MmxnIed7HGr9b99mlAd0
+	ZDIQY48E6mTVy4nUxLQDK3SdKliq4GI7SH1AOWEK4NSrbwj5dYy+Z2QNMEVthQ==
+X-Gm-Gg: ASbGnctFajm0iWlwqV9lat4ugXd9Nk8dYl+pGDd3S3ZIvYoe8CPgre71zqQ/SUvioXp
+	H0h58kzGWhmHmMZqmuo3CIARSx4GvruKvTo9gVvVasZzxoOLpGs7idjpDzICEnamQIMMu+37UYZ
+	ewqR9zGSgdkodbp//dRrZo/QSAtriOeM5fUdZKJLC5wHtsvVcXPUNlJ+khhFt1uB2gd7ALmVPhb
+	a/BwD+Prqkzj0RQ2VPnajVvIkXj3+nr5BY5SsD7gm4g1imKFBEmtMr14HOdLNFkkd8b9y+qQAEU
+	mhN6jrUzaBo=
+X-Google-Smtp-Source: AGHT+IHp2QrrU3RI0OmIU17fgwey6/8O6ZVj8X1aM9FXZJNL58pk/JZ4qsmgGuHB2EK2wRDkI9lhEw==
+X-Received: by 2002:a17:903:2291:b0:211:ff32:93 with SMTP id d9443c01a7336-214e4416006mr8613105ad.4.1732566027670;
+        Mon, 25 Nov 2024 12:20:27 -0800 (PST)
+Received: from localhost (238.76.127.34.bc.googleusercontent.com. [34.127.76.238])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-2129dba5d4bsm69486135ad.80.2024.11.25.12.20.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 25 Nov 2024 12:20:27 -0800 (PST)
+From: jeffxu@chromium.org
+To: akpm@linux-foundation.org,
+	keescook@chromium.org,
+	jannh@google.com,
+	torvalds@linux-foundation.org,
+	adhemerval.zanella@linaro.org,
+	oleg@redhat.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-mm@kvack.org,
+	jorgelo@chromium.org,
+	sroettger@google.com,
+	ojeda@kernel.org,
+	adobriyan@gmail.com,
+	anna-maria@linutronix.de,
+	mark.rutland@arm.com,
+	linus.walleij@linaro.org,
+	Jason@zx2c4.com,
+	deller@gmx.de,
+	rdunlap@infradead.org,
+	davem@davemloft.net,
+	hch@lst.de,
+	peterx@redhat.com,
+	hca@linux.ibm.com,
+	f.fainelli@gmail.com,
+	gerg@kernel.org,
+	dave.hansen@linux.intel.com,
+	mingo@kernel.org,
+	ardb@kernel.org,
+	Liam.Howlett@Oracle.com,
+	mhocko@suse.com,
+	42.hyeyoo@gmail.com,
+	peterz@infradead.org,
+	ardb@google.com,
+	enh@google.com,
+	rientjes@google.com,
+	groeck@chromium.org,
+	mpe@ellerman.id.au,
+	Jeff Xu <jeffxu@chromium.org>
+Subject: [PATCH v4 0/1] Seal system mappings
+Date: Mon, 25 Nov 2024 20:20:20 +0000
+Message-ID: <20241125202021.3684919-1-jeffxu@google.com>
+X-Mailer: git-send-email 2.47.0.338.g60cca15819-goog
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] net: mac80211: cfg: Initialize cnt before accessing elem
-To: Haoyu Li <lihaoyu499@gmail.com>, Johannes Berg <johannes@sipsolutions.net>
-Cc: Kees Cook <kees@kernel.org>, "Gustavo A . R . Silva"
- <gustavoars@kernel.org>, linux-wireless@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20241123170848.309264-1-lihaoyu499@gmail.com>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20241123170848.309264-1-lihaoyu499@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 177.238.21.80
-X-Source-L: No
-X-Exim-ID: 1tFcGX-000OdC-11
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.0.21]) [177.238.21.80]:33066
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfNn1nyF7FELNNfDfeEbHwcf4wwgrtJjsl+rhw8m4Q780oP6bwY1RZrGFB8I2rYclk26QSHQYmI4yB/hUWyY70QAkbM1veqvQpBC+b9EYGUrj421eAKS4
- YMRkkGOmgWzJwzQBz9qH+uunZafw0OfuKhpcKqDS0xVyOQv4BnrsvaE/fdaXgOMw/EfsbCecemlAXPVAz1X1ouy5RkRqMAQPNcRX04auSzZNqSEooy9Q+7IR
+Content-Transfer-Encoding: 8bit
 
+From: Jeff Xu <jeffxu@chromium.org>
 
+Seal vdso, vvar, sigpage, uprobes and vsyscall.
 
-On 23/11/24 11:08, Haoyu Li wrote:
-> With the new __counted_by annocation in cfg80211_rnr_elems, the "cnt"
-> struct member must be set before accessing the "elem" array. Failing to
-> do so will trigger a runtime warning when enabling CONFIG_UBSAN_BOUNDS
-> and CONFIG_FORTIFY_SOURCE.
-> 
+Those mappings are readonly or executable only, sealing can protect
+them from ever changing or unmapped during the life time of the process.
+For complete descriptions of memory sealing, please see mseal.rst [1].
 
-Nice catch. :)
+System mappings such as vdso, vvar, and sigpage (for arm) are
+generated by the kernel during program initialization, and are
+sealed after creation.
 
-> Fixes: 7b6d7087031b ("wifi: cfg80211: Annotate struct cfg80211_rnr_elems with __counted_by")
+Unlike the aforementioned mappings, the uprobe mapping is not
+established during program startup. However, its lifetime is the same
+as the process's lifetime [2]. It is sealed from creation.
 
-This should be Cc'd to stable:
+The vdso, vvar, sigpage, and uprobe mappings all invoke the
+_install_special_mapping() function. As no other mappings utilize this
+function, it is logical to incorporate sealing logic within
+_install_special_mapping(). This approach avoids the necessity of
+modifying code across various architecture-specific implementations.
 
-Cc: stable@vger.kernel.org
+The vsyscall mapping, which has its own initialization function, is
+sealed in the XONLY case, it seems to be the most common and secure
+case of using vsyscall.
 
-> Signed-off-by: Haoyu Li <lihaoyu499@gmail.com>
+It is important to note that the CHECKPOINT_RESTORE feature (CRIU) may
+alter the mapping of vdso, vvar, and sigpage during restore
+operations. Consequently, this feature cannot be universally enabled
+across all systems.
 
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Currently, memory sealing is only functional in a 64-bit kernel
+configuration.
 
-Thanks
--Gustavo
+To enable this feature, the architecture needs to be tested to
+confirm that it doesn't unmap/remap system mappings during the
+the life time of the process. After the architecture enables
+ARCH_HAS_SEAL_SYSTEM_MAPPINGS, a distribution can set
+CONFIG_SEAL_SYSTEM_MAPPING to manage access to the feature.
+Alternatively, kernel command line (exec.seal_system_mappings)
+enables this feature also.
 
-> ---
->   net/mac80211/cfg.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/net/mac80211/cfg.c b/net/mac80211/cfg.c
-> index 61a824ec33da..6936b1303e81 100644
-> --- a/net/mac80211/cfg.c
-> +++ b/net/mac80211/cfg.c
-> @@ -1105,13 +1105,13 @@ ieee80211_copy_rnr_beacon(u8 *pos, struct cfg80211_rnr_elems *dst,
->   {
->   	int i, offset = 0;
->   
-> +	dst->cnt = src->cnt;
->   	for (i = 0; i < src->cnt; i++) {
->   		memcpy(pos + offset, src->elem[i].data, src->elem[i].len);
->   		dst->elem[i].len = src->elem[i].len;
->   		dst->elem[i].data = pos + offset;
->   		offset += dst->elem[i].len;
->   	}
-> -	dst->cnt = src->cnt;
->   
->   	return offset;
->   }
+This feature is tested using ChromeOS and Android on X86_64 and ARM64,
+therefore ARCH_HAS_SEAL_SYSTEM_MAPPINGS is set for X86_64 and ARM64.
+Other architectures can enable this after testing. No specific hardware
+features from the CPU are needed.
+
+This feature's security enhancements will benefit ChromeOS, Android,
+and other secure-by-default systems.
+
+[1] Documentation/userspace-api/mseal.rst
+[2] https://lore.kernel.org/all/CABi2SkU9BRUnqf70-nksuMCQ+yyiWjo3fM4XkRkL-NrCZxYAyg@mail.gmail.com/
+
+History:
+V4:
+  ARCH_HAS_SEAL_SYSTEM_MAPPINGS (Lorenzo Stoakes)
+  test info (Lorenzo Stoakes)
+  Update  mseal.rst (Liam R. Howlett)
+  Update test_mremap_vdso.c (Liam R. Howlett)
+  Misc. style, comments, doc update (Liam R. Howlett)
+
+V3:
+  https://lore.kernel.org/all/20241113191602.3541870-1-jeffxu@google.com/
+  Revert uprobe to v1 logic (Oleg Nesterov)
+  use CONFIG_SEAL_SYSTEM_MAPPINGS instead of _ALWAYS/_NEVER (Kees Cook)
+  Move kernel cmd line from fs/exec.c to mm/mseal.c and misc. refactor (Liam R. Howlett)
+
+V2:
+  https://lore.kernel.org/all/20241014215022.68530-1-jeffxu@google.com/
+  Seal uprobe always (Oleg Nesterov)
+  Update comments and description (Randy Dunlap, Liam R.Howlett, Oleg Nesterov)
+  Rebase to linux_main
+
+V1:
+https://lore.kernel.org/all/20241004163155.3493183-1-jeffxu@google.com/
+
+Jeff Xu (1):
+  exec: seal system mappings
+
+ .../admin-guide/kernel-parameters.txt         | 11 ++++++
+ Documentation/userspace-api/mseal.rst         |  4 ++
+ arch/arm64/Kconfig                            |  1 +
+ arch/x86/Kconfig                              |  1 +
+ arch/x86/entry/vsyscall/vsyscall_64.c         |  8 +++-
+ include/linux/mm.h                            | 12 ++++++
+ init/Kconfig                                  | 25 ++++++++++++
+ mm/mmap.c                                     | 10 +++++
+ mm/mseal.c                                    | 39 +++++++++++++++++++
+ security/Kconfig                              | 24 ++++++++++++
+ 10 files changed, 133 insertions(+), 2 deletions(-)
+
+-- 
+2.47.0.338.g60cca15819-goog
 
