@@ -1,250 +1,245 @@
-Received: from mail.andi.de1.cc (mail.andi.de1.cc [178.238.236.174])
+Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 716801CCEF8;
-	Mon, 25 Nov 2024 21:30:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.238.236.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 173A417BB6;
+	Tue, 26 Nov 2024 07:04:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.97
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732570215; cv=none; b=kwRvDZ1oaDQ8+xAKFpdTn6EOXVSnb0zSaZcsue5ijT0CDw+dwHPYCat+v33VpG6O/he33O2uppv0+OdnEDBTdPgojLU0Uz1jPc6ecgLIfe9G2NNEOC/ZP0CqpALg/uOZg2c3nH0MStb2NbpDOHf3ctSWxzzVZ9RyS2rL6cjdB+M=
+	t=1732604702; cv=none; b=oJn03Dj3a9W1XJXioIZJXsRTOvNIjWFaJ9O+qr5im1xIGHpfJCToeNXjtR/C8dyoLJ2w2hSuhsVnOVIgaYi2/jvcLTMpADbmGfLOH0rwtG8S8/LSZflnpJltPYxy5p6W++Pdem5bS9pVPWDZMMqoeiIGhQ/igssThwIQaeN/sZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732570215; c=relaxed/simple;
-	bh=4O6BXFuQzDtPnFLXu56acl6DbuUQWT9MKV7AxwD9Dso=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=itdux1DULhvXyOV5+UoUENz6apvJPyrDohjXmLmRHYTj0BeQGWp/NxLwn5ADmn3NIbTz+qqcBtjIPEgUtoNFHWMHOADH/sVAU9Lk+ZIMN+kAESMfET3efoBNN9uE+9ygscaJBjh2Jp1epal/dlwAMyy46P/Oxo0jPOIEbeh81KY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kemnade.info; spf=pass smtp.mailfrom=kemnade.info; dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b=IMaMPSBR; arc=none smtp.client-ip=178.238.236.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kemnade.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kemnade.info
+	s=arc-20240116; t=1732604702; c=relaxed/simple;
+	bh=vIXqP9YkTE+VyR7UcARNigtcHPpoZmvDYpifF25EnGA=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=XIaLjpv6p5oVrfHN2qQteoZxGPajAXThv4SXs98XRN6YT71SWxPkOvnaxp2amnH09Qqb4kKbOATAkCyYBlUWomhzEftiEZkJ+sSUmBDxScoOSKMzs1alFZqYo/n3FZcFQSW+m36pQ6829eAYQ5WOWNxKCW2V9saXwe504WVbebs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=q2t3mhkT; arc=none smtp.client-ip=115.124.30.97
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="IMaMPSBR"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=kemnade.info; s=20220719; h=References:In-Reply-To:Cc:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=OBqvw9C3qDYIhkxocUnc72l/ACN2rkhM5PpmpOhWLfI=; b=IMaMPSBRYPv6NoiXYdzaappXwf
-	fqyl4xtfVzMsq6XB1LVKxzy6tpvZk+nTqAV1I2Yzu+NSyn2gtOzpW5GBWzNGRvT1RJJ/UEj+x/xO/
-	2vY++hWKxTrfX2MjKLAnzxS3GIgthJt61sNDWCU7gEX9WQgCX4xaLoPUUfArWvrIDAdAnbgTnPr3q
-	x6C5oK3RrQCn8ybV9nfoCrbmCdcGANVDCchNXZo/R7c4X10wKs8ISihnUjNrxTBiJoThTKbKX4gXc
-	wBXmqEVMUb2u+RWuuKS/WRcb5Vg/v/VTdtZEYJNKWMnxPbNcGJSRoPTQjbgjQznOzO3i0W6Q/LzeT
-	Wvfsizbw==;
-Date: Mon, 25 Nov 2024 22:29:46 +0100
-From: Andreas Kemnade <andreas@kemnade.info>
-To: Mithil Bavishi <bavishimithil@gmail.com>
-Cc: Laurent.pinchart@ideasonboard.com, aaro.koskinen@iki.fi,
- airlied@gmail.com, conor+dt@kernel.org, devicetree@vger.kernel.org,
- dri-devel@lists.freedesktop.org, jernej.skrabec@gmail.com, jonas@kwiboo.se,
- khilman@baylibre.com, krzk+dt@kernel.org, linux-hardening@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
- maarten.lankhorst@linux.intel.com, mripard@kernel.org,
- neil.armstrong@linaro.org, prabhakar.mahadev-lad.rj@bp.renesas.com,
- quic_jesszhan@quicinc.com, rfoss@kernel.org, robh@kernel.org,
- rogerq@kernel.org, simona@ffwll.ch, thierry.reding@gmail.com,
- tony@atomide.com, tzimmermann@suse.de
-Subject: Re: [PATCH v3 06/10] ARM: dts: ti: omap: espresso-common: Add
- common device tree for Samsung Galaxy Tab 2 series
-Message-ID: <20241125222946.51fa8cec@akair>
-In-Reply-To: <20241123181405.861-1-bavishimithil@gmail.com>
-References: <20241112100616.5349ad37@akair>
-	<20241123181405.861-1-bavishimithil@gmail.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="q2t3mhkT"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1732604698; h=Message-ID:Date:MIME-Version:From:Subject:To:Content-Type;
+	bh=2QiaNCS7vZ2jTAUVLHD7wtG2gMb0msZ7gwW+/OdrtVI=;
+	b=q2t3mhkTRU/Nqj7MWB7xAtkK7nAHi0g7cbM4CkTndkQh3oiSn8pEasR2YN46ukDx2W3YeGaHHFQpN/RXD9JrdQF6Lr9ee0Q7qNrbVrLktKfxT07Z5WqBKBt6vpdDqr7+kWRv4TNUMQle/y3s7E2mdL17IIOEHAPlBqMRZgFLK80=
+Received: from 30.246.161.197(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WKHOCd2_1732604695 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 26 Nov 2024 15:04:56 +0800
+Message-ID: <0a57d695-d671-4382-aa53-6517b1caf4a7@linux.alibaba.com>
+Date: Tue, 26 Nov 2024 15:04:53 +0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+Subject: Re: [RFC PATCH v2 0/9] Use ERST for persistent storage of MCE and
+ APEI errors
+To: Borislav Petkov <bp@alien8.de>
+Cc: keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
+ rafael@kernel.org, lenb@kernel.org, james.morse@arm.com, tglx@linutronix.de,
+ mingo@redhat.com, dave.hansen@linux.intel.com, x86@kernel.org,
+ hpa@zytor.com, ardb@kernel.org, robert.moore@intel.com,
+ linux-hardening@vger.kernel.org, linux-acpi@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+ linux-efi@vger.kernel.org, acpica-devel@lists.linuxfoundation.org,
+ baolin.wang@linux.alibaba.com
+References: <20230925074426.97856-1-xueshuai@linux.alibaba.com>
+ <20230928144345.GAZRWRIXH1Tfgn5EpO@fat_crate.local>
+ <f654be8f-aa98-1bed-117b-ebdf96d23df1@linux.alibaba.com>
+ <20231026133209.GCZTpqWVNUmqtBrnTw@fat_crate.local>
+In-Reply-To: <20231026133209.GCZTpqWVNUmqtBrnTw@fat_crate.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Am Sat, 23 Nov 2024 18:14:05 +0000
-schrieb Mithil Bavishi <bavishimithil@gmail.com>:
 
-> > > +			no-map;
-> > > +			reg = <0xA0000000 0x200000>;  
-> >
-> > If used for ramoops, then there should be a compatible = "ramoops"
-> > see Documentation/devicetree/bindings/reserved-memory/ramoops.yaml  
-> > > +		};
-> > > +
-> > > +		continuous_splash: framebuffer@bef00000{
-> > > +			reg = <0xbef00000 (1024 * 600 * 4)>;
-> > > +			no-map;
-> > > +		};
-> > > +	};
-> > > +
-> > > +	chosen { 
-> > > +		#address-cells = <1>;
-> > > +		#size-cells = <1>;
-> > > +		ranges;  
-> > 
-> > hmm, no bus here, so no need for address/size-cells, rather specify
-> > stdout-path, etc.  
+
+在 2023/10/26 21:32, Borislav Petkov 写道:
+
+Hi, Borislav,
+
+Sorry for the late reply.
+
+> On Sat, Oct 07, 2023 at 03:15:45PM +0800, Shuai Xue wrote:
+>> So, IMHO, it's better to add a way to retrieve MCE records through switching
+>> to the new generation rasdaemon solution.
 > 
-> Will be dropping rampoops_region, and chosen nodes. They were used
-> initially for debugging, since we now have drm for display and other
-> means to get logs, these are not required.
+> rasdaemon already collects errors and even saves them in a database of
+> sorts. No kernel changes needed.
+
+I did not figure out how rasdaemon *already* collects errors.
+
+Both rasdaemon and mcelog are designed to collect errors generated by the
+x86_mce_decoder_chain notifier. However, due to the queuing of mce_irq_work on
+the current CPU during an MCE context, the associated notifier_call is not
+executed, preventing error collection before a system panic occurs. As a
+result, neither rasdaemon nor mcelog can capture errors at this critical time.
+
+Upon inspection, rasdaemon fails to record any errors, as evidenced by the
+output of `ras-mc-ctl --errors`, which shows no memory or PCIe AER errors,
+among others.
+
+   # run after a new reboot caused by fatal memory error
+   #ras-mc-ctl --errors
+   No Memory errors.
+   
+   No PCIe AER errors.
+   
+   No Extlog errors.
+   
+   No devlink errors.
+   
+   No disk errors.
+   
+   No Memory failure errors.
+   
+   No MCE errors.
+
+Conversely, mcelog is able to retrieve and log detailed MCE error records
+post-reboot, providing valuable insights into hardware error events, even in
+the case of fatal errors.
+
+   #journalctl -u mcelog --no-pager
+   -- Reboot --
+   systemd[1]: Started Machine Check Exception Logging Daemon.
+   mcelog[2783]: Running trigger `dimm-error-trigger' (reporter: memdb)
+   mcelog[2783]: Hardware event. This is not a software error.
+   mcelog[2783]: MCE 0
+   mcelog[2783]: not finished?
+   mcelog[2783]: CPU 0 BANK 16 TSC 2307d829a77
+   mcelog[2783]: RIP !INEXACT! 10:ffffffffa9588d6b
+   mcelog[2783]: MISC a0001201618f886 ADDR 1715d9880
+   mcelog[2783]: TIME 1732588816 Tue Nov 26 10:40:16 2024
+   mcelog[2783]: MCG status:RIPV MCIP
+   mcelog[2783]: MCi status:
+   mcelog[2783]: Uncorrected error
+   mcelog[2783]: Error enabled
+   mcelog[2783]: MCi_MISC register valid
+   mcelog[2783]: MCi_ADDR register valid
+   mcelog[2783]: Processor context corrupt
+   mcelog[2783]: MCA: MEMORY CONTROLLER RD_CHANNEL1_ERR
+   mcelog[2783]: Transaction: Memory read error
+   mcelog[2783]: MemCtrl: Uncorrected read error
+   mcelog[2783]: bank: 0x2 bankgroup: 0x1 row: 0x402c3 column: 0x1f0
+   mcelog[2783]: rank: 0x2 subrank: 0x0
+   mcelog[2783]: ecc mode: SDDC
+   mcelog[2783]: STATUS be00000200a00091 MCGSTATUS 5
+   mcelog[2783]: MCGCAP f000c15 APICID 0 SOCKETID 0
+   mcelog[2783]: PPIN 74f8640abf43c587
+   mcelog[2783]: MICROCODE 2b000571
+   mcelog[2783]: CPUID Vendor Intel Family 6 Model 143 Step 4
+
+This patchset is based on the fact that we can not collect the MCE records
+which are written to persistent storage if we switch to rasdaemon. Please
+correct me if I missed anything.
+
 > 
-you might want to set stdout-path in chosen for earlycon to work.
-
-> > > +	i2c-gpio-5 {
-> > > +		compatible = "i2c-gpio";
-> > > +		sda-gpios = <&gpio4 2 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-> > > +		scl-gpios = <&gpio4 3 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-> > > +		i2c-gpio,delay-us = <10>;
-> > > +		#address-cells = <1>;
-> > > +		#size-cells = <0>;  
-> > hmm, no pinmux here?   
+>> Sorry for the poor cover letter. I hope the following response can clarify
+>> the matter.
+>>
+>> Q1: What is the exact problem?
+>>
+>> Traditionally, fatal hardware errors will cause Linux print error log to
+>> console, e.g. print_mce() or __ghes_print_estatus(), then reboot. With
+>> Linux, the primary method for obtaining debugging information of a serious
+>> error or fault is via the kdump mechanism.
 > 
-> Cannot seem to find it in the muxset given in vendor kernel.
-
-If in doubt, you can get it via busybox devmem from a working system,
-look in the reference manual for the gpios, I think they are at:
-for sda: 0x4A1000DE 
-for scl: 0x4A1000E0
-Now you need Mode 3 with input pullup.
-
-> These are placeholders for now and hold other devices like smb136
-> charger, stmpe811 adc etc. Drivers for which I need to upstream first.
+> Not necessarily - see above.
 > 
-> https://github.com/MightyM17/linux_pvr/blob/testing/arch/arm/boot/dts/omap4-samsung-espresso7.dts#L10-L24
+>> In the public cloud scenario, multiple virtual machines run on a
+>> single physical server, and if that server experiences a failure, it can
+>> potentially impact multiple tenants. It is crucial for us to thoroughly
+>> analyze the root causes of each instance failure in order to:
+>>
+>> - Provide customers with a detailed explanation of the outage to reassure them.
+>> - Collect the characteristics of the failures, such as ECC syndrome, to enable fault prediction.
+>> - Explore potential solutions to prevent widespread outages.
 > 
-> So for now is it better to drop them?
+> Huh, are you talking about providing customers with error information
+> from the *underlying* physical machine which runs the cloud VMs? That
+> sounds suspicious, to say the least.
 > 
-keep them and add comments for the devices without driver/binding, so
-people can get in touch regarding driver testing, etc.
+> AFAICT, all you can tell the VM owner is: yah, the hw had an
+> uncorrectable error in its memory and crashed. Is that the use case?
 
-E.g. like this one:
-https://elixir.bootlin.com/linux/v6.12/source/arch/arm/boot/dts/nxp/imx/imx50-kobo-aura.dts#L138
+Yes, I mean that the MCE record is a important evidence to dig out the root
+cause for every panic in production to aovid suffering potential wildly
+outages, so we want to collect as many error logs as possible.
 
-Regarding missing devices:
-btw: you know that the wm1811 is covered by the wm8994 driver?
-
-[...]
-> > It might be an idea to use a dedicated wakeup irq instead of
-> > explicitely specifying WAKEUP_EN like you did for the uart.
-> > That counts for other occurances of WAKEUP_EN as well.  
 > 
-> Could you point out to some examples having this change?
-> I have just followed how muxset mentioned it. I assume this can be
-> worked on later as well.
+> To be able to tell the VM owners why it crashed?
 > 
-Look around for pmx_core in the devicetrees, you find e.g:
-in motorola-mapphone-common.dtsi:
-
-        tmp105@48 {
-                compatible = "ti,tmp105";
-                reg = <0x48>;
-                pinctrl-0 = <&tmp105_irq>;
-                pinctrl-names = "default";
-                /* kpd_row0.gpio_178 */
-                interrupts-extended = <&gpio6 18 IRQ_TYPE_EDGE_FALLING
-                                       &omap4_pmx_core 0x14e>;
-                interrupt-names = "irq", "wakeup";
-                wakeup-source;
-        };
-
-and of course the uart interrupts in your submission. There is an
-offset of 0x40 between things in OMAP4_IOPAD and &omap4_pmx_core 0x...
-
-So you replace some WAKEUP_EN with such a wakeup interrupt and
-wakeup-source property. You do not need to do that for stuff in the
-wakeup domain (GPIO1). That should work for any i2c device with
-interrupts. With that, you can control wakeup from suspend via
-/sys/i2c/devices/X-YY/power/wakeup (or maybe power/wakeup of subdevices
-thereof.
-
-Regarding Wifi or Bluetooth wakeup, I doubt that WAKEUP_EN has any
-effect. If BT or Wifi wakeup is enabled, the gpio is kept active so
-power consumption is elevated anyways and nothing sleeps what can be
-woken up by WAKEUP_EN unless the driver supports a dedicated wakeup irq.
-
-So I think, replace the WAKEUP_EN for wakeup irqs for i2c stuff and
-remove the WAKEUP_EN in wifi/bt if it has no effect there.
- 
-> > generic node names:
-> > pmic@48  
+>> In short, it is necessary to serialize hardware error information available
+>> for post-mortem debugging.
+>>
+>> Q2: What exactly I wanna do:
+>>
+>> The MCE handler, do_machine_check(), saves the MCE record to persistent
+>> storage and it is retrieved by mcelog. Mcelog has been deprecated when
+>> kernel 4.12 released in 2017, and the help of the configuration option
+>> CONFIG_X86_MCELOG_LEGACY suggest to consider switching to the new
+>> generation rasdaemon solution. The GHES handler does not support APEI error
+>> record now.
 > 
-> Changed.
+> I think you're confusing things: MCEs do get reported to userspace
+> through the trace_mc_record tracepoint and rasdaemon opens it and reads
+> error info from there. And then writes it out to its db. So that works
+> now.
+
+For recoverable errors, MCEs are recorded in rasdaemon by the trace_mc_record
+tracepoint. But not for fatal errors. See my experiment above.
+
 > 
-> > > +	accelerometer@18 {
-> > > +		compatible = "bosch,bma254";
-> > > +		reg = <0x18>;
-> > > +		vdd-supply = <&ldo4>;
-> > > +		vddio-supply = <&ldo5>;
-> > > +		interrupt-parent = <&gpio4>;
-> > > +		interrupts = <25 (IRQ_TYPE_LEVEL_HIGH | IRQ_TYPE_EDGE_RISING)>,
-> > > +			<26 (IRQ_TYPE_LEVEL_HIGH | IRQ_TYPE_EDGE_RISING)>;  
-> > 
-> > this looks odd, binding says IRQ_TYPE_EDGE_RISING. Why do you think you
-> > need both? After something is rising, it is high, so both seem not to
-> > make sense.  
+> GHES is something different: it is a fw glue around error reporting so
+> that you don't have to develop a reporting driver for every platform but
+> you can use a single one - only the fw glue needs to be added.
 > 
-> https://github.com/torvalds/linux/commit/5640fed3035e88c3ce1361e6fc93f4e72468f307
-> This was worked on before the above mentioned change, hence the confusion.
-> bma180 schema wants both the interrupts, I do not know why, but now it has
-> moved to the bma255 schema which makes more sense.
-> Fixed it according to new schema.
+> The problem with GHES is that it is notoriously buggy and currently
+> it loads on a single platform only on x86.
+
+As far as I know, GHES is wildly used on ARM platfrom and it is the primary
+method to dliver error record from firmware to OS.
+
 > 
-> > +		mount-matrix =  "-1",  "0",  "0",
-> > +				"0",  "1",  "0",
-> > +				"0",  "0", "1";  
+> ARM are doing something in that area - you're better off talking to
+> James Morse about it. And he's on Cc.
+
+Thanks.
+
 > 
-> > hmm, checking twice, since I mixed up something earlier. This just
-> > inverts x values, so we are mirroring across y-z plane, that does not
-> > look like a rotation matrix, so it does not describe how it is mounted.
-> > Eg. the n900 has two -1 in there, that is a turn by 180 degree.
-> > 
-> > Your mount-matrix would be achieved, by cutting the chip into ultra
-> > thin slices, sorting them upside down and glueing that together. I
-> > doubt somebody does that.  
+>> To serialize hardware error information available for post-mortem
+>> debugging:
+>> - add support to save APEI error record into flash via ERST before go panic,
+>> - add support to retrieve MCE or APEI error record from the flash and emit
+>> the related tracepoint after system boot successful again so that rasdaemon
+>> can collect them
 > 
-> Went through the mount matrix docs multiple times. It seems fairly
-> straightforward for the accelerometer. being just a matrix that we can
-> multiply to get a desired result.
+> Now that is yet another thing: you want to save error records into
+> firmware. First of all, you don't really need it if you do kdump as
+> explained above.
+> 
+> Then, that thing has its own troubles: it is buggy like every firmware
+> is and it can brick the machine.
+> 
+> I'm not saying it is not useful - there are some use cases for it which
+> are being worked on but if all you wanna do is dump MCEs to rasdaemon,
+> that works even now.
+> 
+> But then you have an ARM patch there and I'm confused because MCEs are
+> x86 thing - ARM has different stuff.
+> 
+> So I think you need to elaborate more here.
 
-In your opinion, you can use the matrix for any kind of conversion of
-the values. which can mathematically be done. Which a matrix you can
-scale things e.g. too. But there is also the scale parameter. So I
-doubt that there are limits what should be done with that matrix.
 
-In my understanding, the matrix is for describing how the chip is
-rotated towards the rest of the device not for anything else.
-bosch,bma255.yaml clearly says:
- mount-matrix:
-    description: an optional 3x3 mounting rotation matrix.
+Yes, may I need to split this patchset into two parts.
 
-*rotation*
+> 
+> Thx.
+> 
 
-> My intention is to flip the x values thus having a -1 in there.
 
-And I do not have an idea how the chip can be turned in the device to
-require that kind of matrix ... 180 degree turns need two flips ...
+Thanks for valuable comments.
 
-> What I do not understand is the logic of how you came to the conclusion
-> of "cutting the chip into ultra thin slices, sorting them upside down and
-> glueing". 
-besides of this hypothetical operation.
-
-> The matrix seems correct and works as intended as well.
-
-So maybe the chip is weird and maybe that is the most practical way is
-to correct that weidness with the matrix as well and throw away any
-dogmatics. Checking..
- 
-Comparing with n900
-Datasheets: I do not find a datasheet for the BMA254, but for some
-similar chips:
-https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bma253-ds000.pdf
-https://www.geeetech.com/Documents/BST-BMA180-DS000.pdf
-
-vs.
-
-https://www.st.com/resource/en/datasheet/lis302dl.pdf
-
-No flipping in the axis direction between the them. So either both
-n900 and espresso would need single mirroring (=flip one axis) or none.
-
-So if n900 matrix is correct, than you need another -1 in there to have
-some 180 degree rotation.
-
-Regards,
-Andreas
+Best Regards,
+Shuai
