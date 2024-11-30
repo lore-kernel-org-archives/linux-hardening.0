@@ -1,114 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE925156F30;
-	Sat, 30 Nov 2024 12:29:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C5311A072A
+	for <linux-hardening@vger.kernel.org>; Sat, 30 Nov 2024 18:02:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732969798; cv=none; b=OWab6rFBhak9OX5BSAt3uk9uJLH2GxmMnftpySaJjQU4+oyvul+Xg1VjwTih4J846PYtKA+lXVZir426HrbR6Bl8cGfYp6vMR8BRlw3wX/1TqXj84fT7AMZ9qzXnfB8YQG9593+VEI9XTDIhtQjsmbUF2AWC479ltkuB8ZFX4wk=
+	t=1732989780; cv=none; b=ju9YDh1k1DnvZ3caZQaKnGoWOYFtgly1h/FU5YHWhZ5vYkAC/QJU0zCklsYzIaTVC6fP2LM87xW1sGw0XlBrIiqcYShTZuzDeFsLEd6rC51lRHHzJrf3zzQ2Gm9Jtrn5uBPA3kZ4eo05kUpRLadGLePZlFp5yzVG/425JMqMT6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732969798; c=relaxed/simple;
-	bh=0B7+NJKg6PDFktmYDGKBJZxB5QZ8x8bluiluB7gfHbw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z4KJ5aD3uLubNDjpFd3oxVVKbuVUgOID4IVbut67kmJ1F4wTjm+DHEys/eVRNKShr6bXv3l0O6fFodoFXA9di2QJIh0EaArUDFKRqMNzIZkenA2KjtAUPXLYnePnmS3nBIS3jNnovobuNnzp33Jxpx2KC5UfToZczUHnaydZg0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uoBByyPm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1732989780; c=relaxed/simple;
+	bh=5COwjKHdAiMaJwK/Hx+9BfwsgIdb3l+pVKvrV5yLzNM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hqMKAnp1egFZMEvDtKYo45oIdWbES9cygQIeKEYkdVXs62LrknAyGCKM7s68gAaE7VcDfEEtEKQheVpT5Qql05/W92ElzSzjaq3qLbtYFxD+qe6xIrig6/XQxs1/Yo/iXVYBZ7TmwG6JxnTv1e98sO72T7s/neIzaPOeACudKkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=QUbR5MoW; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uoBByyPm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EBAEC4CECC;
-	Sat, 30 Nov 2024 12:29:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732969798;
-	bh=0B7+NJKg6PDFktmYDGKBJZxB5QZ8x8bluiluB7gfHbw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uoBByyPmW9thOAgNMA++sY/TzO60gZgiNi8cCqo6Y5MAS9aKZwVs7+iOD5Ojmo+1N
-	 zKpmYi5jn5hDP1U52B+D8AQWxi7wF27LyIHkRE2Q6Y9o+tBq5NJgEYxiok4AY3Jak4
-	 JRu1DjANRWU8+4bC1v/cqplcZbmS2FqXxotV3mAPU7rJPaaBiqLkHEQNoB6jrL+czB
-	 nUVAT/PzU+UkvGhC1yyCcycdrUk/C96IYKN3nHAxGD3b2Um8J6jbmgd6ylBKX5K/QS
-	 4+9cYYIZP/bpSaoddmNZL6n1ES6fq80OIB0zONDx2dmDE7LrAcFHytYMxoz/DahKxv
-	 sOFYd13zcUSWw==
-Date: Sat, 30 Nov 2024 13:29:52 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>, 
-	Zbigniew =?utf-8?Q?J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>, Tycho Andersen <tandersen@netflix.com>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Aleksa Sarai <cyphar@cyphar.com>, 
-	Eric Biederman <ebiederm@xmission.com>, Jan Kara <jack@suse.cz>, linux-mm@kvack.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] exec: fix up /proc/pid/comm in the
- execveat(AT_EMPTY_PATH) case
-Message-ID: <20241130-ohnegleichen-unweigerlich-ce3b8af0fa45@brauner>
-References: <20241130045437.work.390-kees@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="QUbR5MoW"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-aa51bf95ce1so545247366b.3
+        for <linux-hardening@vger.kernel.org>; Sat, 30 Nov 2024 10:02:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1732989777; x=1733594577; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=RbB2vuXpy4jWACIjXNfh0gThH+CYe3wsKjjW9mdP8c8=;
+        b=QUbR5MoWd9pSEZLRhF3Z06FH3jDIa9Gb8GhLVCi2qZ1PWhCngSQQON9Qhd8oUdxuLn
+         JIIqntu1/TfJWtq2pC197dvPFAELBauziBYIPOo4tprLJyr/BHcKM/UEWLh63y3eQU1Q
+         QrFKW1dRKKNaq++MY4tRkrjlfoSEMnEScnJik=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1732989777; x=1733594577;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RbB2vuXpy4jWACIjXNfh0gThH+CYe3wsKjjW9mdP8c8=;
+        b=A+2znscSyb7Du2LNzyaKwWu4YEmCK22o40Y0jMU/VoXZjfr9AQt+i9cYe9caWj0g4v
+         7S1+C7VkP58Bd8PanuVY5+wC61NGNEiBivHM2pcIdJa/24OtA5/CzR4plP/i5qPXmG4O
+         cGLV24lseTClgTsaVdcwUpxi2jWYq6SmxriMejTbQploVNChMxQv/gxR514D2llxKdQR
+         BpqajHQp8o53UzK7qtZeb6TuMXkkDEU9XN5pgJ2ybSLu4T/MK+4G0DUw++VExgiPcy8j
+         8NYXqHb8rl30GJjiHz/t5elQlSwywVMmLneNVetBMl4iOO00Ccr5O81iS4CRJQ+SLX7X
+         cfRg==
+X-Forwarded-Encrypted: i=1; AJvYcCWARf2YhVVsDVt5Ywt5iP0hj9dl8K8wAEKqZQiQjFwjWxTL6yOUQyWn8DlElUvAGoT35NaaX5HceN0j7ZzsBjA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzqIR54+C4BjqCDwmonPXlGNDSPa2i7vks0l6lhuc99/zvqjr45
+	OXK+dO3uIHYHwhCJyCjeEEat5/dpjuThC5w6cc5D59NtgwaozgdvybKqvnXLD42ctl9ol7EVl8z
+	jgEh2Fw==
+X-Gm-Gg: ASbGncsA8ZOKPZ07PFG1t4vciWldSPukMfhlaHugVf74tL/cTtmsURtQ8NlvbctMV6F
+	QXXmHXXmC8/VydNDYHyPZ5gibe5ixIQt6mVGzXUTQHVOZGV9c2RDsFOyFr0Hh5v+rdqqLCZWTS7
+	t29pMZMYbFeo6FjcgVIVMS1OmftmU6s59NYiQBqY/JCmQMiCTJTr13NxT6Y7hIigykIPJtHAY/k
+	lNnp10azs6ni3x+YbivGKYVz+pzsSC5Zyq/quK+qnY1j6IqIjGtAkrNmMIM55FRRd8V5IZ4wixZ
+	TLJRGGWDue0buMl8m3r88uPn
+X-Google-Smtp-Source: AGHT+IHGxDXSYtwq2R/3jqvzBn/hXHCGdywjci+oYcRZxZPjqJWpGCTknGsB8t+IE4okaWcRLLX6Ew==
+X-Received: by 2002:a17:906:1baa:b0:aa5:c3d3:3249 with SMTP id a640c23a62f3a-aa5c3d333b6mr170127666b.54.1732989777114;
+        Sat, 30 Nov 2024 10:02:57 -0800 (PST)
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com. [209.85.218.53])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aa599904e6csm300809966b.134.2024.11.30.10.02.54
+        for <linux-hardening@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 30 Nov 2024 10:02:54 -0800 (PST)
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a9f1d76dab1so521757966b.0
+        for <linux-hardening@vger.kernel.org>; Sat, 30 Nov 2024 10:02:54 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCW1Y3KM72MxqqQ/dp02VxIOpRX7snXistiVfXVIBBPl6N01mWX4XTZUBT07qEWEafhDWxArMWmVNKmzwLal/bs=@vger.kernel.org
+X-Received: by 2002:a17:906:1ba9:b0:aa5:cec:2785 with SMTP id
+ a640c23a62f3a-aa580f50e22mr1700257566b.25.1732989774448; Sat, 30 Nov 2024
+ 10:02:54 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241130045437.work.390-kees@kernel.org>
+References: <20241130045437.work.390-kees@kernel.org> <20241130-ohnegleichen-unweigerlich-ce3b8af0fa45@brauner>
+In-Reply-To: <20241130-ohnegleichen-unweigerlich-ce3b8af0fa45@brauner>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Sat, 30 Nov 2024 10:02:38 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wi=uOYxfCp+fDT0qoQnvTEb91T25thpZQYw1vkifNVvMQ@mail.gmail.com>
+Message-ID: <CAHk-=wi=uOYxfCp+fDT0qoQnvTEb91T25thpZQYw1vkifNVvMQ@mail.gmail.com>
+Subject: Re: [PATCH] exec: fix up /proc/pid/comm in the execveat(AT_EMPTY_PATH)
+ case
+To: Christian Brauner <brauner@kernel.org>
+Cc: Kees Cook <kees@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, 
+	=?UTF-8?Q?Zbigniew_J=C4=99drzejewski=2DSzmek?= <zbyszek@in.waw.pl>, 
+	Tycho Andersen <tandersen@netflix.com>, Aleksa Sarai <cyphar@cyphar.com>, 
+	Eric Biederman <ebiederm@xmission.com>, Jan Kara <jack@suse.cz>, linux-mm@kvack.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Nov 29, 2024 at 08:54:38PM -0800, Kees Cook wrote:
-> Zbigniew mentioned at Linux Plumber's that systemd is interested in
-> switching to execveat() for service execution, but can't, because the
-> contents of /proc/pid/comm are the file descriptor which was used,
-> instead of the path to the binary. This makes the output of tools like
-> top and ps useless, especially in a world where most fds are opened
-> CLOEXEC so the number is truly meaningless.
-> 
-> When the filename passed in is empty (e.g. with AT_EMPTY_PATH), use the
-> dentry's filename for "comm" instead of using the useless numeral from
-> the synthetic fdpath construction. This way the actual exec machinery
-> is unchanged, but cosmetically the comm looks reasonable to admins
-> investigating things.
-> 
-> Instead of adding TASK_COMM_LEN more bytes to bprm, use one of the unused
-> flag bits to indicate that we need to set "comm" from the dentry.
-> 
-> Suggested-by: Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl>
-> Suggested-by: Tycho Andersen <tandersen@netflix.com>
-> Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
-> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-> CC: Aleksa Sarai <cyphar@cyphar.com>
-> Link: https://github.com/uapi-group/kernel-features#set-comm-field-before-exec
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
-> Cc: Al Viro <viro@zeniv.linux.org.uk>
-> Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> Cc: Eric Biederman <ebiederm@xmission.com>
-> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-> Cc: Christian Brauner <brauner@kernel.org>
-> Cc: Jan Kara <jack@suse.cz>
-> Cc: linux-mm@kvack.org
-> Cc: linux-fsdevel@vger.kernel.org
-> 
-> Here's what I've put together from the various suggestions. I didn't
-> want to needlessly grow bprm, so I just added a flag instead. Otherwise,
-> this is very similar to what Linus and Al suggested.
-> ---
->  fs/exec.c               | 22 +++++++++++++++++++---
->  include/linux/binfmts.h |  4 +++-
->  2 files changed, 22 insertions(+), 4 deletions(-)
-> 
-> diff --git a/fs/exec.c b/fs/exec.c
-> index 5f16500ac325..d897d60ca5c2 100644
-> --- a/fs/exec.c
-> +++ b/fs/exec.c
-> @@ -1347,7 +1347,21 @@ int begin_new_exec(struct linux_binprm * bprm)
->  		set_dumpable(current->mm, SUID_DUMP_USER);
->  
->  	perf_event_exec();
-> -	__set_task_comm(me, kbasename(bprm->filename), true);
-> +
-> +	/*
-> +	 * If the original filename was empty, alloc_bprm() made up a path
-> +	 * that will probably not be useful to admins running ps or similar.
-> +	 * Let's fix it up to be something reasonable.
-> +	 */
-> +	if (bprm->comm_from_dentry) {
-> +		rcu_read_lock();
-> +		/* The dentry name won't change while we hold the rcu read lock. */
-> +		__set_task_comm(me, smp_load_acquire(&bprm->file->f_path.dentry->d_name.name),
+On Sat, 30 Nov 2024 at 04:30, Christian Brauner <brauner@kernel.org> wrote:
+>
+> What does the smp_load_acquire() pair with?
 
-What does the smp_load_acquire() pair with?
+I'm not sure we have them everywhere, but at least this one at dentry
+creation time.
+
+__d_alloc():
+        /* Make sure we always see the terminating NUL character */
+        smp_store_release(&dentry->d_name.name, dname); /* ^^^ */
+
+so even at rename time, when we swap the d_name.name pointers
+(*without* using a store-release at that time), both of the dentry
+names had memory orderings before.
+
+That said, looking at swap_name() at the non-"swap just the pointers"
+case, there we do just "memcpy()" the name, and it would probably be
+good to update the target d_name.name with a smp_store_release.
+
+In practice, none of this ever matters. Anybody who uses the dentry
+name without locking either doesn't care enough (like comm[]) or will
+use the sequence number thing to serialize at a much higher level. So
+the smp_load_acquire() could probably be a READ_ONCE(), and nobody
+would ever see the difference.
+
+            Linus
