@@ -1,158 +1,198 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8E9A5588B;
-	Sat, 30 Nov 2024 04:54:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7362043179;
+	Sat, 30 Nov 2024 05:55:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732942485; cv=none; b=oOt6RdV/7Jpp3aZm13Btqj/Lu7pl5JdVvN6poDsc9lk0lXRVtRH5LqMJ5O1mM7w95hbbT/nKGtTH9AITiYHF+eaovJYvWr4XneA3kncbRJ2xISDuHbf9fOwENv7mA3KCRXrzlY4ZhLDb5abosHkVCaImwsJ/1pNAjJbwCslojYs=
+	t=1732946133; cv=none; b=ojoc3serz98xfuzxaagUehb40l7q/SyOmwGWM/zNx1BeGeYg47Sy0HBSdUDUYjSg09iVcG1qc3Sqo4qtHYYjc0QM5RA1AJLloiwmhkhxxFiImozDjVdy6NQW6pSSZfMMh7gSm4lUS7upC8MthZLck1i6wD8KqFFNryMnLx3HhKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732942485; c=relaxed/simple;
-	bh=aCxakwcfVdMumx7XBGW2MeqYuhOvg/sHlb8AzZkdy88=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=Ho9L3jCWAQFyAmnmSO6VneXOKQ9O2Ju98rTgu2IYS9uICtVHlAkAL1zs/NhZ0dvC7SfsqTC91mBus2AcKXxRbdEv77O5Aga4zibY9ce164FlVbeF4gAqXjhaC6jcxXf4WLfHUYWGZ4OL/p+fFmcm8oUqbSyu02Mk1Uto5Ht8XIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qQi4IFxS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1732946133; c=relaxed/simple;
+	bh=iS9OUfI8gakpfTYs8PqXB7kKI18YaF5bFkT2kC0tCDU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=a/onqILjNjTdYRKHTvY93TPffTqgXrCFC4Gfc8yfnCMdSiEn1P7xlYYrruT0NBd5GsGYa2a/swIfdGiPHQu2vW8m9K/uMNsF6KHZtlpporM37/CqgeuEcfuDLOeeFdyIAwP0J0QDb+ePxiqZqBrPHMJLy6Vr25rr1R0V6XN1egE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cyphar.com; spf=pass smtp.mailfrom=cyphar.com; dkim=pass (2048-bit key) header.d=cyphar.com header.i=@cyphar.com header.b=QaoUrotg; arc=none smtp.client-ip=80.241.56.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cyphar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cyphar.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qQi4IFxS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FEACC4CECC;
-	Sat, 30 Nov 2024 04:54:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732942485;
-	bh=aCxakwcfVdMumx7XBGW2MeqYuhOvg/sHlb8AzZkdy88=;
-	h=From:To:Cc:Subject:Date:From;
-	b=qQi4IFxSpj84eyvJB1SO2yvWP13PTANMBvLiZ8PelEdeF0NJA/CnqT9wCNaoTl6TG
-	 +eam9CteJ8HTHK4gfLZ9DT3wSRjuaPQB4AkyM2rFnRj8HhIq36bRO5YYKyZs7SbZlK
-	 8hWH12oGk68lOJUzT+twvWyRBKUvEUv7aB89yuK8hOllLAK8CTkZKzXR0pu7OxXN22
-	 9EgQ32j5UsJhl9a7hdAIcuFnS9A/gJOHwVTMAd5FLrWBWml4Ehaa/AznyNKB/SsLoL
-	 keIU/dNb/zNS+K9cdGSO0zVKBGVFPOYb6YaTMt310S1pHsIaPe0aFShYtXXGr3/205
-	 d7y2BW5TZlvRw==
-From: Kees Cook <kees@kernel.org>
-To: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Kees Cook <kees@kernel.org>,
-	=?UTF-8?q?Zbigniew=20J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>,
-	Tycho Andersen <tandersen@netflix.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Aleksa Sarai <cyphar@cyphar.com>,
-	Eric Biederman <ebiederm@xmission.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Jan Kara <jack@suse.cz>,
-	linux-mm@kvack.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] exec: fix up /proc/pid/comm in the execveat(AT_EMPTY_PATH) case
-Date: Fri, 29 Nov 2024 20:54:38 -0800
-Message-Id: <20241130045437.work.390-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=cyphar.com header.i=@cyphar.com header.b="QaoUrotg"
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4Y0fQx05vsz9syJ;
+	Sat, 30 Nov 2024 06:55:21 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cyphar.com; s=MBO0001;
+	t=1732946121;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DFFyRAYQJxjBoODb1KIsqrLrSJdTbzj1N/mY9TF40uc=;
+	b=QaoUrotg7h3oTTzkfAM1BguTvwpsnUA4o2fbRkhsmlPGqW3/Lt6UbsDTRdsWV6uoYUNdZO
+	UhoFvWIw29q8SN5MNO1cGDlTdDP03duHdOsjqvUXEdRpJXeNMNE+T4nKdRZapht/qPPZ2u
+	h36bmHuTuLzWxY8oCXooKr+E4Z3ZikX/a73NZMkJxcohmVPWxNFxdhMH5AbdReUYxIZ4Bh
+	JsMTpaNLwaFebf0S/2jOvLHtJyYlt3TNEb2TQvNV+fM6tBfyuCZEd+0Z9AuXPFvzt8a+tN
+	5EZWO/2/ZmAsGs6mY2/a0EpFEc5p4uFYRgvQAAXXl11sQ9VNC/dwFcPYE+j8tQ==
+Date: Sat, 30 Nov 2024 16:55:09 +1100
+From: Aleksa Sarai <cyphar@cyphar.com>
+To: Kees Cook <kees@kernel.org>
+Cc: Al Viro <viro@zeniv.linux.org.uk>, 
+	Zbigniew =?utf-8?Q?J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>, Tycho Andersen <tandersen@netflix.com>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Eric Biederman <ebiederm@xmission.com>, 
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, linux-mm@kvack.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] exec: fix up /proc/pid/comm in the
+ execveat(AT_EMPTY_PATH) case
+Message-ID: <20241130.055433-shy.herds.gross.wars-zGaSWwzAa56n@cyphar.com>
+References: <20241130045437.work.390-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3936; i=kees@kernel.org; h=from:subject:message-id; bh=aCxakwcfVdMumx7XBGW2MeqYuhOvg/sHlb8AzZkdy88=; b=owGbwMvMwCVmps19z/KJym7G02pJDOles/qCNukktoSGha36rGrq0yfNW1Y3ecvlxP4dzbqBG 0yePmbqKGVhEONikBVTZAmyc49z8XjbHu4+VxFmDisTyBAGLk4BmEi6KcNfQd7rTNpXnFf+U1hx NKfaXCSDd2tu59bq7bGdSzS+yFscYPhnNNl6pZK6wlGfA3mLUxYanj+xLFJ9z5sP8aUvw0urPUS YAQ==
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="42vhhdfvrpiztluk"
+Content-Disposition: inline
+In-Reply-To: <20241130045437.work.390-kees@kernel.org>
+X-Rspamd-Queue-Id: 4Y0fQx05vsz9syJ
 
-Zbigniew mentioned at Linux Plumber's that systemd is interested in
-switching to execveat() for service execution, but can't, because the
-contents of /proc/pid/comm are the file descriptor which was used,
-instead of the path to the binary. This makes the output of tools like
-top and ps useless, especially in a world where most fds are opened
-CLOEXEC so the number is truly meaningless.
 
-When the filename passed in is empty (e.g. with AT_EMPTY_PATH), use the
-dentry's filename for "comm" instead of using the useless numeral from
-the synthetic fdpath construction. This way the actual exec machinery
-is unchanged, but cosmetically the comm looks reasonable to admins
-investigating things.
+--42vhhdfvrpiztluk
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] exec: fix up /proc/pid/comm in the
+ execveat(AT_EMPTY_PATH) case
+MIME-Version: 1.0
 
-Instead of adding TASK_COMM_LEN more bytes to bprm, use one of the unused
-flag bits to indicate that we need to set "comm" from the dentry.
+On 2024-11-29, Kees Cook <kees@kernel.org> wrote:
+> Zbigniew mentioned at Linux Plumber's that systemd is interested in
+> switching to execveat() for service execution, but can't, because the
+> contents of /proc/pid/comm are the file descriptor which was used,
+> instead of the path to the binary. This makes the output of tools like
+> top and ps useless, especially in a world where most fds are opened
+> CLOEXEC so the number is truly meaningless.
+>=20
+> When the filename passed in is empty (e.g. with AT_EMPTY_PATH), use the
+> dentry's filename for "comm" instead of using the useless numeral from
+> the synthetic fdpath construction. This way the actual exec machinery
+> is unchanged, but cosmetically the comm looks reasonable to admins
+> investigating things.
+>=20
+> Instead of adding TASK_COMM_LEN more bytes to bprm, use one of the unused
+> flag bits to indicate that we need to set "comm" from the dentry.
 
-Suggested-by: Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl>
-Suggested-by: Tycho Andersen <tandersen@netflix.com>
-Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-CC: Aleksa Sarai <cyphar@cyphar.com>
-Link: https://github.com/uapi-group/kernel-features#set-comm-field-before-exec
-Signed-off-by: Kees Cook <kees@kernel.org>
----
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Eric Biederman <ebiederm@xmission.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Christian Brauner <brauner@kernel.org>
-Cc: Jan Kara <jack@suse.cz>
-Cc: linux-mm@kvack.org
-Cc: linux-fsdevel@vger.kernel.org
+Looks reasonable to me, feel free to take my
 
-Here's what I've put together from the various suggestions. I didn't
-want to needlessly grow bprm, so I just added a flag instead. Otherwise,
-this is very similar to what Linus and Al suggested.
----
- fs/exec.c               | 22 +++++++++++++++++++---
- include/linux/binfmts.h |  4 +++-
- 2 files changed, 22 insertions(+), 4 deletions(-)
+Reviewed-by: Aleksa Sarai <cyphar@cyphar.com>
 
-diff --git a/fs/exec.c b/fs/exec.c
-index 5f16500ac325..d897d60ca5c2 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -1347,7 +1347,21 @@ int begin_new_exec(struct linux_binprm * bprm)
- 		set_dumpable(current->mm, SUID_DUMP_USER);
- 
- 	perf_event_exec();
--	__set_task_comm(me, kbasename(bprm->filename), true);
-+
-+	/*
-+	 * If the original filename was empty, alloc_bprm() made up a path
-+	 * that will probably not be useful to admins running ps or similar.
-+	 * Let's fix it up to be something reasonable.
-+	 */
-+	if (bprm->comm_from_dentry) {
-+		rcu_read_lock();
-+		/* The dentry name won't change while we hold the rcu read lock. */
-+		__set_task_comm(me, smp_load_acquire(&bprm->file->f_path.dentry->d_name.name),
-+				true);
-+		rcu_read_unlock();
-+	} else {
-+		__set_task_comm(me, kbasename(bprm->filename), true);
-+	}
- 
- 	/* An exec changes our domain. We are no longer part of the thread
- 	   group */
-@@ -1521,11 +1535,13 @@ static struct linux_binprm *alloc_bprm(int fd, struct filename *filename, int fl
- 	if (fd == AT_FDCWD || filename->name[0] == '/') {
- 		bprm->filename = filename->name;
- 	} else {
--		if (filename->name[0] == '\0')
-+		if (filename->name[0] == '\0') {
- 			bprm->fdpath = kasprintf(GFP_KERNEL, "/dev/fd/%d", fd);
--		else
-+			bprm->comm_from_dentry = 1;
-+		} else {
- 			bprm->fdpath = kasprintf(GFP_KERNEL, "/dev/fd/%d/%s",
- 						  fd, filename->name);
-+		}
- 		if (!bprm->fdpath)
- 			goto out_free;
- 
-diff --git a/include/linux/binfmts.h b/include/linux/binfmts.h
-index e6c00e860951..3305c849abd6 100644
---- a/include/linux/binfmts.h
-+++ b/include/linux/binfmts.h
-@@ -42,7 +42,9 @@ struct linux_binprm {
- 		 * Set when errors can no longer be returned to the
- 		 * original userspace.
- 		 */
--		point_of_no_return:1;
-+		point_of_no_return:1,
-+		/* Set when "comm" must come from the dentry. */
-+		comm_from_dentry:1;
- 	struct file *executable; /* Executable to pass to the interpreter */
- 	struct file *interpreter;
- 	struct file *file;
--- 
-2.34.1
+>=20
+> Suggested-by: Zbigniew J=C4=99drzejewski-Szmek <zbyszek@in.waw.pl>
+> Suggested-by: Tycho Andersen <tandersen@netflix.com>
+> Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
+> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+> CC: Aleksa Sarai <cyphar@cyphar.com>
+> Link: https://github.com/uapi-group/kernel-features#set-comm-field-before=
+-exec
+> Signed-off-by: Kees Cook <kees@kernel.org>
+> ---
+> Cc: Al Viro <viro@zeniv.linux.org.uk>
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> Cc: Eric Biederman <ebiederm@xmission.com>
+> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+> Cc: Christian Brauner <brauner@kernel.org>
+> Cc: Jan Kara <jack@suse.cz>
+> Cc: linux-mm@kvack.org
+> Cc: linux-fsdevel@vger.kernel.org
+>=20
+> Here's what I've put together from the various suggestions. I didn't
+> want to needlessly grow bprm, so I just added a flag instead. Otherwise,
+> this is very similar to what Linus and Al suggested.
+> ---
+>  fs/exec.c               | 22 +++++++++++++++++++---
+>  include/linux/binfmts.h |  4 +++-
+>  2 files changed, 22 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/fs/exec.c b/fs/exec.c
+> index 5f16500ac325..d897d60ca5c2 100644
+> --- a/fs/exec.c
+> +++ b/fs/exec.c
+> @@ -1347,7 +1347,21 @@ int begin_new_exec(struct linux_binprm * bprm)
+>  		set_dumpable(current->mm, SUID_DUMP_USER);
+> =20
+>  	perf_event_exec();
+> -	__set_task_comm(me, kbasename(bprm->filename), true);
+> +
+> +	/*
+> +	 * If the original filename was empty, alloc_bprm() made up a path
+> +	 * that will probably not be useful to admins running ps or similar.
+> +	 * Let's fix it up to be something reasonable.
+> +	 */
+> +	if (bprm->comm_from_dentry) {
+> +		rcu_read_lock();
+> +		/* The dentry name won't change while we hold the rcu read lock. */
+> +		__set_task_comm(me, smp_load_acquire(&bprm->file->f_path.dentry->d_nam=
+e.name),
+> +				true);
+> +		rcu_read_unlock();
+> +	} else {
+> +		__set_task_comm(me, kbasename(bprm->filename), true);
+> +	}
+> =20
+>  	/* An exec changes our domain. We are no longer part of the thread
+>  	   group */
+> @@ -1521,11 +1535,13 @@ static struct linux_binprm *alloc_bprm(int fd, st=
+ruct filename *filename, int fl
+>  	if (fd =3D=3D AT_FDCWD || filename->name[0] =3D=3D '/') {
+>  		bprm->filename =3D filename->name;
+>  	} else {
+> -		if (filename->name[0] =3D=3D '\0')
+> +		if (filename->name[0] =3D=3D '\0') {
+>  			bprm->fdpath =3D kasprintf(GFP_KERNEL, "/dev/fd/%d", fd);
+> -		else
+> +			bprm->comm_from_dentry =3D 1;
+> +		} else {
+>  			bprm->fdpath =3D kasprintf(GFP_KERNEL, "/dev/fd/%d/%s",
+>  						  fd, filename->name);
+> +		}
+>  		if (!bprm->fdpath)
+>  			goto out_free;
+> =20
+> diff --git a/include/linux/binfmts.h b/include/linux/binfmts.h
+> index e6c00e860951..3305c849abd6 100644
+> --- a/include/linux/binfmts.h
+> +++ b/include/linux/binfmts.h
+> @@ -42,7 +42,9 @@ struct linux_binprm {
+>  		 * Set when errors can no longer be returned to the
+>  		 * original userspace.
+>  		 */
+> -		point_of_no_return:1;
+> +		point_of_no_return:1,
+> +		/* Set when "comm" must come from the dentry. */
+> +		comm_from_dentry:1;
+>  	struct file *executable; /* Executable to pass to the interpreter */
+>  	struct file *interpreter;
+>  	struct file *file;
+> --=20
+> 2.34.1
+>=20
 
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
+
+--42vhhdfvrpiztluk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQS2TklVsp+j1GPyqQYol/rSt+lEbwUCZ0qovQAKCRAol/rSt+lE
+b5FTAP93qPm+eNSOs09B1018U/ThWjWGx3wa4e4OQ8UG49LWDgEA4ffCR0fzoQV8
+nR57GUKYqfUw7R1e46eST1APMDTMtg0=
+=Qnvr
+-----END PGP SIGNATURE-----
+
+--42vhhdfvrpiztluk--
