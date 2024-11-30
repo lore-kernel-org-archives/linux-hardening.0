@@ -1,108 +1,133 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32923132103
-	for <linux-hardening@vger.kernel.org>; Sat, 30 Nov 2024 21:39:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 909621AA1F8
+	for <linux-hardening@vger.kernel.org>; Sat, 30 Nov 2024 21:40:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.85.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733002747; cv=none; b=aTUIo03X16bbgrMznnBQWTjCT7r6KtQ8swLXot4NrlKzl+1o5+3qyc61KBB6H3ORvjBorgMl+9lx2Ttb4fr7BvRTNxUzLDPAUI1FN+faJJ1eB7UodjdH7LXTThgHw04YrsUg7JRLM6IXbQguhmJKKvl8Rfe6N7iEh0N+tNYBkw4=
+	t=1733002850; cv=none; b=gcX0+7oUWleTzqYC3bppfR4vChMn/cjslvNGoD83GxMlPaxiIkJp/eSiM2TcUMRQL5n8Xm7OIA78bFzGFGabGp7saSkfpvTF+GqQDkYYGiWAFaJCpOI4xWJcriAOrD8LU/iB0DGiEFBXdYiuPG/Yd0BPE8R97owH+ApaeBEgCho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733002747; c=relaxed/simple;
-	bh=QIh5LPdBUUadt5QzHZ7uB31Jw1WDhsvFhK956BLp8P8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CZtXra6ht/uyNwoDPac9YkCEcCQZ5EXtOH5H8DMah2Qxg/NTYae7f3ncV94s7wodA3EHZI5ogw4jDKD4ZZKw7a0xAFp1qkKe6mwnVSKIqQ74nwfOxiG4+ZE6OPeFiS6nXDaHdsieU53HqrTofnfsf2YPduPy2s8y/cbdVSYNoU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Rs6amgc5; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Rs6amgc5"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a9ec267b879so436255066b.2
-        for <linux-hardening@vger.kernel.org>; Sat, 30 Nov 2024 13:39:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1733002743; x=1733607543; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Pw67/dEHvgxdkhQ24l1tOBa/DcJdy1WA/fl+pLzPNUA=;
-        b=Rs6amgc5gDdUww+n2XWgrpGlOFFiVgFrKd88UPbnQTBUVoOjtSG0dqKWbvtgSvERjL
-         8sNoCczC5o+/qhLWCIFF9AsSJmygyfNqnK5MfUjAZU6+qd9U+F4Z7jVqrjfvm+YnNqXR
-         23SZ58ZEjXTGcJXg0ca1yrqm0F/OTCKw77+pM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733002743; x=1733607543;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Pw67/dEHvgxdkhQ24l1tOBa/DcJdy1WA/fl+pLzPNUA=;
-        b=NV+c+lYlGyIm/gYDclpB8CFO1l+aWDUTRF8Y2jGaoiCqo+7S3cGTvN0dAYHyASmxMY
-         ncgYKRzc3YlUNBoADt296FEQtxapKJKUGWWe+NorI3TlrZx9T0I+ukEhBDvMutmPrN4/
-         ybylHTYqQYFQjD/dfk9lpkK55KCR9HjlInW0wBYGMyXoTR5ddhSPReTIOmpQK93WdeRL
-         BmnGg/t6QyTMu0G5Dtu3GYBEffzrAaxe5dJYHroi+L9g3+zC+u0ww+fyVk7KmDyk4Qgi
-         j9YrLernlpmzF6rgHuCKq/P8Gg0EQqR2Qz2YZuu4PDco7Vebf3QWWGOrC9Omo/ZHdK6j
-         r54w==
-X-Forwarded-Encrypted: i=1; AJvYcCVJlECmwROhvQqxBpmcvdBdUtzWYzzPKF5LhyMKqJ+VuQathFOSNgLBT4cred7/N1jH0iC8kjo7piE6Xdz4ujw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxj2GCTXqfQMFsX+marChaQpGPvAMBwshlBpU9NiqOOxzRe1Lnz
-	LWrYUes9okhz0BM9mjjNNfgH8aKTq2QkzClKFLea2WsT+VK30oSKMqHxsQApiFUWhijb/MZHYgQ
-	P6qBkJw==
-X-Gm-Gg: ASbGnctTfRxoKjuLXVGTBOojy2H3CIYhSN3ftZ6G033mExalzKXw3n954PN3dvAeuUJ
-	UI3R0c7+9bfbrGELSDIhUYAaZa2A3fz6CGgfV4poUMU2L05QUJWeXpWbYmUCzjlFOCjLTzO5c7w
-	UatAuBenfwVzC5Qz80TBtZQWqwKmGvvNA+c9klPtcST5CjDDPQXDTHxQgwOQnpf8xlwIfu/tcdb
-	CjfVEr4yZG5x5OSatqPvx+ec6Xl/9G4U4z7ToJSCQ98KIrdta7Rs0moU3AElKdfO30Q2mc6N1X4
-	ooZsOnZJg/gG1zSBO2TejLJI
-X-Google-Smtp-Source: AGHT+IFlc4uN6PVj77tV+8T/bkmgzfwX7ei7x1xV1VTGV1WKLo1sLhYjBxfqU8VftesmA1zhMZRQUw==
-X-Received: by 2002:a17:906:3145:b0:aa5:1d68:1ec8 with SMTP id a640c23a62f3a-aa580eddd16mr1419176166b.7.1733002743296;
-        Sat, 30 Nov 2024 13:39:03 -0800 (PST)
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com. [209.85.218.52])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aa5997fcf5bsm319563966b.84.2024.11.30.13.39.01
-        for <linux-hardening@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 30 Nov 2024 13:39:02 -0800 (PST)
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a9f1c590ecdso466747266b.1
-        for <linux-hardening@vger.kernel.org>; Sat, 30 Nov 2024 13:39:01 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVNcdgf1I/CWQzwU2Z1iIU0FqE4d1L4+1srM43klJQThh05nSvt1xKR0KiUQ72LzBGk4AlhvP8nNMwZo1n/dII=@vger.kernel.org
-X-Received: by 2002:a17:906:3090:b0:aa5:1585:ef33 with SMTP id
- a640c23a62f3a-aa580f1ae0emr1355585766b.23.1733002401515; Sat, 30 Nov 2024
- 13:33:21 -0800 (PST)
+	s=arc-20240116; t=1733002850; c=relaxed/simple;
+	bh=D5xcJAsDkXmo34++46K3Zh1aU9K5vOZ0aFsvamdr0Ys=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 MIME-Version:Content-Type; b=jQB6jqVaZn2aHAIZZYS5TvtIdxK+HhQjmJpaPxne8NK9t4ZogyXF4brveZUvOiziceSuzCmCRL3wjyclN9dJUH9TH/853VOB+Hn06C5toHV9LjzAvCp0vA+Qw6r3DqUArud4QY6p2OpGtqY35bAXKRXUFqTXht/GcJ5RaHlIBrg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.85.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-188-g14xKN3oMnyOJnv5xybuBA-1; Sat, 30 Nov 2024 21:40:38 +0000
+X-MC-Unique: g14xKN3oMnyOJnv5xybuBA-1
+X-Mimecast-MFC-AGG-ID: g14xKN3oMnyOJnv5xybuBA
+Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
+ (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Sat, 30 Nov
+ 2024 21:40:14 +0000
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.048; Sat, 30 Nov 2024 21:40:14 +0000
+From: David Laight <David.Laight@ACULAB.COM>
+To: 'Kees Cook' <kees@kernel.org>, Eric Biederman <ebiederm@xmission.com>
+CC: Linus Torvalds <torvalds@linux-foundation.org>, Alexander Viro
+	<viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara
+	<jack@suse.cz>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, Ingo Molnar
+	<mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Juri Lelli
+	<juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt
+	<rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman
+	<mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>, Jens Axboe
+	<axboe@kernel.dk>, Pavel Begunkov <asml.silence@gmail.com>, Andrew Morton
+	<akpm@linux-foundation.org>, Chen Yu <yu.c.chen@intel.com>, Shuah Khan
+	<skhan@linuxfoundation.org>, =?iso-8859-1?Q?Micka=EBl_Sala=FCn?=
+	<mic@digikod.net>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "io-uring@vger.kernel.org"
+	<io-uring@vger.kernel.org>, "linux-hardening@vger.kernel.org"
+	<linux-hardening@vger.kernel.org>
+Subject: RE: [PATCH] exec: Make sure task->comm is always NUL-terminated
+Thread-Topic: [PATCH] exec: Make sure task->comm is always NUL-terminated
+Thread-Index: AQHbQuM3vGxCxoQWAEqauiNGu7/fqLLQWTBw
+Date: Sat, 30 Nov 2024 21:40:14 +0000
+Message-ID: <b11a985992a44152bf8106c084747ed4@AcuMS.aculab.com>
+References: <20241130044909.work.541-kees@kernel.org>
+In-Reply-To: <20241130044909.work.541-kees@kernel.org>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241130044909.work.541-kees@kernel.org> <CAHk-=wjAmu9OBS--RwB+HQn4nhUku=7ECOnSRP8JG0oRU97-kA@mail.gmail.com>
- <202411301244.381F2B8D17@keescook>
-In-Reply-To: <202411301244.381F2B8D17@keescook>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Sat, 30 Nov 2024 13:33:05 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wgSsP6w=wLeydMiZLjNwDaZrxyTx7MjFHo+BLXa+6YtVg@mail.gmail.com>
-Message-ID: <CAHk-=wgSsP6w=wLeydMiZLjNwDaZrxyTx7MjFHo+BLXa+6YtVg@mail.gmail.com>
-Subject: Re: [PATCH] exec: Make sure task->comm is always NUL-terminated
-To: Kees Cook <kees@kernel.org>
-Cc: Eric Biederman <ebiederm@xmission.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, linux-mm@kvack.org, 
-	linux-fsdevel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
-	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
-	Valentin Schneider <vschneid@redhat.com>, Jens Axboe <axboe@kernel.dk>, 
-	Pavel Begunkov <asml.silence@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Chen Yu <yu.c.chen@intel.com>, Shuah Khan <skhan@linuxfoundation.org>, 
-	=?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
-	linux-kernel@vger.kernel.org, io-uring@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: IY9ljcXpVBu01u9qEqp5-Pvs3hPwiOyR0l15v_s4O18_1733002836
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, 30 Nov 2024 at 13:05, Kees Cook <kees@kernel.org> wrote:
+From: Kees Cook
+> Sent: 30 November 2024 04:49
 >
-> Yeah, this just means it has greater potential to be garbled.
+> Instead of adding a new use of the ambiguous strncpy(), we'd want to
+> use memtostr_pad() which enforces being able to check at compile time
+> that sizes are sensible, but this requires being able to see string
+> buffer lengths. Instead of trying to inline __set_task_comm() (which
+> needs to call trace and perf functions), just open-code it. But to
+> make sure we're always safe, add compile-time checking like we already
+> do for get_task_comm().
+...
+> Here's what I'd prefer to use to clean up set_task_comm(). I merged
+> Linus and Eric's suggestions and open-coded memtostr_pad().
+> ---
+>  fs/exec.c             | 12 ++++++------
+>  include/linux/sched.h |  9 ++++-----
+>  io_uring/io-wq.c      |  2 +-
+>  io_uring/sqpoll.c     |  2 +-
+>  kernel/kthread.c      |  3 ++-
+>  5 files changed, 14 insertions(+), 14 deletions(-)
+>=20
+> diff --git a/fs/exec.c b/fs/exec.c
+> index e0435b31a811..5f16500ac325 100644
+> --- a/fs/exec.c
+> +++ b/fs/exec.c
+> @@ -1200,16 +1200,16 @@ char *__get_task_comm(char *buf, size_t buf_size,=
+ struct task_struct *tsk)
+>  EXPORT_SYMBOL_GPL(__get_task_comm);
+>=20
+>  /*
+> - * These functions flushes out all traces of the currently running execu=
+table
+> - * so that a new one can be started
+> + * This is unlocked -- the string will always be NUL-terminated, but
+> + * may show overlapping contents if racing concurrent reads.
+>   */
+> -
+>  void __set_task_comm(struct task_struct *tsk, const char *buf, bool exec=
+)
+>  {
+> -=09task_lock(tsk);
+> +=09size_t len =3D min(strlen(buf), sizeof(tsk->comm) - 1);
+> +
+>  =09trace_task_rename(tsk, buf);
+> -=09strscpy_pad(tsk->comm, buf, sizeof(tsk->comm));
+> -=09task_unlock(tsk);
+> +=09memcpy(tsk->comm, buf, len);
+> +=09memset(&tsk->comm[len], 0, sizeof(tsk->comm) - len);
+>  =09perf_event_comm(tsk, exec);
 
-Garbled is fine. Id' just rather it be "consistently padded".
+Why not do strscpy_pad() into a local char[16] and then do a 16 byte
+memcpy() into the target buffer?
 
-> This is fine, but it doesn't solve either an unstable source nor
-> concurrent writers to dest.
+Then non-constant input data will always give a valid '\0' terminated strin=
+g
+regardless of how strscpy_pad() is implemented.
 
-Yeah, I guess concurrent writers will also cause possibly inconsistent padding.
+=09David
 
-Maybe we just don't care. As long as it's NUL-terminated, it's a
-string. If somebody is messing with the kernel, they get to the
-garbled string parts.
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
+PT, UK
+Registration No: 1397386 (Wales)
 
-           Linus
