@@ -1,133 +1,98 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 909621AA1F8
-	for <linux-hardening@vger.kernel.org>; Sat, 30 Nov 2024 21:40:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.85.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4B7BAD2F;
+	Sun,  1 Dec 2024 02:48:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733002850; cv=none; b=gcX0+7oUWleTzqYC3bppfR4vChMn/cjslvNGoD83GxMlPaxiIkJp/eSiM2TcUMRQL5n8Xm7OIA78bFzGFGabGp7saSkfpvTF+GqQDkYYGiWAFaJCpOI4xWJcriAOrD8LU/iB0DGiEFBXdYiuPG/Yd0BPE8R97owH+ApaeBEgCho=
+	t=1733021287; cv=none; b=PgQ17+QI6JnOP7Qx9pVXkhKkyYZ7w3fv3SwrJ3kXBQTFtSmZM4tdmpeem19g/bv0KEjG23sXP3SprY2FiSNNvaK3sMC4L6ZjBdkV19YisH91xFi+jKjyRs2L2q3WCqzEiQTfjQbguwA0nmHPRqTHeF1dZhEYNnQc8aH5gJ3Y7s4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733002850; c=relaxed/simple;
-	bh=D5xcJAsDkXmo34++46K3Zh1aU9K5vOZ0aFsvamdr0Ys=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 MIME-Version:Content-Type; b=jQB6jqVaZn2aHAIZZYS5TvtIdxK+HhQjmJpaPxne8NK9t4ZogyXF4brveZUvOiziceSuzCmCRL3wjyclN9dJUH9TH/853VOB+Hn06C5toHV9LjzAvCp0vA+Qw6r3DqUArud4QY6p2OpGtqY35bAXKRXUFqTXht/GcJ5RaHlIBrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.85.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-188-g14xKN3oMnyOJnv5xybuBA-1; Sat, 30 Nov 2024 21:40:38 +0000
-X-MC-Unique: g14xKN3oMnyOJnv5xybuBA-1
-X-Mimecast-MFC-AGG-ID: g14xKN3oMnyOJnv5xybuBA
-Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
- (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Sat, 30 Nov
- 2024 21:40:14 +0000
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Sat, 30 Nov 2024 21:40:14 +0000
-From: David Laight <David.Laight@ACULAB.COM>
-To: 'Kees Cook' <kees@kernel.org>, Eric Biederman <ebiederm@xmission.com>
-CC: Linus Torvalds <torvalds@linux-foundation.org>, Alexander Viro
-	<viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara
-	<jack@suse.cz>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, Ingo Molnar
-	<mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Juri Lelli
-	<juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt
-	<rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman
-	<mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>, Jens Axboe
-	<axboe@kernel.dk>, Pavel Begunkov <asml.silence@gmail.com>, Andrew Morton
-	<akpm@linux-foundation.org>, Chen Yu <yu.c.chen@intel.com>, Shuah Khan
-	<skhan@linuxfoundation.org>, =?iso-8859-1?Q?Micka=EBl_Sala=FCn?=
-	<mic@digikod.net>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "io-uring@vger.kernel.org"
-	<io-uring@vger.kernel.org>, "linux-hardening@vger.kernel.org"
-	<linux-hardening@vger.kernel.org>
-Subject: RE: [PATCH] exec: Make sure task->comm is always NUL-terminated
-Thread-Topic: [PATCH] exec: Make sure task->comm is always NUL-terminated
-Thread-Index: AQHbQuM3vGxCxoQWAEqauiNGu7/fqLLQWTBw
-Date: Sat, 30 Nov 2024 21:40:14 +0000
-Message-ID: <b11a985992a44152bf8106c084747ed4@AcuMS.aculab.com>
-References: <20241130044909.work.541-kees@kernel.org>
-In-Reply-To: <20241130044909.work.541-kees@kernel.org>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
+	s=arc-20240116; t=1733021287; c=relaxed/simple;
+	bh=/VSRMvT6+fhRg3ki/LdQRVg9gMWEYuL4F893ivPkmag=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WQQq0NID6Op/kzTh6dgqJdQwaXmzxvxgygNM/p/oeDNiJVLNZrdg0P2BnjsTJW9Zr5ksZamT0QJHzC47B/GwvSbn4Gt/vbplcBEN1hSk5yBBSjjx/eh2IvJ6k/QK/oXZdUj1q9EuFaNJaEOMNY63NkvUPr5952flNXhSx6vPpl8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=gm7d2env; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="gm7d2env"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
+	:Subject; bh=0gTfnan2PRic78M2GErX2vsIFTVHvia6IPklfDcQy5M=; b=gm7d2env4uAWWfbO
+	6gItubsi7E1dk/nmBoZldCWED4gqeBOgA9AfYk/cF1Q9in7qijg8HK14UzIMdpT+zsPe75qjt35du
+	un6HU+xQfztZjzMJGidcbzHqf1dgpLwjbcOcVNegsn98Mq0NT7FiC2/g/YIbtXXhxptBl489NuhdH
+	mZ82/i7Se3b5ODvyYri/9AOBy+bnyI/v7BU65gF/tABPIThe5ft/sKc6M2jV5HcB0zFY6Xw3n1wqi
+	uzijmk3Z0kel3QlQRxuW32bHq144GdKd/kTw6DYyrqk1AGml8yeah55kWJNOiVJrE++1hOV7KvHdM
+	NIB+yzb/8gv/EdPleQ==;
+Received: from dg by mx.treblig.org with local (Exim 4.96)
+	(envelope-from <dg@treblig.org>)
+	id 1tHZzx-002gpl-32;
+	Sun, 01 Dec 2024 02:47:49 +0000
+Date: Sun, 1 Dec 2024 02:47:49 +0000
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Petr Mladek <pmladek@suse.com>, kees@kernel.org, andy@kernel.org,
+	akpm@linux-foundation.org, linux@rasmusvillemoes.dk,
+	senozhatsky@chromium.org, linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] printf: Remove unused 'bprintf'
+Message-ID: <Z0vOVRcZQir0cjjo@gallifrey>
+References: <20241002173147.210107-1-linux@treblig.org>
+ <Zv5SLrKeQIpWnhsS@pathway.suse.cz>
+ <20241003111346.0654f1ac@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: IY9ljcXpVBu01u9qEqp5-Pvs3hPwiOyR0l15v_s4O18_1733002836
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+In-Reply-To: <20241003111346.0654f1ac@gandalf.local.home>
+X-Chocolate: 70 percent or better cocoa solids preferably
+X-Operating-System: Linux/6.1.0-21-amd64 (x86_64)
+X-Uptime: 02:47:25 up 206 days, 14:01,  1 user,  load average: 0.00, 0.00,
+ 0.00
+User-Agent: Mutt/2.2.12 (2023-09-09)
 
-From: Kees Cook
-> Sent: 30 November 2024 04:49
->
-> Instead of adding a new use of the ambiguous strncpy(), we'd want to
-> use memtostr_pad() which enforces being able to check at compile time
-> that sizes are sensible, but this requires being able to see string
-> buffer lengths. Instead of trying to inline __set_task_comm() (which
-> needs to call trace and perf functions), just open-code it. But to
-> make sure we're always safe, add compile-time checking like we already
-> do for get_task_comm().
-...
-> Here's what I'd prefer to use to clean up set_task_comm(). I merged
-> Linus and Eric's suggestions and open-coded memtostr_pad().
-> ---
->  fs/exec.c             | 12 ++++++------
->  include/linux/sched.h |  9 ++++-----
->  io_uring/io-wq.c      |  2 +-
->  io_uring/sqpoll.c     |  2 +-
->  kernel/kthread.c      |  3 ++-
->  5 files changed, 14 insertions(+), 14 deletions(-)
->=20
-> diff --git a/fs/exec.c b/fs/exec.c
-> index e0435b31a811..5f16500ac325 100644
-> --- a/fs/exec.c
-> +++ b/fs/exec.c
-> @@ -1200,16 +1200,16 @@ char *__get_task_comm(char *buf, size_t buf_size,=
- struct task_struct *tsk)
->  EXPORT_SYMBOL_GPL(__get_task_comm);
->=20
->  /*
-> - * These functions flushes out all traces of the currently running execu=
-table
-> - * so that a new one can be started
-> + * This is unlocked -- the string will always be NUL-terminated, but
-> + * may show overlapping contents if racing concurrent reads.
->   */
-> -
->  void __set_task_comm(struct task_struct *tsk, const char *buf, bool exec=
-)
->  {
-> -=09task_lock(tsk);
-> +=09size_t len =3D min(strlen(buf), sizeof(tsk->comm) - 1);
-> +
->  =09trace_task_rename(tsk, buf);
-> -=09strscpy_pad(tsk->comm, buf, sizeof(tsk->comm));
-> -=09task_unlock(tsk);
-> +=09memcpy(tsk->comm, buf, len);
-> +=09memset(&tsk->comm[len], 0, sizeof(tsk->comm) - len);
->  =09perf_event_comm(tsk, exec);
+* Steven Rostedt (rostedt@goodmis.org) wrote:
+> On Thu, 3 Oct 2024 10:13:34 +0200
+> Petr Mladek <pmladek@suse.com> wrote:
+> 
+> > On Wed 2024-10-02 18:31:47, linux@treblig.org wrote:
+> > > From: "Dr. David Alan Gilbert" <linux@treblig.org>
+> > > 
+> > > bprintf() is unused. Remove it. It was added in the commit 4370aa4aa753
+> > > ("vsprintf: add binary printf") but as far as I can see was never used,
+> > > unlike the other two functions in that patch.
+> > > 
+> > > Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+> > > Reviewed-by: Andy Shevchenko <andy@kernel.org>  
+> > 
+> > Looks good to me:
+> > 
+> > Acked-by: Petr Mladek <pmladek@suse.com>
+> > 
+> > I assume that Sven is going to take it via the ftrace tree as he
+> 
+>                Steven ;-)
+> 
+> > suggested at https://lore.kernel.org/r/20241002104807.42b4b64e@gandalf.local.home
+> 
+> Yeah, since I'm basically the only user of it, it's best it goes through my
+> testing.
 
-Why not do strscpy_pad() into a local char[16] and then do a 16 byte
-memcpy() into the target buffer?
+Hmm, did you pick this one up?
 
-Then non-constant input data will always give a valid '\0' terminated strin=
-g
-regardless of how strscpy_pad() is implemented.
+Dave
 
-=09David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
-PT, UK
-Registration No: 1397386 (Wales)
-
+> Thanks,
+> 
+> -- Steve
+> 
+> 
+-- 
+ -----Open up your eyes, open up your mind, open up your code -------   
+/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
+\        dave @ treblig.org |                               | In Hex /
+ \ _________________________|_____ http://www.treblig.org   |_______/
