@@ -1,106 +1,121 @@
-Received: from mail-ed1-f73.google.com (mail-ed1-f73.google.com [209.85.208.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 549FB1F426C
-	for <linux-hardening@vger.kernel.org>; Tue,  3 Dec 2024 14:08:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DCD41F4261
+	for <linux-hardening@vger.kernel.org>; Tue,  3 Dec 2024 14:10:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733234884; cv=none; b=U+ZTqJAJqi4VUjhNU92lgMa5auq4LCTdtgSMt1NgfxHCTKdf6V5Xk/74BJBgxP5lM8/oLHYy5xrTj7474MroQnXkVkTSBTvXWx8VglmdZGCRrKI7Std4Juirsnbq8ODWqYNk/yJLy4to+b+436yV2SyfM8Pj7YCyT7r4a9ZKwEw=
+	t=1733235033; cv=none; b=qBsFvociw259XG1lkZNSYyD/+tGN2t/zQEC5b8eq/qBUbCiNFCy3quv2v72JX/u13snzJxC9cYkMVoB3gjQgwC5KsWOAa5AYIAMYcZkraY0udv0i9+WpttcgY20bL5XF9xfpdu1jB9p6i/fhxl4+Bb1FFzoM2th/N4qCl82l+f4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733234884; c=relaxed/simple;
-	bh=dkRPz5hCP91YP+K/ZzeXcVdSbccaZFfQZLPNFXn+Ooc=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=oVjXeEU1XcLhvFkLKRjFXCTHjvNVEzmMhHuR3BMdqntT50OVRJ0HKtPx7i3x1QIMRclypWEyf9aawE5UsGlAD/jhBq0MjeK1tX9KBEiS+/vPrXbX0kS0lQOg9zoplsZWe0zShQmi7oBuiMaR6YWlM3XUQtQtqUP/ec7xnj3oMEk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--gnoack.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=i8Ao7fen; arc=none smtp.client-ip=209.85.208.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--gnoack.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="i8Ao7fen"
-Received: by mail-ed1-f73.google.com with SMTP id 4fb4d7f45d1cf-5d0abcc9c6cso3295937a12.3
-        for <linux-hardening@vger.kernel.org>; Tue, 03 Dec 2024 06:08:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1733234881; x=1733839681; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kgJ5Ld604A5Q3ZbtbqRhmhZWPfDB0owJn+W381THr6w=;
-        b=i8Ao7fenx6CZkLIhelDjr0ehgwqB26BuWvAOoXEDkM2FGa54kDsEG2U0bayGLE5ZHO
-         xe2nl4lpgy9repW2nMNOa2Q4yJXXGN6zJLf0MI9syKCNTV0W72V21l2EzW/ZYLW0qQqJ
-         T8HfrHjybt/rmKXE0Bb0kDiQXnxRkXJcvRu2m09ybL+TKaBbbrjXPISQqYbduLJRpx1x
-         nok1jQQX/LvWg9a/G4Nr4bgOpIT+zo3vlsC5h40R8r6Dxk61L/5m7b68rHwg5bJTHE5B
-         SgF9lUqPmREvFTCy9gY1VpILalxQ14xA4gFKmALRzpJ91MQQnslsIjeQlKnpwb9eUZ18
-         52nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733234881; x=1733839681;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=kgJ5Ld604A5Q3ZbtbqRhmhZWPfDB0owJn+W381THr6w=;
-        b=XUAzs7jURdPJD1R8CPmpK2dnm1LTyniPtCKIlIiX8Ow8F4o68Afh3lmSDtIxzTfdur
-         s4kxN3LPZAXVOeBrwdhDyI3EBy7qUwvOioWAaXZ8y0p0RCiDF8xP8E8b2IgocW/zpsb5
-         INOtdiQQ1gyi7OEc70sn8xwvlKgDyUeNJZPw9+5/0DEn+lrRP5viOIdXDnBRu+VC2u9n
-         YxLr15upn9BQteiP/XYOoOIB2RiOuncl5RJuqcsmniGWQEfwRf3E2/wCRQX5wjbZPJuV
-         sEvZsR/f/mxh0KMaqVOrtAsVPF7kCkawnxrE7DTFfJpYEUODVKwcmoYZOHazKdvVKX34
-         CJUA==
-X-Forwarded-Encrypted: i=1; AJvYcCUJuGrVX9Xz78/whe8O+A8imYpuS+34ff5zVwYMx0+907AMiWdW3s45y/0zlWZMcABXlzIhV/FHAtPUBxOOYNo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/+DWDCoJprEtHaqzb9jOZsN338S9EgYxS7EwsE7uLMudiqJ+l
-	6Bnpb1xWA34/1K/3sjyWyiXbx5zC4+fjsKYuYg29d3VFsW9X9flYbGVCxyGWEIzBtPZJo98w4ep
-	QUw==
-X-Google-Smtp-Source: AGHT+IEaY8KyMwf/CJRU3fMSCPPQTKC0ZN/MBI985OtghEJefG+CwM21x0l4ouja8k3Nx433ZCD451zKp0s=
-X-Received: from edxi12.prod.google.com ([2002:a05:6402:54c:b0:5cf:d3d9:308])
- (user=gnoack job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6402:13d1:b0:5d0:b2c8:8d04
- with SMTP id 4fb4d7f45d1cf-5d10cb5cc5amr2112502a12.18.1733234880753; Tue, 03
- Dec 2024 06:08:00 -0800 (PST)
-Date: Tue, 3 Dec 2024 15:07:58 +0100
-In-Reply-To: <Z08NV4Z-L0anDxGk@google.com>
+	s=arc-20240116; t=1733235033; c=relaxed/simple;
+	bh=tqA3TSsbSQcOIi2KAkTfgJqNwDsqVcUZ522UJWaCDiE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=QIhG3NiRIW5Fiycd3CSIHcG4HxtqO1La7isOjCCNXQflxsalqGT4AE7OoRxfvxXmEOmtgfd6aC9MiTPsWE9yGNOv7FbxzBt2rIkzBKmPAmxl67/pLqeseteDnNkTWCwOD8ypt6jmHuUzqKMZthUpuHZfIAfrZGlZZsDRV40tA7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.112])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Y2jGh5pWRz1JDX1;
+	Tue,  3 Dec 2024 22:10:20 +0800 (CST)
+Received: from dggpemf100008.china.huawei.com (unknown [7.185.36.138])
+	by mail.maildlp.com (Postfix) with ESMTPS id 731A314037F;
+	Tue,  3 Dec 2024 22:10:27 +0800 (CST)
+Received: from [10.174.177.243] (10.174.177.243) by
+ dggpemf100008.china.huawei.com (7.185.36.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Tue, 3 Dec 2024 22:10:26 +0800
+Message-ID: <d659d925-a322-4566-955a-97894a2aa795@huawei.com>
+Date: Tue, 3 Dec 2024 22:10:26 +0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <ee3ec63269b43b34e1c90dd8c9743bf8@finder.org> <CAG48ez0vg9W=oatvEqxvTSYNUx7htY23LxPrYCiuLZhZQuaGjg@mail.gmail.com>
- <Z08NV4Z-L0anDxGk@google.com>
-Message-ID: <Z08QvvfLSWGIDfBD@google.com>
-Subject: Re: GPM & Emacs broken in Linux 6.7 -- ok to relax check?
-From: "=?utf-8?Q?G=C3=BCnther?= Noack" <gnoack@google.com>
-To: Jann Horn <jannh@google.com>
-Cc: Jared Finder <jared@finder.org>, "Hanno =?utf-8?B?QsO2Y2s=?=" <hanno@hboeck.de>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	linux-hardening@vger.kernel.org, regressions@lists.linux.dev, 
-	kernel list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH -next] mm: usercopy: add a debugfs interface to bypass the
+ vmalloc check.
+To: Uladzislau Rezki <urezki@gmail.com>
+CC: zuoze <zuoze1@huawei.com>, Matthew Wilcox <willy@infradead.org>,
+	<gustavoars@kernel.org>, <akpm@linux-foundation.org>,
+	<linux-hardening@vger.kernel.org>, <linux-mm@kvack.org>,
+	<keescook@chromium.org>
+References: <20241203023159.219355-1-zuoze1@huawei.com>
+ <Z06FAoq59x07-hoN@casper.infradead.org>
+ <57f9eca2-effc-3a9f-932b-fd37ae6d0f87@huawei.com> <Z077_8rNvTGrCb8L@pc636>
+ <92768fc4-4fe0-f74a-d61c-dde0eb64e2c0@huawei.com>
+ <dd3f0a9f-ec3c-46c3-8231-2022b67094a6@huawei.com> <Z08KAupLBo--JGz8@pc636>
+ <76995749-1c2e-4f78-9aac-a4bff4b8097f@huawei.com> <Z08M88NdLfugqhu9@pc636>
+Content-Language: en-US
+From: Kefeng Wang <wangkefeng.wang@huawei.com>
+In-Reply-To: <Z08M88NdLfugqhu9@pc636>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggpemf100008.china.huawei.com (7.185.36.138)
 
-On Tue, Dec 03, 2024 at 02:53:27PM +0100, G=C3=BCnther Noack wrote:
-> Hanno, you are the original author of this patch and you have done a more
-> detailed analysis on the TIOCLINUX problems than me -- do you agree that =
-this
-> weakened check would still be sufficient to protect against the TIOCLINUX
-> problems?  (Or in other words, if we permitted TIOCL_SELPOINTER, TIOCL_SE=
-LCLEAR
-> and TIOCL_SELMOUSEREPORT for non-CAP_SYS_ADMIN processes, would you still=
- see a
-> way to misuse that functionality?)
 
-P.S.: For reference, some more detailed reasoning why I think that that pro=
-posal
-would be OK:
 
-It would protect at least against the "minittyjack.c" example that was atta=
-ched
-to https://www.openwall.com/lists/oss-security/2023/03/14/3
+On 2024/12/3 21:51, Uladzislau Rezki wrote:
+> On Tue, Dec 03, 2024 at 09:45:09PM +0800, Kefeng Wang wrote:
+>>
+>>
+>> On 2024/12/3 21:39, Uladzislau Rezki wrote:
+>>> On Tue, Dec 03, 2024 at 09:30:09PM +0800, Kefeng Wang wrote:
+>>>>
+>>>>
+>>>> On 2024/12/3 21:10, zuoze wrote:
+>>>>>
+>>>>>
+>>>>> 在 2024/12/3 20:39, Uladzislau Rezki 写道:
+>>>>>> On Tue, Dec 03, 2024 at 07:23:44PM +0800, zuoze wrote:
+>>>>>>> We have implemented host-guest communication based on the TUN device
+>>>>>>> using XSK[1]. The hardware is a Kunpeng 920 machine (ARM architecture),
+>>>>>>> and the operating system is based on the 6.6 LTS version with kernel
+>>>>>>> version 6.6. The specific stack for hotspot collection is as follows:
+>>>>>>>
+>>>>>>> -  100.00%     0.00%  vhost-12384  [unknown]      [k] 0000000000000000
+>>>>>>>       - ret_from_fork
+>>>>>>>          - 99.99% vhost_task_fn
+>>>>>>>             - 99.98% 0xffffdc59f619876c
+>>>>>>>                - 98.99% handle_rx_kick
+>>>>>>>                   - 98.94% handle_rx
+>>>>>>>                      - 94.92% tun_recvmsg
+>>>>>>>                         - 94.76% tun_do_read
+>>>>>>>                            - 94.62% tun_put_user_xdp_zc
+>>>>>>>                               - 63.53% __check_object_size
+>>>>>>>                                  - 63.49% __check_object_size.part.0
+>>>>>>>                                       find_vmap_area
+>>>>>>>                               - 30.02% _copy_to_iter
+>>>>>>>                                    __arch_copy_to_user
+>>>>>>>                      - 2.27% get_rx_bufs
+>>>>>>>                         - 2.12% vhost_get_vq_desc
+>>>>>>>                              1.49% __arch_copy_from_user
+>>>>>>>                      - 0.89% peek_head_len
+>>>>>>>                           0.54% xsk_tx_peek_desc
+>>>>>>>                      - 0.68% vhost_add_used_and_signal_n
+>>>>>>>                         - 0.53% eventfd_signal
+>>>>>>>                              eventfd_signal_mask
+>>>>>>>                - 0.94% handle_tx_kick
+>>>>>>>                   - 0.94% handle_tx
+>>>>>>>                      - handle_tx_copy
+>>>>>>>                         - 0.59% vhost_tx_batch.constprop.0
+>>>>>>>                              0.52% tun_sendmsg
+>>>>>>>
+>>>>>>> It can be observed that most of the overhead is concentrated in the
+>>>>>>> find_vmap_area function.
+>>>>>>>
+...
+>>
+> Thank you. Then you have tons of copy_to_iter/copy_from_iter calls
+> during your test case. Per each you need to find an area which might
+> be really heavy.
 
-The trick used there was:
+Exactly, no vmalloc check before 0aef499f3172 （"mm/usercopy: Detect 
+vmalloc overruns"), so no burden in find_vmap_area in old kernel.
 
-* ioctl() with TIOCLINUX with TIOCL_SETSEL with TIOCL_SELLINE,
-  to make a selection (a.k.a. changing the contents of vc_sel)
-* ioctl() with TIOCLINUX and TIOCL_PASTESEL to paste the selection.
-  (The implementation for that is in selection.c/paste_selection()
-  and is just copying from vc_sel.)
+> 
+> How many CPUs in a system you have?
+> 
 
-So as long as we are protecting the change to vc_sel, that should be OK in =
-my
-mind.
-
-=E2=80=94G=C3=BCnther
+128 core
