@@ -1,74 +1,45 @@
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 699511DFE23
-	for <linux-hardening@vger.kernel.org>; Tue,  3 Dec 2024 19:02:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3A5D203704
+	for <linux-hardening@vger.kernel.org>; Tue,  3 Dec 2024 19:56:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733252552; cv=none; b=KEgbBhq1bX4RHCQBryznVIpm2fPdGDio9Y+dfgr5IxmME5sG/dqtoJ4fCIi/4OWPQ7W7AXx4f25J3/IEfgWEps8gQaHo4agtRup24miI634Adav8bw048HWu1vH+LjqbJ0OhPcgQHlc/HfEetTRg9iKw6w5wCy6dHwCV0Ap7FS0=
+	t=1733255801; cv=none; b=qA1/d05d5pG6byEbWOIBhq+4XZnxv7RXp1tzGUf1ziH9t3TzpnvFOjj9sThtrD7YPl18Swb0qL4KOdu/wmIBkwjeQ7MpyQeoZaOHKwuLDV/GVZHIhlz4V/iwo2ASDlYiUWaHPRBJXPxqf8AtkkSlywrI7erNKTPkNoUNWZhMF/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733252552; c=relaxed/simple;
-	bh=nZk1imcCX4Bgsny81fF21sQHRD11Jv87PS0luMIzql4=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t3i1dtQbOOJSajCCvyGw2dbsiWggwWgA4FkSCKy6tFoCNMZZMwpZBG/wCUX0WYUcy0MykhoOqnKEF3eeezmJk1RoLGO0snEuI8L3lC8+U/F39Cd8fLki0Hi9oRnWWOPSfvNjXvq9XT35SW1MmC/m57C5z4CALLXotdXzsERACwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QqBTT33j; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1733255801; c=relaxed/simple;
+	bh=Ysjf2OBPK+7lL0p0Kkrh9+GmuYhpmnc7ExeCH0spffo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eru8AmWy7Pvt2tavyI4FU62lx4dmVUqgDawu8Gt4qbl5iDIX54ovmGcaNCW7Mhe6zfCulH3wHTyh2+HrMUDApliCCfntGAZSvoc4IMYqEWX4XkQrBVDwZwl8rnBe07eKmqCpicjtN7zJrCcxrPtmrfTP6R0zGcbQXDGSR6h15ng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ji8f1Xi3; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QqBTT33j"
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2ffdbc0c103so84169921fa.3
-        for <linux-hardening@vger.kernel.org>; Tue, 03 Dec 2024 11:02:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1733252548; x=1733857348; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=T/W4swd1nrnG8k0sk+wQz3igVR0h0dmv+YgpvdYYMmQ=;
-        b=QqBTT33jDjyOs0BehaOB7QwCvTVt1WVXjL4a/h12ejjYl+RUGzDS54qbiAiSySQcMv
-         suSlYtx5PtK3s8Ny3EeiPD77sz8VxJJt5jUzAeF9+VFxjtVUlotY3CcxrDNhA2Tcu6M6
-         PUx8TOi/pFOijES0io5HBZsIva6sFUYlAq0kkM6Y1eJNb5tGnGVtax18PhXGkFjl9MaJ
-         QyJrI2CXT17Nysg2C1rfkhby4yOUtfETKaeYjSA+fZtdphM9ajdfxUTOAgOWA4c1iesI
-         vZnDrnIQackwyQ+4zeHSv5gUDXwWFMRIQ1SZvfJsYSzDw/fQE+mOWTqyYBo82NDrsFJR
-         ixgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733252548; x=1733857348;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=T/W4swd1nrnG8k0sk+wQz3igVR0h0dmv+YgpvdYYMmQ=;
-        b=CFidkVXVhJs7AlTcBYaNuOL3eQ1NGZragD5sWysdwoKxogem7V9QUmVtNT+3QjgHox
-         8FNruYcvTg5RchB5D6Gk2kj6TowfNI76351e5VS5lTLUxbt/cL6WLMQOCb1UCRHppZ4P
-         kTO7vVt1OLD86XEQ8QNcpFqugK7JB97eKJBJqiXdTTGXISthFuwc4cMpnYkTTHyiVGCS
-         qB/Lq+d3ms6jcXYtugpfNfJ2aUDvdGq42GVsmgmFmdjn9cLsOB98yn1yQSaYCOZR1Cst
-         U3vt6HcxYTh+Cy2eVPB+0Rp3B6r/3l5R26N775vo8YbiD1xUuKF/oY7YPyJnRbwZ2gGE
-         p60A==
-X-Forwarded-Encrypted: i=1; AJvYcCXsJqQTlwS46SyLntIJ4ZJjaR7LYf8LzFXOG7UnhFdkWgPeQxk/cyOgLV23TjwjiW90ny3CiPIawcuxtESlEsM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx1vi0l0nMVdfxodbJT0+R13Jz9nJDp/DSSa3I00/bs2TSqVh09
-	goxAx9Pt6JLKrCEZpyafZAQmQ75DxA/SlLCRfTgtqw8eNUz68fuSGgYM8Q==
-X-Gm-Gg: ASbGncs9qrTQbHnoyplQPaWf5AiFWiwWXwY8ur5/SHF6wODPY4eFqpHnkRharMRKrQJ
-	mm79QQht5AgQ5A7O8NmDxc9cMb0qVl2Yc2T+HX8+sJu7TPqUtm1YdPRAAoW/5km+r9xmru/rzw9
-	OOkURP8hsrfz3DnI1g6HjcQ+HwZfgN0rhHefvR7oHgN5cb4KbojqJ08MI1oopVcT+dmbbQezCvm
-	0PgXgFysgwMO6o/ibMoOQ4YT/5u3+C+ZutX4t0Ycm/skA==
-X-Google-Smtp-Source: AGHT+IGqfS4F2u1liUNOa8FsxnmSFcHX6/qywcZALbqGR8ah608Vj56nCfYmWzfjUbCilkIUDWbKYg==
-X-Received: by 2002:a05:651c:2220:b0:2fb:36df:3b4 with SMTP id 38308e7fff4ca-30009d0288fmr39713311fa.34.1733252548158;
-        Tue, 03 Dec 2024 11:02:28 -0800 (PST)
-Received: from pc638.lan ([2001:9b1:d5a0:a500:2d8:61ff:fec9:d743])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ffdfc097b8sm17031661fa.62.2024.12.03.11.02.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Dec 2024 11:02:27 -0800 (PST)
-From: Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc638.lan>
-Date: Tue, 3 Dec 2024 20:02:26 +0100
-To: Kefeng Wang <wangkefeng.wang@huawei.com>, zuoze <zuoze1@huawei.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ji8f1Xi3"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=Ysjf2OBPK+7lL0p0Kkrh9+GmuYhpmnc7ExeCH0spffo=; b=ji8f1Xi3aYkLJFJGb8+khtGU/W
+	n1mXpETW+aegAdcTfhspyKITv4jJtQZF2i/Rj28KUk9B4et7yzK2r8kuwxNHtYSEHrrZZfM7co2eA
+	SZmM8lpyr5AAp1oHIpOzXRx+MM3yPckQU6Jgdb3HtkilRj+vN4x1Q9gGj+waIyXmCD9ddxWHffXV5
+	TLQAjVEtnFGL47EzoQqJ9bIEf5vA3RQs4qqwfAWygH1uSP/tCLJ6p5P7smRI2pTx+aX60Fdd0XdtF
+	MIWB3JkQrpe4de4V83SYzGBHqh2dMilQjh4jpwTZbVAtCEOh0QT330YD+uiWqVnJ6W0+MMazb0OK8
+	+oNL7mJA==;
+Received: from willy by casper.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tIZ0d-0000000AAHe-0Qcw;
+	Tue, 03 Dec 2024 19:56:35 +0000
+Date: Tue, 3 Dec 2024 19:56:34 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: Uladzislau Rezki <urezki@gmail.com>
 Cc: Kefeng Wang <wangkefeng.wang@huawei.com>, zuoze <zuoze1@huawei.com>,
-	Matthew Wilcox <willy@infradead.org>, gustavoars@kernel.org,
-	akpm@linux-foundation.org, linux-hardening@vger.kernel.org,
-	linux-mm@kvack.org, keescook@chromium.org
+	gustavoars@kernel.org, akpm@linux-foundation.org,
+	linux-hardening@vger.kernel.org, linux-mm@kvack.org,
+	keescook@chromium.org
 Subject: Re: [PATCH -next] mm: usercopy: add a debugfs interface to bypass
  the vmalloc check.
-Message-ID: <Z09VwuhfQbbro-gA@pc638.lan>
-References: <Z06FAoq59x07-hoN@casper.infradead.org>
- <57f9eca2-effc-3a9f-932b-fd37ae6d0f87@huawei.com>
+Message-ID: <Z09icnP7QuaLg4Qv@casper.infradead.org>
+References: <57f9eca2-effc-3a9f-932b-fd37ae6d0f87@huawei.com>
  <Z077_8rNvTGrCb8L@pc636>
  <92768fc4-4fe0-f74a-d61c-dde0eb64e2c0@huawei.com>
  <dd3f0a9f-ec3c-46c3-8231-2022b67094a6@huawei.com>
@@ -77,268 +48,32 @@ References: <Z06FAoq59x07-hoN@casper.infradead.org>
  <Z08M88NdLfugqhu9@pc636>
  <d659d925-a322-4566-955a-97894a2aa795@huawei.com>
  <Z08TlFqWVWs47g9z@pc636>
+ <Z09VwuhfQbbro-gA@pc638.lan>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z08TlFqWVWs47g9z@pc636>
+In-Reply-To: <Z09VwuhfQbbro-gA@pc638.lan>
 
-On Tue, Dec 03, 2024 at 03:20:04PM +0100, Uladzislau Rezki wrote:
-> On Tue, Dec 03, 2024 at 10:10:26PM +0800, Kefeng Wang wrote:
-> > 
-> > 
-> > On 2024/12/3 21:51, Uladzislau Rezki wrote:
-> > > On Tue, Dec 03, 2024 at 09:45:09PM +0800, Kefeng Wang wrote:
-> > > > 
-> > > > 
-> > > > On 2024/12/3 21:39, Uladzislau Rezki wrote:
-> > > > > On Tue, Dec 03, 2024 at 09:30:09PM +0800, Kefeng Wang wrote:
-> > > > > > 
-> > > > > > 
-> > > > > > On 2024/12/3 21:10, zuoze wrote:
-> > > > > > > 
-> > > > > > > 
-> > > > > > > 在 2024/12/3 20:39, Uladzislau Rezki 写道:
-> > > > > > > > On Tue, Dec 03, 2024 at 07:23:44PM +0800, zuoze wrote:
-> > > > > > > > > We have implemented host-guest communication based on the TUN device
-> > > > > > > > > using XSK[1]. The hardware is a Kunpeng 920 machine (ARM architecture),
-> > > > > > > > > and the operating system is based on the 6.6 LTS version with kernel
-> > > > > > > > > version 6.6. The specific stack for hotspot collection is as follows:
-> > > > > > > > > 
-> > > > > > > > > -  100.00%     0.00%  vhost-12384  [unknown]      [k] 0000000000000000
-> > > > > > > > >       - ret_from_fork
-> > > > > > > > >          - 99.99% vhost_task_fn
-> > > > > > > > >             - 99.98% 0xffffdc59f619876c
-> > > > > > > > >                - 98.99% handle_rx_kick
-> > > > > > > > >                   - 98.94% handle_rx
-> > > > > > > > >                      - 94.92% tun_recvmsg
-> > > > > > > > >                         - 94.76% tun_do_read
-> > > > > > > > >                            - 94.62% tun_put_user_xdp_zc
-> > > > > > > > >                               - 63.53% __check_object_size
-> > > > > > > > >                                  - 63.49% __check_object_size.part.0
-> > > > > > > > >                                       find_vmap_area
-> > > > > > > > >                               - 30.02% _copy_to_iter
-> > > > > > > > >                                    __arch_copy_to_user
-> > > > > > > > >                      - 2.27% get_rx_bufs
-> > > > > > > > >                         - 2.12% vhost_get_vq_desc
-> > > > > > > > >                              1.49% __arch_copy_from_user
-> > > > > > > > >                      - 0.89% peek_head_len
-> > > > > > > > >                           0.54% xsk_tx_peek_desc
-> > > > > > > > >                      - 0.68% vhost_add_used_and_signal_n
-> > > > > > > > >                         - 0.53% eventfd_signal
-> > > > > > > > >                              eventfd_signal_mask
-> > > > > > > > >                - 0.94% handle_tx_kick
-> > > > > > > > >                   - 0.94% handle_tx
-> > > > > > > > >                      - handle_tx_copy
-> > > > > > > > >                         - 0.59% vhost_tx_batch.constprop.0
-> > > > > > > > >                              0.52% tun_sendmsg
-> > > > > > > > > 
-> > > > > > > > > It can be observed that most of the overhead is concentrated in the
-> > > > > > > > > find_vmap_area function.
-> > > > > > > > > 
-> > ...
-> > > > 
-> > > Thank you. Then you have tons of copy_to_iter/copy_from_iter calls
-> > > during your test case. Per each you need to find an area which might
-> > > be really heavy.
-> > 
-> > Exactly, no vmalloc check before 0aef499f3172 （"mm/usercopy: Detect vmalloc
-> > overruns"), so no burden in find_vmap_area in old kernel.
-> > 
-> Yep. It will slow down for sure.
-> 
-> > > 
-> > > How many CPUs in a system you have?
-> > > 
-> > 
-> > 128 core
-> OK. Just in case, do you see in a boot log something like:
-> 
-> "Failed to allocate an array. Disable a node layer"
-> 
-And if you do not see such failing message, it means that a node layer
-is up and running fully, can you also test below patch on your workload?
+On Tue, Dec 03, 2024 at 08:02:26PM +0100, Uladzislau Rezki wrote:
 
-<snip>
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index 634162271c00..35b28be27cf4 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -896,7 +896,7 @@ static struct vmap_node {
-  * is fully disabled. Later on, after vmap is initialized these
-  * parameters are updated based on a system capacity.
-  */
--static struct vmap_node *vmap_nodes = &single;
-+static struct vmap_node **vmap_nodes;
- static __read_mostly unsigned int nr_vmap_nodes = 1;
- static __read_mostly unsigned int vmap_zone_size = 1;
- 
-@@ -909,13 +909,13 @@ addr_to_node_id(unsigned long addr)
- static inline struct vmap_node *
- addr_to_node(unsigned long addr)
- {
--	return &vmap_nodes[addr_to_node_id(addr)];
-+	return vmap_nodes[addr_to_node_id(addr)];
- }
- 
- static inline struct vmap_node *
- id_to_node(unsigned int id)
- {
--	return &vmap_nodes[id % nr_vmap_nodes];
-+	return vmap_nodes[id % nr_vmap_nodes];
- }
- 
- /*
-@@ -1060,7 +1060,7 @@ find_vmap_area_exceed_addr_lock(unsigned long addr, struct vmap_area **va)
- 
- repeat:
- 	for (i = 0, va_start_lowest = 0; i < nr_vmap_nodes; i++) {
--		vn = &vmap_nodes[i];
-+		vn = vmap_nodes[i];
- 
- 		spin_lock(&vn->busy.lock);
- 		*va = __find_vmap_area_exceed_addr(addr, &vn->busy.root);
-@@ -2240,7 +2240,7 @@ static bool __purge_vmap_area_lazy(unsigned long start, unsigned long end,
- 	purge_nodes = CPU_MASK_NONE;
- 
- 	for (i = 0; i < nr_vmap_nodes; i++) {
--		vn = &vmap_nodes[i];
-+		vn = vmap_nodes[i];
- 
- 		INIT_LIST_HEAD(&vn->purge_list);
- 		vn->skip_populate = full_pool_decay;
-@@ -2272,7 +2272,7 @@ static bool __purge_vmap_area_lazy(unsigned long start, unsigned long end,
- 		nr_purge_helpers = clamp(nr_purge_helpers, 1U, nr_purge_nodes) - 1;
- 
- 		for_each_cpu(i, &purge_nodes) {
--			vn = &vmap_nodes[i];
-+			vn = vmap_nodes[i];
- 
- 			if (nr_purge_helpers > 0) {
- 				INIT_WORK(&vn->purge_work, purge_vmap_node);
-@@ -2291,7 +2291,7 @@ static bool __purge_vmap_area_lazy(unsigned long start, unsigned long end,
- 		}
- 
- 		for_each_cpu(i, &purge_nodes) {
--			vn = &vmap_nodes[i];
-+			vn = vmap_nodes[i];
- 
- 			if (vn->purge_work.func) {
- 				flush_work(&vn->purge_work);
-@@ -2397,7 +2397,7 @@ struct vmap_area *find_vmap_area(unsigned long addr)
- 	 */
- 	i = j = addr_to_node_id(addr);
- 	do {
--		vn = &vmap_nodes[i];
-+		vn = vmap_nodes[i];
- 
- 		spin_lock(&vn->busy.lock);
- 		va = __find_vmap_area(addr, &vn->busy.root);
-@@ -2421,7 +2421,7 @@ static struct vmap_area *find_unlink_vmap_area(unsigned long addr)
- 	 */
- 	i = j = addr_to_node_id(addr);
- 	do {
--		vn = &vmap_nodes[i];
-+		vn = vmap_nodes[i];
- 
- 		spin_lock(&vn->busy.lock);
- 		va = __find_vmap_area(addr, &vn->busy.root);
-@@ -4928,7 +4928,7 @@ static void show_purge_info(struct seq_file *m)
- 	int i;
- 
- 	for (i = 0; i < nr_vmap_nodes; i++) {
--		vn = &vmap_nodes[i];
-+		vn = vmap_nodes[i];
- 
- 		spin_lock(&vn->lazy.lock);
- 		list_for_each_entry(va, &vn->lazy.head, list) {
-@@ -4948,7 +4948,7 @@ static int vmalloc_info_show(struct seq_file *m, void *p)
- 	int i;
- 
- 	for (i = 0; i < nr_vmap_nodes; i++) {
--		vn = &vmap_nodes[i];
-+		vn = vmap_nodes[i];
- 
- 		spin_lock(&vn->busy.lock);
- 		list_for_each_entry(va, &vn->busy.head, list) {
-@@ -5069,6 +5069,7 @@ static void __init vmap_init_free_space(void)
- 
- static void vmap_init_nodes(void)
- {
-+	struct vmap_node **nodes;
- 	struct vmap_node *vn;
- 	int i, n;
- 
-@@ -5087,23 +5088,34 @@ static void vmap_init_nodes(void)
- 	 * set of cores. Therefore a per-domain purging is supposed to
- 	 * be added as well as a per-domain balancing.
- 	 */
--	n = clamp_t(unsigned int, num_possible_cpus(), 1, 128);
-+	n = 1024;
- 
- 	if (n > 1) {
--		vn = kmalloc_array(n, sizeof(*vn), GFP_NOWAIT | __GFP_NOWARN);
--		if (vn) {
-+		nodes = kmalloc_array(n, sizeof(struct vmap_node **),
-+			GFP_NOWAIT | __GFP_NOWARN | __GFP_ZERO);
-+
-+		if (nodes) {
-+			for (i = 0; i < n; i++) {
-+				nodes[i] = kmalloc(sizeof(struct vmap_node), GFP_NOWAIT | __GFP_ZERO);
-+
-+				if (!nodes[i])
-+					break;
-+			}
-+
- 			/* Node partition is 16 pages. */
- 			vmap_zone_size = (1 << 4) * PAGE_SIZE;
--			nr_vmap_nodes = n;
--			vmap_nodes = vn;
-+			nr_vmap_nodes = i;
-+			vmap_nodes = nodes;
- 		} else {
- 			pr_err("Failed to allocate an array. Disable a node layer\n");
-+			vmap_nodes[0] = &single;
-+			nr_vmap_nodes = 1;
- 		}
- 	}
- #endif
- 
- 	for (n = 0; n < nr_vmap_nodes; n++) {
--		vn = &vmap_nodes[n];
-+		vn = vmap_nodes[n];
- 		vn->busy.root = RB_ROOT;
- 		INIT_LIST_HEAD(&vn->busy.head);
- 		spin_lock_init(&vn->busy.lock);
-@@ -5129,7 +5141,7 @@ vmap_node_shrink_count(struct shrinker *shrink, struct shrink_control *sc)
- 	int i, j;
- 
- 	for (count = 0, i = 0; i < nr_vmap_nodes; i++) {
--		vn = &vmap_nodes[i];
-+		vn = vmap_nodes[i];
- 
- 		for (j = 0; j < MAX_VA_SIZE_PAGES; j++)
- 			count += READ_ONCE(vn->pool[j].len);
-@@ -5144,7 +5156,7 @@ vmap_node_shrink_scan(struct shrinker *shrink, struct shrink_control *sc)
- 	int i;
- 
- 	for (i = 0; i < nr_vmap_nodes; i++)
--		decay_va_pool_node(&vmap_nodes[i], true);
-+		decay_va_pool_node(vmap_nodes[i], true);
- 
- 	return SHRINK_STOP;
- }
-<snip>
+I think there are a few other things we can try here.
 
-it sets a number of nodes to 1024. It would be really appreciated to see
-the perf-delta with this patch. If it improves the things or not.
+First, if the copy is small (and I still don't have an answer to that
+...), we can skip the vmalloc lookup if the copy doesn't cross a page
+boundary.
 
-Thank you in advance.
+Second, we could try storing this in a maple tree rather than an rbtree.
+That gives us RCU protected lookups rather than under a spinlock.
 
---
-Uladzislau Rezki
+It might even be worth going to a rwlock first, in case the problem is
+that there's severe lock contention.
+
+But I've asked for data on spinlock contention and not received an
+answer on that either, so I don't know what to suggest.
+
+Anyway, NACK to the original patch; that's just a horrible idea.
