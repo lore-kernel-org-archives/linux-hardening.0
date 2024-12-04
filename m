@@ -1,104 +1,71 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from kawka3.in.waw.pl (kawka3.in.waw.pl [68.183.222.220])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6F6A2B9B7;
-	Wed,  4 Dec 2024 23:58:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA00E1AF0A1;
+	Wed,  4 Dec 2024 23:59:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.183.222.220
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733356727; cv=none; b=s4ZO4PikqTniZuZNIfaIBFUuYBCiPBBf3RqZPOy52u/nyUVGFCT2k54inVhavUJkkjJeu/9eNqp/E9nSgC0stzcSJuotZMC9sA92xcy/0lRIEM5txIDK5c0o1NM4OBXubDGEV6toyxVkSgMIOg8pE/SvAymNghlH1qPMh4dQfFA=
+	t=1733356744; cv=none; b=DIG6mXTPWmu62lzZbVoGiVld2Yx4gpeBHpnc05aj7wZKOBO6LZgIBPnOaVu0f2tl4Weftwnn2y9h8v2TtIzNgGxdnmn+/B5xDlknkUdI3UfvS0KGMtNK7TJ3qIHC1KolHIFWC45djZfX/HQBE/4/utojTd+3QlCjOA+wkOG0Qf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733356727; c=relaxed/simple;
-	bh=SfP6s4VIWMTbvk2G5z6Y+FMQluZGJn5y1iWBpbzQLUc=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=b7Y4qO4Miledk8+hALpVdFfTUo0NwPsmsR+IVjParaCjYahQoOuFGRrUt7yGNowoy53FL2pk7w34e1SpX12Wd+3AXq3ABDV9qRBQ1jfiDnBMgsjyVm+PcTi1HH6fzJXboT3UeKCIGSwtrDSbnqbTuKyrPmeWrridJ+IcTZ9SQxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PuwxZRtU; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PuwxZRtU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCB77C4CECD;
-	Wed,  4 Dec 2024 23:58:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733356727;
-	bh=SfP6s4VIWMTbvk2G5z6Y+FMQluZGJn5y1iWBpbzQLUc=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=PuwxZRtU1iEBR/hrQMvR1LQ1CsjdX/f/kpaeCbz5fjMfNxC+GosCTzHqeudqViaOp
-	 2ByBbMc0Xx7W6RQa45NHVJrOc08iwMl4EMELNSi73UKzocDCFK/cXH+k06ZX7fy+AZ
-	 Uos7beTN5nbUG3fLgt+9mc5/mrID4QO6b40hz6xhx+/bMQMX2uUsS4/iLjMC3Am76c
-	 +4Hi2+CPbMm0bju/NxMSwHWGmn6nF9BQ3EWk/NBi519OE+V43OAyoZ3LrofjbipWHf
-	 UGGDPVG5ToCDAMjPrZujCikcuAgIft5iQMchwh4MM5duEzj+UnwtisVNrEFEcPDjTI
-	 B7Ajhpsb+SmqA==
-Date: Thu, 05 Dec 2024 09:58:44 +1000
-From: Kees Cook <kees@kernel.org>
-To: mailhol.vincent@wanadoo.fr,
- Vincent Mailhol via B4 Relay <devnull+mailhol.vincent.wanadoo.fr@kernel.org>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- David Laight <David.Laight@aculab.com>,
- Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
- Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>,
- Justin Stitt <justinstitt@google.com>, Yury Norov <yury.norov@gmail.com>,
- Rasmus Villemoes <linux@rasmusvillemoes.dk>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Jani Nikula <jani.nikula@linux.intel.com>,
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin <tursulin@ursulin.net>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Suzuki K Poulose <suzuki.poulose@arm.com>,
- Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Rikard Falkeborn <rikard.falkeborn@gmail.com>,
- Martin Uecker <Martin.Uecker@med.uni-goettingen.de>
-CC: linux-sparse@vger.kernel.org, linux-kernel@vger.kernel.org,
- llvm@lists.linux.dev, linux-hardening@vger.kernel.org,
- intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
- Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_00/10=5D_compiler=2Eh=3A_refactor_=5F=5Fis?=
- =?US-ASCII?Q?=5Fconstexpr=28=29_into_is=5F?=
- =?US-ASCII?Q?const=7B=2C=5Ftrue=2C=5Ffalse=7D=28=29?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20241203-is_constexpr-refactor-v1-0-4e4cbaecc216@wanadoo.fr>
-References: <20241203-is_constexpr-refactor-v1-0-4e4cbaecc216@wanadoo.fr>
-Message-ID: <FBEB24FF-5885-4938-8D1C-9B7BA9071FB9@kernel.org>
+	s=arc-20240116; t=1733356744; c=relaxed/simple;
+	bh=2cHuMuL3bbquJfw1YnlX4Rf7lFZ8x9rfe9wja96Zj0k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iMEDQ6Ama+ueisL/vzFDHxiTYMjQUZ6CNZhTA1bbP7w34JD0Db5fRCl5gG/7XZWs/Vok3hUovF4AuwvKDf7vpRSrobZQzfhrbFDbqyRLnBI2MtGL7pu8Xz1mYVFsblDHxnJVHrpzDLWKzaTbyg4lsUO7mU4FJA4+RevWHMGWSpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=in.waw.pl; spf=pass smtp.mailfrom=in.waw.pl; arc=none smtp.client-ip=68.183.222.220
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=in.waw.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=in.waw.pl
+Received: by kawka3.in.waw.pl (Postfix, from userid 1000)
+	id C2F315B99BA; Wed,  4 Dec 2024 23:50:08 +0000 (UTC)
+Date: Wed, 4 Dec 2024 23:50:08 +0000
+From: Zbigniew =?utf-8?Q?J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>
+To: Kees Cook <kees@kernel.org>
+Cc: Aleksa Sarai <cyphar@cyphar.com>, Al Viro <viro@zeniv.linux.org.uk>,
+	Tycho Andersen <tandersen@netflix.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] exec: fix up /proc/pid/comm in the
+ execveat(AT_EMPTY_PATH) case
+Message-ID: <Z1DqsDSYxLF85ljc@kawka3.in.waw.pl>
+References: <20241130045437.work.390-kees@kernel.org>
+ <20241130.055433-shy.herds.gross.wars-zGaSWwzAa56n@cyphar.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241130.055433-shy.herds.gross.wars-zGaSWwzAa56n@cyphar.com>
 
+On Sat, Nov 30, 2024 at 04:55:09PM +1100, Aleksa Sarai wrote:
+> On 2024-11-29, Kees Cook <kees@kernel.org> wrote:
+> > Zbigniew mentioned at Linux Plumber's that systemd is interested in
+> > switching to execveat() for service execution, but can't, because the
+> > contents of /proc/pid/comm are the file descriptor which was used,
+> > instead of the path to the binary. This makes the output of tools like
+> > top and ps useless, especially in a world where most fds are opened
+> > CLOEXEC so the number is truly meaningless.
+> > 
+> > When the filename passed in is empty (e.g. with AT_EMPTY_PATH), use the
+> > dentry's filename for "comm" instead of using the useless numeral from
+> > the synthetic fdpath construction. This way the actual exec machinery
+> > is unchanged, but cosmetically the comm looks reasonable to admins
+> > investigating things.
+> > 
+> > Instead of adding TASK_COMM_LEN more bytes to bprm, use one of the unused
+> > flag bits to indicate that we need to set "comm" from the dentry.
+> 
+> Looks reasonable to me, feel free to take my
+> 
+> Reviewed-by: Aleksa Sarai <cyphar@cyphar.com>
 
+Thank you for making another version of the patch.
 
-On December 3, 2024 3:33:22 AM GMT+10:00, Vincent Mailhol via B4 Relay <de=
-vnull+mailhol=2Evincent=2Ewanadoo=2Efr@kernel=2Eorg> wrote:
->This series is the spiritual successor of [1] which introduced
->const_true()=2E In [1], following a comment from David Laight, Linus
->came with a suggestion to simplify __is_constexpr() and its derived
->macros using a _Generic() selection=2E Because of the total change of
->scope, I am starting a new series=2E
->
->The goal is to introduce a set of three macros:
->
->  - is_const(): a one to one replacement of __is_constexpr() in term
->    of features but written in a less hacky way thanks to _Generic()=2E
->
->  - is_const_true(): tells whether or not the argument is a true
->    integer constant expression=2E
->
->  - is_const_false(): tells whether or not the argument is a false
->    integer constant expression=2E
+I tested this with systemd compiled to use fexecve and everything
+seems to work as expected (the filename in /proc//comm).
 
-But why make this change? Is something broken? Does it make builds faster?
-
-> 7 files changed, 97 insertions(+), 84 deletions(-)
-
-It makes the code larger too=2E I don't see what the benefit is, and given=
- how much time has been spent making sure the existing stuff works correctl=
-y, I feel like we should have a clear benefit to replacing it all=2E
-
--Kees
-
---=20
-Kees Cook
+Zbyszek
