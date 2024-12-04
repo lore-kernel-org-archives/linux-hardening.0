@@ -1,456 +1,194 @@
-Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7493F1F03C8
-	for <linux-hardening@vger.kernel.org>; Wed,  4 Dec 2024 17:43:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.52
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733334205; cv=none; b=WsLolmXhViN5zp7kEA7mOOLLjVw6+NulEcLrI7DK3KC98ygZ/04sQOPT/CqIoeI+cH9R8TE2cg0NtdoqRVvhvaQ4P6Ja37IXQknk0HeMhbd2r9vywz1uEvoT8nBjoyILbySj+K8qF8j7HQMeXRWzfj97Ibl53VYGizuJXjI3CA4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733334205; c=relaxed/simple;
-	bh=fuZGO0mwvNlu4pz5onjXe5Lhmx6+E/Ht/lDpbBO0t9w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tXfhrXEJNNKq7fuB4us0/6gkTajF9siZ9bAtEAdWRPVVbF3FQKx+rCcCZQlm+bIRsz8gUxNzu7Z2nUGnuEAXBrACxINEDO+h0YGB3oKLlZ+bHcreiW3WYtl/t/uhj+sEXqzkXDrsVIi++f+S/YxtxwKoQFDRbLeDJWvSFCwc3xQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=PuM1MJpZ; arc=none smtp.client-ip=209.85.160.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48BA52066C6;
+	Wed,  4 Dec 2024 18:06:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1733335619; cv=fail; b=bejv7CmKuDFZ/JnnqF4t39e+l5cjJ2uBU96nYhW7lkBrwomHxzd7tSRJ7viji0tux/V4DsG5QGJbgk3kZuBotr3n18DCHT23lp7yZAJTYEO9tL9gT2Y57KuXfKAI5bOKexNUlDV2eqwsWqQCfriuyoapnPBwp+SEYMYN4Y6qhcs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1733335619; c=relaxed/simple;
+	bh=b+kjNtstdLvOUZhZGF+/kI5725taJwiIW5/ZnB0sWWo=;
+	h=To:Cc:Subject:From:In-Reply-To:Message-ID:References:Date:
+	 Content-Type:MIME-Version; b=TAOUKeMYHh55YgszWkeP1uQhbBNAJ2t43Ty9F6KkoeJHx31glfNBYrzPrNf7NNGSA1dzua1nMTcgZpdJlxEm8JwtNlR76Y0gxXz2N0tmE6dgEGiVbDqqIlJSkJtzRHN+3vgvi1px2MPSwqgCLT10SKwedgUUe+dQlvRFIZfOJcM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=oi/g0vjK; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=tCZdUn83; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PuM1MJpZ"
-Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-29e36a3a130so9685fac.0
-        for <linux-hardening@vger.kernel.org>; Wed, 04 Dec 2024 09:43:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="oi/g0vjK";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="tCZdUn83"
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4B4HtYUw014319;
+	Wed, 4 Dec 2024 18:06:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2023-11-20; bh=hnIZt5m6+XM+EbnPQw
+	jWpYWArV9mPNARoXqP1ZK2Xs4=; b=oi/g0vjKHM/AeX12uR2SNTCCjQg25ne+A3
+	kHqZFk9el39iAj6bklzmIcrowkUhivjZy3h/5gP1+blaroPHzlwHS4H3+CgxrLJz
+	/pdnU6pmbEdgqBUmxfmvQcIF5a5Z1NEFVs+BhUNR74qMg4Xn79uBFTh3BAf33lVC
+	V2OlxCARVTftLQdXHw5zSczIk/iYi2MiyHFzBsooKc/KcDWJnI8zsg6veCqAe74v
+	gGzAHfz/BxE38i9R+x07I6xtUOnS1SK7iL2E9K+hF5SGegMkw6zjIBxwwWwl0UN4
+	rCJzc9Dynj3fVHbm3pQRwBg0qUZuY5Dy3c0+XNzgFI1F5ZVnb86A==
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 437sa01492-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 04 Dec 2024 18:06:38 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 4B4HvgdV039998;
+	Wed, 4 Dec 2024 18:06:38 GMT
+Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2174.outbound.protection.outlook.com [104.47.57.174])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 43836vrc20-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 04 Dec 2024 18:06:38 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=LHwBs68vzX5Bqj/Uv/r+ICZjtmBbSmyUOOaTuLOau+A2k73dNtQaWxrdGYotjPzSj9O8G/cKw9gPzLJbtdBPKQu/mfJHPBfAFVgSr2RlLc0irjyx9C4j0REAWIJjGiXiHl4UviweZ3RVTDwU9ZkoPFrcoVt9HdtsPojb4OJSAQTvO+WbJAMAp98BiYq19JMJhxA0K83tGiwiketQKp98TWMCyVvcBG+D3JQdls+sUNDqkCBjJkmvlvtiR11M0X0i8ajx6159LIg9Gd2IwAFeXmch+sYadg5iG1qMISj7tEm06kgA+fXw/eh38Ny2QH80SXvCvFEfEKSr5VcWc2n6Hg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=hnIZt5m6+XM+EbnPQwjWpYWArV9mPNARoXqP1ZK2Xs4=;
+ b=SkLqIgd36/cNHH7+MnhYNRhlp7jZTxqJskzz5BZp5+boae51fqgqLGM1jUfSkzjrCWr5FRZ/AO+ZydIsk/rwyKRkMMQtR9S3scua0ia0zlaVvv0/gOlVJKrJ5APXaesCsALCg9EECkuC9ct2v8sYGLG561lmSHsLnkBvhQRHGWjMgRO4e/4SSiefbQ10GyOICxsnOt/h7I0oZsOtz2p8k7K3ksKd5r4h+/8+yGtfXeEJ3fNAUKczLEYO+6k2E6ig5QzTtKLTaaUURAe32XF0VeFGcEMJVca+7MH/J2FEJfB4o/EBOOB3vBcVxKFclWJ00C4augBgMUjxs8lv4F1+4w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1733334202; x=1733939002; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ffpke/jppWMPMYS5jq5e2krncaNB3PESE9dICL+0s9E=;
-        b=PuM1MJpZCw0SIn3gV4kf4dsi4WXG4kRdgC05wj89vbVflPV8qQt7IONQcoP85d+3ie
-         oabvFEzXFdWHj8icP2uV6n6VEJt+4alfJ4H6tPWhg6f1XOJeujKpfpl+rfJJx+q9e2Lv
-         K7yquNZaGeq4No+RGC6dzVtPKhDls4H7iIGcg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733334202; x=1733939002;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ffpke/jppWMPMYS5jq5e2krncaNB3PESE9dICL+0s9E=;
-        b=TuaD8w1EC7qN58pmrE4WKAnc2JAvYD/YkTW+2dpbhfpraGhlLHJrVZDzFQMOIry+0o
-         VtXL+HSGBMYzr7gYTp39XHK7N8aAW9HZdsIeKLmSxootKFniRH76fW6d6mJ0SNp4fRvc
-         5/fqmupFNjAJt5S4qGVlxPJGlqkewXvwWsHTbjn/GQ48GdH9JMlllCONJy1VkortfN8e
-         Bv4dV6nkOAtOghZcmt9zEfvB3JHAVuF+Nj1tIAbi/FE3kid6UAkvAk0mTX4QY4mDZRRd
-         ZO6D31a4AJCiG8hfu6OX+ZG+wRDSfRrpfLFdDP+pZZkxPsdctxSAL13We0WOOVt+u2L4
-         LJ8g==
-X-Forwarded-Encrypted: i=1; AJvYcCXSw3s9vFmIxn4mzW7Ftq/PJEOJcSWlF6LinCpgUup2xDTBexfmNBMQSDuSTZxHdbjs2SjJ02+QfYo84sRz3Qs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxb0tVBgDNs+XXHYb9/mujVXk/5vgbBd+esu9bBAAZRKY/JNXwc
-	NFw/ymowwH8MnBknD0KhF/R2k71rNuP6ylXahGNnQbuUblXin8L1SJmTiNMDINymwBqbPQLrWaW
-	EjLdTy2s4hNTx+smRXU/fSDRYXm/SRqb4rMfX
-X-Gm-Gg: ASbGncuZqKnklhiMivSkERhk+SbywDBWXC1NLN1Tvn723JLZs5XmBG3QrpWjg4C5KAI
-	UqbmW7ZkNVsKwBg6iMQRbJ1OFG43Fx9xJO5kUdceXxN59U0LoOG7OAsHVB8jt
-X-Google-Smtp-Source: AGHT+IHn7HIS44KbWKiVM6s5E9Bw+9+7axO4PGKeqDfy0AQUicqEFXD0m4tWLtnwb7Q5Oi1HsxoxGTigCZlv6uhxias=
-X-Received: by 2002:a05:6820:1f15:b0:5e3:b1fe:b1a with SMTP id
- 006d021491bc7-5f25adf5fe6mr1079849eaf.2.1733334202423; Wed, 04 Dec 2024
- 09:43:22 -0800 (PST)
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hnIZt5m6+XM+EbnPQwjWpYWArV9mPNARoXqP1ZK2Xs4=;
+ b=tCZdUn83V8JqZie765lpNaHhSWymflyt9XPT218WPZXSx/FrY+BVLj4SYeIIZzrnQSXYOOir5NSr2rrIwbdx6057Du9ynGDSD2piA3RG2ruLq2PIfcY6tc3utgOH2uhDyihz3ijozh1932w8NZjzDj9QK5B3T7fYtOAKl56mZo0=
+Received: from CH0PR10MB5338.namprd10.prod.outlook.com (2603:10b6:610:cb::8)
+ by MW5PR10MB5825.namprd10.prod.outlook.com (2603:10b6:303:19a::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8207.18; Wed, 4 Dec
+ 2024 18:06:35 +0000
+Received: from CH0PR10MB5338.namprd10.prod.outlook.com
+ ([fe80::5cca:2bcc:cedb:d9bf]) by CH0PR10MB5338.namprd10.prod.outlook.com
+ ([fe80::5cca:2bcc:cedb:d9bf%5]) with mapi id 15.20.8230.010; Wed, 4 Dec 2024
+ 18:06:34 +0000
+To: Thorsten Blum <thorsten.blum@linux.dev>
+Cc: Lee Duncan <lduncan@suse.com>, Chris Leech <cleech@redhat.com>,
+        Mike
+ Christie <michael.christie@oracle.com>,
+        "James E.J. Bottomley"
+ <James.Bottomley@HansenPartnership.com>,
+        "Martin K. Petersen"
+ <martin.petersen@oracle.com>,
+        linux-hardening@vger.kernel.org,
+        "Gustavo
+ A. R. Silva" <gustavo@embeddedor.com>,
+        open-iscsi@googlegroups.com, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] scsi: Replace zero-length array with flexible array
+ member
+From: "Martin K. Petersen" <martin.petersen@oracle.com>
+In-Reply-To: <20241110223323.42772-2-thorsten.blum@linux.dev> (Thorsten Blum's
+	message of "Sun, 10 Nov 2024 23:33:24 +0100")
+Organization: Oracle Corporation
+Message-ID: <yq1r06nqq5c.fsf@ca-mkp.ca.oracle.com>
+References: <20241110223323.42772-2-thorsten.blum@linux.dev>
+Date: Wed, 04 Dec 2024 13:06:32 -0500
+Content-Type: text/plain
+X-ClientProxiedBy: SJ0PR05CA0136.namprd05.prod.outlook.com
+ (2603:10b6:a03:33d::21) To CH0PR10MB5338.namprd10.prod.outlook.com
+ (2603:10b6:610:cb::8)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241125202021.3684919-1-jeffxu@google.com> <20241125202021.3684919-2-jeffxu@google.com>
- <07ca17dce4638f11587da0ebd42bfc0533978298.camel@sipsolutions.net>
-In-Reply-To: <07ca17dce4638f11587da0ebd42bfc0533978298.camel@sipsolutions.net>
-From: Jeff Xu <jeffxu@chromium.org>
-Date: Wed, 4 Dec 2024 09:43:10 -0800
-Message-ID: <CABi2SkUU1ChZ6JJ_5aDCL2fQpNts3L3j69iK70UTt0ZJP3_FWw@mail.gmail.com>
-Subject: Re: [PATCH v4 1/1] exec: seal system mappings
-To: Benjamin Berg <benjamin@sipsolutions.net>
-Cc: akpm@linux-foundation.org, keescook@chromium.org, jannh@google.com, 
-	torvalds@linux-foundation.org, adhemerval.zanella@linaro.org, oleg@redhat.com, 
-	linux-um@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-mm@kvack.org, jorgelo@chromium.org, 
-	sroettger@google.com, ojeda@kernel.org, adobriyan@gmail.com, 
-	anna-maria@linutronix.de, mark.rutland@arm.com, linus.walleij@linaro.org, 
-	Jason@zx2c4.com, deller@gmx.de, rdunlap@infradead.org, davem@davemloft.net, 
-	hch@lst.de, peterx@redhat.com, hca@linux.ibm.com, f.fainelli@gmail.com, 
-	gerg@kernel.org, dave.hansen@linux.intel.com, mingo@kernel.org, 
-	ardb@kernel.org, Liam.Howlett@oracle.com, mhocko@suse.com, 
-	42.hyeyoo@gmail.com, peterz@infradead.org, ardb@google.com, enh@google.com, 
-	rientjes@google.com, groeck@chromium.org, mpe@ellerman.id.au
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH0PR10MB5338:EE_|MW5PR10MB5825:EE_
+X-MS-Office365-Filtering-Correlation-Id: 009bdc46-52a0-453e-9964-08dd148e63bd
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?5Z8PdS3mLRukiod5VhL+9B9zdHe5TPNxEyb+l1HdrTZoj2z3gGGySMKNP8gu?=
+ =?us-ascii?Q?nU0zmsIvuUAGi4mHotaw8q968UZ56uDvuB2HsDoprFDW/LYAeNeEt88g5kgn?=
+ =?us-ascii?Q?ygsIxEhHRs9Mp2NENqKIDjOuq2krxBzZMS8p1yN4gaMXfNASlBrYkQlVGySt?=
+ =?us-ascii?Q?iWxmu07czRUPpSLPBxTqVQTgJbbaAsgAxpxryrEuWRbhbmM9zfI5GPSdgdgX?=
+ =?us-ascii?Q?NxS3oiq4/b5Jcr4vydJoU2Daqvnwt9EYIgZr99fmKsT5gtH94mpSQ4wRnP0f?=
+ =?us-ascii?Q?pozCQy3VZ89Ak6fMCQUakD5fC3qxee1G3/zsvXvl5Io1kKsXeXzxi1E5GBfE?=
+ =?us-ascii?Q?JSMvgLiioQooMhmRPJOKeM+YwsCtHk4rX3sBn1haFej2e0OBHX3r4AfZ49Va?=
+ =?us-ascii?Q?Fi4MH7sdKdgFDTmcJ2aNg4wkeqiNaz8KzKh+vOGMSTWOn9jMdfj7dd39Gy/A?=
+ =?us-ascii?Q?l2v2iH2mWrp5swur9HigmNRsrRqiz7R7/KzkaQtGrybhCzPf3Uy2K7z7z70Z?=
+ =?us-ascii?Q?6u5Dj94lLjI/EKttufUHl5q2mDUyoDdKbh4oK8hq6iFHA1UoAUyaObD3Y00k?=
+ =?us-ascii?Q?n2COX1PPnb+Brem3nyUrR+9Q1sMSgQMD5dgaNj5vEorCIYuv6VJ7MusGAL/N?=
+ =?us-ascii?Q?Jam5JLYeDyeHojHM6ixRKYVRxgyuo5IAsYRnPSfUGi/O8CVFKDou2ejYFjfS?=
+ =?us-ascii?Q?nCK57DUJhi5AqP/HvIBWXGfA8jZoDTc5yKlZ8AyfLiM2PHfh0t2LYtegbMyi?=
+ =?us-ascii?Q?CtmDzzCcFDFwN8uf6+9zp0Qk65LqKwvFp+Urm6k+b7kChOz41WFQ6OJqPOIV?=
+ =?us-ascii?Q?Udov3OUD1zfA+fXg2pm5BbQhZehuBg6E4zIKSL908+D/KkAjJHMvfMackVrJ?=
+ =?us-ascii?Q?1i4QayJBbx6VV9CgEDWeVhdhueq8HVAW/2IpGvwLuOWfK3y1RCswOFsji+oE?=
+ =?us-ascii?Q?xu503iLxZ5ZABPekNFACYZnjxwhtOSCIQCJbtQpUwOJUQNrAM+vxbzXSvuzT?=
+ =?us-ascii?Q?6ZRDWpZSYLKiSoe6ztpyDGCh/Zsxj04WhpU3oOK5RmvnnQyqqJDvCwKsxnk8?=
+ =?us-ascii?Q?u330tjh2F/Z/n4azeV3D9DTjaFQKbKLZnjQZsaMgD+KqpHAOT9rzy3jE/iQR?=
+ =?us-ascii?Q?43njreIV8Tfn5sP3mCDYVS9fooY46LKeNgCHcVIjl/oWCRlYdOQdyokSraC5?=
+ =?us-ascii?Q?LymambipY5yIBX1N2ZSHuOvI5EvQdzqEaP+uxmBaGAS+MnKXqYEdEpj4r+0M?=
+ =?us-ascii?Q?6shI2jabb1XQLUCesDlPnnyd/SJlaOCxZxQr1tkT2My9zyXOEdoSbwgl0n24?=
+ =?us-ascii?Q?kdI5EJWtXCQvRxa05KSN8MXJb6ViO0e7wasu0Z7QmDNN/w=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR10MB5338.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?tq7lUD3t6C4aDfDEIfDeOD5Lz7DfBgzvlxR/F7U+5WeGBtPAzqshVrEyg2I9?=
+ =?us-ascii?Q?8gi7rfNbDt1bk2lm26lnhTWhayBshWtjnLNRzjU6hLH7bndQ8D1J0cFffuPE?=
+ =?us-ascii?Q?33+sZzIUG92WizhphuUuAKfo7+u0g3Gu6+dO6iYFrCViIqCbvTeMuJN6KdWQ?=
+ =?us-ascii?Q?tlQGR0Uu/3fFksTjz0IqE+Zuq65vYCiNPvPY7TlLvc2vdiJ41fu5oQBQABui?=
+ =?us-ascii?Q?/5Tyok29LBl2XqFlhoeN5sNdGZ25cZxTUlXKQ1tSQUK3rw/ZZxiVPS1Y4bA0?=
+ =?us-ascii?Q?gxSk1lPR3xYVa8SUxLMarWmjYWKUjwKWq+SSeg5G5njfgF1Oc+1FQH+4ibNO?=
+ =?us-ascii?Q?TZ2POt6PAeorAkOV9ZbEyxXUtEgntNe5bVQl4KjoB1cUfeFTHv1yKP0a5XMF?=
+ =?us-ascii?Q?189B1PBTYpW5ydeR/+0LW5KA1g9zqKzIU0Ihx0aOhTHaqUhQ49X409DOR7qO?=
+ =?us-ascii?Q?lFEEAGPqn+SWs41ouHZc1CYqLA0kbMyB+k1dtebe8pM+lS2oReimrsbogKAf?=
+ =?us-ascii?Q?bGcVWG2u1w58NEoTLTTBn/IHgCmuds7Jxmpp9lIwVjFNAti1B+8AoG0jvrtr?=
+ =?us-ascii?Q?/qJXMjQbAtnw8epSDtyAGqSWt8LiiUDm7iMbU+Ee+seGVvLYnHY6K9bOVRvQ?=
+ =?us-ascii?Q?Lvjk3+BjSTRDpVITLj9FryVkWirD0fJO11xsAgpc1GevXaj/s5AEQOW5/i1+?=
+ =?us-ascii?Q?FcnG4D6Za6ilzWH/ekAw57LFXVZlUCAGdF8GcLz1AWuHhRyeSgZR3HhUtrm+?=
+ =?us-ascii?Q?FnI3fghAhJvtuj7lYhCXvh7LEExeL1V6+yxFFgG2D2N2Dcf9ie2vbBn35klw?=
+ =?us-ascii?Q?JykfavsBZnvgxieddR1ENnpgvxU68GzPHZNuZVHHWfPYeX+C2j5QHnRrbI7A?=
+ =?us-ascii?Q?KJ0uPYfjng9iRPBxXPUEE3z0PiHWPax6pxe700onqBaATKfvI3eo4Gx5F39O?=
+ =?us-ascii?Q?g5WemX2x0lfl+VbBWFZ/37hhP7y3GCXag3q2weNXBf50K4wVrnFp3X4UALOz?=
+ =?us-ascii?Q?0LLi2bIrw8qfs0aC3gIlohJnS/atVHAJW4yqQo/SQTFTHL+TIQ4C1pD1MNqG?=
+ =?us-ascii?Q?He9nAkCbbustz8Sl+TKOvM5TVd3VRBeZVxamDqfPIuI81SqEjvNV/vrOxshf?=
+ =?us-ascii?Q?ncFq2yl/FGj9f0fGYk+JyPPGpiaOrPYfJzJBtyrD117vs++nZdD6VOmaYzsN?=
+ =?us-ascii?Q?O2HkUGCfwb5EnI8vmDJWqZR78JcV0qpgfsWfA5cCqLSh2EJIT4/RntFHaZ6s?=
+ =?us-ascii?Q?izjmLloNeows86hhZuGf3EiejM0knmIaYi8gYWst4s9ZkG3Oykben58zjrsu?=
+ =?us-ascii?Q?gINmomaLYMO0GY5uK1nTWUBYoTr4vEkkQZpdklPZO03Tk4qsNlp85b+THnfq?=
+ =?us-ascii?Q?vgHORu6rROhTmjNyhDptNhAjwNSdYxkQ5rI/HIvRZmDpY3iM8lYUtUjCOUrZ?=
+ =?us-ascii?Q?n+o+CP0PwmuXW5Ln4Zi6y2XOaM0lkERg2H4hH2/Z3gvHJib9EIKa0tju4BmT?=
+ =?us-ascii?Q?wPg2xyYYE5APXKAOlQTSPjUsDoP4Ga6ymrt393/QSLEGIaHSP3ToY7kjqmwb?=
+ =?us-ascii?Q?296FJdM/Savq3BOYfG6jWMivGTXbebdGAavWxqK2QRUHs8GZwFYlr+r3IwlE?=
+ =?us-ascii?Q?1g=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	bb8kLIki69iUAJckjzcvVL78xsPfwv+QsF0pgKXASqIvMzbWOMLz33DP42WRBq3ApaTHL2Kb0Ev6NxoiDAbTsp0HP/2woouSaZSP9N8yeNnTZfN4v0YpbUljPp0UbB7yn8t4sYxat3f7DWYUUm3AMgE9pLBulbG4uqWg5/GYyFpEHmOjF5D1fUnXVYYpy5HEPGs5k9h4rscicXhf8Qi4kYzU3mxwWiD0D9vxxkBomQtP5uE2kVURvyJMmEJ0JO8sZh39KqWiXu4J01jYwndG+DClnwtBToRV91OCrb62JbIIW1dtC6DQ8cYGQbjA5C42MfUnQam63upUa/Yp8kZNRgd6CNOljwIqKQOgX9Tu5vVLbjr/5JDbjdiV2lCwxsUTXP5DtGLAgpM9Dm52c5Fh47IC5Hou3C26t4Yndtxg/+qIo7U81DYWbxeig15Fzx3I4BPmZ3dVd3k2O1XW3yCZGar7yIHvIAjNoC8FgsouwzHQQr3/BuDogKX3Mbg6SXd0+wF6krmjqGJ4PodLQFtV2vZj9X30HhZyBjTPiw1wpbjM36tQQJBm5BAvCE3WIWNb8N8ZzGPjJaEFeMO53MZ0DUdDYqlJZgdNaYybrQzC7pI=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 009bdc46-52a0-453e-9964-08dd148e63bd
+X-MS-Exchange-CrossTenant-AuthSource: CH0PR10MB5338.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Dec 2024 18:06:34.8908
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2skWZSAEHj6DllEQnt7Ur49DOdRSekKXkZt0OSAUN7125EkOg6JPZmLOou3fUiLyTwemGg59E47o5ovykC7if8H9E3LLahU6lCyqkkuqD6k=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW5PR10MB5825
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2024-12-04_15,2024-12-04_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 suspectscore=0
+ malwarescore=0 bulkscore=0 spamscore=0 mlxlogscore=551 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2411120000
+ definitions=main-2412040138
+X-Proofpoint-GUID: pz9sVnaLMTDVxcFY1H0-wEfUOqa6Z8kw
+X-Proofpoint-ORIG-GUID: pz9sVnaLMTDVxcFY1H0-wEfUOqa6Z8kw
 
-On Wed, Dec 4, 2024 at 6:04=E2=80=AFAM Benjamin Berg <benjamin@sipsolutions=
-.net> wrote:
->
-> Hi,
->
-> On Mon, 2024-11-25 at 20:20 +0000, jeffxu@chromium.org wrote:
-> > From: Jeff Xu <jeffxu@chromium.org>
-> >
-> > Seal vdso, vvar, sigpage, uprobes and vsyscall.
-> >
-> > Those mappings are readonly or executable only, sealing can protect
-> > them from ever changing or unmapped during the life time of the process=
-.
-> > For complete descriptions of memory sealing, please see mseal.rst [1].
-> >
-> > System mappings such as vdso, vvar, and sigpage (for arm) are
-> > generated by the kernel during program initialization, and are
-> > sealed after creation.
-> >
-> > Unlike the aforementioned mappings, the uprobe mapping is not
-> > established during program startup. However, its lifetime is the same
-> > as the process's lifetime [2]. It is sealed from creation.
-> >
-> > The vdso, vvar, sigpage, and uprobe mappings all invoke the
-> > _install_special_mapping() function. As no other mappings utilize this
-> > function, it is logical to incorporate sealing logic within
-> > _install_special_mapping(). This approach avoids the necessity of
-> > modifying code across various architecture-specific implementations.
-> >
-> > The vsyscall mapping, which has its own initialization function, is
-> > sealed in the XONLY case, it seems to be the most common and secure
-> > case of using vsyscall.
-> >
-> > It is important to note that the CHECKPOINT_RESTORE feature (CRIU) may
-> > alter the mapping of vdso, vvar, and sigpage during restore
-> > operations. Consequently, this feature cannot be universally enabled
-> > across all systems.
->
-> I think that enabling this feature would break User Mode Linux (UML).
-> It uses a tiny static helper executable to create userspace MMs. This
-> executable just maps some "stub" data/code pages[1] for management and
-> after that all other memory has to be unmapped as it is managed by the
-> UML kernel.
-> This unmapping will not work if the vdso/vvar mappings are sealed.
->
-> Maybe nobody who enables the feature cares about UML. But wanted to
-> raise it as a potential issue in case you are not aware yet.
->
-Thank you for bringing this to attention, I will add this information
-to documentation/comments.
 
-Do you think we need to add a KCONFIG check similar to
-!CHECKPOINT_RESTORE ? or this is something purely  in userspace and
-the kernel doesn't have a control.
+Thorsten,
 
-> Benjamin
->
-> [1] Hmm, we should mseal() those stub pages.
->
-is this reference [1] correct ?
+> Replace the deprecated zero-length array with a modern flexible array
+> member in the struct iscsi_bsg_host_vendor_reply.
 
-> >
-> > Currently, memory sealing is only functional in a 64-bit kernel
-> > configuration.
-> >
-> > To enable this feature, the architecture needs to be tested to
-> > confirm that it doesn't unmap/remap system mappings during the
-> > the life time of the process. After the architecture enables
-> > ARCH_HAS_SEAL_SYSTEM_MAPPINGS, a distribution can set
-> > CONFIG_SEAL_SYSTEM_MAPPING to manage access to the feature.
-> > Alternatively, kernel command line (exec.seal_system_mappings)
-> > enables this feature also.
-> >
-> > This feature is tested using ChromeOS and Android on X86_64 and ARM64,
-> > therefore ARCH_HAS_SEAL_SYSTEM_MAPPINGS is set for X86_64 and ARM64.
-> > Other architectures can enable this after testing. No specific hardware
-> > features from the CPU are needed.
-> >
-> > This feature's security enhancements will benefit ChromeOS, Android,
-> > and other secure-by-default systems.
-> >
-> > [1] Documentation/userspace-api/mseal.rst
-> > [2] https://lore.kernel.org/all/CABi2SkU9BRUnqf70-nksuMCQ+yyiWjo3fM4XkR=
-kL-NrCZxYAyg@mail.gmail.com/
-> > Signed-off-by: Jeff Xu <jeffxu@chromium.org>
-> > ---
-> >  .../admin-guide/kernel-parameters.txt         | 11 ++++++
-> >  Documentation/userspace-api/mseal.rst         |  4 ++
-> >  arch/arm64/Kconfig                            |  1 +
-> >  arch/x86/Kconfig                              |  1 +
-> >  arch/x86/entry/vsyscall/vsyscall_64.c         |  8 +++-
-> >  include/linux/mm.h                            | 12 ++++++
-> >  init/Kconfig                                  | 25 ++++++++++++
-> >  mm/mmap.c                                     | 10 +++++
-> >  mm/mseal.c                                    | 39 +++++++++++++++++++
-> >  security/Kconfig                              | 24 ++++++++++++
-> >  10 files changed, 133 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Document=
-ation/admin-guide/kernel-parameters.txt
-> > index e7bfe1bde49e..f63268341739 100644
-> > --- a/Documentation/admin-guide/kernel-parameters.txt
-> > +++ b/Documentation/admin-guide/kernel-parameters.txt
-> > @@ -1538,6 +1538,17 @@
-> >                       Permit 'security.evm' to be updated regardless of
-> >                       current integrity status.
-> >
-> > +     exec.seal_system_mappings =3D [KNL]
-> > +                     Format: { no | yes }
-> > +                     Seal system mappings: vdso, vvar, sigpage, vsysca=
-ll,
-> > +                     uprobe.
-> > +                     - 'no':  do not seal system mappings.
-> > +                     - 'yes': seal system mappings.
-> > +                     This overrides CONFIG_SEAL_SYSTEM_MAPPINGS=3D(y/n=
-)
-> > +                     If not specified or invalid, default is the value=
- set by
-> > +                     CONFIG_SEAL_SYSTEM_MAPPINGS.
-> > +                     This option has no effect if CONFIG_64BIT=3Dn
-> > +
-> >       early_page_ext [KNL,EARLY] Enforces page_ext initialization to ea=
-rlier
-> >                       stages so cover more early boot allocations.
-> >                       Please note that as side effect some optimization=
-s
-> > diff --git a/Documentation/userspace-api/mseal.rst b/Documentation/user=
-space-api/mseal.rst
-> > index 41102f74c5e2..bec122318a59 100644
-> > --- a/Documentation/userspace-api/mseal.rst
-> > +++ b/Documentation/userspace-api/mseal.rst
-> > @@ -130,6 +130,10 @@ Use cases
-> >
-> >  - Chrome browser: protect some security sensitive data structures.
-> >
-> > +- seal system mappings:
-> > +  kernel config CONFIG_SEAL_SYSTEM_MAPPINGS seals system mappings such
-> > +  as vdso, vvar, sigpage, uprobes and vsyscall.
-> > +
-> >  When not to use mseal
-> >  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> >  Applications can apply sealing to any virtual memory region from users=
-pace,
-> > diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> > index 63de71544d95..fc5da8f74342 100644
-> > --- a/arch/arm64/Kconfig
-> > +++ b/arch/arm64/Kconfig
-> > @@ -44,6 +44,7 @@ config ARM64
-> >       select ARCH_HAS_SETUP_DMA_OPS
-> >       select ARCH_HAS_SET_DIRECT_MAP
-> >       select ARCH_HAS_SET_MEMORY
-> > +     select ARCH_HAS_SEAL_SYSTEM_MAPPINGS
-> >       select ARCH_STACKWALK
-> >       select ARCH_HAS_STRICT_KERNEL_RWX
-> >       select ARCH_HAS_STRICT_MODULE_RWX
-> > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> > index 1ea18662942c..5f6bac99974c 100644
-> > --- a/arch/x86/Kconfig
-> > +++ b/arch/x86/Kconfig
-> > @@ -26,6 +26,7 @@ config X86_64
-> >       depends on 64BIT
-> >       # Options that are inherently 64-bit kernel only:
-> >       select ARCH_HAS_GIGANTIC_PAGE
-> > +     select ARCH_HAS_SEAL_SYSTEM_MAPPINGS
-> >       select ARCH_SUPPORTS_INT128 if CC_HAS_INT128
-> >       select ARCH_SUPPORTS_PER_VMA_LOCK
-> >       select ARCH_SUPPORTS_HUGE_PFNMAP if TRANSPARENT_HUGEPAGE
-> > diff --git a/arch/x86/entry/vsyscall/vsyscall_64.c b/arch/x86/entry/vsy=
-scall/vsyscall_64.c
-> > index 2fb7d53cf333..30e0958915ca 100644
-> > --- a/arch/x86/entry/vsyscall/vsyscall_64.c
-> > +++ b/arch/x86/entry/vsyscall/vsyscall_64.c
-> > @@ -366,8 +366,12 @@ void __init map_vsyscall(void)
-> >               set_vsyscall_pgtable_user_bits(swapper_pg_dir);
-> >       }
-> >
-> > -     if (vsyscall_mode =3D=3D XONLY)
-> > -             vm_flags_init(&gate_vma, VM_EXEC);
-> > +     if (vsyscall_mode =3D=3D XONLY) {
-> > +             unsigned long vm_flags =3D VM_EXEC;
-> > +
-> > +             vm_flags |=3D seal_system_mappings();
-> > +             vm_flags_init(&gate_vma, vm_flags);
-> > +     }
-> >
-> >       BUILD_BUG_ON((unsigned long)__fix_to_virt(VSYSCALL_PAGE) !=3D
-> >                    (unsigned long)VSYSCALL_ADDR);
-> > diff --git a/include/linux/mm.h b/include/linux/mm.h
-> > index df0a5eac66b7..f787d6c85cbb 100644
-> > --- a/include/linux/mm.h
-> > +++ b/include/linux/mm.h
-> > @@ -4238,4 +4238,16 @@ int arch_get_shadow_stack_status(struct task_str=
-uct *t, unsigned long __user *st
-> >  int arch_set_shadow_stack_status(struct task_struct *t, unsigned long =
-status);
-> >  int arch_lock_shadow_stack_status(struct task_struct *t, unsigned long=
- status);
-> >
-> > +#ifdef CONFIG_64BIT
-> > +/*
-> > + * return VM_SEALED if seal system mapping is enabled.
-> > + */
-> > +unsigned long seal_system_mappings(void);
-> > +#else
-> > +static inline unsigned long seal_system_mappings(void)
-> > +{
-> > +     return 0;
-> > +}
-> > +#endif
-> > +
-> >  #endif /* _LINUX_MM_H */
-> > diff --git a/init/Kconfig b/init/Kconfig
-> > index 1aa95a5dfff8..614719259aa0 100644
-> > --- a/init/Kconfig
-> > +++ b/init/Kconfig
-> > @@ -1860,6 +1860,31 @@ config ARCH_HAS_MEMBARRIER_CALLBACKS
-> >  config ARCH_HAS_MEMBARRIER_SYNC_CORE
-> >       bool
-> >
-> > +config ARCH_HAS_SEAL_SYSTEM_MAPPINGS
-> > +     bool
-> > +     help
-> > +       Control SEAL_SYSTEM_MAPPINGS access based on architecture.
-> > +
-> > +       A 64-bit kernel is required for the memory sealing feature.
-> > +       No specific hardware features from the CPU are needed.
-> > +
-> > +       To enable this feature, the architecture needs to be tested to
-> > +       confirm that it doesn't unmap/remap system mappings during the
-> > +       the life time of the process. After the architecture enables th=
-is,
-> > +       a distribution can set CONFIG_SEAL_SYSTEM_MAPPING to manage acc=
-ess
-> > +       to the feature.
-> > +
-> > +       The CONFIG_SEAL_SYSTEM_MAPPINGS already checks the CHECKPOINT_R=
-ESTORE
-> > +       feature, which is known to remap/unmap vdso.  Thus, the presenc=
-e of
-> > +       CHECKPOINT_RESTORE is not considered a factor in enabling
-> > +       ARCH_HAS_SEAL_SYSTEM_MAPPINGS for a architecture.
-> > +
-> > +       For complete list of system mappings, please see
-> > +       CONFIG_SEAL_SYSTEM_MAPPINGS.
-> > +
-> > +       For complete descriptions of memory sealing, please see
-> > +       Documentation/userspace-api/mseal.rst
-> > +
-> >  config HAVE_PERF_EVENTS
-> >       bool
-> >       help
-> > diff --git a/mm/mmap.c b/mm/mmap.c
-> > index 57fd5ab2abe7..bc694c555805 100644
-> > --- a/mm/mmap.c
-> > +++ b/mm/mmap.c
-> > @@ -2133,6 +2133,16 @@ struct vm_area_struct *_install_special_mapping(
-> >       unsigned long addr, unsigned long len,
-> >       unsigned long vm_flags, const struct vm_special_mapping *spec)
-> >  {
-> > +     /*
-> > +      * At present, all mappings (vdso, vvar, sigpage, and uprobe) tha=
-t
-> > +      * invoke the _install_special_mapping function can be sealed.
-> > +      * Therefore, it is logical to call the seal_system_mappings_enab=
-led()
-> > +      * function here. In the future, if this is not the case, i.e. if=
- certain
-> > +      * mappings cannot be sealed, then it would be necessary to move =
-this
-> > +      * check to the calling function.
-> > +      */
-> > +     vm_flags |=3D seal_system_mappings();
-> > +
-> >       return __install_special_mapping(mm, addr, len, vm_flags, (void *=
-)spec,
-> >                                       &special_mapping_vmops);
-> >  }
-> > diff --git a/mm/mseal.c b/mm/mseal.c
-> > index ece977bd21e1..80126d6231bb 100644
-> > --- a/mm/mseal.c
-> > +++ b/mm/mseal.c
-> > @@ -7,6 +7,7 @@
-> >   *  Author: Jeff Xu <jeffxu@chromium.org>
-> >   */
-> >
-> > +#include <linux/fs_parser.h>
-> >  #include <linux/mempolicy.h>
-> >  #include <linux/mman.h>
-> >  #include <linux/mm.h>
-> > @@ -266,3 +267,41 @@ SYSCALL_DEFINE3(mseal, unsigned long, start, size_=
-t, len, unsigned long,
-> >  {
-> >       return do_mseal(start, len, flags);
-> >  }
-> > +
-> > +/*
-> > + * Kernel cmdline override for CONFIG_SEAL_SYSTEM_MAPPINGS
-> > + */
-> > +enum seal_system_mappings_type {
-> > +     SEAL_SYSTEM_MAPPINGS_DISABLED,
-> > +     SEAL_SYSTEM_MAPPINGS_ENABLED
-> > +};
-> > +
-> > +static enum seal_system_mappings_type seal_system_mappings_v __ro_afte=
-r_init =3D
-> > +     IS_ENABLED(CONFIG_SEAL_SYSTEM_MAPPINGS) ? SEAL_SYSTEM_MAPPINGS_EN=
-ABLED :
-> > +     SEAL_SYSTEM_MAPPINGS_DISABLED;
-> > +
-> > +static const struct constant_table value_table_sys_mapping[] __initcon=
-st =3D {
-> > +     { "no", SEAL_SYSTEM_MAPPINGS_DISABLED},
-> > +     { "yes", SEAL_SYSTEM_MAPPINGS_ENABLED},
-> > +     { }
-> > +};
-> > +
-> > +static int __init early_seal_system_mappings_override(char *buf)
-> > +{
-> > +     if (!buf)
-> > +             return -EINVAL;
-> > +
-> > +     seal_system_mappings_v =3D lookup_constant(value_table_sys_mappin=
-g,
-> > +                     buf, seal_system_mappings_v);
-> > +     return 0;
-> > +}
-> > +
-> > +early_param("exec.seal_system_mappings", early_seal_system_mappings_ov=
-erride);
-> > +
-> > +unsigned long seal_system_mappings(void)
-> > +{
-> > +     if (seal_system_mappings_v =3D=3D SEAL_SYSTEM_MAPPINGS_ENABLED)
-> > +             return VM_SEALED;
-> > +
-> > +     return 0;
-> > +}
-> > diff --git a/security/Kconfig b/security/Kconfig
-> > index 28e685f53bd1..5bbb8d989d79 100644
-> > --- a/security/Kconfig
-> > +++ b/security/Kconfig
-> > @@ -51,6 +51,30 @@ config PROC_MEM_NO_FORCE
-> >
-> >  endchoice
-> >
-> > +config SEAL_SYSTEM_MAPPINGS
-> > +     bool "seal system mappings"
-> > +     default n
-> > +     depends on 64BIT
-> > +     depends on ARCH_HAS_SEAL_SYSTEM_MAPPINGS
-> > +     depends on !CHECKPOINT_RESTORE
-> > +     help
-> > +       Seal system mappings such as vdso, vvar, sigpage, vsyscall, upr=
-obes.
-> > +
-> > +       A 64-bit kernel is required for the memory sealing feature.
-> > +       No specific hardware features from the CPU are needed.
-> > +
-> > +       Depends on the ARCH_HAS_SEAL_SYSTEM_MAPPINGS.
-> > +
-> > +       CHECKPOINT_RESTORE might relocate vdso mapping during restore,
-> > +       and remap/unmap will fail when the mapping is sealed, therefore
-> > +       !CHECKPOINT_RESTORE is added as dependency.
-> > +
-> > +       Kernel command line exec.seal_system_mappings=3D(no/yes) overri=
-des
-> > +       this.
-> > +
-> > +       For complete descriptions of memory sealing, please see
-> > +       Documentation/userspace-api/mseal.rst
-> > +
-> >  config SECURITY
-> >       bool "Enable different security models"
-> >       depends on SYSFS
->
->
+Applied to 6.14/scsi-staging, thanks!
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
