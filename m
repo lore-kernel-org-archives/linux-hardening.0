@@ -1,71 +1,108 @@
-Received: from kawka3.in.waw.pl (kawka3.in.waw.pl [68.183.222.220])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA00E1AF0A1;
-	Wed,  4 Dec 2024 23:59:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.183.222.220
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24895217F25
+	for <linux-hardening@vger.kernel.org>; Thu,  5 Dec 2024 12:10:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733356744; cv=none; b=DIG6mXTPWmu62lzZbVoGiVld2Yx4gpeBHpnc05aj7wZKOBO6LZgIBPnOaVu0f2tl4Weftwnn2y9h8v2TtIzNgGxdnmn+/B5xDlknkUdI3UfvS0KGMtNK7TJ3qIHC1KolHIFWC45djZfX/HQBE/4/utojTd+3QlCjOA+wkOG0Qf8=
+	t=1733400650; cv=none; b=kULgcscytvH8EvLC4AxdTyqhOtiMQQ4cJGlKEl6G/HguMXv0Ohgsm2CF3hKXf1N4sspVj7+ijw4tSZ5PwyorFygFmSIq0ZCtshK7AlBU+k2Kzto6UeJJOeqs1jBkpnp2A2lgLfRMjvXrgvHlxxzzXqp50TL6+dAgXgU03NnEx0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733356744; c=relaxed/simple;
-	bh=2cHuMuL3bbquJfw1YnlX4Rf7lFZ8x9rfe9wja96Zj0k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iMEDQ6Ama+ueisL/vzFDHxiTYMjQUZ6CNZhTA1bbP7w34JD0Db5fRCl5gG/7XZWs/Vok3hUovF4AuwvKDf7vpRSrobZQzfhrbFDbqyRLnBI2MtGL7pu8Xz1mYVFsblDHxnJVHrpzDLWKzaTbyg4lsUO7mU4FJA4+RevWHMGWSpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=in.waw.pl; spf=pass smtp.mailfrom=in.waw.pl; arc=none smtp.client-ip=68.183.222.220
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=in.waw.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=in.waw.pl
-Received: by kawka3.in.waw.pl (Postfix, from userid 1000)
-	id C2F315B99BA; Wed,  4 Dec 2024 23:50:08 +0000 (UTC)
-Date: Wed, 4 Dec 2024 23:50:08 +0000
-From: Zbigniew =?utf-8?Q?J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>
-To: Kees Cook <kees@kernel.org>
-Cc: Aleksa Sarai <cyphar@cyphar.com>, Al Viro <viro@zeniv.linux.org.uk>,
-	Tycho Andersen <tandersen@netflix.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Eric Biederman <ebiederm@xmission.com>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] exec: fix up /proc/pid/comm in the
- execveat(AT_EMPTY_PATH) case
-Message-ID: <Z1DqsDSYxLF85ljc@kawka3.in.waw.pl>
-References: <20241130045437.work.390-kees@kernel.org>
- <20241130.055433-shy.herds.gross.wars-zGaSWwzAa56n@cyphar.com>
+	s=arc-20240116; t=1733400650; c=relaxed/simple;
+	bh=2EZLrM0ZLYYdbPxLmXbwElTcSDaUUFW0yoyYRrkj0Xk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TOBKn1/evq8vJ1d0KGu5rXlQ6eAerK3nZ032NNlHmtaxRoY/MJL3Ut5ygiUmkNVWxinIc+MvP6pTP7GGfgAhjRQySVJcRyhg1a5703wwsfcJw4jUYJvgTUDbmqQs8Htv+3ZBhqDBn+tSuUPkRQBI/kQRoJuqpPN/T5HCvDDu9dw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=OPtka1xb; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="OPtka1xb"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-434a14d6bf4so8941255e9.1
+        for <linux-hardening@vger.kernel.org>; Thu, 05 Dec 2024 04:10:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1733400647; x=1734005447; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Qt/CPBcS57R6kXLbkiRsszi+u13mNakGJLbglDYv4Qs=;
+        b=OPtka1xbNSnLHImw/SXzmr+vThp69HlpLao6h8MAYbHaOsNc6dq0iCM+OMrR138uow
+         HzqgCk8UDWKG/7KMWHtKMRJ1S8HiPD6x6uoC1Rmvy/PUrHCVRs0fINP0P0XPL4T0X9zq
+         sDqPl2wN8D8rbTjt2txODLTHVW+k4IH6LjpBzCO3LdAdLdqYYCV5JW7AQ1knwZlG5WOu
+         dBn+vF4/HHQHrAv05x1saKN9LvoMx2qAxI+wpacl/cqBstKNwf1+1vociSfl4oynozH6
+         vD65XvWtgXMjVyR48tMMWawjtM5vsYkjZp3g+3hcrRgYwJZwHYGb5g0n/vYIavyAWYRQ
+         8wtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733400647; x=1734005447;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Qt/CPBcS57R6kXLbkiRsszi+u13mNakGJLbglDYv4Qs=;
+        b=rmLnjw53pic/8dEp4pNQyt8uJUYVUt1KGnomI9QTCnoHdK1GSuXY93IParKtbb+vCX
+         8u7bAa9t/UJkMVAMkGQlpuZCmNX/XepJa99PyXyFy8+KBEaRLh+Vp6ex4kJfzEBIDUi+
+         teBICleaVkO8wsxGdI3jITWX6bnljcec9SWL5a0BNw3PJXExSWUDWN8Vv/JzxNFEIVa1
+         yizARtw4mia++lI9YHS4A5rpUFFz7GkyRvwBq4BgFVKvWrixuQ+2PJneWiCO3SjZlKVw
+         hzcJS92MEYq2YNpQX07kFVps6sTQpmqDZyxTX2edhscZgiFkWijV1earE7rpfYJQg7hy
+         NABw==
+X-Forwarded-Encrypted: i=1; AJvYcCXmpWMnKeeWLIZZa5vhRIu8nPKHw+UwBoPzmBF7+Da6GyvsFF11KkjO8ZKKWZW51xc71vqnGlB31Puh+z1ISmY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwMVWeteBQyQgcVKnDZlfVurXiDaCBaK5zE7eurkmyxmcugspwt
+	SXbCxHNYsPo0yJX7ULb9TP58hknwLVREvFo4z3qug5uIOIkQFNcy5DIIkDn202A=
+X-Gm-Gg: ASbGncu9Drc2TbMBbrM8nPB99pZ3lAYn2H1fSPMQtct0xWvDpH34F+rBGpw+OSBFRNI
+	5z2BytmgB56kwkfUtX7baxj/g6ACl1iwFAmMF3q/I/Y8/dzAwkQ8ERu+lyMxS2IqFA6+K0NILvD
+	ZRdgdr9nsl4cb81alDAtibfb+Dw18nNHeB92rITgtw4mTVFAB4fhx1xTFjmm1tF/HuuACzJh8GB
+	ikUlFAC62vS74cRQKQfyZij9xlLCA+a+G8LOsqAfYDbLTek
+X-Google-Smtp-Source: AGHT+IFfZ50+YagInJgFWXUcpmHfKY6JBPuy+JFDnVOzAD63Uh2CX35OZkA94Lrmw5g1ER5Pu8VJOQ==
+X-Received: by 2002:a05:600c:3c9b:b0:434:a706:c0f0 with SMTP id 5b1f17b1804b1-434d09b5fbdmr91829905e9.14.1733400647235;
+        Thu, 05 Dec 2024 04:10:47 -0800 (PST)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:b496:c2c8:33f:e860])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-434da0980ddsm22089655e9.0.2024.12.05.04.10.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Dec 2024 04:10:46 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Wentong Wu <wentong.wu@intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	Haoyu Li <lihaoyu499@gmail.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] drivers: gpio: gpio-ljca: Initialize num before accessing item in ljca_gpio_config
+Date: Thu,  5 Dec 2024 13:10:45 +0100
+Message-ID: <173340064220.41307.8479220444337077350.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20241203141451.342316-1-lihaoyu499@gmail.com>
+References: <20241203141451.342316-1-lihaoyu499@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241130.055433-shy.herds.gross.wars-zGaSWwzAa56n@cyphar.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Sat, Nov 30, 2024 at 04:55:09PM +1100, Aleksa Sarai wrote:
-> On 2024-11-29, Kees Cook <kees@kernel.org> wrote:
-> > Zbigniew mentioned at Linux Plumber's that systemd is interested in
-> > switching to execveat() for service execution, but can't, because the
-> > contents of /proc/pid/comm are the file descriptor which was used,
-> > instead of the path to the binary. This makes the output of tools like
-> > top and ps useless, especially in a world where most fds are opened
-> > CLOEXEC so the number is truly meaningless.
-> > 
-> > When the filename passed in is empty (e.g. with AT_EMPTY_PATH), use the
-> > dentry's filename for "comm" instead of using the useless numeral from
-> > the synthetic fdpath construction. This way the actual exec machinery
-> > is unchanged, but cosmetically the comm looks reasonable to admins
-> > investigating things.
-> > 
-> > Instead of adding TASK_COMM_LEN more bytes to bprm, use one of the unused
-> > flag bits to indicate that we need to set "comm" from the dentry.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+
+
+On Tue, 03 Dec 2024 22:14:51 +0800, Haoyu Li wrote:
+> With the new __counted_by annocation in ljca_gpio_packet, the "num"
+> struct member must be set before accessing the "item" array. Failing to
+> do so will trigger a runtime warning when enabling CONFIG_UBSAN_BOUNDS
+> and CONFIG_FORTIFY_SOURCE.
 > 
-> Looks reasonable to me, feel free to take my
+> Fixes: 1034cc423f1b ("gpio: update Intel LJCA USB GPIO driver")
 > 
-> Reviewed-by: Aleksa Sarai <cyphar@cyphar.com>
+> [...]
 
-Thank you for making another version of the patch.
+Applied, thanks!
 
-I tested this with systemd compiled to use fexecve and everything
-seems to work as expected (the filename in /proc//comm).
+[1/1] drivers: gpio: gpio-ljca: Initialize num before accessing item in ljca_gpio_config
+      commit: 963deccd17d4e538a8bafb1617803746efe910ef
 
-Zbyszek
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
