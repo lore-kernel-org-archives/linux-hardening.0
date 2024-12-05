@@ -1,108 +1,129 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from out.smtpout.orange.fr (out-18.smtpout.orange.fr [193.252.22.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24895217F25
-	for <linux-hardening@vger.kernel.org>; Thu,  5 Dec 2024 12:10:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B41D2BE49;
+	Thu,  5 Dec 2024 15:21:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733400650; cv=none; b=kULgcscytvH8EvLC4AxdTyqhOtiMQQ4cJGlKEl6G/HguMXv0Ohgsm2CF3hKXf1N4sspVj7+ijw4tSZ5PwyorFygFmSIq0ZCtshK7AlBU+k2Kzto6UeJJOeqs1jBkpnp2A2lgLfRMjvXrgvHlxxzzXqp50TL6+dAgXgU03NnEx0s=
+	t=1733412115; cv=none; b=JmrvK8fJpo/PH+CIgpUx6zOIOE2r6JRSgAOirNjn0nwNCTCysapOjTQXQiW8sFSw9wvQgta47pI5P0HQoCAeMTjC2e82uT0FIfumkSrW2FLLHPLxoINWUn5S6bimg2S+zuYa1XvfjEUNWpB7iT97B6iGh3hkibHsj7Lyi20oueI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733400650; c=relaxed/simple;
-	bh=2EZLrM0ZLYYdbPxLmXbwElTcSDaUUFW0yoyYRrkj0Xk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TOBKn1/evq8vJ1d0KGu5rXlQ6eAerK3nZ032NNlHmtaxRoY/MJL3Ut5ygiUmkNVWxinIc+MvP6pTP7GGfgAhjRQySVJcRyhg1a5703wwsfcJw4jUYJvgTUDbmqQs8Htv+3ZBhqDBn+tSuUPkRQBI/kQRoJuqpPN/T5HCvDDu9dw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=OPtka1xb; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1733412115; c=relaxed/simple;
+	bh=GC3WGrIayaFhbnkEoyvU2eOpxkJNP8G3yldJihZbihU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BFxNkzrAEsmccfBG5lsj2n8PjLPw3ng3gTS7fOFfqqJG3dXSMRNDl/nhre7maaKghhIb/YjbMEjs/x/9Dbp2F6SUKMWxpQSIkvDS1fvWoDa+18XL/fNKPTB4TVKBO1dGYm9C1QR6zfmfpXjM+MHv5fpq+uIKclLqBaMePZ4My60=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=LvV6d31c; arc=none smtp.client-ip=193.252.22.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="OPtka1xb"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-434a14d6bf4so8941255e9.1
-        for <linux-hardening@vger.kernel.org>; Thu, 05 Dec 2024 04:10:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1733400647; x=1734005447; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Qt/CPBcS57R6kXLbkiRsszi+u13mNakGJLbglDYv4Qs=;
-        b=OPtka1xbNSnLHImw/SXzmr+vThp69HlpLao6h8MAYbHaOsNc6dq0iCM+OMrR138uow
-         HzqgCk8UDWKG/7KMWHtKMRJ1S8HiPD6x6uoC1Rmvy/PUrHCVRs0fINP0P0XPL4T0X9zq
-         sDqPl2wN8D8rbTjt2txODLTHVW+k4IH6LjpBzCO3LdAdLdqYYCV5JW7AQ1knwZlG5WOu
-         dBn+vF4/HHQHrAv05x1saKN9LvoMx2qAxI+wpacl/cqBstKNwf1+1vociSfl4oynozH6
-         vD65XvWtgXMjVyR48tMMWawjtM5vsYkjZp3g+3hcrRgYwJZwHYGb5g0n/vYIavyAWYRQ
-         8wtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733400647; x=1734005447;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Qt/CPBcS57R6kXLbkiRsszi+u13mNakGJLbglDYv4Qs=;
-        b=rmLnjw53pic/8dEp4pNQyt8uJUYVUt1KGnomI9QTCnoHdK1GSuXY93IParKtbb+vCX
-         8u7bAa9t/UJkMVAMkGQlpuZCmNX/XepJa99PyXyFy8+KBEaRLh+Vp6ex4kJfzEBIDUi+
-         teBICleaVkO8wsxGdI3jITWX6bnljcec9SWL5a0BNw3PJXExSWUDWN8Vv/JzxNFEIVa1
-         yizARtw4mia++lI9YHS4A5rpUFFz7GkyRvwBq4BgFVKvWrixuQ+2PJneWiCO3SjZlKVw
-         hzcJS92MEYq2YNpQX07kFVps6sTQpmqDZyxTX2edhscZgiFkWijV1earE7rpfYJQg7hy
-         NABw==
-X-Forwarded-Encrypted: i=1; AJvYcCXmpWMnKeeWLIZZa5vhRIu8nPKHw+UwBoPzmBF7+Da6GyvsFF11KkjO8ZKKWZW51xc71vqnGlB31Puh+z1ISmY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMVWeteBQyQgcVKnDZlfVurXiDaCBaK5zE7eurkmyxmcugspwt
-	SXbCxHNYsPo0yJX7ULb9TP58hknwLVREvFo4z3qug5uIOIkQFNcy5DIIkDn202A=
-X-Gm-Gg: ASbGncu9Drc2TbMBbrM8nPB99pZ3lAYn2H1fSPMQtct0xWvDpH34F+rBGpw+OSBFRNI
-	5z2BytmgB56kwkfUtX7baxj/g6ACl1iwFAmMF3q/I/Y8/dzAwkQ8ERu+lyMxS2IqFA6+K0NILvD
-	ZRdgdr9nsl4cb81alDAtibfb+Dw18nNHeB92rITgtw4mTVFAB4fhx1xTFjmm1tF/HuuACzJh8GB
-	ikUlFAC62vS74cRQKQfyZij9xlLCA+a+G8LOsqAfYDbLTek
-X-Google-Smtp-Source: AGHT+IFfZ50+YagInJgFWXUcpmHfKY6JBPuy+JFDnVOzAD63Uh2CX35OZkA94Lrmw5g1ER5Pu8VJOQ==
-X-Received: by 2002:a05:600c:3c9b:b0:434:a706:c0f0 with SMTP id 5b1f17b1804b1-434d09b5fbdmr91829905e9.14.1733400647235;
-        Thu, 05 Dec 2024 04:10:47 -0800 (PST)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:b496:c2c8:33f:e860])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-434da0980ddsm22089655e9.0.2024.12.05.04.10.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Dec 2024 04:10:46 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Wentong Wu <wentong.wu@intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	Haoyu Li <lihaoyu499@gmail.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] drivers: gpio: gpio-ljca: Initialize num before accessing item in ljca_gpio_config
-Date: Thu,  5 Dec 2024 13:10:45 +0100
-Message-ID: <173340064220.41307.8479220444337077350.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20241203141451.342316-1-lihaoyu499@gmail.com>
-References: <20241203141451.342316-1-lihaoyu499@gmail.com>
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="LvV6d31c"
+Received: from mail-lf1-f48.google.com ([209.85.167.48])
+	by smtp.orange.fr with ESMTPSA
+	id JDfrtYtoJo2eYJDfrtQcCO; Thu, 05 Dec 2024 16:21:51 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1733412111;
+	bh=5Sob8jML2a9sfY47l90QZhBAyozcID3U7Li8+UA7roI=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To;
+	b=LvV6d31cJAEGoiZDrSkQNjo9pVAU6TjzSYFdJOCb7T5OGECIfQC4fFWWdIi+PG9Fr
+	 Z5mvy9ue4eMDMHUg/NsCshFqVKXRdRV/vDMiwjebztOSISTwmT7a+LkaDlcIddLDRd
+	 XGTTsT0WlXOVSW8GqXB9hQYtiz0US7PX6qy3MCSYSEmlrYnTHFT7vBzKzS4V4AvJZf
+	 EwyOZsFITzX1fmrJprLpTX4Aj/e+4wzrlSHRjc0EsfZuCLBU95IlPhbWP7uTZ381qi
+	 828XFmI1Era9s/qpzec9N2VkkLg9TJW1gG7nQv6dNU0aWJz0w5tINRpuSXq5Gy6m1i
+	 ueFlo1bA11vTw==
+X-ME-Helo: mail-lf1-f48.google.com
+X-ME-Auth: bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI=
+X-ME-Date: Thu, 05 Dec 2024 16:21:51 +0100
+X-ME-IP: 209.85.167.48
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-53e274f149fso839058e87.1;
+        Thu, 05 Dec 2024 07:21:51 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCV88/MN9Diw6+m3ylIvKiOqJX+gHNlKhg4dbfQMxKA/fJE4esOLruSWZCzap+o5y5e9I8P9br2O7J0War1f@vger.kernel.org, AJvYcCVYUY/C3tWVBH6mApecr1hIwjUJ/q7uC+qIz1IRJ6D+vXOcZP5pDh/aZ47YuRFmeprn5Y/AlnVoTIcAfpcAfwo=@vger.kernel.org, AJvYcCXaJmmXEBFq51X34gT9k45oSzLyEX0LZNHFCx8p2pbwCWmTzwvjl0ABgj4hr7RyuGfDYQqaxNO9lC46Xh3P@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyquz0FnBLOZo3QeOGPLfWuwZH9cFUrsQyiFVEI5PWRTKB39MSB
+	JlS2K2n3Wv5ykainp/vEKF0fLTYIC/FG1YsVWEpcJx59k3/G5O25Hh+6GxpsYhR3B7QDGMocYeN
+	dAunSdnmbqjjQzt53CmSLNpx6FSI=
+X-Google-Smtp-Source: AGHT+IFTPODU6RGdJMXff+75tOD6Nj3x2Mn/gdl5NWtqQnJzhnFZgI0m0ZroaJ8Q+jvxJuILOkW0ziN/Pe9Qt29xALE=
+X-Received: by 2002:a05:6512:32c8:b0:53e:28dd:a9d1 with SMTP id
+ 2adb3069b0e04-53e28ddb7bcmr693951e87.24.1733412111008; Thu, 05 Dec 2024
+ 07:21:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20241203-is_constexpr-refactor-v1-0-4e4cbaecc216@wanadoo.fr> <FBEB24FF-5885-4938-8D1C-9B7BA9071FB9@kernel.org>
+In-Reply-To: <FBEB24FF-5885-4938-8D1C-9B7BA9071FB9@kernel.org>
+From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+Date: Fri, 6 Dec 2024 00:21:35 +0900
+X-Gmail-Original-Message-ID: <CAMZ6RqLSiTfTNQrcje06MbSxvM2k16MgqG1YTCufe6j9FhupEw@mail.gmail.com>
+Message-ID: <CAMZ6RqLSiTfTNQrcje06MbSxvM2k16MgqG1YTCufe6j9FhupEw@mail.gmail.com>
+Subject: Re: [PATCH 00/10] compiler.h: refactor __is_constexpr() into is_const{,_true,_false}()
+To: Kees Cook <kees@kernel.org>
+Cc: Vincent Mailhol via B4 Relay <devnull+mailhol.vincent.wanadoo.fr@kernel.org>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, David Laight <David.Laight@aculab.com>, 
+	Luc Van Oostenryck <luc.vanoostenryck@gmail.com>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Yury Norov <yury.norov@gmail.com>, 
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	Jani Nikula <jani.nikula@linux.intel.com>, 
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+	Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
+	Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Rikard Falkeborn <rikard.falkeborn@gmail.com>, 
+	Martin Uecker <Martin.Uecker@med.uni-goettingen.de>, linux-sparse@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
+	linux-hardening@vger.kernel.org, intel-gfx@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org, coresight@lists.linaro.org, 
+	linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Thu. 5 Dec. 2024 at 08:58, Kees Cook <kees@kernel.org> wrote:
+> On December 3, 2024 3:33:22 AM GMT+10:00, Vincent Mailhol via B4 Relay <devnull+mailhol.vincent.wanadoo.fr@kernel.org> wrote:
+> >This series is the spiritual successor of [1] which introduced
+> >const_true(). In [1], following a comment from David Laight, Linus
+> >came with a suggestion to simplify __is_constexpr() and its derived
+> >macros using a _Generic() selection. Because of the total change of
+> >scope, I am starting a new series.
+> >
+> >The goal is to introduce a set of three macros:
+> >
+> >  - is_const(): a one to one replacement of __is_constexpr() in term
+> >    of features but written in a less hacky way thanks to _Generic().
+> >
+> >  - is_const_true(): tells whether or not the argument is a true
+> >    integer constant expression.
+> >
+> >  - is_const_false(): tells whether or not the argument is a false
+> >    integer constant expression.
+>
+> But why make this change? Is something broken? Does it make builds faster?
+>
+> > 7 files changed, 97 insertions(+), 84 deletions(-)
+>
+> It makes the code larger too. I don't see what the benefit is, and given how much time has been spent making sure the existing stuff works correctly, I feel like we should have a clear benefit to replacing it all.
+
+It makes the "code" larger because patch 3 ("compiler.h: add
+is_const_true() and is_const_false()") adds two new macros with 20
+lines of comments to explain the pros and cons. So the added "code" is
+only comments. If you ignore the comments, you can see that I am
+actually removing a few lines of code.
+
+As for the clear benefit, sorry, but I have nothing more to offer
+other than code simplification. The reason why a lot of time was spent
+to make __is_constexpr() work correctly is just a testimony of how
+complex the thing is. That alone can be a reason to simplify it, now
+that new tools (_Generic()) are available.
+
+Of course, modifying __is_constexpr() is not strictly needed to
+introduce the new is_const_expr(). My previous series:
+
+  https://lore.kernel.org/all/20241113172939.747686-4-mailhol.vincent@wanadoo.fr/
+
+ did it that way. But I was rightfully pointed out for my macro being
+ugly. Maybe I can suggest that you give a look to the above thread and
+tell me if you still disagree with David and Linus's comments after
+reading it?
 
 
-On Tue, 03 Dec 2024 22:14:51 +0800, Haoyu Li wrote:
-> With the new __counted_by annocation in ljca_gpio_packet, the "num"
-> struct member must be set before accessing the "item" array. Failing to
-> do so will trigger a runtime warning when enabling CONFIG_UBSAN_BOUNDS
-> and CONFIG_FORTIFY_SOURCE.
-> 
-> Fixes: 1034cc423f1b ("gpio: update Intel LJCA USB GPIO driver")
-> 
-> [...]
-
-Applied, thanks!
-
-[1/1] drivers: gpio: gpio-ljca: Initialize num before accessing item in ljca_gpio_config
-      commit: 963deccd17d4e538a8bafb1617803746efe910ef
-
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Yours sincerely,
+Vincent Mailhol
