@@ -1,137 +1,123 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AE051FFC70
-	for <linux-hardening@vger.kernel.org>; Fri,  6 Dec 2024 19:15:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00A44192B76
+	for <linux-hardening@vger.kernel.org>; Fri,  6 Dec 2024 19:33:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733512542; cv=none; b=dEYG6F1LzosB04pwDdew16XVmmMKJdlqphSQTfSzgFqGEVoPpmKeBaTB0dY9u8jK01a17LsIsgp9Q8MFBSX1fs1sn1eduRz2FGc3N+FifKtwdWjwX25poZZhAwWY+de2RB1wiVrkAG81brSOof3ejSTD/eWpk5jKqprNiemzW90=
+	t=1733513593; cv=none; b=NWwv3HF/BxxuoBZlmrNQyO5/S59OdEVNuyFxOtvdwCM4K5Xl5Z8OlNanh3BFZme78r8VQQ//0neFl7zxdrgyFfjF38uewG7mxYWdbAcccDuzr5e9m8H4BrHTz5VHT/VtT+FJacb12/Mt101M+I5JImjl2FcIgWfLMIY7CuVi2NU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733512542; c=relaxed/simple;
-	bh=i8VSKf3d9h7aPyCMroFIPs2BgVVC/quFiHlWg+y9lfA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UiJERHKNBhh5Op+Um+odP2KR6p1rzRhciDVjU/vO6BxRdm3jkBqA+YOvQPlJEu3ow56ZIc4Q7J4DPd+nfii7TB8gBRhDGvmpo6toLRIREeGBz5t9w1DyeEPx0/ui5FQ6Y6trMin021jO1RVACugd643AtLc9TVh4QsDvWwlFRrc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=IaFOPHH7; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1733513593; c=relaxed/simple;
+	bh=kmwXrDdVSFzX1RWQbypl4/vyclBnjb9SVqQFwYrXRpQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=m+SC1bBwKEnxUr/5ofy4WkU7ZNB6FS4srbg+EkB0ObvlgWjznxgmQkx1TqXr9nYCP9JcU/DBC45BpVAJpTlkZPxTe9BLuB1p/9ixdkZ/BhPejAETDqHRunWNT4qGNtyZfTzmRByGHTF/pHMKjmXAnfOrAqER3GoiRV2xSARGafE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=WIaj01zc; arc=none smtp.client-ip=209.85.215.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="IaFOPHH7"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-aa549d9dffdso346177766b.2
-        for <linux-hardening@vger.kernel.org>; Fri, 06 Dec 2024 11:15:39 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WIaj01zc"
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-7fbb47b65d8so172100a12.2
+        for <linux-hardening@vger.kernel.org>; Fri, 06 Dec 2024 11:33:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1733512538; x=1734117338; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=chromium.org; s=google; t=1733513591; x=1734118391; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=HB1D/kV+LS+wbR3JFN0rKIWFlL1hHHNzi40qmGJ0Urw=;
-        b=IaFOPHH7Q1qhR31U6jVDe9A8NG8N9GzRTGp1ew27wxOc8vvQbBlRcfInq7il1wu7zW
-         jx0d6o83NkzaXTlvBusBom6UOMqVs51dsgbjsiz3YJLcUZEflmHn8xJ2DujiDe8QXSFf
-         vZCGq1YA9Folqjlt7tDd1SxQ+ld2p6+6i+aa4=
+        bh=HltmlFi5Mtjm1w1ygcJnz7XyQYUTr+uzffhTeU486Yg=;
+        b=WIaj01zcjV8N03KzoeHjvsmbHEY1uFBaCtqQrd3ctCp5lXwCtJZ5Qf3u6srdCL7dx4
+         O2BbsdhG9YudyWBvaLZFzs1Gg6IB0Wer91bdMqNkl+Ew9MlXXS+TAyzkb3czxiB+6E3e
+         y+GNMnPvh/446pxiRm3eWa3lixq5Ag1a4pLQc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733512538; x=1734117338;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1733513591; x=1734118391;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=HB1D/kV+LS+wbR3JFN0rKIWFlL1hHHNzi40qmGJ0Urw=;
-        b=CsPRiibRnIc/5iVoo3ITFP6A2S/l/G+9KaONW4q5IC/OAlGmNT3Puht3QQ+UfrP69b
-         eTQD0uisFUaN+VWdZuBWr9qD57kKFX4p2J6MFn+ysP/dZ6vJJ7KL596iDPEvXxGL0N8O
-         TQ+WAs/HSvs1n5JrDQ29Ot0tBfEAqsoF98zfOn6u/n9rYnZAK2QPTsGeMUzS1dwArx7K
-         LscyZ/j3dUgpOgGNcEfaip2vgv8IO+CJLeofxxq2kzTzZy8O/dZoOrnCKlSeZX6z61ki
-         1CAiUsFnWp/0vHiZkh5VsninzH1OhYYJaQa6S7qMIYTDjSh85PZxDL7f/DDIMftaOI3Q
-         CmWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXw7jVzvJvCkiYI4y6JgBWzPd2Hq8GY69q8m2vmtbEsml8Rs+A97zkweHF/Dp5QQ2kDBu+ojB6CvBzV8JVuqqY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxj0PAYeUSCcnzQoWb9HV+ISRmKIY3/LW9wtPBKIXzLBXwbwvQo
-	/BuK6hwip+cnktgpnDQKSub3M/++LMP1b5uot8wRTmN6DxbywC8iwnHMC1riYGjzcpO4duw9hY6
-	rY1rHCg==
-X-Gm-Gg: ASbGncuJ0hC5uXNdwTKWJXAMEWYDIDZ9EHtdd05jXecsMGUrYxwwL6RcnI8dXE/Mluz
-	0gqR6ZkhfAxOg8QLXkcvNGBHWtSzoxfDtDpH8OVN4Uh/H9DFwDaQXOQnzsRgv2w/joP6f8obl20
-	AVLsUYZcuCpJZs8asFB9AAH86eRAEZA5Zh0eIqkSKcMlukEjmkMJm2lW+5SpgTc9aG2vkYgnu/Z
-	9YvdDf7FljiQNdW+T3jMi/DhKLctRSoFiQGn2YCH5wY9B3H003WFntZs5K9+8yaFhmuAurzMkkq
-	Ra17HMebmxCaNhlN/hTapfmw
-X-Google-Smtp-Source: AGHT+IEQSJyd8NxwHAFPWaxTEOGuxN/cxDokWc3fkCaUMsyKVZnQVNQSGSYlM4sN6M/SZTlkp1Bzuw==
-X-Received: by 2002:a17:907:3a0f:b0:aa5:cec:d504 with SMTP id a640c23a62f3a-aa63a08a537mr273143066b.30.1733512538228;
-        Fri, 06 Dec 2024 11:15:38 -0800 (PST)
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com. [209.85.218.50])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aa62602cf1dsm283621966b.129.2024.12.06.11.15.37
-        for <linux-hardening@vger.kernel.org>
+        bh=HltmlFi5Mtjm1w1ygcJnz7XyQYUTr+uzffhTeU486Yg=;
+        b=P606OCoYbkJIpktChyW4JW0eTCBdh5LCX/0blmco4VpPhnR9QNk5TrsIRZnglxgkZz
+         ZE1ovAaKezCFhKT1ZWLITEP6TMR3XjlGT/Bc8zArxJdbLITPdQgnjpsiKC90NheCbAgN
+         WLHwNkAU4rXDt5cK+zKUW5o1XHg3h3WLupVMPhjLHnyT63uHtfDR/YSVybrETvCmFODQ
+         eCBrCh/8SIsL3ZjwXoptfFj7t5Uit2A+g2BRIVq4C9yEdc+yFry8tiaNwEN1jtY7FjWt
+         2KWbY3Mf18pnG3ILREVxDhL9waLor9hQ8WRGBycImoKwZYTeHNdtwGYj2XaW6atgNzJ5
+         1j5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVvxLlNG3Ro/o1HXdCXS0e6fXjDESGVZjJtuyFiM7IO3h93mLYUE+PCp6umyjXlakmYlQlgX7dqpg15q1Wvj/8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4/s6lYtLKcSAnxLvK8+ZMFT8aSSxlbrK1LR6TshghCEJXoDAm
+	q8Tl0kUtR3exvVSs3O6zHVzSEAsXtqvF85RvZ8ZqBjmq3WXf10KmJrOt6zc1zQ==
+X-Gm-Gg: ASbGncuYZyG87mfjyAn/tzTTnzLNv7YAx2Qa/hrRo3cPKXqp/IVEQFPF56vKyaIgbna
+	5CCorfQm9GAukZk4LDSYHlQ5Mx/8O/ErgmHEuZi4aMKmDETADBVDKizE159m4k419rPUkJU65aZ
+	BEQHvfuXAxRDrpAN9PFIpjaUrpNLfLoX6HdL7thLrzV7Fp4VCEBu0KRVjMD0TW30GjMiHprTNRM
+	UGAAP/Nm/18QXyKR1Z+5MLCuMYBda2uWF1ENGno+nDnbGCjCqZSqStV+v823Sh5izzlNvh0QiBk
+	+wTNOe9sYgg=
+X-Google-Smtp-Source: AGHT+IFyvwmM7rvSPgBh5Lg1uIbAIveZitsJmrI0lGdli31hAiDag50aHX/3xBKsUCxKFfbxFCRvHA==
+X-Received: by 2002:a05:6a20:918d:b0:1d8:a203:95a4 with SMTP id adf61e73a8af0-1e1870b9329mr2877161637.5.1733513591343;
+        Fri, 06 Dec 2024 11:33:11 -0800 (PST)
+Received: from localhost (238.76.127.34.bc.googleusercontent.com. [34.127.76.238])
+        by smtp.gmail.com with UTF8SMTPSA id 41be03b00d2f7-7fd156b7964sm2997645a12.18.2024.12.06.11.33.10
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Dec 2024 11:15:37 -0800 (PST)
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a9a68480164so298794266b.3
-        for <linux-hardening@vger.kernel.org>; Fri, 06 Dec 2024 11:15:37 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUYzvdsClnvGGSybl2Tz+oNHmhcPNdgnvv5vAqgub3DYvGcxKOKZyK0Sn4wbJjPA/znIFs4/KmlnknYgEsd1PQ=@vger.kernel.org
-X-Received: by 2002:a17:906:4c2:b0:aa5:308c:3489 with SMTP id
- a640c23a62f3a-aa63a2519b0mr271057466b.58.1733512537212; Fri, 06 Dec 2024
- 11:15:37 -0800 (PST)
+        Fri, 06 Dec 2024 11:33:10 -0800 (PST)
+From: jeffxu@chromium.org
+To: akpm@linux-foundation.org,
+	vbabka@suse.cz,
+	lorenzo.stoakes@oracle.com,
+	Liam.Howlett@Oracle.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-mm@kvack.org,
+	jorgelo@chromium.org,
+	keescook@chromium.org,
+	pedro.falcato@gmail.com,
+	rdunlap@infradead.org,
+	Jeff Xu <jeffxu@google.com>
+Subject: [PATCH] mseal: remove can_do_mseal
+Date: Fri,  6 Dec 2024 19:33:09 +0000
+Message-ID: <20241206193309.3026213-1-jeffxu@google.com>
+X-Mailer: git-send-email 2.47.0.338.g60cca15819-goog
+In-Reply-To: <CABi2SkUxcgKf1Z_zYNP+LOK8w=uUEKyq3fUpjJNcavhts2g0TA@mail.gmail.com>
+References: <CABi2SkUxcgKf1Z_zYNP+LOK8w=uUEKyq3fUpjJNcavhts2g0TA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241203-is_constexpr-refactor-v1-0-4e4cbaecc216@wanadoo.fr>
- <20241203-is_constexpr-refactor-v1-2-4e4cbaecc216@wanadoo.fr>
- <1d807c7471b9434aa8807e6e86c964ec@AcuMS.aculab.com> <CAMZ6RqLJLP+4d8f5gLfBdFeDVgqy23O+Eo8HRgKCthqBjSHaaw@mail.gmail.com>
- <9ef03cebb4dd406885d8fdf79aaef043@AcuMS.aculab.com> <CAHk-=wjmeU6ahyuwAymqkSpxX-gCNa3Qc70UXjgnxNiC8eiyOw@mail.gmail.com>
- <CAMZ6Rq+SzTA25XcMZnMnOJcrrq1VZpeT1xceinarqbXgDDo8VA@mail.gmail.com>
- <CAHk-=wiP8111QZZJNbcDNsYQ_JC-xvwRKr0qV9UdKn3HKK+-4Q@mail.gmail.com> <d23fe8a5dbe84bfeb18097fdef7aa4c4@AcuMS.aculab.com>
-In-Reply-To: <d23fe8a5dbe84bfeb18097fdef7aa4c4@AcuMS.aculab.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Fri, 6 Dec 2024 11:15:20 -0800
-X-Gmail-Original-Message-ID: <CAHk-=win8afdcergvJ6f2=rRrff8giGUW62qmYs9Ae6aw=wcnA@mail.gmail.com>
-Message-ID: <CAHk-=win8afdcergvJ6f2=rRrff8giGUW62qmYs9Ae6aw=wcnA@mail.gmail.com>
-Subject: Re: [PATCH 02/10] compiler.h: add is_const() as a replacement of __is_constexpr()
-To: David Laight <David.Laight@aculab.com>
-Cc: Vincent Mailhol <vincent.mailhol@gmail.com>, 
-	Luc Van Oostenryck <luc.vanoostenryck@gmail.com>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Yury Norov <yury.norov@gmail.com>, 
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Jani Nikula <jani.nikula@linux.intel.com>, 
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
-	Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
-	Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Rikard Falkeborn <rikard.falkeborn@gmail.com>, 
-	"linux-sparse@vger.kernel.org" <linux-sparse@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"llvm@lists.linux.dev" <llvm@lists.linux.dev>, 
-	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>, 
-	"intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>, 
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, 
-	"coresight@lists.linaro.org" <coresight@lists.linaro.org>, 
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
-	"uecker@tugraz.at" <uecker@tugraz.at>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, 6 Dec 2024 at 11:07, David Laight <David.Laight@aculab.com> wrote:
->
-> I'm missing the compiler version and options to generate the error.
+From: Jeff Xu <jeffxu@google.com>
 
-Just -Wall with most recent gcc versions seems to do it. At least I
-can repro it with gcc-14.2.1 and something silly like this:
+Hi Andrew,
 
-  $ cat t.c
-  int fn(int a) { return (a<<2)?1:2; }
-  $ gcc -Wall -S t.c
-  t.c: In function =E2=80=98fn=E2=80=99:
-  t.c:1:26: warning: =E2=80=98<<=E2=80=99 in boolean context, did you mean =
-=E2=80=98<=E2=80=99?
-[-Wint-in-bool-context]
+Is that possible to squash this change on top of 
+"mseal: move can_do_mseal to mseal.c" on the mm-unstable ?
 
-> Does a '+ 0' help?  "(var << 2) + 0 ? 0 : 0"
+This is the first time I m doing this, because I saw dev did this before,
+and saying this is the prefered approach.
 
-Yeah, that actually works.
+I could also send v2 which is what I usually do.
 
-And "+0" is nice in that it should work in any context.
+Thanks
+-Jeff
 
-> #define const_NULL(x) _Generic(0 ? (x) : (char *)0, char *: 1, void *: 0)
-> #define const_true(x) const_NULL((x) ? NULL : (void *)1L))
-> #define const_expr(x) const_NULL((x) ? NULL : NULL))
-> I send this morning.
-> Needs 's/char/struct kjkjkjkjui/' applied.
+Signed-off-by: Jeff Xu <jeffxu@chromium.org>
+---
+ mm/mseal.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Oh Christ. You really are taking this whole ugly to another level.
+diff --git a/mm/mseal.c b/mm/mseal.c
+index e167220a0bf0..08e6f328d9c7 100644
+--- a/mm/mseal.c
++++ b/mm/mseal.c
+@@ -225,9 +225,9 @@ int do_mseal(unsigned long start, size_t len_in, unsigned long flags)
+ 	unsigned long end;
+ 	struct mm_struct *mm = current->mm;
+ 
+-	ret = can_do_mseal(flags);
+-	if (ret)
+-		return ret;
++	/* Verify flags not set. */
++	if (flags)
++		return -EINVAL;
+ 
+ 	start = untagged_addr(start);
+ 	if (!PAGE_ALIGNED(start))
+-- 
+2.47.0.338.g60cca15819-goog
 
-           Linus
