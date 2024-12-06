@@ -1,57 +1,66 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A64F2206AA;
-	Fri,  6 Dec 2024 18:31:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13B071957F8
+	for <linux-hardening@vger.kernel.org>; Fri,  6 Dec 2024 18:52:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733509873; cv=none; b=TJddpiKl3HoV8sIZWNtjL30B3h6py2jX8YVOZxO1aKvqg12Y0eHrKyawoal1vtm0RSunNUT2OK4kDmrOlKE0yr9XpDJqoxnQq6EuM1/aHO4ZL2f0CunrG+PuSYkFKZd2fRXIw84doK/DSnj6TEhWyjaxxOlON/BNEH7IcmGVdlM=
+	t=1733511175; cv=none; b=tq4R6S96ZvbobQCivkqM0AK4JFX/s83twOViOp+G/Se/VKu241rcyP10qEToV79LarE+WBvcLM67KJVSefQq623MBQY66AEnE2SR8kmRxtLr8caZf09Ecj+0YCfsmCnX9gHJJkhn685CqQwITXnHQ0uC9jTPdfb6+WcGDeQ67po=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733509873; c=relaxed/simple;
-	bh=+2N0lSYv+NBz4Y6vr/lNiuvfJV7RX8RYoJK6s9GX4gY=;
+	s=arc-20240116; t=1733511175; c=relaxed/simple;
+	bh=uWEIYj04jJcQVEnaMjzH0epqUyK8EmgQnn9LnSnYd+k=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nu8oF91OAvlUVOqUTvN9aUit8B7i/nuiDtuWdMXDO8AFtgMFal7GSSlbRaE+mgsUTD9jSMYc+pfRkoku105tHAmiYki3DxYVhXSjqv1jcX0iWphx+OvovhWMPE7GSGq6iK0HGB3cJ/kt2sINtwa0xRYpWz1lYIaFXro+JDtzsQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HAB3cP5n; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=QPi4hYRJgo+QXrmDC+22cG+IpSRmbFSXxf7FRkACli/xCQdn957zs+hf24Bc/iQa9pKWhTgwVkVVitzNPH5UKJXPT8ko6Hg0KJb8uVyJL4yTVA+ZMgxgB9SXy9pRIq2UYXoj5otJwEc6R43JXN9L5PpONonRcUcJvxIF/DZzPcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=KE2O9AAo; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HAB3cP5n"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a9f1d76dab1so93253366b.0;
-        Fri, 06 Dec 2024 10:31:11 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="KE2O9AAo"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-aa55da18f89so325349166b.0
+        for <linux-hardening@vger.kernel.org>; Fri, 06 Dec 2024 10:52:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1733509870; x=1734114670; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=g7buzdn3/PR+OZ7E9SojfZrudu0PKQFtLTRAFouRbM0=;
-        b=HAB3cP5n48M+C74hHmh0ZmzPikkGLr7W6X0e5OjefouJmDGSUXywTNd5I+0i324Ugf
-         yfCjgkfN+ETLhQRZ4Ys+jUjUdqkHXNioDxIMGDIDqFDYLjX/y2jRHxw7OvVxM9eofqew
-         QW0p84FKJiZUWBfdFFW5iH0/o6R4H09z1q6UyMvDueyXJYT+24RizpqInZrrUDedKebq
-         CU+/8DJUKYHbJkPjPndSxYfAUfQG78Yrfa3EDsRLXSZDloL18WSgIw4wwqgUvIMri1xR
-         rI2F1PykG7VJ/vyjPLCCFpCAF5X+EVMTItNedawzEj64ktPiCSGiDlRGMdc6gbkxhhCL
-         4Z1A==
+        d=linux-foundation.org; s=google; t=1733511171; x=1734115971; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=WGtbOaTCTsAvyUDr9a4PNqlmY0QlpNlNkPLsZ0+zYxc=;
+        b=KE2O9AAonaJvTfQUit8WZXOeNBfbp5aVvkFV0z49ryRXmKIQ1zZl/WIeLUJIUpKifG
+         ptxJ/93OWVnJ09B6jiynRIo43dpr35kMQF3AVw4zi3P8gTK+O9oLgR/60qpV/beCbTnb
+         BgZhx7FqDekXz5Y7IIOg/dLpwHVXcUD82HVIw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733509870; x=1734114670;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=g7buzdn3/PR+OZ7E9SojfZrudu0PKQFtLTRAFouRbM0=;
-        b=h2obUv0JVnhzDGBZ9vgMP/ZxrsFWZTsxeceAfQvJp+tSKe/86JQQZUSlCvB9OFLJDV
-         TsxSD6y3YjUUq1s2M0fwBAbWkZPeAyaiVhpHigPyE2Q88C2X23xRIQi3j9qMlCF6RHXi
-         FcfsycTTxZTuKB6vBbVp0Ifp64UG4qvcL/qh6NEIu1wcDEJxhee+L7c0PAjyqqPsQMw3
-         D+qXHYfW5TpciCI+ohz7CNl33ZzxS24EzHcGPwmGsyG/P8FboTN1CIu5t0A0msx9EaAX
-         13tkF2XWQr64GK4nKcF9OONaxJcD46T8cIMYoYdqEdjZsNoUpHlW0ZcXvnHukYjM7eR8
-         z+kA==
-X-Forwarded-Encrypted: i=1; AJvYcCVXQZAs5k6whasUNkuYgeKyUIDvSIbKFijngOCc6mNvVryn+K+pIwb8Jc2Bc+v1mmh8F2SerH1z0fo1aWtk@vger.kernel.org, AJvYcCWyYxzAXA7KdeikVya/MpUTlAWnFkys43LdRknTgb4r1StXO08lg9AsdpJWp2iuqiqE72BMiKy3xA366nDg@vger.kernel.org, AJvYcCXA1BsnBVLeV6UCRKu1M9iVfKs4MuXF8fTenRXiuAi1SR9m+ek1mVtvHZDIzqGCE2E1ap5aWkzRxU1bHPG8sn0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzncDg7soEWJn3bJsmFhOz9D5PdWWNie1rgtP9zbTB6o3ciCO+V
-	tkvTm3bdCPadudVQkBXjQ3+2Thipkrjq2MawXInd5CMeYoNHK7/rov1vys15NSpK0y/HAcdQUDj
-	s7X+CbWxkFDRzbCpDUVf12lWZK4c=
-X-Gm-Gg: ASbGncvMT5+iVgfpl7P+hKhmtKTDMYFgj+fCa9LYdZNkQM+JlpPmnlU+/BRPU4c93Vs
-	skWOFWBFHxP0u3UAMiPg3cUOxEWL69oo=
-X-Google-Smtp-Source: AGHT+IFnd7xj5Pq9akTxmspxJbkFJbmmIA03mUFW2B6h+sDDSyh+/NdbCh8gBxT6LtqsX9b+RXGKw/QASht5Itx+9Lw=
-X-Received: by 2002:a17:907:7703:b0:aa5:46d3:4d88 with SMTP id
- a640c23a62f3a-aa639febbbfmr329138866b.15.1733509869483; Fri, 06 Dec 2024
- 10:31:09 -0800 (PST)
+        d=1e100.net; s=20230601; t=1733511171; x=1734115971;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WGtbOaTCTsAvyUDr9a4PNqlmY0QlpNlNkPLsZ0+zYxc=;
+        b=UWihft8xRH50Xrcy7pjDC2W0EFO5aFPY7HD3pexqmoPnv1AM4XMhwHpMNjI7shoJrX
+         5fLT0e3xUDvgdkeO8WMjuEcJohZQVhYfbq97YIjiiPClMmbk1e5u5j44XlR8nm1h0L7m
+         ytGZKtNL9A3Y+mbus9WWCAyKxpMtTn3L1VeC4+Uh49uks8pSsWKxtlOfJRjGArW+Hx7p
+         mCDQf2+OfFxu9RLlF4Q/x6a13SVGPJqWgDUSpOTs2Fn/0ApmHk3OtOqF0s9rdHdjmXpc
+         3pbEN/WrTuiSaUxqGKwubwniNdXTxfc+42eM1OAhdbadwK4iqBUee13J1Z4gvd51RobS
+         Dhew==
+X-Forwarded-Encrypted: i=1; AJvYcCUyBeGvnVf0yjHc5EpXrEYmUWuqA6CXeUAUEOhmYWq925j3NMv88zdeWkRiTB8iZ6/WKYcKKGoSHsepsozfLE8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJlwLEDVhChSy4dZCNPMKWI6XxxWFt/lkngt95lv20Z6qmzbeS
+	FBWgttYx7Kd7t4lerIyjCLaD7mXNYxT8+lmmBDdwdu5i8p94yCAwtkjM3nYxH3VG8nT1KCC1JZy
+	xp8rr2Q==
+X-Gm-Gg: ASbGncsqonXKiMmcMvDUX0SrHZ4fof5YfiBC/YmIGqR9eIKysNVG/s4VqgjqKLN8Hhn
+	mM3doxYO7saswRwdz96cAdFc5p5/mzj/LnXRngsuivdETvAF23LlC5EOX5Lr6miEzPuTn+P411e
+	p8bSlfGi4otLteorFnjWzv3PST2pFR0yfA4g2shKcsK0VFw/EIME7GZKJsISvou5LPPBk7CaPl8
+	+utdoOJshr5UUYSVE5PcHYxlh2PRB/TpsjL85+STuwrn7VYZZTHHatPaVXecZvqDa3m1Sre1QbU
+	GxQO0a6dWRYcDZE71Q51vly+
+X-Google-Smtp-Source: AGHT+IFj5WJOCSdJNHMAsoAiNZoyMc024ck5QXLVCkEYt+AzD6IYgILgvs941elSO8T7H8mSecSyQg==
+X-Received: by 2002:a17:906:5a5e:b0:aa6:3c7c:eb6c with SMTP id a640c23a62f3a-aa63c7d80d5mr257414266b.57.1733511171131;
+        Fri, 06 Dec 2024 10:52:51 -0800 (PST)
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com. [209.85.218.54])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aa625e92fe3sm278454866b.51.2024.12.06.10.52.49
+        for <linux-hardening@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Dec 2024 10:52:49 -0800 (PST)
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-aa55da18f89so325345466b.0
+        for <linux-hardening@vger.kernel.org>; Fri, 06 Dec 2024 10:52:49 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXQuE7SKPIboPpPo5573KdF75pjHqa3yuGHodVnVFiP8t+cwhVjvqG5/yup89Q8nl/IAaxD5ttVln/jYiq+eXM=@vger.kernel.org
+X-Received: by 2002:a17:906:1ba2:b0:aa5:451c:ce1e with SMTP id
+ a640c23a62f3a-aa63a0aa48amr290776466b.32.1733511169269; Fri, 06 Dec 2024
+ 10:52:49 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -62,12 +71,14 @@ References: <20241203-is_constexpr-refactor-v1-0-4e4cbaecc216@wanadoo.fr>
  <20241203-is_constexpr-refactor-v1-2-4e4cbaecc216@wanadoo.fr>
  <1d807c7471b9434aa8807e6e86c964ec@AcuMS.aculab.com> <CAMZ6RqLJLP+4d8f5gLfBdFeDVgqy23O+Eo8HRgKCthqBjSHaaw@mail.gmail.com>
  <9ef03cebb4dd406885d8fdf79aaef043@AcuMS.aculab.com> <CAHk-=wjmeU6ahyuwAymqkSpxX-gCNa3Qc70UXjgnxNiC8eiyOw@mail.gmail.com>
-In-Reply-To: <CAHk-=wjmeU6ahyuwAymqkSpxX-gCNa3Qc70UXjgnxNiC8eiyOw@mail.gmail.com>
-From: Vincent Mailhol <vincent.mailhol@gmail.com>
-Date: Sat, 7 Dec 2024 03:30:57 +0900
-Message-ID: <CAMZ6Rq+SzTA25XcMZnMnOJcrrq1VZpeT1xceinarqbXgDDo8VA@mail.gmail.com>
+ <CAMZ6Rq+SzTA25XcMZnMnOJcrrq1VZpeT1xceinarqbXgDDo8VA@mail.gmail.com>
+In-Reply-To: <CAMZ6Rq+SzTA25XcMZnMnOJcrrq1VZpeT1xceinarqbXgDDo8VA@mail.gmail.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Fri, 6 Dec 2024 10:52:32 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wiP8111QZZJNbcDNsYQ_JC-xvwRKr0qV9UdKn3HKK+-4Q@mail.gmail.com>
+Message-ID: <CAHk-=wiP8111QZZJNbcDNsYQ_JC-xvwRKr0qV9UdKn3HKK+-4Q@mail.gmail.com>
 Subject: Re: [PATCH 02/10] compiler.h: add is_const() as a replacement of __is_constexpr()
-To: Linus Torvalds <torvalds@linux-foundation.org>
+To: Vincent Mailhol <vincent.mailhol@gmail.com>
 Cc: David Laight <David.Laight@aculab.com>, 
 	Luc Van Oostenryck <luc.vanoostenryck@gmail.com>, Nathan Chancellor <nathan@kernel.org>, 
 	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
@@ -89,122 +100,36 @@ Cc: David Laight <David.Laight@aculab.com>,
 	"coresight@lists.linaro.org" <coresight@lists.linaro.org>, 
 	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, uecker@tugraz.at
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Grrr, I just realized that my emails are bouncing=E2=80=A6 Didn't happen
-before, I guess this is because my smtp server is unhappy with the
-many people in CC.
-
-Resending using another address (and, while at it, redacted two
-messages to combine them in one and added more details).
-
-My deep apologies for that, really sorry. Also, maybe the bouncing
-messages will finally find their way out? In that case, please just
-ignore them, and sorry for the noise.
-
-On Fri. 6 Dec. 2024 at 15:14, Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
-> On Thu, 5 Dec 2024 at 18:26, David Laight <David.Laight@aculab.com> wrote=
-:
-> >
-> > From: Vincent Mailhol
-> > > ACK. Would adding a suggested--by Linus tag solve your concern?
+On Fri, 6 Dec 2024 at 10:31, Vincent Mailhol <vincent.mailhol@gmail.com> wrote:
 >
-> I'm genberally the one person who doesn't need any more credit ;)
+> > causes issues when 'x' is not an integer expression (think
+> > "is_const(NULL)" or "is_const(1 == 2)".
 >
-> > I actually suspect the first patches to change __is_constexpr() to
-> > use _Generic were from myself.
->
-> Yes. And David was also I think the one who suggested something else
-> than "!!" originally too.
+> But 1 == 2 already has an integer type as proven by:
 
-Ack. Then, I will add a suggested-by tag to credit David!
+Yeah, I was confused about exactly what triggers that odd
+'-Wint-in-bool-context'.
 
-> I may have liked "!!" for being very idiomatic and traditional C, but
-> there were those pesky compilers that warn about "integer in bool
-> context" or whatever the annoying warning was when then doing the
-> "multiply by zero" to turn a constant expression into a constant zero
-> expression.
->
-> So that
->
->   #define is_const(x) __is_const_zero(0 * (x))
->
-> causes issues when 'x' is not an integer expression (think
-> "is_const(NULL)" or "is_const(1 =3D=3D 2)".
+It's not about some actual bool type, it's literally a random
+collection of integer operations used with logical ops.
 
-But 1 =3D=3D 2 already has an integer type as proven by:
+So it's things like "!(var<<2)" that generate that warning, because
+some compiler person at some point went "maybe that left shift should
+have been just a comparison instead '<'".
 
-  #define is_int(x) _Generic(x, int: 1, default: 0)
-  static_assert(is_int(1 =3D=3D 2));
+But it turns out that "(var <<2)?0:0" _also_ triggers that warning.
 
-And regardless, __is_const_zero() performs a (long) cast, so
-__is_const_zero() works for any other scalar types. Even the u128
-works because after the (0 * (x)) multiplication, you are left with
-zero, preventing any loss of precision when casting to (long).
+End result: I have *no* idea how to shut that crazy warning up for
+this case, if we want to have some generic macro that says "is this
+constant". Because it damn well is perfectly sane to ask "is (a << 3)
+a constant expression".
 
-Here are some tests to prove my claims:
+How very annoying.
 
-  https://godbolt.org/z/beGs841sz
+This may be a case of "we just need to disable that incorrect compiler
+warning". Or does anybody see a workaround?
 
-So, it leaves us with the is_const(pointer) case. To which I would
-question if we really want to support this. By definition, an
-expression with a pointer type can not be an *integer* constant
-expression. So one part of me tells me that it is a sane thing to
-*not* support this case and throw a warning if the user feeds
-is_const() with a pointer.
+             Linus
 
-By the way, currently, __is_constexpr(NULL) returns false:
-
-  https://godbolt.org/z/f5P9oP9n5
-
-and the reason this went unnotified in the kernel is because no one is
-using it that way. So instead of complicating the macro for a use case
-which currently does not exist (and which goes against the definition
-of an ICE in the C standard), why not say instead that this is not
-supported by just leaving the constraint violation in is_const()?
-
-> Side note: I think "(x) =3D=3D 0" will make sparse unhappy when 'x' is a
-> pointer, because it results that horrid "use integer zero as NULL
-> without a cast" thing when the plain zero gets implicitly cast to a
-> pointer. Which is a really nasty and broken C pattern and should never
-> have been silent.
->
-> I think David suggested using ((x)?0:0) at some point. Silly
-> nonsensical and complex expression, but maybe that finally gets rid of
-> all the warnings:
->
->      #define is_const(x) __is_const_zero((x)?0:0)
->
-> might work regardless of the type of 'x'.
-
-If we *really* want to go beyond the C standard and extend the meaning
-of integer constant expressions in the kernel to also include constant
-pointers, then what about:
-
-  #define is_const(x) __is_const_zero((x) !=3D (x))
-
-As established above, comparaisons return an int, thus making this
-pass all tests:
-
-  https://godbolt.org/z/f5zrzf44h
-
-And it is slightly more pretty than the ((x)?0:0).
-
-(...)
-
-Side question, Linus, what do you think about the __is_const_zero()
-documentation:
-
-  https://lore.kernel.org/all/20241203-is_constexpr-refactor-v1-2-4e4cbaecc=
-216@wanadoo.fr/
-
-Do you think I am too verbose as pointed out by David? Some people
-(including me and Yuri) like it that way. But if you also think this
-is too much, I will make it shorter.
-
-Thanks,
-
-
-Yours sincerely,
-Vincent Mailhol
+              Linus
