@@ -1,153 +1,137 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AD11198A06
-	for <linux-hardening@vger.kernel.org>; Fri,  6 Dec 2024 19:15:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AE051FFC70
+	for <linux-hardening@vger.kernel.org>; Fri,  6 Dec 2024 19:15:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733512537; cv=none; b=bizWjhPI/mSN7p/ji62giKxj+ddwScdoJ1UgeVsDjVfpqHbU8uWlqdCz10zqtOgwOZY65MZDW+0dbsjDEhtPM8KqtMjm1fVKe+LuQUhWsYxHYPzifjcxptOH3LlisigMpy1mLbP/FzLcHpj+1vg1/9nlIrko8jUXAnCbh3cERoI=
+	t=1733512542; cv=none; b=dEYG6F1LzosB04pwDdew16XVmmMKJdlqphSQTfSzgFqGEVoPpmKeBaTB0dY9u8jK01a17LsIsgp9Q8MFBSX1fs1sn1eduRz2FGc3N+FifKtwdWjwX25poZZhAwWY+de2RB1wiVrkAG81brSOof3ejSTD/eWpk5jKqprNiemzW90=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733512537; c=relaxed/simple;
-	bh=ajFbm9bK5cqvgCLi6MJ1DB1DDERcm8YueHpowSShf5M=;
+	s=arc-20240116; t=1733512542; c=relaxed/simple;
+	bh=i8VSKf3d9h7aPyCMroFIPs2BgVVC/quFiHlWg+y9lfA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qV6M847hHL3Er3MqxGi/01USPcMwLjvYdKpH+Nryc5vhYKv0nOo+RgDkjQzS717R5DhLk1gxpJ/dwnD6DYPkhPzuZAv5Efd7dfGhG+bcrYAHhOdvG2jvLudJsZgz8DbFNkCCbd2ZP/fcVNgIFqpIAJsxbXD6Hd8WfcA3oDa6Uow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NsgeBjVW; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=UiJERHKNBhh5Op+Um+odP2KR6p1rzRhciDVjU/vO6BxRdm3jkBqA+YOvQPlJEu3ow56ZIc4Q7J4DPd+nfii7TB8gBRhDGvmpo6toLRIREeGBz5t9w1DyeEPx0/ui5FQ6Y6trMin021jO1RVACugd643AtLc9TVh4QsDvWwlFRrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=IaFOPHH7; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NsgeBjVW"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5d3cfdc7e4fso699a12.0
-        for <linux-hardening@vger.kernel.org>; Fri, 06 Dec 2024 11:15:35 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="IaFOPHH7"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-aa549d9dffdso346177766b.2
+        for <linux-hardening@vger.kernel.org>; Fri, 06 Dec 2024 11:15:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1733512534; x=1734117334; darn=vger.kernel.org;
+        d=linux-foundation.org; s=google; t=1733512538; x=1734117338; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=l7YKnxexLJ1+TaE4HafZ+vrLntQPWzQ2qCK8DJmplRQ=;
-        b=NsgeBjVWj5B+A7QFFE9mZxckWwricz98bTaZaAMlVF4M+rQ2gDPPWrPH0kzZGP3inL
-         t9Fno5IYndOuzYXsxPT5iYqGaD3XeH/lT5x0x7GaEsVwXUGpcKLmLPEZR4pt4OACCdup
-         +ExWHhZLUKDjXGh/msp03efbFLU2l007NZTlwUlYiZj5BDXbK4Rg91gawYfyxmgidOxO
-         /dTy6Rq0mCx/s2tTYqt66Yf8zL9iTcF2B1ECJuHv2JPpCrs44LTrpeh5msqqFlMmgmWU
-         6tYz16JBhiAkWghW8Rqt9GGMdS75pY5UwBdghZRZV4OgQdWpm7lvnEQksvDPLRdMGRtq
-         l0dw==
+        bh=HB1D/kV+LS+wbR3JFN0rKIWFlL1hHHNzi40qmGJ0Urw=;
+        b=IaFOPHH7Q1qhR31U6jVDe9A8NG8N9GzRTGp1ew27wxOc8vvQbBlRcfInq7il1wu7zW
+         jx0d6o83NkzaXTlvBusBom6UOMqVs51dsgbjsiz3YJLcUZEflmHn8xJ2DujiDe8QXSFf
+         vZCGq1YA9Folqjlt7tDd1SxQ+ld2p6+6i+aa4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733512534; x=1734117334;
+        d=1e100.net; s=20230601; t=1733512538; x=1734117338;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=l7YKnxexLJ1+TaE4HafZ+vrLntQPWzQ2qCK8DJmplRQ=;
-        b=pN9kXa8BuPDdv9/utWLEeHrHNGlWrE+xj8caohOjg0ub1AZ/8s2JDPPQITQ4SduEUl
-         EvcjyuUHZ19JWL971QZQNSWFhq8z+92M0nDoXZx0lKO69c9bL30WFg97Y2REtWHSIl/e
-         oeDrHzoj7UhVVHqYxMeK3fQ1QoTt14Rkg1a2myq4TLiK8XwtYKQwKosiVLq8ewjeLQKH
-         NC9LEq2idKm7bFVDP4E30KKRTQkmME1BFjjdRVum4GekTHiFNJXqlJEtpcWdm46yq50F
-         fE9PPRBwvYzuT0QT0gcnQf89WCvp+mRBQSsa1MSZ2G6SBJz6WoAzl1RAkOLEzsMgx8Jl
-         5YQQ==
-X-Gm-Message-State: AOJu0Yy2xHSStwclySCfzMYhPzwxSE7KkyzJXVkyWvFxFentOezZoBLQ
-	KobCG6cecz/8IfMcHpmF+g+65diNb4F/yYAVal0F2KDwlvbrTFYHmLU8cRGhnoAPyUOvvcnUr5g
-	K78hLSyhnaOXuVK+CnORSuAUFY83k9Ic21XYZ
-X-Gm-Gg: ASbGncuwGwWKMt7n1/4O2a/0kr15PttAxazlKe8CfjWginOqImDHxVgCuWYlVDIPJ/2
-	yX1OHJwDa8oXabLZr5pBvPMaWoLgwDWEf+w+650IoNCM/fmm4Wc2GcVn93WU=
-X-Google-Smtp-Source: AGHT+IElYlBNREfqiZtIPEZ0AoFhO5dJI6xcw9xcSYAg6cDhIC7rFrPCr3zdIfmomIG/xUNduJKYL+dryW/WkRiwaII=
-X-Received: by 2002:aa7:d507:0:b0:5d0:eb21:264d with SMTP id
- 4fb4d7f45d1cf-5d3db4b972cmr3792a12.1.1733512533171; Fri, 06 Dec 2024 11:15:33
- -0800 (PST)
+        bh=HB1D/kV+LS+wbR3JFN0rKIWFlL1hHHNzi40qmGJ0Urw=;
+        b=CsPRiibRnIc/5iVoo3ITFP6A2S/l/G+9KaONW4q5IC/OAlGmNT3Puht3QQ+UfrP69b
+         eTQD0uisFUaN+VWdZuBWr9qD57kKFX4p2J6MFn+ysP/dZ6vJJ7KL596iDPEvXxGL0N8O
+         TQ+WAs/HSvs1n5JrDQ29Ot0tBfEAqsoF98zfOn6u/n9rYnZAK2QPTsGeMUzS1dwArx7K
+         LscyZ/j3dUgpOgGNcEfaip2vgv8IO+CJLeofxxq2kzTzZy8O/dZoOrnCKlSeZX6z61ki
+         1CAiUsFnWp/0vHiZkh5VsninzH1OhYYJaQa6S7qMIYTDjSh85PZxDL7f/DDIMftaOI3Q
+         CmWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXw7jVzvJvCkiYI4y6JgBWzPd2Hq8GY69q8m2vmtbEsml8Rs+A97zkweHF/Dp5QQ2kDBu+ojB6CvBzV8JVuqqY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxj0PAYeUSCcnzQoWb9HV+ISRmKIY3/LW9wtPBKIXzLBXwbwvQo
+	/BuK6hwip+cnktgpnDQKSub3M/++LMP1b5uot8wRTmN6DxbywC8iwnHMC1riYGjzcpO4duw9hY6
+	rY1rHCg==
+X-Gm-Gg: ASbGncuJ0hC5uXNdwTKWJXAMEWYDIDZ9EHtdd05jXecsMGUrYxwwL6RcnI8dXE/Mluz
+	0gqR6ZkhfAxOg8QLXkcvNGBHWtSzoxfDtDpH8OVN4Uh/H9DFwDaQXOQnzsRgv2w/joP6f8obl20
+	AVLsUYZcuCpJZs8asFB9AAH86eRAEZA5Zh0eIqkSKcMlukEjmkMJm2lW+5SpgTc9aG2vkYgnu/Z
+	9YvdDf7FljiQNdW+T3jMi/DhKLctRSoFiQGn2YCH5wY9B3H003WFntZs5K9+8yaFhmuAurzMkkq
+	Ra17HMebmxCaNhlN/hTapfmw
+X-Google-Smtp-Source: AGHT+IEQSJyd8NxwHAFPWaxTEOGuxN/cxDokWc3fkCaUMsyKVZnQVNQSGSYlM4sN6M/SZTlkp1Bzuw==
+X-Received: by 2002:a17:907:3a0f:b0:aa5:cec:d504 with SMTP id a640c23a62f3a-aa63a08a537mr273143066b.30.1733512538228;
+        Fri, 06 Dec 2024 11:15:38 -0800 (PST)
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com. [209.85.218.50])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aa62602cf1dsm283621966b.129.2024.12.06.11.15.37
+        for <linux-hardening@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Dec 2024 11:15:37 -0800 (PST)
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a9a68480164so298794266b.3
+        for <linux-hardening@vger.kernel.org>; Fri, 06 Dec 2024 11:15:37 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUYzvdsClnvGGSybl2Tz+oNHmhcPNdgnvv5vAqgub3DYvGcxKOKZyK0Sn4wbJjPA/znIFs4/KmlnknYgEsd1PQ=@vger.kernel.org
+X-Received: by 2002:a17:906:4c2:b0:aa5:308c:3489 with SMTP id
+ a640c23a62f3a-aa63a2519b0mr271057466b.58.1733512537212; Fri, 06 Dec 2024
+ 11:15:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241206101110.1646108-1-kevin.brodsky@arm.com>
-In-Reply-To: <20241206101110.1646108-1-kevin.brodsky@arm.com>
-From: Jann Horn <jannh@google.com>
-Date: Fri, 6 Dec 2024 20:14:57 +0100
-Message-ID: <CAG48ez1b8BBquEB1BJEg+KsPdPyZLPuD7uToUH3ZdN8F0r+U9w@mail.gmail.com>
-Subject: Re: [RFC PATCH 00/16] pkeys-based page table hardening
-To: Kevin Brodsky <kevin.brodsky@arm.com>
-Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	aruna.ramakrishna@oracle.com, broonie@kernel.org, catalin.marinas@arm.com, 
-	dave.hansen@linux.intel.com, jeffxu@chromium.org, joey.gouly@arm.com, 
-	kees@kernel.org, maz@kernel.org, pierre.langlois@arm.com, qperret@google.com, 
-	ryan.roberts@arm.com, will@kernel.org, linux-arm-kernel@lists.infradead.org, 
-	x86@kernel.org
+References: <20241203-is_constexpr-refactor-v1-0-4e4cbaecc216@wanadoo.fr>
+ <20241203-is_constexpr-refactor-v1-2-4e4cbaecc216@wanadoo.fr>
+ <1d807c7471b9434aa8807e6e86c964ec@AcuMS.aculab.com> <CAMZ6RqLJLP+4d8f5gLfBdFeDVgqy23O+Eo8HRgKCthqBjSHaaw@mail.gmail.com>
+ <9ef03cebb4dd406885d8fdf79aaef043@AcuMS.aculab.com> <CAHk-=wjmeU6ahyuwAymqkSpxX-gCNa3Qc70UXjgnxNiC8eiyOw@mail.gmail.com>
+ <CAMZ6Rq+SzTA25XcMZnMnOJcrrq1VZpeT1xceinarqbXgDDo8VA@mail.gmail.com>
+ <CAHk-=wiP8111QZZJNbcDNsYQ_JC-xvwRKr0qV9UdKn3HKK+-4Q@mail.gmail.com> <d23fe8a5dbe84bfeb18097fdef7aa4c4@AcuMS.aculab.com>
+In-Reply-To: <d23fe8a5dbe84bfeb18097fdef7aa4c4@AcuMS.aculab.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Fri, 6 Dec 2024 11:15:20 -0800
+X-Gmail-Original-Message-ID: <CAHk-=win8afdcergvJ6f2=rRrff8giGUW62qmYs9Ae6aw=wcnA@mail.gmail.com>
+Message-ID: <CAHk-=win8afdcergvJ6f2=rRrff8giGUW62qmYs9Ae6aw=wcnA@mail.gmail.com>
+Subject: Re: [PATCH 02/10] compiler.h: add is_const() as a replacement of __is_constexpr()
+To: David Laight <David.Laight@aculab.com>
+Cc: Vincent Mailhol <vincent.mailhol@gmail.com>, 
+	Luc Van Oostenryck <luc.vanoostenryck@gmail.com>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Yury Norov <yury.norov@gmail.com>, 
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Jani Nikula <jani.nikula@linux.intel.com>, 
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+	Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
+	Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Rikard Falkeborn <rikard.falkeborn@gmail.com>, 
+	"linux-sparse@vger.kernel.org" <linux-sparse@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"llvm@lists.linux.dev" <llvm@lists.linux.dev>, 
+	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>, 
+	"intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>, 
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, 
+	"coresight@lists.linaro.org" <coresight@lists.linaro.org>, 
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
+	"uecker@tugraz.at" <uecker@tugraz.at>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Dec 6, 2024 at 11:13=E2=80=AFAM Kevin Brodsky <kevin.brodsky@arm.co=
-m> wrote:
-> This is a proposal to leverage protection keys (pkeys) to harden
-> critical kernel data, by making it mostly read-only. The series includes
-> a simple framework called "kpkeys" to manipulate pkeys for in-kernel use,
-> as well as a page table hardening feature based on that framework
-> (kpkeys_hardened_pgtables). Both are implemented on arm64 as a proof of
-> concept, but they are designed to be compatible with any architecture
-> implementing pkeys.
+On Fri, 6 Dec 2024 at 11:07, David Laight <David.Laight@aculab.com> wrote:
 >
-> The proposed approach is a typical use of pkeys: the data to protect is
-> mapped with a given pkey P, and the pkey register is initially configured
-> to grant read-only access to P. Where the protected data needs to be
-> written to, the pkey register is temporarily switched to grant write
-> access to P on the current CPU.
->
-> The key fact this approach relies on is that the target data is
-> only written to via a limited and well-defined API. This makes it
-> possible to explicitly switch the pkey register where needed, without
-> introducing excessively invasive changes, and only for a small amount of
-> trusted code.
->
-> Page tables were chosen as they are a popular (and critical) target for
-> attacks, but there are of course many others - this is only a starting
-> point (see section "Further use-cases"). It has become more and more
-> common for accesses to such target data to be mediated by a hypervisor
-> in vendor kernels; the hope is that kpkeys can provide much of that
-> protection in a simpler manner. No benchmarking has been performed at
-> this stage, but the runtime overhead should also be lower (though likely
-> not negligible).
+> I'm missing the compiler version and options to generate the error.
 
-Yeah, it isn't great that vendor kernels contain such invasive changes...
+Just -Wall with most recent gcc versions seems to do it. At least I
+can repro it with gcc-14.2.1 and something silly like this:
 
-I guess one difference between this approach and a hypervisor-based
-approach is that a hypervisor that uses a second layer of page tables
-can also prevent access through aliasing mappings, while pkeys only
-prevent access through a specific mapping? (Like if an attacker
-managed to add a page that is mapped into userspace to a page
-allocator freelist, allocate this page as a page table, and use the
-userspace mapping to write into this page table. But I guess whether
-that is an issue depends on the threat model.)
+  $ cat t.c
+  int fn(int a) { return (a<<2)?1:2; }
+  $ gcc -Wall -S t.c
+  t.c: In function =E2=80=98fn=E2=80=99:
+  t.c:1:26: warning: =E2=80=98<<=E2=80=99 in boolean context, did you mean =
+=E2=80=98<=E2=80=99?
+[-Wint-in-bool-context]
 
-> # kpkeys_hardened_pgtables
->
-> The kpkeys_hardened_pgtables feature uses the interface above to make
-> the (kernel and user) page tables read-only by default, enabling write
-> access only in helpers such as set_pte(). One complication is that those
-> helpers as well as page table allocators are used very early, before
-> kpkeys become available. Enabling kpkeys_hardened_pgtables, if and when
-> kpkeys become available, is therefore done as follows:
->
-> 1. A static key is turned on. This enables a transition to
->    KPKEYS_LVL_PGTABLES in all helpers writing to page tables, and also
->    impacts page table allocators (see step 3).
->
-> 2. All pages holding kernel page tables are set to KPKEYS_PKEY_PGTABLES.
->    This ensures they can only be written when runnning at
->    KPKEYS_LVL_PGTABLES.
->
-> 3. Page table allocators set the returned pages to KPKEYS_PKEY_PGTABLES
->    (and the pkey is reset upon freeing). This ensures that all page
->    tables are mapped with that privileged pkey.
->
-> # Threat model
->
-> The proposed scheme aims at mitigating data-only attacks (e.g.
-> use-after-free/cross-cache attacks). In other words, it is assumed that
-> control flow is not corrupted, and that the attacker does not achieve
-> arbitrary code execution. Nothing prevents the pkey register from being
-> set to its most permissive state - the assumption is that the register
-> is only modified on legitimate code paths.
+> Does a '+ 0' help?  "(var << 2) + 0 ? 0 : 0"
 
-Is the threat model that the attacker has already achieved full
-read/write access to unprotected kernel data and should be stopped
-from gaining write access to protected data? Or is the threat model
-that the attacker has achieved some limited corruption, and this
-series is intended to make it harder to either gain write access to
-protected data or achieve full read/write access to unprotected data?
+Yeah, that actually works.
+
+And "+0" is nice in that it should work in any context.
+
+> #define const_NULL(x) _Generic(0 ? (x) : (char *)0, char *: 1, void *: 0)
+> #define const_true(x) const_NULL((x) ? NULL : (void *)1L))
+> #define const_expr(x) const_NULL((x) ? NULL : NULL))
+> I send this morning.
+> Needs 's/char/struct kjkjkjkjui/' applied.
+
+Oh Christ. You really are taking this whole ugly to another level.
+
+           Linus
