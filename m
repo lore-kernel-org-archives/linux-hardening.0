@@ -1,66 +1,66 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89BC91487E9
-	for <linux-hardening@vger.kernel.org>; Sat,  7 Dec 2024 20:28:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31D721E529
+	for <linux-hardening@vger.kernel.org>; Sat,  7 Dec 2024 20:31:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733603335; cv=none; b=GSj087pkG74YTsyMd5heXX+ZnFzwNGSmapK54X2URhpOivBLJsLHnyCSMblVLoQiDPncVulDDJJkXsByUkD6jnSvLNh+UYwqhvLZGi14UeisQhykImXRI8GiwNCygEahEIwTsJkzm3nqoYBc/ueIszikYDdAJCNiXeugEamk01Y=
+	t=1733603491; cv=none; b=g3Sp4h38yyWGKMqbNSSTyU+/2pLNBRJ+B211fJ1BnW/RzIgl0yRO3kNfagylXaU4nNQ1cquBxgv4NDtPtAdaLLC1p/46tLmYN5b8TwbPAAudttrz81Vm40iAbgJ4xX3mTzZEJTWvTDX9sgS6wMEPLJVoGzncqT9GUUTauSo/j6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733603335; c=relaxed/simple;
-	bh=7mHyTv6r85AJbexntlqRENNWjYsWWzkVfT4oFafMmAY=;
+	s=arc-20240116; t=1733603491; c=relaxed/simple;
+	bh=ct+vM4e0Jtr5aDgyp/mMMW/kc2rgYH8fWmf1syFBJE4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dHPefWPpGQO81bm7vbdtta/g4zrWUNqZLR/bWvyrgvK2jBywDuUiZJzS6XV5D2zOHGypIiNcMk1aGZnnR6VfnkMHrKFn+nuCwxcIHz6vh2hpr61jOxm6+oKxR3icaJyG8ut7N7/waARqttBiAS3Lt8XDu6qjh5deozoO+RMegvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=QdXVXDMp; arc=none smtp.client-ip=209.85.218.41
+	 To:Cc:Content-Type; b=BOAWJIXrvz2qwCDXCpSz5BQh63IDsPwP2m9S7sAU7gda7TOtjE4VVjZaSJtogiNmQORhXsM4169vn3pIHSFCz9slq8SytcueFHUL3SACA4i2g0kwZacQuhTlPNW8xaY0GLK/QgrMvnLlhy7fAoAZzSYD6ffThT6GtARNCO2nh/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=h/Y3fuZV; arc=none smtp.client-ip=209.85.218.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="QdXVXDMp"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a9ec267b879so604380166b.2
-        for <linux-hardening@vger.kernel.org>; Sat, 07 Dec 2024 12:28:53 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="h/Y3fuZV"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-aa62f1d2b21so403974866b.1
+        for <linux-hardening@vger.kernel.org>; Sat, 07 Dec 2024 12:31:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1733603332; x=1734208132; darn=vger.kernel.org;
+        d=linux-foundation.org; s=google; t=1733603486; x=1734208286; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=HiZTKf4hCKQ8GKQ+oAO9V4GLtbxeasgvzn3MVqs40sY=;
-        b=QdXVXDMpVGnmG6En3ZUU8WZDW+TtkLwWEfbV+Aq/UeNxm6+muPXv1sghjFaSoMrBO4
-         CxLzcuI1FArwZzoVQKmKhfkg8wSm+Y1QfDJKDhlm+egfjoREktfMpAvEMofj9Tkp/AXN
-         ZrywYALFgQe3q+5HwplAu/dep1aUdaIHzK3Uw=
+        bh=ms7Dj4PhpQjQO3I96MAeIgwapri0gFHpEAP0IFi7Ea0=;
+        b=h/Y3fuZVKNNhmx4D/LkvbQavy/e58VZaHuZ1IgOsjF0n7A57flpgIa4pyWKLMYx012
+         CHaP7T5jEnqJazSzYzhwg+d8Mk0bXhn91SEnkdHxCE6462mkftISmT9kLMoK0yjPda1h
+         Olqh4I8kI0IaPi92v7QTx0jY+wZRCdX5CEwLk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733603332; x=1734208132;
+        d=1e100.net; s=20230601; t=1733603486; x=1734208286;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=HiZTKf4hCKQ8GKQ+oAO9V4GLtbxeasgvzn3MVqs40sY=;
-        b=Crln2QeU6wY9iJVbhJEx6VxACdPm1f4qYg5y6JJq1TahZKaRqFm8zpkHVwLHrn39CR
-         WcIHp0bi5fo2FSLcFACW3Y85vCTer+zmE0AC+V5PE3aRTJLst4O1oewoNiXjL+t6Yixx
-         RJjGGJyt428ePtRUvB7texI/Rqm1ZTcGcBVtDpVr6DIU3p3jwz2j4zbBpziXeka6urr6
-         pApE4XCLQw5VdCdlGRbcjaCvltZGv0t9btHGMtFWY31SVrvOlNx6wOP+/l7BKNgGYxDv
-         HFha1JXYvZ9KxsEJGxUUsYYeoC7wZwUbBeN0S437kYrkLxbw0j8qAae1gTRdUjghPit5
-         +2VQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW8e7tY81ibZ6QagzHB4t9gZjsSMBjQCAKgkyYBFXCNfwbfhmhD4JFytv6IumS9dqIjeiqzoymkDioeGlXJOoE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0x30gTZSZA6sTMUcF+wR6K5ZErIqw0aA9ifTSIizfb6tD4HtZ
-	VlyoQCgTmDoO2xUdMYmQuyG5Da1v2dVt2Zwl5p154AU/PE1Wzd98ReSlORos4jOkK4/uckvq9ae
-	GNLDeOw==
-X-Gm-Gg: ASbGncspHnKjwJkF8/HGY87gWg6K86Nbts6c8Q+q2MS6+iChDUSoEyFf7BHm1TTS+s1
-	QmnyJP7mYKiOqNLd04G6EXdcKeVDcLObyblFJZOEjnSs1DFcok+fazWy5PsnMMNO7qtC7d1HRrm
-	uqCyHB4PF0H4bAEr+ku/PbPw/X1SafJ7xUdjsBOErmlbaMrGDzxD88yxOyHpsBcWqpnC5iaTk6/
-	p9VKtsBTIzi7R4nJ68A53RtEEopvTccttb6xia+Ga+oE5ak1qP9DfAHY0czJA0Se0K5uSoDCM74
-	UyLVM/y0jyUi3mCfl7vhr6ja
-X-Google-Smtp-Source: AGHT+IFeqp/XCZWQtSfOcuSzcLoMx4hhrk2LeS2gbEINWWvIfPAD6HSJiacGy8a7uqlvC4n4UDijpw==
-X-Received: by 2002:a17:907:7847:b0:aa5:cac:9571 with SMTP id a640c23a62f3a-aa63a07fce7mr684963666b.28.1733603331706;
-        Sat, 07 Dec 2024 12:28:51 -0800 (PST)
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com. [209.85.218.46])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aa625e4dbfesm427420066b.6.2024.12.07.12.28.49
+        bh=ms7Dj4PhpQjQO3I96MAeIgwapri0gFHpEAP0IFi7Ea0=;
+        b=tg+p3egFRko6/hD/ZQYRT3BebhX2gjTaVfdQMKvwPJjsna1O4lg1GbPgI0dY6Cql7Y
+         LQvgNlFW7S4yX714BNXm8/XgACM5n7pb8xI7jsFVKCi4Qrdgt+suR7EFkof65Guxwizh
+         9u5tkvRJXljU0xFGe7Pm4z6zOIFl/+GkHQYFxRcqmdDC5EIA9zLxX3HmyUfVit/pkSw+
+         vIQy8MjIIUHsHxv9wNifIbAc1wgMCE1TW7HzF5yU4U/RWThSiApPB3pYyqpkl5/q0izl
+         fRRkGNDfl/PoHmwTqlEuo7wqANdJbQEl7U9BAerwtySlZepZQKdPu7mhQ0tgrHvva/65
+         yDgw==
+X-Forwarded-Encrypted: i=1; AJvYcCUaEkXBfIYJe8PaEQB+JzomV0MJtMsrC9uH7yCwd8K7j2u918/uYPYCrCCsZMIi9AVFsz8BmfXdx4tjr+z7fy0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyhIIMOd1P0p1v4FbhjeaYvJVvzRPa1L8lGi4ALSZByuvarDEHP
+	IfzHWndkbi0xv/9+62Ohn5PlcOAiJ5BnUl5mmcE0zXi+l7FwXhEtXGF7b+pqImYXrD7Q07Jnwj6
+	RdDK58A==
+X-Gm-Gg: ASbGncs7JE/50RwmgP+TISx+QTlndfBpR3FaTVFGQTdYWSwJT5IDUtnW/zzVrFEqe3w
+	1Du51mGUt0eBsxC+xkGWUVIJE19U8hzVwwnm+hkkH87CRz+6GmIygiPu2n8ZkCSrP6LXCFlB2Mz
+	VfMgGnBZGXl9/9eMFdMdpzwMI2DLvTFp0nnH4sYEtwsnH7JfgbdSBCEmpRAoIYTySovFhC2rt8b
+	XUFUwOBFVvbeT81XHt6ONwJqlgMSI0cR+F+qCtSvATdiYapJHXL9SXq4CP3nZlGu8ZWOBers5Gh
+	/jPYw/+2t5nd0O5+JLjwAqzv
+X-Google-Smtp-Source: AGHT+IEjkPe6qEXrFtbeHaRAOQzEXPdfGjNG+yNT5g3ngYMK/dJ0DKQJyHVPDGr2ofXJyygVwv/n/Q==
+X-Received: by 2002:a17:906:9d2:b0:aa6:4a5b:b72c with SMTP id a640c23a62f3a-aa64a5bb770mr291145766b.50.1733603486477;
+        Sat, 07 Dec 2024 12:31:26 -0800 (PST)
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com. [209.85.218.48])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aa653d1df95sm120893866b.98.2024.12.07.12.31.26
         for <linux-hardening@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 07 Dec 2024 12:28:49 -0800 (PST)
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-aa66ead88b3so50937766b.0
-        for <linux-hardening@vger.kernel.org>; Sat, 07 Dec 2024 12:28:49 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVj6lGdruivq/LXFuFq5pOfucWuJxNPIKIsYVdWrNNVogNCcfQS0Qrz2n3wTkDxIw7U0Wpe1GdULtIXAlt5KqA=@vger.kernel.org
-X-Received: by 2002:a17:906:5a52:b0:aa5:3853:553d with SMTP id
- a640c23a62f3a-aa63a21b715mr608706066b.46.1733603329136; Sat, 07 Dec 2024
- 12:28:49 -0800 (PST)
+        Sat, 07 Dec 2024 12:31:26 -0800 (PST)
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-aa5500f7a75so439517466b.0
+        for <linux-hardening@vger.kernel.org>; Sat, 07 Dec 2024 12:31:26 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVmNPYiXXiOD8GjtE7a/kjJUY4QGwzLn1JxH3zqQazNNO35QYIv0/rLvZ0dSlAWPCu+MqX3BDS6SI8NVhmclvk=@vger.kernel.org
+X-Received: by 2002:a17:906:328b:b0:aa6:326a:bcb9 with SMTP id
+ a640c23a62f3a-aa63a10fe42mr541173966b.33.1733603485779; Sat, 07 Dec 2024
+ 12:31:25 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -70,24 +70,28 @@ MIME-Version: 1.0
 References: <20241203-is_constexpr-refactor-v1-0-4e4cbaecc216@wanadoo.fr>
  <20241203-is_constexpr-refactor-v1-2-4e4cbaecc216@wanadoo.fr>
  <1d807c7471b9434aa8807e6e86c964ec@AcuMS.aculab.com> <CAMZ6RqLJLP+4d8f5gLfBdFeDVgqy23O+Eo8HRgKCthqBjSHaaw@mail.gmail.com>
- <9ef03cebb4dd406885d8fdf79aaef043@AcuMS.aculab.com> <abdd7862f136aa676b2d2c324369f4a43ff9909c.camel@gwdg.de>
- <CAMZ6RqKzGiRNMeLsQKRNrxvW_bXB-kEi11udQ82kKX6tGCrqcg@mail.gmail.com>
- <9607300dfca5d71ca9570b1e1de0864e524f356b.camel@gwdg.de> <344b4cf41a474377b3d2cbf6302de703@AcuMS.aculab.com>
- <9a0c041b6143ba07c2b3e524572fccd841f5374b.camel@gwdg.de> <CAHk-=wjpVXEjX16PP=-hi4CgLqEGJ_U-WvKWq+J3C+FW-hSSfg@mail.gmail.com>
- <0a2996a7c63930b9d9a8d3792358dd9e494e27c1.camel@gwdg.de>
-In-Reply-To: <0a2996a7c63930b9d9a8d3792358dd9e494e27c1.camel@gwdg.de>
+ <9ef03cebb4dd406885d8fdf79aaef043@AcuMS.aculab.com> <CAHk-=wjmeU6ahyuwAymqkSpxX-gCNa3Qc70UXjgnxNiC8eiyOw@mail.gmail.com>
+ <CAMZ6Rq+SzTA25XcMZnMnOJcrrq1VZpeT1xceinarqbXgDDo8VA@mail.gmail.com>
+ <CAHk-=wiP8111QZZJNbcDNsYQ_JC-xvwRKr0qV9UdKn3HKK+-4Q@mail.gmail.com>
+ <d23fe8a5dbe84bfeb18097fdef7aa4c4@AcuMS.aculab.com> <CAHk-=win8afdcergvJ6f2=rRrff8giGUW62qmYs9Ae6aw=wcnA@mail.gmail.com>
+ <0f5c07b827c3468c8fa3928a93a98bfa@AcuMS.aculab.com> <e806dd51b1ac4e289131297fbf30fc37@AcuMS.aculab.com>
+ <CAMZ6RqLOR3aCRW_js2agV+VFiHdazb4S2+NdT5G4=WbDKNB8bA@mail.gmail.com>
+ <b1ff4a65594a4d39b2e9b8b44770214e@AcuMS.aculab.com> <CAMZ6RqJFReLJTd-O8s02oQNeB0SPQh3C-Mg+Nif5vMB9gFtQww@mail.gmail.com>
+ <CAHk-=wjpN4GWtnsWQ8XJvf=gBQ3UvBk512xK1S35=nGXA6yTiw@mail.gmail.com> <6b8c9b942ba6e85a3f1e4eef65a9916333502881.camel@gwdg.de>
+In-Reply-To: <6b8c9b942ba6e85a3f1e4eef65a9916333502881.camel@gwdg.de>
 From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Sat, 7 Dec 2024 12:28:32 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wjsfYYKBYuW8_6yKjdwHih0MMa2GwUJh_LHcuUNFR7-QA@mail.gmail.com>
-Message-ID: <CAHk-=wjsfYYKBYuW8_6yKjdwHih0MMa2GwUJh_LHcuUNFR7-QA@mail.gmail.com>
+Date: Sat, 7 Dec 2024 12:31:09 -0800
+X-Gmail-Original-Message-ID: <CAHk-=whzFAaksqMdYeYC=T82tny1HnGGcYu_xJTXZF1OZwVziQ@mail.gmail.com>
+Message-ID: <CAHk-=whzFAaksqMdYeYC=T82tny1HnGGcYu_xJTXZF1OZwVziQ@mail.gmail.com>
 Subject: Re: [PATCH 02/10] compiler.h: add is_const() as a replacement of __is_constexpr()
 To: Martin Uecker <muecker@gwdg.de>
-Cc: David Laight <David.Laight@aculab.com>, Vincent Mailhol <mailhol.vincent@wanadoo.fr>, 
-	Luc Van Oostenryck <luc.vanoostenryck@gmail.com>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Yury Norov <yury.norov@gmail.com>, 
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Jani Nikula <jani.nikula@linux.intel.com>, 
+Cc: Vincent Mailhol <vincent.mailhol@gmail.com>, David Laight <David.Laight@aculab.com>, 
+	"w@1wt.eu" <w@1wt.eu>, Luc Van Oostenryck <luc.vanoostenryck@gmail.com>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+	Yury Norov <yury.norov@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	Jani Nikula <jani.nikula@linux.intel.com>, 
 	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
 	Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>, 
 	Simona Vetter <simona@ffwll.ch>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
@@ -104,59 +108,32 @@ Cc: David Laight <David.Laight@aculab.com>, Vincent Mailhol <mailhol.vincent@wan
 	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 
-On Sat, 7 Dec 2024 at 11:19, Martin Uecker <muecker@gwdg.de> wrote:
+On Sat, 7 Dec 2024 at 11:51, Martin Uecker <muecker@gwdg.de> wrote:
 >
-> But that all seem solvable issues on the compiler side.
+> Am Samstag, dem 07.12.2024 um 10:19 -0800 schrieb Linus Torvalds:
+> >
+> > If there is one feature of C I would have liked it is "allow inline
+> > functions and statement expressions with constant arguments as
+> > constant expressions".
+>
+> There exist proposals along those lines for C2Y.
+>
+> From a more near-term solution, I wonder if making it possible (or
+> easier) to return integer constant expressions from statement
+> expressions and allowing a restricted form of statement expressions
+> at file scope would help?
 
-You know, there was a whole *architecture* that was designed and
-predicated on "it's all solvable on the compiler side".
+Even a more limited form of this would have been useful several times,
+but as mentioned, the problem tends to be that we end up supporting
+compilers for many years.
 
-That architecture was pure and utter *shit*.
+So then we end up having to work with older compilers without that
+feature, and can't actually clean stuff up until many years after the
+fact.
 
-Because no, it's not solvable on the compiler side.
+We're currently still accepting gcc-5.1 as a compiler, although it's
+time to look at that and probably (judging by what stable distros use)
+upgrade to something like gcc-8.1 as the minimum supported compiler
+version.
 
-Getting things like value range analysis right on the compiler side is
-fundamentally hard.
-
-It's hard to the point where either you only get it for the simple
-cases - yes, I can show you a ton of real code where it's trivial - or
-you need to have explicit markings in the source code to help the
-compiler, and then you end up having to have the compiler (or some
-other tool) validate those with asserts or whatever.
-
-And random asserts ARE NOT ACCEPTABLE in the kernel outside of pure
-debug builds.
-
-They may be acceptable in most other situations, but in a kernel you
-can't just say "we stop now because it turns out the analysis was
-broken and the manual notes could be fooled by an attacker".
-
-Now, would we want to have proper value *static* range analysis in the
-kernel for other reasons? Oh yes. It would often be very nice to have
-the ability to state "this value is trusted and is in this range", and
-have it percolate all the way down, both for optimization purposes but
-also for various sanity check purposes.
-
-But it's simply not sanely available in the generic case.
-
-> a) this is not guaranteed in a specific situation (-Wvla-larher-than)
-
-We'd either get horrendous numbers of false positives that we then
-have to manually add special code for, or
-
-> b) transform the array automatically to fixed size array
-> of size X *or* something smaller when it can show this.
-
-we'd just do this by hand *once* and for all, and say "VLA's didn't work out".
-
-So yeah. We did (b) by hand.
-
-We used to have VLA's in the kernel. It was a disaster. We got rid of
-them, because the (big) pain wasn't worth the (few) places it was
-actually useful.
-
-So we have been VLA-free for the last five years, and it's been good.
-
-Simplify.
-
-             Linus
+            Linus
