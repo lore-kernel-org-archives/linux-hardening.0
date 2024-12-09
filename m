@@ -1,92 +1,133 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8E6D216E14;
-	Mon,  9 Dec 2024 10:29:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6423722756C;
+	Mon,  9 Dec 2024 12:32:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733740161; cv=none; b=JPBgm9WXXwSLY3HiHECday1Wjq8EDr4wSaq5yIoeR9SLZ7+sIKC7bC7SvfUv0Xpn5jbXxJVRHMmy1MyHPsGPoPPytvOsmmd8X8MR2kPIG6Q+TXa/st3KDdEVQ1j+aEPfnzCL+2kdHNzXRdbalkuFDzrn7oTzXvSsp4dbBxZBxZU=
+	t=1733747550; cv=none; b=ouRPDH/6HblNWCWDCdk33wrIUcJGhI8TkeVY92bGtIlSLH6ILL/fpNXAZwpuQliymuKIC9PscflUFxX57T3yQ1WoOBb5Ub3Foa8qged83A8qWdL/twps5VPaEGlBzbhuDtBMXoqGE53tduqMuLPC0CcBOELJG+9acnMdCDI5SEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733740161; c=relaxed/simple;
-	bh=+bTYXK0jrTom1pGZmyvIVQuYsLJTy8SR4A4zIcAxvdg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N9rBrSwfGOgZhlvmlnyvyUFGc8l27AMfAx6+8cdiebZ0zbK3hHpNcVWYsn9JS+bmVMI29H+gpNsHNQ07RunWf08cqwNFc69FwghGzV2eSUosyXMxxrg9D2Rb78ejoT/KssBk+DQhtjUuZUO8ugQ287Ma3WAgsBtrokQpEFx/Owg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=PweqRT0q; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1733747550; c=relaxed/simple;
+	bh=kB3RYhKaW5gjZwwRvCZ6UhMhANIepMJBAcWY0Q8JPmI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TAlR7bzvFjJ5IP1ZVfDKDow+82W88ncpRv1w12XqNyIVAqqBxS+I+ycp+0fY1/8GiI2/O7+GqWMYJCl6wWteqfbdGtzzjZWYOBNgfh5wd46sXUfEcDN80QvC9RuMvTuPHP2ilY/i0EU5coZROjeX1Wpm/I99f9ZB5vS/SwU0jP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=emJLQ8hZ; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PweqRT0q"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=OwyB39CTHJItaPJMEkgmfbCR+5h4SkV01S+BaiaQNUE=; b=PweqRT0qTad9szFeFrP/3wFWgV
-	G+rE52BJVCWGEtJdcEJBF7uBGFl5C/3zBQqli1dXtNLe2xD/4Z/Z8ZBczPwm4W3lOM8RCjpCNNhNW
-	qU2qVTjAN4HhH05MMd3wu0PYTjIcZ+zor4GvWB5ZNXgLZGY7bV6/g7lnB0aeLjwBkstz40RxP6yBx
-	rM2jGPOQwECfIV0R7Dbq9aLER8Yf5o3vD7sao85/Z1l4M7howYVQajrqTSKreE5bxK7zWJnqWbKw0
-	iXGNpz+IWIJtQWmItGqr+ekrk9KBG2Ts94afNQXCL46iEgXlyn3N8E33vc6tZeQb1yEWpetdcTCYD
-	JJw8aUTw==;
-Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tKb0s-00000001HHL-2aAc;
-	Mon, 09 Dec 2024 10:29:14 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id DFC9A3003FF; Mon,  9 Dec 2024 11:29:13 +0100 (CET)
-Date: Mon, 9 Dec 2024 11:29:13 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Kevin Brodsky <kevin.brodsky@arm.com>
-Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	aruna.ramakrishna@oracle.com, broonie@kernel.org,
-	catalin.marinas@arm.com, dave.hansen@linux.intel.com,
-	jannh@google.com, jeffxu@chromium.org, joey.gouly@arm.com,
-	kees@kernel.org, maz@kernel.org, pierre.langlois@arm.com,
-	qperret@google.com, ryan.roberts@arm.com, will@kernel.org,
-	linux-arm-kernel@lists.infradead.org, x86@kernel.org
-Subject: Re: [RFC PATCH 13/16] arm64: mm: Reset pkey in __tlb_remove_table()
-Message-ID: <20241209102913.GJ21636@noisy.programming.kicks-ass.net>
-References: <20241206101110.1646108-1-kevin.brodsky@arm.com>
- <20241206101110.1646108-14-kevin.brodsky@arm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="emJLQ8hZ"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-aa66c1345caso45816966b.3;
+        Mon, 09 Dec 2024 04:32:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1733747545; x=1734352345; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=HB4h5xGYBYj3eCi9b2ZJAMbBJzOGVJksJuXFxsMtAq8=;
+        b=emJLQ8hZf5Kyt3H6k+GTU+pJwMc3TK2wBCVgGf9e0k/sr5DeOZxPZoRh/4kl4x5Dh3
+         weTJw/prEVRmoNAzhWFlZpY78tZWcQvkFdQa2Vagr7yBtMCnpLznoPtQVnRazFHfqX5L
+         fp9wH2q0wLZbVv2GmqBpKO1CVW7o7uVQMVY81J3GrfaKmcQ5jWLdDW470H9Egl/sAVVJ
+         x9V9/OwOnLFIWKlICcqRHFFTpVKGezWO8TehUnHY41xH8u9GZqaIGtwjuI4xClHUA/Qd
+         L22aoZ76Wm1QJ7gBz4F8Wynb3bIxwSl7LQBMbi1DwaN0b03VYDqMjV2az2EeGZybGlkS
+         9Jyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733747545; x=1734352345;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HB4h5xGYBYj3eCi9b2ZJAMbBJzOGVJksJuXFxsMtAq8=;
+        b=xJgrFjuDqQFFDT/gwahkv4Nj1nh/du8oCf4sS6g7lpzmKLjE8SXc9YyOefZvGIMje/
+         s9okoY3l5k5WlQpNI7TMTYsvVl/770Ci3du3Mjr1fuKVMN/Vyrsgdr5PtnC7knlr8thX
+         wvPUfjnHos7oZ/9gk66NimUueyy6jOA+qcQdm2n4m4cnRGLhw1mTohnBMpcZRbKVnL5R
+         4jUow/DZt4txg7bLQyB30HYxovnrNd5QvovEiBekg24JVwSDKVvrvjZrnyKfHi4tsAj/
+         OWstW3N4j4anubRF22zhyAv5CROlukhXwRDmatLE99iFXQL0lX/2YFRyRd3Nlgu3gJ1z
+         1qEA==
+X-Forwarded-Encrypted: i=1; AJvYcCUAuYbSPbVDHKpZFevzpV8tn2ksdygtjV4qQujXZXTfZmjR8gXV4sOkBEJNla1FNhUUwptZTRefX08WfcKx@vger.kernel.org, AJvYcCXJMnQ8HFkD8ZDgJYitmFtKxe7d2oEDgGl006kxiX4brhAwwDq9VNEY2czpEOy9dvXJhC3OtbLhmgOYO3lr@vger.kernel.org, AJvYcCXuegDRZy5EQ9HfbL8bKQ/I0AEuAtEBThgwbHIz6TC/iHH+KBWH/ZC1vg1+Co6TvGIXLnos6xvcl1mEKlXvsSs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwlS0s7AdcOlnQoGER7D866ZQ0/Db6l2ixHtaMjPRokpjxVUQMY
+	xYptrIMTDULg3V/BxmEHDhqlrhTyi1pqu6Tg/bTE9ELGfcJRw2gaCbhfKtlyM4SiI1h7f4LdttO
+	Thcl4lSg5RWGfHb4DgJf4+36sfjs=
+X-Gm-Gg: ASbGncvEGY/O7vxGN0Kxo1mmuzGIIJuIQ8sbE9easBb44KnxP8M+A2wqTXoaJlZQ6oe
+	U/O5e/60bNGfs/LWFVdnqttjEf/NF0uI=
+X-Google-Smtp-Source: AGHT+IFjelp5b6CRvlamva7li7ksyULJr/ZURZRaVo1idystYOkChGCfpprPWdYOncNMp0luUAJecmb6PSVS5WPpxr0=
+X-Received: by 2002:a17:906:3145:b0:aa6:7cae:db98 with SMTP id
+ a640c23a62f3a-aa67caedcf6mr431164766b.10.1733747545303; Mon, 09 Dec 2024
+ 04:32:25 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241206101110.1646108-14-kevin.brodsky@arm.com>
+References: <20241203-is_constexpr-refactor-v1-0-4e4cbaecc216@wanadoo.fr>
+ <20241203-is_constexpr-refactor-v1-5-4e4cbaecc216@wanadoo.fr>
+ <8b8262389bd6484586007d749132346f@AcuMS.aculab.com> <CAMZ6RqJPvbSr5i8N4Dm=2N6D8uSzefCM3TyK8HBNNNrybo5f2Q@mail.gmail.com>
+In-Reply-To: <CAMZ6RqJPvbSr5i8N4Dm=2N6D8uSzefCM3TyK8HBNNNrybo5f2Q@mail.gmail.com>
+From: Vincent Mailhol <vincent.mailhol@gmail.com>
+Date: Mon, 9 Dec 2024 21:32:14 +0900
+Message-ID: <CAMZ6RqLMXaAej75eXrLgvt-Co1yyEg0QNJSxPovzLzb7vdxmdQ@mail.gmail.com>
+Subject: Re: [PATCH 05/10] minmax: simplify __clamp_once() by using is_const_false()
+To: David Laight <David.Laight@aculab.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
+	Luc Van Oostenryck <luc.vanoostenryck@gmail.com>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Yury Norov <yury.norov@gmail.com>, 
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Jani Nikula <jani.nikula@linux.intel.com>, 
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+	Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
+	Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Rikard Falkeborn <rikard.falkeborn@gmail.com>, 
+	Martin Uecker <Martin.Uecker@med.uni-goettingen.de>, 
+	"linux-sparse@vger.kernel.org" <linux-sparse@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"llvm@lists.linux.dev" <llvm@lists.linux.dev>, 
+	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>, 
+	"intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>, 
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, 
+	"coresight@lists.linaro.org" <coresight@lists.linaro.org>, 
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Dec 06, 2024 at 10:11:07AM +0000, Kevin Brodsky wrote:
-> Page table pages are typically freed via tlb_remove_table() and
-> friends. Ensure that the linear mapping for those pages is reset to
-> the default pkey when CONFIG_KPKEYS_HARDENED_PGTABLES is enabled.
-> 
-> This patch is a no-op if CONFIG_KPKEYS_HARDENED_PGTABLES is disabled
-> (default).
-> 
-> Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
-> ---
->  arch/arm64/include/asm/tlb.h | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/include/asm/tlb.h b/arch/arm64/include/asm/tlb.h
-> index a947c6e784ed..d1611ffa6d91 100644
-> --- a/arch/arm64/include/asm/tlb.h
-> +++ b/arch/arm64/include/asm/tlb.h
-> @@ -10,10 +10,14 @@
->  
->  #include <linux/pagemap.h>
->  #include <linux/swap.h>
-> +#include <linux/kpkeys.h>
->  
->  static inline void __tlb_remove_table(void *_table)
->  {
-> -	free_page_and_swap_cache((struct page *)_table);
-> +	struct page *page = (struct page *)_table;
-> +
-> +	kpkeys_unprotect_pgtable_memory((unsigned long)page_address(page), 1);
-> +	free_page_and_swap_cache(page);
->  }
+On Fri. 6 Dec. 2024 at 00:52, Vincent Mailhol
+<mailhol.vincent@wanadoo.fr> wrote:
+> On Thu. 5 Dec. 2024 at 03:54, David Laight <David.Laight@aculab.com> wrote:
+> > From: Vincent Mailhol
+> > > Sent: 02 December 2024 17:33
+> > >
+> > > In __clamp_once(),
+> > >
+> > >   __builtin_choose_expr(__is_constexpr((lo) > (hi)), (lo) <= (hi), true)
+> > >
+> > > is equivalent to:
+> > >
+> > >   !is_const_false((lo) <= (hi))
+> > >
+> > > Apply is_const_false() to simplify __clamp_once().
+> >
+> > There is already a patch 'for next' that changes it use BUILD_BUG_ON_MSG()
+> > and statically_true().
+>
+> Found it!
+>
+>   https://lore.kernel.org/all/34d53778977747f19cce2abb287bb3e6@AcuMS.aculab.com/
 
-Same as for the others, perhaps stick this in generic code instead of in
-the arch code?
+I picked up your patch and got two build errors on an allyesconfig.
+
+You already sent a patch for the first one:
+
+  https://lore.kernel.org/all/33893212b1cc4a418cec09aeeed0a9fc@AcuMS.aculab.com/
+
+For the second one, I submitted a patch here:
+
+  https://lore.kernel.org/all/20241209-nfs4state_fix-v1-1-7a66819c60f0@wanadoo.fr/
+
+I will wait for those two to appear in Andrew's mm tree first, and
+only then, I will send a v2 (that will be rebased on the mm tree to
+get your change).
+
+Meanwhile, I think this series will be on hiatus.
+
+
+Yours sincerely,
+Vincent Mailhol
