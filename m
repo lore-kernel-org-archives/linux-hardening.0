@@ -1,58 +1,58 @@
 Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28CE6217679;
-	Mon,  9 Dec 2024 09:52:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0189217739;
+	Mon,  9 Dec 2024 09:52:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733737957; cv=none; b=EtgHFgCTWBXCnaB6qAONhc2qlaGsw/8uggJ54mPxZIupM6lCh6GlhMAelUoLATjJcmR7LHx7Wf8p/Hl+pqVbDlcdJqURqQVN/ats2c6lDZYDPU632BwY92PqfjfeEYPrKtTBMbJM6qArvOAevnXJo/GttpdeUh06PX7R9A9OCwQ=
+	t=1733737958; cv=none; b=moGOOSOTNnZZqIe/lMJsrl0Ioepfzh/FZRTlOFzNmKFJ3ujnO3zMw0Dialcfua8kv3/Xf1JtffOeBrNM7yH1xT5NLmsk97G88hYTvZ54bdJ5oNYyugXMOGTWFA4c5rm5XEmK5+wlqUtJihySrbC2rz6Z1HnF5UKezMjb5frPlZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733737957; c=relaxed/simple;
-	bh=21+SG0suICdfD6OKnQqkgAGQEXHKSgaTP/C0tXY1/u8=;
+	s=arc-20240116; t=1733737958; c=relaxed/simple;
+	bh=xZ6wH9NwIJdn68zqaN4oUXhbnE7mcOvRn9YvuwvEp/0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qx+41WR+OS0IQufCcOUQgRH2MlbVz6FA0zsesvgIaq0I/BaUwWPSj44gaZZkos8Yvvn6VG1dA6PYm6I3RMUCYyUPpnFBVnDVF1hxSRgw+VC2a7Dz7LX7EF474s5GVeUhpe3WTW7B0ueT49k8ioouGfyF18C2jVxx/FQUsLyEZPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=ZVRbNe75; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=iwkoMmUF reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+	 MIME-Version:Content-Type; b=gsMnzxRBpV4gvUBQxUWsLebWIp4kxbptMKb11ag/L0OLq7dONib/qUYTS49mUsIZHaPSUAY4fiITWr95Ix5j6yrvKXvZ4YzgqQu03rOOXAt3Rqe7GuIFrhZ5qfF1nX8xBKmUFtS3dJ4YDMQ0M5OBVEqlLbCj9WXgGL+Tz4C2Vo8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=BquZJxT0; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=YPb8j5r8 reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="ZVRbNe75";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="iwkoMmUF"
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="BquZJxT0";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="YPb8j5r8"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1733737955; x=1765273955;
+  t=1733737956; x=1765273956;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=3/aYN7rPyWzwA0+POa1Li+U2OVvspaRln1K5mS8yp+8=;
-  b=ZVRbNe754k+81iDuIBgVwmPboN/brclZggbTF1ncLKvVNTQxX9vCUnpB
-   7qAOUpr9zoOF5Oa2cGv4nx31S/n6jQNup82VNlYLEc2nFjPpwxKzntBue
-   XvTssRB56LWHse3PJkE6P9Vk1r01Xgw0YFR6IezKpte9iqOXgBaU9mSbl
-   4yP/69IwkN3IwFiWKFY8AxFxzbA2DYnLTFvTP8DjCE0RZkjpZQ4l1pvkt
-   0DB/7sLjXD3YBiECF7LJiwtd1RI2IED1ZgS1bgNASFAtzXrMsv21SYQi1
-   Y0x5rn2BKc4qFNxuHn9PBMdcL2dEEXIXICHDXg16+99J8uRHFhNb9b/AD
-   A==;
-X-CSE-ConnectionGUID: YMOy1Z7QT8S99Otl0T/FcQ==
-X-CSE-MsgGUID: s+1EYtGfSy2rp0zfhDpAhw==
+  bh=ZrBMF+uepwwER16iMh3Tc9DMPJGlXiQwEYl2Z21Ai0s=;
+  b=BquZJxT0iHQt1pEVmMZIkOFaE9m28jdO8jn4ojDdU12vGi1Qy6GkvDRi
+   4CTf27X4Fv1f1AsXDpRC5wXPFQFEqXNteL0RzIRdvcYWOiiNis7u7adah
+   g+qtQ0lXEPaIBWfLqSfUl8wgDu/pZBwCCNq6ZXlXC0TsePbcG3Vk4UFqY
+   0wYwoNrPXzwylM/bebURKsUv7zZBdlEU8SRj7kqCsoiOV4gyIGLnbQF5v
+   NDQoszrwWT3WFtuhvyMxsC/Q/P6gcXAmaZ2377/XO6nkDWf3s3Ggy32S/
+   dAyxpA8w6IIZOlO6xrHJVo1jD5RQXTBLpkIuio3zTeL/oMxw/T/LNuudH
+   Q==;
+X-CSE-ConnectionGUID: oSYvtfyuSkupLwQwn2bcpA==
+X-CSE-MsgGUID: P736M27rRyyQwtveoRH5tg==
 X-IronPort-AV: E=Sophos;i="6.12,219,1728943200"; 
-   d="scan'208";a="40481350"
+   d="scan'208";a="40481353"
 Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 09 Dec 2024 10:52:28 +0100
-X-CheckPoint: {6756BDDC-23-D31EDE1A-D52D6119}
-X-MAIL-CPID: 10A3F78DCD06F9DC5117D727EB54E499_5
-X-Control-Analysis: str=0001.0A682F28.6756BDDD.0026,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 9354F1665D0;
-	Mon,  9 Dec 2024 10:52:23 +0100 (CET)
+  by mx1.tq-group.com with ESMTP; 09 Dec 2024 10:52:34 +0100
+X-CheckPoint: {6756BDE2-3-90CD5875-E0265C0B}
+X-MAIL-CPID: 2739E13F82B87DEBC461CF3D2DF1E092_3
+X-Control-Analysis: str=0001.0A682F15.6756BDE2.0052,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id BBB231665D3;
+	Mon,  9 Dec 2024 10:52:28 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1733737944;
+	s=dkim; t=1733737949;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=3/aYN7rPyWzwA0+POa1Li+U2OVvspaRln1K5mS8yp+8=;
-	b=iwkoMmUFFa/7e4DGM6ciLJ/UC4LbWlxbDIkkVqfNGcy8w+STTge0R7crmwqB8m/Jczm8MR
-	MZsyp8JofofDfizM6+vWG2lpEscISZ0FfJUyo4Kh4204r7r5V/S+NUlQqA1afZbss5cn6z
-	7hY0UvDkD3HizpIoM6pJwV+ohktoQ1EP0mYbpJeEVbEjrUC4NUfUlIZiv86VpHuAGiU0T9
-	RKDiREaGTrEMH3lBTS/mmh0ymQRyrkQA+WKkDtGyYs7+mUwn2TwH3tG6HeM2GM1+i+WzN9
-	PEZbxDfD3r3LzAtUKV2KopcKYz3BGSEPp6/EomphzLTmist3XRi6rqM7OzG66Q==
+	bh=ZrBMF+uepwwER16iMh3Tc9DMPJGlXiQwEYl2Z21Ai0s=;
+	b=YPb8j5r8q9X7Ign/5O2ob7Dy1VXmGWAUQQq+svfw21q4+m5uV8xy3JCtN2xPuQqk6VsICE
+	mOrPfhxtI7pTm04JaXAh4oPOYYc8qOfvWRunVDyI49ajx3ZOZyfYII/6FMN8z9uZfuCBOR
+	kN+8PmWgq4w2jH3Xbw+Hkn/Gc5pmM+L+U99ibqvPo7bljuTR7b5Bai18KT3lj6d6d7bu0f
+	q6Ta9ndbaChjPQWD5gQ4Hr09XDRCTIUy1qHdbfcbFE66c6GKFU1LSd9U72SAmiMab50fAZ
+	g+O2TIzvenVSPVbPUutkUyyPH4HDL4JueFqinM3iO5LtfS4U+pyby4NgL9vSbQ==
 From: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
 To: Nishanth Menon <nm@ti.com>,
 	Vignesh Raghavendra <vigneshr@ti.com>,
@@ -73,10 +73,11 @@ Cc: Rob Herring <robh@kernel.org>,
 	Devarsh Thakkar <devarsht@ti.com>,
 	Hari Nagalla <hnagalla@ti.com>,
 	linux@ew.tq-group.com,
+	Dhruva Gole <d-gole@ti.com>,
 	Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Subject: [PATCH v2 2/5] dt-bindings: arm: ti: Add compatible for AM625-based TQMa62xx SOM family and carrier board
-Date: Mon,  9 Dec 2024 10:51:33 +0100
-Message-ID: <6052e70b8e744bd3a608728f876c97d3172bf975.1733737487.git.matthias.schiffer@ew.tq-group.com>
+Subject: [PATCH v2 3/5] arm64: dts: ti: k3-am62: Add DM R5 ranges in cbass
+Date: Mon,  9 Dec 2024 10:51:34 +0100
+Message-ID: <641475ca5720fcd24bcb41af36b69781a0a86df4.1733737487.git.matthias.schiffer@ew.tq-group.com>
 X-Mailer: git-send-email 2.47.1
 In-Reply-To: <cover.1733737487.git.matthias.schiffer@ew.tq-group.com>
 References: <cover.1733737487.git.matthias.schiffer@ew.tq-group.com>
@@ -90,33 +91,43 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Last-TLS-Session-Version: TLSv1.3
 
-The TQMa62xx is a SoM family with a pluggable connector. The MBa62xx is
-the matching reference/starterkit carrier board.
+From: Devarsh Thakkar <devarsht@ti.com>
 
+Add DM R5F ATCM and BTCM ranges in cbass_wakeup and cbass_main.
+
+Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
+Signed-off-by: Dhruva Gole <d-gole@ti.com>
 Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- Documentation/devicetree/bindings/arm/ti/k3.yaml | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arm64/boot/dts/ti/k3-am62.dtsi | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/ti/k3.yaml b/Documentation/devicetree/bindings/arm/ti/k3.yaml
-index 18f155cd06c84..07d98a67d967f 100644
---- a/Documentation/devicetree/bindings/arm/ti/k3.yaml
-+++ b/Documentation/devicetree/bindings/arm/ti/k3.yaml
-@@ -75,6 +75,13 @@ properties:
-           - const: toradex,verdin-am62          # Verdin AM62 Module
-           - const: ti,am625
+diff --git a/arch/arm64/boot/dts/ti/k3-am62.dtsi b/arch/arm64/boot/dts/ti/k3-am62.dtsi
+index bfb55ca113239..f01a594ba7f89 100644
+--- a/arch/arm64/boot/dts/ti/k3-am62.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am62.dtsi
+@@ -86,7 +86,9 @@ cbass_main: bus@f0000 {
+ 			 /* Wakeup Domain Range */
+ 			 <0x00 0x00b00000 0x00 0x00b00000 0x00 0x00002400>, /* VTM */
+ 			 <0x00 0x2b000000 0x00 0x2b000000 0x00 0x00300400>,
+-			 <0x00 0x43000000 0x00 0x43000000 0x00 0x00020000>;
++			 <0x00 0x43000000 0x00 0x43000000 0x00 0x00020000>,
++			 <0x00 0x78000000 0x00 0x78000000 0x00 0x00008000>, /* DM R5 ATCM */
++			 <0x00 0x78100000 0x00 0x78100000 0x00 0x00008000>; /* DM R5 BTCM */
  
-+      - description: K3 AM625 SoC on TQ-Systems TQMa62xx SoM
-+        items:
-+          - enum:
-+              - tq,am625-tqma6254-mba62xx # MBa62xx base board
-+          - const: tq,am625-tqma6254
-+          - const: ti,am625
-+
-       - description: K3 AM642 SoC
-         items:
-           - enum:
+ 		cbass_mcu: bus@4000000 {
+ 			bootph-all;
+@@ -103,7 +105,9 @@ cbass_wakeup: bus@b00000 {
+ 			#size-cells = <2>;
+ 			ranges = <0x00 0x00b00000 0x00 0x00b00000 0x00 0x00002400>, /* VTM */
+ 				 <0x00 0x2b000000 0x00 0x2b000000 0x00 0x00300400>, /* Peripheral Window */
+-				 <0x00 0x43000000 0x00 0x43000000 0x00 0x00020000>;
++				 <0x00 0x43000000 0x00 0x43000000 0x00 0x00020000>,
++				 <0x00 0x78000000 0x00 0x78000000 0x00 0x00008000>, /* DM R5 ATCM */
++				 <0x00 0x78100000 0x00 0x78100000 0x00 0x00008000>; /* DM R5 BTCM */
+ 		};
+ 	};
+ 
 -- 
 TQ-Systems GmbH | Mühlstraße 2, Gut Delling | 82229 Seefeld, Germany
 Amtsgericht München, HRB 105018
