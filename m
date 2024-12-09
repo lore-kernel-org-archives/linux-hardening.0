@@ -1,101 +1,91 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDDF4229B21;
-	Mon,  9 Dec 2024 12:57:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29840233146;
+	Mon,  9 Dec 2024 13:24:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733749044; cv=none; b=X/Juz6fhZTyrBLsnegB2PVd1gwwdsl2y9DExJjo+RutqGSHtLU3tQ1wf+Krr273RK33p/0MPeHdZnsxShGpbb2z/IuLHBlCcIwqHIp0fW4HuESb4RQuaiooDFz/5Kv2jnbXEfW5U2qiVCThPk/TvPjuvFZk7VOO7h9cLNyOFnvw=
+	t=1733750691; cv=none; b=nNJAnqliakiSoybsu8wXlUxj3ZzWGF7AZQjTTSJjRXJjsJHs3fI2NhURhMrnScPzUa5rWmbJYuaTLsMiObnQhMkf1x/MZc6++XfW6RxfETcDVI8NFJH8j/EhDhq6UhY8/SNqAzMNQ4hpG2Z+NrUL0UNkMZN5tT5pZShrx3Ii6UM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733749044; c=relaxed/simple;
-	bh=VexgucUkKC3dW+9+1fSj/F49YE0/r3u0mmMQ3poEJac=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rsZsEm3fkFuh5TFw9HDMLth04exrDpMrFQj5LLgfFJx/PGdQSi6SxfR8HwGSa3kC7l3OM7UeFtW6iLasbRW/Vg8BzN8Jy9jsjxbr8KpKBiOvoPhXcYWClD6cX6RKb2i0wsrScWAby93jhoV+zlfC4pOB/GHYHWcsU4X+hW7ePC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B6A21113E;
-	Mon,  9 Dec 2024 04:57:47 -0800 (PST)
-Received: from [10.57.68.240] (unknown [10.57.68.240])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5A3DF3F720;
-	Mon,  9 Dec 2024 04:57:12 -0800 (PST)
-Message-ID: <8fc285a3-92af-47e1-a405-0adf573c57aa@arm.com>
-Date: Mon, 9 Dec 2024 13:57:09 +0100
+	s=arc-20240116; t=1733750691; c=relaxed/simple;
+	bh=NkhX649mCYlm7UTdk/xDLU53bUCSolAXgQE7UT4MYkA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=F6LxJjNcfIu4enZMRr57j2Y1Gjj1vx9dg4onC8bwEtXdkJQZtkffg19/Fck5WgE1fKY3QqOQnb9546mXnpEed5mKwb+SS6ChAaxjHoApiwSXrEM4An5ct7k+7hrlhEppbaP0EzpMHJyFV3jifyZNqMJfH6loJxw0iJ1neUECGbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=Lea7Y9Yx; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Lea7Y9Yx"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=72S7Y0m68TBMZpKjMYQCWjvfm2dgENRCYqhWK6vxrak=; b=Lea7Y9YxXbamN6pcuB6gVBs3b1
+	H7qlEJ7sripF744GpmuSDBQaAaaCeESaiMVUhZHbNzFvhejhDuyKpsAk3oIDOWdRIrGslWxXK0kej
+	c+Omu7VKApsh9wOfv7iCEevSiwBvwvHtxql7ZkYoI2PV7HrR9fvaoHmnObZbkVKbWxmg=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1tKdkb-00Ffga-6D; Mon, 09 Dec 2024 14:24:37 +0100
+Date: Mon, 9 Dec 2024 14:24:37 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Cc: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+	Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	Felipe Balbi <balbi@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+	linux-hardening@vger.kernel.org, Devarsh Thakkar <devarsht@ti.com>,
+	Hari Nagalla <hnagalla@ti.com>, linux@ew.tq-group.com
+Subject: Re: [PATCH v2 5/5] arm64: dts: ti: Add TQ-Systems TQMa62xx SoM and
+ MBa62xx carrier board Device Trees
+Message-ID: <a9c5cfda-e3e3-436a-8d05-b2f096157cfe@lunn.ch>
+References: <cover.1733737487.git.matthias.schiffer@ew.tq-group.com>
+ <95ff66ca2c89f69d893c2ce9eed9a0c677633c7b.1733737487.git.matthias.schiffer@ew.tq-group.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 00/16] pkeys-based page table hardening
-To: Jann Horn <jannh@google.com>
-Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
- aruna.ramakrishna@oracle.com, broonie@kernel.org, catalin.marinas@arm.com,
- dave.hansen@linux.intel.com, jeffxu@chromium.org, joey.gouly@arm.com,
- kees@kernel.org, maz@kernel.org, pierre.langlois@arm.com,
- qperret@google.com, ryan.roberts@arm.com, will@kernel.org,
- linux-arm-kernel@lists.infradead.org, x86@kernel.org
-References: <20241206101110.1646108-1-kevin.brodsky@arm.com>
- <CAG48ez1b8BBquEB1BJEg+KsPdPyZLPuD7uToUH3ZdN8F0r+U9w@mail.gmail.com>
-Content-Language: en-GB
-From: Kevin Brodsky <kevin.brodsky@arm.com>
-In-Reply-To: <CAG48ez1b8BBquEB1BJEg+KsPdPyZLPuD7uToUH3ZdN8F0r+U9w@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <95ff66ca2c89f69d893c2ce9eed9a0c677633c7b.1733737487.git.matthias.schiffer@ew.tq-group.com>
 
-On 06/12/2024 20:14, Jann Horn wrote:
-> On Fri, Dec 6, 2024 at 11:13 AM Kevin Brodsky <kevin.brodsky@arm.com> wrote:
->> [...]
->>
->> Page tables were chosen as they are a popular (and critical) target for
->> attacks, but there are of course many others - this is only a starting
->> point (see section "Further use-cases"). It has become more and more
->> common for accesses to such target data to be mediated by a hypervisor
->> in vendor kernels; the hope is that kpkeys can provide much of that
->> protection in a simpler manner. No benchmarking has been performed at
->> this stage, but the runtime overhead should also be lower (though likely
->> not negligible).
-> Yeah, it isn't great that vendor kernels contain such invasive changes...
->
-> I guess one difference between this approach and a hypervisor-based
-> approach is that a hypervisor that uses a second layer of page tables
-> can also prevent access through aliasing mappings, while pkeys only
-> prevent access through a specific mapping? (Like if an attacker
-> managed to add a page that is mapped into userspace to a page
-> allocator freelist, allocate this page as a page table, and use the
-> userspace mapping to write into this page table. But I guess whether
-> that is an issue depends on the threat model.)
+> +&cpsw_port1 {
+> +	phy-mode = "rgmii-rxid";
+> +	phy-handle = <&cpsw3g_phy0>;
+> +};
+> +
+> +&cpsw_port2 {
+> +	phy-mode = "rgmii-rxid";
+> +	phy-handle = <&cpsw3g_phy3>;
+> +};
 
-Yes, that's correct. If an attacker is able to modify page tables then
-kpkeys are easily defeated. (kpkeys_hardened_pgtables does mitigate
-precisely that, though.) On the topic of aliases, it's worth noting that
-this isn't an issue with page table pages (only the linear mapping is
-used), but if we wanted to assigning a pkey to vmalloc areas we'd also
-have to amend the linear mapping.
+rgmii-rxid is very odd.
 
->> [...]
->>
->> # Threat model
->>
->> The proposed scheme aims at mitigating data-only attacks (e.g.
->> use-after-free/cross-cache attacks). In other words, it is assumed that
->> control flow is not corrupted, and that the attacker does not achieve
->> arbitrary code execution. Nothing prevents the pkey register from being
->> set to its most permissive state - the assumption is that the register
->> is only modified on legitimate code paths.
-> Is the threat model that the attacker has already achieved full
-> read/write access to unprotected kernel data and should be stopped
-> from gaining write access to protected data? Or is the threat model
-> that the attacker has achieved some limited corruption, and this
-> series is intended to make it harder to either gain write access to
-> protected data or achieve full read/write access to unprotected data?
+> +
+> +&cpsw3g_mdio {
+> +	status = "okay";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&main_mdio1_pins>;
+> +
+> +	cpsw3g_phy0: ethernet-phy@0 {
+> +		compatible = "ethernet-phy-ieee802.3-c22";
+> +		reg = <0x0>;
+> +		reset-gpios = <&main_gpio1 11 GPIO_ACTIVE_LOW>;
+> +		reset-assert-us = <1000>;
+> +		reset-deassert-us = <1000>;
+> +		ti,rx-internal-delay = <DP83867_RGMIIDCTL_2_00_NS>;
 
-The assumption is that the attacker has acquired a write primitive that
-could potentially allow corrupting any kernel data. The objective is to
-make it harder to exploit that primitive by making critical data immune
-to it. Nothing stops the attacker to turn to another (unprotected)
-target, but this is no different from hypervisor-based protection - the
-hope is that removing the low-hanging fruits makes it too difficult to
-build a complete exploit chain.
+I guess this is the explanation.
 
-- Kevin
+What happens when you use rgmii-id, and don't have this delay here?
+That would be normal.
+
+	Andrew
