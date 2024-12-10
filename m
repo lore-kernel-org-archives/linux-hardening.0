@@ -1,87 +1,66 @@
-Received: from forward203a.mail.yandex.net (forward203a.mail.yandex.net [178.154.239.90])
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DA391AAA0E;
-	Tue, 10 Dec 2024 14:48:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.90
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 450831D5171;
+	Tue, 10 Dec 2024 16:42:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733842123; cv=none; b=DuQDx71yHw3wMKNTOsUL3DoJ0SD36nHLB1Yzf0vQmgA7a3UQ5yl90QNi+hKF1+QPobgdnG8wbWjMV/Ucs60j9ajz/EMKBjoqEWeoueopODwx0GZJsJzqkcPGbCV5EOFCh3dSNt1XyGQp7AWsr2L9tmaQHo1+r45irA0kHXsiEkE=
+	t=1733848961; cv=none; b=jf/3Gnudi39eeLCvLhCcLRmm7ndq511C2SDOeHL7ma1tTMLgDvlMbO5EOhtultktAUbki3XztlGxWHSgkh1i+Gy+RGuzTF+tQYeFvQ9Gb6nQX6nBnWDv3Cf+dgDzI/WlLh8saeXcUWBFsxXexUKeYXclL9VTvtCUPvKMcuktKfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733842123; c=relaxed/simple;
-	bh=Z/Vo7ZQSX8rGYLrNrs6sr86a6WbgE90w+dn33fnZAc0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cXrG93ZSy4tNZOJ9lnebOGjkrMLUknt7r2jk6HiOpsPU6iZpmrjgeldnUn6IrgcJuZYkIIU2ozW6sdKxMsvMtf6ehfEF+TYcBZbM5/Ev3XLK+aF3NGPItQ5mRVDdH2YygHaWw5Gt6XL3+V3Let+AwnWrlW+sWwCNgebotdurjfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=et/I215R; arc=none smtp.client-ip=178.154.239.90
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
+	s=arc-20240116; t=1733848961; c=relaxed/simple;
+	bh=du65EmctrjFOWR/rDQAvwY6K/aqh29+WeYpDuCqCVts=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=C44j82m6nE57bXnFPpowP6ZXQ8rVnfal/wNXUNMDiKUvcroS3EQ89lQHnuhsdN7LJeZFuN5BtKuWB/rfyfVknwURlAzNAI9cAIIOz3gITes+bvxGku0cSPXr48Iism+6o3YAkbiv/sNjMp9tR35sllJhDTGdgJMeaX2J46cxu3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=jj4mIhmN; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="et/I215R"
-Received: from forward103a.mail.yandex.net (forward103a.mail.yandex.net [IPv6:2a02:6b8:c0e:500:1:45:d181:d103])
-	by forward203a.mail.yandex.net (Yandex) with ESMTPS id 77C5E67ED5;
-	Tue, 10 Dec 2024 17:40:10 +0300 (MSK)
-Received: from mail-nwsmtp-smtp-production-main-84.iva.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-84.iva.yp-c.yandex.net [IPv6:2a02:6b8:c0c:200:0:640:1d5:0])
-	by forward103a.mail.yandex.net (Yandex) with ESMTPS id 172C360B54;
-	Tue, 10 Dec 2024 17:40:02 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-84.iva.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id 0enkiN2OgCg0-K3MRZehN;
-	Tue, 10 Dec 2024 17:40:01 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
-	t=1733841601; bh=eUKNwPVhYHVXCqE0/sWtIYARC/uoQkZRf5whvudtY58=;
-	h=Message-ID:Date:Cc:Subject:To:From;
-	b=et/I215RH01FzyCioiIvxXGar9oHaWbxENdiZSWyYxCggMMqyaUETRymRv7ClsKsA
-	 c3HDz2hzeAl5YTn3suNGLhCqtWpe4MwFBMwAIp4g0nk8tAAIpR66ujEwYS94dRdrHh
-	 DXpvH+PXIvBFGFzA3o2GbRPbKJrls4YZckuxQgpY=
-Authentication-Results: mail-nwsmtp-smtp-production-main-84.iva.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
-From: Dmitry Antipov <dmantipov@yandex.ru>
-To: Johannes Berg <johannes.berg@intel.com>
-Cc: Kees Cook <kees@kernel.org>,
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org,
-	linux-wireless@vger.kernel.org,
-	Dmitry Antipov <dmantipov@yandex.ru>
-Subject: [PATCH 1/2] wifi: cfg80211: annotate struct cfg80211_mgmt_registration with __counted_by()
-Date: Tue, 10 Dec 2024 17:39:50 +0300
-Message-ID: <20241210143951.5685-1-dmantipov@yandex.ru>
-X-Mailer: git-send-email 2.47.1
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="jj4mIhmN"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=du65EmctrjFOWR/rDQAvwY6K/aqh29+WeYpDuCqCVts=;
+	t=1733848960; x=1735058560; b=jj4mIhmNzB+9Zi9Y7WMoJQkauVYrwqaMfb2vWnE27dmEvby
+	zr1aw1YfC64FY8huxQm4cyQpV069BXoLYahgFZ/px7BzRo6wFcdUiuUivymB2hJ8HkH19dRBIvZGi
+	DeLc4PX7qUe2+EYtTdySxS0c+yAIUUu6b9MuvY5fLbGuyia8Ksf3wTGioYd9NxkmHIyaM1/7c83yT
+	9880qJ2+PCbz+PCg6nP+aTS4Dtrv2D6EhKIeX7SLmSzp4YaxOXtCgk+JPFxTTRKpLRK8sY8L5rt4l
+	GSiwiDPGLsBQ+SbODUnb9J9g2WS4ZGVA9fnffJDonchwwqsCZVt1R1cDIwhIBhqg==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.98)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1tL3Jl-0000000CT80-11Ib;
+	Tue, 10 Dec 2024 17:42:37 +0100
+Message-ID: <cded5fe5b061e76e00473d0bf40c58b90659d3a1.camel@sipsolutions.net>
+Subject: Re: [PATCH 1/2] wifi: cfg80211: annotate struct
+ cfg80211_mgmt_registration with __counted_by()
+From: Johannes Berg <johannes@sipsolutions.net>
+To: Dmitry Antipov <dmantipov@yandex.ru>
+Cc: Kees Cook <kees@kernel.org>, "Gustavo A . R . Silva"
+ <gustavoars@kernel.org>, 	linux-hardening@vger.kernel.org,
+ linux-wireless@vger.kernel.org
+Date: Tue, 10 Dec 2024 17:42:36 +0100
+In-Reply-To: <20241210143951.5685-1-dmantipov@yandex.ru>
+References: <20241210143951.5685-1-dmantipov@yandex.ru>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.2 (3.54.2-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-malware-bazaar: not-scanned
 
-Add the '__counted_by()' compiler attribute to the flexible array member
-'match[]' to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
-CONFIG_FORTIFY_SOURCE, adjust 'cfg80211_mlme_register_mgmt()' accordingly.
+On Tue, 2024-12-10 at 17:39 +0300, Dmitry Antipov wrote:
+> Add the '__counted_by()' compiler attribute to the flexible array member
+> 'match[]' to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
+> CONFIG_FORTIFY_SOURCE, adjust 'cfg80211_mlme_register_mgmt()' accordingly=
+.
 
-Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
----
- net/wireless/mlme.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Haha. No.
 
-diff --git a/net/wireless/mlme.c b/net/wireless/mlme.c
-index 9d577523462d..4790136758d5 100644
---- a/net/wireless/mlme.c
-+++ b/net/wireless/mlme.c
-@@ -575,7 +575,7 @@ struct cfg80211_mgmt_registration {
- 
- 	bool multicast_rx;
- 
--	u8 match[];
-+	u8 match[] __counted_by(match_len);
- };
- 
- static void cfg80211_mgmt_registrations_update(struct wireless_dev *wdev)
-@@ -710,8 +710,8 @@ int cfg80211_mlme_register_mgmt(struct wireless_dev *wdev, u32 snd_portid,
- 	if (update_multicast) {
- 		kfree(nreg);
- 	} else {
--		memcpy(nreg->match, match_data, match_len);
- 		nreg->match_len = match_len;
-+		memcpy(nreg->match, match_data, match_len);
- 		nreg->nlportid = snd_portid;
- 		nreg->frame_type = cpu_to_le16(frame_type);
- 		nreg->wdev = wdev;
--- 
-2.47.1
+We _just_ discussed how much pain this causes.
 
+johannes
