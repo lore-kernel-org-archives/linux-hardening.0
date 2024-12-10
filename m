@@ -1,96 +1,120 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from forward205a.mail.yandex.net (forward205a.mail.yandex.net [178.154.239.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FB491A0B13;
-	Tue, 10 Dec 2024 12:27:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 983D278F38;
+	Tue, 10 Dec 2024 14:46:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.88
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733833632; cv=none; b=adqVhDcWbFNk4XFQqlpNnhl7noB7H7ZhSVKaJhBJiss4aBzA0y5yrrTsitRpx7q6oSu68q01LeCxrZw727h7GurgjZnjDuEpD9lrLOsqRp3iRGBQVQTzlizO4tC7rWzT+o4xisG5g3KM9oviBe+5aZP53ChBWA92sZYL4a2H4Ac=
+	t=1733842010; cv=none; b=CfZy0WEmSPbCCIjxtWdTl1zLtQpmJwzeS9LduEcGuWvdZ4Hk5t/bM2D2rlqkHzQwXx7bqFnHvaWEduxlVInYL8X/P2OLKA1sTD7a/v66+ciSAp+JcpUy+tivJJtvRz4oTdgQL/c/1+cwE31Iy6NivqneI9s6ZEMxVik9vXNbyxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733833632; c=relaxed/simple;
-	bh=Ld7f7CMd9xrazwJHZykGooWo4/LKyuhiYTmOVOjFPJo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Hd2KAaL0oTQ2UhNKCrTWpb0cS3gsUfA/PYlwAt7nVxh6KGYKhy+HMCvaNlMaiiSlMlq9ZMP7u8H544Xiggkq9ZbeKG8zKL8lVDEzzkw/xRwn2A9l0EXoVnPbOG1ad8rFN03i9xemNxRCY0Pj/PpHVU3Y/OntGUnZM/+zRiCatNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=hKa2p7rV; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1733842010; c=relaxed/simple;
+	bh=IA4TyROiF1W807IEDV30/mCfk8J3N8UTj/aqgXeX+Nw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=mvbITk3X/qCjmhJZwlcwwa2YlhWgggvV/tYp4g78V+NbAujbT14zPFxUQNW2sfm16b8zOnGwPRcqWoZgnXX6PNvkgot9aaVgkGG6nA9ugRJMEp/0h+r4K9SX7erF/47KQ6rlsOxHvsSrPVLm/YbAHxd4pmd2coyrmyFk8QsWfxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=C75aKllD; arc=none smtp.client-ip=178.154.239.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hKa2p7rV"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=asCEkZ3HCMfe18rmMzExk2UpUIh0/XmzWsDd0egaSEE=; b=hKa2p7rV6W6OYuRhhTC5cTHhbX
-	Mibcsrrs8SjTX3g20J3q7QPDl+implsVlKonWpylxnP+N+wxtWhlG68ClpotTryZZSFfZRxVMix++
-	sh1nXGFNHkNywwDlvTMmYoSiSpAFoTpFYDjXTxZ8sef+yrUsPE2P9ASGMkewddJ5wXfT0c9fuu2ft
-	Pum2Zn+EdEdNyych9lY3bvQ6VTfj40Nl/NWq4JuI05VTbLgARL+/cw58v+k5FbrJTfLnBpShxERwk
-	Js+aVVY2wESMtDDRQqbZLATemXaaonTg8zBavBMXdtsjh9jhi6BPjRFPvDhcsyLSc5jx434T3FkTN
-	sSVxtwuQ==;
-Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tKzKU-00000003fsB-3SEN;
-	Tue, 10 Dec 2024 12:27:07 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 6598430035F; Tue, 10 Dec 2024 13:27:06 +0100 (CET)
-Date: Tue, 10 Dec 2024 13:27:06 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Kevin Brodsky <kevin.brodsky@arm.com>
-Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	aruna.ramakrishna@oracle.com, broonie@kernel.org,
-	catalin.marinas@arm.com, dave.hansen@linux.intel.com,
-	jannh@google.com, jeffxu@chromium.org, joey.gouly@arm.com,
-	kees@kernel.org, maz@kernel.org, pierre.langlois@arm.com,
-	qperret@google.com, ryan.roberts@arm.com, will@kernel.org,
-	linux-arm-kernel@lists.infradead.org, x86@kernel.org
-Subject: Re: [RFC PATCH 13/16] arm64: mm: Reset pkey in __tlb_remove_table()
-Message-ID: <20241210122706.GO8562@noisy.programming.kicks-ass.net>
-References: <20241206101110.1646108-1-kevin.brodsky@arm.com>
- <20241206101110.1646108-14-kevin.brodsky@arm.com>
- <20241209102913.GJ21636@noisy.programming.kicks-ass.net>
- <7124d7f4-1d4c-4497-94d8-243af2ed071a@arm.com>
+	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="C75aKllD"
+Received: from forward102a.mail.yandex.net (forward102a.mail.yandex.net [IPv6:2a02:6b8:c0e:500:1:45:d181:d102])
+	by forward205a.mail.yandex.net (Yandex) with ESMTPS id 08FDA67462;
+	Tue, 10 Dec 2024 17:40:13 +0300 (MSK)
+Received: from mail-nwsmtp-smtp-production-main-84.iva.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-84.iva.yp-c.yandex.net [IPv6:2a02:6b8:c0c:200:0:640:1d5:0])
+	by forward102a.mail.yandex.net (Yandex) with ESMTPS id E098F60AF5;
+	Tue, 10 Dec 2024 17:40:02 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-84.iva.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id 0enkiN2OgCg0-MKNOj2ww;
+	Tue, 10 Dec 2024 17:40:02 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
+	t=1733841602; bh=b2VIYTAThn7M+4bBggR3iBohV2L5yGDB68aLTe+G0g0=;
+	h=Message-ID:Date:In-Reply-To:Cc:Subject:References:To:From;
+	b=C75aKllD4P+vimY8Y7v3yMKh7dLhCXMsfS/LFjQDplf43LlzKr3H1zFRbc0Ima7sU
+	 uzqoxuGdW7ei3x4gNMsPmZajfblerBgxyoNcHRg/C1/wrNKzbEBzZCEOX3d23imhz6
+	 J4JFuK8oIU/w4cG218lUOODpstq7SU8CjTC7cw0Y=
+Authentication-Results: mail-nwsmtp-smtp-production-main-84.iva.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
+From: Dmitry Antipov <dmantipov@yandex.ru>
+To: Johannes Berg <johannes.berg@intel.com>
+Cc: Kees Cook <kees@kernel.org>,
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org,
+	linux-wireless@vger.kernel.org,
+	Dmitry Antipov <dmantipov@yandex.ru>
+Subject: [PATCH 2/2] wifi: cfg80211: simplify cfg80211_mlme_register_mgmt()
+Date: Tue, 10 Dec 2024 17:39:51 +0300
+Message-ID: <20241210143951.5685-2-dmantipov@yandex.ru>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20241210143951.5685-1-dmantipov@yandex.ru>
+References: <20241210143951.5685-1-dmantipov@yandex.ru>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7124d7f4-1d4c-4497-94d8-243af2ed071a@arm.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Dec 10, 2024 at 10:28:44AM +0100, Kevin Brodsky wrote:
-> On 09/12/2024 11:29, Peter Zijlstra wrote:
-> > On Fri, Dec 06, 2024 at 10:11:07AM +0000, Kevin Brodsky wrote:
-> >> [...]
-> >>
-> >> diff --git a/arch/arm64/include/asm/tlb.h b/arch/arm64/include/asm/tlb.h
-> >> index a947c6e784ed..d1611ffa6d91 100644
-> >> --- a/arch/arm64/include/asm/tlb.h
-> >> +++ b/arch/arm64/include/asm/tlb.h
-> >> @@ -10,10 +10,14 @@
-> >>  
-> >>  #include <linux/pagemap.h>
-> >>  #include <linux/swap.h>
-> >> +#include <linux/kpkeys.h>
-> >>  
-> >>  static inline void __tlb_remove_table(void *_table)
-> >>  {
-> >> -	free_page_and_swap_cache((struct page *)_table);
-> >> +	struct page *page = (struct page *)_table;
-> >> +
-> >> +	kpkeys_unprotect_pgtable_memory((unsigned long)page_address(page), 1);
-> >> +	free_page_and_swap_cache(page);
-> >>  }
-> > Same as for the others, perhaps stick this in generic code instead of in
-> > the arch code?
-> 
-> This should be doable, with some refactoring. __tlb_remove_table() is
-> currently called from two functions in mm/mmu_gather.c, I suppose I
-> could create a wrapper there that calls
-> kpkeys_unprotect_pgtable_memory() and then __tlb_remove_table(). Like in
-> the p4d case I do however wonder how robust this is, as
-> __tlb_remove_table() could end up being called from other places.
+Simplify 'cfg80211_mlme_register_mgmt()' to allocate an instance of
+'struct cfg80211_mgmt_registration' only if the latter is really
+needed (i.e. when the list of registrations should be updated)
+and prefer 'kmalloc()' over 'kzalloc()' since all of the members
+are explicitly initialized.
 
-I don't foresee other __tlb_remove_table() users, this is all rather
-speicific code. But if there ever were to be new users, it is something
-they would have to take into consideration.
+Fixes: 9dba48a6ece7 ("cfg80211: support multicast RX registration")
+Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
+---
+ net/wireless/mlme.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/net/wireless/mlme.c b/net/wireless/mlme.c
+index 4790136758d5..c7d913c76966 100644
+--- a/net/wireless/mlme.c
++++ b/net/wireless/mlme.c
+@@ -639,7 +639,7 @@ int cfg80211_mlme_register_mgmt(struct wireless_dev *wdev, u32 snd_portid,
+ 				struct netlink_ext_ack *extack)
+ {
+ 	struct cfg80211_registered_device *rdev = wiphy_to_rdev(wdev->wiphy);
+-	struct cfg80211_mgmt_registration *reg, *nreg;
++	struct cfg80211_mgmt_registration *reg;
+ 	int err = 0;
+ 	u16 mgmt_type;
+ 	bool update_multicast = false;
+@@ -680,10 +680,6 @@ int cfg80211_mlme_register_mgmt(struct wireless_dev *wdev, u32 snd_portid,
+ 		return -EINVAL;
+ 	}
+ 
+-	nreg = kzalloc(sizeof(*reg) + match_len, GFP_KERNEL);
+-	if (!nreg)
+-		return -ENOMEM;
+-
+ 	spin_lock_bh(&rdev->mgmt_registrations_lock);
+ 
+ 	list_for_each_entry(reg, &wdev->mgmt_registrations, list) {
+@@ -707,9 +703,14 @@ int cfg80211_mlme_register_mgmt(struct wireless_dev *wdev, u32 snd_portid,
+ 	if (err)
+ 		goto out;
+ 
+-	if (update_multicast) {
+-		kfree(nreg);
+-	} else {
++	if (!update_multicast) {
++		struct cfg80211_mgmt_registration *nreg =
++			kmalloc(sizeof(*reg) + match_len, GFP_KERNEL);
++
++		if (!nreg) {
++			err = -ENOMEM;
++			goto out;
++		}
+ 		nreg->match_len = match_len;
+ 		memcpy(nreg->match, match_data, match_len);
+ 		nreg->nlportid = snd_portid;
+@@ -726,7 +727,6 @@ int cfg80211_mlme_register_mgmt(struct wireless_dev *wdev, u32 snd_portid,
+ 	return 0;
+ 
+  out:
+-	kfree(nreg);
+ 	spin_unlock_bh(&rdev->mgmt_registrations_lock);
+ 
+ 	return err;
+-- 
+2.47.1
+
