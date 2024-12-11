@@ -1,82 +1,132 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D34DF239BC5
-	for <linux-hardening@vger.kernel.org>; Wed, 11 Dec 2024 10:47:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0FBC23FD23
+	for <linux-hardening@vger.kernel.org>; Wed, 11 Dec 2024 12:58:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733914029; cv=none; b=huEc60jHuJTsG5Hvu2Ce2GxLggMb5ouc1fi1F+1CAJS9OAJpoF6iNp5HcLwR0K6AseWjfkvphId3ov0AC5MLeIOFL26OJ62ZK6e6exEy0Dnx1lJwSXpuibajuV0RquzwmvEdAomWQM8b+kDsc7dCLzI7cBnQFvZxNKYUkYCs2mg=
+	t=1733921928; cv=none; b=b6UnV4/LtZRhrb9HwAdmIddQCuCp9Xj9NGrup6Icmb7+Ah3o5y7TSWE2jyJhz0fuYNirwmKmN7e5U5Xk1aMM0HretVPM6ZJwDX7gTI7r3YQs7a8XBtiwTELOzUJLS0srA+Aw6eknEW6NXX2egMXPJ/kCCbUdOmYOUnqnyjYXqE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733914029; c=relaxed/simple;
-	bh=nKjcDcJB4jySgsM+5Bv4lh0SR2eEjEafuclhhXKVV5Y=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=ch8et0R4r3/49kDh8f3ciIT6u2mMfubZYNaApwJNqtYZYmZoUUTa1sjRwHdWwhrYYB8pXpnvyrArOIN+HnYLfm4ljpcY/eZeidSQFiJeihlLCZqNSiPcEhJeT9UjNaeU8fUXtE+wc8TjXKc6wVsHPVihxIqynP/ixkN7WZ0EjaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fireburn.co.uk; spf=none smtp.mailfrom=fireburn.co.uk; dkim=pass (2048-bit key) header.d=fireburn-co-uk.20230601.gappssmtp.com header.i=@fireburn-co-uk.20230601.gappssmtp.com header.b=Ye19dIQG; arc=none smtp.client-ip=209.85.215.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fireburn.co.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=fireburn.co.uk
+	s=arc-20240116; t=1733921928; c=relaxed/simple;
+	bh=KEAn6OuOqUG3OsVVxWOZfTx8NtgFmhCRRDwlZmd0Oh8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nOfIxZ6Pm9tkcg+0mOtbSRrXtEXPBzMqS6ca1fBe/85E9jBYY4UODb+lVgKzWu4iwS9w0GbYlIWA5C/diMk2gxalMLel2ouv0ffRVVVV2RV4ZX7DB2Zh7kJ2zlFccppHf+/dmkAEdznKdhDG2xNyEha2tiBjx9+5OoJNGqtiluM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CvZRiIn4; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fireburn-co-uk.20230601.gappssmtp.com header.i=@fireburn-co-uk.20230601.gappssmtp.com header.b="Ye19dIQG"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-7fd5248d663so2507700a12.0
-        for <linux-hardening@vger.kernel.org>; Wed, 11 Dec 2024 02:47:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fireburn-co-uk.20230601.gappssmtp.com; s=20230601; t=1733914026; x=1734518826; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=nKjcDcJB4jySgsM+5Bv4lh0SR2eEjEafuclhhXKVV5Y=;
-        b=Ye19dIQG393nM8RDbMcfNqLa6sVAhNCHanOC9iIAZc5ijxmQVYWlidQ+3rHpdrnunY
-         YAmwC/bFvZ9ptLCznDGH6/fxKXHr/r4nGQloBvEGH5OQ/Ny6BHlNLTMdHYK29lHe3mzq
-         bjYLsjZxUtyG3E+h5ucNeULAujS7m9p1hpUBJL2P5IH2m8T8i/oQPyNUaeyeKqqSYFVu
-         E2h23nDJveeVvMWTqdBNturic5O0Fx1AgT/yOOSDG0Nf1ve/modFcg32hFUTpI92vxUi
-         cWVIZVHzcAqCR/TGDIUkkYPnxtbulSmHh9g13Yyv7gaBy8XIK9kBDnzH4kTgaHD2E8mf
-         2kXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733914026; x=1734518826;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=nKjcDcJB4jySgsM+5Bv4lh0SR2eEjEafuclhhXKVV5Y=;
-        b=XSk8dlNIvjaiQCPxB9CZ3w6doWmKqp6NftnjVnum+1b6gKfcPgiAbh/0o1aClH8UdB
-         40G6YXzQzOS1KvY+r905cIrwVdaEFeJSRMn+F5Ed8kySVhyBcLMkN68O/IhfOci3tosL
-         cPutbSabDHxQGP3um5I8F3c62KZN9BPwB7pOTaGUEJrlbuGSewMI1fy4MrUj045wizJ5
-         PBPFrnuvvVpuFh7+u05g9iJ6ja5QQpeByEJ0DmYIf9XOQknTZHdKNSxBrjKZb43Z5N9d
-         J5p7mIAL48EYHBcGBDdgttrUl/FgHLh+yk6D/z3NA7YnfJgGPYSVoTqK5iD7tRwPg9wR
-         sRpQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVcip15+tKzAqQfnS3xhWL/63FQ1F2sqVhHmd6U4hEo8yEgbHe3tC7arNP4pKZi8kM9UGL8WTzq4rl3JcEeF28=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwIBIRZiJo35sVdK6fIlDroPOwLItS+ZV5FmEtB9wSDdjy85mTn
-	OeYur4o5yLhyuQXHYCrgm3Ej43Y4ZLqyGC0LW76AeYtXijeC9QBOqz4l7Mrg+5eJVHl9qpV6tCo
-	1x2KsjUUW/0Kfaa5D3t+VxezxirTUEGds0nCG
-X-Gm-Gg: ASbGncvmgD2UanOoSKVlFJKUO06bJyABUBPNCTdnL/qTBA+DpQnbbzc420KsRT+9b78
-	uqbfI4lMi3stZd7BJYWUhzXpdQIn6OodrNWnYN/ycSuQRbETtSLi2VRmxTC9dOtj60bg+gQ==
-X-Google-Smtp-Source: AGHT+IEfc10uei7wMAJXp3wNIDyhS3tTRIVNGgwU+Xml++f4NrLtyZznzfdG3yC/KG2xrJEx7qUX2s8l+mP+Egmyjxk=
-X-Received: by 2002:a17:90b:1b47:b0:2ee:5bc9:75b5 with SMTP id
- 98e67ed59e1d1-2f127f8debbmr3550949a91.4.1733914026227; Wed, 11 Dec 2024
- 02:47:06 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CvZRiIn4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1733921925;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+DEcDh+LdwGMntwkxIbCzkLoVBb89ABtlpvYyrYztn0=;
+	b=CvZRiIn43pzllFdN7DGuEroWhqo9wvog1nuXwDwV43wFTVvXobjcjVx78YymERmLhuYTdm
+	RIIDQ3rTCUp/uFOxpc8otbSr8IA5RC3hJjezukgpB0b8B6zwXgC3FZ+7borY+bTBok4nfP
+	etnVO8bOkIUOOxPReEuHIxc0+EP0u+I=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-636-_hM7nGCVOMm_QIe9A0sMKw-1; Wed,
+ 11 Dec 2024 07:58:42 -0500
+X-MC-Unique: _hM7nGCVOMm_QIe9A0sMKw-1
+X-Mimecast-MFC-AGG-ID: _hM7nGCVOMm_QIe9A0sMKw
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 905441956089;
+	Wed, 11 Dec 2024 12:58:40 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.3])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 29C59300018D;
+	Wed, 11 Dec 2024 12:58:32 +0000 (UTC)
+Date: Wed, 11 Dec 2024 20:58:27 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Coiby Xu <coxu@redhat.com>
+Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>,
+	Milan Broz <gmazyland@gmail.com>,
+	Thomas Staudt <tstaudt@de.ibm.com>,
+	Daniel P =?iso-8859-1?Q?=2E_Berrang=E9?= <berrange@redhat.com>,
+	Kairui Song <ryncsn@gmail.com>,
+	Jan Pazdziora <jpazdziora@redhat.com>,
+	Pingfan Liu <kernelfans@gmail.com>, Dave Young <dyoung@redhat.com>,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	Dave Hansen <dave.hansen@intel.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Greg KH <gregkh@linuxfoundation.org>,
+	Vivek Goyal <vgoyal@redhat.com>,
+	Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_byb" <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH v6 3/7] crash_dump: store dm crypt keys in kdump reserved
+ memory
+Message-ID: <Z1mMc+/dCk+mSahu@MiWiFi-R3L-srv>
+References: <20241029055223.210039-1-coxu@redhat.com>
+ <20241029055223.210039-4-coxu@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Mike Lothian <mike@fireburn.co.uk>
-Date: Wed, 11 Dec 2024 10:46:55 +0000
-Message-ID: <CAHbf0-FQCNkOg4F=cjOCGsD0QzxrSj99ssYaH+9A=GnSn+PqrQ@mail.gmail.com>
-Subject: Re: [PATCH] bpf: replace deprecated strncpy with strscpy
-To: justinstitt@google.com
-Cc: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
-	daniel@iogearbox.net, eddyz87@gmail.com, haoluo@google.com, 
-	john.fastabend@gmail.com, jolsa@kernel.org, kpsingh@kernel.org, 
-	linux-hardening@vger.kernel.org, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, llvm@lists.linux.dev, martin.lau@linux.dev, 
-	morbo@google.com, Nathan Chancellor <nathan@kernel.org>, ndesaulniers@google.com, 
-	sdf@google.com, song@kernel.org, yonghong.song@linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241029055223.210039-4-coxu@redhat.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-Hi
+On 10/29/24 at 01:52pm, Coiby Xu wrote:
+......
+> +int crash_load_dm_crypt_keys(struct kimage *image)
+> +{
+> +	struct kexec_buf kbuf = {
+> +		.image = image,
+> +		.buf_min = 0,
+> +		.buf_max = ULONG_MAX,
+> +		.top_down = false,
+> +		.random = true,
+> +	};
+> +	int r;
+> +
+> +
+> +	if (key_count <= 0) {
+> +		kexec_dprintk("No dm-crypt keys\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	image->dm_crypt_keys_addr = 0;
+> +	r = build_keys_header();
+> +	if (r)
+> +		return r;
+> +
+> +	kbuf.buffer = keys_header;
+> +	kbuf.bufsz = get_keys_header_size(key_count);
+> +
+> +	kbuf.memsz = kbuf.bufsz;
+> +	kbuf.buf_align = ELF_CORE_HEADER_ALIGN;
+> +	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
+> +	r = kexec_add_buffer(&kbuf);
+> +	if (r) {
+> +		kvfree((void *)kbuf.buffer);
+> +		return r;
+> +	}
+> +	image->dm_crypt_keys_addr = kbuf.mem;
+> +	image->dm_crypt_keys_sz = kbuf.bufsz;
 
-I'm not sure if it was this patch or an older one but I'm seeing the
-following warning when compiling/linking with Clang 19.1.5
+Wondering why not assigning kbuf.memsz, but bufsz.
 
-vmlinux.o: warning: objtool: ___bpf_prog_run+0x44: sibling call from
-callable instruction
+> +	kexec_dprintk(
+> +		"Loaded dm crypt keys to kexec_buffer bufsz=0x%lx memsz=0x%lx\n",
+> +		kbuf.bufsz, kbuf.bufsz);
+> +
+> +	return r;
+> +}
+> +
+> +
+>  static int __init configfs_dmcrypt_keys_init(void)
+>  {
+>  	int ret;
+> -- 
+> 2.47.0
+> 
 
-Cheers
-
-Mike
