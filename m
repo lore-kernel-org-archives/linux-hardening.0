@@ -1,174 +1,349 @@
-Received: from mail-oa1-f47.google.com (mail-oa1-f47.google.com [209.85.160.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 573341ABEA5
-	for <linux-hardening@vger.kernel.org>; Wed, 11 Dec 2024 02:39:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FA2D20C496;
+	Wed, 11 Dec 2024 03:42:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733884743; cv=none; b=fE4SO1mCQnW0KIzYnsMj5DjPS7J2aH3iETx1bVOcqtdBRN/2gx7FKT5xwmk7bwfiwSIljrANLDL5m/D8IuTT/lLbVxFC9dKJewXc3/qKQQluMbpJra7eSrQwAnCIj0h7859/Gl9Cd2CKACdv28d2GGfXk+Ftfk34TONo/ilLfio=
+	t=1733888543; cv=none; b=LeDJxnrw+S6TQgtj3/lIn8pq4cLZJgDIRmLm9Ya4kZUcn99Lpesp8ooMZX+3gnOIYM20seyUwLArA3DnJ7KDWUgqSmyMEjmK/SAeThiJSwn9vSBEHcuE5+tN+Q1ikF5PyFcklqaAHBopSpTaS/2Ql7eF4p2scoykOMHLSzVNi6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733884743; c=relaxed/simple;
-	bh=Vma5UC4Up8IXip1IFD7Lr4sLcxtr+U7Nv0cS4zQrrMg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WqKj6Y4Ya7Q/G6ZFDh01lNIOIRSCJUL+E5mMR0648YDSxzqSZpNF2mj7gVWsoS/tODZx0tUte09t/vAZ0FMDertpwd8FqkdpWDZiPhoqfiLQk8sAeTfWdq/QeTJHVGGvJyjWJMaHOnQrOB6vBWqT+nYBzsOWqrZzVFpZLPWvh68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=elvqFIqK; arc=none smtp.client-ip=209.85.160.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1733888543; c=relaxed/simple;
+	bh=oicPpklw009FqW4e5i8LSlbQIq4GW99lIiVOEEutCXw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=jGmVK5rD8Sz37sw3eqpq7VeoRz2YeLqnbE6oh0XvenykHBDUq3Ehy0xTOYm+NOXdEnxkVzoU38rOinN1Nqa4WnokuCO6sqQkzicB7PXj3OBZ487f+bGBnyUxmH4lJjB26wUuZoOj8rCjB9k1xMk6VRbA5liTQUFvfHmWQx9FXE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZbTAOulz; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="elvqFIqK"
-Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-296b6340f05so82262fac.3
-        for <linux-hardening@vger.kernel.org>; Tue, 10 Dec 2024 18:39:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1733884740; x=1734489540; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Vma5UC4Up8IXip1IFD7Lr4sLcxtr+U7Nv0cS4zQrrMg=;
-        b=elvqFIqKGZXtgC2BzASSqlZtibqeAxvW39cMuWPduhXasC8Nvat76fDs3+RqGgLNOD
-         Mo5fLltKzfQMehw6TAc0n672HDMywA0nkfDdBS+LYuX9o/Zhmwz5mAdwEJZRJRN8ArTy
-         icxV+dXzrBqOLtXhM/Dj4VXpJWnrjoWP1JYUQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733884740; x=1734489540;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Vma5UC4Up8IXip1IFD7Lr4sLcxtr+U7Nv0cS4zQrrMg=;
-        b=Be9b/M/SzVxrmsNeT1Bg03avBX5DijzdwX5hEiEQyLIR3tDwt+Jum/talO5V0zEyY4
-         FVoiV/xcBzRyFx0E1foHHJC3ALFd9d6lJOEn8PuyvkaTa4EKMKZy5I00j4muwPqVyFV8
-         CR9s/i5tHoc1ivymsQJ2cgfkNdg/uSo9dGQZQg1+1KMSXVt2s3KJ3aWhvWdwhE5alPsO
-         3a0+d0Crd9e/JTRB/S1YfPuf/2JAjtYhCG/C6AYSXeouIMEbT2k/GXieUN3lFlGWkcTC
-         eZT/wAkD2KgMtL66dDR1wlnIhw/ByM/a/CV/VZFD5UZcF2dVVfjR22T7y0GjEAOBmYCn
-         41xg==
-X-Forwarded-Encrypted: i=1; AJvYcCUd//rSMfondO0Mvwbai+EgUx9SWRRR6Lj0gsCU0yKxCixhgOI5GRVj8gVXFMviPTeQaOZ05uyyUFcr8bZE2qU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyxwFdKe8KkbSPuNTHwTNEQl7j93EbZT72PbssEPoVdujDmLbSR
-	x2PhPrvFRknPmRsRpD1nz7rau9O/vJYmZef37m1w7xzFeTaUtUw5vdPfvaeAMp2DPPZAzlyxxOe
-	gXkw0THE+HLZJbd3hJzQ2hqgmfxLpMJB6GgJh
-X-Gm-Gg: ASbGncuI4ZX4AtBWPIN8ouOHT4RzResdoim9nTDPSyod6tXlQs0k+xjqY8rlJo9Okdg
-	Ems8kE+C1f5cftisAVd1b1A45IixNm1DaTVtGHD/I0DLpu3lL5lgrV8wqv9JtHkZg
-X-Google-Smtp-Source: AGHT+IEZFASK6PUZ+4WyunObGGitl8fk62QLOo0Za5h2KjoAHplUqp/QgRz8ZkDfBfQe8U5z7n2k0R9zDrd7o2X6lIk=
-X-Received: by 2002:a05:6870:b48a:b0:29e:5525:f4fd with SMTP id
- 586e51a60fabf-2a012f874bdmr271231fac.14.1733884740297; Tue, 10 Dec 2024
- 18:39:00 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZbTAOulz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1733888541; x=1765424541;
+  h=from:subject:date:message-id:mime-version:
+   content-transfer-encoding:to:cc;
+  bh=oicPpklw009FqW4e5i8LSlbQIq4GW99lIiVOEEutCXw=;
+  b=ZbTAOulzClrnf7qULBxx6yxbAJlqwe6Kvoas+FrJOa8LVxGlD41sQS9U
+   tuDS4EofRhwSTfC29s8PLUyYjJio1CXf2M8+o9C4CTlxspkbs5aCclDgy
+   jnmfip9J6AB7aTBwIgvYzcLpA6DKe9CELlgVFABCo0ZAeGwsbH0fuYw93
+   J/wfOyvjO0KVZvgOX2wbRpV5powsHH5mBZcNdgWAccZidOrNVjLT0yZX5
+   q/ZEVTRkDb2jiFkEiqTNWMamZKPPrDVYdwz0R6PJ2X7inrotOcGXsGqL7
+   CKCw7Hr7I5vFV/QAO4015L7C2xsT39s+qQTPIe5zl5sJ6T31yuQhaZ1aQ
+   w==;
+X-CSE-ConnectionGUID: KzD86WMzSPqAt6Q3r71Piw==
+X-CSE-MsgGUID: x8daeOEKR52XnwY55lwdkA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11282"; a="34395615"
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="34395615"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2024 19:42:21 -0800
+X-CSE-ConnectionGUID: LHaRrbWmSsmD+fT5amcDxQ==
+X-CSE-MsgGUID: K1BMnLrAQTae22mffkmhag==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="95696663"
+Received: from lstrano-mobl6.amr.corp.intel.com (HELO localhost) ([10.125.109.231])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2024 19:42:18 -0800
+From: Ira Weiny <ira.weiny@intel.com>
+Subject: [PATCH v8 00/21] DCD: Add support for Dynamic Capacity Devices
+ (DCD)
+Date: Tue, 10 Dec 2024 21:42:15 -0600
+Message-Id: <20241210-dcd-type2-upstream-v8-0-812852504400@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241206013934.2782793-1-jeffxu@google.com> <2m3zmlehfigs5r7rptwcoft3j4fipfkgfxmdrdttpf76hwhwae@vclfa5ulcmv2>
- <d710d812-3dc0-406f-ac47-a782673d3d07@lucifer.local> <CABi2SkWkUmBdsUYhr-cE181oh=medLG0iXgHk6TYEuPgztxqOw@mail.gmail.com>
- <f4c704bc-3b9a-48bb-b1dc-8a73d181223c@lucifer.local>
-In-Reply-To: <f4c704bc-3b9a-48bb-b1dc-8a73d181223c@lucifer.local>
-From: Jeff Xu <jeffxu@chromium.org>
-Date: Tue, 10 Dec 2024 18:38:49 -0800
-Message-ID: <CABi2SkV+jVgg5Q=XCTC3+J7WtyvgFbHfP-sGTrzfJA0oteRPLQ@mail.gmail.com>
-Subject: Re: [PATCH v1] mseal: move can_do_mseal to mseal.c
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>, akpm@linux-foundation.org, vbabka@suse.cz, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	linux-mm@kvack.org, jorgelo@chromium.org, keescook@chromium.org, 
-	pedro.falcato@gmail.com, rdunlap@infradead.org, Jann Horn <jannh@google.com>, 
-	David Hildenbrand <david@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIABcKWWcC/4XQzU7DMAwH8FeZeibI+bJbTrwH4pA4LosE7dSWi
+ mnau5NOAraqwNGR/z/bOVWjDFnG6mF3qgaZ85j7rhT13a7ifeheROVU6sqAsYDgVOKkpuNBjHo
+ /jNMg4U0BJ+1bNBrbVJVgDKOoOISO90v0tntpOAzS5o/L1KfnUu/zOPXD8bLErJfXP+fNWoEiH
+ dE6HYN495i7SV7vub/oJerAmt+jkSJAQmPR+Kvossls/p9uCtGSA3Yk1GhcE/aLcFBr3CTscgA
+ 3sUGOAROtCfdNaADaJFwh2KAWQZEkaU34K8I0m4QvRE224YjEltyawB9Cg98kcCE8UxuMdtDKm
+ qBrYvsQKoTHUDtBjGxvvvN8Pn8CyztjWaICAAA=
+X-Change-ID: 20230604-dcd-type2-upstream-0cd15f6216fd
+To: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>, 
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+ Jonathan Corbet <corbet@lwn.net>, Andrew Morton <akpm@linux-foundation.org>, 
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Dan Williams <dan.j.williams@intel.com>, 
+ Davidlohr Bueso <dave@stgolabs.net>, 
+ Alison Schofield <alison.schofield@intel.com>, 
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
+ linux-cxl@vger.kernel.org, linux-doc@vger.kernel.org, 
+ nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org, 
+ linux-hardening@vger.kernel.org, Li Ming <ming.li@zohomail.com>, 
+ Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+X-Mailer: b4 0.15-dev-2a633
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1733888537; l=11963;
+ i=ira.weiny@intel.com; s=20221211; h=from:subject:message-id;
+ bh=oicPpklw009FqW4e5i8LSlbQIq4GW99lIiVOEEutCXw=;
+ b=Wg+WIOn62r8+tDTjdhYRk+4Cr8dP9NuunxJSy9mTaXMAusp8zuBgnHzNg5ZT5RjPNM8u+K9yf
+ NmfWkSEsvtqDKIU5iuzFIAe/w5rj2DStDxSg0viGwMHI/p18NSI3SfD
+X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
+ pk=noldbkG+Wp1qXRrrkfY1QJpDf7QsOEthbOT7vm0PqsE=
 
-Hi Lorenzo,
+A git tree of this series can be found here:
 
-Regarding your proposal of moving mseal.c to vma.c for unit testing.
+	https://github.com/weiny2/linux-kernel/tree/dcd-v4-2024-12-10
 
-On Fri, Dec 6, 2024 at 9:04=E2=80=AFAM Lorenzo Stoakes
-<lorenzo.stoakes@oracle.com> wrote:
-> > >
-> > > An aside - I actually think we need to move the bulk of this code to
-> > > mm/vma.c - it makes absolutely no sense to keep the internals in this=
- file,
-> > > and that way we can userland test mseal functionality.
-> > >
-> > Is there a past discussion to read ? That will help me understand your
-> > strategy of unit testing mm code.
-> > Moving everything to vma.c, will lose log history, e.g. blame no
-> > longer helps, did we consider alternatives ?
->
-> Re; git blame - I'm not sure what alternative you think exists, and I've
-> moved brk(), mmap(), etc. with a history spanning >30 years, so I'm not
-> sure what blame history you're concerned about given how recent mseal is =
-:)
->
-> There is always code that gets moved or changed. You can't stay attached =
-to
-> your name appearing on a git blame line.
->
-> Re: discussion, there's dozens of discussions and patch sets totalling ~3=
-k
-> lines of code... just search lore for vma testing, or search through my
-> commits in mm/vma.c and you can see.
->
-> I can put together links if you really need, but I think say [0] is a goo=
-d
-> motivating example of how I was able to actually write unit tests for VMA
-> merge functionality which previously could not exist.
->
-> In any case you can use the git blame -C option to 'see through' things l=
-ike
-> code moves.
->
-> The whole point of this is to be able to _unit_ test functionality under
-> circumstances that might be otherwise improbable/incredibly difficult to
-> obtain if run as part of a kernel and self testing.
->
-> Importantly it allows us to conduct fuzzing testing in future, something
-> key and fundamental to security testing.
->
-> I would say for somebody who has clearly stated his huge commitment to
-> testing and how critically vital it is especially in the security realm,
-> this is entirely something that is beneficial to the kernel and to mseal
-> stability and security.
->
-> If you want to see it 'in action', you can run the tests in
-> tools/testing/vma via:
->
-> $ make && ./vma
->
-I want to express my support for unit testing and agree that more
-testing would benefit mm. However, I'm unsure about the reasoning
-behind moving code to vma.c in bulk. Could you please clarify this for
-me?
+Rebase this off 6.13 cleanups.
 
-In my understanding, unit tests can be conducted regardless of the
-code's location once dependencies are addressed with stubs. Have you
-considered adding mseal.c to the unittest makefile at the same level
-as vma.c? Since mseal.c doesn't introduce new dependencies, i.e. it
-operates directly on the vm_area_struct, so I would start with that.
+Series info
+===========
 
-I guess, for UT, you might need to change some functions' signatures,
-e.g. remove static, if you want to test an internal function (e.g
-mseal_fixup) , from your unit-test, but this is the same even after
-moving them to vma.c.
+This series has 2 parts:
 
-There will be additional work of clean up including header (".h"),
-still I believe this is the same work even after moving the code into
-vma.c. You might still need to move the prototype of some functions
-into vma.h or vma_internal.h (e.g. definition of MADV_FREE). But I
-think this work is also orthogonal to where the mseal business logic
-is located.
+Patch 1-19: Core DCD support
+Patch 20-21: cxl_test support
 
-I understand the logic behind the current vma.c (on the linux_main
-branch) and the unit test for the VMA merge functionality. However, if
-your plan is to move all VMA-related code into vma.c, that means more
-stubs are needed (depending on the boundary of the proposed unit
-testing), and I don't understand how moving the code can help reduce
-the amount of work or stubs (if that is the motivation).
+Background
+==========
 
-To avoid spending too much of your time, if there are previous
-discussions on this topic, please share links or a brief summary, so I
-can study them first.
+A Dynamic Capacity Device (DCD) (CXL 3.1 sec 9.13.3) is a CXL memory
+device that allows memory capacity within a region to change
+dynamically without the need for resetting the device, reconfiguring
+HDM decoders, or reconfiguring software DAX regions.
 
-Thanks!
-Best Regards,
--Jeff
+One of the biggest use cases for Dynamic Capacity is to allow hosts to
+share memory dynamically within a data center without increasing the
+per-host attached memory.
 
+The general flow for the addition or removal of memory is to have an
+orchestrator coordinate the use of the memory.  Generally there are 5
+actors in such a system, the Orchestrator, Fabric Manager, the Logical
+device, the Host Kernel, and a Host User.
 
-> [0]https://lore.kernel.org/linux-mm/1c7a0b43cfad2c511a6b1b52f3507696478ff=
-51a.1725040657.git.lorenzo.stoakes@oracle.com/
->
-> Thanks, Lorenzo
+Typical work flows are shown below.
+
+Orchestrator      FM         Device       Host Kernel    Host User
+
+    |             |           |            |              |
+    |-------------- Create region ----------------------->|
+    |             |           |            |              |
+    |             |           |            |<-- Create ---|
+    |             |           |            |    Region    |
+    |<------------- Signal done --------------------------|
+    |             |           |            |              |
+    |-- Add ----->|-- Add --->|--- Add --->|              |
+    |  Capacity   |  Extent   |   Extent   |              |
+    |             |           |            |              |
+    |             |<- Accept -|<- Accept  -|              |
+    |             |   Extent  |   Extent   |              |
+    |             |           |            |<- Create --->|
+    |             |           |            |   DAX dev    |-- Use memory
+    |             |           |            |              |   |
+    |             |           |            |              |   |
+    |             |           |            |<- Release ---| <-+
+    |             |           |            |   DAX dev    |
+    |             |           |            |              |
+    |<------------- Signal done --------------------------|
+    |             |           |            |              |
+    |-- Remove -->|- Release->|- Release ->|              |
+    |  Capacity   |  Extent   |   Extent   |              |
+    |             |           |            |              |
+    |             |<- Release-|<- Release -|              |
+    |             |   Extent  |   Extent   |              |
+    |             |           |            |              |
+    |-- Add ----->|-- Add --->|--- Add --->|              |
+    |  Capacity   |  Extent   |   Extent   |              |
+    |             |           |            |              |
+    |             |<- Accept -|<- Accept  -|              |
+    |             |   Extent  |   Extent   |              |
+    |             |           |            |<- Create ----|
+    |             |           |            |   DAX dev    |-- Use memory
+    |             |           |            |              |   |
+    |             |           |            |<- Release ---| <-+
+    |             |           |            |   DAX dev    |
+    |<------------- Signal done --------------------------|
+    |             |           |            |              |
+    |-- Remove -->|- Release->|- Release ->|              |
+    |  Capacity   |  Extent   |   Extent   |              |
+    |             |           |            |              |
+    |             |<- Release-|<- Release -|              |
+    |             |   Extent  |   Extent   |              |
+    |             |           |            |              |
+    |-- Add ----->|-- Add --->|--- Add --->|              |
+    |  Capacity   |  Extent   |   Extent   |              |
+    |             |           |            |<- Create ----|
+    |             |           |            |   DAX dev    |-- Use memory
+    |             |           |            |              |   |
+    |-- Remove -->|- Release->|- Release ->|              |   |
+    |  Capacity   |  Extent   |   Extent   |              |   |
+    |             |           |            |              |   |
+    |             |           |     (Release Ignored)     |   |
+    |             |           |            |              |   |
+    |             |           |            |<- Release ---| <-+
+    |             |           |            |   DAX dev    |
+    |<------------- Signal done --------------------------|
+    |             |           |            |              |
+    |             |- Release->|- Release ->|              |
+    |             |  Extent   |   Extent   |              |
+    |             |           |            |              |
+    |             |<- Release-|<- Release -|              |
+    |             |   Extent  |   Extent   |              |
+    |             |           |            |<- Destroy ---|
+    |             |           |            |   Region     |
+    |             |           |            |              |
+
+Implementation
+==============
+
+The series still requires the creation of regions and DAX devices to be
+closely synchronized with the Orchestrator and Fabric Manager.  The host
+kernel will reject extents if a region is not yet created.  It also
+ignores extent release if memory is in use (DAX device created).  These
+synchronizations are not anticipated to be an issue with real
+applications.
+
+In order to allow for capacity to be added and removed a new concept of
+a sparse DAX region is introduced.  A sparse DAX region may have 0 or
+more bytes of available space.  The total space depends on the number
+and size of the extents which have been added.
+
+Initially it is anticipated that users of the memory will carefully
+coordinate the surfacing of additional capacity with the creation of DAX
+devices which use that capacity.  Therefore, the allocation of the
+memory to DAX devices does not allow for specific associations between
+DAX device and extent.  This keeps allocations very similar to existing
+DAX region behavior.
+
+To keep the DAX memory allocation aligned with the existing DAX devices
+which do not have tags extents are not allowed to have tags.  Future
+support for tags is planned.
+
+Great care was taken to keep the extent tracking simple.  Some xarray's
+needed to be added but extra software objects were kept to a minimum.
+
+Region extents continue to be tracked as sub-devices of the DAX region.
+This ensures that region destruction cleans up all extent allocations
+properly.
+
+The major functionality of this series includes:
+
+- Getting the dynamic capacity (DC) configuration information from cxl
+  devices
+
+- Configuring the DC partitions reported by hardware
+
+- Enhancing the CXL and DAX regions for dynamic capacity support
+	a. Maintain a logical separation between hardware extents and
+	   software managed region extents.  This provides an
+	   abstraction between the layers and should allow for
+	   interleaving in the future
+
+- Get hardware extent lists for endpoint decoders upon
+  region creation.
+
+- Adjust extent/region memory available on the following events.
+        a. Add capacity Events
+	b. Release capacity events
+
+- Host response for add capacity
+	a. do not accept the extent if:
+		If the region does not exist
+		or an error occurs realizing the extent
+	b. If the region does exist
+		realize a DAX region extent with 1:1 mapping (no
+		interleave yet)
+	c. Support the event more bit by processing a list of extents
+	   marked with the more bit together before setting up a
+	   response.
+
+- Host response for remove capacity
+	a. If no DAX device references the extent; release the extent
+	b. If a reference does exist, ignore the request.
+	   (Require FM to issue release again.)
+
+- Modify DAX device creation/resize to account for extents within a
+  sparse DAX region
+
+- Trace Dynamic Capacity events for debugging
+
+- Add cxl-test infrastructure to allow for faster unit testing
+  (See new ndctl branch for cxl-dcd.sh test[1])
+
+- Only support 0 value extent tags
+
+Fan Ni's upstream of Qemu DCD was used for testing.
+
+Remaining work:
+
+	1) Allow mapping to specific extents (perhaps based on
+	   label/tag)
+	   1a) devise region size reporting based on tags
+	2) Interleave support
+
+Possible additional work depending on requirements:
+
+	1) Accept a new extent which extends (but overlaps) an existing
+	   extent(s)
+	2) Release extents when DAX devices are released if a release
+	   was previously seen from the device
+	3) Rework DAX device interfaces, memfd has been explored a bit
+
+[1] https://github.com/weiny2/ndctl/tree/dcd-region2-2024-12-11
+
+---
+Changes in v8:
+- iweiny: rebase off of 6.13
+- iweiny: Use %pra which landed in 6.13
+- Link to v7: https://patch.msgid.link/20241107-dcd-type2-upstream-v7-0-56a84e66bc36@intel.com
+
+---
+Ira Weiny (21):
+      cxl/mbox: Flag support for Dynamic Capacity Devices (DCD)
+      cxl/mem: Read dynamic capacity configuration from the device
+      cxl/core: Separate region mode from decoder mode
+      cxl/region: Add dynamic capacity decoder and region modes
+      cxl/hdm: Add dynamic capacity size support to endpoint decoders
+      cxl/cdat: Gather DSMAS data for DCD regions
+      cxl/mem: Expose DCD partition capabilities in sysfs
+      cxl/port: Add endpoint decoder DC mode support to sysfs
+      cxl/region: Add sparse DAX region support
+      cxl/events: Split event msgnum configuration from irq setup
+      cxl/pci: Factor out interrupt policy check
+      cxl/mem: Configure dynamic capacity interrupts
+      cxl/core: Return endpoint decoder information from region search
+      cxl/extent: Process DCD events and realize region extents
+      cxl/region/extent: Expose region extent information in sysfs
+      dax/bus: Factor out dev dax resize logic
+      dax/region: Create resources on sparse DAX regions
+      cxl/region: Read existing extents on region creation
+      cxl/mem: Trace Dynamic capacity Event Record
+      tools/testing/cxl: Make event logs dynamic
+      tools/testing/cxl: Add DC Regions to mock mem data
+
+ Documentation/ABI/testing/sysfs-bus-cxl |  125 +++-
+ drivers/cxl/core/Makefile               |    2 +-
+ drivers/cxl/core/cdat.c                 |   42 +-
+ drivers/cxl/core/core.h                 |   34 +-
+ drivers/cxl/core/extent.c               |  494 +++++++++++++++
+ drivers/cxl/core/hdm.c                  |  210 ++++++-
+ drivers/cxl/core/mbox.c                 |  603 +++++++++++++++++-
+ drivers/cxl/core/memdev.c               |  128 +++-
+ drivers/cxl/core/port.c                 |   19 +-
+ drivers/cxl/core/region.c               |  165 ++++-
+ drivers/cxl/core/trace.h                |   65 ++
+ drivers/cxl/cxl.h                       |  122 +++-
+ drivers/cxl/cxlmem.h                    |  132 +++-
+ drivers/cxl/pci.c                       |  116 +++-
+ drivers/dax/bus.c                       |  356 +++++++++--
+ drivers/dax/bus.h                       |    4 +-
+ drivers/dax/cxl.c                       |   71 ++-
+ drivers/dax/dax-private.h               |   40 ++
+ drivers/dax/hmem/hmem.c                 |    2 +-
+ drivers/dax/pmem.c                      |    2 +-
+ include/cxl/event.h                     |   32 +
+ include/linux/ioport.h                  |    3 +
+ tools/testing/cxl/Kbuild                |    3 +-
+ tools/testing/cxl/test/mem.c            | 1019 +++++++++++++++++++++++++++----
+ 24 files changed, 3499 insertions(+), 290 deletions(-)
+---
+base-commit: 7cb1b466315004af98f6ba6c2546bb713ca3c237
+change-id: 20230604-dcd-type2-upstream-0cd15f6216fd
+
+Best regards,
+-- 
+Ira Weiny <ira.weiny@intel.com>
+
