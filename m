@@ -1,340 +1,362 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 360E31C4A1B;
-	Wed, 11 Dec 2024 08:35:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733906147; cv=fail; b=cQ2tQ2Ni6/3fZqj5rHMwWe+JmZA/kehRzp5kBdlla/8NE500nIxbNfxTY/54XU8yAqm9QSwXxRfNjkVkIS+wReNDhcAzI7PZs3aLRPWRQZw2ZIzAApjgpGhtoPtNFOeXENNu4gvmevQGe9+YQeE27GNq+TCWXQfTQNmPcOyaHOo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733906147; c=relaxed/simple;
-	bh=AskMFozkmKRVoHajZ2Ubk3/o0rX2LW1Hu+YvwFxdliI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=fcJXiK0aDPG2lIJBxG59ZpARFBW3ygoOakzVbxrIG8MD6UzhsdStOzsxBityaZZhRdi8DSdAiX02Cs6M87jysbXHz1xs0wclYLjQbx+FXMbvq07mf5g70q7ZpuriafkpLSQY/3FUQmfsyW8a3JOB7/xvqhpksErLGJGTsteHuWY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=S9byy/WA; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=D1VqOGcG; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DACD1C1F21
+	for <linux-hardening@vger.kernel.org>; Wed, 11 Dec 2024 08:46:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1733906794; cv=none; b=coQvd7i/CEzJBpzrCbp7lkLaCRDQgb1DP/O6ZLinA/83v4Eg1kFVlkGBgacMyT4u2PdyBXfC3yXfx6JvCbvn5G6mCc9XrUeCasnod6TBJCQfUNDX8MFH46XByrvps6520A4rFwpDydM0Je17j3V8ubB2hlr3m0Bd0Djbh2j0Lrw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1733906794; c=relaxed/simple;
+	bh=XbRLMyt7k3YKZ3F6ya3+jcNz50GxQf5h0+xJvL74Pow=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:In-Reply-To:
+	 Content-Type:References; b=LGuN73yD6QppgAy17gs+6pjQLy5/G/upR1KRm0NA9UEy8czb0Wtbje8Mn82tqwv3qqvu0uQuWPyOuwnBHk4AvHBPbv2BmvofS29b9IgGd1OoSc9o1n2zoMXczWRTcu16c7sJSGhs8e1wT98uQYctPjLkycRcsWYxeKRgOeqSuPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=E0K4+dOP; arc=none smtp.client-ip=210.118.77.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="S9byy/WA";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="D1VqOGcG"
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BB8RMED004948;
-	Wed, 11 Dec 2024 08:35:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2023-11-20; bh=AskMFozkmKRVoHajZ2Ubk3/o0rX2LW1Hu+YvwFxdliI=; b=
-	S9byy/WAzZ9AMNBb4iubU92RvejyfgzfVPRNsMMTz+Bnnf9qmKJrs0/PdmavDEMT
-	BFso8vucB1xBd7/VpCKiVf02Wby19daGBDWerPAAnEmzKhnud/oXVJEOr6cKF4Om
-	oONCAppOORa0Smf1ITujrKrGTVNU6aVyV40HpGpMXk8lOCK8oclUdW/fzj2NWWVT
-	QKYbGUapGltCD5OAG7JN7Ek1xg4jS7BH7c+KCPUYab9pRFdE05pgoc384bbuti+D
-	jkKVXoFqW7+jKMJHpmgEr9rauy8OOUsktwH0x8+7FOKpm3BzNhFrKKdxNF9MP8Rz
-	4aQ33X5pmPZvJzJ4v55agQ==
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 43dx5s55cp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 11 Dec 2024 08:35:28 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 4BB71URV020507;
-	Wed, 11 Dec 2024 08:35:27 GMT
-Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2042.outbound.protection.outlook.com [104.47.55.42])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 43cct9dxmr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 11 Dec 2024 08:35:27 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Fpc54EXjj/SRLuJ1Bew7ahK3kH+yDiDbD01PIDR09chNAJlbtacNgWH6bvFI4o5IbGmbLcZOElL8PsoC9LzOAy0mL1OV2pr40DWPtGHC+boN8qg0+pu/+yloJgljc6lKGE4F6l/8Haa7qM6RwlteT1350MmrKKUZY/U1RZLhCLOcKmxOsRyAW8ir9QGfnC5+BwR6HFJDGOOsZxUj6PBkwiVN3OWSFnkaJuy4EGMn7uWpcXikxJCcOCQemzjzKnhabWw9z55E6dUioiIYyu3w6QZ5aJNrvO5fYcAAWWsD4S7mqgvEBj55cSn8JWMNbobL5i9UhI4dwgUCJfF3lhk3Cg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=AskMFozkmKRVoHajZ2Ubk3/o0rX2LW1Hu+YvwFxdliI=;
- b=HmMvWpn754In7PTYlstWop+inywNtoTMumhLrShJTtj6EXFErVynUh2WbwWqPoy8YiMF10xjKf5NiJQXsRh4HQX25zjN15u7DzX/K72RQB4RNxVpG/+PVeMEG5wAdNwstg/KeYO3wWs+IFezncrcucOXGM7y2HDQ1xoAFO6sbiacQJb1haiyz6qMUwSpeFNKDXfmYWjS63zZ+65MBYxVwpkn6IC4DCip3puTpT0r+wYxFxe2/cNYZ8Rwg5IgNUC8u5MQRom3wfWGI1Gxb2ggyPTSvsvyxEsooUqmOWoWVe0c/hC4KYgwp0eJhblmy9QkErjXgd0zgQj/VnF4yd/cyg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AskMFozkmKRVoHajZ2Ubk3/o0rX2LW1Hu+YvwFxdliI=;
- b=D1VqOGcG8fanlEWDZpiV1ctPCUFfVdwhXf0KcbTXanHSoNTr2XGDwzuE/H0kj9kpFhlTzK3JO/zFk1JUpTxwFqZJOt4lWUmkwvtCNWdaPjr9d4LF6zUtWqlFyj8bpJNl4MEDkZf3xx0AzhvkCOUFUpv62wRZE68QKUlEt+ZsZos=
-Received: from BYAPR10MB3366.namprd10.prod.outlook.com (2603:10b6:a03:14f::25)
- by LV3PR10MB8058.namprd10.prod.outlook.com (2603:10b6:408:286::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8251.15; Wed, 11 Dec
- 2024 08:35:24 +0000
-Received: from BYAPR10MB3366.namprd10.prod.outlook.com
- ([fe80::baf2:dff1:d471:1c9]) by BYAPR10MB3366.namprd10.prod.outlook.com
- ([fe80::baf2:dff1:d471:1c9%7]) with mapi id 15.20.8251.008; Wed, 11 Dec 2024
- 08:35:24 +0000
-Date: Wed, 11 Dec 2024 08:35:16 +0000
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-To: Jeff Xu <jeffxu@chromium.org>
-Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>, akpm@linux-foundation.org,
-        vbabka@suse.cz, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-mm@kvack.org,
-        jorgelo@chromium.org, keescook@chromium.org, pedro.falcato@gmail.com,
-        rdunlap@infradead.org, Jann Horn <jannh@google.com>,
-        David Hildenbrand <david@redhat.com>
-Subject: Re: [PATCH v1] mseal: move can_do_mseal to mseal.c
-Message-ID: <acbc0663-57a5-4643-88e0-33c7beeadc22@lucifer.local>
-References: <20241206013934.2782793-1-jeffxu@google.com>
- <2m3zmlehfigs5r7rptwcoft3j4fipfkgfxmdrdttpf76hwhwae@vclfa5ulcmv2>
- <d710d812-3dc0-406f-ac47-a782673d3d07@lucifer.local>
- <CABi2SkWkUmBdsUYhr-cE181oh=medLG0iXgHk6TYEuPgztxqOw@mail.gmail.com>
- <f4c704bc-3b9a-48bb-b1dc-8a73d181223c@lucifer.local>
- <CABi2SkV+jVgg5Q=XCTC3+J7WtyvgFbHfP-sGTrzfJA0oteRPLQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CABi2SkV+jVgg5Q=XCTC3+J7WtyvgFbHfP-sGTrzfJA0oteRPLQ@mail.gmail.com>
-X-ClientProxiedBy: LO4P123CA0119.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:192::16) To BYAPR10MB3366.namprd10.prod.outlook.com
- (2603:10b6:a03:14f::25)
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="E0K4+dOP"
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20241211084624euoutp01d54b7561da244c149cf8c656c0c8a1f3~QEwisEU6g0848408484euoutp01c
+	for <linux-hardening@vger.kernel.org>; Wed, 11 Dec 2024 08:46:24 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20241211084624euoutp01d54b7561da244c149cf8c656c0c8a1f3~QEwisEU6g0848408484euoutp01c
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1733906784;
+	bh=cpqClTx7HZk9gCRNzag5+pPyGl+jmhAwfbU/m/DP3YU=;
+	h=Date:Subject:From:To:CC:In-Reply-To:References:From;
+	b=E0K4+dOPYFQtoxXGR5PZrn+g9qJVL1YAsLHecTYuCxelSN8okWOzgnt8By69TsTfN
+	 C1gY1E3nGXp7FZ09yC+C7PnO8nip2TXZboFIVVm2CtJ5w/WTNwBHlbQM5mt0Oq3nv/
+	 4e8Y9ptUgpU4Dt98kpCZ2njjX1zuxis7sdPyOLB8=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+	20241211084623eucas1p186e11a3d0905842a8dd10a3b46c3b10d~QEwhrQ9xx2927129271eucas1p1C;
+	Wed, 11 Dec 2024 08:46:23 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+	eusmges3new.samsung.com (EUCPMTA) with SMTP id D2.D2.20397.F5159576; Wed, 11
+	Dec 2024 08:46:23 +0000 (GMT)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20241211084623eucas1p151dc11714ba7c6f5a8168001aaa2107c~QEwhSYGSe2231522315eucas1p1U;
+	Wed, 11 Dec 2024 08:46:22 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+	eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20241211084622eusmtrp20609eaf6fbbfc312142c815c08d447fa~QEwhRwjX72179421794eusmtrp2b;
+	Wed, 11 Dec 2024 08:46:22 +0000 (GMT)
+X-AuditID: cbfec7f5-e59c770000004fad-d5-6759515f0dc8
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+	eusmgms2.samsung.com (EUCPMTA) with SMTP id E9.CD.19654.E5159576; Wed, 11
+	Dec 2024 08:46:22 +0000 (GMT)
+Received: from CAMSVWEXC02.scsc.local (unknown [106.1.227.72]) by
+	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20241211084622eusmtip1a4f3d2a1c700ebd620029913b87df5fd~QEwhGm1o92144321443eusmtip1I;
+	Wed, 11 Dec 2024 08:46:22 +0000 (GMT)
+Received: from [106.110.32.87] (106.110.32.87) by CAMSVWEXC02.scsc.local
+	(2002:6a01:e348::6a01:e348) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
+	Wed, 11 Dec 2024 08:46:21 +0000
+Message-ID: <7274aee6-2f51-4ae8-b085-b9a111c2ac03@samsung.com>
+Date: Wed, 11 Dec 2024 09:46:21 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BYAPR10MB3366:EE_|LV3PR10MB8058:EE_
-X-MS-Office365-Filtering-Correlation-Id: e79f03f9-a775-4842-94a3-08dd19bec1de
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|1800799024|376014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?ZWg2UGpXeVpMSzZFOVRpbzNEaGZrK2IvMzFuQmlUTUNUYnRZa3FLL3Jzc1Zw?=
- =?utf-8?B?S2lockNuZVZpZkNxM244U05HYjFMOVJnUVRPMmU0RW80M21UNEpkUm1kZG0y?=
- =?utf-8?B?RitMaFhzTEZHQWFIWHpNUDNCZzM0SlJMSmtSN0dBMXZGQ29IeEhrdUlxNFN2?=
- =?utf-8?B?Ti9oT3BMMEhMTjVJckJpSXg4cW9mQUZZUG1vZks1Mi96QnJZOTVmT0hNUGlU?=
- =?utf-8?B?RUlINDA2YTgzSkg1TFExM0hwa09uSlBjeWxBRWpRdjRCSnVxNkNsK0VtWUxr?=
- =?utf-8?B?TmlxMTlGWCtkMzNFWDFDaTlSK0N3aDNCeDlFaEk0Tmkzb3BFSTc0d0d6YnpO?=
- =?utf-8?B?dWl4ekVVWUZRM3ZTMWI0U2VMOFo4ZU0wZDBLUG5FdVFQYVRFN3l1eVpqZGdq?=
- =?utf-8?B?SGc1WlBEeGVqRVhFcktuS3ltUmN0NHZMS25TZFZkcWt5Z3FIcGtJakNzb0Q2?=
- =?utf-8?B?NmtPdW5vRkh6YUltdXA4WnkxQ1dZYjRSTWVuck11OHA5UlphSTZJVUdzRjNN?=
- =?utf-8?B?TzR2ek5GMTlGeWQxZXJrcGZacTZnUDNyM0RiSjBQZklxRFArVzBQMUkvcXNh?=
- =?utf-8?B?UStOcmFuUEdqMGpSSmQyeG11M1ZwSTZOa2xzK2RZSXVkR0kraG14Q3ZGb1RX?=
- =?utf-8?B?bGx2N05INXRuU0g5ZHNHTzgva3cxNnNYWEY1TlB0OGpJR2cxeVhMcmVuUlJV?=
- =?utf-8?B?cER5Qmg0UWJ2YXkwd3ZBejJBWVVDLzVHRWJvV2xQSU50N0hSSUdINFUrVldk?=
- =?utf-8?B?OGQxS0tYTXZ4WWhpLzJ3V21UUWdwUnhjeStxTDYwRzZNdXlsQlZ2ZHBsSE52?=
- =?utf-8?B?WGZXbU01Q1lwWWJIL2U5dlZsL1dkZnc4RXMwNThkMVl1SlpyV1BpNlM1aURw?=
- =?utf-8?B?Nmc5bWpOVkJtK3ZtdDZaQWJPR3NhY1NUa1VwR01KZkF0WTRJM1F2M1NIYmVN?=
- =?utf-8?B?WlNDeGtSK2ovaldrbVlWV2JBWmpCcyt2WmtyR0NlcWQ1QmRnYzBYbFFYWWNN?=
- =?utf-8?B?aldqYVMyWGNoUTNEQkUrdlBCTUI1Y0RQWURVdHFoTFBjMHNrT1pCSmhyQTJ0?=
- =?utf-8?B?anhBR1dKaXVVVk5OSkQyNEFNNitwc09qOUFxUk9KakEwcmdVbWN3Mnd0NVpW?=
- =?utf-8?B?MWx6emIralJOTHVpTUNtVmZaUTNIcW1WbStTUyszUldlYk5XcTF2S2duQkRy?=
- =?utf-8?B?SVJvR1RST3Z2WTZYOFVBNTQrN1VFb0txNHRKSlY1Q1p1TjluQzJLYkR3dDEw?=
- =?utf-8?B?blY3cXgzdktIdElQQ1d6K1FJOGo2RFFtLzE3MWJwZEIveSthQ1hBVjVDSmt5?=
- =?utf-8?B?bjY0NnNjV1ROZld4bEw5RlNwQ0xzSThXMHpRakJzbzE0NzhkN0VzWHkwRFFC?=
- =?utf-8?B?UVNMdE95MmkzYjYrT0NjSnd0S3B6ekptN3JOZ21XQjNibmhTay9HQlJuWXpY?=
- =?utf-8?B?WG9YanpuOWVBeEd5ZzRlTUsxRXVvcUdTb2lrNGtpRFFPUHF0eHlEMnN5WFVn?=
- =?utf-8?B?RnlWZ1h1NnFLVXJocENtNUEwNUlRcUMySE94bTlaL1RYZTlWbFRJS0M0alps?=
- =?utf-8?B?STFaaHlJVExpRzBZbE5QNHRkSUdLV3JiY00velRFYkFLcHJva2VhR28wb1g1?=
- =?utf-8?B?TTE2M01WeUNISFNQYXg0ODB5WXBNSGZRRVFXWmtJdzdvdUVyelNMRHlWQW1h?=
- =?utf-8?B?QzlHWnZHeHZNU3NmeUtRQ1FNTFZNMWVFY1ZBZGxWMm9ZK2U5Yy9OVDhQa3hs?=
- =?utf-8?B?QjdkYmFYMkRVVHZYSFhwKzJZUjBCY3ZWdnFpNkw2aURLMVpMKzBtaVM3MzlX?=
- =?utf-8?Q?aEU6lFmGYcHCNCVKL4ODGiJUPNUCGRB1jzmnI=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR10MB3366.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?aEtSVW03MXlXS3V6LzJFbVdlSE1jRjl0NDN2ZFJZdW1kWURsbzBnMEgrdFps?=
- =?utf-8?B?R21MR0VkVnFRTWNDbDN2aHFZN0JlZndEeCtJRTMrQzFPRU1IUkRvbFVSK3lF?=
- =?utf-8?B?WUF0QkdyOUs5TnZpZGhVWjJGUE5TZDJtQlBzVG9uUHM4a1h1QnVmQVUzVFdT?=
- =?utf-8?B?cEtXUnM2UzdzWDl3dzZTTTAwRTE5ejBSdmlBQTBCMUdnN1BoOTJvZmhINjUv?=
- =?utf-8?B?YWswU1IxZVVlNkpYZS9KOVpuRDYxSVhrVHpZa2liWWk2eThpNERzQThhZGRT?=
- =?utf-8?B?cWxEWTFLZFMyZ2RsamJGdDExVXRCZ1BraFpRVmtrK1pua3lzSGVlNzV2RHZR?=
- =?utf-8?B?cktLRzFoMXp3eDhJY0JGZS9VeWRQQWw2dnJnVS9kdDd5YVROVWFudVFqdGYv?=
- =?utf-8?B?UFRyR05OS293dmE0RlJSdmY1RXcvTzJrcVhBTExqRFVRbEw5TEtxNVpoL0JZ?=
- =?utf-8?B?N1dBVVpCMTZjTDZUbCtLWWt6a0Fad2JjTzNsNmtCQ3hqY2crZ3Bjb1hJQ0c3?=
- =?utf-8?B?U29jVHpmOG1nK3Joa1F0WXc0d0w2SzhncGVGOFB3MklZTWMwSE5xVUM4TmQv?=
- =?utf-8?B?NzA5ZXpTVWRraklHWnpZWnluZG83WEZKSnJ3dGcrYjFDRmF1ZUhiSzJlOHVy?=
- =?utf-8?B?WlhJSW9adlRCMEJ4Tm5haE5QblNPWDhjQWlRcXdVWXBIWU8rWnhjbGpIZjZQ?=
- =?utf-8?B?UFY1OTBKNExhN0wwME1pSDlIRk1WTTkwL0NWcmZuL0ttbUtCNm95SmFFSTBq?=
- =?utf-8?B?SE0yVmRzbkQyV2dFeUxRWXlsK0kwMmpFNFQzSi8wVzlwNGRpNlVaT1FxVnB2?=
- =?utf-8?B?eDZtRFhTNzlIMWhvTzIrRU04bTkrcVg1aEdxUTRmby9lbzFEUklKQU9jVm1v?=
- =?utf-8?B?WWUyeC9pTm1iZGpTNjMxbjIxaVgxeFBkNU9Vci9XRkYrRWNPZlJkQ1QyQkcw?=
- =?utf-8?B?M3hTSUxHQ1RlNjhZUVYzanFyeGUvVGsxcE1Tem92S2lGSGk0YVVzMTY3aFNF?=
- =?utf-8?B?em9hMlM4TW84dWdEbytLRnRVYkxtS2dLTFloTnJpRTUya2JaTittYVQvZEg4?=
- =?utf-8?B?eDVVbGdjWXV6Y3J6Uk00VTdYT2M5RlVJRVB6d21RUVdNMWtMYlhTL2I3VHpC?=
- =?utf-8?B?d1ZZMkRlTFBadW5HMlVYQ1ZPYXozTXJwOEFudDNHTFVReXR6T0o4Nm9qTGlR?=
- =?utf-8?B?RXBpVGVaRC9JVEdwU1ZoMU0wanJVM29Ha1dhQUZ3QVh1N3BnbWVUb1JlYTVU?=
- =?utf-8?B?ekl3ZE5QVjg3UFlyU2VldkNNclhBczlKc2s1U0RZd1dBQUdzVmtrU2Z6Y3Rw?=
- =?utf-8?B?enVHaENkb0QzeTZxeHF1RFA5bUVLOG92UWpMWldxN1g3THByMlBQM2VuQ20y?=
- =?utf-8?B?aU1KTGU4a0NDTGdBRzQ1OEhNSTVjNzFoNTk0Skx4dlgrWjZFNitxV1lBN0Fk?=
- =?utf-8?B?Ym5GQUFQTkRDL24yV2Z1VWE4QmRwR3ovWTdMN2NFZFZjanFSbkl5LzVJbTc5?=
- =?utf-8?B?R3ZNekMxVlRLUEVMTEQ3YzQ4Z3JmV2kzRDdPSmVBVDZ0cU1Ib3NEbUJiUDhm?=
- =?utf-8?B?alhGM3FhamVhZTdzUHAreSsrZlJabnlCZWVuVDJURTVIQ2IwUFlvMlBTZGNC?=
- =?utf-8?B?ZHNNdS9PSFpNYUtyVW9BaTF1azlrcXlRaEdRTWE4VTI2ZWpKSTJwejUyTlhS?=
- =?utf-8?B?ZHQ5ZVJLNzdqMGFZd2N5Mno1SkNPNWkvSytad09iY0Q0d2g4eG5QcExObFgv?=
- =?utf-8?B?M1RXenp6aGt2UXBUODNITUFCVXJGR0ZURGFGaDM3TUdwdXFoTUN5L3ZHaW1v?=
- =?utf-8?B?SzV5ak5pZzA4a056UU5kMEhMakJRK1RyMWFsaDBoWEZCTWdhZVdLNlVnZG92?=
- =?utf-8?B?eHljZzl4d1RhU2pnM1Y3cGpSUjhmemFLOXhFUlV2bXlOVXZ6OHpaWUFsSXZM?=
- =?utf-8?B?c3lEaEU2THFSc0krTGdGOXduYnlCWEprc3ZkMUhtanZkb01nME4wK0tQSzU5?=
- =?utf-8?B?Z09NeWV5b1ptajFqRHNVYmNrMG9jV3dIR1BZblJESk1acmpqZEswbTN4Q3l2?=
- =?utf-8?B?dFlLakpBOEJUUitPZFlLS0haeXI5dkRyWEtDdGtCVzVtTHVNU2tvOGFVNjlz?=
- =?utf-8?B?RDNlYmdwT1FuM0srN2VCbitpdGNyWVJNRVJ1VmdRTGludG50K2hiUVh4S2g5?=
- =?utf-8?B?d2c9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	EmcmFVW30LUBXWsiV1nFxhYkAnFL7woVlC4op2LGemqzmqTYVIaNhwO0s+WVPQ5brL+J3esWu2X/IZdlfcTYb2jd2IUXtbYbKHe9Xn1afZMw+N75+jIRPsGsktRNMWiG+/0Lh+SxNGXmszSnsfyZ5Eqs/6J7QzwYhzB8pbS7ZubGIuOsT1BOB0HyXWo3aRfxk6Atpd5MdeAr32i2ZXAkdgP1+altHyGKKHwKGgRIRpGQnLnvN+0Ws+vXb1hID0dZTIwjolyPWdNoYrjAG8pTk/yRvdhKYay6Q99ngov5Qqc3JG2QOIs2R2LdNUU8VKUIUN1pXpJamjY9UV40rxJlJlZ8sl0pomqEFe2Z/CnRY+VfINHeg2fiHw7ajpu40YUeWNHFAvaDMvOvevOIR2lc5bjB35gEnOkyL+h3DHjtoxSn/TuuCPq5HMjZQu2i50qNhrpa2+93ueP8+EsTLbhyMcwgrUG7hQJTEAIc+adF294eYs0IGEud2BNlXbKVbdi+Ej58pn/y44Uiweq1PcWH7PcWs1kCL4FQTA2R++4fPaSFGoCeB2qzZWKrsQcaBHwXAoKT0JCqUTV7+JVyJggmDjHqYeSPf3B0aOGQg5mEwGY=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e79f03f9-a775-4842-94a3-08dd19bec1de
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR10MB3366.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Dec 2024 08:35:24.6684
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: syb1dUEn4zyrTgizqSDxsBOxDZeYrWVdc3fqO5fsxcxD+LcgpN+RDOAfAx/jgsg5Q668kPBub5RTTUusKCTIcJJLyrOsPJjnS/HspAhF9lg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR10MB8058
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2024-12-11_08,2024-12-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 adultscore=0
- phishscore=0 suspectscore=0 spamscore=0 mlxlogscore=999 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2411120000
- definitions=main-2412110064
-X-Proofpoint-ORIG-GUID: 9Gf9j2aMMAVQcR7K__MacHqhDHufzVUY
-X-Proofpoint-GUID: 9Gf9j2aMMAVQcR7K__MacHqhDHufzVUY
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 2/3] module: Don't fail module loading when setting
+ ro_after_init section RO failed
+Content-Language: en-GB
+From: Daniel Gomez <da.gomez@samsung.com>
+To: Petr Pavlu <petr.pavlu@suse.com>, Kees Cook <kees@kernel.org>
+CC: Christophe Leroy <christophe.leroy@csgroup.eu>, Luis Chamberlain
+	<mcgrof@kernel.org>, Sami Tolvanen <samitolvanen@google.com>,
+	<linux-modules@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Thomas
+	Gleixner <tglx@linutronix.de>, <linux-hardening@vger.kernel.org>
+In-Reply-To: <95871917-9747-40d4-8305-51bc5d75cf82@samsung.com>
+Content-Type: text/plain; charset="UTF-8"; format="flowed"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) To
+	CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrLKsWRmVeSWpSXmKPExsWy7djPc7rxgZHpBsu+CFncmfSc3WLd2/Os
+	FvPW/2S0uLxrDptFw+zvrBY3JjxltFj65R2zxdIVb1ktNm+ayuzA6fH15jkmjwWbSj02repk
+	83h37hy7x/otV1k8Pm+SC2CL4rJJSc3JLEst0rdL4Mp409PPVPA8smLqqz/MDYwvvbsYOTkk
+	BEwkNrUcZuxi5OIQEljBKHH16T12COcLo8Sqpl42COczo0R340UWmJb+930sEInljBLXz3cy
+	w1UdvdQF1b+TUeL72kOsIC28AnYSh66+A2tnEVCV6Fy3nQkiLihxcuYTsLiogLzE/Vsz2EFs
+	YYFcibZrz8DizALiEk1fVoLNYRPQlNh3chNYjYiAo8Sba09ZQZYxC0xkkngxazsjSIJTwF7i
+	X+MFoGYOoISVxPQTnhBz5CWat85mhnhBUWLGxJVQ79RKnNpyiwlkjoTAdE6JDd/Os0MkXCRa
+	3z9kgrCFJV4d3wIVl5H4v3M+VDxdYsm6WVCDCiT23J7FCrJXQsBaou9MDkTYUeLu581QYT6J
+	G28FIc7hk5i0bTrzBEbVWUghMQvJx7MQHpiF5IEFjCyrGMVTS4tz01OLjfNSy/WKE3OLS/PS
+	9ZLzczcxAlPU6X/Hv+5gXPHqo94hRiYOxkOMEhzMSiK8N+wj04V4UxIrq1KL8uOLSnNSiw8x
+	SnOwKInzqqbIpwoJpCeWpGanphakFsFkmTg4pRqYHMwkBZ8neJntzs2Ne7J1rbiqjkbzoZse
+	hqVvmrXTvh9/zFfF/m2niomU9OGlfTxdbxl2NLjvqjgtOndWV+dPnSdtU7hrLS4duX1Oq6t7
+	w5+g/FM5z6XeB6l9ZNTdfdNKTGuj49Hb089fvsjq6vu+7OrmVWLPLpyW088rf8AyKXp/M4P6
+	wpf3/zeubHu5aabOZgFl9f4N87wLG38z9+jkH5fWfbFrIaulJ/vsxKq92/9m7chi+vGFtypP
+	YpryzclmHnO6wzc/6izK2LyyZV526KUPecK31pWxbZuz8HiQQafEkacCalk/WbuPfzZ7vabj
+	5nWh2g2B/2OyzU4UuqyRbhX/Fr7o2UsxfauvPqqLlFiKMxINtZiLihMBJU73FsADAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrMIsWRmVeSWpSXmKPExsVy+t/xu7pxgZHpBnPPWFjcmfSc3WLd2/Os
+	FvPW/2S0uLxrDptFw+zvrBY3JjxltFj65R2zxdIVb1ktNm+ayuzA6fH15jkmjwWbSj02repk
+	83h37hy7x/otV1k8Pm+SC2CL0rMpyi8tSVXIyC8usVWKNrQw0jO0tNAzMrHUMzQ2j7UyMlXS
+	t7NJSc3JLEst0rdL0Mt409PPVPA8smLqqz/MDYwvvbsYOTkkBEwk+t/3sYDYQgJLGSX+fLKB
+	iMtIbPxylRXCFpb4c62LrYuRC6jmI6PEy41bmCGcnYwSW//OZwap4hWwkzh09R3YJBYBVYnO
+	dduZIOKCEidnPgGLiwrIS9y/NYMdxBYWyJVou/YMLM4sIC7R9GUl2DY2AU2JfSc3gdWICDhK
+	vLn2lBVkGbPARCaJrnmL2CFOfcoiMWkPN4jNKWAv8a/xAtQgC4nFbw6yQ9jyEs1bZzNDvKAo
+	MWPiShYIu1bi899njBMYRWchuW8WkjtmIRk1C8moBYwsqxhFUkuLc9Nzi430ihNzi0vz0vWS
+	83M3MQJje9uxn1t2MK589VHvECMTB+MhRgkOZiUR3hv2kelCvCmJlVWpRfnxRaU5qcWHGE2B
+	gTSRWUo0OR+YXPJK4g3NDEwNTcwsDUwtzYyVxHnZrpxPExJITyxJzU5NLUgtgulj4uCUamBS
+	/PT/zKXKhOCC2YkXAzLDTpb9MWOcYxZUf0b0o7vohnPXJik/FpmSz2wwzTLA9Ejjca6DuYoP
+	rPjvu7NXLb8vflnlRhLD/lA2kRkndN7n3bBX6mw+sqj90SePWqOZmckKNtKeU5ICFq+Y6dE2
+	+eqzOtuHy/Nlwj1bCjvX7Gx3KWJnrfm2Jbh28vHiyriI5Wm9ExMO72FdaP37YaFj7jH/81/T
+	pJ40rDS0DPXcUpO3uyDJoSL17YWd3WpfzMO+z03zX+qx4NalVvfGM8d/9yRsfn/3X2b0H8/D
+	X9kr9Gd+errm373Zq0ySj/066jGv7c7P3qZF12tC9lTPjZ4p/P7gqpqFSwqfPU5d5ieSGrtJ
+	iaU4I9FQi7moOBEAZdWRn3YDAAA=
+X-CMS-MailID: 20241211084623eucas1p151dc11714ba7c6f5a8168001aaa2107c
+X-Msg-Generator: CA
+X-RootMTR: 20241109103554eucas1p1548e0da57cccb9546a88402f1f5c94be
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20241109103554eucas1p1548e0da57cccb9546a88402f1f5c94be
+References: <737f952790c96a09ad5e51689918b97ef9b29174.1731148254.git.christophe.leroy@csgroup.eu>
+	<CGME20241109103554eucas1p1548e0da57cccb9546a88402f1f5c94be@eucas1p1.samsung.com>
+	<164e5f22f8ab59d1d516e3c992efdd9f83ab4819.1731148254.git.christophe.leroy@csgroup.eu>
+	<D5HZV4A6SC9A.25U3Q0WUVDJHZ@samsung.com>
+	<b74f0845-4916-47eb-945b-eb91ae05fc91@csgroup.eu>
+	<D5K3PNXEIKYK.11GZ8BMY02OA4@samsung.com>
+	<7fdcf601-524b-4530-861d-e4b0f8c1023b@suse.com>
+	<9734d93d-73c8-464e-8f32-6117c6f6c952@samsung.com>
+	<cee55e3b-9028-4f56-8ac6-9895ca383334@suse.com>
+	<95871917-9747-40d4-8305-51bc5d75cf82@samsung.com>
 
-On Tue, Dec 10, 2024 at 06:38:49PM -0800, Jeff Xu wrote:
-> Hi Lorenzo,
->
-> Regarding your proposal of moving mseal.c to vma.c for unit testing.
->
-> On Fri, Dec 6, 2024 at 9:04 AM Lorenzo Stoakes
-> <lorenzo.stoakes@oracle.com> wrote:
-> > > >
-> > > > An aside - I actually think we need to move the bulk of this code to
-> > > > mm/vma.c - it makes absolutely no sense to keep the internals in this file,
-> > > > and that way we can userland test mseal functionality.
-> > > >
-> > > Is there a past discussion to read ? That will help me understand your
-> > > strategy of unit testing mm code.
-> > > Moving everything to vma.c, will lose log history, e.g. blame no
-> > > longer helps, did we consider alternatives ?
-> >
-> > Re; git blame - I'm not sure what alternative you think exists, and I've
-> > moved brk(), mmap(), etc. with a history spanning >30 years, so I'm not
-> > sure what blame history you're concerned about given how recent mseal is :)
-> >
-> > There is always code that gets moved or changed. You can't stay attached to
-> > your name appearing on a git blame line.
-> >
-> > Re: discussion, there's dozens of discussions and patch sets totalling ~3k
-> > lines of code... just search lore for vma testing, or search through my
-> > commits in mm/vma.c and you can see.
-> >
-> > I can put together links if you really need, but I think say [0] is a good
-> > motivating example of how I was able to actually write unit tests for VMA
-> > merge functionality which previously could not exist.
-> >
-> > In any case you can use the git blame -C option to 'see through' things like
-> > code moves.
-> >
-> > The whole point of this is to be able to _unit_ test functionality under
-> > circumstances that might be otherwise improbable/incredibly difficult to
-> > obtain if run as part of a kernel and self testing.
-> >
-> > Importantly it allows us to conduct fuzzing testing in future, something
-> > key and fundamental to security testing.
-> >
-> > I would say for somebody who has clearly stated his huge commitment to
-> > testing and how critically vital it is especially in the security realm,
-> > this is entirely something that is beneficial to the kernel and to mseal
-> > stability and security.
-> >
-> > If you want to see it 'in action', you can run the tests in
-> > tools/testing/vma via:
-> >
-> > $ make && ./vma
-> >
-> I want to express my support for unit testing and agree that more
-> testing would benefit mm. However, I'm unsure about the reasoning
-> behind moving code to vma.c in bulk. Could you please clarify this for
-> me?
->
-> In my understanding, unit tests can be conducted regardless of the
-> code's location once dependencies are addressed with stubs. Have you
-> considered adding mseal.c to the unittest makefile at the same level
-> as vma.c? Since mseal.c doesn't introduce new dependencies, i.e. it
-> operates directly on the vm_area_struct, so I would start with that.
+Hi Kees,
 
-These aren't ordinary unit tests, this is a whole new structure to allow
-for _userland_ unit tests, that is the ability to compile kernel code in
-userland.
 
-The mm/vma.c file has been specially set up to allow for this, it
-outsources its imports to vma_internal.h, one which exists in mm/ for the
-kernel and one which exists in tools/testing/vma for the userland unit
-tests.
+Could you help clarify the handling of __ro_after_init? What do you 
+think is the best approach when a second attempt fails at setting a 
+section to RO after a module is already initialized? (please find the 
+deatils in this pach series or in [1]. Reporting the failure to the 
+caller seems logical to me but adds some complexity. On the other hand, 
+logging alone feels insufficient but may be the simplest option. Could 
+you advice on handling this corner case and if it's relevant to KSPP?
 
-It also strictly means that vma.c is _internal_ only and _cannot_ be used
-from any other part of the kernel except mm - it's a sealed environment
-unto itself.
+You can find below the conversation. And the v1 PATCH series here [1].
 
-None of these things are true of mseal.c.
+[1] 
+https://lore.kernel.org/all/cover.1733427536.git.christophe.leroy@csgroup.eu/
 
-In any case it was something I was considering, if it makes sense to. You
-can see VMA manipulation code in mprotect.c, etc. which may not actually
-make a huge amount of sense to move over.
+Thanks,
+Daniel
 
-So this isn't for certain, and you'll be involved in any discussion if this
-were to be done... :)
 
->
-> I guess, for UT, you might need to change some functions' signatures,
-> e.g. remove static, if you want to test an internal function (e.g
-> mseal_fixup) , from your unit-test, but this is the same even after
-> moving them to vma.c.
->
-> There will be additional work of clean up including header (".h"),
-> still I believe this is the same work even after moving the code into
-> vma.c. You might still need to move the prototype of some functions
-> into vma.h or vma_internal.h (e.g. definition of MADV_FREE). But I
-> think this work is also orthogonal to where the mseal business logic
-> is located.
->
-> I understand the logic behind the current vma.c (on the linux_main
-> branch) and the unit test for the VMA merge functionality. However, if
-> your plan is to move all VMA-related code into vma.c, that means more
-> stubs are needed (depending on the boundary of the proposed unit
-> testing), and I don't understand how moving the code can help reduce
-> the amount of work or stubs (if that is the motivation).
+On 12/10/2024 11:49 AM, Daniel Gomez wrote:
+> On 12/4/2024 4:14 PM, Petr Pavlu wrote:
+>> On 11/28/24 21:23, Daniel Gomez wrote:
+>>> On 11/12/2024 3:35 PM, Petr Pavlu wrote:
+>>>> On 11/12/24 10:43, Daniel Gomez wrote:
+>>>>> On Mon Nov 11, 2024 at 7:53 PM CET, Christophe Leroy wrote:
+>>>>>>
+>>>>>>
+>>>>>> Le 09/11/2024 à 23:17, Daniel Gomez a écrit :
+>>>>>>> On Sat Nov 9, 2024 at 11:35 AM CET, Christophe Leroy wrote:
+>>>>>>>> Once module init has succeded it is too late to cancel loading.
+>>>>>>>> If setting ro_after_init data section to read-only fails, all we
+>>>>>>>> can do is to inform the user through a warning.
+>>>>>>>>
+>>>>>>>> Reported-by: Thomas Gleixner <tglx@linutronix.de>
+>>>>>>>> Closes: https://protect2.fireeye.com/v1/url?k=d3deb284-b2a35ac3- 
+>>>>>>>> d3df39cb-74fe485fff30-288375d7d91e4ad9&q=1&e=701066ca-634d-4525- 
+>>>>>>>> a77d-1a44451f897a&u=https%3A%2F%2Feur01.safelinks.protection.outlook.com%2F%3Furl%3Dhttps%253A%252F%252Flore.kernel.org%252Fall%252F20230915082126.4187913-1-ruanjinjie%2540huawei.com%252F%26data%3D05%257C02%257Cchristophe.leroy%2540csgroup.eu%257C26b5ca7363e54210439b08dd010c4865%257C8b87af7d86474dc78df45f69a2011bb5%257C0%257C0%257C638667874457200373%257CUnknown%257CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%253D%253D%257C0%257C%257C%257C%26sdata%3DZeJ%252F3%252B2Nx%252FBf%252FWLFEkhxKlDhZk8LNkz0fs%252Fg2xMcOjY%253D%26reserved%3D0
+>>>>>>>> Fixes: d1909c022173 ("module: Don't ignore errors from 
+>>>>>>>> set_memory_XX()")
+>>>>>>>> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+>>>>>>>> ---
+>>>>>>>>     kernel/module/main.c | 6 +++---
+>>>>>>>>     1 file changed, 3 insertions(+), 3 deletions(-)
+>>>>>>>>
+>>>>>>>> diff --git a/kernel/module/main.c b/kernel/module/main.c
+>>>>>>>> index 2de4ad7af335..1bf4b0db291b 100644
+>>>>>>>> --- a/kernel/module/main.c
+>>>>>>>> +++ b/kernel/module/main.c
+>>>>>>>> @@ -2583,7 +2583,9 @@ static noinline int do_init_module(struct 
+>>>>>>>> module *mod)
+>>>>>>>>     #endif
+>>>>>>>>         ret = module_enable_rodata_ro_after_init(mod);
+>>>>>>>>         if (ret)
+>>>>>>>> -        goto fail_mutex_unlock;
+>>>>>>>> +        pr_warn("%s: %s() returned %d, ro_after_init data might 
+>>>>>>>> still be writable\n",
+>>>>>>>> +            mod->name, __func__, ret);
+>>>>>>>> +
+>>>>>>>>         mod_tree_remove_init(mod);
+>>>>>>>>         module_arch_freeing_init(mod);
+>>>>>>>>         for_class_mod_mem_type(type, init) {
+>>>>>>>> @@ -2622,8 +2624,6 @@ static noinline int do_init_module(struct 
+>>>>>>>> module *mod)
+>>>>>>>>         return 0;
+>>>>>>>
+>>>>>>> I think it would make sense to propagate the error. But that would
+>>>>>>> require changing modprobe.c. What kind of error can we expect 
+>>>>>>> when this
+>>>>>>> happens?
+>>>>>>
+>>>>>> AFAIK, on powerpc it fails with EINVAL when
+>>>>>> - The area is a vmalloc or module area and is a hugepage area
+>>>>>> - The area is not vmalloc or io register and MMU is not powerpc 
+>>>>>> radix MMU
+>>>>>>
+>>>>>> Otherwise it propagates the error from 
+>>>>>> apply_to_existing_page_range().
+>>>>>> IIUC it will return EINVAL when it hits a leaf PTE in upper 
+>>>>>> directories.
+>>>>>
+>>>>> Looking at that path I see we can also fail at __apply_to_page_range()
+>>>>> -> apply_to_p4d_range() and return with -ENOMEM.
+>>>>>
+>>>>> My proposal was to do something like the change below in modprobe:
+>>>>>
+>>>>> diff --git a/tools/modprobe.c b/tools/modprobe.c
+>>>>> index ec66e6f..8876e27 100644
+>>>>> --- a/tools/modprobe.c
+>>>>> +++ b/tools/modprobe.c
+>>>>> @@ -572,6 +572,11 @@ static int insmod_insert(struct kmod_module 
+>>>>> *mod, int flags, const char *extra_o
+>>>>>                   err = 0;
+>>>>>           else {
+>>>>>                   switch (err) {
+>>>>> +               case -EINVAL:
+>>>>> +                       ERR("module '%s'inserted: ro_after_init 
+>>>>> data might"
+>>>>> +                           "still be writable (see dmesg)\n",
+>>>>> +                           kmod_module_get_name(mod));
+>>>>> +                       break;
+>>>>>                   case -EEXIST:
+>>>>>                           ERR("could not insert '%s': Module 
+>>>>> already in kernel\n",
+>>>>>                               kmod_module_get_name(mod));
+>>>>>
+>>>>> But I think these error codes may be also be reported in other parts
+>>>>> such as simplify_symbols() so may not be a good idea after all.
+>>>>
+>>>> It isn't really possible to make a sensible use of the return code from
+>>>> init_module(), besides some basic check for -EEXIST. The problem is 
+>>>> that
+>>>> any error code from a module's init function is also propagated as
+>>>> a result from the syscall.
+>>>>
+>>>>>
+>>>>> Maybe we just need to change the default/catch all error message in
+>>>>> modprobe.c and to indicate/include this case:
+>>>>>
+>>>>> diff --git a/tools/modprobe.c b/tools/modprobe.c
+>>>>> index ec66e6f..3647d37 100644
+>>>>> --- a/tools/modprobe.c
+>>>>> +++ b/tools/modprobe.c
+>>>>> @@ -582,7 +582,8 @@ static int insmod_insert(struct kmod_module 
+>>>>> *mod, int flags, const char *extra_o
+>>>>>                               kmod_module_get_name(mod));
+>>>>>                           break;
+>>>>>                   default:
+>>>>> -                       ERR("could not insert '%s': %s\n", 
+>>>>> kmod_module_get_name(mod),
+>>>>> +                       ERR("could not insert '%s' or inserted with 
+>>>>> error %s, "
+>>>>> +                           "(see dmesg)\n", 
+>>>>> kmod_module_get_name(mod),
+>>>>>                               strerror(-err));
+>>>>>                           break;
+>>>>>                   }
+>>>>>
+>>>>>
+>>>>>>
+>>>>>> On other architectures it can be different, I know some 
+>>>>>> architecture try
+>>>>>> to split the pages when they hit hugepages and that can fail.
+>>>>>
+>>>>> Is it worth it adding an error code for this case in case we want to
+>>>>> report it back?
+>>>>
+>>>> I feel that the proposed kernel warning about this situation is
+>>>> sufficient and the loader should then return 0 to indicate that the
+>>>> module got loaded. It would be more confusing to return an error but
+>>>> with the module actually remaining inserted.
+>>>>
+>>>> A module loaded without having its RO-after-init section changed
+>>>> properly to RO is still fully functional. In practice, if this final
+>>>> set_memory_ro() call fails, the system is already in such a state where
+>>>> the additional warning is the least of the issues?
+>>>>
+>>>
+>>> __ro_after_init is used for kernel self protection. We are loading
+>>> "successfully" the module yes, but variables with this attribute are
+>>> marked read-only to reduce the attack surface [1]. Since we have
+>>> considered this stage already too late to unload the module, IMHO we
+>>> should at least indicate that there was an error during the module
+>>> initialization and propagate that to the loader, so it can decide the
+>>> best action for their particular case. Warning once in the kernel log
+>>> system, does not seem sufficient to me.
+>>>
+>>> [1] Documentation/security/self-protection.rst
+>>
+>> I'd be careful about introducing this new state where (f)init_module()
+>> returns an error, yet the module actually gets loaded.
+> 
+> Perhaps we just need this new stage? module loaded with permission/ 
+> security error?
+> 
+>>
+>> The init_module() interface has one return value which can originate
+>> from anywhere during the load process, including from the module's own
+>> init function. As mentioned, this means that the userspace cannot
+>> distinguish why the module load failed. It would be needed to have
+>> a specific error code returned only for this case, or to extend the
+>> interface further in some way.
+>>
+>> Another concern is consistency of the module loader interface as
+>> a whole. Returning an error from init_module() in this case would mean
+>> that only the specific caller is made aware that the module was loaded
+>> with some issues. A different task that then decides to check the module
+>> state under /sys/module would see it as normally loaded, and similarly a
+> 
+> Maybe we need to change this state too to indicate the problem.
+> 
+>> task trying to insert it again would get -EEXIST. That likely would need
+>> changing too.
+>>
+>> What I'd like to understand is how reporting this as an error to the
+>> userspace would help in practice. I think the userspace can decide to
+>> report it as a warning and continue, or treat is as a hard problem and
+>> stop the system? I would expect that most tools/systems would opt for
+>> the former, but then this doesn't seem much different to me than when
+>> the kernel produces the warning itself. The second option, with some
+>> stretch, could be implemented with panic_on_warn=1.
+> 
+> Ideally, we would reverse the module initialization when encountering 
+> this error [1]. However, since it's not feasible to undo it correctly at 
+> this stage, reporting the error back to the caller allows them to assess 
+> and decide whether to accept the risk.
+> 
+> [1] https://lore.kernel.org/all/Zuv0nmFblHUwuT8v@bombadil.infradead.org/
+>>
+>> Do you envision that the userspace would handle this problem differently
+>> and it is worth adding the complexity?
+> 
+> What complexity do you mean?
+> 
+> A module driver has ro_after_init for the purpose of protecting the 
+> kernel from attack [2]. If we ignore it by warning once, the caller will 
+> not be aware of such risk (unless the caller it's parsing the kernel log).
+> 
+> [2] https://lore.kernel.org/all/1455748879-21872-1-git-send-email- 
+> keescook@chromium.org/
+> 
+> Another option could be adding a kconfig to decide to report or not 
+> which I would strongly suggest to report by default.
+> 
+> 
+>>
+>> As a side node, I've noticed that the module loader could mark also
+>> static_call sections as ro_after_init. I'll post patches for that.
+>> Additionally, both __jump_table and static_call sections could be
+>> possibly turned RO earlier, after prepare_coming_module() ->
+>> blocking_notifier_call_chain_robust() -> ... ->
+>> jump_label_add_module()/static_call_add_module().
+>>
+> 
 
-Yeah it isn't to move _all_ VMA-related code, because some don't make sense
-there, but rather core VMA operations which make sense to be there and also
-tested.
-
-The possibilities are pretty exciting as to what we can do with this (ok
-maybe only to me but still :P).
-
-So again, it's far from certain I'll try to do this with mseal, it was just
-a heads up ahead of time just in case I do.
-
-I mean speciflcally speaking it'd be the very straightforward stuff about
-applying mseal flags, checking compatibility etc.
-
->
-> To avoid spending too much of your time, if there are previous
-> discussions on this topic, please share links or a brief summary, so I
-> can study them first.
-
-Sure, I mean again the best thing is the original series [1]
-
-[1]:https://lore.kernel.org/all/cover.1722251717.git.lorenzo.stoakes@oracle.com/
-
->
-> Thanks!
-> Best Regards,
-> -Jeff
->
->
-> > [0]https://lore.kernel.org/linux-mm/1c7a0b43cfad2c511a6b1b52f3507696478ff51a.1725040657.git.lorenzo.stoakes@oracle.com/
-> >
-> > Thanks, Lorenzo
-
-This won't happen until next year at the earliest anyway, as I'm off for
-Christmas/NY at the end of this week and this is nowhere near my TODO list
-even at the moment :)
