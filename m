@@ -1,125 +1,181 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B4E02210DE;
-	Thu, 12 Dec 2024 17:29:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67440846F;
+	Fri, 13 Dec 2024 02:09:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734024545; cv=none; b=Nu85yEZPPgtKmQN5wbsgrmjce1efRAKtTRplfbpJ+Ky70kHs2qDzqtCwYwa4cEmgIMKIwyC3/gfyrhDlekUyALEV5VCOXi4s7cl6vUJX7i4YBXow4uiBbkK5wrBY6HLDfnBGQe3XTu0PwUx6TBy8vo9E2b7eCXuddXGUWoQgK+k=
+	t=1734055781; cv=none; b=oCPE4LSFcFJtCxRmgaBI9C5yyjMsFvtqwiZIoPEAQSEX6j0RkK+8P5ukY8atIzICVv6lpTO+OHQTp2ur9euFArxPbcYhiSLHqoyoVjWdfht9QtJCeJK0IKWZnlvnG0DKPbHqTHSLhPieq2D7qFe+LPf4dLXMI6bptyRd4pF6Lrc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734024545; c=relaxed/simple;
-	bh=htYmj36mp8h+Pv0w684UL9RsDcfi/7VjMwIBfrIhGOo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XlVyAuDhPmd+C7SM+iuxMISZgMGp6y7UfdnMNxmoXGZw+fsoIwHd5Yfv2dZHLububkIXUfKskBJw58MoUY15yRDoVz0wXCiAyKTB27ZOgPLk13q5/iJcoyR9QugWgKAxbrA/PdykJjYty6lEKla2aqRVb5eFIgDdwbA+0AsC8Kc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g2K5wiRN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1734055781; c=relaxed/simple;
+	bh=Np3GnoNjjRYHNMfs4ajAm6/M35qHq8wB6mRPx06qig8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=eR5ZBJn8DeHZ285YvrYg7bqqLdViIWnrhPZc6oC+ERXd6QJLH2aYoSvDTeCdVwR1Gej1dNkHq8qJSZKUklifl1ryGefVVn+Jua+9Rn877WXCOpNo9667f3wJMXjswGEuL5NE9K0B0O+12PPp6p+S0JyJ34r2c3GRx77kA3MHflU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EkOPoXTi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g2K5wiRN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB614C4CED0;
-	Thu, 12 Dec 2024 17:29:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EkOPoXTi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5602C4CECE;
+	Fri, 13 Dec 2024 02:09:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734024544;
-	bh=htYmj36mp8h+Pv0w684UL9RsDcfi/7VjMwIBfrIhGOo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=g2K5wiRNqnbIwtKuefqF5unzZb6vHwqvB775JOvVG4tvCE26Ik0m/uiee0KsAnXrI
-	 lEEY7ktzPRZbWEfF/7MMABJF3d8GxDwhLaQ+6gIZ+KRXOjYczPyv6eGePlJSrOYwGY
-	 OOVbCv3/9pqHvrjMMJwZq9UGQN1g8iZn2T4fBT6000NscDVs8b9hQeRy+Iw2PqxFoo
-	 iYhIjxS4e9mgM6gy6vDZP4LyYA5aRX3eiPHgxgPQG9HD22hPNG1Vfs9MHQt7mwwOhs
-	 hc1gco1lv88jPBdKoktS40LQha4eSfGeOu0qf6IVwrA689qw/ayz6/dmS5oc6AaY8l
-	 Md3NGDAjPmmgA==
-Date: Thu, 12 Dec 2024 09:29:02 -0800
+	s=k20201202; t=1734055781;
+	bh=Np3GnoNjjRYHNMfs4ajAm6/M35qHq8wB6mRPx06qig8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=EkOPoXTiOH+lSEh1RK4mRrb6GsB3lVZA9LPd/XWhh+XKK1AJ59QfdC5NlHdtLjvKH
+	 +9+18f7TuiUUFDPDFth8v/sIZtGAodUqZNOr3IEuFA/9rooNAS37MXNs/4GHfCM9eM
+	 NUHKPLNEokl8sEGR0WgsbTbI+o+6SGLaJrNnOxvLhPlW2oJUfXKrwVkAACEVfmUUKm
+	 oP7uQRf7mIxLmn+4/spVBYGY9edDwEExX0bl0jp3OeOCtofOI8gRAU7ef4GsamxOF1
+	 IGzaHc651BcHlUli9/AkrNg2mWwkPY3+pgGl+BmaBcTrAkjC28r7jbl7loYTiGVI34
+	 LZ39hE2ZAx7bw==
 From: Kees Cook <kees@kernel.org>
-To: Christopher Ferris <cferris@google.com>
-Cc: "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Michael Chan <michael.chan@broadcom.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Potnuri Bharat Teja <bharat@chelsio.com>,
-	Christian Benvenuti <benve@cisco.com>,
-	Satish Kharat <satishkh@cisco.com>,
-	Manish Chopra <manishc@marvell.com>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	android-llvm-dev@google.com
-Subject: Re: [PATCH v2 1/2][next] UAPI: ethtool: Use __struct_group() in
- struct ethtool_link_settings
-Message-ID: <202412120927.943DFEDD@keescook>
-References: <20241109100213.262a2fa0@kernel.org>
- <d4f0830f-d384-487a-8442-ca0c603d502b@embeddedor.com>
- <55d62419-3a0c-4f26-a260-06cf2dc44ec1@embeddedor.com>
- <202411151215.B56D49E36@keescook>
- <Z1HZpe3WE5As8UAz@google.com>
- <CANtHk4mnjE5aATk2r8uOsyLKm+7-tbEv5AaXVWGP_unhLNEvsg@mail.gmail.com>
- <20241209131032.6af473f4@kernel.org>
- <CANtHk4kM-9BDCm69+z3hS58uCrjCmma0aQ+nOqFUROaFhLAkDg@mail.gmail.com>
- <0e336341-9575-436f-8e41-df190f67bdd7@embeddedor.com>
- <CANtHk4nyP8HyYMobB76z9LpbA_jD=fLkWtyK9w_aMkzP8iB7Cg@mail.gmail.com>
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Kees Cook <kees@kernel.org>,
+	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+	Nilay Shroff <nilay@linux.ibm.com>,
+	Yury Norov <yury.norov@gmail.com>,
+	"Qing Zhao" <qing.zhao@oracle.com>,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] fortify: Hide run-time copy size from value range tracking
+Date: Thu, 12 Dec 2024 18:09:33 -0800
+Message-Id: <20241213020929.work.498-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANtHk4nyP8HyYMobB76z9LpbA_jD=fLkWtyK9w_aMkzP8iB7Cg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6060; i=kees@kernel.org; h=from:subject:message-id; bh=Np3GnoNjjRYHNMfs4ajAm6/M35qHq8wB6mRPx06qig8=; b=owGbwMvMwCVmps19z/KJym7G02pJDOnR02NmbxateHynujTJ/MZ7Xf6dJ6+l9a5Xkpx9qeDel rDGB1HxHaUsDGJcDLJiiixBdu5xLh5v28Pd5yrCzGFlAhnCwMUpABOJPcfIsGzrAv5rjifzVtg+ aJgxy/n8uy23v2+TuuzbExj2o/v6nJkMv9k1yta6ml4/6brybuGyXa8n7nvM1HAt3zKgZorYd5d PggwA
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Mon, Dec 09, 2024 at 04:39:38PM -0800, Christopher Ferris wrote:
-> By the way, there are some places where __struct_group is used in other
-> uapi headers, the only difference is that the TAG field of the macro is
-> left empty. That compiles fine when used in C++ code.
+GCC performs value range tracking for variables as a way to provide better
+diagnostics. One place this is regularly seen is with warnings associated
+with bounds-checking, e.g. -Wstringop-overflow, -Wstringop-overread,
+-Warray-bounds, etc. In order to keep the signal-to-noise ratio high,
+warnings aren't emitted when a value range spans the entire value range
+representable by a given variable. For example:
 
-Does this fix the C++ inclusion for you?
+	unsigned int len;
+	char dst[8];
+	...
+	memcpy(dst, src, len);
 
+If len's value is unknown, it has the full "unsigned int" range of [0,
+UINT_MAX], and bounds checks against memcpy() will be ignored. However,
+when a code path has been able to narrow the range:
 
-diff --git a/include/uapi/linux/pkt_cls.h b/include/uapi/linux/pkt_cls.h
-index 2c32080416b5..aeff841c528d 100644
---- a/include/uapi/linux/pkt_cls.h
-+++ b/include/uapi/linux/pkt_cls.h
-@@ -245,20 +245,27 @@ struct tc_u32_key {
- 	int		offmask;
- };
+	if (len > 16)
+		return;
+	memcpy(dst, src, len);
+
+Then a range will be updated for the execution path. Above, len is now
+[0, 16], so we might see a -Wstringop-overflow warning like:
+
+	error: '__builtin_memcpy' writing between 9 and 16 bytes from to region of size 8 [-Werror=stringop-overflow]
+
+When building with CONFIG_FORTIFY_SOURCE, the run-time bounds checking
+can appear to narrow value ranges for lengths for memcpy(), depending on
+how the compile constructs the execution paths during optimization
+passes, due to the checks on the size. For example:
+
+	if (p_size_field != SIZE_MAX &&
+	    p_size != p_size_field && p_size_field < size)
+
+As intentionally designed, these checks only affect the kernel warnings
+emitted at run-time and do not block the potentially overflowing memcpy(),
+so GCC thinks it needs to produce a warning about the resulting value
+range that might be reaching the memcpy().
+
+We have seen this manifest a few times now, with the most recent being
+with cpumasks:
+
+In function ‘bitmap_copy’,
+    inlined from ‘cpumask_copy’ at ./include/linux/cpumask.h:839:2,
+    inlined from ‘__padata_set_cpumasks’ at kernel/padata.c:730:2:
+./include/linux/fortify-string.h:114:33: error: ‘__builtin_memcpy’ reading between 257 and 536870904 bytes from a region of size 256 [-Werror=stringop-overread]
+  114 | #define __underlying_memcpy     __builtin_memcpy
+      |                                 ^
+./include/linux/fortify-string.h:633:9: note: in expansion of macro ‘__underlying_memcpy’
+  633 |         __underlying_##op(p, q, __fortify_size);                        \
+      |         ^~~~~~~~~~~~~
+./include/linux/fortify-string.h:678:26: note: in expansion of macro ‘__fortify_memcpy_chk’
+  678 | #define memcpy(p, q, s)  __fortify_memcpy_chk(p, q, s,                  \
+      |                          ^~~~~~~~~~~~~~~~~~~~
+./include/linux/bitmap.h:259:17: note: in expansion of macro ‘memcpy’
+  259 |                 memcpy(dst, src, len);
+      |                 ^~~~~~
+kernel/padata.c: In function ‘__padata_set_cpumasks’:
+kernel/padata.c:713:48: note: source object ‘pcpumask’ of size [0, 256]
+  713 |                                  cpumask_var_t pcpumask,
+      |                                  ~~~~~~~~~~~~~~^~~~~~~~
+
+This warning is _not_ emitted when CONFIG_FORTIFY_SOURCE is disabled,
+and with the recent -fdiagnostics-details we can confirm the origin of
+the warning is due to the FORTIFY range checking:
+
+../include/linux/bitmap.h:259:17: note: in expansion of macro 'memcpy'
+  259 |                 memcpy(dst, src, len);
+      |                 ^~~~~~
+  '__padata_set_cpumasks': events 1-2
+../include/linux/fortify-string.h:613:36:
+  612 |         if (p_size_field != SIZE_MAX &&
+      |             ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  613 |             p_size != p_size_field && p_size_field < size)
+      |             ~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~
+      |                                    |
+      |                                    (1) when the condition is evaluated to false
+      |                                    (2) when the condition is evaluated to true
+  '__padata_set_cpumasks': event 3
+  114 | #define __underlying_memcpy     __builtin_memcpy
+      |                                 ^
+      |                                 |
+      |                                 (3) out of array bounds here
+
+(Note that this warning started appearing since bitmap functions were
+recently marked __always_inline, which allowed GCC to gain visibility
+into the variables as they passed through the FORTIFY implementation.)
+
+In order to silence this false positive but keep deterministic
+compile-time warnings intact, hide the length variable from GCC with
+OPTIMIZE_HIDE_VAR() before calling the builtin memcpy.
+
+Reported-by: "Thomas Weißschuh" <linux@weissschuh.net>
+Closes: https://lore.kernel.org/all/db7190c8-d17f-4a0d-bc2f-5903c79f36c2@t-8ch.de/
+Reported-by: Nilay Shroff <nilay@linux.ibm.com>
+Closes: https://lore.kernel.org/all/20241112124127.1666300-1-nilay@linux.ibm.com/
+Acked-by: Yury Norov <yury.norov@gmail.com>
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+Cc: Nathan Chancellor <nathan@kernel.org>
+Cc: "Qing Zhao" <qing.zhao@oracle.com>
+Cc: linux-hardening@vger.kernel.org
+---
+ include/linux/fortify-string.h | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/include/linux/fortify-string.h b/include/linux/fortify-string.h
+index 0d99bf11d260..cab419f3a05f 100644
+--- a/include/linux/fortify-string.h
++++ b/include/linux/fortify-string.h
+@@ -630,7 +630,16 @@ __FORTIFY_INLINE bool fortify_memcpy_chk(__kernel_size_t size,
+ 		  __fortify_size,					\
+ 		  "field \"" #p "\" at " FILE_LINE,			\
+ 		  __p_size_field);					\
+-	__underlying_##op(p, q, __fortify_size);			\
++	if (__builtin_constant_p(__fortify_size)) {			\
++		/* Pass through compile-time value for real warnings. */\
++		__underlying_##op(p, q, __fortify_size);		\
++	} else {							\
++		/* Hide the run-time size from compile-time value */	\
++		/* range tracking to silence false positives. */	\
++		size_t ___fortify_size = __fortify_size;		\
++		OPTIMIZER_HIDE_VAR(___fortify_size);			\
++		__underlying_##op(p, q, ___fortify_size);		\
++	}								\
+ })
  
-+#define tc_u32_sel_hdr_members			\
-+	unsigned char		flags;		\
-+	unsigned char		offshift;	\
-+	unsigned char		nkeys;		\
-+	__be16			offmask;	\
-+	__u16			off;		\
-+	short			offoff;		\
-+	short			hoff;
-+
-+struct tc_u32_sel_hdr {
-+	tc_u32_sel_hdr_members
-+};
-+
- struct tc_u32_sel {
--	/* New members MUST be added within the __struct_group() macro below. */
--	__struct_group(tc_u32_sel_hdr, hdr, /* no attrs */,
--		unsigned char		flags;
--		unsigned char		offshift;
--		unsigned char		nkeys;
--
--		__be16			offmask;
--		__u16			off;
--		short			offoff;
--
--		short			hoff;
--		__be32			hmask;
--	);
-+	/* Open-coded struct_group() to avoid C++ errors. */
-+	union {
-+		struct tc_u32_sel_hdr hdr;
-+		struct {
-+			tc_u32_sel_hdr_members
-+		};
-+	};
- 	struct tc_u32_key	keys[];
- };
- 
-
-
+ /*
 -- 
-Kees Cook
+2.34.1
+
