@@ -1,101 +1,156 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7231E1CD2C;
-	Sat, 14 Dec 2024 07:47:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAC57653;
+	Sat, 14 Dec 2024 09:12:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734162464; cv=none; b=t0LkP0c3QH5unutEIVmf9BIelI4rAlh0fPy6CQkOmgAuSiRkBoUf3YYg/xgHgm90MMfLkRPxBHpLPo0aDDXqfWQMi9BTzoGglpQxeK+T5/zHUELrhkSSpMb+RoZPl8nCRzG3OTpHnTTgP/lWWllnoV8hYFjGT4ImvQyTUOLeOV0=
+	t=1734167544; cv=none; b=cJZ7kP1/1/hmK45cQHFc9GMDECMkaP/A7q64rnmbROZuLfgox9MDrrnaXZfRF74vv4mR1eIi9MLuDxWsGDNTi7CnLB6q5SKFh3xKLy2HGliG8XyH+am9NsS/51mxexbCc5QVGyk0/c2UkbkmxkobUO9oqfxAv6IEjypBgQyWMv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734162464; c=relaxed/simple;
-	bh=YIbX2MgGl3xGze3jMMeFEJiLRt0XWfpz5HfIdkZ+pIY=;
+	s=arc-20240116; t=1734167544; c=relaxed/simple;
+	bh=vakxJDBESZJU69hvEmHaZbNiXoRGI/zkqMQV/o04X9o=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=szkzXHmS11v3DkMRY/7IRyFOB2uDt37U2UECOZh7Jq4F4X0cidu1SYk7Ux5i5tLaGLs6alLbYsvRtB0KS5oelzqX9pTk/NJZj67nHapdXEz6ytwVh52nF5Uh9miuh1vok68hPcmhYAy6hh063T8QCifE7SKEH/qVFnRNXOC/xT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=2PG3gvYR; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=aVe46P0ttNxKtDo2x0idW9grZ/MV7IztaEN2cssJqLy59a5OPR3C5kh6qJaqUUd78w2nTem6nufP0lkBjzhHlUfcCFB2c+bPvKRPwSkzSgxIGo5LISmy7bLxtpkKgIFUHeuwSUJ7FDdoP5G75oXqapcpAQKeeEkVvrOxiOLv5Ag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=BfNre14Q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="2PG3gvYR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3503EC4CED1;
-	Sat, 14 Dec 2024 07:47:43 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="BfNre14Q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A81B8C4CED1;
+	Sat, 14 Dec 2024 09:12:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1734162463;
-	bh=YIbX2MgGl3xGze3jMMeFEJiLRt0XWfpz5HfIdkZ+pIY=;
+	s=korg; t=1734167543;
+	bh=vakxJDBESZJU69hvEmHaZbNiXoRGI/zkqMQV/o04X9o=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=2PG3gvYRb5L837h6bmde+6JNYeDyCcawdsc0kBqnKck0ckF+WyJrFxdybO9YRUoHI
-	 ZQe4xD3BhacPnAopunOstxKiloQ4T8g6GfqrpxyPHpINwWLUMsihEBEODII2VeC9Mm
-	 JmXYXvNqOBH+6bH7zpBCVCg0JBP8W/020A13QX5o=
-Date: Sat, 14 Dec 2024 08:47:40 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Jared Finder <jared@finder.org>
-Cc: =?iso-8859-1?Q?G=FCnther?= Noack <gnoack@google.com>,
-	Jann Horn <jannh@google.com>,
-	Hanno =?iso-8859-1?Q?B=F6ck?= <hanno@hboeck.de>,
-	Jiri Slaby <jirislaby@kernel.org>, linux-hardening@vger.kernel.org,
-	regressions@lists.linux.dev,
-	kernel list <linux-kernel@vger.kernel.org>
-Subject: Re: GPM & Emacs broken in Linux 6.7 -- ok to relax check?
-Message-ID: <2024121418-blazer-valiant-c51a@gregkh>
-References: <ee3ec63269b43b34e1c90dd8c9743bf8@finder.org>
- <CAG48ez0vg9W=oatvEqxvTSYNUx7htY23LxPrYCiuLZhZQuaGjg@mail.gmail.com>
- <Z08NV4Z-L0anDxGk@google.com>
- <Z08QvvfLSWGIDfBD@google.com>
- <ca2a101ccf5ae790dd2cac58ff832922@finder.org>
+	b=BfNre14QDyWDsHUNnIp1SHG4ZL8SaX+OlRBtconsafmSusJMiCKa9jCrEsfG+h/Ns
+	 6XT/2hpZ5FiPDvFgoDb/8g/N0ygQ+iBqiKtDWQ+JvOqjp0cUoJsCDIp+QgO1cBrRXR
+	 FLDuC0pni+j/uPQxAT9P4vRQKSkt++9dDiEvYKuU=
+Date: Sat, 14 Dec 2024 10:12:19 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
+	Nilay Shroff <nilay@linux.ibm.com>,
+	Yury Norov <yury.norov@gmail.com>, Qing Zhao <qing.zhao@oracle.com>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] fortify: Hide run-time copy size from value range
+ tracking
+Message-ID: <2024121450-scrawny-payphone-71b5@gregkh>
+References: <20241214013600.it.020-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ca2a101ccf5ae790dd2cac58ff832922@finder.org>
+In-Reply-To: <20241214013600.it.020-kees@kernel.org>
 
-On Fri, Dec 13, 2024 at 09:13:54PM -0800, Jared Finder wrote:
-> On 2024-12-03 06:07, G�nther Noack wrote:
-> > On Tue, Dec 03, 2024 at 02:53:27PM +0100, G�nther Noack wrote:
-> > > Hanno, you are the original author of this patch and you have done a
-> > > more
-> > > detailed analysis on the TIOCLINUX problems than me -- do you agree
-> > > that this
-> > > weakened check would still be sufficient to protect against the
-> > > TIOCLINUX
-> > > problems?  (Or in other words, if we permitted TIOCL_SELPOINTER,
-> > > TIOCL_SELCLEAR
-> > > and TIOCL_SELMOUSEREPORT for non-CAP_SYS_ADMIN processes, would you
-> > > still see a
-> > > way to misuse that functionality?)
-> > 
-> > P.S.: For reference, some more detailed reasoning why I think that that
-> > proposal
-> > would be OK:
-> > 
-> > It would protect at least against the "minittyjack.c" example that was
-> > attached
-> > to https://www.openwall.com/lists/oss-security/2023/03/14/3
-> > 
-> > The trick used there was:
-> > 
-> > * ioctl() with TIOCLINUX with TIOCL_SETSEL with TIOCL_SELLINE,
-> >   to make a selection (a.k.a. changing the contents of vc_sel)
-> > * ioctl() with TIOCLINUX and TIOCL_PASTESEL to paste the selection.
-> >   (The implementation for that is in selection.c/paste_selection()
-> >   and is just copying from vc_sel.)
-> > 
-> > So as long as we are protecting the change to vc_sel, that should be OK
-> > in my
-> > mind.
+On Fri, Dec 13, 2024 at 05:36:10PM -0800, Kees Cook wrote:
+> GCC performs value range tracking for variables as a way to provide better
+> diagnostics. One place this is regularly seen is with warnings associated
+> with bounds-checking, e.g. -Wstringop-overflow, -Wstringop-overread,
+> -Warray-bounds, etc. In order to keep the signal-to-noise ratio high,
+> warnings aren't emitted when a value range spans the entire value range
+> representable by a given variable. For example:
 > 
-> It's been silent for about a week and a half here. How long do we wait
-> before creating a patch here? This is a regression so I'm assuming we
-> shouldn't wait too long.
+> 	unsigned int len;
+> 	char dst[8];
+> 	...
+> 	memcpy(dst, src, len);
 > 
-> I'm happy to create the patch if that's helpful. I'd need help with process
-> for submitting it for inclusion in the latest kernel as well as backports to
-> earlier impacted versions. I've never submitted code to Linux before.
+> If len's value is unknown, it has the full "unsigned int" range of [0,
+> UINT_MAX], and bounds checks against memcpy() will be ignored. However,
+> when a code path has been able to narrow the range:
+> 
+> 	if (len > 16)
+> 		return;
+> 	memcpy(dst, src, len);
+> 
+> Then a range will be updated for the execution path. Above, len is now
+> [0, 16], so we might see a -Wstringop-overflow warning like:
+> 
+> 	error: '__builtin_memcpy' writing between 9 and 16 bytes from to region of size 8 [-Werror=stringop-overflow]
+> 
+> When building with CONFIG_FORTIFY_SOURCE, the run-time bounds checking
+> can appear to narrow value ranges for lengths for memcpy(), depending on
+> how the compile constructs the execution paths during optimization
+> passes, due to the checks on the size. For example:
+> 
+> 	if (p_size_field != SIZE_MAX &&
+> 	    p_size != p_size_field && p_size_field < size)
+> 
+> As intentionally designed, these checks only affect the kernel warnings
+> emitted at run-time and do not block the potentially overflowing memcpy(),
+> so GCC thinks it needs to produce a warning about the resulting value
+> range that might be reaching the memcpy().
+> 
+> We have seen this manifest a few times now, with the most recent being
+> with cpumasks:
+> 
+> In function ‘bitmap_copy’,
+>     inlined from ‘cpumask_copy’ at ./include/linux/cpumask.h:839:2,
+>     inlined from ‘__padata_set_cpumasks’ at kernel/padata.c:730:2:
+> ./include/linux/fortify-string.h:114:33: error: ‘__builtin_memcpy’ reading between 257 and 536870904 bytes from a region of size 256 [-Werror=stringop-overread]
+>   114 | #define __underlying_memcpy     __builtin_memcpy
+>       |                                 ^
+> ./include/linux/fortify-string.h:633:9: note: in expansion of macro ‘__underlying_memcpy’
+>   633 |         __underlying_##op(p, q, __fortify_size);                        \
+>       |         ^~~~~~~~~~~~~
+> ./include/linux/fortify-string.h:678:26: note: in expansion of macro ‘__fortify_memcpy_chk’
+>   678 | #define memcpy(p, q, s)  __fortify_memcpy_chk(p, q, s,                  \
+>       |                          ^~~~~~~~~~~~~~~~~~~~
+> ./include/linux/bitmap.h:259:17: note: in expansion of macro ‘memcpy’
+>   259 |                 memcpy(dst, src, len);
+>       |                 ^~~~~~
+> kernel/padata.c: In function ‘__padata_set_cpumasks’:
+> kernel/padata.c:713:48: note: source object ‘pcpumask’ of size [0, 256]
+>   713 |                                  cpumask_var_t pcpumask,
+>       |                                  ~~~~~~~~~~~~~~^~~~~~~~
+> 
+> This warning is _not_ emitted when CONFIG_FORTIFY_SOURCE is disabled,
+> and with the recent -fdiagnostics-details we can confirm the origin of
+> the warning is due to the FORTIFY range checking:
+> 
+> ../include/linux/bitmap.h:259:17: note: in expansion of macro 'memcpy'
+>   259 |                 memcpy(dst, src, len);
+>       |                 ^~~~~~
+>   '__padata_set_cpumasks': events 1-2
+> ../include/linux/fortify-string.h:613:36:
+>   612 |         if (p_size_field != SIZE_MAX &&
+>       |             ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>   613 |             p_size != p_size_field && p_size_field < size)
+>       |             ~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~
+>       |                                    |
+>       |                                    (1) when the condition is evaluated to false
+>       |                                    (2) when the condition is evaluated to true
+>   '__padata_set_cpumasks': event 3
+>   114 | #define __underlying_memcpy     __builtin_memcpy
+>       |                                 ^
+>       |                                 |
+>       |                                 (3) out of array bounds here
+> 
+> Note that this warning started appearing since bitmap functions were
+> recently marked __always_inline in commit ed8cd2b3bd9f ("bitmap: Switch
+> from inline to __always_inline"), which allowed GCC to gain visibility
+> into the variables as they passed through the FORTIFY implementation.
+> 
+> In order to silence this false positive but keep deterministic
+> compile-time warnings intact, hide the length variable from GCC with
+> OPTIMIZE_HIDE_VAR() before calling the builtin memcpy.
+> 
+> Additionally add a comment about why all the macro args have copies with
+> const storage.
+> 
+> Reported-by: "Thomas Weißschuh" <linux@weissschuh.net>
+> Closes: https://lore.kernel.org/all/db7190c8-d17f-4a0d-bc2f-5903c79f36c2@t-8ch.de/
+> Reported-by: Nilay Shroff <nilay@linux.ibm.com>
+> Closes: https://lore.kernel.org/all/20241112124127.1666300-1-nilay@linux.ibm.com/
+> Acked-by: Yury Norov <yury.norov@gmail.com>
+> Signed-off-by: Kees Cook <kees@kernel.org>
+> ---
 
-Sure, make a patch and we will be glad to help you out in getting it
-accepted if it looks good.
+Fixed the build issues I have here, so:
 
-thanks,
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-greg k-h
