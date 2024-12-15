@@ -1,234 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE69517A58F;
-	Sun, 15 Dec 2024 12:26:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 794081BF804
+	for <linux-hardening@vger.kernel.org>; Sun, 15 Dec 2024 19:07:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.85.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734265562; cv=none; b=qSHhwXhYHE3o4spyCvJ3nf3sOU+93nwuXpNRriE40zgYpKxG+7cFPvufxm4bDgMTwhfyNdJzKA5ETdcmzLF+BO4Ni5ulogJ9+sn6xnZdfCXlMSo3xTdXWqmPQ+kHQ7JUMHnsSrbgbm60v6fk5ebAWNdrX+nsmcn2Y78+w+QU0k0=
+	t=1734289646; cv=none; b=Iqm8MLvoYspKJHyWH4m60IY3rakuOM6D/mYl5E50O3HfvWkmFtQUuO3bsO68cHaG6ds3baix8vMjT6MvKZIDbKqkko3ZDBTfK9sQSZpJA+74D73q14frurld3k1n8C9L4fXeLsrmKzIhFE5ZhFBkE9alvZP33X/KosqdEc6Jws0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734265562; c=relaxed/simple;
-	bh=hBCBYksFIyNhxJwJxRKXqjB5K6Spf0NiF3kaZ0z6gZ8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hAGkJAl5BtguuT5Lv1Qho0xJIjclfbqK7gxxJKRJkXaDNk7WbC6LTQvARVkFHZslmbt1JDK2ljdnMbNuDYeGmCLxeXCTR63uUcJ9V1nGbSx1lyPZdgG4Av73A6lZRupU7GYqT8RUSM/PTD310KOC85tQujYhbSiU9g4r1QZuYw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ML3RFGf/; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ML3RFGf/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24D7BC4CECE;
-	Sun, 15 Dec 2024 12:25:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734265562;
-	bh=hBCBYksFIyNhxJwJxRKXqjB5K6Spf0NiF3kaZ0z6gZ8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ML3RFGf/JgEAFv3dDlzelPXTh2oN4dXEQfUH402JguQABiaZObjU5aFfyZiUtLoqV
-	 DPRRG1uz3G5kYdB1x8gswhVywmO0jTSuFfLnumoBhxDlYOthZGNlgkp46e1bvy4N/Y
-	 v8Pn8jvfAbgi3iW94Yy6WEw53VnS6dM5xnUWrg8NVXsIDWSysRdQogzrFq6Knd4nqa
-	 fo6oZdIT5aY1qYOGqPOXgM3mloRtR73fHMYFBrAvoHnYTdkDvaTyPJypZIyXlWv910
-	 jtj8iab7oSEeekrKyZy9HLkgNXGOrJgbewXP0DY6cVwHPfu9lxvLnjUrXRYnvMGlx1
-	 QuBq1H9F8Tp7w==
-Date: Sun, 15 Dec 2024 12:25:53 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: Yasin Lee <yasin.lee.x@gmail.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Kees Cook <kees@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, yasin.lee.x@outlook.com,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] iio: proximity: hx9023s: Added firmware file parsing
- functionality
-Message-ID: <20241215122553.60c2caba@jic23-huawei>
-In-Reply-To: <20241210-hx9023s-firmware-20241209-v1-1-8a736691b106@gmail.com>
-References: <20241210-hx9023s-firmware-20241209-v1-1-8a736691b106@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1734289646; c=relaxed/simple;
+	bh=vgr8lLu1Qqnub64e79oXwUlqd2gR91iR24nmnJhUuJk=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 MIME-Version:Content-Type; b=UgEpPdL+T+GW/Fzi+HzAIVeyz3xncXCqiqHToJuztfkUtlwTPBfvrpSt5ecK+QDQymT4/rwjfQEWtN419DnRevJePtkDkdu6mlrXPWCm4fgy1kzC2H72A0AAnhufod/T2FswJB0B//bbPcSPxHWReDZfHmb+jAmt7tdNaVYimG8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.85.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-150-76v1ZOAhNra134_68TK1Pg-1; Sun, 15 Dec 2024 19:07:14 +0000
+X-MC-Unique: 76v1ZOAhNra134_68TK1Pg-1
+X-Mimecast-MFC-AGG-ID: 76v1ZOAhNra134_68TK1Pg
+Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
+ (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Sun, 15 Dec
+ 2024 19:06:13 +0000
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.048; Sun, 15 Dec 2024 19:06:13 +0000
+From: David Laight <David.Laight@ACULAB.COM>
+To: 'Kees Cook' <kees@kernel.org>, Nathan Chancellor <nathan@kernel.org>
+CC: =?utf-8?B?VGhvbWFzIFdlacOfc2NodWg=?= <linux@weissschuh.net>, Nilay Shroff
+	<nilay@linux.ibm.com>, Yury Norov <yury.norov@gmail.com>, Qing Zhao
+	<qing.zhao@oracle.com>, "linux-hardening@vger.kernel.org"
+	<linux-hardening@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2] fortify: Hide run-time copy size from value range
+ tracking
+Thread-Topic: [PATCH v2] fortify: Hide run-time copy size from value range
+ tracking
+Thread-Index: AQHbTch8d+wrrUhKvECKbtRQEXOCn7LnrGkw
+Date: Sun, 15 Dec 2024 19:06:12 +0000
+Message-ID: <383ed0428fd2415aa7ab09255134d61c@AcuMS.aculab.com>
+References: <20241214013600.it.020-kees@kernel.org>
+In-Reply-To: <20241214013600.it.020-kees@kernel.org>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: S54V96eiyyC7TvoIioV9uZ8P_klpKg39OfZTtyqHDgs_1734289633
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 
-On Tue, 10 Dec 2024 12:24:03 +0800
-Yasin Lee <yasin.lee.x@gmail.com> wrote:
-
-> Configuration information is now prioritized from the firmware file.
-> If the firmware file is missing or fails to parse, the driver falls
-> back to using the default configuration list for writing the settings.
-> 
-> Signed-off-by: Yasin Lee <yasin.lee.x@gmail.com>
-
-Ok.  I guess just reading a load of register values isn't hugely different
-to more complex firmware loads.
-
-Comments inline - in particular please take the time to tidy up
-formatting of your code before posting.
-
-Also why is this +CC linux-hardening, Kees and Gustavo?
-
-They have enough stuff to do without getting patches that seem to have nothing
-to do with hardening!
-
-Jonathan
-
-> ---
->  drivers/iio/proximity/hx9023s.c | 96 ++++++++++++++++++++++++++++++++++++++---
->  1 file changed, 89 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/iio/proximity/hx9023s.c b/drivers/iio/proximity/hx9023s.c
-> index 4021feb7a7ac..6cb1b688bfa9 100644
-> --- a/drivers/iio/proximity/hx9023s.c
-> +++ b/drivers/iio/proximity/hx9023s.c
-> @@ -14,6 +14,7 @@
->  #include <linux/cleanup.h>
->  #include <linux/device.h>
->  #include <linux/errno.h>
-> +#include <linux/firmware.h>
->  #include <linux/i2c.h>
->  #include <linux/interrupt.h>
->  #include <linux/irqreturn.h>
-> @@ -100,6 +101,17 @@
->  #define HX9023S_INTERRUPT_MASK GENMASK(9, 0)
->  #define HX9023S_PROX_DEBOUNCE_MASK GENMASK(3, 0)
->  
-> +#define FW_VER_OFFSET 2
-> +#define FW_REG_CNT_OFFSET 3
-> +#define FW_DATA_OFFSET 16
-> +
-> +struct hx9023s_bin {
-> +	u16 reg_count;
-> +	u16 fw_size;
-> +	u8 fw_ver;
-> +	u8 data[] __counted_by(fw_size);
-> +};
-> +
->  struct hx9023s_ch_data {
->  	s16 raw; /* Raw Data*/
->  	s16 lp; /* Low Pass Filter Data*/
-> @@ -998,6 +1010,80 @@ static int hx9023s_id_check(struct iio_dev *indio_dev)
->  	return 0;
->  }
->  
-> +static int hx9023s_bin_load(struct hx9023s_data *data,
-> +								struct hx9023s_bin *bin)
-> +{
-> +	u8 *cfg_start = bin->data + FW_DATA_OFFSET;
-> +	u8 addr, val;
-> +	u16 i;
-> +	int ret;
-> +
-> +	for (i = 0; i < bin->reg_count; i++) {
-> +		addr = cfg_start[i * 2];
-> +		val = cfg_start[i * 2 + 1];
-> +		ret = regmap_write(data->regmap, addr, val);
-> +		if (ret < 0)
-> +			return ret;
-> +	}
-> +
-> +	return ret;
-return 0;
-Can't get here with anything else.
-
-> +}
-> +
-> +static int hx9023s_send_cfg(const struct firmware *fw,
-> +								struct hx9023s_data *data)
-
-
-Fix all your indenting to match kernel style.
-
-> +{
-> +	if (!fw)
-
-You can't get to this call below with out fw so drop this check.
-
-> +		return -EINVAL;
-> +
-> +	struct hx9023s_bin *bin __free(kfree) =
-> +		kzalloc(fw->size + sizeof(*bin), GFP_KERNEL);
-> +	if (!bin)
-> +		return -ENOMEM;
-> +
-> +	memcpy(bin->data, fw->data, fw->size);
-> +	release_firmware(fw);
-> +
-> +	bin->fw_size = fw->size;
-> +	bin->fw_ver = bin->data[FW_VER_OFFSET];
-> +	bin->reg_count = get_unaligned_le16(bin->data + FW_REG_CNT_OFFSET);
-> +
-> +	return hx9023s_bin_load(data, bin);
-> +}
-> +
-> +static void hx9023s_cfg_update(const struct firmware *fw, void *context)
-> +{
-> +	struct hx9023s_data *data = context;
-> +	struct device *dev = regmap_get_device(data->regmap);
-> +	int ret;
-> +
-> +	if (!fw || !fw->data) {
-> +		dev_warn(dev, "No firmware\n");
-> +		goto no_fw;
-> +	}
-> +
-> +	ret = hx9023s_send_cfg(fw, data);
-> +	if (ret)
-If this fails, we want to notify the user.  The firmware loaded
-but we were unable to use it for some reasons.
-
-> +		goto no_fw;
-> +
-> +	ret = regcache_sync(data->regmap);
-> +	if (ret)
-> +		dev_err(dev, "regcache sync failed\n");
-> +
-> +	return;
-> +
-> +no_fw:
-> +	ret = regmap_multi_reg_write(data->regmap, hx9023s_reg_init_list,
-> +								ARRAY_SIZE(hx9023s_reg_init_list));
-> +	if (ret) {
-> +		dev_err(dev, "Error loading default configuration\n");
-> +		return;
-> +	}
-> +
-> +	ret = regcache_sync(data->regmap);
-> +	if (ret)
-> +		dev_err(dev, "regcache sync failed\n");
-> +}
-> +
->  static int hx9023s_probe(struct i2c_client *client)
->  {
->  	struct device *dev = &client->dev;
-> @@ -1036,18 +1122,14 @@ static int hx9023s_probe(struct i2c_client *client)
->  	indio_dev->modes = INDIO_DIRECT_MODE;
->  	i2c_set_clientdata(client, indio_dev);
->  
-> -	ret = regmap_multi_reg_write(data->regmap, hx9023s_reg_init_list,
-> -				     ARRAY_SIZE(hx9023s_reg_init_list));
-> -	if (ret)
-> -		return dev_err_probe(dev, ret, "device init failed\n");
-> -
->  	ret = hx9023s_ch_cfg(data);
->  	if (ret)
->  		return dev_err_probe(dev, ret, "channel config failed\n");
->  
-> -	ret = regcache_sync(data->regmap);
-
-> +	ret = request_firmware_nowait(THIS_MODULE, true, "hx9023s.bin",
-> +						dev, GFP_KERNEL, data, hx9023s_cfg_update);
-
-Indent dev under T of the THIS_MODULE
-
-
->  	if (ret)
-> -		return dev_err_probe(dev, ret, "regcache sync failed\n");
-> +		return dev_err_probe(dev, ret, "reg config failed\n");
->  
->  	if (client->irq) {
->  		ret = devm_request_threaded_irq(dev, client->irq,
-> 
-> ---
-> base-commit: 8d4d26450d71289a35ff9e847675fd9c718798b8
-> change-id: 20241209-hx9023s-firmware-20241209-47411e8cda0b
-> 
-> Best regards,
+RnJvbTogS2VlcyBDb29rDQo+IFNlbnQ6IDE0IERlY2VtYmVyIDIwMjQgMDE6MzYNCi4uLg0KPiBJ
+biBvcmRlciB0byBzaWxlbmNlIHRoaXMgZmFsc2UgcG9zaXRpdmUgYnV0IGtlZXAgZGV0ZXJtaW5p
+c3RpYw0KPiBjb21waWxlLXRpbWUgd2FybmluZ3MgaW50YWN0LCBoaWRlIHRoZSBsZW5ndGggdmFy
+aWFibGUgZnJvbSBHQ0Mgd2l0aA0KPiBPUFRJTUlaRV9ISURFX1ZBUigpIGJlZm9yZSBjYWxsaW5n
+IHRoZSBidWlsdGluIG1lbWNweS4NCi4uLg0KPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9m
+b3J0aWZ5LXN0cmluZy5oIGIvaW5jbHVkZS9saW51eC9mb3J0aWZ5LXN0cmluZy5oDQo+IGluZGV4
+IDBkOTliZjExZDI2MC4uMWVlZjAxMTk2NzFjIDEwMDY0NA0KPiAtLS0gYS9pbmNsdWRlL2xpbnV4
+L2ZvcnRpZnktc3RyaW5nLmgNCj4gKysrIGIvaW5jbHVkZS9saW51eC9mb3J0aWZ5LXN0cmluZy5o
+DQo+IEBAIC02MTYsNiArNjE2LDEyIEBAIF9fRk9SVElGWV9JTkxJTkUgYm9vbCBmb3J0aWZ5X21l
+bWNweV9jaGsoX19rZXJuZWxfc2l6ZV90IHNpemUsDQo+ICAJcmV0dXJuIGZhbHNlOw0KPiAgfQ0K
+PiANCj4gKy8qDQo+ICsgKiBUbyB3b3JrIGFyb3VuZCB3aGF0IHNlZW1zIHRvIGJlIGFuIG9wdGlt
+aXplciBidWcsIHRoZSBtYWNybyBhcmd1bWVudHMNCj4gKyAqIG5lZWQgdG8gaGF2ZSBjb25zdCBj
+b3BpZXMgb3IgdGhlIHZhbHVlcyBlbmQgdXAgY2hhbmdlZCBieSB0aGUgdGltZSB0aGV5DQo+ICsg
+KiByZWFjaCBmb3J0aWZ5X3dhcm5fb25jZSgpLiBTZWUgY29tbWl0IDZmNzYzMGIxYjViYyAoImZv
+cnRpZnk6IENhcHR1cmUNCj4gKyAqIF9fYm9zKCkgcmVzdWx0cyBpbiBjb25zdCB0ZW1wIHZhcnMi
+KSBmb3IgbW9yZSBkZXRhaWxzLg0KPiArICovDQo+ICAjZGVmaW5lIF9fZm9ydGlmeV9tZW1jcHlf
+Y2hrKHAsIHEsIHNpemUsIHBfc2l6ZSwgcV9zaXplLAkJXA0KPiAgCQkJICAgICBwX3NpemVfZmll
+bGQsIHFfc2l6ZV9maWVsZCwgb3ApICh7CQlcDQo+ICAJY29uc3Qgc2l6ZV90IF9fZm9ydGlmeV9z
+aXplID0gKHNpemVfdCkoc2l6ZSk7CQkJXA0KPiBAQCAtNjIzLDYgKzYyOSw4IEBAIF9fRk9SVElG
+WV9JTkxJTkUgYm9vbCBmb3J0aWZ5X21lbWNweV9jaGsoX19rZXJuZWxfc2l6ZV90IHNpemUsDQo+
+ICAJY29uc3Qgc2l6ZV90IF9fcV9zaXplID0gKHFfc2l6ZSk7CQkJCVwNCj4gIAljb25zdCBzaXpl
+X3QgX19wX3NpemVfZmllbGQgPSAocF9zaXplX2ZpZWxkKTsJCQlcDQo+ICAJY29uc3Qgc2l6ZV90
+IF9fcV9zaXplX2ZpZWxkID0gKHFfc2l6ZV9maWVsZCk7CQkJXA0KPiArCS8qIEtlZXAgYSBtdXRh
+YmxlIHZlcnNpb24gb2YgdGhlIHNpemUgZm9yIHRoZSBmaW5hbCBjb3B5LiAqLwlcDQo+ICsJc2l6
+ZV90IF9fY29weV9zaXplID0gX19mb3J0aWZ5X3NpemU7CQkJCVwNCj4gIAlmb3J0aWZ5X3dhcm5f
+b25jZShmb3J0aWZ5X21lbWNweV9jaGsoX19mb3J0aWZ5X3NpemUsIF9fcF9zaXplLAlcDQo+ICAJ
+CQkJICAgICBfX3Ffc2l6ZSwgX19wX3NpemVfZmllbGQsCQlcDQo+ICAJCQkJICAgICBfX3Ffc2l6
+ZV9maWVsZCwgRk9SVElGWV9GVU5DXyAjI29wKSwgXA0KPiBAQCAtNjMwLDcgKzYzOCwxMSBAQCBf
+X0ZPUlRJRllfSU5MSU5FIGJvb2wgZm9ydGlmeV9tZW1jcHlfY2hrKF9fa2VybmVsX3NpemVfdCBz
+aXplLA0KPiAgCQkgIF9fZm9ydGlmeV9zaXplLAkJCQkJXA0KPiAgCQkgICJmaWVsZCBcIiIgI3Ag
+IlwiIGF0ICIgRklMRV9MSU5FLAkJCVwNCj4gIAkJICBfX3Bfc2l6ZV9maWVsZCk7CQkJCQlcDQo+
+IC0JX191bmRlcmx5aW5nXyMjb3AocCwgcSwgX19mb3J0aWZ5X3NpemUpOwkJCVwNCj4gKwkvKiBI
+aWRlIG9ubHkgdGhlIHJ1bi10aW1lIHNpemUgZnJvbSB2YWx1ZSByYW5nZSB0cmFja2luZyB0byAq
+LwlcDQo+ICsJLyogc2lsZW5jZSBjb21waWxlLXRpbWUgZmFsc2UgcG9zaXRpdmUgYm91bmRzIHdh
+cm5pbmdzLiAqLwlcDQo+ICsJaWYgKCFfX2J1aWx0aW5fY29uc3RhbnRfcChfX2ZvcnRpZnlfc2l6
+ZSkpCQkJXA0KPiArCQlPUFRJTUlaRVJfSElERV9WQVIoX19jb3B5X3NpemUpOwkJCVwNCg0KSSB0
+aGluayB5b3UgY2FuIG1ha2UgdGhhdDoNCglpZiAoIV9fYnVpbHRpbl9jb25zdGFudF9wKF9fY29w
+eV9zaXplKSkgXA0KCQlPUFRJTUlTRVJfSElERV9WQVIoX19jb3B5X3NpemUpIFwNCndoaWNoIGlz
+IHByb2JhYmx5IG1vcmUgcmVhZGFibGUuDQoNCglEYXZpZA0KDQo+ICsJX191bmRlcmx5aW5nXyMj
+b3AocCwgcSwgX19jb3B5X3NpemUpOwkJCQlcDQo+ICB9KQ0KPiANCj4gIC8qDQo+IC0tDQo+IDIu
+MzQuMQ0KPiANCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5IFJvYWQs
+IE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3RyYXRpb24gTm86
+IDEzOTczODYgKFdhbGVzKQ0K
 
