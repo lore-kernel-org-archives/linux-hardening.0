@@ -1,29 +1,29 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0916F13C690;
-	Mon, 16 Dec 2024 15:14:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE3551474BC;
+	Mon, 16 Dec 2024 15:17:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734362085; cv=none; b=Gj3czSSXjiOJv7HVlu/QY1R0W9vDG8ZA1CHswKk/8kScVTzCWUmNB2u3mWEpyIJOyyomZA3vCTzHfXu4zeSooVIJbE+gHosTq3iWPsadlTN6j0P9fOZBebdy6us6IVlT9HFZWFCxhAbi3EjT04Xai33M12IDTYvUUy0JpSyPRyQ=
+	t=1734362238; cv=none; b=tl1MooauJEVIzQhTQMK8OMZEAG1FwEm/nHH7aEfKOfrkYWMpKnzdK4ZxagXXb5rJj9/8Z04/DDHivuCZ/SXArXUrPUE9n5NQFm7grgf4w5uctgXxzwSkgalZmhLGeAPG3iOZJuRl8/eb7cpARA1El5k9KCZ4CtXr6JPPJ45hjis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734362085; c=relaxed/simple;
-	bh=TRzJDG8qpNxuOKS+kC6W4LWtn//Sk7pcdff4uLjlKV8=;
+	s=arc-20240116; t=1734362238; c=relaxed/simple;
+	bh=2J6q7DT6SA1J7apxj/V7KyOjH8Q6PnQ2ZcAN6brgkkk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KyjSIvUsbAhNApamHqYlh/qzm6h/iCXqlqrw/Mo1CpWGFG0nJ0ugjnsn16hdrI9WvH5NHX0ZvtvIteccCjUTahmmhioe7RRaZG9RNPuPffbQBBej1REHKc56LzA4Ld2APd8jXFtiP7VTj7CBDO3TGqVFMCUyhk49qSYxf3vimQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=nQvX9kQV; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=VC3+UAKKnrGihAJRtPSBdofcNnEyHnDPFxA3Tj4p/N8FAzr4EK5rdNlgItX6L7ztmFzU6Nevt+yWl8sxyOSqaal0RIve5ZLIWyM0tH0D0VZMXDXa+W7BMZoJHHfzUlgWXmkHW3wI2rhIpM1Yqm/g1cGyGiaRkbikIJwLDi304M4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=2F8JPt7f; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="nQvX9kQV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47F0BC4CED0;
-	Mon, 16 Dec 2024 15:14:43 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="2F8JPt7f"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48AB3C4CEDE;
+	Mon, 16 Dec 2024 15:17:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1734362084;
-	bh=TRzJDG8qpNxuOKS+kC6W4LWtn//Sk7pcdff4uLjlKV8=;
+	s=korg; t=1734362237;
+	bh=2J6q7DT6SA1J7apxj/V7KyOjH8Q6PnQ2ZcAN6brgkkk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nQvX9kQVXQgdNkYBe1+OI2F9+nyxl3Hxai1zykb43Qmm2uTuAEkGPbgcLXU55KE+S
-	 JJhDdcpjGmArH7jJWKLdQHH3a4hIYu4Rbe9Rkd5h8YbwHnm1cRqiEUJBAXGZOrK9Ry
-	 v5XOLFq4GdCVYC1kEoOi/MsHksY0Cvuj3lClNLBA=
-Date: Mon, 16 Dec 2024 16:14:39 +0100
+	b=2F8JPt7fEKeUW1+09qCIpdU6+KQ86X+l0KWxnGRlvnQSA5wzNAx1zDpG4DzFGQjWW
+	 sNBygwV17d12641QG2xXtW6kjBSd3B4hMvkhvkmpggHH2XmOtBEQzEYhII835oOQv0
+	 A9UL+bpd0C84DzAcOscCUNuF8IHagmhRW2KuP1w0=
+Date: Mon, 16 Dec 2024 16:17:15 +0100
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: =?iso-8859-1?Q?G=FCnther?= Noack <gnoack@google.com>
 Cc: Jann Horn <jannh@google.com>,
@@ -31,7 +31,7 @@ Cc: Jann Horn <jannh@google.com>,
 	Jiri Slaby <jirislaby@kernel.org>, linux-hardening@vger.kernel.org,
 	regressions@lists.linux.dev, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH] tty: Permit some TIOCL_SETSEL modes without CAP_SYS_ADMIN
-Message-ID: <2024121628-naturist-unopposed-44a8@gregkh>
+Message-ID: <2024121653-unblessed-mummified-c630@gregkh>
 References: <2024121418-blazer-valiant-c51a@gregkh>
  <20241216150722.4079213-2-gnoack@google.com>
 Precedence: bulk
@@ -65,38 +65,50 @@ On Mon, Dec 16, 2024 at 03:07:23PM +0000, Günther Noack wrote:
 >  drivers/tty/vt/selection.c | 14 ++++++++++++++
 >  drivers/tty/vt/vt.c        |  3 +--
 >  2 files changed, 15 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/tty/vt/selection.c b/drivers/tty/vt/selection.c
+> index 564341f1a74f..0bd6544e30a6 100644
+> --- a/drivers/tty/vt/selection.c
+> +++ b/drivers/tty/vt/selection.c
+> @@ -192,6 +192,20 @@ int set_selection_user(const struct tiocl_selection __user *sel,
+>  	if (copy_from_user(&v, sel, sizeof(*sel)))
+>  		return -EFAULT;
+>  
+> +	/*
+> +	 * TIOCL_SELCLEAR, TIOCL_SELPOINTER and TIOCL_SELMOUSEREPORT are OK to
+> +	 * use without CAP_SYS_ADMIN as they do not modify the selection.
+> +	 */
+> +	switch (v.sel_mode) {
+> +	case TIOCL_SELCLEAR:
+> +	case TIOCL_SELPOINTER:
+> +	case TIOCL_SELMOUSEREPORT:
+> +		break;
+> +	default:
+> +		if (!capable(CAP_SYS_ADMIN))
+> +			return -EPERM;
+> +	}
 
-Hi,
+Shouldn't you check this _before_ doing the copy_from_user() to emulate
+the previous logic properly?
 
-This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-a patch that has triggered this response.  He used to manually respond
-to these common problems, but in order to save his sanity (he kept
-writing the same thing over and over, yet to different people), I was
-created.  Hopefully you will not take offence and will fix the problem
-in your patch and resubmit it so that it can be accepted into the Linux
-kernel tree.
+> +
+>  	return set_selection_kernel(&v, tty);
+>  }
+>  
+> diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
+> index 96842ce817af..ed65b3b80fbd 100644
+> --- a/drivers/tty/vt/vt.c
+> +++ b/drivers/tty/vt/vt.c
+> @@ -3345,8 +3345,7 @@ int tioclinux(struct tty_struct *tty, unsigned long arg)
+>  
+>  	switch (type) {
+>  	case TIOCL_SETSEL:
+> -		if (!capable(CAP_SYS_ADMIN))
+> -			return -EPERM;
+> +		/* CAP_SYS_ADMIN check happens in set_selection_user(). */
 
-You are receiving this message because of the following common error(s)
-as indicated below:
-
-- Your patch breaks the build.
-
-- Your patch contains warnings and/or errors noticed by the
-  scripts/checkpatch.pl tool.
-
-- You have marked a patch with a "Fixes:" tag for a commit that is in an
-  older released kernel, yet you do not have a cc: stable line in the
-  signed-off-by area at all, which means that the patch will not be
-  applied to any older kernel releases.  To properly fix this, please
-  follow the documented rules in the
-  Documentation/process/stable-kernel-rules.rst file for how to resolve
-  this.
-
-If you wish to discuss this problem further, or you have questions about
-how to resolve this issue, please feel free to respond to this email and
-Greg will reply once he has dug out from the pending patches received
-from other developers.
+No need to mention this here, it's obvious in the function itself.
 
 thanks,
 
-greg k-h's patch email bot
+greg k-h
