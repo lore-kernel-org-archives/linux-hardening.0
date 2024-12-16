@@ -1,32 +1,31 @@
 Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40409207DE3;
-	Mon, 16 Dec 2024 19:17:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CC381E87B;
+	Mon, 16 Dec 2024 19:17:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734376624; cv=none; b=bKQm3cosn7ufWUp0fi0JcI7EdE+OV1yPGu0O0xvdhHCc4TXWG8Mi7KDXDZohm+KQo2Jz8t64EFitx7BGGR86L7vepvtVU89JNdg7Ixy7GjVDJjnnubdDSOBCRWFboHrC5iqvyaeGAF6YBPk3AU548zT2CrnLUWiOVnzKgtzf9Is=
+	t=1734376625; cv=none; b=OB//4Boa7omaS63vZ7GW1N4T9Xn5oC1BmkagiVRaoprvxxuGLae6BT+eqF2jDwHp93B3L2CK1KWKmwWTlrOFpUPFKPtCJDxXGqIp53usaPWamgtecv/lLeQXwwtBMQnT+sf72urDy4i7DOBrmklxUIiMoNicRLvDD1+YVOUL0oU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734376624; c=relaxed/simple;
-	bh=BREmyy2X+Lyrg1xWaxR9jZ1g33IfNfjC6Mi8ln5yPXg=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Cl8QYEjmQyq+HP1t2uXp7EemNhGeE/ma/rfqPWfAOCDIwLnRvZvkFw2A4omn/gWhhcT+yiifhtQDXbn+n6aT0rI00G4i72We3hLZ8soNL/3B/7UqJgHO5BnygWrgL8mv6fgn6qXTbUjIK4kH6iGEZuUBMSTIe/2ESfXU6LAHS2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=KoAgE5FP; arc=none smtp.client-ip=159.69.126.157
+	s=arc-20240116; t=1734376625; c=relaxed/simple;
+	bh=V7KbNN5UX1x8tPH3JWy/OtA6LHRL65sZkslzVlB6VgA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=VUQ5TvZExebHjUsng081nVke4O4MnUfrdz5bWAcohvMKIwKO+gfZ04ixpKwZKR4/HMurT/mOXog/hsFIFyvwD6BVyPdYcKstZfbIQ72qc4HJ1QO4rRu0kT/TnfTaRRNo5mT1wZrUNd5mRL6jzUbplfqs/heVhasJHIL1y0NjwR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=Vu2BaTSd; arc=none smtp.client-ip=159.69.126.157
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="KoAgE5FP"
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="Vu2BaTSd"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
 	s=mail; t=1734376618;
-	bh=BREmyy2X+Lyrg1xWaxR9jZ1g33IfNfjC6Mi8ln5yPXg=;
-	h=From:Subject:Date:To:Cc:From;
-	b=KoAgE5FPL0I539YmLKn8eNWQb4VdPISklLyuvtrOItZtoCMrU0ozQvPLbRtRZtZXB
-	 sbU5xcTjW1puVRxgkiiwPK400VCkMu88gB2t7/vKiuZc08uKJWO9eYy3HuFXWZXK7f
-	 hNIK7srbYvEji+AJigs2pxInGpGDViJHRhPxgXJE=
+	bh=V7KbNN5UX1x8tPH3JWy/OtA6LHRL65sZkslzVlB6VgA=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=Vu2BaTSdejNlyctdYqRrzqZkUN+MuNVcmtXtdDqbEcH2v2M13ZOiQG7aoMlglarpq
+	 mvU8oaCpe6E7I3N6L5c2jGPWGIeNo4CqJy5yRar0CPGZfxD5KjOuMsmvtQEZNzmrvC
+	 ODmyjnDal6hMvLGYmP89xx6hvvjdHMrDHoDVJK+E=
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Subject: [PATCH 0/4] module: sysfs: Two cleanups and preparation for const
- struct bin_attribute
-Date: Mon, 16 Dec 2024 20:16:40 +0100
-Message-Id: <20241216-sysfs-const-bin_attr-module-v1-0-f81e49e54ce4@weissschuh.net>
+Date: Mon, 16 Dec 2024 20:16:44 +0100
+Subject: [PATCH 4/4] module: sysfs: Use const 'struct bin_attribute'
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -35,10 +34,9 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAJh8YGcC/x3MSwqEMAwA0KtI1gZs/aFXERmqRg1oK00dFPHuU
- 2b5Nu8BIc8k0CYPePqysLMRKk1gXI1dCHmKBp3pQmlVotwyC47OSsCB7ceE4HF307kRDpSVeVE
- 1eW0qiMPhaebrv3f9+/4AjnnAxG0AAAA=
-X-Change-ID: 20241215-sysfs-const-bin_attr-module-be05346937a6
+Message-Id: <20241216-sysfs-const-bin_attr-module-v1-4-f81e49e54ce4@weissschuh.net>
+References: <20241216-sysfs-const-bin_attr-module-v1-0-f81e49e54ce4@weissschuh.net>
+In-Reply-To: <20241216-sysfs-const-bin_attr-module-v1-0-f81e49e54ce4@weissschuh.net>
 To: Luis Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, 
  Sami Tolvanen <samitolvanen@google.com>, 
  Daniel Gomez <da.gomez@samsung.com>, Kees Cook <kees@kernel.org>, 
@@ -47,11 +45,11 @@ Cc: linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-hardening@vger.kernel.org, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1734376617; l=719;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1734376617; l=3705;
  i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=BREmyy2X+Lyrg1xWaxR9jZ1g33IfNfjC6Mi8ln5yPXg=;
- b=n0bf4WOlsiRb0SEMNqckCUdhOXKZkLUrDHNyTVTUL8aWpKLRfpiAKbiimHFqb4Y7lsCsN/wwS
- yaIpBJxuBhNAgRVdhdMEBxJgi+ilJY8Yb+wZsEw24NBe3QM8W/KTjGu
+ bh=V7KbNN5UX1x8tPH3JWy/OtA6LHRL65sZkslzVlB6VgA=;
+ b=dku+SY1IqoJujrFsPN/9QwRW8kNQruu/B1cX/cx5kwNTA7yqPERm0wTRmnamkfg5rzxDjh7IC
+ Uyk15uFVqf8BhIqFUMSAFYZlI71GfTvUeInK734zuM35TQ1LDC/kWR1
 X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
  pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
@@ -60,19 +58,104 @@ Prepare for that.
 
 Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 ---
-Thomas Weißschuh (4):
-      module: sysfs: Drop member 'nsections'
-      module: sysfs: Simplify section attribute allocation
-      module: sysfs: Add notes attributes through attribute_group
-      module: sysfs: Use const 'struct bin_attribute'
+ kernel/module/sysfs.c | 28 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
 
- kernel/module/sysfs.c | 85 +++++++++++++++++++++++++--------------------------
- 1 file changed, 41 insertions(+), 44 deletions(-)
----
-base-commit: 2d8308bf5b67dff50262d8a9260a50113b3628c6
-change-id: 20241215-sysfs-const-bin_attr-module-be05346937a6
+diff --git a/kernel/module/sysfs.c b/kernel/module/sysfs.c
+index 4f37970f99c999589257713926395686f03103e6..99177cd55f7edec05abd079577ccf161666d8a20 100644
+--- a/kernel/module/sysfs.c
++++ b/kernel/module/sysfs.c
+@@ -31,11 +31,11 @@ struct module_sect_attrs {
+ 
+ #define MODULE_SECT_READ_SIZE (3 /* "0x", "\n" */ + (BITS_PER_LONG / 4))
+ static ssize_t module_sect_read(struct file *file, struct kobject *kobj,
+-				struct bin_attribute *battr,
++				const struct bin_attribute *battr,
+ 				char *buf, loff_t pos, size_t count)
+ {
+-	struct module_sect_attr *sattr =
+-		container_of(battr, struct module_sect_attr, battr);
++	const struct module_sect_attr *sattr =
++		container_of_const(battr, struct module_sect_attr, battr);
+ 	char bounce[MODULE_SECT_READ_SIZE + 1];
+ 	size_t wrote;
+ 
+@@ -61,11 +61,11 @@ static ssize_t module_sect_read(struct file *file, struct kobject *kobj,
+ 
+ static void free_sect_attrs(struct module_sect_attrs *sect_attrs)
+ {
+-	struct bin_attribute **bin_attr;
++	const struct bin_attribute *const *bin_attr;
+ 
+-	for (bin_attr = sect_attrs->grp.bin_attrs; *bin_attr; bin_attr++)
++	for (bin_attr = sect_attrs->grp.bin_attrs_new; *bin_attr; bin_attr++)
+ 		kfree((*bin_attr)->attr.name);
+-	kfree(sect_attrs->grp.bin_attrs);
++	kfree(sect_attrs->grp.bin_attrs_new);
+ 	kfree(sect_attrs);
+ }
+ 
+@@ -73,7 +73,7 @@ static int add_sect_attrs(struct module *mod, const struct load_info *info)
+ {
+ 	struct module_sect_attrs *sect_attrs;
+ 	struct module_sect_attr *sattr;
+-	struct bin_attribute **gattr;
++	const struct bin_attribute **gattr;
+ 	unsigned int nloaded = 0, i;
+ 	int ret;
+ 
+@@ -93,7 +93,7 @@ static int add_sect_attrs(struct module *mod, const struct load_info *info)
+ 
+ 	/* Setup section attributes. */
+ 	sect_attrs->grp.name = "sections";
+-	sect_attrs->grp.bin_attrs = gattr;
++	sect_attrs->grp.bin_attrs_new = gattr;
+ 
+ 	sattr = &sect_attrs->attrs[0];
+ 	for (i = 0; i < info->hdr->e_shnum; i++) {
+@@ -109,7 +109,7 @@ static int add_sect_attrs(struct module *mod, const struct load_info *info)
+ 			ret = -ENOMEM;
+ 			goto out;
+ 		}
+-		sattr->battr.read = module_sect_read;
++		sattr->battr.read_new = module_sect_read;
+ 		sattr->battr.size = MODULE_SECT_READ_SIZE;
+ 		sattr->battr.attr.mode = 0400;
+ 		*(gattr++) = &(sattr++)->battr;
+@@ -151,11 +151,11 @@ struct module_notes_attrs {
+ 
+ static void free_notes_attrs(struct module_notes_attrs *notes_attrs)
+ {
+-	struct bin_attribute **bin_attr;
++	const struct bin_attribute *const *bin_attr;
+ 
+-	for (bin_attr = notes_attrs->grp.bin_attrs; *bin_attr; bin_attr++)
++	for (bin_attr = notes_attrs->grp.bin_attrs_new; *bin_attr; bin_attr++)
+ 		kfree((*bin_attr)->attr.name);
+-	kfree(notes_attrs->grp.bin_attrs);
++	kfree(notes_attrs->grp.bin_attrs_new);
+ 	kfree(notes_attrs);
+ }
+ 
+@@ -163,7 +163,7 @@ static int add_notes_attrs(struct module *mod, const struct load_info *info)
+ {
+ 	unsigned int notes, loaded, i;
+ 	struct module_notes_attrs *notes_attrs;
+-	struct bin_attribute **gattr;
++	const struct bin_attribute **gattr;
+ 	struct bin_attribute *nattr;
+ 	int ret;
+ 
+@@ -189,7 +189,7 @@ static int add_notes_attrs(struct module *mod, const struct load_info *info)
+ 	}
+ 
+ 	notes_attrs->grp.name = "notes";
+-	notes_attrs->grp.bin_attrs = gattr;
++	notes_attrs->grp.bin_attrs_new = gattr;
+ 
+ 	nattr = &notes_attrs->attrs[0];
+ 	for (loaded = i = 0; i < info->hdr->e_shnum; ++i) {
 
-Best regards,
 -- 
-Thomas Weißschuh <linux@weissschuh.net>
+2.47.1
 
