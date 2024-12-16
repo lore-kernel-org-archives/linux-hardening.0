@@ -1,107 +1,131 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FA3B14D433;
-	Sun, 15 Dec 2024 22:15:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA3F0E57D;
+	Mon, 16 Dec 2024 01:27:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734300937; cv=none; b=b4Z8oqpGcHrlcMaUeJoRKsUFEp3SObZDwEkzqYmEhFc126h0K81254C/ZSR8BIyJGqZauHXESckfYexFOkEL1xGnljsEKEN1jQqPPut4BVYp0YuvZvFEG1hMkuga+3+yZB70Vpo+/1vsCSyDrhDshfKrztSxMXB2pcrNAFJjwyU=
+	t=1734312472; cv=none; b=OFtR79XIa1jPL8/usKo3GFepwmehk0lh1Fg9pCSv4REVoaYZo4f2xbgIzcCCfSf/4jO5JArMODjQpEAnRHidPPQuvVpbweysJ/7GXcngEjcLWYS3WCP+eKzmFH3yiNu2jmU9+4LgGK2kE7rZ+Cf5VDCwMJSaVEyM0GyOLA6fXUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734300937; c=relaxed/simple;
-	bh=LFLsQ0g+lzZ4xHcMyDh47Z5D9FCtM0KWFaRCr1r3IMM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PoMBF+G21xnhP/rwyDjC8RuSXMc4VDCHqBQT10iD4N/dDNmM4dooENeFvT2+rvJRh7Mn3zQYkmaEV54QU3cjRVp9gT67+2fiwLQDUu6stn8leCAUM5TZk4D8dDmjjPW7hLSde8O/cAlngUXesOsk6apyjGnFGOnfV4wmEad4Fus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oIXSdxyy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1734312472; c=relaxed/simple;
+	bh=8mG+G/lK51j1vgDOIaBJx5cjCjXLy2marSPSfx8iBC4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=a2L3Wa3AUVvT6Jf4k3vrDilYs+Mo4Najfn62kpMokBqefLmTaG/BorO7FxxYI8ibxYbrI/0PRlrBQgkNxVpSyPzcf27bl3qXdWzPlVJUtvnvSinKL+aCIItP4xyuxu3SIEN7Kj9pKnQeKqkYx/oxrQb+hCoh1ef9wU5sEqUY/MA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hh+vrx8x; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oIXSdxyy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0ED4C4CECE;
-	Sun, 15 Dec 2024 22:15:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hh+vrx8x"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20B1FC4CECE;
+	Mon, 16 Dec 2024 01:27:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734300936;
-	bh=LFLsQ0g+lzZ4xHcMyDh47Z5D9FCtM0KWFaRCr1r3IMM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oIXSdxyy9yHUUaCJhCOict0yfneCE5cfn7INLa74DfWrS/nz7z0QmA+i6lPqQ5F+e
-	 WYb7klJmPw7ps/KI40KKdGoGD7x0wnoZ84IBXtGR8gUs2T3j2TYv/EVfRjtwjBvjsP
-	 e8Z80aXBUdlt5wDTa4IGm4NQDtsKgNFNzu2GWrJ2BivcDdxPBBewITQ4u+pWa2Sp7n
-	 P1oPKBjiGYu6mJDbdU0f3Tu+qkzn1JUa/6XZRPuCKSnd50cxhJjGNL66k6NbHK9HB0
-	 R/IeeCBaNdytudoN7D6981bwM8PKem9n+0lxBsdXYkMLLaV/On6VjDJGwmrxMOKQa1
-	 4fkuu7+tEeuIw==
-Date: Sun, 15 Dec 2024 14:15:33 -0800
+	s=k20201202; t=1734312472;
+	bh=8mG+G/lK51j1vgDOIaBJx5cjCjXLy2marSPSfx8iBC4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=hh+vrx8xvhqD4CYZmHh0nAY6phw4RNYcY3BXm5Ilc4N5fMGn9tythzCWilO9fqeNB
+	 3qqaxVdOZ7j6N2g5iUs6VpL/tNs8bpBBnAnYHzLM4hZb2hhCajk2+gRybkgZsGb8Ne
+	 77Lq7BlIzpxDR1waboEXAWEcR2sFF+EH90T3/N27g3+PYYIjr3jeIdVuojPVg5hhLj
+	 WB6Fxd6DIVeTzwaRn3Igy8XaH/NKAU9/PRKOOcD8wmo7F12rMdaHoCPNg2yWT3ZWQ4
+	 iu0pkiMimLcXSGh3xBAlDDfx1FHX0oV4z420gjgs4B2sigZWONFeGnBaxqf115NDZ5
+	 qErUpcoPbzzOA==
 From: Kees Cook <kees@kernel.org>
-To: David Laight <David.Laight@aculab.com>
-Cc: Nathan Chancellor <nathan@kernel.org>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
-	Nilay Shroff <nilay@linux.ibm.com>,
-	Yury Norov <yury.norov@gmail.com>, Qing Zhao <qing.zhao@oracle.com>,
-	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] fortify: Hide run-time copy size from value range
- tracking
-Message-ID: <202412151415.E116A89B@keescook>
-References: <20241214013600.it.020-kees@kernel.org>
- <383ed0428fd2415aa7ab09255134d61c@AcuMS.aculab.com>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: Kees Cook <kees@kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Thorsten Leemhuis <linux@leemhuis.info>,
+	regressions@lists.linux.dev,
+	workflows@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] docs: git SHA prefixes are for humans
+Date: Sun, 15 Dec 2024 17:27:47 -0800
+Message-Id: <20241216012743.work.705-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <383ed0428fd2415aa7ab09255134d61c@AcuMS.aculab.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3675; i=kees@kernel.org; h=from:subject:message-id; bh=8mG+G/lK51j1vgDOIaBJx5cjCjXLy2marSPSfx8iBC4=; b=owGbwMvMwCVmps19z/KJym7G02pJDOnxTcLb9531ujFl9rnQdZ/YirbbPVmbb1x1v5X32F/Vm nXNzvuSO0pZGMS4GGTFFFmC7NzjXDzetoe7z1WEmcPKBDKEgYtTACbyZQPDP5MMgd1HvcWfSXnp sXCt1WYPL9vZF75NqK40RulHfeH+ZQz/i24dSft1IpbdleulbfjCmV3uTs87zj7ZvDjWomGKj9B VBgA=
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Sun, Dec 15, 2024 at 07:06:12PM +0000, David Laight wrote:
-> From: Kees Cook
-> > Sent: 14 December 2024 01:36
-> ...
-> > In order to silence this false positive but keep deterministic
-> > compile-time warnings intact, hide the length variable from GCC with
-> > OPTIMIZE_HIDE_VAR() before calling the builtin memcpy.
-> ...
-> > diff --git a/include/linux/fortify-string.h b/include/linux/fortify-string.h
-> > index 0d99bf11d260..1eef0119671c 100644
-> > --- a/include/linux/fortify-string.h
-> > +++ b/include/linux/fortify-string.h
-> > @@ -616,6 +616,12 @@ __FORTIFY_INLINE bool fortify_memcpy_chk(__kernel_size_t size,
-> >  	return false;
-> >  }
-> > 
-> > +/*
-> > + * To work around what seems to be an optimizer bug, the macro arguments
-> > + * need to have const copies or the values end up changed by the time they
-> > + * reach fortify_warn_once(). See commit 6f7630b1b5bc ("fortify: Capture
-> > + * __bos() results in const temp vars") for more details.
-> > + */
-> >  #define __fortify_memcpy_chk(p, q, size, p_size, q_size,		\
-> >  			     p_size_field, q_size_field, op) ({		\
-> >  	const size_t __fortify_size = (size_t)(size);			\
-> > @@ -623,6 +629,8 @@ __FORTIFY_INLINE bool fortify_memcpy_chk(__kernel_size_t size,
-> >  	const size_t __q_size = (q_size);				\
-> >  	const size_t __p_size_field = (p_size_field);			\
-> >  	const size_t __q_size_field = (q_size_field);			\
-> > +	/* Keep a mutable version of the size for the final copy. */	\
-> > +	size_t __copy_size = __fortify_size;				\
-> >  	fortify_warn_once(fortify_memcpy_chk(__fortify_size, __p_size,	\
-> >  				     __q_size, __p_size_field,		\
-> >  				     __q_size_field, FORTIFY_FUNC_ ##op), \
-> > @@ -630,7 +638,11 @@ __FORTIFY_INLINE bool fortify_memcpy_chk(__kernel_size_t size,
-> >  		  __fortify_size,					\
-> >  		  "field \"" #p "\" at " FILE_LINE,			\
-> >  		  __p_size_field);					\
-> > -	__underlying_##op(p, q, __fortify_size);			\
-> > +	/* Hide only the run-time size from value range tracking to */	\
-> > +	/* silence compile-time false positive bounds warnings. */	\
-> > +	if (!__builtin_constant_p(__fortify_size))			\
-> > +		OPTIMIZER_HIDE_VAR(__copy_size);			\
-> 
-> I think you can make that:
-> 	if (!__builtin_constant_p(__copy_size)) \
-> 		OPTIMISER_HIDE_VAR(__copy_size) \
-> which is probably more readable.
+Clarify that the preferred git SHA abbreviation length for the Fixes
+tag is 12 characters[1], as the tag is intended for humans (though, yes,
+it is parsed by machines too). Collision resolution needs to be performed
+using the parenthetical patch Subject that follows the abbreviated hash.
 
-Yeah, that tests out fine. I've updated it locally. Thanks!
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://lore.kernel.org/all/CAHk-=wiwAz3UgPOWK3RdGXDnTRHcwVbxpuxCQt_0SoAJC-oGXQ@mail.gmail.com [1]
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Thorsten Leemhuis <linux@leemhuis.info>
+Cc: regressions@lists.linux.dev
+Cc: workflows@vger.kernel.org
+Cc: linux-doc@vger.kernel.org
+---
+ Documentation/process/handling-regressions.rst | 4 ++--
+ Documentation/process/maintainer-tip.rst       | 4 ++--
+ Documentation/process/submitting-patches.rst   | 6 ++++++
+ 3 files changed, 10 insertions(+), 4 deletions(-)
 
--Kees
-
+diff --git a/Documentation/process/handling-regressions.rst b/Documentation/process/handling-regressions.rst
+index 1f5ab49c48a4..a0e8715c6cd3 100644
+--- a/Documentation/process/handling-regressions.rst
++++ b/Documentation/process/handling-regressions.rst
+@@ -29,9 +29,9 @@ The important bits (aka "The TL;DR")
+     * For mailed reports, check if the reporter included a line like ``#regzbot
+       introduced: v5.13..v5.14-rc1``. If not, send a reply (with the regressions
+       list in CC) containing a paragraph like the following, which tells regzbot
+-      when the issue started to happen::
++      when the issue started to happen, preferably with a full git SHA::
+ 
+-       #regzbot ^introduced: 1f2e3d4c5b6a
++       #regzbot ^introduced: 1f2e3d4c5b6a1524e886b7f1b8a0c1fc7321cac2
+ 
+     * When forwarding reports from a bug tracker to the regressions list (see
+       above), include a paragraph like the following::
+diff --git a/Documentation/process/maintainer-tip.rst b/Documentation/process/maintainer-tip.rst
+index e374b67b3277..658b489705be 100644
+--- a/Documentation/process/maintainer-tip.rst
++++ b/Documentation/process/maintainer-tip.rst
+@@ -284,7 +284,7 @@ following tag ordering scheme:
+ 
+      Commit
+ 
+-       abcdef012345678 ("x86/xxx: Replace foo with bar")
++       ab0123456789 ("x86/xxx: Replace foo with bar")
+ 
+      left an unused instance of variable foo around. Remove it.
+ 
+@@ -295,7 +295,7 @@ following tag ordering scheme:
+      The recent replacement of foo with bar left an unused instance of
+      variable foo around. Remove it.
+ 
+-     Fixes: abcdef012345678 ("x86/xxx: Replace foo with bar")
++     Fixes: ab0123456789 ("x86/xxx: Replace foo with bar")
+      Signed-off-by: J.Dev <j.dev@mail>
+ 
+    The latter puts the information about the patch into the focus and
+diff --git a/Documentation/process/submitting-patches.rst b/Documentation/process/submitting-patches.rst
+index 1518bd57adab..efd4fb1109e9 100644
+--- a/Documentation/process/submitting-patches.rst
++++ b/Documentation/process/submitting-patches.rst
+@@ -163,6 +163,12 @@ An example call::
+ 	$ git log -1 --pretty=fixes 54a4f0239f2e
+ 	Fixes: 54a4f0239f2e ("KVM: MMU: make kvm_mmu_zap_page() return the number of pages it actually freed")
+ 
++Note that the "Fixes" tag, while it does get parsed by machines, is intended
++for humans (hence the Subject portion). It is preferred that hashes remain at
++12 characters even in the face of prefix collisions. When encountering hash
++prefix collisions, tools (and humans) need to resolve such collisions using
++the parenthetical patch Subject.
++
+ .. _split_changes:
+ 
+ Separate your changes
 -- 
-Kees Cook
+2.34.1
+
