@@ -1,88 +1,153 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E876C1804E
-	for <linux-hardening@vger.kernel.org>; Mon, 16 Dec 2024 04:24:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B0011804E;
+	Mon, 16 Dec 2024 04:28:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734323097; cv=none; b=Bs7VPejWLrrseK8dj0jhg5Oyu5Kcbba+ySZziVShO6gHp42AOoVE3wrVL2g2JKRPktjy369kiMWFDsHT1Y6FGDrpc17XsbFxK+kbXdCJHRbyS6+B3gP1b2MlPMFRmiJHBYGwn/d0+a0oeHN9ZbP5PbxnklpRnf2i02VpR7tFXwM=
+	t=1734323334; cv=none; b=S+7sAkr9/M9HfsnSX05SB2g0qAuVVgZiDhCW0WGzCe1qP/9FD0Sow6xoJoNU+HfQqXfaA6AcGMgAnLtwuc3NhUjPuL2Eea1VoANlbfFlKM5acSD7yRtFZcJLyOe4YAK0ZjU5BHvJgVvHe0sngaKau3V5eaj8xAbzzlLdcMuEszg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734323097; c=relaxed/simple;
-	bh=YwqdvjfzG0DoJ0k9XSN0KUtKCfYNTk4LJateWZ4UjBY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KRMZlpUa0WK8xCRQQxJhjjMLh2JrkX0go3hoI9MUO+/37ITKvyXuEk355nyGAq+IY/kmO74RU6uL6+nZulwJN3z28Es/CCnLmAbmXg/l4q3XVOrSfdsHg08NdT8m0bgXuUHXj4nTmiXcNGS8hd/t/4hCqPMmiS9HV1Sxn5BI0iY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=vsRMe9+M; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1734323334; c=relaxed/simple;
+	bh=+7ebeBX9/Sd+wZ9MZbhIg7jVGuJt5VnvgdgVtdj8Evo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PwyYuz/zte9pvckwLyOcIq8lMTpkfe6Va4cht5tluWh5hRv4VV8VBVCb8vXAPyNI2v0qdX59lr2KiTGugpmOFXWPF6I3UjcDUm+ZoRxuk2E3TRtHaVnno3Lff4lAKdYqhAjaJd1GgaDcLAaTA3dE7TmCgd4auzlraggKT/NluAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Swywnszy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vsRMe9+M"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=q/TSpAqjZ0Kmkc6t/yU/vlH1Iwmc59GL94DGDe4ag3k=; b=vsRMe9+Mwu/Be8LSe9V4SM/IJb
-	cAZZbtGj4zemdNsqZpXz2cZkn2X2Mdmb2XDijoVpjfk0uQu6Z3La2Rm9frt6xmNhtNLNI2iIqhf20
-	sj6WCyIdQLZmkA4OB+JIXrlOUz5ywZYtOLTWYgTRMYYF/BThi8pYs/IQuE4w9UJEBPd0UBmTGbHx/
-	OpLFPLHLNF2UbbLEb8a0Ah4U8w6Wg04kf5K3jmt2HbDeakzdgHAhhVTXxJgAYestK36ZoERAy0Crc
-	T6hVIAaAEC8ZWz49b/O3JAuISvxhRqcxlpVVCpmAkb4dfUHhiwxkrfVxCMhBJJxQhEMo/rnCYIiwc
-	TfdLLdTQ==;
-Received: from willy by casper.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tN2ex-0000000DXM8-10sk;
-	Mon, 16 Dec 2024 04:24:43 +0000
-Date: Mon, 16 Dec 2024 04:24:42 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: Uladzislau Rezki <urezki@gmail.com>
-Cc: Kefeng Wang <wangkefeng.wang@huawei.com>, zuoze <zuoze1@huawei.com>,
-	gustavoars@kernel.org, akpm@linux-foundation.org,
-	linux-hardening@vger.kernel.org, linux-mm@kvack.org,
-	keescook@chromium.org
-Subject: Re: [PATCH -next] mm: usercopy: add a debugfs interface to bypass
- the vmalloc check.
-Message-ID: <Z1-riu65--CviPba@casper.infradead.org>
-References: <92768fc4-4fe0-f74a-d61c-dde0eb64e2c0@huawei.com>
- <dd3f0a9f-ec3c-46c3-8231-2022b67094a6@huawei.com>
- <Z08KAupLBo--JGz8@pc636>
- <76995749-1c2e-4f78-9aac-a4bff4b8097f@huawei.com>
- <Z08M88NdLfugqhu9@pc636>
- <d659d925-a322-4566-955a-97894a2aa795@huawei.com>
- <Z08TlFqWVWs47g9z@pc636>
- <Z09VwuhfQbbro-gA@pc638.lan>
- <Z09icnP7QuaLg4Qv@casper.infradead.org>
- <Z1AX-xhOZEZqH1Jw@pc636>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Swywnszy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87802C4CED0;
+	Mon, 16 Dec 2024 04:28:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1734323333;
+	bh=+7ebeBX9/Sd+wZ9MZbhIg7jVGuJt5VnvgdgVtdj8Evo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=SwywnszyURP7Q1UaRzBfKk0cAuAT6yqlPvm36ahD3h8V2kMqVEe3Fit6HPhNiNJAk
+	 IhYWOxATY49Lc1859ZFjHvCh6h6TvV3VUccTlbpAljqKyZCCKrhyLATZxfbARiH9qG
+	 HgR6SQq+eDtueD7qzO/2zkbF1MLCnbU3Bg+RnrbNyppwxqpUEv8R63mICSAc/WoCVg
+	 PocUocHc3iQ17T3ZSaIgZMK8Cl72HUBnJbZT991bWXQaX8O7hUCRE705qZ/d51wzUk
+	 uTn8SBMc8xwc/Zy0NNvZ2O+Z6QwmMX0+BU6HT6vZm4u0cGz5Jox6/y9P6d6h/ISyWi
+	 vJCdKTGflA9hQ==
+From: Kees Cook <kees@kernel.org>
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: Kees Cook <kees@kernel.org>,
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
+	Miri Korenblit <miriam.rachel.korenblit@intel.com>,
+	Kalle Valo <kvalo@kernel.org>,
+	Johannes Berg <johannes.berg@intel.com>,
+	Shaul Triebitz <shaul.triebitz@intel.com>,
+	Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+	Yedidya Benshimol <yedidya.ben.shimol@intel.com>,
+	Benjamin Berg <benjamin.berg@intel.com>,
+	Dmitry Antipov <dmantipov@yandex.ru>,
+	linux-kernel@vger.kernel.org,
+	linux-wireless@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH RESEND] wifi: iwlwifi: mvm: Fix __counted_by usage in cfg80211_wowlan_nd_*
+Date: Sun, 15 Dec 2024 20:28:48 -0800
+Message-Id: <20241216042843.work.498-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z1AX-xhOZEZqH1Jw@pc636>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4355; i=kees@kernel.org; h=from:subject:message-id; bh=+7ebeBX9/Sd+wZ9MZbhIg7jVGuJt5VnvgdgVtdj8Evo=; b=owGbwMvMwCVmps19z/KJym7G02pJDOnxa+pnTdhyv76o/kF3Y9G1dC0VUYsroVHPw4ROGUVJ3 Wc5MHNWRykLgxgXg6yYIkuQnXuci8fb9nD3uYowc1iZQIYwcHEKwEQkLBkZXhtyfmZO+6i+ZoeQ 3iKbn08ehYo7n7ma1Gcyh7vIsfbuCoZ/xo8Dsw9NiypMumBszXryctLSzRMtju2edvR0xAnZ/jl azAA=
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Wed, Dec 04, 2024 at 09:51:07AM +0100, Uladzislau Rezki wrote:
-> I think, when i have more free cycles, i will check it from performance
-> point of view. Because i do not know how much a maple tree is efficient
-> when it comes to lookups, insert and removing.
+Both struct cfg80211_wowlan_nd_match and struct cfg80211_wowlan_nd_info
+pre-allocate space for channels and matches, but then may end up using
+fewer that the full allocation. Shrink the associated counter
+(n_channels and n_matches) after counting the results. This avoids
+compile-time (and run-time) warnings from __counted_by. (The counter
+member needs to be updated _before_ accessing the array index.)
 
-Maple tree has a fanout of around 8-12 at each level, while an rbtree has
-a fanout of two (arguably 3, since we might find the node).  Let's say you
-have 1000 vmalloc areas.  A perfectly balanced rbtree would have 9 levels
-(and might well be 11+ levels if imperfectly balanced -- and part of the
-advantage of rbtrees over AVL trees is that they can be less balanced
-so need fewer rotations).  A perfectly balanced maple tree would have
-only 3 levels.
+Seen with coming GCC 15:
 
-Addition/removal is more expensive.  We biased the implementation heavily
-towards lookup, so we chose to keep it very compact.  Most users (and
-particularly the VMA tree which was our first client) do more lookups
-than modifications; a real application takes many more pagefaults than
-it does calls to mmap/munmap/mprotect/etc.
+drivers/net/wireless/intel/iwlwifi/mvm/d3.c: In function 'iwl_mvm_query_set_freqs':
+drivers/net/wireless/intel/iwlwifi/mvm/d3.c:2877:66: warning: operation on 'match->n_channels' may be undefined [-Wsequence-point]
+ 2877 |                                 match->channels[match->n_channels++] =
+      |                                                 ~~~~~~~~~~~~~~~~~^~
+drivers/net/wireless/intel/iwlwifi/mvm/d3.c:2885:66: warning: operation on 'match->n_channels' may be undefined [-Wsequence-point]
+ 2885 |                                 match->channels[match->n_channels++] =
+      |                                                 ~~~~~~~~~~~~~~~~~^~
+drivers/net/wireless/intel/iwlwifi/mvm/d3.c: In function 'iwl_mvm_query_netdetect_reasons':
+drivers/net/wireless/intel/iwlwifi/mvm/d3.c:2982:58: warning: operation on 'net_detect->n_matches' may be undefined [-Wsequence-point]
+ 2982 |                 net_detect->matches[net_detect->n_matches++] = match;
+      |                                     ~~~~~~~~~~~~~~~~~~~~~^~
 
-> As an RCU safe data structure, yes, a searching is improved in a way there
-> is no need in taking spinlock. As a noted earlier i do not know if a maple 
-> tree allows to find a data when instead of key, it is associated with, we
-> pass something that is withing a searchable area: [va_start:va_end].
+Fixes: aa4ec06c455d ("wifi: cfg80211: use __counted_by where appropriate")
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Link: https://lore.kernel.org/r/20240619211233.work.355-kees@kernel.org
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+Pinging this patch again, see https://lore.kernel.org/lkml/20240619211233.work.355-kees@kernel.org/
+---
+ drivers/net/wireless/intel/iwlwifi/mvm/d3.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-That's what maple trees do; they store non-overlapping ranges.  So you
-can look up any address in a range and it will return you the pointer
-associated with that range.  Just like you'd want for a page fault ;-)
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/d3.c b/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
+index f85c01e04ebf..7d973546c9fb 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
+@@ -2954,6 +2954,7 @@ static void iwl_mvm_query_set_freqs(struct iwl_mvm *mvm,
+ 				    int idx)
+ {
+ 	int i;
++	int n_channels = 0;
+ 
+ 	if (fw_has_api(&mvm->fw->ucode_capa,
+ 		       IWL_UCODE_TLV_API_SCAN_OFFLOAD_CHANS)) {
+@@ -2962,7 +2963,7 @@ static void iwl_mvm_query_set_freqs(struct iwl_mvm *mvm,
+ 
+ 		for (i = 0; i < SCAN_OFFLOAD_MATCHING_CHANNELS_LEN * 8; i++)
+ 			if (matches[idx].matching_channels[i / 8] & (BIT(i % 8)))
+-				match->channels[match->n_channels++] =
++				match->channels[n_channels++] =
+ 					mvm->nd_channels[i]->center_freq;
+ 	} else {
+ 		struct iwl_scan_offload_profile_match_v1 *matches =
+@@ -2970,9 +2971,11 @@ static void iwl_mvm_query_set_freqs(struct iwl_mvm *mvm,
+ 
+ 		for (i = 0; i < SCAN_OFFLOAD_MATCHING_CHANNELS_LEN_V1 * 8; i++)
+ 			if (matches[idx].matching_channels[i / 8] & (BIT(i % 8)))
+-				match->channels[match->n_channels++] =
++				match->channels[n_channels++] =
+ 					mvm->nd_channels[i]->center_freq;
+ 	}
++	/* We may have ended up with fewer channels than we allocated. */
++	match->n_channels = n_channels;
+ }
+ 
+ /**
+@@ -3053,6 +3056,8 @@ static void iwl_mvm_query_netdetect_reasons(struct iwl_mvm *mvm,
+ 			     GFP_KERNEL);
+ 	if (!net_detect || !n_matches)
+ 		goto out_report_nd;
++	net_detect->n_matches = n_matches;
++	n_matches = 0;
+ 
+ 	for_each_set_bit(i, &matched_profiles, mvm->n_nd_match_sets) {
+ 		struct cfg80211_wowlan_nd_match *match;
+@@ -3066,8 +3071,9 @@ static void iwl_mvm_query_netdetect_reasons(struct iwl_mvm *mvm,
+ 				GFP_KERNEL);
+ 		if (!match)
+ 			goto out_report_nd;
++		match->n_channels = n_channels;
+ 
+-		net_detect->matches[net_detect->n_matches++] = match;
++		net_detect->matches[n_matches++] = match;
+ 
+ 		/* We inverted the order of the SSIDs in the scan
+ 		 * request, so invert the index here.
+@@ -3082,6 +3088,8 @@ static void iwl_mvm_query_netdetect_reasons(struct iwl_mvm *mvm,
+ 
+ 		iwl_mvm_query_set_freqs(mvm, d3_data->nd_results, match, i);
+ 	}
++	/* We may have fewer matches than we allocated. */
++	net_detect->n_matches = n_matches;
+ 
+ out_report_nd:
+ 	wakeup.net_detect = net_detect;
+-- 
+2.34.1
+
