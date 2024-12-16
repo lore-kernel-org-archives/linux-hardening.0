@@ -1,131 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA3F0E57D;
-	Mon, 16 Dec 2024 01:27:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E876C1804E
+	for <linux-hardening@vger.kernel.org>; Mon, 16 Dec 2024 04:24:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734312472; cv=none; b=OFtR79XIa1jPL8/usKo3GFepwmehk0lh1Fg9pCSv4REVoaYZo4f2xbgIzcCCfSf/4jO5JArMODjQpEAnRHidPPQuvVpbweysJ/7GXcngEjcLWYS3WCP+eKzmFH3yiNu2jmU9+4LgGK2kE7rZ+Cf5VDCwMJSaVEyM0GyOLA6fXUU=
+	t=1734323097; cv=none; b=Bs7VPejWLrrseK8dj0jhg5Oyu5Kcbba+ySZziVShO6gHp42AOoVE3wrVL2g2JKRPktjy369kiMWFDsHT1Y6FGDrpc17XsbFxK+kbXdCJHRbyS6+B3gP1b2MlPMFRmiJHBYGwn/d0+a0oeHN9ZbP5PbxnklpRnf2i02VpR7tFXwM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734312472; c=relaxed/simple;
-	bh=8mG+G/lK51j1vgDOIaBJx5cjCjXLy2marSPSfx8iBC4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=a2L3Wa3AUVvT6Jf4k3vrDilYs+Mo4Najfn62kpMokBqefLmTaG/BorO7FxxYI8ibxYbrI/0PRlrBQgkNxVpSyPzcf27bl3qXdWzPlVJUtvnvSinKL+aCIItP4xyuxu3SIEN7Kj9pKnQeKqkYx/oxrQb+hCoh1ef9wU5sEqUY/MA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hh+vrx8x; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1734323097; c=relaxed/simple;
+	bh=YwqdvjfzG0DoJ0k9XSN0KUtKCfYNTk4LJateWZ4UjBY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KRMZlpUa0WK8xCRQQxJhjjMLh2JrkX0go3hoI9MUO+/37ITKvyXuEk355nyGAq+IY/kmO74RU6uL6+nZulwJN3z28Es/CCnLmAbmXg/l4q3XVOrSfdsHg08NdT8m0bgXuUHXj4nTmiXcNGS8hd/t/4hCqPMmiS9HV1Sxn5BI0iY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=vsRMe9+M; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hh+vrx8x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20B1FC4CECE;
-	Mon, 16 Dec 2024 01:27:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734312472;
-	bh=8mG+G/lK51j1vgDOIaBJx5cjCjXLy2marSPSfx8iBC4=;
-	h=From:To:Cc:Subject:Date:From;
-	b=hh+vrx8xvhqD4CYZmHh0nAY6phw4RNYcY3BXm5Ilc4N5fMGn9tythzCWilO9fqeNB
-	 3qqaxVdOZ7j6N2g5iUs6VpL/tNs8bpBBnAnYHzLM4hZb2hhCajk2+gRybkgZsGb8Ne
-	 77Lq7BlIzpxDR1waboEXAWEcR2sFF+EH90T3/N27g3+PYYIjr3jeIdVuojPVg5hhLj
-	 WB6Fxd6DIVeTzwaRn3Igy8XaH/NKAU9/PRKOOcD8wmo7F12rMdaHoCPNg2yWT3ZWQ4
-	 iu0pkiMimLcXSGh3xBAlDDfx1FHX0oV4z420gjgs4B2sigZWONFeGnBaxqf115NDZ5
-	 qErUpcoPbzzOA==
-From: Kees Cook <kees@kernel.org>
-To: Jonathan Corbet <corbet@lwn.net>
-Cc: Kees Cook <kees@kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Thorsten Leemhuis <linux@leemhuis.info>,
-	regressions@lists.linux.dev,
-	workflows@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] docs: git SHA prefixes are for humans
-Date: Sun, 15 Dec 2024 17:27:47 -0800
-Message-Id: <20241216012743.work.705-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vsRMe9+M"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=q/TSpAqjZ0Kmkc6t/yU/vlH1Iwmc59GL94DGDe4ag3k=; b=vsRMe9+Mwu/Be8LSe9V4SM/IJb
+	cAZZbtGj4zemdNsqZpXz2cZkn2X2Mdmb2XDijoVpjfk0uQu6Z3La2Rm9frt6xmNhtNLNI2iIqhf20
+	sj6WCyIdQLZmkA4OB+JIXrlOUz5ywZYtOLTWYgTRMYYF/BThi8pYs/IQuE4w9UJEBPd0UBmTGbHx/
+	OpLFPLHLNF2UbbLEb8a0Ah4U8w6Wg04kf5K3jmt2HbDeakzdgHAhhVTXxJgAYestK36ZoERAy0Crc
+	T6hVIAaAEC8ZWz49b/O3JAuISvxhRqcxlpVVCpmAkb4dfUHhiwxkrfVxCMhBJJxQhEMo/rnCYIiwc
+	TfdLLdTQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tN2ex-0000000DXM8-10sk;
+	Mon, 16 Dec 2024 04:24:43 +0000
+Date: Mon, 16 Dec 2024 04:24:42 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: Uladzislau Rezki <urezki@gmail.com>
+Cc: Kefeng Wang <wangkefeng.wang@huawei.com>, zuoze <zuoze1@huawei.com>,
+	gustavoars@kernel.org, akpm@linux-foundation.org,
+	linux-hardening@vger.kernel.org, linux-mm@kvack.org,
+	keescook@chromium.org
+Subject: Re: [PATCH -next] mm: usercopy: add a debugfs interface to bypass
+ the vmalloc check.
+Message-ID: <Z1-riu65--CviPba@casper.infradead.org>
+References: <92768fc4-4fe0-f74a-d61c-dde0eb64e2c0@huawei.com>
+ <dd3f0a9f-ec3c-46c3-8231-2022b67094a6@huawei.com>
+ <Z08KAupLBo--JGz8@pc636>
+ <76995749-1c2e-4f78-9aac-a4bff4b8097f@huawei.com>
+ <Z08M88NdLfugqhu9@pc636>
+ <d659d925-a322-4566-955a-97894a2aa795@huawei.com>
+ <Z08TlFqWVWs47g9z@pc636>
+ <Z09VwuhfQbbro-gA@pc638.lan>
+ <Z09icnP7QuaLg4Qv@casper.infradead.org>
+ <Z1AX-xhOZEZqH1Jw@pc636>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3675; i=kees@kernel.org; h=from:subject:message-id; bh=8mG+G/lK51j1vgDOIaBJx5cjCjXLy2marSPSfx8iBC4=; b=owGbwMvMwCVmps19z/KJym7G02pJDOnxTcLb9531ujFl9rnQdZ/YirbbPVmbb1x1v5X32F/Vm nXNzvuSO0pZGMS4GGTFFFmC7NzjXDzetoe7z1WEmcPKBDKEgYtTACbyZQPDP5MMgd1HvcWfSXnp sXCt1WYPL9vZF75NqK40RulHfeH+ZQz/i24dSft1IpbdleulbfjCmV3uTs87zj7ZvDjWomGKj9B VBgA=
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z1AX-xhOZEZqH1Jw@pc636>
 
-Clarify that the preferred git SHA abbreviation length for the Fixes
-tag is 12 characters[1], as the tag is intended for humans (though, yes,
-it is parsed by machines too). Collision resolution needs to be performed
-using the parenthetical patch Subject that follows the abbreviated hash.
+On Wed, Dec 04, 2024 at 09:51:07AM +0100, Uladzislau Rezki wrote:
+> I think, when i have more free cycles, i will check it from performance
+> point of view. Because i do not know how much a maple tree is efficient
+> when it comes to lookups, insert and removing.
 
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Link: https://lore.kernel.org/all/CAHk-=wiwAz3UgPOWK3RdGXDnTRHcwVbxpuxCQt_0SoAJC-oGXQ@mail.gmail.com [1]
-Signed-off-by: Kees Cook <kees@kernel.org>
----
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Thorsten Leemhuis <linux@leemhuis.info>
-Cc: regressions@lists.linux.dev
-Cc: workflows@vger.kernel.org
-Cc: linux-doc@vger.kernel.org
----
- Documentation/process/handling-regressions.rst | 4 ++--
- Documentation/process/maintainer-tip.rst       | 4 ++--
- Documentation/process/submitting-patches.rst   | 6 ++++++
- 3 files changed, 10 insertions(+), 4 deletions(-)
+Maple tree has a fanout of around 8-12 at each level, while an rbtree has
+a fanout of two (arguably 3, since we might find the node).  Let's say you
+have 1000 vmalloc areas.  A perfectly balanced rbtree would have 9 levels
+(and might well be 11+ levels if imperfectly balanced -- and part of the
+advantage of rbtrees over AVL trees is that they can be less balanced
+so need fewer rotations).  A perfectly balanced maple tree would have
+only 3 levels.
 
-diff --git a/Documentation/process/handling-regressions.rst b/Documentation/process/handling-regressions.rst
-index 1f5ab49c48a4..a0e8715c6cd3 100644
---- a/Documentation/process/handling-regressions.rst
-+++ b/Documentation/process/handling-regressions.rst
-@@ -29,9 +29,9 @@ The important bits (aka "The TL;DR")
-     * For mailed reports, check if the reporter included a line like ``#regzbot
-       introduced: v5.13..v5.14-rc1``. If not, send a reply (with the regressions
-       list in CC) containing a paragraph like the following, which tells regzbot
--      when the issue started to happen::
-+      when the issue started to happen, preferably with a full git SHA::
- 
--       #regzbot ^introduced: 1f2e3d4c5b6a
-+       #regzbot ^introduced: 1f2e3d4c5b6a1524e886b7f1b8a0c1fc7321cac2
- 
-     * When forwarding reports from a bug tracker to the regressions list (see
-       above), include a paragraph like the following::
-diff --git a/Documentation/process/maintainer-tip.rst b/Documentation/process/maintainer-tip.rst
-index e374b67b3277..658b489705be 100644
---- a/Documentation/process/maintainer-tip.rst
-+++ b/Documentation/process/maintainer-tip.rst
-@@ -284,7 +284,7 @@ following tag ordering scheme:
- 
-      Commit
- 
--       abcdef012345678 ("x86/xxx: Replace foo with bar")
-+       ab0123456789 ("x86/xxx: Replace foo with bar")
- 
-      left an unused instance of variable foo around. Remove it.
- 
-@@ -295,7 +295,7 @@ following tag ordering scheme:
-      The recent replacement of foo with bar left an unused instance of
-      variable foo around. Remove it.
- 
--     Fixes: abcdef012345678 ("x86/xxx: Replace foo with bar")
-+     Fixes: ab0123456789 ("x86/xxx: Replace foo with bar")
-      Signed-off-by: J.Dev <j.dev@mail>
- 
-    The latter puts the information about the patch into the focus and
-diff --git a/Documentation/process/submitting-patches.rst b/Documentation/process/submitting-patches.rst
-index 1518bd57adab..efd4fb1109e9 100644
---- a/Documentation/process/submitting-patches.rst
-+++ b/Documentation/process/submitting-patches.rst
-@@ -163,6 +163,12 @@ An example call::
- 	$ git log -1 --pretty=fixes 54a4f0239f2e
- 	Fixes: 54a4f0239f2e ("KVM: MMU: make kvm_mmu_zap_page() return the number of pages it actually freed")
- 
-+Note that the "Fixes" tag, while it does get parsed by machines, is intended
-+for humans (hence the Subject portion). It is preferred that hashes remain at
-+12 characters even in the face of prefix collisions. When encountering hash
-+prefix collisions, tools (and humans) need to resolve such collisions using
-+the parenthetical patch Subject.
-+
- .. _split_changes:
- 
- Separate your changes
--- 
-2.34.1
+Addition/removal is more expensive.  We biased the implementation heavily
+towards lookup, so we chose to keep it very compact.  Most users (and
+particularly the VMA tree which was our first client) do more lookups
+than modifications; a real application takes many more pagefaults than
+it does calls to mmap/munmap/mprotect/etc.
 
+> As an RCU safe data structure, yes, a searching is improved in a way there
+> is no need in taking spinlock. As a noted earlier i do not know if a maple 
+> tree allows to find a data when instead of key, it is associated with, we
+> pass something that is withing a searchable area: [va_start:va_end].
+
+That's what maple trees do; they store non-overlapping ranges.  So you
+can look up any address in a range and it will return you the pointer
+associated with that range.  Just like you'd want for a page fault ;-)
