@@ -1,88 +1,112 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08C5F2595;
-	Tue, 17 Dec 2024 01:52:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0734F2B9CD;
+	Tue, 17 Dec 2024 02:04:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734400355; cv=none; b=Wzjzbp7spCz7gRoMRXDj5A5Dca/fAlbJ22EU5tZupuULOmsW9DNodb9QLWnaAhKPRK4vWFvVCVVbmcmUIfZrXWWM7UZkRrUyO0oPQt8UWbzUQo/Bw26Dtyoefk1l46Hx3vSxSGR+c5dIHF30w6YHudRIGBhwTNOmC0o0SiygI4k=
+	t=1734401090; cv=none; b=q2buxsfGB8Ay0kihLwnsKsEdRgkFSfey+Z7If8+qxiCKdvlHh9XrvsWU6RD4X5DmezYYYPrufKUVC4I+nvB/zEEVAhmBTmOI2V5MiL2gKcRPdpHMOIYSKmlaTUp7bSeMC64eGMQmnGUKqrUgwJKlhMWrujILC45dsFS4x3idpfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734400355; c=relaxed/simple;
-	bh=Dc1EjkkP8yZB+Lzy6XaSHxR9gc0cP4smyE+k7epBWYI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fp4Z6y7UIkKHAPs4ACtpQ2M2CeaZdm8jcMbup5mmQ4ngjwWBBOYbCJst7waiaE0H8T15ZHAqcpF59ygKHBNt2r0KUryh/l5e7DxGQoHhpdsi8kW/bu2oHZeBjH83T1udL9PJY4YzumNwGNxKsPybvvylHVoV9VlX8PRQq6D6/Xk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=En4rEvuM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1734401090; c=relaxed/simple;
+	bh=BTSN9M6hbNaevPQDTr9VKyPD+Neg+lgWqgTutRYqPCY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OVZAyMR8yov/BkIMU8QWC7z0XDpwR2hsJGEuJFjHwO4sUph2wIAdolaib9Vh1dR6JEU/SENBd2/UqGTp0vPxih1BibwPnPE/AeYuWIc1Fdyu6pSk3hpMc3xWIsJqiaCD4HzMB0Z9TQidBDvO/ZIjlvA4cX8WJYGl7kfVdLbm1HQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f/vWsSpb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="En4rEvuM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81EA5C4CED0;
-	Tue, 17 Dec 2024 01:52:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f/vWsSpb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B769C4CED0;
+	Tue, 17 Dec 2024 02:04:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734400354;
-	bh=Dc1EjkkP8yZB+Lzy6XaSHxR9gc0cP4smyE+k7epBWYI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=En4rEvuMe51nLY5xz/kceMOCExv7+kEZY7cXWN5c/6QiI9HGhnxe5yoedIHFXYcUR
-	 N89ctvLxT8zoCZjlDb7K5Hs6Yo5FIRuZK/8IYO8ONCueOSHJmYEA+341hEPZL+BIPu
-	 H6dRGYP8a36hMjds0clyaIFwjAMfaWDCz7owtMX606mOEyouucYALd80QYJMr0xdqD
-	 b/uGPj2kCb3DvFTpdZhRWECCGcIiS1g8Ogdt7sY+glbdEurDrqBhAkONDdD5zQkbTG
-	 6VfGH2Du/6usU6rUnx9yQbErU+C2cL6DYfGRfYNrv6pEEwVR+DaMzJjjkAy+T+JbIM
-	 yHH90SE0w/Q+A==
-Date: Mon, 16 Dec 2024 17:52:31 -0800
+	s=k20201202; t=1734401089;
+	bh=BTSN9M6hbNaevPQDTr9VKyPD+Neg+lgWqgTutRYqPCY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=f/vWsSpbBzTQOBGM0w5uCSl+ZQvSYFYlQapLhFQYntwS1jttm4nWiQIU07/y9vyDq
+	 50f1GB3KNjj/s4o+PTaiD8ceiFuHv8XNoseFnIqr7Ag7HnUnmGiYpwppylxBBC04UR
+	 28AXlQrvAv6ICf0XFnEuklvyS8QXFM8pSXQWehsCBTQh3TxAmkW0j7V2eTaF6xk9RJ
+	 ACgEgFyDZArIgM0AhM9YDR0wUIQ9/YZOZLbwMlIdl4D42vl0sHkuVhKYwWybbR03X0
+	 YmvKSdB273ddUzFcAZ8C3u3Mx6Zd9H6bdt4V0EevIpYz+MPGgBeHJ+JABElaKEHIuk
+	 Udms+ldyEiq+w==
 From: Kees Cook <kees@kernel.org>
-To: Eric Dumazet <eric.dumazet@gmail.com>
-Cc: Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH RFC 3/5] rtnetlink: do_setlink: Use sockaddr_storage
-Message-ID: <202412161749.84F7671F3@keescook>
-References: <20241104221450.work.053-kees@kernel.org>
- <20241104222513.3469025-3-kees@kernel.org>
- <7a2e5da2-5122-4c73-9a94-20e7f21a26f5@gmail.com>
+To: Eric Dumazet <edumazet@google.com>
+Cc: Kees Cook <kees@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Ido Schimmel <idosch@nvidia.com>,
+	Petr Machata <petrm@nvidia.com>,
+	netdev@vger.kernel.org,
+	Simon Horman <horms@kernel.org>,
+	Kuniyuki Iwashima <kuniyu@amazon.com>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] rtnetlink: do_setlink: Use true struct sockaddr
+Date: Mon, 16 Dec 2024 18:04:45 -0800
+Message-Id: <20241217020441.work.066-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7a2e5da2-5122-4c73-9a94-20e7f21a26f5@gmail.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1911; i=kees@kernel.org; h=from:subject:message-id; bh=BTSN9M6hbNaevPQDTr9VKyPD+Neg+lgWqgTutRYqPCY=; b=owGbwMvMwCVmps19z/KJym7G02pJDOkJd2yPbTCbxDi7of9UrHHKSbmkV8z8M2z6/LN2OFyqn yT/5LpqRykLgxgXg6yYIkuQnXuci8fb9nD3uYowc1iZQIYwcHEKwETMFRgZzlw/yPR5VveRV9Ic UyWCAsLYBC+4LzKar6LSKfgkhkViIcP/vKMCH4vrjZ4wvjc/9b6ghe3L2uj5sv9aOx142nyT9nf zAAA=
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Tue, Nov 05, 2024 at 11:59:49AM +0100, Eric Dumazet wrote:
-> 
-> On 11/4/24 11:25 PM, Kees Cook wrote:
-> > Instead of a heap allocation use a stack allocated sockaddr_storage to
-> > support arbitrary length addr_len value (but bounds check it against the
-> > maximum address length).
-> > 
-> > Signed-off-by: Kees Cook <kees@kernel.org>
-> > ---
-> >   net/core/rtnetlink.c | 12 ++++--------
-> >   1 file changed, 4 insertions(+), 8 deletions(-)
-> > 
-> > diff --git a/net/core/rtnetlink.c b/net/core/rtnetlink.c
-> > index f0a520987085..eddd10b74f06 100644
-> > --- a/net/core/rtnetlink.c
-> > +++ b/net/core/rtnetlink.c
-> > @@ -2839,21 +2839,17 @@ static int do_setlink(const struct sk_buff *skb,
-> >   	}
-> >   	if (tb[IFLA_ADDRESS]) {
-> > -		struct sockaddr *sa;
-> > -		int len;
-> > +		struct sockaddr_storage addr;
-> > +		struct sockaddr *sa = (struct sockaddr *)&addr;
-> 
-> We already use too much stack space.
+Instead of a heap allocation use a stack allocated struct sockaddr, as
+dev_set_mac_address_user() is the consumer (which uses a classic
+struct sockaddr). Cap the copy to the minimum address size between
+the incoming address and the traditional sa_data field itself.
 
-I'm finally coming back to this. I was over-thinking: this only calls
-dev_set_mac_address_user() so it really is a true struct sockaddr.
+Putting "sa" on the stack means it will get a reused stack slot since
+it is smaller than other existing single-scope stack variables (like
+the vfinfo array).
 
-> Please move addr into struct rtnl_newlink_tbs ?
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: Ido Schimmel <idosch@nvidia.com>
+Cc: Petr Machata <petrm@nvidia.com>
+Cc: netdev@vger.kernel.org
+---
+ net/core/rtnetlink.c | 22 +++++++---------------
+ 1 file changed, 7 insertions(+), 15 deletions(-)
 
-I couldn't figure out how that was meant to work -- I didn't see a
-struct rtnl_newlink_tbs instance near this routine.
-
-Regardless, I can just tweak the length and leave it heap allocated.
-
--Kees
-
+diff --git a/net/core/rtnetlink.c b/net/core/rtnetlink.c
+index ab5f201bf0ab..6da0edc0870d 100644
+--- a/net/core/rtnetlink.c
++++ b/net/core/rtnetlink.c
+@@ -3048,21 +3048,13 @@ static int do_setlink(const struct sk_buff *skb, struct net_device *dev,
+ 	}
+ 
+ 	if (tb[IFLA_ADDRESS]) {
+-		struct sockaddr *sa;
+-		int len;
+-
+-		len = sizeof(sa_family_t) + max_t(size_t, dev->addr_len,
+-						  sizeof(*sa));
+-		sa = kmalloc(len, GFP_KERNEL);
+-		if (!sa) {
+-			err = -ENOMEM;
+-			goto errout;
+-		}
+-		sa->sa_family = dev->type;
+-		memcpy(sa->sa_data, nla_data(tb[IFLA_ADDRESS]),
+-		       dev->addr_len);
+-		err = dev_set_mac_address_user(dev, sa, extack);
+-		kfree(sa);
++		struct sockaddr sa = { };
++
++		/* dev_set_mac_address_user() uses a true struct sockaddr. */
++		sa.sa_family = dev->type;
++		memcpy(sa.sa_data, nla_data(tb[IFLA_ADDRESS]),
++		       min(dev->addr_len, sizeof(sa.sa_data_min)));
++		err = dev_set_mac_address_user(dev, &sa, extack);
+ 		if (err)
+ 			goto errout;
+ 		status |= DO_SETLINK_MODIFIED;
 -- 
-Kees Cook
+2.34.1
+
