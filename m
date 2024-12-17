@@ -1,191 +1,199 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 106EC1F8EE4;
-	Tue, 17 Dec 2024 20:34:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06E8C1CBE87;
+	Tue, 17 Dec 2024 22:18:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734467696; cv=none; b=B91V96T7sRdzWE8TW+FAi3TCt1nKgd8SF5Ky8qqT/NXajGu5NU0uREAin7YfnfJZy+2yMsYMLxT1RnYgdnsGUmj4Q7I5gJ5GNoS9gi+Ab0wIPiEU4YOfIP7wN/Pvg/bp42YacD3XB3omZjdwGLHjOoEQq2uUgd4eYd2bNMZnouc=
+	t=1734473937; cv=none; b=OUInVx+zUIX8EZ/sKZEO9PNOFbNQmPXEGfE0ywl0UHMK59nUugzlzpj9tYRit0N0AoCnNkFcB5Nv4ZpBnMKeHKb1Wy81DYap4NhHNSF1Y1FuhQHeQZibrUW3p627Kng4BudlK9KOC4c60yXq5Cl8rQbK3ucsXSlscsb5Rj1LZwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734467696; c=relaxed/simple;
-	bh=nvnPPN7j/2p/JFEejejW+Qg34E36N01t9rBWoj3OZgM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=flzgx+Gp7iDoEYQIpfCY8FwJA0+/4kNnXGC6CFO0nCLMwqDOIxGuY5vOJ1Bb4Fall/Oza+u9TDuSpUKsyCLLNaYfMRJ6keGnGHSgTCvZG5XEDnYcFsYJ91T5tSV/zIQD1YEFJR7I1QIOo1PXgyS7ffuw7SnjI8JsTY1EErNx8zw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LsVQxRIV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1734473937; c=relaxed/simple;
+	bh=+cDN887R3QTVEjX6KEQYRZ2FEBrq1PPQJHjIoIcdQkA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Owg72i1FZNofmErfBRFVg1UF3Bskqj9Est3lh+rYOQd8vwGLtD8EUXaWLTFsO3ZdwT1GU63o8NF3lRo8Y80GA2cSrfSbSBWdL0Rbgy6Qlo6CHXWZVOdw9AU98BDKyP+t85CMd+MgJSjslaJuGNgdxS2HTOfS7XmYpCOh+f2WJsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jrhvA2TP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LsVQxRIV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B71EC4CED3;
-	Tue, 17 Dec 2024 20:34:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jrhvA2TP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 675F1C4CED3;
+	Tue, 17 Dec 2024 22:18:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734467695;
-	bh=nvnPPN7j/2p/JFEejejW+Qg34E36N01t9rBWoj3OZgM=;
-	h=From:To:Cc:Subject:Date:From;
-	b=LsVQxRIVnTWmK+4yYhndt3mInuvU6Ulb1pJ+dF2ABRL/mwqpll9QvwFYN/kVaDAVj
-	 nmml2P7yeZ4cs7yKcMTNpo1oHhZVy/v6otDSGOSxYUbO8OVOBwn5SwOcGEwLH+/rZh
-	 COAP0iABpRqOHQIa4GC52DMLTOU/IguAK8DCrbCxPO13jyWqF5phrMQebu/wkemc5F
-	 5Em6BzMo73YoxS1/y0Q0qTJ49zUi7Y8THuemgc7BkfYNCWBFd61SGJbbZ0UGlW8ZGJ
-	 xzKDOoLJBFpx5Tqhk+5eJdPW57RilOoZJxAUQ9iAla6gKIcEEtOaJ76s/xVlM0sSbh
-	 PHl8XF22RXb4w==
+	s=k20201202; t=1734473936;
+	bh=+cDN887R3QTVEjX6KEQYRZ2FEBrq1PPQJHjIoIcdQkA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jrhvA2TPhEHiyGY1AEBOf7bjQ40LICdGm6WCX/VlYN5Iipffw5mlwiGh5DY4DnTzD
+	 lTB+Iq+8zQz6mmCS9XLoFlWsTvHa/DcUQC/Kkgc8uaNZUNMnOEmid7ouP5lz+tsFoS
+	 1dWUKe4a+LbNzee2vMvGYtegnaYDNAR7mzeuYJNiHMVK02Sw2PJFdFIiGbvGyXOZ/n
+	 2TRQ2AxRP8vHrSG6xUY7IAWVDgVaF6Ic6qP+rDBUaMGR3QyFwmWc6uuII24/BSLGKk
+	 pose5P2JOBVQ4QcFDKoKlbTH4f9P069F0Xa+u+jBXZVk/ZTOz0FVnAA7xEKHVmyvP4
+	 /LmWOy4Vfx2tQ==
+Date: Tue, 17 Dec 2024 14:18:53 -0800
 From: Kees Cook <kees@kernel.org>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Kees Cook <kees@kernel.org>,
-	Simon Horman <horms@kernel.org>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Chaitanya Kulkarni <kch@nvidia.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Mike Christie <michael.christie@oracle.com>,
-	Max Gurtovoy <mgurtovoy@nvidia.com>,
-	Maurizio Lombardi <mlombard@redhat.com>,
-	Dmitry Bogdanov <d.bogdanov@yadro.com>,
-	Mingzhe Zou <mingzhe.zou@easystack.cn>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>,
-	linux-nvme@lists.infradead.org,
-	linux-scsi@vger.kernel.org,
-	target-devel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v2] net: core: Convert inet_addr_is_any() to sockaddr_storage
-Date: Tue, 17 Dec 2024 12:34:51 -0800
-Message-Id: <20241217203447.it.588-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+To: jeffxu@chromium.org
+Cc: akpm@linux-foundation.org, keescook@chromium.org, jannh@google.com,
+	torvalds@linux-foundation.org, adhemerval.zanella@linaro.org,
+	oleg@redhat.com, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-mm@kvack.org,
+	jorgelo@chromium.org, sroettger@google.com, ojeda@kernel.org,
+	adobriyan@gmail.com, anna-maria@linutronix.de, mark.rutland@arm.com,
+	linus.walleij@linaro.org, Jason@zx2c4.com, deller@gmx.de,
+	rdunlap@infradead.org, davem@davemloft.net, hch@lst.de,
+	peterx@redhat.com, hca@linux.ibm.com, f.fainelli@gmail.com,
+	gerg@kernel.org, dave.hansen@linux.intel.com, mingo@kernel.org,
+	ardb@kernel.org, Liam.Howlett@oracle.com, mhocko@suse.com,
+	42.hyeyoo@gmail.com, peterz@infradead.org, ardb@google.com,
+	enh@google.com, rientjes@google.com, groeck@chromium.org,
+	mpe@ellerman.id.au, Vlastimil Babka <vbabka@suse.cz>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Andrei Vagin <avagin@gmail.com>,
+	Dmitry Safonov <0x7f454c46@gmail.com>,
+	Mike Rapoport <mike.rapoport@gmail.com>,
+	Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>
+Subject: Re: [PATCH v4 1/1] exec: seal system mappings
+Message-ID: <202412171248.409B10D@keescook>
+References: <20241125202021.3684919-1-jeffxu@google.com>
+ <20241125202021.3684919-2-jeffxu@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4896; i=kees@kernel.org; h=from:subject:message-id; bh=nvnPPN7j/2p/JFEejejW+Qg34E36N01t9rBWoj3OZgM=; b=owGbwMvMwCVmps19z/KJym7G02pJDOmJD7IXGD1bHnYlpCN4y6Tg3H9XYj89Nfrz4+kPLX+O4 85567JEOkpZGMS4GGTFFFmC7NzjXDzetoe7z1WEmcPKBDKEgYtTACZS6sHwP3hN4eMGY3eGE5Jq dVe+buJK2Zey8KEWkxbn7C/6h39eM2RkmLRCIm6RyO4Hq9Z7xwQ8alw1TW5+5nTH7UclY4/eXLZ 3CycA
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241125202021.3684919-2-jeffxu@google.com>
 
-All the callers of inet_addr_is_any() have a sockaddr_storage-backed
-sockaddr. Avoid casts and switch prototype to the actual object being
-used.
+On Mon, Nov 25, 2024 at 08:20:21PM +0000, jeffxu@chromium.org wrote:
+> Seal vdso, vvar, sigpage, uprobes and vsyscall.
+> 
+> Those mappings are readonly or executable only, sealing can protect
+> them from ever changing or unmapped during the life time of the process.
+> For complete descriptions of memory sealing, please see mseal.rst [1].
+> 
+> System mappings such as vdso, vvar, and sigpage (for arm) are
+> generated by the kernel during program initialization, and are
+> sealed after creation.
+> [...]
+>  
+> +	exec.seal_system_mappings = [KNL]
+> +			Format: { no | yes }
+> +			Seal system mappings: vdso, vvar, sigpage, vsyscall,
+> +			uprobe.
+> +			- 'no':  do not seal system mappings.
+> +			- 'yes': seal system mappings.
+> +			This overrides CONFIG_SEAL_SYSTEM_MAPPINGS=(y/n)
+> +			If not specified or invalid, default is the value set by
+> +			CONFIG_SEAL_SYSTEM_MAPPINGS.
+> +			This option has no effect if CONFIG_64BIT=n
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Simon Horman <horms@kernel.org>
-Signed-off-by: Kees Cook <kees@kernel.org>
----
- v2: drop "extern" in header (hch)
- v1: https://lore.kernel.org/all/20241217012618.work.323-kees@kernel.org/
----
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Sagi Grimberg <sagi@grimberg.me>
-Cc: Chaitanya Kulkarni <kch@nvidia.com>
-Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Paolo Abeni <pabeni@redhat.com>
-Cc: Mike Christie <michael.christie@oracle.com>
-Cc: Max Gurtovoy <mgurtovoy@nvidia.com>
-Cc: Maurizio Lombardi <mlombard@redhat.com>
-Cc: Dmitry Bogdanov <d.bogdanov@yadro.com>
-Cc: Mingzhe Zou <mingzhe.zou@easystack.cn>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: Simon Horman <horms@kernel.org>
-Cc: "Dr. David Alan Gilbert" <linux@treblig.org>
-Cc: linux-nvme@lists.infradead.org
-Cc: linux-scsi@vger.kernel.org
-Cc: target-devel@vger.kernel.org
-Cc: netdev@vger.kernel.org
----
- drivers/nvme/target/rdma.c          | 2 +-
- drivers/nvme/target/tcp.c           | 2 +-
- drivers/target/iscsi/iscsi_target.c | 2 +-
- include/linux/inet.h                | 2 +-
- net/core/utils.c                    | 8 ++++----
- 5 files changed, 8 insertions(+), 8 deletions(-)
+I know there is a v5 coming, but I wanted to give my thoughts to help
+shape it based on the current discussion threads.
 
-diff --git a/drivers/nvme/target/rdma.c b/drivers/nvme/target/rdma.c
-index 1afd93026f9b..18ea11342af1 100644
---- a/drivers/nvme/target/rdma.c
-+++ b/drivers/nvme/target/rdma.c
-@@ -1986,7 +1986,7 @@ static void nvmet_rdma_disc_port_addr(struct nvmet_req *req,
- 	struct nvmet_rdma_port *port = nport->priv;
- 	struct rdma_cm_id *cm_id = port->cm_id;
- 
--	if (inet_addr_is_any((struct sockaddr *)&cm_id->route.addr.src_addr)) {
-+	if (inet_addr_is_any(&cm_id->route.addr.src_addr)) {
- 		struct nvmet_rdma_rsp *rsp =
- 			container_of(req, struct nvmet_rdma_rsp, req);
- 		struct rdma_cm_id *req_cm_id = rsp->queue->cm_id;
-diff --git a/drivers/nvme/target/tcp.c b/drivers/nvme/target/tcp.c
-index 7c51c2a8c109..df24244fb820 100644
---- a/drivers/nvme/target/tcp.c
-+++ b/drivers/nvme/target/tcp.c
-@@ -2158,7 +2158,7 @@ static void nvmet_tcp_disc_port_addr(struct nvmet_req *req,
- {
- 	struct nvmet_tcp_port *port = nport->priv;
- 
--	if (inet_addr_is_any((struct sockaddr *)&port->addr)) {
-+	if (inet_addr_is_any(&port->addr)) {
- 		struct nvmet_tcp_cmd *cmd =
- 			container_of(req, struct nvmet_tcp_cmd, req);
- 		struct nvmet_tcp_queue *queue = cmd->queue;
-diff --git a/drivers/target/iscsi/iscsi_target.c b/drivers/target/iscsi/iscsi_target.c
-index 6002283cbeba..1ce68eda0090 100644
---- a/drivers/target/iscsi/iscsi_target.c
-+++ b/drivers/target/iscsi/iscsi_target.c
-@@ -3471,7 +3471,7 @@ iscsit_build_sendtargets_response(struct iscsit_cmd *cmd,
- 					}
- 				}
- 
--				if (inet_addr_is_any((struct sockaddr *)&np->np_sockaddr))
-+				if (inet_addr_is_any(&np->np_sockaddr))
- 					sockaddr = &conn->local_sockaddr;
- 				else
- 					sockaddr = &np->np_sockaddr;
-diff --git a/include/linux/inet.h b/include/linux/inet.h
-index bd8276e96e60..9158772f3559 100644
---- a/include/linux/inet.h
-+++ b/include/linux/inet.h
-@@ -55,6 +55,6 @@ extern int in6_pton(const char *src, int srclen, u8 *dst, int delim, const char
- 
- extern int inet_pton_with_scope(struct net *net, unsigned short af,
- 		const char *src, const char *port, struct sockaddr_storage *addr);
--extern bool inet_addr_is_any(struct sockaddr *addr);
-+bool inet_addr_is_any(struct sockaddr_storage *addr);
- 
- #endif	/* _LINUX_INET_H */
-diff --git a/net/core/utils.c b/net/core/utils.c
-index 27f4cffaae05..e47feeaa5a49 100644
---- a/net/core/utils.c
-+++ b/net/core/utils.c
-@@ -399,9 +399,9 @@ int inet_pton_with_scope(struct net *net, __kernel_sa_family_t af,
- }
- EXPORT_SYMBOL(inet_pton_with_scope);
- 
--bool inet_addr_is_any(struct sockaddr *addr)
-+bool inet_addr_is_any(struct sockaddr_storage *addr)
- {
--	if (addr->sa_family == AF_INET6) {
-+	if (addr->ss_family == AF_INET6) {
- 		struct sockaddr_in6 *in6 = (struct sockaddr_in6 *)addr;
- 		const struct sockaddr_in6 in6_any =
- 			{ .sin6_addr = IN6ADDR_ANY_INIT };
-@@ -409,13 +409,13 @@ bool inet_addr_is_any(struct sockaddr *addr)
- 		if (!memcmp(in6->sin6_addr.s6_addr,
- 			    in6_any.sin6_addr.s6_addr, 16))
- 			return true;
--	} else if (addr->sa_family == AF_INET) {
-+	} else if (addr->ss_family == AF_INET) {
- 		struct sockaddr_in *in = (struct sockaddr_in *)addr;
- 
- 		if (in->sin_addr.s_addr == htonl(INADDR_ANY))
- 			return true;
- 	} else {
--		pr_warn("unexpected address family %u\n", addr->sa_family);
-+		pr_warn("unexpected address family %u\n", addr->ss_family);
- 	}
- 
- 	return false;
+The callers of _install_special_mapping() cover what is mentioned here.
+The vdso is very common (arm, arm64, csky, hexagon, loongarch, mips,
+parisc, powerpc, riscv, s390, sh, sparc, x86, um). For those with vdso,
+some also have vvar (arm, arm64, loongarch, mips, powerpc, riscv, s390,
+sparc, x86). After that, I see a few extra things, in addition to
+sigpage and uprobes as mentioned already in the patch:
+
+arm sigpage
+arm64 compat vectors (what is this for arm?)
+arm64 compat sigreturn (what is this for arm?)
+nios2 kuser helpers
+uprobes
+
+As mentioned in the patch, there is also the x86_64 vsyscall mapping which
+eludes a regular grep since it's not using _install_special_mapping() :)
+
+So I guess the question is: can we mseal all of these universally under
+a common knob? Do the different uses mean we need finer granularity of
+knob, and do different architectures need flexibility here too? The
+patch handles the arch question with CONFIG_ARCH_HAS_SEAL_SYSTEM_MAPPINGS
+(which I think will be renamed with s/SEAL/MSEAL/ if I am following the
+threads). This seems a good solution to me. My question is
+about if sigpage, vectors, and sigreturn can also be included? (It seems
+like the answer is "yes", but I didn't see mention of the arm64 compat
+mappings.)
+
+Linus has expressed the desire that security features be available by
+default if they don't break existing userspace and that they be compiled
+in if possible (rather than be behind a CONFIG) so that code paths are
+being exercised to gain the most exposure to finding bugs. To that end,
+it's best to have a kernel command line to control it if it isn't safe
+to have always enabled. This is how we've handled _many_ features so that
+the code is built into the kernel, but that end users (e.g. distro users)
+can enable/disable a feature without rebuilding the entire kernel.
+
+For a "built into the kernel but default disabled unless enabled at boot
+time" example see:
+
+config RANDOMIZE_KSTACK_OFFSET
+        bool "Support for randomizing kernel stack offset on syscall entry" if EXPERT
+        default y
+        depends on HAVE_ARCH_RANDOMIZE_KSTACK_OFFSET
+...
+config RANDOMIZE_KSTACK_OFFSET_DEFAULT
+        bool "Default state of kernel stack offset randomization"
+        depends on RANDOMIZE_KSTACK_OFFSET
+...
+#ifdef CONFIG_RANDOMIZE_KSTACK_OFFSET
+DEFINE_STATIC_KEY_MAYBE_RO(CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT,
+                           randomize_kstack_offset);
+...
+early_param("randomize_kstack_offset", early_randomize_kstack_offset);
+
+
+For an example of the older "not built into the kernel but when built in
+can be turned off at boot time" that predated Linus's recommendation see:
+
+config HARDENED_USERCOPY
+        bool "Harden memory copies between kernel and userspace"
+...
+static DEFINE_STATIC_KEY_FALSE_RO(bypass_usercopy_checks);
+...
+__setup("hardened_usercopy=", parse_hardened_usercopy);
+
+(This should arguably be "default y" in the kernel these days, but
+whatever.)
+
+So, if we want to have a CONFIG_MSEAL_SYSTEM_MAPPINGS at all, it should
+be "default y" since we have the ...ARCH_HAS... config already, and then
+add a CONFIG_MSEAL_SYSTEM_MAPPINGS_DEFAULT that is off by default (since
+we expect there may be userspace impact) and tie _that_ to the kernel
+command-line so that end users can use it, or system builders can enable
+CONFIG_MSEAL_SYSTEM_MAPPINGS_DEFAULT.
+
+For the command line name, if a namespace is desired, I'd agree that
+naming this "mseal.special_mappings" is reasonable. It does change process
+behavior, so I'm also not opposed to "process.mseal_special_mappings", and
+it happens at exec, so "exec.mseal_special_mappings" is fine by me too.
+I think the main question would be: will there be other things under the
+proposed "mseal", "process", or "exec" namespace? I'd like to encourage
+things being logically grouped since we have SO MANY already. :)
+
+Also from discussions it sounds like there may need to be even finer-gain
+control, likely via prctl, for dealing with the CRIU case. The proposal
+is to provide an opt-out prctl with CAP_CHECKPOINT_RESTORE? I think this
+is reasonable and lets this all work without a new CONFIG. I imagine it
+would look like:
+
+criu process (which has CAP_CHECKPOINT_RESTORE):
+	- prctl(GET_MSEAL_SYSTEM_MAPPINGS)
+	- if set:
+		- remember we need to mseal mappings
+		- prctl(SET_MSEAL_SYSTEM_MAPPINGS, 0)
+		- re-exec with --mseal-system-mappings (or something)
+	- perform the "fork a tree to restore" work
+	- in each child, move around all the mappings
+		- if we need to mseal mappings:
+			- prctl(SET_MSEAL_SYSTEM_MAPPINGS, 1)
+			- mseal each system mapping
+		- eventually drop CAP_CHECKPOINT_RESTORE
+		- become the restored process
+
+Does that all sound right? If so I think Jeff has all the details needed
+to spin a v5.
+
+-Kees
+
 -- 
-2.34.1
-
+Kees Cook
