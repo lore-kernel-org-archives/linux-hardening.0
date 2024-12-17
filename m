@@ -1,136 +1,70 @@
-Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6A741FC114
-	for <linux-hardening@vger.kernel.org>; Tue, 17 Dec 2024 15:58:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B5CE203D52;
+	Tue, 17 Dec 2024 16:00:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734451121; cv=none; b=rAgyab0dOvuSJaUAwRC3TkeB05WWJBpqhlSfWjCSx7BSEKjzq77EskLLOOPePlzq6h1TJBTw+kfPhPeUXEjSeXvT6sYe/SR+Z/vtosy80ab6oXNtFCPU5QoyqYlLgR9NdFlj2Vf4meJ3To8xpmJIYo9I7WeglY32TeCnSve6d9s=
+	t=1734451234; cv=none; b=g6KRq0CXsE5ITAk6ii1cXts6SPrr8nCY3N9GMcFyr8V1LK8AClC0Uub6NaOlPal6J4BvBlSuCsBUrK0RdaKVLS0oa04gF+rO8fITI1Ze7Pdp/O8/IpGudGppF5VEgqskvo8LshjgH5562v4P2bRCwFzUo42Sd+4WXmoNKsBrZaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734451121; c=relaxed/simple;
-	bh=+sDpWVjLDBeBSjHRJ7joaJqh4lAqvOv3lpfPurbkbjU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LD40N/0hjoSzYSbcISNc/kEOdt7NcX0bLALM1YY9fqOMrvLYqeDeGi5Wja4TkykJ2FpMpOMyY5uOYXmVzCeyV7sKh09G80oE/vVr8NzgYgiEeerq6kMHlNKvlzMXK4irUoTgnDDjS2qHvhg5ITciHB+KE3DscOir46uXO6pZdsw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=A5wWcXNO; arc=none smtp.client-ip=44.202.169.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1734451234; c=relaxed/simple;
+	bh=EHGn27UeUnw//XSv6nd3Qhmq3MootZ87QKYdo80ZL/U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jcm2uZNMoYTX9zAVSjPn+61MwHWa+poe+dyaTIr0Xc5WZV/tV3KZzmDPz7Xw0ifRk2ScMtY1rsBfjA582+IqzgcXvpAKVRdoKdmQqU+kyicarIJFw8kk7NbxXUmfq9OEsPp5e3Y+S3DXuTBh6K2MAo8WyJ/KNPrD6UUdzeQbX70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QZVLa1H8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="A5wWcXNO"
-Received: from eig-obgw-5008a.ext.cloudfilter.net ([10.0.29.246])
-	by cmsmtp with ESMTPS
-	id NZlktKb0SiA19NZxxtM1Me; Tue, 17 Dec 2024 15:58:33 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id NZxvtPBqHw1r6NZxwtNW1U; Tue, 17 Dec 2024 15:58:32 +0000
-X-Authority-Analysis: v=2.4 cv=KOBcDkFo c=1 sm=1 tr=0 ts=67619fa8
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=GtNDhlRIH4u8wNL3EA3KcA==:17
- a=IkcTkHD0fZMA:10 a=RZcAm9yDv7YA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
- a=NADnHABVQi_v-tRIJv0A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=Xt_RvD8W3m28Mn_h3AK8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=uZfLtnsGJf44tIM+Q6RRYwmZq5kswEScs/pdo66+oA4=; b=A5wWcXNOCgiywYJPfR0ZuW8nYZ
-	gcv3VdK4TP8/lD0v1ZAoIcs3g/EGQlNCKzvO267+cRYd9kAlXulI91yV+8/eHkGJWXs52co+3sICI
-	r49gKDtdN7Gk5Z7UmgY4KWqdfBoaHZ5YEB2nF+NHLoj/u6uqd4ogoJYrUP6n+2sDnYrze7NFzkjeI
-	dUjvcqF9dWMKQItYyLt0Uvo9BJ/2zfP2vS2TNQwgU0nfY1uc/rFDpzAPXfbL/N+Jc0snRmYjmjtlN
-	oEBRpoZKvV0n/cgIk7ait9Ghnvrii7uWcQtvt2CWJ1TlawROshXDbzdi446tRjo08mnF7cYt4gVpJ
-	D7GIJZyg==;
-Received: from [177.238.21.80] (port=2 helo=[192.168.0.21])
-	by gator4166.hostgator.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1tNZxu-003vsV-0c;
-	Tue, 17 Dec 2024 09:58:30 -0600
-Message-ID: <bbed49c7-56c0-4642-afec-e47b14425f76@embeddedor.com>
-Date: Tue, 17 Dec 2024 09:58:28 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QZVLa1H8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51F67C4CED3;
+	Tue, 17 Dec 2024 16:00:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1734451233;
+	bh=EHGn27UeUnw//XSv6nd3Qhmq3MootZ87QKYdo80ZL/U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QZVLa1H8hgXpNwONSs5txre9UH01OTtl9vxkb32Gtf9+pTFOe/Thhkdue2I9TPEub
+	 jilLZsJi5raF72IUopGowSdSbVrvz2Dbp3v8NL4+JCCS4noxr6JPgyLrFyx/BlZJfZ
+	 Ltd1wKtudLh7QQB89hHu3bnuSkOaDw6e/9TGTeFlHq4zu/K+uIKrq2JKxiFSQ+OcVw
+	 3z577EwN3+VktbZE/wGkYulTQ6oEhICsf8WUgrd4aNXF1BKY5aiRtPSxMrbx4Wm3DP
+	 tJ+ev2O7YGc5iOF0RHZOSfn2qqqa/Sh7F96ZIcEe4QVFBAN/yK0SEydYlsyYnFiA2s
+	 iun5yXRIQWb/w==
+Date: Tue, 17 Dec 2024 16:00:26 +0000
+From: Simon Horman <horms@kernel.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+	Chaitanya Kulkarni <kch@nvidia.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Mike Christie <michael.christie@oracle.com>,
+	Max Gurtovoy <mgurtovoy@nvidia.com>,
+	Maurizio Lombardi <mlombard@redhat.com>,
+	Dmitry Bogdanov <d.bogdanov@yadro.com>,
+	Mingzhe Zou <mingzhe.zou@easystack.cn>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
+	target-devel@vger.kernel.org, netdev@vger.kernel.org,
+	Al Viro <viro@zeniv.linux.org.uk>, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] net: core: Convert inet_addr_is_any() to sockaddr_storage
+Message-ID: <20241217160026.GS780307@kernel.org>
+References: <20241217012618.work.323-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] UAPI: net/sched: Open-code __struct_group() in flex
- struct tc_u32_sel
-To: Alexander Lobakin <aleksander.lobakin@intel.com>,
- Kees Cook <kees@kernel.org>
-Cc: Jakub Kicinski <kuba@kernel.org>, cferris@google.com,
- Jamal Hadi Salim <jhs@mojatatu.com>, Cong Wang <xiyou.wangcong@gmail.com>,
- Jiri Pirko <jiri@resnulli.us>, netdev@vger.kernel.org,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20241217025950.work.601-kees@kernel.org>
- <f4947447-aa66-470c-a48d-06ed77be58da@intel.com>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <f4947447-aa66-470c-a48d-06ed77be58da@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 177.238.21.80
-X-Source-L: No
-X-Exim-ID: 1tNZxu-003vsV-0c
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.0.21]) [177.238.21.80]:2
-X-Source-Auth: guzidine
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfILaSUgiHX5owmdOR9+AbyFDhGEtBcy8K0NJ+Oa0MOpdGNjwwvY4Y2bh00mLhI/aFWdtcNi3uYyLw/G1W7EEFr6iIpkvw1DpbGo9WA7EtFKuis46I2MF
- EuiNas9BG7t/p6leLevRha7KB0T7mt8vNYfVY4xtEJB8R1ptc99D17dcUf+YZ7OgiCiJybnsI8DVjloGynuI9xUW3iFBk2VS7MTa5Xc9cuuC/VHnL8gEZBOq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241217012618.work.323-kees@kernel.org>
 
-
-
-On 17/12/24 08:55, Alexander Lobakin wrote:
-> From: Kees Cook <kees@kernel.org>
-> Date: Mon, 16 Dec 2024 18:59:55 -0800
+On Mon, Dec 16, 2024 at 05:26:19PM -0800, Kees Cook wrote:
+> All the callers of inet_addr_is_any() have a sockaddr_storage-backed
+> sockaddr. Avoid casts and switch prototype to the actual object being
+> used, as part of the work to move away from internal use of struct
+> sockaddr.
 > 
->> This switches to using a manually constructed form of struct tagging
->> to avoid issues with C++ being unable to parse tagged structs within
->> anonymous unions, even under 'extern "C"':
->>
->>    ../linux/include/uapi/linux/pkt_cls.h:25124: error: ‘struct tc_u32_sel::<unnamed union>::tc_u32_sel_hdr,’ invalid; an anonymous union may only have public non-static data members [-fpermissive]
-> 
-> I worked around that like this in the past: [0]
-> As I'm not sure it would be fine to fix every such occurrence manually
-> by open-coding.
-> What do you think?
+> Signed-off-by: Kees Cook <kees@kernel.org>
 
-The thing is that, in this particular case, we need a struct tag to change
-the type of an object in another struct. See:
-
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_u32_parse.h b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_u32_parse.h
-index 9050568a034c..64663112cad8 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_u32_parse.h
-+++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_u32_parse.h
-@@ -242,7 +242,7 @@ struct cxgb4_next_header {
-  	 * field's value to jump to next header such as IHL field
-  	 * in IPv4 header.
-  	 */
--	struct tc_u32_sel sel;
-+	struct tc_u32_sel_hdr sel;
-  	struct tc_u32_key key;
-  	/* location of jump to make */
-  	const struct cxgb4_match_field *jump;;
-
-You can also take a look at the original series:
-
-https://lore.kernel.org/linux-hardening/cover.1723586870.git.gustavoars@kernel.org/
-
-Thanks
---
-Gustavo
-
-
+Reviewed-by: Simon Horman <horms@kernel.org>
