@@ -1,126 +1,64 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 777D91E529;
-	Tue, 17 Dec 2024 03:00:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 759564A23;
+	Tue, 17 Dec 2024 03:57:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734404400; cv=none; b=SW4+d6soNhXAcrIqBf+G8NegteksbNn4madi6Gk+izd6QOJsJCT28nihQPgRaT9/38/MyntSIUCdULqD9DydMvNmHrAET7asN9pKTb3Eav8NkKRp+afXP7qg+B3nFYbLWlnFPMB4MI2Foxy3GD4LUrj1s68qJ9SLQ8KXYs8hCGE=
+	t=1734407827; cv=none; b=k3eqNZSjjc1Wp/dX6pb+imvZ1jYxCJXJoxPgO/cTu0jqNnbGkkjNT9z4xuBsqrYMHBuvV5i5BPBLFpMXXtuKPFVSDej9LoTkYwJWlZUP4JF/w/7nSXe5m2OSYQWqG+eeOhXVs3ww8FP+kr9sMtvl4upcDN661tW/j8bVo/9VNoI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734404400; c=relaxed/simple;
-	bh=9dQhrqRK+R/Veko5MsdHHHznj3Ffk32kbXw0+H2KeTc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=MdZXKy+KCrjyemdPJ7yEzqGx4JWvSp+s6kmwKJ7m2ERxjt2CE8Y8S22oouNAsDA3FCDz28+tZjgYp+8at6wbzDDoXoSk6/R0w0uFM88FHrOyXaLNNoKguYDmpOAt680szryxgXPrpKVhSa1m3uBQb3T4z1AvxGhTkkMwbZVAP6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P2FvIFws; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P2FvIFws"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E19E4C4CED0;
-	Tue, 17 Dec 2024 02:59:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734404400;
-	bh=9dQhrqRK+R/Veko5MsdHHHznj3Ffk32kbXw0+H2KeTc=;
-	h=From:To:Cc:Subject:Date:From;
-	b=P2FvIFwsRLdK9rBdwik1/dN2Po04NmqQQv93gE/PDf9K1t/s9RxO26AWq4HYo1oZY
-	 BNXR2Op3kP9S3vle1dHmfCYRijh5LoKDfbJkwhv6fvFn7kMt182JqL8rhij3fvd3vS
-	 Pw9AUWjLEh4RWi+6eZFz/3/v9OJeNj8OTBgX+NU66QtZHFXkNXVHkskUQ6gnnNIjgY
-	 0+6YmXhoz65uvrA3H6UnhoX2P8gj83utw6kp34ieCZBAbRAuqiq9lCyAC4Zwym1zla
-	 u3jLEcTvLdBOENNtN1QRDur3ZghAq3r76SniMmQk2qHTBS5l1dbYra6X1w2S8IgzgA
-	 r8OtB6/UUMu+A==
-From: Kees Cook <kees@kernel.org>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Kees Cook <kees@kernel.org>,
-	cferris@google.com,
-	Jamal Hadi Salim <jhs@mojatatu.com>,
-	Cong Wang <xiyou.wangcong@gmail.com>,
-	Jiri Pirko <jiri@resnulli.us>,
-	netdev@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-kernel@vger.kernel.org,
+	s=arc-20240116; t=1734407827; c=relaxed/simple;
+	bh=F5w+/O3HjzzsxJsPly6kvqYp/dkWSaoDv8uwoLFudjo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DdBrC3wZ2coiH/SlsENI/od3MoYGkSWTQPkAcJ7l8xottI2QM9VFC5s0azFYI6MvyBiVye15UGgIyJLyveuWMnEDqSy9+vrnMOtl6BWIYxgVd7+w67xplxkZJ0XzxkAkeelzHwtDpbpnDX7gdBZSKOoSuJPTROE457BzRXSo02g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 2F5C468BEB; Tue, 17 Dec 2024 04:56:58 +0100 (CET)
+Date: Tue, 17 Dec 2024 04:56:58 +0100
+From: Christoph Hellwig <hch@lst.de>
+To: Kees Cook <kees@kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+	Chaitanya Kulkarni <kch@nvidia.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Mike Christie <michael.christie@oracle.com>,
+	Max Gurtovoy <mgurtovoy@nvidia.com>,
+	Maurizio Lombardi <mlombard@redhat.com>,
+	Dmitry Bogdanov <d.bogdanov@yadro.com>,
+	Mingzhe Zou <mingzhe.zou@easystack.cn>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Simon Horman <horms@kernel.org>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
+	target-devel@vger.kernel.org, netdev@vger.kernel.org,
+	Al Viro <viro@zeniv.linux.org.uk>, linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH] UAPI: net/sched: Open-code __struct_group() in flex struct tc_u32_sel
-Date: Mon, 16 Dec 2024 18:59:55 -0800
-Message-Id: <20241217025950.work.601-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+Subject: Re: [PATCH] net: core: Convert inet_addr_is_any() to
+ sockaddr_storage
+Message-ID: <20241217035657.GA14719@lst.de>
+References: <20241217012618.work.323-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2186; i=kees@kernel.org; h=from:subject:message-id; bh=9dQhrqRK+R/Veko5MsdHHHznj3Ffk32kbXw0+H2KeTc=; b=owGbwMvMwCVmps19z/KJym7G02pJDOkJL7W7cjrdvu/PtXR4fEG7UGH5mZdaMcpnchqmvA4S4 2uY+mNDRykLgxgXg6yYIkuQnXuci8fb9nD3uYowc1iZQIYwcHEKwES8DjL8D/3hm9H6M+PvfKYz rFf1JlX7O+btyZO5puh35NvX7c2x1Qz/wxXFgxZ1J51TDd98VkzrzZPtD8R87Gcu2RKb0nhRai0 7MwA=
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241217012618.work.323-kees@kernel.org>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-This switches to using a manually constructed form of struct tagging
-to avoid issues with C++ being unable to parse tagged structs within
-anonymous unions, even under 'extern "C"':
+On Mon, Dec 16, 2024 at 05:26:19PM -0800, Kees Cook wrote:
+> -extern bool inet_addr_is_any(struct sockaddr *addr);
+> +extern bool inet_addr_is_any(struct sockaddr_storage *addr);
 
-  ../linux/include/uapi/linux/pkt_cls.h:25124: error: ‘struct tc_u32_sel::<unnamed union>::tc_u32_sel_hdr,’ invalid; an anonymous union may only have public non-static data members [-fpermissive]
+You might want to drop the pointless extern here.
 
-To avoid having multiple struct member lists, use a define to declare
-them.
+Otherwise this looks great:
 
-Reported-by: cferris@google.com
-Closes: https://lore.kernel.org/linux-hardening/Z1HZpe3WE5As8UAz@google.com/
-Fixes: 216203bdc228 ("UAPI: net/sched: Use __struct_group() in flex struct tc_u32_sel")
-Link: https://lore.kernel.org/r/202412120927.943DFEDD@keescook
-Signed-off-by: Kees Cook <kees@kernel.org>
----
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Jamal Hadi Salim <jhs@mojatatu.com>
-Cc: Cong Wang <xiyou.wangcong@gmail.com>
-Cc: Jiri Pirko <jiri@resnulli.us>
-Cc: netdev@vger.kernel.org
----
- include/uapi/linux/pkt_cls.h | 34 +++++++++++++++++++++-------------
- 1 file changed, 21 insertions(+), 13 deletions(-)
-
-diff --git a/include/uapi/linux/pkt_cls.h b/include/uapi/linux/pkt_cls.h
-index 2c32080416b5..02aee6ed6bf0 100644
---- a/include/uapi/linux/pkt_cls.h
-+++ b/include/uapi/linux/pkt_cls.h
-@@ -245,20 +245,28 @@ struct tc_u32_key {
- 	int		offmask;
- };
- 
-+#define tc_u32_sel_hdr_members			\
-+	unsigned char		flags;		\
-+	unsigned char		offshift;	\
-+	unsigned char		nkeys;		\
-+	__be16			offmask;	\
-+	__u16			off;		\
-+	short			offoff;		\
-+	short			hoff;		\
-+	__be32			hmask
-+
-+struct tc_u32_sel_hdr {
-+	tc_u32_sel_hdr_members;
-+};
-+
- struct tc_u32_sel {
--	/* New members MUST be added within the __struct_group() macro below. */
--	__struct_group(tc_u32_sel_hdr, hdr, /* no attrs */,
--		unsigned char		flags;
--		unsigned char		offshift;
--		unsigned char		nkeys;
--
--		__be16			offmask;
--		__u16			off;
--		short			offoff;
--
--		short			hoff;
--		__be32			hmask;
--	);
-+	/* Open-coded struct_group() to avoid C++ errors. */
-+	union {
-+		struct tc_u32_sel_hdr hdr;
-+		struct {
-+			tc_u32_sel_hdr_members;
-+		};
-+	};
- 	struct tc_u32_key	keys[];
- };
- 
--- 
-2.34.1
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 
