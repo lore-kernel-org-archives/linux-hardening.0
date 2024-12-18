@@ -1,50 +1,49 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F65E154BE2;
-	Wed, 18 Dec 2024 05:22:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2438D13F42A;
+	Wed, 18 Dec 2024 05:58:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734499362; cv=none; b=TS1uqwQRmKqTZzyYIxDmoKGR4tipefwvuSJSwdJG6+Bd8MKuOo9jB2vdWymgufmhF/FtIJrLCmipC+Mn9FKz+2i1eoFD9+PNsPqx2lSMPcb0iI/cEz3YjI9tuyB+cuAbFaGebpR1FiWYzrTSSo0UcFa74Oe7Rd9+MiNbznz6XAY=
+	t=1734501527; cv=none; b=DfIUCbJIwDeej+sQbJVWCBswnB7YdF8fLvFhOyN1WqKS+SwXAoseLe7gN7n0hPy52xZWoareAHpk1J6rh+fP9ypzfHlrGVRaOuwkDi1ok63hiI27f9hJEb0VOmcj2Yp5PZz40oyrOSQ98TuDqlbVcMkpgCkNr1WeZ38tWZeiSw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734499362; c=relaxed/simple;
-	bh=pKGixUq0wqQUsfZk5Td9IQcLTzvRWnZb+7UOXPDGSpc=;
+	s=arc-20240116; t=1734501527; c=relaxed/simple;
+	bh=ysKOGVJYbr0S6z+NbKNw3b1mmg2W8Fn+ZzUtTZaF/8c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pxX0zNvfK4IJNZBxsL/oXhS3KGsd0I4f9dq9ARFCoksQD3viDYtpBbMaEaeR0SbzNxlVOoGFy3u0IdiCB78XAvv2LjcLG37EAbFr1ebEay2Eh80WadXHZcI5tqb3quw+F1yozmQJdHL4xD+Madlx31+GW1sR55ixnt8x7JTE6aY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uHgwd3Ib; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=fx+2tNagh6Slt8c0JKO9MrPALS73r2e24k0HAv/ZOe6/xTDKXv1dR7l0C0MlWdUc1gCqRZYsCa41BKdeljhNZq2yqwVb+yJ/XsK36uoWnZRFB4Ij67U+hQpn9lRgqjsvTrg0WFoiZymPuSocZKd2wMLM/2dS8nAMmmK9SOG5JzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xy6wrglV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uHgwd3Ib"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BC9EC4CECE;
-	Wed, 18 Dec 2024 05:22:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xy6wrglV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98805C4CECE;
+	Wed, 18 Dec 2024 05:58:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734499362;
-	bh=pKGixUq0wqQUsfZk5Td9IQcLTzvRWnZb+7UOXPDGSpc=;
+	s=k20201202; t=1734501526;
+	bh=ysKOGVJYbr0S6z+NbKNw3b1mmg2W8Fn+ZzUtTZaF/8c=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uHgwd3Ibgj8KOhXD9Oua9LMFo5VsS250nMIXWQ16SF6PZAd9ksew8n5j1jeSlR8zI
-	 hZ4oqxc7nT4g3E9VrnKyJUyqkE6mPYNqn6g/6pqnw0rqk54ipxgYxcDnIx9hNT5WXA
-	 opK9pj20ZXYXhHloszLqB6FzMaiY4PZSOegxuGviCyoGv2M7o/rreOm2tpA+0igP0Q
-	 XPCTgwvYrB6o1gsbnbApzosLjUxvu+mcetzrfs/yrpDXyZEbUQ5uhVmNZEZljY3u2b
-	 00FGmjt4R0dh68ydP7Ob+RaF1SRVZ+UaZs7OfLPgVH6fiNNnnliAl1IpbuhWz9JsU6
-	 EIHXbpy7zsrFw==
-Date: Tue, 17 Dec 2024 21:22:39 -0800
+	b=Xy6wrglVtm+w1nDWd8/oyjN5XcnVpEW70XbDfw/DTYBj17EcS1/pcFsPezZuZjVkA
+	 KRKZDhkbQym5QMUim8nY/934C0qDeWUBgWkhC26uVDd/1m+gpqcxouKyPp1882lzU3
+	 zRrb1eeo4MCpbLPstwxAz32DXuYn7qQfvLBXz647rgP5P5x+KXBs1pQSYsfnwn2LDZ
+	 KZ512CxV6TUf+aK6LNg48zR1UaXx0/qNg9yvb2QQDWdfnwWtUZkvHTuT/yB7jRTxUw
+	 fn9NnKCCQUsFC/V4l4d44c4OJlFrPPx1va0XRgKufdnqCszKq8sdJpuGWrKOlGs21D
+	 knaP+f/WDKoYQ==
+Date: Tue, 17 Dec 2024 21:58:43 -0800
 From: Kees Cook <kees@kernel.org>
-To: Moshe Shemesh <moshe@nvidia.com>, morbo@google.com,
-	qing.zhao@oracle.com
-Cc: Simon Horman <horms@kernel.org>, Tariq Toukan <tariqt@nvidia.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Cc: "David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Leon Romanovsky <leonro@nvidia.com>, netdev@vger.kernel.org,
-	Saeed Mahameed <saeedm@nvidia.com>, Gal Pressman <gal@nvidia.com>,
-	linux-rdma@vger.kernel.org, Yevgeny Kliteynik <kliteyn@nvidia.com>,
-	Mark Bloch <mbloch@nvidia.com>, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH net-next 05/12] net/mlx5: fs, add mlx5_fs_pool API
-Message-ID: <202412172115.C7FDE7BA@keescook>
-References: <20241211134223.389616-1-tariqt@nvidia.com>
- <20241211134223.389616-6-tariqt@nvidia.com>
- <20241212172355.GE73795@kernel.org>
- <70b3a7b5-abd3-4db4-8415-e0467a565847@nvidia.com>
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, Simon Horman <horms@kernel.org>,
+	David Ahern <dsahern@kernel.org>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Joe Damato <jdamato@fastly.com>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] net: core: dev.c confirmed to use classic sockaddr
+Message-ID: <202412172155.F01961439@keescook>
+References: <20241217012445.work.979-kees@kernel.org>
+ <67619a5029d2c_a046929426@willemb.c.googlers.com.notmuch>
+ <202412171230.824B83D@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -53,67 +52,37 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <70b3a7b5-abd3-4db4-8415-e0467a565847@nvidia.com>
+In-Reply-To: <202412171230.824B83D@keescook>
 
-On Sun, Dec 15, 2024 at 03:39:11PM +0200, Moshe Shemesh wrote:
+On Tue, Dec 17, 2024 at 12:30:36PM -0800, Kees Cook wrote:
+> On Tue, Dec 17, 2024 at 10:35:44AM -0500, Willem de Bruijn wrote:
+> > Kees Cook wrote:
+> > > As part of trying to clean up struct sock_addr, add comments about the
+> > > sockaddr arguments of dev_[gs]et_mac_address() being actual classic "max
+> > > 14 bytes in sa_data" sockaddr instances and not struct sockaddr_storage.
+> > 
+> > What is this assertion based on?
+> > 
+> > I see various non-Ethernet .ndo_set_mac_address implementations, which
+> > dev_set_mac_address calls. And dev_set_mac_addr_user is called from
+> > rtnetlink do_setlink. Which kmalloc's sa based on dev->addr_len.
 > 
-> 
-> On 12/12/2024 7:23 PM, Simon Horman wrote:
-> > External email: Use caution opening links or attachments
-> > 
-> > 
-> > On Wed, Dec 11, 2024 at 03:42:16PM +0200, Tariq Toukan wrote:
-> > > From: Moshe Shemesh <moshe@nvidia.com>
-> > > 
-> > > Refactor fc_pool API to create generic fs_pool API, as HW steering has
-> > > more flow steering elements which can take advantage of the same pool of
-> > > bulks API. Change fs_counters code to use the fs_pool API.
-> > > 
-> > > Signed-off-by: Moshe Shemesh <moshe@nvidia.com>
-> > > Reviewed-by: Yevgeny Kliteynik <kliteyn@nvidia.com>
-> > > Reviewed-by: Mark Bloch <mbloch@nvidia.com>
-> > > Signed-off-by: Tariq Toukan <tariqt@nvidia.com>
-> > 
-> > ...
-> > 
-> > > diff --git a/drivers/net/ethernet/mellanox/mlx5/core/fs_counters.c b/drivers/net/ethernet/mellanox/mlx5/core/fs_counters.c
-> > 
-> > ...
-> > 
-> > > @@ -447,11 +437,9 @@ void mlx5_fc_update_sampling_interval(struct mlx5_core_dev *dev,
-> > >   /* Flow counter bluks */
-> > > 
-> > >   struct mlx5_fc_bulk {
-> > > -     struct list_head pool_list;
-> > > +     struct mlx5_fs_bulk fs_bulk;
-> > >        u32 base_id;
-> > > -     int bulk_len;
-> > > -     unsigned long *bitmask;
-> > > -     struct mlx5_fc fcs[] __counted_by(bulk_len);
-> > > +     struct mlx5_fc fcs[] __counted_by(fs_bulk.bulk_len);
-> > >   };
-> > 
-> > Unfortunately it seems that clang-19 doesn't know how to handle
-> > __counted_by() when used like this:
-> > 
-> > drivers/net/ethernet/mellanox/mlx5/core/fs_counters.c:442:36: error: 'counted_by' argument must be a simple declaration reference
-> >    442 |         struct mlx5_fc fcs[] __counted_by(fs_bulk.bulk_len);
-> 
-> Thanks Simon, from code perspective, bulk_len should be now in the inner
-> struct fs_bulk.
-> 
-> Keen Cook, is that going to be supported in the future? for now I will just
-> remove __counted_by() from this struct.
+> Yeah, I was clearly missing several cases. Please ignore this patch. I
+> will re-examine this.
 
-I am expecting this will be supported in the future, yes, but there isn't
-an ETA for it yet. Neither GCC 15 nor Clang are currently supporting
-sub-struct members -- the counted_by member needs to be at the same
-"level" in the struct as the annotated flexible array.
+So, I think I see what happened -- I missed the dev->addr_len in
+dev_set_mac_address(), and saw that dev_get_mac_address() caps the
+address to 14:
 
-Is it possible to move "base_id" above "fs_bulk" and move "fcs" into
-the of end struct mlx5_fs_bulk?
+        size_t size = sizeof(sa->sa_data_min);
+...
+        if (!dev->addr_len)
+                memset(sa->sa_data, 0, size);
+        else
+                memcpy(sa->sa_data, dev->dev_addr,
+                       min_t(size_t, size, dev->addr_len));
 
--Kees
+It seems only tun/tap and SIOCGIFHWADDR use the "get" interface, though.
 
 -- 
 Kees Cook
