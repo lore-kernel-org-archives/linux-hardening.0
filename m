@@ -1,85 +1,78 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3758E19AD87;
-	Wed, 18 Dec 2024 10:35:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54AAC1A2397
+	for <linux-hardening@vger.kernel.org>; Wed, 18 Dec 2024 10:54:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734518113; cv=none; b=hNvxO48IoF8k2hKLtu3hXkMmpDQz1w0z5kpGUMHEjjN2xPxa2IhsjdBjMAPFDoZy/yrVAUWZFlXYjWsj/NynWHO6gtK6WSIaMqM+LfCLyWh3PsvOZLGyCO8yBRB/fEyA6KIWG8k9vkC2Ss8ncSl1HvdPaJNZLJEwO0GUvB0EAmk=
+	t=1734519285; cv=none; b=HCWLxyidT7IUrbzuosZNRnBx5yNWYpd/8GYgA1x+8An4/mDl8aZbPdlgpXafUhGNkPN603DEXILZdcORpgpbJaNFAdozphJYO5EXZ1akDNiLTF58RKCq0CRkmC4m6K5Vjg3rpAGxibMa1birf7wfXvroZji3JcCPzCscG1X+91E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734518113; c=relaxed/simple;
-	bh=dZ1AzfRoyRVND4selkUnH/Jly1rO3LIsDM7xQj/T1Lo=;
+	s=arc-20240116; t=1734519285; c=relaxed/simple;
+	bh=31AJvFncyDZ/FXq2NhVl5iGwRm7DlmYnqi4Ssp7vJGs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T3k0KQn9o/N7AFPUJn6OepFqwFCAVsBUMrK3WABzfxTxrD8hm9qnCbVUeZjJRaV7O6+wtWN2MgMad+lCHX3M8nZl2/Gs/j89TJBlc6VMkanicKdXt5YUq98G+46CY/E3l+GsTurnhgjIXdWjgGrOihCxfKgx3qgX2caXBbGL4Pg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ttSpTeQL; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=oBsShNME; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ttSpTeQL; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=oBsShNME; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 Content-Type:Content-Disposition:In-Reply-To; b=e4Kt8D1KJNLwEx1jneAgLxBHz5JXzCz3P1WeTdQseTSIH2xokejVoX9dlHstvd8qXZyApdvmnJMZ0iKx6Kro7UmrZ4/NxDqQVrisHsxGGzsyf7+hA+06SVGZOnmn40pr4nskLkK3QvPWDn1KVQ55bmjZxdjyVNHfqMeejXqYGJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rtPXTwQO; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ttSpTeQL";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="oBsShNME";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ttSpTeQL";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="oBsShNME"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 3179F1F396;
-	Wed, 18 Dec 2024 10:35:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1734518109; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=C+SmraYU0h+R7YCPPlMGaG1Hg/PjgKkoqnUIyFTwpyk=;
-	b=ttSpTeQLHLmMOS7+7W0pWsrs5k7lSomZ+Pb8NIJNDCL3E8aaL9dTZX09qVA9zbMWH1vcJI
-	8cxkTtkGlpOTbvzESYM66LLlKFv620JgYxJKrHoQMKwJaFN+7Bo7c0ApESa+eKT+1/xDml
-	vZDZ2ZrxgzQSmTZAN1qOAVsxnObRlzY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1734518109;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=C+SmraYU0h+R7YCPPlMGaG1Hg/PjgKkoqnUIyFTwpyk=;
-	b=oBsShNME3vSE3+NM3vqCO77XtSKQx0GvsfuQEmOZCb0MStB6hy8dsZFRMhFNvgJUYbxINU
-	m25cMoZfQCjWP/AQ==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1734518109; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=C+SmraYU0h+R7YCPPlMGaG1Hg/PjgKkoqnUIyFTwpyk=;
-	b=ttSpTeQLHLmMOS7+7W0pWsrs5k7lSomZ+Pb8NIJNDCL3E8aaL9dTZX09qVA9zbMWH1vcJI
-	8cxkTtkGlpOTbvzESYM66LLlKFv620JgYxJKrHoQMKwJaFN+7Bo7c0ApESa+eKT+1/xDml
-	vZDZ2ZrxgzQSmTZAN1qOAVsxnObRlzY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1734518109;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=C+SmraYU0h+R7YCPPlMGaG1Hg/PjgKkoqnUIyFTwpyk=;
-	b=oBsShNME3vSE3+NM3vqCO77XtSKQx0GvsfuQEmOZCb0MStB6hy8dsZFRMhFNvgJUYbxINU
-	m25cMoZfQCjWP/AQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 281B3137CF;
-	Wed, 18 Dec 2024 10:35:09 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id Uw3ECV2lYmfaWwAAD6G6ig
-	(envelope-from <jack@suse.cz>); Wed, 18 Dec 2024 10:35:09 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id DE97EA0935; Wed, 18 Dec 2024 11:35:08 +0100 (CET)
-Date: Wed, 18 Dec 2024 11:35:08 +0100
-From: Jan Kara <jack@suse.cz>
-To: Kees Cook <kees@kernel.org>
-Cc: Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rtPXTwQO"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a9a68480164so1025804666b.3
+        for <linux-hardening@vger.kernel.org>; Wed, 18 Dec 2024 02:54:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1734519282; x=1735124082; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=bhTokHP9skR7jJeKPK9CVtZx11UuslYBY9BBg+qEOjA=;
+        b=rtPXTwQOcdOhb9yqKuMmBbwMgp+UI8vYI/v0419zOm2xRkHD7jt1obZ6FaBLF5cive
+         ZiFJDWgoogsL5UTN5CkxAZzAsjYc6ItrK5lw3MfM5tFRiipDpjxImNHXKEC0OKkstz8c
+         y1C00kv0OZhwGcto8F8nAmRRiF2gbth16ndCJVdCVoEDyBL46x3qG0Q5xbBN2KvRBRBy
+         9GAR7k/dBaSjOmLEuTTwQHNP70Qz/8JOGga0AVj0Xhw7E4lM9uS+4HqZAxt1kLzkbkuu
+         W+OXX1lwJsdPXCgla9PT0fhZBeA/v2xY7y1qatlOGMBBzCCeE6gcfmeKRejWIbvvZmRI
+         YVaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1734519282; x=1735124082;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bhTokHP9skR7jJeKPK9CVtZx11UuslYBY9BBg+qEOjA=;
+        b=R5dkYJNPpUniMgCg1j1Zb7yM8UerQxg06dyO/wnyvuyx1XReweuylqCCxx1oYXyF92
+         /760zpPUc7rqClaTU/IxM+fGe4ZvWovpMbUZ0OnYobxIDGiEz0O9B3jqfELPO5+ax1xU
+         kWgKeDgd3Edipu50Af0ByTdIw27fiSgd2KopILHyD4+rfUFXlcKikATfL5T0bTYF/N6I
+         h2uCfLFZEDAB2tNL8zH7wIJgesgyVLKD1dMV8GcNJ8S/OjEDGNnFxVyTQmE9fKB5/WfM
+         Z5+qxyFwIU2KV+kMbIDgWSymCEB5QK+gWIMG0Mt8kfGDW9lIblV/Oitkfy8bu113je6f
+         QkWw==
+X-Forwarded-Encrypted: i=1; AJvYcCX6CVAA0rhmzCI/ML88adf8Aml06n6VdwdCsR0E5eqMqbRckKSGKBYw4f2sEj1l4cuVhKbHsS6U0BuDtTpiR1o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJv+FVYlbuXHPEhRujYXMfY+Pb0sl/yp5ykYht1gcw+HqNPvzt
+	r2skjQH87mhc9OpGpEjLorRs3R+ilKR1/llWJcFLjG1Tr3Z+GddcJYzpjzMaX8g=
+X-Gm-Gg: ASbGncvkrVXU1mmlNQAaZeF+TOu/t/drKU7pEm5v1388zSZY/AiF3bY3pXvoksna1gL
+	5a28RPuCL4OJLA/6Ohz3hY16yfi4u6CZc7S/p8cYSs5U/KvRYY6KfPSTJYfsWGn46F+HBIotTJV
+	iake2lPh4Zyi4N0acmDIjre4kcrpXlklyrGKQPUdB0aWkrklDAH4KfNg0zghknK3BTeGJ4QKWwJ
+	oJxeDionU8kPXCwQDYv9cL9RJghjWTeerULRmGk3gGQlF+zgrn2ZkKJStyHMQ==
+X-Google-Smtp-Source: AGHT+IGd9c9NZz2gvokmKM5Dng3BnFozJjkFoab/PE7l5nl8JOL6hBsbbn1h4w3R6/1qrT9lM4LqKg==
+X-Received: by 2002:a17:907:3da4:b0:aa6:8fed:7c25 with SMTP id a640c23a62f3a-aabf474bb0cmr240635866b.16.1734519281678;
+        Wed, 18 Dec 2024 02:54:41 -0800 (PST)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aab9606b3a0sm540413066b.81.2024.12.18.02.54.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Dec 2024 02:54:41 -0800 (PST)
+Date: Wed, 18 Dec 2024 13:54:38 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Herbert Xu <herbert@gondor.apana.org.au>,
+	Justin Stitt <justinstitt@google.com>, Kees Cook <kees@kernel.org>
+Cc: Steffen Klassert <steffen.klassert@secunet.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] inotify: Use strscpy() for event->name copies
-Message-ID: <20241218103508.zxk5th7eqo4okkwt@quack3>
-References: <20241216224507.work.859-kees@kernel.org>
+Subject: Re: [PATCH net] xfrm: Rewrite key length conversion to avoid
+ overflows
+Message-ID: <cedbaec9-d149-48af-8068-182f0af5a89c@stanley.mountain>
+References: <92dc4619-7598-439e-8544-4b3b2cf5e597@stanley.mountain>
+ <Z2FompbNt6NBEoln@gondor.apana.org.au>
+ <053456e5-56e7-478b-b73e-96b7c2098d07@stanley.mountain>
+ <Z2KZC71JZ0QnrhfU@gondor.apana.org.au>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -88,70 +81,45 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241216224507.work.859-kees@kernel.org>
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RCVD_COUNT_THREE(0.00)[3];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_DN_SOME(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FREEMAIL_CC(0.00)[suse.cz,gmail.com,vger.kernel.org];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,suse.com:email,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Score: -3.80
-X-Spam-Flag: NO
+In-Reply-To: <Z2KZC71JZ0QnrhfU@gondor.apana.org.au>
 
-On Mon 16-12-24 14:45:15, Kees Cook wrote:
-> Since we have already allocated "len + 1" space for event->name, make sure
-> that name->name cannot ever accidentally cause a copy overflow by calling
-> strscpy() instead of the unbounded strcpy() routine. This assists in
-> the ongoing efforts to remove the unsafe strcpy() API[1] from the kernel.
+On Wed, Dec 18, 2024 at 05:42:35PM +0800, Herbert Xu wrote:
+> On Tue, Dec 17, 2024 at 03:32:31PM +0300, Dan Carpenter wrote:
+> >
+> > That seems like basic algebra but we have a long history of getting
+> > integer overflow checks wrong so these days I like to just use
+> > INT_MAX where ever I can.  I wanted to use USHRT_MAX. We aren't allowed
+> > to use more than USHRT_MAX bytes, but maybe we're allowed USHRT_MAX
+> > bits, so I didn't do that.
 > 
-> Link: https://github.com/KSPP/linux/issues/88 [1]
-> Signed-off-by: Kees Cook <kees@kernel.org>
-
-Thanks. Added to my tree.
-
-								Honza
-
-> ---
-> Cc: Jan Kara <jack@suse.cz>
-> Cc: Amir Goldstein <amir73il@gmail.com>
-> Cc: linux-fsdevel@vger.kernel.org
-> ---
->  fs/notify/inotify/inotify_fsnotify.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> There is no reason for this to overflow if we rewrite it do do
+> the division carefully.  Something like this:
 > 
-> diff --git a/fs/notify/inotify/inotify_fsnotify.c b/fs/notify/inotify/inotify_fsnotify.c
-> index 993375f0db67..cd7d11b0eb08 100644
-> --- a/fs/notify/inotify/inotify_fsnotify.c
-> +++ b/fs/notify/inotify/inotify_fsnotify.c
-> @@ -121,7 +121,7 @@ int inotify_handle_inode_event(struct fsnotify_mark *inode_mark, u32 mask,
->  	event->sync_cookie = cookie;
->  	event->name_len = len;
->  	if (len)
-> -		strcpy(event->name, name->name);
-> +		strscpy(event->name, name->name, event->name_len + 1);
->  
->  	ret = fsnotify_add_event(group, fsn_event, inotify_merge);
->  	if (ret) {
-> -- 
-> 2.34.1
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+
+I like it!  So obvious in retrospect.  Kees, Justin, this is probably a
+good strategy for dealing with round_up() related integer overflows
+generally.
+
+overflows to zero:	(len + 7) / 8
+      no overflow:	len / 8 + !!(len & 7)
+
+> Steffen, this raises a new question: Can normal users create socket
+> policies of arbtirarily long key lengths? If so we probably should
+> look into limiting the key length to a sane value.  Of course, given
+> namespaces we probably should do that in any case.
+
+The length is capped in verify_one_alg() type functions:
+
+	if (nla_len(rt) < (int)xfrm_alg_len(algp)) {
+
+nla_len() is a USHRT_MAX so the rounded value can't be higher than that.
+
+The (int) cast is unnecessary and confusing.  The condition should
+probably flipped around so the untrusted part is on the left.
+
+	if (xfrm_alg_len(algp) > nla_len(rt))
+		return -EINVAL;
+
+regards,
+dan carpenter
+
