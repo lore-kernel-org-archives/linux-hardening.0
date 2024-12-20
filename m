@@ -1,139 +1,77 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6181B2156EC;
-	Fri, 20 Dec 2024 15:32:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D86F21A072C;
+	Fri, 20 Dec 2024 17:09:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734708752; cv=none; b=TEzwzbEweI3TMPmbIW6XZMTHgMw7ARlsLkEzfkNrt5UmNjRCIg1wsept1DAxnIJ1+ziAcOjvJT2Pz2nkK1rH4RcOGeeF87oto2UVMyGatuuVCQeW9B6I3FygcBZoQPkl4kxCwXqvWI67ADX/yrbEgf6IKJ4nbR4r0VSmIjlHZjI=
+	t=1734714548; cv=none; b=RjW11wp96P3eemmF8Ttl94PGzA5PpfA6H8FpoukHIMYlk7k8Qt07qFVu6JWnkvxs2aPXlkCDigrEEKNYf1Dkg1O8vsDEyxWsQ9qt1fBR5DcrcGb/IU7/ZExRXGYdNmWUA23ulr3/S4igM7+VCivx73pNHMlGPwKcpKML88hqf/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734708752; c=relaxed/simple;
-	bh=8wywkdRWworUBNcYyAaj0Iz13WAXwwVWHDmsKj9i3zw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=iXMbHbmeiROC8+5FcFDIqtcvqMD+LnYkWibLKyDAD2z0PRDTG2J2k2QCNLZRq6NNRkTWEUqsLLiRvcf+dZq3aqB5ioeyKCgIPw/njp2/ZKH7JBg4pKZgjQ8U4IkVrLVqANySDQZP3KIpmGoGio1mBvPcOGI5F70N6+WmFXe5D2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD535C4CED3;
-	Fri, 20 Dec 2024 15:32:30 +0000 (UTC)
-Date: Fri, 20 Dec 2024 10:33:13 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>,
- Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>,
- linux-hardening@vger.kernel.org
-Subject: [PATCH v2] tracing/string: Create and use __free(argv_free) in
- trace_dynevent.c
-Message-ID: <20241220103313.4a74ec8e@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1734714548; c=relaxed/simple;
+	bh=KrZDBpSUHxSNUc07r+o9cYVpnZHoq3YyAKJ9qB12/NU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rYUMztMcm7FoM/TTn0li0v8P15oVEc5f6XeLco3RZCQ/5pVhyDp/t44NbD9BKzZH3n30vS7re1E6XqCFLkl7YdbBzRpjgKNTZZA3SZIWiu+N3yrNJtk27ni8ppqtetYDNtXvl6Rgn8wFvyp4zfOtDe6ndnJ3ukEMRPuKXcD+864=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hwz2o0Kl; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hwz2o0Kl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41C80C4CECD;
+	Fri, 20 Dec 2024 17:09:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1734714548;
+	bh=KrZDBpSUHxSNUc07r+o9cYVpnZHoq3YyAKJ9qB12/NU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=hwz2o0Klh9P3xt9f5d7hNz38TUO88R24qpdYj4gSFFr59JsRKig35mxbqRNfSB8Bm
+	 VfYn+cRryNf2Dcn0ynqpiI5Y9xDMHo36qRJPMr5FpjSSnZK+jycSwGoZUdGC2/31ji
+	 uBzysnq+AfIBvxXafuM9x/ELc2k3O4Sc7icK9+NK6pxUJCRbIRObImIXg0xmIpuVpn
+	 FeDsDJLIqXIIH7lXQoO+2O9d4tDpx2vRQW37rKWj9g6qKmptuFA4ZJgVSZ1tPAULhU
+	 9YJWJbtqIoeUQvg5Gvy8XNw8+ay9hGVuv8dH8SX8FUy17WsGLR5uKuzZib2guXJm11
+	 /BLIaDeC5UUVw==
+From: Kees Cook <kees@kernel.org>
+To: Alexander Lobakin <aleksander.lobakin@intel.com>
+Cc: Kees Cook <kees@kernel.org>,
+	Christopher Ferris <cferris@google.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Erick Archer <erick.archer@outlook.com>,
+	Keith Packard <keithp@keithp.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] stddef: make __struct_group() UAPI C++-friendly
+Date: Fri, 20 Dec 2024 09:09:02 -0800
+Message-Id: <173471453998.1198562.7846004024566721255.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20241219135734.2130002-1-aleksander.lobakin@intel.com>
+References: <20241219135734.2130002-1-aleksander.lobakin@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Thu, 19 Dec 2024 14:57:34 +0100, Alexander Lobakin wrote:
+> For the most part of the C++ history, it couldn't have type
+> declarations inside anonymous unions for different reasons. At the
+> same time, __struct_group() relies on the latters, so when the @TAG
+> argument is not empty, C++ code doesn't want to build (even under
+> `extern "C"`):
+> 
+> ../linux/include/uapi/linux/pkt_cls.h:25:24: error:
+> 'struct tc_u32_sel::<unnamed union>::tc_u32_sel_hdr,' invalid;
+> an anonymous union may only have public non-static data members
+> [-fpermissive]
+> 
+> [...]
 
-The function dyn_event_release() uses argv_split() which must be freed via
-argv_free(). It contains several error paths that do a goto out to call
-argv_free() for cleanup. This makes the code complex and error prone.
+Applied to for-next/hardening, thanks!
 
-Create a new __free() directive __free(argv_free) that will call
-argv_free() for data allocated with argv_split(), and use it in the
-dyn_event_release() function.
+[1/1] stddef: make __struct_group() UAPI C++-friendly
+      https://git.kernel.org/kees/c/724c6ce38bba
 
-Cc: Kees Cook <kees@kernel.org>
-Cc: Andy Shevchenko <andy@kernel.org>
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
-Changes since v1: https://lore.kernel.org/all/20241219201346.029319524@goodmis.org/
+Take care,
 
-- Moved include of cleanup.h up to be more alphabetically ordered
-
- include/linux/string.h        |  3 +++
- kernel/trace/trace_dynevent.c | 23 +++++++----------------
- 2 files changed, 10 insertions(+), 16 deletions(-)
-
-diff --git a/include/linux/string.h b/include/linux/string.h
-index 493ac4862c77..86d5d352068b 100644
---- a/include/linux/string.h
-+++ b/include/linux/string.h
-@@ -4,6 +4,7 @@
- 
- #include <linux/args.h>
- #include <linux/array_size.h>
-+#include <linux/cleanup.h>	/* for DEFINE_FREE() */
- #include <linux/compiler.h>	/* for inline */
- #include <linux/types.h>	/* for size_t */
- #include <linux/stddef.h>	/* for NULL */
-@@ -312,6 +313,8 @@ extern void *kmemdup_array(const void *src, size_t count, size_t element_size, g
- extern char **argv_split(gfp_t gfp, const char *str, int *argcp);
- extern void argv_free(char **argv);
- 
-+DEFINE_FREE(argv_free, char **, if (!IS_ERR_OR_NULL(_T)) argv_free(_T))
-+
- /* lib/cmdline.c */
- extern int get_option(char **str, int *pint);
- extern char *get_options(const char *str, int nints, int *ints);
-diff --git a/kernel/trace/trace_dynevent.c b/kernel/trace/trace_dynevent.c
-index 4376887e0d8a..a322e4f249a5 100644
---- a/kernel/trace/trace_dynevent.c
-+++ b/kernel/trace/trace_dynevent.c
-@@ -74,24 +74,19 @@ int dyn_event_release(const char *raw_command, struct dyn_event_operations *type
- 	struct dyn_event *pos, *n;
- 	char *system = NULL, *event, *p;
- 	int argc, ret = -ENOENT;
--	char **argv;
-+	char **argv __free(argv_free) = argv_split(GFP_KERNEL, raw_command, &argc);
- 
--	argv = argv_split(GFP_KERNEL, raw_command, &argc);
- 	if (!argv)
- 		return -ENOMEM;
- 
- 	if (argv[0][0] == '-') {
--		if (argv[0][1] != ':') {
--			ret = -EINVAL;
--			goto out;
--		}
-+		if (argv[0][1] != ':')
-+			return -EINVAL;
- 		event = &argv[0][2];
- 	} else {
- 		event = strchr(argv[0], ':');
--		if (!event) {
--			ret = -EINVAL;
--			goto out;
--		}
-+		if (!event)
-+			return -EINVAL;
- 		event++;
- 	}
- 
-@@ -101,10 +96,8 @@ int dyn_event_release(const char *raw_command, struct dyn_event_operations *type
- 		event = p + 1;
- 		*p = '\0';
- 	}
--	if (!system && event[0] == '\0') {
--		ret = -EINVAL;
--		goto out;
--	}
-+	if (!system && event[0] == '\0')
-+		return -EINVAL;
- 
- 	mutex_lock(&event_mutex);
- 	for_each_dyn_event_safe(pos, n) {
-@@ -120,8 +113,6 @@ int dyn_event_release(const char *raw_command, struct dyn_event_operations *type
- 	}
- 	tracing_reset_all_online_cpus();
- 	mutex_unlock(&event_mutex);
--out:
--	argv_free(argv);
- 	return ret;
- }
- 
 -- 
-2.45.2
+Kees Cook
 
