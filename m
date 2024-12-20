@@ -1,77 +1,64 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D86F21A072C;
-	Fri, 20 Dec 2024 17:09:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7E2921CFF0;
+	Fri, 20 Dec 2024 19:16:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734714548; cv=none; b=RjW11wp96P3eemmF8Ttl94PGzA5PpfA6H8FpoukHIMYlk7k8Qt07qFVu6JWnkvxs2aPXlkCDigrEEKNYf1Dkg1O8vsDEyxWsQ9qt1fBR5DcrcGb/IU7/ZExRXGYdNmWUA23ulr3/S4igM7+VCivx73pNHMlGPwKcpKML88hqf/0=
+	t=1734722178; cv=none; b=G7xJPGECGWkpQ5HBpUuwQK8wZySZOQojy2uKCib2EaSnv5a7tedtIwsdMB15pCTe72+cseJaPcBPFIlxlcR0vw0JkYce4rHooMvT6zTY7/FFFaQYPmgC7GnHzVwmBLSmPeUrm0nCo4+//Ff37EHF11oTjuvuiQxY0ggs8C/KH4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734714548; c=relaxed/simple;
-	bh=KrZDBpSUHxSNUc07r+o9cYVpnZHoq3YyAKJ9qB12/NU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rYUMztMcm7FoM/TTn0li0v8P15oVEc5f6XeLco3RZCQ/5pVhyDp/t44NbD9BKzZH3n30vS7re1E6XqCFLkl7YdbBzRpjgKNTZZA3SZIWiu+N3yrNJtk27ni8ppqtetYDNtXvl6Rgn8wFvyp4zfOtDe6ndnJ3ukEMRPuKXcD+864=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hwz2o0Kl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1734722178; c=relaxed/simple;
+	bh=I643DwvqBzrmpkd9/0WO7g45CYal1YEc+dZTmIiyD1g=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BQYfDiluFenfIakKe5EHSWmY3EzoxPGPca6KYzx8Ok0qgmoXD9eF3FcCQ914q0tWX8QfiOTjbljz7m9nTxVzgisJo8pxVb1tisuctfUgCLkuCwm054/86R56iassotTiIfPiDoop9qdrnoQRTk1FAqlg1A8nM0RmkCN1RfelO8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l4enO0hk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hwz2o0Kl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41C80C4CECD;
-	Fri, 20 Dec 2024 17:09:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l4enO0hk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E977C4CECD;
+	Fri, 20 Dec 2024 19:16:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734714548;
-	bh=KrZDBpSUHxSNUc07r+o9cYVpnZHoq3YyAKJ9qB12/NU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hwz2o0Klh9P3xt9f5d7hNz38TUO88R24qpdYj4gSFFr59JsRKig35mxbqRNfSB8Bm
-	 VfYn+cRryNf2Dcn0ynqpiI5Y9xDMHo36qRJPMr5FpjSSnZK+jycSwGoZUdGC2/31ji
-	 uBzysnq+AfIBvxXafuM9x/ELc2k3O4Sc7icK9+NK6pxUJCRbIRObImIXg0xmIpuVpn
-	 FeDsDJLIqXIIH7lXQoO+2O9d4tDpx2vRQW37rKWj9g6qKmptuFA4ZJgVSZ1tPAULhU
-	 9YJWJbtqIoeUQvg5Gvy8XNw8+ay9hGVuv8dH8SX8FUy17WsGLR5uKuzZib2guXJm11
-	 /BLIaDeC5UUVw==
-From: Kees Cook <kees@kernel.org>
-To: Alexander Lobakin <aleksander.lobakin@intel.com>
-Cc: Kees Cook <kees@kernel.org>,
-	Christopher Ferris <cferris@google.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Erick Archer <erick.archer@outlook.com>,
-	Keith Packard <keithp@keithp.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] stddef: make __struct_group() UAPI C++-friendly
-Date: Fri, 20 Dec 2024 09:09:02 -0800
-Message-Id: <173471453998.1198562.7846004024566721255.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20241219135734.2130002-1-aleksander.lobakin@intel.com>
-References: <20241219135734.2130002-1-aleksander.lobakin@intel.com>
+	s=k20201202; t=1734722178;
+	bh=I643DwvqBzrmpkd9/0WO7g45CYal1YEc+dZTmIiyD1g=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=l4enO0hkkbSSbuW8Y0zDIg+lapfbiqVfbc6E19X4BBWJMipG4EUwa8DJ/qIC+Bsz9
+	 ZVFbYBessj5sVZxnekot7fXpw2RnVHEieVd9rmZNL9zmrWxKDHA2FTEPca3b+xeJas
+	 aiEKIuS09zoM3j9eJZEXrfLYslYmldmh/Lu1GepbS5oPMeMyl2VpX1NgKIkmCrR+A4
+	 VnwBXJAFIaVcJ37FAg7bEUHgoOg+xQzgw3nwPUubf54rDAbbSFzTd19QtR4tbnTmSn
+	 gKpK1dpnCeTkdDstm0BVGE1klKtTNwaShpB8nr0fGQLHoRltqa29GwnJuhmrbBhKfD
+	 AUyML6Ye/Y4oQ==
+Date: Fri, 20 Dec 2024 19:16:09 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Yasin Lee <yasin.lee.x@gmail.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, yasin.lee.x@outlook.com,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] iio: proximity: hx9023s: Added firmware file parsing
+ functionality
+Message-ID: <20241220191609.5bc87451@jic23-huawei>
+In-Reply-To: <20241216-hx9023s-firmware-20241209-v2-1-ce1b0a1121d0@gmail.com>
+References: <20241216-hx9023s-firmware-20241209-v2-1-ce1b0a1121d0@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, 19 Dec 2024 14:57:34 +0100, Alexander Lobakin wrote:
-> For the most part of the C++ history, it couldn't have type
-> declarations inside anonymous unions for different reasons. At the
-> same time, __struct_group() relies on the latters, so when the @TAG
-> argument is not empty, C++ code doesn't want to build (even under
-> `extern "C"`):
+On Mon, 16 Dec 2024 15:59:40 +0800
+Yasin Lee <yasin.lee.x@gmail.com> wrote:
+
+> Configuration information is now prioritized from the firmware file.
+> If the firmware file is missing or fails to parse, the driver falls
+> back to using the default configuration list for writing the settings.
 > 
-> ../linux/include/uapi/linux/pkt_cls.h:25:24: error:
-> 'struct tc_u32_sel::<unnamed union>::tc_u32_sel_hdr,' invalid;
-> an anonymous union may only have public non-static data members
-> [-fpermissive]
-> 
-> [...]
+> Signed-off-by: Yasin Lee <yasin.lee.x@gmail.com>
 
-Applied to for-next/hardening, thanks!
+Applied to the togreg branch of iio.git and pushed out as testing for 0-day
+to take a look at it.
 
-[1/1] stddef: make __struct_group() UAPI C++-friendly
-      https://git.kernel.org/kees/c/724c6ce38bba
+Thanks,
 
-Take care,
-
--- 
-Kees Cook
-
+Jonathan
