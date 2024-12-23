@@ -1,40 +1,40 @@
-Received: from mail-10626.protonmail.ch (mail-10626.protonmail.ch [79.135.106.26])
+Received: from mail-10627.protonmail.ch (mail-10627.protonmail.ch [79.135.106.27])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FC051B4F17;
-	Mon, 23 Dec 2024 16:21:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.26
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DFD71B6CFE
+	for <linux-hardening@vger.kernel.org>; Mon, 23 Dec 2024 16:28:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.27
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734970873; cv=none; b=g5s44LvHGejBIkgfAxxiy1kMmzAZaTLIUa4zC1pIPIEjtaDiqHBpFeHJ2KPDcAOFonqe4O/2irvLkNg3/5eQa6T20NRMckZHCB8Equ64Hs2LpH+Jv3wR83YPlFtJT2uW2em/vXeVE4AOq87Xyxjo2pSM9G4ojm/nj+LqL0d0+cA=
+	t=1734971304; cv=none; b=YZ0JrY2yqVS46PiHCIp1lJhBXYJuCRciMjuVan8H7H/y0oXkMDmCfzI75PkBJ+jjWdVMd4hJnutOEfXchT7awJX05GhJ00KiCamq/cWOLLj6Zu4nJlFAVMKwSanthcCjNV6PeVGzdzq9oYmGSAmRqOL1jAj+VnTgYIPEAtT/oqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734970873; c=relaxed/simple;
-	bh=jt24JKjEW5Ctr5ZnYI8+K8/4xkVmTpnr9xMlhLEhomQ=;
-	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=oxE/wonJjOGiLWlvAaYDjo4AsoXqf4sLpCUlyfx7f6kOeFzDcuu7NVcWLLHBt45NIriLkP6wwhAQ96gbzhiC7IMWLuh8J7lRE4CHagWf/UjxL0/kV72tvfpf+Qc6yfXQLfu9nmdlFjO196kjYvKD0CFnc7DhlkdAE8C75FC8LRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com; spf=pass smtp.mailfrom=ethancedwards.com; dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b=oFCLbqr9; arc=none smtp.client-ip=79.135.106.26
+	s=arc-20240116; t=1734971304; c=relaxed/simple;
+	bh=YwniGKnAg4EDmwYBiUYaoSDvo6SUYsXGJQgDPG4yMSE=;
+	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=enZB6T1YQwwkSgxusKPOmDdxvV8kD3jCFXmGVYOmUDRZ4OXyFzjZoqE81vozTzlLP1JAKNh1/iMA5fJz1pJcfFNq3fnd9yKbz9XppLyr374w1FQ3LKlChvfUDQp2B0NmdDUFBHpwJuw1L3/BQ06xRIyVYFnp9vNsyC7u6zWOBTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com; spf=pass smtp.mailfrom=ethancedwards.com; dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b=dKhJz62U; arc=none smtp.client-ip=79.135.106.27
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ethancedwards.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b="oFCLbqr9"
+	dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b="dKhJz62U"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ethancedwards.com;
-	s=protonmail3; t=1734970863; x=1735230063;
-	bh=akUmr6bOc+fOEizuHMtWgqa48aPdr3+dMVwuE/0mScA=;
+	s=protonmail3; t=1734971294; x=1735230494;
+	bh=bqyMZPUwM8jdoQ7R6OfI9h6Twr/FyoQIi75Q+q7W9u4=;
 	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
 	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector:
 	 List-Unsubscribe:List-Unsubscribe-Post;
-	b=oFCLbqr9g9+kYm/ypdy6ge5KsZFsBMbilXsEOYPmrnEQrrMf0GF2+H4praGOc5Adq
-	 +HGnjKtYFT5Z/kEt00aRVBhBYbkmoNPoecL8XnwSSwBC/QiNH0mnvxKohIRFx2HT3m
-	 Dto1akoMjsXdHdbrSivAd0NtCDqSTLwLqdeh80h0msQvOwx7eHvj/ZvhE5TFf8eM4J
-	 ql7FckkUEdbKv+MVsb9Nrz7wFVgamO1gQM0v+SOZJZjBhPp4GKotMmfuqG1tpsoa6v
-	 NnFxEypOeGneUly5vgdoGAiS/+nXIZ587tqmugORQCkoaVepCjqYDcDoiGcf3SRd57
-	 BQFPdqc5EfmOg==
-Date: Mon, 23 Dec 2024 16:20:59 +0000
+	b=dKhJz62UltxDlEmpJaPB4/KU5pncU8BXKp64nZSktCoyu/p2SxGL/p6GJpNE+niVM
+	 oRTB6rnkEDxmmsmUR26ZKa7rx4G5gMHFNNYG1jmZCQJV1j3uAyYOLrg0nnXiVGQbDg
+	 uBrJVPK+TDnUpBmeW+AZK6tB0Q1bmA+R35d0U1jSf6EJlRN6MyUbjlWv2Mn8OG11eQ
+	 r7eWB6KuwZlt51nk/OU7MIERljnMPVX34wr7tabRX/v0mbScPuoxmLBzDBUcVfzww8
+	 QwNbJIK/88VBZ7bj63gGpgObQkEzDPpHV/+uE+Et5eWYk48xb9xp2xxkBTFj0VLehv
+	 40ntThRWXFv+g==
+Date: Mon, 23 Dec 2024 16:28:09 +0000
 To: "rafael@kernel.org" <rafael@kernel.org>
 From: Ethan Carter Edwards <ethan@ethancedwards.com>
-Cc: "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>, "kernel-hardening@lists.openwall.com" <kernel-hardening@lists.openwall.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>
-Subject: [PATCH] thermal/debugfs: change kzalloc to kcalloc
-Message-ID: <LD_0bVRqzr2SEjrmrDHAWn0PurFdkgxZD6QS2zowUh5uqA7or1pd88vdA5wyXbTx1Z6dfZzt7pq6xfQ1EnvD4fIt26nWG5-zGEmNLhIcXTE=@ethancedwards.com>
+Cc: "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kernel-hardening@lists.openwall.com" <kernel-hardening@lists.openwall.com>, "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
+Subject: [PATCH v2] thermal/debugfs: change kzalloc to kcalloc
+Message-ID: <LrNqRlU9exQU3mj1YCsmuWHYkpX3ZtUkks2ajMaCbmODAmeO0U0zMIDUVOsIjUyVMaImb67YdBy6M5NFOUqrkdmzgIxILRxZ_pbhOsOvtcI=@ethancedwards.com>
 Feedback-ID: 28410670:user:proton
-X-Pm-Message-ID: ef2dd8441b364721ef05f54745cd160004b2625f
+X-Pm-Message-ID: 7953223c63a835d43bd4e9b315c0fdf4d734ad51
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -68,8 +68,8 @@ z)
 
 -       tz_dbg->trips_crossed =3D kzalloc(sizeof(int) * tz->num_trips, GFP_=
 KERNEL);
-+       tz_dbg->trips_crossed =3D kcalloc(z->num_trips, sizeof(int), GFP_KE=
-RNEL);
++       tz_dbg->trips_crossed =3D kcalloc(tz->num_trips, sizeof(int), GFP_K=
+ERNEL);
         if (!tz_dbg->trips_crossed) {
                 thermal_debugfs_remove_id(thermal_dbg);
                 return;
