@@ -1,82 +1,147 @@
-Received: from mail-10624.protonmail.ch (mail-10624.protonmail.ch [79.135.106.24])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BDAD182
-	for <linux-hardening@vger.kernel.org>; Wed, 25 Dec 2024 00:12:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 905AE1369BC;
+	Thu, 26 Dec 2024 14:38:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735085531; cv=none; b=oklrPdqqy7EAIr37ruqsJ3iRAzn9B5xuAbaPOtgEUHr++OvppvD8qXu1mnmjOe47uNpPwKZ/qHIdvIj8zFnLxYZlV/lkMADzAjQPhcj4vmBTZsGCXUf5Ml/DoAqndr/Mh1dBw4I5SujL+EwfvIjcBMR8c8d1IUD+qO+JZauW70k=
+	t=1735223918; cv=none; b=ZWmtmy0iwaB5LhOjLgPrgr204jibbFEppjkn2qQxZFotSUjKItWGpH+gUCOWw4a8n+O58+eUf/mqKIUlAflhygpIOpaHC+wD8ITOxpZ8fhwQtQwrFtwJu4ixb977Cz0PUldPBbRdTfgEcAYtqbq/aSh4VafkmCgLBoPbkmLnm/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735085531; c=relaxed/simple;
-	bh=aqQEz69ffLO060AUloP0QtKMe9LzDhvaV6vqYUa50co=;
-	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=PSd2kCFXdKbq5JfpStg1FypjjL3xOBes7DBr68jzvEy5s6jSapvOZDGOMbKsXT5k9LbwIY+aPCWkbl6aOClLW/d0IzloixB+xZZYIqWkRrxM9FZ3FBM0C09bydOrDDDblNRL7eiGZDncqCJ58bVbecZ993EzSOhhBjTwz4VuwKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com; spf=pass smtp.mailfrom=ethancedwards.com; dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b=J11nNlGV; arc=none smtp.client-ip=79.135.106.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ethancedwards.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b="J11nNlGV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ethancedwards.com;
-	s=protonmail3; t=1735085519; x=1735344719;
-	bh=aqQEz69ffLO060AUloP0QtKMe9LzDhvaV6vqYUa50co=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector:
-	 List-Unsubscribe:List-Unsubscribe-Post;
-	b=J11nNlGVO0MjJJ7de95ffDB1tAyZHYd+MdtQhmugwsoAOaNW3OUmjG7Umdd9DlMTh
-	 F97zS7VzPww5y8adSE47oLkQ3vwN3isOnjTROCaoNad0cFE00kbdY8Xh9evlLCGVNE
-	 99SURrrgk4N0KBHV4sRybaAH/BAGpvmn1QG332JBYOI2MLDJYh4/5zfiWAO7xFbDGV
-	 iXj95eNuswt5lgjzhxzK2WQ7Bei40e7PHyZHYxC6fmnU23czoPyC6DU20j8fXNxkhu
-	 BXBLsj1+FTJifBFvElKt8KfeIVNNsgXKu/VUuUjGNiiAgYoi273Df5+xSsVMq/7OuM
-	 Koz+quz+aieTQ==
-Date: Wed, 25 Dec 2024 00:11:55 +0000
-To: "mingo@redhat.com" <mingo@redhat.com>
-From: Ethan Carter Edwards <ethan@ethancedwards.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>, "kernel-hardening@lists.openwall.com" <kernel-hardening@lists.openwall.com>, "bsegall@google.com" <bsegall@google.com>, "peterz@infradead.org" <peterz@infradead.org>
-Subject: [PATCH] sched/topology: change kzalloc to kcalloc
-Message-ID: <ieLySO0wXjkbKYOTqu2fRbPKXUdAB6xw5zDQedqQEpBKTD4t61myv42eN9b14T6nmoBd6lb45oK5_2rQ9mYKrNCTs76PrDVpLjk8CFf95E0=@ethancedwards.com>
-Feedback-ID: 28410670:user:proton
-X-Pm-Message-ID: 4a1a081b6666111f8b3515a3da1c822a8b2e5127
+	s=arc-20240116; t=1735223918; c=relaxed/simple;
+	bh=V7VfgRgo9EDOq9sFvBIj3sWEc06L1QrW+/lZAYMjCHI=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=MbGKVLmNvtaDhW29Iej0jAd7ZZmxncuyUOG7/UIj0fC0C2aod2E0LUWIBQDYqzNpcH9vPKHlfbYQKYpByjcDKhENFAZVwCgCkEnJeErd4iOcXnSPI35KmF/AyWvIHYGSsB2UIAeNhhgzvaU4s8T2UnLBc3AdOFRECpqltAYk58g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BF8EC4CEDE;
+	Thu, 26 Dec 2024 14:38:38 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.98)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1tQp1V-0000000G1vp-0ijs;
+	Thu, 26 Dec 2024 09:39:37 -0500
+Message-ID: <20241226143937.023136340@goodmis.org>
+User-Agent: quilt/0.68
+Date: Thu, 26 Dec 2024 09:39:28 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Kees Cook <kees@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Andy Shevchenko <andy@kernel.org>,
+ linux-hardening@vger.kernel.org
+Subject: [for-next][PATCH 14/15] tracing/string: Create and use __free(argv_free) in trace_dynevent.c
+References: <20241226143914.397394975@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 
-We are replacing any instances of kzalloc(size * count, ...) with
-kcalloc(count, size, ...) due to risk of overflow [1].
+From: Steven Rostedt <rostedt@goodmis.org>
 
-[1] https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded=
--arithmetic-in-allocator-arguments
-Link: https://github.com/KSPP/linux/issues/162
+The function dyn_event_release() uses argv_split() which must be freed via
+argv_free(). It contains several error paths that do a goto out to call
+argv_free() for cleanup. This makes the code complex and error prone.
 
-Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
+Create a new __free() directive __free(argv_free) that will call
+argv_free() for data allocated with argv_split(), and use it in the
+dyn_event_release() function.
+
+Cc: Kees Cook <kees@kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Andy Shevchenko <andy@kernel.org>
+Cc: linux-hardening@vger.kernel.org
+Link: https://lore.kernel.org/20241220103313.4a74ec8e@gandalf.local.home
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/sched/topology.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/linux/string.h        |  3 +++
+ kernel/trace/trace_dynevent.c | 23 +++++++----------------
+ 2 files changed, 10 insertions(+), 16 deletions(-)
 
-diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-index 9748a4c8d668..17eb12819563 100644
---- a/kernel/sched/topology.c
-+++ b/kernel/sched/topology.c
-@@ -1920,7 +1920,7 @@ void sched_init_numa(int offline_node)
- =09*/
- =09sched_domains_numa_levels =3D 0;
-=20
--=09masks =3D kzalloc(sizeof(void *) * nr_levels, GFP_KERNEL);
-+=09masks =3D kcalloc(nr_levels, sizeof(void *), GFP_KERNEL);
- =09if (!masks)
- =09=09return;
-=20
-@@ -1929,7 +1929,7 @@ void sched_init_numa(int offline_node)
- =09* CPUs of nodes that are that many hops away from us.
- =09*/
- =09for (i =3D 0; i < nr_levels; i++) {
--=09=09masks[i] =3D kzalloc(nr_node_ids * sizeof(void *), GFP_KERNEL);
-+=09=09masks[i] =3D kcalloc(nr_node_ids, sizeof(void *), GFP_KERNEL);
- =09=09if (!masks[i])
- =09=09=09return;
-=20
---=20
-2.47.1
+diff --git a/include/linux/string.h b/include/linux/string.h
+index 493ac4862c77..86d5d352068b 100644
+--- a/include/linux/string.h
++++ b/include/linux/string.h
+@@ -4,6 +4,7 @@
+ 
+ #include <linux/args.h>
+ #include <linux/array_size.h>
++#include <linux/cleanup.h>	/* for DEFINE_FREE() */
+ #include <linux/compiler.h>	/* for inline */
+ #include <linux/types.h>	/* for size_t */
+ #include <linux/stddef.h>	/* for NULL */
+@@ -312,6 +313,8 @@ extern void *kmemdup_array(const void *src, size_t count, size_t element_size, g
+ extern char **argv_split(gfp_t gfp, const char *str, int *argcp);
+ extern void argv_free(char **argv);
+ 
++DEFINE_FREE(argv_free, char **, if (!IS_ERR_OR_NULL(_T)) argv_free(_T))
++
+ /* lib/cmdline.c */
+ extern int get_option(char **str, int *pint);
+ extern char *get_options(const char *str, int nints, int *ints);
+diff --git a/kernel/trace/trace_dynevent.c b/kernel/trace/trace_dynevent.c
+index 4376887e0d8a..a322e4f249a5 100644
+--- a/kernel/trace/trace_dynevent.c
++++ b/kernel/trace/trace_dynevent.c
+@@ -74,24 +74,19 @@ int dyn_event_release(const char *raw_command, struct dyn_event_operations *type
+ 	struct dyn_event *pos, *n;
+ 	char *system = NULL, *event, *p;
+ 	int argc, ret = -ENOENT;
+-	char **argv;
++	char **argv __free(argv_free) = argv_split(GFP_KERNEL, raw_command, &argc);
+ 
+-	argv = argv_split(GFP_KERNEL, raw_command, &argc);
+ 	if (!argv)
+ 		return -ENOMEM;
+ 
+ 	if (argv[0][0] == '-') {
+-		if (argv[0][1] != ':') {
+-			ret = -EINVAL;
+-			goto out;
+-		}
++		if (argv[0][1] != ':')
++			return -EINVAL;
+ 		event = &argv[0][2];
+ 	} else {
+ 		event = strchr(argv[0], ':');
+-		if (!event) {
+-			ret = -EINVAL;
+-			goto out;
+-		}
++		if (!event)
++			return -EINVAL;
+ 		event++;
+ 	}
+ 
+@@ -101,10 +96,8 @@ int dyn_event_release(const char *raw_command, struct dyn_event_operations *type
+ 		event = p + 1;
+ 		*p = '\0';
+ 	}
+-	if (!system && event[0] == '\0') {
+-		ret = -EINVAL;
+-		goto out;
+-	}
++	if (!system && event[0] == '\0')
++		return -EINVAL;
+ 
+ 	mutex_lock(&event_mutex);
+ 	for_each_dyn_event_safe(pos, n) {
+@@ -120,8 +113,6 @@ int dyn_event_release(const char *raw_command, struct dyn_event_operations *type
+ 	}
+ 	tracing_reset_all_online_cpus();
+ 	mutex_unlock(&event_mutex);
+-out:
+-	argv_free(argv);
+ 	return ret;
+ }
+ 
+-- 
+2.45.2
+
+
