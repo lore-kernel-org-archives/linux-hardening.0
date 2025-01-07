@@ -1,44 +1,42 @@
-Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [195.130.132.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8624618892D
-	for <linux-hardening@vger.kernel.org>; Tue,  7 Jan 2025 08:39:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.132.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE1DA1E7668
+	for <linux-hardening@vger.kernel.org>; Tue,  7 Jan 2025 10:56:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736239145; cv=none; b=sOmh6a3zRHX9sm8NwtQyDKyil9/M6aKpw5vfr7aL890pIPtURKOmbHOeJHdDUDqWSL71IKWzFKwhh9vv3pA4DgYACWaQEoPnd39EB1RRcgmqTiaVh5wc5/5hvDNMNOQdoWbGAfV2mIjMyr0PtModd/k5aCZVwkN2BBIpuxsB9BQ=
+	t=1736247393; cv=none; b=sj4ziDKt38XDjvto/V7BTKG6WyvhR5VyeU95fFH1F3r11YyTU/hlN6ZpU0jp1FnJeiu4UpJQd5UcAWcwH3mKXCvqwdp5nU9MJ96fYX1xEJ9pi85OaagWy3j4K+iH+Ocf54QcRNeYG1/PD/mUuM/RtczbCD3MfNPF8FNqTyoGj20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736239145; c=relaxed/simple;
-	bh=PGUV0MlskUFt+1qqeHdTyI9j0Ottx9A7j6NgCTzY2Co=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oRXaM0/23CdKyFTtuckjCL2mYREzlfsH46zTEtceL3Aj+RwQY15f/XDlgwMS7ugmOatTk0ssV6FaWojeHimy/wCoBefhf/ALGEn9u6SLrrqK/zrk/cLRLhoP8A6Q0ojAJzCvcWiT0xrIjmeFlQspujFaFBivpCB0g9h9BVoNRiw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.132.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:39d4:dc4e:b4ce:1377])
-	by xavier.telenet-ops.be with cmsmtp
-	id y8ez2D00P3AZZFy018ezgV; Tue, 07 Jan 2025 09:39:00 +0100
-Received: from rox.of.borg ([192.168.97.57])
-	by ramsan.of.borg with esmtp (Exim 4.97)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1tV572-00000008ZaZ-0akl;
-	Tue, 07 Jan 2025 09:38:59 +0100
-Received: from geert by rox.of.borg with local (Exim 4.97)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1tV575-00000004lNY-2meS;
-	Tue, 07 Jan 2025 09:38:59 +0100
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+	s=arc-20240116; t=1736247393; c=relaxed/simple;
+	bh=o608bbBSXgBbckZm3C+nmGzItyQ406vPwgM2DFNXamk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lOVZRpBjlkjhqdDxg2Aisc4bOewzz1qTyUoBD0VvkfmQ8HCm1ag8xVKqtQIloXkb52zwIJHQqiFz2kRvSME7mk/ER/CxdCoHz25P5NtpEX4PwjdeIwLgoprjEyFRDcg6k0lrPkBzKXT5vRncvfwrDTrq9RqnGMsZgiZWeZNFozo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=B2kMewph; arc=none smtp.client-ip=95.215.58.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="B2kMewph"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1736247385;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=JbhykM6+EaaFeGUvuFELTlis3wZ07yx3+ZYkSCWCNVw=;
+	b=B2kMewphZy/rWIdJz280J6D8kSyBvTuSRaUIV9QjcVaZTyw6VV1MRSFzCVMqIMrbtp1B53
+	/pnzhy5i9hwG5l7f8FcRdW+bo73qvASX76HqWD4Xi9eqeqyu/Kjg6rFYVF+iRsEMs1104X
+	yq0llsigk+dnv8KgfWeHkZtPi8G6EZ0=
+From: Thorsten Blum <thorsten.blum@linux.dev>
 To: Kees Cook <kees@kernel.org>,
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	Paul Moore <paul@paul-moore.com>,
-	James Morris <jmorris@namei.org>,
-	"Serge E . Hallyn" <serge@hallyn.com>
-Cc: linux-hardening@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Thorsten Blum <thorsten.blum@linux.dev>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
 	linux-kernel@vger.kernel.org,
-	Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] hardening: Document INIT_STACK_ALL_PATTERN behavior with GCC
-Date: Tue,  7 Jan 2025 09:38:57 +0100
-Message-ID: <293d29d6a0d1823165be97285c1bc73e90ee9db8.1736239070.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.43.0
+	linux-hardening@vger.kernel.org
+Subject: [RESEND PATCH v2] params: Annotate struct module_param_attrs with __counted_by()
+Date: Tue,  7 Jan 2025 11:55:30 +0100
+Message-ID: <20250107105531.3368-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -46,27 +44,95 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-The help text for INIT_STACK_ALL_PATTERN documents the patterns used by
-Clang, but lacks documentation for GCC.
+Add the __counted_by compiler attribute to the flexible array member
+attrs to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
+CONFIG_FORTIFY_SOURCE.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Increment num before adding a new param_attribute to the attrs array and
+adjust the array index accordingly. Increment num immediately after the
+first reallocation such that the reallocation for the NULL terminator
+only needs to add 1 (instead of 2) to mk->mp->num.
+
+Use struct_size() instead of manually calculating the size for the
+reallocation.
+
+Use krealloc_array() for the additional NULL terminator.
+
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
 ---
- security/Kconfig.hardening | 1 +
- 1 file changed, 1 insertion(+)
+Changes in v2:
+- Use krealloc_array() as suggested by Andy Shevchenko
+- Link to v1: https://lore.kernel.org/r/20240823123300.37574-1-thorsten.blum@toblux.com/
+---
+ kernel/params.c | 29 +++++++++++++----------------
+ 1 file changed, 13 insertions(+), 16 deletions(-)
 
-diff --git a/security/Kconfig.hardening b/security/Kconfig.hardening
-index c9d5ca3d8d08de23..b56e001e0c6a9533 100644
---- a/security/Kconfig.hardening
-+++ b/security/Kconfig.hardening
-@@ -127,6 +127,7 @@ choice
- 		  repeating for all types and padding except float and double
- 		  which use 0xFF repeating (-NaN). Clang on 32-bit uses 0xFF
- 		  repeating for all types and padding.
-+		  GCC uses 0xFE repeating for all types, and zero for padding.
+diff --git a/kernel/params.c b/kernel/params.c
+index 2e447f8ae183..5f6643676697 100644
+--- a/kernel/params.c
++++ b/kernel/params.c
+@@ -551,7 +551,7 @@ struct module_param_attrs
+ {
+ 	unsigned int num;
+ 	struct attribute_group grp;
+-	struct param_attribute attrs[];
++	struct param_attribute attrs[] __counted_by(num);
+ };
  
- 	config INIT_STACK_ALL_ZERO
- 		bool "zero-init everything (strongest and safest)"
+ #ifdef CONFIG_SYSFS
+@@ -651,35 +651,32 @@ static __modinit int add_sysfs_param(struct module_kobject *mk,
+ 	}
+ 
+ 	/* Enlarge allocations. */
+-	new_mp = krealloc(mk->mp,
+-			  sizeof(*mk->mp) +
+-			  sizeof(mk->mp->attrs[0]) * (mk->mp->num + 1),
++	new_mp = krealloc(mk->mp, struct_size(mk->mp, attrs, mk->mp->num + 1),
+ 			  GFP_KERNEL);
+ 	if (!new_mp)
+ 		return -ENOMEM;
+ 	mk->mp = new_mp;
++	mk->mp->num++;
+ 
+ 	/* Extra pointer for NULL terminator */
+-	new_attrs = krealloc(mk->mp->grp.attrs,
+-			     sizeof(mk->mp->grp.attrs[0]) * (mk->mp->num + 2),
+-			     GFP_KERNEL);
++	new_attrs = krealloc_array(mk->mp->grp.attrs, mk->mp->num + 1,
++				   sizeof(mk->mp->grp.attrs[0]), GFP_KERNEL);
+ 	if (!new_attrs)
+ 		return -ENOMEM;
+ 	mk->mp->grp.attrs = new_attrs;
+ 
+ 	/* Tack new one on the end. */
+-	memset(&mk->mp->attrs[mk->mp->num], 0, sizeof(mk->mp->attrs[0]));
+-	sysfs_attr_init(&mk->mp->attrs[mk->mp->num].mattr.attr);
+-	mk->mp->attrs[mk->mp->num].param = kp;
+-	mk->mp->attrs[mk->mp->num].mattr.show = param_attr_show;
++	memset(&mk->mp->attrs[mk->mp->num - 1], 0, sizeof(mk->mp->attrs[0]));
++	sysfs_attr_init(&mk->mp->attrs[mk->mp->num - 1].mattr.attr);
++	mk->mp->attrs[mk->mp->num - 1].param = kp;
++	mk->mp->attrs[mk->mp->num - 1].mattr.show = param_attr_show;
+ 	/* Do not allow runtime DAC changes to make param writable. */
+ 	if ((kp->perm & (S_IWUSR | S_IWGRP | S_IWOTH)) != 0)
+-		mk->mp->attrs[mk->mp->num].mattr.store = param_attr_store;
++		mk->mp->attrs[mk->mp->num - 1].mattr.store = param_attr_store;
+ 	else
+-		mk->mp->attrs[mk->mp->num].mattr.store = NULL;
+-	mk->mp->attrs[mk->mp->num].mattr.attr.name = (char *)name;
+-	mk->mp->attrs[mk->mp->num].mattr.attr.mode = kp->perm;
+-	mk->mp->num++;
++		mk->mp->attrs[mk->mp->num - 1].mattr.store = NULL;
++	mk->mp->attrs[mk->mp->num - 1].mattr.attr.name = (char *)name;
++	mk->mp->attrs[mk->mp->num - 1].mattr.attr.mode = kp->perm;
+ 
+ 	/* Fix up all the pointers, since krealloc can move us */
+ 	for (i = 0; i < mk->mp->num; i++)
 -- 
-2.43.0
+2.47.1
 
