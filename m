@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 256A61754B;
-	Tue,  7 Jan 2025 01:12:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74CE836AF5;
+	Tue,  7 Jan 2025 01:17:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736212370; cv=none; b=pzGuZW9xpyesZVsnbOD10ebfdLirvN5DK5wtPkTW6GXZ7+dm4w39GE3s3wZnUeevCt2xpSObr3WqV5u3y3AFcmBuYjptbY/BgyGqA4Q2rSRaZDP2bKiR21czqtbehFQwLWUsv8xmdYXSeNv2+gt0cuVBcNYU7unJp5O45a1jxio=
+	t=1736212633; cv=none; b=QfvFw/V0AUAZAvanOahre3xoKkIAdhUmyhV/eWw+OSIsLtYkVL3W7KmRKHeXxVroK6N1CQ7n5FdRXwv+YddtnaYsmJk/d01DbN91V8xrYt/ZsQjPBx+sU3hj+eYd5C6p4io1MRIJ7BGHFY3PF09vmnmb7u2PU6mLUDY04zcmBb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736212370; c=relaxed/simple;
-	bh=q1z5WtS6vKHnbPI01DoVbop19PAY9r5OTM6/6KAVsTc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ckoXtkMoFzkMEeKcz99OlLOfjDWH95iFozNg8edXbeMv0UlLS5FQcDhtAPjhVbUa0MSF7g4IMeDSgCwNtDo7uv1P1l2VS+OXkTGTWu5L5UYtxbGpVHGmIBuT0dTnximu6YYvkG4iNNlSeUK5IC3sgX02tESerbCKMNchLO7DAHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sg+/UsdM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1736212633; c=relaxed/simple;
+	bh=kAVrCQjzZghGx/Mh/TnXhecmI2ef0AhPGBvN/Aj8emc=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oB4obopmq3BbtryVfpww9eIbbGS/OD4C5G2q03EMOGE3PNVGfGHSIGRo/PbGHcIGubf1MGLPGx+XpYxqlahPCS9Y1Q2lagbkEFHlyX8+i04sB7W1tf14P7Oa2eE07cw5oHGuJhSKgdJDiQzXSTEolYzMu0s6Lu5efBFe/8NXaB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dpk+LaIM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sg+/UsdM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94C39C4CED2;
-	Tue,  7 Jan 2025 01:12:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dpk+LaIM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06360C4CED2;
+	Tue,  7 Jan 2025 01:17:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736212369;
-	bh=q1z5WtS6vKHnbPI01DoVbop19PAY9r5OTM6/6KAVsTc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Sg+/UsdM0apxmn3E8JxvhtJwSgj8fV8Xk+RL2Vv8uwygA4HRxCumxyhZcp1+wDpU9
-	 tk90APAMMeGgKdv+NvEAnnY5Udqm/TesNdhzwomaj1+XCsWKyB6mWihaR3aIvE5n1F
-	 neah6DK1OJ5VepOBVxKN43IOrVIIRpbv4tH3hgayCv/cqQIdlDG2+p0t3Igj3paLS6
-	 AwT81aLGJeYWZnDC8TjrOuQ27ccTKVegqO/Wdx/g5fZ08dFToU14OoyyhFajvZ0BYx
-	 MYpghp4OxO//7DzqdcmWZJsY1tm9+pHLlHk8ZUYj0UM4oU3mS+5Kn2R3LQlaHVSxT1
-	 rP/07o11QPyMQ==
-Date: Mon, 6 Jan 2025 17:12:46 -0800
+	s=k20201202; t=1736212633;
+	bh=kAVrCQjzZghGx/Mh/TnXhecmI2ef0AhPGBvN/Aj8emc=;
+	h=Date:From:To:Subject:References:In-Reply-To:From;
+	b=dpk+LaIMK1A26bZlbRyuwn8ixb/Il4rYdg9BPZKr+WqFHmKjCt/rXJ+T4CbdMT+P8
+	 eXzNTGgu3STjCmzu+4POglK+Uq/mZPr57XZl7bi3IAHy4qB8O/+HvsGt1vgbBHn8Vz
+	 m6xN1oK+YJ4ZhknXWuE6ui1fuABxFC+YFlezOjDLBshBGhd8bX59qfC03Vu03iz3Vi
+	 /XUAJiFgOL+bmIZHZvPzsdz5HdaX1zPxR+e2SmmOPNj5no7M1B4+lEkJxLX8wucN3t
+	 Z/c0h5GGHRtU9pryz7ailccg7DjIM2y6NFXWW1iOeEzinRwJ7vlz2g4yUsPL1MHVfV
+	 va1n5a+DihdAA==
+Date: Mon, 6 Jan 2025 17:17:10 -0800
 From: Kees Cook <kees@kernel.org>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: jeffxu@chromium.org, akpm@linux-foundation.org, jannh@google.com,
+To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, jeffxu@chromium.org,
+	akpm@linux-foundation.org, jannh@google.com,
 	torvalds@linux-foundation.org, adhemerval.zanella@linaro.org,
 	oleg@redhat.com, linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org, linux-mm@kvack.org,
@@ -39,20 +39,21 @@ Cc: jeffxu@chromium.org, akpm@linux-foundation.org, jannh@google.com,
 	rdunlap@infradead.org, davem@davemloft.net, hch@lst.de,
 	peterx@redhat.com, hca@linux.ibm.com, f.fainelli@gmail.com,
 	gerg@kernel.org, dave.hansen@linux.intel.com, mingo@kernel.org,
-	ardb@kernel.org, Liam.Howlett@oracle.com, mhocko@suse.com,
-	42.hyeyoo@gmail.com, peterz@infradead.org, ardb@google.com,
-	enh@google.com, rientjes@google.com, groeck@chromium.org,
-	mpe@ellerman.id.au, Vlastimil Babka <vbabka@suse.cz>,
+	ardb@kernel.org, mhocko@suse.com, 42.hyeyoo@gmail.com,
+	peterz@infradead.org, ardb@google.com, enh@google.com,
+	rientjes@google.com, groeck@chromium.org, mpe@ellerman.id.au,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
 	Andrei Vagin <avagin@gmail.com>,
 	Dmitry Safonov <0x7f454c46@gmail.com>,
 	Mike Rapoport <mike.rapoport@gmail.com>,
 	Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>
 Subject: Re: [PATCH v4 1/1] exec: seal system mappings
-Message-ID: <202501061647.6C8F34CB1A@keescook>
+Message-ID: <202501061713.823E772F@keescook>
 References: <20241125202021.3684919-1-jeffxu@google.com>
  <20241125202021.3684919-2-jeffxu@google.com>
  <202412171248.409B10D@keescook>
- <a0a3b26b-2222-478c-a1cb-56514ec8d6ff@lucifer.local>
+ <htdv44tqzi4jl2b7dwutsdwnh4tgrxq6xdvumi5wwu3hnh7sgw@tfwlal74ukx6>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -61,143 +62,19 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a0a3b26b-2222-478c-a1cb-56514ec8d6ff@lucifer.local>
+In-Reply-To: <htdv44tqzi4jl2b7dwutsdwnh4tgrxq6xdvumi5wwu3hnh7sgw@tfwlal74ukx6>
 
-On Fri, Jan 03, 2025 at 09:38:10PM +0000, Lorenzo Stoakes wrote:
-> On Tue, Dec 17, 2024 at 02:18:53PM -0800, Kees Cook wrote:
-> > On Mon, Nov 25, 2024 at 08:20:21PM +0000, jeffxu@chromium.org wrote:
-> > > Seal vdso, vvar, sigpage, uprobes and vsyscall.
-> > >
-> > > Those mappings are readonly or executable only, sealing can protect
-> > > them from ever changing or unmapped during the life time of the process.
-> > > For complete descriptions of memory sealing, please see mseal.rst [1].
-> > >
-> > > System mappings such as vdso, vvar, and sigpage (for arm) are
-> > > generated by the kernel during program initialization, and are
-> > > sealed after creation.
-> > > [...]
-> > >
-> > > +	exec.seal_system_mappings = [KNL]
-> > > +			Format: { no | yes }
-> > > +			Seal system mappings: vdso, vvar, sigpage, vsyscall,
-> > > +			uprobe.
-> > > +			- 'no':  do not seal system mappings.
-> > > +			- 'yes': seal system mappings.
-> > > +			This overrides CONFIG_SEAL_SYSTEM_MAPPINGS=(y/n)
-> > > +			If not specified or invalid, default is the value set by
-> > > +			CONFIG_SEAL_SYSTEM_MAPPINGS.
-> > > +			This option has no effect if CONFIG_64BIT=n
-> >
-> > I know there is a v5 coming, but I wanted to give my thoughts to help
-> > shape it based on the current discussion threads.
-> >
-> > The callers of _install_special_mapping() cover what is mentioned here.
-> > The vdso is very common (arm, arm64, csky, hexagon, loongarch, mips,
-> > parisc, powerpc, riscv, s390, sh, sparc, x86, um). For those with vdso,
-> > some also have vvar (arm, arm64, loongarch, mips, powerpc, riscv, s390,
-> > sparc, x86). After that, I see a few extra things, in addition to
-> > sigpage and uprobes as mentioned already in the patch:
-> >
-> > arm sigpage
-> > arm64 compat vectors (what is this for arm?)
-> > arm64 compat sigreturn (what is this for arm?)
-> > nios2 kuser helpers
-> > uprobes
-> 
-> OK let's not get ahead of ourselves :)
-> 
-> VDSOs/gate VMAs are treated quite differently by different arches. So we
-> have to tread _very_ carefully here.
-> 
-> I believe PPC doe some 'tricky' things and may actually want to unmap, for
-> instance.
-> 
-> The problem with this kind of change is we're doing something fundamental
-> that impacts _every possible combinatorial combination of configs, arches,
-> and use cases_ for each of these which we seeming - just assume - will have
-> no issue with this.
-> 
-> This is insufficient, deeply. We need:
-> 
-> 1. Strong justification (hand waving won't suffice).
-> 2. Very extensive testing and checking, and _proof_ of this testing being
-> performed.
-> 3. Buy-in from arch maintainers.
-> 
-> So far this series has provided none of those. This is why I am cautious
-> and pushing back here.
+On Fri, Jan 03, 2025 at 03:48:23PM -0500, Liam R. Howlett wrote:
+> So we have at least two userspace uses that this will breaks: checkpoint
+> restore and now gVisor, but who knows what else?  How many config
+> options before we decide this can't be just on by default?
 
-Sure, I agree. This is why I was suggested the ...ARCH_HAS... Kconfig.
-That will provide the way for 3) to happen. 1) just needs a little more
-details in the commit log, I guess? The goal is attack surface reduction
-in userspace, and remapping shenanigans have become a recent avenue of
-attack.
-
-For 2) there are limits. As you say we may have "every possible
-combinatorial combination", which may not be feasible to test. But
-making it available for the common cases (and of course testing those)
-makes sense.
-
-> And I absolutely will not accept a user being able to turn on a switch in a
-> known-broken configuration. This is absolutely unacceptable.
-
-Sure, of course.
-
-> It's equally unacceptable for a user to enable a feature that is
-> untested/confirmed on an architecture.
-
-Agreed.
-
-> So let's be careful about Linus's edict here - the operative part being 'if
-> it doesn't break things'.
-
-Right -- I should clarify: I don't mean to say "it should be enabled by
-default", I meant to say that we have a common pattern for making these
-kinds of features available without hiding them behind a build-time
-Kconfig that would have put the features out of reach for system owners
-that only use distro kernels, etc. I was pushing back on an earlier
-comment that I interpreted as rejecting boot params. A boot param (when
-other aspects of the system are sane) is needed for this kind of thing,
-and is the pattern we use for providing optional features that distros
-can make available without enabling them by default.
-
-> > So, if we want to have a CONFIG_MSEAL_SYSTEM_MAPPINGS at all, it should
-> > be "default y" since we have the ...ARCH_HAS... config already, and then
-> > add a CONFIG_MSEAL_SYSTEM_MAPPINGS_DEFAULT that is off by default (since
-> > we expect there may be userspace impact) and tie _that_ to the kernel
-> > command-line so that end users can use it, or system builders can enable
-> > CONFIG_MSEAL_SYSTEM_MAPPINGS_DEFAULT.
-> 
-> Again, I hate to push on this, but I am simply not going to allow users to
-> enable features we know break things.
-> 
-> Users might not be aware this feature is broken for CRIU, and X, and Y and
-> whatever else we've not thought about and enable it thinking it helps
-> security, and end up with a broken system.
-
-This will never be a bright line, and I think choice is more important.
-For example, Ubuntu builds with CRIU, but only a tiny set of tools
-actually use it. (I've actually been considering adding a boot param to
-disable CRIU features since they undermine some aspects of userspace
-security.)
-
-Regardless, yes, if we can make this work with CRIU (which I thought
-there seem to be consensus on), let's do it.
-
-> This seems like putting the onus on CRIU users to deal with a known-broken
-> thing? That seems really unreasonable? And people would just have to have
-> the right userland code to work in the kernel with mseal?
-> 
-> Yeah I oppose entirely this unless I'm missing something?
-
-Hm, well, the primary goal is for Chrome OS and Android to use this. If
-there is honestly no path forward with CRIU, then hard Kconfig conflict
-it is. I'd much rather have it available for anyone who wants it, just
-like we do with lots of other features. Why force people who want this
-and not CRIU to build their own kernels? We have all kinds of boot params
-that if you set you get a broken system.
-
--Kees
+See my reply to Lorenzo, but I'm not arguing for it to be enabled by
+default. I was trying to show how we traditionally handle these kinds
+of features: putting their enablement behind a Kconfig and boot param
+that work together. That way distro kernels have it _available_ without
+making it _enabled_, and specialty kernels can have in enabled by default
+(and can disable it at boot if needed too).
 
 -- 
 Kees Cook
