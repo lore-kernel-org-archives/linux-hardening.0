@@ -1,138 +1,76 @@
-Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE1DA1E7668
-	for <linux-hardening@vger.kernel.org>; Tue,  7 Jan 2025 10:56:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD1CA16DEB1;
+	Tue,  7 Jan 2025 16:52:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736247393; cv=none; b=sj4ziDKt38XDjvto/V7BTKG6WyvhR5VyeU95fFH1F3r11YyTU/hlN6ZpU0jp1FnJeiu4UpJQd5UcAWcwH3mKXCvqwdp5nU9MJ96fYX1xEJ9pi85OaagWy3j4K+iH+Ocf54QcRNeYG1/PD/mUuM/RtczbCD3MfNPF8FNqTyoGj20=
+	t=1736268772; cv=none; b=kihCSt3VqhSPdFVKTEwSyKV6qfJbl7U+efw7SdS0wzyG2vxTMzAp9YKTmALIATpwg4b9Yx4eQ9IO3MF3Yxm58GttSR85E1wyZl0CKAixL78FaVr0GFG+jCnXAUNjYBIX3aD3kCaZGdg5hvFBz7oKwaVOVcYHN1WsbXOO21DJ6SQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736247393; c=relaxed/simple;
-	bh=o608bbBSXgBbckZm3C+nmGzItyQ406vPwgM2DFNXamk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lOVZRpBjlkjhqdDxg2Aisc4bOewzz1qTyUoBD0VvkfmQ8HCm1ag8xVKqtQIloXkb52zwIJHQqiFz2kRvSME7mk/ER/CxdCoHz25P5NtpEX4PwjdeIwLgoprjEyFRDcg6k0lrPkBzKXT5vRncvfwrDTrq9RqnGMsZgiZWeZNFozo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=B2kMewph; arc=none smtp.client-ip=95.215.58.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="B2kMewph"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1736247385;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=JbhykM6+EaaFeGUvuFELTlis3wZ07yx3+ZYkSCWCNVw=;
-	b=B2kMewphZy/rWIdJz280J6D8kSyBvTuSRaUIV9QjcVaZTyw6VV1MRSFzCVMqIMrbtp1B53
-	/pnzhy5i9hwG5l7f8FcRdW+bo73qvASX76HqWD4Xi9eqeqyu/Kjg6rFYVF+iRsEMs1104X
-	yq0llsigk+dnv8KgfWeHkZtPi8G6EZ0=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Thorsten Blum <thorsten.blum@linux.dev>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	s=arc-20240116; t=1736268772; c=relaxed/simple;
+	bh=nv9rXqNH1ImGnwbxoWC5PKtFGL7Cr7HNH6PmRTRReAQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K+GBerV09ZY/8m5H2QxSxYpW0lHAREXInki/HXRUJPQz2GjQX4QaQD/7asJbBHmw0yxoMW6lhXllUqqdYS3fyxwZwzOD3Qumx2d4jEnofFOjZzHuUZNkRPICkNy0oURX5kF4Jpc88VZLCbzqbv4GISxmHzJ7Ge01IgFmRyGc9sk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1BB1C4CED6;
+	Tue,  7 Jan 2025 16:52:51 +0000 (UTC)
+Date: Tue, 7 Jan 2025 17:52:49 +0100
+From: Greg KH <greg@kroah.com>
+To: Petr Pavlu <petr.pavlu@suse.com>
+Cc: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
 	Luis Chamberlain <mcgrof@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	linux-kernel@vger.kernel.org,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Daniel Gomez <da.gomez@samsung.com>, Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [RESEND PATCH v2] params: Annotate struct module_param_attrs with __counted_by()
-Date: Tue,  7 Jan 2025 11:55:30 +0100
-Message-ID: <20250107105531.3368-2-thorsten.blum@linux.dev>
+Subject: Re: [PATCH v2 0/6] module: sysfs: Cleanups and preparation for const
+ struct bin_attribute
+Message-ID: <2025010737-dwelling-pacific-f74f@gregkh>
+References: <20241227-sysfs-const-bin_attr-module-v2-0-e267275f0f37@weissschuh.net>
+ <6f2d2843-e676-4d4a-86aa-881378b1adf1@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <6f2d2843-e676-4d4a-86aa-881378b1adf1@suse.com>
 
-Add the __counted_by compiler attribute to the flexible array member
-attrs to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
-CONFIG_FORTIFY_SOURCE.
+On Tue, Dec 31, 2024 at 04:07:40PM +0100, Petr Pavlu wrote:
+> On 12/27/24 14:23, Thomas Weiﬂschuh wrote:
+> > The sysfs core is switching to 'const struct bin_attribute's.
+> > Prepare for that.
+> > 
+> > Signed-off-by: Thomas Weiﬂschuh <linux@weissschuh.net>
+> > ---
+> > Changes in v2:
+> > - Avoid NULL-deref in free_sect_attrs()
+> > - Avoid double-free and NULL-deref in free_notes_attrs()
+> > - Also drop 'struct module_sect_attr'
+> > - Link to v1: https://lore.kernel.org/r/20241216-sysfs-const-bin_attr-module-v1-0-f81e49e54ce4@weissschuh.net
+> > 
+> > ---
+> > Thomas Weiﬂschuh (6):
+> >       module: sysfs: Drop member 'module_sect_attrs::nsections'
+> >       module: sysfs: Drop member 'module_sect_attr::address'
+> >       module: sysfs: Drop 'struct module_sect_attr'
+> >       module: sysfs: Simplify section attribute allocation
+> >       module: sysfs: Add notes attributes through attribute_group
+> >       module: sysfs: Use const 'struct bin_attribute'
+> > 
+> >  kernel/module/sysfs.c | 116 ++++++++++++++++++++++++--------------------------
+> >  1 file changed, 55 insertions(+), 61 deletions(-)
+> > ---
+> > base-commit: d6ef8b40d075c425f548002d2f35ae3f06e9cf96
+> > change-id: 20241215-sysfs-const-bin_attr-module-be05346937a6
+> 
+> Reviewed-by: Petr Pavlu <petr.pavlu@suse.com>
+> 
+> I'm going to wait for a few days if others want to comment and then plan
+> to queue this on the modules tree for the 6.14 merge window.
 
-Increment num before adding a new param_attribute to the attrs array and
-adjust the array index accordingly. Increment num immediately after the
-first reallocation such that the reallocation for the NULL terminator
-only needs to add 1 (instead of 2) to mk->mp->num.
-
-Use struct_size() instead of manually calculating the size for the
-reallocation.
-
-Use krealloc_array() for the additional NULL terminator.
-
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Luis Chamberlain <mcgrof@kernel.org>
-Cc: Nathan Chancellor <nathan@kernel.org>
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
-Changes in v2:
-- Use krealloc_array() as suggested by Andy Shevchenko
-- Link to v1: https://lore.kernel.org/r/20240823123300.37574-1-thorsten.blum@toblux.com/
----
- kernel/params.c | 29 +++++++++++++----------------
- 1 file changed, 13 insertions(+), 16 deletions(-)
-
-diff --git a/kernel/params.c b/kernel/params.c
-index 2e447f8ae183..5f6643676697 100644
---- a/kernel/params.c
-+++ b/kernel/params.c
-@@ -551,7 +551,7 @@ struct module_param_attrs
- {
- 	unsigned int num;
- 	struct attribute_group grp;
--	struct param_attribute attrs[];
-+	struct param_attribute attrs[] __counted_by(num);
- };
- 
- #ifdef CONFIG_SYSFS
-@@ -651,35 +651,32 @@ static __modinit int add_sysfs_param(struct module_kobject *mk,
- 	}
- 
- 	/* Enlarge allocations. */
--	new_mp = krealloc(mk->mp,
--			  sizeof(*mk->mp) +
--			  sizeof(mk->mp->attrs[0]) * (mk->mp->num + 1),
-+	new_mp = krealloc(mk->mp, struct_size(mk->mp, attrs, mk->mp->num + 1),
- 			  GFP_KERNEL);
- 	if (!new_mp)
- 		return -ENOMEM;
- 	mk->mp = new_mp;
-+	mk->mp->num++;
- 
- 	/* Extra pointer for NULL terminator */
--	new_attrs = krealloc(mk->mp->grp.attrs,
--			     sizeof(mk->mp->grp.attrs[0]) * (mk->mp->num + 2),
--			     GFP_KERNEL);
-+	new_attrs = krealloc_array(mk->mp->grp.attrs, mk->mp->num + 1,
-+				   sizeof(mk->mp->grp.attrs[0]), GFP_KERNEL);
- 	if (!new_attrs)
- 		return -ENOMEM;
- 	mk->mp->grp.attrs = new_attrs;
- 
- 	/* Tack new one on the end. */
--	memset(&mk->mp->attrs[mk->mp->num], 0, sizeof(mk->mp->attrs[0]));
--	sysfs_attr_init(&mk->mp->attrs[mk->mp->num].mattr.attr);
--	mk->mp->attrs[mk->mp->num].param = kp;
--	mk->mp->attrs[mk->mp->num].mattr.show = param_attr_show;
-+	memset(&mk->mp->attrs[mk->mp->num - 1], 0, sizeof(mk->mp->attrs[0]));
-+	sysfs_attr_init(&mk->mp->attrs[mk->mp->num - 1].mattr.attr);
-+	mk->mp->attrs[mk->mp->num - 1].param = kp;
-+	mk->mp->attrs[mk->mp->num - 1].mattr.show = param_attr_show;
- 	/* Do not allow runtime DAC changes to make param writable. */
- 	if ((kp->perm & (S_IWUSR | S_IWGRP | S_IWOTH)) != 0)
--		mk->mp->attrs[mk->mp->num].mattr.store = param_attr_store;
-+		mk->mp->attrs[mk->mp->num - 1].mattr.store = param_attr_store;
- 	else
--		mk->mp->attrs[mk->mp->num].mattr.store = NULL;
--	mk->mp->attrs[mk->mp->num].mattr.attr.name = (char *)name;
--	mk->mp->attrs[mk->mp->num].mattr.attr.mode = kp->perm;
--	mk->mp->num++;
-+		mk->mp->attrs[mk->mp->num - 1].mattr.store = NULL;
-+	mk->mp->attrs[mk->mp->num - 1].mattr.attr.name = (char *)name;
-+	mk->mp->attrs[mk->mp->num - 1].mattr.attr.mode = kp->perm;
- 
- 	/* Fix up all the pointers, since krealloc can move us */
- 	for (i = 0; i < mk->mp->num; i++)
--- 
-2.47.1
-
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
