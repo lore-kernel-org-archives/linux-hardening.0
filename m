@@ -1,254 +1,203 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43356566A;
-	Tue,  7 Jan 2025 01:11:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.16
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736212300; cv=fail; b=MwDJxUyZp8UhhDPr+41OgXWSqe5NhdRArk4XaAekWKf2fSdafTTPXygMXhJLuvjg+gcl5horE5Z1rfFYmFkoEqQJtILvETixbRiznl0UxjIJc2pifuinv7tc9lqPkDSDKzhSmzdW7leTqbHuiVl01vgBuExSENkvYzgztrdLyL0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736212300; c=relaxed/simple;
-	bh=SBUKEFM4vARHApRCg5t83CNOvaMSZkd34vHLYXk9jEY=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Br0aKlG7+hHyCENwQgUXqe6qxZTUPs/iyLPkJMIF8/6cbHWJLlrxEXxUxJvrMz4T5Mje165L3Lmq2Dg2VMSY9CnZXy/VXbkU9Is6qREzBTCtGD3qplpRAvLdgmCudy124OQGVuTsXWi0WPHo8f7o4zzgprYuSVKVpgvT5WzVIis=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EtOxsDee; arc=fail smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 256A61754B;
+	Tue,  7 Jan 2025 01:12:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1736212370; cv=none; b=pzGuZW9xpyesZVsnbOD10ebfdLirvN5DK5wtPkTW6GXZ7+dm4w39GE3s3wZnUeevCt2xpSObr3WqV5u3y3AFcmBuYjptbY/BgyGqA4Q2rSRaZDP2bKiR21czqtbehFQwLWUsv8xmdYXSeNv2+gt0cuVBcNYU7unJp5O45a1jxio=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1736212370; c=relaxed/simple;
+	bh=q1z5WtS6vKHnbPI01DoVbop19PAY9r5OTM6/6KAVsTc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ckoXtkMoFzkMEeKcz99OlLOfjDWH95iFozNg8edXbeMv0UlLS5FQcDhtAPjhVbUa0MSF7g4IMeDSgCwNtDo7uv1P1l2VS+OXkTGTWu5L5UYtxbGpVHGmIBuT0dTnximu6YYvkG4iNNlSeUK5IC3sgX02tESerbCKMNchLO7DAHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sg+/UsdM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EtOxsDee"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1736212297; x=1767748297;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=SBUKEFM4vARHApRCg5t83CNOvaMSZkd34vHLYXk9jEY=;
-  b=EtOxsDeeEIHL+F3xc3th7Kk0u67C/BYkpi3QqfbHn4rJMQzCbzMSTKDf
-   5DpNQqWuo3nIKwdfvAnhuZ4ajcEMekNkYXrD5/meY3AgK0nEtMGVic3TN
-   BWih3FH3ffSAImiMsD92gYO3YVZoucHmPzq0eXZZxpNxxEBiMIC1/Coi/
-   Ai7wtS11SKMMZvxXvEYnwdVQ4KiN++XKxfGSy8BwmM+W0QnyN1H9RnDyD
-   63xt1Lq48+s6fhscF1XN2Q7LBuZ+1SpPucMa4/L04kefD7jS+LLD/MQDr
-   rrrIbWfS53Ca1gb5LKxkwx8UiYaxOsEAbcwsafCaaKRh1YfHGtP4kQZ9F
-   g==;
-X-CSE-ConnectionGUID: 3fNRSrIgT2WZnnv1fvLYnw==
-X-CSE-MsgGUID: 4FQOFo7mQqiqnkDqmEE0uA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11307"; a="23986041"
-X-IronPort-AV: E=Sophos;i="6.12,294,1728975600"; 
-   d="scan'208";a="23986041"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2025 17:11:36 -0800
-X-CSE-ConnectionGUID: +hujOjbQRWWxZwx9EUflcA==
-X-CSE-MsgGUID: TESpMatIR7q+tCHsB4G/CA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="102470771"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by orviesa010.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 06 Jan 2025 17:11:35 -0800
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Mon, 6 Jan 2025 17:11:34 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44 via Frontend Transport; Mon, 6 Jan 2025 17:11:34 -0800
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (104.47.73.174)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Mon, 6 Jan 2025 17:11:32 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=NgixdFKMhkmhk8ZhsX5qB+ixpGAX8Tq1/XwURn6ibwn24L+/kwKSZh7GPCNPw6GnRbl42EnrALctkHN0fH4oGeYVdPE2hBNg2Vnaye6sZ+UR+mpFXOLmHYiVagbPdNB7EQw/QMZ38WZjfRzuayWGWptCZlxu0BCA2gzJi6uKi8TWmum03ipSCUgleCMV7IEh0Is4BJ0KE5eB26plDnEXOzYxRCCbPW1u4z0+nNDGWEfNKMgVKDMgnM33HOem69tAOgeyxbCwwv58HJSyXjg4eckFlFvnERhQ9Gl1L9w8m5+rxPrqDY1ElH2kTPL/WQPAbmz/mI5yO5e5oLyOYTd0yA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=uVRfdZtzd7wbIf11IjniouSAXv++FM7jCDevKH2yV40=;
- b=UDMsUNOEzIv3LkQOsSgevBRy/mdng4lCr4w4/465ZQ8atxxTppxSpHuv01t1IFO0CPuHM57+L5iSE3ZGa57k6N9Wo4rFwPn53CXME5LpxAo9Jo5uItCF7C63dVJt+e/Iu2ff15sbDJAFkMdfg2FKh4gti6Jb1GJJBITq+SqIg3s0NUCZm3bFcuKUModZw99lcBwTqjRnLn3Jh0duTcsQICi2cLsKbugGtKL8uWJPS5bWNCtu6eu0m0lUk+YGJtkOcoKSVrxfWZsDP9UFuaVdCzNrkMIdu2XzAlxsCzWAgKrhfLGtj6f7XnRsU2wv2Ms3OKwlJts3A9ODjUmTQN4tCA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
- by CH3PR11MB7763.namprd11.prod.outlook.com (2603:10b6:610:145::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8314.17; Tue, 7 Jan
- 2025 01:10:46 +0000
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::cf7d:9363:38f4:8c57]) by SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::cf7d:9363:38f4:8c57%4]) with mapi id 15.20.8314.015; Tue, 7 Jan 2025
- 01:10:46 +0000
-Date: Mon, 6 Jan 2025 19:10:39 -0600
-From: Ira Weiny <ira.weiny@intel.com>
-To: Dan Williams <dan.j.williams@intel.com>, Ira Weiny <ira.weiny@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>, "Jonathan
- Cameron" <Jonathan.Cameron@huawei.com>, Jonathan Corbet <corbet@lwn.net>,
-	Andrew Morton <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-CC: Dan Williams <dan.j.williams@intel.com>, Davidlohr Bueso
-	<dave@stgolabs.net>, Alison Schofield <alison.schofield@intel.com>, "Vishal
- Verma" <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
-	<linux-cxl@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-	<nvdimm@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-	<linux-hardening@vger.kernel.org>, Li Ming <ming.li@zohomail.com>
-Subject: Re: [PATCH v8 01/21] cxl/mbox: Flag support for Dynamic Capacity
- Devices (DCD)
-Message-ID: <677c7f0f5ada9_dab0d2948f@iweiny-mobl.notmuch>
-References: <20241210-dcd-type2-upstream-v8-0-812852504400@intel.com>
- <20241210-dcd-type2-upstream-v8-1-812852504400@intel.com>
- <67786b76a0c5_f58f294b1@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <67786b76a0c5_f58f294b1@dwillia2-xfh.jf.intel.com.notmuch>
-X-ClientProxiedBy: MW4PR03CA0055.namprd03.prod.outlook.com
- (2603:10b6:303:8e::30) To SA1PR11MB6733.namprd11.prod.outlook.com
- (2603:10b6:806:25c::17)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sg+/UsdM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94C39C4CED2;
+	Tue,  7 Jan 2025 01:12:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1736212369;
+	bh=q1z5WtS6vKHnbPI01DoVbop19PAY9r5OTM6/6KAVsTc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Sg+/UsdM0apxmn3E8JxvhtJwSgj8fV8Xk+RL2Vv8uwygA4HRxCumxyhZcp1+wDpU9
+	 tk90APAMMeGgKdv+NvEAnnY5Udqm/TesNdhzwomaj1+XCsWKyB6mWihaR3aIvE5n1F
+	 neah6DK1OJ5VepOBVxKN43IOrVIIRpbv4tH3hgayCv/cqQIdlDG2+p0t3Igj3paLS6
+	 AwT81aLGJeYWZnDC8TjrOuQ27ccTKVegqO/Wdx/g5fZ08dFToU14OoyyhFajvZ0BYx
+	 MYpghp4OxO//7DzqdcmWZJsY1tm9+pHLlHk8ZUYj0UM4oU3mS+5Kn2R3LQlaHVSxT1
+	 rP/07o11QPyMQ==
+Date: Mon, 6 Jan 2025 17:12:46 -0800
+From: Kees Cook <kees@kernel.org>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: jeffxu@chromium.org, akpm@linux-foundation.org, jannh@google.com,
+	torvalds@linux-foundation.org, adhemerval.zanella@linaro.org,
+	oleg@redhat.com, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-mm@kvack.org,
+	jorgelo@chromium.org, sroettger@google.com, ojeda@kernel.org,
+	adobriyan@gmail.com, anna-maria@linutronix.de, mark.rutland@arm.com,
+	linus.walleij@linaro.org, Jason@zx2c4.com, deller@gmx.de,
+	rdunlap@infradead.org, davem@davemloft.net, hch@lst.de,
+	peterx@redhat.com, hca@linux.ibm.com, f.fainelli@gmail.com,
+	gerg@kernel.org, dave.hansen@linux.intel.com, mingo@kernel.org,
+	ardb@kernel.org, Liam.Howlett@oracle.com, mhocko@suse.com,
+	42.hyeyoo@gmail.com, peterz@infradead.org, ardb@google.com,
+	enh@google.com, rientjes@google.com, groeck@chromium.org,
+	mpe@ellerman.id.au, Vlastimil Babka <vbabka@suse.cz>,
+	Andrei Vagin <avagin@gmail.com>,
+	Dmitry Safonov <0x7f454c46@gmail.com>,
+	Mike Rapoport <mike.rapoport@gmail.com>,
+	Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>
+Subject: Re: [PATCH v4 1/1] exec: seal system mappings
+Message-ID: <202501061647.6C8F34CB1A@keescook>
+References: <20241125202021.3684919-1-jeffxu@google.com>
+ <20241125202021.3684919-2-jeffxu@google.com>
+ <202412171248.409B10D@keescook>
+ <a0a3b26b-2222-478c-a1cb-56514ec8d6ff@lucifer.local>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|CH3PR11MB7763:EE_
-X-MS-Office365-Filtering-Correlation-Id: 82a7145d-0f20-496e-da71-08dd2eb81dbf
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?w1iWPaNWhv8OeHvBWSx9/XcLZ1hcjmgY1hD8OMqecLCmFckYjiITpszc01z+?=
- =?us-ascii?Q?AhM1FmQFO7st69zW/mdyRP0h6pEPvmh8tLS8XOxduN12zK/cHy4cxpc5ateE?=
- =?us-ascii?Q?wy/geNzzyQZLACckZ6jw/7A0qUNmyz54jlkfJS9bDYEozGk5U93z6ly1m1xi?=
- =?us-ascii?Q?pEb0Bo0r9VyfpvfFxPce4MW2yPNdQUg9d58xXrySOYDzkWL1si1f5HGKwbZI?=
- =?us-ascii?Q?Q1zYOVhMrigGZWyTqy4yruT94Ju03emPaBTRr2oVDC4NfB0XW80lYXarIACe?=
- =?us-ascii?Q?3mhutNIGMvR8t246Hm44xmHUxrRxRIk0rkXz00eTRt3m6o1yGUHg+eUyDo+C?=
- =?us-ascii?Q?XhxB6Ft6y0/nSYJOSebFnVfWhXvBAXa9IGpRgdeVlB5ZQ3BUljBvujP88uqq?=
- =?us-ascii?Q?Hnv2AWTRfemu64qQLUw4zhz/u5wvlh1hmFHHseQ6T+zgwhNc4bsYin78nG+I?=
- =?us-ascii?Q?vwmK+WxNleklTKPHCDVlBl9WsgS3/z0VzHyoqp3cDMHPmx1ngZJsLRpzEwFz?=
- =?us-ascii?Q?zbtprDaWHx35fTvmcA1b6j3OBwoqsPmZOAeVve+BNwhBKIvAJzAt5A4m8neW?=
- =?us-ascii?Q?ZYUsUZgjVHIW/8mKSoAcIqra5+o59fwBLTLs1/c0z0bBY5rPiXGbJD2jPlpo?=
- =?us-ascii?Q?mD4NHq2btjKS5c0khQ+LQg4p+iFvV1QuDi6XUk83vCzsXuujWFEPeMbA8nJc?=
- =?us-ascii?Q?iu9XYyv2pLZQseq4ByRA2sIo8zC6dJbi1VsLpBfPidRsu2VmZuqloH/DBt0i?=
- =?us-ascii?Q?Oez27tghIq/b+nfPw1F9onFplC6rVEByHWY1D3A0yeoc7BqOBrlJg8UKO1Sd?=
- =?us-ascii?Q?h7PuueHHWc96+7btL8lJEClnVaG4CKCWwxTNBQE9SbkUWN5q0TO8Eo1HOHJC?=
- =?us-ascii?Q?irbXebrdQXaraAMaUvWXpRfqPcR00L4sTmO5tSr3YQr/dTzIccXDRXx8g5S4?=
- =?us-ascii?Q?1PX2Yni+/mZ7zK66W0hL0NXrM19JZi7wDOnZbC6UyUX4AXeralHxqGPnvktK?=
- =?us-ascii?Q?VB7tBmQvtGAWlYEwMVE7peRNftjdnPreczb/jsic+5UkYcpdFMjaODIKDfOd?=
- =?us-ascii?Q?wUnt7fm1BC7C4bWVogUuOWNy2TOU2GOUiA+ejSzgGb0QEwFBOt9d4WcqyzAG?=
- =?us-ascii?Q?WGBVLWTB74jCGJI+wNWeYfmbxC8yCCE4tP6XPOt1mAv4amu5/I/8VeKCz16n?=
- =?us-ascii?Q?36aTNrVCP+OtEfb6O2ADk33K0BTEtZEmItulu+Ku1U+kovEGWsrDM3pl5GET?=
- =?us-ascii?Q?ah45ZraAVkJ6TnSBw9Zo1pJ96yJhzldK4LNxoA0DbAAw27vkHoX2fgcZ7PBX?=
- =?us-ascii?Q?F93QBUZEdFNmxEUTX5TKI724ghxALBdQdpBq7k+mFUSRQIkqMrXsxedBIpkM?=
- =?us-ascii?Q?KHVu/5f7TrvFJF7RWHFBpkG8m/M7?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?CCHqqfIafsQ62BUQu7+GxKrIOZOkQVbtAJaRb0765NjCmH8WdrTYsX1IdX/1?=
- =?us-ascii?Q?Z4k0KAnJMU2QRH1puS9QdY2UYHEJ7G9QNiY4qXCPK3EhWIjscHP2q4/f22YQ?=
- =?us-ascii?Q?rTfQaDklmoLWA8tK7/tdE8lGKYRQu/x4P78XaArZ/UdB8ZmRhKosQVRS0E30?=
- =?us-ascii?Q?wsLgUr8g/eTaGwk+RdseEqROMtO4dWwMazlXF0aGCUdr572ReTQZ3MYBvzbF?=
- =?us-ascii?Q?RZR7wWB6/Tbq2esRYy3WFN9Xe2ME/XQUgh3UptnsnOxghE2R1gLMB0fIQdKD?=
- =?us-ascii?Q?8s8hM3/DpWrjWXxA+c+LLFo8gDuhxeDdfmii83+skpp5FuJ3bOEjzQO6hvff?=
- =?us-ascii?Q?MY3/dR1rc9bVbs/CLPTpHdamd+2a+ocvFQiamlaZAr0eKxa2W5/GF/CCdPSF?=
- =?us-ascii?Q?HpteNCwukfb14ijEA4C79Jic8r5CtuqobSHoN8lTdmAwBNBMszgkoMvagJ9k?=
- =?us-ascii?Q?hwgnL5X4zu+9e7hrt0yYsFw95G3zLHCYLZ3+LFNrrRrTwVfBNNnwsTOz0i+k?=
- =?us-ascii?Q?RaQGtwmcB5kwnJ2hAa7ZADbcSHXvJHyOPih1CF7kDw/eM4KeXY8D5YMPAKna?=
- =?us-ascii?Q?jPYWMF2xZqBYFNbin2HgNEJbEZ3UJAE6E0M5HJ+TIuEAW3S3cwn1NX5wl4o8?=
- =?us-ascii?Q?DGMVT9C/HX8pxiNNueLMT7/7fOHeK/kzwb+MIJ/RVXAHD0FFGSwjnNNhHYSq?=
- =?us-ascii?Q?GJmA63znP789qeNSr5K/2kxPyC/hiPLJX9D7Ub3iNzHh4Vw7W1VDoQHUCy4r?=
- =?us-ascii?Q?v6usDmb46Yi5RWoOxA8JUsU6HbLDX6p5yRN0poXKwJZROg0UsTvKi+ArnnxJ?=
- =?us-ascii?Q?jtspCLOmcaCNUbuAAfhV5QhMbU9whCXtPoH/BRu+TUm/80vmmQbUoP+iaRFN?=
- =?us-ascii?Q?lL/QYptz7lYHKC0+aZBMkxDm8pLnZGqm/xRmr9JelQmjpvcHl4S6VhncLvMG?=
- =?us-ascii?Q?ZTP9YwivH5wRIjQHpirZExBHdFwX7ALepyZ7rBpnQEAykM6rGMAdcIbiF02m?=
- =?us-ascii?Q?cgEvXOdoC8cxE6TRINffq3H/YQTSye/xOStMQm0EMxS58tRcd5ctGsQG/7g7?=
- =?us-ascii?Q?o9oslHNVZT8yGvPr4/L/fECyEzl28WjvOf8q1UHNiWJ0NhlLc2IN0c0Df4eS?=
- =?us-ascii?Q?qJoSNYECA20W1C7nIugnNX35MDH+NJVd3TWnABDdokrpsgFAyWTqQryVJ6Ys?=
- =?us-ascii?Q?v5Go4oQG3rvn1j0JHeLcgRSXuS6hksytP26tv+aXFVlTACo2hPMsV9+y3OiC?=
- =?us-ascii?Q?8RVcFUlnO8ZGx8NJHgoHslfm+CdQVSvUzOJEuEs935ftpidlSYBrZuP9t42S?=
- =?us-ascii?Q?ejRhXnrnryIjyvRrD3V+4xPgD+fTjyC4qfNCfhcKZhOrFOMrnQIDHMMPP29+?=
- =?us-ascii?Q?q52h6TMGyxlLEsA2SlBzDUpheuWKtCrM+TF5dgDq3LaMgGwPvBiJ2hfb7kvt?=
- =?us-ascii?Q?4uMk2IsFdyuslbe5rV0Ar8CI8+JkkhSoFnDuqI0OEI7UbzFakeLFONfZxkbX?=
- =?us-ascii?Q?zI0aDCh89BNCX2QP4g1xM8hHoRl0LgiqAbn3SBbKXpq3ejeRUa3xlsSScHXE?=
- =?us-ascii?Q?eCe01kIbB6FFv4hGjqACNGuL+Ohe+urQLGDgbfqE?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 82a7145d-0f20-496e-da71-08dd2eb81dbf
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jan 2025 01:10:46.6500
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: P0iTwPyV+bKsYJM9X94guR9qQ/jXwhmVMTun3hJpEIPJ1JY3e5Bm6u6OVnLki1Gl5kQqUSLbZ1SnxbPLFzrOtA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR11MB7763
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a0a3b26b-2222-478c-a1cb-56514ec8d6ff@lucifer.local>
 
-Dan Williams wrote:
-> Ira Weiny wrote:
-> > Per the CXL 3.1 specification software must check the Command Effects
-> > Log (CEL) for dynamic capacity command support.
-> > 
-> > Detect support for the DCD commands while reading the CEL, including:
-> > 
-> > 	Get DC Config
-> > 	Get DC Extent List
-> > 	Add DC Response
-> > 	Release DC
-> > 
-> > Based on an original patch by Navneet Singh.
-> > 
-> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > Reviewed-by: Fan Ni <fan.ni@samsung.com>
-> > Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> > Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
-> > Reviewed-by: Li Ming <ming.li@zohomail.com>
-> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-
-[snip]
-
-> >  /* Device enabled poison commands */
-> >  enum poison_cmd_enabled_bits {
-> >  	CXL_POISON_ENABLED_LIST,
-> > @@ -461,6 +470,7 @@ static inline struct cxl_dev_state *mbox_to_cxlds(struct cxl_mailbox *cxl_mbox)
-> >   * @lsa_size: Size of Label Storage Area
-> >   *                (CXL 2.0 8.2.9.5.1.1 Identify Memory Device)
-> >   * @firmware_version: Firmware version for the memory device.
-> > + * @dcd_cmds: List of DCD commands implemented by memory device
-> >   * @enabled_cmds: Hardware commands found enabled in CEL.
-> >   * @exclusive_cmds: Commands that are kernel-internal only
-> >   * @total_bytes: sum of all possible capacities
-> > @@ -485,6 +495,7 @@ struct cxl_memdev_state {
-> >  	struct cxl_dev_state cxlds;
-> >  	size_t lsa_size;
-> >  	char firmware_version[0x10];
-> > +	DECLARE_BITMAP(dcd_cmds, CXL_DCD_ENABLED_MAX);
+On Fri, Jan 03, 2025 at 09:38:10PM +0000, Lorenzo Stoakes wrote:
+> On Tue, Dec 17, 2024 at 02:18:53PM -0800, Kees Cook wrote:
+> > On Mon, Nov 25, 2024 at 08:20:21PM +0000, jeffxu@chromium.org wrote:
+> > > Seal vdso, vvar, sigpage, uprobes and vsyscall.
+> > >
+> > > Those mappings are readonly or executable only, sealing can protect
+> > > them from ever changing or unmapped during the life time of the process.
+> > > For complete descriptions of memory sealing, please see mseal.rst [1].
+> > >
+> > > System mappings such as vdso, vvar, and sigpage (for arm) are
+> > > generated by the kernel during program initialization, and are
+> > > sealed after creation.
+> > > [...]
+> > >
+> > > +	exec.seal_system_mappings = [KNL]
+> > > +			Format: { no | yes }
+> > > +			Seal system mappings: vdso, vvar, sigpage, vsyscall,
+> > > +			uprobe.
+> > > +			- 'no':  do not seal system mappings.
+> > > +			- 'yes': seal system mappings.
+> > > +			This overrides CONFIG_SEAL_SYSTEM_MAPPINGS=(y/n)
+> > > +			If not specified or invalid, default is the value set by
+> > > +			CONFIG_SEAL_SYSTEM_MAPPINGS.
+> > > +			This option has no effect if CONFIG_64BIT=n
+> >
+> > I know there is a v5 coming, but I wanted to give my thoughts to help
+> > shape it based on the current discussion threads.
+> >
+> > The callers of _install_special_mapping() cover what is mentioned here.
+> > The vdso is very common (arm, arm64, csky, hexagon, loongarch, mips,
+> > parisc, powerpc, riscv, s390, sh, sparc, x86, um). For those with vdso,
+> > some also have vvar (arm, arm64, loongarch, mips, powerpc, riscv, s390,
+> > sparc, x86). After that, I see a few extra things, in addition to
+> > sigpage and uprobes as mentioned already in the patch:
+> >
+> > arm sigpage
+> > arm64 compat vectors (what is this for arm?)
+> > arm64 compat sigreturn (what is this for arm?)
+> > nios2 kuser helpers
+> > uprobes
 > 
-> Can you clarify why cxl_memdev_state needs this bitmap?
-
-Nope.  I think you are right that there is no need for partial support.
-
-> In the case of
-> 'security' and 'poison' functionality there is a subset of functionality
-> that can be enabled if some of the commands are missing. Like poison
-> listing is still possible even if poison injection is missing. In the
-> case of DCD it is all or nothing.
+> OK let's not get ahead of ourselves :)
 > 
-> In short, I do not think the cxl_memdev_state object needs to track
-> anything more than a single "DCD capable" flag, and cxl_walk_cel() can
-> check for all commands locally without carrying that bitmap around
-> indefinitely.
+> VDSOs/gate VMAs are treated quite differently by different arches. So we
+> have to tread _very_ carefully here.
 > 
-> Something simple like:
+> I believe PPC doe some 'tricky' things and may actually want to unmap, for
+> instance.
 > 
-> cxl_walk_cel()
->     for (...) {
->       if (cxl_is_dcd_command()
->         set_bit(opcode & 0xf, &dcd_commands);
->     }
->     if (dcd_commands == 0xf)
->         mds->dcd_enabled = true;
->     else if (dcd_commands)
->         dev_dbg(...)
+> The problem with this kind of change is we're doing something fundamental
+> that impacts _every possible combinatorial combination of configs, arches,
+> and use cases_ for each of these which we seeming - just assume - will have
+> no issue with this.
 > 
-> ...otherwise it begs the question why the driver would care about
-> anything other than "all" dcd commands?
+> This is insufficient, deeply. We need:
+> 
+> 1. Strong justification (hand waving won't suffice).
+> 2. Very extensive testing and checking, and _proof_ of this testing being
+> performed.
+> 3. Buy-in from arch maintainers.
+> 
+> So far this series has provided none of those. This is why I am cautious
+> and pushing back here.
 
-Yea this could be done.
+Sure, I agree. This is why I was suggested the ...ARCH_HAS... Kconfig.
+That will provide the way for 3) to happen. 1) just needs a little more
+details in the commit log, I guess? The goal is attack surface reduction
+in userspace, and remapping shenanigans have become a recent avenue of
+attack.
 
-Ira
+For 2) there are limits. As you say we may have "every possible
+combinatorial combination", which may not be feasible to test. But
+making it available for the common cases (and of course testing those)
+makes sense.
+
+> And I absolutely will not accept a user being able to turn on a switch in a
+> known-broken configuration. This is absolutely unacceptable.
+
+Sure, of course.
+
+> It's equally unacceptable for a user to enable a feature that is
+> untested/confirmed on an architecture.
+
+Agreed.
+
+> So let's be careful about Linus's edict here - the operative part being 'if
+> it doesn't break things'.
+
+Right -- I should clarify: I don't mean to say "it should be enabled by
+default", I meant to say that we have a common pattern for making these
+kinds of features available without hiding them behind a build-time
+Kconfig that would have put the features out of reach for system owners
+that only use distro kernels, etc. I was pushing back on an earlier
+comment that I interpreted as rejecting boot params. A boot param (when
+other aspects of the system are sane) is needed for this kind of thing,
+and is the pattern we use for providing optional features that distros
+can make available without enabling them by default.
+
+> > So, if we want to have a CONFIG_MSEAL_SYSTEM_MAPPINGS at all, it should
+> > be "default y" since we have the ...ARCH_HAS... config already, and then
+> > add a CONFIG_MSEAL_SYSTEM_MAPPINGS_DEFAULT that is off by default (since
+> > we expect there may be userspace impact) and tie _that_ to the kernel
+> > command-line so that end users can use it, or system builders can enable
+> > CONFIG_MSEAL_SYSTEM_MAPPINGS_DEFAULT.
+> 
+> Again, I hate to push on this, but I am simply not going to allow users to
+> enable features we know break things.
+> 
+> Users might not be aware this feature is broken for CRIU, and X, and Y and
+> whatever else we've not thought about and enable it thinking it helps
+> security, and end up with a broken system.
+
+This will never be a bright line, and I think choice is more important.
+For example, Ubuntu builds with CRIU, but only a tiny set of tools
+actually use it. (I've actually been considering adding a boot param to
+disable CRIU features since they undermine some aspects of userspace
+security.)
+
+Regardless, yes, if we can make this work with CRIU (which I thought
+there seem to be consensus on), let's do it.
+
+> This seems like putting the onus on CRIU users to deal with a known-broken
+> thing? That seems really unreasonable? And people would just have to have
+> the right userland code to work in the kernel with mseal?
+> 
+> Yeah I oppose entirely this unless I'm missing something?
+
+Hm, well, the primary goal is for Chrome OS and Android to use this. If
+there is honestly no path forward with CRIU, then hard Kconfig conflict
+it is. I'd much rather have it available for anyone who wants it, just
+like we do with lots of other features. Why force people who want this
+and not CRIU to build their own kernels? We have all kinds of boot params
+that if you set you get a broken system.
+
+-Kees
+
+-- 
+Kees Cook
