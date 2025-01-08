@@ -1,96 +1,147 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-30.smtpout.orange.fr [80.12.242.30])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC2F81FF7B4;
-	Wed,  8 Jan 2025 17:00:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2F8D200BB2;
+	Wed,  8 Jan 2025 19:20:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736355605; cv=none; b=YVRJvDv0YETAR9kuvp6zqqGaAJkpwUpEMq29XyJuczHbyTY5eYIT2HWq+Q4wJNknZ2EzPfS8iNHvidgfoyxJ7MeMB+vGbR6T5sXaEWl1fjchtTO3jI+gDrEMMZcTfQEaiwnrqvY574r9xUSJYqlVULNmARvyBofLoyXD2GweyQA=
+	t=1736364044; cv=none; b=fbJSywQOyn9KAVD8YRyZ0ZiYKeAdJnYGAE8EYBrAS6+yIeoyCtm4gGmk3HNXkfYpA0ktYqc3l8H5bOD6n0JuBRhJ0W4Sbb+zeWWXfwkvr1351oahRCouer8t371dS6+c1YwzcLCixMHUNvJTbk+EDBrTVyS+OUBxUFmA+BSiZbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736355605; c=relaxed/simple;
-	bh=HFVc8oLbaMpPOiOm4hXv8z+FIyZjllGwd4MTZEyB5Os=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sn+1smZGLZH7rOfojRaHkAXec4Sh0Jq6gLkORipM5fkEkGd8DTPr5v20hNI2ExRpch/39UzkOsgCV0FKgRwk74To08NAzPuG3k4T7KdgkVLOAixYStxFAPOaeQSNrGK58/m0YsL+0m0c6FVrpGxUXQUHvmAKcha2lJxLUUhb3jg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=pcYKJSqo; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1736364044; c=relaxed/simple;
+	bh=L+RpQGow8xkrq65mketEkjUnqMJb37QojTR/a7ncITM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SlH/BrzEjXQbHkNxQkoDRrmoJkxtUCl6Ede7FIYnb0mkeh2eav97/hwq4SW2fZFNEPTNvkqy0yMwLIHoQMy8xpo3brUEA1aERq/kKwzQP8TDDnMX+Kd0LGiswINj2DQg8k5dX8A+EhAhSJN/Fe1vQnX4E3+Ro0PA7q3IQI8t75o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=P1Nhm7JJ; arc=none smtp.client-ip=80.12.242.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="pcYKJSqo"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=KlH41KXb6DEhXWYu4j1AZW/YcnxDGl2H1tPl1BECyjA=; b=pcYKJSqo34eAhorobLO7X0ODm2
-	xLDLot5xhhBbBJxp75+mj8A+HY4rltgVpkUrxJ5d0Ritf/lHp/KdQ5w1UmIhgkb//hvNHt/maTze5
-	tolADuZJKquheTQUa1yRbaR0lZojJoQukvNaHrG0xqpceAqfxtH/8Kdp2/p55DqQLgQ8=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1tVZPP-002dK9-Gt; Wed, 08 Jan 2025 17:59:55 +0100
-Date: Wed, 8 Jan 2025 17:59:55 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Luo Jie <quic_luoj@quicinc.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Lei Wei <quic_leiwei@quicinc.com>,
-	Suruchi Agarwal <quic_suruchia@quicinc.com>,
-	Pavithra R <quic_pavir@quicinc.com>,
-	Simon Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org,
-	quic_kkumarcs@quicinc.com, quic_linchen@quicinc.com,
-	srinivas.kandagatla@linaro.org, bartosz.golaszewski@linaro.org,
-	john@phrozen.org
-Subject: Re: [PATCH net-next v2 12/14] net: ethernet: qualcomm: Initialize
- PPE L2 bridge settings
-Message-ID: <4dbf1550-32e9-4cce-bf0c-8b92dbd49b50@lunn.ch>
-References: <20250108-qcom_ipq_ppe-v2-0-7394dbda7199@quicinc.com>
- <20250108-qcom_ipq_ppe-v2-12-7394dbda7199@quicinc.com>
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="P1Nhm7JJ"
+Received: from [192.168.1.37] ([90.11.132.44])
+	by smtp.orange.fr with ESMTPA
+	id VbaMtLzUGLSCnVbaPtFP0K; Wed, 08 Jan 2025 20:19:29 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1736363969;
+	bh=BXCOtKlMZhgvv0WlfFdcDBMt3DYEIWplOpebQIGJy6E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=P1Nhm7JJ6o4ex9Y/yOOLRkcQF7jcKeL2ucvGSpbqvzQjMOZNxvGt480Tl71nYwpnd
+	 ATAXa2VpWTMxf/KrvWNUVtA10mGILwI8GAit8w3D9/yBVGlsQyC4xspUEMTln5oujL
+	 cszRNcWnG+2RB4cKRjJhIdOGQIDR3xYPZ/rFG8s4yUb+ibnktuDG+/FLCd4bwojMy8
+	 ernhAytbnefHKV+LLSAVNxXSqJTCFB+CLf1xtU3yPf6Pk+lrBmlg88Ug2noNgIWz57
+	 ZRlZn+L8T2Ddv0MSdi5hN21d13ZQNzn5AVIk0jggt2qJf8iOcRe82O6oAgzncW34Z4
+	 JUyWNSlqfeY+Q==
+X-ME-Helo: [192.168.1.37]
+X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
+X-ME-Date: Wed, 08 Jan 2025 20:19:29 +0100
+X-ME-IP: 90.11.132.44
+Message-ID: <29e742c9-82f5-41d5-a06f-70f010a3f39e@wanadoo.fr>
+Date: Wed, 8 Jan 2025 20:19:17 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250108-qcom_ipq_ppe-v2-12-7394dbda7199@quicinc.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v2 03/14] net: ethernet: qualcomm: Add PPE driver
+ for IPQ9574 SoC
+To: Luo Jie <quic_luoj@quicinc.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Lei Wei <quic_leiwei@quicinc.com>,
+ Suruchi Agarwal <quic_suruchia@quicinc.com>,
+ Pavithra R <quic_pavir@quicinc.com>, Simon Horman <horms@kernel.org>,
+ Jonathan Corbet <corbet@lwn.net>, Kees Cook <kees@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org,
+ quic_kkumarcs@quicinc.com, quic_linchen@quicinc.com,
+ srinivas.kandagatla@linaro.org, bartosz.golaszewski@linaro.org,
+ john@phrozen.org
+References: <20250108-qcom_ipq_ppe-v2-0-7394dbda7199@quicinc.com>
+ <20250108-qcom_ipq_ppe-v2-3-7394dbda7199@quicinc.com>
+Content-Language: en-US, fr-FR
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20250108-qcom_ipq_ppe-v2-3-7394dbda7199@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jan 08, 2025 at 09:47:19PM +0800, Luo Jie wrote:
-> From: Lei Wei <quic_leiwei@quicinc.com>
+Le 08/01/2025 à 14:47, Luo Jie a écrit :
+> The PPE (Packet Process Engine) hardware block is available
+> on Qualcomm IPQ SoC that support PPE architecture, such as
+> IPQ9574.
 > 
-> Configure the default L2 bridge settings for the PPE ports to
-> enable L2 frame forwarding between CPU port and PPE Ethernet
-> ports.
+> The PPE in IPQ9574 includes six integrated ethernet MAC
+> (for 6 PPE ports), buffer management, queue management and
+> scheduler functions. The MACs can connect with the external
+> PHY or switch devices using the UNIPHY PCS block available
+> in the SoC.
+> 
+> The PPE also includes various packet processing offload
+> capabilities such as L3 routing and L2 bridging, VLAN and
+> tunnel processing offload. It also includes Ethernet DMA
+> function for transferring packets between ARM cores and
+> PPE ethernet ports.
+> 
+> This patch adds the base source files and Makefiles for
+> the PPE driver such as platform driver registration,
+> clock initialization, and PPE reset routines.
+> 
+> Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
+> ---
 
-It would be good to have an 'only' in there:
+...
 
-> to _only_
-> enable L2 frame forwarding between CPU port and PPE Ethernet
-> ports
+> +static int qcom_ppe_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct ppe_device *ppe_dev;
+> +	void __iomem *base;
+> +	int ret, num_icc;
+> +
+> +	num_icc = ARRAY_SIZE(ppe_icc_data);
+> +	ppe_dev = devm_kzalloc(dev, struct_size(ppe_dev, icc_paths, num_icc),
+> +			       GFP_KERNEL);
+> +	if (!ppe_dev)
+> +		return dev_err_probe(dev, -ENOMEM, "PPE alloc memory failed\n");
 
-That makes it clear there is no port to port forwarding, the ports are
-isolated.
+Usually, no error message in logged in case of devm_kzalloc().
+It is already loud enough.
 
-> The per-port L2 bridge settings are initialized as follows:
-> For PPE CPU port, the PPE bridge TX is enabled and FDB learn is
-> disabled. For PPE physical port, the PPE bridge TX is disabled
-> and FDB learn is enabled by default and the L2 forward action
-> is initialized as forward to CPU port.
+> +
+> +	base = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(base))
+> +		return dev_err_probe(dev, PTR_ERR(base), "PPE ioremap failed\n");
+> +
+> +	ppe_dev->regmap = devm_regmap_init_mmio(dev, base, &regmap_config_ipq9574);
+> +	if (IS_ERR(ppe_dev->regmap))
+> +		return dev_err_probe(dev, PTR_ERR(ppe_dev->regmap),
+> +				     "PPE initialize regmap failed\n");
+> +	ppe_dev->dev = dev;
+> +	ppe_dev->clk_rate = PPE_CLK_RATE;
+> +	ppe_dev->num_ports = PPE_PORT_MAX;
+> +	ppe_dev->num_icc_paths = num_icc;
+> +
+> +	ret = ppe_clock_init_and_reset(ppe_dev);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "PPE clock config failed\n");
+> +
+> +	platform_set_drvdata(pdev, ppe_dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id qcom_ppe_of_match[] = {
+> +	{ .compatible = "qcom,ipq9574-ppe" },
+> +	{},
 
-Why is learning needed on physical ports? In general, switches forward
-unknown destination addresses to the CPU. Which is what you want when
-the ports are isolated from each other. Everything goes to the
-CPU. But maybe this switch does not work like this?
+The ending comma after a terminator like that is not needed.
 
-	Andrew
+> +};
+
+...
+
+CJ
 
