@@ -1,228 +1,174 @@
-Received: from out.smtpout.orange.fr (out-16.smtpout.orange.fr [193.252.22.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2072.outbound.protection.outlook.com [40.107.93.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3F60A2D;
-	Thu,  9 Jan 2025 08:02:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.16
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736409733; cv=none; b=Tp/OwBshncdekczIKF5jLM6R68ffezF2R2ovGmbzxA54uad6cKOfDuroxMkYocAbnXD2yDQf3c2sCn4CB0sV9CsB4SeG3Rq9QNBppdnBI3eW14W4z4EEl8kd36QKElAxMYfSvRFfoFxvH6jfTfVo6yZMXiuU5pNFI5MtzSHjQdA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736409733; c=relaxed/simple;
-	bh=O5ZNgmW3t3fAPZh1YBRP6KjXZhiqggJR9M35+R5lk6U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pLw9o5XWwWwpoBLdzbZ8rhPvF6MD47NqQYm1fmdqbybYaHB4ZiIFRNBL/I0y9VwLzJRmDzYF6traO0Wpr/lUc6K337cCj9vP/umOFmewnRXZGo/73a1LxUTfZUy3XFnZ1D9Kbcwyts+k4WN36XGbXqXaBDm3S88h1wv0z3pmjYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=T/9m6N8+; arc=none smtp.client-ip=193.252.22.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6973F1F4E32;
+	Thu,  9 Jan 2025 09:00:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.72
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1736413235; cv=fail; b=u/RIGbfobNq7a6yJrLUxn1vT/QfS/Y9f4EAENVKAHqJ6BG5UKSSdnnsW8FpKrlF2mOBUkgtp5nr2XZhIILkRWIlWy0dAATctDe2fGaizr0yU2QC4ds9pExHMII2rY7qKm3Ahh4B/6aDK20ekIxKTmrVjg4qVzLg4iIdyFwAqLHM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1736413235; c=relaxed/simple;
+	bh=Q8aAFtMy1m9b7ZYKqVJOrqT2QLAJo5YpIADsWeHQMp4=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=oWnU/fxkX1AzzWwYwyli2/qy5/jbDksxpHIzRbuePEhPh/996ijr9+fHqC2Rd3EtaTLaWtvRStB0Wo26YzDhFul1w0xZ4nysQiEaQdDeHEF99eKZzCzimfBXjWbcvkyiOb2dwFS6bgQnfBXDlj4I/wblTOv3fVN2EiwDlckBXJ4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=G+uZIDNk; arc=fail smtp.client-ip=40.107.93.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="T/9m6N8+"
-Received: from mail-ej1-f41.google.com ([209.85.218.41])
-	by smtp.orange.fr with ESMTPSA
-	id VnLVtGzg4giluVnLYt2rct; Thu, 09 Jan 2025 08:52:52 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1736409172;
-	bh=UL4vb0fbvLbR1U8J+05ODzNTSN8C6D9E9x0FSE1uPd8=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To;
-	b=T/9m6N8+6X154iRiAt/znJxdyVSZvUrQczfyTi5ExkXRPShTO8qt3WlaYaHWLX9HL
-	 5QjmPwnd6C9xQQIFRCuqZDXmB9bJIU5Jagk0a7MhVUd4Lq4wChkmKOhI3xXR7P65NP
-	 62i6aqP2vE4h/mg5bRtmjSRCe09hCpSVJRpZXkDCBfcX3RdQdnE70/rA6icfG74CY6
-	 BrMaPf3j/WoNT+HGntGMf4ntown5FRQMMmwMWYQ9M5Ts2wtkVBjziwPPmu7x5RUFBm
-	 Gv5iI1Nu9zWop0b3N/xAEykdNPW08HJCDUNJKRLVIz/rd1gwEZzmNeIIgoNj1QYjDL
-	 l2rG3UiYi0uBw==
-X-ME-Helo: mail-ej1-f41.google.com
-X-ME-Auth: bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI=
-X-ME-Date: Thu, 09 Jan 2025 08:52:52 +0100
-X-ME-IP: 209.85.218.41
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-aaf60d85238so126921966b.0;
-        Wed, 08 Jan 2025 23:52:52 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVUrazE+EFFPNWF5/haPOKumoWZBdHYIAa08gTCvSHRmlmewoIwlHPpptGi+PmcOAYoHHbWBkD0CmGF2g475mw=@vger.kernel.org, AJvYcCXEemQkCtap47qZXqHiJFWpmm9rPhwvcZDXBknt7fFqEJle7j2AUUv9hjSrdOKmnP1yOWhnSo6pJ0Ubu/VD@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx01HmxUFD6rrjW8FpYnf/k0UGF7kwfMj2ZyWQDuv+yunaLsbsM
-	fOEKrNRfm8ak+HoECkw4wkN/WfL3faQDLX7A/dVesWNLZvnDHlK02thWJ/fvWyWBBqMV00UUUpx
-	QMutngCLmiU4Me/ada2qinLka++4=
-X-Google-Smtp-Source: AGHT+IGrVE57aM35lRnQR/iOi4swLH7E8gsU9cV2VQps8o7HOzflIs1aP9S81XCABdsqlNBrPs3PTe6w4eYJHxXeNXE=
-X-Received: by 2002:a17:906:fd87:b0:aab:cce0:f8b4 with SMTP id
- a640c23a62f3a-ab2abc9ed6cmr488956266b.52.1736409169155; Wed, 08 Jan 2025
- 23:52:49 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="G+uZIDNk"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=f5BymDnOLqBgFOvC1BZv/TpkU+AEpZubmYOOW20XVimGjITVE8737kIpN0ycJnJO7UmL6nihNVwkE7VwEbLkGp/HMQ9dD4JS7HvOj/qAdIniXQpFumAIaMALgKPyGX5/bU0+waWy+3Kk2LXFuiQbfwfM2Rkrb94+SMhLISTc3IZWifWSzfoiTsrpSaORfGF/wVvqveMphAMr4MHCMiS4+ZM6Tn7EZQTTPS06JZmseLCWFqMsJsVR7BcSTH0vIi0C+Q6QjlBP2dASp0rmsNydBVh6GpKZj/5wH0/UJ+fPRwGOfUaXxN4r/DimZIjUgKxviGnsZi7E83/lx2hDBJRGxA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=S3PVme52DjPmLyStzuzR38CRzJBbNq26wDrcGxT4Hjw=;
+ b=jkNYsA2HrFNkl2qGeG7BBDNlMQZ0arTA2DXsaSWKIJKf3CpppENt6lbNccl+fRaRf+BgALO4cpRPAQHCUN6YjrcJcg6ZUmQx6JXebOTiF42OD5kFNeTNsru9oeXfjMV9oANG/n64bOPSAqm2CWwbo5rukkUvZaL9zRP3b8sea2Zg1p91qqCI4nQUQJ2ZVR3hebNje599YHTkX3Rj9+NxmGsPQ86qCEOvufvJQ0cvC8SMVqHku4I/35PhuR2mFGiFTe91XQcUo49+E40M6LTr1TrS2GLQd05AGQa3X18eCrExiYjrfpCJSgY2XddPSZ3rf/G/dEqmQtjUCks/0dTBCQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=S3PVme52DjPmLyStzuzR38CRzJBbNq26wDrcGxT4Hjw=;
+ b=G+uZIDNkzFpY63hmkmDztJEgfj49gFCVclNU3GxkfhJPCsy2kkXCfOxCANJLTOqmN0hih5JU1FKoKnZULyAtK7PfBNuLruf1wsuw0HrKZ75VvO0FiLATQWSERypTeFPaGcM/NPx3jOLyI75IehPbt1g6MnW/ZIMP+67NjnJjkTMTAzqyxYfJO0cKgHQ1SbcJGNPpQ+/fvTmDm5XQZxUZdZcFGMedSwlmHufjXnhf1tKtg2akpSrxvIIlKy6kMYRh4/0wQS+7UFk/IR/3mvD2MBr8HJL9oQH/BGTnQUFo44PI0rpndmOdIJuPLDvjhKGptPbhP519+DrXTGdxd+BMLQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH3PR12MB7500.namprd12.prod.outlook.com (2603:10b6:610:148::17)
+ by CH3PR12MB9171.namprd12.prod.outlook.com (2603:10b6:610:1a2::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8335.11; Thu, 9 Jan
+ 2025 09:00:31 +0000
+Received: from CH3PR12MB7500.namprd12.prod.outlook.com
+ ([fe80::7470:5626:d269:2bf2]) by CH3PR12MB7500.namprd12.prod.outlook.com
+ ([fe80::7470:5626:d269:2bf2%4]) with mapi id 15.20.8335.010; Thu, 9 Jan 2025
+ 09:00:31 +0000
+Message-ID: <35791134-6c58-4cc4-a6ab-2965dce9cd4b@nvidia.com>
+Date: Thu, 9 Jan 2025 11:00:24 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next] net: Silence false field-spanning write warning
+ in ip_tunnel_info_opts_set() memcpy
+To: Kees Cook <kees@kernel.org>, "David S. Miller" <davem@davemloft.net>,
+ Jakub Kicinski <kuba@kernel.org>
+Cc: netdev@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+ Paolo Abeni <pabeni@redhat.com>, David Ahern <dsahern@kernel.org>,
+ Simon Horman <horms@kernel.org>, linux-hardening@vger.kernel.org,
+ Cosmin Ratiu <cratiu@nvidia.com>
+References: <20250107165509.3008505-1-gal@nvidia.com>
+ <53D1D353-B8F6-4ADC-8F29-8C48A7C9C6F1@kernel.org>
+Content-Language: en-US
+From: Gal Pressman <gal@nvidia.com>
+In-Reply-To: <53D1D353-B8F6-4ADC-8F29-8C48A7C9C6F1@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: LO4P302CA0014.GBRP302.PROD.OUTLOOK.COM
+ (2603:10a6:600:2c2::15) To CH3PR12MB7500.namprd12.prod.outlook.com
+ (2603:10b6:610:148::17)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250108-strlen_use_builtin_constant_p-v1-1-611b52e80a9f@wanadoo.fr>
- <202501081331.E4B6DF747@keescook>
-In-Reply-To: <202501081331.E4B6DF747@keescook>
-From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-Date: Thu, 9 Jan 2025 16:52:40 +0900
-X-Gmail-Original-Message-ID: <CAMZ6RqJS5FwuBUdvVdXoZj6wZOJz8Nao4FzSzCK1VtbNF41sMw@mail.gmail.com>
-X-Gm-Features: AbW1kvYoZb-oBlASEyfzMJmtYkCQlSTuCO-o2yO14tE6fQRp0GGVay-N1kPrfGk
-Message-ID: <CAMZ6RqJS5FwuBUdvVdXoZj6wZOJz8Nao4FzSzCK1VtbNF41sMw@mail.gmail.com>
-Subject: Re: [PATCH] fortify: turn strlen() into an inline function using __builtin_constant_p()
-To: Kees Cook <kees@kernel.org>
-Cc: Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
-	David Laight <david.laight@aculab.com>, linux-hardening@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB7500:EE_|CH3PR12MB9171:EE_
+X-MS-Office365-Filtering-Correlation-Id: ec569730-7e1b-4b65-1e9d-08dd308c11e5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?ak1veUtLU3NZa0VuWmhGbFE2MmY3bjY0RDg0alRUQjIyWENtdWw3V3dUb2Z0?=
+ =?utf-8?B?aWh0VFp6OUdMNlRZTmJqamFHeGtvV2dxblhtcVUxR2tIamQrWWZyWkRhdURT?=
+ =?utf-8?B?VWFpUHYrSTU3aDV1MTBtRXQ3cDFDbnRmZC9YUFg2TXJCYjU5bXYrajFHaU1M?=
+ =?utf-8?B?OFJBSzhrd3A0OXBpa1E2THFML3NEN2lOVjZuaXdYZUUycGp1K0g1Zk5LR2Ji?=
+ =?utf-8?B?M1Q2UjA1WUhDTUgvLzJ5TlJWZS9iand6eTVQMU03R3dlaC9LckppN2J4OUYw?=
+ =?utf-8?B?UDhhRUMrbVdIR3hkOWRuNDBpMlJnaVA5UFN3MjhSU1FHMGVQNHJmVGxDVGs4?=
+ =?utf-8?B?VE14dVQwNjNvYTVTaDZCTFlQNGNlaDRjSDNxV0NDaUdEMk9KRHdabzNud2FS?=
+ =?utf-8?B?MVBLRDd3WW1KNEh6Q0xsMnFhUnJXWVhYVmlPOHFOKzdKUUlRVFFGTUtiTW1N?=
+ =?utf-8?B?aHNhYThTdGpUbForZFg3Vm1naFV1cEE2QXF5Vkpibkl5TDF2NlRRKy9zZmdl?=
+ =?utf-8?B?aE8zbTQ2ZHJOdU5pRXRNSXBNRXNicm5UcnVBVjU2M0pJMXpaVlVoNTlQRVZo?=
+ =?utf-8?B?ZmtRQUdwZEgxaDEzVW1IeTlnOHVtM05scUxEZ0VLUHdkVEx2eE51RkI2ZG0v?=
+ =?utf-8?B?bURlMnl1UUJmUURmQ2hFblBMelc1V1VaVWtXazZvYzhSRXNSL1prWGRzZlhV?=
+ =?utf-8?B?Sk9Nald6VUkvZ055dEdLdHY4d2s1ZkNMWHZiMFdvK0RvTG5JUW93MzdMa2tS?=
+ =?utf-8?B?Wmw2dzMxNXRKc25IZFZ3cGQzSjhvM243WlU0K1JueDhIelpuR3Bnd0plb3RV?=
+ =?utf-8?B?QVpsWFB4dzRJYjVvM3NzV0QrSk5rTlJ1UDcxWEFtZmwxaUZhUVA2ZjVhS3lH?=
+ =?utf-8?B?a25QNlpNbU8zcktUTWlMTTJlc29wWmliWVRldXFmc0JCOEI5UjVqSkdvaFha?=
+ =?utf-8?B?SGxLeENlbDFmcmRuTG4wUmpkbUI2UDRjQjZUdWNkeGRMeWNIY1QyNyswZTJQ?=
+ =?utf-8?B?elNqbk1DRG5QUVFjZzlLMHpoVFNZNXQ3T0N1MmtrQWJDOXF6N0l4eTlXSXZh?=
+ =?utf-8?B?YmpiNjBIVGJIY2pBYkFCVDl2ZWM3RVA3OW10SmdsSDFHRjBoQ1N2WU1zc2M2?=
+ =?utf-8?B?MFJzQXFpQkxHSEhqSC9zSlZvaE1pRk1JREg2cUZkaUNhdit6QVRFb0orM1Ju?=
+ =?utf-8?B?c3VoOXlLVmRWUmVKODRMS3ZZZzltSStoR2Jlc3Nwdm16ei90ZFVNbER1bFFK?=
+ =?utf-8?B?NXJMVnlEaWI3ZEFZTDQyMWduSEpFeWFGS1pzL0MwUGNMdVd0WXR3U2dlVVNK?=
+ =?utf-8?B?WEtFV2EvU1pRN2JydUhqb01NVG5UMzJaZkxJeU1PUk1YRHVvOFJGQTFHL3BJ?=
+ =?utf-8?B?T0RXUTVKb0JaMzRRYVROTFBSVVAwTWxrMStjbCtPa05KOW1pTXRsL2xZcVJL?=
+ =?utf-8?B?RjYzR2ZXRzFlNG5SMGIwU21CRUM0aFNwVHl1dTVJZnFvcXF3dkEzZWlRNTBS?=
+ =?utf-8?B?UlZ2L1k1SnVNOFN1MFVpb2tJK2w1WnlIQkthSmRmT3pTbHVacTBEc1MvZnJE?=
+ =?utf-8?B?cHd4aGs4Z0NrMzJ0dVpJWkE5V0FEaUdRUnIvek5LN29raGQ5cys2NDBmMDgv?=
+ =?utf-8?B?VVBMZDh4SnhMbklXSTJLTWU2a1dTUzBuVlZRUHNVWmdzMVU5bW9BVjF5U29u?=
+ =?utf-8?B?NkdVOFpVMDdyQjJkbnpDaUIwbEhCQ0t3d2pwbVI5ekUvUSt5R2U0cGU1aWYz?=
+ =?utf-8?B?ejZVZDJPcThJZWExKy80aUI1Q0ptUFk2aS95TjQrdlM1emZHVDhuRytRUmtp?=
+ =?utf-8?B?aXdNYVlaVUN4WkxhNTZ2dWFGY1ltQXdKSzhZU3BnK0J6ck5UemFOQUsyMXNX?=
+ =?utf-8?Q?xJ9Dc1lrt0iiO?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB7500.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?YjIvM01mLzhpK0p6QnVJUWptcU03WStmOTg0eUlOQlpJWGoxOEpycXcwZjA5?=
+ =?utf-8?B?MjFyb3V6Umluc0xDZE1mcmhBcFdIcXZaNmpmWHp0ZzIySTFyOE5jTXVseVFB?=
+ =?utf-8?B?dnJScFlLY0pmRDJocnN3dW03L3VQWEtGVExHV1I2R0RzUyt4aUxDaDk5cXdi?=
+ =?utf-8?B?VE5GLzl6cm1GS1UrS1lkYjUzV1JtOTJ4Zm5ZdlM2cklrSUV5Tlo2UGVtMmVt?=
+ =?utf-8?B?WE9OUlFRdTNJZ21MaUxEZHFhOHJXWGNtUmY3b1VCMUdHN0ticVhQcFZvOFNm?=
+ =?utf-8?B?Z2pYeFlyVlZrMzFZUm1UdDBRNEpoMTE0NFowNVFibGNBZDBETk03R2JBSWRx?=
+ =?utf-8?B?NWw2aCtGMVdDZGI2SCtBS1Rxd1VYcDJGTytVZHdrYnBEYThzMm16WUlpVnBQ?=
+ =?utf-8?B?T0pvRUxTaWtFTHQ2aTI5eTJERW5FamFleFBVUGRxdloraHF3THF5UkxtRDRp?=
+ =?utf-8?B?YmQrMk1sUHlueDMxNnhVWURheEUwWEJwek1NaW94UllNeFFrczlpZUZPVFp2?=
+ =?utf-8?B?TTNJZzlYaTFRZUNyMmRRVmd4ODhaN2NteTdHdExDRExNMlpDNFRHaDZtdFA2?=
+ =?utf-8?B?ZFBjMHM4MjYzOEdRaEZHbG5pZVhpNldEVlJaOVd6SWsvZmdrMGc4M0J2QzB5?=
+ =?utf-8?B?bGppSFpLd0JTYUFaT2JpWTRGMlhXbnUwQ1h5V3J5cGdDd1Nrd2g1c1ZXa3F4?=
+ =?utf-8?B?WkNGL0dnTXVrRHlRVThzUW5kYVNDR2ptS3FvZy9iRU96YXM4VTlrNHJUeTNQ?=
+ =?utf-8?B?bU5QNVZiMDloOXU0WHlNd2FsRUd4Z3hpVUg5Q0Zlb0pYVDFqNjBML1NVMThS?=
+ =?utf-8?B?SjR3cjBtT25HSGtFQU9MZUtseGVWWXdWbkQwcFlydHE2SnYwZ3pXN1FOclhE?=
+ =?utf-8?B?MFE4eU9TY3RYMkZPKzNJQ01tNTVQRExnaTNRc0RMeHVYWFA0b1BTM3JwTFVJ?=
+ =?utf-8?B?UE1uSTZUM3hPUlRNREFYNmQxeUpvOFliZmk4aTV3ODNVbzZuSk1JUTExdXg5?=
+ =?utf-8?B?VnhRZTlFM1ROSVNtUkdqRmM5bE5lS3hRek5zTmFaV2FMVjRsaEdqeXFwRjRu?=
+ =?utf-8?B?VnltLy9jbkFGZGppWWwyUzY5MjJ1MWFVTUQrYW41ZmxUc1lWRnJXS0hRUk43?=
+ =?utf-8?B?R0cyaXdNRGhWSlFEejNxMnZSOEt5cGU2OEIzNmlPUDZSdkp6K0JzMnpmUC9S?=
+ =?utf-8?B?T0ptY3RXeE1HbGFtM3kvaVpVRE50dHNFNGtGUzJ6V0xKeXhtS3d6M0RnZXJx?=
+ =?utf-8?B?YzV6bFpiamxKZDVUZ1NRSnBFVlpSd0ZkcCszNWZteUhmOXZOVk5ReVV0bWpo?=
+ =?utf-8?B?bXdGWjh2T0tkbk9UU1lOcUt1Y3pmb0d0RDZSREpKSU9QRDlJblMxcytFT3o2?=
+ =?utf-8?B?ZC81T3lKTjFJUGM5Z241dFJ6emdIYVNPb1p5MkFJT3Q3Q0VTUTJDcWFWRW9G?=
+ =?utf-8?B?akRRSncycGsrRk9waTdSSDY0VmxPaDl6NlltcGttVk9kc1dyYzRDMTZjc2wv?=
+ =?utf-8?B?cXVaUWVaM2hMTmRjRmtUYnYvTFBITDlFNmtMckZqSEF2cW55UkZZbzdGaUl0?=
+ =?utf-8?B?ZVdOVnNaaTJZRGZsMjRHRThvT1FXVDBWT0szZyt0bTRqTkhnaDVXa210YkJH?=
+ =?utf-8?B?TXdDSEFqYnp4SWJwU1prSm9ab3dIRTNoS3B5RmVIWWxYaFc5OVltZFBBcjJX?=
+ =?utf-8?B?bCttRHNBVVkxaUF5Vi9PMldEbkFwbGJTZkZNeGc1eUpsSGJBaDNmRjEzNkVw?=
+ =?utf-8?B?K3RzYmluSDRiZFJrR1NIMytxRHdtb3ZhOEMzaFhLMzJnUG9HSDNDdU9obzRx?=
+ =?utf-8?B?QTZCL0VJMWZKTFl2emhFNGtmaFUrUGsyaWZDd1hmNGZDR1M3QjBNczNEUFNs?=
+ =?utf-8?B?ejcvVEJnTjRCTUJVR05HZkx0NEs3Rjg1Q3VaeTFrV1FUT0JOM3hESlBNOEdT?=
+ =?utf-8?B?aXVWUnI2K2JVVHZWTDdvNFQ3OFFVMGFSMTVYMFlwbFNodms3dmdLTnNrUWxK?=
+ =?utf-8?B?THdHOTNGS0pPcDd6Q0swYTE1bkRCOEd0S2tIREd6U0NYTFptNWY1TCtuanF2?=
+ =?utf-8?B?TU9teWkzdHl0QVNWOXlCTjlBRlY5NDFsajhGUnlRaERaWG5kNlZxdXNxWXlx?=
+ =?utf-8?Q?TzeCOCrf+2lq8AwGoVrQSqeI3?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ec569730-7e1b-4b65-1e9d-08dd308c11e5
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB7500.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jan 2025 09:00:31.3002
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: eZCnKeIEgl80/IUkBLQ06eOm8TrniJgdzesvid6FDmlI0Owm+cArdivK8OCWjAFD
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB9171
 
-On Thu. 9 Jan 2025 at 06:46, Kees Cook <kees@kernel.org> wrote:
-> On Wed, Jan 08, 2025 at 11:27:51PM +0900, Vincent Mailhol wrote:
-> > The strlen(p) function-like macro uses:
-> >
-> >   __is_constexpr(__builtin_strlen(p))
-> >
-> > in which GCC would only yield true if the argument p is a string
-> > literal. Otherwise, GCC would return false even if p is a const
-> > string.
-> >
-> > In contrary, by using:
-> >
-> >   __builtin_constant_p(__builtin_strlen(p))
-> >
-> > then GCC can also recognizes when p is a compile time constant string.
-> >
-> > The above is illustrated in [1].
-> >
-> > N.B.: clang is not impacted by any of this and gives the same results
-> > with either __is_constexpr() and __builting_constant_p().
-> >
-> > Use __builtin_constant_p() instead of __is_constexpr() so that GCC can
-> > do the folding on constant strings. This done, strlen() does not
-> > require any more to be a function-like macro, so turn it into a static
-> > inline function. In the process, __fortify_strlen() had to be moved
-> > above strlen() so that it became visible to strlen().
->
-> This is what __compiletime_strlen() ended up doing, so this seems
-> reasonable to me.
->
-> > On a side note, strlen() did a double expansion of its argument p.
->
-> It did? Ah, was it due to __is_constexpr() wrapping? The other
-> expressions should have been side-effect free:
->
->        __builtin_choose_expr(__is_constexpr(__builtin_strlen(p)), \
->                __builtin_strlen(p), __fortify_strlen(p))
+On 08/01/2025 1:28, Kees Cook wrote:
+>> This resolves the following warning:
+>>  memcpy: detected field-spanning write (size 8) of single field "_Generic(info, const struct ip_tunnel_info * : ((const void *)((info) + 1)), struct ip_tunnel_info * : ((void *)((info) + 1)) )" at include/net/ip_tunnels.h:662 (size 0)
+> 
+> Then you can drop this macro and just use: info->options
+> 
+> Looks like you'd need to do it for all the types in struct metadata_dst, but at least you could stop hiding it from the compiler. :)
 
-This does not have a side-effect. The issue is not the side effect but
-the double expansion itself (actually here it is a triple expansion)
-because it may grow exponentially. Linus explained this in greater
-details here:
-
-  https://lore.kernel.org/all/CAHk-=wjpN4GWtnsWQ8XJvf=gBQ3UvBk512xK1S35=nGXA6yTiw@mail.gmail.com/
-
-Note that I do not believe this to be a big deal here. Unless the
-strlen() macro gets called in others macro which themselves do double
-parameter expansion, the issue should not surface. And honestly, I do
-not see this happening with strings. That's why I put this as a side
-note, it's more of a "follow a best practice" than solving an actual
-problem.
-
-On double thought, the risk does not seem real here. I will simply
-drop this paragraph about double expansion in v2.
-
-> I don't think you build-tested this with Clang, though?
-
-I just did and...
-
-  ./include/linux/fortify-string.h:272:17: error: redeclaration of
-'strlen' must not have the 'overloadable' attribute
-    272 | __kernel_size_t strlen(const char *p)
-        |                 ^
-  ./include/linux/string.h:200:24: note: previous unmarked overload of
-function is here
-    200 | extern __kernel_size_t strlen(const char *);
-        |                        ^
-  1 error generated.
-
-OK, guilty here! Changing the function prototype to:
-
-  __FORTIFY_INLINE __diagnose_as(__builtin_strlen, 1)
-  __kernel_size_t strlen(const char * const POS p)
-
-resolves the issue. I was wondering what this POS was for, guess I
-have my answer.
-
->   CC      scripts/mod/devicetable-offsets.s
-> In file included from ../scripts/mod/devicetable-offsets.c:3:
-> In file included from ../include/linux/mod_devicetable.h:14:
-> In file included from ../include/linux/uuid.h:11:
-> In file included from ../include/linux/string.h:389:
-> ../include/linux/fortify-string.h:272:17: error: redeclaration of 'strlen' must not have the 'overloadable' attribute
->   272 | __kernel_size_t strlen(const char *p)
->       |                 ^
-> ../include/linux/string.h:200:24: note: previous unmarked overload of function is here
->   200 | extern __kernel_size_t strlen(const char *);
->       |                        ^
->
-> The externs will need to be reworked if it's no longer depending on asm
-> renaming.
->
-> > Turning it into an inline function also resolved this side issue.
-> >
-> > [1] https://godbolt.org/z/rqr3YvoP4
-> >
-> > Signed-off-by: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-> > ---
-> > This patch is the successor of patch [1] which was part of a longer
-> > series [2]. Meanwhile, I decided to split it, so I am sending this again,
-> > but as a stand-alone patch.
-> >
-> > Changelog since [1]: use __builtin_constant_p() instead and turn
-> > strlen() into an inline function
-> >
-> > [1] https://lore.kernel.org/all/20241203-is_constexpr-refactor-v1-6-4e4cbaecc216@wanadoo.fr/
-> > [2] https://lore.kernel.org/all/20241203-is_constexpr-refactor-v1-0-4e4cbaecc216@wanadoo.fr/
-> > ---
-> >  include/linux/fortify-string.h | 34 +++++++++++++++++++---------------
-> >  1 file changed, 19 insertions(+), 15 deletions(-)
-> >
-> > diff --git a/include/linux/fortify-string.h b/include/linux/fortify-string.h
-> > index e4ce1cae03bf770047ce8a7c032b183683388cd5..bd22dd66e5f5b66ad839df42247e6436e0afd053 100644
-> > --- a/include/linux/fortify-string.h
-> > +++ b/include/linux/fortify-string.h
-> > @@ -4,7 +4,6 @@
-> >
-> >  #include <linux/bitfield.h>
-> >  #include <linux/bug.h>
-> > -#include <linux/const.h>
-> >  #include <linux/limits.h>
-> >
-> >  #define __FORTIFY_INLINE extern __always_inline __gnu_inline __overloadable
-> > @@ -241,6 +240,21 @@ __FORTIFY_INLINE __kernel_size_t strnlen(const char * const POS p, __kernel_size
-> >   * possible for strlen() to be used on compile-time strings for use in
-> >   * static initializers (i.e. as a constant expression).
->
-> ^^ This comment, however, is I think what sinks this patch. Please see
-> commit 67ebc3ab4462 ("fortify: Make sure strlen() may still be used as a
-> constant expression") which required that strlen() not be an inline. I'm
-> pretty sure the build will start failing again (though perhaps only on
-> older GCC versions).
-
-Strange. I tested it with GCC 5.1 on godbolt and it worked fine. After
-more investigation, I only got complains from GCC up to 4.9.4:
-
-  https://godbolt.org/z/rW8r74vE3
-
-I also just did a successful defconfig build using GCC 5.4 (sorry, I
-do not have an environment with GCC 5.1).
-
-So, it looks like an issue of the past to me. But in 67ebc3ab4462, the
-minimum compiler version was already 5.1:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/scripts/min-tool-version.sh?id=67ebc3ab4462#n20
-
-In the end, I am not sure what was the issue you encountered at that time.
-
-Well, I am not able to reproduce, but if you tell me this is an issue,
-then I can just keep the s/__is_constexpr/__builtin_constant_p/g
-change in v2 and drop the inline function part (thus keeping the
-triple expansion).
-
-Let me know if you still think that having it as a function is a no
-go. In the end, the main purpose here is to get rid of the
-__is_constexpr. Turning the macro into a function still looks slightly
-better to me, but at the end I do not really mind.
-
-
-Yours sincerely,
-Vincent Mailhol
+Can you please explain the "do it for all the types in struct
+metadata_dst" part?
+AFAICT, struct ip_tunnel_info is the only one that's extendable, I don't
+think others need to be modified.
