@@ -1,134 +1,83 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60E6E219E8F;
-	Thu,  9 Jan 2025 14:25:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96BF33FBB3;
+	Thu,  9 Jan 2025 14:49:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736432724; cv=none; b=OtG4x1ABOo+MzRb6Hb+8IrZW1z8rTsQl9uwuHIGvWGIsvb1DwuE0VYZo83vIp3t/icnzsxzYy1bViLSkQY350DcwbSaoWw3o1TFejYzkd6+jZfhLimlmQaUdaCCwMA3OTT6Qce8WP6NrBbpTyeAYvEiUKOuRIiC+hhCmsQ/uqEg=
+	t=1736434148; cv=none; b=k0rU2qCSk1sacKNAwDkbIDfoixc1IxmQFLV4hJQFRZpq6H6kYi1F6M6QMzxbawenf0GFZ6suD6xVY/FBinaEny72eCL8jexOj5iUtRcoFAf8W7KhT3rwgfrfw5aRb80+b0cecTUTCuSw1g7/MkTSFdzBBcGcBQARYaVYROLKlU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736432724; c=relaxed/simple;
-	bh=IW6w6j4i4xG642C9CffsoC9CjcCPRo+vI52cU7TR4sU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ODCVUU678cUCOhjSMnFXu/KFZHSJLsXA/0Y3iJEvD3v3OeOXQ935mp9RHN0FFkW6OvFT49cpczvdS1Yk4LeG0n7B0pRGIsVcBo52eQaRpUyV/SmKe8et7tRpccj4yCdakyeA8mnRaljmIdQJ3b1rHOxjXVYekYaYA+v0AKmO+gI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=GTvlwGtD; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="GTvlwGtD"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5097Gjs3019068;
-	Thu, 9 Jan 2025 14:25:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	DG+t50YYxrq5nhzjfuaUkzNrKfnvhXoOkYmHgMiAa5k=; b=GTvlwGtDhEA7T1Sc
-	WXMlzMLwwoWnfwVJU+Mb5vBVIIemxQQeGoZjLa3mgzvwL16zXh+i0i5z0ncxel8i
-	IY+sYmTY500kgTIzCg3C8uYfo8vfAYWITOBrK29dbGaDYVaKjpPmMvK40r+fYPPq
-	z8/w9eoogR46njHB0/qrnuLVLlTNrdQTofXfASlE2Cj1JCXZXCyDxwQDwGIrUUQk
-	3mVOK6kADv2zvnZpHpzwhIBfcX9aOKZ8zU88CU+sVDnmlLDkV80JiTNgPj3+jaQJ
-	NBMzB5aIza2T/jQz7m6b316+bVeq47FTrlK5a/ZNTTm99t9qv3R8ckDqtM7PpPn2
-	ZJL+BQ==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4429x5108e-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 09 Jan 2025 14:25:08 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 509EP81U005976
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 9 Jan 2025 14:25:08 GMT
-Received: from [10.253.12.10] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 9 Jan 2025
- 06:25:02 -0800
-Message-ID: <f7e3d749-76cb-4fd8-a966-20cc1d9003fd@quicinc.com>
-Date: Thu, 9 Jan 2025 22:24:59 +0800
+	s=arc-20240116; t=1736434148; c=relaxed/simple;
+	bh=46OfJedDFsal/84XtGkdidDlykadwg95odP8kEBZssY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uoHQkJ1uNH96+Nx59w/vQTLSR+n3d0MLE3Oyv95Kpd4XF2eMKkCcOnSA4lsYfklJJ6c447yx2AiQRrLEZQXzmtsPigGOnzVaRLn9ZYF9fX66IU0RhsQnWZckf5v3jqM0lOLADlh6yezWjp/vNMyGxKcZzn6jIb8FAFJFEAyTh/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35F4DC4CED2;
+	Thu,  9 Jan 2025 14:49:04 +0000 (UTC)
+Date: Thu, 9 Jan 2025 09:50:37 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Joel Granados <joel.granados@kernel.org>
+Cc: Thomas =?UTF-8?B?V2Vpw59zY2h1aA==?= <linux@weissschuh.net>, Kees Cook
+ <kees@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org, linux-crypto@vger.kernel.org,
+ openipmi-developer@lists.sourceforge.net, intel-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, intel-xe@lists.freedesktop.org,
+ linux-hyperv@vger.kernel.org, linux-rdma@vger.kernel.org,
+ linux-raid@vger.kernel.org, linux-scsi@vger.kernel.org,
+ linux-serial@vger.kernel.org, xen-devel@lists.xenproject.org,
+ linux-aio@kvack.org, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev,
+ codalist@coda.cs.cmu.edu, linux-mm@kvack.org, linux-nfs@vger.kernel.org,
+ ocfs2-devel@lists.linux.dev, fsverity@lists.linux.dev,
+ linux-xfs@vger.kernel.org, io-uring@vger.kernel.org, bpf@vger.kernel.org,
+ kexec@lists.infradead.org, linux-trace-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, apparmor@lists.ubuntu.com,
+ linux-security-module@vger.kernel.org, keyrings@vger.kernel.org
+Subject: Re: [PATCH] treewide: const qualify ctl_tables where applicable
+Message-ID: <20250109095037.0ac3fe09@gandalf.local.home>
+In-Reply-To: <20250109-jag-ctl_table_const-v1-1-622aea7230cf@kernel.org>
+References: <20250109-jag-ctl_table_const-v1-1-622aea7230cf@kernel.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v2 13/14] net: ethernet: qualcomm: Add PPE
- debugfs support for PPE counters
-To: Andrew Lunn <andrew@lunn.ch>
-CC: Andrew Lunn <andrew+netdev@lunn.ch>,
-        "David S. Miller"
-	<davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>, Lei Wei <quic_leiwei@quicinc.com>,
-        Suruchi Agarwal
-	<quic_suruchia@quicinc.com>,
-        Pavithra R <quic_pavir@quicinc.com>,
-        "Simon
- Horman" <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook
-	<kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        "Philipp
- Zabel" <p.zabel@pengutronix.de>,
-        <linux-arm-msm@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-doc@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-        <quic_kkumarcs@quicinc.com>, <quic_linchen@quicinc.com>,
-        <srinivas.kandagatla@linaro.org>, <bartosz.golaszewski@linaro.org>,
-        <john@phrozen.org>
-References: <20250108-qcom_ipq_ppe-v2-0-7394dbda7199@quicinc.com>
- <20250108-qcom_ipq_ppe-v2-13-7394dbda7199@quicinc.com>
- <f47e5292-667e-4662-8cc2-5167da538ad4@lunn.ch>
-Content-Language: en-US
-From: Jie Luo <quic_luoj@quicinc.com>
-In-Reply-To: <f47e5292-667e-4662-8cc2-5167da538ad4@lunn.ch>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: nGl0DdZLV88LMe2H4QDMumC8RXQVkg2f
-X-Proofpoint-ORIG-GUID: nGl0DdZLV88LMe2H4QDMumC8RXQVkg2f
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 impostorscore=0
- bulkscore=0 mlxlogscore=997 clxscore=1015 priorityscore=1501
- lowpriorityscore=0 malwarescore=0 mlxscore=0 spamscore=0 adultscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2501090115
 
+On Thu, 09 Jan 2025 14:16:39 +0100
+Joel Granados <joel.granados@kernel.org> wrote:
 
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index 2e113f8b13a2..489cbab3d64c 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -8786,7 +8786,7 @@ ftrace_enable_sysctl(const struct ctl_table *table, int write,
+>  	return ret;
+>  }
+>  
+> -static struct ctl_table ftrace_sysctls[] = {
+> +static const struct ctl_table ftrace_sysctls[] = {
+>  	{
+>  		.procname       = "ftrace_enabled",
+>  		.data           = &ftrace_enabled,
+> diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
+> index 17bcad8f79de..97325fbd6283 100644
+> --- a/kernel/trace/trace_events_user.c
+> +++ b/kernel/trace/trace_events_user.c
+> @@ -2899,7 +2899,7 @@ static int set_max_user_events_sysctl(const struct ctl_table *table, int write,
+>  	return ret;
+>  }
+>  
+> -static struct ctl_table user_event_sysctls[] = {
+> +static const struct ctl_table user_event_sysctls[] = {
+>  	{
+>  		.procname	= "user_events_max",
+>  		.data		= &max_user_events,
 
-On 1/9/2025 12:43 AM, Andrew Lunn wrote:
-> On Wed, Jan 08, 2025 at 09:47:20PM +0800, Luo Jie wrote:
->> The PPE hardware packet counters are made available through
->> the debugfs entry "/sys/kernel/debug/ppe/packet_counters".
-> 
-> Why?
-> 
-> Would it not be better to make them available via ethtool -S ?
+Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org> # for kernel/trace/
 
-Many of the counters displayed by this debugfs are PPE hardware
-counters that are common for all Ethernet ports. For example,
-counters such as drops in PPE due to lack of hardware buffers.
-Since ethtool -S output is tied to a netdevice, we felt that a
-separate debugfs file to display these common counters is better.
-The port specific counters will be supported using 'ethtool -S'
-along with the netdevice driver that will be posted sequentially
-after the conclusion of the review for this series.
-
-> 
-> You should justify not using standard statistics APIs for what look
-> like statistic counters. Maybe these don't fit the existing API, and
-> if so, you should explain why.
-> 
-> 	Andrew
-
-I will enhance the commit message to justify these debug counters
-in the next update. Hope this is fine.
-
+-- Steve
