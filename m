@@ -1,181 +1,228 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from out.smtpout.orange.fr (out-16.smtpout.orange.fr [193.252.22.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EACBB15667B
-	for <linux-hardening@vger.kernel.org>; Thu,  9 Jan 2025 07:17:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3F60A2D;
+	Thu,  9 Jan 2025 08:02:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736407068; cv=none; b=mfJzuMe8vmg1Oxiu94jOBsZCmEBPtbzQvxjzEOSEbnLDV6Df9iyPixPm3uaDOdv3Y5aRllDUhC639xCERujQH8a+axfL6in6MwTIIzmowWPxcbp2EzXmIP8hXzoF7k+97ZRKZdjDi7EYpxfT3OBuXSGMFzOA+ExLGgrd4ERsDNE=
+	t=1736409733; cv=none; b=Tp/OwBshncdekczIKF5jLM6R68ffezF2R2ovGmbzxA54uad6cKOfDuroxMkYocAbnXD2yDQf3c2sCn4CB0sV9CsB4SeG3Rq9QNBppdnBI3eW14W4z4EEl8kd36QKElAxMYfSvRFfoFxvH6jfTfVo6yZMXiuU5pNFI5MtzSHjQdA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736407068; c=relaxed/simple;
-	bh=8gVcxzeqzL/+fcERlltM6grRSzLHAAtdaECOnc63yrM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mxlFFJR9scoQ98o83vpo+49jeC7iAL4stTcZvtT2XFqR6FM3hdhfdB+YKSRXlI2A647p8ghaM43mjxpyuvaJZHJbnrg1zbnAlkaBbU7KGM7Szi2TUSZEuvI7VOPJPgv7fWxnhajEtkwdm+fNbf9KAmtDv+mkMKcVXZFD64WIKZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=ZdgOnCB1; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1736409733; c=relaxed/simple;
+	bh=O5ZNgmW3t3fAPZh1YBRP6KjXZhiqggJR9M35+R5lk6U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pLw9o5XWwWwpoBLdzbZ8rhPvF6MD47NqQYm1fmdqbybYaHB4ZiIFRNBL/I0y9VwLzJRmDzYF6traO0Wpr/lUc6K337cCj9vP/umOFmewnRXZGo/73a1LxUTfZUy3XFnZ1D9Kbcwyts+k4WN36XGbXqXaBDm3S88h1wv0z3pmjYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=T/9m6N8+; arc=none smtp.client-ip=193.252.22.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="ZdgOnCB1"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-21675fd60feso11340785ad.2
-        for <linux-hardening@vger.kernel.org>; Wed, 08 Jan 2025 23:17:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1736407066; x=1737011866; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=goDrdg8W+niPDn8ee1CTbptL4R9YVIAcGFLpDdY+Uh8=;
-        b=ZdgOnCB1hBn1oxXNNPsuhDzxDNs4GfZUBnWgnLRLusOgyleBeEkfDb/XTKiBFV/37v
-         6MhCw87QqTWJMj6ZNOdvdt58wTRz6qEzVNkRCDUhA5w0S7pwt1PbysjZXg+indAg4MuK
-         mxNbtDGnsxkkCh7RMVtW+1/fHXc2/b9MnaYIHSUAcQiSlNyUoo4goV0Jaa3A4Tg7s0S3
-         9EYorCE5XkEbSu/v/J2yLEKJ/xqhgRfl2Mn0LeOOHGByOHend7hv2DFgWyVCTLB6ecIQ
-         21rJ9f+VPqa4O071ab8bvHFlpJY+jDJAQBpzrqo+CphSQ5dvCRyAr+jxeNfJskNEPHQF
-         tJeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736407066; x=1737011866;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=goDrdg8W+niPDn8ee1CTbptL4R9YVIAcGFLpDdY+Uh8=;
-        b=CgFLPn/2ZuzPqiwJInYH46qw0sbcVe4qpfU1yDpMSnASNcxOuLFyz3PXB8n4Y6yE+U
-         llYiE7uHjg6tV/SoTSwqQ9INq2T/Ywxrc5L365fzrMdFLlli3mXrVUDmFPOQgfgITbiy
-         /cIXslocV1hG6TN4twzQ3SMw8mv1mevLTpq0KWgmrVkSQpUGqAW9Ee2wiF8+mQrH8dRv
-         bNnnaP1TivQIr/sA+KJWZsKtlcaCeWykNYutYDwCg8dQdMtTkoHoIYJe4LCnKNseTPuo
-         ridANDYx1NmPpLzcYNp5DYvhJh+2E0N8SxhtL/MPlBZJA57AyLRnaUqQj17r0j7Zx3YK
-         0SFw==
-X-Gm-Message-State: AOJu0YyyP2IC8qx0K4uExAwl7j+HTzT2JWKtFJ2CAtbwNm8c7azkMx1r
-	8RkrdttztUImspjm2872A1LmJ8Ex9qyNd81mNk4YQwVIfOFhjh1uxCZmzwHcqTw=
-X-Gm-Gg: ASbGnctzD6EOfIYCGwKuWFRD8wJPGVCD43/3vf4YxZcaogGrEpBQY39dBKi/OXJMCcM
-	Y4Jg2vTrBrSd3eJhWC2U5U2ETJbSDeJGtUBZoOFgYg2QK/ClB6rW8mVziQx8pjoisrWrqd0O3Y3
-	t4vFUHTRIwKzRjJDgHlzlRSw1GAikGHfruRHDKSkWs9/M04bdoDQ2YwORB1Dy3erER2Vx7sCH7v
-	J2q2mem+xeMO4I5Byj5ZQ2P+OaRMd0VAW/Ow/dmcezr2tW3tXkfaoE5aaqUGcLc45dNmPXdFVH4
-	U0zE
-X-Google-Smtp-Source: AGHT+IEsAuvKeLfnjNnQ0YmOJjZ/KDeiDHrFAudvPLzZf1ylAUBvPZmXYBm85/H4yI4Dr4XRcKGbcw==
-X-Received: by 2002:a05:6a00:3910:b0:728:e906:e446 with SMTP id d2e1a72fcca58-72d220077b5mr9905948b3a.24.1736407066229;
-        Wed, 08 Jan 2025 23:17:46 -0800 (PST)
-Received: from [10.4.51.182] ([139.177.225.244])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72aad848020sm36417198b3a.81.2025.01.08.23.17.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jan 2025 23:17:45 -0800 (PST)
-Message-ID: <6b4c4abb-8d53-4b17-8a1c-1d28fb4d5f88@bytedance.com>
-Date: Thu, 9 Jan 2025 15:17:33 +0800
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="T/9m6N8+"
+Received: from mail-ej1-f41.google.com ([209.85.218.41])
+	by smtp.orange.fr with ESMTPSA
+	id VnLVtGzg4giluVnLYt2rct; Thu, 09 Jan 2025 08:52:52 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1736409172;
+	bh=UL4vb0fbvLbR1U8J+05ODzNTSN8C6D9E9x0FSE1uPd8=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To;
+	b=T/9m6N8+6X154iRiAt/znJxdyVSZvUrQczfyTi5ExkXRPShTO8qt3WlaYaHWLX9HL
+	 5QjmPwnd6C9xQQIFRCuqZDXmB9bJIU5Jagk0a7MhVUd4Lq4wChkmKOhI3xXR7P65NP
+	 62i6aqP2vE4h/mg5bRtmjSRCe09hCpSVJRpZXkDCBfcX3RdQdnE70/rA6icfG74CY6
+	 BrMaPf3j/WoNT+HGntGMf4ntown5FRQMMmwMWYQ9M5Ts2wtkVBjziwPPmu7x5RUFBm
+	 Gv5iI1Nu9zWop0b3N/xAEykdNPW08HJCDUNJKRLVIz/rd1gwEZzmNeIIgoNj1QYjDL
+	 l2rG3UiYi0uBw==
+X-ME-Helo: mail-ej1-f41.google.com
+X-ME-Auth: bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI=
+X-ME-Date: Thu, 09 Jan 2025 08:52:52 +0100
+X-ME-IP: 209.85.218.41
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-aaf60d85238so126921966b.0;
+        Wed, 08 Jan 2025 23:52:52 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVUrazE+EFFPNWF5/haPOKumoWZBdHYIAa08gTCvSHRmlmewoIwlHPpptGi+PmcOAYoHHbWBkD0CmGF2g475mw=@vger.kernel.org, AJvYcCXEemQkCtap47qZXqHiJFWpmm9rPhwvcZDXBknt7fFqEJle7j2AUUv9hjSrdOKmnP1yOWhnSo6pJ0Ubu/VD@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx01HmxUFD6rrjW8FpYnf/k0UGF7kwfMj2ZyWQDuv+yunaLsbsM
+	fOEKrNRfm8ak+HoECkw4wkN/WfL3faQDLX7A/dVesWNLZvnDHlK02thWJ/fvWyWBBqMV00UUUpx
+	QMutngCLmiU4Me/ada2qinLka++4=
+X-Google-Smtp-Source: AGHT+IGrVE57aM35lRnQR/iOi4swLH7E8gsU9cV2VQps8o7HOzflIs1aP9S81XCABdsqlNBrPs3PTe6w4eYJHxXeNXE=
+X-Received: by 2002:a17:906:fd87:b0:aab:cce0:f8b4 with SMTP id
+ a640c23a62f3a-ab2abc9ed6cmr488956266b.52.1736409169155; Wed, 08 Jan 2025
+ 23:52:49 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 13/15] arm64: mm: Guard page table writes with
- kpkeys
-To: Kevin Brodsky <kevin.brodsky@arm.com>
-Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
- Andrew Morton <akpm@linux-foundation.org>, Mark Brown <broonie@kernel.org>,
- Catalin Marinas <catalin.marinas@arm.com>,
- Dave Hansen <dave.hansen@linux.intel.com>, Jann Horn <jannh@google.com>,
- Jeff Xu <jeffxu@chromium.org>, Joey Gouly <joey.gouly@arm.com>,
- Kees Cook <kees@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
- Andy Lutomirski <luto@kernel.org>, Marc Zyngier <maz@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>,
- Pierre Langlois <pierre.langlois@arm.com>,
- Quentin Perret <qperret@google.com>, "Mike Rapoport (IBM)"
- <rppt@kernel.org>, Ryan Roberts <ryan.roberts@arm.com>,
- Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
- Matthew Wilcox <willy@infradead.org>, linux-arm-kernel@lists.infradead.org,
- x86@kernel.org
-References: <20250108103250.3188419-1-kevin.brodsky@arm.com>
- <20250108103250.3188419-14-kevin.brodsky@arm.com>
-From: Qi Zheng <zhengqi.arch@bytedance.com>
-Content-Language: en-US
-In-Reply-To: <20250108103250.3188419-14-kevin.brodsky@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250108-strlen_use_builtin_constant_p-v1-1-611b52e80a9f@wanadoo.fr>
+ <202501081331.E4B6DF747@keescook>
+In-Reply-To: <202501081331.E4B6DF747@keescook>
+From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+Date: Thu, 9 Jan 2025 16:52:40 +0900
+X-Gmail-Original-Message-ID: <CAMZ6RqJS5FwuBUdvVdXoZj6wZOJz8Nao4FzSzCK1VtbNF41sMw@mail.gmail.com>
+X-Gm-Features: AbW1kvYoZb-oBlASEyfzMJmtYkCQlSTuCO-o2yO14tE6fQRp0GGVay-N1kPrfGk
+Message-ID: <CAMZ6RqJS5FwuBUdvVdXoZj6wZOJz8Nao4FzSzCK1VtbNF41sMw@mail.gmail.com>
+Subject: Re: [PATCH] fortify: turn strlen() into an inline function using __builtin_constant_p()
+To: Kees Cook <kees@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+	David Laight <david.laight@aculab.com>, linux-hardening@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Kevin,
+On Thu. 9 Jan 2025 at 06:46, Kees Cook <kees@kernel.org> wrote:
+> On Wed, Jan 08, 2025 at 11:27:51PM +0900, Vincent Mailhol wrote:
+> > The strlen(p) function-like macro uses:
+> >
+> >   __is_constexpr(__builtin_strlen(p))
+> >
+> > in which GCC would only yield true if the argument p is a string
+> > literal. Otherwise, GCC would return false even if p is a const
+> > string.
+> >
+> > In contrary, by using:
+> >
+> >   __builtin_constant_p(__builtin_strlen(p))
+> >
+> > then GCC can also recognizes when p is a compile time constant string.
+> >
+> > The above is illustrated in [1].
+> >
+> > N.B.: clang is not impacted by any of this and gives the same results
+> > with either __is_constexpr() and __builting_constant_p().
+> >
+> > Use __builtin_constant_p() instead of __is_constexpr() so that GCC can
+> > do the folding on constant strings. This done, strlen() does not
+> > require any more to be a function-like macro, so turn it into a static
+> > inline function. In the process, __fortify_strlen() had to be moved
+> > above strlen() so that it became visible to strlen().
+>
+> This is what __compiletime_strlen() ended up doing, so this seems
+> reasonable to me.
+>
+> > On a side note, strlen() did a double expansion of its argument p.
+>
+> It did? Ah, was it due to __is_constexpr() wrapping? The other
+> expressions should have been side-effect free:
+>
+>        __builtin_choose_expr(__is_constexpr(__builtin_strlen(p)), \
+>                __builtin_strlen(p), __fortify_strlen(p))
 
-On 2025/1/8 18:32, Kevin Brodsky wrote:
-> When CONFIG_KPKEYS_HARDENED_PGTABLES is enabled, page tables (both
-> user and kernel) are mapped with a privileged pkey in the linear
-> mapping. As a result, they can only be written under the
-> kpkeys_hardened_pgtables guard, which sets POR_EL1 appropriately to
-> allow such writes.
-> 
-> Use this guard wherever page tables genuinely need to be written,
-> keeping its scope as small as possible (so that POR_EL1 is reset as
-> fast as possible). Where atomics are involved, the guard's scope
-> encompasses the whole loop to avoid switching POR_EL1 unnecessarily.
-> 
-> This patch is a no-op if CONFIG_KPKEYS_HARDENED_PGTABLES is disabled
-> (default).
-> 
-> Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
-> ---
->   arch/arm64/include/asm/pgtable.h | 19 +++++++++++++++++--
->   arch/arm64/mm/fault.c            |  2 ++
->   2 files changed, 19 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-> index f8dac6673887..0d60a49dc234 100644
-> --- a/arch/arm64/include/asm/pgtable.h
-> +++ b/arch/arm64/include/asm/pgtable.h
-> @@ -39,6 +39,7 @@
->   #include <linux/mm_types.h>
->   #include <linux/sched.h>
->   #include <linux/page_table_check.h>
-> +#include <linux/kpkeys.h>
->   
->   #ifdef CONFIG_TRANSPARENT_HUGEPAGE
->   #define __HAVE_ARCH_FLUSH_PMD_TLB_RANGE
-> @@ -314,6 +315,7 @@ static inline pte_t pte_clear_uffd_wp(pte_t pte)
->   
->   static inline void __set_pte_nosync(pte_t *ptep, pte_t pte)
->   {
-> +	guard(kpkeys_hardened_pgtables)();
->   	WRITE_ONCE(*ptep, pte);
->   }
->   
-> @@ -758,6 +760,7 @@ static inline void set_pmd(pmd_t *pmdp, pmd_t pmd)
->   	}
->   #endif /* __PAGETABLE_PMD_FOLDED */
->   
-> +	guard(kpkeys_hardened_pgtables)();
->   	WRITE_ONCE(*pmdp, pmd);
->   
->   	if (pmd_valid(pmd)) {
+This does not have a side-effect. The issue is not the side effect but
+the double expansion itself (actually here it is a triple expansion)
+because it may grow exponentially. Linus explained this in greater
+details here:
 
-I noticed a long time ago that set_pte/set_pmd/... was implemented
-separately by each architecture without a unified entry point. This
-makes it difficult to add some hooks for them.
+  https://lore.kernel.org/all/CAHk-=wjpN4GWtnsWQ8XJvf=gBQ3UvBk512xK1S35=nGXA6yTiw@mail.gmail.com/
 
-Taking set_pte() as an example, is it possible to do the following:
+Note that I do not believe this to be a big deal here. Unless the
+strlen() macro gets called in others macro which themselves do double
+parameter expansion, the issue should not surface. And honestly, I do
+not see this happening with strings. That's why I put this as a side
+note, it's more of a "follow a best practice" than solving an actual
+problem.
 
-1) add a generic set_pte() in include/asm-generic/tlb.h (Or other more
-    appropriate files)
+On double thought, the risk does not seem real here. I will simply
+drop this paragraph about double expansion in v2.
 
-static inline void set_pte(pte_t *ptep, pte_t pte)
-{
-	arch_set_pte(ptep, pte);
-}
+> I don't think you build-tested this with Clang, though?
 
-2) let each architecture include this file and rename the original
-    set_pte() to arch_set_pte().
+I just did and...
 
-3) then we can add hooks for generic set_pte():
+  ./include/linux/fortify-string.h:272:17: error: redeclaration of
+'strlen' must not have the 'overloadable' attribute
+    272 | __kernel_size_t strlen(const char *p)
+        |                 ^
+  ./include/linux/string.h:200:24: note: previous unmarked overload of
+function is here
+    200 | extern __kernel_size_t strlen(const char *);
+        |                        ^
+  1 error generated.
 
-static inline void set_pte(pte_t *ptep, pte_t pte)
-{
-	guard(kpkeys_hardened_pgtables)();
-	arch_set_pte(ptep, pte);
-}
+OK, guilty here! Changing the function prototype to:
 
-4) in this way, the architecture that supports
-    ARCH_HAS_KPKEYS_HARDENED_PGTABLES only needs to implement
-    the kpkeys_hardened_pgtables(), otherwise it is no-op.
+  __FORTIFY_INLINE __diagnose_as(__builtin_strlen, 1)
+  __kernel_size_t strlen(const char * const POS p)
 
-Just some immature ideas, and the related set/clear interfaces
-are currently quite messy. ;)
+resolves the issue. I was wondering what this POS was for, guess I
+have my answer.
 
-Of course, this does not affect the feature to be implemented
-in this patch series.
+>   CC      scripts/mod/devicetable-offsets.s
+> In file included from ../scripts/mod/devicetable-offsets.c:3:
+> In file included from ../include/linux/mod_devicetable.h:14:
+> In file included from ../include/linux/uuid.h:11:
+> In file included from ../include/linux/string.h:389:
+> ../include/linux/fortify-string.h:272:17: error: redeclaration of 'strlen' must not have the 'overloadable' attribute
+>   272 | __kernel_size_t strlen(const char *p)
+>       |                 ^
+> ../include/linux/string.h:200:24: note: previous unmarked overload of function is here
+>   200 | extern __kernel_size_t strlen(const char *);
+>       |                        ^
+>
+> The externs will need to be reworked if it's no longer depending on asm
+> renaming.
+>
+> > Turning it into an inline function also resolved this side issue.
+> >
+> > [1] https://godbolt.org/z/rqr3YvoP4
+> >
+> > Signed-off-by: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+> > ---
+> > This patch is the successor of patch [1] which was part of a longer
+> > series [2]. Meanwhile, I decided to split it, so I am sending this again,
+> > but as a stand-alone patch.
+> >
+> > Changelog since [1]: use __builtin_constant_p() instead and turn
+> > strlen() into an inline function
+> >
+> > [1] https://lore.kernel.org/all/20241203-is_constexpr-refactor-v1-6-4e4cbaecc216@wanadoo.fr/
+> > [2] https://lore.kernel.org/all/20241203-is_constexpr-refactor-v1-0-4e4cbaecc216@wanadoo.fr/
+> > ---
+> >  include/linux/fortify-string.h | 34 +++++++++++++++++++---------------
+> >  1 file changed, 19 insertions(+), 15 deletions(-)
+> >
+> > diff --git a/include/linux/fortify-string.h b/include/linux/fortify-string.h
+> > index e4ce1cae03bf770047ce8a7c032b183683388cd5..bd22dd66e5f5b66ad839df42247e6436e0afd053 100644
+> > --- a/include/linux/fortify-string.h
+> > +++ b/include/linux/fortify-string.h
+> > @@ -4,7 +4,6 @@
+> >
+> >  #include <linux/bitfield.h>
+> >  #include <linux/bug.h>
+> > -#include <linux/const.h>
+> >  #include <linux/limits.h>
+> >
+> >  #define __FORTIFY_INLINE extern __always_inline __gnu_inline __overloadable
+> > @@ -241,6 +240,21 @@ __FORTIFY_INLINE __kernel_size_t strnlen(const char * const POS p, __kernel_size
+> >   * possible for strlen() to be used on compile-time strings for use in
+> >   * static initializers (i.e. as a constant expression).
+>
+> ^^ This comment, however, is I think what sinks this patch. Please see
+> commit 67ebc3ab4462 ("fortify: Make sure strlen() may still be used as a
+> constant expression") which required that strlen() not be an inline. I'm
+> pretty sure the build will start failing again (though perhaps only on
+> older GCC versions).
 
-Thanks!
+Strange. I tested it with GCC 5.1 on godbolt and it worked fine. After
+more investigation, I only got complains from GCC up to 4.9.4:
 
+  https://godbolt.org/z/rW8r74vE3
+
+I also just did a successful defconfig build using GCC 5.4 (sorry, I
+do not have an environment with GCC 5.1).
+
+So, it looks like an issue of the past to me. But in 67ebc3ab4462, the
+minimum compiler version was already 5.1:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/scripts/min-tool-version.sh?id=67ebc3ab4462#n20
+
+In the end, I am not sure what was the issue you encountered at that time.
+
+Well, I am not able to reproduce, but if you tell me this is an issue,
+then I can just keep the s/__is_constexpr/__builtin_constant_p/g
+change in v2 and drop the inline function part (thus keeping the
+triple expansion).
+
+Let me know if you still think that having it as a function is a no
+go. In the end, the main purpose here is to get rid of the
+__is_constexpr. Turning the macro into a function still looks slightly
+better to me, but at the end I do not really mind.
+
+
+Yours sincerely,
+Vincent Mailhol
