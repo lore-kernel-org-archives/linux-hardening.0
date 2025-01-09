@@ -1,58 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1491F192D7E;
-	Thu,  9 Jan 2025 17:42:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC53519CC20;
+	Thu,  9 Jan 2025 17:48:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736444563; cv=none; b=ru29GR42VRQTzOE5v3mLbOoSKrJVM76zexm/AglEvs9GPELxa8vP7fnR4EQ3jn0ikZdwAgXvJ1Er/GdPirqgPT+IVLDmp3znwrudSlk8pOtuAykEAg/lNhx2kLmZq3bO0cEVKostu43o34JuLJs4G6ERUCJwcvFB1JZ+q5Xw6XQ=
+	t=1736444910; cv=none; b=ClKxpaqLT7Smo9c0mzywT0hxUJGhvsW9Z92AI5jNEh+KxcwHt3Ray0BDlEjkjMU5kkGeAOjR1OAi0u/qIZb1MKj157e6TowvM5dsr/YFvBdxmT8dfzq2BegHe9+AB3o29IosFUmP/hLkQlCK+tirE2LVSMwN5zBBHfWU1XH0xyU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736444563; c=relaxed/simple;
-	bh=EijKJl28wp+gcuB4mOs6c/TVvHLtx/iw+sxnVMthWYE=;
+	s=arc-20240116; t=1736444910; c=relaxed/simple;
+	bh=Oupr2ADGnFXbb+lA545sXVkg508tXecBZ4wLoU1tz6s=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uUSUOFJeoo1vCSgon1yjWfBZ8qlMsubpJKKHcP/0fDN23awdwgc1GE9tqam5y0Ya+kTq1azQMCE7DP+miRW6IAghnMwIe6SMe6aA36U/Mze0IWDQ9MeikS8es1tDjZYh2Uj5iRvbCG0EjY7qxE5zFiAczzwZhSB5VsHdgYALRho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p7qV75z4; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=R6zzv+y0mbkHnHTzUg3thK7CZvGbeH1X7G94FqQ1MB0LjmRSEi773+RG7ehYEZyeo1OF/YUQyER35dRBqDo/h7IlqOIV5fsxNFRuYisJaEXTm5MCbwCC1N/V/iUwA5PKwqFnItddOa90xp4SLnUucdMO4wmYHHlU2cl0xnHqz6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SEvbNblF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p7qV75z4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7544C4CED2;
-	Thu,  9 Jan 2025 17:42:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SEvbNblF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52075C4CEDF;
+	Thu,  9 Jan 2025 17:48:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736444561;
-	bh=EijKJl28wp+gcuB4mOs6c/TVvHLtx/iw+sxnVMthWYE=;
+	s=k20201202; t=1736444910;
+	bh=Oupr2ADGnFXbb+lA545sXVkg508tXecBZ4wLoU1tz6s=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=p7qV75z4FmBSLJbt39+WewUqPOjCeSu1TiqeR1vuQkGR/v/WEhXbohOlZi0J+cNg6
-	 EYZtY1F9KLKvJfwJtHMO0ly3KoBUnd6Yx0UxjqPCCkuuU0GcqPM2pOxcrpOqts8nVl
-	 3oBUhaXCkkdMsevFFbau9KMsobHOlKvyKbG2dO89xQ4HEZ+69koBU+V1BUF3BC9YyB
-	 Q6G2KRzajkCcw7rzt9BZLP9jPvwOuonRLKt5grRbl+8fBYT19skPaRWWdkSzzxxngt
-	 pPUT9KinyWtt1hMxSE+5M9d/2iC3OTsea25obE9autsUMHykBLcZkLdMz3ZduwJaG9
-	 0BSS/fh5yCDbQ==
-Date: Thu, 9 Jan 2025 17:42:34 +0000
-From: Simon Horman <horms@kernel.org>
-To: Luo Jie <quic_luoj@quicinc.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Lei Wei <quic_leiwei@quicinc.com>,
-	Suruchi Agarwal <quic_suruchia@quicinc.com>,
-	Pavithra R <quic_pavir@quicinc.com>,
-	Jonathan Corbet <corbet@lwn.net>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org,
-	quic_kkumarcs@quicinc.com, quic_linchen@quicinc.com,
-	srinivas.kandagatla@linaro.org, bartosz.golaszewski@linaro.org,
-	john@phrozen.org
-Subject: Re: [PATCH net-next v2 06/14] net: ethernet: qualcomm: Initialize
- the PPE scheduler settings
-Message-ID: <20250109174234.GO7706@kernel.org>
-References: <20250108-qcom_ipq_ppe-v2-0-7394dbda7199@quicinc.com>
- <20250108-qcom_ipq_ppe-v2-6-7394dbda7199@quicinc.com>
+	b=SEvbNblFCZke0f9gKL/3l4eE+SVnYMVP66m1aM2zsvpkyrZhIwm4pccELCJ3epsLW
+	 M/jhsJhcAaKkBz9SqtM9Hu27Qu9XbQousr38KQAcfKEcZtEhYS/rrpaYmYRArWoryX
+	 y7LfpAo0btGx4Oo4WesfPzkm6sulNvsBYUIb8CM4CoUftOHIuR87QtOOP8LlORlIFY
+	 tg5IXAcCnGGQzFwp/2Gj2p0r2kZoXu3v11lmc/BV/aQJIY6NRwJjZB6nMSK6vta7IM
+	 RcwUWvKXsIRjtmq10vYeHqKYF9jUNHjd74n6n9dAQT4b+IYQFpWqOX0iDzRi1nXvkT
+	 IWVkpBz2WdfLQ==
+Date: Thu, 9 Jan 2025 09:48:27 -0800
+From: Kees Cook <kees@kernel.org>
+To: Eugen Hristev <eugen.hristev@linaro.org>
+Cc: liaoweixiong@allwinnertech.com, linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org, gpiccoli@igalia.com,
+	tony.luck@intel.com
+Subject: Re: [PATCH] pstore/zone: avoid dereferencing zero sized ptr after
+ init zones
+Message-ID: <202501090947.3619CFD5E9@keescook>
+References: <20241227170459.622630-1-eugen.hristev@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -61,57 +44,52 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250108-qcom_ipq_ppe-v2-6-7394dbda7199@quicinc.com>
+In-Reply-To: <20241227170459.622630-1-eugen.hristev@linaro.org>
 
-On Wed, Jan 08, 2025 at 09:47:13PM +0800, Luo Jie wrote:
-> The PPE scheduler settings determine the priority of scheduling the
-> packet across the different hardware queues per PPE port.
+On Fri, Dec 27, 2024 at 07:04:59PM +0200, Eugen Hristev wrote:
+> In psz_init_zones, if the requested area has a total_size less than
+> record_size, kcalloc will be called with c == 0 and will return
+> ZERO_SIZE_PTR.
+> Further, this will lead to an oops.
 > 
-> Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
+> With this patch, in this scenario, it will look like this :
+> [    6.865545] pstore_zone:     total size : 28672 Bytes
+> [    6.865547] pstore_zone:     kmsg size : 65536 Bytes
+> [    6.865549] pstore_zone:     pmsg size : 0 Bytes
+> [    6.865551] pstore_zone:     console size : 0 Bytes
+> [    6.865553] pstore_zone:     ftrace size : 0 Bytes
+> [    6.872095] pstore_zone: zone dmesg total_size too small
+> [    6.878234] pstore_zone: alloc zones failed
+> 
+> Signed-off-by: Eugen Hristev <eugen.hristev@linaro.org>
 > ---
->  drivers/net/ethernet/qualcomm/ppe/ppe_config.c | 789 ++++++++++++++++++++++++-
->  drivers/net/ethernet/qualcomm/ppe/ppe_config.h |  37 ++
->  drivers/net/ethernet/qualcomm/ppe/ppe_regs.h   |  97 +++
->  3 files changed, 922 insertions(+), 1 deletion(-)
+>  fs/pstore/zone.c | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> diff --git a/drivers/net/ethernet/qualcomm/ppe/ppe_config.c b/drivers/net/ethernet/qualcomm/ppe/ppe_config.c
+> diff --git a/fs/pstore/zone.c b/fs/pstore/zone.c
+> index 694db616663f..50a765999b54 100644
+> --- a/fs/pstore/zone.c
+> +++ b/fs/pstore/zone.c
+> @@ -1217,6 +1217,10 @@ static struct pstore_zone **psz_init_zones(enum pstore_type_id type,
+>  		pr_err("allocate for zones %s failed\n", name);
+>  		return ERR_PTR(-ENOMEM);
+>  	}
+> +	if (unlikely(zones == ZERO_SIZE_PTR)) {
+> +		pr_err("zone %s total_size too small\n", name);
+> +		return ERR_PTR(-EINVAL);
+> +	}
 
-...
+I'd rather catch this after the calculation of "c" rather than after a
+zero-sized allocation. Can you rework the patch to test it then?
 
-> +/**
-> + * ppe_queue_scheduler_set - Configure scheduler for PPE hardware queue
-> + * @ppe_dev: PPE device
-> + * @node_id: PPE queue ID or flow ID
-> + * @flow_level: Flow level scheduler or queue level scheduler
-> + * @port: PPE port ID set scheduler configuration
-> + * @scheduler_cfg: PPE scheduler configuration
-> + *
-> + * PPE scheduler configuration supports queue level and flow level on
-> + * the PPE egress port.
-> + *
-> + * Return 0 on success, negative error code on failure.
+-Kees
 
-Nit: The tooling would prefer this last line formatted as;
+>  
+>  	for (i = 0; i < c; i++) {
+>  		zone = psz_init_zone(type, off, record_size);
+> -- 
+> 2.43.0
+> 
 
-    * Return: ...
-
-or
-
-    * Returns: ...
-
-Flagged by ./scripts/kernel-doc -none -Wall
-
-> + */
-> +int ppe_queue_scheduler_set(struct ppe_device *ppe_dev,
-> +			    int node_id, bool flow_level, int port,
-> +			    struct ppe_scheduler_cfg scheduler_cfg)
-> +{
-> +	if (flow_level)
-> +		return ppe_scheduler_l1_queue_map_set(ppe_dev, node_id,
-> +						      port, scheduler_cfg);
-> +
-> +	return ppe_scheduler_l0_queue_map_set(ppe_dev, node_id,
-> +					      port, scheduler_cfg);
-> +}
-
-...
+-- 
+Kees Cook
