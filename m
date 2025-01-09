@@ -1,44 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9F3F4C8F;
-	Thu,  9 Jan 2025 16:51:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F7ED139D19;
+	Thu,  9 Jan 2025 16:52:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736441507; cv=none; b=J812STS7irILqNr9vsHsmCNS4niiGMHY2MscLjT7UuYHDliRoH8wGJdwAgnut5DpV/X5+rpCDM6RmGgtMtkmQWYdTdQ0COk01aCKuUe4rJtWbKbLpUWnTG7UfLhzW9yXzBYwG87Ftp2ioFJ6tkmrxGxRonuy2oGpMTy/h/dg7nc=
+	t=1736441575; cv=none; b=mJB7Pv95OgpTXTQ97tglFekPGjK6jJlg3TAzKZjngM0/Ewn+S+ZydAPQ1NPW008b6+N9LnM5qNHd2lC2JZFxOXWdRV5gwZUPsikDXV23BeT7okaxUyPkSQ75bTNLpycXGMTKRfpd4TJMVvWvvosZdJTwmCuXExRUAmx2hRyMLcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736441507; c=relaxed/simple;
-	bh=wAt1V4OmdUBqn+fpxgrDGfhV5zdTbxWpA2JYnCCrjhE=;
+	s=arc-20240116; t=1736441575; c=relaxed/simple;
+	bh=D9wPmSGM+XKwwXedjCZUph0IWYMqhMZDIHz6GWv8qw8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dJMcHZXGk7JggOV9rRB4EhQJudihjIp54joxn+yv70sVXknqWjWU5aqCFmD5v5cpJ1pnxpP0LlOjWgqpxUpQkbNoz4mr55i9HFxMyme1YDJYzEWIUwhbV3UsRSO09R0Nz7WrE6xPxZ6tdw/x5gWnZM7V6otQAXwh/tcJbM39VXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eh6+6M/N; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=fDg5oH+3jexuivzlY+Q6qNY0t4y5fWDPN3kpBQ2pSO3bRR7J70lQOhZk0/w+8J2/nFS0sZZnlO8JxYE/119p1UzSar1HJraAZ8+4NfMipmi+MocbzavJvawSMJ81XfxIxafSkAscEmpArVrHjnWf3vnNtCZytvo0lfdPOePDqOg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QrzBm/zc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eh6+6M/N"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32792C4CED2;
-	Thu,  9 Jan 2025 16:51:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QrzBm/zc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A816C4CED2;
+	Thu,  9 Jan 2025 16:52:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736441507;
-	bh=wAt1V4OmdUBqn+fpxgrDGfhV5zdTbxWpA2JYnCCrjhE=;
+	s=k20201202; t=1736441574;
+	bh=D9wPmSGM+XKwwXedjCZUph0IWYMqhMZDIHz6GWv8qw8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eh6+6M/NevPjIyyh72LLGv0s/vxUonGKmtm0a34KPXcMjmJ4aZdSljVeorNNqppyf
-	 irb6S2c/gG3iX/lEqGZRTkflk1lLbLZTsdRlAO7NYnZ8Rpq8IUXW2iLzKVkha+UIrx
-	 sSMMtm3osiTQsVhgifaZjX0eXYxY7iciY52hTokF5EmcnLnYVJzGi66Lxlz7k/00Hu
-	 0ERzjJfY12PCsFVycJRrBZHso1W0Oh5e1Y/AlGGR0bTh7087A1o2sQrMFn3hbgAwU2
-	 WulxxFQkKKLqyqxKGi8EVQw16WjmV1UqX2IUVWJlOTh9rbVwzSXvxMRW7/YQFcff13
-	 W8BnH/VI8I7eg==
-Date: Thu, 9 Jan 2025 08:51:44 -0800
+	b=QrzBm/zc/7hrXaE0GlSJpd9qLH3JywU0ZDLwH7UMDR51AsYxxuFS9AgQXBx0/IuJg
+	 5mRc9rZ1B89/eSCmX6KwK/uqbG5J9GmrSHSwc+zAP8MQG58GPA3r0uxVqMCdDUovx2
+	 JMiUMyd89sA+9B++YJAPaUUpmiojTcTSQSBVJZzbGd6+CZVZtWHCltQRRrkRDSHPdz
+	 ayekRYOG8yniRDTk4Q2xatb9MRry0bDXMORkzQp412iUnYg1nYkGm5coDGNvZNrGK+
+	 CZX3IjTK/w4+WBjIVhP2o+LT9Bnt28R6Rgv/v7odmVOJW7F56o44ljKvR/YJjPXe0c
+	 bYjrl+ZXbUx4w==
+Date: Thu, 9 Jan 2025 08:52:50 -0800
 From: Kees Cook <kees@kernel.org>
-To: kernel test robot <oliver.sang@intel.com>
-Cc: oe-lkp@lists.linux.dev, lkp@intel.com, linux-kernel@vger.kernel.org,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
-	Nilay Shroff <nilay@linux.ibm.com>,
-	Yury Norov <yury.norov@gmail.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-hardening@vger.kernel.org
-Subject: Re: [linus:master] [fortify]  239d87327d:  vm-scalability.throughput
- 17.3% improvement
-Message-ID: <202501090850.F23EBEBC5B@keescook>
-References: <202501091405.a1fcb1ed-lkp@intel.com>
+To: Gal Pressman <gal@nvidia.com>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	David Ahern <dsahern@kernel.org>, Simon Horman <horms@kernel.org>,
+	linux-hardening@vger.kernel.org, Cosmin Ratiu <cratiu@nvidia.com>
+Subject: Re: [PATCH net-next] net: Silence false field-spanning write warning
+ in ip_tunnel_info_opts_set() memcpy
+Message-ID: <202501090852.AA32AF8BD@keescook>
+References: <20250107165509.3008505-1-gal@nvidia.com>
+ <53D1D353-B8F6-4ADC-8F29-8C48A7C9C6F1@kernel.org>
+ <35791134-6c58-4cc4-a6ab-2965dce9cd4b@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -47,16 +48,27 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202501091405.a1fcb1ed-lkp@intel.com>
+In-Reply-To: <35791134-6c58-4cc4-a6ab-2965dce9cd4b@nvidia.com>
 
-On Thu, Jan 09, 2025 at 02:57:58PM +0800, kernel test robot wrote:
-> kernel test robot noticed a 17.3% improvement of vm-scalability.throughput on:
+On Thu, Jan 09, 2025 at 11:00:24AM +0200, Gal Pressman wrote:
+> On 08/01/2025 1:28, Kees Cook wrote:
+> >> This resolves the following warning:
+> >>  memcpy: detected field-spanning write (size 8) of single field "_Generic(info, const struct ip_tunnel_info * : ((const void *)((info) + 1)), struct ip_tunnel_info * : ((void *)((info) + 1)) )" at include/net/ip_tunnels.h:662 (size 0)
+> > 
+> > Then you can drop this macro and just use: info->options
+> > 
+> > Looks like you'd need to do it for all the types in struct metadata_dst, but at least you could stop hiding it from the compiler. :)
 > 
-> commit: 239d87327dcd361b0098038995f8908f3296864f ("fortify: Hide run-time copy size from value range tracking")
-> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+> Can you please explain the "do it for all the types in struct
+> metadata_dst" part?
+> AFAICT, struct ip_tunnel_info is the only one that's extendable, I don't
+> think others need to be modified.
 
-Well that is unexpected. There should be no binary output difference
-with that patch. I will investigate...
+Ah, sorry. If that's the case, then just ip_tunnel_info is fine. (Is all
+of the metadata_dst trailing byte allocation logic just for
+ip_tunnel_info?)
+
+-Kees
 
 -- 
 Kees Cook
