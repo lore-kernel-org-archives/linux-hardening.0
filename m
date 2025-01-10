@@ -1,75 +1,78 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4115F212D6E;
-	Fri, 10 Jan 2025 16:51:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16499212B02;
+	Fri, 10 Jan 2025 16:52:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736527861; cv=none; b=alPxPj6WLqBVKbPHT/1SOM8d+ZJmdykSDXDo3NNNfWZEhiC2UkU3MiRz8RHRsY9cj837M7mdITL88rR+6fUbOyJah45bOMporsKQLj/n6QKsoCrrEy19hc4RTjWEKQEwdaE9DAviNb5kWt/xjH7P+cuVUZZ+iy4IEc6/95gX+Eo=
+	t=1736527942; cv=none; b=NIVqgDOh3fb5IkED2HrUsq8a+rdNW7KrShi9cpf2mRYLcQrLAHJIUiqRtSbD2WXxkUK690LqJJ6Ny4fxCfIXoRvkA45i8OCQkYG45aZOY2Ui0PmtAN2aiXcn8sSjWO49xgQ4isNl9pZl5ot34g/5ISWwxM3m1ljirP3D5XD+pi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736527861; c=relaxed/simple;
-	bh=E5EtxMeyWUUCs8tTLOFLUz2X93/43HeEReam767DSIk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cSatdWFl+LzHQRc6qf/GGKPGqNcLu2x03P3uSZ2+hHx7KM1nmsgq0uyacb0/AVtk8q2E4En4OFvB3bXI5pK88aUgcnmQdE2PDgQgMqSJiof7m6kMduaqFo4nDjJZhRct0qdtJjGyhGHj/ZfNniby0Sh8/ioa0SMb9/vdkWzbQ2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fc98Rz6n; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1736527942; c=relaxed/simple;
+	bh=2iDuBUHDM6pe8lx2e+EJ1C11Te3LUtYB0Fp14CLTr5s=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Qxt1RnFHN7L4UUUpNSIgyG5I6RyDNOniFV7dl1T7BrVgcIZzZkSHFjeojHrp4DjDyirVpKEkC3V62Xws+JQYTdoefbV3eqP6IHkOyHbRWwMBSApI0pCZPn5HSIoUGr+Fy3ni5/yRz91xvhPuH3HU82HR49GeLFyKM39VDo+DZcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sSEVnB05; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fc98Rz6n"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9F2AC4CED6;
-	Fri, 10 Jan 2025 16:51:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sSEVnB05"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E28F7C4CED6;
+	Fri, 10 Jan 2025 16:52:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736527860;
-	bh=E5EtxMeyWUUCs8tTLOFLUz2X93/43HeEReam767DSIk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Fc98Rz6ntxow0a2CAtsMRPtAgSXIHcLiF1M61ZKF+95kudGEkGWYshcSYarcsEEzG
-	 56ovRgn2HyLMk+KsQ+D1j78pQw81VQUw0iRg6ONUFns1yxD/9WZP+HyeCtdqT0PMKE
-	 K+KBg9n6eqBwBGOw0a5TRrEdJEG9w/JsB5PtFAR3qiccnkyBVEMe5sUhHsrOwPCKtU
-	 pY+YZhXlPlc5QquQ0J5OGa9cTcLJtcYUbVRpGG5egeVIQHS1EERv3spOghasLbL5OO
-	 Q08/tdcJyheZniR53/EGzuSb3nQv2KGl0QY69rtmBRauTY3HEbZxfDgxtFEG/ivUEh
-	 bZCIVE6Z8QFsA==
-Date: Fri, 10 Jan 2025 08:50:57 -0800
+	s=k20201202; t=1736527941;
+	bh=2iDuBUHDM6pe8lx2e+EJ1C11Te3LUtYB0Fp14CLTr5s=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=sSEVnB05CwzXRuLkq/EMwPB1jobFwvwczP9w/JuHWwVrOIpk4os7AIT9BWsaCSY+S
+	 Hot8AF3yd7HmRwsAi0/uvqhxOAlsNWeXthEc4t3q+i3Kvh6h8YYnecezwq3BnuUShE
+	 glpfNIM+gcrsSAbVGfIheIqhPoVbwL7H0rYChmROk4q/sfDG7mUtOwAOgTWpChZhp2
+	 aaIwYmNyWZgiv0f0P3F3kDwCpSnPWT4sm5kY51o8ZF/gUzSf5GNjcqNQ3xEOCYE0rs
+	 0hQC53QBWR4l+scMzkOnu8oVg0OOeCWCpU4oQ9PfeEV9Rj04f/jzVj/UN07FFyBp3/
+	 ygxYZHrz+/ntg==
 From: Kees Cook <kees@kernel.org>
-To: =?iso-8859-1?Q?G=FCnther?= Noack <gnoack@google.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jann Horn <jannh@google.com>,
-	Hanno =?iso-8859-1?Q?B=F6ck?= <hanno@hboeck.de>,
-	Jiri Slaby <jirislaby@kernel.org>, linux-hardening@vger.kernel.org,
-	regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v2] tty: Permit some TIOCL_SETSEL modes without
- CAP_SYS_ADMIN
-Message-ID: <202501100850.5E4D0A5@keescook>
-References: <Z2ahOy7XaflrfCMw@google.com>
- <20250110142122.1013222-1-gnoack@google.com>
+To: linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	WeiXiong Liao <gmpy.liaowx@gmail.com>,
+	Eugen Hristev <eugen.hristev@linaro.org>
+Cc: Kees Cook <kees@kernel.org>,
+	gpiccoli@igalia.com,
+	tony.luck@intel.com
+Subject: Re: [PATCH v2] pstore/zone: avoid dereferencing zero sized ptr after init zones
+Date: Fri, 10 Jan 2025 08:52:18 -0800
+Message-Id: <173652793731.3103853.15317559735833434900.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250110125714.2594719-1-eugen.hristev@linaro.org>
+References: <20250110125714.2594719-1-eugen.hristev@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250110142122.1013222-1-gnoack@google.com>
 
-On Fri, Jan 10, 2025 at 02:21:22PM +0000, Günther Noack wrote:
-> With this, processes without CAP_SYS_ADMIN are able to use TIOCLINUX with
-> subcode TIOCL_SETSEL, in the selection modes TIOCL_SETPOINTER,
-> TIOCL_SELCLEAR and TIOCL_SELMOUSEREPORT.
+On Fri, 10 Jan 2025 14:57:14 +0200, Eugen Hristev wrote:
+> In psz_init_zones, if the requested area has a total_size less than
+> record_size, kcalloc will be called with c == 0 and will return
+> ZERO_SIZE_PTR.
+> Further, this will lead to an oops.
 > 
-> TIOCL_SETSEL was previously changed to require CAP_SYS_ADMIN, as this IOCTL
-> let callers change the selection buffer and could be used to simulate
-> keypresses.  These three TIOCL_SETSEL selection modes, however, are safe to
-> use, as they do not modify the selection buffer.
+> With this patch, in this scenario, it will look like this :
+> [    6.865545] pstore_zone:     total size : 28672 Bytes
+> [    6.865547] pstore_zone:     kmsg size : 65536 Bytes
+> [    6.865549] pstore_zone:     pmsg size : 0 Bytes
+> [    6.865551] pstore_zone:     console size : 0 Bytes
+> [    6.865553] pstore_zone:     ftrace size : 0 Bytes
+> [    6.872095] pstore_zone: zone dmesg total_size too small
+> [    6.878234] pstore_zone: alloc zones failed
 > 
-> This fixes a mouse support regression that affected Emacs (invisible mouse
-> cursor).
-> 
-> Cc: stable@vger.kernel.org
-> Link: https://lore.kernel.org/r/ee3ec63269b43b34e1c90dd8c9743bf8@finder.org
-> Fixes: 8d1b43f6a6df ("tty: Restrict access to TIOCLINUX' copy-and-paste subcommands")
-> Signed-off-by: Günther Noack <gnoack@google.com>
+> [...]
 
-Reviewed-by: Kees Cook <kees@kernel.org>
+Applied to for-next/pstore, thanks!
+
+[1/1] pstore/zone: avoid dereferencing zero sized ptr after init zones
+      https://git.kernel.org/kees/c/067cdf020329
+
+Take care,
 
 -- 
 Kees Cook
+
