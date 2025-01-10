@@ -1,157 +1,146 @@
-Received: from mail-ed1-f74.google.com (mail-ed1-f74.google.com [209.85.208.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 418F320E709
-	for <linux-hardening@vger.kernel.org>; Fri, 10 Jan 2025 14:21:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03077211A2D;
+	Fri, 10 Jan 2025 15:37:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736518889; cv=none; b=kjbwF+TRWvn0OHhb6MrxRupHkKDOpBbznSUfHYXgYX6LmgjwM4cORlegAnRRSUztGriTk8rhjx0BPG7LF/9EKNfFb5uppREMbMZBix7xlyTsw0y/i4xmgN1tGWdFkqfdTZYNAhr0rypiIaXDxTJZ/HiJYTJWEP4S3CqtJubgJug=
+	t=1736523445; cv=none; b=Pcg5ng9gxOtRGwUX0DiA0OsoIlDhHV5LVRprT6OP6OdK3d91klkkV4J0hoAdtBRgY/mWRDvZdoi8HLzXihvofZNoEcfPXy3IHTXD0W6SeTVH9NWg0x8S2QX+oEK8tvOZ0x/AvnD+tpPs9HOC+VL3aiEx73FIWs2PucgFZtKerMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736518889; c=relaxed/simple;
-	bh=eZLl37fOSbYQYDLGS5Y/QLTa91exobFept6c4ErWMTE=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=u+R/1b4/h1aF3Cw/SbeKNw4rjreADlZi4kKXsmbvevDefrqy0eYt8pcCHHYhckeX9AaK5NNnix7TDpQNh+6BcOwVMLkmsObMQrBx4sN7agSL8BKKr5LvH9KIWZkybFqAg07kv0lmUqrXiMEdqui7VY93vu34J765b9dXDJil9s0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--gnoack.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4OD9GaIK; arc=none smtp.client-ip=209.85.208.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--gnoack.bounces.google.com
+	s=arc-20240116; t=1736523445; c=relaxed/simple;
+	bh=Z/bsfZHLqn7sUe4vDHhHfLRhvjd61kqXFBkhmq0D8vg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=qVKq8fozb9AxdvRhBL1OvWlyZzGj6Gc1brPSE4/nfX3qOLEHwiZaUQ5HkQHPPGjekA3DzHROpDqH9E1o5j5BIkVhQYMxUMKl3+NqzlU+Tk/Zz6WeaUAGrciTG7Sf/z+V3A5OkL5erBzjszqIxW5C3CSNeXbthseO6Kt1vLMfoTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=fFtDnhcF; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4OD9GaIK"
-Received: by mail-ed1-f74.google.com with SMTP id 4fb4d7f45d1cf-5d3f01eeef8so1774053a12.0
-        for <linux-hardening@vger.kernel.org>; Fri, 10 Jan 2025 06:21:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1736518885; x=1737123685; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9umdn33M+pmVRz+NuzpgduvU4xJDCFruejcIKVHUmT0=;
-        b=4OD9GaIKd+6iSucTKlTyfl17+CPR4JKN3DmLRP3AUTAfRoepDmROEZmKNwVQPsf59F
-         jGwpFAhYuqMW+JJrB+8aStyGvse22OMIJZ/5FIcwYDKdqvEca+OKsD44dSI1JaGmnGUF
-         vur9y9vV2z7ZBAtts+cIXE8mEDeh0N/wZoTUprpFIQm/9g0OI69Wg7faXUjPa+6nZXT/
-         fl59+8GCwxuN7uR4MBmD4wZWXtiUO56DL+WBtX83cLfx8z9OEv72GZ7dzb+9lVnCGpT6
-         dkKZcc7/w4H437GPd5GIJpRnIzbL9DKm6psGEU4O1HJa8F/eobaGxs0WQSrPcY/Orni4
-         4SBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736518885; x=1737123685;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=9umdn33M+pmVRz+NuzpgduvU4xJDCFruejcIKVHUmT0=;
-        b=sniNzseNi13xZCpOID0IceDfCz3nf6pj6F5dZ3evh2eApPUJVYBs8ss/tJmeUQBAVC
-         BuNqtl2GCv3cMm7hYW7nRv90TKl70WsHuJpcqRI9TNJTQtR2YrXsV3sQz/wBoGcjfMGr
-         yeUnhzR2xwrFDsupi9/72IoOjl1kSz3s1TPi5zoySNoXeAb2OEJ1Dq/jb1A5H++ZZhCj
-         AGz/lPOr/DnkoWlbAANlB7B4Pbk1gecMFjMuNPzx6tDzE5ILd3MbLnCWV+bRRCkY1F+G
-         8BwZB707M4tEr54SaGlSCA6hnB6HL1rCVPcR39RsBWgTsemxAbHjzJ4k7rZiSfYFdHtl
-         0vAw==
-X-Forwarded-Encrypted: i=1; AJvYcCWvqO77KmFHl4Pkly4CqInhjDF2BHgvZZMUV68LKbgkLJ/kRu4ZsX9BGXRORMEPouQNSLseo6q21Q7ZdvM/8eA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFZRdoNNv0R6ukk68iFNBR+981hFw7+WbSW3B7XJOZtcKMZhGQ
-	HF2ztprF0df52T8YDqgSHebaI2Y4zrZxqBl2JX+HyNKQhoupWFKJyYZIMQUwdcdTkZVCjKn/XkD
-	hgA==
-X-Google-Smtp-Source: AGHT+IHRHNispYW5vs1jXOBSVq75OKtYcFcYRuAEh4jZLhpJkXnr4emt/EvlkNg20gd/mcSFGW2ts8m0Ozk=
-X-Received: from edqg23.prod.google.com ([2002:aa7:c597:0:b0:5d9:1530:45a7])
- (user=gnoack job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6402:278f:b0:5d0:ed92:cdf6
- with SMTP id 4fb4d7f45d1cf-5d972e1c66bmr22388062a12.19.1736518885687; Fri, 10
- Jan 2025 06:21:25 -0800 (PST)
-Date: Fri, 10 Jan 2025 14:21:22 +0000
-In-Reply-To: <Z2ahOy7XaflrfCMw@google.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="fFtDnhcF"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50A9wnHU012011;
+	Fri, 10 Jan 2025 15:37:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	pcaB471v/EE7pbHbVZ/gzy+IGGkuqwQSaMJRbgn0Bv8=; b=fFtDnhcFkqijZ/eK
+	thCE/FMs6C0ACoa4HyH4mKN4krKBMCGkEaliR8KUMNU8gNnH8Idr8w0W+XDGTwCM
+	jFKarnmygA6xW8urvPVl6iEZc/CuYLwXumZQ8Ng+9BfgqSU+y3Kz2Lq2YbvYbxfv
+	7FmoiqkZMgSf2QQulmJJ1FX7DyHQ7Rr4y5GjTJyHBmkwAVDkFPi3GHRsqqv7v4cc
+	R3ylGnrIile8BSUc0rvz37itx6UrevJ0B7tDZQSaib2/IfUHHM0QlwkxpA/oDwc7
+	NyKwNUvTXLUdWtSCsKRQ6SVcsB1yB5XQeBGRgWctYqOnJRRd83kXUwMkSjNKHcC9
+	LItTUQ==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4431d48vuh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 10 Jan 2025 15:37:07 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 50AFb6qP002889
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 10 Jan 2025 15:37:06 GMT
+Received: from [10.253.12.10] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 10 Jan
+ 2025 07:37:00 -0800
+Message-ID: <50a42c90-bbe7-4bdd-90dd-c8bfe4d4051d@quicinc.com>
+Date: Fri, 10 Jan 2025 23:36:58 +0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <Z2ahOy7XaflrfCMw@google.com>
-X-Mailer: git-send-email 2.47.1.613.gc27f4b7a9f-goog
-Message-ID: <20250110142122.1013222-1-gnoack@google.com>
-Subject: [PATCH v2] tty: Permit some TIOCL_SETSEL modes without CAP_SYS_ADMIN
-From: "=?UTF-8?q?G=C3=BCnther=20Noack?=" <gnoack@google.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jann Horn <jannh@google.com>, "=?UTF-8?q?Hanno=20B=C3=B6ck?=" <hanno@hboeck.de>, Jiri Slaby <jirislaby@kernel.org>, 
-	linux-hardening@vger.kernel.org, regressions@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, 
-	"=?UTF-8?q?G=C3=BCnther=20Noack?=" <gnoack@google.com>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v2 08/14] net: ethernet: qualcomm: Initialize PPE
+ service code settings
+To: Simon Horman <horms@kernel.org>
+CC: Andrew Lunn <andrew+netdev@lunn.ch>,
+        "David S. Miller"
+	<davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+	<kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>, Lei Wei <quic_leiwei@quicinc.com>,
+        Suruchi Agarwal
+	<quic_suruchia@quicinc.com>,
+        Pavithra R <quic_pavir@quicinc.com>,
+        "Jonathan
+ Corbet" <corbet@lwn.net>, Kees Cook <kees@kernel.org>,
+        "Gustavo A. R. Silva"
+	<gustavoars@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        <linux-arm-msm@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
+        <quic_kkumarcs@quicinc.com>, <quic_linchen@quicinc.com>,
+        <srinivas.kandagatla@linaro.org>, <bartosz.golaszewski@linaro.org>,
+        <john@phrozen.org>
+References: <20250108-qcom_ipq_ppe-v2-0-7394dbda7199@quicinc.com>
+ <20250108-qcom_ipq_ppe-v2-8-7394dbda7199@quicinc.com>
+ <20250109175845.GQ7706@kernel.org>
+Content-Language: en-US
+From: Jie Luo <quic_luoj@quicinc.com>
+In-Reply-To: <20250109175845.GQ7706@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: GDOoK8I8GJC-t7MO56NwjeOuF5zGrryY
+X-Proofpoint-GUID: GDOoK8I8GJC-t7MO56NwjeOuF5zGrryY
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
+ malwarescore=0 phishscore=0 mlxlogscore=999 spamscore=0 mlxscore=0
+ lowpriorityscore=0 clxscore=1015 priorityscore=1501 suspectscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2501100122
 
-With this, processes without CAP_SYS_ADMIN are able to use TIOCLINUX with
-subcode TIOCL_SETSEL, in the selection modes TIOCL_SETPOINTER,
-TIOCL_SELCLEAR and TIOCL_SELMOUSEREPORT.
 
-TIOCL_SETSEL was previously changed to require CAP_SYS_ADMIN, as this IOCTL
-let callers change the selection buffer and could be used to simulate
-keypresses.  These three TIOCL_SETSEL selection modes, however, are safe to
-use, as they do not modify the selection buffer.
 
-This fixes a mouse support regression that affected Emacs (invisible mouse
-cursor).
+On 1/10/2025 1:58 AM, Simon Horman wrote:
+> On Wed, Jan 08, 2025 at 09:47:15PM +0800, Luo Jie wrote:
+>> PPE service code is a special code (0-255) that is defined by PPE for
+>> PPE's packet processing stages, as per the network functions required
+>> for the packet.
+>>
+>> For packet being sent out by ARM cores on Ethernet ports, The service
+>> code 1 is used as the default service code. This service code is used
+>> to bypass most of packet processing stages of the PPE before the packet
+>> transmitted out PPE port, since the software network stack has already
+>> processed the packet.
+>>
+>> Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
+> 
+> ...
+> 
+>> diff --git a/drivers/net/ethernet/qualcomm/ppe/ppe_config.h b/drivers/net/ethernet/qualcomm/ppe/ppe_config.h
+> 
+> ...
+> 
+>> +/**
+>> + * struct ppe_sc_bypss - PPE service bypass bitmaps
+> 
+> nit: struct ppe_sc_bypass
 
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/ee3ec63269b43b34e1c90dd8c9743bf8@finder.org
-Fixes: 8d1b43f6a6df ("tty: Restrict access to TIOCLINUX' copy-and-paste sub=
-commands")
-Signed-off-by: G=C3=BCnther Noack <gnoack@google.com>
----
-Changes in V2:
+OK. Will correct it.
 
- * Removed comment in vt.c (per Greg's suggestion)
-
- * CC'd stable@
-
- * I *kept* the CAP_SYS_ADMIN check *after* copy_from_user(),
-   with the reasoning that:
-
-   1. I do not see a good alternative to reorder the code here.
-      We need the data from copy_from_user() in order to know whether
-      the CAP_SYS_ADMIN check even needs to be performed.
-   2. A previous get_user() from an adjacent memory region already worked
-      (making this a very unlikely failure)
-
-I would still appreciate a more formal Tested-by from Hanno (hint, hint) :)
-
----
- drivers/tty/vt/selection.c | 14 ++++++++++++++
- drivers/tty/vt/vt.c        |  2 --
- 2 files changed, 14 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/tty/vt/selection.c b/drivers/tty/vt/selection.c
-index 564341f1a74f..0bd6544e30a6 100644
---- a/drivers/tty/vt/selection.c
-+++ b/drivers/tty/vt/selection.c
-@@ -192,6 +192,20 @@ int set_selection_user(const struct tiocl_selection __=
-user *sel,
- 	if (copy_from_user(&v, sel, sizeof(*sel)))
- 		return -EFAULT;
-=20
-+	/*
-+	 * TIOCL_SELCLEAR, TIOCL_SELPOINTER and TIOCL_SELMOUSEREPORT are OK to
-+	 * use without CAP_SYS_ADMIN as they do not modify the selection.
-+	 */
-+	switch (v.sel_mode) {
-+	case TIOCL_SELCLEAR:
-+	case TIOCL_SELPOINTER:
-+	case TIOCL_SELMOUSEREPORT:
-+		break;
-+	default:
-+		if (!capable(CAP_SYS_ADMIN))
-+			return -EPERM;
-+	}
-+
- 	return set_selection_kernel(&v, tty);
- }
-=20
-diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
-index 96842ce817af..be5564ed8c01 100644
---- a/drivers/tty/vt/vt.c
-+++ b/drivers/tty/vt/vt.c
-@@ -3345,8 +3345,6 @@ int tioclinux(struct tty_struct *tty, unsigned long a=
-rg)
-=20
- 	switch (type) {
- 	case TIOCL_SETSEL:
--		if (!capable(CAP_SYS_ADMIN))
--			return -EPERM;
- 		return set_selection_user(param, tty);
- 	case TIOCL_PASTESEL:
- 		if (!capable(CAP_SYS_ADMIN))
---=20
-2.47.1.613.gc27f4b7a9f-goog
+> 
+>> + * @ingress: Bitmap of features that can be bypassed on the ingress packet.
+>> + * @egress: Bitmap of features that can be bypassed on the egress packet.
+>> + * @counter: Bitmap of features that can be bypassed on the counter type.
+>> + * @tunnel: Bitmap of features that can be bypassed on the tunnel packet.
+>> + */
+>> +struct ppe_sc_bypass {
+>> +	DECLARE_BITMAP(ingress, PPE_SC_BYPASS_INGRESS_SIZE);
+>> +	DECLARE_BITMAP(egress, PPE_SC_BYPASS_EGRESS_SIZE);
+>> +	DECLARE_BITMAP(counter, PPE_SC_BYPASS_COUNTER_SIZE);
+>> +	DECLARE_BITMAP(tunnel, PPE_SC_BYPASS_TUNNEL_SIZE);
+>> +};
+> 
+> ...
 
