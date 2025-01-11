@@ -1,396 +1,138 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from out.smtpout.orange.fr (out-18.smtpout.orange.fr [193.252.22.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F75817C68;
-	Sat, 11 Jan 2025 02:13:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE05C24B22A;
+	Sat, 11 Jan 2025 14:41:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736561619; cv=none; b=Ns2geh29ucT+jyJKPwADpXzZuioCCPOkO80EYvxgh9pEM1EPe0b919O/hULEW2IwUgm10YZqiexiNKt9p5Ltp452j24QxcJhXqkMP1P7R6+C1dLGuHGZPpeyZGnf/Fg8QWr0/0WVPjC0Dt84ELaiklw9hmLhZFOLJeO3r/WWn+0=
+	t=1736606466; cv=none; b=sYZV8lnb1V4QhUSwASOuVsT1r+ieYGgY+ztQOvq06+5xDXg19yyGlXLMTJkBLXxGoTeQXkxXfegSxZxRWNN80aTn/psO4zkPHmL3LM8/1nqQy8E6rsGzvdnOXv1by4sgfucxBfbNTtDEkSxaVR5Of2dM/ggr1+QtSwrPM8k6Rqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736561619; c=relaxed/simple;
-	bh=DftX6aQhvgmb9ePJ1K/sp914/tMimWDvyvye8J0QWe8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lhRoXsjZWX/GY4Oqk2hQl8EKQrF69i0yP3X/1iP+e6isvkzsGy+SE/P6GGokQ3Cxhw8CoP92qqcKnhAK9dhi7oS6OgQwS9CNkEJPpF//7HOIie1eytLiJLvFOYdAhkHuPltoZJWuDucacMfjH2UZOGTq1cQ5F7DTH2fK/GeXRpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Fc71G1GC; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1736606466; c=relaxed/simple;
+	bh=MWY8Vh9vyzPLy4+o8smc3TSgBb2SpB71E2D4V/zKYlQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=los/pYknvmENAfPjLYP3X1TtAQlap6JxwuGWa0xycYTcWCaiLLoOLva/zW+sPrqvGF2B53I5Jvxw980MRPMZMs8BRiusx7IICyHOzQB5fZa4LJ07lsvfgWUGFSlDOqmuSmrcB7+k/Tn9JR/W+amVXwNgztnob/IkTa44k4dR2bo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=RFV2eecN; arc=none smtp.client-ip=193.252.22.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Fc71G1GC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1736561617; x=1768097617;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=DftX6aQhvgmb9ePJ1K/sp914/tMimWDvyvye8J0QWe8=;
-  b=Fc71G1GC/Ixh6w9mj3GmzjyYeVEEBgszQilcowZnPDpLCnvPA8jKTUzB
-   HOjEbPc/gPGY/uX23tbSpHnykLJYjZBlqgYwpN7WjImIiXWBEIIOLfx2F
-   z+vKdzpngbsqPSPWedxdiFXsM41vz+Z9FdH/r9FB8S67BJUJMjwO5MwKY
-   JXj0CckXaFoQ71JykqJATwoKiIqCV4dFxxVMnJRdHFrSKNXFkgBidgSCN
-   m/vkAwhfcsy0L8n5+JOJF2uPqQbocADqRfZUv2j9f1OuP4rW1aV9JNJhN
-   erg1Dcbc0UwXgQmfF3/j0R93WnVz9bo6VoNN8fPnYPBfU3XKUum15ccft
-   Q==;
-X-CSE-ConnectionGUID: ql67X/grSj2KJLit5TQSWQ==
-X-CSE-MsgGUID: aN3AQpAvSCS8Ypk77gGvNw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11311"; a="37097265"
-X-IronPort-AV: E=Sophos;i="6.12,305,1728975600"; 
-   d="scan'208";a="37097265"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2025 18:13:36 -0800
-X-CSE-ConnectionGUID: F16tXYebQfiTLSF1ilTRTQ==
-X-CSE-MsgGUID: mzW84XBpQe+okEkwyvDy4Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,305,1728975600"; 
-   d="scan'208";a="108900360"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by orviesa004.jf.intel.com with ESMTP; 10 Jan 2025 18:13:33 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tWR0E-000K2F-1F;
-	Sat, 11 Jan 2025 02:13:30 +0000
-Date: Sat, 11 Jan 2025 10:13:05 +0800
-From: kernel test robot <lkp@intel.com>
-To: Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
-	Kees Cook <kees@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>
-Cc: oe-kbuild-all@lists.linux.dev, David Laight <david.laight@aculab.com>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev, Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-Subject: Re: [PATCH] fortify: turn strlen() into an inline function using
- __builtin_constant_p()
-Message-ID: <202501110943.PA4ylzB9-lkp@intel.com>
-References: <20250108-strlen_use_builtin_constant_p-v1-1-611b52e80a9f@wanadoo.fr>
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="RFV2eecN"
+Received: from mail-ej1-f42.google.com ([209.85.218.42])
+	by smtp.orange.fr with ESMTPSA
+	id WcfVtwGxJqZ5JWcfYtrFSj; Sat, 11 Jan 2025 15:40:56 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1736606456;
+	bh=HnmEdRI/JuEW7Q0XlIQvyBGESggVLrnEqhLzSdi7NTk=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To;
+	b=RFV2eecNGBDURff6CsmQiUnSMGZ+OILUfQ3CT4jHPHY2iKa52cWELI57f8pWk4Kn1
+	 p81xzRI/Nskg+BnzU5Ztax0n4RfzGKferszYGoBl7BEiadq5WgQU+DjLIyQziXiUv1
+	 4TksPNibevjESAT3w+KczQp8DidNMBcAB00KRXm5/K3baBZ9ltRsKQvOTA4lo2bDT+
+	 1MbnWX+1RSaGiV0A/yd1HPWUCFiVP56jEKhHMJ15OAa7NLxK/fJziSylSiYkQAGJiK
+	 4/SBfCWekqCqmj/CADo/K75crqIkYLprpZZTUYTaMxyj+elSErYdQubMZ0IEpIFJai
+	 +8+LxzYZftxhw==
+X-ME-Helo: mail-ej1-f42.google.com
+X-ME-Auth: bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI=
+X-ME-Date: Sat, 11 Jan 2025 15:40:56 +0100
+X-ME-IP: 209.85.218.42
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-aae81f4fdc4so584511666b.0;
+        Sat, 11 Jan 2025 06:40:56 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU0p0pvQtskPc57g6ZnhkqyLoSJC+7tUq7CdeN57Ifx+dv4tEl9o12VoiUkVo6CofA5JX+KtMjDCHafvJyW/jg=@vger.kernel.org, AJvYcCUFo2wPkTN3+zqsP/UDwuxmOhb488MNxfF/HFgDz9NHHRQGBtuO3WKkC0ms/nGYrSo+rnTdryZvb2MJiv6a@vger.kernel.org
+X-Gm-Message-State: AOJu0YwT/r4qgiSLGslJ7XaHla2zo6uFXp6pkB2COJUY4hP/0QTZsXoQ
+	EK/n3IWoj5DV3BJcUk8p6P7mp6EK+u7YE2gwgYd/g+SlMqameMZ3lgnDTfxab4izuf83LFmHf5D
+	RSGNAcmriy7D0rzF8zqCoZnTQav8=
+X-Google-Smtp-Source: AGHT+IEWbXRgdQ6oOnCXEsh9qkGATUuGBQ1omOgQ7o8G7l70E+lYhM/OujP8uUXCdcbR/4GmuEOy9WZ4dA9GwgveI6A=
+X-Received: by 2002:a17:907:70c:b0:ab2:e7c0:6561 with SMTP id
+ a640c23a62f3a-ab2e7c076c7mr401455566b.22.1736606452879; Sat, 11 Jan 2025
+ 06:40:52 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250108-strlen_use_builtin_constant_p-v1-1-611b52e80a9f@wanadoo.fr>
+References: <20250108-strlen_use_builtin_constant_p-v1-1-611b52e80a9f@wanadoo.fr>
+ <202501081331.E4B6DF747@keescook> <CAMZ6RqJS5FwuBUdvVdXoZj6wZOJz8Nao4FzSzCK1VtbNF41sMw@mail.gmail.com>
+In-Reply-To: <CAMZ6RqJS5FwuBUdvVdXoZj6wZOJz8Nao4FzSzCK1VtbNF41sMw@mail.gmail.com>
+From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+Date: Sat, 11 Jan 2025 23:40:41 +0900
+X-Gmail-Original-Message-ID: <CAMZ6RqJbinVpsGf6ADUtQTYPRRQN=D8Ne_n6pHtDUPXxED5ZvQ@mail.gmail.com>
+X-Gm-Features: AbW1kvb4zdGjZYAy4UF-AWwj-igw1bOTlLKn6fbLiVDPF6WP_Sm6v2Df_P1KUsw
+Message-ID: <CAMZ6RqJbinVpsGf6ADUtQTYPRRQN=D8Ne_n6pHtDUPXxED5ZvQ@mail.gmail.com>
+Subject: Re: [PATCH] fortify: turn strlen() into an inline function using __builtin_constant_p()
+To: Kees Cook <kees@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+	David Laight <david.laight@aculab.com>, linux-hardening@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Vincent,
+On Thu. 9 Jan 2025 at 16:52, Vincent Mailhol <mailhol.vincent@wanadoo.fr> w=
+rote:
+(...)
+> > >   * possible for strlen() to be used on compile-time strings for use =
+in
+> > >   * static initializers (i.e. as a constant expression).
+> >
+> > ^^ This comment, however, is I think what sinks this patch. Please see
+> > commit 67ebc3ab4462 ("fortify: Make sure strlen() may still be used as =
+a
+> > constant expression") which required that strlen() not be an inline. I'=
+m
+> > pretty sure the build will start failing again (though perhaps only on
+> > older GCC versions).
+>
+> Strange. I tested it with GCC 5.1 on godbolt and it worked fine. After
+> more investigation, I only got complains from GCC up to 4.9.4:
+>
+>   https://godbolt.org/z/rW8r74vE3
+>
+> I also just did a successful defconfig build using GCC 5.4 (sorry, I
+> do not have an environment with GCC 5.1).
+>
+> So, it looks like an issue of the past to me. But in 67ebc3ab4462, the
+> minimum compiler version was already 5.1:
+>
+>   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
+/scripts/min-tool-version.sh?id=3D67ebc3ab4462#n20
+>
+> In the end, I am not sure what was the issue you encountered at that time=
+.
+>
+> Well, I am not able to reproduce, but if you tell me this is an issue,
+> then I can just keep the s/__is_constexpr/__builtin_constant_p/g
+> change in v2 and drop the inline function part (thus keeping the
+> triple expansion).
+>
+> Let me know if you still think that having it as a function is a no
+> go. In the end, the main purpose here is to get rid of the
+> __is_constexpr. Turning the macro into a function still looks slightly
+> better to me, but at the end I do not really mind.
 
-kernel test robot noticed the following build warnings:
+Actually, I did more investigation and it is working for some strange
+reasons. Whenever the argument of a function named strlen() is a
+compile time constant, the compiler (both GCC and clang) will replace
+it with the string length on the argument, even if strlen() is
+programmed to return something else:
 
-[auto build test WARNING on 9d89551994a430b50c4fffcb1e617a057fa76e20]
+  https://godbolt.org/z/nK4b3fnM7
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Vincent-Mailhol/fortify-turn-strlen-into-an-inline-function-using-__builtin_constant_p/20250108-223159
-base:   9d89551994a430b50c4fffcb1e617a057fa76e20
-patch link:    https://lore.kernel.org/r/20250108-strlen_use_builtin_constant_p-v1-1-611b52e80a9f%40wanadoo.fr
-patch subject: [PATCH] fortify: turn strlen() into an inline function using __builtin_constant_p()
-config: s390-randconfig-r064-20250111 (https://download.01.org/0day-ci/archive/20250111/202501110943.PA4ylzB9-lkp@intel.com/config)
-compiler: clang version 20.0.0git (https://github.com/llvm/llvm-project f5cd181ffbb7cb61d582fe130d46580d5969d47a)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250111/202501110943.PA4ylzB9-lkp@intel.com/reproduce)
+So it is only working because the compiler uses its builtin strlen()
+instead of the function we provided.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202501110943.PA4ylzB9-lkp@intel.com/
+Actually, we could just do:
 
-All warnings (new ones prefixed by >>):
+  extern inline size_t strlen(const char *p)
+  {
+          return __fortify_strlen(p);
+  }
 
-         |                 ^        ~
-   arch/s390/include/asm/signal.h:22:9: note: array 'sig' declared here
-      22 |         unsigned long sig[_NSIG_WORDS];
-         |         ^
-   In file included from drivers/most/most_cdev.c:8:
-   In file included from include/linux/module.h:19:
-   In file included from include/linux/elf.h:6:
-   In file included from arch/s390/include/asm/elf.h:168:
-   include/linux/compat.h:454:22: warning: array index 3 is past the end of the array (that has type 'const unsigned long[1]') [-Warray-bounds]
-     454 |         case 4: v.sig[7] = (set->sig[3] >> 32); v.sig[6] = set->sig[3];
-         |                             ^        ~
-   arch/s390/include/asm/signal.h:22:9: note: array 'sig' declared here
-      22 |         unsigned long sig[_NSIG_WORDS];
-         |         ^
-   In file included from drivers/most/most_cdev.c:8:
-   In file included from include/linux/module.h:19:
-   In file included from include/linux/elf.h:6:
-   In file included from arch/s390/include/asm/elf.h:168:
-   include/linux/compat.h:454:10: warning: array index 7 is past the end of the array (that has type 'compat_sigset_word[2]' (aka 'unsigned int[2]')) [-Warray-bounds]
-     454 |         case 4: v.sig[7] = (set->sig[3] >> 32); v.sig[6] = set->sig[3];
-         |                 ^     ~
-   include/linux/compat.h:130:2: note: array 'sig' declared here
-     130 |         compat_sigset_word      sig[_COMPAT_NSIG_WORDS];
-         |         ^
-   include/linux/compat.h:454:42: warning: array index 6 is past the end of the array (that has type 'compat_sigset_word[2]' (aka 'unsigned int[2]')) [-Warray-bounds]
-     454 |         case 4: v.sig[7] = (set->sig[3] >> 32); v.sig[6] = set->sig[3];
-         |                                                 ^     ~
-   include/linux/compat.h:130:2: note: array 'sig' declared here
-     130 |         compat_sigset_word      sig[_COMPAT_NSIG_WORDS];
-         |         ^
-   include/linux/compat.h:454:53: warning: array index 3 is past the end of the array (that has type 'const unsigned long[1]') [-Warray-bounds]
-     454 |         case 4: v.sig[7] = (set->sig[3] >> 32); v.sig[6] = set->sig[3];
-         |                                                            ^        ~
-   arch/s390/include/asm/signal.h:22:9: note: array 'sig' declared here
-      22 |         unsigned long sig[_NSIG_WORDS];
-         |         ^
-   In file included from drivers/most/most_cdev.c:8:
-   In file included from include/linux/module.h:19:
-   In file included from include/linux/elf.h:6:
-   In file included from arch/s390/include/asm/elf.h:168:
-   include/linux/compat.h:456:22: warning: array index 2 is past the end of the array (that has type 'const unsigned long[1]') [-Warray-bounds]
-     456 |         case 3: v.sig[5] = (set->sig[2] >> 32); v.sig[4] = set->sig[2];
-         |                             ^        ~
-   arch/s390/include/asm/signal.h:22:9: note: array 'sig' declared here
-      22 |         unsigned long sig[_NSIG_WORDS];
-         |         ^
-   In file included from drivers/most/most_cdev.c:8:
-   In file included from include/linux/module.h:19:
-   In file included from include/linux/elf.h:6:
-   In file included from arch/s390/include/asm/elf.h:168:
-   include/linux/compat.h:456:10: warning: array index 5 is past the end of the array (that has type 'compat_sigset_word[2]' (aka 'unsigned int[2]')) [-Warray-bounds]
-     456 |         case 3: v.sig[5] = (set->sig[2] >> 32); v.sig[4] = set->sig[2];
-         |                 ^     ~
-   include/linux/compat.h:130:2: note: array 'sig' declared here
-     130 |         compat_sigset_word      sig[_COMPAT_NSIG_WORDS];
-         |         ^
-   include/linux/compat.h:456:42: warning: array index 4 is past the end of the array (that has type 'compat_sigset_word[2]' (aka 'unsigned int[2]')) [-Warray-bounds]
-     456 |         case 3: v.sig[5] = (set->sig[2] >> 32); v.sig[4] = set->sig[2];
-         |                                                 ^     ~
-   include/linux/compat.h:130:2: note: array 'sig' declared here
-     130 |         compat_sigset_word      sig[_COMPAT_NSIG_WORDS];
-         |         ^
-   include/linux/compat.h:456:53: warning: array index 2 is past the end of the array (that has type 'const unsigned long[1]') [-Warray-bounds]
-     456 |         case 3: v.sig[5] = (set->sig[2] >> 32); v.sig[4] = set->sig[2];
-         |                                                            ^        ~
-   arch/s390/include/asm/signal.h:22:9: note: array 'sig' declared here
-      22 |         unsigned long sig[_NSIG_WORDS];
-         |         ^
-   In file included from drivers/most/most_cdev.c:8:
-   In file included from include/linux/module.h:19:
-   In file included from include/linux/elf.h:6:
-   In file included from arch/s390/include/asm/elf.h:168:
-   include/linux/compat.h:458:22: warning: array index 1 is past the end of the array (that has type 'const unsigned long[1]') [-Warray-bounds]
-     458 |         case 2: v.sig[3] = (set->sig[1] >> 32); v.sig[2] = set->sig[1];
-         |                             ^        ~
-   arch/s390/include/asm/signal.h:22:9: note: array 'sig' declared here
-      22 |         unsigned long sig[_NSIG_WORDS];
-         |         ^
-   In file included from drivers/most/most_cdev.c:8:
-   In file included from include/linux/module.h:19:
-   In file included from include/linux/elf.h:6:
-   In file included from arch/s390/include/asm/elf.h:168:
-   include/linux/compat.h:458:10: warning: array index 3 is past the end of the array (that has type 'compat_sigset_word[2]' (aka 'unsigned int[2]')) [-Warray-bounds]
-     458 |         case 2: v.sig[3] = (set->sig[1] >> 32); v.sig[2] = set->sig[1];
-         |                 ^     ~
-   include/linux/compat.h:130:2: note: array 'sig' declared here
-     130 |         compat_sigset_word      sig[_COMPAT_NSIG_WORDS];
-         |         ^
-   include/linux/compat.h:458:42: warning: array index 2 is past the end of the array (that has type 'compat_sigset_word[2]' (aka 'unsigned int[2]')) [-Warray-bounds]
-     458 |         case 2: v.sig[3] = (set->sig[1] >> 32); v.sig[2] = set->sig[1];
-         |                                                 ^     ~
-   include/linux/compat.h:130:2: note: array 'sig' declared here
-     130 |         compat_sigset_word      sig[_COMPAT_NSIG_WORDS];
-         |         ^
-   include/linux/compat.h:458:53: warning: array index 1 is past the end of the array (that has type 'const unsigned long[1]') [-Warray-bounds]
-     458 |         case 2: v.sig[3] = (set->sig[1] >> 32); v.sig[2] = set->sig[1];
-         |                                                            ^        ~
-   arch/s390/include/asm/signal.h:22:9: note: array 'sig' declared here
-      22 |         unsigned long sig[_NSIG_WORDS];
-         |         ^
->> drivers/most/most_cdev.c:449:2: warning: implicit conversion from 'unsigned long' to 'unsigned int' changes value from 18446744073709551615 to 4294967295 [-Wconstant-conversion]
-     449 |         INIT_KFIFO(c->fifo);
-         |         ^~~~~~~~~~~~~~~~~~~
-   include/linux/kfifo.h:135:69: note: expanded from macro 'INIT_KFIFO'
-     135 |         __kfifo->mask = __is_kfifo_ptr(__tmp) ? 0 : ARRAY_SIZE(__tmp->buf) - 1;\
-         |                       ~                             ~~~~~~~~~~~~~~~~~~~~~~~^~~
-   62 warnings and 1 error generated.
---
-         |                 ^     ~
-   include/linux/compat.h:130:2: note: array 'sig' declared here
-     130 |         compat_sigset_word      sig[_COMPAT_NSIG_WORDS];
-         |         ^
-   include/linux/compat.h:454:42: warning: array index 6 is past the end of the array (that has type 'compat_sigset_word[2]' (aka 'unsigned int[2]')) [-Warray-bounds]
-     454 |         case 4: v.sig[7] = (set->sig[3] >> 32); v.sig[6] = set->sig[3];
-         |                                                 ^     ~
-   include/linux/compat.h:130:2: note: array 'sig' declared here
-     130 |         compat_sigset_word      sig[_COMPAT_NSIG_WORDS];
-         |         ^
-   include/linux/compat.h:454:53: warning: array index 3 is past the end of the array (that has type 'const unsigned long[1]') [-Warray-bounds]
-     454 |         case 4: v.sig[7] = (set->sig[3] >> 32); v.sig[6] = set->sig[3];
-         |                                                            ^        ~
-   arch/s390/include/asm/signal.h:22:9: note: array 'sig' declared here
-      22 |         unsigned long sig[_NSIG_WORDS];
-         |         ^
-   In file included from drivers/tty/tty_port.c:8:
-   In file included from include/linux/tty.h:9:
-   In file included from include/linux/tty_driver.h:9:
-   In file included from include/linux/cdev.h:8:
-   In file included from include/linux/device.h:32:
-   In file included from include/linux/device/driver.h:21:
-   In file included from include/linux/module.h:19:
-   In file included from include/linux/elf.h:6:
-   In file included from arch/s390/include/asm/elf.h:168:
-   include/linux/compat.h:456:22: warning: array index 2 is past the end of the array (that has type 'const unsigned long[1]') [-Warray-bounds]
-     456 |         case 3: v.sig[5] = (set->sig[2] >> 32); v.sig[4] = set->sig[2];
-         |                             ^        ~
-   arch/s390/include/asm/signal.h:22:9: note: array 'sig' declared here
-      22 |         unsigned long sig[_NSIG_WORDS];
-         |         ^
-   In file included from drivers/tty/tty_port.c:8:
-   In file included from include/linux/tty.h:9:
-   In file included from include/linux/tty_driver.h:9:
-   In file included from include/linux/cdev.h:8:
-   In file included from include/linux/device.h:32:
-   In file included from include/linux/device/driver.h:21:
-   In file included from include/linux/module.h:19:
-   In file included from include/linux/elf.h:6:
-   In file included from arch/s390/include/asm/elf.h:168:
-   include/linux/compat.h:456:10: warning: array index 5 is past the end of the array (that has type 'compat_sigset_word[2]' (aka 'unsigned int[2]')) [-Warray-bounds]
-     456 |         case 3: v.sig[5] = (set->sig[2] >> 32); v.sig[4] = set->sig[2];
-         |                 ^     ~
-   include/linux/compat.h:130:2: note: array 'sig' declared here
-     130 |         compat_sigset_word      sig[_COMPAT_NSIG_WORDS];
-         |         ^
-   include/linux/compat.h:456:42: warning: array index 4 is past the end of the array (that has type 'compat_sigset_word[2]' (aka 'unsigned int[2]')) [-Warray-bounds]
-     456 |         case 3: v.sig[5] = (set->sig[2] >> 32); v.sig[4] = set->sig[2];
-         |                                                 ^     ~
-   include/linux/compat.h:130:2: note: array 'sig' declared here
-     130 |         compat_sigset_word      sig[_COMPAT_NSIG_WORDS];
-         |         ^
-   include/linux/compat.h:456:53: warning: array index 2 is past the end of the array (that has type 'const unsigned long[1]') [-Warray-bounds]
-     456 |         case 3: v.sig[5] = (set->sig[2] >> 32); v.sig[4] = set->sig[2];
-         |                                                            ^        ~
-   arch/s390/include/asm/signal.h:22:9: note: array 'sig' declared here
-      22 |         unsigned long sig[_NSIG_WORDS];
-         |         ^
-   In file included from drivers/tty/tty_port.c:8:
-   In file included from include/linux/tty.h:9:
-   In file included from include/linux/tty_driver.h:9:
-   In file included from include/linux/cdev.h:8:
-   In file included from include/linux/device.h:32:
-   In file included from include/linux/device/driver.h:21:
-   In file included from include/linux/module.h:19:
-   In file included from include/linux/elf.h:6:
-   In file included from arch/s390/include/asm/elf.h:168:
-   include/linux/compat.h:458:22: warning: array index 1 is past the end of the array (that has type 'const unsigned long[1]') [-Warray-bounds]
-     458 |         case 2: v.sig[3] = (set->sig[1] >> 32); v.sig[2] = set->sig[1];
-         |                             ^        ~
-   arch/s390/include/asm/signal.h:22:9: note: array 'sig' declared here
-      22 |         unsigned long sig[_NSIG_WORDS];
-         |         ^
-   In file included from drivers/tty/tty_port.c:8:
-   In file included from include/linux/tty.h:9:
-   In file included from include/linux/tty_driver.h:9:
-   In file included from include/linux/cdev.h:8:
-   In file included from include/linux/device.h:32:
-   In file included from include/linux/device/driver.h:21:
-   In file included from include/linux/module.h:19:
-   In file included from include/linux/elf.h:6:
-   In file included from arch/s390/include/asm/elf.h:168:
-   include/linux/compat.h:458:10: warning: array index 3 is past the end of the array (that has type 'compat_sigset_word[2]' (aka 'unsigned int[2]')) [-Warray-bounds]
-     458 |         case 2: v.sig[3] = (set->sig[1] >> 32); v.sig[2] = set->sig[1];
-         |                 ^     ~
-   include/linux/compat.h:130:2: note: array 'sig' declared here
-     130 |         compat_sigset_word      sig[_COMPAT_NSIG_WORDS];
-         |         ^
-   include/linux/compat.h:458:42: warning: array index 2 is past the end of the array (that has type 'compat_sigset_word[2]' (aka 'unsigned int[2]')) [-Warray-bounds]
-     458 |         case 2: v.sig[3] = (set->sig[1] >> 32); v.sig[2] = set->sig[1];
-         |                                                 ^     ~
-   include/linux/compat.h:130:2: note: array 'sig' declared here
-     130 |         compat_sigset_word      sig[_COMPAT_NSIG_WORDS];
-         |         ^
-   include/linux/compat.h:458:53: warning: array index 1 is past the end of the array (that has type 'const unsigned long[1]') [-Warray-bounds]
-     458 |         case 2: v.sig[3] = (set->sig[1] >> 32); v.sig[2] = set->sig[1];
-         |                                                            ^        ~
-   arch/s390/include/asm/signal.h:22:9: note: array 'sig' declared here
-      22 |         unsigned long sig[_NSIG_WORDS];
-         |         ^
->> drivers/tty/tty_port.c:266:2: warning: implicit conversion from 'unsigned long' to 'unsigned int' changes value from 18446744073709551615 to 4294967295 [-Wconstant-conversion]
-     266 |         INIT_KFIFO(port->xmit_fifo);
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/kfifo.h:135:69: note: expanded from macro 'INIT_KFIFO'
-     135 |         __kfifo->mask = __is_kfifo_ptr(__tmp) ? 0 : ARRAY_SIZE(__tmp->buf) - 1;\
-         |                       ~                             ~~~~~~~~~~~~~~~~~~~~~~~^~~
-   62 warnings and 1 error generated.
+and it would work: the compiler ignores the content whenever p is a
+compile time constant =C2=AF\_(=E3=83=84)_/=C2=AF
+
+Well, all this is really ugly. I will drop the inline function and
+send a v2 just with the s/__is_constexpr/__builtin_constant_p/g
+replacement.
 
 
-vim +449 drivers/most/most_cdev.c
-
-9bc79bbcd0c526 drivers/staging/most/aim-cdev/cdev.c Christian Gromm    2015-07-24  400  
-9bc79bbcd0c526 drivers/staging/most/aim-cdev/cdev.c Christian Gromm    2015-07-24  401  /**
-1fd923f38610a8 drivers/staging/most/cdev/cdev.c     Christian Gromm    2017-11-21  402   * comp_probe - probe function of the driver module
-9bc79bbcd0c526 drivers/staging/most/aim-cdev/cdev.c Christian Gromm    2015-07-24  403   * @iface: pointer to interface instance
-9bc79bbcd0c526 drivers/staging/most/aim-cdev/cdev.c Christian Gromm    2015-07-24  404   * @channel_id: channel index/ID
-9bc79bbcd0c526 drivers/staging/most/aim-cdev/cdev.c Christian Gromm    2015-07-24  405   * @cfg: pointer to actual channel configuration
-9bc79bbcd0c526 drivers/staging/most/aim-cdev/cdev.c Christian Gromm    2015-07-24  406   * @name: name of the device to be created
-fba3993e86cc44 drivers/most/most_cdev.c             Randy Dunlap       2023-01-12  407   * @args: pointer to array of component parameters (from configfs)
-9bc79bbcd0c526 drivers/staging/most/aim-cdev/cdev.c Christian Gromm    2015-07-24  408   *
-9bc79bbcd0c526 drivers/staging/most/aim-cdev/cdev.c Christian Gromm    2015-07-24  409   * This allocates a channel object and creates the device node in /dev
-9bc79bbcd0c526 drivers/staging/most/aim-cdev/cdev.c Christian Gromm    2015-07-24  410   *
-9bc79bbcd0c526 drivers/staging/most/aim-cdev/cdev.c Christian Gromm    2015-07-24  411   * Returns 0 on success or error code otherwise.
-9bc79bbcd0c526 drivers/staging/most/aim-cdev/cdev.c Christian Gromm    2015-07-24  412   */
-1fd923f38610a8 drivers/staging/most/cdev/cdev.c     Christian Gromm    2017-11-21  413  static int comp_probe(struct most_interface *iface, int channel_id,
-dfee92dd50464c drivers/staging/most/cdev/cdev.c     Christian Gromm    2019-04-03  414  		      struct most_channel_config *cfg, char *name, char *args)
-9bc79bbcd0c526 drivers/staging/most/aim-cdev/cdev.c Christian Gromm    2015-07-24  415  {
-ef0fbbbb9a6004 drivers/staging/most/cdev/cdev.c     Christian Gromm    2017-11-21  416  	struct comp_channel *c;
-9bc79bbcd0c526 drivers/staging/most/aim-cdev/cdev.c Christian Gromm    2015-07-24  417  	unsigned long cl_flags;
-9bc79bbcd0c526 drivers/staging/most/aim-cdev/cdev.c Christian Gromm    2015-07-24  418  	int retval;
-9bc79bbcd0c526 drivers/staging/most/aim-cdev/cdev.c Christian Gromm    2015-07-24  419  	int current_minor;
-9bc79bbcd0c526 drivers/staging/most/aim-cdev/cdev.c Christian Gromm    2015-07-24  420  
-e8e0f7fd7715de drivers/staging/most/cdev/cdev.c     Christian Gromm    2020-06-22  421  	if (!cfg || !name)
-9bc79bbcd0c526 drivers/staging/most/aim-cdev/cdev.c Christian Gromm    2015-07-24  422  		return -EINVAL;
-61fd971eddecdc drivers/staging/most/cdev/cdev.c     Christian Gromm    2020-06-22  423  
-d8b082e6c625cb drivers/staging/most/aim-cdev/cdev.c Christian Gromm    2015-12-22  424  	c = get_channel(iface, channel_id);
-d8b082e6c625cb drivers/staging/most/aim-cdev/cdev.c Christian Gromm    2015-12-22  425  	if (c)
-9bc79bbcd0c526 drivers/staging/most/aim-cdev/cdev.c Christian Gromm    2015-07-24  426  		return -EEXIST;
-9bc79bbcd0c526 drivers/staging/most/aim-cdev/cdev.c Christian Gromm    2015-07-24  427  
-b737a221702c7b drivers/most/most_cdev.c             Christophe JAILLET 2024-06-08  428  	current_minor = ida_alloc(&comp.minor_id, GFP_KERNEL);
-9bc79bbcd0c526 drivers/staging/most/aim-cdev/cdev.c Christian Gromm    2015-07-24  429  	if (current_minor < 0)
-9bc79bbcd0c526 drivers/staging/most/aim-cdev/cdev.c Christian Gromm    2015-07-24  430  		return current_minor;
-9bc79bbcd0c526 drivers/staging/most/aim-cdev/cdev.c Christian Gromm    2015-07-24  431  
-d8b082e6c625cb drivers/staging/most/aim-cdev/cdev.c Christian Gromm    2015-12-22  432  	c = kzalloc(sizeof(*c), GFP_KERNEL);
-d8b082e6c625cb drivers/staging/most/aim-cdev/cdev.c Christian Gromm    2015-12-22  433  	if (!c) {
-9bc79bbcd0c526 drivers/staging/most/aim-cdev/cdev.c Christian Gromm    2015-07-24  434  		retval = -ENOMEM;
-bddd3c2546e9c4 drivers/staging/most/cdev/cdev.c     Christian Gromm    2018-09-21  435  		goto err_remove_ida;
-9bc79bbcd0c526 drivers/staging/most/aim-cdev/cdev.c Christian Gromm    2015-07-24  436  	}
-9bc79bbcd0c526 drivers/staging/most/aim-cdev/cdev.c Christian Gromm    2015-07-24  437  
-c73d915dd293a4 drivers/staging/most/cdev/cdev.c     Christian Gromm    2017-11-21  438  	c->devno = MKDEV(comp.major, current_minor);
-d8b082e6c625cb drivers/staging/most/aim-cdev/cdev.c Christian Gromm    2015-12-22  439  	cdev_init(&c->cdev, &channel_fops);
-d8b082e6c625cb drivers/staging/most/aim-cdev/cdev.c Christian Gromm    2015-12-22  440  	c->cdev.owner = THIS_MODULE;
-5ae890780e1b4d drivers/staging/most/cdev/cdev.c     Colin Ian King     2019-02-02  441  	retval = cdev_add(&c->cdev, c->devno, 1);
-5ae890780e1b4d drivers/staging/most/cdev/cdev.c     Colin Ian King     2019-02-02  442  	if (retval < 0)
-5ae890780e1b4d drivers/staging/most/cdev/cdev.c     Colin Ian King     2019-02-02  443  		goto err_free_c;
-d8b082e6c625cb drivers/staging/most/aim-cdev/cdev.c Christian Gromm    2015-12-22  444  	c->iface = iface;
-d8b082e6c625cb drivers/staging/most/aim-cdev/cdev.c Christian Gromm    2015-12-22  445  	c->cfg = cfg;
-d8b082e6c625cb drivers/staging/most/aim-cdev/cdev.c Christian Gromm    2015-12-22  446  	c->channel_id = channel_id;
-b3c9f3c56c41cb drivers/staging/most/aim-cdev/cdev.c Christian Gromm    2015-12-22  447  	c->access_ref = 0;
-fa96b8ed9cc562 drivers/staging/most/aim-cdev/cdev.c Christian Gromm    2015-12-22  448  	spin_lock_init(&c->unlink);
-d8b082e6c625cb drivers/staging/most/aim-cdev/cdev.c Christian Gromm    2015-12-22 @449  	INIT_KFIFO(c->fifo);
-d8b082e6c625cb drivers/staging/most/aim-cdev/cdev.c Christian Gromm    2015-12-22  450  	retval = kfifo_alloc(&c->fifo, cfg->num_buffers, GFP_KERNEL);
-ebf256e36754fc drivers/staging/most/cdev/cdev.c     Keyur Patel        2019-07-14  451  	if (retval)
-bddd3c2546e9c4 drivers/staging/most/cdev/cdev.c     Christian Gromm    2018-09-21  452  		goto err_del_cdev_and_free_channel;
-d8b082e6c625cb drivers/staging/most/aim-cdev/cdev.c Christian Gromm    2015-12-22  453  	init_waitqueue_head(&c->wq);
-d8b082e6c625cb drivers/staging/most/aim-cdev/cdev.c Christian Gromm    2015-12-22  454  	mutex_init(&c->io_mutex);
-9bc79bbcd0c526 drivers/staging/most/aim-cdev/cdev.c Christian Gromm    2015-07-24  455  	spin_lock_irqsave(&ch_list_lock, cl_flags);
-d8b082e6c625cb drivers/staging/most/aim-cdev/cdev.c Christian Gromm    2015-12-22  456  	list_add_tail(&c->list, &channel_list);
-9bc79bbcd0c526 drivers/staging/most/aim-cdev/cdev.c Christian Gromm    2015-07-24  457  	spin_unlock_irqrestore(&ch_list_lock, cl_flags);
-c73d915dd293a4 drivers/staging/most/cdev/cdev.c     Christian Gromm    2017-11-21  458  	c->dev = device_create(comp.class, NULL, c->devno, NULL, "%s", name);
-9bc79bbcd0c526 drivers/staging/most/aim-cdev/cdev.c Christian Gromm    2015-07-24  459  
-ea39854712ba8a drivers/staging/most/aim-cdev/cdev.c Sudip Mukherjee    2016-02-08  460  	if (IS_ERR(c->dev)) {
-ea39854712ba8a drivers/staging/most/aim-cdev/cdev.c Sudip Mukherjee    2016-02-08  461  		retval = PTR_ERR(c->dev);
-bddd3c2546e9c4 drivers/staging/most/cdev/cdev.c     Christian Gromm    2018-09-21  462  		goto err_free_kfifo_and_del_list;
-9bc79bbcd0c526 drivers/staging/most/aim-cdev/cdev.c Christian Gromm    2015-07-24  463  	}
-d8b082e6c625cb drivers/staging/most/aim-cdev/cdev.c Christian Gromm    2015-12-22  464  	kobject_uevent(&c->dev->kobj, KOBJ_ADD);
-9bc79bbcd0c526 drivers/staging/most/aim-cdev/cdev.c Christian Gromm    2015-07-24  465  	return 0;
-9bc79bbcd0c526 drivers/staging/most/aim-cdev/cdev.c Christian Gromm    2015-07-24  466  
-bddd3c2546e9c4 drivers/staging/most/cdev/cdev.c     Christian Gromm    2018-09-21  467  err_free_kfifo_and_del_list:
-d8b082e6c625cb drivers/staging/most/aim-cdev/cdev.c Christian Gromm    2015-12-22  468  	kfifo_free(&c->fifo);
-d8b082e6c625cb drivers/staging/most/aim-cdev/cdev.c Christian Gromm    2015-12-22  469  	list_del(&c->list);
-bddd3c2546e9c4 drivers/staging/most/cdev/cdev.c     Christian Gromm    2018-09-21  470  err_del_cdev_and_free_channel:
-d8b082e6c625cb drivers/staging/most/aim-cdev/cdev.c Christian Gromm    2015-12-22  471  	cdev_del(&c->cdev);
-5ae890780e1b4d drivers/staging/most/cdev/cdev.c     Colin Ian King     2019-02-02  472  err_free_c:
-d8b082e6c625cb drivers/staging/most/aim-cdev/cdev.c Christian Gromm    2015-12-22  473  	kfree(c);
-bddd3c2546e9c4 drivers/staging/most/cdev/cdev.c     Christian Gromm    2018-09-21  474  err_remove_ida:
-b737a221702c7b drivers/most/most_cdev.c             Christophe JAILLET 2024-06-08  475  	ida_free(&comp.minor_id, current_minor);
-9bc79bbcd0c526 drivers/staging/most/aim-cdev/cdev.c Christian Gromm    2015-07-24  476  	return retval;
-9bc79bbcd0c526 drivers/staging/most/aim-cdev/cdev.c Christian Gromm    2015-07-24  477  }
-9bc79bbcd0c526 drivers/staging/most/aim-cdev/cdev.c Christian Gromm    2015-07-24  478  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Yours sincerely,
+Vincent Mailhol
