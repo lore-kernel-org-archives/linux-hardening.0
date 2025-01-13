@@ -1,48 +1,25 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70A0B1465AE;
-	Mon, 13 Jan 2025 03:40:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81C3A186A;
+	Mon, 13 Jan 2025 10:10:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736739605; cv=none; b=Rb7S4o/y1IZ/Fff/+rbAPoTMiCnJyEE/YFrXzSPNd72QdGxY66N2n/xA+dJqZwqnOoi+UGfk29ZO5KnMsAkQVIPFywKcK/4VcgRiNUvraDerdGGxVhvkq45H7a55zOIPV/agOX8anZqnQROVcUIwQas5nqAhxz4GAOrMcCgK/oU=
+	t=1736763045; cv=none; b=p7PUekJfwxc7OWp03Y6C4OiepVi7CuTBqzqiUIkvH6hGMk50uO2kiODTGGf8T1Rq1loOOzr/FgTU8c5VEf7iOp9E20kqGg2TNx/glrcvXevW5kylHdvLJEkjuX+oF7sDboSKLHL2UIN5WqAwxtagb2/7wNKX6F7Hh62Isn4Hsf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736739605; c=relaxed/simple;
-	bh=OkYu8QtfWeI2FUHB8uxRKxkCO8XUDTF2vmK5MmhwTfs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=p3sCPzZ22aSVpAZWKhhjNXZPy1NYeu0fW8UsGasOOnbrDNk1iRw85f9mFKnlV8H/YxM5v+4qhlFQ22dQnjc4t6+ObKToWDwqgXiq6DEKJi33fPE+f0HBPJ1dPHAvQeaqn73PzXs7iUCk/yZCnBYfq1u95yseKob9pNcGMzR2iBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Oaja9uwC; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Oaja9uwC"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50CLxcBR000968;
-	Mon, 13 Jan 2025 03:39:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	G41VudNhZOLNdv9BEzJMaOPngvyidLagxXgJb6Cu6BM=; b=Oaja9uwC+b9EKbRY
-	2iEJc8hd//Co9TapGM/Yb4CqenRw962hBRKmMapvSOykbtMm06rEgqZibfHxFt/e
-	kPXTt66qmqtukM0jh3BlZD5Gfoic4yvMhpe+kJ9XjsHKG7MIYaumwAeUMsxC4H6r
-	Pwg+C0E/8f5yK6tFJs+1iItfDiaVCXyFy70v3BtjK78B88/Y+btTUO1+NtvUpmPY
-	aH3XBy47GeLkVnapZzexKD2ikaQC9sUmLWn5/OOaYS9XEfezcRDif1lo76hMsbZj
-	N3xS6PEaj5PYMJ0w/OKqn9MOovuD/XtOdXXU22fKiPAQlPXNBG6O3oO0/peBqyST
-	mLOxTQ==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 443hkfk2f9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 13 Jan 2025 03:39:45 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 50D3di6v003653
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 13 Jan 2025 03:39:44 GMT
-Received: from [10.253.33.98] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sun, 12 Jan
- 2025 19:39:38 -0800
-Message-ID: <c67f4510-e71b-4211-8fe2-35dabfc7b44e@quicinc.com>
-Date: Mon, 13 Jan 2025 11:39:09 +0800
+	s=arc-20240116; t=1736763045; c=relaxed/simple;
+	bh=jqo4SwSptk7hKi0M8gQXHVZfAad1gALA0Zh70B3XpQw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Sr1f6Ao19FgmDd55kgEeAMisLDQfPFCNzofB8bFtHHTo2PCSYU09/ciQakBekySt+INsw84nDMqM7Y0tlh+l8qm3lcWbywDMyhQz5DiDAe2caBugx9Agxlp8cN/lT3pBkEe4PaE+Ui7gSCqbSvTOHvAMnPA9c/Nd9P47TVgxZes=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CF80D1424;
+	Mon, 13 Jan 2025 02:11:10 -0800 (PST)
+Received: from [10.57.94.36] (unknown [10.57.94.36])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1B2183F66E;
+	Mon, 13 Jan 2025 02:10:36 -0800 (PST)
+Message-ID: <83b57cc5-fe6f-483b-b7e3-8d6e356c914f@arm.com>
+Date: Mon, 13 Jan 2025 11:10:34 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -50,112 +27,67 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v2 12/14] net: ethernet: qualcomm: Initialize PPE
- L2 bridge settings
-To: Andrew Lunn <andrew@lunn.ch>, Luo Jie <quic_luoj@quicinc.com>
-CC: Andrew Lunn <andrew+netdev@lunn.ch>,
-        "David S. Miller"
-	<davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Suruchi Agarwal <quic_suruchia@quicinc.com>,
-        "Pavithra
- R" <quic_pavir@quicinc.com>,
-        Simon Horman <horms@kernel.org>, Jonathan Corbet
-	<corbet@lwn.net>,
-        Kees Cook <kees@kernel.org>,
-        "Gustavo A. R. Silva"
-	<gustavoars@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        <linux-arm-msm@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-doc@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-        <quic_kkumarcs@quicinc.com>, <quic_linchen@quicinc.com>,
-        <srinivas.kandagatla@linaro.org>, <bartosz.golaszewski@linaro.org>,
-        <john@phrozen.org>
-References: <20250108-qcom_ipq_ppe-v2-0-7394dbda7199@quicinc.com>
- <20250108-qcom_ipq_ppe-v2-12-7394dbda7199@quicinc.com>
- <4dbf1550-32e9-4cce-bf0c-8b92dbd49b50@lunn.ch>
-Content-Language: en-US
-From: Lei Wei <quic_leiwei@quicinc.com>
-In-Reply-To: <4dbf1550-32e9-4cce-bf0c-8b92dbd49b50@lunn.ch>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Subject: Re: [RFC PATCH v2 00/15] pkeys-based page table hardening
+To: Dave Hansen <dave.hansen@intel.com>, linux-hardening@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+ Mark Brown <broonie@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>, Jann Horn <jannh@google.com>,
+ Jeff Xu <jeffxu@chromium.org>, Joey Gouly <joey.gouly@arm.com>,
+ Kees Cook <kees@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+ Andy Lutomirski <luto@kernel.org>, Marc Zyngier <maz@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Pierre Langlois <pierre.langlois@arm.com>,
+ Quentin Perret <qperret@google.com>, "Mike Rapoport (IBM)"
+ <rppt@kernel.org>, Ryan Roberts <ryan.roberts@arm.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
+ Matthew Wilcox <willy@infradead.org>, Qi Zheng <zhengqi.arch@bytedance.com>,
+ linux-arm-kernel@lists.infradead.org, x86@kernel.org
+References: <20250108103250.3188419-1-kevin.brodsky@arm.com>
+ <dcc1800c-cf0a-4d88-bc88-982f0709b382@intel.com>
+Content-Language: en-GB
+From: Kevin Brodsky <kevin.brodsky@arm.com>
+In-Reply-To: <dcc1800c-cf0a-4d88-bc88-982f0709b382@intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: B5LmC5PjFOmfpkabMs1GkQGiUwhPzDJ0
-X-Proofpoint-ORIG-GUID: B5LmC5PjFOmfpkabMs1GkQGiUwhPzDJ0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- phishscore=0 mlxscore=0 adultscore=0 clxscore=1011 bulkscore=0
- mlxlogscore=999 impostorscore=0 priorityscore=1501 spamscore=0
- malwarescore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2411120000 definitions=main-2501130029
 
+On 09/01/2025 17:30, Dave Hansen wrote:
+> One of the sticker things in the x86 attempt to do the same thing was
+> context switching, both between normal tasks and in/out of exceptions
+> and interrupts.
+>
+> The easiest place this manifested for us was code chunk like this:
+>
+> 	kpkeys_set_level(KPKEYS_LVL_PGTABLES);
+> 	// modify page tables here
+> 	kpkeys_restore_pkey_reg();
+>
+> We had to make sure that we didn't get preempted and context switch over
+> to some other task that _wasn't_ doing page table manipulation while
+> page table writes were allowed.
+>
+> On x86, we had to basically start context-switching the kernel pkey
+> register the same way we do GPRs.
+>
+> How is SYS_POR_EL0 being context switched?
 
+I think this is pretty much the same situation with POR_EL1 on arm64. I
+mentioned on the cover letter that resetting POR_EL1 on exception entry
+is required (and not done yet), but in fact as you say it also needs to
+be context-switched per-thread. This does sound pretty similar to GPRs
+(unlike POR_EL0, which is switched in __switch_to() like the user TLS
+register for instance).
 
-On 1/9/2025 12:59 AM, Andrew Lunn wrote:
-> On Wed, Jan 08, 2025 at 09:47:19PM +0800, Luo Jie wrote:
->> From: Lei Wei <quic_leiwei@quicinc.com>
->>
->> Configure the default L2 bridge settings for the PPE ports to
->> enable L2 frame forwarding between CPU port and PPE Ethernet
->> ports.
-> 
-> It would be good to have an 'only' in there:
-> 
->> to _only_
->> enable L2 frame forwarding between CPU port and PPE Ethernet
->> ports
-> 
-> That makes it clear there is no port to port forwarding, the ports are
-> isolated.
-> 
+Is there a particular concern about that extra switching? I don't expect
+it to be a significant cost on arm64. In the vast majority of cases,
+POR_EL1 will remain set to its default value, meaning that the overhead
+is limited to reading POR_EL1, a load and a branch. The only situation
+where an expensive write to POR_EL1 is needed is an interrupt firing
+right in the middle of a page table setter - possible but pretty
+unlikely. Writing to POR_EL1 on exception return isn't really a concern
+either, as no additional barrier (ISB) is required in that case.
 
-Sure, I will add 'only' to make it clear.
+By the way thank your for mentioning the x86 attempt, I wasn't aware of
+it. I'll have a better look and make sure to Cc anyone involved in that
+work in future versions.
 
->> The per-port L2 bridge settings are initialized as follows:
->> For PPE CPU port, the PPE bridge TX is enabled and FDB learn is
->> disabled. For PPE physical port, the PPE bridge TX is disabled
->> and FDB learn is enabled by default and the L2 forward action
->> is initialized as forward to CPU port.
-> 
-> Why is learning needed on physical ports? In general, switches forward
-> unknown destination addresses to the CPU. Which is what you want when
-> the ports are isolated from each other. Everything goes to the
-> CPU. But maybe this switch does not work like this?
-> 
-
-L2 forwarding can be disabled in PPE in two ways:
-
-1.) Keep the learning enabled (which is the default HW setting) and
-configure the FDB-miss-action to redirect to CPU.
-
-This works because even if FDB learning is enabled, we need to represent
-the bridge and the physical ports using their 'virtual switch instance'
-(VSI) in the PPE HW, and create the 'port membership' for the bridge VSI
-(the list of slave ports), before FDB based forwarding can take place. 
-Since we do not yet support switchdev, these VSI are not created and 
-packets are always forwarded to CPU due to FDB miss.
-
-(or)
-
-2.) Explicitly disable learning either globally or on the ports.
-
-With method 1 we can achieve packet forwarding to CPU without explicitly
-disabling learning. When switchdev is enabled later, L2 forwarding can 
-be enabled as a natural extension on top of this configuration. So we 
-have chosen the first approach.
-
-> 	Andrew
-> 
-
+- Kevin
