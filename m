@@ -1,147 +1,138 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF5621CDFC1
-	for <linux-hardening@vger.kernel.org>; Tue, 14 Jan 2025 21:48:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 846F51CDFC1
+	for <linux-hardening@vger.kernel.org>; Tue, 14 Jan 2025 21:50:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736891332; cv=none; b=C/BF5Hyok+k6PWv1FN+u5piXeVib3AgitamCOrBxvEBrCQOCGK2bMy8N6Q6kM+YendN78G30zwOlebTp+lcWJw3oTglujJcvc4dakwYf3yKlqI3ogNjVYRbHAyhhT3c580gEYTTSn/C9s3cm4Xr67DrhVzSj+iFNvndOW+4ZMxQ=
+	t=1736891439; cv=none; b=UAocIMu5N8vq3ryu5rOk2vtSDJ2f7nizQSKno91W82LMpE2O6VplfVxOuu68DUfWETrlgZ61Dt19Scg1PNpnKy8Ib5YPrw2rhnxAKnl2Ya+LgvggrXQrbKseul/Tj/xAVZnEzhucRSr9FdXosVXW4phIgn7Nlmw/yChr1nW9vqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736891332; c=relaxed/simple;
-	bh=Qnfv3RXewSZryKcbeV9ntSt9VoSXcn2RU5Cczbey1Bs=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=EpNHd261b85N5Yp86PqKa2A4OW7Nkpxmd6oLG7AhesjMHYPZdoQek1t782cJ6WcXbviG9YbDXTXfTB2roFcpKUbVqArjiIXKRyNuoI0xSSor7WmCFhuAL91fdri9wadCrAtlZAk0hb9baDDk4/6Puz4xZ/y74RaOtK93i+dNwmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vHPDWtoz; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1736891439; c=relaxed/simple;
+	bh=o608bbBSXgBbckZm3C+nmGzItyQ406vPwgM2DFNXamk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mM1zfELdpupyOuMbxPQHI4B+cI1G1J9MtvVIKNkEBhC4x9Yov5MpnkFPVeI3Qw9+tlk1jaoz78gIz1pHywAHSD13UxUkfIKaqyirbKU9P0gu5R7QYSou9j+kYUDGVpnB/1oGa8sj6/T+3oaGMI3FOC0DoAgCr+cDxhauGqfUwQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=wJ4OBq6l; arc=none smtp.client-ip=91.218.175.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vHPDWtoz"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2f5538a2356so10422577a91.2
-        for <linux-hardening@vger.kernel.org>; Tue, 14 Jan 2025 13:48:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1736891330; x=1737496130; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=SY5ohLi34L7dYoduVlaYy23kjKtiA3foJ9V2Q6nj8Ew=;
-        b=vHPDWtoz15PHx2+owNqMUZS9HsFf+aBx5qlVGvpH7cKVBSFa/rY5zSqMhF5+GUltD+
-         CrU3Qbx8ceTmWrrEroY9VUPVD55b3A3lanUzvfNYAckLKCfjT1nXrC9jFNCn02KB4tNV
-         MWNpc9GkYPaQBEZEZx1utA1LwugytGYec8eHIWRCOxfLtzCTAenkwsND5zYvF0m4njMq
-         xlj/9pvtYnmX19nb7UWl4hYz25QO8X8fPvwNpo7J5rf+QoQLw5a43KuNvvX31LISYNtb
-         ORjcN0Jde7xCC2Ig15unDYwc9N1DkOrgSHJVxjUVYf7ft1GrbcZYZmHl/4L0WLYPea8o
-         K0qA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736891330; x=1737496130;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SY5ohLi34L7dYoduVlaYy23kjKtiA3foJ9V2Q6nj8Ew=;
-        b=bRDGn1C4l3qMaRBkTANCOuhhTJtGWWXadgY7oE3/1J7es4rM3XGma6UCGWvB/5vtkZ
-         FpfRsZW4MNII/EZxK753gr2Pda+dWZhJdi/npccRrdy3vK+t4XO0HpN1KuOIHU1g+aaT
-         6hWaJlcWe9jijdp2eSooe9DVlB5MQ0XL3dytA/kvwdVHdcNMSaQ3IED2H6T5FMY/8yt/
-         PD/Z9cfhERvCunTySN4ncmYPgEN5w/OOLvsrpNBEguKHQPtnGuKQt1vSwsOIJqNYZVlw
-         lYnwLgRL7KuPkQ9EZqhwuBxG5eqk5nD8mYfdFNKBzSuMDyFTj8JoReUObvRB9Y2CCM8s
-         z2kA==
-X-Forwarded-Encrypted: i=1; AJvYcCUMaRKrOFkL5H7XsV3DvJFvp8/2S4y2ZARr2MebO6jqROXTSecxVeacuTY7W7E31Tu23PM38KzGxg4+EhrT/nQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzuRLPGbDc/l8belNCwVyZTK0fnbfzFOZpUUgHCZNWAZ2wWcbPh
-	sfQb6HecMqZWw2xQNaPVjQEwWZtlajUaoNAaTc0YgN0qEoMQKngwKk6EdbITSBn15BfSbaCSz0P
-	n2g==
-X-Google-Smtp-Source: AGHT+IGwfpH2TIl0yoCx6tHXuYKAWJYGIodcKzr2p0TmFaGwbmX4878qRqYpxqFQD7ygsze3Eu4GllOh0sY=
-X-Received: from pjbtc14.prod.google.com ([2002:a17:90b:540e:b0:2f2:ea3f:34c3])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:d00b:b0:2ee:d63f:d8f
- with SMTP id 98e67ed59e1d1-2f548ebf53cmr37053651a91.13.1736891330040; Tue, 14
- Jan 2025 13:48:50 -0800 (PST)
-Date: Tue, 14 Jan 2025 13:48:48 -0800
-In-Reply-To: <Z4bTlZkqihaAyGb4@google.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="wJ4OBq6l"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1736891434;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=JbhykM6+EaaFeGUvuFELTlis3wZ07yx3+ZYkSCWCNVw=;
+	b=wJ4OBq6lgq8S3DwdJc24RBrVrMWwaDJAckagV0HpNSbpevi+D91cfYlRGyFo01Vu+naIqt
+	O4JKas+CWDCTjWglhoHFr1ZF5zqM9TZOU3YfONkyggBJP6Y4zqDeLnXaubA8hafh0JJ/O/
+	LUGVmhgIxcnczc01fAX3/ZsBHJVpvJQ=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [RESEND PATCH v2] params: Annotate struct module_param_attrs with __counted_by()
+Date: Tue, 14 Jan 2025 22:49:54 +0100
+Message-ID: <20250114214956.915982-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250114175143.81438-1-vschneid@redhat.com> <20250114175143.81438-26-vschneid@redhat.com>
- <Z4bTlZkqihaAyGb4@google.com>
-Message-ID: <Z4bbwE8yfg349gBx@google.com>
-Subject: Re: [PATCH v4 25/30] context_tracking,x86: Defer kernel text patching IPIs
-From: Sean Christopherson <seanjc@google.com>
-To: Valentin Schneider <vschneid@redhat.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org, 
-	virtualization@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org, 
-	linux-perf-users@vger.kernel.org, xen-devel@lists.xenproject.org, 
-	kvm@vger.kernel.org, linux-arch@vger.kernel.org, rcu@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-mm@kvack.org, 
-	linux-kselftest@vger.kernel.org, bpf@vger.kernel.org, 
-	bcm-kernel-feedback-list@broadcom.com, Peter Zijlstra <peterz@infradead.org>, 
-	Nicolas Saenz Julienne <nsaenzju@redhat.com>, Juergen Gross <jgross@suse.com>, 
-	Ajay Kaher <ajay.kaher@broadcom.com>, Alexey Makhalov <alexey.amakhalov@broadcom.com>, 
-	Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Frederic Weisbecker <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, 
-	Jason Baron <jbaron@akamai.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Ard Biesheuvel <ardb@kernel.org>, Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, 
-	Joel Fernandes <joel@joelfernandes.org>, Josh Triplett <josh@joshtriplett.org>, 
-	Boqun Feng <boqun.feng@gmail.com>, Uladzislau Rezki <urezki@gmail.com>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>, 
-	Zqiang <qiang.zhang1211@gmail.com>, Juri Lelli <juri.lelli@redhat.com>, 
-	Clark Williams <williams@redhat.com>, Yair Podemsky <ypodemsk@redhat.com>, 
-	Tomas Glozar <tglozar@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Ben Segall <bsegall@google.com>, 
-	Mel Gorman <mgorman@suse.de>, Kees Cook <kees@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Christoph Hellwig <hch@infradead.org>, 
-	Shuah Khan <shuah@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	"Mike Rapoport (Microsoft)" <rppt@kernel.org>, Samuel Holland <samuel.holland@sifive.com>, Rong Xu <xur@google.com>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, Yosry Ahmed <yosryahmed@google.com>, 
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, 
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Jinghao Jia <jinghao7@illinois.edu>, 
-	Luis Chamberlain <mcgrof@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, 
-	Tiezhu Yang <yangtiezhu@loongson.cn>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, Jan 14, 2025, Sean Christopherson wrote:
-> On Tue, Jan 14, 2025, Valentin Schneider wrote:
-> > +/**
-> > + * is_kernel_noinstr_text - checks if the pointer address is located in the
-> > + *                    .noinstr section
-> > + *
-> > + * @addr: address to check
-> > + *
-> > + * Returns: true if the address is located in .noinstr, false otherwise.
-> > + */
-> > +static inline bool is_kernel_noinstr_text(unsigned long addr)
-> > +{
-> > +	return addr >= (unsigned long)__noinstr_text_start &&
-> > +	       addr < (unsigned long)__noinstr_text_end;
-> > +}
-> 
-> This doesn't do the right thing for modules, which matters because KVM can be
-> built as a module on x86, and because context tracking understands transitions
-> to GUEST mode, i.e. CPUs that are running in a KVM guest will be treated as not
-> being in the kernel, and thus will have IPIs deferred.  If KVM uses a static key
-> or branch between guest_state_enter_irqoff() and guest_state_exit_irqoff(), the
-> patching code won't wait for CPUs to exit guest mode, i.e. KVM could theoretically
-> use the wrong static path.
-> 
-> I don't expect this to ever cause problems in practice, because patching code in
-> KVM's VM-Enter/VM-Exit path that has *functional* implications, while CPUs are
-> actively running guest code, would be all kinds of crazy.  But I do think we
-> should plug the hole.
-> 
-> If this issue is unique to KVM, i.e. is not a generic problem for all modules (I
-> assume module code generally isn't allowed in the entry path, even via NMI?), one
-> idea would be to let KVM register its noinstr section for text poking.
+Add the __counted_by compiler attribute to the flexible array member
+attrs to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
+CONFIG_FORTIFY_SOURCE.
 
-Another idea would be to track which keys/branches are tagged noinstr, i.e. generate
-the information at compile time instead of doing lookups at runtime.  The biggest
-downside I can think of is that it would require plumbing in the information to
-text_poke_bp_batch().
+Increment num before adding a new param_attribute to the attrs array and
+adjust the array index accordingly. Increment num immediately after the
+first reallocation such that the reallocation for the NULL terminator
+only needs to add 1 (instead of 2) to mk->mp->num.
+
+Use struct_size() instead of manually calculating the size for the
+reallocation.
+
+Use krealloc_array() for the additional NULL terminator.
+
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+---
+Changes in v2:
+- Use krealloc_array() as suggested by Andy Shevchenko
+- Link to v1: https://lore.kernel.org/r/20240823123300.37574-1-thorsten.blum@toblux.com/
+---
+ kernel/params.c | 29 +++++++++++++----------------
+ 1 file changed, 13 insertions(+), 16 deletions(-)
+
+diff --git a/kernel/params.c b/kernel/params.c
+index 2e447f8ae183..5f6643676697 100644
+--- a/kernel/params.c
++++ b/kernel/params.c
+@@ -551,7 +551,7 @@ struct module_param_attrs
+ {
+ 	unsigned int num;
+ 	struct attribute_group grp;
+-	struct param_attribute attrs[];
++	struct param_attribute attrs[] __counted_by(num);
+ };
+ 
+ #ifdef CONFIG_SYSFS
+@@ -651,35 +651,32 @@ static __modinit int add_sysfs_param(struct module_kobject *mk,
+ 	}
+ 
+ 	/* Enlarge allocations. */
+-	new_mp = krealloc(mk->mp,
+-			  sizeof(*mk->mp) +
+-			  sizeof(mk->mp->attrs[0]) * (mk->mp->num + 1),
++	new_mp = krealloc(mk->mp, struct_size(mk->mp, attrs, mk->mp->num + 1),
+ 			  GFP_KERNEL);
+ 	if (!new_mp)
+ 		return -ENOMEM;
+ 	mk->mp = new_mp;
++	mk->mp->num++;
+ 
+ 	/* Extra pointer for NULL terminator */
+-	new_attrs = krealloc(mk->mp->grp.attrs,
+-			     sizeof(mk->mp->grp.attrs[0]) * (mk->mp->num + 2),
+-			     GFP_KERNEL);
++	new_attrs = krealloc_array(mk->mp->grp.attrs, mk->mp->num + 1,
++				   sizeof(mk->mp->grp.attrs[0]), GFP_KERNEL);
+ 	if (!new_attrs)
+ 		return -ENOMEM;
+ 	mk->mp->grp.attrs = new_attrs;
+ 
+ 	/* Tack new one on the end. */
+-	memset(&mk->mp->attrs[mk->mp->num], 0, sizeof(mk->mp->attrs[0]));
+-	sysfs_attr_init(&mk->mp->attrs[mk->mp->num].mattr.attr);
+-	mk->mp->attrs[mk->mp->num].param = kp;
+-	mk->mp->attrs[mk->mp->num].mattr.show = param_attr_show;
++	memset(&mk->mp->attrs[mk->mp->num - 1], 0, sizeof(mk->mp->attrs[0]));
++	sysfs_attr_init(&mk->mp->attrs[mk->mp->num - 1].mattr.attr);
++	mk->mp->attrs[mk->mp->num - 1].param = kp;
++	mk->mp->attrs[mk->mp->num - 1].mattr.show = param_attr_show;
+ 	/* Do not allow runtime DAC changes to make param writable. */
+ 	if ((kp->perm & (S_IWUSR | S_IWGRP | S_IWOTH)) != 0)
+-		mk->mp->attrs[mk->mp->num].mattr.store = param_attr_store;
++		mk->mp->attrs[mk->mp->num - 1].mattr.store = param_attr_store;
+ 	else
+-		mk->mp->attrs[mk->mp->num].mattr.store = NULL;
+-	mk->mp->attrs[mk->mp->num].mattr.attr.name = (char *)name;
+-	mk->mp->attrs[mk->mp->num].mattr.attr.mode = kp->perm;
+-	mk->mp->num++;
++		mk->mp->attrs[mk->mp->num - 1].mattr.store = NULL;
++	mk->mp->attrs[mk->mp->num - 1].mattr.attr.name = (char *)name;
++	mk->mp->attrs[mk->mp->num - 1].mattr.attr.mode = kp->perm;
+ 
+ 	/* Fix up all the pointers, since krealloc can move us */
+ 	for (i = 0; i < mk->mp->num; i++)
+-- 
+2.47.1
+
