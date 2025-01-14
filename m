@@ -1,138 +1,167 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62A077E105;
-	Tue, 14 Jan 2025 14:36:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BFD9232451;
+	Tue, 14 Jan 2025 16:03:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736865367; cv=none; b=VEJY6T9fsP0xclotgQ4gE/ZdrQ4jsuuLiQkJxekWd4Mc0ykzrzuJjXDBIoHk/C3DDY/bxaS+KIU2PgoJJiLjAW3WULSD4V3/RVCCzHAFteIqHQy8WHh6pmnKD0LXCg/srAFq0kKVP1BcEo2rplhYaDoopRmDsNja0JQ8PoSQKRo=
+	t=1736870601; cv=none; b=brsF3Qi7srzwFQDH9pZdpPeE1HhugDrsJ+uhd/odWNcnnB8/Q+1NmByjwaTsRV1pqPdXYf29ZQuBDMR6sUrBXhwEqi9vAry/eQW2nSIxoZPdE07YbpUtBD1w6LpM62R3fMM6mcQwiJnNO6v/6eeLnq2KtxI5Kn7a717Badrrqmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736865367; c=relaxed/simple;
-	bh=O+FVCGaYLGH4K7GTseci5UKWMtc95bitnPOamY441ig=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AKHOnQjJmcpLaV/hrfCona7coFC+6aFix+BTCoRXGsCIxXD+p+m62eO4GPex9m/Z5dH8zcFeUWtGN2O26/TqUC5zJPtAVWzlFN1BQMP11uUNJ1f6XaX7pk9uKPlhDEC/L+VOsujTOCDtP3ZRLm57CkyffCevp//NovYlRgnl7DE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DOCFD1uF; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1736870601; c=relaxed/simple;
+	bh=QHLTitPy6r6GtpcJpsPME6nWx9+dH1gZdEw1vosaeJg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DmYcCu/nVnCtzoy4pgaSARanB3ZKhVCtrSPMunD5jc7OeADHxxqmlvTq/I1vJ/rZAIJaoBpAS3afkwdrWIRRr0uY4OmrvhSA6fyRLRpQhL4yMxR5/7/ONdGZ1P/588TrMuiziwt3CuU8IQgnPBuw/QzMtckCkdLY/prjjaRAijM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HT8uhiA4; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DOCFD1uF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1736865365; x=1768401365;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=O+FVCGaYLGH4K7GTseci5UKWMtc95bitnPOamY441ig=;
-  b=DOCFD1uFc21WRvngy0D+6C/x8GBohFjUvk6UvgllHh7f8svFhDeboDjb
-   snmw6cMUgrRrwSCBLeMnzovF24VSqzzkxcrSlma7vYInwY3koIwy3RrYZ
-   Iu2WseFuEoShx84wri6Q23upWPoWEtg3D8dAszfA7ATGHH/UFlBwtuYe5
-   ox4fW7kUg1giu/RYRPbGrMO533V4BZ2+FWM6UnRb97UmFvV0llnNto7by
-   owVUyYFeryrsmU0xdtrHyQVNjNq99VcORgkitzQnHzsaKdM6mPInlMjPy
-   l3XINB2kBBC6q59EVEfutx7vrMI3gdvUAUXqX9Wg9z/tnaBDiY+pMTD9w
-   Q==;
-X-CSE-ConnectionGUID: wZseXWBAToC85bJfd3hCNg==
-X-CSE-MsgGUID: JB4znTfvR1SF72eO3MlaVw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="37275554"
-X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="37275554"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2025 06:36:05 -0800
-X-CSE-ConnectionGUID: HKwes1AZRB+LkkJc1cJGSw==
-X-CSE-MsgGUID: lOFDQY+YTxmS78LMnAMOkA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="128068671"
-Received: from unknown (HELO smile.fi.intel.com) ([10.237.72.154])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2025 06:36:01 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tXi1O-00000000s7c-15Tm;
-	Tue, 14 Jan 2025 16:35:58 +0200
-Date: Tue, 14 Jan 2025 16:35:57 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Greg KH <gregkh@linuxfoundation.org>, Kees Cook <kees@kernel.org>,
-	Petr Mladek <pmladek@suse.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [DISCUSSION] vsprintf: the current state of restricted pointers
- (%pK)
-Message-ID: <Z4Z2TW_HaANvT4VH@smile.fi.intel.com>
-References: <20250113171731-dc10e3c1-da64-4af0-b767-7c7070468023@linutronix.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HT8uhiA4"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2161d4b820bso8560845ad.1;
+        Tue, 14 Jan 2025 08:03:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1736870599; x=1737475399; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=du0ol062NoMGm23MxITUchO9/Z8lzAy0FNSBC2ZWwrc=;
+        b=HT8uhiA44Up56fxqogz9FGs78SxotGC1VtxysDNoD89lEWcOBLgHzI/k/j/pmNGqGf
+         3KWGFqVHnLy/nZeyWRYIeuSjepGEcJItvJ+uDncs+y6Vld9VWcVbJEsk1e60iYJvhzRs
+         W6ZxK3tr+PSCzc1JZyZyTjZssd/AvoHzBug8luAwq+x6TQaKyVicxyxrfO9WxWd4KnGT
+         d5oFEYv0SA2bjezCl08x0C1+ycuXETsZ5ErALHStEPHDPbljXQq5yA9dOzHqQ5R9NzxE
+         9XuTepMsa4+canS62lW3DI/tDb7ECrRLx81CShwTbwhlMG6HiWwyO+Hb6sFj98enbI1I
+         7d2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736870599; x=1737475399;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=du0ol062NoMGm23MxITUchO9/Z8lzAy0FNSBC2ZWwrc=;
+        b=N61wTxXTCUK/sGGxr0dof9sZQarMHxoqR8CWZ11RdAubhOl1EpN70aawqoPobUdFzM
+         BaYuEZ3fAn4VqQvbv2q2Id9uwUVlWw7d34GpY/9rPj7g0ZzjtGNgkPUPeaSH8jULQXaR
+         UBsc7OcFqOOb3/y/kOalKKC07susFIOdOEodJYATSpIIswDQpLKQcBfWjEtKdBB6wsPw
+         o9k9m6KnDEimwIaYe1T3itWyq2CnFD4n/cVlMrce8ZJBJUaO2KI/0PIDgiLsKIc14V8E
+         NWZIuHMk60nGcMKp1o+kD9wusXIIga4fQTZODy82f/AdkgIju0S9oAR2pqlCffqQBMTo
+         BDUw==
+X-Forwarded-Encrypted: i=1; AJvYcCUC/0UADuFsdYqGW3XHodCkulToC0LAqeUjpvrJs1cg8a4VB4DrUErLm5kTV532Bro6+0efYS43rxkRU5Each0=@vger.kernel.org, AJvYcCVvHPVxPVt7aMaF5zZ+xB4pKXymuNLnTUKcH6JLrUjMW5ENE/sh2z21VlWDR7RzR+wAcI5x+/wgfU55lAjg@vger.kernel.org
+X-Gm-Message-State: AOJu0YwBZT3uZAJN8HtSERz/kPZZ7jpY16Z9uD0m39ui4izzJPAD3Ezr
+	EqOo4eTP+qQaJLFqgox/p1r7NHRloHRKN3PBLmJKfE7L4Hj6Wnk2
+X-Gm-Gg: ASbGncvWdl1SbpJzxieNIaJ9rrw20Uu7MOLClyt5VTQlaVgPDxbWk7HgDTC94eru4mp
+	Q8dl0AlP4+U5soR39Y1/hCotcRFhX8jgBvHxkqqx1KzvXJDsOhAx/jHCztd2mOyrPl4/0mEIaeC
+	hEVpsSYjwK12YJPBwVihhnIhZAimcuWCO+SFWFgynSXBADAHahbBnKMgq0OhowENWtWKBFxeozl
+	6ttqx5olxCJoKAXDtr8GDupR3adyqA+J1M10LBPGPybLkr+s38IZVJS+IxZvsJIt3iKUpjRc8d1
+	3UhOXavp9BHcFbFwozvOOGStPSQ+PA==
+X-Google-Smtp-Source: AGHT+IFIOqLbMaopTmPlhxaTfsRdloworkDKFg5KO8mD3qNF/JRkdBzwNu+zzRndsQYM9E1nan5Ctw==
+X-Received: by 2002:a17:902:f60e:b0:216:42fd:79d8 with SMTP id d9443c01a7336-21a83fd373emr154515295ad.12.1736870599289;
+        Tue, 14 Jan 2025 08:03:19 -0800 (PST)
+Received: from ?IPV6:2402:e280:214c:86:4de:6c26:6a11:901e? ([2402:e280:214c:86:4de:6c26:6a11:901e])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21a9f10f4d7sm68299575ad.10.2025.01.14.08.03.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Jan 2025 08:03:19 -0800 (PST)
+Message-ID: <58751174-1dc4-4467-aed3-e387261dba78@gmail.com>
+Date: Tue, 14 Jan 2025 21:33:16 +0530
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250113171731-dc10e3c1-da64-4af0-b767-7c7070468023@linutronix.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 linux-next 1/2] lib/string_choices: Rearrange functions
+ in sorted order
+To: Larysa Zaremba <larysa.zaremba@intel.com>
+Cc: Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>,
+ linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Andy Shevchenko <andy.shevchenko@gmail.com>
+References: <20241119021719.7659-1-prosunofficial@gmail.com>
+ <20241119021719.7659-2-prosunofficial@gmail.com>
+ <Z4ZZroWX80eQGMAT@lzaremba-mobl.ger.corp.intel.com>
+Content-Language: en-US
+From: R Sundar <prosunofficial@gmail.com>
+In-Reply-To: <Z4ZZroWX80eQGMAT@lzaremba-mobl.ger.corp.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jan 13, 2025 at 05:46:44PM +0100, Thomas Weißschuh wrote:
-> Hi everybody,
+On 14/01/25 18:03, Larysa Zaremba wrote:
+> On Tue, Nov 19, 2024 at 07:47:18AM +0530, R Sundar wrote:
+>> Rearrange misplaced functions in sorted order.
+>>
+>> Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+>> Signed-off-by: R Sundar <prosunofficial@gmail.com>
 > 
-> as you know, leaking raw kernel pointers to the user is problematic as
-> they can be used to break KASLR.
-> Therefore back in 2011 the %pK format specifier was added [0], printing
-> certain pointers zeroed out or raw depending on the usage context.
-> Then in 2017 even the default %p format was changed to hash the pointers [1].
+> Reviewed-by: Larysa Zaremba <larysa.zaremba@intel.com>
 > 
-> Both mechanisms are similar in their intention but have different,
-> cross-interacting effects and configuration knobs.
-> The end result is not always obvious. For example:
-> * "no_hash_pointers" does not work for %pK if kernel.kptr_restrict>=1
-> * If kernel.kptr_restrict=1, "restricted" pointers are effectively
->   less restricted than "normal" pointers.
-> * For other values of kernel.kptr_restrict %p and %pK have the same
->   security properties, but still different string representations.
+> This is a much-needed patch.
 > 
-> Additionally the current usage of %pK is incorrect in many cases.
-> As %pK relies on the current task context for its permission check, it
-> was only ever meant to be used from procfs/sysfs/debugfs handlers [2].
-> In reality many callers use it through printk(), leaking addresses
-> into dmesg. While restricted_pointer() tries to detect some of such
-> situations at runtime, this check is not and can not be always complete.
+> R Sundar,
+> Can I pick it into my series in case it will not be accepted in the nearest
+> future? (I do not promise this, but there is a chance)
 > 
-> File handlers which could use %pK correctly today, often use
-> kallsyms_show_value() instead. This is similar, but checks explicitly
-> against the credentials from an opened file instead of the implicit task
-> credentials. This behavior was the goal for %pK all along [3].
+Hi,
 
-> Is it time to inspect the users of %pK and migrate them to either
-> %p/%px, kallsyms_show_value() or some similar new API?
-> Then alias %pK to %p, maybe removing it at some point.
+Yes, Please.
 
-To me this paragraph sounds like a good plan, which I agree on!
+Thanks.
 
-> A different, but slightly related issue occurs with PREEMPT_RT.
-> Calling printk("%pK") while holding a raw spinlock will trigger an
-> invalid wait context and latency spikes if an LSM using sleeping
-> spinlocks is enabled.
-> As printk() should be callable from any context this is an issue.
-> Removing the implicit group check would also avoid this.
+Best Regards,
+Sundar
 
-> [0] 455cd5ab305c ("kptr_restrict for hiding kernel pointers from unprivileged users"),
-> [1] ad67b74d2469 ("printk: hash addresses printed with %p")
-> [2] Documentation/core-api/printk-formats.rst:
-> 	This modifier is *only* intended when producing content of a file read by
-> 	userspace from e.g. procfs or sysfs, not for dmesg. Please refer to the
-> 	section about %p above for discussion about how to manage hashing pointers
-> 	in printk().
-> [3] Documentation/admin-guide/sysctl/kernel.rst:
-> 	"The correct long-term solution is to do the permission checks at open() time."
-> [4] https://lore.kernel.org/lkml/20241217142032.55793-1-acarmina@redhat.com/
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+>> ---
+>>   include/linux/string_choices.h | 24 ++++++++++++------------
+>>   1 file changed, 12 insertions(+), 12 deletions(-)
+>>
+>> diff --git a/include/linux/string_choices.h b/include/linux/string_choices.h
+>> index 120ca0f28e95..f3ba4f52ff26 100644
+>> --- a/include/linux/string_choices.h
+>> +++ b/include/linux/string_choices.h
+>> @@ -41,23 +41,23 @@ static inline const char *str_high_low(bool v)
+>>   }
+>>   #define str_low_high(v)		str_high_low(!(v))
+>>   
+>> -static inline const char *str_read_write(bool v)
+>> -{
+>> -	return v ? "read" : "write";
+>> -}
+>> -#define str_write_read(v)		str_read_write(!(v))
+>> -
+>>   static inline const char *str_on_off(bool v)
+>>   {
+>>   	return v ? "on" : "off";
+>>   }
+>>   #define str_off_on(v)		str_on_off(!(v))
+>>   
+>> -static inline const char *str_yes_no(bool v)
+>> +static inline const char *str_read_write(bool v)
+>>   {
+>> -	return v ? "yes" : "no";
+>> +	return v ? "read" : "write";
+>>   }
+>> -#define str_no_yes(v)		str_yes_no(!(v))
+>> +#define str_write_read(v)		str_read_write(!(v))
+>> +
+>> +static inline const char *str_true_false(bool v)
+>> +{
+>> +	return v ? "true" : "false";
+>> +}
+>> +#define str_false_true(v)		str_true_false(!(v))
+>>   
+>>   static inline const char *str_up_down(bool v)
+>>   {
+>> @@ -65,11 +65,11 @@ static inline const char *str_up_down(bool v)
+>>   }
+>>   #define str_down_up(v)		str_up_down(!(v))
+>>   
+>> -static inline const char *str_true_false(bool v)
+>> +static inline const char *str_yes_no(bool v)
+>>   {
+>> -	return v ? "true" : "false";
+>> +	return v ? "yes" : "no";
+>>   }
+>> -#define str_false_true(v)		str_true_false(!(v))
+>> +#define str_no_yes(v)		str_yes_no(!(v))
+>>   
+>>   /**
+>>    * str_plural - Return the simple pluralization based on English counts
+>> -- 
+>> 2.34.1
+>>
 
