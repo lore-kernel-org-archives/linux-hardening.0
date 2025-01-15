@@ -1,138 +1,432 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2041.outbound.protection.outlook.com [40.107.243.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D07E71E7C05
-	for <linux-hardening@vger.kernel.org>; Wed, 15 Jan 2025 08:46:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736930776; cv=none; b=SYt5wNOihppBZPAe7NmUAJQDB41Lc7VfQ96smnWbTxHPy9s2tu5v7A9tmAyvtXKIe300y0oaSEL7vQ3oHT+5GkZJE3Eb7RDlA5vqiiVwY3zR5b2UxaOyNOL8EQvcfrx0lnAqHsTkaHiPMvi1x6zrjsPs90L2ZL8ly/fgWgFOBmw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736930776; c=relaxed/simple;
-	bh=Up7sdHdULndNV3wa1eoRT8YiiUCWqExy7Bh/qkpr2c8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uOIxPbd+ukU0/1eMGJhhyA5ctkd7VDMozl+z24e1KyohKjag0eVBkZfTiOzfa/8Shxq03z804oOmLhP79E7p4qYbismz9yN0GDMH3qLt7qJT+lEL4zXuqdateB/xEgyyI54kGJ8dbnlbkn1Ptc9kjYg/Yf0Q/BvyzHnbRNJoqR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=bOHsbztT; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C09A724A7E0;
+	Wed, 15 Jan 2025 13:55:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.41
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1736949351; cv=fail; b=hYJ7bW7ix47Pvd3xf+HTuA2kRgsBtKZq+988ZLROFuH12lzMqC21CaPotCdRHgyMxaAD7+lyhwgar1c8nitGymS3GM4W/vXw2MmT6Z9kOuAO6TA4PQRgPFIRycShRVXpWF8d5gyBOszmXElcPoDWvx7yOkXBWspz963xzu9jy2o=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1736949351; c=relaxed/simple;
+	bh=HoQ9ZfgM8u2ObBJVuTeVjzMjhDHZMcPgH4AB0/oBeUQ=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=elnMg0K3gQgre9rs58aa4yciXWYEefn57IxVWGUUxLILCKvRw8YW/0oIsAm8g+gCyGQsH51KbWpU7M7pegEHk5JCeFKQ3pgWV+6EvGjGh7PXSwXSc+5ljMedPtXi1+4UBcHfwoa96nE9YvjAcHMk5hrsi8+Xl/5P1NF0VboR+wU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=DZ18YJwh; arc=fail smtp.client-ip=40.107.243.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="bOHsbztT"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3862f32a33eso2760263f8f.3
-        for <linux-hardening@vger.kernel.org>; Wed, 15 Jan 2025 00:46:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1736930772; x=1737535572; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=vy1VNzBTuZPf0pEoPCF5h9VsVPv33S9oELOOuaVNs5A=;
-        b=bOHsbztTXX3bOtoRsK65PoBtONwCWoCzv1qPDHiAsvNAiX1uWXWhf8Wl7mbKxpDBZ0
-         G/mKF7xdqox4aLdAQ+b09BprSyvVjTvJa1/3uHbfcvhArTXf0gmkGq3LKyHOcJ+qKqNU
-         mTsSn2Admoanm7e+rR5F8YO4ZAD6gMY6SVN5J0WfymYbwA5EAWPqA/ktcHgDK94KThEO
-         7P9+moxm0fJUILYD98JmvLRlwQoaZCHtQbmkp9jbjEbXtU8pJuytNwYRUphjaYCv5gZv
-         8BN3/gSVmIgAOx8natmTKC0FiSQ0iMswJ5I2Gl+e01TALHORlR+GKv0OX0fFPjjV4334
-         PLiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736930772; x=1737535572;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vy1VNzBTuZPf0pEoPCF5h9VsVPv33S9oELOOuaVNs5A=;
-        b=UCsKYsEw+WtS4/YETQFhtpxUnLHDjNxn23UziopQplZKBHuapLrFRkvEt4xRQxOJLF
-         nvI7KU5SeqYJdNHYYBCuS6ezCIkH+KmjFh44GlpBJUXfGgWOpD11jRolhBmFXpzLwCaK
-         8YSmMPhEObhh651ogCQzsUoV8X6a5tc4PPF9KqEKTleTI7Kg/dHzIU8LMD9YKSeAe4dl
-         zHhQPCm+w2RAUQqJFLMXPsWiNl5O/M66jWu9sitQgikHW39ym+WpsIM0D/Va812iL8K0
-         59NI43CGjyOCPzsOUUswFCIrJ6+DjxAzyFGoSg8nJkfPVux7IJOs6sns4MBrWDG5CB/y
-         v2ig==
-X-Forwarded-Encrypted: i=1; AJvYcCWQBRGnAv+Q7/dE1OAbrZOvjuTIFwejoj4ClI9lPYmwGdp1zmgM1Un+FzD0J5eqDqx7uOY9jSD0rfif9yqfi+Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzvWXAnQeIgpNj/Z1gMuSLlBdnC7RnntKOskhkb4pi3zLukOurP
-	wA3FMd2ZE4rfoFdZJVG3TE0I+Sff0rDrVhtpFah44Jbd01pkQqrn929lVk0jmoI=
-X-Gm-Gg: ASbGnculgTLRswI/Adnmd5l4P/3TIdSPsGvzXjGtNmjfS06zU2MBmKfcTuLtk2/RNI1
-	QVoCEjRXqhR7d/NGKBvgz9O94RVtYwX0TsARpAAjiIYuKLaimitQeGzrScK8Tnp7KdKXMIeE5aX
-	gjKSPaj33fhJlTyrgm2Cjep3K4KRW2wnSRxGAIeRG1ahrK6Jb6L1CX3KXsqqOE4vrIhtHQiW2oM
-	DkjO6tjlWqlOAkMa0kjwAeUZ4qcf6OX78ZTFjK2FL8ffVCe06rcNEedRg==
-X-Google-Smtp-Source: AGHT+IFME8CbH/ZGTpWmcIC+L99hUYVgtrEwwgCc87ctbLiyealQR1Pe87aBz94hev6yzMucT7Nqsw==
-X-Received: by 2002:a05:6000:1566:b0:385:f1f2:13f1 with SMTP id ffacd0b85a97d-38a87303e63mr1936295f8f.22.1736930772109;
-        Wed, 15 Jan 2025 00:46:12 -0800 (PST)
-Received: from pathway.suse.cz ([176.114.240.50])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38a8e37d472sm16689950f8f.1.2025.01.15.00.46.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jan 2025 00:46:11 -0800 (PST)
-Date: Wed, 15 Jan 2025 09:46:10 +0100
-From: Petr Mladek <pmladek@suse.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
-	Greg KH <gregkh@linuxfoundation.org>, Kees Cook <kees@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [DISCUSSION] vsprintf: the current state of restricted pointers
- (%pK)
-Message-ID: <Z4d10nHUg71Of7bu@pathway.suse.cz>
-References: <20250113171731-dc10e3c1-da64-4af0-b767-7c7070468023@linutronix.de>
- <Z4Z2TW_HaANvT4VH@smile.fi.intel.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="DZ18YJwh"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=pltzNG5rMAVJoJ6mXCWiyd8GmIfWNNL+6u1WKHM/x1dIEyge5wW/z9Q4H5LaIo4/taEscu9s4M/iDwIPHoSdJFz97gzUkuWR6dnlHg8L1Hr+f28mUogF0N5OJy2f05lxvitIWUzutr3XrWZkIFNO+NzxS1SlxcZDPPzFTlRjvG6ynCIDGWHGztfUbpplJ3wYqqDhpoZcED21Z6wvDfKlxW8jx6HIJ6VLATo8DUXHeSbZ168LvxjI2/cOOvmOQQ7Np3QYiX37XVxenuXjnGBPAQBD/76lDoaWz+uAsNc96xH6ngCcZQbDNhr33tsoZXhwymttTN//qEDdRX3bYz4n3A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Sv7BjvCOen48rjb7bUmA5T36kCIVTGcpOWVkBNB6e+o=;
+ b=BUCmurFWq9SQHYakuxAx4Kt3jQy8dib0styjswgxe+zwaXnFoM0fOxX92HoIG6bgOlMTVtyYa02gCdSSp7eReNxYeXtujMKf/CoQSyhNEbzGQGTJVsa4wxquD23NweGk0HeXYo9QHcDem7kg7MlGCVc91Ry0YvyMbR/5v5FG44XQe6SBxehMeM0pn2vVKmQjp7PioKy34xJHRnq1p5b87n7TytdObk3lPcZCLczlqHrDVRX5UXAbF0a0hw0xycxtq2IypTEceYSea6KWrJNKOezHX6ng6PJt8+xn9UqtH4GlN4EgrCjAaQWO3g9pBCCe3vS9AAksQw9Xw8xsY8oO9g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Sv7BjvCOen48rjb7bUmA5T36kCIVTGcpOWVkBNB6e+o=;
+ b=DZ18YJwhtvn3vFWSEP1BhzcwHPHS40l5m9kFsQynabQvtTjo1WGJX3TkQe7iZ+C8M6BjfmDol14O+8hir6v46oIcJ7teYylukNZZO43NlnWJ+t8FeeZ5PKP82ztqjwRh9O86RF2iGftEV3XJNXhT/h2v4cTLqGEjy9tyf3/ch5Q=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
+ by DS0PR12MB6631.namprd12.prod.outlook.com (2603:10b6:8:d1::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8356.13; Wed, 15 Jan
+ 2025 13:55:46 +0000
+Received: from DM6PR12MB4202.namprd12.prod.outlook.com
+ ([fe80::f943:600c:2558:af79]) by DM6PR12MB4202.namprd12.prod.outlook.com
+ ([fe80::f943:600c:2558:af79%7]) with mapi id 15.20.8335.017; Wed, 15 Jan 2025
+ 13:55:46 +0000
+Message-ID: <469ac491-8733-986a-aaae-768ec28ebbec@amd.com>
+Date: Wed, 15 Jan 2025 13:55:39 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH v8 02/21] cxl/mem: Read dynamic capacity configuration
+ from the device
+Content-Language: en-US
+To: Dan Williams <dan.j.williams@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Jonathan Corbet <corbet@lwn.net>, Andrew Morton <akpm@linux-foundation.org>,
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Davidlohr Bueso <dave@stgolabs.net>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, linux-cxl@vger.kernel.org,
+ linux-doc@vger.kernel.org, nvdimm@lists.linux.dev,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+ Li Ming <ming.li@zohomail.com>
+References: <20241210-dcd-type2-upstream-v8-0-812852504400@intel.com>
+ <20241210-dcd-type2-upstream-v8-2-812852504400@intel.com>
+ <67871f05cd767_20f32947f@dwillia2-xfh.jf.intel.com.notmuch>
+From: Alejandro Lucero Palau <alucerop@amd.com>
+In-Reply-To: <67871f05cd767_20f32947f@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: FR4P281CA0292.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:e7::8) To DM6PR12MB4202.namprd12.prod.outlook.com
+ (2603:10b6:5:219::22)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z4Z2TW_HaANvT4VH@smile.fi.intel.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|DS0PR12MB6631:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9c3f1690-7c30-49fc-a5fc-08dd356c4f5e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?eGRmMzNpMVkrcE5WRkdSL3V6QTk3TkxUNkJJN1RaUW9UTnZ5Z2VIaWVVN1J6?=
+ =?utf-8?B?Uk5pWFpRTGd5dDYxYnFSQzlhblBERnBTZXllelllNStKSnJoanZDRU1aOHZC?=
+ =?utf-8?B?M0dldWo4eXFzdENmaVIwSEp5Y2pLamR4Y3ZuTXZiMUpOVFhEVnZRb2dZSW1k?=
+ =?utf-8?B?NjhTN1RTSnloclFUbjU1a3YzakhGTWVQUkpyZXhBRjJ5eWg1NGV5NDEydm9v?=
+ =?utf-8?B?S0xCSFp0MHBjMytvVkFsamxpMCtxQnkxNXZzY3ZFYVVtcWV1T1RGZ3RLV2pl?=
+ =?utf-8?B?QW1ld3ZZMWhkQmdzTXgwVlIvYXRsSithN0JWSUxWaHF5ZWtIUnV4aWVvQWNV?=
+ =?utf-8?B?UGRTYVFlZVdkZ1N5NmQrUHd2ZWVTMENSVUk2K0s3dUNLeThCZ2doa2pIUTRO?=
+ =?utf-8?B?U3hKTWVFQ1o5blRFUXFLTlk5a3JrSDZoUlRPV3lOMWxUWXE5WUorTUxLbytT?=
+ =?utf-8?B?UXE4NVNEVTF5UlM3R1lvbkF3TERBVjVSaXN6Qk1DYkhiZE0yM3crRnltZ2hk?=
+ =?utf-8?B?clg4WXdaaW1jdUhvY3AvQWMwcUZGVzVLRGxpM1VRZ2ovSFFTVGpLRWttRmF4?=
+ =?utf-8?B?NlN1NGI2dk4zV2ppVk15cHZxcTBpTXp5K1ZDNzBUZEd5LzJ1cFZFbHRZZ1l0?=
+ =?utf-8?B?dmlmTEdGeE4ySkw5OG5FYU9YK1BQN0hzRmtrVU5WTjdkSlRPd1JCVGZBaWh5?=
+ =?utf-8?B?SUV3b3UwNGFZUFVmVHJNL2FKaGh5OTF4M0JvTkgvMFUyWmtiMEUwcUlkSmh3?=
+ =?utf-8?B?cmJadkxFRW8vYnovQWxCVjY2SklRUkp1UStocmdwdWNtRUZlbG9YbVEyUHg3?=
+ =?utf-8?B?L2tndjlwSVA1dXBESm1PbUQrTHo5UGd4cDdyK09qRG5lSjBrNko2ejlKY0xF?=
+ =?utf-8?B?dUJuN3pOSVpoWnh4T01EUnNEaXpjMmRjQnNYcDZhRmx1NjBBUTB3R2ZBRjI3?=
+ =?utf-8?B?aUhuVm8wbXNoZmJNdFRRWG5mNTcrZC81V3dBYll4UUtidXAxTWw0UnZIcW41?=
+ =?utf-8?B?Vy9SZ3ROOU5NOUpHWCtWODJBQ0lJUythbUdybmhGRy9XaEtiMk5YMEx3bWlr?=
+ =?utf-8?B?TTRpSkV0NXcycldWSnptMWk0WXp1ajNFc2NGYmRReVM1dk9EUmI5OW1PMDFo?=
+ =?utf-8?B?dWRwOEl4M3VTSnl0S1I3UEo4S2JJanhZRVg1OVpjM0FIRk5QT2NQUkpJU0x3?=
+ =?utf-8?B?cjA4OXdOKzM2Ny91NVhWQ2l1b3k2WEJuajNGWlkzNndlQW9mVzlKQkNYUExU?=
+ =?utf-8?B?cHB1RUxsdi9XWHZKK0dpSFFWSlN2Mi9ReXQ3SU1rZC9EdHJJT3VuTkxUSVZC?=
+ =?utf-8?B?Zkx0dUxGNGt2WmtOaGt4OSs5eUM0Sk54RjkvTnJGelBOazA2VERNR01xRjVh?=
+ =?utf-8?B?b1dBanJzMHNnY0N4WE14UVZtUGM4aFEyak5nMURDUnZONEZleGlvQklkUTZm?=
+ =?utf-8?B?NHBqWjNuR0lSd01jSk9yNmNRYWFWQ0xyRjBIdXNWV2J3U0ZVOWJaVUwvWjJK?=
+ =?utf-8?B?SlcvRGtwU3lKRUlDeWlNdXlzU0htdDFrTUdxakVWNUxydXp0WXNmeDZ3UmZO?=
+ =?utf-8?B?Z3NnT0hoWEtHY2pnYXJNMjV6WFA0S3B5VVdMRDJYdlc4ZzhrV2VHQjM3Z1A2?=
+ =?utf-8?B?TUVZTVFpcVVQejFWQ2dJVjlIb2ZESGFRQmlCRWZwT1RrV2JnSUlEMGk5S1k1?=
+ =?utf-8?B?SkFmMkhXNXhKc2tpdjF0NzRSV1l6S01meXdVS29XeWczcDQ0UWRtSkloTDVF?=
+ =?utf-8?B?a0ZIVTFqOFZ2eW5FR2pmcWFVMWN2RzZQZEJyb1JnRFYyTzUrYTByNTNBQVhH?=
+ =?utf-8?B?YkFER29YZENvUzNKL2JhVHBTWDY2enJEN2E5ZEo2T1FkTzZYS2FaQTF4d0t2?=
+ =?utf-8?Q?78IuUCOefG+DF?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?YlI4cDdZY1NBcWNyaGdwYUFvcDF2RzdWdERwQ0IraTNjaVJzOGhFWmcxOTZl?=
+ =?utf-8?B?cFFRY1g0VWpWN3QxWEhTOTZHOUlHMWJGVnBYWmc0Q28xMVVLUmlBWTFWbGlq?=
+ =?utf-8?B?RVNKY0lXQ2Q2TVRvYWVXMXNyeXQwTmpETXVOTXR1NlNRb3dDMHRqa2ZMZXNO?=
+ =?utf-8?B?cDRkNjJMYlFWUThZTmFjVTZrcmFwTlVXNGIrMklpR1VDNzloUDU5ejIvRjJY?=
+ =?utf-8?B?S3VOZ0xIRmhzaGpVVTZjQjhOVXA0Nm0wSFRrSDdzc0pRYm1ZbnpjNDljR3Bq?=
+ =?utf-8?B?YWtwQmxnem5sRWxzZHFPclEzVm5ld0FQOWRQN25CSjZZQjUxUFlYOE9YUkpI?=
+ =?utf-8?B?UlBsWVhvOFNWVlF2bXFmOXpPUTdVNmlkSjlOdVNBY0pET25rSGZWMXZSVHBv?=
+ =?utf-8?B?U1d0RUlwbXNlWVV5amh4VGNPWm9ETjVDMnZCUS9XNXpSclRwUGFadFNJSncv?=
+ =?utf-8?B?NEJOVXh4K0pKZzJnd25Mb1Z1bVJEN00wTlhnNzc3dDhEM1VqVnlrQnNoUVZn?=
+ =?utf-8?B?NE15RnlOY1RDS283RldYaG9BdEdTSXpFemRwMTgrWTZ5SkVyNExPcExjNEY0?=
+ =?utf-8?B?THRycXgvbFZpWERidTErR2pUaElOOTIvL3BaM3Q1bVJmZ3lYdlRlMGxUQmR3?=
+ =?utf-8?B?enczWHB0MlZESmVObVRSYytaZXE5ZnhYR1lydTNhQ1MyOEgzT0JaSmVyVGI5?=
+ =?utf-8?B?dklDWFJKTEx0Rm1Kc09HQ2FockZmREtWaGNtd0ZFZWp4cXBHd3RvVDd4ZWhz?=
+ =?utf-8?B?bHRJOGhQVmJCRkJqR0tkQUZyZmZRUXFqUUw3SUo0T3F6MWU3TTFHa0xkYTNk?=
+ =?utf-8?B?SFh0SlNtT3AzZkVTZytzV3VQREV6MHZTcXRuWUxwc0ltd0ZDYlFodll3Y2Fs?=
+ =?utf-8?B?ZmdEaWUyTktmT3lBMXdtdkF5THE2Y0VwcThmemRSbVNiMkJyNnFjamZob2hz?=
+ =?utf-8?B?WVVSTkJ3MytVOTdiZm9pOVR1bmh3ZUcycG5VWmVubUY5SlFyTitPWnltUUJr?=
+ =?utf-8?B?M1JFdFlhdGxxOU1MZE1JUzcxTXoxVGthTEtpdG5qbnAyMmRXUDNpVExpWDZ5?=
+ =?utf-8?B?UFZURk04ZVp5RGVJckdVUHBUSXpBcFRvT056T3Q3d1h6bUpuUjJRRFRvUW5T?=
+ =?utf-8?B?R1l3UmVCWUN5Sm81VzlBSlFKYkVyKytiVElZWVQvWFdjQWVscWFwQktoZHlZ?=
+ =?utf-8?B?Y3JrbjJjSkdnb1RTMkZUM1c2Y05yRkxJcy8yNm9qR2JvNVZEcHV0bTRVd0tj?=
+ =?utf-8?B?ZnJVbk0yZnZ1WStXR2ExRmZWNXlHVElUaFREYUc4UnNpYVNSYjZtWHEvS3NL?=
+ =?utf-8?B?Wm8xUzNPRUtJYU5xeG9tRngvWmt0Rm5mbVhVdTJYMkNIMEJzVXcrak05QTNo?=
+ =?utf-8?B?cHRtVkpkNHhoN2pRVEFGem1kdmcrbFR5RWFMVjE1MStMWXVlWW5pa0pxblBp?=
+ =?utf-8?B?R3B4UHg0UnlUSjFWSnNKL1lJYjQwTDN3RVZsbmZGdXFSRVN6d1BaVDJzUjBi?=
+ =?utf-8?B?UCs1K3BFUGhXUzR5bWhPODNITkxCVmtPaE5PNm1XRVp1R2w5T1NvVVp5bHpD?=
+ =?utf-8?B?TlJNd0tFc3JyVTVrTHZSNTdFVEdSY0lSQjdNZ2NFbWZsWU1wcDhGb2hUTlUx?=
+ =?utf-8?B?ajFFZ3NuL1NoRFJaeXNMbjJrWVpUNG1DY21hblNTUGZMZ3c4eXFNNjRySFhQ?=
+ =?utf-8?B?RmFyZGN0cVJpOWpIN3hSVHdEMlFsS0JyM0dYd1ZhenN6VURIaElRaGNDdHBw?=
+ =?utf-8?B?Mm1pbUFoSFZDeHd6TG54NHhtenI5OTdoQzl3bWJaYWxPVklWaUFaYmd0Tk12?=
+ =?utf-8?B?SkZEWEJjOW9GcXEydDhZQUtPcmdYd0pCUEhBc0xXRlU3b0R3Tk9ZRjJSc3NO?=
+ =?utf-8?B?Z01udkhNUVB3REptY1E1RTVUZE1YZzl3VzhmS0VteDUwRmo5bmswR0JyZGtV?=
+ =?utf-8?B?WS8xOGpiWHk5LzE4R0xuM080dHJnU0d3Q0lXaGpoVjVEdTR6L2d1VUs3a093?=
+ =?utf-8?B?MGNmYzdOZDlPa0diVVpDN1EzdmNJcklpL29LT0VrdEZPRHdWc0JqUTREdzM1?=
+ =?utf-8?B?VS8vU2gxNFpYd3JVVHc1R1RyczIzZ3AzYVJCVEZFeDBwQUl4Vm5PaHBlcmdz?=
+ =?utf-8?Q?dcNGM/0bS00Zug1Beg+hY9gxE?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9c3f1690-7c30-49fc-a5fc-08dd356c4f5e
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jan 2025 13:55:46.5120
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Ts7AxwzLKOOeaCVxXyK/2WUO/fL3AjkwGvvfb05x5DLPxKK5aat4h5LNl1FGmh8d5wiEw5nSJjFnwt/WkUC6Fg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB6631
 
-On Tue 2025-01-14 16:35:57, Andy Shevchenko wrote:
-> On Mon, Jan 13, 2025 at 05:46:44PM +0100, Thomas Weißschuh wrote:
-> > Hi everybody,
-> > 
-> > as you know, leaking raw kernel pointers to the user is problematic as
-> > they can be used to break KASLR.
-> > Therefore back in 2011 the %pK format specifier was added [0], printing
-> > certain pointers zeroed out or raw depending on the usage context.
-> > Then in 2017 even the default %p format was changed to hash the pointers [1].
-> > 
-> > Both mechanisms are similar in their intention but have different,
-> > cross-interacting effects and configuration knobs.
-> > The end result is not always obvious. For example:
-> > * "no_hash_pointers" does not work for %pK if kernel.kptr_restrict>=1
-> > * If kernel.kptr_restrict=1, "restricted" pointers are effectively
-> >   less restricted than "normal" pointers.
-> > * For other values of kernel.kptr_restrict %p and %pK have the same
-> >   security properties, but still different string representations.
-> > 
-> > Additionally the current usage of %pK is incorrect in many cases.
-> > As %pK relies on the current task context for its permission check, it
-> > was only ever meant to be used from procfs/sysfs/debugfs handlers [2].
-> > In reality many callers use it through printk(), leaking addresses
-> > into dmesg. While restricted_pointer() tries to detect some of such
-> > situations at runtime, this check is not and can not be always complete.
-> > 
-> > File handlers which could use %pK correctly today, often use
-> > kallsyms_show_value() instead. This is similar, but checks explicitly
-> > against the credentials from an opened file instead of the implicit task
-> > credentials. This behavior was the goal for %pK all along [3].
-> 
-> > Is it time to inspect the users of %pK and migrate them to either
-> > %p/%px, kallsyms_show_value() or some similar new API?
-> > Then alias %pK to %p, maybe removing it at some point.
-> 
-> To me this paragraph sounds like a good plan, which I agree on!
 
-+1
+On 1/15/25 02:35, Dan Williams wrote:
+> Ira Weiny wrote:
+>> Devices which optionally support Dynamic Capacity (DC) are configured
+>> via mailbox commands.  CXL 3.1 requires the host to issue the Get DC
+>> Configuration command in order to properly configure DCDs.  Without the
+>> Get DC Configuration command DCD can't be supported.
+>>
+>> Implement the DC mailbox commands as specified in CXL 3.1 section
+>> 8.2.9.9.9 (opcodes 48XXh) to read and store the DCD configuration
+>> information.  Disable DCD if DCD is not supported.  Leverage the Get DC
+>> Configuration command supported bit to indicate if DCD is supported.
+>>
+>> Linux has no use for the trailing fields of the Get Dynamic Capacity
+>> Configuration Output Payload (Total number of supported extents, number
+>> of available extents, total number of supported tags, and number of
+>> available tags).  Avoid defining those fields to use the more useful
+>> dynamic C array.
+>>
+>> Based on an original patch by Navneet Singh.
+>>
+>> Cc: Li Ming <ming.li@zohomail.com>
+>> Cc: Kees Cook <kees@kernel.org>
+>> Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
+>> Cc: linux-hardening@vger.kernel.org
+>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+>>
+>> ---
+>> Changes:
+>> [iweiny: fix EXPORT_SYMBOL_NS_GPL(cxl_dev_dynamic_capacity_identify)]
+>> [iweiny: limit variable scope in cxl_dev_dynamic_capacity_identify]
+>> ---
+>>   drivers/cxl/core/mbox.c | 166 +++++++++++++++++++++++++++++++++++++++++++++++-
+>>   drivers/cxl/cxlmem.h    |  64 ++++++++++++++++++-
+>>   drivers/cxl/pci.c       |   4 ++
+>>   3 files changed, 232 insertions(+), 2 deletions(-)
+>>
+> [snipping the C code to do a data structure review first]
+>
+>> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+>> index e8907c403edbd83c8a36b8d013c6bc3391207ee6..05a0718aea73b3b2a02c608bae198eac7c462523 100644
+>> --- a/drivers/cxl/cxlmem.h
+>> +++ b/drivers/cxl/cxlmem.h
+>> @@ -403,6 +403,7 @@ enum cxl_devtype {
+>>   	CXL_DEVTYPE_CLASSMEM,
+>>   };
+>>   
+>> +#define CXL_MAX_DC_REGION 8
+> Please no, lets not sign up to have the "which cxl 'region' concept are
+> you referring to?" debate in perpetuity. "DPA partition", "DPA
+> resource", "DPA capacity" anything but "region".
+>
+>
 
-> > A different, but slightly related issue occurs with PREEMPT_RT.
-> > Calling printk("%pK") while holding a raw spinlock will trigger an
-> > invalid wait context and latency spikes if an LSM using sleeping
-> > spinlocks is enabled.
-> > As printk() should be callable from any context this is an issue.
-> > Removing the implicit group check would also avoid this.
+This next comment is not my main point to discuss in this email 
+(resources initialization is), but I seize it for giving my view in this 
+one.
 
-Good to know.
+Dan, you say later we (Linux) are not obligated to use "questionable 
+naming decisions of specifications", but we should not confuse people 
+either.
 
-Best Regards,
-Petr
+Maybe CXL_MAX_DC_HW_REGION would help here, for differentiating it from 
+the kernel software cxl region construct. I think we will need a CXL 
+kernel dictionary sooner or later ...
+
+>>   /**
+>>    * struct cxl_dpa_perf - DPA performance property entry
+>>    * @dpa_range: range for DPA address
+>> @@ -434,6 +435,8 @@ struct cxl_dpa_perf {
+>>    * @dpa_res: Overall DPA resource tree for the device
+>>    * @pmem_res: Active Persistent memory capacity configuration
+>>    * @ram_res: Active Volatile memory capacity configuration
+>> + * @dc_res: Active Dynamic Capacity memory configuration for each possible
+>> + *          region
+>>    * @serial: PCIe Device Serial Number
+>>    * @type: Generic Memory Class device or Vendor Specific Memory device
+>>    * @cxl_mbox: CXL mailbox context
+>> @@ -449,11 +452,23 @@ struct cxl_dev_state {
+>>   	struct resource dpa_res;
+>>   	struct resource pmem_res;
+>>   	struct resource ram_res;
+>> +	struct resource dc_res[CXL_MAX_DC_REGION];
+> This is throwing off cargo-cult alarms. The named pmem_res and ram_res
+> served us well up until the point where DPA partitions grew past 2 types
+> at well defined locations. I like the array of resources idea, but that
+> begs the question why not put all partition information into an array?
+>
+> This would also head off complications later on in this series where the
+> DPA capacity reservation and allocation flows have "dc" sidecars bolted
+> on rather than general semantics like "allocating from partition index N
+> means that all partitions indices less than N need to be skipped and
+> marked reserved".
+
+
+I guess this is likely how you want to change the type2 resource 
+initialization issue and where I'm afraid these two patchsets are going 
+to collide at.
+
+If that is the case, both are going to miss the next kernel cycle since 
+it means major changes, but let's discuss it without further delays for 
+the sake of implementing the accepted changes as soon as possible, and I 
+guess with a close sync between Ira and I.
+
+BTW, in the case of the Type2, there are more things to discuss which I 
+do there.
+
+Thank you
+
+
+>>   	u64 serial;
+>>   	enum cxl_devtype type;
+>>   	struct cxl_mailbox cxl_mbox;
+>>   };
+>>   
+>> +#define CXL_DC_REGION_STRLEN 8
+>> +struct cxl_dc_region_info {
+>> +	u64 base;
+>> +	u64 decode_len;
+>> +	u64 len;
+> Duplicating partition information in multiple places, like
+> mds->dc_region[X].base and cxlds->dc_res[X].start, feels like an
+> RFC-quality decision for expediency that needs to reconciled on the way
+> to upstream.
+>
+>> +	u64 blk_size;
+>> +	u32 dsmad_handle;
+>> +	u8 flags;
+>> +	u8 name[CXL_DC_REGION_STRLEN];
+> No, lets not entertain:
+>
+>      printk("%s\n", mds->dc_region[index].name);
+>
+> ...when:
+>
+>      printk("dc%d\n", index);
+>
+> ...will do.
+>
+>> +};
+>> +
+>>   static inline struct cxl_dev_state *mbox_to_cxlds(struct cxl_mailbox *cxl_mbox)
+>>   {
+>>   	return dev_get_drvdata(cxl_mbox->host);
+>> @@ -473,7 +488,9 @@ static inline struct cxl_dev_state *mbox_to_cxlds(struct cxl_mailbox *cxl_mbox)
+>>    * @dcd_cmds: List of DCD commands implemented by memory device
+>>    * @enabled_cmds: Hardware commands found enabled in CEL.
+>>    * @exclusive_cmds: Commands that are kernel-internal only
+>> - * @total_bytes: sum of all possible capacities
+>> + * @total_bytes: length of all possible capacities
+>> + * @static_bytes: length of possible static RAM and PMEM partitions
+>> + * @dynamic_bytes: length of possible DC partitions (DC Regions)
+>>    * @volatile_only_bytes: hard volatile capacity
+>>    * @persistent_only_bytes: hard persistent capacity
+> I have regrets that cxl_memdev_state permanently carries runtime storage
+> for init time variables, lets not continue down that path with DCD
+> enabling.
+>
+>>    * @partition_align_bytes: alignment size for partition-able capacity
+>> @@ -483,6 +500,8 @@ static inline struct cxl_dev_state *mbox_to_cxlds(struct cxl_mailbox *cxl_mbox)
+>>    * @next_persistent_bytes: persistent capacity change pending device reset
+>>    * @ram_perf: performance data entry matched to RAM partition
+>>    * @pmem_perf: performance data entry matched to PMEM partition
+>> + * @nr_dc_region: number of DC regions implemented in the memory device
+>> + * @dc_region: array containing info about the DC regions
+>>    * @event: event log driver state
+>>    * @poison: poison driver state info
+>>    * @security: security driver state info
+>> @@ -499,6 +518,8 @@ struct cxl_memdev_state {
+>>   	DECLARE_BITMAP(enabled_cmds, CXL_MEM_COMMAND_ID_MAX);
+>>   	DECLARE_BITMAP(exclusive_cmds, CXL_MEM_COMMAND_ID_MAX);
+>>   	u64 total_bytes;
+>> +	u64 static_bytes;
+>> +	u64 dynamic_bytes;
+>>   	u64 volatile_only_bytes;
+>>   	u64 persistent_only_bytes;
+>>   	u64 partition_align_bytes;
+>> @@ -510,6 +531,9 @@ struct cxl_memdev_state {
+>>   	struct cxl_dpa_perf ram_perf;
+>>   	struct cxl_dpa_perf pmem_perf;
+>>   
+>> +	u8 nr_dc_region;
+>> +	struct cxl_dc_region_info dc_region[CXL_MAX_DC_REGION];
+> DPA capacity is a generic CXL.mem concern and partition information is
+> contained cxl_dev_state. Lets find a way to not need partially redundant
+> data structures across in cxl_memdev_state and cxl_dev_state.
+>
+> DCD introduces the concept of "decode size vs usable capacity" into the
+> partition information, but I see no reason to conceptually tie that to
+> only DCD.  Fabio's memory hole patches show that there is already a
+> memory-hole concept in the CXL arena. DCD is just saying "be prepared for
+> the concept of DPA partitions with memory holes at the end".
+>
+>> +
+>>   	struct cxl_event_state event;
+>>   	struct cxl_poison_state poison;
+>>   	struct cxl_security_state security;
+>> @@ -708,6 +732,32 @@ struct cxl_mbox_set_partition_info {
+>>   
+>>   #define  CXL_SET_PARTITION_IMMEDIATE_FLAG	BIT(0)
+>>   
+>> +/* See CXL 3.1 Table 8-163 get dynamic capacity config Input Payload */
+>> +struct cxl_mbox_get_dc_config_in {
+>> +	u8 region_count;
+>> +	u8 start_region_index;
+>> +} __packed;
+>> +
+>> +/* See CXL 3.1 Table 8-164 get dynamic capacity config Output Payload */
+>> +struct cxl_mbox_get_dc_config_out {
+>> +	u8 avail_region_count;
+>> +	u8 regions_returned;
+>> +	u8 rsvd[6];
+>> +	/* See CXL 3.1 Table 8-165 */
+>> +	struct cxl_dc_region_config {
+>> +		__le64 region_base;
+>> +		__le64 region_decode_length;
+>> +		__le64 region_length;
+>> +		__le64 region_block_size;
+>> +		__le32 region_dsmad_handle;
+>> +		u8 flags;
+>> +		u8 rsvd[3];
+>> +	} __packed region[] __counted_by(regions_returned);
+> Yes, the spec unfortunately uses "region" for this partition info
+> payload. This would be a good place to say "CXL spec calls this 'region'
+> but Linux calls it 'partition' not to be confused with the Linux 'struct
+> cxl_region' or all the other usages of 'region' in the specification".
+>
+> Linux is not obligated to follow the questionable naming decisions of
+> specifications.
+>
+>> +	/* Trailing fields unused */
+>> +} __packed;
+>> +#define CXL_DYNAMIC_CAPACITY_SANITIZE_ON_RELEASE_FLAG BIT(0)
+>> +#define CXL_DCD_BLOCK_LINE_SIZE 0x40
+>> +
+>>   /* Set Timestamp CXL 3.0 Spec 8.2.9.4.2 */
+>>   struct cxl_mbox_set_timestamp_in {
+>>   	__le64 timestamp;
+>> @@ -831,6 +881,7 @@ enum {
+>>   int cxl_internal_send_cmd(struct cxl_mailbox *cxl_mbox,
+>>   			  struct cxl_mbox_cmd *cmd);
+>>   int cxl_dev_state_identify(struct cxl_memdev_state *mds);
+>> +int cxl_dev_dynamic_capacity_identify(struct cxl_memdev_state *mds);
+>>   int cxl_await_media_ready(struct cxl_dev_state *cxlds);
+>>   int cxl_enumerate_cmds(struct cxl_memdev_state *mds);
+>>   int cxl_mem_create_range_info(struct cxl_memdev_state *mds);
+>> @@ -844,6 +895,17 @@ void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
+>>   			    enum cxl_event_log_type type,
+>>   			    enum cxl_event_type event_type,
+>>   			    const uuid_t *uuid, union cxl_event *evt);
+>> +
+>> +static inline bool cxl_dcd_supported(struct cxl_memdev_state *mds)
+>> +{
+>> +	return test_bit(CXL_DCD_ENABLED_GET_CONFIG, mds->dcd_cmds);
+>> +}
+>> +
+>> +static inline void cxl_disable_dcd(struct cxl_memdev_state *mds)
+>> +{
+>> +	clear_bit(CXL_DCD_ENABLED_GET_CONFIG, mds->dcd_cmds);
+>> +}
+> This hunk is out of place, and per the last patch, I think it can just be
+> a flag that does not need a helper.
+>
