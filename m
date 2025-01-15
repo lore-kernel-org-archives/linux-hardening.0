@@ -1,1764 +1,499 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91D951D9A78
-	for <linux-hardening@vger.kernel.org>; Wed, 15 Jan 2025 20:30:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736973034; cv=none; b=mSBdGhQU80C7HG2cIaH3eQLuQH3i2oAx8oeOGPEk9VJ0WuCFuhhGfgh4LAWisES0jiE3jf/nLQfWY9MRPOanVsMRhXZPif4f0pzgmQsl5rkqTQde86edTTA0dxXS6G++xPDRgqnCfR+WyJ2KlVYlaP2GroOvuWnSE2OmOMFy1K8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736973034; c=relaxed/simple;
-	bh=1XSNq0U42VbUCtFWFgKODKRbRebRGu/VeMbpQbk13xk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Fbe/YlxBmT3UmBFXnKRbkHg89H0HKH6k8dRAGcba75fBNW8lwG7CTKLu14EVfvafRY4ygDh3MdvFwv1joziB/WpwzIaHL9cSIWdggrn/b9JhLsaVqSxowizfBN1ovHtbZVtnJSolqgWZP8VPkDIOXCjN/fR/A+25WqKKXLjOu8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YxzxfrXU; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A88C19922A;
+	Wed, 15 Jan 2025 20:33:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1736973211; cv=fail; b=o0FL8VU+dbCqyeqDAdFC7BV4QIEf8iN+QPvICIWHFeaUIp/ElylUF+AA12rkaye0bvnCOjtW2RnKTI6yqUKSxYdD0Vqkko9PQs3xmsBJViYgILioDeUb/q1x+eSE2B8vB7Vdyr1gIqmOXx/ExmqlzZeQ/o0HXKTIcyqJy3sx9qU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1736973211; c=relaxed/simple;
+	bh=XWDaBfAFnDTKGOmlwhzeZ6VP/+98YohgKp9HhJtu8qw=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=ftbjvoSINC9mzRR9tu6k4V64ZV479t4tlZqTG9nrUr0QdhvKOeVZHSRN6yvjk6CTZ7zJsSMGp+gNuWbpwc4vr4v6r4qduIMoxv3DfKs9ZwVRtaB5Dz3uD7lKSE6EAP9yVWFKil2WR+wcqX+NF9dozi6RXqB3a3anws5XmWaEplA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dUuWcBUw; arc=fail smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YxzxfrXU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1736973023;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=D+jmT165dsLbbDGyFZRdHkP5avOBczmV2tO5rd78/5A=;
-	b=YxzxfrXUy5bb0annnD5u9sJWnbqWb13f/Hf7wrfUR9FyANuae53WNTH2dUE2wH8HxbnNxV
-	aouod7WfmSoiXOU2KZhmblwHmDKObDppi95DSjnGxMrTdPVGMGuKN5yWG3eyxr81DieNNV
-	5UlcDSp9WWq8hc6Txe5WidHUSe/Sjy0=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-637-Z6SPIm02MSKKYG6SPwRX3g-1; Wed,
- 15 Jan 2025 15:30:20 -0500
-X-MC-Unique: Z6SPIm02MSKKYG6SPwRX3g-1
-X-Mimecast-MFC-AGG-ID: Z6SPIm02MSKKYG6SPwRX3g
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5A4991955DC8;
-	Wed, 15 Jan 2025 20:30:13 +0000 (UTC)
-Received: from redhat.com (unknown [10.22.89.185])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C2F09195608A;
-	Wed, 15 Jan 2025 20:30:02 +0000 (UTC)
-Date: Wed, 15 Jan 2025 14:30:00 -0600
-From: Bill O'Donnell <bodonnel@redhat.com>
-To: Joel Granados <joel.granados@kernel.org>
-Cc: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
-	Kees Cook <kees@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-crypto@vger.kernel.org,
-	openipmi-developer@lists.sourceforge.net,
-	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	intel-xe@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
-	linux-rdma@vger.kernel.org, linux-raid@vger.kernel.org,
-	linux-scsi@vger.kernel.org, linux-serial@vger.kernel.org,
-	xen-devel@lists.xenproject.org, linux-aio@kvack.org,
-	linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev,
-	codalist@coda.cs.cmu.edu, linux-mm@kvack.org,
-	linux-nfs@vger.kernel.org, ocfs2-devel@lists.linux.dev,
-	fsverity@lists.linux.dev, linux-xfs@vger.kernel.org,
-	io-uring@vger.kernel.org, bpf@vger.kernel.org,
-	kexec@lists.infradead.org, linux-trace-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, apparmor@lists.ubuntu.com,
-	linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-	Song Liu <song@kernel.org>,
-	"Steven Rostedt (Google)" <rostedt@goodmis.org>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	"Darrick J. Wong" <djwong@kernel.org>,
-	Jani Nikula <jani.nikula@intel.com>,
-	Corey Minyard <cminyard@mvista.com>
-Subject: Re: [PATCH v2] treewide: const qualify ctl_tables where applicable
-Message-ID: <Z4gayPSrRIWYKgCn@redhat.com>
-References: <20250110-jag-ctl_table_const-v2-1-0000e1663144@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dUuWcBUw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1736973208; x=1768509208;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=XWDaBfAFnDTKGOmlwhzeZ6VP/+98YohgKp9HhJtu8qw=;
+  b=dUuWcBUwfyC1CLCXmv0TAVGzfafjg2EpaBp7IJVP+BkVrnBoq1wFuQ1i
+   b/28QPbqYvmhXCtj53XOOfgUnwm2Nlhbf69g7NUdka1031LVH4rkgM5Dy
+   +rWkYiGlT3RgBFEZmcTaM7R5lnO57TEbA7srS97gUqpiCsugWt3mztdXm
+   4QcGZzqRigPE1UehhO7MdAPQniB1PogKAiz5H2Z8huZLUDRfsogpeolsU
+   3BO8pY5Io9Yiuj7nn8iHKYwj/CK6tLjM6PmmKPV1wf3Zoto67ck8nax9d
+   Zfs0MSLAJJM2CwE4pOYA9oKBxpkOQeaMyZcqPNQNuuhv4lj46x3EXJxAP
+   Q==;
+X-CSE-ConnectionGUID: 45eZHXUfTPSF/2P64E2vBw==
+X-CSE-MsgGUID: VrQpim8UTyCh97rJc0DiHA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11316"; a="41009130"
+X-IronPort-AV: E=Sophos;i="6.13,207,1732608000"; 
+   d="scan'208";a="41009130"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2025 12:33:28 -0800
+X-CSE-ConnectionGUID: k8iIyRIGRfebEU2AvusOuA==
+X-CSE-MsgGUID: SDd2RuXJQkiwiX6QEzrrVw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,207,1732608000"; 
+   d="scan'208";a="105793668"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 15 Jan 2025 12:33:27 -0800
+Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Wed, 15 Jan 2025 12:33:26 -0800
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44 via Frontend Transport; Wed, 15 Jan 2025 12:33:26 -0800
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.177)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Wed, 15 Jan 2025 12:33:25 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=YS5U872GITYr+1suBCjR4VhspIC1HwbT/fRFds6ztxPvcfFOWnr/tLO5ub+u/Z5aiRqjfu980zG9sPt5iN0uDcs2HucvvMzypS0Cp09Zc/sTYqvOO10eX+tTzSnU+FzSyLWk3xt8X0ptJVKrZiaTyeGTknom9+EDPAjx3MU+kBzDxpkJUvCszyczceVCpqc6GwFAvpWRpkBwF9k+Rgx1d5p6Hk3KjRbaYq1ioT6v7/uf2SLVIOF6ToWtf/UuAswWhQZF/winaM72kdeyrjS8xwzFTTv/dm5aNmyO3QSGkb5O1FFgn0dxrHiWOLivF46FnTe4GaKPhvptvGbm9A8WRA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=6dCyHgEPla4DiGcNF7BcZt7a26Uob74PR5vQ/qJGA2s=;
+ b=b61U8/+8FVc2S7g98C7AzB2h7GPXQkHRtXfntZlUmL0yHFRnn8NaCW6+jNGFH4dKeC5BbKQAF+CKQF2jHHp0l5lxq8sOdGtgd+pOT1tmzZjNE43BBJg1MQjgrD7E6yX7IhRWqkd0ceGRr6yVQvxSx8bIaiwFJaJGrK/G7FKvvJ8tPqaQNFqDGXXdfcMvkYcDQIDis7graWgqd0Q76lMyC0NacNNJCq+tiVTT+jN8jKK8cJGf7VvcRj3KlnfxxW52yk6Z1+qQmVpTWQA0ordXZkpE/UlAmN95EFEytBTr/jwF1I6A8N08jtmKDEAjxclyP1fAEV2s7Ib9ph3GOMleMg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
+ by SN7PR11MB7067.namprd11.prod.outlook.com (2603:10b6:806:29a::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8335.12; Wed, 15 Jan
+ 2025 20:32:40 +0000
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::cf7d:9363:38f4:8c57]) by SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::cf7d:9363:38f4:8c57%5]) with mapi id 15.20.8356.010; Wed, 15 Jan 2025
+ 20:32:40 +0000
+Date: Wed, 15 Jan 2025 14:32:32 -0600
+From: Ira Weiny <ira.weiny@intel.com>
+To: Dan Williams <dan.j.williams@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>, "Jonathan
+ Cameron" <Jonathan.Cameron@huawei.com>, Jonathan Corbet <corbet@lwn.net>,
+	Andrew Morton <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+CC: Dan Williams <dan.j.williams@intel.com>, Davidlohr Bueso
+	<dave@stgolabs.net>, Alison Schofield <alison.schofield@intel.com>, "Vishal
+ Verma" <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+	<linux-cxl@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+	<nvdimm@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
+	<linux-hardening@vger.kernel.org>, Li Ming <ming.li@zohomail.com>
+Subject: Re: [PATCH v8 02/21] cxl/mem: Read dynamic capacity configuration
+ from the device
+Message-ID: <67881b606ca4e_1aa45f2948b@iweiny-mobl.notmuch>
+References: <20241210-dcd-type2-upstream-v8-0-812852504400@intel.com>
+ <20241210-dcd-type2-upstream-v8-2-812852504400@intel.com>
+ <67871f05cd767_20f32947f@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <67871f05cd767_20f32947f@dwillia2-xfh.jf.intel.com.notmuch>
+X-ClientProxiedBy: MW4P223CA0024.NAMP223.PROD.OUTLOOK.COM
+ (2603:10b6:303:80::29) To SA1PR11MB6733.namprd11.prod.outlook.com
+ (2603:10b6:806:25c::17)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250110-jag-ctl_table_const-v2-1-0000e1663144@kernel.org>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|SN7PR11MB7067:EE_
+X-MS-Office365-Filtering-Correlation-Id: 946efa92-5cc5-4365-48cd-08dd35a3c1a2
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?HmbHmT8Jp1tU7gkbF5L/fzqdyLcj9tH1EpfQ5tqSRAGp4up/U7dIADStgne6?=
+ =?us-ascii?Q?D69mW7MEphN3u48IkcrbX8L+la0xDTK40xrCuclmcvswnFZfjC4POReSlcqv?=
+ =?us-ascii?Q?zKppFnmHy/WKsuXdzpTWK9bbjiKTeOLM/vYHoz+U58IvvhIWZXREFfxdUWOc?=
+ =?us-ascii?Q?hnJzuqV0YITozp4PVAvx9DSfRRm6h6il6nwtsiaYS+zHk/CF8oeZfAu8zPR3?=
+ =?us-ascii?Q?RACQdCNqeaaaRmzhyD2wbFHE4xfb8NwgfrlvRzIcsZqIowOG6npJjoKHa+Uj?=
+ =?us-ascii?Q?VoDTcEfkwu+++6htbmEA/O/SnUjwzVAnsewmTJ7kjQeV+k4mzCyTzzHIM0MJ?=
+ =?us-ascii?Q?uLM0rPMH+uVe7BLqmT3Na6RSVO7L4IGL/4KLzErs8jATfeIoS5wUVicEQ1QJ?=
+ =?us-ascii?Q?BL7R8G8kJmOmq8hflmcSrK/JEya32PcTh9R2Q9MTKPAXw3t4AwWO/C/rrVOm?=
+ =?us-ascii?Q?9vUqB46Ak7vWNPn/EX6Bu+61pcchBxH4YMIeonSPqyEY8hGFAvBa0NADdxd1?=
+ =?us-ascii?Q?2lkbiJhPBJEeHR+yIuZdo1nZFNKKLvI9Pl8cfHWqIdj1x3MrPWTEOJDtBSSI?=
+ =?us-ascii?Q?lltSZqh2z6AJ+InhYXJTe/Obv85ynyCgUdU9TB4iK2kWRD1p05sS02LEkeCS?=
+ =?us-ascii?Q?wle5oITXBLmhmnO12NSVAwMSmZgx/57fDyMWHI8LyhG4Sm0BRvRdn6EIE583?=
+ =?us-ascii?Q?1SiGJY9BUxNNKRW+VIyDL8oj+VNN0FhDzA1GRITBq/Pbyvn6W5d8879lqkZU?=
+ =?us-ascii?Q?jb0mQtfDhe77pE/H4onG3Mr9EWiXqG1vk+ITt6PJdoe+cSMBdUU+6L+CpbqI?=
+ =?us-ascii?Q?b/TlGbggs/U44CE32B8wsh0Vy3n1Vz8DAgLYmf5y+a0xmXEplixF5/Hojr7u?=
+ =?us-ascii?Q?4LcVdVLsKE/bVJbY5cF4s0bU7RPYtvSA07/Gg9ZCfj6BjXDfo7ZQBcFi5YLO?=
+ =?us-ascii?Q?u1jw1hb41cQgOmecxyfOoXeE7SyyBnSi7n+K0xwEpvdlF1IecaqnFlFT+eNJ?=
+ =?us-ascii?Q?BMJ1nfDE9ekhAH11y8CBaZUZ6s+QGoiFAiLAL9wwudsbOMonYeo7VSy4EQ4C?=
+ =?us-ascii?Q?46v377Dgb0vYpZU8yPLwspIp9n/Hpgy5YsowPgLjxSduajVf7BdDfMtyZ1yj?=
+ =?us-ascii?Q?yNrRXpW3Op/4QAkV93DNJ0QTcy+4OFpKBaiCrt215M7/Z3rokBJxPcD3blgP?=
+ =?us-ascii?Q?gBcTFJraKwX9EPOrl9YlvL3Z0SiSUgtd379boFiAgXtgafEThwdbVazOPir1?=
+ =?us-ascii?Q?ERACNmhk/2jOf53U6XLl4nbhlgcjUZrjbNIoL/MVShYBnZMXr5pU1ez0jPvo?=
+ =?us-ascii?Q?/B9pR5EMHhMmRPwjfZdp4BADdI5RvUYoxCnKqtRQrXllKpyDf4KK/vT1wntj?=
+ =?us-ascii?Q?kHMJU+HT6UgTu3nCg7ZsZnPEUIbJ?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?k8SrtiDSa+0EYS7g/xmQnCX16YI15jfX7QzTdebWmijZaugQ8xJDZeSl50EO?=
+ =?us-ascii?Q?b1EU7TgkXWSeyctUgCIwRJ8q7QVmxM6ZXJQzNgsWykSrgylP5BzL7SMYnEm8?=
+ =?us-ascii?Q?Yxy1FydUe/Q5DTlAcjn17ak+ntUSuTIHumx5E3Gvxu5c/Qc5V/sCy0DiwdaD?=
+ =?us-ascii?Q?ePLt0cnsUkzDPcWtwE6WHdnCb6JB3zirDHqAK1mLuTSKdsLIGNQMSEwwo3Sx?=
+ =?us-ascii?Q?1cvTRAAoKPp66YYDY4otXcAOI//c8nZRgYjmHuCfJdHsQLAeCDmDeAQ9OZo7?=
+ =?us-ascii?Q?rP2xKfiMeaEbjBBUrGb8v76VCzk6ICqdm/eYK6TRn4yoKDwXdGWdSBqebR+x?=
+ =?us-ascii?Q?AVufqsZZICDXbNj82cAjFZ1H6ya/IJXrD/GIazXeft7yOR9p14eWZX0oUBYX?=
+ =?us-ascii?Q?ES9P5xHkkAkIqhIETCK50nydJVkNPsfl4/GVlx56V6MRv4066cmuCXVQvf9g?=
+ =?us-ascii?Q?8PSbVo3b2ABVJyhWBdEghs9wleQ1rKWeWPu87xy3E8Fvv/25WzL3GK0IWmk6?=
+ =?us-ascii?Q?rD/PpWYOt5Gh4Ui/y8qOzX7L4Up4F/whtqzPlcPRJ62Kca9R/SP57BluaNi/?=
+ =?us-ascii?Q?YiVENfw97QDbVakl20mBpkJ9GG01UzY65k0xViX4oXP2LVRLNoTFLpcsYwBF?=
+ =?us-ascii?Q?3dPUUgb60YNTrLyPA20P4NJDuAr/tfKMCw45f3XP5rXIXRa/aQ3emsbeDB6K?=
+ =?us-ascii?Q?PDNsqDsZgLzRqRsjdxH5FY6EehSN+AxTpA2Joplh2xxFv/t+cRti02I108o7?=
+ =?us-ascii?Q?zsS/zbOw1/3rJh801GVcvDhciQbuVqjCxtxXYuQpt2iq6cnEpZInVzUPWwwx?=
+ =?us-ascii?Q?MPqGJAAHm1fiVATUvGUwtyn9wrPKyBFwkZ2erMveF3Q69122nXJq+tCskkf9?=
+ =?us-ascii?Q?10/3jt7VRbjUofY3VkGcucGL3c9u2qhyAo9hnO1XSSXBVdkM09QE/7kvlkj4?=
+ =?us-ascii?Q?+RT3EdNQWbHGVznQgfP3F03STIVlXVsZWaMSJGaFw9hVpGR6z8v4hae5b8NP?=
+ =?us-ascii?Q?GdcY8cTU8Q+hcuCl1hkIn1hYNBuDTqHjh7IqaqW+sKL9+LRkkfgZ/YGkPSxG?=
+ =?us-ascii?Q?9hl0fjwUBctBUNq8JdgQ8ZoLYQXz/RCiYmXfVC/+7bNjV7Xv+lnZTnwD8tWI?=
+ =?us-ascii?Q?VfsqwowzXzQ2Dk+70V8PP3EK1yZOlncY37eSAcVG8pOLWHwtyUv4FCWea9DG?=
+ =?us-ascii?Q?b4p4DhmRUja7f9xRe8QV/j3CIBIZ8MoOxnOP3BykRCLoB1wgeuP/5lAtD3Pf?=
+ =?us-ascii?Q?zHCoCxxvv0NdpzGvCWE1/XBE3UBFkHSl/5nkgQ9TmDVOV9+LzVVXb6iZxJRb?=
+ =?us-ascii?Q?bXXhaIdydWODZNseL0IqE06330HOkBgXMejjGMqHF0GOK36FAX62aUpIeNaJ?=
+ =?us-ascii?Q?UBgQwlYavKfnScW/4+Bh3ny1b0NrtvJem+CTzWBm7NP73ahEkQAPNy4l+UPL?=
+ =?us-ascii?Q?6OUB/XMWZcgDb6zMp5zXs/mr6l8ogkcU0ZIXmxEMp8DhibE4XdT/zailD8MG?=
+ =?us-ascii?Q?GtZLh+2y+OElBy4mg7i202ltxSYWaoLlecxEuih/NEUqoBDsQBMhjby71iq2?=
+ =?us-ascii?Q?kitWV/d5LIdb+xxuzYEQr02H0V2U+OThRvLzDwY6?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 946efa92-5cc5-4365-48cd-08dd35a3c1a2
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jan 2025 20:32:40.3264
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: QM17XLKQMqYCEtRXofIev6R6mtxgHvxETKS71RYbKCZa8uoT6mdca7rW1+k5QkjvAxvQtR9yGB6Lc61Q11mM5A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR11MB7067
+X-OriginatorOrg: intel.com
 
-On Fri, Jan 10, 2025 at 03:16:08PM +0100, Joel Granados wrote:
-> Add the const qualifier to all the ctl_tables in the tree except for
-> watchdog_hardlockup_sysctl, memory_allocation_profiling_sysctls,
-> loadpin_sysctl_table and the ones calling register_net_sysctl (./net,
-> drivers/inifiniband dirs). These are special cases as they use a
-> registration function with a non-const qualified ctl_table argument or
-> modify the arrays before passing them on to the registration function.
-> 
-> Constifying ctl_table structs will prevent the modification of
-> proc_handler function pointers as the arrays would reside in .rodata.
-> This is made possible after commit 78eb4ea25cd5 ("sysctl: treewide:
-> constify the ctl_table argument of proc_handlers") constified all the
-> proc_handlers.
-> 
-> Created this by running an spatch followed by a sed command:
-> Spatch:
->     virtual patch
-> 
->     @
->     depends on !(file in "net")
->     disable optional_qualifier
->     @
->     identifier table_name != {watchdog_hardlockup_sysctl,iwcm_ctl_table,ucma_ctl_table,memory_allocation_profiling_sysctls,loadpin_sysctl_table};
->     @@
-> 
->     + const
->     struct ctl_table table_name [] = { ... };
-> 
-> sed:
->     sed --in-place \
->       -e "s/struct ctl_table .table = &uts_kern/const struct ctl_table *table = \&uts_kern/" \
->       kernel/utsname_sysctl.c
-> 
-> Reviewed-by: Song Liu <song@kernel.org>
-> Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org> # for kernel/trace/
-> Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com> # SCSI
-> Reviewed-by: Darrick J. Wong <djwong@kernel.org> # xfs
-> Acked-by: Jani Nikula <jani.nikula@intel.com>
-> Acked-by: Corey Minyard <cminyard@mvista.com>
-> Signed-off-by: Joel Granados <joel.granados@kernel.org>
-> ---
+Dan Williams wrote:
+> Ira Weiny wrote:
 
-For xfs bits...
-Reviewed-by: Bill O'Donnell <bodonnel@redhat.com>
+[snip]
 
-
-> This treewide commit builds upon the work Thomas began a few releases
-> ago [1], where he laid the groundwork for constifying ctl_tables. We
-> implement constification throughout the tree, with the exception of the
-> ctl_tables in the "net" directory. Those are special in that they treat
-> the ctl_table as non-const but we can take them at a later point.
+> > diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> > index e8907c403edbd83c8a36b8d013c6bc3391207ee6..05a0718aea73b3b2a02c608bae198eac7c462523 100644
+> > --- a/drivers/cxl/cxlmem.h
+> > +++ b/drivers/cxl/cxlmem.h
+> > @@ -403,6 +403,7 @@ enum cxl_devtype {
+> >  	CXL_DEVTYPE_CLASSMEM,
+> >  };
+> >  
+> > +#define CXL_MAX_DC_REGION 8
 > 
-> Upstreaming:
-> ===========
-> It is late in the release cycle, but I'm hopeful that we can get this
-> in for the upcoming merge window and this is why:
-> 1. We don't use linux-next: As with previous treewide changes similar to
->    this one [1], we avoid using linux-next in order to avoid unwanted
->    merge conflicts
-> 2. This is a non-functional change: which lowers the probability of
->    unforeseen errors or regressions.
-> 3. It will have at least 2 weeks to be tested/reviewed: The PULL should
->    be sent at the end of the merge window, giving it at least 2 weeks.
->    And if there are more release candidates after rc6, there will be
->    more time.
-> 
-> Testing:
-> ========
-> 1. Currently being tested in 0-day
-> 2. sysctl self-tests/kunit-tests
-> 
-> Reduced To/Cc:
-> ==============
-> b4 originally gave me 200 ppl that this should go out to (which seems a
-> bit overkill from my point of view). So I left the mailing lists and
-> reduced the To: the ppl previously involved in the effort and sysctl
-> maintainers. Please tell me if I missed someone important to the
-> constification effort.
-> 
-> Comments are greatly appreciated.
-> 
-> Changes in v2:
-> - watchdog_hardlockup_sysctl, memory_allocation_profiling_sysctls,
->   loadpin_sysctl_table, iwcm_ctl_table and ucma_ctl_table where removed
->   from patchset as they change the sysctl array before registration.
-> - Added reviewed-by tags
-> - Link to v1: https://lore.kernel.org/r/20250109-jag-ctl_table_const-v1-1-622aea7230cf@kernel.org
-> Best
-> 
-> [1] https://lore.kernel.org/20240724210014.mc6nima6cekgiukx@joelS2.panther.com
-> 
-> --
-> ---
-> 
-> ---
->  arch/arm/kernel/isa.c                         | 2 +-
->  arch/arm64/kernel/fpsimd.c                    | 4 ++--
->  arch/arm64/kernel/process.c                   | 2 +-
->  arch/powerpc/kernel/idle.c                    | 2 +-
->  arch/powerpc/platforms/pseries/mobility.c     | 2 +-
->  arch/riscv/kernel/process.c                   | 2 +-
->  arch/riscv/kernel/vector.c                    | 2 +-
->  arch/s390/appldata/appldata_base.c            | 2 +-
->  arch/s390/kernel/debug.c                      | 2 +-
->  arch/s390/kernel/hiperdispatch.c              | 2 +-
->  arch/s390/kernel/topology.c                   | 2 +-
->  arch/s390/mm/cmm.c                            | 2 +-
->  arch/s390/mm/pgalloc.c                        | 2 +-
->  arch/x86/entry/vdso/vdso32-setup.c            | 2 +-
->  arch/x86/kernel/cpu/bus_lock.c                | 2 +-
->  arch/x86/kernel/itmt.c                        | 2 +-
->  crypto/fips.c                                 | 2 +-
->  drivers/base/firmware_loader/fallback_table.c | 2 +-
->  drivers/cdrom/cdrom.c                         | 2 +-
->  drivers/char/hpet.c                           | 2 +-
->  drivers/char/ipmi/ipmi_poweroff.c             | 2 +-
->  drivers/char/random.c                         | 2 +-
->  drivers/gpu/drm/i915/i915_perf.c              | 2 +-
->  drivers/gpu/drm/xe/xe_observation.c           | 2 +-
->  drivers/hv/hv_common.c                        | 2 +-
->  drivers/macintosh/mac_hid.c                   | 2 +-
->  drivers/md/md.c                               | 2 +-
->  drivers/misc/sgi-xp/xpc_main.c                | 4 ++--
->  drivers/perf/arm_pmuv3.c                      | 2 +-
->  drivers/perf/riscv_pmu_sbi.c                  | 2 +-
->  drivers/scsi/scsi_sysctl.c                    | 2 +-
->  drivers/scsi/sg.c                             | 2 +-
->  drivers/tty/tty_io.c                          | 2 +-
->  drivers/xen/balloon.c                         | 2 +-
->  fs/aio.c                                      | 2 +-
->  fs/cachefiles/error_inject.c                  | 2 +-
->  fs/coda/sysctl.c                              | 2 +-
->  fs/coredump.c                                 | 2 +-
->  fs/dcache.c                                   | 2 +-
->  fs/devpts/inode.c                             | 2 +-
->  fs/eventpoll.c                                | 2 +-
->  fs/exec.c                                     | 2 +-
->  fs/file_table.c                               | 2 +-
->  fs/fuse/sysctl.c                              | 2 +-
->  fs/inode.c                                    | 2 +-
->  fs/lockd/svc.c                                | 2 +-
->  fs/locks.c                                    | 2 +-
->  fs/namei.c                                    | 2 +-
->  fs/namespace.c                                | 2 +-
->  fs/nfs/nfs4sysctl.c                           | 2 +-
->  fs/nfs/sysctl.c                               | 2 +-
->  fs/notify/dnotify/dnotify.c                   | 2 +-
->  fs/notify/fanotify/fanotify_user.c            | 2 +-
->  fs/notify/inotify/inotify_user.c              | 2 +-
->  fs/ocfs2/stackglue.c                          | 2 +-
->  fs/pipe.c                                     | 2 +-
->  fs/quota/dquot.c                              | 2 +-
->  fs/sysctls.c                                  | 2 +-
->  fs/userfaultfd.c                              | 2 +-
->  fs/verity/init.c                              | 2 +-
->  fs/xfs/xfs_sysctl.c                           | 2 +-
->  init/do_mounts_initrd.c                       | 2 +-
->  io_uring/io_uring.c                           | 2 +-
->  ipc/ipc_sysctl.c                              | 2 +-
->  ipc/mq_sysctl.c                               | 2 +-
->  kernel/acct.c                                 | 2 +-
->  kernel/bpf/syscall.c                          | 2 +-
->  kernel/delayacct.c                            | 2 +-
->  kernel/exit.c                                 | 2 +-
->  kernel/hung_task.c                            | 2 +-
->  kernel/kexec_core.c                           | 2 +-
->  kernel/kprobes.c                              | 2 +-
->  kernel/latencytop.c                           | 2 +-
->  kernel/locking/lockdep.c                      | 2 +-
->  kernel/panic.c                                | 2 +-
->  kernel/pid_namespace.c                        | 2 +-
->  kernel/pid_sysctl.h                           | 2 +-
->  kernel/printk/sysctl.c                        | 2 +-
->  kernel/reboot.c                               | 2 +-
->  kernel/sched/autogroup.c                      | 2 +-
->  kernel/sched/core.c                           | 2 +-
->  kernel/sched/deadline.c                       | 2 +-
->  kernel/sched/fair.c                           | 2 +-
->  kernel/sched/rt.c                             | 2 +-
->  kernel/sched/topology.c                       | 2 +-
->  kernel/seccomp.c                              | 2 +-
->  kernel/signal.c                               | 2 +-
->  kernel/stackleak.c                            | 2 +-
->  kernel/sysctl-test.c                          | 6 +++---
->  kernel/sysctl.c                               | 4 ++--
->  kernel/time/timer.c                           | 2 +-
->  kernel/trace/ftrace.c                         | 2 +-
->  kernel/trace/trace_events_user.c              | 2 +-
->  kernel/umh.c                                  | 2 +-
->  kernel/utsname_sysctl.c                       | 4 ++--
->  kernel/watchdog.c                             | 2 +-
->  lib/test_sysctl.c                             | 6 +++---
->  mm/compaction.c                               | 2 +-
->  mm/hugetlb.c                                  | 2 +-
->  mm/hugetlb_vmemmap.c                          | 2 +-
->  mm/memory-failure.c                           | 2 +-
->  mm/oom_kill.c                                 | 2 +-
->  mm/page-writeback.c                           | 2 +-
->  mm/page_alloc.c                               | 2 +-
->  security/apparmor/lsm.c                       | 2 +-
->  security/keys/sysctl.c                        | 2 +-
->  security/yama/yama_lsm.c                      | 2 +-
->  107 files changed, 115 insertions(+), 115 deletions(-)
-> 
-> diff --git a/arch/arm/kernel/isa.c b/arch/arm/kernel/isa.c
-> index 905b1b191546..db8be609fab2 100644
-> --- a/arch/arm/kernel/isa.c
-> +++ b/arch/arm/kernel/isa.c
-> @@ -16,7 +16,7 @@
->  
->  static unsigned int isa_membase, isa_portbase, isa_portshift;
->  
-> -static struct ctl_table ctl_isa_vars[] = {
-> +static const struct ctl_table ctl_isa_vars[] = {
->  	{
->  		.procname	= "membase",
->  		.data		= &isa_membase, 
-> diff --git a/arch/arm64/kernel/fpsimd.c b/arch/arm64/kernel/fpsimd.c
-> index 8c4c1a2186cc..2b601d88762d 100644
-> --- a/arch/arm64/kernel/fpsimd.c
-> +++ b/arch/arm64/kernel/fpsimd.c
-> @@ -562,7 +562,7 @@ static int vec_proc_do_default_vl(const struct ctl_table *table, int write,
->  	return 0;
->  }
->  
-> -static struct ctl_table sve_default_vl_table[] = {
-> +static const struct ctl_table sve_default_vl_table[] = {
->  	{
->  		.procname	= "sve_default_vector_length",
->  		.mode		= 0644,
-> @@ -585,7 +585,7 @@ static int __init sve_sysctl_init(void) { return 0; }
->  #endif /* ! (CONFIG_ARM64_SVE && CONFIG_SYSCTL) */
->  
->  #if defined(CONFIG_ARM64_SME) && defined(CONFIG_SYSCTL)
-> -static struct ctl_table sme_default_vl_table[] = {
-> +static const struct ctl_table sme_default_vl_table[] = {
->  	{
->  		.procname	= "sme_default_vector_length",
->  		.mode		= 0644,
-> diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
-> index 2968a33bb3bc..42faebb7b712 100644
-> --- a/arch/arm64/kernel/process.c
-> +++ b/arch/arm64/kernel/process.c
-> @@ -859,7 +859,7 @@ long get_tagged_addr_ctrl(struct task_struct *task)
->   * disable it for tasks that already opted in to the relaxed ABI.
->   */
->  
-> -static struct ctl_table tagged_addr_sysctl_table[] = {
-> +static const struct ctl_table tagged_addr_sysctl_table[] = {
->  	{
->  		.procname	= "tagged_addr_disabled",
->  		.mode		= 0644,
-> diff --git a/arch/powerpc/kernel/idle.c b/arch/powerpc/kernel/idle.c
-> index 30b56c67fa61..e527cd3ef128 100644
-> --- a/arch/powerpc/kernel/idle.c
-> +++ b/arch/powerpc/kernel/idle.c
-> @@ -97,7 +97,7 @@ void power4_idle(void)
->  /*
->   * Register the sysctl to set/clear powersave_nap.
->   */
-> -static struct ctl_table powersave_nap_ctl_table[] = {
-> +static const struct ctl_table powersave_nap_ctl_table[] = {
->  	{
->  		.procname	= "powersave-nap",
->  		.data		= &powersave_nap,
-> diff --git a/arch/powerpc/platforms/pseries/mobility.c b/arch/powerpc/platforms/pseries/mobility.c
-> index 1798f0f14d58..62bd8e2d5d4c 100644
-> --- a/arch/powerpc/platforms/pseries/mobility.c
-> +++ b/arch/powerpc/platforms/pseries/mobility.c
-> @@ -53,7 +53,7 @@ struct update_props_workarea {
->  static unsigned int nmi_wd_lpm_factor = 200;
->  
->  #ifdef CONFIG_SYSCTL
-> -static struct ctl_table nmi_wd_lpm_factor_ctl_table[] = {
-> +static const struct ctl_table nmi_wd_lpm_factor_ctl_table[] = {
->  	{
->  		.procname	= "nmi_wd_lpm_factor",
->  		.data		= &nmi_wd_lpm_factor,
-> diff --git a/arch/riscv/kernel/process.c b/arch/riscv/kernel/process.c
-> index 58b6482c2bf6..7891294abf49 100644
-> --- a/arch/riscv/kernel/process.c
-> +++ b/arch/riscv/kernel/process.c
-> @@ -364,7 +364,7 @@ static bool try_to_set_pmm(unsigned long value)
->   * disable it for tasks that already opted in to the relaxed ABI.
->   */
->  
-> -static struct ctl_table tagged_addr_sysctl_table[] = {
-> +static const struct ctl_table tagged_addr_sysctl_table[] = {
->  	{
->  		.procname	= "tagged_addr_disabled",
->  		.mode		= 0644,
-> diff --git a/arch/riscv/kernel/vector.c b/arch/riscv/kernel/vector.c
-> index 821818886fab..d022b028ac3f 100644
-> --- a/arch/riscv/kernel/vector.c
-> +++ b/arch/riscv/kernel/vector.c
-> @@ -287,7 +287,7 @@ long riscv_v_vstate_ctrl_set_current(unsigned long arg)
->  
->  #ifdef CONFIG_SYSCTL
->  
-> -static struct ctl_table riscv_v_default_vstate_table[] = {
-> +static const struct ctl_table riscv_v_default_vstate_table[] = {
->  	{
->  		.procname	= "riscv_v_default_allow",
->  		.data		= &riscv_v_implicit_uacc,
-> diff --git a/arch/s390/appldata/appldata_base.c b/arch/s390/appldata/appldata_base.c
-> index 91a30e017d65..dd7ba7587dd5 100644
-> --- a/arch/s390/appldata/appldata_base.c
-> +++ b/arch/s390/appldata/appldata_base.c
-> @@ -52,7 +52,7 @@ static int appldata_interval_handler(const struct ctl_table *ctl, int write,
->  				     void *buffer, size_t *lenp, loff_t *ppos);
->  
->  static struct ctl_table_header *appldata_sysctl_header;
-> -static struct ctl_table appldata_table[] = {
-> +static const struct ctl_table appldata_table[] = {
->  	{
->  		.procname	= "timer",
->  		.mode		= S_IRUGO | S_IWUSR,
-> diff --git a/arch/s390/kernel/debug.c b/arch/s390/kernel/debug.c
-> index de19fd8a6a95..2c245c2bce4f 100644
-> --- a/arch/s390/kernel/debug.c
-> +++ b/arch/s390/kernel/debug.c
-> @@ -972,7 +972,7 @@ static int s390dbf_procactive(const struct ctl_table *table, int write,
->  		return 0;
->  }
->  
-> -static struct ctl_table s390dbf_table[] = {
-> +static const struct ctl_table s390dbf_table[] = {
->  	{
->  		.procname	= "debug_stoppable",
->  		.data		= &debug_stoppable,
-> diff --git a/arch/s390/kernel/hiperdispatch.c b/arch/s390/kernel/hiperdispatch.c
-> index 2a99a216ab62..7857a7e8e56c 100644
-> --- a/arch/s390/kernel/hiperdispatch.c
-> +++ b/arch/s390/kernel/hiperdispatch.c
-> @@ -292,7 +292,7 @@ static int hiperdispatch_ctl_handler(const struct ctl_table *ctl, int write,
->  	return 0;
->  }
->  
-> -static struct ctl_table hiperdispatch_ctl_table[] = {
-> +static const struct ctl_table hiperdispatch_ctl_table[] = {
->  	{
->  		.procname	= "hiperdispatch",
->  		.mode		= 0644,
-> diff --git a/arch/s390/kernel/topology.c b/arch/s390/kernel/topology.c
-> index 4f9c301a705b..5067293ef69d 100644
-> --- a/arch/s390/kernel/topology.c
-> +++ b/arch/s390/kernel/topology.c
-> @@ -662,7 +662,7 @@ static int polarization_ctl_handler(const struct ctl_table *ctl, int write,
->  	return set_polarization(polarization);
->  }
->  
-> -static struct ctl_table topology_ctl_table[] = {
-> +static const struct ctl_table topology_ctl_table[] = {
->  	{
->  		.procname	= "topology",
->  		.mode		= 0644,
-> diff --git a/arch/s390/mm/cmm.c b/arch/s390/mm/cmm.c
-> index d01724a715d0..939e3bec2db7 100644
-> --- a/arch/s390/mm/cmm.c
-> +++ b/arch/s390/mm/cmm.c
-> @@ -332,7 +332,7 @@ static int cmm_timeout_handler(const struct ctl_table *ctl, int write,
->  	return 0;
->  }
->  
-> -static struct ctl_table cmm_table[] = {
-> +static const struct ctl_table cmm_table[] = {
->  	{
->  		.procname	= "cmm_pages",
->  		.mode		= 0644,
-> diff --git a/arch/s390/mm/pgalloc.c b/arch/s390/mm/pgalloc.c
-> index 58696a0c4e4a..18d3176e44fb 100644
-> --- a/arch/s390/mm/pgalloc.c
-> +++ b/arch/s390/mm/pgalloc.c
-> @@ -21,7 +21,7 @@
->  int page_table_allocate_pgste = 0;
->  EXPORT_SYMBOL(page_table_allocate_pgste);
->  
-> -static struct ctl_table page_table_sysctl[] = {
-> +static const struct ctl_table page_table_sysctl[] = {
->  	{
->  		.procname	= "allocate_pgste",
->  		.data		= &page_table_allocate_pgste,
-> diff --git a/arch/x86/entry/vdso/vdso32-setup.c b/arch/x86/entry/vdso/vdso32-setup.c
-> index 76e4e74f35b5..f6d2d8aba643 100644
-> --- a/arch/x86/entry/vdso/vdso32-setup.c
-> +++ b/arch/x86/entry/vdso/vdso32-setup.c
-> @@ -57,7 +57,7 @@ __setup_param("vdso=", vdso_setup, vdso32_setup, 0);
->  /* Register vsyscall32 into the ABI table */
->  #include <linux/sysctl.h>
->  
-> -static struct ctl_table abi_table2[] = {
-> +static const struct ctl_table abi_table2[] = {
->  	{
->  		.procname	= "vsyscall32",
->  		.data		= &vdso32_enabled,
-> diff --git a/arch/x86/kernel/cpu/bus_lock.c b/arch/x86/kernel/cpu/bus_lock.c
-> index 704e9241b964..6cba85c79d42 100644
-> --- a/arch/x86/kernel/cpu/bus_lock.c
-> +++ b/arch/x86/kernel/cpu/bus_lock.c
-> @@ -49,7 +49,7 @@ static unsigned int sysctl_sld_mitigate = 1;
->  static DEFINE_SEMAPHORE(buslock_sem, 1);
->  
->  #ifdef CONFIG_PROC_SYSCTL
-> -static struct ctl_table sld_sysctls[] = {
-> +static const struct ctl_table sld_sysctls[] = {
->  	{
->  		.procname       = "split_lock_mitigate",
->  		.data           = &sysctl_sld_mitigate,
-> diff --git a/arch/x86/kernel/itmt.c b/arch/x86/kernel/itmt.c
-> index 51b805c727fc..083d8c4deb2b 100644
-> --- a/arch/x86/kernel/itmt.c
-> +++ b/arch/x86/kernel/itmt.c
-> @@ -64,7 +64,7 @@ static int sched_itmt_update_handler(const struct ctl_table *table, int write,
->  	return ret;
->  }
->  
-> -static struct ctl_table itmt_kern_table[] = {
-> +static const struct ctl_table itmt_kern_table[] = {
->  	{
->  		.procname	= "sched_itmt_enabled",
->  		.data		= &sysctl_sched_itmt_enabled,
-> diff --git a/crypto/fips.c b/crypto/fips.c
-> index 8a784018ebfc..ec6574596e59 100644
-> --- a/crypto/fips.c
-> +++ b/crypto/fips.c
-> @@ -41,7 +41,7 @@ __setup("fips=", fips_enable);
->  static char fips_name[] = FIPS_MODULE_NAME;
->  static char fips_version[] = FIPS_MODULE_VERSION;
->  
-> -static struct ctl_table crypto_sysctl_table[] = {
-> +static const struct ctl_table crypto_sysctl_table[] = {
->  	{
->  		.procname	= "fips_enabled",
->  		.data		= &fips_enabled,
-> diff --git a/drivers/base/firmware_loader/fallback_table.c b/drivers/base/firmware_loader/fallback_table.c
-> index ddb70e29eb42..c8afc501a8a4 100644
-> --- a/drivers/base/firmware_loader/fallback_table.c
-> +++ b/drivers/base/firmware_loader/fallback_table.c
-> @@ -25,7 +25,7 @@ struct firmware_fallback_config fw_fallback_config = {
->  EXPORT_SYMBOL_NS_GPL(fw_fallback_config, "FIRMWARE_LOADER_PRIVATE");
->  
->  #ifdef CONFIG_SYSCTL
-> -static struct ctl_table firmware_config_table[] = {
-> +static const struct ctl_table firmware_config_table[] = {
->  	{
->  		.procname	= "force_sysfs_fallback",
->  		.data		= &fw_fallback_config.force_sysfs_fallback,
-> diff --git a/drivers/cdrom/cdrom.c b/drivers/cdrom/cdrom.c
-> index 51745ed1bbab..b163e043c687 100644
-> --- a/drivers/cdrom/cdrom.c
-> +++ b/drivers/cdrom/cdrom.c
-> @@ -3612,7 +3612,7 @@ static int cdrom_sysctl_handler(const struct ctl_table *ctl, int write,
->  }
->  
->  /* Place files in /proc/sys/dev/cdrom */
-> -static struct ctl_table cdrom_table[] = {
-> +static const struct ctl_table cdrom_table[] = {
->  	{
->  		.procname	= "info",
->  		.data		= &cdrom_sysctl_settings.info, 
-> diff --git a/drivers/char/hpet.c b/drivers/char/hpet.c
-> index 48fe96ab4649..e110857824fc 100644
-> --- a/drivers/char/hpet.c
-> +++ b/drivers/char/hpet.c
-> @@ -724,7 +724,7 @@ static int hpet_is_known(struct hpet_data *hdp)
->  	return 0;
->  }
->  
-> -static struct ctl_table hpet_table[] = {
-> +static const struct ctl_table hpet_table[] = {
->  	{
->  	 .procname = "max-user-freq",
->  	 .data = &hpet_max_freq,
-> diff --git a/drivers/char/ipmi/ipmi_poweroff.c b/drivers/char/ipmi/ipmi_poweroff.c
-> index 941d2dcc8c9d..de84f59468a9 100644
-> --- a/drivers/char/ipmi/ipmi_poweroff.c
-> +++ b/drivers/char/ipmi/ipmi_poweroff.c
-> @@ -650,7 +650,7 @@ static struct ipmi_smi_watcher smi_watcher = {
->  #ifdef CONFIG_PROC_FS
->  #include <linux/sysctl.h>
->  
-> -static struct ctl_table ipmi_table[] = {
-> +static const struct ctl_table ipmi_table[] = {
->  	{ .procname	= "poweroff_powercycle",
->  	  .data		= &poweroff_powercycle,
->  	  .maxlen	= sizeof(poweroff_powercycle),
-> diff --git a/drivers/char/random.c b/drivers/char/random.c
-> index 23ee76bbb4aa..2581186fa61b 100644
-> --- a/drivers/char/random.c
-> +++ b/drivers/char/random.c
-> @@ -1665,7 +1665,7 @@ static int proc_do_rointvec(const struct ctl_table *table, int write, void *buf,
->  	return write ? 0 : proc_dointvec(table, 0, buf, lenp, ppos);
->  }
->  
-> -static struct ctl_table random_table[] = {
-> +static const struct ctl_table random_table[] = {
->  	{
->  		.procname	= "poolsize",
->  		.data		= &sysctl_poolsize,
-> diff --git a/drivers/gpu/drm/i915/i915_perf.c b/drivers/gpu/drm/i915/i915_perf.c
-> index 2406cda75b7b..5384d1bb4923 100644
-> --- a/drivers/gpu/drm/i915/i915_perf.c
-> +++ b/drivers/gpu/drm/i915/i915_perf.c
-> @@ -4802,7 +4802,7 @@ int i915_perf_remove_config_ioctl(struct drm_device *dev, void *data,
->  	return ret;
->  }
->  
-> -static struct ctl_table oa_table[] = {
-> +static const struct ctl_table oa_table[] = {
->  	{
->  	 .procname = "perf_stream_paranoid",
->  	 .data = &i915_perf_stream_paranoid,
-> diff --git a/drivers/gpu/drm/xe/xe_observation.c b/drivers/gpu/drm/xe/xe_observation.c
-> index 8ec1b84cbb9e..57cf01efc07f 100644
-> --- a/drivers/gpu/drm/xe/xe_observation.c
-> +++ b/drivers/gpu/drm/xe/xe_observation.c
-> @@ -56,7 +56,7 @@ int xe_observation_ioctl(struct drm_device *dev, void *data, struct drm_file *fi
->  	}
->  }
->  
-> -static struct ctl_table observation_ctl_table[] = {
-> +static const struct ctl_table observation_ctl_table[] = {
->  	{
->  	 .procname = "observation_paranoid",
->  	 .data = &xe_observation_paranoid,
-> diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
-> index 7a35c82976e0..9453f0c26f2a 100644
-> --- a/drivers/hv/hv_common.c
-> +++ b/drivers/hv/hv_common.c
-> @@ -141,7 +141,7 @@ static int sysctl_record_panic_msg = 1;
->   * sysctl option to allow the user to control whether kmsg data should be
->   * reported to Hyper-V on panic.
->   */
-> -static struct ctl_table hv_ctl_table[] = {
-> +static const struct ctl_table hv_ctl_table[] = {
->  	{
->  		.procname	= "hyperv_record_panic_msg",
->  		.data		= &sysctl_record_panic_msg,
-> diff --git a/drivers/macintosh/mac_hid.c b/drivers/macintosh/mac_hid.c
-> index b461b1bed25b..369d72f59b3c 100644
-> --- a/drivers/macintosh/mac_hid.c
-> +++ b/drivers/macintosh/mac_hid.c
-> @@ -215,7 +215,7 @@ static int mac_hid_toggle_emumouse(const struct ctl_table *table, int write,
->  }
->  
->  /* file(s) in /proc/sys/dev/mac_hid */
-> -static struct ctl_table mac_hid_files[] = {
-> +static const struct ctl_table mac_hid_files[] = {
->  	{
->  		.procname	= "mouse_button_emulation",
->  		.data		= &mouse_emulate_buttons,
-> diff --git a/drivers/md/md.c b/drivers/md/md.c
-> index aebe12b0ee27..0e06f9027d81 100644
-> --- a/drivers/md/md.c
-> +++ b/drivers/md/md.c
-> @@ -294,7 +294,7 @@ void mddev_destroy_serial_pool(struct mddev *mddev, struct md_rdev *rdev)
->  
->  static struct ctl_table_header *raid_table_header;
->  
-> -static struct ctl_table raid_table[] = {
-> +static const struct ctl_table raid_table[] = {
->  	{
->  		.procname	= "speed_limit_min",
->  		.data		= &sysctl_speed_limit_min,
-> diff --git a/drivers/misc/sgi-xp/xpc_main.c b/drivers/misc/sgi-xp/xpc_main.c
-> index 61b66e318488..7a3c34306de9 100644
-> --- a/drivers/misc/sgi-xp/xpc_main.c
-> +++ b/drivers/misc/sgi-xp/xpc_main.c
-> @@ -93,7 +93,7 @@ int xpc_disengage_timelimit = XPC_DISENGAGE_DEFAULT_TIMELIMIT;
->  static int xpc_disengage_min_timelimit;	/* = 0 */
->  static int xpc_disengage_max_timelimit = 120;
->  
-> -static struct ctl_table xpc_sys_xpc_hb[] = {
-> +static const struct ctl_table xpc_sys_xpc_hb[] = {
->  	{
->  	 .procname = "hb_interval",
->  	 .data = &xpc_hb_interval,
-> @@ -111,7 +111,7 @@ static struct ctl_table xpc_sys_xpc_hb[] = {
->  	 .extra1 = &xpc_hb_check_min_interval,
->  	 .extra2 = &xpc_hb_check_max_interval},
->  };
-> -static struct ctl_table xpc_sys_xpc[] = {
-> +static const struct ctl_table xpc_sys_xpc[] = {
->  	{
->  	 .procname = "disengage_timelimit",
->  	 .data = &xpc_disengage_timelimit,
-> diff --git a/drivers/perf/arm_pmuv3.c b/drivers/perf/arm_pmuv3.c
-> index b5cc11abc962..0e360feb3432 100644
-> --- a/drivers/perf/arm_pmuv3.c
-> +++ b/drivers/perf/arm_pmuv3.c
-> @@ -1279,7 +1279,7 @@ static int armv8pmu_proc_user_access_handler(const struct ctl_table *table, int
->  	return 0;
->  }
->  
-> -static struct ctl_table armv8_pmu_sysctl_table[] = {
-> +static const struct ctl_table armv8_pmu_sysctl_table[] = {
->  	{
->  		.procname       = "perf_user_access",
->  		.data		= &sysctl_perf_user_access,
-> diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
-> index 1aa303f76cc7..ea96c0a88f73 100644
-> --- a/drivers/perf/riscv_pmu_sbi.c
-> +++ b/drivers/perf/riscv_pmu_sbi.c
-> @@ -1315,7 +1315,7 @@ static int riscv_pmu_proc_user_access_handler(const struct ctl_table *table,
->  	return 0;
->  }
->  
-> -static struct ctl_table sbi_pmu_sysctl_table[] = {
-> +static const struct ctl_table sbi_pmu_sysctl_table[] = {
->  	{
->  		.procname       = "perf_user_access",
->  		.data		= &sysctl_perf_user_access,
-> diff --git a/drivers/scsi/scsi_sysctl.c b/drivers/scsi/scsi_sysctl.c
-> index 093774d77534..be4aef0f4f99 100644
-> --- a/drivers/scsi/scsi_sysctl.c
-> +++ b/drivers/scsi/scsi_sysctl.c
-> @@ -12,7 +12,7 @@
->  #include "scsi_priv.h"
->  
->  
-> -static struct ctl_table scsi_table[] = {
-> +static const struct ctl_table scsi_table[] = {
->  	{ .procname	= "logging_level",
->  	  .data		= &scsi_logging_level,
->  	  .maxlen	= sizeof(scsi_logging_level),
-> diff --git a/drivers/scsi/sg.c b/drivers/scsi/sg.c
-> index 94127868bedf..effb7e768165 100644
-> --- a/drivers/scsi/sg.c
-> +++ b/drivers/scsi/sg.c
-> @@ -1639,7 +1639,7 @@ MODULE_PARM_DESC(allow_dio, "allow direct I/O (default: 0 (disallow))");
->  #ifdef CONFIG_SYSCTL
->  #include <linux/sysctl.h>
->  
-> -static struct ctl_table sg_sysctls[] = {
-> +static const struct ctl_table sg_sysctls[] = {
->  	{
->  		.procname	= "sg-big-buff",
->  		.data		= &sg_big_buff,
-> diff --git a/drivers/tty/tty_io.c b/drivers/tty/tty_io.c
-> index dcb1769c3625..0e84677712b4 100644
-> --- a/drivers/tty/tty_io.c
-> +++ b/drivers/tty/tty_io.c
-> @@ -3618,7 +3618,7 @@ void console_sysfs_notify(void)
->  		sysfs_notify(&consdev->kobj, NULL, "active");
->  }
->  
-> -static struct ctl_table tty_table[] = {
-> +static const struct ctl_table tty_table[] = {
->  	{
->  		.procname	= "legacy_tiocsti",
->  		.data		= &tty_legacy_tiocsti,
-> diff --git a/drivers/xen/balloon.c b/drivers/xen/balloon.c
-> index 528395133b4f..163f7f1d70f1 100644
-> --- a/drivers/xen/balloon.c
-> +++ b/drivers/xen/balloon.c
-> @@ -84,7 +84,7 @@ module_param(balloon_boot_timeout, uint, 0444);
->  #ifdef CONFIG_XEN_BALLOON_MEMORY_HOTPLUG
->  static int xen_hotplug_unpopulated;
->  
-> -static struct ctl_table balloon_table[] = {
-> +static const struct ctl_table balloon_table[] = {
->  	{
->  		.procname	= "hotplug_unpopulated",
->  		.data		= &xen_hotplug_unpopulated,
-> diff --git a/fs/aio.c b/fs/aio.c
-> index 50671640b588..7b976b564cfc 100644
-> --- a/fs/aio.c
-> +++ b/fs/aio.c
-> @@ -224,7 +224,7 @@ static unsigned long aio_nr;		/* current system wide number of aio requests */
->  static unsigned long aio_max_nr = 0x10000; /* system wide maximum number of aio requests */
->  /*----end sysctl variables---*/
->  #ifdef CONFIG_SYSCTL
-> -static struct ctl_table aio_sysctls[] = {
-> +static const struct ctl_table aio_sysctls[] = {
->  	{
->  		.procname	= "aio-nr",
->  		.data		= &aio_nr,
-> diff --git a/fs/cachefiles/error_inject.c b/fs/cachefiles/error_inject.c
-> index 1715d5ca2b2d..e341ade47dd8 100644
-> --- a/fs/cachefiles/error_inject.c
-> +++ b/fs/cachefiles/error_inject.c
-> @@ -11,7 +11,7 @@
->  unsigned int cachefiles_error_injection_state;
->  
->  static struct ctl_table_header *cachefiles_sysctl;
-> -static struct ctl_table cachefiles_sysctls[] = {
-> +static const struct ctl_table cachefiles_sysctls[] = {
->  	{
->  		.procname	= "error_injection",
->  		.data		= &cachefiles_error_injection_state,
-> diff --git a/fs/coda/sysctl.c b/fs/coda/sysctl.c
-> index 9f2d5743e2c8..0df46f09b6cc 100644
-> --- a/fs/coda/sysctl.c
-> +++ b/fs/coda/sysctl.c
-> @@ -14,7 +14,7 @@
->  
->  static struct ctl_table_header *fs_table_header;
->  
-> -static struct ctl_table coda_table[] = {
-> +static const struct ctl_table coda_table[] = {
->  	{
->  		.procname	= "timeout",
->  		.data		= &coda_timeout,
-> diff --git a/fs/coredump.c b/fs/coredump.c
-> index d48edb37bc35..591700e1b2ce 100644
-> --- a/fs/coredump.c
-> +++ b/fs/coredump.c
-> @@ -995,7 +995,7 @@ static int proc_dostring_coredump(const struct ctl_table *table, int write,
->  static const unsigned int core_file_note_size_min = CORE_FILE_NOTE_SIZE_DEFAULT;
->  static const unsigned int core_file_note_size_max = CORE_FILE_NOTE_SIZE_MAX;
->  
-> -static struct ctl_table coredump_sysctls[] = {
-> +static const struct ctl_table coredump_sysctls[] = {
->  	{
->  		.procname	= "core_uses_pid",
->  		.data		= &core_uses_pid,
-> diff --git a/fs/dcache.c b/fs/dcache.c
-> index b4d5e9e1e43d..370302d4e488 100644
-> --- a/fs/dcache.c
-> +++ b/fs/dcache.c
-> @@ -192,7 +192,7 @@ static int proc_nr_dentry(const struct ctl_table *table, int write, void *buffer
->  	return proc_doulongvec_minmax(table, write, buffer, lenp, ppos);
->  }
->  
-> -static struct ctl_table fs_dcache_sysctls[] = {
-> +static const struct ctl_table fs_dcache_sysctls[] = {
->  	{
->  		.procname	= "dentry-state",
->  		.data		= &dentry_stat,
-> diff --git a/fs/devpts/inode.c b/fs/devpts/inode.c
-> index b20e565b9c5e..1096ff8562fa 100644
-> --- a/fs/devpts/inode.c
-> +++ b/fs/devpts/inode.c
-> @@ -45,7 +45,7 @@ static int pty_limit_min;
->  static int pty_limit_max = INT_MAX;
->  static atomic_t pty_count = ATOMIC_INIT(0);
->  
-> -static struct ctl_table pty_table[] = {
-> +static const struct ctl_table pty_table[] = {
->  	{
->  		.procname	= "max",
->  		.maxlen		= sizeof(int),
-> diff --git a/fs/eventpoll.c b/fs/eventpoll.c
-> index f9898e60dd8b..7c0980db77b3 100644
-> --- a/fs/eventpoll.c
-> +++ b/fs/eventpoll.c
-> @@ -318,7 +318,7 @@ static void unlist_file(struct epitems_head *head)
->  static long long_zero;
->  static long long_max = LONG_MAX;
->  
-> -static struct ctl_table epoll_table[] = {
-> +static const struct ctl_table epoll_table[] = {
->  	{
->  		.procname	= "max_user_watches",
->  		.data		= &max_user_watches,
-> diff --git a/fs/exec.c b/fs/exec.c
-> index 98cb7ba9983c..96229a6a4dff 100644
-> --- a/fs/exec.c
-> +++ b/fs/exec.c
-> @@ -2142,7 +2142,7 @@ static int proc_dointvec_minmax_coredump(const struct ctl_table *table, int writ
->  	return error;
->  }
->  
-> -static struct ctl_table fs_exec_sysctls[] = {
-> +static const struct ctl_table fs_exec_sysctls[] = {
->  	{
->  		.procname	= "suid_dumpable",
->  		.data		= &suid_dumpable,
-> diff --git a/fs/file_table.c b/fs/file_table.c
-> index 976736be47cb..70ed0b3a5a0e 100644
-> --- a/fs/file_table.c
-> +++ b/fs/file_table.c
-> @@ -106,7 +106,7 @@ static int proc_nr_files(const struct ctl_table *table, int write, void *buffer,
->  	return proc_doulongvec_minmax(table, write, buffer, lenp, ppos);
->  }
->  
-> -static struct ctl_table fs_stat_sysctls[] = {
-> +static const struct ctl_table fs_stat_sysctls[] = {
->  	{
->  		.procname	= "file-nr",
->  		.data		= &files_stat,
-> diff --git a/fs/fuse/sysctl.c b/fs/fuse/sysctl.c
-> index b272bb333005..63fb1e5bee30 100644
-> --- a/fs/fuse/sysctl.c
-> +++ b/fs/fuse/sysctl.c
-> @@ -13,7 +13,7 @@ static struct ctl_table_header *fuse_table_header;
->  /* Bound by fuse_init_out max_pages, which is a u16 */
->  static unsigned int sysctl_fuse_max_pages_limit = 65535;
->  
-> -static struct ctl_table fuse_sysctl_table[] = {
-> +static const struct ctl_table fuse_sysctl_table[] = {
->  	{
->  		.procname	= "max_pages_limit",
->  		.data		= &fuse_max_pages_limit,
-> diff --git a/fs/inode.c b/fs/inode.c
-> index 6b4c77268fc0..5587aabdaa5e 100644
-> --- a/fs/inode.c
-> +++ b/fs/inode.c
-> @@ -184,7 +184,7 @@ static int proc_nr_inodes(const struct ctl_table *table, int write, void *buffer
->  	return proc_doulongvec_minmax(table, write, buffer, lenp, ppos);
->  }
->  
-> -static struct ctl_table inodes_sysctls[] = {
-> +static const struct ctl_table inodes_sysctls[] = {
->  	{
->  		.procname	= "inode-nr",
->  		.data		= &inodes_stat,
-> diff --git a/fs/lockd/svc.c b/fs/lockd/svc.c
-> index 4ec22c2f2ea3..d6cac1c89c2a 100644
-> --- a/fs/lockd/svc.c
-> +++ b/fs/lockd/svc.c
-> @@ -419,7 +419,7 @@ EXPORT_SYMBOL_GPL(lockd_down);
->   * Sysctl parameters (same as module parameters, different interface).
->   */
->  
-> -static struct ctl_table nlm_sysctls[] = {
-> +static const struct ctl_table nlm_sysctls[] = {
->  	{
->  		.procname	= "nlm_grace_period",
->  		.data		= &nlm_grace_period,
-> diff --git a/fs/locks.c b/fs/locks.c
-> index 25afc8d9c9d1..1619cddfa7a4 100644
-> --- a/fs/locks.c
-> +++ b/fs/locks.c
-> @@ -97,7 +97,7 @@ static int leases_enable = 1;
->  static int lease_break_time = 45;
->  
->  #ifdef CONFIG_SYSCTL
-> -static struct ctl_table locks_sysctls[] = {
-> +static const struct ctl_table locks_sysctls[] = {
->  	{
->  		.procname	= "leases-enable",
->  		.data		= &leases_enable,
-> diff --git a/fs/namei.c b/fs/namei.c
-> index 9d30c7aa9aa6..6a18b2ea21b7 100644
-> --- a/fs/namei.c
-> +++ b/fs/namei.c
-> @@ -1099,7 +1099,7 @@ static int sysctl_protected_fifos __read_mostly;
->  static int sysctl_protected_regular __read_mostly;
->  
->  #ifdef CONFIG_SYSCTL
-> -static struct ctl_table namei_sysctls[] = {
-> +static const struct ctl_table namei_sysctls[] = {
->  	{
->  		.procname	= "protected_symlinks",
->  		.data		= &sysctl_protected_symlinks,
-> diff --git a/fs/namespace.c b/fs/namespace.c
-> index 23e81c2a1e3f..3819c322244e 100644
-> --- a/fs/namespace.c
-> +++ b/fs/namespace.c
-> @@ -5927,7 +5927,7 @@ const struct proc_ns_operations mntns_operations = {
->  };
->  
->  #ifdef CONFIG_SYSCTL
-> -static struct ctl_table fs_namespace_sysctls[] = {
-> +static const struct ctl_table fs_namespace_sysctls[] = {
->  	{
->  		.procname	= "mount-max",
->  		.data		= &sysctl_mount_max,
-> diff --git a/fs/nfs/nfs4sysctl.c b/fs/nfs/nfs4sysctl.c
-> index 886a7c4c60b3..d1a92d8f8ba4 100644
-> --- a/fs/nfs/nfs4sysctl.c
-> +++ b/fs/nfs/nfs4sysctl.c
-> @@ -17,7 +17,7 @@ static const int nfs_set_port_min;
->  static const int nfs_set_port_max = 65535;
->  static struct ctl_table_header *nfs4_callback_sysctl_table;
->  
-> -static struct ctl_table nfs4_cb_sysctls[] = {
-> +static const struct ctl_table nfs4_cb_sysctls[] = {
->  	{
->  		.procname = "nfs_callback_tcpport",
->  		.data = &nfs_callback_set_tcpport,
-> diff --git a/fs/nfs/sysctl.c b/fs/nfs/sysctl.c
-> index e645be1a3381..f579df0e8d67 100644
-> --- a/fs/nfs/sysctl.c
-> +++ b/fs/nfs/sysctl.c
-> @@ -14,7 +14,7 @@
->  
->  static struct ctl_table_header *nfs_callback_sysctl_table;
->  
-> -static struct ctl_table nfs_cb_sysctls[] = {
-> +static const struct ctl_table nfs_cb_sysctls[] = {
->  	{
->  		.procname	= "nfs_mountpoint_timeout",
->  		.data		= &nfs_mountpoint_expiry_timeout,
-> diff --git a/fs/notify/dnotify/dnotify.c b/fs/notify/dnotify/dnotify.c
-> index 6004dfdfdf0f..c4cdaf5fa7ed 100644
-> --- a/fs/notify/dnotify/dnotify.c
-> +++ b/fs/notify/dnotify/dnotify.c
-> @@ -20,7 +20,7 @@
->  
->  static int dir_notify_enable __read_mostly = 1;
->  #ifdef CONFIG_SYSCTL
-> -static struct ctl_table dnotify_sysctls[] = {
-> +static const struct ctl_table dnotify_sysctls[] = {
->  	{
->  		.procname	= "dir-notify-enable",
->  		.data		= &dir_notify_enable,
-> diff --git a/fs/notify/fanotify/fanotify_user.c b/fs/notify/fanotify/fanotify_user.c
-> index 2d85c71717d6..004cfdae1316 100644
-> --- a/fs/notify/fanotify/fanotify_user.c
-> +++ b/fs/notify/fanotify/fanotify_user.c
-> @@ -58,7 +58,7 @@ static int fanotify_max_queued_events __read_mostly;
->  static long ft_zero = 0;
->  static long ft_int_max = INT_MAX;
->  
-> -static struct ctl_table fanotify_table[] = {
-> +static const struct ctl_table fanotify_table[] = {
->  	{
->  		.procname	= "max_user_groups",
->  		.data	= &init_user_ns.ucount_max[UCOUNT_FANOTIFY_GROUPS],
-> diff --git a/fs/notify/inotify/inotify_user.c b/fs/notify/inotify/inotify_user.c
-> index e0c48956608a..b372fb2c56bd 100644
-> --- a/fs/notify/inotify/inotify_user.c
-> +++ b/fs/notify/inotify/inotify_user.c
-> @@ -58,7 +58,7 @@ struct kmem_cache *inotify_inode_mark_cachep __ro_after_init;
->  static long it_zero = 0;
->  static long it_int_max = INT_MAX;
->  
-> -static struct ctl_table inotify_table[] = {
-> +static const struct ctl_table inotify_table[] = {
->  	{
->  		.procname	= "max_user_instances",
->  		.data		= &init_user_ns.ucount_max[UCOUNT_INOTIFY_INSTANCES],
-> diff --git a/fs/ocfs2/stackglue.c b/fs/ocfs2/stackglue.c
-> index 20aa37b67cfb..ddd761cf44c8 100644
-> --- a/fs/ocfs2/stackglue.c
-> +++ b/fs/ocfs2/stackglue.c
-> @@ -650,7 +650,7 @@ static int ocfs2_sysfs_init(void)
->   * and easier to preserve the name.
->   */
->  
-> -static struct ctl_table ocfs2_nm_table[] = {
-> +static const struct ctl_table ocfs2_nm_table[] = {
->  	{
->  		.procname	= "hb_ctl_path",
->  		.data		= ocfs2_hb_ctl_path,
-> diff --git a/fs/pipe.c b/fs/pipe.c
-> index 12b22c2723b7..638fb318e7be 100644
-> --- a/fs/pipe.c
-> +++ b/fs/pipe.c
-> @@ -1477,7 +1477,7 @@ static int proc_dopipe_max_size(const struct ctl_table *table, int write,
->  				 do_proc_dopipe_max_size_conv, NULL);
->  }
->  
-> -static struct ctl_table fs_pipe_sysctls[] = {
-> +static const struct ctl_table fs_pipe_sysctls[] = {
->  	{
->  		.procname	= "pipe-max-size",
->  		.data		= &pipe_max_size,
-> diff --git a/fs/quota/dquot.c b/fs/quota/dquot.c
-> index f9578918cfb2..825c5c2e0962 100644
-> --- a/fs/quota/dquot.c
-> +++ b/fs/quota/dquot.c
-> @@ -2926,7 +2926,7 @@ static int do_proc_dqstats(const struct ctl_table *table, int write,
->  	return proc_doulongvec_minmax(table, write, buffer, lenp, ppos);
->  }
->  
-> -static struct ctl_table fs_dqstats_table[] = {
-> +static const struct ctl_table fs_dqstats_table[] = {
->  	{
->  		.procname	= "lookups",
->  		.data		= &dqstats.stat[DQST_LOOKUPS],
-> diff --git a/fs/sysctls.c b/fs/sysctls.c
-> index 8dbde9a802fa..ad429dffeb4b 100644
-> --- a/fs/sysctls.c
-> +++ b/fs/sysctls.c
-> @@ -7,7 +7,7 @@
->  #include <linux/init.h>
->  #include <linux/sysctl.h>
->  
-> -static struct ctl_table fs_shared_sysctls[] = {
-> +static const struct ctl_table fs_shared_sysctls[] = {
->  	{
->  		.procname	= "overflowuid",
->  		.data		= &fs_overflowuid,
-> diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
-> index 7c0bd0b55f88..97c4d71115d8 100644
-> --- a/fs/userfaultfd.c
-> +++ b/fs/userfaultfd.c
-> @@ -36,7 +36,7 @@
->  static int sysctl_unprivileged_userfaultfd __read_mostly;
->  
->  #ifdef CONFIG_SYSCTL
-> -static struct ctl_table vm_userfaultfd_table[] = {
-> +static const struct ctl_table vm_userfaultfd_table[] = {
->  	{
->  		.procname	= "unprivileged_userfaultfd",
->  		.data		= &sysctl_unprivileged_userfaultfd,
-> diff --git a/fs/verity/init.c b/fs/verity/init.c
-> index f440f0e61e3e..6e8d33b50240 100644
-> --- a/fs/verity/init.c
-> +++ b/fs/verity/init.c
-> @@ -10,7 +10,7 @@
->  #include <linux/ratelimit.h>
->  
->  #ifdef CONFIG_SYSCTL
-> -static struct ctl_table fsverity_sysctl_table[] = {
-> +static const struct ctl_table fsverity_sysctl_table[] = {
->  #ifdef CONFIG_FS_VERITY_BUILTIN_SIGNATURES
->  	{
->  		.procname       = "require_signatures",
-> diff --git a/fs/xfs/xfs_sysctl.c b/fs/xfs/xfs_sysctl.c
-> index c84df23b494d..751dc74a3067 100644
-> --- a/fs/xfs/xfs_sysctl.c
-> +++ b/fs/xfs/xfs_sysctl.c
-> @@ -66,7 +66,7 @@ xfs_deprecated_dointvec_minmax(
->  	return proc_dointvec_minmax(ctl, write, buffer, lenp, ppos);
->  }
->  
-> -static struct ctl_table xfs_table[] = {
-> +static const struct ctl_table xfs_table[] = {
->  	{
->  		.procname	= "irix_sgid_inherit",
->  		.data		= &xfs_params.sgid_inherit.val,
-> diff --git a/init/do_mounts_initrd.c b/init/do_mounts_initrd.c
-> index 22c7f41ff642..903b4d573d3d 100644
-> --- a/init/do_mounts_initrd.c
-> +++ b/init/do_mounts_initrd.c
-> @@ -21,7 +21,7 @@ phys_addr_t phys_initrd_start __initdata;
->  unsigned long phys_initrd_size __initdata;
->  
->  #ifdef CONFIG_SYSCTL
-> -static struct ctl_table kern_do_mounts_initrd_table[] = {
-> +static const struct ctl_table kern_do_mounts_initrd_table[] = {
->  	{
->  		.procname       = "real-root-dev",
->  		.data           = &real_root_dev,
-> diff --git a/io_uring/io_uring.c b/io_uring/io_uring.c
-> index d3403c8216db..72ad31225fb3 100644
-> --- a/io_uring/io_uring.c
-> +++ b/io_uring/io_uring.c
-> @@ -156,7 +156,7 @@ static int __read_mostly sysctl_io_uring_disabled;
->  static int __read_mostly sysctl_io_uring_group = -1;
->  
->  #ifdef CONFIG_SYSCTL
-> -static struct ctl_table kernel_io_uring_disabled_table[] = {
-> +static const struct ctl_table kernel_io_uring_disabled_table[] = {
->  	{
->  		.procname	= "io_uring_disabled",
->  		.data		= &sysctl_io_uring_disabled,
-> diff --git a/ipc/ipc_sysctl.c b/ipc/ipc_sysctl.c
-> index 54318e0b4557..15b17e86e198 100644
-> --- a/ipc/ipc_sysctl.c
-> +++ b/ipc/ipc_sysctl.c
-> @@ -73,7 +73,7 @@ int ipc_mni = IPCMNI;
->  int ipc_mni_shift = IPCMNI_SHIFT;
->  int ipc_min_cycle = RADIX_TREE_MAP_SIZE;
->  
-> -static struct ctl_table ipc_sysctls[] = {
-> +static const struct ctl_table ipc_sysctls[] = {
->  	{
->  		.procname	= "shmmax",
->  		.data		= &init_ipc_ns.shm_ctlmax,
-> diff --git a/ipc/mq_sysctl.c b/ipc/mq_sysctl.c
-> index b70dc2ff22d8..0dd12e1c9f53 100644
-> --- a/ipc/mq_sysctl.c
-> +++ b/ipc/mq_sysctl.c
-> @@ -20,7 +20,7 @@ static int msg_max_limit_max = HARD_MSGMAX;
->  static int msg_maxsize_limit_min = MIN_MSGSIZEMAX;
->  static int msg_maxsize_limit_max = HARD_MSGSIZEMAX;
->  
-> -static struct ctl_table mq_sysctls[] = {
-> +static const struct ctl_table mq_sysctls[] = {
->  	{
->  		.procname	= "queues_max",
->  		.data		= &init_ipc_ns.mq_queues_max,
-> diff --git a/kernel/acct.c b/kernel/acct.c
-> index 179848ad33e9..31222e8cd534 100644
-> --- a/kernel/acct.c
-> +++ b/kernel/acct.c
-> @@ -76,7 +76,7 @@ static int acct_parm[3] = {4, 2, 30};
->  #define ACCT_TIMEOUT	(acct_parm[2])	/* foo second timeout between checks */
->  
->  #ifdef CONFIG_SYSCTL
-> -static struct ctl_table kern_acct_table[] = {
-> +static const struct ctl_table kern_acct_table[] = {
->  	{
->  		.procname       = "acct",
->  		.data           = &acct_parm,
-> diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-> index 5684e8ce132d..fbcf07f98d8b 100644
-> --- a/kernel/bpf/syscall.c
-> +++ b/kernel/bpf/syscall.c
-> @@ -6124,7 +6124,7 @@ static int bpf_unpriv_handler(const struct ctl_table *table, int write,
->  	return ret;
->  }
->  
-> -static struct ctl_table bpf_syscall_table[] = {
-> +static const struct ctl_table bpf_syscall_table[] = {
->  	{
->  		.procname	= "unprivileged_bpf_disabled",
->  		.data		= &sysctl_unprivileged_bpf_disabled,
-> diff --git a/kernel/delayacct.c b/kernel/delayacct.c
-> index dead51de8eb5..75659ac036cd 100644
-> --- a/kernel/delayacct.c
-> +++ b/kernel/delayacct.c
-> @@ -64,7 +64,7 @@ static int sysctl_delayacct(const struct ctl_table *table, int write, void *buff
->  	return err;
->  }
->  
-> -static struct ctl_table kern_delayacct_table[] = {
-> +static const struct ctl_table kern_delayacct_table[] = {
->  	{
->  		.procname       = "task_delayacct",
->  		.data           = NULL,
-> diff --git a/kernel/exit.c b/kernel/exit.c
-> index 1dcddfe537ee..3485e5fc499e 100644
-> --- a/kernel/exit.c
-> +++ b/kernel/exit.c
-> @@ -85,7 +85,7 @@
->  static unsigned int oops_limit = 10000;
->  
->  #ifdef CONFIG_SYSCTL
-> -static struct ctl_table kern_exit_table[] = {
-> +static const struct ctl_table kern_exit_table[] = {
->  	{
->  		.procname       = "oops_limit",
->  		.data           = &oops_limit,
-> diff --git a/kernel/hung_task.c b/kernel/hung_task.c
-> index c18717189f32..62a5d8927ce9 100644
-> --- a/kernel/hung_task.c
-> +++ b/kernel/hung_task.c
-> @@ -272,7 +272,7 @@ static int proc_dohung_task_timeout_secs(const struct ctl_table *table, int writ
->   * and hung_task_check_interval_secs
->   */
->  static const unsigned long hung_task_timeout_max = (LONG_MAX / HZ);
-> -static struct ctl_table hung_task_sysctls[] = {
-> +static const struct ctl_table hung_task_sysctls[] = {
->  #ifdef CONFIG_SMP
->  	{
->  		.procname	= "hung_task_all_cpu_backtrace",
-> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-> index c0caa14880c3..71b0809e06d6 100644
-> --- a/kernel/kexec_core.c
-> +++ b/kernel/kexec_core.c
-> @@ -925,7 +925,7 @@ static int kexec_limit_handler(const struct ctl_table *table, int write,
->  	return proc_dointvec(&tmp, write, buffer, lenp, ppos);
->  }
->  
-> -static struct ctl_table kexec_core_sysctls[] = {
-> +static const struct ctl_table kexec_core_sysctls[] = {
->  	{
->  		.procname	= "kexec_load_disabled",
->  		.data		= &kexec_load_disabled,
-> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-> index b027a4030976..9a15fb343be8 100644
-> --- a/kernel/kprobes.c
-> +++ b/kernel/kprobes.c
-> @@ -954,7 +954,7 @@ static int proc_kprobes_optimization_handler(const struct ctl_table *table,
->  	return ret;
->  }
->  
-> -static struct ctl_table kprobe_sysctls[] = {
-> +static const struct ctl_table kprobe_sysctls[] = {
->  	{
->  		.procname	= "kprobes-optimization",
->  		.data		= &sysctl_kprobes_optimization,
-> diff --git a/kernel/latencytop.c b/kernel/latencytop.c
-> index 7a75eab9c179..39a5fcdff9f9 100644
-> --- a/kernel/latencytop.c
-> +++ b/kernel/latencytop.c
-> @@ -77,7 +77,7 @@ static int sysctl_latencytop(const struct ctl_table *table, int write, void *buf
->  	return err;
->  }
->  
-> -static struct ctl_table latencytop_sysctl[] = {
-> +static const struct ctl_table latencytop_sysctl[] = {
->  	{
->  		.procname   = "latencytop",
->  		.data       = &latencytop_enabled,
-> diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-> index 2d8ec0351ef9..926b796ba71a 100644
-> --- a/kernel/locking/lockdep.c
-> +++ b/kernel/locking/lockdep.c
-> @@ -79,7 +79,7 @@ module_param(lock_stat, int, 0644);
->  #endif
->  
->  #ifdef CONFIG_SYSCTL
-> -static struct ctl_table kern_lockdep_table[] = {
-> +static const struct ctl_table kern_lockdep_table[] = {
->  #ifdef CONFIG_PROVE_LOCKING
->  	{
->  		.procname       = "prove_locking",
-> diff --git a/kernel/panic.c b/kernel/panic.c
-> index fbc59b3b64d0..d8635d5cecb2 100644
-> --- a/kernel/panic.c
-> +++ b/kernel/panic.c
-> @@ -84,7 +84,7 @@ ATOMIC_NOTIFIER_HEAD(panic_notifier_list);
->  EXPORT_SYMBOL(panic_notifier_list);
->  
->  #ifdef CONFIG_SYSCTL
-> -static struct ctl_table kern_panic_table[] = {
-> +static const struct ctl_table kern_panic_table[] = {
->  #ifdef CONFIG_SMP
->  	{
->  		.procname       = "oops_all_cpu_backtrace",
-> diff --git a/kernel/pid_namespace.c b/kernel/pid_namespace.c
-> index d70ab49d5b4a..0f23285be4f9 100644
-> --- a/kernel/pid_namespace.c
-> +++ b/kernel/pid_namespace.c
-> @@ -282,7 +282,7 @@ static int pid_ns_ctl_handler(const struct ctl_table *table, int write,
->  }
->  
->  extern int pid_max;
-> -static struct ctl_table pid_ns_ctl_table[] = {
-> +static const struct ctl_table pid_ns_ctl_table[] = {
->  	{
->  		.procname = "ns_last_pid",
->  		.maxlen = sizeof(int),
-> diff --git a/kernel/pid_sysctl.h b/kernel/pid_sysctl.h
-> index 18ecaef6be41..5d8f981de7c5 100644
-> --- a/kernel/pid_sysctl.h
-> +++ b/kernel/pid_sysctl.h
-> @@ -31,7 +31,7 @@ static int pid_mfd_noexec_dointvec_minmax(const struct ctl_table *table,
->  	return err;
->  }
->  
-> -static struct ctl_table pid_ns_ctl_table_vm[] = {
-> +static const struct ctl_table pid_ns_ctl_table_vm[] = {
->  	{
->  		.procname	= "memfd_noexec",
->  		.data		= &init_pid_ns.memfd_noexec_scope,
-> diff --git a/kernel/printk/sysctl.c b/kernel/printk/sysctl.c
-> index f5072dc85f7a..da77f3f5c1fe 100644
-> --- a/kernel/printk/sysctl.c
-> +++ b/kernel/printk/sysctl.c
-> @@ -20,7 +20,7 @@ static int proc_dointvec_minmax_sysadmin(const struct ctl_table *table, int writ
->  	return proc_dointvec_minmax(table, write, buffer, lenp, ppos);
->  }
->  
-> -static struct ctl_table printk_sysctls[] = {
-> +static const struct ctl_table printk_sysctls[] = {
->  	{
->  		.procname	= "printk",
->  		.data		= &console_loglevel,
-> diff --git a/kernel/reboot.c b/kernel/reboot.c
-> index a701000bab34..b5a8569e5d81 100644
-> --- a/kernel/reboot.c
-> +++ b/kernel/reboot.c
-> @@ -1287,7 +1287,7 @@ static struct attribute *reboot_attrs[] = {
->  };
->  
->  #ifdef CONFIG_SYSCTL
-> -static struct ctl_table kern_reboot_table[] = {
-> +static const struct ctl_table kern_reboot_table[] = {
->  	{
->  		.procname       = "poweroff_cmd",
->  		.data           = &poweroff_cmd,
-> diff --git a/kernel/sched/autogroup.c b/kernel/sched/autogroup.c
-> index db68a964e34e..83d46b9b8ec8 100644
-> --- a/kernel/sched/autogroup.c
-> +++ b/kernel/sched/autogroup.c
-> @@ -9,7 +9,7 @@ static struct autogroup autogroup_default;
->  static atomic_t autogroup_seq_nr;
->  
->  #ifdef CONFIG_SYSCTL
-> -static struct ctl_table sched_autogroup_sysctls[] = {
-> +static const struct ctl_table sched_autogroup_sysctls[] = {
->  	{
->  		.procname       = "sched_autogroup_enabled",
->  		.data           = &sysctl_sched_autogroup_enabled,
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index 3e5a6bf587f9..00fea6f32ae5 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -4646,7 +4646,7 @@ static int sysctl_schedstats(const struct ctl_table *table, int write, void *buf
->  #endif /* CONFIG_SCHEDSTATS */
->  
->  #ifdef CONFIG_SYSCTL
-> -static struct ctl_table sched_core_sysctls[] = {
-> +static const struct ctl_table sched_core_sysctls[] = {
->  #ifdef CONFIG_SCHEDSTATS
->  	{
->  		.procname       = "sched_schedstats",
-> diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-> index d94f2ed6d1f4..dab4887d6406 100644
-> --- a/kernel/sched/deadline.c
-> +++ b/kernel/sched/deadline.c
-> @@ -26,7 +26,7 @@
->  static unsigned int sysctl_sched_dl_period_max = 1 << 22; /* ~4 seconds */
->  static unsigned int sysctl_sched_dl_period_min = 100;     /* 100 us */
->  #ifdef CONFIG_SYSCTL
-> -static struct ctl_table sched_dl_sysctls[] = {
-> +static const struct ctl_table sched_dl_sysctls[] = {
->  	{
->  		.procname       = "sched_deadline_period_max_us",
->  		.data           = &sysctl_sched_dl_period_max,
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 3e9ca38512de..1692dbb67d7a 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -130,7 +130,7 @@ static unsigned int sysctl_numa_balancing_promote_rate_limit = 65536;
->  #endif
->  
->  #ifdef CONFIG_SYSCTL
-> -static struct ctl_table sched_fair_sysctls[] = {
-> +static const struct ctl_table sched_fair_sysctls[] = {
->  #ifdef CONFIG_CFS_BANDWIDTH
->  	{
->  		.procname       = "sched_cfs_bandwidth_slice_us",
-> diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
-> index bd66a46b06ac..4b8e33c615b1 100644
-> --- a/kernel/sched/rt.c
-> +++ b/kernel/sched/rt.c
-> @@ -26,7 +26,7 @@ static int sched_rt_handler(const struct ctl_table *table, int write, void *buff
->  		size_t *lenp, loff_t *ppos);
->  static int sched_rr_handler(const struct ctl_table *table, int write, void *buffer,
->  		size_t *lenp, loff_t *ppos);
-> -static struct ctl_table sched_rt_sysctls[] = {
-> +static const struct ctl_table sched_rt_sysctls[] = {
->  	{
->  		.procname       = "sched_rt_period_us",
->  		.data           = &sysctl_sched_rt_period,
-> diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-> index 9748a4c8d668..20d59b0bc928 100644
-> --- a/kernel/sched/topology.c
-> +++ b/kernel/sched/topology.c
-> @@ -312,7 +312,7 @@ static int sched_energy_aware_handler(const struct ctl_table *table, int write,
->  	return ret;
->  }
->  
-> -static struct ctl_table sched_energy_aware_sysctls[] = {
-> +static const struct ctl_table sched_energy_aware_sysctls[] = {
->  	{
->  		.procname       = "sched_energy_aware",
->  		.data           = &sysctl_sched_energy_aware,
-> diff --git a/kernel/seccomp.c b/kernel/seccomp.c
-> index 385d48293a5f..f59381c4a2ff 100644
-> --- a/kernel/seccomp.c
-> +++ b/kernel/seccomp.c
-> @@ -2450,7 +2450,7 @@ static int seccomp_actions_logged_handler(const struct ctl_table *ro_table, int
->  	return ret;
->  }
->  
-> -static struct ctl_table seccomp_sysctl_table[] = {
-> +static const struct ctl_table seccomp_sysctl_table[] = {
->  	{
->  		.procname	= "actions_avail",
->  		.data		= (void *) &seccomp_actions_avail,
-> diff --git a/kernel/signal.c b/kernel/signal.c
-> index 989b1cc9116a..77f32c2d6ccb 100644
-> --- a/kernel/signal.c
-> +++ b/kernel/signal.c
-> @@ -4931,7 +4931,7 @@ static inline void siginfo_buildtime_checks(void)
->  }
->  
->  #if defined(CONFIG_SYSCTL)
-> -static struct ctl_table signal_debug_table[] = {
-> +static const struct ctl_table signal_debug_table[] = {
->  #ifdef CONFIG_SYSCTL_EXCEPTION_TRACE
->  	{
->  		.procname	= "exception-trace",
-> diff --git a/kernel/stackleak.c b/kernel/stackleak.c
-> index 39fd620a7db6..c1bfc14cd36e 100644
-> --- a/kernel/stackleak.c
-> +++ b/kernel/stackleak.c
-> @@ -44,7 +44,7 @@ static int stack_erasing_sysctl(const struct ctl_table *table, int write,
->  					state ? "enabled" : "disabled");
->  	return ret;
->  }
-> -static struct ctl_table stackleak_sysctls[] = {
-> +static const struct ctl_table stackleak_sysctls[] = {
->  	{
->  		.procname	= "stack_erasing",
->  		.data		= NULL,
-> diff --git a/kernel/sysctl-test.c b/kernel/sysctl-test.c
-> index 3ac98bb7fb82..eb2842bd0557 100644
-> --- a/kernel/sysctl-test.c
-> +++ b/kernel/sysctl-test.c
-> @@ -374,7 +374,7 @@ static void sysctl_test_register_sysctl_sz_invalid_extra_value(
->  		struct kunit *test)
->  {
->  	unsigned char data = 0;
-> -	struct ctl_table table_foo[] = {
-> +	const struct ctl_table table_foo[] = {
->  		{
->  			.procname	= "foo",
->  			.data		= &data,
-> @@ -386,7 +386,7 @@ static void sysctl_test_register_sysctl_sz_invalid_extra_value(
->  		},
->  	};
->  
-> -	struct ctl_table table_bar[] = {
-> +	const struct ctl_table table_bar[] = {
->  		{
->  			.procname	= "bar",
->  			.data		= &data,
-> @@ -398,7 +398,7 @@ static void sysctl_test_register_sysctl_sz_invalid_extra_value(
->  		},
->  	};
->  
-> -	struct ctl_table table_qux[] = {
-> +	const struct ctl_table table_qux[] = {
->  		{
->  			.procname	= "qux",
->  			.data		= &data,
-> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-> index 5c9202cb8f59..3a0132cb0d5d 100644
-> --- a/kernel/sysctl.c
-> +++ b/kernel/sysctl.c
-> @@ -1609,7 +1609,7 @@ int proc_do_static_key(const struct ctl_table *table, int write,
->  	return ret;
->  }
->  
-> -static struct ctl_table kern_table[] = {
-> +static const struct ctl_table kern_table[] = {
->  	{
->  		.procname	= "panic",
->  		.data		= &panic_timeout,
-> @@ -2030,7 +2030,7 @@ static struct ctl_table kern_table[] = {
->  #endif
->  };
->  
-> -static struct ctl_table vm_table[] = {
-> +static const struct ctl_table vm_table[] = {
->  	{
->  		.procname	= "overcommit_memory",
->  		.data		= &sysctl_overcommit_memory,
-> diff --git a/kernel/time/timer.c b/kernel/time/timer.c
-> index a5860bf6d16f..79a1f83d2944 100644
-> --- a/kernel/time/timer.c
-> +++ b/kernel/time/timer.c
-> @@ -301,7 +301,7 @@ static int timer_migration_handler(const struct ctl_table *table, int write,
->  	return ret;
->  }
->  
-> -static struct ctl_table timer_sysctl[] = {
-> +static const struct ctl_table timer_sysctl[] = {
->  	{
->  		.procname	= "timer_migration",
->  		.data		= &sysctl_timer_migration,
-> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> index 2e113f8b13a2..489cbab3d64c 100644
-> --- a/kernel/trace/ftrace.c
-> +++ b/kernel/trace/ftrace.c
-> @@ -8786,7 +8786,7 @@ ftrace_enable_sysctl(const struct ctl_table *table, int write,
->  	return ret;
->  }
->  
-> -static struct ctl_table ftrace_sysctls[] = {
-> +static const struct ctl_table ftrace_sysctls[] = {
->  	{
->  		.procname       = "ftrace_enabled",
->  		.data           = &ftrace_enabled,
-> diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
-> index 17bcad8f79de..97325fbd6283 100644
-> --- a/kernel/trace/trace_events_user.c
-> +++ b/kernel/trace/trace_events_user.c
-> @@ -2899,7 +2899,7 @@ static int set_max_user_events_sysctl(const struct ctl_table *table, int write,
->  	return ret;
->  }
->  
-> -static struct ctl_table user_event_sysctls[] = {
-> +static const struct ctl_table user_event_sysctls[] = {
->  	{
->  		.procname	= "user_events_max",
->  		.data		= &max_user_events,
-> diff --git a/kernel/umh.c b/kernel/umh.c
-> index be9234270777..b4da45a3a7cf 100644
-> --- a/kernel/umh.c
-> +++ b/kernel/umh.c
-> @@ -544,7 +544,7 @@ static int proc_cap_handler(const struct ctl_table *table, int write,
->  	return 0;
->  }
->  
-> -static struct ctl_table usermodehelper_table[] = {
-> +static const struct ctl_table usermodehelper_table[] = {
->  	{
->  		.procname	= "bset",
->  		.data		= &usermodehelper_bset,
-> diff --git a/kernel/utsname_sysctl.c b/kernel/utsname_sysctl.c
-> index 7282f61a8650..bfbaaecb1dd4 100644
-> --- a/kernel/utsname_sysctl.c
-> +++ b/kernel/utsname_sysctl.c
-> @@ -75,7 +75,7 @@ static DEFINE_CTL_TABLE_POLL(hostname_poll);
->  static DEFINE_CTL_TABLE_POLL(domainname_poll);
->  
->  // Note: update 'enum uts_proc' to match any changes to this table
-> -static struct ctl_table uts_kern_table[] = {
-> +static const struct ctl_table uts_kern_table[] = {
->  	{
->  		.procname	= "arch",
->  		.data		= init_uts_ns.name.machine,
-> @@ -129,7 +129,7 @@ static struct ctl_table uts_kern_table[] = {
->   */
->  void uts_proc_notify(enum uts_proc proc)
->  {
-> -	struct ctl_table *table = &uts_kern_table[proc];
-> +	const struct ctl_table *table = &uts_kern_table[proc];
->  
->  	proc_sys_poll_notify(table->poll);
->  }
-> diff --git a/kernel/watchdog.c b/kernel/watchdog.c
-> index 41e0f7e9fa35..613e73ef367c 100644
-> --- a/kernel/watchdog.c
-> +++ b/kernel/watchdog.c
-> @@ -1094,7 +1094,7 @@ static int proc_watchdog_cpumask(const struct ctl_table *table, int write,
->  
->  static const int sixty = 60;
->  
-> -static struct ctl_table watchdog_sysctls[] = {
-> +static const struct ctl_table watchdog_sysctls[] = {
->  	{
->  		.procname       = "watchdog",
->  		.data		= &watchdog_user_enabled,
-> diff --git a/lib/test_sysctl.c b/lib/test_sysctl.c
-> index b6696fa1d426..4249e0cc8aaf 100644
-> --- a/lib/test_sysctl.c
-> +++ b/lib/test_sysctl.c
-> @@ -71,7 +71,7 @@ static struct test_sysctl_data test_data = {
->  };
->  
->  /* These are all under /proc/sys/debug/test_sysctl/ */
-> -static struct ctl_table test_table[] = {
-> +static const struct ctl_table test_table[] = {
->  	{
->  		.procname	= "int_0001",
->  		.data		= &test_data.int_0001,
-> @@ -177,7 +177,7 @@ static int test_sysctl_setup_node_tests(void)
->  }
->  
->  /* Used to test that unregister actually removes the directory */
-> -static struct ctl_table test_table_unregister[] = {
-> +static const struct ctl_table test_table_unregister[] = {
->  	{
->  		.procname	= "unregister_error",
->  		.data		= &test_data.int_0001,
-> @@ -220,7 +220,7 @@ static int test_sysctl_run_register_mount_point(void)
->  	return 0;
->  }
->  
-> -static struct ctl_table test_table_empty[] = { };
-> +static const struct ctl_table test_table_empty[] = { };
->  
->  static int test_sysctl_run_register_empty(void)
->  {
-> diff --git a/mm/compaction.c b/mm/compaction.c
-> index a2b16b08cbbf..62e8ee230e1c 100644
-> --- a/mm/compaction.c
-> +++ b/mm/compaction.c
-> @@ -3297,7 +3297,7 @@ static int proc_dointvec_minmax_warn_RT_change(const struct ctl_table *table,
->  	return ret;
->  }
->  
-> -static struct ctl_table vm_compaction[] = {
-> +static const struct ctl_table vm_compaction[] = {
->  	{
->  		.procname	= "compact_memory",
->  		.data		= &sysctl_compact_memory,
-> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-> index c498874a7170..3857b9d72c84 100644
-> --- a/mm/hugetlb.c
-> +++ b/mm/hugetlb.c
-> @@ -4845,7 +4845,7 @@ static int hugetlb_overcommit_handler(const struct ctl_table *table, int write,
->  	return ret;
->  }
->  
-> -static struct ctl_table hugetlb_table[] = {
-> +static const struct ctl_table hugetlb_table[] = {
->  	{
->  		.procname	= "nr_hugepages",
->  		.data		= NULL,
-> diff --git a/mm/hugetlb_vmemmap.c b/mm/hugetlb_vmemmap.c
-> index 57b7f591eee8..7735972add01 100644
-> --- a/mm/hugetlb_vmemmap.c
-> +++ b/mm/hugetlb_vmemmap.c
-> @@ -693,7 +693,7 @@ void hugetlb_vmemmap_optimize_folios(struct hstate *h, struct list_head *folio_l
->  	free_vmemmap_page_list(&vmemmap_pages);
->  }
->  
-> -static struct ctl_table hugetlb_vmemmap_sysctls[] = {
-> +static const struct ctl_table hugetlb_vmemmap_sysctls[] = {
->  	{
->  		.procname	= "hugetlb_optimize_vmemmap",
->  		.data		= &vmemmap_optimize_enabled,
-> diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-> index a7b8ccd29b6f..995a15eb67e2 100644
-> --- a/mm/memory-failure.c
-> +++ b/mm/memory-failure.c
-> @@ -124,7 +124,7 @@ const struct attribute_group memory_failure_attr_group = {
->  	.attrs = memory_failure_attr,
->  };
->  
-> -static struct ctl_table memory_failure_table[] = {
-> +static const struct ctl_table memory_failure_table[] = {
->  	{
->  		.procname	= "memory_failure_early_kill",
->  		.data		= &sysctl_memory_failure_early_kill,
-> diff --git a/mm/oom_kill.c b/mm/oom_kill.c
-> index 1c485beb0b93..c8280a39119c 100644
-> --- a/mm/oom_kill.c
-> +++ b/mm/oom_kill.c
-> @@ -699,7 +699,7 @@ static void queue_oom_reaper(struct task_struct *tsk)
->  }
->  
->  #ifdef CONFIG_SYSCTL
-> -static struct ctl_table vm_oom_kill_table[] = {
-> +static const struct ctl_table vm_oom_kill_table[] = {
->  	{
->  		.procname	= "panic_on_oom",
->  		.data		= &sysctl_panic_on_oom,
-> diff --git a/mm/page-writeback.c b/mm/page-writeback.c
-> index d213ead95675..fb523107701f 100644
-> --- a/mm/page-writeback.c
-> +++ b/mm/page-writeback.c
-> @@ -2313,7 +2313,7 @@ static int page_writeback_cpu_online(unsigned int cpu)
->  /* this is needed for the proc_doulongvec_minmax of vm_dirty_bytes */
->  static const unsigned long dirty_bytes_min = 2 * PAGE_SIZE;
->  
-> -static struct ctl_table vm_page_writeback_sysctls[] = {
-> +static const struct ctl_table vm_page_writeback_sysctls[] = {
->  	{
->  		.procname   = "dirty_background_ratio",
->  		.data       = &dirty_background_ratio,
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index cae7b93864c2..6224a2ab5e86 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -6172,7 +6172,7 @@ static int percpu_pagelist_high_fraction_sysctl_handler(const struct ctl_table *
->  	return ret;
->  }
->  
-> -static struct ctl_table page_alloc_sysctl_table[] = {
-> +static const struct ctl_table page_alloc_sysctl_table[] = {
->  	{
->  		.procname	= "min_free_kbytes",
->  		.data		= &min_free_kbytes,
-> diff --git a/security/apparmor/lsm.c b/security/apparmor/lsm.c
-> index 1edc12862a7d..9b6c2f157f83 100644
-> --- a/security/apparmor/lsm.c
-> +++ b/security/apparmor/lsm.c
-> @@ -2038,7 +2038,7 @@ static int apparmor_dointvec(const struct ctl_table *table, int write,
->  	return proc_dointvec(table, write, buffer, lenp, ppos);
->  }
->  
-> -static struct ctl_table apparmor_sysctl_table[] = {
-> +static const struct ctl_table apparmor_sysctl_table[] = {
->  #ifdef CONFIG_USER_NS
->  	{
->  		.procname       = "unprivileged_userns_apparmor_policy",
-> diff --git a/security/keys/sysctl.c b/security/keys/sysctl.c
-> index 91f000eef3ad..cde08c478f32 100644
-> --- a/security/keys/sysctl.c
-> +++ b/security/keys/sysctl.c
-> @@ -9,7 +9,7 @@
->  #include <linux/sysctl.h>
->  #include "internal.h"
->  
-> -static struct ctl_table key_sysctls[] = {
-> +static const struct ctl_table key_sysctls[] = {
->  	{
->  		.procname = "maxkeys",
->  		.data = &key_quota_maxkeys,
-> diff --git a/security/yama/yama_lsm.c b/security/yama/yama_lsm.c
-> index e1a5e13ea269..54bd5f535ac1 100644
-> --- a/security/yama/yama_lsm.c
-> +++ b/security/yama/yama_lsm.c
-> @@ -454,7 +454,7 @@ static int yama_dointvec_minmax(const struct ctl_table *table, int write,
->  
->  static int max_scope = YAMA_SCOPE_NO_ATTACH;
->  
-> -static struct ctl_table yama_sysctl_table[] = {
-> +static const struct ctl_table yama_sysctl_table[] = {
->  	{
->  		.procname       = "ptrace_scope",
->  		.data           = &ptrace_scope,
-> 
-> ---
-> base-commit: 9d89551994a430b50c4fffcb1e617a057fa76e20
-> change-id: 20250109-jag-ctl_table_const-38f6b2ccbba7
-> 
-> Best regards,
-> -- 
-> Joel Granados <joel.granados@kernel.org>
-> 
-> 
+> Please no, lets not sign up to have the "which cxl 'region' concept are
+> you referring to?" debate in perpetuity. "DPA partition", "DPA
+> resource", "DPA capacity" anything but "region".
 > 
 
+I'm inclined to agree with Alejandro on this one.  I've walked this
+tightrope quite a bit with this series.  But there are other places where
+we have chosen to change the verbiage from the spec and it has made it
+difficult for new comers to correlate the spec with the code.
+
+So I like Alejandro's idea of adding "HW" to the name to indicate that we
+are talking about a spec or hardware defined thing.
+
+That said I am open to changing some names where it is clear it is a
+software structure.  I'll audit the series for that.
+
+> >  /**
+> >   * struct cxl_dpa_perf - DPA performance property entry
+> >   * @dpa_range: range for DPA address
+> > @@ -434,6 +435,8 @@ struct cxl_dpa_perf {
+> >   * @dpa_res: Overall DPA resource tree for the device
+> >   * @pmem_res: Active Persistent memory capacity configuration
+> >   * @ram_res: Active Volatile memory capacity configuration
+> > + * @dc_res: Active Dynamic Capacity memory configuration for each possible
+> > + *          region
+> >   * @serial: PCIe Device Serial Number
+> >   * @type: Generic Memory Class device or Vendor Specific Memory device
+> >   * @cxl_mbox: CXL mailbox context
+> > @@ -449,11 +452,23 @@ struct cxl_dev_state {
+> >  	struct resource dpa_res;
+> >  	struct resource pmem_res;
+> >  	struct resource ram_res;
+> > +	struct resource dc_res[CXL_MAX_DC_REGION];
+> 
+> This is throwing off cargo-cult alarms. The named pmem_res and ram_res
+> served us well up until the point where DPA partitions grew past 2 types
+> at well defined locations. I like the array of resources idea, but that
+> begs the question why not put all partition information into an array?
+
+For me that keeps it clear what is pmem/ram/dc.
+
+> 
+> This would also head off complications later on in this series where the
+> DPA capacity reservation and allocation flows have "dc" sidecars bolted
+> on rather than general semantics like "allocating from partition index N
+> means that all partitions indices less than N need to be skipped and
+> marked reserved".
+
+I assume you are speaking of this patch:
+
+	cxl/hdm: Add dynamic capacity size support to endpoint decoders
+
+I took some care to make the skip calculations and tracking generic.  But
+I think you are correct more could be done.
+
+We would also need to adjust cxl_dpa_alloc().
+
+I thought there might be other places where the memdev_state would need to
+be adjusted.  But it looks like those are minor issues.
+
+Over all I did spend a lot of time making the skip generic and honestly it
+is probably worth making it all generic.  However, I think it will take
+careful review and testing to make sure we don't break things.
+
+> 
+> >  	u64 serial;
+> >  	enum cxl_devtype type;
+> >  	struct cxl_mailbox cxl_mbox;
+> >  };
+> >  
+> > +#define CXL_DC_REGION_STRLEN 8
+> > +struct cxl_dc_region_info {
+> > +	u64 base;
+> > +	u64 decode_len;
+> > +	u64 len;
+> 
+> Duplicating partition information in multiple places, like
+> mds->dc_region[X].base and cxlds->dc_res[X].start, feels like an
+> RFC-quality decision for expediency that needs to reconciled on the way
+> to upstream.
+
+I think this was done to follow a pattern of the mds being passed around
+rather than creating resources right when partitions are read.
+
+Furthermore this stands to hold this information in CPU endianess rather
+than holding an array of region info coming from the hardware.
+
+Let see how other changes fall out before I go hacking this though.
+
+> 
+> > +	u64 blk_size;
+> > +	u32 dsmad_handle;
+> > +	u8 flags;
+> > +	u8 name[CXL_DC_REGION_STRLEN];
+> 
+> No, lets not entertain:
+> 
+>     printk("%s\n", mds->dc_region[index].name);
+> 
+> ...when:
+> 
+>     printk("dc%d\n", index);
+> 
+> ...will do.
+
+Actually these buffers provide a buffer for the (struct
+resource)dc_res[x].name pointers to point to.
+
+It could be devm_malloc'ed memory but this actually worked ok.  ram/pmem
+just use static strings.
+
+I could add a comment to that effect.  Or I could define a static array
+thusly...  I think this would go against defining a resource map though.
+
+@@ -1460,6 +1459,10 @@ static int add_dpa_res(struct device *dev, struct resource *parent,
+        return 0;
+ }
+ 
++static const char * const dc_resource_name[] = {
++       "dc0", "dc1", "dc2", "dc3", "dc4", "dc5", "dc6", "dc7",
++};
++
+ int cxl_mem_create_range_info(struct cxl_memdev_state *mds)
+ {
+        struct cxl_dev_state *cxlds = &mds->cxlds;
+@@ -1486,7 +1489,8 @@ int cxl_mem_create_range_info(struct cxl_memdev_state *mds)
+                struct cxl_dc_region_info *dcr = &mds->dc_region[i];
+ 
+                rc = add_dpa_res(dev, &cxlds->dpa_res, &cxlds->dc_res[i],
+-                                dcr->base, dcr->decode_len, dcr->name);
++                                dcr->base, dcr->decode_len,
++                                dc_resource_name[i]);
+                if (rc)
+                        return rc;
+        }
+
+> 
+> > +};
+> > +
+> >  static inline struct cxl_dev_state *mbox_to_cxlds(struct cxl_mailbox *cxl_mbox)
+> >  {
+> >  	return dev_get_drvdata(cxl_mbox->host);
+> > @@ -473,7 +488,9 @@ static inline struct cxl_dev_state *mbox_to_cxlds(struct cxl_mailbox *cxl_mbox)
+> >   * @dcd_cmds: List of DCD commands implemented by memory device
+> >   * @enabled_cmds: Hardware commands found enabled in CEL.
+> >   * @exclusive_cmds: Commands that are kernel-internal only
+> > - * @total_bytes: sum of all possible capacities
+> > + * @total_bytes: length of all possible capacities
+> > + * @static_bytes: length of possible static RAM and PMEM partitions
+> > + * @dynamic_bytes: length of possible DC partitions (DC Regions)
+> >   * @volatile_only_bytes: hard volatile capacity
+> >   * @persistent_only_bytes: hard persistent capacity
+> 
+> I have regrets that cxl_memdev_state permanently carries runtime storage
+> for init time variables, lets not continue down that path with DCD
+> enabling.
+
+Yea I thought these were used more than they are.  I feel like over time
+they got used less and less.  Perhaps now they can be removed.
+
+> 
+> >   * @partition_align_bytes: alignment size for partition-able capacity
+> > @@ -483,6 +500,8 @@ static inline struct cxl_dev_state *mbox_to_cxlds(struct cxl_mailbox *cxl_mbox)
+> >   * @next_persistent_bytes: persistent capacity change pending device reset
+> >   * @ram_perf: performance data entry matched to RAM partition
+> >   * @pmem_perf: performance data entry matched to PMEM partition
+> > + * @nr_dc_region: number of DC regions implemented in the memory device
+> > + * @dc_region: array containing info about the DC regions
+> >   * @event: event log driver state
+> >   * @poison: poison driver state info
+> >   * @security: security driver state info
+> > @@ -499,6 +518,8 @@ struct cxl_memdev_state {
+> >  	DECLARE_BITMAP(enabled_cmds, CXL_MEM_COMMAND_ID_MAX);
+> >  	DECLARE_BITMAP(exclusive_cmds, CXL_MEM_COMMAND_ID_MAX);
+> >  	u64 total_bytes;
+> > +	u64 static_bytes;
+> > +	u64 dynamic_bytes;
+> >  	u64 volatile_only_bytes;
+> >  	u64 persistent_only_bytes;
+> >  	u64 partition_align_bytes;
+> > @@ -510,6 +531,9 @@ struct cxl_memdev_state {
+> >  	struct cxl_dpa_perf ram_perf;
+> >  	struct cxl_dpa_perf pmem_perf;
+> >  
+> > +	u8 nr_dc_region;
+> > +	struct cxl_dc_region_info dc_region[CXL_MAX_DC_REGION];
+> 
+> DPA capacity is a generic CXL.mem concern and partition information is
+> contained cxl_dev_state. Lets find a way to not need partially redundant
+> data structures across in cxl_memdev_state and cxl_dev_state.
+
+I'll think on it.
+
+> 
+> DCD introduces the concept of "decode size vs usable capacity" into the
+> partition information, but I see no reason to conceptually tie that to
+> only DCD.  Fabio's memory hole patches show that there is already a
+> memory-hole concept in the CXL arena. DCD is just saying "be prepared for
+> the concept of DPA partitions with memory holes at the end".
+
+I'm not clear how this relates.  ram and pmem partitions can already have
+holes at the end if not mapped.
+
+> 
+> > +
+> >  	struct cxl_event_state event;
+> >  	struct cxl_poison_state poison;
+> >  	struct cxl_security_state security;
+> > @@ -708,6 +732,32 @@ struct cxl_mbox_set_partition_info {
+> >  
+> >  #define  CXL_SET_PARTITION_IMMEDIATE_FLAG	BIT(0)
+> >  
+> > +/* See CXL 3.1 Table 8-163 get dynamic capacity config Input Payload */
+> > +struct cxl_mbox_get_dc_config_in {
+> > +	u8 region_count;
+> > +	u8 start_region_index;
+> > +} __packed;
+> > +
+> > +/* See CXL 3.1 Table 8-164 get dynamic capacity config Output Payload */
+> > +struct cxl_mbox_get_dc_config_out {
+> > +	u8 avail_region_count;
+> > +	u8 regions_returned;
+> > +	u8 rsvd[6];
+> > +	/* See CXL 3.1 Table 8-165 */
+> > +	struct cxl_dc_region_config {
+> > +		__le64 region_base;
+> > +		__le64 region_decode_length;
+> > +		__le64 region_length;
+> > +		__le64 region_block_size;
+> > +		__le32 region_dsmad_handle;
+> > +		u8 flags;
+> > +		u8 rsvd[3];
+> > +	} __packed region[] __counted_by(regions_returned);
+> 
+> Yes, the spec unfortunately uses "region" for this partition info
+> payload. This would be a good place to say "CXL spec calls this 'region'
+> but Linux calls it 'partition' not to be confused with the Linux 'struct
+> cxl_region' or all the other usages of 'region' in the specification".
+
+In this case I totally disagree.  This is a structure being filled in by
+the hardware and is directly related to the spec.  I think I would rather
+change 
+
+s/cxl_dc_region_info/cxl_dc_partition_info/
+
+And leave this.  Which draws a more distinct line between what is
+specified in hardware vs a software construct.
+
+> 
+> Linux is not obligated to follow the questionable naming decisions of
+> specifications.
+
+We are not.  But as Alejandro says it can be confusing if we don't make
+some association to the spec.
+
+What do you think about the HW/SW line I propose above?
+
+> 
+> > +	/* Trailing fields unused */
+> > +} __packed;
+> > +#define CXL_DYNAMIC_CAPACITY_SANITIZE_ON_RELEASE_FLAG BIT(0)
+> > +#define CXL_DCD_BLOCK_LINE_SIZE 0x40
+> > +
+> >  /* Set Timestamp CXL 3.0 Spec 8.2.9.4.2 */
+> >  struct cxl_mbox_set_timestamp_in {
+> >  	__le64 timestamp;
+> > @@ -831,6 +881,7 @@ enum {
+> >  int cxl_internal_send_cmd(struct cxl_mailbox *cxl_mbox,
+> >  			  struct cxl_mbox_cmd *cmd);
+> >  int cxl_dev_state_identify(struct cxl_memdev_state *mds);
+> > +int cxl_dev_dynamic_capacity_identify(struct cxl_memdev_state *mds);
+> >  int cxl_await_media_ready(struct cxl_dev_state *cxlds);
+> >  int cxl_enumerate_cmds(struct cxl_memdev_state *mds);
+> >  int cxl_mem_create_range_info(struct cxl_memdev_state *mds);
+> > @@ -844,6 +895,17 @@ void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
+> >  			    enum cxl_event_log_type type,
+> >  			    enum cxl_event_type event_type,
+> >  			    const uuid_t *uuid, union cxl_event *evt);
+> > +
+> > +static inline bool cxl_dcd_supported(struct cxl_memdev_state *mds)
+> > +{
+> > +	return test_bit(CXL_DCD_ENABLED_GET_CONFIG, mds->dcd_cmds);
+> > +}
+> > +
+> > +static inline void cxl_disable_dcd(struct cxl_memdev_state *mds)
+> > +{
+> > +	clear_bit(CXL_DCD_ENABLED_GET_CONFIG, mds->dcd_cmds);
+> > +}
+> 
+> This hunk is out of place,
+
+Not sure why they are out of place.  This is the first patch they are used
+in so they were added here.  I could push them back a patch but you have
+mentioned before you don't like to see functions defined without a use.
+So I structured the series this way.
+
+> and per the last patch, I think it can just be
+> a flag that does not need a helper.
+
+Agreed.  This has already been changed.  But these functions remain
+defined here along with where they are used for proper context.
+
+Ira
