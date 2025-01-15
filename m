@@ -1,1059 +1,283 @@
-Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45EAD1DA2F1
-	for <linux-hardening@vger.kernel.org>; Wed, 15 Jan 2025 20:47:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.44
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736974065; cv=none; b=ZzE54nfmGEf9CcmcKrewps88A7twPifQXhx222yHzKFdnAYIMLuZVpB+ezsgxzX/pxnjM1+OUGlQAzhaUO5ug+u3w4cmea3ruTbwQGavHmMWm+nmwKEiGjTp+x7A8gzzbkkREtQfl35Ow+OOnh1lnbZ8a3sECpsB0ZOlbVHdyVg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736974065; c=relaxed/simple;
-	bh=YENfUkzbzqD2fmVIpk7p4rPO7OFBiLGKNUYYsR1XbeA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dbCHr/iDdnBotILQ67jMYB+Ko5duKrE3gtWVeiZoAFeuyACtTH8rfdL/pnh9L1Kk8ky7sSDzQCClvH4QO+OsAwveD6qM5ZZGPIRKuyX7e8SnhGPz3JF1v3QNWVzqffML04I/a50aBsOxxXdN0fHUS+0TnCIMTASFNlNpOVBmcXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=AhwgdOKz; arc=none smtp.client-ip=209.85.161.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFAE71D9A54;
+	Wed, 15 Jan 2025 20:48:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.18
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1736974117; cv=fail; b=oM73y9VzE/u0IsxZa7vsr7uzyzQULIlDbZpEwgrlVMCLfhjVsS0O9qVbP/0hrB5zNSSiF0CjG+C6/OFJP1qr0EURAaPs60aoVFe8dy/U3U2YgpuDmrZckHBNwzns/vXykvNijkc8vXFwAb8UexfQVzFQhAEU0j7599+V9iCdE1E=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1736974117; c=relaxed/simple;
+	bh=lyfvVW8VUbD6xJ1On+CIWYb+bAMniDNQIA3wHMD/vPE=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Og6ePu1AUAGaa+IwpgCxl3p7OLOTqy+Hv76RLfaph7pcGQaznM6v/9nCrvWmiLZaIZ+bHy7gcHDlg9aiQ+X7kPJ/m7vwkwnZFtRiUya9t4nAZ8ey+P8rkr7kr3hiuzn4prxPImAyl1RG3h2NSq7FuHAkc34OnfyQZcn04lNC9wA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=H9HwylR3; arc=fail smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AhwgdOKz"
-Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-5f2ed7462c1so13820eaf.0
-        for <linux-hardening@vger.kernel.org>; Wed, 15 Jan 2025 12:47:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1736974061; x=1737578861; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XvVBQjaZLw0Wy2oH/j71QStboTFh2zLn+D266xrEsvg=;
-        b=AhwgdOKzNS74raZMsGfeburSN7ixzWu72fNQDYds2tnuGmSgz+Pg/N/Pvx6zkUZ+0Q
-         UXDN3df/fyE3dcWzhO6L2j2+BPwWnA8v8acm+qywI/uo2LplRO9bpwpyyaws1DpJzuPC
-         o3fdCdB7UtgpOIQkes/IzyZuqXLob227tN7co=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736974061; x=1737578861;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XvVBQjaZLw0Wy2oH/j71QStboTFh2zLn+D266xrEsvg=;
-        b=IZ4ioqhVUqGVE95769Gt3kl1eYjnFNsKOLDtephsth4/hKcgbo7Pyma1bd13E/0Fl7
-         5e41CmmFj5cfl+piVw8KPkEl1IIOScSYGag9nXAJMluqEBMvEa7VbzjCbOJjCaNWsOi6
-         ajEOzjCIVc6xRfBpTsZKCA1fS0QAYJqrQ5pPGr/GoK5/vmlcYqQdXPb7hgRjy/linCDR
-         mGO8+/+lYB7Prw8T3ku2/fHwPLKguIUPef5KXgi9RsSeJwP/JNRN1haaEHoN7fnT1V4k
-         mxPe9s7+psUQHkTgKxxwrPKhCMzOs9PfcO5SxawYAnZX21sR4k2FzQazz/5yQvIfBZ2Y
-         zcAg==
-X-Forwarded-Encrypted: i=1; AJvYcCV6iqlfUlm6O4zsxymaEGiVZMtv5067nI1p7RAhpvIjvpkibnzlYdK1tpBIdu3FqJ8Xa+bMiB2mwCYnYx/ZdgI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLJutR5D7nRHcPdTRvsfUy+vQsPdGwR0rmmK+Z2Gpulms7OGP3
-	0raOUthgIYKxWvsgzloNOk3HpJQ9SzJ4tjWH5HfuK7Sg9LqfD8uRyJxkLIkyDZoNxrPuEXJiYZ9
-	wuI4H7J+Eqrp+n1NJV5luvQmFGs2l8gWurlvP
-X-Gm-Gg: ASbGncvahS7Knz+GmF3vJr/LljZcBHSr5U4BZsBReXpGhuq18nSItOtp0JFtPwpuZBq
-	QRzIeYbk2yWEYjczf2XFYUzqaJ41D9g/hG+fiHg==
-X-Google-Smtp-Source: AGHT+IFqZQVR5t6x++9jzFdlM+EB7r+ptS9ZY4gNv6QzpwKvn69g3tFZEk1VSK5JKyEoxH+9k/SrEuj3i6irPd/1NfM=
-X-Received: by 2002:a05:6870:1602:b0:29e:3d1c:24cb with SMTP id
- 586e51a60fabf-2aa068f27f0mr6187756fac.11.1736974060889; Wed, 15 Jan 2025
- 12:47:40 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="H9HwylR3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1736974116; x=1768510116;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=lyfvVW8VUbD6xJ1On+CIWYb+bAMniDNQIA3wHMD/vPE=;
+  b=H9HwylR3SaZEMG5zmsbB3TGz/G8w5y2uC8aEN8fcuzzUqeFu4mXQ5eWl
+   N83P/5HsNbBTs5r6CGhVLIA1WtHn5xF1Fjroz+uyjN5SiuE/FscyVbTl3
+   lKjPKfvFvQqW6aELRPjymKGxSFE6/8ft5sw5zKou+HJWiyKBSOn0NzSgh
+   Zjw0Dl/RLIiyDt6rBkXxmxsVgAds/mIQ0Y/hf1KlukRbnp0OSld0J6V9+
+   g24ALHRedpGWEksVf58+3DeKKexSQ2wOG1EF0TEos58XIT7v+9+RR7c4a
+   hBcMt1awBdOxoDnnTA1gMLDlaP2HNu61PVVzmONA7efW1582Lb/VyoRGF
+   w==;
+X-CSE-ConnectionGUID: YByKy/n/Q3qqz19zmx0XkA==
+X-CSE-MsgGUID: 0+ywe+q1R42lVWuEBd9Jrw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="37443220"
+X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
+   d="scan'208";a="37443220"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2025 12:48:29 -0800
+X-CSE-ConnectionGUID: 4D1NxCg6Rh+mcpEql9WhvA==
+X-CSE-MsgGUID: EWzVBn6rTCaBxlgNDW5ZtA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,207,1732608000"; 
+   d="scan'208";a="105024465"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by orviesa009.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 15 Jan 2025 12:48:25 -0800
+Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Wed, 15 Jan 2025 12:48:24 -0800
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44 via Frontend Transport; Wed, 15 Jan 2025 12:48:24 -0800
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.49) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Wed, 15 Jan 2025 12:48:24 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=QcbF4QFNF/SKz1s7l49rjxDUFkk7KMmDQ9fGlmb9s3rZ2lN3k9Rv8oY+gXIHupHbzMO46NRJAZBw031z3zbUsHb4dnufLuf6ml+SsS8jVimr0AMDcrIHbpnU+ruUkPwm8gs4/uT7AS2zc0zBGzDXf9lc8aBPzT7G/8iPMJYsZ6QH1GPMCsiwXg/Syvan8rtSuFjLaUJAArrTDJcQdqxsgjChzqWp7vFF6FZ8jPggoR+zx9QAAlo6yQtMD3SEmm/I1RdAB13RFqbQd8P7UjYAdIaotDYlTrDTYpTuvs7Wm3u85dQ97o9XfRcfSf/diC5apiuZAHxlb8pKbibrPOD/tw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=wBPDwzdy+WnZv5fNvuiUwiu39NofjjPQNTnlqlqsljY=;
+ b=FLD2GREF8PoBJeHeVLhZOjreJ3BgvlvJdSDfkVFtqaokviN5EoIOSORRNwJFMRlo5VLrJT2RxnCBTlFqiN6MMQ0pdoiFBVaPTWDZqVWyfHRITIxkR++Lt2eM07Bc0IMa/q44D3sYL9WQimFoH+FxJ+LB23gxPO1UM7T/AfeOKXZwC801lA/8T07DUsZL+jp+h0xQmbKjx5sOq82PxoItzwATUYUbDHP9jPxxutm7vE79FzIdPb6gCelCh1p4GdtM/3drNzepwRoumT8eKmHPTkapJNGgKKO8+vuDpGv+QP9NDylbe1OAXWCNREwhn4tq5weNfYcwD94OLRS4vRDj6A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
+ by CO1PR11MB4772.namprd11.prod.outlook.com (2603:10b6:303:97::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8335.18; Wed, 15 Jan
+ 2025 20:48:09 +0000
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::cf7d:9363:38f4:8c57]) by SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::cf7d:9363:38f4:8c57%5]) with mapi id 15.20.8356.010; Wed, 15 Jan 2025
+ 20:48:09 +0000
+Date: Wed, 15 Jan 2025 14:48:03 -0600
+From: Ira Weiny <ira.weiny@intel.com>
+To: Alejandro Lucero Palau <alucerop@amd.com>, Dan Williams
+	<dan.j.williams@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dave Jiang
+	<dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>, Jonathan Cameron
+	<Jonathan.Cameron@huawei.com>, Jonathan Corbet <corbet@lwn.net>, "Andrew
+ Morton" <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>, "Gustavo A.
+ R. Silva" <gustavoars@kernel.org>
+CC: Davidlohr Bueso <dave@stgolabs.net>, Alison Schofield
+	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
+	<linux-cxl@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+	<nvdimm@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
+	<linux-hardening@vger.kernel.org>, Li Ming <ming.li@zohomail.com>
+Subject: Re: [PATCH v8 02/21] cxl/mem: Read dynamic capacity configuration
+ from the device
+Message-ID: <67881f03e607b_1aa45f29430@iweiny-mobl.notmuch>
+References: <20241210-dcd-type2-upstream-v8-0-812852504400@intel.com>
+ <20241210-dcd-type2-upstream-v8-2-812852504400@intel.com>
+ <67871f05cd767_20f32947f@dwillia2-xfh.jf.intel.com.notmuch>
+ <469ac491-8733-986a-aaae-768ec28ebbec@amd.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <469ac491-8733-986a-aaae-768ec28ebbec@amd.com>
+X-ClientProxiedBy: MW4P223CA0019.NAMP223.PROD.OUTLOOK.COM
+ (2603:10b6:303:80::24) To SA1PR11MB6733.namprd11.prod.outlook.com
+ (2603:10b6:806:25c::17)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241211053311.245636-1-jeffxu@google.com> <20241211053311.245636-2-jeffxu@google.com>
- <e81dba68-ee9b-42ea-911a-4eca907c8f6a@lucifer.local>
-In-Reply-To: <e81dba68-ee9b-42ea-911a-4eca907c8f6a@lucifer.local>
-From: Jeff Xu <jeffxu@chromium.org>
-Date: Wed, 15 Jan 2025 12:47:27 -0800
-X-Gm-Features: AbW1kvYyyJCXrPXnWuYMfz2GGufl0qkJqlL8U8yiLRAfZfv9b9Ss0wzeynbHVnk
-Message-ID: <CABi2SkXKW2EGPE9BV9j+c5tzxj8a1t2iXy7ckZTCNW_ZniC-hw@mail.gmail.com>
-Subject: Re: [RFC PATCH v1 1/1] selftest/mm: refactor mseal_test
-To: Andrew Morton <akpm@linux-foundation.org>, Vlastimil Babka <vbabka@suse.cz>, 
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	Mark Brown <broonie@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, linux-hardening@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
-	Jorge Lucangeli Obes <jorgelo@chromium.org>, Kees Cook <keescook@chromium.org>, 
-	Pedro Falcato <pedro.falcato@gmail.com>, Randy Dunlap <rdunlap@infradead.org>, 
-	Jann Horn <jannh@google.com>, Jeff Xu <jeffxu@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|CO1PR11MB4772:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2468995f-9d23-4c45-139c-08dd35a5eb3d
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016|921020;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?nw72UZdoO35ZhKhqk1qjtMWn7qAgsT4+90r5rHFZj0JPU1sh/6L6Zs1MY088?=
+ =?us-ascii?Q?+4Hol/Ddnw9wL0YOdsiPOYZ4QQMiu4U/oty2qpXc5QkEbkWkrKILFXDiqnYD?=
+ =?us-ascii?Q?gPU9Bhl7HwPt6spLlar+EuiZgCB/iquqvSf1JaaxhTIlvL8q9DpTVPbJcd6w?=
+ =?us-ascii?Q?uHbiePNw9M6XRkMT1cIxm/EoFoDcxoCvjOesN+anv10g6vBo4ABTeDzwnbwJ?=
+ =?us-ascii?Q?vN/gDIHe8uuNhJitqlAFcVKGWCqlrdD0ZcdDZs3chA/Ej+DBBUTvbSVJjU8v?=
+ =?us-ascii?Q?nKocskZI/6O59Hais18XJsnULBE/RmtMg+SkAKBYPh127pznl4W38K/S3xGa?=
+ =?us-ascii?Q?GmGSkcw4PsJl2j+rikxlZE0CRbv8nhSizviHETEtP4zmr3ISyC3KyIhExG4z?=
+ =?us-ascii?Q?bzg51LegLZpcKJdiLDVGOz6w5fnkOl6GF6JN+eNf3Fp7d61xThtCIeAf6RUu?=
+ =?us-ascii?Q?76xJLn/DwYcfHlCI933yRBg7PCYS7B2AFwjNSL2bgwNYRANYm9KY1g6MWphU?=
+ =?us-ascii?Q?1UJunIGXv6FqU+TtcTNDM2RLdmJcMi8fVvjBSzfH04rXavgOZiJZIavqZSVX?=
+ =?us-ascii?Q?Z7Up95+G2P94Kg//iSlxAuI1PT4hEm038f6ZGCWY0pPKRUuqPM1TT08zQQIm?=
+ =?us-ascii?Q?UmPwF+qJvLYROiVMU1Qfa2xOXJFstGJ8sLj6w2Vs9wmEIfYBB0LzFdcDukNH?=
+ =?us-ascii?Q?6Jv2eHLyquPv4w0nfcO1qK+LeO99afHs48mFMGkM7WJKmWaeX28N+O/b9oyV?=
+ =?us-ascii?Q?T+ktIfxSyNbAHCV/LuqqJol1sEF0tVEP80qtMtIJVa+MnZSfeWWHcGXAI7n+?=
+ =?us-ascii?Q?o0lKcjDZayEzcSxWIibgV1A76KgacvjkhQVr6bBlupbRsDiwryy6+/W7ETfI?=
+ =?us-ascii?Q?PYbizn0P+OcwPGN3DEaPlV4y/iDEndOMpse6QDjVTzvQ4GdO1iIMnoi7eOF9?=
+ =?us-ascii?Q?Yp7p6c+qsGFbpriujKcWwbu1dmpQSRBBHeKipdG4FvXX4wvIx/m/IMkXI9UI?=
+ =?us-ascii?Q?eNol4dI/usq0wSiYj1xJTbH4CrANNYaK9Y6bs2tl8rKpfplPdrU6Oidj4p1c?=
+ =?us-ascii?Q?czmjRzr9UxMV/kCwbMxC3bAzuZ6v1MSaoKLgDW99CfTtFOyE8E0c+UQa1cKM?=
+ =?us-ascii?Q?rCa/2531ynLnGdVsXiHKXvng5K84LBNunyGkAJy21gEbuyUhdnSIq9FwZviA?=
+ =?us-ascii?Q?Ccs1MwAOmnQ+21nmC+JPjEaPaAuLxuStegGn2z7tBU/44B2zdJsqB3j6xzzy?=
+ =?us-ascii?Q?+zaS9+LN7oXQdGGuSOHgte659ZfKNBe/8bniXXlvExmFE1GFiYnH+TQQay+D?=
+ =?us-ascii?Q?7lNGNGkf4nr/5L6rwAELHvddD9AfmSmz3gybTLz61aWUvA5fQ8faYcBejN8C?=
+ =?us-ascii?Q?kWUq+RX9N+BXMYfybQ9u938a1EGnQhanMAc+Fh3HWJH1nASpjGjJdkEhKn7S?=
+ =?us-ascii?Q?nGotiXs2en4=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?uZGWa4cP+sootY3JzjQF8Kf+N3UyTZYypMwZ925tEmbwOtRg5hIZPRaqD2Ft?=
+ =?us-ascii?Q?FqTvueyRQTN5hnGZQJv6oWjvbp0LtkO+CG2ELSEoB4jEYa9gozuR0k/d8+hb?=
+ =?us-ascii?Q?Orx4SsQfdmAnAwxADGKKGW/9Q0i9DMh+dFkypfCqBo2HTup70iMU0oy5g2Q4?=
+ =?us-ascii?Q?Af7H/pNhMEXiqPoVN5Z2YTaAV47w5F56+T8ZiI2OgWh0Wscl7cCB+7ytmya4?=
+ =?us-ascii?Q?Lv00DvL4/7k6L+1mjsgR6U5ukOz2t2ridzd5cnceKEh6xKAzbqWh5FicygZA?=
+ =?us-ascii?Q?hdpzmyISyAyxr0aHQZk43+gCUWGuJwCT0UkK9/OZ4Xt3qOz9HivqhYwSm3BD?=
+ =?us-ascii?Q?1aRPLHVx3ted53OoZkqkLJ0ahm5DfxMN5RMvuQnxWOOanuKqiLpnA6kVDDjR?=
+ =?us-ascii?Q?SGslqB0FApP0jX2e0DoW8Rxe0hIPDr7ZLi/bmgucE/BdNNtHKLLLw5EZvNZW?=
+ =?us-ascii?Q?R2O0xzahVfhVT0A8zTn2tkC6fkRLkc/F5vtjVFZ65gQdzvUWvhgh1jpDgAHd?=
+ =?us-ascii?Q?7YDw51UFtA/oU50mXNzUH8P4kyVqP+fjiT/Ww0Ps1OrHq8jjOoJnc0Juqqw7?=
+ =?us-ascii?Q?0K7d/tQ9JTv9k7iPWxmq915BXOINzN1Ugz/PHlXh7ZbShCiDzI7MeExNiOvd?=
+ =?us-ascii?Q?E5zNXhlGahnfQavJDSUvv50jpsinTWN1CeKX3luU1WHeUbgkvQDGf9jmbof+?=
+ =?us-ascii?Q?z6fv22UcJIGBDjNNPOyG9XKcKmEM/yOnQvSqyXPzB80DdyoW59tLykbopEnV?=
+ =?us-ascii?Q?LF5VluK/WiMxm6tsF2kcJrUrEI08qs6OOCIdPkQ8YQIU2I3FCsIAErdGpNG1?=
+ =?us-ascii?Q?11ul66aKCmWvQhmaNrkgLjPFrI37dZc+sILf/3cLYcSTPM3lKYl5K33D/TJa?=
+ =?us-ascii?Q?tmytm2Kb/XJO+wlVW/pY6j5z2+BY7Hh2OtCtU3GJoTfQEKjkSjRfuy1gRGxB?=
+ =?us-ascii?Q?0nauhQx9digaClCpyvkwHXuOSF46lPIMy3tD6TfOfOUtF9Lzft/GxBPhDq6n?=
+ =?us-ascii?Q?FwPu2wN9hIpZevW5R11yPTPsFz2VbUuZirlTWwHoqvKH4wH7HcJaWX3vpABZ?=
+ =?us-ascii?Q?4CnxUq5ESAGpvmeVlqLUoD/3G3Q8xFMxdrzXlXx+OIuQTyT6ubAsR11yuvMk?=
+ =?us-ascii?Q?cqiXYRY0L5ff/EqgnNgWwdlTCwE8sVVuuzWyp1DbDQGXrWfCrrgaxzzWwFOe?=
+ =?us-ascii?Q?u/4rar5c5GjRWcX1k87MMhaO/0x60D3bE+NWyLjcYRpSgKYesTwn4azKhA63?=
+ =?us-ascii?Q?x6bSw/8cPTE0REXHINAAHybuS2JFI2DfpmhywNd9JSEoL7lnlCcNKJaw7jvB?=
+ =?us-ascii?Q?TVIpuOmJ9sric05cWHlVDSlwVJHzbEy455dRJ1wtwxRPACLAa2Zh3CeCaMqO?=
+ =?us-ascii?Q?w+vTkFjnL0MZTSjYLuUtFIoQHYvyoElMyylTF6YHPVUNFk8a1o3nFZFZ9+Tf?=
+ =?us-ascii?Q?yH2S5CrOPSRJnU52aQWTBazh32EixNsHeBDMdr0gTmkH3NFgntQE6FoXPmka?=
+ =?us-ascii?Q?GX6Is5wu2Ot5qhcTx5/nisjsnRsI/HJ6gb3EUdwE7qOxvaJyX7Rd5j8jh+Oi?=
+ =?us-ascii?Q?rufqDA9YI20VOlFuY9sMVvqhXbvjg7U/fnXfqJ1S?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2468995f-9d23-4c45-139c-08dd35a5eb3d
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jan 2025 20:48:09.0650
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6L5UYah6ZV+TdezyJdMQh4vQ7gkSRGp+8Oe1/F6ROMVgIIla+m54Nb5QaEbnMsaDWLAyLh5IkWlyaqVe51hE0Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR11MB4772
+X-OriginatorOrg: intel.com
 
-Hi Lorenzo,
+Alejandro Lucero Palau wrote:
+> 
+> On 1/15/25 02:35, Dan Williams wrote:
+> > Ira Weiny wrote:
 
-On Thu, Jan 2, 2025 at 9:30=E2=80=AFAM Lorenzo Stoakes
-<lorenzo.stoakes@oracle.com> wrote:
->
-> Sorry for delay, was super busy leading up to xmas break, then had ~2.5
-> weeks off.
->
-Thanks for reviewing.  There are lots of comments, so it takes some
-time to go through comments and experiment with some of the suggested
-changes. Please see below.
+[snip]
 
-> And happy new year! :)
->
-Happy new year !
-
-> On Wed, Dec 11, 2024 at 05:33:11AM +0000, jeffxu@chromium.org wrote:
-> > From: Jeff Xu <jeffxu@chromium.org>
+> >> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> >> index e8907c403edbd83c8a36b8d013c6bc3391207ee6..05a0718aea73b3b2a02c608bae198eac7c462523 100644
+> >> --- a/drivers/cxl/cxlmem.h
+> >> +++ b/drivers/cxl/cxlmem.h
+> >> @@ -403,6 +403,7 @@ enum cxl_devtype {
+> >>   	CXL_DEVTYPE_CLASSMEM,
+> >>   };
+> >>   
+> >> +#define CXL_MAX_DC_REGION 8
+> > Please no, lets not sign up to have the "which cxl 'region' concept are
+> > you referring to?" debate in perpetuity. "DPA partition", "DPA
+> > resource", "DPA capacity" anything but "region".
 > >
-> > This change creates the initial version of memorysealing.c.
 > >
-> > The introduction of memorysealing.c, which replaces mseal_test.c and
->
-> I mean I don't want to be a pain but I would kinda prefer to have 'mseal'
-> everywhere mseal is to avoid confusion vs. memfd seals.
->
-As I tried to explain, the memorysealing.c will eventually replace
-mseal_test.c, after all the tests are moved to use kselftest_karness.
-How about mseal_test_new.c ? I'm open to new names if you have one.
+> 
+> This next comment is not my main point to discuss in this email 
+> (resources initialization is), but I seize it for giving my view in this 
+> one.
+> 
+> Dan, you say later we (Linux) are not obligated to use "questionable 
+> naming decisions of specifications", but we should not confuse people 
+> either.
+> 
+> Maybe CXL_MAX_DC_HW_REGION would help here, for differentiating it from 
+> the kernel software cxl region construct. I think we will need a CXL 
+> kernel dictionary sooner or later ...
 
-> Of course we in the kernel absolutely _love_ to overload the meaning of t=
-erms
-> but some traditions are worth breaking :)
->
-> > uses the kselftest_harness, aims to initiate a discussion on using the
-> > selftest harness for memory sealing tests. Upon approval of this
-> > approach, the migration of tests from mseal_test.c to memorysealing.c
-> > can be implemented in a step-by-step manner.
->
-> Well, I for one like this approach so (unsurprisingly) :) but perhaps
-> sensible to do it iteratively so we can also tweak things as we go.
->
-Yes, that is the idea.
+I agree.  I have had folks confused between spec and code and I'm really trying
+to differentiate hardware region vs software partition.
 
+> 
+> >>   /**
+> >>    * struct cxl_dpa_perf - DPA performance property entry
+> >>    * @dpa_range: range for DPA address
+> >> @@ -434,6 +435,8 @@ struct cxl_dpa_perf {
+> >>    * @dpa_res: Overall DPA resource tree for the device
+> >>    * @pmem_res: Active Persistent memory capacity configuration
+> >>    * @ram_res: Active Volatile memory capacity configuration
+> >> + * @dc_res: Active Dynamic Capacity memory configuration for each possible
+> >> + *          region
+> >>    * @serial: PCIe Device Serial Number
+> >>    * @type: Generic Memory Class device or Vendor Specific Memory device
+> >>    * @cxl_mbox: CXL mailbox context
+> >> @@ -449,11 +452,23 @@ struct cxl_dev_state {
+> >>   	struct resource dpa_res;
+> >>   	struct resource pmem_res;
+> >>   	struct resource ram_res;
+> >> +	struct resource dc_res[CXL_MAX_DC_REGION];
+> > This is throwing off cargo-cult alarms. The named pmem_res and ram_res
+> > served us well up until the point where DPA partitions grew past 2 types
+> > at well defined locations. I like the array of resources idea, but that
+> > begs the question why not put all partition information into an array?
 > >
-> > This tests addresses following feedback from previous reviews:
-> >
-> > 1> Use kselftest_harness instead of custom macro, such as EXPECT_XX,
-> > ASSERT_XX, etc.  (Lorenzo Stoakes, Mark Brown) [1]
-> >
-> > 2> Use MAP_FAILED to check the return of mmap (Lorenzo Stoakes).
->
-> Thanks!
->
-> >
-> > 3>  Adding a check for vma size and prot bits. The discussion for
-> >     this can be found in [2] [3], here is a brief summary:
-> >     This is to follow up on Pedro=E2=80=99s in-loop change (from
-> >     can_modify_mm to can_modify_vma). When mseal_test is initially
-> >     created, they have a common pattern:  setup memory layout,
-> >     seal the memory, perform a few mm-api steps, verify return code
-> >     (not zero).  Because of the nature of out-of-loop,  it is sufficien=
-t
-> >     to just verify the error code in a few cases.
-> >
-> >     With Pedro's in-loop change, the sealing check happens later in the
-> >     stack, thus there are more things and scenarios to verify. And ther=
-e
-> >     was feedbacks to me that mseal_test should be extensive enough to
-> >     discover all regressions. Hence I'm adding check for vma size and p=
-rot
-> >     bits.
-> >
-> > In this change: we created two fixtures:
-> >
-> > Fixture basic:   This creates a single VMA, the VMA has a
-> > PROT_NONE page at each end to prevent auto-merging.
-> >
-> > Fixture wo_vma: Two VMAs back to end, a PROT_NONE page at each
-> > end to prevent auto-merging.
-> >
-> > In addition, I add one test (mprotec) in each fixture to demo the tests=
-.
-> >
-> > [1] https://lore.kernel.org/all/20240830180237.1220027-5-jeffxu@chromiu=
-m.org/
-> > [2] https://lore.kernel.org/all/CABi2SkUgDZtJtRJe+J9UNdtZn=3DEQzZcbMB68=
-5P=3D1rR7DUhg=3D6Q@mail.gmail.com/
-> > [3] https://lore.kernel.org/all/2qywbjb5ebtgwkh354w3lj3vhaothvubjokxq5f=
-hyri5jeeton@duqngzo3swjz/
-> >
-> > Signed-off-by: Jeff Xu <jeffxu@chromium.org>
-> > ---
-> >  tools/testing/selftests/mm/.gitignore      |   1 +
-> >  tools/testing/selftests/mm/Makefile        |   1 +
-> >  tools/testing/selftests/mm/memorysealing.c | 182 +++++++++++++++++++++
-> >  tools/testing/selftests/mm/memorysealing.h | 116 +++++++++++++
-> >  tools/testing/selftests/mm/mseal_test.c    |  67 +-------
-> >  5 files changed, 301 insertions(+), 66 deletions(-)
-> >  create mode 100644 tools/testing/selftests/mm/memorysealing.c
-> >  create mode 100644 tools/testing/selftests/mm/memorysealing.h
-> >
-> > diff --git a/tools/testing/selftests/mm/.gitignore b/tools/testing/self=
-tests/mm/.gitignore
-> > index a51a947b2d1d..982234a99f20 100644
-> > --- a/tools/testing/selftests/mm/.gitignore
-> > +++ b/tools/testing/selftests/mm/.gitignore
-> > @@ -57,3 +57,4 @@ hugetlb_dio
-> >  pkey_sighandler_tests_32
-> >  pkey_sighandler_tests_64
-> >  guard-pages
-> > +memorysealing
-> > diff --git a/tools/testing/selftests/mm/Makefile b/tools/testing/selfte=
-sts/mm/Makefile
-> > index 93a46ac633df..08876624f46d 100644
-> > --- a/tools/testing/selftests/mm/Makefile
-> > +++ b/tools/testing/selftests/mm/Makefile
-> > @@ -67,6 +67,7 @@ TEST_GEN_FILES +=3D map_populate
-> >  ifneq (,$(filter $(ARCH),arm64 riscv riscv64 x86 x86_64))
-> >  TEST_GEN_FILES +=3D memfd_secret
-> >  endif
-> > +TEST_GEN_FILES +=3D memorysealing
-> >  TEST_GEN_FILES +=3D migration
-> >  TEST_GEN_FILES +=3D mkdirty
-> >  TEST_GEN_FILES +=3D mlock-random-test
-> > diff --git a/tools/testing/selftests/mm/memorysealing.c b/tools/testing=
-/selftests/mm/memorysealing.c
-> > new file mode 100644
-> > index 000000000000..e10032528b64
-> > --- /dev/null
-> > +++ b/tools/testing/selftests/mm/memorysealing.c
-> > @@ -0,0 +1,182 @@
-> > +// SPDX-License-Identifier: GPL-2.0-or-later
-> > +#define _GNU_SOURCE
-> > +#include "../kselftest_harness.h"
-> > +#include <asm-generic/unistd.h>
-> > +#include <errno.h>
-> > +#include <syscall.h>
-> > +#include "memorysealing.h"
-> > +
-> > +/*
-> > + * To avoid auto-merging, create a VMA with PROT_NONE pages at each en=
-d.
-> > + * If unsuccessful, return MAP_FAILED.
-> > + */
-> > +static void *setup_single_address(int size, int prot)
->
-> Nitty, but size should really be an unsigned long.
->
-sure, thanks
+> > This would also head off complications later on in this series where the
+> > DPA capacity reservation and allocation flows have "dc" sidecars bolted
+> > on rather than general semantics like "allocating from partition index N
+> > means that all partitions indices less than N need to be skipped and
+> > marked reserved".
+> 
+> 
+> I guess this is likely how you want to change the type2 resource 
+> initialization issue and where I'm afraid these two patchsets are going 
+> to collide at.
+> 
+> If that is the case, both are going to miss the next kernel cycle since 
+> it means major changes, but let's discuss it without further delays for 
+> the sake of implementing the accepted changes as soon as possible, and I 
+> guess with a close sync between Ira and I.
+> 
+> BTW, in the case of the Type2, there are more things to discuss which I 
+> do there.
 
-> > +{
-> > +     int ret;
-> > +     void *ptr;
-> > +     unsigned long page_size =3D getpagesize();
->
-> Trivial, but we store page size in self->page_size so why not pass it as =
-a
-> parameter instead of looking up?
->
-sure.
+I'm looking at your set again because I think I missed this detail.
 
-> > +
-> > +     ptr =3D mmap(NULL, size + 2 * page_size, prot,
-> > +             MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
-> > +
-> > +     if (ptr =3D=3D MAP_FAILED)
-> > +             return MAP_FAILED;
-> > +
-> > +     /* To avoid auto-merging, change to PROT_NONE at each end. */
-> > +     ret =3D sys_mprotect(ptr, page_size, PROT_NONE);
-> > +     if (ret !=3D 0)
-> > +             return MAP_FAILED;
-> > +
-> > +     ret =3D sys_mprotect(ptr + size + page_size, page_size, PROT_NONE=
-);
-> > +     if (ret !=3D 0)
-> > +             return MAP_FAILED;
-> > +
-> > +     return ptr + page_size;
-> > +}
->
-> This could be done more easily with a single PROT_NONE, like:
->
->         static void *setup_single_address(unsigned long size, int prot,
->                         unsigned long page_size)
->         {
->                 void *ptr;
->
->                 /* Ensure we only merge what we intend to. */
->                 ptr =3D mmap(NULL, size + 2 * page_size, PROT_NONE,
->                            MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
->                 if (ptr =3D=3D MAP_FAILED)
->                         return MAP_FAILED;
->
->                 return mmap(&ptr[page_size], size, prot,
->                             MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
->         }
->
-sure, create PROT_NONE mapping first, then use mprotect to change the
-middle part.
+After looking into this more I think a singular array of resources could be
+done without to much major surgery.
 
-> It's probably worth having an equivalent freeing function to avoid leaks:
->
->         static int free_single_address(void *ptr, unsigned long size,
->                         unsigned long page_size)
->         {
->                 /* Also free the PROT_NONE sentinels. */
->                 return munmap(ptr - page_size, size + 2 * page_size);
+The question for type 2 is what interface does the core export for
+accelerators to request these resources?  Or do we export a function like
+add_dpa_res() and let drivers do that directly?
 
-[resp 1] could you clarify? I think we won't need freeing because
-mapping will be sealed. You might recall, mseal() blocks munmap(), and
-munmap() is atomic,  so the above line that you suggested will result
-in no-action during FIXTURE_TEARDOWN. There will be separate test
-cases to test munmap under sealing. In addition, the virtual address
-space is big enough for this test complete without worry about the
-out-of-memory situation. Do I miss anything ?
+Dan is concerned about storing duplicate information about the partitions.
+For DCD I think it should call add_dpa_res() to create resources on the
+fly as I detect partition information from the device.  For type 2 they
+can call that however/whenever they want.
 
->         }
->
-> > +
-> > +FIXTURE(basic)
-> > +{
-> > +     unsigned long page_size;
-> > +     unsigned long size;
-> > +     void *ptr;
-> > +};
-> > +
-> > +/*
-> > + * Setup for basic:
-> > + * Single VMA with 4 pages, prot =3D (PROT_READ | PROT_WRITE).
-> > + */
-> > +FIXTURE_SETUP(basic)
-> > +{
-> > +     int prot;
-> > +
-> > +     self->page_size =3D getpagesize();
-> > +
-> > +     if (!mseal_supported())
-> > +             SKIP(return, "mseal is not supported");
-> > +
-> > +     /* Create a single VMA with 4 pages, prot as PROT_READ | PROT_WRI=
-TE. */
-> > +     self->size =3D self->page_size * 4;
-> > +     self->ptr =3D setup_single_address(self->size, PROT_READ | PROT_W=
-RITE);
-> > +     EXPECT_NE(self->ptr, MAP_FAILED);
-> > +
-> > +     EXPECT_EQ(self->size, get_vma_size(self->ptr, &prot));
->
-> I mean fine but this check seems a bit overkill here, we don't need to
-> check to ensure that PROT_NONE works.
->
-[resp 2] Those checks are there,  for the same reason that test cases
-usually check the return value of mmap(), mprotect() in the
-FIXTURE_SETUP. You are right that those calls are unlikely to fail,
-however, test cases generally do those  "housekeeping tasks"  to make
-sure everything is OK before  the actual test. If you don't want to
-keep those, what is the downside of keeping them ?
+We can even make this an xarray for complete flexibility with how many
+partitions a device can have.  Although I'm not sure if the spec allows
+for that on type 2.  Does it?
 
-> > +     EXPECT_EQ(PROT_READ | PROT_WRITE, prot);
->
-> Nitty, but this seems a bit 'Yoda style', that is placing the expectation
-> prior to the value whose expectation we are assessing, that is perhaps it=
-'d
-> be clearer as:
->
->         EXPECT_EQ(prot, PROT_READ | PROT_WRITE);
->
-[resp 3] Both styles are used in self tests and I believe it is
-equally clear,  I can accommodate this request for this patch.
+Ira
 
-> And again, I think this is really overkill here, if the kernel is unable =
-to
-> do an ordinary mapping correctly we have bigger problems than an mseal bu=
-g!
->
-please see [resp 2]
-
-> > +};
-> > +
-> > +FIXTURE_TEARDOWN(basic)
-> > +{
->
-> Probably worth adding munmap() teardown here.
->
-please see [resp 1]
-
-> > +}
-> > +
-> > +FIXTURE(two_vma)
-> > +{
-> > +     unsigned long page_size;
-> > +     unsigned long size;
-> > +     void *ptr;
-> > +};
-> > +
-> > +/*
-> > + * Setup for two_vma:
-> > + * Two consecutive VMAs, each with 2 pages.
-> > + * The first VMA:  prot =3D PROT_READ.
-> > + * The second VMA: prot =3D (PROT_READ | PROT_WRITE).
-> > + */
-> > +FIXTURE_SETUP(two_vma)
-> > +{
-> > +     int prot;
-> > +     int ret;
-> > +
-> > +     self->page_size =3D getpagesize();
-> > +
-> > +     if (!mseal_supported())
-> > +             SKIP(return, "mseal is not supported");
-> > +
-> > +     /* Create a single VMA with 4 pages, prot as PROT_READ | PROT_WRI=
-TE. */
-> > +     self->size =3D getpagesize() * 4;
-> > +     self->ptr =3D setup_single_address(self->size, PROT_READ | PROT_W=
-RITE);
-> > +     EXPECT_NE(self->ptr, MAP_FAILED);
-> > +
-> > +     /* Use mprotect to split as two VMA. */
-> > +     ret =3D sys_mprotect(self->ptr, self->page_size * 2, PROT_READ);
-> > +     ASSERT_EQ(ret, 0);
-> > +
->
-> > +     /* Verify the first VMA is 2 pages and prot bits */
-> > +     EXPECT_EQ(self->page_size * 2, get_vma_size(self->ptr, &prot));
-> > +     EXPECT_EQ(PROT_READ, prot);
-> > +
-> > +     /* Verify the second VMA is 2 pages and prot bits */
-> > +     EXPECT_EQ(self->page_size * 2,
-> > +             get_vma_size(self->ptr + self->page_size * 2, &prot));
-> > +     EXPECT_EQ(PROT_READ | PROT_WRITE, prot);
->
-> Again, as with the prior fixture, it seems a bit overkill, as this is
-> essentially testing 'does mmap() and mprotect()' work. We should hope so =
-:)
-Please see [resp 2]
-
-> > +};
-> > +
-> > +FIXTURE_TEARDOWN(two_vma)
-> > +{
->
-> Same comment as for the basic fixture - let's clean up after ourselves.
->
-please see [resp 1]
-
-> > +}
-> > +
-> > +/*
-> > + * Verify mprotect is blocked.
-> > + */
-> > +TEST_F(basic, mprotect_basic)
-> > +{
-> > +     int ret;
-> > +     unsigned long size;
-> > +     int prot;
-> > +
-> > +     /* Seal the mapping. */
-> > +     ret =3D sys_mseal(self->ptr, self->size, 0);
-> > +     ASSERT_EQ(ret, 0);
-> > +
-> > +     /* Verify mprotect is blocked. */
-> > +     ret =3D sys_mprotect(self->ptr, self->size, PROT_READ);
-> > +     EXPECT_GT(0, ret);
->
-> Yeah this one is kinda egregious, this is genuinely hard to read. Wouldn'=
-t
-> this be better as:
->
->         EXPECT_NE(ret, 0);
->
-> As it explicitly says 'not equal to a success case'. Rather than 'wait 0 =
-is
-> _greater than_ the result which means the result is _less than_ 0 which
-> means an error but let me check the man page can it be positive, oh ok it=
-'s
-> -1 on error, 0 on success', which was the Lorenzo thought process... :)
->
-[resp 4] The man page says: "On success, mprotect() and
-pkey_mprotect() return zero.  On error, these system calls return -1,
-and errno is set to indicate the error."
-
-I wll switch EXPECT_EQ(ret, -1) which is precisely what the man page says.
-
-> > +     EXPECT_EQ(EPERM, errno);
->
-> Let's invert these, Yoda style isn't really useful here and is a little
-> harder to read, e.g. we should do:
->
->         EXPECT_EQ(errno, EPERM);
->
-please see [resp 3]
-
-> > +
-> > +     /* Verify the VMA (sealed) isn't changed */
-> > +     size =3D get_vma_size(self->ptr, &prot);
-> > +     EXPECT_EQ(self->size, size);
-> > +     EXPECT_EQ(PROT_READ | PROT_WRITE, prot);
->
-> Again, no to Yoda :)
->
-please see [resp 3]
-
-> I also wonder how useful this is - I guess belts + braces, and linux _can=
-_
-> do partial failures, but is that something we would care about in practic=
-e?
->
-[resp 5]
-Those checks will help to detect regression, such as  when Pedro
-Falcato implemented in-loop change [1]. Liam R. Howlett also commented
-that mseal_test should be extensive enough to check for size and prot
-to avoid future regression [2]
-
-For your question about partial failure, there will be additional
-tests for partial-sealed-address range, and those will check the
-sealed mapping only.
-
-> > +}
-> > +
-> > +/*
-> > + * Seal both VMAs in one mseal call.
-> > + * Verify mprotect is blocked on both VMAs in various cases.
-> > + */
-> > +TEST_F(two_vma, mprotect)
->
-> I'm guessing you aren't necessarily covering _all_ mprotect cases here
-> (though perhaps you intend to later, iteratively?)
->
-Yes.
-
-> > +{
-> > +     int ret;
-> > +     int prot;
-> > +     unsigned long size;
->
-> I think 'size' is a bit confusing as it refers to the size ascertained fr=
-om
-> the get_vma_size() later on. Perhaps call it actual_size?
->
-To help  readability, I will change size to vma_size, which
-corresponds to the return of get_vma_size().
-
-> Maybe worth adding:
->
->         void *ptr =3D self->ptr;
->         unsigned long size =3D self->size;
->         unsigned long page_size =3D self->page_size;
->
-> For convenience?
->
-> This is totally optional though, maybe more effort than it's worth.
->
-I don't think it is worth it.
-
-> > +
-> > +     /* Seal both VMAs in one mseal call. */
-> > +     ret =3D sys_mseal(self->ptr, self->size, 0);
-> > +     ASSERT_EQ(ret, 0);
-> > +
-> > +     /* Verify mprotect is rejected on the first VMA. */
-> > +     ret =3D sys_mprotect(self->ptr, self->page_size * 2,
-> > +             PROT_READ | PROT_EXEC);
->
-> Why PROT_READ | PROT_EXEC? Is this arbitrary? To be thorough shouldn't yo=
-u
-> loop through all of the prot flags that you think should fail? And perhap=
-s
-> check what happens if you mprotect() the VMA to set it to what it already
-> is?
->
-[resp 6]
-Not arbitrary. As commented in FIXTURE_SETUP, the first VMA is
-PROT_READ, and the second VMA is PROT_READ | PROT_WRITE.   The test
-wants to use mprotect to change the proc bit to a different set.
-
-For your question about mprotect() the sealed vma to what it already
-is (doesn't change any attribute), I don't want to solidify the
-current behavior (which is to block). It should be successful instead.
-With in-loop check and partial update behavior,  there is no reason to
-block it, i.e. no security benefit. I already plan to address this.
-
-> > +     EXPECT_GT(0, ret);
->
-> Please convert to EXPECT_NE(ret, 0)
->
-please see [resp 4]
-
-> > +     EXPECT_EQ(EPERM, errno);
->
-> Please invert to EXPECT_EQ(errno, EPERM)
->
-please see [resp 3]
-
-> > +
-> > +     /* Verify mprotect is rejected on the second VMA. */
-> > +     ret =3D sys_mprotect(self->ptr, self->page_size * 2,
-> > +             PROT_READ | PROT_EXEC);
->
-> Hang on, isn't this just a repeat of the first test? Shouldn't this be:
->
->         ret =3D sys_mprotect(&self->ptr[self->page_size * 2],
->                 self->page_size * 2, PROT_READ | PROT_EXEC);
->
-[resp 7] Not the same, this test has two VMA, and  the mseal() covers
-both VMAs in one call. In the first test, i.e. basic, mprotect_basic,
-mseal is called on single VMA.
-
-> > +     EXPECT_GT(0, ret);
-> > +     EXPECT_EQ(EPERM, errno);
->
-> Same comment as above re: ordering.
->
-please see [resp 3]
-
-> > +
-> > +     /* Attempt of mprotect two VMAs at the same call is blocked */
-> > +     ret =3D sys_mprotect(self->ptr, self->size,
-> > +             PROT_READ | PROT_EXEC);
->
-> Same comment about iterating through prot flags that should fail as above=
-.
->
-please see [resp 7]
-
-> > +     EXPECT_GT(0, ret);
-> > +     EXPECT_EQ(EPERM, errno);
->
-> Same comment as above re: ordering.
->
-please see [resp 3]
-
-> > +
-> > +     /* Verify both VMAs aren't changed. */
-> > +     size =3D get_vma_size(self->ptr, &prot);
-> > +     EXPECT_EQ(self->page_size * 2, size);
-> > +     EXPECT_EQ(PROT_READ, prot);
->
-> Same comment as above re: ordering.
->
-please see [resp 3]
-
-> > +
-> > +     size =3D get_vma_size(self->ptr + self->page_size * 2, &prot);
-> > +     EXPECT_EQ(self->page_size * 2, size);
-> > +     EXPECT_EQ(PROT_READ | PROT_WRITE, prot);
->
-> Same comment as above re: ordering.
->
-please see [resp 3]
-
-> > +}
-> > +
-> > +TEST_HARNESS_MAIN
-> > diff --git a/tools/testing/selftests/mm/memorysealing.h b/tools/testing=
-/selftests/mm/memorysealing.h
-> > new file mode 100644
-> > index 000000000000..aee6e6700028
-> > --- /dev/null
-> > +++ b/tools/testing/selftests/mm/memorysealing.h
-> > @@ -0,0 +1,116 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +#include <syscall.h>
-> > +
-> > +/*
-> > + * Define sys_xyx to call syscall directly.
-> > + * This is needed because we want to avoid calling glibc and
-> > + * test syscall directly.
->
-> I do wonder if this is worth it, but I mean, I guess it's not too egregio=
-us
-> if it's wrapped like this. Same comment for other wrappers.
->
-The self-test should directly test the kernel syscall without any
-intermediate layer. selftest is not a libc test. It is practical too,
-glibc's behavior can change across versions which result inconsistent,
-and Padro Falcato reported one of this and fixed in [3]
-
-> > + * The only exception is mmap, which _NR_mmap2 is not defined for
-> > + * some ARM architecture.
-> > + */
-> > +static inline int sys_mseal(void *start, size_t len, unsigned long fla=
-gs)
-> > +{
-> > +     int sret;
-> > +
-> > +     errno =3D 0;
->
-> Why are we setting this to 0? Same comment for all sys_XXX() wrappers.
->
-The test is only interested in the latest error associated with the
-failed syscall, and I'm not sure the kernel clears the errno for each
-system call. Note, there is no glibc layer here.
-
-> > +     sret =3D syscall(__NR_mseal, start, len, flags);
-> > +     return sret;
->
-> Nit, but this seems a bit redundant, why not just drop the sret assignmen=
-t,
-> and simply:
->
->         return syscall(__NR_mseal, start, len, flags);
->
-> Same comment for all sys_XXX() wrappers.
->
-[resp 6] I think this is a different taste in coding style. For the
-test, I prefer to have local variables so it is easy to show them in
-the debugger, when needed.
-
-> > +}
-> > +
-> > +static inline int sys_mprotect(void *ptr, size_t size, unsigned long p=
-rot)
-> > +{
-> > +     int sret;
-> > +
-> > +     errno =3D 0;
-> > +     sret =3D syscall(__NR_mprotect, ptr, size, prot);
-> > +     return sret;
-> > +}
-> > +
->
-> The wrappers below don't seem to be used yet, could we delay putting them
-> in until they are actually used?
->
-Sure, I will remove sys_mprotect_pkey for this patch.
-
-> > +static inline int sys_mprotect_pkey(void *ptr, size_t size,
-> > +     unsigned long orig_prot, unsigned long pkey)
-> > +{
-> > +     int sret;
-> > +
-> > +     errno =3D 0;
-> > +     sret =3D syscall(__NR_pkey_mprotect, ptr, size, orig_prot, pkey);
-> > +     return sret;
-> > +}
-> > +
-> > +static inline int sys_munmap(void *ptr, size_t size)
-> > +{
-> > +     int sret;
-> > +
-> > +     errno =3D 0;
-> > +     sret =3D syscall(__NR_munmap, ptr, size);
-> > +     return sret;
-> > +}
-> > +
-> > +static inline int sys_madvise(void *start, size_t len, int types)
-> > +{
-> > +     int sret;
-> > +
-> > +     errno =3D 0;
-> > +     sret =3D syscall(__NR_madvise, start, len, types);
-> > +     return sret;
-> > +}
-> > +
-> > +static inline void *sys_mremap(void *addr, size_t old_len, size_t new_=
-len,
-> > +     unsigned long flags, void *new_addr)
-> > +{
-> > +     void *sret;
-> > +
-> > +     errno =3D 0;
-> > +     sret =3D (void *) syscall(__NR_mremap, addr, old_len, new_len, fl=
-ags, new_addr);
-> > +     return sret;
-> > +}
-> > +
-> > +/*
-> > + * Parsing /proc/self/maps to get VMA's size and prot bit.
-> > + */
-> > +static unsigned long get_vma_size(void *addr, int *prot)
-> > +{
-> > +     FILE *maps;
-> > +     char line[256];
-> > +     int size =3D 0;
-> > +     uintptr_t  addr_start, addr_end;
->
-> Why not add a:
->
->         uintptr_t addr_val =3D (uintptr_t)addr;
->
-> To avoid having to constantly cast below?
->
-sure.
-
-> > +     char protstr[5];
-> > +     *prot =3D 0;
->
-> Nit but not sure there's much point in setting this to 0 even in failure
-> cases?
->
-> With an error code return you can avoid having to do this.
->
-[resp 8]
-I don't think the error code return is worth the effort, it currently
-returns 0 size in case of error or not-found. For easy debug parsing
-errors, I can add logs.  Notes, the parsing should always be
-successful.
-
-> > +
-> > +     maps =3D fopen("/proc/self/maps", "r");
-> > +     if (!maps)
-> > +             return 0;
->
-> Might it be better to return an error code or something so we can identif=
-y
-> this case? I guess any sensible call will fail on a 0 but you're sort of
-> just implicitly hoping for this.
->
-[resp 9] we could add logging in case of error.
-
-> > +
-> > +     while (fgets(line, sizeof(line), maps)) {
-> > +             if (sscanf(line, "%lx-%lx %4s", &addr_start, &addr_end, p=
-rotstr) =3D=3D 3) {
-> > +                     if (addr_start =3D=3D (uintptr_t) addr) {
->
-> This is a Yoda comparison again, let's put what we're comparing first, an=
-d
-> the thing we're comparing to afterwards, e.g.
->
->         if ((uintptr_t)addr =3D=3D addr_start) ...
->
-addr is the expected value from input and  addr_start changes after
-parsing each line. The expected value (addr) is in second position,
-why is this yoda syntax ? IMO, introducing the yoda syntax concept for
-"=3D=3D"  is more confusing than useful, A=3D=3DB is as clear as B=3D=3DA.
-
-> Also I don't think a space after the (type) cast is necesary.
->
-sure
-
-> > +                             size =3D addr_end - addr_start;
-> > +                             if (protstr[0] =3D=3D 'r')
-> > +                                     *prot |=3D PROT_READ;
-> > +                             if (protstr[1] =3D=3D 'w')
-> > +                                     *prot |=3D PROT_WRITE;
-> > +                             if (protstr[2] =3D=3D 'x')
-> > +                                     *prot |=3D PROT_EXEC;
-> > +                             break;
-> > +                     }
-> > +             }
-> > +     }
->
-> On the impl: This would be neater if you used guard clauses:
->
->         while (fgets(line, sizeof(line), maps)) {
->                 if (sscanf(line, "%lx-%lx %4s", &addr_start, &addr_end, p=
-rotstr) !=3D 3)
->                         continue;
->
->                 if (addr_val !=3D addr_start)
->                         continue;
->
->                 size =3D addr_end - addr_start;
->                 if (protstr[0] =3D=3D 'r')
->                         *prot |=3D PROT_READ;
->                 if (protstr[1] =3D=3D 'w')
->                         *prot |=3D PROT_WRITE;
->                 if (protstr[2] =3D=3D 'x')
->                         *prot |=3D PROT_EXEC;
->                 break;
->         }
->
-> This is a lot more readable?
->
-sure.
-
-> On doing this at all - it feels a bit crazy to check this, but I guess it
-> might be the only way to assert things about merge/split.
->
-> I'm not sure it's _really useful_ to do that though - merges/splits are
-> internal implementation details in effect (modulo mremap single VMA
-> requirements), and mseal is an external interface, really the check shoul=
-d
-> be around 'can forbidden operations be performed on sealed mappings'.
->
-This is related to resp [5].
-This test not only verifies the size, but also verifies the prot bits.
-The argument that VMA is an internal behavior is questionable, the
-/proc/pid/maps is user-facing and applications can read it and parse
-it.
-
-> However, if you do really want to do this, I think it would be much bette=
-r
-> to use the new ioctl interface for this [0] which should avoid having to =
-do
-> unpleasant text wrangling :)
->
-> [0]:https://lore.kernel.org/all/20240627170900.1672542-1-andrii@kernel.or=
-g/
->
-I could try this. This is a new feature though, I do think this
-selftest should be self-standing and has as minimal dependency as
-possible.  Is there harm of using /proc/pid/maps ? parsing
-/proc/pid/maps already used by selftest in lots of places (see below),
-I would prefer testing to use well-established patterns than relying
-on a newly developed feature.
-
-filesystems/overlayfs/dev_in_maps.c
-mm/mlock2-tests.c
-mm/mremap_test.c
-mm/virtual_address_range.c
-mm/split_huge_page_test.c
-filesystems/overlayfs/dev_in_maps.c
-exec/load_address.c
-bpf/trace_helpers.c
-
->
-> > +     fclose(maps);
-> > +     return size;
->
-> If we don't find the line we don't seem to be indicating this, again wort=
-h
-> being able to pass back an error?
->
-It can be normal that we don't find a line, i.e. tests want to verify
-that a VMA does not exist at address, return 0 size is correct in this
-case. If a parsing error ever happened, the test would have failed at
-FIXTURE_SETUP to begin with.
-
-> > +}
-> > +
-> > +static inline bool mseal_supported(void)
-> > +{
-> > +     int ret;
-> > +     void *ptr;
-> > +     unsigned long page_size =3D getpagesize();
-> > +
-> > +     ptr =3D mmap(NULL, page_size, PROT_READ, MAP_ANONYMOUS | MAP_PRIV=
-ATE, -1, 0);
-> > +     if (ptr =3D=3D MAP_FAILED)
-> > +             return false;
-> > +
-> > +     ret =3D sys_mseal(ptr, page_size, 0);
-> > +     if (ret < 0)
-> > +             return false;
->
-> This is kind of cute, I mean it speaks to the need I think for us to be
-> able to expose 'is X available?' programmatically. But I digress.
->
-> I guess this is ok, as this is something that should never fail.
->
-You might recall that mseal is not available on the 32 bits kernel,
-automation might run the mseal_test on a 32 bit build.
-mseal_supported() detects this so tests can be skipped.
-
-> But we should definitely clean up after ourselves here whether this
-> succeeds or fails.
->
-please see resp [1].
-
-Thanks!
--Jeff
-[1] https://lore.kernel.org/all/CAKbZUD31EK2ah=3DvWJ46y4nL9OygzAa6ZxPnPHmWY=
-O-sop5t+5Q@mail.gmail.com/
-[2] https://lore.kernel.org/all/ko3pjllsgufbz33hqvwdpdsyxvgrgzqiodxexnpcng3=
-mssffeh@dfgfkqlg46xa/
-[3] https://lore.kernel.org/all/20240807153544.2754247-1-jeffxu@chromium.or=
-g/
-
-
-
-
-
-
-
-> > +
-> > +     return true;
-> > +}
-> > diff --git a/tools/testing/selftests/mm/mseal_test.c b/tools/testing/se=
-lftests/mm/mseal_test.c
-> > index ad17005521a8..8dd20341de3d 100644
-> > --- a/tools/testing/selftests/mm/mseal_test.c
-> > +++ b/tools/testing/selftests/mm/mseal_test.c
-> > @@ -517,30 +517,6 @@ static void test_seal_twice(void)
-> >       REPORT_TEST_PASS();
-> >  }
-> >
-> > -static void test_seal_mprotect(bool seal)
-> > -{
-> > -     void *ptr;
-> > -     unsigned long page_size =3D getpagesize();
-> > -     unsigned long size =3D 4 * page_size;
-> > -     int ret;
-> > -
-> > -     setup_single_address(size, &ptr);
-> > -     FAIL_TEST_IF_FALSE(ptr !=3D (void *)-1);
-> > -
-> > -     if (seal) {
-> > -             ret =3D seal_single_address(ptr, size);
-> > -             FAIL_TEST_IF_FALSE(!ret);
-> > -     }
-> > -
-> > -     ret =3D sys_mprotect(ptr, size, PROT_READ | PROT_WRITE);
-> > -     if (seal)
-> > -             FAIL_TEST_IF_FALSE(ret < 0);
-> > -     else
-> > -             FAIL_TEST_IF_FALSE(!ret);
-> > -
-> > -     REPORT_TEST_PASS();
-> > -}
-> > -
-> >  static void test_seal_start_mprotect(bool seal)
-> >  {
-> >       void *ptr;
-> > @@ -658,41 +634,6 @@ static void test_seal_mprotect_unalign_len_variant=
-_2(bool seal)
-> >       REPORT_TEST_PASS();
-> >  }
-> >
-> > -static void test_seal_mprotect_two_vma(bool seal)
-> > -{
-> > -     void *ptr;
-> > -     unsigned long page_size =3D getpagesize();
-> > -     unsigned long size =3D 4 * page_size;
-> > -     int ret;
-> > -
-> > -     setup_single_address(size, &ptr);
-> > -     FAIL_TEST_IF_FALSE(ptr !=3D (void *)-1);
-> > -
-> > -     /* use mprotect to split */
-> > -     ret =3D sys_mprotect(ptr, page_size * 2, PROT_READ | PROT_WRITE);
-> > -     FAIL_TEST_IF_FALSE(!ret);
-> > -
-> > -     if (seal) {
-> > -             ret =3D seal_single_address(ptr, page_size * 4);
-> > -             FAIL_TEST_IF_FALSE(!ret);
-> > -     }
-> > -
-> > -     ret =3D sys_mprotect(ptr, page_size * 2, PROT_READ | PROT_WRITE);
-> > -     if (seal)
-> > -             FAIL_TEST_IF_FALSE(ret < 0);
-> > -     else
-> > -             FAIL_TEST_IF_FALSE(!ret);
-> > -
-> > -     ret =3D sys_mprotect(ptr + page_size * 2, page_size * 2,
-> > -                     PROT_READ | PROT_WRITE);
-> > -     if (seal)
-> > -             FAIL_TEST_IF_FALSE(ret < 0);
-> > -     else
-> > -             FAIL_TEST_IF_FALSE(!ret);
-> > -
-> > -     REPORT_TEST_PASS();
-> > -}
-> > -
-> >  static void test_seal_mprotect_two_vma_with_split(bool seal)
-> >  {
-> >       void *ptr;
-> > @@ -1876,7 +1817,7 @@ int main(void)
-> >       if (!pkey_supported())
-> >               ksft_print_msg("PKEY not supported\n");
-> >
-> > -     ksft_set_plan(88);
-> > +     ksft_set_plan(84);
-> >
-> >       test_seal_addseal();
-> >       test_seal_unmapped_start();
-> > @@ -1889,9 +1830,6 @@ int main(void)
-> >       test_seal_zero_length();
-> >       test_seal_twice();
-> >
-> > -     test_seal_mprotect(false);
-> > -     test_seal_mprotect(true);
-> > -
-> >       test_seal_start_mprotect(false);
-> >       test_seal_start_mprotect(true);
-> >
-> > @@ -1904,9 +1842,6 @@ int main(void)
-> >       test_seal_mprotect_unalign_len_variant_2(false);
-> >       test_seal_mprotect_unalign_len_variant_2(true);
-> >
-> > -     test_seal_mprotect_two_vma(false);
-> > -     test_seal_mprotect_two_vma(true);
-> > -
-> >       test_seal_mprotect_two_vma_with_split(false);
-> >       test_seal_mprotect_two_vma_with_split(true);
-> >
-> > --
-> > 2.47.1.613.gc27f4b7a9f-goog
-> >
+[snip]
