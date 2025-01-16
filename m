@@ -1,274 +1,287 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 600EB7081E;
-	Thu, 16 Jan 2025 17:02:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737046935; cv=none; b=DNXtYayMEVgwMnJEJXXqUbJtIUOyOXHGZvtFd6T+dJk6bJj4CM/IY/cvliDajM0n3OrEqZCmV7ih/KD2ik330GbncXKHPau0knEXMhDenNAcnx+W/bxP9YkYm4xfL1sWvBmnfvnrOKAmobIOBDX3WvZU2hnA7CJEncxh3P14A6M=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737046935; c=relaxed/simple;
-	bh=T8R5tMys7/6Dum5ZmAnZlcvoQlyflbF7+q/krE4HoAI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=L5od6S2WXG7AjbwrP6OK7gHJm4NpW1LXxKOYPdfjHlyBg4ov8+sGOyZbVXq3Qh37ehwYdzTLUuL3TC5PDX6QSithBk2g68dDVuC7N+bT9prpMyS+KHlRG024jIUkAtC+kwoSGHzmp0aQ906N5Ho6qAB5MucqBmYK8iqyY30zSdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=dF0VM+Cm; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3486C145A03;
+	Thu, 16 Jan 2025 17:17:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1737047824; cv=fail; b=DVMhl/E0xnA5FU03JgkkRdlD9qHa2Vxazxvp4N+YSVWZuMKWqNXk10lo82o/TU3UlzNqs4s/aOyZOot+sTPZW1WHuZCqPQcwaxVOk5LbG2xduG7YTFN/TIZtH4m2PHa8q136Q8eLppmr30pFM9hqBRRFqRWjzBgQA/uGL0YDuF4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1737047824; c=relaxed/simple;
+	bh=VyIV83C1B8CPkZKdJk5DGhmHlnVqFMij4Q1qitdHcis=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=jJq7oLXRqnniGa+Lb1pqHTM5oTSEZ5Ds50sXEjLozkcdcG+A67ePMIWgmr9EZWt7vYQKYA4cc3yiFLZ4pal5rsgi+DcFROx0kEUM4T5DAwpQqW2rBdqYQCVbgt8zctY4mtYQgiWwppGUMob5eVBllAd+Vo2aMfI0eWuVcDbPpc4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=PSb0IP5W; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=x7ZxoCjy; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="dF0VM+Cm"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=Jx3cXvqZ9ovrK0Hi4jvCFEZUPQPOw2CkB5KWOoFWIZg=;
-	t=1737046933; x=1738256533; b=dF0VM+CmcJQcdPXPMkFLIZJirWP6AkDh6neTXemPT7SCP3w
-	kO694EUMcQ6ENVq8Fm5QUbiyeIB5L6OnEe3X4ohndl4y+Ldi/Xhrs8F9LIqCTBJEFztJg4I3gVvsH
-	wK2tp9iPlueH/RgCeGImn0/6J5OIEp18sluO4gvyq8kwi5eZkbIcJ/ciD6PsUpZXjbU8hAMXYhoZ4
-	tMS3g2ocuzudPbfbi+zEP6m9cXZsW/cto2l9MIpA7R6a4ujNZHqPfLLPNIRVXucIfmcugY0SuBcVp
-	aYQZpAcCVXEtjO/44hQIE2qKc9AThoxwS5e7QFmJPtD8h/rcJ0GEsYP1HtHFwFsA==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.98)
-	(envelope-from <benjamin@sipsolutions.net>)
-	id 1tYTFm-0000000H3OG-0Pr3;
-	Thu, 16 Jan 2025 18:01:58 +0100
-Message-ID: <2e5de601da34342d8eb0d8319dcf81ff213c7ef0.camel@sipsolutions.net>
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="PSb0IP5W";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="x7ZxoCjy"
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50GH0ist005198;
+	Thu, 16 Jan 2025 17:16:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2023-11-20; bh=Akln4iEOgTcBwfPmUIg+BHkiG0uX9AyJCEnYQgaAIXI=; b=
+	PSb0IP5WkwmcaaB0IJ37R7pwClrYTuzkhwIk6OtcRrwQNpn6IDDth8hUUCIIMlVL
+	mnnM4pGoQskil0OjF6hRpyLPd3xKZ02jutQFwFPlH8vRSqlSuIPIVFucickdQa+U
+	MXQ22v8KU+99kWg3QbKNWPkRbcyvc5zFEiV0IEmFsJSgeV65f/RYirU/RfXkZ369
+	ms3VoYrLtIvRG6wbg0jHjhIUuiyqwK5ffoOMQgxp0yxBwxYNCWEwf+c7D6NdInz4
+	aLDt7KgpPVyVF73O1jQ5l8tNP1gKGBr+WSTlvPJKayMOws7DjN0PPZLnQAYmZKuJ
+	Qc+RF4eu07iX1fPriWt6HA==
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 443f7yaqmn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 16 Jan 2025 17:16:18 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 50GH4IJC035036;
+	Thu, 16 Jan 2025 17:16:18 GMT
+Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2173.outbound.protection.outlook.com [104.47.59.173])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 443f3b2mey-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 16 Jan 2025 17:16:18 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=OB/mxZpJIQJO6N2qWP+e+RJTr6dRkO39bj2TfWD00LUiT8zxMU6nQ2otQXGizyeUS6bP92q2kJBK8z/lZJlKjZiAIsMHeDLE8qLBFwygKn+q+GngblwfJPPBNbQq7bDFVAzKpPqKhCxhqEVPXyWxcWwjLZux5RUcVhC7kKC7P+WBn8/IGEJmQlYreKz9Tct3tT1D6eE853p+uVby9Sy0bjcjQiXSowkjQCPN3Xg+tUdxkcCcxlIB721bBI+O+FnZw18oE+U1VqVKdAJtYilJxPFOk1vc6izbnYG9AX/Id6mgg0JtSp6SDx+QsJqeVudqBMahIrIoeXBCNeTqLCwnJg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Akln4iEOgTcBwfPmUIg+BHkiG0uX9AyJCEnYQgaAIXI=;
+ b=A+01RXbgQJiNPGVxdH6dyIPhrud6fqhdJW+PrEM1uMFWs163pxQXpnaReEzLVgDn06iR/CqWWtVKYQiujffVcRl/q3jERWlP0BRxgeJlPen4zAMnEMuETQ1PRGS5VQX59mQmG2rdm+AZ/kYF1cvmJdcBLGtNZ1OPr+RHUGyT92tRn+kmS/ahNnQFSgiHYi3dTaribsuvXkOJPR6fdzLcMc9u1kpsWnoSuWoPJrF4xpfsPnoDObap2hcBQqo990vNiDf0aLLu/urAN+P+wbp45jmBL8wchR93sVqvLN1b7JSGj6wWybtRUxRvvZosVd0VgnhIJtjHD1q9jpyRm1SrjA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Akln4iEOgTcBwfPmUIg+BHkiG0uX9AyJCEnYQgaAIXI=;
+ b=x7ZxoCjyjWY5T7a3CJVKypTvY7cyX35WQwMQ/SZkC4yieVGdSXjD4m156IuRBxDooduaIFdv6LuzRXHYW4NsXK2pd+GyS2RlBaQpXgJwW/xEiHY8PTcUrepuQ28441r9e3u8JS9FGkQ6E4KhgtW7/2ESWUNvDhrFnMYAP+R7prY=
+Received: from BYAPR10MB3366.namprd10.prod.outlook.com (2603:10b6:a03:14f::25)
+ by SJ0PR10MB4544.namprd10.prod.outlook.com (2603:10b6:a03:2ad::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8356.16; Thu, 16 Jan
+ 2025 17:16:15 +0000
+Received: from BYAPR10MB3366.namprd10.prod.outlook.com
+ ([fe80::baf2:dff1:d471:1c9]) by BYAPR10MB3366.namprd10.prod.outlook.com
+ ([fe80::baf2:dff1:d471:1c9%4]) with mapi id 15.20.8356.010; Thu, 16 Jan 2025
+ 17:16:15 +0000
+Date: Thu, 16 Jan 2025 17:16:12 +0000
+From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+To: Benjamin Berg <benjamin@sipsolutions.net>
+Cc: Jeff Xu <jeffxu@chromium.org>, Kees Cook <kees@kernel.org>,
+        akpm@linux-foundation.org, jannh@google.com,
+        torvalds@linux-foundation.org, adhemerval.zanella@linaro.org,
+        oleg@redhat.com, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-mm@kvack.org,
+        jorgelo@chromium.org, sroettger@google.com, ojeda@kernel.org,
+        adobriyan@gmail.com, anna-maria@linutronix.de, mark.rutland@arm.com,
+        linus.walleij@linaro.org, Jason@zx2c4.com, deller@gmx.de,
+        rdunlap@infradead.org, davem@davemloft.net, hch@lst.de,
+        peterx@redhat.com, hca@linux.ibm.com, f.fainelli@gmail.com,
+        gerg@kernel.org, dave.hansen@linux.intel.com, mingo@kernel.org,
+        ardb@kernel.org, Liam.Howlett@oracle.com, mhocko@suse.com,
+        42.hyeyoo@gmail.com, peterz@infradead.org, ardb@google.com,
+        enh@google.com, rientjes@google.com, groeck@chromium.org,
+        mpe@ellerman.id.au, Vlastimil Babka <vbabka@suse.cz>,
+        Andrei Vagin <avagin@gmail.com>, Dmitry Safonov <0x7f454c46@gmail.com>,
+        Mike Rapoport <mike.rapoport@gmail.com>,
+        Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>
 Subject: Re: [PATCH v4 1/1] exec: seal system mappings
-From: Benjamin Berg <benjamin@sipsolutions.net>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Jeff Xu
- <jeffxu@chromium.org>
-Cc: Kees Cook <kees@kernel.org>, akpm@linux-foundation.org,
- jannh@google.com, 	torvalds@linux-foundation.org,
- adhemerval.zanella@linaro.org, oleg@redhat.com, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	linux-mm@kvack.org, jorgelo@chromium.org, sroettger@google.com,
- ojeda@kernel.org, 	adobriyan@gmail.com, anna-maria@linutronix.de,
- mark.rutland@arm.com, 	linus.walleij@linaro.org, Jason@zx2c4.com,
- deller@gmx.de, rdunlap@infradead.org, 	davem@davemloft.net, hch@lst.de,
- peterx@redhat.com, hca@linux.ibm.com, 	f.fainelli@gmail.com,
- gerg@kernel.org, dave.hansen@linux.intel.com, 	mingo@kernel.org,
- ardb@kernel.org, Liam.Howlett@oracle.com, mhocko@suse.com, 
-	42.hyeyoo@gmail.com, peterz@infradead.org, ardb@google.com, enh@google.com,
- 	rientjes@google.com, groeck@chromium.org, mpe@ellerman.id.au, Vlastimil
- Babka	 <vbabka@suse.cz>, Andrei Vagin <avagin@gmail.com>, Dmitry Safonov	
- <0x7f454c46@gmail.com>, Mike Rapoport <mike.rapoport@gmail.com>, Alexander
- Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>
-Date: Thu, 16 Jan 2025 18:01:47 +0100
-In-Reply-To: <7071878c-7857-4acd-ac27-f049cbc84de2@lucifer.local>
-References: <20241125202021.3684919-1-jeffxu@google.com>
-	 <20241125202021.3684919-2-jeffxu@google.com>
-	 <202412171248.409B10D@keescook>
-	 <a0a3b26b-2222-478c-a1cb-56514ec8d6ff@lucifer.local>
-	 <202501061647.6C8F34CB1A@keescook>
-	 <CABi2SkUfAoCbsknnXnyoFbCPOFRahDx+Vqz3ohnyf_G1p4eszA@mail.gmail.com>
-	 <CABi2SkXS9OOwP2BZGQOa=Pn+NoL1VmOJBJEn-6tWBBQwLtpYiw@mail.gmail.com>
-	 <5cf1601b-70c3-45bb-81ef-416d89c415c2@lucifer.local>
-	 <CABi2SkX--gf8XtzBd1G7wS6E=F51rFckP62V0GrONuXs1TCOcQ@mail.gmail.com>
-	 <7071878c-7857-4acd-ac27-f049cbc84de2@lucifer.local>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.2 (3.54.2-1.fc41) 
+Message-ID: <37b57df4-4687-4ed3-88b1-578bf5471751@lucifer.local>
+References: <20241125202021.3684919-2-jeffxu@google.com>
+ <202412171248.409B10D@keescook>
+ <a0a3b26b-2222-478c-a1cb-56514ec8d6ff@lucifer.local>
+ <202501061647.6C8F34CB1A@keescook>
+ <CABi2SkUfAoCbsknnXnyoFbCPOFRahDx+Vqz3ohnyf_G1p4eszA@mail.gmail.com>
+ <CABi2SkXS9OOwP2BZGQOa=Pn+NoL1VmOJBJEn-6tWBBQwLtpYiw@mail.gmail.com>
+ <5cf1601b-70c3-45bb-81ef-416d89c415c2@lucifer.local>
+ <CABi2SkX--gf8XtzBd1G7wS6E=F51rFckP62V0GrONuXs1TCOcQ@mail.gmail.com>
+ <7071878c-7857-4acd-ac27-f049cbc84de2@lucifer.local>
+ <2e5de601da34342d8eb0d8319dcf81ff213c7ef0.camel@sipsolutions.net>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2e5de601da34342d8eb0d8319dcf81ff213c7ef0.camel@sipsolutions.net>
+X-ClientProxiedBy: LO4P123CA0678.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:351::18) To BYAPR10MB3366.namprd10.prod.outlook.com
+ (2603:10b6:a03:14f::25)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BYAPR10MB3366:EE_|SJ0PR10MB4544:EE_
+X-MS-Office365-Filtering-Correlation-Id: 183c9f35-3580-4025-43b5-08dd36517b7b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Vm9lYW12QXdsSE93TDk2SDZqYm1KLzZ0ZEhmblorN3FsOGNxMUI1SUs4TC8z?=
+ =?utf-8?B?M00vK2UzbXlqdFZadzIwT0JmRDBxemkyTDJSR2JGVVJ5OG84Mkpxa3JMZitp?=
+ =?utf-8?B?ZlFwZWU4WmJmQmVzditDMVYvMXI2RnhXNHc1ZWFJSjlEVkNBbFRuaENLdkFx?=
+ =?utf-8?B?K01LenFuZll5bW1FbU5VZEU3Z0VEd0lSWjVZeEswMkhneFFnK2tKZURraW5z?=
+ =?utf-8?B?SlZwWlFONnVKNGd0MnVIdGN6V3pCYklFUVE3dXNsNXNQZWxBb3A5UFRwUUxR?=
+ =?utf-8?B?dm5UVEVOSDlaMHhLZXB4Mm9FNmthbnQwQ24zUWFqaFFJM3dJaTF4K2RFaGZH?=
+ =?utf-8?B?T2hkTGRvWERDaW5kak9VeU9vcHlMa2JrbVJQZXJPWGl3WHVkazk4S0xmbVhM?=
+ =?utf-8?B?WkowYmNsdXZKMjNObkZoVml1V0p6QUlZYVR0U2dLSXYrOHphSXpQQzJPVU9D?=
+ =?utf-8?B?Q1FyRDU5ZHlJZ1o2N2tTZnljVHZJWUxoRk9oUHBEU29zTW9rMFM1WEFENEdF?=
+ =?utf-8?B?SW1ab0tCUUh5ZnQyUHJiRDNDQXc0L0pSejJLUE5ZVkxKSEM5OXY0NDFmQ3dD?=
+ =?utf-8?B?NDNGQ1ArQ1NWc3JUSlE1ME5hb3Faa1hQand3bVIxaVlvU3hNZE5GNFAvdVpo?=
+ =?utf-8?B?bVBBZHlFOXg2Rzg5bVcrTE9GekFlQ1V3KzFFSFdmQi9HRERuQlZVTGFJZmNo?=
+ =?utf-8?B?akRscE12NDlOaWZ6VmE0ZVF2eEJFUFN2QXpqWXZKcUJTeGlNWVVuVmpuUmY2?=
+ =?utf-8?B?aGN1VjBJWmIwY0loUWlnaGh5VklnRWhQSlFnc05LVW5DbmJQSG1KN3Z4WGVl?=
+ =?utf-8?B?L3NucjRyS0pic3Z3QUdZbm1CU011YzJhRW1CcFZvOWJkeVlsWmJDUWVzcVVr?=
+ =?utf-8?B?a1FvKy9pMG03VC9WRExYTDVCY2hpOUI1aVJFR2wvanRzZDBMTzFtaWdOQXRB?=
+ =?utf-8?B?ZTl6QUtRcDZTaCtrc0thc2tNWTFpZW9HaGxucWpqdTdDUW93T3NmYy83RmFX?=
+ =?utf-8?B?UmM0Unl4ZDNzSDMrNjAxZDM2NEJaTTg1bFdPbXRzWmJqTGJVTEFvZ1lqRXFW?=
+ =?utf-8?B?U1V1aWNaZWppNVBNaHJJL0lkQ212YU82SldJaVIyK3Q1eG4rSytUNWEreER1?=
+ =?utf-8?B?bDJqRUlVSFI0RUxQWEZSSmVxS1o0VDhIRHhoK3puWGY3MVpmNzdjZFgxd2dm?=
+ =?utf-8?B?R04zYW5rcEdHaWZtR2gyajZrV2lkQ1czT3dTdGtCeGVMcTFCeDJpeGEwem1x?=
+ =?utf-8?B?cVg1eUcrVUxaL20rRGRSbkZ6RnJEZ3Q2T3liOFVlS1ZOazhPUEhPNDZuMHhk?=
+ =?utf-8?B?VnZmdzBrMkQwbSt0RVhSVU1zalVaTVBmeU5lR2QxZy9ONTJmNUs5L3NyV1RW?=
+ =?utf-8?B?b3pMM0FhTytlOTRjN01JTFNuRUdmTkdSZ3o1VGFPbC9sK2h2OUptYWJSSXJP?=
+ =?utf-8?B?dk9aS3VtNm9TYWlUcDlZSDBaeW45WXpGOVNYZE9HVWd6aGVONmVSTDlyYWh6?=
+ =?utf-8?B?OUxJVnVOWnNaNXc1UnpzVDgxQWo3MjhOK0w3eUZUcDJFR2RTNEg0cXR3R0JC?=
+ =?utf-8?B?VTl1UUFaSFA2d0hPdlN0d2ZVTWZtSVAxdEwxVXdYNUw4elRRL25VZldjd1Ra?=
+ =?utf-8?B?YlpQc21aZlBIQmdhSXVZWFFBZjUrYUg1QXYrcG1nd0lRSktaZTNZRGEySGdl?=
+ =?utf-8?B?YU4yQ1dEYkxvNnJIRlU4YnBhVnl5N3lJdjNHTTlJb3NJYlZ5VzRmMElRZFJW?=
+ =?utf-8?B?azRMM3ViNnR0eUFXUFhLZEdJR0Z5R2xkM0kwSG05eDBBdElpZy9Ja01vaVNG?=
+ =?utf-8?B?ckl4UjB6ZUQ2K1hQTVNnbm52TzdkNWt2QkNDUmQxRTg5d2wybGk4bXJVTlAw?=
+ =?utf-8?Q?5vTXbV3KmVPjz?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR10MB3366.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?OGw2UVpPSXVheG5NQVRFc1hsY2lvR0lqeTNBS0NJVHo1dDNuNkp3RTFLWGs3?=
+ =?utf-8?B?eHN4RGhhUm1RZXRnMG5MQ1NyQlIrNFJPaFcrd0VpMnMwWTZRcEFDYVdoWUVE?=
+ =?utf-8?B?N1hFclRkTlEzOEkya2hiQmpjeGtYQjlMdUFONTB6NUlnSDBFalp3TGk5L1RS?=
+ =?utf-8?B?cnk0RGNnZDc4U1FsendhbDF2ajBkYnRFQmJwcGR1VUI1eXRMbkRpQ29xd1Y1?=
+ =?utf-8?B?T1ZuZmEvZ2phTDZaaXpiNmtYZnFhQ1JZZFFHY1hmMGZiaGpNOUNOTDFEcVNs?=
+ =?utf-8?B?RlZzUFZYcU16amp2Z0V6d2libVcrNW1PMlZrSzRBNXVHS2FHdjdSeWZ1UGdy?=
+ =?utf-8?B?MjdZNnYrTU9DUVREa3M4OU5XSEFEQUltcnczT3puK0FFQjBJdkVvWU0vSGRZ?=
+ =?utf-8?B?b0RVVWtDVXRXY1A2K0FOM1M2bE0vdG1CMmZjNlNlVVRMWkFUYVNlS1Nld3Vz?=
+ =?utf-8?B?UWZNdWpOb1E0QjU5eTdZRXg5djN0ZHFpK0lkaXAwR1ZoaWdJY1V1aVNROHdZ?=
+ =?utf-8?B?K3h3SzJ5aXNZeDcvaTYyQmdhOEdqelo2M1pnVGVZU1JZTzQzNDhyWDBveHhM?=
+ =?utf-8?B?Y3NSakVVUVgvemZYTXo3RCtPcUhON3RDT2lEc3RLRUFhVkJlSVlieElIZm11?=
+ =?utf-8?B?ZXJFM2p1MWJjQXJnZC9CSk9lTVF6ditzTXpLZEQwWnVtS1RITHhNQmcvWUhK?=
+ =?utf-8?B?RVdhVXZRaGxwcU1RR1d4dHFCUHlOcVVOM3MrWWRZVzIyZCtMUVIyZC9LVnVq?=
+ =?utf-8?B?Q2VseXlKUFI5MDBTdkZuUlBXc3ZRakgrTmtzQ3B2TmZISVBnQTNDOWZJUzdt?=
+ =?utf-8?B?MVhTV29mNHZmQWFENkFES05WaE95MWRJWkphNjR0alZCekIvcU5XVzFtQnl3?=
+ =?utf-8?B?Z1R3dXJ6TXhESXpTU0VTTERicWhEaVBiNndOWVBFd0RxL1NOQjBjakhYdmpS?=
+ =?utf-8?B?LzNNUUtMWWs1cVZITlhFL3Z3WmVPS3I0ZnBaU24zTUR6Y0ZZNmVVMFpUdjRx?=
+ =?utf-8?B?b2FPU3pIQzFvTXEzZjRRQkpRVEZpM0JaNXhuWnJHYU55dGlHZ1l6ckw5eUtr?=
+ =?utf-8?B?ZjFQVXN4bDRwamQvdU9yWjBQbjNDajNvSGFGTzBVQ1pQb3UrV2JZd0JyUmhp?=
+ =?utf-8?B?ZUNnL1J4WStKclBWclFpZitBOXNzOWNOLzNqOHdlbTF3cnlsZzZCRWlwU2ll?=
+ =?utf-8?B?UXI4bVY5NzlRbmd4NHpIZmFiRlhXb1RTM1RFWUVPSUp0YVdKL3Q5VG5FL2U5?=
+ =?utf-8?B?ODVPMFpvSmFpUlF5Wm12VUVSRUp0bkdzMmwyOElhRWRCVC9EelBBOG9ieW5J?=
+ =?utf-8?B?bVpxWElyQkR6TEFrU2dPVHJpQ0wrMGFvaG5SdEs0emNHREMyOE1IeGNzQ0w4?=
+ =?utf-8?B?TGdaNndkUitseXJZOUFTdFAyZTRvVXpacjNUUGY5dC9nVXFoSU5kR2RTUUc5?=
+ =?utf-8?B?ZnRZNzhnTTFPWDYwNXJUMnhXZjVNRzdjMWxxaExCRGZZbUhNU1VsOTFKQVdL?=
+ =?utf-8?B?N3hWSjdTQ1RPMnE3U01CN1JtTVRrMkl4NzNyc1lwdE5hSjBBNUZLRmR2Vkg1?=
+ =?utf-8?B?RnZndU1ablp5N3NLNVVveWhvZ1h6akZKYWNWY3BKeG00RjBsL2Y1dy93NWR2?=
+ =?utf-8?B?MXBDNVBvRS81aVBudGIvdnNjd0x6QXVncTBrK29zY09LMmxTOXBKZlVTSldv?=
+ =?utf-8?B?cnQwM2QwTGo2b3hGcm91TVIyOHROQ0xYaFY0VndaSzN2eVVnR1ZyTzJQNm1n?=
+ =?utf-8?B?b1llRThjYXY0NHV4cS9HbFFod29hSFpUb3NjaStLVnh3MHFUWXlTWDVrK3V3?=
+ =?utf-8?B?R0V0UVRBbExhREIrRGFWekhOc3k0S1pFWnRROGhqcGJaUGw3dWdLTENORnRz?=
+ =?utf-8?B?aTgySTd6YjJvOU5wWWxpT0NsWHpGakJaWGxiVnNad0QycnhlU1VJRWlnUGJh?=
+ =?utf-8?B?ZTRGZ3FRc0loYTN0MksvaGRSeEVCbWR5b1lZeXhRRnJHU0ZVbTVSWDhXWFZ1?=
+ =?utf-8?B?V2d6bjZLQmhCbitIazIwK0doVXNtMkZEZ3BhNXJhRUhsTmZzbVBCUEQ5alhy?=
+ =?utf-8?B?Z2tJZkdLd1JtZkVYQTRtMytnVVc0TE15dnpIRE9sV3NwMlcraGd6Q2l1SmZx?=
+ =?utf-8?B?MklyNEc1UWFFS0xLc3d3VW1VaVlSTHQvbGNFYm1udXlvVE9qdXNsdXlpK3Zl?=
+ =?utf-8?B?amc9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	uJnFoKlAhUvbkAxyrOHNAK/lHJmRhV5jqXHtmN6dD2GFkm8shQRb9+nndmKwRqU9sp68CixNmn8eZnhmGok0EjE+BmxTcils7CgCDfcDp4ZyYTO7m9/iis8/8t4p8y47otw30SmsS585QwaN7FwHiw8uRLDFPTefAYzeGhHJ9jYxlMNFX9n0/aPV2KIqwZOggMweUEVw5K9yXy8DGzJIbZ3RBOj0Bppjep2FRatb87+uYzw9LcArNmehrLI3BJzcrP6RGLUcVfRUs0dLDuDX67JkBGZCB7jz6Cmx3jat0BRRYH2svwGyQLQjkCIO0SkVEn3Azd9eNstXPj69vnE6fqfLBOhwng2OTkbqwo+8Ht6U6b1IYJms6VKPgFh922fZbqKO4XbdWfBvj+eW5Al5e8aoKX8sQOWPNr9yvonh0E7az1aLdXAIv4FDqWPCcOngkKlFCC7ecagxDSAT6C28DyoYxi/nz9K0OV/Yw780rw2h4yvgn1umiaJHYpoQguQnu+/JJn8X6FFwUC10TXcJSq8tSUJ/4fCiLUHmJFsq+Rb+taNc6y36ZuBxWEZ/xw1NZAaq+ir5mV1q5HDga8CW9d+x/JtvVxNHQX8DfhLhko0=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 183c9f35-3580-4025-43b5-08dd36517b7b
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR10MB3366.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jan 2025 17:16:15.1302
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: o9sOvXcVRVujqoIk9D8a8mvX9CzU5Vk8ocsGd65hkYdCpKVctMMLrIVex1oJKxcShkG5XOGKjzdjOB2r5ujdeub1QTqAvcCmDlUcz0IVW9Q=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB4544
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-01-16_07,2025-01-16_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 bulkscore=0 adultscore=0
+ suspectscore=0 phishscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2411120000
+ definitions=main-2501160129
+X-Proofpoint-ORIG-GUID: dEFPwDWOubWlOPk0P_XkwOsUT6egLum9
+X-Proofpoint-GUID: dEFPwDWOubWlOPk0P_XkwOsUT6egLum9
 
-Hi Lorenzo,
+On Thu, Jan 16, 2025 at 06:01:47PM +0100, Benjamin Berg wrote:
+> Hi Lorenzo,
+>
+> On Thu, 2025-01-16 at 15:48 +0000, Lorenzo Stoakes wrote:
+> > On Wed, Jan 15, 2025 at 12:20:59PM -0800, Jeff Xu wrote:
+> > > On Wed, Jan 15, 2025 at 11:46 AM Lorenzo Stoakes
+> > > <lorenzo.stoakes@oracle.com> wrote:
+> >
+> > [SNIP]
+> > >
+> > > > I've made it abundantly clear that this (NACKed) series cannot allow the
+> > > > kernel to be in a broken state even if a user sets flags to do so.
+> > > >
+> > > > This is because users might lack context to make this decision and
+> > > > incorrectly do so, and now we ship a known-broken kernel.
+> > > >
+> > > > You are now suggesting disabling the !CRIU requirement. Which violates my
+> > > > _requirements_ (not optional features).
+> > > >
+> > > Sure, I can add CRIU back.
+> > >
+> > > Are you fine with UML and gViso not working under this CONFIG ?
+> > > UML/gViso doesn't use any KCONFIG like CRIU does.
+> >
+> > Yeah this is a concern, wouldn't we be able to catch UML with a flag?
+> >
+> > Apologies my fault for maybe not being totally up to date with this, but what
+> > exactly was the gViso (is it gVisor actually?)
+>
+> UML is a separate architecture. It is a Linux kernel running as a
+> userspace application on top of an unmodified host kernel.
+>
+> So really, UML is a mostly weird userspace program for the purpose of
+> this discussion. And a pretty buggy one too--it got broken by rseq
+> already.
+>
+> What UML now does is:
+>  * Execute a tiny static binary
+>  * map special "stub" code/data pages at the topmost userspace address
+>    (replacing its stack)
+>  * continue execution inside the "stub" pages
+>  * unmap everything below the "stub" pages
+>  * use the unmap'ed area for userspace application mappings
+>
+> I believe that the "unmap everything" step will fail with this feature.
+>
 
-On Thu, 2025-01-16 at 15:48 +0000, Lorenzo Stoakes wrote:
-> On Wed, Jan 15, 2025 at 12:20:59PM -0800, Jeff Xu wrote:
-> > On Wed, Jan 15, 2025 at 11:46=E2=80=AFAM Lorenzo Stoakes
-> > <lorenzo.stoakes@oracle.com> wrote:
->=20
-> [SNIP]
-> >=20
-> > > I've made it abundantly clear that this (NACKed) series cannot allow =
-the
-> > > kernel to be in a broken state even if a user sets flags to do so.
-> > >=20
-> > > This is because users might lack context to make this decision and
-> > > incorrectly do so, and now we ship a known-broken kernel.
-> > >=20
-> > > You are now suggesting disabling the !CRIU requirement. Which violate=
-s my
-> > > _requirements_ (not optional features).
-> > >=20
-> > Sure, I can add CRIU back.
-> >=20
-> > Are you fine with UML and gViso not working under this CONFIG ?
-> > UML/gViso doesn't use any KCONFIG like CRIU does.
->=20
-> Yeah this is a concern, wouldn't we be able to catch UML with a flag?
->=20
-> Apologies my fault for maybe not being totally up to date with this, but =
-what
-> exactly was the gViso (is it gVisor actually?)
+Ahhh interesting.
 
-UML is a separate architecture. It is a Linux kernel running as a
-userspace application on top of an unmodified host kernel.
+>
+> Now, I am sure one can come up with solutions, e.g.:
+>    1. Simply print an explanation if the unmap() fails
+>    2. Find an address that is guaranteed to be below the VDSO and use a
+>       smaller address space for the UML userspace.
+>    3. Somehow tell the host kernel to not install the VDSO mappings
+>    4. Add the host VDSO pages as a sealed VMA within UML to guard them
+>
 
-So really, UML is a mostly weird userspace program for the purpose of
-this discussion. And a pretty buggy one too--it got broken by rseq
-already.
+Right.
 
-What UML now does is:
- * Execute a tiny static binary
- * map special "stub" code/data pages at the topmost userspace address
-   (replacing its stack)
- * continue execution inside the "stub" pages
- * unmap everything below the "stub" pages
- * use the unmap'ed area for userspace application mappings
+> UML is a bit of a niche and I am not sure it is worth worrying about it
+> too much.
+>
+> Benjamin
 
-I believe that the "unmap everything" step will fail with this feature.
+Well in that case then it's number_of_things_to_worry_about--; here :)
 
+Cheers Benjamin!
 
-Now, I am sure one can come up with solutions, e.g.:
-   1. Simply print an explanation if the unmap() fails
-   2. Find an address that is guaranteed to be below the VDSO and use a
-      smaller address space for the UML userspace.
-   3. Somehow tell the host kernel to not install the VDSO mappings
-   4. Add the host VDSO pages as a sealed VMA within UML to guard them
-
-UML is a bit of a niche and I am not sure it is worth worrying about it
-too much.
-
-Benjamin
-
->=20
-> >=20
-> > > You seem to be saying you're pushing an internal feature on upstream =
-and
-> > > only care about internal use cases, this is not how upstream works, a=
-s
-> > > Matthew alludes to.
-> > >=20
-> > > I have told you that my requirements are:
-> > >=20
-> > > 1. You cannot allow a user to set config or boot options to have a
-> > > =C2=A0=C2=A0 broken kernel configuration.
-> > >=20
-> > Can you clarify on the definition of "broken kernel configuration":
->=20
-> Anything that'd unexpected break userland in a way that would be entirely
-> unexpected.
->=20
-> Especially so if there is a real disconnect between the person who is
-> enabling the feature and the program.
->=20
-> For instance if a distro wants to be big on security, is (as is entirely
-> reasonable) concerned about an unsealed VDSO/VVAR/etc. being exploited, s=
-o
-> turns on the flag, but _doesn't realise_ or doesn't communicate (such a b=
-ig
-> problem and difficult actually for many distros/vendors) that this will
-> break certain programs - and then users do a kernel update, and *bang*
-> their whole system is broken.
->=20
-> It's really this kind of scenario I'm worried about.
->=20
-> This is the crux of it really.
->=20
-> >=20
-> > Do you consider "setting mseal kernel cmd line under 32 bit build" as b=
-roken ?
-> > If so, this problem is not solvable and I might just not try to solve
-> > it for the next version.
->=20
-> Yeah, I really don't like the kernel cmd line thing, because of this risk
-> of disconnect - your justification for it is prima facie reasonable - the
-> distro didn't want to enable the thing by default but you want more
-> security - but then we have this issue with the possible disconnect betwe=
-en
-> 'hey here is security feature X' vs. 'security feature X breaks Y, Z +
-> alpha'.
->=20
-> >=20
-> > If you just refer to a need to detect CRIU, in KCONFIG or/and kernel
-> > cmd line,=C2=A0 this is solvable.
-> >=20
-> > > 2. You must provide evidence that the arches you claim work with this=
-,
-> > > =C2=A0=C2=A0 actually do.
-> > >=20
-> > Sure
->=20
-> See my reply to Kees as to what this comprises, sorry if I was not clear
-> previously.
->=20
->=20
-> >=20
-> > > You seem to have eliminated that from your summary as if the very thi=
-ng
-> > > that makes this series NACKed were not pertinent.
-> > >=20
-> > In my last email, I tried to cover all code-logic related comments,
-> > which is blocking me.
-> > I also mentioned I will address non-code related comments
-> > (threat-model/test etc),=C2=A0 later.
->=20
-> Ack.
->=20
-> I felt that you hadn't hit on my fundamental objections and this was in
-> effect - a final analysis as to how you would be moving forward with v5 -
-> but apologies if you did intend to separately discuss them.
->=20
-> >=20
-> > > if you do not address these correctly, I will simply have to reject y=
-our v5
-> > > too and it'll waste everybody's time. I _genuinely_ don't want to hav=
-e to
-> > > do this.
-> > >=20
-> > > Any solution MUST fulfil these requirements. I also want to see v5 as=
- an
-> > > RFC honestly at this stage, since it seems we are VERY MUCH in a disc=
-ussion
-> > > phase rather than a patch phase at this time.
-> > >=20
-> > Sure.
->=20
-> To be clear - if the series is viable, I want to see it merged. And to
-> further clarify - a simpler, smaller version of this that explicitly
-> disallows breakage in config options suffices (though we must clarify the
-> gVisor + UML things).
->=20
-> If I just wanted to reject this outright, I'd tell you :) (I don't).
->=20
-> I just need to feel vaguely less anxious about breaking things! :)
->=20
-> >=20
-> > > I really want to help you improve mseal and get things upstream, but =
-I
-> > > can't ignore my duty to ensure that the kernel remains stable and we =
-don't
-> > > hand kernel users (overly huge) footguns. I hate to be negative, but =
-this
-> > > is why I am pushing back so much here.
-> > >=20
-> > Thanks. You can help me by answering my questions, and clarify your
-> > requirements. I appreciate your time to make this feature useful.
->=20
-> Sure, hopefully I have done so, do follow up if anything was unclear.
->=20
-> >=20
-> > Please take note that the security feature often takes away
-> > capabilities.=C2=A0 Sometimes it is impossible to meet security, usabil=
-ity
-> > or performance goals simultaneously. I'm trying my best to get all
-> > aspected satisfied.
->=20
-> Ack, and I realise it's often a difficult trade-off. I just worry about
-> compounding complexity in consequences of kernel configuration vs. userla=
-nd
-> stuff + the disconnect between the two.
->=20
-> >=20
-> > -Jeff
-> >=20
-> > > Thanks!
->=20
-> Cheers, Lorenzo
->=20
-
+[snip]
