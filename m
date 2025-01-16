@@ -1,127 +1,274 @@
-Received: from mx.skole.hr (mx2.hosting.skole.hr [161.53.165.186])
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D517E22C9EC;
-	Thu, 16 Jan 2025 15:57:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=161.53.165.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 600EB7081E;
+	Thu, 16 Jan 2025 17:02:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737043053; cv=none; b=AwnRv+zWU7nTC2izwt6sWgdjW/xeH0jVKOXxOwjrdVp1XQfTR/kAJwfjar6nflXRS5XqdYBdDATFMDBuqmn6EyZjprX/s+xb1gS/R0vVL7DrHHwt6w5UJi4VDNLi5IxsMYeC8e6WYS52TX45pCZbt6LC4xQoMWbPn6mjIam3N6I=
+	t=1737046935; cv=none; b=DNXtYayMEVgwMnJEJXXqUbJtIUOyOXHGZvtFd6T+dJk6bJj4CM/IY/cvliDajM0n3OrEqZCmV7ih/KD2ik330GbncXKHPau0knEXMhDenNAcnx+W/bxP9YkYm4xfL1sWvBmnfvnrOKAmobIOBDX3WvZU2hnA7CJEncxh3P14A6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737043053; c=relaxed/simple;
-	bh=pp53PsG2bW5UFxFqYOwl6ysQE+WIcRtaUgsyKfrRfKU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rtNNv8lee3McU7V94k5aotiHi+96cGpjfpvMB19oZMilJd679kBk+2dDerkoDxfBXrhBChNyssDP9XjmisC1x835DADeo+E8JvIUos66vpGUhuz2D3MvTjjc0jLmvXuh+wUrnPucV3628Gc0Holg069tNL4dJRYFSx46JUmJcq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=skole.hr; spf=pass smtp.mailfrom=skole.hr; arc=none smtp.client-ip=161.53.165.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=skole.hr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=skole.hr
-Received: from mx2.hosting.skole.hr (localhost.localdomain [127.0.0.1])
-	by mx.skole.hr (mx.skole.hr) with ESMTP id 537F18346A;
-	Thu, 16 Jan 2025 16:50:10 +0100 (CET)
-From: Duje =?UTF-8?B?TWloYW5vdmnEhw==?= <duje.mihanovic@skole.hr>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Lubomir Rintel <lkundrak@v3.sk>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>,
- Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
- Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>,
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
- David Wronek <david@mainlining.org>, Karel Balej <balejk@matfyz.cz>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org,
- phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
-Subject:
- Re: [PATCH v14 4/4] MAINTAINERS: add myself as Marvell PXA1908 maintainer
-Date: Thu, 16 Jan 2025 16:47:29 +0100
-Message-ID: <2969840.e9J7NaK4W3@radijator>
-In-Reply-To: <oapsqjdop3szi7zfwiyy65ty65gz3uid6cc4lfao22o4d6amjd@bmfkt2wnmlom>
-References:
- <20250115-pxa1908-lkml-v14-0-847d24f3665a@skole.hr>
- <20250115-pxa1908-lkml-v14-4-847d24f3665a@skole.hr>
- <oapsqjdop3szi7zfwiyy65ty65gz3uid6cc4lfao22o4d6amjd@bmfkt2wnmlom>
+	s=arc-20240116; t=1737046935; c=relaxed/simple;
+	bh=T8R5tMys7/6Dum5ZmAnZlcvoQlyflbF7+q/krE4HoAI=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=L5od6S2WXG7AjbwrP6OK7gHJm4NpW1LXxKOYPdfjHlyBg4ov8+sGOyZbVXq3Qh37ehwYdzTLUuL3TC5PDX6QSithBk2g68dDVuC7N+bT9prpMyS+KHlRG024jIUkAtC+kwoSGHzmp0aQ906N5Ho6qAB5MucqBmYK8iqyY30zSdk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=dF0VM+Cm; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="dF0VM+Cm"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=Jx3cXvqZ9ovrK0Hi4jvCFEZUPQPOw2CkB5KWOoFWIZg=;
+	t=1737046933; x=1738256533; b=dF0VM+CmcJQcdPXPMkFLIZJirWP6AkDh6neTXemPT7SCP3w
+	kO694EUMcQ6ENVq8Fm5QUbiyeIB5L6OnEe3X4ohndl4y+Ldi/Xhrs8F9LIqCTBJEFztJg4I3gVvsH
+	wK2tp9iPlueH/RgCeGImn0/6J5OIEp18sluO4gvyq8kwi5eZkbIcJ/ciD6PsUpZXjbU8hAMXYhoZ4
+	tMS3g2ocuzudPbfbi+zEP6m9cXZsW/cto2l9MIpA7R6a4ujNZHqPfLLPNIRVXucIfmcugY0SuBcVp
+	aYQZpAcCVXEtjO/44hQIE2qKc9AThoxwS5e7QFmJPtD8h/rcJ0GEsYP1HtHFwFsA==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.98)
+	(envelope-from <benjamin@sipsolutions.net>)
+	id 1tYTFm-0000000H3OG-0Pr3;
+	Thu, 16 Jan 2025 18:01:58 +0100
+Message-ID: <2e5de601da34342d8eb0d8319dcf81ff213c7ef0.camel@sipsolutions.net>
+Subject: Re: [PATCH v4 1/1] exec: seal system mappings
+From: Benjamin Berg <benjamin@sipsolutions.net>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Jeff Xu
+ <jeffxu@chromium.org>
+Cc: Kees Cook <kees@kernel.org>, akpm@linux-foundation.org,
+ jannh@google.com, 	torvalds@linux-foundation.org,
+ adhemerval.zanella@linaro.org, oleg@redhat.com, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	linux-mm@kvack.org, jorgelo@chromium.org, sroettger@google.com,
+ ojeda@kernel.org, 	adobriyan@gmail.com, anna-maria@linutronix.de,
+ mark.rutland@arm.com, 	linus.walleij@linaro.org, Jason@zx2c4.com,
+ deller@gmx.de, rdunlap@infradead.org, 	davem@davemloft.net, hch@lst.de,
+ peterx@redhat.com, hca@linux.ibm.com, 	f.fainelli@gmail.com,
+ gerg@kernel.org, dave.hansen@linux.intel.com, 	mingo@kernel.org,
+ ardb@kernel.org, Liam.Howlett@oracle.com, mhocko@suse.com, 
+	42.hyeyoo@gmail.com, peterz@infradead.org, ardb@google.com, enh@google.com,
+ 	rientjes@google.com, groeck@chromium.org, mpe@ellerman.id.au, Vlastimil
+ Babka	 <vbabka@suse.cz>, Andrei Vagin <avagin@gmail.com>, Dmitry Safonov	
+ <0x7f454c46@gmail.com>, Mike Rapoport <mike.rapoport@gmail.com>, Alexander
+ Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>
+Date: Thu, 16 Jan 2025 18:01:47 +0100
+In-Reply-To: <7071878c-7857-4acd-ac27-f049cbc84de2@lucifer.local>
+References: <20241125202021.3684919-1-jeffxu@google.com>
+	 <20241125202021.3684919-2-jeffxu@google.com>
+	 <202412171248.409B10D@keescook>
+	 <a0a3b26b-2222-478c-a1cb-56514ec8d6ff@lucifer.local>
+	 <202501061647.6C8F34CB1A@keescook>
+	 <CABi2SkUfAoCbsknnXnyoFbCPOFRahDx+Vqz3ohnyf_G1p4eszA@mail.gmail.com>
+	 <CABi2SkXS9OOwP2BZGQOa=Pn+NoL1VmOJBJEn-6tWBBQwLtpYiw@mail.gmail.com>
+	 <5cf1601b-70c3-45bb-81ef-416d89c415c2@lucifer.local>
+	 <CABi2SkX--gf8XtzBd1G7wS6E=F51rFckP62V0GrONuXs1TCOcQ@mail.gmail.com>
+	 <7071878c-7857-4acd-ac27-f049cbc84de2@lucifer.local>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.2 (3.54.2-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Autocrypt: addr=duje.mihanovic@skole.hr;
- keydata=
- mDMEZokhzhYJKwYBBAHaRw8BAQdAWJZ0hsI/ytTqHGFV8x6tzd5sB596cTeeDB4CQsTf+wC0KER
- 1amUgTWloYW5vdmnEhyA8ZHVqZUBkdWplbWloYW5vdmljLnh5ej6ImQQTFgoAQRYhBG3/QdYN8x
- S1t2umMK0xk1JFj60DBQJmiSHOAhsDBQkJZgGABQsJCAcCAiICBhUKCQgLAgQWAgMBAh4HAheAA
- AoJEK0xk1JFj60D1GABAJVSorZdMOlrp/oQtCSH/G53NE56x/JHA8VX+ZQBd/H3AP4/EcUf6eef
- DUxVMh2bdkmuQKsVZGgOGiXpMksrVntWBrQpRHVqZSBNaWhhbm92acSHIDxkdWplLm1paGFub3Z
- pY0Bza29sZS5ocj6ImQQTFgoAQRYhBG3/QdYN8xS1t2umMK0xk1JFj60DBQJmiSH/AhsDBQkJZg
- GABQsJCAcCAiICBhUKCQgLAgQWAgMBAh4HAheAAAoJEK0xk1JFj60Dlw8A/i4lPOL7NaYoYePDq
- l8MaJaR9qoUi+D+HtD3t0Koi7ztAQCdizXbuqP3AVNxy5Gpb1ozgp9Xqh2MRcNmJCHA1YhWAbg4
- BGaJIc4SCisGAQQBl1UBBQEBB0DEc9JeA55OlZfWKgvmRgw6a/EpBQ8mDl6nQTBmnd1XHAMBCAe
- IfgQYFgoAJhYhBG3/QdYN8xS1t2umMK0xk1JFj60DBQJmiSHOAhsMBQkJZgGAAAoJEK0xk1JFj6
- 0DG5MA/iuo4l2GDEZ1Zf+XaS//8FwdXDO9nHkfbV2MHjF4NZXwAQDroMzBdMcqVvc8GABFlTTgG
- j7KrRDz2HwWNyF8ZeprAQ==
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+X-malware-bazaar: not-scanned
 
-On Thursday 16 January 2025 08:56:24 Central European Standard Time Krzyszt=
-of=20
-Kozlowski wrote:
-> On Wed, Jan 15, 2025 at 09:35:57PM +0100, Duje Mihanovi=C4=87 wrote:
-> > Add myself as the maintainer for Marvell PXA1908 SoC support.
-> >=20
-> > Signed-off-by: Duje Mihanovi=C4=87 <duje.mihanovic@skole.hr>
-> > ---
-> >=20
-> >  MAINTAINERS | 9 +++++++++
-> >  1 file changed, 9 insertions(+)
-> >=20
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index
-> >=20
-a87ddad78e26f28ffd0f3433560d6db1518f9f95..caa5f6b96251a3da0f3f9d2f760b38288
-> > eb23ab3 100644 --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -2624,6 +2624,15 @@ F:	drivers/irqchip/irq-mvebu-*
-> >=20
-> >  F:	drivers/pinctrl/mvebu/
-> >  F:	drivers/rtc/rtc-armada38x.c
-> >=20
-> > +ARM/Marvell PXA1908 SOC support
-> > +M:	Duje Mihanovi=C4=87 <duje.mihanovic@skole.hr>
-> > +L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-> > +S:	Maintained
-> > +T:	git https://gitlab.com/LegoLivesMatter/linux
+Hi Lorenzo,
+
+On Thu, 2025-01-16 at 15:48 +0000, Lorenzo Stoakes wrote:
+> On Wed, Jan 15, 2025 at 12:20:59PM -0800, Jeff Xu wrote:
+> > On Wed, Jan 15, 2025 at 11:46=E2=80=AFAM Lorenzo Stoakes
+> > <lorenzo.stoakes@oracle.com> wrote:
 >=20
-> Not sure if this was mentioned ever (it is v14, so it is likely) but if
-> that was not clear:
+> [SNIP]
+> >=20
+> > > I've made it abundantly clear that this (NACKed) series cannot allow =
+the
+> > > kernel to be in a broken state even if a user sets flags to do so.
+> > >=20
+> > > This is because users might lack context to make this decision and
+> > > incorrectly do so, and now we ship a known-broken kernel.
+> > >=20
+> > > You are now suggesting disabling the !CRIU requirement. Which violate=
+s my
+> > > _requirements_ (not optional features).
+> > >=20
+> > Sure, I can add CRIU back.
+> >=20
+> > Are you fine with UML and gViso not working under this CONFIG ?
+> > UML/gViso doesn't use any KCONFIG like CRIU does.
 >=20
-> Pull requests from non-kernel.org repos must be signed and your key must
-> be in kernel.org keyring. Please get your key signed
-> (meetups/conferences/keysigning map/video confcalls) and submitted to
-> the keyring.
+> Yeah this is a concern, wouldn't we be able to catch UML with a flag?
 >=20
-> Patchset should be sent to soc@, as expressed in soc@ maintainer
-> profile.
+> Apologies my fault for maybe not being totally up to date with this, but =
+what
+> exactly was the gViso (is it gVisor actually?)
+
+UML is a separate architecture. It is a Linux kernel running as a
+userspace application on top of an unmodified host kernel.
+
+So really, UML is a mostly weird userspace program for the purpose of
+this discussion. And a pretty buggy one too--it got broken by rseq
+already.
+
+What UML now does is:
+ * Execute a tiny static binary
+ * map special "stub" code/data pages at the topmost userspace address
+   (replacing its stack)
+ * continue execution inside the "stub" pages
+ * unmap everything below the "stub" pages
+ * use the unmap'ed area for userspace application mappings
+
+I believe that the "unmap everything" step will fail with this feature.
+
+
+Now, I am sure one can come up with solutions, e.g.:
+   1. Simply print an explanation if the unmap() fails
+   2. Find an address that is guaranteed to be below the VDSO and use a
+      smaller address space for the UML userspace.
+   3. Somehow tell the host kernel to not install the VDSO mappings
+   4. Add the host VDSO pages as a sealed VMA within UML to guard them
+
+UML is a bit of a niche and I am not sure it is worth worrying about it
+too much.
+
+Benjamin
+
 >=20
-> Unless this is not going to be merged by soc@, but someone from Marvell
-> maintainers, but then please drop the repo. Git repos here are for
-> managing patches.
-
-I didn't know about Git repos being used for patch management, thanks for=20
-letting me know.
-
-I believe this is best merged by soc@ since it is not mvebu and is the firs=
-t=20
-arm64 MMP to be merged. However, for various reasons I'd prefer not to have=
- my=20
-key signed quite yet, so would it be possible for this to get merged throug=
-h=20
-soc@ if I removed the repo?
-
-Also, I will certainly add soc@ to the Cc list in v15.
-
-Regards,
-=2D-=20
-Duje
-
-
+> >=20
+> > > You seem to be saying you're pushing an internal feature on upstream =
+and
+> > > only care about internal use cases, this is not how upstream works, a=
+s
+> > > Matthew alludes to.
+> > >=20
+> > > I have told you that my requirements are:
+> > >=20
+> > > 1. You cannot allow a user to set config or boot options to have a
+> > > =C2=A0=C2=A0 broken kernel configuration.
+> > >=20
+> > Can you clarify on the definition of "broken kernel configuration":
+>=20
+> Anything that'd unexpected break userland in a way that would be entirely
+> unexpected.
+>=20
+> Especially so if there is a real disconnect between the person who is
+> enabling the feature and the program.
+>=20
+> For instance if a distro wants to be big on security, is (as is entirely
+> reasonable) concerned about an unsealed VDSO/VVAR/etc. being exploited, s=
+o
+> turns on the flag, but _doesn't realise_ or doesn't communicate (such a b=
+ig
+> problem and difficult actually for many distros/vendors) that this will
+> break certain programs - and then users do a kernel update, and *bang*
+> their whole system is broken.
+>=20
+> It's really this kind of scenario I'm worried about.
+>=20
+> This is the crux of it really.
+>=20
+> >=20
+> > Do you consider "setting mseal kernel cmd line under 32 bit build" as b=
+roken ?
+> > If so, this problem is not solvable and I might just not try to solve
+> > it for the next version.
+>=20
+> Yeah, I really don't like the kernel cmd line thing, because of this risk
+> of disconnect - your justification for it is prima facie reasonable - the
+> distro didn't want to enable the thing by default but you want more
+> security - but then we have this issue with the possible disconnect betwe=
+en
+> 'hey here is security feature X' vs. 'security feature X breaks Y, Z +
+> alpha'.
+>=20
+> >=20
+> > If you just refer to a need to detect CRIU, in KCONFIG or/and kernel
+> > cmd line,=C2=A0 this is solvable.
+> >=20
+> > > 2. You must provide evidence that the arches you claim work with this=
+,
+> > > =C2=A0=C2=A0 actually do.
+> > >=20
+> > Sure
+>=20
+> See my reply to Kees as to what this comprises, sorry if I was not clear
+> previously.
+>=20
+>=20
+> >=20
+> > > You seem to have eliminated that from your summary as if the very thi=
+ng
+> > > that makes this series NACKed were not pertinent.
+> > >=20
+> > In my last email, I tried to cover all code-logic related comments,
+> > which is blocking me.
+> > I also mentioned I will address non-code related comments
+> > (threat-model/test etc),=C2=A0 later.
+>=20
+> Ack.
+>=20
+> I felt that you hadn't hit on my fundamental objections and this was in
+> effect - a final analysis as to how you would be moving forward with v5 -
+> but apologies if you did intend to separately discuss them.
+>=20
+> >=20
+> > > if you do not address these correctly, I will simply have to reject y=
+our v5
+> > > too and it'll waste everybody's time. I _genuinely_ don't want to hav=
+e to
+> > > do this.
+> > >=20
+> > > Any solution MUST fulfil these requirements. I also want to see v5 as=
+ an
+> > > RFC honestly at this stage, since it seems we are VERY MUCH in a disc=
+ussion
+> > > phase rather than a patch phase at this time.
+> > >=20
+> > Sure.
+>=20
+> To be clear - if the series is viable, I want to see it merged. And to
+> further clarify - a simpler, smaller version of this that explicitly
+> disallows breakage in config options suffices (though we must clarify the
+> gVisor + UML things).
+>=20
+> If I just wanted to reject this outright, I'd tell you :) (I don't).
+>=20
+> I just need to feel vaguely less anxious about breaking things! :)
+>=20
+> >=20
+> > > I really want to help you improve mseal and get things upstream, but =
+I
+> > > can't ignore my duty to ensure that the kernel remains stable and we =
+don't
+> > > hand kernel users (overly huge) footguns. I hate to be negative, but =
+this
+> > > is why I am pushing back so much here.
+> > >=20
+> > Thanks. You can help me by answering my questions, and clarify your
+> > requirements. I appreciate your time to make this feature useful.
+>=20
+> Sure, hopefully I have done so, do follow up if anything was unclear.
+>=20
+> >=20
+> > Please take note that the security feature often takes away
+> > capabilities.=C2=A0 Sometimes it is impossible to meet security, usabil=
+ity
+> > or performance goals simultaneously. I'm trying my best to get all
+> > aspected satisfied.
+>=20
+> Ack, and I realise it's often a difficult trade-off. I just worry about
+> compounding complexity in consequences of kernel configuration vs. userla=
+nd
+> stuff + the disconnect between the two.
+>=20
+> >=20
+> > -Jeff
+> >=20
+> > > Thanks!
+>=20
+> Cheers, Lorenzo
+>=20
 
