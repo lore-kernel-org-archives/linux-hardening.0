@@ -1,182 +1,199 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AA921991B2;
-	Thu, 16 Jan 2025 08:00:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A8981DD889;
+	Thu, 16 Jan 2025 10:32:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737014444; cv=none; b=l99B2zKnPMemHJ68sAAfbC0/G6738CDfHyRRQgPkR+3+/y5lzj1/ClXdeWXJxtKuxcYmoMKCBzDSP4uqRC6jAuG1P+60REjyfweZa75pbOyazQz4hcyF/UEI73jXNBH5fXKSLlHSoBgKsadcLa7SIcy/SjQIj8EgG8scGwbQH/o=
+	t=1737023535; cv=none; b=FUt9AgnOFVQPjVIUd0ojwnnAoeI66Rd/c9ZdZMWFVk9WzKn1d1wAVWSSvSWdBU4MeKPah4MDkyBiLzQa/BO7JcE7NayaLEUwNsR3JbnPc4Pe+XD9k7HMurduw8NOJ92W2G5kquEB87rFQABkNCWXbYTZKsbXMJeIj6db5KGWq7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737014444; c=relaxed/simple;
-	bh=KR6pDDk62q9UaRrK4RmyRNoSNWfVR6Rmaqs4PT1/DAU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eaYs5iC2W4W8IyR/J2Lhf+NnoiPXZG8xxhZjFZH6o6oa6KE/ySM/n7A/EpBReUkt09KoKRWF9DgragXPHPiQSmUj+y4vWUW/bABZ1LOqf425IW6gvRAmUMesdeA0uBM6WsylMsTI8LE5hoRC21cwuAUxFwClWIjX+EVKBW4zh+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oBYqv24m; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oBYqv24m"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B29D0C4CED6;
-	Thu, 16 Jan 2025 08:00:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737014443;
-	bh=KR6pDDk62q9UaRrK4RmyRNoSNWfVR6Rmaqs4PT1/DAU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oBYqv24m0tlLBTlBFW24hd/H61Wr/cGmMHYP+bQ+w2WCuktl5qr/B6BJZveAUzv4v
-	 qO1VqvSooL0lt8GXF67x9jllkjaGFVQ26mQlwX1olnl9RKvN9LwgLDiP5YzZE3SEWg
-	 HWL2HVOTDdbXeL55L1/rr4tVC9/TC6PKtPJh2iIDwnbe8PEOZcOmo5fec+fo3X1KA2
-	 rbW/ctzgeL4aafBBAdfCgJ2JBGG/jeL/GSR1A5Z14TsM/CgX0ySsu0UKxm6p3SYO8n
-	 nz2UFzCFo2ckNiHL4HCQZN01+nDZi19gR0SsPToWVU2StsqMhqeyIVJ2iZJZQtPV9E
-	 RUr2fUgDNqgBA==
-Date: Thu, 16 Jan 2025 09:00:40 +0100
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Duje =?utf-8?Q?Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
-Cc: Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Lubomir Rintel <lkundrak@v3.sk>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Andrew Lunn <andrew@lunn.ch>, 
-	Gregory Clement <gregory.clement@bootlin.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, 
-	Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, 
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>, David Wronek <david@mainlining.org>, 
-	Karel Balej <balejk@matfyz.cz>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org, phone-devel@vger.kernel.org, 
-	~postmarketos/upstreaming@lists.sr.ht
-Subject: Re: [PATCH v14 3/4] arm64: dts: Add DTS for Marvell PXA1908 and
- samsung,coreprimevelte
-Message-ID: <ct7q2eaps2m2ceghiek2pmb7yhd5it6s53moumfncnyq4d4zmw@fmtoyyn3j5t2>
-References: <20250115-pxa1908-lkml-v14-0-847d24f3665a@skole.hr>
- <20250115-pxa1908-lkml-v14-3-847d24f3665a@skole.hr>
+	s=arc-20240116; t=1737023535; c=relaxed/simple;
+	bh=JrxqlXeV+1EMrKAwWg2I5zva3xkZUNbBW8jB4JaHh28=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ofUJmVbzgYVzU6VvP6xfC9FosQZdNzlrCNtPZVckzQKt5itYR3yaDEl7waUkt+pWfr2LuZY4nC/laT3Oa6du6/91LZu1wF7u3G85wMV9+gTPuyq0hqWlytiC3ErakAq1GonWVzwzxS69SC7V7DbtjriQCjv6VxZ2C359WrMiu+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YYfJb5yM2z6M4HV;
+	Thu, 16 Jan 2025 18:30:23 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 4A858140393;
+	Thu, 16 Jan 2025 18:32:10 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 16 Jan
+ 2025 11:32:09 +0100
+Date: Thu, 16 Jan 2025 10:32:07 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Dan Williams <dan.j.williams@intel.com>
+CC: Ira Weiny <ira.weiny@intel.com>, Dave Jiang <dave.jiang@intel.com>, "Fan
+ Ni" <fan.ni@samsung.com>, Jonathan Corbet <corbet@lwn.net>, Andrew Morton
+	<akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>, "Gustavo A. R.
+ Silva" <gustavoars@kernel.org>, Davidlohr Bueso <dave@stgolabs.net>, "Alison
+ Schofield" <alison.schofield@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, <linux-cxl@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>, <nvdimm@lists.linux.dev>,
+	<linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>, Li Ming
+	<ming.li@zohomail.com>
+Subject: Re: [PATCH v8 02/21] cxl/mem: Read dynamic capacity configuration
+ from the device
+Message-ID: <20250116103207.00005461@huawei.com>
+In-Reply-To: <678837fcc0ed_20f3294fb@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20241210-dcd-type2-upstream-v8-0-812852504400@intel.com>
+	<20241210-dcd-type2-upstream-v8-2-812852504400@intel.com>
+	<67871f05cd767_20f32947f@dwillia2-xfh.jf.intel.com.notmuch>
+	<67881b606ca4e_1aa45f2948b@iweiny-mobl.notmuch>
+	<678837fcc0ed_20f3294fb@dwillia2-xfh.jf.intel.com.notmuch>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20250115-pxa1908-lkml-v14-3-847d24f3665a@skole.hr>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Wed, Jan 15, 2025 at 09:35:56PM +0100, Duje Mihanovi=C4=87 wrote:
-> Add DTS for Marvell PXA1908 SoC and Samsung Galaxy Core Prime Value
-> Edition LTE, a smartphone based on said SoC.
->=20
-> Signed-off-by: Duje Mihanovi=C4=87 <duje.mihanovic@skole.hr>
-> ---
->  arch/arm64/boot/dts/marvell/Makefile               |   3 +
->  .../dts/marvell/pxa1908-samsung-coreprimevelte.dts | 336 +++++++++++++++=
-++++++
->  arch/arm64/boot/dts/marvell/pxa1908.dtsi           | 300 +++++++++++++++=
-+++
->  3 files changed, 639 insertions(+)
->=20
-> diff --git a/arch/arm64/boot/dts/marvell/Makefile b/arch/arm64/boot/dts/m=
-arvell/Makefile
-> index ce751b5028e2628834340b5c50f8992092226eba..39c5749e631db33aa8fb0386a=
-951c0a70215bc02 100644
-> --- a/arch/arm64/boot/dts/marvell/Makefile
-> +++ b/arch/arm64/boot/dts/marvell/Makefile
-> @@ -32,3 +32,6 @@ dtb-$(CONFIG_ARCH_MVEBU) +=3D cn9130-cf-base.dtb
->  dtb-$(CONFIG_ARCH_MVEBU) +=3D cn9130-cf-pro.dtb
->  dtb-$(CONFIG_ARCH_MVEBU) +=3D cn9131-cf-solidwan.dtb
->  dtb-$(CONFIG_ARCH_MVEBU) +=3D cn9132-clearfog.dtb
-> +
-> +# MMP SoC Family
-> +dtb-$(CONFIG_ARCH_MMP) +=3D pxa1908-samsung-coreprimevelte.dtb
+On Wed, 15 Jan 2025 14:34:36 -0800
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-Hm, why separate ARCH if this is part of Marvell Makefile? One ARCH per
-vendor, so if you think this is different than MVEBU, then should be in
-a separate subdirectory of marvell.
+> Ira Weiny wrote:
+> > Dan Williams wrote:  
+> > > Ira Weiny wrote:  
+> > 
+> > [snip]
+> >   
+> > > > diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> > > > index e8907c403edbd83c8a36b8d013c6bc3391207ee6..05a0718aea73b3b2a02c608bae198eac7c462523 100644
+> > > > --- a/drivers/cxl/cxlmem.h
+> > > > +++ b/drivers/cxl/cxlmem.h
+> > > > @@ -403,6 +403,7 @@ enum cxl_devtype {
+> > > >  	CXL_DEVTYPE_CLASSMEM,
+> > > >  };
+> > > >  
+> > > > +#define CXL_MAX_DC_REGION 8  
+> > > 
+> > > Please no, lets not sign up to have the "which cxl 'region' concept are
+> > > you referring to?" debate in perpetuity. "DPA partition", "DPA
+> > > resource", "DPA capacity" anything but "region".
+> > >   
+> > 
+> > I'm inclined to agree with Alejandro on this one.  I've walked this
+> > tightrope quite a bit with this series.  But there are other places where
+> > we have chosen to change the verbiage from the spec and it has made it
+> > difficult for new comers to correlate the spec with the code.
+> > 
+> > So I like Alejandro's idea of adding "HW" to the name to indicate that we
+> > are talking about a spec or hardware defined thing.  
+> 
+> See below, the only people that could potentially be bothered by the
+> lack of spec terminology matching are the very same people that are
+> sophisticated enough to have read the spec to know its a problem.
 
-> diff --git a/arch/arm64/boot/dts/marvell/pxa1908-samsung-coreprimevelte.d=
-ts b/arch/arm64/boot/dts/marvell/pxa1908-samsung-coreprimevelte.dts
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..83b789a837d3876bf15ed0d7e=
-10e190eacdfd56f
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/marvell/pxa1908-samsung-coreprimevelte.dts
-> @@ -0,0 +1,336 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +#include "pxa1908.dtsi"
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/input/linux-event-codes.h>
-> +
-> +/ {
-> +	model =3D "Samsung Galaxy Core Prime VE LTE";
-> +	compatible =3D "samsung,coreprimevelte", "marvell,pxa1908";
-> +
-> +	aliases {
-> +		mmc0 =3D &sdh2; /* eMMC */
-> +		mmc1 =3D &sdh0; /* SD card */
-> +		serial0 =3D &uart0;
-> +	};
-> +
-> +	chosen {
-> +		#address-cells =3D <2>;
-> +		#size-cells =3D <2>;
-> +		ranges;
-> +
-> +		stdout-path =3D "serial0:115200n8";
-> +
-> +		/* S-Boot places the initramfs here */
-> +		linux,initrd-start =3D <0x4d70000>;
-> +		linux,initrd-end =3D <0x5000000>;
-> +
-> +		fb0: framebuffer@17177000 {
-> +			compatible =3D "simple-framebuffer";
-> +			reg =3D <0 0x17177000 0 (480 * 800 * 4)>;
-> +			width =3D <480>;
-> +			height =3D <800>;
-> +			stride =3D <(480 * 4)>;
-> +			format =3D "a8r8g8b8";
-> +		};
-> +	};
-> +
-> +	/* Bootloader fills this in */
-> +	memory {
-> +		device_type =3D "memory";
-> +		reg =3D <0 0 0 0>;
-> +	};
-> +
-> +	reserved-memory {
-> +		#address-cells =3D <2>;
-> +		#size-cells =3D <2>;
-> +		ranges;
-> +
-> +		framebuffer@17000000 {
-> +			reg =3D <0 0x17000000 0 0x1800000>;
-> +			no-map;
-> +		};
-> +
-> +		gpu@9000000 {
-> +			reg =3D <0 0x9000000 0 0x1000000>;
-> +		};
-> +
-> +		/* Communications processor, aka modem */
-> +		cp@5000000 {
-> +			reg =3D <0 0x5000000 0 0x3000000>;
-> +		};
-> +
-> +		cm3@a000000 {
-> +			reg =3D <0 0xa000000 0 0x80000>;
-> +		};
-> +
-> +		seclog@8000000 {
-> +			reg =3D <0 0x8000000 0 0x100000>;
-> +		};
-> +
-> +		ramoops@8100000 {
-> +			compatible =3D "ramoops";
-> +			reg =3D <0 0x8100000 0 0x40000>;
-> +			record-size =3D <0x8000>;
-> +			console-size =3D <0x20000>;
-> +			max-reason =3D <5>;
-> +		};
-> +	};
-> +
-> +
+It's confusing me.  :)  I know the confusion source exists but
+that doesn't mean I remember how all the terms match up.
 
-If there is going to be resend/new version:
-Just one blank line.
+> 
+> > 
+> > That said I am open to changing some names where it is clear it is a
+> > software structure.  I'll audit the series for that.
+> >   
+> > > >  	u64 serial;
+> > > >  	enum cxl_devtype type;
+> > > >  	struct cxl_mailbox cxl_mbox;
+> > > >  };
+> > > >  
+> > > > +#define CXL_DC_REGION_STRLEN 8
+> > > > +struct cxl_dc_region_info {
+> > > > +	u64 base;
+> > > > +	u64 decode_len;
+> > > > +	u64 len;  
+> > > 
+> > > Duplicating partition information in multiple places, like
+> > > mds->dc_region[X].base and cxlds->dc_res[X].start, feels like an
+> > > RFC-quality decision for expediency that needs to reconciled on the way
+> > > to upstream.  
+> > 
+> > I think this was done to follow a pattern of the mds being passed around
+> > rather than creating resources right when partitions are read.
+> > 
+> > Furthermore this stands to hold this information in CPU endianess rather
+> > than holding an array of region info coming from the hardware.  
+> 
+> Yes, the ask is translate all of this into common information that lives
+> at the cxl_dev_state level.
+> 
+> > 
+> > Let see how other changes fall out before I go hacking this though.
+> >   
+> > >   
+> > > > +	u64 blk_size;
+> > > > +	u32 dsmad_handle;
+> > > > +	u8 flags;
+> > > > +	u8 name[CXL_DC_REGION_STRLEN];  
+> > > 
+> > > No, lets not entertain:
+> > > 
+> > >     printk("%s\n", mds->dc_region[index].name);
+> > > 
+> > > ...when:
+> > > 
+> > >     printk("dc%d\n", index);
+> > > 
+> > > ...will do.  
+> > 
+> > Actually these buffers provide a buffer for the (struct
+> > resource)dc_res[x].name pointers to point to.  
+> 
+> I missed that specific detail, but I still challenge whether this
+> precision is needed especially since it makes the data structure
+> messier. Given these names are for debug only and multi-partition DCD
+> devices seem unlikely to ever exist, just use a static shared name for
+> adding to ->dpa_res.
 
-Best regards,
-Krzysztof
+Given the read only shared concept relies on multiple hardware dc regions
+(I think they map to partitions) then we are very likely to see
+multiples.  (maybe I'm lost in terminology as well).
+
+
+...
+
+> > > 
+> > > Linux is not obligated to follow the questionable naming decisions of
+> > > specifications.  
+> > 
+> > We are not.  But as Alejandro says it can be confusing if we don't make
+> > some association to the spec.
+> > 
+> > What do you think about the HW/SW line I propose above?  
+> 
+> Rename to cxl_dc_partition_info and drop the region_ prefixes, sure.
+> 
+> Otherwise, for this init-time only concern I would much rather deal with
+> the confusion of:
+> 
+> "why does Linux call this partition when the spec calls it region?":
+> which only trips up people that already know the difference because they read the
+> spec. In that case the comment will answer their confusion.
+> 
+> ...versus:
+> 
+> "why are there multiple region concepts in the CXL subsystem": which
+> trips up everyone that greps through the CXL subsystem especially those
+> that have no intention of ever reading the spec.
+
+versus one time rename of all internal infrastructure to align to the spec
+and only keep the confusion at the boundaries where we have ABI.
+
+Horrible option but how often are those diving in the code that bothered
+about the userspace /kernel interaction terminology?
+
+Anyhow, they are all horrible choices.
+
+Jonathan
+
+> 
 
