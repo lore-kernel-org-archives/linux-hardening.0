@@ -1,176 +1,98 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99E12199920
-	for <linux-hardening@vger.kernel.org>; Thu, 16 Jan 2025 07:54:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBFCB45009;
+	Thu, 16 Jan 2025 07:56:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737014096; cv=none; b=SVZcXyp9OnTNJm+lChimlSmZBXd/6OuFv5na7UREgeB75VBI+U0hYyVG60ovKsGf72QQJeAnjkUNdTQppI9VkKgCs9FokHlH3xjr27G5cBTl8D+h2sx/Z4BUUE+e5PEbobJ38YKhRUYuXdgsYloodFwA6hh4xtD6Mz7oXLlYolM=
+	t=1737014189; cv=none; b=VN1QgDU8ALH0ACQAUzba6uecMRFmZ8dcYuthJCFSvu++yiTKosFf/BO+5DFN+pj2DTQRQGSP4AwoZ+1OSzw27T0fGnZWVKq41L1QU8A8w9at0fZ4eq97nrVIctCknWMDgYuNX55xKF6m+RJcp0RPcutLuHN55LdZHKSlcuyClZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737014096; c=relaxed/simple;
-	bh=7M65RmMX3Ry4OaGybSFFVt26wFFfaatRGurZ9wLro+M=;
+	s=arc-20240116; t=1737014189; c=relaxed/simple;
+	bh=4+3nAGVh/uPX2+IHp5ayZL30DSWxzNqR/sh4yXvJYk8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GLrGey/SJQSim2LNYfp0qww3LGguB6/4nUxrCJ/GKbiVkiMw+4JgiQFsPN9bweo0VOOWpblBXkHULvTVzJyXiS0lIRrFjvHHkUOatvLA6hyGfCe6R2MhdH6eNKoH43ARNGTKh6XUlAtcZvpqyApyBXPa2HCZZg+pNs8Q/SA1Zpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1tYKhe-00075B-4S; Thu, 16 Jan 2025 08:54:10 +0100
-Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1tYKhT-000DS3-0I;
-	Thu, 16 Jan 2025 08:53:59 +0100
-Received: from pengutronix.de (pd9e59fec.dip0.t-ipconnect.de [217.229.159.236])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: mkl-all@blackshift.org)
-	by smtp.blackshift.org (Postfix) with ESMTPSA id 165233A99BF;
-	Thu, 16 Jan 2025 07:53:43 +0000 (UTC)
-Date: Thu, 16 Jan 2025 08:53:42 +0100
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Kees Cook <kees@kernel.org>
-Cc: Jakub Kicinski <kuba@kernel.org>, 
-	Cheng Xu <chengyou@linux.alibaba.com>, Kai Shen <kaishen@linux.alibaba.com>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>, 
-	Christian Benvenuti <benve@cisco.com>, Nelson Escobar <neescoba@cisco.com>, 
-	Bernard Metzler <bmt@zurich.ibm.com>, Karsten Keil <isdn@linux-pingi.de>, 
-	Michal Ostrowski <mostrows@earthlink.net>, Andrew Lunn <andrew+netdev@lunn.ch>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Paolo Abeni <pabeni@redhat.com>, Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>, 
-	Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, 
-	Chaitanya Kulkarni <kch@nvidia.com>, Lee Duncan <lduncan@suse.com>, Chris Leech <cleech@redhat.com>, 
-	Mike Christie <michael.christie@oracle.com>, "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
-	"Martin K. Petersen" <martin.petersen@oracle.com>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Alexander Aring <aahringo@redhat.com>, 
-	David Teigland <teigland@redhat.com>, Trond Myklebust <trondmy@kernel.org>, 
-	Anna Schumaker <anna@kernel.org>, Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>, 
-	Joseph Qi <joseph.qi@linux.alibaba.com>, Namjae Jeon <linkinjeon@kernel.org>, 
-	Steve French <sfrench@samba.org>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Tom Talpey <tom@talpey.com>, Simon Horman <horms@kernel.org>, 
-	Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>, 
-	Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, David Ahern <dsahern@kernel.org>, 
-	Joerg Reuter <jreuter@yaina.de>, Marcel Holtmann <marcel@holtmann.org>, 
-	Johan Hedberg <johan.hedberg@gmail.com>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
-	Oliver Hartkopp <socketcan@hartkopp.net>, Robin van der Gracht <robin@protonic.nl>, 
-	Oleksij Rempel <o.rempel@pengutronix.de>, Alexandra Winter <wintera@linux.ibm.com>, 
-	Thorsten Winkler <twinkler@linux.ibm.com>, James Chapman <jchapman@katalix.com>, 
-	Krzysztof Kozlowski <krzk@kernel.org>, Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
-	Remi Denis-Courmont <courmisch@gmail.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-	Allison Henderson <allison.henderson@oracle.com>, Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>, 
-	Xin Long <lucien.xin@gmail.com>, Wenjia Zhang <wenjia@linux.ibm.com>, 
-	Jan Karcher <jaka@linux.ibm.com>, "D. Wythe" <alibuda@linux.alibaba.com>, 
-	Tony Lu <tonylu@linux.alibaba.com>, Wen Gu <guwen@linux.alibaba.com>, Jon Maloy <jmaloy@redhat.com>, 
-	Ying Xue <ying.xue@windriver.com>, Stefano Garzarella <sgarzare@redhat.com>, 
-	Martin Schiller <ms@dev.tdt.de>, Kentaro Takeda <takedakn@nttdata.co.jp>, 
-	Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>, Paul Moore <paul@paul-moore.com>, 
-	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, 
-	Guillaume Nault <gnault@redhat.com>, 
-	Ahelenia =?utf-8?Q?Ziemia=C5=84ska?= <nabijaczleweli@nabijaczleweli.xyz>, Andrew Morton <akpm@linux-foundation.org>, 
-	Wu Yunchuan <yunchuan@nfschina.com>, Max Gurtovoy <mgurtovoy@nvidia.com>, 
-	Maurizio Lombardi <mlombard@redhat.com>, David Howells <dhowells@redhat.com>, 
-	Atte =?utf-8?B?SGVpa2tpbMOk?= <atteh.mailbox@gmail.com>, Vincent Duvert <vincent.ldev@duvert.net>, 
-	Denis Kirjanov <kirjanov@gmail.com>, Lukas Bulwahn <lukas.bulwahn@gmail.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Thomas Huth <thuth@redhat.com>, 
-	Andrew Waterman <waterman@eecs.berkeley.edu>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Andrej Shadura <andrew.shadura@collabora.co.uk>, Ying Hsu <yinghsu@chromium.org>, 
-	Kuniyuki Iwashima <kuniyu@amazon.com>, Tom Parkin <tparkin@katalix.com>, 
-	Jason Xing <kernelxing@tencent.com>, Dan Carpenter <error27@gmail.com>, Hyunwoo Kim <v4bel@theori.io>, 
-	Bernard Pidoux <f6bvp@free.fr>, Sangsoo Lee <constant.lee@samsung.com>, 
-	Doug Brown <doug@schmorgal.com>, Ignat Korchagin <ignat@cloudflare.com>, 
-	Gou Hao <gouhao@uniontech.com>, Mina Almasry <almasrymina@google.com>, 
-	Abhishek Chauhan <quic_abchauha@quicinc.com>, Yajun Deng <yajun.deng@linux.dev>, Michal Luczaj <mhal@rbox.co>, 
-	Jiri Pirko <jiri@resnulli.us>, syzbot <syzkaller@googlegroups.com>, 
-	linux-kernel@vger.kernel.org, kernel@pengutronix.de, linux-rdma@vger.kernel.org, 
-	netdev@vger.kernel.org, linux-nvme@lists.infradead.org, open-iscsi@googlegroups.com, 
-	linux-scsi@vger.kernel.org, linux-arm-msm@vger.kernel.org, target-devel@vger.kernel.org, 
-	gfs2@lists.linux.dev, linux-nfs@vger.kernel.org, ocfs2-devel@lists.linux.dev, 
-	linux-cifs@vger.kernel.org, linux-hams@vger.kernel.org, linux-bluetooth@vger.kernel.org, 
-	linux-can@vger.kernel.org, linux-s390@vger.kernel.org, rds-devel@oss.oracle.com, 
-	linux-sctp@vger.kernel.org, tipc-discussion@lists.sourceforge.net, 
-	virtualization@lists.linux.dev, linux-x25@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	syzbot+d7ce59b06b3eb14fd218@syzkaller.appspotmail.com, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] net: Convert proto_ops::getname to sockaddr_storage
-Message-ID: <20250116-light-panda-of-reverence-2f5da8-mkl@pengutronix.de>
-References: <20241217023417.work.145-kees@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q6b2xMpNwIK44J1n0Rrw661Nfq5vZRqiuDy1YUNizLja3nRFZHKiU7uX92r+hnugdGU5Sop4TWqna2+ePEnOmWq4dX/5ypnsZ4xboaipHdIrV+3FPb5g9djWDky4ZI6IXCkjmVmsVqhCld/qM383lwyz6+6FsoGqpAleISb1Pxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QJ4o7ap5; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QJ4o7ap5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 732A0C4CED6;
+	Thu, 16 Jan 2025 07:56:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1737014188;
+	bh=4+3nAGVh/uPX2+IHp5ayZL30DSWxzNqR/sh4yXvJYk8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QJ4o7ap5LJxVK8XrbEFOmAjINzZFM8vE1o182z6WXu8uEcZxGaeGzPyTvjKmo2Xsy
+	 ssthYPGwkfbrlNXXMCegfzMZ/Z5yGspiYIeRd/2X9WTBKOHV8jDWeGslyIDZ7T9ml3
+	 tuYWHQoC6K1QvRgG/xglyewFP0RTBH1ziLabZW6bIKGtvwMy3FE1w8KerW+E593gCb
+	 LpeE+dn1OlViMVZNsib18UHdcsKUsAW5uERjEr7ldnWTccqyATsZg8tB3X1WZmDF+O
+	 42Zr0dkDqjJzx3FXqN3AoC1tFB9poYZMtjHAndPzVGKdjVmztJUCvSrJIE0qfXYVhs
+	 EhekIY6+Jk+Dw==
+Date: Thu, 16 Jan 2025 08:56:24 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Duje =?utf-8?Q?Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
+Cc: Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Lubomir Rintel <lkundrak@v3.sk>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Andrew Lunn <andrew@lunn.ch>, 
+	Gregory Clement <gregory.clement@bootlin.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, 
+	Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, 
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>, David Wronek <david@mainlining.org>, 
+	Karel Balej <balejk@matfyz.cz>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org, phone-devel@vger.kernel.org, 
+	~postmarketos/upstreaming@lists.sr.ht
+Subject: Re: [PATCH v14 4/4] MAINTAINERS: add myself as Marvell PXA1908
+ maintainer
+Message-ID: <oapsqjdop3szi7zfwiyy65ty65gz3uid6cc4lfao22o4d6amjd@bmfkt2wnmlom>
+References: <20250115-pxa1908-lkml-v14-0-847d24f3665a@skole.hr>
+ <20250115-pxa1908-lkml-v14-4-847d24f3665a@skole.hr>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="nbdyd5ky7ajuduf3"
-Content-Disposition: inline
-In-Reply-To: <20241217023417.work.145-kees@kernel.org>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-hardening@vger.kernel.org
-
-
---nbdyd5ky7ajuduf3
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] net: Convert proto_ops::getname to sockaddr_storage
-MIME-Version: 1.0
+In-Reply-To: <20250115-pxa1908-lkml-v14-4-847d24f3665a@skole.hr>
 
-On 16.12.2024 18:34:28, Kees Cook wrote:
-> The proto_ops::getname callback was long ago backed by sockaddr_storage,
-> but the replacement of it for sockaddr was never done. Plumb it through
-> all the getname() callbacks, adjust prototypes, and fix casts.
+On Wed, Jan 15, 2025 at 09:35:57PM +0100, Duje Mihanovi=C4=87 wrote:
+> Add myself as the maintainer for Marvell PXA1908 SoC support.
 >=20
-> There are a few cases where the backing object is _not_ a sockaddr_storage
-> and converting it looks painful. In those cases, they use a cast to
-> struct sockaddr_storage. They appear well bounds-checked, so the risk
-> is no worse that we have currently.
->=20
-> Other casts to sockaddr are removed, though to avoid spilling this
-> change into BPF (which becomes a much larger set of changes), cast the
-> sockaddr_storage instances there to sockaddr for the time being.
->=20
-> In theory this could be split up into per-caller patches that add more
-> casts that all later get removed, but it seemed like there are few
-> enough callers that it seems feasible to do this in a single patch. Most
-> conversions are mechanical, so review should be fairly easy. (Famous
-> last words.)
->=20
-> Signed-off-by: Kees Cook <kees@kernel.org>
+> Signed-off-by: Duje Mihanovi=C4=87 <duje.mihanovic@skole.hr>
 > ---
->  net/can/isotp.c                               |  3 +-
->  net/can/j1939/socket.c                        |  2 +-
->  net/can/raw.c                                 |  2 +-
+>  MAINTAINERS | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+>=20
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index a87ddad78e26f28ffd0f3433560d6db1518f9f95..caa5f6b96251a3da0f3f9d2f7=
+60b38288eb23ab3 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -2624,6 +2624,15 @@ F:	drivers/irqchip/irq-mvebu-*
+>  F:	drivers/pinctrl/mvebu/
+>  F:	drivers/rtc/rtc-armada38x.c
+> =20
+> +ARM/Marvell PXA1908 SOC support
+> +M:	Duje Mihanovi=C4=87 <duje.mihanovic@skole.hr>
+> +L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+> +S:	Maintained
+> +T:	git https://gitlab.com/LegoLivesMatter/linux
 
-Acked-by: Marc Kleine-Budde <mkl@pengutronix.de> # for net/can
+Not sure if this was mentioned ever (it is v14, so it is likely) but if
+that was not clear:
 
-regards,
-Marc
+Pull requests from non-kernel.org repos must be signed and your key must
+be in kernel.org keyring. Please get your key signed
+(meetups/conferences/keysigning map/video confcalls) and submitted to
+the keyring.
 
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
+Patchset should be sent to soc@, as expressed in soc@ maintainer
+profile.
 
---nbdyd5ky7ajuduf3
-Content-Type: application/pgp-signature; name="signature.asc"
+Unless this is not going to be merged by soc@, but someone from Marvell
+maintainers, but then please drop the repo. Git repos here are for
+managing patches.
 
------BEGIN PGP SIGNATURE-----
+Best regards,
+Krzysztof
 
-iQEzBAABCgAdFiEEUEC6huC2BN0pvD5fKDiiPnotvG8FAmeIuv8ACgkQKDiiPnot
-vG/tCQgAnoYMQthE5qhN4islXZibYx3HOEVpQp20V/CdVVRH56MNpoQvsjN0F5I9
-Pe8FiGuyUR9fNqhHJPDV5qTZfzq6vRSoc7PpwLTwF9ReyzpbKcMrYcmv/Wkbso1k
-faQaG0U/F/5wp2/nsK1h/PUHRvlwFfLs41wCCmlXQDks5vvt1U+8F/0mUiM/L0yT
-SQG9iudLNDMEv22xlkR1e90s94ARgRIKcBcOZ9LudgYLwGmT8I3JAenyHET3Q8d2
-GWVaepqliLBxoq7pfWcJm1yFL8DFp2xSUy/gP7BqrfKIJoJhRqOR2EXGSgAZ6rek
-c/YmUBVaGDu2ZBkxhzlB6NKXFu9dBA==
-=LAEY
------END PGP SIGNATURE-----
-
---nbdyd5ky7ajuduf3--
