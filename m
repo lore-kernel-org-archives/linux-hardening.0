@@ -1,199 +1,96 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A8981DD889;
-	Thu, 16 Jan 2025 10:32:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2CAF1DE4FF
+	for <linux-hardening@vger.kernel.org>; Thu, 16 Jan 2025 13:20:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737023535; cv=none; b=FUt9AgnOFVQPjVIUd0ojwnnAoeI66Rd/c9ZdZMWFVk9WzKn1d1wAVWSSvSWdBU4MeKPah4MDkyBiLzQa/BO7JcE7NayaLEUwNsR3JbnPc4Pe+XD9k7HMurduw8NOJ92W2G5kquEB87rFQABkNCWXbYTZKsbXMJeIj6db5KGWq7o=
+	t=1737033610; cv=none; b=mD+GpDxKccA4o6DpZ/HXnVR9ZvrZf5LrLfisp1uWyXTCv32vrhlY/CafH9nhweCN08Ys05ELHLV53KN8MhATK8fTWNYrUiSVin44/HOUPQXBeG41SNT/22PU5Nq5dHjRFqtETLLP4Vy6IoqTzzzHOgcpJ8p1yQTRXFlUFFsS01o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737023535; c=relaxed/simple;
-	bh=JrxqlXeV+1EMrKAwWg2I5zva3xkZUNbBW8jB4JaHh28=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ofUJmVbzgYVzU6VvP6xfC9FosQZdNzlrCNtPZVckzQKt5itYR3yaDEl7waUkt+pWfr2LuZY4nC/laT3Oa6du6/91LZu1wF7u3G85wMV9+gTPuyq0hqWlytiC3ErakAq1GonWVzwzxS69SC7V7DbtjriQCjv6VxZ2C359WrMiu+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YYfJb5yM2z6M4HV;
-	Thu, 16 Jan 2025 18:30:23 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 4A858140393;
-	Thu, 16 Jan 2025 18:32:10 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 16 Jan
- 2025 11:32:09 +0100
-Date: Thu, 16 Jan 2025 10:32:07 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Dan Williams <dan.j.williams@intel.com>
-CC: Ira Weiny <ira.weiny@intel.com>, Dave Jiang <dave.jiang@intel.com>, "Fan
- Ni" <fan.ni@samsung.com>, Jonathan Corbet <corbet@lwn.net>, Andrew Morton
-	<akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>, "Gustavo A. R.
- Silva" <gustavoars@kernel.org>, Davidlohr Bueso <dave@stgolabs.net>, "Alison
- Schofield" <alison.schofield@intel.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, <linux-cxl@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>, <nvdimm@lists.linux.dev>,
-	<linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>, Li Ming
-	<ming.li@zohomail.com>
-Subject: Re: [PATCH v8 02/21] cxl/mem: Read dynamic capacity configuration
- from the device
-Message-ID: <20250116103207.00005461@huawei.com>
-In-Reply-To: <678837fcc0ed_20f3294fb@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20241210-dcd-type2-upstream-v8-0-812852504400@intel.com>
-	<20241210-dcd-type2-upstream-v8-2-812852504400@intel.com>
-	<67871f05cd767_20f32947f@dwillia2-xfh.jf.intel.com.notmuch>
-	<67881b606ca4e_1aa45f2948b@iweiny-mobl.notmuch>
-	<678837fcc0ed_20f3294fb@dwillia2-xfh.jf.intel.com.notmuch>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1737033610; c=relaxed/simple;
+	bh=JLbzrkPHHl4z3OfrMXHdkLR2wYyEFz7nDvkukN04Yns=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=u16ackSKcpBcsff4JyuwHfKbnESwpPyVbILcz7urmf94u4q1LuceNqUCWrFrvzi19OMZcPVoa+lgStkOD0+9qYx5PzG0D8ew+H9wsv788G3ESgis6C9774t8q7z1mRJ3l7WQwuUsL6Fz6RXxJLvDbzF/5NhRAhCJC8yMedhRD24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=MR2RdUZI; arc=none smtp.client-ip=91.218.175.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="MR2RdUZI"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1737033589;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=KCtIlCqqSrO4jJm7cqUf8hZlN4VmB46QY7zufEspPzQ=;
+	b=MR2RdUZI0IBjFtTp2atANEKRTb5K+2PvOTA2NZaeYgdNKkhQQYZWxMM6nWeYUFLAhM6Jrt
+	4fRWK3SwWQE6PwKtZlf9t18usGoWAIuGL4gZ1iPq5yR89uRLxJQXe2LFd+tyQZc6s1brwf
+	SBEM2bbUoxoYNb2qNzI4SQVUodGdFVM=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Tony Krowiak <akrowiak@linux.ibm.com>,
+	Halil Pasic <pasic@linux.ibm.com>,
+	Jason Herne <jjherne@linux.ibm.com>,
+	Harald Freudenberger <freude@linux.ibm.com>,
+	Holger Dengler <dengler@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>
+Cc: linux-hardening@vger.kernel.org,
+	Thorsten Blum <thorsten.blum@linux.dev>,
+	linux-s390@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] s390/vfio-ap: Replace one-element array with flexible array member
+Date: Thu, 16 Jan 2025 14:18:59 +0100
+Message-ID: <20250116131859.105756-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, 15 Jan 2025 14:34:36 -0800
-Dan Williams <dan.j.williams@intel.com> wrote:
+Replace the deprecated one-element array with a modern flexible array
+member in the struct ap_matrix_dev.
 
-> Ira Weiny wrote:
-> > Dan Williams wrote:  
-> > > Ira Weiny wrote:  
-> > 
-> > [snip]
-> >   
-> > > > diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> > > > index e8907c403edbd83c8a36b8d013c6bc3391207ee6..05a0718aea73b3b2a02c608bae198eac7c462523 100644
-> > > > --- a/drivers/cxl/cxlmem.h
-> > > > +++ b/drivers/cxl/cxlmem.h
-> > > > @@ -403,6 +403,7 @@ enum cxl_devtype {
-> > > >  	CXL_DEVTYPE_CLASSMEM,
-> > > >  };
-> > > >  
-> > > > +#define CXL_MAX_DC_REGION 8  
-> > > 
-> > > Please no, lets not sign up to have the "which cxl 'region' concept are
-> > > you referring to?" debate in perpetuity. "DPA partition", "DPA
-> > > resource", "DPA capacity" anything but "region".
-> > >   
-> > 
-> > I'm inclined to agree with Alejandro on this one.  I've walked this
-> > tightrope quite a bit with this series.  But there are other places where
-> > we have chosen to change the verbiage from the spec and it has made it
-> > difficult for new comers to correlate the spec with the code.
-> > 
-> > So I like Alejandro's idea of adding "HW" to the name to indicate that we
-> > are talking about a spec or hardware defined thing.  
-> 
-> See below, the only people that could potentially be bothered by the
-> lack of spec terminology matching are the very same people that are
-> sophisticated enough to have read the spec to know its a problem.
+Use struct_size() to calculate the number of bytes to allocate for
+matrix_dev with a single mdev_type.
 
-It's confusing me.  :)  I know the confusion source exists but
-that doesn't mean I remember how all the terms match up.
+Link: https://github.com/KSPP/linux/issues/79
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+---
+ drivers/s390/crypto/vfio_ap_drv.c     | 2 +-
+ drivers/s390/crypto/vfio_ap_private.h | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-> 
-> > 
-> > That said I am open to changing some names where it is clear it is a
-> > software structure.  I'll audit the series for that.
-> >   
-> > > >  	u64 serial;
-> > > >  	enum cxl_devtype type;
-> > > >  	struct cxl_mailbox cxl_mbox;
-> > > >  };
-> > > >  
-> > > > +#define CXL_DC_REGION_STRLEN 8
-> > > > +struct cxl_dc_region_info {
-> > > > +	u64 base;
-> > > > +	u64 decode_len;
-> > > > +	u64 len;  
-> > > 
-> > > Duplicating partition information in multiple places, like
-> > > mds->dc_region[X].base and cxlds->dc_res[X].start, feels like an
-> > > RFC-quality decision for expediency that needs to reconciled on the way
-> > > to upstream.  
-> > 
-> > I think this was done to follow a pattern of the mds being passed around
-> > rather than creating resources right when partitions are read.
-> > 
-> > Furthermore this stands to hold this information in CPU endianess rather
-> > than holding an array of region info coming from the hardware.  
-> 
-> Yes, the ask is translate all of this into common information that lives
-> at the cxl_dev_state level.
-> 
-> > 
-> > Let see how other changes fall out before I go hacking this though.
-> >   
-> > >   
-> > > > +	u64 blk_size;
-> > > > +	u32 dsmad_handle;
-> > > > +	u8 flags;
-> > > > +	u8 name[CXL_DC_REGION_STRLEN];  
-> > > 
-> > > No, lets not entertain:
-> > > 
-> > >     printk("%s\n", mds->dc_region[index].name);
-> > > 
-> > > ...when:
-> > > 
-> > >     printk("dc%d\n", index);
-> > > 
-> > > ...will do.  
-> > 
-> > Actually these buffers provide a buffer for the (struct
-> > resource)dc_res[x].name pointers to point to.  
-> 
-> I missed that specific detail, but I still challenge whether this
-> precision is needed especially since it makes the data structure
-> messier. Given these names are for debug only and multi-partition DCD
-> devices seem unlikely to ever exist, just use a static shared name for
-> adding to ->dpa_res.
-
-Given the read only shared concept relies on multiple hardware dc regions
-(I think they map to partitions) then we are very likely to see
-multiples.  (maybe I'm lost in terminology as well).
-
-
-...
-
-> > > 
-> > > Linux is not obligated to follow the questionable naming decisions of
-> > > specifications.  
-> > 
-> > We are not.  But as Alejandro says it can be confusing if we don't make
-> > some association to the spec.
-> > 
-> > What do you think about the HW/SW line I propose above?  
-> 
-> Rename to cxl_dc_partition_info and drop the region_ prefixes, sure.
-> 
-> Otherwise, for this init-time only concern I would much rather deal with
-> the confusion of:
-> 
-> "why does Linux call this partition when the spec calls it region?":
-> which only trips up people that already know the difference because they read the
-> spec. In that case the comment will answer their confusion.
-> 
-> ...versus:
-> 
-> "why are there multiple region concepts in the CXL subsystem": which
-> trips up everyone that greps through the CXL subsystem especially those
-> that have no intention of ever reading the spec.
-
-versus one time rename of all internal infrastructure to align to the spec
-and only keep the confusion at the boundaries where we have ABI.
-
-Horrible option but how often are those diving in the code that bothered
-about the userspace /kernel interaction terminology?
-
-Anyhow, they are all horrible choices.
-
-Jonathan
-
-> 
+diff --git a/drivers/s390/crypto/vfio_ap_drv.c b/drivers/s390/crypto/vfio_ap_drv.c
+index 67a807e2e75b..ea9ffa37f263 100644
+--- a/drivers/s390/crypto/vfio_ap_drv.c
++++ b/drivers/s390/crypto/vfio_ap_drv.c
+@@ -96,7 +96,7 @@ static int vfio_ap_matrix_dev_create(void)
+ 	if (ret)
+ 		goto bus_register_err;
+ 
+-	matrix_dev = kzalloc(sizeof(*matrix_dev), GFP_KERNEL);
++	matrix_dev = kzalloc(struct_size(matrix_dev, mdev_types, 1), GFP_KERNEL);
+ 	if (!matrix_dev) {
+ 		ret = -ENOMEM;
+ 		goto matrix_alloc_err;
+diff --git a/drivers/s390/crypto/vfio_ap_private.h b/drivers/s390/crypto/vfio_ap_private.h
+index 437a161c8659..9aed8994f567 100644
+--- a/drivers/s390/crypto/vfio_ap_private.h
++++ b/drivers/s390/crypto/vfio_ap_private.h
+@@ -53,7 +53,7 @@ struct ap_matrix_dev {
+ 	struct mutex guests_lock; /* serializes access to each KVM guest */
+ 	struct mdev_parent parent;
+ 	struct mdev_type mdev_type;
+-	struct mdev_type *mdev_types[1];
++	struct mdev_type *mdev_types[];
+ };
+ 
+ extern struct ap_matrix_dev *matrix_dev;
+-- 
+2.48.0
 
