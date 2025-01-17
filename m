@@ -1,179 +1,141 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B394F1FA249
-	for <linux-hardening@vger.kernel.org>; Fri, 17 Jan 2025 09:54:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B5FD1FBE83;
+	Fri, 17 Jan 2025 10:15:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737107663; cv=none; b=j1WFoIoykS+7pVZ6HlUsx3RjbgCMNEYHae/TrNNgLxDjAZoFUjCPvTPZquCdq3CbqyYVbnqNtem6ff8dWHcOfpVPBwmMjmoITSuV2FIU//k1s4KOMc+bWmsmo17fiscVOi78lwkoWZxyIkhUq3RPstUCj7k494FqJ5YN4MtkjOo=
+	t=1737108922; cv=none; b=D9I4ImsN4Zzy8SL18zRlFRDwX1l+izB+O/A1//t/utuDOd5iXM6HvXHs0JJoBKw4AiT4Pm9MnKlu65STY9SlN9LCIam+17MoP7UvYFn0jzAaNjcYhdYjwBb4pWu6PmIGiLJRAKIE0BCW+Taq+dw3Z/3xDp4iGax3ly7M5q9LTFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737107663; c=relaxed/simple;
-	bh=dfiy2R/0rK2WNQBFJ4B8wz0dhd7gEAJUhvpkWIIsvfg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=hyENGnqfZBd6J8qWNijJOlQ/dZ/fjWqj9Z/9IL3UgxRm3nw7B7drLSGkTXf1FE34qcsIEwImKfzFB2WJnr1SS8hIQtCNeDnZTxv1yaTsRgGuHgU9VykFjQe0wMZ+z6wS5RISvcbPWxUhf2HEF1jbLU16qcRT4gepV8C3h3L959g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LE8U3DmT; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1737108922; c=relaxed/simple;
+	bh=Xq1vfM1Dw7b5vPzAwTmlPIm82xcnU+h+rpbiF67cYSg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V4TMsO/TF9ji/lUYTe+lRlbZRt5QPc4WS5EZVWbFNnuC3qPUrIv9M/0CxUaGoc8XlHCiB63LNpmNZxbv0MRg327T/jjZjpQJ+b7GZ8KH5d5zbgiex9EerRJUseOrYLQhtApj70YVvpKv9npMHirMgHAYzRbj4+/F7jnqoQMkEGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=qKOeGeGb; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LE8U3DmT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1737107660;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=L9Oe7BkLz3ZQnhnrUC9eWHjE3nyj6wgCJoWV2O/5t40=;
-	b=LE8U3DmT3gzpsSVFq0G5WDH9SYgbFj6TVLii4ma06aBuEWYVYd2eJNuxPkNLvfsYiqJuu3
-	SaD/zTjPzp/QiCEAsfHKsreZ/8YCg/VmwgRRQJ/eh+c2PIGcZaqG9z/hNRVmWS1ohVGyie
-	d/a/zXCy9UjF3/6QPXwk8EnEFj9v3vA=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-630-wYch68smMGa-LFo_htgCTA-1; Fri, 17 Jan 2025 04:54:16 -0500
-X-MC-Unique: wYch68smMGa-LFo_htgCTA-1
-X-Mimecast-MFC-AGG-ID: wYch68smMGa-LFo_htgCTA
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43628594d34so9636595e9.2
-        for <linux-hardening@vger.kernel.org>; Fri, 17 Jan 2025 01:54:16 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737107655; x=1737712455;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=L9Oe7BkLz3ZQnhnrUC9eWHjE3nyj6wgCJoWV2O/5t40=;
-        b=X67To+JO+KjCWAHTjmjx8ZxqLSZeAXNI1z/8MyisL5lws1MIz710IzC8t2FOxZ5qBm
-         Uf8J5kwt61esp9hJulJApSZN5EHya2xrELJi0ek6z5J5QHvdOgVi9+xh2MMAQgF0ucjG
-         AmAq05L73HRARC8TglSHIQ/y6+4ExG+dhzQDArq49b5rbrpbvRSIN9Je/z5cnNW5pTO1
-         C7ErRx7C55hv48Rh+Ph6kuyvoBRpjGBEup8KhBgUNLr/ugJ3LMajcQQ4kn+tB59kMCST
-         GBuP34SoUs+vGjoxtDvkFupRlsk33PdZuAQ6/Z1Z3RQK8JPMCzCNubjyKeFfQE1ZpSz3
-         6WoA==
-X-Forwarded-Encrypted: i=1; AJvYcCXy54ca2gZhZY/VE923FbhPSaquu1ZSbjXyKw2FXUznEibwhA9UeKB7DhJxXmvaeurFcslnBvwXvZoTNaQHsLE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3Mn8hMNZgcLFwoszjtJQAWCFIVvFrxR1QfmR6Z+Ql/DI0IccV
-	C8XsYK7yUXYeORJcZFUinlem7LffE6xzZtGC27fK/e8VbXmQ5PeoV36ZqG0dRWAia6GXxj46EB7
-	ASsUlwD07+1NPz6j2hfVcuocPH9Q+FuxBGvRHU5rT87Fx20ihrC/sVe9VHjZwriQSZw==
-X-Gm-Gg: ASbGncs1uAUZDdnSyexpVcSdnO/QdXgOgXzD0RaTpuFgF0y4gAi6kXIohxhPtRP9462
-	6/3p/ME+3Y8C4xXW7i6eCYlEJTAZyGN4MlkofrjrKyvxdi3B9Tj5B01sHPnQjSkfLYVYdQg3ll6
-	uRGOGJVoFqSx8oL8XCoXcuXq5qrjXwp+iijNoSF7yL+2IfO+uGZD1/GjOd1TgS/QC4G8sDMii8e
-	mFUzo7JnWevbihzjXpQnEEAkAzh8GjIQapOP4yXE/wj1kF9zEZH8UwzliEZEtCPNtx2XqRRZslR
-	cSiP4xf3ai6TD9oiezRGLxtT+sPaG70lPrAXHww7yA==
-X-Received: by 2002:a05:600c:450d:b0:436:840b:261c with SMTP id 5b1f17b1804b1-438914340afmr16339515e9.19.1737107655082;
-        Fri, 17 Jan 2025 01:54:15 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFuw6rUkDZiEIMePly7ic4RGfvY46wjcWihk2kMpcZz3D30VqRFOYeHlJ+bekZM5WnBbSAhfQ==
-X-Received: by 2002:a05:600c:450d:b0:436:840b:261c with SMTP id 5b1f17b1804b1-438914340afmr16338925e9.19.1737107654599;
-        Fri, 17 Jan 2025 01:54:14 -0800 (PST)
-Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43890420412sm28393455e9.18.2025.01.17.01.54.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2025 01:54:14 -0800 (PST)
-From: Valentin Schneider <vschneid@redhat.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
- virtualization@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
- linux-perf-users@vger.kernel.org, xen-devel@lists.xenproject.org,
- kvm@vger.kernel.org, linux-arch@vger.kernel.org, rcu@vger.kernel.org,
- linux-hardening@vger.kernel.org, linux-mm@kvack.org,
- linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
- bcm-kernel-feedback-list@broadcom.com, Peter Zijlstra
- <peterz@infradead.org>, Nicolas Saenz Julienne <nsaenzju@redhat.com>,
- Juergen Gross <jgross@suse.com>, Ajay Kaher <ajay.kaher@broadcom.com>,
- Alexey Makhalov <alexey.amakhalov@broadcom.com>, Russell King
- <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will
- Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui
- <kernel@xen0n.name>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
- Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Thomas
- Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav
- Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, "H.
- Peter Anvin" <hpa@zytor.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
- <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
- <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, Boris
- Ostrovsky <boris.ostrovsky@oracle.com>, Josh Poimboeuf
- <jpoimboe@kernel.org>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
- Paolo Bonzini <pbonzini@redhat.com>, Andy Lutomirski <luto@kernel.org>,
- Arnd Bergmann <arnd@arndb.de>, Frederic Weisbecker <frederic@kernel.org>,
- "Paul E. McKenney" <paulmck@kernel.org>, Jason Baron <jbaron@akamai.com>,
- Steven Rostedt <rostedt@goodmis.org>, Ard Biesheuvel <ardb@kernel.org>,
- Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, Joel Fernandes
- <joel@joelfernandes.org>, Josh Triplett <josh@joshtriplett.org>, Boqun
- Feng <boqun.feng@gmail.com>, Uladzislau Rezki <urezki@gmail.com>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Lai Jiangshan
- <jiangshanlai@gmail.com>, Zqiang <qiang.zhang1211@gmail.com>, Juri Lelli
- <juri.lelli@redhat.com>, Clark Williams <williams@redhat.com>, Yair
- Podemsky <ypodemsk@redhat.com>, Tomas Glozar <tglozar@redhat.com>, Vincent
- Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann
- <dietmar.eggemann@arm.com>, Ben Segall <bsegall@google.com>, Mel Gorman
- <mgorman@suse.de>, Kees Cook <kees@kernel.org>, Andrew Morton
- <akpm@linux-foundation.org>, Christoph Hellwig <hch@infradead.org>, Shuah
- Khan <shuah@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, Miguel
- Ojeda <ojeda@kernel.org>, Alice Ryhl <aliceryhl@google.com>, "Mike
- Rapoport (Microsoft)" <rppt@kernel.org>, Samuel Holland
- <samuel.holland@sifive.com>, Rong Xu <xur@google.com>, Geert Uytterhoeven
- <geert@linux-m68k.org>, Yosry Ahmed <yosryahmed@google.com>, "Kirill A.
- Shutemov" <kirill.shutemov@linux.intel.com>, "Masami Hiramatsu (Google)"
- <mhiramat@kernel.org>, Jinghao Jia <jinghao7@illinois.edu>, Luis
- Chamberlain <mcgrof@kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
- Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: Re: [PATCH v4 25/30] context_tracking,x86: Defer kernel text
- patching IPIs
-In-Reply-To: <Z4bbwE8yfg349gBx@google.com>
-References: <20250114175143.81438-1-vschneid@redhat.com>
- <20250114175143.81438-26-vschneid@redhat.com>
- <Z4bTlZkqihaAyGb4@google.com> <Z4bbwE8yfg349gBx@google.com>
-Date: Fri, 17 Jan 2025 10:54:11 +0100
-Message-ID: <xhsmh8qr9hikc.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="qKOeGeGb"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50H85Zt6000477;
+	Fri, 17 Jan 2025 10:14:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=YMl2uammyGUZkli6LdYmcx3aBVbe0l
+	XDhS5waMtFoDg=; b=qKOeGeGbxRzXlPjOVD3g8SuBuS3JX1t//g2Nq+wV/9Y0NM
+	wVWEoBhc2GwulXrMvRpXoU9hoiiee+gk/MlSemaLuDWQSPh24YPIFqSNh+gmvUq+
+	zrmzDjWdVYIXNmkt6H95GtwEVMBgnab3cXCO7guUhzv/4QBcuzgXMOpSpzV9brtg
+	WGjoMMO+yskRkWzQjuUNg4bbpIYx1MItXyvbD5IBF06RGCsCsfkRhOg7v0eI1Le+
+	Fy+Uxxmcd81rVVgrmG0RyEofGhQOaHNh1xUyhWN+F9eEF6k74RrSH/gReiW9QndZ
+	HTVRbBZlAOs9B5AYZkHMVLzT8vdlBRYDVWPWkdtA==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 447kd3gjgc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 17 Jan 2025 10:14:35 +0000 (GMT)
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 50HA1aNF004031;
+	Fri, 17 Jan 2025 10:14:35 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 447kd3gjg8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 17 Jan 2025 10:14:35 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50H7LdD5001110;
+	Fri, 17 Jan 2025 10:14:34 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 44456ka5hv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 17 Jan 2025 10:14:34 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50HAEWqj55837154
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 17 Jan 2025 10:14:32 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3D5DA201E1;
+	Fri, 17 Jan 2025 10:14:32 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id EC236201E0;
+	Fri, 17 Jan 2025 10:14:29 +0000 (GMT)
+Received: from osiris (unknown [9.171.15.37])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Fri, 17 Jan 2025 10:14:29 +0000 (GMT)
+Date: Fri, 17 Jan 2025 11:14:28 +0100
+From: Heiko Carstens <hca@linux.ibm.com>
+To: Kees Cook <kees@kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>,
+        Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+        Jeff Xu <jeffxu@chromium.org>, akpm@linux-foundation.org,
+        jannh@google.com, torvalds@linux-foundation.org,
+        adhemerval.zanella@linaro.org, oleg@redhat.com,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        linux-mm@kvack.org, jorgelo@chromium.org, sroettger@google.com,
+        ojeda@kernel.org, adobriyan@gmail.com, anna-maria@linutronix.de,
+        mark.rutland@arm.com, linus.walleij@linaro.org, Jason@zx2c4.com,
+        deller@gmx.de, rdunlap@infradead.org, davem@davemloft.net,
+        peterx@redhat.com, f.fainelli@gmail.com, gerg@kernel.org,
+        dave.hansen@linux.intel.com, mingo@kernel.org, ardb@kernel.org,
+        Liam.Howlett@oracle.com, mhocko@suse.com, 42.hyeyoo@gmail.com,
+        peterz@infradead.org, ardb@google.com, enh@google.com,
+        rientjes@google.com, groeck@chromium.org, mpe@ellerman.id.au,
+        Vlastimil Babka <vbabka@suse.cz>, Andrei Vagin <avagin@gmail.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Mike Rapoport <mike.rapoport@gmail.com>,
+        Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>,
+        Benjamin Berg <benjamin@sipsolutions.net>
+Subject: Re: [PATCH v4 1/1] exec: seal system mappings
+Message-ID: <20250117101428.10714-A-hca@linux.ibm.com>
+References: <20241125202021.3684919-2-jeffxu@google.com>
+ <202412171248.409B10D@keescook>
+ <a0a3b26b-2222-478c-a1cb-56514ec8d6ff@lucifer.local>
+ <202501061647.6C8F34CB1A@keescook>
+ <CABi2SkUfAoCbsknnXnyoFbCPOFRahDx+Vqz3ohnyf_G1p4eszA@mail.gmail.com>
+ <CABi2SkXS9OOwP2BZGQOa=Pn+NoL1VmOJBJEn-6tWBBQwLtpYiw@mail.gmail.com>
+ <5cf1601b-70c3-45bb-81ef-416d89c415c2@lucifer.local>
+ <202501151538.3E757401@keescook>
+ <20250116052655.GA23894@lst.de>
+ <202501161137.D76EE5CEC@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: wIof0n0mHOiw7G5Xrp1zLZQFIQtBaiGVYrCCIGhdf3w_1737107655
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202501161137.D76EE5CEC@keescook>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: T7TjX-CnkmH_6KmMNkt-BPQvC-whKsbo
+X-Proofpoint-GUID: AklqSMAcI8Nb8_dMc2O0gIEz8uWLGDpu
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-01-17_04,2025-01-16_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=862
+ priorityscore=1501 malwarescore=0 mlxscore=0 suspectscore=0 bulkscore=0
+ spamscore=0 impostorscore=0 clxscore=1011 phishscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2411120000
+ definitions=main-2501170079
 
-On 14/01/25 13:48, Sean Christopherson wrote:
-> On Tue, Jan 14, 2025, Sean Christopherson wrote:
->> On Tue, Jan 14, 2025, Valentin Schneider wrote:
->> > +/**
->> > + * is_kernel_noinstr_text - checks if the pointer address is located in the
->> > + *                    .noinstr section
->> > + *
->> > + * @addr: address to check
->> > + *
->> > + * Returns: true if the address is located in .noinstr, false otherwise.
->> > + */
->> > +static inline bool is_kernel_noinstr_text(unsigned long addr)
->> > +{
->> > +	return addr >= (unsigned long)__noinstr_text_start &&
->> > +	       addr < (unsigned long)__noinstr_text_end;
->> > +}
->>
->> This doesn't do the right thing for modules, which matters because KVM can be
->> built as a module on x86, and because context tracking understands transitions
->> to GUEST mode, i.e. CPUs that are running in a KVM guest will be treated as not
->> being in the kernel, and thus will have IPIs deferred.  If KVM uses a static key
->> or branch between guest_state_enter_irqoff() and guest_state_exit_irqoff(), the
->> patching code won't wait for CPUs to exit guest mode, i.e. KVM could theoretically
->> use the wrong static path.
->>
->> I don't expect this to ever cause problems in practice, because patching code in
->> KVM's VM-Enter/VM-Exit path that has *functional* implications, while CPUs are
->> actively running guest code, would be all kinds of crazy.  But I do think we
->> should plug the hole.
->>
->> If this issue is unique to KVM, i.e. is not a generic problem for all modules (I
->> assume module code generally isn't allowed in the entry path, even via NMI?), one
->> idea would be to let KVM register its noinstr section for text poking.
->
-> Another idea would be to track which keys/branches are tagged noinstr, i.e. generate
-> the information at compile time instead of doing lookups at runtime.  The biggest
-> downside I can think of is that it would require plumbing in the information to
-> text_poke_bp_batch().
+Hi Kees,
 
-IIUC that's what I went for in v3:
+On Thu, Jan 16, 2025 at 11:40:37AM -0800, Kees Cook wrote:
+> On Thu, Jan 16, 2025 at 06:26:55AM +0100, Christoph Hellwig wrote:
+> > On Wed, Jan 15, 2025 at 03:52:23PM -0800, Kees Cook wrote:
+> > > > You seem to be saying you're pushing an internal feature on upstream and
+> > > > only care about internal use cases, this is not how upstream works, as
+> > > > Matthew alludes to.
+> > > 
+> > > Internal? No. Chrome OS and Android. Linux runs more Android devices
+> > > than everything else in the world combined -- this is not some random
+> > > experiment.
+> > 
+> > All of which are tightly controlled by Google and not actually open
+> > to users.  Which doesn't say they don't matter, but they matter a
+> > lot less than fetures widely useful to the open not locked down
+> > userbase of classic Linux.
+> 
+> I get your point. Though in my proposal it would be available to anyone
+> without CRIU too, which is, for example, defconfig builds (excepting
+> s390 and riscv).
 
-https://lore.kernel.org/lkml/20241119153502.41361-11-vschneid@redhat.com
-
-but, modules notwithstanding, simply checking if the patched instruction is
-in .noinstr was a lot neater.
-
+Just looking from time to time into this discussion, so I didn't
+follow everything. What makes s390 and riscv special here?
