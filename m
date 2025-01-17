@@ -1,123 +1,172 @@
-Received: from mail12.out.titan.email (mail12.out.titan.email [18.198.158.5])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DA951FFC4A
-	for <linux-hardening@vger.kernel.org>; Fri, 17 Jan 2025 13:39:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.198.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0951B1FFC68
+	for <linux-hardening@vger.kernel.org>; Fri, 17 Jan 2025 13:44:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737121167; cv=none; b=il9taXxQmY89q5DXiPZ7MpqD/sTDFcLYVvEol5o7w8fmhM8YBJ4UskCxd9fqRR8EOzloPwc3g+DUpCYwMt1HS9NPhYK0lXr9oddwpYGya6rfG+EhPpZGgnSiIq3iKjIaJUBBKgVpyaBAzIKdxbVOeRd2ICvw1nXZ3SrFD/pGkpE=
+	t=1737121501; cv=none; b=bx6A7xXAphMnJSnU0ASborMPvkGBab3455UoDpDFRpYd3fOuC+bo3vqJuIWQavkfARfChb5NnDKROYYG/AQyG/bJQz2go0hPirayBjxYj8aDOQPXVwOi5t2KvkzYjXbFClhCOmVnKzpRMbca5HPQQH0ktkmSt0YH4ia0jNr8CIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737121167; c=relaxed/simple;
-	bh=GoL8elr1g+v9QVwcLmr7gtwKfIKEgObjpBU6EDehYeE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YM41NmSzZpcuLYPom6xm3f1OEBWg6u3IZ7HCCVDhY7RPJy33sPLOVzd4Zp6q8aELpSg0g8xXi6BHrzbErhi9iKOjs3EigHQwuZfWk2hT9xkpRVrUjc0ApY8vKF4kz4Hy/yeVTGwZcXCZK4elegAslUSOwoHUnQUL5uRG9U/PQxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=techsingularity.net; spf=pass smtp.mailfrom=techsingularity.net; dkim=pass (1024-bit key) header.d=techsingularity.net header.i=@techsingularity.net header.b=Y6vlzjVM; arc=none smtp.client-ip=18.198.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=techsingularity.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=techsingularity.net
+	s=arc-20240116; t=1737121501; c=relaxed/simple;
+	bh=3uGThAIZZrxCJ1Zag/yc29l3qlAKBV2/uT4Bw7pXLWs=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=AHZ4VqeoRmPdhYAC8UL475I81bUNRVHVjhoYbGQdE59w9Ttco2QRZLz8VZRz9c7sCCq8DPk0pxnCmhbfEZEFPaxhbhcLC93pBMGiJwoutpJG/7oTogYqCwSqRUseeYzNOEXsIa/3Qx8SSS4k/PAucBF+h28ZFxvwjYZa76CchRE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dHjdNyLa; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=techsingularity.net header.i=@techsingularity.net header.b="Y6vlzjVM"
-Received: from smtp-out0101.titan.email (localhost [127.0.0.1])
-	by smtp-out0101.titan.email (Postfix) with ESMTP id 80932A009B;
-	Fri, 17 Jan 2025 13:03:59 +0000 (UTC)
-DKIM-Signature: a=rsa-sha256; bh=2rFrjKhCOLgXm9a/3DoxLHhn5CHHMWAoj6SakG580bw=;
-	c=relaxed/relaxed; d=techsingularity.net;
-	h=to:cc:subject:from:message-id:date:in-reply-to:references:mime-version:from:to:cc:subject:date:message-id:in-reply-to:references:reply-to;
-	q=dns/txt; s=titan1; t=1737119039; v=1;
-	b=Y6vlzjVMCJ3cZmPLJA88USrvWVVrM7jdpCl11/6uLbjj9qSHS6WUji2cl4FNKOyyMwZNzoEi
-	zZf5HTTHVkHFGw6tg48WzdRCv0+S5dWi8U+Dj+llcrQqWc/jPg6PkMPu1BbliPUhs64+aq6J/RC
-	NhaVEcqa5Lybqn7J1UlwZ748=
-Received: from mail.blacknight.com (ip-84-203-196-66.broadband.digiweb.ie [84.203.196.66])
-	by smtp-out0101.titan.email (Postfix) with ESMTPA id 20583A0049;
-	Fri, 17 Jan 2025 13:03:59 +0000 (UTC)
-Feedback-ID: :mgorman@techsingularity.net:techsingularity.net:flockmailId
-From: Mel Gorman <mgorman@techsingularity.net>
-To: Kees Cook <kees@kernel.org>
-Cc: Daniel Micay <danielmicay@gmail.com>,
-	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Mel Gorman <mgorman@techsingularity.net>
-Subject: [PATCH 1/3] mm: security: Move hardened usercopy under 'Kernel hardening options'
-Date: Fri, 17 Jan 2025 13:03:35 +0000
-Message-ID: <20250117130337.4716-2-mgorman@techsingularity.net>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250117130337.4716-1-mgorman@techsingularity.net>
-References: <20250117130337.4716-1-mgorman@techsingularity.net>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dHjdNyLa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1737121499;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HEKKhsO2kOL/qF9SHnIE9a8dcD47/tUh4wLid3vzvOo=;
+	b=dHjdNyLax0qZVxM9TIJC6GF6oJJeIcbVv3BEyemoowgxe3PJIrBsA7l8Ktyvd5P5emCgVd
+	PEHTgRd538zCRI+sHUdDKDRqRcoBmxgg9z/A3YMmE2j0ehxAnOuOGW6bEz99LM1Akwt8ut
+	zuGD+qxG2M8Y9BO54zSvwAuyaSxxx+Y=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-68-IIKVm3vDP1afX_TDP7ECwg-1; Fri, 17 Jan 2025 08:44:58 -0500
+X-MC-Unique: IIKVm3vDP1afX_TDP7ECwg-1
+X-Mimecast-MFC-AGG-ID: IIKVm3vDP1afX_TDP7ECwg
+Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-467b19b5641so42993661cf.3
+        for <linux-hardening@vger.kernel.org>; Fri, 17 Jan 2025 05:44:57 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737121497; x=1737726297;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=HEKKhsO2kOL/qF9SHnIE9a8dcD47/tUh4wLid3vzvOo=;
+        b=LjuQhgAs0b6kKYZeTWlADc31DZn0G3/mpGCh3r/lzaMeU7bZQVHf/93ZmofkZ1Wsd0
+         BmJhnY+ojhTGnAp8U7oQYfVNR53o7ErrPYDMtKgW/0DvAbF0HOyOLdroyXGQfAYqy8E8
+         jnvJ/ucfaLzyxsk8u0KN8/n3KYPHDA4Lyycl6fviQueHGIO4slcxUxfER2qjmv4K9++A
+         YLQ11v0gyNsvwW1PewoYNBCyBAyVlZDtFsQ2YbMlHj3LW89p0SGum4S2fuxNsnHP4vaX
+         qaeP5ayOfNDAYISx4rd4g+A7fiW+ZEanCRNgZDoAvfiqtud15c/Ie+PQNLH9x70fu+bh
+         /AQg==
+X-Forwarded-Encrypted: i=1; AJvYcCUycmg+X7bca8z96rjMVbfe2b38CL3y6vgiA4wGtc6UsVvqC++IMLjEeJECmFs6S27x9AOgbcmH+TAhI3ntw7E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwTBfIQg/62NN/2/EShyyUcEt9K/GV8lyJOks2UCApqDc0yvtux
+	w/HAa0r5SDVch1mxurmw40ncKFTn9D1Eq06XkcyrJZ1+Vh2NkaOOPjUjMc62eJnwaO1qHquwFLY
+	XyFhZko1Rzy2B8IMNo2l8l2xFswbxRBRrKoscobGb7UNas6zELm2BujSDfA7ZHO3MNA==
+X-Gm-Gg: ASbGncvsd6lrKz8hcDTJ9wDohX8+S+FUhh0h79SKBMPXCf1X1XMe5a78MKNwV11xXCB
+	byp/ltu/Z7mUevXtwBSC8YygMwuwuBONQdph/TCRqkbv7dRhNcVe8BUXnYv/gwPhbXfZn/LHhMb
+	YjY6V4l4E4A6pYezikB+NnKUXtMZj24E0S9Y3srsnL84DLE7lalWypgup+of8NoUnVMEGkCqqzM
+	12bnI7lmpNIAE2/6KxS4H+SkKxm+bvJlWMwhxJeLPjC2Y9FdkT23te0Fu08ylDvZJeZQqn7USqX
+	cv3hweTZCdzflrpYYoyj1uNrM/bTSDQUO4+8SxaKLw==
+X-Received: by 2002:a05:622a:1387:b0:467:674d:237f with SMTP id d75a77b69052e-46e12ad5f7bmr40519331cf.11.1737121496638;
+        Fri, 17 Jan 2025 05:44:56 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHmIl4MCDkHkFsxi8fUyXS99BtrKRZsY+6w06Ii3eQgKuqou3xcsKirOxy10aWGIFujuL9O5w==
+X-Received: by 2002:a05:622a:1387:b0:467:674d:237f with SMTP id d75a77b69052e-46e12ad5f7bmr40518371cf.11.1737121496270;
+        Fri, 17 Jan 2025 05:44:56 -0800 (PST)
+Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-46e1042ef63sm11228641cf.71.2025.01.17.05.44.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jan 2025 05:44:55 -0800 (PST)
+From: Valentin Schneider <vschneid@redhat.com>
+To: Dave Hansen <dave.hansen@intel.com>, linux-kernel@vger.kernel.org,
+ x86@kernel.org, virtualization@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linux-riscv@lists.infradead.org, linux-perf-users@vger.kernel.org,
+ xen-devel@lists.xenproject.org, kvm@vger.kernel.org,
+ linux-arch@vger.kernel.org, rcu@vger.kernel.org,
+ linux-hardening@vger.kernel.org, linux-mm@kvack.org,
+ linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
+ bcm-kernel-feedback-list@broadcom.com
+Cc: Peter Zijlstra <peterz@infradead.org>, Juergen Gross <jgross@suse.com>,
+ Ajay Kaher <ajay.kaher@broadcom.com>, Alexey Makhalov
+ <alexey.amakhalov@broadcom.com>, Russell King <linux@armlinux.org.uk>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Paul
+ Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
+ Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
+ <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander
+ Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
+ <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
+ <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, Boris
+ Ostrovsky <boris.ostrovsky@oracle.com>, Josh Poimboeuf
+ <jpoimboe@kernel.org>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+ Sean Christopherson <seanjc@google.com>, Paolo Bonzini
+ <pbonzini@redhat.com>, Andy Lutomirski <luto@kernel.org>, Arnd Bergmann
+ <arnd@arndb.de>, Frederic Weisbecker <frederic@kernel.org>, "Paul E.
+ McKenney" <paulmck@kernel.org>, Jason Baron <jbaron@akamai.com>, Steven
+ Rostedt <rostedt@goodmis.org>, Ard Biesheuvel <ardb@kernel.org>, Neeraj
+ Upadhyay <neeraj.upadhyay@kernel.org>, Joel Fernandes
+ <joel@joelfernandes.org>, Josh Triplett <josh@joshtriplett.org>, Boqun
+ Feng <boqun.feng@gmail.com>, Uladzislau Rezki <urezki@gmail.com>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Lai Jiangshan
+ <jiangshanlai@gmail.com>, Zqiang <qiang.zhang1211@gmail.com>, Juri Lelli
+ <juri.lelli@redhat.com>, Clark Williams <williams@redhat.com>, Yair
+ Podemsky <ypodemsk@redhat.com>, Tomas Glozar <tglozar@redhat.com>, Vincent
+ Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann
+ <dietmar.eggemann@arm.com>, Ben Segall <bsegall@google.com>, Mel Gorman
+ <mgorman@suse.de>, Kees Cook <kees@kernel.org>, Andrew Morton
+ <akpm@linux-foundation.org>, Christoph Hellwig <hch@infradead.org>, Shuah
+ Khan <shuah@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, Miguel
+ Ojeda <ojeda@kernel.org>, Alice Ryhl <aliceryhl@google.com>, "Mike
+ Rapoport (Microsoft)" <rppt@kernel.org>, Samuel Holland
+ <samuel.holland@sifive.com>, Rong Xu <xur@google.com>, Nicolas Saenz
+ Julienne <nsaenzju@redhat.com>, Geert Uytterhoeven <geert@linux-m68k.org>,
+ Yosry Ahmed <yosryahmed@google.com>, "Kirill A. Shutemov"
+ <kirill.shutemov@linux.intel.com>, "Masami Hiramatsu (Google)"
+ <mhiramat@kernel.org>, Jinghao Jia <jinghao7@illinois.edu>, Luis
+ Chamberlain <mcgrof@kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
+ Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: Re: [PATCH v4 26/30] x86,tlb: Make __flush_tlb_global()
+ noinstr-compliant
+In-Reply-To: <52311c3d-83cf-4dc4-bbcb-5fbca8eb249c@intel.com>
+References: <20250114175143.81438-1-vschneid@redhat.com>
+ <20250114175143.81438-27-vschneid@redhat.com>
+ <52311c3d-83cf-4dc4-bbcb-5fbca8eb249c@intel.com>
+Date: Fri, 17 Jan 2025 14:44:42 +0100
+Message-ID: <xhsmh5xmdh7w5.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-F-Verdict: SPFVALID
-X-Titan-Src-Out: 1737119039409530807.9138.3900322166364608842@prod-euc1-smtp-out1002.
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.4 cv=UdNXSrSN c=1 sm=1 tr=0 ts=678a553f
-	a=jU4EnjUUC1PH4wSjvv7Pww==:117 a=jU4EnjUUC1PH4wSjvv7Pww==:17
-	a=CEWIc4RMnpUA:10 a=R_Myd5XaAAAA:8 a=KkbEisfxgXDdCi-76G0A:9
-	a=L2g4Dz8VuBQ37YGmWQah:22
-X-Virus-Scanned: ClamAV using ClamSMTP
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: 2Czpy1NQq_E-JbZPlR2QmHbUtcR076_witsmA32YocY_1737121497
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain
 
-There is a submenu for 'Kernel hardening options' under "Security".
-Move HARDENED_USERCOPY under the hardening options as it is clearly
-related.
+On 14/01/25 13:45, Dave Hansen wrote:
+> On 1/14/25 09:51, Valentin Schneider wrote:
+>> +	cr4 = this_cpu_read(cpu_tlbstate.cr4);
+>> +	asm volatile("mov %0,%%cr4": : "r" (cr4 ^ X86_CR4_PGE) : "memory");
+>> +	asm volatile("mov %0,%%cr4": : "r" (cr4) : "memory");
+>> +	/*
+>> +	 * In lieu of not having the pinning crap, hard fail if CR4 doesn't
+>> +	 * match the expected value. This ensures that anybody doing dodgy gets
+>> +	 * the fallthrough check.
+>> +	 */
+>> +	BUG_ON(cr4 != this_cpu_read(cpu_tlbstate.cr4));
+>
+> Let's say someone managed to write to cpu_tlbstate.cr4 where they
+> cleared one of the pinned bits.
+>
+> Before this patch, CR4 pinning would WARN_ONCE() about it pretty quickly
+> and also reset the cleared bits.
+>
+> After this patch, the first native_flush_tlb_global() can clear pinned
+> bits, at least until native_write_cr4() gets called the next time. That
+> seems like it'll undermine CR4 pinning at least somewhat.
+>
 
-Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
----
- security/Kconfig           | 12 ------------
- security/Kconfig.hardening | 16 ++++++++++++++++
- 2 files changed, 16 insertions(+), 12 deletions(-)
+The BUG_ON() should still catch any pinned bit mishandling, however...
 
-diff --git a/security/Kconfig b/security/Kconfig
-index 28e685f53bd1..fe7346dc4bc3 100644
---- a/security/Kconfig
-+++ b/security/Kconfig
-@@ -159,18 +159,6 @@ config LSM_MMAP_MIN_ADDR
- 	  this low address space will need the permission specific to the
- 	  systems running LSM.
- 
--config HARDENED_USERCOPY
--	bool "Harden memory copies between kernel and userspace"
--	imply STRICT_DEVMEM
--	help
--	  This option checks for obviously wrong memory regions when
--	  copying memory to/from the kernel (via copy_to_user() and
--	  copy_from_user() functions) by rejecting memory ranges that
--	  are larger than the specified heap object, span multiple
--	  separately allocated pages, are not on the process stack,
--	  or are part of the kernel text. This prevents entire classes
--	  of heap overflow exploits and similar kernel memory exposures.
--
- config FORTIFY_SOURCE
- 	bool "Harden common str/mem functions against buffer overflows"
- 	depends on ARCH_HAS_FORTIFY_SOURCE
-diff --git a/security/Kconfig.hardening b/security/Kconfig.hardening
-index c9d5ca3d8d08..00e6e2ed0c43 100644
---- a/security/Kconfig.hardening
-+++ b/security/Kconfig.hardening
-@@ -279,6 +279,22 @@ config ZERO_CALL_USED_REGS
- 
- endmenu
- 
-+menu "String manipulation"
-+
-+config HARDENED_USERCOPY
-+	bool "Harden memory copies between kernel and userspace"
-+	imply STRICT_DEVMEM
-+	help
-+	  This option checks for obviously wrong memory regions when
-+	  copying memory to/from the kernel (via copy_to_user() and
-+	  copy_from_user() functions) by rejecting memory ranges that
-+	  are larger than the specified heap object, span multiple
-+	  separately allocated pages, are not on the process stack,
-+	  or are part of the kernel text. This prevents entire classes
-+	  of heap overflow exploits and similar kernel memory exposures.
-+
-+endmenu
-+
- menu "Hardening of kernel data structures"
- 
- config LIST_HARDENED
--- 
-2.43.0
+> What keeps native_write_cr4() from being noinstr-compliant now? Is it
+> just the WARN_ONCE()?
+>
+
+I don't think that's even an issue since __WARN_printf() wraps the print in
+instrumentation_{begin,end}(). In v3 I made native_write_cr4() noinstr and
+added a non-noinstr wrapper to be used in existing callsites.
+
+AFAICT if acceptable we could make the whole thing noinstr and stick with
+that; Peter, is there something I missed that made you write the handmade
+noinstr CR4 RMW?
 
