@@ -1,111 +1,141 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 589AA1F7066;
-	Fri, 17 Jan 2025 06:14:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAC801F754C
+	for <linux-hardening@vger.kernel.org>; Fri, 17 Jan 2025 08:42:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737094443; cv=none; b=LeOnjXC6BW9oKJ/OXB5hFxyCFf90koaUwQERZzeJowJtyWsA63jaaNuqtAYuMGgyDxiyvrFwSAUywqYkRfRBiTHNpmmATbmVrp+QxR4y6stNZpMfYV+ixkQkTMMl7ioOzTrvHP3rG2FHKTMk2O3FseVtEfcdoNeiFAa+NLH6V1o=
+	t=1737103364; cv=none; b=NQB4STkWTCrz4X+RdsGAs/CCRbqzA7NDp4ZSVTWS8l/1adbo+LGrBn4Kv2SeLjZ1zjZP/pEBAyXXCjvohAGlYqGpL+HAx9tHc2HeqWv3w6wu96omagtlo7WmFT19aSafC+8NgDS+lKqe96leK+0HqcIBZmAMbmY8qs13DwWjg68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737094443; c=relaxed/simple;
-	bh=sz6DETrCSuVIvrFoZOEWFxSk1K1oBhDlzfT3ft3RyFw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ggc0Whs9OBMlcdpEy1DmRXMet8yMdm2DEwg1sECl0SsGs1R2TQ6h8DgAewdU5zvGfmE9mEVfqXM9CDVUdzlnlBSYp8IFI8kEZzyo8rxRf5mJVZ4v9OHr9RVdVpbmHhEp485JhGByW8XEQfoQ9WN7T8mMODtkaFMqJJ3E1i/R07Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=be+G5E78; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1737103364; c=relaxed/simple;
+	bh=C0pXPebYk/Z6eKCj51xDuC/4vVpAywT2Dl8KQgqFL5o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BGMrBlr8ZFFbL8dKtvXv3nKa79Yv4zZ63a/VzuMaT+7ZsWL5TmcOX478ZlUu5noI8PauDz3fdsMQFZCkY30MTlRs/rLaaabqEDjTcRdeb7NE/oKnCTm69NO5ebuvkpgWVyqyUa531BACLjZuBHrYKDDE+UlFSmLpmhrsn+PdaT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SPOQhju5; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="be+G5E78"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1737094441; x=1768630441;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=sz6DETrCSuVIvrFoZOEWFxSk1K1oBhDlzfT3ft3RyFw=;
-  b=be+G5E78Jipr5ROAC7SLfIbR+LTynvBANVC71oGmVWBaOUx/L+ILOvZk
-   OICZ4kvuaCUb4NP9lh956YmzioXC8nFWvJBwyVPh9TP5tqpdl1S8viHGH
-   XekaXN8osU+ytdoxz/b5hEGEBhbgErzB9eO9CGcrmx6Njug5z9gSMNvxq
-   lo0PilP2yeDgxHhT2dSfS3W7rjLErTYKVV5OG6f+Eqs8q+v3eET/JzBuO
-   JbwnhX7P793ysyPoMpkxwJX3r8vLmJtIxRskmeoSPrbgiq4gxw2oONDNa
-   znMK8Am1TQ0L3GH/j+Ja49DqZoffiAOUdc/5t2a4DWwtta1Yy1UMVTxoV
-   A==;
-X-CSE-ConnectionGUID: obhMP+xnSX2BTul1KB3t6Q==
-X-CSE-MsgGUID: lWFpuPbNTBOliBDohCJaOg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="48933799"
-X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="48933799"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2025 22:14:00 -0800
-X-CSE-ConnectionGUID: OtmeHGkZRIi1ujQghhg20Q==
-X-CSE-MsgGUID: tFe52pjKRT2DEsEbmXSIYw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,211,1732608000"; 
-   d="scan'208";a="106263542"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by fmviesa010.fm.intel.com with ESMTP; 16 Jan 2025 22:13:55 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tYfc9-000Spr-1E;
-	Fri, 17 Jan 2025 06:13:53 +0000
-Date: Fri, 17 Jan 2025 14:13:22 +0800
-From: kernel test robot <lkp@intel.com>
-To: Duje =?utf-8?Q?Mihanovi=C4=87?= via B4 Relay <devnull+duje.mihanovic.skole.hr@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Lubomir Rintel <lkundrak@v3.sk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-	Gregory Clement <gregory.clement@bootlin.com>,
-	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-	Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc: Paul Gazzillo <paul@pgazz.com>,
-	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
-	oe-kbuild-all@lists.linux.dev, David Wronek <david@mainlining.org>,
-	Karel Balej <balejk@matfyz.cz>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-hardening@vger.kernel.org, phone-devel@vger.kernel.org,
-	~postmarketos/upstreaming@lists.sr.ht,
-	Duje =?utf-8?Q?Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
-Subject: Re: [PATCH v14 2/4] arm64: Kconfig.platforms: Add config for Marvell
- PXA1908 platform
-Message-ID: <202501171330.0mw1PLZh-lkp@intel.com>
-References: <20250115-pxa1908-lkml-v14-2-847d24f3665a@skole.hr>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SPOQhju5"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-385ddcfc97bso1466087f8f.1
+        for <linux-hardening@vger.kernel.org>; Fri, 17 Jan 2025 00:42:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1737103361; x=1737708161; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=nCOF/7DWf6/+p38Tf4t2GS4pCPMHx5hroCn7XUZPVyc=;
+        b=SPOQhju5nDUu6OQf62tWeUTlGM3NdSVT6alHlibQpwTiGhEZi7DtmbQOWPuTDzvtl7
+         mmvWG78J1Nee4lGffNYJETYiNj49sFtNf7/phQRxChho4b4YJtiSHxNXQPuODbO5ZdFL
+         +TrKFPGsVPiIYRfhN1pC4UZnSsIZVsSS0WFhMp0Lbu460zdnOy+9ENocDq3OVHBpSTup
+         myc1KjglBcTOzbMKPECnkB5lCwpq5c5Fedtf52L//qi8uOrPoxp9a3ZAv0d/3wpul1Fj
+         qTYXeoAIlGtw5NAoufdIYmcuHvtcZGC8Bor/6FEYcYjeSBgjgfqULRDWqVNdRXrJhm4F
+         FB1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737103361; x=1737708161;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nCOF/7DWf6/+p38Tf4t2GS4pCPMHx5hroCn7XUZPVyc=;
+        b=dQCUFLWx8LDi/CZKP7RnymgDAHZ2em7rcU1FLr/iK/BxU5kgZtkDruvUzz3QEilJ2d
+         9J4tlJ2fpCa5Zo5rwhajB5nXAEIZL5BBCgAVwmcvVATfCYZlmWeoVtt+1yMnIupFGY1k
+         tFCMJk0hP1qkuaP/bvcQSiz2jY4f4OnR7Q/mc47FVf2aF8RTGGXRt3lcMDev8A7ctCBV
+         6LHQlTZvZKiSSIGYvVohFkNP+6TAzo6FLYLQWxTcCdtqTFUY4I8iN9xUhjkX+0niqj7x
+         hDb7tr15OzV7kcNYp8qE0yXPb1ZEgqHvTLyNh/wfYELrLwjxeFtcvTE9GjEbUEzBikhZ
+         K12g==
+X-Gm-Message-State: AOJu0YxpCserCyZcNNX/EpTfVsf6lT2QDR7SIWlL3tqCAth+izbDn5LT
+	RQ6p4DO/s5Itxd92Q70Vh1TdCRWCz0bOXIN8rb6WIjGV1vPziXqhiLb4Z8ypPl4=
+X-Gm-Gg: ASbGncumJLW7ZMaMhrAmZzPq3LBiDvEVHckX5D5ptTC+XEeDQ6kfi6VZjb9KZLfQ5mZ
+	NMxprCfhz3YRG3xTf/JzC6+mFti0hO+G4BswQgq3am9cpuz4nbSA2X2BBlVq8gwWyuQOR1x8tBI
+	qcj0XYFOQuI9Hxrb9D4m+bh3sg9wIIPDjKSGTy0EqBJ0T01QVtltBuQEqXmHELXLsLoBVoG9IGv
+	7BVmiOjbQuES6yV+HjMD4IkmisbXVg7qpg8JsiXwks01UFh6xpMCxT3U9AvswNpa7jfFRet7A==
+X-Google-Smtp-Source: AGHT+IE0g2r4mNuufMYa1SF7rV4BL9Qgy7k7aHEbEjsbW6jZHbIv/diqdIIXdLchTvnzZ3HNocPLRQ==
+X-Received: by 2002:a05:6000:156c:b0:385:dedb:a156 with SMTP id ffacd0b85a97d-38bf5655e66mr1298777f8f.6.1737103361295;
+        Fri, 17 Jan 2025 00:42:41 -0800 (PST)
+Received: from localhost.localdomain ([2a00:f29:229:ba3:d022:662:690:4bb8])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-437c74c6179sm85902655e9.22.2025.01.17.00.42.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jan 2025 00:42:40 -0800 (PST)
+From: Eugen Hristev <eugen.hristev@linaro.org>
+To: kees@kernel.org
+Cc: linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Eugen Hristev <eugen.hristev@linaro.org>
+Subject: [PATCH] pstore/zone: rewrite some comments for better understanding
+Date: Fri, 17 Jan 2025 10:42:28 +0200
+Message-ID: <20250117084228.3218024-1-eugen.hristev@linaro.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250115-pxa1908-lkml-v14-2-847d24f3665a@skole.hr>
+Content-Transfer-Encoding: 8bit
 
-Hi Duje,
+Rewrite some comments to make it more clear and easier to understand.
 
-kernel test robot noticed the following build warnings:
+Signed-off-by: Eugen Hristev <eugen.hristev@linaro.org>
+---
+ fs/pstore/zone.c | 19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
 
-[auto build test WARNING on 5bc55a333a2f7316b58edc7573e8e893f7acb532]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Duje-Mihanovi-via-B4-Relay/dt-bindings-marvell-Document-PXA1908-SoC-and-samsung-coreprimevelte/20250116-044350
-base:   5bc55a333a2f7316b58edc7573e8e893f7acb532
-patch link:    https://lore.kernel.org/r/20250115-pxa1908-lkml-v14-2-847d24f3665a%40skole.hr
-patch subject: [PATCH v14 2/4] arm64: Kconfig.platforms: Add config for Marvell PXA1908 platform
-config: arm64-kismet-CONFIG_I2C_GPIO-CONFIG_VIDEO_MMP_CAMERA-0-0 (https://download.01.org/0day-ci/archive/20250117/202501171330.0mw1PLZh-lkp@intel.com/config)
-reproduce: (https://download.01.org/0day-ci/archive/20250117/202501171330.0mw1PLZh-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202501171330.0mw1PLZh-lkp@intel.com/
-
-kismet warnings: (new ones prefixed by >>)
->> kismet: WARNING: unmet direct dependencies detected for I2C_GPIO when selected by VIDEO_MMP_CAMERA
-   WARNING: unmet direct dependencies detected for I2C_GPIO
-     Depends on [n]: I2C [=y] && HAS_IOMEM [=y] && (GPIOLIB [=n] || COMPILE_TEST [=n])
-     Selected by [y]:
-     - VIDEO_MMP_CAMERA [=y] && MEDIA_SUPPORT [=y] && MEDIA_PLATFORM_SUPPORT [=y] && MEDIA_PLATFORM_DRIVERS [=y] && V4L_PLATFORM_DRIVERS [=y] && I2C [=y] && VIDEO_DEV [=y] && (ARCH_MMP [=y] || COMPILE_TEST [=n]) && COMMON_CLK [=y]
-
+diff --git a/fs/pstore/zone.c b/fs/pstore/zone.c
+index ceb5639a0629..5fa2fa2e7aa7 100644
+--- a/fs/pstore/zone.c
++++ b/fs/pstore/zone.c
+@@ -214,7 +214,7 @@ static int psz_zone_write(struct pstore_zone *zone,
+ 		atomic_set(&zone->buffer->datalen, wlen + off);
+ 	}
+ 
+-	/* avoid to damage old records */
++	/* avoid damaging old records */
+ 	if (!is_on_panic() && !atomic_read(&pstore_zone_cxt.recovered))
+ 		goto dirty;
+ 
+@@ -249,7 +249,7 @@ static int psz_zone_write(struct pstore_zone *zone,
+ 
+ 	return 0;
+ dirty:
+-	/* no need to mark dirty if going to try next zone */
++	/* no need to mark it dirty if going to try next zone */
+ 	if (wcnt == -ENOMSG)
+ 		return -ENOMSG;
+ 	atomic_set(&zone->dirty, true);
+@@ -378,7 +378,7 @@ static int psz_kmsg_recover_meta(struct psz_context *cxt)
+ 	struct timespec64 time = { };
+ 	unsigned long i;
+ 	/*
+-	 * Recover may on panic, we can't allocate any memory by kmalloc.
++	 * Recover may happen on panic, we can't allocate any memory by kmalloc.
+ 	 * So, we use local array instead.
+ 	 */
+ 	char buffer_header[sizeof(*buf) + sizeof(*hdr)] = {0};
+@@ -856,11 +856,11 @@ static int notrace psz_record_write(struct pstore_zone *zone,
+ 
+ 	/**
+ 	 * psz_zone_write will set datalen as start + cnt.
+-	 * It work if actual data length lesser than buffer size.
+-	 * If data length greater than buffer size, pmsg will rewrite to
+-	 * beginning of zone, which make buffer->datalen wrongly.
++	 * It works if actual data length is lesser than buffer size.
++	 * If data length is greater than buffer size, pmsg will rewrite to
++	 * the beginning of the zone, which makes buffer->datalen wrong.
+ 	 * So we should reset datalen as buffer size once actual data length
+-	 * greater than buffer size.
++	 * is greater than buffer size.
+ 	 */
+ 	if (is_full_data) {
+ 		atomic_set(&zone->buffer->datalen, zone->buffer_size);
+@@ -878,8 +878,9 @@ static int notrace psz_pstore_write(struct pstore_record *record)
+ 		atomic_set(&cxt->on_panic, 1);
+ 
+ 	/*
+-	 * if on panic, do not write except panic records
+-	 * Fix case that panic_write prints log which wakes up console backend.
++	 * If on panic, do not write anything except panic records.
++	 * Fix the case when panic_write prints log that wakes up
++	 * console backend.
+ 	 */
+ 	if (is_on_panic() && record->type != PSTORE_TYPE_DMESG)
+ 		return -EBUSY;
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.43.0
+
