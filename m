@@ -1,76 +1,77 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE40F19F121
-	for <linux-hardening@vger.kernel.org>; Fri, 17 Jan 2025 16:53:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7FBE19E7F9
+	for <linux-hardening@vger.kernel.org>; Fri, 17 Jan 2025 17:00:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737132823; cv=none; b=BunHQTK7DrzlaoNWBJkHEn8a5YBdRZnB3pZeQ239vrGZPVKPSe4kp9uThsnjwpDlfI1wkm2tCoQXrauq6WUG6ObrwnhrQCNUo9Sjtmf145LmgqL2ZX6SJL3FTGwCxUuvessk2MmbtH8ybNjk0qkBGMbGwjwsTMR6918+TzZf8FA=
+	t=1737133239; cv=none; b=RGWNmkk3DaohyYt9FUrLPt2JSfW+x24kWRh/72kXgI1W3haLjL/E+aR8/Xr3+5U5Mzgc9tmjWkIfkEoz8Ukzj+yqDTlguBqJUSemwm6KXJ/hI1s0yNkqIlJlS/U4hv13/XxsHosV6lsWXKg/FtA01YtfITXB8lYb3I2/0iZvkh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737132823; c=relaxed/simple;
-	bh=N/IFo0/H4hlssGmiFiddM6Zrvy7F7bLkhW3DK1UInsM=;
+	s=arc-20240116; t=1737133239; c=relaxed/simple;
+	bh=2zB9z7u7dclAVOo2ULVj1p74p7CXPvWK/XjFblVO3P8=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Zomb1IWHKw0l44kqfp5Fw+sxRYi/fph4u9qDYWHrvEbKl4U9y9zbqbDHXHbXcwIXSrbNp2BhDvE7xRpdHI6Q9icyHRWEUWdtBIgOcVkkR0i6gw/IQ9NWA8PwtnqJIvFsngXbOTEQzmDhWpwsLNhnpa+ouG7ytvwPZAGfFkovpy4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=V0dBQJd5; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:Content-Type; b=Nv15PkmgmBKSrlM5UtJbv+TWeXahEB7a9JtR6ed0BQyJU6/K3EW7xdxLrKLnWtOp77NzwK/q8si2ZL3yDQFMYdw6RIfiavsVrqzerRp86K3ibgJIzE+PVDOtbXI6x3X+mdQx0MoI49XqFm4fDkKs5ACe0ra95vUMSuE07LM1c4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=i4MejUZ6; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V0dBQJd5"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i4MejUZ6"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1737132819;
+	s=mimecast20190719; t=1737133236;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=N/IFo0/H4hlssGmiFiddM6Zrvy7F7bLkhW3DK1UInsM=;
-	b=V0dBQJd5ur6m4dbljPrSx9mml55oOXhJv5n2nrpoTP/dGiXyEZreptuKkrk69VubdBIlnI
-	cQMJRNjg5OWVLMMtR/itKfcPLdMVyRBG4zH2ZyFpmaH3qUAbePTAWtjKjOpLkRh4YdvvcB
-	MC1AeIhEo+7mnnQW0URzC+ll8VBVeEY=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=2zB9z7u7dclAVOo2ULVj1p74p7CXPvWK/XjFblVO3P8=;
+	b=i4MejUZ6WmxXZxh2uPO4VWtJxweEGVCHpPxsqy2zLae42WshVn/gkSC/jGjgdY9nc12BcH
+	IiaDZIi14B2ZahOYO0EaVNglwI7T9juUXpRE4Cg4Q89YjKrvSgZM1M73v51ImunCbwQe7F
+	uhl103ZrTegnrqT2PUHKKyP2u+py/u8=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-221-A8PrHVR2MCm2xl6_Bi4ITA-1; Fri, 17 Jan 2025 11:53:38 -0500
-X-MC-Unique: A8PrHVR2MCm2xl6_Bi4ITA-1
-X-Mimecast-MFC-AGG-ID: A8PrHVR2MCm2xl6_Bi4ITA
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-38a2140a400so1882832f8f.0
-        for <linux-hardening@vger.kernel.org>; Fri, 17 Jan 2025 08:53:38 -0800 (PST)
+ us-mta-368-6Ckyq3J5OQyUhSy8z-qx0Q-1; Fri, 17 Jan 2025 12:00:35 -0500
+X-MC-Unique: 6Ckyq3J5OQyUhSy8z-qx0Q-1
+X-Mimecast-MFC-AGG-ID: 6Ckyq3J5OQyUhSy8z-qx0Q
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-436248d1240so11215205e9.0
+        for <linux-hardening@vger.kernel.org>; Fri, 17 Jan 2025 09:00:35 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737132817; x=1737737617;
+        d=1e100.net; s=20230601; t=1737133234; x=1737738034;
         h=content-transfer-encoding:mime-version:message-id:date:references
          :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zS2KlTiZnGu6aQKTYj9yMifWHTI073WZ1gonGb0ZMuU=;
-        b=jzP78haZBeBC2NuSLLKh3YZ3LVbsLI43z/45Ir3PEKSNm9WR0iOfyX+pb7BWQz8rbN
-         ku/QPZsVVxm56Cm0zIPYHIa4kepqU00M41zJbFD3hulzKmNE/WOyZoeD10RYP99SWFLO
-         Z2Osv9wA85H9KLh/eTs8XxpFCxojg7zudB83MpDiPcEkQgVXwe2AIRgEVDEfwv7SGofk
-         kDEoeekFgPmMF6jcDNvOzcOrw5YAVEGqVUimRexb8q+TrXuFYr+8D6n3vf5nxknAWL1O
-         Dv/2aKSO74FeyDAcruhppn856h/7S/6ah5TuguMYD/dESwwMF6mPzlJFoGxiw/Pza0P5
-         6P8g==
-X-Forwarded-Encrypted: i=1; AJvYcCVVW5mzr59Vl+g5lJPgj8bJgH3ASWW+ENaj6iyEkDYD7Xq4zkomCZDw8/K2eV0e2qatTpH/YVpHNwJ3Qhzu6gM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxiPj+RpURjhDX1IdgPcMXdBGEL9YVfgONOBTENyxbIJ402ApC8
-	Whi5ED8EGA+iRSZZY/ePwCcii5zx1X7OMxcYZi3OeLbWjakbMiQ14CqSThCdAUS1/nuM1KXTRFy
-	gPteOEFqnkFu8OI7XPJmCWX3kE8PBqwsExPXV6t78tQrJrf3NmdEoUNGKYi4r0km65w==
-X-Gm-Gg: ASbGnctk0oIIQzTAgLjnU3g7Dwa9ITG1nCm4W1KDG+G3Ju7MRGgkr4jGul5Vxsre4Ii
-	2pnUUgV2FTL2NYJ+R69XZHS/+S5KPATZWhEfJXE67TmmpZVzMVVoMd2LZtRWBt8UjHu5XZhkLeU
-	hH21rLlkowGQA/WodE3BnuipBVS+9PQbxjTG/Fu6urK30dLk9e9Y/v6FEVYBMDjZGa1IoCfbiyq
-	We4e8j0D1Xq3hnpwyPnWOTWZzKqxOwbgM+byiMosusTZGoe+NBoLloSImJPZ8zVnonzNu7EGo8c
-	B2r9DWB8B8BjxzL3Gl+E7BD+7R6VTZF93+E8aGNd+g==
-X-Received: by 2002:a5d:6da4:0:b0:38b:e32a:10a6 with SMTP id ffacd0b85a97d-38bf57a9932mr3394925f8f.41.1737132817348;
-        Fri, 17 Jan 2025 08:53:37 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGgg/tn25OOVaMMDMlg+FUQ1oxKEYFZYFbhCFaXXhI5w4vXLbPHJsNwkMnyD4aTZ+GRHXAAGg==
-X-Received: by 2002:a5d:6da4:0:b0:38b:e32a:10a6 with SMTP id ffacd0b85a97d-38bf57a9932mr3394815f8f.41.1737132816637;
-        Fri, 17 Jan 2025 08:53:36 -0800 (PST)
+        bh=XGvTpyNczRvA62kOrzrUa3TgLdL0aqoCD5BBfkghzOs=;
+        b=vFnP3mNJzuM1k0EQU6ZuxT/IBlOx6WyUCXuXwUIIbw2/GVRojP/Fg9klgdQxkL34pW
+         bF9UYeePW26zSScD6+QK1vS7ykaWKoib06+QEhWfE5bcrZrTKxVO0ktaSxuOHA+rn48H
+         W1uHrvsUf94lEa7BmELRfinS99uFAYIZ6M0VGREUkRg2+fmITVL1JYMrNKDscYFG2wrX
+         YKfwLhsRcuM5bULFRSgJLM8z403J5HXrr3Xe4/3thQ8tZy/8ZTIeZdufwkOG1iAdLSjR
+         1gnZVH6wVAiAc//8KdhC89a6cwgJLeFrMgTJVU1lE0coRadGBJEO7P35rZ9BhL6exndp
+         dH2A==
+X-Forwarded-Encrypted: i=1; AJvYcCXuQgBVPIZeQiNqkGXtDLBXF68xxnj/nJJ79DAulJY5mvSYHniO7WS5vR5ES2ZJM0ZGn5BRdCpCqDyElEZqSNQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwApylJMzZcw1FQ7Q7GIfCDZqULYKT8+jNbhC+YHFbqV4FrDySY
+	i1MqJEg2s72dm8K2D+6FlmYMJvfnxQ6jn8JqadSdLkTrAwJjRxyYqXMbJFtkGZFPxnhhCQCrD3S
+	/9qGNpxOCylDUag64k2rwUUpeiwS6H+AuKBTsRypuCNWIVmz/r0oQKtyFV7TPXkHYug==
+X-Gm-Gg: ASbGnctgjsul2QnYmo9gImkOoBsM1bHTyiAgL7h8zFmsH8Kt7+6kQBNOEtfZkoQLlJY
+	6v8B8mVqylgXdHMS9bZmgVPfLViyfwJA17nZ93MYHsrJWP8erYtENa+NmX63kRAjNDGl5M1f2EO
+	3m6UugpwScUyhb+OfheEGEtkXO9e4/nPEFpdRQ5gSZ843EYkp2qBYzPnCcy5mBzvONHZ87k88d+
+	ZDEd55d2q64IhGHW4Ffd9ye6e2KVtpotxhIJLLUT4bG1359Nr8RKp/xpafhTmT5gUGbFhbeoRJa
+	UU613NLtY6EidvRiBbghUZt0f8EFImKu2+xy9vrutg==
+X-Received: by 2002:a05:600c:3585:b0:434:9936:c823 with SMTP id 5b1f17b1804b1-438913ef6d0mr38316905e9.18.1737133234119;
+        Fri, 17 Jan 2025 09:00:34 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFagDashmtCONr1e0mPjwxw78kvxvfLwflTa5M+wz0yje22vE2jx/prTk0zBbNIWdtqILag4w==
+X-Received: by 2002:a05:600c:3585:b0:434:9936:c823 with SMTP id 5b1f17b1804b1-438913ef6d0mr38315575e9.18.1737133233397;
+        Fri, 17 Jan 2025 09:00:33 -0800 (PST)
 Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38bf3221db2sm2893201f8f.29.2025.01.17.08.53.33
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-437c7499932sm99166875e9.7.2025.01.17.09.00.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2025 08:53:36 -0800 (PST)
+        Fri, 17 Jan 2025 09:00:32 -0800 (PST)
 From: Valentin Schneider <vschneid@redhat.com>
-To: Jann Horn <jannh@google.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
- virtualization@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
- linux-perf-users@vger.kernel.org, xen-devel@lists.xenproject.org,
- kvm@vger.kernel.org, linux-arch@vger.kernel.org, rcu@vger.kernel.org,
+To: Uladzislau Rezki <urezki@gmail.com>
+Cc: Jann Horn <jannh@google.com>, linux-kernel@vger.kernel.org,
+ x86@kernel.org, virtualization@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linux-riscv@lists.infradead.org, linux-perf-users@vger.kernel.org,
+ xen-devel@lists.xenproject.org, kvm@vger.kernel.org,
+ linux-arch@vger.kernel.org, rcu@vger.kernel.org,
  linux-hardening@vger.kernel.org, linux-mm@kvack.org,
  linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
  bcm-kernel-feedback-list@broadcom.com, Juergen Gross <jgross@suse.com>,
@@ -117,14 +118,14 @@ Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
  Tiezhu Yang <yangtiezhu@loongson.cn>
 Subject: Re: [PATCH v4 29/30] x86/mm, mm/vmalloc: Defer
  flush_tlb_kernel_range() targeting NOHZ_FULL CPUs
-In-Reply-To: <CAG48ez3H8OVP1GxBLdmFgusvT1gQhwu2SiXbgi8T9uuCYVK52w@mail.gmail.com>
+In-Reply-To: <Z4qBMqcMg16p57av@pc636>
 References: <20250114175143.81438-1-vschneid@redhat.com>
  <20250114175143.81438-30-vschneid@redhat.com>
  <CAG48ez1Mh+DOy0ysOo7Qioxh1W7xWQyK9CLGNU9TGOsLXbg=gQ@mail.gmail.com>
  <xhsmh34hhh37q.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <CAG48ez3H8OVP1GxBLdmFgusvT1gQhwu2SiXbgi8T9uuCYVK52w@mail.gmail.com>
-Date: Fri, 17 Jan 2025 17:53:33 +0100
-Message-ID: <xhsmhzfjpfkky.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <Z4qBMqcMg16p57av@pc636>
+Date: Fri, 17 Jan 2025 18:00:30 +0100
+Message-ID: <xhsmhwmetfk9d.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -132,14 +133,13 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: u9HELU6KeM3tLoSR5_mXLWbxtmikqQmBECUpsF1Nl_Q_1737132818
+X-Mimecast-MFC-PROC-ID: s6t8m0P7t4s9sRquq37hDj8Q28bA-mf7LJ9Ob2n6Kvk_1737133234
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On 17/01/25 16:52, Jann Horn wrote:
-> On Fri, Jan 17, 2025 at 4:25=E2=80=AFPM Valentin Schneider <vschneid@redh=
-at.com> wrote:
+On 17/01/25 17:11, Uladzislau Rezki wrote:
+> On Fri, Jan 17, 2025 at 04:25:45PM +0100, Valentin Schneider wrote:
 >> On 14/01/25 19:16, Jann Horn wrote:
 >> > On Tue, Jan 14, 2025 at 6:51=E2=80=AFPM Valentin Schneider <vschneid@r=
 edhat.com> wrote:
@@ -167,13 +167,7 @@ nmap'd
 >> I'm not sure if that would be a problem (not an mm expert, please do
 >> correct me) - looking at vmap_pages_range(), flush_cache_vmap() isn't
 >> deferred anyway.
->
-> flush_cache_vmap() is about stuff like flushing data caches on
-> architectures with virtually indexed caches; that doesn't do TLB
-> maintenance. When you look for its definition on x86 or arm64, you'll
-> see that they use the generic implementation which is simply an empty
-> inline function.
->
+>>
 >> So after vmapping something, I wouldn't expect isolated CPUs to have
 >> invalid TLB entries for the newly vmapped page.
 >>
@@ -184,41 +178,32 @@ e
 >> "danger zone").
 >>
 >> Does that make sense?
->
-> The design idea wrt TLB flushes in the vmap code is that you don't do
-> TLB flushes when you unmap stuff or when you map stuff, because doing
-> TLB flushes across the entire system on every vmap/vunmap would be a
-> bit costly; instead you just do batched TLB flushes in between, in
-> __purge_vmap_area_lazy().
->
-> In other words, the basic idea is that you can keep calling vmap() and
-> vunmap() a bunch of times without ever doing TLB flushes until you run
-> out of virtual memory in the vmap region; then you do one big TLB
-> flush, and afterwards you can reuse the free virtual address space for
-> new allocations again.
->
-> So if you "defer" that batched TLB flush for CPUs that are not
-> currently running in the kernel, I think the consequence is that those
-> CPUs may end up with incoherent TLB state after a reallocation of the
-> virtual address space.
+>>
+> Probably i am missing something and need to have a look at your patches,
+> but how do you guarantee that no-one map same are that you defer for TLB
+> flushing?
 >
 
-Ah, gotcha, thank you for laying this out! In which case yes, any vmalloc
-that occurred while an isolated CPU was NOHZ-FULL can be an issue if said
-CPU accesses it during early entry;
+That's the cool part: I don't :')
 
-> Actually, I think this would mean that your optimization is disallowed
-> at least on arm64 - I'm not sure about the exact wording, but arm64
-> has a "break before make" rule that forbids conflicting writable
-> address translations or something like that.
+For deferring instruction patching IPIs, I (well Josh really) managed to
+get instrumentation to back me up and catch any problematic area.
+
+I looked into getting something similar for vmalloc region access in
+.noinstr code, but I didn't get anywhere. I even tried using emulated
+watchpoints on QEMU to watch the whole vmalloc range, but that went about
+as well as you could expect.
+
+That left me with staring at code. AFAICT the only vmap'd thing that is
+accessed during early entry is the task stack (CONFIG_VMAP_STACK), which
+itself cannot be freed until the task exits - thus can't be subject to
+invalidation when a task is entering kernelspace.
+
+If you have any tracing/instrumentation suggestions, I'm all ears (eyes?).
+
+> As noted by Jann, we already defer a TLB flushing by backing freed areas
+> until certain threshold and just after we cross it we do a flush.
 >
-
-On the bright side of things, arm64 is not as bad as x86 when it comes to
-IPI'ing isolated CPUs :-) I'll add that to my notes, thanks!
-
-> (I said "until you run out of virtual memory in the vmap region", but
-> that's not actually true - see the comment above lazy_max_pages() for
-> an explanation of the actual heuristic. You might be able to tune that
-> a bit if you'd be significantly happier with less frequent
-> interruptions, or something along those lines.)
+> --
+> Uladzislau Rezki
 
