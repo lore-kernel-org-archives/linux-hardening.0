@@ -1,141 +1,227 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAC801F754C
-	for <linux-hardening@vger.kernel.org>; Fri, 17 Jan 2025 08:42:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76BAB1F9AAD
+	for <linux-hardening@vger.kernel.org>; Fri, 17 Jan 2025 09:47:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737103364; cv=none; b=NQB4STkWTCrz4X+RdsGAs/CCRbqzA7NDp4ZSVTWS8l/1adbo+LGrBn4Kv2SeLjZ1zjZP/pEBAyXXCjvohAGlYqGpL+HAx9tHc2HeqWv3w6wu96omagtlo7WmFT19aSafC+8NgDS+lKqe96leK+0HqcIBZmAMbmY8qs13DwWjg68=
+	t=1737107279; cv=none; b=fraD6TS7b/w4ILQJjMU9DUZzvUTX+vd5isNkWakKJQfE0OEXs1FhOFg4X1bWvnvvFcfiMLmhS+6Xolc6c8SOBM386w+B8rkkWMHQHdM+8iwPIBQqLwuJGAqTZlywsHs9sq+RNjvtjd0brQEOTFPx09b/X3OSY14HtwLTxAZihkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737103364; c=relaxed/simple;
-	bh=C0pXPebYk/Z6eKCj51xDuC/4vVpAywT2Dl8KQgqFL5o=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BGMrBlr8ZFFbL8dKtvXv3nKa79Yv4zZ63a/VzuMaT+7ZsWL5TmcOX478ZlUu5noI8PauDz3fdsMQFZCkY30MTlRs/rLaaabqEDjTcRdeb7NE/oKnCTm69NO5ebuvkpgWVyqyUa531BACLjZuBHrYKDDE+UlFSmLpmhrsn+PdaT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SPOQhju5; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1737107279; c=relaxed/simple;
+	bh=F2gqeuB0aLhR/bzKUvYunwZ5S0liP9KO05qoNp3Tqo0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=t+H44NJ/TVNRptXVMS8TqZec2Y9tj4UvGWgmxn5HmeTlzeXOHilJdHERydJBL9jwm34dz+CxQOgmxp60OvR43INVYTYEpKvLZa1OR8s6dpWV5OwZx/aHJMmbZgmF9jWiTHDHJVgWWy8uFa0o5MxQT2VT83ColBucBwtqnTfUv0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=A6tK/8Kh; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SPOQhju5"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-385ddcfc97bso1466087f8f.1
-        for <linux-hardening@vger.kernel.org>; Fri, 17 Jan 2025 00:42:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1737103361; x=1737708161; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=nCOF/7DWf6/+p38Tf4t2GS4pCPMHx5hroCn7XUZPVyc=;
-        b=SPOQhju5nDUu6OQf62tWeUTlGM3NdSVT6alHlibQpwTiGhEZi7DtmbQOWPuTDzvtl7
-         mmvWG78J1Nee4lGffNYJETYiNj49sFtNf7/phQRxChho4b4YJtiSHxNXQPuODbO5ZdFL
-         +TrKFPGsVPiIYRfhN1pC4UZnSsIZVsSS0WFhMp0Lbu460zdnOy+9ENocDq3OVHBpSTup
-         myc1KjglBcTOzbMKPECnkB5lCwpq5c5Fedtf52L//qi8uOrPoxp9a3ZAv0d/3wpul1Fj
-         qTYXeoAIlGtw5NAoufdIYmcuHvtcZGC8Bor/6FEYcYjeSBgjgfqULRDWqVNdRXrJhm4F
-         FB1w==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A6tK/8Kh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1737107276;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VvR9KfuLK5jT/0k1YGBwcApH+9cF5PsvBxGMV+DYi4c=;
+	b=A6tK/8KhRQ9XMbSHXn7b5FCof71m9Nz66+F3lTZOpjmBhLvLfDkuafP9csPHxi6ibgXlmA
+	odXr377rBr7gxIYAXJCILlv4Qo6Fgqt8l31LZtzZy5NQMwudsySR0rPzqoyDucmtwib/t3
+	QSY23AtGRzyG9yN5iLngePVHHe8gxJY=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-48-tM358F_bPvmK3SBeqLKntQ-1; Fri, 17 Jan 2025 04:47:55 -0500
+X-MC-Unique: tM358F_bPvmK3SBeqLKntQ-1
+X-Mimecast-MFC-AGG-ID: tM358F_bPvmK3SBeqLKntQ
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4361efc9d1fso13364035e9.2
+        for <linux-hardening@vger.kernel.org>; Fri, 17 Jan 2025 01:47:54 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737103361; x=1737708161;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=nCOF/7DWf6/+p38Tf4t2GS4pCPMHx5hroCn7XUZPVyc=;
-        b=dQCUFLWx8LDi/CZKP7RnymgDAHZ2em7rcU1FLr/iK/BxU5kgZtkDruvUzz3QEilJ2d
-         9J4tlJ2fpCa5Zo5rwhajB5nXAEIZL5BBCgAVwmcvVATfCYZlmWeoVtt+1yMnIupFGY1k
-         tFCMJk0hP1qkuaP/bvcQSiz2jY4f4OnR7Q/mc47FVf2aF8RTGGXRt3lcMDev8A7ctCBV
-         6LHQlTZvZKiSSIGYvVohFkNP+6TAzo6FLYLQWxTcCdtqTFUY4I8iN9xUhjkX+0niqj7x
-         hDb7tr15OzV7kcNYp8qE0yXPb1ZEgqHvTLyNh/wfYELrLwjxeFtcvTE9GjEbUEzBikhZ
-         K12g==
-X-Gm-Message-State: AOJu0YxpCserCyZcNNX/EpTfVsf6lT2QDR7SIWlL3tqCAth+izbDn5LT
-	RQ6p4DO/s5Itxd92Q70Vh1TdCRWCz0bOXIN8rb6WIjGV1vPziXqhiLb4Z8ypPl4=
-X-Gm-Gg: ASbGncumJLW7ZMaMhrAmZzPq3LBiDvEVHckX5D5ptTC+XEeDQ6kfi6VZjb9KZLfQ5mZ
-	NMxprCfhz3YRG3xTf/JzC6+mFti0hO+G4BswQgq3am9cpuz4nbSA2X2BBlVq8gwWyuQOR1x8tBI
-	qcj0XYFOQuI9Hxrb9D4m+bh3sg9wIIPDjKSGTy0EqBJ0T01QVtltBuQEqXmHELXLsLoBVoG9IGv
-	7BVmiOjbQuES6yV+HjMD4IkmisbXVg7qpg8JsiXwks01UFh6xpMCxT3U9AvswNpa7jfFRet7A==
-X-Google-Smtp-Source: AGHT+IE0g2r4mNuufMYa1SF7rV4BL9Qgy7k7aHEbEjsbW6jZHbIv/diqdIIXdLchTvnzZ3HNocPLRQ==
-X-Received: by 2002:a05:6000:156c:b0:385:dedb:a156 with SMTP id ffacd0b85a97d-38bf5655e66mr1298777f8f.6.1737103361295;
-        Fri, 17 Jan 2025 00:42:41 -0800 (PST)
-Received: from localhost.localdomain ([2a00:f29:229:ba3:d022:662:690:4bb8])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-437c74c6179sm85902655e9.22.2025.01.17.00.42.39
+        d=1e100.net; s=20230601; t=1737107274; x=1737712074;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=VvR9KfuLK5jT/0k1YGBwcApH+9cF5PsvBxGMV+DYi4c=;
+        b=iAPootJboSHJLaw2J9Yz1vxNuEkN9THiSOxN2W6MLuMuNRcDk+8BN8xcL+uq5UbOk6
+         u7TIwsz5MrCH8XC8YaK4bqYZJWqm2W1vKZKVsuDgTqrQa757RNds3vfKK1Ch7UXQBtSE
+         Od7mMNKkR42j2ZyiYlMODqDwarXmPA4fUOIt7rkeGoqyKLtd4IYCAqjzCtN7LycFnYHp
+         Mj7C0qVZbQgiieVtT0FU+z2z0JLWMAtj3HnPdGaVfWE9wLqfeFupUCgnBW8+LYMqB6OJ
+         xVVTB/qSlyG/Mq9IjRn1ZmCfmCugGJW4YE6N8ZYPr2YstVYO0C587B5MwPV14juE2unx
+         HRzA==
+X-Forwarded-Encrypted: i=1; AJvYcCX/jTDI3PxgLF4fEMUPgi0SqFmWQyqo2KLw4PKBE17fNWvaPd66AcEOOH6QR2pdvqHzmxNTQtbIdPOUtzvNAvA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNltWZHx3Igw0ps0B1VM9LSJSnfGK5P++sA4SXYdNLc/YCDtmI
+	PwEmU7QWN9fgtDeUH5h4JSwSCupXFRjAJvUETBi+0Y73iOhzB12iqBMj0oEmD8qlOMFZAQGXewe
+	SqOp/hhMoo0q9Z7bmM/stB+0WvMXbfcNa9x4vrbWTB7Eg6Ofe4vVW52Q9xTRgy5FOcQ==
+X-Gm-Gg: ASbGncsyA4n1tj0PMv7P6MFr2w4HDRlBWy7OPGtZpAo9dwxdtXeMLVxIp3RZzLhnXPx
+	SF0aOn5ebRd8qa8eixYOdRqQThxfyz/L4fg/C951tevGCwHfIzNuMeYKqr2sEif0p9QaCFVMyT4
+	aBy4PUErv9DUMlSTVDvgBJE3XyyrT6jWh99lHzRAAZ2GQN45dhCQZVKIqTFZ2J8mnkonVwZghM0
+	ej1VlcDRaRdmkYvAMJnbydRq9XYbVgiM9mbJg+CwUeW7nF0dDfTmfoy1aHvz3ZviI+Cp5OlXZBM
+	YYucJGi5Q2KgGThR74Haj2O9R3V0hOEMR0aK7u882g==
+X-Received: by 2002:a05:600c:9a3:b0:434:fa73:a907 with SMTP id 5b1f17b1804b1-4389191b819mr16313735e9.13.1737107273764;
+        Fri, 17 Jan 2025 01:47:53 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHToHDxXT5KMOIEW1byUZUSn/LchRidR5pJg2ZFHbUxu07B2Q/njknWrWkjTXhDYHkp8NfwWQ==
+X-Received: by 2002:a05:600c:9a3:b0:434:fa73:a907 with SMTP id 5b1f17b1804b1-4389191b819mr16313255e9.13.1737107273291;
+        Fri, 17 Jan 2025 01:47:53 -0800 (PST)
+Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438904131f5sm27135155e9.11.2025.01.17.01.47.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2025 00:42:40 -0800 (PST)
-From: Eugen Hristev <eugen.hristev@linaro.org>
-To: kees@kernel.org
-Cc: linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Eugen Hristev <eugen.hristev@linaro.org>
-Subject: [PATCH] pstore/zone: rewrite some comments for better understanding
-Date: Fri, 17 Jan 2025 10:42:28 +0200
-Message-ID: <20250117084228.3218024-1-eugen.hristev@linaro.org>
-X-Mailer: git-send-email 2.43.0
+        Fri, 17 Jan 2025 01:47:52 -0800 (PST)
+From: Valentin Schneider <vschneid@redhat.com>
+To: Sean Christopherson <seanjc@google.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+ virtualization@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+ linux-perf-users@vger.kernel.org, xen-devel@lists.xenproject.org,
+ kvm@vger.kernel.org, linux-arch@vger.kernel.org, rcu@vger.kernel.org,
+ linux-hardening@vger.kernel.org, linux-mm@kvack.org,
+ linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
+ bcm-kernel-feedback-list@broadcom.com, Peter Zijlstra
+ <peterz@infradead.org>, Nicolas Saenz Julienne <nsaenzju@redhat.com>,
+ Juergen Gross <jgross@suse.com>, Ajay Kaher <ajay.kaher@broadcom.com>,
+ Alexey Makhalov <alexey.amakhalov@broadcom.com>, Russell King
+ <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will
+ Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui
+ <kernel@xen0n.name>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
+ Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Thomas
+ Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav
+ Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, "H.
+ Peter Anvin" <hpa@zytor.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
+ <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
+ <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, Boris
+ Ostrovsky <boris.ostrovsky@oracle.com>, Josh Poimboeuf
+ <jpoimboe@kernel.org>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+ Paolo Bonzini <pbonzini@redhat.com>, Andy Lutomirski <luto@kernel.org>,
+ Arnd Bergmann <arnd@arndb.de>, Frederic Weisbecker <frederic@kernel.org>,
+ "Paul E. McKenney" <paulmck@kernel.org>, Jason Baron <jbaron@akamai.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Ard Biesheuvel <ardb@kernel.org>,
+ Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, Joel Fernandes
+ <joel@joelfernandes.org>, Josh Triplett <josh@joshtriplett.org>, Boqun
+ Feng <boqun.feng@gmail.com>, Uladzislau Rezki <urezki@gmail.com>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Lai Jiangshan
+ <jiangshanlai@gmail.com>, Zqiang <qiang.zhang1211@gmail.com>, Juri Lelli
+ <juri.lelli@redhat.com>, Clark Williams <williams@redhat.com>, Yair
+ Podemsky <ypodemsk@redhat.com>, Tomas Glozar <tglozar@redhat.com>, Vincent
+ Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann
+ <dietmar.eggemann@arm.com>, Ben Segall <bsegall@google.com>, Mel Gorman
+ <mgorman@suse.de>, Kees Cook <kees@kernel.org>, Andrew Morton
+ <akpm@linux-foundation.org>, Christoph Hellwig <hch@infradead.org>, Shuah
+ Khan <shuah@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, Miguel
+ Ojeda <ojeda@kernel.org>, Alice Ryhl <aliceryhl@google.com>, "Mike
+ Rapoport (Microsoft)" <rppt@kernel.org>, Samuel Holland
+ <samuel.holland@sifive.com>, Rong Xu <xur@google.com>, Geert Uytterhoeven
+ <geert@linux-m68k.org>, Yosry Ahmed <yosryahmed@google.com>, "Kirill A.
+ Shutemov" <kirill.shutemov@linux.intel.com>, "Masami Hiramatsu (Google)"
+ <mhiramat@kernel.org>, Jinghao Jia <jinghao7@illinois.edu>, Luis
+ Chamberlain <mcgrof@kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
+ Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: Re: [PATCH v4 25/30] context_tracking,x86: Defer kernel text
+ patching IPIs
+In-Reply-To: <Z4bTlZkqihaAyGb4@google.com>
+References: <20250114175143.81438-1-vschneid@redhat.com>
+ <20250114175143.81438-26-vschneid@redhat.com>
+ <Z4bTlZkqihaAyGb4@google.com>
+Date: Fri, 17 Jan 2025 10:47:49 +0100
+Message-ID: <xhsmhed11hiuy.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: LaHUEdwwjQbfq03-CqHcPDS8shTVVkADPoMyqKOmMQY_1737107274
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain
 
-Rewrite some comments to make it more clear and easier to understand.
+On 14/01/25 13:13, Sean Christopherson wrote:
+> On Tue, Jan 14, 2025, Valentin Schneider wrote:
+>> text_poke_bp_batch() sends IPIs to all online CPUs to synchronize
+>> them vs the newly patched instruction. CPUs that are executing in userspace
+>> do not need this synchronization to happen immediately, and this is
+>> actually harmful interference for NOHZ_FULL CPUs.
+>
+> ...
+>
+>> This leaves us with static keys and static calls.
+>
+> ...
+>
+>> @@ -2317,11 +2334,20 @@ static void text_poke_bp_batch(struct text_poke_loc *tp, unsigned int nr_entries
+>>       * First step: add a int3 trap to the address that will be patched.
+>>       */
+>>      for (i = 0; i < nr_entries; i++) {
+>> -		tp[i].old = *(u8 *)text_poke_addr(&tp[i]);
+>> -		text_poke(text_poke_addr(&tp[i]), &int3, INT3_INSN_SIZE);
+>> +		void *addr = text_poke_addr(&tp[i]);
+>> +
+>> +		/*
+>> +		 * There's no safe way to defer IPIs for patching text in
+>> +		 * .noinstr, record whether there is at least one such poke.
+>> +		 */
+>> +		if (is_kernel_noinstr_text((unsigned long)addr))
+>> +			cond = NULL;
+>
+> Maybe pre-check "cond", especially if multiple ranges need to be checked?  I.e.
+>
+>               if (cond && is_kernel_noinstr_text(...))
+>> +
+>> +		tp[i].old = *((u8 *)addr);
+>> +		text_poke(addr, &int3, INT3_INSN_SIZE);
+>>      }
+>>
+>> -	text_poke_sync();
+>> +	__text_poke_sync(cond);
+>>
+>>      /*
+>>       * Second step: update all but the first byte of the patched range.
+>
+> ...
+>
+>> +/**
+>> + * is_kernel_noinstr_text - checks if the pointer address is located in the
+>> + *                    .noinstr section
+>> + *
+>> + * @addr: address to check
+>> + *
+>> + * Returns: true if the address is located in .noinstr, false otherwise.
+>> + */
+>> +static inline bool is_kernel_noinstr_text(unsigned long addr)
+>> +{
+>> +	return addr >= (unsigned long)__noinstr_text_start &&
+>> +	       addr < (unsigned long)__noinstr_text_end;
+>> +}
+>
+> This doesn't do the right thing for modules, which matters because KVM can be
+> built as a module on x86, and because context tracking understands transitions
+> to GUEST mode, i.e. CPUs that are running in a KVM guest will be treated as not
+> being in the kernel, and thus will have IPIs deferred.  If KVM uses a static key
+> or branch between guest_state_enter_irqoff() and guest_state_exit_irqoff(), the
+> patching code won't wait for CPUs to exit guest mode, i.e. KVM could theoretically
+> use the wrong static path.
+>
 
-Signed-off-by: Eugen Hristev <eugen.hristev@linaro.org>
----
- fs/pstore/zone.c | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+AFAICT guest_state_{enter,exit}_irqoff() are only used in noinstr functions
+and thus such a static key usage should at the very least be caught and
+warned about by objtool - when this isn't built as a module.
 
-diff --git a/fs/pstore/zone.c b/fs/pstore/zone.c
-index ceb5639a0629..5fa2fa2e7aa7 100644
---- a/fs/pstore/zone.c
-+++ b/fs/pstore/zone.c
-@@ -214,7 +214,7 @@ static int psz_zone_write(struct pstore_zone *zone,
- 		atomic_set(&zone->buffer->datalen, wlen + off);
- 	}
- 
--	/* avoid to damage old records */
-+	/* avoid damaging old records */
- 	if (!is_on_panic() && !atomic_read(&pstore_zone_cxt.recovered))
- 		goto dirty;
- 
-@@ -249,7 +249,7 @@ static int psz_zone_write(struct pstore_zone *zone,
- 
- 	return 0;
- dirty:
--	/* no need to mark dirty if going to try next zone */
-+	/* no need to mark it dirty if going to try next zone */
- 	if (wcnt == -ENOMSG)
- 		return -ENOMSG;
- 	atomic_set(&zone->dirty, true);
-@@ -378,7 +378,7 @@ static int psz_kmsg_recover_meta(struct psz_context *cxt)
- 	struct timespec64 time = { };
- 	unsigned long i;
- 	/*
--	 * Recover may on panic, we can't allocate any memory by kmalloc.
-+	 * Recover may happen on panic, we can't allocate any memory by kmalloc.
- 	 * So, we use local array instead.
- 	 */
- 	char buffer_header[sizeof(*buf) + sizeof(*hdr)] = {0};
-@@ -856,11 +856,11 @@ static int notrace psz_record_write(struct pstore_zone *zone,
- 
- 	/**
- 	 * psz_zone_write will set datalen as start + cnt.
--	 * It work if actual data length lesser than buffer size.
--	 * If data length greater than buffer size, pmsg will rewrite to
--	 * beginning of zone, which make buffer->datalen wrongly.
-+	 * It works if actual data length is lesser than buffer size.
-+	 * If data length is greater than buffer size, pmsg will rewrite to
-+	 * the beginning of the zone, which makes buffer->datalen wrong.
- 	 * So we should reset datalen as buffer size once actual data length
--	 * greater than buffer size.
-+	 * is greater than buffer size.
- 	 */
- 	if (is_full_data) {
- 		atomic_set(&zone->buffer->datalen, zone->buffer_size);
-@@ -878,8 +878,9 @@ static int notrace psz_pstore_write(struct pstore_record *record)
- 		atomic_set(&cxt->on_panic, 1);
- 
- 	/*
--	 * if on panic, do not write except panic records
--	 * Fix case that panic_write prints log which wakes up console backend.
-+	 * If on panic, do not write anything except panic records.
-+	 * Fix the case when panic_write prints log that wakes up
-+	 * console backend.
- 	 */
- 	if (is_on_panic() && record->type != PSTORE_TYPE_DMESG)
- 		return -EBUSY;
--- 
-2.43.0
+I never really thought about noinstr sections for modules; I can get
+objtool to warn about a non-noinstr allowed key being used in
+e.g. vmx_vcpu_enter_exit() just by feeding it the vmx.o:
+
+arch/x86/kvm/vmx/vmx.o: warning: objtool: vmx_vcpu_enter_exit.isra.0+0x0: dummykey: non-RO static key usage in noinstr
+
+...but that requires removing a lot of code first because objtool stops
+earlier in its noinstr checks as it hits functions it doesn't have full
+information on, e.g.
+
+arch/x86/kvm/vmx/vmx.o: warning: objtool: vmx_vcpu_enter_exit+0x21c: call to __ct_user_enter() leaves .noinstr.text section
+
+__ct_user_enter() *is* noinstr, but you don't get that from just the header prototype.
+
+> I don't expect this to ever cause problems in practice, because patching code in
+> KVM's VM-Enter/VM-Exit path that has *functional* implications, while CPUs are
+> actively running guest code, would be all kinds of crazy.  But I do think we
+> should plug the hole.
+>
+> If this issue is unique to KVM, i.e. is not a generic problem for all modules (I
+> assume module code generally isn't allowed in the entry path, even via NMI?), one
+> idea would be to let KVM register its noinstr section for text poking.
 
