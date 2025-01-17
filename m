@@ -1,57 +1,54 @@
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+Received: from mail-oo1-f48.google.com (mail-oo1-f48.google.com [209.85.161.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CCF51A264A
-	for <linux-hardening@vger.kernel.org>; Fri, 17 Jan 2025 19:35:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A48A1A9B2C
+	for <linux-hardening@vger.kernel.org>; Fri, 17 Jan 2025 20:15:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737142532; cv=none; b=BzFzAEH071lCGJMcNuCpCjaqHDWtZ0mezmVGF7IDdzdrcrDiMxHZNIigtIjimRMZerobTOwonXGIK3bkf189P/8QdWhq2dfPCx1vjkuka1wBKykhuDx338Bq+H0RqxthofPeuSjeZCQVtVG5LEaIc4ost32/EFjHp9gDjjd+aJI=
+	t=1737144926; cv=none; b=TZiZsz7vvgTV3ZJaoZHUWzSG2eiY8stuVTSTQPqv6t8X80tuMzvnyF1J/YypeJ4gxhSZ6iL6i+PzUbpRTk4tYneIFq9TH3SwET09rFmZXGiysbc6z/WdFMmupyo3zd34NWey5hSMrH/uTGHxkeyCxznjpalUw3lvpRsxZ6NuQjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737142532; c=relaxed/simple;
-	bh=xxSSWaLoPAy3N8uKIuLFr0NseHeAPlAOevUG1Hs7j28=;
+	s=arc-20240116; t=1737144926; c=relaxed/simple;
+	bh=Akx68EPp3QxPFV9VbYQBLGaRECiVB/V3fJMJGx83hVg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=r5wSjPhDbBaZjZhIbvZ1GqJ2zsNwmlLJdRMI1rLcUlZqfTXkryYta5SPND6hbsLA3gefSNMLn2bZD+NeLUy6pnD4z2sNSPgErthMNlCJzA4HgN6wQQ+z/XoEjPL292sCAYBHEqhA6Uy4wfRifx8IleUpw68v5d1c2Qd89+hKaso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LHVelLwc; arc=none smtp.client-ip=209.85.219.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=JM0qbg8uqg9Mpm39lv2Oh7JLWaPCYWggo+/mL9a5GJcXdnW66qfXTQo5RSYjHQ8P0lb7TWKwQ2skNsG4aDE6Aq1XvxuVisNwUFLoNZJOR84WFy/ZLSirP4IUWR/NOYzHTKZ9qpbfvBlX+g3qnmoe5XQZY0RqStKWW0OjeVd19oo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=XrmN/caM; arc=none smtp.client-ip=209.85.161.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LHVelLwc"
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6dcdd9a3e54so26112796d6.3
-        for <linux-hardening@vger.kernel.org>; Fri, 17 Jan 2025 11:35:30 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XrmN/caM"
+Received: by mail-oo1-f48.google.com with SMTP id 006d021491bc7-5f2e32b44dfso151880eaf.2
+        for <linux-hardening@vger.kernel.org>; Fri, 17 Jan 2025 12:15:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1737142530; x=1737747330; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1737144924; x=1737749724; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=l0NSKWvLWFeR1xeLGL0GyYR3i1t5ClvvGlKBcqjteoM=;
-        b=LHVelLwc34+Asg0WhpPD1TgSTV32SDbIxH/ckkxVg+pX7r+/XyOb22y7KVVjsUg0PZ
-         6dWlZsNjO1Q9GQA83T10VQkEwL4iF2S/Sln7w7kl2Wnjap05RCYdKvR92vGNEK32PqvO
-         agygiqPbcWgG8zBe4hXnnAFCY68iRhkH1mSTqot6O0mqtT/JjQnCiHpQo//JVW6CQzoa
-         V0BWutsmQnKTL5Ih+lJO19Cu9/c9DMAORGlqw0jRc+qPqjxghJY0QI3vIqRKxXW3j4Gs
-         eXML/wkA9X4lsEie8OxekYkFBmcaobVDvuxXVJe4HH7tIMp4/t55T4v5+BeCg8jVcH8x
-         efPg==
+        bh=hp9zLJvqXDsmT/YVqgMgXNRqVduI1VilfID2VFMHy6U=;
+        b=XrmN/caMAsCZwr480y2EyoefPb2N9mYFEmoGP6NtBCx1u5SPoyRjQJWYSXzhpzl/lt
+         Fu5gYiM9Li5tz++KOGn86KOeuCpF08PqwTZw+RgffFyUVX9ys7cOQ+F9cyJSHaJZXSZL
+         9I5dkOcvlNH/ZGart9cEFu+bJdFXmn0ZOMzdM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737142530; x=1737747330;
+        d=1e100.net; s=20230601; t=1737144924; x=1737749724;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=l0NSKWvLWFeR1xeLGL0GyYR3i1t5ClvvGlKBcqjteoM=;
-        b=HiDT0qWWKs5SqtbbLjrWN+VTB3hMUaRON5g9YK6aD45QEdZ5/jvSHWE7Qm9g8yvc+h
-         hrBpTZmbzZm7/i55OI3YRpC9LvYCGW5intDr2nZf480JUmaXPD8z/n+4OpT01i0agGJ2
-         Sb1Lqk5YhTPNIZgLn09YGm+Hkpy1mVcd886+npa0BPeo1MDiGd5p1cI/AvuHr7dneLeu
-         hUr7Zwpo8QjbEIx0oAiMF1Qotukr+qCL5j1xcLggqtIo4TZ6SBwu6wJlQ//qwSgWaplX
-         LyuBupUVs/Zk8/l9elfEg2vq5Ynd9GkO/Q/XsNsID9Z/twSmOLG64YFkvvYwM04XaDfS
-         aYMg==
-X-Forwarded-Encrypted: i=1; AJvYcCVdNZvntCPkh3Yup85pK96iaodA7P5dp8RNi8/w7fiFZIVjKb4FV2+WGgBuqgLVc1Kj2fj8hDT7OwVAJjz/bEg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwwGfG7YCzxkdJIXN0aID/vQ4EqvCrmRcf6vhrSMa54k5/Brt+b
-	V6NWLjZ+i8kWdusvPHwYpESCSqXy02EUiN2sV+CQkn95uboGHEL79D0BWlQn3yL/pQBsnEG8oSk
-	rRwl/RnmZ1c60U8xiop09cgHuJuvjr5snjzyj
-X-Gm-Gg: ASbGnctHMxPK2CPbjXNMXURH5efjk0+OcSDWEHMz1uK0zh7iVcCNvtdqpoxYLKOEq+/
-	8/3Uq8rPlVMqConpHy9BliSIyhCHzYSV2A4s=
-X-Google-Smtp-Source: AGHT+IEz+H9K4qcswyKJVr8f/V4dLAGWaZ2IEdJ98YGU1N84YtyCwzuFA8b/FUIFw2oIjZh1saRbCEf/T67kF78Sq4Q=
-X-Received: by 2002:ad4:5de1:0:b0:6d8:7e5d:ef1c with SMTP id
- 6a1803df08f44-6e1b2180fcbmr73609836d6.21.1737142529803; Fri, 17 Jan 2025
- 11:35:29 -0800 (PST)
+        bh=hp9zLJvqXDsmT/YVqgMgXNRqVduI1VilfID2VFMHy6U=;
+        b=pXHLEvIDKnuseS8WLLnl35kGHXdNtVPPo6VOfWHfle8a2Fjp7zdk57mUsv8n2MQ8VW
+         2SlAdUmvL1FuAH9HH/pYFIO1jDWLrZoHThDylMw0l0W4TaGDhn/+1wFPeU4bBmKt8vCo
+         7Z4FzSkdlX6+9DJYIdu3vkiqQ9/0EhJW5wQAfp/2osnf3rRu2OcPBimt+z3Hr5yMY8iP
+         P/dFtVTzu7pEey5Zp1DgPiWpxgQVTsNtQ2fKqXY1aT7OAhFg/QIbyBl22+GXBGd5bFAC
+         Yz6yCVW9jrCOUoZ55CmXKvuezckRSgL9zRtJn2ispx/W68bAheYXZs9I5W5Si0O5GkHf
+         tPnA==
+X-Forwarded-Encrypted: i=1; AJvYcCV6v1cpS4R9NxwK3gWsjHqnbLpSOmdkFmx09lMqFhkP6KrIGmzZpLDMQDFml6lvSKyVQS27/WhVZJRa6vOpmiE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzd/qEjjpFosa8uDa+uPitYbIGHdJ5jvVMWZkHwI4APNh1dAexV
+	mzKmyvZcR5JLWCwzFtK8Eo3l+uKv5mANyO44ePxd1hldV7E3V+M9RVQhT0JZn3FrsbF5NZCjjBV
+	5j3KRK7+plZfZetVx313VmE4C9Vz3mGdgaxq0
+X-Gm-Gg: ASbGncsQfVYhg2y7/Bh+JM/vznD9JLXuG1SJY2EYkr33yUYicCsBghHXXb4uk0Sn3Wb
+	ykzfZCEx5JKQfMV/sTx+AFrcSMwTDUkJJTQykVMF+219TFY7PmbKaqeYfLzRBORgkrkNoCn0=
+X-Google-Smtp-Source: AGHT+IHEiGZ03eQhEBIhf5BLtIbqWWBcvn9z4gLXJ+XfmzEQCNzjg8hVb4Vq5Q2pOuijlkAJjAklJOQqoxYk9yK9yHo=
+X-Received: by 2002:a05:6830:61cc:b0:71e:1849:5ed9 with SMTP id
+ 46e09a7af769-7249da5eb30mr838648a34.2.1737144924050; Fri, 17 Jan 2025
+ 12:15:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -64,14 +61,15 @@ References: <20241125202021.3684919-1-jeffxu@google.com> <20241125202021.3684919
  <CABi2SkXS9OOwP2BZGQOa=Pn+NoL1VmOJBJEn-6tWBBQwLtpYiw@mail.gmail.com>
  <5cf1601b-70c3-45bb-81ef-416d89c415c2@lucifer.local> <CABi2SkX--gf8XtzBd1G7wS6E=F51rFckP62V0GrONuXs1TCOcQ@mail.gmail.com>
  <7071878c-7857-4acd-ac27-f049cbc84de2@lucifer.local> <2e5de601da34342d8eb0d8319dcf81ff213c7ef0.camel@sipsolutions.net>
- <CAKbZUD1btTbeEht6W5MmhgtEJk3dg55cBpBtoDL0ieaL=23qeQ@mail.gmail.com> <CABi2SkWoNTd5sRJ7-7arPfutYZx6xi9iac0mXZyfzuVXuh1atA@mail.gmail.com>
-In-Reply-To: <CABi2SkWoNTd5sRJ7-7arPfutYZx6xi9iac0mXZyfzuVXuh1atA@mail.gmail.com>
-From: enh <enh@google.com>
-Date: Fri, 17 Jan 2025 14:35:18 -0500
-X-Gm-Features: AbW1kvYaXalMuVcN4fChMZ9gaCas0Qmcz-I2_lvsxGYgbIiFv-NPY4ujWyjJTzw
-Message-ID: <CAJgzZop04=7+13jjV_zDfJF4dyJ7tp-86G8_mRe=C=sBEp+z3Q@mail.gmail.com>
+ <CAKbZUD1btTbeEht6W5MmhgtEJk3dg55cBpBtoDL0ieaL=23qeQ@mail.gmail.com>
+ <CABi2SkWoNTd5sRJ7-7arPfutYZx6xi9iac0mXZyfzuVXuh1atA@mail.gmail.com> <CAJgzZop04=7+13jjV_zDfJF4dyJ7tp-86G8_mRe=C=sBEp+z3Q@mail.gmail.com>
+In-Reply-To: <CAJgzZop04=7+13jjV_zDfJF4dyJ7tp-86G8_mRe=C=sBEp+z3Q@mail.gmail.com>
+From: Jeff Xu <jeffxu@chromium.org>
+Date: Fri, 17 Jan 2025 12:15:12 -0800
+X-Gm-Features: AbW1kvbfX_Ez_y9xI_Jf2U6tPOlD28z0La4l01YzXYWsN_RQRxp1A3CG0IIWSyM
+Message-ID: <CABi2SkUwnQMqPGuQA855uifCr0AKBYN6j0i-k9g+WzRgsf4jww@mail.gmail.com>
 Subject: Re: [PATCH v4 1/1] exec: seal system mappings
-To: Jeff Xu <jeffxu@chromium.org>
+To: enh <enh@google.com>
 Cc: Pedro Falcato <pedro.falcato@gmail.com>, Benjamin Berg <benjamin@sipsolutions.net>, 
 	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Kees Cook <kees@kernel.org>, akpm@linux-foundation.org, 
 	jannh@google.com, torvalds@linux-foundation.org, 
@@ -91,112 +89,129 @@ Cc: Pedro Falcato <pedro.falcato@gmail.com>, Benjamin Berg <benjamin@sipsolution
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 17, 2025 at 1:20=E2=80=AFPM Jeff Xu <jeffxu@chromium.org> wrote=
-:
+On Fri, Jan 17, 2025 at 11:35=E2=80=AFAM enh <enh@google.com> wrote:
 >
-> On Thu, Jan 16, 2025 at 9:18=E2=80=AFAM Pedro Falcato <pedro.falcato@gmai=
-l.com> wrote:
+> On Fri, Jan 17, 2025 at 1:20=E2=80=AFPM Jeff Xu <jeffxu@chromium.org> wro=
+te:
 > >
-> > On Thu, Jan 16, 2025 at 5:02=E2=80=AFPM Benjamin Berg <benjamin@sipsolu=
-tions.net> wrote:
+> > On Thu, Jan 16, 2025 at 9:18=E2=80=AFAM Pedro Falcato <pedro.falcato@gm=
+ail.com> wrote:
 > > >
-> > > Hi Lorenzo,
-> > >
-> > > On Thu, 2025-01-16 at 15:48 +0000, Lorenzo Stoakes wrote:
-> > > > On Wed, Jan 15, 2025 at 12:20:59PM -0800, Jeff Xu wrote:
-> > > > > On Wed, Jan 15, 2025 at 11:46=E2=80=AFAM Lorenzo Stoakes
-> > > > > <lorenzo.stoakes@oracle.com> wrote:
+> > > On Thu, Jan 16, 2025 at 5:02=E2=80=AFPM Benjamin Berg <benjamin@sipso=
+lutions.net> wrote:
 > > > >
-> > > > [SNIP]
+> > > > Hi Lorenzo,
+> > > >
+> > > > On Thu, 2025-01-16 at 15:48 +0000, Lorenzo Stoakes wrote:
+> > > > > On Wed, Jan 15, 2025 at 12:20:59PM -0800, Jeff Xu wrote:
+> > > > > > On Wed, Jan 15, 2025 at 11:46=E2=80=AFAM Lorenzo Stoakes
+> > > > > > <lorenzo.stoakes@oracle.com> wrote:
 > > > > >
-> > > > > > I've made it abundantly clear that this (NACKed) series cannot =
-allow the
-> > > > > > kernel to be in a broken state even if a user sets flags to do =
-so.
+> > > > > [SNIP]
 > > > > > >
-> > > > > > This is because users might lack context to make this decision =
-and
-> > > > > > incorrectly do so, and now we ship a known-broken kernel.
+> > > > > > > I've made it abundantly clear that this (NACKed) series canno=
+t allow the
+> > > > > > > kernel to be in a broken state even if a user sets flags to d=
+o so.
+> > > > > > >
+> > > > > > > This is because users might lack context to make this decisio=
+n and
+> > > > > > > incorrectly do so, and now we ship a known-broken kernel.
+> > > > > > >
+> > > > > > > You are now suggesting disabling the !CRIU requirement. Which=
+ violates my
+> > > > > > > _requirements_ (not optional features).
+> > > > > > >
+> > > > > > Sure, I can add CRIU back.
 > > > > > >
-> > > > > > You are now suggesting disabling the !CRIU requirement. Which v=
-iolates my
-> > > > > > _requirements_ (not optional features).
-> > > > > >
-> > > > > Sure, I can add CRIU back.
+> > > > > > Are you fine with UML and gViso not working under this CONFIG ?
+> > > > > > UML/gViso doesn't use any KCONFIG like CRIU does.
 > > > > >
-> > > > > Are you fine with UML and gViso not working under this CONFIG ?
-> > > > > UML/gViso doesn't use any KCONFIG like CRIU does.
+> > > > > Yeah this is a concern, wouldn't we be able to catch UML with a f=
+lag?
+> > > > >
+> > > > > Apologies my fault for maybe not being totally up to date with th=
+is, but what
+> > > > > exactly was the gViso (is it gVisor actually?)
 > > > >
-> > > > Yeah this is a concern, wouldn't we be able to catch UML with a fla=
-g?
+> > > > UML is a separate architecture. It is a Linux kernel running as a
+> > > > userspace application on top of an unmodified host kernel.
 > > > >
-> > > > Apologies my fault for maybe not being totally up to date with this=
-, but what
-> > > > exactly was the gViso (is it gVisor actually?)
+> > > > So really, UML is a mostly weird userspace program for the purpose =
+of
+> > > > this discussion. And a pretty buggy one too--it got broken by rseq
+> > > > already.
+> > > >
+> > > > What UML now does is:
+> > > >  * Execute a tiny static binary
+> > > >  * map special "stub" code/data pages at the topmost userspace addr=
+ess
+> > > >    (replacing its stack)
+> > > >  * continue execution inside the "stub" pages
+> > > >  * unmap everything below the "stub" pages
+> > > >  * use the unmap'ed area for userspace application mappings
+> > > >
+> > > > I believe that the "unmap everything" step will fail with this feat=
+ure.
+> > > >
+> > > >
+> > > > Now, I am sure one can come up with solutions, e.g.:
+> > > >    1. Simply print an explanation if the unmap() fails
+> > > >    2. Find an address that is guaranteed to be below the VDSO and u=
+se a
+> > > >       smaller address space for the UML userspace.
+> > > >    3. Somehow tell the host kernel to not install the VDSO mappings
+> > > >    4. Add the host VDSO pages as a sealed VMA within UML to guard t=
+hem
+> > > >
+> > > > UML is a bit of a niche and I am not sure it is worth worrying abou=
+t it
+> > > > too much.
 > > >
-> > > UML is a separate architecture. It is a Linux kernel running as a
-> > > userspace application on top of an unmodified host kernel.
+> > > I've been absent from this patch series in general, but this gave me
+> > > an idea: what if we let userspace seal these mappings itself? Since
+> > > glibc is already sealing things, it might as well seal these?
+> > > And then systems that _do_ care about this would set the glibc tunabl=
+e
+> > > and deal with the breakage.
 > > >
-> > > So really, UML is a mostly weird userspace program for the purpose of
-> > > this discussion. And a pretty buggy one too--it got broken by rseq
-> > > already.
+> > > Is there something seriously wrong with this approach? Besides maybe
+> > > not having a super easy way to discover these mappings atm, I feel
+> > > like it would solve all of the policy issues people have been talking
+> > > about in these threads.
 > > >
-> > > What UML now does is:
-> > >  * Execute a tiny static binary
-> > >  * map special "stub" code/data pages at the topmost userspace addres=
-s
-> > >    (replacing its stack)
-> > >  * continue execution inside the "stub" pages
-> > >  * unmap everything below the "stub" pages
-> > >  * use the unmap'ed area for userspace application mappings
-> > >
-> > > I believe that the "unmap everything" step will fail with this featur=
-e.
-> > >
-> > >
-> > > Now, I am sure one can come up with solutions, e.g.:
-> > >    1. Simply print an explanation if the unmap() fails
-> > >    2. Find an address that is guaranteed to be below the VDSO and use=
- a
-> > >       smaller address space for the UML userspace.
-> > >    3. Somehow tell the host kernel to not install the VDSO mappings
-> > >    4. Add the host VDSO pages as a sealed VMA within UML to guard the=
-m
-> > >
-> > > UML is a bit of a niche and I am not sure it is worth worrying about =
-it
-> > > too much.
-> >
-> > I've been absent from this patch series in general, but this gave me
-> > an idea: what if we let userspace seal these mappings itself? Since
-> > glibc is already sealing things, it might as well seal these?
-> > And then systems that _do_ care about this would set the glibc tunable
-> > and deal with the breakage.
-> >
-> > Is there something seriously wrong with this approach? Besides maybe
-> > not having a super easy way to discover these mappings atm, I feel
-> > like it would solve all of the policy issues people have been talking
-> > about in these threads.
-> >
-> There are technical difficulties to seal vdso/vvar from the glibc
-> side. The dynamic linker lacks vdso/vvar mapping size information, and
-> architectural variations for vdso/vvar also means sealing from the
-> kernel side is a simpler solution. Adhemerval has more details in case
-> clarification is needed from the glibc side.
-
-as a maintainer of a different linux libc, i've long wanted a "tell me
-everything there is to know about this vma" syscall rather than having
-to parse /proc/maps...
-
-...but in this special case, is the vdso/vvar size ever anything other
-than "one page" in practice?
-
-> Additionally, uprobe mapping can't be sealed by the dynamic linker,
-> dynamic linker can only apply sealing during execve() and dlopen(),
-> uprobe mapping isn't created during those two calls.
+> > There are technical difficulties to seal vdso/vvar from the glibc
+> > side. The dynamic linker lacks vdso/vvar mapping size information, and
+> > architectural variations for vdso/vvar also means sealing from the
+> > kernel side is a simpler solution. Adhemerval has more details in case
+> > clarification is needed from the glibc side.
 >
-> -Jeff
+> as a maintainer of a different linux libc, i've long wanted a "tell me
+> everything there is to know about this vma" syscall rather than having
+> to parse /proc/maps...
 >
+That will be an interesting mm feature, i.e. query the vma information
+given an address.  ASLR might be a thing to consider, there are
+sandbox solutions to block the read on /proc/pid/maps, such as
+landlock.
+
+The glibc's dynamic linker gets the mapping size info from the elf
+header of the .so, during execve() call. In a previous attempt of
+glibc sealing the vdso, the size of vdso.so (in PT_LOAD) was found to
+be inaccurate. To make the thing more difficult, the vvar size might
+not be present, iiuc.
+
+> ...but in this special case, is the vdso/vvar size ever anything other
+> than "one page" in practice?
 >
-> > --
-> > Pedro
+yes. on x86, the vdso size can be two pages long.
+
+> > Additionally, uprobe mapping can't be sealed by the dynamic linker,
+> > dynamic linker can only apply sealing during execve() and dlopen(),
+> > uprobe mapping isn't created during those two calls.
+> >
+> > -Jeff
+> >
+> >
+> > > --
+> > > Pedro
