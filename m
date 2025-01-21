@@ -1,150 +1,105 @@
-Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAADA199EB7
-	for <linux-hardening@vger.kernel.org>; Mon, 20 Jan 2025 21:43:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED99879D2;
+	Tue, 21 Jan 2025 00:37:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737409388; cv=none; b=rWFJwQKlt+L3sd8YGFlcv5isLrcJOUZUzZKRJvjnwykQzXXih/fVqh6nq29nkEyENU++fCU+RF1inYnlGZVApTXohCFXZZNXlUYcjQ4jOY2S2yllf2fYQD1nZs+5lg98f/yKbpbD0hVLj2fao3TY6s9l74J7SDjCKwfFteuOyq8=
+	t=1737419823; cv=none; b=OomZdSKYn1k5v6wDAV+DK1hXn7btHFudHyvfxfJiqy3w6vRGWoxxz0FJlnawjGwiq8M7qbWTrL4slCgvl2pd0KalIiQ0IAEl1o8tc0W5u3sV4YzR1+VjHGNbOuuAyGS/gaqMYuVOCSbVVh4p1Koanlf6eblL1qv8aZxPJAoe0vo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737409388; c=relaxed/simple;
-	bh=XWfIEXm93QRmWkKbfU5UTbnY7CJbm+cc8Pdw/A45k68=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SnuTAKhSyzPnTsHVeeAmzKCtgvx3u/IPWAyCTWv0+cJ/h7MdGzZRmQz8dl5FOy7J7jVhfOTK8djVNIVqCZtPLBTXKSa+RIblY+vgSl8YXhgJxRA5xnGgBQLS8ULgugnJXyXHIB8A99gXPKDJUMaf1Kxw6b0tjlBdsONIbcOHjNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=J7mNnhU4; arc=none smtp.client-ip=209.85.219.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	s=arc-20240116; t=1737419823; c=relaxed/simple;
+	bh=3HnnYi/SmEcGz2glgVrJmb8BnWrs+DQG6iLqEy+biCE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qvRijzfvh4aLLDbWpb3MT9EMh2dNLVEtwEIsBhCH4CmwymonsUN4AzPC7uBD3nkXqS/Y9LK9J91loDHXKVoYN3mxjjaZs7xawIsoYX9TDCSci8hxLF+NC4l1o9PXNS0YqfJ0B64LyqNvHRwiqxAcv23ysrrpLU1Qedw0UIhdMJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PdCNe8Qg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="J7mNnhU4"
-Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-e460717039fso6476238276.0
-        for <linux-hardening@vger.kernel.org>; Mon, 20 Jan 2025 13:43:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1737409386; x=1738014186; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bRbNRaRO0SI5VgVGLEKrB6BcQTgHuaf5bn1tG3/NR8Y=;
-        b=J7mNnhU4fdyVu11tHRi2Y7OYapFkrjYCpqpN18SzoS6SGfEjMMShzGrKVZy7ujOpCj
-         by1LS4LgpDbYOKksvwjS3KdLIieldu057yKM9UktZnND6khFht+PCTVUEWYzXThaVDOK
-         FH/E4bmy2oK5jR2a8c0vXew3hSl48YAlt8LsxKRzQUwhrMajxyIWg3b4oHWIjdsZWhZ/
-         rEtPlA04TTDzrtz/cCxO8W/ujn1ncKubvd4Ekz8baacAAlY6RfTI3Ecw1WA1vcI9IbfI
-         Qi9m4g6cyGDVKS5XPX6LKsQFGiXE0UJo/hzyCRP4tre5o8YqxT8+/vE8QJD8bB7aEuiu
-         sklQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737409386; x=1738014186;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bRbNRaRO0SI5VgVGLEKrB6BcQTgHuaf5bn1tG3/NR8Y=;
-        b=p0Yleg5TGN5wzxOCCCJlbhEqvdO0yJ6wGarvrAikjP33bHUt/UidGJ9kd74E0m4Fgs
-         6MbIKsG0rZQlimHEzKpuAy9weLd6SmETfu7fOm6mP5br6M79coBOAZI2Zxk53pbUWmCf
-         KUqWM6+m5r41nmr12GyuZ3r00XIZ9lN4yS+ZgyyYF6/DEnjUg5zQy51VcIkpsj7t3XJr
-         mNTlsZnG4SWD+iDEVqt1VNMal4bFOzir5D8OBv3UfiaLVoreJ1ULEFxo5Z4i/9qUQupK
-         WgsKDPQT52SJ3TZjcMZDAw9l8SeHQ8oU8bZysLo64/8S20rQ4639+Z4rq9Bmi7RGub8D
-         OzAw==
-X-Forwarded-Encrypted: i=1; AJvYcCU2Zuf9rpq99/u0xjdEzqrG2pqnrhvyWyHZlFgUHa4ZX3KQmr2/YArBPyCbyjCwG2bSuUbjmq1Zp76//u1ONpQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzzQ3FtYxR81g0R/mHaOcUnnr+vWwoUTuVqFIMW+vLSPB0Iczq/
-	qEAiSt7tt9lFIEDktRWvQtXQg2pyihMTmibz1+c+lgaFF3d4UFCL1FkMgq2gOypvxwmmd/xfICI
-	ZCKgqCq7uXsTZS6km21gLSoOBHdCKuCOKIQqH
-X-Gm-Gg: ASbGncsUMjMhspYerrEhTfnxM4IRRm4GDbc460DKZzx2EerZ4YswICO2oL4hczZvXeu
-	ooo3H8LAC1gxIl3Yzw6NpopRCnwmRxGDbqkrLo0igPPneeqRy/Q==
-X-Google-Smtp-Source: AGHT+IEfkrZcZaM4OcrwCCFu1ppQYb+u+0+ZvF4kaX6gB/GN5nxINxXC4jtIf/eTUO8QmrMg9CKoN9zG4ass7aKatF4=
-X-Received: by 2002:a05:690c:358a:b0:6ef:a08f:8ec0 with SMTP id
- 00721157ae682-6f6eb693fe4mr107326777b3.22.1737409385678; Mon, 20 Jan 2025
- 13:43:05 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PdCNe8Qg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51955C4CEDD;
+	Tue, 21 Jan 2025 00:37:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1737419822;
+	bh=3HnnYi/SmEcGz2glgVrJmb8BnWrs+DQG6iLqEy+biCE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=PdCNe8QgIHqew3aXu0kl3Ne3+Qq+3cHesEQxhIRigZBK9P7ByzqilM5UKoFB9dPBE
+	 xPa5fZr6nv2svRcNUfzOpYmdGHjVjk/IM+6O70pP2HG1/YqKJbYANqg9cjypjnIM1e
+	 vGqo/xPcljz+vW3yKtZKdRKnopxU/p47F13/XiiM/lS8WqEzPBANokTdD3Yich9/3j
+	 vgAmvx7wXyMgbsXUg9lrZdKTBWjR9KXcKsbQNakbz5JEulpPjr+fTp9c+BKsPSyYLD
+	 66y99td+dQ4xoUDtl2hXO59qDhjiEnkT2Qsy/tyalU8vSowE2pJVoNQOYQDEcyHYDw
+	 ws0JPZ24MCSgQ==
+From: Kees Cook <kees@kernel.org>
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Kees Cook <kees@kernel.org>,
+	Jakub Jelinek <jakub@redhat.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	linux-kbuild@vger.kernel.org,
+	Stephen Hemminger <stephen@networkplumber.org>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] kbuild: Use -fzero-init-padding-bits=all
+Date: Mon, 20 Jan 2025 16:36:53 -0800
+Message-Id: <20250121003646.work.168-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250117130337.4716-1-mgorman@techsingularity.net> <20250117130337.4716-2-mgorman@techsingularity.net>
-In-Reply-To: <20250117130337.4716-2-mgorman@techsingularity.net>
-From: Paul Moore <paul@paul-moore.com>
-Date: Mon, 20 Jan 2025 16:42:54 -0500
-X-Gm-Features: AbW1kvarg3nT_WvZxhZbYVBI0pQNrEUaQX4QBAPYffpSfIxAizJCMp_I6UozxxY
-Message-ID: <CAHC9VhS-UNb5LkjsihD1sNnSajpKyHZMym8oPsRMwTepmNpo_g@mail.gmail.com>
-Subject: Re: [PATCH 1/3] mm: security: Move hardened usercopy under 'Kernel
- hardening options'
-To: Mel Gorman <mgorman@techsingularity.net>
-Cc: Kees Cook <kees@kernel.org>, Daniel Micay <danielmicay@gmail.com>, 
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2377; i=kees@kernel.org; h=from:subject:message-id; bh=3HnnYi/SmEcGz2glgVrJmb8BnWrs+DQG6iLqEy+biCE=; b=owGbwMvMwCVmps19z/KJym7G02pJDOl9b1Tbuf1uNPy0S5c5+3KDw+kc7bWG1zb9OTzT//Rz+ Y2lTLYcHaUsDGJcDLJiiixBdu5xLh5v28Pd5yrCzGFlAhnCwMUpABNxXsHwv56pnjEi7na2ZfNP mX2TntwtVRHQFbmsqMQQeGDrtv18PowMD5ytQmatL+8wY+v+ssM8a6as/uL6ZhmdT569/l3lL+a wAAA=
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jan 17, 2025 at 8:39=E2=80=AFAM Mel Gorman <mgorman@techsingularity=
-.net> wrote:
->
-> There is a submenu for 'Kernel hardening options' under "Security".
-> Move HARDENED_USERCOPY under the hardening options as it is clearly
-> related.
->
-> Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
-> ---
->  security/Kconfig           | 12 ------------
->  security/Kconfig.hardening | 16 ++++++++++++++++
->  2 files changed, 16 insertions(+), 12 deletions(-)
+Enable -fzero-init-padding-bits=all when available (GCC 15+). This will
+correctly zero padding bits in structs and unions that might have been
+left uninitialized, and will make sure there is no regression in union
+initializations[1]. This fixes the following stackinit KUnit selftest
+cases that had been XFAIL until now because there was no compiler
+support:
 
-Agree with Kees' comment regarding "Bounds checking" instead of
-"String manipulation", but beyond that this is fine with me.
+    ok 38 test_small_hole_static_all # SKIP XFAIL uninit bytes: 3
+    ok 39 test_big_hole_static_all # SKIP XFAIL uninit bytes: 124
+    ok 40 test_trailing_hole_static_all # SKIP XFAIL uninit bytes: 7
+    ok 42 test_small_hole_dynamic_all # SKIP XFAIL uninit bytes: 3
+    ok 43 test_big_hole_dynamic_all # SKIP XFAIL uninit bytes: 124
+    ok 44 test_trailing_hole_dynamic_all # SKIP XFAIL uninit bytes: 7
+    ok 58 test_small_hole_assigned_static_all # SKIP XFAIL uninit bytes: 3
+    ok 59 test_big_hole_assigned_static_all # SKIP XFAIL uninit bytes: 124
+    ok 60 test_trailing_hole_assigned_static_all # SKIP XFAIL uninit bytes: 7
+    ok 62 test_small_hole_assigned_dynamic_all # SKIP XFAIL uninit bytes: 3
+    ok 63 test_big_hole_assigned_dynamic_all # SKIP XFAIL uninit bytes: 124
+    ok 64 test_trailing_hole_assigned_dynamic_all # SKIP XFAIL uninit bytes: 7
 
-Acked-by: Paul Moore <paul@paul-moore.com>
+All of the above now pass when built under GCC 15:
 
-> diff --git a/security/Kconfig b/security/Kconfig
-> index 28e685f53bd1..fe7346dc4bc3 100644
-> --- a/security/Kconfig
-> +++ b/security/Kconfig
-> @@ -159,18 +159,6 @@ config LSM_MMAP_MIN_ADDR
->           this low address space will need the permission specific to the
->           systems running LSM.
->
-> -config HARDENED_USERCOPY
-> -       bool "Harden memory copies between kernel and userspace"
-> -       imply STRICT_DEVMEM
-> -       help
-> -         This option checks for obviously wrong memory regions when
-> -         copying memory to/from the kernel (via copy_to_user() and
-> -         copy_from_user() functions) by rejecting memory ranges that
-> -         are larger than the specified heap object, span multiple
-> -         separately allocated pages, are not on the process stack,
-> -         or are part of the kernel text. This prevents entire classes
-> -         of heap overflow exploits and similar kernel memory exposures.
-> -
->  config FORTIFY_SOURCE
->         bool "Harden common str/mem functions against buffer overflows"
->         depends on ARCH_HAS_FORTIFY_SOURCE
-> diff --git a/security/Kconfig.hardening b/security/Kconfig.hardening
-> index c9d5ca3d8d08..00e6e2ed0c43 100644
-> --- a/security/Kconfig.hardening
-> +++ b/security/Kconfig.hardening
-> @@ -279,6 +279,22 @@ config ZERO_CALL_USED_REGS
->
->  endmenu
->
-> +menu "String manipulation"
-> +
-> +config HARDENED_USERCOPY
-> +       bool "Harden memory copies between kernel and userspace"
-> +       imply STRICT_DEVMEM
-> +       help
-> +         This option checks for obviously wrong memory regions when
-> +         copying memory to/from the kernel (via copy_to_user() and
-> +         copy_from_user() functions) by rejecting memory ranges that
-> +         are larger than the specified heap object, span multiple
-> +         separately allocated pages, are not on the process stack,
-> +         or are part of the kernel text. This prevents entire classes
-> +         of heap overflow exploits and similar kernel memory exposures.
-> +
-> +endmenu
-> +
->  menu "Hardening of kernel data structures"
->
->  config LIST_HARDENED
-> --
-> 2.43.0
->
->
+    ./tools/testing/kunit/kunit.py run stackinit --arch=x86_64 \
+        --make_option CC=gcc-15
 
+Suggested-by: Jakub Jelinek <jakub@redhat.com>
+Link: https://lore.kernel.org/linux-toolchains/Z0hRrrNU3Q+ro2T7@tucnak/ [1]
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+Cc: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>
+Cc: Nicolas Schier <nicolas@fjasle.eu>
+Cc: linux-kbuild@vger.kernel.org
+---
+ scripts/Makefile.extrawarn | 3 +++
+ 1 file changed, 3 insertions(+)
 
---=20
-paul-moore.com
+diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
+index 1d13cecc7cc7..eb719f6d8d53 100644
+--- a/scripts/Makefile.extrawarn
++++ b/scripts/Makefile.extrawarn
+@@ -77,6 +77,9 @@ KBUILD_CFLAGS += $(call cc-option,-Werror=designated-init)
+ # Warn if there is an enum types mismatch
+ KBUILD_CFLAGS += $(call cc-option,-Wenum-conversion)
+ 
++# Explicitly clear padding bits during variable initialization
++KBUILD_CFLAGS += $(call cc-option,-fzero-init-padding-bits=all)
++
+ KBUILD_CFLAGS += -Wextra
+ KBUILD_CFLAGS += -Wunused
+ 
+-- 
+2.34.1
+
