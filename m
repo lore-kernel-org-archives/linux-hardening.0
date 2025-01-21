@@ -1,153 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC0E81487F6;
-	Tue, 21 Jan 2025 14:00:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE8F01F470B
+	for <linux-hardening@vger.kernel.org>; Tue, 21 Jan 2025 15:06:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737468024; cv=none; b=TmatCLmkgW3c57hVsNuVDHqoq9xoWSLWEIHqJ3YuHbh6VYoU+EofUxfqfQC6E9M119d6+guZiAoI6nZNJbyc21dzL67IBvT0U3SEo0bNEMHProXxg2hODKrrmB7dbXbkn8gh86xtx1NCrOBYXeY2cVKv4ird+lgWcizG8ieFti4=
+	t=1737471992; cv=none; b=Ee9yslqSBVkT6gpYgWLWQ/yjgxuVnNM1QYIQ8Usu2aS/nwYKpmUXenbPLUjdtKnMpI/3LY+OXpKdqqVgcVYe9UgeKPPNV+uIslayQuFWKgTS+pSkHDVGDr87+Us80xflIJiFcRlynHMcyb+vzEUZG9xpxEA0MhrhioQp6upImpg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737468024; c=relaxed/simple;
-	bh=Q5S9rJetTl9cgCroBUGkg7SOjKEl71T4cDyTy00Ssfo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YCwJCtObWkcQLZU+pjgmoJ/stcoua9YmzpiugY0auhm/IBV7rl4f/FmvwcQAhLky8cu4AeopsQBM0bqz4gil9F2yS+3YLM+V24/uIb7dNzHXEyDn4mTgZqmo1DK4A8HjRKMv0PcGduJOESZfQB3rIshdR+VZB8js3IrIa//O60o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FXH6cakO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1737471992; c=relaxed/simple;
+	bh=fACdkvrQz3xHG26Gy/TSFwx/AcDLdoyuEAccUKN5eXA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pJIqc2DhHdvatzxYG4gfi4RDu0n5enSMNDW8MPYlGWLMt/cw5ISBpBO+0UrPrMr/h+3hjKu1/8L6o49gpoVtyWLqctXCc29npx5jnJ8x+WTcYZd9Lhp95jjdUSbNyoafa9xq0IawpBRFJh7vmUqGoJYAQoB+tPHuv748zJWsPis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pD5DLzTP; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FXH6cakO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5C8CC4CEE0;
-	Tue, 21 Jan 2025 14:00:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737468023;
-	bh=Q5S9rJetTl9cgCroBUGkg7SOjKEl71T4cDyTy00Ssfo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FXH6cakOFkqIb5zaMucRt18L87yvpwVZGaJxUhREOt4P68rgom62uMZqy68vIiJxY
-	 vC1cXMrRMcOwMAfmuxLEZ5bndo3NE4WwazkktDRZnaa3oxsql1H5GUr7t+fwMIx0bz
-	 XkAJkUT9nkasLdUoZuBKZrBbotzPsLrjgcHMO3sqMz38POYs+eMlsXPGM73jQ0n8iK
-	 MmzoQzjKnN6ACmqf4QPGnpglxf6uAX3/BRM7U3tqtHBoHNE7h6KqKMl22hpV4arvIi
-	 4EBHxuw1qzMJUStZM7S/rcVySHrJR+84rbhK+Ss3scFXmd7IzHbUAqqT0NZChxotoD
-	 A/lQ8LRjiOvEw==
-Date: Tue, 21 Jan 2025 15:00:20 +0100
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Valentin Schneider <vschneid@redhat.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
-	virtualization@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
-	linux-riscv@lists.infradead.org, linux-perf-users@vger.kernel.org,
-	xen-devel@lists.xenproject.org, kvm@vger.kernel.org,
-	linux-arch@vger.kernel.org, rcu@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
-	bcm-kernel-feedback-list@broadcom.com,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Juergen Gross <jgross@suse.com>,
-	Ajay Kaher <ajay.kaher@broadcom.com>,
-	Alexey Makhalov <alexey.amakhalov@broadcom.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Jason Baron <jbaron@akamai.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang1211@gmail.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Clark Williams <williams@redhat.com>,
-	Yair Podemsky <ypodemsk@redhat.com>,
-	Tomas Glozar <tglozar@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Kees Cook <kees@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Christoph Hellwig <hch@infradead.org>,
-	Shuah Khan <shuah@kernel.org>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
-	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Rong Xu <xur@google.com>,
-	Nicolas Saenz Julienne <nsaenzju@redhat.com>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Yosry Ahmed <yosryahmed@google.com>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	Jinghao Jia <jinghao7@illinois.edu>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: Re: [PATCH v4 04/30] rcutorture: Make TREE04 use
- CONFIG_RCU_DYNTICKS_TORTURE
-Message-ID: <Z4-odFAImP-_uLV7@localhost.localdomain>
-References: <20250114175143.81438-1-vschneid@redhat.com>
- <20250114175143.81438-5-vschneid@redhat.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pD5DLzTP"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43621d27adeso39573055e9.2
+        for <linux-hardening@vger.kernel.org>; Tue, 21 Jan 2025 07:06:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1737471989; x=1738076789; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=O9D0+ljEbQhZcGi15IbGvnov0OawqjfcmowqWE1AvlQ=;
+        b=pD5DLzTPr940F2gNp2wToTymVaqjVbrsNmgORJLjDbxthLQ7ph0DRHhE3jwET4eKs/
+         8ZsujWaVMzeyHac7Mg7AF7Ban5ceYb0Fe18HKwyyjBAiHBDk0cE8YBLghsdrnlOFWdEJ
+         nZxPDlyyy/eUFLbD9RrTOzfZ/vubE/iyQ6/E7Ttp00sExU+PmCI1Pfj7BJbSnhhvglPl
+         Xehac2ZMb/qcitRL+SJgC3t7sidjJDrM7dzmkr804z8M8bLkYdyUCWECNQaj4JVCubmi
+         8rSk3hjIJD+D2iYi8rNL2Kv5tgvXG6J5nZjXsXALUsntevPjY5sW6SCBit2V35joEkU9
+         5SHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737471989; x=1738076789;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=O9D0+ljEbQhZcGi15IbGvnov0OawqjfcmowqWE1AvlQ=;
+        b=lnZ1tS00KQJMW80KVY+/ddVmF93fa77VBsJT/42AWQfEe+pKHNVc0DBAXuxrbBuKab
+         M980AMDoINR9pyuLMuJfiwSAWMWBFaNI8DAZ8FgyBSXxIAP6/cYONv/+93l3L4XRwcxH
+         Gw4SaDyJrDHZBiR4DZQFWhYgm/aOnxu6MvTconH/cyi8GaLimGFX/HXcr0ji+4MMykTl
+         NiMGukzJ+qhuxUuHLySIcWmlVK/7tZB5rQfLwumUcsO+ieS420yx5MhPPRSIeG5cGHNM
+         u+bgaCT0jz+1JhW85/U85i2QusYcB+nMaYua6k9ahaLJ8KODLwxVgxfJLCKSLFIM37JT
+         EcjQ==
+X-Gm-Message-State: AOJu0YzUw7HCzBb+QIEuUg5O0XKmL4hTxEPOkFJSkTvlK9rv+tG/esbV
+	FGMRRV2cz8mxesBbIyr83i5VXvOVCdz/meFik21Itx/aLd9+IbVWlc1k1b3+M9c=
+X-Gm-Gg: ASbGncsx6nvSKwqTUbkR7H/k2HtNIsSkAC9uDRGDJYypH/S+SCtuhsfsIDxiUyRXsgv
+	rw72o+rQVXfzOtRg+f611pyUH0jQ0OW3sl7v81toXWmkODreV0oNUw269MhPxWG00cLunwSHJzG
+	H7N3NNiZ8aP0GEgyLkqubl3kVIpi76jcOjGwlZ5w7V0HF505Mr8d1x/D/pu+PDuh7BtReiejw97
+	mBi8VCt0Y8UyIsXJGNWbYVpjg6w3m7HVDFcEZMr6USaeq3g6gWXt8XjpENFRoA9vMTNlLHC49v7
+	z04=
+X-Google-Smtp-Source: AGHT+IGhiM80Yx8g7FgQEg9lBl/tB6jqhiNWi6qeIbN3jHFPIOlb2fJoLnI+x2zn9XucLqolIv1CyA==
+X-Received: by 2002:a05:600c:348c:b0:434:f1d5:1453 with SMTP id 5b1f17b1804b1-438912dbfedmr184206655e9.0.1737471989066;
+        Tue, 21 Jan 2025 07:06:29 -0800 (PST)
+Received: from eugen-station.. ([82.76.24.202])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-437c7499942sm240936555e9.6.2025.01.21.07.06.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jan 2025 07:06:28 -0800 (PST)
+From: Eugen Hristev <eugen.hristev@linaro.org>
+To: kees@kernel.org
+Cc: linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Eugen Hristev <eugen.hristev@linaro.org>
+Subject: [PATCH] pstore/zone: fix return value for psz_init_zones
+Date: Tue, 21 Jan 2025 17:06:17 +0200
+Message-ID: <20250121150617.608118-1-eugen.hristev@linaro.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250114175143.81438-5-vschneid@redhat.com>
 
-Le Tue, Jan 14, 2025 at 06:51:17PM +0100, Valentin Schneider a écrit :
-> We now have an RCU_EXPERT config for testing small-sized RCU dynticks
-> counter:  CONFIG_RCU_DYNTICKS_TORTURE.
-> 
-> Modify scenario TREE04 to exercise to use this config in order to test a
-> ridiculously small counter (2 bits).
-> 
-> Link: http://lore.kernel.org/r/4c2cb573-168f-4806-b1d9-164e8276e66a@paulmck-laptop
-> Suggested-by: Paul E. McKenney <paulmck@kernel.org>
-> Signed-off-by: Valentin Schneider <vschneid@redhat.com>
-> Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
-> ---
->  tools/testing/selftests/rcutorture/configs/rcu/TREE04 | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/tools/testing/selftests/rcutorture/configs/rcu/TREE04 b/tools/testing/selftests/rcutorture/configs/rcu/TREE04
-> index dc4985064b3ad..67caf4276bb01 100644
-> --- a/tools/testing/selftests/rcutorture/configs/rcu/TREE04
-> +++ b/tools/testing/selftests/rcutorture/configs/rcu/TREE04
-> @@ -16,3 +16,4 @@ CONFIG_DEBUG_OBJECTS_RCU_HEAD=n
->  CONFIG_RCU_EXPERT=y
->  CONFIG_RCU_EQS_DEBUG=y
->  CONFIG_RCU_LAZY=y
-> +CONFIG_RCU_DYNTICKS_TORTURE=y
+psz_init_zones is not supposed to return NULL. It returns an errno,
+and its caller always checks for an errno to look for a problem.
+If the caller receives a NULL as a return, this code will go further
+without any errors:
 
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+        cxt->kpszs = psz_init_zones(PSTORE_TYPE_DMESG, &off,
+                        info->total_size - off_size,
+                        info->kmsg_size, &cxt->kmsg_max_cnt);
+        if (IS_ERR(cxt->kpszs)) {
+                err = PTR_ERR(cxt->kpszs);
+                cxt->kpszs = NULL;
+                goto free_out;
+        }
 
+Later, when dereferencing kpszs, a panic would occur.
 
-> -- 
-> 2.43.0
-> 
-> 
+Thus, to avoid this possible crash, it's better to avoid returning NULL
+in psz_init_zones, and just return -EINVAL if the parameters received
+are wrong (in this case, a zero size request).
+
+Fixes: d26c3321fe18 ("pstore/zone: Introduce common layer to manage storage zones")
+Signed-off-by: Eugen Hristev <eugen.hristev@linaro.org>
+---
+ fs/pstore/zone.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/pstore/zone.c b/fs/pstore/zone.c
+index 5fa2fa2e7aa7..dbafc72a2f68 100644
+--- a/fs/pstore/zone.c
++++ b/fs/pstore/zone.c
+@@ -1204,7 +1204,7 @@ static struct pstore_zone **psz_init_zones(enum pstore_type_id type,
+ 
+ 	*cnt = 0;
+ 	if (!total_size || !record_size)
+-		return NULL;
++		return ERR_PTR(-EINVAL);
+ 
+ 	if (*off + total_size > info->total_size) {
+ 		pr_err("no room for zones %s (0x%zx@0x%llx over 0x%lx)\n",
+-- 
+2.43.0
+
