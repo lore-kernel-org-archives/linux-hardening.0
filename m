@@ -1,137 +1,220 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 369031F191E
-	for <linux-hardening@vger.kernel.org>; Tue, 21 Jan 2025 13:12:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08E391119A;
+	Tue, 21 Jan 2025 13:40:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737465166; cv=none; b=A9o5LYMrM9GGmmt7A1j+QX+8GST+BGoONxUkDNVL6BZzf07LALM/b3mg2UZ2JOIBafcK+Gtvkyv30kL/zkF+jtzXg94FPpNdcv8COw1efKwhu4ntVt0YOGkC2DrDFtugMMuF/KjefJavMJyaTnrBIVCGYBshhZzKWK8JCL7ErhQ=
+	t=1737466858; cv=none; b=bJQoNIMjC/ZXVoJ9wiufPCSv5ONcgARl1wWqraDdni4qk1GowmVhzTHL6R998R8EqbzgTlSvgGzEZlCYymJCYngaqJ0SXqrrIhxezLxr2xByS2OncKC/RsC8VRnyt47GMNuAI5uxtioi9uIDm14kjd45oLvhwocHzVQ4q/+2rSc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737465166; c=relaxed/simple;
-	bh=NAIeDNWBPAUV4s2hD2YhjTqYmw23E7vHz0ySOuJHVI8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dhukWgUsmufw/VkaiU8nN5xltArejuBxN28/8t9LKxK+gZVWbg6bHKZGstd+kJZUW4ft8+ppKvt4duQAr8LwQ0yBj5mHq/zwdt+vZf555CPaB0+kwnKFqmBj6bIrLCxWwDjYJq4xzWjR+iAJ9tAMfQaAEY47w3z6kl7pcvrRWV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JKVNoAAG; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1737466858; c=relaxed/simple;
+	bh=O6UDpyy68BQo7X626NvkAmSzVuRiTAwo5GjYO1FKjts=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rEQwzI8gOlpxKvmAG5rEfLCFl3QaHckMVAjI5Qbbgr4hNKX7uuOo8DAHBjFUMyQU0qjpKhxAxpFG5zZ9VVeS8VVvzYJwFYfVmgQyFpWy4z/+SgRVlBJvhROJWQm0JcpvL70u98TRZpKvMYUSvw0amTkvcpyZ6mIXFj1TysfDmYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=XXJc1fjY; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JKVNoAAG"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3863494591bso3050097f8f.1
-        for <linux-hardening@vger.kernel.org>; Tue, 21 Jan 2025 05:12:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1737465161; x=1738069961; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=s2x1boRC7Td3/KtEDErRciKOCKj4bZ9FvBbMmDACL5I=;
-        b=JKVNoAAGzkg4HxjC86jel9/jqpGvJGta9XPkA+Yb6fKA2gE0aXgxIYhrt2aB1rsMik
-         GMKMUXVfigcVr60xNtmYSPE5WGLBtRkY6035TKJoe1Y2psqBAvPhFbqYEfqU7SpqR54D
-         mZdvezQoHYpoRd/9/DJCD7FGfObyGr90lM/qJ3/76VZinttNVLg/XMlcLIO8F6/DxhZo
-         dfh4zfg5GpeBrBd5+Rj432jKOdKs0SZyQUWSkgyMRza99mGyWVyuZmfwOifU+OcUiErM
-         34cO5Svxp8NUhM0HdAffmFaQ94cFtzKFDoorB22UEbs2a6e4zXP0jeRhOhEvM3b93Fsp
-         MFDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737465161; x=1738069961;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=s2x1boRC7Td3/KtEDErRciKOCKj4bZ9FvBbMmDACL5I=;
-        b=R1Uv+4lxvmqIJ0R0nILVY2htOcJMnqGqCqoUWkfceSZ1fAqvrvTCTEt6qP3VmvEgfJ
-         9sIAmMdW/S3X0VMcPcWkINt/POjeobE0hV2PhMQpbbS/pRjfGY6SHcITmWdpnqsOtzAH
-         SLjxq84SH1o+t3aO+fkLjIp3oTa8CWJz9ZRVQ7Jn7U/f5N2R8MmWUZNK+rW689VFl4rL
-         VjJMV8junFRKcRP35GYF20RWa4zjFbjKEdirrIjZ9RYE5poKoVVtbufU6jGwdUBiwqHA
-         LJguyXeUPK8d6yLdIHh1jOtjQqP3SoCjJI4KLid3trxe6CZC/8UzYUS6wLPsepfdmxLn
-         1Odw==
-X-Forwarded-Encrypted: i=1; AJvYcCWeahj+P4layovNhQ12rscy9XiBqQJmJKL5cfr5B89a97M3eNWvA0c5HTF+mpUudKCAVG5Y/B1u46WPpUiKQMg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyM7IM8r56v8PtX6HV1hK/MJkESrjtbb3VSttcOuBQAYaDTZ9IH
-	JHjCkc7pBrj8ty6xl47LL7R+fZDqgcb67yqwIBxIqCRH6004ohELZVyVp+QJNbI1piXM8LOdSPo
-	flTuXuA==
-X-Gm-Gg: ASbGnctGN3YiX4u6FcWdzyM2b23zw+xOElg5hSTfzGZ+osb5v0e/c4gZkMhhA8XHsNb
-	/vX5Fv+hHiPfk2e2c67yf7MxPFX83OipNzYAOXjwgJrmq8yELnsrrnTUOK3O8R0+RkBQQf6QUZH
-	ef8G6r3XL//s+y8gjzjVV+cEaLGjsJHUaEqvNxogVOaQ+PhUpzGxMr6M3vSBHKXLCtFoxJZEUCm
-	HoLr4jxacQuppVEc8HKkNvJ626OrjVY+HETjbEUpUOGNkgNVOI0U80lxUjA/MRns7xclp+q5LLt
-	Cw==
-X-Google-Smtp-Source: AGHT+IFdpFJJy8M5KC3Tmd+NcjbDB60676AM8tQG4Ka5vOs+QjGJbreqWkLYn0gnkKmNKPe9eyz+tA==
-X-Received: by 2002:a5d:5f51:0:b0:38a:624b:e619 with SMTP id ffacd0b85a97d-38bf59e2019mr18759407f8f.43.1737465161465;
-        Tue, 21 Jan 2025 05:12:41 -0800 (PST)
-Received: from [192.168.0.24] ([82.76.24.202])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-437c7527fd1sm241546295e9.31.2025.01.21.05.12.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Jan 2025 05:12:41 -0800 (PST)
-Message-ID: <af478340-6f3f-48d7-b88a-7dd3fa7b8e51@linaro.org>
-Date: Tue, 21 Jan 2025 15:12:39 +0200
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="XXJc1fjY"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50LBcWDl021758;
+	Tue, 21 Jan 2025 13:40:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=1XuHjAhe+6crgeyPxGiThULHkHEa/Q
+	wDtL3yiBvZqn4=; b=XXJc1fjY1LEte8uWYOHY0rVlVq4wX9PCcoXpIbn1EYs9EL
+	OD4/8pPTNQ9wGah7zwpokGzeZLvKhyS2XwyswSQynQSvx4Pq0nVXT5v0PMm1KdzN
+	F6FmU2v9zN3MF0dGtVIr8337iz/SeaELL+AkChcaIBTAfjVK9Q1TKCVQHZUYF4b8
+	lkEmavTZcGG7bcRDLLuw9HOFrKWm+iyEw+rBb1iDcR2ksQakFyzbWZB9l+0n9NZH
+	7bFXS3CXhWJ3qAfxFUQeEb9d90I2xBmDXS8qIuY9SsKjzzFL1VStL4eYIhJR/WhB
+	kacwVPn3TvuRt93neu9S0HZxZA9oxnhjkLM3qkFg==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44a1n9b0sf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 21 Jan 2025 13:40:21 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50LAtOsq021012;
+	Tue, 21 Jan 2025 13:40:19 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 448sb1b14q-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 21 Jan 2025 13:40:19 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50LDeIWj60031254
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 21 Jan 2025 13:40:18 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 25C3B2004B;
+	Tue, 21 Jan 2025 13:40:18 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7FD1A20040;
+	Tue, 21 Jan 2025 13:40:17 +0000 (GMT)
+Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.155.204.135])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue, 21 Jan 2025 13:40:17 +0000 (GMT)
+Date: Tue, 21 Jan 2025 14:40:16 +0100
+From: Alexander Gordeev <agordeev@linux.ibm.com>
+To: Joel Granados <joel.granados@kernel.org>
+Cc: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
+        Kees Cook <kees@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-crypto@vger.kernel.org,
+        openipmi-developer@lists.sourceforge.net,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        intel-xe@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-serial@vger.kernel.org,
+        xen-devel@lists.xenproject.org, linux-aio@kvack.org,
+        linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev,
+        codalist@coda.cs.cmu.edu, linux-mm@kvack.org,
+        linux-nfs@vger.kernel.org, ocfs2-devel@lists.linux.dev,
+        fsverity@lists.linux.dev, linux-xfs@vger.kernel.org,
+        io-uring@vger.kernel.org, bpf@vger.kernel.org,
+        kexec@lists.infradead.org, linux-trace-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org, apparmor@lists.ubuntu.com,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        Song Liu <song@kernel.org>,
+        "Steven Rostedt (Google)" <rostedt@goodmis.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Corey Minyard <cminyard@mvista.com>
+Subject: Re: [PATCH v2] treewide: const qualify ctl_tables where applicable
+Message-ID: <Z4+jwDBrZNRgu85S@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+References: <20250110-jag-ctl_table_const-v2-1-0000e1663144@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: RFC design of device coredump collection on panic in Pstore
-To: Kees Cook <keescook@chromium.org>, Mukesh Ojha <quic_mojha@quicinc.com>
-Cc: gregkh@linuxfoundation.org, tony.luck@intel.com, gpiccoli@igalia.com,
- johannes@sipsolutions.net, rafael@kernel.org,
- linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
- quic_shashim@quicinc.com, quic_pkondeti@quicinc.com
-References: <1683561060-2197-1-git-send-email-quic_mojha@quicinc.com>
- <202305161353.0F771E0@keescook>
-Content-Language: en-US
-From: Eugen Hristev <eugen.hristev@linaro.org>
-In-Reply-To: <202305161353.0F771E0@keescook>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250110-jag-ctl_table_const-v2-1-0000e1663144@kernel.org>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: mWjZL4Eizm--6YwnTI2RlL8astD0-e-i
+X-Proofpoint-GUID: mWjZL4Eizm--6YwnTI2RlL8astD0-e-i
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-01-21_05,2025-01-21_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
+ bulkscore=0 suspectscore=0 adultscore=0 clxscore=1011 priorityscore=1501
+ spamscore=0 impostorscore=0 lowpriorityscore=0 mlxscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2411120000
+ definitions=main-2501210112
 
+On Fri, Jan 10, 2025 at 03:16:08PM +0100, Joel Granados wrote:
 
+Hi Joel,
 
-On 5/16/23 23:55, Kees Cook wrote:
-> On Mon, May 08, 2023 at 09:21:00PM +0530, Mukesh Ojha wrote:
->> 1. Device_coredump allocates some configurable contigous memory that can be controlled
->>    via CONFIG or bootargs and later registers for panic notifiers.
->> 2. Notifier gets added.
->> 3. Pstore adds device_coredump as its front-end via dumper registration similar
->>    to kmsg being dump today.
->> 4. Successful registration of dumper.
->> 5. A device driver(A-Z) can register their buffer to be dumped as part of panic.
->> 6. buffer gets added to the dump list.
->> 7. Panic occurs.
->> 8. iterate over registered drivers and copy their dump list to its own memory and if
->>    it crosses device core dump memory log an error stop iterating.
->> 9. Similar to devcore_dump() inline with kmsg_dump()
->> 10.Copy the content to pstore region and this could be elf or raw binary that can be
->>    discussed.
+> Add the const qualifier to all the ctl_tables in the tree except for
+> watchdog_hardlockup_sysctl, memory_allocation_profiling_sysctls,
+> loadpin_sysctl_table and the ones calling register_net_sysctl (./net,
+> drivers/inifiniband dirs). These are special cases as they use a
+> registration function with a non-const qualified ctl_table argument or
+> modify the arrays before passing them on to the registration function.
 > 
-> Yeah, I think having something like the panic dump handlers for
-> driver-specific data sounds like a fine idea (as long as we have actual
-> users of such an interface).
-> 
-> I think it would be easy to add another front-end to pstore (via the
-> enums, etc), and expose it via a new template filename in the pstorefs.
-> 
+> Constifying ctl_table structs will prevent the modification of
+> proc_handler function pointers as the arrays would reside in .rodata.
+> This is made possible after commit 78eb4ea25cd5 ("sysctl: treewide:
+> constify the ctl_table argument of proc_handlers") constified all the
+> proc_handlers.
 
-Hello Kees,
+I could identify at least these occurences in s390 code as well:
 
-Currently I am working to get a similar design on Pstore as described by
-Mukesh, with some differences.
-I want to be able to register memory areas into Pstore, not by doing a
-copy, just by registering via a new API (as a frontend, area pointer and
-size). Further, these memory areas would be registered to a new type of
-zone inside pstore/zone called directly mapped zone, and then registered
-to any kind of backend that would support it. The backend would then
-decide what to do with the memory area, have it ready in a list for a
-panic case, hangup, or hardware fault; or something else.
-This implementation would avoid memory copy operations, memory
-reservations, and dependency to a panic handler being run. It would work
-in multiple scenarios, not just when the kernel is being able to run a
-panic handler.
-Further, the data can be extracted either by JTAG, firmware, remote
-processor or any other solution, including dedicated storage, shared
-memory. One could then use it to construct a coredump or specific dump
-information.
-Having different memory areas being registered has the advantage of
-being flexible and small, ranging from nothing to a full kernel memory
-range.
+diff --git a/arch/s390/appldata/appldata_base.c b/arch/s390/appldata/appldata_base.c
+index dd7ba7587dd5..9b83c318f919 100644
+--- a/arch/s390/appldata/appldata_base.c
++++ b/arch/s390/appldata/appldata_base.c
+@@ -204,7 +204,7 @@ appldata_timer_handler(const struct ctl_table *ctl, int write,
+ {
+ 	int timer_active = appldata_timer_active;
+ 	int rc;
+-	struct ctl_table ctl_entry = {
++	const struct ctl_table ctl_entry = {
+ 		.procname	= ctl->procname,
+ 		.data		= &timer_active,
+ 		.maxlen		= sizeof(int),
+@@ -237,7 +237,7 @@ appldata_interval_handler(const struct ctl_table *ctl, int write,
+ {
+ 	int interval = appldata_interval;
+ 	int rc;
+-	struct ctl_table ctl_entry = {
++	const struct ctl_table ctl_entry = {
+ 		.procname	= ctl->procname,
+ 		.data		= &interval,
+ 		.maxlen		= sizeof(int),
+@@ -269,7 +269,7 @@ appldata_generic_handler(const struct ctl_table *ctl, int write,
+ 	struct list_head *lh;
+ 	int rc, found;
+ 	int active;
+-	struct ctl_table ctl_entry = {
++	const struct ctl_table ctl_entry = {
+ 		.data		= &active,
+ 		.maxlen		= sizeof(int),
+ 		.extra1		= SYSCTL_ZERO,
+diff --git a/arch/s390/kernel/hiperdispatch.c b/arch/s390/kernel/hiperdispatch.c
+index 7857a7e8e56c..7d0ba16085c1 100644
+--- a/arch/s390/kernel/hiperdispatch.c
++++ b/arch/s390/kernel/hiperdispatch.c
+@@ -273,7 +273,7 @@ static int hiperdispatch_ctl_handler(const struct ctl_table *ctl, int write,
+ {
+ 	int hiperdispatch;
+ 	int rc;
+-	struct ctl_table ctl_entry = {
++	const struct ctl_table ctl_entry = {
+ 		.procname	= ctl->procname,
+ 		.data		= &hiperdispatch,
+ 		.maxlen		= sizeof(int),
+diff --git a/arch/s390/kernel/topology.c b/arch/s390/kernel/topology.c
+index 6691808bf50a..26e50de83d80 100644
+--- a/arch/s390/kernel/topology.c
++++ b/arch/s390/kernel/topology.c
+@@ -629,7 +629,7 @@ static int topology_ctl_handler(const struct ctl_table *ctl, int write,
+ 	int enabled = topology_is_enabled();
+ 	int new_mode;
+ 	int rc;
+-	struct ctl_table ctl_entry = {
++	const struct ctl_table ctl_entry = {
+ 		.procname	= ctl->procname,
+ 		.data		= &enabled,
+ 		.maxlen		= sizeof(int),
+@@ -658,7 +658,7 @@ static int polarization_ctl_handler(const struct ctl_table *ctl, int write,
+ {
+ 	int polarization;
+ 	int rc;
+-	struct ctl_table ctl_entry = {
++	const struct ctl_table ctl_entry = {
+ 		.procname	= ctl->procname,
+ 		.data		= &polarization,
+ 		.maxlen		= sizeof(int),
+diff --git a/arch/s390/mm/cmm.c b/arch/s390/mm/cmm.c
+index 939e3bec2db7..8e354c90a3dd 100644
+--- a/arch/s390/mm/cmm.c
++++ b/arch/s390/mm/cmm.c
+@@ -263,7 +263,7 @@ static int cmm_pages_handler(const struct ctl_table *ctl, int write,
+ 			     void *buffer, size_t *lenp, loff_t *ppos)
+ {
+ 	long nr = cmm_get_pages();
+-	struct ctl_table ctl_entry = {
++	const struct ctl_table ctl_entry = {
+ 		.procname	= ctl->procname,
+ 		.data		= &nr,
+ 		.maxlen		= sizeof(long),
+@@ -283,7 +283,7 @@ static int cmm_timed_pages_handler(const struct ctl_table *ctl, int write,
+ 				   loff_t *ppos)
+ {
+ 	long nr = cmm_get_timed_pages();
+-	struct ctl_table ctl_entry = {
++	const struct ctl_table ctl_entry = {
+ 		.procname	= ctl->procname,
+ 		.data		= &nr,
+ 		.maxlen		= sizeof(long),
 
-What do you think about this approach ? Do you see it working like this ?
 
-Thank you for your suggestions,
-Eugen
+> Best regards,
+> -- 
+> Joel Granados <joel.granados@kernel.org>
+
+Thanks!
