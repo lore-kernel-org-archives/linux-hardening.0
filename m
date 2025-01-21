@@ -1,205 +1,137 @@
-Received: from mail37.out.titan.email (mail37.out.titan.email [3.65.141.4])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB8971F191A
-	for <linux-hardening@vger.kernel.org>; Tue, 21 Jan 2025 12:35:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=3.65.141.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 369031F191E
+	for <linux-hardening@vger.kernel.org>; Tue, 21 Jan 2025 13:12:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737462959; cv=none; b=puVrwEHzRGGpTE5TTwJjD+NeHHPQmAdBQZqn9PX6mQSRymFnzz0pqIc5VZshmtnQaWwtZDPFbVDBJ6UPxUJpNPY0yomKHPnbGBXE/LhP6Xo4wbrI+PCyRuUAuiDEkkGXOiakF7C3DPgMFuvZHrTtw0hjNbNksPMrbELRIkKVlBo=
+	t=1737465166; cv=none; b=A9o5LYMrM9GGmmt7A1j+QX+8GST+BGoONxUkDNVL6BZzf07LALM/b3mg2UZ2JOIBafcK+Gtvkyv30kL/zkF+jtzXg94FPpNdcv8COw1efKwhu4ntVt0YOGkC2DrDFtugMMuF/KjefJavMJyaTnrBIVCGYBshhZzKWK8JCL7ErhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737462959; c=relaxed/simple;
-	bh=iPN4iMNlCreEtWDv8pwwpSuUYWSCMO9mPht3pgJ+Uew=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BKgH3onZsaZ2I9fJWNpYOPfhx8s0+YyPMrEw94AahK/JZQQUdTh6UFxpOAR4ZGy6dWxgwIrkOZSizfW6gVG3j+8uQhlwlFlU3n/SJdp6JE6DbqNjV+SV672eEHc3K2kQR47j8Ru/lb42QFDYnlt1EebUO/APIpAIG9dXrGmiBto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=techsingularity.net; spf=pass smtp.mailfrom=techsingularity.net; dkim=pass (1024-bit key) header.d=techsingularity.net header.i=@techsingularity.net header.b=VWb3dwA5; arc=none smtp.client-ip=3.65.141.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=techsingularity.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=techsingularity.net
+	s=arc-20240116; t=1737465166; c=relaxed/simple;
+	bh=NAIeDNWBPAUV4s2hD2YhjTqYmw23E7vHz0ySOuJHVI8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dhukWgUsmufw/VkaiU8nN5xltArejuBxN28/8t9LKxK+gZVWbg6bHKZGstd+kJZUW4ft8+ppKvt4duQAr8LwQ0yBj5mHq/zwdt+vZf555CPaB0+kwnKFqmBj6bIrLCxWwDjYJq4xzWjR+iAJ9tAMfQaAEY47w3z6kl7pcvrRWV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JKVNoAAG; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=techsingularity.net header.i=@techsingularity.net header.b="VWb3dwA5"
-Received: from smtp-out0101.titan.email (localhost [127.0.0.1])
-	by smtp-out0101.titan.email (Postfix) with ESMTP id 40C24100314;
-	Tue, 21 Jan 2025 12:35:55 +0000 (UTC)
-DKIM-Signature: a=rsa-sha256; bh=hW7NrVXkxUQhbBM9CKOUAXuTqSHWPfMwEfBYmm9DTl8=;
-	c=relaxed/relaxed; d=techsingularity.net;
-	h=date:message-id:in-reply-to:to:subject:references:from:cc:mime-version:from:to:cc:subject:date:message-id:in-reply-to:references:reply-to;
-	q=dns/txt; s=titan1; t=1737462955; v=1;
-	b=VWb3dwA5dhlRU2rrneLLsXD4ejTxKhQqfI+prZ5ctw4bslZjmFcDsJHQv0xoICAxgQ9PDTbN
-	DeKO8EVzGWLSp2k1aGrKelILeDQAiYDI2r4mgxumyXiHgvmngLjDRu20AvmiLVeKbU1VEGaF50g
-	3VA4xAMFRDiuR3tUP/622mNM=
-Received: from mail.blacknight.com (ip-84-203-196-66.broadband.digiweb.ie [84.203.196.66])
-	by smtp-out0101.titan.email (Postfix) with ESMTPA id CBB4B10031B;
-	Tue, 21 Jan 2025 12:35:54 +0000 (UTC)
-Date: Tue, 21 Jan 2025 12:35:53 +0000
-Feedback-ID: :mgorman@techsingularity.net:techsingularity.net:flockmailId
-From: Mel Gorman <mgorman@techsingularity.net>
-To: Kees Cook <kees@kernel.org>
-Cc: Daniel Micay <danielmicay@gmail.com>, linux-hardening@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] mm: security: Allow default HARDENED_USERCOPY to be
- set at compile time
-Message-ID: <s2uigraqtmh3rs72hbsxcv2mnl3fa7dlqtq6erl2glkeizzdn7@wi6fop5p4usx>
-References: <20250117130337.4716-1-mgorman@techsingularity.net>
- <20250117130337.4716-3-mgorman@techsingularity.net>
- <202501201311.C67EEFBD7F@keescook>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JKVNoAAG"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3863494591bso3050097f8f.1
+        for <linux-hardening@vger.kernel.org>; Tue, 21 Jan 2025 05:12:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1737465161; x=1738069961; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=s2x1boRC7Td3/KtEDErRciKOCKj4bZ9FvBbMmDACL5I=;
+        b=JKVNoAAGzkg4HxjC86jel9/jqpGvJGta9XPkA+Yb6fKA2gE0aXgxIYhrt2aB1rsMik
+         GMKMUXVfigcVr60xNtmYSPE5WGLBtRkY6035TKJoe1Y2psqBAvPhFbqYEfqU7SpqR54D
+         mZdvezQoHYpoRd/9/DJCD7FGfObyGr90lM/qJ3/76VZinttNVLg/XMlcLIO8F6/DxhZo
+         dfh4zfg5GpeBrBd5+Rj432jKOdKs0SZyQUWSkgyMRza99mGyWVyuZmfwOifU+OcUiErM
+         34cO5Svxp8NUhM0HdAffmFaQ94cFtzKFDoorB22UEbs2a6e4zXP0jeRhOhEvM3b93Fsp
+         MFDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737465161; x=1738069961;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=s2x1boRC7Td3/KtEDErRciKOCKj4bZ9FvBbMmDACL5I=;
+        b=R1Uv+4lxvmqIJ0R0nILVY2htOcJMnqGqCqoUWkfceSZ1fAqvrvTCTEt6qP3VmvEgfJ
+         9sIAmMdW/S3X0VMcPcWkINt/POjeobE0hV2PhMQpbbS/pRjfGY6SHcITmWdpnqsOtzAH
+         SLjxq84SH1o+t3aO+fkLjIp3oTa8CWJz9ZRVQ7Jn7U/f5N2R8MmWUZNK+rW689VFl4rL
+         VjJMV8junFRKcRP35GYF20RWa4zjFbjKEdirrIjZ9RYE5poKoVVtbufU6jGwdUBiwqHA
+         LJguyXeUPK8d6yLdIHh1jOtjQqP3SoCjJI4KLid3trxe6CZC/8UzYUS6wLPsepfdmxLn
+         1Odw==
+X-Forwarded-Encrypted: i=1; AJvYcCWeahj+P4layovNhQ12rscy9XiBqQJmJKL5cfr5B89a97M3eNWvA0c5HTF+mpUudKCAVG5Y/B1u46WPpUiKQMg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyM7IM8r56v8PtX6HV1hK/MJkESrjtbb3VSttcOuBQAYaDTZ9IH
+	JHjCkc7pBrj8ty6xl47LL7R+fZDqgcb67yqwIBxIqCRH6004ohELZVyVp+QJNbI1piXM8LOdSPo
+	flTuXuA==
+X-Gm-Gg: ASbGnctGN3YiX4u6FcWdzyM2b23zw+xOElg5hSTfzGZ+osb5v0e/c4gZkMhhA8XHsNb
+	/vX5Fv+hHiPfk2e2c67yf7MxPFX83OipNzYAOXjwgJrmq8yELnsrrnTUOK3O8R0+RkBQQf6QUZH
+	ef8G6r3XL//s+y8gjzjVV+cEaLGjsJHUaEqvNxogVOaQ+PhUpzGxMr6M3vSBHKXLCtFoxJZEUCm
+	HoLr4jxacQuppVEc8HKkNvJ626OrjVY+HETjbEUpUOGNkgNVOI0U80lxUjA/MRns7xclp+q5LLt
+	Cw==
+X-Google-Smtp-Source: AGHT+IFdpFJJy8M5KC3Tmd+NcjbDB60676AM8tQG4Ka5vOs+QjGJbreqWkLYn0gnkKmNKPe9eyz+tA==
+X-Received: by 2002:a5d:5f51:0:b0:38a:624b:e619 with SMTP id ffacd0b85a97d-38bf59e2019mr18759407f8f.43.1737465161465;
+        Tue, 21 Jan 2025 05:12:41 -0800 (PST)
+Received: from [192.168.0.24] ([82.76.24.202])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-437c7527fd1sm241546295e9.31.2025.01.21.05.12.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Jan 2025 05:12:41 -0800 (PST)
+Message-ID: <af478340-6f3f-48d7-b88a-7dd3fa7b8e51@linaro.org>
+Date: Tue, 21 Jan 2025 15:12:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <202501201311.C67EEFBD7F@keescook>
-X-F-Verdict: SPFVALID
-X-Titan-Src-Out: 1737462955129931656.2117.4168520547574402111@prod-euc1-smtp-out1001.
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.4 cv=TIZDSUla c=1 sm=1 tr=0 ts=678f94ab
-	a=jU4EnjUUC1PH4wSjvv7Pww==:117 a=jU4EnjUUC1PH4wSjvv7Pww==:17
-	a=Q9fys5e9bTEA:10 a=CEWIc4RMnpUA:10 a=R_Myd5XaAAAA:8 a=VwQbUJbxAAAA:8
-	a=HkYVKR1uqoi5OQ_vu8cA:9 a=PUjeQqilurYA:10 a=L2g4Dz8VuBQ37YGmWQah:22
-X-Virus-Scanned: ClamAV using ClamSMTP
+User-Agent: Mozilla Thunderbird
+Subject: Re: RFC design of device coredump collection on panic in Pstore
+To: Kees Cook <keescook@chromium.org>, Mukesh Ojha <quic_mojha@quicinc.com>
+Cc: gregkh@linuxfoundation.org, tony.luck@intel.com, gpiccoli@igalia.com,
+ johannes@sipsolutions.net, rafael@kernel.org,
+ linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+ quic_shashim@quicinc.com, quic_pkondeti@quicinc.com
+References: <1683561060-2197-1-git-send-email-quic_mojha@quicinc.com>
+ <202305161353.0F771E0@keescook>
+Content-Language: en-US
+From: Eugen Hristev <eugen.hristev@linaro.org>
+In-Reply-To: <202305161353.0F771E0@keescook>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jan 20, 2025 at 01:21:54PM -0800, Kees Cook wrote:
-> On Fri, Jan 17, 2025 at 01:03:36PM +0000, Mel Gorman wrote:
-> > HARDENED_USERCOPY defaults to on if enabled at compile time. Allow
-> > hardened_usercopy= default to be set at compile time similar to
-> > init_on_alloc= and init_on_free=. The intent is that hardening
-> > options that can be disabled at runtime can set their default at
-> > build time.
-> > 
-> > Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
-> > ---
-> >  Documentation/admin-guide/kernel-parameters.txt | 4 +++-
-> >  mm/usercopy.c                                   | 3 ++-
-> >  security/Kconfig.hardening                      | 8 ++++++++
-> >  3 files changed, 13 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> > index 3872bc6ec49d..5d759b20540a 100644
-> > --- a/Documentation/admin-guide/kernel-parameters.txt
-> > +++ b/Documentation/admin-guide/kernel-parameters.txt
-> > @@ -1773,7 +1773,9 @@
-> >  			allocation boundaries as a proactive defense
-> >  			against bounds-checking flaws in the kernel's
-> >  			copy_to_user()/copy_from_user() interface.
-> > -		on	Perform hardened usercopy checks (default).
-> > +			The default is determined by
-> > +			CONFIG_HARDENED_USERCOPY_DEFAULT_ON.
-> > +		on	Perform hardened usercopy checks.
-> >  		off	Disable hardened usercopy checks.
-> >  
-> >  	hardlockup_all_cpu_backtrace=
-> > diff --git a/mm/usercopy.c b/mm/usercopy.c
-> > index 83c164aba6e0..4cf33305347a 100644
-> > --- a/mm/usercopy.c
-> > +++ b/mm/usercopy.c
-> > @@ -255,7 +255,8 @@ void __check_object_size(const void *ptr, unsigned long n, bool to_user)
-> >  }
-> >  EXPORT_SYMBOL(__check_object_size);
-> >  
-> > -static bool enable_checks __initdata = true;
-> > +static bool enable_checks __initdata =
-> > +		IS_ENABLED(CONFIG_HARDENED_USERCOPY_DEFAULT_ON);
+
+
+On 5/16/23 23:55, Kees Cook wrote:
+> On Mon, May 08, 2023 at 09:21:00PM +0530, Mukesh Ojha wrote:
+>> 1. Device_coredump allocates some configurable contigous memory that can be controlled
+>>    via CONFIG or bootargs and later registers for panic notifiers.
+>> 2. Notifier gets added.
+>> 3. Pstore adds device_coredump as its front-end via dumper registration similar
+>>    to kmsg being dump today.
+>> 4. Successful registration of dumper.
+>> 5. A device driver(A-Z) can register their buffer to be dumped as part of panic.
+>> 6. buffer gets added to the dump list.
+>> 7. Panic occurs.
+>> 8. iterate over registered drivers and copy their dump list to its own memory and if
+>>    it crosses device core dump memory log an error stop iterating.
+>> 9. Similar to devcore_dump() inline with kmsg_dump()
+>> 10.Copy the content to pstore region and this could be elf or raw binary that can be
+>>    discussed.
 > 
-> With the addition of the compile-time default, we can also provide
-> better hot-path hinting for the static branches (likely as a separate
-> patch), that would rename "bypass_usercopy_checks" to
-> "perform_usercopy_checks" to avoid confusing negatives, and then:
+> Yeah, I think having something like the panic dump handlers for
+> driver-specific data sounds like a fine idea (as long as we have actual
+> users of such an interface).
+> 
+> I think it would be easy to add another front-end to pstore (via the
+> enums, etc), and expose it via a new template filename in the pstorefs.
 > 
 
-I decided to go with the more explicit name "validate_usercopy_range"
-but I'm not overly pushed about the name
+Hello Kees,
 
-> > --- a/security/Kconfig.hardening
-> > +++ b/security/Kconfig.hardening
-> > @@ -293,6 +293,14 @@ config HARDENED_USERCOPY
-> >       or are part of the kernel text. This prevents entire classes
-> >       of heap overflow exploits and similar kernel memory exposures.
-> >
-> > +config HARDENED_USERCOPY_DEFAULT_ON
-> > +   bool "Harden memory copies by default"
-> > +   depends on HARDENED_USERCOPY
-> > +   default n
->
-> To avoid regressions for people moving their configs forward (and IMO
-> get the right setting by default), I think this should instead be
-> "default HARDENED_USERCOPY".
+Currently I am working to get a similar design on Pstore as described by
+Mukesh, with some differences.
+I want to be able to register memory areas into Pstore, not by doing a
+copy, just by registering via a new API (as a frontend, area pointer and
+size). Further, these memory areas would be registered to a new type of
+zone inside pstore/zone called directly mapped zone, and then registered
+to any kind of backend that would support it. The backend would then
+decide what to do with the memory area, have it ready in a list for a
+panic case, hangup, or hardware fault; or something else.
+This implementation would avoid memory copy operations, memory
+reservations, and dependency to a panic handler being run. It would work
+in multiple scenarios, not just when the kernel is being able to run a
+panic handler.
+Further, the data can be extracted either by JTAG, firmware, remote
+processor or any other solution, including dedicated storage, shared
+memory. One could then use it to construct a coredump or specific dump
+information.
+Having different memory areas being registered has the advantage of
+being flexible and small, ranging from nothing to a full kernel memory
+range.
 
-This I'm less keen on. The intent is that all the hardening options would
-default to all opt-in or all opt-out by default to be consistent. I lean
-towards default opt-in because those requiring a hardened environment should
-know what options to enable and why. A distribution providing a hardened
-kernel would explicitly enable them by default. A distribution that wanted
-to provided a general kernel for users could provide the hardening options
-but leave them disabled to avoid spurious performance regression reports
-after a kernel upgrade.
+What do you think about this approach ? Do you see it working like this ?
 
-Micro-optimisation currently is this;
-
---<--
-mm: security: Check early if HARDENED_USERCOPY is enabled
-
-HARDENED_USERCOPY is checked within a function so even if disabled, the
-function overhead stillexists. Move the static check inline.
-
-Suggested-by: Kees Cook <kees@kernel.org>
-Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
-
-diff --git a/include/linux/thread_info.h b/include/linux/thread_info.h
-index cf2446c9c30d..832f6a97e64c 100644
---- a/include/linux/thread_info.h
-+++ b/include/linux/thread_info.h
-@@ -221,9 +221,17 @@ static inline int arch_within_stack_frames(const void * const stack,
- extern void __check_object_size(const void *ptr, unsigned long n,
- 					bool to_user);
- 
-+DECLARE_STATIC_KEY_MAYBE(CONFIG_HARDENED_USERCOPY_DEFAULT_ON,
-+			   validate_usercopy_range);
-+
- static __always_inline void check_object_size(const void *ptr, unsigned long n,
- 					      bool to_user)
- {
-+	if (static_branch_maybe(CONFIG_HARDENED_USERCOPY_DEFAULT_ON,
-+				&validate_usercopy_range)) {
-+		return;
-+	}
-+
- 	if (!__builtin_constant_p(n))
- 		__check_object_size(ptr, n, to_user);
- }
-diff --git a/mm/usercopy.c b/mm/usercopy.c
-index 4cf33305347a..2e86413ed244 100644
---- a/mm/usercopy.c
-+++ b/mm/usercopy.c
-@@ -201,7 +201,9 @@ static inline void check_heap_object(const void *ptr, unsigned long n,
- 	}
- }
- 
--static DEFINE_STATIC_KEY_FALSE_RO(bypass_usercopy_checks);
-+DEFINE_STATIC_KEY_MAYBE_RO(CONFIG_HARDENED_USERCOPY_DEFAULT_ON,
-+			   validate_usercopy_range);
-+EXPORT_SYMBOL(validate_usercopy_range);
- 
- /*
-  * Validates that the given object is:
-@@ -212,9 +214,6 @@ static DEFINE_STATIC_KEY_FALSE_RO(bypass_usercopy_checks);
-  */
- void __check_object_size(const void *ptr, unsigned long n, bool to_user)
- {
--	if (static_branch_unlikely(&bypass_usercopy_checks))
--		return;
--
- 	/* Skip all tests if size is zero. */
- 	if (!n)
- 		return;
-@@ -271,7 +270,9 @@ __setup("hardened_usercopy=", parse_hardened_usercopy);
- static int __init set_hardened_usercopy(void)
- {
- 	if (enable_checks == false)
--		static_branch_enable(&bypass_usercopy_checks);
-+		static_branch_enable(&validate_usercopy_range);
-+	else
-+		static_branch_disable(&validate_usercopy_range);
- 	return 1;
- }
- 
+Thank you for your suggestions,
+Eugen
