@@ -1,115 +1,129 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE8F01F470B
-	for <linux-hardening@vger.kernel.org>; Tue, 21 Jan 2025 15:06:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 066D41F4285
+	for <linux-hardening@vger.kernel.org>; Tue, 21 Jan 2025 15:38:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737471992; cv=none; b=Ee9yslqSBVkT6gpYgWLWQ/yjgxuVnNM1QYIQ8Usu2aS/nwYKpmUXenbPLUjdtKnMpI/3LY+OXpKdqqVgcVYe9UgeKPPNV+uIslayQuFWKgTS+pSkHDVGDr87+Us80xflIJiFcRlynHMcyb+vzEUZG9xpxEA0MhrhioQp6upImpg=
+	t=1737473926; cv=none; b=UYVO2TVhAmZDGbYaaYamBkmTbEvS8q+Ul2K2eedGSbE0d1WnVwnmTL+MaxYdetGJedBVpBM+fSuAm6T1SJm4mqykp7s/Y/mkTdFeHX9KoK/p9jxReNO4QzKjrchN/wSQvCDW+Nj5OzJ+gqGhWVR1oQZ6WpOl+SwGDb33WaJ17Tw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737471992; c=relaxed/simple;
-	bh=fACdkvrQz3xHG26Gy/TSFwx/AcDLdoyuEAccUKN5eXA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pJIqc2DhHdvatzxYG4gfi4RDu0n5enSMNDW8MPYlGWLMt/cw5ISBpBO+0UrPrMr/h+3hjKu1/8L6o49gpoVtyWLqctXCc29npx5jnJ8x+WTcYZd9Lhp95jjdUSbNyoafa9xq0IawpBRFJh7vmUqGoJYAQoB+tPHuv748zJWsPis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pD5DLzTP; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1737473926; c=relaxed/simple;
+	bh=wXbPtfG6OX/fZzo5GBygwakP/GK7OIf7vQ5InWG+iYk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=MkEkrB3LNwAOdA+5p0g9vx8mOkzsX6KjNwbSSfAfZDuBXRIBPfHoKraVzu5jp9N8NyUubyt3sGohhsu9yT7jtxpNMH6XGNSGrCsceGmSkQTxyCena1RQbbugPoPRan7eFGmOJQa70Sm2mUKDe8OWxoxOWr7NbEwQF4EwGyETwag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DqMyETBq; arc=none smtp.client-ip=209.85.222.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pD5DLzTP"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43621d27adeso39573055e9.2
-        for <linux-hardening@vger.kernel.org>; Tue, 21 Jan 2025 07:06:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DqMyETBq"
+Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7bcf33f698dso518949785a.2
+        for <linux-hardening@vger.kernel.org>; Tue, 21 Jan 2025 07:38:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1737471989; x=1738076789; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=O9D0+ljEbQhZcGi15IbGvnov0OawqjfcmowqWE1AvlQ=;
-        b=pD5DLzTPr940F2gNp2wToTymVaqjVbrsNmgORJLjDbxthLQ7ph0DRHhE3jwET4eKs/
-         8ZsujWaVMzeyHac7Mg7AF7Ban5ceYb0Fe18HKwyyjBAiHBDk0cE8YBLghsdrnlOFWdEJ
-         nZxPDlyyy/eUFLbD9RrTOzfZ/vubE/iyQ6/E7Ttp00sExU+PmCI1Pfj7BJbSnhhvglPl
-         Xehac2ZMb/qcitRL+SJgC3t7sidjJDrM7dzmkr804z8M8bLkYdyUCWECNQaj4JVCubmi
-         8rSk3hjIJD+D2iYi8rNL2Kv5tgvXG6J5nZjXsXALUsntevPjY5sW6SCBit2V35joEkU9
-         5SHA==
+        d=google.com; s=20230601; t=1737473924; x=1738078724; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wXbPtfG6OX/fZzo5GBygwakP/GK7OIf7vQ5InWG+iYk=;
+        b=DqMyETBqYcvu0mEl8kuz6ZS3T9y2mr5Y33iN76kpqxL52PjLWeUvJrA7c4C4Y5mhWN
+         f3kR/LvDCrO3m9HC0qEyWBNICx9SZM3hE+653Q7cVSc2OsEex6IpGWeyZ7HHerss+DKT
+         qwPcAHrNLLIAEasuCkxcoW/N4Mf0IV2sx0ZIc8y8HsxyHNB1YKU95XRoHsOPvujpRn/y
+         SIDf5NRhxq3FXWoguq5Q5eDKqWnBjrQaehEnxxQpxgirSPRCEjPpdRUFYFkKDzOxHQ6+
+         ypEm9CKFLPjOq8vQKkGrWKVZVmNbYwFcpAM6WAEAcT/IzAKStkSm+Y5/W/mJRENWYooA
+         LP4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737471989; x=1738076789;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=O9D0+ljEbQhZcGi15IbGvnov0OawqjfcmowqWE1AvlQ=;
-        b=lnZ1tS00KQJMW80KVY+/ddVmF93fa77VBsJT/42AWQfEe+pKHNVc0DBAXuxrbBuKab
-         M980AMDoINR9pyuLMuJfiwSAWMWBFaNI8DAZ8FgyBSXxIAP6/cYONv/+93l3L4XRwcxH
-         Gw4SaDyJrDHZBiR4DZQFWhYgm/aOnxu6MvTconH/cyi8GaLimGFX/HXcr0ji+4MMykTl
-         NiMGukzJ+qhuxUuHLySIcWmlVK/7tZB5rQfLwumUcsO+ieS420yx5MhPPRSIeG5cGHNM
-         u+bgaCT0jz+1JhW85/U85i2QusYcB+nMaYua6k9ahaLJ8KODLwxVgxfJLCKSLFIM37JT
-         EcjQ==
-X-Gm-Message-State: AOJu0YzUw7HCzBb+QIEuUg5O0XKmL4hTxEPOkFJSkTvlK9rv+tG/esbV
-	FGMRRV2cz8mxesBbIyr83i5VXvOVCdz/meFik21Itx/aLd9+IbVWlc1k1b3+M9c=
-X-Gm-Gg: ASbGncsx6nvSKwqTUbkR7H/k2HtNIsSkAC9uDRGDJYypH/S+SCtuhsfsIDxiUyRXsgv
-	rw72o+rQVXfzOtRg+f611pyUH0jQ0OW3sl7v81toXWmkODreV0oNUw269MhPxWG00cLunwSHJzG
-	H7N3NNiZ8aP0GEgyLkqubl3kVIpi76jcOjGwlZ5w7V0HF505Mr8d1x/D/pu+PDuh7BtReiejw97
-	mBi8VCt0Y8UyIsXJGNWbYVpjg6w3m7HVDFcEZMr6USaeq3g6gWXt8XjpENFRoA9vMTNlLHC49v7
-	z04=
-X-Google-Smtp-Source: AGHT+IGhiM80Yx8g7FgQEg9lBl/tB6jqhiNWi6qeIbN3jHFPIOlb2fJoLnI+x2zn9XucLqolIv1CyA==
-X-Received: by 2002:a05:600c:348c:b0:434:f1d5:1453 with SMTP id 5b1f17b1804b1-438912dbfedmr184206655e9.0.1737471989066;
-        Tue, 21 Jan 2025 07:06:29 -0800 (PST)
-Received: from eugen-station.. ([82.76.24.202])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-437c7499942sm240936555e9.6.2025.01.21.07.06.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jan 2025 07:06:28 -0800 (PST)
-From: Eugen Hristev <eugen.hristev@linaro.org>
-To: kees@kernel.org
-Cc: linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Eugen Hristev <eugen.hristev@linaro.org>
-Subject: [PATCH] pstore/zone: fix return value for psz_init_zones
-Date: Tue, 21 Jan 2025 17:06:17 +0200
-Message-ID: <20250121150617.608118-1-eugen.hristev@linaro.org>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20230601; t=1737473924; x=1738078724;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wXbPtfG6OX/fZzo5GBygwakP/GK7OIf7vQ5InWG+iYk=;
+        b=luLYRc3WPRvrTyCtqYRg5I5QCkigqgRDHNmXtr+raEQd6VJyK76/R2q+pVWe0zDqJW
+         9+Kt0cFF8NIf0c12NKCvDCOesb4mQrJtlCBBcZeriL0vM3a7ASmWnxkrnSfsSY1Js/Ia
+         QBhZFj6fvs5HqwQ15h84RLDANnls1JwofGkg6b7GNYXbjeNPf8Ctt99wovaPl4Wn+baM
+         wxpddBPwMajwZPeO7xM9z50Nwi7wK8IYhvL1GouA7ZkkgsbRbzv33YrqUIvPLJKjpwW3
+         nzXo5Jt3G1S04jZgFAJSK5zxTtZJrcJWU2xvzVR7ZQqlKt4E3STi/3Q8Paf2mx+ObfwR
+         ZJvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUPSrw5RBPzOdErEIdvuCJlx0Xx/KsykBa8W/aYoYnJKMAybPqgZv6p5gY8IXd2cxA3Xf89O27zaM3Pdmzgw/Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIf38RkOzDRdsR6LwvyOzU1aJA/bj31SC67JfPOTW+EMrEI3o9
+	LDyBV/aQ/WI6KprHI1sfvLKQyXRbRpQsNUc5NBuJ16J5mMVL5DCQ7DYVJOel01jEtdKUPe0oQUi
+	OZFdpEgHQhqDsTVx1tSk1mpFTeKOmL2xPA5lw
+X-Gm-Gg: ASbGncuJq6ppwtpnoc8GusWYvwLkm8HQ5am+kODybSMWYTmTu5p0w/w/ZMdL5UBWaG7
+	H9wnqyAcyzl2aRqbHvI/ircJ+lqccGnq/qp6DbaMYayvIlENC
+X-Google-Smtp-Source: AGHT+IH2AKLBa2Z32l2lWnfu4E9pnovaAlVvU+CDW8xr+dDGVb09CiGZaH6ORsIC+VXBLZx4gmt9UFmfU+yhnig/Ur0=
+X-Received: by 2002:a05:6214:2466:b0:6d8:b115:76a6 with SMTP id
+ 6a1803df08f44-6e1b1b26187mr321560316d6.0.1737473923655; Tue, 21 Jan 2025
+ 07:38:43 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <202501061647.6C8F34CB1A@keescook> <CABi2SkUfAoCbsknnXnyoFbCPOFRahDx+Vqz3ohnyf_G1p4eszA@mail.gmail.com>
+ <CABi2SkXS9OOwP2BZGQOa=Pn+NoL1VmOJBJEn-6tWBBQwLtpYiw@mail.gmail.com>
+ <5cf1601b-70c3-45bb-81ef-416d89c415c2@lucifer.local> <CABi2SkX--gf8XtzBd1G7wS6E=F51rFckP62V0GrONuXs1TCOcQ@mail.gmail.com>
+ <7071878c-7857-4acd-ac27-f049cbc84de2@lucifer.local> <2e5de601da34342d8eb0d8319dcf81ff213c7ef0.camel@sipsolutions.net>
+ <CAKbZUD1btTbeEht6W5MmhgtEJk3dg55cBpBtoDL0ieaL=23qeQ@mail.gmail.com>
+ <CABi2SkWoNTd5sRJ7-7arPfutYZx6xi9iac0mXZyfzuVXuh1atA@mail.gmail.com>
+ <CAJgzZop04=7+13jjV_zDfJF4dyJ7tp-86G8_mRe=C=sBEp+z3Q@mail.gmail.com> <ocstrhpyoyxzurvvxbrbnlzfqzo6hiqt7dxj7vu45ipj4min6z@ffnpao72slda>
+In-Reply-To: <ocstrhpyoyxzurvvxbrbnlzfqzo6hiqt7dxj7vu45ipj4min6z@ffnpao72slda>
+From: enh <enh@google.com>
+Date: Tue, 21 Jan 2025 10:38:32 -0500
+X-Gm-Features: AbW1kvbpVP0FEwwCGd_2Q54HtfoIbYiStsGFG684toRNN56zCqOwNktD1Uc_TOk
+Message-ID: <CAJgzZopv+jKmDncYDJEQTymqQ1oRpy8HNpOsmcoM7Chb=uBJzg@mail.gmail.com>
+Subject: Re: [PATCH v4 1/1] exec: seal system mappings
+To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, enh <enh@google.com>, 
+	Jeff Xu <jeffxu@chromium.org>, Pedro Falcato <pedro.falcato@gmail.com>, 
+	Benjamin Berg <benjamin@sipsolutions.net>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	Kees Cook <kees@kernel.org>, akpm@linux-foundation.org, jannh@google.com, 
+	torvalds@linux-foundation.org, adhemerval.zanella@linaro.org, oleg@redhat.com, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	linux-mm@kvack.org, jorgelo@chromium.org, sroettger@google.com, 
+	ojeda@kernel.org, adobriyan@gmail.com, anna-maria@linutronix.de, 
+	mark.rutland@arm.com, linus.walleij@linaro.org, Jason@zx2c4.com, 
+	deller@gmx.de, rdunlap@infradead.org, davem@davemloft.net, hch@lst.de, 
+	peterx@redhat.com, hca@linux.ibm.com, f.fainelli@gmail.com, gerg@kernel.org, 
+	dave.hansen@linux.intel.com, mingo@kernel.org, ardb@kernel.org, 
+	mhocko@suse.com, 42.hyeyoo@gmail.com, peterz@infradead.org, ardb@google.com, 
+	rientjes@google.com, groeck@chromium.org, mpe@ellerman.id.au, 
+	Vlastimil Babka <vbabka@suse.cz>, Andrei Vagin <avagin@gmail.com>, Dmitry Safonov <0x7f454c46@gmail.com>, 
+	Mike Rapoport <mike.rapoport@gmail.com>, 
+	Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-psz_init_zones is not supposed to return NULL. It returns an errno,
-and its caller always checks for an errno to look for a problem.
-If the caller receives a NULL as a return, this code will go further
-without any errors:
+On Fri, Jan 17, 2025 at 5:08=E2=80=AFPM Liam R. Howlett <Liam.Howlett@oracl=
+e.com> wrote:
+>
+> * enh <enh@google.com> [250117 14:35]:
+> ...
+>
+> >
+> > as a maintainer of a different linux libc, i've long wanted a "tell me
+> > everything there is to know about this vma" syscall rather than having
+> > to parse /proc/maps...
+> >
+>
+> You mean an ioctl()-based API to query VMAs from /proc/<pid>/maps?
 
-        cxt->kpszs = psz_init_zones(PSTORE_TYPE_DMESG, &off,
-                        info->total_size - off_size,
-                        info->kmsg_size, &cxt->kmsg_max_cnt);
-        if (IS_ERR(cxt->kpszs)) {
-                err = PTR_ERR(cxt->kpszs);
-                cxt->kpszs = NULL;
-                goto free_out;
-        }
+i wasn't imagining an ioctl(), no, just a regular syscall, but that
+would work too.
 
-Later, when dereferencing kpszs, a panic would occur.
+> Andrii had something like that [1], check out ed5d583a88a92 ("fs/procfs:
+> implement efficient VMA querying API for /proc/<pid>/maps")
 
-Thus, to avoid this possible crash, it's better to avoid returning NULL
-in psz_init_zones, and just return -EINVAL if the parameters received
-are wrong (in this case, a zero size request).
+yeah, that would work for the use cases i've seen too (some of which
+are similar to the ones mentioned in the patch description, but other
+ones too).
 
-Fixes: d26c3321fe18 ("pstore/zone: Introduce common layer to manage storage zones")
-Signed-off-by: Eugen Hristev <eugen.hristev@linaro.org>
----
- fs/pstore/zone.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+the other motivation we've had that i didn't notice mentioned there is
+avoiding the awkward /proc/<pid>/maps behavior when you have too many
+vmas to fit all the output into a page.
 
-diff --git a/fs/pstore/zone.c b/fs/pstore/zone.c
-index 5fa2fa2e7aa7..dbafc72a2f68 100644
---- a/fs/pstore/zone.c
-+++ b/fs/pstore/zone.c
-@@ -1204,7 +1204,7 @@ static struct pstore_zone **psz_init_zones(enum pstore_type_id type,
- 
- 	*cnt = 0;
- 	if (!total_size || !record_size)
--		return NULL;
-+		return ERR_PTR(-EINVAL);
- 
- 	if (*off + total_size > info->total_size) {
- 		pr_err("no room for zones %s (0x%zx@0x%llx over 0x%lx)\n",
--- 
-2.43.0
+i'd definitely use this in Android's libc, and several of our
+profiling/unwinding libraries.
 
+> Regards,
+> Liam
+>
+> [1]. https://lore.kernel.org/linux-mm/20240627170900.1672542-1-andrii@ker=
+nel.org/
