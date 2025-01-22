@@ -1,111 +1,144 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D4F31B85C5;
-	Tue, 21 Jan 2025 21:51:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28DC912B71;
+	Wed, 22 Jan 2025 00:22:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737496287; cv=none; b=X5ZlgBZ6pFVa3GRwCRWpxts15LtvGGBv5u2KmZmt8kcmDwyYiWx7P3rQ7WEyGL9R/+eJ7VW96223FQc1diAWBhdA7z86+ryd0LvYIXMZ3I83HTjd7y/PzWaMYJw/QBnT3iR2QDIRsvGsX3y//Zu/uQwYQndxzw+Hrb/Q6Z1AS+Y=
+	t=1737505336; cv=none; b=mXRnw7MoJrKr0fVFK8Tk+gXkhybANZXgq/W1cRBBJEo4RNmDOBhcDw/eOa0LyCvM7tjGzX7lKpij/Mgzn7DBu+6owiyIVhnJyaIA1FNtIxWJltTTEyxxZSfp4Kak/LaTC5Bt7td98S5TKy9QhX5mAY1h1KZ+aj1EZ3wha6su2zM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737496287; c=relaxed/simple;
-	bh=ghPzPcH4slQD//gSMFh6JByj3Bbfq1ElIu7rxa7KJuU=;
+	s=arc-20240116; t=1737505336; c=relaxed/simple;
+	bh=/jGFli4cvz5GuKwl53vdKodQbbfB6lqGAT1IVg71WEg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eRZW2++ONQ/KHPEit3749RgJck6iE2+RgO6HLWziGFK4Iw47i4N7Q6ABVCjp7MS3FhHWB6XjAa0OBLvSXhVKyIxlSSFR0UNWPEzcx3EihIL5KrG67UKG/WEgQeJQv9mZdTYyG/4TYlBBcAAzE6h+nW+rhhoXcvQQUSwqfKOwKQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t/6AtUgu; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=t6xb0AlHxCL5QW3ZfQOtlZgaCvjSx4j93KZhBGBEhAJHETBXKdAIcvJYop+jbHLxobySvAcSG3DCX1u0+lEgTBrNVMRDoWLikVqRaCAA3D4QrK6DoANtVd/dwnXLXFSZPGY122OlRpXy7FI3bdTKrcqSZCi2Ol6UDzGD1Fys1Mw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m6yz2ru+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t/6AtUgu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02207C4CEDF;
-	Tue, 21 Jan 2025 21:51:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m6yz2ru+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A0ECC4CEDF;
+	Wed, 22 Jan 2025 00:22:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737496286;
-	bh=ghPzPcH4slQD//gSMFh6JByj3Bbfq1ElIu7rxa7KJuU=;
+	s=k20201202; t=1737505335;
+	bh=/jGFli4cvz5GuKwl53vdKodQbbfB6lqGAT1IVg71WEg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=t/6AtUguCkvg8jyLjxP+LSXvzDm8FKRVhkADOgYAZi4sbxxAYbPAx4e6PF1rV4Jty
-	 rrc7jFtSZz5wYH3Ur7KUINHmAi3hfdAck/qdFAdfOLseTrwg1Bsq0hCDUawkitKMhT
-	 9Pm/Wy4EuWN+GzjB0fEy5MO+GFYZ80NvIXXF6K2GRFNbfpd3srg0UsUAlOHhyrcrSN
-	 jY5gMvQv58sr+Cj9HmPdiFmj4fyW47zREPz1VSHLgRIHeFXDGMvRxiVSRFzHHLvrG3
-	 MVun19DQL2GM0Gvv2pbgQbqnSFWhmagXRzxlOTtjaRD0PQyyWTy8eeKGru3zHtz2uQ
-	 oEg6ssSH5Ez3Q==
-Date: Tue, 21 Jan 2025 14:51:22 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Masahiro Yamada <masahiroy@kernel.org>,
-	Jakub Jelinek <jakub@redhat.com>,
-	Nicolas Schier <nicolas@fjasle.eu>, linux-kbuild@vger.kernel.org,
-	Stephen Hemminger <stephen@networkplumber.org>,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] kbuild: Use -fzero-init-padding-bits=all
-Message-ID: <20250121215122.GA1517789@ax162>
-References: <20250121003646.work.168-kees@kernel.org>
+	b=m6yz2ru+LXXh5xzgW1nRGofBLoFG1mOtZGKi5a///oNnHCh2ZlX7+dcv8uCWMxNTP
+	 NYc7Ip5HhxveoM1UG1zbALPWHqlghrr9FWkgxzL4ynzknjr2qzRJNXR0bvmmp0LFhV
+	 2OSMqyc+t3WixyaNjJpsZ4FqrFQOpqBUkDbXqnD8oIRzHSRo6BI6S0PtYY51ka7mXT
+	 F/aNHCRlDP27nrL0iFxyIILAmTVs3KAxdOxLI4Oy09Y/BLpA3KwnyrjprYZYiv2vA6
+	 /XRCO70HAGc/N4UdSrMWqxSo9SxN0390mZcC3+duriCj1eGd6MeQlfVWwQxOpCa2cX
+	 9AeBV3eiLnmoQ==
+Date: Wed, 22 Jan 2025 01:22:12 +0100
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Valentin Schneider <vschneid@redhat.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+	virtualization@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+	linux-riscv@lists.infradead.org, linux-perf-users@vger.kernel.org,
+	xen-devel@lists.xenproject.org, kvm@vger.kernel.org,
+	linux-arch@vger.kernel.org, rcu@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
+	bcm-kernel-feedback-list@broadcom.com,
+	Juergen Gross <jgross@suse.com>,
+	Ajay Kaher <ajay.kaher@broadcom.com>,
+	Alexey Makhalov <alexey.amakhalov@broadcom.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Jason Baron <jbaron@akamai.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Clark Williams <williams@redhat.com>,
+	Yair Podemsky <ypodemsk@redhat.com>,
+	Tomas Glozar <tglozar@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Kees Cook <kees@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Christoph Hellwig <hch@infradead.org>,
+	Shuah Khan <shuah@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Rong Xu <xur@google.com>,
+	Nicolas Saenz Julienne <nsaenzju@redhat.com>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Yosry Ahmed <yosryahmed@google.com>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Jinghao Jia <jinghao7@illinois.edu>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: Re: [PATCH v4 22/30] context_tracking: Exit CT_STATE_IDLE upon
+ irq/nmi entry
+Message-ID: <Z5A6NPqVGoZ32YsN@pavilion.home>
+References: <20250114175143.81438-1-vschneid@redhat.com>
+ <20250114175143.81438-23-vschneid@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20250121003646.work.168-kees@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250114175143.81438-23-vschneid@redhat.com>
 
-On Mon, Jan 20, 2025 at 04:36:53PM -0800, Kees Cook wrote:
-> Enable -fzero-init-padding-bits=all when available (GCC 15+). This will
-> correctly zero padding bits in structs and unions that might have been
-> left uninitialized, and will make sure there is no regression in union
-> initializations[1]. This fixes the following stackinit KUnit selftest
-> cases that had been XFAIL until now because there was no compiler
-> support:
+Le Tue, Jan 14, 2025 at 06:51:35PM +0100, Valentin Schneider a écrit :
+> ct_nmi_{enter, exit}() only touches the RCU watching counter and doesn't
+> modify the actual CT state part context_tracking.state. This means that
+> upon receiving an IRQ when idle, the CT_STATE_IDLE->CT_STATE_KERNEL
+> transition only happens in ct_idle_exit().
 > 
->     ok 38 test_small_hole_static_all # SKIP XFAIL uninit bytes: 3
->     ok 39 test_big_hole_static_all # SKIP XFAIL uninit bytes: 124
->     ok 40 test_trailing_hole_static_all # SKIP XFAIL uninit bytes: 7
->     ok 42 test_small_hole_dynamic_all # SKIP XFAIL uninit bytes: 3
->     ok 43 test_big_hole_dynamic_all # SKIP XFAIL uninit bytes: 124
->     ok 44 test_trailing_hole_dynamic_all # SKIP XFAIL uninit bytes: 7
->     ok 58 test_small_hole_assigned_static_all # SKIP XFAIL uninit bytes: 3
->     ok 59 test_big_hole_assigned_static_all # SKIP XFAIL uninit bytes: 124
->     ok 60 test_trailing_hole_assigned_static_all # SKIP XFAIL uninit bytes: 7
->     ok 62 test_small_hole_assigned_dynamic_all # SKIP XFAIL uninit bytes: 3
->     ok 63 test_big_hole_assigned_dynamic_all # SKIP XFAIL uninit bytes: 124
->     ok 64 test_trailing_hole_assigned_dynamic_all # SKIP XFAIL uninit bytes: 7
-> 
-> All of the above now pass when built under GCC 15:
-> 
->     ./tools/testing/kunit/kunit.py run stackinit --arch=x86_64 \
->         --make_option CC=gcc-15
-> 
-> Suggested-by: Jakub Jelinek <jakub@redhat.com>
-> Link: https://lore.kernel.org/linux-toolchains/Z0hRrrNU3Q+ro2T7@tucnak/ [1]
-> Signed-off-by: Kees Cook <kees@kernel.org>
+> One can note that ct_nmi_enter() can only ever be entered with the CT state
+> as either CT_STATE_KERNEL or CT_STATE_IDLE, as an IRQ/NMI happenning in the
+> CT_STATE_USER or CT_STATE_GUEST states will be routed down to ct_user_exit().
 
-Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+Are you sure? An NMI can fire between guest_state_enter_irqoff() and
+__svm_vcpu_run(). And NMIs interrupting userspace don't call
+enter_from_user_mode(). In fact they don't call irqentry_enter_from_user_mode()
+like regular IRQs but irqentry_nmi_enter() instead. Well that's for archs
+implementing common entry code, I can't speak for the others.
 
-As far as I understand it, clang has decided to do this unconditionally:
+Unifying the behaviour between user and idle such that the IRQs/NMIs exit the
+CT_STATE can be interesting but I fear this may not come for free. You would
+need to save the old state on IRQ/NMI entry and restore it on exit.
 
-https://github.com/llvm/llvm-project/commit/7a086e1b2dc05f54afae3591614feede727601fa
+Do we really need it?
 
-> ---
-> Cc: Masahiro Yamada <masahiroy@kernel.org>
-> Cc: Nathan Chancellor <nathan@kernel.org>
-> Cc: Nicolas Schier <nicolas@fjasle.eu>
-> Cc: linux-kbuild@vger.kernel.org
-> ---
->  scripts/Makefile.extrawarn | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
-> index 1d13cecc7cc7..eb719f6d8d53 100644
-> --- a/scripts/Makefile.extrawarn
-> +++ b/scripts/Makefile.extrawarn
-> @@ -77,6 +77,9 @@ KBUILD_CFLAGS += $(call cc-option,-Werror=designated-init)
->  # Warn if there is an enum types mismatch
->  KBUILD_CFLAGS += $(call cc-option,-Wenum-conversion)
->  
-> +# Explicitly clear padding bits during variable initialization
-> +KBUILD_CFLAGS += $(call cc-option,-fzero-init-padding-bits=all)
-> +
->  KBUILD_CFLAGS += -Wextra
->  KBUILD_CFLAGS += -Wunused
->  
-> -- 
-> 2.34.1
-> 
+Thanks.
