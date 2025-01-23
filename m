@@ -1,115 +1,130 @@
-Received: from mail18.out.titan.email (mail18.out.titan.email [3.64.226.212])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 416851CDA0B
-	for <linux-hardening@vger.kernel.org>; Thu, 23 Jan 2025 22:12:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=3.64.226.212
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9D083C463;
+	Thu, 23 Jan 2025 22:38:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737670340; cv=none; b=c35OfAxasS7Af0cuzCYS8/x4kKZZ5IBxmOyKHNy1vO653FfSe5w17J0VKahTHV3G9vAj42HLeNrBKZjORlrVULXwu0Q8BK641PYk1E3ogTYOQgQRZuPth8QlWuTwCGxzA8nX0BLp3tgnjeYq/dAjtbWXsWG148imnEjRLKIlgWI=
+	t=1737671925; cv=none; b=VfaeOgy9MuNBKLPL7+X+5oSJra/U6GPg89TLzY1G0j9OaUEjq7+wR91VB4ESp9uJN2h5HmyNlgiJKkz5+HcoEdz5rW6KjByMS4lnvE4NHW2r3kr1Ga7wOoS/sXlwDBMgxx9G0bTDQS4pfKN281lhxrBTpIutxinrHh7U2N4m+Sc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737670340; c=relaxed/simple;
-	bh=FXnGYN1HLA7oKl4oNnF5ibO9kW/y1hP4Ubr7zJXHLCo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=usFHl33xeOImRauObX96q7C5EZNTZ2U+VKMCIBNxN6A3CPcCBRn6ibfnAYTXcZGOmYQDiA7u+klQdalwYdZ4nlTr86ELlYiWmzdOWrA4XCTpSSkZ+52guM2AzlLTY6u8l0dIse9GEzji3qZ08ZH2QVqTcFXc4pwy1nmGJKJ2nvw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=techsingularity.net; spf=pass smtp.mailfrom=techsingularity.net; dkim=pass (1024-bit key) header.d=techsingularity.net header.i=@techsingularity.net header.b=DG8o9ysz; arc=none smtp.client-ip=3.64.226.212
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=techsingularity.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=techsingularity.net
+	s=arc-20240116; t=1737671925; c=relaxed/simple;
+	bh=yh6b+cZcjYDmNt1Vb4HM/fy8U2yY81X6obnraoK1JNQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JvVLtgWklkbhDgklhPperFdmbJ8oYsB6rVmBjv5fCDMEcId1zh8RDnK5oQ6KjV6hv53eO+xYswHDwnXhEI5FnIahbX/w5pBij/X1/9WZh63GbstoPdcidNpwafhp3Zd7dT2BH4dtEG4rkOV2v2kglShtyEUqnnoOZpEQ/CIwprM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=qTYMtfcV; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=techsingularity.net header.i=@techsingularity.net header.b="DG8o9ysz"
-Received: from smtp-out0101.titan.email (localhost [127.0.0.1])
-	by smtp-out0101.titan.email (Postfix) with ESMTP id BD949A0015;
-	Thu, 23 Jan 2025 22:12:09 +0000 (UTC)
-DKIM-Signature: a=rsa-sha256; bh=/ztBC38zol6aAkdXqs+b9CijeIaCMsYQyn8IPOdL8aY=;
-	c=relaxed/relaxed; d=techsingularity.net;
-	h=to:cc:message-id:in-reply-to:mime-version:from:date:references:subject:from:to:cc:subject:date:message-id:in-reply-to:references:reply-to;
-	q=dns/txt; s=titan1; t=1737670329; v=1;
-	b=DG8o9yszbOff1vdwbaD31yZT3dsXx5iPurhZd0IhzZLVVFs1ZzvYkaUbjyCn2UahZCdc4pKT
-	V1jrguBwYzSUvYvm+UVOl/9dkVqbdk3+dKnLE9cJ409oY3G8YDiLrTEqTH2RT70WWE8+iuT+NTy
-	CLVzQpG6+ZuRySB4KTJJREik=
-Received: from mail.blacknight.com (ip-84-203-196-66.broadband.digiweb.ie [84.203.196.66])
-	by smtp-out0101.titan.email (Postfix) with ESMTPA id 4D2D0A0010;
-	Thu, 23 Jan 2025 22:12:09 +0000 (UTC)
-Feedback-ID: :mgorman@techsingularity.net:techsingularity.net:flockmailId
-From: Mel Gorman <mgorman@techsingularity.net>
-To: Kees Cook <kees@kernel.org>
-Cc: Daniel Micay <danielmicay@gmail.com>,
-	Paul Moore <paul@paul-moore.com>,
-	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Mel Gorman <mgorman@techsingularity.net>
-Subject: [PATCH 4/4] fortify: Move FORTIFY_SOURCE under 'Kernel hardening options'
-Date: Thu, 23 Jan 2025 22:11:15 +0000
-Message-ID: <20250123221115.19722-5-mgorman@techsingularity.net>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250123221115.19722-1-mgorman@techsingularity.net>
-References: <20250123221115.19722-1-mgorman@techsingularity.net>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qTYMtfcV"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=0fGNZae0SEsdeWC7CbCUBx4kB8+o1y3cPswn80K5x64=; b=qTYMtfcV02PO6gNh0YR8vHugQY
+	ekoQSqltH1di7AEklFlxmJQjAGXVtV08P3t+PlJu1Ro7ABZi4FLCHvRwqNMsupDfE1zwB+Vzhmkra
+	9GiKQjsoMjGQKYmyY7GsN0jYEpX0ysGO96Jz/mhjWeB0PpgZlvmD+5BmSrKZGhp4lxvgkbE+vAJFi
+	4248oBMvtEoHYytq9W243xI5dlZ65epReXaY/wxUi3JeBs0z/cdZQlQ98Z1ysNm5cLqxNpX5SOuTe
+	wxifipKy2cBs5yAlVxSD29Eq+uIGMZwrnL8LLMHliQurDhRRMWqraojLXzSyEzsdTUfn+NylBaKkc
+	RJa477eg==;
+Received: from willy by casper.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tb5qL-0000000BIin-0Vwz;
+	Thu, 23 Jan 2025 22:38:33 +0000
+Date: Thu, 23 Jan 2025 22:38:32 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: enh <enh@google.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Jeff Xu <jeffxu@chromium.org>,
+	Pedro Falcato <pedro.falcato@gmail.com>,
+	Benjamin Berg <benjamin@sipsolutions.net>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Kees Cook <kees@kernel.org>, akpm@linux-foundation.org,
+	jannh@google.com, torvalds@linux-foundation.org,
+	adhemerval.zanella@linaro.org, oleg@redhat.com,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	linux-mm@kvack.org, jorgelo@chromium.org, sroettger@google.com,
+	ojeda@kernel.org, adobriyan@gmail.com, anna-maria@linutronix.de,
+	mark.rutland@arm.com, linus.walleij@linaro.org, Jason@zx2c4.com,
+	deller@gmx.de, rdunlap@infradead.org, davem@davemloft.net,
+	hch@lst.de, peterx@redhat.com, hca@linux.ibm.com,
+	f.fainelli@gmail.com, gerg@kernel.org, dave.hansen@linux.intel.com,
+	mingo@kernel.org, ardb@kernel.org, mhocko@suse.com,
+	42.hyeyoo@gmail.com, peterz@infradead.org, ardb@google.com,
+	rientjes@google.com, groeck@chromium.org, mpe@ellerman.id.au,
+	Andrei Vagin <avagin@gmail.com>,
+	Dmitry Safonov <0x7f454c46@gmail.com>,
+	Mike Rapoport <mike.rapoport@gmail.com>,
+	Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>,
+	Christopher Ferris <cferris@google.com>
+Subject: Re: [PATCH v4 1/1] exec: seal system mappings
+Message-ID: <Z5LE6BkIQjgyVfvb@casper.infradead.org>
+References: <2e5de601da34342d8eb0d8319dcf81ff213c7ef0.camel@sipsolutions.net>
+ <CAKbZUD1btTbeEht6W5MmhgtEJk3dg55cBpBtoDL0ieaL=23qeQ@mail.gmail.com>
+ <CABi2SkWoNTd5sRJ7-7arPfutYZx6xi9iac0mXZyfzuVXuh1atA@mail.gmail.com>
+ <CAJgzZop04=7+13jjV_zDfJF4dyJ7tp-86G8_mRe=C=sBEp+z3Q@mail.gmail.com>
+ <ocstrhpyoyxzurvvxbrbnlzfqzo6hiqt7dxj7vu45ipj4min6z@ffnpao72slda>
+ <CAJgzZopv+jKmDncYDJEQTymqQ1oRpy8HNpOsmcoM7Chb=uBJzg@mail.gmail.com>
+ <l7pexkoo7t7p5u6gobgc46lxvpgpe2lywaqwa4b6vjddt3ccnq@mh6x72cxfhyv>
+ <CAJgzZopiyhq9Wpu+gxUssoNhQT7tNjiey0JGsKPJAXjraEBRiw@mail.gmail.com>
+ <881c3558-1101-496e-9ef4-5bef13f3f233@suse.cz>
+ <CAJgzZoq29GzVsqAMrGiKoUpXFPVjPRQRO87SiagaQCVXfH90Lw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-F-Verdict: SPFVALID
-X-Titan-Src-Out: 1737670329649399389.9138.4356779843527689844@prod-euc1-smtp-out1002.
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.4 cv=UdNXSrSN c=1 sm=1 tr=0 ts=6792beb9
-	a=jU4EnjUUC1PH4wSjvv7Pww==:117 a=jU4EnjUUC1PH4wSjvv7Pww==:17
-	a=CEWIc4RMnpUA:10 a=NEAV23lmAAAA:8 a=R_Myd5XaAAAA:8 a=xVhDTqbCAAAA:8
-	a=is8aNrDapYGysjnIDgAA:9 a=L2g4Dz8VuBQ37YGmWQah:22
-	a=GrmWmAYt4dzCMttCBZOh:22
-X-Virus-Scanned: ClamAV using ClamSMTP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJgzZoq29GzVsqAMrGiKoUpXFPVjPRQRO87SiagaQCVXfH90Lw@mail.gmail.com>
 
-FORTIFY_SOURCE is a hardening option both at build and runtime. Move
-it under 'Kernel hardening options'.
+On Thu, Jan 23, 2025 at 04:50:46PM -0500, enh wrote:
+> yeah, at this point i should (a) drag in +cferris who may have actual
+> experience of this and (b) admit that iirc i've never personally seen
+> _evidence_ of this, just claims. most famously in the chrome source...
+> if you `grep -r /proc/.*/maps` you'll find lots of examples, but
+> something like https://chromium.googlesource.com/chromium/src/+/main/base/debug/proc_maps_linux.h#61
+> is quite representative of the "folklore" in this area.
 
-Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
-Acked-by: Paul Moore <paul@paul-moore.com>
----
- security/Kconfig           | 9 ---------
- security/Kconfig.hardening | 9 +++++++++
- 2 files changed, 9 insertions(+), 9 deletions(-)
+That folklore is 100% based on a true story!  I'm not sure that all of
+the details are precisely correct, but it's true enough that I wouldn't
+quibble with it.
 
-diff --git a/security/Kconfig b/security/Kconfig
-index fe7346dc4bc3..bca84f839fbe 100644
---- a/security/Kconfig
-+++ b/security/Kconfig
-@@ -159,15 +159,6 @@ config LSM_MMAP_MIN_ADDR
- 	  this low address space will need the permission specific to the
- 	  systems running LSM.
- 
--config FORTIFY_SOURCE
--	bool "Harden common str/mem functions against buffer overflows"
--	depends on ARCH_HAS_FORTIFY_SOURCE
--	# https://github.com/llvm/llvm-project/issues/53645
--	depends on !CC_IS_CLANG || !X86_32
--	help
--	  Detect overflows of buffers in common string and memory functions
--	  where the compiler can determine and validate the buffer sizes.
--
- config STATIC_USERMODEHELPER
- 	bool "Force all usermode helper calls through a single binary"
- 	help
-diff --git a/security/Kconfig.hardening b/security/Kconfig.hardening
-index 3a941cc45396..1ce9009c3cc6 100644
---- a/security/Kconfig.hardening
-+++ b/security/Kconfig.hardening
-@@ -281,6 +281,15 @@ endmenu
- 
- menu "Bounds checking"
- 
-+config FORTIFY_SOURCE
-+	bool "Harden common str/mem functions against buffer overflows"
-+	depends on ARCH_HAS_FORTIFY_SOURCE
-+	# https://github.com/llvm/llvm-project/issues/53645
-+	depends on !CC_IS_CLANG || !X86_32
-+	help
-+	  Detect overflows of buffers in common string and memory functions
-+	  where the compiler can determine and validate the buffer sizes.
-+
- config HARDENED_USERCOPY
- 	bool "Harden memory copies between kernel and userspace"
- 	imply STRICT_DEVMEM
--- 
-2.43.0
+In fact, we want to make it worse.  Because the mmap_lock is such a
+huge point of contention, we want to read /proc/PID/maps protected
+only by RCU.  That will relax the guarantees to:
 
+a. If a VMA existed and was not modified during the duration of the
+   read, it will definitely be returned.
+b. If a VMA was added during the call, it might be returned.
+c. If a VMA was removed during the call, it might be returned.
+d. If an address was covered by a VMA before the call and that
+   VMA was modified during the call, you might get the prior or
+   posterior state of the VMA.  And you might get both!
+
+What might be confusing:
+
+e. If VMA A is added, then VMA B is added, your call might show you VMA
+   B and not VMA A.
+f. Similarly for deleted.
+g. If you have, say, a VMA from (4000-9000) and you mprotect the region
+   (5000-6000), you might see:
+	4000-9000 oldA
+   or
+	4000-5000 newA
+	4000-9000 oldA
+   or
+	4000-5000 newA
+	5000-6000 newB
+	4000-9000 oldA
+   or
+	4000-5000 newA
+	5000-6000 newB
+	6000-9000 newC
+
+(it's possible other combinations might be visible; i'm not working on
+the details of this right now)
+
+We shouldn't be able to _skip_  a VMA.  That seems far worse than
+returning duplicates; if your maps parser sees duplicates it can either
+try to figure it out itself, or retry the whole read.
