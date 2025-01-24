@@ -1,219 +1,174 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37C5D136E09;
-	Fri, 24 Jan 2025 15:19:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D1F515A868
+	for <linux-hardening@vger.kernel.org>; Fri, 24 Jan 2025 15:29:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737732000; cv=none; b=vEEGTIP4grRnJvXA4YD2aaKjF9l6WR3N99P+BS5m1A9sALUeTtiOxRHsmLjBkeZ4o1fsTQLPxhROLZXZ90tq8CRW4HiTW3O/upsdTvPn6AY0pojt3jaw6khg4lV50rhyRcb8nNzQksO99duANQXlvfTOjWl5eMzQhAzj/X4izH4=
+	t=1737732575; cv=none; b=uSvHOdqZvmqhYmPCA3Q+K4evJDNnaIEpWxaGC0y/C2UnPKbesVGfMOdECnWNEPd8H6Xcys6kbsNdCHB46CvYhNCjUXDyQO0080/CF7Tg1isL9rTUymY51uEPK9uibAOj5gMvZo5ECnwSIlLHaHoI1eUx9c056Cp0v9+A1GuagW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737732000; c=relaxed/simple;
-	bh=qt9hOujmJqYKqXE9jqqjOse66bg3OVK38sui9ZhjN5Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RhHfVFq3n7K3O69cLBa4IGELdSxCkLWjNyhRqbxv7d2o87ZLLH00CQ0iOrZHOEEAxqFld4yVFYwuLXcssWFLC4mG6HXdaSnNBXiuRkkJnxmg1k58N93zZA8ItNSBkX5/eJvVKCbjKofLfmJyLi6XOpTxbgiTdHiuGbv/DBzGcQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=25c6Dhbl; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=oJNjoNCO; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=25c6Dhbl; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=oJNjoNCO; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1737732575; c=relaxed/simple;
+	bh=DwitzjRGQEzgyZZn0UD4LNiBUZsqGx1Qrum3CBb5LtE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=qH40Snd3QhTaCURIKEDwdB15a8Roi8uHnJbzGXR8dqkqzOjiaItBppr1BXqeSQUTwiIHji5rN0zbfhStUatbY6khxk2U3dZ+w/kcZyDyVpyAQGA75+PEDDzOI4taW5f6SRbbwUrDlIPXLEZKV91mvTWGF5yfhKJxdEbAPFRnzew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LMb3/hXu; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="25c6Dhbl";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="oJNjoNCO";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="25c6Dhbl";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="oJNjoNCO"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 30A6621160;
-	Fri, 24 Jan 2025 15:19:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1737731996; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=JVptaKsKywBb/luIYsL7Zvg5gNwGNyiSLMBWcRb5mww=;
-	b=25c6Dhbl+uxJG5SNNsMe/Xvr8G/+WsQ6O00cy2ANkcN8yTKJDjwOc+bfI/kpa5VMcXgNFE
-	MuF9byzvqWj8oVs/vHslbzSsFF+j2BBfNuAY/klLCdaAjNBDq/B22oRpmERk1vAwYKywmv
-	wp6LtFGXaEXlO8HZY3SL4ycI8xb2A6Q=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1737731996;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=JVptaKsKywBb/luIYsL7Zvg5gNwGNyiSLMBWcRb5mww=;
-	b=oJNjoNCOWyNVbm56bC7PzSEQcfvTy8rk3sqtMitUcDb2+6iNpcchaRbg/0FkN50g64hG/A
-	dW6LWTBwrBrdL7CA==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=25c6Dhbl;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=oJNjoNCO
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1737731996; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=JVptaKsKywBb/luIYsL7Zvg5gNwGNyiSLMBWcRb5mww=;
-	b=25c6Dhbl+uxJG5SNNsMe/Xvr8G/+WsQ6O00cy2ANkcN8yTKJDjwOc+bfI/kpa5VMcXgNFE
-	MuF9byzvqWj8oVs/vHslbzSsFF+j2BBfNuAY/klLCdaAjNBDq/B22oRpmERk1vAwYKywmv
-	wp6LtFGXaEXlO8HZY3SL4ycI8xb2A6Q=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1737731996;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=JVptaKsKywBb/luIYsL7Zvg5gNwGNyiSLMBWcRb5mww=;
-	b=oJNjoNCOWyNVbm56bC7PzSEQcfvTy8rk3sqtMitUcDb2+6iNpcchaRbg/0FkN50g64hG/A
-	dW6LWTBwrBrdL7CA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 063B1139CB;
-	Fri, 24 Jan 2025 15:19:56 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id ofgzAZyvk2e8EAAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Fri, 24 Jan 2025 15:19:56 +0000
-Message-ID: <62044279-0c56-4185-97f7-7afac65ff449@suse.cz>
-Date: Fri, 24 Jan 2025 16:19:55 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LMb3/hXu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1737732571;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DwitzjRGQEzgyZZn0UD4LNiBUZsqGx1Qrum3CBb5LtE=;
+	b=LMb3/hXuyuv5XAOocbleXBVqE4ky9x3VgI0/Ml/oVrOtBkNGQoTUlJeV7BeONSWdejHZ5y
+	HOTGMxXPbA9QbiS8jmW0+QZB+Ts4V1+ZcuQ40gBaDnGj8SFmuZIetYR+3OcIGA3kJSgbfo
+	P7skMDtXnUM0JMR53h+N47CrlDBspVg=
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
+ [209.85.219.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-213--nTO9GJSMP6uZqM4ix0waQ-1; Fri, 24 Jan 2025 10:29:17 -0500
+X-MC-Unique: -nTO9GJSMP6uZqM4ix0waQ-1
+X-Mimecast-MFC-AGG-ID: -nTO9GJSMP6uZqM4ix0waQ
+Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6d88ccf14aeso35685366d6.1
+        for <linux-hardening@vger.kernel.org>; Fri, 24 Jan 2025 07:29:17 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737732553; x=1738337353;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DwitzjRGQEzgyZZn0UD4LNiBUZsqGx1Qrum3CBb5LtE=;
+        b=DNg+yWL08fu6dYfCdv1njNMhcep9sTX5cYpEBlu4TGh314Z89HoE44o8zuQCxbtZpm
+         VXuekUUH+j4Fao2Td2cPtMPrGm+KitFwOdwvx9ry7gRVErXfGwskqF39lHE4/XyiHIDl
+         teHuxxFKI7gihnOBptLUTDhE0qIDI040b7ODo7xYCGAtlsMD4vfHaL9gVW5G9JJ0l4by
+         BZABmoZfOoY1HH+pKgB3BhWMIY2/eg/oWr3qGGN/chX6DyrsPZlfCr3qnhqM9XxIfNYE
+         ZjtKf8s0Uyhqxoj6+lkvnf2K66NiXN+cEB8ZyQvFF27I2UJheFUeSSCWhJNKsOYwQQ1k
+         F1EQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXMjz/3JVSYvqPFkBGtN7n4NwoXUS4r6kbC+jy4Zf3DTbnOI5BjGJ8W6IWLHlcpXEHeLv7C7wPSoiE4ZC3Tn48=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy8kWtv83aQJgNXem7a1ZKPawPRJpgFs3YU635cALVdpQxn/n/x
+	c/BYouTgFH0basYhQsH8LqXKIf22FXgiiJkiA4ug8lJiB2yMYHeFeYfElLriILhmW4UkOAHx2fD
+	W/crAYYO7KhnLaXOUhD7kyM5vHTiNz4ujiECGvCswhpShHIKmOyQ6L+a3QJjcnDTecw==
+X-Gm-Gg: ASbGncuVIacrQXZFYdBuO06Oy97tKZWxzqJKKrKnDaayt8udnWsaJXSawU05odN00cy
+	LsPR9srE5cUuAPRGF4bjImqCScCt7ktG7U8TpyMEvlAU8purhB7VCH9apPSs9sa/Ytes8/MhsW7
+	rdnWV8l9xclfIm1jyWfGGUdG0q+VQa7EDjQ/ivw94z4WR/kOrH5EwB4ZG9LSGZV0R6391wVXUxO
+	8XwiS6pQeDu4uPwnWYWP+BUBKOsOZ4C9mAdw1n0mOdYqxYyNQ/PQ8t5guHm0cIjSd6e2+v3lcIO
+	8fVmtrSXe56v0Stzd8n1aHynWKccj8Kz0JgNck0CooNfx4LR55jqniQ=
+X-Received: by 2002:a05:6214:1302:b0:6d8:861f:adca with SMTP id 6a1803df08f44-6e1b2235c9fmr497774336d6.42.1737732153306;
+        Fri, 24 Jan 2025 07:22:33 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IE5TeadQAXYF5iUiWYdZcwN/B3B0GhQEA3OgvrN+YGY06rhpOtkdAXjp93P8gBhIIoKYtqxZQ==
+X-Received: by 2002:a05:6214:1302:b0:6d8:861f:adca with SMTP id 6a1803df08f44-6e1b2235c9fmr497773786d6.42.1737732152904;
+        Fri, 24 Jan 2025 07:22:32 -0800 (PST)
+Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e2058c2a51sm9344776d6.109.2025.01.24.07.22.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Jan 2025 07:22:32 -0800 (PST)
+From: Valentin Schneider <vschneid@redhat.com>
+To: Uladzislau Rezki <urezki@gmail.com>
+Cc: Uladzislau Rezki <urezki@gmail.com>, Jann Horn <jannh@google.com>,
+ linux-kernel@vger.kernel.org, x86@kernel.org,
+ virtualization@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+ linux-perf-users@vger.kernel.org, xen-devel@lists.xenproject.org,
+ kvm@vger.kernel.org, linux-arch@vger.kernel.org, rcu@vger.kernel.org,
+ linux-hardening@vger.kernel.org, linux-mm@kvack.org,
+ linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
+ bcm-kernel-feedback-list@broadcom.com, Juergen Gross <jgross@suse.com>,
+ Ajay Kaher <ajay.kaher@broadcom.com>, Alexey Makhalov
+ <alexey.amakhalov@broadcom.com>, Russell King <linux@armlinux.org.uk>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Paul
+ Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
+ Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo
+ <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
+ Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>, Boris Ostrovsky
+ <boris.ostrovsky@oracle.com>, Josh Poimboeuf <jpoimboe@kernel.org>, Pawan
+ Gupta <pawan.kumar.gupta@linux.intel.com>, Sean Christopherson
+ <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, Andy Lutomirski
+ <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Frederic Weisbecker
+ <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, Jason
+ Baron <jbaron@akamai.com>, Steven Rostedt <rostedt@goodmis.org>, Ard
+ Biesheuvel <ardb@kernel.org>, Neeraj Upadhyay
+ <neeraj.upadhyay@kernel.org>, Joel Fernandes <joel@joelfernandes.org>,
+ Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Lai Jiangshan
+ <jiangshanlai@gmail.com>, Zqiang <qiang.zhang1211@gmail.com>, Juri Lelli
+ <juri.lelli@redhat.com>, Clark Williams <williams@redhat.com>, Yair
+ Podemsky <ypodemsk@redhat.com>, Tomas Glozar <tglozar@redhat.com>, Vincent
+ Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann
+ <dietmar.eggemann@arm.com>, Ben Segall <bsegall@google.com>, Mel Gorman
+ <mgorman@suse.de>, Kees Cook <kees@kernel.org>, Andrew Morton
+ <akpm@linux-foundation.org>, Christoph Hellwig <hch@infradead.org>, Shuah
+ Khan <shuah@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, Miguel
+ Ojeda <ojeda@kernel.org>, Alice Ryhl <aliceryhl@google.com>, "Mike
+ Rapoport (Microsoft)" <rppt@kernel.org>, Samuel Holland
+ <samuel.holland@sifive.com>, Rong Xu <xur@google.com>, Nicolas Saenz
+ Julienne <nsaenzju@redhat.com>, Geert Uytterhoeven <geert@linux-m68k.org>,
+ Yosry Ahmed <yosryahmed@google.com>, "Kirill A. Shutemov"
+ <kirill.shutemov@linux.intel.com>, "Masami Hiramatsu (Google)"
+ <mhiramat@kernel.org>, Jinghao Jia <jinghao7@illinois.edu>, Luis
+ Chamberlain <mcgrof@kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
+ Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: Re: [PATCH v4 29/30] x86/mm, mm/vmalloc: Defer
+ flush_tlb_kernel_range() targeting NOHZ_FULL CPUs
+In-Reply-To: <Z4_Sl-zu7GprkbaL@pc636>
+References: <20250114175143.81438-1-vschneid@redhat.com>
+ <20250114175143.81438-30-vschneid@redhat.com>
+ <CAG48ez1Mh+DOy0ysOo7Qioxh1W7xWQyK9CLGNU9TGOsLXbg=gQ@mail.gmail.com>
+ <xhsmh34hhh37q.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <Z4qBMqcMg16p57av@pc636>
+ <xhsmhwmetfk9d.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <Z44wSJTXknQVKWb0@pc636>
+ <xhsmhr04xfow1.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <Z4_Sl-zu7GprkbaL@pc636>
+Date: Fri, 24 Jan 2025 16:22:19 +0100
+Message-ID: <xhsmh8qr0p784.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm/slab: Achieve better kmalloc caches randomization in
- kvmalloc
-Content-Language: en-US
-To: "Christoph Lameter (Ampere)" <cl@gentwo.org>,
- GONG Ruiqi <gongruiqi1@huawei.com>
-Cc: Pekka Enberg <penberg@kernel.org>, David Rientjes <rientjes@google.com>,
- Joonsoo Kim <iamjoonsoo.kim@lge.com>,
- Andrew Morton <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>,
- Tamas Koczka <poprdi@google.com>, Roman Gushchin <roman.gushchin@linux.dev>,
- Hyeonggon Yoo <42.hyeyoo@gmail.com>, Xiu Jianfeng <xiujianfeng@huawei.com>,
- linux-mm@kvack.org, linux-hardening@vger.kernel.org,
- linux-kernel@vger.kernel.org, "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-References: <20250122074817.991060-1-gongruiqi1@huawei.com>
- <a424b98e-87dc-4f1a-e18b-28ed28b555ef@gentwo.org>
-From: Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; keydata=
- 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
- EP+ylKVEKb0Q2A==
-In-Reply-To: <a424b98e-87dc-4f1a-e18b-28ed28b555ef@gentwo.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 30A6621160
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[15];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	FREEMAIL_CC(0.00)[kernel.org,google.com,lge.com,linux-foundation.org,linux.dev,gmail.com,huawei.com,kvack.org,vger.kernel.org];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -3.01
-X-Spam-Flag: NO
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: yjFeoWgy6lpgHqDKD0pT8Jtspc9TVLzOGZE8QAR2mJQ_1737732556
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain
 
-On 1/22/25 17:02, Christoph Lameter (Ampere) wrote:
-> On Wed, 22 Jan 2025, GONG Ruiqi wrote:
-> 
+On 21/01/25 18:00, Uladzislau Rezki wrote:
+>> >
+>> > As noted before, we defer flushing for vmalloc. We have a lazy-threshold
+>> > which can be exposed(if you need it) over sysfs for tuning. So, we can add it.
+>> >
 >>
->> +void *__kmalloc_node_inline(size_t size, kmem_buckets *b, gfp_t flags,
->> +				int node, unsigned long caller);
->> +
-> 
-> 
-> Huh? Is this inline? Where is the body of the function?
-> 
->> diff --git a/mm/slub.c b/mm/slub.c
->> index c2151c9fee22..ec75070345c6 100644
->> --- a/mm/slub.c
->> +++ b/mm/slub.c
->> @@ -4319,6 +4319,13 @@ void *__kmalloc_node_track_caller_noprof(DECL_BUCKET_PARAMS(size, b), gfp_t flag
->>  }
->>  EXPORT_SYMBOL(__kmalloc_node_track_caller_noprof);
+>> In a CPU isolation / NOHZ_FULL context, isolated CPUs will be running a
+>> single userspace application that will never enter the kernel, unless
+>> forced to by some interference (e.g. IPI sent from a housekeeping CPU).
 >>
->> +__always_inline void *__kmalloc_node_inline(size_t size, kmem_buckets *b,
->> +					    gfp_t flags, int node,
->> +					    unsigned long caller)
->> +{
->> +	return __do_kmalloc_node(size, b, flags, node, caller);
->> +}
->> +
-> 
-> inline functions need to be defined in the header file AFAICT.
+>> Increasing the lazy threshold would unfortunately only delay the
+>> interference - housekeeping CPUs are free to run whatever, and so they will
+>> eventually cause the lazy threshold to be hit and IPI all the CPUs,
+>> including the isolated/NOHZ_FULL ones.
+>>
+> Do you have any testing results for your workload? I mean how much
+> potentially we can allocate. Again, maybe it is just enough to back
+> and once per-hour offload it.
+>
 
-Yeah, this could possibly inline only with LTO (dunno if it does). But the
-real difference is passing __kvmalloc_node_noprof()'s _RET_IP_ as caller.
+Potentially as much as you want... In our Openshift environments, you can
+get any sort of container executing on the housekeeping CPUs and they're
+free to do pretty much whatever they want. Per CPU isolation they're not
+allowed/meant to disturb isolated CPUs, however.
 
-Maybe instead of this new wrapper we could just move
-__kvmalloc_node_noprof() to slub.c and access __do_kmalloc_node() directly.
-For consistency also kvfree() and whatever necessary dependencies. The
-placement in util.c is kinda weird anyway and IIRC we already moved
-krealloc() due to needing deeper involvement with slab internals. The
-vmalloc part of kvmalloc/kvfree is kinda a self-contained fallback that can
-be just called from slub.c as well as from util.c.
+> Apart of that how critical IPIing CPUs affect your workloads?
+>
 
+If I'm being pedantic, a single IPI to an isolated CPU breaks the
+isolation. If we can't quiesce IPIs to isolated CPUs, then we can't
+guarantee that whatever is running on the isolated CPUs is actually
+isolated / shielded from third party interference.
 
