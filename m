@@ -1,57 +1,58 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from ene-kolla.pt (mail.ene-kolla.pt [89.149.207.97])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 924671BDAB5;
-	Thu, 23 Jan 2025 23:51:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DF4C4EB48
+	for <linux-hardening@vger.kernel.org>; Fri, 24 Jan 2025 00:15:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.149.207.97
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737676272; cv=none; b=NpSNVj6Y6Pbwx3XJx9XPtP9Ox95xTP+QnYLNiHNt1qLsJGi+TtpCv7ZnABcxK4WyquEprm0jNCa6gFEjuQKfPf6qXY0ZQOeyGPoASriokzX0vsnMAPfeoXB4e2FgWqhppJ2a15K9zkDTaN10EZdwoq8VdcXlAZQ5l61+5UV4onE=
+	t=1737677755; cv=none; b=N2BPocDkHbKgzpThHaddFgLpDiijMbi83rfVy0eol1qY189DMBKdp5YzoDnH8YfE0y+VSvFslR6ijfxkd90lL6YtzawksluMB9DU6s20z3UIh0NvP0bnXR+ochuctjN5WkQlnPlheJXYHLshPqs4si8SyTJuhk3RWtvY/d36SpQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737676272; c=relaxed/simple;
-	bh=DT6oax769El5tLMXqfdJPrLfVYni1M28D02nz3sh8Hc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mwxlUpJPf+Yycd6oyJ6I657FgbjAUzJJ28kIu9Em/d9mAfWvzbUJb6lgwbqcL8rJ/qcawvvOlZkooX5wQ8vJ/BwV6QPSDerk0MSSjy9f3CKGypZVZtzub05CJg88JPydHP82XU+WkSFH98sP9rYEUDOHwMmvWMw1aiN8T+7kjQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YUhy7IzY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1737677755; c=relaxed/simple;
+	bh=6Cz1RoC77WgRsOJMWY05qhxtkmo/QejZ9PVT55bwtTs=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EnFmoMknUUh9SLkI5AQwAk4n02G6nt+6QLN3xqj32/74VZbm3xq3YtmqVIhBRY8gkOc+NP87qLZ/bRow4iHIpN1PtM5hnOd8nVr3L28A2aKkybjxrjpvDaGQwGyZSR7l57wwxuZICYfNo//7CJSGzRsqaa0pKey1IaPPbiTOubo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ene-kolla.pt; spf=pass smtp.mailfrom=ene-kolla.pt; dkim=pass (2048-bit key) header.d=ene-kolla.pt header.i=@ene-kolla.pt header.b=KT0hLjbc; arc=none smtp.client-ip=89.149.207.97
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ene-kolla.pt
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ene-kolla.pt
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YUhy7IzY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23035C4CEDD;
-	Thu, 23 Jan 2025 23:51:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737676272;
-	bh=DT6oax769El5tLMXqfdJPrLfVYni1M28D02nz3sh8Hc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YUhy7IzYtWwCPOHMuA2Cd2Gjvleq5Yqmei09DkzBZKs91b8g4FpLqDxIxf9SEe0Vq
-	 eaK8weE4Yhsf2IoKppHGFXOwjuUMN59ehvvS1swQxo8e1EeRI7SFChSKD0yFY0GCKj
-	 PVqheZzuo5DoVymItpCbwKIHASqzex0tyKqwAivqNGWN52jdcETaxNlJCVNQKdaT3d
-	 hWfC9xhwbuVRvnDT4sM0xJ5v4MRIfs9yNwGAFx6SzYfH+ZgQznrtPASkQ0JM3/4tAH
-	 8ZGl+fdHnejozF75wQ41S5nQOHOf9j/uMznffh+fFP52jJtVpjMHfgpn2ulBwSLHwe
-	 9QzXc9hnN4ZUg==
-Date: Thu, 23 Jan 2025 15:51:09 -0800
-From: Kees Cook <kees@kernel.org>
-To: Mel Gorman <mgorman@techsingularity.net>
-Cc: Daniel Micay <danielmicay@gmail.com>, Paul Moore <paul@paul-moore.com>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/4] Allow default HARDENED_USERCOPY to be set at
- compile time
-Message-ID: <202501231550.1D3B9C9@keescook>
-References: <20250123221115.19722-1-mgorman@techsingularity.net>
+	dkim=pass (2048-bit key) header.d=ene-kolla.pt header.i=@ene-kolla.pt header.b="KT0hLjbc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ene-kolla.pt;
+	s=202211; t=1737677751;
+	bh=6Cz1RoC77WgRsOJMWY05qhxtkmo/QejZ9PVT55bwtTs=;
+	h=Reply-To:From:To:Subject:Date:From;
+	b=KT0hLjbcbskd9KXlYgIiK1H7+d7aybTmPWrApiQhsL09U4deGGwP22xT0pnFV3jBk
+	 ZJS/r1QJbLr91rjOzqnvdaaU6HcuPkzDme5v45s9wlG5iQ+oRHXPtKQgs2ybRlbo8S
+	 WY/1bJ/I0Ha8k44MadYz7S00IApe13hCcelq2wiaNVIrD6dsi1Tf4GAt9wMJkwdoLA
+	 +ysN2Yo9OI21trO0Ieq3ffT7ErG3DnMOn85c3roh8M/oiX6yS5oxj8Nfvh14AndqFG
+	 qAFXdQmhctVDNYP3pB7qsNhtg2Q4f9ADNPHabhIyHQq6fB5rMJ5MnYB/sMCOKDYhx1
+	 co23kNBCq0eZg==
+Received: from [103.202.55.136] (unknown [103.202.55.136])
+	by mail.ene-kolla.pt (Postfix) with ESMTPSA id 8BA55F8EC2
+	for <linux-hardening@vger.kernel.org>; Fri, 24 Jan 2025 00:15:51 +0000 (UTC)
+Reply-To: wioleta.raimer@invpolamd.com
+From: manuel.rodrigues@ene-kolla.pt
+To: linux-hardening@vger.kernel.org
+Subject: urgent request for a quote
+Date: 24 Jan 2025 01:15:51 +0100
+Message-ID: <20250124011551.EB8911BC7A6A56D2@ene-kolla.pt>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250123221115.19722-1-mgorman@techsingularity.net>
+Content-Type: text/plain;
+	charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jan 23, 2025 at 10:11:11PM +0000, Mel Gorman wrote:
-> Changelog since v2
-> o Default on
-> o Logic correction and simplification
-
-Thanks, this look good to me! I'll get this added to the hardening tree
-once the merge window closes.
-
--- 
-Kees Cook
+Hello,
+My name is wioleta. we would like to know if you export to=20
+Poland, as We have active
+projects that require most products as seen on your website. If
+yes, please kindly keep us informed upon your feedback so we can
+send our preferred listing for quote. For further information or
+have any questions, please do not hesitate to write us.
+=20
+Sten Arnlund
+Purchase Manager
+wioleta.raimer@invpolamd.com
+a: Vedwalterdige by 2, Holmerskulle, 432 68 Poland.
