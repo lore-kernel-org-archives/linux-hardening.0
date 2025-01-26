@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E723419ABD4;
-	Sun, 26 Jan 2025 14:53:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 218571F8EFA;
+	Sun, 26 Jan 2025 14:55:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737903210; cv=none; b=qry6rlRss3QtWi8NRM1braq+Pa7UoVox+SdFCAsHt8G4Y/q9XqFx+I5RlnB6X4r/x9IpbFCPvzmPKHUZpeOBGNAlA5/Z/AaEnd2pKHBu2GcTnA/4XmSkWvzjh+Fzkq1M8qZ0ZuVK09UrIqwCyyRSS4FB74+kVPaLdhc9InQuMBo=
+	t=1737903301; cv=none; b=CQVZkEYOOWma9R4jfK1omgSDTRQ/nedAI9vjX3LomeT+AFXGLAvcszlnLt5wJcHy9XCm4u1uDMXeimR5s6ADiwwPNrdz22mVXBV6QfaKwn09r4iKKEJLHKGxVw4ssg2SLqRrkurGrahflKntDC//F79Y+ExTvPaxfERMmG5zQTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737903210; c=relaxed/simple;
+	s=arc-20240116; t=1737903301; c=relaxed/simple;
 	bh=H3ihNu9lytvhY1ApmPwmT/44kX+lqVmpuWKllBpoQNo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=A0r2PnuW0eaawzlugO2u9p9MU2LbVMFcLPKXb20AeZkclcXPngoIxvVAkIfAevSK1VHdP/P1cbTYX+LrfPKQx6d4O9zeaaoULE/bJgi/2B5VzTF4HExv4g69b+7tTIBy5HapUT4OH1oo7GPJHrE8tb2xI9pldc3iE2zEPtc2tuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AFJXyGkE; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=puvj1etU2Fa/5xuVIBXiEF5vQsXfDzsdMuRMsDC2xZmXxkskANkVqr7BvSMJl3qE8Fn5FDOsLS52IFELmEIIWSfp7o+fGQze3dKs5h0FijbpqfSZlpzpOQ9/soe7pbKCjve49vkOfINiJdUcT9EDWiD/3YHGzEbTqNt1hd2idF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jodTSryU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AFJXyGkE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EAF9C4CEE3;
-	Sun, 26 Jan 2025 14:53:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jodTSryU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57840C4CED3;
+	Sun, 26 Jan 2025 14:54:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737903209;
+	s=k20201202; t=1737903301;
 	bh=H3ihNu9lytvhY1ApmPwmT/44kX+lqVmpuWKllBpoQNo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=AFJXyGkELkm3KVCE16eBpzq33DNcqOvaCgW4id+tv93UFzESbxta2bUko+Xv4hur+
-	 JUd1OWrlTDJLXsL4mmPunud4Tj5hloUNLacCuYap0l0QSrZaICGv16D+uADognmNn3
-	 9gTe2aaf1/fue+rYJPWTKHtnRo0FIaDdqMQKaFvDCoEXdl+Ge1Ph14hRtuGzBVxfxP
-	 9rsvBAmT6VnPMOiLsYBtCvkxip8I7bPOWBEUvHTnBmIWWKrDsFGjlqZHotJocs50Tb
-	 D27UORXF+c2EEmMR61+z9xyRCDYe8fgtF4daKyVCapTQG2MfUrVDLt8X14NWeamO1D
-	 SmIaL4tYEWtqA==
+	b=jodTSryU2F3kZgGyWvdEGFF2Ba4lXlpn5h0l7k370pFVkomO4B4yB59VIE+OyvFYk
+	 h7tDQkdXKg+P3EIPbSOktBVu9MfhLZfZ1k7hUIqvvvJeGszZEQgi8gZIyf3jSeTfch
+	 HxBeSBN+a6PaoKYtrn4nLb9FiifmAS5xPytEaTlBIn0Jt9Rk8nrA5DP0+GLlc8CpxH
+	 oRfNnjv5eqJJClTJ4adFUrgvUuT0Vs2Vds3T4zkFyUTSepFvNnXEUpDwFgNaA2L1hb
+	 9Pq5GRTIuzKxlS2oLjoTcFr7zR/ZRTPuDHKzFQe6soBhUDRU1OpG0RBx7X+LUUDpP7
+	 Kg7xvUXuVYNBA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -43,12 +43,12 @@ Cc: Zhi Wang <zhiw@nvidia.com>,
 	dri-devel@lists.freedesktop.org,
 	nouveau@lists.freedesktop.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.13 06/34] nvkm/gsp: correctly advance the read pointer of GSP message queue
-Date: Sun, 26 Jan 2025 09:52:42 -0500
-Message-Id: <20250126145310.926311-6-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.12 05/31] nvkm/gsp: correctly advance the read pointer of GSP message queue
+Date: Sun, 26 Jan 2025 09:54:21 -0500
+Message-Id: <20250126145448.930220-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250126145310.926311-1-sashal@kernel.org>
-References: <20250126145310.926311-1-sashal@kernel.org>
+In-Reply-To: <20250126145448.930220-1-sashal@kernel.org>
+References: <20250126145448.930220-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -57,7 +57,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.13
+X-stable-base: Linux 6.12.11
 Content-Transfer-Encoding: quoted-printable
 
 From: Zhi Wang <zhiw@nvidia.com>
