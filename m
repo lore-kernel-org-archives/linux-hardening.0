@@ -1,107 +1,262 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AEBE4D8C8;
-	Sun, 26 Jan 2025 07:18:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E723419ABD4;
+	Sun, 26 Jan 2025 14:53:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737875893; cv=none; b=jSrf1WiHki3LZNOTF3B0+5JuyoT+7+RlWPqvETanjPk0IxoGi4yp8kEAomtmoM+vCWLbE4Lj6yO2vcAeClyLzNMyyxs9nMd9WrTsmQlyv7l2uYEoB5LCJzLHWs/CT5U/NHytEcG/bJ4mDi4eJ5XUWlsGS8ggctmMprzCjtUIhb0=
+	t=1737903210; cv=none; b=qry6rlRss3QtWi8NRM1braq+Pa7UoVox+SdFCAsHt8G4Y/q9XqFx+I5RlnB6X4r/x9IpbFCPvzmPKHUZpeOBGNAlA5/Z/AaEnd2pKHBu2GcTnA/4XmSkWvzjh+Fzkq1M8qZ0ZuVK09UrIqwCyyRSS4FB74+kVPaLdhc9InQuMBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737875893; c=relaxed/simple;
-	bh=cifKj7r/S3xNJEKDYgEHQjsGRGqn+jx1+bwQiCuUAEw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=K3cyVeBLT709WmImpeWjXQtnOn2nyCBLPoJHqv8aDU38xBC5OdDE65Ez1Tdd/qsNh7rmF7IK9dupNSvTPwaqvxJgWMz66xykzlu5w36N0jAY5YIbOHXCBVzkmxjdN8BIaaJrT4ITp3tRn/IH/+W+6t5YMw7RSaD5bJc8wmPbmoU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4YgjVB65B5z1l090;
-	Sun, 26 Jan 2025 15:14:42 +0800 (CST)
-Received: from kwepemg100016.china.huawei.com (unknown [7.202.181.57])
-	by mail.maildlp.com (Postfix) with ESMTPS id C0F78180042;
-	Sun, 26 Jan 2025 15:18:06 +0800 (CST)
-Received: from [10.67.110.48] (10.67.110.48) by kwepemg100016.china.huawei.com
- (7.202.181.57) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Sun, 26 Jan
- 2025 15:18:05 +0800
-Message-ID: <b64c6a55-bc27-443e-b2e2-8f6b8e2d1060@huawei.com>
-Date: Sun, 26 Jan 2025 15:17:52 +0800
+	s=arc-20240116; t=1737903210; c=relaxed/simple;
+	bh=H3ihNu9lytvhY1ApmPwmT/44kX+lqVmpuWKllBpoQNo=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=A0r2PnuW0eaawzlugO2u9p9MU2LbVMFcLPKXb20AeZkclcXPngoIxvVAkIfAevSK1VHdP/P1cbTYX+LrfPKQx6d4O9zeaaoULE/bJgi/2B5VzTF4HExv4g69b+7tTIBy5HapUT4OH1oo7GPJHrE8tb2xI9pldc3iE2zEPtc2tuc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AFJXyGkE; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AFJXyGkE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EAF9C4CEE3;
+	Sun, 26 Jan 2025 14:53:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1737903209;
+	bh=H3ihNu9lytvhY1ApmPwmT/44kX+lqVmpuWKllBpoQNo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=AFJXyGkELkm3KVCE16eBpzq33DNcqOvaCgW4id+tv93UFzESbxta2bUko+Xv4hur+
+	 JUd1OWrlTDJLXsL4mmPunud4Tj5hloUNLacCuYap0l0QSrZaICGv16D+uADognmNn3
+	 9gTe2aaf1/fue+rYJPWTKHtnRo0FIaDdqMQKaFvDCoEXdl+Ge1Ph14hRtuGzBVxfxP
+	 9rsvBAmT6VnPMOiLsYBtCvkxip8I7bPOWBEUvHTnBmIWWKrDsFGjlqZHotJocs50Tb
+	 D27UORXF+c2EEmMR61+z9xyRCDYe8fgtF4daKyVCapTQG2MfUrVDLt8X14NWeamO1D
+	 SmIaL4tYEWtqA==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Zhi Wang <zhiw@nvidia.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	kherbst@redhat.com,
+	lyude@redhat.com,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	kees@kernel.org,
+	ttabi@nvidia.com,
+	airlied@redhat.com,
+	chaitanya.kumar.borah@intel.com,
+	dri-devel@lists.freedesktop.org,
+	nouveau@lists.freedesktop.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.13 06/34] nvkm/gsp: correctly advance the read pointer of GSP message queue
+Date: Sun, 26 Jan 2025 09:52:42 -0500
+Message-Id: <20250126145310.926311-6-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250126145310.926311-1-sashal@kernel.org>
+References: <20250126145310.926311-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm/slab: Achieve better kmalloc caches randomization in
- kvmalloc
-To: Vlastimil Babka <vbabka@suse.cz>, "Christoph Lameter (Ampere)"
-	<cl@gentwo.org>
-CC: Pekka Enberg <penberg@kernel.org>, David Rientjes <rientjes@google.com>,
-	Joonsoo Kim <iamjoonsoo.kim@lge.com>, Andrew Morton
-	<akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>, Tamas Koczka
-	<poprdi@google.com>, Roman Gushchin <roman.gushchin@linux.dev>, Hyeonggon Yoo
-	<42.hyeyoo@gmail.com>, Xiu Jianfeng <xiujianfeng@huawei.com>,
-	<linux-mm@kvack.org>, <linux-hardening@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-References: <20250122074817.991060-1-gongruiqi1@huawei.com>
- <a424b98e-87dc-4f1a-e18b-28ed28b555ef@gentwo.org>
- <62044279-0c56-4185-97f7-7afac65ff449@suse.cz>
-Content-Language: en-US
-From: GONG Ruiqi <gongruiqi1@huawei.com>
-In-Reply-To: <62044279-0c56-4185-97f7-7afac65ff449@suse.cz>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemg100016.china.huawei.com (7.202.181.57)
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.13
+Content-Transfer-Encoding: quoted-printable
 
+From: Zhi Wang <zhiw@nvidia.com>
 
+[ Upstream commit 8d9beb4aebc02c4bd09e1d39c9c5f1c68c786dbc ]
 
-On 2025/01/24 23:19, Vlastimil Babka wrote:
-> On 1/22/25 17:02, Christoph Lameter (Ampere) wrote:
->> On Wed, 22 Jan 2025, GONG Ruiqi wrote:
->>
->>>
->>> +void *__kmalloc_node_inline(size_t size, kmem_buckets *b, gfp_t flags,
->>> +				int node, unsigned long caller);
->>> +
->>
->>
->> Huh? Is this inline? Where is the body of the function?
->>
->>> diff --git a/mm/slub.c b/mm/slub.c
->>> index c2151c9fee22..ec75070345c6 100644
->>> --- a/mm/slub.c
->>> +++ b/mm/slub.c
->>> @@ -4319,6 +4319,13 @@ void *__kmalloc_node_track_caller_noprof(DECL_BUCKET_PARAMS(size, b), gfp_t flag
->>>  }
->>>  EXPORT_SYMBOL(__kmalloc_node_track_caller_noprof);
->>>
->>> +__always_inline void *__kmalloc_node_inline(size_t size, kmem_buckets *b,
->>> +					    gfp_t flags, int node,
->>> +					    unsigned long caller)
->>> +{
->>> +	return __do_kmalloc_node(size, b, flags, node, caller);
->>> +}
->>> +
->>
->> inline functions need to be defined in the header file AFAICT.
-> 
-> Yeah, this could possibly inline only with LTO (dunno if it does). But the
-> real difference is passing __kvmalloc_node_noprof()'s _RET_IP_ as caller.
-> 
-> Maybe instead of this new wrapper we could just move
-> __kvmalloc_node_noprof() to slub.c and access __do_kmalloc_node() directly.
-> For consistency also kvfree() and whatever necessary dependencies. The
-> placement in util.c is kinda weird anyway and IIRC we already moved
-> krealloc() due to needing deeper involvement with slab internals. The
-> vmalloc part of kvmalloc/kvfree is kinda a self-contained fallback that can
-> be just called from slub.c as well as from util.c.
+A GSP event message consists three parts: message header, RPC header,
+message body. GSP calculates the number of pages to write from the
+total size of a GSP message. This behavior can be observed from the
+movement of the write pointer.
 
-Thanks for the advice!
+However, nvkm takes only the size of RPC header and message body as
+the message size when advancing the read pointer. When handling a
+two-page GSP message in the non rollback case, It wrongly takes the
+message body of the previous message as the message header of the next
+message. As the "message length" tends to be zero, in the calculation of
+size needs to be copied (0 - size of (message header)), the size needs to
+be copied will be "0xffffffxx". It also triggers a kernel panic due to a
+NULL pointer error.
 
-I will send a V2 based on moving __kvmalloc_node_noprof() and kvfree()
-to slub.c as soon as possible.
+[  547.614102] msg: 00000f90: ff ff ff ff ff ff ff ff 40 d7 18 fb 8b 00 00 =
+00  ........@.......
+[  547.622533] msg: 00000fa0: 00 00 00 00 ff ff ff ff ff ff ff ff 00 00 00 =
+00  ................
+[  547.630965] msg: 00000fb0: ff ff ff ff ff ff ff ff 00 00 00 00 ff ff ff =
+ff  ................
+[  547.639397] msg: 00000fc0: ff ff ff ff 00 00 00 00 ff ff ff ff ff ff ff =
+ff  ................
+[  547.647832] nvkm 0000:c1:00.0: gsp: peek msg rpc fn:0 len:0x0/0xffffffff=
+ffffffe0
+[  547.655225] nvkm 0000:c1:00.0: gsp: get msg rpc fn:0 len:0x0/0xfffffffff=
+fffffe0
+[  547.662532] BUG: kernel NULL pointer dereference, address: 0000000000000=
+020
+[  547.669485] #PF: supervisor read access in kernel mode
+[  547.674624] #PF: error_code(0x0000) - not-present page
+[  547.679755] PGD 0 P4D 0
+[  547.682294] Oops: 0000 [#1] PREEMPT SMP NOPTI
+[  547.686643] CPU: 22 PID: 322 Comm: kworker/22:1 Tainted: G            E =
+     6.9.0-rc6+ #1
+[  547.694893] Hardware name: ASRockRack 1U1G-MILAN/N/ROMED8-NL, BIOS L3.12=
+E 09/06/2022
+[  547.702626] Workqueue: events r535_gsp_msgq_work [nvkm]
+[  547.707921] RIP: 0010:r535_gsp_msg_recv+0x87/0x230 [nvkm]
+[  547.713375] Code: 00 8b 70 08 48 89 e1 31 d2 4c 89 f7 e8 12 f5 ff ff 48 =
+89 c5 48 85 c0 0f 84 cf 00 00 00 48 81 fd 00 f0 ff ff 0f 87 c4 00 00 00 <8b=
+> 55 10 41 8b 46 30 85 d2 0f 85 f6 00 00 00 83 f8 04 76 10 ba 05
+[  547.732119] RSP: 0018:ffffabe440f87e10 EFLAGS: 00010203
+[  547.737335] RAX: 0000000000000010 RBX: 0000000000000008 RCX: 00000000000=
+0003f
+[  547.744461] RDX: 0000000000000000 RSI: ffffabe4480a8030 RDI: 00000000000=
+00010
+[  547.751585] RBP: 0000000000000010 R08: 0000000000000000 R09: ffffabe440f=
+87bb0
+[  547.758707] R10: ffffabe440f87dc8 R11: 0000000000000010 R12: 00000000000=
+00000
+[  547.765834] R13: 0000000000000000 R14: ffff9351df1e5000 R15: 00000000000=
+00000
+[  547.772958] FS:  0000000000000000(0000) GS:ffff93708eb00000(0000) knlGS:=
+0000000000000000
+[  547.781035] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  547.786771] CR2: 0000000000000020 CR3: 00000003cc220002 CR4: 00000000007=
+70ef0
+[  547.793896] PKRU: 55555554
+[  547.796600] Call Trace:
+[  547.799046]  <TASK>
+[  547.801152]  ? __die+0x20/0x70
+[  547.804211]  ? page_fault_oops+0x75/0x170
+[  547.808221]  ? print_hex_dump+0x100/0x160
+[  547.812226]  ? exc_page_fault+0x64/0x150
+[  547.816152]  ? asm_exc_page_fault+0x22/0x30
+[  547.820341]  ? r535_gsp_msg_recv+0x87/0x230 [nvkm]
+[  547.825184]  r535_gsp_msgq_work+0x42/0x50 [nvkm]
+[  547.829845]  process_one_work+0x196/0x3d0
+[  547.833861]  worker_thread+0x2fc/0x410
+[  547.837613]  ? __pfx_worker_thread+0x10/0x10
+[  547.841885]  kthread+0xdf/0x110
+[  547.845031]  ? __pfx_kthread+0x10/0x10
+[  547.848775]  ret_from_fork+0x30/0x50
+[  547.852354]  ? __pfx_kthread+0x10/0x10
+[  547.856097]  ret_from_fork_asm+0x1a/0x30
+[  547.860019]  </TASK>
+[  547.862208] Modules linked in: nvkm(E) gsp_log(E) snd_seq_dummy(E) snd_h=
+rtimer(E) snd_seq(E) snd_timer(E) snd_seq_device(E) snd(E) soundcore(E) rfk=
+ill(E) qrtr(E) vfat(E) fat(E) ipmi_ssif(E) amd_atl(E) intel_rapl_msr(E) int=
+el_rapl_common(E) amd64_edac(E) mlx5_ib(E) edac_mce_amd(E) kvm_amd(E) ib_uv=
+erbs(E) kvm(E) ib_core(E) acpi_ipmi(E) ipmi_si(E) ipmi_devintf(E) mxm_wmi(E=
+) joydev(E) rapl(E) ptdma(E) i2c_piix4(E) acpi_cpufreq(E) wmi_bmof(E) pcspk=
+r(E) k10temp(E) ipmi_msghandler(E) xfs(E) libcrc32c(E) ast(E) i2c_algo_bit(=
+E) drm_shmem_helper(E) crct10dif_pclmul(E) drm_kms_helper(E) ahci(E) crc32_=
+pclmul(E) nvme_tcp(E) libahci(E) nvme(E) crc32c_intel(E) nvme_fabrics(E) cd=
+c_ether(E) nvme_core(E) usbnet(E) mlx5_core(E) ghash_clmulni_intel(E) drm(E=
+) libata(E) ccp(E) mii(E) t10_pi(E) mlxfw(E) sp5100_tco(E) psample(E) pci_h=
+yperv_intf(E) wmi(E) dm_multipath(E) sunrpc(E) dm_mirror(E) dm_region_hash(=
+E) dm_log(E) dm_mod(E) be2iscsi(E) bnx2i(E) cnic(E) uio(E) cxgb4i(E) cxgb4(=
+E) tls(E) libcxgbi(E) libcxgb(E) qla4xxx(E)
+[  547.862283]  iscsi_boot_sysfs(E) iscsi_tcp(E) libiscsi_tcp(E) libiscsi(E=
+) scsi_transport_iscsi(E) fuse(E) [last unloaded: gsp_log(E)]
+[  547.962691] CR2: 0000000000000020
+[  547.966003] ---[ end trace 0000000000000000 ]---
+[  549.012012] clocksource: Long readout interval, skipping watchdog check:=
+ cs_nsec: 1370499158 wd_nsec: 1370498904
+[  549.043676] pstore: backend (erst) writing error (-28)
+[  549.050924] RIP: 0010:r535_gsp_msg_recv+0x87/0x230 [nvkm]
+[  549.056389] Code: 00 8b 70 08 48 89 e1 31 d2 4c 89 f7 e8 12 f5 ff ff 48 =
+89 c5 48 85 c0 0f 84 cf 00 00 00 48 81 fd 00 f0 ff ff 0f 87 c4 00 00 00 <8b=
+> 55 10 41 8b 46 30 85 d2 0f 85 f6 00 00 00 83 f8 04 76 10 ba 05
+[  549.075138] RSP: 0018:ffffabe440f87e10 EFLAGS: 00010203
+[  549.080361] RAX: 0000000000000010 RBX: 0000000000000008 RCX: 00000000000=
+0003f
+[  549.087484] RDX: 0000000000000000 RSI: ffffabe4480a8030 RDI: 00000000000=
+00010
+[  549.094609] RBP: 0000000000000010 R08: 0000000000000000 R09: ffffabe440f=
+87bb0
+[  549.101733] R10: ffffabe440f87dc8 R11: 0000000000000010 R12: 00000000000=
+00000
+[  549.108857] R13: 0000000000000000 R14: ffff9351df1e5000 R15: 00000000000=
+00000
+[  549.115982] FS:  0000000000000000(0000) GS:ffff93708eb00000(0000) knlGS:=
+0000000000000000
+[  549.124061] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  549.129807] CR2: 0000000000000020 CR3: 00000003cc220002 CR4: 00000000007=
+70ef0
+[  549.136940] PKRU: 55555554
+[  549.139653] Kernel panic - not syncing: Fatal exception
+[  549.145054] Kernel Offset: 0x18c00000 from 0xffffffff81000000 (relocatio=
+n range: 0xffffffff80000000-0xffffffffbfffffff)
+[  549.165074] ---[ end Kernel panic - not syncing: Fatal exception ]---
 
-BR,
-Ruiqi
+Also, nvkm wrongly advances the read pointer when handling a two-page GSP
+message in the rollback case. In the rollback case, the GSP message will
+be copied in two rounds. When handling a two-page GSP message, nvkm first
+copies amount of (GSP_PAGE_SIZE - header) data into the buffer, then
+advances the read pointer by the result of DIV_ROUND_UP(size,
+GSP_PAGE_SIZE). Thus, the read pointer is advanced by 1.
+
+Next, nvkm copies the amount of (total size - (GSP_PAGE_SIZE -
+header)) data into the buffer. The left amount of the data will be always
+larger than one page since the message header is not taken into account
+in the first copy. Thus, the read pointer is advanced by DIV_ROUND_UP(
+size(larger than one page), GSP_PAGE_SIZE) =3D 2.
+
+In the end, the read pointer is wrongly advanced by 3 when handling a
+two-page GSP message in the rollback case.
+
+Fix the problems by taking the total size of the message into account
+when advancing the read pointer and calculate the read pointer in the end
+of the all copies for the rollback case.
+
+BTW: the two-page GSP message can be observed in the msgq when vGPU is
+enabled.
+
+Signed-off-by: Zhi Wang <zhiw@nvidia.com>
+Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20241017071922.2518724-=
+2-zhiw@nvidia.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c b/drivers/gpu/d=
+rm/nouveau/nvkm/subdev/gsp/r535.c
+index d586aea308984..bd4b5d6a7bd36 100644
+--- a/drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c
++++ b/drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c
+@@ -121,6 +121,8 @@ r535_gsp_msgq_wait(struct nvkm_gsp *gsp, u32 repc, u32 =
+*prepc, int *ptime)
+ 		return mqe->data;
+ 	}
+=20
++	size =3D ALIGN(repc + GSP_MSG_HDR_SIZE, GSP_PAGE_SIZE);
++
+ 	msg =3D kvmalloc(repc, GFP_KERNEL);
+ 	if (!msg)
+ 		return ERR_PTR(-ENOMEM);
+@@ -129,19 +131,15 @@ r535_gsp_msgq_wait(struct nvkm_gsp *gsp, u32 repc, u3=
+2 *prepc, int *ptime)
+ 	len =3D min_t(u32, repc, len);
+ 	memcpy(msg, mqe->data, len);
+=20
+-	rptr +=3D DIV_ROUND_UP(len, GSP_PAGE_SIZE);
+-	if (rptr =3D=3D gsp->msgq.cnt)
+-		rptr =3D 0;
+-
+ 	repc -=3D len;
+=20
+ 	if (repc) {
+ 		mqe =3D (void *)((u8 *)gsp->shm.msgq.ptr + 0x1000 + 0 * 0x1000);
+ 		memcpy(msg + len, mqe, repc);
+-
+-		rptr +=3D DIV_ROUND_UP(repc, GSP_PAGE_SIZE);
+ 	}
+=20
++	rptr =3D (rptr + DIV_ROUND_UP(size, GSP_PAGE_SIZE)) % gsp->msgq.cnt;
++
+ 	mb();
+ 	(*gsp->msgq.rptr) =3D rptr;
+ 	return msg;
+--=20
+2.39.5
+
