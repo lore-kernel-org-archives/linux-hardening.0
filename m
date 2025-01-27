@@ -1,196 +1,301 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E900915D5C4;
-	Mon, 27 Jan 2025 15:52:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5566C190664;
+	Mon, 27 Jan 2025 19:10:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737993125; cv=none; b=Yaixk2NT9g8JS+nz72wMIxpyoC41XThvZ1riCIksfXTtYLysSA3UrwSnQ9sWF0sHTwwS8wWOeWVqWQen2NztrCCfsLfCdgHNHMY4H5rsCkVvwW9iznH5ErGFppww+Q5Da+hytEGb2XF9MlAhdTCx+rDplukRrloFRxIriOjKrko=
+	t=1738005035; cv=none; b=KfQ6VA67BpeOHL87MgFg9GQEy69ankitdaJx5zxPYWWWgpqUa3tOcfthcveLNAdkEHX8SeksIB9RVSW73f02BTxI4+FU/8MjzVW/FXDTgHEsgysGbZBT1Nn3pQy8AcZDGp44p/PHnsxqmrx4ugYCyNse2jZ8PZA6WROkhKv31Wk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737993125; c=relaxed/simple;
-	bh=lKShl/TiOp2ZoXo/jImChQXPJ2hMZLXx2pOut7WiptI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DLKFJfUHVX4VaBF+Z2eMkHiaDRNcIR6mJIyT/JNL2m+bKkJMX3TblJtnnT54DblrKEvsX15pyDWE7kuIM35u8d4bjeX9e5pNGzLZ5ZEwTbUfkvo6RkcRoGtXuaRz0+LgTNClx5GXD3odvjFt/caxe4wrmdUclmbHwsiKuLhffKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Opi/ZOMV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738005035; c=relaxed/simple;
+	bh=YPJwq5DVB44I+jO9br7SuFQ3XjAuvyyVVkJP3VZKCec=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=koNnNFxPnwM3HJK9Nbp0HoWQx8WjNP3bO4AsVhRcbbFln+fw8RlHnOUrFPq+bd6I8LLTIeVYEWuUBgCrZireBpVGPtZ2pqBxbhAcOj3ncOzSg8fuhGHXfW1E216G7dD+jUXWfT3+ykX7No6w47SpZYKHUeaafqe78o3l3nRysTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ie//lXsv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Opi/ZOMV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87519C4CED2;
-	Mon, 27 Jan 2025 15:51:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ie//lXsv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0CB2C4CED2;
+	Mon, 27 Jan 2025 19:10:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737993124;
-	bh=lKShl/TiOp2ZoXo/jImChQXPJ2hMZLXx2pOut7WiptI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Opi/ZOMV/zfLovkaRrjcFN22SaJmB+XJGtnDJ/cIoGIjT25SkYRyAorU+UjcclWyd
-	 6DePEaUZ/QK4W0yHLc5Kb3ieU/uOi+zRZdhIrfh5zorrG9bSfVDQc9h0dR9gO+3bHq
-	 ul1VD9PJ3iJuekF+lfnqBztVCR/WhUeMwXxaqNSwUyFJREhVmoO8Vtntzw4FAiTB00
-	 00OvDbjpP1jbVZyUSglO9BK2uxJ3fZYicWL3MsWiS1eDM68OxCFUf3tPPbIQwtET/k
-	 cGteI6qIszlohfI51re4Bs3hb3htIsly4LrqymlfAEdhSawB5JdAEcLJmnZm2zRPZn
-	 N7W92SLp2WhHA==
-Date: Mon, 27 Jan 2025 15:51:47 +0000
-From: Will Deacon <will@kernel.org>
-To: Jann Horn <jannh@google.com>
-Cc: Valentin Schneider <vschneid@redhat.com>, linux-kernel@vger.kernel.org,
-	x86@kernel.org, virtualization@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
-	linux-riscv@lists.infradead.org, linux-perf-users@vger.kernel.org,
-	xen-devel@lists.xenproject.org, kvm@vger.kernel.org,
-	linux-arch@vger.kernel.org, rcu@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
-	bcm-kernel-feedback-list@broadcom.com,
-	Juergen Gross <jgross@suse.com>,
-	Ajay Kaher <ajay.kaher@broadcom.com>,
-	Alexey Makhalov <alexey.amakhalov@broadcom.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Jason Baron <jbaron@akamai.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang1211@gmail.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Clark Williams <williams@redhat.com>,
-	Yair Podemsky <ypodemsk@redhat.com>,
-	Tomas Glozar <tglozar@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Kees Cook <kees@kernel.org>,
+	s=k20201202; t=1738005034;
+	bh=YPJwq5DVB44I+jO9br7SuFQ3XjAuvyyVVkJP3VZKCec=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Ie//lXsvp/0M2huuTvS56N8tWu5emnzuYiJAXnkMps1eO29AxNkNrVmvxp8lacRlr
+	 imajBbxc/PiH/IDsmhNDQ4TsQaPj72jBgZS/6Ew5QO5hzwKTmo83vFm/hOfxvy6Q9Y
+	 RsduXBTQP7Gq6vPf8RHkaElPNkJ9limjRIF/WNk7bvLaGzFWehPHhSYnsEQCXJ6ojX
+	 7dUVLbNe2LMxQYG/eJJ/5GltNqLTf0qPjVqx/oObb1P0Tt683rWR6Ap7zCFoO17pzw
+	 z8s+x2UOkJSgv1gTuprpDXhHFDTrxWGtIRu5zjAlsuPvgoJbFv1te3wllVjvC07dup
+	 1278wS6KQ2tJA==
+From: Kees Cook <kees@kernel.org>
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Kees Cook <kees@kernel.org>,
 	Andrew Morton <akpm@linux-foundation.org>,
-	Christoph Hellwig <hch@infradead.org>,
-	Shuah Khan <shuah@kernel.org>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
-	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Rong Xu <xur@google.com>,
-	Nicolas Saenz Julienne <nsaenzju@redhat.com>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Yosry Ahmed <yosryahmed@google.com>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	Jinghao Jia <jinghao7@illinois.edu>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: Re: [PATCH v4 29/30] x86/mm, mm/vmalloc: Defer
- flush_tlb_kernel_range() targeting NOHZ_FULL CPUs
-Message-ID: <20250127155146.GB25757@willie-the-truck>
-References: <20250114175143.81438-1-vschneid@redhat.com>
- <20250114175143.81438-30-vschneid@redhat.com>
- <CAG48ez1Mh+DOy0ysOo7Qioxh1W7xWQyK9CLGNU9TGOsLXbg=gQ@mail.gmail.com>
- <xhsmh34hhh37q.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <CAG48ez3H8OVP1GxBLdmFgusvT1gQhwu2SiXbgi8T9uuCYVK52w@mail.gmail.com>
+	Jakub Jelinek <jakub@redhat.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	linux-kernel@vger.kernel.org,
+	linux-kbuild@vger.kernel.org,
+	llvm@lists.linux.dev,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v2 2/3] stackinit: Add union initialization to selftests
+Date: Mon, 27 Jan 2025 11:10:27 -0800
+Message-Id: <20250127191031.245214-2-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250127190636.it.745-kees@kernel.org>
+References: <20250127190636.it.745-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-Developer-Signature: v=1; a=openpgp-sha256; l=9240; i=kees@kernel.org; h=from:subject; bh=YPJwq5DVB44I+jO9br7SuFQ3XjAuvyyVVkJP3VZKCec=; b=owGbwMvMwCVmps19z/KJym7G02pJDOnTbylXTK96M7X/N5f61D9+k/VCjy6q+pY+LfFIaWZM0 DNG+wLGjlIWBjEuBlkxRZYgO/c4F4+37eHucxVh5rAygQxh4OIUgIlE9DEyrAlxNe9VmLPf+nD+ Z863Rhn8h7KZX0TUG3E9/FiSqrI+kZHhz743N7dLzT4hFLL9z/y6l1tCp148ab3uoYtZVqmiSmE IOwA=
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAG48ez3H8OVP1GxBLdmFgusvT1gQhwu2SiXbgi8T9uuCYVK52w@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Fri, Jan 17, 2025 at 04:52:19PM +0100, Jann Horn wrote:
-> On Fri, Jan 17, 2025 at 4:25 PM Valentin Schneider <vschneid@redhat.com> wrote:
-> > On 14/01/25 19:16, Jann Horn wrote:
-> > > On Tue, Jan 14, 2025 at 6:51 PM Valentin Schneider <vschneid@redhat.com> wrote:
-> > >> vunmap()'s issued from housekeeping CPUs are a relatively common source of
-> > >> interference for isolated NOHZ_FULL CPUs, as they are hit by the
-> > >> flush_tlb_kernel_range() IPIs.
-> > >>
-> > >> Given that CPUs executing in userspace do not access data in the vmalloc
-> > >> range, these IPIs could be deferred until their next kernel entry.
-> > >>
-> > >> Deferral vs early entry danger zone
-> > >> ===================================
-> > >>
-> > >> This requires a guarantee that nothing in the vmalloc range can be vunmap'd
-> > >> and then accessed in early entry code.
-> > >
-> > > In other words, it needs a guarantee that no vmalloc allocations that
-> > > have been created in the vmalloc region while the CPU was idle can
-> > > then be accessed during early entry, right?
-> >
-> > I'm not sure if that would be a problem (not an mm expert, please do
-> > correct me) - looking at vmap_pages_range(), flush_cache_vmap() isn't
-> > deferred anyway.
-> 
-> flush_cache_vmap() is about stuff like flushing data caches on
-> architectures with virtually indexed caches; that doesn't do TLB
-> maintenance. When you look for its definition on x86 or arm64, you'll
-> see that they use the generic implementation which is simply an empty
-> inline function.
-> 
-> > So after vmapping something, I wouldn't expect isolated CPUs to have
-> > invalid TLB entries for the newly vmapped page.
-> >
-> > However, upon vunmap'ing something, the TLB flush is deferred, and thus
-> > stale TLB entries can and will remain on isolated CPUs, up until they
-> > execute the deferred flush themselves (IOW for the entire duration of the
-> > "danger zone").
-> >
-> > Does that make sense?
-> 
-> The design idea wrt TLB flushes in the vmap code is that you don't do
-> TLB flushes when you unmap stuff or when you map stuff, because doing
-> TLB flushes across the entire system on every vmap/vunmap would be a
-> bit costly; instead you just do batched TLB flushes in between, in
-> __purge_vmap_area_lazy().
-> 
-> In other words, the basic idea is that you can keep calling vmap() and
-> vunmap() a bunch of times without ever doing TLB flushes until you run
-> out of virtual memory in the vmap region; then you do one big TLB
-> flush, and afterwards you can reuse the free virtual address space for
-> new allocations again.
-> 
-> So if you "defer" that batched TLB flush for CPUs that are not
-> currently running in the kernel, I think the consequence is that those
-> CPUs may end up with incoherent TLB state after a reallocation of the
-> virtual address space.
-> 
-> Actually, I think this would mean that your optimization is disallowed
-> at least on arm64 - I'm not sure about the exact wording, but arm64
-> has a "break before make" rule that forbids conflicting writable
-> address translations or something like that.
+The stack initialization selftests were checking scalars, strings,
+and structs, but not unions. Add union tests (which are mostly identical
+setup to structs). This catches the recent union initialization behavioral
+changes seen in GCC 15. Before GCC 15, this new test passes:
 
-Yes, that would definitely be a problem. There's also the more obvious
-issue that the CnP ("Common not Private") feature of some Arm CPUs means
-that TLB entries can be shared between cores, so the whole idea of using
-a CPU's exception level to predicate invalidation is flawed on such a
-system.
+    ok 18 test_small_start_old_zero
 
-Will
+With GCC 15, it fails:
+
+    not ok 18 test_small_start_old_zero
+
+Specifically, a union with a larger member where a smaller member is
+initialized with the older "= { 0 }" syntax:
+
+union test_small_start {
+     char one:1;
+     char two;
+     short three;
+     unsigned long four;
+     struct big_struct {
+             unsigned long array[8];
+     } big;
+};
+
+This is a regression in compiler behavior that Linux has depended on.
+GCC does not seem likely to fix it, instead suggesting that affected
+projects start using -fzero-init-padding-bits=unions:
+https://gcc.gnu.org/bugzilla/show_bug.cgi?id=118403
+
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+ lib/stackinit_kunit.c | 103 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 103 insertions(+)
+
+diff --git a/lib/stackinit_kunit.c b/lib/stackinit_kunit.c
+index 7cc9af181e89..fbe910c9c825 100644
+--- a/lib/stackinit_kunit.c
++++ b/lib/stackinit_kunit.c
+@@ -47,10 +47,12 @@ static bool stackinit_range_contains(char *haystack_start, size_t haystack_size,
+ #define DO_NOTHING_TYPE_SCALAR(var_type)	var_type
+ #define DO_NOTHING_TYPE_STRING(var_type)	void
+ #define DO_NOTHING_TYPE_STRUCT(var_type)	void
++#define DO_NOTHING_TYPE_UNION(var_type)		void
+ 
+ #define DO_NOTHING_RETURN_SCALAR(ptr)		*(ptr)
+ #define DO_NOTHING_RETURN_STRING(ptr)		/**/
+ #define DO_NOTHING_RETURN_STRUCT(ptr)		/**/
++#define DO_NOTHING_RETURN_UNION(ptr)		/**/
+ 
+ #define DO_NOTHING_CALL_SCALAR(var, name)			\
+ 		(var) = do_nothing_ ## name(&(var))
+@@ -58,10 +60,13 @@ static bool stackinit_range_contains(char *haystack_start, size_t haystack_size,
+ 		do_nothing_ ## name(var)
+ #define DO_NOTHING_CALL_STRUCT(var, name)			\
+ 		do_nothing_ ## name(&(var))
++#define DO_NOTHING_CALL_UNION(var, name)			\
++		do_nothing_ ## name(&(var))
+ 
+ #define FETCH_ARG_SCALAR(var)		&var
+ #define FETCH_ARG_STRING(var)		var
+ #define FETCH_ARG_STRUCT(var)		&var
++#define FETCH_ARG_UNION(var)		&var
+ 
+ /*
+  * On m68k, if the leaf function test variable is longer than 8 bytes,
+@@ -77,6 +82,7 @@ static bool stackinit_range_contains(char *haystack_start, size_t haystack_size,
+ #define INIT_CLONE_SCALAR		/**/
+ #define INIT_CLONE_STRING		[FILL_SIZE_STRING]
+ #define INIT_CLONE_STRUCT		/**/
++#define INIT_CLONE_UNION		/**/
+ 
+ #define ZERO_CLONE_SCALAR(zero)		memset(&(zero), 0x00, sizeof(zero))
+ #define ZERO_CLONE_STRING(zero)		memset(&(zero), 0x00, sizeof(zero))
+@@ -92,6 +98,7 @@ static bool stackinit_range_contains(char *haystack_start, size_t haystack_size,
+ 		zero.three = 0;				\
+ 		zero.four = 0;				\
+ 	} while (0)
++#define ZERO_CLONE_UNION(zero)		ZERO_CLONE_STRUCT(zero)
+ 
+ #define INIT_SCALAR_none(var_type)	/**/
+ #define INIT_SCALAR_zero(var_type)	= 0
+@@ -147,6 +154,34 @@ static bool stackinit_range_contains(char *haystack_start, size_t haystack_size,
+ #define INIT_STRUCT_assigned_copy(var_type)				\
+ 					; var = *(arg)
+ 
++/* Union initialization is the same as structs. */
++#define INIT_UNION_none(var_type)	INIT_STRUCT_none(var_type)
++#define INIT_UNION_zero(var_type)	INIT_STRUCT_zero(var_type)
++#define INIT_UNION_old_zero(var_type)	INIT_STRUCT_old_zero(var_type)
++
++#define INIT_UNION_static_partial(var_type)		\
++	INIT_STRUCT_static_partial(var_type)
++#define INIT_UNION_static_all(var_type)			\
++	INIT_STRUCT_static_all(var_type)
++#define INIT_UNION_dynamic_partial(var_type)		\
++	INIT_STRUCT_dynamic_partial(var_type)
++#define INIT_UNION_dynamic_all(var_type)		\
++	INIT_STRUCT_dynamic_all(var_type)
++#define INIT_UNION_runtime_partial(var_type)		\
++	INIT_STRUCT_runtime_partial(var_type)
++#define INIT_UNION_runtime_all(var_type)		\
++	INIT_STRUCT_runtime_all(var_type)
++#define INIT_UNION_assigned_static_partial(var_type)	\
++	INIT_STRUCT_assigned_static_partial(var_type)
++#define INIT_UNION_assigned_static_all(var_type)	\
++	INIT_STRUCT_assigned_static_all(var_type)
++#define INIT_UNION_assigned_dynamic_partial(var_type)	\
++	INIT_STRUCT_assigned_dynamic_partial(var_type)
++#define INIT_UNION_assigned_dynamic_all(var_type)	\
++	INIT_STRUCT_assigned_dynamic_all(var_type)
++#define INIT_UNION_assigned_copy(var_type)		\
++	INIT_STRUCT_assigned_copy(var_type)
++
+ /*
+  * @name: unique string name for the test
+  * @var_type: type to be tested for zeroing initialization
+@@ -295,6 +330,33 @@ struct test_user {
+ 	unsigned long four;
+ };
+ 
++/* No padding: all members are the same size. */
++union test_same_sizes {
++	unsigned long one;
++	unsigned long two;
++	unsigned long three;
++	unsigned long four;
++};
++
++/* Mismatched sizes, with one and two being small */
++union test_small_start {
++	char one:1;
++	char two;
++	short three;
++	unsigned long four;
++	struct big_struct {
++		unsigned long array[8];
++	} big;
++};
++
++/* Mismatched sizes, with one and two being small */
++union test_small_end {
++	short one;
++	unsigned long two;
++	char three:1;
++	char four;
++};
++
+ #define ALWAYS_PASS	WANT_SUCCESS
+ #define ALWAYS_FAIL	XFAIL
+ 
+@@ -333,6 +395,11 @@ struct test_user {
+ 			    struct test_ ## name, STRUCT, init, \
+ 			    xfail)
+ 
++#define DEFINE_UNION_TEST(name, init, xfail)			\
++		DEFINE_TEST(name ## _ ## init,			\
++			    union test_ ## name, STRUCT, init,	\
++			    xfail)
++
+ #define DEFINE_STRUCT_TESTS(init, xfail)			\
+ 		DEFINE_STRUCT_TEST(small_hole, init, xfail);	\
+ 		DEFINE_STRUCT_TEST(big_hole, init, xfail);	\
+@@ -344,10 +411,22 @@ struct test_user {
+ 				    xfail);			\
+ 		DEFINE_STRUCT_TESTS(base ## _ ## all, xfail)
+ 
++#define DEFINE_UNION_INITIALIZER_TESTS(base, xfail)		\
++		DEFINE_UNION_TESTS(base ## _ ## partial,	\
++				    xfail);			\
++		DEFINE_UNION_TESTS(base ## _ ## all, xfail)
++
++#define DEFINE_UNION_TESTS(init, xfail)				\
++		DEFINE_UNION_TEST(same_sizes, init, xfail);	\
++		DEFINE_UNION_TEST(small_start, init, xfail);	\
++		DEFINE_UNION_TEST(small_end, init, xfail);
++
+ /* These should be fully initialized all the time! */
+ DEFINE_SCALAR_TESTS(zero, ALWAYS_PASS);
+ DEFINE_STRUCT_TESTS(zero, ALWAYS_PASS);
+ DEFINE_STRUCT_TESTS(old_zero, ALWAYS_PASS);
++DEFINE_UNION_TESTS(zero, ALWAYS_PASS);
++DEFINE_UNION_TESTS(old_zero, ALWAYS_PASS);
+ /* Struct initializers: padding may be left uninitialized. */
+ DEFINE_STRUCT_INITIALIZER_TESTS(static, STRONG_PASS);
+ DEFINE_STRUCT_INITIALIZER_TESTS(dynamic, STRONG_PASS);
+@@ -355,6 +434,12 @@ DEFINE_STRUCT_INITIALIZER_TESTS(runtime, STRONG_PASS);
+ DEFINE_STRUCT_INITIALIZER_TESTS(assigned_static, STRONG_PASS);
+ DEFINE_STRUCT_INITIALIZER_TESTS(assigned_dynamic, STRONG_PASS);
+ DEFINE_STRUCT_TESTS(assigned_copy, ALWAYS_FAIL);
++DEFINE_UNION_INITIALIZER_TESTS(static, STRONG_PASS);
++DEFINE_UNION_INITIALIZER_TESTS(dynamic, STRONG_PASS);
++DEFINE_UNION_INITIALIZER_TESTS(runtime, STRONG_PASS);
++DEFINE_UNION_INITIALIZER_TESTS(assigned_static, STRONG_PASS);
++DEFINE_UNION_INITIALIZER_TESTS(assigned_dynamic, STRONG_PASS);
++DEFINE_UNION_TESTS(assigned_copy, ALWAYS_FAIL);
+ /* No initialization without compiler instrumentation. */
+ DEFINE_SCALAR_TESTS(none, STRONG_PASS);
+ DEFINE_STRUCT_TESTS(none, BYREF_PASS);
+@@ -438,14 +523,23 @@ DEFINE_TEST_DRIVER(switch_2_none, uint64_t, SCALAR, ALWAYS_FAIL);
+ 		KUNIT_CASE(test_trailing_hole_ ## init),\
+ 		KUNIT_CASE(test_packed_ ## init)	\
+ 
++#define KUNIT_test_unions(init)				\
++		KUNIT_CASE(test_same_sizes_ ## init),	\
++		KUNIT_CASE(test_small_start_ ## init),	\
++		KUNIT_CASE(test_small_end_ ## init)	\
++
+ static struct kunit_case stackinit_test_cases[] = {
+ 	/* These are explicitly initialized and should always pass. */
+ 	KUNIT_test_scalars(zero),
+ 	KUNIT_test_structs(zero),
+ 	KUNIT_test_structs(old_zero),
++	KUNIT_test_unions(zero),
++	KUNIT_test_unions(old_zero),
+ 	/* Padding here appears to be accidentally always initialized? */
+ 	KUNIT_test_structs(dynamic_partial),
+ 	KUNIT_test_structs(assigned_dynamic_partial),
++	KUNIT_test_unions(dynamic_partial),
++	KUNIT_test_unions(assigned_dynamic_partial),
+ 	/* Padding initialization depends on compiler behaviors. */
+ 	KUNIT_test_structs(static_partial),
+ 	KUNIT_test_structs(static_all),
+@@ -455,8 +549,17 @@ static struct kunit_case stackinit_test_cases[] = {
+ 	KUNIT_test_structs(assigned_static_partial),
+ 	KUNIT_test_structs(assigned_static_all),
+ 	KUNIT_test_structs(assigned_dynamic_all),
++	KUNIT_test_unions(static_partial),
++	KUNIT_test_unions(static_all),
++	KUNIT_test_unions(dynamic_all),
++	KUNIT_test_unions(runtime_partial),
++	KUNIT_test_unions(runtime_all),
++	KUNIT_test_unions(assigned_static_partial),
++	KUNIT_test_unions(assigned_static_all),
++	KUNIT_test_unions(assigned_dynamic_all),
+ 	/* Everything fails this since it effectively performs a memcpy(). */
+ 	KUNIT_test_structs(assigned_copy),
++	KUNIT_test_unions(assigned_copy),
+ 	/* STRUCTLEAK_BYREF_ALL should cover everything from here down. */
+ 	KUNIT_test_scalars(none),
+ 	KUNIT_CASE(test_switch_1_none),
+-- 
+2.34.1
+
