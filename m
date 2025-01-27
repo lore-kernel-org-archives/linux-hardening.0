@@ -1,262 +1,203 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 218571F8EFA;
-	Sun, 26 Jan 2025 14:55:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C90A11FDA99;
+	Mon, 27 Jan 2025 10:37:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737903301; cv=none; b=CQVZkEYOOWma9R4jfK1omgSDTRQ/nedAI9vjX3LomeT+AFXGLAvcszlnLt5wJcHy9XCm4u1uDMXeimR5s6ADiwwPNrdz22mVXBV6QfaKwn09r4iKKEJLHKGxVw4ssg2SLqRrkurGrahflKntDC//F79Y+ExTvPaxfERMmG5zQTw=
+	t=1737974223; cv=none; b=UJSvAmgV7Lh1mGfkDD4YPKdfrazrzbjhN/q33EonAVT01cLcVHoM09IVbxFVQ9V5mnZwI1LCS707MTVCJCVzOX3zXfLQyFol9TIH0arQSkgpSpSGUEf+lGTrFmvRyUHxiIrQRwtY2Iicvh/5hz0mWga6hNabjW1Sd3AOIswAGyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737903301; c=relaxed/simple;
-	bh=H3ihNu9lytvhY1ApmPwmT/44kX+lqVmpuWKllBpoQNo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=puvj1etU2Fa/5xuVIBXiEF5vQsXfDzsdMuRMsDC2xZmXxkskANkVqr7BvSMJl3qE8Fn5FDOsLS52IFELmEIIWSfp7o+fGQze3dKs5h0FijbpqfSZlpzpOQ9/soe7pbKCjve49vkOfINiJdUcT9EDWiD/3YHGzEbTqNt1hd2idF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jodTSryU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1737974223; c=relaxed/simple;
+	bh=jxECeMXjdkYPN8Gg6gBfLrTjeCyPn6+e948JqztZKrc=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TFl9rHEq+kNCgUFMQ8s6ptM0CM+eDhKwDj84bwSCqpBawBkEk7rLyd5Da7v8J6gtc8vNAgVlvXvrmW+YAnGiWBZj9V0lwRY5NRR/oappCawkQVgKoZCV9iCQwzdfYArQ8YzceOVw+HrVs+1Q/75eoMD9vxfsarMj7DU4ARCzCeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SBG60Ehs; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jodTSryU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57840C4CED3;
-	Sun, 26 Jan 2025 14:54:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737903301;
-	bh=H3ihNu9lytvhY1ApmPwmT/44kX+lqVmpuWKllBpoQNo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jodTSryU2F3kZgGyWvdEGFF2Ba4lXlpn5h0l7k370pFVkomO4B4yB59VIE+OyvFYk
-	 h7tDQkdXKg+P3EIPbSOktBVu9MfhLZfZ1k7hUIqvvvJeGszZEQgi8gZIyf3jSeTfch
-	 HxBeSBN+a6PaoKYtrn4nLb9FiifmAS5xPytEaTlBIn0Jt9Rk8nrA5DP0+GLlc8CpxH
-	 oRfNnjv5eqJJClTJ4adFUrgvUuT0Vs2Vds3T4zkFyUTSepFvNnXEUpDwFgNaA2L1hb
-	 9Pq5GRTIuzKxlS2oLjoTcFr7zR/ZRTPuDHKzFQe6soBhUDRU1OpG0RBx7X+LUUDpP7
-	 Kg7xvUXuVYNBA==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Zhi Wang <zhiw@nvidia.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	kherbst@redhat.com,
-	lyude@redhat.com,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	kees@kernel.org,
-	ttabi@nvidia.com,
-	airlied@redhat.com,
-	chaitanya.kumar.borah@intel.com,
-	dri-devel@lists.freedesktop.org,
-	nouveau@lists.freedesktop.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 05/31] nvkm/gsp: correctly advance the read pointer of GSP message queue
-Date: Sun, 26 Jan 2025 09:54:21 -0500
-Message-Id: <20250126145448.930220-5-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250126145448.930220-1-sashal@kernel.org>
-References: <20250126145448.930220-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SBG60Ehs"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-540201cfedbso4142055e87.3;
+        Mon, 27 Jan 2025 02:37:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1737974220; x=1738579020; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=W4QFE15tzxGQeI7M/zW2nqDheIV1bS+m/FQTTUzpTLk=;
+        b=SBG60EhsV6vyJ1IDGSJKIKZienw7FUEeoTFQPU3iMW3FXZaU6I7fmM1KsRGgAHn7hV
+         xp2IujVbrtpOBhfuhagLYwW3q8l9JhXsbguC8I4L0Gd/q1MWh3Pwney0FnqgVN+VZFU5
+         U2JBGF2vw+yfi60jmAq5S13gFp7i5fttClRvx47xArAe4UIub6hr1PFun+l/nvLpDO3C
+         ErW2tCc19Co6A4KVKwfqsMwPJcBC4c+sysy0Jjwia6vV60BoduprpwwMRKS3zyjyUN+Z
+         DpvVUPtInzNzKsnkQNfwDWnIoeSHLtDOyoUw23EwemjyWG1ODG1NiRjFJ36ecUFAKCEV
+         hvLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737974220; x=1738579020;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=W4QFE15tzxGQeI7M/zW2nqDheIV1bS+m/FQTTUzpTLk=;
+        b=PMk2fDCAeKFtcCY/q//RJcZe4MRRi0SIIq7lF8XPIF4Mmr55NnCCBMYQo61p/iWq5i
+         vstKQmPBdhvEh12FMXrCA61Rmuga4o3qKW4DP/JQKfzjMAjYCcQGmW40/LF6R8zRtZNO
+         35GyYmXRwmbjGURMxoIdgamrn3KEAMZGGwiADwKzp6n28dtMbUN/SMbfIdNqhwpunFYg
+         VrfXA/tga5vPKDAybWKJai0RZLLmoRm0ZOiM469WDji0rjp4neY/BgJy97wFa9HD44YA
+         BRWVFHwJ5ssLhCrehUYtS/Iqx6uWHfS1yVlDmNbT9DB5pVim4AJIAtc56GmMUofYOc1h
+         XyPw==
+X-Forwarded-Encrypted: i=1; AJvYcCUSbQBrqmlVU+4ZjkZDv1R0JYDh7Up6QagW4bP5DB5MDPygrc+30pQ7ln5qY9XaQVWEYQNG@vger.kernel.org, AJvYcCUTMjOpy7b06hLjWlmbxRfUrQboZmGaR0dVLsIGCeUfXEQgxcUIG36A7042LKSSQTdo4I5+a8FejDW3B1+9935Q@vger.kernel.org, AJvYcCUjyPh0BEHz92YIKm7kxhKI4L4fhXLmkXiY9/0t2fWncjFaqyIeogtPawrS9HC3y0OQC62Q@vger.kernel.org, AJvYcCUlUqm4+Ebsfnny1oEJ05SIppnqsPFndHibRJhTrfrY+BFWDl2DltjOHqWBB/bjQbVb98mhfRtOtYF7PQ==@vger.kernel.org, AJvYcCVW+B3sT1AUmSZfr5O5SqMRM9CZFw/+qH778Jub4WjSuTv2td9cXC5UkNvwMpiYK0SkmxMQ9EQFAN/kjGJA@vger.kernel.org, AJvYcCWF8WgkhqAkYU4mK0hNVbXo6Xg+FK/xfMZC0ouFFUbcBG8jpzX1ON+Nh/Vm7m2NIBS6ayrml5fXWUTb1mnaM4CSxg==@vger.kernel.org, AJvYcCX2VA5zezrGPJjCAd9xs7ELQTsdN9WtKCj0T4h5Ce6L+khYsA5l17EOX1O5zozNiv0yNu9eQ5KoUAgdIsrMNMZD@vger.kernel.org, AJvYcCXpIUm1221jaXwpgC6vY18LBSSui5dhWmFBubj/vjWCsHK7hqZeWzOhXLgO7UqRyjzxP2Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxS7Cvb1k5M3UjD2VdSDrtX4yXOYutVYVG2F/TY8iBpuwO9mMxc
+	pFtWpeFBL9pQXibvyu9GpEESGS4XeAbyeyH/riL+xbAKbnJbE4wW
+X-Gm-Gg: ASbGnctbKY7zwkt2spfIvn1g7lrZabunv8Iprk4H2ZpilVwYsJgi+M0fJwWf4kt+3QL
+	S2KBDPjQA1kMY6DJWIrKbI+XpzIovaz9DzOdsU0KB3nmW5bdyS+KUbPUGgXKG0Eyo1xowMfuk+p
+	Jqwak1eG40FGTLtOPJKC88ZaA6c70OSC8+7BSJkRe8ZX+S4xPfZ8g1oM8MszYPUwjDL/Ps7V9CZ
+	OyjDfypdAiy5wrW8ZY5aSPhsmH01uTkY5XV7Fc2w5p9ss1qBbbmqnr9KFetB3y/JgROsaxUFZfJ
+	GVHXxr5ihEKmc20XWTrVBoVgP0Daqs9anCI=
+X-Google-Smtp-Source: AGHT+IEcn2mDT5d0SWT5jg0poO+BtsvQPwWj5ydN+QiFTcCpstqFwzzlc4zIAZ/gMSqSpGuiyMrqQQ==
+X-Received: by 2002:a19:8c1d:0:b0:543:baa9:a48a with SMTP id 2adb3069b0e04-543baa9a4bcmr6967602e87.27.1737974219462;
+        Mon, 27 Jan 2025 02:36:59 -0800 (PST)
+Received: from pc636 (host-217-213-93-172.mobileonline.telia.com. [217.213.93.172])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-3076bc1956csm14103761fa.70.2025.01.27.02.36.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jan 2025 02:36:58 -0800 (PST)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date: Mon, 27 Jan 2025 11:36:51 +0100
+To: Valentin Schneider <vschneid@redhat.com>
+Cc: Uladzislau Rezki <urezki@gmail.com>, Jann Horn <jannh@google.com>,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	virtualization@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+	linux-riscv@lists.infradead.org, linux-perf-users@vger.kernel.org,
+	xen-devel@lists.xenproject.org, kvm@vger.kernel.org,
+	linux-arch@vger.kernel.org, rcu@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
+	bcm-kernel-feedback-list@broadcom.com,
+	Juergen Gross <jgross@suse.com>,
+	Ajay Kaher <ajay.kaher@broadcom.com>,
+	Alexey Makhalov <alexey.amakhalov@broadcom.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Jason Baron <jbaron@akamai.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Clark Williams <williams@redhat.com>,
+	Yair Podemsky <ypodemsk@redhat.com>,
+	Tomas Glozar <tglozar@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Kees Cook <kees@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Christoph Hellwig <hch@infradead.org>,
+	Shuah Khan <shuah@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Rong Xu <xur@google.com>,
+	Nicolas Saenz Julienne <nsaenzju@redhat.com>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Yosry Ahmed <yosryahmed@google.com>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Jinghao Jia <jinghao7@illinois.edu>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: Re: [PATCH v4 29/30] x86/mm, mm/vmalloc: Defer
+ flush_tlb_kernel_range() targeting NOHZ_FULL CPUs
+Message-ID: <Z5dhw0Ml4KGEfaUv@pc636>
+References: <20250114175143.81438-1-vschneid@redhat.com>
+ <20250114175143.81438-30-vschneid@redhat.com>
+ <CAG48ez1Mh+DOy0ysOo7Qioxh1W7xWQyK9CLGNU9TGOsLXbg=gQ@mail.gmail.com>
+ <xhsmh34hhh37q.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <Z4qBMqcMg16p57av@pc636>
+ <xhsmhwmetfk9d.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <Z44wSJTXknQVKWb0@pc636>
+ <xhsmhr04xfow1.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <Z4_Sl-zu7GprkbaL@pc636>
+ <xhsmh8qr0p784.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.12.11
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <xhsmh8qr0p784.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 
-From: Zhi Wang <zhiw@nvidia.com>
+On Fri, Jan 24, 2025 at 04:22:19PM +0100, Valentin Schneider wrote:
+> On 21/01/25 18:00, Uladzislau Rezki wrote:
+> >> >
+> >> > As noted before, we defer flushing for vmalloc. We have a lazy-threshold
+> >> > which can be exposed(if you need it) over sysfs for tuning. So, we can add it.
+> >> >
+> >>
+> >> In a CPU isolation / NOHZ_FULL context, isolated CPUs will be running a
+> >> single userspace application that will never enter the kernel, unless
+> >> forced to by some interference (e.g. IPI sent from a housekeeping CPU).
+> >>
+> >> Increasing the lazy threshold would unfortunately only delay the
+> >> interference - housekeeping CPUs are free to run whatever, and so they will
+> >> eventually cause the lazy threshold to be hit and IPI all the CPUs,
+> >> including the isolated/NOHZ_FULL ones.
+> >>
+> > Do you have any testing results for your workload? I mean how much
+> > potentially we can allocate. Again, maybe it is just enough to back
+> > and once per-hour offload it.
+> >
+> 
+> Potentially as much as you want... In our Openshift environments, you can
+> get any sort of container executing on the housekeeping CPUs and they're
+> free to do pretty much whatever they want. Per CPU isolation they're not
+> allowed/meant to disturb isolated CPUs, however.
+> 
+> > Apart of that how critical IPIing CPUs affect your workloads?
+> >
+> 
+> If I'm being pedantic, a single IPI to an isolated CPU breaks the
+> isolation. If we can't quiesce IPIs to isolated CPUs, then we can't
+> guarantee that whatever is running on the isolated CPUs is actually
+> isolated / shielded from third party interference.
+> 
+I see. I thought you are fixing some issue. I do not see a straight
+forward way how to remove such "distortion". Probably we can block the
+range which we defer for flushing. But it also can be problematic
+because of other constraints.
 
-[ Upstream commit 8d9beb4aebc02c4bd09e1d39c9c5f1c68c786dbc ]
+Thanks!
 
-A GSP event message consists three parts: message header, RPC header,
-message body. GSP calculates the number of pages to write from the
-total size of a GSP message. This behavior can be observed from the
-movement of the write pointer.
-
-However, nvkm takes only the size of RPC header and message body as
-the message size when advancing the read pointer. When handling a
-two-page GSP message in the non rollback case, It wrongly takes the
-message body of the previous message as the message header of the next
-message. As the "message length" tends to be zero, in the calculation of
-size needs to be copied (0 - size of (message header)), the size needs to
-be copied will be "0xffffffxx". It also triggers a kernel panic due to a
-NULL pointer error.
-
-[  547.614102] msg: 00000f90: ff ff ff ff ff ff ff ff 40 d7 18 fb 8b 00 00 =
-00  ........@.......
-[  547.622533] msg: 00000fa0: 00 00 00 00 ff ff ff ff ff ff ff ff 00 00 00 =
-00  ................
-[  547.630965] msg: 00000fb0: ff ff ff ff ff ff ff ff 00 00 00 00 ff ff ff =
-ff  ................
-[  547.639397] msg: 00000fc0: ff ff ff ff 00 00 00 00 ff ff ff ff ff ff ff =
-ff  ................
-[  547.647832] nvkm 0000:c1:00.0: gsp: peek msg rpc fn:0 len:0x0/0xffffffff=
-ffffffe0
-[  547.655225] nvkm 0000:c1:00.0: gsp: get msg rpc fn:0 len:0x0/0xfffffffff=
-fffffe0
-[  547.662532] BUG: kernel NULL pointer dereference, address: 0000000000000=
-020
-[  547.669485] #PF: supervisor read access in kernel mode
-[  547.674624] #PF: error_code(0x0000) - not-present page
-[  547.679755] PGD 0 P4D 0
-[  547.682294] Oops: 0000 [#1] PREEMPT SMP NOPTI
-[  547.686643] CPU: 22 PID: 322 Comm: kworker/22:1 Tainted: G            E =
-     6.9.0-rc6+ #1
-[  547.694893] Hardware name: ASRockRack 1U1G-MILAN/N/ROMED8-NL, BIOS L3.12=
-E 09/06/2022
-[  547.702626] Workqueue: events r535_gsp_msgq_work [nvkm]
-[  547.707921] RIP: 0010:r535_gsp_msg_recv+0x87/0x230 [nvkm]
-[  547.713375] Code: 00 8b 70 08 48 89 e1 31 d2 4c 89 f7 e8 12 f5 ff ff 48 =
-89 c5 48 85 c0 0f 84 cf 00 00 00 48 81 fd 00 f0 ff ff 0f 87 c4 00 00 00 <8b=
-> 55 10 41 8b 46 30 85 d2 0f 85 f6 00 00 00 83 f8 04 76 10 ba 05
-[  547.732119] RSP: 0018:ffffabe440f87e10 EFLAGS: 00010203
-[  547.737335] RAX: 0000000000000010 RBX: 0000000000000008 RCX: 00000000000=
-0003f
-[  547.744461] RDX: 0000000000000000 RSI: ffffabe4480a8030 RDI: 00000000000=
-00010
-[  547.751585] RBP: 0000000000000010 R08: 0000000000000000 R09: ffffabe440f=
-87bb0
-[  547.758707] R10: ffffabe440f87dc8 R11: 0000000000000010 R12: 00000000000=
-00000
-[  547.765834] R13: 0000000000000000 R14: ffff9351df1e5000 R15: 00000000000=
-00000
-[  547.772958] FS:  0000000000000000(0000) GS:ffff93708eb00000(0000) knlGS:=
-0000000000000000
-[  547.781035] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  547.786771] CR2: 0000000000000020 CR3: 00000003cc220002 CR4: 00000000007=
-70ef0
-[  547.793896] PKRU: 55555554
-[  547.796600] Call Trace:
-[  547.799046]  <TASK>
-[  547.801152]  ? __die+0x20/0x70
-[  547.804211]  ? page_fault_oops+0x75/0x170
-[  547.808221]  ? print_hex_dump+0x100/0x160
-[  547.812226]  ? exc_page_fault+0x64/0x150
-[  547.816152]  ? asm_exc_page_fault+0x22/0x30
-[  547.820341]  ? r535_gsp_msg_recv+0x87/0x230 [nvkm]
-[  547.825184]  r535_gsp_msgq_work+0x42/0x50 [nvkm]
-[  547.829845]  process_one_work+0x196/0x3d0
-[  547.833861]  worker_thread+0x2fc/0x410
-[  547.837613]  ? __pfx_worker_thread+0x10/0x10
-[  547.841885]  kthread+0xdf/0x110
-[  547.845031]  ? __pfx_kthread+0x10/0x10
-[  547.848775]  ret_from_fork+0x30/0x50
-[  547.852354]  ? __pfx_kthread+0x10/0x10
-[  547.856097]  ret_from_fork_asm+0x1a/0x30
-[  547.860019]  </TASK>
-[  547.862208] Modules linked in: nvkm(E) gsp_log(E) snd_seq_dummy(E) snd_h=
-rtimer(E) snd_seq(E) snd_timer(E) snd_seq_device(E) snd(E) soundcore(E) rfk=
-ill(E) qrtr(E) vfat(E) fat(E) ipmi_ssif(E) amd_atl(E) intel_rapl_msr(E) int=
-el_rapl_common(E) amd64_edac(E) mlx5_ib(E) edac_mce_amd(E) kvm_amd(E) ib_uv=
-erbs(E) kvm(E) ib_core(E) acpi_ipmi(E) ipmi_si(E) ipmi_devintf(E) mxm_wmi(E=
-) joydev(E) rapl(E) ptdma(E) i2c_piix4(E) acpi_cpufreq(E) wmi_bmof(E) pcspk=
-r(E) k10temp(E) ipmi_msghandler(E) xfs(E) libcrc32c(E) ast(E) i2c_algo_bit(=
-E) drm_shmem_helper(E) crct10dif_pclmul(E) drm_kms_helper(E) ahci(E) crc32_=
-pclmul(E) nvme_tcp(E) libahci(E) nvme(E) crc32c_intel(E) nvme_fabrics(E) cd=
-c_ether(E) nvme_core(E) usbnet(E) mlx5_core(E) ghash_clmulni_intel(E) drm(E=
-) libata(E) ccp(E) mii(E) t10_pi(E) mlxfw(E) sp5100_tco(E) psample(E) pci_h=
-yperv_intf(E) wmi(E) dm_multipath(E) sunrpc(E) dm_mirror(E) dm_region_hash(=
-E) dm_log(E) dm_mod(E) be2iscsi(E) bnx2i(E) cnic(E) uio(E) cxgb4i(E) cxgb4(=
-E) tls(E) libcxgbi(E) libcxgb(E) qla4xxx(E)
-[  547.862283]  iscsi_boot_sysfs(E) iscsi_tcp(E) libiscsi_tcp(E) libiscsi(E=
-) scsi_transport_iscsi(E) fuse(E) [last unloaded: gsp_log(E)]
-[  547.962691] CR2: 0000000000000020
-[  547.966003] ---[ end trace 0000000000000000 ]---
-[  549.012012] clocksource: Long readout interval, skipping watchdog check:=
- cs_nsec: 1370499158 wd_nsec: 1370498904
-[  549.043676] pstore: backend (erst) writing error (-28)
-[  549.050924] RIP: 0010:r535_gsp_msg_recv+0x87/0x230 [nvkm]
-[  549.056389] Code: 00 8b 70 08 48 89 e1 31 d2 4c 89 f7 e8 12 f5 ff ff 48 =
-89 c5 48 85 c0 0f 84 cf 00 00 00 48 81 fd 00 f0 ff ff 0f 87 c4 00 00 00 <8b=
-> 55 10 41 8b 46 30 85 d2 0f 85 f6 00 00 00 83 f8 04 76 10 ba 05
-[  549.075138] RSP: 0018:ffffabe440f87e10 EFLAGS: 00010203
-[  549.080361] RAX: 0000000000000010 RBX: 0000000000000008 RCX: 00000000000=
-0003f
-[  549.087484] RDX: 0000000000000000 RSI: ffffabe4480a8030 RDI: 00000000000=
-00010
-[  549.094609] RBP: 0000000000000010 R08: 0000000000000000 R09: ffffabe440f=
-87bb0
-[  549.101733] R10: ffffabe440f87dc8 R11: 0000000000000010 R12: 00000000000=
-00000
-[  549.108857] R13: 0000000000000000 R14: ffff9351df1e5000 R15: 00000000000=
-00000
-[  549.115982] FS:  0000000000000000(0000) GS:ffff93708eb00000(0000) knlGS:=
-0000000000000000
-[  549.124061] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  549.129807] CR2: 0000000000000020 CR3: 00000003cc220002 CR4: 00000000007=
-70ef0
-[  549.136940] PKRU: 55555554
-[  549.139653] Kernel panic - not syncing: Fatal exception
-[  549.145054] Kernel Offset: 0x18c00000 from 0xffffffff81000000 (relocatio=
-n range: 0xffffffff80000000-0xffffffffbfffffff)
-[  549.165074] ---[ end Kernel panic - not syncing: Fatal exception ]---
-
-Also, nvkm wrongly advances the read pointer when handling a two-page GSP
-message in the rollback case. In the rollback case, the GSP message will
-be copied in two rounds. When handling a two-page GSP message, nvkm first
-copies amount of (GSP_PAGE_SIZE - header) data into the buffer, then
-advances the read pointer by the result of DIV_ROUND_UP(size,
-GSP_PAGE_SIZE). Thus, the read pointer is advanced by 1.
-
-Next, nvkm copies the amount of (total size - (GSP_PAGE_SIZE -
-header)) data into the buffer. The left amount of the data will be always
-larger than one page since the message header is not taken into account
-in the first copy. Thus, the read pointer is advanced by DIV_ROUND_UP(
-size(larger than one page), GSP_PAGE_SIZE) =3D 2.
-
-In the end, the read pointer is wrongly advanced by 3 when handling a
-two-page GSP message in the rollback case.
-
-Fix the problems by taking the total size of the message into account
-when advancing the read pointer and calculate the read pointer in the end
-of the all copies for the rollback case.
-
-BTW: the two-page GSP message can be observed in the msgq when vGPU is
-enabled.
-
-Signed-off-by: Zhi Wang <zhiw@nvidia.com>
-Signed-off-by: Danilo Krummrich <dakr@kernel.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20241017071922.2518724-=
-2-zhiw@nvidia.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c b/drivers/gpu/d=
-rm/nouveau/nvkm/subdev/gsp/r535.c
-index d586aea308984..bd4b5d6a7bd36 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c
-@@ -121,6 +121,8 @@ r535_gsp_msgq_wait(struct nvkm_gsp *gsp, u32 repc, u32 =
-*prepc, int *ptime)
- 		return mqe->data;
- 	}
-=20
-+	size =3D ALIGN(repc + GSP_MSG_HDR_SIZE, GSP_PAGE_SIZE);
-+
- 	msg =3D kvmalloc(repc, GFP_KERNEL);
- 	if (!msg)
- 		return ERR_PTR(-ENOMEM);
-@@ -129,19 +131,15 @@ r535_gsp_msgq_wait(struct nvkm_gsp *gsp, u32 repc, u3=
-2 *prepc, int *ptime)
- 	len =3D min_t(u32, repc, len);
- 	memcpy(msg, mqe->data, len);
-=20
--	rptr +=3D DIV_ROUND_UP(len, GSP_PAGE_SIZE);
--	if (rptr =3D=3D gsp->msgq.cnt)
--		rptr =3D 0;
--
- 	repc -=3D len;
-=20
- 	if (repc) {
- 		mqe =3D (void *)((u8 *)gsp->shm.msgq.ptr + 0x1000 + 0 * 0x1000);
- 		memcpy(msg + len, mqe, repc);
--
--		rptr +=3D DIV_ROUND_UP(repc, GSP_PAGE_SIZE);
- 	}
-=20
-+	rptr =3D (rptr + DIV_ROUND_UP(size, GSP_PAGE_SIZE)) % gsp->msgq.cnt;
-+
- 	mb();
- 	(*gsp->msgq.rptr) =3D rptr;
- 	return msg;
---=20
-2.39.5
-
+--
+Uladzislau Rezki
