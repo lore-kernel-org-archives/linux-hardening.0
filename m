@@ -1,148 +1,109 @@
-Received: from exchange.fintech.ru (exchange.fintech.ru [195.54.195.159])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEF591A9B27;
-	Tue, 28 Jan 2025 13:45:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.54.195.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BCB2199FAB;
+	Tue, 28 Jan 2025 13:56:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738071929; cv=none; b=D10NVVm6VQQmy/rOAb9rIl87hg8qPLeVCQw6UVRuQQvHkTasM9LQEvXFsq6hPvpE04Clm5ieTaloBL2KgVBt4Qv0+yhquNs4jbksIZnnK1xHXPR+NG7KDWvUUBi3uiJI4jMDq8P65vlAXuAlyXNn1AbarFz/UN9WKuPUS06103Y=
+	t=1738072611; cv=none; b=op3/fFp1q5YkRueKZxmMNtYyt7Al0HIC7IOn2Hjul/paJ9+zfdRJbNLkipIy3KIpmt1+75ABgahhXEN5NMR3kFEcJq4BLTzbZYaTggP+pfbqqcdN41iI2t2teaOTbwfQXI6kNsxQ25z52S0/0KH/PZcb46MXZ2HDmM806qc9T/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738071929; c=relaxed/simple;
-	bh=EUsuGP9bWwQ6szFAe4jv0xP7A6dPxF3mOEJ24D/CzO8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=SyVdGiMdMUo31CDcEkpCOcWp5MxhNPBj0tZHKRBF81yQXzbLIr+2i+vkNNkY/qcbVi2rQ/BNFTUmbLu9E1NZ+RS4OImgexHEbzPT33hJ13BI9GUjv3GKSuR7PBmqL7ihK4OhJ2mA3tTvwrDcGswncariDdMYR2H+taS4CF2tOkY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru; spf=pass smtp.mailfrom=fintech.ru; arc=none smtp.client-ip=195.54.195.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fintech.ru
-Received: from Ex16-01.fintech.ru (10.0.10.18) by exchange.fintech.ru
- (195.54.195.159) with Microsoft SMTP Server (TLS) id 14.3.498.0; Tue, 28 Jan
- 2025 16:45:22 +0300
-Received: from [192.168.211.130] (10.0.253.138) by Ex16-01.fintech.ru
- (10.0.10.18) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2242.4; Tue, 28 Jan
- 2025 16:45:22 +0300
-Message-ID: <807cfa6f-5863-4fe4-8294-76d5cdbc3aac@fintech.ru>
-Date: Tue, 28 Jan 2025 05:45:21 -0800
+	s=arc-20240116; t=1738072611; c=relaxed/simple;
+	bh=0Psdc0X6HSTyYPpwGvfGQy93sgANDoxb4M7yMIZrlV0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XNUDwrK4rHnL8oAWHru6rv6WcSX8hGnVQxQkPFqr5PLdCbIyGlIWgEqTkoVVWanjPR/nhBPyvw93GpOWnnoKRfyq4qxXIL1P+nexI9B5H5nPPGu70LcnHlcuU/TrjWFKJDSBGFF4gHPLsjvEhLkO1Kz9dcz7qsngu+U+WXTy1rQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=hl5SHcTS; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="hl5SHcTS"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50SAw3Lg018740;
+	Tue, 28 Jan 2025 13:56:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=ftt86SRZrpGFXT1q8Trgh8dS5i1TpH
+	U0oqWDg7R1gmw=; b=hl5SHcTSY90yejSG64hh4YNo83JwaQydVL7MRmmy3hioMT
+	qFfkiw1vKwpsU+iQM1kC4PDGfr/+GWE0ZHNoxkPFwEzvhqnXc5gBOuQ74cwVqA5c
+	qwsaxf86hfbHAkAzyJow49TpvL0c1HrkGXZy1xTRYgDT1+sujAKQ+6JQej5DDOFG
+	4Y1FzzKApVHQv/qk8T73yOztUtATemN4s8WVP9FbNdpCWhm0SH1nGVnnul7pCWlG
+	wf3wiCRk3wBD1upP3NuMLGknrDtfeQBwCAE9r1+Mfht6x4CPPA6RBZTv5CIvt10o
+	7jmMe1HC1jM1M7bFyhlobWHlxQORncHDcLC9INbQ==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44ecytd2bt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 28 Jan 2025 13:56:43 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50SDbwWI019210;
+	Tue, 28 Jan 2025 13:56:42 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44db9muh43-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 28 Jan 2025 13:56:42 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50SDud0934472230
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 28 Jan 2025 13:56:39 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id F16F920149;
+	Tue, 28 Jan 2025 13:56:38 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id ADF342012F;
+	Tue, 28 Jan 2025 13:56:38 +0000 (GMT)
+Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.155.204.135])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue, 28 Jan 2025 13:56:38 +0000 (GMT)
+Date: Tue, 28 Jan 2025 14:56:37 +0100
+From: Alexander Gordeev <agordeev@linux.ibm.com>
+To: Thorsten Blum <thorsten.blum@linux.dev>,
+        Tony Krowiak <akrowiak@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>, Jason Herne <jjherne@linux.ibm.com>
+Cc: Harald Freudenberger <freude@linux.ibm.com>,
+        Holger Dengler <dengler@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>, linux-hardening@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] s390/vfio-ap: Replace one-element array with flexible
+ array member
+Message-ID: <Z5jiFcbylhWSs5gq@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+References: <20250116131859.105756-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] HID: usbhid: fix recurrent out-of-bounds bug in
- usbhid_parse()
-To: Alan Stern <stern@rowland.harvard.edu>, Kees Cook <kees@kernel.org>
-CC: Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>,
-	<linux-usb@vger.kernel.org>, <linux-input@vger.kernel.org>,
-	<syzkaller-bugs@googlegroups.com>, <linux-kernel@vger.kernel.org>,
-	<syzbot+c52569baf0c843f35495@syzkaller.appspotmail.com>,
-	<linux-hardening@vger.kernel.org>
-References: <20240524120112.28076-1-n.zhandarovich@fintech.ru>
- <nycvar.YFH.7.76.2406041015210.16865@cbobk.fhfr.pm>
- <E62FA5CB-D7AE-4A11-9D2E-7D78D7C10ADA@kernel.org>
- <nycvar.YFH.7.76.2406041614210.24940@cbobk.fhfr.pm>
- <2a38e355-af5c-4b3d-81be-0cc97376c1f5@fintech.ru>
- <202406041019.BCD0A93C@keescook>
- <d1ad84e3-7da9-4dc8-a095-b9fbe191eb56@rowland.harvard.edu>
-From: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
-Content-Language: en-US, ru-RU
-In-Reply-To: <d1ad84e3-7da9-4dc8-a095-b9fbe191eb56@rowland.harvard.edu>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: Ex16-02.fintech.ru (10.0.10.19) To Ex16-01.fintech.ru
- (10.0.10.18)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250116131859.105756-2-thorsten.blum@linux.dev>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 4jDw1tI4C23gwd6acMk_53izjFN-Q6Ek
+X-Proofpoint-ORIG-GUID: 4jDw1tI4C23gwd6acMk_53izjFN-Q6Ek
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-01-28_04,2025-01-27_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011
+ priorityscore=1501 lowpriorityscore=0 adultscore=0 spamscore=0
+ impostorscore=0 mlxscore=0 phishscore=0 mlxlogscore=759 suspectscore=0
+ bulkscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2501280101
 
-Hello,
-
-On 6/4/24 10:45, Alan Stern wrote:
-> On Tue, Jun 04, 2024 at 10:21:15AM -0700, Kees Cook wrote:
->> On Tue, Jun 04, 2024 at 10:09:43AM -0700, Nikita Zhandarovich wrote:
->>> Hi,
->>>
->>> On 6/4/24 07:15, Jiri Kosina wrote:
->>>> On Tue, 4 Jun 2024, Kees Cook wrote:
->>>>
->>>>> This isn't the right solution. The problem is that hid_class_descriptor 
->>>>> is a flexible array but was sized as a single element fake flexible 
->>>>> array:
->>>>>
->>>>> struct hid_descriptor {
->>>>> 	   __u8  bLength;
->>>>> 	   __u8  bDescriptorType;
->>>>> 	   __le16 bcdHID;
->>>>> 	   __u8  bCountryCode;
->>>>> 	   __u8  bNumDescriptors;
->>>>>
->>>>> 	   struct hid_class_descriptor desc[1];
->>>>> } __attribute__ ((packed));
->>>>>
->>>>> This likely needs to be: 
->>>>>
->>>>> struct hid_class_descriptor desc[] __counted_by(bNumDescriptors);
->>>>>
->>>>> And then check for any sizeof() uses of the struct that might have changed.
-
-Alan, I finally got around to preparing a revised version of the
-required patch and encountered a few issues. I could use some advice in
-this matter...
-
-If we change 'struct hid_descriptor' as you suggested, which does make
-sense, most occurrences of that type are easy enough to fix.
-
-1) usbhid_parse() starts working properly if there are more than 1
-descriptors, sizeof(struct hid_descriptor) may be turned into something
-crude but straightforward like sizeof(struct hid_descriptor) +
-sizeof(struct hid_class_descriptor).
-
-2) 'hid_descriptor' in drivers/hid/hid-hyperv.c remains innocuous as
-well as only 1 descriptor expected there. My impression is only some
-small changes are needed there.
-
-However, the issue that stumps me is the following: static struct
-hid_descriptor hidg_desc in drivers/usb/gadget/function/f_hid.c relies
-on a static nature of that one descriptor. hidg_desc ends up being used
-elsewhere, in other static structures. Basically, using __counted_by
-requires a lot of changes, as I see it, out of scope of merely closing
-an UBSAN error.
-
-Is this approach still worthy pursuing or should I look into some neater
-solution?
-
-Best regards,
-Nikita
-
->>>>
->>>> Ah, you are of course right, not sure what I was thinking. Thanks a lot 
->>>> for catching my brainfart.
->>>>
->>>> I am dropping the patch for now; Nikita, will you please send a refreshed 
->>>> one?
->>>>
->>>
->>> Thanks for catching my mistake.
->>>
->>> I'll gladly send a revised version, hoping to do it very soon.
->>
->> I spent a little more time looking at this, and I'm not sure I
->> understand where the actual space for the descriptors comes from?
->> There's interface->extra that is being parsed, and effectively
->> hid_descriptor is being mapped into it, but it uses "sizeof(struct
->> hid_descriptor)" for the limit.
+On Thu, Jan 16, 2025 at 02:18:59PM +0100, Thorsten Blum wrote:
+> Replace the deprecated one-element array with a modern flexible array
+> member in the struct ap_matrix_dev.
 > 
-> That's a lower limit, not an upper limit.  The hid_descriptor must 
-> include at least one hid_class_descriptor, but it can include more.
-> That's what the min_t() calculation of num_descriptors is meant to 
-> figure out.
+> Use struct_size() to calculate the number of bytes to allocate for
+> matrix_dev with a single mdev_type.
 > 
->>  Is more than 1 descriptor expected to
->> work correctly?
-> 
-> More than one hid_class_descriptor -- yes.
-> 
->>  Or is the limit being ignored? I'm a bit confused by
->> this code...
-> 
-> Does this explain it?
-> 
-> Alan Stern
+> Link: https://github.com/KSPP/linux/issues/79
+> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+> ---
+>  drivers/s390/crypto/vfio_ap_drv.c     | 2 +-
+>  drivers/s390/crypto/vfio_ap_private.h | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+
+Hi Tony, Halil, Jason,
+
+Could you please take a look?
+
+Thanks!
