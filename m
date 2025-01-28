@@ -1,94 +1,148 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from exchange.fintech.ru (exchange.fintech.ru [195.54.195.159])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADE501A072A;
-	Tue, 28 Jan 2025 11:22:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEF591A9B27;
+	Tue, 28 Jan 2025 13:45:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.54.195.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738063363; cv=none; b=WIed3RYgYQwzRJ8kptd6WG0A7azbhd6tlAJ8xEBUaWX2ov0kUBy04gQIi6BbWu8tMFYNKl75YN8czkWDvn+WWRj8QIwQhjvvqbNMsrA3L5EA19mI/kH3RDJIhN/o6fCHiQgk2PAGt6/tbb88ey/PRCR2gcvdGF3miENGXU3HHl8=
+	t=1738071929; cv=none; b=D10NVVm6VQQmy/rOAb9rIl87hg8qPLeVCQw6UVRuQQvHkTasM9LQEvXFsq6hPvpE04Clm5ieTaloBL2KgVBt4Qv0+yhquNs4jbksIZnnK1xHXPR+NG7KDWvUUBi3uiJI4jMDq8P65vlAXuAlyXNn1AbarFz/UN9WKuPUS06103Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738063363; c=relaxed/simple;
-	bh=AJfDJn9pFkPItjs+l9CjDlC33TdlTCE01Kr4mfJIOJE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g+cCyGb2/fsQowQreYNLg9qSUrLirXR7MS1CsgJTWL5oNhbhe1swUVk/CwSswe8PDryMSusPUfNKlrWUa3532e8R+YEEmmA4oN6QzpCINKU580mS3vkG99WHUT1yexgg3lDas9CYY6cW1AeZPm219ztniPyeJErJcq9Nc2Lg5xE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=foTouGKI; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="foTouGKI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98109C4CEDF;
-	Tue, 28 Jan 2025 11:22:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738063362;
-	bh=AJfDJn9pFkPItjs+l9CjDlC33TdlTCE01Kr4mfJIOJE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=foTouGKI5Xpt6DiifiySGU1Px4B0JlxynZkL/A+4GJ+F1wUAFkM/N4G83a9sI8N06
-	 lsMHA2F0I+BGkV1h4oylhwmSeJznMzbN+UJy9qwbYRK5QlpfqNfv8Msq/ndA/iDm4I
-	 JYp3P2GR22dNEIcBnZOOATJGYPU+gMIFK9XfLLma3B24+UKToDLZL/ZLBF6bwp16qy
-	 HMKr9svtYad8MrCuOMMF5t2I0WLB8bGS9HGYMu9w94+SD6sanYCztaTmP2cubx4D+F
-	 lhSPEntAtoYhJR/j92VqRwE5MifEf7tNzvj9NQnTwv0sbHofELHMou005/QzH1lonP
-	 yczCENnq4hKEA==
-Date: Tue, 28 Jan 2025 12:22:37 +0100
-From: Joel Granados <joel.granados@kernel.org>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: Jani Nikula <jani.nikula@intel.com>, Ard Biesheuvel <ardb@kernel.org>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
-	Kees Cook <kees@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, linux-crypto@vger.kernel.org, 
-	openipmi-developer@lists.sourceforge.net, intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
-	intel-xe@lists.freedesktop.org, linux-hyperv@vger.kernel.org, linux-rdma@vger.kernel.org, 
-	linux-raid@vger.kernel.org, linux-scsi@vger.kernel.org, linux-serial@vger.kernel.org, 
-	xen-devel@lists.xenproject.org, linux-aio@kvack.org, linux-fsdevel@vger.kernel.org, 
-	netfs@lists.linux.dev, codalist@coda.cs.cmu.edu, linux-mm@kvack.org, 
-	linux-nfs@vger.kernel.org, ocfs2-devel@lists.linux.dev, fsverity@lists.linux.dev, 
-	linux-xfs@vger.kernel.org, io-uring@vger.kernel.org, bpf@vger.kernel.org, 
-	kexec@lists.infradead.org, linux-trace-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org, 
-	keyrings@vger.kernel.org, Song Liu <song@kernel.org>, 
-	"Steven Rostedt (Google)" <rostedt@goodmis.org>, "Martin K. Petersen" <martin.petersen@oracle.com>, 
-	"Darrick J. Wong" <djwong@kernel.org>, Corey Minyard <cminyard@mvista.com>
-Subject: Re: Re: Re: Re: [PATCH v2] treewide: const qualify ctl_tables where
- applicable
-Message-ID: <u2fwibsnbfvulxj6adigla6geiafh2vuve4hcyo4vmeytwjl7p@oz6xonrq5225>
-References: <20250110-jag-ctl_table_const-v2-1-0000e1663144@kernel.org>
- <Z4+jwDBrZNRgu85S@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
- <nslqrapp4v3rknjgtfk4cg64ha7rewrrg24aslo2e5jmxfwce5@t4chrpuk632k>
- <CAMj1kXEZPe8zk7s67SADK9wVH3cfBup-sAZSC6_pJyng9QT7aw@mail.gmail.com>
- <f4lfo2fb7ajogucsvisfd5sg2avykavmkizr6ycsllcrco4mo3@qt2zx4zp57zh>
- <87jzag9ugx.fsf@intel.com>
- <Z5epb86xkHQ3BLhp@casper.infradead.org>
+	s=arc-20240116; t=1738071929; c=relaxed/simple;
+	bh=EUsuGP9bWwQ6szFAe4jv0xP7A6dPxF3mOEJ24D/CzO8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=SyVdGiMdMUo31CDcEkpCOcWp5MxhNPBj0tZHKRBF81yQXzbLIr+2i+vkNNkY/qcbVi2rQ/BNFTUmbLu9E1NZ+RS4OImgexHEbzPT33hJ13BI9GUjv3GKSuR7PBmqL7ihK4OhJ2mA3tTvwrDcGswncariDdMYR2H+taS4CF2tOkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru; spf=pass smtp.mailfrom=fintech.ru; arc=none smtp.client-ip=195.54.195.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fintech.ru
+Received: from Ex16-01.fintech.ru (10.0.10.18) by exchange.fintech.ru
+ (195.54.195.159) with Microsoft SMTP Server (TLS) id 14.3.498.0; Tue, 28 Jan
+ 2025 16:45:22 +0300
+Received: from [192.168.211.130] (10.0.253.138) by Ex16-01.fintech.ru
+ (10.0.10.18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2242.4; Tue, 28 Jan
+ 2025 16:45:22 +0300
+Message-ID: <807cfa6f-5863-4fe4-8294-76d5cdbc3aac@fintech.ru>
+Date: Tue, 28 Jan 2025 05:45:21 -0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z5epb86xkHQ3BLhp@casper.infradead.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] HID: usbhid: fix recurrent out-of-bounds bug in
+ usbhid_parse()
+To: Alan Stern <stern@rowland.harvard.edu>, Kees Cook <kees@kernel.org>
+CC: Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>,
+	<linux-usb@vger.kernel.org>, <linux-input@vger.kernel.org>,
+	<syzkaller-bugs@googlegroups.com>, <linux-kernel@vger.kernel.org>,
+	<syzbot+c52569baf0c843f35495@syzkaller.appspotmail.com>,
+	<linux-hardening@vger.kernel.org>
+References: <20240524120112.28076-1-n.zhandarovich@fintech.ru>
+ <nycvar.YFH.7.76.2406041015210.16865@cbobk.fhfr.pm>
+ <E62FA5CB-D7AE-4A11-9D2E-7D78D7C10ADA@kernel.org>
+ <nycvar.YFH.7.76.2406041614210.24940@cbobk.fhfr.pm>
+ <2a38e355-af5c-4b3d-81be-0cc97376c1f5@fintech.ru>
+ <202406041019.BCD0A93C@keescook>
+ <d1ad84e3-7da9-4dc8-a095-b9fbe191eb56@rowland.harvard.edu>
+From: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
+Content-Language: en-US, ru-RU
+In-Reply-To: <d1ad84e3-7da9-4dc8-a095-b9fbe191eb56@rowland.harvard.edu>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: Ex16-02.fintech.ru (10.0.10.19) To Ex16-01.fintech.ru
+ (10.0.10.18)
 
-On Mon, Jan 27, 2025 at 03:42:39PM +0000, Matthew Wilcox wrote:
-> On Mon, Jan 27, 2025 at 04:55:58PM +0200, Jani Nikula wrote:
-> > You could have static const within functions too. You get the rodata
-> > protection and function local scope, best of both worlds?
+Hello,
+
+On 6/4/24 10:45, Alan Stern wrote:
+> On Tue, Jun 04, 2024 at 10:21:15AM -0700, Kees Cook wrote:
+>> On Tue, Jun 04, 2024 at 10:09:43AM -0700, Nikita Zhandarovich wrote:
+>>> Hi,
+>>>
+>>> On 6/4/24 07:15, Jiri Kosina wrote:
+>>>> On Tue, 4 Jun 2024, Kees Cook wrote:
+>>>>
+>>>>> This isn't the right solution. The problem is that hid_class_descriptor 
+>>>>> is a flexible array but was sized as a single element fake flexible 
+>>>>> array:
+>>>>>
+>>>>> struct hid_descriptor {
+>>>>> 	   __u8  bLength;
+>>>>> 	   __u8  bDescriptorType;
+>>>>> 	   __le16 bcdHID;
+>>>>> 	   __u8  bCountryCode;
+>>>>> 	   __u8  bNumDescriptors;
+>>>>>
+>>>>> 	   struct hid_class_descriptor desc[1];
+>>>>> } __attribute__ ((packed));
+>>>>>
+>>>>> This likely needs to be: 
+>>>>>
+>>>>> struct hid_class_descriptor desc[] __counted_by(bNumDescriptors);
+>>>>>
+>>>>> And then check for any sizeof() uses of the struct that might have changed.
+
+Alan, I finally got around to preparing a revised version of the
+required patch and encountered a few issues. I could use some advice in
+this matter...
+
+If we change 'struct hid_descriptor' as you suggested, which does make
+sense, most occurrences of that type are easy enough to fix.
+
+1) usbhid_parse() starts working properly if there are more than 1
+descriptors, sizeof(struct hid_descriptor) may be turned into something
+crude but straightforward like sizeof(struct hid_descriptor) +
+sizeof(struct hid_class_descriptor).
+
+2) 'hid_descriptor' in drivers/hid/hid-hyperv.c remains innocuous as
+well as only 1 descriptor expected there. My impression is only some
+small changes are needed there.
+
+However, the issue that stumps me is the following: static struct
+hid_descriptor hidg_desc in drivers/usb/gadget/function/f_hid.c relies
+on a static nature of that one descriptor. hidg_desc ends up being used
+elsewhere, in other static structures. Basically, using __counted_by
+requires a lot of changes, as I see it, out of scope of merely closing
+an UBSAN error.
+
+Is this approach still worthy pursuing or should I look into some neater
+solution?
+
+Best regards,
+Nikita
+
+>>>>
+>>>> Ah, you are of course right, not sure what I was thinking. Thanks a lot 
+>>>> for catching my brainfart.
+>>>>
+>>>> I am dropping the patch for now; Nikita, will you please send a refreshed 
+>>>> one?
+>>>>
+>>>
+>>> Thanks for catching my mistake.
+>>>
+>>> I'll gladly send a revised version, hoping to do it very soon.
+>>
+>> I spent a little more time looking at this, and I'm not sure I
+>> understand where the actual space for the descriptors comes from?
+>> There's interface->extra that is being parsed, and effectively
+>> hid_descriptor is being mapped into it, but it uses "sizeof(struct
+>> hid_descriptor)" for the limit.
 > 
-> timer_active is on the stack, so it can't be static const.
+> That's a lower limit, not an upper limit.  The hid_descriptor must 
+> include at least one hid_class_descriptor, but it can include more.
+> That's what the min_t() calculation of num_descriptors is meant to 
+> figure out.
 > 
-> Does this really need to be cc'd to such a wide distribution list?
-That is a very good question. I removed 160 people from the original
-e-mail and left the ones that where previously involved with this patch
-and left all the lists for good measure. But it seems I can reduce it
-even more.
-
-How about this: For these treewide efforts I just leave the people that
-are/were involved in the series and add two lists: linux-kernel and
-linux-hardening.
-
-Unless someone screams, I'll try this out on my next treewide.
-
-Thx for the feedback
-
-Best
-
--- 
-
-Joel Granados
+>>  Is more than 1 descriptor expected to
+>> work correctly?
+> 
+> More than one hid_class_descriptor -- yes.
+> 
+>>  Or is the limit being ignored? I'm a bit confused by
+>> this code...
+> 
+> Does this explain it?
+> 
+> Alan Stern
