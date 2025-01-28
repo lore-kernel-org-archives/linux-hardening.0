@@ -1,182 +1,112 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE335199230
-	for <linux-hardening@vger.kernel.org>; Tue, 28 Jan 2025 17:00:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F052B18F2D8;
+	Tue, 28 Jan 2025 22:42:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738083647; cv=none; b=gdh8RzEv05kdfL5UVkBN8DYwj4Preu86gT/rcQb/FOy7fE9VnuuOKSb3Og8Tx/msnxU+tTSIV/aniIpOKE+Cb9xFBdxLuKJn6vig/4JM+npn5yzdmuakv4aBQomhnhTfKaZCFtw1a26HiEhTycOGjiP2lKpGnUoSEDeJzFhbVIA=
+	t=1738104123; cv=none; b=ZSF1tzNNEft+ZEMz5E4zgPPXk+febAiAn33i/Eh/A6X2yRIlMKHMYXePkYGjBA29YrW1R0lzdzk27xkElQ1TfsRtEt5A+Csf4YkVhqrQuLgDt0bgaRRhNqmMnL/t6zPWAoS/PF7kQE0QMZlFM67269x0X7WL/qUqMWlBuZ/lMyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738083647; c=relaxed/simple;
-	bh=iIybshDrGhTpu5fdQslefhHPNdOHP0cFoqox0S5u16s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lgOsdDNrJXdIqbEmGvP2necWro7cmY1OdAfZ/gZKgInkfKEzPAEG6Uct3H/BcQao1TV2SnMvwu/5dTrRE2BD5PWc1y0PLReEf4pfH4WaBqG5Az6giQBof3UmnQHzEJGTF15fFuKPFVOSEHPlTAJIzlvcYUqGkhKAkYfPAd7IlqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu; spf=fail smtp.mailfrom=g.harvard.edu; dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b=nlFWbreo; arc=none smtp.client-ip=209.85.160.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=g.harvard.edu
+	s=arc-20240116; t=1738104123; c=relaxed/simple;
+	bh=AOq0SJfJiBWND1wZ8FCd25+xqo3YTjsEqxOPO7EP2Os=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=FstZ4C6DuUxK9n5M/3sg7jpX/GB3dpw1cVdd0Rje5e+IrzQ204QiRqwwmVyx07DktIGradd5Ie/WbNADPj5RPL0y8Zpyb+ibRpIexleAFtYiDUFvEW3KX+VkOpd/umHn281FNaZhLY+iyFPjMBcDcp1VSYcbo8UhwRuSgJsix8o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=NUNSUUGt; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b="nlFWbreo"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-46788c32a69so78135461cf.2
-        for <linux-hardening@vger.kernel.org>; Tue, 28 Jan 2025 09:00:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rowland.harvard.edu; s=google; t=1738083644; x=1738688444; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=rYQbyDpHC1ac+WOYHWsMxWbSZSl6a353d6NzBjJrrrg=;
-        b=nlFWbreobHnKp+6q6YGyOrscYnZvnkWMEBziBelYxjduted3YxY2cwYb5GUg+nZwAd
-         c2dD2dBJdjWh9NPDToSlEi1g5Djr0q5SsZiQVHL26qD8PQM5LFMXPdzeqWyhn4XNaKU1
-         sB0c6byqdoTl4kdlGoYvz3svZpcPwFcpDTF5rBZatz8/D9rN+85AKd+4ryUrCVCI2itR
-         GRT4DaiP1y/ut4oYTUdSG3BHYVkgo7e0mjeVp8XudAbX4DnLflZAf/c5cA1+jSk22xi3
-         JHXpac3WezJdlf5nCMh4WZqkzLsSiWNPsXbkKQfva9J3x4C9my3HufPZWcS5iJaXZHi7
-         hy4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738083644; x=1738688444;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rYQbyDpHC1ac+WOYHWsMxWbSZSl6a353d6NzBjJrrrg=;
-        b=FmUYjxTFsQlpycyNcaMmJUHa7NAV33dBlQIh4ylDF+SD9xa9ytbLXQIfYRy+x5qWRm
-         5VeN1sdfYpEUwA735nL7gJMXUAdmwj1qhO4HQxCUqgtQLmYpYJ3RmYz5hHo/xSMaKJ8I
-         acQpp4gSq/0skQXm2Ps/v9VgLQx9tu1aDWxN+02H9iDzfkIAv8R2mPC/hnhhjhHvsgTc
-         1LPkKknIOa3JHXvzgF1w/V8mqJ9noOKQjgidgWuR+zMwzvwVFFkzrKU02UhYyCP2zqqQ
-         AYwrApzLPxAmEXfWZHSclxo827vILysXKnmIs3/SDNj1Kb9HpyAeorM4AGZpH/+zRpKF
-         3UpA==
-X-Forwarded-Encrypted: i=1; AJvYcCWzX52yUb9DseMzhZkJJGqu9jz7z0TgUj+iR+o0JhNPnnTYpAi6IeTVdCscYvbEgu+vZ9fG1JIWLtUbFqj2khA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+ilzo7oXBfHDDhfoTTRSHYZqThHYkpvm8kHfFhbPhl0fjf1AF
-	9hkFqz3NJfLgEKhGhoDN05VNDH4LAPP2HkCfGKqvHRG7dlF4/9d6NrJ6KA2QIMoREsGbdCp7ciI
-	=
-X-Gm-Gg: ASbGnct39hUrdMtAK/OvhFOTPmsDExqH+A0yZgJfqL2QaW/4hgyK/TQtF6aNHnW5ZUP
-	QpwpxoWpSGYS7oGMFPdI2qTXt2nlWeyOWdjf65nBYMNLvx3QTUgpkvMKQbIoaNFWQw1gbMeX18f
-	A6T7jfrNPs3HUBPnyU4QMy3JKrrsOD7Tw2VdVJnJvm8sWxp2rBM9wL3+J04PGZDfOw6Ee50o5K+
-	hfGZWihDkijO49MyalINKPj7Y0VrIR5xo/aaCVLHQPrgJbfMoirEzpuLFIWs+rCpziwtuSNLGN0
-	jbvIQVMIsPecK10YIdpwTi8tMf6XiRsfoG2evvhevG855lvV79pgkcFgShIqDLpUZtOowGmPNm5
-	SogZTOtzE
-X-Google-Smtp-Source: AGHT+IFXtWLgYvf5afKDBq9IFcUR79Cv4+hTgX2p8X0VQsEnSg9GzqwrSx/uGsGZRVXzUnYEXoIRFw==
-X-Received: by 2002:a05:622a:190b:b0:467:4b8d:2eea with SMTP id d75a77b69052e-46e12b90d4emr687489221cf.34.1738083644545;
-        Tue, 28 Jan 2025 09:00:44 -0800 (PST)
-Received: from rowland.harvard.edu (nat-65-112-8-51.harvard-secure.wrls.harvard.edu. [65.112.8.51])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-46e66b88e49sm52565771cf.68.2025.01.28.09.00.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jan 2025 09:00:44 -0800 (PST)
-Date: Tue, 28 Jan 2025 12:00:41 -0500
-From: Alan Stern <stern@rowland.harvard.edu>
-To: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
-Cc: Kees Cook <kees@kernel.org>, Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <bentiss@kernel.org>, linux-usb@vger.kernel.org,
-	linux-input@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-	linux-kernel@vger.kernel.org,
-	syzbot+c52569baf0c843f35495@syzkaller.appspotmail.com,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] HID: usbhid: fix recurrent out-of-bounds bug in
- usbhid_parse()
-Message-ID: <649f5c1c-f3a7-420d-b727-f904d58f491f@rowland.harvard.edu>
-References: <20240524120112.28076-1-n.zhandarovich@fintech.ru>
- <nycvar.YFH.7.76.2406041015210.16865@cbobk.fhfr.pm>
- <E62FA5CB-D7AE-4A11-9D2E-7D78D7C10ADA@kernel.org>
- <nycvar.YFH.7.76.2406041614210.24940@cbobk.fhfr.pm>
- <2a38e355-af5c-4b3d-81be-0cc97376c1f5@fintech.ru>
- <202406041019.BCD0A93C@keescook>
- <d1ad84e3-7da9-4dc8-a095-b9fbe191eb56@rowland.harvard.edu>
- <807cfa6f-5863-4fe4-8294-76d5cdbc3aac@fintech.ru>
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="NUNSUUGt"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 06ECA403FA
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1738104121; bh=+meNH1juZBBtvrp/xo2cF0Sh2lEGZRx9Dv3JEMGVfwQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=NUNSUUGtYAw8IZ7v+u9urKWTHqRqgIaFDi/LwOklT1yZ+dVdXczOD9aTVo9dL8GaQ
+	 OAf5s35W/sLcrCXBP9L1rzztGXQrZf82Io4oQsEPVhxr2Gmfam9dfHpeHYHM4gAzS8
+	 Z5wJvtiQGdryhtYMX/RqM8UUTkxsZ7qqsI/DxEU04UzFD7wrLVaAgpDF9YgOAVZODR
+	 ghFfoDDu31L5plmrTy4y8+t+6MkL5TJscft0G5BNRz45gjvAU7I+oGLILjgoaHhU9M
+	 9iNee1I8iwhHjJ3JhYnCMWXNAtQ6QziZH5AMs5lTvSyDYyN1vQVIIWC4TLGwjRIBKs
+	 EZQClEOOCB0lQ==
+Received: from localhost (unknown [IPv6:2601:280:5e00:625::1fe])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 06ECA403FA;
+	Tue, 28 Jan 2025 22:42:00 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Linux Doc Mailing
+ List <linux-doc@vger.kernel.org>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>
+Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Mauro Carvalho Chehab
+ <mchehab+huawei@kernel.org>, linux-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, coresight@lists.linaro.org,
+ linux-arm-kernel@lists.infradead.org, linux-block@vger.kernel.org,
+ linux-f2fs-devel@lists.sourceforge.net, linux-hardening@vger.kernel.org,
+ linux-iio@vger.kernel.org, linux-media@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-usb@vger.kernel.org,
+ linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+ workflows@vger.kernel.org
+Subject: Re: [RFC v2 00/38] Improve ABI documentation generation
+In-Reply-To: <cover.1738020236.git.mchehab+huawei@kernel.org>
+References: <cover.1738020236.git.mchehab+huawei@kernel.org>
+Date: Tue, 28 Jan 2025 15:42:00 -0700
+Message-ID: <87h65i7e87.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <807cfa6f-5863-4fe4-8294-76d5cdbc3aac@fintech.ru>
+Content-Type: text/plain
 
-On Tue, Jan 28, 2025 at 05:45:21AM -0800, Nikita Zhandarovich wrote:
-> Hello,
-> 
-> On 6/4/24 10:45, Alan Stern wrote:
-> > On Tue, Jun 04, 2024 at 10:21:15AM -0700, Kees Cook wrote:
-> >> On Tue, Jun 04, 2024 at 10:09:43AM -0700, Nikita Zhandarovich wrote:
-> >>> Hi,
-> >>>
-> >>> On 6/4/24 07:15, Jiri Kosina wrote:
-> >>>> On Tue, 4 Jun 2024, Kees Cook wrote:
-> >>>>
-> >>>>> This isn't the right solution. The problem is that hid_class_descriptor 
-> >>>>> is a flexible array but was sized as a single element fake flexible 
-> >>>>> array:
-> >>>>>
-> >>>>> struct hid_descriptor {
-> >>>>> 	   __u8  bLength;
-> >>>>> 	   __u8  bDescriptorType;
-> >>>>> 	   __le16 bcdHID;
-> >>>>> 	   __u8  bCountryCode;
-> >>>>> 	   __u8  bNumDescriptors;
-> >>>>>
-> >>>>> 	   struct hid_class_descriptor desc[1];
-> >>>>> } __attribute__ ((packed));
-> >>>>>
-> >>>>> This likely needs to be: 
-> >>>>>
-> >>>>> struct hid_class_descriptor desc[] __counted_by(bNumDescriptors);
-> >>>>>
-> >>>>> And then check for any sizeof() uses of the struct that might have changed.
-> 
-> Alan, I finally got around to preparing a revised version of the
-> required patch and encountered a few issues. I could use some advice in
-> this matter...
-> 
-> If we change 'struct hid_descriptor' as you suggested,
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
 
-I didn't make that suggestion.  Kees Cook did.
+> Hi Jon/Greg,
+>
+> That's the second version of my RFC patches meant to modenize the ABI
+> parser that I wrote in Perl.
 
->  which does make
-> sense, most occurrences of that type are easy enough to fix.
-> 
-> 1) usbhid_parse() starts working properly if there are more than 1
-> descriptors, sizeof(struct hid_descriptor) may be turned into something
-> crude but straightforward like sizeof(struct hid_descriptor) +
-> sizeof(struct hid_class_descriptor).
-> 
-> 2) 'hid_descriptor' in drivers/hid/hid-hyperv.c remains innocuous as
-> well as only 1 descriptor expected there. My impression is only some
-> small changes are needed there.
-> 
-> However, the issue that stumps me is the following: static struct
-> hid_descriptor hidg_desc in drivers/usb/gadget/function/f_hid.c relies
-> on a static nature of that one descriptor. hidg_desc ends up being used
-> elsewhere, in other static structures. Basically, using __counted_by
-> requires a lot of changes, as I see it, out of scope of merely closing
-> an UBSAN error.
+I have a couple of minor comments on the individual patches, but overall
+I do like this direction.
 
-The hidg_desc structure needs to contain room for a single 
-hid_descriptor containing a single hid_class_descriptor.  I think you 
-can define it that way by doing something like this:
+It would be nice, though, if the code were a bit more extensively
+commented.  Parts of it get into the "twistly maze of regexes" mode that
+can be awfully hard to follow.
 
-static struct hid_descriptor hidg_desc = {
-	.bLength			= sizeof hidg_desc,
-	.bDescriptorType		= HID_DT_HID,
-	.bcdHID				= cpu_to_le16(0x0101),
-	.bCountryCode			= 0x00,
-	.bNumDescriptors		= 0x1,
-	.desc				= {
-		{
-			.bDescriptorType	= 0, /* DYNAMIC */
-			.wDescriptorLength	= 0, /* DYNAMIC */
-		}
-	}
-};
+> On this series we have:
+>
+> patches 1 to 11: several bug fixes addressing issues at ABI symbols;
 
-Or maybe it needs to be:
+1-3 aren't needed - it seems you already upstreamed #2?
 
-	.desc				= { {0, 0} } /* DYNAMIC */
+For the rest, is there any reason to not apply them right away?  They
+just seem like worthwhile fixes.
 
-I'm not sure what is the correct syntax; you'll have to figure that out.  
+> patch 12: a fix for scripts/documentation-file-ref-check
+> patches 13-15: create new script with rest and search logic and 
+>   minimally integrate with kernel_abi Sphinx extension(phase 1);
+> patches 16-19: implement phase 2: class integration (phase 2);
+> patch 20: fix a bug at kernel_abi: the way it splits lines is buggy;
+> patches  21-24: rewrite kernel_abi logic to make it simpler and more
+>   robust;
+> patches 25-27: add cross-reference support at automarkup;
+> patches 28-36: several ABI cleanups to cope with the improvements;
+> patch 37: implement undefined command;
+> patch 38: get rid of the old Perl script.
+>
+> To make it easier to review/apply, I may end breaking the next version
+> on a couple of different patchsets. Still it would be nice to have more
+> people testing it and providing some feedback.
 
-You'll have to be more careful about the definition of hidg_desc_copy in 
-hidg_setup(), however.  You might want to define hidg_desc_copy as an 
-alias to the start of a byte array of the right size.
+I've looked over everything, though with limited depth.  My testing
+hasn't turned up any problems.  I've only tested with current Sphinx,
+have you tried this with the more ancient versions we support?
 
-> Is this approach still worthy pursuing or should I look into some neater
-> solution?
+[It's probably time to raise our minimum version again, especially now
+that current Sphinx has better performance.]
 
-I think you should persist with this approach.
+I don't see a whole lot of reasons not to apply this set shortly after
+the merge window; anybody disagree?
 
-Alan Stern
+Thanks,
+
+jon
