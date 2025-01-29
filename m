@@ -1,210 +1,247 @@
-Received: from omta034.useast.a.cloudfilter.net (omta034.useast.a.cloudfilter.net [44.202.169.33])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21D9119F421
-	for <linux-hardening@vger.kernel.org>; Wed, 29 Jan 2025 08:05:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BD3C19A28D;
+	Wed, 29 Jan 2025 08:14:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738137949; cv=none; b=sSorjpfly2YVJMjh3RSPjOtb6erwVGNm7/EuGdjgTbKFwHcPXUBtvSuTbpOS+ZaUC8mPhepj0SVejli359ezrILfOVfbwfspET6Hsa9rNpnzjuPQG4hqdANC6Dt4hPH6FUOsfYe5O3XMpZl2zbrCCl/ptRVJE8ghVgqZCFRsmKw=
+	t=1738138480; cv=none; b=sY/doN0hPMeYTXyyAgl/Af4Gy4obwOKpfS2JAA2YluJ4ROM0OYWjbTujQwfLxcc3kIZW1PXEvHsapI34Q0xHdBeGAw1rAr8gCVOiC4owJiTh3EBLGek+2j6ICIzktoByyiSiL6QEITGnrRkJGll0EWCT/XziruehHfBo4IdvRyM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738137949; c=relaxed/simple;
-	bh=oF30+J3IqzruAOpxJYIi5djwvudQtHK2lwBVZ4vPqeI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ClxGwXjZF412fRX/r6h5cyCL/g47II8Ymd9uMP3l0vnyNrgL2GE1HXn7Xku9Fn2MhhUImyopmFbpFAW7ZhMeQzQoD6mXlzArYAabHijbCcM2XvyPC2fAL9Ta3/dhY+LzSsUHA82/sitkgdEiBJ2cyexhfsOBFsX6Y7Gq++W3WDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=hstIpoSI; arc=none smtp.client-ip=44.202.169.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1738138480; c=relaxed/simple;
+	bh=Iw3ppgBY5sLOi1990ConwcQ4ZKtsA/u/PoORWMqt+Lo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=vEs0t8gvLHfhMewMRbpGUHlMpfqKFaa6B8S40Io4NLIDcnyi8mvgBhh555w2RDegYZCj+vF/l3pl9jMOgiiIAqTg2L0/088WbHtgvc+YTq6WYoODJ1OGMZbAtOG1eya1SRU/7QdS2p4VXolm+ooUZoDwC7zXVYCJkpwaRgLzxLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NlW9ZHp9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="hstIpoSI"
-Received: from eig-obgw-6003a.ext.cloudfilter.net ([10.0.30.151])
-	by cmsmtp with ESMTPS
-	id d2zUtypbzXshwd34ttweQw; Wed, 29 Jan 2025 08:05:39 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id d34stWa2wNMSld34stnvsj; Wed, 29 Jan 2025 08:05:38 +0000
-X-Authority-Analysis: v=2.4 cv=K9DpHDWI c=1 sm=1 tr=0 ts=6799e152
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=3GLQtCDrk5mhnYkuwPoHkA==:17
- a=IkcTkHD0fZMA:10 a=VdSt8ZQiCzkA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
- a=KKAkSRfTAAAA:8 a=n4Tv2M7neSFVITN6eSkA:9 a=QEXdDO2ut3YA:10
- a=cvBusfyB2V15izCimMoJ:22 a=Xt_RvD8W3m28Mn_h3AK8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=dJNGaRuyb43KyPltLLyaM42uJkC8Bu7eSEAbbEuHpi8=; b=hstIpoSIJ1JEtZzYmgPkabvpfF
-	vewCr2uyaWYPsQL1VMcI/JFT9EhN+mnyLm2Yav6CBKePf/0O5bZ1TgiJzurrvg6vKVXxvyYwuftt3
-	Phs8FHj71S77gnoz4FE9O97GBFj9FrkC+QP31HKy0F1MVAokZJW98l2DcBpNFW0v6t5Nk5CeIq1v1
-	1OXis5r+oh06nSgCmQpl6Ci4Qlw0a/QYSuvsDNp3J/UfgYEEIAu08TD41rwon3Nf8WPmvrX4dSeTj
-	eyhtKibdTY4nS7gWunG4nO/1D5wSr10wMOekg2brDYcK2FtQcXcwWmZbTXtgPHssQoCEQL6dpziK1
-	RvaQr58g==;
-Received: from [45.124.203.141] (port=55427 helo=[192.168.0.153])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1td34q-0028o3-2J;
-	Wed, 29 Jan 2025 02:05:37 -0600
-Message-ID: <f6e24dfa-450e-4de6-87a6-6fcf7d83888d@embeddedor.com>
-Date: Wed, 29 Jan 2025 18:35:18 +1030
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NlW9ZHp9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D2B1C4CED3;
+	Wed, 29 Jan 2025 08:14:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738138479;
+	bh=Iw3ppgBY5sLOi1990ConwcQ4ZKtsA/u/PoORWMqt+Lo=;
+	h=Date:From:To:Cc:Subject:From;
+	b=NlW9ZHp9VudwHkBpLCWjJBuDBOM5xiUGC07cPz+1W1pid4cQ3A23aWksXQ737B9sR
+	 QDd52umKF10CvZNhYGFYGei1XAHJseyQp0LyDmsSJsoDYAfzEbofL8X6KHSGEPCc26
+	 2W+9RofmVoDPUoLquZpvDHK14QBda+WL+OAQDLjkinLqC5/Koi4mthsxs5t8jg6CYo
+	 pxXpX75EIxi2Dghm6JTtfA10LL/+lPRb/7AF6Nn7xCmcP9VisB1AnBBhWx2wV9X9nB
+	 OvNjbL/K8y+RshuTeRQbLlQis7opaZApWFpYMNFLPZACBc1TNefz3hA3mgeQYZxdm6
+	 3ObqC2JV6LywA==
+Date: Wed, 29 Jan 2025 09:14:20 +0100
+From: Joel Granados <joel.granados@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Anna Schumaker <anna.schumaker@oracle.com>, 
+	Ashutosh Dixit <ashutosh.dixit@intel.com>, Baoquan He <bhe@redhat.com>, 
+	Bill O'Donnell <bodonnel@redhat.com>, Corey Minyard <cminyard@mvista.com>, 
+	"Darrick J. Wong" <djwong@kernel.org>, Jani Nikula <jani.nikula@intel.com>, 
+	Joel Granados <joel.granados@kernel.org>, "Martin K. Petersen" <martin.petersen@oracle.com>, 
+	Song Liu <song@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Wei Liu <wei.liu@kernel.org>, Kees Cook <kees@kernel.org>, 
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [GIT PULL] sysctl constification changes for v6.14-rc1
+Message-ID: <kndlh7lx2gfmz5m3ilwzp7fcsmimsnjgh434hnaro2pmy7evl6@jfui76m22kig>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2][next] container_of: add container_first() macro
-To: Greg KH <gregkh@linuxfoundation.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Dan Carpenter <dan.carpenter@linaro.org>, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <Z5m76U5zh34WbeQY@kspp>
- <2025012955-hypnotic-patronize-8931@gregkh>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <2025012955-hypnotic-patronize-8931@gregkh>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 45.124.203.141
-X-Source-L: No
-X-Exim-ID: 1td34q-0028o3-2J
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.0.153]) [45.124.203.141]:55427
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfF7g3mD6Yducij8/cuLPdyXM64PEBD9IgWQkKqhc9KCdYooedcGvvsGuf1znABj6i2mTTgove9JPgVGrDUAU8o46ROUtaBfBzYaMD1WPBtzmFxHou2TX
- xWdy/z10UQ7Cd5S9Z3OskyTaUhkL+JVsgviuBera++3ONgKveKecDbbfaWop2aJDx6ZnGTkQwqz3p0xFiiQena2RhH+JcR7wXoyeMyXVvB+Nv+Nz7WUI+W8x
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+Linus:
 
+This is a continuation of the ctl_table constification work started in
+commit 78eb4ea25cd5 ("sysctl: treewide: constify the ctl_table argument
+of proc_handlers"). That commit allows the const qualifying of the
+ctl_tables; with a few exceptions listed in the commit.
 
-On 29/01/25 16:24, Greg KH wrote:
-> On Wed, Jan 29, 2025 at 03:56:01PM +1030, Gustavo A. R. Silva wrote:
->> This is like container_of_const() but it contains an assert to
->> ensure that it's using the first member in the structure.
-> 
-> But why?  If you "know" it's the first member, just do a normal cast.
-> If you don't, then you probably shouldn't be caring about this anyway,
-> right?
+As with previous large tree-wide PRs [1], I'm sending it at the end of
+the merge window to try to avoid unnecessary conflicts. I have rebased
+it on top of what I see as your latest master (6d61a53dd6f5), but I can
+rebase it again later if you prefer.
 
-This is more about the cases where the member _must_ be first in the
-structure. See below for an example related to -Wflex-array-member-not-at-end
+Testing was done in 0-day to avoid generating unnecessary merge
+conflicts in linux-next. I do not expect any error/regression given that
+all changes contained in this PR are non-functional.
 
-> 
->>
->> Co-developed-by: Dan Carpenter <dan.carpenter@linaro.org>
->> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
->> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->> ---
->>
->> I will be using this in my -Wflex-array-member-not-at-end patches. :)
-> 
-> Confused, I'd like to see some users first please.
+Finally, if you need to regenerate it do:
+  1. Run the spatch [2] with the coccichekck command [3].
+  2. Run the sed command [4]
 
-When addressing the -Wflex-array-member-not-at-end warnings, the common
-scenario is when we have to separate the flexible-array member from the
-rest of the members in the flexible structure, as shown below [1]:
+Best
 
-struct bplus_header
-{
-         struct_group_tagged(bplus_header_fixed, __hdr,
-                 u8 flags;               /* bit 0 - high bit of first free entry offset
-                                            bit 5 - we're pointed to by an fnode,
-                                            the data btree or some ea or the
-                                            main ea bootage pointer ea_secno
-                                            bit 6 - suggest binary search (unused)
-                                            bit 7 - 1 -> (internal) tree of anodes
-                                            0 -> (leaf) list of extents */
-                 u8 fill[3];
-                 u8 n_free_nodes;        /* free nodes in following array */
-                 u8 n_used_nodes;        /* used nodes in following array */
-                 __le16 first_free;      /* offset from start of header to
-                                            first free node in array */
-         );
-         union {
-                 /* (internal) 2-word entries giving subtree pointers */
-                 DECLARE_FLEX_ARRAY(struct bplus_internal_node, internal);
-                 /* (external) 3-word entries giving sector runs */
-                 DECLARE_FLEX_ARRAY(struct bplus_leaf_node, external);
-         } u;
-};
+[1] https://lore.kernel.org/all/20240724210014.mc6nima6cekgiukx@joelS2.panther.com/
+[2] Spatch:
+      virtual patch
 
-struct_group_tagged() creates a new type: `struct bplus_header_fixed`, we
-then use the newly created type to change the type of the middle objects
-causing the warnings, and with that the warnings are gone:
+      @
+      depends on !(file in "net")
+      disable optional_qualifier
+      @
 
-@@ -453,7 +455,7 @@ struct fnode
-    __le16 flags;				/* bit 1 set -> ea_secno is an anode */
-  					/* bit 8 set -> directory.  first & only extent
-  					   points to dnode. */
--  struct bplus_header btree;		/* b+ tree, 8 extents or 12 subtrees */
-+  struct bplus_header_fixed btree;	/* b+ tree, 8 extents or 12 subtrees */
-    union {
-      struct bplus_leaf_node external[8];
-      struct bplus_internal_node internal[12];
-@@ -495,7 +497,7 @@ struct anode
-    __le32 self;				/* pointer to this anode */
-    __le32 up;				/* parent anode or fnode */
+      identifier table_name != {
+        watchdog_hardlockup_sysctl,
+        iwcm_ctl_table,
+        ucma_ctl_table,
+        memory_allocation_profiling_sysctls,
+        loadpin_sysctl_table
+      };
+      @@
 
--  struct bplus_header btree;		/* b+tree, 40 extents or 60 subtrees */
-+  struct bplus_header_fixed btree;	/* b+tree, 40 extents or 60 subtrees */
-    union {
-      struct bplus_leaf_node external[40];
-      struct bplus_internal_node internal[60];
+      + const
+      struct ctl_table table_name [] = { ... };
 
-However, this newly created type, or rather the member `__hdr` (also
-created when calling struct_group_tagged()) _must_ always be the first
-member in the flexible struct `struct bplus_header`.
+[3] Spatch command:
+      make coccicheck MODE=patch \
+        SPFLAGS="--in-place --include-headers --smpl-spacing --jobs=16" \
+        COCCI=PATCH_FILE
 
-Then we need to use container_first() to retrieve a pointer to the flexible
-structure [2], via which we can access the flexible-array member when
-necessary:
+[4] sed:
+      sed --in-place \
+        -e "s/struct ctl_table .table = &uts_kern/const struct ctl_table *table = \&uts_kern/" \
+        kernel/utsname_sysctl.c
 
-diff --git a/fs/hpfs/anode.c b/fs/hpfs/anode.c
-index c14c9a035ee0c0..a366f6ac71e436 100644
---- a/fs/hpfs/anode.c
-+++ b/fs/hpfs/anode.c
-@@ -27,7 +27,7 @@ secno hpfs_bplus_lookup(struct super_block *s, struct inode *inode,
-  				a = le32_to_cpu(btree->u.internal[i].down);
-  				brelse(bh);
-  				if (!(anode = hpfs_map_anode(s, a, &bh))) return -1;
--				btree = &anode->btree;
-+				btree = container_first(&anode->btree, struct bplus_header, __hdr);
-  				goto go_down;
-  			}
-  		hpfs_error(s, "sector %08x not found in internal anode %08x", sec, a);
-@@ -69,12 +69,16 @@ secno hpfs_add_sector_to_btree(struct super_block *s, secno node, int fnod, unsi
-  	int n;
-  	unsigned fs;
-  	int c1, c2 = 0;
-+	struct bplus_header *anode_btree = container_first(&anode->btree, struct bplus_header, __hdr);
-+	struct bplus_header *ranode_btree = container_first(&ranode->btree, struct bplus_header, __hdr);
-+	struct bplus_header *fnode_btree = container_first(&fnode->btree, struct bplus_header, __hdr);
-+
+The following changes since commit 6d61a53dd6f55405ebcaea6ee38d1ab5a8856c2c:
 
-So, if we use container_first() (or container_of_first(), you tell
-which name you prefer), we are asserting that that `__hdr` member
-is always the first member in `struct bplus_header`.
+  Merge tag 'f2fs-for-6.14-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/jaegeuk/f2fs (2025-01-27 20:58:58 -0800)
 
-I've explained all this at Plumbers last year. In any case, let
-me know if you need more clarification. :)
+are available in the Git repository at:
 
-Thanks!
---
-Gustavo
+  git://git.kernel.org/pub/scm/linux/kernel/git/sysctl/sysctl.git/ tags/constfy-sysctl-6.14-rc1
 
-[1] 
-https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git/diff/fs/hpfs/hpfs.h?h=testing/wfamnae-next20250124&id=f66219294267a2fba220f4f3118e11c5cda63d0b
-[2] 
-https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git/diff/fs/hpfs/anode.c?h=testing/wfamnae-next20250124&id=f66219294267a2fba220f4f3118e11c5cda63d0b
+for you to fetch changes up to 1751f872cc97f992ed5c4c72c55588db1f0021e1:
+
+  treewide: const qualify ctl_tables where applicable (2025-01-28 13:48:37 +0100)
+
+----------------------------------------------------------------
+Summary:
+
+  All ctl_table declared outside of functions and that remain unmodified after
+  initialization are const qualified. This prevents unintended modifications to
+  proc_handler function pointers by placing them in the .rodata section. This is
+  a continuation of the tree-wide effort started a few releases ago with the
+  constification of the ctl_table struct arguments in the sysctl API done in
+  78eb4ea25cd5 ("sysctl: treewide: constify the ctl_table argument of
+  proc_handlers")
+
+Testing:
+
+  Testing was done on 0-day and sysctl selftests in x86_64. The linux-next
+  branch was not used for such a big change in order to avoid unnecessary merge
+  conflicts
+
+----------------------------------------------------------------
+Joel Granados (1):
+      treewide: const qualify ctl_tables where applicable
+
+ arch/arm/kernel/isa.c                         | 2 +-
+ arch/arm64/kernel/fpsimd.c                    | 4 ++--
+ arch/arm64/kernel/process.c                   | 2 +-
+ arch/powerpc/kernel/idle.c                    | 2 +-
+ arch/powerpc/platforms/pseries/mobility.c     | 2 +-
+ arch/riscv/kernel/process.c                   | 2 +-
+ arch/riscv/kernel/vector.c                    | 2 +-
+ arch/s390/appldata/appldata_base.c            | 2 +-
+ arch/s390/kernel/debug.c                      | 2 +-
+ arch/s390/kernel/hiperdispatch.c              | 2 +-
+ arch/s390/kernel/topology.c                   | 2 +-
+ arch/s390/mm/cmm.c                            | 2 +-
+ arch/s390/mm/pgalloc.c                        | 2 +-
+ arch/x86/entry/vdso/vdso32-setup.c            | 2 +-
+ arch/x86/kernel/cpu/bus_lock.c                | 2 +-
+ crypto/fips.c                                 | 2 +-
+ drivers/base/firmware_loader/fallback_table.c | 2 +-
+ drivers/cdrom/cdrom.c                         | 2 +-
+ drivers/char/hpet.c                           | 2 +-
+ drivers/char/ipmi/ipmi_poweroff.c             | 2 +-
+ drivers/char/random.c                         | 2 +-
+ drivers/gpu/drm/i915/i915_perf.c              | 2 +-
+ drivers/gpu/drm/xe/xe_observation.c           | 2 +-
+ drivers/hv/hv_common.c                        | 2 +-
+ drivers/md/md.c                               | 2 +-
+ drivers/misc/sgi-xp/xpc_main.c                | 4 ++--
+ drivers/perf/arm_pmuv3.c                      | 2 +-
+ drivers/perf/riscv_pmu_sbi.c                  | 2 +-
+ drivers/scsi/scsi_sysctl.c                    | 2 +-
+ drivers/scsi/sg.c                             | 2 +-
+ drivers/tty/tty_io.c                          | 2 +-
+ drivers/xen/balloon.c                         | 2 +-
+ fs/aio.c                                      | 2 +-
+ fs/cachefiles/error_inject.c                  | 2 +-
+ fs/coda/sysctl.c                              | 2 +-
+ fs/coredump.c                                 | 2 +-
+ fs/dcache.c                                   | 2 +-
+ fs/devpts/inode.c                             | 2 +-
+ fs/eventpoll.c                                | 2 +-
+ fs/exec.c                                     | 2 +-
+ fs/file_table.c                               | 2 +-
+ fs/fuse/sysctl.c                              | 2 +-
+ fs/inode.c                                    | 2 +-
+ fs/lockd/svc.c                                | 2 +-
+ fs/locks.c                                    | 2 +-
+ fs/namei.c                                    | 2 +-
+ fs/namespace.c                                | 2 +-
+ fs/nfs/nfs4sysctl.c                           | 2 +-
+ fs/nfs/sysctl.c                               | 2 +-
+ fs/notify/dnotify/dnotify.c                   | 2 +-
+ fs/notify/fanotify/fanotify_user.c            | 2 +-
+ fs/notify/inotify/inotify_user.c              | 2 +-
+ fs/ocfs2/stackglue.c                          | 2 +-
+ fs/pipe.c                                     | 2 +-
+ fs/quota/dquot.c                              | 2 +-
+ fs/sysctls.c                                  | 2 +-
+ fs/userfaultfd.c                              | 2 +-
+ fs/verity/init.c                              | 2 +-
+ fs/xfs/xfs_sysctl.c                           | 2 +-
+ init/do_mounts_initrd.c                       | 2 +-
+ io_uring/io_uring.c                           | 2 +-
+ ipc/ipc_sysctl.c                              | 2 +-
+ ipc/mq_sysctl.c                               | 2 +-
+ kernel/acct.c                                 | 2 +-
+ kernel/bpf/syscall.c                          | 2 +-
+ kernel/delayacct.c                            | 2 +-
+ kernel/exit.c                                 | 2 +-
+ kernel/hung_task.c                            | 2 +-
+ kernel/kexec_core.c                           | 2 +-
+ kernel/kprobes.c                              | 2 +-
+ kernel/latencytop.c                           | 2 +-
+ kernel/locking/lockdep.c                      | 2 +-
+ kernel/panic.c                                | 2 +-
+ kernel/pid.c                                  | 2 +-
+ kernel/pid_namespace.c                        | 2 +-
+ kernel/pid_sysctl.h                           | 2 +-
+ kernel/printk/sysctl.c                        | 2 +-
+ kernel/reboot.c                               | 2 +-
+ kernel/sched/autogroup.c                      | 2 +-
+ kernel/sched/core.c                           | 2 +-
+ kernel/sched/deadline.c                       | 2 +-
+ kernel/sched/fair.c                           | 2 +-
+ kernel/sched/rt.c                             | 2 +-
+ kernel/sched/topology.c                       | 2 +-
+ kernel/seccomp.c                              | 2 +-
+ kernel/signal.c                               | 2 +-
+ kernel/stackleak.c                            | 2 +-
+ kernel/sysctl-test.c                          | 6 +++---
+ kernel/sysctl.c                               | 4 ++--
+ kernel/time/timer.c                           | 2 +-
+ kernel/trace/ftrace.c                         | 2 +-
+ kernel/trace/trace_events_user.c              | 2 +-
+ kernel/umh.c                                  | 2 +-
+ kernel/utsname_sysctl.c                       | 4 ++--
+ kernel/watchdog.c                             | 2 +-
+ lib/test_sysctl.c                             | 6 +++---
+ mm/compaction.c                               | 2 +-
+ mm/hugetlb.c                                  | 2 +-
+ mm/hugetlb_vmemmap.c                          | 2 +-
+ mm/memory-failure.c                           | 2 +-
+ mm/oom_kill.c                                 | 2 +-
+ mm/page-writeback.c                           | 2 +-
+ mm/page_alloc.c                               | 2 +-
+ security/apparmor/lsm.c                       | 2 +-
+ security/keys/sysctl.c                        | 2 +-
+ security/yama/yama_lsm.c                      | 2 +-
+ 106 files changed, 114 insertions(+), 114 deletions(-)
+
+-- 
+
+Joel Granados
