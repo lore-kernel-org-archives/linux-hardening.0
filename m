@@ -1,111 +1,194 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 206B7156678;
-	Wed, 29 Jan 2025 16:09:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDE0228EB;
+	Wed, 29 Jan 2025 16:19:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738166996; cv=none; b=cBgYUOkjEtuYk8ZWG/KsRuoh1AZZibP1vqlJUGvu6mG7EoZ1f0jt2swb9F40pc0LPM86thnS+UvsdDI/kb1yEpqT55Ok0IAz5xP+rCmIpjlFsm3XZN6iqWF1sOxnnJFsVn1rcu6B80kptiazxnpzGW85yFNR2MycH8LU1k+qeYU=
+	t=1738167569; cv=none; b=K6ZXkCa6FvrRRx45ew/+4I0fv2d90yQkbZmPmXXVXjduNPECCes6nqUrmppH3b8nSV8uMR4S47oMklJsWUD3sC6gIWyj97TeWH9SFYNyLT8HGE0v29a4xIT0BgC6gkj2ybibkgnLt7sNi+gVtxWMaeCAiD1T063PzfeFyjJAtLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738166996; c=relaxed/simple;
-	bh=47hGXtsL3yH+9X6h8n8mRguN/T7WJWfu5J4RSN27yr0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b/8Qpv2KUaygGTl6E7BBsT21AGA2yfKse282l1XvmQJ7/54/pkHUtjg6V2YrOar27ex6mxKqVCDN66vN50OkQB64h+GxDGlDZKQuerVDyA+g00omedvXcWPJU/nM+/HPM5k6ZaiSwie1KyJTkKZQ/eLF+ffVLXa/yJlZiZezv70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=10QtRB9n; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738167569; c=relaxed/simple;
+	bh=VQ1tE7auwykWHFaAWlmFtxRv+H5gTV+mb3VLluuo+bU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lqzadzTRERZY+E6SIv5+4fNfw0TM3HQpyCZ0D5wRZh29RYk6+9gxQ91aCn25YVkydcXJRbVoZwhcCOUT4Dlu6XLQRkJaDp5ImK5cFc8o2LT9/xJklj00KwyAE4bmHYDo79ZRlrH0Qa8MZZY0EaqOL0pA5w9aR2ooiaLe3HqL7bw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n/4WzsGK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="10QtRB9n"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 072D3C4CED1;
-	Wed, 29 Jan 2025 16:09:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1738166995;
-	bh=47hGXtsL3yH+9X6h8n8mRguN/T7WJWfu5J4RSN27yr0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=10QtRB9nSPxKWpc+v9mNvZgx7/bOmAXigXyUOgzOfjU2GWlGd+UesmCsgzmEzSzEy
-	 Z7h8ykn+CJrqOdXkh63TKm2sYmdPJ/F7KMqsiULKmwM+oYiTgOVu8+EWl4VbG6Ji+1
-	 Dz6D1g3U3kgHDlDNoHVUnQI/1ZyuRDyPOpJt1i0I=
-Date: Wed, 29 Jan 2025 17:08:56 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2][next] container_of: add container_first() macro
-Message-ID: <2025012940-hardhat-usual-fbc6@gregkh>
-References: <Z5m76U5zh34WbeQY@kspp>
- <2025012955-hypnotic-patronize-8931@gregkh>
- <f6e24dfa-450e-4de6-87a6-6fcf7d83888d@embeddedor.com>
- <2025012921-dense-unplanted-952b@gregkh>
- <06aa1194-a7aa-4a5a-adb8-f6cd447d35d9@stanley.mountain>
- <2025012951-plenty-clang-1e2b@gregkh>
- <3979f87d-b7d7-48bb-b6ab-cd8165dbc3cc@stanley.mountain>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n/4WzsGK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDB92C4CED1;
+	Wed, 29 Jan 2025 16:19:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738167568;
+	bh=VQ1tE7auwykWHFaAWlmFtxRv+H5gTV+mb3VLluuo+bU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=n/4WzsGK81F59SkkUMb+WMCMS5ZHaRbmeLw6ahJDhfCBABA4a6KVBCSwK9uQe2dCx
+	 x0mNRgNXoAzA3H2ahKHYKJqAKXXN8MREVyvIrV0GgJAcoI7h6gX9LHdjLTxtClMSx4
+	 EddIHSjyw6wAz2IS3Q+EeK4Ip3z4ZZbwoD7CtalDQ7OeIU8gJmPRFPLhFO6904UeOL
+	 pbOtP49em5EsHn7LjmGJCQd4vKS5POHzZdHn43fsshTYlLqDnGfVcMwX7Xp0QR2BJT
+	 vmSJuwnOZQMB3s3i2xEUR2Vvxazeak0N6s9PY8c7YRZAkNftTuLHW4TgGq2APSSIua
+	 GqdW/Bxq24vdQ==
+Date: Wed, 29 Jan 2025 17:19:22 +0100
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, coresight@lists.linaro.org,
+ linux-arm-kernel@lists.infradead.org, linux-block@vger.kernel.org,
+ linux-f2fs-devel@lists.sourceforge.net, linux-hardening@vger.kernel.org,
+ linux-iio@vger.kernel.org, linux-media@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-usb@vger.kernel.org,
+ linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+ workflows@vger.kernel.org
+Subject: Re: [RFC v2 00/38] Improve ABI documentation generation
+Message-ID: <20250129171922.4322c338@foz.lan>
+In-Reply-To: <87a5b96296.fsf@trenco.lwn.net>
+References: <cover.1738020236.git.mchehab+huawei@kernel.org>
+	<87h65i7e87.fsf@trenco.lwn.net>
+	<20250129164157.3c7c072d@foz.lan>
+	<87a5b96296.fsf@trenco.lwn.net>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3979f87d-b7d7-48bb-b6ab-cd8165dbc3cc@stanley.mountain>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jan 29, 2025 at 05:06:54PM +0300, Dan Carpenter wrote:
-> On Wed, Jan 29, 2025 at 02:14:14PM +0100, Greg KH wrote:
-> > On Wed, Jan 29, 2025 at 01:39:27PM +0300, Dan Carpenter wrote:
-> > > On Wed, Jan 29, 2025 at 09:34:07AM +0100, Greg KH wrote:
-> > > > On Wed, Jan 29, 2025 at 06:35:18PM +1030, Gustavo A. R. Silva wrote:
-> > > > > 
-> > > > > 
-> > > > > On 29/01/25 16:24, Greg KH wrote:
-> > > > > > On Wed, Jan 29, 2025 at 03:56:01PM +1030, Gustavo A. R. Silva wrote:
-> > > > > > > This is like container_of_const() but it contains an assert to
-> > > > > > > ensure that it's using the first member in the structure.
-> > > > > > 
-> > > > > > But why?  If you "know" it's the first member, just do a normal cast.
-> > > > > > If you don't, then you probably shouldn't be caring about this anyway,
-> > > > > > right?
-> > > > > 
-> > > > > This is more about the cases where the member _must_ be first in the
-> > > > > structure. See below for an example related to -Wflex-array-member-not-at-end
-> > > > 
-> > > > That's fine, but that's a build-time issue, you should enforce that in
-> > > > the structure itself, why are you forcing people to remember to use this
-> > > > macro when you want to use the field?  There's nothing preventing anyone
-> > > > from using container_of() instead here, and nothing will catch that from
-> > > > what I can tell.
-> > > 
-> > > The new definition has a static_assert() in it so it's enforced about
-> > > build time.
-> > 
-> > Yes, but that forces you to "know" to do that in the .c file.  How do
-> > you know to use this, and if you remove it or change it to
-> > container_of(), it works just fine again.
-> > 
+Em Wed, 29 Jan 2025 08:58:13 -0700
+Jonathan Corbet <corbet@lwn.net> escreveu:
+
+> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
 > 
-> I guess my use case is different from Gustavo's.  For him, using
-> container_of() is fine.  We probably don't even need an assert because
-> once you see a struct_group_tagged() then you know the order is important.
-
-Who knows this?  The developer?  What are they supposed to "know" here?
-I sure don't :)
-
-Having some sort of "__must_be_first" marking for a field is fine and
-break the build if that doesn't happen.  Otherwise this is something
-that is not going to be used properly over time.
-
-> For me, it's code like I mentioned which does:
+> > So, I'm proposing to change the minimal requirements to:
+> > 	- Sphinx 3.4.3;
+> > 	- Python 3.9
+> >
+> > By setting Sphinx minimal version to 3.4.3, we can get rid of all
+> > Sphinx backward-compatible code.  
 > 
-> 	p = container_of();
-> 	if (IS_ERR(p))
-> 		...
+> That's certainly a nice thought.
 > 
-> And I did see you suggest that people re-write that kind of code, but no
-> one is going to do that.  :P  People know that container_of() is just a
-> cast in that case.  It works fine.  It's just a bit ugly.
+> With regard to Python ... are all reasonable distributions at 3.9 at
+> least?  CentOS 9 seems to be there, and Debian beyond it.  So probably
+> that is a reasonable floor to set?
 
-It doesn't work if the field isn't first, so no, it shouldn't be working
-fine, and that should be flagged and fixed and never allowed to come
-back again.  Can't we do that with coccinelle?
+I didn't check, but those are the current minimal versions above 3.5 for
+what we have at the Kernel tree[1]:
 
-thanks,
+            !2, 3.10     tools/net/sunrpc/xdrgen/generators/__init__.py
+            !2, 3.10     tools/net/sunrpc/xdrgen/generators/program.py
+            !2, 3.10     tools/net/sunrpc/xdrgen/subcmds/source.py
+            !2, 3.10     tools/net/sunrpc/xdrgen/xdr_ast.py
+            !2, 3.10     tools/power/cpupower/bindings/python/test_raw_pylibcpupower.py
+            !2, 3.9      tools/testing/selftests/net/rds/test.py
+            !2, 3.9      tools/net/ynl/ethtool.py
+            !2, 3.9      tools/net/ynl/cli.py
+            !2, 3.9      scripts/checktransupdate.py
+            !2, 3.8      tools/testing/selftests/tc-testing/plugin-lib/nsPlugin.py
+            !2, 3.8      tools/testing/selftests/hid/tests/base.py
+            !2, 3.7      tools/testing/selftests/turbostat/smi_aperf_mperf.py
+            !2, 3.7      tools/testing/selftests/turbostat/defcolumns.py
+            !2, 3.7      tools/testing/selftests/turbostat/added_perf_counters.py
+            !2, 3.7      tools/testing/selftests/hid/tests/conftest.py
+            !2, 3.7      tools/testing/kunit/qemu_config.py
+            !2, 3.7      tools/testing/kunit/kunit_tool_test.py
+            !2, 3.7      tools/testing/kunit/kunit.py
+            !2, 3.7      tools/testing/kunit/kunit_parser.py
+            !2, 3.7      tools/testing/kunit/kunit_kernel.py
+            !2, 3.7      tools/testing/kunit/kunit_json.py
+            !2, 3.7      tools/testing/kunit/kunit_config.py
+            !2, 3.7      tools/perf/scripts/python/gecko.py
+            !2, 3.7      scripts/rust_is_available_test.py
+            !2, 3.7      scripts/bpf_doc.py
+            !2, 3.6      tools/writeback/wb_monitor.py
+            !2, 3.6      tools/workqueue/wq_monitor.py
+            !2, 3.6      tools/workqueue/wq_dump.py
+            !2, 3.6      tools/usb/p9_fwd.py
+            !2, 3.6      tools/tracing/rtla/sample/timerlat_load.py
+            !2, 3.6      tools/testing/selftests/net/openvswitch/ovs-dpctl.py
+            !2, 3.6      tools/testing/selftests/net/nl_netdev.py
+            !2, 3.6      tools/testing/selftests/net/lib/py/ynl.py
+            !2, 3.6      tools/testing/selftests/net/lib/py/utils.py
+            !2, 3.6      tools/testing/selftests/net/lib/py/nsim.py
+            !2, 3.6      tools/testing/selftests/net/lib/py/netns.py
+            !2, 3.6      tools/testing/selftests/net/lib/py/ksft.py
+            !2, 3.6      tools/testing/selftests/kselftest/ksft.py
+            !2, 3.6      tools/testing/selftests/hid/tests/test_tablet.py
+            !2, 3.6      tools/testing/selftests/hid/tests/test_sony.py
+            !2, 3.6      tools/testing/selftests/hid/tests/test_multitouch.py
+            !2, 3.6      tools/testing/selftests/hid/tests/test_mouse.py
+            !2, 3.6      tools/testing/selftests/hid/tests/base_gamepad.py
+            !2, 3.6      tools/testing/selftests/hid/tests/base_device.py
+            !2, 3.6      tools/testing/selftests/drivers/net/stats.py
+            !2, 3.6      tools/testing/selftests/drivers/net/shaper.py
+            !2, 3.6      tools/testing/selftests/drivers/net/queues.py
+            !2, 3.6      tools/testing/selftests/drivers/net/ping.py
+            !2, 3.6      tools/testing/selftests/drivers/net/lib/py/remote_ssh.py
+            !2, 3.6      tools/testing/selftests/drivers/net/lib/py/load.py
+            !2, 3.6      tools/testing/selftests/drivers/net/lib/py/__init__.py
+            !2, 3.6      tools/testing/selftests/drivers/net/lib/py/env.py
+            !2, 3.6      tools/testing/selftests/drivers/net/hw/rss_ctx.py
+            !2, 3.6      tools/testing/selftests/drivers/net/hw/pp_alloc_fail.py
+            !2, 3.6      tools/testing/selftests/drivers/net/hw/nic_performance.py
+            !2, 3.6      tools/testing/selftests/drivers/net/hw/nic_link_layer.py
+            !2, 3.6      tools/testing/selftests/drivers/net/hw/lib/py/linkconfig.py
+            !2, 3.6      tools/testing/selftests/drivers/net/hw/lib/py/__init__.py
+            !2, 3.6      tools/testing/selftests/drivers/net/hw/devmem.py
+            !2, 3.6      tools/testing/selftests/drivers/net/hw/devlink_port_split.py
+            !2, 3.6      tools/testing/selftests/drivers/net/hw/csum.py
+            !2, 3.6      tools/testing/selftests/devices/probe/test_discoverable_devices.py
+            !2, 3.6      tools/testing/selftests/bpf/test_bpftool_synctypes.py
+            !2, 3.6      tools/testing/selftests/bpf/generate_udp_fragments.py
+            !2, 3.6      tools/testing/kunit/run_checks.py
+            !2, 3.6      tools/testing/kunit/kunit_printer.py
+            !2, 3.6      tools/sched_ext/scx_show_state.py
+            !2, 3.6      tools/perf/tests/shell/lib/perf_metric_validation.py
+            !2, 3.6      tools/perf/tests/shell/lib/perf_json_output_lint.py
+            !2, 3.6      tools/perf/scripts/python/parallel-perf.py
+            !2, 3.6      tools/perf/scripts/python/flamegraph.py
+            !2, 3.6      tools/perf/scripts/python/arm-cs-trace-disasm.py
+            !2, 3.6      tools/perf/pmu-events/models.py
+            !2, 3.6      tools/perf/pmu-events/metric_test.py
+            !2, 3.6      tools/perf/pmu-events/metric.py
+            !2, 3.6      tools/perf/pmu-events/jevents.py
+            !2, 3.6      tools/net/ynl/ynl-gen-rst.py
+            !2, 3.6      tools/net/ynl/ynl-gen-c.py
+            !2, 3.6      tools/net/ynl/lib/ynl.py
+            !2, 3.6      tools/net/ynl/lib/nlspec.py
+            !2, 3.6      tools/crypto/tcrypt/tcrypt_speed_compare.py
+            !2, 3.6      tools/cgroup/iocost_monitor.py
+            !2, 3.6      tools/cgroup/iocost_coef_gen.py
+            !2, 3.6      scripts/make_fit.py
+            !2, 3.6      scripts/macro_checker.py
+            !2, 3.6      scripts/get_abi.py
+            !2, 3.6      scripts/generate_rust_analyzer.py
+            !2, 3.6      scripts/gdb/linux/timerlist.py
+            !2, 3.6      scripts/gdb/linux/pgtable.py
+            !2, 3.6      scripts/clang-tools/run-clang-tools.py
+            !2, 3.6      Documentation/sphinx/automarkup.py
 
-greg k-h
+[1] Checked with:
+	vermin -v $(git ls-files *.py)
+
+    Please notice that vermin is not perfect: my script passed as version 3.6
+    because the f-string check there didn't verify f-string improvements over
+    time. Still, it is a quick way to check that our current minimal version
+    is not aligned with reality.
+ 
+Btw, vermin explains what is requiring more at the scripts. For instance:
+
+	$ vermin -vv scripts/checktransupdate.py
+	...
+	!2, 3.9      /new_devel/v4l/docs/scripts/checktransupdate.py
+	  'argparse' module requires 2.7, 3.2
+	  'argparse.BooleanOptionalAction' member requires !2, 3.9
+	  'datetime' module requires 2.3, 3.0
+	  'datetime.datetime.strptime' member requires 2.5, 3.0
+	  'logging' module requires 2.3, 3.0
+	  'logging.StreamHandler' member requires 2.6, 3.0
+	  'os.path.relpath' member requires 2.6, 3.0
+	  f-strings require !2, 3.6
+
+Thanks,
+Mauro
