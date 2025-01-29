@@ -1,105 +1,175 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from cosmicgizmosystems.com (cosmicgizmosystems.com [63.249.102.155])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FE3014F9FF
-	for <linux-hardening@vger.kernel.org>; Wed, 29 Jan 2025 18:48:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EF0D2C9D;
+	Wed, 29 Jan 2025 19:26:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.249.102.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738176504; cv=none; b=I+csomYJFouC5snku6H8NG/O7Er59Eqgzt1hxpQK3z7ygksRmouUy+1pm1qnUIa3PIGMrYkPIhDKT1g/9ZaXES/Z+RRMj+9Ej7klWRu1jtiqXxJ8au4+xrB9zpVCt/D7YkSYZhI1LqYtAHH1sVbmHrPJMHAHeAMCSRi8BZSUqVo=
+	t=1738178818; cv=none; b=ODKC7bZq+r8rxbsPqYSx1+1YItpgk5X4/nDKFDmYo69zobgmDcD/T0+mcic0GmqkdNZu8KCk6in8U8+kxy3oGJlP3gBXfbUymBMiAvUQZclRRq1L7e4o/1jW5+h1StL2jFV0KdNVxOBdBXEPNiIhQdgFIv2aJytB8y/nyh9SYn4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738176504; c=relaxed/simple;
-	bh=v7t/b1bseEGT07c3FY8utGzEJPHu0vgEf5zHyuSLnLk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=S8gWUrmzVSYpeB1MSyxCewvMbVdiWNcyzIYAEUnZbVlvH/Fnb9JOhQoXdcW0KMbwu7HKKp+AV3bpWmkZKZp9O5MwTyqwP+qve2rhtSeqZwGaNwkFk26Q8YNsInGN79obMxapTEMkULSLNKBU7wJiYoDnXqY0e3dylV/qcRUNr24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=I7h1czg4; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="I7h1czg4"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ab6da1bb1a8so8688066b.0
-        for <linux-hardening@vger.kernel.org>; Wed, 29 Jan 2025 10:48:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1738176500; x=1738781300; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=h8bf4DZJPP2rSwdY+pwJS8gO4tmZtY2U6WvRvjgGimU=;
-        b=I7h1czg4I1GDCPTJ1oVEGTQEPJWrazAxiTxesUcdAuvFqTtYatl32WFit+ZcBto7QP
-         MD/pp7jm/q/ZPHKpc5u5A5bM8roGooIJfuk3NKqWJzy00kMxj+rBRuKyCdKTk7xxeBho
-         Cslq9Rj7pz1QCy7IitKCmJ45hTh/uq9QnNBbg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738176500; x=1738781300;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=h8bf4DZJPP2rSwdY+pwJS8gO4tmZtY2U6WvRvjgGimU=;
-        b=r4K0KIg9Tk+XUojRmV3lDpDUd/F85T/SBsdwaRGxoYhPEW6CEXIffZcDke9thTaZtK
-         wlpknagaKnZYJoBRbvzuXOOA9Uxx+PztEWdO3hcSqI3OL0TPTuflao4LI137NRGyMEAS
-         TYrjTb+F9hkGcjJraKljSqR5C0riCtPKyyQO/a4EpyegijDmJ4oGtKLSyIYTaxRSyTQp
-         xjA1D3ossneyU4VSBTBdPFBMuiyyarn/JU5ZTgd0uq3mgn9PH9zxwNAfWfwIb1I5itGW
-         xomQreWQywPSpuZ8NjIBVNOZEYAclHkDtjaXvOr1qWCbLDl957DlrrsDIyfDUJnmj4P2
-         +uIw==
-X-Forwarded-Encrypted: i=1; AJvYcCVql88Gk/z87ZhJ+qhc/vCLPmoPKTHu2WI2PrMDmaFMIKAXnztT6VYTWs1Jd3MD385H5Vxhre7u1byrDCbDlw8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxfIWqZzAdJM1x59zxHiCnxqMfc2CQ6FqOa4pOehTOVQGCpFOdt
-	Z1vRUNTWCtV/zYel9C+aap1moOKHL7DnN2/6bXMwvSUCme7T1K125xswBQgxeaYqtuP5bKHqLr9
-	dRYA=
-X-Gm-Gg: ASbGncuAxVNtXhZ60JvNkb5kbU3zcIgCyUqgxlYh5IM+yTpNQ1DyPqQ2Ap4d9iiSVMb
-	WZmyZwxUy/x31afpzV+WQiTQsclFxXbuE3PTTgwQqkmKwInEQAIdH7DJQ+qjO6N7vFG/vukW/A/
-	Mh/FZifpWV0TGv4DH+ZKyr2ItGoJLSBxrGPAG35i7RPlwPE9maoEqn15/5ZPwwAg9iSacwnOTuc
-	R6ZxOnU5np5XllW+FSk2q/RDeelZK6VIJZdvfelLGEcVWklJdplSfljhz2XjaMay0k/WAqE79/Y
-	AGCjZMDhVkAXDYfPimwKOV9/YSRKTzTwHNByRGwQA49IWFv57xCJohYFslsfLGo4OA==
-X-Google-Smtp-Source: AGHT+IHpQncC6iCioHofvz/oec9rfib/vANqCkwOO+n7UoXxOLskPD8MDEOBEVM21prRXcwceOU8rg==
-X-Received: by 2002:a17:907:d384:b0:aa6:85d0:1492 with SMTP id a640c23a62f3a-ab6cfe12d52mr398154866b.37.1738176500572;
-        Wed, 29 Jan 2025 10:48:20 -0800 (PST)
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com. [209.85.218.41])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6aa40824asm571665366b.134.2025.01.29.10.48.19
-        for <linux-hardening@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Jan 2025 10:48:19 -0800 (PST)
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ab2aea81cd8so3854966b.2
-        for <linux-hardening@vger.kernel.org>; Wed, 29 Jan 2025 10:48:19 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUifO8ZkRrhpsAB2tHqriqD1Cqg+YwkZL5JA/PA0R2Mz8Jn074LxF8cojdtgKvpDloWeBg1dlXcJ2kort7B+GY=@vger.kernel.org
-X-Received: by 2002:a17:906:da85:b0:ab6:9d92:6d6 with SMTP id
- a640c23a62f3a-ab6cfd0d35dmr415053566b.26.1738176498692; Wed, 29 Jan 2025
- 10:48:18 -0800 (PST)
+	s=arc-20240116; t=1738178818; c=relaxed/simple;
+	bh=cTXIpFUJ72rQ6X+qiqfdqHAIWXIwKPIqlawAGwvmTSM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=M7uWEkg4uUlYQNDCRB7kd52dUxPzlXgvAkOSvcXs0+eTBGoUL7mZlxN2kTHx97MKtO35wBZKcuuTRIKk7szVqHryCXpa487M7BvWFPxGtUVrgnyiTrRQ6sR59G+HxpxvJ4DQofUZv6zpWlOZ8K69ZM2L1AAqoZhiVGN07Y1WND8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cosmicgizmosystems.com; spf=pass smtp.mailfrom=cosmicgizmosystems.com; arc=none smtp.client-ip=63.249.102.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cosmicgizmosystems.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cosmicgizmosystems.com
+Received: from [10.0.0.101] (c-73-190-111-195.hsd1.wa.comcast.net [73.190.111.195])
+	by host11.cruzio.com (Postfix) with ESMTPSA id E96F62463008;
+	Wed, 29 Jan 2025 11:21:25 -0800 (PST)
+Message-ID: <f7963a1d-e069-4ec9-82a1-e17fd324a44f@cosmicgizmosystems.com>
+Date: Wed, 29 Jan 2025 11:21:25 -0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <kndlh7lx2gfmz5m3ilwzp7fcsmimsnjgh434hnaro2pmy7evl6@jfui76m22kig>
-In-Reply-To: <kndlh7lx2gfmz5m3ilwzp7fcsmimsnjgh434hnaro2pmy7evl6@jfui76m22kig>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Wed, 29 Jan 2025 10:48:02 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wgNwJ57GtPM_ZUCGeVN5iJt0pxDf96dRwp0KhuVV4Hjpw@mail.gmail.com>
-X-Gm-Features: AWEUYZlqaMWdacM1L6lq7K7jLmz8nrxtrZnee6xpSEfGqjffsjadL1gFNvtIh-4
-Message-ID: <CAHk-=wgNwJ57GtPM_ZUCGeVN5iJt0pxDf96dRwp0KhuVV4Hjpw@mail.gmail.com>
-Subject: Re: [GIT PULL] sysctl constification changes for v6.14-rc1
-To: Joel Granados <joel.granados@kernel.org>
-Cc: Anna Schumaker <anna.schumaker@oracle.com>, Ashutosh Dixit <ashutosh.dixit@intel.com>, 
-	Baoquan He <bhe@redhat.com>, "Bill O'Donnell" <bodonnel@redhat.com>, 
-	Corey Minyard <cminyard@mvista.com>, "Darrick J. Wong" <djwong@kernel.org>, 
-	Jani Nikula <jani.nikula@intel.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, 
-	Song Liu <song@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Wei Liu <wei.liu@kernel.org>, Kees Cook <kees@kernel.org>, 
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] HID: usbhid: fix recurrent out-of-bounds bug in
+ usbhid_parse()
+To: Kees Cook <kees@kernel.org>, Alan Stern <stern@rowland.harvard.edu>
+Cc: Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
+ Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>,
+ linux-usb@vger.kernel.org, linux-input@vger.kernel.org,
+ syzkaller-bugs@googlegroups.com, linux-kernel@vger.kernel.org,
+ syzbot+c52569baf0c843f35495@syzkaller.appspotmail.com,
+ linux-hardening@vger.kernel.org
+References: <20240524120112.28076-1-n.zhandarovich@fintech.ru>
+ <nycvar.YFH.7.76.2406041015210.16865@cbobk.fhfr.pm>
+ <E62FA5CB-D7AE-4A11-9D2E-7D78D7C10ADA@kernel.org>
+ <nycvar.YFH.7.76.2406041614210.24940@cbobk.fhfr.pm>
+ <2a38e355-af5c-4b3d-81be-0cc97376c1f5@fintech.ru>
+ <202406041019.BCD0A93C@keescook>
+ <d1ad84e3-7da9-4dc8-a095-b9fbe191eb56@rowland.harvard.edu>
+ <807cfa6f-5863-4fe4-8294-76d5cdbc3aac@fintech.ru>
+ <649f5c1c-f3a7-420d-b727-f904d58f491f@rowland.harvard.edu>
+ <202501281747.9690B3B@keescook>
+Content-Language: en-US
+From: Terry Junge <linuxhid@cosmicgizmosystems.com>
+In-Reply-To: <202501281747.9690B3B@keescook>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, 29 Jan 2025 at 00:14, Joel Granados <joel.granados@kernel.org> wrote:
->
->   All ctl_table declared outside of functions and that remain unmodified after
->   initialization are const qualified.
+Sorry to join late and top post but I want to propose a direction change for this.
 
-Hmm. A quick grep shows
+According to the HID 1.11 specification section 6.2.1, the first element of the desc array must be the type and size of the mandatory report descriptor. There is no need to scan through the array to look for it. So the for loop can be collapsed to:
 
-    static struct ctl_table alignment_tbl[5] = {
+	if (hdesc->desc[0].bDescriptorType == HID_DT_REPORT)
+		rsize = le16_to_cpu(hdesc->desc[0].wDescriptorLength);
 
-in arch/csky/abiv1/alignment.c that didn't get converted.
+and the out-of-bounds bug goes away.
 
-And a couple of rdma drivers (iwcm_ctl_table and ucma_ctl_table), but
-maybe those weren't converted due to being in the "net" address space?
+I would be happy to submit a patch if you like.
 
-Anyway, taken as-is, I'm just noting the lacking cases.
+Thanks,
+Terry
 
-            Linus
+On 1/28/25 5:53 PM, Kees Cook wrote:
+> On Tue, Jan 28, 2025 at 12:00:41PM -0500, Alan Stern wrote:
+>> On Tue, Jan 28, 2025 at 05:45:21AM -0800, Nikita Zhandarovich wrote:
+>>> Hello,
+>>>
+>>> On 6/4/24 10:45, Alan Stern wrote:
+>>>> On Tue, Jun 04, 2024 at 10:21:15AM -0700, Kees Cook wrote:
+>>>>> On Tue, Jun 04, 2024 at 10:09:43AM -0700, Nikita Zhandarovich wrote:
+>>>>>> Hi,
+>>>>>>
+>>>>>> On 6/4/24 07:15, Jiri Kosina wrote:
+>>>>>>> On Tue, 4 Jun 2024, Kees Cook wrote:
+>>>>>>>
+>>>>>>>> This isn't the right solution. The problem is that hid_class_descriptor 
+>>>>>>>> is a flexible array but was sized as a single element fake flexible 
+>>>>>>>> array:
+>>>>>>>>
+>>>>>>>> struct hid_descriptor {
+>>>>>>>> 	   __u8  bLength;
+>>>>>>>> 	   __u8  bDescriptorType;
+>>>>>>>> 	   __le16 bcdHID;
+>>>>>>>> 	   __u8  bCountryCode;
+>>>>>>>> 	   __u8  bNumDescriptors;
+>>>>>>>>
+>>>>>>>> 	   struct hid_class_descriptor desc[1];
+>>>>>>>> } __attribute__ ((packed));
+>>>>>>>>
+>>>>>>>> This likely needs to be: 
+>>>>>>>>
+>>>>>>>> struct hid_class_descriptor desc[] __counted_by(bNumDescriptors);
+>>>>>>>>
+>>>>>>>> And then check for any sizeof() uses of the struct that might have changed.
+>>>
+>>> Alan, I finally got around to preparing a revised version of the
+>>> required patch and encountered a few issues. I could use some advice in
+>>> this matter...
+>>>
+>>> If we change 'struct hid_descriptor' as you suggested,
+>>
+>> I didn't make that suggestion.  Kees Cook did.
+>>
+>>>  which does make
+>>> sense, most occurrences of that type are easy enough to fix.
+>>>
+>>> 1) usbhid_parse() starts working properly if there are more than 1
+>>> descriptors, sizeof(struct hid_descriptor) may be turned into something
+>>> crude but straightforward like sizeof(struct hid_descriptor) +
+>>> sizeof(struct hid_class_descriptor).
+>>>
+>>> 2) 'hid_descriptor' in drivers/hid/hid-hyperv.c remains innocuous as
+>>> well as only 1 descriptor expected there. My impression is only some
+>>> small changes are needed there.
+>>>
+>>> However, the issue that stumps me is the following: static struct
+>>> hid_descriptor hidg_desc in drivers/usb/gadget/function/f_hid.c relies
+>>> on a static nature of that one descriptor. hidg_desc ends up being used
+>>> elsewhere, in other static structures. Basically, using __counted_by
+>>> requires a lot of changes, as I see it, out of scope of merely closing
+>>> an UBSAN error.
+>>
+>> The hidg_desc structure needs to contain room for a single 
+>> hid_descriptor containing a single hid_class_descriptor.  I think you 
+>> can define it that way by doing something like this:
+>>
+>> static struct hid_descriptor hidg_desc = {
+>> 	.bLength			= sizeof hidg_desc,
+>> 	.bDescriptorType		= HID_DT_HID,
+>> 	.bcdHID				= cpu_to_le16(0x0101),
+>> 	.bCountryCode			= 0x00,
+>> 	.bNumDescriptors		= 0x1,
+>> 	.desc				= {
+>> 		{
+>> 			.bDescriptorType	= 0, /* DYNAMIC */
+>> 			.wDescriptorLength	= 0, /* DYNAMIC */
+>> 		}
+>> 	}
+>> };
+>>
+>> Or maybe it needs to be:
+>>
+>> 	.desc				= { {0, 0} } /* DYNAMIC */
+>>
+>> I'm not sure what is the correct syntax; you'll have to figure that out.  
+> 
+> Either should work.
+> 
+>>
+>> You'll have to be more careful about the definition of hidg_desc_copy in 
+>> hidg_setup(), however.  You might want to define hidg_desc_copy as an 
+>> alias to the start of a byte array of the right size.
+> 
+> For an on-stack fixed-size flex array structure, you can use:
+> 
+> 	DEFINE_FLEX(struct hid_descriptor, hidg_desc_copy,
+> 		    desc, bNumDescriptors, 1);
+> 	*hidg_desc_copy = hidg_desc;
+> 
+> and then adjust the "hidg_desc_copy." instances to "hidg_desc_copy->"
+> 
+>>
+>>> Is this approach still worthy pursuing or should I look into some neater
+>>> solution?
+>>
+>> I think you should persist with this approach.
+>>
+>> Alan Stern
+> 
+
