@@ -1,169 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC0FD1B4250;
-	Wed, 29 Jan 2025 14:22:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D842813D51E;
+	Wed, 29 Jan 2025 14:27:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738160531; cv=none; b=MqzDk1aNZ+SSNVjv43r4DyISKUzQeEur/oOfPpDJVbGMYIhfSoem97n2BmiBhK0LOSlbUi6MHFZMfYIHkszoGcX92cm12kX+0gBhYvhpZ0agiWJyX50xHbA2Vi80OMyiKsC13Ly+IxtIKsD73SR11miLV9aFhQ8o4Nw35yCqzDM=
+	t=1738160880; cv=none; b=kaN2Be4BNThq9lfy04t9/kXC1u6cfoCZJQPs577BH8S3W+9VnVVf01aReufLFsVvXbetL/tF1k6ctVkH7rxS+giWSKQ+WpkgknHUimRs7/1+bk6nMM24ISrM2DdMM3wx+Oc6req2CDVtPyDB7u7RuOEFHIeDzb8rYicL0J6lyLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738160531; c=relaxed/simple;
-	bh=/uy2KVK+92bnjkNkIT1iw5CrTdiZ0e2lwuNq07xf8OM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dIjz3OvimteobWYLHRjzWMXoKzWhEPpYBp/O6JqsOwdVvdewpUnFs1NaqCTilPqJWha4nHJJxRgrUqN6Ert/SPUSHV3gZV96iRKaCGnvu0jrAToRkBvclybo2sg/eWRoCriqyANIdJ1Hi/K9TsDOeM+JG4ZBtncizAKGRA2A1hI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=djFiyaI1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738160880; c=relaxed/simple;
+	bh=BLI6egnAdGTtnYw+9QuxZLSH7W+BG1KOcngek/cpDXI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=l6qw+UgXvMi2GBJSGbRpD5Ww1C2l+BMA18MPjq/bAXqN2/da9uZ2HyJ7h043MOyCW/ESEom12GwCzesKtuHHQHEd/HHm2bArg+AXfEozmn+GmAIjHbLX7adqcAJx7LuOvzzu0v68xckflg2Eogn2DiGka+RDTme1RFzmCkBwud4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=OmgqcU7Q; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="djFiyaI1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69A63C4CED3;
-	Wed, 29 Jan 2025 14:22:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738160530;
-	bh=/uy2KVK+92bnjkNkIT1iw5CrTdiZ0e2lwuNq07xf8OM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=djFiyaI1DlJWiFHE8181GXXxjAr3wEqHuYYG3QsXELwZvDKxnRVxjUbFdIQbTnmLU
-	 Lt9fufnc/G7WtGz9dtGAS3ZPyc4zzMF7RCfLnP+iBbDKwR+eb444lgkHrtJ/IVzKnP
-	 WXttUr2Yxs6fWKBISWq0/x5ZYEIrKYg1CFR9lX/xH1tZyDicoyC+ae2lT5AysNsQ5+
-	 Zrzl0ec3PcPgnqhqfetOvYwj+teyI/gwI8joVAbOMvx/WjRa3zWtMYKccoxnJSJUEq
-	 elKqiXQFndQZbOtUJb0kgnqPfoQifhZUjqbQYA3D92ZpRy6VKsPv9SGhYwjgHdtLhq
-	 gPYPXMPtSHgOQ==
-Date: Wed, 29 Jan 2025 15:22:03 +0100
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Jonathan Corbet <corbet@lwn.net>
-Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org,
- bpf@vger.kernel.org, coresight@lists.linaro.org,
- linux-arm-kernel@lists.infradead.org, linux-block@vger.kernel.org,
- linux-f2fs-devel@lists.sourceforge.net, linux-hardening@vger.kernel.org,
- linux-iio@vger.kernel.org, linux-media@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-usb@vger.kernel.org,
- linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
- workflows@vger.kernel.org
-Subject: Re: [RFC v2 00/38] Improve ABI documentation generation
-Message-ID: <20250129152203.0dda53ca@foz.lan>
-In-Reply-To: <20250129024518.69c0be81@foz.lan>
-References: <cover.1738020236.git.mchehab+huawei@kernel.org>
-	<87h65i7e87.fsf@trenco.lwn.net>
-	<20250129024518.69c0be81@foz.lan>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="OmgqcU7Q"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50TDbftr028470;
+	Wed, 29 Jan 2025 14:27:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=o7Pu6q
+	27ML/V8ZUvXNJ2AfseDV8prCHSuR5q4Cio8Io=; b=OmgqcU7Q+o7Mb5MHaGH2CG
+	DNukU5JvOlXwvKK6Er7+6J0oD/9nOiaI9zd6hkn1jq53d70pc3IqoBcccW66PMVg
+	L3T+4Sjq8k2laEGAG1bDdmwb2yRejubqrhrqhYXZK1tPXRW8VsmGpDF89+MVaRrv
+	H+QC71JqtwFwX2oNaWGNo6y12ra1wSmUu5DIHNP7iuz3Lk2pv7fIQa+k0PYk579H
+	n/3Jww4ScCFzsJvt1t6MkwHUj4L3uaSSyfPQanRJW4PcEFTSNmGQlIcPc6wP1jTc
+	QI95JdBstAaGkFS779BveJ/Ik4pzqW2UxHU2xOlmENBBAq5Hl4GisRU3uUowigTw
+	==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44fb60as2f-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 29 Jan 2025 14:27:44 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50TDv0XU028042;
+	Wed, 29 Jan 2025 14:27:44 GMT
+Received: from smtprelay05.wdc07v.mail.ibm.com ([172.16.1.72])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44dbskgymg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 29 Jan 2025 14:27:44 +0000
+Received: from smtpav04.wdc07v.mail.ibm.com (smtpav04.wdc07v.mail.ibm.com [10.39.53.231])
+	by smtprelay05.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50TERgEI19530390
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 29 Jan 2025 14:27:42 GMT
+Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A93215805E;
+	Wed, 29 Jan 2025 14:27:42 +0000 (GMT)
+Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1ADD658052;
+	Wed, 29 Jan 2025 14:27:41 +0000 (GMT)
+Received: from [9.61.176.130] (unknown [9.61.176.130])
+	by smtpav04.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 29 Jan 2025 14:27:40 +0000 (GMT)
+Message-ID: <38a47dc9-7680-4321-b4c0-cf8b82ed1b43@linux.ibm.com>
+Date: Wed, 29 Jan 2025 09:27:40 -0500
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] s390/vfio-ap: Replace one-element array with flexible
+ array member
+To: Thorsten Blum <thorsten.blum@linux.dev>,
+        Halil Pasic
+ <pasic@linux.ibm.com>,
+        Jason Herne <jjherne@linux.ibm.com>,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        Holger Dengler <dengler@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev
+ <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>
+Cc: linux-hardening@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20250116131859.105756-2-thorsten.blum@linux.dev>
+Content-Language: en-US
+From: Anthony Krowiak <akrowiak@linux.ibm.com>
+In-Reply-To: <20250116131859.105756-2-thorsten.blum@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: k_eAbs0Okt0RS2cNWyITuDzSk9OJthm2
+X-Proofpoint-ORIG-GUID: k_eAbs0Okt0RS2cNWyITuDzSk9OJthm2
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-01-29_02,2025-01-29_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ malwarescore=0 clxscore=1011 lowpriorityscore=0 mlxlogscore=999
+ bulkscore=0 spamscore=0 suspectscore=0 phishscore=0 priorityscore=1501
+ mlxscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2501290113
 
-Em Wed, 29 Jan 2025 02:45:18 +0100
-Mauro Carvalho Chehab <mchehab+huawei@kernel.org> escreveu:
 
-> > I've only tested with current Sphinx,
-> > have you tried this with the more ancient versions we support?  
-> 
-> Not yet, but I double-checked at Sphinx documentation to be sure that
-> I won't be using any newer methods: I just kept using the same Sphinx
-> API as used by other extensions at the Kernel.
 
-Just checked it with Python 3.6 and Sphinx 3.4 on Fedora 41 with:
 
-	sudo dnf install python3.6.x86_64
-	python3.6 -m venv Sphinx-3.4
-	pip install alabaster Sphinx==3.4.3 pyyaml
+On 1/16/25 8:18 AM, Thorsten Blum wrote:
+> Replace the deprecated one-element array with a modern flexible array
+> member in the struct ap_matrix_dev.
+>
+> Use struct_size() to calculate the number of bytes to allocate for
+> matrix_dev with a single mdev_type.
+>
+> Link: https://github.com/KSPP/linux/issues/79
 
-There were some issues related to problems with early f-string
-support, as reported by Akira.
+LGTM:
+Reviewed-by: Anthony Krowiak <akrowiak@linux.ibm.com>
 
-After applying the enclosed patch, it is now working fine. The only
-drawback is here:
+> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+> ---
+>   drivers/s390/crypto/vfio_ap_drv.c     | 2 +-
+>   drivers/s390/crypto/vfio_ap_private.h | 2 +-
+>   2 files changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/s390/crypto/vfio_ap_drv.c b/drivers/s390/crypto/vfio_ap_drv.c
+> index 67a807e2e75b..ea9ffa37f263 100644
+> --- a/drivers/s390/crypto/vfio_ap_drv.c
+> +++ b/drivers/s390/crypto/vfio_ap_drv.c
+> @@ -96,7 +96,7 @@ static int vfio_ap_matrix_dev_create(void)
+>   	if (ret)
+>   		goto bus_register_err;
+>   
+> -	matrix_dev = kzalloc(sizeof(*matrix_dev), GFP_KERNEL);
+> +	matrix_dev = kzalloc(struct_size(matrix_dev, mdev_types, 1), GFP_KERNEL);
+>   	if (!matrix_dev) {
+>   		ret = -ENOMEM;
+>   		goto matrix_alloc_err;
+> diff --git a/drivers/s390/crypto/vfio_ap_private.h b/drivers/s390/crypto/vfio_ap_private.h
+> index 437a161c8659..9aed8994f567 100644
+> --- a/drivers/s390/crypto/vfio_ap_private.h
+> +++ b/drivers/s390/crypto/vfio_ap_private.h
+> @@ -53,7 +53,7 @@ struct ap_matrix_dev {
+>   	struct mutex guests_lock; /* serializes access to each KVM guest */
+>   	struct mdev_parent parent;
+>   	struct mdev_type mdev_type;
+> -	struct mdev_type *mdev_types[1];
+> +	struct mdev_type *mdev_types[];
+>   };
+>   
+>   extern struct ap_matrix_dev *matrix_dev;
 
-	- print(f"Defined on file{'s'[:len(files) ^ 1]}:\t{", ".join(files)}")
-	+ print("Defined on file(s):\t" + ", ".join(files))
-
-As I removed the file/files auto-plural logic depending on the files
-array length. Not a big deal.
-
-I'll double-check if there's no other diff between old/new version
-and add the enclosed patch in the end.
-
-Thanks,
-Mauro
-
-[PATCH] scripts/get_abi.py: make it backward-compatible with Python 3.6
-
-Despite being introduced on Python 3.6, the original implementation
-was too limited: it doesn't accept anything but the argument.
-
-Even on python 3.10.12, support was still limited, as more complex
-operations cause SyntaxError:
-
-	Exception occurred:
-	  File ".../linux/Documentation/sphinx/kernel_abi.py", line 48, in <module>
-	    from get_abi import AbiParser
-	  File ".../linux/scripts/get_abi.py", line 525
-	    msg += f"{part}\n{"-" * len(part)}\n\n"
-                       ^
-	SyntaxError: f-string: expecting '}'
-
-Replace f-strings by normal string concatenation when it doesn't
-work on Python 3.6.
-
-Reported-by: Akira Yokosawa <akiyks@gmail.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-
-diff --git a/scripts/get_abi.py b/scripts/get_abi.py
-index 543bed397c8c..e6e94f721fff 100755
---- a/scripts/get_abi.py
-+++ b/scripts/get_abi.py
-@@ -522,7 +522,7 @@ class AbiParser:
- 
-                 if cur_part and cur_part != part:
-                     part = cur_part
--                    msg += f"{part}\n{"-" * len(part)}\n\n"
-+                    msg += part + "\n"+ "-" * len(part) +"\n\n"
- 
-                 msg += f".. _{key}:\n\n"
- 
-@@ -546,7 +546,7 @@ class AbiParser:
-                     msg += f"Defined on file :ref:`{base} <{ref[1]}>`\n\n"
- 
-             if wtype == "File":
--                msg += f"{names[0]}\n{"-" * len(names[0])}\n\n"
-+                msg += names[0] +"\n" + "-" * len(names[0]) +"\n\n"
- 
-             desc = v.get("description")
-             if not desc and wtype != "File":
-@@ -570,7 +570,8 @@ class AbiParser:
- 
-             users = v.get("users")
-             if users and users.strip(" \t\n"):
--                msg += f"Users:\n\t{users.strip("\n").replace('\n', '\n\t')}\n\n"
-+                users = users.strip("\n").replace('\n', '\n\t')
-+                msg += f"Users:\n\t{users}\n\n"
- 
-             ln = v.get("line_no", 1)
- 
-@@ -596,7 +597,9 @@ class AbiParser:
-                 elif len(lines) == 1:
-                     f.append(f"{fname}:{lines[0]}")
-                 else:
--                    f.append(f"{fname} lines {", ".join(str(x) for x in lines)}")
-+                    m = fname + "lines "
-+                    m += ", ".join(str(x) for x in lines)
-+                    f.append(m)
- 
-             self.log.warning("%s is defined %d times: %s", what, len(f), "; ".join(f))
- 
-@@ -644,10 +647,11 @@ class AbiParser:
-                     if users:
-                         print(f"Users:\t\t\t{users}")
- 
--                    print(f"Defined on file{'s'[:len(files) ^ 1]}:\t{", ".join(files)}")
-+                    print("Defined on file(s):\t" + ", ".join(files))
- 
-                     if desc:
--                        print(f"\n{desc.strip("\n")}\n")
-+                        desc = desc.strip("\n")
-+                        print(f"\n{desc}\n")
- 
-         if not found_keys:
-             print(f"Regular expression /{expr}/ not found.")
