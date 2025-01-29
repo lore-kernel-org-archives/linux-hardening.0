@@ -1,146 +1,202 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from omta34.uswest2.a.cloudfilter.net (omta34.uswest2.a.cloudfilter.net [35.89.44.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8B7129A2;
-	Wed, 29 Jan 2025 20:38:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2078DDCD
+	for <linux-hardening@vger.kernel.org>; Wed, 29 Jan 2025 23:36:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738183124; cv=none; b=kiyS/+8w6QH//+MzHqdx5E5dn93pMycjRyJtblnsZdUd+pKG5aXzGKXEMg/ILJw8IMAGSUE+KGOWgmJ44MhqYg6U4EvlzxMVbHLxohs1XLBgNOtDy/USPP1myCV5TKVxHOlhzW87loChh+mX0GFSKcN2/VJLSuUg9NZoLS1g+So=
+	t=1738193781; cv=none; b=kXdqnxZF/RLCXwA9+GCo6EsuR6g2Qme+u19+0V+4oOPQb2XLIKATH9xuNbD6jNLJxWJKM6LmXQJ2vQ/nZqPnQncqc4Tf4H8jwFxtWwNEfBjnb53X5znetpo4Gk+yahF4HA8dgi+BUirTfKvKnSHEbl8FBwleCSdW98wMmtJz8/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738183124; c=relaxed/simple;
-	bh=u7bkkFbgFIRXyXjanPwlyDibiv2H8vlJ8rkMU2DVKcg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oZv6iD/1fsubL8agu6OlLPDV0sorZ+j34VN8U3hKFNqbfcR3f6quWinQX0UwpPAXf49nTXOHGVlSI9mJW4/Rx5lbweER8CvvAU9i2eHPMCqoVBll/dp6XGrDcigKkbrNPJqea+OaCJEJ/DnreCDCNfTeBoA3+l6QLWm08vRfFE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=eByBx+rM; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1738193781; c=relaxed/simple;
+	bh=jMDBRsPaOHcFhnUw/Wv69LKyrOF6jC1i9MALjXLdOoI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oFKcmwVgBWdLDKzY6Bp3GlU5opTBb2dRCJT9wzmmNwGpbGhDrvlyfonj4nc6zNHTrf69g2xFLxM2AopeexX9fmh28Z4y2uBTKeonUf+U34+QqksheQLUZ2dqIdvzzaYsf8QazPHZ57Fq+l9PjdOJTou1BA5HOqJLg3gahrpJ62k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=y5uVgPnL; arc=none smtp.client-ip=35.89.44.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="eByBx+rM"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50TDdeOY004395;
-	Wed, 29 Jan 2025 20:38:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=1paovO
-	MNVQAoBPhr5hxiZ1wYuOUpazAMiY0kx/X16Qo=; b=eByBx+rMlUWkC4obFL5Ivy
-	WI6nfiJgzGeZNMYIxH9HOZ8biofCgor5zEB3txawrQ9hSKz+kmfuzgPSEYAF4CPO
-	R0bAM91iXMje9usONAac0kLZ2J4ct37GKQwLmXlVorMhQoP+GJT5mNTERWaepnn7
-	gdQi5iYL86VwMmptIYwa/GQLPRyIhBta0dVdF/noWE83x9ulbRdT+n0Ow/hlqDVY
-	nbbMbP9Wz1RdebgmJEBS8r26CDi4cwboXGKf+oLUcg12RqBiq76xRp8L55Rqfjky
-	7guFpJy6gfI8oVlKbz8CmFbmBlzTbJE+X6m8S/7u5Uvgu2/jFoslCfEUgU34cR9g
-	==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44fad9n39k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 Jan 2025 20:38:34 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50THjpRf022175;
-	Wed, 29 Jan 2025 20:38:33 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 44dcgjtcgp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 Jan 2025 20:38:33 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50TKcTTS53215676
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 29 Jan 2025 20:38:29 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5A991200A4;
-	Wed, 29 Jan 2025 20:38:29 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 81C50200A3;
-	Wed, 29 Jan 2025 20:38:28 +0000 (GMT)
-Received: from li-ce58cfcc-320b-11b2-a85c-85e19b5285e0 (unknown [9.179.12.122])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with SMTP;
-	Wed, 29 Jan 2025 20:38:28 +0000 (GMT)
-Date: Wed, 29 Jan 2025 21:38:26 +0100
-From: Halil Pasic <pasic@linux.ibm.com>
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: Tony Krowiak <akrowiak@linux.ibm.com>,
-        Jason Herne
- <jjherne@linux.ibm.com>,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        Holger Dengler <dengler@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev
- <agordeev@linux.ibm.com>,
-        Christian Borntraeger
- <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>, linux-hardening@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Halil Pasic <pasic@linux.ibm.com>
-Subject: Re: [PATCH] s390/vfio-ap: Replace one-element array with flexible
- array member
-Message-ID: <20250129213826.291cfe12.pasic@linux.ibm.com>
-In-Reply-To: <20250116131859.105756-2-thorsten.blum@linux.dev>
-References: <20250116131859.105756-2-thorsten.blum@linux.dev>
-Organization: IBM
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="y5uVgPnL"
+Received: from eig-obgw-6005a.ext.cloudfilter.net ([10.0.30.201])
+	by cmsmtp with ESMTPS
+	id dErKtsTJRWuHKdHbQtilWX; Wed, 29 Jan 2025 23:36:12 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id dHbPtP1wuvt5YdHbPtplHS; Wed, 29 Jan 2025 23:36:11 +0000
+X-Authority-Analysis: v=2.4 cv=c9JgQg9l c=1 sm=1 tr=0 ts=679abb6b
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=3GLQtCDrk5mhnYkuwPoHkA==:17
+ a=IkcTkHD0fZMA:10 a=VdSt8ZQiCzkA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
+ a=TBnyChJfKI2p-A7FU4wA:9 a=QEXdDO2ut3YA:10 a=Xt_RvD8W3m28Mn_h3AK8:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=cqLhnexwQeVTpKw6kDdMPge95PVCfboLdmw4Sd7tyBk=; b=y5uVgPnL5JZOF2lNG0FIwzQT+T
+	wO8/rTfUJcpIjRMoKUxPvIzfZ9FeKJcpLnxSy7MBADV4G6F4UkX5QAWrrTcUlXQF7qa0qeTk6OCnI
+	WZqVihVPlZ14gzu82uRKI7/statE0rUTjJ2ToNs/wCuY/MLZDdBTfA/x7btNfvVLkHQdwwUp2wNoh
+	bbUz1NZyosiBeOMRqZp2MUtVYkCrf87JwjzXAHk7l+lKz/uzM345nykQ9Ouw27xogIayyMetK5UwY
+	LTrHwU3bXDkh1/n5iyqnEY+vuz/OnKiaRwjKphtLcy46ztUwjGn3jrufLIyGN50kXRR0X9VOP3dtH
+	AeDrHw4Q==;
+Received: from [45.124.203.141] (port=55136 helo=[192.168.0.153])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1tdHbO-003ScQ-2D;
+	Wed, 29 Jan 2025 17:36:10 -0600
+Message-ID: <7f165e66-a0ff-48e2-a3f3-d5405a66c867@embeddedor.com>
+Date: Thu, 30 Jan 2025 10:06:00 +1030
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: fBgppfXwsLTHHsfj8173ivdA6KbuCFqH
-X-Proofpoint-ORIG-GUID: fBgppfXwsLTHHsfj8173ivdA6KbuCFqH
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-01-29_04,2025-01-29_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- lowpriorityscore=0 bulkscore=0 phishscore=0 mlxlogscore=875 spamscore=0
- priorityscore=1501 suspectscore=0 clxscore=1011 mlxscore=0 impostorscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2501290157
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2][next] container_of: add container_first() macro
+To: Greg KH <gregkh@linuxfoundation.org>,
+ Dan Carpenter <dan.carpenter@linaro.org>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <Z5m76U5zh34WbeQY@kspp>
+ <2025012955-hypnotic-patronize-8931@gregkh>
+ <f6e24dfa-450e-4de6-87a6-6fcf7d83888d@embeddedor.com>
+ <2025012921-dense-unplanted-952b@gregkh>
+ <06aa1194-a7aa-4a5a-adb8-f6cd447d35d9@stanley.mountain>
+ <2025012951-plenty-clang-1e2b@gregkh>
+ <3979f87d-b7d7-48bb-b6ab-cd8165dbc3cc@stanley.mountain>
+ <2025012940-hardhat-usual-fbc6@gregkh>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <2025012940-hardhat-usual-fbc6@gregkh>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 45.124.203.141
+X-Source-L: No
+X-Exim-ID: 1tdHbO-003ScQ-2D
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.0.153]) [45.124.203.141]:55136
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfGczMq/qww+IZfjbJLdq1kF9Tr1Vn7fgGpOrKFu8+Nxl93KhvQ+A+p9c9AmKLHqdsmFob8mpaLfd9wLWAEeOqfgNjs+be2tyyltzVRl+OODMzUzFsIOf
+ cql/JsB1MlLwQSov5HJjI/5vK4+FcfWU+Bb5E37bVf9UF6vs8couWhFo3npL7rmjJTSH968LaRJUyrLt19QlzGmZBJzsI4KQcsETH7o3XhP4kBfeOpO+PdAr
 
-On Thu, 16 Jan 2025 14:18:59 +0100
-Thorsten Blum <thorsten.blum@linux.dev> wrote:
 
-> Replace the deprecated one-element array with a modern flexible array
-> member in the struct ap_matrix_dev.
+
+On 30/01/25 02:38, Greg KH wrote:
+> On Wed, Jan 29, 2025 at 05:06:54PM +0300, Dan Carpenter wrote:
+>> On Wed, Jan 29, 2025 at 02:14:14PM +0100, Greg KH wrote:
+>>> On Wed, Jan 29, 2025 at 01:39:27PM +0300, Dan Carpenter wrote:
+>>>> On Wed, Jan 29, 2025 at 09:34:07AM +0100, Greg KH wrote:
+>>>>> On Wed, Jan 29, 2025 at 06:35:18PM +1030, Gustavo A. R. Silva wrote:
+>>>>>>
+>>>>>>
+>>>>>> On 29/01/25 16:24, Greg KH wrote:
+>>>>>>> On Wed, Jan 29, 2025 at 03:56:01PM +1030, Gustavo A. R. Silva wrote:
+>>>>>>>> This is like container_of_const() but it contains an assert to
+>>>>>>>> ensure that it's using the first member in the structure.
+>>>>>>>
+>>>>>>> But why?  If you "know" it's the first member, just do a normal cast.
+>>>>>>> If you don't, then you probably shouldn't be caring about this anyway,
+>>>>>>> right?
+>>>>>>
+>>>>>> This is more about the cases where the member _must_ be first in the
+>>>>>> structure. See below for an example related to -Wflex-array-member-not-at-end
+>>>>>
+>>>>> That's fine, but that's a build-time issue, you should enforce that in
+>>>>> the structure itself, why are you forcing people to remember to use this
+>>>>> macro when you want to use the field?  There's nothing preventing anyone
+>>>>> from using container_of() instead here, and nothing will catch that from
+>>>>> what I can tell.
+>>>>
+>>>> The new definition has a static_assert() in it so it's enforced about
+>>>> build time.
+>>>
+>>> Yes, but that forces you to "know" to do that in the .c file.  How do
+>>> you know to use this, and if you remove it or change it to
+>>> container_of(), it works just fine again.
+>>>
+>>
+>> I guess my use case is different from Gustavo's.  For him, using
+>> container_of() is fine.  We probably don't even need an assert because
+>> once you see a struct_group_tagged() then you know the order is important.
 > 
-
-I'm not sure I understand the value of this. What we have here is not
-a flexible array but a one element array. Something that in the generic
-case could be many but particularly for vfio-ap is always one.
-
-Imagine if we had exactly 2 supported mdev types. I guess you would not
-come to the idea that the array of two needs to be changed to a modern
-flexible array. Or am I wrong about that?
-
-So I suppose the problem  here is that arrays of one are under general
-suspicion of not actually being arrays of one but a pre C99 way of
-doing flexible arrays. I kind of do understand that an array wih
-one element is funny. But I think the current declaration of
-struct ap_matrix_dev is more expressive the proposed one.
-
-Now I understand that it is easy to grep for [1], but it is much
-harder to tell.
-
-I've checked in Documentation/process/coding-style.rst did not see this
-documented. But then I checked in checkpatch.pl and it indeed seems to
-warn about it and refer to
-https://docs.kernel.org/process/deprecated.html#zero-length-and-one-element-arrays
-
-But as far as I can tell it is also talking about the case where one
-needs a trailing array of an at compile time unknown size, and not
-about the case where all we need is just one element and it happens
-to be convenient to have it in an array.
-
-If there is community consensus that one sized arrays are bad regardless
-of what they are used for, then the one sized array has to go.
-
-But please tell me what speaks against replacing it with a single
-pointer and then taking passing in that pointers address into
-mdev_register_parent()?
-
-
-> Use struct_size() to calculate the number of bytes to allocate for
-> matrix_dev with a single mdev_type.
+> Who knows this?  The developer?  What are they supposed to "know" here?
+> I sure don't :)
 > 
-> Link: https://github.com/KSPP/linux/issues/79
-> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+> Having some sort of "__must_be_first" marking for a field is fine and
+> break the build if that doesn't happen.  Otherwise this is something
+> that is not going to be used properly over time.
+
+I'm currently dealing with this situation in the following way:
+
+  struct libipw_hdr_3addr {
+-	__le16 frame_ctl;
+-	__le16 duration_id;
+-	u8 addr1[ETH_ALEN];
+-	u8 addr2[ETH_ALEN];
+-	u8 addr3[ETH_ALEN];
+-	__le16 seq_ctl;
++	/* New members MUST be added within the __struct_group() macro below. */
++	__struct_group(libipw_hdr_3addr_hdr, hdr, __packed,
++		__le16 frame_ctl;
++		__le16 duration_id;
++		u8 addr1[ETH_ALEN];
++		u8 addr2[ETH_ALEN];
++		u8 addr3[ETH_ALEN];
++		__le16 seq_ctl;
++	);
+  	u8 payload[];
+  } __packed;
++static_assert(offsetof(struct libipw_hdr_3addr, payload) == sizeof(struct libipw_hdr_3addr_hdr),
++	      "struct member likely outside of __struct_group()");
+
+"We also want to ensure that when new members need to be added to the
+flexible structure, they are always included within the newly created
+tagged struct. For this, we use `static_assert()`. This ensures that the
+memory layout for both the flexible structure and the new tagged struct
+is the same after any changes." [1]
+
+We could probably create struct_group_first() instead of container_first().
+
+Anyways, so far so good.  For some reason I was under the impression
+that you two guys wanted the container_first() macro.
+
+OK, that's it from my side.
+
+Have a good one!
+-Gustavo
+
+[1] https://git.kernel.org/linus/089332e703b681c8
+
+> 
+>> For me, it's code like I mentioned which does:
+>>
+>> 	p = container_of();
+>> 	if (IS_ERR(p))
+>> 		...
+>>
+>> And I did see you suggest that people re-write that kind of code, but no
+>> one is going to do that.  :P  People know that container_of() is just a
+>> cast in that case.  It works fine.  It's just a bit ugly.
+> 
+> It doesn't work if the field isn't first, so no, it shouldn't be working
+> fine, and that should be flagged and fixed and never allowed to come
+> back again.  Can't we do that with coccinelle?
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
