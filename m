@@ -1,227 +1,168 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BF1E17C68;
-	Wed, 29 Jan 2025 01:45:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC21E42A8B;
+	Wed, 29 Jan 2025 01:53:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738115125; cv=none; b=tBVLu49wQREp6CA51HPPi8LA9d/MRURrEs3ikIDAZgcf7FDgOhJG8kp9bTcgfK74ZBRUiq+koJULjZZnJESQmWE5ZHvHGrUL3LwfMXNGMGb9SEXvLBAjhPJ0c8aMeGSe2uTRR5OEl0NpAqyfU8GRGfBOdTqkU13S6i1UtYlw6ec=
+	t=1738115599; cv=none; b=iBSRJ6RrhJhGlvey2eM6pdC8CR4DiceuEXybb2IftkBkrjkkaB6yAYGJN5JLf46vbHRsZL9rdEhF356iA1TEr//RyXqm6sL2rd+AuoPxbWePLNiUkhR+bB+S8pFkqzPml8m4C7SaTy2T7KrZZG8jA/nH/zH9JOVWXHh6htpqGkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738115125; c=relaxed/simple;
-	bh=CWzXW0bIMSURgr0c3IY4/tvstyV6bj1ozJj9dzgjU1s=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aQ8mgffPWoD32Lu22oMBWebvQ2Opc3pRRPkcfWU4MTd7mQztYihgKse+eYhQgQY3tNqSwA/vHyXkY0AABoxQCV23q2gQkjSbsntQKJ9WbgK/u1A7N8/YIhIYnWL3EtWaBrq0GPyhepP6/1FpQZj0C83h31L8UekJYKpcIDGjX/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tJt4ZVW0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738115599; c=relaxed/simple;
+	bh=0T839DzywJ26Cfrs9GWEAdkq8cMjMgdWjHzUsu7iSfw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=vEQARenbAn51biKON/8Ka0Et/x74TdjvxkMANwXTn80lhhIjlTAPMp1w4+0TRNJ/KuUvClsh3XllDqsVXAiHgEaGbQ5nOKvmxe7ah9UwJAw73sxAgxojclZoxJKvoKiUmjZ6TOqzo3dKA94rAYAEHXXca9zSkER5wiC9ev29/SA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SWImoMZU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tJt4ZVW0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3927EC4CED3;
-	Wed, 29 Jan 2025 01:45:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SWImoMZU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92A65C4CED3;
+	Wed, 29 Jan 2025 01:53:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738115124;
-	bh=CWzXW0bIMSURgr0c3IY4/tvstyV6bj1ozJj9dzgjU1s=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=tJt4ZVW0p8weQsSPDZjLgTUab4flB9ZDeO3oV5MFy7mrenPn2R71XljjJYKAkhnrm
-	 UCkaqQqT+OZAhF0CZcDf6w+z1Qt+gQsQ5OCNAxgM1rmArls+WMymb4Mq830RmFCoKO
-	 +qFwvjNxZ5/w+Tx4QkGkdy0DNTUbSSpw6PslUzb5XdvZf0l8UzSKbhwOCZjyb+SnY9
-	 q6L5Zj8WJL2S1/bLsi4d6YQV8UUltZT+eHdIQb3MT8SpdgDLFwbf9U5bSybrLtzkIN
-	 sufR1bq3uvCWQSqMly5wDlwj2bsOCg3IPtP8q6yZFB3HIxEpMDKVAt03sxW/8L9VE6
-	 rHgpPPhwR2yMg==
-Date: Wed, 29 Jan 2025 02:45:18 +0100
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Jonathan Corbet <corbet@lwn.net>
-Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org,
- bpf@vger.kernel.org, coresight@lists.linaro.org,
- linux-arm-kernel@lists.infradead.org, linux-block@vger.kernel.org,
- linux-f2fs-devel@lists.sourceforge.net, linux-hardening@vger.kernel.org,
- linux-iio@vger.kernel.org, linux-media@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-usb@vger.kernel.org,
- linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
- workflows@vger.kernel.org
-Subject: Re: [RFC v2 00/38] Improve ABI documentation generation
-Message-ID: <20250129024518.69c0be81@foz.lan>
-In-Reply-To: <87h65i7e87.fsf@trenco.lwn.net>
-References: <cover.1738020236.git.mchehab+huawei@kernel.org>
-	<87h65i7e87.fsf@trenco.lwn.net>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	s=k20201202; t=1738115598;
+	bh=0T839DzywJ26Cfrs9GWEAdkq8cMjMgdWjHzUsu7iSfw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SWImoMZUOCOrWwPau//NTYK2b4SjcVc/SJ39NnSdERoDZBs8+SbfHSmR2+AfWqyab
+	 aiOe0LC9oDa+jOg5svaMJfhW7WgH+/sINSKxkyJMZYO5SQ5mQcqh/1WRAJkWDVR3Ri
+	 pfGboLR/6hqjQ6JBG2kKzeFGnP2hdO3v/Uikyy6vNK7WRkAucDQahd2xQNJpc2k3Hy
+	 J7+SzmhVIQIvCweTC1HRWnSMjb0CmX2kmX8Rr/LE4Q/vNJ160AJhZ4jrpKoRcZWODW
+	 HIIAjs7u6+YreIwkk6+MOC8do01DHBcKmAvQIn70oNgx7pIcgDYghm8aYJE0m5KVxk
+	 m9wfbMVmPywPA==
+Date: Tue, 28 Jan 2025 17:53:14 -0800
+From: Kees Cook <kees@kernel.org>
+To: Alan Stern <stern@rowland.harvard.edu>
+Cc: Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
+	Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>, linux-usb@vger.kernel.org,
+	linux-input@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+	linux-kernel@vger.kernel.org,
+	syzbot+c52569baf0c843f35495@syzkaller.appspotmail.com,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] HID: usbhid: fix recurrent out-of-bounds bug in
+ usbhid_parse()
+Message-ID: <202501281747.9690B3B@keescook>
+References: <20240524120112.28076-1-n.zhandarovich@fintech.ru>
+ <nycvar.YFH.7.76.2406041015210.16865@cbobk.fhfr.pm>
+ <E62FA5CB-D7AE-4A11-9D2E-7D78D7C10ADA@kernel.org>
+ <nycvar.YFH.7.76.2406041614210.24940@cbobk.fhfr.pm>
+ <2a38e355-af5c-4b3d-81be-0cc97376c1f5@fintech.ru>
+ <202406041019.BCD0A93C@keescook>
+ <d1ad84e3-7da9-4dc8-a095-b9fbe191eb56@rowland.harvard.edu>
+ <807cfa6f-5863-4fe4-8294-76d5cdbc3aac@fintech.ru>
+ <649f5c1c-f3a7-420d-b727-f904d58f491f@rowland.harvard.edu>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <649f5c1c-f3a7-420d-b727-f904d58f491f@rowland.harvard.edu>
 
-Em Tue, 28 Jan 2025 15:42:00 -0700
-Jonathan Corbet <corbet@lwn.net> escreveu:
-
-> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
+On Tue, Jan 28, 2025 at 12:00:41PM -0500, Alan Stern wrote:
+> On Tue, Jan 28, 2025 at 05:45:21AM -0800, Nikita Zhandarovich wrote:
+> > Hello,
+> > 
+> > On 6/4/24 10:45, Alan Stern wrote:
+> > > On Tue, Jun 04, 2024 at 10:21:15AM -0700, Kees Cook wrote:
+> > >> On Tue, Jun 04, 2024 at 10:09:43AM -0700, Nikita Zhandarovich wrote:
+> > >>> Hi,
+> > >>>
+> > >>> On 6/4/24 07:15, Jiri Kosina wrote:
+> > >>>> On Tue, 4 Jun 2024, Kees Cook wrote:
+> > >>>>
+> > >>>>> This isn't the right solution. The problem is that hid_class_descriptor 
+> > >>>>> is a flexible array but was sized as a single element fake flexible 
+> > >>>>> array:
+> > >>>>>
+> > >>>>> struct hid_descriptor {
+> > >>>>> 	   __u8  bLength;
+> > >>>>> 	   __u8  bDescriptorType;
+> > >>>>> 	   __le16 bcdHID;
+> > >>>>> 	   __u8  bCountryCode;
+> > >>>>> 	   __u8  bNumDescriptors;
+> > >>>>>
+> > >>>>> 	   struct hid_class_descriptor desc[1];
+> > >>>>> } __attribute__ ((packed));
+> > >>>>>
+> > >>>>> This likely needs to be: 
+> > >>>>>
+> > >>>>> struct hid_class_descriptor desc[] __counted_by(bNumDescriptors);
+> > >>>>>
+> > >>>>> And then check for any sizeof() uses of the struct that might have changed.
+> > 
+> > Alan, I finally got around to preparing a revised version of the
+> > required patch and encountered a few issues. I could use some advice in
+> > this matter...
+> > 
+> > If we change 'struct hid_descriptor' as you suggested,
 > 
-> > Hi Jon/Greg,
-> >
-> > That's the second version of my RFC patches meant to modenize the ABI
-> > parser that I wrote in Perl.  
+> I didn't make that suggestion.  Kees Cook did.
 > 
-> I have a couple of minor comments on the individual patches, but overall
-> I do like this direction.
+> >  which does make
+> > sense, most occurrences of that type are easy enough to fix.
+> > 
+> > 1) usbhid_parse() starts working properly if there are more than 1
+> > descriptors, sizeof(struct hid_descriptor) may be turned into something
+> > crude but straightforward like sizeof(struct hid_descriptor) +
+> > sizeof(struct hid_class_descriptor).
+> > 
+> > 2) 'hid_descriptor' in drivers/hid/hid-hyperv.c remains innocuous as
+> > well as only 1 descriptor expected there. My impression is only some
+> > small changes are needed there.
+> > 
+> > However, the issue that stumps me is the following: static struct
+> > hid_descriptor hidg_desc in drivers/usb/gadget/function/f_hid.c relies
+> > on a static nature of that one descriptor. hidg_desc ends up being used
+> > elsewhere, in other static structures. Basically, using __counted_by
+> > requires a lot of changes, as I see it, out of scope of merely closing
+> > an UBSAN error.
 > 
-> It would be nice, though, if the code were a bit more extensively
-> commented.  Parts of it get into the "twistly maze of regexes" mode that
-> can be awfully hard to follow.
-
-The regex code is indeed complex, but documenting it is not an easy task.
-Btw, they are (about) the same that the Perl script does. imported also
-the documentation for there. I did some extra cleanups/optimizations there,
-though, after checking the results of some expressions.
-
-The big issue is that we don't have an uniform way of defining What: 
-expressions. So, each subsystem (and/or author) document it in different
-ways.
-
-There are even some ABI symbols with:
-
-	$(readlink)/sys/...
-
-(I intend to send a patch for those later on)
-
-and:
-
-	What: /sys/something/...
-
-	What: .../something_else
-
-(I guess ".../" means "/sys/something/...", but I can't be sure, as this
-is on one driver for a hardware I don't have - so, if I send a patch,
-I may end breaking it)
-
-If you want to understand how the whole set of regexes work, you can
-run:
-
-	$ ./scripts/get_abi.py -d 16 undefined --dry-run >/dev/null
-...
-	[DEBUG] /sys/kernel/mm/damon/admin/kdamonds/\w+/contexts/\w+/schemes/\w+/quotas/goals/\w+/current_value <== /sys/kernel/mm/damon/admin/kdamonds/<K>/contexts/<C>/schemes/<S>/quotas/goals/<G>/current_value
-	[DEBUG] /sys/kernel/mm/damon/admin/kdamonds/\w+/contexts/\w+/schemes/\w+/quotas/goals/\w+/target_metric <== /sys/kernel/mm/damon/admin/kdamonds/<K>/contexts/<C>/schemes/<S>/quotas/goals/<G>/target_metric
-	[DEBUG] /sys/kernel/mm/damon/admin/kdamonds/\w+/contexts/\w+/schemes/\w+/quotas/goals/\w+/target_value <== /sys/kernel/mm/damon/admin/kdamonds/<K>/contexts/<C>/schemes/<S>/quotas/goals/<G>/target_value
-	[DEBUG] /sys/kernel/mm/damon/admin/kdamonds/\w+/contexts/\w+/schemes/\w+/quotas/goals/nr_goals     <== /sys/kernel/mm/damon/admin/kdamonds/<K>/contexts/<C>/schemes/<S>/quotas/goals/nr_goals
-	[DEBUG] /sys/kernel/mm/damon/admin/kdamonds/\w+/contexts/\w+/schemes/\w+/quotas/ms                 <== /sys/kernel/mm/damon/admin/kdamonds/<K>/contexts/<C>/schemes/<S>/quotas/ms
-	[DEBUG] /sys/kernel/mm/damon/admin/kdamonds/\w+/contexts/\w+/schemes/\w+/quotas/reset_interval_ms  <== /sys/kernel/mm/
-...
-
-This will place at stderr all regular expressions that are currently
-parsed (they're currently used only for /sys symbols).
-
-Yet, instead of spending too much time documenting them, IMO we shold
-do the do the reverse: use the AbiRegex class to convert "What:" into
-a new tag (like "Regex:") and use it as much as possible (we'll still
-need "What:" for some things that aren't devnodes), as, with regular
-expressions, symbols can be clearly documented. As on python match groups
-can be named with:
-
-	(?P<name>...)
-
-this could be used to better describe some arguments, e.g. (picking an
-easy case):
-
-	What: /sys/module/<MODULENAME>/srcversion
-
-could be described, instead, as:
-
-	Regex: /sys/module/(?P<MODULENAME>[\w\-]+)/srcversion
-
-The Kernel_abi extension (actually AbiParser class) can either display it
-as-is (my personal preference), or even replace:
-	(?P<MODULENAME>[\w\-]+)
-with:
-	MODULENAME
-
-and still output this at html/pdf output as before, e. g.:
-
-	What: /sys/module/<MODULENAME>/srcversion
-
-Yet, doing it on a consistent way.
-
-This is easier said than done, as if we do some automatic conversion,
-subsystem reviewers/maintainers will need to double-check if the
-converted expressions make sense.
-
-
-> > On this series we have:
-> >
-> > patches 1 to 11: several bug fixes addressing issues at ABI symbols;  
+> The hidg_desc structure needs to contain room for a single 
+> hid_descriptor containing a single hid_class_descriptor.  I think you 
+> can define it that way by doing something like this:
 > 
-> 1-3 aren't needed - it seems you already upstreamed #2?
+> static struct hid_descriptor hidg_desc = {
+> 	.bLength			= sizeof hidg_desc,
+> 	.bDescriptorType		= HID_DT_HID,
+> 	.bcdHID				= cpu_to_le16(0x0101),
+> 	.bCountryCode			= 0x00,
+> 	.bNumDescriptors		= 0x1,
+> 	.desc				= {
+> 		{
+> 			.bDescriptorType	= 0, /* DYNAMIC */
+> 			.wDescriptorLength	= 0, /* DYNAMIC */
+> 		}
+> 	}
+> };
 > 
-> For the rest, is there any reason to not apply them right away?  They
-> just seem like worthwhile fixes.
+> Or maybe it needs to be:
 > 
-> > patch 12: a fix for scripts/documentation-file-ref-check
-> > patches 13-15: create new script with rest and search logic and 
-> >   minimally integrate with kernel_abi Sphinx extension(phase 1);
-> > patches 16-19: implement phase 2: class integration (phase 2);
-> > patch 20: fix a bug at kernel_abi: the way it splits lines is buggy;
-> > patches  21-24: rewrite kernel_abi logic to make it simpler and more
-> >   robust;
-> > patches 25-27: add cross-reference support at automarkup;
-> > patches 28-36: several ABI cleanups to cope with the improvements;
-> > patch 37: implement undefined command;
-> > patch 38: get rid of the old Perl script.
-> >
-> > To make it easier to review/apply, I may end breaking the next version
-> > on a couple of different patchsets. Still it would be nice to have more
-> > people testing it and providing some feedback.  
+> 	.desc				= { {0, 0} } /* DYNAMIC */
 > 
-> I've looked over everything, though with limited depth. 
+> I'm not sure what is the correct syntax; you'll have to figure that out.  
 
-> My testing hasn't turned up any problems.  
+Either should work.
 
-Great!
+> 
+> You'll have to be more careful about the definition of hidg_desc_copy in 
+> hidg_setup(), however.  You might want to define hidg_desc_copy as an 
+> alias to the start of a byte array of the right size.
 
-> I've only tested with current Sphinx,
-> have you tried this with the more ancient versions we support?
+For an on-stack fixed-size flex array structure, you can use:
 
-Not yet, but I double-checked at Sphinx documentation to be sure that
-I won't be using any newer methods: I just kept using the same Sphinx
-API as used by other extensions at the Kernel.
+	DEFINE_FLEX(struct hid_descriptor, hidg_desc_copy,
+		    desc, bNumDescriptors, 1);
+	*hidg_desc_copy = hidg_desc;
 
-For instance this loop:
+and then adjust the "hidg_desc_copy." instances to "hidg_desc_copy->"
 
-    def do_parse(self, content, node):
-        with switch_source_input(self.state, content):
-            self.state.nested_parse(content, 0, node, match_titles=1)
+> 
+> > Is this approach still worthy pursuing or should I look into some neater
+> > solution?
+> 
+> I think you should persist with this approach.
+> 
+> Alan Stern
 
-was changed on Sphinx 7.4[1], and even nested_parse(match_titles=1) is
-not the recommended code for versions < 7.4, as there is this 
-replacement function:
-
-	nested_parse_with_titles()
-
-Yet, as they're working fine at least up to version 8.1.3, we can
-keep using the old way.
-
-In any case, I'll do a test before sending the final version to see if
-it works fine with our minimal version.
-
-[1] See: https://www.sphinx-doc.org/en/master/extdev/markupapi.html
-
-- 
-
-On a separate discussion, I noticed one potential compatibility issue
-we may have with future Python versions, due to some ascii texts
-formatted as unicode. I'll send later a patch fixing them.
-
-Additionally, automarkup has backward-compatible code with Python 2.7.
- Can I send patches dropping 2.7 support from Sphinx extensions?
-
-> [It's probably time to raise our minimum version again, especially now
-> that current Sphinx has better performance.]
-
-Agreed. 
-
-IMO, we should also increase Python's minimal version.
-
-> I don't see a whole lot of reasons not to apply this set shortly after
-> the merge window; anybody disagree?
-
-Thanks,
-Mauro
+-- 
+Kees Cook
