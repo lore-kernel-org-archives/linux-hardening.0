@@ -1,44 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BD3C19A28D;
-	Wed, 29 Jan 2025 08:14:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DAF48462;
+	Wed, 29 Jan 2025 08:35:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738138480; cv=none; b=sY/doN0hPMeYTXyyAgl/Af4Gy4obwOKpfS2JAA2YluJ4ROM0OYWjbTujQwfLxcc3kIZW1PXEvHsapI34Q0xHdBeGAw1rAr8gCVOiC4owJiTh3EBLGek+2j6ICIzktoByyiSiL6QEITGnrRkJGll0EWCT/XziruehHfBo4IdvRyM=
+	t=1738139708; cv=none; b=fFKjQtNP/iqS84IZOJ/HT35Qr7fFopIq2defyd6nWfYWUDFOHY55KrX4tHVVjq/SLSssn0ff+77/Aq9G8u09Swe80WEef9j37MpB/XkeSLAbbhC2J5NwVDCEL6GjPsi+Zu+RTYIGDxlHB9jAydsOo+ui/aAanDSvt2Y7wwP6C3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738138480; c=relaxed/simple;
-	bh=Iw3ppgBY5sLOi1990ConwcQ4ZKtsA/u/PoORWMqt+Lo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=vEs0t8gvLHfhMewMRbpGUHlMpfqKFaa6B8S40Io4NLIDcnyi8mvgBhh555w2RDegYZCj+vF/l3pl9jMOgiiIAqTg2L0/088WbHtgvc+YTq6WYoODJ1OGMZbAtOG1eya1SRU/7QdS2p4VXolm+ooUZoDwC7zXVYCJkpwaRgLzxLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NlW9ZHp9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738139708; c=relaxed/simple;
+	bh=gxvTpIAE3DBPCJ8aI6P/6C8gn0iHZTxkw1AhjtXRAF8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ktwT1aRNRJf3DLwWllVIxY0nw6U4cp4bac3ntokx+Y7irYTxm92H7HCEbHtvUVwJOmqALbqPCANyP3oGih2rtMvLrbfOTxEfOD3NxHmprr6wrI7rK0iTHOwiO40RiLAfO3ymh+e7o0OnBvMrnf2pzY78bR6el9ZREZi5rklbOcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=uJVrdmhc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NlW9ZHp9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D2B1C4CED3;
-	Wed, 29 Jan 2025 08:14:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738138479;
-	bh=Iw3ppgBY5sLOi1990ConwcQ4ZKtsA/u/PoORWMqt+Lo=;
-	h=Date:From:To:Cc:Subject:From;
-	b=NlW9ZHp9VudwHkBpLCWjJBuDBOM5xiUGC07cPz+1W1pid4cQ3A23aWksXQ737B9sR
-	 QDd52umKF10CvZNhYGFYGei1XAHJseyQp0LyDmsSJsoDYAfzEbofL8X6KHSGEPCc26
-	 2W+9RofmVoDPUoLquZpvDHK14QBda+WL+OAQDLjkinLqC5/Koi4mthsxs5t8jg6CYo
-	 pxXpX75EIxi2Dghm6JTtfA10LL/+lPRb/7AF6Nn7xCmcP9VisB1AnBBhWx2wV9X9nB
-	 OvNjbL/K8y+RshuTeRQbLlQis7opaZApWFpYMNFLPZACBc1TNefz3hA3mgeQYZxdm6
-	 3ObqC2JV6LywA==
-Date: Wed, 29 Jan 2025 09:14:20 +0100
-From: Joel Granados <joel.granados@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Anna Schumaker <anna.schumaker@oracle.com>, 
-	Ashutosh Dixit <ashutosh.dixit@intel.com>, Baoquan He <bhe@redhat.com>, 
-	Bill O'Donnell <bodonnel@redhat.com>, Corey Minyard <cminyard@mvista.com>, 
-	"Darrick J. Wong" <djwong@kernel.org>, Jani Nikula <jani.nikula@intel.com>, 
-	Joel Granados <joel.granados@kernel.org>, "Martin K. Petersen" <martin.petersen@oracle.com>, 
-	Song Liu <song@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Wei Liu <wei.liu@kernel.org>, Kees Cook <kees@kernel.org>, 
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [GIT PULL] sysctl constification changes for v6.14-rc1
-Message-ID: <kndlh7lx2gfmz5m3ilwzp7fcsmimsnjgh434hnaro2pmy7evl6@jfui76m22kig>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="uJVrdmhc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55A0CC4CED3;
+	Wed, 29 Jan 2025 08:35:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1738139707;
+	bh=gxvTpIAE3DBPCJ8aI6P/6C8gn0iHZTxkw1AhjtXRAF8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uJVrdmhcaUCdDku6Dkc7A4EBhjdBiwB6W4hwM1Fm73MQwiYceWYCDv/w6aORME1P2
+	 dVZh08BTIcP6UF8LMYsHqDeepW5GGCaBa/0ZHO6yfsmRhXL3Hds1P9ArJdSZ95SpeK
+	 C5D5xlg90inUXeyD4VuGCXty5PdZTMliXOb8bcX8=
+Date: Wed, 29 Jan 2025 09:34:07 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2][next] container_of: add container_first() macro
+Message-ID: <2025012921-dense-unplanted-952b@gregkh>
+References: <Z5m76U5zh34WbeQY@kspp>
+ <2025012955-hypnotic-patronize-8931@gregkh>
+ <f6e24dfa-450e-4de6-87a6-6fcf7d83888d@embeddedor.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -47,201 +42,137 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <f6e24dfa-450e-4de6-87a6-6fcf7d83888d@embeddedor.com>
 
-Linus:
+On Wed, Jan 29, 2025 at 06:35:18PM +1030, Gustavo A. R. Silva wrote:
+> 
+> 
+> On 29/01/25 16:24, Greg KH wrote:
+> > On Wed, Jan 29, 2025 at 03:56:01PM +1030, Gustavo A. R. Silva wrote:
+> > > This is like container_of_const() but it contains an assert to
+> > > ensure that it's using the first member in the structure.
+> > 
+> > But why?  If you "know" it's the first member, just do a normal cast.
+> > If you don't, then you probably shouldn't be caring about this anyway,
+> > right?
+> 
+> This is more about the cases where the member _must_ be first in the
+> structure. See below for an example related to -Wflex-array-member-not-at-end
 
-This is a continuation of the ctl_table constification work started in
-commit 78eb4ea25cd5 ("sysctl: treewide: constify the ctl_table argument
-of proc_handlers"). That commit allows the const qualifying of the
-ctl_tables; with a few exceptions listed in the commit.
+That's fine, but that's a build-time issue, you should enforce that in
+the structure itself, why are you forcing people to remember to use this
+macro when you want to use the field?  There's nothing preventing anyone
+from using container_of() instead here, and nothing will catch that from
+what I can tell.
 
-As with previous large tree-wide PRs [1], I'm sending it at the end of
-the merge window to try to avoid unnecessary conflicts. I have rebased
-it on top of what I see as your latest master (6d61a53dd6f5), but I can
-rebase it again later if you prefer.
+> When addressing the -Wflex-array-member-not-at-end warnings, the common
+> scenario is when we have to separate the flexible-array member from the
+> rest of the members in the flexible structure, as shown below [1]:
+> 
+> struct bplus_header
+> {
+>         struct_group_tagged(bplus_header_fixed, __hdr,
+>                 u8 flags;               /* bit 0 - high bit of first free entry offset
+>                                            bit 5 - we're pointed to by an fnode,
+>                                            the data btree or some ea or the
+>                                            main ea bootage pointer ea_secno
+>                                            bit 6 - suggest binary search (unused)
+>                                            bit 7 - 1 -> (internal) tree of anodes
+>                                            0 -> (leaf) list of extents */
+>                 u8 fill[3];
+>                 u8 n_free_nodes;        /* free nodes in following array */
+>                 u8 n_used_nodes;        /* used nodes in following array */
+>                 __le16 first_free;      /* offset from start of header to
+>                                            first free node in array */
+>         );
+>         union {
+>                 /* (internal) 2-word entries giving subtree pointers */
+>                 DECLARE_FLEX_ARRAY(struct bplus_internal_node, internal);
+>                 /* (external) 3-word entries giving sector runs */
+>                 DECLARE_FLEX_ARRAY(struct bplus_leaf_node, external);
+>         } u;
+> };
+> 
+> struct_group_tagged() creates a new type: `struct bplus_header_fixed`, we
+> then use the newly created type to change the type of the middle objects
+> causing the warnings, and with that the warnings are gone:
+> 
+> @@ -453,7 +455,7 @@ struct fnode
+>    __le16 flags;				/* bit 1 set -> ea_secno is an anode */
+>  					/* bit 8 set -> directory.  first & only extent
+>  					   points to dnode. */
+> -  struct bplus_header btree;		/* b+ tree, 8 extents or 12 subtrees */
+> +  struct bplus_header_fixed btree;	/* b+ tree, 8 extents or 12 subtrees */
+>    union {
+>      struct bplus_leaf_node external[8];
+>      struct bplus_internal_node internal[12];
+> @@ -495,7 +497,7 @@ struct anode
+>    __le32 self;				/* pointer to this anode */
+>    __le32 up;				/* parent anode or fnode */
+> 
+> -  struct bplus_header btree;		/* b+tree, 40 extents or 60 subtrees */
+> +  struct bplus_header_fixed btree;	/* b+tree, 40 extents or 60 subtrees */
+>    union {
+>      struct bplus_leaf_node external[40];
+>      struct bplus_internal_node internal[60];
+> 
+> However, this newly created type, or rather the member `__hdr` (also
+> created when calling struct_group_tagged()) _must_ always be the first
+> member in the flexible struct `struct bplus_header`.
+> 
+> Then we need to use container_first() to retrieve a pointer to the flexible
+> structure [2], via which we can access the flexible-array member when
+> necessary:
 
-Testing was done in 0-day to avoid generating unnecessary merge
-conflicts in linux-next. I do not expect any error/regression given that
-all changes contained in this PR are non-functional.
+You don't _need_ to use it, you could use container_of() just fine.
+Which is my point, this is always going to get stale and wrong over
+time, you are trying to enforce in the .c code when someone access a
+field that should have been checked in the .h definition.
 
-Finally, if you need to regenerate it do:
-  1. Run the spatch [2] with the coccichekck command [3].
-  2. Run the sed command [4]
+> diff --git a/fs/hpfs/anode.c b/fs/hpfs/anode.c
+> index c14c9a035ee0c0..a366f6ac71e436 100644
+> --- a/fs/hpfs/anode.c
+> +++ b/fs/hpfs/anode.c
+> @@ -27,7 +27,7 @@ secno hpfs_bplus_lookup(struct super_block *s, struct inode *inode,
+>  				a = le32_to_cpu(btree->u.internal[i].down);
+>  				brelse(bh);
+>  				if (!(anode = hpfs_map_anode(s, a, &bh))) return -1;
+> -				btree = &anode->btree;
+> +				btree = container_first(&anode->btree, struct bplus_header, __hdr);
 
-Best
+Ick, so when is anyone going to "know" that container_of() couldn't be
+used here instead?  What is going to enforce this?
 
-[1] https://lore.kernel.org/all/20240724210014.mc6nima6cekgiukx@joelS2.panther.com/
-[2] Spatch:
-      virtual patch
 
-      @
-      depends on !(file in "net")
-      disable optional_qualifier
-      @
 
-      identifier table_name != {
-        watchdog_hardlockup_sysctl,
-        iwcm_ctl_table,
-        ucma_ctl_table,
-        memory_allocation_profiling_sysctls,
-        loadpin_sysctl_table
-      };
-      @@
+>  				goto go_down;
+>  			}
+>  		hpfs_error(s, "sector %08x not found in internal anode %08x", sec, a);
+> @@ -69,12 +69,16 @@ secno hpfs_add_sector_to_btree(struct super_block *s, secno node, int fnod, unsi
+>  	int n;
+>  	unsigned fs;
+>  	int c1, c2 = 0;
+> +	struct bplus_header *anode_btree = container_first(&anode->btree, struct bplus_header, __hdr);
+> +	struct bplus_header *ranode_btree = container_first(&ranode->btree, struct bplus_header, __hdr);
+> +	struct bplus_header *fnode_btree = container_first(&fnode->btree, struct bplus_header, __hdr);
+> +
+> 
+> So, if we use container_first() (or container_of_first(), you tell
+> which name you prefer), we are asserting that that `__hdr` member
+> is always the first member in `struct bplus_header`.
 
-      + const
-      struct ctl_table table_name [] = { ... };
+Yes, you are asserting it in the c code, but a global replace of
+container_first() with container_of() isn't going to do anything if that
+starts to happen.  And a driver/fs author doesn't care here which one
+matters, they will just use the first one that compiles and runs
+properly.
 
-[3] Spatch command:
-      make coccicheck MODE=patch \
-        SPFLAGS="--in-place --include-headers --smpl-spacing --jobs=16" \
-        COCCI=PATCH_FILE
+In other words, nothing is going to enforce this check making it
+semi-useless over time.  Can't you put something in the .h file to
+"ensure" that the field is first there?  Then a normal container_of()
+can just be used like everyone is used to without having to worry about
+anything over time.
 
-[4] sed:
-      sed --in-place \
-        -e "s/struct ctl_table .table = &uts_kern/const struct ctl_table *table = \&uts_kern/" \
-        kernel/utsname_sysctl.c
+thanks,
 
-The following changes since commit 6d61a53dd6f55405ebcaea6ee38d1ab5a8856c2c:
-
-  Merge tag 'f2fs-for-6.14-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/jaegeuk/f2fs (2025-01-27 20:58:58 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/sysctl/sysctl.git/ tags/constfy-sysctl-6.14-rc1
-
-for you to fetch changes up to 1751f872cc97f992ed5c4c72c55588db1f0021e1:
-
-  treewide: const qualify ctl_tables where applicable (2025-01-28 13:48:37 +0100)
-
-----------------------------------------------------------------
-Summary:
-
-  All ctl_table declared outside of functions and that remain unmodified after
-  initialization are const qualified. This prevents unintended modifications to
-  proc_handler function pointers by placing them in the .rodata section. This is
-  a continuation of the tree-wide effort started a few releases ago with the
-  constification of the ctl_table struct arguments in the sysctl API done in
-  78eb4ea25cd5 ("sysctl: treewide: constify the ctl_table argument of
-  proc_handlers")
-
-Testing:
-
-  Testing was done on 0-day and sysctl selftests in x86_64. The linux-next
-  branch was not used for such a big change in order to avoid unnecessary merge
-  conflicts
-
-----------------------------------------------------------------
-Joel Granados (1):
-      treewide: const qualify ctl_tables where applicable
-
- arch/arm/kernel/isa.c                         | 2 +-
- arch/arm64/kernel/fpsimd.c                    | 4 ++--
- arch/arm64/kernel/process.c                   | 2 +-
- arch/powerpc/kernel/idle.c                    | 2 +-
- arch/powerpc/platforms/pseries/mobility.c     | 2 +-
- arch/riscv/kernel/process.c                   | 2 +-
- arch/riscv/kernel/vector.c                    | 2 +-
- arch/s390/appldata/appldata_base.c            | 2 +-
- arch/s390/kernel/debug.c                      | 2 +-
- arch/s390/kernel/hiperdispatch.c              | 2 +-
- arch/s390/kernel/topology.c                   | 2 +-
- arch/s390/mm/cmm.c                            | 2 +-
- arch/s390/mm/pgalloc.c                        | 2 +-
- arch/x86/entry/vdso/vdso32-setup.c            | 2 +-
- arch/x86/kernel/cpu/bus_lock.c                | 2 +-
- crypto/fips.c                                 | 2 +-
- drivers/base/firmware_loader/fallback_table.c | 2 +-
- drivers/cdrom/cdrom.c                         | 2 +-
- drivers/char/hpet.c                           | 2 +-
- drivers/char/ipmi/ipmi_poweroff.c             | 2 +-
- drivers/char/random.c                         | 2 +-
- drivers/gpu/drm/i915/i915_perf.c              | 2 +-
- drivers/gpu/drm/xe/xe_observation.c           | 2 +-
- drivers/hv/hv_common.c                        | 2 +-
- drivers/md/md.c                               | 2 +-
- drivers/misc/sgi-xp/xpc_main.c                | 4 ++--
- drivers/perf/arm_pmuv3.c                      | 2 +-
- drivers/perf/riscv_pmu_sbi.c                  | 2 +-
- drivers/scsi/scsi_sysctl.c                    | 2 +-
- drivers/scsi/sg.c                             | 2 +-
- drivers/tty/tty_io.c                          | 2 +-
- drivers/xen/balloon.c                         | 2 +-
- fs/aio.c                                      | 2 +-
- fs/cachefiles/error_inject.c                  | 2 +-
- fs/coda/sysctl.c                              | 2 +-
- fs/coredump.c                                 | 2 +-
- fs/dcache.c                                   | 2 +-
- fs/devpts/inode.c                             | 2 +-
- fs/eventpoll.c                                | 2 +-
- fs/exec.c                                     | 2 +-
- fs/file_table.c                               | 2 +-
- fs/fuse/sysctl.c                              | 2 +-
- fs/inode.c                                    | 2 +-
- fs/lockd/svc.c                                | 2 +-
- fs/locks.c                                    | 2 +-
- fs/namei.c                                    | 2 +-
- fs/namespace.c                                | 2 +-
- fs/nfs/nfs4sysctl.c                           | 2 +-
- fs/nfs/sysctl.c                               | 2 +-
- fs/notify/dnotify/dnotify.c                   | 2 +-
- fs/notify/fanotify/fanotify_user.c            | 2 +-
- fs/notify/inotify/inotify_user.c              | 2 +-
- fs/ocfs2/stackglue.c                          | 2 +-
- fs/pipe.c                                     | 2 +-
- fs/quota/dquot.c                              | 2 +-
- fs/sysctls.c                                  | 2 +-
- fs/userfaultfd.c                              | 2 +-
- fs/verity/init.c                              | 2 +-
- fs/xfs/xfs_sysctl.c                           | 2 +-
- init/do_mounts_initrd.c                       | 2 +-
- io_uring/io_uring.c                           | 2 +-
- ipc/ipc_sysctl.c                              | 2 +-
- ipc/mq_sysctl.c                               | 2 +-
- kernel/acct.c                                 | 2 +-
- kernel/bpf/syscall.c                          | 2 +-
- kernel/delayacct.c                            | 2 +-
- kernel/exit.c                                 | 2 +-
- kernel/hung_task.c                            | 2 +-
- kernel/kexec_core.c                           | 2 +-
- kernel/kprobes.c                              | 2 +-
- kernel/latencytop.c                           | 2 +-
- kernel/locking/lockdep.c                      | 2 +-
- kernel/panic.c                                | 2 +-
- kernel/pid.c                                  | 2 +-
- kernel/pid_namespace.c                        | 2 +-
- kernel/pid_sysctl.h                           | 2 +-
- kernel/printk/sysctl.c                        | 2 +-
- kernel/reboot.c                               | 2 +-
- kernel/sched/autogroup.c                      | 2 +-
- kernel/sched/core.c                           | 2 +-
- kernel/sched/deadline.c                       | 2 +-
- kernel/sched/fair.c                           | 2 +-
- kernel/sched/rt.c                             | 2 +-
- kernel/sched/topology.c                       | 2 +-
- kernel/seccomp.c                              | 2 +-
- kernel/signal.c                               | 2 +-
- kernel/stackleak.c                            | 2 +-
- kernel/sysctl-test.c                          | 6 +++---
- kernel/sysctl.c                               | 4 ++--
- kernel/time/timer.c                           | 2 +-
- kernel/trace/ftrace.c                         | 2 +-
- kernel/trace/trace_events_user.c              | 2 +-
- kernel/umh.c                                  | 2 +-
- kernel/utsname_sysctl.c                       | 4 ++--
- kernel/watchdog.c                             | 2 +-
- lib/test_sysctl.c                             | 6 +++---
- mm/compaction.c                               | 2 +-
- mm/hugetlb.c                                  | 2 +-
- mm/hugetlb_vmemmap.c                          | 2 +-
- mm/memory-failure.c                           | 2 +-
- mm/oom_kill.c                                 | 2 +-
- mm/page-writeback.c                           | 2 +-
- mm/page_alloc.c                               | 2 +-
- security/apparmor/lsm.c                       | 2 +-
- security/keys/sysctl.c                        | 2 +-
- security/yama/yama_lsm.c                      | 2 +-
- 106 files changed, 114 insertions(+), 114 deletions(-)
-
--- 
-
-Joel Granados
+greg k-h
