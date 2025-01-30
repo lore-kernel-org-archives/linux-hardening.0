@@ -1,172 +1,151 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1773470814;
-	Thu, 30 Jan 2025 02:35:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BC63190058;
+	Thu, 30 Jan 2025 06:14:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738204553; cv=none; b=epdQn45g3G8trZ6DjxS6zcrSqWrbPtOH3nriVQTW1cPRg0yvxuy1l66FNdNMVV3Soxq/zRdzHm7uk3HAMOK7Eg3Y7U1+dFedYHLt+9FHYNdSyV0m0v+eOc2Lw2EOz1L3/jsAx6M7Z3U8YTAUoB8cxtbVVqZJ+a8j3Zp7rQuCzF8=
+	t=1738217645; cv=none; b=CYLBosKwDFM6Eq51JEdCJ9uuOf27+01HevFMTQBKNS/Kqz7ukTqmqcdh07LG6SttAi5pyAkYQ83P9rLcCcx8a2p2N7RGn//MJ/8Omjks4phlWsqSz0ilkMfZzegJxpNMbOHTFwEcMRt2anNPj8thNq1bc1jovufXBHg9C6/S6/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738204553; c=relaxed/simple;
-	bh=T0RovnnXWTxM6L/zQT97fVSjSrKG8gRUFwQkT/Zrhik=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=t3f6F7ZQOgC7adkvcGX/ZAj6E91vP+I0v3ah5rA5GPpeWx1/hGEmA+JTBmT5mtBmm4yhyv00Qw71QSxVrtL3APv+ybJHr5WCLWY+eCd056oD+3al777HyRqgVwY0I/jXW+gmkR+0hqweVw3PQVhtIZWVorIQrNHbNLeW5SWjDQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cq66AvgL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738217645; c=relaxed/simple;
+	bh=piqnWVU9aUejBh25VUCTtHqSvx12RW2XNfKQy/OkbBA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iJZ7RC5HvExE4DidveZg/2nRfuSt9qco2MNE2nKNUCSlu5e3yh+GNJkJQoGiHWFFsmeqDZ1gN1kZ2Nyu7eY9S6aCX6WNlwXG1hLXYyPezg/zz6GIMkucx4P7jTPHFJtkonKWeuhzUF7mH+kVlXo6bk4SBH9fk43fWwVYrWs75U8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=LVSSnnAO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cq66AvgL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 903FAC4CEE4;
-	Thu, 30 Jan 2025 02:35:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738204552;
-	bh=T0RovnnXWTxM6L/zQT97fVSjSrKG8gRUFwQkT/Zrhik=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Cq66AvgLr3NzPqeAHIOw4GZ+r9B1Mn//sRDrLU4WB7q8Hpr51ieznc3qpMzKY6fZQ
-	 C+JLlckm1cHdsAlncbx7FB6a+8gXDkpipLL+H+xdOs8aZUkcdEUK9V4SxwRb1LhDA0
-	 b2ixFKYk7V0NS0RUpM9AAD/eERjp2NtzqBz+ugZDLdbbL3kRJ3tzh1Qi0EMQyAvB7g
-	 ltBo2q8sAwjj2I1fZAHiiHFQPzQGxRvtQ3bY06zGFXmc84KpXx5e0ACUwYdGOdp9dD
-	 igFTLanf1sRYoaJO+JDzCovUBLxGKrVpaFkCNsvHvOzSdDdWIHzNFoHZWHNZUxWHFH
-	 9x8SdOv61MULQ==
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-540218726d5so299329e87.2;
-        Wed, 29 Jan 2025 18:35:52 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVAQv81mTloR6pm0DYEOJ6YG5PYmHyRTyNC9iFhU4mF5WNbLkvunB/v5LMmniOqC2VN3x/RLcnPOy874bu0@vger.kernel.org, AJvYcCVfBFinFmSTlZcOUBQAABdBoaGVT85mYRj3kglchjDapAryZf32+HrLAXj1mfgZeFKO1IKwMIDX8wOruq2HQFc=@vger.kernel.org, AJvYcCXpUWWwPL6AC1hXodOXwV/85s4k+N7CsoVCjOYmx7rRaAQlCnHirO9vh2bUDJ2/tpPqjPwawDk2lnkuOs0T@vger.kernel.org
-X-Gm-Message-State: AOJu0YxqjHC9I3iqS8DhT9rWboO+dAvXXjnhB78O5SrP9AxeJBU3cBlR
-	Ojz2lgv6D2letZXK49HKkHDIcFEE+Ubx5fxfofmZwRLHRQh6RSPY51FRbJdyQlJ7zV+hk9PiMZp
-	k3eAT3S06Dl+mmXv54vmpD3YSzG4=
-X-Google-Smtp-Source: AGHT+IFMGErUnujwP3n6bW5wKMD+e0J+f1mcVybdVxr5wZnJ6lnpYxeSgL8sUGrrVHOPGXiCPNWj/PN3Kut7CtsOPp8=
-X-Received: by 2002:ac2:55ab:0:b0:540:2549:b5ad with SMTP id
- 2adb3069b0e04-543e4beab7dmr1443386e87.22.1738204551169; Wed, 29 Jan 2025
- 18:35:51 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="LVSSnnAO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 591DEC4CED2;
+	Thu, 30 Jan 2025 06:14:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1738217644;
+	bh=piqnWVU9aUejBh25VUCTtHqSvx12RW2XNfKQy/OkbBA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LVSSnnAOS+vyGmBU+a7q4FlRjDkoqO7XbFhENgwC8vzzq6WOsV+30IHP2+g+g/4wU
+	 Ic6JyOxN87Wtq0bxBHcncQXAsppKhgWFoksgNcKF3YZ/ZODueMKaBfnvopPw61TaPP
+	 RAzIduM84+PzsZjorO+OJSbQUfXbuDIVnos9PnPw=
+Date: Thu, 30 Jan 2025 07:14:01 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc: Dan Carpenter <dan.carpenter@linaro.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2][next] container_of: add container_first() macro
+Message-ID: <2025013030-unleaded-answering-165d@gregkh>
+References: <Z5m76U5zh34WbeQY@kspp>
+ <2025012955-hypnotic-patronize-8931@gregkh>
+ <f6e24dfa-450e-4de6-87a6-6fcf7d83888d@embeddedor.com>
+ <2025012921-dense-unplanted-952b@gregkh>
+ <06aa1194-a7aa-4a5a-adb8-f6cd447d35d9@stanley.mountain>
+ <2025012951-plenty-clang-1e2b@gregkh>
+ <3979f87d-b7d7-48bb-b6ab-cd8165dbc3cc@stanley.mountain>
+ <2025012940-hardhat-usual-fbc6@gregkh>
+ <7f165e66-a0ff-48e2-a3f3-d5405a66c867@embeddedor.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250127190636.it.745-kees@kernel.org> <20250127191031.245214-3-kees@kernel.org>
-In-Reply-To: <20250127191031.245214-3-kees@kernel.org>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Thu, 30 Jan 2025 11:35:14 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQ8RCAKWhwWNVA6jv-MGNCRFjsiBw2U6Y+3SDmv=7XGJg@mail.gmail.com>
-X-Gm-Features: AWEUYZn4_c25TVQTqoLVdGfmnUT7NotqVxqLcoXnpzgN0PqT25tgrCqcg-3QAlM
-Message-ID: <CAK7LNAQ8RCAKWhwWNVA6jv-MGNCRFjsiBw2U6Y+3SDmv=7XGJg@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] kbuild: Use -fzero-init-padding-bits=all
-To: Kees Cook <kees@kernel.org>
-Cc: Jakub Jelinek <jakub@redhat.com>, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nicolas@fjasle.eu>, linux-kbuild@vger.kernel.org, 
-	Andrew Morton <akpm@linux-foundation.org>, Nick Desaulniers <ndesaulniers@google.com>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org, 
-	llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7f165e66-a0ff-48e2-a3f3-d5405a66c867@embeddedor.com>
 
-On Tue, Jan 28, 2025 at 4:10=E2=80=AFAM Kees Cook <kees@kernel.org> wrote:
->
-> GCC 15 introduces a regression in "=3D { 0 }" style initialization of
-> unions that Linux has depended on for eliminating uninitialized variable
-> contents. GCC does not seem likely to fix it[1], instead suggesting[2]
-> that affected projects start using -fzero-init-padding-bits=3Dunions.
->
-> To avoid future surprises beyond just the current situation with unions,
-> enable -fzero-init-padding-bits=3Dall when available (GCC 15+). This will
-> correctly zero padding bits in unions and structs that might have been
-> left uninitialized, and will make sure there is no immediate regression
-> in union initializations. As seen in the stackinit KUnit selftest union
-> cases, which were passing before, were failing under GCC 15:
->
->     not ok 18 test_small_start_old_zero
->     ok 29 test_small_start_dynamic_partial # SKIP XFAIL uninit bytes: 63
->     ok 32 test_small_start_assigned_dynamic_partial # SKIP XFAIL uninit b=
-ytes: 63
->     ok 67 test_small_start_static_partial # SKIP XFAIL uninit bytes: 63
->     ok 70 test_small_start_static_all # SKIP XFAIL uninit bytes: 56
->     ok 73 test_small_start_dynamic_all # SKIP XFAIL uninit bytes: 56
->     ok 82 test_small_start_assigned_static_partial # SKIP XFAIL uninit by=
-tes: 63
->     ok 85 test_small_start_assigned_static_all # SKIP XFAIL uninit bytes:=
- 56
->     ok 88 test_small_start_assigned_dynamic_all # SKIP XFAIL uninit bytes=
-: 56
->
-> The above all now pass again with -fzero-init-padding-bits=3Dall added.
->
-> This also fixes the following cases for struct initialization that had
-> been XFAIL until now because there was no compiler support beyond the
-> larger "-ftrivial-auto-var-init=3Dzero" option:
->
->     ok 38 test_small_hole_static_all # SKIP XFAIL uninit bytes: 3
->     ok 39 test_big_hole_static_all # SKIP XFAIL uninit bytes: 124
->     ok 40 test_trailing_hole_static_all # SKIP XFAIL uninit bytes: 7
->     ok 42 test_small_hole_dynamic_all # SKIP XFAIL uninit bytes: 3
->     ok 43 test_big_hole_dynamic_all # SKIP XFAIL uninit bytes: 124
->     ok 44 test_trailing_hole_dynamic_all # SKIP XFAIL uninit bytes: 7
->     ok 58 test_small_hole_assigned_static_all # SKIP XFAIL uninit bytes: =
-3
->     ok 59 test_big_hole_assigned_static_all # SKIP XFAIL uninit bytes: 12=
-4
->     ok 60 test_trailing_hole_assigned_static_all # SKIP XFAIL uninit byte=
-s: 7
->     ok 62 test_small_hole_assigned_dynamic_all # SKIP XFAIL uninit bytes:=
- 3
->     ok 63 test_big_hole_assigned_dynamic_all # SKIP XFAIL uninit bytes: 1=
-24
->     ok 64 test_trailing_hole_assigned_dynamic_all # SKIP XFAIL uninit byt=
-es: 7
->
-> All of the above now pass when built under GCC 15. Tests can be seen
-> with:
->
->     ./tools/testing/kunit/kunit.py run stackinit --arch=3Dx86_64 \
->         --make_option CC=3Dgcc-15
->
-> Clang continues to fully initialize these kinds of variables[3] with
-> additional flags.
->
-> Suggested-by: Jakub Jelinek <jakub@redhat.com>
-> Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D118403 [1]
-> Link: https://lore.kernel.org/linux-toolchains/Z0hRrrNU3Q+ro2T7@tucnak/ [=
-2]
-> Link: https://github.com/llvm/llvm-project/commit/7a086e1b2dc05f54afae359=
-1614feede727601fa [3]
-> Reviewed-by: Nathan Chancellor <nathan@kernel.org>
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
+On Thu, Jan 30, 2025 at 10:06:00AM +1030, Gustavo A. R. Silva wrote:
+> 
+> 
+> On 30/01/25 02:38, Greg KH wrote:
+> > On Wed, Jan 29, 2025 at 05:06:54PM +0300, Dan Carpenter wrote:
+> > > On Wed, Jan 29, 2025 at 02:14:14PM +0100, Greg KH wrote:
+> > > > On Wed, Jan 29, 2025 at 01:39:27PM +0300, Dan Carpenter wrote:
+> > > > > On Wed, Jan 29, 2025 at 09:34:07AM +0100, Greg KH wrote:
+> > > > > > On Wed, Jan 29, 2025 at 06:35:18PM +1030, Gustavo A. R. Silva wrote:
+> > > > > > > 
+> > > > > > > 
+> > > > > > > On 29/01/25 16:24, Greg KH wrote:
+> > > > > > > > On Wed, Jan 29, 2025 at 03:56:01PM +1030, Gustavo A. R. Silva wrote:
+> > > > > > > > > This is like container_of_const() but it contains an assert to
+> > > > > > > > > ensure that it's using the first member in the structure.
+> > > > > > > > 
+> > > > > > > > But why?  If you "know" it's the first member, just do a normal cast.
+> > > > > > > > If you don't, then you probably shouldn't be caring about this anyway,
+> > > > > > > > right?
+> > > > > > > 
+> > > > > > > This is more about the cases where the member _must_ be first in the
+> > > > > > > structure. See below for an example related to -Wflex-array-member-not-at-end
+> > > > > > 
+> > > > > > That's fine, but that's a build-time issue, you should enforce that in
+> > > > > > the structure itself, why are you forcing people to remember to use this
+> > > > > > macro when you want to use the field?  There's nothing preventing anyone
+> > > > > > from using container_of() instead here, and nothing will catch that from
+> > > > > > what I can tell.
+> > > > > 
+> > > > > The new definition has a static_assert() in it so it's enforced about
+> > > > > build time.
+> > > > 
+> > > > Yes, but that forces you to "know" to do that in the .c file.  How do
+> > > > you know to use this, and if you remove it or change it to
+> > > > container_of(), it works just fine again.
+> > > > 
+> > > 
+> > > I guess my use case is different from Gustavo's.  For him, using
+> > > container_of() is fine.  We probably don't even need an assert because
+> > > once you see a struct_group_tagged() then you know the order is important.
+> > 
+> > Who knows this?  The developer?  What are they supposed to "know" here?
+> > I sure don't :)
+> > 
+> > Having some sort of "__must_be_first" marking for a field is fine and
+> > break the build if that doesn't happen.  Otherwise this is something
+> > that is not going to be used properly over time.
+> 
+> I'm currently dealing with this situation in the following way:
+> 
+>  struct libipw_hdr_3addr {
+> -	__le16 frame_ctl;
+> -	__le16 duration_id;
+> -	u8 addr1[ETH_ALEN];
+> -	u8 addr2[ETH_ALEN];
+> -	u8 addr3[ETH_ALEN];
+> -	__le16 seq_ctl;
+> +	/* New members MUST be added within the __struct_group() macro below. */
+> +	__struct_group(libipw_hdr_3addr_hdr, hdr, __packed,
+> +		__le16 frame_ctl;
+> +		__le16 duration_id;
+> +		u8 addr1[ETH_ALEN];
+> +		u8 addr2[ETH_ALEN];
+> +		u8 addr3[ETH_ALEN];
+> +		__le16 seq_ctl;
+> +	);
+>  	u8 payload[];
+>  } __packed;
+> +static_assert(offsetof(struct libipw_hdr_3addr, payload) == sizeof(struct libipw_hdr_3addr_hdr),
+> +	      "struct member likely outside of __struct_group()");
+> 
+> "We also want to ensure that when new members need to be added to the
+> flexible structure, they are always included within the newly created
+> tagged struct. For this, we use `static_assert()`. This ensures that the
+> memory layout for both the flexible structure and the new tagged struct
+> is the same after any changes." [1]
 
+That's nice, much better and it is right where the structure is defined
+making it more likely to stay there over time.
 
+> We could probably create struct_group_first() instead of container_first().
 
-Acked-by: Masahiro Yamada <masahiroy@kernel.org>
+Like this?
 
+	#define struct_group_first(s, n)	static_assert(offsetof(s, n) == sizeof(s), "struct member likely outside of __struct_group(), please fix!")
 
+And then the above would be:
+struct_group_fist(struct libipw_hdr_3addr, payload);
 
+Hm, use of "payload" here feels odd but you get the idea.
 
+> Anyways, so far so good.  For some reason I was under the impression
+> that you two guys wanted the container_first() macro.
 
+I don't :)
 
-> Cc: Masahiro Yamada <masahiroy@kernel.org>
-> Cc: Nicolas Schier <nicolas@fjasle.eu>
-> Cc: linux-kbuild@vger.kernel.org
-> ---
->  scripts/Makefile.extrawarn | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
-> index 1d13cecc7cc7..eb719f6d8d53 100644
-> --- a/scripts/Makefile.extrawarn
-> +++ b/scripts/Makefile.extrawarn
-> @@ -77,6 +77,9 @@ KBUILD_CFLAGS +=3D $(call cc-option,-Werror=3Ddesignate=
-d-init)
->  # Warn if there is an enum types mismatch
->  KBUILD_CFLAGS +=3D $(call cc-option,-Wenum-conversion)
->
-> +# Explicitly clear padding bits during variable initialization
-> +KBUILD_CFLAGS +=3D $(call cc-option,-fzero-init-padding-bits=3Dall)
-> +
->  KBUILD_CFLAGS +=3D -Wextra
->  KBUILD_CFLAGS +=3D -Wunused
->
-> --
-> 2.34.1
->
+thanks,
 
-
---=20
-Best Regards
-Masahiro Yamada
+greg k-h
