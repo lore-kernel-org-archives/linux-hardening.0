@@ -1,169 +1,132 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C20F199924
-	for <linux-hardening@vger.kernel.org>; Thu, 30 Jan 2025 08:16:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E9591ACEB3;
+	Thu, 30 Jan 2025 10:46:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738225012; cv=none; b=LRXFFyTZ6qrGmrpv4tUbqUXGAxcqgIwlSodbkL3UBhtm0AxrvIQgtqVTb5UlEp5UORgPupWuowu2E3eVan6f1iC+r0zYXchy3+VsskxX2WwSJ/8O6Z021KmmEzrLoJnY5u+tYIQkfDDGhKzW//KSBJbzKNqjlX5w9tg/PHGvxAg=
+	t=1738233997; cv=none; b=rmAnc+5PwquIklBc/g5jWUX3+n/KH08xqB1JZfEr7BAQbqUnqvJCSHL6B8VirP96XpGZMXHE/p+syeJ1ttuivtVNowQ3NTVKVsYclGNrKSVZUCM+ab0CIMGAV7rXs6gFpImMLI2oTMalLpQllgaVJq3ziTKDkbB8vzMcK8DBp68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738225012; c=relaxed/simple;
-	bh=thFpIKSrzc48zBWfFcfPLiqFrhjEdaU6F0FW+zf4rsM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jqrPDlL+VIoMCLuJa7yJyGHTC75zTPjjGR3Jgt7YPtE9nu3vQe/4Qcrj2wsc+YSMSFsRBcyhd8QgzcQHXmHPraMcYuptcmtb8/45c+kPrKmfXZ3gZuWccbBhN8M/9A1wV6c18qj30yMT3OcgLRete92B/XFM9jAByrWpdMtFNpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=g3zFRLgg; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738233997; c=relaxed/simple;
+	bh=XnLyFFk1L3o2T1GAGQ8JEFb5LfLnzJHt7dvXNVvn8Zs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OgYblXSSsKTlvYXbTNQFr09duOhkX45WuxMDc/NUneaq+A7pGoHQ2rZUFy1cwua9LCkZM2i/PfVx4k1c/OSdPv8RThEj0WrRy6VnvoOYStTvnCb5mbqIB4vH5LH3NwwZv7R9DUXUoNdVpcXLRI5a/I5Hu8dFvGDjFBcQTWPfZV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=OC85zOnT; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g3zFRLgg"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-436ce2ab251so2951325e9.1
-        for <linux-hardening@vger.kernel.org>; Thu, 30 Jan 2025 00:16:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738225007; x=1738829807; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=HbemEf+xhUc2mT3lWThkeJWiexh/Of8vPXBaz6+0qAg=;
-        b=g3zFRLggPFw0YtjBkN6YnEFRlZMZW9LTQXOBwWWYMPG0QndvItFdHI8KWn5lFbs+Fg
-         mNGM8mryHwjJFpsBw8gluchHkA5fqxMlaYGBojfjn3MbH7KX3DNRSKrnOmIuj8HrrpSy
-         Rw4hFUZjbTp+8unK9frVIWeWY60yGLOhxL1heS3pt6edPBh9ge/EXqIq+bX3T7SoZjIH
-         j3HiatdDWSBG24X59yvSKGI58SKls9nukbw9oL02TfJ/Tsw2WYzoCO2SAzBDM+xLqHxQ
-         7knVL4nsCO2RMAN1ifT0SGVLfUG7ln+VLGpxMvcV49U2TaTqawi79z2nRUtmk8x3qA6U
-         iiIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738225007; x=1738829807;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HbemEf+xhUc2mT3lWThkeJWiexh/Of8vPXBaz6+0qAg=;
-        b=YcH36SlX/DnY5I2UWBxjQHI3v/ijLycRsbA0Dc9LArjdCIffAL3jHt5fHSnvF6oz/n
-         M0GCiWQzosTbvpA8M5a9sKgh4skOvb3Eux2tRZ05DRFkATg3Dv7d9oT1t3s1pIXkeJ/V
-         ebXZ8PiAridKthoA5R/Q9JbGB3pxYsmgoojXW0xFqaizdBguxwyEljO9lBK6XJ/oBCIF
-         iyg0UTKHCREW4np0wkU48QRY8+9/pZzAXF+zg5W11SrSwOcBJ9oNcLQMEKzYWI/fat4C
-         HmZTnxblqsXzu6YAA1wmrJGUpci0TlzeyRDfeeW6cH7NaKuUOPaBnyrj78K4fPCJwqn7
-         GGXw==
-X-Forwarded-Encrypted: i=1; AJvYcCWiWi6D712QfHmhs8YpRBTyIJ0tarF+WohMeSb4MeaKi285uhtdBue1qUEZX4tuewVxyMEL8oqzXk7q4KnCNnE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNKvkaBnxt4arakirwy8PbRCcTCCYSeLgageyJPXFSGRz8JDr+
-	MlPxw8TK/YgbU9bm5BWXhrwFKe0vtNh13ZgZsU97IQESsEmuurWDLP9C5Fm+Hi8=
-X-Gm-Gg: ASbGncvqWB2hMjPUlYgNAa8a0vJ4q+ZkdwcjbsChhiQGoLet8325+NAy/xn5hGB6TOB
-	0K8QF9W2PFrkOsQpeWjVwFdlFRghyLy9s4M2V21wHRJQCSc0ccdAU+k/dH+2EvJn8UcXwm8/Hug
-	iUCNNd72LXDnrK40njbcIgNCqOwGVWPioucce4UaeWWHGR4Ru9fa0ulU/stE1i5CJWWb7IxE+c8
-	DB6ybdatqhfYbglfmRtAEZcCNieOSH83Mv85vNZJda7wOBBY2BoBk75Qq3XmxwZeC2r6RYUSYkB
-	L0+hXOf5K/3+SYVnPhO4
-X-Google-Smtp-Source: AGHT+IHhtr9w91Nho4TPvuAAvm8MqwAGRZsNV86QLdJ6VOdB7b7cJnCAZnjkLka/hqqB6XtKlVfCAg==
-X-Received: by 2002:a05:600c:870a:b0:434:a7b6:10e9 with SMTP id 5b1f17b1804b1-438dc3cbadcmr53604745e9.17.1738225007382;
-        Thu, 30 Jan 2025 00:16:47 -0800 (PST)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438dcc6df1esm50323705e9.27.2025.01.30.00.16.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2025 00:16:46 -0800 (PST)
-Date: Thu, 30 Jan 2025 11:16:43 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: kernel test robot <lkp@intel.com>
-Cc: Dan Carpenter <error27@gmail.com>,
-	Steffen Klassert <steffen.klassert@secunet.com>,
-	oe-kbuild-all@lists.linux.dev,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH net] xfrm: fix integer overflow in
- xfrm_replay_state_esn_len()
-Message-ID: <f86c7660-0910-4ca2-9ff9-d2d142a968c7@stanley.mountain>
-References: <018ecf13-e371-4b39-8946-c7510baf916b@stanley.mountain>
- <202501230035.cFbLTHtZ-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="OC85zOnT"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50U1ILwU008475;
+	Thu, 30 Jan 2025 10:46:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=rbQ0iV
+	5kMkAPr98XhQIgEokS+6oo7ofi+Sa+NyvSgwQ=; b=OC85zOnTl/VQmPikdMYnGa
+	prkfC3/uLAdyQE9cr9aE54C+FlBj6LMMXjzN8jZsF81wGmd5yWB3bSmNCbSB4xPF
+	anxnB0PeYA8eLYjiSuL139O9fs1ubD+s7ApJkk2J1kjf7KQQBHBU3Iloya1Pxcaz
+	lCBPXuIvE/uj4UUbHAE01MSdf//ae6PoNa6xYTPnNV+3c9SehkcuaM4VA85Q5Vzd
+	VUmZvJc+cn5X3bQAo1xdUNNSugOdnu+EQ6p/ZS+6juAkUJP9Fe+oa+MUiV31B5jg
+	JkOBCWHS+kKGj1rcauHkuOp1j6jwF5Fs8uO4ZN0dRm3nSWu0LEeJNFM8chwJDYcg
+	==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44fq5tvgsq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 30 Jan 2025 10:46:22 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50U8DVAn028051;
+	Thu, 30 Jan 2025 10:46:21 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44dbsknpaw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 30 Jan 2025 10:46:21 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50UAkHNW53871032
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 30 Jan 2025 10:46:17 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9531B20081;
+	Thu, 30 Jan 2025 10:46:17 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 69B4120084;
+	Thu, 30 Jan 2025 10:46:17 +0000 (GMT)
+Received: from li-ce58cfcc-320b-11b2-a85c-85e19b5285e0 (unknown [9.152.224.212])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 30 Jan 2025 10:46:17 +0000 (GMT)
+Date: Thu, 30 Jan 2025 11:46:15 +0100
+From: Halil Pasic <pasic@linux.ibm.com>
+To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+        Tony Krowiak
+ <akrowiak@linux.ibm.com>,
+        Jason Herne <jjherne@linux.ibm.com>,
+        Harald
+ Freudenberger <freude@linux.ibm.com>,
+        Holger Dengler
+ <dengler@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik
+ <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian
+ Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle
+ <svens@linux.ibm.com>, linux-hardening@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Halil Pasic
+ <pasic@linux.ibm.com>
+Subject: Re: [PATCH] s390/vfio-ap: Replace one-element array with flexible
+ array member
+Message-ID: <20250130114615.6f591882.pasic@linux.ibm.com>
+In-Reply-To: <85863d7a-2d8b-4c1b-b76a-e2f40834a7a8@embeddedor.com>
+References: <20250116131859.105756-2-thorsten.blum@linux.dev>
+	<20250129213826.291cfe12.pasic@linux.ibm.com>
+	<85863d7a-2d8b-4c1b-b76a-e2f40834a7a8@embeddedor.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202501230035.cFbLTHtZ-lkp@intel.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: q9NxGqcZI12C94KXtUoH1A5QT5ao1ZLb
+X-Proofpoint-ORIG-GUID: q9NxGqcZI12C94KXtUoH1A5QT5ao1ZLb
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-01-30_06,2025-01-30_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ mlxlogscore=635 lowpriorityscore=0 impostorscore=0 phishscore=0
+ adultscore=0 priorityscore=1501 clxscore=1011 mlxscore=0 malwarescore=0
+ spamscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2501300081
 
-I've added linux-hardening to the CC.
+On Thu, 30 Jan 2025 10:30:30 +1030
+"Gustavo A. R. Silva" <gustavo@embeddedor.com> wrote:
 
-This is a fortify false positive.  I can't reproduce it on x86 with
-gcc-14.  Perhaps it only affect mips?  It's a W=1 warning so it shouldn't
-be a blocker in that sense.
+> On 30/01/25 07:08, Halil Pasic wrote:
+> > On Thu, 16 Jan 2025 14:18:59 +0100
+> > Thorsten Blum <thorsten.blum@linux.dev> wrote:
+> >   
+> >> Replace the deprecated one-element array with a modern flexible array
+> >> member in the struct ap_matrix_dev.
+> >>  
+> > 
+> > I'm not sure I understand the value of this. What we have here is not
+> > a flexible array but a one element array. Something that in the generic
+> > case could be many but particularly for vfio-ap is always one.  
+> 
+> You are correct. Only fake flexible arrays should be transformed into
+> C99 flex-array members [1].
+> 
+> Thanks
+> -Gustavo
+> 
+> [1] https://lwn.net/Articles/908817/
+> 
 
-regards,
-dan carpenter
-
-On Thu, Jan 23, 2025 at 12:53:14AM +0800, kernel test robot wrote:
-> Hi Dan,
-> 
-> kernel test robot noticed the following build warnings:
-> 
-> [auto build test WARNING on net/main]
-> 
-> url:    https://github.com/intel-lab-lkp/linux/commits/Dan-Carpenter/xfrm-fix-integer-overflow-in-xfrm_replay_state_esn_len/20250121-191827
-> base:   net/main
-> patch link:    https://lore.kernel.org/r/018ecf13-e371-4b39-8946-c7510baf916b%40stanley.mountain
-> patch subject: [PATCH net] xfrm: fix integer overflow in xfrm_replay_state_esn_len()
-> config: mips-allyesconfig (https://download.01.org/0day-ci/archive/20250123/202501230035.cFbLTHtZ-lkp@intel.com/config)
-> compiler: mips-linux-gcc (GCC) 14.2.0
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250123/202501230035.cFbLTHtZ-lkp@intel.com/reproduce)
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202501230035.cFbLTHtZ-lkp@intel.com/
-> 
-> All warnings (new ones prefixed by >>):
-> 
->    In file included from include/linux/string.h:389,
->                     from include/linux/bitmap.h:13,
->                     from include/linux/cpumask.h:12,
->                     from arch/mips/include/asm/processor.h:15,
->                     from arch/mips/include/asm/thread_info.h:16,
->                     from include/linux/thread_info.h:60,
->                     from include/asm-generic/preempt.h:5,
->                     from ./arch/mips/include/generated/asm/preempt.h:1,
->                     from include/linux/preempt.h:79,
->                     from include/linux/spinlock.h:56,
->                     from include/net/xfrm.h:7,
->                     from net/xfrm/xfrm_replay.c:10:
->    In function 'memcmp',
->        inlined from 'xfrm_replay_notify_bmp' at net/xfrm/xfrm_replay.c:336:7:
-> >> include/linux/fortify-string.h:120:33: warning: '__builtin_memcmp' specified bound 4294967295 exceeds maximum object size 2147483647 [-Wstringop-overread]
->      120 | #define __underlying_memcmp     __builtin_memcmp
->          |                                 ^
->    include/linux/fortify-string.h:727:16: note: in expansion of macro '__underlying_memcmp'
->      727 |         return __underlying_memcmp(p, q, size);
->          |                ^~~~~~~~~~~~~~~~~~~
->    net/xfrm/xfrm_replay.c: In function 'xfrm_replay_notify_bmp':
->    net/xfrm/xfrm_replay.c:308:53: note: source object allocated here
->      308 |         struct xfrm_replay_state_esn *replay_esn = x->replay_esn;
->          |                                                    ~^~~~~~~~~~~~
->    In function 'memcmp',
->        inlined from 'xfrm_replay_notify_esn' at net/xfrm/xfrm_replay.c:402:7:
-> >> include/linux/fortify-string.h:120:33: warning: '__builtin_memcmp' specified bound 4294967295 exceeds maximum object size 2147483647 [-Wstringop-overread]
->      120 | #define __underlying_memcmp     __builtin_memcmp
->          |                                 ^
->    include/linux/fortify-string.h:727:16: note: in expansion of macro '__underlying_memcmp'
->      727 |         return __underlying_memcmp(p, q, size);
->          |                ^~~~~~~~~~~~~~~~~~~
->    net/xfrm/xfrm_replay.c: In function 'xfrm_replay_notify_esn':
->    net/xfrm/xfrm_replay.c:360:53: note: source object allocated here
->      360 |         struct xfrm_replay_state_esn *replay_esn = x->replay_esn;
->          |                                                    ~^~~~~~~~~~~~
-> 
-> 
-> vim +/__builtin_memcmp +120 include/linux/fortify-string.h
-> 
-> 78a498c3a227f2 Alexander Potapenko 2022-10-24  118  
-> 78a498c3a227f2 Alexander Potapenko 2022-10-24  119  #define __underlying_memchr	__builtin_memchr
-> 78a498c3a227f2 Alexander Potapenko 2022-10-24 @120  #define __underlying_memcmp	__builtin_memcmp
-> a28a6e860c6cf2 Francis Laniel      2021-02-25  121  #define __underlying_strcat	__builtin_strcat
-> a28a6e860c6cf2 Francis Laniel      2021-02-25  122  #define __underlying_strcpy	__builtin_strcpy
-> a28a6e860c6cf2 Francis Laniel      2021-02-25  123  #define __underlying_strlen	__builtin_strlen
-> a28a6e860c6cf2 Francis Laniel      2021-02-25  124  #define __underlying_strncat	__builtin_strncat
-> a28a6e860c6cf2 Francis Laniel      2021-02-25  125  #define __underlying_strncpy	__builtin_strncpy
-> 2e577732e8d28b Andrey Konovalov    2024-05-17  126  
-> 
-> -- 
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests/wiki
+Thanks! Alex, what do we do with this then? I think you picked it up
+yesterday late. And I think, it might make sense to make this look
+less like a fake flex-array...
