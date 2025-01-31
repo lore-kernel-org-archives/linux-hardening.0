@@ -1,45 +1,51 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB3DF38DF9;
-	Fri, 31 Jan 2025 17:05:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A225418E25;
+	Fri, 31 Jan 2025 20:03:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738343146; cv=none; b=t50hQYjePJE1SQbSFzqZGSbtdqonNySrW90DABlKoINufQj5WJNIYMfeeFT9m0SjuaOCbanNbfm1CKToEuty7x+hy7K844D/dQ85ZhDl4j+8iEAROfMhqBmK72mzCX7H9mN8LH9WssLUn9+IPOQbHzjimgIeMssovha37L0DIeU=
+	t=1738353825; cv=none; b=cUZV4M9QM2evcY2FalbXfLaJj2/+JOucDLGTFpcHMJ5uOxIQVjcdRHHngrEPwHKLTtQg8LULodWPqiLE4xuICkjPF0wI2DzCWjpRLa29Xmzqc9fnzyWYeJFX1GqDm46y+HlJjeByNubSC5Elu66mqAcYPnxq7IaUT5IXXS21Jeg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738343146; c=relaxed/simple;
-	bh=GzNm+yNw+pdzz2orVudQOrEVeefnZ5aaovRcTdm0BGo=;
+	s=arc-20240116; t=1738353825; c=relaxed/simple;
+	bh=v9bao2gRBuOejMGQejXblTZGEJEolhZDA9IwvqQFiiU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RyL9FFqNiG1vSL6t0lEt5BZ9LTu767qzL5wimPPmxC3I6Xg4H6mlbvZJYigarNRI405QK1CQpTKwRYkndjpNLf/3FYWtWE63Ai9mz0ZFVapR1vrRdyqy7LUUz9YcwjffGK35kshv/syF9nlEI3ty9JelUEwcE0aHD8+tpnetfYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R9+Dmayg; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Gtkmh/vShwL77stOalU0eRd3lSDRkyVwyNQ39XQnkm3neL/HKax06UtEW43vcsEg8lmy7ng+czFnhssW26VAZ0f+qZ2gQ1bGWH+xH1C50Y4YyrfpIb3xXQ/eqBJYcSrTkvPcxmRbYcM9/u22bdwgRk4+ayI1Xsass6AMsgfcq4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Uh7huvfG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R9+Dmayg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C04D9C4CED1;
-	Fri, 31 Jan 2025 17:05:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Uh7huvfG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02A22C4CED1;
+	Fri, 31 Jan 2025 20:03:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738343145;
-	bh=GzNm+yNw+pdzz2orVudQOrEVeefnZ5aaovRcTdm0BGo=;
+	s=k20201202; t=1738353825;
+	bh=v9bao2gRBuOejMGQejXblTZGEJEolhZDA9IwvqQFiiU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=R9+Dmayg8UpBzjZETE4+Ds8Q5ZSCUQfFG1/PFVqiRbHaR5xhzIA+m736rsvI/MJ/o
-	 9j1V7KhnNmBUOZ7ThlmFQkzt8fTZgw8gB/+qToP1kQufHd/m55wAIgwJirLmGcpEpX
-	 siVUD7bvN3YIwh+mEFCMXjI/Fo/xkdOX8X1gXLRHBBvI47fEQPblELnoVMVReHDmNr
-	 wu4uzXcIM5yzgt0rStG05cGvbW0xZkAHim4eeIOEjeSbkGS0KgzAdAK54lblUzbDAZ
-	 goHZjStxHi0DG4EApxed+DgiM0zIgZaGIbi7VlQZ9EnwkNkIVbsKX0cRh9k+JO5N14
-	 3ZQhk2NLOcBqg==
-Date: Fri, 31 Jan 2025 14:57:40 +0100
-From: Joel Granados <joel.granados@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Anna Schumaker <anna.schumaker@oracle.com>, 
-	Ashutosh Dixit <ashutosh.dixit@intel.com>, Baoquan He <bhe@redhat.com>, 
-	Bill O'Donnell <bodonnel@redhat.com>, Corey Minyard <cminyard@mvista.com>, 
-	"Darrick J. Wong" <djwong@kernel.org>, Jani Nikula <jani.nikula@intel.com>, 
-	"Martin K. Petersen" <martin.petersen@oracle.com>, Song Liu <song@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Wei Liu <wei.liu@kernel.org>, Kees Cook <kees@kernel.org>, 
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-hardening@vger.kernel.org
+	b=Uh7huvfGJaEnS8Du79Z5fPoFpq1mnLBjHw6voJI3FuY+IRZ0+wFc9Bsn3se8xKcJ8
+	 JcWIk/c8q9MmdwGMgBHxjIxuqN8MgcsSFKzpj7x3TM5AiRgBpNGnMdpwbsAG3X8ftG
+	 OXRR+1eIXOqHDHTV6sY2Ehrjem6P7Axv5tm4gSXO6RdiDT9E4hDUIU2NlKcKhfChtQ
+	 0KPN+aMl3sOWtSyKTVxdrgt1FgBwKazFKxkezDYpOmXrA6ukpjCPwLvEC1U+SvdcIS
+	 1KuQewccLOkzCV1YJqEd5dfZ59D6+oaZufIMIToSdmB/DbuQylu+OfVauP4uMi6xCs
+	 QVamYAyzBoLyQ==
+Date: Fri, 31 Jan 2025 12:03:39 -0800
+From: Kees Cook <kees@kernel.org>
+To: Joel Granados <joel.granados@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	Anna Schumaker <anna.schumaker@oracle.com>,
+	Ashutosh Dixit <ashutosh.dixit@intel.com>,
+	Baoquan He <bhe@redhat.com>, Bill O'Donnell <bodonnel@redhat.com>,
+	Corey Minyard <cminyard@mvista.com>,
+	"Darrick J. Wong" <djwong@kernel.org>,
+	Jani Nikula <jani.nikula@intel.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Song Liu <song@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>, Wei Liu <wei.liu@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
 Subject: Re: Re: [GIT PULL] sysctl constification changes for v6.14-rc1
-Message-ID: <iay2bmkotede6c5xkxnfvxwgxg2drmcc6az3eeiijkkz3ftie7@co4cir66ksz2>
+Message-ID: <202501311203.D6FDB314@keescook>
 References: <kndlh7lx2gfmz5m3ilwzp7fcsmimsnjgh434hnaro2pmy7evl6@jfui76m22kig>
  <CAHk-=wgNwJ57GtPM_ZUCGeVN5iJt0pxDf96dRwp0KhuVV4Hjpw@mail.gmail.com>
+ <iay2bmkotede6c5xkxnfvxwgxg2drmcc6az3eeiijkkz3ftie7@co4cir66ksz2>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -48,79 +54,29 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wgNwJ57GtPM_ZUCGeVN5iJt0pxDf96dRwp0KhuVV4Hjpw@mail.gmail.com>
+In-Reply-To: <iay2bmkotede6c5xkxnfvxwgxg2drmcc6az3eeiijkkz3ftie7@co4cir66ksz2>
 
-On Wed, Jan 29, 2025 at 10:48:02AM -0800, Linus Torvalds wrote:
-> On Wed, 29 Jan 2025 at 00:14, Joel Granados <joel.granados@kernel.org> wrote:
-> >
-> >   All ctl_table declared outside of functions and that remain unmodified after
-> >   initialization are const qualified.
+On Fri, Jan 31, 2025 at 02:57:40PM +0100, Joel Granados wrote:
+> From 431abf6c9c11a8b7321842ed0747b3200d43ef34 Mon Sep 17 00:00:00 2001
+> From: Joel Granados <joel.granados@kernel.org>
+> Date: Fri, 31 Jan 2025 14:10:57 +0100
+> Subject: [PATCH] csky: Remove the size from alignment_tbl declaration
 > 
-> Hmm. A quick grep shows
+> Having to synchronize the number of ctl_table array elements with the
+> size in the declaration can lead to discrepancies between the two
+> values. Since commit d7a76ec87195 ("sysctl: Remove check for sentinel
+> element in ctl_table arrays"), the calculation of the ctl_table array
+> size is done solely by the ARRAY_SIZE macro removing the need for the
+> size in the declaration.
 > 
->     static struct ctl_table alignment_tbl[5] = {
-
-Very good catch!
-
-I missed this one because it defines the size of the ctl_table array and
-my spatch did not account for that case.
-
-It turns out that the number in the square brackets does not coincide
-with the number of elements in the array. I would expect this results in
-a failure in the sysctl_check_table function; I dont have a csky system
-to test though.
-
-In any case there is an easy untested fix:
-
-From 431abf6c9c11a8b7321842ed0747b3200d43ef34 Mon Sep 17 00:00:00 2001
-From: Joel Granados <joel.granados@kernel.org>
-Date: Fri, 31 Jan 2025 14:10:57 +0100
-Subject: [PATCH] csky: Remove the size from alignment_tbl declaration
-
-Having to synchronize the number of ctl_table array elements with the
-size in the declaration can lead to discrepancies between the two
-values. Since commit d7a76ec87195 ("sysctl: Remove check for sentinel
-element in ctl_table arrays"), the calculation of the ctl_table array
-size is done solely by the ARRAY_SIZE macro removing the need for the
-size in the declaration.
-
-Remove the size for the aligment_tbl declaration and const qualify the
-array for good measure.
-
-Signed-off-by: Joel Granados <joel.granados@kernel.org>
----
- arch/csky/abiv1/alignment.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/csky/abiv1/alignment.c b/arch/csky/abiv1/alignment.c
-index e5b8b4b2109a..aee904833dec 100644
---- a/arch/csky/abiv1/alignment.c
-+++ b/arch/csky/abiv1/alignment.c
-@@ -300,7 +300,7 @@ void csky_alignment(struct pt_regs *regs)
- 	force_sig_fault(SIGBUS, BUS_ADRALN, (void __user *)addr);
- }
- 
--static struct ctl_table alignment_tbl[5] = {
-+static const struct ctl_table alignment_tbl[] = {
- 	{
- 		.procname = "kernel_enable",
- 		.data = &align_kern_enable,
--- 
-2.44.2
-
-I'll queue this up for the next release unless you take it in now.
+> Remove the size for the aligment_tbl declaration and const qualify the
+> array for good measure.
 > 
-> in arch/csky/abiv1/alignment.c that didn't get converted.
-> 
-> And a couple of rdma drivers (iwcm_ctl_table and ucma_ctl_table), but
-These two are accounted for. I'll get to them eventually.
+> Signed-off-by: Joel Granados <joel.granados@kernel.org>
 
-> maybe those weren't converted due to being in the "net" address space?
-> 
-> Anyway, taken as-is, I'm just noting the lacking cases.
-> 
->             Linus
+FWIW, this looks correct to me.
+
+Reviewed-by: Kees Cook <kees@kernel.org>
 
 -- 
-
-Joel Granados
+Kees Cook
