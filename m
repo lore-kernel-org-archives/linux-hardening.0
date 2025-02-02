@@ -1,253 +1,203 @@
-Received: from exchange.fintech.ru (exchange.fintech.ru [195.54.195.159])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6BB8DF58;
-	Sun,  2 Feb 2025 09:55:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.54.195.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCD462A1A4;
+	Sun,  2 Feb 2025 18:38:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738490158; cv=none; b=hBGjypVCB2ywE05AxFNMy4pGgSPNRJZ35XcdjBcqKNbUhn9OkxRyA26LrDU1y4DIVHqXSaqws0RT2XVf0tgY+W7wmzSuRn0YCy/gvzlqugdXRyR/IIe65P83PZhxHrHq5TS/AJOmJCNxvUKfdrvN3z1gPuN7dNg1S9xSYb7e7Hk=
+	t=1738521504; cv=none; b=Xd6Ai8CgBofwJfdu3Y0fiKleUnxR5LNWUB5LsZyRPK+dZizmiXJlFLmK6WX6bUcQ9XjMo1+fE4jUFTf2kro8y3wO3fhKd4ITEzvxCq1VrnkFEV//NBoW4FtF0imoxaMkrXApMhlNNdHqLcVFtPd0tkmxG8JpbwiyxEqDVhuGAC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738490158; c=relaxed/simple;
-	bh=1XCb2JMptTgcj17b+YSKVYvQ7breD1kezbibJgXhQRw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=NoaJ4DkGrms30woIucu2ig0CfGzdh8RB+6gqSPKkIPJSG6Fsg3leIWNG0LtTcmV/OiIWtmM1L6KP1VEpDuPRXr0K+Nvjw0RlxdZtGtTV4DAywzCl/qsRdaaO0u+ooWNsKW613ZCXG5ba5jNXGix11ZzN4j2F4i2e48TXgLveKCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru; spf=pass smtp.mailfrom=fintech.ru; arc=none smtp.client-ip=195.54.195.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fintech.ru
-Received: from Ex16-01.fintech.ru (10.0.10.18) by exchange.fintech.ru
- (195.54.195.159) with Microsoft SMTP Server (TLS) id 14.3.498.0; Sun, 2 Feb
- 2025 12:55:43 +0300
-Received: from [192.168.211.132] (10.0.253.138) by Ex16-01.fintech.ru
- (10.0.10.18) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2242.4; Sun, 2 Feb 2025
- 12:55:43 +0300
-Message-ID: <27f8c5a1-6671-4e23-862f-4c5bf888684a@fintech.ru>
-Date: Sun, 2 Feb 2025 12:55:43 +0300
+	s=arc-20240116; t=1738521504; c=relaxed/simple;
+	bh=PJpkgskkNYqE5ktWw6CmmWj99ePEwkxlYbUu1j7z2tQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=sgza5YpeXNOVeWj6Y3WNQJLndUChkGjK8Bs4jBfCEDw2LFIQYJTTQdkqKs4wDF5aki9P1At70FRFQ/QQizHOA533CoFaeNwzUwq/oAW+zBImFZ+O12jdz4wb25NC9lSSXe5LrqlYMy57MX25ls3KRBdcya8qS8hP0L5+gEG0b/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=PvRkanL+; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="PvRkanL+"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id F211924D2C;
+	Sun,  2 Feb 2025 19:38:11 +0100 (CET)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id OEy66ANLXArl; Sun,  2 Feb 2025 19:38:07 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1738521487; bh=PJpkgskkNYqE5ktWw6CmmWj99ePEwkxlYbUu1j7z2tQ=;
+	h=From:Subject:Date:To:Cc;
+	b=PvRkanL+THf7F0wJyRMfB4LMkH1MPC/pG9VfEO20TqFB1gTnivf3bmhWs56ZXjTuy
+	 1/DKfAcHXhDlpT7dQm452xmiL3Dp54ty6+0kg7giSIINEDGSL3NOR5yAxEt5GL1DH6
+	 SdgrDIj+G6K/4/xY6QFe3IWjCvVqnT7BsJ5Ccfm8CwPAWI+6JaoJyUSiD7G98lqWjn
+	 qsyQ2CCWkbR9M/1GzNw62FUXLt+SGgb9ptR+gHHR3LRmxC3bjWaewgB/uiFCQJ2K2/
+	 i/TZvyU1Ao9ULDNM8ff3udU0yroWs6G+AyKSBU5Aj+/ZKRjWeQ7dUDMIn/0jcZax9N
+	 boofc5bJitG+w==
+From: Kaustabh Chakraborty <kauschluss@disroot.org>
+Subject: [PATCH 00/33] Add support for the Exynos7870 SoC, along with three
+ devices
+Date: Mon, 03 Feb 2025 00:06:33 +0530
+Message-Id: <20250203-exynos7870-v1-0-2b6df476a3f0@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] HID: usbhid: fix recurrent out-of-bounds bug in
- usbhid_parse()
-To: Kees Cook <kees@kernel.org>
-CC: Jiri Kosina <jikos@kernel.org>, Alan Stern <stern@rowland.harvard.edu>,
-	Benjamin Tissoires <bentiss@kernel.org>, Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Terry Junge <linuxhid@cosmicgizmosystems.com>, <linux-usb@vger.kernel.org>,
-	<linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-hardening@vger.kernel.org>, syzbot
-	<syzbot+c52569baf0c843f35495@syzkaller.appspotmail.com>,
-	<syzkaller-bugs@googlegroups.com>, <lvc-project@linuxtesting.org>
-References: <20250131151600.410242-1-n.zhandarovich@fintech.ru>
- <202501311205.DB75F95@keescook>
-From: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
-Content-Language: en-US
-In-Reply-To: <202501311205.DB75F95@keescook>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: Ex16-02.fintech.ru (10.0.10.19) To Ex16-01.fintech.ru
- (10.0.10.18)
+X-B4-Tracking: v=1; b=H4sIADG7n2cC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDIwND3dSKyrz8YnMLcwNdAxNLUwvzVJMk85Q0JaCGgqLUtMwKsGHRsbW
+ 1AMsls61cAAAA
+X-Change-ID: 20250201-exynos7870-049587e4b7df
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, 
+ Conor Dooley <conor@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
+ Sylwester Nawrocki <s.nawrocki@samsung.com>, 
+ Chanwoo Choi <cw00.choi@samsung.com>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Jiri Slaby <jirislaby@kernel.org>, Lee Jones <lee@kernel.org>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Marek Szyprowski <m.szyprowski@samsung.com>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ Andi Shyti <andi.shyti@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
+ Jaehoon Chung <jh80.chung@samsung.com>, 
+ Vivek Gautam <gautam.vivek@samsung.com>, 
+ Thinh Nguyen <Thinh.Nguyen@synopsys.com>, Kees Cook <kees@kernel.org>, 
+ Tony Luck <tony.luck@intel.com>, 
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc: Sergey Lisov <sleirsgoevy@gmail.com>, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org, 
+ linux-phy@lists.infradead.org, linux-usb@vger.kernel.org, 
+ dri-devel@lists.freedesktop.org, linux-i2c@vger.kernel.org, 
+ linux-mmc@vger.kernel.org, linux-hardening@vger.kernel.org, 
+ Kaustabh Chakraborty <kauschluss@disroot.org>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1738521464; l=6574;
+ i=kauschluss@disroot.org; s=20250202; h=from:subject:message-id;
+ bh=PJpkgskkNYqE5ktWw6CmmWj99ePEwkxlYbUu1j7z2tQ=;
+ b=OQtdK1RGc0JLdcNe0AAwrKVcWolcTpa0ZUxZtTQKZh2HI/tE+Yxg3q5N8DaCYUDzMaj8ii3Z3
+ nZlAC/KW2OeALOGfeSJkRYgLwjHwBi5N9Fw5vGYllF7W3vwwCgIL231
+X-Developer-Key: i=kauschluss@disroot.org; a=ed25519;
+ pk=h2xeR+V2I1+GrfDPAhZa3M+NWA0Cnbdkkq1bH3ct1hE=
 
+Samsung Exynos 7870 (codename: Joshua) is an ARM-v8 system-on-chip that was
+announced in 2016. The chipset was found in several popular mid-range to
+low-end Samsung phones, released within 2016 to 2019.
 
+This patch series aims to add support for Exynos 7870, starting with the
+most basic yet essential components such as CPU, GPU, clock controllers,
+PMIC, pin controllers, etc.
 
-On 1/31/25 23:12, Kees Cook wrote:
-> On Fri, Jan 31, 2025 at 06:15:58PM +0300, Nikita Zhandarovich wrote:
->> Syzbot reports [1] a reemerging out-of-bounds bug regarding hid
->> descriptors supposedly having unpredictable bNumDescriptors values in
->> usbhid_parse().
->>
->> The issue stems from the fact that hid_class_descriptor is supposed
->> to be a flexible array, however it was sized as desc[1], using only
->> one element. Therefore, going beyond 1 element, courtesy of
->> bNumDescriptors, may lead to an error.
->>
->> Modify struct hid_descriptor by employing __counted_by macro, tying
->> together struct hid_class_descriptor desc[] and number of descriptors
->> bNumDescriptors. Also, fix places where this change affects work with
->> newly updated struct.
->>
->> [1] Syzbot report:
->>
->> UBSAN: array-index-out-of-bounds in drivers/hid/usbhid/hid-core.c:1024:7
->> index 1 is out of range for type 'struct hid_class_descriptor[1]'
->> ...
->> Workqueue: usb_hub_wq hub_event
->> Call Trace:
->>  <TASK>
->>  __dump_stack lib/dump_stack.c:88 [inline]
->>  dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
->>  ubsan_epilogue lib/ubsan.c:231 [inline]
->>  __ubsan_handle_out_of_bounds+0x121/0x150 lib/ubsan.c:429
->>  usbhid_parse+0x5a7/0xc80 drivers/hid/usbhid/hid-core.c:1024
->>  hid_add_device+0x132/0x520 drivers/hid/hid-core.c:2790
->>  usbhid_probe+0xb38/0xea0 drivers/hid/usbhid/hid-core.c:1429
->>  usb_probe_interface+0x645/0xbb0 drivers/usb/core/driver.c:399
->>  really_probe+0x2b8/0xad0 drivers/base/dd.c:656
->>  __driver_probe_device+0x1a2/0x390 drivers/base/dd.c:798
->>  driver_probe_device+0x50/0x430 drivers/base/dd.c:828
->>  __device_attach_driver+0x2d6/0x530 drivers/base/dd.c:956
->>  bus_for_each_drv+0x24e/0x2e0 drivers/base/bus.c:457
->>  __device_attach+0x333/0x520 drivers/base/dd.c:1028
->>  bus_probe_device+0x189/0x260 drivers/base/bus.c:532
->>  device_add+0x8ff/0xca0 drivers/base/core.c:3720
->>  usb_set_configuration+0x1976/0x1fb0 drivers/usb/core/message.c:2210
->>  usb_generic_driver_probe+0x88/0x140 drivers/usb/core/generic.c:254
->>  usb_probe_device+0x1b8/0x380 drivers/usb/core/driver.c:294
->>
->> Reported-by: syzbot+c52569baf0c843f35495@syzkaller.appspotmail.com
->> Closes: https://syzkaller.appspot.com/bug?extid=c52569baf0c843f35495
->> Fixes: f043bfc98c19 ("HID: usbhid: fix out-of-bounds bug")
->> Cc: stable@vger.kernel.org
->> Signed-off-by: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
->> ---
->> v1: https://lore.kernel.org/all/20240524120112.28076-1-n.zhandarovich@fintech.ru/
->>
->> v2: Instead of essentially forcing usbhid_parse() to only check
->> the first descriptor, modify hid_descriptor struct to anticipate
->> multiple hid_class_descriptor in desc[] by utilizing __counted_by
->> macro. This change, in turn, requires several other ones wherever
->> that struct is used. Adjust commit description accordingly.
->>
->> P.S. Since syzbot currently breaks trying to reproduce the issue,
->> with or without this patch, I only managed to test it locally with
->> syz repros. Would greatly appreciate other people's effort to test
->> it as well.
->>
->> P.P.S. Terry Junge <linuxhid@cosmicgizmosystems.com> suggested a
->> different approach to this issue, see:
->> Link: https://lore.kernel.org/all/f7963a1d-e069-4ec9-82a1-e17fd324a44f@cosmicgizmosystems.com/
->>
->>  drivers/hid/usbhid/hid-core.c       |  2 +-
->>  drivers/usb/gadget/function/f_fs.c  |  3 ++-
->>  drivers/usb/gadget/function/f_hid.c | 22 ++++++++++++++--------
->>  include/linux/hid.h                 |  2 +-
->>  4 files changed, 18 insertions(+), 11 deletions(-)
->>
->> diff --git a/drivers/hid/usbhid/hid-core.c b/drivers/hid/usbhid/hid-core.c
->> index a6eb6fe6130d..eb4807785d6d 100644
->> --- a/drivers/hid/usbhid/hid-core.c
->> +++ b/drivers/hid/usbhid/hid-core.c
->> @@ -1010,7 +1010,7 @@ static int usbhid_parse(struct hid_device *hid)
->>  		return -ENODEV;
->>  	}
->>  
->> -	if (hdesc->bLength < sizeof(struct hid_descriptor)) {
->> +	if (hdesc->bLength < struct_size(hdesc, desc, hdesc->bNumDescriptors)) {
->>  		dbg_hid("hid descriptor is too short\n");
->>  		return -EINVAL;
->>  	}
-> 
-> I don't think you want this hunk in the patch. The existing logic will
-> correctly adapt num_descriptors to a size that fits within
-> hdesc->bLength. In theory, the above change could break a weird but
-> working device that reported too high bNumDescriptors but still worked
-> with what num_descriptors walks.
-> 
+Moreover, the series also adds support for three Exynos 7870 devices via
+devicetree. The devices are:
+ * Samsung Galaxy J7 Prime     - released 2016, codename on7xelte
+ * Samsung Galaxy J6           - released 2018, codename j6lte
+ * Samsung Galaxy A2 Core      - released 2019, codename a2corelte
 
-Thank you for mentioning this and you are right about possibly breaking
-a working device.
+Additional features implemented in this series include:
+ * I2C     - touchscreen, IIO sensors, etc.
+ * UART    - bluetooth and serial debugging
+ * MMC     - eMMC, Wi-Fi SDIO, SDCard
+ * USB     - micro-USB 2.0 interface
 
-However, sizeof(struct hid_descriptor) doesn't count flex array sizes.
-So, leaving this check as is will miss cases when hdesc->bLength >=
-sizeof(struct hid_descriptor) but short enough to have a desc[0]
-element. Maybe doing struct_size(hdesc, desc, 1) is better? Then we
-make sure that at least one mandatory hid_class_desriptor is there.
+The series has commits from me and Sergey, who has given me permission
+to upstream their patches with proper attribution.
 
->> diff --git a/drivers/usb/gadget/function/f_fs.c b/drivers/usb/gadget/function/f_fs.c
->> index 2dea9e42a0f8..a4b6d7cbf56d 100644
->> --- a/drivers/usb/gadget/function/f_fs.c
->> +++ b/drivers/usb/gadget/function/f_fs.c
->> @@ -2550,7 +2550,8 @@ static int __must_check ffs_do_single_desc(char *data, unsigned len,
->>  	case USB_TYPE_CLASS | 0x01:
->>  		if (*current_class == USB_INTERFACE_CLASS_HID) {
->>  			pr_vdebug("hid descriptor\n");
->> -			if (length != sizeof(struct hid_descriptor))
->> +			if (length < sizeof(struct hid_descriptor) +
->> +				     sizeof(struct hid_class_descriptor))
->>  				goto inv_length;
->>  			break;
->>  		} else if (*current_class == USB_INTERFACE_CLASS_CCID) {
-> 
-> Same here, I think? This isn't needed unless I'm misunderstanding
-> something about the fix.
+Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
+---
+Kaustabh Chakraborty (26):
+      dt-bindings: hwinfo: samsung,exynos-chipid: add exynos7870-chipid compatible
+      dt-bindings: clock: document exynos7870 clock driver CMU bindings
+      dt-bindings: soc: samsung: exynos-pmu: add exynos7870-pmu compatible
+      dt-bindings: pinctrl: samsung: add exynos7870-pinctrl compatible
+      dt-bindings: pinctrl: samsung: add exynos7870-wakeup-eint compatible
+      dt-bindings: serial: samsung: add exynos7870-uart compatible
+      dt-bindings: mfd: samsung,s2mps11: add compatible for s2mpu05-pmic
+      regulator: dt-bindings: add documentation for s2mpu05-pmic regulators
+      dt-bindings: phy: samsung,usb3-drd-phy: add exynos7870-usbdrd-phy compatible
+      dt-bindings: usb: samsung,exynos-dwc3: add exynos7870 support
+      dt-bindings: gpu: arm,mali-midgard: add exynos7870 mali compatible
+      dt-bindings: i2c: samsung,s3c2410: add exynos7870-i2c compatible
+      dt-bindings: i2c: exynos5: add exynos7870-hsi2c compatible
+      dt-bindings: mmc: samsung,exynos-dw-mshc: add exynos7870 support
+      dt-bindings: soc: samsung,boot-mode: add boot mode definitions for exynos7870
+      dt-bindings: arm: samsung: add compatibles for exynos7870 devices
+      soc: samsung: exynos-chipid: add support for exynos7870
+      clk: samsung: add exynos7870 CLKOUT support
+      tty: serial: samsung: add support for exynos7870
+      phy: exynos5-usbdrd: fix MPLL_MULTIPLIER and SSC_REFCLKSEL masks in refclk
+      phy: exynos5-usbdrd: use GENMASK and FIELD_PREP for Exynos5 PHY registers
+      usb: dwc3: exynos: add support for exynos7870
+      arm64: dts: exynos: add initial devicetree support for exynos7870
+      arm64: dts: exynos: add initial support for Samsung Galaxy J7 Prime
+      arm64: dts: exynos: add initial support for Samsung Galaxy A2 Core
+      arm64: dts: exynos: add initial support for Samsung Galaxy J6
 
-Once again, sizeof(struct hid_descriptor) will not count struct
-hid_class_descriptor desc[] __counted_by(...) so even correct and
-predictable lengths will fail the check. We need to test length against
-hid_descriptor with at least one element of its flex array.
+Sergey Lisov (7):
+      dt-bindings: clock: add clock definitions for exynos7870 CMU
+      clk: samsung: add initial exynos7870 clock driver
+      pinctrl: samsung: add support for exynos7870 pinctrl
+      mfd: sec: add support for S2MPU05 PMIC
+      regulator: s2mps11: Add support for S2MPU05 regulators
+      phy: exynos5-usbdrd: add exynos7870 USBDRD support
+      mmc: dw_mmc: add exynos7870 support, with a quirk for accessing 64-bit FIFOs in two halves
 
-I would prefer struct_size() here as well but it's not optimal in this
-case.
-> 
->> diff --git a/drivers/usb/gadget/function/f_hid.c b/drivers/usb/gadget/function/f_hid.c
->> index 740311c4fa24..ec8c2e2d6812 100644
->> --- a/drivers/usb/gadget/function/f_hid.c
->> +++ b/drivers/usb/gadget/function/f_hid.c
->> @@ -139,13 +139,17 @@ static struct usb_interface_descriptor hidg_interface_desc = {
->>  };
->>  
->>  static struct hid_descriptor hidg_desc = {
->> -	.bLength			= sizeof hidg_desc,
->> +	.bLength			= struct_size(&hidg_desc, desc, 1),
->>  	.bDescriptorType		= HID_DT_HID,
->>  	.bcdHID				= cpu_to_le16(0x0101),
->>  	.bCountryCode			= 0x00,
->>  	.bNumDescriptors		= 0x1,
->> -	/*.desc[0].bDescriptorType	= DYNAMIC */
->> -	/*.desc[0].wDescriptorLenght	= DYNAMIC */
->> +	.desc				= {
->> +		{
->> +			.bDescriptorType	= 0, /* DYNAMIC */
->> +			.wDescriptorLength	= 0, /* DYNAMIC */
->> +		}
->> +	}
->>  };
->>  
->>  /* Super-Speed Support */
->> @@ -936,16 +940,18 @@ static int hidg_setup(struct usb_function *f,
->>  		switch (value >> 8) {
->>  		case HID_DT_HID:
->>  		{
->> -			struct hid_descriptor hidg_desc_copy = hidg_desc;
->> +			DEFINE_FLEX(struct hid_descriptor, hidg_desc_copy,
->> +				desc, bNumDescriptors, 1);
->> +			*hidg_desc_copy = hidg_desc;
->>  
->>  			VDBG(cdev, "USB_REQ_GET_DESCRIPTOR: HID\n");
->> -			hidg_desc_copy.desc[0].bDescriptorType = HID_DT_REPORT;
->> -			hidg_desc_copy.desc[0].wDescriptorLength =
->> +			hidg_desc_copy->desc[0].bDescriptorType = HID_DT_REPORT;
->> +			hidg_desc_copy->desc[0].wDescriptorLength =
->>  				cpu_to_le16(hidg->report_desc_length);
->>  
->>  			length = min_t(unsigned short, length,
->> -						   hidg_desc_copy.bLength);
->> -			memcpy(req->buf, &hidg_desc_copy, length);
->> +						   hidg_desc_copy->bLength);
->> +			memcpy(req->buf, hidg_desc_copy, length);
->>  			goto respond;
->>  			break;
->>  		}
->> diff --git a/include/linux/hid.h b/include/linux/hid.h
->> index cdc0dc13c87f..85a58ae2c4a0 100644
->> --- a/include/linux/hid.h
->> +++ b/include/linux/hid.h
->> @@ -739,7 +739,7 @@ struct hid_descriptor {
->>  	__u8  bCountryCode;
->>  	__u8  bNumDescriptors;
->>  
->> -	struct hid_class_descriptor desc[1];
->> +	struct hid_class_descriptor desc[] __counted_by(bNumDescriptors);
->>  } __attribute__ ((packed));
->>  
->>  #define HID_DEVICE(b, g, ven, prod)					\
-> 
-> Otherwise, this looks correct to me.
-> 
+ .../bindings/arm/samsung/samsung-boards.yaml       |    8 +
+ .../bindings/clock/samsung,exynos7870-clock.yaml   |  246 +++
+ .../devicetree/bindings/gpu/arm,mali-midgard.yaml  |    5 +-
+ .../bindings/hwinfo/samsung,exynos-chipid.yaml     |    1 +
+ .../devicetree/bindings/i2c/i2c-exynos5.yaml       |    1 +
+ .../bindings/i2c/samsung,s3c2410-i2c.yaml          |    1 +
+ .../devicetree/bindings/mfd/samsung,s2mps11.yaml   |   13 +
+ .../bindings/mmc/samsung,exynos-dw-mshc.yaml       |    2 +
+ .../bindings/phy/samsung,usb3-drd-phy.yaml         |    2 +
+ .../pinctrl/samsung,pinctrl-wakeup-interrupt.yaml  |    2 +
+ .../bindings/pinctrl/samsung,pinctrl.yaml          |    1 +
+ .../bindings/regulator/samsung,s2mpu05.yaml        |   44 +
+ .../devicetree/bindings/serial/samsung_uart.yaml   |    2 +
+ .../bindings/soc/samsung/exynos-pmu.yaml           |    1 +
+ .../bindings/usb/samsung,exynos-dwc3.yaml          |   34 +-
+ arch/arm64/boot/dts/exynos/Makefile                |    3 +
+ .../arm64/boot/dts/exynos/exynos7870-a2corelte.dts |  624 +++++++
+ arch/arm64/boot/dts/exynos/exynos7870-j6lte.dts    |  611 +++++++
+ arch/arm64/boot/dts/exynos/exynos7870-on7xelte.dts |  659 +++++++
+ arch/arm64/boot/dts/exynos/exynos7870-pinctrl.dtsi | 1035 +++++++++++
+ arch/arm64/boot/dts/exynos/exynos7870.dtsi         |  722 ++++++++
+ drivers/clk/samsung/Makefile                       |    1 +
+ drivers/clk/samsung/clk-exynos-clkout.c            |    3 +
+ drivers/clk/samsung/clk-exynos7870.c               | 1830 ++++++++++++++++++++
+ drivers/mfd/sec-core.c                             |   12 +
+ drivers/mfd/sec-irq.c                              |   85 +
+ drivers/mmc/host/dw_mmc-exynos.c                   |   41 +-
+ drivers/mmc/host/dw_mmc.c                          |   94 +-
+ drivers/mmc/host/dw_mmc.h                          |   27 +
+ drivers/phy/samsung/phy-exynos5-usbdrd.c           |  407 ++++-
+ drivers/pinctrl/samsung/pinctrl-exynos-arm64.c     |  141 ++
+ drivers/pinctrl/samsung/pinctrl-exynos.h           |   29 +
+ drivers/pinctrl/samsung/pinctrl-samsung.c          |    2 +
+ drivers/pinctrl/samsung/pinctrl-samsung.h          |    1 +
+ drivers/regulator/Kconfig                          |    4 +-
+ drivers/regulator/s2mps11.c                        |   92 +-
+ drivers/soc/samsung/exynos-chipid.c                |    1 +
+ drivers/tty/serial/samsung_tty.c                   |   13 +
+ drivers/usb/dwc3/dwc3-exynos.c                     |    9 +
+ include/dt-bindings/clock/exynos7870.h             |  324 ++++
+ include/dt-bindings/soc/samsung,boot-mode.h        |    6 +
+ include/linux/mfd/samsung/core.h                   |    1 +
+ include/linux/mfd/samsung/irq.h                    |   44 +
+ include/linux/mfd/samsung/s2mpu05.h                |  152 ++
+ include/linux/soc/samsung/exynos-regs-pmu.h        |    2 +
+ 45 files changed, 7257 insertions(+), 81 deletions(-)
+---
+base-commit: df4b2bbff898227db0c14264ac7edd634e79f755
+change-id: 20250201-exynos7870-049587e4b7df
 
-Regards,
-Nikita
+Best regards,
+-- 
+Kaustabh Chakraborty <kauschluss@disroot.org>
 
