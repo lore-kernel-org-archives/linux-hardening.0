@@ -1,50 +1,49 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 558EE2036E1;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62F542040BC;
 	Mon,  3 Feb 2025 12:18:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738585129; cv=none; b=A3SZToee7y70h/mqTWoTglyou8xerpe2vVnIVMk2zDXpKAz9ldhWl/vDsGFBt4UtQhx8ZqzEBh1T57aitaWyo5e20vVnlWKAnmG3Dj+wOdmcOJ3kaH59pvcVc5pGoQSqYBzdBJjC3UWzBxIKwt41yQ2i1oBrrsdk8oFDym7SZaU=
+	t=1738585130; cv=none; b=t18JRoRoa4bBtcJnoabr1KahmdZM4EKG280p/6GikfIonXpSN8bHrTnaVPNtUZxsBIWZ1BHgWoO46qadvZ0jb1v/By+cE1TaitMXoC14zWEItry1EMxdiBBVX5ZVsc0A20tZZSPI9i4RK5QsgSh6gswKZQVxcYT2veWvlFgiNXU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738585129; c=relaxed/simple;
-	bh=Hg+ZWkXcKMzpoi69OuZ67hZSAqFz2rwIYs4UrpX3Q1U=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cGy2gCa2YIVwH9NEdiGdb4qb8ZjC0O3tzbssDYH3Q6EPXDD7x8vTrFP7DbJG/s6UXVe+psgpHbpRt79IhRdAtUL5ZWLrd7IS5IJTjZ4n+eul9hiHATTF/b/KQyJZF5gRUou1/lThLk4HyrqR5lBgQzj/ekvNSO2XF6wl2ajFyVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JGNVf+R5; arc=none smtp.client-ip=198.175.65.10
+	s=arc-20240116; t=1738585130; c=relaxed/simple;
+	bh=NBVcdgylnwnM3bgnQaOwIXSjV8MjodT55hSyuPWhiMg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qJq22DWtll9tKwTG9XEE4YysyM2QXioXeXgqqKw9wvItFjcvTUuX02FWVVgiv3Bg1ldWErJTJ2/UWYSiciN3Uf108sbxMNmdRUhmyNUeNkIBIDFhVRZcuS8NXFTYOHcDyNEMTP0w30AqPCAcH3n4EdLsza1NOwJouFzfhzKzvAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VaZGVZOm; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JGNVf+R5"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VaZGVZOm"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738585129; x=1770121129;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Hg+ZWkXcKMzpoi69OuZ67hZSAqFz2rwIYs4UrpX3Q1U=;
-  b=JGNVf+R5CUoZSxaDZFaj454feamTUn/2nr5C+aQ65qFIKbpxflv7TZF0
-   YpKMm2Vrxc1kR8MKfZ5Op31eDdjOc8nZOOd54morp5Duice4y4DdZfUMP
-   wtXrPIcjJR/LefUOSUgPYUYL5cG9yePsAe949N1p+KYE550zvSXakiqaG
-   MAiLucHkW8wpdS1WFu+XjMYXlzSV2CnWbVOhKoQP78ZnQSm/jbGS+/Rk9
-   rSUVwOGL3mN4POpTVTBI7na4cvThDAAhgHYUhcT3MlAIiqufgQV7ATBgs
-   ZomkY9IXGTKQ0hZk6kGJ7Ypo9+XNyRrb7eJi5r0KeQehK4TpsR8WIKx6c
-   Q==;
-X-CSE-ConnectionGUID: F9J0RjmZTySLRQPf7ibG8g==
-X-CSE-MsgGUID: ctdBajcsQ0iXSkLJ8iQRkg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="56502983"
+  t=1738585128; x=1770121128;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=NBVcdgylnwnM3bgnQaOwIXSjV8MjodT55hSyuPWhiMg=;
+  b=VaZGVZOmEb7zUjRphV1Lr9nvl6AtuEEqb4D8KQk1dCQDTJJnQc2Q1YaU
+   ygOzpP9uw31fziKgd8wIb8msE1/G/GIaaBz/2JZ2aLJZ2mKJulevmaX9O
+   k9HbwANj65BnXzKIb9ysLc8KETm68afSxR9oaEDFp4GLhTVpwlFOtggjT
+   YHkBXMolNA/tl+lvy9E7m3mjLw6fMsTzzqncLJGjry9qo4cAQtNJIkv/n
+   u3QbtA/gRLpYNSjUf4ToU9jqhI1NUL/Btx/fu9tlE4LCjh9MJAvey7uDK
+   /u7Z/cjaGSoNVarYX/lnYS3WC5ov7Sa35FJqFxLNpO4Cix+1kv9NlYLCI
+   A==;
+X-CSE-ConnectionGUID: Pwc/jv5/RHKqDuN9IUrqbw==
+X-CSE-MsgGUID: fnMtkgvKQZe9YU7VBtvUbA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="42731503"
 X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
-   d="scan'208";a="56502983"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 04:18:48 -0800
-X-CSE-ConnectionGUID: U/dc3eLMTaagZAXlvCZv4A==
-X-CSE-MsgGUID: jQ1GOZbLQXuXeAO0Tpr6Tw==
+   d="scan'208";a="42731503"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 04:18:48 -0800
+X-CSE-ConnectionGUID: wVmJOYIUQ3CJDWDsAtN8cg==
+X-CSE-MsgGUID: nsGwx/DLRmeoZt7OdsWEbw==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
-   d="scan'208";a="115279157"
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="141138405"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa004.jf.intel.com with ESMTP; 03 Feb 2025 04:18:46 -0800
+  by fmviesa001.fm.intel.com with ESMTP; 03 Feb 2025 04:18:45 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 62D423A7; Mon, 03 Feb 2025 14:18:44 +0200 (EET)
+	id 2FD1823F; Mon, 03 Feb 2025 14:18:44 +0200 (EET)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
 	Linus Walleij <linus.walleij@linaro.org>,
@@ -55,12 +54,10 @@ Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
 	Kees Cook <kees@kernel.org>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 3/7] gpio: 74x164: Annotate buffer with __counted_by()
-Date: Mon,  3 Feb 2025 14:17:19 +0200
-Message-ID: <20250203121843.3183991-4-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 0/7] gpio: 74x164: Refactor and clean up the driver
+Date: Mon,  3 Feb 2025 14:17:16 +0200
+Message-ID: <20250203121843.3183991-1-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
-In-Reply-To: <20250203121843.3183991-1-andriy.shevchenko@linux.intel.com>
-References: <20250203121843.3183991-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -69,64 +66,22 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add the __counted_by() compiler attribute to the flexible array member
-volumes to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
-CONFIG_FORTIFY_SOURCE.
+Seems like I have had a cleanup series for 74x164, but forgot to send it
+last year, here it is.
 
-Use struct_size() instead of manually calculating the number of bytes to
-allocate the private structure with a buffer.
+Andy Shevchenko (7):
+  gpio: 74x164: Remove unneeded dependency to OF_GPIO
+  gpio: 74x164: Simplify code with cleanup helpers
+  gpio: 74x164: Annotate buffer with __counted_by()
+  gpio: 74x164: Make use of the macros from bits.h
+  gpio: 74x164: Fully convert to use managed resources
+  gpio: 74x164: Switch to use dev_err_probe()
+  gpio: 74x164: Utilise temporary variable for struct device
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/gpio/gpio-74x164.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/gpio/Kconfig       |  1 -
+ drivers/gpio/gpio-74x164.c | 63 +++++++++++++++++++++-----------------
+ 2 files changed, 35 insertions(+), 29 deletions(-)
 
-diff --git a/drivers/gpio/gpio-74x164.c b/drivers/gpio/gpio-74x164.c
-index 70c662bbca7b..7844f8a58834 100644
---- a/drivers/gpio/gpio-74x164.c
-+++ b/drivers/gpio/gpio-74x164.c
-@@ -30,7 +30,7 @@ struct gen_74x164_chip {
- 	 * register at the end of the transfer. So, to have a logical
- 	 * numbering, store the bytes in reverse order.
- 	 */
--	u8			buffer[];
-+	u8			buffer[] __counted_by(registers);
- };
- 
- static int __gen_74x164_write_config(struct gen_74x164_chip *chip)
-@@ -97,6 +97,7 @@ static int gen_74x164_direction_output(struct gpio_chip *gc,
- 
- static int gen_74x164_probe(struct spi_device *spi)
- {
-+	struct device *dev = &spi->dev;
- 	struct gen_74x164_chip *chip;
- 	u32 nregs;
- 	int ret;
-@@ -116,10 +117,12 @@ static int gen_74x164_probe(struct spi_device *spi)
- 		return -EINVAL;
- 	}
- 
--	chip = devm_kzalloc(&spi->dev, sizeof(*chip) + nregs, GFP_KERNEL);
-+	chip = devm_kzalloc(dev, struct_size(chip, buffer, nregs), GFP_KERNEL);
- 	if (!chip)
- 		return -ENOMEM;
- 
-+	chip->registers = nregs;
-+
- 	chip->gpiod_oe = devm_gpiod_get_optional(&spi->dev, "enable",
- 						 GPIOD_OUT_LOW);
- 	if (IS_ERR(chip->gpiod_oe))
-@@ -133,10 +136,7 @@ static int gen_74x164_probe(struct spi_device *spi)
- 	chip->gpio_chip.set = gen_74x164_set_value;
- 	chip->gpio_chip.set_multiple = gen_74x164_set_multiple;
- 	chip->gpio_chip.base = -1;
--
--	chip->registers = nregs;
- 	chip->gpio_chip.ngpio = GEN_74X164_NUMBER_GPIOS * chip->registers;
--
- 	chip->gpio_chip.can_sleep = true;
- 	chip->gpio_chip.parent = &spi->dev;
- 	chip->gpio_chip.owner = THIS_MODULE;
 -- 
 2.43.0.rc1.1336.g36b5255a03ac
 
