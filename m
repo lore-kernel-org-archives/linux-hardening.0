@@ -1,99 +1,113 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 842F6204C04;
-	Mon,  3 Feb 2025 12:18:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1304F20468D;
+	Mon,  3 Feb 2025 12:40:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738585134; cv=none; b=pFyVDXrHWt5GFZ0JUeyHheLg8fbrzMNZdMF6gNHTNSUm5XCRhMuj04VPEexnFvIkUojBNZ/f2WCCRQRmcmxzlPwhvNbngcSP8A4q6fgfEnS+dSbrWFQd9OPjyMihSCE0BXtpw8Xxoqn7rGgM52vQcTM/5B2ftyuCNlhzrXZ6Ti0=
+	t=1738586423; cv=none; b=hEiBGCzunqjS3tpalGUO8RnIeje4+A3PJH1ZHtQqDb7XIlx/DNLeqRIQ6BB2RiuKzg9qyOACvPSBo3hZ2JB7K9/hgy9qa9zKrE+bde0u6jz0AMrBtqgUiId+W5Fgcwq6Dt671RjIhosbE74Pu3ANu9lxA1Wmh5AjBsm+Ntfnw7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738585134; c=relaxed/simple;
-	bh=AKEZmIwmmi49xx20Ic0IkNg47TcPP9PP5Xf66m4RXVA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nFD2ADqPTrqjHev3kfPkbymRpUeUiVWzrB4mjpmvYyjBoPGPqW7fbPbvTtL+KqmSunli6dxxISk5StBPxAiGr20R07FUizyF6nKxf1tj1yDniPuMMF098CRTF93/WqyS1CfiP6+dM5HpVaKXB7x2lwpV2QR38ByaJfB1chybAXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l78clTPJ; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738586423; c=relaxed/simple;
+	bh=AkDFsgM8ht/4xOTKn+YGxCP4v6cjlpjp8uRWn5voH7o=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=p+Jl7/QB4J7x5+L3u6xAPXXe+wUQE7B0L3Dr7akbvtjo6Uk2M83BtoP9Q6TZBP+UXOW4OH0VCoGlp/pRTGdEnQ2JbgsCHNZOBXGsyhk+JRLzSvzvL36zHlP2gOBY2TKYiYdO6mE71dyCMnCptjF0oLoaS/N/3gAlMN48t0Ma55g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=NiCsXrG7; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l78clTPJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738585133; x=1770121133;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=AKEZmIwmmi49xx20Ic0IkNg47TcPP9PP5Xf66m4RXVA=;
-  b=l78clTPJR31VNxeBYfebQE+IwRSIGwsxEeDh2l5GByp2Sa0pgfNOprwG
-   9DTWhFPojXxM2QTWffyFMbLu4QodQ/B1jS3YSEz/nGqTmGhD/CjERhmes
-   qG7ICSpIIZ1XOfVO96w4m+llYAdJRX399HYqZt7lpncr5haaZjRfr+d0H
-   stoEJQcCBk5RwPIW/f7tdFb9Z7ndCcjantyhcCBHN5hUSfXvAMAFS7RCi
-   zgWKAiYlqAyHik4ju55S0UqbmcBli+sy+0q9zWIOzPY31XGX6WfQloDR1
-   vy4oNkWc3XHfslwnvhmklTW5HKNjaJb9sdobESOF5IxGVb55myoexl6Tc
-   Q==;
-X-CSE-ConnectionGUID: Tup2glKFSmGD7sK5aSaZJQ==
-X-CSE-MsgGUID: ozcYa+fOR+WeatdP1Z0y2w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="42731528"
-X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
-   d="scan'208";a="42731528"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 04:18:51 -0800
-X-CSE-ConnectionGUID: im5GMaOTTzqjuSNCDD8+kg==
-X-CSE-MsgGUID: ijJD+OJ6R9ikHhe+Vsf9Tw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="141138411"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa001.fm.intel.com with ESMTP; 03 Feb 2025 04:18:48 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 899593B1; Mon, 03 Feb 2025 14:18:44 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 6/7] gpio: 74x164: Switch to use dev_err_probe()
-Date: Mon,  3 Feb 2025 14:17:22 +0200
-Message-ID: <20250203121843.3183991-7-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
-In-Reply-To: <20250203121843.3183991-1-andriy.shevchenko@linux.intel.com>
-References: <20250203121843.3183991-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="NiCsXrG7"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id E576025CAA;
+	Mon,  3 Feb 2025 13:40:17 +0100 (CET)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id kOJee6X8J05I; Mon,  3 Feb 2025 13:40:17 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1738586417; bh=AkDFsgM8ht/4xOTKn+YGxCP4v6cjlpjp8uRWn5voH7o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=NiCsXrG7LpnG5w/NFwLl1Xf4k91ChodYcxZdyx5YPPOd49ovtD7MWdYY8MSqveHJL
+	 AjJK0tAADkF89VLXYecmauRE5Gbv5iijR/wWAk4bwUHJvvvhXCYprAkat0d0TGYHIf
+	 ykOg1aVULxEsuMRLAo+lnp61mnypYcYTcGh8agQvcbDbQ93GggzGqmU2WdUo/fnERe
+	 cf0a6u52bgH+nL3XJ9zgtBTU2ZwrsvKehCSZyQANT07sLZRkG2mrLpJPC599dAG4RR
+	 gPgmAg3QdVtp9K9GV7ZrzkCmvJgfX0tErHPHs9P/aQnPsTEdcVAPpr+zHZOgyA1afb
+	 2mgxyQClmL60Q==
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Date: Mon, 03 Feb 2025 12:40:16 +0000
+From: Kaustabh Chakraborty <kauschluss@disroot.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Conor Dooley <conor@kernel.org>, Alim
+ Akhtar <alim.akhtar@samsung.com>, Sylwester Nawrocki
+ <s.nawrocki@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Michael
+ Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Tomasz
+ Figa <tomasz.figa@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby
+ <jirislaby@kernel.org>, Lee Jones <lee@kernel.org>, Liam Girdwood
+ <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Vinod Koul
+ <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, Marek
+ Szyprowski <m.szyprowski@samsung.com>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, Andi Shyti <andi.shyti@kernel.org>,
+ Ulf Hansson <ulf.hansson@linaro.org>, Jaehoon Chung
+ <jh80.chung@samsung.com>, Vivek Gautam <gautam.vivek@samsung.com>, Thinh
+ Nguyen <Thinh.Nguyen@synopsys.com>, Kees Cook <kees@kernel.org>, Tony Luck
+ <tony.luck@intel.com>, "Guilherme G . Piccoli" <gpiccoli@igalia.com>, Sergey
+ Lisov <sleirsgoevy@gmail.com>, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org,
+ linux-phy@lists.infradead.org, linux-usb@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-i2c@vger.kernel.org,
+ linux-mmc@vger.kernel.org, linux-hardening@vger.kernel.org, Kaustabh
+ Chakraborty <kauschluss@disroot.org>
+Subject: Re: [PATCH 02/33] dt-bindings: clock: add clock definitions for
+ exynos7870 CMU
+In-Reply-To: <20250203-enigmatic-remarkable-beagle-709955@krzk-bin>
+References: <20250203-exynos7870-v1-0-2b6df476a3f0@disroot.org>
+ <20250202190758.14986-1-kauschluss@disroot.org>
+ <20250203-enigmatic-remarkable-beagle-709955@krzk-bin>
+Message-ID: <c1249f2f6ac8a2f5a1dcb3bbbba647f9@disroot.org>
+X-Sender: kauschluss@disroot.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Switch to use dev_err_probe() to simplify the error path and
-unify a message template.
+On 2025-02-03 07:54, Krzysztof Kozlowski wrote:
+> On Mon, Feb 03, 2025 at 12:37:58AM +0530, Kaustabh Chakraborty wrote:
+>> From: Sergey Lisov <sleirsgoevy@gmail.com>
+>> 
+>> Add unique identifiers for exynos7870 clocks for every bank. It adds all
+>> clocks of CMU_MIF, CMU_DISPAUD, CMU_G3D, CMU_ISP, CMU_MFCMSCL, and
+>> CMU_PERI.
+>> 
+>> Signed-off-by: Sergey Lisov <sleirsgoevy@gmail.com>
+>> Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
+>> ---
+>>  include/dt-bindings/clock/exynos7870.h | 324 +++++++++++++++++++++++++
+>>  1 file changed, 324 insertions(+)
+> 
+> Look at git log - that's never a separate commit.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/gpio/gpio-74x164.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+Hmm, I see past examples which are mixed.
 
-diff --git a/drivers/gpio/gpio-74x164.c b/drivers/gpio/gpio-74x164.c
-index 920d3b9c1087..2cf77c0a5615 100644
---- a/drivers/gpio/gpio-74x164.c
-+++ b/drivers/gpio/gpio-74x164.c
-@@ -125,10 +125,8 @@ static int gen_74x164_probe(struct spi_device *spi)
- 		return ret;
- 
- 	ret = device_property_read_u32(&spi->dev, "registers-number", &nregs);
--	if (ret) {
--		dev_err(&spi->dev, "Missing 'registers-number' property.\n");
--		return -EINVAL;
--	}
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Missing 'registers-number' property.\n");
- 
- 	chip = devm_kzalloc(dev, struct_size(chip, buffer, nregs), GFP_KERNEL);
- 	if (!chip)
--- 
-2.43.0.rc1.1336.g36b5255a03ac
+2ae5c2c3f8d586b709cf67efe94488be397d7544
+Exynos850 CMU (c. 2021). CMU definitions are in a separate commit.
 
+591020a516720e9eba1c4b1748cb73b6748e445f
+Exynos7885 CMU (c. 2021). CMU definitions are in a separate commit.
+
+while
+
+96bd6224f07b8bf73e0359f15a3d7678118494e6
+Exynos5433 CMU (c. 2015). CMU definitions and driver are in a single commit.
+
+Let me know if I should still continue with the approach you mentioned.
+
+> 
+> Best regards,
+> Krzysztof
