@@ -1,58 +1,66 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95198201116;
-	Mon,  3 Feb 2025 10:29:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 558EE2036E1;
+	Mon,  3 Feb 2025 12:18:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738578542; cv=none; b=uCcCMEICsCYQW1+wTXRHp4l9Aam0+w8SVAtyb3oOdSKNpW1dcI/rXvHzLjnREKin3R22V6xJzsiCC9RtuwQTTUunmdj0ueLkSckvx9CfJqAbGd+5eak1PzUlgZbXk8/s3BW5erlr9E+BtKhpgeONDrautz71Fdi7HoWbYc+47ow=
+	t=1738585129; cv=none; b=A3SZToee7y70h/mqTWoTglyou8xerpe2vVnIVMk2zDXpKAz9ldhWl/vDsGFBt4UtQhx8ZqzEBh1T57aitaWyo5e20vVnlWKAnmG3Dj+wOdmcOJ3kaH59pvcVc5pGoQSqYBzdBJjC3UWzBxIKwt41yQ2i1oBrrsdk8oFDym7SZaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738578542; c=relaxed/simple;
-	bh=yEdNOIPpD7/j1H5I4Ox6cnx7ti57tChBlnF+bbJo9kQ=;
+	s=arc-20240116; t=1738585129; c=relaxed/simple;
+	bh=Hg+ZWkXcKMzpoi69OuZ67hZSAqFz2rwIYs4UrpX3Q1U=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bnpoXW4JpiWzbwZgu5iplhqDxM4u/NUbzLmbFhlTlhC8v84RN+D4Gi12/rR6UhOizV2sD+/JJVWctGAg3S/OsP6sMi05kEYQujl9LUTgwevalRHW0BUzCG1NaJWScXuVHBrd9PsTMjZmxRX+61MkDpbj4ZKLY+1Mqr6ypBlcqBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5909D1BCA;
-	Mon,  3 Feb 2025 02:29:24 -0800 (PST)
-Received: from e123572-lin.arm.com (e123572-lin.cambridge.arm.com [10.1.194.54])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2AE363F7BD;
-	Mon,  3 Feb 2025 02:28:56 -0800 (PST)
-From: Kevin Brodsky <kevin.brodsky@arm.com>
-To: linux-hardening@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Kevin Brodsky <kevin.brodsky@arm.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Mark Brown <broonie@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	David Howells <dhowells@redhat.com>,
-	"Eric W. Biederman" <ebiederm@xmission.com>,
-	Jann Horn <jannh@google.com>,
-	Jeff Xu <jeffxu@chromium.org>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Kees Cook <kees@kernel.org>,
+	 MIME-Version; b=cGy2gCa2YIVwH9NEdiGdb4qb8ZjC0O3tzbssDYH3Q6EPXDD7x8vTrFP7DbJG/s6UXVe+psgpHbpRt79IhRdAtUL5ZWLrd7IS5IJTjZ4n+eul9hiHATTF/b/KQyJZF5gRUou1/lThLk4HyrqR5lBgQzj/ekvNSO2XF6wl2ajFyVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JGNVf+R5; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JGNVf+R5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738585129; x=1770121129;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=Hg+ZWkXcKMzpoi69OuZ67hZSAqFz2rwIYs4UrpX3Q1U=;
+  b=JGNVf+R5CUoZSxaDZFaj454feamTUn/2nr5C+aQ65qFIKbpxflv7TZF0
+   YpKMm2Vrxc1kR8MKfZ5Op31eDdjOc8nZOOd54morp5Duice4y4DdZfUMP
+   wtXrPIcjJR/LefUOSUgPYUYL5cG9yePsAe949N1p+KYE550zvSXakiqaG
+   MAiLucHkW8wpdS1WFu+XjMYXlzSV2CnWbVOhKoQP78ZnQSm/jbGS+/Rk9
+   rSUVwOGL3mN4POpTVTBI7na4cvThDAAhgHYUhcT3MlAIiqufgQV7ATBgs
+   ZomkY9IXGTKQ0hZk6kGJ7Ypo9+XNyRrb7eJi5r0KeQehK4TpsR8WIKx6c
+   Q==;
+X-CSE-ConnectionGUID: F9J0RjmZTySLRQPf7ibG8g==
+X-CSE-MsgGUID: ctdBajcsQ0iXSkLJ8iQRkg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="56502983"
+X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
+   d="scan'208";a="56502983"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 04:18:48 -0800
+X-CSE-ConnectionGUID: U/dc3eLMTaagZAXlvCZv4A==
+X-CSE-MsgGUID: jQ1GOZbLQXuXeAO0Tpr6Tw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
+   d="scan'208";a="115279157"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa004.jf.intel.com with ESMTP; 03 Feb 2025 04:18:46 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 62D423A7; Mon, 03 Feb 2025 14:18:44 +0200 (EET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
 	Linus Walleij <linus.walleij@linaro.org>,
-	Andy Lutomirski <luto@kernel.org>,
-	Marc Zyngier <maz@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Pierre Langlois <pierre.langlois@arm.com>,
-	Quentin Perret <qperret@google.com>,
-	"Mike Rapoport (IBM)" <rppt@kernel.org>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Will Deacon <will@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Qi Zheng <zhengqi.arch@bytedance.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mm@kvack.org,
-	x86@kernel.org
-Subject: [RFC PATCH 8/8] mm: Add basic tests for kpkeys_hardened_cred
-Date: Mon,  3 Feb 2025 10:28:09 +0000
-Message-ID: <20250203102809.1223255-9-kevin.brodsky@arm.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20250203102809.1223255-1-kevin.brodsky@arm.com>
-References: <20250203102809.1223255-1-kevin.brodsky@arm.com>
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 3/7] gpio: 74x164: Annotate buffer with __counted_by()
+Date: Mon,  3 Feb 2025 14:17:19 +0200
+Message-ID: <20250203121843.3183991-4-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
+In-Reply-To: <20250203121843.3183991-1-andriy.shevchenko@linux.intel.com>
+References: <20250203121843.3183991-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -61,97 +69,64 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add basic tests for the kpkeys_hardened_pgtables feature: try to
-perform a direct write to current->{cred,real_cred} and ensure it
-fails.
+Add the __counted_by() compiler attribute to the flexible array member
+volumes to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
+CONFIG_FORTIFY_SOURCE.
 
-Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
+Use struct_size() instead of manually calculating the number of bytes to
+allocate the private structure with a buffer.
+
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- mm/Makefile                    |  1 +
- mm/kpkeys_hardened_cred_test.c | 42 ++++++++++++++++++++++++++++++++++
- security/Kconfig.hardening     | 11 +++++++++
- 3 files changed, 54 insertions(+)
- create mode 100644 mm/kpkeys_hardened_cred_test.c
+ drivers/gpio/gpio-74x164.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/mm/Makefile b/mm/Makefile
-index f7263b7f45b8..2024226902d4 100644
---- a/mm/Makefile
-+++ b/mm/Makefile
-@@ -149,3 +149,4 @@ obj-$(CONFIG_TMPFS_QUOTA) += shmem_quota.o
- obj-$(CONFIG_PT_RECLAIM) += pt_reclaim.o
- obj-$(CONFIG_KPKEYS_HARDENED_PGTABLES) += kpkeys_hardened_pgtables.o
- obj-$(CONFIG_KPKEYS_HARDENED_PGTABLES_TEST) += kpkeys_hardened_pgtables_test.o
-+obj-$(CONFIG_KPKEYS_HARDENED_CRED_TEST) += kpkeys_hardened_cred_test.o
-diff --git a/mm/kpkeys_hardened_cred_test.c b/mm/kpkeys_hardened_cred_test.c
-new file mode 100644
-index 000000000000..46048098f99d
---- /dev/null
-+++ b/mm/kpkeys_hardened_cred_test.c
-@@ -0,0 +1,42 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#include <kunit/test.h>
-+#include <linux/sched.h>
-+
-+static void write_cred(struct kunit *test)
-+{
-+	long zero = 0;
-+	int ret;
-+
-+	ret = copy_to_kernel_nofault((unsigned long *)current->cred, &zero, sizeof(zero));
-+	KUNIT_EXPECT_EQ_MSG(test, ret, -EFAULT,
-+			    "Write to current->cred wasn't prevented");
-+
-+	ret = copy_to_kernel_nofault((unsigned long *)current->real_cred, &zero, sizeof(zero));
-+	KUNIT_EXPECT_EQ_MSG(test, ret, -EFAULT,
-+			    "Write to current->real_cred wasn't prevented");
-+}
-+
-+static int kpkeys_hardened_cred_suite_init(struct kunit_suite *suite)
-+{
-+	if (!arch_kpkeys_enabled()) {
-+		pr_err("Cannot run kpkeys_hardened_cred tests: kpkeys are not supported\n");
-+		return 1;
-+	}
-+
-+	return 0;
-+}
-+
-+static struct kunit_case kpkeys_hardened_cred_test_cases[] = {
-+	KUNIT_CASE(write_cred),
-+	{}
-+};
-+
-+static struct kunit_suite kpkeys_hardened_cred_test_suite = {
-+	.name = "Hardened credentials using kpkeys",
-+	.test_cases = kpkeys_hardened_cred_test_cases,
-+	.suite_init = kpkeys_hardened_cred_suite_init,
-+};
-+kunit_test_suite(kpkeys_hardened_cred_test_suite);
-+
-+MODULE_DESCRIPTION("Tests for the kpkeys_hardened_cred feature");
-+MODULE_LICENSE("GPL");
-diff --git a/security/Kconfig.hardening b/security/Kconfig.hardening
-index 1af3a9dae645..9b0563a03ab4 100644
---- a/security/Kconfig.hardening
-+++ b/security/Kconfig.hardening
-@@ -338,6 +338,17 @@ config KPKEYS_HARDENED_CRED
- 	  This option has no effect if the system does not support
- 	  kernel pkeys.
+diff --git a/drivers/gpio/gpio-74x164.c b/drivers/gpio/gpio-74x164.c
+index 70c662bbca7b..7844f8a58834 100644
+--- a/drivers/gpio/gpio-74x164.c
++++ b/drivers/gpio/gpio-74x164.c
+@@ -30,7 +30,7 @@ struct gen_74x164_chip {
+ 	 * register at the end of the transfer. So, to have a logical
+ 	 * numbering, store the bytes in reverse order.
+ 	 */
+-	u8			buffer[];
++	u8			buffer[] __counted_by(registers);
+ };
  
-+config KPKEYS_HARDENED_CRED_TEST
-+	tristate "KUnit tests for kpkeys_hardened_cred" if !KUNIT_ALL_TESTS
-+	depends on KPKEYS_HARDENED_CRED
-+	depends on KUNIT
-+	default KUNIT_ALL_TESTS
-+	help
-+	  Enable this option to check that the kpkeys_hardened_cred feature
-+	  functions as intended, i.e. prevents arbitrary writes to live credentials.
-+
-+	  If unsure, say N.
-+
- endmenu
+ static int __gen_74x164_write_config(struct gen_74x164_chip *chip)
+@@ -97,6 +97,7 @@ static int gen_74x164_direction_output(struct gpio_chip *gc,
  
- config CC_HAS_RANDSTRUCT
+ static int gen_74x164_probe(struct spi_device *spi)
+ {
++	struct device *dev = &spi->dev;
+ 	struct gen_74x164_chip *chip;
+ 	u32 nregs;
+ 	int ret;
+@@ -116,10 +117,12 @@ static int gen_74x164_probe(struct spi_device *spi)
+ 		return -EINVAL;
+ 	}
+ 
+-	chip = devm_kzalloc(&spi->dev, sizeof(*chip) + nregs, GFP_KERNEL);
++	chip = devm_kzalloc(dev, struct_size(chip, buffer, nregs), GFP_KERNEL);
+ 	if (!chip)
+ 		return -ENOMEM;
+ 
++	chip->registers = nregs;
++
+ 	chip->gpiod_oe = devm_gpiod_get_optional(&spi->dev, "enable",
+ 						 GPIOD_OUT_LOW);
+ 	if (IS_ERR(chip->gpiod_oe))
+@@ -133,10 +136,7 @@ static int gen_74x164_probe(struct spi_device *spi)
+ 	chip->gpio_chip.set = gen_74x164_set_value;
+ 	chip->gpio_chip.set_multiple = gen_74x164_set_multiple;
+ 	chip->gpio_chip.base = -1;
+-
+-	chip->registers = nregs;
+ 	chip->gpio_chip.ngpio = GEN_74X164_NUMBER_GPIOS * chip->registers;
+-
+ 	chip->gpio_chip.can_sleep = true;
+ 	chip->gpio_chip.parent = &spi->dev;
+ 	chip->gpio_chip.owner = THIS_MODULE;
 -- 
-2.47.0
+2.43.0.rc1.1336.g36b5255a03ac
 
