@@ -1,63 +1,62 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 749C11FFC75;
-	Tue,  4 Feb 2025 06:12:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1910A25A655;
+	Tue,  4 Feb 2025 06:20:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738649580; cv=none; b=oWw6lEgrFG7Y17AcG+owqXOT0mXmmKwREIr4j0VkLq0ZCBUVA0xreIdKUweIsg1gzTUJH+7AM3dALGSatEOgX9YcB+5bGDK325WdyleSPdYiNQw3+L6nS5pE/T+yWGoNa2Jr8NE+nX2jpz93vkL7iDV0Wliw5zq3FAWzP9enZVA=
+	t=1738650019; cv=none; b=sg0kAT4CXv52Y8SxK1b7DeM9veRgY04Jy/PvTKWAnCHY/SkpB5Hxh4XryCXPFmBGP0e/qeX+wI1i+aiqia3Db+RbgRJGaB2Kk5S4t1cxcZ9Z66cYDv7F0n8UAEu4ax7ogJ2C9h3UwOkPzr0qJcS1B+FueJXSgPv1uAOdOHkDJdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738649580; c=relaxed/simple;
-	bh=Dhv3SRrHpLrLEKz3V+145BCuQEnuBa4gIZEwCDoN8/4=;
+	s=arc-20240116; t=1738650019; c=relaxed/simple;
+	bh=HkcZscvvD3gCXyz29syjOg7HivyYRZkHBV9qK8IwClI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uLcPvFPUeLarJYUj4aQlJdQroi8DAJBdmJ5k2phTvqxJxhaUW3/6Yx0uB12AmSwin/JoqgpCeNv1UHEDS+qhBAKydi2tZtt9ZsGPIEW/2CC4x7beAo+Tnwz/L7cDNk+TqZAV33ZVAAgflcjPnAO3s6LQ5g19HdAcNW2t4HLBSQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lAEjk6k4; arc=none smtp.client-ip=192.198.163.9
+	 Content-Type:Content-Disposition:In-Reply-To; b=qvJ32n5kH2bTIMBy/VGuLS1NAxJGWtqoHuKZeT4Uo4lcUG4ToS+QI75o4nSPtQuituBTHdxcpux4FhMZCRqiA71Jrhfdyjp5h/+do9z24VJb68YMXSVUY2Mq8m8K2AVVCuKJo029ar2cbklmakLefvW76wZga0xAs4VylHBLhow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YiwF+bc8; arc=none smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lAEjk6k4"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YiwF+bc8"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738649578; x=1770185578;
+  t=1738650018; x=1770186018;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=Dhv3SRrHpLrLEKz3V+145BCuQEnuBa4gIZEwCDoN8/4=;
-  b=lAEjk6k4ku57jx1r6wNB4t3WtIPDqBm7/G2NSvOtu4IOgrF4oiGkITar
-   ZqVPaL3Gs3XoRReolflIs7qc++eSNhYWjPyrkT76zZAemwat6z6m78Bwm
-   KtFMnUn1PjBPbTljq0f6Qc5VVcqavF7kCAfPP7xa+TfKogle3zcMzJzPO
-   pavaVQYATMk96RGOYz5MtonPORbtt6y8BSCaIPlPamA1vKi+pCMCKACnT
-   9xIOPxCEOCVXEg30aQBiB9HOTah/GeCWcCtGDpL7sSJ+9kd0y6cQOz9hA
-   Sb5Xu8g+NedWu5DTH64yaRs+WgIFedwn/9KTe4sMyr5wi3pvh80msgXnv
-   Q==;
-X-CSE-ConnectionGUID: mkFuB8pDQQKV3CSs9SL++A==
-X-CSE-MsgGUID: zPQK+9sUT+aRdd/pgpwxPw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="49812965"
-X-IronPort-AV: E=Sophos;i="6.13,258,1732608000"; 
-   d="scan'208";a="49812965"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 22:12:57 -0800
-X-CSE-ConnectionGUID: pUEZjYQMQFOvutZG/29oIA==
-X-CSE-MsgGUID: CQJAhstLRE+hJtPENz1Jvw==
+  bh=HkcZscvvD3gCXyz29syjOg7HivyYRZkHBV9qK8IwClI=;
+  b=YiwF+bc8fty90hNnOU6hfWGGwvj3vYZv1i3fbmoJZXLyWqNUOjbj6Nts
+   TW+14U2/nG6/y44NOlbszQ4FZX6ZCUAfaOlD4CHzDSUCG3tdrSe1+sYH0
+   dZtsnuRvyyqI3yT2RqrUuQhUh6pduj39WTRE4Y69ASHaQANQAJSU8fRoE
+   Rft8TRFYtNMo9bIzphPPrBiw5biqRiFz7koouftdJdQjgPp5CnhMoF7Iw
+   7FAlkdEJUPWA7YVUUr1PR/UsPry/hIT50IzvSP/T2pZMF/RKRZtc6vCie
+   XABj8UAgvSpqKqn9T9dupNF6C8CPjl+34RV1XYuS9+HREKejm5qwpwwZ1
+   w==;
+X-CSE-ConnectionGUID: ZiN7WtePTYawQRPoIPRvvA==
+X-CSE-MsgGUID: rGgwreD2Tc6aiY6Nk6uceA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="50580252"
+X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
+   d="scan'208";a="50580252"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 22:20:16 -0800
+X-CSE-ConnectionGUID: bVraY+nvRnmI6DT4JpRhIg==
+X-CSE-MsgGUID: G5FdLvNeS8mBz2ueWN9oeA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.13,258,1732608000"; 
-   d="scan'208";a="111049364"
+   d="scan'208";a="110280685"
 Received: from mev-dev.igk.intel.com ([10.237.112.144])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 22:12:54 -0800
-Date: Tue, 4 Feb 2025 07:09:23 +0100
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 22:20:14 -0800
+Date: Tue, 4 Feb 2025 07:16:41 +0100
 From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
 To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Saeed Mahameed <saeedm@nvidia.com>, Leon Romanovsky <leon@kernel.org>,
-	Tariq Toukan <tariqt@nvidia.com>,
+Cc: Igor Russkikh <irusskikh@marvell.com>,
 	Andrew Lunn <andrew+netdev@lunn.ch>,
 	"David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
 	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] net/mlx5e: Avoid a hundred
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2][next] net: atlantic: Avoid
  -Wflex-array-member-not-at-end warnings
-Message-ID: <Z6GvE4su2/m9e+Ev@mev-dev.igk.intel.com>
-References: <Z6GCJY8G9EzASrwQ@kspp>
+Message-ID: <Z6GwydOggtMRqYCY@mev-dev.igk.intel.com>
+References: <Z6F3KZVfnAZ2FoJm@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -66,109 +65,44 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z6GCJY8G9EzASrwQ@kspp>
+In-Reply-To: <Z6F3KZVfnAZ2FoJm@kspp>
 
-On Tue, Feb 04, 2025 at 01:27:41PM +1030, Gustavo A. R. Silva wrote:
+On Tue, Feb 04, 2025 at 12:40:49PM +1030, Gustavo A. R. Silva wrote:
 > -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
 > getting ready to enable it, globally.
 > 
-> So, in order to avoid ending up with a flexible-array member in the
-> middle of other structs, we use the `struct_group_tagged()` helper
-> to create a new tagged `struct mlx5e_umr_wqe_hdr`. This structure
-> groups together all the members of the flexible `struct mlx5e_umr_wqe`
-> except the flexible array.
+> Remove unused flexible-array member `buf` and, with this, fix the following
+> warnings:
+> drivers/net/ethernet/aquantia/atlantic/aq_hw.h:197:36: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> drivers/net/ethernet/aquantia/atlantic/hw_atl/../aq_hw.h:197:36: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 > 
-> As a result, the array is effectively separated from the rest of the
-> members without modifying the memory layout of the flexible structure.
-> We then change the type of the middle struct member currently causing
-> trouble from `struct mlx5e_umr_wqe` to `struct mlx5e_umr_wqe_hdr`.
-> 
-> We also want to ensure that when new members need to be added to the
-> flexible structure, they are always included within the newly created
-> tagged struct. For this, we use `static_assert()`. This ensures that the
-> memory layout for both the flexible structure and the new tagged struct
-> is the same after any changes.
-> 
-> This approach avoids having to implement `struct mlx5e_umr_wqe_hdr` as
-> a completely separate structure, thus preventing having to maintain two
-> independent but basically identical structures, closing the door to
-> potential bugs in the future.
-> 
-> We also use `container_of()` whenever we need to retrieve a pointer to
-> the flexible structure, through which we can access the flexible-array
-> member, if necessary.
-> 
-> So, with these changes, fix 124 of the following warnings:
-> 
-> drivers/net/ethernet/mellanox/mlx5/core/en.h:664:48: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> 
+> Suggested-by: Igor Russkikh <irusskikh@marvell.com>
 > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 > ---
->  drivers/net/ethernet/mellanox/mlx5/core/en.h      | 13 +++++++++----
->  drivers/net/ethernet/mellanox/mlx5/core/en_main.c |  4 +++-
->  2 files changed, 12 insertions(+), 5 deletions(-)
+> Changes in v2:
+>  - Remove unused flex-array member. (Igor)
 > 
-> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en.h b/drivers/net/ethernet/mellanox/mlx5/core/en.h
-> index 979fc56205e1..c30c64eb346f 100644
-> --- a/drivers/net/ethernet/mellanox/mlx5/core/en.h
-> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en.h
-> @@ -233,15 +233,20 @@ struct mlx5e_rx_wqe_cyc {
+> v1:
+>  - Link: https://lore.kernel.org/linux-hardening/ZrDwoVKH8d6TdVxn@cute/
+> 
+>  drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils.h | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils.h b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils.h
+> index f5901f8e3907..f6b990b7f5b4 100644
+> --- a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils.h
+> +++ b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils.h
+> @@ -226,7 +226,6 @@ struct __packed offload_info {
+>  	struct offload_port_info ports;
+>  	struct offload_ka_info kas;
+>  	struct offload_rr_info rrs;
+> -	u8 buf[];
 >  };
->  
->  struct mlx5e_umr_wqe {
-> -	struct mlx5_wqe_ctrl_seg       ctrl;
-> -	struct mlx5_wqe_umr_ctrl_seg   uctrl;
-> -	struct mlx5_mkey_seg           mkc;
-> +	/* New members MUST be added within the struct_group() macro below. */
-> +	struct_group_tagged(mlx5e_umr_wqe_hdr, hdr,
-> +		struct mlx5_wqe_ctrl_seg       ctrl;
-> +		struct mlx5_wqe_umr_ctrl_seg   uctrl;
-> +		struct mlx5_mkey_seg           mkc;
-> +	);
->  	union {
->  		DECLARE_FLEX_ARRAY(struct mlx5_mtt, inline_mtts);
->  		DECLARE_FLEX_ARRAY(struct mlx5_klm, inline_klms);
->  		DECLARE_FLEX_ARRAY(struct mlx5_ksm, inline_ksms);
->  	};
->  };
-> +static_assert(offsetof(struct mlx5e_umr_wqe, inline_mtts) == sizeof(struct mlx5e_umr_wqe_hdr),
-> +	      "struct member likely outside of struct_group_tagged()");
->  
->  enum mlx5e_priv_flag {
->  	MLX5E_PFLAG_RX_CQE_BASED_MODER,
-> @@ -660,7 +665,7 @@ struct mlx5e_rq {
->  		} wqe;
->  		struct {
->  			struct mlx5_wq_ll      wq;
-> -			struct mlx5e_umr_wqe   umr_wqe;
-> +			struct mlx5e_umr_wqe_hdr umr_wqe;
->  			struct mlx5e_mpw_info *info;
->  			mlx5e_fp_skb_from_cqe_mpwrq skb_from_cqe_mpwrq;
->  			__be32                 umr_mkey_be;
-> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-> index bd41b75d246e..4ff4ff2342cf 100644
-> --- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-> @@ -373,6 +373,8 @@ static void mlx5e_rq_shampo_hd_info_free(struct mlx5e_rq *rq)
->  
->  static int mlx5e_rq_alloc_mpwqe_info(struct mlx5e_rq *rq, int node)
->  {
-> +	struct mlx5e_umr_wqe *umr_wqe =
-> +		container_of(&rq->mpwqe.umr_wqe, struct mlx5e_umr_wqe, hdr);
->  	int wq_sz = mlx5_wq_ll_get_size(&rq->mpwqe.wq);
->  	size_t alloc_size;
->  
-> @@ -393,7 +395,7 @@ static int mlx5e_rq_alloc_mpwqe_info(struct mlx5e_rq *rq, int node)
->  		bitmap_fill(wi->skip_release_bitmap, rq->mpwqe.pages_per_wqe);
->  	}
->  
-> -	mlx5e_build_umr_wqe(rq, rq->icosq, &rq->mpwqe.umr_wqe);
-> +	mlx5e_build_umr_wqe(rq, rq->icosq, umr_wqe);
->  
->  	return 0;
 
 Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
 
->  }
+>  
+>  struct __packed hw_atl_utils_fw_rpc {
 > -- 
 > 2.43.0
+> 
