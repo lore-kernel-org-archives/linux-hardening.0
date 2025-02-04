@@ -1,46 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63A5F25A634;
-	Tue,  4 Feb 2025 02:57:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 651C714AD20;
+	Tue,  4 Feb 2025 03:03:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738637870; cv=none; b=sHgulA2r+FIinQpgdULOKAL73XIbphZ2jfUfLeMksvvWRvwUATlGN53/Ty5SUTParhuvjnt0vuzwlan7xZSdhu79iySV/SWUpJDFJ2ohTb3PSZi1rHQlxB2xLqbZUfps2sb6XGyEj8YflQ5t767p7ETY+eEQTNlIURAhEYVJnKs=
+	t=1738638225; cv=none; b=LJgwz4cRPVNMymt7w2mJY6FkTYg/ih3JGFP+EH3FWW3saIkWmNjiSY2T/cKm2si1LcR+ycBAacMqDGxqr3Uu3RZCKXIVvxqUZrnKzNJnNZLsUtm3tRirIUbERr59wTXadvTzYiyEnm3bivxN1hSx4gIeoLs0F9vLY6jU5dZctJ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738637870; c=relaxed/simple;
-	bh=CszYs/LJUcQ5jw0qlgHashLCbJKeipVq4nzLbBwNyjI=;
+	s=arc-20240116; t=1738638225; c=relaxed/simple;
+	bh=zfB93JeM7MiYyZSDcH+Cv62cIp0qVV5wlF6CFxF1K18=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=NgJhY1tr5dM159JojGI+xSBnk4Q7EUhjPIkVxFK/75hvqCmmwBh3vD/YsIgtxtbgdExbsUuEmvDBZHB7d6ghlyuW9xoUpTr8mdRqgYorfdi0g2d7nlqzukatz/8uTTEPimP80IdaAuotzXvXf/uazu1kXfnswbH6L7pk0Es6pYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uIAInkUL; arc=none smtp.client-ip=10.30.226.201
+	 Content-Disposition; b=eoHO131zES5aG6T3E0F/N6pqtPPP/vbXLnLugyokXY/qcMdsg6ohz/RVCbjoFNTywGcbvo7d2K9vNEIOMHal7w1/ojXFVRVRlHWpRME5J9C+FY8FEo6/wHAotYXVxbj/t6EPIBOLWDxUfhJxJChvHvflyBfHKV72GndVMxLAF9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CkwJURUI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uIAInkUL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A02FC4CEE0;
-	Tue,  4 Feb 2025 02:57:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CkwJURUI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 322B7C4CEE0;
+	Tue,  4 Feb 2025 03:03:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738637869;
-	bh=CszYs/LJUcQ5jw0qlgHashLCbJKeipVq4nzLbBwNyjI=;
+	s=k20201202; t=1738638224;
+	bh=zfB93JeM7MiYyZSDcH+Cv62cIp0qVV5wlF6CFxF1K18=;
 	h=Date:From:To:Cc:Subject:From;
-	b=uIAInkULcB4ZqT8id7Ve+pfC1Pl5mWRvTOFpU49bVYCyvw92i2y0379QVAUT0Sm8W
-	 mqi5FMzB+qCUC3cI1ETkFuXT+wlTxPqXFrv0t8+JphZBkAoQkkNQ7QZ9yBqauo00Ee
-	 cFXzvjl1YfcOH/NQxIeR9TBuvvu2WgJpVwRlFzaleJfJEnQzoI3WEWecNQTjVH2/+7
-	 7AfmCxBQxA81E9e+0+QXdbmmZ3Y0rSw6ij45vxOGn4yFUyrUjJ6v3PhwSxCqWQj3wq
-	 p7myqBrCs8t8xYNA1mwCrccLMkGhk2XIh3YdwiAwl3Iwsm326k4lDpvNGxgnSVwH13
-	 c9uqJkQNKTtnA==
-Date: Tue, 4 Feb 2025 13:27:41 +1030
+	b=CkwJURUI28A9HkD3AJVyabrekuC939zg3Z/0a4mA95JiCLvxBk3jOwJi8KXYT+4Ge
+	 x/pQKjlbJLCMz7nvIiqVEgfxhb1exR/wthN/l6owOa7xG93iyWdbOILNYlEi+YJ27X
+	 6QOONtrPNxrETRW5XsvXAOV5dPkygHvqEtSHVU9votsedau7dBYeZEWgj2tOlK6rG5
+	 xWDkIy1jP3K/IvtzYaHj/NfjqMlziVLJzDzBdoZn2gJLduCp9sWy/vJUk1wzGmM4uP
+	 wHZShmNwGxwdiFf8/ZFKL50Eo0QhFI9RoW06gB9FHXv1wMLLwwfjdrfbKr9AS1RO9M
+	 gfKwJnmsYtQBQ==
+Date: Tue, 4 Feb 2025 13:33:36 +1030
 From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Saeed Mahameed <saeedm@nvidia.com>, Leon Romanovsky <leon@kernel.org>,
-	Tariq Toukan <tariqt@nvidia.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
+To: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
+	Neil Brown <neilb@suse.de>, Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] net/mlx5e: Avoid a hundred
- -Wflex-array-member-not-at-end warnings
-Message-ID: <Z6GCJY8G9EzASrwQ@kspp>
+Subject: [RESEND PATCH][next] fs: nfs: acl: Avoid
+ -Wflex-array-member-not-at-end warning
+Message-ID: <Z6GDiLZo5u4CqxBr@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -55,14 +53,14 @@ getting ready to enable it, globally.
 
 So, in order to avoid ending up with a flexible-array member in the
 middle of other structs, we use the `struct_group_tagged()` helper
-to create a new tagged `struct mlx5e_umr_wqe_hdr`. This structure
-groups together all the members of the flexible `struct mlx5e_umr_wqe`
+to create a new tagged `struct posix_acl_hdr`. This structure
+groups together all the members of the flexible `struct posix_acl`
 except the flexible array.
 
 As a result, the array is effectively separated from the rest of the
 members without modifying the memory layout of the flexible structure.
 We then change the type of the middle struct member currently causing
-trouble from `struct mlx5e_umr_wqe` to `struct mlx5e_umr_wqe_hdr`.
+trouble from `struct posix_acl` to `struct posix_acl_hdr`.
 
 We also want to ensure that when new members need to be added to the
 flexible structure, they are always included within the newly created
@@ -70,8 +68,8 @@ tagged struct. For this, we use `static_assert()`. This ensures that the
 memory layout for both the flexible structure and the new tagged struct
 is the same after any changes.
 
-This approach avoids having to implement `struct mlx5e_umr_wqe_hdr` as
-a completely separate structure, thus preventing having to maintain two
+This approach avoids having to implement `struct posix_acl_hdr` as a
+completely separate structure, thus preventing having to maintain two
 independent but basically identical structures, closing the door to
 potential bugs in the future.
 
@@ -79,75 +77,73 @@ We also use `container_of()` whenever we need to retrieve a pointer to
 the flexible structure, through which we can access the flexible-array
 member, if necessary.
 
-So, with these changes, fix 124 of the following warnings:
+So, with these changes, fix the following warning:
 
-drivers/net/ethernet/mellanox/mlx5/core/en.h:664:48: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+fs/nfs_common/nfsacl.c:45:26: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en.h      | 13 +++++++++----
- drivers/net/ethernet/mellanox/mlx5/core/en_main.c |  4 +++-
- 2 files changed, 12 insertions(+), 5 deletions(-)
+ fs/nfs_common/nfsacl.c    |  8 +++++---
+ include/linux/posix_acl.h | 11 ++++++++---
+ 2 files changed, 13 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en.h b/drivers/net/ethernet/mellanox/mlx5/core/en.h
-index 979fc56205e1..c30c64eb346f 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en.h
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en.h
-@@ -233,15 +233,20 @@ struct mlx5e_rx_wqe_cyc {
+diff --git a/fs/nfs_common/nfsacl.c b/fs/nfs_common/nfsacl.c
+index ea382b75b26c..e2eaac14fd8e 100644
+--- a/fs/nfs_common/nfsacl.c
++++ b/fs/nfs_common/nfsacl.c
+@@ -42,7 +42,7 @@ struct nfsacl_encode_desc {
  };
  
- struct mlx5e_umr_wqe {
--	struct mlx5_wqe_ctrl_seg       ctrl;
--	struct mlx5_wqe_umr_ctrl_seg   uctrl;
--	struct mlx5_mkey_seg           mkc;
-+	/* New members MUST be added within the struct_group() macro below. */
-+	struct_group_tagged(mlx5e_umr_wqe_hdr, hdr,
-+		struct mlx5_wqe_ctrl_seg       ctrl;
-+		struct mlx5_wqe_umr_ctrl_seg   uctrl;
-+		struct mlx5_mkey_seg           mkc;
-+	);
- 	union {
- 		DECLARE_FLEX_ARRAY(struct mlx5_mtt, inline_mtts);
- 		DECLARE_FLEX_ARRAY(struct mlx5_klm, inline_klms);
- 		DECLARE_FLEX_ARRAY(struct mlx5_ksm, inline_ksms);
- 	};
+ struct nfsacl_simple_acl {
+-	struct posix_acl acl;
++	struct posix_acl_hdr acl;
+ 	struct posix_acl_entry ace[4];
  };
-+static_assert(offsetof(struct mlx5e_umr_wqe, inline_mtts) == sizeof(struct mlx5e_umr_wqe_hdr),
+ 
+@@ -112,7 +112,8 @@ int nfsacl_encode(struct xdr_buf *buf, unsigned int base, struct inode *inode,
+ 	    xdr_encode_word(buf, base, entries))
+ 		return -EINVAL;
+ 	if (encode_entries && acl && acl->a_count == 3) {
+-		struct posix_acl *acl2 = &aclbuf.acl;
++		struct posix_acl *acl2 =
++			container_of(&aclbuf.acl, struct posix_acl, hdr);
+ 
+ 		/* Avoid the use of posix_acl_alloc().  nfsacl_encode() is
+ 		 * invoked in contexts where a memory allocation failure is
+@@ -177,7 +178,8 @@ bool nfs_stream_encode_acl(struct xdr_stream *xdr, struct inode *inode,
+ 		return false;
+ 
+ 	if (encode_entries && acl && acl->a_count == 3) {
+-		struct posix_acl *acl2 = &aclbuf.acl;
++		struct posix_acl *acl2 =
++			container_of(&aclbuf.acl, struct posix_acl, hdr);
+ 
+ 		/* Avoid the use of posix_acl_alloc().  nfsacl_encode() is
+ 		 * invoked in contexts where a memory allocation failure is
+diff --git a/include/linux/posix_acl.h b/include/linux/posix_acl.h
+index e2d47eb1a7f3..62d497763e25 100644
+--- a/include/linux/posix_acl.h
++++ b/include/linux/posix_acl.h
+@@ -27,11 +27,16 @@ struct posix_acl_entry {
+ };
+ 
+ struct posix_acl {
+-	refcount_t		a_refcount;
+-	unsigned int		a_count;
+-	struct rcu_head		a_rcu;
++	/* New members MUST be added within the struct_group() macro below. */
++	struct_group_tagged(posix_acl_hdr, hdr,
++		refcount_t		a_refcount;
++		unsigned int		a_count;
++		struct rcu_head		a_rcu;
++	);
+ 	struct posix_acl_entry	a_entries[] __counted_by(a_count);
+ };
++static_assert(offsetof(struct posix_acl, a_entries) == sizeof(struct posix_acl_hdr),
 +	      "struct member likely outside of struct_group_tagged()");
  
- enum mlx5e_priv_flag {
- 	MLX5E_PFLAG_RX_CQE_BASED_MODER,
-@@ -660,7 +665,7 @@ struct mlx5e_rq {
- 		} wqe;
- 		struct {
- 			struct mlx5_wq_ll      wq;
--			struct mlx5e_umr_wqe   umr_wqe;
-+			struct mlx5e_umr_wqe_hdr umr_wqe;
- 			struct mlx5e_mpw_info *info;
- 			mlx5e_fp_skb_from_cqe_mpwrq skb_from_cqe_mpwrq;
- 			__be32                 umr_mkey_be;
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-index bd41b75d246e..4ff4ff2342cf 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-@@ -373,6 +373,8 @@ static void mlx5e_rq_shampo_hd_info_free(struct mlx5e_rq *rq)
- 
- static int mlx5e_rq_alloc_mpwqe_info(struct mlx5e_rq *rq, int node)
- {
-+	struct mlx5e_umr_wqe *umr_wqe =
-+		container_of(&rq->mpwqe.umr_wqe, struct mlx5e_umr_wqe, hdr);
- 	int wq_sz = mlx5_wq_ll_get_size(&rq->mpwqe.wq);
- 	size_t alloc_size;
- 
-@@ -393,7 +395,7 @@ static int mlx5e_rq_alloc_mpwqe_info(struct mlx5e_rq *rq, int node)
- 		bitmap_fill(wi->skip_release_bitmap, rq->mpwqe.pages_per_wqe);
- 	}
- 
--	mlx5e_build_umr_wqe(rq, rq->icosq, &rq->mpwqe.umr_wqe);
-+	mlx5e_build_umr_wqe(rq, rq->icosq, umr_wqe);
- 
- 	return 0;
- }
+ #define FOREACH_ACL_ENTRY(pa, acl, pe) \
+ 	for(pa=(acl)->a_entries, pe=pa+(acl)->a_count; pa<pe; pa++)
 -- 
 2.43.0
 
