@@ -1,44 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15C6C25A655;
-	Tue,  4 Feb 2025 02:10:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86327EC4;
+	Tue,  4 Feb 2025 02:54:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738635058; cv=none; b=V7v4X7098McPmdMMhIN19R9iFi2cvaFgkkcNDtt4l2eOx1QhADxIKAVD5QuYAbbQRZ5y4FdYxJMYc0jh/3mD4HFedwSQB73LBD+wukDjSoCmv4FHL4lU1OhTv60mI6d6MG/ROi77JXGxzbuuch73oW4tS3/z3VeK889UIqv87Ic=
+	t=1738637679; cv=none; b=s/3/jU8w1nxB8x68a6vR+Fd7ROT7c/HiBcBtfARPNoC4ZlgEcOEduSqt0II3QpG6UvvLl6aUuMdRt/jVcuOuvbqPe1qrqSkyrJeesAPpnNUyf8gQkeuK8WSg555H2QiJ84qvlIWaUYmp+clMsG5sQ2oRCElVrUBCVf4bpJzXwxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738635058; c=relaxed/simple;
-	bh=VFV1QQ4KPl9eM8E5rpXdw31ZGHL5nyodW9NTHy1BxmE=;
+	s=arc-20240116; t=1738637679; c=relaxed/simple;
+	bh=Hr6eeyE9E3euEHL6VQuoN3igwKmYR486ysCJziX04tw=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=oaizuQCnW2VwndJh70A4h7kg7WYWk1MFEgF3GGMH4rproEHEPRjuLIRxto8luhN+tEKHQfOjjhx8vwSK+4eGj26mfx9T1fXgiucUZS+y1nL/12o6rUz8SFbSHpExeINySmYtWfXFNrjO6msvvmS0ztdJwGnyp1tR0sh4B8Hcsm8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WewVQh0k; arc=none smtp.client-ip=10.30.226.201
+	 Content-Disposition; b=ajOnOeaWuWBzhLvG+GRUFV6wyIK8Z7yKfi3poe12byd9TmZqA5dMEODOUlfMaMApuwtmJQwdGcYyBbNU1pzU9Qn8xyR5A/x48KBefMDvs+ANfMCQcKkDTWnM/Xk3iT88aDhu1V9RwHm3keGUc6+ULluTZsoMtntZRTZnw/WAzdo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gs5S3CSX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WewVQh0k"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0202C4CEE0;
-	Tue,  4 Feb 2025 02:10:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gs5S3CSX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 311DEC4CEE2;
+	Tue,  4 Feb 2025 02:54:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738635057;
-	bh=VFV1QQ4KPl9eM8E5rpXdw31ZGHL5nyodW9NTHy1BxmE=;
+	s=k20201202; t=1738637679;
+	bh=Hr6eeyE9E3euEHL6VQuoN3igwKmYR486ysCJziX04tw=;
 	h=Date:From:To:Cc:Subject:From;
-	b=WewVQh0k/PbrjnRCy9yvluBSyzvZRVIz1Vwa6P0++DTlxSWNXocMDu3vt2ZCo9EHz
-	 xI1MKwMvpX8RkxVq7oM1VVO09H7xAQcRbkcnOjJJz31z+guDVmo9msTQ/x1fgEufYj
-	 Y6lVpi7IUK9sohXNEJ3LK1I0RUUkS2VqSOlr+OitDgy8tLnVatwip0yn6am3sXkudf
-	 6o7v8pR/rvy2m5Bq6uyunRQ2/tj4E/3+nF1ch3rwrjS487pS+rmIyTwzJLMt/neXaX
-	 It6ZinkrDu/1u7adXMpMLlDRXrkCH+I8rNkJ3GsJ8T2Voek5mbrsX+ID8nxFNwwvT4
-	 ImpptK0l4mxNw==
-Date: Tue, 4 Feb 2025 12:40:49 +1030
+	b=Gs5S3CSXcuLJ5Iuf2f5yaE4zMN4Z00DFYdT8QkkukJEwRcCkoKLnhCGyfP2906Zle
+	 aWyrds+y4TQSC4wxEZVfScVgW0mw7hm2uMAgBHM5jaYj8E84pJ5NYLbdpSL6PcsKg6
+	 Yk/FQs/xHbZT5nl6N0/G5I2J9ovOU3vFKiDcZx8hJMmZ/8P+psJ5wCkXDjha+TFbyV
+	 JY/5On5vOnX/RiFWDy5AvBrcOXvWEgSgaFy3giq4hJspINKDgbkG9FRTIz+Nzt7Ayo
+	 UuZA1DD+RTCTvmX9m81LpwT+/rLJNBJsxaHkcT4oqv+s7U74bMfYzlth18UuAXJ6ch
+	 n9Q41nTvZUowQ==
+Date: Tue, 4 Feb 2025 13:24:31 +1030
 From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Igor Russkikh <irusskikh@marvell.com>,
+To: Potnuri Bharat Teja <bharat@chelsio.com>,
 	Andrew Lunn <andrew+netdev@lunn.ch>,
 	"David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>
 Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH v2][next] net: atlantic: Avoid -Wflex-array-member-not-at-end
- warnings
-Message-ID: <Z6F3KZVfnAZ2FoJm@kspp>
+Subject: [PATCH v2][next] cxgb4: Avoid a -Wflex-array-member-not-at-end
+ warning
+Message-ID: <Z6GBZ4brXYffLkt_@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -51,35 +52,51 @@ Content-Disposition: inline
 -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
 getting ready to enable it, globally.
 
-Remove unused flexible-array member `buf` and, with this, fix the following
-warnings:
-drivers/net/ethernet/aquantia/atlantic/aq_hw.h:197:36: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/net/ethernet/aquantia/atlantic/hw_atl/../aq_hw.h:197:36: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+Move the conflicting declaration to the end of the structure. Notice
+that `struct ethtool_dump` is a flexible structure --a structure that
+contains a flexible-array member.
 
-Suggested-by: Igor Russkikh <irusskikh@marvell.com>
+Fix the following warning:
+./drivers/net/ethernet/chelsio/cxgb4/cxgb4.h:1215:29: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+
+Reviewed-by: Simon Horman <horms@kernel.org>
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
 Changes in v2:
- - Remove unused flex-array member. (Igor)
+ - Update subject and prefix.
+ - Add RB tag.
 
 v1:
- - Link: https://lore.kernel.org/linux-hardening/ZrDwoVKH8d6TdVxn@cute/
+ - Link: https://lore.kernel.org/linux-hardening/ZrDx4Jii7XfuOPfC@cute/
 
- drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils.h | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4.h | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils.h b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils.h
-index f5901f8e3907..f6b990b7f5b4 100644
---- a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils.h
-+++ b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils.h
-@@ -226,7 +226,6 @@ struct __packed offload_info {
- 	struct offload_port_info ports;
- 	struct offload_ka_info kas;
- 	struct offload_rr_info rrs;
--	u8 buf[];
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4.h b/drivers/net/ethernet/chelsio/cxgb4/cxgb4.h
+index c7c2c15a1815..95e6f015a6af 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4.h
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4.h
+@@ -1211,9 +1211,6 @@ struct adapter {
+ 	struct timer_list flower_stats_timer;
+ 	struct work_struct flower_stats_work;
+ 
+-	/* Ethtool Dump */
+-	struct ethtool_dump eth_dump;
+-
+ 	/* HMA */
+ 	struct hma_data hma;
+ 
+@@ -1233,6 +1230,10 @@ struct adapter {
+ 
+ 	/* Ethtool n-tuple */
+ 	struct cxgb4_ethtool_filter *ethtool_filters;
++
++	/* Ethtool Dump */
++	/* Must be last - ends in a flex-array member. */
++	struct ethtool_dump eth_dump;
  };
  
- struct __packed hw_atl_utils_fw_rpc {
+ /* Support for "sched-class" command to allow a TX Scheduling Class to be
 -- 
 2.43.0
 
