@@ -1,84 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B39679FE;
-	Wed,  5 Feb 2025 09:03:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04A3622C328;
+	Wed,  5 Feb 2025 12:18:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738746218; cv=none; b=OmX/QzUo84vnhQXxIJVYSOVDVFak/RCP0ApNW85ncxH4ehHzXOBnUqKjyX+Y5VZfrK5mn5sj+8eorHGePQY7k7d+rNVzV3jonXKY9rO5Wq443LhWXLQAZXZmVI8YkrYvaoe5ZpuSxte5GDfzPME+xtSW581hmdPkzpj8KTNqU6c=
+	t=1738757900; cv=none; b=ZH8KtqKNuLEnxIOruqJiUfYecr0A4wmhBawaypk7kxr01ErleY9VaODk3jEiwDgHl/d/piXna5jQE0gJQFouJRbqGR0mOW35OCV03QqGJSFeOCU+XUiZiI+ZHmAoIz4EguJ/ixUoInbvGl/YMyarI7wJCBgCg2SOz/HExb3/yD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738746218; c=relaxed/simple;
-	bh=odrvl/ADLlE3OrvpCHrvqcIe/wV28jyuJRNCa6Hv8Ew=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nV/Hqp3Nd78lz+mTl9k1u0SjGY+xqzDHHRl+ojoWfw/gHBl3mHtQp9lV3MURmb6CQgLTVNBqsq5jFqETMbhtiW/WPF5sB/aUEqEXPWMjsCX+CA81LR05FysCY2ZHwjPd/gjccBeYwttGO5gtZc/1qviMwcaEbL6457N02gFXqKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UcouUFqS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738757900; c=relaxed/simple;
+	bh=fR+cFt4BZQLkpdvtnfLohX+19rk0r0+rK9SVAbMmxYg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=carLjLVhKqdhkCcc1mmOOoQEd8Rx67TISOc9I5VoGK/V7pnb+UXl+zZFwIiIhRidrYaCjpRSvLR2YLFW231FWzivQ0FqMQgfy2tkYKP1MgRsxorCje1pf03ii8i1jl/vgf8ZP4kRF53ZUxVDR8uNqFiT88NaF5MT79NIt8PndHA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SLdiLpIs; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UcouUFqS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F70CC4CED1;
-	Wed,  5 Feb 2025 09:03:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738746217;
-	bh=odrvl/ADLlE3OrvpCHrvqcIe/wV28jyuJRNCa6Hv8Ew=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UcouUFqSydEDvu0EP/6CYZJrsCw0Mzoz8NrCFV2ylQpmjanhNzZrcJQ2C9E7EgWFt
-	 zc6NzfbUp8O/AYZwsOrYqJr8Hw5kSiZvyZ8QbXpPC1uGGFdbX4jtRK0UqrJmUamGuK
-	 wteT+GTQsRK1AAVoIx6jxdkEY9RzHbJDPiq/CqImI2xzrJIkgPhmuGe7gUcVaabqtp
-	 fFtpXaHIrjVgInPxTJ3JNSJXDYCaUOsMB6ggu/M62umCiIfwPCB2XkcHQqzIscWAiv
-	 LqOJDw/mNYfj9VxTY9MSQFeEued1TtKshVJImHsO72RbcpSvf7h2FjqD1zwORZFp0w
-	 8qz/w5wvnbyiw==
-Date: Wed, 5 Feb 2025 10:03:32 +0100
-From: Joel Granados <joel.granados@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
-	Anna Schumaker <anna.schumaker@oracle.com>, Ashutosh Dixit <ashutosh.dixit@intel.com>, 
-	Baoquan He <bhe@redhat.com>, Bill O'Donnell <bodonnel@redhat.com>, 
-	Corey Minyard <cminyard@mvista.com>, "Darrick J. Wong" <djwong@kernel.org>, 
-	Jani Nikula <jani.nikula@intel.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, 
-	Song Liu <song@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Wei Liu <wei.liu@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [GIT PULL] sysctl constification changes for v6.14-rc1
-Message-ID: <ba4qmufdwy4w73aiiopxpgozo2bklnzqigxdcvcf7xuvomvalk@rm7evxixij5k>
-References: <kndlh7lx2gfmz5m3ilwzp7fcsmimsnjgh434hnaro2pmy7evl6@jfui76m22kig>
- <CAHk-=wgNwJ57GtPM_ZUCGeVN5iJt0pxDf96dRwp0KhuVV4Hjpw@mail.gmail.com>
- <iay2bmkotede6c5xkxnfvxwgxg2drmcc6az3eeiijkkz3ftie7@co4cir66ksz2>
- <202501311203.D6FDB314@keescook>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SLdiLpIs"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5dc75f98188so10841322a12.2;
+        Wed, 05 Feb 2025 04:18:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738757897; x=1739362697; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=p06UyUghuYW91CsxE3GRq30kKC6rXBlgYtHonuFNOdI=;
+        b=SLdiLpIsKWmpMUq5UFDvvyYGpyUuPnzfVfg+lXp758KhYlzhbwuxIolitpXOtdlBcA
+         b8f5URJ642ErRlhJgETsvrg4LMYUnW1Q82G5YokL8RWDRyNyRWYifnxGiLuZ2Rd0Blcn
+         CmYW9qDHEdx6QcMZg9+YFWun1YJSfgba/4kcC8eU147P4svxGy5SUx4g+cN3obLoQZuJ
+         pyQjefyBHsgROsRwJaE66U8K/mIj49BybtNDlfySD68BKBHLNPsGOFfXJQRidkvRMdfq
+         YBQ9DrvV4CwcE2TZw3YmjN42Q2S7GMo+q2vJ5c20h2yLqPhhpWHx6dL9SoiAsmGIAzRs
+         72zw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738757897; x=1739362697;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=p06UyUghuYW91CsxE3GRq30kKC6rXBlgYtHonuFNOdI=;
+        b=STigjg2zcc8ZBeGInZhcJUyfNYw26xd+0iO5/FOm9PiO08Xi1/6M918uEFgrCPoVFe
+         /NtBPHFx7XDevDdI4nsWNH8Nhq2h6RVq8PQ45y9Og2V9ZX7jXFQSdYCve/XTEz652L5N
+         gWEPN2TH5KuWhQQJ7677iaXHXjAtvRDFDfF8m1HPPxQCnjF9I6+yl85X/YvdysILLnYk
+         YNdEDmuOfU1W6H/QpDmtBnmD1WZtFv5SCDQrgFIICvEzrPgbsAxbL8WV/+OG/KsuoBfX
+         H85fs/S3Aqch0YAzuKy21T5lFZScb6fRHbY8NigTLTLrJow26DPt5GES+D1mpTbLsywM
+         BUSA==
+X-Forwarded-Encrypted: i=1; AJvYcCUm8PgS4tKR7sRjiK45QpJBw2ikRpPX2V3SdmdDKUUt8mBqE34yQjlMuRhnrJ5//J9yKlGSw5xINqM3U4GyRhM=@vger.kernel.org, AJvYcCWE1Jm1bbnt4nEiIif8uVEbbhPey/Bj518SmVz9u9rAFElgdM2PPBxian3p8DIIU1WLkLL8MU2ZpgbvhwOJ@vger.kernel.org
+X-Gm-Message-State: AOJu0YxSCMj7qkTpkEMq38aMQrhzAsaBmwtWUfJkLJbJaCEtXx8E3toQ
+	oOwc97klKUfK3ITpMPxitRtWtnrPnIugJCQl10U70CGiD3mElPs4O5eAzB5/YHkTr1ehuFk6kF5
+	dXCuV3F50pLEk5C2fOb7ItGctCIY=
+X-Gm-Gg: ASbGncu+eBC9QOazS7MdniPoxrR8djmBOfqvaegpKl79xzG+kTxHFtYe3K/aTt9Uwtd
+	qrTUYoPQaV/jmAN8jSde/d6E4ww8xePQI3RqTxhMHrGo09wONbJEYGjctzqJInibnnPwoc1s=
+X-Google-Smtp-Source: AGHT+IFeX+/obu7ox8PSNyj4uND9bjMg4Y3XV6IaQYWfLu9eUVM1KsKrD3Fv1nq/hLAssLVakajUofJswFM1RoTahQo=
+X-Received: by 2002:a05:6402:5d0:b0:5d3:cf08:d64d with SMTP id
+ 4fb4d7f45d1cf-5dcdb779fb9mr3123510a12.32.1738757896835; Wed, 05 Feb 2025
+ 04:18:16 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202501311203.D6FDB314@keescook>
+References: <67a1e1f4.050a0220.163cdc.0063.GAE@google.com> <CAGudoHHCXHA=7e8M=6jMVqbh8=keRBBF8yHvDm9PnyeN6Bb7Xw@mail.gmail.com>
+ <202502040717.FCEFDB7E0@keescook> <CAGudoHFszbdKkPibU_ynbj_PSyHewxTxWT_-hR3=8GHa46ebaQ@mail.gmail.com>
+ <CAGudoHHWsuVse-Ek3zOuOh-mBxaWRXYVr9W_Uef46K0_mxB0ZA@mail.gmail.com>
+ <20250204203059.GA909029@mit.edu> <CAGudoHFvLiCnCkAQN82qhdqmy0P2=Ywtnwqkc3KOc3s3hUQX8g@mail.gmail.com>
+ <CAGudoHEv+Diti3r0x9VmF5ixgRVKk4trYnX_skVJNkQoTMaDHg@mail.gmail.com> <20250205052651.GD909029@mit.edu>
+In-Reply-To: <20250205052651.GD909029@mit.edu>
+From: Mateusz Guzik <mjguzik@gmail.com>
+Date: Wed, 5 Feb 2025 13:18:04 +0100
+X-Gm-Features: AWEUYZkBF2cxzU94WR2mFC2eLUAkx0XtWDm1ZPapWQsMexh_fxOzU14uHyYbuR8
+Message-ID: <CAGudoHEkekF447FRTZL0GQsDwGi=VNr1vkwiDuOuME3YEpP0Lw@mail.gmail.com>
+Subject: Re: [syzbot] [hardening?] [mm?] BUG: bad usercopy in vfs_readlink
+To: "Theodore Ts'o" <tytso@mit.edu>
+Cc: Kees Cook <kees@kernel.org>, 
+	syzbot <syzbot+48a99e426f29859818c0@syzkaller.appspotmail.com>, 
+	akpm@linux-foundation.org, brauner@kernel.org, gustavoars@kernel.org, 
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 31, 2025 at 12:03:39PM -0800, Kees Cook wrote:
-> On Fri, Jan 31, 2025 at 02:57:40PM +0100, Joel Granados wrote:
-> > From 431abf6c9c11a8b7321842ed0747b3200d43ef34 Mon Sep 17 00:00:00 2001
-> > From: Joel Granados <joel.granados@kernel.org>
-> > Date: Fri, 31 Jan 2025 14:10:57 +0100
-> > Subject: [PATCH] csky: Remove the size from alignment_tbl declaration
-> > 
-> > Having to synchronize the number of ctl_table array elements with the
-> > size in the declaration can lead to discrepancies between the two
-> > values. Since commit d7a76ec87195 ("sysctl: Remove check for sentinel
-> > element in ctl_table arrays"), the calculation of the ctl_table array
-> > size is done solely by the ARRAY_SIZE macro removing the need for the
-> > size in the declaration.
-> > 
-> > Remove the size for the aligment_tbl declaration and const qualify the
-> > array for good measure.
-> > 
-> > Signed-off-by: Joel Granados <joel.granados@kernel.org>
-> 
-> FWIW, this looks correct to me.
-> 
-> Reviewed-by: Kees Cook <kees@kernel.org>
-Thx, I'll queue this up in sysctl-next unless it is already there.
+On Wed, Feb 5, 2025 at 6:26=E2=80=AFAM Theodore Ts'o <tytso@mit.edu> wrote:
+>
+> On Tue, Feb 04, 2025 at 10:25:29PM +0100, Mateusz Guzik wrote:
+> > >
+> > > My question is if that's legitimate, I'm guessing not. If not, then
+> > > ext4 should complain about it.
+> > >
+> > > On stock kernel this happens to work because strlen finds the "right"=
+ size.
+> > >
+> >
+> > So it occurred to me to check what fsck thinks about it.
+> >
+> > I ran it twice in a row, it *removed* the problematic symlink.
+>
+> Can you show me what's in the problematic symlink?  And does the
+> syzbot reproducer trigger a problem before adding your symlink
+> caching?
+>
+> What would be really great if you couldcreate small focused test case
+> that shows what's going on --- ideally something like a 100k file
+> system, ala the file systems in the tests directory of the e2fsprogs
+> sources....
+>
 
-Best
+Everything is in the first e-mail I sent you, albeit a little spread out.
 
--- 
+Corrupted image:
+https://storage.googleapis.com/syzbot-assets/7c2919610764/mount_0.gz
 
-Joel Granados
+The bogus link is under file0/file1 and readlinks to
+/tmp/syz-imagegen43743633/file0/file0.
+
+ext4 sets  i_size to 131109, while strlen on the thing is 37
+
+The problem happens to not reproduce with this testcase because of the
+nul terminator in the corrupted symlink. Because of it the kernel
+prior to my change only attempts to copy the 37 bytes.
+
+Suppose the corrupted image got massaged to *NOT* have a nul
+terminator in that symlink. Then the kernel-side ext4 code without my
+change would still only nul terminate
+
+So this:
+                        nd_terminate_link(ei->i_data, inode->i_size,
+                                sizeof(ei->i_data) - 1);
+
+Clamps it to whichever is lower -- inode->i_size or sizeof(ei->i_data) - 1.
+
+The call added by my patch uses inode->i_size unconditionally and
+trips over, so one could argue this is a bug on my end:
+
+                        inode_set_cached_link(inode, (char *)ei->i_data,
+                                              inode->i_size);
+
+It definitely fixes itself if one strlen()s and that would respect the
+termination, I'm going to send a patch to that extent later.
+
+However, that aside, there is definitely something going wrong with
+the symlink to begin with (size vs actual size disparity) and the fs
+should most likely reject it in the first place. So for this
+particular case I argue my bug only manifested itself because of the
+prior bug of ext4 accepting this link.
+--=20
+Mateusz Guzik <mjguzik gmail.com>
