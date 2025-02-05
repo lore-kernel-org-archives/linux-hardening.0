@@ -1,196 +1,165 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E22025A62C;
-	Tue,  4 Feb 2025 21:25:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D36E1FE479;
+	Wed,  5 Feb 2025 00:43:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738704345; cv=none; b=YGqvCp9/c6wzZXD/JHdM8kOnHeNO8cHjwV+trOfiTmozyigaf6TmUSsHGqMkkwtDCHcuzqgjvQOBgIFj+ZbdYp+VsgQKXnqggd1mX7vKaMWDjJjGgdZnFscmhle13plekd7RD62t4+mqitbcCRrLqrEL7qUtIpmzGTQLOSHwt4o=
+	t=1738716221; cv=none; b=LRWpdQiO2SFmWxz1JoYwzgrQSqUOJgYR/kPxM3YVoNP97qtJslDA+dZvpI9em89QEpSy7VwkwkO/qvzdW20I3oKiDMrWMnJTIHMnnRh6aoW6zjY9cg7HwqChW3Mt+pFEQWi6KZwNAMrcLjtoNj6uQCTLamBPbzfjM/lmpQOSehw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738704345; c=relaxed/simple;
-	bh=KkuJStOFGP+DhRKY5bNAaUqJbu7eJw/FdsyTkzYvyRE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=X/XfhXn8ovMjwo8iWtNCDBz1t8bPwxAQ+YFTAgjhLBdFOerwjd9P5ywvcDkB4881OkC+m9w5gUqTDxZMDu75HUzYpZQv3G9IC+3E5zxuqsKGpF+xstXjv+TMRBKrrZTwRQ+VPfyvDaucRmwtFFvhWLSlHgZg2XaXDgqJsjhopZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V64ELIeD; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738716221; c=relaxed/simple;
+	bh=DYdszt71y6WeymCQBtk4lvyx4TCPHkHSFV4UdgUples=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=oQzVb3GvwJ+C38oWKfwE/BzvHmvdU8PptL+tIzZZ0TCW+0o/ltPC0q4sW9SMkQkqICdV+I3YIYAMl7lhYodj9TE6jNiY5cvekTmW8ESUSOb1fb8wZcKMhjx7aDRWfoGz88isa6PexMPqxe8d9aTf8anBJS3cjcWg0lFZ0BQpCco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IT5tbY65; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V64ELIeD"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5d4e2aa7ea9so13027917a12.2;
-        Tue, 04 Feb 2025 13:25:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738704341; x=1739309141; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=F4C3nF0MrFU3lYanCxKKbK2G+JW9NeWKWWVNPsiXZNQ=;
-        b=V64ELIeDFlxpvi32zxfegIRQJf9bhrGFc3fmdbHW7MAP589qBFRbgv1l/4x+iiQgGW
-         8wJJFa8DlSejMbHFwuOErBjOn8tfHbIaAzxLhamb2eVOoXHfvDizwsRZx8QDqMHok/Af
-         +9mjvLXzAClhVgB+aJ3iFdIjcDJYwXY7cqVwLl60Hi933zq1ZUGX0FSBlkeGU7EhA4Z7
-         +wKOuSXcPXtQQrEATQ328WGP4APVeKnbgQTKJvPk1HHkphDHer/5wr1b59MNyjKulAFg
-         oKlq9oGRq6JuwRkrZtz14VooQR124k5BKsDKJgw6REkbQarvgDDbjSnMfhZOnWx9UjV9
-         6yXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738704341; x=1739309141;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=F4C3nF0MrFU3lYanCxKKbK2G+JW9NeWKWWVNPsiXZNQ=;
-        b=XNKpWMjIdg4hlermFeNtHiJpDZI65ep/KhF8Zb714ZQp/yZNfTgsX/YCg8mPwTvxFN
-         tUM4DRQi+o/KOqDKTZF0JRsbLuDZJSqX4zA9Ucm2fH6gpBRevWeiqCswSoiXiw683dJH
-         w31UrRwgeodEi9cKnAKWdeqqWdHqQRrQuOvG+DzmJWKEhTK4uftnc57ZyHSlrLbxfY20
-         oIR5QJzLnYnjtsetKeLO/wKo9Jh0aBegA6+UOX4jyRSWNziqh4e3N0NigbpwT7IUgcJk
-         KOhfPcL5M9EHjpjnIGhJ1JKxpvj+YRsxsMv4kynhBMAOPaS+6J35Lo1OsFXFw8ie5vie
-         dwHw==
-X-Forwarded-Encrypted: i=1; AJvYcCVNwFc5GXwuqoXE3bKx249fU4n90Cf0Nq15pPCWtYz+D9E4dHUzz1GO880Xr82hDI2WzFdWWjP5ugRFOPuy8Dk=@vger.kernel.org, AJvYcCVht81s0xn0mz62pWvm8O+xAqUq4pMTwB62MypH1+IscXuJoegpa+wA3sfaAYRJvp0j+Ci2SZGGYe6vv2Xr@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUcPuBiIDsOLCMkfXFIDlaq9QNKCeaFbPRBTp5oCr85cnm5dgE
-	9NTLbvSMyglpqy3rP0VnRYi1zvFvjZGiY6XrDB/1wTMnkLycfvEUv1MIKLjPL1IUQz0AAXIhuMh
-	f7FvLSYARqZEiU9Ftj5JeCWOnfdA=
-X-Gm-Gg: ASbGnct7YK9PTO32P4kVnvlC8MrwI46+6pY6A+NeUY/8vIiO8p7IWxpUq5f1jGUrZYt
-	lB/CAkACXYY4unO0qXjvdgYjE10XrBAOcmku46U9ysfzP0zv/olI3FDwIeFPKPokL2kflYMA=
-X-Google-Smtp-Source: AGHT+IGjcSWjs+ThZeODFo1Ch/yAVmyGtwLMyZHY93carg6mxOuz8K/lwuEqDLo0g3BJ/62afzxS2kQCol8JaUeguSE=
-X-Received: by 2002:a05:6402:358d:b0:5dc:cc02:5d25 with SMTP id
- 4fb4d7f45d1cf-5dcdb73336emr654488a12.11.1738704341310; Tue, 04 Feb 2025
- 13:25:41 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IT5tbY65"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1025CC4CEDF;
+	Wed,  5 Feb 2025 00:43:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738716220;
+	bh=DYdszt71y6WeymCQBtk4lvyx4TCPHkHSFV4UdgUples=;
+	h=Date:From:To:Cc:Subject:From;
+	b=IT5tbY65Vi0gQSafotjimOwjig4H7Ai4+mYmNAFtqjbEBESJt3efkTek1cfsWv1YU
+	 641LJHpDZn2RReo00FcSbzE4KFsgFdK8u2HbR97dtZKVobmqj+98O3e4Q/Z9EKUta1
+	 EJE72CrlNVSd9n0O2dXuBP2tUvdsshlu18twd5NZn+A/axSGuVn7yD6t8JdjgrgxYp
+	 83htpfOjr5+OY+7ieJsDVmZYvr+DlXcp778+1d7zdkgY/Uo2xAgal4/Knx/KBXVdU1
+	 maheqOeN4YryPwNYPx0UAm5AVrNfA6zEteXxdZV2RJ8vcbXjVRo5gOcEwVkq32qGQz
+	 TiceXpYqVzlYw==
+Date: Wed, 5 Feb 2025 11:13:33 +1030
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Igor Mitsyanko <imitsyanko@quantenna.com>,
+	Sergey Matyukevich <geomatsi@gmail.com>,
+	Kalle Valo <kvalo@kernel.org>
+Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH][next] qtnfmac: Avoid multiple -Wflex-array-member-not-at-end
+ warnings
+Message-ID: <Z6K0Nd_IprrhS6pn@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <67a1e1f4.050a0220.163cdc.0063.GAE@google.com> <CAGudoHHCXHA=7e8M=6jMVqbh8=keRBBF8yHvDm9PnyeN6Bb7Xw@mail.gmail.com>
- <202502040717.FCEFDB7E0@keescook> <CAGudoHFszbdKkPibU_ynbj_PSyHewxTxWT_-hR3=8GHa46ebaQ@mail.gmail.com>
- <CAGudoHHWsuVse-Ek3zOuOh-mBxaWRXYVr9W_Uef46K0_mxB0ZA@mail.gmail.com>
- <20250204203059.GA909029@mit.edu> <CAGudoHFvLiCnCkAQN82qhdqmy0P2=Ywtnwqkc3KOc3s3hUQX8g@mail.gmail.com>
-In-Reply-To: <CAGudoHFvLiCnCkAQN82qhdqmy0P2=Ywtnwqkc3KOc3s3hUQX8g@mail.gmail.com>
-From: Mateusz Guzik <mjguzik@gmail.com>
-Date: Tue, 4 Feb 2025 22:25:29 +0100
-X-Gm-Features: AWEUYZn5Bnu3knhWyzIOw0Z5zwfvbIPBa4gVp-XE170mO4LdzTpwkbg3B8Bab6M
-Message-ID: <CAGudoHEv+Diti3r0x9VmF5ixgRVKk4trYnX_skVJNkQoTMaDHg@mail.gmail.com>
-Subject: Re: [syzbot] [hardening?] [mm?] BUG: bad usercopy in vfs_readlink
-To: "Theodore Ts'o" <tytso@mit.edu>
-Cc: Kees Cook <kees@kernel.org>, 
-	syzbot <syzbot+48a99e426f29859818c0@syzkaller.appspotmail.com>, 
-	akpm@linux-foundation.org, brauner@kernel.org, gustavoars@kernel.org, 
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Tue, Feb 4, 2025 at 9:48=E2=80=AFPM Mateusz Guzik <mjguzik@gmail.com> wr=
-ote:
->
-> On Tue, Feb 4, 2025 at 9:31=E2=80=AFPM Theodore Ts'o <tytso@mit.edu> wrot=
-e:
-> >
-> > On Tue, Feb 04, 2025 at 05:49:48PM +0100, Mateusz Guzik wrote:
-> > > I'm going to restate: the original behavior can be restored by
-> > > replacing i_size usage with a strlen call. However, as is I have no
-> > > basis to think that the disparity between the two is legitimate. If a=
-n
-> > > ext4 person (Ted cc'ed) tells me the disparity can legally happen and
-> > > is the expected way, I'm going to patch it up no problem.
-> >
-> > There are two kinds of symlinks in ext4.  "Fast symlinks", where the
-> > symlink target can fit in i_block[].  And normal, sometimes called
-> > "slow" symlinks, where i_block[] contains a pointer to data block
-> > (either i_blocks[0] for a traditional inode, or the root of an extent
-> > tree that will fit in i_block[] if EXTENTS_FL is set).  In the case
-> > of a fast symlink, the maximum size of the file system is
-> > sizeof(i_block[])-1.  For a normal/slow symlink, the maximum size is
-> > super->s_blocksize.
-> >
-> > We determine whether a symlink is "fast" or not by checking whether
-> > i_size is less than sizeof(i_blocks[]).  In other words. if i_size
-> > less than 60 (and it's not an encrypted inode), it's a fast symlink
-> > and we set i_link to point to the i_block array.  From __ext4_iget()
-> > in fs/ext4/inode.c:
-> >
-> >                 if (IS_ENCRYPTED(inode)) {
-> >                         inode->i_op =3D &ext4_encrypted_symlink_inode_o=
-perations;
-> >                 } else if (ext4_inode_is_fast_symlink(inode)) {
-> >                         inode->i_link =3D (char *)ei->i_data;
-> >                         inode->i_op =3D &ext4_fast_symlink_inode_operat=
-ions;
-> >                         nd_terminate_link(ei->i_data, inode->i_size,
-> >                                 sizeof(ei->i_data) - 1);
-> >                 } else {
-> >                         inode->i_op =3D &ext4_symlink_inode_operations;
-> >                 }
-> >
-> >
-> > The call to nd_terminate_link() guarantees that inode->i_link is
-> > NUL-terminated, although the on-disk formatshould have already been
-> > NUL-terminated when the symlink is set.
-> >
->
-> It is nul-terminated, but inode->i_size does not line up with it -- as
-> in the inode size pulled from the disk image is different than what
-> strlen would suggest.
->
-> My question is if that's legitimate, I'm guessing not. If not, then
-> ext4 should complain about it.
->
-> On stock kernel this happens to work because strlen finds the "right" siz=
-e.
->
+-Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+getting ready to enable it, globally.
 
-So it occurred to me to check what fsck thinks about it.
+So, in order to avoid ending up with a flexible-array member in the
+middle of other structs, we use the `__struct_group()` helper to
+create a new tagged `struct qlink_tlv_hdr_fixed`. This structure
+groups together all the members of the flexible `struct qlink_tlv_hdr`
+except the flexible array.
 
-I ran it twice in a row, it *removed* the problematic symlink.
-e2fsck 1.47.0 (5-Feb-2023)
-One or more block group descriptor checksums are invalid.  Fix<y>? yes
-Group descriptor 0 checksum is 0xd7c5, should be 0xa2fe.  FIXED.
-Pass 1: Checking inodes, blocks, and sizes
-Pass 2: Checking directory structure
-Symlink /file0/file1 (inode #14) is invalid.
-Clear<y>? yes
-Pass 3: Checking directory connectivity
-Pass 4: Checking reference counts
-Pass 5: Checking group summary information
-[ERROR] ../../../../lib/support/quotaio_tree.c:546:check_reference:
-Illegal reference (4294967295 >=3D 6) in user quota file
-Update quota info for quota type 0<y>? yes
-[QUOTA WARNING] Usage inconsistent for ID 4294967295:actual (0, 0) !=3D
-expected (458752, 8)
-[QUOTA WARNING] Usage inconsistent for ID 0:actual (458752, 8) !=3D
-expected (0, 0)
-[ERROR] ../../../../lib/support/quotaio_tree.c:546:check_reference:
-Illegal reference (256 >=3D 6) in group quota file
-Update quota info for quota type 1<y>? yes
+As a result, the array is effectively separated from the rest of the
+members without modifying the memory layout of the flexible structure.
+We then change the type of the middle struct member currently causing
+trouble from `struct qlink_tlv_hdr` to `struct qlink_tlv_hdr_fixed`.
 
-syzkaller: ***** FILE SYSTEM WAS MODIFIED *****
-syzkaller: 16/32 files (0.0% non-contiguous), 160/512 blocks
+We also want to ensure that when new members need to be added to the
+flexible structure, they are always included within the newly created
+tagged struct. For this, we use `static_assert()`. This ensures that
+the memory layout for both the flexible structure and the new tagged
+struct is the same after any changes.
 
-So I stand by my assessment that the symlink fetching code should
-check for the problem of size vs strlen disparity.
+This approach avoids having to implement `struct qlink_tlv_hdr_fixed`
+as a completely separate structure, thus preventing having to maintain
+two independent but basically identical structures, closing the door
+to potential bugs in the future.
 
-> > Also note that there really is no point to caching inodes where
-> > inode->i_link is not a NUL pointer, since in those cases we never call
-> > file system's get_link() function; the VFS will just fetch it straight
-> > from i_link.  And in those cases, it's because it's a "fast symlink"
-> > (many file systems have this concept; not just ext[234]) and the
-> > symlink target was read in as part of the on-disk inode, and so there
-> > is no separate disk block read read the symlink.  And so if you are
-> > attempting to cache symlinks where inode->i_link is non-NULL, you're
-> > just wasting a small amount of memory, and wasting the CPU time to do
-> > the strcpy.
-> >
->
-> My code does not allocate any extra memory or do any extra copies.
->
-> The code prior to my change would grab i_link, strlen on it and pass
-> that to copy_to_user every single time readlink is issued.
->
-> My code stores the size in the inode (unioned with a field not used
-> for symlinks, so no again no increase in memory usage) so that the
-> strlen call can be avoided. Past that it's the same thing.
->
-> --
-> Mateusz Guzik <mjguzik gmail.com>
+So, with this changes, fix 66 of the following warnings:
+drivers/net/wireless/quantenna/qtnfmac/qlink.h:1681:30: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/wireless/quantenna/qtnfmac/qlink.h:1660:30: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/wireless/quantenna/qtnfmac/qlink.h:1646:30: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/wireless/quantenna/qtnfmac/qlink.h:1621:30: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/wireless/quantenna/qtnfmac/qlink.h:1609:30: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/wireless/quantenna/qtnfmac/qlink.h:1570:30: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ .../net/wireless/quantenna/qtnfmac/qlink.h    | 21 ++++++++++++-------
+ 1 file changed, 13 insertions(+), 8 deletions(-)
 
+diff --git a/drivers/net/wireless/quantenna/qtnfmac/qlink.h b/drivers/net/wireless/quantenna/qtnfmac/qlink.h
+index 674461fa7fb3..eae35b678952 100644
+--- a/drivers/net/wireless/quantenna/qtnfmac/qlink.h
++++ b/drivers/net/wireless/quantenna/qtnfmac/qlink.h
+@@ -1510,10 +1510,15 @@ enum qlink_tlv_id {
+ };
+ 
+ struct qlink_tlv_hdr {
+-	__le16 type;
+-	__le16 len;
++	/* New members MUST be added within the struct_group() macro below. */
++	__struct_group(qlink_tlv_hdr_fixed, __hdr, __packed,
++		__le16 type;
++		__le16 len;
++	);
+ 	u8 val[];
+ } __packed;
++static_assert(offsetof(struct qlink_tlv_hdr, val) == sizeof(struct qlink_tlv_hdr_fixed),
++	      "struct member likely outside of __struct_group()");
+ 
+ struct qlink_iface_limit {
+ 	__le16 max_num;
+@@ -1567,7 +1572,7 @@ enum qlink_reg_rule_flags {
+  * @dfs_cac_ms: DFS CAC period.
+  */
+ struct qlink_tlv_reg_rule {
+-	struct qlink_tlv_hdr hdr;
++	struct qlink_tlv_hdr_fixed hdr;
+ 	__le32 start_freq_khz;
+ 	__le32 end_freq_khz;
+ 	__le32 max_bandwidth_khz;
+@@ -1606,7 +1611,7 @@ enum qlink_dfs_state {
+  * @channel: ieee80211 channel settings.
+  */
+ struct qlink_tlv_channel {
+-	struct qlink_tlv_hdr hdr;
++	struct qlink_tlv_hdr_fixed hdr;
+ 	struct qlink_channel chan;
+ } __packed;
+ 
+@@ -1618,7 +1623,7 @@ struct qlink_tlv_channel {
+  * @chan: channel definition data.
+  */
+ struct qlink_tlv_chandef {
+-	struct qlink_tlv_hdr hdr;
++	struct qlink_tlv_hdr_fixed hdr;
+ 	struct qlink_chandef chdef;
+ } __packed;
+ 
+@@ -1643,7 +1648,7 @@ enum qlink_ie_set_type {
+  * @ie_data: IEs data.
+  */
+ struct qlink_tlv_ie_set {
+-	struct qlink_tlv_hdr hdr;
++	struct qlink_tlv_hdr_fixed hdr;
+ 	u8 type;
+ 	u8 flags;
+ 	u8 rsvd[2];
+@@ -1657,7 +1662,7 @@ struct qlink_tlv_ie_set {
+  * @ie_data: IEs data.
+  */
+ struct qlink_tlv_ext_ie {
+-	struct qlink_tlv_hdr hdr;
++	struct qlink_tlv_hdr_fixed hdr;
+ 	u8 eid_ext;
+ 	u8 rsvd[3];
+ 	u8 ie_data[];
+@@ -1678,7 +1683,7 @@ struct qlink_sband_iftype_data {
+  * @iftype_data: interface type data entries.
+  */
+ struct qlink_tlv_iftype_data {
+-	struct qlink_tlv_hdr hdr;
++	struct qlink_tlv_hdr_fixed hdr;
+ 	u8 n_iftype_data;
+ 	u8 rsvd[3];
+ 	struct qlink_sband_iftype_data iftype_data[];
+-- 
+2.43.0
 
---=20
-Mateusz Guzik <mjguzik gmail.com>
