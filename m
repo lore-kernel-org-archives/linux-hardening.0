@@ -1,91 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 441A01A256E;
-	Thu,  6 Feb 2025 18:52:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 323EC23957B
+	for <linux-hardening@vger.kernel.org>; Thu,  6 Feb 2025 19:01:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738867940; cv=none; b=aQ09dAMZa0yD0L+I11CW7xZJkDGqESbkr0zK/p0+ux/R3kQ3ijk4Gmg3zW3Lylucr7id+j4YiSAvJx5tnW/oKmjdLDccXQ3sbeSdRgDLdOcVGYefMuw9Q/Ngbu8HTDB6ba47APtwJVJUIk0mPnQoHeALzaRiHdVEJ6vrIQyxugA=
+	t=1738868510; cv=none; b=GDa8pDOijbUxUSqRzKuNxJEQyBJ01tZlynl5vSHUIBE4FTYUTVfM1vYDvKD4rBBcNwUpi5DhuVf+sdRoGX98daiMVyfoXTfU66Xlqb1k2xuniq7iMYwruAVmbSzcE64ztNvJlqATXk1yffalUxjsORzwEE413f4rvkAKoMFW/Nw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738867940; c=relaxed/simple;
-	bh=PYqpdjb3pm4kXVwX/G7U2wilgc0uN1LJbAA0nKyUDbM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=noFRSV4Yrg61oQoe3QV1hpMjHPSZTPgK9KnTla8qatmdznxIVIxQeDyG2+x4RItVm50cFvTKwdaUYlbAwhI73bb8YOpICl6ommK3okyZx59xW3FpehXOZz9gF/I1hl0ShHZ92KoJSPXGOuBiu3qfsT5qWMfGwZ9EBVOxsv1f2Hs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TlGPb+U+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738868510; c=relaxed/simple;
+	bh=H26hCa0BkZ3dMHTQ+5j05dxgsk8Xe5RdYR/UT/6FR1s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kJwMHfg9xIUEApyN+Jda35pzqyppZRJfXB7FYhvsZlMbBTH7iFK8XXAbaUAwte1TpQ1Z5kN2SeXLgZ0NbdrLNLDcQHIkmOlnZ+3cPoKnlWURoR40HOa/Kr6gIX0pbqVCT/tdycNyt2SfNHNpr5iFWoBsMhdccWJOCF/kA5817XQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Df9zaj9+; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TlGPb+U+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9695FC4CEDF;
-	Thu,  6 Feb 2025 18:52:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738867938;
-	bh=PYqpdjb3pm4kXVwX/G7U2wilgc0uN1LJbAA0nKyUDbM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TlGPb+U+r3kCa87x7+sMSHeMSICA4IQJzF0t8VY6fE1gP+KFQwahsrQzZA20aM7nG
-	 bbqjwdlw1YhsjPZKNqhFPtSlSYtGO+qgI6+OLstGdgwxCgDAxBTejI6aGuva0TeJFR
-	 yW/rYBhl93dq7E6orZ/tHc/vg9ynIlgnhzATCs4xeE1bL0ZIbVqG0DtxgXRDFZtN4j
-	 Umz0dKBcKGetbO6yTWUivH7dTcDK9p4w1B7OGIe++JZtFOeuKUP6zLZAzc9wwrQEms
-	 BdAhp0F6mKdcY478chy3NjV9sVtCjbvnJQa+iFPz6mKIkfWimYUKBi5SV01paExQOE
-	 JJaQT1I0eQ8GA==
-Date: Thu, 6 Feb 2025 10:52:18 -0800
-From: Kees Cook <kees@kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Andy Shevchenko <andy@kernel.org>,
-	Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Philipp Reisner <philipp.reisner@linbit.com>,
-	Miguel Ojeda <ojeda@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH 0/3] string.h: Use ARRAY_SIZE() for
- memtostr*()/strtomem*()
-Message-ID: <202502061050.EC48F506B1@keescook>
-References: <20250206175216.work.225-kees@kernel.org>
- <CAHp75Vf=84tWvv57Kj5A5bLenQSkC5yDHTHy-u0iK1_U87nvBw@mail.gmail.com>
- <CANiq72kGUOgP60SaEwiBcgsDJnjdvJZ1VJtyf3a_+sQJjiffng@mail.gmail.com>
- <CAHp75Veo-C3A+XVr1RuFumoULWNOugN+CFE65d1T5o+TZSmw-g@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Df9zaj9+"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-54410d769f7so952233e87.3
+        for <linux-hardening@vger.kernel.org>; Thu, 06 Feb 2025 11:01:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738868506; x=1739473306; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=H26hCa0BkZ3dMHTQ+5j05dxgsk8Xe5RdYR/UT/6FR1s=;
+        b=Df9zaj9+9IC8fyTO+LAviJqdFOO+UMN+s8gst16NahaFc+p4lgpT4YEJq0CXNYBFzy
+         OWfFYa0NN4RaQNZhnbj7LmZ9b/yueA6QhqKJbxYG/CyNm3eQEJrkMdOATr2cs8seI6tu
+         /uXzKdrWzliPFuIeJKSo489feKxHv93RgA8bQikFHvosorOY7Zx5KPi5Ya129+AXBQHx
+         rp1+RQ1bOEwiLhbTJAU3WxqVbocryHEAd3SI7dKALSTzaN+omfaOVF16ZAd3/wF1e27S
+         LQ32TWqDJ9atsiS9nGSWVOgvbxWtLDudcUuNZLDmmhF7cabHFJncgHfubH8SMak93Rxk
+         SoxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738868506; x=1739473306;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=H26hCa0BkZ3dMHTQ+5j05dxgsk8Xe5RdYR/UT/6FR1s=;
+        b=IQ8WbPy176INF5R1ZYWMuiBkdmo3PgdnR9plFC7vPFfpMUPUhxwD+vaBhHWvNLXU7u
+         gq26pQ5rPmj/ecZv6jArLRV782tkl+h3OxCcRIdF9SJi+r0L7jzGyTLgI7FT2HKn7teQ
+         H22IUgUIClZPXRc/1o+yBpsbyZZ/+LWCrNWhmc8/18tXlLDvaQKX+PhSdWlreDbnTCsK
+         dvkw1W/XP0hBDWN5oAHi4xQ1rCm4bL2yOTlj61oU3TRqKuOzcgIQoPHS4P/PHvXIBnik
+         QuaWWpgJxTp8b3Z5HASgUBGho5G2+su9kYy7s1dGBCF+UoB10Qr7wqvav3nlnhGr9W2j
+         RSCA==
+X-Gm-Message-State: AOJu0YxU5/pP96gMhU/jaXkIoLygwugjYUhBXTcspvFyli3sxSq5/FDY
+	9Cqw6lodk1bNZKpptAkCpqkfUCv0IylpeX60LPYC66Ag/DhERNc8N/RX1PXNeDZlaaImcooIWcZ
+	qqObGjrfIVuLBMCZakEodqrtyjvJjCMmxALZWjw==
+X-Gm-Gg: ASbGncuFvYnHGYmHbrEX3WRYkHUGn9C2cqe7Ap3IcTByER1Qheyg0mZyZh752HOX1/s
+	DSnOakGekK0limKcALZ+vwrKgCaepLBKxQR+z15o3SUwEpNEE/xw4ks9ThI/S3ozqxym+6Zk=
+X-Google-Smtp-Source: AGHT+IGYbTW64WX7v4eRIud9aI7sO+r6eN6uxSXvFM2flvdaMCaTnXZkw1PV8dpsvo+PKiCDP3tZfZA6qctV7ZLyAak=
+X-Received: by 2002:a2e:a10c:0:b0:302:3de5:b039 with SMTP id
+ 38308e7fff4ca-307e57bc6b9mr333711fa.8.1738868506188; Thu, 06 Feb 2025
+ 11:01:46 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHp75Veo-C3A+XVr1RuFumoULWNOugN+CFE65d1T5o+TZSmw-g@mail.gmail.com>
+References: <20250203101839.1223008-1-kevin.brodsky@arm.com> <20250203101839.1223008-9-kevin.brodsky@arm.com>
+In-Reply-To: <20250203101839.1223008-9-kevin.brodsky@arm.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 6 Feb 2025 20:01:34 +0100
+X-Gm-Features: AWEUYZkf3utqCGGAYFw3Wd0K9HPUGk1pvzmcRu62yuHXXkM5758Qny3DAHNgUk4
+Message-ID: <CACRpkdZ_eGsfZh2vkG8dtSyZDbStMfDUuj7s7TQ4FcDwThJVkg@mail.gmail.com>
+Subject: Re: [RFC PATCH v3 08/15] mm: Introduce kernel_pgtables_set_pkey()
+To: Kevin Brodsky <kevin.brodsky@arm.com>
+Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Andrew Morton <akpm@linux-foundation.org>, Mark Brown <broonie@kernel.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	Jann Horn <jannh@google.com>, Jeff Xu <jeffxu@chromium.org>, Joey Gouly <joey.gouly@arm.com>, 
+	Kees Cook <kees@kernel.org>, Andy Lutomirski <luto@kernel.org>, Marc Zyngier <maz@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Pierre Langlois <pierre.langlois@arm.com>, 
+	Quentin Perret <qperret@google.com>, "Mike Rapoport (IBM)" <rppt@kernel.org>, 
+	Ryan Roberts <ryan.roberts@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>, 
+	Matthew Wilcox <willy@infradead.org>, Qi Zheng <zhengqi.arch@bytedance.com>, 
+	linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 06, 2025 at 08:45:41PM +0200, Andy Shevchenko wrote:
-> On Thu, Feb 6, 2025 at 8:44 PM Miguel Ojeda
-> <miguel.ojeda.sandonis@gmail.com> wrote:
-> >
-> > On Thu, Feb 6, 2025 at 7:42 PM Andy Shevchenko
-> > <andy.shevchenko@gmail.com> wrote:
-> > >
-> > > What's the minimum Clang version we build kernel with? 12?
-> >
-> > 13.0.1 for most architectures according to `scripts/min-tool-version.sh`.
-> 
-> Okay, does it mean 13 has no such a bug?
+Hi Kevin,
 
-It probably did, but Clang 13 didn't support compile-time error messages
-(added in 14). Regardless, this fixes it there and makes the API more
-robust.
+thanks for your patch!
 
-> Otherwise the commit message and other comments might be clearer...
+On Mon, Feb 3, 2025 at 11:20=E2=80=AFAM Kevin Brodsky <kevin.brodsky@arm.co=
+m> wrote:
 
-How should I rephrase things? I mention the bug and when it was fixed
-in patch 3:
+> kernel_pgtables_set_pkey() allows setting the pkey of all page table
+> pages in swapper_pg_dir, recursively. This will be needed by
+> kpkeys_hardened_pgtables, as it relies on all PTPs being mapped with
+> a non-default pkey. Those initial kernel page tables cannot
+> practically be assigned a non-default pkey right when they are
+> allocated, so mutating them during (early) boot is required.
+>
+> Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
 
-  ...
-  benefit of working around a bug in Clang (fixed[1] in 15+) that got
-  ...
+(...)
 
--Kees
+> +static int set_page_pkey(void *p, int pkey)
+> +static int set_pkey_pte(pmd_t *pmd, int pkey)
+> +static int set_pkey_pmd(pud_t *pud, int pkey)
+> +static int set_pkey_pud(p4d_t *p4d, int pkey)
+> +static int set_pkey_p4d(pgd_t *pgd, int pkey)
+> +int kernel_pgtables_set_pkey(int pkey)
 
--- 
-Kees Cook
+Aren't these all discardable after boot, so the whole set should
+be tagged with __init?
+
+Other than that it LGTM.
+
+Yours,
+Linus Walleij
