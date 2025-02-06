@@ -1,253 +1,120 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 612C0376;
-	Thu,  6 Feb 2025 09:43:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4EED2451F0;
+	Thu,  6 Feb 2025 13:20:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738835017; cv=none; b=V77BDbcSNgFWLOK/BjDFPhNq8+8MPKCUMEkQc+TPmBmXb198L/TUgGTFubAKIKOHYx8oLarl53XUZkEMmnd10Ns6B/PrfV18uYbcV9pPUG5STWB4E3zH3B2m9swX+zj+vO1Fn1jORi5W6/hcSth0hasy1bH5ocf98goZ4Qh7TPY=
+	t=1738848027; cv=none; b=ev6S5pQzQ8MNAFkBTINT4VAPSJKGFZO5OY7mDefOvOalp2vefrY8PkRq/mP/bz9S521i2gFjoT7h7wLADlMJ0xn6Pt8Y1Ot0Rd6A+6/xyAVpCAtBXvf1C0KnJHgZvNRAOwgnD3x/n5lxWTPnZ43NZmYSHFggfvzG3nnRqFc6fUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738835017; c=relaxed/simple;
-	bh=8eyl0VzZgoiNvO1SiHEm8u1wtKboPWxSpz1MoUnM9IQ=;
+	s=arc-20240116; t=1738848027; c=relaxed/simple;
+	bh=85OGFqCAaYhHp9+67jN8c6VZPGWz0QLxevvnw8zRwLE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hx1+Pn75a5iKKNFcRSA12Za73nGCoBWCP2RDaWno/SVK3qBPjxImvSI5D2wG4tpssbDygX0sWimg0mheewpDAX4iqadjYfTFn9S2qW5C0q8ZctfoxaR5nxVGTPuphCB+WL7PdvgpeeslJ/G9Wo20e+RnDIeQH2jOs5QQKMM3fOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=MbbuIhLm; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=XCE50CTl; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=MbbuIhLm; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=XCE50CTl; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 Content-Type:Content-Disposition:In-Reply-To; b=AQR6yTzu3ZkYlHVA3+ke0JA7BY83L8dxXdOKxSwcCBYyMSx+TeeMU3KgBvCgCQnxd4R53GmWnyi+TGsMcQLet9v2MbdmYBbU22QlqLBZbbs9N8pBN/L0DRIOPY1A1ZnS+FjEyj9sgOFF3+frFSEcuwlU6Ceq9hiFFGojAMkLBGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Vsra+7bh; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=IvIe/z1D; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="MbbuIhLm";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="XCE50CTl";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="MbbuIhLm";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="XCE50CTl"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 076D91F381;
-	Thu,  6 Feb 2025 09:43:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1738835008; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Vsra+7bh";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IvIe/z1D"
+Date: Thu, 6 Feb 2025 14:20:22 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1738848023;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=f1SuLVgARcM8qAh8txDvor/72mo2wlLPZKKAQ1xZVPE=;
-	b=MbbuIhLmLiiRG6ZOB8H+LYZaDNhs7EtLOb3nra3waVSoye2S3s7nqbYn1e2hn0SnJReNnZ
-	Mhj7+KbUn1ADBYQpv6GvTkBhk2F7Z+/8A7JaIhHEXHk3lXGrciAXC8x9ali/HbtooqoihY
-	uwBDU0FkNRoTYH0agZI3bR1m5v9Y/EY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1738835008;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
+	bh=0Ud3Qu2rXs7gKlmPU8x2diyWcmreX5g6Jir9z7AYo2Q=;
+	b=Vsra+7bhKm9lHVvPeMv4HsaPWHQq0miNDYD4giIigcTE6+1b92B9WaqzWrT+Hhbjp9x4hO
+	etvZB5QjHgy0MhYdnIdnRqAOlhb6RGf3UT9ohGnEzoODPuqjNCsCHwm7zRtLEDbNZh0ZxX
+	1JdnkzAzcUj3XNu/4i+ZL92CL37DzoXS1cVcRiJqSPMngIOAeTtEJ6AhFdKsWf8FZjb8m8
+	I+4K3HvD6HkGXwNw4AH7pI9OEl5GND7Uhqp/72nm3UTppsPaMyT/B0vuCCqz8MeThBGCdT
+	CnT7lh5XcqFgpH2c0N8vk+zFjAfWsf+KGd3HHQPYylr3cP/OaWCfyFEuA+EEhw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1738848023;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=f1SuLVgARcM8qAh8txDvor/72mo2wlLPZKKAQ1xZVPE=;
-	b=XCE50CTl4r7Si0qs8/75D62T8CK5kYib5Dd4BJTPTlK0Cy0Lj4HkE+XRlh03sAJzyE0hPP
-	lbRLzW1rEgrJUrBA==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1738835008; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=f1SuLVgARcM8qAh8txDvor/72mo2wlLPZKKAQ1xZVPE=;
-	b=MbbuIhLmLiiRG6ZOB8H+LYZaDNhs7EtLOb3nra3waVSoye2S3s7nqbYn1e2hn0SnJReNnZ
-	Mhj7+KbUn1ADBYQpv6GvTkBhk2F7Z+/8A7JaIhHEXHk3lXGrciAXC8x9ali/HbtooqoihY
-	uwBDU0FkNRoTYH0agZI3bR1m5v9Y/EY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1738835008;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=f1SuLVgARcM8qAh8txDvor/72mo2wlLPZKKAQ1xZVPE=;
-	b=XCE50CTl4r7Si0qs8/75D62T8CK5kYib5Dd4BJTPTlK0Cy0Lj4HkE+XRlh03sAJzyE0hPP
-	lbRLzW1rEgrJUrBA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EC66413697;
-	Thu,  6 Feb 2025 09:43:27 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id Rl60OT+EpGcFSwAAD6G6ig
-	(envelope-from <jack@suse.cz>); Thu, 06 Feb 2025 09:43:27 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 9E902A0889; Thu,  6 Feb 2025 10:43:23 +0100 (CET)
-Date: Thu, 6 Feb 2025 10:43:23 +0100
-From: Jan Kara <jack@suse.cz>
-To: Kees Cook <kees@kernel.org>
-Cc: Jan Kara <jack@suse.cz>, 
-	syzbot <syzbot+48a99e426f29859818c0@syzkaller.appspotmail.com>, akpm@linux-foundation.org, brauner@kernel.org, 
-	gustavoars@kernel.org, linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, mjguzik@gmail.com, syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [hardening?] [mm?] BUG: bad usercopy in vfs_readlink
-Message-ID: <gksdmj6duotvgrqrdf5omv5mlbvolw7jofsxqbnqvd2a5t7wpu@ukqah3y2dzqg>
-References: <67a1e1f4.050a0220.163cdc.0063.GAE@google.com>
- <r7aylhww6ssce4uk4drib5c7awf6kcdgo5rzorbi3mve723hu6@6p7ij7t44ejq>
- <202502051031.2CF8D96392@keescook>
+	bh=0Ud3Qu2rXs7gKlmPU8x2diyWcmreX5g6Jir9z7AYo2Q=;
+	b=IvIe/z1DEyPwDIET7ND0p6Do1/gTd/Eu+o6lDk7vaU30Voa8a/qwsrPUCezHNX9XvfwWDZ
+	ZrVHN26MvqfrHGBA==
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+To: enh <enh@google.com>
+Cc: Jeff Xu <jeffxu@chromium.org>, Pedro Falcato <pedro.falcato@gmail.com>, 
+	Benjamin Berg <benjamin@sipsolutions.net>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	Kees Cook <kees@kernel.org>, akpm@linux-foundation.org, jannh@google.com, 
+	torvalds@linux-foundation.org, adhemerval.zanella@linaro.org, oleg@redhat.com, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, linux-mm@kvack.org, 
+	jorgelo@chromium.org, sroettger@google.com, ojeda@kernel.org, adobriyan@gmail.com, 
+	anna-maria@linutronix.de, mark.rutland@arm.com, linus.walleij@linaro.org, Jason@zx2c4.com, 
+	deller@gmx.de, rdunlap@infradead.org, davem@davemloft.net, hch@lst.de, 
+	peterx@redhat.com, hca@linux.ibm.com, f.fainelli@gmail.com, gerg@kernel.org, 
+	dave.hansen@linux.intel.com, mingo@kernel.org, ardb@kernel.org, Liam.Howlett@oracle.com, 
+	mhocko@suse.com, 42.hyeyoo@gmail.com, peterz@infradead.org, ardb@google.com, 
+	rientjes@google.com, groeck@chromium.org, mpe@ellerman.id.au, 
+	Vlastimil Babka <vbabka@suse.cz>, Andrei Vagin <avagin@gmail.com>, 
+	Dmitry Safonov <0x7f454c46@gmail.com>, Mike Rapoport <mike.rapoport@gmail.com>, 
+	Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>
+Subject: Re: [PATCH v4 1/1] exec: seal system mappings
+Message-ID: <20250206135150-6c770e7d-9af8-4924-b760-82cff5092586@linutronix.de>
+References: <202501061647.6C8F34CB1A@keescook>
+ <CABi2SkUfAoCbsknnXnyoFbCPOFRahDx+Vqz3ohnyf_G1p4eszA@mail.gmail.com>
+ <CABi2SkXS9OOwP2BZGQOa=Pn+NoL1VmOJBJEn-6tWBBQwLtpYiw@mail.gmail.com>
+ <5cf1601b-70c3-45bb-81ef-416d89c415c2@lucifer.local>
+ <CABi2SkX--gf8XtzBd1G7wS6E=F51rFckP62V0GrONuXs1TCOcQ@mail.gmail.com>
+ <7071878c-7857-4acd-ac27-f049cbc84de2@lucifer.local>
+ <2e5de601da34342d8eb0d8319dcf81ff213c7ef0.camel@sipsolutions.net>
+ <CAKbZUD1btTbeEht6W5MmhgtEJk3dg55cBpBtoDL0ieaL=23qeQ@mail.gmail.com>
+ <CABi2SkWoNTd5sRJ7-7arPfutYZx6xi9iac0mXZyfzuVXuh1atA@mail.gmail.com>
+ <CAJgzZop04=7+13jjV_zDfJF4dyJ7tp-86G8_mRe=C=sBEp+z3Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <202502051031.2CF8D96392@keescook>
-X-Spam-Score: -1.30
-X-Spamd-Result: default: False [-1.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	URI_HIDDEN_PATH(1.00)[https://syzkaller.appspot.com/x/.config?x=57ab43c279fa614d];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	RCVD_TLS_LAST(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	FREEMAIL_CC(0.00)[suse.cz,syzkaller.appspotmail.com,linux-foundation.org,kernel.org,vger.kernel.org,kvack.org,gmail.com,googlegroups.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,suse.com:email,imap1.dmz-prg2.suse.org:helo];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[48a99e426f29859818c0];
-	MISSING_XM_UA(0.00)[];
-	SUBJECT_HAS_QUESTION(0.00)[]
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJgzZop04=7+13jjV_zDfJF4dyJ7tp-86G8_mRe=C=sBEp+z3Q@mail.gmail.com>
 
-On Wed 05-02-25 10:39:37, Kees Cook wrote:
-> On Wed, Feb 05, 2025 at 07:21:04PM +0100, Jan Kara wrote:
-> > On Tue 04-02-25 01:46:28, syzbot wrote:
-> > > Hello,
-> > > 
-> > > syzbot found the following issue on:
-> > > 
-> > > HEAD commit:    69b8923f5003 Merge tag 'for-linus-6.14-ofs4' of git://git...
-> > > git tree:       upstream
-> > > console+strace: https://syzkaller.appspot.com/x/log.txt?x=1258aeb0580000
-> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=57ab43c279fa614d
-> > > dashboard link: https://syzkaller.appspot.com/bug?extid=48a99e426f29859818c0
-> > > compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15825724580000
-> > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1658aeb0580000
-> > > 
-> > > Downloadable assets:
-> > > disk image: https://storage.googleapis.com/syzbot-assets/ea84ac864e92/disk-69b8923f.raw.xz
-> > > vmlinux: https://storage.googleapis.com/syzbot-assets/6a465997b4e0/vmlinux-69b8923f.xz
-> > > kernel image: https://storage.googleapis.com/syzbot-assets/d72b67b2bd15/bzImage-69b8923f.xz
-> > > mounted in repro: https://storage.googleapis.com/syzbot-assets/7c2919610764/mount_0.gz
-> > > 
-> > > The issue was bisected to:
-> > > 
-> > > commit bae80473f7b0b25772619e7692019b1549d4a82c
-> > > Author: Mateusz Guzik <mjguzik@gmail.com>
-> > > Date:   Wed Nov 20 11:20:35 2024 +0000
-> > > 
-> > >     ext4: use inode_set_cached_link()
-> > > 
-> > > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1248c3df980000
-> > > final oops:     https://syzkaller.appspot.com/x/report.txt?x=1148c3df980000
-> > > console output: https://syzkaller.appspot.com/x/log.txt?x=1648c3df980000
-> > > 
-> > > IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> > > Reported-by: syzbot+48a99e426f29859818c0@syzkaller.appspotmail.com
-> > > Fixes: bae80473f7b0 ("ext4: use inode_set_cached_link()")
-> > 
-> > Please check attached patch:
-> > 
-> > #syz test: git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> > 
-> > 								Honza
-> > -- 
-> > Jan Kara <jack@suse.com>
-> > SUSE Labs, CR
-> 
-> > From df00b84402fb67d94a9eb6b86633092983cb388c Mon Sep 17 00:00:00 2001
-> > From: Jan Kara <jack@suse.cz>
-> > Date: Wed, 5 Feb 2025 19:02:35 +0100
-> > Subject: [PATCH] ext4: Verify fast symlink length
-> > 
-> > Verify fast symlink length stored in inode->i_size matches the string
-> > stored in the inode to avoid surprises from corrupted filesystems.
-> > 
-> > Reported-by: syzbot+48a99e426f29859818c0@syzkaller.appspotmail.com
-> > Fixes: bae80473f7b0 ("ext4: use inode_set_cached_link()")
-> > Suggested-by: "Darrick J. Wong" <djwong@kernel.org>
-> > Signed-off-by: Jan Kara <jack@suse.cz>
-> > ---
-> >  fs/ext4/inode.c | 12 ++++++++++--
-> >  1 file changed, 10 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-> > index 7c54ae5fcbd4..fbda5a67f7f9 100644
-> > --- a/fs/ext4/inode.c
-> > +++ b/fs/ext4/inode.c
-> > @@ -5007,8 +5007,16 @@ struct inode *__ext4_iget(struct super_block *sb, unsigned long ino,
-> >  			inode->i_op = &ext4_encrypted_symlink_inode_operations;
-> >  		} else if (ext4_inode_is_fast_symlink(inode)) {
-> >  			inode->i_op = &ext4_fast_symlink_inode_operations;
-> > -			nd_terminate_link(ei->i_data, inode->i_size,
-> > -				sizeof(ei->i_data) - 1);
-> > +			if (inode->i_size == 0 ||
-> > +			    inode->i_size >= EXT4_N_BLOCKS * 4 ||
-> 
-> This took me a while to understand. ei->i_data is u32[15]. It looks like
-> EXT4_N_BLOCKS is also 15. I feel like it would be much more readable to
-> have the above check be:
-> 
-> 			    inode->i_size >= sizeof(ei->i_data) ||
-> 
-> instead of using a literal "4" for sizeof(u32) as "4", and having a
-> EXT4_N_BLOCKS standing in for the literal "15" in i_data.
-> sizeof(ei->i_data) is precisely what is being checked, so why not use
-> it?
+On Fri, Jan 17, 2025 at 02:35:18PM -0500, enh wrote:
+> On Fri, Jan 17, 2025 at 1:20 PM Jeff Xu <jeffxu@chromium.org> wrote:
 
-Yeah, I've used the tradidional way ext4 uses for this (e.g. in
-ext4_inode_is_fast_symlink()) but I agree it is rather cryptic for those
-not intimately familiar with ext4 on-disk format. Switched to the sizeof()
-as you suggested. Thanks for review!
+<snip>
 
-								Honza
+> > There are technical difficulties to seal vdso/vvar from the glibc
+> > side. The dynamic linker lacks vdso/vvar mapping size information, and
+> > architectural variations for vdso/vvar also means sealing from the
+> > kernel side is a simpler solution. Adhemerval has more details in case
+> > clarification is needed from the glibc side.
+> 
+> as a maintainer of a different linux libc, i've long wanted a "tell me
+> everything there is to know about this vma" syscall rather than having
+> to parse /proc/maps...
+> 
+> ...but in this special case, is the vdso/vvar size ever anything other
+> than "one page" in practice?
 
-> 
-> And while at it, the definition of i_data could be adjusted to to use
-> EXT4_N_BLOCKS, e.g.:
-> 
-> struct ext4_inode_info {
->         __le32  i_data[EXT4_N_BLOCKS];     /* unconverted */
-> 
-> ?
-> 
-> > +			    strnlen((char *)ei->i_data, inode->i_size + 1) !=
-> > +								inode->i_size) {
-> > +				ext4_error_inode(inode, function, line, 0,
-> > +					"invalid fast symlink length %llu",
-> > +					 (unsigned long long)inode->i_size);
-> > +				ret = -EFSCORRUPTED;
-> > +				goto bad_inode;
-> > +			}
-> 
-> But regardless, yes, the math checks out, and looks correct to me.
-> 
-> >  			inode_set_cached_link(inode, (char *)ei->i_data,
-> >  					      inode->i_size);
-> >  		} else {
-> > -- 
-> > 2.43.0
-> > 
-> 
-> 
-> -Kees
-> 
-> -- 
-> Kees Cook
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+x86 has two additional vvar pages for virtual clocks.
+(Since v6.13 even split into their own mapping)
+Loongarch has per-cpu vvar data which is larger than one page.
+The vdso mapping is however many pages the code ends up being compiled as,
+for example on my current x86_64 distro kernel it's two pages.
+In the near future, probably v6.14, vvars will be split over multiple
+pages in general [0].
+
+Figuring out the start and size from /proc/maps, or the new
+PROCMAP_QUERY ioctl, is not trivial, due to architectural variations.
+
+Trying to construct the size from the ELF header is also problematic as
+that only contains information about the vdso code.
+The vvars are mapped before the code in memory independently.
+
+A dedicated interface like a prctl() would be actually reliable.
+Or theoretically a function from the vdso itself.
+
+<snip>
+
+[0] https://lore.kernel.org/lkml/20250204-vdso-store-rng-v3-0-13a4669dfc8c@linutronix.de/
