@@ -1,141 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from omta034.useast.a.cloudfilter.net (omta034.useast.a.cloudfilter.net [44.202.169.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22D5423C380;
-	Thu,  6 Feb 2025 22:41:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E00C52376F0
+	for <linux-hardening@vger.kernel.org>; Thu,  6 Feb 2025 23:10:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738881691; cv=none; b=nw48+EnuRy3MlrGyfjChvZKrAi58KUUctE7gmPOHQwCOHE8OyFLuBi+/T/66Tdmk4dCVyn51EIA/nKO2PPSIxjUWDgRBUeuNopIy6zEcm8Y6XEPoIM32yzkxUNW5de8b+d9OVd3oHlOk9eitnlssz706cRpb6jr3jmuVTi/jBuA=
+	t=1738883404; cv=none; b=Ro4QLZisNReoUlvEdaBW5BumiuIh+sHRuSdI22pEp1wYrpTzavS4DzgDfSdjweJZNjohWajk8V2Bs9ziAJDpIJ0NC26vcspL6ImBoN0ou39UCRbmeqE/R0gkkUaX7uMQXTD6Gk5jOlf4oFC0379Rv/GpE+TJ95TDLJZSUXpJU1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738881691; c=relaxed/simple;
-	bh=qSJN84svPdMWH8aktcRiZHTS6zg+RmikFW+FS9uQhxA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ihK5pcCm1ggT50fdEWLWJa/7DQkQPuV8MnmYsd8CBNXhSyMQa1+OpxqA6zI9oJgKIlhSDRVY7PRByfJetffyammBuWQgT+F2OXEC+qsxzrOTuZ8oo0yOCq9ljPs+LOUILV46l8k/9tGi7Oi3aLGaPr8EAXTbajsvetWGbh5bWmw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CPLy65US; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738883404; c=relaxed/simple;
+	bh=kPQLaiE17kEvtVVIcklJiOtE0vJC6esAyz2PHe7aHgw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qlfwFZ5KJnruk0JBQT6nT7r/GIwqKaHARNmfYdZGaK9z18VsMobaTYELiY8Jt0t54+hKW5slI6IQXvANhE1DtjoHJv4tkr0NuWrQUekwjt7zHXFjzG2oV91zaYolzFNeV/QnpzQ2Y+OtNaf34mDQgfUmi2QjZ8e6L3ag92Bw+zI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=z0yl9JsL; arc=none smtp.client-ip=44.202.169.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CPLy65US"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F18F8C4CEDD;
-	Thu,  6 Feb 2025 22:41:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738881691;
-	bh=qSJN84svPdMWH8aktcRiZHTS6zg+RmikFW+FS9uQhxA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CPLy65USrvJKh1O4UBNVOzteiSFzuXeFerLTb+QfV5TWiJR91p4EYvI8e1wIozhmq
-	 mBHh+a4brX8oUQGHiI9fEl4mptmMRtN+ilHcPNMjdWcnh8pzA3ZVtef0ryiT5h6UKT
-	 BBXtAuGf/+iaqZhdwI2ZYA8nNBC4yvJnKpc6XYZ6ilSh+HdDw4v/97jDG7htOuIX34
-	 rrEBhpt4wYRzTL4eRzOjqqEaGJOcs2FMvVPIFak//CM7yxbIyO5/vY+J7JG5RkPHga
-	 HOga/YPGjWP1Gh4gKO4w3i6miIzZlq7prT8DIUgCu+DdC6//nGDqwcsUtZEuNvWGuc
-	 cZa70cGISwVkw==
-Date: Thu, 6 Feb 2025 14:41:30 -0800
-From: Kees Cook <kees@kernel.org>
-To: Kevin Brodsky <kevin.brodsky@arm.com>
-Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Mark Brown <broonie@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Jann Horn <jannh@google.com>, Jeff Xu <jeffxu@chromium.org>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Andy Lutomirski <luto@kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Pierre Langlois <pierre.langlois@arm.com>,
-	Quentin Perret <qperret@google.com>,
-	"Mike Rapoport (IBM)" <rppt@kernel.org>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Qi Zheng <zhengqi.arch@bytedance.com>,
-	linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-	x86@kernel.org
-Subject: Re: [RFC PATCH v3 00/15] pkeys-based page table hardening
-Message-ID: <202502061422.517A57F8@keescook>
-References: <20250203101839.1223008-1-kevin.brodsky@arm.com>
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="z0yl9JsL"
+Received: from eig-obgw-5010a.ext.cloudfilter.net ([10.0.29.199])
+	by cmsmtp with ESMTPS
+	id gAvbtmhmkXshwgB0OtREwd; Thu, 06 Feb 2025 23:09:56 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id gB0NthtLKUvNvgB0NtrnPY; Thu, 06 Feb 2025 23:09:55 +0000
+X-Authority-Analysis: v=2.4 cv=SMZEVvvH c=1 sm=1 tr=0 ts=67a54143
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=6Vi/Wpy7sgpXGMLew8oZcg==:17
+ a=IkcTkHD0fZMA:10 a=T2h4t0Lz3GQA:10 a=7T7KSl7uo7wA:10
+ a=5NrVWRCCLrfdh0Jvg2MA:9 a=QEXdDO2ut3YA:10 a=0lgtpPvCYYIA:10
+ a=Xt_RvD8W3m28Mn_h3AK8:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=E+YTnOMYFTRww4vc+3L6vgtI2NWn1P0qdxz7Mx881oE=; b=z0yl9JsLXoRh1h3AVY+uLJtw4X
+	n+Hz1G6DVZbr32LccMc47/N6SN4IcKu1lFTicgeWulkvu7Iqc2w509Bgk/M6YlEZstXO5gqvfWoXP
+	dIAodwRLmFy8ppN3Be5uKiRtajKK3iaHd1BKZ9g2XWiKqfNQn5hrarCjRlxKv64ynqQUBa3SxBNtv
+	uWtcTIV5kARh73IG73WeIh3bCvSntiB08J9YBN9LQAkFCuw5S+qyEET7bl53wdB5q0xzpJejP8PHO
+	HYDiVh6rXlRb+OLhC4HsHXCywhKlOGYZnYgNj2ZH6zvIiXgUvolo0BM4LMiV2eZAVAvDZV8Am+CzZ
+	d5dL+73Q==;
+Received: from [45.124.203.140] (port=54600 helo=[192.168.0.152])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1tgB0M-001s8r-2D;
+	Thu, 06 Feb 2025 17:09:54 -0600
+Message-ID: <09e5992a-46a7-410e-a57f-3d337d282943@embeddedor.com>
+Date: Fri, 7 Feb 2025 09:39:42 +1030
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250203101839.1223008-1-kevin.brodsky@arm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH][next] ext4: avoid dozens of
+ -Wflex-array-member-not-at-end warnings
+To: Theodore Ts'o <tytso@mit.edu>, "Gustavo A. R. Silva"
+ <gustavoars@kernel.org>
+Cc: Andreas Dilger <adilger.kernel@dilger.ca>, linux-ext4@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <Zz0TEX3GycUEmISN@kspp> <20250206150910.GA1130956@mit.edu>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20250206150910.GA1130956@mit.edu>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 45.124.203.140
+X-Source-L: No
+X-Exim-ID: 1tgB0M-001s8r-2D
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.0.152]) [45.124.203.140]:54600
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfJtDE/vR1jhJoCjzgxA/itrlDMvvOYxel6VKct6YeUP6C58aLWMCi3n5xeBGUdZ9nxXd7ubwuEwq84BXmq2gQTypW18LC5B9sIKNh8dzSBfWLKN/+ebO
+ WcqBj7L2eJUwXK4rOhC5Krb+hwIsLL/LPy5w9ncNOUJW+7VVEDijFTtJXFvuRYXke8D2n36LrTVjyxMlQTMQJN0iymuJIdrxlBLdF6JHylXdDFbQNB19kkbe
 
-On Mon, Feb 03, 2025 at 10:18:24AM +0000, Kevin Brodsky wrote:
-> This is a proposal to leverage protection keys (pkeys) to harden
-> critical kernel data, by making it mostly read-only. The series includes
-> a simple framework called "kpkeys" to manipulate pkeys for in-kernel use,
-> as well as a page table hardening feature based on that framework
-> (kpkeys_hardened_pgtables). Both are implemented on arm64 as a proof of
-> concept, but they are designed to be compatible with any architecture
-> implementing pkeys.
 
-Does QEMU support POE? The only mention I could find is here:
-https://mail.gnu.org/archive/html/qemu-arm/2024-03/msg00486.html
-where the answer is, "no and it looks difficult". :P
+> Thanks, for this patch!  It appears that this patch has since been
+> obviated by Eric Bigger's commit f2b4fa19647e (" ext4: switch to using
+> the crc32c library"), which landed during this merge window, so this
+> patch should not be needed.
 
-> # Threat model
-> 
-> The proposed scheme aims at mitigating data-only attacks (e.g.
-> use-after-free/cross-cache attacks). In other words, it is assumed that
-> control flow is not corrupted, and that the attacker does not achieve
-> arbitrary code execution. Nothing prevents the pkey register from being
-> set to its most permissive state - the assumption is that the register
-> is only modified on legitimate code paths.
+Oh, nice! Thanks for letting me know. :)
 
-Do you have any tests that could be added to drivers/misc/lkdtm that
-explicitly exercise the protection? That is where many hardware security
-features get tested. (i.e. a successful test will generally trigger a
-BUG_ON or similar.)
-
-> The arm64 implementation should be considered a proof of concept only.
-> The enablement of POE for in-kernel use is incomplete; in particular
-> POR_EL1 (pkey register) should be reset on exception entry and restored
-> on exception return.
-
-As in, make sure the loaded pkey isn't leaked into an exception handler?
-
-> # Open questions
-> 
-> A few aspects in this RFC that are debatable and/or worth discussing:
-> 
-> - There is currently no restriction on how kpkeys levels map to pkeys
->   permissions. A typical approach is to allocate one pkey per level and
->   make it writable at that level only. As the number of levels
->   increases, we may however run out of pkeys, especially on arm64 (just
->   8 pkeys with POE). Depending on the use-cases, it may be acceptable to
->   use the same pkey for the data associated to multiple levels.
-> 
->   Another potential concern is that a given piece of code may require
->   write access to multiple privileged pkeys. This could be addressed by
->   introducing a notion of hierarchy in trust levels, where Tn is able to
->   write to memory owned by Tm if n >= m, for instance.
-> 
-> - kpkeys_set_level() and kpkeys_restore_pkey_reg() are not symmetric:
->   the former takes a kpkeys level and returns a pkey register value, to
->   be consumed by the latter. It would be more intuitive to manipulate
->   kpkeys levels only. However this assumes that there is a 1:1 mapping
->   between kpkeys levels and pkey register values, while in principle
->   the mapping is 1:n (certain pkeys may be used outside the kpkeys
->   framework).
-
-Is the "levels" nature of this related to how POE behaves? It sounds
-like there can only be 1 pkey active at a time (a role), rather than
-each pkey representing access to a specific set of pages (a key in a
-keyring), where many pkeys could be active at the same time. Am I
-understanding that correctly?
-
-> Any comment or feedback will be highly appreciated, be it on the
-> high-level approach or implementation choices!
-
-As hinted earlier with my QEMU question... what's the best way I can I
-test this myself? :)
-
-Thanks for working on this! Data-only attacks have been on the rise for
-a while now, and I'm excited to see some viable mitigations appearing.
-Yay!
-
--Kees
-
--- 
-Kees Cook
+-Gustavo
