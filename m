@@ -1,112 +1,102 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 323EC23957B
-	for <linux-hardening@vger.kernel.org>; Thu,  6 Feb 2025 19:01:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBED923959B;
+	Thu,  6 Feb 2025 19:13:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738868510; cv=none; b=GDa8pDOijbUxUSqRzKuNxJEQyBJ01tZlynl5vSHUIBE4FTYUTVfM1vYDvKD4rBBcNwUpi5DhuVf+sdRoGX98daiMVyfoXTfU66Xlqb1k2xuniq7iMYwruAVmbSzcE64ztNvJlqATXk1yffalUxjsORzwEE413f4rvkAKoMFW/Nw=
+	t=1738869183; cv=none; b=dPVMNYzbUc9ydERiusbJY7YzsCpNuxvBitMfyoVAoSwV0OOqkG5PTijdD8N2ogyU1rsyw99UpX2yxwUAQh1qZliXGqOl62/k+k1SZ8+W/cOXGUMM71RQiFFJmRpJWtElonIKdep+AUSCbeMIwKCipBYmNhltDhNxTvmsyfsIH/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738868510; c=relaxed/simple;
-	bh=H26hCa0BkZ3dMHTQ+5j05dxgsk8Xe5RdYR/UT/6FR1s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kJwMHfg9xIUEApyN+Jda35pzqyppZRJfXB7FYhvsZlMbBTH7iFK8XXAbaUAwte1TpQ1Z5kN2SeXLgZ0NbdrLNLDcQHIkmOlnZ+3cPoKnlWURoR40HOa/Kr6gIX0pbqVCT/tdycNyt2SfNHNpr5iFWoBsMhdccWJOCF/kA5817XQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Df9zaj9+; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Df9zaj9+"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-54410d769f7so952233e87.3
-        for <linux-hardening@vger.kernel.org>; Thu, 06 Feb 2025 11:01:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738868506; x=1739473306; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=H26hCa0BkZ3dMHTQ+5j05dxgsk8Xe5RdYR/UT/6FR1s=;
-        b=Df9zaj9+9IC8fyTO+LAviJqdFOO+UMN+s8gst16NahaFc+p4lgpT4YEJq0CXNYBFzy
-         OWfFYa0NN4RaQNZhnbj7LmZ9b/yueA6QhqKJbxYG/CyNm3eQEJrkMdOATr2cs8seI6tu
-         /uXzKdrWzliPFuIeJKSo489feKxHv93RgA8bQikFHvosorOY7Zx5KPi5Ya129+AXBQHx
-         rp1+RQ1bOEwiLhbTJAU3WxqVbocryHEAd3SI7dKALSTzaN+omfaOVF16ZAd3/wF1e27S
-         LQ32TWqDJ9atsiS9nGSWVOgvbxWtLDudcUuNZLDmmhF7cabHFJncgHfubH8SMak93Rxk
-         SoxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738868506; x=1739473306;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=H26hCa0BkZ3dMHTQ+5j05dxgsk8Xe5RdYR/UT/6FR1s=;
-        b=IQ8WbPy176INF5R1ZYWMuiBkdmo3PgdnR9plFC7vPFfpMUPUhxwD+vaBhHWvNLXU7u
-         gq26pQ5rPmj/ecZv6jArLRV782tkl+h3OxCcRIdF9SJi+r0L7jzGyTLgI7FT2HKn7teQ
-         H22IUgUIClZPXRc/1o+yBpsbyZZ/+LWCrNWhmc8/18tXlLDvaQKX+PhSdWlreDbnTCsK
-         dvkw1W/XP0hBDWN5oAHi4xQ1rCm4bL2yOTlj61oU3TRqKuOzcgIQoPHS4P/PHvXIBnik
-         QuaWWpgJxTp8b3Z5HASgUBGho5G2+su9kYy7s1dGBCF+UoB10Qr7wqvav3nlnhGr9W2j
-         RSCA==
-X-Gm-Message-State: AOJu0YxU5/pP96gMhU/jaXkIoLygwugjYUhBXTcspvFyli3sxSq5/FDY
-	9Cqw6lodk1bNZKpptAkCpqkfUCv0IylpeX60LPYC66Ag/DhERNc8N/RX1PXNeDZlaaImcooIWcZ
-	qqObGjrfIVuLBMCZakEodqrtyjvJjCMmxALZWjw==
-X-Gm-Gg: ASbGncuFvYnHGYmHbrEX3WRYkHUGn9C2cqe7Ap3IcTByER1Qheyg0mZyZh752HOX1/s
-	DSnOakGekK0limKcALZ+vwrKgCaepLBKxQR+z15o3SUwEpNEE/xw4ks9ThI/S3ozqxym+6Zk=
-X-Google-Smtp-Source: AGHT+IGYbTW64WX7v4eRIud9aI7sO+r6eN6uxSXvFM2flvdaMCaTnXZkw1PV8dpsvo+PKiCDP3tZfZA6qctV7ZLyAak=
-X-Received: by 2002:a2e:a10c:0:b0:302:3de5:b039 with SMTP id
- 38308e7fff4ca-307e57bc6b9mr333711fa.8.1738868506188; Thu, 06 Feb 2025
- 11:01:46 -0800 (PST)
+	s=arc-20240116; t=1738869183; c=relaxed/simple;
+	bh=hhRBRUdqB9PgcJ8rttKlgxiZynWfr8f5RE3RGCNNA6w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mx9RNrvJNG+ktQsNWhN9YaqJnyFCQ5V0QFMWD3ZPnZ3J89Yi1W7tTp6JtlxMgLK+x9s8eO8PxS0E7H6kFRL3xCMxZkD8JQItlIKPeHsJ2G8mGxLnHEkVJrwXUKcCBTzaXWMjUNfrw99Xk/shsTjZOWxIDuqjL2bMACnnzLjyX64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+X-CSE-ConnectionGUID: c1DecBebRBa+bmgdE8hdJA==
+X-CSE-MsgGUID: r8OMDaBCQkSvgWFfUE9FOw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="39189146"
+X-IronPort-AV: E=Sophos;i="6.13,265,1732608000"; 
+   d="scan'208";a="39189146"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 11:13:02 -0800
+X-CSE-ConnectionGUID: 0Ysy79jQQiyrMYzoIz0tog==
+X-CSE-MsgGUID: UFpXcEGvS6um270/TAk51A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="148519631"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 11:12:57 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andy.shevchenko@gmail.com>)
+	id 1tg7J0-00000008pGD-24HP;
+	Thu, 06 Feb 2025 21:12:54 +0200
+Date: Thu, 6 Feb 2025 21:12:54 +0200
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+To: Kees Cook <kees@kernel.org>
+Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Philipp Reisner <philipp.reisner@linbit.com>,
+	Miguel Ojeda <ojeda@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH 0/3] string.h: Use ARRAY_SIZE() for
+ memtostr*()/strtomem*()
+Message-ID: <Z6UJtt2QNNAjSE_w@smile.fi.intel.com>
+References: <20250206175216.work.225-kees@kernel.org>
+ <CAHp75Vf=84tWvv57Kj5A5bLenQSkC5yDHTHy-u0iK1_U87nvBw@mail.gmail.com>
+ <CANiq72kGUOgP60SaEwiBcgsDJnjdvJZ1VJtyf3a_+sQJjiffng@mail.gmail.com>
+ <CAHp75Veo-C3A+XVr1RuFumoULWNOugN+CFE65d1T5o+TZSmw-g@mail.gmail.com>
+ <202502061050.EC48F506B1@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250203101839.1223008-1-kevin.brodsky@arm.com> <20250203101839.1223008-9-kevin.brodsky@arm.com>
-In-Reply-To: <20250203101839.1223008-9-kevin.brodsky@arm.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 6 Feb 2025 20:01:34 +0100
-X-Gm-Features: AWEUYZkf3utqCGGAYFw3Wd0K9HPUGk1pvzmcRu62yuHXXkM5758Qny3DAHNgUk4
-Message-ID: <CACRpkdZ_eGsfZh2vkG8dtSyZDbStMfDUuj7s7TQ4FcDwThJVkg@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 08/15] mm: Introduce kernel_pgtables_set_pkey()
-To: Kevin Brodsky <kevin.brodsky@arm.com>
-Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Andrew Morton <akpm@linux-foundation.org>, Mark Brown <broonie@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	Jann Horn <jannh@google.com>, Jeff Xu <jeffxu@chromium.org>, Joey Gouly <joey.gouly@arm.com>, 
-	Kees Cook <kees@kernel.org>, Andy Lutomirski <luto@kernel.org>, Marc Zyngier <maz@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Pierre Langlois <pierre.langlois@arm.com>, 
-	Quentin Perret <qperret@google.com>, "Mike Rapoport (IBM)" <rppt@kernel.org>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>, 
-	Matthew Wilcox <willy@infradead.org>, Qi Zheng <zhengqi.arch@bytedance.com>, 
-	linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <202502061050.EC48F506B1@keescook>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hi Kevin,
+On Thu, Feb 06, 2025 at 10:52:18AM -0800, Kees Cook wrote:
+> On Thu, Feb 06, 2025 at 08:45:41PM +0200, Andy Shevchenko wrote:
+> > On Thu, Feb 6, 2025 at 8:44 PM Miguel Ojeda
+> > <miguel.ojeda.sandonis@gmail.com> wrote:
+> > > On Thu, Feb 6, 2025 at 7:42 PM Andy Shevchenko
+> > > <andy.shevchenko@gmail.com> wrote:
+> > > >
+> > > > What's the minimum Clang version we build kernel with? 12?
+> > >
+> > > 13.0.1 for most architectures according to `scripts/min-tool-version.sh`.
+> > 
+> > Okay, does it mean 13 has no such a bug?
+> 
+> It probably did, but Clang 13 didn't support compile-time error messages
+> (added in 14). Regardless, this fixes it there and makes the API more
+> robust.
+> 
+> > Otherwise the commit message and other comments might be clearer...
+> 
+> How should I rephrase things? I mention the bug and when it was fixed
+> in patch 3:
+> 
+>   ...
+>   benefit of working around a bug in Clang (fixed[1] in 15+) that got
+>   ...
 
-thanks for your patch!
+Ah, the version is mentioned only in cover letter. So, the patch's commit
+message seems good to me.
 
-On Mon, Feb 3, 2025 at 11:20=E2=80=AFAM Kevin Brodsky <kevin.brodsky@arm.co=
-m> wrote:
+-- 
+With Best Regards,
+Andy Shevchenko
 
-> kernel_pgtables_set_pkey() allows setting the pkey of all page table
-> pages in swapper_pg_dir, recursively. This will be needed by
-> kpkeys_hardened_pgtables, as it relies on all PTPs being mapped with
-> a non-default pkey. Those initial kernel page tables cannot
-> practically be assigned a non-default pkey right when they are
-> allocated, so mutating them during (early) boot is required.
->
-> Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
 
-(...)
-
-> +static int set_page_pkey(void *p, int pkey)
-> +static int set_pkey_pte(pmd_t *pmd, int pkey)
-> +static int set_pkey_pmd(pud_t *pud, int pkey)
-> +static int set_pkey_pud(p4d_t *p4d, int pkey)
-> +static int set_pkey_p4d(pgd_t *pgd, int pkey)
-> +int kernel_pgtables_set_pkey(int pkey)
-
-Aren't these all discardable after boot, so the whole set should
-be tagged with __init?
-
-Other than that it LGTM.
-
-Yours,
-Linus Walleij
