@@ -1,269 +1,461 @@
-Received: from cosmicgizmosystems.com (cosmicgizmosystems.com [63.249.102.155])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B19A6148FF5;
-	Thu,  6 Feb 2025 03:11:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.249.102.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A815146BF;
+	Thu,  6 Feb 2025 03:39:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738811519; cv=none; b=rig7Yf2qIDw58tjeVqvVQpo64WJlvgl9a5jEzl/SZazL4ud5IWhRpEcgMcd2gzsdEVjfBzjCS3+RNmeuhvzNcRtS/wt9x2hES164NeMApalii0ZU9GeEAQwOhCLDcyWu5jHXPzujEdf2ZEetn5fuHhkgoRIIlbmB81Cr1/uQhaw=
+	t=1738813193; cv=none; b=kBOaJ3c3MBhoR5qFEve0vx198IEf4DljY0WOVgnYH2Lf4+OTQ+rZ9d/Li3wepS+NkJ0hr9A+dvq+faKVtjpJlj5SChGa0hlFFqWs0LMIosPXN9BStYXyV8ozlc2gqiVd44M6eXV+EobCpLpxFUZ4l6GC2PKas9mFixQEeI9cn9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738811519; c=relaxed/simple;
-	bh=ruwprGVpgf2x/B1GvPWylp94rMFLTqQMKzlbnkdvPRc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KQ42uGKVORsHo4CoOxlFcF/9sgtQaxb6CM5UUwbYvt18nXjkl/j6qqd3HvXI5raZn1vrAr8OdhAxOh5+5wHi+6mQonvUjCM9spl0MsUA0/82BD5hw4UciXqb+gfnr/QJv322n23Y6gbF/ZOMYl9x5CNri9fpfGr/Gjl1UF+T5bA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cosmicgizmosystems.com; spf=pass smtp.mailfrom=cosmicgizmosystems.com; arc=none smtp.client-ip=63.249.102.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cosmicgizmosystems.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cosmicgizmosystems.com
-Received: from [192.168.12.108] (unknown [172.56.152.117])
-	by host11.cruzio.com (Postfix) with ESMTPSA id 2BD2026F8C75;
-	Wed,  5 Feb 2025 19:02:37 -0800 (PST)
-Message-ID: <dd0d2992-ed72-4f9f-b0f6-8b8ff1d9b377@cosmicgizmosystems.com>
-Date: Wed, 5 Feb 2025 19:02:34 -0800
+	s=arc-20240116; t=1738813193; c=relaxed/simple;
+	bh=u+KIz+0ekM8kKBmnoSW/Z79RFvrLdFsyi8HjKjHTJMs=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Tup2G/DMx1hVgViKFb0I4H3So0qUjbOO9r8/9RKLkut/O1cUOUf4+X8hZTlsaT7p9j9PNjS1LIztmThhaI3ooC2TmJkWmY/6cGLwfYMN/yylkGu6Og85elH+AvKl9vtROE6Wn/qcOLiuBjmc8Cd4/jTnrnwXGXT4KdpSOrgy5e4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nzs33vJJ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nzs33vJJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 774D3C4CEDD;
+	Thu,  6 Feb 2025 03:39:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738813193;
+	bh=u+KIz+0ekM8kKBmnoSW/Z79RFvrLdFsyi8HjKjHTJMs=;
+	h=Date:From:To:Cc:Subject:From;
+	b=Nzs33vJJH8jhCPsjbGraDBKMYDzg9vhFUp8nd5upsZmh8FGuJuXW2qk3xWQ7IyHkB
+	 pwb4XvV70lZiXFHtord6mtTkSelGI5QaiXEEvI7uC+z5rzZSfDhM62Vu7WCxyyx/FW
+	 vIjhidsGy7BgylnlUA52kGENqtmp5j91mC9gzHPUSJJTBBuQUTMRrsRZJHbQUe0nqQ
+	 s+s+Cg6R1XkCPmncVJlWfjPHmd+Xldtals9xsrbC+zHXZIbPAHOPLTmgcchaRIa23l
+	 jW27wokHsOSTFLAmmwGIVN43JznVe+Wb/0jL1B13vuWG5OamcAAwWTxf0M76xieuo3
+	 48n+06bBxXPaQ==
+Date: Thu, 6 Feb 2025 14:09:45 +1030
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v3][next] tty: tty_buffer: Avoid hundreds of
+ -Wflex-array-member-not-at-end warnings
+Message-ID: <Z6QvAZxiQusdaDkH@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] HID: usbhid: fix recurrent out-of-bounds bug in
- usbhid_parse()
-To: Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
- Kees Cook <kees@kernel.org>
-Cc: Jiri Kosina <jikos@kernel.org>, Alan Stern <stern@rowland.harvard.edu>,
- Benjamin Tissoires <bentiss@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-usb@vger.kernel.org,
- linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org,
- syzbot <syzbot+c52569baf0c843f35495@syzkaller.appspotmail.com>,
- syzkaller-bugs@googlegroups.com, lvc-project@linuxtesting.org
-References: <20250131151600.410242-1-n.zhandarovich@fintech.ru>
- <202501311205.DB75F95@keescook>
- <27f8c5a1-6671-4e23-862f-4c5bf888684a@fintech.ru>
-Content-Language: en-US
-From: Terry Junge <linuxhid@cosmicgizmosystems.com>
-In-Reply-To: <27f8c5a1-6671-4e23-862f-4c5bf888684a@fintech.ru>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 2/2/25 1:55 AM, Nikita Zhandarovich wrote:
-> 
-> 
-> On 1/31/25 23:12, Kees Cook wrote:
->> On Fri, Jan 31, 2025 at 06:15:58PM +0300, Nikita Zhandarovich wrote:
->>> Syzbot reports [1] a reemerging out-of-bounds bug regarding hid
->>> descriptors supposedly having unpredictable bNumDescriptors values in
->>> usbhid_parse().
->>>
->>> The issue stems from the fact that hid_class_descriptor is supposed
->>> to be a flexible array, however it was sized as desc[1], using only
->>> one element. Therefore, going beyond 1 element, courtesy of
->>> bNumDescriptors, may lead to an error.
->>>
->>> Modify struct hid_descriptor by employing __counted_by macro, tying
->>> together struct hid_class_descriptor desc[] and number of descriptors
->>> bNumDescriptors. Also, fix places where this change affects work with
->>> newly updated struct.
->>>
->>> [1] Syzbot report:
->>>
->>> UBSAN: array-index-out-of-bounds in drivers/hid/usbhid/hid-core.c:1024:7
->>> index 1 is out of range for type 'struct hid_class_descriptor[1]'
->>> ...
->>> Workqueue: usb_hub_wq hub_event
->>> Call Trace:
->>>  <TASK>
->>>  __dump_stack lib/dump_stack.c:88 [inline]
->>>  dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
->>>  ubsan_epilogue lib/ubsan.c:231 [inline]
->>>  __ubsan_handle_out_of_bounds+0x121/0x150 lib/ubsan.c:429
->>>  usbhid_parse+0x5a7/0xc80 drivers/hid/usbhid/hid-core.c:1024
->>>  hid_add_device+0x132/0x520 drivers/hid/hid-core.c:2790
->>>  usbhid_probe+0xb38/0xea0 drivers/hid/usbhid/hid-core.c:1429
->>>  usb_probe_interface+0x645/0xbb0 drivers/usb/core/driver.c:399
->>>  really_probe+0x2b8/0xad0 drivers/base/dd.c:656
->>>  __driver_probe_device+0x1a2/0x390 drivers/base/dd.c:798
->>>  driver_probe_device+0x50/0x430 drivers/base/dd.c:828
->>>  __device_attach_driver+0x2d6/0x530 drivers/base/dd.c:956
->>>  bus_for_each_drv+0x24e/0x2e0 drivers/base/bus.c:457
->>>  __device_attach+0x333/0x520 drivers/base/dd.c:1028
->>>  bus_probe_device+0x189/0x260 drivers/base/bus.c:532
->>>  device_add+0x8ff/0xca0 drivers/base/core.c:3720
->>>  usb_set_configuration+0x1976/0x1fb0 drivers/usb/core/message.c:2210
->>>  usb_generic_driver_probe+0x88/0x140 drivers/usb/core/generic.c:254
->>>  usb_probe_device+0x1b8/0x380 drivers/usb/core/driver.c:294
->>>
->>> Reported-by: syzbot+c52569baf0c843f35495@syzkaller.appspotmail.com
->>> Closes: https://syzkaller.appspot.com/bug?extid=c52569baf0c843f35495
->>> Fixes: f043bfc98c19 ("HID: usbhid: fix out-of-bounds bug")
->>> Cc: stable@vger.kernel.org
->>> Signed-off-by: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
->>> ---
->>> v1: https://lore.kernel.org/all/20240524120112.28076-1-n.zhandarovich@fintech.ru/
->>>
->>> v2: Instead of essentially forcing usbhid_parse() to only check
->>> the first descriptor, modify hid_descriptor struct to anticipate
->>> multiple hid_class_descriptor in desc[] by utilizing __counted_by
->>> macro. This change, in turn, requires several other ones wherever
->>> that struct is used. Adjust commit description accordingly.
->>>
->>> P.S. Since syzbot currently breaks trying to reproduce the issue,
->>> with or without this patch, I only managed to test it locally with
->>> syz repros. Would greatly appreciate other people's effort to test
->>> it as well.
->>>
->>> P.P.S. Terry Junge <linuxhid@cosmicgizmosystems.com> suggested a
->>> different approach to this issue, see:
->>> Link: https://lore.kernel.org/all/f7963a1d-e069-4ec9-82a1-e17fd324a44f@cosmicgizmosystems.com/
->>>
->>>  drivers/hid/usbhid/hid-core.c       |  2 +-
->>>  drivers/usb/gadget/function/f_fs.c  |  3 ++-
->>>  drivers/usb/gadget/function/f_hid.c | 22 ++++++++++++++--------
->>>  include/linux/hid.h                 |  2 +-
->>>  4 files changed, 18 insertions(+), 11 deletions(-)
->>>
->>> diff --git a/drivers/hid/usbhid/hid-core.c b/drivers/hid/usbhid/hid-core.c
->>> index a6eb6fe6130d..eb4807785d6d 100644
->>> --- a/drivers/hid/usbhid/hid-core.c
->>> +++ b/drivers/hid/usbhid/hid-core.c
->>> @@ -1010,7 +1010,7 @@ static int usbhid_parse(struct hid_device *hid)
->>>  		return -ENODEV;
->>>  	}
->>>  
->>> -	if (hdesc->bLength < sizeof(struct hid_descriptor)) {
->>> +	if (hdesc->bLength < struct_size(hdesc, desc, hdesc->bNumDescriptors)) {
->>>  		dbg_hid("hid descriptor is too short\n");
->>>  		return -EINVAL;
->>>  	}
->>
->> I don't think you want this hunk in the patch. The existing logic will
->> correctly adapt num_descriptors to a size that fits within
->> hdesc->bLength. In theory, the above change could break a weird but
->> working device that reported too high bNumDescriptors but still worked
->> with what num_descriptors walks.
->>
-> 
-> Thank you for mentioning this and you are right about possibly breaking
-> a working device.
-> 
-> However, sizeof(struct hid_descriptor) doesn't count flex array sizes.
-> So, leaving this check as is will miss cases when hdesc->bLength >=
-> sizeof(struct hid_descriptor) but short enough to have a desc[0]
-> element. Maybe doing struct_size(hdesc, desc, 1) is better? Then we
-> make sure that at least one mandatory hid_class_desriptor is there.
-> 
->>> diff --git a/drivers/usb/gadget/function/f_fs.c b/drivers/usb/gadget/function/f_fs.c
->>> index 2dea9e42a0f8..a4b6d7cbf56d 100644
->>> --- a/drivers/usb/gadget/function/f_fs.c
->>> +++ b/drivers/usb/gadget/function/f_fs.c
->>> @@ -2550,7 +2550,8 @@ static int __must_check ffs_do_single_desc(char *data, unsigned len,
->>>  	case USB_TYPE_CLASS | 0x01:
->>>  		if (*current_class == USB_INTERFACE_CLASS_HID) {
->>>  			pr_vdebug("hid descriptor\n");
->>> -			if (length != sizeof(struct hid_descriptor))
->>> +			if (length < sizeof(struct hid_descriptor) +
->>> +				     sizeof(struct hid_class_descriptor))
+-Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+getting ready to enable it, globally.
 
-Don't change the logic of the if statement in this function, leave it as !=
-if it failed before this change it should still fail with this change.
+Currently, member `sentinel` in `struct tty_bufhead` is causing trouble
+becase its type is `struct tty_buffer`, which is a flexible structure
+--meaning it contains a flexible-array member. This combined with the
+fact that `sentinel` is positioned in the middle of `struct tty_bufhead`,
+triggers hundreds of -Wflex-array-member-not-at-end warnings because
+flex-array members in the middle of structures are deprecated, and all
+code involving them should be fixed/refactored/adjusted --flex-array
+members are only allowed at the very end of any number of nested
+structures. Enabling -Wflex-array-member-not-at-end globally will
+enforce this behavior.
 
->>>  				goto inv_length;
->>>  			break;
->>>  		} else if (*current_class == USB_INTERFACE_CLASS_CCID) {
->>
->> Same here, I think? This isn't needed unless I'm misunderstanding
->> something about the fix.
-> 
-> Once again, sizeof(struct hid_descriptor) will not count struct
-> hid_class_descriptor desc[] __counted_by(...) so even correct and
-> predictable lengths will fail the check. We need to test length against
-> hid_descriptor with at least one element of its flex array.
-> 
-> I would prefer struct_size() here as well but it's not optimal in this
-> case.
->>
->>> diff --git a/drivers/usb/gadget/function/f_hid.c b/drivers/usb/gadget/function/f_hid.c
->>> index 740311c4fa24..ec8c2e2d6812 100644
->>> --- a/drivers/usb/gadget/function/f_hid.c
->>> +++ b/drivers/usb/gadget/function/f_hid.c
->>> @@ -139,13 +139,17 @@ static struct usb_interface_descriptor hidg_interface_desc = {
->>>  };
->>>  
->>>  static struct hid_descriptor hidg_desc = {
->>> -	.bLength			= sizeof hidg_desc,
->>> +	.bLength			= struct_size(&hidg_desc, desc, 1),
->>>  	.bDescriptorType		= HID_DT_HID,
->>>  	.bcdHID				= cpu_to_le16(0x0101),
->>>  	.bCountryCode			= 0x00,
->>>  	.bNumDescriptors		= 0x1,
->>> -	/*.desc[0].bDescriptorType	= DYNAMIC */
->>> -	/*.desc[0].wDescriptorLenght	= DYNAMIC */
->>> +	.desc				= {
->>> +		{
->>> +			.bDescriptorType	= 0, /* DYNAMIC */
->>> +			.wDescriptorLength	= 0, /* DYNAMIC */
->>> +		}
->>> +	}
->>>  };
->>>  
->>>  /* Super-Speed Support */
->>> @@ -936,16 +940,18 @@ static int hidg_setup(struct usb_function *f,
->>>  		switch (value >> 8) {
->>>  		case HID_DT_HID:
->>>  		{
->>> -			struct hid_descriptor hidg_desc_copy = hidg_desc;
->>> +			DEFINE_FLEX(struct hid_descriptor, hidg_desc_copy,
->>> +				desc, bNumDescriptors, 1);
->>> +			*hidg_desc_copy = hidg_desc;
->>>  
->>>  			VDBG(cdev, "USB_REQ_GET_DESCRIPTOR: HID\n");
->>> -			hidg_desc_copy.desc[0].bDescriptorType = HID_DT_REPORT;
->>> -			hidg_desc_copy.desc[0].wDescriptorLength =
->>> +			hidg_desc_copy->desc[0].bDescriptorType = HID_DT_REPORT;
->>> +			hidg_desc_copy->desc[0].wDescriptorLength =
->>>  				cpu_to_le16(hidg->report_desc_length);
->>>  
->>>  			length = min_t(unsigned short, length,
->>> -						   hidg_desc_copy.bLength);
->>> -			memcpy(req->buf, &hidg_desc_copy, length);
->>> +						   hidg_desc_copy->bLength);
->>> +			memcpy(req->buf, hidg_desc_copy, length);
->>>  			goto respond;
->>>  			break;
->>>  		}
->>> diff --git a/include/linux/hid.h b/include/linux/hid.h
->>> index cdc0dc13c87f..85a58ae2c4a0 100644
->>> --- a/include/linux/hid.h
->>> +++ b/include/linux/hid.h
->>> @@ -739,7 +739,7 @@ struct hid_descriptor {
->>>  	__u8  bCountryCode;
->>>  	__u8  bNumDescriptors;
->>>  
->>> -	struct hid_class_descriptor desc[1];
->>> +	struct hid_class_descriptor desc[] __counted_by(bNumDescriptors);
->>>  } __attribute__ ((packed));
->>>  
->>>  #define HID_DEVICE(b, g, ven, prod)					\
->>
->> Otherwise, this looks correct to me.
->>
-> 
-> Regards,
-> Nikita
-> 
+So, in this particular case, we create a new `struct tty_buffer_hdr`
+to enclose the header part of flexible structure `struct tty_buffer`
+This is all the members except the flexible array `data[]`. We then
+replace that header part with `struct tty_buffer_hdr hdr;` in
+`struct tty_buffer`, and change the type of `sentinel` from `struct
+tty_buffer` to `struct tty_buffer_hdr` --this bit gets rid of the
+flex-array-in-the-middle part.
 
-In drivers/hid/hid-hyperv.c there are additional struct hid_descriptor references
+The next step is to refactor the rest of the related code, accordingly.
+Which means, adding a bunch of `hdr.` wherever it's needed.
 
-struct synthhid_device_info {
-	struct synthhid_msg_hdr header;
-	struct hv_input_dev_info hid_dev_info;
-	struct hid_descriptor hid_descriptor;
-};
+Lastly, we use `container_of()` whenever we need to retrieve a pointer
+to the flexible structure `struct tty_buffer`.
 
-Have you checked that there are no changes necessary in that file due to the
-size change of struct hid_descriptor?
+So, with these changes, fix 384 of the following warnings:
+include/linux/tty_buffer.h:40:27: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
-Regards,
-Terry
+Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+Changes in v3:
+ - Implement `struct tty_buffer_hdr` as a separate struct and embed it
+   into `struct tty_buffer`. Refactor the rest of the code, accordingly.
+
+Changes in v2:
+ - Fix a space at the beginning of the line issue, and adjust the
+   identation of a code coment.
+ - Link: https://lore.kernel.org/linux-hardening/Z6L29DXeGWl-6OnK@kspp/
+
+v1:
+ -  Link: https://lore.kernel.org/linux-hardening/Z6L1XwE-WEzcGFwv@kspp/
+
+ drivers/tty/tty_buffer.c   | 114 +++++++++++++++++++------------------
+ include/linux/tty_buffer.h |  12 ++--
+ include/linux/tty_flip.h   |  10 ++--
+ 3 files changed, 73 insertions(+), 63 deletions(-)
+
+diff --git a/drivers/tty/tty_buffer.c b/drivers/tty/tty_buffer.c
+index 79f0ff94ce00..cd04a6567a33 100644
+--- a/drivers/tty/tty_buffer.c
++++ b/drivers/tty/tty_buffer.c
+@@ -70,7 +70,7 @@ EXPORT_SYMBOL_GPL(tty_buffer_lock_exclusive);
+ void tty_buffer_unlock_exclusive(struct tty_port *port)
+ {
+ 	struct tty_bufhead *buf = &port->buf;
+-	bool restart = buf->head->commit != buf->head->read;
++	bool restart = buf->head->hdr.commit != buf->head->hdr.read;
+ 
+ 	atomic_dec(&buf->priority);
+ 	mutex_unlock(&buf->lock);
+@@ -101,13 +101,13 @@ EXPORT_SYMBOL_GPL(tty_buffer_space_avail);
+ 
+ static void tty_buffer_reset(struct tty_buffer *p, size_t size)
+ {
+-	p->used = 0;
+-	p->size = size;
+-	p->next = NULL;
+-	p->commit = 0;
+-	p->lookahead = 0;
+-	p->read = 0;
+-	p->flags = true;
++	p->hdr.used = 0;
++	p->hdr.size = size;
++	p->hdr.next = NULL;
++	p->hdr.commit = 0;
++	p->hdr.lookahead = 0;
++	p->hdr.read = 0;
++	p->hdr.flags = true;
+ }
+ 
+ /**
+@@ -120,24 +120,27 @@ static void tty_buffer_reset(struct tty_buffer *p, size_t size)
+ void tty_buffer_free_all(struct tty_port *port)
+ {
+ 	struct tty_bufhead *buf = &port->buf;
++	struct tty_buffer *buf_sentinel;
+ 	struct tty_buffer *p, *next;
+ 	struct llist_node *llist;
+ 	unsigned int freed = 0;
+ 	int still_used;
+ 
++	buf_sentinel = container_of(&buf->sentinel, struct tty_buffer, hdr);
++
+ 	while ((p = buf->head) != NULL) {
+-		buf->head = p->next;
+-		freed += p->size;
+-		if (p->size > 0)
++		buf->head = p->hdr.next;
++		freed += p->hdr.size;
++		if (p->hdr.size > 0)
+ 			kfree(p);
+ 	}
+ 	llist = llist_del_all(&buf->free);
+-	llist_for_each_entry_safe(p, next, llist, free)
++	llist_for_each_entry_safe(p, next, llist, hdr.free)
+ 		kfree(p);
+ 
+-	tty_buffer_reset(&buf->sentinel, 0);
+-	buf->head = &buf->sentinel;
+-	buf->tail = &buf->sentinel;
++	tty_buffer_reset(buf_sentinel, 0);
++	buf->head = buf_sentinel;
++	buf->tail = buf_sentinel;
+ 
+ 	still_used = atomic_xchg(&buf->mem_used, 0);
+ 	WARN(still_used != freed, "we still have not freed %d bytes!",
+@@ -167,7 +170,7 @@ static struct tty_buffer *tty_buffer_alloc(struct tty_port *port, size_t size)
+ 	if (size <= MIN_TTYB_SIZE) {
+ 		free = llist_del_first(&port->buf.free);
+ 		if (free) {
+-			p = llist_entry(free, struct tty_buffer, free);
++			p = llist_entry(free, struct tty_buffer, hdr.free);
+ 			goto found;
+ 		}
+ 	}
+@@ -200,12 +203,12 @@ static void tty_buffer_free(struct tty_port *port, struct tty_buffer *b)
+ 	struct tty_bufhead *buf = &port->buf;
+ 
+ 	/* Dumb strategy for now - should keep some stats */
+-	WARN_ON(atomic_sub_return(b->size, &buf->mem_used) < 0);
++	WARN_ON(atomic_sub_return(b->hdr.size, &buf->mem_used) < 0);
+ 
+-	if (b->size > MIN_TTYB_SIZE)
++	if (b->hdr.size > MIN_TTYB_SIZE)
+ 		kfree(b);
+-	else if (b->size > 0)
+-		llist_add(&b->free, &buf->free);
++	else if (b->hdr.size > 0)
++		llist_add(&b->hdr.free, &buf->free);
+ }
+ 
+ /**
+@@ -230,12 +233,12 @@ void tty_buffer_flush(struct tty_struct *tty, struct tty_ldisc *ld)
+ 	/* paired w/ release in __tty_buffer_request_room; ensures there are
+ 	 * no pending memory accesses to the freed buffer
+ 	 */
+-	while ((next = smp_load_acquire(&buf->head->next)) != NULL) {
++	while ((next = smp_load_acquire(&buf->head->hdr.next)) != NULL) {
+ 		tty_buffer_free(port, buf->head);
+ 		buf->head = next;
+ 	}
+-	buf->head->read = buf->head->commit;
+-	buf->head->lookahead = buf->head->read;
++	buf->head->hdr.read = buf->head->hdr.commit;
++	buf->head->hdr.lookahead = buf->head->hdr.read;
+ 
+ 	if (ld && ld->ops->flush_buffer)
+ 		ld->ops->flush_buffer(tty);
+@@ -263,8 +266,8 @@ static int __tty_buffer_request_room(struct tty_port *port, size_t size,
+ {
+ 	struct tty_bufhead *buf = &port->buf;
+ 	struct tty_buffer *n, *b = buf->tail;
+-	size_t left = (b->flags ? 1 : 2) * b->size - b->used;
+-	bool change = !b->flags && flags;
++	size_t left = (b->hdr.flags ? 1 : 2) * b->hdr.size - b->hdr.used;
++	bool change = !b->hdr.flags && flags;
+ 
+ 	if (!change && left >= size)
+ 		return size;
+@@ -274,19 +277,19 @@ static int __tty_buffer_request_room(struct tty_port *port, size_t size,
+ 	if (n == NULL)
+ 		return change ? 0 : left;
+ 
+-	n->flags = flags;
++	n->hdr.flags = flags;
+ 	buf->tail = n;
+ 	/*
+ 	 * Paired w/ acquire in flush_to_ldisc() and lookahead_bufs()
+ 	 * ensures they see all buffer data.
+ 	 */
+-	smp_store_release(&b->commit, b->used);
++	smp_store_release(&b->hdr.commit, b->hdr.used);
+ 	/*
+ 	 * Paired w/ acquire in flush_to_ldisc() and lookahead_bufs()
+ 	 * ensures the latest commit value can be read before the head
+ 	 * is advanced to the next buffer.
+ 	 */
+-	smp_store_release(&b->next, n);
++	smp_store_release(&b->hdr.next, n);
+ 
+ 	return size;
+ }
+@@ -312,19 +315,19 @@ size_t __tty_insert_flip_string_flags(struct tty_port *port, const u8 *chars,
+ 		if (unlikely(space == 0))
+ 			break;
+ 
+-		memcpy(char_buf_ptr(tb, tb->used), chars, space);
++		memcpy(char_buf_ptr(tb, tb->hdr.used), chars, space);
+ 
+ 		if (mutable_flags) {
+-			memcpy(flag_buf_ptr(tb, tb->used), flags, space);
++			memcpy(flag_buf_ptr(tb, tb->hdr.used), flags, space);
+ 			flags += space;
+-		} else if (tb->flags) {
+-			memset(flag_buf_ptr(tb, tb->used), flags[0], space);
++		} else if (tb->hdr.flags) {
++			memset(flag_buf_ptr(tb, tb->hdr.used), flags[0], space);
+ 		} else {
+ 			/* tb->flags should be available once requested */
+ 			WARN_ON_ONCE(need_flags);
+ 		}
+ 
+-		tb->used += space;
++		tb->hdr.used += space;
+ 		copied += space;
+ 		chars += space;
+ 
+@@ -358,10 +361,10 @@ size_t tty_prepare_flip_string(struct tty_port *port, u8 **chars, size_t size)
+ 	if (likely(space)) {
+ 		struct tty_buffer *tb = port->buf.tail;
+ 
+-		*chars = char_buf_ptr(tb, tb->used);
+-		if (tb->flags)
+-			memset(flag_buf_ptr(tb, tb->used), TTY_NORMAL, space);
+-		tb->used += space;
++		*chars = char_buf_ptr(tb, tb->hdr.used);
++		if (tb->hdr.flags)
++			memset(flag_buf_ptr(tb, tb->hdr.used), TTY_NORMAL, space);
++		tb->hdr.used += space;
+ 	}
+ 
+ 	return space;
+@@ -396,7 +399,7 @@ EXPORT_SYMBOL_GPL(tty_ldisc_receive_buf);
+ 
+ static void lookahead_bufs(struct tty_port *port, struct tty_buffer *head)
+ {
+-	head->lookahead = max(head->lookahead, head->read);
++	head->hdr.lookahead = max(head->hdr.lookahead, head->hdr.read);
+ 
+ 	while (head) {
+ 		struct tty_buffer *next;
+@@ -407,12 +410,12 @@ static void lookahead_bufs(struct tty_port *port, struct tty_buffer *head)
+ 		 * ensures commit value read is not stale if the head
+ 		 * is advancing to the next buffer.
+ 		 */
+-		next = smp_load_acquire(&head->next);
++		next = smp_load_acquire(&head->hdr.next);
+ 		/*
+ 		 * Paired w/ release in __tty_buffer_request_room() or in
+ 		 * tty_buffer_flush(); ensures we see the committed buffer data.
+ 		 */
+-		count = smp_load_acquire(&head->commit) - head->lookahead;
++		count = smp_load_acquire(&head->hdr.commit) - head->hdr.lookahead;
+ 		if (!count) {
+ 			head = next;
+ 			continue;
+@@ -421,26 +424,26 @@ static void lookahead_bufs(struct tty_port *port, struct tty_buffer *head)
+ 		if (port->client_ops->lookahead_buf) {
+ 			u8 *p, *f = NULL;
+ 
+-			p = char_buf_ptr(head, head->lookahead);
+-			if (head->flags)
+-				f = flag_buf_ptr(head, head->lookahead);
++			p = char_buf_ptr(head, head->hdr.lookahead);
++			if (head->hdr.flags)
++				f = flag_buf_ptr(head, head->hdr.lookahead);
+ 
+ 			port->client_ops->lookahead_buf(port, p, f, count);
+ 		}
+ 
+-		head->lookahead += count;
++		head->hdr.lookahead += count;
+ 	}
+ }
+ 
+ static size_t
+ receive_buf(struct tty_port *port, struct tty_buffer *head, size_t count)
+ {
+-	u8 *p = char_buf_ptr(head, head->read);
++	u8 *p = char_buf_ptr(head, head->hdr.read);
+ 	const u8 *f = NULL;
+ 	size_t n;
+ 
+-	if (head->flags)
+-		f = flag_buf_ptr(head, head->read);
++	if (head->hdr.flags)
++		f = flag_buf_ptr(head, head->hdr.read);
+ 
+ 	n = port->client_ops->receive_buf(port, p, f, count);
+ 	if (n > 0)
+@@ -479,11 +482,11 @@ static void flush_to_ldisc(struct work_struct *work)
+ 		 * ensures commit value read is not stale if the head
+ 		 * is advancing to the next buffer
+ 		 */
+-		next = smp_load_acquire(&head->next);
++		next = smp_load_acquire(&head->hdr.next);
+ 		/* paired w/ release in __tty_buffer_request_room() or in
+ 		 * tty_buffer_flush(); ensures we see the committed buffer data
+ 		 */
+-		count = smp_load_acquire(&head->commit) - head->read;
++		count = smp_load_acquire(&head->hdr.commit) - head->hdr.read;
+ 		if (!count) {
+ 			if (next == NULL)
+ 				break;
+@@ -493,7 +496,7 @@ static void flush_to_ldisc(struct work_struct *work)
+ 		}
+ 
+ 		rcvd = receive_buf(port, head, count);
+-		head->read += rcvd;
++		head->hdr.read += rcvd;
+ 		if (rcvd < count)
+ 			lookahead_bufs(port, head);
+ 		if (!rcvd)
+@@ -513,7 +516,7 @@ static inline void tty_flip_buffer_commit(struct tty_buffer *tail)
+ 	 * Paired w/ acquire in flush_to_ldisc(); ensures flush_to_ldisc() sees
+ 	 * buffer data.
+ 	 */
+-	smp_store_release(&tail->commit, tail->used);
++	smp_store_release(&tail->hdr.commit, tail->hdr.used);
+ }
+ 
+ /**
+@@ -576,11 +579,14 @@ int tty_insert_flip_string_and_push_buffer(struct tty_port *port,
+ void tty_buffer_init(struct tty_port *port)
+ {
+ 	struct tty_bufhead *buf = &port->buf;
++	struct tty_buffer *buf_sentinel;
++
++	buf_sentinel = container_of(&buf->sentinel, struct tty_buffer, hdr);
+ 
+ 	mutex_init(&buf->lock);
+-	tty_buffer_reset(&buf->sentinel, 0);
+-	buf->head = &buf->sentinel;
+-	buf->tail = &buf->sentinel;
++	tty_buffer_reset(buf_sentinel, 0);
++	buf->head = buf_sentinel;
++	buf->tail = buf_sentinel;
+ 	init_llist_head(&buf->free);
+ 	atomic_set(&buf->mem_used, 0);
+ 	atomic_set(&buf->priority, 0);
+diff --git a/include/linux/tty_buffer.h b/include/linux/tty_buffer.h
+index 31125e3be3c5..80a9d7832c97 100644
+--- a/include/linux/tty_buffer.h
++++ b/include/linux/tty_buffer.h
+@@ -7,7 +7,7 @@
+ #include <linux/mutex.h>
+ #include <linux/workqueue.h>
+ 
+-struct tty_buffer {
++struct tty_buffer_hdr {
+ 	union {
+ 		struct tty_buffer *next;
+ 		struct llist_node free;
+@@ -15,9 +15,13 @@ struct tty_buffer {
+ 	unsigned int used;
+ 	unsigned int size;
+ 	unsigned int commit;
+-	unsigned int lookahead;		/* Lazy update on recv, can become less than "read" */
++	unsigned int lookahead; /* Lazy update on recv, can become less than "read" */
+ 	unsigned int read;
+ 	bool flags;
++};
++
++struct tty_buffer {
++	struct tty_buffer_hdr hdr;
+ 	/* Data points here */
+ 	u8 data[] __aligned(sizeof(unsigned long));
+ };
+@@ -29,7 +33,7 @@ static inline u8 *char_buf_ptr(struct tty_buffer *b, unsigned int ofs)
+ 
+ static inline u8 *flag_buf_ptr(struct tty_buffer *b, unsigned int ofs)
+ {
+-	return char_buf_ptr(b, ofs) + b->size;
++	return char_buf_ptr(b, ofs) + b->hdr.size;
+ }
+ 
+ struct tty_bufhead {
+@@ -37,7 +41,7 @@ struct tty_bufhead {
+ 	struct work_struct work;
+ 	struct mutex	   lock;
+ 	atomic_t	   priority;
+-	struct tty_buffer sentinel;
++	struct tty_buffer_hdr sentinel;
+ 	struct llist_head free;		/* Free queue head */
+ 	atomic_t	   mem_used;    /* In-use buffers excluding free list */
+ 	int		   mem_limit;
+diff --git a/include/linux/tty_flip.h b/include/linux/tty_flip.h
+index af4fce98f64e..1874b0059e97 100644
+--- a/include/linux/tty_flip.h
++++ b/include/linux/tty_flip.h
+@@ -67,11 +67,11 @@ static inline size_t tty_insert_flip_char(struct tty_port *port, u8 ch, u8 flag)
+ 	struct tty_buffer *tb = port->buf.tail;
+ 	int change;
+ 
+-	change = !tb->flags && (flag != TTY_NORMAL);
+-	if (!change && tb->used < tb->size) {
+-		if (tb->flags)
+-			*flag_buf_ptr(tb, tb->used) = flag;
+-		*char_buf_ptr(tb, tb->used++) = ch;
++	change = !tb->hdr.flags && (flag != TTY_NORMAL);
++	if (!change && tb->hdr.used < tb->hdr.size) {
++		if (tb->hdr.flags)
++			*flag_buf_ptr(tb, tb->hdr.used) = flag;
++		*char_buf_ptr(tb, tb->hdr.used++) = ch;
+ 		return 1;
+ 	}
+ 	return __tty_insert_flip_string_flags(port, &ch, &flag, false, 1);
+-- 
+2.43.0
 
