@@ -1,36 +1,36 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 191FC22257E;
-	Thu,  6 Feb 2025 21:34:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1AF11F3FEB;
+	Thu,  6 Feb 2025 21:40:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738877676; cv=none; b=ntKod5qmZ/TZfgL/BAx4t3R9lXzLRj4ttnx0zkIJF9k5up5VlTM7yqEuvFHkffETizRcTyYrhfqLdxfNVT2a49BnRFbJ7UScaNOXfLRMFiekiYFjLgJx3/QdlfuwHEywWrnv/fXhyufQt0HDLXkRv6bNKJbshiJYwMIGYee88AI=
+	t=1738878016; cv=none; b=m1lVzfQIYADJ8Wg2aD5JI1MDti+USmFTAHbeEnfGR4AxL58lNDYdOPfZaFlN5K5CjNtTycv1S7mmNqClljffdWGc4bigPKvO6hn4ZO7mTr5mKCKcKyeYb9cVYs1+6op2g03ZkGHrR2lhD9ywrG+DRTwYUcivi5X9H5/Y+76LSmo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738877676; c=relaxed/simple;
-	bh=BU8/9ZrZRphAqMAbRakEUnZqvXDTNsJBwDy4oWe2YyY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V0FnUM+2S+dUIMEQkKcl2oNtr/ywtKWUi4Uo8l5G8FHmht4rSuQTuI61PYTiBtjd8AYvVohKwVMFtCaaC9D5RoVs7I98PBKvAYyAjc1C1x9xHrR5DBO+4tggzoIemErlzRXOkBUJUOpqcT6f73tbn6gKPCYfTz4hOn8IhLzk0Mg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cfUue+5l; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738878016; c=relaxed/simple;
+	bh=eGKKi55A4CG+yAvJdvj2IcXNepZ1fjwyJttbIWLP314=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qfxmUZXmttZHkfffdvXz2rTIw7UDZEx7DUPCj8hh03qh5H4EUINgkg2K32JU6nsHVBXjYqdCAizrTgwVfRpwrzTdsQgk6nnvejpLAZ0IdgZz0XS1wmAOReIhStzNaViz4CMewZpfSkeu69NpmCiGwhuAu2jnrcUAMtVStMQJb7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CUgjlh2u; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cfUue+5l"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8248CC4CEDD;
-	Thu,  6 Feb 2025 21:34:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CUgjlh2u"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C097C4CEDD;
+	Thu,  6 Feb 2025 21:40:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738877675;
-	bh=BU8/9ZrZRphAqMAbRakEUnZqvXDTNsJBwDy4oWe2YyY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cfUue+5ld7dZBKCSCZ7h7h13CQoXymaPelp6hxSfzICo7frrhc3GSRGUvMww6jdY/
-	 sWEtGdXoqbNIpdSY8YoIaS2YQdKiwDxtGpT5UQ9RXa+a79MgwriJBLXqWyR44Xncsf
-	 HxFkKyTtRYzqIucK6mQQQ4rocBgog1h3D9xsHF4ZcjL2m0p2scYeU4QxMi9W272Pxo
-	 c7eyLTrW0E/UsUh421NQ4FkDfqt5/JNjEkf/xF8RyZBSe6op6qdzNcc239J2szAg5j
-	 BatSDCqcmR0VhIxn9q5sMC70gAJ9WkF5kcCmM4MzMMk+XD07WyegBJSRegrkGSG3An
-	 m++GifmP/c2dQ==
-Date: Thu, 6 Feb 2025 13:34:35 -0800
+	s=k20201202; t=1738878015;
+	bh=eGKKi55A4CG+yAvJdvj2IcXNepZ1fjwyJttbIWLP314=;
+	h=From:To:Cc:Subject:Date:From;
+	b=CUgjlh2udGIBFuE85XTO5rZpyP8/czdwGTDoCganqvBPuUB0PeLtSuNXT4A2JpxS3
+	 XHJt2PygCKznrci9myYEuxdYtzOO+dd+uCIOiUmPx9+/wm42cNpzJCNWqsX2jtD6Ja
+	 IEWZnR1O5jx8t2wEBsqQzWJK61mAjkwMG1Hy7QRyLAUsqkAehkZauNTbtsFZuBI3uk
+	 vWQomTHa35z80XYVvUSd6u4AsXR+gwWg0RIlVUr6UZyFZDNO5ycRWNu6ZChaqK/qcY
+	 j49Zy6y1Heps9lc5RT8NrujtTqYoG078m3uedbXqwuiiB4pK9MkEHQdAkQW5zbUqAl
+	 CABThbItiOM3g==
 From: Kees Cook <kees@kernel.org>
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Suren Baghdasaryan <surenb@google.com>,
+To: Suren Baghdasaryan <surenb@google.com>
+Cc: Kees Cook <kees@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
 	Kent Overstreet <kent.overstreet@linux.dev>,
+	kernel test robot <lkp@intel.com>,
 	Andy Shevchenko <andy@kernel.org>,
 	Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
 	Nathan Chancellor <nathan@kernel.org>,
@@ -38,41 +38,45 @@ Cc: Suren Baghdasaryan <surenb@google.com>,
 	Bill Wendling <morbo@google.com>,
 	Justin Stitt <justinstitt@google.com>,
 	Philipp Reisner <philipp.reisner@linbit.com>,
-	Miguel Ojeda <ojeda@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH 2/3] compiler.h: Introduce __must_be_char_array()
-Message-ID: <202502061333.302D4EA68@keescook>
-References: <20250206175216.work.225-kees@kernel.org>
- <20250206181133.3450635-2-kees@kernel.org>
- <20250206195658.79231973@pumpkin>
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: [PATCH v2 0/3] string.h: Use ARRAY_SIZE() for memtostr*()/strtomem*()
+Date: Thu,  6 Feb 2025 13:40:05 -0800
+Message-Id: <20250206213532.it.087-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250206195658.79231973@pumpkin>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=801; i=kees@kernel.org; h=from:subject:message-id; bh=eGKKi55A4CG+yAvJdvj2IcXNepZ1fjwyJttbIWLP314=; b=owGbwMvMwCVmps19z/KJym7G02pJDOlLdUwdCg/znU3OkmmM0TjkK3b08ee4klg195137nTwd ZwOWL6to5SFQYyLQVZMkSXIzj3OxeNte7j7XEWYOaxMIEMYuDgFYCILeBj+lz7pqq1ceru80u5d x9Wzcd+f8m9qC289qT9d94j/pwfarxn+5+mvuBL9OMnW3yjWoZZbh0190+UTV5Y2mLPeybryli2 aBwA=
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 06, 2025 at 07:56:58PM +0000, David Laight wrote:
-> On Thu,  6 Feb 2025 10:11:29 -0800
-> Kees Cook <kees@kernel.org> wrote:
-> 
-> > In preparation for adding stricter type checking to the str/mem*()
-> > helpers, provide a way to check that a variable is a character array
-> > via __must_be_char_array().
-> > 
-> ...
-> > +#define __is_char_array(a)	(__is_array(a) && sizeof((a)[0]) == 1)
-> > +#define __must_be_char_array(a)	__BUILD_BUG_ON_ZERO_MSG(!__is_char_array(a), \
-> > +							"must be byte array")
-> 
-> If you are only checking the size, perhaps __is_byte_array() would
-> be a better name.
-> (You've even used 'byte' in the error message.)
+Work around a Clang <15 bug by switching to ARRAY_SIZE() (with the
+added benefit of explicitly checking for char array arguments) in
+memtostr*/strtomem*().
 
-Yeah, fair point. I went and forth on naming. Fixed for v2.
+ v2:
+  - change __must_be_byte_array to __must_be_byte_array() (david)
+  - add missed Suggested-by (kent)
+  - clarify move log (miguel)
+  - clarify cover letter Clang version (andy)
+ v1: https://lore.kernel.org/lkml/20250206175216.work.225-kees@kernel.org/
+
+-Kees
+
+Kees Cook (3):
+  compiler.h: Move C string helpers into C-only kernel section
+  compiler.h: Introduce __must_be_byte_array()
+  string.h: Use ARRAY_SIZE() for memtostr*()/strtomem*()
+
+ include/linux/compiler.h | 32 +++++++++++++++++++-------------
+ include/linux/string.h   | 12 ++++++++----
+ 2 files changed, 27 insertions(+), 17 deletions(-)
 
 -- 
-Kees Cook
+2.34.1
+
