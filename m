@@ -1,150 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BF2A1A08C5;
-	Thu,  6 Feb 2025 19:17:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B1141ACECD;
+	Thu,  6 Feb 2025 19:57:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738869423; cv=none; b=e2Q4i0IcdLnndTm5Th4pIu5+CUA4AqeBZ1q8yh8G/BDPr1PDAkPMJMfhIPgTrUSo158ykKuTphfZPyJu1qwkR6V23SzRRu08zO830UdySta1ngScHwH7M4tp168gALWD66VUDboBD+R9JZxGnTYHqtp+jS0IiQYmKE0zfKHKng4=
+	t=1738871823; cv=none; b=mpAYyOKAcGgQSCm3OIm37YCJfOMfKoEsegCXpO3VWNGVmyaDLQVLhdP4E7l8X6dKeJH4EB74KPdnQUeOjXKb17ADANbh6kCtxubNDJDjtG5X7T5f2O70+J/udlpMnP/f5gXkD4/EBdDEDUNb5eUocZsQff2eKi37R4KzBggF1D8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738869423; c=relaxed/simple;
-	bh=GdQnHoyLthlfKrlMEi6nzpGqWRjNbuL5NJ7PhAbGqhY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=n+422ZEtNzX6DU6E76vJ6u271OYGoPeMEFDxNDzmzFLkIZlJP8jw/K7AXm02wU7S+kcw3XCCDQDK7+5nZrMIfZxTp3HKwY5bArszqWsMoSz2Z+ZcXvdhO4bChBgQj8uo+QYINq5wFJdvqFcLajU7/Xa/SdqxxYdoI+i/YrPIqTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rb2WXjwq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738871823; c=relaxed/simple;
+	bh=m29euKP0tRbm1pfzPENkzHxEPSHo+gfSNXCTL4qfmug=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=O4MUDqFj7cuMGFlFiJHh1pmBuVJGK3Le8yVHCkmrsbppNysxIjWvdHnmrpbxmn+p+19ndYn/XcJZu9FXLOD5hS4UOhxntdXxnMmB97YsAu+fOgtqHAviomVJB3wqHZHWRS0mocJP1u7OPurN/69mP+sxbPsiUT9/k/AjCwx0w2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jetr4/rz; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rb2WXjwq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8522C4CEDD;
-	Thu,  6 Feb 2025 19:17:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738869422;
-	bh=GdQnHoyLthlfKrlMEi6nzpGqWRjNbuL5NJ7PhAbGqhY=;
-	h=From:To:Cc:Subject:Date:From;
-	b=rb2WXjwqOldsyzOMUFT36EIf4r7j2kZDMeywaA0Roe+9GNIq17srbrpMF9vjCJASF
-	 BK5/qLDcNfSaqAE5cpIp1TdHZ20CWDpgLAWmcHbbs+C0LRjO0KQckNmSGvUxtdwF+1
-	 NyDPH8x8kJWZYFCCsdEx3/aD1IAkXZvQ/YMHmpAEdOGtUfLimCL+pY0JiM1tqNJivP
-	 pqVEKa82i1i5wGaIe4U7M/mnzQ/PPYLab4Ozh8TWSJhcwph0o73l7xIJTlquDc8qpg
-	 27mss/p/PZGlsGHdemB95viltUiu/2C2VxVu1rOw7hgFl1sRZbzEmz7MFE+LH435kE
-	 e+enZ/4BnZlUg==
-From: Kees Cook <kees@kernel.org>
-To: Eric Sandeen <sandeen@redhat.com>
-Cc: Kees Cook <kees@kernel.org>,
-	Tony Luck <tony.luck@intel.com>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] pstore: Change kmsg_bytes storage size to u32
-Date: Thu,  6 Feb 2025 11:16:59 -0800
-Message-Id: <20250206191655.work.798-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jetr4/rz"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-436249df846so9171645e9.3;
+        Thu, 06 Feb 2025 11:57:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738871819; x=1739476619; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1BcIyHBsPlzNpYJRzgarV1TA18Vy0KuhGFQwaCUNHPs=;
+        b=jetr4/rzDMEh8O0BjburlQDc1LV0TPoi74Wa82gewpBfCeIrFbO+eNrp3scnjnyeKB
+         FQehsVVtCM7BhGbxJfQWx8JibQukhaPRnQcQ5I1zd6zRQLjiIspIiuRM38BmTXOiH7He
+         NYCcW5AWLr14OCw0t9sPyLYEprrpskvwQkvDgq0JOeT+UhlF0FWt5P5TCOhazak9MGd6
+         LH5RlF1ck1BSl1reKfcq9E5R/jnkWxR0wsvHw9sjaEXHuqbeL8UouhprygtqPkVLU4uh
+         hk+wQtApzaIx62JYdJoOGg3Ofr9uEchzGh+WCy6zgSwS/WFWJYAMasnsMOiC2nThjS0Z
+         Yvuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738871819; x=1739476619;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1BcIyHBsPlzNpYJRzgarV1TA18Vy0KuhGFQwaCUNHPs=;
+        b=NgOPXCJbhy+Z7uxIpYlVQvtyZWfu9SK+HYdfPFSwu7brnl1dzSWDtVTIaLePngxzrc
+         3aG8R2kVbCQSC+ijBxKL33UTK1k97x0OhUE7LxKKzXosSJbLCLwrkEC6OzqSX6/zDAnS
+         9mP/mGLxn+/GLLxQl6+uxXRfHtL1RutDP/TQDC0HohQED2O9YLZvvujoB3gWeClb2nim
+         TQpBJmQJa6J68rnqQDAkUiiTYXS9K2pr5P03gAmmZRBW5YLCYgKMf0/MIWTHUum9/vVf
+         HV/ebGq9Im+2D7ASfJCGdE+DPQjp6eh1DoS9pYR4aXhmEb7/Afb3bLgoisJur7qA1Fc3
+         MdFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV8cDwiItzo7NSPMCiZNhlbLgbjjlO/n3MFDsh+BHX8LZUdsj9YQgMmqWQl22zXGxV5s4KQZfgTbPVc22/3@vger.kernel.org, AJvYcCXwqP4k85cv9ZN0vhC6LIZg9fABDoxIqtB70fnXzc7HSEdMCNokSMPiVGV9WNejsP/Lthk5wDJ1+8J/xiIem78=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwK7weiBd2YbaVFmOCeSlMvUWuYPr/+mXB0ufACGEB2K98VqLfE
+	+y6rmuFUkDul83b78nXrlsB+8KA3euXp7GBnr9ScbJHHBqMPfHCT
+X-Gm-Gg: ASbGnctVK4RarSjSXVLqbxpXcbErMnD/+FLL8R7zaEsAMYqk36ukeBxsBLMDpfdY5UV
+	NfqaBjJFqmE096iGAIuUJBFR+DA1LW6GkqIW0z0LXq6NZgn3ii3038leMnwHklThAYzEnj/teZU
+	jbRX1a9c95E6pq288KUSsAyguu1ICFbRkV+hWEZo8s5J/C9lXK3zz1a+vN20u1e1Tms0os7n6h+
+	zkZQJerxmrVkA1hGGLEYlLVSWs5cxZJdCPhSYIQ+akEHSggM2W9VbJpfAs1wMOAOjsvv35l3Cxg
+	iHvdl3VBJc1Wv1/bgeAfGiSHe19OouU4BM1aVpFmS3fiJ4AVmJ8DbA==
+X-Google-Smtp-Source: AGHT+IH+OL30IFfRMNsPtlHNYkTxJSj4lsGxvGMTQ+15ZtUvzy7gINcPStM0hCceknYWifHXCEqJGw==
+X-Received: by 2002:a05:6000:4009:b0:385:fb2c:6021 with SMTP id ffacd0b85a97d-38dc933393amr186251f8f.39.1738871819474;
+        Thu, 06 Feb 2025 11:56:59 -0800 (PST)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dbde0fe37sm2561146f8f.69.2025.02.06.11.56.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Feb 2025 11:56:59 -0800 (PST)
+Date: Thu, 6 Feb 2025 19:56:58 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: Kees Cook <kees@kernel.org>
+Cc: Suren Baghdasaryan <surenb@google.com>, Kent Overstreet
+ <kent.overstreet@linux.dev>, Andy Shevchenko <andy@kernel.org>, Luc Van
+ Oostenryck <luc.vanoostenryck@gmail.com>, Nathan Chancellor
+ <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, Bill
+ Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, Philipp
+ Reisner <philipp.reisner@linbit.com>, Miguel Ojeda <ojeda@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+ llvm@lists.linux.dev
+Subject: Re: [PATCH 2/3] compiler.h: Introduce __must_be_char_array()
+Message-ID: <20250206195658.79231973@pumpkin>
+In-Reply-To: <20250206181133.3450635-2-kees@kernel.org>
+References: <20250206175216.work.225-kees@kernel.org>
+	<20250206181133.3450635-2-kees@kernel.org>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3509; i=kees@kernel.org; h=from:subject:message-id; bh=GdQnHoyLthlfKrlMEi6nzpGqWRjNbuL5NJ7PhAbGqhY=; b=owGbwMvMwCVmps19z/KJym7G02pJDOlLuVa75wXcCJqRvHlF9YI4kapPi9b9d9q0uIgvarnBC YMZPi4aHaUsDGJcDLJiiixBdu5xLh5v28Pd5yrCzGFlAhnCwMUpABNxusHwV3zDh1efiubItmnE TS8XEp7WtCfO9+StV4cyXvgU6S20z2JkaMh6+fGVZCp//bnnH1hPyHr/bKle9XuCtLLAh5vXOE8 /4AYA
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-The types around kmsg_bytes were inconsistent. The global was unsigned
-long, the argument to pstore_set_kmsg_bytes() was int, and the filesystem
-option was u32. Given other internal limits, there's not much sense
-in making a single pstore record larger than INT_MAX and it can't be
-negative, so use u32 everywhere. Additionally, use READ/WRITE_ONCE and a
-local variable in pstore_dump() to avoid kmsg_bytes changing during a
-dump.
+On Thu,  6 Feb 2025 10:11:29 -0800
+Kees Cook <kees@kernel.org> wrote:
 
-Signed-off-by: Kees Cook <kees@kernel.org>
----
-Cc: Eric Sandeen <sandeen@redhat.com>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc: linux-hardening@vger.kernel.org
----
- fs/pstore/inode.c    |  2 +-
- fs/pstore/internal.h |  4 ++--
- fs/pstore/platform.c | 11 ++++++-----
- 3 files changed, 9 insertions(+), 8 deletions(-)
+> In preparation for adding stricter type checking to the str/mem*()
+> helpers, provide a way to check that a variable is a character array
+> via __must_be_char_array().
+> 
+...
+> +#define __is_char_array(a)	(__is_array(a) && sizeof((a)[0]) == 1)
+> +#define __must_be_char_array(a)	__BUILD_BUG_ON_ZERO_MSG(!__is_char_array(a), \
+> +							"must be byte array")
 
-diff --git a/fs/pstore/inode.c b/fs/pstore/inode.c
-index 56815799ce79..9de6b280c4f4 100644
---- a/fs/pstore/inode.c
-+++ b/fs/pstore/inode.c
-@@ -265,7 +265,7 @@ static void parse_options(char *options)
- static int pstore_show_options(struct seq_file *m, struct dentry *root)
- {
- 	if (kmsg_bytes != CONFIG_PSTORE_DEFAULT_KMSG_BYTES)
--		seq_printf(m, ",kmsg_bytes=%lu", kmsg_bytes);
-+		seq_printf(m, ",kmsg_bytes=%u", kmsg_bytes);
- 	return 0;
- }
- 
-diff --git a/fs/pstore/internal.h b/fs/pstore/internal.h
-index 801d6c0b170c..a0fc51196910 100644
---- a/fs/pstore/internal.h
-+++ b/fs/pstore/internal.h
-@@ -6,7 +6,7 @@
- #include <linux/time.h>
- #include <linux/pstore.h>
- 
--extern unsigned long kmsg_bytes;
-+extern unsigned int kmsg_bytes;
- 
- #ifdef CONFIG_PSTORE_FTRACE
- extern void pstore_register_ftrace(void);
-@@ -35,7 +35,7 @@ static inline void pstore_unregister_pmsg(void) {}
- 
- extern struct pstore_info *psinfo;
- 
--extern void	pstore_set_kmsg_bytes(int);
-+extern void	pstore_set_kmsg_bytes(unsigned int bytes);
- extern void	pstore_get_records(int);
- extern void	pstore_get_backend_records(struct pstore_info *psi,
- 					   struct dentry *root, int quiet);
-diff --git a/fs/pstore/platform.c b/fs/pstore/platform.c
-index f56b066ab80c..557cf9d40177 100644
---- a/fs/pstore/platform.c
-+++ b/fs/pstore/platform.c
-@@ -92,8 +92,8 @@ module_param(compress, charp, 0444);
- MODULE_PARM_DESC(compress, "compression to use");
- 
- /* How much of the kernel log to snapshot */
--unsigned long kmsg_bytes = CONFIG_PSTORE_DEFAULT_KMSG_BYTES;
--module_param(kmsg_bytes, ulong, 0444);
-+unsigned int kmsg_bytes = CONFIG_PSTORE_DEFAULT_KMSG_BYTES;
-+module_param(kmsg_bytes, uint, 0444);
- MODULE_PARM_DESC(kmsg_bytes, "amount of kernel log to snapshot (in bytes)");
- 
- static void *compress_workspace;
-@@ -107,9 +107,9 @@ static void *compress_workspace;
- static char *big_oops_buf;
- static size_t max_compressed_size;
- 
--void pstore_set_kmsg_bytes(int bytes)
-+void pstore_set_kmsg_bytes(unsigned int bytes)
- {
--	kmsg_bytes = bytes;
-+	WRITE_ONCE(kmsg_bytes, bytes);
- }
- 
- /* Tag each group of saved records with a sequence number */
-@@ -278,6 +278,7 @@ static void pstore_dump(struct kmsg_dumper *dumper,
- 			struct kmsg_dump_detail *detail)
- {
- 	struct kmsg_dump_iter iter;
-+	unsigned int	remaining = READ_ONCE(kmsg_bytes);
- 	unsigned long	total = 0;
- 	const char	*why;
- 	unsigned int	part = 1;
-@@ -300,7 +301,7 @@ static void pstore_dump(struct kmsg_dumper *dumper,
- 	kmsg_dump_rewind(&iter);
- 
- 	oopscount++;
--	while (total < kmsg_bytes) {
-+	while (total < remaining) {
- 		char *dst;
- 		size_t dst_size;
- 		int header_size;
--- 
-2.34.1
+If you are only checking the size, perhaps __is_byte_array() would
+be a better name.
+(You've even used 'byte' in the error message.)
 
+	David
