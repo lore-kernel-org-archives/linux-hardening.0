@@ -1,107 +1,185 @@
-Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4953237705
-	for <linux-hardening@vger.kernel.org>; Thu,  6 Feb 2025 23:23:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A773A1EA7F6
+	for <linux-hardening@vger.kernel.org>; Fri,  7 Feb 2025 00:00:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738884231; cv=none; b=W9mPdy9TQsq4QHZ7UlaKluR1Ins7lE1F86dDyVpSkxMn+1lpRBT0rLDXx4CBWlIszIgwst0HL34lrQhTyIH348cydL7SaeGYxVK3NvgwLc1W05x7AxbqG4op+hIj/qFHABcskTS10czhATLqar9F4ivsMsZLpxLMJuUx2Y27P/w=
+	t=1738886409; cv=none; b=iA8Gd6yMqVe6mnT/SIsOaoKFxzwY+5eoeNSThHHVbLX8yszoeCha/Y0WsAMvfiw0L+avcHz0koJZaNAy7/NQIwLnhTNTwcyo0jXz7IdTy/nA5W4FuTxPD1n67svRd/VXrtPfjx6YKU7oiWevJ4A3V0XwFfJZQdLhAsYbvvQ/zVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738884231; c=relaxed/simple;
-	bh=V2hDQVZfXi10myODsQHJDr1PrZbrGGSvhhbd4aHROEI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=k72qdoitqqSui5N7kVbqCg1VUHm0smde9LxLwm7D8AV+sAE/cjhdl5sr6pVy3mL6ga+eQy7uc9EB7DcSbhFY3/+SVAnDAfxBNVp3cTgWmQWxJWf4iMcwi8yeyWrVIh3hRW/Lh7HLzv4Z6Ko9nANddvBKREcS5fBX5Z2y47g2L+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=oUlCs0qD; arc=none smtp.client-ip=44.202.169.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1738886409; c=relaxed/simple;
+	bh=chUCDcEzEInCWiQXbeEg0w+EOP4qjigrh2i2js7DTAQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MTZNVvFlBYmN+vtMompu4p4v+ouRJEfOQuL5aafIRNSl+bJo4BGsGZ5adBbT7HtIHtofFnUp/3tingsULhUx/kE4NT4X4EpMZ9uSKZytdADsleM/JjEzu83nF1174MS614zxuk4McoBZwuv0tpbLTGG7NalNSGOzsc1YrylR6Kk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XTNwQWVB; arc=none smtp.client-ip=209.85.160.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="oUlCs0qD"
-Received: from eig-obgw-5008a.ext.cloudfilter.net ([10.0.29.246])
-	by cmsmtp with ESMTPS
-	id g6ActHwlViuzSgBDjtZS4M; Thu, 06 Feb 2025 23:23:43 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id gBDitP94Gh3xvgBDitgSnq; Thu, 06 Feb 2025 23:23:42 +0000
-X-Authority-Analysis: v=2.4 cv=F+ZRdLhN c=1 sm=1 tr=0 ts=67a5447e
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=6Vi/Wpy7sgpXGMLew8oZcg==:17
- a=IkcTkHD0fZMA:10 a=T2h4t0Lz3GQA:10 a=7T7KSl7uo7wA:10
- a=KZ9MsSxUvLdQbKA6SOoA:9 a=QEXdDO2ut3YA:10 a=Xt_RvD8W3m28Mn_h3AK8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=mfsvnhoslxgxndnAvhSW95+TCDLQ1GuITfG+HDlgT28=; b=oUlCs0qDbMdKAYj2+6uqMqJRrx
-	MsZZvofjojXYWNPk8Z9owrj4Z14wf5sSw7Qkb7NTbyTQkcGkiIJB7o/f8MoSaoJcPVRUkF4qf0ayz
-	EFlEHL9GgxMa+g6NQQlRFlEcgv771zEKpm1Ec3LerlutSiy3FhhR0SNtxY5TlMB4aJUwrcNBZqH5S
-	XM/unbiol57DAa9ErB4zxTiA8rBEV+WvffsFtnrg11k1GbHmrTGVMvKeoXSyEYv0EHrp+NOQnimQH
-	FTXrnEi42x9+5lxm6g52j5Dhf9S5R6jFnXxmfqiq2e67gDhZLU099ELKkF/TdUs1rErgH0lQ8bUso
-	z3eaR1GA==;
-Received: from [45.124.203.140] (port=54722 helo=[192.168.0.152])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1tgBDg-0025YQ-2y;
-	Thu, 06 Feb 2025 17:23:41 -0600
-Message-ID: <7c396d56-a2ea-4cb5-8a10-a2b78cebfaeb@embeddedor.com>
-Date: Fri, 7 Feb 2025 09:53:30 +1030
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XTNwQWVB"
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-4679b5c66d0so60071cf.1
+        for <linux-hardening@vger.kernel.org>; Thu, 06 Feb 2025 16:00:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738886405; x=1739491205; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3s2OEGfvS1PfxV3TnGZWGqOwe5jfP7CRQxSK+W5cvuM=;
+        b=XTNwQWVBYUTafna7IK7vDgJ7sgqIUgmnv8UgChjfzV07d4Gj4O5K91hfcV5UbutmwA
+         RS2AB7Gwn1se/0t6Lu+gtkMMOBXyS5oBqDWrV784h1Gi/rOb1RhS9KatQ3erhQANV5/6
+         rk/aQPJKENB0l/Nonsgt4drDYzgoDdqhNxVaeMbL0XIUVTkHkPkKdu3Gfhs7JSle1HzS
+         xZG4Koom9UOt6M7EVtghyuxZY4+HlYe6uqd6hKdzO3/OdJA4ic2gXsjtIIrWz4tefjC8
+         zqaztqAWcsIAvU2kVBXh6vuGkSS8j3P9UZ6xlBZEufZ2Xbf3qwvfKJN1JryhtGjLy4LE
+         zA6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738886405; x=1739491205;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3s2OEGfvS1PfxV3TnGZWGqOwe5jfP7CRQxSK+W5cvuM=;
+        b=fFjEzNP1RRscJKlsmdWkhK0nVBBeSG4URZ0H//ELzD0ieH/X7Y76rH4nShNJoBiU+0
+         Gi9NFQ5pxB+MfY8WDzaoF7geBEt6qOiROwtQKrNx6vPVPixd3kvG4HKrvEI7IcV0WPCE
+         XltQpvY8dVmkvUqaBCMiY5GkQvzlV0FquleDnknHe24pDqsscLELBlS2nulsvQiYiCGf
+         hf8BirNl67B+qpbpMNECtgcojpDQePJXdQ14YG3JDhYiZHKFbSSNQ5h/sKgydE2+kTsn
+         yo6iB9xy1lQNq1F5Ie6u54G9PFEVz1yF+1wGUvKV7Ybm4HT475mtdQ9i2u2EnqPVE1LB
+         YZIQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWhAX5urDsW/f+m8LKdr9L/aC4semPn6Sv3WmuA2/mnDqve8zDICQRU232w49+6bNlYdnXVBGs8J24Q7gIDhlY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz3ED9IfUD/e6sp3nscg49Oa+6iexleHopYBQTeNOpAVSwsHkuk
+	m7VfPqC1XoyOn8SQGGHNgJi308DTzWas5KvQoiBhCOKhLaEqK8F/JOP/PDThSKuuhzaTHRns+M0
+	pg+EXNZoXbyB5OfWbjals4EseEZCmaZBVVQje
+X-Gm-Gg: ASbGncsc1P7/uLA6L1oKtNdyjcXema3qSqG08qZN/ADFepzOSz1we4OKJ3F/rs0qV3X
+	IZXqWSrehvfdcdqTAiHHwgJLQgrJlG6xOH8JOW+xrwRtwi88A8WT8fGBXVW87wFehzdufOTJlfB
+	5Um4iAfWGHTE78EPSmhxeaXddd9g==
+X-Google-Smtp-Source: AGHT+IHsY1ag2sOIK3JK02gum2DZEW5zecE4KoEUXFFjDCnoCQZYFjF6l1ExbdpVfmOOkIc1JXq8L8KU1rbrQRi3s3o=
+X-Received: by 2002:a05:622a:1b8e:b0:466:861a:f633 with SMTP id
+ d75a77b69052e-47169c018f0mr532361cf.5.1738886405231; Thu, 06 Feb 2025
+ 16:00:05 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3][next] tty: tty_buffer: Avoid hundreds of
- -Wflex-array-member-not-at-end warnings
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Jiri Slaby <jirislaby@kernel.org>, linux-kernel@vger.kernel.org,
- linux-serial@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <Z6QvAZxiQusdaDkH@kspp>
- <2025020633-irritate-boogieman-4c35@gregkh>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <2025020633-irritate-boogieman-4c35@gregkh>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 45.124.203.140
-X-Source-L: No
-X-Exim-ID: 1tgBDg-0025YQ-2y
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.0.152]) [45.124.203.140]:54722
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 7
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfEuZrbVVd4LE3jW3HnQZQqziDBacVwLutCz0v72n/h+WFoK7gcc54c8RxAadhudqnAqV8fg94qqW05THeW1KdQS3QU5jk4TGxK5q5KJoBjq9nEtQNeRo
- 17Ek+GyFG0MD5GTL9HasWK4iqFG2u8BS86HSKEZ+KKLS8Js5Yvb8ooad6RNLQCXmPjau0Km3YTZ7gE9kAYf90f9xDwltA/a7yiXXoUUv3AD0hMtihGaHo9T4
+References: <20250206213532.it.087-kees@kernel.org> <20250206214014.3567372-3-kees@kernel.org>
+In-Reply-To: <20250206214014.3567372-3-kees@kernel.org>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Thu, 6 Feb 2025 15:59:53 -0800
+X-Gm-Features: AWEUYZl-0BsWMPB7YR915iCrl5G_SmVkXfJHEMoYyMVyZZI3P_9T9W0LUcexzms
+Message-ID: <CAJuCfpEDdtC-NmYu1-RNC8R=Spuc1iQoqy44O8ML92fztF=1bw@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] string.h: Use ARRAY_SIZE() for memtostr*()/strtomem*()
+To: Kees Cook <kees@kernel.org>
+Cc: kernel test robot <lkp@intel.com>, Kent Overstreet <kent.overstreet@linux.dev>, nathan@kernel.org, 
+	Andy Shevchenko <andy@kernel.org>, linux-hardening@vger.kernel.org, 
+	Miguel Ojeda <ojeda@kernel.org>, Luc Van Oostenryck <luc.vanoostenryck@gmail.com>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Philipp Reisner <philipp.reisner@linbit.com>, 
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
+	Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Feb 6, 2025 at 1:40=E2=80=AFPM Kees Cook <kees@kernel.org> wrote:
+>
+> The destination argument of memtostr*() and strtomem*() must be a
+> fixed-size char array at compile time, so there is no need to use
+> __builtin_object_size() (which is useful for when an argument is
+> either a pointer or unknown). Instead use ARRAY_SIZE(), which has the
+> benefit of working around a bug in Clang (fixed[1] in 15+) that got
+> __builtin_object_size() wrong sometimes.
+>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202501310832.kiAeOt2z-lkp@i=
+ntel.com/
+> Suggested-by: Kent Overstreet <kent.overstreet@linux.dev>
+> Link: https://github.com/llvm/llvm-project/commit/d8e0a6d5e9dd2311641f9a8=
+a5d2bf90829951ddc [1]
+> Signed-off-by: Kees Cook <kees@kernel.org>
 
->>   	unsigned int used;
->>   	unsigned int size;
->>   	unsigned int commit;
->> -	unsigned int lookahead;		/* Lazy update on recv, can become less than "read" */
->> +	unsigned int lookahead; /* Lazy update on recv, can become less than "read" */
-> 
-> Coding style change?
+Tested-by: Suren Baghdasaryan <surenb@google.com>
 
-(Whaa? for some reason your response didn't reach my inbox until today)
+Thanks Kees!
+CC'ing Andrew Morton since mm-unstable contains my workaround patch
+[1] for the issue fixed by this patchset. I'm not sure which tree will
+be taking these fixes but once they are in we should drop [1]. Or
+maybe we just drop it now from mm-unstable? Seems like only testbot
+was the only one who complained...
 
-It seems I got a bit too proactive.
+[1] 0e91345e75b2 ("alloc_tag: work around clang-14 build issue with
+__builtin_object_size()")
 
-What do you think about the rest of the patch?
-
-Thanks!
--Gustavo
-
+> ---
+> Cc: Suren Baghdasaryan <surenb@google.com>
+> Cc: nathan@kernel.org
+> Cc: Andy Shevchenko <andy@kernel.org>
+> Cc: linux-hardening@vger.kernel.org
+> ---
+>  include/linux/string.h | 12 ++++++++----
+>  1 file changed, 8 insertions(+), 4 deletions(-)
+>
+> diff --git a/include/linux/string.h b/include/linux/string.h
+> index 493ac4862c77..fc5ae145bd78 100644
+> --- a/include/linux/string.h
+> +++ b/include/linux/string.h
+> @@ -411,7 +411,8 @@ void memcpy_and_pad(void *dest, size_t dest_len, cons=
+t void *src, size_t count,
+>   * must be discoverable by the compiler.
+>   */
+>  #define strtomem_pad(dest, src, pad)   do {                            \
+> -       const size_t _dest_len =3D __builtin_object_size(dest, 1);       =
+ \
+> +       const size_t _dest_len =3D __must_be_byte_array(dest) +          =
+ \
+> +                                ARRAY_SIZE(dest);                      \
+>         const size_t _src_len =3D __builtin_object_size(src, 1);         =
+ \
+>                                                                         \
+>         BUILD_BUG_ON(!__builtin_constant_p(_dest_len) ||                \
+> @@ -434,7 +435,8 @@ void memcpy_and_pad(void *dest, size_t dest_len, cons=
+t void *src, size_t count,
+>   * must be discoverable by the compiler.
+>   */
+>  #define strtomem(dest, src)    do {                                    \
+> -       const size_t _dest_len =3D __builtin_object_size(dest, 1);       =
+ \
+> +       const size_t _dest_len =3D __must_be_byte_array(dest) +          =
+ \
+> +                                ARRAY_SIZE(dest);                      \
+>         const size_t _src_len =3D __builtin_object_size(src, 1);         =
+ \
+>                                                                         \
+>         BUILD_BUG_ON(!__builtin_constant_p(_dest_len) ||                \
+> @@ -453,7 +455,8 @@ void memcpy_and_pad(void *dest, size_t dest_len, cons=
+t void *src, size_t count,
+>   * Note that sizes of @dest and @src must be known at compile-time.
+>   */
+>  #define memtostr(dest, src)    do {                                    \
+> -       const size_t _dest_len =3D __builtin_object_size(dest, 1);       =
+ \
+> +       const size_t _dest_len =3D __must_be_byte_array(dest) +          =
+ \
+> +                                ARRAY_SIZE(dest);                      \
+>         const size_t _src_len =3D __builtin_object_size(src, 1);         =
+ \
+>         const size_t _src_chars =3D strnlen(src, _src_len);              =
+ \
+>         const size_t _copy_len =3D min(_dest_len - 1, _src_chars);       =
+ \
+> @@ -478,7 +481,8 @@ void memcpy_and_pad(void *dest, size_t dest_len, cons=
+t void *src, size_t count,
+>   * Note that sizes of @dest and @src must be known at compile-time.
+>   */
+>  #define memtostr_pad(dest, src)                do {                     =
+       \
+> -       const size_t _dest_len =3D __builtin_object_size(dest, 1);       =
+ \
+> +       const size_t _dest_len =3D __must_be_byte_array(dest) +          =
+ \
+> +                                ARRAY_SIZE(dest);                      \
+>         const size_t _src_len =3D __builtin_object_size(src, 1);         =
+ \
+>         const size_t _src_chars =3D strnlen(src, _src_len);              =
+ \
+>         const size_t _copy_len =3D min(_dest_len - 1, _src_chars);       =
+ \
+> --
+> 2.34.1
+>
