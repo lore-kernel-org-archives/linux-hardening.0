@@ -1,158 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BF657FD;
-	Fri,  7 Feb 2025 04:52:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 907CD2343BC
+	for <linux-hardening@vger.kernel.org>; Fri,  7 Feb 2025 08:02:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738903953; cv=none; b=McdZMGd/6V7F0l9xWL2tS+mZY21ho3SJf1qj6PwQIHXSF/8vOFjhSD292R0/T1J6LcalXjSVRl92xPP8DxNdUecTo4FdatpW13UZlxx8haFsHAKZYKrS5qDywEdCHWIEBAQ+4U72LyOoFKsnO24EHo6kxjBWqXKXouaInCvsCuM=
+	t=1738915323; cv=none; b=ot4LTtUJx93LUmq8gkIfN0n3OZNP0x0cLz9Vg+6EaMyuKHtPDT5kFtj5dzfesow3fJzToi/xw71+DMxPsb3YKLjLeEYB6kCAmQwWhEq5C/uvHgPqsj2OVLOaF3DAl2zFf/Rm3QUNM4NNt16ApN7ixg1LczJL3xKjd8UUQyrhwpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738903953; c=relaxed/simple;
-	bh=DHjArMeAK3MeqFPs8ewPHAdYTmkFt/+F2+q7rMjVEsQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XE6cL20gdKOnT1Grn6e2wAAC71Ke/gq5PoTSVJkEwm0CPXBi5qyn30FuGUS8FZeBUAwz3vT7IAADe0J6yjQtD0hac0hA4oi77xJld9c+zaeWOEp3iMlBaBLUPOafrAz+QW3mBuFU3WXTDNuM8twpHgU9sNt1140ufDG+HMfaZVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J4hOTD94; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738915323; c=relaxed/simple;
+	bh=wg7M3VeNI1uNtxFXFqf+8CE3L3YU9zZvMgM6VBEDA0o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pEt6UAyoDp9hs/I920xd9T818MtGRPVwXDPKXsSSxh3dZmCQRSmZAcIWVerwY8jFsXcf9DQpdhD/VSM4pYAd9AWjepHAG66PeIeyDgF8JKK2JQRe/Tj9pDWCkj3ZTTHc8RAxNYUer0iYePxRWPzw1eNROWEOz8K84mk71SMYX34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=anVkvNqm; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J4hOTD94"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1AC9C4CED1;
-	Fri,  7 Feb 2025 04:52:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738903952;
-	bh=DHjArMeAK3MeqFPs8ewPHAdYTmkFt/+F2+q7rMjVEsQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=J4hOTD940F1xlXDm0mc5K3mDWMF8PSxayTzbGZ7yFgncZQhreabSjsW/SPkrxvWyj
-	 nSL6ezpoAY094IRO9xVo7ABLzhV1eguxz++lt/TzXCZ8K45nVXR4iXLQO5O5OvWp0K
-	 ATK9xHVbtmFdnug59ERW+h66BXmzxYNeXv29CdAsmMdv00eYEe0sd6vVofADQf05te
-	 lT0NWx4WrW5hPsI8JfAq6/8JcdwZWb3xVM2NWlDEGMKosdaJAlWafYQrvED6iGX8qh
-	 kmzhADTz8zfNueFUjkLH68uqsQf0kpB9zw+24EnTrALzamINKTukN0O7a9JCGIPQDt
-	 St5IHezNhourg==
-Date: Thu, 6 Feb 2025 20:52:32 -0800
-From: Kees Cook <kees@kernel.org>
-To: Kevin Brodsky <kevin.brodsky@arm.com>
-Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Mark Brown <broonie@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	David Howells <dhowells@redhat.com>,
-	"Eric W. Biederman" <ebiederm@xmission.com>,
-	Jann Horn <jannh@google.com>, Jeff Xu <jeffxu@chromium.org>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Andy Lutomirski <luto@kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Pierre Langlois <pierre.langlois@arm.com>,
-	Quentin Perret <qperret@google.com>,
-	"Mike Rapoport (IBM)" <rppt@kernel.org>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Qi Zheng <zhengqi.arch@bytedance.com>,
-	linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-	x86@kernel.org
-Subject: Re: [RFC PATCH 8/8] mm: Add basic tests for kpkeys_hardened_cred
-Message-ID: <202502062024.BCB0DED1D5@keescook>
-References: <20250203102809.1223255-1-kevin.brodsky@arm.com>
- <20250203102809.1223255-9-kevin.brodsky@arm.com>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="anVkvNqm"
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-30795988ebeso16569201fa.3
+        for <linux-hardening@vger.kernel.org>; Fri, 07 Feb 2025 00:02:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1738915320; x=1739520120; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LOAWJb2vzX94RdNhQSlGKZAFYwRJCIBEJ11rOyxtNRE=;
+        b=anVkvNqmZEbGItitdwZ4ezL5cz4QNRRfxhzyQnNEUPj/570Ipr8Aj6dsPjlNr7DOP7
+         6RM1fCBAZ7Dig0Ub2EafXCIXhIqVRqhRQXuy46jKoSkXCURMzZnOQpmz4kWW7yr2vu9/
+         AbdKlCpXjrGVi+HZhxed75Dl9SRBgF8+Qqt46S6l9OBxU1Xd98yTu3hRvnW8AfEAGb46
+         O+H9a8n1vb4PzYmoyDMoWMxX7Fm/WMbFrGj0YKCBrB8L4WxbLBk4IzrUSu+12WyZ0M0H
+         7XJAV2M9iOA41kMBhyMIXKuuJ9/zGv6Uyyw7to5YAC4yFmMLtM8quCxJxehLzSwE6E2j
+         ceaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738915320; x=1739520120;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LOAWJb2vzX94RdNhQSlGKZAFYwRJCIBEJ11rOyxtNRE=;
+        b=Vj2VSNbZVn/Mu4587OAdpnlYVUIugxw5rREOyTbLcmxHdFVkppd8lU6RevUYDawkvs
+         wWBy9oIjSN4JHF2x2PjdvM4KYYPFPdRxM3XReBW09xRQWoCUanmRihwpGeqN+LnbB9O1
+         QJYb01pcY19Vp4dPupn82CY+0hj8NUj6s5RbD4unNdqaAmHVSt3At0nAIadA2WwnD5lY
+         EpKf4gsIyn67zzet2euWQ6OvEU1Sy6gafbRzoe5zkFTmSMX0luTGFadrlCPJeE6U11ZY
+         xX9fOp1emv9otTT4eKTNXFNpGJ/9PXactYdUWWflXqCKLDkGPJfQ/F1GsqqOSZwUOk7K
+         /PGg==
+X-Forwarded-Encrypted: i=1; AJvYcCXJr6akxv3BrBVWPTmFa5WAE9HYDZdapiGaDh2NAT/j3GtQ5kR8RMN46sgnj9jGBInQZ63eFVfXOm6NNpJrU6o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzbckvkLGK+1XcbONVIRPPJ5cvn3LHt3hUvfHnYHGwJpiqdLH/P
+	2Nekc4zcRAc+5ptLQ5WOn0GZlx/B98G+v094eI2+f0oTh1Lo9xGcCbn8LGukUmdy+WCmImJxwt+
+	6LzAO00WWycPpfXbmG53xy0MSB6KqpZtpF3d2vA==
+X-Gm-Gg: ASbGncvY45eOTF5F4Y44OwnmCoGdS2j/55whDU4ncL94alg5hio331QjhypEzLF/+Fq
+	szgAw2i7MFG5hmpZ8uNwpn6CyQ0gNR0IvBrykEKI9Zmf6sebI6jVn++uENLXFi94aUnabgVrBGb
+	ih1ZjS6ITXzu9D5xSzJ9VfFnmVLrE=
+X-Google-Smtp-Source: AGHT+IHQN7EW2uidYCyJgniKrSJh5CHau5RAsiJsPpkl9BjhCcmIHhiHYrNsdO0/XG5n25F3cY+ULx/9H3owm0JpQmU=
+X-Received: by 2002:a2e:a913:0:b0:307:ce2b:ed82 with SMTP id
+ 38308e7fff4ca-307e580c8c2mr6906271fa.22.1738915319619; Fri, 07 Feb 2025
+ 00:01:59 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250203102809.1223255-9-kevin.brodsky@arm.com>
+References: <20250203121843.3183991-1-andriy.shevchenko@linux.intel.com> <20250203121843.3183991-2-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20250203121843.3183991-2-andriy.shevchenko@linux.intel.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Fri, 7 Feb 2025 09:01:48 +0100
+X-Gm-Features: AWEUYZnnHn0Y93j7DoyQ91s-D8BeYKbpj-YuZV6sgQZrLbjP87O4U1rJxsSUKdE
+Message-ID: <CAMRc=Mc+obxRPpMWNmSk5Tab6NmwM4gSzoHE8JtFf=k+u23QSA@mail.gmail.com>
+Subject: Re: [PATCH v1 1/7] gpio: 74x164: Remove unneeded dependency to OF_GPIO
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 03, 2025 at 10:28:09AM +0000, Kevin Brodsky wrote:
-> Add basic tests for the kpkeys_hardened_pgtables feature: try to
-> perform a direct write to current->{cred,real_cred} and ensure it
-> fails.
-> 
-> Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
+On Mon, Feb 3, 2025 at 1:18=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> Remove unneeded dependency to OF_GPIO which driver does not use.
+>
+> Fixes: 3c7469514dbe ("gpio: 74x164: Make use of device properties")
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > ---
->  mm/Makefile                    |  1 +
->  mm/kpkeys_hardened_cred_test.c | 42 ++++++++++++++++++++++++++++++++++
+>  drivers/gpio/Kconfig | 1 -
+>  1 file changed, 1 deletion(-)
+>
+> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> index add5ad29a673..56c1f30ac195 100644
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -1790,7 +1790,6 @@ menu "SPI GPIO expanders"
+>
+>  config GPIO_74X164
+>         tristate "74x164 serial-in/parallel-out 8-bits shift register"
+> -       depends on OF_GPIO
+>         help
+>           Driver for 74x164 compatible serial-in/parallel-out 8-outputs
+>           shift registers. This driver can be used to provide access
+> --
+> 2.43.0.rc1.1336.g36b5255a03ac
+>
 
-Current file naming convention[1] would be to name this as:
+Geert: Just Cc'ing you here because you yelled at me last time I
+removed all dependencies. This driver is under the SPI section so it
+does have the CONFIG_SPI_MASTER dependency. I think it's fine to drop
+OF_GPIO here but I just wanted to run it by you.
 
-	mm/tests/kpkeys_hardened_cred_kunit.c
-
->  security/Kconfig.hardening     | 11 +++++++++
->  3 files changed, 54 insertions(+)
->  create mode 100644 mm/kpkeys_hardened_cred_test.c
-> 
-> diff --git a/mm/Makefile b/mm/Makefile
-> index f7263b7f45b8..2024226902d4 100644
-> --- a/mm/Makefile
-> +++ b/mm/Makefile
-> @@ -149,3 +149,4 @@ obj-$(CONFIG_TMPFS_QUOTA) += shmem_quota.o
->  obj-$(CONFIG_PT_RECLAIM) += pt_reclaim.o
->  obj-$(CONFIG_KPKEYS_HARDENED_PGTABLES) += kpkeys_hardened_pgtables.o
->  obj-$(CONFIG_KPKEYS_HARDENED_PGTABLES_TEST) += kpkeys_hardened_pgtables_test.o
-> +obj-$(CONFIG_KPKEYS_HARDENED_CRED_TEST) += kpkeys_hardened_cred_test.o
-
-And for the Kconfig convention says[2] this should be:
-
-	CONFIG_KPKEYS_HARDENED_CRED_KUNIT_TEST
-
-> diff --git a/mm/kpkeys_hardened_cred_test.c b/mm/kpkeys_hardened_cred_test.c
-> new file mode 100644
-> index 000000000000..46048098f99d
-> --- /dev/null
-> +++ b/mm/kpkeys_hardened_cred_test.c
-> @@ -0,0 +1,42 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +#include <kunit/test.h>
-> +#include <linux/sched.h>
-> +
-> +static void write_cred(struct kunit *test)
-> +{
-> +	long zero = 0;
-> +	int ret;
-> +
-> +	ret = copy_to_kernel_nofault((unsigned long *)current->cred, &zero, sizeof(zero));
-> +	KUNIT_EXPECT_EQ_MSG(test, ret, -EFAULT,
-> +			    "Write to current->cred wasn't prevented");
-> +
-> +	ret = copy_to_kernel_nofault((unsigned long *)current->real_cred, &zero, sizeof(zero));
-> +	KUNIT_EXPECT_EQ_MSG(test, ret, -EFAULT,
-> +			    "Write to current->real_cred wasn't prevented");
-
-This is a good negative test. I would include a positive test as well.
-i.e. make sure you can run copy_from_kernel_nofault() to read it
-successfully. Otherwise you don't know if you're just getting a bad
-address -- we want to distinguish between them. (This is more true for
-the next suggestion, since current->cred being broken would be much more
-obvious.)
-
-While current->cred is good and easy, I would like to see prepare_creds()
-exercised too to get a new cred and validate that it is equally directly
-readable and directly not writable, and then use the correct accessors
-to perform a successful write to the cred, read back the change,
-etc. (i.e. validate the expected behavior too.)
-
-> +}
-> +
-> +static int kpkeys_hardened_cred_suite_init(struct kunit_suite *suite)
-> +{
-> +	if (!arch_kpkeys_enabled()) {
-> +		pr_err("Cannot run kpkeys_hardened_cred tests: kpkeys are not supported\n");
-> +		return 1;
-> +	}
-
-Instead of failing ("return 1") I think this should be a "skip" (it is
-expected to not work if there is no support) in each test instead:
-
-	if (!arch_kpkeys_enabled())
-		kunit_skip(test, "kpkeys are not supported\n");
-
-I'm very happy to see tests! :)
-
--Kees
-
-[1] https://docs.kernel.org/dev-tools/kunit/style.html#test-file-and-module-names
-[2] https://docs.kernel.org/dev-tools/kunit/style.html#test-kconfig-entries
-
--- 
-Kees Cook
+Bart
