@@ -1,67 +1,59 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F67F155345;
-	Fri,  7 Feb 2025 02:37:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BF657FD;
+	Fri,  7 Feb 2025 04:52:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738895848; cv=none; b=Y/J87nywRJWPQqquITtslTubF5GCYAfYboHTqR4WR+81NC0k64CudY6SJHLwCaxhSySS968OyUSuAJmeUQFmh7G4QyM6WWrcO51RkxEjXmvuHpkp18eQV/wr9spjuuRlQpjW0TZ96H3Pxx2amKKDGcjQNYcxJSoGe7EdQ5ewzsg=
+	t=1738903953; cv=none; b=McdZMGd/6V7F0l9xWL2tS+mZY21ho3SJf1qj6PwQIHXSF/8vOFjhSD292R0/T1J6LcalXjSVRl92xPP8DxNdUecTo4FdatpW13UZlxx8haFsHAKZYKrS5qDywEdCHWIEBAQ+4U72LyOoFKsnO24EHo6kxjBWqXKXouaInCvsCuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738895848; c=relaxed/simple;
-	bh=3MhgtvavbTSXW6MkC8R4dDYEwIMFhGFGO1iDqu57M+w=;
+	s=arc-20240116; t=1738903953; c=relaxed/simple;
+	bh=DHjArMeAK3MeqFPs8ewPHAdYTmkFt/+F2+q7rMjVEsQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IqP6/kroNqPHE7R56oghN+dw7wWkcDyruoTh0yRAjLuc4OttwM2G7sDjIvQ/9/+ROTCVf/rNLKEMgYE1U/TOc6lBT73lWRdOpLk2ULAdCurrt+nLvhzTvJ9wrBr6A+HuErayeNAmAS4l/j8r51X63Fw8q38CSh2E1snIExSkah0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dr9cCOp/; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=XE6cL20gdKOnT1Grn6e2wAAC71Ke/gq5PoTSVJkEwm0CPXBi5qyn30FuGUS8FZeBUAwz3vT7IAADe0J6yjQtD0hac0hA4oi77xJld9c+zaeWOEp3iMlBaBLUPOafrAz+QW3mBuFU3WXTDNuM8twpHgU9sNt1140ufDG+HMfaZVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J4hOTD94; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dr9cCOp/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E9E1C4CEDD;
-	Fri,  7 Feb 2025 02:37:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J4hOTD94"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1AC9C4CED1;
+	Fri,  7 Feb 2025 04:52:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738895848;
-	bh=3MhgtvavbTSXW6MkC8R4dDYEwIMFhGFGO1iDqu57M+w=;
+	s=k20201202; t=1738903952;
+	bh=DHjArMeAK3MeqFPs8ewPHAdYTmkFt/+F2+q7rMjVEsQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Dr9cCOp/zbVJ7rJ9uQpsRrcC0qHhGFHha9D6kP9YMm3Kb9b+hbLuu/rv1LU7jf20L
-	 ktjX9o/Uxj8cog2qZxL+vWdOMYZ1ih/32NFpdYr3p4m2zDZwZBBio4SIYxalOQJ/D8
-	 zwExSzg9OOnhy7XiKDhBe0+RAkuOSmoqRl+239UoaUAC3ElE188Atu5bOuvwU03MGT
-	 AKfe3xxSuIZ/8oVJmTH/8gfLF2SWFUq7WnvkgttYHLvt2eGW0etSe+9XqShbCCFABx
-	 wOR+EC455LLVSPyBGP7vm5EvcEW3hr3BPLUBWhRVqZXsh1wiAnvnO9qHUo0yQHd7wN
-	 2mwEHFsb3a+VQ==
-Date: Thu, 6 Feb 2025 18:37:27 -0800
+	b=J4hOTD940F1xlXDm0mc5K3mDWMF8PSxayTzbGZ7yFgncZQhreabSjsW/SPkrxvWyj
+	 nSL6ezpoAY094IRO9xVo7ABLzhV1eguxz++lt/TzXCZ8K45nVXR4iXLQO5O5OvWp0K
+	 ATK9xHVbtmFdnug59ERW+h66BXmzxYNeXv29CdAsmMdv00eYEe0sd6vVofADQf05te
+	 lT0NWx4WrW5hPsI8JfAq6/8JcdwZWb3xVM2NWlDEGMKosdaJAlWafYQrvED6iGX8qh
+	 kmzhADTz8zfNueFUjkLH68uqsQf0kpB9zw+24EnTrALzamINKTukN0O7a9JCGIPQDt
+	 St5IHezNhourg==
+Date: Thu, 6 Feb 2025 20:52:32 -0800
 From: Kees Cook <kees@kernel.org>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Andy Shevchenko <andy@kernel.org>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-	linux-coco@lists.linux.dev,
-	Sathya Prakash <sathya.prakash@broadcom.com>,
-	Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-	Suganath Prabu Subramani <suganath-prabu.subramani@broadcom.com>,
-	Kashyap Desai <kashyap.desai@broadcom.com>,
-	Sumit Saxena <sumit.saxena@broadcom.com>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Nilesh Javali <njavali@marvell.com>,
+To: Kevin Brodsky <kevin.brodsky@arm.com>
+Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
 	Andrew Morton <akpm@linux-foundation.org>,
-	Alexey Dobriyan <adobriyan@gmail.com>,
-	Sven Eckelmann <sven@narfation.org>,
-	Tadeusz Struk <tadeusz.struk@linaro.org>,
-	kernel test robot <lkp@intel.com>,
-	Erick Archer <erick.archer@outlook.com>,
-	Dmitry Antipov <dmantipov@yandex.ru>,
-	Ryusuke Konishi <konishi.ryusuke@gmail.com>,
-	Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-	linux-kernel@vger.kernel.org, MPT-FusionLinux.pdl@broadcom.com,
-	linux-scsi@vger.kernel.org, mpi3mr-linuxdrv.pdl@broadcom.com,
-	GR-QLogic-Storage-Upstream@marvell.com,
-	linux-hardening@vger.kernel.org, linux-nilfs@vger.kernel.org
-Subject: Re: [PATCH 06/10] x86/tdx: Mark message.str as nonstring
-Message-ID: <202502061835.F57547B@keescook>
-References: <20250207005832.work.324-kees@kernel.org>
- <20250207010022.749952-6-kees@kernel.org>
- <b4f08d43-c421-4e8d-9bbb-c954c4472f8a@intel.com>
+	Mark Brown <broonie@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	David Howells <dhowells@redhat.com>,
+	"Eric W. Biederman" <ebiederm@xmission.com>,
+	Jann Horn <jannh@google.com>, Jeff Xu <jeffxu@chromium.org>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Andy Lutomirski <luto@kernel.org>, Marc Zyngier <maz@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Pierre Langlois <pierre.langlois@arm.com>,
+	Quentin Perret <qperret@google.com>,
+	"Mike Rapoport (IBM)" <rppt@kernel.org>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Qi Zheng <zhengqi.arch@bytedance.com>,
+	linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+	x86@kernel.org
+Subject: Re: [RFC PATCH 8/8] mm: Add basic tests for kpkeys_hardened_cred
+Message-ID: <202502062024.BCB0DED1D5@keescook>
+References: <20250203102809.1223255-1-kevin.brodsky@arm.com>
+ <20250203102809.1223255-9-kevin.brodsky@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -70,44 +62,97 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b4f08d43-c421-4e8d-9bbb-c954c4472f8a@intel.com>
+In-Reply-To: <20250203102809.1223255-9-kevin.brodsky@arm.com>
 
-On Thu, Feb 06, 2025 at 05:12:11PM -0800, Dave Hansen wrote:
-> On 2/6/25 17:00, Kees Cook wrote:
-> > +++ b/arch/x86/coco/tdx/tdx.c
-> > @@ -170,7 +170,7 @@ static void __noreturn tdx_panic(const char *msg)
-> >  		/* Define register order according to the GHCI */
-> >  		struct { u64 r14, r15, rbx, rdi, rsi, r8, r9, rdx; };
-> >  
-> > -		char str[64];
-> > +		char str[64] __nonstring;
-> >  	} message;
+On Mon, Feb 03, 2025 at 10:28:09AM +0000, Kevin Brodsky wrote:
+> Add basic tests for the kpkeys_hardened_pgtables feature: try to
+> perform a direct write to current->{cred,real_cred} and ensure it
+> fails.
 > 
-> So, the patch itself makes sense. But it does end up looking kinda
-> funky. We call it a "str"ing and then annotate it as not a string.
+> Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
+> ---
+>  mm/Makefile                    |  1 +
+>  mm/kpkeys_hardened_cred_test.c | 42 ++++++++++++++++++++++++++++++++++
 
-Yeah, this is true all over the place. It's a string, just not a
-NUL-terminated string: *sob*
+Current file naming convention[1] would be to name this as:
 
-> It doesn't have to be done in this patch, but it does seem like we
-> should probably not be using 'char' and also shouldn't call it anything
-> close to "string". Maybe:
+	mm/tests/kpkeys_hardened_cred_kunit.c
+
+>  security/Kconfig.hardening     | 11 +++++++++
+>  3 files changed, 54 insertions(+)
+>  create mode 100644 mm/kpkeys_hardened_cred_test.c
 > 
->	 	u8 message[64] __nonstring;
-> 	} message;
+> diff --git a/mm/Makefile b/mm/Makefile
+> index f7263b7f45b8..2024226902d4 100644
+> --- a/mm/Makefile
+> +++ b/mm/Makefile
+> @@ -149,3 +149,4 @@ obj-$(CONFIG_TMPFS_QUOTA) += shmem_quota.o
+>  obj-$(CONFIG_PT_RECLAIM) += pt_reclaim.o
+>  obj-$(CONFIG_KPKEYS_HARDENED_PGTABLES) += kpkeys_hardened_pgtables.o
+>  obj-$(CONFIG_KPKEYS_HARDENED_PGTABLES_TEST) += kpkeys_hardened_pgtables_test.o
+> +obj-$(CONFIG_KPKEYS_HARDENED_CRED_TEST) += kpkeys_hardened_cred_test.o
 
-message.message ;)
+And for the Kconfig convention says[2] this should be:
 
-message.chars?
-message.bytes?
+	CONFIG_KPKEYS_HARDENED_CRED_KUNIT_TEST
 
-> In any case, feel free to carry the annotation in your tree:
-> 
-> Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
+> diff --git a/mm/kpkeys_hardened_cred_test.c b/mm/kpkeys_hardened_cred_test.c
+> new file mode 100644
+> index 000000000000..46048098f99d
+> --- /dev/null
+> +++ b/mm/kpkeys_hardened_cred_test.c
+> @@ -0,0 +1,42 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +#include <kunit/test.h>
+> +#include <linux/sched.h>
+> +
+> +static void write_cred(struct kunit *test)
+> +{
+> +	long zero = 0;
+> +	int ret;
+> +
+> +	ret = copy_to_kernel_nofault((unsigned long *)current->cred, &zero, sizeof(zero));
+> +	KUNIT_EXPECT_EQ_MSG(test, ret, -EFAULT,
+> +			    "Write to current->cred wasn't prevented");
+> +
+> +	ret = copy_to_kernel_nofault((unsigned long *)current->real_cred, &zero, sizeof(zero));
+> +	KUNIT_EXPECT_EQ_MSG(test, ret, -EFAULT,
+> +			    "Write to current->real_cred wasn't prevented");
 
-Thanks!
+This is a good negative test. I would include a positive test as well.
+i.e. make sure you can run copy_from_kernel_nofault() to read it
+successfully. Otherwise you don't know if you're just getting a bad
+address -- we want to distinguish between them. (This is more true for
+the next suggestion, since current->cred being broken would be much more
+obvious.)
+
+While current->cred is good and easy, I would like to see prepare_creds()
+exercised too to get a new cred and validate that it is equally directly
+readable and directly not writable, and then use the correct accessors
+to perform a successful write to the cred, read back the change,
+etc. (i.e. validate the expected behavior too.)
+
+> +}
+> +
+> +static int kpkeys_hardened_cred_suite_init(struct kunit_suite *suite)
+> +{
+> +	if (!arch_kpkeys_enabled()) {
+> +		pr_err("Cannot run kpkeys_hardened_cred tests: kpkeys are not supported\n");
+> +		return 1;
+> +	}
+
+Instead of failing ("return 1") I think this should be a "skip" (it is
+expected to not work if there is no support) in each test instead:
+
+	if (!arch_kpkeys_enabled())
+		kunit_skip(test, "kpkeys are not supported\n");
+
+I'm very happy to see tests! :)
 
 -Kees
+
+[1] https://docs.kernel.org/dev-tools/kunit/style.html#test-file-and-module-names
+[2] https://docs.kernel.org/dev-tools/kunit/style.html#test-kconfig-entries
 
 -- 
 Kees Cook
