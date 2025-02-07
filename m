@@ -1,112 +1,152 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2AD913C9A3;
-	Fri,  7 Feb 2025 01:00:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 176C013D8A0;
+	Fri,  7 Feb 2025 01:01:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738890023; cv=none; b=tY+mEuCqnnjnMdcj0WB/rpeJ5bFZW5JDy77HV+kr+zcFmym40Ovu7T7eQ2/1cbW4Di+DvqQqVqyO4DKAq3mTmnBoXFRpZHA4z2oFUwnaUI0McO83e8PaSw5YCQQ7kXoZPxUPvJZTq2asbDRvl3QZnf1t9+oGf/C6l0NEkiajdc4=
+	t=1738890116; cv=none; b=nRmMm1K+e7+GNYoDNy0muUurdE7cQGx8Eu3xPn9RAaRfjsX3d9q66VFQDHz6M/8N3dFtmuVA2j1oEVZZRCJlMdqGMPegl7S6NtA+IVuqhi1jRnHMCmsQbuqsob+PHEbTc5vAbrEIw2QYpqN5+J7hFmZqHWM37CQLPVIS3z6Olds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738890023; c=relaxed/simple;
-	bh=Opu1xXyyZ3aCe64Oqm1K1/bSvXQOECiF/s4lP93IAgM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Kiy2EQfA+3hnvzVpx/FJQ4id/5Z2g6VOGC1xlQOcihj5+wlpT3sJj2jXYyFjtGlB7HuOj7KIl5zir3uKQ34A/3Nu1CAT9qWuZZJQFwZRCHks98yX982fkU+11tHSb5+8KCMKZhbKdzpL6y/0agp5URd4MX2FP4VVoQy8HVUlHpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l5T51yNs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738890116; c=relaxed/simple;
+	bh=8tAIi6RL1Kebq35UJ0GWYTKAnkLhfTKQxXx4V889VM0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lA1Iq3woUVsB4as/hNoc49Ich/RT8MutVVxwopeSFraLe1IUYq+RpcCjO+lVPfBLHmLLU5ojyxqMBWARA7Hwq+7P4cide2SSrCN2dzl1SzDxPBio/D7LRgDAJu2WF1NRX6oTLf3r4BlbCUYaTrilSy6oZXZ58ZQaZG9np9+/XiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nj5AEXhC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l5T51yNs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32F3CC4CEF4;
-	Fri,  7 Feb 2025 01:00:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nj5AEXhC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE76DC4CEE3;
+	Fri,  7 Feb 2025 01:01:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738890023;
-	bh=Opu1xXyyZ3aCe64Oqm1K1/bSvXQOECiF/s4lP93IAgM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=l5T51yNscCYGt1Edn/A2clAER9RG9za+q2NWF0ds3FvOGP3Gm64us8UWo6wdz5gRj
-	 QwyU/+MHcPG0QHTbSwqSKxEIz91aellUc/HQGKfxhSvse7LXa3QuCM+aq+3osYHNcI
-	 S4y2Efpcd62r099O53jJ/nt9YhyM0vIKuUppXrqDuLz2CUCQUJTg1ii7DaabB0t/z6
-	 vRYjzcLLdKRdILI79jwnfg5KvR8kqmOaxDYQObBEGZUVOtstXzPO2t6pQaez3tJDYw
-	 PPy2hPh0bWu29g5djjfrJBXi5oBTFPV73BsPJ2RhAmDbh6UWMvsZZgiSGk4SoHUAnP
-	 XkcJPHZjzZEjg==
+	s=k20201202; t=1738890115;
+	bh=8tAIi6RL1Kebq35UJ0GWYTKAnkLhfTKQxXx4V889VM0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nj5AEXhCd/RVc/RXQpEz509PF2lHtW0FU/Iy4fo8KlM7q/h05ZmTQgqqspSB1QJa5
+	 oVHXez7qc/LQJQv8+0p8H4lDt/+yDdu0C7B0v1Xp5aXufKbN3NhSeqjxUPaUBB8+jp
+	 LdWBZvo3i4iTpxQXq+A0uSxn8RxCEPa/3vPO9zXjmeCiqO2AIiUUTmS1gZQ6DKmJEA
+	 hCyd4jJXlFckCZ+K3zRVuLfVx4nB1hNnjM6Pytc9WvmFeL1n9v0DZx35n8GShbde0+
+	 o0G+lz8XQa0BWofCHhcgsUWDSktBQu3aEwj17pgviaqvBxBLJPaUTgxdyw3yuiQ2H4
+	 LXFIf1YbVid0g==
+Date: Thu, 6 Feb 2025 17:01:55 -0800
 From: Kees Cook <kees@kernel.org>
-To: Andy Shevchenko <andy@kernel.org>
-Cc: Kees Cook <kees@kernel.org>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	linux-coco@lists.linux.dev,
-	Sathya Prakash <sathya.prakash@broadcom.com>,
-	Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-	Suganath Prabu Subramani <suganath-prabu.subramani@broadcom.com>,
-	Kashyap Desai <kashyap.desai@broadcom.com>,
-	Sumit Saxena <sumit.saxena@broadcom.com>,
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Nilesh Javali <njavali@marvell.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Alexey Dobriyan <adobriyan@gmail.com>,
-	Sven Eckelmann <sven@narfation.org>,
-	Tadeusz Struk <tadeusz.struk@linaro.org>,
-	kernel test robot <lkp@intel.com>,
-	Erick Archer <erick.archer@outlook.com>,
-	Dmitry Antipov <dmantipov@yandex.ru>,
-	Ryusuke Konishi <konishi.ryusuke@gmail.com>,
+To: Suren Baghdasaryan <surenb@google.com>
+Cc: kernel test robot <lkp@intel.com>,
+	Kent Overstreet <kent.overstreet@linux.dev>, nathan@kernel.org,
+	Andy Shevchenko <andy@kernel.org>, linux-hardening@vger.kernel.org,
+	Miguel Ojeda <ojeda@kernel.org>,
 	Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	MPT-FusionLinux.pdl@broadcom.com,
-	linux-scsi@vger.kernel.org,
-	mpi3mr-linuxdrv.pdl@broadcom.com,
-	GR-QLogic-Storage-Upstream@marvell.com,
-	linux-hardening@vger.kernel.org,
-	linux-nilfs@vger.kernel.org
-Subject: [PATCH 06/10] x86/tdx: Mark message.str as nonstring
-Date: Thu,  6 Feb 2025 17:00:15 -0800
-Message-Id: <20250207010022.749952-6-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250207005832.work.324-kees@kernel.org>
-References: <20250207005832.work.324-kees@kernel.org>
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Philipp Reisner <philipp.reisner@linbit.com>,
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v2 3/3] string.h: Use ARRAY_SIZE() for
+ memtostr*()/strtomem*()
+Message-ID: <202502061701.187F080@keescook>
+References: <20250206213532.it.087-kees@kernel.org>
+ <20250206214014.3567372-3-kees@kernel.org>
+ <CAJuCfpEDdtC-NmYu1-RNC8R=Spuc1iQoqy44O8ML92fztF=1bw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1065; i=kees@kernel.org; h=from:subject; bh=Opu1xXyyZ3aCe64Oqm1K1/bSvXQOECiF/s4lP93IAgM=; b=owGbwMvMwCVmps19z/KJym7G02pJDOlLoxVb/a45ye1N3nZuqsmMqdt3iX/LT7mgOIuZk9miY tKcyQynO0pZGMS4GGTFFFmC7NzjXDzetoe7z1WEmcPKBDKEgYtTACbCoMDwV+aBrT9ffG/FQZ6r uj1PbPwD7nH58IRq8pqwzop7MbOHgZFh6sOyGdatOv9PRHA8uLy6X+Rxw6H7l6a1iEf+kXrNbfm MEwA=
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJuCfpEDdtC-NmYu1-RNC8R=Spuc1iQoqy44O8ML92fztF=1bw@mail.gmail.com>
 
-In preparation for strtomem*() checking that its destination is a
-nonstring, annotate message.str accordingly.
+On Thu, Feb 06, 2025 at 03:59:53PM -0800, Suren Baghdasaryan wrote:
+> On Thu, Feb 6, 2025 at 1:40 PM Kees Cook <kees@kernel.org> wrote:
+> >
+> > The destination argument of memtostr*() and strtomem*() must be a
+> > fixed-size char array at compile time, so there is no need to use
+> > __builtin_object_size() (which is useful for when an argument is
+> > either a pointer or unknown). Instead use ARRAY_SIZE(), which has the
+> > benefit of working around a bug in Clang (fixed[1] in 15+) that got
+> > __builtin_object_size() wrong sometimes.
+> >
+> > Reported-by: kernel test robot <lkp@intel.com>
+> > Closes: https://lore.kernel.org/oe-kbuild-all/202501310832.kiAeOt2z-lkp@intel.com/
+> > Suggested-by: Kent Overstreet <kent.overstreet@linux.dev>
+> > Link: https://github.com/llvm/llvm-project/commit/d8e0a6d5e9dd2311641f9a8a5d2bf90829951ddc [1]
+> > Signed-off-by: Kees Cook <kees@kernel.org>
+> 
+> Tested-by: Suren Baghdasaryan <surenb@google.com>
+> 
+> Thanks Kees!
+> CC'ing Andrew Morton since mm-unstable contains my workaround patch
+> [1] for the issue fixed by this patchset. I'm not sure which tree will
+> be taking these fixes but once they are in we should drop [1]. Or
+> maybe we just drop it now from mm-unstable? Seems like only testbot
+> was the only one who complained...
+> 
+> [1] 0e91345e75b2 ("alloc_tag: work around clang-14 build issue with
+> __builtin_object_size()")
 
-Signed-off-by: Kees Cook <kees@kernel.org>
----
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: x86@kernel.org
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: linux-coco@lists.linux.dev
----
- arch/x86/coco/tdx/tdx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Yeah, that should be dropped. I intend to send this fix series to Linus
+tomorrow or Saturday before rc2.
 
-diff --git a/arch/x86/coco/tdx/tdx.c b/arch/x86/coco/tdx/tdx.c
-index 0d9b090b4880..977ab1ffa3fe 100644
---- a/arch/x86/coco/tdx/tdx.c
-+++ b/arch/x86/coco/tdx/tdx.c
-@@ -170,7 +170,7 @@ static void __noreturn tdx_panic(const char *msg)
- 		/* Define register order according to the GHCI */
- 		struct { u64 r14, r15, rbx, rdi, rsi, r8, r9, rdx; };
- 
--		char str[64];
-+		char str[64] __nonstring;
- 	} message;
- 
- 	/* VMM assumes '\0' in byte 65, if the message took all 64 bytes */
+-Kees
+
+> 
+> > ---
+> > Cc: Suren Baghdasaryan <surenb@google.com>
+> > Cc: nathan@kernel.org
+> > Cc: Andy Shevchenko <andy@kernel.org>
+> > Cc: linux-hardening@vger.kernel.org
+> > ---
+> >  include/linux/string.h | 12 ++++++++----
+> >  1 file changed, 8 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/include/linux/string.h b/include/linux/string.h
+> > index 493ac4862c77..fc5ae145bd78 100644
+> > --- a/include/linux/string.h
+> > +++ b/include/linux/string.h
+> > @@ -411,7 +411,8 @@ void memcpy_and_pad(void *dest, size_t dest_len, const void *src, size_t count,
+> >   * must be discoverable by the compiler.
+> >   */
+> >  #define strtomem_pad(dest, src, pad)   do {                            \
+> > -       const size_t _dest_len = __builtin_object_size(dest, 1);        \
+> > +       const size_t _dest_len = __must_be_byte_array(dest) +           \
+> > +                                ARRAY_SIZE(dest);                      \
+> >         const size_t _src_len = __builtin_object_size(src, 1);          \
+> >                                                                         \
+> >         BUILD_BUG_ON(!__builtin_constant_p(_dest_len) ||                \
+> > @@ -434,7 +435,8 @@ void memcpy_and_pad(void *dest, size_t dest_len, const void *src, size_t count,
+> >   * must be discoverable by the compiler.
+> >   */
+> >  #define strtomem(dest, src)    do {                                    \
+> > -       const size_t _dest_len = __builtin_object_size(dest, 1);        \
+> > +       const size_t _dest_len = __must_be_byte_array(dest) +           \
+> > +                                ARRAY_SIZE(dest);                      \
+> >         const size_t _src_len = __builtin_object_size(src, 1);          \
+> >                                                                         \
+> >         BUILD_BUG_ON(!__builtin_constant_p(_dest_len) ||                \
+> > @@ -453,7 +455,8 @@ void memcpy_and_pad(void *dest, size_t dest_len, const void *src, size_t count,
+> >   * Note that sizes of @dest and @src must be known at compile-time.
+> >   */
+> >  #define memtostr(dest, src)    do {                                    \
+> > -       const size_t _dest_len = __builtin_object_size(dest, 1);        \
+> > +       const size_t _dest_len = __must_be_byte_array(dest) +           \
+> > +                                ARRAY_SIZE(dest);                      \
+> >         const size_t _src_len = __builtin_object_size(src, 1);          \
+> >         const size_t _src_chars = strnlen(src, _src_len);               \
+> >         const size_t _copy_len = min(_dest_len - 1, _src_chars);        \
+> > @@ -478,7 +481,8 @@ void memcpy_and_pad(void *dest, size_t dest_len, const void *src, size_t count,
+> >   * Note that sizes of @dest and @src must be known at compile-time.
+> >   */
+> >  #define memtostr_pad(dest, src)                do {                            \
+> > -       const size_t _dest_len = __builtin_object_size(dest, 1);        \
+> > +       const size_t _dest_len = __must_be_byte_array(dest) +           \
+> > +                                ARRAY_SIZE(dest);                      \
+> >         const size_t _src_len = __builtin_object_size(src, 1);          \
+> >         const size_t _src_chars = strnlen(src, _src_len);               \
+> >         const size_t _copy_len = min(_dest_len - 1, _src_chars);        \
+> > --
+> > 2.34.1
+> >
+
 -- 
-2.34.1
-
+Kees Cook
