@@ -1,101 +1,325 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36C55194C8B
-	for <linux-hardening@vger.kernel.org>; Fri,  7 Feb 2025 19:56:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E46C47DA66;
+	Sat,  8 Feb 2025 01:37:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738958220; cv=none; b=NXqRKmsa0XvPLByxDojgkQoY72ArLjHBRUe03qgPc7sn95I3zIlCo2Wp7lqz/68s0O+EaRyRh3rAA0akYybzeAMeFh6XqCjCuxrd9VUbSe7QyDpcXN3TW7Dc/LqtB0WuMKlFCYhiufGKUBX1CwkGP5eO5EniTkXl1lOYwUvFr0U=
+	t=1738978654; cv=none; b=IA3rteMDpXhmQakBL88RabRlnu3SRt0u+qq75ppXQWHpq3SvC7MiNfZjMVQyYe7zBwTaL9NLDtnimmcUE41n8vyCk8d57+3u4RYJgBZljvkbVZUI0j70GP/2RI2v/TtzAeTqHAQKiaj/QmhoAYXHEIivh3FSu0lPu51yVlEFek8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738958220; c=relaxed/simple;
-	bh=79LQgR3k/Btr24QSq/kePaUzIL0o36tX30EbGhUwh5w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AgVvYYZWLP2Axly4TKxbSJd+Y6CiTE5ce+xkI/xbJu5g5cZ6kaaczbMHFD3XLDkslaztWThgRp7dUkV/SjTbKw2Iy4vwQwnyV7rIFSyvpmBUc8lQYsKgrrpow4JjiCuIiRJuSGEMfNx3XPeZDu5MkRQ9mmhdBdbEmwjiowkGFS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=syBEdqOT; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="syBEdqOT"
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-308dc0878dfso3355291fa.3
-        for <linux-hardening@vger.kernel.org>; Fri, 07 Feb 2025 11:56:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1738958216; x=1739563016; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=79LQgR3k/Btr24QSq/kePaUzIL0o36tX30EbGhUwh5w=;
-        b=syBEdqOTadXkZfHYjUXyDF3/b63gua7a9RgUgXbVet1Tuj+KAyuKzrSj1TswCxG4zL
-         ja16qKJ51px5SoCQIZs0NgyVWrP925ZkX1xYILlxbCzOhD7/QHaLHxuO4f7R5p+QQdgP
-         P1eQrXeMR+ROJIPYFW7yuQ3sAZv/M6Td0zCRhhoP5ay0rk8DhmmbZ7cF3imPFEE79Ad2
-         MA4ovYu/oxScgB8/r+XdW1V4nkTdGkEynhqmw6oMey6FAy0b4f1/dG9ba50MzFTDiXv0
-         ihQEBQOSPs/jfUtwsyL6zIp3qlqORO8n5YNShZ55GMrIaW5hhd2VW305a7Bp7M5as6c7
-         umYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738958216; x=1739563016;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=79LQgR3k/Btr24QSq/kePaUzIL0o36tX30EbGhUwh5w=;
-        b=B/oMjVMTqiNHjZDqAzvNU4qY+S+JsgDqjbsGg4pCdUml/OAIOiZ2KSFC2VU3v7snvd
-         IaVlLI1+YvcKIe2vU+gjjGTJvyVh21iUhVkgq/YVcC4E81+qdaKitfI/HEC2bXUOqLXd
-         ghSTEFFg3RlaaJjupOFkEjW5tUa9DzwrDaudRepxpHeR1umR0ge+GF72NkCMJ9bjool3
-         MszBydcjm7rrXmQvQbAHQPt+cYBI8KzCcttlhF1tDOt2v+0tQaEHbBmUXrZE+tS/qfkj
-         z002qo0GkY4hkYDxN+emnT6V/p1FdxHRXH1sa1Eucu+cqFBtbGLyHV/w26v/lSKN5e+E
-         5Qgw==
-X-Forwarded-Encrypted: i=1; AJvYcCX5fQ+38Pf+pmvKWwe1nbBXe2N3fDHZSlfGWTLhmBJ9h+K1O5svMrPOoOU1rLYTJcDIgNPIGFMk1A3cRFBvegg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxttzLWx33cy7jyl4SizTK3iobSysdhIoUFdeG1txOBL5PwrDS5
-	nCvuDdLhVObnNdCFO74JH4HZUxLLQurD824spH14yzEPP/BPK9IEA21nDsxMyIkZX7ixgZAQs6r
-	ODdch6tUeoIaWGfB36wD8ug4wrpEFJobfHxcXm1Z+8B8XV4PB4Mo=
-X-Gm-Gg: ASbGncup7hTw5cRS/CKNJv/shIZXpxt/5AQYiDLv4OIFhy/E+ZCVtZho0Bg6MeY7sOi
-	NfW4D69wt4buckytuR623fu3l5Ivm37uFx0iThE/sgXzu0H0/PqhXHycaEpxo2/pyBGS1LErygH
-	fYr/WJUe+Gm/XWbk2813XW6DexoOg=
-X-Google-Smtp-Source: AGHT+IGcldAttxlLtJk4Fmc6rBnfR3YDGT0u2J7Iom+k4vjkPDF1Uo8mr4HUXBeyLSkHxMEFExi1YbQDREIHsVDAdKk=
-X-Received: by 2002:a2e:bea0:0:b0:302:1de7:ef3c with SMTP id
- 38308e7fff4ca-307e5a84a4bmr12434941fa.31.1738958215983; Fri, 07 Feb 2025
- 11:56:55 -0800 (PST)
+	s=arc-20240116; t=1738978654; c=relaxed/simple;
+	bh=aCfrr/wbv0MJ+jrWtGXxnXXUA6AzqbzF6TFK9N4Uzi8=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VXO0ihoqP7zG45gHt/QEUGL+ZA2pIWKXwC9gC4Q4klH+0fVbJmL4DZI3tvzMTJjbaSriEsRrVqdhsW7rORvOketfYfw89r+zYyEPcb0ZCyK3n8IApsNGcSwRnZu0NQ21tWV22/1Rfq32EX72PJ04tKQuvLXGBjzU+eOp8SSyeWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.234])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4YqYKs1B3fz22mh5;
+	Sat,  8 Feb 2025 09:34:41 +0800 (CST)
+Received: from kwepemg100016.china.huawei.com (unknown [7.202.181.57])
+	by mail.maildlp.com (Postfix) with ESMTPS id 3EC0214022E;
+	Sat,  8 Feb 2025 09:37:29 +0800 (CST)
+Received: from huawei.com (10.67.174.33) by kwepemg100016.china.huawei.com
+ (7.202.181.57) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Sat, 8 Feb
+ 2025 09:37:28 +0800
+From: GONG Ruiqi <gongruiqi1@huawei.com>
+To: Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>, David
+ Rientjes <rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, Andrew
+ Morton <akpm@linux-foundation.org>, Vlastimil Babka <vbabka@suse.cz>, Kees
+ Cook <kees@kernel.org>
+CC: Tamas Koczka <poprdi@google.com>, Roman Gushchin
+	<roman.gushchin@linux.dev>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, Xiu Jianfeng
+	<xiujianfeng@huawei.com>, <linux-mm@kvack.org>,
+	<linux-hardening@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<gongruiqi1@huawei.com>
+Subject: [PATCH v2 1/2] slab: Adjust placement of __kvmalloc_node_noprof
+Date: Sat, 8 Feb 2025 09:47:22 +0800
+Message-ID: <20250208014723.1514049-2-gongruiqi1@huawei.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250208014723.1514049-1-gongruiqi1@huawei.com>
+References: <20250208014723.1514049-1-gongruiqi1@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250207151825.2122419-1-andriy.shevchenko@linux.intel.com>
- <20250207151825.2122419-8-andriy.shevchenko@linux.intel.com> <Z6Ypww-xXAvoCCq1@smile.fi.intel.com>
-In-Reply-To: <Z6Ypww-xXAvoCCq1@smile.fi.intel.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 7 Feb 2025 20:56:45 +0100
-X-Gm-Features: AWEUYZmXWJ_lbK-g8mszuq861gNNZ5AaVN8r5wA7kPpaIp5zjgxpgUc3nebktXg
-Message-ID: <CAMRc=MeTgjHYCmZcDhvZGKCaKyHhxUU=3EF6OvsLW-H-Dv+Y6Q@mail.gmail.com>
-Subject: Re: [PATCH v2 7/7] gpio: 74x164: Utilise temporary variable for
- struct device
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, 
-	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemg100016.china.huawei.com (7.202.181.57)
 
-On Fri, Feb 7, 2025 at 4:42=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Fri, Feb 07, 2025 at 05:17:14PM +0200, Andy Shevchenko wrote:
-> > We have a temporary variable to keep a pointer to struct device.
-> > Utilise it where it makes sense.
->
-> Urgh, this seems incomplete...
-> There are more lines to convert, however they do not affect =C4=85 statis=
-tics.
->
-> Tell me if I need to send full v3 or just this patch.
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
+Move __kvmalloc_node_noprof (and also kvfree* for consistency) into
+mm/slub.c so that it can directly invoke __do_kmalloc_node, which is
+needed for the next patch. Move kmalloc_gfp_adjust to slab.h since now
+its two callers are in different .c files.
 
-No worries, I may fix it when applying.
+No functional changes intended.
 
-I'll still give this series a few more days on the list.
+Signed-off-by: GONG Ruiqi <gongruiqi1@huawei.com>
+---
+ include/linux/slab.h |  22 +++++++++
+ mm/slub.c            |  90 ++++++++++++++++++++++++++++++++++
+ mm/util.c            | 112 -------------------------------------------
+ 3 files changed, 112 insertions(+), 112 deletions(-)
 
-Bart
+diff --git a/include/linux/slab.h b/include/linux/slab.h
+index 09eedaecf120..0bf4cbf306fe 100644
+--- a/include/linux/slab.h
++++ b/include/linux/slab.h
+@@ -1101,4 +1101,26 @@ size_t kmalloc_size_roundup(size_t size);
+ void __init kmem_cache_init_late(void);
+ void __init kvfree_rcu_init(void);
+ 
++static inline gfp_t kmalloc_gfp_adjust(gfp_t flags, size_t size)
++{
++	/*
++	 * We want to attempt a large physically contiguous block first because
++	 * it is less likely to fragment multiple larger blocks and therefore
++	 * contribute to a long term fragmentation less than vmalloc fallback.
++	 * However make sure that larger requests are not too disruptive - no
++	 * OOM killer and no allocation failure warnings as we have a fallback.
++	 */
++	if (size > PAGE_SIZE) {
++		flags |= __GFP_NOWARN;
++
++		if (!(flags & __GFP_RETRY_MAYFAIL))
++			flags |= __GFP_NORETRY;
++
++		/* nofail semantic is implemented by the vmalloc fallback */
++		flags &= ~__GFP_NOFAIL;
++	}
++
++	return flags;
++}
++
+ #endif	/* _LINUX_SLAB_H */
+diff --git a/mm/slub.c b/mm/slub.c
+index 1f50129dcfb3..0830894bb92c 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -4878,6 +4878,96 @@ void *krealloc_noprof(const void *p, size_t new_size, gfp_t flags)
+ }
+ EXPORT_SYMBOL(krealloc_noprof);
+ 
++/**
++ * __kvmalloc_node - attempt to allocate physically contiguous memory, but upon
++ * failure, fall back to non-contiguous (vmalloc) allocation.
++ * @size: size of the request.
++ * @b: which set of kmalloc buckets to allocate from.
++ * @flags: gfp mask for the allocation - must be compatible (superset) with GFP_KERNEL.
++ * @node: numa node to allocate from
++ *
++ * Uses kmalloc to get the memory but if the allocation fails then falls back
++ * to the vmalloc allocator. Use kvfree for freeing the memory.
++ *
++ * GFP_NOWAIT and GFP_ATOMIC are not supported, neither is the __GFP_NORETRY modifier.
++ * __GFP_RETRY_MAYFAIL is supported, and it should be used only if kmalloc is
++ * preferable to the vmalloc fallback, due to visible performance drawbacks.
++ *
++ * Return: pointer to the allocated memory of %NULL in case of failure
++ */
++void *__kvmalloc_node_noprof(DECL_BUCKET_PARAMS(size, b), gfp_t flags, int node)
++{
++	void *ret;
++
++	/*
++	 * It doesn't really make sense to fallback to vmalloc for sub page
++	 * requests
++	 */
++	ret = __kmalloc_node_noprof(PASS_BUCKET_PARAMS(size, b),
++				    kmalloc_gfp_adjust(flags, size),
++				    node);
++	if (ret || size <= PAGE_SIZE)
++		return ret;
++
++	/* non-sleeping allocations are not supported by vmalloc */
++	if (!gfpflags_allow_blocking(flags))
++		return NULL;
++
++	/* Don't even allow crazy sizes */
++	if (unlikely(size > INT_MAX)) {
++		WARN_ON_ONCE(!(flags & __GFP_NOWARN));
++		return NULL;
++	}
++
++	/*
++	 * kvmalloc() can always use VM_ALLOW_HUGE_VMAP,
++	 * since the callers already cannot assume anything
++	 * about the resulting pointer, and cannot play
++	 * protection games.
++	 */
++	return __vmalloc_node_range_noprof(size, 1, VMALLOC_START, VMALLOC_END,
++			flags, PAGE_KERNEL, VM_ALLOW_HUGE_VMAP,
++			node, __builtin_return_address(0));
++}
++EXPORT_SYMBOL(__kvmalloc_node_noprof);
++
++/**
++ * kvfree() - Free memory.
++ * @addr: Pointer to allocated memory.
++ *
++ * kvfree frees memory allocated by any of vmalloc(), kmalloc() or kvmalloc().
++ * It is slightly more efficient to use kfree() or vfree() if you are certain
++ * that you know which one to use.
++ *
++ * Context: Either preemptible task context or not-NMI interrupt.
++ */
++void kvfree(const void *addr)
++{
++	if (is_vmalloc_addr(addr))
++		vfree(addr);
++	else
++		kfree(addr);
++}
++EXPORT_SYMBOL(kvfree);
++
++/**
++ * kvfree_sensitive - Free a data object containing sensitive information.
++ * @addr: address of the data object to be freed.
++ * @len: length of the data object.
++ *
++ * Use the special memzero_explicit() function to clear the content of a
++ * kvmalloc'ed object containing sensitive data to make sure that the
++ * compiler won't optimize out the data clearing.
++ */
++void kvfree_sensitive(const void *addr, size_t len)
++{
++	if (likely(!ZERO_OR_NULL_PTR(addr))) {
++		memzero_explicit((void *)addr, len);
++		kvfree(addr);
++	}
++}
++EXPORT_SYMBOL(kvfree_sensitive);
++
+ struct detached_freelist {
+ 	struct slab *slab;
+ 	void *tail;
+diff --git a/mm/util.c b/mm/util.c
+index b6b9684a1438..5a755d2a7347 100644
+--- a/mm/util.c
++++ b/mm/util.c
+@@ -612,118 +612,6 @@ unsigned long vm_mmap(struct file *file, unsigned long addr,
+ }
+ EXPORT_SYMBOL(vm_mmap);
+ 
+-static gfp_t kmalloc_gfp_adjust(gfp_t flags, size_t size)
+-{
+-	/*
+-	 * We want to attempt a large physically contiguous block first because
+-	 * it is less likely to fragment multiple larger blocks and therefore
+-	 * contribute to a long term fragmentation less than vmalloc fallback.
+-	 * However make sure that larger requests are not too disruptive - no
+-	 * OOM killer and no allocation failure warnings as we have a fallback.
+-	 */
+-	if (size > PAGE_SIZE) {
+-		flags |= __GFP_NOWARN;
+-
+-		if (!(flags & __GFP_RETRY_MAYFAIL))
+-			flags |= __GFP_NORETRY;
+-
+-		/* nofail semantic is implemented by the vmalloc fallback */
+-		flags &= ~__GFP_NOFAIL;
+-	}
+-
+-	return flags;
+-}
+-
+-/**
+- * __kvmalloc_node - attempt to allocate physically contiguous memory, but upon
+- * failure, fall back to non-contiguous (vmalloc) allocation.
+- * @size: size of the request.
+- * @b: which set of kmalloc buckets to allocate from.
+- * @flags: gfp mask for the allocation - must be compatible (superset) with GFP_KERNEL.
+- * @node: numa node to allocate from
+- *
+- * Uses kmalloc to get the memory but if the allocation fails then falls back
+- * to the vmalloc allocator. Use kvfree for freeing the memory.
+- *
+- * GFP_NOWAIT and GFP_ATOMIC are not supported, neither is the __GFP_NORETRY modifier.
+- * __GFP_RETRY_MAYFAIL is supported, and it should be used only if kmalloc is
+- * preferable to the vmalloc fallback, due to visible performance drawbacks.
+- *
+- * Return: pointer to the allocated memory of %NULL in case of failure
+- */
+-void *__kvmalloc_node_noprof(DECL_BUCKET_PARAMS(size, b), gfp_t flags, int node)
+-{
+-	void *ret;
+-
+-	/*
+-	 * It doesn't really make sense to fallback to vmalloc for sub page
+-	 * requests
+-	 */
+-	ret = __kmalloc_node_noprof(PASS_BUCKET_PARAMS(size, b),
+-				    kmalloc_gfp_adjust(flags, size),
+-				    node);
+-	if (ret || size <= PAGE_SIZE)
+-		return ret;
+-
+-	/* non-sleeping allocations are not supported by vmalloc */
+-	if (!gfpflags_allow_blocking(flags))
+-		return NULL;
+-
+-	/* Don't even allow crazy sizes */
+-	if (unlikely(size > INT_MAX)) {
+-		WARN_ON_ONCE(!(flags & __GFP_NOWARN));
+-		return NULL;
+-	}
+-
+-	/*
+-	 * kvmalloc() can always use VM_ALLOW_HUGE_VMAP,
+-	 * since the callers already cannot assume anything
+-	 * about the resulting pointer, and cannot play
+-	 * protection games.
+-	 */
+-	return __vmalloc_node_range_noprof(size, 1, VMALLOC_START, VMALLOC_END,
+-			flags, PAGE_KERNEL, VM_ALLOW_HUGE_VMAP,
+-			node, __builtin_return_address(0));
+-}
+-EXPORT_SYMBOL(__kvmalloc_node_noprof);
+-
+-/**
+- * kvfree() - Free memory.
+- * @addr: Pointer to allocated memory.
+- *
+- * kvfree frees memory allocated by any of vmalloc(), kmalloc() or kvmalloc().
+- * It is slightly more efficient to use kfree() or vfree() if you are certain
+- * that you know which one to use.
+- *
+- * Context: Either preemptible task context or not-NMI interrupt.
+- */
+-void kvfree(const void *addr)
+-{
+-	if (is_vmalloc_addr(addr))
+-		vfree(addr);
+-	else
+-		kfree(addr);
+-}
+-EXPORT_SYMBOL(kvfree);
+-
+-/**
+- * kvfree_sensitive - Free a data object containing sensitive information.
+- * @addr: address of the data object to be freed.
+- * @len: length of the data object.
+- *
+- * Use the special memzero_explicit() function to clear the content of a
+- * kvmalloc'ed object containing sensitive data to make sure that the
+- * compiler won't optimize out the data clearing.
+- */
+-void kvfree_sensitive(const void *addr, size_t len)
+-{
+-	if (likely(!ZERO_OR_NULL_PTR(addr))) {
+-		memzero_explicit((void *)addr, len);
+-		kvfree(addr);
+-	}
+-}
+-EXPORT_SYMBOL(kvfree_sensitive);
+-
+ /**
+  * kvrealloc - reallocate memory; contents remain unchanged
+  * @p: object to reallocate memory for
+-- 
+2.25.1
+
