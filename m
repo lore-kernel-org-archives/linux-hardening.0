@@ -1,79 +1,58 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from greenhill.hpalace.com (greenhill.hpalace.com [192.155.80.58])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 114F114EC73;
-	Sat,  8 Feb 2025 01:37:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7F14248178;
+	Sat,  8 Feb 2025 15:25:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.155.80.58
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738978658; cv=none; b=KPVavjPYqHnIF+/sqb1s8eK4NXN6q2CCH8xjHMaG5MSaEpkJqwWyzpTeQrxVDyzH3/SMZZfQ50UdGkhdzAWzxuqMYxH+VD1hIg/W7+8RUl2ciNL+vCGpWJA5jeeS7UZBBwYDlkFzcR4O7tzNa22hKN4fCXFAtWn8klirYyTO+bo=
+	t=1739028342; cv=none; b=haj2jqN1mXNGSNQ+coDUvG9A+uALQ5NpUtA1Jx+Sx9B5yP8EEWf7YTXrBh2kvLZrQtL1aB7NG5lgM1pcBFPzaTRwREsED1m/hr3UaXp7RFu+dG/lO2caPrzgNzMYYmlw0Y9zsvbhHKr5ayAUACDz3OV2jo1d6paX+rEotTliidg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738978658; c=relaxed/simple;
-	bh=RGFwYDd+EiBu6gmkUm1IoGn060IVM7htNNhjXAVgf2I=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=sc8MKO5cENpgDiVW1lMbBQK65Yi1yqjFhcb/sNq9At2o4kw6uxnK7394zyjJMxL6+eC/4UqnsPnc1zlVZvW+npjANmrxJPeLbAGUAcrrlR9PEhHVtQia5bVWV0vW/pnzLjNiQfCn/Z0/vWfpD/PLyjdrCn5WD2WVRDg7cR76HcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4YqYKF6SZlzgbrQ;
-	Sat,  8 Feb 2025 09:34:09 +0800 (CST)
-Received: from kwepemg100016.china.huawei.com (unknown [7.202.181.57])
-	by mail.maildlp.com (Postfix) with ESMTPS id 836EF1400D5;
-	Sat,  8 Feb 2025 09:37:28 +0800 (CST)
-Received: from huawei.com (10.67.174.33) by kwepemg100016.china.huawei.com
- (7.202.181.57) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Sat, 8 Feb
- 2025 09:37:27 +0800
-From: GONG Ruiqi <gongruiqi1@huawei.com>
-To: Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>, David
- Rientjes <rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, Andrew
- Morton <akpm@linux-foundation.org>, Vlastimil Babka <vbabka@suse.cz>, Kees
- Cook <kees@kernel.org>
-CC: Tamas Koczka <poprdi@google.com>, Roman Gushchin
-	<roman.gushchin@linux.dev>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, Xiu Jianfeng
-	<xiujianfeng@huawei.com>, <linux-mm@kvack.org>,
-	<linux-hardening@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<gongruiqi1@huawei.com>
-Subject: [PATCH v2 0/2] Refine kmalloc caches randomization in kvmalloc
-Date: Sat, 8 Feb 2025 09:47:21 +0800
-Message-ID: <20250208014723.1514049-1-gongruiqi1@huawei.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1739028342; c=relaxed/simple;
+	bh=txcb17Dyd8K2FMh25wuAdjONKluBC/WDCjlReoHpCL8=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:Message-ID:
+	 Content-Type; b=NglKy7Q6ZxHzZdefFYC8GB/sf8tYMa3XdHu+IEjA18j9ORIaQeZIwiJInaPwB1LCxZKcv9DzzSNZOxVvGAY09Nbu2tKVsRTi8fKvMZbu5ib/59MiuLGNrOUyA/zND+uobS68mnMrILB7olrqQ2V2ShdXc/xdLNjhWYZdTh2JE2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=finder.org; spf=pass smtp.mailfrom=finder.org; dkim=pass (2048-bit key) header.d=finder.org header.i=@finder.org header.b=NPNk4Mul; arc=none smtp.client-ip=192.155.80.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=finder.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=finder.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=finder.org header.i=@finder.org header.b="NPNk4Mul"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=finder.org; s=2018;
+	t=1739027902; bh=txcb17Dyd8K2FMh25wuAdjONKluBC/WDCjlReoHpCL8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=NPNk4MulmCteIjGGVqtIaUMHMi1+ZqbMo9oafkQ2SY7n5g4dJQpDhpEBLVsFvtuQi
+	 n53nwLSA0XldUQPDvTvjF8rpQbl2l6ZqcgIT0UQFIyXm1y2trFcKg2WpIMcdTutQAq
+	 BnFnLfhgflFQfTnUu51NMD1n+gPv+N6MxuAu22LKQnOdy45rHWfQdY+cV9yLw7zjTi
+	 t7SDwAJ+a5WvQB7bwdPhoZPooG7qdzSFxFPOpFVonbjcaPd1xXdI27Vl2BN+WnOiVa
+	 DUEcMB5giERUUVtVThaufqxgopnN2Rgk3fbRZZ/YDoLfcpONfMpBoS5Pnodgj4LkBz
+	 jCYi0ffZvjheA==
+Received: from mail.finder.org (unknown [192.155.80.58])
+	by greenhill.hpalace.com (Postfix) with ESMTPSA id 5D13D55A;
+	Sat,  8 Feb 2025 15:18:22 +0000 (UTC)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemg100016.china.huawei.com (7.202.181.57)
+Date: Sat, 08 Feb 2025 07:18:22 -0800
+From: Jared Finder <jared@finder.org>
+To: kees@kernel.org
+Cc: gnoack@google.com, gregkh@linuxfoundation.org, hanno@hboeck.de,
+ jannh@google.com, jirislaby@kernel.org, linux-hardening@vger.kernel.org,
+ linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
+ stable@vger.kernel.org
+Subject: Re: [PATCH v2] tty: Permit some TIOCL_SETSEL modes without
+ CAP_SYS_ADMIN
+In-Reply-To: <202501100850.5E4D0A5@keescook>
+Message-ID: <cd83bd96b0b536dd96965329e282122c@finder.org>
+X-Sender: jared@finder.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi,
+Hi, I'm the original reporter of this regression (noticed because it 
+impacted GNU Emacs) and I'm wondering if there's any traction on 
+creating an updated patch? This thread appears to have stalled out. I 
+haven't seen any reply for three weeks.
 
-v2: change the implementation as Vlastimil suggested
-v1: https://lore.kernel.org/all/20250122074817.991060-1-gongruiqi1@huawei.com/
-
-Tamás reported [1] that kmalloc cache randomization doesn't actually
-work for those kmalloc invoked via kvmalloc. For more details, see the
-commit log of patch 2.
-
-The current solution requires a direct call from __kvmalloc_node_noprof
-to __do_kmalloc_node, a static function in a different .c file.
-Comparing to v1, this version achieves this by simply moving
-__kvmalloc_node_noprof to mm/slub.c, as suggested by Vlastimil [2].
-
-Link: https://github.com/google/security-research/pull/83/files#diff-1604319b55a48c39a210ee52034ed7ff5b9cdc3d704d2d9e34eb230d19fae235R200 [1]
-Link: https://lore.kernel.org/all/62044279-0c56-4185-97f7-7afac65ff449@suse.cz/ [2]
-
-GONG Ruiqi (2):
-  slab: Adjust placement of __kvmalloc_node_noprof
-  slab: Achieve better kmalloc caches randomization in kvmalloc
-
- include/linux/slab.h |  22 +++++++++
- mm/slub.c            |  90 ++++++++++++++++++++++++++++++++++
- mm/util.c            | 112 -------------------------------------------
- 3 files changed, 112 insertions(+), 112 deletions(-)
-
--- 
-2.25.1
-
+   -- MJF
