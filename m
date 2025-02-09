@@ -1,48 +1,48 @@
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D04F6CA6F;
-	Sun,  9 Feb 2025 03:44:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50709243384;
+	Sun,  9 Feb 2025 03:45:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739072699; cv=none; b=AdS3b/DB+Tj+2b+KXR+JxNoZr9z/6Q5rUz4XTmZKXcDrex5zejOnM7YmUO68mKRr4WVI/0OeC2thZAgQeHEJZAXg410Zent8nIReCm92RkdvHji7roThCuNssmTRBDk+sUMNjEOYfTJq9pVwWW6bSNWLjZuELmkEifBiTQQug1M=
+	t=1739072736; cv=none; b=m5OxkstfvyuBtJfKBp1e2caT0Dn3ZN0MRl7cZgOl51f7W1ZdAMMT2OvevcL7s/NIqLAiV4YcKeAIfoNRrOiINqEfkrbss8Co4AMJklnVA6Xcf1ZiyKnMyK2CtR9QOZLn5R01XKPp1X76U3epCb7NZNcwKjTcKVvm39F6G4OXA3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739072699; c=relaxed/simple;
-	bh=NgYomdEiHgjsfNh6JTaerLlR4aoaIx5h10Ey5hLdp0Y=;
+	s=arc-20240116; t=1739072736; c=relaxed/simple;
+	bh=338iPXjZDlUhP6o4Fg7qbAjayGvr0eEBDQocUyHmnww=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LtoWiHYVxgWH51lh6NLUvogHE8aEBwL6BG5ttWASPihtKdv2nk/r6JkKwhtEjT4gxiPvYoOQMk8kEHO7M8ruukBspGvapBQcE1skM23iEsJLHXr9MdR/TumH+kvC6F1eI5LYbcJ4O0VjbYBA4KmgOunYVbverqv7xfGsDekomOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com; spf=pass smtp.mailfrom=ethancedwards.com; dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b=P2yZHj8g; arc=none smtp.client-ip=80.241.56.172
+	 Content-Type:Content-Disposition:In-Reply-To; b=QjauZTiwWKk2Np6bSnYtZ4u+GgI5nFdWaSc0D1iKXIZxT8rlWdAheKspODwe+vXjlShs0/s2o8mvgqUSWZv1g4+WhsUAhgc15nbnSYtyD/jdDXyw3kVfebShngGvHWSNtA739hACV7OaCezfx8OErRG7zKNIZVPr/ekwUvTZTEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com; spf=pass smtp.mailfrom=ethancedwards.com; dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b=xy12kheP; arc=none smtp.client-ip=80.241.56.151
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ethancedwards.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b="P2yZHj8g"
+	dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b="xy12kheP"
 Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4YrD9d6h5rz9skP;
-	Sun,  9 Feb 2025 04:44:53 +0100 (CET)
+	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4YrDBB4k0gz9swN;
+	Sun,  9 Feb 2025 04:45:22 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ethancedwards.com;
-	s=MBO0001; t=1739072694;
+	s=MBO0001; t=1739072722;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=TW1GVy7OXHVjEtLYS6l4yYsrDFNRMzSuR/4sETXaIT8=;
-	b=P2yZHj8g4wGOTYHaiiXbppITdF3KTYKPqs0KJKDKYHXBeZyXusB768Ei67xAj7yPuav/Ky
-	0M3zocDoCY5dcyJAadj8kwNh++GnSiRYjwaKnwg7ms7CLF8css1BmXEvCzM6rTlskuXBUa
-	oEAwYOHnsR7riQOowyaGbri2fV9KSQEe+0jkexIK19rOC19UfEX2iDTNPCaEEnUyRx6B90
-	dNv1eHVo46dAj7G+bgyRPjxyLOmQsTblBRnQFOO87O28s7yWwlEXsYHhWzIKLnUqiE8szV
-	k5CnKvPJKHx/cUG1ZyuGRHW0Iw8l9Ek+Q73f+4lkSxFnhOXMy9Kws7qjTuaq3g==
-Date: Sat, 8 Feb 2025 22:44:51 -0500
+	bh=agZpKSsd5fdzyN9OBz2BDTXHlW6w6QtZAvyhXYpYcrU=;
+	b=xy12khePBAai55WERQUGDfslclILql6MXbEtnoXVKCyvjPqujf2x3RhV5bUkk/77kKQY0w
+	EHEKeCYvdbIHcAMDSQkhsn5ZfWO5JPeDvHp69UJq1zEVvvcqcib7UyJfMK73p2ddzTaUh/
+	MldDJBNlpMl3Z6sqAg51L9JGGh4FPdRsytWn3l9Yx28pN9YTIQikfIeflsLRe2CPDN9Zat
+	EONVFUcLfvVTbZ288ysFzDlkRkLkqGDvgkGlyxwfVyRjRq02DvI4sWRamvr/TFEnG/s6Nr
+	nJtadRDXeNHYcvOsuL9AL6zLuPirPBXVq+areDnTQCfzYX/P8C44vKhEb6iBhg==
+Date: Sat, 8 Feb 2025 22:45:20 -0500
 From: Ethan Carter Edwards <ethan@ethancedwards.com>
-To: "rafael@kernel.org" <rafael@kernel.org>
-Cc: "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, 
-	"linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"kernel-hardening@lists.openwall.com" <kernel-hardening@lists.openwall.com>, 
-	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH v3] thermal/debugfs: change kzalloc to kcalloc
-Message-ID: <5gjmqurpvdyb6sxpeytev7clxxrkpbjncjb623z4dg3vbaqzvm@kavc7th7svwd>
-References: <dmv2euctawmijgffigu7qr4yn7jtby4afuy5fgymq6s35c5elu@inovmydfkaez>
+To: mingo@redhat.com
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>, 
+	"kernel-hardening@lists.openwall.com" <kernel-hardening@lists.openwall.com>, "bsegall@google.com" <bsegall@google.com>, 
+	"peterz@infradead.org" <peterz@infradead.org>
+Subject: Re: [PATCH v2] sched/topology: change kzalloc to kcalloc
+Message-ID: <pqhk3i5byxj3ygnh7jp3irmluykrocwdmfudfb3lm6xm3enygg@cezu6wjo3a2l>
+References: <wayfdq456uccu2kzujdokp5kklbl7evp432rmnxcdh2222wwlp@67idbpxoy32u>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -51,15 +51,15 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <dmv2euctawmijgffigu7qr4yn7jtby4afuy5fgymq6s35c5elu@inovmydfkaez>
-X-Rspamd-Queue-Id: 4YrD9d6h5rz9skP
+In-Reply-To: <wayfdq456uccu2kzujdokp5kklbl7evp432rmnxcdh2222wwlp@67idbpxoy32u>
+X-Rspamd-Queue-Id: 4YrDBB4k0gz9swN
 
 I wanted to check in on this. Anything I need to change?
 
 Thanks,
 Ethan
 
-On 25/01/19 01:35PM, Ethan Carter Edwards wrote:
+On 25/01/19 01:23PM, Ethan Carter Edwards wrote:
 > We are replacing any instances of kzalloc(size * count, ...) with
 > kcalloc(count, size, ...) due to risk of overflow [1].
 > 
@@ -68,24 +68,32 @@ On 25/01/19 01:35PM, Ethan Carter Edwards wrote:
 > 
 > Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
 > ---
->  v3: fix description and email client formatting
->  v2: fix typo
->  drivers/thermal/thermal_debugfs.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  V2: fix email client formatting.
+>  kernel/sched/topology.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/thermal/thermal_debugfs.c b/drivers/thermal/thermal_debugfs.c
-> index c800504c3cfe..29dc1431a252 100644
-> --- a/drivers/thermal/thermal_debugfs.c
-> +++ b/drivers/thermal/thermal_debugfs.c
-> @@ -876,7 +876,7 @@ void thermal_debug_tz_add(struct thermal_zone_device *tz)
+> diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+> index 9748a4c8d668..17eb12819563 100644
+> --- a/kernel/sched/topology.c
+> +++ b/kernel/sched/topology.c
+> @@ -1920,7 +1920,7 @@ void sched_init_numa(int offline_node)
+>  	 */
+>  	sched_domains_numa_levels = 0;
 >  
->  	tz_dbg->tz = tz;
->  
-> -	tz_dbg->trips_crossed = kzalloc(sizeof(int) * tz->num_trips, GFP_KERNEL);
-> +	tz_dbg->trips_crossed = kcalloc(tz->num_trips, sizeof(int), GFP_KERNEL);
->  	if (!tz_dbg->trips_crossed) {
->  		thermal_debugfs_remove_id(thermal_dbg);
+> -	masks = kzalloc(sizeof(void *) * nr_levels, GFP_KERNEL);
+> +	masks = kcalloc(nr_levels, sizeof(void *), GFP_KERNEL);
+>  	if (!masks)
 >  		return;
+>  
+> @@ -1929,7 +1929,7 @@ void sched_init_numa(int offline_node)
+>  	 * CPUs of nodes that are that many hops away from us.
+>  	 */
+>  	for (i = 0; i < nr_levels; i++) {
+> -		masks[i] = kzalloc(nr_node_ids * sizeof(void *), GFP_KERNEL);
+> +		masks[i] = kcalloc(nr_node_ids, sizeof(void *), GFP_KERNEL);
+>  		if (!masks[i])
+>  			return;
+>  
 > -- 
 > 2.47.1
 > 
