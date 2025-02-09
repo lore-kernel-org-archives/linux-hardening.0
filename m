@@ -1,75 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.web.de (mout.web.de [212.227.17.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20F254C9F;
-	Sun,  9 Feb 2025 06:49:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DFF317BB6;
+	Sun,  9 Feb 2025 10:16:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739083798; cv=none; b=RLrzko0Sbo0simagWz6Zo3Khf8/84/n6czNIWyHozn3XQWsKpxq/ImFm7AcXlrzktFponFSevE2f6/f0YU3MBOQqxGQfAlssrNskRqakoTIFYbd4A86XXpfIb5NpUDPxxhkT6XOYcvjB4nlh4V1T64UWZ5jq+r5UDbT+sDLknj0=
+	t=1739096182; cv=none; b=IqaGcjuNx+8fvkbr7y/OiQmcTZF8zhUKBOC07Q4f869am7S7XRTl/498RXCVVCVOGRnNeKGaIBjTc+c+u79UjFzS467RMZwesgjd8zecf4jmZo1UkFsG8ZVMjXpwl51RW3Il2T/6Zlld+w6CECNMgGAfuPUTuzn03qlfyaJXQFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739083798; c=relaxed/simple;
-	bh=6WhwOi1PO8XaTLt/+uAUYLG4dac1oyS3ReLFZ3wljtk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nSAwQbDtFBFCLpXC91Th8WNPQs6QRnHBusrKZTogKzd+fVxKNhrVp+t/GuXbWR5nZ9WnWkJzoDHBnAQ9pq750m67s7g8UZBTd2vhM+s6C+TK5j0AcS3Uy40mGGjdCsNAkjgnLziz1l7rEXxqGaemPkLf7nK0ZelhKFrnxP2/ypA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=kX8v6eGX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739096182; c=relaxed/simple;
+	bh=DsS2geAXtMSqBWDK9YbfnJpbliuNKiJlxEBaQTMgqwA=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=diOoH7FfWB0DU3L703mSmVd9D8odD+wEuPS4gcDV//Smp8D8XEICRfeIkth4+9GrqVwINaVIAGInZ3YPmebhq0Qy8rKDSAFyOX5O2MAu28uZl1szuzwPMW2uflYtd4tnmMVVTzOtZXbxMYSAVL8agyCkl7Ao3Ni58yCN8/14rUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=e8KWJk7K; arc=none smtp.client-ip=212.227.17.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="kX8v6eGX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68352C4CEDD;
-	Sun,  9 Feb 2025 06:49:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1739083798;
-	bh=6WhwOi1PO8XaTLt/+uAUYLG4dac1oyS3ReLFZ3wljtk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kX8v6eGXEVj0C76VGZFm66rlS47CF9w30+mjGHAQnZMIwbgRVy3mP/VaYJFS8dSun
-	 4vtx+8rORGyFZ/eXDsLdFTiayzNK77mFso4cmQU7cGGojwmY1vrVxVUdXzU6vOfHt2
-	 OTHEAKq94yVxrwGZJuyjbdl03rntNM3XsB1DW67A=
-Date: Sun, 9 Feb 2025 07:49:54 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Jared Finder <jared@finder.org>
-Cc: kees@kernel.org, gnoack@google.com, hanno@hboeck.de, jannh@google.com,
-	jirislaby@kernel.org, linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v2] tty: Permit some TIOCL_SETSEL modes without
- CAP_SYS_ADMIN
-Message-ID: <2025020909-reshape-dynasty-0587@gregkh>
-References: <202501100850.5E4D0A5@keescook>
- <cd83bd96b0b536dd96965329e282122c@finder.org>
- <2025020812-refusing-selection-a717@gregkh>
- <fceb96ee879249d18be0261e57388542@finder.org>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="e8KWJk7K"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1739096168; x=1739700968; i=markus.elfring@web.de;
+	bh=F3bDdKl8eATlDg8WYVq5TTuNjlsg7scF7CmaxNIlem4=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=e8KWJk7KnQ+x/X/TSMhk/eufCcaY5Dw8k2LN0Acynm5KxjdmIHZuxQFlQnOHSkhF
+	 0M+vyHWXRKV3SDHtoQcZpuGaENaiCNnUaHeXktQjNP3IyjvPSFvOnufNDxxuO27fL
+	 d7hNznti5Pyljzu1GDCER/JQDLwyFiErAGMPKQWK+wLupNBcg4N6Y8wslhdS5r8yB
+	 dkhToCQwTBjXVesvsm5nO+pArfDj81n3fx6/U4uWwPIKKJ81V54560XQFtsMrz2GY
+	 OqHV9wAMm8njp1ki85/Rxh6ANtddENq/XR5k2X6MYSCp3dduc1fa+wkHhHLX6zthL
+	 pIaO9nfvz2C9Jh6LLQ==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.70.5]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MidDR-1tE5Gh0OXv-00qiTY; Sun, 09
+ Feb 2025 11:16:08 +0100
+Message-ID: <797c061c-7324-42e2-b4bd-fd93cf4ff0d0@web.de>
+Date: Sun, 9 Feb 2025 11:15:59 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fceb96ee879249d18be0261e57388542@finder.org>
+User-Agent: Mozilla Thunderbird
+To: Ethan Carter Edwards <ethan@ethancedwards.com>,
+ kernel-hardening@lists.openwall.com, linux-hardening@vger.kernel.org,
+ linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Takashi Iwai <tiwai@suse.com>
+References: <s6duijftssuzy34ilogc5ggfyukfqxmbflhllyzjlu4ki3xoo4@ci57esahvmxn>
+Subject: Re: [PATCH] ASoC: q6dsp: q6apm: change kzalloc to kcalloc
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <s6duijftssuzy34ilogc5ggfyukfqxmbflhllyzjlu4ki3xoo4@ci57esahvmxn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:9qLT0/6znlrr/UX2FzpFVqVWgiJtm9nEXtNZITfFV7q0fA3urLi
+ ocRmNq9WCEz2HCQzKkoSyn47v8HjzCebI+Oj/qtjnE1FRMWmyCFf5dfO26MJbnfgAdHHFln
+ 2zjuGAn5UCfMW4tm07CItXxbmqYohhCD4zdFou4/hoh/3/D+Aho/Ns3Il7nnGOa3yYMxaIw
+ 3PcJMFAN2O6SUFKgFFUPQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:sSj4urlGScs=;aYQ2CVZDDz1kQzwhW3MloEE1199
+ 3bTjnrHI7d3xVZuOLLFf1VDWX062zj02hYmpGEh8PFSaH4NZSPV0L6O37cq5eA5FrpRnY6hUM
+ Ses7fbc00O6fLHuruFIMZwAPXEaNOkMLntvEF/bPkzpHu17d9QVNfdQb5zWHtTLurnJcBUsQ+
+ Ug2KU3fYOEdDiwkPZfXfZ5PTiaq7GiZV2FEuqUBE88JuFw2rhJdPxs/si8yqUoL6VW3BC6BV5
+ /qHUsvSbyzjvWsTkk6HqiIQNV43xLtC4uFLHoCxZvQqEFp9NhfumITFGqSEIwB5mi+Fn6g91o
+ G5vyAwyezRK/ED9Xa53W0JnI3ak8kxxOIaxCfDT8L375f4tsfZGJ2wTO36xQ5QRN0aY0zxqo2
+ dd4hHSZk34h6Az+pZbds8+TvN/DM1YiqU61ySMGM83wlJGHijYcTk1UnBLpCCFoaM+wR7M+vI
+ YwY9e1PYoQkBcU9fuhB3e2qdmAjIYKxUV9Zv9BHPcZByWQmpWmI6Fk5xsXQMI+Z8xDrAOmxaT
+ wPLL6YJpmIBfyXebgUmB+SJctSZw0sdKawZPNmVh4Q8UAQ3l0tF3l8HGSmDlvo4FQky9DDHqY
+ +dpPE1RRjxwkXvAiWUnw+uKWYSJi4APeLlVJzeGX0a5ZU9aF6FfgVzUCAM7my2TCtGFVWsiFd
+ ap2nLz3jTA0+vIPW0Q6j6bvgg/ruXVq14NQlIwe4S0UXXlH8R18I2VIwZ1VbMoqU2qau2vAHk
+ +y43sExq+zW3g2K4OXXXYmqo4y+AYuXROJhLW72Vjpun7hJUIGYtW1Kxbwz7WOT0NJ5uM8P3S
+ 3v0xmak90lMqOom4zR+V3PJD5rkBRnBA9Czp9b35VJ+nHqozR2uNxdlwiaNWZlwHUMfKZV1IM
+ 9Uy1hWtpkGoMADutt6LhzW4iUW/9ASkyZ2Ra12u3USd5u1YwiayZ6EOdkQ5Kbbf5yEIZQGdKI
+ kvOzCS6yLogdSoo7b9a4K/RuPPxOsESr3lPzwbrkMY+eu87/CgeGdGUls838JJ6mlu/YSAMl0
+ xF2KNIYyqHcdY0bi+BkH7du5ufBnUZ3+N9+OY02OWrwaw1pAkgAkOMDtqLRBe1kcaL7zWIYSA
+ m/au2iaUvmcQdRv0O+Uc9G+1ISV85zD6eebAt6JLiIpOt7/V0lf+c2XFc6lr8qeEHKHZI7HIO
+ o7YlJaegmMXffKFlK4fIW9cgdKydK/s24g38UlWDW2Nk7wq2NwgUwnsxXbLnBHMLaag/cRS+p
+ p3bQNbh+onsXAtr2xyej2FeBbW1UXQtiaB6mR80NKfwT+1p32mIBSsvXjBsnCqmXl4x7UJTBO
+ tp+3UUBRPCLWazFoMssAqKOFtzvpJlc4i8aTcN1pr6NPVExOWDXU06W+fuCaRDxmcvpwU6bXp
+ D45YEcGOmQ3aPNw3r/OW3noIPaLCuRgukot7yICaD44BJSI0K6LSGbdOYkQ8CS0lEGMpTdBHj
+ 3U7JovgvjF0/MIpPWUdKJvM8Avig=
 
-On Sat, Feb 08, 2025 at 08:03:27AM -0800, Jared Finder wrote:
-> On 2025-02-08 07:28, Greg KH wrote:
-> > On Sat, Feb 08, 2025 at 07:18:22AM -0800, Jared Finder wrote:
-> > > Hi, I'm the original reporter of this regression (noticed because it
-> > > impacted GNU Emacs) and I'm wondering if there's any traction on
-> > > creating an
-> > > updated patch? This thread appears to have stalled out. I haven't
-> > > seen any
-> > > reply for three weeks.
-> > 
-> > It's already in 6.14-rc1 as commit 2f83e38a095f ("tty: Permit some
-> > TIOCL_SETSEL modes without CAP_SYS_ADMIN").
-> 
-> Great! Is this expected to get backported to 6.7 through 6.13? I would like
-> to note the expected resolution correctly in Emacs' bug tracker.
+> We are replacing any instances of kzalloc(size * count, ...) with
+> kcalloc(count, size, ...) due to risk of overflow [1].
 
-Yes, it should show up in the next round of stable kernel updates later
-this week.
+See also:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
+cumentation/process/submitting-patches.rst?h=3Dv6.13#n94
 
-But note, it will only show up in the 6.12.y and 6.13.y kernels, as all
-others in your range are end-of-life and shouldn't be used by anyone at
-this point in time.
 
-thanks,
+=E2=80=A6
+> +++ b/sound/soc/qcom/qdsp6/q6apm.c
+> @@ -230,7 +230,7 @@ int q6apm_map_memory_regions(struct q6apm_graph *gra=
+ph, unsigned int dir, phys_a
+>  		return 0;
+>  	}
+>
+> -	buf =3D kzalloc(((sizeof(struct audio_buffer)) * periods), GFP_KERNEL)=
+;
+> +	buf =3D kcalloc(periods, sizeof(struct audio_buffer), GFP_KERNEL);
+=E2=80=A6
 
-greg k-h
+See also:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
+cumentation/process/coding-style.rst?h=3Dv6.13#n941
+
+
+How do you think about to increase the application of scope-based resource=
+ management?
+
+Regards,
+Markus
