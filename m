@@ -1,176 +1,130 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E59B7243945
-	for <linux-hardening@vger.kernel.org>; Mon, 10 Feb 2025 17:36:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEE8F2500BA;
+	Mon, 10 Feb 2025 17:45:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739208990; cv=none; b=liIqbYsBPDo6ErvH9la+kIm3n8dMmKe4g/O50czz/EQq8lzH17bQIB5vR+XehN9r/JkUNgYdctujhnObVMoff1QH4bYNuFFG3DUSdqzUm+wtcctEK7+q3XZ79ZdWGyMN1G9Wubcgg2wXvlKx4XbdUGOfnXGmtj5McKAQgfXwnIA=
+	t=1739209508; cv=none; b=AOvBUbxZAlOE8ab7uy1MtRBDeraHjtiTNRi6hsOTydV+AzuK7tFSBWD6t6HkDWAqyfm/etkB2OSKzXB9AXJxcReQ3Dpowd1G9JZibumrnzl0HgZR6SdgbtlOLuPftqhyXFEKXfwpg+ZxGkMOnbGBgBd1Hhb+74sGCm7eSqGOHJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739208990; c=relaxed/simple;
-	bh=u+xBAfgGtWSjK+lShNplBj7ifal6E7BNbQMyEHGnBJo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=JApgMLuY+mxbWyWjAXCmOEXab/1egH+7Tdou8dC1oJ2UFJWwAyJC5K5/l4STz6/a5zSuI4SdZhaUoQMR+Q+E/Rif3UqqpQmHqff+iJo3Zr98HL+Hw0Jmfrwz0VvRD4cXk6yQJDFGobRQ3qPEuwFpMuRNT8ADhablYVVtVsSqLQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GDiyfweS; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1739209508; c=relaxed/simple;
+	bh=EkPg0iVWp2FJbeErYnYBxnLlulonUWK0FxLvxy3RRK4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=eb4GB9yKwOvz3JR7C4qAgfgk9qLQ/kjtDHmwEfe0R8N+cV+0C0/I3F2CRyaG5vQN90TzooTdtQCKaEcTA1pyKuw/2H+/RqrxITi8lPKVSzTo3M40JRTOQs405cNq2ZK1CAlu4y3AKQMZ/V3p87pjmDBtKw1jCPolfeSWp+l7E00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A8PBU0H4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GDiyfweS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739208987;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jmeQoovG0+h8NkGt8mJ7mUN4l2oR44byLjbsSTWDllc=;
-	b=GDiyfweSKdilGx56dnDevoYaeKexVK8+lohfxnkWlQEvZ4ufWneaLySnxQ1nuveBLx0CzX
-	e4fJ+iUffsenm8fH1RVwrphP9cQvcX4+88lK6CQBZznNua/NQ+rAjCv3PR6bg0Ipmch20H
-	QLFPM4PtzZOMxRujA9jhJg7Vy3NxSgM=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-396-XLOtDNVXOTG5UqlTCwJkew-1; Mon, 10 Feb 2025 12:36:26 -0500
-X-MC-Unique: XLOtDNVXOTG5UqlTCwJkew-1
-X-Mimecast-MFC-AGG-ID: XLOtDNVXOTG5UqlTCwJkew
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-38dca55788eso1753090f8f.1
-        for <linux-hardening@vger.kernel.org>; Mon, 10 Feb 2025 09:36:26 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739208985; x=1739813785;
-        h=content-transfer-encoding:mime-version:message-id:date:references
-         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jmeQoovG0+h8NkGt8mJ7mUN4l2oR44byLjbsSTWDllc=;
-        b=OTNvU6H10QSv800x366X7IMYqAVFYYitxk9nGh4LS3+gMsd8Mrx2pfe7jdu1aOmQDq
-         IEjev0WKxypXydvN79anKEnAeNRKFkQYGiP9S8aKBSbpPSFjJtidDZq/dMtNJudwuow4
-         eGOQ9wc7rSUNfI/OwSc4K7ennc6mrFERtGAuQmwtCVWQPZ44olSgx1WRkKrtq9lFdb9Y
-         PKDTqC5/7N5tycPXSR1VMcq91320pQ6JENbEbo6388rtn8OrYIH1Jj3oZXKTytL+n1fh
-         cC/w81huaP910sgzNxVKds8sB+QeGCdIzKkfvuOMOLoHwqBuZuS5X6bbLzwnfA8YK/ve
-         eLHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW14hXJiSEKMCIkzqsb2y6OiEkLwfR3MyPlWV7HothIZX8uoKZHVCdmVQ8Qs4UKwMasAh3IVvovSsX/HyP1XdQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9bbRpDn17UpYsnboK/quul8B8NKOMk3CJgvc9XcrSvzbX5ro1
-	DPTnNaesq1dOFN7R0t7hv56fUsJk1xXM9WjksWr3uciirw83v3qrv2r/sdpbpxF9NcHoG1D29b4
-	tbpg2wnfLN59Alg28zceL2UTPB8xDg8+QoZQz2nqzsKm1vY3jVoXDa7TQu0/9HGlN3Q==
-X-Gm-Gg: ASbGnctzkO3XQNWxUQChL5d3vOV7uo7eBOzlWjo6A2xBOrnLHfCLDnVplJwL2hTGXLY
-	fRe1Wr9CM47LX7pOq3vy7SgJzP/RDulO0/9keTOAQhJdFNSENDIlQeI86B5Zm6HF4kQumhfyjff
-	QwsV7Mkt1IWiJTJorWYnuYVXMrLy0aAdGKjo6G9igcjvrEBFgthcOWnV+o6kPvP0qaNWQQUnkdH
-	e7GF2APJUW7uePVXqaYKgCNLdj8ksorc78yoZIp2kjqmCmbYzneWurY25As3dtrYyGE0Tq6b5N7
-	9qzNGp1jKmkq266Ij+12Ve/gx0zlHs5DNhyjDWHVz6w9Z6pvNOqwMKwvIkxifRmGZQ==
-X-Received: by 2002:a5d:598f:0:b0:38d:e250:d953 with SMTP id ffacd0b85a97d-38de250dbabmr3058681f8f.35.1739208985424;
-        Mon, 10 Feb 2025 09:36:25 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFxfTkrMg3Ut4KvVNhGVu91A0XAdGHvAD9T0QbpHzfP2OmSPgOw5f7LxHQ3fWHxL8NqTxJ5mQ==
-X-Received: by 2002:a5d:598f:0:b0:38d:e250:d953 with SMTP id ffacd0b85a97d-38de250dbabmr3058583f8f.35.1739208984820;
-        Mon, 10 Feb 2025 09:36:24 -0800 (PST)
-Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dbf2ed900sm12687106f8f.53.2025.02.10.09.36.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 09:36:24 -0800 (PST)
-From: Valentin Schneider <vschneid@redhat.com>
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
- virtualization@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
- linux-perf-users@vger.kernel.org, xen-devel@lists.xenproject.org,
- kvm@vger.kernel.org, linux-arch@vger.kernel.org, rcu@vger.kernel.org,
- linux-hardening@vger.kernel.org, linux-mm@kvack.org,
- linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
- bcm-kernel-feedback-list@broadcom.com, Juergen Gross <jgross@suse.com>,
- Ajay Kaher <ajay.kaher@broadcom.com>, Alexey Makhalov
- <alexey.amakhalov@broadcom.com>, Russell King <linux@armlinux.org.uk>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Paul
- Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
- Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
- Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
- Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>, Boris Ostrovsky
- <boris.ostrovsky@oracle.com>, Josh Poimboeuf <jpoimboe@kernel.org>, Pawan
- Gupta <pawan.kumar.gupta@linux.intel.com>, Sean Christopherson
- <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, Andy Lutomirski
- <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>, "Paul E. McKenney"
- <paulmck@kernel.org>, Jason Baron <jbaron@akamai.com>, Steven Rostedt
- <rostedt@goodmis.org>, Ard Biesheuvel <ardb@kernel.org>, Neeraj Upadhyay
- <neeraj.upadhyay@kernel.org>, Joel Fernandes <joel@joelfernandes.org>,
- Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
- Uladzislau Rezki <urezki@gmail.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>,
- Zqiang <qiang.zhang1211@gmail.com>, Juri Lelli <juri.lelli@redhat.com>,
- Clark Williams <williams@redhat.com>, Yair Podemsky <ypodemsk@redhat.com>,
- Tomas Glozar <tglozar@redhat.com>, Vincent Guittot
- <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Kees Cook
- <kees@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Christoph
- Hellwig <hch@infradead.org>, Shuah Khan <shuah@kernel.org>, Sami Tolvanen
- <samitolvanen@google.com>, Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl
- <aliceryhl@google.com>, "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
- Samuel Holland <samuel.holland@sifive.com>, Rong Xu <xur@google.com>,
- Nicolas Saenz Julienne <nsaenzju@redhat.com>, Geert Uytterhoeven
- <geert@linux-m68k.org>, Yosry Ahmed <yosryahmed@google.com>, "Kirill A.
- Shutemov" <kirill.shutemov@linux.intel.com>, "Masami Hiramatsu (Google)"
- <mhiramat@kernel.org>, Jinghao Jia <jinghao7@illinois.edu>, Luis
- Chamberlain <mcgrof@kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
- Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: Re: [PATCH v4 22/30] context_tracking: Exit CT_STATE_IDLE upon
- irq/nmi entry
-In-Reply-To: <Z6ZTBXUiEOLVcSKp@pavilion.home>
-References: <20250114175143.81438-1-vschneid@redhat.com>
- <20250114175143.81438-23-vschneid@redhat.com>
- <Z5A6NPqVGoZ32YsN@pavilion.home>
- <xhsmh5xm0pkuo.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <xhsmhbjvdk7kq.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <Z6ZTBXUiEOLVcSKp@pavilion.home>
-Date: Mon, 10 Feb 2025 18:36:20 +0100
-Message-ID: <xhsmh8qqdk8h7.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A8PBU0H4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 567D9C4CEE5;
+	Mon, 10 Feb 2025 17:45:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739209507;
+	bh=EkPg0iVWp2FJbeErYnYBxnLlulonUWK0FxLvxy3RRK4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=A8PBU0H4UdGp7EEii9SVKDYE3xCTXFxnvsSm8n6vjdQKVpgfLVGBqMvwYcxapcqpG
+	 /e9WhuyHheagw0ggp5DGCOWc0AnApALJ0iW4WveKnDahwmH/3SJlhgo1lV/7jv8OUM
+	 9GU+cJNUit24AYXhDaBEmgBns7TT5XjQR3jrX52kpazd8M8GoYAfD8Up8/CBz6OHio
+	 evRcWwznTb4ubpjoL+hvA6H/uZIB7GRBQwh3/B28BQvPkoR7l1xCZJ/E2l5MKHCZlz
+	 vhHUHKstenVnlUZ9HBkO70ibzWQbihBg72d9QfAhGNuXuTc2MI/jcCN433DEyLGhd7
+	 oSogFORbTUGWQ==
+From: Kees Cook <kees@kernel.org>
+To: Tariq Toukan <tariqt@nvidia.com>
+Cc: Kees Cook <kees@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] net/mlx4_core: Avoid impossible mlx4_db_alloc() order value
+Date: Mon, 10 Feb 2025 09:45:05 -0800
+Message-Id: <20250210174504.work.075-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 89zwDImUoxPnNCb8n9rnmSKGix33aqyLkcYSi9053Jo_1739208986
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3608; i=kees@kernel.org; h=from:subject:message-id; bh=EkPg0iVWp2FJbeErYnYBxnLlulonUWK0FxLvxy3RRK4=; b=owGbwMvMwCVmps19z/KJym7G02pJDOmrrBU+V3w5JxDieixNs3bKsg1HJS8/6yu7FMJesI1tm pLqtFOhHaUsDGJcDLJiiixBdu5xLh5v28Pd5yrCzGFlAhnCwMUpABP51MzI0MoVuTjI7V/Imin7 fz7hVjPYxvHm6E3Otf6rcjqulj8oZWFkWPLgkVkHT6j8q3Pf+ATFrK/NPaLA8+9Z9M87ipV2kz4 f4AQA
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On 07/02/25 19:37, Frederic Weisbecker wrote:
-> Le Fri, Feb 07, 2025 at 06:06:45PM +0100, Valentin Schneider a =C3=A9crit=
- :
->>
->> Soooo I've been thinking...
->>
->> Isn't
->>
->>   (context_tracking.state & CT_RCU_WATCHING)
->>
->> pretty much a proxy for knowing whether a CPU is executing in kernelspac=
-e,
->> including NMIs?
->
-> You got it!
->
+GCC can see that the value range for "order" is capped, but this leads
+it to consider that it might be negative, leading to a false positive
+warning (with GCC 15 with -Warray-bounds -fdiagnostics-details):
 
-Yay!
+../drivers/net/ethernet/mellanox/mlx4/alloc.c:691:47: error: array subscript -1 is below array bounds of 'long unsigned int *[2]' [-Werror=array-bounds=]
+  691 |                 i = find_first_bit(pgdir->bits[o], MLX4_DB_PER_PAGE >> o);
+      |                                    ~~~~~~~~~~~^~~
+  'mlx4_alloc_db_from_pgdir': events 1-2
+  691 |                 i = find_first_bit(pgdir->bits[o], MLX4_DB_PER_PAGE >> o);                        |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                     |                         |                                                   |                     |                         (2) out of array bounds here
+      |                     (1) when the condition is evaluated to true                             In file included from ../drivers/net/ethernet/mellanox/mlx4/mlx4.h:53,
+                 from ../drivers/net/ethernet/mellanox/mlx4/alloc.c:42:
+../include/linux/mlx4/device.h:664:33: note: while referencing 'bits'
+  664 |         unsigned long          *bits[2];
+      |                                 ^~~~
 
->>
->> NMI interrupts userspace/VM/idle -> ct_nmi_enter()   -> it becomes true
->> IRQ interrupts idle              -> ct_irq_enter()   -> it becomes true
->> IRQ interrupts userspace         -> __ct_user_exit() -> it becomes true
->> IRQ interrupts VM                -> __ct_user_exit() -> it becomes true
->>
->> IOW, if I gate setting deferred work by checking for this instead of
->> explicitely CT_STATE_KERNEL, "it should work" and prevent the
->> aforementioned issue? Or should I be out drinking instead? :-)
->
-> Exactly it should work! Now that doesn't mean you can't go out
-> for a drink :-)
->
+Switch the argument to unsigned int, which removes the compiler needing
+to consider negative values.
 
-Well, drinks were had very shortly after sending this email :D
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+Cc: Tariq Toukan <tariqt@nvidia.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: Yishai Hadas <yishaih@nvidia.com>
+Cc: netdev@vger.kernel.org
+Cc: linux-rdma@vger.kernel.org
+---
+ drivers/net/ethernet/mellanox/mlx4/alloc.c | 6 +++---
+ include/linux/mlx4/device.h                | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-> Thanks.
+diff --git a/drivers/net/ethernet/mellanox/mlx4/alloc.c b/drivers/net/ethernet/mellanox/mlx4/alloc.c
+index b330020dc0d6..f2bded847e61 100644
+--- a/drivers/net/ethernet/mellanox/mlx4/alloc.c
++++ b/drivers/net/ethernet/mellanox/mlx4/alloc.c
+@@ -682,9 +682,9 @@ static struct mlx4_db_pgdir *mlx4_alloc_db_pgdir(struct device *dma_device)
+ }
+ 
+ static int mlx4_alloc_db_from_pgdir(struct mlx4_db_pgdir *pgdir,
+-				    struct mlx4_db *db, int order)
++				    struct mlx4_db *db, unsigned int order)
+ {
+-	int o;
++	unsigned int o;
+ 	int i;
+ 
+ 	for (o = order; o <= 1; ++o) {
+@@ -712,7 +712,7 @@ static int mlx4_alloc_db_from_pgdir(struct mlx4_db_pgdir *pgdir,
+ 	return 0;
+ }
+ 
+-int mlx4_db_alloc(struct mlx4_dev *dev, struct mlx4_db *db, int order)
++int mlx4_db_alloc(struct mlx4_dev *dev, struct mlx4_db *db, unsigned int order)
+ {
+ 	struct mlx4_priv *priv = mlx4_priv(dev);
+ 	struct mlx4_db_pgdir *pgdir;
+diff --git a/include/linux/mlx4/device.h b/include/linux/mlx4/device.h
+index 27f42f713c89..86f0f2a25a3d 100644
+--- a/include/linux/mlx4/device.h
++++ b/include/linux/mlx4/device.h
+@@ -1135,7 +1135,7 @@ int mlx4_write_mtt(struct mlx4_dev *dev, struct mlx4_mtt *mtt,
+ int mlx4_buf_write_mtt(struct mlx4_dev *dev, struct mlx4_mtt *mtt,
+ 		       struct mlx4_buf *buf);
+ 
+-int mlx4_db_alloc(struct mlx4_dev *dev, struct mlx4_db *db, int order);
++int mlx4_db_alloc(struct mlx4_dev *dev, struct mlx4_db *db, unsigned int order);
+ void mlx4_db_free(struct mlx4_dev *dev, struct mlx4_db *db);
+ 
+ int mlx4_alloc_hwq_res(struct mlx4_dev *dev, struct mlx4_hwq_resources *wqres,
+-- 
+2.34.1
 
