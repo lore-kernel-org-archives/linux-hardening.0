@@ -1,81 +1,81 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACC562E628;
-	Mon, 10 Feb 2025 09:59:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EED8B1CBA18;
+	Mon, 10 Feb 2025 10:05:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739181559; cv=none; b=P81sdW40z1c78ipzRPpyWKtGVaxaAG6Pi5LNa8lTrkntSbzkVCG2Pj/eX/4XbY0OGrQXMN0qwKA1YL2Aez+Cv2xwTRmj+J+798nMYmO1YRt33DxgUOj1wlpEfdLm/04guR8EKkgUVSino3+jbD44iqfsVDZG9JuBrtJIkJtK35M=
+	t=1739181940; cv=none; b=Nrh81FSSp6OtiZLpKpahTGwdtEfCjgj5mjwh8Wf9t1WC+mpSyco1Js57OGtqHOJyFBjeHOKuaMSaUpjU/CXqwI9zQmJ8Cc8tOrvAzIVHL9nNsoxG6PitXc6JMqaiwN6gAJijkVjbhRDP4AcNTPyjl9hzY8cfpCN0dhPzs8IFI4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739181559; c=relaxed/simple;
-	bh=AfopC487WoVLryM+ChwdbJdfBy3OZqjh3zGi5Da5xAg=;
+	s=arc-20240116; t=1739181940; c=relaxed/simple;
+	bh=9V+c79Ybc3Afm0xKGUjzL9b8/mtJ5DL7Y1eYTLnsLyc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aAq2PJz6nYCCqbqcMXqGLac712UeZYbijXjvd8ik3M6MAeJn4tsvmF6CkzkOMG0OfL8yJQdDh3qhgEsQVgeho+/XcXv98t0MB6118I8ItF8NH6yGpggNok9z/oBXlC5QkcBBCWe9dpSpGy2sqOuNGhK6UZNZqo/xN/Tdvdb5Qn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=uB0TAc8i; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=u1XNse4N; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=uB0TAc8i; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=u1XNse4N; arc=none smtp.client-ip=195.135.223.130
+	 In-Reply-To:Content-Type; b=f298unKXJSlI3X/XDG36J3jdodIZXG1BgOREsXmIs9EnyOZXT0P0OUfN8Ud5M+BLcq9Pm0hjhITqyGzQam7zrmN5yT3eOPc5MbsDFYG94ozvRZbKjqPd76GcwSpqp2Z2oqVKtLzIzKo8n9Y18T/SHwjZRRW8dwA8YXSHuLcpfhk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=P0skPLgB; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=br+kPhgb; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=oRTxJ/qZ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=MNd/v9BC; arc=none smtp.client-ip=195.135.223.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="uB0TAc8i";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="u1XNse4N";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="uB0TAc8i";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="u1XNse4N"
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="P0skPLgB";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="br+kPhgb";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="oRTxJ/qZ";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="MNd/v9BC"
 Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 8ECDB210EC;
-	Mon, 10 Feb 2025 09:59:13 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id D0FF01F38F;
+	Mon, 10 Feb 2025 10:05:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1739181553; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1739181936; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=NioSo9jy6/hmspATT6/1NoFuL/TYInEjWoLVtXb15Ns=;
-	b=uB0TAc8iFjub6vi9CJVn40qFO0grlASak5qJjcG2qc7+T44M47p4SUYR4Oflfmba15U0gA
-	s3wN2MDvT9QGtxS1XPeHmosTBcqYTRkWM6PRD21zWZgOiADSGgX5OM+7qgpuZQGv1T8bik
-	iXw6DFKqxilvpQwzzqIC3fWKNhd7oj0=
+	bh=YVnSoIkwfv52XVW57m0P3SMuTTbAAGCE1tva5T3FlZ4=;
+	b=P0skPLgByfEvF+nvLzFdKb83b7psUJSalW92rjRY669FcgsozNM6QG6T8NOFnNAAqUuZP0
+	01YEvOq3Hq1cutiqwNSPDa9yM+OtXAOOwwdIbLQki8PtpS8tifEei0yQq1048fOwfchLCs
+	ctSQjysnxO+BveFqvwBUqkKEFIubw5Q=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1739181553;
+	s=susede2_ed25519; t=1739181936;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=NioSo9jy6/hmspATT6/1NoFuL/TYInEjWoLVtXb15Ns=;
-	b=u1XNse4NumlXm+dFPoXoVchnUGhTOzVByc/I4t0k3ZYBhz9B9WCmLrI2ISAczvZNtzALy5
-	2PD9M2obM7monhDA==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=uB0TAc8i;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=u1XNse4N
+	bh=YVnSoIkwfv52XVW57m0P3SMuTTbAAGCE1tva5T3FlZ4=;
+	b=br+kPhgbpWNzZhEqnp+YiXH1PgxDj7ui5+8zy8159rRNMj8shMhwMRny+CVWcS9Ln5zwj2
+	yRT7/zU7CQ7FkHAQ==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b="oRTxJ/qZ";
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b="MNd/v9BC"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1739181553; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1739181935; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=NioSo9jy6/hmspATT6/1NoFuL/TYInEjWoLVtXb15Ns=;
-	b=uB0TAc8iFjub6vi9CJVn40qFO0grlASak5qJjcG2qc7+T44M47p4SUYR4Oflfmba15U0gA
-	s3wN2MDvT9QGtxS1XPeHmosTBcqYTRkWM6PRD21zWZgOiADSGgX5OM+7qgpuZQGv1T8bik
-	iXw6DFKqxilvpQwzzqIC3fWKNhd7oj0=
+	bh=YVnSoIkwfv52XVW57m0P3SMuTTbAAGCE1tva5T3FlZ4=;
+	b=oRTxJ/qZ/52dDkc78mdeNgXsCDMWSXsmo7Erpfuqqv8VLDq5lOGNyRknHtQNETk9fstpz2
+	CBNCTxJnuW2HnlBJODbkHlTPqCi+/EiprbpfxFz+UNO0lRj6rGNouGkAwzNlJBwmUFZS5u
+	xJVGNFovP/zP/lQ2hM/7RfcwryX7IoE=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1739181553;
+	s=susede2_ed25519; t=1739181935;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=NioSo9jy6/hmspATT6/1NoFuL/TYInEjWoLVtXb15Ns=;
-	b=u1XNse4NumlXm+dFPoXoVchnUGhTOzVByc/I4t0k3ZYBhz9B9WCmLrI2ISAczvZNtzALy5
-	2PD9M2obM7monhDA==
+	bh=YVnSoIkwfv52XVW57m0P3SMuTTbAAGCE1tva5T3FlZ4=;
+	b=MNd/v9BCzAxcKBtmCz4x1QIFAseTJtG60SL1TDARzYurgfIZxZKLxipZek3Zd3rNqTTaAp
+	qlwHvPalYVqC+jAQ==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 70A3013A62;
-	Mon, 10 Feb 2025 09:59:13 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A09AE13A62;
+	Mon, 10 Feb 2025 10:05:35 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id J8EvG/HNqWcfQgAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Mon, 10 Feb 2025 09:59:13 +0000
-Message-ID: <40853b61-3ad5-448a-980a-9584561887e6@suse.cz>
-Date: Mon, 10 Feb 2025 10:59:13 +0100
+	id GCmXJm/PqWdsRAAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Mon, 10 Feb 2025 10:05:35 +0000
+Message-ID: <d50c3fae-1c2c-42b1-b622-fcd89c6b2dd3@suse.cz>
+Date: Mon, 10 Feb 2025 11:05:35 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -83,7 +83,8 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] slab: Adjust placement of __kvmalloc_node_noprof
+Subject: Re: [PATCH v2 2/2] slab: Achieve better kmalloc caches randomization
+ in kvmalloc
 Content-Language: en-US
 To: GONG Ruiqi <gongruiqi1@huawei.com>, Christoph Lameter <cl@linux.com>,
  Pekka Enberg <penberg@kernel.org>, David Rientjes <rientjes@google.com>,
@@ -95,7 +96,7 @@ Cc: Tamas Koczka <poprdi@google.com>,
  linux-mm@kvack.org, linux-hardening@vger.kernel.org,
  linux-kernel@vger.kernel.org
 References: <20250208014723.1514049-1-gongruiqi1@huawei.com>
- <20250208014723.1514049-2-gongruiqi1@huawei.com>
+ <20250208014723.1514049-3-gongruiqi1@huawei.com>
 From: Vlastimil Babka <vbabka@suse.cz>
 Autocrypt: addr=vbabka@suse.cz; keydata=
  xsFNBFZdmxYBEADsw/SiUSjB0dM+vSh95UkgcHjzEVBlby/Fg+g42O7LAEkCYXi/vvq31JTB
@@ -136,14 +137,14 @@ Autocrypt: addr=vbabka@suse.cz; keydata=
  w9XOLH1IIWh7RURU7G1iOfEfmImFeC3cbbS73LQEFGe1urxvIH5K/7vX+FkNcr9ujwWuPE9b
  1C2o4i/yZPLXIVy387EjA6GZMqvQUFuSTs/GeBcv0NjIQi8867H3uLjz+mQy63fAitsDwLmR
  EP+ylKVEKb0Q2A==
-In-Reply-To: <20250208014723.1514049-2-gongruiqi1@huawei.com>
+In-Reply-To: <20250208014723.1514049-3-gongruiqi1@huawei.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 8ECDB210EC
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: D0FF01F38F
 X-Spam-Score: -3.01
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
+	BAYES_HAM(-3.00)[100.00%];
 	SUSPICIOUS_RECIPS(1.50)[];
 	NEURAL_HAM_LONG(-1.00)[-1.000];
 	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
@@ -151,22 +152,19 @@ X-Spamd-Result: default: False [-3.01 / 50.00];
 	MIME_GOOD(-0.10)[text/plain];
 	MX_GOOD(-0.01)[];
 	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[14];
 	FUZZY_BLOCKED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	RCPT_COUNT_TWELVE(0.00)[14];
 	MIME_TRACE(0.00)[0:+];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
 	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	FREEMAIL_CC(0.00)[google.com,linux.dev,gmail.com,huawei.com,kvack.org,vger.kernel.org];
 	RCVD_TLS_ALL(0.00)[];
+	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_TWO(0.00)[2];
-	MID_RHS_MATCH_FROM(0.00)[];
 	FROM_EQ_ENVFROM(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	FREEMAIL_CC(0.00)[google.com,linux.dev,gmail.com,huawei.com,kvack.org,vger.kernel.org];
+	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[];
 	DKIM_TRACE(0.00)[suse.cz:+];
@@ -177,26 +175,82 @@ X-Spam-Flag: NO
 X-Spam-Level: 
 
 On 2/8/25 02:47, GONG Ruiqi wrote:
-> Move __kvmalloc_node_noprof (and also kvfree* for consistency) into
-> mm/slub.c so that it can directly invoke __do_kmalloc_node, which is
-> needed for the next patch. Move kmalloc_gfp_adjust to slab.h since now
-> its two callers are in different .c files.
+> As revealed by this writeup[1], due to the fact that __kmalloc_node (now
+> renamed to __kmalloc_node_noprof) is an exported symbol and will never
+> get inlined, using it in kvmalloc_node (now is __kvmalloc_node_noprof)
+> would make the RET_IP inside always point to the same address:
 > 
-> No functional changes intended.
+>     upper_caller
+>         kvmalloc
+>         kvmalloc_node
+>         kvmalloc_node_noprof
+>         __kvmalloc_node_noprof	<-- all macros all the way down here
+>             __kmalloc_node_noprof
+>                 __do_kmalloc_node(.., _RET_IP_)
+>             ...			<-- _RET_IP_ points to
 > 
+> That literally means all kmalloc invoked via kvmalloc would use the same
+> seed for cache randomization (CONFIG_RANDOM_KMALLOC_CACHES), which makes
+> this hardening unfunctional.
+
+                 non-functional?
+
+> The root cause of this problem, IMHO, is that using RET_IP only cannot
+> identify the actual allocation site in case of kmalloc being called
+> inside wrappers or helper functions.
+
+inside non-inlined wrappers... ?
+
+>  And I believe there could be
+> similar cases in other functions. Nevertheless, I haven't thought of
+> any good solution for this. So for now let's solve this specific case
+> first.
+
+Yeah it's the similar problem with shared allocation wrappers as what
+allocation tagging has.
+
+> For __kvmalloc_node_noprof, replace __kmalloc_node_noprof and call
+> __do_kmalloc_node directly instead, so that RET_IP can take the return
+> address of kvmalloc and differentiate each kvmalloc invocation:
+> 
+>     upper_caller
+>         kvmalloc
+>         kvmalloc_node
+>         kvmalloc_node_noprof
+>         __kvmalloc_node_noprof	<-- all macros all the way down here
+>             __do_kmalloc_node(.., _RET_IP_)
+>         ...			<-- _RET_IP_ points to
+> 
+> Thanks to Tamás Koczka for the report and discussion!
+> 
+> Link: https://github.com/google/security-research/pull/83/files#diff-1604319b55a48c39a210ee52034ed7ff5b9cdc3d704d2d9e34eb230d19fae235R200 [1]
+
+This should be slightly better? A permalink for the file itself:
+https://github.com/google/security-research/blob/908d59b573960dc0b90adda6f16f7017aca08609/pocs/linux/kernelctf/CVE-2024-27397_mitigation/docs/exploit.md
+
+Thanks.
+
+> Reported-by: Tamás Koczka <poprdi@google.com>
 > Signed-off-by: GONG Ruiqi <gongruiqi1@huawei.com>
 > ---
->  include/linux/slab.h |  22 +++++++++
->  mm/slub.c            |  90 ++++++++++++++++++++++++++++++++++
->  mm/util.c            | 112 -------------------------------------------
->  3 files changed, 112 insertions(+), 112 deletions(-)
+>  mm/slub.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
-> diff --git a/include/linux/slab.h b/include/linux/slab.h
-> index 09eedaecf120..0bf4cbf306fe 100644
-> --- a/include/linux/slab.h
-> +++ b/include/linux/slab.h
-
-This could be mm/slab.h instead.
-But I'd just go all the way and move kvrealloc_noprof() too, it would be
-more consistent anyway.
+> diff --git a/mm/slub.c b/mm/slub.c
+> index 0830894bb92c..46e884b77dca 100644
+> --- a/mm/slub.c
+> +++ b/mm/slub.c
+> @@ -4903,9 +4903,9 @@ void *__kvmalloc_node_noprof(DECL_BUCKET_PARAMS(size, b), gfp_t flags, int node)
+>  	 * It doesn't really make sense to fallback to vmalloc for sub page
+>  	 * requests
+>  	 */
+> -	ret = __kmalloc_node_noprof(PASS_BUCKET_PARAMS(size, b),
+> -				    kmalloc_gfp_adjust(flags, size),
+> -				    node);
+> +	ret = __do_kmalloc_node(size, PASS_BUCKET_PARAM(b),
+> +				kmalloc_gfp_adjust(flags, size),
+> +				node, _RET_IP_);
+>  	if (ret || size <= PAGE_SIZE)
+>  		return ret;
+>  
 
