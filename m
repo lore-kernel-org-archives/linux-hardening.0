@@ -1,51 +1,72 @@
-Received: from mail-ed1-f65.google.com (mail-ed1-f65.google.com [209.85.208.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 020F91119A;
-	Sun,  9 Feb 2025 20:16:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F408017BCE
+	for <linux-hardening@vger.kernel.org>; Mon, 10 Feb 2025 02:12:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739132199; cv=none; b=V0bofKBXAodIlssdRprtkIC6Q/YtE/jxWsNm7PjN1jO8nWMHO6xj/xEW/sdOPcRMYlAchV7qPKHdV72rSAFn2coKvc7RiGV6K4dW76PK1yfgkHdd/Bxp8zLWfQpD0wgWmq4Bjt7M3ADyi2ZxfqVB65SUR+esM9Za1M8kzPbpbJQ=
+	t=1739153571; cv=none; b=jlf5Kpd6c0I96jboxfl8DHUlZuNp60vfOyNj14Snv4FaO1wIRYkaYEEXRjiF9SL0gb/2RwHfT50cn0HjCjYcwSavrV1rXOSu0NdzJxNI8wMP9mZOsyzBHcwQ2YuhHyDyz3ybXPGJB8JMBWrdvjr711GNtJu+752gxpNTCi0ZP1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739132199; c=relaxed/simple;
-	bh=7PUpceYtqAYnsrUpQIi8LdEBl5dp3+qFOQe5eVTwX0E=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=TQtHGmDiGL/dL7cMGSfEDhtzwPN2NwDcjjI4Zk80jdpVlf8FLopDBHMSJ5Vpo5R6DXrcX0HJNM0Zd+Z8xvGPq8zAgtKp/w86ZWoAMOU85/n7QgZSl64q+k55SxI3EuuYsnwSiGc/KcYEBcjc15kD75W47O3H+CH7a4MSyjzRO5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ovn.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ovn.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f65.google.com with SMTP id 4fb4d7f45d1cf-5de77a5d2a2so726483a12.0;
-        Sun, 09 Feb 2025 12:16:37 -0800 (PST)
+	s=arc-20240116; t=1739153571; c=relaxed/simple;
+	bh=zg0532LxoHL6vEbEEc7retLEcn74qqIhiqcJ4chtAOQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Gnt/goPk7RtksYIVXLFJVzuo44G4pbalDHPwfpUlA03MUUxM0pTMae1EpKWWW7zFDrLul2V7pMD8NW/qAp+tQQifPmAkVZULfGc12eFFfFqBhf0ZIbpkqx5hyzq0uiHX0Kk9qBKx6YAxFJanLgmBk6S8A+Oj3LRxdm0SjlNBh5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=YIktDj/C; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="YIktDj/C"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51A0B7xo013082
+	for <linux-hardening@vger.kernel.org>; Mon, 10 Feb 2025 02:12:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	rpmdF1Rnc9/NsCNm9SOlPO1mOdH4yrsT2cCwJQzffRQ=; b=YIktDj/CUkyF9Eq+
+	UC6aCpjjBva8cqkEMUfw8BI++vIHraGRoq2ooUb/9453QTZZlSCzByCmGS3ZiLrn
+	5F1xFmGolbaeL9kl/1VizdAWVI8gC5GXZ/uXio6y9Nc4r5sAt9NfWzm5Ranwz88e
+	TNj/vBBKs7wXqk2E5pSOB7J0oPB8YjX+WtjNyfkFlqCOaqNjhlTN/XdDZ3v4pe7e
+	KUJ0ThxG4RE7TiF7c+fa7QO4CgXT4qRbATZ1zHRKFAuwd0F9UL/sEyQMX5ajh/lP
+	RvZjbJ4MMGSXxzRJixJpvQ539dbU5QCMnDziX22myvKy3NfgA4OUP+ik/ogB8vUK
+	jfnxFQ==
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44p0dqat7p-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-hardening@vger.kernel.org>; Mon, 10 Feb 2025 02:12:47 +0000 (GMT)
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-21f464b9954so60818745ad.1
+        for <linux-hardening@vger.kernel.org>; Sun, 09 Feb 2025 18:12:47 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739132196; x=1739736996;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:to:subject:cc:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Jcnq3Qcy2LcXlI5p7Yl7QaLicFI76aNuTJDZwMWxRg8=;
-        b=wsH/p2noqMY/iQXMrVk+eCQrcKSZMOG8Q3NnCdvex3caWrZXG5UfoWXYYfQbN0Dg6x
-         0bCxsPuntEA+7ZKqLXLcI4j7s44lH1FDHlrGin7bMCX47gezB6/qMBRSPn2auGNoYLtk
-         BvLffNk2mPZVAHmTMr269/7M/qJEWDBh2uQqIvgTyWBTZd0MpfPVzXqa2WNfjDU2MbLX
-         T9rakO0pBB2pJfDe9I6Nkl7jivHtQQK264HabJChOBNqgRVQnYLr635urPvPst738/e1
-         GIs2JARvA+bxYvZ2uKOLqLD64m5rwFSXL4iHmNpYXibR0wdIpkF0ApzukBKxm1iPZdGE
-         lMxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUdbHSHziJP+VzZP5Bab/ewyklGoSC9/9IJiriH+hkRwM1iJUj13ixJ136MzJR6BJ9bA1Taz5EwP9JqtbH8R64=@vger.kernel.org, AJvYcCVMN44Nasy9dttwa+xn/uBuGxb/YfvLIuW49YR/K2mgnHiBfFReYXJAD0hf4a78IESklQy8aFMy@vger.kernel.org
-X-Gm-Message-State: AOJu0YyaAPJrHbb9arQLDHQBV1E/VzsY2EBVeHeJVHy65X5wWlD3NBy0
-	J+rhtoZD4YE1MyvgTSv2EP35+Fw9W+ckRwA+wQjKkEx32vtV4K5/ReKBOngE
-X-Gm-Gg: ASbGncuz6TzJZR/DvdowqoukLQRIza/Zj9uYiX0rE1QnVPOQ2rr5RM/KxawE5rSR3tO
-	8THxSAQp30tXXDTYF3mRRz6uQav9EHp6+o853VOeT7n9zwH3wpwzhHq/yl6jLMTjXPOMiZYxxEo
-	JA5bYynKPoi45Yto65jGigOs0q3P4tpnd27L8evF4nJfL5Nfu50aXqdilTvZS4LSpAIVRNXxBkb
-	FoxOjnp+bezVqeVuQNz9n1UCcOkiMZKNK9qJZxo8D5T1h+ICMdE9q8vt8MkCkGM97DbB2e8QDNf
-	2bHqU6fdpIE6YXaUq/aS0Em1r0WXKD/krs0o454ae1sGz4I=
-X-Google-Smtp-Source: AGHT+IF2CryFI8dyJN2wBpThrDZwkDaSkqSUw353zMPpLy+BhutEea3TRV3WDfJAc7GdISOEnhhCkQ==
-X-Received: by 2002:a17:906:7310:b0:ab7:6c4e:8e52 with SMTP id a640c23a62f3a-ab789a9bd9bmr1331859066b.5.1739132195824;
-        Sun, 09 Feb 2025 12:16:35 -0800 (PST)
-Received: from [192.168.0.13] (ip-86-49-44-151.bb.vodafone.cz. [86.49.44.151])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7b77d58bdsm169360766b.130.2025.02.09.12.16.34
+        d=1e100.net; s=20230601; t=1739153567; x=1739758367;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rpmdF1Rnc9/NsCNm9SOlPO1mOdH4yrsT2cCwJQzffRQ=;
+        b=ACFYKFbbEfCpMcZ3vD0IWiLgJx68bmqNTwAp56eHDluZtQMFMW//P3UMpih0JmQjrv
+         hOMFLwDrU3vaAFiDm9K5eF+7wceE07zSsFsRcfTPlZjdAp63N/8JxQ4zSwLGgzOZoF+r
+         7eNq89Yr6w3IzOetENzBKlsAwzRYhG3FZdLx6PYotNgB3K5q+TzkULmWMmE+9K7g+Xl1
+         ymbtQnAEvZohsVrAAKThaO/Sh8D/7o2ErlGkf59YFwQU0sZIQSEGBQKdrJdBGV9hf44S
+         Jbabs0o7KwbK+qCiHe/Vleo6YSU6efhUQm/ufJQbevP1KwN9g4WUwF7S+CnFfFmjMMgv
+         skQA==
+X-Forwarded-Encrypted: i=1; AJvYcCVAc/f7SmZfxcJz9QJz+3FLcDw1wgWKhXdmWmzhs3sFR/8c3eeSwc7kJAIhJGK5545kJ4MmYMk4yyeTI/bpMjs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxzSTOHwSKkZI2XqLgWiTR60Jp8JgHr03ygye/OM0PCJvAuk0VY
+	tfs/Jnsv4nsmca/9cf8WLOJ7IiL3N1psYRfE+RBO2xp6XN5qAJpwsrJtb0NgCyMY4LB/gVIghVH
+	zZvewmBoN6bjnJiX2HTuHIESEcGN6n/a+dukDorQ2YHJwnqpYn6B1I7KO5t07fbrZN1w=
+X-Gm-Gg: ASbGncvFF50qoa8msc2o8Avl5vlR+6TIXpTV+2U+awmANKcOLCGs7dfENu5F7w2f7d8
+	JO9sLvwX+54Qc+LHzTPIK3Ed0zq0R7COxemK1cfjcAFXsOl3Is8w3fah5EPUEc6slVClM5i0qjm
+	8aOL9Z8hdjmuj6Zu53ZVus5j3FOQ6LRtyPXvZj5zSjBKZ3H4PqSdNPDjStf/ad+PFeG5Xjha1P3
+	qbK5ZclP7oVfTR1VubNv92StlFDskWMa3TjyLGR4RStHM4Fg3ISahX6rVP4kquZ8WyScKp7NXoo
+	LItragFh4RrrQogsYoPrrXN7HmyrE8g5kdHma0W+pgCES0NKy1lbyw0rhsKNQWE=
+X-Received: by 2002:a05:6a20:9c9a:b0:1e0:c166:18ba with SMTP id adf61e73a8af0-1ee052ce872mr19099363637.12.1739153566965;
+        Sun, 09 Feb 2025 18:12:46 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFc5O/uCO3z9TBjwxHuwPv68BL++jliZvMnB6lrZNaTSTkptrnCAXOUYjybUKCxsKhWaSBCvA==
+X-Received: by 2002:a05:6a20:9c9a:b0:1e0:c166:18ba with SMTP id adf61e73a8af0-1ee052ce872mr19099316637.12.1739153566489;
+        Sun, 09 Feb 2025 18:12:46 -0800 (PST)
+Received: from [10.133.33.8] (tpe-colo-wan-fw-bordernet.qualcomm.com. [103.229.16.4])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7308c4d0d3esm1120722b3a.31.2025.02.09.18.12.38
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 09 Feb 2025 12:16:35 -0800 (PST)
-Message-ID: <acf28b0e-5d34-46e0-823f-8028e2fb8356@ovn.org>
-Date: Sun, 9 Feb 2025 21:16:34 +0100
+        Sun, 09 Feb 2025 18:12:45 -0800 (PST)
+Message-ID: <58e05149-abc2-4cf4-a6e8-35380823d94a@oss.qualcomm.com>
+Date: Mon, 10 Feb 2025 10:12:37 +0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -53,136 +74,414 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Cc: i.maximets@ovn.org, dev@openvswitch.org,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, Jiri Pirko
- <jiri@resnulli.us>, Jamal Hadi Salim <jhs@mojatatu.com>,
- Kees Cook <kees@kernel.org>, David Ahern <dsahern@kernel.org>,
- Yotam Gigi <yotam.gi@gmail.com>, Tariq Toukan <tariqt@nvidia.com>,
- linux-hardening@vger.kernel.org, Simon Horman <horms@kernel.org>,
- Cong Wang <xiyou.wangcong@gmail.com>, Cosmin Ratiu <cratiu@nvidia.com>
-Subject: Re: [ovs-dev] [PATCH net-next] net: Add options as a flexible array
- to struct ip_tunnel_info
-To: Gal Pressman <gal@nvidia.com>, netdev@vger.kernel.org,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>
-References: <20250209101853.15828-1-gal@nvidia.com>
- <2ef88acc-d4d7-4309-8c14-73ac107d1d07@ovn.org>
- <fe814549-3bd4-4ef6-8e7d-9d21626766e1@nvidia.com>
+Subject: Re: [PATCH net-next v3 03/14] net: ethernet: qualcomm: Add PPE driver
+ for IPQ9574 SoC
+To: Luo Jie <quic_luoj@quicinc.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Lei Wei <quic_leiwei@quicinc.com>,
+        Suruchi Agarwal <quic_suruchia@quicinc.com>,
+        Pavithra R <quic_pavir@quicinc.com>, Simon Horman <horms@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>, Kees Cook <kees@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org,
+        quic_kkumarcs@quicinc.com, quic_linchen@quicinc.com,
+        srinivas.kandagatla@linaro.org, bartosz.golaszewski@linaro.org,
+        john@phrozen.org
+References: <20250209-qcom_ipq_ppe-v3-0-453ea18d3271@quicinc.com>
+ <20250209-qcom_ipq_ppe-v3-3-453ea18d3271@quicinc.com>
 Content-Language: en-US
-From: Ilya Maximets <i.maximets@ovn.org>
-Autocrypt: addr=i.maximets@ovn.org; keydata=
- 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
-In-Reply-To: <fe814549-3bd4-4ef6-8e7d-9d21626766e1@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
+From: Jie Gan <jie.gan@oss.qualcomm.com>
+In-Reply-To: <20250209-qcom_ipq_ppe-v3-3-453ea18d3271@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: VWSJRKLnN89otNBFJNP2HPrsLCEnK4X0
+X-Proofpoint-ORIG-GUID: VWSJRKLnN89otNBFJNP2HPrsLCEnK4X0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-10_01,2025-02-07_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
+ phishscore=0 spamscore=0 malwarescore=0 impostorscore=0 lowpriorityscore=0
+ clxscore=1011 priorityscore=1501 bulkscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
+ definitions=main-2502100016
 
-On 2/9/25 20:37, Gal Pressman wrote:
-> Hi Ilya, thanks for the review.
+
+
+On 2/9/2025 10:29 PM, Luo Jie wrote:
+> The PPE (Packet Process Engine) hardware block is available
+> on Qualcomm IPQ SoC that support PPE architecture, such as
+> IPQ9574.
 > 
-> On 09/02/2025 18:21, Ilya Maximets wrote:
->> On 2/9/25 11:18, Gal Pressman via dev wrote:
->>> Remove the hidden assumption that options are allocated at the end of
->>> the struct, and teach the compiler about them using a flexible array.
->>>
->>> With this, we can revert the unsafe_memcpy() call we have in
->>> tun_dst_unclone() [1], and resolve the false field-spanning write
->>> warning caused by the memcpy() in ip_tunnel_info_opts_set().
->>>
->>> Note that this patch changes the layout of struct ip_tunnel_info since
->>> there is padding at the end of the struct.
->>> Before this, options would be written at 'info + 1' which is after the
->>> padding.
->>> After this patch, options are written right after 'mode' field (into the
->>> padding).
->>
->> This doesn't sound like a safe thing to do.  'info + 1' ensures that the
->> options are aligned the same way as the struct ip_tunnel_info itself.
+> The PPE in IPQ9574 includes six integrated ethernet MAC
+> (for 6 PPE ports), buffer management, queue management and
+> scheduler functions. The MACs can connect with the external
+> PHY or switch devices using the UNIPHY PCS block available
+> in the SoC.
 > 
-> What is special about the alignment of struct ip_tunnel_info? What are
-> you assuming it to be, and how is it related to whatever alignment the
-> options need?
-
-There is nothing special in it.  But the fact that there was no explicit
-alignment of the options before doesn't make them not actually aligned.
-
+> The PPE also includes various packet processing offload
+> capabilities such as L3 routing and L2 bridging, VLAN and
+> tunnel processing offload. It also includes Ethernet DMA
+> function for transferring packets between ARM cores and
+> PPE ethernet ports.
 > 
->> In many places in the code, the options are cast into a specific tunnel
->> options type that may require sufficient alignment.  And the alignment can
->> no longer be guaranteed once the options are put directly after the 'mode'.
+> This patch adds the base source files and Makefiles for
+> the PPE driver such as platform driver registration,
+> clock initialization, and PPE reset routines.
 > 
-> What guaranteed it was aligned before? A hidden assumption that a u64 is
-> hidden somewhere in ip_tunnel_info?
-
-I agree that it may break if the structure changed.  However, there are,
-in fact, __be64 fields in the structure that make the whole thing aligned
-and it's part of dst_metadata that by itself is also aligned, so any options
-in the tunnel info will be inherently aligned for 8-byte accesses.
-
-I didn't check the actual structure layout with this change, but it seems
-like the start of the options will be only 2-byte aligned, making them
-non-aligned for most types of accesses and likely causing problems after
-the cast.
-
-So, not saying that the current code is good, but it's implicitly doing the
-right thing.  We should make that more explicit and add some guarantees that
-the alignment will not break, but we should not break the alignment itself.
-
+> Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
+> ---
+>   drivers/net/ethernet/qualcomm/Kconfig      |  15 ++
+>   drivers/net/ethernet/qualcomm/Makefile     |   1 +
+>   drivers/net/ethernet/qualcomm/ppe/Makefile |   7 +
+>   drivers/net/ethernet/qualcomm/ppe/ppe.c    | 218 +++++++++++++++++++++++++++++
+>   drivers/net/ethernet/qualcomm/ppe/ppe.h    |  36 +++++
+>   5 files changed, 277 insertions(+)
 > 
->> May cause crashes on some architectures as well as performance impact on
->> others.
->>
->> Should the alignment attribute be also added to the field?
+> diff --git a/drivers/net/ethernet/qualcomm/Kconfig b/drivers/net/ethernet/qualcomm/Kconfig
+> index 9210ff360fdc..59931c4edbeb 100644
+> --- a/drivers/net/ethernet/qualcomm/Kconfig
+> +++ b/drivers/net/ethernet/qualcomm/Kconfig
+> @@ -61,6 +61,21 @@ config QCOM_EMAC
+>   	  low power, Receive-Side Scaling (RSS), and IEEE 1588-2008
+>   	  Precision Clock Synchronization Protocol.
+>   
+> +config QCOM_PPE
+> +	tristate "Qualcomm Technologies, Inc. PPE Ethernet support"
+> +	depends on HAS_IOMEM && OF
+> +	depends on COMMON_CLK
+> +	select REGMAP_MMIO
+> +	help
+> +	  This driver supports the Qualcomm Technologies, Inc. packet
+> +	  process engine (PPE) available with IPQ SoC. The PPE includes
+> +	  the ethernet MACs, Ethernet DMA (EDMA) and switch core that
+> +	  supports L3 flow offload, L2 switch function, RSS and tunnel
+> +	  offload.
+> +
+> +	  To compile this driver as a module, choose M here. The module
+> +	  will be called qcom-ppe.
+> +
+>   source "drivers/net/ethernet/qualcomm/rmnet/Kconfig"
+>   
+>   endif # NET_VENDOR_QUALCOMM
+> diff --git a/drivers/net/ethernet/qualcomm/Makefile b/drivers/net/ethernet/qualcomm/Makefile
+> index 9250976dd884..166a59aea363 100644
+> --- a/drivers/net/ethernet/qualcomm/Makefile
+> +++ b/drivers/net/ethernet/qualcomm/Makefile
+> @@ -11,4 +11,5 @@ qcauart-objs := qca_uart.o
+>   
+>   obj-y += emac/
+>   
+> +obj-$(CONFIG_QCOM_PPE) += ppe/
+>   obj-$(CONFIG_RMNET) += rmnet/
+> diff --git a/drivers/net/ethernet/qualcomm/ppe/Makefile b/drivers/net/ethernet/qualcomm/ppe/Makefile
+> new file mode 100644
+> index 000000000000..63d50d3b4f2e
+> --- /dev/null
+> +++ b/drivers/net/ethernet/qualcomm/ppe/Makefile
+> @@ -0,0 +1,7 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +#
+> +# Makefile for the device driver of PPE (Packet Process Engine) in IPQ SoC
+> +#
+> +
+> +obj-$(CONFIG_QCOM_PPE) += qcom-ppe.o
+> +qcom-ppe-objs := ppe.o
+> diff --git a/drivers/net/ethernet/qualcomm/ppe/ppe.c b/drivers/net/ethernet/qualcomm/ppe/ppe.c
+> new file mode 100644
+> index 000000000000..40da7d240594
+> --- /dev/null
+> +++ b/drivers/net/ethernet/qualcomm/ppe/ppe.c
+> @@ -0,0 +1,218 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
+> + */
+> +
+> +/* PPE platform device probe, DTSI parser and PPE clock initializations. */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/interconnect.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/reset.h>
+> +
+> +#include "ppe.h"
+> +
+> +#define PPE_PORT_MAX		8
+> +#define PPE_CLK_RATE		353000000
+> +
+> +/* ICC clocks for enabling PPE device. The avg_bw and peak_bw with value 0
+> + * will be updated by the clock rate of PPE.
+> + */
+> +static const struct icc_bulk_data ppe_icc_data[] = {
+> +	{
+> +		.name = "ppe",
+> +		.avg_bw = 0,
+> +		.peak_bw = 0,
+> +	},
+> +	{
+> +		.name = "ppe_cfg",
+> +		.avg_bw = 0,
+> +		.peak_bw = 0,
+> +	},
+> +	{
+> +		.name = "qos_gen",
+> +		.avg_bw = 6000,
+> +		.peak_bw = 6000,
+> +	},
+> +	{
+> +		.name = "timeout_ref",
+> +		.avg_bw = 6000,
+> +		.peak_bw = 6000,
+> +	},
+> +	{
+> +		.name = "nssnoc_memnoc",
+> +		.avg_bw = 533333,
+> +		.peak_bw = 533333,
+> +	},
+> +	{
+> +		.name = "memnoc_nssnoc",
+> +		.avg_bw = 533333,
+> +		.peak_bw = 533333,
+> +	},
+> +	{
+> +		.name = "memnoc_nssnoc_1",
+> +		.avg_bw = 533333,
+> +		.peak_bw = 533333,
+> +	},
+> +};
+> +
+> +static const struct regmap_range ppe_readable_ranges[] = {
+> +	regmap_reg_range(0x0, 0x1ff),		/* Global */
+> +	regmap_reg_range(0x400, 0x5ff),		/* LPI CSR */
+> +	regmap_reg_range(0x1000, 0x11ff),	/* GMAC0 */
+> +	regmap_reg_range(0x1200, 0x13ff),	/* GMAC1 */
+> +	regmap_reg_range(0x1400, 0x15ff),	/* GMAC2 */
+> +	regmap_reg_range(0x1600, 0x17ff),	/* GMAC3 */
+> +	regmap_reg_range(0x1800, 0x19ff),	/* GMAC4 */
+> +	regmap_reg_range(0x1a00, 0x1bff),	/* GMAC5 */
+> +	regmap_reg_range(0xb000, 0xefff),	/* PRX CSR */
+> +	regmap_reg_range(0xf000, 0x1efff),	/* IPE */
+> +	regmap_reg_range(0x20000, 0x5ffff),	/* PTX CSR */
+> +	regmap_reg_range(0x60000, 0x9ffff),	/* IPE L2 CSR */
+> +	regmap_reg_range(0xb0000, 0xeffff),	/* IPO CSR */
+> +	regmap_reg_range(0x100000, 0x17ffff),	/* IPE PC */
+> +	regmap_reg_range(0x180000, 0x1bffff),	/* PRE IPO CSR */
+> +	regmap_reg_range(0x1d0000, 0x1dffff),	/* Tunnel parser */
+> +	regmap_reg_range(0x1e0000, 0x1effff),	/* Ingress parse */
+> +	regmap_reg_range(0x200000, 0x2fffff),	/* IPE L3 */
+> +	regmap_reg_range(0x300000, 0x3fffff),	/* IPE tunnel */
+> +	regmap_reg_range(0x400000, 0x4fffff),	/* Scheduler */
+> +	regmap_reg_range(0x500000, 0x503fff),	/* XGMAC0 */
+> +	regmap_reg_range(0x504000, 0x507fff),	/* XGMAC1 */
+> +	regmap_reg_range(0x508000, 0x50bfff),	/* XGMAC2 */
+> +	regmap_reg_range(0x50c000, 0x50ffff),	/* XGMAC3 */
+> +	regmap_reg_range(0x510000, 0x513fff),	/* XGMAC4 */
+> +	regmap_reg_range(0x514000, 0x517fff),	/* XGMAC5 */
+> +	regmap_reg_range(0x600000, 0x6fffff),	/* BM */
+> +	regmap_reg_range(0x800000, 0x9fffff),	/* QM */
+> +	regmap_reg_range(0xb00000, 0xbef800),	/* EDMA */
+> +};
+> +
+> +static const struct regmap_access_table ppe_reg_table = {
+> +	.yes_ranges = ppe_readable_ranges,
+> +	.n_yes_ranges = ARRAY_SIZE(ppe_readable_ranges),
+> +};
+> +
+> +static const struct regmap_config regmap_config_ipq9574 = {
+> +	.reg_bits = 32,
+> +	.reg_stride = 4,
+> +	.val_bits = 32,
+> +	.rd_table = &ppe_reg_table,
+> +	.wr_table = &ppe_reg_table,
+> +	.max_register = 0xbef800,
+> +	.fast_io = true,
+> +};
+> +
+> +static int ppe_clock_init_and_reset(struct ppe_device *ppe_dev)
+> +{
+> +	unsigned long ppe_rate = ppe_dev->clk_rate;
+> +	struct device *dev = ppe_dev->dev;
+> +	struct reset_control *rstc;
+> +	struct clk_bulk_data *clks;
+> +	struct clk *clk;
+> +	int ret, i;
+> +
+> +	for (i = 0; i < ppe_dev->num_icc_paths; i++) {
+> +		ppe_dev->icc_paths[i].name = ppe_icc_data[i].name;
+> +		ppe_dev->icc_paths[i].avg_bw = ppe_icc_data[i].avg_bw ? :
+> +					       Bps_to_icc(ppe_rate);
+it's ppe_dev->icc_paths[i].avg_bw = ppe_icc_data[i].avg_bw ? 
+ppe_icc_data[i].avg_bw : Bps_to_icc(ppe_rate);  ?
+
+
+> +		ppe_dev->icc_paths[i].peak_bw = ppe_icc_data[i].peak_bw ? :
+> +						Bps_to_icc(ppe_rate);
+Same with previous one?
+
+> +	}
+> +
+> +	ret = devm_of_icc_bulk_get(dev, ppe_dev->num_icc_paths,
+> +				   ppe_dev->icc_paths);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = icc_bulk_set_bw(ppe_dev->num_icc_paths, ppe_dev->icc_paths);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* The PPE clocks have a common parent clock. Setting the clock
+Should be:
+/*
+  * The PPE clocks have a common parent clock. Setting the clock
+  * rate of "ppe" ensures the clock rate of all PPE clocks is
+  * configured to the same rate.
+  */
+
+BTW, it's better wrapped with ~75 characters per line.
+
+> +	 * rate of "ppe" ensures the clock rate of all PPE clocks is
+> +	 * configured to the same rate.
+> +	 */
+> +	clk = devm_clk_get(dev, "ppe");
+> +	if (IS_ERR(clk))
+> +		return PTR_ERR(clk);
+> +
+> +	ret = clk_set_rate(clk, ppe_rate);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = devm_clk_bulk_get_all_enabled(dev, &clks);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	/* Reset the PPE. */
+> +	rstc = devm_reset_control_get_exclusive(dev, NULL);
+> +	if (IS_ERR(rstc))
+> +		return PTR_ERR(rstc);
+> +
+> +	ret = reset_control_assert(rstc);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* The delay 10 ms of assert is necessary for resetting PPE. */
+> +	usleep_range(10000, 11000);
+> +
+> +	return reset_control_deassert(rstc);
+> +}
+> +
+> +static int qcom_ppe_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct ppe_device *ppe_dev;
+> +	void __iomem *base;
+> +	int ret, num_icc;
+I think it's better with:
+	int num_icc = ARRAY_SIZE(ppe_icc_data);
+
+> +
+> +	num_icc = ARRAY_SIZE(ppe_icc_data);
+> +	ppe_dev = devm_kzalloc(dev, struct_size(ppe_dev, icc_paths, num_icc),
+> +			       GFP_KERNEL);
+> +	if (!ppe_dev)
+> +		return -ENOMEM;
+> +
+> +	base = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(base))
+> +		return dev_err_probe(dev, PTR_ERR(base), "PPE ioremap failed\n");
+> +
+> +	ppe_dev->regmap = devm_regmap_init_mmio(dev, base, &regmap_config_ipq9574);
+> +	if (IS_ERR(ppe_dev->regmap))
+> +		return dev_err_probe(dev, PTR_ERR(ppe_dev->regmap),
+> +				     "PPE initialize regmap failed\n");
+> +	ppe_dev->dev = dev;
+> +	ppe_dev->clk_rate = PPE_CLK_RATE;
+> +	ppe_dev->num_ports = PPE_PORT_MAX;
+> +	ppe_dev->num_icc_paths = num_icc;
+> +
+> +	ret = ppe_clock_init_and_reset(ppe_dev);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "PPE clock config failed\n");
+> +
+> +	platform_set_drvdata(pdev, ppe_dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id qcom_ppe_of_match[] = {
+> +	{ .compatible = "qcom,ipq9574-ppe" },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, qcom_ppe_of_match);
+> +
+> +static struct platform_driver qcom_ppe_driver = {
+> +	.driver = {
+> +		.name = "qcom_ppe",
+> +		.of_match_table = qcom_ppe_of_match,
+> +	},
+> +	.probe	= qcom_ppe_probe,
+> +};
+> +module_platform_driver(qcom_ppe_driver);
+> +
+> +MODULE_LICENSE("GPL");
+> +MODULE_DESCRIPTION("Qualcomm Technologies, Inc. IPQ PPE driver");
+> diff --git a/drivers/net/ethernet/qualcomm/ppe/ppe.h b/drivers/net/ethernet/qualcomm/ppe/ppe.h
+> new file mode 100644
+> index 000000000000..cc6767b7c2b8
+> --- /dev/null
+> +++ b/drivers/net/ethernet/qualcomm/ppe/ppe.h
+> @@ -0,0 +1,36 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only
+> + *
+> + * Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
+> + */
+> +
+> +#ifndef __PPE_H__
+> +#define __PPE_H__
+> +
+> +#include <linux/compiler.h>
+> +#include <linux/interconnect.h>
+> +
+> +struct device;
+#include <linux/device.h> ?
+
+> +struct regmap;
+Same with previous one, include it's header file?
+
+> +
+> +/**
+> + * struct ppe_device - PPE device private data.
+> + * @dev: PPE device structure.
+> + * @regmap: PPE register map.
+> + * @clk_rate: PPE clock rate.
+> + * @num_ports: Number of PPE ports.
+> + * @num_icc_paths: Number of interconnect paths.
+> + * @icc_paths: Interconnect path array.
+> + *
+> + * PPE device is the instance of PPE hardware, which is used to
+> + * configure PPE packet process modules such as BM (buffer management),
+> + * QM (queue management), and scheduler.
+> + */
+> +struct ppe_device {
+> +	struct device *dev;
+> +	struct regmap *regmap;
+> +	unsigned long clk_rate;
+> +	unsigned int num_ports;
+> +	unsigned int num_icc_paths;
+> +	struct icc_bulk_data icc_paths[] __counted_by(num_icc_paths);
+> +};
+> +#endif
 > 
-> Align to what?
-> To the first field of every potential options type? To eight bytes?
 
-Ideally we would have a proper union with all the potential option types
-instead of this hacky construct.  But if that's not the the way to go, then
-8 bytes may indeed be the way, as it is the maximum guaranteed alignment
-for allocations and the current alignment of the structure.
+Thanks,
+Jie
 
-But I'll leave this for others to weigh in.
-
-Best regards, Ilya Maximets.
