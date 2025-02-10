@@ -1,145 +1,150 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DBB224E4B7
-	for <linux-hardening@vger.kernel.org>; Mon, 10 Feb 2025 22:09:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDD7A26460A;
+	Mon, 10 Feb 2025 22:14:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739225377; cv=none; b=H4wQre9l8Tqhwuxkw7g+RotpDYM0VEiBw7FQsNCmEPFx1k3nEtBgVCt3zjc6vIjeRK2FZ5RhpOBAhJf8bE42vT+3vQAXgxIOjO6gJiOwFG93TyKBfBnIF/VujxPh5BT+hFLUkuu1LQkX5e8MuV0nixwu3X0zQuDJ9SmXVQr6WFY=
+	t=1739225675; cv=none; b=FbWwICmwKRRKA7Jmd0UA9eNMmXOSlOTP13R3Y3vJjTjCouwA4UKbhV6YzPiXC6Fqndi4r68ks3sYtL3lVDRo7xlmJ5bkJj0k5cXLzWH5ieV6G68N9zA8HaIsoKpxHt/6TFlgcnpBBJ/Mwfgl5QuJo07MTYlpMJkEluoVvDaGIvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739225377; c=relaxed/simple;
-	bh=44AOn8KPG/5b/gwXWVMZM4o0cSu0C5gCOO/mytEsVzc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=L6Nfu8VSCAlVE4W7gyi2cIVys0tfzsAr9MsL9DQgIF4J6EbULm12F9oZYXJQTqqi/2VZis6AFUXEhbPfZPV0z8C/8x54UV2TBG2vIaA1rNka2xYajvW1synGqxiY9NdUJPUAC/vuQlGsfik/p7dFM4VHDizLxG4HemJz1QfRsDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Er4k8Jgg; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1739225675; c=relaxed/simple;
+	bh=wAlco3KgE3b5Zm2KxeQSUCDAHvlWIRWuWCxaZuyhKIA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=o/O0PzvduXHusGhsOk6OQN46nsQY50bwxoG9EIdADRt1L9wzyDLHI7slFCJ/HKCIAwHabz6J5QV60QxOJqvpmOAlI7hHR90c0QFRdQaWyLVXKu1dk2PIVSLNfaQT9O6DVoD6BmlYtHop5+UoEnaZ5vq/Qp/lXXYqSO8qJPez2n4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=bKgYrG2O; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Er4k8Jgg"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5de636e6937so2996a12.0
-        for <linux-hardening@vger.kernel.org>; Mon, 10 Feb 2025 14:09:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739225374; x=1739830174; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=44AOn8KPG/5b/gwXWVMZM4o0cSu0C5gCOO/mytEsVzc=;
-        b=Er4k8Jggi+SM4CnJwm27bFFKeQkowgsaqOyOh89teRf+uRTV8W9l50Gr/9vDaBFO2l
-         DdtALmmisHwzd0PONwPMwil4vpdlJoTeTDFTI3ixQL7x7X8vLAV4839xH0GVspld/V+6
-         96JBHWoYyIJDLDlzGZC/6SyFOwuKXU6qjZY/YzEQ8WeXnGJ1AsmfW2qXHUaA2we5g0v/
-         ArIgVC/8Sq4RykAHj7LkOYAzsNPoLcj/bsq01O5TmO1a6pxI+7SI8q9/zDIrXXSR8D6Y
-         AZAXikH7tZA/LJrwUl9A5DHiVLl+THQrcU87unLFsk16627Gmr4dY3LrCGoj8FQzh2mc
-         KLnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739225374; x=1739830174;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=44AOn8KPG/5b/gwXWVMZM4o0cSu0C5gCOO/mytEsVzc=;
-        b=DIPVaAV3lI/sXgrFB5unP8nn9kGuV6jSUZQ4WHhuttAEyVwJDP8Thg+E5XDVq7jaxy
-         slJcp7dGDyX/hQJUt+JbwBv8lsuFRU+N2lXomzIQh+mn5I6hUFGtztwerV/c3N29b2Yp
-         9Kf6SASBzVmYZUiaiMnEU7gu92oLD4wGNsT6ks2NDWv9f5rZpdJDo7eVBUulACu/7Nax
-         Qw3MKxU83a5qe9l+7zbTmy8PDbu5eer9e3ZSdaDUN2tuF1Gr41Ywgb7CNuaY1nLOSkq6
-         ggPs5zRZB6mjN3pDgBeYUo9YerMACnWHbJGAjIRLTv9OfhZKhq4LGFImfoKZlafapw7r
-         L65Q==
-X-Forwarded-Encrypted: i=1; AJvYcCW3Anp1uvhzFT52lm1vh51rL+bvwXCiezj43jG8bZWSX6Kmrx6d+LDxDAMmlq/hxRkMGjuVP+gwm+kWumcsEfI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+mDlkTm+k7K4I6a0yj45UTC5/XNX4jrH+eXLWtuNRDlS1snPv
-	y2Sxh9BZRfaQw4NRf1o3AlZXJM8dAsGfJv1s1+Ik0IwLUu2dF8QVqhyv72WKHDfbsKJsiEb4xP4
-	6H6fizbXYjQr1Yqdr/lHtPw4o7CubDMoADFtR
-X-Gm-Gg: ASbGncuShDIdoKFHgU3GLMYEx4war4N7uV2SUPLamjEGnBMZnJ501V5AiBFekZldHu3
-	aJ547OHpRyhtYE/2iiz4KMwawIUJWJ7mFvu0u4m+VSqJgJl21M6FttE7ot+VMR4IgaOqmeghPRL
-	/tSMoHzE2isNbEDhjTQIK/g7E=
-X-Google-Smtp-Source: AGHT+IG6JmQxBrqAHiHQy9r7fd0aAn9Heiw/iaJpJbhcsh707Pq8kG+sl2h6STthD8Ujnt3Wdn5OEmJdDMQ5PMlBL9s=
-X-Received: by 2002:a50:aa93:0:b0:5dc:d08e:e128 with SMTP id
- 4fb4d7f45d1cf-5dea05e7838mr1520a12.5.1739225373121; Mon, 10 Feb 2025 14:09:33
- -0800 (PST)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="bKgYrG2O"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51AFWGNv010537;
+	Mon, 10 Feb 2025 22:14:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	vY50FlbYh4+8a/VdeObjeHxe9rwAB0wgSpExAfUGU9c=; b=bKgYrG2O14NkcbVZ
+	cGs/N0lLBDOJLBYcof8s/qxsUf1UpBGHpGGzfQEF+LFCdZIbZXQQ764YyGJoSx8E
+	n67QtCKeY8HVZgQPARVUQgUU0sk9YC+aOetSTfSh5BHIhHdvoCn7ysXEm1BH+3Bv
+	OwQWran9q1WadH1zhCv2LNtt61VZnansqLLHeXWBWJF/tAPGn7jKE+G8adTJU6kd
+	s52HcoX2UoAcGEZBnpPdMVTsXh0Mj0I3zlVzlbc6x4gRk4J57fHIJG7G58YUa4fY
+	bpT87AZVOoKSmvYVcXzUofi+NucLIqg15dAGS9Q2sSIkCfXyQL4rWdFPQMAdHjnG
+	/P/z1w==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44qcs5actr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Feb 2025 22:14:17 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51AMEGmp031662
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Feb 2025 22:14:16 GMT
+Received: from [10.71.110.136] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 10 Feb
+ 2025 14:14:15 -0800
+Message-ID: <8e40c1bf-6da7-46b1-925c-53d1fa25f3ce@quicinc.com>
+Date: Mon, 10 Feb 2025 14:14:14 -0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250114175143.81438-1-vschneid@redhat.com> <20250114175143.81438-30-vschneid@redhat.com>
- <CAG48ez1Mh+DOy0ysOo7Qioxh1W7xWQyK9CLGNU9TGOsLXbg=gQ@mail.gmail.com>
- <xhsmh34hhh37q.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <CAG48ez3H8OVP1GxBLdmFgusvT1gQhwu2SiXbgi8T9uuCYVK52w@mail.gmail.com> <xhsmh5xlhk5p2.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
-In-Reply-To: <xhsmh5xlhk5p2.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
-From: Jann Horn <jannh@google.com>
-Date: Mon, 10 Feb 2025 23:08:55 +0100
-X-Gm-Features: AWEUYZmtdNVDV_xq3vvo5TVQ7aaS79EFzdycTCfl72XGpztchND9QHjN9zcxWNo
-Message-ID: <CAG48ez1EAATYcX520Nnw=P8XtUDSr5pe+qGH1YVNk3xN2LE05g@mail.gmail.com>
-Subject: Re: [PATCH v4 29/30] x86/mm, mm/vmalloc: Defer flush_tlb_kernel_range()
- targeting NOHZ_FULL CPUs
-To: Valentin Schneider <vschneid@redhat.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org, 
-	virtualization@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org, 
-	linux-perf-users@vger.kernel.org, xen-devel@lists.xenproject.org, 
-	kvm@vger.kernel.org, linux-arch@vger.kernel.org, rcu@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-mm@kvack.org, 
-	linux-kselftest@vger.kernel.org, bpf@vger.kernel.org, 
-	bcm-kernel-feedback-list@broadcom.com, Juergen Gross <jgross@suse.com>, 
-	Ajay Kaher <ajay.kaher@broadcom.com>, Alexey Makhalov <alexey.amakhalov@broadcom.com>, 
-	Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	"Liang, Kan" <kan.liang@linux.intel.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, 
-	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Frederic Weisbecker <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, 
-	Jason Baron <jbaron@akamai.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Ard Biesheuvel <ardb@kernel.org>, Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, 
-	Joel Fernandes <joel@joelfernandes.org>, Josh Triplett <josh@joshtriplett.org>, 
-	Boqun Feng <boqun.feng@gmail.com>, Uladzislau Rezki <urezki@gmail.com>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>, 
-	Zqiang <qiang.zhang1211@gmail.com>, Juri Lelli <juri.lelli@redhat.com>, 
-	Clark Williams <williams@redhat.com>, Yair Podemsky <ypodemsk@redhat.com>, 
-	Tomas Glozar <tglozar@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Ben Segall <bsegall@google.com>, 
-	Mel Gorman <mgorman@suse.de>, Kees Cook <kees@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Christoph Hellwig <hch@infradead.org>, 
-	Shuah Khan <shuah@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	"Mike Rapoport (Microsoft)" <rppt@kernel.org>, Samuel Holland <samuel.holland@sifive.com>, Rong Xu <xur@google.com>, 
-	Nicolas Saenz Julienne <nsaenzju@redhat.com>, Geert Uytterhoeven <geert@linux-m68k.org>, 
-	Yosry Ahmed <yosryahmed@google.com>, 
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, 
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Jinghao Jia <jinghao7@illinois.edu>, 
-	Luis Chamberlain <mcgrof@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, 
-	Tiezhu Yang <yangtiezhu@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] drm/msm/dpu: Fix uninitialized variable
+To: Ethan Carter Edwards <ethan@ethancedwards.com>,
+        Rob Clark
+	<robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        David Airlie
+	<airlied@gmail.com>
+CC: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Marijn Suijten
+	<marijn.suijten@somainline.org>,
+        Simona Vetter <simona@ffwll.ch>, <linux-arm-msm@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <freedreno@lists.freedesktop.org>,
+        <linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>
+References: <20250209-dpu-v2-1-114dfd4ebefd@ethancedwards.com>
+Content-Language: en-US
+From: Abhinav Kumar <quic_abhinavk@quicinc.com>
+In-Reply-To: <20250209-dpu-v2-1-114dfd4ebefd@ethancedwards.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: 6dQVsI2Oq7WzMD3NmrriezMEIldBAUks
+X-Proofpoint-GUID: 6dQVsI2Oq7WzMD3NmrriezMEIldBAUks
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-10_11,2025-02-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
+ mlxlogscore=999 phishscore=0 lowpriorityscore=0 spamscore=0 malwarescore=0
+ adultscore=0 clxscore=1011 mlxscore=0 priorityscore=1501 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
+ definitions=main-2502100175
 
-On Mon, Feb 10, 2025 at 7:36=E2=80=AFPM Valentin Schneider <vschneid@redhat=
-.com> wrote:
-> What if isolated CPUs unconditionally did a TLBi as late as possible in
-> the stack right before returning to userspace? This would mean that upon
-> re-entering the kernel, an isolated CPU's TLB wouldn't contain any kernel
-> range translation - with the exception of whatever lies between the
-> last-minute flush and the actual userspace entry, which should be feasibl=
-e
-> to vet? Then AFAICT there wouldn't be any work/flush to defer, the IPI
-> could be entirely silenced if it targets an isolated CPU.
 
-Two issues with that:
 
-1. I think the "Common not Private" feature Will Deacon referred to is
-incompatible with this idea:
-<https://developer.arm.com/documentation/101811/0104/Address-spaces/Common-=
-not-Private>
-says "When the CnP bit is set, the software promises to use the ASIDs
-and VMIDs in the same way on all processors, which allows the TLB
-entries that are created by one processor to be used by another"
+On 2/9/2025 7:51 PM, Ethan Carter Edwards wrote:
+> There is a possibility for an uninitialized *ret* variable to be
+> returned in some code paths.
+> 
+> Fix this by initializing *ret* to 0.
+> 
+> Addresses-Coverity-ID: 1642546 ("Uninitialized scalar variable")
+> Fixes: 774bcfb731765d ("drm/msm/dpu: add support for virtual planes")
+> Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
+> ---
+> Changes in v2:
+> - Return explicit 0 when no error occurs
+> - Add hardening mailing lists
+> - Link to v1: https://lore.kernel.org/r/20250209-dpu-v1-1-0db666884f70@ethancedwards.com
+> ---
+>   drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c | 7 +++----
+>   1 file changed, 3 insertions(+), 4 deletions(-)
+> 
 
-2. It's wrong to assume that TLB entries are only populated for
-addresses you access - thanks to speculative execution, you have to
-assume that the CPU might be populating random TLB entries all over
-the place.
+Thanks for your patch, this was addressed with
+
+https://patchwork.freedesktop.org/patch/631567/ but since this is better 
+I am fine with this, will pick this one up
+
+Reviewed-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
+
+
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+> index 098abc2c0003cde90ce6219c97ee18fa055a92a5..af3e541f60c303eb5212524e877129359b5ca98c 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+> @@ -1164,7 +1164,6 @@ int dpu_assign_plane_resources(struct dpu_global_state *global_state,
+>   			       unsigned int num_planes)
+>   {
+>   	unsigned int i;
+> -	int ret;
+>   
+>   	for (i = 0; i < num_planes; i++) {
+>   		struct drm_plane_state *plane_state = states[i];
+> @@ -1173,13 +1172,13 @@ int dpu_assign_plane_resources(struct dpu_global_state *global_state,
+>   		    !plane_state->visible)
+>   			continue;
+>   
+> -		ret = dpu_plane_virtual_assign_resources(crtc, global_state,
+> +		int ret = dpu_plane_virtual_assign_resources(crtc, global_state,
+>   							 state, plane_state);
+>   		if (ret)
+> -			break;
+> +			return ret;
+>   	}
+>   
+> -	return ret;
+> +	return 0;
+>   }
+>   
+>   static void dpu_plane_flush_csc(struct dpu_plane *pdpu, struct dpu_sw_pipe *pipe)
+> 
+> ---
+> base-commit: a64dcfb451e254085a7daee5fe51bf22959d52d3
+> change-id: 20250209-dpu-c3fac78fc617
+> 
+> Best regards,
+
