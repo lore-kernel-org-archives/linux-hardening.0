@@ -1,237 +1,305 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EF581EF087
-	for <linux-hardening@vger.kernel.org>; Mon, 10 Feb 2025 18:36:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739212596; cv=none; b=pUDyAg2Uz2+KGYgeRRVuBX9GLGxQeDwzjdG7o6SxRnvcMuXXJttrsKYFMwdd+cgvL8f+f0yUNw0Yi1V9JTuMd3gPP+dqz2dcxofDsF1YaSGXmduPbyZXXpg37iUwtvy0FZSbfvfEQktmwzQwADhyziP8t84DVClum6Ur7RkA17Q=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739212596; c=relaxed/simple;
-	bh=pqE0jHaMjhCJShfdzgjb9zITCwMN+BQSAsP6fR/sVdA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=i9TnLc/iYilkMx/8Gpo4lBrVwCwpPqhXD0cGHKOkKyHSSKw+bfI5ApkrlpjGtQedaDw2bAGw6AMgc7rOtRff01bj36epaJhV3RjfNrFDQrH6IawozQV7GVA+cuOolwSLW9IgYDXibzpwx0l4l2+eGdULShkndnA9oNpPE+txd/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Vo5WL7Fh; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DA5A25C6E0;
+	Mon, 10 Feb 2025 19:48:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739216936; cv=fail; b=fNd73y1qNKspYaQNuICrM07Cpmep2w9LzZmvVwhIjW85ms6iV4ZeIGiijZPPiW+UFRqobuuYv7a1n5ZBvzw/mIdCXMamTTYV9I7QWpFiRWfCn+RmmS1E+GUbSpL1+8GeuUL8xbkbMI+Qjksl9lny9aLuQ8LVr6bZ9CStOVvwYKY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739216936; c=relaxed/simple;
+	bh=c9uDye5zGgWJoGnuDkoJfAELi6FvJTByyZmDrbaVTEg=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=g+AewIAYmQ5w/X454dM0yC2JuAJ2HNMRQ+BrCRG+4R/7qHeXAjgRdaYq13TgQTlcV7RlnjdsSGz43MtKi2LqtA4I+VpXf8LjMVpFBCebhvzg83HeCEALiX6SgNNZhRPKy3ZRzfmjA8s3SpMoTUwaXFvEbkz8p8gaLHKFa2IzkCo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=BlUggtZu; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=NYPTop6N; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Vo5WL7Fh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739212593;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pqE0jHaMjhCJShfdzgjb9zITCwMN+BQSAsP6fR/sVdA=;
-	b=Vo5WL7FhIYD9BEr9KoCwI0Lkp0COUKWv730W7H6ipIjPHYkIMzfPQLGw9mU7NinysycPWa
-	+A+/XrwEzn1m6D1g6y2M0WZy4uh84VYodKO0fJY7K4tHjhIlwS0bX5n4iTwviN5EiY4S2D
-	djx/5oFeRUlC3f7RpfRIExxygG3UQdc=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-612-gVkgGkR2PUWI1zRV3ItYzg-1; Mon, 10 Feb 2025 13:36:31 -0500
-X-MC-Unique: gVkgGkR2PUWI1zRV3ItYzg-1
-X-Mimecast-MFC-AGG-ID: gVkgGkR2PUWI1zRV3ItYzg
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-38de0923dbaso526308f8f.0
-        for <linux-hardening@vger.kernel.org>; Mon, 10 Feb 2025 10:36:31 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739212590; x=1739817390;
-        h=content-transfer-encoding:mime-version:message-id:date:references
-         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fiJBK34xYsYFUmPZtAh8Dtmq/EliyHBgVCGizBc5us0=;
-        b=Dr2B03WqXeQ4/qzQgMUtt+AT+gtGhOZgeTvLlrsngJooBIEebSSxHqjq4lfO1kKcdI
-         skJ0phlQo5U2nY91x5RWK009z5hLR/aV7/OIfkmv6S8H4q6L8pmPs2/tj6U3+D7e9Bhu
-         oDbqs9p4lusZNMGEjrAa39OnT2TVBs3N97clmlGzb2U0b1DzOLS29HCm3ppnBfpMAr+M
-         n+kewC/FaQP7IXg8yvrECgv7soJdaHz999Qy7CHBjGqcXr9T3a5vThYCltAK3JWHfmc8
-         Cmqszr1rg+D5NQWoLmLTs+cnM/RQP2ZvSwDhiLaZkg1KTzo0s6fQEMsvwtaedm0AWOjB
-         y7mw==
-X-Forwarded-Encrypted: i=1; AJvYcCUTKpqaTV3/PZSQ4G8pBmi+c2nYCdNuvtxrIPdHoQO+lFyp7Zl9AOZwBRhtfhKIcJBCL5juHQuluUcrx8YjCT4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwSqmxkNC9sX0+fbbSPJluO/jluKpyiU/KuD5a6gb5iQdqhX5rA
-	Xul2dME0THeLowTXLoOqtWYhXIP6lqHFbmrPRrsLgL2/np41jdaFJxLQ9XL9Q2URCO1ZJvNKpbs
-	liBpq4FniNCk0OxNKhc8Z0Xn8U+fTwF+2Gh5lXuyiyI/NhUmvM5UyuzpoNQiab+Qp7w==
-X-Gm-Gg: ASbGncsfb9E8/cQdDWqUBT07U1G1467tp0IMYzdXfsE3DJu8pHFK1Dx+ww+kDZSS2kF
-	t/933kUqs4Bp6FYgSMx55Ofr3g0vuFIAbN1e2P0kFoOJzGPGTsDlUSyzUF8zCK3tBiAgrS9deUp
-	/jJxJUJoFoBuVoE1HD5aKxN4I/tdcsqN/S5TQBZVMbDN8GeLxve6HQJUl9QAYejinFLScUhXb/+
-	DpL2usGsyYH6cd7JB37vXQirJSqNokmsyOJAgrt7bZl+ZtftujRLHzRU0qragNnXxZJCJ1KODA8
-	AGSi97HWc7fc12PfQT7khG3d/8s7xZZOeuh8kCW+rfOMtN4rhPjBrsmEKKW/jQLWZg==
-X-Received: by 2002:a5d:47ac:0:b0:38d:db7b:5d7d with SMTP id ffacd0b85a97d-38de419476bmr505864f8f.32.1739212590284;
-        Mon, 10 Feb 2025 10:36:30 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGWifeCshW6jETL9TuYLjadqG7dtdSXfyo+9LdDhlWGx2V5vqBUb9lSHZiG4U0YoCHaPoMeeg==
-X-Received: by 2002:a5d:47ac:0:b0:38d:db7b:5d7d with SMTP id ffacd0b85a97d-38de419476bmr505766f8f.32.1739212589672;
-        Mon, 10 Feb 2025 10:36:29 -0800 (PST)
-Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4394328fcb8sm43783895e9.32.2025.02.10.10.36.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 10:36:29 -0800 (PST)
-From: Valentin Schneider <vschneid@redhat.com>
-To: Jann Horn <jannh@google.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
- virtualization@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
- linux-perf-users@vger.kernel.org, xen-devel@lists.xenproject.org,
- kvm@vger.kernel.org, linux-arch@vger.kernel.org, rcu@vger.kernel.org,
- linux-hardening@vger.kernel.org, linux-mm@kvack.org,
- linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
- bcm-kernel-feedback-list@broadcom.com, Juergen Gross <jgross@suse.com>,
- Ajay Kaher <ajay.kaher@broadcom.com>, Alexey Makhalov
- <alexey.amakhalov@broadcom.com>, Russell King <linux@armlinux.org.uk>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Paul
- Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
- Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
- Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
- Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>, Boris Ostrovsky
- <boris.ostrovsky@oracle.com>, Josh Poimboeuf <jpoimboe@kernel.org>, Pawan
- Gupta <pawan.kumar.gupta@linux.intel.com>, Sean Christopherson
- <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, Andy Lutomirski
- <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Frederic Weisbecker
- <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, Jason
- Baron <jbaron@akamai.com>, Steven Rostedt <rostedt@goodmis.org>, Ard
- Biesheuvel <ardb@kernel.org>, Neeraj Upadhyay
- <neeraj.upadhyay@kernel.org>, Joel Fernandes <joel@joelfernandes.org>,
- Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
- Uladzislau Rezki <urezki@gmail.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>,
- Zqiang <qiang.zhang1211@gmail.com>, Juri Lelli <juri.lelli@redhat.com>,
- Clark Williams <williams@redhat.com>, Yair Podemsky <ypodemsk@redhat.com>,
- Tomas Glozar <tglozar@redhat.com>, Vincent Guittot
- <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Kees Cook
- <kees@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Christoph
- Hellwig <hch@infradead.org>, Shuah Khan <shuah@kernel.org>, Sami Tolvanen
- <samitolvanen@google.com>, Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl
- <aliceryhl@google.com>, "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
- Samuel Holland <samuel.holland@sifive.com>, Rong Xu <xur@google.com>,
- Nicolas Saenz Julienne <nsaenzju@redhat.com>, Geert Uytterhoeven
- <geert@linux-m68k.org>, Yosry Ahmed <yosryahmed@google.com>, "Kirill A.
- Shutemov" <kirill.shutemov@linux.intel.com>, "Masami Hiramatsu (Google)"
- <mhiramat@kernel.org>, Jinghao Jia <jinghao7@illinois.edu>, Luis
- Chamberlain <mcgrof@kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
- Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: Re: [PATCH v4 29/30] x86/mm, mm/vmalloc: Defer
- flush_tlb_kernel_range() targeting NOHZ_FULL CPUs
-In-Reply-To: <CAG48ez3H8OVP1GxBLdmFgusvT1gQhwu2SiXbgi8T9uuCYVK52w@mail.gmail.com>
-References: <20250114175143.81438-1-vschneid@redhat.com>
- <20250114175143.81438-30-vschneid@redhat.com>
- <CAG48ez1Mh+DOy0ysOo7Qioxh1W7xWQyK9CLGNU9TGOsLXbg=gQ@mail.gmail.com>
- <xhsmh34hhh37q.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <CAG48ez3H8OVP1GxBLdmFgusvT1gQhwu2SiXbgi8T9uuCYVK52w@mail.gmail.com>
-Date: Mon, 10 Feb 2025 19:36:25 +0100
-Message-ID: <xhsmh5xlhk5p2.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="BlUggtZu";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="NYPTop6N"
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51AHMVrW000790;
+	Mon, 10 Feb 2025 19:48:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2023-11-20; bh=jkNvVYAc2NGwiAqVqTE0WmhzibA/RvEEb44YcyRcDlk=; b=
+	BlUggtZuuRGkjyUQyrn+1LK6kL1kux1Se+vxfpjjuNNZtQo6YJ5dRARQGACscevy
+	oc70mrTjCoJEjTHselzU6XUpmi2T0oQO1vbtzPla5S4lOh5DliIkj8rOsn0oK74m
+	JlPb3e8tQ82XosDQYB7hwhyKq4bj1Rcy8RtC99n/E5iF5NltBwjRvEuR3c0hM1dw
+	EnmOaXEY8LQn88WMkwaEYEK+7xDJVRYROds0mLIYJXgFcrE8n34lJPWJiXvQ0zK2
+	Hi2MwJSVivrMCDV1kZvhjzVvD6s7SvKFWu9panznHTt4fsEbvKGdgYJKxIvhw1Vw
+	z782ePjJe0dO85v08shuig==
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44p0q2bs0b-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 10 Feb 2025 19:48:45 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 51AIu9WT002402;
+	Mon, 10 Feb 2025 19:48:44 GMT
+Received: from nam02-dm3-obe.outbound.protection.outlook.com (mail-dm3nam02lp2042.outbound.protection.outlook.com [104.47.56.42])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 44nwqebux6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 10 Feb 2025 19:48:43 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=v5tB+XMmO6c51mLIj9Ko2WAC34PRhIJxXYt0Zdbqj82BXlCWbdLEGVH+RvqLvYX/nJkQiTLdlhlgRgSDb//cVFy18u9pQT3JO67hUoxUQKKxcwvNQaQPHJ/tnJ9aTEQiPqRRIcn5WzgRKOD4t7fthoqqSgrrVsuFTUfIC0lTb5CzxOzqbjaYFJY7ouQ3Yx8AVx6aY2vGllBfnEvo/FUkdVSb38ox5w5PjlR+q2StGotj1PTIU+cpZ+3gMhmigf7spDo1VRDTMl9iFBu37/AZQ6FlQf4n65bXg+INimlhBEOAHMncnthZ7G5uQK7jzzDxYXLGhLnztplq/tqcVdrw9g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=jkNvVYAc2NGwiAqVqTE0WmhzibA/RvEEb44YcyRcDlk=;
+ b=rJ4tiChZA3WsLrAzcpWt5BmO7NBlZGRT9EiztG4FEBH0/+yr1InwURGV4OlaTrgMNx08lF2ubPBTebple//mrTULUuCxc/KcNjdFmvmBGbeBW3TliS/DxT2Dv11kRGllls2p6VHPEULvZRKG+vopLH11Vlyh6tJlskusIBwGQL/JbbQFbzbdC9GXptzr+2WeOm6JIebjbHg8AO0J0lF3JM2fsUCp87QiG6Od94cGZ2OlwMOeZDrJpW4a2hvrxuHMQgU8WjS8lwwsua9BmVio5jnNwK+VyQWgEsain95r55JDfP5suBRi6UNsCZkaM9x/RiuC2d2NmL5RJisweUS65A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jkNvVYAc2NGwiAqVqTE0WmhzibA/RvEEb44YcyRcDlk=;
+ b=NYPTop6NGYWYb0wW/KjQXaAlDSVmqTL5FiK6C3RcWcumcsYDHaVwoHRVfGZwXamYifqeG2Mk+TUSQuN6ZSZN0g5nlZ2fGfblFpJDxZ4zgYPRoF5PkLluKvrCjvyNpybcE/oCq7fVxorkLk5ebXUvumJGYnZA1D8MHyWwwBVWUzc=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by IA0PR10MB7135.namprd10.prod.outlook.com (2603:10b6:208:401::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.19; Mon, 10 Feb
+ 2025 19:48:41 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90%6]) with mapi id 15.20.8422.015; Mon, 10 Feb 2025
+ 19:48:41 +0000
+Message-ID: <b16ac12f-166a-4d25-bf33-b1ccf6e0dac7@oracle.com>
+Date: Mon, 10 Feb 2025 14:48:39 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RESEND PATCH][next] fs: nfs: acl: Avoid
+ -Wflex-array-member-not-at-end warning
+To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org,
+        "Gustavo A. R. Silva"
+ <gustavoars@kernel.org>,
+        Dai Ngo <Dai.Ngo@oracle.com>, Jeff Layton <jlayton@kernel.org>,
+        Olga Kornievskaia <okorniev@redhat.com>, Tom Talpey <tom@talpey.com>,
+        Neil Brown <neilb@suse.de>
+References: <Z6GDiLZo5u4CqxBr@kspp>
+Content-Language: en-US
+From: Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <Z6GDiLZo5u4CqxBr@kspp>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: CH0P223CA0024.NAMP223.PROD.OUTLOOK.COM
+ (2603:10b6:610:116::12) To BN0PR10MB5128.namprd10.prod.outlook.com
+ (2603:10b6:408:117::24)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 4vXpLfDfnuvnXzA_co9CfFUuTj7WnF1lbDpDJnfz7dk_1739212591
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|IA0PR10MB7135:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5c7fee7a-1f0e-4638-49b0-08dd4a0bebba
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?RXg0cWpmREl1RVRrSXdBMmt2TmtOM0s0QnRFNTVEUTBqbHBlRS9EYzhsMW9k?=
+ =?utf-8?B?MUdON1Q4cVMyYitwTFF0OWtpYjNPUkxYcC9ldGFIQmpEWTFVWXJFd0MyN3d6?=
+ =?utf-8?B?NDVGZEdMbmJqckMwVzBGTVdtRGpWa1JoeEJTRXBzbGZ6SGJSVXEwRzMyY2Ri?=
+ =?utf-8?B?WEYxQUFCR0FoZTIzZ0lrbWdCRW9yYUhPYUJ6ampDZXdwdHdUT09rNnJ3b04w?=
+ =?utf-8?B?U3N3WHA2VnVXUElsNDYwZVpSWTBpQlVPMXRzZnJuTW9jbDFZK1Fwb0p5Nktp?=
+ =?utf-8?B?NVJWYjMzTS9BYk1rYUs1czVxTFBxbm82clc3ZEJIT3gxMXcrWUhTWml4WWla?=
+ =?utf-8?B?VVN1TmtTVm01cWxHeFhlTUhFd0tOVEREaTI0eDlGNHBlYzE5TkRya1laTS8w?=
+ =?utf-8?B?NVViSEdRRGNGNG1sNDRNNkcrbG1DQXU3VXJzZ2J6b3NtVFYvcldUc1RzQUNH?=
+ =?utf-8?B?bUZwWHp4Y1Iwd3ZSYzJIN0ZiS1dBZmpMbEduVURPNW5qYXJweXhlUjdGVktN?=
+ =?utf-8?B?Mi80dFBMNXNrQ0pSZnRNcDhtRFNrcTdJbXdGbkp2VThRZmwxOWswQmV5dm9U?=
+ =?utf-8?B?Si9jZUx1OW50WmxoNkxJelJuMXdOMkJDVjFVZzlrdjRnL2ZWVVc0ZXN5YWFj?=
+ =?utf-8?B?U0pjYVpyZUhERlNYRkkzb2tacTRwM3R2bHhIdVBFSVRMSVJjNE9YTlhSSjgw?=
+ =?utf-8?B?RHcyR1hLb3ZHaWhrWEI2R1ZIdHJGY3RadXdVQ0x4S0tmOWNyWjRQQXNmcnVr?=
+ =?utf-8?B?cUJoRTVHY1N6cUx3V2NhUys5RlRsbm5mSHJnbC9uM3FmcWtWcGtVdzkwRllv?=
+ =?utf-8?B?SmpKNCtkLzJSekMvVHcrNVI4bGYwMEVZNUVQdWZ4NkFGeldJQnljSUZkSWVw?=
+ =?utf-8?B?K1VpT1hrQW4zNEVXYXA5QU9ML1M3Zm5ucEJMLzBFM2R2eVBrVVpqZE5tdHEv?=
+ =?utf-8?B?R1Z0N3RkeFhsbnV3bndwc0lRYVlSaGJpWU9WUjlSK1pGeVYxbXpsaWtNMUlx?=
+ =?utf-8?B?OXZKUHNNOFBkckQ4a3lOZXJMZjJtYW8vNzVUT2kvb0tOMUhRcjlmZGJNTSt6?=
+ =?utf-8?B?TVRja2R5RkRQK05vdU55SzE5VlhEVlBQV3NNa0VXNTRSRThndENoaGxwSDFL?=
+ =?utf-8?B?bHFUaUhyYm1RMy96RWc1ZDhLdUhLQlZyZGxGVGN2N1lmNjBycEovSVR0MGEy?=
+ =?utf-8?B?QklqS1dZemNXbWpzZ3Z5bDJIRWY4eXk0WCtPYW1qZkxFQ0V3djVkZEc5dWhW?=
+ =?utf-8?B?QnF0Y0pJNHBGSCtkS3VYZ2lGbDNlMXY1RUlOQkg3U2tPV3JZdDN5bDhhR3N2?=
+ =?utf-8?B?U1Zhb1hobGVlQ0VIM3ZQUGZOK2hzbHVoMFBoSXFQSjBSdjQ3dER6ZTdaeFZ3?=
+ =?utf-8?B?SmJ0SmNER3hUM2twejhtRUhUamtheCsvak0zc1gzUUhPdUxadjV0TlY1UnhW?=
+ =?utf-8?B?MVpDQ3h2Tm1NMUxPZDNMZEF5ajZlWWlkZVlrOUgwOGcydHZtWUh3bng4aEVT?=
+ =?utf-8?B?b2hra2U2T0p2RzA0OVZicWpSL2oxTTAwRU5FajI1akZaaU54QW5ZSllacyti?=
+ =?utf-8?B?V1NzOWJxNHkybUJsNU5TUFdrT1NacFBUaExIWGJ3S0ZXdlNrUUN6MUUySjRu?=
+ =?utf-8?B?U0FjNnd2MkNrS0x3eEVoTjMvdXlFTjAyMWduWXV6bXhkcmVZckZhNVZ0d0pz?=
+ =?utf-8?B?cTZ1VkxCU0hxSnhJVjN5WDVoMXlyU2Y0RllDM1FLYkxVZHNhY1p5QjdtOVMw?=
+ =?utf-8?B?Sy8xcmVEWVpyRDN1TTZ5a2t1YmRkdDRCUmkzUzJZcWozYncwa1A4dzBHYURu?=
+ =?utf-8?B?VzJDdnhNS2VQT1NwQWJFa000Um9yMGJVOTd5MUg1S0NTNUFnQTJ1blZaRFBK?=
+ =?utf-8?Q?O8D4VYVzlBI4D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?T2FBSHc5M2dSU0IvM2FSOGNBR3JiMnFTak5DMUZKWGRNUG5lRm5lTmNOK1dR?=
+ =?utf-8?B?WEVRRy93VGtLL1ZKQnptRkJUaXAyZXJSZEhYcXBUWmRmSC8vMzUyTkxWRkVR?=
+ =?utf-8?B?WDY3WERzRVlvWnU0Sys2OFBmY3VqdU9GVGVBVnVac2lRTWY5M1p2a1VsNUtt?=
+ =?utf-8?B?cW4yWjlzeXZweUZQb1JMOTJWWjRKK05ROU9oVDJJemFBQUZLYnFxOXNtc2w3?=
+ =?utf-8?B?R2lZOXI2N0pLbzY5OWxMRW9QK2M1Uk9zZTZPaFpWdWhpcTNYMUVubFAxd2Vp?=
+ =?utf-8?B?NTk5SHZ4cktrMUFNMUcybHNrRVNRMllPUTRMeE0vYVY4THlKa1Z2VW5IZjd2?=
+ =?utf-8?B?NXhKNndqVUc5b0JNYUJpM2RCUzlHZWxKU2tDaUZkM3luNDVhaTBESzFSV2l5?=
+ =?utf-8?B?aWFtbnV6TWJMYmQzNWVYbnBnN2Y1WnJzSGM1b05OTElkK0x4a2phdWgwVG40?=
+ =?utf-8?B?V0Y2UjRQbmZxNG4vVjdNWVY3WGh2b3FMNHJzMVd1RjRONndkUDlxUHhxNEs5?=
+ =?utf-8?B?TVFybVFyamxOc1RDalBobnRZR2MwcTJQY0YyL3F6aGxnT21YTWQwcC9LUTlH?=
+ =?utf-8?B?VVZac0N2akY3UGdEMFpyNlQ4bk5DYmI4TzRsN2VyaEZXQ2xEVVZWb25zV2Vi?=
+ =?utf-8?B?SFRVY3BxbzlCRk9DemFxOTFBMXhXTzRHNkNleWVjNE9XRHVPNkJqOGJjaEt4?=
+ =?utf-8?B?bytqTFh0T0NxVCtnYXhFTHpLNWlGQll3dm0wUG5KeHdzdHF2WndFbkhtYUhr?=
+ =?utf-8?B?NEE4bWg0YUNRT3JvQUwrTjFSdmtsWnRTQjF2K1Q5bDZucU1zbnoyZVp0NWQ1?=
+ =?utf-8?B?RUNsZGVOT2xYZkhrQ1BLYlBRaktKMnAvdDJvVmhrNTV0cXIxWDh2L1JrODBp?=
+ =?utf-8?B?VlA0dnJ6ZjRNNnB6eHM5YWVqeDJMUGtSenNOWFd0R2VtdDluWENCSDdtN3I0?=
+ =?utf-8?B?SmNsSVdvSThPeXllYkNXWVVWeDRVd2lvbC9Sakd6UzhleDl3WmZBQXVwdnFG?=
+ =?utf-8?B?WXl0MklPMitJZzhjVGcvNTZaNGc5TXE3UkFVUWhLNXY4ZnIvc0YvaXFYdXZE?=
+ =?utf-8?B?MWRNckFRU3c1Mm5tZnE3aTNXVlU5RHZKTGhadEY4cUNCUU5KMWlTT3dETzVK?=
+ =?utf-8?B?ZHdjNWptWnJNRnhIcGtaNEM1MnhaRyt3SGtlMHM3SXl5bFFwdkw4K3EySS9j?=
+ =?utf-8?B?dytEVlduT1J1dXArYWlYTEE0WFFXTWpZdFpRTVRaaGVDdUw0RE1OUXlRcHdM?=
+ =?utf-8?B?NEpiMDFnUjdrakRaN1FMWERaeXUxM0ZRWkZUZWlDV0lKZWNvUVI1ZHZiTU5T?=
+ =?utf-8?B?VUZpY3FTY3doNTU3OTArL1k4SVBFV09rTmsvc1oyYVlGVzhpMmR1QXpON3dK?=
+ =?utf-8?B?endCanpFQVk5VjBBcDdTUkwyTlN5MUVwS0Exc0svM2VOYlRtWmFuMkVReW8y?=
+ =?utf-8?B?cWg4VVp1Nlo2bk9Jd0pOWWtoNm9oN2xhY01PNG92RXhQeXpqR3drVGIxNVow?=
+ =?utf-8?B?TUVHeDNnZ3JNQ2RSOTdLMzZoaUI2OUJ2RXI5c29NUzRQZGppczF5UVBuNzhE?=
+ =?utf-8?B?UjhlSk1PZnJJTzNwM0Q5TEt0aXkrcmlqRTNvYk5LaFdkWUhSUGk5Um15dE51?=
+ =?utf-8?B?bVE0QXJPTzZVb2lVZGpBbjlKeUwyakljcEJVTnVYWWZERFlMODZHenlWczha?=
+ =?utf-8?B?QzNoTHR4a2F1d0ZwdlJsZm9wOHIvNk5jSkord01TeFFxMkdNSXNEMTd5a0tj?=
+ =?utf-8?B?R2JXOUhZbHJWdXczcFRWb0JQUHAyQ2VsOEVockZNWnBnL05NcE42dG5jMU03?=
+ =?utf-8?B?SFMydFRSMjBKd0VxRDJETEpQMGNxWmQvbVFzYjlOVis3Q2E1Y0JHMERXMHlj?=
+ =?utf-8?B?aEJ6Wk52S1F4YmkzS2lRMlpnOWFybHc4bGZIQ2ZRb2dLNi93dkIwbG9jci9E?=
+ =?utf-8?B?ZjdNQVFvUFRvakdsQ1k1Q1ZVWVNlT1Y5bVQvYXRXc3JEenNYbTdvN2w0dElG?=
+ =?utf-8?B?QUxSb3pVOVFJZXNWVDRkRjdEQUh1V0RjZXRNbVRsUjVwVU15YTJLRjI1VGx5?=
+ =?utf-8?B?Vi9CanF1WkJZL2ZLVjhCZGV5dEpJeVJJRVBOdXpoeis0SE9XZGl3WXl6YmhE?=
+ =?utf-8?Q?+OM2j9fBNdHrzbZtgoBxXTx9p?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	Bay2h5FaM7B7JxPOzbBwSLZr4V6HvFJpHneJAuGtQ7sTzAjXEYY2MEJbG9/RnZHFq6RpFFRdKT5xDQZOCzfcP9RWBBaUHASqTnrdvFQR6WIp+QAH3a8iHuZdSXDoUoKwtMbE9lcpSX7AKiubQ6svwXcl8GIAF37rqESXpMlwN5xC5rNkddzNdcUWHdqmAh7VQlp71ORUhP8tqNvpys7G0dtCAJh2MS3HzwDtKF0jaIiW+Kqx+qQJO5WH6p/SdtoOgqKyeEB/6kewL6GU2dYQTAK4TuytXgct1JcyzHmCTgiplFKl5gWYCRR4naMYZqAbKNTS0SSiRniG5+ZHaEx7PBicwa4rpIqF3/lKGcLlxwAMX9IGFl0H8hVievZBq/8ZA80z/8QVwCPN22AEi3P0P/OfOzhfYNlejCXQxx+KEFBACrKyfIOaa2ibXE/ZyGNDsxb76A1a6rZypyBC6ifMyoDCeut7/iPBCF7n1kbs8Td7cDAh9SgK0egpqzPBDi/YmYMVouBCE6a0AczU33eVHPV7mORMsJJEnb2E1SDVDfCmsarvNk+fa8X0WOS6zQvY8Uu1r/fkZpTKYh/EzU43+QiZQECy+o+u06VDj0jxeTA=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5c7fee7a-1f0e-4638-49b0-08dd4a0bebba
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Feb 2025 19:48:41.8331
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: NnhCcs6xoCd0kEVLN7UYAJUbg4NM+nRqnQW1RlET6LLOh4mUQMLlxHNN//WJhcU3fmziJvmxTDvYg4NqRXyIMA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR10MB7135
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-10_10,2025-02-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxlogscore=999
+ phishscore=0 malwarescore=0 mlxscore=0 spamscore=0 adultscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2501170000 definitions=main-2502100159
+X-Proofpoint-GUID: dbtB6HGiwGF_XhZViXAuSLWCJHi7MDld
+X-Proofpoint-ORIG-GUID: dbtB6HGiwGF_XhZViXAuSLWCJHi7MDld
 
-On 17/01/25 16:52, Jann Horn wrote:
-> On Fri, Jan 17, 2025 at 4:25=E2=80=AFPM Valentin Schneider <vschneid@redh=
-at.com> wrote:
->> On 14/01/25 19:16, Jann Horn wrote:
->> > On Tue, Jan 14, 2025 at 6:51=E2=80=AFPM Valentin Schneider <vschneid@r=
-edhat.com> wrote:
->> >> vunmap()'s issued from housekeeping CPUs are a relatively common sour=
-ce of
->> >> interference for isolated NOHZ_FULL CPUs, as they are hit by the
->> >> flush_tlb_kernel_range() IPIs.
->> >>
->> >> Given that CPUs executing in userspace do not access data in the vmal=
-loc
->> >> range, these IPIs could be deferred until their next kernel entry.
->> >>
->> >> Deferral vs early entry danger zone
->> >> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->> >>
->> >> This requires a guarantee that nothing in the vmalloc range can be vu=
-nmap'd
->> >> and then accessed in early entry code.
->> >
->> > In other words, it needs a guarantee that no vmalloc allocations that
->> > have been created in the vmalloc region while the CPU was idle can
->> > then be accessed during early entry, right?
->>
->> I'm not sure if that would be a problem (not an mm expert, please do
->> correct me) - looking at vmap_pages_range(), flush_cache_vmap() isn't
->> deferred anyway.
->
-> flush_cache_vmap() is about stuff like flushing data caches on
-> architectures with virtually indexed caches; that doesn't do TLB
-> maintenance. When you look for its definition on x86 or arm64, you'll
-> see that they use the generic implementation which is simply an empty
-> inline function.
->
->> So after vmapping something, I wouldn't expect isolated CPUs to have
->> invalid TLB entries for the newly vmapped page.
->>
->> However, upon vunmap'ing something, the TLB flush is deferred, and thus
->> stale TLB entries can and will remain on isolated CPUs, up until they
->> execute the deferred flush themselves (IOW for the entire duration of th=
-e
->> "danger zone").
->>
->> Does that make sense?
->
-> The design idea wrt TLB flushes in the vmap code is that you don't do
-> TLB flushes when you unmap stuff or when you map stuff, because doing
-> TLB flushes across the entire system on every vmap/vunmap would be a
-> bit costly; instead you just do batched TLB flushes in between, in
-> __purge_vmap_area_lazy().
->
-> In other words, the basic idea is that you can keep calling vmap() and
-> vunmap() a bunch of times without ever doing TLB flushes until you run
-> out of virtual memory in the vmap region; then you do one big TLB
-> flush, and afterwards you can reuse the free virtual address space for
-> new allocations again.
->
-> So if you "defer" that batched TLB flush for CPUs that are not
-> currently running in the kernel, I think the consequence is that those
-> CPUs may end up with incoherent TLB state after a reallocation of the
-> virtual address space.
->
-> Actually, I think this would mean that your optimization is disallowed
-> at least on arm64 - I'm not sure about the exact wording, but arm64
-> has a "break before make" rule that forbids conflicting writable
-> address translations or something like that.
->
-> (I said "until you run out of virtual memory in the vmap region", but
-> that's not actually true - see the comment above lazy_max_pages() for
-> an explanation of the actual heuristic. You might be able to tune that
-> a bit if you'd be significantly happier with less frequent
-> interruptions, or something along those lines.)
+On 2/3/25 10:03 PM, Gustavo A. R. Silva wrote:
+> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> getting ready to enable it, globally.
+> 
+> So, in order to avoid ending up with a flexible-array member in the
+> middle of other structs, we use the `struct_group_tagged()` helper
+> to create a new tagged `struct posix_acl_hdr`. This structure
+> groups together all the members of the flexible `struct posix_acl`
+> except the flexible array.
+> 
+> As a result, the array is effectively separated from the rest of the
+> members without modifying the memory layout of the flexible structure.
+> We then change the type of the middle struct member currently causing
+> trouble from `struct posix_acl` to `struct posix_acl_hdr`.
+> 
+> We also want to ensure that when new members need to be added to the
+> flexible structure, they are always included within the newly created
+> tagged struct. For this, we use `static_assert()`. This ensures that the
+> memory layout for both the flexible structure and the new tagged struct
+> is the same after any changes.
+> 
+> This approach avoids having to implement `struct posix_acl_hdr` as a
+> completely separate structure, thus preventing having to maintain two
+> independent but basically identical structures, closing the door to
+> potential bugs in the future.
+> 
+> We also use `container_of()` whenever we need to retrieve a pointer to
+> the flexible structure, through which we can access the flexible-array
+> member, if necessary.
+> 
+> So, with these changes, fix the following warning:
+> 
+> fs/nfs_common/nfsacl.c:45:26: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  fs/nfs_common/nfsacl.c    |  8 +++++---
+>  include/linux/posix_acl.h | 11 ++++++++---
+>  2 files changed, 13 insertions(+), 6 deletions(-)
+> 
+> diff --git a/fs/nfs_common/nfsacl.c b/fs/nfs_common/nfsacl.c
+> index ea382b75b26c..e2eaac14fd8e 100644
+> --- a/fs/nfs_common/nfsacl.c
+> +++ b/fs/nfs_common/nfsacl.c
+> @@ -42,7 +42,7 @@ struct nfsacl_encode_desc {
+>  };
+>  
+>  struct nfsacl_simple_acl {
+> -	struct posix_acl acl;
+> +	struct posix_acl_hdr acl;
+>  	struct posix_acl_entry ace[4];
+>  };
+>  
+> @@ -112,7 +112,8 @@ int nfsacl_encode(struct xdr_buf *buf, unsigned int base, struct inode *inode,
+>  	    xdr_encode_word(buf, base, entries))
+>  		return -EINVAL;
+>  	if (encode_entries && acl && acl->a_count == 3) {
+> -		struct posix_acl *acl2 = &aclbuf.acl;
+> +		struct posix_acl *acl2 =
+> +			container_of(&aclbuf.acl, struct posix_acl, hdr);
+>  
+>  		/* Avoid the use of posix_acl_alloc().  nfsacl_encode() is
+>  		 * invoked in contexts where a memory allocation failure is
+> @@ -177,7 +178,8 @@ bool nfs_stream_encode_acl(struct xdr_stream *xdr, struct inode *inode,
+>  		return false;
+>  
+>  	if (encode_entries && acl && acl->a_count == 3) {
+> -		struct posix_acl *acl2 = &aclbuf.acl;
+> +		struct posix_acl *acl2 =
+> +			container_of(&aclbuf.acl, struct posix_acl, hdr);
+>  
+>  		/* Avoid the use of posix_acl_alloc().  nfsacl_encode() is
+>  		 * invoked in contexts where a memory allocation failure is
+> diff --git a/include/linux/posix_acl.h b/include/linux/posix_acl.h
+> index e2d47eb1a7f3..62d497763e25 100644
+> --- a/include/linux/posix_acl.h
+> +++ b/include/linux/posix_acl.h
+> @@ -27,11 +27,16 @@ struct posix_acl_entry {
+>  };
+>  
+>  struct posix_acl {
+> -	refcount_t		a_refcount;
+> -	unsigned int		a_count;
+> -	struct rcu_head		a_rcu;
+> +	/* New members MUST be added within the struct_group() macro below. */
+> +	struct_group_tagged(posix_acl_hdr, hdr,
+> +		refcount_t		a_refcount;
+> +		unsigned int		a_count;
+> +		struct rcu_head		a_rcu;
+> +	);
+>  	struct posix_acl_entry	a_entries[] __counted_by(a_count);
+>  };
+> +static_assert(offsetof(struct posix_acl, a_entries) == sizeof(struct posix_acl_hdr),
+> +	      "struct member likely outside of struct_group_tagged()");
+>  
+>  #define FOREACH_ACL_ENTRY(pa, acl, pe) \
+>  	for(pa=(acl)->a_entries, pe=pa+(acl)->a_count; pa<pe; pa++)
 
-I've been thinking some more (this is your cue to grab a brown paper bag)..=
-.
+Trond, Anna -
 
-Experimentation (unmap the whole VMALLOC range upon return to userspace,
-see what explodes upon entry into the kernel) suggests that the early entry
-"danger zone" should only access the vmaped stack, which itself isn't an
-issue.
+Let me know if I need to take this one via the NFSD tree. If not,
 
-That is obviously just a test on one system configuration, and the problem
-I'm facing is trying put in place /some/ form of instrumentation that would
-at the very least cause a warning for any future patch that would introduce
-a vmap'd access in early entry code. That, or a complete mitigation that
-prevents those accesses altogether.
+Acked-by: Chuck Lever <chuck.lever@oracle.com>
 
-What if isolated CPUs unconditionally did a TLBi as late as possible in
-the stack right before returning to userspace? This would mean that upon
-re-entering the kernel, an isolated CPU's TLB wouldn't contain any kernel
-range translation - with the exception of whatever lies between the
-last-minute flush and the actual userspace entry, which should be feasible
-to vet? Then AFAICT there wouldn't be any work/flush to defer, the IPI
-could be entirely silenced if it targets an isolated CPU.
 
+-- 
+Chuck Lever
