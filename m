@@ -1,199 +1,176 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3AE802528EC;
-	Mon, 10 Feb 2025 14:23:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E59B7243945
+	for <linux-hardening@vger.kernel.org>; Mon, 10 Feb 2025 17:36:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739197441; cv=none; b=EZScjjtCmO+8LhL9Jw6bRJTuZyGuR4NeeHoMf1Ly/xsOd1E2s1H5fhPi4UumkUkQp0bRdOxrSXogfYntnRFBBqhtnAbafuNOAcxiqNkLaFJX514VZrioJLlTDH6HcD15dLROCKf9OK0w+QKqT7A69mnItzJBztMAj9FSvzFFkso=
+	t=1739208990; cv=none; b=liIqbYsBPDo6ErvH9la+kIm3n8dMmKe4g/O50czz/EQq8lzH17bQIB5vR+XehN9r/JkUNgYdctujhnObVMoff1QH4bYNuFFG3DUSdqzUm+wtcctEK7+q3XZ79ZdWGyMN1G9Wubcgg2wXvlKx4XbdUGOfnXGmtj5McKAQgfXwnIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739197441; c=relaxed/simple;
-	bh=qAh5YfWoaW0Ybw9Jz+yD/p5y/chhs3hMDJE9ZnXfv0U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jYhe6IT4d4FAZ3Viu9APIkhEt1KPVLczo1N+BOIK7m/2wPTwh4PkmetVDPLr3DNEzOoUjh8n64sdA9vgLf+Jlv6eP3a7UYERrZ4VpqWcaOIVA2n1059enJmCXap/7qImaMeyUJ1T7Oe+KNhMw//aHLuj5+Th7x0NuzVn5x2I8L4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 320551477;
-	Mon, 10 Feb 2025 06:24:20 -0800 (PST)
-Received: from [10.57.95.206] (unknown [10.57.95.206])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D55AD3F5A1;
-	Mon, 10 Feb 2025 06:23:53 -0800 (PST)
-Message-ID: <fd101c51-d3fc-4a4f-afcc-364b8d3c4a0b@arm.com>
-Date: Mon, 10 Feb 2025 15:23:52 +0100
+	s=arc-20240116; t=1739208990; c=relaxed/simple;
+	bh=u+xBAfgGtWSjK+lShNplBj7ifal6E7BNbQMyEHGnBJo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=JApgMLuY+mxbWyWjAXCmOEXab/1egH+7Tdou8dC1oJ2UFJWwAyJC5K5/l4STz6/a5zSuI4SdZhaUoQMR+Q+E/Rif3UqqpQmHqff+iJo3Zr98HL+Hw0Jmfrwz0VvRD4cXk6yQJDFGobRQ3qPEuwFpMuRNT8ADhablYVVtVsSqLQU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GDiyfweS; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GDiyfweS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739208987;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jmeQoovG0+h8NkGt8mJ7mUN4l2oR44byLjbsSTWDllc=;
+	b=GDiyfweSKdilGx56dnDevoYaeKexVK8+lohfxnkWlQEvZ4ufWneaLySnxQ1nuveBLx0CzX
+	e4fJ+iUffsenm8fH1RVwrphP9cQvcX4+88lK6CQBZznNua/NQ+rAjCv3PR6bg0Ipmch20H
+	QLFPM4PtzZOMxRujA9jhJg7Vy3NxSgM=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-396-XLOtDNVXOTG5UqlTCwJkew-1; Mon, 10 Feb 2025 12:36:26 -0500
+X-MC-Unique: XLOtDNVXOTG5UqlTCwJkew-1
+X-Mimecast-MFC-AGG-ID: XLOtDNVXOTG5UqlTCwJkew
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-38dca55788eso1753090f8f.1
+        for <linux-hardening@vger.kernel.org>; Mon, 10 Feb 2025 09:36:26 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739208985; x=1739813785;
+        h=content-transfer-encoding:mime-version:message-id:date:references
+         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jmeQoovG0+h8NkGt8mJ7mUN4l2oR44byLjbsSTWDllc=;
+        b=OTNvU6H10QSv800x366X7IMYqAVFYYitxk9nGh4LS3+gMsd8Mrx2pfe7jdu1aOmQDq
+         IEjev0WKxypXydvN79anKEnAeNRKFkQYGiP9S8aKBSbpPSFjJtidDZq/dMtNJudwuow4
+         eGOQ9wc7rSUNfI/OwSc4K7ennc6mrFERtGAuQmwtCVWQPZ44olSgx1WRkKrtq9lFdb9Y
+         PKDTqC5/7N5tycPXSR1VMcq91320pQ6JENbEbo6388rtn8OrYIH1Jj3oZXKTytL+n1fh
+         cC/w81huaP910sgzNxVKds8sB+QeGCdIzKkfvuOMOLoHwqBuZuS5X6bbLzwnfA8YK/ve
+         eLHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW14hXJiSEKMCIkzqsb2y6OiEkLwfR3MyPlWV7HothIZX8uoKZHVCdmVQ8Qs4UKwMasAh3IVvovSsX/HyP1XdQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9bbRpDn17UpYsnboK/quul8B8NKOMk3CJgvc9XcrSvzbX5ro1
+	DPTnNaesq1dOFN7R0t7hv56fUsJk1xXM9WjksWr3uciirw83v3qrv2r/sdpbpxF9NcHoG1D29b4
+	tbpg2wnfLN59Alg28zceL2UTPB8xDg8+QoZQz2nqzsKm1vY3jVoXDa7TQu0/9HGlN3Q==
+X-Gm-Gg: ASbGnctzkO3XQNWxUQChL5d3vOV7uo7eBOzlWjo6A2xBOrnLHfCLDnVplJwL2hTGXLY
+	fRe1Wr9CM47LX7pOq3vy7SgJzP/RDulO0/9keTOAQhJdFNSENDIlQeI86B5Zm6HF4kQumhfyjff
+	QwsV7Mkt1IWiJTJorWYnuYVXMrLy0aAdGKjo6G9igcjvrEBFgthcOWnV+o6kPvP0qaNWQQUnkdH
+	e7GF2APJUW7uePVXqaYKgCNLdj8ksorc78yoZIp2kjqmCmbYzneWurY25As3dtrYyGE0Tq6b5N7
+	9qzNGp1jKmkq266Ij+12Ve/gx0zlHs5DNhyjDWHVz6w9Z6pvNOqwMKwvIkxifRmGZQ==
+X-Received: by 2002:a5d:598f:0:b0:38d:e250:d953 with SMTP id ffacd0b85a97d-38de250dbabmr3058681f8f.35.1739208985424;
+        Mon, 10 Feb 2025 09:36:25 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFxfTkrMg3Ut4KvVNhGVu91A0XAdGHvAD9T0QbpHzfP2OmSPgOw5f7LxHQ3fWHxL8NqTxJ5mQ==
+X-Received: by 2002:a5d:598f:0:b0:38d:e250:d953 with SMTP id ffacd0b85a97d-38de250dbabmr3058583f8f.35.1739208984820;
+        Mon, 10 Feb 2025 09:36:24 -0800 (PST)
+Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dbf2ed900sm12687106f8f.53.2025.02.10.09.36.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 09:36:24 -0800 (PST)
+From: Valentin Schneider <vschneid@redhat.com>
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+ virtualization@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+ linux-perf-users@vger.kernel.org, xen-devel@lists.xenproject.org,
+ kvm@vger.kernel.org, linux-arch@vger.kernel.org, rcu@vger.kernel.org,
+ linux-hardening@vger.kernel.org, linux-mm@kvack.org,
+ linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
+ bcm-kernel-feedback-list@broadcom.com, Juergen Gross <jgross@suse.com>,
+ Ajay Kaher <ajay.kaher@broadcom.com>, Alexey Makhalov
+ <alexey.amakhalov@broadcom.com>, Russell King <linux@armlinux.org.uk>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Paul
+ Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
+ Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo
+ <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
+ Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>, Boris Ostrovsky
+ <boris.ostrovsky@oracle.com>, Josh Poimboeuf <jpoimboe@kernel.org>, Pawan
+ Gupta <pawan.kumar.gupta@linux.intel.com>, Sean Christopherson
+ <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, Andy Lutomirski
+ <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>, "Paul E. McKenney"
+ <paulmck@kernel.org>, Jason Baron <jbaron@akamai.com>, Steven Rostedt
+ <rostedt@goodmis.org>, Ard Biesheuvel <ardb@kernel.org>, Neeraj Upadhyay
+ <neeraj.upadhyay@kernel.org>, Joel Fernandes <joel@joelfernandes.org>,
+ Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
+ Uladzislau Rezki <urezki@gmail.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>,
+ Zqiang <qiang.zhang1211@gmail.com>, Juri Lelli <juri.lelli@redhat.com>,
+ Clark Williams <williams@redhat.com>, Yair Podemsky <ypodemsk@redhat.com>,
+ Tomas Glozar <tglozar@redhat.com>, Vincent Guittot
+ <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Kees Cook
+ <kees@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Christoph
+ Hellwig <hch@infradead.org>, Shuah Khan <shuah@kernel.org>, Sami Tolvanen
+ <samitolvanen@google.com>, Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl
+ <aliceryhl@google.com>, "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+ Samuel Holland <samuel.holland@sifive.com>, Rong Xu <xur@google.com>,
+ Nicolas Saenz Julienne <nsaenzju@redhat.com>, Geert Uytterhoeven
+ <geert@linux-m68k.org>, Yosry Ahmed <yosryahmed@google.com>, "Kirill A.
+ Shutemov" <kirill.shutemov@linux.intel.com>, "Masami Hiramatsu (Google)"
+ <mhiramat@kernel.org>, Jinghao Jia <jinghao7@illinois.edu>, Luis
+ Chamberlain <mcgrof@kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
+ Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: Re: [PATCH v4 22/30] context_tracking: Exit CT_STATE_IDLE upon
+ irq/nmi entry
+In-Reply-To: <Z6ZTBXUiEOLVcSKp@pavilion.home>
+References: <20250114175143.81438-1-vschneid@redhat.com>
+ <20250114175143.81438-23-vschneid@redhat.com>
+ <Z5A6NPqVGoZ32YsN@pavilion.home>
+ <xhsmh5xm0pkuo.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <xhsmhbjvdk7kq.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <Z6ZTBXUiEOLVcSKp@pavilion.home>
+Date: Mon, 10 Feb 2025 18:36:20 +0100
+Message-ID: <xhsmh8qqdk8h7.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v3 00/15] pkeys-based page table hardening
-To: Kees Cook <kees@kernel.org>
-Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
- Andrew Morton <akpm@linux-foundation.org>, Mark Brown <broonie@kernel.org>,
- Catalin Marinas <catalin.marinas@arm.com>,
- Dave Hansen <dave.hansen@linux.intel.com>, Jann Horn <jannh@google.com>,
- Jeff Xu <jeffxu@chromium.org>, Joey Gouly <joey.gouly@arm.com>,
- Linus Walleij <linus.walleij@linaro.org>, Andy Lutomirski <luto@kernel.org>,
- Marc Zyngier <maz@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Pierre Langlois <pierre.langlois@arm.com>,
- Quentin Perret <qperret@google.com>, "Mike Rapoport (IBM)"
- <rppt@kernel.org>, Ryan Roberts <ryan.roberts@arm.com>,
- Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
- Matthew Wilcox <willy@infradead.org>, Qi Zheng <zhengqi.arch@bytedance.com>,
- linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org, x86@kernel.org
-References: <20250203101839.1223008-1-kevin.brodsky@arm.com>
- <202502061422.517A57F8@keescook>
-Content-Language: en-GB
-From: Kevin Brodsky <kevin.brodsky@arm.com>
-In-Reply-To: <202502061422.517A57F8@keescook>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: 89zwDImUoxPnNCb8n9rnmSKGix33aqyLkcYSi9053Jo_1739208986
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 06/02/2025 23:41, Kees Cook wrote:
-> On Mon, Feb 03, 2025 at 10:18:24AM +0000, Kevin Brodsky wrote:
->> This is a proposal to leverage protection keys (pkeys) to harden
->> critical kernel data, by making it mostly read-only. The series includes
->> a simple framework called "kpkeys" to manipulate pkeys for in-kernel use,
->> as well as a page table hardening feature based on that framework
->> (kpkeys_hardened_pgtables). Both are implemented on arm64 as a proof of
->> concept, but they are designed to be compatible with any architecture
->> implementing pkeys.
-> Does QEMU support POE? The only mention I could find is here:
-> https://mail.gnu.org/archive/html/qemu-arm/2024-03/msg00486.html
-> where the answer is, "no and it looks difficult". :P
-
-Unfortunately it looks like the answer hasn't changed since last year. I
-am testing this series on an Arm Fast Models platform (FVP) [1], which
-does support POE. I've included instructions to get you started at the end.
-
->> # Threat model
+On 07/02/25 19:37, Frederic Weisbecker wrote:
+> Le Fri, Feb 07, 2025 at 06:06:45PM +0100, Valentin Schneider a =C3=A9crit=
+ :
 >>
->> The proposed scheme aims at mitigating data-only attacks (e.g.
->> use-after-free/cross-cache attacks). In other words, it is assumed that
->> control flow is not corrupted, and that the attacker does not achieve
->> arbitrary code execution. Nothing prevents the pkey register from being
->> set to its most permissive state - the assumption is that the register
->> is only modified on legitimate code paths.
-> Do you have any tests that could be added to drivers/misc/lkdtm that
-> explicitly exercise the protection? That is where many hardware security
-> features get tested. (i.e. a successful test will generally trigger a
-> BUG_ON or similar.)
-
-I could certainly add some tests there, but I wonder if such crash tests
-provide much benefit compared to the KUnit tests (that rely on
-copy_to_kernel_nofault()) in patch 15? Not crashing the kernel does mean
-that many of those tests can be run in a row :)
-
->> The arm64 implementation should be considered a proof of concept only.
->> The enablement of POE for in-kernel use is incomplete; in particular
->> POR_EL1 (pkey register) should be reset on exception entry and restored
->> on exception return.
-> As in, make sure the loaded pkey isn't leaked into an exception handler?
-
-I wouldn't say "leaking" is the issue here, but yes conceptually
-exception handlers should run with a fixed pkey configuration, not that
-of the interrupted context. As Dave Hansen pointed out [2], what is even
-more important is to context-switch the pkey register. A thread may be
-interrupted and scheduled out while executing at a higher kpkeys level;
-we want to ensure that this thread resumes execution at the same kpkeys
-level, and that in the meantime we return to the standard level.
-
->> # Open questions
+>> Soooo I've been thinking...
 >>
->> A few aspects in this RFC that are debatable and/or worth discussing:
+>> Isn't
 >>
->> - There is currently no restriction on how kpkeys levels map to pkeys
->>   permissions. A typical approach is to allocate one pkey per level and
->>   make it writable at that level only. As the number of levels
->>   increases, we may however run out of pkeys, especially on arm64 (just
->>   8 pkeys with POE). Depending on the use-cases, it may be acceptable to
->>   use the same pkey for the data associated to multiple levels.
+>>   (context_tracking.state & CT_RCU_WATCHING)
 >>
->>   Another potential concern is that a given piece of code may require
->>   write access to multiple privileged pkeys. This could be addressed by
->>   introducing a notion of hierarchy in trust levels, where Tn is able to
->>   write to memory owned by Tm if n >= m, for instance.
+>> pretty much a proxy for knowing whether a CPU is executing in kernelspac=
+e,
+>> including NMIs?
+>
+> You got it!
+>
+
+Yay!
+
 >>
->> - kpkeys_set_level() and kpkeys_restore_pkey_reg() are not symmetric:
->>   the former takes a kpkeys level and returns a pkey register value, to
->>   be consumed by the latter. It would be more intuitive to manipulate
->>   kpkeys levels only. However this assumes that there is a 1:1 mapping
->>   between kpkeys levels and pkey register values, while in principle
->>   the mapping is 1:n (certain pkeys may be used outside the kpkeys
->>   framework).
-> Is the "levels" nature of this related to how POE behaves? It sounds
-> like there can only be 1 pkey active at a time (a role), rather than
-> each pkey representing access to a specific set of pages (a key in a
-> keyring), where many pkeys could be active at the same time. Am I
-> understanding that correctly?
+>> NMI interrupts userspace/VM/idle -> ct_nmi_enter()   -> it becomes true
+>> IRQ interrupts idle              -> ct_irq_enter()   -> it becomes true
+>> IRQ interrupts userspace         -> __ct_user_exit() -> it becomes true
+>> IRQ interrupts VM                -> __ct_user_exit() -> it becomes true
+>>
+>> IOW, if I gate setting deferred work by checking for this instead of
+>> explicitely CT_STATE_KERNEL, "it should work" and prevent the
+>> aforementioned issue? Or should I be out drinking instead? :-)
+>
+> Exactly it should work! Now that doesn't mean you can't go out
+> for a drink :-)
+>
 
-Only one key is used (besides the default key) in this initial RFC.
-However, the idea behind the level abstraction is indeed that (RW)
-access to multiple keys may be required at the same time. In the
-follow-up RFC protecting credentials, this is illustrated by the
-"unrestricted" level that grants RW access to all keys. I believe this
-approach is the most flexible, in that any permission mapping can be
-defined for each level.
+Well, drinks were had very shortly after sending this email :D
 
->> Any comment or feedback will be highly appreciated, be it on the
->> high-level approach or implementation choices!
-> As hinted earlier with my QEMU question... what's the best way I can I
-> test this myself? :)
+> Thanks.
 
-As mentioned above I tested this series on Arm FVP. By far the easiest
-way to run some custom kernel/rootfs on FVP is to use the Shrinkwrap
-tool [3]. First install it following the quick start guide [4] (I would
-recommend using the Docker backend if possible). Then build the firmware
-stack using:
-
-$ shrinkwrap build -o arch/v9.0.yaml ns-edk2.yaml
-
-To make things easy, the runtime configuration can be stored in a file.
-Create ~/.shrinkwrap/config/poe.yaml with the following contents:
-
-----8<----
-
-%YAML 1.2
----
-layers:
-  - arch/v9.0.yaml
-
-run:
-  rtvars:
-    CMDLINE:
-      type: string
-      # nr_cpus=1 can be added to speed up the boot
-      value: console=ttyAMA0 earlycon=pl011,0x1c090000 root=/dev/vda rw
-  params:
-    -C cluster0.has_permission_overlay_s1: 1
-    -C cluster1.has_permission_overlay_s1: 1
-
-----8<----
-
-Finally start FVP using:
-
-$ shrinkwrap run -o poe.yaml ns-edk2.yaml -r
-KERNEL=<out>/arch/arm64/boot/Image -r ROOTFS=<rootfs.img>
-
-(Use Ctrl-] to terminate the model if needed.)
-
-<rootfs.img> is a file containing the root filesystem (in raw format,
-e.g. ext4). The kernel itself is built as usual (defconfig works just
-fine), just make sure to select CONFIG_KPKEYS_HARDENED_PGTABLES to
-enable the feature. You can also select
-CONFIG_KPKEYS_HARDENED_PGTABLES_TEST to run the tests in patch 15.
-
-> Thanks for working on this! Data-only attacks have been on the rise for
-> a while now, and I'm excited to see some viable mitigations appearing.
-> Yay!
-
-Thank you for your interest and support, very appreciated!
-
-- Kevin
-[1]
-https://developer.arm.com/Tools%20and%20Software/Fixed%20Virtual%20Platforms/Arm%20Architecture%20FVPs
-[2]
-https://lore.kernel.org/linux-hardening/dcc1800c-cf0a-4d88-bc88-982f0709b382@intel.com/
-[3] https://shrinkwrap.docs.arm.com/
-[4] https://shrinkwrap.docs.arm.com/en/latest/userguide/quickstart.html
