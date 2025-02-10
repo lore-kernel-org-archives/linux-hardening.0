@@ -1,553 +1,128 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98B69208D7
-	for <linux-hardening@vger.kernel.org>; Mon, 10 Feb 2025 02:48:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA51D125B2;
+	Mon, 10 Feb 2025 03:52:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739155692; cv=none; b=TloZgtw92E1aGnF3DK9Dag0qSZ1KJn5fCZS82nLp76E/FkNAsBlql/JkpE+Fa0QN5/Sf/k4SV+HLe4OeYg2KbCesAb2Wx1eVdXCKBp04+PmAgxXNbdRSrmBOkc8OKEh2Uss1nKJoy1bMvPZbLW1yUkoedDjUPg9AFLo964wwY2I=
+	t=1739159532; cv=none; b=Ee9Rxq0hZDDGlklhV+5dkCplj3CdSShheIfuTAApti6tWdYQ71UpaKQkPEy14/gs0sMrDx1N9Ro+FWLaJVYYRitLD6ubVYSxxcDdVGcWJLznbMvY181b14x75Viu38kQAr8m3Xl3ggmNjUTOAEg36zedHMDOKHU8Qa4B9KFR17A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739155692; c=relaxed/simple;
-	bh=QpajHgX3Drm0wz4qxg76dLloUu4uYleNAGLY/gKYQWY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jYmVgBPZxKRsj8ZbtioN94NHdFWR9cLD8rfPO4kKfWbyVVusbdUwnDZG5TMOo6I3b1ROuOHWqdT4vaWdJIIeFUnXlNJ/j+XWqfrqxroqP5JFdcKcTkrXgbcyZ/9bIrLrncAUH5v4uGxT71Iqcvf4K711QuUawDXU/b8g3Ne5em4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=OTYgjV/6; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1739159532; c=relaxed/simple;
+	bh=28nhjIqmGv2HbdXYQNPlD/qwIn8nqK1Z1FnvA35GsIs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=cKqrufoUp1YbJSE+CTfwszog4JCMAIQAlnverB5Wt1fnqBu3hY/2YGHjNYeDPOF7i0/qNrOLDWN4bcldbuzqKdI9eav9L4dKNw5nZ3jE14gFrH3wcM4x977qPmPNr2Db0zGI4HS3X3y3ec6gWANKgB21deQJ07ksonK0seAwCyk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com; spf=pass smtp.mailfrom=ethancedwards.com; dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b=GFSvKdEk; arc=none smtp.client-ip=80.241.56.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ethancedwards.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="OTYgjV/6"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 519LmcdW005019
-	for <linux-hardening@vger.kernel.org>; Mon, 10 Feb 2025 02:48:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	TvAj2LadsVPoilCdX1n1BrOSMKvUfEQ91Z4My6HVH0I=; b=OTYgjV/6zIJoKg5j
-	SFN029qT/RZcYG11SV1CaV7aASTitdKHfrmjt7ft/Q9jZE9dk+1u8XvOtd246PRF
-	E/429QbIsMVIHAjIUCAZUDWQ//ZMt1LQsXZcpMwFkL7+kWCgFyDwukDFbXzQs796
-	277W6YwjB+am3PzhBrf6DncWyhbQNSXTmfr20oEiYNn5xLeHxa60AxVk4MjipWpK
-	NUy6BhunvWcmJe98l1s8w0CDGiluO2owUeE878DYHGItCaCV/6DjR1BXjHTJ18lw
-	pfMgJflHyb+Wk66Y+xcXJx47Jw06Wsoai3vI3TQKTYM2Qq4f7eJYo+fPXlT+zy/z
-	SL81Sw==
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44p0dyjtyb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-hardening@vger.kernel.org>; Mon, 10 Feb 2025 02:48:09 +0000 (GMT)
-Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-2fa562cc2a6so2465624a91.2
-        for <linux-hardening@vger.kernel.org>; Sun, 09 Feb 2025 18:48:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739155689; x=1739760489;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TvAj2LadsVPoilCdX1n1BrOSMKvUfEQ91Z4My6HVH0I=;
-        b=vjvvkZtFq1Z65gToXXK3osWFYlqNceuuSaHX6r3kWkJubzBww7BQSNUWcg2ppyDuIQ
-         uU2lySMIMP0eGEtLVQDCZ4x2GqReWWIRvTOQHhwczkMTbheCO3cDsyytzI4G/NKY8Ht2
-         w4EvfsNUF5524CDRyvANFwwXBFW2J1kctqaFpsKFhxjFsX53Khf4j6/r1k4kXxlfDDvM
-         RNIIMOGnMXE7NjSHybl3OcjFJaGh6eBhG6g7vzjxzulAHp1e+TcqN1N+usz1IfoIIReH
-         i5GSosLsm5wqyC0jQRRHZdw5HY2G1TjuqA3zMEwt8jPnvbXjvcBFNbTLfg8A4Fm4rc7v
-         puSg==
-X-Forwarded-Encrypted: i=1; AJvYcCX3i/aS5DZGQFuTjSJd39exGkl99dnzSJo6xDc9ht6/iOyZvHH4ax5J8qYzdXczxSTAk+mx9ENBQLcvWCq7SW0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw88Uayr09+7o12KufsStr6j+9UllLY5K1Luii49v2xzTlHJAiN
-	JXMLewZ1mW0rLQ2i54mVF10SD4j1DBOShcuktM+kuyNOLT0caR48TNkjBivkeTwEawTtOapsOp/
-	scPyz/TIK0CUXQHexZ/cthOSBsEtZx12TW/6YQFGxLguVhomSsW4EaNd7L8J7yaxKG0k=
-X-Gm-Gg: ASbGnctAbu6Hzk66Fl8d9DFiT6ynSPyrkqbvLFMD3xu9cyUtn/m5E+MOfYZBe1i5/G+
-	+GjkR4NBjhBNz6tueNiX7P1iNHpYOXe7nbSo28UolAKcxZXDDhc9+GkjFRG61ZQIcXpbLg5Z6fK
-	04v5w1Zb3npLi4h/lk0r+XyuPEinYVCTrwrZ05Uk/o0D79gYhswKm/nbsH3KstoJVU754+DbF9f
-	nRszHCglGf8BONHoZyLzl7S3TDF1jyAG7qHWjLq1Ocwm+cFOorWN3wHj9A56qRB2T+uPxljYaV3
-	LuW7mUQ4W8iFei/IzX0iIlen3Ipoi/1rKwpFtZSbwk029Aluff4UuRyz1veqIgQ=
-X-Received: by 2002:a17:90b:2309:b0:2ee:ead6:6213 with SMTP id 98e67ed59e1d1-2fa242766b0mr16642692a91.19.1739155688658;
-        Sun, 09 Feb 2025 18:48:08 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IE1gOkEG5TO/EuKCqWcjwa94DVMY+rPKs8cM6aFLr0UABclV3X3OkJwg+1xxiCB5alZLClAMA==
-X-Received: by 2002:a17:90b:2309:b0:2ee:ead6:6213 with SMTP id 98e67ed59e1d1-2fa242766b0mr16642640a91.19.1739155688120;
-        Sun, 09 Feb 2025 18:48:08 -0800 (PST)
-Received: from [10.133.33.8] (tpe-colo-wan-fw-bordernet.qualcomm.com. [103.229.16.4])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fa09a753dbsm7516184a91.29.2025.02.09.18.48.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 09 Feb 2025 18:48:07 -0800 (PST)
-Message-ID: <383599d8-d124-4c5a-8253-43502702e748@oss.qualcomm.com>
-Date: Mon, 10 Feb 2025 10:47:58 +0800
+	dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b="GFSvKdEk"
+Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4YrrHP2MQmz9shp;
+	Mon, 10 Feb 2025 04:52:01 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ethancedwards.com;
+	s=MBO0001; t=1739159521;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=NSZuHneQJ8E7PuSXeM+u1QfGVntSHexPdYDiQ+xH+8w=;
+	b=GFSvKdEkBADv1j9CAKotDU7aEWO2kPTxKB4iGWRMssF0vGQjYfY9418/KuQ+AeGpCjOGCr
+	Rq+9vI1EKtSlTqyzT/QSxGq7Q5ha0NocR+s1bNX7lbyP8jJGHU8qtK+sxfv1e6Q304ipxy
+	3X4Bs2trOamT6t51W5r6xcn7HXoI9Cm0TtVg0qIz9GRe9vyGDYMR/pYTtWGyy/bfhC79qN
+	hhTAmi/v36hF6LC1mKFa4p74pG4ItEk/G5rrpp/79QvwGLfzwala1gdMlAvBOBTczq/K7V
+	+45krd3MRqWJkUWESgD0B9ab/Ypurdkp6rtlYXmi+Kp6a0/16hJZWG6N6XwgrA==
+From: Ethan Carter Edwards <ethan@ethancedwards.com>
+Date: Sun, 09 Feb 2025 22:51:54 -0500
+Subject: [PATCH v2] drm/msm/dpu: Fix uninitialized variable
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v3 01/14] dt-bindings: net: Add PPE for Qualcomm
- IPQ9574 SoC
-To: Luo Jie <quic_luoj@quicinc.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Lei Wei <quic_leiwei@quicinc.com>,
-        Suruchi Agarwal <quic_suruchia@quicinc.com>,
-        Pavithra R <quic_pavir@quicinc.com>, Simon Horman <horms@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>, Kees Cook <kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Cc: linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org,
-        quic_kkumarcs@quicinc.com, quic_linchen@quicinc.com,
-        srinivas.kandagatla@linaro.org, bartosz.golaszewski@linaro.org,
-        john@phrozen.org
-References: <20250209-qcom_ipq_ppe-v3-0-453ea18d3271@quicinc.com>
- <20250209-qcom_ipq_ppe-v3-1-453ea18d3271@quicinc.com>
-Content-Language: en-US
-From: Jie Gan <jie.gan@oss.qualcomm.com>
-In-Reply-To: <20250209-qcom_ipq_ppe-v3-1-453ea18d3271@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: mJPjDllY8bu9p7J7Ms5koA0OZ_0c4i07
-X-Proofpoint-GUID: mJPjDllY8bu9p7J7Ms5koA0OZ_0c4i07
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-10_01,2025-02-07_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
- clxscore=1015 lowpriorityscore=0 impostorscore=0 mlxlogscore=999
- mlxscore=0 priorityscore=1501 spamscore=0 adultscore=0 phishscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502100021
+Message-Id: <20250209-dpu-v2-1-114dfd4ebefd@ethancedwards.com>
+X-B4-Tracking: v=1; b=H4sIANl3qWcC/1WNQQ7CIBREr9L8tRhABezKe5gu8POxLCwNVNQ03
+ F3szuWbzLxZIVMKlKHvVkhUQg5xaiB3HeBopzux4BqD5PLEJT8zNz8ZHrxFbTwqoaE150Q+vDf
+ LdWg8hrzE9NmkRfzS/30RTDDubkopY45e8wst7QzJvWxyeY/xAUOt9Quk107cngAAAA==
+X-Change-ID: 20250209-dpu-c3fac78fc617
+To: Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+ Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>, 
+ David Airlie <airlied@gmail.com>
+Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
+ Marijn Suijten <marijn.suijten@somainline.org>, 
+ Simona Vetter <simona@ffwll.ch>, linux-arm-msm@vger.kernel.org, 
+ dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+ linux-hardening@vger.kernel.org, 
+ Ethan Carter Edwards <ethan@ethancedwards.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1837;
+ i=ethan@ethancedwards.com; h=from:subject:message-id;
+ bh=28nhjIqmGv2HbdXYQNPlD/qwIn8nqK1Z1FnvA35GsIs=;
+ b=LS0tLS1CRUdJTiBQR1AgTUVTU0FHRS0tLS0tCgpvd0o0bkp2QXk4ekFKWGJEOXFoNThlVGp6e
+ GhQcXlVeHBLOHN2K3YwTkNySmRIZGNFODlGZzlNVHF3NW5PdTBJCkZ2YnphRGxWTHBYMmdJSGg2
+ ZTJPVWhZR01TNEdXVEZGbHY4NXlta1BOV2NvN1B6cjBnUXpoNVVKWkFnREY2Y0EKVE1UekNpUER
+ vMmVtcXBrTWJENEZ0d1RZRFlxK0xIbmRiZC8xZGwvRnEvODhic2Q5MWorWXcvQS8vdEd1OWUreQ
+ pGdkhVVmN5ODQ2b3cyMzJkNkYrVHk5OXFIUjh1VEM2VWQ4eG5CUUJSQms0Uwo9cHZzKwotLS0tL
+ UVORCBQR1AgTUVTU0FHRS0tLS0tCg==
+X-Developer-Key: i=ethan@ethancedwards.com; a=openpgp;
+ fpr=2E51F61839D1FA947A7300C234C04305D581DBFE
+X-Rspamd-Queue-Id: 4YrrHP2MQmz9shp
 
+There is a possibility for an uninitialized *ret* variable to be
+returned in some code paths.
 
+Fix this by initializing *ret* to 0.
 
-On 2/9/2025 10:29 PM, Luo Jie wrote:
-> The PPE (packet process engine) hardware block is available in Qualcomm
-> IPQ chipsets that support PPE architecture, such as IPQ9574. The PPE in
-> the IPQ9574 SoC includes six ethernet ports (6 GMAC and 6 XGMAC), which
-> are used to connect with external PHY devices by PCS. It includes an L2
-> switch function for bridging packets among the 6 ethernet ports and the
-> CPU port. The CPU port enables packet transfer between the ethernet
-> ports and the ARM cores in the SoC, using the ethernet DMA.
-> 
-> The PPE also includes packet processing offload capabilities for various
-> networking functions such as route and bridge flows, VLANs, different
-> tunnel protocols and VPN.
-> 
-> Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
-> ---
->   .../devicetree/bindings/net/qcom,ipq9574-ppe.yaml  | 406 +++++++++++++++++++++
->   1 file changed, 406 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/qcom,ipq9574-ppe.yaml b/Documentation/devicetree/bindings/net/qcom,ipq9574-ppe.yaml
-> new file mode 100644
-> index 000000000000..be6f9311eebb
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/qcom,ipq9574-ppe.yaml
-> @@ -0,0 +1,406 @@
-> +# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/net/qcom,ipq9574-ppe.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm IPQ packet process engine (PPE)
-> +
-> +maintainers:
-> +  - Luo Jie <quic_luoj@quicinc.com>
-> +  - Lei Wei <quic_leiwei@quicinc.com>
-> +  - Suruchi Agarwal <quic_suruchia@quicinc.com>
-> +  - Pavithra R <quic_pavir@quicinc.com>>
-> +
-> +description:
-You have multiple paragrahs here.
-description: -> description: |
+Addresses-Coverity-ID: 1642546 ("Uninitialized scalar variable")
+Fixes: 774bcfb731765d ("drm/msm/dpu: add support for virtual planes")
+Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
+---
+Changes in v2:
+- Return explicit 0 when no error occurs
+- Add hardening mailing lists
+- Link to v1: https://lore.kernel.org/r/20250209-dpu-v1-1-0db666884f70@ethancedwards.com
+---
+ drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-Thanks,
-Jie
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+index 098abc2c0003cde90ce6219c97ee18fa055a92a5..af3e541f60c303eb5212524e877129359b5ca98c 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+@@ -1164,7 +1164,6 @@ int dpu_assign_plane_resources(struct dpu_global_state *global_state,
+ 			       unsigned int num_planes)
+ {
+ 	unsigned int i;
+-	int ret;
+ 
+ 	for (i = 0; i < num_planes; i++) {
+ 		struct drm_plane_state *plane_state = states[i];
+@@ -1173,13 +1172,13 @@ int dpu_assign_plane_resources(struct dpu_global_state *global_state,
+ 		    !plane_state->visible)
+ 			continue;
+ 
+-		ret = dpu_plane_virtual_assign_resources(crtc, global_state,
++		int ret = dpu_plane_virtual_assign_resources(crtc, global_state,
+ 							 state, plane_state);
+ 		if (ret)
+-			break;
++			return ret;
+ 	}
+ 
+-	return ret;
++	return 0;
+ }
+ 
+ static void dpu_plane_flush_csc(struct dpu_plane *pdpu, struct dpu_sw_pipe *pipe)
 
-> +  The Ethernet functionality in the PPE (Packet Process Engine) is comprised
-> +  of three components, the switch core, port wrapper and Ethernet DMA.
-> +
-> +  The Switch core in the IPQ9574 PPE has maximum of 6 front panel ports and
-> +  two FIFO interfaces. One of the two FIFO interfaces is used for Ethernet
-> +  port to host CPU communication using Ethernet DMA. The other is used
-> +  communicating to the EIP engine which is used for IPsec offload. On the
-> +  IPQ9574, the PPE includes 6 GMAC/XGMACs that can be connected with external
-> +  Ethernet PHY. Switch core also includes BM (Buffer Management), QM (Queue
-> +  Management) and SCH (Scheduler) modules for supporting the packet processing.
-> +
-> +  The port wrapper provides connections from the 6 GMAC/XGMACS to UNIPHY (PCS)
-> +  supporting various modes such as SGMII/QSGMII/PSGMII/USXGMII/10G-BASER. There
-> +  are 3 UNIPHY (PCS) instances supported on the IPQ9574.
-> +
-> +  Ethernet DMA is used to transmit and receive packets between the six Ethernet
-> +  ports and ARM host CPU.
-> +
-> +  The follow diagram shows the PPE hardware block along with its connectivity
-> +  to the external hardware blocks such clock hardware blocks (CMNPLL, GCC,
-> +  NSS clock controller) and ethernet PCS/PHY blocks. For depicting the PHY
-> +  connectivity, one 4x1 Gbps PHY (QCA8075) and two 10 GBps PHYs are used as an
-> +  example.
-> +  - |
-> +         +---------+
-> +         |  48 MHZ |
-> +         +----+----+
-> +              |(clock)
-> +              v
-> +         +----+----+
-> +  +------| CMN PLL |
-> +  |      +----+----+
-> +  |           |(clock)
-> +  |           v
-> +  |      +----+----+           +----+----+  (clock) +----+----+
-> +  |  +---|  NSSCC  |           |   GCC   |--------->|   MDIO  |
-> +  |  |   +----+----+           +----+----+          +----+----+
-> +  |  |        |(clock & reset)      |(clock)
-> +  |  |        v                     v
-> +  |  |   +-----------------------------+----------+----------+---------+
-> +  |  |   |       +-----+               |EDMA FIFO |          | EIP FIFO|
-> +  |  |   |       | SCH |               +----------+          +---------+
-> +  |  |   |       +-----+                        |              |       |
-> +  |  |   |  +------+   +------+               +-------------------+    |
-> +  |  |   |  |  BM  |   |  QM  |  IPQ9574-PPE  |    L2/L3 Process  |    |
-> +  |  |   |  +------+   +------+               +-------------------+    |
-> +  |  |   |                                             |               |
-> +  |  |   | +-------+ +-------+ +-------+ +-------+ +-------+ +-------+ |
-> +  |  |   | |  MAC0 | |  MAC1 | |  MAC2 | |  MAC3 | | XGMAC4| |XGMAC5 | |
-> +  |  |   | +---+---+ +---+---+ +---+---+ +---+---+ +---+---+ +---+---+ |
-> +  |  |   |     |         |         |         |         |         |     |
-> +  |  |   +-----+---------+---------+---------+---------+---------+-----+
-> +  |  |         |         |         |         |         |         |
-> +  |  |     +---+---------+---------+---------+---+ +---+---+ +---+---+
-> +  +--+---->|                PCS0                 | |  PCS1 | | PCS2  |
-> +  |(clock) +---+---------+---------+---------+---+ +---+---+ +---+---+
-> +  |            |         |         |         |         |         |
-> +  |        +---+---------+---------+---------+---+ +---+---+ +---+---+
-> +  +------->|             QCA8075 PHY             | | PHY4  | | PHY5  |
-> +   (clock) +-------------------------------------+ +-------+ +-------+
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - qcom,ipq9574-ppe
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    items:
-> +      - description: PPE core clock from NSS clock controller
-> +      - description: PPE APB (Advanced Peripheral Bus) clock from NSS clock controller
-> +      - description: PPE ingress process engine clock from NSS clock controller
-> +      - description: PPE BM, QM and scheduler clock from NSS clock controller
-> +
-> +  clock-names:
-> +    items:
-> +      - const: ppe
-> +      - const: apb
-> +      - const: ipe
-> +      - const: btq
-> +
-> +  resets:
-> +    maxItems: 1
-> +    description: PPE reset, which is necessary before configuring PPE hardware
-> +
-> +  interconnects:
-> +    items:
-> +      - description: Clock path leading to PPE switch core function
-> +      - description: Clock path leading to PPE register access
-> +      - description: Clock path leading to QoS generation
-> +      - description: Clock path leading to timeout reference
-> +      - description: Clock path leading to NSS NOC from memory NOC
-> +      - description: Clock path leading to memory NOC from NSS NOC
-> +      - description: Clock path leading to enhanced memory NOC from NSS NOC
-> +
-> +  interconnect-names:
-> +    items:
-> +      - const: ppe
-> +      - const: ppe_cfg
-> +      - const: qos_gen
-> +      - const: timeout_ref
-> +      - const: nssnoc_memnoc
-> +      - const: memnoc_nssnoc
-> +      - const: memnoc_nssnoc_1
-> +
-> +  ethernet-dma:
-> +    type: object
-> +    additionalProperties: false
-> +    description:
-> +      EDMA (Ethernet DMA) is used to transmit packets between PPE and ARM
-> +      host CPU. There are 32 TX descriptor rings, 32 TX completion rings,
-> +      24 RX descriptor rings and 8 RX fill rings supported.
-> +
-> +    properties:
-> +      clocks:
-> +        items:
-> +          - description: EDMA system clock from NSS Clock Controller
-> +          - description: EDMA APB (Advanced Peripheral Bus) clock from
-> +              NSS Clock Controller
-> +
-> +      clock-names:
-> +        items:
-> +          - const: sys
-> +          - const: apb
-> +
-> +      resets:
-> +        maxItems: 1
-> +        description: EDMA reset from NSS clock controller
-> +
-> +      interrupts:
-> +        minItems: 29
-> +        maxItems: 57
-> +
-> +      interrupt-names:
-> +        minItems: 29
-> +        maxItems: 57
-> +        items:
-> +          pattern: '^(txcmpl_([0-9]|[1-2][0-9]|3[0-1])|rxdesc_([0-9]|1[0-9]|2[0-3])|misc)$'
-> +        description:
-> +          Interrupts "txcmpl_[0-31]" are the Ethernet DMA Tx completion ring interrupts.
-> +          Interrupts "rxdesc_[0-23]" are the Ethernet DMA Rx Descriptor ring interrupts.
-> +          Interrupt "misc" is the Ethernet DMA miscellaneous error interrupt.
-> +
-> +    required:
-> +      - clocks
-> +      - clock-names
-> +      - resets
-> +      - interrupts
-> +      - interrupt-names
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - resets
-> +  - interconnects
-> +  - interconnect-names
-> +  - ethernet-dma
-> +
-> +allOf:
-> +  - $ref: ethernet-switch.yaml
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/qcom,ipq9574-gcc.h>
-> +    #include <dt-bindings/interconnect/qcom,ipq9574.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +    ethernet-switch@3a000000 {
-> +        compatible = "qcom,ipq9574-ppe";
-> +        reg = <0x3a000000 0xbef800>;
-> +        clocks = <&nsscc 80>,
-> +                 <&nsscc 79>,
-> +                 <&nsscc 81>,
-> +                 <&nsscc 78>;
-> +        clock-names = "ppe",
-> +                      "apb",
-> +                      "ipe",
-> +                      "btq";
-> +        resets = <&nsscc 108>;
-> +        interconnects = <&nsscc MASTER_NSSNOC_PPE &nsscc SLAVE_NSSNOC_PPE>,
-> +                        <&nsscc MASTER_NSSNOC_PPE_CFG &nsscc SLAVE_NSSNOC_PPE_CFG>,
-> +                        <&gcc MASTER_NSSNOC_QOSGEN_REF &gcc SLAVE_NSSNOC_QOSGEN_REF>,
-> +                        <&gcc MASTER_NSSNOC_TIMEOUT_REF &gcc SLAVE_NSSNOC_TIMEOUT_REF>,
-> +                        <&gcc MASTER_MEM_NOC_NSSNOC &gcc SLAVE_MEM_NOC_NSSNOC>,
-> +                        <&gcc MASTER_NSSNOC_MEMNOC &gcc SLAVE_NSSNOC_MEMNOC>,
-> +                        <&gcc MASTER_NSSNOC_MEM_NOC_1 &gcc SLAVE_NSSNOC_MEM_NOC_1>;
-> +        interconnect-names = "ppe",
-> +                             "ppe_cfg",
-> +                             "qos_gen",
-> +                             "timeout_ref",
-> +                             "nssnoc_memnoc",
-> +                             "memnoc_nssnoc",
-> +                             "memnoc_nssnoc_1";
-> +
-> +        ethernet-dma {
-> +            clocks = <&nsscc 77>,
-> +                     <&nsscc 76>;
-> +            clock-names = "sys",
-> +                          "apb";
-> +            resets = <&nsscc 0>;
-> +            interrupts = <GIC_SPI 371 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 372 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 373 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 374 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 375 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 376 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 377 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 378 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 379 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 380 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 381 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 382 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 383 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 384 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 509 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 508 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 507 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 506 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 505 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 504 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 503 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 502 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 501 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 500 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 351 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 352 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 353 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 499 IRQ_TYPE_LEVEL_HIGH>;
-> +            interrupt-names = "txcmpl_8",
-> +                              "txcmpl_9",
-> +                              "txcmpl_10",
-> +                              "txcmpl_11",
-> +                              "txcmpl_12",
-> +                              "txcmpl_13",
-> +                              "txcmpl_14",
-> +                              "txcmpl_15",
-> +                              "txcmpl_16",
-> +                              "txcmpl_17",
-> +                              "txcmpl_18",
-> +                              "txcmpl_19",
-> +                              "txcmpl_20",
-> +                              "txcmpl_21",
-> +                              "txcmpl_22",
-> +                              "txcmpl_23",
-> +                              "txcmpl_24",
-> +                              "txcmpl_25",
-> +                              "txcmpl_26",
-> +                              "txcmpl_27",
-> +                              "txcmpl_28",
-> +                              "txcmpl_29",
-> +                              "txcmpl_30",
-> +                              "txcmpl_31",
-> +                              "rxdesc_20",
-> +                              "rxdesc_21",
-> +                              "rxdesc_22",
-> +                              "rxdesc_23",
-> +                              "misc";
-> +        };
-> +
-> +        ethernet-ports {
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-> +
-> +            port@1 {
-> +                reg = <1>;
-> +                phy-mode = "qsgmii";
-> +                managed = "in-band-status";
-> +                phy-handle = <&phy0>;
-> +                pcs-handle = <&pcs0_mii0>;
-> +                clocks = <&nsscc 33>,
-> +                         <&nsscc 34>,
-> +                         <&nsscc 37>;
-> +                clock-names = "mac",
-> +                              "rx",
-> +                              "tx";
-> +                resets = <&nsscc 29>,
-> +                         <&nsscc 96>,
-> +                         <&nsscc 97>;
-> +                reset-names = "mac",
-> +                              "rx",
-> +                              "tx";
-> +            };
-> +
-> +            port@2 {
-> +                reg = <2>;
-> +                phy-mode = "qsgmii";
-> +                managed = "in-band-status";
-> +                phy-handle = <&phy1>;
-> +                pcs-handle = <&pcs0_mii1>;
-> +                clocks = <&nsscc 40>,
-> +                         <&nsscc 41>,
-> +                         <&nsscc 44>;
-> +                clock-names = "mac",
-> +                              "rx",
-> +                              "tx";
-> +                resets = <&nsscc 30>,
-> +                         <&nsscc 98>,
-> +                         <&nsscc 99>;
-> +                reset-names = "mac",
-> +                              "rx",
-> +                              "tx";
-> +            };
-> +
-> +            port@3 {
-> +                reg = <3>;
-> +                phy-mode = "qsgmii";
-> +                managed = "in-band-status";
-> +                phy-handle = <&phy2>;
-> +                pcs-handle = <&pcs0_mii2>;
-> +                clocks = <&nsscc 47>,
-> +                         <&nsscc 48>,
-> +                         <&nsscc 51>;
-> +                clock-names = "mac",
-> +                              "rx",
-> +                              "tx";
-> +                resets = <&nsscc 31>,
-> +                         <&nsscc 100>,
-> +                         <&nsscc 101>;
-> +                reset-names = "mac",
-> +                              "rx",
-> +                              "tx";
-> +            };
-> +
-> +            port@4 {
-> +                reg = <4>;
-> +                phy-mode = "qsgmii";
-> +                managed = "in-band-status";
-> +                phy-handle = <&phy3>;
-> +                pcs-handle = <&pcs0_mii3>;
-> +                clocks = <&nsscc 54>,
-> +                         <&nsscc 55>,
-> +                         <&nsscc 58>;
-> +                clock-names = "mac",
-> +                              "rx",
-> +                              "tx";
-> +                resets = <&nsscc 32>,
-> +                         <&nsscc 102>,
-> +                         <&nsscc 103>;
-> +                reset-names = "mac",
-> +                              "rx",
-> +                              "tx";
-> +            };
-> +
-> +            port@5 {
-> +                reg = <5>;
-> +                phy-mode = "usxgmii";
-> +                managed = "in-band-status";
-> +                phy-handle = <&phy4>;
-> +                pcs-handle = <&pcs1_mii0>;
-> +                clocks = <&nsscc 61>,
-> +                         <&nsscc 62>,
-> +                         <&nsscc 65>;
-> +                clock-names = "mac",
-> +                              "rx",
-> +                              "tx";
-> +                resets = <&nsscc 33>,
-> +                         <&nsscc 104>,
-> +                         <&nsscc 105>;
-> +                reset-names = "mac",
-> +                              "rx",
-> +                              "tx";
-> +            };
-> +
-> +            port@6 {
-> +                reg = <6>;
-> +                phy-mode = "usxgmii";
-> +                managed = "in-band-status";
-> +                phy-handle = <&phy5>;
-> +                pcs-handle = <&pcs2_mii0>;
-> +                clocks = <&nsscc 68>,
-> +                         <&nsscc 69>,
-> +                         <&nsscc 72>;
-> +                clock-names = "mac",
-> +                              "rx",
-> +                              "tx";
-> +                resets = <&nsscc 34>,
-> +                         <&nsscc 106>,
-> +                         <&nsscc 107>;
-> +                reset-names = "mac",
-> +                              "rx",
-> +                              "tx";
-> +            };
-> +        };
-> +    };
-> 
+---
+base-commit: a64dcfb451e254085a7daee5fe51bf22959d52d3
+change-id: 20250209-dpu-c3fac78fc617
+
+Best regards,
+-- 
+Ethan Carter Edwards <ethan@ethancedwards.com>
 
