@@ -1,106 +1,113 @@
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A04E2F2E;
-	Mon, 10 Feb 2025 04:47:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E58817C220;
+	Mon, 10 Feb 2025 05:40:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739162870; cv=none; b=AJPQyiTwbZhlXtSEF/veerBZYfJ8I4bHKi8eBcrpvKMK8Iks24+QzpqIfBxcPlOLoryAQJVIDVqT1/2gtYdQiSDfk+eSqBra2kj8AiX1X8qxJ8iAU8e+W+fvk6G40dMIKnrCjuQogrFL9SeJTLyynzjv6buEXKTDzX6+1ybgo6k=
+	t=1739166026; cv=none; b=Ot9O8u415jtrguzW0QJC7G7V/MmDx188AOOVH/LI7iqTKXNUhsB1XayFaETXJ1VC+b+BjeKuKHgAMl/F56l+ftACsRNfJvE/aWG3zEb9UZIlkPdS/4+vCcfMtlVwP3r5Jukzzl4zAPEHE2XeIqJ9ntKuU6kkd6V1wGZxa3miOQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739162870; c=relaxed/simple;
-	bh=1im/VCm5y7Sebw9X8ipwvqIuoQBYm0NNnURuN4wiqX0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=U0u0H7XH9plBJ+ScHU/sU4dqLeE//s0ZS58terA96ZX73XbJDlHAXJ52EtTA3Ht4nl4QTB+1FKU2GArbJhqfW8Sj8iCrcF08IiWG1dDpOjChX/TPYSJ63+fZeZhnj99TPbigsEPH8sT9T7jR3Eqf+Z7/unuL8eZ6hRWFHTw3JAs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com; spf=pass smtp.mailfrom=ethancedwards.com; dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b=ZbddG3N/; arc=none smtp.client-ip=80.241.56.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ethancedwards.com
+	s=arc-20240116; t=1739166026; c=relaxed/simple;
+	bh=wqqJHWBJ+k5VNxqZ8rwbBAUHuSes0w4hjTbau4Q3OF4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Tki4Fx76opyB4T9Ky5Z1wpBy86zw4P+gvYu7yl16ft6PSVgXiRKZkYmVC2jsvs5rUh0J6J4M1MiLweIU7HDBdktaf7kAU9BdtDucGgY20rUpS+mp8l5iD5JJjyHYpxAicH26I4zH6Q4+IS0IHqgU7zNZB4Z0mTWHiGXRVJYDZlE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hPrxWAEm; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b="ZbddG3N/"
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4YrsWb5T15z9sZZ;
-	Mon, 10 Feb 2025 05:47:39 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ethancedwards.com;
-	s=MBO0001; t=1739162859;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=kca9LEECPrfswrWUPZvyaDxx4NwxuWzzj1p0ey+sgvY=;
-	b=ZbddG3N/BTYKzAAA5ZktaEM8+SVH33OpkHm44p2UTTstODryRB9z96Ers+JBth2IIRR0nP
-	7mpQbwYvLEkKwB5BMLRBNrYbvSMY3Dy1FUn4fxoz+h8BPcXQ47+B+Z9jXivqnLBHCH4CGm
-	qjEhLeH/8GrNZJ/jgV02Z4feaIiHftjUH294MAD6s154vQdKmwGoauCS4E5dgTM7EXo7jp
-	ktyoHEbmKxUQrTeNUAc1+ZvPsTXGb6sI0+CRRSONTtvIzRQp+xOMR4JUytPjKiGID+N1nZ
-	mgCcR8wayDKWGb9q9BYM7/uL3VnmdWPe+TC40meQpj/EtLq6jufkSU5oGkJqhQ==
-From: Ethan Carter Edwards <ethan@ethancedwards.com>
-Date: Sun, 09 Feb 2025 23:47:24 -0500
-Subject: [PATCH] ixgbe: remove self assignment
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hPrxWAEm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739166025; x=1770702025;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=wqqJHWBJ+k5VNxqZ8rwbBAUHuSes0w4hjTbau4Q3OF4=;
+  b=hPrxWAEmQ45/FrtRrdkZRdbd8qU26I2apEnXb3E8SP090tuJLOrZ1BHl
+   9+ZmrxxT1m9w6tmksh52qVUPf8fvrs6zTEYWAi+MDe0uQyrRjqQXILRlo
+   NtweJbh/tqLoYa16JlSQpXrRzCo4lm9ZFnFxja8L1QV+c02Nb9LMrYm0I
+   oMdcxtaQgHaOApC+lBfABk8hhQsU9edzJs6R1XqBx4uRkFUmTeER7bxfo
+   yZggIe12NpQyBdh9qd4Bxs7wnYG2fpqJAEKNvsAvzblknKt1Trr33SLx2
+   dMnaZj3V+Lvj9vxQyUJd7Ih3KLMOkK9tXTn0q7HNzmgpvjwntHygrUOGZ
+   Q==;
+X-CSE-ConnectionGUID: 3OTKSoGFSGK8NHluVYIuhQ==
+X-CSE-MsgGUID: niaS2vP8SxiORS4u4Y1rcw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11340"; a="39754641"
+X-IronPort-AV: E=Sophos;i="6.13,273,1732608000"; 
+   d="scan'208";a="39754641"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2025 21:40:24 -0800
+X-CSE-ConnectionGUID: dY9cPuvhSvaibce0BbRdBg==
+X-CSE-MsgGUID: k2hJYR98S/qGieL3zs4VEw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="135343330"
+Received: from mev-dev.igk.intel.com ([10.237.112.144])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2025 21:40:20 -0800
+Date: Mon, 10 Feb 2025 06:36:43 +0100
+From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+To: Ethan Carter Edwards <ethan@ethancedwards.com>
+Cc: Piotr Kwapulinski <piotr.kwapulinski@intel.com>,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Jedrzej Jagielski <jedrzej.jagielski@intel.com>,
+	Simon Horman <horms@kernel.org>,
+	Stefan Wegrzyn <stefan.wegrzyn@intel.com>,
+	Michal Swiatkowski <michal.swiatkowski@linux.intel.com>,
+	intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] ixgbe: remove self assignment
+Message-ID: <Z6mQa0l6Y4tb9BrY@mev-dev.igk.intel.com>
+References: <20250209-e610-self-v1-1-34c6c46ffe11@ethancedwards.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250209-e610-self-v1-1-34c6c46ffe11@ethancedwards.com>
-X-B4-Tracking: v=1; b=H4sIANuEqWcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDIwNL3VQzQwPd4tScNF0L09TEZMM0g1RjYwsloPqCotS0zAqwWdGxtbU
- AdXCXNVsAAAA=
-X-Change-ID: 20250209-e610-self-85eac1f0e338
-To: Piotr Kwapulinski <piotr.kwapulinski@intel.com>
-Cc: Tony Nguyen <anthony.l.nguyen@intel.com>, 
- Przemek Kitszel <przemyslaw.kitszel@intel.com>, 
- Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Jedrzej Jagielski <jedrzej.jagielski@intel.com>, 
- Simon Horman <horms@kernel.org>, Stefan Wegrzyn <stefan.wegrzyn@intel.com>, 
- Michal Swiatkowski <michal.swiatkowski@linux.intel.com>, 
- intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
- linux-hardening@vger.kernel.org, 
- Ethan Carter Edwards <ethan@ethancedwards.com>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1107;
- i=ethan@ethancedwards.com; h=from:subject:message-id;
- bh=1im/VCm5y7Sebw9X8ipwvqIuoQBYm0NNnURuN4wiqX0=;
- b=LS0tLS1CRUdJTiBQR1AgTUVTU0FHRS0tLS0tCgpvd0o0bkp2QXk4ekFKWGJEOXFoNThlVGp6e
- GhQcXlVeHBLOXNlV3JSZHR1eTEzalh4cE4raGJWYjk3ZjhQdWp4CjdQb3QvMW5iLzBzdU1XRlJt
- N0N2bzVTRlFZeUxRVlpNa2VWL2puTGFRODBaQ2p2L3VqVEJ6R0ZsQWhuQ3dNVXAKQUJOaDYyTDR
- wMm4yK1J6SEZENy9NN3JHZWd2VVdnMGlkckV3N3QvZXZYZlRiNDhveFhxeFRFYUcvL2ZPT1ZRRg
- pwZmJVdkxzMXUzek82NHVYVFk3ZHJ0Nlg5RzdxdExpdnQ0dzFPUUdpQjFESgo9dHpzWgotLS0tL
- UVORCBQR1AgTUVTU0FHRS0tLS0tCg==
-X-Developer-Key: i=ethan@ethancedwards.com; a=openpgp;
- fpr=2E51F61839D1FA947A7300C234C04305D581DBFE
-X-Rspamd-Queue-Id: 4YrsWb5T15z9sZZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250209-e610-self-v1-1-34c6c46ffe11@ethancedwards.com>
 
-Variable self assignment does not have any effect.
+On Sun, Feb 09, 2025 at 11:47:24PM -0500, Ethan Carter Edwards wrote:
+> Variable self assignment does not have any effect.
+> 
+> Addresses-Coverity-ID: 1641823 ("Self assignment")
+> Fixes: 46761fd52a886 ("ixgbe: Add support for E610 FW Admin Command Interface")
+> Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
+> ---
+>  drivers/net/ethernet/intel/ixgbe/ixgbe_e610.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_e610.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_e610.c
+> index 683c668672d65535fca3b2fe6f58a9deda1188fa..6b0bce92476c3c5ec3cf7ab79864b394b592c6d4 100644
+> --- a/drivers/net/ethernet/intel/ixgbe/ixgbe_e610.c
+> +++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_e610.c
+> @@ -145,7 +145,6 @@ static int ixgbe_aci_send_cmd_execute(struct ixgbe_hw *hw,
+>  	if ((hicr & IXGBE_PF_HICR_SV)) {
+>  		for (i = 0; i < IXGBE_ACI_DESC_SIZE_IN_DWORDS; i++) {
+>  			raw_desc[i] = IXGBE_READ_REG(hw, IXGBE_PF_HIDA(i));
+> -			raw_desc[i] = raw_desc[i];
+>  		}
+>  	}
+>  
 
-Addresses-Coverity-ID: 1641823 ("Self assignment")
-Fixes: 46761fd52a886 ("ixgbe: Add support for E610 FW Admin Command Interface")
-Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
----
- drivers/net/ethernet/intel/ixgbe/ixgbe_e610.c | 1 -
- 1 file changed, 1 deletion(-)
+Thanks for the patch. This change is already in progress [1] (I hope,
+waiting for v3).
 
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_e610.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_e610.c
-index 683c668672d65535fca3b2fe6f58a9deda1188fa..6b0bce92476c3c5ec3cf7ab79864b394b592c6d4 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_e610.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_e610.c
-@@ -145,7 +145,6 @@ static int ixgbe_aci_send_cmd_execute(struct ixgbe_hw *hw,
- 	if ((hicr & IXGBE_PF_HICR_SV)) {
- 		for (i = 0; i < IXGBE_ACI_DESC_SIZE_IN_DWORDS; i++) {
- 			raw_desc[i] = IXGBE_READ_REG(hw, IXGBE_PF_HIDA(i));
--			raw_desc[i] = raw_desc[i];
- 		}
- 	}
- 
+[1] https://lore.kernel.org/netdev/20250115034117.172999-1-dheeraj.linuxdev@gmail.com/
 
----
-base-commit: a64dcfb451e254085a7daee5fe51bf22959d52d3
-change-id: 20250209-e610-self-85eac1f0e338
+Thanks,
+Michal
 
-Best regards,
--- 
-Ethan Carter Edwards <ethan@ethancedwards.com>
-
+> 
+> ---
+> base-commit: a64dcfb451e254085a7daee5fe51bf22959d52d3
+> change-id: 20250209-e610-self-85eac1f0e338
+> 
+> Best regards,
+> -- 
+> Ethan Carter Edwards <ethan@ethancedwards.com>
