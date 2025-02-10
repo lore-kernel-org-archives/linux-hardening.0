@@ -1,113 +1,101 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E58817C220;
-	Mon, 10 Feb 2025 05:40:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ACF318E764;
+	Mon, 10 Feb 2025 08:09:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739166026; cv=none; b=Ot9O8u415jtrguzW0QJC7G7V/MmDx188AOOVH/LI7iqTKXNUhsB1XayFaETXJ1VC+b+BjeKuKHgAMl/F56l+ftACsRNfJvE/aWG3zEb9UZIlkPdS/4+vCcfMtlVwP3r5Jukzzl4zAPEHE2XeIqJ9ntKuU6kkd6V1wGZxa3miOQQ=
+	t=1739174995; cv=none; b=Ku/lgGhJvUguytIOhan7Il9F2NBrGVwHi9WoEbP4WjtWperB5uCuYXWFBm9WTfarwba5BHsFm8X/NhNqaTYhFVftgrY2pVtdBRv6YGm9XeQMXtgoekfAgjRSWLg8TqFWf7Vk2GD46e/daN5wztZzul4MsF/OqkcgH9c/svl5oLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739166026; c=relaxed/simple;
-	bh=wqqJHWBJ+k5VNxqZ8rwbBAUHuSes0w4hjTbau4Q3OF4=;
+	s=arc-20240116; t=1739174995; c=relaxed/simple;
+	bh=U0WYcS19MsIrktm50+bHvEQL/Euj82Fu7ea08jiBPOw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Tki4Fx76opyB4T9Ky5Z1wpBy86zw4P+gvYu7yl16ft6PSVgXiRKZkYmVC2jsvs5rUh0J6J4M1MiLweIU7HDBdktaf7kAU9BdtDucGgY20rUpS+mp8l5iD5JJjyHYpxAicH26I4zH6Q4+IS0IHqgU7zNZB4Z0mTWHiGXRVJYDZlE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hPrxWAEm; arc=none smtp.client-ip=198.175.65.17
+	 Content-Type:Content-Disposition:In-Reply-To; b=oEjfiLIq2QFL9bXe4H9A73Nz1i358081JBKqoF7RVl3yv8UEfrIwx7XcKxMl7tRtS2kzmlYRBMLqDo+PdtdHjqP6zGn37IomMP9LRrzqMRgzAU65s4/ZykW5RctcqJi5xaPPu3AY++bJ4FQc02Glr+Pa3jgcm/NZCNpT7HQt9QE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HVtO7A3d; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hPrxWAEm"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HVtO7A3d"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739166025; x=1770702025;
+  t=1739174994; x=1770710994;
   h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=wqqJHWBJ+k5VNxqZ8rwbBAUHuSes0w4hjTbau4Q3OF4=;
-  b=hPrxWAEmQ45/FrtRrdkZRdbd8qU26I2apEnXb3E8SP090tuJLOrZ1BHl
-   9+ZmrxxT1m9w6tmksh52qVUPf8fvrs6zTEYWAi+MDe0uQyrRjqQXILRlo
-   NtweJbh/tqLoYa16JlSQpXrRzCo4lm9ZFnFxja8L1QV+c02Nb9LMrYm0I
-   oMdcxtaQgHaOApC+lBfABk8hhQsU9edzJs6R1XqBx4uRkFUmTeER7bxfo
-   yZggIe12NpQyBdh9qd4Bxs7wnYG2fpqJAEKNvsAvzblknKt1Trr33SLx2
-   dMnaZj3V+Lvj9vxQyUJd7Ih3KLMOkK9tXTn0q7HNzmgpvjwntHygrUOGZ
-   Q==;
-X-CSE-ConnectionGUID: 3OTKSoGFSGK8NHluVYIuhQ==
-X-CSE-MsgGUID: niaS2vP8SxiORS4u4Y1rcw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11340"; a="39754641"
-X-IronPort-AV: E=Sophos;i="6.13,273,1732608000"; 
-   d="scan'208";a="39754641"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2025 21:40:24 -0800
-X-CSE-ConnectionGUID: dY9cPuvhSvaibce0BbRdBg==
-X-CSE-MsgGUID: k2hJYR98S/qGieL3zs4VEw==
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=U0WYcS19MsIrktm50+bHvEQL/Euj82Fu7ea08jiBPOw=;
+  b=HVtO7A3dgp1TYdZM5bW24bUsSpsiT9ky2MU5qt6HRglNl/byT/uwJyBV
+   AAZqjcUyHxey5IioI/gbl5tE/DySZkAyS/9lxkMIt2MUm83vpP1PC5Iz6
+   EoxE9IiOI9NNEEQi7jTW+Z+31WUkEIX+uic6/eA5Ujj2CWCouficZT2Oq
+   TIEyjS5ZWVO3Mt0jZXd+PCZy0rHFmCAMvYDSOVMT2ug475VuJas5atp3R
+   ujNKxRKO/8ylHWvjYIEzFLr39pdXxfLsKvUdnsEbDRTyYJMYq8OQ9bYyE
+   c2HLatjY2aK5h+/+KJSZx+6TNIbfLKjVfurRmri7/go1VGco4Of4ZyUmm
+   A==;
+X-CSE-ConnectionGUID: nvU0en+8TIuk0Pm6e8imbg==
+X-CSE-MsgGUID: AsUrcfv0SCmYfyMVSsJYlA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11340"; a="57278509"
+X-IronPort-AV: E=Sophos;i="6.13,274,1732608000"; 
+   d="scan'208";a="57278509"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 00:09:53 -0800
+X-CSE-ConnectionGUID: ILEs/rIXQKe8CLHpL8xoJA==
+X-CSE-MsgGUID: 7Q40UtIKTduMSkzoqk/cMQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="135343330"
-Received: from mev-dev.igk.intel.com ([10.237.112.144])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2025 21:40:20 -0800
-Date: Mon, 10 Feb 2025 06:36:43 +0100
-From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-To: Ethan Carter Edwards <ethan@ethancedwards.com>
-Cc: Piotr Kwapulinski <piotr.kwapulinski@intel.com>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Jedrzej Jagielski <jedrzej.jagielski@intel.com>,
-	Simon Horman <horms@kernel.org>,
-	Stefan Wegrzyn <stefan.wegrzyn@intel.com>,
-	Michal Swiatkowski <michal.swiatkowski@linux.intel.com>,
-	intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] ixgbe: remove self assignment
-Message-ID: <Z6mQa0l6Y4tb9BrY@mev-dev.igk.intel.com>
-References: <20250209-e610-self-v1-1-34c6c46ffe11@ethancedwards.com>
+   d="scan'208";a="112555207"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 00:09:51 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1thOrU-0000000A3oY-0oB4;
+	Mon, 10 Feb 2025 10:09:48 +0200
+Date: Mon, 10 Feb 2025 10:09:47 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: Re: [PATCH v2 7/7] gpio: 74x164: Utilise temporary variable for
+ struct device
+Message-ID: <Z6m0S0qnZVfyijWt@smile.fi.intel.com>
+References: <20250207151825.2122419-1-andriy.shevchenko@linux.intel.com>
+ <20250207151825.2122419-8-andriy.shevchenko@linux.intel.com>
+ <Z6Ypww-xXAvoCCq1@smile.fi.intel.com>
+ <CAMRc=MeTgjHYCmZcDhvZGKCaKyHhxUU=3EF6OvsLW-H-Dv+Y6Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250209-e610-self-v1-1-34c6c46ffe11@ethancedwards.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=MeTgjHYCmZcDhvZGKCaKyHhxUU=3EF6OvsLW-H-Dv+Y6Q@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Sun, Feb 09, 2025 at 11:47:24PM -0500, Ethan Carter Edwards wrote:
-> Variable self assignment does not have any effect.
+On Fri, Feb 07, 2025 at 08:56:45PM +0100, Bartosz Golaszewski wrote:
+> On Fri, Feb 7, 2025 at 4:42 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> >
+> > On Fri, Feb 07, 2025 at 05:17:14PM +0200, Andy Shevchenko wrote:
+> > > We have a temporary variable to keep a pointer to struct device.
+> > > Utilise it where it makes sense.
+> >
+> > Urgh, this seems incomplete...
+> > There are more lines to convert, however they do not affect ą statistics.
+> >
+> > Tell me if I need to send full v3 or just this patch.
 > 
-> Addresses-Coverity-ID: 1641823 ("Self assignment")
-> Fixes: 46761fd52a886 ("ixgbe: Add support for E610 FW Admin Command Interface")
-> Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
-> ---
->  drivers/net/ethernet/intel/ixgbe/ixgbe_e610.c | 1 -
->  1 file changed, 1 deletion(-)
+> No worries, I may fix it when applying.
 > 
-> diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_e610.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_e610.c
-> index 683c668672d65535fca3b2fe6f58a9deda1188fa..6b0bce92476c3c5ec3cf7ab79864b394b592c6d4 100644
-> --- a/drivers/net/ethernet/intel/ixgbe/ixgbe_e610.c
-> +++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_e610.c
-> @@ -145,7 +145,6 @@ static int ixgbe_aci_send_cmd_execute(struct ixgbe_hw *hw,
->  	if ((hicr & IXGBE_PF_HICR_SV)) {
->  		for (i = 0; i < IXGBE_ACI_DESC_SIZE_IN_DWORDS; i++) {
->  			raw_desc[i] = IXGBE_READ_REG(hw, IXGBE_PF_HIDA(i));
-> -			raw_desc[i] = raw_desc[i];
->  		}
->  	}
->  
+> I'll still give this series a few more days on the list.
 
-Thanks for the patch. This change is already in progress [1] (I hope,
-waiting for v3).
+Sure, thanks!
 
-[1] https://lore.kernel.org/netdev/20250115034117.172999-1-dheeraj.linuxdev@gmail.com/
 
-Thanks,
-Michal
+-- 
+With Best Regards,
+Andy Shevchenko
 
-> 
-> ---
-> base-commit: a64dcfb451e254085a7daee5fe51bf22959d52d3
-> change-id: 20250209-e610-self-85eac1f0e338
-> 
-> Best regards,
-> -- 
-> Ethan Carter Edwards <ethan@ethancedwards.com>
+
