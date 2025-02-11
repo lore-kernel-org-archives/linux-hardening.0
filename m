@@ -1,191 +1,138 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF8DC2206A3
-	for <linux-hardening@vger.kernel.org>; Tue, 11 Feb 2025 13:33:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79DDE24BCFD;
+	Tue, 11 Feb 2025 13:55:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739280842; cv=none; b=ZwcbmnZZ/PZF3n75tmksiF4T+Ccmu3sf2mEY4ktIE5Ste6/zvH0akBvGnhKKtH6Yvzcrbq5MBHyw4+cOrggy1c8Q2XZhAS4zdRef37VQJDwg49pxq8YjOfSKdGWAlMEY98kQB849AQXkfP2eSrc/CNsm+AGSf1O738p+lJFPz7I=
+	t=1739282127; cv=none; b=G4R3fX31Io4B6iR1GTXE0zHPpWnR7nDfTVE7IgoOX40a89ng4PpuFY4+KgpdHfMLYTw/BxSkIBFL4BwZiL/VnUeP13OsRCSuWeaUjUSffLWVRXr/H+4CHSSv1oZosHjih1rEmUZJHbHeg3K5FGocrexG0oZ4u5CArhG3rrXUL08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739280842; c=relaxed/simple;
-	bh=kiPSr3n7+xyd4jM/lLYprUxePjslA+jL9wOlKC/+QfI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=IHLBH4dariTV13Hp75aYInIKxgwCN0B7TdP+eXMdqmjA8bLRzW8y6gQ333SRrwN0LK0NVC2xDuNSq7NnD2Oeh7IM7+bARXQ5TO1LIrEmLkknMvJ44keOyypIOJBc3gbJJnfaVSQqlcIoVPVo23rZABMPWhiCoBz+pTHh70tDeO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GYQeNyL4; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1739282127; c=relaxed/simple;
+	bh=LPJIW9CtLWEsBpR7hKRNe4DFO7x2P5md0lGDfeCVAx8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M6y2CSa/ucSn2iP8E8U3VqhBLyqU1IITWOyNG752XCn4Z39+LO+uPGqLhih/YV99y+6ugtMup+m34OlXlUa1vu/AhgzgLZ8liuxV+4n249OM8RA9KH1brvTjcr6ZkUQ9NhT7FJJU/vaL0xlR5buiCtl8WMGkEPkA3obcYRkcZdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=0dqaU3dH; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GYQeNyL4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739280839;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kiPSr3n7+xyd4jM/lLYprUxePjslA+jL9wOlKC/+QfI=;
-	b=GYQeNyL4znWp0r3z23ns2fzNmk/53xyuAy//AC3+DtFJhkDv/vwVQWBWshe9YWKjt6MUgf
-	Qa+SPxW+QVqBhbCCLaFpdFopdfAgifzHy8rFmTEIiEe33qv3BEuLEaXzyPP52BBYFby5nT
-	6UGo0yTixeaOqNeckMgsGB6UbCt6gvE=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-446-QB5PfaO0NsyFgwjzrK0b3A-1; Tue, 11 Feb 2025 08:33:57 -0500
-X-MC-Unique: QB5PfaO0NsyFgwjzrK0b3A-1
-X-Mimecast-MFC-AGG-ID: QB5PfaO0NsyFgwjzrK0b3A
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4394b2c19ccso11910625e9.1
-        for <linux-hardening@vger.kernel.org>; Tue, 11 Feb 2025 05:33:57 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739280836; x=1739885636;
-        h=content-transfer-encoding:mime-version:message-id:date:references
-         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=I6rYC3Ttea935cxDKXU7eGhmr1cWrMQ3SYanZpPc/20=;
-        b=VcDvmmW1B3kgv2EbZntywpB6KggwQKK2lMLC6WeT4wP5nmD6+oJ5+/Ck3VH7PQVN1J
-         5SiSJzY4GJJilkgpgG7G1L9Nj6MotgGYQGWPZrbcJY3QheKgNu7naSZIJVDjBTJMzAk5
-         sIJ/OZAxxP9yUQKB1Uexqx8bGtoGQUXmzm4FaWO4iUWd4ph8hJE69o6csMwgdTGNapOU
-         he9wh3JtzOI3uICUuq1r7vJzGDVb6pbI8/zns5v0wo4Zswr96ksEQKzLM2kQGSlADI/h
-         WqP7KWS+dZ8JLPQszfU84WtMAamIvvVqHL2RHeI/sAsas4JCZ76EQt5tkSgyrfRXFUCD
-         RaeA==
-X-Forwarded-Encrypted: i=1; AJvYcCUEkUeIE2LM76gAOzVmqLvZREAVXqc2++HqkVmsOMXseIE61kQE8xplnQgRLyX0HTDUZbKle+4nwq1a9Aotnuk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwnkybeGEmcyV/YRkmgI0v5aPmR/A1KtLHfM+GYSMTJPM/a4tfy
-	MfgBLRUrCDtGfOBeYO+DENalgxE7Eirmar+QM0vwXka607XN23vb5rstg1UXq8ZwXACvFQw9tnO
-	uzLcOMKhn5O62+HS9PArsCwvwsQfBH5QKkeX450B36H/nu08a6yESSmlNtOqWq4Tc3A==
-X-Gm-Gg: ASbGnctkRQybM1j3ed1oYvTZA+UxSvbHVYB1BcFFmvm0bF6jOs297S8ZtaviJiI82pR
-	kAoZJpXiFFnLbztLDgZ4RlOuHaJ+/tHJG29gz1qX6VF14mCsAi/NdTb8Dy8RufzAw7dQDhXVQbJ
-	bOs4M2tkrG/mZd1d+KQkpXXoLNaFOLiGggxPLqNxLZg6CEjll9RlxYnGvaDeRah9e2tFheco3Ud
-	+pjILCzOo2u9QJY1wu2Pp9g2jBS0VIlhmIGxnKi0xYMdK3earrMIHoS5X9AzQC6MeWuzOMkrM1Z
-	zqYrxot5l+mJUlPWP3KbUJ+VcbC2DU6JW8NTC/ftqr9SziE5asLD2yYV4+aeRlH7aw==
-X-Received: by 2002:a05:600c:384c:b0:439:554f:f64f with SMTP id 5b1f17b1804b1-439554ffb3bmr21891545e9.0.1739280836470;
-        Tue, 11 Feb 2025 05:33:56 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHLaJ199QatUt+F367q7Ky9NspQydjwYuxDlEpx56Dm3c1ApLy01ntC7qxuc1s/8cawIiMmnw==
-X-Received: by 2002:a05:600c:384c:b0:439:554f:f64f with SMTP id 5b1f17b1804b1-439554ffb3bmr21890805e9.0.1739280836017;
-        Tue, 11 Feb 2025 05:33:56 -0800 (PST)
-Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dcb88d5e6sm11688621f8f.1.2025.02.11.05.33.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2025 05:33:55 -0800 (PST)
-From: Valentin Schneider <vschneid@redhat.com>
-To: Jann Horn <jannh@google.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
- virtualization@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
- linux-perf-users@vger.kernel.org, xen-devel@lists.xenproject.org,
- kvm@vger.kernel.org, linux-arch@vger.kernel.org, rcu@vger.kernel.org,
- linux-hardening@vger.kernel.org, linux-mm@kvack.org,
- linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
- bcm-kernel-feedback-list@broadcom.com, Juergen Gross <jgross@suse.com>,
- Ajay Kaher <ajay.kaher@broadcom.com>, Alexey Makhalov
- <alexey.amakhalov@broadcom.com>, Russell King <linux@armlinux.org.uk>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Paul
- Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
- Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
- Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
- Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>, Boris Ostrovsky
- <boris.ostrovsky@oracle.com>, Josh Poimboeuf <jpoimboe@kernel.org>, Pawan
- Gupta <pawan.kumar.gupta@linux.intel.com>, Sean Christopherson
- <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, Andy Lutomirski
- <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Frederic Weisbecker
- <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, Jason
- Baron <jbaron@akamai.com>, Steven Rostedt <rostedt@goodmis.org>, Ard
- Biesheuvel <ardb@kernel.org>, Neeraj Upadhyay
- <neeraj.upadhyay@kernel.org>, Joel Fernandes <joel@joelfernandes.org>,
- Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
- Uladzislau Rezki <urezki@gmail.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>,
- Zqiang <qiang.zhang1211@gmail.com>, Juri Lelli <juri.lelli@redhat.com>,
- Clark Williams <williams@redhat.com>, Yair Podemsky <ypodemsk@redhat.com>,
- Tomas Glozar <tglozar@redhat.com>, Vincent Guittot
- <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Kees Cook
- <kees@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Christoph
- Hellwig <hch@infradead.org>, Shuah Khan <shuah@kernel.org>, Sami Tolvanen
- <samitolvanen@google.com>, Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl
- <aliceryhl@google.com>, "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
- Samuel Holland <samuel.holland@sifive.com>, Rong Xu <xur@google.com>,
- Nicolas Saenz Julienne <nsaenzju@redhat.com>, Geert Uytterhoeven
- <geert@linux-m68k.org>, Yosry Ahmed <yosryahmed@google.com>, "Kirill A.
- Shutemov" <kirill.shutemov@linux.intel.com>, "Masami Hiramatsu (Google)"
- <mhiramat@kernel.org>, Jinghao Jia <jinghao7@illinois.edu>, Luis
- Chamberlain <mcgrof@kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
- Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: Re: [PATCH v4 29/30] x86/mm, mm/vmalloc: Defer
- flush_tlb_kernel_range() targeting NOHZ_FULL CPUs
-In-Reply-To: <CAG48ez1EAATYcX520Nnw=P8XtUDSr5pe+qGH1YVNk3xN2LE05g@mail.gmail.com>
-References: <20250114175143.81438-1-vschneid@redhat.com>
- <20250114175143.81438-30-vschneid@redhat.com>
- <CAG48ez1Mh+DOy0ysOo7Qioxh1W7xWQyK9CLGNU9TGOsLXbg=gQ@mail.gmail.com>
- <xhsmh34hhh37q.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <CAG48ez3H8OVP1GxBLdmFgusvT1gQhwu2SiXbgi8T9uuCYVK52w@mail.gmail.com>
- <xhsmh5xlhk5p2.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <CAG48ez1EAATYcX520Nnw=P8XtUDSr5pe+qGH1YVNk3xN2LE05g@mail.gmail.com>
-Date: Tue, 11 Feb 2025 14:33:51 +0100
-Message-ID: <xhsmh34gkk3ls.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="0dqaU3dH"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=JMokV+6fg2Xdrbbos7AcaNWCczEBKC1U9U+IkW3qWZ8=; b=0dqaU3dHW0dUK2VSIVWYfzO/z/
+	fgSoO8k7bxswv4vk3Xjd1yaSqnJf+OGhDknkqpJyhJdRbv37Ukd2zRPGwikasLE4viaqihVYfIHry
+	tgkfrkKUYeI3WDQoneGWGsNuI2pwHSQYvGWZOUQUgRE9OsmOQzKE9On2Ma55ctJJctHM=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1thqjM-00D4jP-Q4; Tue, 11 Feb 2025 14:55:16 +0100
+Date: Tue, 11 Feb 2025 14:55:16 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Luo Jie <quic_luoj@quicinc.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Lei Wei <quic_leiwei@quicinc.com>,
+	Suruchi Agarwal <quic_suruchia@quicinc.com>,
+	Pavithra R <quic_pavir@quicinc.com>,
+	Simon Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org,
+	quic_kkumarcs@quicinc.com, quic_linchen@quicinc.com,
+	srinivas.kandagatla@linaro.org, bartosz.golaszewski@linaro.org,
+	john@phrozen.org
+Subject: Re: [PATCH net-next v3 13/14] net: ethernet: qualcomm: Add PPE
+ debugfs support for PPE counters
+Message-ID: <5a53333b-e94c-4fb7-b23d-e1d38d2dad8e@lunn.ch>
+References: <20250209-qcom_ipq_ppe-v3-0-453ea18d3271@quicinc.com>
+ <20250209-qcom_ipq_ppe-v3-13-453ea18d3271@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: i2bfidQnDECoo6LITXj1Jy6JpslbZyvegD3XfAiCBeY_1739280836
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250209-qcom_ipq_ppe-v3-13-453ea18d3271@quicinc.com>
 
-On 10/02/25 23:08, Jann Horn wrote:
-> On Mon, Feb 10, 2025 at 7:36=E2=80=AFPM Valentin Schneider <vschneid@redh=
-at.com> wrote:
->> What if isolated CPUs unconditionally did a TLBi as late as possible in
->> the stack right before returning to userspace? This would mean that upon
->> re-entering the kernel, an isolated CPU's TLB wouldn't contain any kerne=
-l
->> range translation - with the exception of whatever lies between the
->> last-minute flush and the actual userspace entry, which should be feasib=
-le
->> to vet? Then AFAICT there wouldn't be any work/flush to defer, the IPI
->> could be entirely silenced if it targets an isolated CPU.
->
-> Two issues with that:
->
+> +#define PRINT_COUNTER_PREFIX(desc, cnt_type)		\
+> +	seq_printf(seq, "%-16s %16s", desc, cnt_type)
+> +
+> +#define PRINT_CPU_CODE_COUNTER(cnt, code)		\
+> +	seq_printf(seq, "%10u(cpucode:%d)", cnt, code)
+> +
+> +#define PRINT_DROP_CODE_COUNTER(cnt, port, code)	\
+> +	seq_printf(seq, "%10u(port=%d),dropcode:%d", cnt, port, code)
+> +
+> +#define PRINT_SINGLE_COUNTER(tag, cnt, str, index)			\
+> +do {									\
+> +	if (!((tag) % 4))							\
+> +		seq_printf(seq, "\n%-16s %16s", "", "");		\
+> +	seq_printf(seq, "%10u(%s=%04d)", cnt, str, index);		\
+> +} while (0)
+> +
+> +#define PRINT_TWO_COUNTERS(tag, cnt0, cnt1, str, index)			\
+> +do {									\
+> +	if (!((tag) % 4))							\
+> +		seq_printf(seq, "\n%-16s %16s", "", "");		\
+> +	seq_printf(seq, "%10u/%u(%s=%04d)", cnt0, cnt1, str, index);	\
+> +} while (0)
 
-Firstly, thank you for entertaining the idea :-)
+I don't think these make the code any more readable. Just inline it.
 
-> 1. I think the "Common not Private" feature Will Deacon referred to is
-> incompatible with this idea:
-> <https://developer.arm.com/documentation/101811/0104/Address-spaces/Commo=
-n-not-Private>
-> says "When the CnP bit is set, the software promises to use the ASIDs
-> and VMIDs in the same way on all processors, which allows the TLB
-> entries that are created by one processor to be used by another"
->
+> +/* The number of packets dropped because of no buffer available, no PPE
+> + * buffer assigned to these packets.
+> + */
+> +static void ppe_port_rx_drop_counter_get(struct ppe_device *ppe_dev,
+> +					 struct seq_file *seq)
+> +{
+> +	u32 reg, drop_cnt = 0;
+> +	int ret, i, tag = 0;
+> +
+> +	PRINT_COUNTER_PREFIX("PRX_DROP_CNT", "SILENT_DROP:");
+> +	for (i = 0; i < PPE_DROP_CNT_TBL_ENTRIES; i++) {
+> +		reg = PPE_DROP_CNT_TBL_ADDR + i * PPE_DROP_CNT_TBL_INC;
+> +		ret = ppe_pkt_cnt_get(ppe_dev, reg, PPE_PKT_CNT_SIZE_1WORD,
+> +				      &drop_cnt, NULL);
+> +		if (ret) {
+> +			seq_printf(seq, "ERROR %d\n", ret);
+> +			return;
+> +		}
 
+This is an error getting the value from the hardware? You should not
+put that into the debugfs itself, you want the read() call to return
+it.
 
-Sorry for being obtuse - I can understand inconsistent TLB states (old vs
-new translations being present in separate TLBs) due to not sending the
-flush IPI causing an issue with that, but not "flushing early". Even if TLB
-entries can be shared/accessed between CPUs, a CPU should be allowed not to
-have a shared entry in its TLB - what am I missing?
+> +/* Display the various packet counters of PPE. */
+> +static int ppe_packet_counter_show(struct seq_file *seq, void *v)
+> +{
+> +	struct ppe_device *ppe_dev = seq->private;
+> +
+> +	ppe_port_rx_drop_counter_get(ppe_dev, seq);
+> +	ppe_port_rx_bm_drop_counter_get(ppe_dev, seq);
+> +	ppe_port_rx_bm_port_counter_get(ppe_dev, seq);
+> +	ppe_parse_pkt_counter_get(ppe_dev, seq);
+> +	ppe_port_rx_counter_get(ppe_dev, seq);
+> +	ppe_vp_rx_counter_get(ppe_dev, seq);
+> +	ppe_pre_l2_counter_get(ppe_dev, seq);
+> +	ppe_vlan_counter_get(ppe_dev, seq);
+> +	ppe_cpu_code_counter_get(ppe_dev, seq);
+> +	ppe_eg_vsi_counter_get(ppe_dev, seq);
+> +	ppe_vp_tx_counter_get(ppe_dev, seq);
+> +	ppe_port_tx_counter_get(ppe_dev, seq);
+> +	ppe_queue_tx_counter_get(ppe_dev, seq);
 
-> 2. It's wrong to assume that TLB entries are only populated for
-> addresses you access - thanks to speculative execution, you have to
-> assume that the CPU might be populating random TLB entries all over
-> the place.
+It would be more normal to have one debugfs file per group of
+counters.
 
-Gotta love speculation. Now it is supposed to be limited to genuinely
-accessible data & code, right? Say theoretically we have a full TLBi as
-literally the last thing before doing the return-to-userspace, speculation
-should be limited to executing maybe bits of the return-from-userspace
-code?
-
-Furthermore, I would hope that once a CPU is executing in userspace, it's
-not going to populate the TLB with kernel address translations - AIUI the
-whole vulnerability mitigation debacle was about preventing this sort of
-thing.
-
+	Andrew
