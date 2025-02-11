@@ -1,104 +1,128 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D0F6130E58;
-	Tue, 11 Feb 2025 04:10:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EB3B2C9A;
+	Tue, 11 Feb 2025 05:54:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739247062; cv=none; b=ML6T/f5ErOrmvWkJFlyNJhAK/8xzpGxDT3aKMiEEHZCBv89ayhwMmlFKun3pJkAbC1WABMEPnH4Gjw/LEVyP2jLwKnPgBO1yY41J7JTs7oJLejMe+xZmmfW/7LsRonDKEzL0QN/IUnni+9uFUYa+TYaA/zDXu0Zg1YjCglZyliw=
+	t=1739253277; cv=none; b=pGUPfkcpWEoqP4oL8c8/C2IUcc6+SMXU4Q1uFD6RFOmXTBTXwpoDLUL5ZiOSDexk3AxgOaDWvOrQmIf45f4pJMSDwNibnOzZAz5Iw5u/47TN1tEdFX2Fa8ckVFc3cEYx0eWWhd13lN7a7/ATbxp0ZZ6qaSSwmGaJNirXS/qYoj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739247062; c=relaxed/simple;
-	bh=5EB8g/uOvyrDBMsmspqSzKjHK8EvUOY35tJ0BHhVOzU=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=st8vbFQCwZgi7xKKFCnBA3ySXSM5YRPujOCABFz8Mznpi4sRnXvChEUhbezls89XVBncAKMRsu4V8b4rHowAkIb84AP/zYCcLGmklQiZwN6WQq4W18xASR63zzp80t3FVsRLjNFdSG/BSnix9sTkNzsT8eCSh8jgp1uitlaEqeY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=fx4WT9Rc; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+	s=arc-20240116; t=1739253277; c=relaxed/simple;
+	bh=hVmFd14xdvqxZNoX8n/AztacQV0z9P6ENxKHHDjuzL4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=krdAMi1jnbCxXkDIryw80nZVrH29mdO3pXh8wOL9M3YKFV+jC4v5WEl5JxwaQE+kWlYaguGl3rf43Bk29Cwi1IOM6cWwGK1tvf+vhYaskG0cRtDn7BgD3MyTX5SKs09McmrZdzpgMMQ8cmAz2XZEI5LU7BB5JIgXdJ6b8X9Tcy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Qy1LI0Hz; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="fx4WT9Rc"
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 51B49ujF63909179, This message is accepted by code: ctloc85258
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
-	t=1739246996; bh=5EB8g/uOvyrDBMsmspqSzKjHK8EvUOY35tJ0BHhVOzU=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:MIME-Version;
-	b=fx4WT9RcvBvLOVkQrIkKpy1/oVNIqZoSUTJRFjJ92iEE6IY480+gPqX9CWK3vAkmk
-	 fHQD+IN0QOzQbB1aPHWE8M12ds+H09JCchrLsb15H0MuF4dPGN6nML+ZYq87W1xjCN
-	 LbEAMMKsW+ZILhAl/FizDuQ7hblxSQ7okOrdaWiFyawlmuFtxC5ifMmfU7Fbww63Sf
-	 VCFl0iHKMXr2jhZiyDq1+zIVqvhAxCjX3dS5kXAvQ7NVLgoOTBNERYEzK74vUijcw7
-	 WcuAQZr6RlrfdINzZKMkPkBZanKMQf4AuFqUM3TAtr/zJr4ParWVxyFlFSsJ05Jxw0
-	 jpcqUk1RIaJHg==
-Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
-	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 51B49ujF63909179
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 11 Feb 2025 12:09:56 +0800
-Received: from RTEXDAG02.realtek.com.tw (172.21.6.101) by
- RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Tue, 11 Feb 2025 12:09:57 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXDAG02.realtek.com.tw (172.21.6.101) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Tue, 11 Feb 2025 12:09:56 +0800
-Received: from RTEXMBS04.realtek.com.tw ([fe80::48ab:b54f:96a1:6553]) by
- RTEXMBS04.realtek.com.tw ([fe80::48ab:b54f:96a1:6553%5]) with mapi id
- 15.01.2507.035; Tue, 11 Feb 2025 12:09:56 +0800
-From: Ping-Ke Shih <pkshih@realtek.com>
-To: Ethan Carter Edwards <ethan@ethancedwards.com>,
-        Jeff Johnson
-	<jeff.johnson@oss.qualcomm.com>
-CC: Kalle Valo <kvalo@kernel.org>,
-        Karthikeyan Periyasamy
-	<quic_periyasa@quicinc.com>,
-        Jeff Johnson <jjohnson@kernel.org>,
-        "Harshitha
- Prem" <quic_hprem@quicinc.com>,
-        Kalle Valo <quic_kvalo@quicinc.com>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "ath12k@lists.infradead.org" <ath12k@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-Subject: RE: [PATCH] wifi: ath12k: Fix uninitialized variable and remove goto
-Thread-Topic: [PATCH] wifi: ath12k: Fix uninitialized variable and remove goto
-Thread-Index: AQHbe3V4G+SZHcbSkEu0HsYEXOLAqrNAxeaAgAAWcwCAAJ8zYA==
-Date: Tue, 11 Feb 2025 04:09:56 +0000
-Message-ID: <94ddba7eff9f4261bf8fa547f1ba4d7d@realtek.com>
-References: <20250209-ath12k-uninit-v1-1-afc8005847be@ethancedwards.com>
- <a7ca4e4b-c432-4f2b-81c6-c7b06cd12de1@oss.qualcomm.com>
- <mmutvwbsr3h33hxr364zr6f3whmyxp73od3fihsbynek2pkvjd@6bqaqfkwkf4m>
-In-Reply-To: <mmutvwbsr3h33hxr364zr6f3whmyxp73od3fihsbynek2pkvjd@6bqaqfkwkf4m>
-Accept-Language: en-US, zh-TW
-Content-Language: zh-TW
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Qy1LI0Hz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739253275; x=1770789275;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=hVmFd14xdvqxZNoX8n/AztacQV0z9P6ENxKHHDjuzL4=;
+  b=Qy1LI0Hzi/aYyjWOfgYyamLy5KEk3NDue4PN04/v0CXv8l5rf45SKP0K
+   Hu+ff7WQoCfXUUn/nUIn9Dt4odIX9g9n4b9HJS3/+GKTQygfmyA76++b5
+   eeUsg50+sXKY1j1kvlHOaBuKeyBwRI5WZPSWpZsuQgIQPUZMZS+dxeE3e
+   XhamQYgEH9x0Z0GTy+msgvgARp11XVXiFhruNoqUF7Tu50kms35FlTUXh
+   UQXs6Op1hpCzcZTfv/0yxwTQpWrNRINfxfvVy7LoF6wYcZetw4L4G6GLB
+   AThpAq5CYduPcik2IY6V109ecDhlFUb0hRt4vZ5RzrOZYp9Nbq8L1n7Vd
+   w==;
+X-CSE-ConnectionGUID: TSA9MU24R/qzM54cWzCP1Q==
+X-CSE-MsgGUID: 6OdS7neCSzO7dgsVmtiZZQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="51288710"
+X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
+   d="scan'208";a="51288710"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 21:54:34 -0800
+X-CSE-ConnectionGUID: xj7JgrJwRl+YPqx4HtZBpA==
+X-CSE-MsgGUID: R0B+Cx0sTLyTFUH0k0ebvw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="135666689"
+Received: from mev-dev.igk.intel.com ([10.237.112.144])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 21:54:31 -0800
+Date: Tue, 11 Feb 2025 06:50:56 +0100
+From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+To: Ethan Carter Edwards <ethan@ethancedwards.com>
+Cc: hariprasad <hkelam@marvell.com>, Sunil Goutham <sgoutham@marvell.com>,
+	Geetha sowjanya <gakula@marvell.com>,
+	Subbaraya Sundeep <sbhatta@marvell.com>,
+	Bharat Bhushan <bbhushan2@marvell.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] octeontx2-af: Fix uninitialized scalar variable
+Message-ID: <Z6rk3Z6TuFSJgSaV@mev-dev.igk.intel.com>
+References: <20250210-otx2_common-v1-1-954570a3666d@ethancedwards.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250210-otx2_common-v1-1-954570a3666d@ethancedwards.com>
 
-> > >
-> > > Addresses-Coverity-ID: 1642337 ("Uninitialized scalar variable")
-> >
-> > Is that an official kernel tag? IMO the proper tag would be
-> So, it isn't "official" as far as I can tell, but it is widely used in
-> other commits, especially by Gustavo Silva.
->=20
-> Also:
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commi=
-t/?id=3D778e2478d19574508861bcb
-> 1806d6e34d095587c
->=20
-> Coverity-IDs: is another option I have found. I have seen Closes: a few
-> times as well. I'm not really sure what the best option is, honestly.
+On Mon, Feb 10, 2025 at 09:01:52PM -0500, Ethan Carter Edwards wrote:
+> The variable *max_mtu* is uninitialized in the function
+> otx2_get_max_mtu. It is only assigned in the if-statement, leaving the
+> possibility of returning an uninitialized value.
 
-In my patch, I used and treated Addresses-Coverity-ID as a unofficial tag,
-so additional empty line is added.
+In which case? If rc == 0 at the end of the function max_mtu is set to
+custom value from HW. If rc != it will reach the if after goto label and
+set max_mtu to default.
 
-Days ago I have received Coverity issues sent to mailing list, so I used
-Closes tag at that time. But recently I have not seen that kind of mails.=20
-Instead, I visit Coverity web site to check issues and use
-Addresses-Coverity-ID tag, since Coverity link is not visible to everyone.
-That is just my thought.=20
+In my opinion this change is good. It is easier to see that the variable
+is alwyas correct initialized, but I don't think it is a fix for real
+issue.
 
+Thanks,
+Michal
 
+> 
+> 1500 is the industry standard networking mtu and therefore should be the
+> default. If the function detects that the hardware custom sets the mtu,
+> then it will use it instead.
+> 
+> Addresses-Coverity-ID: 1636407 ("Uninitialized scalar variable")
+> Fixes: ab58a416c93f ("octeontx2-pf: cn10k: Get max mtu supported from admin function")
+> Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
+> ---
+>  drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c
+> index 2b49bfec78692cf1f63c793ec49511607cda7c3e..6c1b03690a9c24c5232ff9f07befb1cc553490f7 100644
+> --- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c
+> +++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c
+> @@ -1909,7 +1909,7 @@ u16 otx2_get_max_mtu(struct otx2_nic *pfvf)
+>  {
+>  	struct nix_hw_info *rsp;
+>  	struct msg_req *req;
+> -	u16 max_mtu;
+> +	u16 max_mtu = 1500;
+>  	int rc;
+>  
+>  	mutex_lock(&pfvf->mbox.lock);
+> @@ -1948,7 +1948,6 @@ u16 otx2_get_max_mtu(struct otx2_nic *pfvf)
+>  	if (rc) {
+>  		dev_warn(pfvf->dev,
+>  			 "Failed to get MTU from hardware setting default value(1500)\n");
+> -		max_mtu = 1500;
+>  	}
+>  	return max_mtu;
+>  }
+> 
+> ---
+> base-commit: febbc555cf0fff895546ddb8ba2c9a523692fb55
+> change-id: 20250210-otx2_common-453132aa0a24
+> 
+> Best regards,
+> -- 
+> Ethan Carter Edwards <ethan@ethancedwards.com>
