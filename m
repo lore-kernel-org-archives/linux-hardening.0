@@ -1,136 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76C7517C91;
-	Tue, 11 Feb 2025 17:49:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C789E25A2DB
+	for <linux-hardening@vger.kernel.org>; Tue, 11 Feb 2025 18:54:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739296169; cv=none; b=OtnZFPw4SCSYD9mWvYSIv4Q4EBoPyH1pWHAFp/Ur08XqPTmR4pHj0rY4QafIpqg4Oi5+lgwLHCpetjoyPNQ7Y+zmwl2kwHvbervSSTMu2HkNEKZ4hGRLzXMs8SK8TOja8p1DHgnUosdt8e63AbUUtJTHxR+PpUUuRQg4AnbLZNM=
+	t=1739300102; cv=none; b=YUjTE6E6aIakkLok8rEQUk1rcpL2t+n7RE4d6UaEP1Yu+/1CxyGAjyWPiD+7fROwpKcweVg3KZvfDW9mKtEi4tjE137MkRD3ob6IIEJdCb3Svf/PycUo3eaTmFq2w7ckAMi8+SCqx0SxWjr8sMGDp3CfHc401pp+XZ18YF3r9oc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739296169; c=relaxed/simple;
-	bh=hBM3qEWuCBL66wdrUKj7M9a2AATgh8I6a+M8Txmi/k8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p6FFlWG5VcTp5/204u+Qb4WQCFd+0SBQsdW3252SiMiT5HyyUEzkprcdDEvToV0+NT47vRS1MUuv1dgnucp4/PcgjN3brvuxno5wSmKXATuhA1+MKqOSd0jk8wfpElYTMVZwXE2tCq31VMmNDjK9zdAbV6TfVgHS8kPaVWaHwdg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EhX8LCNW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739300102; c=relaxed/simple;
+	bh=2NFgTKZpUWVZdAUiFKPyuSsYRytI7F1lf/BkXz3fClY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dZiWsWXzaUtZf5LNFymK1+5Ofb7lCJ0tJG9E8/scA3IVVR+dw3naSw7qP9IbEQeiEjnPrwH4nYuKd+sfammxQwSFNkug5sZ2E8JbN0bsOQyIz6kyZXf9QVzzZQ2eJc/z0vtA9zEOpniNg3MP2TASH4YeDRWMU1OGpoguUte1i+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=WYOu5hLC; arc=none smtp.client-ip=95.215.58.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EhX8LCNW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D375C4CEDD;
-	Tue, 11 Feb 2025 17:49:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739296169;
-	bh=hBM3qEWuCBL66wdrUKj7M9a2AATgh8I6a+M8Txmi/k8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EhX8LCNWRFQgX/XJXsERVrxEBjMe3shJhxvueQo43z8HAzWhg0b7edderCgNa0mxK
-	 S7b+4Cs8dOSL2GLsDk31hyZS5DxRkPha6kcWIc36WtrRXeM8daC3n8x+tZut17TL0i
-	 cTIsyeKxlyc89BUTzRx9s4HyL5udXxOzmfLNd+3TSs4YYGiahAhIQSBzrsPjxwJzCr
-	 Hq0omcguxlpAJ2vRTVaq9fisdw2rnMz58gOKnqBogFahzyVfiay8lfYKjYwm/nJAVm
-	 SwHw7IaOlPN4jvRi0usNvrZ/4NgQSKkOqOc7+CskKxUlL1312XMa9m6J+oivTIvZiW
-	 memKCy4aVbwCQ==
-Date: Tue, 11 Feb 2025 09:49:27 -0800
-From: Kees Cook <kees@kernel.org>
-To: Gal Pressman <gal@nvidia.com>
-Cc: netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Tariq Toukan <tariqt@nvidia.com>,
-	Louis Peens <louis.peens@corigine.com>,
-	Simon Horman <horms@kernel.org>, David Ahern <dsahern@kernel.org>,
-	Pravin B Shelar <pshelar@ovn.org>, Yotam Gigi <yotam.gi@gmail.com>,
-	Jamal Hadi Salim <jhs@mojatatu.com>,
-	Cong Wang <xiyou.wangcong@gmail.com>, Jiri Pirko <jiri@resnulli.us>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, dev@openvswitch.org,
-	linux-hardening@vger.kernel.org, Cosmin Ratiu <cratiu@nvidia.com>
-Subject: Re: [PATCH net-next] net: Add options as a flexible array to struct
- ip_tunnel_info
-Message-ID: <202502110942.8DE626C@keescook>
-References: <20250209101853.15828-1-gal@nvidia.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="WYOu5hLC"
+Message-ID: <a97bf84a-21e8-41ce-8679-332630136ec5@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1739300097;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rYTA8Yg9YQQb28J/lnoc+xxJ4BC+fKNM3Ta76gIp5j4=;
+	b=WYOu5hLCkrrt4uzQ3yU43CXEEAHmWLvmQTb1EmVfay/eIQdb88ImxkP7CrO0urIhlt6WYQ
+	eh/ShQLv8OVTiBynTSOLY45HHI+eomYCxPeAvfiBU2PJQBOKGjXusTrDomit8CgCDAvbe/
+	MIuIyYDUDdBxyNeIVvjYtkt9qu5bWZo=
+Date: Tue, 11 Feb 2025 12:54:52 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250209101853.15828-1-gal@nvidia.com>
+Subject: Re: [PATCH] ASoC: Intel: sof_sdw: initialize ret in
+ asoc_sdw_rt_amp_spk_rtd_init()
+To: Mark Brown <broonie@kernel.org>,
+ Ethan Carter Edwards <ethan@ethancedwards.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, linux-sound@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+ Bard Liao <yung-chuan.liao@linux.intel.com>, shumingf@realtek.com
+References: <20250210-soc_sdw_rt_amp-v1-1-1ee1afcd8941@ethancedwards.com>
+ <ad5eb513-d3ef-42b8-b4a7-88a6ecf08804@sirena.org.uk>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>
+In-Reply-To: <ad5eb513-d3ef-42b8-b4a7-88a6ecf08804@sirena.org.uk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Sun, Feb 09, 2025 at 12:18:53PM +0200, Gal Pressman wrote:
-> Remove the hidden assumption that options are allocated at the end of
-> the struct, and teach the compiler about them using a flexible array.
+On 2/11/25 07:13, Mark Brown wrote:
+> On Mon, Feb 10, 2025 at 11:08:27PM -0500, Ethan Carter Edwards wrote:
+>> There is a possibility for an uninitialized *ret* variable to be
+>> returned in some code paths.
+>>
+>> Setting to 0 prevents a random value from being returned.
 > 
-> With this, we can revert the unsafe_memcpy() call we have in
-> tun_dst_unclone() [1], and resolve the false field-spanning write
-> warning caused by the memcpy() in ip_tunnel_info_opts_set().
-> 
-> Note that this patch changes the layout of struct ip_tunnel_info since
-> there is padding at the end of the struct.
-> Before this, options would be written at 'info + 1' which is after the
-> padding.
-> After this patch, options are written right after 'mode' field (into the
-> padding).
-> 
-> [1] Commit 13cfd6a6d7ac ("net: Silence false field-spanning write warning in metadata_dst memcpy")
-> 
-> Link: https://lore.kernel.org/all/53D1D353-B8F6-4ADC-8F29-8C48A7C9C6F1@kernel.org/
-> Suggested-by: Kees Cook <kees@kernel.org>
-> Reviewed-by: Cosmin Ratiu <cratiu@nvidia.com>
-> Reviewed-by: Tariq Toukan <tariqt@nvidia.com>
-> Signed-off-by: Gal Pressman <gal@nvidia.com>
-> [...]
-> @@ -107,6 +101,7 @@ struct ip_tunnel_info {
->  #endif
->  	u8			options_len;
->  	u8			mode;
-> +	u8			options[] __counted_by(options_len);
->  };
+> That'll shut up the warning but is the warning trying to tell us that
+> there's a logic bug somewhere in the function and we're for example
+> forgetting to look at a return value in some path in the function?
 
-I see __counted_by being added here (thank you).
+The problematic code is this:
 
-> [...]
-> @@ -659,7 +654,7 @@ static inline void ip_tunnel_info_opts_set(struct ip_tunnel_info *info,
->  {
->  	info->options_len = len;
->  	if (len > 0) {
-> -		memcpy(ip_tunnel_info_opts(info), from, len);
-> +		memcpy(info->options, from, len);
->  		ip_tunnel_flags_or(info->key.tun_flags, info->key.tun_flags,
->  				   flags);
->  	}
+for_each_rtd_codec_dais(rtd, i, codec_dai) {
+	if (strstr(codec_dai->component->name_prefix, "-1"))
+		ret = snd_soc_dapm_add_routes(&card->dapm, rt_amp_map, 2);
+	else if (strstr(codec_dai->component->name_prefix, "-2"))
+		ret = snd_soc_dapm_add_routes(&card->dapm, rt_amp_map + 2, 2);
+}
 
-And I see info->options_len being set here before the copy into
-info_>options. What validates that "info" was allocated with enough
-space to hold "len" here? I would have expected this as allocation time
-instead of here.
+return ret;
 
-> diff --git a/net/core/dst.c b/net/core/dst.c
-> index 9552a90d4772..d981c295a48e 100644
-> --- a/net/core/dst.c
-> +++ b/net/core/dst.c
-> @@ -286,7 +286,8 @@ struct metadata_dst *metadata_dst_alloc(u8 optslen, enum metadata_type type,
->  {
->  	struct metadata_dst *md_dst;
->  
-> -	md_dst = kmalloc(sizeof(*md_dst) + optslen, flags);
-> +	md_dst = kmalloc(struct_size(md_dst, u.tun_info.options, optslen),
-> +			 flags);
->  	if (!md_dst)
->  		return NULL;
->  
+I am not sure if it's possible that either the for_each does nothing or that the two branches are skipped, but certainly initializing the 'ret' value makes sense to me.
 
-I don't see options_len being set here? I assume since it's sub-type
-specific. I'd expect the type to be validated (i.e. optslen must == 0
-unless this is a struct ip_tunnel_info, and if so, set options_len here
-instead of in ip_tunnel_info_opts_set().
+Bard, Shuming, what do you think?
 
-Everything else looks very good, though, yes, I would agree with the
-alignment comments made down-thread. This was "accidentally correct"
-before in the sense that the end of the struct would be padded for
-alignment, but isn't guaranteed to be true with an explicit u8 array.
-The output of "pahole -C struct ip_tunnel_info" before/after should
-answer any questions, though.
 
--Kees
 
--- 
-Kees Cook
