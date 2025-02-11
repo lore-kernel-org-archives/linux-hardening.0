@@ -1,105 +1,104 @@
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9B2B1D5CD1;
-	Tue, 11 Feb 2025 04:08:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D0F6130E58;
+	Tue, 11 Feb 2025 04:10:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739246922; cv=none; b=Zvu1lwk0u8mazjO6PIw22F/ffIV098vE15zmsMdLHYS9zzGjAndcGWmLLk1x9ya3+LWnDGyN2zo9VaHiXsejitPS9zAKskE0mg1fI/v87orBYxdJXkBSqOq9/iBNaNqsCWMv6WH8DwWlHQ3EcL2oHPhuPZFLtVHHolla2CHu+Pg=
+	t=1739247062; cv=none; b=ML6T/f5ErOrmvWkJFlyNJhAK/8xzpGxDT3aKMiEEHZCBv89ayhwMmlFKun3pJkAbC1WABMEPnH4Gjw/LEVyP2jLwKnPgBO1yY41J7JTs7oJLejMe+xZmmfW/7LsRonDKEzL0QN/IUnni+9uFUYa+TYaA/zDXu0Zg1YjCglZyliw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739246922; c=relaxed/simple;
-	bh=RIdLjh0gInw/I9blWel0UlToC5xdW4xXT3livZR0rJc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=UQJQlgpUkoR8w3jfKlUpHfl0zVpKZJl5AZm4OoyBGXwpW0+wfIzzmh5mpanzDpKngsjsqyFuiQa9+kj6hfJBhdQbEEgcESeeogWU/F+Ya2Bmgli9xPOmdGrEado5xVVT6+zu5uOV46IqbioOQBGcZVttqCmQM11AH6BYq3Cv7hE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com; spf=pass smtp.mailfrom=ethancedwards.com; dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b=FMLvhbTY; arc=none smtp.client-ip=80.241.56.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ethancedwards.com
+	s=arc-20240116; t=1739247062; c=relaxed/simple;
+	bh=5EB8g/uOvyrDBMsmspqSzKjHK8EvUOY35tJ0BHhVOzU=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=st8vbFQCwZgi7xKKFCnBA3ySXSM5YRPujOCABFz8Mznpi4sRnXvChEUhbezls89XVBncAKMRsu4V8b4rHowAkIb84AP/zYCcLGmklQiZwN6WQq4W18xASR63zzp80t3FVsRLjNFdSG/BSnix9sTkNzsT8eCSh8jgp1uitlaEqeY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=fx4WT9Rc; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b="FMLvhbTY"
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4YsSc36PQNz9t0N;
-	Tue, 11 Feb 2025 05:08:35 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ethancedwards.com;
-	s=MBO0001; t=1739246916;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=y0neZiz0fLVNbrblskOmdm8UUdxdooce3vHdNB+7YLA=;
-	b=FMLvhbTY6AfyMGu5f5YG7nHM0Ysya9bCSvxSxF9LQiAV5EPqTchMCL2AuMo/8atJyg63vL
-	jB4lOVOmCWJNdCCVZkQssUCTdK3QdUVzvGprScKMyo27GAMrYmBoI65h7LDFe571VfNxUY
-	du6RgUt0d8IMsmFxMWtPvBtoH8DfqDPgXyhTGtjrg/lXxrAIBOCqFoo1TGrXLDVD0v9cyN
-	eKnsrb1M/8iBQHlwZl1gqzglbqVuZINraYZJCblpZQ2T81i5HpdKiFpCLx99Gb/0deP1Jo
-	GI1XIN6r5HKIu7zXTS0ze1aMcQ2zbq7sQdymmG8R2/XPMlzSCOHak2ZBU7hbrA==
-From: Ethan Carter Edwards <ethan@ethancedwards.com>
-Date: Mon, 10 Feb 2025 23:08:27 -0500
-Subject: [PATCH] ASoC: Intel: sof_sdw: initialize ret in
- asoc_sdw_rt_amp_spk_rtd_init()
+	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="fx4WT9Rc"
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 51B49ujF63909179, This message is accepted by code: ctloc85258
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
+	t=1739246996; bh=5EB8g/uOvyrDBMsmspqSzKjHK8EvUOY35tJ0BHhVOzU=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding:MIME-Version;
+	b=fx4WT9RcvBvLOVkQrIkKpy1/oVNIqZoSUTJRFjJ92iEE6IY480+gPqX9CWK3vAkmk
+	 fHQD+IN0QOzQbB1aPHWE8M12ds+H09JCchrLsb15H0MuF4dPGN6nML+ZYq87W1xjCN
+	 LbEAMMKsW+ZILhAl/FizDuQ7hblxSQ7okOrdaWiFyawlmuFtxC5ifMmfU7Fbww63Sf
+	 VCFl0iHKMXr2jhZiyDq1+zIVqvhAxCjX3dS5kXAvQ7NVLgoOTBNERYEzK74vUijcw7
+	 WcuAQZr6RlrfdINzZKMkPkBZanKMQf4AuFqUM3TAtr/zJr4ParWVxyFlFSsJ05Jxw0
+	 jpcqUk1RIaJHg==
+Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
+	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 51B49ujF63909179
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 11 Feb 2025 12:09:56 +0800
+Received: from RTEXDAG02.realtek.com.tw (172.21.6.101) by
+ RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Tue, 11 Feb 2025 12:09:57 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXDAG02.realtek.com.tw (172.21.6.101) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Tue, 11 Feb 2025 12:09:56 +0800
+Received: from RTEXMBS04.realtek.com.tw ([fe80::48ab:b54f:96a1:6553]) by
+ RTEXMBS04.realtek.com.tw ([fe80::48ab:b54f:96a1:6553%5]) with mapi id
+ 15.01.2507.035; Tue, 11 Feb 2025 12:09:56 +0800
+From: Ping-Ke Shih <pkshih@realtek.com>
+To: Ethan Carter Edwards <ethan@ethancedwards.com>,
+        Jeff Johnson
+	<jeff.johnson@oss.qualcomm.com>
+CC: Kalle Valo <kvalo@kernel.org>,
+        Karthikeyan Periyasamy
+	<quic_periyasa@quicinc.com>,
+        Jeff Johnson <jjohnson@kernel.org>,
+        "Harshitha
+ Prem" <quic_hprem@quicinc.com>,
+        Kalle Valo <quic_kvalo@quicinc.com>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "ath12k@lists.infradead.org" <ath12k@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
+Subject: RE: [PATCH] wifi: ath12k: Fix uninitialized variable and remove goto
+Thread-Topic: [PATCH] wifi: ath12k: Fix uninitialized variable and remove goto
+Thread-Index: AQHbe3V4G+SZHcbSkEu0HsYEXOLAqrNAxeaAgAAWcwCAAJ8zYA==
+Date: Tue, 11 Feb 2025 04:09:56 +0000
+Message-ID: <94ddba7eff9f4261bf8fa547f1ba4d7d@realtek.com>
+References: <20250209-ath12k-uninit-v1-1-afc8005847be@ethancedwards.com>
+ <a7ca4e4b-c432-4f2b-81c6-c7b06cd12de1@oss.qualcomm.com>
+ <mmutvwbsr3h33hxr364zr6f3whmyxp73od3fihsbynek2pkvjd@6bqaqfkwkf4m>
+In-Reply-To: <mmutvwbsr3h33hxr364zr6f3whmyxp73od3fihsbynek2pkvjd@6bqaqfkwkf4m>
+Accept-Language: en-US, zh-TW
+Content-Language: zh-TW
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250210-soc_sdw_rt_amp-v1-1-1ee1afcd8941@ethancedwards.com>
-X-B4-Tracking: v=1; b=H4sIADvNqmcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDI0MD3eL85PjilPL4opL4xNwC3VTLZHMD49SkVJOUZCWgpoKi1LTMCrC
- B0bG1tQBe6DfAYAAAAA==
-X-Change-ID: 20250210-soc_sdw_rt_amp-e9c703ebe4dc
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-hardening@vger.kernel.org, 
- Ethan Carter Edwards <ethan@ethancedwards.com>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1364;
- i=ethan@ethancedwards.com; h=from:subject:message-id;
- bh=RIdLjh0gInw/I9blWel0UlToC5xdW4xXT3livZR0rJc=;
- b=LS0tLS1CRUdJTiBQR1AgTUVTU0FHRS0tLS0tCgpvd0o0bkp2QXk4ekFKWGJEOXFoNThlVGp6e
- GhQcXlVeHBLODZhLy9ZTGV2NHY1bi92MytVeWZlS09sRWpjZDR4CjMvOTY1dnNGRzNQNmcrYjR1
- cWwxbExJd2lIRXh5SW9wc3Z6UFVVNTdxRGxEWWVkZmx5YVlPYXhNSUVNWXVEZ0YKWUNLZTN4Z1p
- qano2OHUxS3R1KzB5TmZQWlNWQ3ZwNmRQMi83MHRwTFFXZXVkOG5xbG5Wc1ZXYjRaM2FnOUhQMg
- oxYnpRNDh2MGRWOFoxcys5K21SOTlOVGJ4dmJ6NTM4NnV0dDJMajhBVnJWVVR3PT0KPUpjZE8KL
- S0tLS1FTkQgUEdQIE1FU1NBR0UtLS0tLQo=
-X-Developer-Key: i=ethan@ethancedwards.com; a=openpgp;
- fpr=2E51F61839D1FA947A7300C234C04305D581DBFE
 
-There is a possibility for an uninitialized *ret* variable to be
-returned in some code paths.
+> > >
+> > > Addresses-Coverity-ID: 1642337 ("Uninitialized scalar variable")
+> >
+> > Is that an official kernel tag? IMO the proper tag would be
+> So, it isn't "official" as far as I can tell, but it is widely used in
+> other commits, especially by Gustavo Silva.
+>=20
+> Also:
+> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commi=
+t/?id=3D778e2478d19574508861bcb
+> 1806d6e34d095587c
+>=20
+> Coverity-IDs: is another option I have found. I have seen Closes: a few
+> times as well. I'm not really sure what the best option is, honestly.
 
-Setting to 0 prevents a random value from being returned.
+In my patch, I used and treated Addresses-Coverity-ID as a unofficial tag,
+so additional empty line is added.
 
-Closes: https://scan5.scan.coverity.com/#/project-view/63873/10063?selectedIssue=1627120
-Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
----
-Would it potentially be better to remove ret entirely and just return 0
-explicitly at the end of the function and directly return in the if
-statements? I'm not sure.
----
- sound/soc/sdw_utils/soc_sdw_rt_amp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Days ago I have received Coverity issues sent to mailing list, so I used
+Closes tag at that time. But recently I have not seen that kind of mails.=20
+Instead, I visit Coverity web site to check issues and use
+Addresses-Coverity-ID tag, since Coverity link is not visible to everyone.
+That is just my thought.=20
 
-diff --git a/sound/soc/sdw_utils/soc_sdw_rt_amp.c b/sound/soc/sdw_utils/soc_sdw_rt_amp.c
-index 0538c252ba69b1f5a24ba2de2a610b22d0c0665f..61a00a3548d85689c13e2d2a301da17a572e4a0e 100644
---- a/sound/soc/sdw_utils/soc_sdw_rt_amp.c
-+++ b/sound/soc/sdw_utils/soc_sdw_rt_amp.c
-@@ -190,7 +190,7 @@ int asoc_sdw_rt_amp_spk_rtd_init(struct snd_soc_pcm_runtime *rtd, struct snd_soc
- 	const struct snd_soc_dapm_route *rt_amp_map;
- 	char codec_name[CODEC_NAME_SIZE];
- 	struct snd_soc_dai *codec_dai;
--	int ret;
-+	int ret = 0;
- 	int i;
- 
- 	rt_amp_map = get_codec_name_and_route(dai, codec_name);
-
----
-base-commit: febbc555cf0fff895546ddb8ba2c9a523692fb55
-change-id: 20250210-soc_sdw_rt_amp-e9c703ebe4dc
-
-Best regards,
--- 
-Ethan Carter Edwards <ethan@ethancedwards.com>
 
