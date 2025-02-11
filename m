@@ -1,166 +1,201 @@
-Received: from mail-io1-f54.google.com (mail-io1-f54.google.com [209.85.166.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15D68E573
-	for <linux-hardening@vger.kernel.org>; Tue, 11 Feb 2025 00:01:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DDF7524F;
+	Tue, 11 Feb 2025 00:31:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739232082; cv=none; b=gcM6yb2RaTl71nwqh4t8EBoPHb2B9CuLsu3CoIFoCWdVv0NTrGwFTc+/+rYqo9WCewvIYlY7b2XfjzZ5vPVdZe/4tmZmyEqV9BlMO435z/H1jUjoIjX+fBvFbtTwa86UAKewCwR68dLULSi2JR0Z2SQH7CgIO7o1au8ASwwQrpE=
+	t=1739233897; cv=none; b=B/2puNQ91cjUPlpJKxihYWXCNN5AhHfk85Ia8KOxaBh5q3oB9O6F/aPw9r69hzHY4ff9Zuks//hn+7JIpwdeRFQuLLyPnVd49O5p0MqsCgJ2f2ZQc/DAc/anW5jGSX7JyDsaywBg/+O6csG2+NuX6wVKU0wGYKUhbsYF20T/pHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739232082; c=relaxed/simple;
-	bh=nJ6LzyoeCFVUzoZJxDKWwrZWehljrX0DhSYi/LN5Rh0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CHm6KnVYmX6DNqRI5a9u9eB3bNuLxm2vXFPTUYoGCZjHdFvxhEa6gUGt3NhPYrYKs7PMpYBzZFwukxK/IYR29EkDHIOV0ocA4XcMG60uYEKhQbSonSmekRVtgwOwnKtFXDR7L1uOBp1015eUZ5PvFLdVhu3Qyt/14D2LWH7HVBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iX5WbZS+; arc=none smtp.client-ip=209.85.166.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1739233897; c=relaxed/simple;
+	bh=BmsEnez1b0zRvTS3dQOIzftkHPfoxZVnxcnBemZHVVA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Ce8IR1v14N60YHSchPWUyVwSnZjkh6yyb4ibfl0AmXv25U0pqsBUwIi41FF2etZc42AqxmN4wsKVcAVf8bUdHm6nEPdkkbp6re2BouxpOVCGffi8yxY5bOj6wPIQC2Ib4Q+3TJccwjrz4LnffVOGJqcjFKln56UHE1G6X9Tufnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B3YlhPnV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iX5WbZS+"
-Received: by mail-io1-f54.google.com with SMTP id ca18e2360f4ac-85522610e26so40243739f.0
-        for <linux-hardening@vger.kernel.org>; Mon, 10 Feb 2025 16:01:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739232076; x=1739836876; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=o+6VjZyKkm05cc5abGkcRCYDQiyuvjp7DI1YWDZerk8=;
-        b=iX5WbZS+JoAYBsgYxpl6YrW89+p70yhF992Vocgl1ivjdsv+Satdjm2HcL7lSdBpl7
-         SOEeJpC9dxduVk8eQbhzyGyfRtI84+H8+5zVdhqxsg8ct01aHL96fo5EfI4zNh2sqSHt
-         2ceVv45CI4Ub4aUp0R4dRks7NoYYo75pH8X8e8oERVapjcQAP8w2P6rkqKdcU30iASKB
-         bnkSFwH7cSU2GIkcpT4SWfGfI6lo2RC0NJIfZ7o47OQ1zbtdZk6/ElOdg9qhjGEr3pPw
-         OEvhYdS8nmV2sUGoqX5JwZAT7qFttafzr7Hzg/uuJ04wWSkdoY/dAKjaaLRal6NOeg2+
-         N7RQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739232076; x=1739836876;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=o+6VjZyKkm05cc5abGkcRCYDQiyuvjp7DI1YWDZerk8=;
-        b=lGXi9aHRvUQL7afZhdgfL6WeLL95ySaV8026dBTN/+arZbYIn3GS5hQIuFVdkFd5Me
-         t2PFeLnCLlmieYqJUBWhmCerUWuTuuV65yW8V0e9ljxideFQMNr0ZOWgytMi6LggzVIW
-         hHPGjMZCR9qreEDxGByfOF35j84WUUjB8EkLCMisKmgh5X3tM8xgRyZ1q1ZMyqooDxT6
-         evzRRDjsRnJ3LfNkTFuUDUMrgHx8zm2FNhpmS05kd3bf3ZKzy3d8vEGxQaWiZYeQcbGw
-         ADfXGH53CpHMHm4UQNCKDMc3N09UNVdUST9B29WDGqCxJShiA0EFcwEcBjnRTqUmAh+J
-         OxdA==
-X-Forwarded-Encrypted: i=1; AJvYcCWrLFJet6Y3weskSwD+2+QedwlSAhp+RPdKQb4fp1EiWS4xwxT2V5trbkJNHRxr20u6uePyVc0zT+wcNWNVNec=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx4qSn/7JMb6s69d/A9gGe3E3V1xC9BgmI+C+0TSECX1MUi1ben
-	Z3KuURKny+JXoiOVBWddz/3vbUGcFnm0GatQos8U4jyPII+HdzTdyfHlLUROqg==
-X-Gm-Gg: ASbGnctD+HKZj5uqNQAqhnNzdBCg97/peL74rqyGZ72dZSPHcj1sB3dfGQLjizRc9ch
-	m/ZgywuNvihypRnmBPYnBCKqIc+kriEPzGmgugvTd5rqq6VlJWsfhCoIne4R4BfODt4FyUozH7k
-	LJqxNe8Fe3BxM6aVMEy1L5Xh2ow3/pX2lfd/cCtKZaKb4ns9B3Fi7fzihdi+AsXa7vIQPLJwlXr
-	wc+jmUjuv5Es+exB5ad4vxr1n6ngzgFiT9zfi14ea54/BDojhE0vTxTfTpTmuNoGdrF5VP+mrql
-	RIJRlj2pK2Bt86uxX63kANVAF5quND8txS3n+D8YzkA1KNEOAMRO2CU=
-X-Google-Smtp-Source: AGHT+IEPW+Dnhu306cg6k4cp4JKL9h87jLz1ibbxMZeZMr5tSf0uulSyxZPsQKhKZyhcDka4DYJs9Q==
-X-Received: by 2002:a05:6e02:b43:b0:3d0:23ac:b29f with SMTP id e9e14a558f8ab-3d13dcee786mr134115905ab.1.1739232076020;
-        Mon, 10 Feb 2025 16:01:16 -0800 (PST)
-Received: from google.com (143.96.28.34.bc.googleusercontent.com. [34.28.96.143])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4ecef0c9674sm1185594173.117.2025.02.10.16.01.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 16:01:15 -0800 (PST)
-Date: Mon, 10 Feb 2025 16:01:10 -0800
-From: Justin Stitt <justinstitt@google.com>
-To: Kees Cook <kees@kernel.org>
-Cc: Tariq Toukan <tariqt@nvidia.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Yishai Hadas <yishaih@nvidia.com>, netdev@vger.kernel.org, linux-rdma@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] net/mlx4_core: Avoid impossible mlx4_db_alloc() order
- value
-Message-ID: <3biiqfwwvlbkvo5tx56nmcl4rzbq5w7u3kxn5f5ctwsolxpubo@isskxigmypwz>
-References: <20250210174504.work.075-kees@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B3YlhPnV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98D28C4CEEA;
+	Tue, 11 Feb 2025 00:31:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739233896;
+	bh=BmsEnez1b0zRvTS3dQOIzftkHPfoxZVnxcnBemZHVVA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=B3YlhPnVdOIT4e81h2O1aWlE3y2MmeG1thD9FvvPckVivtVpBOKCDtPqFfyfDiuHK
+	 BQ1rhHhZbiiSzUEn9p2FLpkfexdgq0ZhNZPaG8JDJakGSep8mnZ/5LRf6MCjlPrCA6
+	 HxQleRDT52ioXdy0zySngNKlpkkXqsATiJk7WZ28frEuN3E+U/2hSWcvKwhdX5/2wK
+	 7KhoERUBmq0ifrKX4dFUwFKWoGduvWAG5uoKDz1G5V1VlY9JIkmva2BMOPhoyTf6cE
+	 xARr5h+ZIjMCwM/3++8KBYgqjdn1xxVIqXNTedKqkfp6Is6ocePkl2n0Gh6hexJWQF
+	 3pAYprgudHv2g==
+From: Kees Cook <kees@kernel.org>
+To: David Gow <davidgow@google.com>
+Cc: Kees Cook <kees@kernel.org>,
+	=?UTF-8?q?Bruno=20Sobreira=20Fran=C3=A7a?= <brunofrancadevsec@gmail.com>,
+	Rae Moar <rmoar@google.com>,
+	Luis Felipe Hernandez <luis.hernandez093@gmail.com>,
+	Nicolas Pitre <npitre@baylibre.com>,
+	Pedro Orlando <porlando@lkcamp.dev>,
+	Danilo Pereira <dpereira@lkcamp.dev>,
+	Gabriela Bittencourt <gbittencourt@lkcamp.dev>,
+	Gabriel Krisman Bertazi <krisman@suse.de>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Diego Vieira <diego.daniel.professional@gmail.com>,
+	"Steven Rostedt (Google)" <rostedt@goodmis.org>,
+	Jakub Kicinski <kuba@kernel.org>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	kunit-dev@googlegroups.com
+Subject: [PATCH v2 2/6] lib/math: Add int_log test suite
+Date: Mon, 10 Feb 2025 16:31:30 -0800
+Message-Id: <20250211003136.2860503-2-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250211002600.it.339-kees@kernel.org>
+References: <20250211002600.it.339-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250210174504.work.075-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4361; i=kees@kernel.org; h=from:subject; bh=mkouk3rvbOl7z7ij3vA30BSZx3TjW2NkPOI4lLL6SNM=; b=owGbwMvMwCVmps19z/KJym7G02pJDOmrZqWecnqy2iG+/peNzdr9jwNaime/2Lpvho6MxWEx0 /Klr17d6yhlYRDjYpAVU2QJsnOPc/F42x7uPlcRZg4rE8gQBi5OAZiIugzDP02Fiz3bTZRWbBbO r389oVFQ5uTcFSk51jMfFnt+/3SkOoWR4ZC7F9PtpLtl3pHhz+dteL3xwol87xtznqVZXNEUdLO o5wIA
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Mon, Feb 10, 2025 at 09:45:05AM -0800, Kees Cook wrote:
-> GCC can see that the value range for "order" is capped, but this leads
-> it to consider that it might be negative, leading to a false positive
-> warning (with GCC 15 with -Warray-bounds -fdiagnostics-details):
-> 
-> ../drivers/net/ethernet/mellanox/mlx4/alloc.c:691:47: error: array subscript -1 is below array bounds of 'long unsigned int *[2]' [-Werror=array-bounds=]
->   691 |                 i = find_first_bit(pgdir->bits[o], MLX4_DB_PER_PAGE >> o);
->       |                                    ~~~~~~~~~~~^~~
->   'mlx4_alloc_db_from_pgdir': events 1-2
->   691 |                 i = find_first_bit(pgdir->bits[o], MLX4_DB_PER_PAGE >> o);                        |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->       |                     |                         |                                                   |                     |                         (2) out of array bounds here
->       |                     (1) when the condition is evaluated to true                             In file included from ../drivers/net/ethernet/mellanox/mlx4/mlx4.h:53,
->                  from ../drivers/net/ethernet/mellanox/mlx4/alloc.c:42:
-> ../include/linux/mlx4/device.h:664:33: note: while referencing 'bits'
->   664 |         unsigned long          *bits[2];
->       |                                 ^~~~
-> 
-> Switch the argument to unsigned int, which removes the compiler needing
-> to consider negative values.
-> 
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
-> Cc: Tariq Toukan <tariqt@nvidia.com>
-> Cc: Andrew Lunn <andrew+netdev@lunn.ch>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Eric Dumazet <edumazet@google.com>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Paolo Abeni <pabeni@redhat.com>
-> Cc: Yishai Hadas <yishaih@nvidia.com>
-> Cc: netdev@vger.kernel.org
-> Cc: linux-rdma@vger.kernel.org
-> ---
->  drivers/net/ethernet/mellanox/mlx4/alloc.c | 6 +++---
->  include/linux/mlx4/device.h                | 2 +-
->  2 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/mellanox/mlx4/alloc.c b/drivers/net/ethernet/mellanox/mlx4/alloc.c
-> index b330020dc0d6..f2bded847e61 100644
-> --- a/drivers/net/ethernet/mellanox/mlx4/alloc.c
-> +++ b/drivers/net/ethernet/mellanox/mlx4/alloc.c
-> @@ -682,9 +682,9 @@ static struct mlx4_db_pgdir *mlx4_alloc_db_pgdir(struct device *dma_device)
->  }
->  
->  static int mlx4_alloc_db_from_pgdir(struct mlx4_db_pgdir *pgdir,
-> -				    struct mlx4_db *db, int order)
-> +				    struct mlx4_db *db, unsigned int order)
->  {
-> -	int o;
-> +	unsigned int o;
->  	int i;
->  
->  	for (o = order; o <= 1; ++o) {
+From: Bruno Sobreira França <brunofrancadevsec@gmail.com>
 
-  ^ Knowing now that @order can only be 0 or 1 can this for loop (and
-  goto) be dropped entirely?
+This commit introduces KUnit tests for the intlog2 and intlog10
+functions, which compute logarithms in base 2 and base 10, respectively.
+The tests cover a range of inputs to ensure the correctness of these
+functions across common and edge cases.
 
-  The code is already short and sweet so I don't feel strongly either
-  way.
+Signed-off-by: Bruno Sobreira França <brunofrancadevsec@gmail.com>
+Reviewed-by: David Gow <davidgow@google.com>
+Reviewed-by: Rae Moar <rmoar@google.com>
+Link: https://lore.kernel.org/r/20241202075545.3648096-3-davidgow@google.com
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+ lib/Kconfig.debug              | 11 +++++
+ lib/math/tests/Makefile        |  1 +
+ lib/math/tests/int_log_kunit.c | 74 ++++++++++++++++++++++++++++++++++
+ 3 files changed, 86 insertions(+)
+ create mode 100644 lib/math/tests/int_log_kunit.c
 
-> @@ -712,7 +712,7 @@ static int mlx4_alloc_db_from_pgdir(struct mlx4_db_pgdir *pgdir,
->  	return 0;
->  }
->  
-> -int mlx4_db_alloc(struct mlx4_dev *dev, struct mlx4_db *db, int order)
-> +int mlx4_db_alloc(struct mlx4_dev *dev, struct mlx4_db *db, unsigned int order)
->  {
->  	struct mlx4_priv *priv = mlx4_priv(dev);
->  	struct mlx4_db_pgdir *pgdir;
-> diff --git a/include/linux/mlx4/device.h b/include/linux/mlx4/device.h
-> index 27f42f713c89..86f0f2a25a3d 100644
-> --- a/include/linux/mlx4/device.h
-> +++ b/include/linux/mlx4/device.h
-> @@ -1135,7 +1135,7 @@ int mlx4_write_mtt(struct mlx4_dev *dev, struct mlx4_mtt *mtt,
->  int mlx4_buf_write_mtt(struct mlx4_dev *dev, struct mlx4_mtt *mtt,
->  		       struct mlx4_buf *buf);
->  
-> -int mlx4_db_alloc(struct mlx4_dev *dev, struct mlx4_db *db, int order);
-> +int mlx4_db_alloc(struct mlx4_dev *dev, struct mlx4_db *db, unsigned int order);
->  void mlx4_db_free(struct mlx4_dev *dev, struct mlx4_db *db);
->  
->  int mlx4_alloc_hwq_res(struct mlx4_dev *dev, struct mlx4_hwq_resources *wqres,
-> -- 
-> 2.34.1
-> 
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index b18dbfc53ca4..f30929ed1a84 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -3197,6 +3197,17 @@ config INT_SQRT_KUNIT_TEST
+ 
+ 	  If unsure, say N
+ 
++config INT_LOG_KUNIT_TEST
++        tristate "Integer log (int_log) test" if !KUNIT_ALL_TESTS
++        depends on KUNIT
++        default KUNIT_ALL_TESTS
++        help
++          This option enables the KUnit test suite for the int_log library, which
++          provides two functions to compute the integer logarithm in base 2 and
++          base 10, called respectively as intlog2 and intlog10.
++
++          If unsure, say N
++
+ endif # RUNTIME_TESTING_MENU
+ 
+ config ARCH_USE_MEMTEST
+diff --git a/lib/math/tests/Makefile b/lib/math/tests/Makefile
+index 66b10a7f5a84..f139b73c65cb 100644
+--- a/lib/math/tests/Makefile
++++ b/lib/math/tests/Makefile
+@@ -1,5 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ 
+ obj-$(CONFIG_INT_POW_KUNIT_TEST)  += int_pow_kunit.o
++obj-$(CONFIG_INT_LOG_KUNIT_TEST)  += int_log_kunit.o
+ obj-$(CONFIG_RATIONAL_KUNIT_TEST) += rational_kunit.o
+ obj-$(CONFIG_INT_SQRT_KUNIT_TEST) += int_sqrt_kunit.o
+diff --git a/lib/math/tests/int_log_kunit.c b/lib/math/tests/int_log_kunit.c
+new file mode 100644
+index 000000000000..14e854146cb4
+--- /dev/null
++++ b/lib/math/tests/int_log_kunit.c
+@@ -0,0 +1,74 @@
++// SPDX-License-Identifier: GPL-2.0-only
++#include <kunit/test.h>
++#include <linux/int_log.h>
++
++struct test_case_params {
++	u32 value;
++	unsigned int expected_result;
++	const char *name;
++};
++
++
++/* The expected result takes into account the log error */
++static const struct test_case_params intlog2_params[] = {
++	{0, 0, "Log base 2 of 0"},
++	{1, 0, "Log base 2 of 1"},
++	{2, 16777216, "Log base 2 of 2"},
++	{3, 26591232, "Log base 2 of 3"},
++	{4, 33554432, "Log base 2 of 4"},
++	{8, 50331648, "Log base 2 of 8"},
++	{16, 67108864, "Log base 2 of 16"},
++	{32, 83886080, "Log base 2 of 32"},
++	{U32_MAX, 536870911, "Log base 2 of MAX"},
++};
++
++static const struct test_case_params intlog10_params[] = {
++	{0, 0, "Log base 10 of 0"},
++	{1, 0, "Log base 10 of 1"},
++	{6, 13055203, "Log base 10 of 6"},
++	{10, 16777225, "Log base 10 of 10"},
++	{100, 33554450, "Log base 10 of 100"},
++	{1000, 50331675, "Log base 10 of 1000"},
++	{10000, 67108862, "Log base 10 of 10000"},
++	{U32_MAX, 161614247, "Log base 10 of MAX"}
++};
++
++static void get_desc(const struct test_case_params *tc, char *desc)
++{
++	strscpy(desc, tc->name, KUNIT_PARAM_DESC_SIZE);
++}
++
++
++KUNIT_ARRAY_PARAM(intlog2, intlog2_params, get_desc);
++
++static void intlog2_test(struct kunit *test)
++{
++	const struct test_case_params *tc = (const struct test_case_params *)test->param_value;
++
++	KUNIT_EXPECT_EQ(test, tc->expected_result, intlog2(tc->value));
++}
++
++KUNIT_ARRAY_PARAM(intlog10, intlog10_params, get_desc);
++
++static void intlog10_test(struct kunit *test)
++{
++	const struct test_case_params *tc = (const struct test_case_params *)test->param_value;
++
++	KUNIT_EXPECT_EQ(test, tc->expected_result, intlog10(tc->value));
++}
++
++static struct kunit_case math_int_log_test_cases[] = {
++	KUNIT_CASE_PARAM(intlog2_test, intlog2_gen_params),
++	KUNIT_CASE_PARAM(intlog10_test, intlog10_gen_params),
++	{}
++};
++
++static struct kunit_suite int_log_test_suite = {
++	.name = "math-int_log",
++	.test_cases =  math_int_log_test_cases,
++};
++
++kunit_test_suites(&int_log_test_suite);
++
++MODULE_DESCRIPTION("math.int_log KUnit test suite");
++MODULE_LICENSE("GPL");
+-- 
+2.34.1
 
-Justin
