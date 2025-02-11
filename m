@@ -1,169 +1,87 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4D28204873;
-	Tue, 11 Feb 2025 12:37:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41BF8215799;
+	Tue, 11 Feb 2025 13:04:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739277476; cv=none; b=iNnvynZG3Ua4fuPWhsizv1HrM18rB7Mj9hqd4LUxy1NJnxhOXUK2Y00tJmaFXiem4LAFTdKhxJ627oG4V2lcJFeJ4MA/+ZbXvIVI8cAsVVZ4hn8H8porbIDQsP9C03DYEhRaGRh+yI+oArqmaAxBZi5I9/oZO12SR6kLM8r/PbU=
+	t=1739279085; cv=none; b=REFVeEbU2pjsbnVy6kjtgtJxw5fAJdim1nAd6SEWeCl28Fbfvxh6opomQUenAwwZfdIYwQMBkBFYz2qFqgEJC+nDpPVZaFfqnYA+ED/s446Gdgqf9Hb2Z5vGtUhDx6BZZVnu0GQBFFVcP1WdLpWyFXO1Rk495kuBXMuVB2n83Sw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739277476; c=relaxed/simple;
-	bh=9FFcc2GB0jSxjG8mkUaYtqfXPHpoxeLtabpNTGFeG4g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=nWH5y8FyjjXnDbtPKZa+9o5Vxpqu084keGD36LRHMTP21DB7Bo0xW4WjWo3PKPTRWDwkPap0VuR+2PyvClRtXeUyU4cJLZTPH9RImH3QpZtUHLgqeTMLIrCjgRNGxyMzlwbm4/j0dlge63sVV8yQEg2CBMFnstvqnafaSaKLSCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=LFEZNeQU; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1739279085; c=relaxed/simple;
+	bh=sAdcQi1hrUdjrMl6px17gNDTR1HqFZ87LlJBFbf9JzM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nAvD59abDxOI5t2sQ1jvjIsJhldbG43zMkRWiBlMpCy74cOBD6taKEGsMSjefurChv8tzBZ8vIYJnkNkKHr96iXBe8Fk3zwZBOmMl5fmGJjrUNyQ4c90ut57RSOzFbbkSactV6jEP/R4JIXYbiU0x7wj0kLcsnKzro8J61texKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=tm6NpqQa; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="LFEZNeQU"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51B94jQp008337;
-	Tue, 11 Feb 2025 12:37:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	+ShQz5N2nxj49mik6Xuy9nBMQQOaIIynX9b3fSGhxsg=; b=LFEZNeQUlwmQ7HAZ
-	8Wyar+uSmq+UpgF3Ih6JZuM1oS8lZYmL40/ekviaI1v2aF3kzTW4Y15UdIBlliSr
-	PRPNAY0GPPbOSDSXx6QYj5e2RwbMaHPcPoLylvra5o4sCp3eGQmxQAGtLfuphxG0
-	j6pYLu2YSUcTfk+eKdIhWW2/2QOyk7Z41B49I0EmbqVKIDjxJUx2IISfmWUMdype
-	teialJ/uHKeYJhnOAOLfuK2Bn/TRmk6qlYz3u6hPYBfaTIg5fxZLZJrfq/xMUsVP
-	afKApbCNstTFFsIvzrr3kIfQYFaTyFPpY7jG1sl/XdKa9H6jv4oCfTfV/8eneqTR
-	1M6ehw==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44qewh41bh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 11 Feb 2025 12:37:34 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51BCbXSP004532
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 11 Feb 2025 12:37:33 GMT
-Received: from [10.253.72.242] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 11 Feb
- 2025 04:37:26 -0800
-Message-ID: <387fbaa0-4210-4e75-aa15-003866c7735f@quicinc.com>
-Date: Tue, 11 Feb 2025 20:36:33 +0800
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="tm6NpqQa"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=MbjM39msWvOuziAcuJFCWwbKhzNklQkM6TVt4zMre/4=; b=tm6NpqQa797j2ElKfgrG1fjoL/
+	vuihCSCb+2lLV2HndDijV062w53OF1JSQzT6rXKwukiGEJQ99iOK3TvWx9mqwtOsaouBM/oarXAmD
+	ymPtbZqaRqcMABRn0axZtfZ/kdOzKpWKoi/xO/yeZ8XqZnrQuXxoMVuYN/YhP5eIhVoQ=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1thpwC-00D3q3-DR; Tue, 11 Feb 2025 14:04:28 +0100
+Date: Tue, 11 Feb 2025 14:04:28 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Jie Gan <jie.gan@oss.qualcomm.com>
+Cc: Luo Jie <quic_luoj@quicinc.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Lei Wei <quic_leiwei@quicinc.com>,
+	Suruchi Agarwal <quic_suruchia@quicinc.com>,
+	Pavithra R <quic_pavir@quicinc.com>,
+	Simon Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org,
+	quic_kkumarcs@quicinc.com, quic_linchen@quicinc.com,
+	srinivas.kandagatla@linaro.org, bartosz.golaszewski@linaro.org,
+	john@phrozen.org
+Subject: Re: [PATCH net-next v3 03/14] net: ethernet: qualcomm: Add PPE
+ driver for IPQ9574 SoC
+Message-ID: <d0b608ef-bb22-43d5-b9fc-6739964e1bd5@lunn.ch>
+References: <20250209-qcom_ipq_ppe-v3-0-453ea18d3271@quicinc.com>
+ <20250209-qcom_ipq_ppe-v3-3-453ea18d3271@quicinc.com>
+ <58e05149-abc2-4cf4-a6e8-35380823d94a@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v3 02/14] docs: networking: Add PPE driver
- documentation for Qualcomm IPQ9574 SoC
-To: Bagas Sanjaya <bagasdotme@gmail.com>, Luo Jie <quic_luoj@quicinc.com>,
-        Andrew Lunn <andrew+netdev@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        "Paolo
- Abeni" <pabeni@redhat.com>, Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Suruchi
- Agarwal <quic_suruchia@quicinc.com>,
-        Pavithra R <quic_pavir@quicinc.com>, "Simon Horman" <horms@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>, Kees
- Cook <kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        "Philipp Zabel" <p.zabel@pengutronix.de>
-CC: <linux-arm-msm@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-doc@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-        <quic_kkumarcs@quicinc.com>, <quic_linchen@quicinc.com>,
-        <srinivas.kandagatla@linaro.org>, <bartosz.golaszewski@linaro.org>,
-        <john@phrozen.org>
-References: <20250209-qcom_ipq_ppe-v3-0-453ea18d3271@quicinc.com>
- <20250209-qcom_ipq_ppe-v3-2-453ea18d3271@quicinc.com>
- <Z6lhPB1y3BBFI4ux@archie.me>
-Content-Language: en-US
-From: Lei Wei <quic_leiwei@quicinc.com>
-In-Reply-To: <Z6lhPB1y3BBFI4ux@archie.me>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: JSPcQpJY_klIsepDx3cn02vvpTQmds5h
-X-Proofpoint-GUID: JSPcQpJY_klIsepDx3cn02vvpTQmds5h
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-11_05,2025-02-11_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
- impostorscore=0 mlxlogscore=999 phishscore=0 clxscore=1011 adultscore=0
- lowpriorityscore=0 malwarescore=0 bulkscore=0 suspectscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502110081
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <58e05149-abc2-4cf4-a6e8-35380823d94a@oss.qualcomm.com>
 
-
-
-On 2/10/2025 10:15 AM, Bagas Sanjaya wrote:
-> On Sun, Feb 09, 2025 at 10:29:36PM +0800, Luo Jie wrote:
->> +The Ethernet functionality in the PPE (Packet Process Engine) is comprised of three
->> +components: the switch core, port wrapper and Ethernet DMA.
->> +
->> +The Switch core in the IPQ9574 PPE has maximum of 6 front panel ports and two FIFO
->> +interfaces. One of the two FIFO interfaces is used for Ethernet port to host CPU
->> +communication using Ethernet DMA. The other is used communicating to the EIP engine
->                                      "The other one is used ..."
-
-OK, I will fix here in next update.
-
->> +which is used for IPsec offload. On the IPQ9574, the PPE includes 6 GMAC/XGMACs that
->> +can be connected with external Ethernet PHY. Switch core also includes BM (Buffer
->> +Management), QM (Queue Management) and SCH (Scheduler) modules for supporting the
->> +packet processing.
->> +
->> <snipped>...
->> +The PPE driver files in drivers/net/ethernet/qualcomm/ppe/ are listed as below:
->> +
->> +- Makefile
->> +- ppe.c
->> +- ppe.h
->> +- ppe_config.c
->> +- ppe_config.h
->> +- ppe_debugfs.c
->> +- ppe_debugfs.h
->> +- ppe_regs.h
+> > +#ifndef __PPE_H__
+> > +#define __PPE_H__
+> > +
+> > +#include <linux/compiler.h>
+> > +#include <linux/interconnect.h>
+> > +
+> > +struct device;
+> #include <linux/device.h> ?
 > 
-> If somehow new source files were added, should the list above be updated to
-> keep up?
+> > +struct regmap;
+> Same with previous one, include it's header file?
 > 
 
-Yes, the list will be updated when new files added in the following PPE 
-MAC and EDMA patch series.
+If the structure is opaque at this level, it is fine to not include
+the header. There is nothing in the header actually needed. By not
+including it, the build it faster. A large part of the kernel build
+time is spent processing headers, so less headers are better.
 
->> +Enabling the Driver
->> +===================
->> +
->> +The driver is located in the menu structure at:
->> +
->> +  -> Device Drivers
->> +    -> Network device support (NETDEVICES [=y])
->> +      -> Ethernet driver support
->> +        -> Qualcomm devices
->> +          -> Qualcomm Technologies, Inc. PPE Ethernet support
-> 
-> Literal code block should format above nicer, but plain paragraph is fine.
-> 
-
-OK, I will use Literal code block by using "at::" to replace "at:" here. 
-hope it is fine.
-
->> +
->> +If this driver is built as a module, we can use below commands to install and remove it:
->> +
->> +- insmod qcom-ppe.ko
->> +- rmmod qcom-ppe.ko
-> 
-> "If the driver is built as a module, the module will be called qcom-ppe."
-> (I assume that readers know how to insert/remove modules).
-> 
-
-OK, I will modify this sentence in next update.
-
-> Thanks.
-> 
-
+     Andrew
