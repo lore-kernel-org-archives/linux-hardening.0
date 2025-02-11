@@ -1,74 +1,94 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABF9821D00B;
-	Tue, 11 Feb 2025 13:15:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 870251EF096
+	for <linux-hardening@vger.kernel.org>; Tue, 11 Feb 2025 13:18:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739279705; cv=none; b=ovYDr7OerlvBqSImepisoR1CAGJFXnBJbrLvT+rtakRxEncEWSXMX0RAVMqvFMgiGtia6XEzCiitnzBAgq2e6qynVkkWMVKCXhQL2A+pjpQhgNckWIdTD2PTLnEae8DFjq7ibVV0TWD3EtGF2lYTA91mGtGRUhvkOJCQaLt5/nY=
+	t=1739279916; cv=none; b=AAD7pGtUQs2sfUdbRqAWqX7o3E2hEDAJZnKlmcQM2NCxkGXT1JliIJMbvtJpeHCC2S9G8SbQKjBzS895h/yo/0hzTEx/NaiGGJjquPw1+SRk2ynHTvRBlFVp1lCKwr/lIkWvdVI5dQmbrVpZ83zp7gNWrFvYgg6PNobClIJQHOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739279705; c=relaxed/simple;
-	bh=9A59qM/qw0l02R/clbPT49PZoQ0cDLl+GY/1uFLeQ9c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qeoS792d8dT2LzrV+w2jLfan5druBBKTCSsIf71pxNgwmYoH57SrWLhsiJvIqszjUnd4vl7an/pO4x7NZw77XNbLkZmpopoNhGGuQoKl9KsRZun+d5+cfp9jc4CfoQyLB3CSMaksdPgjqDr5lphqFhVMiQSQ/13l0dl5vegt8T4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=ecphhuHC; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1739279916; c=relaxed/simple;
+	bh=sOdzvUj4MMT9zxUfUJkqXakEoGQ9CVufcBrdC+1LLqU=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=aLZHz5KbCKUKo58IMpufKjVM1gFHreeb8W6WseCHCUzodRAC3SovtbWazk2Wj6Xgz9GJ1ITh2i0TbRRCDvwAbbQdIYxqQH3Y17dKsGXlbqINnZ2/Gijdo2y3MwKiLpncW6/U8Nlx1TTPni2fbpYkuWp7kdUo4q8bWsMKJLAEY5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=lRypKdS+; arc=none smtp.client-ip=95.215.58.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="ecphhuHC"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=r9ceLtlRJhS6F2F2NWLhZNuEBw0qSXHcZnna8TM1i58=; b=ecphhuHCYVnh2jgdAqTnarz0qn
-	MoiZ/LfXKYKy6M8WNWpqpRelLktMDLTRsbErd+YIGi/32nZlOZe/37nMm+G7FiH4JRUbnW19WRANV
-	V+VRYeRvehrtc50M3XTGUf91C4wzS0bVfqxtcC2WQHZBC1HlX8JixDHCSTJIeR8ioZPo=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1thq6J-00D41o-CR; Tue, 11 Feb 2025 14:14:55 +0100
-Date: Tue, 11 Feb 2025 14:14:55 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Luo Jie <quic_luoj@quicinc.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Lei Wei <quic_leiwei@quicinc.com>,
-	Suruchi Agarwal <quic_suruchia@quicinc.com>,
-	Pavithra R <quic_pavir@quicinc.com>,
-	Simon Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org,
-	quic_kkumarcs@quicinc.com, quic_linchen@quicinc.com,
-	srinivas.kandagatla@linaro.org, bartosz.golaszewski@linaro.org,
-	john@phrozen.org
-Subject: Re: [PATCH net-next v3 04/14] net: ethernet: qualcomm: Initialize
- PPE buffer management for IPQ9574
-Message-ID: <17d9f02c-3eb3-4bae-8a2c-0504747de6f2@lunn.ch>
-References: <20250209-qcom_ipq_ppe-v3-0-453ea18d3271@quicinc.com>
- <20250209-qcom_ipq_ppe-v3-4-453ea18d3271@quicinc.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="lRypKdS+"
+Content-Type: text/plain;
+	charset=us-ascii
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1739279902;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sOdzvUj4MMT9zxUfUJkqXakEoGQ9CVufcBrdC+1LLqU=;
+	b=lRypKdS+Lu1mAGTHjlzCKz74VYgItBEALnpxTr1eNGBc5adKk+eKPE78HfVPwqFKBW7V9/
+	ffFVFNYiBPAp0uxRDJesf599D5HU03DU70wKc/s54XPTzoRsujoGZPTPWCBS6E7Ny4UHuG
+	KiZNZK4L8n89HHDkEgI/7ZGmkF327pw=
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250209-qcom_ipq_ppe-v3-4-453ea18d3271@quicinc.com>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51.11.1\))
+Subject: Re: [RESEND PATCH v2] params: Annotate struct module_param_attrs with
+ __counted_by()
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Thorsten Blum <thorsten.blum@linux.dev>
+In-Reply-To: <CBE23F82-A597-4DC5-A297-26F8DEFA07B0@linux.dev>
+Date: Tue, 11 Feb 2025 14:18:08 +0100
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Nathan Chancellor <nathan@kernel.org>,
+ Kees Cook <kees@kernel.org>,
+ linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <EF59E5FB-5998-4BD8-9E51-6B52198638CA@linux.dev>
+References: <20250114214956.915982-2-thorsten.blum@linux.dev>
+ <CBE23F82-A597-4DC5-A297-26F8DEFA07B0@linux.dev>
+To: Luis Chamberlain <mcgrof@kernel.org>
+X-Migadu-Flow: FLOW_OUT
 
-> +/* Assign the share buffer number 1550 to group 0 by default. */
-> +static const int ipq9574_ppe_bm_group_config = 1550;
+On 4. Feb 2025, at 17:44, Thorsten Blum wrote:
+> On 14. Jan 2025, at 22:49, Thorsten Blum wrote:
+>> Add the __counted_by compiler attribute to the flexible array member
+>> attrs to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
+>> CONFIG_FORTIFY_SOURCE.
+>>=20
+>> Increment num before adding a new param_attribute to the attrs array =
+and
+>> adjust the array index accordingly. Increment num immediately after =
+the
+>> first reallocation such that the reallocation for the NULL terminator
+>> only needs to add 1 (instead of 2) to mk->mp->num.
+>>=20
+>> Use struct_size() instead of manually calculating the size for the
+>> reallocation.
+>>=20
+>> Use krealloc_array() for the additional NULL terminator.
+>=20
+> Hi, could someone please take another look at this?
+>=20
+> It was already applied to modules-next in August 2024, but dropped
+> shortly after because of a Clang issue:
+>=20
+> https://lore.kernel.org/all/20241029140036.577804-1-kernel@jfarr.cc
+>=20
+> The Clang issue has been fixed for a while and this patch could be
+> applied again.
 
-To a large extent, the comment is useless. What should be in the
-comment is why, not what.
+Hi Luis,
 
-	Andrew
+you already applied this to modules-next in September of last year [1].
+Could you apply it again now that the Clang issue has been fixed?
+
+Thanks,
+Thorsten
+
+[1] =
+https://lore.kernel.org/linux-kernel/ZuHaiiMV6ESS8p7z@bombadil.infradead.o=
+rg/=
