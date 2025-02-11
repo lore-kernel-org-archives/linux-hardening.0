@@ -1,181 +1,209 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2071.outbound.protection.outlook.com [40.107.223.71])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 112542512E4;
-	Tue, 11 Feb 2025 15:38:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.71
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739288326; cv=fail; b=A56NvwLJ1CnuKkv5k9ymQG0hQ4W42ejRrFOGJxbKZ0wV/x7YnhUF/LhamMFethfOkDpb+mYhPENcuDDS8MRKk8Mjy9BlWRHvqzKh8DEyi0Ao6ffQGS+TEIa+OyMNK92NEYI8XkQ9gNWgrISV5a630YvI3sDGH3LNOnY/lY9nWdE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739288326; c=relaxed/simple;
-	bh=hJaY/nmz9XgpKkZp2PrNARMVNU7U5cQiqpaWq9MQkd0=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=HAf+kQmoRWfe1tVsF4rBopORlsBtpOHQmcjO1JRk17BZMHhq04ox5twuFIQpHrKZ3Dx6JSCBNCPDX37Wfp3mZyG9ol5pZX7B9Y8Kr99T7f7iQTPWyq+25J5ZKvm7w2jspymAWPdXCFYYNLj5iiz8/wsnNM3NYq8zvUv9w/BefhE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=fuFGpeQp; arc=fail smtp.client-ip=40.107.223.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2124825A32B
+	for <linux-hardening@vger.kernel.org>; Tue, 11 Feb 2025 16:09:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739290202; cv=none; b=UUYhSum2OSZ/v0XRzIeMQ1715ox6ZY1zG+AsFr/aT9kMc9bkb9epQxijXQejnLNWFhHLHiO3kwQKJvLMZTuDKbY8UJTK4X4Qv7cD7x4D374x2lIGGEZeuWjPo7N++YwM4X1PJVgni39gdYOMW3KYVi1S14oXdXACvkYIHehx/48=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739290202; c=relaxed/simple;
+	bh=djk7Y7ajWHGUwmNBsUGYqINcVGjOOrYHNCM13HFGEf8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=GegjbRwVLCRfNdu3a/kNy/SQqWYX5HMJEkosotknyl9axbqgc9hSmVQm7FuCGZFv9htZeW8axQy69+cSyXE/YbINhu3G07JXNd4wkvvbA5PwKjQ8B5yFKxZk7XHN87BLRYTEQz0LVOB/P+EnUkAFNEKi3IuzoceR3Vj8jLmGnT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Vb5k2lYN; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="fuFGpeQp"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=BR06miccHcYfaMfqUh6xj9tiqfnbT91ceNvhbBZQoH8+LCjoLdDFD8OGc40KRCspuRNR0SAbuPIQxMpswNVAKwl04wMabWIxBjBXl0nG/Yx/OBXzh+LbDoqT7F9wUd+MtWn0VWuH9xjdHMkyvGGk6r7LWcUvgjgnQJAsvSvlb7NkI9jY+6ErWIRj6SHuN3aPorlQqJhmoIjPfUR5GwUBmEQiOYcmb3C/qz2ml3nyeCYemQi3lumA+1EEmhKwNE4jLQB4QFrCna/aS0Tn6SgSZyC2GGgM91/uDMzls0XCSRrXA6zaTNWAgmD86lAqlwN692fPZdvqz/X79/xon8a/9w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=at+kIpaHDUJ+pyRlP7exAee9nVCWDHipFT3XsmUV2XA=;
- b=uMtf9KuLfsKsubKdAt0wlQ/JgBXIhra2Mv4SWDxh6SrgKI3/bSqDRx0rMz/yF2PLUeW1T+6nElg+f/R8ecnPmiKgpigxA87nCoEgN00MrH4L+2fNMhLdz42PsrpCyKpq0P+Cc92BJ6dKSThXE/q5aKPHewcWkByaC/RZxhIp1ceq2HjGL/1b+1AAWxvqJSvcTOu1UxPptUsJZBcEiM4oCMoWaR7AjfM55l6Sp5PIKqJcQi1myXLtc2SCrX8qb2/iaRqpp+a/oh8KxCBt0fQocPkVDjEcJNH1ubiYRCSGua/mcHTByDcaEvD20DgLW7of2nzz1H7l0AKuoTHBsJX0UA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=at+kIpaHDUJ+pyRlP7exAee9nVCWDHipFT3XsmUV2XA=;
- b=fuFGpeQpaPO0Gda9pt7QiOnHBkTjGx1jfwJiSxENPaXCVDilahuWLJ9JPTpE71I6U/7sOBIKYNjAnrw9Sqt/fpe6kdXKdoWSv9hOMTH0LO4Sa3iGc8lBgYyY5p/PQg6FgyRQktiJOWMT/hG2Tp/7i1u+JTdVfctv7rpOJR55nG6kigsUNw5bNXXbjbeG+9OfYuluyHE0VGkjlaHfTpj32jiRvt4+PNVkSx8fcngAGP04L3jVbN/2RJHWvvm4KR4cLCFV5bsFdSDy3jrJZw2j+tT8NBr/vywW9yIVqnOaAScX0Pg3cZpM9YUf45vi6BEgyv6X5SPNkEomytBRcNPrLg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH3PR12MB7500.namprd12.prod.outlook.com (2603:10b6:610:148::17)
- by DS7PR12MB6069.namprd12.prod.outlook.com (2603:10b6:8:9f::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.11; Tue, 11 Feb
- 2025 15:38:40 +0000
-Received: from CH3PR12MB7500.namprd12.prod.outlook.com
- ([fe80::7470:5626:d269:2bf2]) by CH3PR12MB7500.namprd12.prod.outlook.com
- ([fe80::7470:5626:d269:2bf2%5]) with mapi id 15.20.8422.011; Tue, 11 Feb 2025
- 15:38:39 +0000
-Message-ID: <f12c1f1e-3ae8-4cd8-b727-61c35b8ed9ce@nvidia.com>
-Date: Tue, 11 Feb 2025 17:38:31 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [ovs-dev] [PATCH net-next] net: Add options as a flexible array
- to struct ip_tunnel_info
-To: Ilya Maximets <i.maximets@ovn.org>, netdev@vger.kernel.org,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>
-Cc: dev@openvswitch.org, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Jiri Pirko <jiri@resnulli.us>, Jamal Hadi Salim <jhs@mojatatu.com>,
- Kees Cook <kees@kernel.org>, David Ahern <dsahern@kernel.org>,
- Yotam Gigi <yotam.gi@gmail.com>, Tariq Toukan <tariqt@nvidia.com>,
- linux-hardening@vger.kernel.org, Simon Horman <horms@kernel.org>,
- Cong Wang <xiyou.wangcong@gmail.com>, Cosmin Ratiu <cratiu@nvidia.com>
-References: <20250209101853.15828-1-gal@nvidia.com>
- <2ef88acc-d4d7-4309-8c14-73ac107d1d07@ovn.org>
- <fe814549-3bd4-4ef6-8e7d-9d21626766e1@nvidia.com>
- <acf28b0e-5d34-46e0-823f-8028e2fb8356@ovn.org>
-From: Gal Pressman <gal@nvidia.com>
-Content-Language: en-US
-In-Reply-To: <acf28b0e-5d34-46e0-823f-8028e2fb8356@ovn.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: GV3PEPF00002BC1.SWEP280.PROD.OUTLOOK.COM
- (2603:10a6:144:1:0:6:0:12) To CH3PR12MB7500.namprd12.prod.outlook.com
- (2603:10b6:610:148::17)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Vb5k2lYN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739290199;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vlqDgCP2DAkslcpgDFYXdlhhng4EN6BqWt/KN1sHhDc=;
+	b=Vb5k2lYNxi641zOqZtjHVCwzEGsqt5fNgJw+NbWxbzNOokI+oJeyM9P6fWEXaqGoWx6xen
+	z2hUd97MQhEeXbnoAY3h3Yug1NRur3rKJajCUKDZ+fISujuAgwPG6IZGwwVFpo6eAeBL1u
+	+vxB2bFdvSCs40cl0INNYHOxQIJjDZs=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-648-97blV6FtOmKUcOoBnGS8lw-1; Tue, 11 Feb 2025 11:09:55 -0500
+X-MC-Unique: 97blV6FtOmKUcOoBnGS8lw-1
+X-Mimecast-MFC-AGG-ID: 97blV6FtOmKUcOoBnGS8lw
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-38dd533dad0so2017810f8f.0
+        for <linux-hardening@vger.kernel.org>; Tue, 11 Feb 2025 08:09:54 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739290194; x=1739894994;
+        h=content-transfer-encoding:mime-version:message-id:date:references
+         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cqBw0fvuK6HvmV212DNXANVYi4ije8UDstIz77BqBKI=;
+        b=Ql0grujxXQ5rcVjqGSylHxut9Fa1lD8Aipea4nLsZTib6Rxpir6tt+J3a358wlOv/Q
+         9iFoGMMTpvHiOc6Uukuscc5hcH0JSDtWjX9dNe9FfADj0LnYKINb/IYS1PT/JgwSzzZd
+         z3r22G5ZHucUnOZdq4tdyBF+cv464nvSvtJ5bq9HJDLU2cOkZxzX9Rj9F4eIuT67o1+X
+         YQnXhqYP+6NopaVMtOcd3+W/tjdddmJlw7x0Ya2kychstfwnevTCI0OJK1B6b8J5cDj7
+         B0DwqGl8QC/e45sMnEENIlLqgJdHp80AiwCp/SgwAc0MSIje9UpA3Xrlhun5TjpbHqDO
+         g0Rg==
+X-Forwarded-Encrypted: i=1; AJvYcCUkMMpIWBfoPqxwUZ+ZC5dWZnfd5rd6xVDHM58fGqEnoiPQremSZ6diHGcD2mTi8zqAFLREIMCl8Ywug/geOhA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4Pc5GDfqnKbfh0wluZR6bgv+y7yJfDBroxS2eE7+wSGZVHLzt
+	vRRpP99oGbgfx5M7ZcWE9W5J3lPjbw4BqVd64toIKnKx5GXcIfX/U+Ubqn6vyaJ/FyiR1yoHzpJ
+	GHblf2NwoD3alZtGZdf+1XK/0tdUZ84wH2zYSqjG7nxoyeKL15xERecIEgeogAWcWoA==
+X-Gm-Gg: ASbGnctn/M60o6hEBYhk+B772TlULrpDSnczbUeH9ZZlgmx2VuZPDfo+vZFIOA29RsI
+	tANcWWwk3GvreL6bMWSMNA4Kr1g6nIablCrQ+euWb9xXrFIB6n4OPtuiAN4MJtqoE1bt1cipvI7
+	7VgQs4yGpkrr0mJaw9xnUx9e3LTuy4RoeYl5jLM6qnXRlPZfO20kDLjzrrdUnuo3U3WtdXa6JgD
+	4TQ14CB4mHFEQo4kVs2AsxvzwUVVOe81EwP+7gOIMxRHckj5yLylGRCsoyV78OQAONGLPfHEMkL
+	CMZlCXITJkGU2++x6A/uELD0AnaDSCmx7bsqPr6cQyZLmx0ykoYq8a7G6jL/nEy7xw==
+X-Received: by 2002:adf:b60f:0:b0:38d:b113:eb8 with SMTP id ffacd0b85a97d-38de918b920mr304860f8f.20.1739290193764;
+        Tue, 11 Feb 2025 08:09:53 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHK1ASMUo9/0VqOa8FhznHehFcHh+h1fB2eK6UH8SCGRKzMX4fpRgybDSM9A1NmLLMyPAzxtg==
+X-Received: by 2002:adf:b60f:0:b0:38d:b113:eb8 with SMTP id ffacd0b85a97d-38de918b920mr304770f8f.20.1739290193306;
+        Tue, 11 Feb 2025 08:09:53 -0800 (PST)
+Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dbde1dfaesm15387623f8f.90.2025.02.11.08.09.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Feb 2025 08:09:52 -0800 (PST)
+From: Valentin Schneider <vschneid@redhat.com>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Jann Horn <jannh@google.com>, linux-kernel@vger.kernel.org,
+ x86@kernel.org, virtualization@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linux-riscv@lists.infradead.org, linux-perf-users@vger.kernel.org,
+ xen-devel@lists.xenproject.org, kvm@vger.kernel.org,
+ linux-arch@vger.kernel.org, rcu@vger.kernel.org,
+ linux-hardening@vger.kernel.org, linux-mm@kvack.org,
+ linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
+ bcm-kernel-feedback-list@broadcom.com, Juergen Gross <jgross@suse.com>,
+ Ajay Kaher <ajay.kaher@broadcom.com>, Alexey Makhalov
+ <alexey.amakhalov@broadcom.com>, Russell King <linux@armlinux.org.uk>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Paul
+ Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
+ Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo
+ <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
+ Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>, Boris Ostrovsky
+ <boris.ostrovsky@oracle.com>, Josh Poimboeuf <jpoimboe@kernel.org>, Pawan
+ Gupta <pawan.kumar.gupta@linux.intel.com>, Sean Christopherson
+ <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, Andy Lutomirski
+ <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Frederic Weisbecker
+ <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, Jason
+ Baron <jbaron@akamai.com>, Steven Rostedt <rostedt@goodmis.org>, Ard
+ Biesheuvel <ardb@kernel.org>, Neeraj Upadhyay
+ <neeraj.upadhyay@kernel.org>, Joel Fernandes <joel@joelfernandes.org>,
+ Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
+ Uladzislau Rezki <urezki@gmail.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>,
+ Zqiang <qiang.zhang1211@gmail.com>, Juri Lelli <juri.lelli@redhat.com>,
+ Clark Williams <williams@redhat.com>, Yair Podemsky <ypodemsk@redhat.com>,
+ Tomas Glozar <tglozar@redhat.com>, Vincent Guittot
+ <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Kees Cook
+ <kees@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Christoph
+ Hellwig <hch@infradead.org>, Shuah Khan <shuah@kernel.org>, Sami Tolvanen
+ <samitolvanen@google.com>, Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl
+ <aliceryhl@google.com>, "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+ Samuel Holland <samuel.holland@sifive.com>, Rong Xu <xur@google.com>,
+ Nicolas Saenz Julienne <nsaenzju@redhat.com>, Geert Uytterhoeven
+ <geert@linux-m68k.org>, Yosry Ahmed <yosryahmed@google.com>, "Kirill A.
+ Shutemov" <kirill.shutemov@linux.intel.com>, "Masami Hiramatsu (Google)"
+ <mhiramat@kernel.org>, Jinghao Jia <jinghao7@illinois.edu>, Luis
+ Chamberlain <mcgrof@kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
+ Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: Re: [PATCH v4 29/30] x86/mm, mm/vmalloc: Defer
+ flush_tlb_kernel_range() targeting NOHZ_FULL CPUs
+In-Reply-To: <Z6tYnOEBkOlT_ehp@J2N7QTR9R3>
+References: <20250114175143.81438-1-vschneid@redhat.com>
+ <20250114175143.81438-30-vschneid@redhat.com>
+ <CAG48ez1Mh+DOy0ysOo7Qioxh1W7xWQyK9CLGNU9TGOsLXbg=gQ@mail.gmail.com>
+ <xhsmh34hhh37q.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <CAG48ez3H8OVP1GxBLdmFgusvT1gQhwu2SiXbgi8T9uuCYVK52w@mail.gmail.com>
+ <xhsmh5xlhk5p2.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <CAG48ez1EAATYcX520Nnw=P8XtUDSr5pe+qGH1YVNk3xN2LE05g@mail.gmail.com>
+ <xhsmh34gkk3ls.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <Z6tYnOEBkOlT_ehp@J2N7QTR9R3>
+Date: Tue, 11 Feb 2025 17:09:49 +0100
+Message-ID: <xhsmhwmdwihte.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB7500:EE_|DS7PR12MB6069:EE_
-X-MS-Office365-Filtering-Correlation-Id: 41f2303b-eb53-4b1f-f8d2-08dd4ab22820
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?cVhJMDNHNnZKcHViMzIzeTkvbkVyM1Q0b1VkUmI4SnRkYXBtODNCdU1rS2Vz?=
- =?utf-8?B?ZTM1eTdhR3QxYlZVanQ0QjUyVFdJYlN6SEhabEdkUlkveG9iV1BTNVREN0ti?=
- =?utf-8?B?d3U1WWFRSVM0ZE8yd1d4cFVBeXF4bTVsYWpJUnhvTUF2am5jVW1JUmpGS0xt?=
- =?utf-8?B?WHdad3pxd2d3WW9iMGtRTkxSZDFKUGtjejh2OGJPQ3dpcmZXRVo2ZFQ5dHRw?=
- =?utf-8?B?UUZpS3VSNWsrN1l1WExYSXRRUkZxdTRDRlkrTVJNd3FzMjNkREtHaGxacEZU?=
- =?utf-8?B?UEhpc0l2c2R5TUJQa0h3a0VlQlIwU3VkUlJtd3YzNkdtcHBKQWMzWXU3dURj?=
- =?utf-8?B?bURML1RJVmhJeFlWSUdZNTdoTUNQM3hya01WWUtId0lwOE9KbFgxZmVzUDl0?=
- =?utf-8?B?VnZKZkt6QXYyUGtFOHcxZVJsSk15dC9Tc09NVWxCN1dZdnYyckE3YlpNMkhy?=
- =?utf-8?B?ZGk5YnUxSTJYZHpmeG00VHdFK3N4em1mUkplaU8wa1dDVWF3dXpwZi82d3V0?=
- =?utf-8?B?S1liWUwzYVN6ZXIzaGdESGxSNkY0NEllYkVCWVk0Q3hRNm1kb3VzVjRhc1NV?=
- =?utf-8?B?dWxYVVlMZGp4aUMyZFhlSmN4Q29LU1hJaW1WTFlsTll2MjJiZnNXWW83ZDVx?=
- =?utf-8?B?aDkrSG1yaHdnYjlYQWNrYjZaMzZnT1VHTzlVWEdBdDVVVzJ2bXYyeXdCR0Vy?=
- =?utf-8?B?RUR4WFJvYVJESi9Qb2tVeFA3YzBEaWNOU3M4T1AyZTFMaHM1K3RRRkNIMzhL?=
- =?utf-8?B?ajNZMkkzWWtkQ3VGWDZPN1FPN2Y2TDhNazJtbTJPa2tKMVl3eTJFNTBYTHNX?=
- =?utf-8?B?Vmg2bU9nMEZWTGNaQ3I2NG84VnF6VkFCeEFqQXZSNHpSdXVTODRXTlIwMWht?=
- =?utf-8?B?SHYyZmNvOGtMWjNUTWllUmtxQVVXQmdVSm4xQndGZElBSjFvU3BxaFVVcVlo?=
- =?utf-8?B?dTNwNkR1VXJkK3JKTmxCYjJySUptWHNMc0toczEyb3ZqajRGdVlBZGo4ZUlS?=
- =?utf-8?B?Z0pjZTF5K2M0UFJGSlo3MnRyK1ZSRG1KMXY1VzFleUZPTkZ0TnhXd2l4YzhG?=
- =?utf-8?B?RlpXUG1qdThjc1hLMFBqOE9wbE5Gem9IZnd0UjcvMGtTVmE4QU4rdkF1YVBQ?=
- =?utf-8?B?dXh0b1FMTnZxYWRCLzkvcmNSUXF6c0JZYWdpczZ2MDV2aVI2bzFtVEFqNmpW?=
- =?utf-8?B?c3phUFhqR1FzWXlOOU0zZkx4dk1wUGhMREFQK3RpWkhKYkZ6M0hXM1ltV2lq?=
- =?utf-8?B?aUEzOHFCNGlVOUJ0VklaZXdMOXBtdGhmT2RwZGZ6QzRJNXNKWlpxbllPUHJv?=
- =?utf-8?B?K24wckVjbGl6Q29ZaXBKVDR4MEtRUWpyMWtEVGRLMWZPNDVFeWRIZ2dSR3hB?=
- =?utf-8?B?dWZPMVJTNDVhalg5ZGRSLy96K2g2OVVmQ3lQTENNU0Jxd1pTNEFTTnMvVmc3?=
- =?utf-8?B?K0Z3WlE5OUpTM2FVWlFia2luUE9vME1CMU1xUG4rZTh4UDAwbmsvLzBxcUdl?=
- =?utf-8?B?QXVlZEM0T01VZTBORjRQaUJNbG9vbVo1YUlzUXdwL0JnMmVKdVhsejNTd1lx?=
- =?utf-8?B?d3BENkRVNVFSOE8za1IwUTVmcUlaQlcxc0lDMjBBVXlXUzRzaW1QNEE2R21Z?=
- =?utf-8?B?ck1NRjhMdiszMVVjQmhYK015bWlnTUhOWVVoZkw1ZFdIbzM3QzJlUzlCeDRX?=
- =?utf-8?B?RGhrMUJydjVIejVmY1M1SEVnSFY5cmM0NG5aalk5NFEzdVZodHlvOEt2RmFi?=
- =?utf-8?B?bUIzZ0RVanpyVWp1ZzJidEk0ajNNN1RHYXlCVUJsZjlKc3lzcU1Vbk10aWRR?=
- =?utf-8?B?ZE5GUEkxODdOdWIwRUZ4ejVBUVl0RzNraGllb2RPdDRib2ZTcnRBVjNiZHVZ?=
- =?utf-8?Q?m4sfn2uq5JQOP?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB7500.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?MkYzcks2b0pGYXZCbG1RN3RibGZZMURTK1JhYkorSFVwZzZlaFYrWThyQkZh?=
- =?utf-8?B?amE3RDN0WlVXR05oQU1SbEpDRE9rMWVCNUVzTW55RzdXTlJHaldUNHh5T0Mw?=
- =?utf-8?B?MGJOQnp3RTNjdFdBbVNpVFhvWHNNTjdzbDBFMkJZVURGRnB2T1d1TWFXZkY0?=
- =?utf-8?B?WldkbVY4clIwRkIzdHcrSkVGTzN6QXphdWl1bjZ2WTE4aDY5Z2JzWENYK1Zj?=
- =?utf-8?B?c01JODFSdG9BNXF5OEphS2dabDVXcWVYNWRZejlKbWhLMmM5NlkrYWphWTJy?=
- =?utf-8?B?RkxudWF4MWhoeFREQTN1Ylp2alhSbDdNWWlrSjMwSFNKekZxdE0za1ZBUURD?=
- =?utf-8?B?NTE2MGFxS2ZPZ0ZLQUlSSVVQaE94cEJDN1dhV2hQN0d1L0FDaVk4N2I2R3B0?=
- =?utf-8?B?cnRnRmJuMFY3Ym1LZmhQTGlHSEMyRHZrNkhDWVAwdE1MbmNPMFQ5NE9rNDFR?=
- =?utf-8?B?ZlEwbzA4WStLZFVlTCsxUFRDL3JTYk00QU4vYUZoVkFFQ0dxL1I1bTI0bWQ5?=
- =?utf-8?B?bUwzVUtTZzRWczM0amdiTlZNT0p0cThOWHJGTzkyeTViRFk2TjdJSVp0blZz?=
- =?utf-8?B?dmF5YkQrRmVhK1BiaTZvbHVrRU11WTFnWk1tU1dSdzgwNnNMUXMvck5BMk5r?=
- =?utf-8?B?eHZPOXVGRnZncGtnOHRHRXk2VitCSzNqc1RhRkJTMmRsTUZPcEpWd2R5emgy?=
- =?utf-8?B?cXZIWVhLQ3luSnYxRWc0MnRUR1hFT1FHOFVhMzZZWHFVRXdIZUZ3Vnpiajh1?=
- =?utf-8?B?T3RYSVZMcW9PM3VJWXVUcjBkbXY1MGlnOUJkNWM2ZkFKTDQ5Mjd5L2xmRUkw?=
- =?utf-8?B?WGZlSW5VeXR4TU1QaWhnN2k3akZUQjJVbE9hVkJSa2tSOXgvRnhoY0RJdDlz?=
- =?utf-8?B?YWw5RksraDRDTUV1d1VxY1NzUTBNNkdacE9jdy9mWXFMeFRubStQai9rcXJF?=
- =?utf-8?B?NCs4c21ybkRLbVFLVGF2Z3Q3Zk13d1hYMFZ5L2RQdUMzTWNnaWFlcTlTUTAy?=
- =?utf-8?B?Z1JacWE5emx6WUYxMjBqdnZtd2MrNEdVM1VtMHpsVjhsalVDNzl0NWpWMWZ4?=
- =?utf-8?B?ZmZKclAwVzFCbGFJSFY0YXg3Zk9vNkd4MWw4eUFBSFBIaWVNUHFLYTlIZ1NJ?=
- =?utf-8?B?L1o4NTB4RkhaTkhPcjdsTFlFUEM3T3A5dS9zb3BYelJreENsYTJqZm9tVWV0?=
- =?utf-8?B?V2xxVm1FMVQwUFV5cFpaUlZxNGVxaVpwMlFXckg0bzJGYTVKTVBSZ0FuM2l6?=
- =?utf-8?B?VGI3OHBveU1KZldZcWliSlRiRkhMK1FnakpwVnNlN3FDMXBRVytpSzZPeHhr?=
- =?utf-8?B?ZG9BR0lZeE9uaGcxRWlaNzBpZ2x1L2VHbzdaMk83MXJQVDVVaUhXNEVTclhr?=
- =?utf-8?B?NmNGb1VybG5RRFo0eVgvOXNDbTFqYmdnWDE3dk12VFlBcTVha0xLYnkzWDJu?=
- =?utf-8?B?WUxPYmg1RCtsZ1laaWl0Wm5ZN2xvVVlkWnlYcTRVU2tZaFlJRk13Snk2dFFV?=
- =?utf-8?B?ZUJ3NU8xZXpuR1hEaXRRSGJGQTAwdzZyalpsalU4bDA3SlA3alk5eGdqMzNB?=
- =?utf-8?B?YnJUaFY3OXVuVDlBZlpyRnUrc25RUmQzc2pWNkxlQ2hIMEtMU05UbzkraVha?=
- =?utf-8?B?VzhxdXZnbHVOYWo3RXVpZXczb3BqcGJnSldONU12dlR1STljV25UalJhb3Zp?=
- =?utf-8?B?dWZuTTlTU09UYzkrT01XM3k5ajlVV2pqYkdybVR3UVljUGQ4MFNOcGRwcUdr?=
- =?utf-8?B?ZWtUQWl3UFdwZUdyTnozblBwbW8xQ2xJMi9vNlZLeEVSNGhQdEhWLzBZT3lH?=
- =?utf-8?B?aGtSY3pnR1JERmwzNXE1MmpJa20vSUtPU0puYXZud05kTFpqQ1JGZ0N6VlhK?=
- =?utf-8?B?d3FZRW01akJLQnRrK1NnY3JqUEdLRkdFaFZqYU9Kb29VTloxbjEwdFhBV2I3?=
- =?utf-8?B?M0dJR2RvU1grdFhLQ2xrVytVaHZJOUpMMnpwSzBmd2RNOU01VU90ZU1hekdp?=
- =?utf-8?B?YjVMbUs1RTcwenVEcTMrMUVNYWIxeVlEWG9ySXFuR21tOU9hbldLN2FPVHJ2?=
- =?utf-8?B?WU9xSS8yV1EzUTlYbXRBMFdtbEEwMHZYbjMrb1NPcnBLbEFrQW5NWmY2Skdv?=
- =?utf-8?Q?7mToLW3gh189mEnQ/kIGQITrE?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 41f2303b-eb53-4b1f-f8d2-08dd4ab22820
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB7500.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Feb 2025 15:38:39.7173
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: O3f4e0od0XEIEyCl0BH65ms3+fZ5yPIheArp6AuDu7qcr9a/U9xcVfsOOTCHpOsP
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB6069
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: n0jfxZrUnnxj970Eqk80Kawx1Q3fUkRoQNDfMb_UBgA_1739290194
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 09/02/2025 22:16, Ilya Maximets wrote:
-> Ideally we would have a proper union with all the potential option types
-> instead of this hacky construct.  But if that's not the the way to go, then
-> 8 bytes may indeed be the way, as it is the maximum guaranteed alignment
-> for allocations and the current alignment of the structure.
-> 
-> But I'll leave this for others to weigh in.
+On 11/02/25 14:03, Mark Rutland wrote:
+> On Tue, Feb 11, 2025 at 02:33:51PM +0100, Valentin Schneider wrote:
+>> On 10/02/25 23:08, Jann Horn wrote:
+>> > 2. It's wrong to assume that TLB entries are only populated for
+>> > addresses you access - thanks to speculative execution, you have to
+>> > assume that the CPU might be populating random TLB entries all over
+>> > the place.
+>>
+>> Gotta love speculation. Now it is supposed to be limited to genuinely
+>> accessible data & code, right? Say theoretically we have a full TLBi as
+>> literally the last thing before doing the return-to-userspace, speculati=
+on
+>> should be limited to executing maybe bits of the return-from-userspace
+>> code?
+>
+> I think it's easier to ignore speculation entirely, and just assume that
+> the MMU can arbitrarily fill TLB entries from any page table entries
+> which are valid/accessible in the active page tables. Hardware
+> prefetchers can do that regardless of the specific path of speculative
+> execution.
+>
+> Thus TLB fills are not limited to VAs which would be used on that
+> return-to-userspace path.
+>
+>> Furthermore, I would hope that once a CPU is executing in userspace, it'=
+s
+>> not going to populate the TLB with kernel address translations - AIUI th=
+e
+>> whole vulnerability mitigation debacle was about preventing this sort of
+>> thing.
+>
+> The CPU can definitely do that; the vulnerability mitigations are all
+> about what userspace can observe rather than what the CPU can do in the
+> background. Additionally, there are features like SPE and TRBE that use
+> kernel addresses while the CPU is executing userspace instructions.
+>
+> The latest ARM Architecture Reference Manual (ARM DDI 0487 L.a) is fairly=
+ clear
+> about that in section D8.16 "Translation Lookaside Buff", where it says
+> (among other things):
+>
+>   When address translation is enabled, if a translation table entry
+>   meets all of the following requirements, then that translation table
+>   entry is permitted to be cached in a TLB or intermediate TLB caching
+>   structure at any time:
+>   =E2=80=A2 The translation table entry itself does not generate a Transl=
+ation
+>     fault, an Address size fault, or an Access flag fault.
+>   =E2=80=A2 The translation table entry is not from a translation regime
+>     configured by an Exception level that is lower than the current
+>     Exception level.
+>
+> Here "permitted to be cached in a TLB" also implies that the HW is
+> allowed to fetch the translation tabl entry (which is what ARM call page
+> table entries).
+>
 
-Thank you Ilya.
+That's actually fairly clear all things considered, thanks for the
+education and for fishing out the relevant DDI section!
 
-Unless anyone has a better idea, I'm going to add an explicit alignment
-to the options field, that would keep the struct layout as it was before
-this patch.
+> The PDF can be found at:
+>
+>   https://developer.arm.com/documentation/ddi0487/la/?lang=3Den
+>
+> Mark.
+
