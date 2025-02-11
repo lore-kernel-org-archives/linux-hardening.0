@@ -1,120 +1,136 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FCC0261569
-	for <linux-hardening@vger.kernel.org>; Tue, 11 Feb 2025 17:32:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76C7517C91;
+	Tue, 11 Feb 2025 17:49:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739295140; cv=none; b=mDx51yHIgNe9tdmVYhOcyyAEcmjvKrNIKc/u94NJLy5ut7vsnY8ikIxGSvYHH2wB4p4jtPCDTB7xy75cjhYtBvM3zZm2uiyYEvzIc+1LPCQd0r18ajpaajsgUD+HWNPt2g8+T/8hPZ8T8HVhQxLvYy48RtaAXeFj3IvpI0cQziw=
+	t=1739296169; cv=none; b=OtnZFPw4SCSYD9mWvYSIv4Q4EBoPyH1pWHAFp/Ur08XqPTmR4pHj0rY4QafIpqg4Oi5+lgwLHCpetjoyPNQ7Y+zmwl2kwHvbervSSTMu2HkNEKZ4hGRLzXMs8SK8TOja8p1DHgnUosdt8e63AbUUtJTHxR+PpUUuRQg4AnbLZNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739295140; c=relaxed/simple;
-	bh=myFhEI7olwvlcKDX/vZyne2d/kbazrOb4/046xUxn4I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ouysasVzfN0LxxA5RjODBYXh3ld5RmVy09BhVNWEHOIE3zdOG5S2TigVp0B9ERjhuAIB4vJvm8JUiePWFtQEZ6A1P6ubuuuJIsspYqMGQnstzvpBVc96865dXMAYpAG5veyS5bN6CwEPs0DEipRa8Z8ruYXbgezdfftyGmdqPEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=EqxbXW9c; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1739296169; c=relaxed/simple;
+	bh=hBM3qEWuCBL66wdrUKj7M9a2AATgh8I6a+M8Txmi/k8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p6FFlWG5VcTp5/204u+Qb4WQCFd+0SBQsdW3252SiMiT5HyyUEzkprcdDEvToV0+NT47vRS1MUuv1dgnucp4/PcgjN3brvuxno5wSmKXATuhA1+MKqOSd0jk8wfpElYTMVZwXE2tCq31VMmNDjK9zdAbV6TfVgHS8kPaVWaHwdg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EhX8LCNW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="EqxbXW9c"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51BGP23v006121
-	for <linux-hardening@vger.kernel.org>; Tue, 11 Feb 2025 17:32:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	7t13RmOscMfNDi73nleX4EUfoNXKCb4b28tzUu8aPKU=; b=EqxbXW9cWWmWZDpK
-	KJHTfS4BOz9w1wKyaRz4aAM8il3tM5Wz52S/pYIY3Xb9NNCtCE6vl1VMgkSTrXUw
-	J+a62IiCeyKEIl3tCWDuXYJgR9n3WPjRMj2xrp0s/MwZt0nxVe1xzm3PB1sRSE0Y
-	f5ypUFOn+PX2Z/SaROlw7CwKU1E9K71vrgo1KxOCiG1QOPE1IFD5v1SKZsWPPR0q
-	ZBHr5akx5RiKD/KbYgcXvIv8DHMla3RAmGIUWneM74x0pLDvdQWAtH9VHEei86fG
-	cY2he9AwYXRXa7gGtfjgkBkgyErF27pk3v49emaiRQHFeH+J8qWdfnFV+PBwzuaP
-	QtPGyQ==
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44qe5mvwd8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-hardening@vger.kernel.org>; Tue, 11 Feb 2025 17:32:16 +0000 (GMT)
-Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-2fa562cc226so6055301a91.0
-        for <linux-hardening@vger.kernel.org>; Tue, 11 Feb 2025 09:32:16 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739295136; x=1739899936;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7t13RmOscMfNDi73nleX4EUfoNXKCb4b28tzUu8aPKU=;
-        b=Q0V0J2FGtaneBLRnmEmSULLUvKIdJsLxDnoE/DfKNTU/h6EdpsOUycnkcT0XhvYCiH
-         MAzhNUnpWBhiOxRXgNzXPDg6RM05Yk+QEYZbb/XR0Ke2ZbPqz0Fe54qGN/s7N6euUcNS
-         idDVzGf1VoDPB8qFDSm77UtkOWAO1zqBgDBfCMtp7sDh/pqprIn48s1+cWtxZ8px3gho
-         bC2CkTpcqLbqPc0ALGxQo3FAPYd4wZ8uVhH1zTWKOajeVQRts1Vbki54vGIX9W+LfZIn
-         iSPYBsK8l9aiIaaBQKWg01HG06zyqwARtVvwV9P2pKBE6+6yhtEG6opK+Yi0nrOlGsqh
-         F7Dw==
-X-Forwarded-Encrypted: i=1; AJvYcCVFloqQ9wf1KpqGBrNxGCB/FHkJ86qOkSjbp+Bm7oXye4CsLhZ2+ty+90U829/56wYf0NACZCYS8mEjBzNy8yk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxpgfVtDwGIRgzrp6Rjl3DymCbjSWatLoJaMRH0MxiWLHogjdLg
-	zRqM6NzedcxMeAWKkQ0RGTv5o4XmYr5+CfFN7eTC+mW/0eqO0qOkc6yzs16m6EPlgYyfHHGPMV3
-	s5FtP2j00jGSAuIprWUQ21Frk2AOuPpl8uTOHR49RYbgkqR4V9JLbyP0U8etYGYImYeU=
-X-Gm-Gg: ASbGnctzQ0qYs8KxdV5pO2FRBRm+9WdGZIm4S7cW757GiLmD4MaiosCtdlFkIydM576
-	aWh7JIDVopO2Zbfrb7QUAR4fbjSRBEWSEfaehBbqRU0CEKrO2dDv6I9ZSfe4Az/asbNH1YHuIQv
-	54NSd0dhU8gd1hCqlYpnp2H2GjNIAoppi6YFJNsO8mq3cTvZ1El03zNHNRwhFVsiPI9eo/ZYO0q
-	bpGu/qSv4QZIGJSZNEoBeuERbe/PK1O23i0tSz9MuQpDKzUaPbJudxIXAslRXi3CVGMJ6Ej2gDv
-	OVJEoToqFz7nLgq3yy7ZBaKsHwlle8KEhMJujElX5w==
-X-Received: by 2002:a17:90b:4d8d:b0:2ee:693e:ed7a with SMTP id 98e67ed59e1d1-2fa243ebdbcmr25018193a91.35.1739295135581;
-        Tue, 11 Feb 2025 09:32:15 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IF21/tLPL2jpe5F4TcV+Wyh9fwEmWRbfBc0shXo7z6JXXJnQmbq2Yvx8LMK31GkNy5SlgN6Ig==
-X-Received: by 2002:a17:90b:4d8d:b0:2ee:693e:ed7a with SMTP id 98e67ed59e1d1-2fa243ebdbcmr25018158a91.35.1739295135224;
-        Tue, 11 Feb 2025 09:32:15 -0800 (PST)
-Received: from [192.168.29.221] ([49.37.208.137])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3687c187sm99816815ad.168.2025.02.11.09.32.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Feb 2025 09:32:14 -0800 (PST)
-Message-ID: <9f0b4a6e-337e-4370-a2b5-9aed1887d112@oss.qualcomm.com>
-Date: Tue, 11 Feb 2025 23:02:10 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EhX8LCNW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D375C4CEDD;
+	Tue, 11 Feb 2025 17:49:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739296169;
+	bh=hBM3qEWuCBL66wdrUKj7M9a2AATgh8I6a+M8Txmi/k8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EhX8LCNWRFQgX/XJXsERVrxEBjMe3shJhxvueQo43z8HAzWhg0b7edderCgNa0mxK
+	 S7b+4Cs8dOSL2GLsDk31hyZS5DxRkPha6kcWIc36WtrRXeM8daC3n8x+tZut17TL0i
+	 cTIsyeKxlyc89BUTzRx9s4HyL5udXxOzmfLNd+3TSs4YYGiahAhIQSBzrsPjxwJzCr
+	 Hq0omcguxlpAJ2vRTVaq9fisdw2rnMz58gOKnqBogFahzyVfiay8lfYKjYwm/nJAVm
+	 SwHw7IaOlPN4jvRi0usNvrZ/4NgQSKkOqOc7+CskKxUlL1312XMa9m6J+oivTIvZiW
+	 memKCy4aVbwCQ==
+Date: Tue, 11 Feb 2025 09:49:27 -0800
+From: Kees Cook <kees@kernel.org>
+To: Gal Pressman <gal@nvidia.com>
+Cc: netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Tariq Toukan <tariqt@nvidia.com>,
+	Louis Peens <louis.peens@corigine.com>,
+	Simon Horman <horms@kernel.org>, David Ahern <dsahern@kernel.org>,
+	Pravin B Shelar <pshelar@ovn.org>, Yotam Gigi <yotam.gi@gmail.com>,
+	Jamal Hadi Salim <jhs@mojatatu.com>,
+	Cong Wang <xiyou.wangcong@gmail.com>, Jiri Pirko <jiri@resnulli.us>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, dev@openvswitch.org,
+	linux-hardening@vger.kernel.org, Cosmin Ratiu <cratiu@nvidia.com>
+Subject: Re: [PATCH net-next] net: Add options as a flexible array to struct
+ ip_tunnel_info
+Message-ID: <202502110942.8DE626C@keescook>
+References: <20250209101853.15828-1-gal@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] wifi: ath12k: cleanup ath12k_mac_mlo_ready()
-To: Ethan Carter Edwards <ethan@ethancedwards.com>,
-        Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
-        Karthikeyan Periyasamy <quic_periyasa@quicinc.com>
-Cc: Kalle Valo <kvalo@kernel.org>, Jeff Johnson <jjohnson@kernel.org>,
-        Harshitha Prem <quic_hprem@quicinc.com>,
-        Kalle Valo
- <quic_kvalo@quicinc.com>, linux-wireless@vger.kernel.org,
-        ath12k@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-References: <20250210-ath12k-uninit-v2-1-3596f28dd380@ethancedwards.com>
-From: Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>
-Content-Language: en-US
-In-Reply-To: <20250210-ath12k-uninit-v2-1-3596f28dd380@ethancedwards.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: cLPw3tCeDXliu3MBFCLmsyBxFKP7CHHp
-X-Proofpoint-ORIG-GUID: cLPw3tCeDXliu3MBFCLmsyBxFKP7CHHp
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-11_07,2025-02-11_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- priorityscore=1501 clxscore=1011 suspectscore=0 mlxscore=0
- lowpriorityscore=0 phishscore=0 impostorscore=0 malwarescore=0 spamscore=0
- mlxlogscore=539 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2501170000 definitions=main-2502110114
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250209101853.15828-1-gal@nvidia.com>
 
-On 2/11/25 08:19, Ethan Carter Edwards wrote:
-> There is a possibility for an uninitialized*ret* variable to be
-> returned in some code paths.
+On Sun, Feb 09, 2025 at 12:18:53PM +0200, Gal Pressman wrote:
+> Remove the hidden assumption that options are allocated at the end of
+> the struct, and teach the compiler about them using a flexible array.
 > 
-> This explicitly returns 0 without an error. Also removes goto that
-> returned*ret* and simply returns in place.
+> With this, we can revert the unsafe_memcpy() call we have in
+> tun_dst_unclone() [1], and resolve the false field-spanning write
+> warning caused by the memcpy() in ip_tunnel_info_opts_set().
 > 
-> Closes:https://scan5.scan.coverity.com/#/project-view/63541/10063? 
-> selectedIssue=1642337
-> Fixes: b716a10d99a28 ("wifi: ath12k: enable MLO setup and teardown from core")
-> Signed-off-by: Ethan Carter Edwards<ethan@ethancedwards.com>
-> ---
+> Note that this patch changes the layout of struct ip_tunnel_info since
+> there is padding at the end of the struct.
+> Before this, options would be written at 'info + 1' which is after the
+> padding.
+> After this patch, options are written right after 'mode' field (into the
+> padding).
+> 
+> [1] Commit 13cfd6a6d7ac ("net: Silence false field-spanning write warning in metadata_dst memcpy")
+> 
+> Link: https://lore.kernel.org/all/53D1D353-B8F6-4ADC-8F29-8C48A7C9C6F1@kernel.org/
+> Suggested-by: Kees Cook <kees@kernel.org>
+> Reviewed-by: Cosmin Ratiu <cratiu@nvidia.com>
+> Reviewed-by: Tariq Toukan <tariqt@nvidia.com>
+> Signed-off-by: Gal Pressman <gal@nvidia.com>
+> [...]
+> @@ -107,6 +101,7 @@ struct ip_tunnel_info {
+>  #endif
+>  	u8			options_len;
+>  	u8			mode;
+> +	u8			options[] __counted_by(options_len);
+>  };
 
-Reviewed-by: Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>
+I see __counted_by being added here (thank you).
+
+> [...]
+> @@ -659,7 +654,7 @@ static inline void ip_tunnel_info_opts_set(struct ip_tunnel_info *info,
+>  {
+>  	info->options_len = len;
+>  	if (len > 0) {
+> -		memcpy(ip_tunnel_info_opts(info), from, len);
+> +		memcpy(info->options, from, len);
+>  		ip_tunnel_flags_or(info->key.tun_flags, info->key.tun_flags,
+>  				   flags);
+>  	}
+
+And I see info->options_len being set here before the copy into
+info_>options. What validates that "info" was allocated with enough
+space to hold "len" here? I would have expected this as allocation time
+instead of here.
+
+> diff --git a/net/core/dst.c b/net/core/dst.c
+> index 9552a90d4772..d981c295a48e 100644
+> --- a/net/core/dst.c
+> +++ b/net/core/dst.c
+> @@ -286,7 +286,8 @@ struct metadata_dst *metadata_dst_alloc(u8 optslen, enum metadata_type type,
+>  {
+>  	struct metadata_dst *md_dst;
+>  
+> -	md_dst = kmalloc(sizeof(*md_dst) + optslen, flags);
+> +	md_dst = kmalloc(struct_size(md_dst, u.tun_info.options, optslen),
+> +			 flags);
+>  	if (!md_dst)
+>  		return NULL;
+>  
+
+I don't see options_len being set here? I assume since it's sub-type
+specific. I'd expect the type to be validated (i.e. optslen must == 0
+unless this is a struct ip_tunnel_info, and if so, set options_len here
+instead of in ip_tunnel_info_opts_set().
+
+Everything else looks very good, though, yes, I would agree with the
+alignment comments made down-thread. This was "accidentally correct"
+before in the sense that the end of the struct would be padded for
+alignment, but isn't guaranteed to be true with an explicit u8 array.
+The output of "pahole -C struct ip_tunnel_info" before/after should
+answer any questions, though.
+
+-Kees
 
 -- 
-Aditya
+Kees Cook
