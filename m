@@ -1,33 +1,33 @@
 Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E20E4320F;
-	Tue, 11 Feb 2025 13:22:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACF601F03E2;
+	Tue, 11 Feb 2025 13:32:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739280160; cv=none; b=O+o8Oza8FlV/Vj43zxFdE5/aA/VQT9Np7cD0XLSduMJW8PNVxuMOBgnB+q8GeNWzOES1PQmZLYHguiUSLz0UNwVyBMmVWGyuLMUggNJDGEJNY5Z8isoarV+H5ve6LLxDRGPXi32RujwwUoH2alE8/MXINs6NMzzbdc2WHaKKRA0=
+	t=1739280738; cv=none; b=Upc2cLAs0GBOydDk/bD2rGesWWR7FpR4bz9o1LHA2bX1Yci3Mbhh8Cii5Z4mreiwZuklGzNizTL+PRHBCRb0vDr6t1qCDe0RLmN8Ld8VLWFfTh4RezcxsbGnrRzWZRITX6CsC6usf4kiOL2WQ9sxgIqNLt4Vj9YqDL4klfGOT1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739280160; c=relaxed/simple;
-	bh=arLglQmV5VidFxnBkrW2+9ueIxpEFFsBaPpAR/6uRLA=;
+	s=arc-20240116; t=1739280738; c=relaxed/simple;
+	bh=iblFUqfFN7d6iW/DvwtRFMBHAXoJS+rlnKGUZSuP+eo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ITnBU9/9DHH2/7iNnARrYH+fVNeeLPY/PuCWP8M281OA5p/5b630PJa6YJa+hl0IsGNcvutd3t/CYYX/oOgE+S9O0rU3Afp0FVS6QKdzSVQW8qs0Z8rvlVI/yN+Jldmp33nq27Hy85Y+zIFKqss/v+zQzMYdwHYpU9OVCYuP0tM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=fj+OHqQx; arc=none smtp.client-ip=156.67.10.101
+	 Content-Type:Content-Disposition:In-Reply-To; b=LnTKVHjG8l42l5l6K2ISD3o+91XbXlhbkl33OsQYpp+WiiE6DUArqrGa53gEXr4VJQ89xQtZS1QbN0GQY8zziumvSgvagupC3KNAR9+/8p3IJLAeYw4yRph92e6u/83GRaxDjh/gpa7iNFnkhNp1kRLzaC1zpMesZcOpxWUuKww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=U4zvpwon; arc=none smtp.client-ip=156.67.10.101
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="fj+OHqQx"
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="U4zvpwon"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
 	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
 	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
 	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
 	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=nMhOBh8DgkON3jQ47+9kyvLDG3k/HaJv7Qu7721ywG8=; b=fj+OHqQxs9aFuslv8VSUdy/Fgx
-	yw89d+vudrPTbh1CDSH9uk4PEqTZe0JStKWpPVO+p62C8fBwJjWXyutNgKE8rYMfV7eaj045AOoei
-	z0j5sHyosidbjvE6xOZd2QLjKKgE/Q15eZVAqmt+wnDk2gfe8yewAZQU2kuLH1Z8jVPI=;
+	bh=ov1w7hbGSo+7ZZmwYvIYEyViiZM3fh+QAdoSLNmScKo=; b=U4zvpwonp0ObNX9gO169W88LHC
+	SfAud6VbkHOQd8nm6OmV1sEvAPL31fYu0fIMpJURooNlxkVaLmB104doUfo2Suhs/VfFmyiXtjtqn
+	GDjPTL6fGzTFeaHUeFL9n0ZA42vT51LGMTusgtl6qxfMF6KDL2Y8ORN9o53kaqfrGKfM=;
 Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
 	(envelope-from <andrew@lunn.ch>)
-	id 1thqDd-00D4BP-JJ; Tue, 11 Feb 2025 14:22:29 +0100
-Date: Tue, 11 Feb 2025 14:22:29 +0100
+	id 1thqMx-00D4M7-3L; Tue, 11 Feb 2025 14:32:07 +0100
+Date: Tue, 11 Feb 2025 14:32:07 +0100
 From: Andrew Lunn <andrew@lunn.ch>
 To: Luo Jie <quic_luoj@quicinc.com>
 Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
@@ -50,11 +50,11 @@ Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
 	quic_kkumarcs@quicinc.com, quic_linchen@quicinc.com,
 	srinivas.kandagatla@linaro.org, bartosz.golaszewski@linaro.org,
 	john@phrozen.org
-Subject: Re: [PATCH net-next v3 04/14] net: ethernet: qualcomm: Initialize
- PPE buffer management for IPQ9574
-Message-ID: <a79027ed-012c-4771-982c-b80b55ab0c8a@lunn.ch>
+Subject: Re: [PATCH net-next v3 06/14] net: ethernet: qualcomm: Initialize
+ the PPE scheduler settings
+Message-ID: <f8d30195-1ee9-42f2-be82-819c7f7bd219@lunn.ch>
 References: <20250209-qcom_ipq_ppe-v3-0-453ea18d3271@quicinc.com>
- <20250209-qcom_ipq_ppe-v3-4-453ea18d3271@quicinc.com>
+ <20250209-qcom_ipq_ppe-v3-6-453ea18d3271@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -63,41 +63,24 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250209-qcom_ipq_ppe-v3-4-453ea18d3271@quicinc.com>
+In-Reply-To: <20250209-qcom_ipq_ppe-v3-6-453ea18d3271@quicinc.com>
 
-> +	/* Configure BM flow control related threshold. */
-> +	PPE_BM_PORT_FC_SET_WEIGHT(bm_fc_val, port_cfg.weight);
-> +	PPE_BM_PORT_FC_SET_RESUME_OFFSET(bm_fc_val, port_cfg.resume_offset);
-> +	PPE_BM_PORT_FC_SET_RESUME_THRESHOLD(bm_fc_val, port_cfg.resume_ceil);
-> +	PPE_BM_PORT_FC_SET_DYNAMIC(bm_fc_val, port_cfg.dynamic);
-> +	PPE_BM_PORT_FC_SET_REACT_LIMIT(bm_fc_val, port_cfg.in_fly_buf);
-> +	PPE_BM_PORT_FC_SET_PRE_ALLOC(bm_fc_val, port_cfg.pre_alloc);
+> +/* Scheduler configuration for the assigning and releasing buffers for the
+> + * packet passing through PPE, which is different per SoC.
+> + */
+> +static const struct ppe_scheduler_bm_config ipq9574_ppe_sch_bm_config[] = {
+> +	{1, 0, 0, 0, 0},
+> +	{1, 1, 0, 0, 0},
+> +	{1, 0, 5, 0, 0},
+> +	{1, 1, 5, 0, 0},
+> +	{1, 0, 6, 0, 0},
+> +	{1, 1, 6, 0, 0},
+> +	{1, 0, 1, 0, 0},
+> +	{1, 1, 1, 0, 0},
 
-...
+Rather than add a comment what it is, add a comment what it means.
 
-> +#define PPE_BM_PORT_FC_CFG_TBL_ADDR		0x601000
-> +#define PPE_BM_PORT_FC_CFG_TBL_ENTRIES		15
-> +#define PPE_BM_PORT_FC_CFG_TBL_INC		0x10
-> +#define PPE_BM_PORT_FC_W0_REACT_LIMIT		GENMASK(8, 0)
-> +#define PPE_BM_PORT_FC_W0_RESUME_THRESHOLD	GENMASK(17, 9)
-> +#define PPE_BM_PORT_FC_W0_RESUME_OFFSET		GENMASK(28, 18)
-> +#define PPE_BM_PORT_FC_W0_CEILING_LOW		GENMASK(31, 29)
-> +#define PPE_BM_PORT_FC_W1_CEILING_HIGH		GENMASK(7, 0)
-> +#define PPE_BM_PORT_FC_W1_WEIGHT		GENMASK(10, 8)
-> +#define PPE_BM_PORT_FC_W1_DYNAMIC		BIT(11)
-> +#define PPE_BM_PORT_FC_W1_PRE_ALLOC		GENMASK(22, 12)
-> +
-> +#define PPE_BM_PORT_FC_SET_REACT_LIMIT(tbl_cfg, value)	\
-> +	u32p_replace_bits((u32 *)tbl_cfg, value, PPE_BM_PORT_FC_W0_REACT_LIMIT)
-> +#define PPE_BM_PORT_FC_SET_RESUME_THRESHOLD(tbl_cfg, value)	\
-> +	u32p_replace_bits((u32 *)tbl_cfg, value, PPE_BM_PORT_FC_W0_RESUME_THRESHOLD)
-
-Where is u32p_replace_bits()?
-
-This cast does not look good. And this does not look like anything any
-other driver does. I suspect you are not using FIELD_PREP() etc when
-you should.
-
-https://elixir.bootlin.com/linux/v6.14-rc2/source/include/linux/bitfield.h
+It also looks like the first, 3 and 4 value are fixed, so do they even
+need to be in the table? And the second value flip-flops?
 
 	Andrew
