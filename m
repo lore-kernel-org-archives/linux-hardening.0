@@ -1,128 +1,111 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from omta034.useast.a.cloudfilter.net (omta034.useast.a.cloudfilter.net [44.202.169.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EB3B2C9A;
-	Tue, 11 Feb 2025 05:54:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCC4426BDB6
+	for <linux-hardening@vger.kernel.org>; Tue, 11 Feb 2025 07:03:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739253277; cv=none; b=pGUPfkcpWEoqP4oL8c8/C2IUcc6+SMXU4Q1uFD6RFOmXTBTXwpoDLUL5ZiOSDexk3AxgOaDWvOrQmIf45f4pJMSDwNibnOzZAz5Iw5u/47TN1tEdFX2Fa8ckVFc3cEYx0eWWhd13lN7a7/ATbxp0ZZ6qaSSwmGaJNirXS/qYoj8=
+	t=1739257422; cv=none; b=CGVsHfHPZsYr/DyMT4sDmk7rHlOy3CErJ9jWhHUTtSfGJcJl1jrIUNbK5wvFy9RMdxQx/LOpkyPYbHIc9fecXR2wH4FfoT5rzus0tc9Uicg6leXQho1YO3R938mphm+RxgS2DNGVZMy2/0FW1A8IfLB88bquSY+KO5SPlj74i3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739253277; c=relaxed/simple;
-	bh=hVmFd14xdvqxZNoX8n/AztacQV0z9P6ENxKHHDjuzL4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=krdAMi1jnbCxXkDIryw80nZVrH29mdO3pXh8wOL9M3YKFV+jC4v5WEl5JxwaQE+kWlYaguGl3rf43Bk29Cwi1IOM6cWwGK1tvf+vhYaskG0cRtDn7BgD3MyTX5SKs09McmrZdzpgMMQ8cmAz2XZEI5LU7BB5JIgXdJ6b8X9Tcy4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Qy1LI0Hz; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1739257422; c=relaxed/simple;
+	bh=vZLXZjjOPjiqAyN1pMAP9QZspcSLtGUZeLCcavpZogk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GmjJfX1/kcgK0dik3s5UTuKCoD1T3FrX1ezVcKBLUVIaWbcD230znik4Dd3lph/oJAaG+FLRJKB6tGgw6IoJQnTA7BLWQCaafLcAsS2G/kPMuM9YU4pUKimDd50PYGLAwi4gObCdO7GO6hgHO644v7Wx/KtKoAD+FFIRLBKFeX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=OcOrIuDk; arc=none smtp.client-ip=44.202.169.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Qy1LI0Hz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739253275; x=1770789275;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=hVmFd14xdvqxZNoX8n/AztacQV0z9P6ENxKHHDjuzL4=;
-  b=Qy1LI0Hzi/aYyjWOfgYyamLy5KEk3NDue4PN04/v0CXv8l5rf45SKP0K
-   Hu+ff7WQoCfXUUn/nUIn9Dt4odIX9g9n4b9HJS3/+GKTQygfmyA76++b5
-   eeUsg50+sXKY1j1kvlHOaBuKeyBwRI5WZPSWpZsuQgIQPUZMZS+dxeE3e
-   XhamQYgEH9x0Z0GTy+msgvgARp11XVXiFhruNoqUF7Tu50kms35FlTUXh
-   UQXs6Op1hpCzcZTfv/0yxwTQpWrNRINfxfvVy7LoF6wYcZetw4L4G6GLB
-   AThpAq5CYduPcik2IY6V109ecDhlFUb0hRt4vZ5RzrOZYp9Nbq8L1n7Vd
-   w==;
-X-CSE-ConnectionGUID: TSA9MU24R/qzM54cWzCP1Q==
-X-CSE-MsgGUID: 6OdS7neCSzO7dgsVmtiZZQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="51288710"
-X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="51288710"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 21:54:34 -0800
-X-CSE-ConnectionGUID: xj7JgrJwRl+YPqx4HtZBpA==
-X-CSE-MsgGUID: R0B+Cx0sTLyTFUH0k0ebvw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="135666689"
-Received: from mev-dev.igk.intel.com ([10.237.112.144])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 21:54:31 -0800
-Date: Tue, 11 Feb 2025 06:50:56 +0100
-From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-To: Ethan Carter Edwards <ethan@ethancedwards.com>
-Cc: hariprasad <hkelam@marvell.com>, Sunil Goutham <sgoutham@marvell.com>,
-	Geetha sowjanya <gakula@marvell.com>,
-	Subbaraya Sundeep <sbhatta@marvell.com>,
-	Bharat Bhushan <bbhushan2@marvell.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] octeontx2-af: Fix uninitialized scalar variable
-Message-ID: <Z6rk3Z6TuFSJgSaV@mev-dev.igk.intel.com>
-References: <20250210-otx2_common-v1-1-954570a3666d@ethancedwards.com>
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="OcOrIuDk"
+Received: from eig-obgw-6004a.ext.cloudfilter.net ([10.0.30.197])
+	by cmsmtp with ESMTPS
+	id hRm5t441TXshwhkIvtuQji; Tue, 11 Feb 2025 07:03:33 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id hkItt6zlklqdthkIutSW53; Tue, 11 Feb 2025 07:03:32 +0000
+X-Authority-Analysis: v=2.4 cv=JIzwsNKb c=1 sm=1 tr=0 ts=67aaf644
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=6Vi/Wpy7sgpXGMLew8oZcg==:17
+ a=IkcTkHD0fZMA:10 a=T2h4t0Lz3GQA:10 a=7T7KSl7uo7wA:10
+ a=PX_z9cZZlryqIJpxFbEA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=Xt_RvD8W3m28Mn_h3AK8:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=ZAqk/kPjeF1znOItEkmi2wBaDhf/+EtLCrTaF/cU7Eo=; b=OcOrIuDkLC299Gj8idUtnL1VW9
+	TqiW36pf5h+tnVNYjjtCRvpQrQCKj1h+UScGZc2atMBJrL6GgSFaDqQhWC+J4X3RspYozlNEiBAgd
+	Ksu06uzGLhjbcMM5HBYE3CQN6m1SdA38rb/+nG/sodd6mdNmXPY4DFrd87uJjbMNeaSrjRwqaRPZf
+	eJgqyKsivAdZquDbp271nrwAhzs94o3kONqHVWIz2GMyrKda85xHVbMRHGUydxsSxqmoS6e5EYSoQ
+	rPJNTctoFog1Ieys0IUP9L2bEnHU6QqGN5UBgEVO9MHdLPonU7XXwrmI4nk6rT6UVbFf0hHGsuzFm
+	35jt3xCA==;
+Received: from [45.124.203.140] (port=54947 helo=[192.168.0.153])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1thkIs-000XwA-26;
+	Tue, 11 Feb 2025 01:03:31 -0600
+Message-ID: <55e010d1-4f98-40f1-b009-78580f895b86@embeddedor.com>
+Date: Tue, 11 Feb 2025 17:32:57 +1030
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250210-otx2_common-v1-1-954570a3666d@ethancedwards.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3][next] tty: tty_buffer: Avoid hundreds of
+ -Wflex-array-member-not-at-end warnings
+To: Jiri Slaby <jirislaby@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <Z6QvAZxiQusdaDkH@kspp>
+ <daea13b0-137c-4ab5-8388-1d46919b8609@kernel.org>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <daea13b0-137c-4ab5-8388-1d46919b8609@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 45.124.203.140
+X-Source-L: No
+X-Exim-ID: 1thkIs-000XwA-26
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.0.153]) [45.124.203.140]:54947
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfCExV25dz22STGAmvgYbljOx3luFPNfcQWraDSk7xadhR7qR9GmwCPSX4JA8WKWACj6Q7MNpTFdlWBT6xl9GhNNM6N8//DFwR/EwX+kMI+vnBCbnLtov
+ HfdBnA8i4H3IsCQJs/hk/HtDnU3Gz55piasMvYUyjPEBwgf2Q7g7rrlLu7Bbe188QdN/4+/R6dcXiv7Nn6oVy4zZuEvSWlxvMEM/8r/bYTwSkLdOiDsYUv6Y
 
-On Mon, Feb 10, 2025 at 09:01:52PM -0500, Ethan Carter Edwards wrote:
-> The variable *max_mtu* is uninitialized in the function
-> otx2_get_max_mtu. It is only assigned in the if-statement, leaving the
-> possibility of returning an uninitialized value.
 
-In which case? If rc == 0 at the end of the function max_mtu is set to
-custom value from HW. If rc != it will reach the if after goto label and
-set max_mtu to default.
 
-In my opinion this change is good. It is easier to see that the variable
-is alwyas correct initialized, but I don't think it is a fix for real
-issue.
-
-Thanks,
-Michal
 
 > 
-> 1500 is the industry standard networking mtu and therefore should be the
-> default. If the function detects that the hardware custom sets the mtu,
-> then it will use it instead.
+>> @@ -576,11 +579,14 @@ int tty_insert_flip_string_and_push_buffer(struct tty_port *port,
+>>   void tty_buffer_init(struct tty_port *port)
+>>   {
+>>       struct tty_bufhead *buf = &port->buf;
+>> +    struct tty_buffer *buf_sentinel;
+>> +
+>> +    buf_sentinel = container_of(&buf->sentinel, struct tty_buffer, hdr);
 > 
-> Addresses-Coverity-ID: 1636407 ("Uninitialized scalar variable")
-> Fixes: ab58a416c93f ("octeontx2-pf: cn10k: Get max mtu supported from admin function")
-> Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
-> ---
->  drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+> Bah, so this is ugly and even dangerous if someone adds a member to tty_buffer outside _hdr.
 > 
-> diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c
-> index 2b49bfec78692cf1f63c793ec49511607cda7c3e..6c1b03690a9c24c5232ff9f07befb1cc553490f7 100644
-> --- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c
-> +++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c
-> @@ -1909,7 +1909,7 @@ u16 otx2_get_max_mtu(struct otx2_nic *pfvf)
->  {
->  	struct nix_hw_info *rsp;
->  	struct msg_req *req;
-> -	u16 max_mtu;
-> +	u16 max_mtu = 1500;
->  	int rc;
->  
->  	mutex_lock(&pfvf->mbox.lock);
-> @@ -1948,7 +1948,6 @@ u16 otx2_get_max_mtu(struct otx2_nic *pfvf)
->  	if (rc) {
->  		dev_warn(pfvf->dev,
->  			 "Failed to get MTU from hardware setting default value(1500)\n");
-> -		max_mtu = 1500;
->  	}
->  	return max_mtu;
->  }
-> 
-> ---
-> base-commit: febbc555cf0fff895546ddb8ba2c9a523692fb55
-> change-id: 20250210-otx2_common-453132aa0a24
-> 
-> Best regards,
-> -- 
-> Ethan Carter Edwards <ethan@ethancedwards.com>
+> We should link headers in the list, it appears.
+
+What should that patch look like?
+
+--
+Gustavo
