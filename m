@@ -1,183 +1,120 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 525A7255E27
-	for <linux-hardening@vger.kernel.org>; Tue, 11 Feb 2025 16:10:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FCC0261569
+	for <linux-hardening@vger.kernel.org>; Tue, 11 Feb 2025 17:32:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739290246; cv=none; b=Zo5adE7PPc6GruaR1zjVGOn1EOzJeR7QmPa9RwkbQwOCdEFhfNoA0uv0h4folDbSYE64g3AOyEM/jHqXbPbbqp5mH9KRFXV9XAkoDxXRup5o5c/6Loovf90zOUSckY0Ryk/rWwoyGxdTVLBYsKJ+9ynStiuDwqeV3iEG8DW8g8c=
+	t=1739295140; cv=none; b=mDx51yHIgNe9tdmVYhOcyyAEcmjvKrNIKc/u94NJLy5ut7vsnY8ikIxGSvYHH2wB4p4jtPCDTB7xy75cjhYtBvM3zZm2uiyYEvzIc+1LPCQd0r18ajpaajsgUD+HWNPt2g8+T/8hPZ8T8HVhQxLvYy48RtaAXeFj3IvpI0cQziw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739290246; c=relaxed/simple;
-	bh=nE7GJqZw+gIEdhcV99Kpd2q5ds+/vCptECGTizt6klE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=pGtP1JqZa5z52bvlwVafWrSk3ZMBm1/i+a+fLjta7Gtv6Dbfosz1oAPWJmDVrleBJLBFbc+jA42WCymv5Y8DknWAl0lD6qCGALghx5Bk6h0sa8wE6BIGcPqbgMEFEXs9ZQ1cySMgRfQ2y4u1h9BD6EXUKe0UD9O/Ja3l9gW7fXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=i1HUBeyt; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1739295140; c=relaxed/simple;
+	bh=myFhEI7olwvlcKDX/vZyne2d/kbazrOb4/046xUxn4I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ouysasVzfN0LxxA5RjODBYXh3ld5RmVy09BhVNWEHOIE3zdOG5S2TigVp0B9ERjhuAIB4vJvm8JUiePWFtQEZ6A1P6ubuuuJIsspYqMGQnstzvpBVc96865dXMAYpAG5veyS5bN6CwEPs0DEipRa8Z8ruYXbgezdfftyGmdqPEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=EqxbXW9c; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i1HUBeyt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739290243;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DkXKKRZIZ3B6nMXAUQwqba2hAbiJWDhaRaBNOU6/fJw=;
-	b=i1HUBeytVZQfuTjrexbgjP7YEuXhfQTbb6pRe91MQPsrHrNvdDzSOfyC/EERd6n8ZWPDjF
-	+lZ5tsIl54r4itAaxVJ7JLggTgV7punI/95D8cHSFkAUzbdWyJUgYCJxsfKBbdpQAXbDp7
-	n1YwDMda2zzuC6MFCw8XkhNYDMwIpOc=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-647-VPsGbocZPHKsj7GvdtqkWg-1; Tue, 11 Feb 2025 11:10:42 -0500
-X-MC-Unique: VPsGbocZPHKsj7GvdtqkWg-1
-X-Mimecast-MFC-AGG-ID: VPsGbocZPHKsj7GvdtqkWg
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-439385b08d1so22197035e9.1
-        for <linux-hardening@vger.kernel.org>; Tue, 11 Feb 2025 08:10:41 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="EqxbXW9c"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51BGP23v006121
+	for <linux-hardening@vger.kernel.org>; Tue, 11 Feb 2025 17:32:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	7t13RmOscMfNDi73nleX4EUfoNXKCb4b28tzUu8aPKU=; b=EqxbXW9cWWmWZDpK
+	KJHTfS4BOz9w1wKyaRz4aAM8il3tM5Wz52S/pYIY3Xb9NNCtCE6vl1VMgkSTrXUw
+	J+a62IiCeyKEIl3tCWDuXYJgR9n3WPjRMj2xrp0s/MwZt0nxVe1xzm3PB1sRSE0Y
+	f5ypUFOn+PX2Z/SaROlw7CwKU1E9K71vrgo1KxOCiG1QOPE1IFD5v1SKZsWPPR0q
+	ZBHr5akx5RiKD/KbYgcXvIv8DHMla3RAmGIUWneM74x0pLDvdQWAtH9VHEei86fG
+	cY2he9AwYXRXa7gGtfjgkBkgyErF27pk3v49emaiRQHFeH+J8qWdfnFV+PBwzuaP
+	QtPGyQ==
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44qe5mvwd8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-hardening@vger.kernel.org>; Tue, 11 Feb 2025 17:32:16 +0000 (GMT)
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-2fa562cc226so6055301a91.0
+        for <linux-hardening@vger.kernel.org>; Tue, 11 Feb 2025 09:32:16 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739290241; x=1739895041;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DkXKKRZIZ3B6nMXAUQwqba2hAbiJWDhaRaBNOU6/fJw=;
-        b=B+AHolX0r8sNVd1lKan+NEWiZI2pDPUwbwMJQtLNXZ7hf0V1wGuQzzCiPEb6+heArg
-         E/jjKlcRmGzrLK6Y7QRELSNSf7CGGgl7Z9cyFLx+36M++z3Zfebeu7kEZfiP3yRUzqh/
-         ay9UI9trIAXih1NRxhDpJ0xnuF0kdgnkFVVNomVY+RtvIgU/oYqjQSbmVkVaJGIgYOfz
-         1kyS/V0gORptHn9s0xmZKVCMY5tPxutQk6aPFxM3XN4qklSQqYLDbn4RM0AVNWfZxc8d
-         on/KdzBnhOduMvurdad3W5sBrYe2s1KsIsFTuuU3nXE7jQTTmSsRNu09cXcNul+46IIS
-         n1qA==
-X-Forwarded-Encrypted: i=1; AJvYcCXxC4NOefQeiaO46MQnG37kInnF8fIfPCizqdIQkY0gndKNg1S6i/OyCybik5aOM79K+xXSs+pdB3LabEAEP4s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzUw9G3YewLmgLeLfbfOHKUl14B4PwOqIf9/VWrMzwujmUsj1DC
-	f1AYd1FOlVVlix0hU9KEqKNfSVS4uR7pj2VAuCoJi0zc6ICfjmcOI6RHRo0VeCLKy32v2wC6lyp
-	MQPexj4yQEWndHabKHQ5TZ6ckRlZOb87xxpBFeD5d4+otpjcefpsN2ZF+9E9000R5SQ==
-X-Gm-Gg: ASbGncuPhn3hLt+vzOw7j5f4mo+qeKgqU4s04kcgZjHb3pvDIJeoiSpM7HAHSFrKSA1
-	8oPzSKq8Kc5hFwzp+emQEJtE1IPpyrs8/xfq6AiA/ihvIXwXNMPDb5jOEM9o6D583KctM7OmkE4
-	T51n1498lLU6+tZuKmhWOh6M5mXKxZVjrOgEM7OW/mFR9+tvd6kEV2aZ+afdjee4Ybg8JcomilM
-	q2Av0hEmz1qYJxTcotk7gnjoRLFgaumhhS38B3Y0bEmgJTOZnfN4jBY20kOD2HOb+Sb0opa7hl/
-	QPq12AIokrPjtwtjSvuBvssBL9MxxK7l1v3Xr3jxP3jpVWOv7bHW4QcXvvY3kSds1g==
-X-Received: by 2002:a05:600c:500b:b0:439:48d9:d8b0 with SMTP id 5b1f17b1804b1-43948d9dd41mr73108225e9.16.1739290240830;
-        Tue, 11 Feb 2025 08:10:40 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGxNXfn5PLr2I3O9shVB9BLvMIo6l6XNn4GHuv5+NRtXPlNDWEKqGeQnOp/tv15slnT46loqA==
-X-Received: by 2002:a05:600c:500b:b0:439:48d9:d8b0 with SMTP id 5b1f17b1804b1-43948d9dd41mr73107295e9.16.1739290240325;
-        Tue, 11 Feb 2025 08:10:40 -0800 (PST)
-Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dc9ef8ac6sm12561610f8f.27.2025.02.11.08.10.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2025 08:10:39 -0800 (PST)
-From: Valentin Schneider <vschneid@redhat.com>
-To: Dave Hansen <dave.hansen@intel.com>, Jann Horn <jannh@google.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
- virtualization@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
- linux-perf-users@vger.kernel.org, xen-devel@lists.xenproject.org,
- kvm@vger.kernel.org, linux-arch@vger.kernel.org, rcu@vger.kernel.org,
- linux-hardening@vger.kernel.org, linux-mm@kvack.org,
- linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
- bcm-kernel-feedback-list@broadcom.com, Juergen Gross <jgross@suse.com>,
- Ajay Kaher <ajay.kaher@broadcom.com>, Alexey Makhalov
- <alexey.amakhalov@broadcom.com>, Russell King <linux@armlinux.org.uk>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Paul
- Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
- Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
- Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
- Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>, Boris Ostrovsky
- <boris.ostrovsky@oracle.com>, Josh Poimboeuf <jpoimboe@kernel.org>, Pawan
- Gupta <pawan.kumar.gupta@linux.intel.com>, Sean Christopherson
- <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, Andy Lutomirski
- <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Frederic Weisbecker
- <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, Jason
- Baron <jbaron@akamai.com>, Steven Rostedt <rostedt@goodmis.org>, Ard
- Biesheuvel <ardb@kernel.org>, Neeraj Upadhyay
- <neeraj.upadhyay@kernel.org>, Joel Fernandes <joel@joelfernandes.org>,
- Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
- Uladzislau Rezki <urezki@gmail.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>,
- Zqiang <qiang.zhang1211@gmail.com>, Juri Lelli <juri.lelli@redhat.com>,
- Clark Williams <williams@redhat.com>, Yair Podemsky <ypodemsk@redhat.com>,
- Tomas Glozar <tglozar@redhat.com>, Vincent Guittot
- <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Kees Cook
- <kees@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Christoph
- Hellwig <hch@infradead.org>, Shuah Khan <shuah@kernel.org>, Sami Tolvanen
- <samitolvanen@google.com>, Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl
- <aliceryhl@google.com>, "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
- Samuel Holland <samuel.holland@sifive.com>, Rong Xu <xur@google.com>,
- Nicolas Saenz Julienne <nsaenzju@redhat.com>, Geert Uytterhoeven
- <geert@linux-m68k.org>, Yosry Ahmed <yosryahmed@google.com>, "Kirill A.
- Shutemov" <kirill.shutemov@linux.intel.com>, "Masami Hiramatsu (Google)"
- <mhiramat@kernel.org>, Jinghao Jia <jinghao7@illinois.edu>, Luis
- Chamberlain <mcgrof@kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
- Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: Re: [PATCH v4 29/30] x86/mm, mm/vmalloc: Defer
- flush_tlb_kernel_range() targeting NOHZ_FULL CPUs
-In-Reply-To: <352317e3-c7dc-43b4-b4cb-9644489318d0@intel.com>
-References: <20250114175143.81438-1-vschneid@redhat.com>
- <20250114175143.81438-30-vschneid@redhat.com>
- <CAG48ez1Mh+DOy0ysOo7Qioxh1W7xWQyK9CLGNU9TGOsLXbg=gQ@mail.gmail.com>
- <xhsmh34hhh37q.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <CAG48ez3H8OVP1GxBLdmFgusvT1gQhwu2SiXbgi8T9uuCYVK52w@mail.gmail.com>
- <xhsmh5xlhk5p2.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <CAG48ez1EAATYcX520Nnw=P8XtUDSr5pe+qGH1YVNk3xN2LE05g@mail.gmail.com>
- <xhsmh34gkk3ls.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <352317e3-c7dc-43b4-b4cb-9644489318d0@intel.com>
-Date: Tue, 11 Feb 2025 17:10:36 +0100
-Message-ID: <xhsmhv7tgihs3.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+        d=1e100.net; s=20230601; t=1739295136; x=1739899936;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7t13RmOscMfNDi73nleX4EUfoNXKCb4b28tzUu8aPKU=;
+        b=Q0V0J2FGtaneBLRnmEmSULLUvKIdJsLxDnoE/DfKNTU/h6EdpsOUycnkcT0XhvYCiH
+         MAzhNUnpWBhiOxRXgNzXPDg6RM05Yk+QEYZbb/XR0Ke2ZbPqz0Fe54qGN/s7N6euUcNS
+         idDVzGf1VoDPB8qFDSm77UtkOWAO1zqBgDBfCMtp7sDh/pqprIn48s1+cWtxZ8px3gho
+         bC2CkTpcqLbqPc0ALGxQo3FAPYd4wZ8uVhH1zTWKOajeVQRts1Vbki54vGIX9W+LfZIn
+         iSPYBsK8l9aiIaaBQKWg01HG06zyqwARtVvwV9P2pKBE6+6yhtEG6opK+Yi0nrOlGsqh
+         F7Dw==
+X-Forwarded-Encrypted: i=1; AJvYcCVFloqQ9wf1KpqGBrNxGCB/FHkJ86qOkSjbp+Bm7oXye4CsLhZ2+ty+90U829/56wYf0NACZCYS8mEjBzNy8yk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxpgfVtDwGIRgzrp6Rjl3DymCbjSWatLoJaMRH0MxiWLHogjdLg
+	zRqM6NzedcxMeAWKkQ0RGTv5o4XmYr5+CfFN7eTC+mW/0eqO0qOkc6yzs16m6EPlgYyfHHGPMV3
+	s5FtP2j00jGSAuIprWUQ21Frk2AOuPpl8uTOHR49RYbgkqR4V9JLbyP0U8etYGYImYeU=
+X-Gm-Gg: ASbGnctzQ0qYs8KxdV5pO2FRBRm+9WdGZIm4S7cW757GiLmD4MaiosCtdlFkIydM576
+	aWh7JIDVopO2Zbfrb7QUAR4fbjSRBEWSEfaehBbqRU0CEKrO2dDv6I9ZSfe4Az/asbNH1YHuIQv
+	54NSd0dhU8gd1hCqlYpnp2H2GjNIAoppi6YFJNsO8mq3cTvZ1El03zNHNRwhFVsiPI9eo/ZYO0q
+	bpGu/qSv4QZIGJSZNEoBeuERbe/PK1O23i0tSz9MuQpDKzUaPbJudxIXAslRXi3CVGMJ6Ej2gDv
+	OVJEoToqFz7nLgq3yy7ZBaKsHwlle8KEhMJujElX5w==
+X-Received: by 2002:a17:90b:4d8d:b0:2ee:693e:ed7a with SMTP id 98e67ed59e1d1-2fa243ebdbcmr25018193a91.35.1739295135581;
+        Tue, 11 Feb 2025 09:32:15 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IF21/tLPL2jpe5F4TcV+Wyh9fwEmWRbfBc0shXo7z6JXXJnQmbq2Yvx8LMK31GkNy5SlgN6Ig==
+X-Received: by 2002:a17:90b:4d8d:b0:2ee:693e:ed7a with SMTP id 98e67ed59e1d1-2fa243ebdbcmr25018158a91.35.1739295135224;
+        Tue, 11 Feb 2025 09:32:15 -0800 (PST)
+Received: from [192.168.29.221] ([49.37.208.137])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3687c187sm99816815ad.168.2025.02.11.09.32.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Feb 2025 09:32:14 -0800 (PST)
+Message-ID: <9f0b4a6e-337e-4370-a2b5-9aed1887d112@oss.qualcomm.com>
+Date: Tue, 11 Feb 2025 23:02:10 +0530
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: bc3kRnlN13fyJmILzypKXKDSA4kohoHwueX4yCjjDgM_1739290241
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] wifi: ath12k: cleanup ath12k_mac_mlo_ready()
+To: Ethan Carter Edwards <ethan@ethancedwards.com>,
+        Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+        Karthikeyan Periyasamy <quic_periyasa@quicinc.com>
+Cc: Kalle Valo <kvalo@kernel.org>, Jeff Johnson <jjohnson@kernel.org>,
+        Harshitha Prem <quic_hprem@quicinc.com>,
+        Kalle Valo
+ <quic_kvalo@quicinc.com>, linux-wireless@vger.kernel.org,
+        ath12k@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+References: <20250210-ath12k-uninit-v2-1-3596f28dd380@ethancedwards.com>
+From: Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>
+Content-Language: en-US
+In-Reply-To: <20250210-ath12k-uninit-v2-1-3596f28dd380@ethancedwards.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: cLPw3tCeDXliu3MBFCLmsyBxFKP7CHHp
+X-Proofpoint-ORIG-GUID: cLPw3tCeDXliu3MBFCLmsyBxFKP7CHHp
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-11_07,2025-02-11_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ priorityscore=1501 clxscore=1011 suspectscore=0 mlxscore=0
+ lowpriorityscore=0 phishscore=0 impostorscore=0 malwarescore=0 spamscore=0
+ mlxlogscore=539 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2501170000 definitions=main-2502110114
 
-On 11/02/25 06:22, Dave Hansen wrote:
-> On 2/11/25 05:33, Valentin Schneider wrote:
->>> 2. It's wrong to assume that TLB entries are only populated for
->>> addresses you access - thanks to speculative execution, you have to
->>> assume that the CPU might be populating random TLB entries all over
->>> the place.
->> Gotta love speculation. Now it is supposed to be limited to genuinely
->> accessible data & code, right? Say theoretically we have a full TLBi as
->> literally the last thing before doing the return-to-userspace, speculation
->> should be limited to executing maybe bits of the return-from-userspace
->> code?
->
-> In practice, it's mostly limited like that.
->
-> Architecturally, there are no promises from the CPU. It is within its
-> rights to cache anything from the page tables at any time. If it's in
-> the CR3 tree, it's fair game.
->
->> Furthermore, I would hope that once a CPU is executing in userspace, it's
->> not going to populate the TLB with kernel address translations - AIUI the
->> whole vulnerability mitigation debacle was about preventing this sort of
->> thing.
->
-> Nope, unfortunately. There's two big exception to this. First, "implicit
-> supervisor-mode accesses". There are structures for which the CPU gets a
-> virtual address and accesses it even while userspace is running. The LDT
-> and GDT are the most obvious examples, but there are some less
-> ubiquitous ones like the buffers for PEBS events.
->
-> Second, remember that user versus supervisor is determined *BY* the page
-> tables. Before Linear Address Space Separation (LASS), all virtual
-> memory accesses walk the page tables, even userspace accesses to kernel
-> addresses.  The User/Supervisor bit is *in* the page tables, of course.
->
-> A userspace access to a kernel address results in a page walk and the
-> CPU is completely free to cache all or part of that page walk. A
-> Meltdown-style _speculative_ userspace access to kernel memory won't
-> generate a fault either. It won't leak data like it used to, of course,
-> but it can still walk the page tables. That's one reason LASS is needed.
+On 2/11/25 08:19, Ethan Carter Edwards wrote:
+> There is a possibility for an uninitialized*ret* variable to be
+> returned in some code paths.
+> 
+> This explicitly returns 0 without an error. Also removes goto that
+> returned*ret* and simply returns in place.
+> 
+> Closes:https://scan5.scan.coverity.com/#/project-view/63541/10063? 
+> selectedIssue=1642337
+> Fixes: b716a10d99a28 ("wifi: ath12k: enable MLO setup and teardown from core")
+> Signed-off-by: Ethan Carter Edwards<ethan@ethancedwards.com>
+> ---
 
-Bummer, now I have at least two architectures proving me wrong :-) Thank
-you as well for the education, I really appreciate it.
+Reviewed-by: Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>
 
+-- 
+Aditya
