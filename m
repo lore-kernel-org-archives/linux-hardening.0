@@ -1,150 +1,166 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f54.google.com (mail-io1-f54.google.com [209.85.166.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDD7A26460A;
-	Mon, 10 Feb 2025 22:14:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15D68E573
+	for <linux-hardening@vger.kernel.org>; Tue, 11 Feb 2025 00:01:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739225675; cv=none; b=FbWwICmwKRRKA7Jmd0UA9eNMmXOSlOTP13R3Y3vJjTjCouwA4UKbhV6YzPiXC6Fqndi4r68ks3sYtL3lVDRo7xlmJ5bkJj0k5cXLzWH5ieV6G68N9zA8HaIsoKpxHt/6TFlgcnpBBJ/Mwfgl5QuJo07MTYlpMJkEluoVvDaGIvo=
+	t=1739232082; cv=none; b=gcM6yb2RaTl71nwqh4t8EBoPHb2B9CuLsu3CoIFoCWdVv0NTrGwFTc+/+rYqo9WCewvIYlY7b2XfjzZ5vPVdZe/4tmZmyEqV9BlMO435z/H1jUjoIjX+fBvFbtTwa86UAKewCwR68dLULSi2JR0Z2SQH7CgIO7o1au8ASwwQrpE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739225675; c=relaxed/simple;
-	bh=wAlco3KgE3b5Zm2KxeQSUCDAHvlWIRWuWCxaZuyhKIA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=o/O0PzvduXHusGhsOk6OQN46nsQY50bwxoG9EIdADRt1L9wzyDLHI7slFCJ/HKCIAwHabz6J5QV60QxOJqvpmOAlI7hHR90c0QFRdQaWyLVXKu1dk2PIVSLNfaQT9O6DVoD6BmlYtHop5+UoEnaZ5vq/Qp/lXXYqSO8qJPez2n4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=bKgYrG2O; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1739232082; c=relaxed/simple;
+	bh=nJ6LzyoeCFVUzoZJxDKWwrZWehljrX0DhSYi/LN5Rh0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CHm6KnVYmX6DNqRI5a9u9eB3bNuLxm2vXFPTUYoGCZjHdFvxhEa6gUGt3NhPYrYKs7PMpYBzZFwukxK/IYR29EkDHIOV0ocA4XcMG60uYEKhQbSonSmekRVtgwOwnKtFXDR7L1uOBp1015eUZ5PvFLdVhu3Qyt/14D2LWH7HVBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iX5WbZS+; arc=none smtp.client-ip=209.85.166.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="bKgYrG2O"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51AFWGNv010537;
-	Mon, 10 Feb 2025 22:14:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	vY50FlbYh4+8a/VdeObjeHxe9rwAB0wgSpExAfUGU9c=; b=bKgYrG2O14NkcbVZ
-	cGs/N0lLBDOJLBYcof8s/qxsUf1UpBGHpGGzfQEF+LFCdZIbZXQQ764YyGJoSx8E
-	n67QtCKeY8HVZgQPARVUQgUU0sk9YC+aOetSTfSh5BHIhHdvoCn7ysXEm1BH+3Bv
-	OwQWran9q1WadH1zhCv2LNtt61VZnansqLLHeXWBWJF/tAPGn7jKE+G8adTJU6kd
-	s52HcoX2UoAcGEZBnpPdMVTsXh0Mj0I3zlVzlbc6x4gRk4J57fHIJG7G58YUa4fY
-	bpT87AZVOoKSmvYVcXzUofi+NucLIqg15dAGS9Q2sSIkCfXyQL4rWdFPQMAdHjnG
-	/P/z1w==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44qcs5actr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Feb 2025 22:14:17 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51AMEGmp031662
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Feb 2025 22:14:16 GMT
-Received: from [10.71.110.136] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 10 Feb
- 2025 14:14:15 -0800
-Message-ID: <8e40c1bf-6da7-46b1-925c-53d1fa25f3ce@quicinc.com>
-Date: Mon, 10 Feb 2025 14:14:14 -0800
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iX5WbZS+"
+Received: by mail-io1-f54.google.com with SMTP id ca18e2360f4ac-85522610e26so40243739f.0
+        for <linux-hardening@vger.kernel.org>; Mon, 10 Feb 2025 16:01:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739232076; x=1739836876; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=o+6VjZyKkm05cc5abGkcRCYDQiyuvjp7DI1YWDZerk8=;
+        b=iX5WbZS+JoAYBsgYxpl6YrW89+p70yhF992Vocgl1ivjdsv+Satdjm2HcL7lSdBpl7
+         SOEeJpC9dxduVk8eQbhzyGyfRtI84+H8+5zVdhqxsg8ct01aHL96fo5EfI4zNh2sqSHt
+         2ceVv45CI4Ub4aUp0R4dRks7NoYYo75pH8X8e8oERVapjcQAP8w2P6rkqKdcU30iASKB
+         bnkSFwH7cSU2GIkcpT4SWfGfI6lo2RC0NJIfZ7o47OQ1zbtdZk6/ElOdg9qhjGEr3pPw
+         OEvhYdS8nmV2sUGoqX5JwZAT7qFttafzr7Hzg/uuJ04wWSkdoY/dAKjaaLRal6NOeg2+
+         N7RQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739232076; x=1739836876;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=o+6VjZyKkm05cc5abGkcRCYDQiyuvjp7DI1YWDZerk8=;
+        b=lGXi9aHRvUQL7afZhdgfL6WeLL95ySaV8026dBTN/+arZbYIn3GS5hQIuFVdkFd5Me
+         t2PFeLnCLlmieYqJUBWhmCerUWuTuuV65yW8V0e9ljxideFQMNr0ZOWgytMi6LggzVIW
+         hHPGjMZCR9qreEDxGByfOF35j84WUUjB8EkLCMisKmgh5X3tM8xgRyZ1q1ZMyqooDxT6
+         evzRRDjsRnJ3LfNkTFuUDUMrgHx8zm2FNhpmS05kd3bf3ZKzy3d8vEGxQaWiZYeQcbGw
+         ADfXGH53CpHMHm4UQNCKDMc3N09UNVdUST9B29WDGqCxJShiA0EFcwEcBjnRTqUmAh+J
+         OxdA==
+X-Forwarded-Encrypted: i=1; AJvYcCWrLFJet6Y3weskSwD+2+QedwlSAhp+RPdKQb4fp1EiWS4xwxT2V5trbkJNHRxr20u6uePyVc0zT+wcNWNVNec=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx4qSn/7JMb6s69d/A9gGe3E3V1xC9BgmI+C+0TSECX1MUi1ben
+	Z3KuURKny+JXoiOVBWddz/3vbUGcFnm0GatQos8U4jyPII+HdzTdyfHlLUROqg==
+X-Gm-Gg: ASbGnctD+HKZj5uqNQAqhnNzdBCg97/peL74rqyGZ72dZSPHcj1sB3dfGQLjizRc9ch
+	m/ZgywuNvihypRnmBPYnBCKqIc+kriEPzGmgugvTd5rqq6VlJWsfhCoIne4R4BfODt4FyUozH7k
+	LJqxNe8Fe3BxM6aVMEy1L5Xh2ow3/pX2lfd/cCtKZaKb4ns9B3Fi7fzihdi+AsXa7vIQPLJwlXr
+	wc+jmUjuv5Es+exB5ad4vxr1n6ngzgFiT9zfi14ea54/BDojhE0vTxTfTpTmuNoGdrF5VP+mrql
+	RIJRlj2pK2Bt86uxX63kANVAF5quND8txS3n+D8YzkA1KNEOAMRO2CU=
+X-Google-Smtp-Source: AGHT+IEPW+Dnhu306cg6k4cp4JKL9h87jLz1ibbxMZeZMr5tSf0uulSyxZPsQKhKZyhcDka4DYJs9Q==
+X-Received: by 2002:a05:6e02:b43:b0:3d0:23ac:b29f with SMTP id e9e14a558f8ab-3d13dcee786mr134115905ab.1.1739232076020;
+        Mon, 10 Feb 2025 16:01:16 -0800 (PST)
+Received: from google.com (143.96.28.34.bc.googleusercontent.com. [34.28.96.143])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4ecef0c9674sm1185594173.117.2025.02.10.16.01.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 16:01:15 -0800 (PST)
+Date: Mon, 10 Feb 2025 16:01:10 -0800
+From: Justin Stitt <justinstitt@google.com>
+To: Kees Cook <kees@kernel.org>
+Cc: Tariq Toukan <tariqt@nvidia.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Yishai Hadas <yishaih@nvidia.com>, netdev@vger.kernel.org, linux-rdma@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] net/mlx4_core: Avoid impossible mlx4_db_alloc() order
+ value
+Message-ID: <3biiqfwwvlbkvo5tx56nmcl4rzbq5w7u3kxn5f5ctwsolxpubo@isskxigmypwz>
+References: <20250210174504.work.075-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] drm/msm/dpu: Fix uninitialized variable
-To: Ethan Carter Edwards <ethan@ethancedwards.com>,
-        Rob Clark
-	<robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie
-	<airlied@gmail.com>
-CC: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Marijn Suijten
-	<marijn.suijten@somainline.org>,
-        Simona Vetter <simona@ffwll.ch>, <linux-arm-msm@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <freedreno@lists.freedesktop.org>,
-        <linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>
-References: <20250209-dpu-v2-1-114dfd4ebefd@ethancedwards.com>
-Content-Language: en-US
-From: Abhinav Kumar <quic_abhinavk@quicinc.com>
-In-Reply-To: <20250209-dpu-v2-1-114dfd4ebefd@ethancedwards.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 6dQVsI2Oq7WzMD3NmrriezMEIldBAUks
-X-Proofpoint-GUID: 6dQVsI2Oq7WzMD3NmrriezMEIldBAUks
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-10_11,2025-02-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
- mlxlogscore=999 phishscore=0 lowpriorityscore=0 spamscore=0 malwarescore=0
- adultscore=0 clxscore=1011 mlxscore=0 priorityscore=1501 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
- definitions=main-2502100175
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250210174504.work.075-kees@kernel.org>
 
-
-
-On 2/9/2025 7:51 PM, Ethan Carter Edwards wrote:
-> There is a possibility for an uninitialized *ret* variable to be
-> returned in some code paths.
+On Mon, Feb 10, 2025 at 09:45:05AM -0800, Kees Cook wrote:
+> GCC can see that the value range for "order" is capped, but this leads
+> it to consider that it might be negative, leading to a false positive
+> warning (with GCC 15 with -Warray-bounds -fdiagnostics-details):
 > 
-> Fix this by initializing *ret* to 0.
+> ../drivers/net/ethernet/mellanox/mlx4/alloc.c:691:47: error: array subscript -1 is below array bounds of 'long unsigned int *[2]' [-Werror=array-bounds=]
+>   691 |                 i = find_first_bit(pgdir->bits[o], MLX4_DB_PER_PAGE >> o);
+>       |                                    ~~~~~~~~~~~^~~
+>   'mlx4_alloc_db_from_pgdir': events 1-2
+>   691 |                 i = find_first_bit(pgdir->bits[o], MLX4_DB_PER_PAGE >> o);                        |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>       |                     |                         |                                                   |                     |                         (2) out of array bounds here
+>       |                     (1) when the condition is evaluated to true                             In file included from ../drivers/net/ethernet/mellanox/mlx4/mlx4.h:53,
+>                  from ../drivers/net/ethernet/mellanox/mlx4/alloc.c:42:
+> ../include/linux/mlx4/device.h:664:33: note: while referencing 'bits'
+>   664 |         unsigned long          *bits[2];
+>       |                                 ^~~~
 > 
-> Addresses-Coverity-ID: 1642546 ("Uninitialized scalar variable")
-> Fixes: 774bcfb731765d ("drm/msm/dpu: add support for virtual planes")
-> Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
+> Switch the argument to unsigned int, which removes the compiler needing
+> to consider negative values.
+> 
+> Signed-off-by: Kees Cook <kees@kernel.org>
 > ---
-> Changes in v2:
-> - Return explicit 0 when no error occurs
-> - Add hardening mailing lists
-> - Link to v1: https://lore.kernel.org/r/20250209-dpu-v1-1-0db666884f70@ethancedwards.com
+> Cc: Tariq Toukan <tariqt@nvidia.com>
+> Cc: Andrew Lunn <andrew+netdev@lunn.ch>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Eric Dumazet <edumazet@google.com>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: Paolo Abeni <pabeni@redhat.com>
+> Cc: Yishai Hadas <yishaih@nvidia.com>
+> Cc: netdev@vger.kernel.org
+> Cc: linux-rdma@vger.kernel.org
 > ---
->   drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c | 7 +++----
->   1 file changed, 3 insertions(+), 4 deletions(-)
+>  drivers/net/ethernet/mellanox/mlx4/alloc.c | 6 +++---
+>  include/linux/mlx4/device.h                | 2 +-
+>  2 files changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/mellanox/mlx4/alloc.c b/drivers/net/ethernet/mellanox/mlx4/alloc.c
+> index b330020dc0d6..f2bded847e61 100644
+> --- a/drivers/net/ethernet/mellanox/mlx4/alloc.c
+> +++ b/drivers/net/ethernet/mellanox/mlx4/alloc.c
+> @@ -682,9 +682,9 @@ static struct mlx4_db_pgdir *mlx4_alloc_db_pgdir(struct device *dma_device)
+>  }
+>  
+>  static int mlx4_alloc_db_from_pgdir(struct mlx4_db_pgdir *pgdir,
+> -				    struct mlx4_db *db, int order)
+> +				    struct mlx4_db *db, unsigned int order)
+>  {
+> -	int o;
+> +	unsigned int o;
+>  	int i;
+>  
+>  	for (o = order; o <= 1; ++o) {
+
+  ^ Knowing now that @order can only be 0 or 1 can this for loop (and
+  goto) be dropped entirely?
+
+  The code is already short and sweet so I don't feel strongly either
+  way.
+
+> @@ -712,7 +712,7 @@ static int mlx4_alloc_db_from_pgdir(struct mlx4_db_pgdir *pgdir,
+>  	return 0;
+>  }
+>  
+> -int mlx4_db_alloc(struct mlx4_dev *dev, struct mlx4_db *db, int order)
+> +int mlx4_db_alloc(struct mlx4_dev *dev, struct mlx4_db *db, unsigned int order)
+>  {
+>  	struct mlx4_priv *priv = mlx4_priv(dev);
+>  	struct mlx4_db_pgdir *pgdir;
+> diff --git a/include/linux/mlx4/device.h b/include/linux/mlx4/device.h
+> index 27f42f713c89..86f0f2a25a3d 100644
+> --- a/include/linux/mlx4/device.h
+> +++ b/include/linux/mlx4/device.h
+> @@ -1135,7 +1135,7 @@ int mlx4_write_mtt(struct mlx4_dev *dev, struct mlx4_mtt *mtt,
+>  int mlx4_buf_write_mtt(struct mlx4_dev *dev, struct mlx4_mtt *mtt,
+>  		       struct mlx4_buf *buf);
+>  
+> -int mlx4_db_alloc(struct mlx4_dev *dev, struct mlx4_db *db, int order);
+> +int mlx4_db_alloc(struct mlx4_dev *dev, struct mlx4_db *db, unsigned int order);
+>  void mlx4_db_free(struct mlx4_dev *dev, struct mlx4_db *db);
+>  
+>  int mlx4_alloc_hwq_res(struct mlx4_dev *dev, struct mlx4_hwq_resources *wqres,
+> -- 
+> 2.34.1
 > 
 
-Thanks for your patch, this was addressed with
-
-https://patchwork.freedesktop.org/patch/631567/ but since this is better 
-I am fine with this, will pick this one up
-
-Reviewed-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
-
-
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-> index 098abc2c0003cde90ce6219c97ee18fa055a92a5..af3e541f60c303eb5212524e877129359b5ca98c 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-> @@ -1164,7 +1164,6 @@ int dpu_assign_plane_resources(struct dpu_global_state *global_state,
->   			       unsigned int num_planes)
->   {
->   	unsigned int i;
-> -	int ret;
->   
->   	for (i = 0; i < num_planes; i++) {
->   		struct drm_plane_state *plane_state = states[i];
-> @@ -1173,13 +1172,13 @@ int dpu_assign_plane_resources(struct dpu_global_state *global_state,
->   		    !plane_state->visible)
->   			continue;
->   
-> -		ret = dpu_plane_virtual_assign_resources(crtc, global_state,
-> +		int ret = dpu_plane_virtual_assign_resources(crtc, global_state,
->   							 state, plane_state);
->   		if (ret)
-> -			break;
-> +			return ret;
->   	}
->   
-> -	return ret;
-> +	return 0;
->   }
->   
->   static void dpu_plane_flush_csc(struct dpu_plane *pdpu, struct dpu_sw_pipe *pipe)
-> 
-> ---
-> base-commit: a64dcfb451e254085a7daee5fe51bf22959d52d3
-> change-id: 20250209-dpu-c3fac78fc617
-> 
-> Best regards,
-
+Justin
