@@ -1,87 +1,82 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41BF8215799;
-	Tue, 11 Feb 2025 13:04:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F92B214811;
+	Tue, 11 Feb 2025 13:13:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739279085; cv=none; b=REFVeEbU2pjsbnVy6kjtgtJxw5fAJdim1nAd6SEWeCl28Fbfvxh6opomQUenAwwZfdIYwQMBkBFYz2qFqgEJC+nDpPVZaFfqnYA+ED/s446Gdgqf9Hb2Z5vGtUhDx6BZZVnu0GQBFFVcP1WdLpWyFXO1Rk495kuBXMuVB2n83Sw=
+	t=1739279603; cv=none; b=g2Pg5DgGVWEvXzceEOE93MiOOt7aP+pAFbkAzx/VtzEME5J6/y0upi81Jen/FNuJ815Q8uQYZ/oQgMscAgZnHsbFfMA6q5xdgr5E0fFaQmjWQFW1XXvtgOWhBlPf68SjvvJAH0sajZXH4uwlEBbKaIh6a8UxsVGlexuVAkncQ1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739279085; c=relaxed/simple;
-	bh=sAdcQi1hrUdjrMl6px17gNDTR1HqFZ87LlJBFbf9JzM=;
+	s=arc-20240116; t=1739279603; c=relaxed/simple;
+	bh=DXHDCcdSZ74+HT8JhefhzAUBoSlZIMztGyfXMF9pxcM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nAvD59abDxOI5t2sQ1jvjIsJhldbG43zMkRWiBlMpCy74cOBD6taKEGsMSjefurChv8tzBZ8vIYJnkNkKHr96iXBe8Fk3zwZBOmMl5fmGJjrUNyQ4c90ut57RSOzFbbkSactV6jEP/R4JIXYbiU0x7wj0kLcsnKzro8J61texKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=tm6NpqQa; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=AEVevlynOFGxoAkV42DAiD+DM2EB7lGq5/XNe9UETr8mXOxsz2nWdedrzWgBfsSrPMEK1TpGOU6X0RHTuUtXQdbLeKZL773hKhqduuYGh2FpSw6i47GkLhZCfWH6UKhy1PJY1O1WwvIiJFGKqOEgtJFMGRJSe3LG9j0ccwbbb6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D7LnbAvU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="tm6NpqQa"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=MbjM39msWvOuziAcuJFCWwbKhzNklQkM6TVt4zMre/4=; b=tm6NpqQa797j2ElKfgrG1fjoL/
-	vuihCSCb+2lLV2HndDijV062w53OF1JSQzT6rXKwukiGEJQ99iOK3TvWx9mqwtOsaouBM/oarXAmD
-	ymPtbZqaRqcMABRn0axZtfZ/kdOzKpWKoi/xO/yeZ8XqZnrQuXxoMVuYN/YhP5eIhVoQ=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1thpwC-00D3q3-DR; Tue, 11 Feb 2025 14:04:28 +0100
-Date: Tue, 11 Feb 2025 14:04:28 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Jie Gan <jie.gan@oss.qualcomm.com>
-Cc: Luo Jie <quic_luoj@quicinc.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Lei Wei <quic_leiwei@quicinc.com>,
-	Suruchi Agarwal <quic_suruchia@quicinc.com>,
-	Pavithra R <quic_pavir@quicinc.com>,
-	Simon Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org,
-	quic_kkumarcs@quicinc.com, quic_linchen@quicinc.com,
-	srinivas.kandagatla@linaro.org, bartosz.golaszewski@linaro.org,
-	john@phrozen.org
-Subject: Re: [PATCH net-next v3 03/14] net: ethernet: qualcomm: Add PPE
- driver for IPQ9574 SoC
-Message-ID: <d0b608ef-bb22-43d5-b9fc-6739964e1bd5@lunn.ch>
-References: <20250209-qcom_ipq_ppe-v3-0-453ea18d3271@quicinc.com>
- <20250209-qcom_ipq_ppe-v3-3-453ea18d3271@quicinc.com>
- <58e05149-abc2-4cf4-a6e8-35380823d94a@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D7LnbAvU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F064C4CEDD;
+	Tue, 11 Feb 2025 13:13:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739279602;
+	bh=DXHDCcdSZ74+HT8JhefhzAUBoSlZIMztGyfXMF9pxcM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=D7LnbAvUGrVDhyysGn7C7ourOQIjJ2uwjXz7Kt38gn1eVvhJUEnyG+AtDw7TzCGE6
+	 l9me+Lv9VSuQMnB9b9D8WgRw/lxoFRLsEyIulZTZEWA4/D+WmkJTVAoGS5NwtoIwa+
+	 FWawIAwTrlggUeLDRN/wj9v4p+XWf1AlAz+1RqV+pgvlIveMCxH+lkKc5qgYR+w4dE
+	 A87s7M2yZrNT4gK0O6ehD7vmBaW+9WTF0nKT7qvoOQsXGXr695ZDzmBpiu/85f2ii2
+	 CgvRI2Rt9YNX3KYFmKSZGAoiOLO1Tbr4B5j/0ihjo/PBHtX0ulzlaG+2kZydONBtVG
+	 +IAZ6njAAxFaw==
+Date: Tue, 11 Feb 2025 13:13:18 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Ethan Carter Edwards <ethan@ethancedwards.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>, linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] ASoC: Intel: sof_sdw: initialize ret in
+ asoc_sdw_rt_amp_spk_rtd_init()
+Message-ID: <ad5eb513-d3ef-42b8-b4a7-88a6ecf08804@sirena.org.uk>
+References: <20250210-soc_sdw_rt_amp-v1-1-1ee1afcd8941@ethancedwards.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="KlwLJ2hhBEf8MsIq"
+Content-Disposition: inline
+In-Reply-To: <20250210-soc_sdw_rt_amp-v1-1-1ee1afcd8941@ethancedwards.com>
+X-Cookie: Printed on recycled paper.
+
+
+--KlwLJ2hhBEf8MsIq
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <58e05149-abc2-4cf4-a6e8-35380823d94a@oss.qualcomm.com>
+Content-Transfer-Encoding: quoted-printable
 
-> > +#ifndef __PPE_H__
-> > +#define __PPE_H__
-> > +
-> > +#include <linux/compiler.h>
-> > +#include <linux/interconnect.h>
-> > +
-> > +struct device;
-> #include <linux/device.h> ?
-> 
-> > +struct regmap;
-> Same with previous one, include it's header file?
-> 
+On Mon, Feb 10, 2025 at 11:08:27PM -0500, Ethan Carter Edwards wrote:
+> There is a possibility for an uninitialized *ret* variable to be
+> returned in some code paths.
+>=20
+> Setting to 0 prevents a random value from being returned.
 
-If the structure is opaque at this level, it is fine to not include
-the header. There is nothing in the header actually needed. By not
-including it, the build it faster. A large part of the kernel build
-time is spent processing headers, so less headers are better.
+That'll shut up the warning but is the warning trying to tell us that
+there's a logic bug somewhere in the function and we're for example
+forgetting to look at a return value in some path in the function?
 
-     Andrew
+--KlwLJ2hhBEf8MsIq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmerTO0ACgkQJNaLcl1U
+h9AZowf/aDiZbuROEyPiikzdBtyZNIv0RE/feOqyLJttpANt80Ha6yTGBnkEi6Ok
+xBRMlSQ0Xfz5k4Gz6kX1Sk79LIFyUfSGnNW/0rjzVhxdT6PfM8Hg0K4ujZ6DxpmJ
+BuicLQVEfWMJCw688UliIC2IK6AkET84jHpXYmgyVBH4GQ7wVbb2F2qaicUg39IZ
++W+/T4juBjH+QVia2/k9IDpfgtupug29KyPPAAIJwDrdCTk1RJDQfNV8xJaIxCUp
+nVQFRBeWbIdE30zLlbmu0T0yvoAKdSpPwdSWarXTO9uiEsrlb3TXFIOo1055uxWx
+e0NpolOzog/setmRTDDRiDqq3LPq2Q==
+=UEE1
+-----END PGP SIGNATURE-----
+
+--KlwLJ2hhBEf8MsIq--
