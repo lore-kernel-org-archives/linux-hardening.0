@@ -1,87 +1,119 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from m-r1.th.seeweb.it (m-r1.th.seeweb.it [5.144.164.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EDCF1EE7B9
-	for <linux-hardening@vger.kernel.org>; Tue, 11 Feb 2025 09:16:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B37DB1F12ED
+	for <linux-hardening@vger.kernel.org>; Tue, 11 Feb 2025 09:24:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.144.164.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739265366; cv=none; b=AtNP5aKoKLvsGCOq03OxdWngvjyKy3tcWdC+ZJhS4R22+r5caNn+pl+Xwn1Jq/rAt3l0kOm6xM8MW/bm+p2JhhdsHfDfhgY0PKyBVgQ6L2FDSPx+mh8z8mgDaKhTOwtZcWmAK2hGR/bk5I9Ok3238D1mrM2cAP6FiXohqC4+9k0=
+	t=1739265846; cv=none; b=mmddztL653Bh93Bg4sT+QJSmn0yIKy8pHq1iExR1J222uK3Y8WexUfeLmhg91n7j6RxnSwDpEIrURtD4upVbx6lXoGnAePknkr8FTNTgAb+LeRVftl3VuEElo2YVCOTNEVF2yY6QU5RuvY9633v6DAx4KtWeyf+VCaiCuhaJNKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739265366; c=relaxed/simple;
-	bh=8UfEMiOEBOeaIBtwImceNCmamRpFFTjgv2GGzdM5I7s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MK7UIs1yuXX6JfFumuvBaKLl0xS6GqZnbIUbH3prOgjhBiw9t54CdP9HkrsC8QXmnfgHGuBE7c2LNZElTNlgcAN2cJSsiU+BZZZM+CPdKmMo13qtjfBtFlfFUXlodSWikDgDPAhxOfKNcc2XvOFXNrqb6ObvyB8V5aZyG+1lVXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FDIrcK87; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FDIrcK87"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-54504f29000so2868529e87.1
-        for <linux-hardening@vger.kernel.org>; Tue, 11 Feb 2025 01:16:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739265362; x=1739870162; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8UfEMiOEBOeaIBtwImceNCmamRpFFTjgv2GGzdM5I7s=;
-        b=FDIrcK87hwYMj3ThVP/bpXvBTIwTIxc2CDQk1BsZHgA+tP1wTU0omUWu/JdUadLlpA
-         E4prB+oV2f6vzyyU4eOb0rrIoj2Vp8MsO75xNE5zveAndNG0FNGkidoeuYtFBgExAnPb
-         OOrP7R+ioGeslyZjvHUQ3+Ncf9dl3Wqcu1VYBZHiGWF1nPrPNqrwMDYkr6DxXqOAR2dm
-         xcysla+vtHS1+M7ZKgQyTgUp67cIC1nEUSVEmM0pm54mecRjEuT1qyBPh4vJ0aLJdeMe
-         DzKXCdB86OEIamIfNzv65JdBGTGyLZ6rwMEcwHDClXSmQZkLoh6HtYCDD3/lr/TQ2Yj1
-         G8bg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739265362; x=1739870162;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8UfEMiOEBOeaIBtwImceNCmamRpFFTjgv2GGzdM5I7s=;
-        b=utiTQQGLuNrjaZe3HmjRdn/4IMIfJkmFW35xiQ5Vm+/mBSz17RbA1W6BeAEbq2fKoy
-         /1p4+W/1K4LbA2yG5EG4ROynYQEdTB7bV7V/e4UJG2phr87ZxOety+rXfWBPfgmSBlhS
-         4QU3HMBEMm3rAz3pbQsJrHZPqAO8laSDLjbDiuLkVav4o5BjMdr0HyT5d7rgLRVaa8tB
-         k3OSRbleCe8hD0G2VPLr0C/ztPy80quYWQKnwTkeThcCnSAPav26z5amecWxW1+evb2h
-         3p/SAxaX6YE+10HyKaePJbygS7RWMVPtiwKOSjIiFwbnWgUD1onvdiYqTAdiQm9/bcfD
-         EuOA==
-X-Forwarded-Encrypted: i=1; AJvYcCV/ifvEW8QgDT5tEzMqbpkiHPEeJ8zCtFBcIdhW7mE0zcZouGfNCul8ONeoE/37rWUiDNJifg5tYZziT+T6C64=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyhewSjGPr6M5t107GPfQWsspmaqIHTEXxxDnVI3t08llpi72kV
-	e1tH2TRfqUg9nWYx+fCouJrGAur5epFoOCU4T99g2fwSeDeFKZr1Bz+CZQdbzjaU+fFyKYD9tHC
-	z9OVa8ArOg+yBzExzDwUo2y7BRu7X4k1ojiL53oH4e32se0dJ
-X-Gm-Gg: ASbGncuPnJNutLwrvT/d4tdVyEcKu6HoPheCzkJX+w/uvmKGwq0tCMr4Nht5qFLRo/l
-	PcWdzV3SE9WNhNphruT28wTeLNU44CgLWFLWB6W/dwWoOXybu9teGOV9xKgougwFcu2IRJ6rG
-X-Google-Smtp-Source: AGHT+IGUDw4T7meBLRLmxvDNfzzNRFxj3H+A9DNaY0nmeEagW6HROntcqR+BTGp7fazad8t23/Foxxtov8jsByu1Lis=
-X-Received: by 2002:a05:6512:118f:b0:545:a1a:556f with SMTP id
- 2adb3069b0e04-545118767edmr854568e87.50.1739265362482; Tue, 11 Feb 2025
- 01:16:02 -0800 (PST)
+	s=arc-20240116; t=1739265846; c=relaxed/simple;
+	bh=Rk5U0Rep1F3kms699juI2A/b9Wt+dbddkVp5SzapCGk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JBfllzFg5WpjtQOafEjdmx892mwfCPqT1kFuGn/4r+l0Fe4T1xfGm7K2kNnz6+b8NxbC3IBD8QCX0QxUG4fd4T9/4TPGUC8EpBuu55KBYNIT1wXqkE2OKaiCpiE4kS6b1ddUaSs4MFjhi5PSIY27aH8V3jRGEHCKdzxiPMwtFls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org; spf=pass smtp.mailfrom=somainline.org; arc=none smtp.client-ip=5.144.164.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=somainline.org
+Received: from SoMainline.org (94-211-6-86.cable.dynamic.v4.ziggo.nl [94.211.6.86])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by m-r1.th.seeweb.it (Postfix) with ESMTPSA id B596D20113;
+	Tue, 11 Feb 2025 10:23:55 +0100 (CET)
+Date: Tue, 11 Feb 2025 10:23:54 +0100
+From: Marijn Suijten <marijn.suijten@somainline.org>
+To: Abhinav Kumar <quic_abhinavk@quicinc.com>
+Cc: Ethan Carter Edwards <ethan@ethancedwards.com>, 
+	Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>, David Airlie <airlied@gmail.com>, 
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Simona Vetter <simona@ffwll.ch>, linux-arm-msm@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] drm/msm/dpu: Fix uninitialized variable
+Message-ID: <zj7sqsg3ruev4akl5paedsg65qyh53iddqvssrye2pjtfofs3q@u4g3kevpl2jn>
+References: <20250209-dpu-v2-1-114dfd4ebefd@ethancedwards.com>
+ <8e40c1bf-6da7-46b1-925c-53d1fa25f3ce@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250203121843.3183991-1-andriy.shevchenko@linux.intel.com> <20250203121843.3183991-7-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20250203121843.3183991-7-andriy.shevchenko@linux.intel.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 11 Feb 2025 10:15:51 +0100
-X-Gm-Features: AWEUYZmKsMFSUUUDA-6QujaPBWCv-A0WnPWsEIS9Ys7-p_cNmYjrYPDZOgguks4
-Message-ID: <CACRpkdYgfpYAGaWdoULMhFgXRj49j5Jkf9Do+wmG=NiH83nSRg@mail.gmail.com>
-Subject: Re: [PATCH v1 6/7] gpio: 74x164: Switch to use dev_err_probe()
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8e40c1bf-6da7-46b1-925c-53d1fa25f3ce@quicinc.com>
 
-On Mon, Feb 3, 2025 at 1:18=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+On 2025-02-10 14:14:14, Abhinav Kumar wrote:
+> 
+> 
+> On 2/9/2025 7:51 PM, Ethan Carter Edwards wrote:
+> > There is a possibility for an uninitialized *ret* variable to be
+> > returned in some code paths.
+> > 
+> > Fix this by initializing *ret* to 0.
+> > 
+> > Addresses-Coverity-ID: 1642546 ("Uninitialized scalar variable")
+> > Fixes: 774bcfb731765d ("drm/msm/dpu: add support for virtual planes")
+> > Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
+> > ---
+> > Changes in v2:
+> > - Return explicit 0 when no error occurs
+> > - Add hardening mailing lists
+> > - Link to v1: https://lore.kernel.org/r/20250209-dpu-v1-1-0db666884f70@ethancedwards.com
+> > ---
+> >   drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c | 7 +++----
+> >   1 file changed, 3 insertions(+), 4 deletions(-)
+> > 
+> 
+> Thanks for your patch, this was addressed with
+> 
+> https://patchwork.freedesktop.org/patch/631567/ but since this is better 
+> I am fine with this, will pick this one up
 
-> Switch to use dev_err_probe() to simplify the error path and
-> unify a message template.
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+The `return 0;` in this patch should certainly fix this issue entirely and we
+don't need to inline the `int ret` for that, which I think is against mixed
+declaration rules anyway?
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+As far as I understand that's what Dmitry suggested in v1, but he r-b'd it in
+this form.  Dmitry, was that intended?
 
-Yours,
-Linus Walleij
+- Marijn
+
+> Reviewed-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
+> 
+> 
+> > diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+> > index 098abc2c0003cde90ce6219c97ee18fa055a92a5..af3e541f60c303eb5212524e877129359b5ca98c 100644
+> > --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+> > +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+> > @@ -1164,7 +1164,6 @@ int dpu_assign_plane_resources(struct dpu_global_state *global_state,
+> >   			       unsigned int num_planes)
+> >   {
+> >   	unsigned int i;
+> > -	int ret;
+> >   
+> >   	for (i = 0; i < num_planes; i++) {
+> >   		struct drm_plane_state *plane_state = states[i];
+> > @@ -1173,13 +1172,13 @@ int dpu_assign_plane_resources(struct dpu_global_state *global_state,
+> >   		    !plane_state->visible)
+> >   			continue;
+> >   
+> > -		ret = dpu_plane_virtual_assign_resources(crtc, global_state,
+> > +		int ret = dpu_plane_virtual_assign_resources(crtc, global_state,
+> >   							 state, plane_state);
+> >   		if (ret)
+> > -			break;
+> > +			return ret;
+> >   	}
+> >   
+> > -	return ret;
+> > +	return 0;
+> >   }
+> >   
+> >   static void dpu_plane_flush_csc(struct dpu_plane *pdpu, struct dpu_sw_pipe *pipe)
+> > 
+> > ---
+> > base-commit: a64dcfb451e254085a7daee5fe51bf22959d52d3
+> > change-id: 20250209-dpu-c3fac78fc617
+> > 
+> > Best regards,
+> 
