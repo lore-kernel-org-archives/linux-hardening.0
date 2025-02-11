@@ -1,133 +1,87 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 259791E5721;
-	Tue, 11 Feb 2025 08:58:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EDCF1EE7B9
+	for <linux-hardening@vger.kernel.org>; Tue, 11 Feb 2025 09:16:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739264317; cv=none; b=rZdZfp0cWxqwSE0qwwpieya0bNoRZmyBVjGyFAGPmmTLUeSowBQjPbUN9UQVew8DOGaU3ySwLadUYY3zRLvCTGFCyYjbPeJE+Anu63KXIV+RKTcOyAEduiXWFtuy18zuftoE9Yt0NPs4CuWgw7u0XrlOKTlejPGgDve3ckDLFI0=
+	t=1739265366; cv=none; b=AtNP5aKoKLvsGCOq03OxdWngvjyKy3tcWdC+ZJhS4R22+r5caNn+pl+Xwn1Jq/rAt3l0kOm6xM8MW/bm+p2JhhdsHfDfhgY0PKyBVgQ6L2FDSPx+mh8z8mgDaKhTOwtZcWmAK2hGR/bk5I9Ok3238D1mrM2cAP6FiXohqC4+9k0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739264317; c=relaxed/simple;
-	bh=x6W1HDLosyVn27dDhWnDbtDxbDJIhXRuKZqrrk9uB+M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mIshLFjM8kLBTeAbFOU5UClkxVeYxl2pg0uVtzKJfN0p2+ZqpepUx9nz/KymV1mfe+kZVWNe96eEnTNRUw77TWVY4VOZthrBRh2f2RZzvgwwvVHnudibqs+deMoaZeb9QjbcCh0Gu40ad2Zov67gqhPXmEetz6oO6LyvOJU7lEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C72091477;
-	Tue, 11 Feb 2025 00:58:55 -0800 (PST)
-Received: from [10.57.83.200] (unknown [10.57.83.200])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9FBD13F5A1;
-	Tue, 11 Feb 2025 00:58:28 -0800 (PST)
-Message-ID: <d009306c-eb1c-48ca-ab8e-d891b413d55f@arm.com>
-Date: Tue, 11 Feb 2025 09:58:25 +0100
+	s=arc-20240116; t=1739265366; c=relaxed/simple;
+	bh=8UfEMiOEBOeaIBtwImceNCmamRpFFTjgv2GGzdM5I7s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MK7UIs1yuXX6JfFumuvBaKLl0xS6GqZnbIUbH3prOgjhBiw9t54CdP9HkrsC8QXmnfgHGuBE7c2LNZElTNlgcAN2cJSsiU+BZZZM+CPdKmMo13qtjfBtFlfFUXlodSWikDgDPAhxOfKNcc2XvOFXNrqb6ObvyB8V5aZyG+1lVXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FDIrcK87; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FDIrcK87"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-54504f29000so2868529e87.1
+        for <linux-hardening@vger.kernel.org>; Tue, 11 Feb 2025 01:16:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739265362; x=1739870162; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8UfEMiOEBOeaIBtwImceNCmamRpFFTjgv2GGzdM5I7s=;
+        b=FDIrcK87hwYMj3ThVP/bpXvBTIwTIxc2CDQk1BsZHgA+tP1wTU0omUWu/JdUadLlpA
+         E4prB+oV2f6vzyyU4eOb0rrIoj2Vp8MsO75xNE5zveAndNG0FNGkidoeuYtFBgExAnPb
+         OOrP7R+ioGeslyZjvHUQ3+Ncf9dl3Wqcu1VYBZHiGWF1nPrPNqrwMDYkr6DxXqOAR2dm
+         xcysla+vtHS1+M7ZKgQyTgUp67cIC1nEUSVEmM0pm54mecRjEuT1qyBPh4vJ0aLJdeMe
+         DzKXCdB86OEIamIfNzv65JdBGTGyLZ6rwMEcwHDClXSmQZkLoh6HtYCDD3/lr/TQ2Yj1
+         G8bg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739265362; x=1739870162;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8UfEMiOEBOeaIBtwImceNCmamRpFFTjgv2GGzdM5I7s=;
+        b=utiTQQGLuNrjaZe3HmjRdn/4IMIfJkmFW35xiQ5Vm+/mBSz17RbA1W6BeAEbq2fKoy
+         /1p4+W/1K4LbA2yG5EG4ROynYQEdTB7bV7V/e4UJG2phr87ZxOety+rXfWBPfgmSBlhS
+         4QU3HMBEMm3rAz3pbQsJrHZPqAO8laSDLjbDiuLkVav4o5BjMdr0HyT5d7rgLRVaa8tB
+         k3OSRbleCe8hD0G2VPLr0C/ztPy80quYWQKnwTkeThcCnSAPav26z5amecWxW1+evb2h
+         3p/SAxaX6YE+10HyKaePJbygS7RWMVPtiwKOSjIiFwbnWgUD1onvdiYqTAdiQm9/bcfD
+         EuOA==
+X-Forwarded-Encrypted: i=1; AJvYcCV/ifvEW8QgDT5tEzMqbpkiHPEeJ8zCtFBcIdhW7mE0zcZouGfNCul8ONeoE/37rWUiDNJifg5tYZziT+T6C64=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyhewSjGPr6M5t107GPfQWsspmaqIHTEXxxDnVI3t08llpi72kV
+	e1tH2TRfqUg9nWYx+fCouJrGAur5epFoOCU4T99g2fwSeDeFKZr1Bz+CZQdbzjaU+fFyKYD9tHC
+	z9OVa8ArOg+yBzExzDwUo2y7BRu7X4k1ojiL53oH4e32se0dJ
+X-Gm-Gg: ASbGncuPnJNutLwrvT/d4tdVyEcKu6HoPheCzkJX+w/uvmKGwq0tCMr4Nht5qFLRo/l
+	PcWdzV3SE9WNhNphruT28wTeLNU44CgLWFLWB6W/dwWoOXybu9teGOV9xKgougwFcu2IRJ6rG
+X-Google-Smtp-Source: AGHT+IGUDw4T7meBLRLmxvDNfzzNRFxj3H+A9DNaY0nmeEagW6HROntcqR+BTGp7fazad8t23/Foxxtov8jsByu1Lis=
+X-Received: by 2002:a05:6512:118f:b0:545:a1a:556f with SMTP id
+ 2adb3069b0e04-545118767edmr854568e87.50.1739265362482; Tue, 11 Feb 2025
+ 01:16:02 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 8/8] mm: Add basic tests for kpkeys_hardened_cred
-To: Kees Cook <kees@kernel.org>
-Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
- Andrew Morton <akpm@linux-foundation.org>, Mark Brown <broonie@kernel.org>,
- Catalin Marinas <catalin.marinas@arm.com>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- David Howells <dhowells@redhat.com>,
- "Eric W. Biederman" <ebiederm@xmission.com>, Jann Horn <jannh@google.com>,
- Jeff Xu <jeffxu@chromium.org>, Joey Gouly <joey.gouly@arm.com>,
- Linus Walleij <linus.walleij@linaro.org>, Andy Lutomirski <luto@kernel.org>,
- Marc Zyngier <maz@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Pierre Langlois <pierre.langlois@arm.com>,
- Quentin Perret <qperret@google.com>, "Mike Rapoport (IBM)"
- <rppt@kernel.org>, Ryan Roberts <ryan.roberts@arm.com>,
- Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
- Matthew Wilcox <willy@infradead.org>, Qi Zheng <zhengqi.arch@bytedance.com>,
- linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org, x86@kernel.org
-References: <20250203102809.1223255-1-kevin.brodsky@arm.com>
- <20250203102809.1223255-9-kevin.brodsky@arm.com>
- <202502062024.BCB0DED1D5@keescook>
-Content-Language: en-GB
-From: Kevin Brodsky <kevin.brodsky@arm.com>
-In-Reply-To: <202502062024.BCB0DED1D5@keescook>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250203121843.3183991-1-andriy.shevchenko@linux.intel.com> <20250203121843.3183991-7-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20250203121843.3183991-7-andriy.shevchenko@linux.intel.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 11 Feb 2025 10:15:51 +0100
+X-Gm-Features: AWEUYZmKsMFSUUUDA-6QujaPBWCv-A0WnPWsEIS9Ys7-p_cNmYjrYPDZOgguks4
+Message-ID: <CACRpkdYgfpYAGaWdoULMhFgXRj49j5Jkf9Do+wmG=NiH83nSRg@mail.gmail.com>
+Subject: Re: [PATCH v1 6/7] gpio: 74x164: Switch to use dev_err_probe()
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 07/02/2025 05:52, Kees Cook wrote:
-> On Mon, Feb 03, 2025 at 10:28:09AM +0000, Kevin Brodsky wrote:
->> Add basic tests for the kpkeys_hardened_pgtables feature: try to
->> perform a direct write to current->{cred,real_cred} and ensure it
->> fails.
->>
->> Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
->> ---
->>  mm/Makefile                    |  1 +
->>  mm/kpkeys_hardened_cred_test.c | 42 ++++++++++++++++++++++++++++++++++
-> Current file naming convention[1] would be to name this as:
+On Mon, Feb 3, 2025 at 1:18=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+
+> Switch to use dev_err_probe() to simplify the error path and
+> unify a message template.
 >
-> 	mm/tests/kpkeys_hardened_cred_kunit.c
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-I wasn't aware of those guidelines, thanks for the pointer! I got
-inspiration from various existing tests, it unfortunately looks like the
-conventions in [1] have not been universally adopted. I'll try to follow
-them in the next version (of both RFC series).
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-> [...]
->
-> +static void write_cred(struct kunit *test)
-> +{
-> +	long zero = 0;
-> +	int ret;
-> +
-> +	ret = copy_to_kernel_nofault((unsigned long *)current->cred, &zero, sizeof(zero));
-> +	KUNIT_EXPECT_EQ_MSG(test, ret, -EFAULT,
-> +			    "Write to current->cred wasn't prevented");
-> +
-> +	ret = copy_to_kernel_nofault((unsigned long *)current->real_cred, &zero, sizeof(zero));
-> +	KUNIT_EXPECT_EQ_MSG(test, ret, -EFAULT,
-> +			    "Write to current->real_cred wasn't prevented");
-> This is a good negative test. I would include a positive test as well.
-> i.e. make sure you can run copy_from_kernel_nofault() to read it
-> successfully. Otherwise you don't know if you're just getting a bad
-> address -- we want to distinguish between them. (This is more true for
-> the next suggestion, since current->cred being broken would be much more
-> obvious.)
-
-That's a fair point, I've actually run into this sort of issues with the
-page table tests (in the other RFC series). I can add positive tests
-with a regular read (e.g. reading current->cred->uid directly) - no
-fault is expected to occur in that case.
-
-> While current->cred is good and easy, I would like to see prepare_creds()
-> exercised too to get a new cred and validate that it is equally directly
-> readable and directly not writable, and then use the correct accessors
-> to perform a successful write to the cred, read back the change,
-> etc. (i.e. validate the expected behavior too.)
-
-prepare_creds() does not allocate protected memory, see the introduction
-in the cover letter and patch 6. However I could certainly add such
-tests for the new helpers protect_creds() and prepare_protected_creds(),
-which are meant to be used with override_creds().
-
->> +}
->> +
->> +static int kpkeys_hardened_cred_suite_init(struct kunit_suite *suite)
->> +{
->> +	if (!arch_kpkeys_enabled()) {
->> +		pr_err("Cannot run kpkeys_hardened_cred tests: kpkeys are not supported\n");
->> +		return 1;
->> +	}
-> Instead of failing ("return 1") I think this should be a "skip" (it is
-> expected to not work if there is no support) in each test instead:
-
-kasan_suite_init() uses this approach if KASAN is disabled, but skipping
-does seem to be a better idea - this way it doesn't show up as an error.
-
-> 	if (!arch_kpkeys_enabled())
-> 		kunit_skip(test, "kpkeys are not supported\n");
->
-> I'm very happy to see tests! :)
-
-Thank you for the review and suggestions!
-
-- Kevin
+Yours,
+Linus Walleij
