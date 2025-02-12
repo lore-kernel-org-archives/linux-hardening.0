@@ -1,89 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69CC92036F6;
-	Wed, 12 Feb 2025 22:05:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 486A31EE013
+	for <linux-hardening@vger.kernel.org>; Wed, 12 Feb 2025 22:23:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739397912; cv=none; b=CivcJsudJyQBTt4hjlnwzs23q6KoNOP258QOcf627YirXzZrV2R74ng+2Fe/JcAAhmKeVZvGYPLuZtDxTpJfbjMKMCjWAdqq1mF+fJrreUqh5RGkJUHFJv6MS14Nld05Lxd7UcBQ9WYAZLvk0PUNXHXjLfIP7XpiyJjDX63nCj8=
+	t=1739399035; cv=none; b=Yuf9MHfgZbN8X+9iDo4bfohklFva+Z6gX3wZaFOfU8NeA0nFaaQEmFPhZxqR/6CD1o8MZ73U0PC/BZSJ10syZqCIbnPrnuaLGqk64r4lNofR4QrgtJ8rc8BfHTi23/4VYcVj1HUG9AM13BeLW0+TCmXtHcgTALTCzIqevd5JMcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739397912; c=relaxed/simple;
-	bh=Y884TGbn38v12x+Fv+o7ctbuzGeY4ETaEIEr0q7aULw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rd9FqvDYQuXKmxWW2RnGA3+CLylyYZ2ADo/tlZKJbOJhhzpSZw56z2J0oplSCzQA2cqVCasTE8w5Gkp9+dj+V6EU2R32ys3W8jsiDWTNoMqf6435sIfapQz/vWoqiYrHVUkmoyqFZKfhg5W2xR3zUuwcwOg3FPbYAMEGWvZ6z1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qHalxVGC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739399035; c=relaxed/simple;
+	bh=1jeWaSLD5tHtzDUpc0Naqe9/RXjJP7H4xKkVzPVgMks=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=E44m2KS7bZ7XznDg2FcCBIsyGhCY/k93HiQyvQi4ipyCJzOxUEAOd3x7xdf2a4GgJT6RZycAobNV3Zt/oS+Tmt1VH4/+V4YbjXcCVNOjYDtFSlOpb8SmnraIKMe5+0ubPmrua5vI2Mm4OTZV3+phVG46S4NjQ2vHMCwxG5pOZRs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=e83HsoxU; arc=none smtp.client-ip=95.215.58.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qHalxVGC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BE1EC4CEDF;
-	Wed, 12 Feb 2025 22:05:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739397912;
-	bh=Y884TGbn38v12x+Fv+o7ctbuzGeY4ETaEIEr0q7aULw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qHalxVGCbt3PfQou4OQRbr4DwEpl8QOgU7jwY0/FYRBigeT+XLRZzlOWjg4thCeUv
-	 K6Tzruh4gnBDgGNndSep6EUcTu70RTNhqQdL+Pm0U+QTX3oHWU5D21zKcCscSQTvSX
-	 vBb8LdcOQ2eYbMZLtoNyP1zsOZHPaskdgsqSt3Bb2G39EdOCXNEn8AT9RPCUKTCeys
-	 2pMgMIx3dtCYl32OTbOk45yET5jc4LAd44lQgtaWT8VUgu7Y4G/0JUlm8DAB9T8VBt
-	 gSF1DtLQpv3ow4DsQIDF4bZ4CIdfRU4tjAE9D3deFv8rSYay661wuAgmCS0TBOR+N0
-	 NjR+X8sKMLTBA==
-Date: Wed, 12 Feb 2025 14:05:11 -0800
-From: Kees Cook <kees@kernel.org>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: jeffxu@chromium.org, akpm@linux-foundation.org, jannh@google.com,
-	torvalds@linux-foundation.org, vbabka@suse.cz,
-	Liam.Howlett@oracle.com, adhemerval.zanella@linaro.org,
-	oleg@redhat.com, avagin@gmail.com, benjamin@sipsolutions.net,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	linux-mm@kvack.org, jorgelo@chromium.org, sroettger@google.com,
-	hch@lst.de, ojeda@kernel.org, thomas.weissschuh@linutronix.de,
-	adobriyan@gmail.com, johannes@sipsolutions.net,
-	pedro.falcato@gmail.com, hca@linux.ibm.com, willy@infradead.org,
-	anna-maria@linutronix.de, mark.rutland@arm.com,
-	linus.walleij@linaro.org, Jason@zx2c4.com, deller@gmx.de,
-	rdunlap@infradead.org, davem@davemloft.net, peterx@redhat.com,
-	f.fainelli@gmail.com, gerg@kernel.org, dave.hansen@linux.intel.com,
-	mingo@kernel.org, ardb@kernel.org, mhocko@suse.com,
-	42.hyeyoo@gmail.com, peterz@infradead.org, ardb@google.com,
-	enh@google.com, rientjes@google.com, groeck@chromium.org,
-	mpe@ellerman.id.au, aleksandr.mikhalitsyn@canonical.com,
-	mike.rapoport@gmail.com
-Subject: Re: [RFC PATCH v5 0/7] mseal system mappings
-Message-ID: <202502121401.B6EF2D4517@keescook>
-References: <20250212032155.1276806-1-jeffxu@google.com>
- <b114f48a-a485-4ebd-9278-6c62a1f33d9c@lucifer.local>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="e83HsoxU"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1739399030;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=cspwxC9nVN+grYvnsk1+x8gpGvhnB9zjEEBy7u03DWo=;
+	b=e83HsoxU2P5tv3o1FnLX+D56W4CzaWbBgE89Mgr8mmcbe3Qrp/UFtjnb29kzyxkHatq19L
+	zd65jM9ysG8ZE4N5mxcDBWEkJ7DveMpGKkiNcyavyPEuOr5R9ToMFmrBufDwB9iQTPFlzx
+	ycHJ2lWphXLd20ulTvVG7opP/qOQESA=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Don Brace <don.brace@microchip.com>,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	linux-hardening@vger.kernel.org,
+	Bart Van Assche <bvanassche@acm.org>,
+	storagedev@microchip.com,
+	linux-scsi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] scsi: hpsa: Replace deprecated strncpy() with strscpy()
+Date: Wed, 12 Feb 2025 23:22:15 +0100
+Message-ID: <20250212222214.86110-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b114f48a-a485-4ebd-9278-6c62a1f33d9c@lucifer.local>
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, Feb 12, 2025 at 11:24:35AM +0000, Lorenzo Stoakes wrote:
-> On Wed, Feb 12, 2025 at 03:21:48AM +0000, jeffxu@chromium.org wrote:
-> > From: Jeff Xu <jeffxu@chromium.org>
-> >
-> > The commit message in the first patch contains the full description of
-> > this series.
-> 
-> Sorry to nit, but it'd be useful to reproduce in the cover letter too! But
-> this obviously isn't urgent, just be nice when we un-RFC.
+strncpy() is deprecated for NUL-terminated destination buffers [1]. Use
+strscpy() instead and remove the manual NUL-termination.
 
-I advised Jeff against this because I've found it can sometimes cause
-"thread splitting" in that some people reply to the cover letter, and
-some people reply to the first patch, etc. I've tended to try to keep
-cover letters very general, with the bulk of the prose in the first
-patch.
+Use min() to simplify the size calculation.
 
-> It'd be nice to update the documentation to have a list of 'known
-> problematic userland software with sealed VDSO' so we make people aware.
+Compile-tested only.
 
-I like this idea! Probably in mseal.rst, as the Kconfig help already
-points there.
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+Suggested-by: Bart Van Assche <bvanassche@acm.org>
+---
+ drivers/scsi/hpsa.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
--Kees
-
+diff --git a/drivers/scsi/hpsa.c b/drivers/scsi/hpsa.c
+index 84d8de07b7ae..9399e101f150 100644
+--- a/drivers/scsi/hpsa.c
++++ b/drivers/scsi/hpsa.c
+@@ -460,9 +460,8 @@ static ssize_t host_store_hp_ssd_smart_path_status(struct device *dev,
+ 
+ 	if (!capable(CAP_SYS_ADMIN) || !capable(CAP_SYS_RAWIO))
+ 		return -EACCES;
+-	len = count > sizeof(tmpbuf) - 1 ? sizeof(tmpbuf) - 1 : count;
+-	strncpy(tmpbuf, buf, len);
+-	tmpbuf[len] = '\0';
++	len = min(count, sizeof(tmpbuf) - 1);
++	strscpy(tmpbuf, buf, len);
+ 	if (sscanf(tmpbuf, "%d", &status) != 1)
+ 		return -EINVAL;
+ 	h = shost_to_hba(shost);
+@@ -484,9 +483,8 @@ static ssize_t host_store_raid_offload_debug(struct device *dev,
+ 
+ 	if (!capable(CAP_SYS_ADMIN) || !capable(CAP_SYS_RAWIO))
+ 		return -EACCES;
+-	len = count > sizeof(tmpbuf) - 1 ? sizeof(tmpbuf) - 1 : count;
+-	strncpy(tmpbuf, buf, len);
+-	tmpbuf[len] = '\0';
++	len = min(count, sizeof(tmpbuf) - 1);
++	strscpy(tmpbuf, buf, len);
+ 	if (sscanf(tmpbuf, "%d", &debug_level) != 1)
+ 		return -EINVAL;
+ 	if (debug_level < 0)
 -- 
-Kees Cook
+2.48.1
+
