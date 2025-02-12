@@ -1,344 +1,172 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21FDE78F20
-	for <linux-hardening@vger.kernel.org>; Wed, 12 Feb 2025 01:59:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 802461D8A10
+	for <linux-hardening@vger.kernel.org>; Wed, 12 Feb 2025 03:21:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739325546; cv=none; b=cOsBpcpqEHjmoIe28bWaXosz++3lLuBGmXPCeTtDa3c5ppVpz28khnajsbc7ioAeYuDmn+WPwhHK6sU1PLHZD4mwU+ln9K2LfoaLI8BAzmSXy1QiedmmCWg3kHoJBS3vFRC25bD+HjNZv5H9d+b5PwJx3XP0ZWDeei1HAaTzkc8=
+	t=1739330518; cv=none; b=SlhoexXipJ8XAcsg5BFTeMt1jdBztu9Ko/q8KtrsZ6U0FD/d39YWqrC/65Be9GSrvg3qyfQuMJdHv7IFE9eZKZqm14CTFbjr8AvxVslqC2J+V7iU8uzSL0WVxAeM6MB3h5u50/EQIM0ipPLDKJCTMVidIokOrPOp3OpbyzkDXss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739325546; c=relaxed/simple;
-	bh=TgTFzIfKCXEPT/O7ObTgjTQk9DcHKZ5vxqv1bmZnltI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MTCVfb56XUHkDzxpmUvAm3Q2muZxLYCofRjuX7EHa1XPP7MRX8B22PwITeVXOXiP9XxHUQrcNyMrh2Lw4GLBEjNFmU4ZXYkrJva6KUE63tOXdOxP55dyWgnU1HgsK/WQxJLbRLroa+2xHZI21hNyW8fVIsG6QtdZSRVv2kFZwOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Vc758I9Z; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1739330518; c=relaxed/simple;
+	bh=GXIjdcanFwwm7LKyMwYAwJA0WALJk9p2AHH6SgAhdTA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=e8QBMLj9XkKgMrm/p6lyEslR42XNeeujoG/sgrrhUhQZeSBx8gJCxIYM3UKhuMU25+CqeTJU8DxYZmkaQZXjcMa+IvXl1gHjixqEQJgv0sIfFNrKFZUgAbS3gIHr994Jh21tWu1G01RAOKgp8rMq3pC0x4RQAQ9DzA2BghbZFM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=c3o9ET5Q; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Vc758I9Z"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51BJVKt9023212
-	for <linux-hardening@vger.kernel.org>; Wed, 12 Feb 2025 01:59:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	awv0rGxstM311fFi4Sv24BEaC0+mwddjoTpetAR3/s4=; b=Vc758I9ZNeYjWDTN
-	b8yxc7Os7WRcFZt7zsZAAiVHzTCLuno8/YYdiJwQM5/SSdBgxQtc+Kl9jObDLRah
-	KrWwiyO37+5viWIJyMOCB5qJUiIFWdJjHnhaQ2nnoJhlFTJW5kGhh2nnQcXpIDfr
-	08wS/bKMX9c1DWHzbRDHjn7RYuPUSvfRoLgL8jpWXZtjAYOgWFgH0Fh2yde3abms
-	q+sn50VIuHwThLKAPIMsScI50Aef6zOsBYvYcBzISlKwVWT9zm00URsLhze9j0RM
-	Hyqsme00ExNKBE0ruyNFgoISmthPmVPFJ4aYChmPKMIw6XCPfBSgqd7cs52Rm0E1
-	J3pHNw==
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44r4b5te3h-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-hardening@vger.kernel.org>; Wed, 12 Feb 2025 01:59:03 +0000 (GMT)
-Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-2f5538a2356so13256503a91.2
-        for <linux-hardening@vger.kernel.org>; Tue, 11 Feb 2025 17:59:03 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="c3o9ET5Q"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-21f5ccd9742so9857185ad.1
+        for <linux-hardening@vger.kernel.org>; Tue, 11 Feb 2025 19:21:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1739330517; x=1739935317; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=VhDIo/pgY9uUkXE2IY3OHzZfG1I5TLyMDQUSWmrc3tE=;
+        b=c3o9ET5QAQTif8Cw3xpzCsMN24aV9JDeW+AaULOR9N+/ovsEuZKUvbYBK/bdg77fd2
+         0A+c7nI82NzTRrqdUmmNx3XfWxIZvSaBBv8b6NBzPv+GWD1IWlhD+rrQFLN3PbmTLSQY
+         tZSvY2WsI/Wha+iEGbX2WSQ3ugWUg5szZ4oLM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739325542; x=1739930342;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=awv0rGxstM311fFi4Sv24BEaC0+mwddjoTpetAR3/s4=;
-        b=k/c3r+V1BPWWaXTaLIvI4HO3HMemNrHLRYKuov2Q22kz+ujekLgWwSA2cqMUsrUzcN
-         95c4rAuv5CupO6KGib2+hvZAne2vydxnUPaRlSRQ/fDfuc88lFrPs8CsJ8wuk9zP0TwW
-         T5JcubKcmpx1Od8yCy9ouBNu50DzDWYfjv3gPipp8EAI6GNCC4jAzrocpgfdT8e67bd4
-         VEOC1m+AKMct2Gbt9Z2WhMS12M5vU5NkLgfeFIlqSIwB0os4xYTw7kezSnkwTYTNF11R
-         xf8aqY/YWkMZPvGHiRng1WJC0H4/2V13X1gB8kK7kWN2uuqCsmK05l2rGpb8kUUY2MCz
-         volA==
-X-Forwarded-Encrypted: i=1; AJvYcCXKeIVKei1pWB/P82hz6DRbiYRdZhpXvo4745pRUQprinTeP4xLtnD1u2sy79dxEiHO4POOZYalH/eYAxHccDQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvwJO6cJBrzTtINztTLc9+ht8dpSPyy9wMTHpzVBAkaaEwX7q3
-	tedxVZA1leGtxRmkNhuKAH1ys6lraF0UhVQBxGf8zBIdXB7ei9HdChNnXAqE1z5MqVE85/EeoHK
-	m93Q/+4G6H70LjInlX0AZuJTvatVb9vJ967O8cTPb5G4d/X/j4r5gqfhld4gSpbWULgM=
-X-Gm-Gg: ASbGncs7lB0Kag/Q4o9BvtEYEM3Zw0SXP0ju1mBIzQT4toTUUidGJAnPuQL2bBVtGeh
-	jzeLqh3283Ijrlr7IHLBnMiRbWHMMrELsMl33mEyM+9jFM17ZMshii6/aB60MRTkhinRkFDj1K1
-	5HRuH30QPvkGyLtq1ZxftRBVLgSFsEs0rpgpxsaHln80N9UuUahRefuLRf0gwv1lFgjFSUg6eWp
-	SlzFEo8qngKCnDME8pPvh5LHSNxCk2f+jHOMGIE73unfUMDU7p9vISbyTOkikQrRQsJiDo9JYZT
-	3ho2+FMgkedmiWWM0DmhY3H5CSYvFfq1GDla2Eb+ZPDNWTKyxoKtvWP3uKCAnRG0
-X-Received: by 2002:a05:6a20:918e:b0:1ee:49ca:759a with SMTP id adf61e73a8af0-1ee5c73340amr3109481637.2.1739325542301;
-        Tue, 11 Feb 2025 17:59:02 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IG9Ozamvj+FZMPdOC0mLlHyPulDXC1bHtTkbyAiVj5wsepcMbBLe+J/zsOKEgvKiq2TwNTNew==
-X-Received: by 2002:a05:6a20:918e:b0:1ee:49ca:759a with SMTP id adf61e73a8af0-1ee5c73340amr3109438637.2.1739325541866;
-        Tue, 11 Feb 2025 17:59:01 -0800 (PST)
-Received: from [10.133.33.12] (tpe-colo-wan-fw-bordernet.qualcomm.com. [103.229.16.4])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73087d8dc08sm4990517b3a.128.2025.02.11.17.58.54
+        d=1e100.net; s=20230601; t=1739330517; x=1739935317;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VhDIo/pgY9uUkXE2IY3OHzZfG1I5TLyMDQUSWmrc3tE=;
+        b=HSy38sI9OWahQS/2wyVWzDChCFug0kjByp4k2Y/8DXqctp7tqznedJhLKOP4oH6xle
+         dtL2CdYHddUYqK4Qk2HWjsZw3V1S/uaFUhTZyUCuoJ5n1slA1DpOaBEGWYPS3tVrzSNk
+         kfH6vpTJSjTkEuWosM2uU9TROXQKSQ8B693xNbT5aPnBWUPL3WI1fzewT4kx9Z4TwOVJ
+         6qal4gemKolrNqddYxx9eYKfZCGg7iNlNNTDBr+zu1kqZAIOPrEHbYujy21g+ZDIvGj1
+         WLtJiY6jy1Dvokj4gIqQU+8p1c5O5zFJdeW/t+qEeh3BZqiBPgwgd3AAuoMcPhAb8EFB
+         lgEw==
+X-Forwarded-Encrypted: i=1; AJvYcCXiKQKj1hx8N+Dm1UszFC8gpU+dBXn9a7tbdnjmLJjDwXJXmMdfZTJpBHKUtGtc8TTwJKhDaJb8Wzxh7mg8oeU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQ3fB2i1/Txl1T/4xHs0AMKBMgb2QgE7mAQu6jALQ5z/KrrF4T
+	uOyjm8nuIw2bORb87QuCfrJKBKFkIgcBoOG8RNvIr8YXbitfIEtI09GmiJ2VSg==
+X-Gm-Gg: ASbGncs4fQUIfYIbHMqwve4LyCwqVQ9nmf+KFl+1aYYIQjGHiKoXozAgoOXTsysNLSu
+	Xu6mNxqwg8fxv4F034WrCeezp/cBWHmTPQ4VwhOPtBHGEVKweV+5PBaRgnI+C8EUu2mI//Amy29
+	ETAIndOJ+COZ15e1ksOSkTMQjr+V/gzQwIwI39WJwnM6WcO1M9PMlz3NdAu13wqOfqmh5z1I9QP
+	JVjCK9WrKucC7N6OS0VSAyrgn2Z6/I5suH3MuGlMTDxEmNU1xeR2XRjgXuDjXXIEbDcmmYHR5fz
+	BXfe4yVwj/vbfDdWCYJY+sMmmpjJ58VxF834bHbEQGHlfUZN3w==
+X-Google-Smtp-Source: AGHT+IGj5JrfUFtJivT0L1NZIctVTEv6fxRQRRuajrSnp6hBeSeQ4P2FV57Y3QZUw60ZeV22PTo0Gw==
+X-Received: by 2002:a05:6a21:6d97:b0:1ea:ddd1:2fe4 with SMTP id adf61e73a8af0-1ee5c8e9c84mr1016097637.0.1739330516623;
+        Tue, 11 Feb 2025 19:21:56 -0800 (PST)
+Received: from localhost (9.184.168.34.bc.googleusercontent.com. [34.168.184.9])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-7308ac1a373sm4777776b3a.41.2025.02.11.19.21.56
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Feb 2025 17:59:01 -0800 (PST)
-Message-ID: <1882f5dd-4e46-40b9-977d-dc3570975738@oss.qualcomm.com>
-Date: Wed, 12 Feb 2025 09:58:53 +0800
+        Tue, 11 Feb 2025 19:21:56 -0800 (PST)
+From: jeffxu@chromium.org
+To: akpm@linux-foundation.org,
+	keescook@chromium.org,
+	jannh@google.com,
+	torvalds@linux-foundation.org,
+	vbabka@suse.cz,
+	lorenzo.stoakes@oracle.com,
+	Liam.Howlett@Oracle.com,
+	adhemerval.zanella@linaro.org,
+	oleg@redhat.com,
+	avagin@gmail.com,
+	benjamin@sipsolutions.net
+Cc: linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-mm@kvack.org,
+	jorgelo@chromium.org,
+	sroettger@google.com,
+	hch@lst.de,
+	ojeda@kernel.org,
+	thomas.weissschuh@linutronix.de,
+	adobriyan@gmail.com,
+	johannes@sipsolutions.net,
+	pedro.falcato@gmail.com,
+	hca@linux.ibm.com,
+	willy@infradead.org,
+	anna-maria@linutronix.de,
+	mark.rutland@arm.com,
+	linus.walleij@linaro.org,
+	Jason@zx2c4.com,
+	deller@gmx.de,
+	rdunlap@infradead.org,
+	davem@davemloft.net,
+	peterx@redhat.com,
+	f.fainelli@gmail.com,
+	gerg@kernel.org,
+	dave.hansen@linux.intel.com,
+	mingo@kernel.org,
+	ardb@kernel.org,
+	mhocko@suse.com,
+	42.hyeyoo@gmail.com,
+	peterz@infradead.org,
+	ardb@google.com,
+	enh@google.com,
+	rientjes@google.com,
+	groeck@chromium.org,
+	mpe@ellerman.id.au,
+	aleksandr.mikhalitsyn@canonical.com,
+	mike.rapoport@gmail.com,
+	Jeff Xu <jeffxu@chromium.org>
+Subject: [RFC PATCH v5 0/7] mseal system mappings
+Date: Wed, 12 Feb 2025 03:21:48 +0000
+Message-ID: <20250212032155.1276806-1-jeffxu@google.com>
+X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v3 03/14] net: ethernet: qualcomm: Add PPE driver
- for IPQ9574 SoC
-To: Jie Luo <quic_luoj@quicinc.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Lei Wei <quic_leiwei@quicinc.com>,
-        Suruchi Agarwal <quic_suruchia@quicinc.com>,
-        Pavithra R <quic_pavir@quicinc.com>, Simon Horman <horms@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>, Kees Cook <kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Cc: linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org,
-        quic_kkumarcs@quicinc.com, quic_linchen@quicinc.com,
-        srinivas.kandagatla@linaro.org, bartosz.golaszewski@linaro.org,
-        john@phrozen.org
-References: <20250209-qcom_ipq_ppe-v3-0-453ea18d3271@quicinc.com>
- <20250209-qcom_ipq_ppe-v3-3-453ea18d3271@quicinc.com>
- <58e05149-abc2-4cf4-a6e8-35380823d94a@oss.qualcomm.com>
- <63f1d25c-087a-46dd-9053-60334a0095d5@quicinc.com>
-Content-Language: en-US
-From: Jie Gan <jie.gan@oss.qualcomm.com>
-In-Reply-To: <63f1d25c-087a-46dd-9053-60334a0095d5@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: jVusDY8ClOXcVL7Ja7FJobl_UUSPEl4o
-X-Proofpoint-GUID: jVusDY8ClOXcVL7Ja7FJobl_UUSPEl4o
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-11_10,2025-02-11_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- priorityscore=1501 suspectscore=0 mlxlogscore=999 lowpriorityscore=0
- malwarescore=0 impostorscore=0 clxscore=1015 mlxscore=0 bulkscore=0
- spamscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502120014
 
+From: Jeff Xu <jeffxu@chromium.org>
 
+The commit message in the first patch contains the full description of
+this series.
 
-On 2/11/2025 9:58 PM, Jie Luo wrote:
-> 
-> 
-> On 2/10/2025 10:12 AM, Jie Gan wrote:
->>> +static int ppe_clock_init_and_reset(struct ppe_device *ppe_dev)
->>> +{
->>> +    unsigned long ppe_rate = ppe_dev->clk_rate;
->>> +    struct device *dev = ppe_dev->dev;
->>> +    struct reset_control *rstc;
->>> +    struct clk_bulk_data *clks;
->>> +    struct clk *clk;
->>> +    int ret, i;
->>> +
->>> +    for (i = 0; i < ppe_dev->num_icc_paths; i++) {
->>> +        ppe_dev->icc_paths[i].name = ppe_icc_data[i].name;
->>> +        ppe_dev->icc_paths[i].avg_bw = ppe_icc_data[i].avg_bw ? :
->>> +                           Bps_to_icc(ppe_rate);
->> it's ppe_dev->icc_paths[i].avg_bw = ppe_icc_data[i].avg_bw ? 
->> ppe_icc_data[i].avg_bw : Bps_to_icc(ppe_rate);  ?
-> 
-> I feel the above used notation is also fine for readability, and is
-> shorter and simpler.
-> 
->>
->>
->>> +        ppe_dev->icc_paths[i].peak_bw = ppe_icc_data[i].peak_bw ? :
->>> +                        Bps_to_icc(ppe_rate);
->> Same with previous one?
-> 
-> Same response as for the previous comment is applicable here as well.
-> 
->>
->>> +    }
->>> +
->>> +    ret = devm_of_icc_bulk_get(dev, ppe_dev->num_icc_paths,
->>> +                   ppe_dev->icc_paths);
->>> +    if (ret)
->>> +        return ret;
->>> +
->>> +    ret = icc_bulk_set_bw(ppe_dev->num_icc_paths, ppe_dev->icc_paths);
->>> +    if (ret)
->>> +        return ret;
->>> +
->>> +    /* The PPE clocks have a common parent clock. Setting the clock
->> Should be:
->> /*
->>   * The PPE clocks have a common parent clock. Setting the clock
->>   * rate of "ppe" ensures the clock rate of all PPE clocks is
->>   * configured to the same rate.
->>   */
->>
-> 
-> I think for drivers/net, the above format follows the recommended
-> commenting style. Pls see: https://www.kernel.org/doc/html/v6.10/
-> process/coding-style.html
-> 
-> For files in net/ and drivers/net/ the preferred style for long
-> (multi-line) comments is a little different.
-> 
->> BTW, it's better wrapped with ~75 characters per line.
-> 
-> Yes, the comments should be wrapped to ~75 characters.
-> 
->>
->>> +     * rate of "ppe" ensures the clock rate of all PPE clocks is
->>> +     * configured to the same rate.
->>> +     */
->>> +    clk = devm_clk_get(dev, "ppe");
->>> +    if (IS_ERR(clk))
->>> +        return PTR_ERR(clk);
->>> +
->>> +    ret = clk_set_rate(clk, ppe_rate);
->>> +    if (ret)
->>> +        return ret;
->>> +
->>> +    ret = devm_clk_bulk_get_all_enabled(dev, &clks);
->>> +    if (ret < 0)
->>> +        return ret;
->>> +
->>> +    /* Reset the PPE. */
->>> +    rstc = devm_reset_control_get_exclusive(dev, NULL);
->>> +    if (IS_ERR(rstc))
->>> +        return PTR_ERR(rstc);
->>> +
->>> +    ret = reset_control_assert(rstc);
->>> +    if (ret)
->>> +        return ret;
->>> +
->>> +    /* The delay 10 ms of assert is necessary for resetting PPE. */
->>> +    usleep_range(10000, 11000);
->>> +
->>> +    return reset_control_deassert(rstc);
->>> +}
->>> +
->>> +static int qcom_ppe_probe(struct platform_device *pdev)
->>> +{
->>> +    struct device *dev = &pdev->dev;
->>> +    struct ppe_device *ppe_dev;
->>> +    void __iomem *base;
->>> +    int ret, num_icc;
->> I think it's better with:
->>      int num_icc = ARRAY_SIZE(ppe_icc_data);
-> 
-> This will impact the “reverse xmas tree” rule for local variable
-> definitions. Also, the num_icc will vary as per the different SoC,
-> so we will need to initialize the num_icc in a separate statement.
-> 
-> (Note: This driver will be extended to support different SoC in
-> the future.)
-> 
-Got your point here. So there may have multiple definitions like 
-ppe_icc_data here, right? But the num_icc here is hardcoded.
-Maybe it would be better defined within the ppe_icc_data, if possible?
-Then just directly use ppe_icc_data->num_icc?
+------------------
+History:
 
-Never mind, that's just my thought on the flexibility.
+V5
+  - Remove kernel cmd line (Lorenzo Stoakes)
+  - Add test info (Lorenzo Stoakes)
+  - Add threat model info (Lorenzo Stoakes)
+  - Fix x86 selftest: test_mremap_vdso
+  - Restrict code change to ARM64/x86-64/UM arch only.
+  - Add userprocess.h to include seal_system_mapping().
+  - Remove sealing vsyscall.
+  - Split the patch.
 
-Jie
->>
->>> +
->>> +    num_icc = ARRAY_SIZE(ppe_icc_data);
->>> +    ppe_dev = devm_kzalloc(dev, struct_size(ppe_dev, icc_paths, 
->>> num_icc),
->>> +                   GFP_KERNEL);
->>> +    if (!ppe_dev)
->>> +        return -ENOMEM;
->>> +
->>> +    base = devm_platform_ioremap_resource(pdev, 0);
->>> +    if (IS_ERR(base))
->>> +        return dev_err_probe(dev, PTR_ERR(base), "PPE ioremap 
->>> failed\n");
->>> +
->>> +    ppe_dev->regmap = devm_regmap_init_mmio(dev, base, 
->>> &regmap_config_ipq9574);
->>> +    if (IS_ERR(ppe_dev->regmap))
->>> +        return dev_err_probe(dev, PTR_ERR(ppe_dev->regmap),
->>> +                     "PPE initialize regmap failed\n");
->>> +    ppe_dev->dev = dev;
->>> +    ppe_dev->clk_rate = PPE_CLK_RATE;
->>> +    ppe_dev->num_ports = PPE_PORT_MAX;
->>> +    ppe_dev->num_icc_paths = num_icc;
->>> +
->>> +    ret = ppe_clock_init_and_reset(ppe_dev);
->>> +    if (ret)
->>> +        return dev_err_probe(dev, ret, "PPE clock config failed\n");
->>> +
->>> +    platform_set_drvdata(pdev, ppe_dev);
->>> +
->>> +    return 0;
->>> +}
->>> +
->>> +static const struct of_device_id qcom_ppe_of_match[] = {
->>> +    { .compatible = "qcom,ipq9574-ppe" },
->>> +    {}
->>> +};
->>> +MODULE_DEVICE_TABLE(of, qcom_ppe_of_match);
->>> +
->>> +static struct platform_driver qcom_ppe_driver = {
->>> +    .driver = {
->>> +        .name = "qcom_ppe",
->>> +        .of_match_table = qcom_ppe_of_match,
->>> +    },
->>> +    .probe    = qcom_ppe_probe,
->>> +};
->>> +module_platform_driver(qcom_ppe_driver);
->>> +
->>> +MODULE_LICENSE("GPL");
->>> +MODULE_DESCRIPTION("Qualcomm Technologies, Inc. IPQ PPE driver");
->>> diff --git a/drivers/net/ethernet/qualcomm/ppe/ppe.h b/drivers/net/ 
->>> ethernet/qualcomm/ppe/ppe.h
->>> new file mode 100644
->>> index 000000000000..cc6767b7c2b8
->>> --- /dev/null
->>> +++ b/drivers/net/ethernet/qualcomm/ppe/ppe.h
->>> @@ -0,0 +1,36 @@
->>> +/* SPDX-License-Identifier: GPL-2.0-only
->>> + *
->>> + * Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights 
->>> reserved.
->>> + */
->>> +
->>> +#ifndef __PPE_H__
->>> +#define __PPE_H__
->>> +
->>> +#include <linux/compiler.h>
->>> +#include <linux/interconnect.h>
->>> +
->>> +struct device;
->> #include <linux/device.h> ?
->>
->>> +struct regmap;
->> Same with previous one, include it's header file?
-> 
-> The driver only need to reference these structures but don't
-> need their full definitions. So it should be fine to declare
-> the existence of these structures here.
-> 
->>
->>> +
->>> +/**
->>> + * struct ppe_device - PPE device private data.
->>> + * @dev: PPE device structure.
->>> + * @regmap: PPE register map.
->>> + * @clk_rate: PPE clock rate.
->>> + * @num_ports: Number of PPE ports.
->>> + * @num_icc_paths: Number of interconnect paths.
->>> + * @icc_paths: Interconnect path array.
->>> + *
->>> + * PPE device is the instance of PPE hardware, which is used to
->>> + * configure PPE packet process modules such as BM (buffer management),
->>> + * QM (queue management), and scheduler.
->>> + */
->>> +struct ppe_device {
->>> +    struct device *dev;
->>> +    struct regmap *regmap;
->>> +    unsigned long clk_rate;
->>> +    unsigned int num_ports;
->>> +    unsigned int num_icc_paths;
->>> +    struct icc_bulk_data icc_paths[] __counted_by(num_icc_paths);
->>> +};
->>> +#endif
->>>
->>
->> Thanks,
->> Jie
-> 
+V4:
+  https://lore.kernel.org/all/20241125202021.3684919-1-jeffxu@google.com/
+
+V3:
+  https://lore.kernel.org/all/20241113191602.3541870-1-jeffxu@google.com/
+
+V2:
+  https://lore.kernel.org/all/20241014215022.68530-1-jeffxu@google.com/
+
+V1:
+  https://lore.kernel.org/all/20241004163155.3493183-1-jeffxu@google.com/
+
+Jeff Xu (7):
+  mseal, system mappings: kernel config and header change
+  selftests: x86: test_mremap_vdso: skip if vdso is msealed
+  mseal, system mappings: enable x86-64
+  mseal, system mappings: enable arm64
+  mseal, system mappings: enable uml architecture
+  mseal, system mappings: uprobe mapping
+  mseal, system mappings: update mseal.rst
+
+ Documentation/userspace-api/mseal.rst         |  5 +++
+ arch/arm64/Kconfig                            |  1 +
+ arch/arm64/kernel/vdso.c                      | 23 +++++++----
+ arch/um/Kconfig                               |  1 +
+ arch/x86/Kconfig                              |  1 +
+ arch/x86/entry/vdso/vma.c                     | 17 ++++++---
+ arch/x86/um/vdso/vma.c                        |  7 +++-
+ include/linux/userprocess.h                   | 18 +++++++++
+ init/Kconfig                                  | 18 +++++++++
+ kernel/events/uprobes.c                       |  6 ++-
+ security/Kconfig                              | 18 +++++++++
+ .../testing/selftests/x86/test_mremap_vdso.c  | 38 +++++++++++++++++++
+ 12 files changed, 137 insertions(+), 16 deletions(-)
+ create mode 100644 include/linux/userprocess.h
+
+-- 
+2.48.1.502.g6dc24dfdaf-goog
 
