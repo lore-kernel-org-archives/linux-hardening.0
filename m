@@ -1,72 +1,72 @@
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B94F124C68E
-	for <linux-hardening@vger.kernel.org>; Wed, 12 Feb 2025 16:54:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B2E9256C7B
+	for <linux-hardening@vger.kernel.org>; Wed, 12 Feb 2025 17:05:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739379286; cv=none; b=MhEdpV1tGcrxWLKsNgbVCAP4H4V7xj9JD63MprBGp4LBZitt5Vei4QQ3DJ9eFS9MgYSx+cRooHc52jpgc5pub04M+mNmnhpAM13MjbBpInOtu1Yp98Eaa6j51sYsO11EbqA1NmeMz1m5GXEOu12K9N84c6Y+ne5iDYsxmIUufxw=
+	t=1739379942; cv=none; b=apThbNu1ZsZcYvkWXmkJfPPudObDHCXV5IjjY/SXnGbFikgC8cOHBJW+MVOHRVd5F0Y9nF2RXlJg1IxkbNntNdnuRMUKSI3WvacJyUuY/c16EOg/+kl9L2rLTVr3SBHWYaf2Rm3rFMYsdkG413VlbpZHATSP0WTH6NaP2QEilpo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739379286; c=relaxed/simple;
-	bh=wkaUg1DENSD4yHymFSi2ejg0prL/M/EWygSMyN+dkvg=;
+	s=arc-20240116; t=1739379942; c=relaxed/simple;
+	bh=H7tXEj1NdQHAKyqV8cpiuL0FVc3yiVn9AC7w16MT164=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sJ7ZJZxDFkMQTJxHrSTghmF47or9BANpeuzgvqNedFiZs6stmT/pKcHhLIn7SQRm7PYHhIe1ulYD66Zw3CoJaeCtmgVtcfba6cGj7HUS9GhHZZNHtQCw2ItO1Ytv228f4JqM12AmOU6+WHebyft2tr7WPaBJJyKoxCAloSCwNW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=NU8DpwJ8; arc=none smtp.client-ip=205.220.180.131
+	 In-Reply-To:Content-Type; b=h8DfAmhfFJVQ7XGca7s5W9UIb2URefauJ4WqhVtFypLD+fbZ0TkNTFegomMyJW8KGcfqIYzW8fEVNEHYSvi+3YrVdQWuF3LtIbAwW2s6MA7xLS4HD8sEddCJsYpJ2MRqn8qxAlSr/132QgguiDVYdw1gMiQqvRD5tIKUGV8XRIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=clbcZAH0; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="NU8DpwJ8"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51CBQ1YO030175
-	for <linux-hardening@vger.kernel.org>; Wed, 12 Feb 2025 16:54:43 GMT
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="clbcZAH0"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51CC0ohK010392
+	for <linux-hardening@vger.kernel.org>; Wed, 12 Feb 2025 17:05:39 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	nfbHxXfLDJVGtgNZIgeGSymwLVT6zSrgg/aja6UrOP4=; b=NU8DpwJ8CmbsbmiF
-	lsoXBD4n34MNA4ARVp5HzKP90RqInNXWXXHBR6njz5YKZcuXQmpkdHwq6ZNR1OzB
-	YZWT9Cq4eZ/FnRIwA4iR2QTNWR2ZK25uc3VlqYxFj8tKQVGL1b+Zl640Jg/jvW1C
-	0YNKYpwu5zgJBpM+8klt+0MB9jKIsq6vrVMCA39oKNVjfD9/sOlbS6C5MsA/n6O8
-	d1UyD0gybZQ23wBSGlZ7fLXagn8/iUwKRuZVqcIvtC1Ke5MT1hizU0FynsgNpHw+
-	vD9lcahJnutDSOTbmbtqgqXt4dA+M/4oSRj7oXhGnt34EPQCXuI12jST2hYEecO+
-	tZqHiA==
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44qxg9njhp-1
+	vnd0+ycBfQNPMC4oWZS4BXvKfWaH6/W1TyXhpqePNEQ=; b=clbcZAH0NjrgUDpd
+	mRkzYwrySfK/E+3reVbcB3wjPAiuo2Z9jsNwG70COQE104N4jbx3wcfOSX2RRWic
+	qT/49HcQVdqRCGYgp4+D2ipcQS7YrIzZd7zdkToQElA1hkkbZ33HQz9xkNhhMmd3
+	OnHtCBUwd2NLZx9Rx++j8A84vGtbLPi2s+Rbx5vqZ8QsRZQBujWpVkUwBGtF1RTI
+	yW0OrZytnbakYq/h9AfHeQW7neUMckugji3eAvEtcVqtIn7Ymvfnk0E6jalH9M8q
+	2qsfBvzOUeozzo1H3Hwapq+llkGZW7Ek51ZhSJ9qa7x2AXsK1mssUCMeungcD2he
+	B5kV4A==
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44qcs5ggup-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-hardening@vger.kernel.org>; Wed, 12 Feb 2025 16:54:43 +0000 (GMT)
-Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-2fa166cf693so20452420a91.1
-        for <linux-hardening@vger.kernel.org>; Wed, 12 Feb 2025 08:54:43 -0800 (PST)
+	for <linux-hardening@vger.kernel.org>; Wed, 12 Feb 2025 17:05:39 +0000 (GMT)
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-2fa34df4995so77936a91.0
+        for <linux-hardening@vger.kernel.org>; Wed, 12 Feb 2025 09:05:39 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739379282; x=1739984082;
+        d=1e100.net; s=20230601; t=1739379938; x=1739984738;
         h=content-transfer-encoding:in-reply-to:content-language:from
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nfbHxXfLDJVGtgNZIgeGSymwLVT6zSrgg/aja6UrOP4=;
-        b=YugOz3n1+DTkzsgII0jSYwVL0tasEQlAS+0Y4TjiHF3qw5FApxV7djv3rOrGmK5DXG
-         vjaYksJhCKPKh8bEfXWJiofFTcNWR063xxLm/iYE0BBIsQX6wvIwAsOqrZHBubbOi7QS
-         dqMwTrBnV583k/hLgMKOEeVRtfjcFTKQECsN57gcB22+TWL2tgsqhsMQ8XkzUggJn1GE
-         LDyOuY1hX73xFdl5kVfN3dFIaRMKI0wrvCp7NccgiFOTQdfBCS070ZS6OFT9LgrHar9s
-         2+36X9OPbl9m1T5qH8ouo43g2iAYdtfYkZWhmvzbQ+4oAu3Vs5mvLDUpzjVWJQuFG5BC
-         W1eA==
-X-Forwarded-Encrypted: i=1; AJvYcCVrV6JBGNo4U63iDYHps8lKJt81BmHB0Y3pdtLNs40/mT1Zen9CP6islq2U+pkhhS+qAr5tUBOMyJloQZGVK0s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxyebFSOshSRInCFNvJW7dZr604oAGdMrFLLTecQZ8+vlR28mu9
-	3yHPDwKwi5ILGMZbVmbYrU7i+I3S+9wK95IkNa0XJQDOLUbmEvOvSOWjVp6wWPm2ZwbfHPGitG4
-	tDNZ5lcPJ/tOccTWu9xkGe6g6ffpMwYXjJPbcPdd3IkpT6im21zi5W70+gWr0YPUadiI=
-X-Gm-Gg: ASbGncsUFmhKQkkkH1rFmFpuVPGRcHTs/m0oeZh15b108Zw51denkJVtuczkaI8m4lU
-	1/PZlCVxoP6PyAtcsA2r3ar18jm/ohwNxHn/REcdF5FicT1730bThd4U/OI3iyGZwbpz4e06VHO
-	3sz2WHWYCXHH6hnXG+mFy5deABrPdk1L55K8DMGxT74MTKJg/rSRJqDGqFM+3THYVFDm0tktl+c
-	898usVKwsqJbCNZioOcHMS0WfcyuRgKOXOXKA++wjOAMeZ7HKmcw1WfJhfLZOPTxEOXICHwwc3d
-	tv7k4LHZyRoEJnQCrhfrt6uMv+67RgVVgqJ671f5u8BGxOGoTZOmwV1IA+Kn
-X-Received: by 2002:a17:90b:134f:b0:2ea:83a0:47a5 with SMTP id 98e67ed59e1d1-2fbf5bb5735mr6133338a91.4.1739379282042;
-        Wed, 12 Feb 2025 08:54:42 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGx+CWks0nvoqMOT5wEtwjJQXwKdPFly96tXraDduozSmPBMM+3wmzaLt6FvkicFgrTncPtIg==
-X-Received: by 2002:a17:90b:134f:b0:2ea:83a0:47a5 with SMTP id 98e67ed59e1d1-2fbf5bb5735mr6133297a91.4.1739379281639;
-        Wed, 12 Feb 2025 08:54:41 -0800 (PST)
+        bh=vnd0+ycBfQNPMC4oWZS4BXvKfWaH6/W1TyXhpqePNEQ=;
+        b=Be9QZ63g3WE+BmEL4/qmYR43Px6NgbcqcdVM2Kv/7PwLf+cyX4CcClWdFA2+KQ+yMJ
+         Y9vt/naLLLAKH83XQW0lwLW2fLThvTOKIZORj+UECe1sQhAPxdnT3J43l68ovvkzPfVt
+         OlSF8T/xzvAyMoxbEf10q/J4AnQaxLGJu2wf8fGmQ9wgBDpKcpx+1dktDxbJRmKdIBWK
+         hbEsevBKhQoo9XUxVquOrWW/fdD7K9L4Ym6V5dluuf/hZ0LVZEeT33MH6GzambPk1DXE
+         8cks/RdmM8dx7GZ+0UxEm359bA3Il3R3oBjBFw+w7sDgS8JNF4Ik/gleLfvpejwRzt9n
+         iWHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWKOjQ+A2RTz/Pldta2tVQ6qFW0+lyhAOlagpnypocCDrnCXG3ETbe4sZ0IHz1+/LhaxiVNQLvZ5wTxI1Zpav8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwL4rf9dhiM+dohxKEHv6YXN+5P9LG7g72YB1EuTnmY8ziGCskI
+	DE9stsxk6DLIk7CsYSGyfydmLzET3+fOscu8PoB8DvumN0Xtug6SloRkkT+PcKi2RpWGuo4wKJR
+	2azuA229mu8f6owIxRPAYyAMZqIjbH+x681vHVTslqyYKVLm1ycYukzArc5H74XfQuu4=
+X-Gm-Gg: ASbGncsq3qs5VAo5i9HfoeroovcmkzKEcISxoVQA48iAUbxAA8uEIdWcs5xJ0utMSdK
+	PP2wL1XTmMo+J37Z4Gl8GxWdqnAhB8uctqh6JtOfhANtc3sjDh9yIgtV1dUEjJnwi31ZYrZ6nnb
+	BzV8LCK39kj2MOlrbow4JpBat+uc0Yc91090L8WtqchBKOv6pmneLJ8Mh7OFauWqa1AQyHBD3y4
+	3Rqku+seExTi2RwxPQPx7xefhJws0zhDm7xkOP9+eG61S7QNqeQACrtiMl6/tiFp19UiUxm6DuF
+	uJQunQGBMVjeMejKygQQbkP63MfxLH3M+KTpDBOGeKZLn4ObhVj2y4wJl5Ud
+X-Received: by 2002:a17:90a:c912:b0:2fc:b40:339a with SMTP id 98e67ed59e1d1-2fc0b403555mr1491489a91.10.1739379938122;
+        Wed, 12 Feb 2025 09:05:38 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFUt2lq1oFlB4bsT3D4UF+HoAa24Rkzxvgc6j4DJgkutmH/tUKFc2bhFS2x5A06AoQXeC1Oig==
+X-Received: by 2002:a17:90a:c912:b0:2fc:b40:339a with SMTP id 98e67ed59e1d1-2fc0b403555mr1491259a91.10.1739379936213;
+        Wed, 12 Feb 2025 09:05:36 -0800 (PST)
 Received: from [10.227.110.203] (i-global254.qualcomm.com. [199.106.103.254])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fbf989bdcfsm1721378a91.3.2025.02.12.08.54.40
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fbf98d05cesm1746598a91.18.2025.02.12.09.05.35
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Feb 2025 08:54:41 -0800 (PST)
-Message-ID: <509cb1aa-a0d9-4444-9a54-0edc0b181d61@oss.qualcomm.com>
-Date: Wed, 12 Feb 2025 08:54:39 -0800
+        Wed, 12 Feb 2025 09:05:35 -0800 (PST)
+Message-ID: <f7f9d508-e999-4e5c-b02f-976e7cb700f3@oss.qualcomm.com>
+Date: Wed, 12 Feb 2025 09:05:34 -0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -74,47 +74,73 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] wifi: ath12k: cleanup ath12k_mac_mlo_ready()
-To: Ethan Carter Edwards <ethan@ethancedwards.com>,
-        Karthikeyan Periyasamy <quic_periyasa@quicinc.com>
-Cc: Kalle Valo <kvalo@kernel.org>, Jeff Johnson <jjohnson@kernel.org>,
+Subject: Re: [PATCH] wifi: ath12k: Fix uninitialized variable and remove goto
+To: Ping-Ke Shih <pkshih@realtek.com>,
+        Ethan Carter Edwards <ethan@ethancedwards.com>
+Cc: Kalle Valo <kvalo@kernel.org>,
+        Karthikeyan Periyasamy <quic_periyasa@quicinc.com>,
+        Jeff Johnson <jjohnson@kernel.org>,
         Harshitha Prem <quic_hprem@quicinc.com>,
-        Kalle Valo
- <quic_kvalo@quicinc.com>, linux-wireless@vger.kernel.org,
-        ath12k@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-References: <20250210-ath12k-uninit-v2-1-3596f28dd380@ethancedwards.com>
+        Kalle Valo <quic_kvalo@quicinc.com>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "ath12k@lists.infradead.org" <ath12k@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
+References: <20250209-ath12k-uninit-v1-1-afc8005847be@ethancedwards.com>
+ <a7ca4e4b-c432-4f2b-81c6-c7b06cd12de1@oss.qualcomm.com>
+ <mmutvwbsr3h33hxr364zr6f3whmyxp73od3fihsbynek2pkvjd@6bqaqfkwkf4m>
+ <94ddba7eff9f4261bf8fa547f1ba4d7d@realtek.com>
 From: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
 Content-Language: en-US
-In-Reply-To: <20250210-ath12k-uninit-v2-1-3596f28dd380@ethancedwards.com>
+In-Reply-To: <94ddba7eff9f4261bf8fa547f1ba4d7d@realtek.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: YX5Ua2t8GHKooU3fLMPra1vkioEtrrxf
-X-Proofpoint-GUID: YX5Ua2t8GHKooU3fLMPra1vkioEtrrxf
+X-Proofpoint-ORIG-GUID: I6oZwhyMtBlxwEmpeCpeFo_0_ryZkCEL
+X-Proofpoint-GUID: I6oZwhyMtBlxwEmpeCpeFo_0_ryZkCEL
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-02-12_05,2025-02-11_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
- mlxscore=0 priorityscore=1501 malwarescore=0 spamscore=0 impostorscore=0
- mlxlogscore=699 lowpriorityscore=0 phishscore=0 clxscore=1015
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502120124
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
+ mlxlogscore=947 phishscore=0 lowpriorityscore=0 spamscore=0 malwarescore=0
+ adultscore=0 clxscore=1015 mlxscore=0 priorityscore=1501 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
+ definitions=main-2502120125
 
-On 2/10/2025 6:49 PM, Ethan Carter Edwards wrote:
-> There is a possibility for an uninitialized *ret* variable to be
-> returned in some code paths.
+On 2/10/2025 8:09 PM, Ping-Ke Shih wrote:
+>>>>
+>>>> Addresses-Coverity-ID: 1642337 ("Uninitialized scalar variable")
+>>>
+>>> Is that an official kernel tag? IMO the proper tag would be
+>> So, it isn't "official" as far as I can tell, but it is widely used in
+>> other commits, especially by Gustavo Silva.
+>>
+>> Also:
+>> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=778e2478d19574508861bcb
+>> 1806d6e34d095587c
+>>
+>> Coverity-IDs: is another option I have found. I have seen Closes: a few
+>> times as well. I'm not really sure what the best option is, honestly.
 > 
-> This explicitly returns 0 without an error. Also removes goto that
-> returned *ret* and simply returns in place.
+> In my patch, I used and treated Addresses-Coverity-ID as a unofficial tag,
+> so additional empty line is added.
 > 
-> Closes: https://scan5.scan.coverity.com/#/project-view/63541/10063?selectedIssue=1642337
-> Fixes: b716a10d99a28 ("wifi: ath12k: enable MLO setup and teardown from core")
+> Days ago I have received Coverity issues sent to mailing list, so I used
+> Closes tag at that time. But recently I have not seen that kind of mails. 
+> Instead, I visit Coverity web site to check issues and use
+> Addresses-Coverity-ID tag, since Coverity link is not visible to everyone.
+> That is just my thought. 
 
-In the pending branch I changed this to:
-Fixes: b716a10d99a2 ("wifi: ath12k: enable MLO setup and teardown from core")
+The problem I have is that I get Coverity fixes both from the linux and the
+linux-next projects:
 
-To fix the checkpatch issue:
-WARNING: Please use correct Fixes: style 'Fixes: <12 chars of sha1> ("<title line>")' - ie: 'Fixes: b716a10d99a2 ("wifi: ath12k: enable MLO setup and teardown from core")'
+https://scan.coverity.com/projects/linux?tab=overview
+https://scan.coverity.com/projects/linux-next-weekly-scan?tab=overview
 
-https://git.kernel.org/pub/scm/linux/kernel/git/ath/ath.git/commit/?h=pending&id=c2f7ae223cd3d781c69337dc804f1fae95789cdd
+The Coverity IDs from these projects are allocated independently, so a
+Coverity ID does not uniquely identify an issue.
 
+The URL uniquely identifies an issue, and also utilizes an official tag.
+
+That is my thought.
+
+/jeff
