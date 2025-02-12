@@ -1,55 +1,56 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50F521EBA0C;
-	Wed, 12 Feb 2025 22:01:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69CC92036F6;
+	Wed, 12 Feb 2025 22:05:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739397673; cv=none; b=DQoGLHF1iwZfUBviuRK4g7A3IOgvW4PVcrLkOZSLLWWOjxI4ap88FR/FC06cE3zUkkoMA1IL6ThHpyYwpgoLkp7EDgwnQiiVmC8SNsrBSQdFZbSaglKm6RcumfpMCqSW8WvyDQShljRm1hl/5/DznJoxzQHAUieoED1QQkH74jY=
+	t=1739397912; cv=none; b=CivcJsudJyQBTt4hjlnwzs23q6KoNOP258QOcf627YirXzZrV2R74ng+2Fe/JcAAhmKeVZvGYPLuZtDxTpJfbjMKMCjWAdqq1mF+fJrreUqh5RGkJUHFJv6MS14Nld05Lxd7UcBQ9WYAZLvk0PUNXHXjLfIP7XpiyJjDX63nCj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739397673; c=relaxed/simple;
-	bh=JsxQrQLoRzxEnInmKjF+mVhcdpr1cU7XFb9bT5+5QDw=;
+	s=arc-20240116; t=1739397912; c=relaxed/simple;
+	bh=Y884TGbn38v12x+Fv+o7ctbuzGeY4ETaEIEr0q7aULw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Lvi07/qHuPM2NaG9XIleWlDw3gms1aoq+1Pe/F7h5ca2w2NuXT0XLQcmh0h/SFnVzM0a9x4+lE07jukUQmE+ryxkDkGJSjo1FFbs3q+29kjg6+RLMF+a8i5QGOCD6orYQWm0RVD1OlNpZ/CylaaoCkYA6dqndkNf8haX4QSYlVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nEYVcxBG; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=rd9FqvDYQuXKmxWW2RnGA3+CLylyYZ2ADo/tlZKJbOJhhzpSZw56z2J0oplSCzQA2cqVCasTE8w5Gkp9+dj+V6EU2R32ys3W8jsiDWTNoMqf6435sIfapQz/vWoqiYrHVUkmoyqFZKfhg5W2xR3zUuwcwOg3FPbYAMEGWvZ6z1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qHalxVGC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nEYVcxBG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B85B0C4CEE4;
-	Wed, 12 Feb 2025 22:01:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qHalxVGC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BE1EC4CEDF;
+	Wed, 12 Feb 2025 22:05:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739397672;
-	bh=JsxQrQLoRzxEnInmKjF+mVhcdpr1cU7XFb9bT5+5QDw=;
+	s=k20201202; t=1739397912;
+	bh=Y884TGbn38v12x+Fv+o7ctbuzGeY4ETaEIEr0q7aULw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nEYVcxBGLr5QfQfMsR8ytHEOK7NGL6+RTqamyfq6va4w3fwRD5yBZWliHFQnqSa/Z
-	 UteO0Wl/RFveNURpAQzq6efcNHz2tqggnnEyKL89LtOYR7qviSxSmG0HEKKnOzX4Lo
-	 da4r+r4oBXNwZFtoVBOMU947NeYhFGKHBWkLy9NfmIQYWIfQsbvDQo3LnPPaRxgcUV
-	 4NlFUrN7nnvZ0omISHMc7w2rD+2A6VjCYh9T7WhETIBtSS126uJ878t1KXyqibdAoM
-	 aLdIoazYcBsb+C4Xtom/n8W/gbsof7O7sljgZ8uW24a1aelvXS9b4EhOUrF+9XZFD9
-	 R4t70Vw+S7DoQ==
-Date: Wed, 12 Feb 2025 14:01:12 -0800
+	b=qHalxVGCbt3PfQou4OQRbr4DwEpl8QOgU7jwY0/FYRBigeT+XLRZzlOWjg4thCeUv
+	 K6Tzruh4gnBDgGNndSep6EUcTu70RTNhqQdL+Pm0U+QTX3oHWU5D21zKcCscSQTvSX
+	 vBb8LdcOQ2eYbMZLtoNyP1zsOZHPaskdgsqSt3Bb2G39EdOCXNEn8AT9RPCUKTCeys
+	 2pMgMIx3dtCYl32OTbOk45yET5jc4LAd44lQgtaWT8VUgu7Y4G/0JUlm8DAB9T8VBt
+	 gSF1DtLQpv3ow4DsQIDF4bZ4CIdfRU4tjAE9D3deFv8rSYay661wuAgmCS0TBOR+N0
+	 NjR+X8sKMLTBA==
+Date: Wed, 12 Feb 2025 14:05:11 -0800
 From: Kees Cook <kees@kernel.org>
-To: Gabriel Krisman Bertazi <krisman@suse.de>
-Cc: David Gow <davidgow@google.com>,
-	Gabriela Bittencourt <gbittencourt@lkcamp.dev>,
-	Pedro Orlando <porlando@lkcamp.dev>,
-	Danilo Pereira <dpereira@lkcamp.dev>,
-	Shuah Khan <skhan@linuxfoundation.org>, Rae Moar <rmoar@google.com>,
-	Luis Felipe Hernandez <luis.hernandez093@gmail.com>,
-	Nicolas Pitre <npitre@baylibre.com>,
-	Diego Vieira <diego.daniel.professional@gmail.com>,
-	"Steven Rostedt (Google)" <rostedt@goodmis.org>,
-	Jakub Kicinski <kuba@kernel.org>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Bruno Sobreira =?iso-8859-1?Q?Fran=E7a?= <brunofrancadevsec@gmail.com>,
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: jeffxu@chromium.org, akpm@linux-foundation.org, jannh@google.com,
+	torvalds@linux-foundation.org, vbabka@suse.cz,
+	Liam.Howlett@oracle.com, adhemerval.zanella@linaro.org,
+	oleg@redhat.com, avagin@gmail.com, benjamin@sipsolutions.net,
 	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-	Thorsten Leemhuis <linux@leemhuis.info>
-Subject: Re: [PATCH v2 6/6] unicode: kunit: change tests filename and path
-Message-ID: <202502121400.EEDE42C8@keescook>
-References: <20250211002600.it.339-kees@kernel.org>
- <20250211003136.2860503-6-kees@kernel.org>
- <87pljnw4r1.fsf@mailhost.krisman.be>
+	linux-mm@kvack.org, jorgelo@chromium.org, sroettger@google.com,
+	hch@lst.de, ojeda@kernel.org, thomas.weissschuh@linutronix.de,
+	adobriyan@gmail.com, johannes@sipsolutions.net,
+	pedro.falcato@gmail.com, hca@linux.ibm.com, willy@infradead.org,
+	anna-maria@linutronix.de, mark.rutland@arm.com,
+	linus.walleij@linaro.org, Jason@zx2c4.com, deller@gmx.de,
+	rdunlap@infradead.org, davem@davemloft.net, peterx@redhat.com,
+	f.fainelli@gmail.com, gerg@kernel.org, dave.hansen@linux.intel.com,
+	mingo@kernel.org, ardb@kernel.org, mhocko@suse.com,
+	42.hyeyoo@gmail.com, peterz@infradead.org, ardb@google.com,
+	enh@google.com, rientjes@google.com, groeck@chromium.org,
+	mpe@ellerman.id.au, aleksandr.mikhalitsyn@canonical.com,
+	mike.rapoport@gmail.com
+Subject: Re: [RFC PATCH v5 0/7] mseal system mappings
+Message-ID: <202502121401.B6EF2D4517@keescook>
+References: <20250212032155.1276806-1-jeffxu@google.com>
+ <b114f48a-a485-4ebd-9278-6c62a1f33d9c@lucifer.local>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -58,86 +59,31 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87pljnw4r1.fsf@mailhost.krisman.be>
+In-Reply-To: <b114f48a-a485-4ebd-9278-6c62a1f33d9c@lucifer.local>
 
-On Wed, Feb 12, 2025 at 10:40:34AM -0500, Gabriel Krisman Bertazi wrote:
-> Kees Cook <kees@kernel.org> writes:
-> 
-> > From: Gabriela Bittencourt <gbittencourt@lkcamp.dev>
+On Wed, Feb 12, 2025 at 11:24:35AM +0000, Lorenzo Stoakes wrote:
+> On Wed, Feb 12, 2025 at 03:21:48AM +0000, jeffxu@chromium.org wrote:
+> > From: Jeff Xu <jeffxu@chromium.org>
 > >
-> > Change utf8 kunit test filename and path to follow the style
-> > convention on Documentation/dev-tools/kunit/style.rst
-> >
-> > Co-developed-by: Pedro Orlando <porlando@lkcamp.dev>
-> > Signed-off-by: Pedro Orlando <porlando@lkcamp.dev>
-> > Co-developed-by: Danilo Pereira <dpereira@lkcamp.dev>
-> > Signed-off-by: Danilo Pereira <dpereira@lkcamp.dev>
-> > Signed-off-by: Gabriela Bittencourt <gbittencourt@lkcamp.dev>
-> > Reviewed-by: David Gow <davidgow@google.com>
-> > Acked-by: Gabriel Krisman Bertazi <krisman@suse.de>
-> > Reviewed-by: Shuah Khan <skhan@linuxfoundation.org>
-> > Reviewed-by: Rae Moar <rmoar@google.com>
-> > Link: https://lore.kernel.org/r/20241202075545.3648096-7-davidgow@google.com
-> > Signed-off-by: Kees Cook <kees@kernel.org>
+> > The commit message in the first patch contains the full description of
+> > this series.
 > 
-> Hi Kees,
-> 
-> Last time this was submitted, I have reported this patch breaks the
-> build when the kunit is built as a module, and it wasn't fixed before
-> resubmission.  Thorsten Leemhuis just reported the same issue is now on
-> linux-next and I confirmed it is still there.
-> 
-> https://lore.kernel.org/lkml/2c26c5e4-9cf3-4020-b0be-637dc826b4e9@leemhuis.info/T/#m2e2ddb3b2600274e5eae50b93ea821914dc85f20
-> 
-> The build error is:
-> 
-> fs/unicode/tests/utf8_kunit.c:11:10: fatal error: utf8n.h: No such file or directory
->    11 | #include "utf8n.h"
->       |          ^~~~~~~~~
-> 
-> The problem is that the patch moves utf8_kunit.c into tests/ but doesn't
-> fix the include line above.  Can you fix it in your tree since it is
-> already merged?
+> Sorry to nit, but it'd be useful to reproduce in the cover letter too! But
+> this obviously isn't urgent, just be nice when we un-RFC.
 
-Ah-ha! Thanks. Yes, I've updated this now.
+I advised Jeff against this because I've found it can sometimes cause
+"thread splitting" in that some people reply to the cover letter, and
+some people reply to the first patch, etc. I've tended to try to keep
+cover letters very general, with the bulk of the prose in the first
+patch.
+
+> It'd be nice to update the documentation to have a list of 'known
+> problematic userland software with sealed VDSO' so we make people aware.
+
+I like this idea! Probably in mseal.rst, as the Kconfig help already
+points there.
 
 -Kees
-
-> 
-> Thanks,
-> 
-> > ---
-> >  fs/unicode/Makefile                                | 2 +-
-> >  fs/unicode/{ => tests}/.kunitconfig                | 0
-> >  fs/unicode/{utf8-selftest.c => tests/utf8_kunit.c} | 0
-> >  3 files changed, 1 insertion(+), 1 deletion(-)
-> >  rename fs/unicode/{ => tests}/.kunitconfig (100%)
-> >  rename fs/unicode/{utf8-selftest.c => tests/utf8_kunit.c} (100%)
-> >
-> > diff --git a/fs/unicode/Makefile b/fs/unicode/Makefile
-> > index 37bbcbc628a1..d95be7fb9f6b 100644
-> > --- a/fs/unicode/Makefile
-> > +++ b/fs/unicode/Makefile
-> > @@ -4,7 +4,7 @@ ifneq ($(CONFIG_UNICODE),)
-> >  obj-y			+= unicode.o
-> >  endif
-> >  obj-$(CONFIG_UNICODE)	+= utf8data.o
-> > -obj-$(CONFIG_UNICODE_NORMALIZATION_KUNIT_TEST) += utf8-selftest.o
-> > +obj-$(CONFIG_UNICODE_NORMALIZATION_KUNIT_TEST) += tests/utf8_kunit.o
-> >  
-> >  unicode-y := utf8-norm.o utf8-core.o
-> >  
-> > diff --git a/fs/unicode/.kunitconfig b/fs/unicode/tests/.kunitconfig
-> > similarity index 100%
-> > rename from fs/unicode/.kunitconfig
-> > rename to fs/unicode/tests/.kunitconfig
-> > diff --git a/fs/unicode/utf8-selftest.c b/fs/unicode/tests/utf8_kunit.c
-> > similarity index 100%
-> > rename from fs/unicode/utf8-selftest.c
-> > rename to fs/unicode/tests/utf8_kunit.c
-> 
-> -- 
-> Gabriel Krisman Bertazi
 
 -- 
 Kees Cook
