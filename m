@@ -1,70 +1,76 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E115C2111;
-	Wed, 12 Feb 2025 00:28:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D2091DA21;
+	Wed, 12 Feb 2025 00:40:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739320134; cv=none; b=axT1R5KiTpzqzPBjTpA13jj7kOXuDMgGtIhdZvSmj31JJI/oKrnf+qDTKWWYHh2Txnckbh+XGonwLMZHlH/GE41tlhnxBngwU5QWZki8hec1PUuVfW1BwFF8y2RX7CupzCpoCAkZzb/BhSVqySdGBgTdIBNdqS5Y2N6nQ7P37cw=
+	t=1739320811; cv=none; b=dxA+NmxsClT1bfiloOkvoQUpQVtxbk0/G1Ii4vs23nY6xZ5eH6fsMb0facD3CCLKvtrjgDQXqwPDdwlaM04yDIbZJNPTSHyyxkFpjRKmJEnTOmtEAwd/BXHxVuY1FuttU3LI5tV2SCQ/weT5vjoZelZJdcxhiTkrpGUZhtGmc84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739320134; c=relaxed/simple;
-	bh=PX0y80qAB6JuymCN0sWZFKFBTK8nn1vKz6jz9qDkfNg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UKSK23b+zrYSFmiuM3sa1ouIStfVyhtkwmrmozaMVVW9u1AdgoYnp8zLhohUejKxPKv2lI7qdy4g6vJ4iBa0L8fGTfdh7qKM96iFWbl2UtCmWu5TvI5pEuOamc/7HXbWL5FUv6P2fmXTz7TgKoAgzCoUV2+l2stS75eQlPD+G08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H4fl0Qgt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739320811; c=relaxed/simple;
+	bh=o6jacl+8YFQgDkweUrSEzGvajj1U6xTIXTLU27ON87Q=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=o/s1kfzW/6APV0YKl0Qe09ntEwiGnJnvT0oT+RFN1zLzCK8N74DSeWggh6jzd4yb4xThQrjvkykdlMgF5BLRM0OAccAOmE7X1lBTuxYX9klz1T6VR1xh+sV4nyMiNMRefuJHjzoMDXSFv3Zr+WRM6lsvUI3v5ouYse1WBR3klFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=horZP85L; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H4fl0Qgt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 853F1C4CEDD;
-	Wed, 12 Feb 2025 00:28:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="horZP85L"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E439C4CEE2;
+	Wed, 12 Feb 2025 00:40:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739320133;
-	bh=PX0y80qAB6JuymCN0sWZFKFBTK8nn1vKz6jz9qDkfNg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=H4fl0QgtXvVUEzoGD1EQzZWCYsHA3Fk8rw8Uc9ALrQ5ledczjrbZCIHuZlCArt17d
-	 01zF3F5GeME12DA34GIx7xsSE/sN2NnHHbT+30J0UvNy/rIugtbDEn8HWhLTlBSF0w
-	 JoNWqPrkxkk+hAmE4b+aX9kmf72y2t6hbPn1M1Iy1jVQMIzujvo8P4MtSsNj7OROLc
-	 /rZPvRB7y5QQFbhTqgb6bwJwne15spPkMd34ZZC0iay5OBcNcFeP8ZrQjmYNOAWtIF
-	 yywKVO1Vbb9qmzXozpfP6W1lYqgX2RXR8tELUkt7/bmblsVFJ26cX2TUPFnHvmMK7Q
-	 sZ3JduWbXydqA==
-Date: Tue, 11 Feb 2025 16:28:51 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: Gal Pressman <gal@nvidia.com>
-Cc: Kees Cook <kees@kernel.org>, netdev@vger.kernel.org, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
- <pabeni@redhat.com>, Andrew Lunn <andrew+netdev@lunn.ch>, Tariq Toukan
- <tariqt@nvidia.com>, Louis Peens <louis.peens@corigine.com>, Simon Horman
- <horms@kernel.org>, David Ahern <dsahern@kernel.org>, Pravin B Shelar
- <pshelar@ovn.org>, Yotam Gigi <yotam.gi@gmail.com>, Jamal Hadi Salim
- <jhs@mojatatu.com>, Cong Wang <xiyou.wangcong@gmail.com>, Jiri Pirko
- <jiri@resnulli.us>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- dev@openvswitch.org, linux-hardening@vger.kernel.org, Cosmin Ratiu
- <cratiu@nvidia.com>
-Subject: Re: [PATCH net-next] net: Add options as a flexible array to struct
- ip_tunnel_info
-Message-ID: <20250211162851.4409b61a@kernel.org>
-In-Reply-To: <ee761ca9-5aa0-4f48-96b9-295ed2c444c4@nvidia.com>
-References: <20250209101853.15828-1-gal@nvidia.com>
-	<202502110942.8DE626C@keescook>
-	<ee761ca9-5aa0-4f48-96b9-295ed2c444c4@nvidia.com>
+	s=k20201202; t=1739320810;
+	bh=o6jacl+8YFQgDkweUrSEzGvajj1U6xTIXTLU27ON87Q=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=horZP85LlDZ86QCZvtw15CDgr1Mo8OW5HZQj5/HiaQVmg7YZ67A4QfVf8N8Cq+dLq
+	 8lXcGDK/rJG15Bh+HNw4ajUaUcUQq1g054DSKqAk2K+VTPbsHI7RYYMoQ5d91WlVh6
+	 UIYyU150aJfGduKkNmkUsfItaidd9JwO0EWrVUmQGv+XmQPTZShTS+DZcaLL4INVrv
+	 eZ2DTondLlJS1nBFz3UUeJpoTdkjt8DIUy6PxJHAWvMiPmrYUJ6JZ/wjUq1Vt+Mdy2
+	 J8QPCNfhSstwU+4kVTjdOZV335c5rKRylDlEuEpGdWriFbr+9QU+IqgZmwmL6UMRky
+	 lP/AH5scUBhMA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADE57380AA7A;
+	Wed, 12 Feb 2025 00:40:40 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v3] hamradio: baycom: replace strcpy() with strscpy()
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <173932083925.51333.16699116613029373811.git-patchwork-notify@kernel.org>
+Date: Wed, 12 Feb 2025 00:40:39 +0000
+References: <3qo3fbrak7undfgocsi2s74v4uyjbylpdqhie4dohfoh4welfn@joq7up65ug6v>
+In-Reply-To: <3qo3fbrak7undfgocsi2s74v4uyjbylpdqhie4dohfoh4welfn@joq7up65ug6v>
+To: Ethan Carter Edwards <ethan@ethancedwards.com>
+Cc: dan.carpenter@linaro.org, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, linux-hams@vger.kernel.org, pabeni@redhat.com,
+ linux-hardening@vger.kernel.org, kernel-hardening@lists.openwall.com
 
-On Tue, 11 Feb 2025 20:59:24 +0200 Gal Pressman wrote:
-> > Everything else looks very good, though, yes, I would agree with the
-> > alignment comments made down-thread. This was "accidentally correct"
-> > before in the sense that the end of the struct would be padded for
-> > alignment, but isn't guaranteed to be true with an explicit u8 array.
-> > The output of "pahole -C struct ip_tunnel_info" before/after should
-> > answer any questions, though.  
+Hello:
+
+This patch was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Sat, 8 Feb 2025 23:06:21 -0500 you wrote:
+> The strcpy() function has been deprecated and replaced with strscpy().
+> There is an effort to make this change treewide:
+> https://github.com/KSPP/linux/issues/88.
 > 
-> Thanks, I will attach pahole's output in the commit message.
+> Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
+> Reviewed-by: Dan Carpenter <dan.carpenter@linaro.org>
+> 
+> [...]
 
-Why not slap an __aligned(sizeof(void *)) or just __aligned(8) 
-on the new option field? That should give us the same behavior 
-as we have today implicitly.
+Here is the summary with links:
+  - [v3] hamradio: baycom: replace strcpy() with strscpy()
+    https://git.kernel.org/netdev/net-next/c/3b147be9ef08
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
