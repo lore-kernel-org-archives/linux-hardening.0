@@ -1,76 +1,76 @@
-Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
+Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 111EA281360
-	for <linux-hardening@vger.kernel.org>; Thu, 13 Feb 2025 14:14:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8E11281345
+	for <linux-hardening@vger.kernel.org>; Thu, 13 Feb 2025 14:19:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739456079; cv=none; b=LIT+7wN0dVpuhi05Cj3MwWHAvsf4mrReTkQcT0mTwTyKvT5ismIeCTOOs1weUAkPoF6d10qjcuKCWGJ0H2ttZMKvY+64aig0sARxx/k1c/mnm7EkiISlbkZHcv6idGOov20ePT5/yza9anjUccGBWRuFQoYILeHALe+KOzYa3aA=
+	t=1739456360; cv=none; b=LeP2KM7V0gwdaHwNmmkQNW9dPN3783GEMbLUfxKnVcFTbdIYCMnostGVl8HlvPkVi09Nv+zszfoA77HSWVKqBKxIatd5Zq5Ie8TK4cN9c+/YrG7yNjuXfkjzL34eQds17GsslffAyie1ARXAP2kAMSeDT9ku9uLMPXYh7YrKdNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739456079; c=relaxed/simple;
-	bh=GNESsdobWvElHx5uMVlUccaEq7W4UGcITpDJhinMpmo=;
+	s=arc-20240116; t=1739456360; c=relaxed/simple;
+	bh=uvwW2M0tsg3X8YSCEGE1nEThdpnwA3AYKjZ9BOrjojg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PKrTImdoPj6H3poew4ywy11e8hbT34ZSMJ6Jh7WSZl4c/SOQ2VQTI8tM1d8S0UDXUfktRV6OppT+ryWzFryC4Y9GgU4PSuwMN3uIFQCiJnBf/FBJRzWXGgPXPmxOf8iS4T0ScETNte6sfAOG44hhFJ4+HKlOmjiLrHye28+uN/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=AmZYHUHw; arc=none smtp.client-ip=209.85.167.178
+	 To:Cc:Content-Type; b=fzRnh0RUtyOCcXRxZO+t5swE7MgvCkatnnaoAD0LuCFOKt/Hpa22nrtTMtBQ0pJQUIGnopdX4gE6rCKd/2Lg1k9AZn6brBVwXfbRc7mxkdB+D0zSP07qdZMfUrixTI3hOj6sCdZONb7oVTZ+nCJ4+oTYnclMVzOU/fzpFk1fK0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=dVicuATO; arc=none smtp.client-ip=209.85.210.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AmZYHUHw"
-Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-3f3d80379d5so27170b6e.1
-        for <linux-hardening@vger.kernel.org>; Thu, 13 Feb 2025 06:14:36 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dVicuATO"
+Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-7270130a109so31191a34.3
+        for <linux-hardening@vger.kernel.org>; Thu, 13 Feb 2025 06:19:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1739456076; x=1740060876; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1739456358; x=1740061158; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=KwgMpUGpPt83uP2kmDr1SGqVNltXn8RoI5FSgDbOZyI=;
-        b=AmZYHUHwi7GRWeguAjU8+vIA8FGLAMjSE4uwnpa7UuXrtw7932K8fhSUpK98LJnhzn
-         UVaW0Kiz3kGhiMMI/T4Xo6RXgLCGR5ICqKN64bfXXbuZMFn0eOzX3WfmYISuQzJrrgVk
-         ixRYD3XsfHVUjzF3Cz/vA1QLyTVdZ0O1ujnE8=
+        bh=uvwW2M0tsg3X8YSCEGE1nEThdpnwA3AYKjZ9BOrjojg=;
+        b=dVicuATO5+njIY76HlhFYIyH8Ag0TCxOkyXLTm/EAlw6tpMkpeEYidgNO+rT4gaqTL
+         O4DZeIQg4YVPuqzB+1awXy++S6AmBtH+Lp9+1XEr35Px8h2EBFLvmVSej2YWUdiCDY3D
+         rOK8JUCY1cgxZtfz3CDV8wtgBQPdP5MqOAAWI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739456076; x=1740060876;
+        d=1e100.net; s=20230601; t=1739456358; x=1740061158;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=KwgMpUGpPt83uP2kmDr1SGqVNltXn8RoI5FSgDbOZyI=;
-        b=KjBifrl2lp9QihsTTDFb5tmuy+/GBIcp4WncwYoxS9JuyCoBHCyz9isspEsUn48s0c
-         I8xmx6uKvENneGNtC5T24K4YmeTA434koW53xop0Flpg//R4dw/At5oNKK02MvkEs1qY
-         Rx59nuDqGEfKXvvd2zB8hEnsiSuWVb7nThVmL2DwuLIVE5wd/TeqpcQnfN9Q7RF5QuYS
-         9hMNRp00YjfQT17APr/7sK9mw6ZPBFlB3+AkQbstNCy4UOXNI+9+qXFdRyHe8kJE2xlZ
-         ulqE64vocRGQwi810Lg2o7VJR75Z6FhkksAIShXfO6ma4U1+j1VHdBJmxzD9LqKMz2+x
-         nBcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWEEmDnjDwnxzyEpax5BpG8ypO3D2mAXh1JjxfcfO4TcjPvwMguurBLjtG2R4ihDKxz787AG1hIS5lEmH94kXQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwcrOWp64Lgm3vxmxEvztDocM88RayLdSLCBhrlmc2resnJ9nUA
-	ERRYsPDcOkZGjIl6w1aX1pV+MfeKiiV23bLDHFFQHw3VJM4ZZR8NYoRPTdvEfiHJ7PUNSSbBPxN
-	73mOKwONqok/BR0o72fvVrRE/UUsgtXJpLy3u
-X-Gm-Gg: ASbGncuyJ/++0rnqY6oRke05nCkPwlmak/zWx21l2VvUMdLMWbHPK2goTPb/kWtVxvX
-	jR7BuBfN5+gLVHxx7Y4IEzORDgPkMgDe3tijTsnPf8yo8/RGakhD9YgIi3RmmeOzmqMEdKsEA
-X-Google-Smtp-Source: AGHT+IEtNnqaFNM3IFYkaevRL1voz6bW7MV+eHfloPEq3p2jBFOfznRwaq9+4MhkBWZc8DES3xDKYRxboQlSxD5GRww=
-X-Received: by 2002:a05:6808:189f:b0:3eb:6849:e89 with SMTP id
- 5614622812f47-3f3cd5d31a2mr1761716b6e.3.1739456076093; Thu, 13 Feb 2025
- 06:14:36 -0800 (PST)
+        bh=uvwW2M0tsg3X8YSCEGE1nEThdpnwA3AYKjZ9BOrjojg=;
+        b=C5g/q4F5rqZJLbWhnX3IRU4UX9kRfu7w5YrhsvhlgMz8WQEa+j4My9z/AxjLbTwu3U
+         Gk2bUVu9T2f+vIb7V26Sfzva8NJ50Eh1RYF0b6iZKnvxQ4hPCy0lQKWwbkb+GiyM33SS
+         bnsr5eh1Dv4dGTmicbhT/kRRWar7yoDngbeibtbO9fzA57oXqL7pgNVvuWCkkm1govxx
+         plf9qHIALm9odvJiBSgpwL4fNeYbcFWGjx0ZK7FdL2WI48gW8FLAdUFxTWuM6uwA0H6Y
+         31DP0FYR5V0qNevV1ehATs3nd2lO10gE2qWjUex7DkfX2Xb2Qeex4LIOhedDlQpBEEcD
+         PkSw==
+X-Forwarded-Encrypted: i=1; AJvYcCWmoMXI7WvxS7161cqdbzf4NZ+tjYsUUquq26gWUualzh1csMbldVFv6PeVjyekzs/MESHb39gaWsFS4wgPeZc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YykpAMhA2+GsO54lSXfcCrqLW3OKdp6fEauNigBhDaa7u7vJH8Y
+	h64A4d29geK5s7m1y9dRN+HWwpUVLQ19mzQKSLVWMYdgoS1U+0YkVPvuu0xFBiqBHYhHQqISOqI
+	0mVVAODEMj/NjzLVPoTRCZtE2AD+vxj/57Igu
+X-Gm-Gg: ASbGncv3+e0ztF5njsHUsJPj2LLBOmHjxZVR0aO9IUfcpZD6SvXu5yIouerx76Y0dXy
+	klH2H8jsxMnhX2+9Zkjnbgw2QB6ZSsc5S1GrY3k7hHV2wEfGCPJEzhk5DreY+J4AzCC8PkYadBF
+	Z8NNt1sEn4ATEvuWp+77v/GcJYv67Ltw==
+X-Google-Smtp-Source: AGHT+IEDqI9pfjnnU/sTPvTq6q4LFKcqw8kNwZAhOcRWyUEaa9UGeRzGdRy+xyqhMEsX8LjY+QmDAxL4M8xudw2I6rM=
+X-Received: by 2002:a05:6830:488d:b0:71e:4ce2:4331 with SMTP id
+ 46e09a7af769-726f324c02dmr1708739a34.4.1739456357827; Thu, 13 Feb 2025
+ 06:19:17 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250212032155.1276806-1-jeffxu@google.com> <20250212032155.1276806-3-jeffxu@google.com>
- <20250212135000-861e6353-6e0a-43c3-9b28-649ae4dfc607@linutronix.de>
-In-Reply-To: <20250212135000-861e6353-6e0a-43c3-9b28-649ae4dfc607@linutronix.de>
+References: <20250212032155.1276806-1-jeffxu@google.com> <b114f48a-a485-4ebd-9278-6c62a1f33d9c@lucifer.local>
+In-Reply-To: <b114f48a-a485-4ebd-9278-6c62a1f33d9c@lucifer.local>
 From: Jeff Xu <jeffxu@chromium.org>
-Date: Thu, 13 Feb 2025 06:14:00 -0800
-X-Gm-Features: AWEUYZn6agI683FCVewtEvJCU-TMhKcDzUvXDlTokG6FIGxk-prLy1E5md-55vU
-Message-ID: <CABi2SkUCviiTbd1roeBiqSk98S87R1WwSP9rUYh4t3JfSD+2ZA@mail.gmail.com>
-Subject: Re: [RFC PATCH v5 2/7] selftests: x86: test_mremap_vdso: skip if vdso
- is msealed
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+Date: Thu, 13 Feb 2025 06:19:06 -0800
+X-Gm-Features: AWEUYZkh57X2nN0U81mtrUf8380_Mz2GDTsMAg8QIsAN8W21sRJ2eFLIaAt_1F8
+Message-ID: <CABi2SkWbYpQsUUAukG1xCnX1FmZpr90r_LtKMrAji_HuB6E6zQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v5 0/7] mseal system mappings
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 Cc: akpm@linux-foundation.org, keescook@chromium.org, jannh@google.com, 
-	torvalds@linux-foundation.org, vbabka@suse.cz, lorenzo.stoakes@oracle.com, 
-	Liam.Howlett@oracle.com, adhemerval.zanella@linaro.org, oleg@redhat.com, 
-	avagin@gmail.com, benjamin@sipsolutions.net, linux-kernel@vger.kernel.org, 
+	torvalds@linux-foundation.org, vbabka@suse.cz, Liam.Howlett@oracle.com, 
+	adhemerval.zanella@linaro.org, oleg@redhat.com, avagin@gmail.com, 
+	benjamin@sipsolutions.net, linux-kernel@vger.kernel.org, 
 	linux-hardening@vger.kernel.org, linux-mm@kvack.org, jorgelo@chromium.org, 
-	sroettger@google.com, hch@lst.de, ojeda@kernel.org, adobriyan@gmail.com, 
+	sroettger@google.com, hch@lst.de, ojeda@kernel.org, 
+	thomas.weissschuh@linutronix.de, adobriyan@gmail.com, 
 	johannes@sipsolutions.net, pedro.falcato@gmail.com, hca@linux.ibm.com, 
 	willy@infradead.org, anna-maria@linutronix.de, mark.rutland@arm.com, 
 	linus.walleij@linaro.org, Jason@zx2c4.com, deller@gmx.de, 
@@ -83,87 +83,28 @@ Cc: akpm@linux-foundation.org, keescook@chromium.org, jannh@google.com,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 12, 2025 at 5:04=E2=80=AFAM Thomas Wei=C3=9Fschuh
-<thomas.weissschuh@linutronix.de> wrote:
+On Wed, Feb 12, 2025 at 3:24=E2=80=AFAM Lorenzo Stoakes
+<lorenzo.stoakes@oracle.com> wrote:
+
+> It'd be nice to update the documentation to have a list of 'known
+> problematic userland software with sealed VDSO' so we make people aware.
 >
-> On Wed, Feb 12, 2025 at 03:21:50AM +0000, jeffxu@chromium.org wrote:
-> > From: Jeff Xu <jeffxu@chromium.org>
-> >
-> > Add code to detect if the vdso is memory sealed, skip the test
-> > if it is.
-> >
-> > Signed-off-by: Jeff Xu <jeffxu@chromium.org>
-> > ---
-> >  .../testing/selftests/x86/test_mremap_vdso.c  | 38 +++++++++++++++++++
-> >  1 file changed, 38 insertions(+)
-> >
-> > diff --git a/tools/testing/selftests/x86/test_mremap_vdso.c b/tools/tes=
-ting/selftests/x86/test_mremap_vdso.c
-> > index d53959e03593..c68077c56b22 100644
-> > --- a/tools/testing/selftests/x86/test_mremap_vdso.c
-> > +++ b/tools/testing/selftests/x86/test_mremap_vdso.c
-> > @@ -14,6 +14,7 @@
-> >  #include <errno.h>
-> >  #include <unistd.h>
-> >  #include <string.h>
-> > +#include <stdbool.h>
-> >
-> >  #include <sys/mman.h>
-> >  #include <sys/auxv.h>
-> > @@ -55,13 +56,50 @@ static int try_to_remap(void *vdso_addr, unsigned l=
-ong size)
-> >
-> >  }
-> >
-> > +#define VDSO_NAME "[vdso]"
-> > +#define VMFLAGS "VmFlags:"
-> > +#define MSEAL_FLAGS "sl"
-> > +#define MAX_LINE_LEN 512
-> > +
-> > +bool vdso_sealed(FILE *maps)
-> > +{
-> > +     char line[MAX_LINE_LEN];
-> > +     bool has_vdso =3D false;
-> > +
-> > +     while (fgets(line, sizeof(line), maps)) {
-> > +             if (strstr(line, VDSO_NAME))
-> > +                     has_vdso =3D true;
-> > +
-> > +             if (has_vdso && !strncmp(line, VMFLAGS, strlen(VMFLAGS)))=
- {
-> > +                     if (strstr(line, MSEAL_FLAGS))
-> > +                             return true;
-> > +
-> > +                     return false;
+Sure. It will be added in the next version.
+
 >
-> This only tests that any mapping after the vdso is sealed.
-
-The code above begins by searching for the "[vdso]" string, then looks
-for the first line that starts with "VmFlags:", and looks for the "sl"
-substring within that line. We're assuming the format of smaps won't
-change from release to release.
-
-> There is a real parser for /proc/self/smaps in
-> tools/testing/selftests/mm/vm_util.[ch], see check_vmflag_io().
+> And I _want the series to land_ :>) I suspect we're close now.
 >
-This test is in selftest/x86, which makes it hard to include the
-vm_util from selftest/mm, if that's what you're asking.
+Thank you for reviewing the patch and giving support.
 
-If you are asking reusing the code logic from vm_util, the
-check_vmflag_io() calls __get_smap_entry(addr, "VmFlags:", ...), which
-begins by searching for address, then looks for the first line that
-started with "VmFlags:", then check for the "io" within that line.
-This is the same logic as my code, if I read the code correctly.
+> I am tied up with a number of other tasks at the moment so apologies if I
+> take a second to get back to this series, but just wanted to say thanks f=
+or
+> addressing my various points, and that I will definitely provide review
+> (it's on the whiteboard, the only true guarantee I will do something :P).
+>
+> I will also come back to your testing series which I owe you review on,
+> which is equally on the same whiteboard...
+>
+Thank you for the heads up.
 
-Thanks
 -Jeff
-
-
-
-> > +             }
-> > +     }
-> > +
-> > +     return false;
-> > +}
->
-> <snip>
