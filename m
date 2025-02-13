@@ -1,165 +1,140 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B4CE2661B7
-	for <linux-hardening@vger.kernel.org>; Thu, 13 Feb 2025 20:41:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72F64266B54;
+	Thu, 13 Feb 2025 20:47:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739479281; cv=none; b=WIZMr+K3EE53MwYb30nnUE5JcFPTWFndxZ7GiNztewo3i8IQwy3mMK4JrFc+e7k89VekClUqa5Wh41v2Ola2ZePvj8+r1kDHXjJVpwjp7iHHKZoMeAs0tDIuZa2x/33FWXdOYriaM38vcYoERgSsHqLoMIZjmkdYca8V5wv2ORE=
+	t=1739479668; cv=none; b=rJiVBRJt2xPbyo3GeqtVo3yutX3X9s7R0U6eJkf3R+AtGRo6Abum0CQQ8idHpT+JbOWJ5OaKwsL7o6yCmqVvc4BLWtu2CXrsK311aObKr2vF6IWSQQqru82hgVevg9UG30SPEKQMFOwGIjQCHR3TROrJD6bp/hm4YWi08oisckM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739479281; c=relaxed/simple;
-	bh=GEO8HaWi4QPWZEPqnXMKXjc1uQwgaeT7yXmjm39pIZ8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SxL02q+S0n3sIR7c6chLyY3bbb+kujo+nJr1KOCZhk1yxN+riKsjByNwmz2iTVZejgYI4dAqZRMKMgrizOcH/80XbJAqdxdOKMkgte2qyQlUi7p9Sl1FkYV3n2cDUPcnxC9aI+zcjaXPXSEzD6Q3zqzue/kBIv9+IBHKdVFHLDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=YWDJxxgC; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
+	s=arc-20240116; t=1739479668; c=relaxed/simple;
+	bh=xsAbZvVEr/6Fsigt2bodFoyIOZi8VkbXaR8jtN+QkDQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZvpC/b30Rqsv2H3mug0rBxM0Z8XgLnLWyatdDysuFjPnXZzE+mXiv/MEXMiyvp0YO9O14eZZhxWa/DaWVh/Q+KI/Rf6t+Txo01Iedn2smyYtVmBB/SxlDLAqyNzmWjhTQvGVCrP2OgkDaLDj0u7/hWUwguVd+vECq3jfDtQ1FT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VbIPR2EJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="YWDJxxgC"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43957634473so14277455e9.0
-        for <linux-hardening@vger.kernel.org>; Thu, 13 Feb 2025 12:41:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=citrix.com; s=google; t=1739479278; x=1740084078; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=JdzpiFraoMmeLhGJnT7doQj/1oDPuw5cX4OAzG+mUlw=;
-        b=YWDJxxgCiOL2QkxEnIwn+LpWLo1+mRT6mPecCMmR5yYvVSjQJT/e3sxgmXw337lgig
-         sEQg9E6vDpBH/QRz1MbhBmIwHbIJirMHAgUG56vr1qSgQf/ZqRFPCVISFh4InEilEr/T
-         1mTlpAhTu8oI//sPKPbb05qvaCZ8fHoNGc/Dg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739479278; x=1740084078;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JdzpiFraoMmeLhGJnT7doQj/1oDPuw5cX4OAzG+mUlw=;
-        b=TIjueLTHpG6DIrSFZWw5ivymxbyHa5Jt/fv+qlt5vJlQjVNbObjpz8xB6rHst/Fy2g
-         vUwqREc9cHxWZ/Uol8nms6Woegut6e0LRAYNdVj/ya9Z19DTDiJSW07fLRfWpTgSUHX5
-         i3LZNC2n6aYQ+Z7/bKEfwt3bdGQcXPZ7frX/QnkK4A2axYb7vryv1DjV1LYbvS5l+wcF
-         +D9p0n4/t9gsj6RMQkv/xTn/eO7nF8Tu60NXnmTu2BjWVuXa4LsOFu/oAcwZVOr6Vp21
-         EDS31CpEnV9DbZi9BwUtuIemMTnO7dCttG8EL7pY/A8L8jr/yafyBMV4azZ/bhpGmrEH
-         y14g==
-X-Forwarded-Encrypted: i=1; AJvYcCXyIHUdPVBm2JgFAcZopC+ZmdighlxEXASZ0WrrURtC4vjT57oIuU4RHiC8hwpOUzdgcSO6D35jR3bBf3LE/qo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZJoPHUr3ejQSAEZ1J2wxpgdjxuXikbXeQe5T3LF0xY3od0Ukh
-	JedTBhws5nX/lkeOTfkN5pPSVuHMj6UxPYxp/EZUrlBeXQdgtQKKQE9jfrz8wEU=
-X-Gm-Gg: ASbGncs9/g1ApHzNADB2wsQX/WeG8N+P/8b5VXs4ta6ZczSL8TbC61zucoM+KpYnTNJ
-	bskK0CUONLDzpk071Xb42Z4aqHRttbshjaVDeag+d+YrIOIMoJQb174iC9bwmVDad1BpcGh7V7X
-	+Ita46bRjnJJKD7VfzMYx5Met1uiPYJk0tseRejXpZ6ZZ/smL2The4jbpERarWAsWnRDoGO6t53
-	jv5Rwx3gQ4CyDri5ELY+7cpfAjYeuKz4UmdpSSFub7WHPHUCZOlF/XitI+RzMUlAwgPnsguy7Ph
-	rywjhMaHPe1vW5cEO4PYHO+ycbVaS7oQTzuZTRdILjSgUIKoFRPtvJc=
-X-Google-Smtp-Source: AGHT+IE8o+O6Rj99pbvAV2YEC3zJPBi0iF2O3SooUAH+pSf73d5GOrt4ZeIVdUyA8MCewiQRBRCRJw==
-X-Received: by 2002:a05:600c:444d:b0:439:5529:33eb with SMTP id 5b1f17b1804b1-439581bf064mr113281535e9.30.1739479277707;
-        Thu, 13 Feb 2025 12:41:17 -0800 (PST)
-Received: from [192.168.1.10] (host-92-26-98-202.as13285.net. [92.26.98.202])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43961884f93sm26834485e9.27.2025.02.13.12.41.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Feb 2025 12:41:17 -0800 (PST)
-Message-ID: <6641d1e0-7151-4857-bb0e-db555d4cdf50@citrix.com>
-Date: Thu, 13 Feb 2025 20:41:16 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VbIPR2EJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA490C4CED1;
+	Thu, 13 Feb 2025 20:47:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739479667;
+	bh=xsAbZvVEr/6Fsigt2bodFoyIOZi8VkbXaR8jtN+QkDQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VbIPR2EJry14RyYsG9OCmVXECu2vsr0QZbP5dy8vQ+3FZtIl/NpwkB5HEH5/fh4us
+	 INQLijhO1RSLiewpXCDSOHETuy1rT42+mCLSnaiqRvT6KLftMmuV3p1Em0FQdkKusT
+	 e/51FOAu7XdYFlKIUjMrzgsvwdMBQgNHYojfPcPEm/j1heAvzysaBaOoTBtGo0M265
+	 HE+W36jwO68BOszt/wtWJS+7cePSXs8gdBUBcM2RAi4Nd6KMsOBna6wYdqHf+knkZO
+	 EX9iZ0yF3+UnbED0ge0nACKO0T1Wm6ME+68+NqBSZ+nZGq1KAzJrBo0HdTeCq97LTF
+	 AsmW36O62vZlA==
+Date: Thu, 13 Feb 2025 12:47:47 -0800
+From: Kees Cook <kees@kernel.org>
+To: Pedro Falcato <pedro.falcato@gmail.com>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, jeffxu@chromium.org,
+	akpm@linux-foundation.org, jannh@google.com,
+	torvalds@linux-foundation.org, vbabka@suse.cz,
+	Liam.Howlett@oracle.com, adhemerval.zanella@linaro.org,
+	oleg@redhat.com, avagin@gmail.com, benjamin@sipsolutions.net,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	linux-mm@kvack.org, jorgelo@chromium.org, sroettger@google.com,
+	hch@lst.de, ojeda@kernel.org, thomas.weissschuh@linutronix.de,
+	adobriyan@gmail.com, johannes@sipsolutions.net, hca@linux.ibm.com,
+	willy@infradead.org, anna-maria@linutronix.de, mark.rutland@arm.com,
+	linus.walleij@linaro.org, Jason@zx2c4.com, deller@gmx.de,
+	rdunlap@infradead.org, davem@davemloft.net, peterx@redhat.com,
+	f.fainelli@gmail.com, gerg@kernel.org, dave.hansen@linux.intel.com,
+	mingo@kernel.org, ardb@kernel.org, mhocko@suse.com,
+	42.hyeyoo@gmail.com, peterz@infradead.org, ardb@google.com,
+	enh@google.com, rientjes@google.com, groeck@chromium.org,
+	mpe@ellerman.id.au, aleksandr.mikhalitsyn@canonical.com,
+	mike.rapoport@gmail.com
+Subject: Re: [RFC PATCH v5 0/7] mseal system mappings
+Message-ID: <202502131240.A57C749@keescook>
+References: <20250212032155.1276806-1-jeffxu@google.com>
+ <b114f48a-a485-4ebd-9278-6c62a1f33d9c@lucifer.local>
+ <CAKbZUD0TAX8F9kDCEEvGSbcegDD4GLyra3ewtxncBbs45WJZ3g@mail.gmail.com>
+ <7545d5eb-a16e-4cc8-a9e3-5431be01aade@lucifer.local>
+ <CAKbZUD3kaYEqQFU1TWfJWvtV02ESaMb0_ygadGgeAKo-b+GRcA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC] Circumventing FineIBT Via Entrypoints
-To: Kees Cook <kees@kernel.org>
-Cc: jannh@google.com, jmill@asu.edu, joao@overdrivepizza.com,
- linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
- luto@kernel.org, samitolvanen@google.com,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>
-References: <CAG48ez09JuZPt112nnE6N=hS6cfCLkT-iHUAmidQ-QGNGMVoBw@mail.gmail.com>
- <c46f5614-a82e-42fc-91eb-05e483a7df9c@citrix.com>
- <202502131224.D6F5A235@keescook>
-Content-Language: en-GB
-From: Andrew Cooper <andrew.cooper3@citrix.com>
-Autocrypt: addr=andrew.cooper3@citrix.com; keydata=
- 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
- 6+ahAA==
-In-Reply-To: <202502131224.D6F5A235@keescook>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAKbZUD3kaYEqQFU1TWfJWvtV02ESaMb0_ygadGgeAKo-b+GRcA@mail.gmail.com>
 
-On 13/02/2025 8:28 pm, Kees Cook wrote:
-> On Thu, Feb 13, 2025 at 01:31:30AM +0000, Andrew Cooper wrote:
->>>> Assuming this is an issue you all feel is worth addressing, I will
->>>> continue working on providing a patch. I'm concerned though that the
->>>> overhead from adding a wrmsr on both syscall entry and exit to
->>>> overwrite and restore the KERNEL_GS_BASE MSR may be quite high, so
->>>> any feedback in regards to the approach or suggestions of alternate
->>>> approaches to patching are welcome :) 
->>> Since the kernel, as far as I understand, uses FineIBT without
->>> backwards control flow protection (in other words, I think we assume
->>> that the kernel stack is trusted?),
->> This is fun indeed.  Linux cannot use supervisor shadow stacks because
->> the mess around NMI re-entrancy (and IST more generally) requires ROP
->> gadgets in order to function safely.  Implementing this with shadow
->> stacks active, while not impossible, is deemed to be prohibitively
->> complicated.
-> And just validate my understanding here, this attack is fundamentally
-> about FineIBT, not regular CFI (IBT or not), as the validation of target
-> addresses is done at indirect call time, yes?
+On Thu, Feb 13, 2025 at 07:59:48PM +0000, Pedro Falcato wrote:
+> On Wed, Feb 12, 2025 at 2:02 PM Lorenzo Stoakes
+> <lorenzo.stoakes@oracle.com> wrote:
+> >
+> > (sorry I really am struggling to reply to mail as lore still seems to be
+> > broken).
+> >
+> > On Wed, Feb 12, 2025 at 12:37:50PM +0000, Pedro Falcato wrote:
+> > > On Wed, Feb 12, 2025 at 11:25 AM Lorenzo Stoakes
+> > > <lorenzo.stoakes@oracle.com> wrote:
+> > > >
+> > > > On Wed, Feb 12, 2025 at 03:21:48AM +0000, jeffxu@chromium.org wrote:
+> > > > > From: Jeff Xu <jeffxu@chromium.org>
+> > > > >
+> > > > > The commit message in the first patch contains the full description of
+> > > > > this series.
+> > > >
+> > [...]
+> > >
+> > > FWIW, although it would (at the moment) be hard to pull off in the
+> > > libc, I still much prefer it to playing these weird games with CONFIG
+> > > options and kernel command line options and prctl and personality and
+> > > whatnot. It seems to me like we're trying to stick policy where it
+> > > doesn't belong.
+> >
+> > The problem is, as a security feature, you don't want to make it trivially
+> > easy to disable.
+> >
+> > I mean we _need_ a config option to be able to strictly enforce only making
+> > the feature enable-able on architectures and configuration option
+> > combinations that work.
+> >
+> > But if there is userspace that will be broken, we really have to have some
+> > way of avoiding the disconnect between somebody making policy decision at
+> > the kernel level and somebody trying to run something.
+> >
+> > Because I can easily envision somebody enabling this as a 'good security
+> > feature' for a distro release or such, only for somebody else to later try
+> > rr, CRIU, or whatever else and for it to just not work or fail subtly and
+> > to have no idea why.
+> 
+> Ok so I went looking around for the glibc patchset. It seems they're
+> moving away from tunables and there was a nice
+> GNU_PROPERTY_MEMORY_SEAL added to binutils.
+> So my proposal is to parse this property on the binfmt_elf.c side, and
+> mm would use this to know if we should seal these mappings. This seems
+> to tackle compatibility problems,
+> and glibc isn't sealing programs without this program header anyway. Thoughts?
 
-I'm not sure I'd classify it like that.  As a pivot primitive, it works
-very widely.
+It seems to me that doing this ties it to the binary, rather than
+execution context, which may want to seal/not-seal, etc. I have a sense
+that it's be better as a secure bit, or prctl, or something like that. The
+properties seem to be better suited for "this binary _can_ do a thing"
+or "this binary _requires_ a thing", like the GNU_STACK bits, etc. But
+maybe there's more to this I'm not considering?
 
-FineIBT (more specifically any hybrid CFI scheme which includes CET-IBT)
-relies on hardware to do the course grain violation detection, and some
-software hash for fine grain violation detection.
+> > I mean one option is to have it as a CONFIG_ flag _and_ you have to enable
+> > it via a tunable, so then it can become sysctl.d policy for instance.
+> 
+> sysctl is also an option but the idea of dropping a random feature
+> behind a CONFIG_ that's unusable by lots of people (including the
+> general GNU/Linux ecosystem) is really really unappealing to me.
 
-In this case, the requirement for the SYSCALL entrypoint to have an
-ENDBR64 instruction means it passes the CET-IBT check (does not yield
-#CP), and then lacks the software hash check as well.
+I agree 100%, but I think we need to make small steps. Behind a CONFIG
+means we get it implemented, and then we can look at how to make it more
+flexible. I'm motivated to figure this out because I've long wanted to
+have a boot param to disable CRIU since I have distro systems that I
+don't use CRIU on, and I don't want the (very small) interface changes
+it makes available into seccomp filter visibility. And if CRIU could be
+run-time based, so could system mapping sealing. :)
 
-i.e. this renders FineIBT (and other hybrid CFI schemes) rather moot,
-because one hole is all the attacker needs to win, if they can control a
-function pointer / return address.  At which point it's a large overhead
-for no security benefit over simple CET-IBT.
-
-The problem is that SYSCALL entry/exit is a toxic operating mode,
-because you only have to think about sneezing and another user->kernel
-priv-esc appears.
-
-~Andrew
+-- 
+Kees Cook
