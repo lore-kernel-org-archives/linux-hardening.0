@@ -1,104 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B76428A2CE;
-	Thu, 13 Feb 2025 19:34:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 683C524A042
+	for <linux-hardening@vger.kernel.org>; Thu, 13 Feb 2025 19:54:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739475250; cv=none; b=DcYgHhshj2liqpc6KwvfPQn/sUPwAVmaz4+uJ5jy6wpBuFqY7EhTIKd5MJghZQ3cd5dYrzF/SQCKGNn/8umRozwcwCpV4ngouLiRgQSt1nVCN9l77sdTZI5vO7QmhBVfTobQWxE2AhrBcG+dyouEoRhAuD9P0AnhpTuSxiQ/6pI=
+	t=1739476482; cv=none; b=L3CylrUQlDT1yx+jW30u5IHcqRN7zMbSQN3fn0V3rIyDy8ZGq/3NXO85bzQ+7/uKeQISJ3aiWBbGC/NBPrnuG2Smu+A+NFdow4F0ePvk72VWW8qhUreycV0bfaf858OFb3hi+fjiUDTxgFfUFWhDsa2cnLO+i7kC12Qn0fggd0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739475250; c=relaxed/simple;
-	bh=uxvsjaNh82I1/Ai/fST6DXeHd9m7K/+qT5V12SmKNto=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=I7gL2jOOUlXMGW8eYaHGyrYQlT4ZlJ3NixXPfaVuQjhLwt4Mi4/2FFiBOYQrSnViHzIe0aP19uWPhLydOa8oBFNyHJPGDndSxR8wwt1XpQFpfKTOuz6UBVQO19YRbWoFPDzzdPFrZyY/fK7lopAV2LG2JpahCGZpJv8b7Ov8U38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=habiQrF5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739476482; c=relaxed/simple;
+	bh=DTFVmRKr/sRy0lujQpNPmaprPhJHgvIYAyhefq5wfhs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JCby/zJTTfDJqEcwdyz8wWmt2FucZ1PpmSzfwb24U7nv+hq2j9wJNmFNp7nlHHcUQTRD7OvMoRjSdCPKShIlbx9Be3MDgmI+5iMQfYYdCfeCM8ylu3UxoAGLisPHwOZhuaHlat3m54I+PMpMbJX7Izws0Wfkl4qi4k/1T0BgrWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=MOnFxECN; arc=none smtp.client-ip=95.215.58.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="habiQrF5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A09A9C4CED1;
-	Thu, 13 Feb 2025 19:34:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739475249;
-	bh=uxvsjaNh82I1/Ai/fST6DXeHd9m7K/+qT5V12SmKNto=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=habiQrF52mK4Y+HokO0aZIYhVrmehI3PnkD7DXVK+BH104wyltvtNsLqAQbsv+GuX
-	 pBc8FSHmfH1ASrLHv4YgiSJH7vszpoEYe+jvILWUFMgNBd43DxQt19t36YCXCYCFmc
-	 VFnmHc0ygvHs94FD6NRMlukpe1dcVFQFc0rbF1RhHee+x4hZJWRcg1nouRL704l44n
-	 4mE2LPZAbSBvanFTpP3ZhUKZ49u0zDR/cxCkLf+nTwldPBpW8IjWvcWL6TxfL7kCDB
-	 SEQD7I401n7ANI8/jz10ufHNX6gbPETFzw3A/cQZ4ZKjudj1deJ6nVL0SfdywK+WnG
-	 XylqhC58Ip4Zw==
-Date: Thu, 13 Feb 2025 11:34:07 -0800
-From: Kees Cook <kees@kernel.org>
-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>
-CC: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, jeffxu@chromium.org,
- akpm@linux-foundation.org, jannh@google.com, torvalds@linux-foundation.org,
- vbabka@suse.cz, adhemerval.zanella@linaro.org, oleg@redhat.com,
- avagin@gmail.com, benjamin@sipsolutions.net, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org, linux-mm@kvack.org, jorgelo@chromium.org,
- sroettger@google.com, hch@lst.de, ojeda@kernel.org,
- thomas.weissschuh@linutronix.de, adobriyan@gmail.com,
- johannes@sipsolutions.net, pedro.falcato@gmail.com, hca@linux.ibm.com,
- willy@infradead.org, anna-maria@linutronix.de, mark.rutland@arm.com,
- linus.walleij@linaro.org, Jason@zx2c4.com, deller@gmx.de,
- rdunlap@infradead.org, davem@davemloft.net, peterx@redhat.com,
- f.fainelli@gmail.com, gerg@kernel.org, dave.hansen@linux.intel.com,
- mingo@kernel.org, ardb@kernel.org, mhocko@suse.com, 42.hyeyoo@gmail.com,
- peterz@infradead.org, ardb@google.com, enh@google.com, rientjes@google.com,
- groeck@chromium.org, mpe@ellerman.id.au, aleksandr.mikhalitsyn@canonical.com,
- mike.rapoport@gmail.com
-Subject: Re: [RFC PATCH v5 0/7] mseal system mappings
-User-Agent: K-9 Mail for Android
-In-Reply-To: <fyqlqgtbscwh4fiwmjtkb74k4ratlelwh2vzfyaeatbc3tcicb@5uvfy4hq5xde>
-References: <20250212032155.1276806-1-jeffxu@google.com> <b114f48a-a485-4ebd-9278-6c62a1f33d9c@lucifer.local> <202502121401.B6EF2D4517@keescook> <fyqlqgtbscwh4fiwmjtkb74k4ratlelwh2vzfyaeatbc3tcicb@5uvfy4hq5xde>
-Message-ID: <CD0870ED-6857-45EF-9C28-F27475964D71@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="MOnFxECN"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1739476468;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=239vtdGQF+N49EPmM+HoBTCJVsqE4ZMPXJ8M+TXlAZE=;
+	b=MOnFxECN+fL3mGdpw0PfKGtjVpIR4qzFZJS7s8hkyHScierwD8RT5IOCC+peRMIAn5bd5H
+	2tdgaamZDqpnENViNDU1Z/nXuJwm+1gc7EAMeh9HYFs8ysNcZQ96oZNIRhq/FTYmwItStz
+	uQI1aqFVR0zrKrSY3aXWuNab62/AcWk=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Don Brace <don.brace@microchip.com>,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	linux-hardening@vger.kernel.org,
+	Bart Van Assche <bvanassche@acm.org>,
+	storagedev@microchip.com,
+	linux-scsi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] scsi: hpsa: Replace deprecated strncpy() with strscpy()
+Date: Thu, 13 Feb 2025 20:53:33 +0100
+Message-ID: <20250213195332.1464-3-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
+strncpy() is deprecated for NUL-terminated destination buffers. Use
+strscpy() instead and remove the manual NUL-termination.
 
+Use min() to simplify the size calculation.
 
-On February 13, 2025 10:35:21 AM PST, "Liam R=2E Howlett" <Liam=2EHowlett@=
-oracle=2Ecom> wrote:
->* Kees Cook <kees@kernel=2Eorg> [250212 17:05]:
->> On Wed, Feb 12, 2025 at 11:24:35AM +0000, Lorenzo Stoakes wrote:
->> > On Wed, Feb 12, 2025 at 03:21:48AM +0000, jeffxu@chromium=2Eorg wrote=
-:
->> > > From: Jeff Xu <jeffxu@chromium=2Eorg>
->> > >
->> > > The commit message in the first patch contains the full description=
- of
->> > > this series=2E
->> >=20
->> > Sorry to nit, but it'd be useful to reproduce in the cover letter too=
-! But
->> > this obviously isn't urgent, just be nice when we un-RFC=2E
->>=20
->> I advised Jeff against this because I've found it can sometimes cause
->> "thread splitting" in that some people reply to the cover letter, and
->> some people reply to the first patch, etc=2E I've tended to try to keep
->> cover letters very general, with the bulk of the prose in the first
->> patch=2E
->
->Interesting idea, but I think thread splitting is less of a concern than
->diluting the meaning of a patch by including a lengthy change log with a
->fraction of the text being about the code that follows=2E
->
->I think this is the reason for a cover letter in the first place; not
->just version control=2E  After all, we could tack the version information
->into the first patch too and avoid it being in the final commit message=
-=2E
+Compile-tested only.
 
-Okay, so to be clear: you'd prefer to put the rationales and other stuff i=
-n the cover, and put more specific details in the first patch? I've not lik=
-ed this because cover letters aren't (except for akpm's trees) included any=
-where in git, which makes archeology much harder=2E
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Suggested-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+---
+Changes in v2:
+- Adjust len to copy the same number of bytes as with strncpy()
+- Link to v1: https://lore.kernel.org/r/34BB4FDE-062D-4C1B-B246-86CB55F631B8@linux.dev/
+---
+ drivers/scsi/hpsa.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
--Kees
+diff --git a/drivers/scsi/hpsa.c b/drivers/scsi/hpsa.c
+index 84d8de07b7ae..c7ebae24b09f 100644
+--- a/drivers/scsi/hpsa.c
++++ b/drivers/scsi/hpsa.c
+@@ -460,9 +460,8 @@ static ssize_t host_store_hp_ssd_smart_path_status(struct device *dev,
+ 
+ 	if (!capable(CAP_SYS_ADMIN) || !capable(CAP_SYS_RAWIO))
+ 		return -EACCES;
+-	len = count > sizeof(tmpbuf) - 1 ? sizeof(tmpbuf) - 1 : count;
+-	strncpy(tmpbuf, buf, len);
+-	tmpbuf[len] = '\0';
++	len = min(count + 1, sizeof(tmpbuf));
++	strscpy(tmpbuf, buf, len);
+ 	if (sscanf(tmpbuf, "%d", &status) != 1)
+ 		return -EINVAL;
+ 	h = shost_to_hba(shost);
+@@ -484,9 +483,8 @@ static ssize_t host_store_raid_offload_debug(struct device *dev,
+ 
+ 	if (!capable(CAP_SYS_ADMIN) || !capable(CAP_SYS_RAWIO))
+ 		return -EACCES;
+-	len = count > sizeof(tmpbuf) - 1 ? sizeof(tmpbuf) - 1 : count;
+-	strncpy(tmpbuf, buf, len);
+-	tmpbuf[len] = '\0';
++	len = min(count + 1, sizeof(tmpbuf));
++	strscpy(tmpbuf, buf, len);
+ 	if (sscanf(tmpbuf, "%d", &debug_level) != 1)
+ 		return -EINVAL;
+ 	if (debug_level < 0)
+-- 
+2.48.1
 
---=20
-Kees Cook
