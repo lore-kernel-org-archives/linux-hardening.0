@@ -1,80 +1,202 @@
-Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com [209.85.222.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62678202F7E;
-	Wed, 12 Feb 2025 22:44:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64D8B8828
+	for <linux-hardening@vger.kernel.org>; Thu, 13 Feb 2025 00:10:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739400294; cv=none; b=BE/21OY4zSzbEUKjL/mm/46XJW0cSqxQVMupb+Sf98Mlw1VUvsDSCkDafCA70Ydgk5S5QgvQN7rMc2Kso4Y2CvbUDCjt07jRwDCn99EZYfOdF1h7NrnmYG9GdR630svR9zB2DR29512xXqKhMkN77vjyhdMNBTWihUllD0J9n4w=
+	t=1739405455; cv=none; b=UKNlGUclGLEO3QNlSQxYp2TtOdaCwHt5R0KaDEZUwMCwMh4qx8iJaMph+yYIrtiloDGftF7+lbhqg/Np8CuRfMw3Wfvr6rOEYIHAZfvn5kfkwHmEuD8PSJ/xQFaN+I7iX5Y3w12nqN7ZuBiwBb5SLshgE1+dPKgyzgdlPrdQxPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739400294; c=relaxed/simple;
-	bh=z9K2SNQtTIdcySZ/ULm/lkM2yh+FA5LHsXlyB61Kgnk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ty3IGJy/d7GTA5QNbz3qGesZeCCgCYUeg3IHWCqcbhYbmxrMi/UImSLm7RMAO2Vm5qMn36hksdmKNyNOt1heL1SjsyNWG0kVgkfHw5ABIoZAaA9xeX7JGOkgxwA54yvARK/E0UjyHOYnZjnreo8oaxqLnx9UoWe0pjjpk9ZaWF0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=exhtteN2; arc=none smtp.client-ip=91.218.175.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1739405455; c=relaxed/simple;
+	bh=SifCzjX4GY5GN2rUJ8a5yh5rfxDC24HGCOd98DeaIb4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=t7AnC84eorpOEE3SBo84jnwAcZC9aQHxF4ywib7GUIOgnwSz+3dIH5KL+1xXDIckZOGeKbi87YeAk0obN5Ycjh88csusr4T8HXjx5Q2MzNAGyaTje8ifMV2iR20E9Do/g4BeErQcwl6eyLwZ6L3RAHVvPeUFesjx3DWOMzNeQGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EsMkzTfH; arc=none smtp.client-ip=209.85.222.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="exhtteN2"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1739400289;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=E/cxKPCvN17tUSvXSTT4NfZgXnCFHT0D3OhifJh6Y5M=;
-	b=exhtteN2rEMT63dC1GLSP/ATefmHrQFZ3zqoLIXAASHfg9XSlwjgpP6gY+xMpGK1s3jX1b
-	CEz1NViWMzjWTIJbke8phdr1clZ0ZISnSVuEdXdPb+TX6v2EZayYOj2A0Iz2wTmG5jzHGc
-	1cs4HxZ5jC0PwNIKI1xXEFRIrqBFToQ=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Don Brace <don.brace@microchip.com>,
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	linux-hardening@vger.kernel.org,
-	storagedev@microchip.com,
-	linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] scsi: hpsa: Replace deprecated strncpy() with strscpy_pad()
-Date: Wed, 12 Feb 2025 23:43:53 +0100
-Message-ID: <20250212224352.86583-3-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EsMkzTfH"
+Received: by mail-ua1-f53.google.com with SMTP id a1e0cc1a2514c-864e4f5b253so123923241.1
+        for <linux-hardening@vger.kernel.org>; Wed, 12 Feb 2025 16:10:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739405452; x=1740010252; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=s+WfHu/v5u/KfWiPWoeUIJ/AgU1PcO3O1k2ZFWW7w5c=;
+        b=EsMkzTfHZfKB8K2EWd4Cf1dwoDqLwkqBc5i0SbeyEeZG4DMz20nWPT10xodcREXCQ5
+         NPaN9UGXB9apCvROxz8FfI8hptTTNaJtsu2Mjv8X6SVYoToUEWI2BckhaVyfze+1ukOF
+         6THGobEFoAZAMUD2vL/GiN2MReNLSzLJXtm2DZyOS1ulJTsbghlpMuOLPWdbCfkShKIC
+         CplAZGNVF8qBtslAkTifgMwcBQ+vzv3wo0vcTs9o30zD6bCN96K2uTIiHpIKKjwgEvsM
+         IEZnqoz8haawfWup/d/rrFIuHm65zYeKYsgS5QXrNRDHU812FFQwl1LqeifO6MzI8N1m
+         YKuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739405452; x=1740010252;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=s+WfHu/v5u/KfWiPWoeUIJ/AgU1PcO3O1k2ZFWW7w5c=;
+        b=WL90LhaKU8P28ijIX2BQ4ippBlk/VGsj+PUICTybly8Lp/Jy6R+Ie9VSuxkGWkgzYs
+         DHdro9UkbfFnrLpzv1JvSiMd4jr2hnAEmfbpyQZ9DsLna+vn+2Kjj5QWjDC3GZaX3hnx
+         VDw5ymEWwlPCoXDdX/9S2hn2WcNRi//0fQqlkL0lrP5hXcvJnDecrTWqg8BSVDnzu88Q
+         QbcCXgFf9K6ZsRGPhQXIu/x5ScAiCfwKYbVqGRI0XOHQRmgXD5IEbOmV7kO3OX+TyJKe
+         BtnpZ5R6CPV2OCRon97FXqodqyAFdBwkK5cIHXAow2JPNsxddqmbLQ9N10gaxHAIrTRL
+         +HFw==
+X-Forwarded-Encrypted: i=1; AJvYcCUV6/9uyb/+y30khBzcPFN1eP+UICktw0aqVKL5scFnoyFJK5RB0ZJMXLiylGRGeiV58OpapLrGYOZcz7RVfgM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxA4wxgcGiJk7Z+gSVuCsrnX+xQUAhMQmd+0VabMbnsmmJCPc9G
+	aVzRT3SJHW0BTO1c8AbL3dhgIVZBaZ8x0D6KwxfXQ32t0q1dJJ81ITz29CBV+EckBeBKcWFx2Qn
+	EVUQTME4L8PEM0hHH6xXISUg9D9Wr+16+hTi0
+X-Gm-Gg: ASbGncvpo55VPPkpgwCtQ3P5aAOvRA3okOuBX7Fm/Kmo57rpUkjpj7PeWxmSYNg+8rM
+	onG/lJ/lc2tQc2KSOFNeQ9VHj7uH9cBxN0FKt5d/dQBX7HztcI1ziG6rrEhP1nvijYb6t8Nms71
+	CRVNhh6BFr99OB6AdsfPuD342ASA==
+X-Google-Smtp-Source: AGHT+IEUmixnq02JlWKfwvEaLZDC3tHu+8a5G6UODHmdG4Lm1heidGpNx7OzILYgZRHUPwr+ZA1zRmmMlpPG+CZd8NQ=
+X-Received: by 2002:a05:6102:2ad4:b0:4bb:5d61:1288 with SMTP id
+ ada2fe7eead31-4bbf231f56fmr6157553137.23.1739405452181; Wed, 12 Feb 2025
+ 16:10:52 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+References: <20250210174504.work.075-kees@kernel.org> <3biiqfwwvlbkvo5tx56nmcl4rzbq5w7u3kxn5f5ctwsolxpubo@isskxigmypwz>
+ <d11de4d4-1205-43d0-8a7d-a43d55a4f3eb@gmail.com>
+In-Reply-To: <d11de4d4-1205-43d0-8a7d-a43d55a4f3eb@gmail.com>
+From: Justin Stitt <justinstitt@google.com>
+Date: Wed, 12 Feb 2025 16:10:40 -0800
+X-Gm-Features: AWEUYZktjfLB0-Uv9mkLV-i_REAZ7bFxF9SxqOc292IN5aDUReN9RqbNh26rT8M
+Message-ID: <CAFhGd8om_1W7inq+V4a4EP3e5y1y+qw7C3wi3DR4WpspYzZenQ@mail.gmail.com>
+Subject: Re: [PATCH] net/mlx4_core: Avoid impossible mlx4_db_alloc() order value
+To: Tariq Toukan <ttoukan.linux@gmail.com>
+Cc: Kees Cook <kees@kernel.org>, Tariq Toukan <tariqt@nvidia.com>, 
+	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Yishai Hadas <yishaih@nvidia.com>, netdev@vger.kernel.org, linux-rdma@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-strncpy() is deprecated for NUL-terminated destination buffers [1].
+On Tue, Feb 11, 2025 at 6:22=E2=80=AFAM Tariq Toukan <ttoukan.linux@gmail.c=
+om> wrote:
+>
+>
+>
+> On 11/02/2025 2:01, Justin Stitt wrote:
+> > On Mon, Feb 10, 2025 at 09:45:05AM -0800, Kees Cook wrote:
+> >> GCC can see that the value range for "order" is capped, but this leads
+> >> it to consider that it might be negative, leading to a false positive
+> >> warning (with GCC 15 with -Warray-bounds -fdiagnostics-details):
+> >>
+> >> ../drivers/net/ethernet/mellanox/mlx4/alloc.c:691:47: error: array sub=
+script -1 is below array bounds of 'long unsigned int *[2]' [-Werror=3Darra=
+y-bounds=3D]
+> >>    691 |                 i =3D find_first_bit(pgdir->bits[o], MLX4_DB_=
+PER_PAGE >> o);
+> >>        |                                    ~~~~~~~~~~~^~~
+> >>    'mlx4_alloc_db_from_pgdir': events 1-2
+> >>    691 |                 i =3D find_first_bit(pgdir->bits[o], MLX4_DB_=
+PER_PAGE >> o);                        |                     ^~~~~~~~~~~~~~=
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >>        |                     |                         |              =
+                                     |                     |               =
+          (2) out of array bounds here
+> >>        |                     (1) when the condition is evaluated to tr=
+ue                             In file included from ../drivers/net/etherne=
+t/mellanox/mlx4/mlx4.h:53,
+> >>                   from ../drivers/net/ethernet/mellanox/mlx4/alloc.c:4=
+2:
+> >> ../include/linux/mlx4/device.h:664:33: note: while referencing 'bits'
+> >>    664 |         unsigned long          *bits[2];
+> >>        |                                 ^~~~
+> >>
+> >> Switch the argument to unsigned int, which removes the compiler needin=
+g
+> >> to consider negative values.
+> >>
+> >> Signed-off-by: Kees Cook <kees@kernel.org>
+> >> ---
+> >> Cc: Tariq Toukan <tariqt@nvidia.com>
+> >> Cc: Andrew Lunn <andrew+netdev@lunn.ch>
+> >> Cc: "David S. Miller" <davem@davemloft.net>
+> >> Cc: Eric Dumazet <edumazet@google.com>
+> >> Cc: Jakub Kicinski <kuba@kernel.org>
+> >> Cc: Paolo Abeni <pabeni@redhat.com>
+> >> Cc: Yishai Hadas <yishaih@nvidia.com>
+> >> Cc: netdev@vger.kernel.org
+> >> Cc: linux-rdma@vger.kernel.org
+> >> ---
+> >>   drivers/net/ethernet/mellanox/mlx4/alloc.c | 6 +++---
+> >>   include/linux/mlx4/device.h                | 2 +-
+> >>   2 files changed, 4 insertions(+), 4 deletions(-)
+> >>
+> >> diff --git a/drivers/net/ethernet/mellanox/mlx4/alloc.c b/drivers/net/=
+ethernet/mellanox/mlx4/alloc.c
+> >> index b330020dc0d6..f2bded847e61 100644
+> >> --- a/drivers/net/ethernet/mellanox/mlx4/alloc.c
+> >> +++ b/drivers/net/ethernet/mellanox/mlx4/alloc.c
+> >> @@ -682,9 +682,9 @@ static struct mlx4_db_pgdir *mlx4_alloc_db_pgdir(s=
+truct device *dma_device)
+> >>   }
+> >>
+> >>   static int mlx4_alloc_db_from_pgdir(struct mlx4_db_pgdir *pgdir,
+> >> -                                struct mlx4_db *db, int order)
+> >> +                                struct mlx4_db *db, unsigned int orde=
+r)
+> >>   {
+> >> -    int o;
+> >> +    unsigned int o;
+> >>      int i;
+> >>
+> >>      for (o =3D order; o <=3D 1; ++o) {
+> >
+> >    ^ Knowing now that @order can only be 0 or 1 can this for loop (and
+> >    goto) be dropped entirely?
+> >
+>
+> Maybe I'm missing something...
+> Can you please explain why you think this can be dropped?
 
-Replace memset() and strncpy() with strscpy_pad() to copy the version
-string and fill the remaining bytes in the destination buffer with NUL
-bytes. This avoids zeroing the memory before copying the string.
+I meant "rewritten to use two if statements" instead of "dropped". I
+think "replaced" or "refactored" was the word I wanted.
 
-Compile-tested only.
-
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
- drivers/scsi/hpsa.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/scsi/hpsa.c b/drivers/scsi/hpsa.c
-index 84d8de07b7ae..1334886b68d0 100644
---- a/drivers/scsi/hpsa.c
-+++ b/drivers/scsi/hpsa.c
-@@ -7238,8 +7238,7 @@ static int hpsa_controller_hard_reset(struct pci_dev *pdev,
- 
- static void init_driver_version(char *driver_version, int len)
- {
--	memset(driver_version, 0, len);
--	strncpy(driver_version, HPSA " " HPSA_DRIVER_VERSION, len - 1);
-+	strscpy_pad(driver_version, HPSA " " HPSA_DRIVER_VERSION, len - 1);
- }
- 
- static int write_driver_ver_to_cfgtable(struct CfgTable __iomem *cfgtable)
--- 
-2.48.1
-
+>
+>
+> >    The code is already short and sweet so I don't feel strongly either
+> >    way.
+> >
+> >> @@ -712,7 +712,7 @@ static int mlx4_alloc_db_from_pgdir(struct mlx4_db=
+_pgdir *pgdir,
+> >>      return 0;
+> >>   }
+> >>
+> >> -int mlx4_db_alloc(struct mlx4_dev *dev, struct mlx4_db *db, int order=
+)
+> >> +int mlx4_db_alloc(struct mlx4_dev *dev, struct mlx4_db *db, unsigned =
+int order)
+> >>   {
+> >>      struct mlx4_priv *priv =3D mlx4_priv(dev);
+> >>      struct mlx4_db_pgdir *pgdir;
+> >> diff --git a/include/linux/mlx4/device.h b/include/linux/mlx4/device.h
+> >> index 27f42f713c89..86f0f2a25a3d 100644
+> >> --- a/include/linux/mlx4/device.h
+> >> +++ b/include/linux/mlx4/device.h
+> >> @@ -1135,7 +1135,7 @@ int mlx4_write_mtt(struct mlx4_dev *dev, struct =
+mlx4_mtt *mtt,
+> >>   int mlx4_buf_write_mtt(struct mlx4_dev *dev, struct mlx4_mtt *mtt,
+> >>                     struct mlx4_buf *buf);
+> >>
+> >> -int mlx4_db_alloc(struct mlx4_dev *dev, struct mlx4_db *db, int order=
+);
+> >> +int mlx4_db_alloc(struct mlx4_dev *dev, struct mlx4_db *db, unsigned =
+int order);
+> >>   void mlx4_db_free(struct mlx4_dev *dev, struct mlx4_db *db);
+> >>
+> >>   int mlx4_alloc_hwq_res(struct mlx4_dev *dev, struct mlx4_hwq_resourc=
+es *wqres,
+> >> --
+> >> 2.34.1
+> >>
+> >
+> > Justin
+> >
+>
