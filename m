@@ -1,106 +1,112 @@
-Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C99B281346
-	for <linux-hardening@vger.kernel.org>; Thu, 13 Feb 2025 14:20:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.174
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E38E1C07C3;
+	Thu, 13 Feb 2025 14:54:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739456448; cv=none; b=r+NNG8PkANXzVnURulxhiRNug+WDoVMkiusWQpYyOXU+g8yj+630SA+4tAk/6qu0jwmI5QGijYFaNLuHbVAV66aTuL/ROV3Zs14Ey1p8oFC9VGthjnYn3ASmcVMODzKb33Oj7I6EYGEpvlBKqSfiVHa4AbyKqSI5LALLxj2aG/M=
+	t=1739458490; cv=none; b=h2E4TV5TJGOqWBnP81coFg/SjtBOjAD5k8KMvgOMLNGFJTwN9JBKnN5ypnmCXfEV1XNt31dUYHyH2awofrIWDULV4w2gw8k3BShVOzO0Elz1k229msHyPE7JCADDZOCsnEHwzrZfYnJczk08MfRyj3llqMZRs015aI+hqsRBSr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739456448; c=relaxed/simple;
-	bh=W4UC5h0oxNGNf3Gcc3aP7t6L4iCexNLWYlMLrbpEbw4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fLxjwg23JwjQ/Ov1m+Bgecrg2QVkK+5v9BPUf3FWC2Whe8A629VPAcx4PJukcAyCtNv5+4s/I1v8cYkSAJrGUsbYrvwlmqzeaygGbyIZDVxCccwVusx03spRfb9uJ2MtprkiCktJhBlqgrj8b66lCb8XFoEo+PFboKlnFphXbFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Nk1bX0/t; arc=none smtp.client-ip=209.85.167.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Nk1bX0/t"
-Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-3f20f9eef03so17599b6e.1
-        for <linux-hardening@vger.kernel.org>; Thu, 13 Feb 2025 06:20:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1739456445; x=1740061245; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W4UC5h0oxNGNf3Gcc3aP7t6L4iCexNLWYlMLrbpEbw4=;
-        b=Nk1bX0/t+Wg49Sud9aF9L+2146eGOZuquDOs5M0/wQOW2ELLDgm8X5PcIkXjDU3GZ4
-         cq+WlyvY0NGPdO+wztGfkzOcquMjsSB3Ipid9Y2dcQsQ/fDXgDsiHUk9G9sQYt897+Gp
-         v8QGP8A1CMTYxrZHrO0oNSiyerKOi/i7DXlO0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739456445; x=1740061245;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=W4UC5h0oxNGNf3Gcc3aP7t6L4iCexNLWYlMLrbpEbw4=;
-        b=PLquaPQpUMEA8O+wa0/aOxTeG2JZz3+KhQ3yMjJGNc3W61h/gl57vPLkH78iiF12Fv
-         MSP4VFfLhPnePaREG3LaTmQo2uauNcVo8yp0yuWFaTNHVnnv6l5eW0ADxDBnB+q3LrU+
-         jRrItY7TJeHPHUExW5jQW8yM3WDPyio6gW7omBxtkJ4m+zLzTWtDNmRmtzY94GVOCek3
-         7L+FpWPu08nt7at96sRuvDvrgJJ7hk+/vsarDXOfNu1no9Ce/xsKf0YiOvuAeu4CTgdZ
-         R0SlRMBCNqysCX3X2A3bKNh3abfHzGFjDz6WI/eodU9qaOH2BEIH+G4hZI1rFTnZ/caz
-         xj8w==
-X-Forwarded-Encrypted: i=1; AJvYcCWihS6jlzHGMPALwI03NoieQCBqlV+Oj/gAS//aRyxuJx6+t9Mc09X+F9UDpifG1oN5y2NpfeiykZpkPEB1Wmw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyy0U5RgCtaNkmiGfYsslOCa2n2bxRLykZk96Jn1wl9O9oociW+
-	YVO83PWfV2xSBY9vIZvZkku+LKvEWNE1SepiQ/Q9OjzVBaA7PL0cNIatGTYzWy8iyRu0JgciAIT
-	GntqFRh4eSNIsDkyGpbhTgIntyzAzAsgUry4q
-X-Gm-Gg: ASbGncuqBfNJiDkKOMH2KEAmLpQ2H2T2y1D9BBJemxKcHsWpZ4k0IUwd5HqPiSm9c/g
-	voI1p2DBuwD+/MdGmSvzkw0+mDNh/vawUwNmyRziTBccjAzhCx7WaYdC+79spLO2Z8QrBkq+n1z
-	5feSdgMbWsmmnVBr5k8oneJtACr2YW+Q==
-X-Google-Smtp-Source: AGHT+IGAXPpwFZ7DOEudMrOlVqjPC+LaHLP+X27Z9YtQOz9iiB2ORSQ7DxYPkmOMw4okkqdaC7PyOXVEXg9CiOpB7yg=
-X-Received: by 2002:a05:6870:14cc:b0:29e:73f6:ee8b with SMTP id
- 586e51a60fabf-2b8d68c8a25mr1609549fac.12.1739456445551; Thu, 13 Feb 2025
- 06:20:45 -0800 (PST)
+	s=arc-20240116; t=1739458490; c=relaxed/simple;
+	bh=IfuxON9f1+mt0J5dXUHTZ8LLFpSbXwaRfsyQDzivT8Y=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=UJrM0RBeevITjjeqUjjHl4dQljGs6DLenBg39/+qlANSNvHiiS0p5EgPRwAvveqwcyas4QiFHtEVFbCfgX0TOn3ljCz4aAT1A9kqGiFwhFVLAUtcUl7C2WKG12Bo6gBPGxg0eCy0G63Mf6FZY5d8OJ+YBSCh7vSOgFsMm3XPW6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2C074106F;
+	Thu, 13 Feb 2025 06:55:08 -0800 (PST)
+Received: from [10.44.160.94] (e126510-lin.lund.arm.com [10.44.160.94])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 677FC3F58B;
+	Thu, 13 Feb 2025 06:54:42 -0800 (PST)
+Message-ID: <c16a24b9-1258-4976-827d-db3335bf6e83@arm.com>
+Date: Thu, 13 Feb 2025 15:54:40 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250212032155.1276806-1-jeffxu@google.com> <b114f48a-a485-4ebd-9278-6c62a1f33d9c@lucifer.local>
- <202502121401.B6EF2D4517@keescook>
-In-Reply-To: <202502121401.B6EF2D4517@keescook>
-From: Jeff Xu <jeffxu@chromium.org>
-Date: Thu, 13 Feb 2025 06:20:33 -0800
-X-Gm-Features: AWEUYZl-9kl58flpzB7gHde-CGvyUjvurrYBhAejrmr0ps8oWaWIhTMUJXeqP18
-Message-ID: <CABi2SkVMzeerqeFcmGxVwB+uNeZDmRPF5Nd1oicUXJuAFnHB=g@mail.gmail.com>
-Subject: Re: [RFC PATCH v5 0/7] mseal system mappings
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v3 00/15] pkeys-based page table hardening
+From: Kevin Brodsky <kevin.brodsky@arm.com>
 To: Kees Cook <kees@kernel.org>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, akpm@linux-foundation.org, jannh@google.com, 
-	torvalds@linux-foundation.org, vbabka@suse.cz, Liam.Howlett@oracle.com, 
-	adhemerval.zanella@linaro.org, oleg@redhat.com, avagin@gmail.com, 
-	benjamin@sipsolutions.net, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-mm@kvack.org, jorgelo@chromium.org, 
-	sroettger@google.com, hch@lst.de, ojeda@kernel.org, 
-	thomas.weissschuh@linutronix.de, adobriyan@gmail.com, 
-	johannes@sipsolutions.net, pedro.falcato@gmail.com, hca@linux.ibm.com, 
-	willy@infradead.org, anna-maria@linutronix.de, mark.rutland@arm.com, 
-	linus.walleij@linaro.org, Jason@zx2c4.com, deller@gmx.de, 
-	rdunlap@infradead.org, davem@davemloft.net, peterx@redhat.com, 
-	f.fainelli@gmail.com, gerg@kernel.org, dave.hansen@linux.intel.com, 
-	mingo@kernel.org, ardb@kernel.org, mhocko@suse.com, 42.hyeyoo@gmail.com, 
-	peterz@infradead.org, ardb@google.com, enh@google.com, rientjes@google.com, 
-	groeck@chromium.org, mpe@ellerman.id.au, aleksandr.mikhalitsyn@canonical.com, 
-	mike.rapoport@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Andrew Morton <akpm@linux-foundation.org>, Mark Brown <broonie@kernel.org>,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>, Jann Horn <jannh@google.com>,
+ Jeff Xu <jeffxu@chromium.org>, Joey Gouly <joey.gouly@arm.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Andy Lutomirski <luto@kernel.org>,
+ Marc Zyngier <maz@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Pierre Langlois <pierre.langlois@arm.com>,
+ Quentin Perret <qperret@google.com>, "Mike Rapoport (IBM)"
+ <rppt@kernel.org>, Ryan Roberts <ryan.roberts@arm.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
+ Matthew Wilcox <willy@infradead.org>, Qi Zheng <zhengqi.arch@bytedance.com>,
+ linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org, x86@kernel.org
+References: <20250203101839.1223008-1-kevin.brodsky@arm.com>
+ <202502061422.517A57F8@keescook>
+ <fd101c51-d3fc-4a4f-afcc-364b8d3c4a0b@arm.com>
+Content-Language: en-GB
+In-Reply-To: <fd101c51-d3fc-4a4f-afcc-364b8d3c4a0b@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 12, 2025 at 2:05=E2=80=AFPM Kees Cook <kees@kernel.org> wrote:
+On 10/02/2025 15:23, Kevin Brodsky wrote:
+> [...]
 >
-> > It'd be nice to update the documentation to have a list of 'known
-> > problematic userland software with sealed VDSO' so we make people aware=
-.
+>>> Any comment or feedback will be highly appreciated, be it on the
+>>> high-level approach or implementation choices!
+>> As hinted earlier with my QEMU question... what's the best way I can I
+>> test this myself? :)
+> As mentioned above I tested this series on Arm FVP. By far the easiest
+> way to run some custom kernel/rootfs on FVP is to use the Shrinkwrap
+> tool [3]. First install it following the quick start guide [4] (I would
+> recommend using the Docker backend if possible). Then build the firmware
+> stack using:
 >
-> I like this idea! Probably in mseal.rst, as the Kconfig help already
-> points there.
+> $ shrinkwrap build -o arch/v9.0.yaml ns-edk2.yaml
 >
-Will update mseal.rst to include the above suggestion in the next version.
-
-Thanks
--Jeff
-
-> -Kees
-
-
+> To make things easy, the runtime configuration can be stored in a file.
+> Create ~/.shrinkwrap/config/poe.yaml with the following contents:
 >
-> --
-> Kees Cook
+> ----8<----
+>
+> %YAML 1.2
+> ---
+> layers:
+>   - arch/v9.0.yaml
+
+Apologies, this is incorrect - it will not work with the most recent FVP
+builds. POE is a v9.4 feature so this line should be replaced with:
+
+> - arch/v9.4.yaml
+
+(No need to change the shrinkwrap build line, it only matters for the
+FVP runtime parameters.)
+
+- Kevin
+
+> run:
+>   rtvars:
+>     CMDLINE:
+>       type: string
+>       # nr_cpus=1 can be added to speed up the boot
+>       value: console=ttyAMA0 earlycon=pl011,0x1c090000 root=/dev/vda rw
+>   params:
+>     -C cluster0.has_permission_overlay_s1: 1
+>     -C cluster1.has_permission_overlay_s1: 1
+>
+> ----8<----
+>
+> Finally start FVP using:
+>
+> $ shrinkwrap run -o poe.yaml ns-edk2.yaml -r
+> KERNEL=<out>/arch/arm64/boot/Image -r ROOTFS=<rootfs.img>
+>
+> (Use Ctrl-] to terminate the model if needed.)
+>
+> <rootfs.img> is a file containing the root filesystem (in raw format,
+> e.g. ext4). The kernel itself is built as usual (defconfig works just
+> fine), just make sure to select CONFIG_KPKEYS_HARDENED_PGTABLES to
+> enable the feature. You can also select
+> CONFIG_KPKEYS_HARDENED_PGTABLES_TEST to run the tests in patch 15.
