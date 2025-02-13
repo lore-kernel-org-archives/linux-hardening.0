@@ -1,42 +1,48 @@
-Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63053227EB6
-	for <linux-hardening@vger.kernel.org>; Thu, 13 Feb 2025 11:41:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DF67215059;
+	Thu, 13 Feb 2025 12:06:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739446890; cv=none; b=Roq4RO/E38jkjYHsLljTtU9aaUs+zS0pklQII7vVUq/tR7DDmV9/JEka8M6FVZV0ZbuxY1LhIrnGPQPwf+Y9dSqb6sdabW6zR0aFIZycuBrhLOYZJ0iKnzIRWFxi7UiB4Py1WbbVeOt3MW/ZOqSXtGpH6S//tpgxinOL7bnvoDk=
+	t=1739448388; cv=none; b=kVu37ZLcvZiFthsn3P01+pv2wFAqGefd9CR0GZRgOAtyGWIUy8PxFJNzCJnLw8X3N8TOFw4rU4Anms9VrH1rPZqrRM4Tfvu9W4R9gHOKXGnvDJWATIIYfoFBhlEdmVCyOiKRfK9MLaTDuZJn7vI3C+m0fa/zbu8c2rj7vZBZ6O8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739446890; c=relaxed/simple;
-	bh=+qKUAWjFc48ziEJIkUk+8ESw3UmXJzNOpYUOg1HgaSs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TCxorgN49PbK2jod4zMP7Aq9qy3k66tT8wdj5t/CPg99EdgkJ72mcBNfnBWIKAQkbd0eUGcLUZLTGdZ8wDmCC1CXvijK9M0kYAouXQVYUd0lUhurfPzfpK7ChGeRRGG3gol0kGafFPJmVlsYV5sK9s1BHLtytCot+9Tmjj3j2Zs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=naKAqAbs; arc=none smtp.client-ip=95.215.58.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1739448388; c=relaxed/simple;
+	bh=/wM8GJMjDr++3muLjDT+A1c8YGcYigrvRmRrvP2JhqM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=s1I99PyVEArnCdZv42Eq00ryhk1aiuptCc9ieS5Um98ISLspmYimIzwtnpHm38mini9EJSn1SPWAUMcNKRNPSLA+NTsfrP7hWRhRTcjEURDYyMcxs45d3dzokWt23e5wZWsAcoc3VKrVEQUzE+nkCIwWJKPY0BMKdUA8i2w/4ik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KsakIyUP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="naKAqAbs"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1739446880;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=ML720xXgLDVS1KuIyxe6zn7F10AobIzF856LOQXCS0o=;
-	b=naKAqAbsp+YtigXKI1sWgYo5jQhp7EUIniFG0D5o7qPUY9f+wlVu6JZVYie6SAddb5woy2
-	3cpyd5IKgTpUiBonCbEIwS7X4o4CoMZUvj6pNOwQdV+dU10C/lIPYFXqv/3ervuT9zNySV
-	iVGnZjzJvyPevBl1yjpwc84DSM3gsd4=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Don Brace <don.brace@microchip.com>,
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	linux-hardening@vger.kernel.org,
-	storagedev@microchip.com,
-	linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] scsi: hpsa: Replace deprecated strncpy() with strscpy_pad()
-Date: Thu, 13 Feb 2025 12:40:48 +0100
-Message-ID: <20250213114047.2366-2-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KsakIyUP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD2C2C4AF0B;
+	Thu, 13 Feb 2025 12:06:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739448387;
+	bh=/wM8GJMjDr++3muLjDT+A1c8YGcYigrvRmRrvP2JhqM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=KsakIyUP6InZZhoVKGUXXS+hqMFFVMUxosTtPp4R4ZmhZvyV0/tKDNcPIX0ai+fkR
+	 V3TyQlUUWJ6hL/fvH7DnXhmgaC49009azkIfXrPIcWVe6Tlq3n6XKphRmEXb31T2CW
+	 WChLAGQnxA4fOtxhBkJONZTZbJZkdGSI7pKJhlrEAOFp3kNg9ejGFMGxBK3Q+88Z+v
+	 qsDwzIzrPXDoWHGSRE8/hfiDQwfRDGngpCDjlbow9nCg8Lp9+unnXRsSeqqCg66Fbd
+	 XAz3+Mk2XT7f9gjFFZw1E67H17ooOLGcUn4/zZdGQYyIhSyJmodfHiAxM0LsHdlovK
+	 DnTnDKZ8W9RwA==
+Received: from mchehab by mail.kernel.org with local (Exim 4.98)
+	(envelope-from <mchehab+huawei@kernel.org>)
+	id 1tiXz7-0000000BIUz-1GYb;
+	Thu, 13 Feb 2025 13:06:25 +0100
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>
+Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <mchehab+huawei@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	linux-arch@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH RFCv2 0/5]Implement kernel-doc in Python
+Date: Thu, 13 Feb 2025 13:06:13 +0100
+Message-ID: <cover.1739447912.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -44,40 +50,67 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-strncpy() is deprecated for NUL-terminated destination buffers. Replace
-memset() and strncpy() with strscpy_pad() to copy the version string and
-fill the remaining bytes in the destination buffer with NUL bytes. This
-avoids zeroing the memory before copying the string.
+Hi Jon,
 
-Compile-tested only.
+That's the second version of the Python kernel-doc tool.
 
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
-Changes in v2:
-- Use len instead of len - 1
-- Link to v1: https://lore.kernel.org/r/20250212224352.86583-3-thorsten.blum@linux.dev/
----
- drivers/scsi/hpsa.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+As the previous version, I tried to stay as close as possible of the original
+Perl implementation, as it helps to double check if each function was 
+properly translated to Python.  This have been helpful debugging troubles
+that happened during the conversion.
 
-diff --git a/drivers/scsi/hpsa.c b/drivers/scsi/hpsa.c
-index c7ebae24b09f..968cefb497eb 100644
---- a/drivers/scsi/hpsa.c
-+++ b/drivers/scsi/hpsa.c
-@@ -7236,8 +7236,7 @@ static int hpsa_controller_hard_reset(struct pci_dev *pdev,
- 
- static void init_driver_version(char *driver_version, int len)
- {
--	memset(driver_version, 0, len);
--	strncpy(driver_version, HPSA " " HPSA_DRIVER_VERSION, len - 1);
-+	strscpy_pad(driver_version, HPSA " " HPSA_DRIVER_VERSION, len);
- }
- 
- static int write_driver_ver_to_cfgtable(struct CfgTable __iomem *cfgtable)
+On this version, the ReST output for the files included under Documentation
+is identical to the perl version, except for:
+
+ - blank lines;
+ - white spaces;
+ - this version suppresses return (and description) sections on a few places
+   where this is left in blank.
+
+This version also replaces the old script by the new one for doc generation,
+to make easier to test its results.
+
+It should be noticed that  there are some sutile nuances on the way Perl 
+and Python handle  regular expressions. In particular, Perl compiled 
+expressions with qr{}  behaves as non-capturing groups, sometimes optional
+ones. I documented it on one place, but I had to use non-capturing groups
+on other parts of the logic to achieve the desired results.
+
+This version is on a minimal integration scenario: it just replaces the
+exec file to use the new one and gets rid of an obsolete parameter
+as on this version I didn't implement support for Sphinx < 3.1.
+
+On other words, it assumes that the patch requiring Sphinx >= 3.4
+will be merged.
+
+I also didn't remove on this series the old kernel-doc script, as this makes
+easier to test both variations, e. g. using:
+
+	make cleandocs && make KERNELDOC=scripts/kernel-doc htmldocs
+
+will make it use the original Perl version.
+
+Comments?
+
+Mauro Carvalho Chehab (5):
+  include/asm-generic/io.h: fix kerneldoc markup
+  scripts/kernel-doc: remove an obscure logic from kernel-doc
+  scripts/kernel-doc: don't add not needed new lines
+  scripts/kernel-doc.py: add a Python parser
+  docs: use kernel-doc.py script for kerneldoc output
+
+ Documentation/Makefile            |    2 +-
+ Documentation/conf.py             |    2 +-
+ Documentation/sphinx/kerneldoc.py |    5 -
+ include/asm-generic/io.h          |    6 +-
+ scripts/kernel-doc                |   23 +-
+ scripts/kernel-doc.py             | 2752 +++++++++++++++++++++++++++++
+ 6 files changed, 2762 insertions(+), 28 deletions(-)
+ create mode 100755 scripts/kernel-doc.py
+
 -- 
 2.48.1
+
 
