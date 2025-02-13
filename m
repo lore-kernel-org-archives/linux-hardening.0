@@ -1,140 +1,107 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72F64266B54;
-	Thu, 13 Feb 2025 20:47:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68C6E1FFC59;
+	Thu, 13 Feb 2025 20:53:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739479668; cv=none; b=rJiVBRJt2xPbyo3GeqtVo3yutX3X9s7R0U6eJkf3R+AtGRo6Abum0CQQ8idHpT+JbOWJ5OaKwsL7o6yCmqVvc4BLWtu2CXrsK311aObKr2vF6IWSQQqru82hgVevg9UG30SPEKQMFOwGIjQCHR3TROrJD6bp/hm4YWi08oisckM=
+	t=1739480009; cv=none; b=hdkQXCyplVCJJwEGQKK36JqY3MD3IEYhTKwVDjxYh/yZNFU5SkWD2hgPnJz7YVGBMxWD57rlDvnWjnd4WHke7rDwZxk5cn3Iz6szs5Q4TYa2ckwSKayIFjd9cvsjQ3Vk3N7Tc6JfOKAvUDubSY/Jb34FNx3qhS7J/JvtciwnXTU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739479668; c=relaxed/simple;
-	bh=xsAbZvVEr/6Fsigt2bodFoyIOZi8VkbXaR8jtN+QkDQ=;
+	s=arc-20240116; t=1739480009; c=relaxed/simple;
+	bh=RAQR5ntAmHQ/Wq8vp+BLtvwDDGIGaKQbSbNQFKN2iOw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZvpC/b30Rqsv2H3mug0rBxM0Z8XgLnLWyatdDysuFjPnXZzE+mXiv/MEXMiyvp0YO9O14eZZhxWa/DaWVh/Q+KI/Rf6t+Txo01Iedn2smyYtVmBB/SxlDLAqyNzmWjhTQvGVCrP2OgkDaLDj0u7/hWUwguVd+vECq3jfDtQ1FT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VbIPR2EJ; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=iOvh3S15a2A1fX3ze6u2jnVRQyOc6MqCz9pkXephaCkp63ZIjrY/mMemHoFj4dxY12uw/n9wVzv1ZGsNWz15lFoSl69BOnF3jss4uRR5rJ6iwDIzscW4P4Rd8wNi6p+V99lgYOFz0+UpxYMkX7HuPJFyD4GK01aMzmpqjIIQ2XQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LSbKAPPL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VbIPR2EJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA490C4CED1;
-	Thu, 13 Feb 2025 20:47:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LSbKAPPL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4577C4CED1;
+	Thu, 13 Feb 2025 20:53:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739479667;
-	bh=xsAbZvVEr/6Fsigt2bodFoyIOZi8VkbXaR8jtN+QkDQ=;
+	s=k20201202; t=1739480008;
+	bh=RAQR5ntAmHQ/Wq8vp+BLtvwDDGIGaKQbSbNQFKN2iOw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VbIPR2EJry14RyYsG9OCmVXECu2vsr0QZbP5dy8vQ+3FZtIl/NpwkB5HEH5/fh4us
-	 INQLijhO1RSLiewpXCDSOHETuy1rT42+mCLSnaiqRvT6KLftMmuV3p1Em0FQdkKusT
-	 e/51FOAu7XdYFlKIUjMrzgsvwdMBQgNHYojfPcPEm/j1heAvzysaBaOoTBtGo0M265
-	 HE+W36jwO68BOszt/wtWJS+7cePSXs8gdBUBcM2RAi4Nd6KMsOBna6wYdqHf+knkZO
-	 EX9iZ0yF3+UnbED0ge0nACKO0T1Wm6ME+68+NqBSZ+nZGq1KAzJrBo0HdTeCq97LTF
-	 AsmW36O62vZlA==
-Date: Thu, 13 Feb 2025 12:47:47 -0800
+	b=LSbKAPPL0evS7fkicTq6YNTcGHDs05DRQxIV8OQcZPfJSoPvfsomXCSQY/MR6zNGb
+	 ckqpDeiqCfIPWZa5ZYn3dgU3tacLW96mvvlajIgz41wbeTaVA4a1//RvrwWsc4TDnL
+	 wgQKTzrJIBvWnFFNZEr77SFEVQ9O5H4hBnJfCGHDYoHkcgqa+sDT9dbwuBi5XWEl6A
+	 dv4jF8Dw7eS7PF96LfhgTT2ROksB6EcA/wNvDtLoRofemNimnj4gKlhKosr8PMAo9z
+	 mXeTKIHhyiw2ozpsSTtWa1PGdfNr2nLhtOA1BLDf92ber1yojbh+1EmY5clWG3Gdtc
+	 kh0+MGSZgQ3CQ==
+Date: Thu, 13 Feb 2025 12:53:28 -0800
 From: Kees Cook <kees@kernel.org>
-To: Pedro Falcato <pedro.falcato@gmail.com>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, jeffxu@chromium.org,
-	akpm@linux-foundation.org, jannh@google.com,
-	torvalds@linux-foundation.org, vbabka@suse.cz,
-	Liam.Howlett@oracle.com, adhemerval.zanella@linaro.org,
-	oleg@redhat.com, avagin@gmail.com, benjamin@sipsolutions.net,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	linux-mm@kvack.org, jorgelo@chromium.org, sroettger@google.com,
-	hch@lst.de, ojeda@kernel.org, thomas.weissschuh@linutronix.de,
-	adobriyan@gmail.com, johannes@sipsolutions.net, hca@linux.ibm.com,
-	willy@infradead.org, anna-maria@linutronix.de, mark.rutland@arm.com,
-	linus.walleij@linaro.org, Jason@zx2c4.com, deller@gmx.de,
-	rdunlap@infradead.org, davem@davemloft.net, peterx@redhat.com,
-	f.fainelli@gmail.com, gerg@kernel.org, dave.hansen@linux.intel.com,
-	mingo@kernel.org, ardb@kernel.org, mhocko@suse.com,
-	42.hyeyoo@gmail.com, peterz@infradead.org, ardb@google.com,
-	enh@google.com, rientjes@google.com, groeck@chromium.org,
-	mpe@ellerman.id.au, aleksandr.mikhalitsyn@canonical.com,
-	mike.rapoport@gmail.com
-Subject: Re: [RFC PATCH v5 0/7] mseal system mappings
-Message-ID: <202502131240.A57C749@keescook>
-References: <20250212032155.1276806-1-jeffxu@google.com>
- <b114f48a-a485-4ebd-9278-6c62a1f33d9c@lucifer.local>
- <CAKbZUD0TAX8F9kDCEEvGSbcegDD4GLyra3ewtxncBbs45WJZ3g@mail.gmail.com>
- <7545d5eb-a16e-4cc8-a9e3-5431be01aade@lucifer.local>
- <CAKbZUD3kaYEqQFU1TWfJWvtV02ESaMb0_ygadGgeAKo-b+GRcA@mail.gmail.com>
+To: Andrew Cooper <andrew.cooper3@citrix.com>
+Cc: jannh@google.com, jmill@asu.edu, joao@overdrivepizza.com,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	luto@kernel.org, samitolvanen@google.com,
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>
+Subject: Re: [RFC] Circumventing FineIBT Via Entrypoints
+Message-ID: <202502131248.B6CC333@keescook>
+References: <CAG48ez09JuZPt112nnE6N=hS6cfCLkT-iHUAmidQ-QGNGMVoBw@mail.gmail.com>
+ <c46f5614-a82e-42fc-91eb-05e483a7df9c@citrix.com>
+ <202502131224.D6F5A235@keescook>
+ <6641d1e0-7151-4857-bb0e-db555d4cdf50@citrix.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAKbZUD3kaYEqQFU1TWfJWvtV02ESaMb0_ygadGgeAKo-b+GRcA@mail.gmail.com>
+In-Reply-To: <6641d1e0-7151-4857-bb0e-db555d4cdf50@citrix.com>
 
-On Thu, Feb 13, 2025 at 07:59:48PM +0000, Pedro Falcato wrote:
-> On Wed, Feb 12, 2025 at 2:02â€¯PM Lorenzo Stoakes
-> <lorenzo.stoakes@oracle.com> wrote:
-> >
-> > (sorry I really am struggling to reply to mail as lore still seems to be
-> > broken).
-> >
-> > On Wed, Feb 12, 2025 at 12:37:50PM +0000, Pedro Falcato wrote:
-> > > On Wed, Feb 12, 2025 at 11:25â€¯AM Lorenzo Stoakes
-> > > <lorenzo.stoakes@oracle.com> wrote:
-> > > >
-> > > > On Wed, Feb 12, 2025 at 03:21:48AM +0000, jeffxu@chromium.org wrote:
-> > > > > From: Jeff Xu <jeffxu@chromium.org>
-> > > > >
-> > > > > The commit message in the first patch contains the full description of
-> > > > > this series.
-> > > >
-> > [...]
-> > >
-> > > FWIW, although it would (at the moment) be hard to pull off in the
-> > > libc, I still much prefer it to playing these weird games with CONFIG
-> > > options and kernel command line options and prctl and personality and
-> > > whatnot. It seems to me like we're trying to stick policy where it
-> > > doesn't belong.
-> >
-> > The problem is, as a security feature, you don't want to make it trivially
-> > easy to disable.
-> >
-> > I mean we _need_ a config option to be able to strictly enforce only making
-> > the feature enable-able on architectures and configuration option
-> > combinations that work.
-> >
-> > But if there is userspace that will be broken, we really have to have some
-> > way of avoiding the disconnect between somebody making policy decision at
-> > the kernel level and somebody trying to run something.
-> >
-> > Because I can easily envision somebody enabling this as a 'good security
-> > feature' for a distro release or such, only for somebody else to later try
-> > rr, CRIU, or whatever else and for it to just not work or fail subtly and
-> > to have no idea why.
+On Thu, Feb 13, 2025 at 08:41:16PM +0000, Andrew Cooper wrote:
+> On 13/02/2025 8:28 pm, Kees Cook wrote:
+> > On Thu, Feb 13, 2025 at 01:31:30AM +0000, Andrew Cooper wrote:
+> >>>> Assuming this is an issue you all feel is worth addressing, I will
+> >>>> continue working on providing a patch. I'm concerned though that the
+> >>>> overhead from adding a wrmsr on both syscall entry and exit to
+> >>>> overwrite and restore the KERNEL_GS_BASE MSR may be quite high, so
+> >>>> any feedback in regards to the approach or suggestions of alternate
+> >>>> approaches to patching are welcome :) 
+> >>> Since the kernel, as far as I understand, uses FineIBT without
+> >>> backwards control flow protection (in other words, I think we assume
+> >>> that the kernel stack is trusted?),
+> >> This is fun indeed.  Linux cannot use supervisor shadow stacks because
+> >> the mess around NMI re-entrancy (and IST more generally) requires ROP
+> >> gadgets in order to function safely.  Implementing this with shadow
+> >> stacks active, while not impossible, is deemed to be prohibitively
+> >> complicated.
+> > And just validate my understanding here, this attack is fundamentally
+> > about FineIBT, not regular CFI (IBT or not), as the validation of target
+> > addresses is done at indirect call time, yes?
 > 
-> Ok so I went looking around for the glibc patchset. It seems they're
-> moving away from tunables and there was a nice
-> GNU_PROPERTY_MEMORY_SEAL added to binutils.
-> So my proposal is to parse this property on the binfmt_elf.c side, and
-> mm would use this to know if we should seal these mappings. This seems
-> to tackle compatibility problems,
-> and glibc isn't sealing programs without this program header anyway. Thoughts?
-
-It seems to me that doing this ties it to the binary, rather than
-execution context, which may want to seal/not-seal, etc. I have a sense
-that it's be better as a secure bit, or prctl, or something like that. The
-properties seem to be better suited for "this binary _can_ do a thing"
-or "this binary _requires_ a thing", like the GNU_STACK bits, etc. But
-maybe there's more to this I'm not considering?
-
-> > I mean one option is to have it as a CONFIG_ flag _and_ you have to enable
-> > it via a tunable, so then it can become sysctl.d policy for instance.
+> I'm not sure I'd classify it like that.  As a pivot primitive, it works
+> very widely.
 > 
-> sysctl is also an option but the idea of dropping a random feature
-> behind a CONFIG_ that's unusable by lots of people (including the
-> general GNU/Linux ecosystem) is really really unappealing to me.
+> FineIBT (more specifically any hybrid CFI scheme which includes CET-IBT)
+> relies on hardware to do the course grain violation detection, and some
+> software hash for fine grain violation detection.
+> 
+> In this case, the requirement for the SYSCALL entrypoint to have an
+> ENDBR64 instruction means it passes the CET-IBT check (does not yield
+> #CP), and then lacks the software hash check as well.
+> 
+> i.e. this renders FineIBT (and other hybrid CFI schemes) rather moot,
+> because one hole is all the attacker needs to win, if they can control a
+> function pointer / return address.  At which point it's a large overhead
+> for no security benefit over simple CET-IBT.
 
-I agree 100%, but I think we need to make small steps. Behind a CONFIG
-means we get it implemented, and then we can look at how to make it more
-flexible. I'm motivated to figure this out because I've long wanted to
-have a boot param to disable CRIU since I have distro systems that I
-don't use CRIU on, and I don't want the (very small) interface changes
-it makes available into seccomp filter visibility. And if CRIU could be
-run-time based, so could system mapping sealing. :)
+Right, the "if they can control a function pointer" is the part I'm
+focusing on. This attack depends on making an indirect call with a
+controlled pointer. Non-FineIBT CFI will protect against that step,
+so I think this is only an issue for IBT-only and FineIBT, but not CFI
+nor CFI+IBT.
+
+> The problem is that SYSCALL entry/exit is a toxic operating mode,
+> because you only have to think about sneezing and another user->kernel
+> priv-esc appears.
+
+Yeah, once an attacker can make an indirect call to a controlled
+address, everything falls apart. And using the entry just makes the
+pivot all that much easier to find/use.
+
+-Kees
 
 -- 
 Kees Cook
