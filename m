@@ -1,69 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16F8718EB0;
-	Thu, 13 Feb 2025 01:55:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D76511422DD
+	for <linux-hardening@vger.kernel.org>; Thu, 13 Feb 2025 02:09:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739411727; cv=none; b=YgZJZmRut8re6J2fi/E7jS9AR1ZmoaLch7sYGhJJHSc/GOx2/B4EfFzZp55KuPfoJveVV128xg8i2gNFUEB7vHAU3wP5E3aOy7sBCNd8msRnsiPs5pR9jOyqbkbLJEJ7Iac2uxTix+Qimth4wLslBrdu8l5p4ay5DA/m+kDqJTE=
+	t=1739412600; cv=none; b=F4+5/dko/ErdNJ8X0Yd4iX8BbLmJPPcf/JncVVf3zGqL6dpS/geXJInX5CBwOubK8Krt1TXsPcgqR1QAgolr6GMBdSpUfdFr/Yu4bdseldOYQLUuwGJTSNxv3L4pOl/u/ptUDho26me0dXMcqp8dKwgzaBl4Dzq+ghB/o/6IoAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739411727; c=relaxed/simple;
-	bh=iHz3/lz8by3vyfJfWdwvgvbN/HigLmoOkJ804e/e2OE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ybh7r4J1PbZJ27PKFZv8Be0YPkfzu5nDeronvSli2exu2EPDbuDUWhAD114gyW/lC+RG+pFPJ0b/T/cncdGHKe6kjLbJuYxQP711djgSnYx9zelo5o8JhpnIyrtGPUFNi/w9SAIfPE7XzpfjXcsaCzP60BFxijYwbyprWV+cydE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uOklJTdD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739412600; c=relaxed/simple;
+	bh=D/w0ZwtRtYcmWs37X8IYT8H9Nl48IrgHcsGVG2ENYnw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Y6xgcZYh9qaIlJW+ElBf/iS8YdMFkroB37b+UlBUlmn5uI3Fkel5k6ylXM7asDQbuJbt1jRbFUTLLuKf4yW6g1OtOb9wwznT/Gi1nTcOKwuWUr7WdVSsPTfw7GIAwzyquhfeXZbUUqvcsCB/os3kzYofI+aq6qiOnQ92BXChJ2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=U1xCtbhy; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uOklJTdD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2E09C4CEDF;
-	Thu, 13 Feb 2025 01:55:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739411726;
-	bh=iHz3/lz8by3vyfJfWdwvgvbN/HigLmoOkJ804e/e2OE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=uOklJTdD9MPwJna+bt6mER7qr7rzwQqUrG/tLpLMhJWROffn2rfqcos/ZRxog2+cB
-	 rk9RsOprMWjZBQa5D9GsDwPGgIddTd2nmDebMAd3i6ChvOiaN3WtKyGttk+wNR4a8R
-	 qlE++skhleUYz1BzPX6SpCpvdhnkW/MRq4f6XJ/4Ck96JDWDyio/HHkdISfao8Q4vi
-	 DaL8/Sfxbsl9Zrmx+8DZDY0I0+Wh5u8xaPJ0Hqiyzi6UMF7gltkvZIPsxiiBoG6Fqo
-	 bYfEJ3VG+dtFBkLg4IA8xRAiAwRNdiVZthYp8ypHlAv0bny4/wTKgqa+0uuhR8tAVv
-	 qrJT9QcYsfF9A==
-Date: Wed, 12 Feb 2025 17:55:25 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: Gal Pressman <gal@nvidia.com>
-Cc: Alexander Lobakin <aleksander.lobakin@intel.com>,
- netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Andrew Lunn
- <andrew+netdev@lunn.ch>, Tariq Toukan <tariqt@nvidia.com>, Louis Peens
- <louis.peens@corigine.com>, Simon Horman <horms@kernel.org>, David Ahern
- <dsahern@kernel.org>, Pravin B Shelar <pshelar@ovn.org>, Yotam Gigi
- <yotam.gi@gmail.com>, Jamal Hadi Salim <jhs@mojatatu.com>, Cong Wang
- <xiyou.wangcong@gmail.com>, Jiri Pirko <jiri@resnulli.us>, Kees Cook
- <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- dev@openvswitch.org, linux-hardening@vger.kernel.org, Ilya Maximets
- <i.maximets@ovn.org>, Cosmin Ratiu <cratiu@nvidia.com>
-Subject: Re: [PATCH net-next v2] net: Add options as a flexible array to
- struct ip_tunnel_info
-Message-ID: <20250212175525.4e658590@kernel.org>
-In-Reply-To: <d98d0c20-741d-4d87-b39e-5aa8eed4624c@nvidia.com>
-References: <20250212140953.107533-1-gal@nvidia.com>
-	<f9adb864-8ed5-4368-a880-b2aac8aac885@intel.com>
-	<d98d0c20-741d-4d87-b39e-5aa8eed4624c@nvidia.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="U1xCtbhy"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5dbfc122b82so1998a12.0
+        for <linux-hardening@vger.kernel.org>; Wed, 12 Feb 2025 18:09:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739412597; x=1740017397; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2a2v0j0te6NIFTJGusW3Izof1NhUdtIxSDnUtBZIkAI=;
+        b=U1xCtbhyaRT6u77bt9bia7yuJCMWYWE9sCWFvPiN4y76loaDY2x5GPMConBeSGQb9x
+         SMZl79mhmg33BMmXbwkHKhoVxDqoT69KpHplc78iMRjPk+C+YG22qqEUCNT2BzR72RNA
+         1YmH+RpOWl2IwAJ/YHAH/rlGlDjWPqFAXeykEdewbzrdgisBos6wSSnnY9RJqlMyxDw8
+         AEkg83LTdfuJ1ruDzVvf7ICRZ0/Z2BqMqU6wvKKR++k7L06eF8Z/PRebhGHi94IwMhPf
+         AiSQQIxOy1iMbbqzrO29a4gcXdA8GX1AxEDxG8CTDm3FAyMwLmJn9oqu5/MuYSIl7CGZ
+         jvDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739412597; x=1740017397;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2a2v0j0te6NIFTJGusW3Izof1NhUdtIxSDnUtBZIkAI=;
+        b=JEcGSkphQuSNq9G99Qp91EW6x1rRYcJMUoR+yfdHo8oVUQHKq1Rcoru5Z2c1F7xRfp
+         msXqvrLl5ow/21k8Ur1uVIn2guzVKo5sBjE9PsYWnyzA6La7tY3tvGT2qxL+nIbNJvc6
+         hPMg0SzqkUvpNLwld6tzii/Q8BAjE3eKVSy/Iilmdr+221X1jvbfLD+s8SCePJS5ps5a
+         h8V1RFwzqD5pt5+YVOKHU6kBhxyU9WIfUSpglzfBJd8oHP5Ablh8+7HDYNrkd52rnr3w
+         R90Trh2ccFLa+u09W6QK+KM32EfaK++mXOyldMIx8FHQmDmv0n+h9D7oaP/IjRZIbTlD
+         8KlA==
+X-Forwarded-Encrypted: i=1; AJvYcCUY7IUt2m3Lpp2C6NcF877GYiKFKiJmI97Be6xNTZwG7My1aKXIMwzs5Nt+fCIrPmdwNhsiw0CjF5Ifq/dNn20=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwLTA40GrKTTeFewHvHG/QFvozXro9ycJjZfnDFRe+AanavyU0J
+	LRhVPqeaDnFad1laV4x7RJ6Y/HskUADcvK4w/4LHBfth6a8rN1rvuy4baXHT8I0IOYdYwVyhm1y
+	9PA+2MRq7eZYOSajhiqVpJH5fDJKuZgTpKNx3
+X-Gm-Gg: ASbGncs801tTh7Kk6dQxS+eorl98ZcffK/NM2t9RsifIupcT11RAwq1HXTsJ9KcwRiS
+	DwkT9I73rQeH0vu87AYP2qyNEXUwV34U5otyFEdR2CmXZ7sZPA7FHXLe+RYSHTmE1gM+Ty9wQBu
+	H/yxRryi05b3XiriFZrDp8Sdg0
+X-Google-Smtp-Source: AGHT+IEGXYza8jPG+mtHgFh7992UjGTwtZVd3O5N+Wv7U028jj6PHsIgLk+pz8qLqg5Kbmp2XIFM5RlBBip4q7wXA0o=
+X-Received: by 2002:aa7:c70f:0:b0:5dc:e07d:515b with SMTP id
+ 4fb4d7f45d1cf-5decb4962damr50168a12.2.1739412596550; Wed, 12 Feb 2025
+ 18:09:56 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <CAG48ez09JuZPt112nnE6N=hS6cfCLkT-iHUAmidQ-QGNGMVoBw@mail.gmail.com>
+ <c46f5614-a82e-42fc-91eb-05e483a7df9c@citrix.com>
+In-Reply-To: <c46f5614-a82e-42fc-91eb-05e483a7df9c@citrix.com>
+From: Jann Horn <jannh@google.com>
+Date: Thu, 13 Feb 2025 03:09:20 +0100
+X-Gm-Features: AWEUYZnvdHs8yyFW6XYSqu5PjiO1JQQc7EpzD0iG3tCB0flG_c2hqhEyvARDM2c
+Message-ID: <CAG48ez0h0wUS6y+W1HTOwN14V95gKmmFZ_2TamAX+JKTmXT=DA@mail.gmail.com>
+Subject: Re: [RFC] Circumventing FineIBT Via Entrypoints
+To: Andrew Cooper <andrew.cooper3@citrix.com>
+Cc: jmill@asu.edu, joao@overdrivepizza.com, kees@kernel.org, 
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	luto@kernel.org, samitolvanen@google.com, 
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 12 Feb 2025 20:13:28 +0200 Gal Pressman wrote:
-> > You could leave this macro inplace and just change `(info) + 1` to
-> > `(info)->options` avoiding changes in lots of files and adding casts
-> > everywhere.  
+On Thu, Feb 13, 2025 at 2:31=E2=80=AFAM Andrew Cooper <andrew.cooper3@citri=
+x.com> wrote:
+> >> Assuming this is an issue you all feel is worth addressing, I will
+> >> continue working on providing a patch. I'm concerned though that the
+> >> overhead from adding a wrmsr on both syscall entry and exit to
+> >> overwrite and restore the KERNEL_GS_BASE MSR may be quite high, so
+> >> any feedback in regards to the approach or suggestions of alternate
+> >> approaches to patching are welcome :)
+> >
+> > Since the kernel, as far as I understand, uses FineIBT without
+> > backwards control flow protection (in other words, I think we assume
+> > that the kernel stack is trusted?),
+>
+> This is fun indeed.  Linux cannot use supervisor shadow stacks because
+> the mess around NMI re-entrancy (and IST more generally) requires ROP
+> gadgets in order to function safely.  Implementing this with shadow
+> stacks active, while not impossible, is deemed to be prohibitively
+> complicated.
+>
+> Linux's supervisor shadow stack support is waiting for FRED support,
+> which fixes both the NMI re-entrancy problem, and other exceptions
+> nesting within NMIs, as well as prohibiting the use of the SWAPGS
+> instruction as FRED tries to make sure that the correct GS is always in
+> context.
+>
+> But, FRED support is slated for PantherLake/DiamondRapids which haven't
+> shipped yet, so are no use to the problem right now.
+>
+> > could we build a cheaper
+> > check on that basis somehow? For example, maybe we could do something l=
+ike:
+> >
+> > ```
+> > endbr64
+> > test rsp, rsp
+> > js slowpath
+> > swapgs
+> > ```
+>
+> I presume it's been pointed out already, but there are 3 related
+> entrypoints here.  SYSCALL64 which is discussed, SYSCALL32 and SYSENTER
+> which are related.
+>
+> But, any other IDT entry is in a similar bucket.  If we're corrupting a
+> function pointer or return address to redirect here, then the check of
+> CS(%rsp) to control the conditional SWAPGS is an OoB read in the callers
+> stack frame.
+>
+> For IDT entries, checking %rsp is reasonable, because userspace can't
+> forge a kernel-like %rsp.  However, SYSCALL64 specifically leaves %rsp
+> entirely attacker controlled (and even potentially non-canonical), so
+> I'm wondering what you hand in mind for the slowpath to truly
+> distinguish kernel context from user context?
 
-+1
-
-> I'd rather not, having a macro to do 'info->options' doesn't help code
-> readability IMHO.
-
-It'd avoid having to explicitly cast the types everywhere, too.
+Hm, yeah, that seems hard - maybe the best we could do is to make sure
+that the inactive gsbase has the correct value for our CPU's kernel
+gsbase? Kinda like a paranoid_entry, except more painful because we'd
+first have to figure out a place to spill registers to before we can
+start using stuff like rdmsr... Then a function pointer overwrite
+might still turn into returning to userspace with a sysret with GPRs
+full of kernel pointers, but at least we wouldn't run off of a bogus
+gsbase anymore?
