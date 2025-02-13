@@ -1,62 +1,48 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B062E2AE77
-	for <linux-hardening@vger.kernel.org>; Thu, 13 Feb 2025 01:31:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3251078F37;
+	Thu, 13 Feb 2025 01:51:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739410296; cv=none; b=hixHS5+H8gznvzUOg4m/gSj3eHQsrXba9Pk+jAU7fx4M02wSwHjfM+ZhcG+1zdnmSNc69CbLsgmuKQSQH11BdViRsPMoiVkkrUz1Spvgdg7aP0RELgZ8SlvqrZDEd1Us6WdMarCROww4WKFuPkArMc2tFRzOLrfLXsR4iPVEbnY=
+	t=1739411494; cv=none; b=amCTEyEFBpMExs2OW6rwRHzV3GDVUEo26yh18RxdtVXzZntb5WAJtxeukMgrTzjXzv4t0JEG8b6yLTb1yR/qG6PENzYIIkB7JLrIGVXUxU75fc6H4o33hFMKqTYAEUqbm1xiW/Mklzj0wDYbG6Q66gJvtA47NIW7eIzC/qmrWTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739410296; c=relaxed/simple;
-	bh=K1YqvT/uRu3Beo69LcLvuMznFi3ilLXZg3DzZP3Y8gw=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=S+ZYy0jV02zOtIYFCMmRy2X5Mf1g0a7BekPGLlRIOeZIfGmLsB9sgPiYU9C7wxXYWkUIAqWwtCZMwHi4Rj8t4TVnpOBBilFUY2TsLOMcJ4pzwrpSSHoDRNVWJx8XHw2PTfgsNjJsteNjQJ/dk8442TpaGpq5zX5cX0SgJ7YcDM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=rLmdfCY9; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
+	s=arc-20240116; t=1739411494; c=relaxed/simple;
+	bh=lfxTwf02fmuNW3qU/mwRbtMRstP2+Lho/oafqg0kr/g=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
+	 In-Reply-To:Content-Type; b=kSuWp3M/QJurUJJMDBVdQS2Lohess1QE38PSaoihyuizEn9l2Z9bMAoiTfA3eacven1073GMngb2s20/8g0mj3p2uwZsAJFn96dAoHQZbwGPw0qtvsZto0AA7gairhowkvlE1ZZf1Nb49rIA7/2m+Baa2A25Qz5FQAAbnEmNC5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=o8dBWt+P; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="rLmdfCY9"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43946b5920cso2015375e9.1
-        for <linux-hardening@vger.kernel.org>; Wed, 12 Feb 2025 17:31:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=citrix.com; s=google; t=1739410293; x=1740015093; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:subject:references:cc:to:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=w5EKFWBgqPpVx5P7IvxNzLC6M+MvEBL76rv2xNaJ708=;
-        b=rLmdfCY9Qa8YJZhIY7gn2eEr+MhWisLs6wmOYOq1HQYYvICR1akOuUgPL3uRijfZH6
-         ozk13rtOsb6LI+KAqdwQ1pxFZazLNefFIZXQEV4Fkul/RXfjShVX3rsVILo+XQTWCqpZ
-         SZ1eAvtlWj9fSgoh3fP0tzy5E0GlVrV7ahWSc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739410293; x=1740015093;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:subject:references:cc:to:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=w5EKFWBgqPpVx5P7IvxNzLC6M+MvEBL76rv2xNaJ708=;
-        b=tUuYYeAjif/cM0srWXRGu3W7b9kImviwBX/0uP731dqREUoqxopsycO03n881csI53
-         uYjMrfIFHwgvoef7fiws9AVzXOQ9GfKbFwCmN1+RgNxGpG6bPWedkMJww3FWWPYUG8sp
-         JcvN9MXWcQaUpFK/Oswop+GakkuNZB/YHC1eRcGoRbNklM/oIaLAbvn+CKkt5BibDnbr
-         DsRaACdlIwyG/agoKrFnkr8Zh1nn0+YsoJDmOTHAHyFb1+XeGjakPJDScAD90DSPzNj2
-         UKSLfHE13nVE9gF8t/tD9vUhzqrAtN+3ehQAo9+utTywH6xqUAJgwRElgIzBEa2NrxSE
-         bvCw==
-X-Forwarded-Encrypted: i=1; AJvYcCUfUsb/k8yQ6nrMeqZFRKk7SNA4gqWfdopHZXJt1t8LRQ/V1p/ztE1Hmn1u0n8yNAZXNKuyqmctMYDRSpbycsU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx4WNHqZiEU+UZB1jC/Si3euNH0WCg9qWKD4tUeYqxZrnhoX0LR
-	AN5MrUswoupNE4jmwp8yBDiLnOEppv9JmPCk/TuvBf7JTnovSLCAfZLvkg80J0s=
-X-Gm-Gg: ASbGnct451pBbgei0HxQOZ/HVIJ2jm8lYMZMnx0JbwiOKw7uKu28kvSxuX8vFWr3qqQ
-	Jh/vurK77tDUd/s2yjjYMkaZV0sWbJ7822uGQxfuvPDMcnTQXRhowT4Jld2TMEHCL/QoFmvm9eV
-	e8nGy8cW2vJspvDC2sr+v0SFz0ocxArbacZbnr08CpwjV1u2JgZVoVfV5I6vFwvkc96DErON3a/
-	r96PvNCtDcZTsXIGOFrYCQ8eReiOfPp7DAtC2y8El1ZemcWQPbzT3X4cttfuEoUcPUg05YFNE4W
-	IasTS1/TJ9TESU9IntRQn0EHzsYWq17mnyJNjv7r5p1DYII9fAyywFU=
-X-Google-Smtp-Source: AGHT+IHkfWcbtltL+KlPJj6/r329jxDn9hmKlU/J0nwqxobvWMmDKGoutWnwtiQOtr/KoOClttIVhw==
-X-Received: by 2002:a05:600c:c8c:b0:439:4499:54de with SMTP id 5b1f17b1804b1-439601afaf0mr13890885e9.31.1739410292956;
-        Wed, 12 Feb 2025 17:31:32 -0800 (PST)
-Received: from [192.168.1.10] (host-92-26-98-202.as13285.net. [92.26.98.202])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f259d65bcsm428526f8f.65.2025.02.12.17.31.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Feb 2025 17:31:31 -0800 (PST)
-Message-ID: <c46f5614-a82e-42fc-91eb-05e483a7df9c@citrix.com>
-Date: Thu, 13 Feb 2025 01:31:30 +0000
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="o8dBWt+P"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51CC0tpk010369;
+	Thu, 13 Feb 2025 01:51:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	3RrZzmUxHHLNiwmSBc6F03gaN3NGBJVAFD86s91Ywkc=; b=o8dBWt+PDDIM70HK
+	TkjewlcXP16lYl3eJITecig+zLoCQacFF7Ygb0o+PAhguk6fMGtUhjUYQ88uuK2H
+	S6ekHu/M9Hoye3s0mJKS9c4qEzwnD2qdRmLPt/aDcgHUdqzVmlR3hHXMMG4c2s5u
+	gkJfdcMAGz0e+apXZn4TE7vbb60a82mmoDCjvsphQpLtM5jqB//H2YP+5d8I6F40
+	sYMF40SzkhPqtEcIzfcyFPfZeu5HEkQ+Id3Sr/BE65bQ42Tkq2ACPJOO/Hn3urOX
+	82koA/jE4cA25Fs3I5XkoWhwqeo/KW7KGcY2fqd9vSDe88l9U8ZmV0NSGHEEK1z7
+	n+qMJw==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44qcs5hm71-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 13 Feb 2025 01:51:14 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51D1pDbb001781
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 13 Feb 2025 01:51:13 GMT
+Received: from [10.71.110.136] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 12 Feb
+ 2025 17:51:12 -0800
+Message-ID: <eb0e478f-87c8-4d1d-a491-d0b1120d60b7@quicinc.com>
+Date: Wed, 12 Feb 2025 17:51:11 -0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -64,111 +50,145 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-To: jannh@google.com
-Cc: jmill@asu.edu, joao@overdrivepizza.com, kees@kernel.org,
- linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
- luto@kernel.org, samitolvanen@google.com,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>
-References: <CAG48ez09JuZPt112nnE6N=hS6cfCLkT-iHUAmidQ-QGNGMVoBw@mail.gmail.com>
-Subject: Re: [RFC] Circumventing FineIBT Via Entrypoints
-Content-Language: en-GB
-From: Andrew Cooper <andrew.cooper3@citrix.com>
-Autocrypt: addr=andrew.cooper3@citrix.com; keydata=
- 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
- 6+ahAA==
-In-Reply-To: <CAG48ez09JuZPt112nnE6N=hS6cfCLkT-iHUAmidQ-QGNGMVoBw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH v2] drm/msm/dpu: Fix uninitialized variable
+From: Abhinav Kumar <quic_abhinavk@quicinc.com>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Marijn Suijten
+	<marijn.suijten@somainline.org>
+CC: Ethan Carter Edwards <ethan@ethancedwards.com>,
+        Rob Clark
+	<robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        David Airlie
+	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>
+References: <20250209-dpu-v2-1-114dfd4ebefd@ethancedwards.com>
+ <8e40c1bf-6da7-46b1-925c-53d1fa25f3ce@quicinc.com>
+ <zj7sqsg3ruev4akl5paedsg65qyh53iddqvssrye2pjtfofs3q@u4g3kevpl2jn>
+ <nllxmdfk4wwm2bbrg5jc4tt7la65rwqdtt4tqjp36j6dr4hgmx@ukszi5llldup>
+ <22c97d77-5983-429b-ba0b-ce821a717a0e@quicinc.com>
+Content-Language: en-US
+In-Reply-To: <22c97d77-5983-429b-ba0b-ce821a717a0e@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: 2IV3np8f94ir8rTqzL9pcxLh27P2A1Wp
+X-Proofpoint-GUID: 2IV3np8f94ir8rTqzL9pcxLh27P2A1Wp
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-12_08,2025-02-11_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
+ mlxlogscore=999 phishscore=0 lowpriorityscore=0 spamscore=0 malwarescore=0
+ adultscore=0 clxscore=1015 mlxscore=0 priorityscore=1501 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
+ definitions=main-2502130012
 
->> Assuming this is an issue you all feel is worth addressing, I will
->> continue working on providing a patch. I'm concerned though that the
->> overhead from adding a wrmsr on both syscall entry and exit to
->> overwrite and restore the KERNEL_GS_BASE MSR may be quite high, so
->> any feedback in regards to the approach or suggestions of alternate
->> approaches to patching are welcome :) 
->
-> Since the kernel, as far as I understand, uses FineIBT without
-> backwards control flow protection (in other words, I think we assume
-> that the kernel stack is trusted?),
 
-This is fun indeed.  Linux cannot use supervisor shadow stacks because
-the mess around NMI re-entrancy (and IST more generally) requires ROP
-gadgets in order to function safely.  Implementing this with shadow
-stacks active, while not impossible, is deemed to be prohibitively
-complicated.
 
-Linux's supervisor shadow stack support is waiting for FRED support,
-which fixes both the NMI re-entrancy problem, and other exceptions
-nesting within NMIs, as well as prohibiting the use of the SWAPGS
-instruction as FRED tries to make sure that the correct GS is always in
-context.
+On 2/11/2025 4:19 PM, Abhinav Kumar wrote:
+> 
+> 
+> On 2/11/2025 4:13 PM, Dmitry Baryshkov wrote:
+>> On Tue, Feb 11, 2025 at 10:23:54AM +0100, Marijn Suijten wrote:
+>>> On 2025-02-10 14:14:14, Abhinav Kumar wrote:
+>>>>
+>>>>
+>>>> On 2/9/2025 7:51 PM, Ethan Carter Edwards wrote:
+>>>>> There is a possibility for an uninitialized *ret* variable to be
+>>>>> returned in some code paths.
+>>>>>
+>>>>> Fix this by initializing *ret* to 0.
+>>>>>
+>>>>> Addresses-Coverity-ID: 1642546 ("Uninitialized scalar variable")
+>>>>> Fixes: 774bcfb731765d ("drm/msm/dpu: add support for virtual planes")
+>>>>> Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
+>>>>> ---
+>>>>> Changes in v2:
+>>>>> - Return explicit 0 when no error occurs
+>>>>> - Add hardening mailing lists
+>>>>> - Link to v1: https://lore.kernel.org/r/20250209-dpu- 
+>>>>> v1-1-0db666884f70@ethancedwards.com
+>>>>> ---
+>>>>>    drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c | 7 +++----
+>>>>>    1 file changed, 3 insertions(+), 4 deletions(-)
+>>>>>
+>>>>
+>>>> Thanks for your patch, this was addressed with
+>>>>
+>>>> https://patchwork.freedesktop.org/patch/631567/ but since this is 
+>>>> better
+>>>> I am fine with this, will pick this one up
+>>>
+>>> The `return 0;` in this patch should certainly fix this issue 
+>>> entirely and we
+>>> don't need to inline the `int ret` for that, which I think is against 
+>>> mixed
+>>> declaration rules anyway?
+>>>
+>>> As far as I understand that's what Dmitry suggested in v1, but he r- 
+>>> b'd it in
+>>> this form.  Dmitry, was that intended?
+>>
+>> I think it should be fine, if the gcc doesn't warn against it.
+>>
+> 
+> Let me test out the compilation while applying and see if it throws any 
+> errors. If it does, will report here and we can go with the other patch.
+> 
 
-But, FRED support is slated for PantherLake/DiamondRapids which haven't
-shipped yet, so are no use to the problem right now.
+On my end, compilation looks fine, so will pickup this version.
 
-> could we build a cheaper
-> check on that basis somehow? For example, maybe we could do something like:
->
-> ```
-> endbr64
-> test rsp, rsp
-> js slowpath
-> swapgs
-> ```
+Thanks
 
-I presume it's been pointed out already, but there are 3 related
-entrypoints here.  SYSCALL64 which is discussed, SYSCALL32 and SYSENTER
-which are related.
+Abhinav
+>>>
+>>> - Marijn
+>>>
+>>>> Reviewed-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
+>>>>
+>>>>
+>>>>> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c b/drivers/ 
+>>>>> gpu/drm/msm/disp/dpu1/dpu_plane.c
+>>>>> index 
+>>>>> 098abc2c0003cde90ce6219c97ee18fa055a92a5..af3e541f60c303eb5212524e877129359b5ca98c 100644
+>>>>> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+>>>>> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+>>>>> @@ -1164,7 +1164,6 @@ int dpu_assign_plane_resources(struct 
+>>>>> dpu_global_state *global_state,
+>>>>>                       unsigned int num_planes)
+>>>>>    {
+>>>>>        unsigned int i;
+>>>>> -    int ret;
+>>>>>        for (i = 0; i < num_planes; i++) {
+>>>>>            struct drm_plane_state *plane_state = states[i];
+>>>>> @@ -1173,13 +1172,13 @@ int dpu_assign_plane_resources(struct 
+>>>>> dpu_global_state *global_state,
+>>>>>                !plane_state->visible)
+>>>>>                continue;
+>>>>> -        ret = dpu_plane_virtual_assign_resources(crtc, global_state,
+>>>>> +        int ret = dpu_plane_virtual_assign_resources(crtc, 
+>>>>> global_state,
+>>>>>                                 state, plane_state);
+>>>>>            if (ret)
+>>>>> -            break;
+>>>>> +            return ret;
+>>>>>        }
+>>>>> -    return ret;
+>>>>> +    return 0;
+>>>>>    }
+>>>>>    static void dpu_plane_flush_csc(struct dpu_plane *pdpu, struct 
+>>>>> dpu_sw_pipe *pipe)
+>>>>>
+>>>>> ---
+>>>>> base-commit: a64dcfb451e254085a7daee5fe51bf22959d52d3
+>>>>> change-id: 20250209-dpu-c3fac78fc617
+>>>>>
+>>>>> Best regards,
+>>>>
+>>
+> 
 
-But, any other IDT entry is in a similar bucket.  If we're corrupting a
-function pointer or return address to redirect here, then the check of
-CS(%rsp) to control the conditional SWAPGS is an OoB read in the callers
-stack frame.
-
-For IDT entries, checking %rsp is reasonable, because userspace can't
-forge a kernel-like %rsp.  However, SYSCALL64 specifically leaves %rsp
-entirely attacker controlled (and even potentially non-canonical), so
-I'm wondering what you hand in mind for the slowpath to truly
-distinguish kernel context from user context?
-
-~Andrew
