@@ -1,112 +1,85 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E38E1C07C3;
-	Thu, 13 Feb 2025 14:54:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EA6418784A;
+	Thu, 13 Feb 2025 16:04:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739458490; cv=none; b=h2E4TV5TJGOqWBnP81coFg/SjtBOjAD5k8KMvgOMLNGFJTwN9JBKnN5ypnmCXfEV1XNt31dUYHyH2awofrIWDULV4w2gw8k3BShVOzO0Elz1k229msHyPE7JCADDZOCsnEHwzrZfYnJczk08MfRyj3llqMZRs015aI+hqsRBSr8=
+	t=1739462658; cv=none; b=H4PD7H0i/eGlvsvdUB/gm2vo06Biqg2PVrJUUfsovFpmjShNfG0HGaPdTbWwSlVC3HCQ9G0vmWbfLRzgLq+kwio7NiHbmwCN3Aga1VuL2BtuR8GVw3ivft7a1ZTPRUjMbQXBI95Q2lZSPCbEA2tClIW5/42iMFZml71kNTWoHCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739458490; c=relaxed/simple;
-	bh=IfuxON9f1+mt0J5dXUHTZ8LLFpSbXwaRfsyQDzivT8Y=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=UJrM0RBeevITjjeqUjjHl4dQljGs6DLenBg39/+qlANSNvHiiS0p5EgPRwAvveqwcyas4QiFHtEVFbCfgX0TOn3ljCz4aAT1A9kqGiFwhFVLAUtcUl7C2WKG12Bo6gBPGxg0eCy0G63Mf6FZY5d8OJ+YBSCh7vSOgFsMm3XPW6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2C074106F;
-	Thu, 13 Feb 2025 06:55:08 -0800 (PST)
-Received: from [10.44.160.94] (e126510-lin.lund.arm.com [10.44.160.94])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 677FC3F58B;
-	Thu, 13 Feb 2025 06:54:42 -0800 (PST)
-Message-ID: <c16a24b9-1258-4976-827d-db3335bf6e83@arm.com>
-Date: Thu, 13 Feb 2025 15:54:40 +0100
+	s=arc-20240116; t=1739462658; c=relaxed/simple;
+	bh=0ppe+hGsKBjwi9+qUO7ATGSY7gr+M0GyA2Dpz7/PKB8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RwTzksdXcoQau49qHmQnYA85SBPaDZjKZMEXgb/2EvSdKnxhD+n7qmmZzZ1i+GkiD5KTi6XfF2fyPzgGcfK05wVjLIWmRFrmCLOQrBHL79jlqc4ypmshnVbCwRgHVXCIYQXFtY6kSAGGROjVjWYGynwmoSH3TseeVSIn6SNh1XE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pFLLxWla; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pFLLxWla"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77DBAC4CED1;
+	Thu, 13 Feb 2025 16:04:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739462657;
+	bh=0ppe+hGsKBjwi9+qUO7ATGSY7gr+M0GyA2Dpz7/PKB8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=pFLLxWlaRUSWM3tDyxytg1FfQE7zjuO45pgUt4f0x0/xvuSeYmnYk2H4Hl2Kc0kML
+	 H0gThPCl49lG2Nb3Tz/aCV/8ycYYJWEAv+24WBlmgY7WC0FgdDOiAZZfs36DBkTR5P
+	 AIvcaP+teshSKpYLzztta5nV3BQ/ocjAY7swV0cvRThHUnlbdrH3xJHe5t9hUqhGN8
+	 fahpF7zEx15NT3qu5mH1sbIN11/6xWcmW9cc6OmOPGqYnKmuVZmOKlTn/6BIKhZosi
+	 pTdv/6UQayy7TGTmWTsoZbgq62hkvQsqun/OpK/YOQYddVp1YLMMAfrB5w7UAldIXz
+	 S62JvdhfifUqA==
+Date: Thu, 13 Feb 2025 17:04:13 +0100
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Linux Doc Mailing List <linux-doc@vger.kernel.org>, Jonathan Corbet
+ <corbet@lwn.net>
+Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFCv2 4/5] scripts/kernel-doc.py: add a Python parser
+Message-ID: <20250213170413.39caf2d7@foz.lan>
+In-Reply-To: <59e3bb9ad6f9147c139ef4cc5500985e0bc847c2.1739447912.git.mchehab+huawei@kernel.org>
+References: <cover.1739447912.git.mchehab+huawei@kernel.org>
+	<59e3bb9ad6f9147c139ef4cc5500985e0bc847c2.1739447912.git.mchehab+huawei@kernel.org>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v3 00/15] pkeys-based page table hardening
-From: Kevin Brodsky <kevin.brodsky@arm.com>
-To: Kees Cook <kees@kernel.org>
-Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
- Andrew Morton <akpm@linux-foundation.org>, Mark Brown <broonie@kernel.org>,
- Catalin Marinas <catalin.marinas@arm.com>,
- Dave Hansen <dave.hansen@linux.intel.com>, Jann Horn <jannh@google.com>,
- Jeff Xu <jeffxu@chromium.org>, Joey Gouly <joey.gouly@arm.com>,
- Linus Walleij <linus.walleij@linaro.org>, Andy Lutomirski <luto@kernel.org>,
- Marc Zyngier <maz@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Pierre Langlois <pierre.langlois@arm.com>,
- Quentin Perret <qperret@google.com>, "Mike Rapoport (IBM)"
- <rppt@kernel.org>, Ryan Roberts <ryan.roberts@arm.com>,
- Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
- Matthew Wilcox <willy@infradead.org>, Qi Zheng <zhengqi.arch@bytedance.com>,
- linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org, x86@kernel.org
-References: <20250203101839.1223008-1-kevin.brodsky@arm.com>
- <202502061422.517A57F8@keescook>
- <fd101c51-d3fc-4a4f-afcc-364b8d3c4a0b@arm.com>
-Content-Language: en-GB
-In-Reply-To: <fd101c51-d3fc-4a4f-afcc-364b8d3c4a0b@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 10/02/2025 15:23, Kevin Brodsky wrote:
-> [...]
->
->>> Any comment or feedback will be highly appreciated, be it on the
->>> high-level approach or implementation choices!
->> As hinted earlier with my QEMU question... what's the best way I can I
->> test this myself? :)
-> As mentioned above I tested this series on Arm FVP. By far the easiest
-> way to run some custom kernel/rootfs on FVP is to use the Shrinkwrap
-> tool [3]. First install it following the quick start guide [4] (I would
-> recommend using the Docker backend if possible). Then build the firmware
-> stack using:
->
-> $ shrinkwrap build -o arch/v9.0.yaml ns-edk2.yaml
->
-> To make things easy, the runtime configuration can be stored in a file.
-> Create ~/.shrinkwrap/config/poe.yaml with the following contents:
->
-> ----8<----
->
-> %YAML 1.2
-> ---
-> layers:
->   - arch/v9.0.yaml
+Em Thu, 13 Feb 2025 13:06:17 +0100
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> escreveu:
 
-Apologies, this is incorrect - it will not work with the most recent FVP
-builds. POE is a v9.4 feature so this line should be replaced with:
+> +    def dump_function(self, ln, prototype):
+> +
+...
 
-> - arch/v9.4.yaml
+> +            (r"""
+> +              __attribute__\s*\(\(
+> +                (?:
+> +                    [\w\s]++          # attribute name
+> +                    (?:\([^)]*+\))?   # attribute arguments
+> +                    \s*+,?            # optional comma at the end
+> +                )+
+> +              \)\)\s+
+> +             """, "", re.X),
 
-(No need to change the shrinkwrap build line, it only matters for the
-FVP runtime parameters.)
+Heh, funny enough, this regex doesn't work here (Python 3.13.2), even 
+after removing the extra "+" on some lines, e. g.:
 
-- Kevin
+            (r"""
+              __attribute__\s*\(\(
+                (?:
+                    [\w\s]+          # attribute name
+                    (?:\([^)]*\))?   # attribute arguments
+                    \s*,?            # optional comma at the end
+                )+
+              \)\)\s+
+             """, "", re.X),
 
-> run:
->   rtvars:
->     CMDLINE:
->       type: string
->       # nr_cpus=1 can be added to speed up the boot
->       value: console=ttyAMA0 earlycon=pl011,0x1c090000 root=/dev/vda rw
->   params:
->     -C cluster0.has_permission_overlay_s1: 1
->     -C cluster1.has_permission_overlay_s1: 1
->
-> ----8<----
->
-> Finally start FVP using:
->
-> $ shrinkwrap run -o poe.yaml ns-edk2.yaml -r
-> KERNEL=<out>/arch/arm64/boot/Image -r ROOTFS=<rootfs.img>
->
-> (Use Ctrl-] to terminate the model if needed.)
->
-> <rootfs.img> is a file containing the root filesystem (in raw format,
-> e.g. ext4). The kernel itself is built as usual (defconfig works just
-> fine), just make sure to select CONFIG_KPKEYS_HARDENED_PGTABLES to
-> enable the feature. You can also select
-> CONFIG_KPKEYS_HARDENED_PGTABLES_TEST to run the tests in patch 15.
+I had to fold it into a non-verbose/extended regex, e. g.:
+
+            (r"__attribute__\s*\(\((?:[\w\s]+(?:\([^)]*\))?\s*,?)+\)\)\s+", "", 0),
+
+
+Thanks,
+Mauro
