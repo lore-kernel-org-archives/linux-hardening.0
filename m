@@ -1,71 +1,71 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EAF6200132
-	for <linux-hardening@vger.kernel.org>; Thu, 13 Feb 2025 10:13:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1D2A201006
+	for <linux-hardening@vger.kernel.org>; Thu, 13 Feb 2025 10:32:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739441588; cv=none; b=vAmP23Lo5r8jQhLLPEUnSZyTpbnz7eZ6NHud03yEW0KO5ctS4Yca+crXNtBh2VJQLAFtG+BOauDhTUxr6OjxbqlrsKKWXR0t4SYQwdZWdhiN33antC+w4cmzxGUIbYWnOubhGVPWZxlsqzg7fDsJmfAikaYsalic+/odcYVBfLc=
+	t=1739442751; cv=none; b=dlPKVr/dtUfxIlq7lz2i4V3U1n7w/5VoG626HD21xeCJMDrq2sjA+6BV4SQM+xmQDBpyTkLnMDecBKeUZi1jn09covtbfbiIR3O4KIpqb65bIy/BIj/80mUyBr4y3OjBnTZMBr92E/gfypQmbli6JvzO6iD5wQsz0BYKi6mq+cs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739441588; c=relaxed/simple;
-	bh=TPJ/nTIknPS5cx18/Sqpw2qu6ixwnIbzogcI8kwGoP8=;
+	s=arc-20240116; t=1739442751; c=relaxed/simple;
+	bh=RSb6AWuuOTKDXx/iwJOiFqPAdBRjDemlLkiLcOpxrPs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XoibrIkoESsAAfezzhWGDAUX7bTpEuYCRTtKU4PrfKwgicGmkluyCpz2F57ZDfDOwC5bsHiHck0MkcNJnB+7zRnv20zYUruwDZktQzjJl2Grr3KmK8g4yV6m4vsSYV1zgTrtXG6892GoqPfp10IfpUSu6lzaq8LpLCKe8/DZIpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UEtG5sMd; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=UqFE/mLbQC+Khb27X8wLmalB8/1k/8B0mz+DKJhqAkDJ2pp6f3zj/Nt5WKqSfgaCYKrakOAB77WP+zJXnCm0qmarx07n6+/w+8wD/obOGcTJvgc/D8wSU93HDcaKEQ/LK9U4vamvgk8ogXf7wqLngZHNybLSGfs+KH3UUg8fvqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=c+HX2z11; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UEtG5sMd"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c+HX2z11"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739441586;
+	s=mimecast20190719; t=1739442746;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Kir0xP/eZn19J/5p1I2ZFGYt8Aw6idVAPW8577Id44g=;
-	b=UEtG5sMdVaabwnNkpE+fweK0GZvaxOYNJ5PznfQqss50V0b9KeFylLnXMBsVOtqNp9n29h
-	VHeC6cKMDDp3bXp1D/1zxS74koh8lnJG8IPXfZ1EttJ5m9tXMKWdXwoXsg7xIpBHPntTLl
-	vfDeAIAr+lfO5yoz2PMDrdoI4vkU/Ck=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=Ft4Xrl2F2mgPSEHxN3B5fwyLk6cWe4p7NtJxQ7scBGU=;
+	b=c+HX2z11x9xj7CYcbhNfCg3vNanl9VP30+nVVfz7RmQU9A6J+OPWNV+djrxGUm/Mq+x6Yv
+	rxAmaz7RotKy3AK9f6tT0GC5TTU+upfovhG0bKnPd9iw5xDn6epFk+lej88pl+N4DXUpf+
+	CwVztTpzvcXc2Uh6lPxvuqAFiKRU78k=
+Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
+ [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-395-Ah_uiyQENeeaLPemaZ2fyQ-1; Thu, 13 Feb 2025 05:13:04 -0500
-X-MC-Unique: Ah_uiyQENeeaLPemaZ2fyQ-1
-X-Mimecast-MFC-AGG-ID: Ah_uiyQENeeaLPemaZ2fyQ
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4395f1c4354so4999435e9.2
-        for <linux-hardening@vger.kernel.org>; Thu, 13 Feb 2025 02:13:04 -0800 (PST)
+ us-mta-561-H3HM_lbvP-uFPwT5lQ9d3g-1; Thu, 13 Feb 2025 05:32:25 -0500
+X-MC-Unique: H3HM_lbvP-uFPwT5lQ9d3g-1
+X-Mimecast-MFC-AGG-ID: H3HM_lbvP-uFPwT5lQ9d3g
+Received: by mail-lf1-f72.google.com with SMTP id 2adb3069b0e04-5450bc1c4e6so362428e87.2
+        for <linux-hardening@vger.kernel.org>; Thu, 13 Feb 2025 02:32:25 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739441583; x=1740046383;
+        d=1e100.net; s=20230601; t=1739442744; x=1740047544;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Kir0xP/eZn19J/5p1I2ZFGYt8Aw6idVAPW8577Id44g=;
-        b=ZpFnjgLhfFAtMAfpzWGWh1SrAbOhGiwnH1pmVbf/3XLYRnAnpBl5LkD2H077V1JoYE
-         wDAf5Hc7m4aCbpAdEwWVGEYwYMutAJXVww67/u0dNXXAgF19WW+1F3jkiNJFRgrUrUh4
-         pMPf1mrYCrf1FLBkyRcMZa60ExrWNnmgYxvbPvlVbzY9O9dmg9c4AtrFzQcYD/nX+gOa
-         hIP0vqemiLfMfMZH1WX/GCZZet+8+KvR0FOF9aCSDHxGsSRtz1p+Qv2onvmO/Qcsn0rF
-         BDEa9KcOmYAvgeywlXXYqUlYbqFZ0jaVaNmc+h/aD+MjRDbnnVr5ScPw783AvEyoCDRP
-         p2mQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUHdmjuWRlgoi1O6NBSEMDM8U98GXG9H6yu4rLzed8BX4liov7gBIrkrzViQImUb9A2L9ZWqdFDsPvLO1eI+to=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyhqLN7CnmdRCfJ/l1pl4w8fQP8eDvVmjYEOlVUAm8vEO5tfZEB
-	ayd42eN7w93TRRvJiw7OzdcWiZIR2fvhzzabrTwZRZX0MP46jgmWQIOe2mKRDp0BWwcChzG08aE
-	9Btkm6Rq95u5T0aZEqaGIisN0WM6uxK/MvPrxlO2Swqk2tkIs4bB25rKx7R7Np1Wa1w==
-X-Gm-Gg: ASbGncue+TfRV15uWiqYKr+nDhn1HdZaTTOgzR1kNP/aD172SHaCY8MShcIQ6RTMBJD
-	w7urCC4004uha0BrI3HIhpMPl3aoKAySkG58/XfWU8eGBefEs+tW7//O65LS2Sszc/hDzrqEav+
-	hgSx9R0OkvRo326yzARUoH4jdv+7lXlyX9wBb8e2d9Ua8daSjIARL+K39Mnjg7vbqn5szYUJRmn
-	rw5nxciNXxVeOFYUGz4EaSU6UFHcLw5w9ByffJy7+kxW9FY2XllH3OHcyEfoB5cAEQqw4qOPCWP
-	JrSH1vMR7MHNpGkv/QkFtK/l//Hfdnijt3c=
-X-Received: by 2002:a05:600c:1d85:b0:436:f960:3428 with SMTP id 5b1f17b1804b1-439581c9cffmr67587435e9.29.1739441583335;
-        Thu, 13 Feb 2025 02:13:03 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEr/ZoioARrAtsjEX0T4uArnjm6HRk8PKz7oSXppRfbi28wR4BrFT3aKjCq8hOmcWroASjtgw==
-X-Received: by 2002:a05:600c:1d85:b0:436:f960:3428 with SMTP id 5b1f17b1804b1-439581c9cffmr67587045e9.29.1739441582954;
-        Thu, 13 Feb 2025 02:13:02 -0800 (PST)
+        bh=Ft4Xrl2F2mgPSEHxN3B5fwyLk6cWe4p7NtJxQ7scBGU=;
+        b=ZlsLmqe8zSdqa//bMEZ9whEiKufVt6QcbnVmW2g6tgmJboFZO8EwThEF3eRUCcfyK1
+         hr8lSJ8jqmafPGXXiwsMgJ05gIijK8G7i0TJD0G/+4bjDkzulokyDqRS0PiRQa5oe+LP
+         jFVRqSBM8iSln0E8Kt1cg1Bnyi3lWM7hKVn9sT/3HDjBwUf7UXbcU5xr7xJB68Pq7WPn
+         GVwFwqxijtul+vVtCezQ1grvx49bVvt5KjXcSiISHGTNtyAfyS4gJMr5YcAXPh/3/YDQ
+         sPr1dzZgo/F3tWFNs4xCLxvlC/DqZglZ9JwvCgTyO1UbEMP5ZoQb77PoblXdPVY5e8Ah
+         qaCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUmTrm37sf8BfTLymUlEw8M/ghKi71BM9enj0ua5bGKV7p6fQQ+U5BHeJsr8ck1uNGf/NMpkLPmxe88+ZsrSYg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJPykpvj94cfuTtQGp2vCfPS6KSx+VXgFDL0QXaP8WgWCMDwmU
+	OfTBwie/BSLPh914yG2f0UKpIVDLVeA7JjBKIL1hJP8S5YsS0BxDbf24ii1SVI+dhAbfEWjtQJR
+	h56a8cpCjIuT5gs8CLVOKWSiIoS9/k+vgc58kcecR9JZOm99WXQc8hQLfWUqBc8fzHQ==
+X-Gm-Gg: ASbGnctLtE8c4qrF0CrYgPzl/Xu68wPUu0JzFQ0GaJxYg6MlozdQHVz3oA3NY7c/gl0
+	lvNP2is1Yi34lLRFHEfSbs14FmDtj0n+W+rni5G2xLgueciUDxEJKWL+P1nJmHhVlsjpb0nd2qU
+	9hgaO+R0GQaMggd96GxcrCPsiXWHZBDhxxS4v3rDWK84FY5j8wxlV/CBO1TATew9f5WkUL816yA
+	G56WnWeGts1ciRCkZyII59OtfECaH8ehY8vPJzSFJoiMNwNGeJ4SLoF+yyymZDczOm0NrLsgnP4
+	OcUCpX8oLBlON6SpNMHWAi8EMXPPtYxF9+Y=
+X-Received: by 2002:a05:6512:1288:b0:542:8cf5:a3a3 with SMTP id 2adb3069b0e04-545180ea9bdmr2313815e87.5.1739442743796;
+        Thu, 13 Feb 2025 02:32:23 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFOjVjfgWpSxlDgp1d5SSfQqcJAl+Kj/IMfKejulsNDq4Ht7M1ACB2G+v8WrXUKd+ndKzht2A==
+X-Received: by 2002:a05:6512:1288:b0:542:8cf5:a3a3 with SMTP id 2adb3069b0e04-545180ea9bdmr2313793e87.5.1739442743361;
+        Thu, 13 Feb 2025 02:32:23 -0800 (PST)
 Received: from [192.168.88.253] (146-241-31-160.dyn.eolo.it. [146.241.31.160])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-439618a9970sm12953035e9.33.2025.02.13.02.13.01
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5451f083443sm131485e87.33.2025.02.13.02.32.20
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Feb 2025 02:13:02 -0800 (PST)
-Message-ID: <3bd1622d-438a-4903-b87a-08987f98c449@redhat.com>
-Date: Thu, 13 Feb 2025 11:13:00 +0100
+        Thu, 13 Feb 2025 02:32:22 -0800 (PST)
+Message-ID: <875da042-ef68-4036-beab-9beff1e21ab7@redhat.com>
+Date: Thu, 13 Feb 2025 11:32:19 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -73,65 +73,122 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] net/mlx4_core: Avoid impossible mlx4_db_alloc() order
- value
-To: Justin Stitt <justinstitt@google.com>,
- Tariq Toukan <ttoukan.linux@gmail.com>
-Cc: Kees Cook <kees@kernel.org>, Tariq Toukan <tariqt@nvidia.com>,
+Subject: Re: [PATCH] octeontx2-af: Fix uninitialized scalar variable
+To: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>,
+ Ethan Carter Edwards <ethan@ethancedwards.com>
+Cc: hariprasad <hkelam@marvell.com>, Sunil Goutham <sgoutham@marvell.com>,
+ Geetha sowjanya <gakula@marvell.com>, Subbaraya Sundeep
+ <sbhatta@marvell.com>, Bharat Bhushan <bbhushan2@marvell.com>,
  Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
  <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Yishai Hadas <yishaih@nvidia.com>,
- netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+ Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20250210174504.work.075-kees@kernel.org>
- <3biiqfwwvlbkvo5tx56nmcl4rzbq5w7u3kxn5f5ctwsolxpubo@isskxigmypwz>
- <d11de4d4-1205-43d0-8a7d-a43d55a4f3eb@gmail.com>
- <CAFhGd8om_1W7inq+V4a4EP3e5y1y+qw7C3wi3DR4WpspYzZenQ@mail.gmail.com>
+References: <20250210-otx2_common-v1-1-954570a3666d@ethancedwards.com>
+ <Z6rk3Z6TuFSJgSaV@mev-dev.igk.intel.com>
 From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <CAFhGd8om_1W7inq+V4a4EP3e5y1y+qw7C3wi3DR4WpspYzZenQ@mail.gmail.com>
+In-Reply-To: <Z6rk3Z6TuFSJgSaV@mev-dev.igk.intel.com>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: F1NCVNXr06nhR1hV2c2a-Mf28hUoesyXhaQH8FqOxjc_1739441583
+X-Mimecast-MFC-PROC-ID: kJYbG-vA_2qb1Zxa-kngXP5iH5kggVI3gPDICCW9CGQ_1739442744
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 2/13/25 1:10 AM, Justin Stitt wrote:
-> On Tue, Feb 11, 2025 at 6:22 AM Tariq Toukan <ttoukan.linux@gmail.com> wrote:
->> On 11/02/2025 2:01, Justin Stitt wrote:
->>>> diff --git a/drivers/net/ethernet/mellanox/mlx4/alloc.c b/drivers/net/ethernet/mellanox/mlx4/alloc.c
->>>> index b330020dc0d6..f2bded847e61 100644
->>>> --- a/drivers/net/ethernet/mellanox/mlx4/alloc.c
->>>> +++ b/drivers/net/ethernet/mellanox/mlx4/alloc.c
->>>> @@ -682,9 +682,9 @@ static struct mlx4_db_pgdir *mlx4_alloc_db_pgdir(struct device *dma_device)
->>>>   }
->>>>
->>>>   static int mlx4_alloc_db_from_pgdir(struct mlx4_db_pgdir *pgdir,
->>>> -                                struct mlx4_db *db, int order)
->>>> +                                struct mlx4_db *db, unsigned int order)
->>>>   {
->>>> -    int o;
->>>> +    unsigned int o;
->>>>      int i;
->>>>
->>>>      for (o = order; o <= 1; ++o) {
->>>
->>>    ^ Knowing now that @order can only be 0 or 1 can this for loop (and
->>>    goto) be dropped entirely?
->>>
->>
->> Maybe I'm missing something...
->> Can you please explain why you think this can be dropped?
+On 2/11/25 6:50 AM, Michal Swiatkowski wrote:
+> On Mon, Feb 10, 2025 at 09:01:52PM -0500, Ethan Carter Edwards wrote:
+>> The variable *max_mtu* is uninitialized in the function
+>> otx2_get_max_mtu. It is only assigned in the if-statement, leaving the
+>> possibility of returning an uninitialized value.
 > 
-> I meant "rewritten to use two if statements" instead of "dropped". I
-> think "replaced" or "refactored" was the word I wanted.
+> In which case? If rc == 0 at the end of the function max_mtu is set to
+> custom value from HW. If rc != it will reach the if after goto label and
+> set max_mtu to default.
+> 
+> In my opinion this change is good. It is easier to see that the variable
+> is alwyas correct initialized, but I don't think it is a fix for real
+> issue.
 
-IMHO that would be a significant uglification, not worthy to address an
-issue that could be solved with the patch proposed here.
+Yep, this is not a fix, the 'Fixes' tag should be dropped. Also I think
+the external tool related tag should not be included.
 
-@Tariq: are you ok with this patch?
+IMHO have the `max_mtu = 1500` initialization nearby the related warning
+is preferable.
 
-Thanks,
+Since this is a refactor, I would instead rewrite the relevant function
+to be more readable and hopefully please the checker, something alike
+the following (completely untested):
 
-Paolo
+---
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c
+b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c
+index 2b49bfec7869..7f6c8945e1ef 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c
+@@ -1915,42 +1915,37 @@ u16 otx2_get_max_mtu(struct otx2_nic *pfvf)
+ 	mutex_lock(&pfvf->mbox.lock);
+
+ 	req = otx2_mbox_alloc_msg_nix_get_hw_info(&pfvf->mbox);
+-	if (!req) {
+-		rc =  -ENOMEM;
+-		goto out;
+-	}
++	if (!req)
++		goto fail;
+
+ 	rc = otx2_sync_mbox_msg(&pfvf->mbox);
+-	if (!rc) {
+-		rsp = (struct nix_hw_info *)
+-		       otx2_mbox_get_rsp(&pfvf->mbox.mbox, 0, &req->hdr);
+-		if (IS_ERR(rsp)) {
+-			rc = PTR_ERR(rsp);
+-			goto out;
+-		}
++	if (rc)
++		goto fail;
++	rsp = (struct nix_hw_info *)
++	       otx2_mbox_get_rsp(&pfvf->mbox.mbox, 0, &req->hdr);
++	if (IS_ERR(rsp))
++		goto fail;
+
+-		/* HW counts VLAN insertion bytes (8 for double tag)
+-		 * irrespective of whether SQE is requesting to insert VLAN
+-		 * in the packet or not. Hence these 8 bytes have to be
+-		 * discounted from max packet size otherwise HW will throw
+-		 * SMQ errors
+-		 */
+-		max_mtu = rsp->max_mtu - 8 - OTX2_ETH_HLEN;
++	/* HW counts VLAN insertion bytes (8 for double tag)
++	 * irrespective of whether SQE is requesting to insert VLAN
++	 * in the packet or not. Hence these 8 bytes have to be
++	 * discounted from max packet size otherwise HW will throw
++	 * SMQ errors
++	 */
++	max_mtu = rsp->max_mtu - 8 - OTX2_ETH_HLEN;
+
+-		/* Also save DWRR MTU, needed for DWRR weight calculation */
+-		pfvf->hw.dwrr_mtu = get_dwrr_mtu(pfvf, rsp);
+-		if (!pfvf->hw.dwrr_mtu)
+-			pfvf->hw.dwrr_mtu = 1;
+-	}
++	/* Also save DWRR MTU, needed for DWRR weight calculation */
++	pfvf->hw.dwrr_mtu = get_dwrr_mtu(pfvf, rsp);
++	if (!pfvf->hw.dwrr_mtu)
++		pfvf->hw.dwrr_mtu = 1;
++	mutex_unlock(&pfvf->mbox.lock);
++	return max_mtu;
+
+-out:
++fail:
+ 	mutex_unlock(&pfvf->mbox.lock);
+-	if (rc) {
+-		dev_warn(pfvf->dev,
++	dev_warn(pfvf->dev,
+ 			 "Failed to get MTU from hardware setting default value(1500)\n");
+-		max_mtu = 1500;
+-	}
+-	return max_mtu;
++	return 1500;
+ }
+ EXPORT_SYMBOL(otx2_get_max_mtu);
+
 
