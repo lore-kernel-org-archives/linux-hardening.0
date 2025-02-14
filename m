@@ -1,227 +1,247 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E5C286346;
-	Fri, 14 Feb 2025 14:34:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6102F2661B9
+	for <linux-hardening@vger.kernel.org>; Fri, 14 Feb 2025 14:40:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739543673; cv=none; b=CI2hbgH+NpESqwXNziS7BqLaorVePmqN+XlUbMhzbykVwfBqqAlj6YdENnjOs9zH28WXAgwLcyzfPnpIYwOJyYzbTuBLKzjDgX2EvFBBqkpnJJyrA3oQYJ/tJBukWYDM43WwiYM7w+T6aTrfUV9TD8OVqcpdVunTD2iie0Hyy+o=
+	t=1739544003; cv=none; b=dSANYmORYltAnYpsCH3tIS3IjLqiAX981o4MSjHXojS0bTI7ivecnMl5g6Vj0XZJwS3D0hMSumwPbIM1xRvgGYVhFY7RFsgvvcy8KxpNbyrW3/fUDp3Hy+XKl3/wrSI3PQ/b7S6hXVNGaZExo8xKjCDysvagigQmHiqz24M5sx4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739543673; c=relaxed/simple;
-	bh=NJmvbcsU8q1XtWcH0UtkjJEOCrGZ447zohbd+uik+ZA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q+wibtCKXHChMrP+33nQeec0OGHiUFrMMymwwyVOFiSmtNv7rXUPhQ1u7RgBsrFFrZpKfW3oZJ31UTG1fuMjNNS/kH2CIHUiSB9yy9ViO4egJ0kP4V6uTEPBR7SbQjvkm5tfY9c2lOZDU7e6LF1jg2UaKS4VatKdE7SMo2eW/ZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JxBvVZBn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739544003; c=relaxed/simple;
+	bh=mSGPqJ7pPobo1joX6a4Mc1VuLcnH0TERvQkFnSYe+Os=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=FsjBqz/wZ9mesryAD7ZF0GgNs2Ek6wsXUWtT48iAN0ILNJ+zdCHphjExm6jVMsFh2p0SuDNL6voGeAF6sTwnVaseMp04FZrnVFMo+gAF7ZgFnUDZV1iM4kK/D+WP+UhpEAz/HLY5iVcuwiEDA1e18t7UW76x9zR5MgwC6Fp7TcQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=bLa9DvKo; arc=none smtp.client-ip=209.85.210.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JxBvVZBn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC23CC4CED1;
-	Fri, 14 Feb 2025 14:34:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739543673;
-	bh=NJmvbcsU8q1XtWcH0UtkjJEOCrGZ447zohbd+uik+ZA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JxBvVZBnuqJJjO/lVCfT6QnlvHi/3+ZJAjjOL819o/ZGUebO3iUVM3nd/3OHvDzVm
-	 UGgu1fPs+9NwxzPOrPW2BEcgb2raErujOmFbl2sEjbSwiaMhY+xPh2T/vRUBjF/hDV
-	 7mcnZuzCCQ8VPaMSE//8wLQwKjGxAX7kSFS6yRcdVjv/hYMzcziIh+cK6ltMNOxdGt
-	 9/5PI0rhRwfBKbUf3/jWcUI6b9zUcwGAgw/Aek9fMo1IeBAH15ekhBb7RYBjIdv53w
-	 XrzT4IrnJTiiBflyZl/G6dDlIaAvSb5YD3jzSlov+m8GlViwxzDAD57Tt5lmPYAN67
-	 /lAFq75RyuzDg==
-Date: Fri, 14 Feb 2025 15:34:28 +0100
-From: Danilo Krummrich <dakr@kernel.org>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
-	Faith Ekstrand <faith.ekstrand@collabora.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] drm/nouveau: Avoid multiple
- -Wflex-array-member-not-at-end warnings
-Message-ID: <Z69UdL9zaCINQSFC@cassiopeiae>
-References: <Z6xjZhHxRp4Bu_SX@kspp>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bLa9DvKo"
+Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-72709f5e300so156003a34.2
+        for <linux-hardening@vger.kernel.org>; Fri, 14 Feb 2025 06:40:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1739544000; x=1740148800; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=e50JFqmY2OdzosOXKFQSp920S0Fnul4zaVHjHtIwYN4=;
+        b=bLa9DvKoGazWkcbKAxOTeIlpRunD5qz4QLnpeAMe6FRRubbg09eQ3yCFF5N0BmSemU
+         GRom7QjG+H4hyJjc3vT9ZuRYJ2E/NERW4DqVa24LR73+MBrItykDI2o9rM77jf+P/8yk
+         rENRcY/Y86uaRLpGpCyLzDprf7PbsdnpDb0qo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739544000; x=1740148800;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=e50JFqmY2OdzosOXKFQSp920S0Fnul4zaVHjHtIwYN4=;
+        b=k/DxHi4xcIfBRs3U6wP5/gTfeLVWHistWSURQPGWmz7ZRz7Km8ewt6fgwEWREi01Px
+         tiSf+SOUFmsQvqAYGGEUBB22l8lRKCv1obP7Y4lBo2JPkl4hIXmbHbi35lbH8jAINR0S
+         wCntnlOONPJ+7UvtCHu20YmNiowpuRVDniRFQ916UFIagD4GOpQUdLbbCfBBFEvy8g59
+         FNXSps6UpSgFZfBfl50NN0+uimHzoaS4pr+3gEEMbnJ4LnIlA10G2qf1z2WP++7yp08Y
+         xNgGukq5xdkT59kfkPsdCW8gyyNTZYhNBcGz2iNJj09tmyUgi7f7vY1HZFgaJfILMphP
+         TWCw==
+X-Forwarded-Encrypted: i=1; AJvYcCWWgtJ+OIiHPxxSXMZH7wA2PeDwNwuxkIjDmJtmmyvZCp5M888QqriN1ArHvT1rMKwbQA3Z+KyOaeWo7FoqfqE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZUo4W5AcOlWJ/BtByV0y8QdGMAWmz6WWpBUKqn/YfJ+0H0UbU
+	1b2PAnoScvwWrLZEBbQRF+9ri8Co0K4FRait79jHLsihKgqS5ubjjja9hKlejOsP4OuQKwfLEBe
+	3NpVBsm1oHmfTLQd+6qEdz0oTwpmwm+0ae+sL
+X-Gm-Gg: ASbGnctZ8cRQukUO+Jn/ai6ffaQpbdm+EKwBG0A+yAyFrXq+xRFdkZiB5awYcLikGM7
+	8t6YzekbYhdjVZ//c9pqTn0h+nqjdDwSOSouUZXOkThxwe39GKx2v7YPy7/W3ax42xt34zK1QUd
+	nx75oFGzfUKhpOuaXchblPUgvWlPQjZQ==
+X-Google-Smtp-Source: AGHT+IE5phE84a0UTMr4W87ScgbUlW/dFHXl7hg7/1Hl59bEFS9809KM+sJHjNr/1G9i++0cxtWwsdHrnjZkeJlT4Tg=
+X-Received: by 2002:a05:6808:30aa:b0:3eb:5372:980a with SMTP id
+ 5614622812f47-3f3e1a3dae1mr621837b6e.9.1739544000360; Fri, 14 Feb 2025
+ 06:40:00 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z6xjZhHxRp4Bu_SX@kspp>
+References: <20250212032155.1276806-1-jeffxu@google.com> <20250212032155.1276806-2-jeffxu@google.com>
+ <qrxmfa6jvaojedmo6fle2e6vd5k4hzihcuxdc6zk43dclf6nsd@dvuzolusdtz4>
+ <CABi2SkUWGXtWAir5j1TO1c7FwOhbNmSwEzwTrxRgzfBydus=2A@mail.gmail.com>
+ <66q7feybn3q2vuam72uwmai322jdx3jtv2m5xmh75l6w6etqiv@knpsyh3o627k>
+ <202502131142.F5EE115C3A@keescook> <t5hsasch3aybjujmjzs3shpiorcgzp5pjc4fmz77u574voi3hr@qomzrd2llv2q>
+ <CABi2SkX3o-PdeuzownVkFT-oo8tjtaaS9ebOALu+r6O1S6W3sg@mail.gmail.com>
+ <tfoitovawb6zwr7nvwfo2mnbahgtnoo6umvecj5mgtie4b5vuf@sloraia3ppfy> <ex3y7knp5kmubeauwktvv4fdjqya7ndatzm7ht4gf773c72hc3@y4ow7k54fttj>
+In-Reply-To: <ex3y7knp5kmubeauwktvv4fdjqya7ndatzm7ht4gf773c72hc3@y4ow7k54fttj>
+From: Jeff Xu <jeffxu@chromium.org>
+Date: Fri, 14 Feb 2025 06:39:48 -0800
+X-Gm-Features: AWEUYZnFrrkgQutGRNCikvC0GjZmPuFErPnb4MZpk1qZi3Du18JPUWGyIDShPQQ
+Message-ID: <CABi2SkW_CqwNXFu9BUDfTX07aq5T8OAZern9hL=WumEWqK=ZFA@mail.gmail.com>
+Subject: Re: [RFC PATCH v5 1/7] mseal, system mappings: kernel config and
+ header change
+To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Jeff Xu <jeffxu@chromium.org>, 
+	Kees Cook <kees@kernel.org>, akpm@linux-foundation.org, jannh@google.com, 
+	torvalds@linux-foundation.org, vbabka@suse.cz, lorenzo.stoakes@oracle.com, 
+	adhemerval.zanella@linaro.org, oleg@redhat.com, avagin@gmail.com, 
+	benjamin@sipsolutions.net, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, linux-mm@kvack.org, jorgelo@chromium.org, 
+	sroettger@google.com, hch@lst.de, ojeda@kernel.org, 
+	thomas.weissschuh@linutronix.de, adobriyan@gmail.com, 
+	johannes@sipsolutions.net, pedro.falcato@gmail.com, hca@linux.ibm.com, 
+	willy@infradead.org, anna-maria@linutronix.de, mark.rutland@arm.com, 
+	linus.walleij@linaro.org, Jason@zx2c4.com, deller@gmx.de, 
+	rdunlap@infradead.org, davem@davemloft.net, peterx@redhat.com, 
+	f.fainelli@gmail.com, gerg@kernel.org, dave.hansen@linux.intel.com, 
+	mingo@kernel.org, ardb@kernel.org, mhocko@suse.com, 42.hyeyoo@gmail.com, 
+	peterz@infradead.org, ardb@google.com, enh@google.com, rientjes@google.com, 
+	groeck@chromium.org, mpe@ellerman.id.au, aleksandr.mikhalitsyn@canonical.com, 
+	mike.rapoport@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 12, 2025 at 07:31:26PM +1030, Gustavo A. R. Silva wrote:
-> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-> getting ready to enable it, globally.
-> 
-> So, in order to avoid ending up with flexible-array members in the
-> middle of other structs, we use the `struct_group_tagged()` helper
-> to separate the flexible arrays from the rest of the members in the
-> flexible structures. We then use the newly created tagged `struct
-> nvif_ioctl_v0_hdr` and `struct nvif_ioctl_mthd_v0_hdr` to replace the
-> type of the objects causing trouble in multiple structures.
-> 
-> We also want to ensure that when new members need to be added to the
-> flexible structures, they are always included within the newly created
-> tagged structs. For this, we use `static_assert()`. This ensures that the
-> memory layout for both the flexible structure and the new tagged struct
-> is the same after any changes.
-> 
-> So, with these changes, fix the following warnings:
-> drivers/gpu/drm/nouveau/nvif/object.c:60:38: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> drivers/gpu/drm/nouveau/nvif/object.c:233:38: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> drivers/gpu/drm/nouveau/nvif/object.c:214:38: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> drivers/gpu/drm/nouveau/nvif/object.c:152:38: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> drivers/gpu/drm/nouveau/nvif/object.c:138:38: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> drivers/gpu/drm/nouveau/nvif/object.c:104:38: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> drivers/gpu/drm/nouveau/nouveau_svm.c:83:35: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> drivers/gpu/drm/nouveau/nouveau_svm.c:82:30: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+On Thu, Feb 13, 2025 at 5:10=E2=80=AFPM Liam R. Howlett <Liam.Howlett@oracl=
+e.com> wrote:
+>
+> * Liam R. Howlett <Liam.Howlett@oracle.com> [250213 19:14]:
+> > * Jeff Xu <jeffxu@chromium.org> [250213 17:00]:
+> > > On Thu, Feb 13, 2025 at 12:54=E2=80=AFPM Liam R. Howlett
+> > > <Liam.Howlett@oracle.com> wrote:
+> > >
+> > > > > > >
+> > > > > > > VM_SEALED isn't defined in 32-bit systems, and mseal.c isn't =
+part of
+> > > > > > > the build. This is intentional. Any 32-bit code trying to use=
+ the
+> > > > > > > sealing function or the VM_SEALED flag will immediately fail
+> > > > > > > compilation. This makes it easier to identify incorrect usage=
+.
+> > > > > >
+> > > > > > So you are against using the #define because the VM_SYSTEM_SEAL=
+ will be
+> > > > > > defined, even though it will be VM_NONE?  This is no worse than=
+ a
+> > > > > > function that returns 0, and it aligns better with what we have=
+ today in
+> > > > > > that it can be put in the list of other flags.
+> > > > >
+> > > > > When I was reading through all of this and considering the histor=
+y of
+> > > > > its development goals, it strikes me that a function is easier fo=
+r the
+> > > > > future if/when this can be made a boot-time setting.
+> > > > >
+> > > >
+> > > > Reworking this change to function as a boot-time parameter, or what=
+ever,
+> > > > would not be a significant amount of work, if/when the time comes.
+> > > > Since we don't know what the future holds, it it unnecessary to eng=
+ineer
+> > > > in a potential change for a future version when the change is easy
+> > > > enough to make later and keep the code cleaner now.
+> > > >
+> > > Sure, I will put the function in mm.h for this patch. We can find a
+> > > proper place when it is time to implement the boot-time parameter
+> > > change.
+> > >
+> > > The call stack for sealing system mapping is something like below:
+> > >
+> > > install_special_mapping (mm/mmap.c)
+> > > map_vdso (arch/x86/entry/vdso/vma.c)
+> > > load_elf_binary (fs/binfmt_elf.c)
+> > > load_misc_binary (fs/binfmt_misc.c)
+> > > bprm_execve (fs/exec.c)
+> > > do_execveat_common
+> > > __x64_sys_execve
+> > > do_syscall_64
+> > >
+> > > IMO, there's a clear divide between the API implementer and the API u=
+ser.
+> > > mm and mm.h are the providers, offering the core mm functionality
+> > > through APIs/data structures like install_special_mapping().
+> > >
+> > > The exe layer (bprm_execve, map_vdso, etc)  is the consumer of the
+> > > install_special_mapping.
+> > > The logic related to checking if sealing system mapping is enabled
+> > > belongs to the exe layer.
+> >
+> > Since this is an all or nothing enabling, there is no reason to have
+> > each caller check the same thing and do the same action. You should put
+> > the logic into the provider - they all end up doing the same thing.
+> >
+> > Also, this is a compile time option so it doesn't even need to be
+> > checked on execution - just apply it in the first place, at the source.
+> > Your static inline function was already doing this...?
+> >
+> > I'm confused as to what you are arguing here because it goes against
+> > what you had and what I suggested.  The alternative you are suggesting
+> > is more code, more instructions, and the best outcome is the same
+> > result.
+>
+> I think I understand what you are saying now: the interface to
+> install_special_mapping() needs to take the vma flag, as it does today.
+> What I don't understand is that what you proposed and what I proposed
+> both do that.
+>
+> What I'm saying is that, since system mappings are enabled, we can
+> already know implicitly by having VM_SYSTEM_SEAL either VM_NONE or
+> VM_SEAL.
+>
+> Turning this:
+>
+> @@ -264,11 +266,12 @@ static int map_vdso(const struct vdso_image *image,=
+ unsigned long addr)
+>         /*
+>          * MAYWRITE to allow gdb to COW and set breakpoints
+>          */
+> +       vm_flags =3D VM_READ|VM_EXEC|VM_MAYREAD|VM_MAYWRITE|VM_MAYEXEC;
+> +       vm_flags |=3D mseal_system_mappings();
+>         vma =3D _install_special_mapping(mm,
+>                                        text_start,
+>                                        image->size,
+> -                                      VM_READ|VM_EXEC|
+> -                                      VM_MAYREAD|VM_MAYWRITE|VM_MAYEXEC,
+> +                                      vm_flags,
+>                                        &vdso_mapping);
+>
+> to this:
+>
+>         /*
+>          * MAYWRITE to allow gdb to COW and set breakpoints
+>          */
+>         vma =3D _install_special_mapping(mm,
+>                                        text_start,
+>                                        image->size,
+>                                        VM_READ|VM_EXEC|
+> -                                      VM_MAYREAD|VM_MAYWRITE|VM_MAYEXEC,
+> +                                      VM_MAYREAD|VM_MAYWRITE|VM_MAYEXEC|
+> +                                      VM_SYSTEM_SEAL,
+>                                        &vdso_mapping);
+>
+> No unsigned long vm_flags needed.  It's easier to read and I don't think
+> it's any more hidden than the vm_flags |=3D function call option.
+>
+The arch code needs a mseal_system_mappings() function. Otherwise,
+I'll have to change this line (in arch) again when I implement the kernel
+command line or pre-process opt-in/opt-out, which requires a function
+call. This isn't overthinking; based on our discussion so far, there
+are clear needs for a subsequent patch series. This patch is just the
+first step.
 
-@Faith, Karol: Can I get an ACK from mesa for this one?
+For software layering, I'd like to see a clear separation between
+layers. mm implements _install_special_mapping, which accepts any
+combination of vm_flags as input.  Then I'd like the caller (in arch
+code) to have all the necessary code to compose the vm_flags in one
+place. This helps readability. In the past, we discussed merging the
+vdso/vvar code across all architectures. When that happens, the new
+code in arch will likely have its own .c and .h files, but it will still si=
+t
+above mm.  That means mm won't need to change, and the
+_install_special_mapping API from mm will remain unchanged.
 
-> ---
->  drivers/gpu/drm/nouveau/include/nvif/ioctl.h | 32 +++++++++++++-------
->  drivers/gpu/drm/nouveau/nouveau_svm.c        |  4 +--
->  drivers/gpu/drm/nouveau/nvif/object.c        | 12 ++++----
->  3 files changed, 29 insertions(+), 19 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/nouveau/include/nvif/ioctl.h b/drivers/gpu/drm/nouveau/include/nvif/ioctl.h
-> index e825c8a1d9ca..00015412cb3e 100644
-> --- a/drivers/gpu/drm/nouveau/include/nvif/ioctl.h
-> +++ b/drivers/gpu/drm/nouveau/include/nvif/ioctl.h
-> @@ -3,25 +3,30 @@
->  #define __NVIF_IOCTL_H__
->  
->  struct nvif_ioctl_v0 {
-> -	__u8  version;
-> +	/* New members MUST be added within the struct_group() macro below. */
-> +	struct_group_tagged(nvif_ioctl_v0_hdr, __hdr,
-> +		__u8  version;
->  #define NVIF_IOCTL_V0_SCLASS                                               0x01
->  #define NVIF_IOCTL_V0_NEW                                                  0x02
->  #define NVIF_IOCTL_V0_DEL                                                  0x03
->  #define NVIF_IOCTL_V0_MTHD                                                 0x04
->  #define NVIF_IOCTL_V0_MAP                                                  0x07
->  #define NVIF_IOCTL_V0_UNMAP                                                0x08
-> -	__u8  type;
-> -	__u8  pad02[4];
-> +		__u8  type;
-> +		__u8  pad02[4];
->  #define NVIF_IOCTL_V0_OWNER_NVIF                                           0x00
->  #define NVIF_IOCTL_V0_OWNER_ANY                                            0xff
-> -	__u8  owner;
-> +		__u8  owner;
->  #define NVIF_IOCTL_V0_ROUTE_NVIF                                           0x00
->  #define NVIF_IOCTL_V0_ROUTE_HIDDEN                                         0xff
-> -	__u8  route;
-> -	__u64 token;
-> -	__u64 object;
-> +		__u8  route;
-> +		__u64 token;
-> +		__u64 object;
-> +	);
->  	__u8  data[];		/* ioctl data (below) */
->  };
-> +static_assert(offsetof(struct nvif_ioctl_v0, data) == sizeof(struct nvif_ioctl_v0_hdr),
-> +	      "struct member likely outside of struct_group()");
->  
->  struct nvif_ioctl_sclass_v0 {
->  	/* nvif_ioctl ... */
-> @@ -51,12 +56,17 @@ struct nvif_ioctl_del {
->  };
->  
->  struct nvif_ioctl_mthd_v0 {
-> -	/* nvif_ioctl ... */
-> -	__u8  version;
-> -	__u8  method;
-> -	__u8  pad02[6];
-> +	/* New members MUST be added within the struct_group() macro below. */
-> +	struct_group_tagged(nvif_ioctl_mthd_v0_hdr, __hdr,
-> +		/* nvif_ioctl ... */
-> +		__u8  version;
-> +		__u8  method;
-> +		__u8  pad02[6];
-> +	);
->  	__u8  data[];		/* method data (class.h) */
->  };
-> +static_assert(offsetof(struct nvif_ioctl_mthd_v0, data) == sizeof(struct nvif_ioctl_mthd_v0_hdr),
-> +	      "struct member likely outside of struct_group()");
->  
->  struct nvif_ioctl_map_v0 {
->  	/* nvif_ioctl ... */
-> diff --git a/drivers/gpu/drm/nouveau/nouveau_svm.c b/drivers/gpu/drm/nouveau/nouveau_svm.c
-> index b4da82ddbb6b..fc64c3d3169e 100644
-> --- a/drivers/gpu/drm/nouveau/nouveau_svm.c
-> +++ b/drivers/gpu/drm/nouveau/nouveau_svm.c
-> @@ -79,8 +79,8 @@ struct nouveau_svm {
->  #define SVM_ERR(s,f,a...) NV_WARN((s)->drm, "svm: "f"\n", ##a)
->  
->  struct nouveau_pfnmap_args {
-> -	struct nvif_ioctl_v0 i;
-> -	struct nvif_ioctl_mthd_v0 m;
-> +	struct nvif_ioctl_v0_hdr i;
-> +	struct nvif_ioctl_mthd_v0_hdr m;
->  	struct nvif_vmm_pfnmap_v0 p;
->  };
->  
-> diff --git a/drivers/gpu/drm/nouveau/nvif/object.c b/drivers/gpu/drm/nouveau/nvif/object.c
-> index 0b87278ac0f8..70af63d70976 100644
-> --- a/drivers/gpu/drm/nouveau/nvif/object.c
-> +++ b/drivers/gpu/drm/nouveau/nvif/object.c
-> @@ -57,7 +57,7 @@ int
->  nvif_object_sclass_get(struct nvif_object *object, struct nvif_sclass **psclass)
->  {
->  	struct {
-> -		struct nvif_ioctl_v0 ioctl;
-> +		struct nvif_ioctl_v0_hdr ioctl;
->  		struct nvif_ioctl_sclass_v0 sclass;
->  	} *args = NULL;
->  	int ret, cnt = 0, i;
-> @@ -101,7 +101,7 @@ int
->  nvif_object_mthd(struct nvif_object *object, u32 mthd, void *data, u32 size)
->  {
->  	struct {
-> -		struct nvif_ioctl_v0 ioctl;
-> +		struct nvif_ioctl_v0_hdr ioctl;
->  		struct nvif_ioctl_mthd_v0 mthd;
->  	} *args;
->  	u32 args_size;
-> @@ -135,7 +135,7 @@ void
->  nvif_object_unmap_handle(struct nvif_object *object)
->  {
->  	struct {
-> -		struct nvif_ioctl_v0 ioctl;
-> +		struct nvif_ioctl_v0_hdr ioctl;
->  		struct nvif_ioctl_unmap unmap;
->  	} args = {
->  		.ioctl.type = NVIF_IOCTL_V0_UNMAP,
-> @@ -149,7 +149,7 @@ nvif_object_map_handle(struct nvif_object *object, void *argv, u32 argc,
->  		       u64 *handle, u64 *length)
->  {
->  	struct {
-> -		struct nvif_ioctl_v0 ioctl;
-> +		struct nvif_ioctl_v0_hdr ioctl;
->  		struct nvif_ioctl_map_v0 map;
->  	} *args;
->  	u32 argn = sizeof(*args) + argc;
-> @@ -211,7 +211,7 @@ void
->  nvif_object_dtor(struct nvif_object *object)
->  {
->  	struct {
-> -		struct nvif_ioctl_v0 ioctl;
-> +		struct nvif_ioctl_v0_hdr ioctl;
->  		struct nvif_ioctl_del del;
->  	} args = {
->  		.ioctl.type = NVIF_IOCTL_V0_DEL,
-> @@ -230,7 +230,7 @@ nvif_object_ctor(struct nvif_object *parent, const char *name, u32 handle,
->  		 s32 oclass, void *data, u32 size, struct nvif_object *object)
->  {
->  	struct {
-> -		struct nvif_ioctl_v0 ioctl;
-> +		struct nvif_ioctl_v0_hdr ioctl;
->  		struct nvif_ioctl_new_v0 new;
->  	} *args;
->  	int ret = 0;
-> -- 
-> 2.43.0
-> 
+The mseal_system_mappings() function can already return VM_SEALED,
+and future patches will add more logic into mseal_system_mappings(), e.g.
+check for kernel cmdline or opt-in/opt-out. we don't need a separate
+VM_SYSTEM_SEAL, which is a *** redirect macro ***, I prefer to keep
+all the important code logic relevant to configuration of enabling system
+mapping sealing in one place, for easy reading.
+
+mseal_system_mappings() can be placed in mm.h in this patch, as you
+suggested. But in the near future, it will be moved out of mm.h and find
+a right header. The functionality belongs to exe namespace, because of
+the reasons I put in the commit message and discussions.
+
+Thanks
+-Jeff
+
+-Jeff
