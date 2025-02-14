@@ -1,69 +1,130 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2140B24166C;
-	Fri, 14 Feb 2025 10:05:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 302F12627ED
+	for <linux-hardening@vger.kernel.org>; Fri, 14 Feb 2025 11:44:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739527550; cv=none; b=AIhrY7dqal/9A6qjiL3cCFRgzmXSpc5dD+94PcxtAcol72GBYyRkjPSD0wU2U7Prflm5mbGkgW6iMxUfcRdHnUfwCwhlNe+ar7QvdvtEAXfKF1qmLLFEfbmj+PFs1NQbkOKQd7K8ZlSp8G3TpZKsIDb0vOyO6Y5iChECv73sxFg=
+	t=1739533458; cv=none; b=WbMXlOYApSKg6OgxZy2yHtzZ3XkBPIY+0zAWDD3b+W7mD8P4QBIfowYUOBye0uvgMZpV/XO2ByOOyZjqdTOF7jUJvwPcPphM++wUgwqKgLbxXcCussmsGXJUpBn3om1NayKd2lB9ufUajo4d29MSbVUi1QAsALQ0SrhJFRzPu6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739527550; c=relaxed/simple;
-	bh=hEXV7yfCSHFzsOP4HMvf4zh9MsM4ube2N74I3JPqssE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tJT66GvdgAlpIpajINnqc5t4JGwudn+r6CvXakQ5FcjIitbpLNoD3F7msLRi9PIqZ2DIA+jNFsQv7YJ4BVE62tmX3cYwf20CAXP1dvephBguix9ZANUwU+qnZ9+9JQcPpyEMerPO5n1sZkQA0YM4IuO0TIF9qQ5UHbMAOJ5aqZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=nMGjjVI1; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1739533458; c=relaxed/simple;
+	bh=rwhe49/5jB2QdiusmRIz9cSf22eUSJf+KuUjfLK0eQo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=T2Ll+ZVIjnzqVPGKQrkhNqPD1EoxoM7viRhIuLw4Kq4dR0X6RRi4gtppkuRbmxI8z26m/Lm242voHUDc5jlF0ODGzqteYT29WeNtsr7yGA8BQ/exR46PmRK401AWAkf8MCNZlJHmWD3KkZx6Bt+k/nDbg0tT9JFF+xex7bnLvQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=pf3hgB0D; arc=none smtp.client-ip=95.215.58.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nMGjjVI1"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=hEXV7yfCSHFzsOP4HMvf4zh9MsM4ube2N74I3JPqssE=; b=nMGjjVI1H2TwZJKNmdf35JE8Vv
-	000AmU9Jaq0zGxW6lDXMT/kvftMXTdEihJNgYiFiS43HDy1HpyHZU8FM4zT+9psLF/6KAIOw94dlX
-	zzV+R+bxi3NkNjHgQh7NtmL6ea1TxSONeZQs5fMZw/V+SF1wfJnj4scOiHmpCfb+vKVq3Lx4zzJgS
-	RqSlZq8F7NnSNWN3UtV1ZgNBLgT3lpf9QYZJBFH2PAMAYpYGVrk1s7R/YZ+UZAZTMuOIZ9VnrzqpU
-	vD7sMfLBjprEHtOyUq80imHQvoGX8co9DYpDgXgsE9mEhfBbX7hr23e0PRsRIRCkcX0CvNVPgtM1I
-	8a8L9CLA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tisZu-0000000AwUc-1RaT;
-	Fri, 14 Feb 2025 10:05:46 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id E77E830050D; Fri, 14 Feb 2025 11:05:45 +0100 (CET)
-Date: Fri, 14 Feb 2025 11:05:45 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Andrew Cooper <andrew.cooper3@citrix.com>
-Cc: Kees Cook <kees@kernel.org>, jannh@google.com, jmill@asu.edu,
-	joao@overdrivepizza.com, linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org, luto@kernel.org,
-	samitolvanen@google.com
-Subject: Re: [RFC] Circumventing FineIBT Via Entrypoints
-Message-ID: <20250214100545.GG21726@noisy.programming.kicks-ass.net>
-References: <CAG48ez09JuZPt112nnE6N=hS6cfCLkT-iHUAmidQ-QGNGMVoBw@mail.gmail.com>
- <c46f5614-a82e-42fc-91eb-05e483a7df9c@citrix.com>
- <202502131224.D6F5A235@keescook>
- <6641d1e0-7151-4857-bb0e-db555d4cdf50@citrix.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="pf3hgB0D"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1739533452;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=89gFJdlR9qUDNbjkUW82cBr8nzW66/88qgzIThpdpAo=;
+	b=pf3hgB0DH54F1MAtwetbpQhnD8ASG/CUsIHMzSv3DqCZTpyk6o6e8nIcFe5fAsmHEMZf7x
+	QSEXFXilQLJ4mSm7dsciz0AK6PuC0V41qB4cutKiZ4eEqdRuHFk4pvwM/GtTnN8Y4gADxi
+	r0u7RX9ixZEMkSv+VAi1iFEnw/4TKEw=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Don Brace <don.brace@microchip.com>,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	linux-hardening@vger.kernel.org,
+	Kees Cook <kees@kernel.org>,
+	David Laight <david.laight.linux@gmail.com>,
+	Bart Van Assche <bvanassche@acm.org>,
+	storagedev@microchip.com,
+	linux-scsi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3] scsi: hpsa: Remove deprecated and unnecessary strncpy()
+Date: Fri, 14 Feb 2025 12:43:02 +0100
+Message-ID: <20250214114302.86001-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6641d1e0-7151-4857-bb0e-db555d4cdf50@citrix.com>
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, Feb 13, 2025 at 08:41:16PM +0000, Andrew Cooper wrote:
+While replacing strncpy() with strscpy(), Bart Van Assche pointed out
+that the code occurs inside sysfs write callbacks, which already uses
+NUL-terminated strings. This allows the string to be passed directly to
+sscanf() without requiring a temporary copy.
 
-> The problem is that SYSCALL entry/exit is a toxic operating mode,
-> because you only have to think about sneezing and another user->kernel
-> priv-esc appears.
+Remove the deprecated and unnecessary strncpy() and the corresponding
+local variables, and pass the buffer buf directly to sscanf().
 
-For a very brief moment I thought we could leave out the ENDBR there and
-eat the #CP, but 1) slow, and 2) then #CP needs to be an IST and ARGHH.
+Replace sscanf() with kstrtoint() to silence checkpatch warnings.
 
-So yeah, I didn't just suggest anything at all.
+Compile-tested only.
 
-I hate all this.
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Cc: Kees Cook <kees@kernel.org>
+Cc: David Laight <david.laight.linux@gmail.com>
+Suggested-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+---
+Changes in v2:
+- Adjust len to copy the same number of bytes as with strncpy()
+- Link to v1: https://lore.kernel.org/r/20250212222214.86110-2-thorsten.blum@linux.dev/
+
+Changes in v3:
+- Remove strncpy() and tmpbuf et al and use buf directly as suggested by
+  Bart Van Assche and Kees Cook
+- Replace sscanf() with kstrtoint() as suggested by David Laight
+- Link to v2: https://lore.kernel.org/linux-kernel/20250213195332.1464-3-thorsten.blum@linux.dev/
+---
+ drivers/scsi/hpsa.c | 16 ++++------------
+ 1 file changed, 4 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/scsi/hpsa.c b/drivers/scsi/hpsa.c
+index 84d8de07b7ae..bb65954b1b1e 100644
+--- a/drivers/scsi/hpsa.c
++++ b/drivers/scsi/hpsa.c
+@@ -453,17 +453,13 @@ static ssize_t host_store_hp_ssd_smart_path_status(struct device *dev,
+ 					 struct device_attribute *attr,
+ 					 const char *buf, size_t count)
+ {
+-	int status, len;
++	int status;
+ 	struct ctlr_info *h;
+ 	struct Scsi_Host *shost = class_to_shost(dev);
+-	char tmpbuf[10];
+ 
+ 	if (!capable(CAP_SYS_ADMIN) || !capable(CAP_SYS_RAWIO))
+ 		return -EACCES;
+-	len = count > sizeof(tmpbuf) - 1 ? sizeof(tmpbuf) - 1 : count;
+-	strncpy(tmpbuf, buf, len);
+-	tmpbuf[len] = '\0';
+-	if (sscanf(tmpbuf, "%d", &status) != 1)
++	if (kstrtoint(buf, 10, &status))
+ 		return -EINVAL;
+ 	h = shost_to_hba(shost);
+ 	h->acciopath_status = !!status;
+@@ -477,17 +473,13 @@ static ssize_t host_store_raid_offload_debug(struct device *dev,
+ 					 struct device_attribute *attr,
+ 					 const char *buf, size_t count)
+ {
+-	int debug_level, len;
++	int debug_level;
+ 	struct ctlr_info *h;
+ 	struct Scsi_Host *shost = class_to_shost(dev);
+-	char tmpbuf[10];
+ 
+ 	if (!capable(CAP_SYS_ADMIN) || !capable(CAP_SYS_RAWIO))
+ 		return -EACCES;
+-	len = count > sizeof(tmpbuf) - 1 ? sizeof(tmpbuf) - 1 : count;
+-	strncpy(tmpbuf, buf, len);
+-	tmpbuf[len] = '\0';
+-	if (sscanf(tmpbuf, "%d", &debug_level) != 1)
++	if (kstrtoint(buf, 10, &debug_level))
+ 		return -EINVAL;
+ 	if (debug_level < 0)
+ 		debug_level = 0;
+-- 
+2.48.1
+
