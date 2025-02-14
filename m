@@ -1,104 +1,198 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBFCB7081C;
-	Fri, 14 Feb 2025 14:03:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62133245002
+	for <linux-hardening@vger.kernel.org>; Fri, 14 Feb 2025 14:15:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739541788; cv=none; b=KgGtfIvjxbMY+wDKDRIGL5i+rTEJlBCOJKViCGu9J+UENMFdw6FkZhDXMol9Ayr6kDkZbojZvfAnG6y2TU1A3de8iErP+B1ndw7igps6vo7rxgIn3EHiqtjFaIKtIw7zQwqqlU5WlfkebRrWoNwaX7vJF+Nt6TX/pkBzEkvXyK8=
+	t=1739542537; cv=none; b=RAlIlDql1VnnoiO59i+btOiuzENidKASCWMn+dhJcIfGD35hO3P/WgqMbD2gNQ7yr6erqtRQlRJjeEXOzc2dDu5N0b1MeRY+ECymbc9gdACXf3HOM2dA/O7618yCAYHkhv2Hs/+FOsjxgyJgxHquxckjGjHpH6VdX3LXM6zo+VA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739541788; c=relaxed/simple;
-	bh=HPjrAGuqBs30Xqla0S08E7D+Vsk8nak+FoJqatHVKqs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GEbxC9LFJZAeVC2jywQgScFjENM+hOLdOT7QtFvgA6UapXlLwv8TvxYwVew1rSx1P9AF9MwxveQDWAVP0RCO3ym4PzT0J7s0iK8tb4z3F+ycq0p+IYI6Ckizug9Nlrz+87v1I5GHa1vwq5Fez6GISeCQ/O2ALfiPmMQzUS7VcXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=ffutnsRo; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1739542537; c=relaxed/simple;
+	bh=Vg3CFjgZ4NjWXgslmVJ4H6JEVnL4fXVyeFPaL3zku7U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dgqnUipH6RF19pYwe1SrVuyFSIlpNIbzOv9DOidNv9vaUqdjK6zHoVTyAGZSuxkF9vm+qnkF9nDhywZH2ZKAKzwmiIGA+4Zc3hLtmyi8pt9gDaX3t0TnxG6OJIEDuiICOEYojF2ipTqgtWaU7pQH4rAy08dyIvRDE1BsiiV8VFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=PcZvAbHA; arc=none smtp.client-ip=209.85.167.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="ffutnsRo"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=YPfqLp9fbZ/8JOO2RhhN9couacnmyf0ld4MXnUIvALM=; b=ffutnsRoSZY8FyHYndFd/8kLiJ
-	I4KHxo35/Ek9TxhoUWtM8unvMnPGhWSEmkPTEcDT3jYClEQEnUPZhUgdZ2ziMHH55Gx8f8Cqx5dY+
-	TMUNkVQeXvIecwSFy4vJcLw7LskEMPFSJgDfs890xo04TQ/QG3ANEnPgdKm5ofEn2wRI=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1tiwHO-00E5L7-4X; Fri, 14 Feb 2025 15:02:54 +0100
-Date: Fri, 14 Feb 2025 15:02:54 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Jie Luo <quic_luoj@quicinc.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Lei Wei <quic_leiwei@quicinc.com>,
-	Suruchi Agarwal <quic_suruchia@quicinc.com>,
-	Pavithra R <quic_pavir@quicinc.com>,
-	Simon Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org,
-	quic_kkumarcs@quicinc.com, quic_linchen@quicinc.com,
-	srinivas.kandagatla@linaro.org, bartosz.golaszewski@linaro.org,
-	john@phrozen.org
-Subject: Re: [PATCH net-next v3 13/14] net: ethernet: qualcomm: Add PPE
- debugfs support for PPE counters
-Message-ID: <72171304-9a98-4734-85a3-d1302d053602@lunn.ch>
-References: <20250209-qcom_ipq_ppe-v3-0-453ea18d3271@quicinc.com>
- <20250209-qcom_ipq_ppe-v3-13-453ea18d3271@quicinc.com>
- <5a53333b-e94c-4fb7-b23d-e1d38d2dad8e@lunn.ch>
- <a455a2f6-ca0b-43e0-b18c-53f73344981f@quicinc.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PcZvAbHA"
+Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-3f3d71b1627so172509b6e.1
+        for <linux-hardening@vger.kernel.org>; Fri, 14 Feb 2025 06:15:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1739542534; x=1740147334; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jUSHq3jaDRKrxbHBpMUUMtmLRZDuG6csEtNLoVlgBlw=;
+        b=PcZvAbHAhWaVh3TBvScKKHci3ZLEkVWkpaJYLA8Drl5X9+HdqEk2xY5PROIFGAE1Op
+         ih1FAc6mf59rAuEl9gp33d+D5i2uR/O1pOrq18gBSC7ItVXtKrhDvS2KyiSglJ5LsXuT
+         Wy9VzC6qg3jm7GWcxYcOFA9rwoIQUfpXAruHI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739542534; x=1740147334;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jUSHq3jaDRKrxbHBpMUUMtmLRZDuG6csEtNLoVlgBlw=;
+        b=FeMB0JW7FctT2YboNwiitSWFY1UZvRt0RCHu/ASc7jz++MexmzmXqZ4Oql4ksEfHtv
+         54r8L6vucmI+fiAHhc6GV44Bl3Nz/VJdHiSyEb+X2TvYgD0lTx6HI9FLKJwRv5EThtU3
+         F11gG2Rmm4/962cYrJjQIe1WflCzA3b8OGWGtekOiNr8SksdALK8Eg7hSG9AnaszLO60
+         9p8yYjHHL6j8cddib7s3RQhCnEaiT5nIX3G0ATjj8nX9UqVavaXT4QNUHNdEvR2hr5DT
+         8mwUWR25sQkkKIMKHu43Q+34IJBjN5FoVcU7Jk6xIvfBXdji0jrxxx006MfrEZ4JXfLv
+         1PNg==
+X-Forwarded-Encrypted: i=1; AJvYcCWxQls3BogfA2HpADFo/SQwTJgHO6OP4hyJDwYwaKV7QX/4a9o647PYjvtaaHBQDf3+IvR6XFY5GEzR8lNznNc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRnAZ+YCd1YhSGgI62FUfom0nCTDA5fSQnm5eAOgvCcuJDhQkB
+	ds4hwgJirlIXB43NKdfXUEOCXUOfnL4yu+6QEaXOND/hNOb+SWhei5AOexQV9VZl3ePn5wW8f4U
+	IL93jlxRSfBqKOXKJXm/iRBa+0H17aHnAYWWb
+X-Gm-Gg: ASbGncs/jrtoiZj+vQp//14vjgftB0vMhCFxWa5r3RdUhzG5o4k/QfXIgkOs/ymhhz9
+	UESfB5H3hFgjKM3plKnDG28Fbx/wQFf9ipRBDLvQ7i7dfUtX482W0givzlWTIv/yseHfhR/PM9F
+	ztOVQj9daHDht5/qIuyqY3PsQGk40tog==
+X-Google-Smtp-Source: AGHT+IGWTatZC4i6Xeclni+qSZuML5VogNMExsBKztM0nMedMyzeMcfxgLKyTArA7nCZqL1C62QN50G8Y+0AaZqQ5oc=
+X-Received: by 2002:a05:6808:2223:b0:3f3:d712:ed1d with SMTP id
+ 5614622812f47-3f3d712eec2mr2215561b6e.3.1739542534360; Fri, 14 Feb 2025
+ 06:15:34 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a455a2f6-ca0b-43e0-b18c-53f73344981f@quicinc.com>
+References: <20250212032155.1276806-1-jeffxu@google.com> <20250212032155.1276806-3-jeffxu@google.com>
+ <20250212135000-861e6353-6e0a-43c3-9b28-649ae4dfc607@linutronix.de>
+ <CABi2SkUCviiTbd1roeBiqSk98S87R1WwSP9rUYh4t3JfSD+2ZA@mail.gmail.com>
+ <35C0FD0B-0483-4663-AD60-701AB8D9247A@kernel.org> <CABi2SkU0kW8yAoucxLjkqXpFJMJzGDmKZZhgMJGobaALNVTGvA@mail.gmail.com>
+ <462A068C-489E-400D-9E82-F54F46E77DF3@kernel.org>
+In-Reply-To: <462A068C-489E-400D-9E82-F54F46E77DF3@kernel.org>
+From: Jeff Xu <jeffxu@chromium.org>
+Date: Fri, 14 Feb 2025 06:15:00 -0800
+X-Gm-Features: AWEUYZnCbHWd4NfDRp5Q7loL4F7IOU0imN4RIPXvJI6KVbMK6gXuf6iKqHba70I
+Message-ID: <CABi2SkXjiJ-fmJxTFdzHRyT9opxUYbYJ1zEmRameDhHECLtJdg@mail.gmail.com>
+Subject: Re: [RFC PATCH v5 2/7] selftests: x86: test_mremap_vdso: skip if vdso
+ is msealed
+To: Kees Cook <kees@kernel.org>
+Cc: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
+	akpm@linux-foundation.org, keescook@chromium.org, jannh@google.com, 
+	torvalds@linux-foundation.org, vbabka@suse.cz, lorenzo.stoakes@oracle.com, 
+	Liam.Howlett@oracle.com, adhemerval.zanella@linaro.org, oleg@redhat.com, 
+	avagin@gmail.com, benjamin@sipsolutions.net, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, linux-mm@kvack.org, jorgelo@chromium.org, 
+	sroettger@google.com, hch@lst.de, ojeda@kernel.org, adobriyan@gmail.com, 
+	johannes@sipsolutions.net, pedro.falcato@gmail.com, hca@linux.ibm.com, 
+	willy@infradead.org, anna-maria@linutronix.de, mark.rutland@arm.com, 
+	linus.walleij@linaro.org, Jason@zx2c4.com, deller@gmx.de, 
+	rdunlap@infradead.org, davem@davemloft.net, peterx@redhat.com, 
+	f.fainelli@gmail.com, gerg@kernel.org, dave.hansen@linux.intel.com, 
+	mingo@kernel.org, ardb@kernel.org, mhocko@suse.com, 42.hyeyoo@gmail.com, 
+	peterz@infradead.org, ardb@google.com, enh@google.com, rientjes@google.com, 
+	groeck@chromium.org, mpe@ellerman.id.au, aleksandr.mikhalitsyn@canonical.com, 
+	mike.rapoport@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> > > +/* The number of packets dropped because of no buffer available, no PPE
-> > > + * buffer assigned to these packets.
-> > > + */
-> > > +static void ppe_port_rx_drop_counter_get(struct ppe_device *ppe_dev,
-> > > +					 struct seq_file *seq)
-> > > +{
-> > > +	u32 reg, drop_cnt = 0;
-> > > +	int ret, i, tag = 0;
-> > > +
-> > > +	PRINT_COUNTER_PREFIX("PRX_DROP_CNT", "SILENT_DROP:");
-> > > +	for (i = 0; i < PPE_DROP_CNT_TBL_ENTRIES; i++) {
-> > > +		reg = PPE_DROP_CNT_TBL_ADDR + i * PPE_DROP_CNT_TBL_INC;
-> > > +		ret = ppe_pkt_cnt_get(ppe_dev, reg, PPE_PKT_CNT_SIZE_1WORD,
-> > > +				      &drop_cnt, NULL);
-> > > +		if (ret) {
-> > > +			seq_printf(seq, "ERROR %d\n", ret);
-> > > +			return;
-> > > +		}
-> > 
-> > This is an error getting the value from the hardware? You should not
-> > put that into the debugfs itself, you want the read() call to return
-> > it.
-> > 
-> 
-> Yes, this error code is returned by regmap read functions in
-> ppe_pkt_cnt_get() when the hardware counter read fails. I will
-> remove it from debugfs file and instead log the error to the
-> console (dev_info).
+On Thu, Feb 13, 2025 at 6:52=E2=80=AFPM Kees Cook <kees@kernel.org> wrote:
+>
+>
+>
+> On February 13, 2025 2:20:01 PM PST, Jeff Xu <jeffxu@chromium.org> wrote:
+> >On Thu, Feb 13, 2025 at 11:28=E2=80=AFAM Kees Cook <kees@kernel.org> wro=
+te:
+> >>
+> >>
+> >>
+> >> On February 13, 2025 6:14:00 AM PST, Jeff Xu <jeffxu@chromium.org> wro=
+te:
+> >> >On Wed, Feb 12, 2025 at 5:04=E2=80=AFAM Thomas Wei=C3=9Fschuh
+> >> ><thomas.weissschuh@linutronix.de> wrote:
+> >> >>
+> >> >> On Wed, Feb 12, 2025 at 03:21:50AM +0000, jeffxu@chromium.org wrote=
+:
+> >> >> > From: Jeff Xu <jeffxu@chromium.org>
+> >> >> >
+> >> >> > Add code to detect if the vdso is memory sealed, skip the test
+> >> >> > if it is.
+> >> >> >
+> >> >> > Signed-off-by: Jeff Xu <jeffxu@chromium.org>
+> >> >> > ---
+> >> >> >  .../testing/selftests/x86/test_mremap_vdso.c  | 38 +++++++++++++=
+++++++
+> >> >> >  1 file changed, 38 insertions(+)
+> >> >> >
+> >> >> > diff --git a/tools/testing/selftests/x86/test_mremap_vdso.c b/too=
+ls/testing/selftests/x86/test_mremap_vdso.c
+> >> >> > index d53959e03593..c68077c56b22 100644
+> >> >> > --- a/tools/testing/selftests/x86/test_mremap_vdso.c
+> >> >> > +++ b/tools/testing/selftests/x86/test_mremap_vdso.c
+> >> >> > @@ -14,6 +14,7 @@
+> >> >> >  #include <errno.h>
+> >> >> >  #include <unistd.h>
+> >> >> >  #include <string.h>
+> >> >> > +#include <stdbool.h>
+> >> >> >
+> >> >> >  #include <sys/mman.h>
+> >> >> >  #include <sys/auxv.h>
+> >> >> > @@ -55,13 +56,50 @@ static int try_to_remap(void *vdso_addr, unsi=
+gned long size)
+> >> >> >
+> >> >> >  }
+> >> >> >
+> >> >> > +#define VDSO_NAME "[vdso]"
+> >> >> > +#define VMFLAGS "VmFlags:"
+> >> >> > +#define MSEAL_FLAGS "sl"
+> >> >> > +#define MAX_LINE_LEN 512
+> >> >> > +
+> >> >> > +bool vdso_sealed(FILE *maps)
+> >> >> > +{
+> >> >> > +     char line[MAX_LINE_LEN];
+> >> >> > +     bool has_vdso =3D false;
+> >> >> > +
+> >> >> > +     while (fgets(line, sizeof(line), maps)) {
+> >> >> > +             if (strstr(line, VDSO_NAME))
+> >> >> > +                     has_vdso =3D true;
+> >> >> > +
+> >> >> > +             if (has_vdso && !strncmp(line, VMFLAGS, strlen(VMFL=
+AGS))) {
+> >> >> > +                     if (strstr(line, MSEAL_FLAGS))
+> >> >> > +                             return true;
+> >> >> > +
+> >> >> > +                     return false;
+> >> >>
+> >> >> This only tests that any mapping after the vdso is sealed.
+> >> >
+> >> >The code above begins by searching for the "[vdso]" string, then look=
+s
+> >> >for the first line that starts with "VmFlags:", and looks for the "sl=
+"
+> >> >substring within that line. We're assuming the format of smaps won't
+> >> >change from release to release.
+> >>
+> >> Oh, I missed this in my reviews: nothing _resets_ has_vdso to false, s=
+o if any other mapping follows vdso that happens to be sealed, this will re=
+turn true...
+> >>
+> >It won't return the next mapping's sealing flag.
+> >After finding the "[vdso]", if the next line that contains VMFLAGS
+> >doesn't have the "sl" flag, the function returns false immediately.
+>
+> Oh! Agh, yes. You are right, this is all fine.
+>
+> >I can switch to vm_util, I will need to add a new parsing function in
+> >vm_util, the existing __get_smap_entry() only searches for vm's
+> >starting address, not name.
+>
+> Unless someone feels strongly about this, my instinct is to avoid the hig=
+her complexity of a cross-test thing.
+>
+OK. I will keep the existing test.
 
-and return it to user space via the read() call. These functions
-normally return the number of bytes put into the buffer. But you can
-also return a negative error code which gets passed back to user space
-instead.
+If we decide to use vm_util, it would be best to refactor it
+separately later on. The existing vm_util can't be used as is for my
+needs, so some refactoring would be necessary.
 
-	Andrew
+
+Thanks
+-Jeff
+
+> -Kees
+>
+>
+> --
+> Kees Cook
