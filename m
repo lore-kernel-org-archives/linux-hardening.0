@@ -1,62 +1,62 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B962E1FCCE5
-	for <linux-hardening@vger.kernel.org>; Fri, 14 Feb 2025 22:40:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E04321C84AC
+	for <linux-hardening@vger.kernel.org>; Fri, 14 Feb 2025 23:06:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739572834; cv=none; b=Kp9UaHq2L4AMsZeEa736Sg1Xt9ti2zqpoIZ4U/QcAu1f1KUXNLLTNcREOY55stFHLrBKoFUIkrHghhjv/jsNFhzNWxDWgtQpiNc3WdXed3JtTf3XYI1xsdUbq5khqjZtbMw7U0TW0/9mZDskYmnmUrJlfnR41cdDj3y5gEWovwU=
+	t=1739574415; cv=none; b=uY8osLmOuTHKwIXg/dmjc5kcLjd+g+jdlBtpH8YEqJ4qUL8Dnr2UrRUKm6O/mtLulkj7u/g4ooDUR1oRCPnTnEFzZR+ggYanZgElGmDa3ac2zA98zY+Wqhkni8ywswb9AfTF31NITIud+FSKWSTwjCkeC4i+71iWRj8w47E3skU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739572834; c=relaxed/simple;
-	bh=FkhQen3jMCWKwg3SUUeVcC847PjdOBFyLDHwxk87puw=;
+	s=arc-20240116; t=1739574415; c=relaxed/simple;
+	bh=KyQL3L0qpc6BP+Wc2cClrEFXi5QBtwDn66b2cUtQHGI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=guox1ogR/h7as/lh2Vv0J9N9n1e2dgcOpTw0N2y/Og0woQqq4Dw2VJUfPoP0k0rSoDsGAkg3bVeLgusR7yffntzHIWlO9TNMILb/VmfvMYwHYqnFNGLNUHolKG0vkrU0rdHFYHwyBXED0r92SRyqrTchkbFTGCJw4UKAAe443o8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=qllAR9dY; arc=none smtp.client-ip=209.85.128.48
+	 In-Reply-To:Content-Type; b=fLf+4JAeq9jreWM0bx5XLZO1HJAjs4N98dZBK2aRxTDKHTSjXdFVaew8eZJvksc29Dote5i+tCSldOgoWBYSpJV1LxvrmfE1S32vLGzEXkPyZaOQU6RnXzpp9ytNx5zq9Yuq6q7j0qrpek2YKvj4l/AjcsQkkZ7XIaaSmC9l7Pw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=GOuUc9rR; arc=none smtp.client-ip=209.85.221.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="qllAR9dY"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4395f81db4dso15828355e9.1
-        for <linux-hardening@vger.kernel.org>; Fri, 14 Feb 2025 14:40:32 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="GOuUc9rR"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-38de1a5f039so2372211f8f.2
+        for <linux-hardening@vger.kernel.org>; Fri, 14 Feb 2025 15:06:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=citrix.com; s=google; t=1739572831; x=1740177631; darn=vger.kernel.org;
+        d=citrix.com; s=google; t=1739574412; x=1740179212; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=d2Es7W7rIA+SDUtfarzDyFqNiRUQrkoPh/TZ5m+aaOw=;
-        b=qllAR9dYU8hMk6l/ezrKB87OeELFeIVFPtt23l48p5S8XQtlH9vySkvJYu69VVO9Ib
-         5fsOjh4JOI3OgdtpHdpe8lnLwMNhIOpZC6C59uBi6FOJZ0ziZP7KJTcnJn3V0/bKr/J/
-         xOfLxoh2zHMiUqA8ujquQQRslDjohT9+y85kU=
+        bh=PB+r6JvVzie2JvMnY5R6Nkb8yUTw2Iu5MRXRiO5OIrs=;
+        b=GOuUc9rRT02Q4U23i5kui/A2Bmjf6IcdJ+UIJc98pgRgVeEGOQuoURAvkxdF9Yx6rD
+         mwUaZOwVs0G1SeoV+7u9i7i3ymmr670xx/ilYbq/2h28jcsknLpm07iy605tk3I9VO1p
+         4n0ilTUgiP+38IcixEmuuHlhW+bcnCD0+MEZ8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739572831; x=1740177631;
+        d=1e100.net; s=20230601; t=1739574412; x=1740179212;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=d2Es7W7rIA+SDUtfarzDyFqNiRUQrkoPh/TZ5m+aaOw=;
-        b=m5YExPvuBsbmNo8/Z7VaH7J7i1tAdohB+NuA5vmqr9Krsj5p/n8SfIUtVAch8Mu3h8
-         OF1kleLPSp04irwL73RbqiaCycKv9AVy7VPYVDaXndrIenhZ34stuEzpiZHQtl6YpJha
-         QAVYxSVanOD4X9csA/bqbH9/cmB88YenSIsFveSHaRDN/Vr6LT5JP1hhEsyMD6qgj0Ly
-         Q8P3yJ9fJo3Q0dbFgoCnhF4Nnw13KRbjlMvHKVi61lN6BERWdeXY1cWwlgVi3t41jG5a
-         IL2Tx+lma/ulN8AGcuchhaki8FdlhlDrlKqh6wvT5XZemVqITbzUNyem5amYmcCMTu6B
-         MBzg==
-X-Forwarded-Encrypted: i=1; AJvYcCVYQ8ypRBT57DnYWLk4qpxRf/0K96neNHQOFGO4GvbVzLJynIM4UGf8wgrmpYC83RiQpwU6vrNeqcJ/6SE1PNw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzP/UiS/kFnj9bPxmrXhPEXYM+UKo77A5t7rBzF4WxuHgp+/psq
-	jZrXUI3VMUd9YrDERKCgjw6fifKjezJ9lIlfpnRkGbT6KGecNnk5vSsez+35PO8=
-X-Gm-Gg: ASbGnctZX5LxFkYQQ343MXDgZCrlcXZ/tdYG+NzG/YNnbET3y3pyzMpil/aq0cU9pvP
-	Dina12K0sc8uzR6yZ8mFJV3YFsgSAJIL8sIq7qjtEI/9ZLZjdS3y0aMywHlvwaPX5MJ2DhdLtJ4
-	DubPXMwhA3guKtQOkZkh1krvLaG+pq6O21aOO6pDnexDVZPgJMo1aSeqlhjlTYcLMOFygI2wzRN
-	W6VHQtm/6lLrV8Tn5MmyJKIR6qB7t5HadTOn1GjSDWAUXuL+Xf+DfuwjAaSQKLMsqiWVA50kZXL
-	7+7S8CKg2muwn2eHTcduXSBukNIo0VbOKo0XGAfsMGnWw9X0grKssmk=
-X-Google-Smtp-Source: AGHT+IE71hgfi9vKmHrPeDtRHLEyfmLXJ+z/aDf94JYukLeP3uNQb4g+Gi67XQkP3nROa1beIZLSUA==
-X-Received: by 2002:a05:600c:214:b0:438:a313:cda9 with SMTP id 5b1f17b1804b1-43960c068d9mr111724805e9.10.1739572831004;
-        Fri, 14 Feb 2025 14:40:31 -0800 (PST)
+        bh=PB+r6JvVzie2JvMnY5R6Nkb8yUTw2Iu5MRXRiO5OIrs=;
+        b=urfAxoGcawxJXz7FIt+APe6jBJMryIAoFvSL/RSu7MRLkB44TADcRxcSngtZI/ROa/
+         6/Eb3NKCxNTr4UVXTMvBOxsTBNQyyK5dP4KvbI8lR0ji5+/PCDZ+CR886pjcdWJNM5dV
+         T2aHawYbYALVbiLEc2ZSbQwyVfLhG0ygY1a2mMA3brcqbO69qn2ldyo23IMtzTzfRIZb
+         UsgVMRg4HyHWR9cPKIjv+MqtIQErkw9wljyHj/HBolmdluhoNEzP/CXZZn6ATvsstTHM
+         y1Ybk0xMk9E+kpBrcy7bSww6knfMgEKCxHLhPBwwvSUkNOtSf2W8lEuh338aqj5foqj3
+         mRqw==
+X-Forwarded-Encrypted: i=1; AJvYcCUz41m4ZSL7SJPJc3zmZcM2CH1s3E36F3pov0e33qEX7N36S4I3RYo2n7SNCMk+S0sRfsSTtderk9g1pYncBoo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZcvcnQcoUE2TbbV/hC0zc/nUrvEO9RagkM54vd8Iwa6qI23JI
+	vpEExDu98EutMfGJdNLhMM8tIGaLBTPuaVTc5Ry7cLQjahr4pFOsuB49lIfv+RQ=
+X-Gm-Gg: ASbGncuUoFCbRBtHVb7bvvJvNX3OuTCtDaK1Wm7Aaja5poQFig2/G1+nevXOllcsbTC
+	oGGprjTQqIYDMXhZOze0M9BxeOfQasejVxcvmCtjWwBj2YBiYk0apR9hfxtQ6lAii0uYpIGVAEz
+	7hjgRcyMln7DHK/aEX/5ancM962gUxlAB9rIyU/O8riLp7cttcyAL6UYdifpDzuYylnerRP++Di
+	43rM/m6Dkreg7s/drQJZ5Dg+stD8Ed+9RV0o38rw59ZaSXRYTqodPONrcxLWw/F3YMYKn454Txe
+	CB34k4Z1QP3LWb4MmVJRjz2Ql6ugNO5iN6vVrAseOqMHHL8Hwa88AAM=
+X-Google-Smtp-Source: AGHT+IFLQd2UoaUoR8vSrVkmfa1fsW1c99PulW/ZI1I/6rPcmxTRozmB9oTxgdVe8prRiiraCjwMUg==
+X-Received: by 2002:adf:fa08:0:b0:38f:2a99:b377 with SMTP id ffacd0b85a97d-38f33f57459mr1030799f8f.53.1739574412141;
+        Fri, 14 Feb 2025 15:06:52 -0800 (PST)
 Received: from [192.168.1.10] (host-92-26-98-202.as13285.net. [92.26.98.202])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43961811315sm54926895e9.20.2025.02.14.14.40.29
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f259d5923sm5795765f8f.74.2025.02.14.15.06.50
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Feb 2025 14:40:30 -0800 (PST)
-Message-ID: <7ae6ee84-b5ae-479b-b963-9e9aefcd3bfa@citrix.com>
-Date: Fri, 14 Feb 2025 22:40:28 +0000
+        Fri, 14 Feb 2025 15:06:51 -0800 (PST)
+Message-ID: <c2af5771-1c16-4ac8-bc09-c33d07956358@citrix.com>
+Date: Fri, 14 Feb 2025 23:06:50 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -64,21 +64,16 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] x86/kcfi: Require FRED for FineIBT
-To: Kees Cook <kees@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Jennifer Miller <jmill@asu.edu>,
- Sami Tolvanen <samitolvanen@google.com>, Jann Horn <jannh@google.com>,
- Nathan Chancellor <nathan@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, Alexei Starovoitov <ast@kernel.org>,
- Josh Poimboeuf <jpoimboe@kernel.org>,
- "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
- Rik van Riel <riel@surriel.com>, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20250214192210.work.253-kees@kernel.org>
- <5d26bcdf-0e72-45b6-98c5-f90481650f09@citrix.com>
- <202502141345.C78A253D@keescook>
+Subject: Re: [RFC] Circumventing FineIBT Via Entrypoints
+To: Jennifer Miller <jmill@asu.edu>, Jann Horn <jannh@google.com>
+Cc: Andy Lutomirski <luto@kernel.org>, linux-hardening@vger.kernel.org,
+ kees@kernel.org, joao@overdrivepizza.com, samitolvanen@google.com,
+ kernel list <linux-kernel@vger.kernel.org>
+References: <Z60NwR4w/28Z7XUa@ubun>
+ <CAG48ez09JuZPt112nnE6N=hS6cfCLkT-iHUAmidQ-QGNGMVoBw@mail.gmail.com>
+ <Z62N6cGmaN+OZfoY@ubun>
+ <CAG48ez0Bt9348i=We3-wJ1QrW-_5R-we7y_S3Q1brhoyEdHJ0Q@mail.gmail.com>
+ <60447cd2-a8da-4be6-80fa-a5639b7455b1@citrix.com> <Z65/Fpd9cnUk8TjE@ubun>
 Content-Language: en-GB
 From: Andrew Cooper <andrew.cooper3@citrix.com>
 Autocrypt: addr=andrew.cooper3@citrix.com; keydata=
@@ -124,75 +119,54 @@ Autocrypt: addr=andrew.cooper3@citrix.com; keydata=
  B8WrhBLXDiYlyJT6zOV2yZFuW47VrLsjYnHwn27hmxTC/7tvG3euCklmkn9Sl9IAKFu29RSo
  d5bD8kMSCYsTqtTfT6W4A3qHGvIDta3ptLYpIAOD2sY3GYq2nf3Bbzx81wZK14JdDDHUX2Rs
  6+ahAA==
-In-Reply-To: <202502141345.C78A253D@keescook>
+In-Reply-To: <Z65/Fpd9cnUk8TjE@ubun>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 14/02/2025 9:54 pm, Kees Cook wrote:
-> On Fri, Feb 14, 2025 at 07:39:20PM +0000, Andrew Cooper wrote:
->> On 14/02/2025 7:22 pm, Kees Cook wrote:
->>> diff --git a/arch/x86/include/asm/cfi.h b/arch/x86/include/asm/cfi.h
->>> index ef5e0a698253..dfa2ba4cceca 100644
->>> --- a/arch/x86/include/asm/cfi.h
->>> +++ b/arch/x86/include/asm/cfi.h
->>> @@ -93,7 +93,7 @@
->>>   *
->>>   */
->>>  enum cfi_mode {
->>> -	CFI_AUTO,	/* FineIBT if hardware has IBT, otherwise kCFI */
->>> +	CFI_AUTO,	/* FineIBT if hardware has IBT, FRED, and XOM */
->> You discuss XOM in the commit message, but there's no check ...
+On 13/02/2025 11:24 pm, Jennifer Miller wrote:
+> On Thu, Feb 13, 2025 at 09:24:18PM +0000, Andrew Cooper wrote:
+>>>> ; swap stacks as normal
+>>>>     mov    QWORD PTR gs:[rip+0x7f005f85],rsp       # 0x6014 <cpu_tss_rw+20>
+>>>>     mov    rsp,QWORD PTR gs:[rip+0x7f02c56d]       # 0x2c618 <pcpu_hot+24>
+>> ... these are memory accesses using the user %gs.  As you note a few
+>> lines lower, %gs isn't safe at this point.
 >>
->>>  	CFI_OFF,	/* Taditional / IBT depending on .config */
->>>  	CFI_KCFI,	/* Optionally CALL_PADDING, IBT, RETPOLINE */
->>>  	CFI_FINEIBT,	/* see arch/x86/kernel/alternative.c */
->>> diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
->>> index 97422292b609..acc12a6efc18 100644
->>> --- a/arch/x86/kernel/alternative.c
->>> +++ b/arch/x86/kernel/alternative.c
->>> @@ -1323,7 +1323,9 @@ static void __apply_fineibt(s32 *start_retpoline, s32 *end_retpoline,
->>>  
->>>  	if (cfi_mode == CFI_AUTO) {
->>>  		cfi_mode = CFI_KCFI;
->>> -		if (HAS_KERNEL_IBT && cpu_feature_enabled(X86_FEATURE_IBT))
->>> +		/* FineIBT requires IBT and will only be safe with FRED */
->>> +		if (HAS_KERNEL_IBT && cpu_feature_enabled(X86_FEATURE_IBT) &&
->>> +		    cpu_feature_enabled(X86_FEATURE_FRED))
->> ... here.
+>> A cunning attacker can make gs:[rip+0x7f02c56d] be a read-only mapping,
+>> at point we'll have loaded an attacker controlled %rsp, then take #PF
+>> trying to spill %rsp into pcpu_hot, and now we're running the pagefault
+>> handler on an attacker controlled stack and gsbase.
 >>
->> Is this meant to be "/* TODO: wire up XOM */" or is that accounted for
->> somewhere else?
-> Yeah, I wasn't sure how to best capture that in here. XOM doesn't exist
-> yet for x86... I could add a TODO like that?
+> I don't follow, the spill of %rsp into pcpu_hot occurs first, before we
+> would move to the attacker controlled stack. This is Intel asm syntax,
+> sorry if that was unclear.
 
-I get the feeling that the PKS series would have an easier time starting
-with XOM (even if it hard-codes pkey1=xom and avoids the allocator in
-the short term, seeing as Linux does have a good grasp of where it's
-executable pages are, and how they're accessed) rather than trying to do
-general page hiding.  The capability is in 3 generations of Intel CPU now.
+No, sorry.  It's clearly written; I simply wasn't paying enough attention.
 
->
->> Also, while I hate to come back and contradict myself from earlier...
->>
->> Architecturally, FineIBT without FRED seems to be no improvement over
->> simple IBT.  (I'd love to find some way of hardening the entrypoints,
->> but I can't see a robust way of doing so.)
-> If you're just looking at IBT, yes. But kCFI (with or without IBT,
-> but without FineIBT) will do hash checking at the call site, which
-> should make it impossible to reach the entrypoints from an indirect call
-> in the first place, as they have no hash preceding them.
->
->> However, micro-architecturally, FineIBT is still far better than simple
->> IBT for speculation issue, seeing as Intel keep on staunchly refusing to
->> turn off the indirect predictors by default like AMD do.
->>
->> A security conscious user ought to be using FineIBT for this, given a
->> choice, even if it's not perfect in other regards.
-> A security conscious user should use kCFI without FineIBT. :) But I
-> think we might be thinking about different elements of security. I am
-> focusing on control flow, and I think you're considering speculation?
+> Still, I hadn't considered misusing readonly/unmapped pages on the GPR
+> register spill that follows. Could we enforce that the stack pointer we get
+> be page aligned to prevent this vector? So that if one were to attempt to
+> point the stack to readonly or unmapped memory they should be guaranteed to
+> double fault?
 
-True.  The security realist knows they're dammed either way, and gets a
-stiff drink instead.
+Hmm.
+
+Espfix64 does involve #DF recovering from a write to a read-only stack. 
+(This broken corner of x86 is also fixed in FRED.   We fixed a *lot* of
+thing.)
+
+As long the #DF handler can be updated to safely distinguish espfix64
+from this entrypoint attack, this seems like it might mitigate the
+read-only case.
+> I think we can do the overwrite at any point before actually calling into 
+> the individual syscall handlers, really anywhere before potentially 
+> hijacked indirect control flow can occur and then restore it just after 
+> those return e.g., for the 64-bit path I am currently overwriting it at the
+> start of do_syscall_64 and then restoring it just before 
+> syscall_exit_to_user_mode. I'm not sure if there is any reason to do it
+> sooner while we'd still be register constrained.
+
+I don't follow.  If any "bad" execution is found in an entrypoint, Linux
+needs to panic().  Detecting the malice involves clobbering an in-use
+stack, and there's no ability to safely recover.
 
 ~Andrew
