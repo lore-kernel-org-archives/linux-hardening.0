@@ -1,81 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54ED71953A9;
-	Fri, 14 Feb 2025 22:25:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E57C1FC0F1
+	for <linux-hardening@vger.kernel.org>; Fri, 14 Feb 2025 22:27:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739571931; cv=none; b=CAv36oLv6/i03m7dvnlbYxpdJ+Wh1DQzc3EkzKGEuCUPIEgHJSCtikxoqO1m/hTaQF/lYfVO1PKn1srOkLLU8j4jrYfeRWBdRHg7ycBh0yo+oEHnYsZ8Xxg7tmZaN88lShn2XMSnXDztlXUac/zWr8+BVpD0+/64G7gE3YSQ668=
+	t=1739572047; cv=none; b=Jx8i461pnBjrJHttWIqz90rYxo8sZo+JEQYJvfbnma1s1YLNCNZtcb8kqjfUAAow9GGP4eAhE7cM16vlxLqPwu2jJs3OugXJgMMi5r2x+HFsR8Ahl39d3pz6Ni+a/RJ3nf0JhxMyFBA6HSlztDN7Zm4/VIKs6BvmMBmDrsUaZp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739571931; c=relaxed/simple;
-	bh=JLPABf+6hAl/sSDOY8RUhJ1VUtF6q/IL7NYfsrits3E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NSToL+OuA6Uy6wMqOf19eRgvBF9jvT/gJprLpkl5ZVP5dO5vY1TXqKPr+ieXx6eGI0qPJVeChtZQKKa8ktrRrLVbO0UgrCrxm5Bo7uN7HfTcNyTq31YyItyRVAEGUvRIuaNmR3cKRvrUtGofV6w1rEZUeGOPyPf2KucMZsmtpFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RCP3T/hy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739572047; c=relaxed/simple;
+	bh=PBbNBcIUzTTSdz9tVw4pdA/QWKQr5U/yTQvU7YXGWdI=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=YoT34Zxut+rKD6Uc7ZOAKEZODgJ8YRLeXzwzOyPgjeS+ODsm4ljf6BkHjvf2y14nmP9BkJeOIZHn9NLqHqBkAOkpQWSu8xRLAX2hpP04Z1MqW5ObTDZ+2Z4+lkWomZK4eVOwex70+Gy93jBhJEnYj3+7nnIHeDEF2gEI3b2d2vo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=KFo2QU8K; arc=none smtp.client-ip=91.218.175.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RCP3T/hy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CCC5C4CED1;
-	Fri, 14 Feb 2025 22:25:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739571930;
-	bh=JLPABf+6hAl/sSDOY8RUhJ1VUtF6q/IL7NYfsrits3E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RCP3T/hynzWkWIrGTRQSUzLFmF66srarZI+XHUs4tPEU0xGL9JUTer6r5LhgES9CR
-	 540AhPhzEu96R+K3g8WsnlL0vC76KHgKVrKXuZSGPDHd7ho1QAH+MiigeRqESjcV8n
-	 yZId+KfiXpJmlEd58gmDWUih8doAfncWXLHlYaK6Po9JWc0fw0IRODvZV30URntHXG
-	 iRBEn48aW2h6qGq9JtX7miBjRhyD0j3Ii4NC0E/Qzz6ah+ujwAPFkq0oFHsgEnElsf
-	 bwqEMUHISqfR18GvoNwM0DMKU5MXZ1ksguy9tJu6h3TkJk4DTL0YFxGyOkU8UGv7DJ
-	 rqaMNewHnoYrg==
-Date: Fri, 14 Feb 2025 14:25:28 -0800
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Jann Horn <jannh@google.com>
-Cc: Jennifer Miller <jmill@asu.edu>, Andy Lutomirski <luto@kernel.org>, 
-	linux-hardening@vger.kernel.org, kees@kernel.org, joao@overdrivepizza.com, 
-	samitolvanen@google.com, kernel list <linux-kernel@vger.kernel.org>, 
-	Andrew Cooper <andrew.cooper3@citrix.com>
-Subject: Re: [RFC] Circumventing FineIBT Via Entrypoints
-Message-ID: <qczypdkenk2e5atbn46o2xhts6vtu2hxvmucvhkuu7zoziuq2c@26tyi763snot>
-References: <Z60NwR4w/28Z7XUa@ubun>
- <CAG48ez09JuZPt112nnE6N=hS6cfCLkT-iHUAmidQ-QGNGMVoBw@mail.gmail.com>
- <Z62N6cGmaN+OZfoY@ubun>
- <CAG48ez0Bt9348i=We3-wJ1QrW-_5R-we7y_S3Q1brhoyEdHJ0Q@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="KFo2QU8K"
+Content-Type: text/plain;
+	charset=us-ascii
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1739572033;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PBbNBcIUzTTSdz9tVw4pdA/QWKQr5U/yTQvU7YXGWdI=;
+	b=KFo2QU8KPWyXHnULt/2kQRKYCq51Vlv9GbZ1JS5HdlPvahulfeEfgSMYCh3HqZmA1ZKfJK
+	j+6kReZbc3QYyKY1NBUsfk2uxeMNWxrzVEd01H6J9A5AdKWLJ/ewNwQ62gvwOBM8/TUope
+	zJBW22EfFYHyeiqVA1b94Os6pYpWUbE=
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAG48ez0Bt9348i=We3-wJ1QrW-_5R-we7y_S3Q1brhoyEdHJ0Q@mail.gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51.11.1\))
+Subject: Re: [PATCH linux-next] tracing: use strscpy() to instead of strncpy()
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Thorsten Blum <thorsten.blum@linux.dev>
+In-Reply-To: <20230124121703.1e3a1ac4@gandalf.local.home>
+Date: Fri, 14 Feb 2025 23:27:00 +0100
+Cc: yang.yang29@zte.com.cn,
+ mhiramat@kernel.org,
+ linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org,
+ xu.panda@zte.com.cn,
+ linux-hardening@vger.kernel.org,
+ Justin Stitt <justinstitt@google.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <13330090-9D89-4AAE-B59E-7353AE319654@linux.dev>
+References: <202301091939219689840@zte.com.cn>
+ <20230124121703.1e3a1ac4@gandalf.local.home>
+To: Steven Rostedt <rostedt@goodmis.org>
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, Feb 13, 2025 at 08:23:34PM +0100, Jann Horn wrote:
-> On Thu, Feb 13, 2025 at 7:15 AM Jennifer Miller <jmill@asu.edu> wrote:
-> > In short, we could have the slowpath branch as you suggested, in the
-> > slowpath permit the stack switch and preserving of the registers on the
-> > stack, but then do a sanity check according to the __per_cpu_offset array
-> > and decide from there whether we should continue executing the entrypoint
-> > or die/attempt to recover.
-> 
-> One ugly option to avoid the register spilling might be to say
-> "userspace is not allowed to execute a SYSCALL instruction while RSP
-> is a kernel address, and if userspace does it anyway, the kernel can
-> kill the process". Then the slowpath could immediately start using the
-> GPRs without having to worry about where to save their old values, and
-> it could read the correct gsbase with the GET_PERCPU_BASE macro. It
-> would be an ABI change, but one that is probably fairly unlikely to
-> actually break stuff? But it would require a bit of extra kernel code
-> on the slowpath, which is kinda annoying...
+Hi Steven,
 
-Could all this be made easier if we went back to having percpu entry
-trampolines?  Then the trampoline could just use a PC-relative access to
-get the kernel stack pointer without needing %gs.
+I was about to submit the same patch when I found this one from 2023.
 
-I think the main reason the entry trampolines were removed was because
-they needed an indirect branch to jump back to the global text.  But
-they could be allocated within 2GB of the entry text and do a direct
-jump.
+On 24. Jan 2023, at 18:17, Steven Rostedt wrote:
+> So the above will *always* return -E2BIG *and* not end buf[] with '\0' =
+as
+> if strscpy() returns -E2BIG, then buf[] is not guaranteed to be
+> NUL-terminated.
 
--- 
-Josh
+The return value is not used and the strscpy() documentation in
+linux/string.h says:
+
+"The destination @dst buffer is always NUL terminated, unless it's zero-
+sized." and "Preferred to strncpy() since it always returns a valid
+string, ..."
+
+Has strscpy() changed since 2023 or could this patch be revisited? I saw
+that Justin also made an effort in September 2024 [1] to revisit it and
+to remove the deprecated strncpy() here.
+
+> NACK!
+>=20
+> -- Steve
+
+Thanks,
+Thorsten
+
+[1] =
+https://lore.kernel.org/r/yhv3rzg6vhgwage27cyvg72t4vwf5x3tdtj3zjipryzvz3u5=
+5x@c33q753uxyi3/
+Cc: linux-hardening@vger.kernel.org=
