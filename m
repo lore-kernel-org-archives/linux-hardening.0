@@ -1,111 +1,88 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62E6242070;
-	Sun, 16 Feb 2025 23:51:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF6FD42070;
+	Sun, 16 Feb 2025 23:52:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739749891; cv=none; b=CyrXfmky8I/St0ofl4T6FVtgK3Zpb5s+tbbwHLkBEkF+zqEAyVJTtSIJHwqD6f4Dd3pvSnzyBVoGvywPSDAsP9ewez6T8Ihib6Qs6z+f/Dg3IMy/zt7AG53p7qP+S3MLXE2YJlugZkiTcYaF5nVSeK80UsmLCi/4qFIIDH8Dgvk=
+	t=1739749964; cv=none; b=U+eDqfcjNQPz7dvzwQJHAJhXRXGfiaFSmFU/1lZMyDw1ZZTPEzmpE89POkYj0AA+e/wsxZHGlQU8T7d5oRyPpcUlGzLlrR8vC0FnTibs9DNyRRDaWsV5fETjzk9j6i9chl9fhcsNSqzU0lePHX1/GdFkVEiOQO9KLSPPfWa6p8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739749891; c=relaxed/simple;
-	bh=fIRD6d+Q8TA1vcv9Dja8WVwUWkt4/LCL4Mx0a6QI7cQ=;
+	s=arc-20240116; t=1739749964; c=relaxed/simple;
+	bh=3L4tlo2c89d3kSO8HthDGeRHFhL9r4lRwxE1YOMYINg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mJzQ8oSqFl938I21CmISg/tR64xhwLCf6XEby8WJrdBFcfk84E9XnbmRFsE0hScH8OZI6TTw8Zv7+0C615UA3+ZI5Ee9AQHQgBe/IEa9sNlA+9OB3W4TjRoKPONASw7PgnZxgBVnYBH6eFEKvmFR8dB6Y4iqLpJ4nxicWQj8mc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ra/l8uuA; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q6P7tW7ZEERVD5TGuLc0NH0s0In5C3goqBkqWRvnVj8qkeqBDtBWQ8YHlEkndZqWXLcsart+lsbW5X2FjLuaQk6zc8eezNKHmN6Xw63o+tCYUANV8+kmD7LSxhVhy0gdDJmNjCNBjQJ3I2AwDE0RnNatIMI0JUNfDdTo7dH1jDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XmJPh0sI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ra/l8uuA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF716C4CEDD;
-	Sun, 16 Feb 2025 23:51:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XmJPh0sI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F2FCC4CEDD;
+	Sun, 16 Feb 2025 23:52:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739749890;
-	bh=fIRD6d+Q8TA1vcv9Dja8WVwUWkt4/LCL4Mx0a6QI7cQ=;
+	s=k20201202; t=1739749963;
+	bh=3L4tlo2c89d3kSO8HthDGeRHFhL9r4lRwxE1YOMYINg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Ra/l8uuA6Kg3TtTTrpl9KQM7SKrOP+piLgJybbaHC9ekL242Zl0w/b/FqQ+4SPTdi
-	 rHTHo/qNtUZAWAMz0/kjtnbfoHsjJ8apgZP5nNR/8MQZ5O7AoCN8pMrEdNYwu3DCZ7
-	 c/QrXKc6d1x+P86xp092zjxzG65aP7/v58M2kt3+B5kaiVBsF+PxLTHsgYxZtaD32x
-	 NkqgNimpMnx2dU1JsBqImJ3hbRPLx1+H4oBPXjGb0NL0UVhL4k9wBojH/b0GiPO/ID
-	 E+dYK5jpvfMG/qst30lW0+Dp9QqgNvRUadzNmNTPeU2tD25MsI0UDqZP2HRC60G2sQ
-	 d+tZwLEJdJZXw==
-Date: Sun, 16 Feb 2025 15:51:27 -0800
+	b=XmJPh0sIU2EOQbr30hukSMw+vM9rIDRJ1pNQqFVjfkXpRaQ+Vu5ETrd5ybFmVwcnO
+	 +OvFRWiSc/lCJBl+Gz6jwx2YPYGNrdOEqKwFVBlxM1QX46aksCY8x1Fek1YFoKO+I+
+	 lQAOhAVXLmoYF3oOJQIq10FLjRZesPEUNzhQzcxnKYk82+GQ+VnAfTWf+KF5+vHoy6
+	 z3Jsgme7ZWkCF79KbjVjJBbhHtP/YZIv1mBKlboGyIHc38UuwgU1WKRSD+mFgFYv0i
+	 FzLddAB/uO/GTFFMT6ZcuHvO9Op2XUeQbURgtj+cgVUCZmnr8SzjPvmokcMcoTd+od
+	 vw7lFNoYm+rBw==
+Date: Sun, 16 Feb 2025 15:52:40 -0800
 From: Kees Cook <kees@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Andrew Cooper <andrew.cooper3@citrix.com>, jannh@google.com,
-	jmill@asu.edu, joao@overdrivepizza.com,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	luto@kernel.org, samitolvanen@google.com,
-	scott.d.constable@intel.com, x86@kernel.org
-Subject: Re: [RFC] Circumventing FineIBT Via Entrypoints
-Message-ID: <202502161547.B05817003F@keescook>
-References: <CAG48ez09JuZPt112nnE6N=hS6cfCLkT-iHUAmidQ-QGNGMVoBw@mail.gmail.com>
- <c46f5614-a82e-42fc-91eb-05e483a7df9c@citrix.com>
- <202502131224.D6F5A235@keescook>
- <6641d1e0-7151-4857-bb0e-db555d4cdf50@citrix.com>
- <202502131248.B6CC333@keescook>
- <20250214095751.GF21726@noisy.programming.kicks-ass.net>
- <20250215210729.GA25168@noisy.programming.kicks-ass.net>
+To: Andrew Cooper <andrew.cooper3@citrix.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Jennifer Miller <jmill@asu.edu>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Jann Horn <jannh@google.com>, Nathan Chancellor <nathan@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+	Rik van Riel <riel@surriel.com>, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] x86/kcfi: Require FRED for FineIBT
+Message-ID: <202502161552.54EA17D@keescook>
+References: <20250214192210.work.253-kees@kernel.org>
+ <5d26bcdf-0e72-45b6-98c5-f90481650f09@citrix.com>
+ <202502141345.C78A253D@keescook>
+ <7ae6ee84-b5ae-479b-b963-9e9aefcd3bfa@citrix.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20250215210729.GA25168@noisy.programming.kicks-ass.net>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7ae6ee84-b5ae-479b-b963-9e9aefcd3bfa@citrix.com>
 
-On Sat, Feb 15, 2025 at 10:07:29PM +0100, Peter Zijlstra wrote:
-> On Fri, Feb 14, 2025 at 10:57:51AM +0100, Peter Zijlstra wrote:
-> > On Thu, Feb 13, 2025 at 12:53:28PM -0800, Kees Cook wrote:
-> > 
-> > > Right, the "if they can control a function pointer" is the part I'm
-> > > focusing on. This attack depends on making an indirect call with a
-> > > controlled pointer. Non-FineIBT CFI will protect against that step,
-> > > so I think this is only an issue for IBT-only and FineIBT, but not CFI
-> > > nor CFI+IBT.
-> > 
-> > Yes, the whole caller side validation should stop this.
+On Fri, Feb 14, 2025 at 10:40:28PM +0000, Andrew Cooper wrote:
+> On 14/02/2025 9:54 pm, Kees Cook wrote:
+> > On Fri, Feb 14, 2025 at 07:39:20PM +0000, Andrew Cooper wrote:
+> >> Architecturally, FineIBT without FRED seems to be no improvement over
+> >> simple IBT.  (I'd love to find some way of hardening the entrypoints,
+> >> but I can't see a robust way of doing so.)
+> > If you're just looking at IBT, yes. But kCFI (with or without IBT,
+> > but without FineIBT) will do hash checking at the call site, which
+> > should make it impossible to reach the entrypoints from an indirect call
+> > in the first place, as they have no hash preceding them.
+> >
+> >> However, micro-architecturally, FineIBT is still far better than simple
+> >> IBT for speculation issue, seeing as Intel keep on staunchly refusing to
+> >> turn off the indirect predictors by default like AMD do.
+> >>
+> >> A security conscious user ought to be using FineIBT for this, given a
+> >> choice, even if it's not perfect in other regards.
+> > A security conscious user should use kCFI without FineIBT. :) But I
+> > think we might be thinking about different elements of security. I am
+> > focusing on control flow, and I think you're considering speculation?
 > 
-> And I think we can retro-fit that in FineIBT. Notably the current call
-> sites look like:
-> 
-> 0000000000000060 <fineibt_caller>:
->   60:   41 ba 78 56 34 12       mov    $0x12345678,%r10d
->   66:   49 83 eb 10             sub    $0x10,%r11
->   6a:   0f 1f 40 00             nopl   0x0(%rax)
->   6e:   41 ff d3                call   *%r11
->   71:   0f 1f 00                nopl   (%rax)
-> 
-> Of which the last 6 bytes are the retpoline site (starting at 0x6e). It
-> is trivially possible to re-arrange things to have both nops next to one
-> another, giving us 7 bytes to muck about with.
-> 
-> And I think we can just about manage to do a caller side hash validation
-> in them bytes like:
-> 
-> 0000000000000080 <fineibt_paranoid>:
->   80:   41 ba 78 56 34 12       mov    $0x12345678,%r10d
->   86:   49 83 eb 10             sub    $0x10,%r11
->   8a:   45 3b 53 07             cmp    0x7(%r11),%r10d
->   8e:   74 01                   je     91 <fineibt_paranoid+0x11>
->   90:   ea                      (bad)
->   91:   41 ff d3                call   *%r11
+> True.  The security realist knows they're dammed either way, and gets a
+> stiff drink instead.
 
-Ah nice! Yes, that would be great and removes all my concerns about
-FineIBT. :) (And you went with EA just to distinguish it more easily?
-Can't we still use the UD2 bug tables to find this like normal?)
-
-> And while this is somewhat daft, it would close the hole vs this entry
-> point swizzle afaict, no?
-> 
-> Patch against tip/x86/core (which includes the latest ibt bits as per
-> this morning).
-> 
-> Boots and builds the next kernel on my ADL.
-
-Lovely! Based on the patch, I assume you were testing CFI crash location
-reporting too?
-
-I'll try to get this spun up for testing here too.
+I don't know how any of our livers survive. :)
 
 -- 
 Kees Cook
