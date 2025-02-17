@@ -1,134 +1,122 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60C5A2135AF;
-	Mon, 17 Feb 2025 10:39:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24B85217660
+	for <linux-hardening@vger.kernel.org>; Mon, 17 Feb 2025 10:44:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739788801; cv=none; b=YkttcQOWGqps/LnAa0PwE948o7Wjp6PlN3Kn41DSZYqvedIrymUx5ZFHE7wb0ESiOx4/rYi4yBnv+eLhvlLeDkcAkrrocTsxIWFqjnvOzJxeif8ROKMyAXsWWRoyKbl+F4P5fTGmGYui3ntH4QSPOGyBfxULSc8MoHM4VcY9u4I=
+	t=1739789074; cv=none; b=baTuFohlDwxovqQOPcp5xBb66QOXfZIKKkclAuJsMES6EIqTXUIFXJE7HUH+dNuiV58GAJQD8lHcRzVEUgNhVgo3FhoRF8KvFqHfuXQnoBYK26YQ787nFBbmF6upPXZushfvBpWfJaviCaaBoXrgIC6GvHEnXOKScaGyOdcQDHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739788801; c=relaxed/simple;
-	bh=aexLyFKD2izY1bwPV7rn+KFIvV8FTQbYldZGou1hmvI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mMuGwIramJCfZV7JVMas/y7C2ejZYeXe+fA8dilaTn4nKbyaqa9z5lh7ewamyrJ+3Gs2N32bjSZ7CAt+Kgt2bvxtZ95NwFheeYRoWuhRKQCgks58p6SpuMRR9Fcjl3Jz4ryklkiLRPIZqnroHNkBxG6Ij1IqAbakhJj0duURrqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=RVRUZ31E; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1739789074; c=relaxed/simple;
+	bh=lAVINVnHlWjTWaGVpFZbbokZJSBj5vEpW5VZeY4f3Fg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QW2CfAiGQGMOhxXp2UM8SnJiF+kMXV2OHDZeM0vgSzzTsGL2dY8HjY3gwhPWmRA3f0LVLhji81w0h2qwBXfoAgxeA4Bn5cBRQUIY3MIttpFCkcSSLJDb2BnJ0MXL2kiWTjBrn8hnqwqzvNdNHgoXAN9EoI1cVjEQQk6vaVsUcZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wJm40Mts; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RVRUZ31E"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=OE4rNS8s/qPZLHL+1S0BHoa0MIZLU9wgIaMlGXFasXI=; b=RVRUZ31EH3FU/hiV/9opTaU4OM
-	D65gb+ZHDhF6OlYLrWMcV1tSwA9lz3S5/DUh7LSkN0t2fdUE/hnYiwCU7SzVhpsrUldiUXHMXyGno
-	K3+3hgGVvzMar/81T0914p0IdBaDlmX8TSboyDPFZbjNJ/8UJVw5+zfrxYmdDTlKf0Ff9VLyF1Mu/
-	79RywaKA5JmbNYMkTf19OJc83vJ+fxwC1UZ48e7VrYk6CoZmQJl6c4Gp/V+6FQmUCgJk5sg95RtC+
-	/Cxc+3vvZ7B+HzUWUij94RCUFNEbBQEU5Bkrh+VOBwKGbokR/I9+zsM352KvoQOtFr/cnb8x5owhQ
-	qdd2FXAw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tjyXa-00000001mIh-0YCV;
-	Mon, 17 Feb 2025 10:39:54 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 05561300756; Mon, 17 Feb 2025 11:39:53 +0100 (CET)
-Date: Mon, 17 Feb 2025 11:39:52 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Andrew Cooper <andrew.cooper3@citrix.com>, jannh@google.com,
-	jmill@asu.edu, joao@overdrivepizza.com,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	luto@kernel.org, samitolvanen@google.com,
-	scott.d.constable@intel.com, x86@kernel.org
-Subject: Re: [RFC] Circumventing FineIBT Via Entrypoints
-Message-ID: <20250217103952.GM14028@noisy.programming.kicks-ass.net>
-References: <CAG48ez09JuZPt112nnE6N=hS6cfCLkT-iHUAmidQ-QGNGMVoBw@mail.gmail.com>
- <c46f5614-a82e-42fc-91eb-05e483a7df9c@citrix.com>
- <202502131224.D6F5A235@keescook>
- <6641d1e0-7151-4857-bb0e-db555d4cdf50@citrix.com>
- <202502131248.B6CC333@keescook>
- <20250214095751.GF21726@noisy.programming.kicks-ass.net>
- <20250215210729.GA25168@noisy.programming.kicks-ass.net>
- <202502161547.B05817003F@keescook>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wJm40Mts"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-abb97e15bcbso158473666b.0
+        for <linux-hardening@vger.kernel.org>; Mon, 17 Feb 2025 02:44:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739789071; x=1740393871; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=QEbDsC7zOesvvA0J5tAlZE6+h1PCWgc42liU2tI3McI=;
+        b=wJm40Mtsm01IIjp0pJOT9kUXukQqG0N/QpN4wHm0TM361GJW7JlaAgT3oyUTjIUmR9
+         qImGSRYTQStQPs3aewejzhkhbqgzNANqZ01ON08QqiD173a7oSdoQJezq9r36rVNu+tn
+         S7NFB8wriv6dZdZJHuoxC+4HVhJy7lO2y2DWRYggtzZ5pWGJ8a+WM7Il2EoApe+s3Q7c
+         M+XjuBv4OrZjf0tn1i40Jn8MuRh0362PKZCrh0gAEDBCIsNziAVqk4cYPEIkZTQlTY7Q
+         T2XLazv3HeyFXDpstHmRg2pRWvSu0WNwnYElogPcvV0U5EO07GxRo6fVmLra+OqQVBA3
+         Rrgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739789071; x=1740393871;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QEbDsC7zOesvvA0J5tAlZE6+h1PCWgc42liU2tI3McI=;
+        b=JhEyDnFc4qanSeHHcF79jVBY6iEs9fAmEurvQyx4mUpMBye38kh9HXI7xrNOaLPmVd
+         rh1V+gN2DQ0y9FOX/hEs7W1mNcJH943RnDf/Xnx75tjOYGjN0DL7Dr9VyfX6CHlbS4b3
+         WORe0Pq3ZyaMJGei5cbmuGArhtWlnSXdV90TYmEgOQ3Ma44lRjbaoP9k+z8E+5LJmcIU
+         WDV3EugcfeZqlCOKxl1fJ1kosGY9gkJfvdvJoM1aj+799Y3Vv1+X1mIccdt28lF1nMQE
+         3z0vctNiS3Clxhhg2rcOxOSOl0GLGt08/h4d0pExO1QXChrV+K68IGQRjOOHvWv+C/23
+         on+w==
+X-Forwarded-Encrypted: i=1; AJvYcCV0HK7QQXTCjvyF3inhFoeRvxFMBtQ88e4ARBpy4YuPNRAwaL4lRV1lSIMRuCMKw2Z7gPa88pVPEsK1ZuI+x94=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJdClLd3Qkc6RBJ2Q3Kn4fDN5h8hTtTFuGZxKH4Xr7rmicQz7V
+	Bh3GQhqvixYNxuR9TwCkHNTJ8Xjcm5g8NGSP8Pg2HUrA4kCnpiHVX8WBKntUoeI=
+X-Gm-Gg: ASbGncvuFbTnrKtiCxqPSnAjdbNvzAc1hh6VmH8yA+X20Rd/oyv8Y1SUYtloNlgYPYi
+	kPw88UZ59MC/PmqZFaO6WdySCvMDBc7QNAL/uR525Iudjag/syQdJy1ASTU9ZcZokqCmV2dAqcc
+	bCCNfSgWtu+PCBZgRDriUZDIyj1tob60UmgwJUIY6FyipdeuRoIHKXgZQz+ZuygdQWn1h8MaSfY
+	+1Hta9JgPjPzLupkkPD7Wa+UsaWMK1LbaivxBR5yPK3pIdlfM6KCjj8Q9LMgE+xsV8epPT9wJ1w
+	vWqo8M759QXXsA0/WjL/gbs=
+X-Google-Smtp-Source: AGHT+IE+qR+XkSpEa4n8UFFb2YUXaqm+JYBZqs/0Cfmj9Y8tSfbfIbKyD0WPukltsMDTzYdEa4UX0g==
+X-Received: by 2002:a17:906:7312:b0:ab7:ca44:feb8 with SMTP id a640c23a62f3a-abb711304d9mr1001080366b.52.1739789071395;
+        Mon, 17 Feb 2025 02:44:31 -0800 (PST)
+Received: from [192.168.0.24] ([82.76.24.202])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abb88c69c1bsm330535466b.110.2025.02.17.02.44.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Feb 2025 02:44:31 -0800 (PST)
+Message-ID: <b304d582-9328-4e1b-9e34-5604125b0c06@linaro.org>
+Date: Mon, 17 Feb 2025 12:44:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202502161547.B05817003F@keescook>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC][PATCH 00/10] pstore: directly mapped regions
+To: Johannes Berg <johannes@sipsolutions.net>, linux-arm-msm@vger.kernel.org,
+ linux-hardening@vger.kernel.org, kees@kernel.org
+Cc: linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+ rafael@kernel.org, dakr@kernel.org, andersson@kernel.org,
+ konradybcio@kernel.org, tony.luck@intel.com, gpiccoli@igalia.com,
+ pmladek@suse.com, rostedt@goodmis.org, john.ogness@linutronix.de,
+ senozhatsky@chromium.org, quic_mojha@quicinc.com,
+ linux-arm-kernel@lists.infradead.org, kernel@quicinc.com
+References: <20250217101706.2104498-1-eugen.hristev@linaro.org>
+ <c4b48faeae8531e670ea5909800d1a0bfed69862.camel@sipsolutions.net>
+From: Eugen Hristev <eugen.hristev@linaro.org>
+Content-Language: en-US
+In-Reply-To: <c4b48faeae8531e670ea5909800d1a0bfed69862.camel@sipsolutions.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sun, Feb 16, 2025 at 03:51:27PM -0800, Kees Cook wrote:
-> On Sat, Feb 15, 2025 at 10:07:29PM +0100, Peter Zijlstra wrote:
-> > On Fri, Feb 14, 2025 at 10:57:51AM +0100, Peter Zijlstra wrote:
-> > > On Thu, Feb 13, 2025 at 12:53:28PM -0800, Kees Cook wrote:
-> > > 
-> > > > Right, the "if they can control a function pointer" is the part I'm
-> > > > focusing on. This attack depends on making an indirect call with a
-> > > > controlled pointer. Non-FineIBT CFI will protect against that step,
-> > > > so I think this is only an issue for IBT-only and FineIBT, but not CFI
-> > > > nor CFI+IBT.
-> > > 
-> > > Yes, the whole caller side validation should stop this.
-> > 
-> > And I think we can retro-fit that in FineIBT. Notably the current call
-> > sites look like:
-> > 
-> > 0000000000000060 <fineibt_caller>:
-> >   60:   41 ba 78 56 34 12       mov    $0x12345678,%r10d
-> >   66:   49 83 eb 10             sub    $0x10,%r11
-> >   6a:   0f 1f 40 00             nopl   0x0(%rax)
-> >   6e:   41 ff d3                call   *%r11
-> >   71:   0f 1f 00                nopl   (%rax)
-> > 
-> > Of which the last 6 bytes are the retpoline site (starting at 0x6e). It
-> > is trivially possible to re-arrange things to have both nops next to one
-> > another, giving us 7 bytes to muck about with.
-> > 
-> > And I think we can just about manage to do a caller side hash validation
-> > in them bytes like:
-> > 
-> > 0000000000000080 <fineibt_paranoid>:
-> >   80:   41 ba 78 56 34 12       mov    $0x12345678,%r10d
-> >   86:   49 83 eb 10             sub    $0x10,%r11
-> >   8a:   45 3b 53 07             cmp    0x7(%r11),%r10d
-> >   8e:   74 01                   je     91 <fineibt_paranoid+0x11>
-> >   90:   ea                      (bad)
-> >   91:   41 ff d3                call   *%r11
+
+
+On 2/17/25 12:23, Johannes Berg wrote:
+> On Mon, 2025-02-17 at 12:16 +0200, Eugen Hristev wrote:
 > 
-> Ah nice! Yes, that would be great and removes all my concerns about
-> FineIBT. :) 
-
-Excellent!
-
-> (And you went with EA just to distinguish it more easily?
-> Can't we still use the UD2 bug tables to find this like normal?)
-
-No space; UD2 is a 2 byte instruction. IIUC all the single byte
-instructions that trip #UD are more or less 'reserved' and we shouldn't
-be using them, but I think we can use 0xEA here since it is specific to
-the paranoid FineIBT thing -- and if people want to reclaim the usage,
-all they need to do is fix IBT :-) -- which as I said before should be
-done once FRED happens.
-
-(/me makes note to go read the very latest FRED spec -- its been a
-while).
-
-> > And while this is somewhat daft, it would close the hole vs this entry
-> > point swizzle afaict, no?
-> > 
-> > Patch against tip/x86/core (which includes the latest ibt bits as per
-> > this morning).
-> > 
-> > Boots and builds the next kernel on my ADL.
+>> This series comes as an RFC proposed solution to enhance pstore and
+>> devcoredump with the following functionality:
 > 
-> Lovely! Based on the patch, I assume you were testing CFI crash location
-> reporting too?
+> ...
+> 
+>> This patch series attempts to solve this by reusing existing
+>> infrastructure in pstore and devcoredump, and provide a copy-free
+> 
+> ...
+> 
+> You mention devcoredump multiple times, but it almost seems like you
+> don't even know what devcoredump does? I don't see how there's any
+> relation at all, and the code added to it seems to have no relation to
+> the actual functionality of devcoredump either?
 
-Sami was, he reminded me I forgot to hook up FineIBT, so I did :-)
+At this moment going through devcoredump is not something that impacts
+the idea of the implementation.
+The whole reason of going through it (because things work without it as
+well), is to see whether this has any kind of impact or not, and if
+there is any kind of fit/reason of going through it.
+Devcoredump is involved because the whole core registration is similar
+to a core area that devcoredump could use.
+For example, would it be interesting to have a handler going through all
+devices, and have the dump areas already registered ?
+Meaning, when there is a request to generate a core dump, one could
+directly dump this area instead of calling back the driver, and provide
+that to the userspace instead of the driver calling the dev_coredumpv by
+its own.
 
-> I'll try to get this spun up for testing here too.
+> 
+> johannes
 
-Thanks!
