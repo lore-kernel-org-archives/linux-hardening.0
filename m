@@ -1,88 +1,93 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7F9C218EA7;
-	Mon, 17 Feb 2025 11:44:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A825D21ADA7;
+	Mon, 17 Feb 2025 13:01:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739792644; cv=none; b=AK7hkM/uPIHix3+qc6Q2YXIj9jOjM8JLOJF3T+iNRrcPfi/d9pXVR1sW/CXPEvb8q1kcKHWAsitY+Yfd2pdnEA0A0Eqmoa0qR2ordDxg6FmkDcqYnw7JmBBfsyfbJid5Xv+VPJ5dy+t6jvOhmbzRDWBbR7lvITsgPUp3A0AaWSE=
+	t=1739797295; cv=none; b=RcT0SCWjcDdXasVgKeqWzXRoSh2wmm4tmuMINdnTiZPlxJrxjcYK64C3SPUFSNytPiP0qD8VbyCB3XEX1Y4DNiM6zHMAsOZ8l5ZBIGHPqyJH5gSp4qRscXzLxtwTZ+eM0cf5+tNLTSFV3bLUI3KJb7Nb/sC9hywAQEEjLO4upjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739792644; c=relaxed/simple;
-	bh=BR3LESeh5qWqE1nsMsX6OvvYNBnjmcXgWQfYW0WVmZc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=FVhPLxaRXwr2oNjAPthg0c2unBK/fjYHusEBpnENNCTJdszPs0OPX0Yn6naDeYfRFYQcGeNeM1h92p0w7yDyrjoXyyTXQi16MK0YhVYGnhQM5QlEoWw/8gUTg5seasmBzs62eJPJdLRgDWZTuwr6wIANZlHnYnkcWgqvd9mzzEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=p/SUC7bY; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1739797295; c=relaxed/simple;
+	bh=Hk9O6kgZtW5HBAPWDi1ubXQtnoQYa4K3Vipj/XLrz20=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rLhUjimsb5HiVjdvLx2GPp/efjB71D7Fph6/3IwRnKVEYMHlmCoTQPPAYuaxJI74pwmmDNKUxwZezk/v9vmLkzPIA1PBX+dQ96f2P2tmNHB8DmMZMwkKG1CvDPXDc5hus6XigFlLOie/G3wQpGBC6cl8WotOL0FABlCGfy/z/wQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yoseli.org; spf=none smtp.mailfrom=yoseli.org; dkim=pass (2048-bit key) header.d=yoseli.org header.i=@yoseli.org header.b=bO6ALWhb; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yoseli.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=yoseli.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="p/SUC7bY"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=BR3LESeh5qWqE1nsMsX6OvvYNBnjmcXgWQfYW0WVmZc=;
-	t=1739792642; x=1741002242; b=p/SUC7bYSpF3dYnCspmuCWZQsiMdRj8V4E/Cc26dKbkypOP
-	GY3uF9XgtpG0V5pavFr02tj7y2rNTCj9Sr0gJLttJE9NBIS5gUCCdivg+6SkA9KhyhTJgx7bczSox
-	Ece/Zy5R95szc+MirErz0wTJNJmHlDhJbgyA/ccTQZxvNjIX6ob9STlq0y+7ZMHVg6yiS6l71EOTX
-	pNNxfFVZJzfSoDzSieRbBCCph2wxzW9/JPp6wAS5ynHoNPIiRIVvzynqTT15oaMZESFGuEIhr9NSK
-	aTphOPBym6RYLfsfsJhBedd+pVgYiiuGoyiVYf8lED177Ih8QulZ8kYBUkTHM0JQ==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.98)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1tjzXZ-00000000JSW-1v57;
-	Mon, 17 Feb 2025 12:43:57 +0100
-Message-ID: <673d0ef9477f1dfbed474cc51ad68092814dfe85.camel@sipsolutions.net>
-Subject: Re: [RFC][PATCH 00/10] pstore: directly mapped regions
-From: Johannes Berg <johannes@sipsolutions.net>
-To: Eugen Hristev <eugen.hristev@linaro.org>, linux-arm-msm@vger.kernel.org,
- 	linux-hardening@vger.kernel.org, kees@kernel.org
-Cc: linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
- rafael@kernel.org, 	dakr@kernel.org, andersson@kernel.org,
- konradybcio@kernel.org, tony.luck@intel.com, 	gpiccoli@igalia.com,
- pmladek@suse.com, rostedt@goodmis.org, 	john.ogness@linutronix.de,
- senozhatsky@chromium.org, quic_mojha@quicinc.com, 
-	linux-arm-kernel@lists.infradead.org, kernel@quicinc.com
-Date: Mon, 17 Feb 2025 12:43:56 +0100
-In-Reply-To: <885a9312-484a-4b60-bec0-5adf8f1e4a0e@linaro.org>
-References: <20250217101706.2104498-1-eugen.hristev@linaro.org>
-	 <c4b48faeae8531e670ea5909800d1a0bfed69862.camel@sipsolutions.net>
-	 <b304d582-9328-4e1b-9e34-5604125b0c06@linaro.org>
-	 <59333d4aa8a3bb3222967d70d10d9288cece444c.camel@sipsolutions.net>
-	 <885a9312-484a-4b60-bec0-5adf8f1e4a0e@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (2048-bit key) header.d=yoseli.org header.i=@yoseli.org header.b="bO6ALWhb"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 21E8D442EC;
+	Mon, 17 Feb 2025 13:01:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yoseli.org; s=gm1;
+	t=1739797291;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bOL9mfk/9v5FRO1VfirUKFrE/whi9WWcvzNJX8maZI0=;
+	b=bO6ALWhbXToInNzAwugYrepTD3C+fePro0peaMuYKAJEE3qz90F7zY7uftSaSeTkdCswHs
+	MrTrpDJ1FZM57Tzm8SVabRsLlTnl94kLbVKIH7NDR8ZyawZLlbBqpMXWIjnOoC5rvsbO68
+	GVO3qzIBDclhusXUotVYOinhVZOKqGBIcM3yad8MBNN61YqEt6ndtV62AqmdJu/xjfqmZa
+	7ntQ0wH9q87y8WbWy42Rd38CRgyNvaWCJn0iHeHqSL5InCKdkX7ipQUADuueouPSgSXyhO
+	nadEqh1vOOr6Dzy/itC1ersATHYxw+UUccV8/Ita2PvLOxTv+ntMJzQHctCuPQ==
+Message-ID: <b5ed8cc5-ae78-42f7-bbb8-8f9d286ed7b6@yoseli.org>
+Date: Mon, 17 Feb 2025 14:01:29 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] m68k: mm: Replace deprecated strncpy() with strscpy()
+To: Thorsten Blum <thorsten.blum@linux.dev>,
+ Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: linux-hardening@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+ linux-kernel@vger.kernel.org
+References: <20250213141037.50394-2-thorsten.blum@linux.dev>
+Content-Language: en-US, fr
+From: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
+In-Reply-To: <20250213141037.50394-2-thorsten.blum@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdehkeegiecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtjeertddtvdejnecuhfhrohhmpeflvggrnhdqofhitghhvghlucfjrghuthgsohhishcuoehjvggrnhhmihgthhgvlhdrhhgruhhtsghoihhsseihohhsvghlihdrohhrgheqnecuggftrfgrthhtvghrnheptdehkedtieetudeiffekhfeghfdtheetfeeftddvleekgeelieduveetueehgeefnecuffhomhgrihhnpehgihhthhhusgdrtghomhenucfkphepfeejrdduieelrdduvdeirddvgeeknecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepfeejrdduieelrdduvdeirddvgeekpdhhvghloheplgduledvrdduieekrddvtddrudeijegnpdhmrghilhhfrhhomhepjhgvrghnmhhitghhvghlrdhhrghuthgsohhisheshihoshgvlhhirdhorhhgpdhnsggprhgtphhtthhopeehpdhrtghpthhtohepthhhohhrshhtvghnrdgslhhumheslhhinhhugidruggvvhdprhgtphhtthhopehgvggvrhhtsehlihhnuhigqdhmieekkhdrohhrghdprhgtphhtthhopehlihhnuhigqdhhrghruggvnhhinhhgsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepl
+ hhinhhugidqmheikehksehlihhsthhsrdhlihhnuhigqdhmieekkhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-GND-Sasl: jeanmichel.hautbois@yoseli.org
 
-On Mon, 2025-02-17 at 13:39 +0200, Eugen Hristev wrote:
->=20
-> On 2/17/25 13:19, Johannes Berg wrote:
-> > On Mon, 2025-02-17 at 12:44 +0200, Eugen Hristev wrote:
-> > >=20
-> > > At this moment going through devcoredump is not something that impact=
-s
-> > > the idea of the implementation.
-> >=20
-> > Yeah. I don't think it _should_ go through it at all.
-> >=20
-> > > The whole reason of going through it (because things work without it =
-as
-> > > well), is to see whether this has any kind of impact or not, and if
-> > > there is any kind of fit/reason of going through it.
-> >=20
-> > So it's just a trial balloon?
->=20
-> Yes, that's why it's marked as an RFC.
->=20
+Hi Thorsten,
 
-(IMHO) that doesn't make it acceptable to just randomly go modify code
-you don't understand the purpose of, certainly not without actually
-stating such. But anyway, I'll leave it at that.
+On 2/13/25 3:10 PM, Thorsten Blum wrote:
+> strncpy() is deprecated for NUL-terminated destination buffers. Use
+> strscpy() instead and remove the manual NUL-termination.
+> 
+> Compile-tested only.
+> 
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
 
-johannes
+Thanks for the patch !
+It works fine for me:
+
+Tested-by: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
+> ---
+>   arch/m68k/kernel/setup_mm.c | 3 +--
+>   1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/arch/m68k/kernel/setup_mm.c b/arch/m68k/kernel/setup_mm.c
+> index 15c1a595a1de..48ce67947678 100644
+> --- a/arch/m68k/kernel/setup_mm.c
+> +++ b/arch/m68k/kernel/setup_mm.c
+> @@ -243,8 +243,7 @@ void __init setup_arch(char **cmdline_p)
+>   	setup_initial_init_mm((void *)PAGE_OFFSET, _etext, _edata, _end);
+>   
+>   #if defined(CONFIG_BOOTPARAM)
+> -	strncpy(m68k_command_line, CONFIG_BOOTPARAM_STRING, CL_SIZE);
+> -	m68k_command_line[CL_SIZE - 1] = 0;
+> +	strscpy(m68k_command_line, CONFIG_BOOTPARAM_STRING, CL_SIZE);
+>   #endif /* CONFIG_BOOTPARAM */
+>   	process_uboot_commandline(&m68k_command_line[0], CL_SIZE);
+>   	*cmdline_p = m68k_command_line;
+
