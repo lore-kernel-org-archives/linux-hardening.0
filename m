@@ -1,62 +1,62 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9ABC218AA5
-	for <linux-hardening@vger.kernel.org>; Mon, 17 Feb 2025 10:17:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42A41218AB3
+	for <linux-hardening@vger.kernel.org>; Mon, 17 Feb 2025 10:17:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739787478; cv=none; b=iypMC5JY8HO3N/mR74BmigRSi2m0bOQFS1vvTf8IF3wgSrb1gfJ9hBW+V6fmq8pABj4gKcpKTGt+tTo3cBAqUybwtsWuHuxDq8FVJuHrsKYCNqZqenpo2lWUpCZpC8hr4FugySHw8CNFsQT1jmbSRgjeY2hWIfV6UyQOll3ibcY=
+	t=1739787479; cv=none; b=ZdAPpjlcoQv2UZu/SeVJGNINtUNKbiMDb/nLz+xg6LLI5YhvFEHAQp1z+dkYUiOwXQw28nPkCpPMU66gFWEYELt4PbFGKzZxJpK1NG5EACYpeGfuZQesEhh84mlEnrO7fkHWoGOyTEqepSis0IAEtuLf2SfrLniq0LqLkL8Zh7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739787478; c=relaxed/simple;
-	bh=aIDoW7X3UEqmkRU5fd1ed1f7Yb48yUxmvjsG6JEXMy4=;
+	s=arc-20240116; t=1739787479; c=relaxed/simple;
+	bh=u5QzLaMGCFkT6QzP4xgn658e+DtF0u9SlOsNS3Z0kwo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CWAYD9RfhnXknf5QbDMaXl0KwQtzfi+7qh1vb1hjTK8cguEnFj6bwl093+YqAiuF1BIoYSs6r3dw4d60voLT/qXYCh/VkhLLIuhThliMZBPbckwbwwkqMpi6SJD0oViyVmtM4E91e5giXtqxC/8MZ8fIwTvwtlyjmvX9xw/uPNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=o8twVDZo; arc=none smtp.client-ip=209.85.218.43
+	 MIME-Version; b=IK1jokLbmjQeDaddG7xuS/EGmVCRg5aS0KqnPCJweL08Kr4/5qV6nH/p7mZA995LxUcaengAP4eeySDzNzBzf1eJsMqayKSq4wzLHQ0chxozT6bdp35UbknRf8R2+rnPto0Dg74VtXg1CaVxSI6Jrx97DESUuzFMLG8y7qmjgLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=j2d+EPkL; arc=none smtp.client-ip=209.85.208.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o8twVDZo"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-abb79af88afso297711866b.1
-        for <linux-hardening@vger.kernel.org>; Mon, 17 Feb 2025 02:17:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j2d+EPkL"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5e033c2f106so2920768a12.3
+        for <linux-hardening@vger.kernel.org>; Mon, 17 Feb 2025 02:17:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739787475; x=1740392275; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1739787473; x=1740392273; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=pjqSIaqjo22M/fJ6WrzBYInBLUW49xWtc11H9nbdufw=;
-        b=o8twVDZojukUFWL3S8iI2AP6UXMtrVpRVaVZH5UvvmTEpXcZO1UpLxeF/YDscsxnCB
-         S+jjnSTM2IasEld2rvi7OfFnTKUwwPSYqTk+coYyqOpzyHziSAl9zl9ev9M3FstDb+5+
-         6cErzq/sJAhoxcjpkzUqzAsC7sjlrUrsgoclQu4UtPVOQaI9hsjGQJM+gNY4bjgXnNXq
-         520EfVxXrR3v4tW+oAMjlHcgqhXKdqfbFznB/CwuROHoYjyRM1beA6qm27iN4iy2tif0
-         Bs/ZBIll+F39RX/vEk+4u5isoI7LTWYnz8UsU8QLOJSPKMibWBQMwpbEJxaN1dZnHue9
-         wutA==
+        bh=o2yIlVyyOPbQ4NJXMaimxxzGIHYKCdR1oZZmLPUjNQg=;
+        b=j2d+EPkLrDxgowwfi3qhRIjWh3BxHHmKPmoHbK4IV0P+8SGyo9EQQIWVd48uMfhqS2
+         f7Kz649HjUrXieGFnC479UXFrUu+YnIyAMN19eow9Jt/CWSOaDI5q7QgaypOuGFvakVj
+         IFUM8iH1DOXSw7fnVuEb3SLDWRIwpqdC8Q6DxK8YhJlXYqUredVfSnlAbNIHAxT6zE9/
+         dxoFpS41YZoz/wQvNEJ0+O3/zoHPLvDLvAkVLtp3vsj4KlnJK5Hb6yH8t7BTRSbJqtss
+         srGGj2DXfBDjZU+Jq9/y3ESE3izbGb6LWueJAgyQz481kIm/3rXeciXfjbcIbLNLtVdm
+         7Ygw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739787475; x=1740392275;
+        d=1e100.net; s=20230601; t=1739787473; x=1740392273;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=pjqSIaqjo22M/fJ6WrzBYInBLUW49xWtc11H9nbdufw=;
-        b=c5fdm8oLEusd/ohq2Yqj53quvMoqq+7nfYNglToK/ocE0uQCkb+CFN3xBCHFiAIrtC
-         Thv9e0CvbCfigVzp1iiaWlEyMxglARBaErpZpOu9JY4mh/sMIx3S0uXNmQBRWrLezszr
-         rs7CN6XJBI+JlcUx0/kRIHkpxTXJ29w9vfyyxdu+sojdo2/tIXGvYSsG7jV6GwYkD4X+
-         I3xWumf4CzmZVpF8sV7SBjvH8jE4m43IfJBwOvlsTr4YkjbZHJwZHNd0GyHxjRM2ly/w
-         ypWlGC5zUxiEVFc9Uau1najMDOm7MzLOSJCkCofjMQAy2wEBikbqDs38McGi4pQkqXA9
-         dddg==
-X-Forwarded-Encrypted: i=1; AJvYcCWsn9BMWKILWSAVH5xpS/IwRCSJUYFpMw5EoVLwpwIx9ipUcQqP4x1h25dhLSzm/QcNQRlTAgk79oSK+kw20sE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwoH0JBQNSBkxCt8u9QYXybCDAaC0HtO2DuXE+rEJOmFR5ERZH5
-	Vs1M5iUAEG/QhYFcsYnl97jybIb/ZVC/NHHb4BoSAs/mcn+fl5CZ6DwCYE3QHWY=
-X-Gm-Gg: ASbGncsjRB0+VLlua4tlxHht8lCYVRvTRSeZ1nt412D8mh+X0i9xulM+6Qc8j1Ogefu
-	FXiorBg+QavALoHF+NwXiTbi8tx27VyfaUuAC+50njIQvrXrDurobounTgwOH2HmfD+gRgsv3mv
-	M6EjCDYUZNwn87xilhomNjQYOfjKmjkqMdlM+oqN1tldONoXBWLuTBfi88n4owVPCnW5PSmTd1X
-	mLB7IG0VgjvzTaTcQ8NXl1LBZxkFuy+DzdO7EslHpp/WGYEvmG4hXYx0omCGu3BYJM+2X3SliGN
-	fHhqnjMkAsbu4io/MZo6MsCC
-X-Google-Smtp-Source: AGHT+IFlDyIupv/Dc3O4C3y1gwzt/272w46jucKO95aSvrTTvzjMkzKCPNIWu+2421TQveFqhl50lg==
-X-Received: by 2002:a17:907:26ce:b0:ab7:b878:e8bc with SMTP id a640c23a62f3a-abb70de288cmr1064938866b.38.1739787474939;
-        Mon, 17 Feb 2025 02:17:54 -0800 (PST)
+        bh=o2yIlVyyOPbQ4NJXMaimxxzGIHYKCdR1oZZmLPUjNQg=;
+        b=sfeYukD0/xQ9R3zJBW6qBJlGfTa3XaVuWGllQRW/votiHKBpwTK9J5xm4JiY2RzdZd
+         MRj1VkuOYJHLiqDBlt+eCQExzdPaZUkvgxoN8tbJarF1uzQrD0WzlFoM3qsTLtJ00iUa
+         7JRHqFc8q75cQpOB26n48Kag8brKgdWrnFHDEOG1dB1rE1y4pK9zzYBAN3WCtZ8GBt59
+         ZXwKstIFDfocRQFtikuYwz/Ujrter9dp2MnKaAupkG4kHt24qdcuKpaY7DLDMXxvj1bP
+         uBsejS6/E5xVViXcsob5EBKurKCdczYO9brjFRFLBitj/GedcS0+gYLsfRRqCgZ41qWy
+         vpQw==
+X-Forwarded-Encrypted: i=1; AJvYcCUv4gCspvr3suN39W2/7f6Wszmsb+vxAG+S9B6CBDUZxK0SJTrKziapILZHZTGz3aiPtqKiBFwDEdFigY9y8WI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHTtlP4QeHcw5h7VgDOy9RJOquZLp+7E6Xi1xi5l7Xw88HxK2T
+	TmEw2js1oKjhkbkGMzCI6xsvAHDmN3xicKjacZfq/wYg0nffhQABvslCl1xXD7k=
+X-Gm-Gg: ASbGncvIl4Xr/2DZJZoh8DTux4UDRJraCDgVviGwlm1AQIHd5Lh8s5qkg3DjsAIvUDn
+	56fTmdXW8zZ/f1I9zWq6Cjid5y/lnPsS38cG6Lp/twKr1NlPndobPD0MnVvPCy13c7We2lwxiz+
+	igqH/obxjap3qw61mHSZr3CY/hHR2m6NZM0AfnbCNcjlKpBIc6lEkWW0mYTJTPw9MntTW0rzWcX
+	cqktR4p75MbxX63ePw+P0vBBtIk73NZnqNS/pQq9Q0q4ecIDOA68l1zd9ZubA7BRmV9XklphK+p
+	diKdUhwpmA9UTVspqVI/EfNn
+X-Google-Smtp-Source: AGHT+IGpx0/whONuJWGo4HwkqVqYsCJmEUhrUJNrzL9FCk0mF7dow3SMs9U25x2XZBwWQZmzKpeEtw==
+X-Received: by 2002:a05:6402:5107:b0:5dc:ea7e:8c56 with SMTP id 4fb4d7f45d1cf-5e036139d68mr21109346a12.22.1739787473355;
+        Mon, 17 Feb 2025 02:17:53 -0800 (PST)
 Received: from eugen-station.. ([82.76.24.202])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abb8b1767e8sm308583266b.174.2025.02.17.02.17.53
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abb8b1767e8sm308583266b.174.2025.02.17.02.17.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Feb 2025 02:17:54 -0800 (PST)
+        Mon, 17 Feb 2025 02:17:53 -0800 (PST)
 From: Eugen Hristev <eugen.hristev@linaro.org>
 To: linux-arm-msm@vger.kernel.org,
 	linux-hardening@vger.kernel.org,
@@ -78,9 +78,9 @@ Cc: linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	kernel@quicinc.com,
 	Eugen Hristev <eugen.hristev@linaro.org>
-Subject: [RFC][PATCH 06/10] qcom: smem: enable smem pstore backend
-Date: Mon, 17 Feb 2025 12:17:02 +0200
-Message-ID: <20250217101706.2104498-7-eugen.hristev@linaro.org>
+Subject: [RFC][PATCH 05/10] pstore: implement core area registration
+Date: Mon, 17 Feb 2025 12:17:01 +0200
+Message-ID: <20250217101706.2104498-6-eugen.hristev@linaro.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250217101706.2104498-1-eugen.hristev@linaro.org>
 References: <20250217101706.2104498-1-eugen.hristev@linaro.org>
@@ -92,40 +92,242 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Enable smem pstore backend that registers regions into the minidump
-table.
+Implement core area registration mechanism.
+Implement directly mapped zone corespoding to core areas.
 
 Signed-off-by: Eugen Hristev <eugen.hristev@linaro.org>
 ---
- drivers/soc/qcom/smem.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ fs/pstore/platform.c   | 67 ++++++++++++++++++++++++++++++++++++
+ fs/pstore/zone.c       | 77 ++++++++++++++++++++++++++++++++++++++++++
+ include/linux/pstore.h | 16 +++++++++
+ 3 files changed, 160 insertions(+)
 
-diff --git a/drivers/soc/qcom/smem.c b/drivers/soc/qcom/smem.c
-index 592819701809..f4d2646fcc0b 100644
---- a/drivers/soc/qcom/smem.c
-+++ b/drivers/soc/qcom/smem.c
-@@ -1236,11 +1236,21 @@ static int qcom_smem_probe(struct platform_device *pdev)
- 	if (IS_ERR(smem->socinfo))
- 		dev_dbg(&pdev->dev, "failed to register socinfo device\n");
+diff --git a/fs/pstore/platform.c b/fs/pstore/platform.c
+index e20e60b88727..32448d9dd316 100644
+--- a/fs/pstore/platform.c
++++ b/fs/pstore/platform.c
+@@ -68,6 +68,7 @@ static DECLARE_WORK(pstore_work, pstore_dowork);
+  * the filesystem mount/unmount routines.
+  */
+ static DEFINE_MUTEX(psinfo_lock);
++static DEFINE_MUTEX(ps_dmr_lock);
+ struct pstore_info *psinfo;
  
-+	ret = qcom_smem_md_init(&pdev->dev);
-+	if (ret)
-+		dev_info(&pdev->dev, "smem minidump backend init failed\n");
+ static char *backend;
+@@ -99,6 +100,12 @@ MODULE_PARM_DESC(kmsg_bytes, "amount of kernel log to snapshot (in bytes)");
+ 
+ static void *compress_workspace;
+ 
++static LIST_HEAD(rec_list);
++struct rec_list_t {
++	struct pstore_record rec;
++	struct list_head list;
++};
 +
-+	ret = qcom_register_pstore_smem(&pdev->dev);
-+	if (ret)
-+		dev_info(&pdev->dev, "smem pstore backend registration failed\n");
+ /*
+  * Compression is only used for dmesg output, which consists of low-entropy
+  * ASCII text, and so we can assume worst-case 60%.
+@@ -271,6 +278,66 @@ void pstore_record_init(struct pstore_record *record,
+ 	record->time = ns_to_timespec64(ktime_get_real_fast_ns());
+ }
+ 
++int pstore_register_core_area(const char *handle, void *area, size_t size)
++{
++	struct rec_list_t *rec_element = kzalloc(sizeof (*rec_element), GFP_KERNEL);
++	struct pstore_record *record = &rec_element->rec;
++	int ret;
 +
++	if (!psinfo || !psinfo->register_dmr) {
++		pr_err("No pstore available ! Bailing out.\n");
++		return -EAGAIN;
++	}
++
++	pstore_record_init(record, psinfo);
++	record->type = PSTORE_TYPE_DMAPPED;
++	record->buf = area;
++	record->size = size;
++
++	if (handle) {
++		record->priv = kmalloc(8, GFP_KERNEL);
++		strncpy(record->priv, handle, 8);
++	}
++
++	mutex_lock(&ps_dmr_lock);
++
++	ret = psinfo->register_dmr(record);
++	if (!ret)
++		list_add(&rec_element->list, &rec_list);
++
++	mutex_unlock(&ps_dmr_lock);
++	return ret;
++}
++EXPORT_SYMBOL_GPL(pstore_register_core_area);
++
++int pstore_unregister_core_area(const char *handle, void *area, size_t size)
++{
++	struct rec_list_t *rec_element, *tmp;
++	int ret;
++
++	if (!psinfo || !psinfo->unregister_dmr)
++		return -EAGAIN;
++
++	mutex_lock(&ps_dmr_lock);
++	list_for_each_entry_safe(rec_element, tmp, &rec_list, list) {
++		struct pstore_record *record;
++
++		record = &rec_element->rec;
++
++		if (record->buf == area) {
++			ret = psinfo->unregister_dmr(record);
++			list_del(&rec_element->list);
++			mutex_unlock(&ps_dmr_lock);
++			return 0;
++		}
++	}
++
++	mutex_unlock(&ps_dmr_lock);
++	return 0;
++
++}
++EXPORT_SYMBOL_GPL(pstore_unregister_core_area);
++
+ /*
+  * callback from kmsg_dump. Save as much as we can (up to kmsg_bytes) from the
+  * end of the buffer.
+diff --git a/fs/pstore/zone.c b/fs/pstore/zone.c
+index affa4370208c..f9e2dc4252ea 100644
+--- a/fs/pstore/zone.c
++++ b/fs/pstore/zone.c
+@@ -35,6 +35,7 @@ struct psz_buffer {
+ 	uint32_t sig;
+ 	atomic_t datalen;
+ 	atomic_t start;
++	void *data_ptr;
+ 	uint8_t data[];
+ };
+ 
+@@ -822,6 +823,38 @@ static int notrace psz_kmsg_write(struct psz_context *cxt,
  	return 0;
  }
  
- static void qcom_smem_remove(struct platform_device *pdev)
- {
-+	qcom_unregister_pstore_smem();
++static int notrace psz_register_dmr_record(struct pstore_zone *zone,
++			struct pstore_record *record)
++{
++	struct pstore_zone_info *info = pstore_zone_cxt.pstore_zone_info;
++	int ret;
 +
- 	platform_device_unregister(__smem->socinfo);
++	if (!info->register_dmr)
++		return -ENOTSUPP;
++
++	zone->buffer->data_ptr = record->buf;
++	atomic_set(&zone->buffer->datalen, record->size);
++
++	ret = info->register_dmr(record->priv, record->id, record->buf,
++				 record->size);
++	if (!ret)
++		atomic_set(&zone->dirty, true);
++	return ret;
++}
++
++static int psz_unregister_dmr_zone(struct pstore_zone *zone)
++{
++	struct pstore_zone_info *info = pstore_zone_cxt.pstore_zone_info;
++	if (!info->unregister_dmr)
++		return -ENOTSUPP;
++
++	info->unregister_dmr(zone->buffer->data_ptr,
++			     atomic_read(&zone->buffer->datalen));
++
++	atomic_set(&zone->dirty, false);
++	return 0;
++}
++
+ static int notrace psz_record_write(struct pstore_zone *zone,
+ 		struct pstore_record *record)
+ {
+@@ -906,6 +939,48 @@ static int notrace psz_pstore_write(struct pstore_record *record)
+ 	}
+ }
  
- 	hwspin_lock_free(__smem->hwlock);
++static int pstore_unregister_dmr(struct pstore_record *record)
++{
++	struct psz_context *cxt = record->psi->data;
++	int c = 0;
++
++	if (!cxt->dmszs)
++		return -ENODEV;
++
++	while (c < cxt->dmapped_max_cnt) {
++		if (!atomic_read(&cxt->dmszs[c]->dirty))
++			continue;
++
++		if (cxt->dmszs[c]->buffer->data_ptr == record->buf)
++			return psz_unregister_dmr_zone(cxt->dmszs[c]);
++		c++;
++	}
++
++	return -ENOENT;
++}
++
++static int pstore_register_dmr(struct pstore_record *record)
++{
++	struct psz_context *cxt = record->psi->data;
++	int c = 0;
++
++	if (!cxt->dmszs)
++		return -ENODEV;
++
++	while (c < cxt->dmapped_max_cnt) {
++		if (!atomic_read(&cxt->dmszs[c]->dirty))
++			break;
++		c++;
++	}
++
++	if (c == cxt->dmapped_max_cnt)
++		return -ENOSPC;
++
++	record->id = c;
++
++	return psz_register_dmr_record(cxt->dmszs[c], record);
++}
++
+ static struct pstore_zone *psz_read_next_zone(struct psz_context *cxt)
+ {
+ 	struct pstore_zone *zone = NULL;
+@@ -1110,6 +1185,8 @@ static struct psz_context pstore_zone_cxt = {
+ 		.read = psz_pstore_read,
+ 		.write = psz_pstore_write,
+ 		.erase = psz_pstore_erase,
++		.register_dmr = pstore_register_dmr,
++		.unregister_dmr = pstore_unregister_dmr,
+ 	},
+ };
+ 
+diff --git a/include/linux/pstore.h b/include/linux/pstore.h
+index 8360d94c96b6..85f3f964b268 100644
+--- a/include/linux/pstore.h
++++ b/include/linux/pstore.h
+@@ -290,4 +290,20 @@ pstore_ftrace_write_timestamp(struct pstore_ftrace_record *rec, u64 val)
+ }
+ #endif
+ 
++#ifdef CONFIG_PSTORE
++int pstore_register_core_area(const char *handle, void *area, size_t size);
++int pstore_unregister_core_area(const char *handle, void *area, size_t size);
++#else
++static inline int pstore_register_core_area(const char *handle, void *area,
++					    size_t size)
++{
++	return 0;
++}
++static inline int pstore_unregister_core_area(const char *handle, void *area,
++				       size_t size)
++{
++	return 0;
++}
++#endif
++
+ #endif /*_LINUX_PSTORE_H*/
 -- 
 2.43.0
 
