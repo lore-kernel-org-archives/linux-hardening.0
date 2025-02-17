@@ -1,62 +1,62 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42A41218AB3
-	for <linux-hardening@vger.kernel.org>; Mon, 17 Feb 2025 10:17:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AEA1218AD2
+	for <linux-hardening@vger.kernel.org>; Mon, 17 Feb 2025 10:17:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739787479; cv=none; b=ZdAPpjlcoQv2UZu/SeVJGNINtUNKbiMDb/nLz+xg6LLI5YhvFEHAQp1z+dkYUiOwXQw28nPkCpPMU66gFWEYELt4PbFGKzZxJpK1NG5EACYpeGfuZQesEhh84mlEnrO7fkHWoGOyTEqepSis0IAEtuLf2SfrLniq0LqLkL8Zh7U=
+	t=1739787480; cv=none; b=Q6dv8Eqs6wsktrYRuJSeDYAIdQIkNfXNF0wWs3we2nkP1m2LRDgImCA7C3fBgCSalz09fuCwZc4eIYWO+CGAfBxdssJMkqHaJK3oTQcXta0TbPgd1v0UpKQbyFMNIqmBfWHHKyFTXrLOdlMqb6NZDvNsKzOq96rkH8JGLt3bKNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739787479; c=relaxed/simple;
-	bh=u5QzLaMGCFkT6QzP4xgn658e+DtF0u9SlOsNS3Z0kwo=;
+	s=arc-20240116; t=1739787480; c=relaxed/simple;
+	bh=61J2pu5l3ndGn9woBnkjvneIE/RD9R+0X2yrx5ajIWM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IK1jokLbmjQeDaddG7xuS/EGmVCRg5aS0KqnPCJweL08Kr4/5qV6nH/p7mZA995LxUcaengAP4eeySDzNzBzf1eJsMqayKSq4wzLHQ0chxozT6bdp35UbknRf8R2+rnPto0Dg74VtXg1CaVxSI6Jrx97DESUuzFMLG8y7qmjgLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=j2d+EPkL; arc=none smtp.client-ip=209.85.208.48
+	 MIME-Version; b=NPTEsYOs1hWLSjWznf6D9Wdiu3/uC8R18/uOQOpV9L+BLLHdMvNKjdzcZEui39+cGODHyPwFnNZSPDOXNG6g6Q1dUb1kTwHuV7316Ism28V6gtq1Y+z2SJhEKWuBtd6kdP1sr9ffZ6kNAFekRNNckSgzQaqZ7CFGkzyUOIponU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZsEMpFNt; arc=none smtp.client-ip=209.85.218.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j2d+EPkL"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5e033c2f106so2920768a12.3
-        for <linux-hardening@vger.kernel.org>; Mon, 17 Feb 2025 02:17:54 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZsEMpFNt"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-abb75200275so249018666b.3
+        for <linux-hardening@vger.kernel.org>; Mon, 17 Feb 2025 02:17:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739787473; x=1740392273; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1739787477; x=1740392277; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=o2yIlVyyOPbQ4NJXMaimxxzGIHYKCdR1oZZmLPUjNQg=;
-        b=j2d+EPkLrDxgowwfi3qhRIjWh3BxHHmKPmoHbK4IV0P+8SGyo9EQQIWVd48uMfhqS2
-         f7Kz649HjUrXieGFnC479UXFrUu+YnIyAMN19eow9Jt/CWSOaDI5q7QgaypOuGFvakVj
-         IFUM8iH1DOXSw7fnVuEb3SLDWRIwpqdC8Q6DxK8YhJlXYqUredVfSnlAbNIHAxT6zE9/
-         dxoFpS41YZoz/wQvNEJ0+O3/zoHPLvDLvAkVLtp3vsj4KlnJK5Hb6yH8t7BTRSbJqtss
-         srGGj2DXfBDjZU+Jq9/y3ESE3izbGb6LWueJAgyQz481kIm/3rXeciXfjbcIbLNLtVdm
-         7Ygw==
+        bh=ldGwrx2cT3RoWK8xQPpncYSf7C74wmzaVDctYgnNzT8=;
+        b=ZsEMpFNtgC8tqQQhhiNG9KGHmENdgB4rAu9TzSfsY1MSvj3kXgq+zR+OVmeyE23lfY
+         hIOT3cC2fIbGcc3Hzbf1dVsmey8oQxNt9XMXlNncyUSDe1Rvj2UouxOZ4iGlTzGRBfoC
+         pZksizHBgwUvweaz535oIlBw/CTWRn9nfeek0P3NytAJ/ck1PqSOG75pFOD7fYRIh3gG
+         O6nwqs5eEGWqJfIuGCDSIw9uRuAMXV92lTqoOVNC9s8i3VuzuxUFB+lS3gs5+9o1ecq/
+         Leib4/k/6UMbNc6yq9iTHWf3RDatAVe5pYDPb+fGwOIwr77wjdmuRPqiVrJlBvBC5gUk
+         uP5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739787473; x=1740392273;
+        d=1e100.net; s=20230601; t=1739787477; x=1740392277;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=o2yIlVyyOPbQ4NJXMaimxxzGIHYKCdR1oZZmLPUjNQg=;
-        b=sfeYukD0/xQ9R3zJBW6qBJlGfTa3XaVuWGllQRW/votiHKBpwTK9J5xm4JiY2RzdZd
-         MRj1VkuOYJHLiqDBlt+eCQExzdPaZUkvgxoN8tbJarF1uzQrD0WzlFoM3qsTLtJ00iUa
-         7JRHqFc8q75cQpOB26n48Kag8brKgdWrnFHDEOG1dB1rE1y4pK9zzYBAN3WCtZ8GBt59
-         ZXwKstIFDfocRQFtikuYwz/Ujrter9dp2MnKaAupkG4kHt24qdcuKpaY7DLDMXxvj1bP
-         uBsejS6/E5xVViXcsob5EBKurKCdczYO9brjFRFLBitj/GedcS0+gYLsfRRqCgZ41qWy
-         vpQw==
-X-Forwarded-Encrypted: i=1; AJvYcCUv4gCspvr3suN39W2/7f6Wszmsb+vxAG+S9B6CBDUZxK0SJTrKziapILZHZTGz3aiPtqKiBFwDEdFigY9y8WI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHTtlP4QeHcw5h7VgDOy9RJOquZLp+7E6Xi1xi5l7Xw88HxK2T
-	TmEw2js1oKjhkbkGMzCI6xsvAHDmN3xicKjacZfq/wYg0nffhQABvslCl1xXD7k=
-X-Gm-Gg: ASbGncvIl4Xr/2DZJZoh8DTux4UDRJraCDgVviGwlm1AQIHd5Lh8s5qkg3DjsAIvUDn
-	56fTmdXW8zZ/f1I9zWq6Cjid5y/lnPsS38cG6Lp/twKr1NlPndobPD0MnVvPCy13c7We2lwxiz+
-	igqH/obxjap3qw61mHSZr3CY/hHR2m6NZM0AfnbCNcjlKpBIc6lEkWW0mYTJTPw9MntTW0rzWcX
-	cqktR4p75MbxX63ePw+P0vBBtIk73NZnqNS/pQq9Q0q4ecIDOA68l1zd9ZubA7BRmV9XklphK+p
-	diKdUhwpmA9UTVspqVI/EfNn
-X-Google-Smtp-Source: AGHT+IGpx0/whONuJWGo4HwkqVqYsCJmEUhrUJNrzL9FCk0mF7dow3SMs9U25x2XZBwWQZmzKpeEtw==
-X-Received: by 2002:a05:6402:5107:b0:5dc:ea7e:8c56 with SMTP id 4fb4d7f45d1cf-5e036139d68mr21109346a12.22.1739787473355;
-        Mon, 17 Feb 2025 02:17:53 -0800 (PST)
+        bh=ldGwrx2cT3RoWK8xQPpncYSf7C74wmzaVDctYgnNzT8=;
+        b=kkwq1YPyyDpmDV4i3krN/kJLjwiSbV9OiG/WcVz5mT7HRg9EycNxY/HfWhdeQKdQp6
+         xLB7v+qJyg8L7mbtpWTAUdba0NJKvh0wPzekMZ5EcWbdKETStHJh7kUpACvOWk+EhBr6
+         RFm77lllMpNLTCuNUDvPSXvjpqpFVF4WD/HwupDdDc1oS+D9AexN+NMNQpO+MW7NQ1a8
+         ns2gOQO47FSk8PN7lJrcZE6CNUhn2VsOOXY4tXt9KztB/ev0GyDdZRrbu6eNlWtqF6n8
+         fCMVG8w1bFmoj41qdGbg8mexocxCkSV9ExSbdzvEFLcxFEU5Wmsuhzh0+cT1zBk4n2AN
+         ZWEg==
+X-Forwarded-Encrypted: i=1; AJvYcCVK/TcmdJPN7T+qb8/+FPb8eGK7vhvhsLAsrbrTyz66QYvGFMntvj7ZL6yRYHYoBSkNNnuCcFte3OYezAxJBt0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJmaaYUZaAWH/BYWFEFOcE758nwFMKTMg2LYnKRGyVFn2w+7qH
+	a8E/gOSS4Dfz5ZeF+fvYI2LLzx1OpsxeQ3mn0StFcZK4oeg/dpjkTIjqchqt5/E=
+X-Gm-Gg: ASbGnct7977+dDIgpVoLGUr2VzT9UZgotU/w4o6iGDLJ3z/gy58A2WANUOt0hqnFMHA
+	7R1hyN2YLbTxKVL4BVYkIT16Z8ikKifXi547R61kJBkCwaKA+qwU9I03Zzr1tNwAsOdXQnE3SBA
+	sjkNeY/grG6af4rxobvRaIuHHtobkXEPYcT6H3GIAwdI//EReaNVOnsDJ87JcmJxKS8M5r8Kzkq
+	CWAEbSsVUJsLaWRSv6jADWmrB8oausDYTZg/eksnn2ca9eOX/QHgx6yrKLwBpWzxjyO5R1oq4wf
+	wT2SPPndr6G9qOOgXdAFhmQ6
+X-Google-Smtp-Source: AGHT+IGLJ6wBq1Q2Otx2cXUsLqwI686ZT/K4uXqflhPHhYRM3ByDKMZpdTFQUXVBYhqRHLkwN7a7fQ==
+X-Received: by 2002:a17:907:78b:b0:ab7:c115:68fd with SMTP id a640c23a62f3a-abb70e61a23mr916824766b.53.1739787476706;
+        Mon, 17 Feb 2025 02:17:56 -0800 (PST)
 Received: from eugen-station.. ([82.76.24.202])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abb8b1767e8sm308583266b.174.2025.02.17.02.17.51
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abb8b1767e8sm308583266b.174.2025.02.17.02.17.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Feb 2025 02:17:53 -0800 (PST)
+        Mon, 17 Feb 2025 02:17:56 -0800 (PST)
 From: Eugen Hristev <eugen.hristev@linaro.org>
 To: linux-arm-msm@vger.kernel.org,
 	linux-hardening@vger.kernel.org,
@@ -78,9 +78,9 @@ Cc: linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	kernel@quicinc.com,
 	Eugen Hristev <eugen.hristev@linaro.org>
-Subject: [RFC][PATCH 05/10] pstore: implement core area registration
-Date: Mon, 17 Feb 2025 12:17:01 +0200
-Message-ID: <20250217101706.2104498-6-eugen.hristev@linaro.org>
+Subject: [RFC][PATCH 07/10] printk: export symbols for buffer address and length functions
+Date: Mon, 17 Feb 2025 12:17:03 +0200
+Message-ID: <20250217101706.2104498-8-eugen.hristev@linaro.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250217101706.2104498-1-eugen.hristev@linaro.org>
 References: <20250217101706.2104498-1-eugen.hristev@linaro.org>
@@ -92,242 +92,33 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Implement core area registration mechanism.
-Implement directly mapped zone corespoding to core areas.
+log_buf_addr_get() and log_buf_len_get() can be reused in another module,
+export the symbols.
 
 Signed-off-by: Eugen Hristev <eugen.hristev@linaro.org>
 ---
- fs/pstore/platform.c   | 67 ++++++++++++++++++++++++++++++++++++
- fs/pstore/zone.c       | 77 ++++++++++++++++++++++++++++++++++++++++++
- include/linux/pstore.h | 16 +++++++++
- 3 files changed, 160 insertions(+)
+ kernel/printk/printk.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/fs/pstore/platform.c b/fs/pstore/platform.c
-index e20e60b88727..32448d9dd316 100644
---- a/fs/pstore/platform.c
-+++ b/fs/pstore/platform.c
-@@ -68,6 +68,7 @@ static DECLARE_WORK(pstore_work, pstore_dowork);
-  * the filesystem mount/unmount routines.
-  */
- static DEFINE_MUTEX(psinfo_lock);
-+static DEFINE_MUTEX(ps_dmr_lock);
- struct pstore_info *psinfo;
- 
- static char *backend;
-@@ -99,6 +100,12 @@ MODULE_PARM_DESC(kmsg_bytes, "amount of kernel log to snapshot (in bytes)");
- 
- static void *compress_workspace;
- 
-+static LIST_HEAD(rec_list);
-+struct rec_list_t {
-+	struct pstore_record rec;
-+	struct list_head list;
-+};
-+
- /*
-  * Compression is only used for dmesg output, which consists of low-entropy
-  * ASCII text, and so we can assume worst-case 60%.
-@@ -271,6 +278,66 @@ void pstore_record_init(struct pstore_record *record,
- 	record->time = ns_to_timespec64(ktime_get_real_fast_ns());
- }
- 
-+int pstore_register_core_area(const char *handle, void *area, size_t size)
-+{
-+	struct rec_list_t *rec_element = kzalloc(sizeof (*rec_element), GFP_KERNEL);
-+	struct pstore_record *record = &rec_element->rec;
-+	int ret;
-+
-+	if (!psinfo || !psinfo->register_dmr) {
-+		pr_err("No pstore available ! Bailing out.\n");
-+		return -EAGAIN;
-+	}
-+
-+	pstore_record_init(record, psinfo);
-+	record->type = PSTORE_TYPE_DMAPPED;
-+	record->buf = area;
-+	record->size = size;
-+
-+	if (handle) {
-+		record->priv = kmalloc(8, GFP_KERNEL);
-+		strncpy(record->priv, handle, 8);
-+	}
-+
-+	mutex_lock(&ps_dmr_lock);
-+
-+	ret = psinfo->register_dmr(record);
-+	if (!ret)
-+		list_add(&rec_element->list, &rec_list);
-+
-+	mutex_unlock(&ps_dmr_lock);
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(pstore_register_core_area);
-+
-+int pstore_unregister_core_area(const char *handle, void *area, size_t size)
-+{
-+	struct rec_list_t *rec_element, *tmp;
-+	int ret;
-+
-+	if (!psinfo || !psinfo->unregister_dmr)
-+		return -EAGAIN;
-+
-+	mutex_lock(&ps_dmr_lock);
-+	list_for_each_entry_safe(rec_element, tmp, &rec_list, list) {
-+		struct pstore_record *record;
-+
-+		record = &rec_element->rec;
-+
-+		if (record->buf == area) {
-+			ret = psinfo->unregister_dmr(record);
-+			list_del(&rec_element->list);
-+			mutex_unlock(&ps_dmr_lock);
-+			return 0;
-+		}
-+	}
-+
-+	mutex_unlock(&ps_dmr_lock);
-+	return 0;
-+
-+}
-+EXPORT_SYMBOL_GPL(pstore_unregister_core_area);
-+
- /*
-  * callback from kmsg_dump. Save as much as we can (up to kmsg_bytes) from the
-  * end of the buffer.
-diff --git a/fs/pstore/zone.c b/fs/pstore/zone.c
-index affa4370208c..f9e2dc4252ea 100644
---- a/fs/pstore/zone.c
-+++ b/fs/pstore/zone.c
-@@ -35,6 +35,7 @@ struct psz_buffer {
- 	uint32_t sig;
- 	atomic_t datalen;
- 	atomic_t start;
-+	void *data_ptr;
- 	uint8_t data[];
- };
- 
-@@ -822,6 +823,38 @@ static int notrace psz_kmsg_write(struct psz_context *cxt,
- 	return 0;
- }
- 
-+static int notrace psz_register_dmr_record(struct pstore_zone *zone,
-+			struct pstore_record *record)
-+{
-+	struct pstore_zone_info *info = pstore_zone_cxt.pstore_zone_info;
-+	int ret;
-+
-+	if (!info->register_dmr)
-+		return -ENOTSUPP;
-+
-+	zone->buffer->data_ptr = record->buf;
-+	atomic_set(&zone->buffer->datalen, record->size);
-+
-+	ret = info->register_dmr(record->priv, record->id, record->buf,
-+				 record->size);
-+	if (!ret)
-+		atomic_set(&zone->dirty, true);
-+	return ret;
-+}
-+
-+static int psz_unregister_dmr_zone(struct pstore_zone *zone)
-+{
-+	struct pstore_zone_info *info = pstore_zone_cxt.pstore_zone_info;
-+	if (!info->unregister_dmr)
-+		return -ENOTSUPP;
-+
-+	info->unregister_dmr(zone->buffer->data_ptr,
-+			     atomic_read(&zone->buffer->datalen));
-+
-+	atomic_set(&zone->dirty, false);
-+	return 0;
-+}
-+
- static int notrace psz_record_write(struct pstore_zone *zone,
- 		struct pstore_record *record)
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index 07668433644b..022947f9b61d 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -588,12 +588,14 @@ char *log_buf_addr_get(void)
  {
-@@ -906,6 +939,48 @@ static int notrace psz_pstore_write(struct pstore_record *record)
- 	}
+ 	return log_buf;
  }
++EXPORT_SYMBOL_GPL(log_buf_addr_get);
  
-+static int pstore_unregister_dmr(struct pstore_record *record)
-+{
-+	struct psz_context *cxt = record->psi->data;
-+	int c = 0;
-+
-+	if (!cxt->dmszs)
-+		return -ENODEV;
-+
-+	while (c < cxt->dmapped_max_cnt) {
-+		if (!atomic_read(&cxt->dmszs[c]->dirty))
-+			continue;
-+
-+		if (cxt->dmszs[c]->buffer->data_ptr == record->buf)
-+			return psz_unregister_dmr_zone(cxt->dmszs[c]);
-+		c++;
-+	}
-+
-+	return -ENOENT;
-+}
-+
-+static int pstore_register_dmr(struct pstore_record *record)
-+{
-+	struct psz_context *cxt = record->psi->data;
-+	int c = 0;
-+
-+	if (!cxt->dmszs)
-+		return -ENODEV;
-+
-+	while (c < cxt->dmapped_max_cnt) {
-+		if (!atomic_read(&cxt->dmszs[c]->dirty))
-+			break;
-+		c++;
-+	}
-+
-+	if (c == cxt->dmapped_max_cnt)
-+		return -ENOSPC;
-+
-+	record->id = c;
-+
-+	return psz_register_dmr_record(cxt->dmszs[c], record);
-+}
-+
- static struct pstore_zone *psz_read_next_zone(struct psz_context *cxt)
+ /* Return log buffer size */
+ u32 log_buf_len_get(void)
  {
- 	struct pstore_zone *zone = NULL;
-@@ -1110,6 +1185,8 @@ static struct psz_context pstore_zone_cxt = {
- 		.read = psz_pstore_read,
- 		.write = psz_pstore_write,
- 		.erase = psz_pstore_erase,
-+		.register_dmr = pstore_register_dmr,
-+		.unregister_dmr = pstore_unregister_dmr,
- 	},
- };
- 
-diff --git a/include/linux/pstore.h b/include/linux/pstore.h
-index 8360d94c96b6..85f3f964b268 100644
---- a/include/linux/pstore.h
-+++ b/include/linux/pstore.h
-@@ -290,4 +290,20 @@ pstore_ftrace_write_timestamp(struct pstore_ftrace_record *rec, u64 val)
+ 	return log_buf_len;
  }
- #endif
++EXPORT_SYMBOL_GPL(log_buf_len_get);
  
-+#ifdef CONFIG_PSTORE
-+int pstore_register_core_area(const char *handle, void *area, size_t size);
-+int pstore_unregister_core_area(const char *handle, void *area, size_t size);
-+#else
-+static inline int pstore_register_core_area(const char *handle, void *area,
-+					    size_t size)
-+{
-+	return 0;
-+}
-+static inline int pstore_unregister_core_area(const char *handle, void *area,
-+				       size_t size)
-+{
-+	return 0;
-+}
-+#endif
-+
- #endif /*_LINUX_PSTORE_H*/
+ /*
+  * Define how much of the log buffer we could take at maximum. The value
 -- 
 2.43.0
 
