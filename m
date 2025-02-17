@@ -1,132 +1,209 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 612FA21767B
-	for <linux-hardening@vger.kernel.org>; Mon, 17 Feb 2025 10:06:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D6C723CE
+	for <linux-hardening@vger.kernel.org>; Mon, 17 Feb 2025 10:17:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739786817; cv=none; b=Z8kILRfyF+FQ0abt14PpcgeWQWBw7v126usrSPb3hi9VV0LH33TJVugwUOwBFphfamEBynEfWLi/z3gRSi7g+DD6h5o9AUcastDYbekLWzLL/qqZtzlxnkQdSp0Vc6iRBNa3ugnJdcGV00H7jbczQjYGBo6EuN32hOW8/XqQlwI=
+	t=1739787469; cv=none; b=p0ffVJzHyg5qvPAQ3BXzZp0BMPx9SIJb5fFA2L0xXZhAlvDowF6hdrqeC3BKA19Aaa7VUSp2DY4XMHVrV6xoW65zPzkQ2FUKJzGHOqUp/q/3aH4S7waDm4v2H9TagPI5E3DPAMOYyyc/uEl1qlYImAltG0hcvi1j+EqZGyYXAVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739786817; c=relaxed/simple;
-	bh=Biw6DUxzk939fJknAJPcsYdiS9No9FiyXZeyYUMpkmc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=O80eH1tGBuvGIKInfoTZtpDtynsDtm5iNjcAc2WpHMXr2v7vJDZEGsgh577A5feifPgkWsqup4rIoh4VIlzukW4dR3x4mHtQhfhogjBY6D/TJaa/g/wnLZplI6DMN8M+q/qKHy9/lwn3J/V80ufVEmnnUmF49VAEvWLpmyLwMIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IDJaRlum; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1739787469; c=relaxed/simple;
+	bh=7r+4EPkQi0khwl3pIMV3sEMCc4jpZs7gCnWySQtmFhk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Tqe9tD1EaLcLhcYhTkTVORY5yTIMo0F3Xgr/TQel3kc5wgLdf7cGseBmKNh64c9woCBQrTejSrF4xbHcRtAlUdYZAB72nRQ5+8tlEQyz7z7Y4kgqdH+VQF8Ngu3imMgAhh4LjvYPnDrqTEMz/KkpuPiqv2u1mBpmCfuWQE3XC5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=viPX+Pkp; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IDJaRlum"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739786814;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=7uYWhEd1/c+mNMCq30U6Kc7sDjWCoVhIrgohc+6hGoc=;
-	b=IDJaRlum/U1U84Oj34bGHuHMEtJBty4AFk4Mw8x9dOP3zCKSq9cyoUhlxNWGKWUWnaFmTq
-	mWCVrEq33sRook1+YnBjXfuEVYFuN4E7acE+EBvbk3doB+UocwQWza+lvXHu363RGmqwgP
-	GOa524aeknZYjz6UcE8QkGdUkCD+b20=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-220-ZCmSdXiGM8qY15qQbad7IA-1; Mon, 17 Feb 2025 05:06:52 -0500
-X-MC-Unique: ZCmSdXiGM8qY15qQbad7IA-1
-X-Mimecast-MFC-AGG-ID: ZCmSdXiGM8qY15qQbad7IA_1739786811
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-38f338525e1so864065f8f.3
-        for <linux-hardening@vger.kernel.org>; Mon, 17 Feb 2025 02:06:51 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="viPX+Pkp"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-abb97e15bcbso153915866b.0
+        for <linux-hardening@vger.kernel.org>; Mon, 17 Feb 2025 02:17:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739787465; x=1740392265; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=dLhLqEj5CnQGR3HAISzr8o6znCJqNhfLLG9jh4rRpzQ=;
+        b=viPX+PkpF32PixuYkVDABqydvgOAyGmPhijKrDpDJbYaxWzgdJddJ32jLeZG4eqgCS
+         EFlpwZaPqaqCu5vnMHpZ37lCLT4qxXPOL/qbvkrtqvERWnizOjLxfPJ2OE2N1ksBrb20
+         styW8xEsW+pTBAsfX2n4ptvU42ZVmhbbELcIPZBSkd2H6kOJPaZPsV5Mv+ikp0HsrOjj
+         ZYxkRMuHv+yGuVyMCeYR24PxXYXrGeSZJ0qQCEZvHDxWJgu6+h3wRbnVXEwF5UQ4q3Y0
+         OIVC1iQLa4MqbaWdIlNJNQ6LCkrW344sDv5h+mFSYrBiQPfx/OGNy1vg8+9GV/MJ4AJ8
+         tSZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739786811; x=1740391611;
+        d=1e100.net; s=20230601; t=1739787465; x=1740392265;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=7uYWhEd1/c+mNMCq30U6Kc7sDjWCoVhIrgohc+6hGoc=;
-        b=TBJ60pteRJ0SBm9IHtm2v6qv9q3Xc2RQWbxUOmo/qCIC7JDWdT1+ZebRQ2ett37ReI
-         5LiaBEbzfkAFAUjVSgFJ+RNMH0A0dlqf62A9lFNIpH6BCODBzRODYkPNoTimF9Psv9Pt
-         Mbk0POhA9DUkLPmePtASmchOQ8va7SR4uzKBkgGO5VJ8VqafQ66E+fG3MI85ohCNU7+V
-         541pjxNZ+wanPmEwwE579PERtY9DoEL4ACQEOPYbaQR/gp/ytmQFKmxD4bJ2OnsEQlkb
-         yoJDemco0hgLR2Pq/dzL3XITcMZJpAMWBupKnAacScK0DYlp6EqKptgdFWoAG1eAuUcN
-         IlNA==
-X-Forwarded-Encrypted: i=1; AJvYcCXZDEUyuNjhUlhkWJQII+GHsn9tZGVpGWq0xsqH/wjnBULATsP9ihZ4jzNszS45ffYIGyAuR0HYIugTlPpEPSQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzayYG5cHudLg5zWRH65QvYZjhjJ6Z5Vvxig7R9gYcFe2HVFvPL
-	D1XB6jk5O865ETgeGMkZNTPwCzM8IGDiHQng+yaEBTeUmhb1oWBtZlq0l22Dil2OOG+z7yBhyvm
-	Q/KC2qNXq6cIPp9r8KgLGS3XdxkoeHqY2uDh9K5q7YMtp9Y9iQRCeuStMYLqhHbYeZA==
-X-Gm-Gg: ASbGncsJiGOqLN/oVgOlmGSah70Q/5zqNZYXERbXoCQCQnq5i8YCWBTot7DONM4WATO
-	GE9Dj8uAC2sfcuTbb3mpkIaKvoBqrdkGg00F9fGvO8s5jKGm94oos3ptqR17DBIvJpSW+qKiWVZ
-	7wHTsqdaJ76J5kI49HpW7iWq7fUZLSEQHl2vaUJvT6t0iMn08y5QPFwCQ8/FEOa1RP9uf9JhI8P
-	dWguxIwgvA/fc7y1DMw5xMlv0IERG6YWa3VhmXxZeyEP2iZ7jfRUMk26uSCg6csas+5fFSAXJ/q
-	tJRzI9QyGPqnTBKmECl9o+8sZkNn6an870G2Xoqe1l8RwihR/dHj
-X-Received: by 2002:a05:6000:4025:b0:38f:4176:7c25 with SMTP id ffacd0b85a97d-38f41768063mr2940025f8f.2.1739786810974;
-        Mon, 17 Feb 2025 02:06:50 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IF17aX5wN9RpvCFSTEz6ASI7aS8LQfB/Yvz3pfn6bQCqV1ymw293EC3qwrkdzNkvfNshhjdBA==
-X-Received: by 2002:a05:6000:4025:b0:38f:4176:7c25 with SMTP id ffacd0b85a97d-38f41768063mr2939994f8f.2.1739786810613;
-        Mon, 17 Feb 2025 02:06:50 -0800 (PST)
-Received: from lbulwahn-thinkpadx1carbongen9.rmtde.csb ([2a02:810d:7e40:14b0:4ce1:e394:7ac0:6905])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f258dcc50sm12020780f8f.34.2025.02.17.02.06.49
+        bh=dLhLqEj5CnQGR3HAISzr8o6znCJqNhfLLG9jh4rRpzQ=;
+        b=xKfzdV3uRxtgeGbzMR8YUT9miyU50DgXEqGk60VMo/Wa/kn1DAZ6bHJjcmuSdWzMVS
+         QrgW43hpyx3Vbgxs2Bcokw9YZUhyvmvcLn7Re0NrjzPhRzBvksIEMGALC6+oulMS9VuX
+         gTeXMPb723wd++jj3RwgWJ1YjvMxGKIasKMgOe/6d7JLapUhonLa+lQQxRT9gWsi17YU
+         e8vX8VTXbXfQiOi55vvTMusUSI4S6/zXSkNT3G/mykZM+fWs5HZMDGeLPQRB0HDWMWfW
+         X/wAkvvNp0ce/Izbwp4MuDz1TrL5QS/wd071nh5D2Oz/4gBRzDGcg3XZml/6BTcpLIlV
+         G+ww==
+X-Forwarded-Encrypted: i=1; AJvYcCUgf3juaDkjW/q8FyBEhOkEmgBu0AysYr+p07h4CVcT+c4C+F8e9L6uIwxOdYTpBxfRMIZkLeGZoqxUK7PcKOo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyC03jrBdZtdRcTyI8o0yVlpdcoPy217l4wN2r5odU8mACqi9/X
+	HVVEi7PkWKyO6f4SFBT5Js3H9NH8lSosG1Fsdo+kWuDKQuYhgKW6JEsBuKu0kRk=
+X-Gm-Gg: ASbGncubgzz8MiPl9lzWRTCvrBg2X3cWeBulvgnJoK7a6VM2JZYZ6zBmniiHiviUb97
+	0DhNpHRq8/X8ikcGutg9QR37Qz19rtEZUe5Iv7c2woWOCDg+15dGWO7EupR9FSA32+Wbfka/MD+
+	kkgM3Nuj0UiV/TLB4sEoi/t/UN9K//nu+NyRH7sR2nzNySWNqauFkPb8A2ZWnnH6Sl7X7ABXhsl
+	3ROFL2BP2YQdthgRR7jt87Cz0BvYmhOebkrRNBdYXrucbdE9RzXVTAdO4Zd1aZgeHMsTTGntRHI
+	UeBE/R2+6TFui7Bv8s6LCfYc
+X-Google-Smtp-Source: AGHT+IGhAefa1tvvBaYve+g3pCx7CrvFHmDaSY+YPBz5y8cOdMoT47LHpy0cyxq3ytVFBIUJ3pcdAg==
+X-Received: by 2002:a17:907:2da0:b0:ab7:83c2:bdbf with SMTP id a640c23a62f3a-abb710dc6cbmr892362566b.41.1739787465317;
+        Mon, 17 Feb 2025 02:17:45 -0800 (PST)
+Received: from eugen-station.. ([82.76.24.202])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abb8b1767e8sm308583266b.174.2025.02.17.02.17.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Feb 2025 02:06:49 -0800 (PST)
-From: Lukas Bulwahn <lbulwahn@redhat.com>
-X-Google-Original-From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
-To: Kees Cook <kees@kernel.org>,
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Lukas Bulwahn <lukas.bulwahn@redhat.com>
-Subject: [PATCH] MAINTAINERS: adjust entries in FORTIFY_SOURCE and KERNEL HARDENING
-Date: Mon, 17 Feb 2025 11:06:43 +0100
-Message-ID: <20250217100643.20182-1-lukas.bulwahn@redhat.com>
-X-Mailer: git-send-email 2.48.1
+        Mon, 17 Feb 2025 02:17:44 -0800 (PST)
+From: Eugen Hristev <eugen.hristev@linaro.org>
+To: linux-arm-msm@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	kees@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	johannes@sipsolutions.net,
+	gregkh@linuxfoundation.org,
+	rafael@kernel.org,
+	dakr@kernel.org,
+	andersson@kernel.org,
+	konradybcio@kernel.org,
+	tony.luck@intel.com,
+	gpiccoli@igalia.com,
+	pmladek@suse.com,
+	rostedt@goodmis.org,
+	john.ogness@linutronix.de,
+	senozhatsky@chromium.org,
+	quic_mojha@quicinc.com,
+	linux-arm-kernel@lists.infradead.org,
+	kernel@quicinc.com,
+	Eugen Hristev <eugen.hristev@linaro.org>
+Subject: [RFC][PATCH 00/10] pstore: directly mapped regions
+Date: Mon, 17 Feb 2025 12:16:56 +0200
+Message-ID: <20250217101706.2104498-1-eugen.hristev@linaro.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: u3yUPpQbM2eYOGaY_et6EQkznBP71tvYT8l3_gVdQsQ_1739786811
-X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
 
-From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+Hello,
 
-Commit db6fe4d61ece ("lib: Move KUnit tests into tests/ subdirectory") adds
-a file entry to the non-existing file scripts/test_fortify.sh. Probably,
-this entry intends to refer to ./lib/test_fortify/test_fortify.sh, though.
-As that file is already covered by the entry lib/test_fortify/*, there is
-no need for a separate file entry. So, drop the unnecessary file entry to
-the test_fortify script.
+This series comes as an RFC proposed solution to enhance pstore and
+devcoredump with the following functionality:
+It is interesting to mark specific memory regions in the kernel
+as core areas, such that in the even of a cataclysmic event like
+panic, deadlock, hardware fault, those areas can be retrieved by
+an external agent, that can be JTAG, firmware, additional debug
+processor, etc.
+Even though pstore panic handlers attempt to copy data into the
+persistent storage, this is not always working, because the kernel
+could be in a deadlock, have irqs disabled, panic handler could
+crash itself, or even some memory areas could be corrupted badly
+enough that the recovery mechanism doesn't work.
+This patch series attempts to solve this by reusing existing
+infrastructure in pstore and devcoredump, and provide a copy-free
+possibility to have core kernel data exposed for creating debug
+information like a coredump or list of binary elements with data.
 
-Further, this commit misses to adjust the entry referring to
-lib/usercopy_kunit.c, which is moved to lib/tests. So, also adjust that
-file entry.
+How this works:
+Drivers and key kernel infrastructure, like for example the dmesg
+buffer (ftrace buffer is still work in progress and not in the series),
+would register themselves into pstore, with a simple function
+call taking a name, a pointer to the area and size.
+That would be all, and the patch labeled "EXAMPLE" shows a driver
+doing exactly that, registering it's own dev struct with string markers
+that can help identifying the data later once it's being retrieved.
+Further, pstore and pstore/zone would keep track of all registered
+areas inside the intermediary back-end. There would not be any copy of
+the data.
+Pstore would require a new type of back-end, named directly mapped
+(because there is no copy, and each zone directly maps the incoming
+buffer). If this back-end is available, then pstore further calls
+the back-end to register the area.
+The back-end itself is then free to do whatever it wishes with the
+received area. It can (possibly) do a copy to store data, it can
+have a timer to check the area every x time periods, or store the
+pointers inside a table of contents (which is what the qcom smem is
+doing).
+The qcom smem driver registers itself into pstore as a new type of
+back-end called shared memory. It's very similar with the pstore/blk
+but much simplified, to cope with just a shared memory storage.
+The areas metadata are stored in a shared memory that is being managed
+by the qcom_smem driver. It's called shared memory because it's being
+shared between the main processor running the kernel and additional
+secondary remote processors running firmware.
+In this qcom smem backend case, the firmware runs when there is a
+panic event, of watchdog timeout, and uses the table of contents to
+retrieve useful kernel debug data.
 
-Fixes: db6fe4d61ece ("lib: Move KUnit tests into tests/ subdirectory")
+The advantages of this proposed idea are: no kernel panic handler
+intervention. Everything is being marked and prepared ahead of time,
+before there is an actual crash. There is no overhead associated,
+simply the areas are being marked and metadata created, no buffers
+associated, no memory areas reserved for it. Memory areas being marked,
+there is no possibility of getting older useless data, that was copied
+before the actual events leading to a crash would occur, so the data
+would be the real actual data the kernel was working on.
+Of course, this would not work if there is no external agent to parse
+the areas and get the useful data. However as the hardware becomes
+more and more advanced, in the cases where this is available, kernel
+debugging had no way of using this advantage. As the hardware evolves,
+so is the kernel.
 
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
----
- MAINTAINERS | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+There is another aspect to underline: the directly mapped zones
+change the semantics of pstore using them. Pstore relies on user being
+able to read the data from a previous kernel run once the system
+has rebooted. This is not valid with the directly mapped zones unless
+the JTAG/firmware would copy this data into a persistent area and make
+it available upon reboot (which is not impossible).
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 53cf3cbf33c9..15632a34b740 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9070,7 +9070,6 @@ F:	include/linux/fortify-string.h
- F:	lib/test_fortify/*
- F:	lib/tests/fortify_kunit.c
- F:	lib/tests/memcpy_kunit.c
--F:	scripts/test_fortify.sh
- K:	\bunsafe_memcpy\b
- K:	\b__NO_FORTIFY\b
- 
-@@ -12613,7 +12612,7 @@ F:	arch/*/configs/hardening.config
- F:	include/linux/overflow.h
- F:	include/linux/randomize_kstack.h
- F:	kernel/configs/hardening.config
--F:	lib/usercopy_kunit.c
-+F:	lib/tests/usercopy_kunit.c
- F:	mm/usercopy.c
- F:	security/Kconfig.hardening
- K:	\b(add|choose)_random_kstack_offset\b
+I would like to thank everyone reviewing and chiping in on the series.
+
+The back-end implementation for qcom_smem is based on the minidump
+patch series and driver written by Mukesh Ojha, thanks:
+https://lore.kernel.org/lkml/20240131110837.14218-1-quic_mojha@quicinc.com/
+
+Eugen
+
+Eugen Hristev (10):
+  pstore/zone: move pstore_device_info into zone header
+  pstore/smem: add new pstore/smem type of pstore
+  pstore/zone: introduce directly mapped zones
+  qcom: smem: add pstore smem backend
+  pstore: implement core area registration
+  qcom: smem: enable smem pstore backend
+  printk: export symbols for buffer address and length functions
+  pstore: register kmsg into directly mapped zones if available
+  devcoredump: add devcd_{un}register_core_area API
+  rng: qcom_rng: EXAMPLE: registering dev structure
+
+ drivers/base/devcoredump.c     |  13 ++
+ drivers/crypto/qcom-rng.c      |  11 ++
+ drivers/soc/qcom/Kconfig       |   9 +
+ drivers/soc/qcom/Makefile      |   6 +-
+ drivers/soc/qcom/smem.c        |  10 ++
+ drivers/soc/qcom/smem_md.c     | 306 +++++++++++++++++++++++++++++++++
+ drivers/soc/qcom/smem_pstore.c | 112 ++++++++++++
+ fs/pstore/Kconfig              |  13 ++
+ fs/pstore/Makefile             |   3 +
+ fs/pstore/platform.c           |  84 +++++++++
+ fs/pstore/smem.c               | 115 +++++++++++++
+ fs/pstore/zone.c               | 122 +++++++++++--
+ include/linux/devcoredump.h    |   3 +
+ include/linux/pstore.h         |  20 +++
+ include/linux/pstore_blk.h     |  14 --
+ include/linux/pstore_smem.h    |   9 +
+ include/linux/pstore_zone.h    |  17 ++
+ include/linux/soc/qcom/smem.h  |  43 +++++
+ kernel/printk/printk.c         |   2 +
+ 19 files changed, 885 insertions(+), 27 deletions(-)
+ create mode 100644 drivers/soc/qcom/smem_md.c
+ create mode 100644 drivers/soc/qcom/smem_pstore.c
+ create mode 100644 fs/pstore/smem.c
+ create mode 100644 include/linux/pstore_smem.h
+
 -- 
-2.48.1
+2.43.0
 
