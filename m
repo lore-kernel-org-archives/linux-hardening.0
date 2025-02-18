@@ -1,714 +1,176 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03532272925;
-	Tue, 18 Feb 2025 19:04:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6891E21B9DF
+	for <linux-hardening@vger.kernel.org>; Tue, 18 Feb 2025 19:18:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739905466; cv=none; b=pjZfQHeo4t8QXvlZLS/FKXjnOnrqUlv6JxehMj4a7ISkUaGbSXMRK7zKagovhZEEaB5idv8MqJtROA1zPCjrRl6GIQDYqm5onNnyrCERGfRJryqSJHyvGb93HBcxvdhajql9TKxv8inEseUmGDyMMucixwcfqvFSYskiEnm2AbM=
+	t=1739906330; cv=none; b=Q13iqWb099ltzmuh+xGDclmPMAjZrMB4Hde9tgrJ4RQ0I7Mmy9xm+96MqFOHbU7zK1Czh3tflHPk/oRHnMB4H3asU1wsA2/B+54xJLif9Lp9nkTscsofaNLUAM0Y14aMuOQQ/vwX9d4vhkBi+v1D7PCsjaXSq0jLq79mZ+HHFUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739905466; c=relaxed/simple;
-	bh=BW+R1CxBPNHKEugfocotEN6oIyo8WLJXg+kF7LVX81Y=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=dMGAZV4alygywFs1uUtz6i9bCpmueorYjxdLSMWB2lSLttx2eBN2RorI+cp8xnuBDp8aApfOIKbYpw2Bm4RqP0rtU5NYUoorDDrTgidXbP6CwcffHYFv6bBPO2k+yTnUX2elZsMrCoYoB+ckdxV7gA3oUgYX8rwZpJg/BiSToCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=V2jFeeIX; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1739906330; c=relaxed/simple;
+	bh=Wo1dSIMgOpzXJrHFjWadb3uFvvKajIMKXY4UPrEQHZA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YKwCMt55MY8Iwn9DbrpwKVr8MQJ/y/AXdTjzkub68Gd1SWJwwplUP1e/9F38Gg1Sas9yhqn6zhMN0wUCDj4iIFV2DWUz9+uqqSIwmhnClefHbIQTTGT6TedX6txndSg1yICTdHAif/aM6g3VYZ0Mvm/qtCKRRAEa8ZxlYZbY3ko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=overdrivepizza.com; spf=fail smtp.mailfrom=overdrivepizza.com; dkim=pass (2048-bit key) header.d=overdrivepizza-com.20230601.gappssmtp.com header.i=@overdrivepizza-com.20230601.gappssmtp.com header.b=3COnDYR2; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=overdrivepizza.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=overdrivepizza.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="V2jFeeIX"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 7FE81251D7;
-	Tue, 18 Feb 2025 20:04:22 +0100 (CET)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id 4bY-6aUnLGqp; Tue, 18 Feb 2025 20:04:21 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1739905461; bh=BW+R1CxBPNHKEugfocotEN6oIyo8WLJXg+kF7LVX81Y=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=V2jFeeIXXnpqMVMEOPTVBan4TBJCf9ljuNzKGmjTQwX2mZ/D5gucAWlaB2kM9QWO5
-	 Y2pvFaF+Kzl3J3J/W2g11LKaQSzA4ENPDir6Lc2RtLyxouzgeUu9OaK3wWEbEWjBQl
-	 aAqmVegiHpyql3BtmBFuoVD6JVrMXn3ifj8pnX/Hb8oD6CJvwl79QETrNksaq0iA5P
-	 lRQhkWYo+pWl7XH7gUf1tF1V87UCgnnNoFZ4f3jqk8dTUJw2+W4STj5DFJX+HqfjuN
-	 Lh8qgj7T+U5kSlJv+U4mMjju1MdbCzhGODs96RY5LoDS9Qb1Ruaf5/xZ2bSHDJZq+K
-	 5PujQcBKnru8w==
-From: Kaustabh Chakraborty <kauschluss@disroot.org>
-Date: Wed, 19 Feb 2025 00:33:17 +0530
-Subject: [PATCH v3 7/7] arm64: dts: exynos: add initial support for Samsung
- Galaxy J6
+	dkim=pass (2048-bit key) header.d=overdrivepizza-com.20230601.gappssmtp.com header.i=@overdrivepizza-com.20230601.gappssmtp.com header.b="3COnDYR2"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-5461cb12e39so2633294e87.2
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Feb 2025 11:18:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=overdrivepizza-com.20230601.gappssmtp.com; s=20230601; t=1739906325; x=1740511125; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nZn7+VF4S7Dh4qG9hSrxTiOHJ0wC9t+U+ePn2pEV93g=;
+        b=3COnDYR2o/q5tYKIch48HA+p6AlLI+u6N69asnuMdrCNkUx0/Q5ZSNfDlxEc9o1PbP
+         Z5wvVpQ1m4Hi5Z45UciYwhxansa7Vzde8dnrXhlJ7xBOGFYbcNkY7mcAmING/VoyHdk7
+         qJMDdvv/5m+ahOFXgqtMjJPAef90Cj6Xzx4WNPWqjMravTB2WeNn+iDBeaWYpxPLCXqw
+         q8lS5n9RqCb2kCQId/wX6aZvPfgfI5YK+owVACV3TffhGAcJA9nR6EsQyOW53dtMtgd0
+         CMrakdSO+8qSKEPEnnAgr3Rr+sPHCdvja/cjMJ34SRplLn2yPVvBTT8JrtNUmi97afZX
+         LxiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739906325; x=1740511125;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nZn7+VF4S7Dh4qG9hSrxTiOHJ0wC9t+U+ePn2pEV93g=;
+        b=cbgec0DzZTvpFBRYbExJxKUOqt/pYedm7eoV8c/y7wjU55DVlwwCgd2lGl2cBKWOJh
+         t8T6l8WQgPHofVeobRBk5cZkq9nAJxRQA99YQ+n5hY/qGGLUKsqwS/S3qv6hhwCtXsCn
+         nxthVQwzw7VnYRi6v4wuEqycsNq6svIhfAkRg4o6cXqgh4bTMbabZ7fa7CgSIn8cJhom
+         xNd5DrJxwtb5jJEGjz9bruKn6bGHRG90GaEIMx9Ied10/S0aoqHnTQuL4wP7SQwLXHT8
+         5hi7GEpowuz34u5F4t1Thd9qREffpOD0TtNIarrVaKsoqkmQRT7aO3sbV94UK20xBd1j
+         WPMA==
+X-Gm-Message-State: AOJu0Yw3InumU4gmM69y2xv/9nYv3/jOK+7By7+1A2Pqac4CA/RY9VPM
+	s5fEq2Oxb6wafupoVuTd7GKZLd5sS4fE/VL/v1gYlAU7OFkCASijVCNN6b38Io2X5gscTpW+Cqo
+	FIQPfM15WlVsY78RdKgthlCW5Tym3urmOgJt1Cg==
+X-Gm-Gg: ASbGncuELaCmVz9Md4B8xwWfCTA0/vNLA4TLBF+bnpCRRLuWTnPryVM3XAFE+Rw8roK
+	sQnKayiLrtuW8AQ0E2Jv27Fr0uKDp8NbxmvLDl73R9l7Z4ZBmKzIkgqcq5FFNt/OucDt2xWSRKi
+	HqyCSs0JcHHOrNTAwpboDJpxaOaKg=
+X-Google-Smtp-Source: AGHT+IFBnQAaq+UtVijrCtBhvreBQUusJmJ8C6qywa/TQMPyDZNeI5BV9iEz1skvEJ4167zPjxaD06GdLZnYufrT5xw=
+X-Received: by 2002:a05:6512:3b0b:b0:542:29b6:9c26 with SMTP id
+ 2adb3069b0e04-5452fe95c7emr4915672e87.47.1739906325124; Tue, 18 Feb 2025
+ 11:18:45 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250219-exynos7870-v3-7-e384fb610cad@disroot.org>
-References: <20250219-exynos7870-v3-0-e384fb610cad@disroot.org>
-In-Reply-To: <20250219-exynos7870-v3-0-e384fb610cad@disroot.org>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
- Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, 
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>, 
- Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
- Kaustabh Chakraborty <kauschluss@disroot.org>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1739905418; l=16230;
- i=kauschluss@disroot.org; s=20250202; h=from:subject:message-id;
- bh=BW+R1CxBPNHKEugfocotEN6oIyo8WLJXg+kF7LVX81Y=;
- b=7d6EzkA+6OGsBgO0zXcuaGZWL5qJXp2lUdodSmhMxXNfsMMvHhB8A0eCaaF9I4f6nzySYCK0g
- C1S6likgtw8CK0TMPFeQot2C/fociD8cN42LsgU1p+85+FDMMZ2Z+Ez
-X-Developer-Key: i=kauschluss@disroot.org; a=ed25519;
- pk=h2xeR+V2I1+GrfDPAhZa3M+NWA0Cnbdkkq1bH3ct1hE=
+References: <Z60NwR4w/28Z7XUa@ubun>
+In-Reply-To: <Z60NwR4w/28Z7XUa@ubun>
+From: Joao Moreira <joao@overdrivepizza.com>
+Date: Tue, 18 Feb 2025 11:18:34 -0800
+X-Gm-Features: AWEUYZmiCYvoBAdXmTwWdC9J_zjSsYebC861zEtGSgW-d_IuBtxsspbQYKx33Vc
+Message-ID: <CAKUFkX0+zrvvajVgOiHb=hqaJA+7_WTFetweNZ2hzNHTKwhQbg@mail.gmail.com>
+Subject: Re: [RFC] Circumventing FineIBT Via Entrypoints
+To: Jennifer Miller <jmill@asu.edu>
+Cc: linux-hardening@vger.kernel.org, kees@kernel.org, samitolvanen@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add initial devicetree support for Samsung Galaxy J6 (codename: j6lte),
-an Exynos7870 device.
+Hey Jennifer, really cool work :)
 
-Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
----
- arch/arm64/boot/dts/exynos/Makefile             |   1 +
- arch/arm64/boot/dts/exynos/exynos7870-j6lte.dts | 617 ++++++++++++++++++++++++
- 2 files changed, 618 insertions(+)
+Since you mentioned approaches to handling the issue, a possible
+simple fix could be aligning function endbrs to 0x1, and keeping the
+entry points at 0x0. Then, before doing the indirect call, just OR 0x1
+the function address. It seems PeterZ has something else on his
+pipeline, which sounds very reasonable for upstream and closes other
+concerns raised by Kees. Yet, given you may be interested in
+approaches beyond what is suitable for upstream, I felt like you could
+be interested in this trick.
 
-diff --git a/arch/arm64/boot/dts/exynos/Makefile b/arch/arm64/boot/dts/exynos/Makefile
-index e0da4c4972c7344cf957e00ef701d6405a16bdcb..89c90564c3d86a268ea46492b67d72fa69ad3e95 100644
---- a/arch/arm64/boot/dts/exynos/Makefile
-+++ b/arch/arm64/boot/dts/exynos/Makefile
-@@ -6,6 +6,7 @@ dtb-$(CONFIG_ARCH_EXYNOS) += \
- 	exynos5433-tm2e.dtb		\
- 	exynos7-espresso.dtb		\
- 	exynos7870-a2corelte.dtb	\
-+	exynos7870-j6lte.dtb		\
- 	exynos7870-on7xelte.dtb		\
- 	exynos7885-jackpotlte.dtb	\
- 	exynos850-e850-96.dtb		\
-diff --git a/arch/arm64/boot/dts/exynos/exynos7870-j6lte.dts b/arch/arm64/boot/dts/exynos/exynos7870-j6lte.dts
-new file mode 100644
-index 0000000000000000000000000000000000000000..d77c2adff09ef1843a186e620c353467f5f640a8
---- /dev/null
-+++ b/arch/arm64/boot/dts/exynos/exynos7870-j6lte.dts
-@@ -0,0 +1,617 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Samsung Galaxy J6 (j6lte) device tree source
-+ *
-+ * Copyright (c) 2018 Samsung Electronics Co., Ltd.
-+ * Copyright (c) 2025 Kaustabh Chakraborty <kauschluss@disroot.org>
-+ */
-+
-+/dts-v1/;
-+#include "exynos7870.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
-+/ {
-+	model = "Samsung Galaxy J6";
-+	compatible = "samsung,j6lte", "samsung,exynos7870";
-+	chassis-type = "handset";
-+
-+	aliases {
-+		mmc0 = &mmc0;
-+		mmc1 = &mmc1;
-+		mmc2 = &mmc2;
-+		serial0 = &serial0;
-+		serial1 = &serial1;
-+		serial2 = &serial2;
-+	};
-+
-+	chosen {
-+		#address-cells = <2>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		stdout-path = &serial2;
-+
-+		framebuffer@67000000 {
-+			compatible = "simple-framebuffer";
-+			reg = <0x0 0x67000000 (720 * 1480 * 4)>;
-+			width = <720>;
-+			height = <1480>;
-+			stride = <(720 * 4)>;
-+			format = "a8r8g8b8";
-+		};
-+	};
-+
-+	gpio-hall-effect-sensor {
-+		compatible = "gpio-keys";
-+		label = "GPIO Hall Effect Sensor";
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&hall_irq>;
-+
-+		event-hall-effect-sensor {
-+			label = "Hall Effect Sensor";
-+			gpios = <&gpa1 3 GPIO_ACTIVE_LOW>;
-+			linux,input-type = <EV_SW>;
-+			linux,code = <SW_LID>;
-+			linux,can-disable;
-+			wakeup-source;
-+		};
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+		label = "GPIO Keys";
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&key_power &key_voldown &key_volup>;
-+
-+		key-power {
-+			label = "Power Key";
-+			gpios = <&gpa0 0 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_POWER>;
-+		};
-+
-+		key-voldown {
-+			label = "Volume Down Key";
-+			gpios = <&gpa2 1 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_VOLUMEDOWN>;
-+		};
-+
-+
-+		key-volup {
-+			label = "Volume Up Key";
-+			gpios = <&gpa2 0 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_VOLUMEUP>;
-+		};
-+	};
-+
-+	memory@40000000 {
-+		device_type = "memory";
-+		reg = <0x0 0x40000000 0x3d800000>;
-+	};
-+
-+	memory@80000000 {
-+		device_type = "memory";
-+		reg = <0x0 0x80000000 0x40000000>;
-+	};
-+
-+	pwrseq_mmc1: pwrseq-mmc1 {
-+		compatible = "mmc-pwrseq-simple";
-+		reset-gpios = <&gpd3 6 GPIO_ACTIVE_LOW>;
-+	};
-+
-+	/* mmc2: vmmc */
-+	vdd_fixed_mmc2: regulator-fixed-mmc2 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vdd_fixed_mmc2";
-+		regulator-max-microvolt = <2800000>;
-+		regulator-min-microvolt = <2800000>;
-+		gpio = <&gpc0 0 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		ramoops@46e00000 {
-+			compatible = "ramoops";
-+			reg = <0x0 0x46e00000 0x8000>;
-+			console-size = <0x4000>;
-+			pmsg-size = <0x4000>;
-+		};
-+
-+		framebuffer@67000000 {
-+			reg = <0x0 0x67000000 (720 * 1480 * 4)>;
-+			no-map;
-+		};
-+	};
-+
-+	vibrator {
-+		compatible = "regulator-haptic";
-+		haptic-supply = <&vdd_ldo32>;
-+		min-microvolt = <3300000>;
-+		max-microvolt = <3300000>;
-+	};
-+};
-+
-+&gpu {
-+	status = "okay";
-+};
-+
-+&hsi2c0 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	status = "okay";
-+
-+	pmic@66 {
-+		compatible = "samsung,s2mpu05-pmic";
-+		reg = <0x66>;
-+		interrupt-parent = <&gpa0>;
-+		interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pmic_irq>;
-+
-+		regulators {
-+			vdd_buck1: BUCK1 {
-+				regulator-name = "BUCK1";
-+				regulator-min-microvolt = <500000>;
-+				regulator-max-microvolt = <1300000>;
-+				regulator-ramp-delay = <12000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vdd_buck2: BUCK2 {
-+				regulator-name = "BUCK2";
-+				regulator-min-microvolt = <500000>;
-+				regulator-max-microvolt = <1300000>;
-+				regulator-ramp-delay = <12000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vdd_buck3: BUCK3 {
-+				regulator-name = "BUCK3";
-+				regulator-min-microvolt = <500000>;
-+				regulator-max-microvolt = <1300000>;
-+				regulator-ramp-delay = <12000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vdd_buck4: BUCK4 {
-+				regulator-name = "BUCK4";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <1500000>;
-+				regulator-ramp-delay = <12000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vdd_buck5: BUCK5 {
-+				regulator-name = "BUCK5";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <2100000>;
-+				regulator-ramp-delay = <12000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vdd_ldo1: LDO1 {
-+				regulator-name = "vdd_ldo1";
-+				regulator-min-microvolt = <650000>;
-+				regulator-max-microvolt = <1350000>;
-+				regulator-ramp-delay = <12000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			/* mmc2: vqmmc */
-+			vdd_ldo2: LDO2 {
-+				regulator-name = "vdd_ldo2";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <2800000>;
-+				regulator-ramp-delay = <12000>;
-+			};
-+
-+			vdd_ldo3: LDO3 {
-+				regulator-name = "vdd_ldo3";
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <2375000>;
-+				regulator-ramp-delay = <12000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vdd_ldo4: LDO4 {
-+				regulator-name = "vdd_ldo4";
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <1350000>;
-+				regulator-ramp-delay = <12000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vdd_ldo5: LDO5 {
-+				regulator-name = "vdd_ldo5";
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <1350000>;
-+				regulator-ramp-delay = <12000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vdd_ldo6: LDO6 {
-+				regulator-name = "vdd_ldo6";
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <1350000>;
-+				regulator-ramp-delay = <12000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vdd_ldo7: LDO7 {
-+				regulator-name = "vdd_ldo7";
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <2375000>;
-+				regulator-ramp-delay = <12000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			/* usbdrd: vdd33 */
-+			vdd_ldo8: LDO8 {
-+				regulator-name = "vdd_ldo8";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3375000>;
-+				regulator-ramp-delay = <12000>;
-+			};
-+
-+			vdd_ldo9: LDO9 {
-+				regulator-name = "vdd_ldo9";
-+				regulator-min-microvolt = <650000>;
-+				regulator-max-microvolt = <1350000>;
-+				regulator-ramp-delay = <12000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vdd_ldo10: LDO10 {
-+				regulator-name = "vdd_ldo10";
-+				regulator-min-microvolt = <650000>;
-+				regulator-max-microvolt = <1350000>;
-+				regulator-ramp-delay = <12000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vdd_ldo25: LDO25 {
-+				regulator-name = "vdd_ldo25";
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <2375000>;
-+				regulator-ramp-delay = <12000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			/* mmc0: vmmc */
-+			vdd_ldo26: LDO26 {
-+				regulator-name = "vdd_ldo26";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3375000>;
-+				regulator-ramp-delay = <12000>;
-+			};
-+
-+			/* mmc0: vqmmc */
-+			vdd_ldo27: LDO27 {
-+				regulator-name = "vdd_ldo27";
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <2375000>;
-+				regulator-ramp-delay = <12000>;
-+			};
-+
-+			vdd_ldo29: LDO29 {
-+				regulator-name = "vdd_ldo29";
-+				regulator-min-microvolt = <3000000>;
-+				regulator-max-microvolt = <3000000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vdd_ldo30: LDO30 {
-+				regulator-name = "vdd_ldo30";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vdd_ldo31: LDO31 {
-+				regulator-name = "vdd_ldo31";
-+				regulator-min-microvolt = <2800000>;
-+				regulator-max-microvolt = <2800000>;
-+				regulator-ramp-delay = <12000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			/* vibrator: haptic */
-+			vdd_ldo32: LDO32 {
-+				regulator-name = "vdd_ldo32";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-ramp-delay = <12000>;
-+			};
-+
-+			vdd_ldo33: LDO33 {
-+				regulator-name = "vdd_ldo33";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-ramp-delay = <12000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			/* touchscreen: vdd */
-+			vdd_ldo34: LDO34 {
-+				regulator-name = "vdd_ldo34";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+			};
-+
-+			vdd_ldo35: LDO35 {
-+				regulator-name = "vdd_ldo35";
-+				regulator-min-microvolt = <2800000>;
-+				regulator-max-microvolt = <2800000>;
-+				regulator-ramp-delay = <12000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+		};
-+	};
-+};
-+
-+&i2c5 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	samsung,i2c-sda-delay = <100>;
-+	samsung,i2c-max-bus-freq = <400000>;
-+
-+	status = "okay";
-+
-+	accelerometer@1d {
-+		compatible = "st,lis2ds12";
-+		reg = <0x1d>;
-+		interrupt-parent = <&gpa2>;
-+		interrupts = <3 IRQ_TYPE_EDGE_RISING>;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&accel_irq>;
-+
-+		mount-matrix = "-1", "0",  "0",
-+				"0", "1",  "0",
-+				"0", "0", "-1";
-+
-+		st,drdy-int-pin = <1>;
-+	};
-+};
-+
-+&i2c6 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	samsung,i2c-sda-delay = <100>;
-+	samsung,i2c-max-bus-freq = <400000>;
-+
-+	status = "okay";
-+
-+	touchscreen@20 {
-+		compatible = "zinitix,bt532";
-+		reg = <0x20>;
-+		interrupt-parent = <&gpa0>;
-+		interrupts = <6 IRQ_TYPE_LEVEL_LOW>;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&touch_irq>;
-+
-+		touchscreen-size-x = <720>;
-+		touchscreen-size-y = <1480>;
-+
-+		vdd-supply = <&vdd_ldo34>;
-+	};
-+};
-+
-+&mmc0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_rdqs &sd0_bus1 &sd0_bus4 &sd0_bus8>;
-+
-+	vmmc-supply = <&vdd_ldo26>;
-+	vqmmc-supply = <&vdd_ldo27>;
-+
-+	fifo-depth = <64>;
-+	samsung,dw-mshc-ciu-div = <3>;
-+	samsung,dw-mshc-sdr-timing = <0 4>;
-+	samsung,dw-mshc-ddr-timing = <2 4>;
-+	non-removable;
-+
-+	status = "okay";
-+};
-+
-+&mmc1 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sd1_clk &sd1_cmd &sd1_bus1 &sd1_bus4>;
-+
-+	mmc-pwrseq = <&pwrseq_mmc1>;
-+
-+	bus-width = <4>;
-+	fifo-depth = <64>;
-+	samsung,dw-mshc-ciu-div = <3>;
-+	samsung,dw-mshc-sdr-timing = <0 3>;
-+	samsung,dw-mshc-ddr-timing = <1 2>;
-+	non-removable;
-+	cap-sd-highspeed;
-+	cap-sdio-irq;
-+
-+	status = "okay";
-+
-+	wifi@1 {
-+		compatible = "brcm,bcm43430a1-fmac", "brcm,bcm4329-fmac";
-+		reg = <0x1>;
-+		interrupt-names = "host-wake";
-+		interrupt-parent = <&gpa2>;
-+		interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
-+
-+		reset-gpios = <&gpd3 6 GPIO_ACTIVE_LOW>;
-+	};
-+};
-+
-+&mmc2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_bus1 &sd2_bus4 &dwmmc2_irq>;
-+
-+	vmmc-supply = <&vdd_fixed_mmc2>;
-+	vqmmc-supply = <&vdd_ldo2>;
-+
-+	bus-width = <4>;
-+	fifo-depth = <64>;
-+	samsung,dw-mshc-ciu-div = <3>;
-+	samsung,dw-mshc-sdr-timing = <0 3>;
-+	samsung,dw-mshc-ddr-timing = <1 2>;
-+	non-removable;
-+	sd-uhs-sdr50;
-+	sd-uhs-sdr104;
-+	disable-wp;
-+
-+	status = "okay";
-+};
-+
-+&oscclk {
-+	clock-frequency = <26000000>;
-+};
-+
-+&pinctrl_alive {
-+	accel_irq: accel-irq-pins {
-+		samsung,pins = "gpa2-3";
-+		samsung,pin-function = <EXYNOS_PIN_FUNC_EINT>;
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-+		samsung,pin-drv = <EXYNOS5433_PIN_DRV_FAST_SR1>;
-+	};
-+
-+	dwmmc2_irq: dwmmc2-irq-pins {
-+		samsung,pins = "gpa0-1";
-+		samsung,pin-function = <EXYNOS_PIN_FUNC_EINT>;
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-+		samsung,pin-drv = <EXYNOS5433_PIN_DRV_FAST_SR1>;
-+	};
-+
-+	fuel_irq: fuel-irq-pins {
-+		samsung,pins = "gpa0-3";
-+		samsung,pin-function = <EXYNOS_PIN_FUNC_INPUT>;
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-+		samsung,pin-drv = <EXYNOS5433_PIN_DRV_FAST_SR1>;
-+	};
-+
-+	hall_irq: hall-irq-pins {
-+		samsung,pins = "gpa1-3";
-+		samsung,pin-function = <EXYNOS_PIN_FUNC_EINT>;
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-+		samsung,pin-drv = <EXYNOS5433_PIN_DRV_FAST_SR1>;
-+	};
-+
-+	key_power: key-power-pins {
-+		samsung,pins = "gpa0-0";
-+		samsung,pin-function = <EXYNOS_PIN_FUNC_EINT>;
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-+		samsung,pin-drv = <EXYNOS5433_PIN_DRV_FAST_SR1>;
-+	};
-+
-+	key_voldown: key-voldown-pins {
-+		samsung,pins = "gpa2-1";
-+		samsung,pin-function = <EXYNOS_PIN_FUNC_EINT>;
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-+		samsung,pin-drv = <EXYNOS5433_PIN_DRV_FAST_SR1>;
-+	};
-+
-+	key_volup: key-volup-pins {
-+		samsung,pins = "gpa2-0";
-+		samsung,pin-function = <EXYNOS_PIN_FUNC_EINT>;
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-+		samsung,pin-drv = <EXYNOS5433_PIN_DRV_FAST_SR1>;
-+	};
-+
-+	pmic_irq: pmic-irq-pins {
-+		samsung,pins = "gpa0-2";
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_UP>;
-+		samsung,pin-drv = <EXYNOS5433_PIN_DRV_FAST_SR4>;
-+	};
-+
-+	touch_irq: touch-irq-pins {
-+		samsung,pins = "gpa0-6";
-+		samsung,pin-function = <EXYNOS_PIN_FUNC_EINT>;
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-+		samsung,pin-drv = <EXYNOS5433_PIN_DRV_FAST_SR1>;
-+	};
-+
-+	wlan_hostwake: wlan-hostwake-pins {
-+		samsung,pins = "gpa2-2";
-+		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_UP>;
-+	};
-+};
-+
-+&pinctrl_top {
-+	bt_enable: bt-enable-pins {
-+		samsung,pins = "gpd4-0";
-+		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
-+		samsung,pin-con-pdn = <EXYNOS_PIN_PDN_PREV>;
-+		samsung,pin-pud-pdn = <EXYNOS_PIN_PULL_NONE>;
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_DOWN>;
-+	};
-+
-+	wlan_enable: wlan-enable-pins {
-+		samsung,pins = "gpd3-6";
-+		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
-+		samsung,pin-con-pdn = <EXYNOS_PIN_PDN_PREV>;
-+		samsung,pin-pud-pdn = <EXYNOS_PIN_PULL_NONE>;
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-+		samsung,pin-drv = <EXYNOS5433_PIN_DRV_FAST_SR4>;
-+		samsung,pin-val = <0>;
-+	};
-+};
-+
-+&serial1 {
-+	status = "okay";
-+
-+	bluetooth {
-+		compatible = "brcm,bcm43430a1-bt";
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&bt_btwake &bt_hostwake &bt_enable>;
-+
-+		device-wakeup-gpios = <&gpa1 2 GPIO_ACTIVE_HIGH>;
-+		host-wakeup-gpios = <&gpa1 6 GPIO_ACTIVE_HIGH>;
-+		shutdown-gpios = <&gpd4 0 GPIO_ACTIVE_HIGH>;
-+
-+		max-speed = <3000000>;
-+	};
-+};
-+
-+&serial2 {
-+	status = "okay";
-+};
-+
-+&usbdrd {
-+	vdd33-supply = <&vdd_ldo8>;
-+
-+	status = "okay";
-+};
+Thank you for the paper, I'm looking forward to reading it.
 
--- 
-2.48.1
+Best,
+Joao
 
+On Wed, Feb 12, 2025 at 1:08=E2=80=AFPM Jennifer Miller <jmill@asu.edu> wro=
+te:
+>
+> Hi All,
+>
+> As part of a recently accepted paper we demonstrated that syscall
+> entrypoints can be misused on x86-64 systems to generically bypass
+> FineIBT/KERNEL_IBT from forwards-edge control flow hijacking. We
+> communicated this finding to s@k.o before submitting the paper and were
+> encouraged to bring the issue to hardening after the paper was accepted t=
+o
+> have a discussion on how to address the issue.
+>
+> The bypass takes advantage of the architectural requirement of entrypoint=
+s
+> to begin with the endbr64 instruction and the ability to control GS_BASE
+> from userspace via wrgsbase, from to the FSGSBASE extension, in order to
+> perform a stack pivot to a ROP-chain.
+>
+> Here is a snippet of the 64-bit entrypoint code:
+> ```
+> entry_SYSCALL_64:
+> <+0>:     endbr64
+> <+4>:     swapgs
+> <+7>:     mov    QWORD PTR gs:0x6014,rsp
+> <+16>:    jmp    <entry_SYSCALL_64+36>
+> <+18>:    mov    rsp,cr3
+> <+21>:    nop
+> <+26>:    and    rsp,0xffffffffffffe7ff
+> <+33>:    mov    cr3,rsp
+> <+36>:    mov    rsp,QWORD PTR gs:0x32c98
+> ```
+>
+> This is a valid target from any indirect callsite under FineIBT due to th=
+e
+> endbr64 instruction and the lack of a software CFI check. After hijacking
+> control flow to the entrypoint, executing swapgs will swap to the user
+> controlled GS_BASE, which will be used to set the stack pointer, leading =
+to
+> a stack pivot. The rest of the entrypoint will execute with a hijacked
+> GS_BASE on a user controlled stack. The stack page we use is one mapped i=
+n
+> the user address space and from another thread we race overwriting return=
+s
+> addresses on the stack to pivot a second time to a ROP-chain. For this to
+> succeed we required a large area of user-controlled kernel memory that ca=
+n
+> serve as the forged GS_BASE address, we did this by spraying 2MB
+> Transparent Huge Pages to fill the kernel physical memory map with
+> controlled 2MB allocations and guessing relative to the base address of t=
+he
+> area to hit a page we control.
+>
+> We evaluated an approach to patching the issue in the paper but it touche=
+d
+> the userspace API a bit, added an error code returned by syscalls if they
+> are invoked with a kernel address in GS_BASE, which is not a great
+> solution.
+>
+> Linus provided some thoughts on how to potentially address this issue
+> in our communication with s@k.o, suggesting the kernel could make the
+> KERNEL_GS_BASE match the GS_BASE value so both registers always contain a
+> valid kernel address and a confusion induced by executing swapgs an extra
+> time cannot occur, and restore the value of KERNEL_GS_BASE ahead of
+> executing swapgs in the exit path.
+>
+> I started working on a patch based on the approach suggested by Linus but=
+ I
+> haven't been able to get it passing the relevant x86 selftests yet. It
+> turned out that it's more than the entrypoint code that needs to be
+> modified for it to work, we need to correctly save and restore the user's
+> GS_BASE across task switches and ensure it is updated correctly when set
+> via arch_prctl and ptrace. Unfortunately, I lack familiarity with those
+> parts of the kernel, and my understanding is that the paper will be made
+> public in a couple weeks so I didn't want to delay too long on bringing t=
+he
+> issue to this list.
+>
+> Assuming this is an issue you all feel is worth addressing, I will contin=
+ue
+> working on providing a patch. I'm concerned though that the overhead from
+> adding a wrmsr on both syscall entry and exit to overwrite and restore th=
+e
+> KERNEL_GS_BASE MSR may be quite high, so any feedback in regards to the
+> approach or suggestions of alternate approaches to patching are welcome :=
+)
+>
+> ~Jennifer
