@@ -1,64 +1,64 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CB7E22AE42
-	for <linux-hardening@vger.kernel.org>; Tue, 18 Feb 2025 09:11:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C33FF231C8D;
+	Tue, 18 Feb 2025 09:49:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739869921; cv=none; b=KkU85nzZZk8NjxFbIqdlutzpbzZ0U2uA0FnpS9nWzdiXNd/56V2NPXtdsLMfauorSvzfstOow6yMSwX3ie2XzVgBrgZORnMHaGLMGAyqdXLUqbM0UtkiYHY4OsRKIWXv3b84US2b4dwOVpoisxbgKoXEmL1BBhcTdvgQoZmEGvk=
+	t=1739872161; cv=none; b=XqxRGuICG9rbHoqvF5gpbeiEtbINrh+UWpEetywd49gJRDmR8TH9Q4s5bPYsJ/3jFL81eePEHa7VHyxnfH+XImyzLX/vdC5+cKf3sMmLLbMT+mcq5BBcf0i1DNM58zeigDJvooQ3IzkGW2HVF8WqhlUO3PPKL8wWXIJJwPUg8hc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739869921; c=relaxed/simple;
-	bh=UzhNznqgAAuIcZzZPrJUtoMO3STF21152UGRG8HaC/k=;
+	s=arc-20240116; t=1739872161; c=relaxed/simple;
+	bh=XbF9Z9EDOE+WH6IsM10sX91VT6//KmQmo+fxU51EyWo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nuf3NQNgM119NrszvHh1x4IoaCBlUvTt99oVxBReCBZx7ni0IAt45k+dQCDWPXNIHcICTppLQ1ARyYRj7NOpHoV53rDpAgQ6L/CK0b2N52Lbaxor6LAHW9HdFV0yj8qBC016najGAzOdk03jTyGre2kDGV6Y9oOfzH3RYwPIepc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=guX+IQym; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 In-Reply-To:Content-Type; b=aYDCXGNxGTTWV8bN//Uzh5TG1eF2758cn29RcK5v+QRFDZXOq+TI/IdDK+Qn2qmZA/9GXKRmtM4clUTpZZ83w1omXMJp58aotdfRwA6CIN6qsIBHWgdGK9BEQ8x44pjAlaGh1RnrON+CTq4i/sUT9YfsV5aEKTukIqqSgMMDhtw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nFraw+Iv; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="guX+IQym"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5ded51d31f1so8616720a12.3
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Feb 2025 01:11:59 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nFraw+Iv"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-38a8b17d7a7so2913299f8f.2;
+        Tue, 18 Feb 2025 01:49:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739869918; x=1740474718; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
+        d=gmail.com; s=20230601; t=1739872158; x=1740476958; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=V3uXTrr03eTBp4TQInaTHeB1lyJsdQisBIQEzz1BspM=;
-        b=guX+IQymz6uDTHw8M8yrP85wM1puEgjhC8F5+CFOiJb4WQwjgb4GEfCIBQL8xUQknw
-         kcpgvAYBypq9pd/p/7U/ZLY81HzUezgMuab/FCggH//Km/kKDB9ynoslCRKfam/ga/Gz
-         4sER1E62Q8Kz6cBLghd1uAw2RGRFfom5TF3sLNy74OrZOqy//3mk3IIT+hwDk7uDq1o9
-         0spohzSseEG2AUoUPL9Z2EyzE6gxADlDndIEQTKgGFEFpdXUUHotqdtfMAV8CPqtqBtI
-         5Ca+T5xJRC1gtzS2Tz4Wv93xFIG1MTtH41hGf0jJbstEEWPVtgkOm9gbPwstjfZnJwBD
-         ooJw==
+        bh=nmC+DcBpQAGFGOKtkkBPoJk4Mr/Jtv0ZiKFK90g8220=;
+        b=nFraw+IvTEiak+45ZTjOsCIVk8idx4nEpHJhdUlAp6F8JgiE4vlNQa6Vay+IN6TT47
+         +DU330t+VHrJxId0q2msTYOZk9no6h76gQxb2upP4GAjJwPHZwG11wceY3gmju+FAfl3
+         DBTLCXG8gdXW49/0cIXD+O5GmC8pK7t2Fcm0RrKKLEN/Zb2ZC7vvDUlCfQKg0/9ExIPe
+         vuCwC25znSHBnTAJ4AQV97PwazcAM4+dI8K408DIXs29aYZ3PhrWMH5VP5coKHkTV5xp
+         BUSZHFK61YLfO7FB+wRdRhEmDPH8ZbFXjh/7ifIja0nJ/b11e8rAK1SXj7l2Cp7L/Qqe
+         AyvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739869918; x=1740474718;
-        h=content-transfer-encoding:in-reply-to:content-language:from
+        d=1e100.net; s=20230601; t=1739872158; x=1740476958;
+        h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=V3uXTrr03eTBp4TQInaTHeB1lyJsdQisBIQEzz1BspM=;
-        b=XJLmopwO3ik5eXz6yu7KX6E00gm9ubX87MLU1OhxidKfN45Bo5uopEmYdsIM8v1kH/
-         i6NTscF/AZjiG+RKtiJWi7v33ayB7RSZvMhhf5aNngSws6ZS7UGLB2mzVamHuy+i7hgW
-         HzGVlhBrDOmgw5MFTeX0dBWN+YjQd773PzYzVSU95W0bq2ac6iEW6tEykOsjEougI858
-         jSI6WL94w+8yHSOSPs/ZbjO3xcPnaCj8BVqT4i9yHim/RhKSAfkta36QYUIIgukLSy4O
-         sL+eQrf0zj/6/yfkD1hCDexSwyRS/0KmaHelKtMTvqrh2jgRda/bbXbzjbsZe7plJFKP
-         w7sw==
-X-Forwarded-Encrypted: i=1; AJvYcCWr1ckyczbp3WI6wKZwrpU5NzJZCJTzBegUzoXIEFstT7S9Ck4jSQhNmUQz2SUFahbGg0SvOO+bYYZT9ZBV7us=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHAebBUq0vHRd2j9qx6BmZKn9DEDuGL5p+H0Ma31NbvrK+wMLy
-	U0EIUZRiNuzto8xP02horK1pZSRhiTdFAPE3vUjmlwQ6eaWQu7qfM1YYpb7cv4A=
-X-Gm-Gg: ASbGncsC1cPxQYqTg1YG3BpgLnkeCWFdcoCCZfOpCTdwyEAbu5i+BfDIiamIH58glx6
-	IBUneCyG+G+efS+aivCnvMaQkNEa21WunKiBi5457Hel+7Mr05Okf2JW8ZWAgGIvmqPo4ZeQaNY
-	AeuPC3SRPrBPPUVs4kjshDq5bzNLbFchMJXb8689NOUbs5o9jdMBxRnoyknmo1T4DB8lVAbn1sP
-	qLGarBaNBs/yqT1RVS0ZlMtqAWzey+O+2Gpvr33Hs+X9NnfHiR5szUTGsUxcllZoQ+cSlJ5D92z
-	733u/phZBLNJvGtEjBw0Q+Y=
-X-Google-Smtp-Source: AGHT+IElObB+wPJH8ll7VWsYIuWeUZ3GQukv025YddeShYC2NXJtKepo4lLlRZ3MwK7mM+8bMe+zXw==
-X-Received: by 2002:a05:6402:5246:b0:5d0:cfdd:2ac1 with SMTP id 4fb4d7f45d1cf-5e036055eb7mr13524262a12.6.1739869918369;
-        Tue, 18 Feb 2025 01:11:58 -0800 (PST)
-Received: from [192.168.0.24] ([82.76.24.202])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e076048c05sm924724a12.35.2025.02.18.01.11.56
+        bh=nmC+DcBpQAGFGOKtkkBPoJk4Mr/Jtv0ZiKFK90g8220=;
+        b=mVZIrW4rUL/gmoBrm1W6sLs82Vtj2nuMtcPOmTGED0368emgvy9dfhLRO6xAW8VAHD
+         qhUb/i01djKMIOvTIeCW362IJ5FTLePFLDFg3Nzh4j03xriMEuOlqGVIb12lwzZm2d5/
+         9r4U37MKVc9fRWosS/IDXqHZeKgDUnwCSxrStpVHPWtemHfhuEGDklhGkmLV2xLVfrKS
+         1EwgAfHfitIza10/0JHC2pfnFYfpcO6qQMpKeeKx4hp7VEE2iDv2CjmgPVlWgAfAuKd/
+         4iSgBXLUbG9tD9NPyM2x10dbNr+SrPF7dThl7mgJxH0u9cxEdHHHYLmem/y78UlhEWrE
+         AKUg==
+X-Forwarded-Encrypted: i=1; AJvYcCUJyPFrLHrvoxwEzqWYUa0eIOLsvyeGgvh3Ji/rsM2kWNYUPzWs+yRGBNlGHqZMb5kcGVk5QREPT5jFnuAm@vger.kernel.org, AJvYcCVFSvaQuCqeVPcgmNcHG848Voj+AZDwZnp9AafznTjxm7wmjDrjr+wH3c+hpMC9s0ngbrj2xePh2lpJ7A==@vger.kernel.org, AJvYcCVjTil4mSGmG223Q2npQAPxV+Use5xEnPeCnT0CjGGbNMGhaQuWawE9qnDQr60NW67yd/0R392+QfPGy1/IFFg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzfdvWg/J9n5x4e3cWjmPqL/yuyUbAvF4a9HuA1MWzgv+upIUl
+	26BvIoj6IHFMJhfJqFtiL44e8hvsHxN+KwgKq0NAZrKaQPcT9/mc
+X-Gm-Gg: ASbGncsttmkB56v8rXW9P0sjR4Kn2qgPBqz7gugQ8Rv1JCSUC51aTuEIGFblezhmQPN
+	eOEBPkV7ptHIGkDbwtlffhjm41oh3DgxaEaf2S7O+WJkxcEKEnhnNskTgRPNu9hV6e/gJSQ/0jp
+	Wt7VhSHjwuMnzi706FmhnY20JMTrla2JeYD7mDOkiOH6I6rkunb4Rys//2BMZ+AzOd8TJlN62fC
+	aJH79Nhu9rP1D65Qlab/aJzGenZhMDkHZwRa6B0eyZFwjJPw3yN8az4dxu6qUwNf8F8Id5dPNB9
+	Paxiu3ncqPvfErJy9eT0hkZjicSTaF02Zne2
+X-Google-Smtp-Source: AGHT+IHMMavTvoFgwqe3JTZjFjaVhMPpCPIj09sm9EPZ0jm15kDP34LtqQrw6MAxx6sLesAeKhn1HQ==
+X-Received: by 2002:a5d:64ad:0:b0:38d:d4b5:84cf with SMTP id ffacd0b85a97d-38f33f1b5cbmr13829426f8f.5.1739872157727;
+        Tue, 18 Feb 2025 01:49:17 -0800 (PST)
+Received: from [172.27.59.237] ([193.47.165.251])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f259f8273sm14201167f8f.89.2025.02.18.01.49.15
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Feb 2025 01:11:58 -0800 (PST)
-Message-ID: <e925a6d7-aa71-43cf-ab84-bed65b78cbe3@linaro.org>
-Date: Tue, 18 Feb 2025 11:11:56 +0200
+        Tue, 18 Feb 2025 01:49:17 -0800 (PST)
+Message-ID: <5f2ca37f-3f6d-44d2-9821-7d6b0655937d@gmail.com>
+Date: Tue, 18 Feb 2025 11:49:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -66,48 +66,39 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC][PATCH 07/10] printk: export symbols for buffer address and
- length functions
-To: Sergey Senozhatsky <senozhatsky@chromium.org>,
- Christoph Hellwig <hch@infradead.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-hardening@vger.kernel.org,
- kees@kernel.org, linux-kernel@vger.kernel.org, johannes@sipsolutions.net,
- gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org,
- andersson@kernel.org, konradybcio@kernel.org, tony.luck@intel.com,
- gpiccoli@igalia.com, pmladek@suse.com, rostedt@goodmis.org,
- john.ogness@linutronix.de, quic_mojha@quicinc.com,
- linux-arm-kernel@lists.infradead.org, kernel@quicinc.com
-References: <20250217101706.2104498-1-eugen.hristev@linaro.org>
- <20250217101706.2104498-8-eugen.hristev@linaro.org>
- <Z7RELnyWRLietj9b@infradead.org>
- <20250218-175733-neomutt-senozhatsky@chromium.org>
-From: Eugen Hristev <eugen.hristev@linaro.org>
+Subject: Re: [PATCH][next] net/mlx5e: Avoid a hundred
+ -Wflex-array-member-not-at-end warnings
+To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Saeed Mahameed <saeedm@nvidia.com>, Leon Romanovsky <leon@kernel.org>,
+ Tariq Toukan <tariqt@nvidia.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <Z6GCJY8G9EzASrwQ@kspp>
+ <4e556977-c7b9-4d37-b874-4f3d60d54429@embeddedor.com>
+ <8d06f07c-5bb4-473d-90af-5f57ce2b068f@gmail.com>
+ <7ce8d318-584f-42c2-b88a-2597acd67029@embeddedor.com>
 Content-Language: en-US
-In-Reply-To: <20250218-175733-neomutt-senozhatsky@chromium.org>
-Content-Type: text/plain; charset=UTF-8
+From: Tariq Toukan <ttoukan.linux@gmail.com>
+In-Reply-To: <7ce8d318-584f-42c2-b88a-2597acd67029@embeddedor.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
-On 2/18/25 10:58, Sergey Senozhatsky wrote:
-> On (25/02/18 00:26), Christoph Hellwig wrote:
->> On Mon, Feb 17, 2025 at 12:17:03PM +0200, Eugen Hristev wrote:
->>> log_buf_addr_get() and log_buf_len_get() can be reused in another module,
->>> export the symbols.
->>
->> Err, no way.
+On 18/02/2025 10:14, Gustavo A. R. Silva wrote:
+> Hi all,
 > 
-> Yeah I think we've been there before [1]
+> Friendly ping: who can take this, please?
 > 
-> [1] https://lore.kernel.org/all/20230905081902.321778-1-hch@lst.de/
+> Thanks
+> -- 
+> Gustavo
+> 
 
-Okay... in the line of the purpose of this patch series, I would like to
-be able to have the dmesg ready to be retrieved out of the kernel in
-case the kernel becomes unusable (due to various reasons as described in
-the cover letter). However to know exactly 'where' is the buffer stored
-I would need some way to point to it.
-Do you have any other suggestion on how to do this ? Using the
-kmsg_dump() API works only if the kernel/CPU can run code.
+net-next maintainers, please pick it.
+I provided the Reviewed-by tag.
 
-Thanks for looking into the patches,
-Eugen
+Tariq.
