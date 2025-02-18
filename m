@@ -1,103 +1,373 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from omta40.uswest2.a.cloudfilter.net (omta40.uswest2.a.cloudfilter.net [35.89.44.39])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F6D319F115;
-	Mon, 17 Feb 2025 22:28:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59CEE23FC66
+	for <linux-hardening@vger.kernel.org>; Tue, 18 Feb 2025 08:15:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.39
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739831337; cv=none; b=A4cAq/yHsQh4vGSh7BETI/njCpZo3vRJEtrOTnkBi9JOHQkZ8/jLBwdbtszySywzJWBaOlmNvqP6TR/iBNe7PgIJz1tSpa5AumbdoYjAUNsPOOyKSPCl/H1qpDKXnoJnzNTGULHYgWM9fzSPC16/jPEazEqqG7S6N9kDzOSKiR4=
+	t=1739866522; cv=none; b=pf+oPzLm2eud0WITzcmMd8TlBhomABrDeL9U6l7hHNCOBG0yIGAbfaUBb/L5K3N9/sX1jUgWogSdHDyfYzMAd6IL2oGtnxukH7sqODON9Rdl6o8VcrY2rliBbNXL20SrAqvl7kCV79VXUqS/UZoKLI8wNRvp52DV3PRvkKtOj5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739831337; c=relaxed/simple;
-	bh=0pkubBL3Lac9RferHD31Q0nRQv1dXYW9gdNdNRTI5+o=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=N6yEcg4VWEGCY9X4hSHBXbjRoOf3b4wWP5gL+iSAYHd7UhjyGtZfo27hsy5Ejt9dcO+Gt0Ktr0ZQffdGLqfY3YLaa50Kx4fuIMYQbqRe9fXyLL5usOUQ1Ez4EihbLSRGo54kANvj5CMvZ//0ayqtnQ56r5V6x6Xid3/RUQcoFOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=UfxWNC+/; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1739866522; c=relaxed/simple;
+	bh=2PQla5GvuDnKYjqyE9DUuTPBVDgNyzPK7MdB2Y/0bcU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=r8FMvuVxutB19EU039KixX7CG0yFk+7roDBfUJhVAoMwppUVQBdA9dgxiO9CLVnSjAsYEQ6vrHDlLlsk/LUgmj2PfivmglWLZZSwWkBeLJgxXBbdirU2YjuISucNA/S/bimmXdVkRZEZatt4o1LFMoaoqAzRgV8qFDmsQV38n10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=OKg2BYxt; arc=none smtp.client-ip=35.89.44.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="UfxWNC+/"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51HAfIev026272;
-	Mon, 17 Feb 2025 22:28:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	85rHUocnU9lklzB9BR0gJkyl7D6exIAQ63c0M02GufQ=; b=UfxWNC+/E3dM/UZ6
-	Jv8Gv5WIEhs6rTWFo+sC61wnYOubkZlFsLck4JvG2z57atGeO8cHDCVySkmVmGef
-	lKw520Qf2Dp7dHkDG6hCk3MpzbZ1v/49uDeSAxV/PIWbwlBfalSmlwrgcLygPDxV
-	j9t+Bfojj38GMeFeqlb4P9CDR6uusgjyr+uKeYz481g2/6De49LU604OgGlgZX/n
-	ORoQ8GwA3Xe2MPck6S74YpmONsXgHF7oyP7AdNRN95u5OUSv0YDuBEBs6Gc/lKDa
-	MGUvik1YH/KuxvUVhc6zZdmS66EcTkq62P0Mj01Ent8ipEeH34KWyI3qxpNIg32G
-	51S52Q==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44ut7ttyaa-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 17 Feb 2025 22:28:30 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51HMSTWO009718
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 17 Feb 2025 22:28:29 GMT
-Received: from abhinavk-linux1.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Mon, 17 Feb 2025 14:28:28 -0800
-From: Abhinav Kumar <quic_abhinavk@quicinc.com>
-To: Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie
-	<airlied@gmail.com>,
-        Ethan Carter Edwards <ethan@ethancedwards.com>
-CC: Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        Dmitry Baryshkov
-	<dmitry.baryshkov@linaro.org>,
-        Marijn Suijten
-	<marijn.suijten@somainline.org>,
-        Simona Vetter <simona@ffwll.ch>, <linux-arm-msm@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <freedreno@lists.freedesktop.org>,
-        <linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>
-Subject: Re: (subset) [PATCH v2] drm/msm/dpu: Fix uninitialized variable
-Date: Mon, 17 Feb 2025 14:28:19 -0800
-Message-ID: <173983118340.1710817.130011978241538683.b4-ty@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250209-dpu-v2-1-114dfd4ebefd@ethancedwards.com>
-References: <20250209-dpu-v2-1-114dfd4ebefd@ethancedwards.com>
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="OKg2BYxt"
+Received: from eig-obgw-5007a.ext.cloudfilter.net ([10.0.29.141])
+	by cmsmtp with ESMTPS
+	id k4wWtu7bZf1UXkIl8tO1VN; Tue, 18 Feb 2025 08:15:14 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id kIl7tw5yhqwd6kIl7tNlGW; Tue, 18 Feb 2025 08:15:14 +0000
+X-Authority-Analysis: v=2.4 cv=dOygmvZb c=1 sm=1 tr=0 ts=67b44192
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=6Vi/Wpy7sgpXGMLew8oZcg==:17
+ a=IkcTkHD0fZMA:10 a=T2h4t0Lz3GQA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
+ a=Ikd4Dj_1AAAA:8 a=UKC9dJ4rekCoHJVrYOYA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=Xt_RvD8W3m28Mn_h3AK8:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=aWAJtaoadsRxyAw25xzEtDKRxBzlOTPao3CDU71dnNE=; b=OKg2BYxtfQsiTWRuyLT9edwQTq
+	WUVMpOMvNdMPhoPC9Zp42Z7e67w8lOW2X2WGpErYhAMu6C24MaysW0FrY2mW8NMN4he6FULRPZe7c
+	Hct/ClR2Imb67Avb2P7HJW390syhFDAuaez7lKHsVdcMpnW2wAGnUSArUwUTwAsjpPli1FApPGp/O
+	5yuZbTuqTpZTmOeILvPjtJzdBB0TV6FoQ8wLNqzzTHEHvGdjk1x67XVI9p3DsimR5Ah9t/ZQOq1vK
+	Tfajlz5YMjyje0YB2IlIA6CdigSJ8vuMh/m1JIKV/GEsNbstYh7AB3p6bK81bJazJxIsMxihlNhwp
+	sIC+Ewwg==;
+Received: from [45.124.203.140] (port=54695 helo=[192.168.0.163])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1tkIl4-001Vbh-0Y;
+	Tue, 18 Feb 2025 02:15:11 -0600
+Message-ID: <7ce8d318-584f-42c2-b88a-2597acd67029@embeddedor.com>
+Date: Tue, 18 Feb 2025 18:44:48 +1030
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH][next] net/mlx5e: Avoid a hundred
+ -Wflex-array-member-not-at-end warnings
+To: Tariq Toukan <ttoukan.linux@gmail.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Saeed Mahameed <saeedm@nvidia.com>, Leon Romanovsky <leon@kernel.org>,
+ Tariq Toukan <tariqt@nvidia.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <Z6GCJY8G9EzASrwQ@kspp>
+ <4e556977-c7b9-4d37-b874-4f3d60d54429@embeddedor.com>
+ <8d06f07c-5bb4-473d-90af-5f57ce2b068f@gmail.com>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <8d06f07c-5bb4-473d-90af-5f57ce2b068f@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: oF4oUbUp5fgCIti7eZfx5lni0vTmDY6B
-X-Proofpoint-GUID: oF4oUbUp5fgCIti7eZfx5lni0vTmDY6B
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-17_08,2025-02-13_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
- malwarescore=0 impostorscore=0 clxscore=1015 phishscore=0 adultscore=0
- spamscore=0 mlxlogscore=666 bulkscore=0 suspectscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
- definitions=main-2502170174
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 45.124.203.140
+X-Source-L: No
+X-Exim-ID: 1tkIl4-001Vbh-0Y
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.0.163]) [45.124.203.140]:54695
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfBRlOZYMz6iT298H+TueqRL/XwBCBTLO0bteQeOuE0yIqmfT5n5rtLpepUxd1O/JCzdb5V7zD6nRI3ENdRxA3kccUVhV1lBM4Ls+V4CefpEHezTD0Un7
+ 918MTAbUhIBRsLxiWeVxQnj4vNpyj87m84R3QDbQ+4uRwu9AmPBCYsMrHub3vsk1pPn4hRX1Ko0Ck5MmPKLYrWe1WT2j7i6XN0vRCy7neus+9r165gYyqRmc
 
+Hi all,
 
-On Sun, 09 Feb 2025 22:51:54 -0500, Ethan Carter Edwards wrote:
-> There is a possibility for an uninitialized *ret* variable to be
-> returned in some code paths.
+Friendly ping: who can take this, please?
+
+Thanks
+--
+Gustavo
+
+On 06/02/25 17:55, Tariq Toukan wrote:
 > 
-> Fix this by initializing *ret* to 0.
+> 
+> On 06/02/2025 6:37, Gustavo A. R. Silva wrote:
+>> Hi,
+>>
+>> On 04/02/25 13:27, Gustavo A. R. Silva wrote:
+>>> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+>>> getting ready to enable it, globally.
+>>>
+>>> So, in order to avoid ending up with a flexible-array member in the
+>>> middle of other structs, we use the `struct_group_tagged()` helper
+>>> to create a new tagged `struct mlx5e_umr_wqe_hdr`. This structure
+>>> groups together all the members of the flexible `struct mlx5e_umr_wqe`
+>>> except the flexible array.
+>>>
+>>> As a result, the array is effectively separated from the rest of the
+>>> members without modifying the memory layout of the flexible structure.
+>>> We then change the type of the middle struct member currently causing
+>>> trouble from `struct mlx5e_umr_wqe` to `struct mlx5e_umr_wqe_hdr`.
+>>>
+>>> We also want to ensure that when new members need to be added to the
+>>> flexible structure, they are always included within the newly created
+>>> tagged struct. For this, we use `static_assert()`. This ensures that the
+>>> memory layout for both the flexible structure and the new tagged struct
+>>> is the same after any changes.
+>>>
+>>> This approach avoids having to implement `struct mlx5e_umr_wqe_hdr` as
+>>> a completely separate structure, thus preventing having to maintain two
+>>> independent but basically identical structures, closing the door to
+>>> potential bugs in the future.
+>>>
+>>> We also use `container_of()` whenever we need to retrieve a pointer to
+>>> the flexible structure, through which we can access the flexible-array
+>>> member, if necessary.
+>>>
+>>> So, with these changes, fix 124 of the following warnings:
+>>>
+>>> drivers/net/ethernet/mellanox/mlx5/core/en.h:664:48: warning: structure containing a flexible array member is not at the end of another structure [-Wflex- 
+>>> array-member-not-at-end]
+>>>
+>>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>>> ---
+>>>   drivers/net/ethernet/mellanox/mlx5/core/en.h      | 13 +++++++++----
+>>>   drivers/net/ethernet/mellanox/mlx5/core/en_main.c |  4 +++-
+>>>   2 files changed, 12 insertions(+), 5 deletions(-)
+>>>
+>>> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en.h b/drivers/ net/ethernet/mellanox/mlx5/core/en.h
+>>> index 979fc56205e1..c30c64eb346f 100644
+>>> --- a/drivers/net/ethernet/mellanox/mlx5/core/en.h
+>>> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en.h
+>>> @@ -233,15 +233,20 @@ struct mlx5e_rx_wqe_cyc {
+>>>   };
+>>>   struct mlx5e_umr_wqe {
+>>> -    struct mlx5_wqe_ctrl_seg       ctrl;
+>>> -    struct mlx5_wqe_umr_ctrl_seg   uctrl;
+>>> -    struct mlx5_mkey_seg           mkc;
+>>> +    /* New members MUST be added within the struct_group() macro below. */
+>>> +    struct_group_tagged(mlx5e_umr_wqe_hdr, hdr,
+>>> +        struct mlx5_wqe_ctrl_seg       ctrl;
+>>> +        struct mlx5_wqe_umr_ctrl_seg   uctrl;
+>>> +        struct mlx5_mkey_seg           mkc;
+>>> +    );
+>>>       union {
+>>>           DECLARE_FLEX_ARRAY(struct mlx5_mtt, inline_mtts);
+>>>           DECLARE_FLEX_ARRAY(struct mlx5_klm, inline_klms);
+>>>           DECLARE_FLEX_ARRAY(struct mlx5_ksm, inline_ksms);
+>>>       };
+>>>   };
+>>> +static_assert(offsetof(struct mlx5e_umr_wqe, inline_mtts) == sizeof(struct mlx5e_umr_wqe_hdr),
+>>> +          "struct member likely outside of struct_group_tagged()");
+>>>   enum mlx5e_priv_flag {
+>>>       MLX5E_PFLAG_RX_CQE_BASED_MODER,
+>>> @@ -660,7 +665,7 @@ struct mlx5e_rq {
+>>>           } wqe;
+>>>           struct {
+>>>               struct mlx5_wq_ll      wq;
+>>> -            struct mlx5e_umr_wqe   umr_wqe;
+>>> +            struct mlx5e_umr_wqe_hdr umr_wqe;
+>>>               struct mlx5e_mpw_info *info;
+>>>               mlx5e_fp_skb_from_cqe_mpwrq skb_from_cqe_mpwrq;
+>>>               __be32                 umr_mkey_be;
+>>> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/ drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+>>> index bd41b75d246e..4ff4ff2342cf 100644
+>>> --- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+>>> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+>>> @@ -373,6 +373,8 @@ static void mlx5e_rq_shampo_hd_info_free(struct mlx5e_rq *rq)
+>>>   static int mlx5e_rq_alloc_mpwqe_info(struct mlx5e_rq *rq, int node)
+>>>   {
+>>> +    struct mlx5e_umr_wqe *umr_wqe =
+>>> +        container_of(&rq->mpwqe.umr_wqe, struct mlx5e_umr_wqe, hdr);
+>>>       int wq_sz = mlx5_wq_ll_get_size(&rq->mpwqe.wq);
+>>>       size_t alloc_size;
+>>> @@ -393,7 +395,7 @@ static int mlx5e_rq_alloc_mpwqe_info(struct mlx5e_rq *rq, int node)
+>>>           bitmap_fill(wi->skip_release_bitmap, rq->mpwqe.pages_per_wqe);
+>>>       }
+>>> -    mlx5e_build_umr_wqe(rq, rq->icosq, &rq->mpwqe.umr_wqe);
+>>> +    mlx5e_build_umr_wqe(rq, rq->icosq, umr_wqe);
+>>>       return 0;
+>>>   }
+>>
+>> Here is another alternative for this.  And similarly to the struct_group_tagged()
+>> change above, no struct members should be added before or after `struct
+>> mlx5e_umr_wqe_hdr hdr;` in `struct mlx5e_umr_wqe`:
+>>
+> 
+> Thanks for your patch.
+> 
+> The change with the struct_group_tagged() uses advanced tag, and keeps code cleaner.
+> I prefer it.
+> 
+> Reviewed-by: Tariq Toukan <tariqt@nvidia.com>
+> 
+> Regards,
+> Tariq
+> 
+>> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en.h b/drivers/net/ ethernet/mellanox/mlx5/core/en.h
+>> index 979fc56205e1..912b97eeb4d6 100644
+>> --- a/drivers/net/ethernet/mellanox/mlx5/core/en.h
+>> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en.h
+>> @@ -232,10 +232,13 @@ struct mlx5e_rx_wqe_cyc {
+>>          DECLARE_FLEX_ARRAY(struct mlx5_wqe_data_seg, data);
+>>   };
+>>
+>> -struct mlx5e_umr_wqe {
+>> +struct mlx5e_umr_wqe_hdr {
+>>          struct mlx5_wqe_ctrl_seg       ctrl;
+>>          struct mlx5_wqe_umr_ctrl_seg   uctrl;
+>>          struct mlx5_mkey_seg           mkc;
+>> +};
+>> +struct mlx5e_umr_wqe {
+>> +       struct mlx5e_umr_wqe_hdr hdr;
+>>          union {
+>>                  DECLARE_FLEX_ARRAY(struct mlx5_mtt, inline_mtts);
+>>                  DECLARE_FLEX_ARRAY(struct mlx5_klm, inline_klms);
+>> @@ -660,7 +663,7 @@ struct mlx5e_rq {
+>>                  } wqe;
+>>                  struct {
+>>                          struct mlx5_wq_ll      wq;
+>> -                       struct mlx5e_umr_wqe   umr_wqe;
+>> +                       struct mlx5e_umr_wqe_hdr umr_wqe;
+>>                          struct mlx5e_mpw_info *info;
+>>                          mlx5e_fp_skb_from_cqe_mpwrq skb_from_cqe_mpwrq;
+>>                          __be32                 umr_mkey_be;
+>> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/rx.c b/ drivers/net/ethernet/mellanox/mlx5/core/en/xsk/rx.c
+>> index 1b7132fa70de..2b05536d564a 100644
+>> --- a/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/rx.c
+>> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/rx.c
+>> @@ -123,7 +123,7 @@ int mlx5e_xsk_alloc_rx_mpwqe(struct mlx5e_rq *rq, u16 ix)
+>>          bitmap_zero(wi->skip_release_bitmap, rq->mpwqe.pages_per_wqe);
+>>          wi->consumed_strides = 0;
+>>
+>> -       umr_wqe->ctrl.opmod_idx_opcode =
+>> +       umr_wqe->hdr.ctrl.opmod_idx_opcode =
+>>                  cpu_to_be32((icosq->pc << MLX5_WQE_CTRL_WQE_INDEX_SHIFT) | MLX5_OPCODE_UMR);
+>>
+>>          /* Optimized for speed: keep in sync with mlx5e_mpwrq_umr_entry_size. */
+>> @@ -134,7 +134,7 @@ int mlx5e_xsk_alloc_rx_mpwqe(struct mlx5e_rq *rq, u16 ix)
+>>                  offset = offset * sizeof(struct mlx5_klm) * 2 / MLX5_OCTWORD;
+>>          else if (unlikely(rq->mpwqe.umr_mode == MLX5E_MPWRQ_UMR_MODE_TRIPLE))
+>>                  offset = offset * sizeof(struct mlx5_ksm) * 4 / MLX5_OCTWORD;
+>> -       umr_wqe->uctrl.xlt_offset = cpu_to_be16(offset);
+>> +       umr_wqe->hdr.uctrl.xlt_offset = cpu_to_be16(offset);
+>>
+>>          icosq->db.wqe_info[pi] = (struct mlx5e_icosq_wqe_info) {
+>>                  .wqe_type = MLX5E_ICOSQ_WQE_UMR_RX,
+>> @@ -144,7 +144,7 @@ int mlx5e_xsk_alloc_rx_mpwqe(struct mlx5e_rq *rq, u16 ix)
+>>
+>>          icosq->pc += rq->mpwqe.umr_wqebbs;
+>>
+>> -       icosq->doorbell_cseg = &umr_wqe->ctrl;
+>> +       icosq->doorbell_cseg = &umr_wqe->hdr.ctrl;
+>>
+>>          return 0;
+>>
+>> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/ drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+>> index a814b63ed97e..bbd0b888d237 100644
+>> --- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+>> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+>> @@ -311,8 +311,8 @@ static inline void mlx5e_build_umr_wqe(struct mlx5e_rq *rq,
+>>                                         struct mlx5e_icosq *sq,
+>>                                         struct mlx5e_umr_wqe *wqe)
+>>   {
+>> -       struct mlx5_wqe_ctrl_seg      *cseg = &wqe->ctrl;
+>> -       struct mlx5_wqe_umr_ctrl_seg *ucseg = &wqe->uctrl;
+>> +       struct mlx5_wqe_ctrl_seg      *cseg = &wqe->hdr.ctrl;
+>> +       struct mlx5_wqe_umr_ctrl_seg *ucseg = &wqe->hdr.uctrl;
+>>          u16 octowords;
+>>          u8 ds_cnt;
+>>
+>> @@ -393,7 +393,9 @@ static int mlx5e_rq_alloc_mpwqe_info(struct mlx5e_rq *rq, int node)
+>>                  bitmap_fill(wi->skip_release_bitmap, rq-  >mpwqe.pages_per_wqe);
+>>          }
+>>
+>> -       mlx5e_build_umr_wqe(rq, rq->icosq, &rq->mpwqe.umr_wqe);
+>> +       mlx5e_build_umr_wqe(rq, rq->icosq,
+>> +                           container_of(&rq->mpwqe.umr_wqe,
+>> +                                        struct mlx5e_umr_wqe, hdr));
+>>
+>>          return 0;
+>>   }
+>> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c b/drivers/ net/ethernet/mellanox/mlx5/core/en_rx.c
+>> index 1963bc5adb18..5fd70b4d55be 100644
+>> --- a/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
+>> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
+>> @@ -631,16 +631,16 @@ static void build_ksm_umr(struct mlx5e_icosq *sq, struct mlx5e_umr_wqe *umr_wqe,
+>>                            __be32 key, u16 offset, u16 ksm_len)
+>>   {
+>>          memset(umr_wqe, 0, offsetof(struct mlx5e_umr_wqe, inline_ksms));
+>> -       umr_wqe->ctrl.opmod_idx_opcode =
+>> +       umr_wqe->hdr.ctrl.opmod_idx_opcode =
+>>                  cpu_to_be32((sq->pc << MLX5_WQE_CTRL_WQE_INDEX_SHIFT) |
+>>                               MLX5_OPCODE_UMR);
+>> -       umr_wqe->ctrl.umr_mkey = key;
+>> -       umr_wqe->ctrl.qpn_ds = cpu_to_be32((sq->sqn << MLX5_WQE_CTRL_QPN_SHIFT)
+>> +       umr_wqe->hdr.ctrl.umr_mkey = key;
+>> +       umr_wqe->hdr.ctrl.qpn_ds = cpu_to_be32((sq->sqn << MLX5_WQE_CTRL_QPN_SHIFT)
+>>                                              | MLX5E_KSM_UMR_DS_CNT(ksm_len));
+>> -       umr_wqe->uctrl.flags = MLX5_UMR_TRANSLATION_OFFSET_EN | MLX5_UMR_INLINE;
+>> -       umr_wqe->uctrl.xlt_offset = cpu_to_be16(offset);
+>> -       umr_wqe->uctrl.xlt_octowords = cpu_to_be16(ksm_len);
+>> -       umr_wqe->uctrl.mkey_mask     = cpu_to_be64(MLX5_MKEY_MASK_FREE);
+>> +       umr_wqe->hdr.uctrl.flags = MLX5_UMR_TRANSLATION_OFFSET_EN | MLX5_UMR_INLINE;
+>> +       umr_wqe->hdr.uctrl.xlt_offset = cpu_to_be16(offset);
+>> +       umr_wqe->hdr.uctrl.xlt_octowords = cpu_to_be16(ksm_len);
+>> +       umr_wqe->hdr.uctrl.mkey_mask     = cpu_to_be64(MLX5_MKEY_MASK_FREE);
+>>   }
+>>
+>>   static struct mlx5e_frag_page *mlx5e_shampo_hd_to_frag_page(struct mlx5e_rq *rq, int header_index)
+>> @@ -704,7 +704,7 @@ static int mlx5e_build_shampo_hd_umr(struct mlx5e_rq *rq,
+>>
+>>          shampo->pi = (shampo->pi + ksm_entries) & (shampo->hd_per_wq - 1);
+>>          sq->pc += wqe_bbs;
+>> -       sq->doorbell_cseg = &umr_wqe->ctrl;
+>> +       sq->doorbell_cseg = &umr_wqe->hdr.ctrl;
+>>
+>>          return 0;
+>>
+>> @@ -814,12 +814,12 @@ static int mlx5e_alloc_rx_mpwqe(struct mlx5e_rq *rq, u16 ix)
+>>          bitmap_zero(wi->skip_release_bitmap, rq->mpwqe.pages_per_wqe);
+>>          wi->consumed_strides = 0;
+>>
+>> -       umr_wqe->ctrl.opmod_idx_opcode =
+>> +       umr_wqe->hdr.ctrl.opmod_idx_opcode =
+>>                  cpu_to_be32((sq->pc << MLX5_WQE_CTRL_WQE_INDEX_SHIFT) |
+>>                              MLX5_OPCODE_UMR);
+>>
+>>          offset = (ix * rq->mpwqe.mtts_per_wqe) * sizeof(struct mlx5_mtt) / MLX5_OCTWORD;
+>> -       umr_wqe->uctrl.xlt_offset = cpu_to_be16(offset);
+>> +       umr_wqe->hdr.uctrl.xlt_offset = cpu_to_be16(offset);
+>>
+>>          sq->db.wqe_info[pi] = (struct mlx5e_icosq_wqe_info) {
+>>                  .wqe_type   = MLX5E_ICOSQ_WQE_UMR_RX,
+>> @@ -829,7 +829,7 @@ static int mlx5e_alloc_rx_mpwqe(struct mlx5e_rq *rq, u16 ix)
+>>
+>>          sq->pc += rq->mpwqe.umr_wqebbs;
+>>
+>> -       sq->doorbell_cseg = &umr_wqe->ctrl;
+>> +       sq->doorbell_cseg = &umr_wqe->hdr.ctrl;
+>>
+>>          return 0;
+>>
+>>
+>> Thanks
+>> -- 
+>> Gustavo
+>>
 > 
 > 
 
-
-Applied to msm-fixes, thanks!
-
-[1/1] drm/msm/dpu: Fix uninitialized variable
-      https://gitlab.freedesktop.org/drm/msm/-/commit/978ca99d6bd8
-
-Best regards,
--- 
-Abhinav Kumar <quic_abhinavk@quicinc.com>
