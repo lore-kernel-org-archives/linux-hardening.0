@@ -1,210 +1,193 @@
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C80721A8F6D;
-	Tue, 18 Feb 2025 23:18:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C8F2286297;
+	Wed, 19 Feb 2025 00:39:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739920729; cv=none; b=tdLlnEUrsCr6PagQpELdU+/mmsRsBvgWx5ktVBbDQFDVAf4Rcb79orNxlGNDEWf2tCp0Bqldg+qlxrFielQ7HWJe72JRl6ycyuxs+AQYeEw0e4AUT/bIlr6THOdj6tPFNyOuO+Kpr2C1ydwzTa3B+QWNiR9xMFp9993FeFh+dng=
+	t=1739925580; cv=none; b=fFobMYinqLaEArLXSUOIchY+1sl5rku3VERvpoUGkjH6WJYH4iC1H9P+zkSyIz7Bas8FT7JNbBxiqUcGU0CEkigeQ1CqoyCm6KdADqogOYhlX8LNoLlMEpNOMa6UEBusk+8h0b0qOjQEPKCxvPbUM11kCza3vR0z07VNZpH4z8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739920729; c=relaxed/simple;
-	bh=cJZKYboTxb8eI3E86OVhHv0iNOUs21llNDOF1MXgUYQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=J9rYK8rLd6MOXeZNt594LZfmmw8UEIoA9vSvnXgaPClhLzlwQqsaW5Hl57sXjJ4rJYyVCk0WJYc3SAYxI5w0nc9Kw8S16k33p9Xl7tzJKlXpXLNLeKPJkJa7PzgGV3HXtvUH+/RQs1V7IMVyTNziNQ4WHW28ujvvabn9Rc8bu1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K55JzAyE; arc=none smtp.client-ip=209.85.217.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739925580; c=relaxed/simple;
+	bh=ny12EX+o4qM029fH3mY2iSlT+ERh8W7+sa79jE2Anl4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=r0rfUu/1SCFlphcSx93lNQtKwCH+oP8f/MZhP0lts8OySYVP2gWaP2p7J0td0/cIX1z4MiCJiOkyK9wYa9tu8IgzsD0/1mk8MoyF/i1HCcHMxzU5rc/XZ6gNA5eXFlelSG8UWO255nesRBTeOh5NH9Hl7fWjvCMmq/2OyKdhD9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KuzF1ekW; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K55JzAyE"
-Received: by mail-vs1-f48.google.com with SMTP id ada2fe7eead31-4bda3ea7076so214316137.0;
-        Tue, 18 Feb 2025 15:18:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739920726; x=1740525526; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cJZKYboTxb8eI3E86OVhHv0iNOUs21llNDOF1MXgUYQ=;
-        b=K55JzAyE2wIYgILOKknlyEnDIj371xveSIOCWq6cQCjN8KadZ7skLubXcZf2725Ec1
-         L0MAb3SdW80/K65yENfxhZ24Ww/VIpYDLFjf44N41o/8A1kw68/kIWpbwJ3qXhmKt0M8
-         W01IW4+5Ugkw3AvKAKNdR8qD3Ojh+B3q8/6qtx6+v6MifvnakuKa/kmx/tgJiKRZWKPL
-         IjqRpA4PQweoBNzP3qFG6erKlrSPyZFiu4f89sa9la1b5gQ3NrdzLSEwEbhCQvCEYw8p
-         0rk6U2MugXfkUkna1AoIwXEr7WzH7DznfwJ5se5y7HI4j7L3XMPZzaFK1EyhYaHbvs2F
-         48YA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739920726; x=1740525526;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cJZKYboTxb8eI3E86OVhHv0iNOUs21llNDOF1MXgUYQ=;
-        b=O4URmECjmhomeVwplhHCLgA+yHuHjg3xNrKb7/fZSrW7BemkJRg9Ca+fpNgvbXlD6k
-         poA5UOi5wdLne8e4CA7QttJi3tzrFazR0FHFZzTC/ZHFxsDYzKRe906gx9307u+2jlmq
-         tlXxPBSPTtmyo+iAPWJNgCcWt94s23K0K+U5v4Q1CNDVlwumqOAOWF4BlZX39xezjguL
-         EAFBQk8Milr5Xs+xoJQxtWGjhZ5ymcVyQjAxHft4JkV1rxdmvTIJl6o92fVGhFBy/P7s
-         qo0PlIlvVW6uTYpHjZ94/pF/iOQd/rTDRYTM5eI3smgKClzAvhJiwPPQnfgoIPtaSMVF
-         hNig==
-X-Forwarded-Encrypted: i=1; AJvYcCUbGuDs060tDZnevNXxNN9QwT3F7r5929aSC3GTagUX6SBu9F/N1BN0GI+J92Kob+GHnXAkrC1J8yEbmnQkv5Y=@vger.kernel.org, AJvYcCXDjRkWXbKxRTEj5CMmt9SW8v44J+fDTRhtvOl56hyxcm7VUPP42AHz1ee8Omeulit9Uqiao6SLymRa1I2z@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6t0nBZLm5JIrvFkr75pPBIcTPbyg9t4P+PSMWUE7p4IkPLRBU
-	hwRmAWdogTLVU5fcYQfhGAPUdQLolTo69w73Vys4+qc7baS56Fq/yAQUf/1YnNpZV8MVd5w6SIj
-	uKJUQNpDg60GDb9yPe8KXPMxgchM=
-X-Gm-Gg: ASbGncvx1kHz6Bko42OOQuj/JMOG36pG8harfnjdP28cSimJt4bu7dOn04j6jrHTiqX
-	f4H/iAp9xWg1fP52iTZimuDY1B8eaKv2BnK03H2wMRP/2evldL3Bud7w49saWt26UYten/P4w5A
-	nkukl5DwDe1wnFZ+7NORX0tPicdSyY
-X-Google-Smtp-Source: AGHT+IGKGQRQAl8RdXEgVYEV0wpJE87L/FaWCi6brr9B7QBb3fpm0Lts0CWlx0AMzHd2VMZ1ZcRSNSvzuIQRVBJawkc=
-X-Received: by 2002:a05:6102:f10:b0:4b2:9e5d:baf with SMTP id
- ada2fe7eead31-4be84525188mr1413338137.11.1739920726529; Tue, 18 Feb 2025
- 15:18:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KuzF1ekW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739925579; x=1771461579;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=ny12EX+o4qM029fH3mY2iSlT+ERh8W7+sa79jE2Anl4=;
+  b=KuzF1ekWnUktjghpmEJw4PpkydsUrhA/ZgnXNbmTWZrTImhT6anDojTI
+   y0kFKQ55KGW2Jz79imC4v6PrOxrPFtEM2DcRJxFAYaP53cFcsrQA8zfy1
+   fsQZzZIlcK1ei3aFQay/hrCtGdQwX/EU1rq00mBOie8Oj5GbvEjsmow2B
+   BkjQZ2htEh2WC2UBVzUSNI8EoHnX0/2Q7VG2tSIFjgrolEf7k3cI/2hz7
+   G+X7QOM/Z0+nmtTwyEmH1ykLhmDn2JZeyp6aYbVJvMiIYoSQ/ZJ/RYJMX
+   kz5SzXYGTip2bD8xy+ekl7HUVSacEz9R06hVGWyJNiN81LxZmYg4UCV0n
+   Q==;
+X-CSE-ConnectionGUID: vWbTiqaAQ5OyySeKYpSjyQ==
+X-CSE-MsgGUID: amn+OfK3SfuUmmXPAPn+Ug==
+X-IronPort-AV: E=McAfee;i="6700,10204,11348"; a="50859735"
+X-IronPort-AV: E=Sophos;i="6.13,296,1732608000"; 
+   d="scan'208";a="50859735"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2025 16:39:37 -0800
+X-CSE-ConnectionGUID: StxpGDHDSbyAh5uQiajbzA==
+X-CSE-MsgGUID: FiydVNMLQ+SQcbnjn4HSPg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="145453200"
+Received: from mgoodin-mobl2.amr.corp.intel.com (HELO [10.125.109.220]) ([10.125.109.220])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2025 16:39:30 -0800
+Message-ID: <d0450bc8-6585-49ca-9cad-49e65934bd5c@intel.com>
+Date: Tue, 18 Feb 2025 16:39:34 -0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250212032155.1276806-1-jeffxu@google.com> <b114f48a-a485-4ebd-9278-6c62a1f33d9c@lucifer.local>
- <CAKbZUD0TAX8F9kDCEEvGSbcegDD4GLyra3ewtxncBbs45WJZ3g@mail.gmail.com>
- <7545d5eb-a16e-4cc8-a9e3-5431be01aade@lucifer.local> <CAKbZUD3kaYEqQFU1TWfJWvtV02ESaMb0_ygadGgeAKo-b+GRcA@mail.gmail.com>
- <202502131240.A57C749@keescook>
-In-Reply-To: <202502131240.A57C749@keescook>
-From: Pedro Falcato <pedro.falcato@gmail.com>
-Date: Tue, 18 Feb 2025 23:18:34 +0000
-X-Gm-Features: AWEUYZnpYHWvn6nqeVyLXVg13y8CRbOGKz08G_TnkGN6y5dwD6CgxjUxA5BE0y4
-Message-ID: <CAKbZUD16kfO2OBxY2fMbnmnEinTeKbPpTOLVC=Pc+FbWN_kjcQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v5 0/7] mseal system mappings
-To: Kees Cook <kees@kernel.org>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, jeffxu@chromium.org, 
-	akpm@linux-foundation.org, jannh@google.com, torvalds@linux-foundation.org, 
-	vbabka@suse.cz, Liam.Howlett@oracle.com, adhemerval.zanella@linaro.org, 
-	oleg@redhat.com, avagin@gmail.com, benjamin@sipsolutions.net, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	linux-mm@kvack.org, jorgelo@chromium.org, sroettger@google.com, hch@lst.de, 
-	ojeda@kernel.org, thomas.weissschuh@linutronix.de, adobriyan@gmail.com, 
-	johannes@sipsolutions.net, hca@linux.ibm.com, willy@infradead.org, 
-	anna-maria@linutronix.de, mark.rutland@arm.com, linus.walleij@linaro.org, 
-	Jason@zx2c4.com, deller@gmx.de, rdunlap@infradead.org, davem@davemloft.net, 
-	peterx@redhat.com, f.fainelli@gmail.com, gerg@kernel.org, 
-	dave.hansen@linux.intel.com, mingo@kernel.org, ardb@kernel.org, 
-	mhocko@suse.com, 42.hyeyoo@gmail.com, peterz@infradead.org, ardb@google.com, 
-	enh@google.com, rientjes@google.com, groeck@chromium.org, mpe@ellerman.id.au, 
-	aleksandr.mikhalitsyn@canonical.com, mike.rapoport@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 29/30] x86/mm, mm/vmalloc: Defer
+ flush_tlb_kernel_range() targeting NOHZ_FULL CPUs
+To: Valentin Schneider <vschneid@redhat.com>, Jann Horn <jannh@google.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+ virtualization@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+ linux-perf-users@vger.kernel.org, xen-devel@lists.xenproject.org,
+ kvm@vger.kernel.org, linux-arch@vger.kernel.org, rcu@vger.kernel.org,
+ linux-hardening@vger.kernel.org, linux-mm@kvack.org,
+ linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
+ bcm-kernel-feedback-list@broadcom.com, Juergen Gross <jgross@suse.com>,
+ Ajay Kaher <ajay.kaher@broadcom.com>,
+ Alexey Makhalov <alexey.amakhalov@broadcom.com>,
+ Russell King <linux@armlinux.org.uk>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>,
+ Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+ Josh Poimboeuf <jpoimboe@kernel.org>,
+ Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+ Sean Christopherson <seanjc@google.com>, Paolo Bonzini
+ <pbonzini@redhat.com>, Andy Lutomirski <luto@kernel.org>,
+ Arnd Bergmann <arnd@arndb.de>, Frederic Weisbecker <frederic@kernel.org>,
+ "Paul E. McKenney" <paulmck@kernel.org>, Jason Baron <jbaron@akamai.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Ard Biesheuvel <ardb@kernel.org>,
+ Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+ Joel Fernandes <joel@joelfernandes.org>,
+ Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
+ Uladzislau Rezki <urezki@gmail.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Lai Jiangshan <jiangshanlai@gmail.com>, Zqiang <qiang.zhang1211@gmail.com>,
+ Juri Lelli <juri.lelli@redhat.com>, Clark Williams <williams@redhat.com>,
+ Yair Podemsky <ypodemsk@redhat.com>, Tomas Glozar <tglozar@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>, Ben Segall
+ <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+ Kees Cook <kees@kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
+ Christoph Hellwig <hch@infradead.org>, Shuah Khan <shuah@kernel.org>,
+ Sami Tolvanen <samitolvanen@google.com>, Miguel Ojeda <ojeda@kernel.org>,
+ Alice Ryhl <aliceryhl@google.com>,
+ "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+ Samuel Holland <samuel.holland@sifive.com>, Rong Xu <xur@google.com>,
+ Nicolas Saenz Julienne <nsaenzju@redhat.com>,
+ Geert Uytterhoeven <geert@linux-m68k.org>,
+ Yosry Ahmed <yosryahmed@google.com>,
+ "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+ "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+ Jinghao Jia <jinghao7@illinois.edu>, Luis Chamberlain <mcgrof@kernel.org>,
+ Randy Dunlap <rdunlap@infradead.org>, Tiezhu Yang <yangtiezhu@loongson.cn>
+References: <20250114175143.81438-1-vschneid@redhat.com>
+ <20250114175143.81438-30-vschneid@redhat.com>
+ <CAG48ez1Mh+DOy0ysOo7Qioxh1W7xWQyK9CLGNU9TGOsLXbg=gQ@mail.gmail.com>
+ <xhsmh34hhh37q.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <CAG48ez3H8OVP1GxBLdmFgusvT1gQhwu2SiXbgi8T9uuCYVK52w@mail.gmail.com>
+ <xhsmh5xlhk5p2.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <CAG48ez1EAATYcX520Nnw=P8XtUDSr5pe+qGH1YVNk3xN2LE05g@mail.gmail.com>
+ <xhsmh34gkk3ls.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <352317e3-c7dc-43b4-b4cb-9644489318d0@intel.com>
+ <xhsmhjz9mj2qo.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <xhsmhjz9mj2qo.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Feb 13, 2025 at 8:47=E2=80=AFPM Kees Cook <kees@kernel.org> wrote:
->
-> On Thu, Feb 13, 2025 at 07:59:48PM +0000, Pedro Falcato wrote:
-> > On Wed, Feb 12, 2025 at 2:02=E2=80=AFPM Lorenzo Stoakes
-> > <lorenzo.stoakes@oracle.com> wrote:
-> > >
-> > > (sorry I really am struggling to reply to mail as lore still seems to=
- be
-> > > broken).
-> > >
-> > > On Wed, Feb 12, 2025 at 12:37:50PM +0000, Pedro Falcato wrote:
-> > > > On Wed, Feb 12, 2025 at 11:25=E2=80=AFAM Lorenzo Stoakes
-> > > > <lorenzo.stoakes@oracle.com> wrote:
-> > > > >
-> > > > > On Wed, Feb 12, 2025 at 03:21:48AM +0000, jeffxu@chromium.org wro=
-te:
-> > > > > > From: Jeff Xu <jeffxu@chromium.org>
-> > > > > >
-> > > > > > The commit message in the first patch contains the full descrip=
-tion of
-> > > > > > this series.
-> > > > >
-> > > [...]
-> > > >
-> > > > FWIW, although it would (at the moment) be hard to pull off in the
-> > > > libc, I still much prefer it to playing these weird games with CONF=
-IG
-> > > > options and kernel command line options and prctl and personality a=
-nd
-> > > > whatnot. It seems to me like we're trying to stick policy where it
-> > > > doesn't belong.
-> > >
-> > > The problem is, as a security feature, you don't want to make it triv=
-ially
-> > > easy to disable.
-> > >
-> > > I mean we _need_ a config option to be able to strictly enforce only =
-making
-> > > the feature enable-able on architectures and configuration option
-> > > combinations that work.
-> > >
-> > > But if there is userspace that will be broken, we really have to have=
- some
-> > > way of avoiding the disconnect between somebody making policy decisio=
-n at
-> > > the kernel level and somebody trying to run something.
-> > >
-> > > Because I can easily envision somebody enabling this as a 'good secur=
-ity
-> > > feature' for a distro release or such, only for somebody else to late=
-r try
-> > > rr, CRIU, or whatever else and for it to just not work or fail subtly=
- and
-> > > to have no idea why.
-> >
-> > Ok so I went looking around for the glibc patchset. It seems they're
-> > moving away from tunables and there was a nice
-> > GNU_PROPERTY_MEMORY_SEAL added to binutils.
-> > So my proposal is to parse this property on the binfmt_elf.c side, and
-> > mm would use this to know if we should seal these mappings. This seems
-> > to tackle compatibility problems,
-> > and glibc isn't sealing programs without this program header anyway. Th=
-oughts?
->
-> It seems to me that doing this ties it to the binary, rather than
-> execution context, which may want to seal/not-seal, etc. I have a sense
-> that it's be better as a secure bit, or prctl, or something like that. Th=
-e
-> properties seem to be better suited for "this binary _can_ do a thing"
-> or "this binary _requires_ a thing", like the GNU_STACK bits, etc. But
-> maybe there's more to this I'm not considering?
+On 2/18/25 14:40, Valentin Schneider wrote:
+>> In practice, it's mostly limited like that.
+>>
+>> Architecturally, there are no promises from the CPU. It is within its
+>> rights to cache anything from the page tables at any time. If it's in
+>> the CR3 tree, it's fair game.
+>>
+> So what if the VMEMMAP range *isn't* in the CR3 tree when a CPU is
+> executing in userspace?
+> 
+> AIUI that's the case with kPTI - the remaining kernel pages should mostly
+> be .entry.text and cpu_entry_area, at least for x86.
 
-Doesn't this exactly kind of Just Work though? "This binary can
-do/tolerate sealing". I would blindly guess that we don't have very
-opinionated shared libraries that do this kind of shenanigans
-unilaterally, so that's probably not something we really need to worry
-about (though I admittedly need to read through the glibc patchset,
-and nail down what they're thinking about doing with linking
-mseal-ready and mseal-non-ready ELF execs/shared objects together).
-The problem with something like prctl is that we either indirectly
-provide some kind of limited form of munseal, or we require some sort
-of handover (like personality(2) + execve(2)), which both sound like a
-huge PITA and still don't solve any of our backwards compat issues...
-all binaries would need to be patched with this
-prctl/personality()/whatever call, and old ones wouldn't work.
+Having part of VMEMMAP not in the CR3 tree should be harmless while
+running userspace. VMEMMAP is a purely software structure; the hardware
+doesn't do implicit supervisor accesses to it. It's also not needed in
+super early entry.
 
-The semantics behind GNU_PROPERTY_MEMORY_SEAL are unclear to me (maybe
-the toolchain folks could shed some light?), but it sounds like it'd
-fit perfectly.
-I suspect we probably want to parse this on the kernel's side anyway
-(to seal the main program/interp's segments)[1], then extending them
-to the kernel system mappings should be somewhat trivial...
-I don't think we'll ever get a program that can't cope with sealing
-the system mappings but can cope with sealing itself (and if we do, we
-just won't seal the entire thing and that's _okay_).
-
-Deploying mseal-ready programs could then be done in a phased way by
-distros. e.g chromeOS and android could simply enable the
-corresponding linker option in LDFLAGS and let it rip. Other more
-mainstream distros could obviously take a little longer or test/deploy
-this on all programs not named gVisor and/or after CRIU is okay with
-all of this. We then might not need a user-configurable CONFIG_ (only
-an arch HAS_SYSTEM_MAPPINGS_MSEAL or whatever), nor a sysctl, and
-everyone is happy.
-
-I glanced through libc-alpha again and it seems like the glibc folks
-also seem to have reached the same idea, but I'd love to hear from
-Adhemerval.
-
-Am I missing anything?
-
-
-[1] we should probably nail this responsibility handover down before
-glibc msealing (or bionic) makes it to a release. It'd probably be a
-little nicer if we could mseal these segments from the kernel instead
-of forcing the libc to take care of this, now that we have this
-property.
-
---=20
-Pedro
+Maybe I missed part of the discussion though. Is VMEMMAP your only
+concern? I would have guessed that the more generic vmalloc()
+functionality would be harder to pin down.
