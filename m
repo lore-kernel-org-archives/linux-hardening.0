@@ -1,239 +1,279 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2073.outbound.protection.outlook.com [40.107.95.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68F581C5F18
-	for <linux-hardening@vger.kernel.org>; Wed, 19 Feb 2025 13:46:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739972808; cv=none; b=lmUw0HFl75LJQO1DCgke70DfK07nyxLc7bDGuESl2dA3kYP9JUng4tjT05XjR6v0n1hXbIXWNgCFvs41Fn5PRq00bQONyOJQ6kUxJ4P3Gy1XTjd8WJuUxbF8uoIRmnwmpe1+/bZnPXQtSA0r7mchsiCFC7hObYuKufqxvk3x1H0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739972808; c=relaxed/simple;
-	bh=nUXrVDPszJmwB5Bwbq3NpI4cj5YAJ0KMDlWoPy/V5LI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TA2O9oYC9k0BG4s63Z05nkcPc1unGq7T3z6S5ZYc4YnyheqTliZCOnz4dmFWmXUyE5NSQjwo2bDPxagPJsYfBeKCC586YOByx5Devgl2f/iMLNJPXN72e2sZhb74wIO+aYt7wZ7/OpNesBdFnBEj3mk/63h9uZ+KWe3ov12MTLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EFQEn/vB; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 656091EB5FA;
+	Wed, 19 Feb 2025 14:33:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.73
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739975622; cv=fail; b=cjkjpUVgNlR2FU/TD+gKICvpJTZ2AmqbAA6t60sC0j49j4yuL9cmjcKCA8aH1y4+vMAeOTFnd4igf153OURfMkFED0jpR0pOHHigEyQraSJlZApAMPc+BTaFQd/D6kUU1YSiu5d8RYDe2XAlDcOjjLAafJRXlCsgt3kOQnzL7iw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739975622; c=relaxed/simple;
+	bh=VjPA8OY4NcWA/Tt3rc8krRkS58SqmjpS5RRUn5OGAEM=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Y6vnziXk04f/bKY3kM/VHfQaT3bto5q3bE+pj9wh4RFLazruPZzHeaWGodlaJw3l9D1TY5lhPSmaoVLcqL4esdcecpaRrc+5cZI/gt8hpGQXjlV3h090+rGvB4XHSEYbyD5ADS22nTuzO6yiwReebUDygePQMA3BAHGPGAWyedc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=mWhKYGYs; arc=fail smtp.client-ip=40.107.95.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EFQEn/vB"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-22104c4de96so72923605ad.3
-        for <linux-hardening@vger.kernel.org>; Wed, 19 Feb 2025 05:46:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739972805; x=1740577605; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=ko00ndovSDIn9wXeXsjiQM4wpEigh6jTkcvJNJZTbVw=;
-        b=EFQEn/vBgCy3w99xC9Eazm/xV2XA90k7Lv4NrOWIYLslY94TIUc7Kl9hd9PAb1MPTk
-         2kKd6KLPuHGW7GUbWeCXaXyK5tnrmnMyABJ3+syxOCQ+mcz2RAmLtEdQ+Q0QDjJer3/X
-         a32yoP0Vp856O4Xvu2eNpa5VTjsoIm3fEuFqp5qG5o9ylQyLyXKAQLf/M7jRy/hOX2cA
-         ltZAS0ODItsuqq84ft2kDHt8TrXneus07vdTxCsty8kDJzHrgCUo8gEl9RoOxFz/Fn4T
-         DmuTzaQOarFyNoOvU0N1SBW72IUzXN2sfZSwcdonuM7dvvSlCOrH/01f0xBtaY03aUqq
-         iMbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739972805; x=1740577605;
-        h=content-transfer-encoding:in-reply-to:organization:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ko00ndovSDIn9wXeXsjiQM4wpEigh6jTkcvJNJZTbVw=;
-        b=iFB8n3lzBAg+usMgvRjCRaaNf+Nbcc0/28yK94/BfbrX76tqQBwxLIEeCzoe1C5wwk
-         JHfxqJH1mdZxmU/ftOrsapSR23iSXHa4LZMQG0NERtdknf3UTjeWLM2e9f1mqJ5SJO2z
-         QCpWFOhfEyf4R5Iyd5L8Om+769rLW4cA43RaK7ReGFL6aX5Grlr9PJxBMrEUUhdZ+nRX
-         kHzArS0IOR6jS5mWoouAREjTGkZRBYayOZbF5F0wSPcdXXLUb4/3T5PNm7erOiBTXEHN
-         rw7n2u+gEYynLD4gJjFaxs5nqPWHfRwh0nUFQwlORSO1nkvo5Ewh+JacAIQWWCgK2Fog
-         2Otw==
-X-Forwarded-Encrypted: i=1; AJvYcCXxQAUkPhG6zDu191gApwZRZqvAVxPsY1eCVPTkFfnpm0ExhjgD3hnPUb+jkWMRgcAzwgtZ5yTfrRpJr4YpALo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/c0tDkAhi3dZ2HDoGPOTCjYO2oaeS1ffW5BALFkOWnfqEJ02M
-	uzONjAmB2gHsNNbh2+IZPM6E9xIlFzRXb/0K7AyJXh5OwVtKyPJR0BSCNSmCXUw=
-X-Gm-Gg: ASbGncuhXv+aAJjuPq2B/7evSy9ROV/+8oLCipO5lkZ0MiRKz8eA8IPkofIqU4yB6OK
-	uXVdDEq4VPYZR9xh0eT+jLadTndkjG8GMnTXjwFQhUh/w04oUO8VMiCQuWbxR2/lkmF9VQ3mxiG
-	uwExC6H2Y7piny6Ikgkl3kzyfnv+kBDv+RM+xrE3PYLKlpQc3ORpNQ4LZxosXtOHDWUmZysAd4N
-	9t6CWuz4GI3ItasMmerlcwU6qDPzfP3xGEX8Ri7qOPaTyk4DuAzHnBMvWdzWfHthv0Ro0c4l6kH
-	1RbiE6dOS/sC8XXCYaqVrjlPB2K15IcNTpO5dJFmi8ou0Gm62KmemL66T78UFuimzb/BcoqjvZz
-	WlqgWbZtxoPkpaP8=
-X-Google-Smtp-Source: AGHT+IHzud8yErWxQizk2X9LlTm6NcH2o64l3dhMPpAt69MusAto549t5CGCBpRameWQHlsswQzXpg==
-X-Received: by 2002:a17:903:2cb:b0:21f:7082:1146 with SMTP id d9443c01a7336-221040867e8mr282114035ad.30.1739972805371;
-        Wed, 19 Feb 2025 05:46:45 -0800 (PST)
-Received: from ?IPV6:2804:1b3:a7c3:f704:ed29:494:9f22:f6c5? ([2804:1b3:a7c3:f704:ed29:494:9f22:f6c5])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d5584dccsm104054335ad.205.2025.02.19.05.46.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Feb 2025 05:46:44 -0800 (PST)
-Message-ID: <191a4cc2-5c35-43f1-aaa4-01395299590b@linaro.org>
-Date: Wed, 19 Feb 2025 10:46:33 -0300
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="mWhKYGYs"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=pA+OL4bLyjo02hDvhoU8cABoMDayDSrkP1bO7Oa2/5ku35t3ImaqlUeViDdFmA4K3MXgRd1g4N/PU39gsY5jSYGlNNZk39b0Btay3+6gTrvmJUgAW/u9DM4k+J2aHH1vUsjK/tDqNAM29WoT4onug0nRPwhJQE7d9RAV/arYhmbFIEbdlNRr1V6QCiBBh3MVDbWjPupvvZ89iLUvRyNfDeq0d3tZzGxTlIyBPQf9mpswb27zzvBFTNAHJ4VUmAf4ORIfHcgWJf1Si21nvKn7xKQlbbCVQb7Za/6MexGYnAQG17U5VplW7SWdwLkClO2X9jnR1WR3cg4GnICB/xtkLw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=dDsnLxrwS4iXed8QxH9Bq21n6Ki5LCZ+X8pfnLhY4Yw=;
+ b=KQ/MJkDrwZ5KiyTIkrzcIuVyCyXVmq76XCeWW7GPxIdM34tJxhABFPK3TqR7IF+bQOPTlKikBkc0Ij3yW59DQTMxC06V1qjynDkbsBs+ygF72BdBaLLzunfHxd0GNf7jk5drCUyCtc+1Pa5R73pV6MI0ebqQlsZcyoRJJrOYRt+FZMmxVuieEHo5A75LuOoubNfqEjeVChByc/s2Z3KMTK2FhFbz2vioyWtDZrdLRCeZKKtdZXUn8Q0iWZ4+wMiG16PuF9SAU4Jd9sTaqSoli95MCtK4bDcD5WSUpLLH7R3lkFlmSC4ZETbBnTOyQCv1tkNOckR7JygkJky7lSP66Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.161) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dDsnLxrwS4iXed8QxH9Bq21n6Ki5LCZ+X8pfnLhY4Yw=;
+ b=mWhKYGYsMdDQeqXV1h4gKt5qE2PpBLhIBrwSFqa2gv87xUJN7dLUHspd7/+NErIGWQfUzjbqLLwMcyUR1xbDpty0fpQxAZXSVMmQjw4Y4UY+GvFiFbfUoVtQProO1+p/k+YkDmtPvGobz6xc5VzUR3WJLKQww26BXU+96CHgBdEe2EaNZTJWLJlcyNLD7GKqPl2ZowIj+7qNRnXY0qwU9SUhiI2RE6jgBhvYydOMj6/8hSQ1kLE5CcXNZGqoCyUYbGCrtUbKlVyCsaP5qgl9/qls0YZ1Rk8lKX3sNJ/ZgWJTvsukmVtA7a2giMTmvfoBOXbBET73VHymwivKd0Km2Q==
+Received: from SJ0PR13CA0072.namprd13.prod.outlook.com (2603:10b6:a03:2c4::17)
+ by CYYPR12MB8991.namprd12.prod.outlook.com (2603:10b6:930:b9::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.18; Wed, 19 Feb
+ 2025 14:33:35 +0000
+Received: from SA2PEPF000015CD.namprd03.prod.outlook.com
+ (2603:10b6:a03:2c4:cafe::76) by SJ0PR13CA0072.outlook.office365.com
+ (2603:10b6:a03:2c4::17) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8466.14 via Frontend Transport; Wed,
+ 19 Feb 2025 14:33:35 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.161) by
+ SA2PEPF000015CD.mail.protection.outlook.com (10.167.241.203) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8466.11 via Frontend Transport; Wed, 19 Feb 2025 14:33:34 +0000
+Received: from rnnvmail205.nvidia.com (10.129.68.10) by mail.nvidia.com
+ (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Wed, 19 Feb
+ 2025 06:33:17 -0800
+Received: from rnnvmail205.nvidia.com (10.129.68.10) by rnnvmail205.nvidia.com
+ (10.129.68.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Wed, 19 Feb
+ 2025 06:33:16 -0800
+Received: from vdi.nvidia.com (10.127.8.12) by mail.nvidia.com (10.129.68.10)
+ with Microsoft SMTP Server id 15.2.1544.14 via Frontend Transport; Wed, 19
+ Feb 2025 06:33:11 -0800
+From: Gal Pressman <gal@nvidia.com>
+To: <netdev@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>, "Eric
+ Dumazet" <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+	<pabeni@redhat.com>, Andrew Lunn <andrew+netdev@lunn.ch>
+CC: Tariq Toukan <tariqt@nvidia.com>, Louis Peens <louis.peens@corigine.com>,
+	Simon Horman <horms@kernel.org>, David Ahern <dsahern@kernel.org>, "Pravin B
+ Shelar" <pshelar@ovn.org>, Yotam Gigi <yotam.gi@gmail.com>, Jamal Hadi Salim
+	<jhs@mojatatu.com>, Cong Wang <xiyou.wangcong@gmail.com>, Jiri Pirko
+	<jiri@resnulli.us>, Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva"
+	<gustavoars@kernel.org>, <dev@openvswitch.org>,
+	<linux-hardening@vger.kernel.org>, Ilya Maximets <i.maximets@ovn.org>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>, Gal Pressman
+	<gal@nvidia.com>, Cosmin Ratiu <cratiu@nvidia.com>
+Subject: [PATCH net-next v4 2/2] net: Add options as a flexible array to struct ip_tunnel_info
+Date: Wed, 19 Feb 2025 16:32:56 +0200
+Message-ID: <20250219143256.370277-3-gal@nvidia.com>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20250219143256.370277-1-gal@nvidia.com>
+References: <20250219143256.370277-1-gal@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v5 0/7] mseal system mappings
-To: Pedro Falcato <pedro.falcato@gmail.com>, Kees Cook <kees@kernel.org>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, jeffxu@chromium.org,
- akpm@linux-foundation.org, jannh@google.com, torvalds@linux-foundation.org,
- vbabka@suse.cz, Liam.Howlett@oracle.com, oleg@redhat.com, avagin@gmail.com,
- benjamin@sipsolutions.net, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org, linux-mm@kvack.org, jorgelo@chromium.org,
- sroettger@google.com, hch@lst.de, ojeda@kernel.org,
- thomas.weissschuh@linutronix.de, adobriyan@gmail.com,
- johannes@sipsolutions.net, hca@linux.ibm.com, willy@infradead.org,
- anna-maria@linutronix.de, mark.rutland@arm.com, linus.walleij@linaro.org,
- Jason@zx2c4.com, deller@gmx.de, rdunlap@infradead.org, davem@davemloft.net,
- peterx@redhat.com, f.fainelli@gmail.com, gerg@kernel.org,
- dave.hansen@linux.intel.com, mingo@kernel.org, ardb@kernel.org,
- mhocko@suse.com, 42.hyeyoo@gmail.com, peterz@infradead.org, ardb@google.com,
- enh@google.com, rientjes@google.com, groeck@chromium.org,
- mpe@ellerman.id.au, aleksandr.mikhalitsyn@canonical.com,
- mike.rapoport@gmail.com
-References: <20250212032155.1276806-1-jeffxu@google.com>
- <b114f48a-a485-4ebd-9278-6c62a1f33d9c@lucifer.local>
- <CAKbZUD0TAX8F9kDCEEvGSbcegDD4GLyra3ewtxncBbs45WJZ3g@mail.gmail.com>
- <7545d5eb-a16e-4cc8-a9e3-5431be01aade@lucifer.local>
- <CAKbZUD3kaYEqQFU1TWfJWvtV02ESaMb0_ygadGgeAKo-b+GRcA@mail.gmail.com>
- <202502131240.A57C749@keescook>
- <CAKbZUD16kfO2OBxY2fMbnmnEinTeKbPpTOLVC=Pc+FbWN_kjcQ@mail.gmail.com>
-Content-Language: en-US
-From: Adhemerval Zanella Netto <adhemerval.zanella@linaro.org>
-Organization: Linaro
-In-Reply-To: <CAKbZUD16kfO2OBxY2fMbnmnEinTeKbPpTOLVC=Pc+FbWN_kjcQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA2PEPF000015CD:EE_|CYYPR12MB8991:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9b3cd424-74d3-4c43-2c2a-08dd50f26440
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|36860700013|1800799024|376014|82310400026|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?4oYMcw0WsT+NeTOAIlry1+iAb9k0HxXDOwZB80kaIQ58sA3bSzVCAKwTGuV/?=
+ =?us-ascii?Q?sF3IecHPEHYB1DsZbgJf5RfKXISt7HKiwW1VZ7Ud0NT+67WO94wzgGiPjeqJ?=
+ =?us-ascii?Q?wgPHFX5z2PAPrXiqpdABGnZ5t1POBSAajtBybz1uysE/sdfk+Vuo28XTko/4?=
+ =?us-ascii?Q?mxhiK0T2OpwANIttQ9EzxMqjNDbaMzZJv09N+u5lNNuIAy/CTLHwVYlvV3KO?=
+ =?us-ascii?Q?E66eh1aWykCE9vOcrxvPkcW865z+JWwzLgnovXRrG9kXKvblKAcw52h0kogA?=
+ =?us-ascii?Q?8wGftIi3FjaWjFq3365EsLc7HgyZZPdmwBWukhrCSUlLwxO1D62b2rJXqyhp?=
+ =?us-ascii?Q?sqhhpDg7FPKr5SIYfsKNxEF8RjrRJuKKEyxg53bBuLwE8WBr5f0T4h/t6b+F?=
+ =?us-ascii?Q?ktgIglSFkOvJjO/dfJYMZgr6RWEFL9ze5cnPRW1T7CCWa7dk7nHm6j2tb2gI?=
+ =?us-ascii?Q?78HQfQ+IzTDWxlUiuRutsWEnRXieJR791SsD/P9U5REN9XWhmLY2aIRyUPWh?=
+ =?us-ascii?Q?Pi+0/2nNvNbXE/NsB/eWaPj6NfuR2Y1gek3nBis5krdSc72xbUiFg0zJvtnu?=
+ =?us-ascii?Q?/AnlkP/LjP+3nTBIiQKAC/KW/RAC+8QytnvoU9LS6SA2U2XmQ8uq+aRZUNyF?=
+ =?us-ascii?Q?Sc9BXT1HUldz+oJfdTFs5u58uyMS8htDhm1fvmvIMnUMP0CpgkJrIBSoGzMa?=
+ =?us-ascii?Q?ViCQopQI0hL7A9snS0N2gKYFyLJ6+VIY3tKy0TSV2bDgdJtyYiH/MyPEUwrZ?=
+ =?us-ascii?Q?bmVpxr1oeg+ilVAm15vRWjkTNY4KOmzjeDcM+5lh4JhVWJyceFLO3Hm/1rvk?=
+ =?us-ascii?Q?p1E+FSxh72freZ9VKjdFwwjK03hIpfUzjo998OqxsyzZ476A4Xgj7oKNLUyG?=
+ =?us-ascii?Q?ahH3s11H6gRvqLUBjWGHL2WFLS3Ex3FvTAUEFEpxaFCK2iBgqOFYarPgOhvr?=
+ =?us-ascii?Q?FDvpm5maE9Onnfabgl6M+i4e4I4gqcD08VQQYSgl7MEHFhuFJzCL+8gVOz/Q?=
+ =?us-ascii?Q?PuzZ3NkDyBpZHQYCouGRPSrTzrXQxoznx9D5g0ncIEWaL6yvs+3jylRpBpgp?=
+ =?us-ascii?Q?+s9CbKmz5KjFruhKbcSmy8zKcP5DPjZV4rvHyj4/Wss32h9Cjo2YvgBGmdTy?=
+ =?us-ascii?Q?s4RfBb1WTvhpz3AAiMFYmMZJC0UL8xbQG+3MJlIGu8vte1SivPMeUYpKUD8O?=
+ =?us-ascii?Q?k7PNZfmUApnLmLcqRUC2PXmUHtl4wMaw3VIcjmnNgrB9Qa2f7IB4i0+vkypG?=
+ =?us-ascii?Q?Xn+8Sr4CCs/Yn1HVxBrcGpp/I3G0lX6OrozUMJ8tX9UYfM3/ElEDY4SbVtps?=
+ =?us-ascii?Q?zmekISXGVuDfr3mSrOjI1dmfemEMC0JmraLpG5uuYtWHAdPc10RpHvqOHjA5?=
+ =?us-ascii?Q?C7iQxqFKMR99nNwx4mUgRLP61Xgc+ocn2mhQWYro74Dvbcch40Ts79aderWy?=
+ =?us-ascii?Q?JMr/b2PXlHVwlzGINPz42fsbHo8mFNKYL8ltODvLlmbZ+tf9Mw5Lrg1kBxhy?=
+ =?us-ascii?Q?uKKew//wo/ruwqc=3D?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(7416014)(36860700013)(1800799024)(376014)(82310400026)(13003099007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Feb 2025 14:33:34.9150
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9b3cd424-74d3-4c43-2c2a-08dd50f26440
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SA2PEPF000015CD.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR12MB8991
 
+Remove the hidden assumption that options are allocated at the end of
+the struct, and teach the compiler about them using a flexible array.
 
+With this, we can revert the unsafe_memcpy() call we have in
+tun_dst_unclone() [1], and resolve the false field-spanning write
+warning caused by the memcpy() in ip_tunnel_info_opts_set().
 
-On 18/02/25 20:18, Pedro Falcato wrote:
-> On Thu, Feb 13, 2025 at 8:47 PM Kees Cook <kees@kernel.org> wrote:
->>
->> On Thu, Feb 13, 2025 at 07:59:48PM +0000, Pedro Falcato wrote:
->>> On Wed, Feb 12, 2025 at 2:02 PM Lorenzo Stoakes
->>> <lorenzo.stoakes@oracle.com> wrote:
->>>>
->>>> (sorry I really am struggling to reply to mail as lore still seems to be
->>>> broken).
->>>>
->>>> On Wed, Feb 12, 2025 at 12:37:50PM +0000, Pedro Falcato wrote:
->>>>> On Wed, Feb 12, 2025 at 11:25 AM Lorenzo Stoakes
->>>>> <lorenzo.stoakes@oracle.com> wrote:
->>>>>>
->>>>>> On Wed, Feb 12, 2025 at 03:21:48AM +0000, jeffxu@chromium.org wrote:
->>>>>>> From: Jeff Xu <jeffxu@chromium.org>
->>>>>>>
->>>>>>> The commit message in the first patch contains the full description of
->>>>>>> this series.
->>>>>>
->>>> [...]
->>>>>
->>>>> FWIW, although it would (at the moment) be hard to pull off in the
->>>>> libc, I still much prefer it to playing these weird games with CONFIG
->>>>> options and kernel command line options and prctl and personality and
->>>>> whatnot. It seems to me like we're trying to stick policy where it
->>>>> doesn't belong.
->>>>
->>>> The problem is, as a security feature, you don't want to make it trivially
->>>> easy to disable.
->>>>
->>>> I mean we _need_ a config option to be able to strictly enforce only making
->>>> the feature enable-able on architectures and configuration option
->>>> combinations that work.
->>>>
->>>> But if there is userspace that will be broken, we really have to have some
->>>> way of avoiding the disconnect between somebody making policy decision at
->>>> the kernel level and somebody trying to run something.
->>>>
->>>> Because I can easily envision somebody enabling this as a 'good security
->>>> feature' for a distro release or such, only for somebody else to later try
->>>> rr, CRIU, or whatever else and for it to just not work or fail subtly and
->>>> to have no idea why.
->>>
->>> Ok so I went looking around for the glibc patchset. It seems they're
->>> moving away from tunables and there was a nice
->>> GNU_PROPERTY_MEMORY_SEAL added to binutils.
->>> So my proposal is to parse this property on the binfmt_elf.c side, and
->>> mm would use this to know if we should seal these mappings. This seems
->>> to tackle compatibility problems,
->>> and glibc isn't sealing programs without this program header anyway. Thoughts?
->>
->> It seems to me that doing this ties it to the binary, rather than
->> execution context, which may want to seal/not-seal, etc. I have a sense
->> that it's be better as a secure bit, or prctl, or something like that. The
->> properties seem to be better suited for "this binary _can_ do a thing"
->> or "this binary _requires_ a thing", like the GNU_STACK bits, etc. But
->> maybe there's more to this I'm not considering?
-> 
-> Doesn't this exactly kind of Just Work though? "This binary can
-> do/tolerate sealing". I would blindly guess that we don't have very
-> opinionated shared libraries that do this kind of shenanigans
-> unilaterally, so that's probably not something we really need to worry
-> about (though I admittedly need to read through the glibc patchset,
-> and nail down what they're thinking about doing with linking
-> mseal-ready and mseal-non-ready ELF execs/shared objects together).
-> The problem with something like prctl is that we either indirectly
-> provide some kind of limited form of munseal, or we require some sort
-> of handover (like personality(2) + execve(2)), which both sound like a
-> huge PITA and still don't solve any of our backwards compat issues...
-> all binaries would need to be patched with this
-> prctl/personality()/whatever call, and old ones wouldn't work.
-> 
-> The semantics behind GNU_PROPERTY_MEMORY_SEAL are unclear to me (maybe
-> the toolchain folks could shed some light?), but it sounds like it'd
-> fit perfectly.
-> I suspect we probably want to parse this on the kernel's side anyway
-> (to seal the main program/interp's segments)[1], then extending them
-> to the kernel system mappings should be somewhat trivial...
-> I don't think we'll ever get a program that can't cope with sealing
-> the system mappings but can cope with sealing itself (and if we do, we
-> just won't seal the entire thing and that's _okay_).
-> 
-> Deploying mseal-ready programs could then be done in a phased way by
-> distros. e.g chromeOS and android could simply enable the
-> corresponding linker option in LDFLAGS and let it rip. Other more
-> mainstream distros could obviously take a little longer or test/deploy
-> this on all programs not named gVisor and/or after CRIU is okay with
-> all of this. We then might not need a user-configurable CONFIG_ (only
-> an arch HAS_SYSTEM_MAPPINGS_MSEAL or whatever), nor a sysctl, and
-> everyone is happy.
-> 
-> I glanced through libc-alpha again and it seems like the glibc folks
-> also seem to have reached the same idea, but I'd love to hear from
-> Adhemerval.
-> 
-> Am I missing anything?
+The layout of struct ip_tunnel_info remains the same with this patch.
+Before this patch, there was an implicit padding at the end of the
+struct, options would be written at 'info + 1' which is after the
+padding.
+This will remain the same as this patch explicitly aligns 'options'.
+The alignment is needed as the options are later casted to different
+structs, and might result in unaligned memory access.
 
-Hi Pedro,
+Pahole output before this patch:
+struct ip_tunnel_info {
+    struct ip_tunnel_key       key;                  /*     0    64 */
 
-After discussing with CRIU developers, I plan to change how glibc will
-handle GNU_PROPERTY_MEMORY_SEAL to allow a more smooth enablement in
-distros (the latest version is at [1]).
+    /* XXX last struct has 1 byte of padding */
 
-The idea is only enable memory sealing iff the main binary (either 
-ET_EXEC or PIE) has the new sealing attribute.  If it were the case, 
-the loader will still check if the dependency has the attribute and 
-seal accordingly.
+    /* --- cacheline 1 boundary (64 bytes) --- */
+    struct ip_tunnel_encap     encap;                /*    64     8 */
+    struct dst_cache           dst_cache;            /*    72    16 */
+    u8                         options_len;          /*    88     1 */
+    u8                         mode;                 /*    89     1 */
 
-So if for any reason the binary does not support memory sealing at all,
-like CRIU for the snapshot restore phase, it just need to be built
-with -Wl,-z,nomemory-seal.  It is also for the case for libraries,
-although I think this will be rare.
+    /* size: 96, cachelines: 2, members: 5 */
+    /* padding: 6 */
+    /* paddings: 1, sum paddings: 1 */
+    /* last cacheline: 32 bytes */
+};
 
-I will also work on adding a way to enable partially non-sealing
-sections, since Florian has hinted that he wants to use on some libgcc
-metadata (similar to how RELRO '.data.rel.ro' works).  My initial plan
-is just mimic what OpenBSD does with PT_OPENBSD_MUTABLE, which only
-works for ET_DYN (and I think it should not be a problem). But it is
-a userland problem, so no kernel support would be required.
+Pahole output after this patch:
+struct ip_tunnel_info {
+    struct ip_tunnel_key       key;                  /*     0    64 */
 
-> 
-> 
-> [1] we should probably nail this responsibility handover down before
-> glibc msealing (or bionic) makes it to a release. It'd probably be a
-> little nicer if we could mseal these segments from the kernel instead
-> of forcing the libc to take care of this, now that we have this
-> property.
-> 
+    /* XXX last struct has 1 byte of padding */
 
-Keep in mind that GNU_PROPERTY_MEMORY_SEAL is currently a glibc extension 
-and I am not sure if other runtime would be willing to adopt as well.  
-So its presence can not be implied that sealing will be applied by runtime.
+    /* --- cacheline 1 boundary (64 bytes) --- */
+    struct ip_tunnel_encap     encap;                /*    64     8 */
+    struct dst_cache           dst_cache;            /*    72    16 */
+    u8                         options_len;          /*    88     1 */
+    u8                         mode;                 /*    89     1 */
 
-[1] https://patchwork.sourceware.org/project/glibc/list/?series=43524
+    /* XXX 6 bytes hole, try to pack */
+
+    u8                         options[] __attribute__((__aligned__(16))); /*    96     0 */
+
+    /* size: 96, cachelines: 2, members: 6 */
+    /* sum members: 90, holes: 1, sum holes: 6 */
+    /* paddings: 1, sum paddings: 1 */
+    /* forced alignments: 1, forced holes: 1, sum forced holes: 6 */
+    /* last cacheline: 32 bytes */
+} __attribute__((__aligned__(16)));
+
+[1] Commit 13cfd6a6d7ac ("net: Silence false field-spanning write warning in metadata_dst memcpy")
+
+Link: https://lore.kernel.org/all/53D1D353-B8F6-4ADC-8F29-8C48A7C9C6F1@kernel.org/
+Suggested-by: Kees Cook <kees@kernel.org>
+Reviewed-by: Cosmin Ratiu <cratiu@nvidia.com>
+Reviewed-by: Tariq Toukan <tariqt@nvidia.com>
+Signed-off-by: Gal Pressman <gal@nvidia.com>
+---
+ include/net/dst_metadata.h | 7 ++-----
+ include/net/ip_tunnels.h   | 5 +++--
+ net/core/dst.c             | 6 ++++--
+ 3 files changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/include/net/dst_metadata.h b/include/net/dst_metadata.h
+index 84c15402931c..4160731dcb6e 100644
+--- a/include/net/dst_metadata.h
++++ b/include/net/dst_metadata.h
+@@ -163,11 +163,8 @@ static inline struct metadata_dst *tun_dst_unclone(struct sk_buff *skb)
+ 	if (!new_md)
+ 		return ERR_PTR(-ENOMEM);
+ 
+-	unsafe_memcpy(&new_md->u.tun_info, &md_dst->u.tun_info,
+-		      sizeof(struct ip_tunnel_info) + md_size,
+-		      /* metadata_dst_alloc() reserves room (md_size bytes) for
+-		       * options right after the ip_tunnel_info struct.
+-		       */);
++	memcpy(&new_md->u.tun_info, &md_dst->u.tun_info,
++	       sizeof(struct ip_tunnel_info) + md_size);
+ #ifdef CONFIG_DST_CACHE
+ 	/* Unclone the dst cache if there is one */
+ 	if (new_md->u.tun_info.dst_cache.cache) {
+diff --git a/include/net/ip_tunnels.h b/include/net/ip_tunnels.h
+index 7b54cea5de27..e041e4865373 100644
+--- a/include/net/ip_tunnels.h
++++ b/include/net/ip_tunnels.h
+@@ -95,8 +95,8 @@ struct ip_tunnel_encap {
+ 
+ #define ip_tunnel_info_opts(info)				\
+ 	_Generic(info,						\
+-		 const struct ip_tunnel_info * : ((const void *)((info) + 1)),\
+-		 struct ip_tunnel_info * : ((void *)((info) + 1))\
++		 const struct ip_tunnel_info * : ((const void *)(info)->options),\
++		 struct ip_tunnel_info * : ((void *)(info)->options)\
+ 	)
+ 
+ struct ip_tunnel_info {
+@@ -107,6 +107,7 @@ struct ip_tunnel_info {
+ #endif
+ 	u8			options_len;
+ 	u8			mode;
++	u8			options[] __aligned_largest __counted_by(options_len);
+ };
+ 
+ /* 6rd prefix/relay information */
+diff --git a/net/core/dst.c b/net/core/dst.c
+index 9552a90d4772..c99b95cf9cbb 100644
+--- a/net/core/dst.c
++++ b/net/core/dst.c
+@@ -286,7 +286,8 @@ struct metadata_dst *metadata_dst_alloc(u8 optslen, enum metadata_type type,
+ {
+ 	struct metadata_dst *md_dst;
+ 
+-	md_dst = kmalloc(sizeof(*md_dst) + optslen, flags);
++	md_dst = kmalloc(struct_size(md_dst, u.tun_info.options, optslen),
++			 flags);
+ 	if (!md_dst)
+ 		return NULL;
+ 
+@@ -314,7 +315,8 @@ metadata_dst_alloc_percpu(u8 optslen, enum metadata_type type, gfp_t flags)
+ 	int cpu;
+ 	struct metadata_dst __percpu *md_dst;
+ 
+-	md_dst = __alloc_percpu_gfp(sizeof(struct metadata_dst) + optslen,
++	md_dst = __alloc_percpu_gfp(struct_size(md_dst, u.tun_info.options,
++						optslen),
+ 				    __alignof__(struct metadata_dst), flags);
+ 	if (!md_dst)
+ 		return NULL;
+-- 
+2.40.1
+
