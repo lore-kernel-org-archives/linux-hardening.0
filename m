@@ -1,150 +1,193 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9A18381AF;
-	Wed, 19 Feb 2025 02:45:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D04D1C5F18;
+	Wed, 19 Feb 2025 08:32:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739933115; cv=none; b=RnOo0DS5gOW7CjdJU+kSJAEPTWBEoPkfxZw+ypC1n5TJHX8KXbxQhLZc4uKJesEgd/H7lF2f0WWDAzcoQCCCT/rzh3UzZmNxUFIYUiAj8h2k4VcUjHi7/Ah+auHNT3fuubVuONAv7kS/RBlDAE+gz/yRvVhHhNuJCk4tIXjVcgo=
+	t=1739953972; cv=none; b=JEXHGWCAOt8x+Uy9V2n6voAGOUT4KqguYhrWSDUYzhqQ2wxzL8LHbLnsLuo/a76xR1kkXMX0ofRsdght2f+gHhAoAUr/yTUytCXZuwiL9zFOL6BFo3uEU3/77mhZO5vXP8XqSYROIKObQ7Nb5praw8ROKhi1o62a2iwkFDZHbYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739933115; c=relaxed/simple;
-	bh=Uj0+jeVodxFXzLFxn3YvbTHPAMSeBiTHDnrVWNUjqm0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QGRqMW5PG7X8BLonQeTuUXmAVn4Kz2irsNwp0sIBFLE9QdbECxxZUB6WTjgvzjMNNB3DjeCm0TxNEBI61xOTLPI1bEYKbjmlNcGeLrnVQvhcdQxfzOFtSzZ6Q323Bp1b3Wdyr+HBqOZfjqMoIv9ymkbq2274Cgzv05oonxjv9pA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=piu/1fcq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739953972; c=relaxed/simple;
+	bh=blm26kWj5aQPEC4WfZGgw5G7lh0zITYqtzpGclMk880=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=h3Eb1iQX5LQ8hdmfP6QbM0gJN6ycc8AUgfa9BXAuHO9wpin9jFi6OD6EkLAKEmviw60mF22BJZdshV0vbiDTcwhrG//awlVCsu1Cg2xaYCEFNHs2dBWIkdiRbki1xi00+CdZOn9Q9Zehut5El2ZRxGNKPtytZ4JSNoT3oe3L9dQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rKP1bejj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="piu/1fcq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A2EBC4CEE2;
-	Wed, 19 Feb 2025 02:45:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rKP1bejj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE268C4CEE9;
+	Wed, 19 Feb 2025 08:32:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739933115;
-	bh=Uj0+jeVodxFXzLFxn3YvbTHPAMSeBiTHDnrVWNUjqm0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=piu/1fcqCXQAzGTSSqDdQqyxsFRV7n+FzeUNG54N6zBdo48Zg3afT0uU3pL+4v72Q
-	 8G+lIPxIe6JO2TgnUrmGOipFONaedsgcxtRuBWe1ZvHHdV2NLIlMXmS/E2cE22Vcpe
-	 ZNqNYKKb0yvWcLRnpoFBGCYmaxN41+EO3aMlG/2h+GIF0YGFV3MQEkXLR1X25+AN7f
-	 nz/7XF7ysj9aBuzY/EWxf1uY9zbA1jjZBahZgB9w7IuDsNgTNyh44YFCgBjSITG9TH
-	 W/v8xJ1qz92p/jdoP7LJ2tz6GBHXkS06Q3XGALpd4go7vcISUbjsPPx3ZT6fjrBhTT
-	 x7GpF66YL86PA==
-Date: Tue, 18 Feb 2025 18:45:13 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: Gal Pressman <gal@nvidia.com>
-Cc: <netdev@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>, "Eric
- Dumazet" <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Andrew
- Lunn <andrew+netdev@lunn.ch>, Tariq Toukan <tariqt@nvidia.com>, Louis Peens
- <louis.peens@corigine.com>, Simon Horman <horms@kernel.org>, David Ahern
- <dsahern@kernel.org>, "Pravin B Shelar" <pshelar@ovn.org>, Yotam Gigi
- <yotam.gi@gmail.com>, Jamal Hadi Salim <jhs@mojatatu.com>, Cong Wang
- <xiyou.wangcong@gmail.com>, Jiri Pirko <jiri@resnulli.us>, Kees Cook
- <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- <dev@openvswitch.org>, <linux-hardening@vger.kernel.org>, Ilya Maximets
- <i.maximets@ovn.org>, Alexander Lobakin <aleksander.lobakin@intel.com>
-Subject: Re: [PATCH net-next v3 1/2] ip_tunnel: Use ip_tunnel_info() helper
- instead of 'info + 1'
-Message-ID: <20250218184513.05ac19d0@kernel.org>
-In-Reply-To: <20250217202503.265318-2-gal@nvidia.com>
-References: <20250217202503.265318-1-gal@nvidia.com>
-	<20250217202503.265318-2-gal@nvidia.com>
+	s=k20201202; t=1739953971;
+	bh=blm26kWj5aQPEC4WfZGgw5G7lh0zITYqtzpGclMk880=;
+	h=From:To:Cc:Subject:Date:From;
+	b=rKP1bejjozwruOcYXC7DVtcNbc9dWLljp5JbRDFwx5MOQYoPN2YDgwfMfem/0otDe
+	 M72RCfVu1Rs1U0PeZOC76Kfw+lsYkS2p2EZj60tw6fb/ic7XQYyo2no1vJfaERqiJX
+	 1eSJzLrk1iNx7pjVXKn8rKKbpLR1JGc8xXVrwAtNTAMuaTOwSPVrUrbtQtLd0SviHO
+	 2MzdtWQSbPhHuVIfEZYRn2OWE450ZoM3/H4WHznjOz0yf7gjVcyd3BRAWWc6IRMtov
+	 WYmLwEbXo1IiLMORuB8MYBqto3mOsG6ciXL+uXI2yVYNsJUMEeUh6jCfA9W7GS/N0d
+	 UbkRWVTgdz57Q==
+Received: from mchehab by mail.kernel.org with local (Exim 4.98)
+	(envelope-from <mchehab+huawei@kernel.org>)
+	id 1tkfVh-0000000Gv4I-3tcj;
+	Wed, 19 Feb 2025 09:32:49 +0100
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>
+Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <mchehab+huawei@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Bingbu Cao <bingbu.cao@intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Kees Cook <mchehab+huawei@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+	Tianshu Qiu <tian.shu.qiu@intel.com>,
+	Vegard Nossum <vegard.nossum@oracle.com>,
+	linux-arch@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	linux-staging@lists.linux.dev,
+	linux1394-devel@lists.sourceforge.net
+Subject: [PATCH 00/27] Implement kernel-doc in Python
+Date: Wed, 19 Feb 2025 09:32:16 +0100
+Message-ID: <cover.1739952783.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-On Mon, 17 Feb 2025 22:25:02 +0200 Gal Pressman wrote:
-> diff --git a/net/sched/act_tunnel_key.c b/net/sched/act_tunnel_key.c
-> index af7c99845948..6d97be6bc7fa 100644
-> --- a/net/sched/act_tunnel_key.c
-> +++ b/net/sched/act_tunnel_key.c
-> @@ -572,7 +572,7 @@ static int tunnel_key_geneve_opts_dump(struct sk_buff *skb,
->  				       const struct ip_tunnel_info *info)
->  {
->  	int len = info->options_len;
-> -	u8 *src = (u8 *)(info + 1);
-> +	u8 *src = (u8 *)ip_tunnel_info_opts(info);
->  	struct nlattr *start;
->  
->  	start = nla_nest_start_noflag(skb, TCA_TUNNEL_KEY_ENC_OPTS_GENEVE);
-> @@ -603,7 +603,8 @@ static int tunnel_key_geneve_opts_dump(struct sk_buff *skb,
->  static int tunnel_key_vxlan_opts_dump(struct sk_buff *skb,
->  				      const struct ip_tunnel_info *info)
->  {
-> -	struct vxlan_metadata *md = (struct vxlan_metadata *)(info + 1);
-> +	struct vxlan_metadata *md =
-> +		(struct vxlan_metadata *)ip_tunnel_info_opts(info);
->  	struct nlattr *start;
->  
->  	start = nla_nest_start_noflag(skb, TCA_TUNNEL_KEY_ENC_OPTS_VXLAN);
-> @@ -622,7 +623,8 @@ static int tunnel_key_vxlan_opts_dump(struct sk_buff *skb,
->  static int tunnel_key_erspan_opts_dump(struct sk_buff *skb,
->  				       const struct ip_tunnel_info *info)
->  {
-> -	struct erspan_metadata *md = (struct erspan_metadata *)(info + 1);
-> +	struct erspan_metadata *md =
-> +		(struct erspan_metadata *)ip_tunnel_info_opts(info);
->  	struct nlattr *start;
+Hi Jon,
 
-We shouldn't cast the const away any more. 
-Squash this in, please:
+This changeset contains the kernel-doc.py script to replace the verable
+kernel-doc originally written in Perl.
 
-diff --git a/net/sched/act_tunnel_key.c b/net/sched/act_tunnel_key.c
-index 6d97be6bc7fa..ae5dea7c48a8 100644
---- a/net/sched/act_tunnel_key.c
-+++ b/net/sched/act_tunnel_key.c
-@@ -569,20 +569,20 @@ static void tunnel_key_release(struct tc_action *a)
- }
- 
- static int tunnel_key_geneve_opts_dump(struct sk_buff *skb,
-                                       const struct ip_tunnel_info *info)
- {
-+       const u8 *src = ip_tunnel_info_opts(info);
-        int len = info->options_len;
--       u8 *src = (u8 *)ip_tunnel_info_opts(info);
-        struct nlattr *start;
- 
-        start = nla_nest_start_noflag(skb, TCA_TUNNEL_KEY_ENC_OPTS_GENEVE);
-        if (!start)
-                return -EMSGSIZE;
- 
-        while (len > 0) {
--               struct geneve_opt *opt = (struct geneve_opt *)src;
-+               const struct geneve_opt *opt = (const struct geneve_opt *)src;
- 
-                if (nla_put_be16(skb, TCA_TUNNEL_KEY_ENC_OPT_GENEVE_CLASS,
-                                 opt->opt_class) ||
-                    nla_put_u8(skb, TCA_TUNNEL_KEY_ENC_OPT_GENEVE_TYPE,
-                               opt->type) ||
-@@ -601,12 +601,11 @@ static int tunnel_key_geneve_opts_dump(struct sk_buff *skb,
- }
- 
- static int tunnel_key_vxlan_opts_dump(struct sk_buff *skb,
-                                      const struct ip_tunnel_info *info)
- {
--       struct vxlan_metadata *md =
--               (struct vxlan_metadata *)ip_tunnel_info_opts(info);
-+       const struct vxlan_metadata *md = ip_tunnel_info_opts(info);
-        struct nlattr *start;
- 
-        start = nla_nest_start_noflag(skb, TCA_TUNNEL_KEY_ENC_OPTS_VXLAN);
-        if (!start)
-                return -EMSGSIZE;
-@@ -621,12 +620,11 @@ static int tunnel_key_vxlan_opts_dump(struct sk_buff *skb,
- }
- 
- static int tunnel_key_erspan_opts_dump(struct sk_buff *skb,
-                                       const struct ip_tunnel_info *info)
- {
--       struct erspan_metadata *md =
--               (struct erspan_metadata *)ip_tunnel_info_opts(info);
-+       const struct erspan_metadata *md = ip_tunnel_info_opts(info);
-        struct nlattr *start;
- 
-        start = nla_nest_start_noflag(skb, TCA_TUNNEL_KEY_ENC_OPTS_ERSPAN);
-        if (!start)
-                return -EMSGSIZE;
+As the previous versions, I tried to stay as close as possible of the original
+Perl implementation, as it helps to double check if each function was 
+properly translated to Python.  This have been helpful debugging troubles
+that happened during the conversion.
+
+I worked hard to make it bug-compatible with the original one. Still, its
+output has a couple of differences from the original one:
+
+- The tab expansion works better with the Python script. With that, some
+  outputs that contain tabs at kernel-doc markups are now different;
+
+- The new script  works better stripping blank lines. So, there are a couple
+  of empty new lines that are now stripped with this version;
+
+- There is a buggy logic at kernel-doc to strip empty description and
+  return sections. I was not able to replicate the exact behavior. So, I ended
+  adding an extra logic to strip empty sections with a different algorithm.
+
+Yet, on my tests, the results are compatible with the venerable script
+output for all .. kernel-doc tags found in Documentation/. I double-checked
+this by adding support to output the kernel-doc commands when V=1, and
+then I ran a diff between kernel-doc.pl and kernel-doc.py for the same
+command lines.
+
+This version uses a minimal integration scenario: it just replaces the
+exec file from the Perl to th Python version.
+
+This series contains:
+
+- 4 patches fixing some kernel-doc issues. One of them is for media, but
+   I prefer to have this merged via your tree, as it suppresses a warning
+   that happens after the changes;
+
+- 2 cleanup patches for Perl kernel-doc;
+
+- 2 patches renaming kernel-doc to kernel-doc.pl and adding a symlink.
+  I opted to have the symlink in separate to make easier to review, but
+  feel free to merge them on a single patch if you want;
+
+- 15 patches with the new script. The first one is the new tool on a single
+   file. The other ones split it into a library. Then, there are several bug
+   fixes to make its output compatible with the original script;
+
+- 1 patch adding a .pylintrc file to teach pylint about scripts/lib/* dirs;
+
+- 2 patches adding some extra functionality to Sphinx kerneldoc extension;
+
+- 1 patch switching Sphinx to use the new tool.
+
+What is missing:
+
+- a patch droping kernel-doc.pl;
+- a patch renaming kernel-doc.py to kernel-doc (or changing the symlink).
+
+I opted to not do those final changes here, as this way we can better
+test the tools.
+
+With such changes, if one wants to build docs with the old script,
+all it is needed is to use KERNELDOC parameter, e.g.:
+
+	$ make KERNELDOC=scripts/kernel-doc.pl htmldocs
+
+Will make Sphinx use the original version.
+
+Mauro Carvalho Chehab (27):
+  include/asm-generic/io.h: fix kerneldoc markup
+  drivers: media: intel-ipu3.h: fix identation on a kernel-doc markup
+  drivers: firewire: firewire-cdev.h: fix identation on a kernel-doc
+    markup
+  docs: driver-api/infiniband.rst: fix Kerneldoc markup
+  scripts/kernel-doc: don't add not needed new lines
+  scripts/kernel-doc: drop dead code for Wcontents_before_sections
+  scripts/kernel-doc: rename it to scripts/kernel-doc.pl
+  scripts/kernel-doc: add a symlink to the Perl version of kernel-doc
+  scripts/kernel-doc.py: add a Python parser
+  scripts/kernel-doc.py: output warnings the same way as kerneldoc
+  scripts/kernel-doc.py: better handle empty sections
+  scripts/kernel-doc.py: properly handle struct_group macros
+  scripts/kernel-doc.py: move regex methods to a separate file
+  scripts/kernel-doc.py: move KernelDoc class to a separate file
+  scripts/kernel-doc.py: move KernelFiles class to a separate file
+  scripts/kernel-doc.py: move output classes to a separate file
+  scripts/kernel-doc.py: convert message output to an interactor
+  scripts/kernel-doc.py: move file lists to the parser function
+  scripts/kernel-doc.py: implement support for -no-doc-sections
+  scripts/kernel-doc.py: fix line number output
+  scripts/kernel-doc.py: fix handling of doc output check
+  scripts/kernel-doc.py: properly handle out_section for ReST
+  scripts/kernel-doc.py: postpone warnings to the output plugin
+  docs: add a .pylintrc file with sys path for docs scripts
+  docs: sphinx: kerneldoc: verbose kernel-doc command if V=1
+  docs: sphinx: kerneldoc: ignore "\" characters from options
+  docs: sphinx: kerneldoc: use kernel-doc.py script
+
+ .pylintrc                                     |    2 +
+ Documentation/Makefile                        |    2 +-
+ Documentation/conf.py                         |    2 +-
+ Documentation/driver-api/infiniband.rst       |   16 +-
+ Documentation/sphinx/kerneldoc.py             |   46 +
+ .../media/ipu3/include/uapi/intel-ipu3.h      |    3 +-
+ include/asm-generic/io.h                      |    6 +-
+ include/uapi/linux/firewire-cdev.h            |    3 +-
+ scripts/kernel-doc                            | 2447 +----------------
+ scripts/kernel-doc.pl                         | 2439 ++++++++++++++++
+ scripts/kernel-doc.py                         |  224 ++
+ scripts/lib/kdoc/kdoc_files.py                |  274 ++
+ scripts/lib/kdoc/kdoc_output.py               |  753 +++++
+ scripts/lib/kdoc/kdoc_parser.py               | 1702 ++++++++++++
+ scripts/lib/kdoc/kdoc_re.py                   |  272 ++
+ 15 files changed, 5730 insertions(+), 2461 deletions(-)
+ create mode 100644 .pylintrc
+ mode change 100755 => 120000 scripts/kernel-doc
+ create mode 100755 scripts/kernel-doc.pl
+ create mode 100755 scripts/kernel-doc.py
+ create mode 100755 scripts/lib/kdoc/kdoc_files.py
+ create mode 100755 scripts/lib/kdoc/kdoc_output.py
+ create mode 100755 scripts/lib/kdoc/kdoc_parser.py
+ create mode 100755 scripts/lib/kdoc/kdoc_re.py
 
 -- 
-pw-bot: cr
+2.48.1
+
+
