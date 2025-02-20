@@ -1,41 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 825663987D;
-	Thu, 20 Feb 2025 02:21:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B8621D8DE4;
+	Thu, 20 Feb 2025 02:57:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740018119; cv=none; b=YtKtNxAtWt4BQnhL+M2xUNMw7sAgpXBlSTYnKbiTVxXfxx851Kq9nMW88C5TtPNpl/IT+H2anEj1894KmoHw25R3r3PEe7NNZnsghN5ZECumt+mqxNHEtGJ2xlUNt8fqqlHxETE06jfVtZqeA0DkqyM+vTso5YLjVaBQdmTyAN8=
+	t=1740020224; cv=none; b=aCjZL/oG3NRnWLs9Ag0AQwtWO//mYd3gZyuSBpVBPzrI3KGdCZtxvPJFWC4DsQawR+AEKdZXvircARYUQvt2RXlCTqnnhc+YDetmMeej0czQhHwgF+hMgQWCzMDzEYkQnTz9iScP3oqHFa6aMkMNTLPAA/xRpFPZHXvuoNrFhdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740018119; c=relaxed/simple;
-	bh=CsKE1O38t52KiDz42xjoVchy3XbzTa/Ox6cYeUTmN2o=;
+	s=arc-20240116; t=1740020224; c=relaxed/simple;
+	bh=zVgovuXVZ4q88QdyAkhcTS22Eyu+EFR2/CUYe3ib2Yo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ie4hTrcO1a76m4Fxriisna8wkH9j03Z2Z1fq6T1huyu7uCE92gW6doqkfMY3InELSnCHmIoR6tpg5Q3iquvOrPXKEO7NkualsXfu27DmNIfs3Zm3nHgbRrzFH6p7/o1yAoQo9x8jGyFGVkEi1oEN18ytwdm5yJD/igkd9RPIcOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iPWAverB; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ws7JnK2UWltmlimAuX4AawqdIQ/vQoRcxoTrhMOtpBhh1dynzsUFCnEfhRLouUYxReFGqlcqadoKs6x6kM5FHClTd5mQvKdtm1Xw16cYGV/iSu390YUMJB8ToLAaWNdNO4JDfthxJVBjF86RDd9upuCglqlhoQdGQ1cYl/rtQzc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CBDwQpZk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iPWAverB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03670C4CED1;
-	Thu, 20 Feb 2025 02:21:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CBDwQpZk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD6A7C4CED1;
+	Thu, 20 Feb 2025 02:57:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740018119;
-	bh=CsKE1O38t52KiDz42xjoVchy3XbzTa/Ox6cYeUTmN2o=;
+	s=k20201202; t=1740020223;
+	bh=zVgovuXVZ4q88QdyAkhcTS22Eyu+EFR2/CUYe3ib2Yo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iPWAverBseQNUwurQ+ue9mcQ3yObYrdhiPCoGRhbnZFL/cAjTpWfe1AmIt50Pl7lZ
-	 rHt4QfEOkJ41lkhLfitj8NZYkWNtH2ZXBm/blLk4moFU6g8thv/kw3CSft4749/mqU
-	 N+YC6M74gTPmrQw2W5fOW1zzUUAtvLxUNDA4BH7FoycgihzdlYH9qJ2yP2PJ5Js7Lp
-	 YkHapP5/qyvdD61ksSS79UvIqpWwxFWyIYXseDXmnFFGovm2HryPsVc9TA3bTshn+Q
-	 b9n+jl89FoHDmeqrzJE5wqdL8RmidlxWBJV1LtmlBHx8xxFW81/Qa2KnbTTps5yGez
-	 3T9I+P5eP+0CQ==
-Date: Wed, 19 Feb 2025 18:21:54 -0800
+	b=CBDwQpZk0/WQCm0LwestZJXWcJ2/fpBma3zlL4bttI3M56xlVAwPKPCXcXzbGP1vS
+	 ldHiUHnri9YU+/oiAaGFOKK3AV96xuhL/Ym3pzn+2HmDWfe+/hYn2DLAc3u4Ojeson
+	 toK1B7bpX9WXxXhnEmBlw9r+kzhYKinHwb2ROKCwCnA9PS9iDeU/7TLHqtJ8iUC5xT
+	 qMLsfrGu2pCHhT0I/Uzq9noSus8SXV2sCiJ/0a/dNmabh3WjeeG8ZlDHV9pWDXrYBL
+	 gyEwU07tKH61Gj73V866rO5ga3l01bBbCb7/yZVJZ4R1NqMwHKUH0lEN4FFEaP6MXV
+	 /4x+iHXm3Kydg==
+Date: Wed, 19 Feb 2025 18:57:01 -0800
 From: Kees Cook <kees@kernel.org>
 To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
-	Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>,
-	linux-hardening@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] m68k: mm: Replace deprecated strncpy() with strscpy()
-Message-ID: <202502191820.DA875C6@keescook>
-References: <20250213141037.50394-2-thorsten.blum@linux.dev>
+Cc: Allison Henderson <allison.henderson@oracle.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>, linux-hardening@vger.kernel.org,
+	netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+	rds-devel@oss.oracle.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] net/rds: Replace deprecated strncpy() with
+ strscpy_pad()
+Message-ID: <202502191855.C9B9A7AA@keescook>
+References: <20250219224730.73093-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -44,11 +48,26 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250213141037.50394-2-thorsten.blum@linux.dev>
+In-Reply-To: <20250219224730.73093-2-thorsten.blum@linux.dev>
 
-On Thu, Feb 13, 2025 at 03:10:36PM +0100, Thorsten Blum wrote:
+On Wed, Feb 19, 2025 at 11:47:31PM +0100, Thorsten Blum wrote:
 > strncpy() is deprecated for NUL-terminated destination buffers. Use
-> strscpy() instead and remove the manual NUL-termination.
+> strscpy_pad() instead and remove the manual NUL-termination.
+
+When doing these conversions, please describe two aspects of
+conversions:
+
+- Why is it safe to be NUL terminated
+- Why is it safe to be/not-be NUL-padded
+
+In this case, the latter needs examination. Looking at how ctr is used,
+it is memcpy()ed later, which means this string MUST be NUL padded or it
+will leak stack memory contents.
+
+So, please use strscpy_pad() here. :)
+
+-Kees
+
 > 
 > Compile-tested only.
 > 
@@ -56,30 +75,27 @@ On Thu, Feb 13, 2025 at 03:10:36PM +0100, Thorsten Blum wrote:
 > Cc: linux-hardening@vger.kernel.org
 > Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
 > ---
->  arch/m68k/kernel/setup_mm.c | 3 +--
+>  net/rds/stats.c | 3 +--
 >  1 file changed, 1 insertion(+), 2 deletions(-)
 > 
-> diff --git a/arch/m68k/kernel/setup_mm.c b/arch/m68k/kernel/setup_mm.c
-> index 15c1a595a1de..48ce67947678 100644
-> --- a/arch/m68k/kernel/setup_mm.c
-> +++ b/arch/m68k/kernel/setup_mm.c
-> @@ -243,8 +243,7 @@ void __init setup_arch(char **cmdline_p)
->  	setup_initial_init_mm((void *)PAGE_OFFSET, _etext, _edata, _end);
+> diff --git a/net/rds/stats.c b/net/rds/stats.c
+> index 9e87da43c004..cb2e3d2cdf73 100644
+> --- a/net/rds/stats.c
+> +++ b/net/rds/stats.c
+> @@ -89,8 +89,7 @@ void rds_stats_info_copy(struct rds_info_iterator *iter,
 >  
->  #if defined(CONFIG_BOOTPARAM)
-> -	strncpy(m68k_command_line, CONFIG_BOOTPARAM_STRING, CL_SIZE);
-> -	m68k_command_line[CL_SIZE - 1] = 0;
-> +	strscpy(m68k_command_line, CONFIG_BOOTPARAM_STRING, CL_SIZE);
->  #endif /* CONFIG_BOOTPARAM */
->  	process_uboot_commandline(&m68k_command_line[0], CL_SIZE);
->  	*cmdline_p = m68k_command_line;
-
-m68k_command_line lives in rwdata, so it should be 0-initialized by
-default, so there should be no behavioral difference here (i.e. it will
-be zero-padded), and it is used as a C String, so there was unlikely to
-be anything depending on the NUL-padding.
-
-Reviewed-by: Kees Cook <kees@kernel.org>
+>  	for (i = 0; i < nr; i++) {
+>  		BUG_ON(strlen(names[i]) >= sizeof(ctr.name));
+> -		strncpy(ctr.name, names[i], sizeof(ctr.name) - 1);
+> -		ctr.name[sizeof(ctr.name) - 1] = '\0';
+> +		strscpy_pad(ctr.name, names[i]);
+>  		ctr.value = values[i];
+>  
+>  		rds_info_copy(iter, &ctr, sizeof(ctr));
+> -- 
+> 2.48.1
+> 
+> 
 
 -- 
 Kees Cook
