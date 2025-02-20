@@ -1,101 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B8621D8DE4;
-	Thu, 20 Feb 2025 02:57:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B446C19AD8D;
+	Thu, 20 Feb 2025 05:51:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740020224; cv=none; b=aCjZL/oG3NRnWLs9Ag0AQwtWO//mYd3gZyuSBpVBPzrI3KGdCZtxvPJFWC4DsQawR+AEKdZXvircARYUQvt2RXlCTqnnhc+YDetmMeej0czQhHwgF+hMgQWCzMDzEYkQnTz9iScP3oqHFa6aMkMNTLPAA/xRpFPZHXvuoNrFhdw=
+	t=1740030669; cv=none; b=QVNa2HDj+2/b8DkuF3LpixccuAay6ooKgky5JXpY2YCVIGyOpODtvCkoGXNrhCXSRR+/noOEHoNI6NjrOV8yRESNIo7+xHQJ4u8eDUF5wkSGiz1CSBhXmu6Pm3BN9kOEBwjAFXixLgQ2DBqtQh0Mx2yY2LQ920xFgvaOdAMGX1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740020224; c=relaxed/simple;
-	bh=zVgovuXVZ4q88QdyAkhcTS22Eyu+EFR2/CUYe3ib2Yo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ws7JnK2UWltmlimAuX4AawqdIQ/vQoRcxoTrhMOtpBhh1dynzsUFCnEfhRLouUYxReFGqlcqadoKs6x6kM5FHClTd5mQvKdtm1Xw16cYGV/iSu390YUMJB8ToLAaWNdNO4JDfthxJVBjF86RDd9upuCglqlhoQdGQ1cYl/rtQzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CBDwQpZk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740030669; c=relaxed/simple;
+	bh=Q1/h5UcSOF0+IitiK3DRpDk+zkM8EvN7YEECp6mauzs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=DefR2AALc8IbuAJYc4QPOrVvBoge9nnz7jahrqmWSLG8tfG2oKJiN2INig2QDddOHPJwJnF6kmtPBxSrQ4/53bu91SMr1BIfNBJl3M4goxQ8+ak32XH565dWMVYqNMqs0iKwBX5r/0FjkycGy42nJg882xa29ujZNSRUSK46ZyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com; spf=pass smtp.mailfrom=ethancedwards.com; dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b=auP5xDaD; arc=none smtp.client-ip=80.241.56.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ethancedwards.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CBDwQpZk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD6A7C4CED1;
-	Thu, 20 Feb 2025 02:57:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740020223;
-	bh=zVgovuXVZ4q88QdyAkhcTS22Eyu+EFR2/CUYe3ib2Yo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CBDwQpZk0/WQCm0LwestZJXWcJ2/fpBma3zlL4bttI3M56xlVAwPKPCXcXzbGP1vS
-	 ldHiUHnri9YU+/oiAaGFOKK3AV96xuhL/Ym3pzn+2HmDWfe+/hYn2DLAc3u4Ojeson
-	 toK1B7bpX9WXxXhnEmBlw9r+kzhYKinHwb2ROKCwCnA9PS9iDeU/7TLHqtJ8iUC5xT
-	 qMLsfrGu2pCHhT0I/Uzq9noSus8SXV2sCiJ/0a/dNmabh3WjeeG8ZlDHV9pWDXrYBL
-	 gyEwU07tKH61Gj73V866rO5ga3l01bBbCb7/yZVJZ4R1NqMwHKUH0lEN4FFEaP6MXV
-	 /4x+iHXm3Kydg==
-Date: Wed, 19 Feb 2025 18:57:01 -0800
-From: Kees Cook <kees@kernel.org>
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: Allison Henderson <allison.henderson@oracle.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>, linux-hardening@vger.kernel.org,
-	netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-	rds-devel@oss.oracle.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] net/rds: Replace deprecated strncpy() with
- strscpy_pad()
-Message-ID: <202502191855.C9B9A7AA@keescook>
-References: <20250219224730.73093-2-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b="auP5xDaD"
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4Yz2S20gypz9spg;
+	Thu, 20 Feb 2025 06:50:58 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ethancedwards.com;
+	s=MBO0001; t=1740030658;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=+dgz00ZipOtNvzq7Cv9VSPB1Ky0qLAJZNTot4wkdp+k=;
+	b=auP5xDaDcuJWKBqZLVGALXckR2T+En0lMNVxY3sBTx32a+lnXxVlimuuPvHpnJ9V2DMZ8V
+	IcW7YKEOU/eUPOEZy0P7pKGZwwXgSvuPuPckEOVGT+bdRrygYQnYTwmK+a1CC9GEKnNy1r
+	qXv/vLuIY6Qr7AMrMRLOaa3hzOvrncTjtuetEXcvIhfWwVWzPn9F9MbNfgjNdS5m8k1C16
+	9qlC5ijAKm8nLMlE0yDQ2tYciTGnnxDHtCIfQlaEUmH3u1TcwgSc1H0vGZz5mtDMJ/I4Bs
+	c0bf0f+yzdmONKVgP3QNKRZTJtYnuz8ZbI9my3XaVV4MkIjO7sY3me+8glfSDA==
+From: Ethan Carter Edwards <ethan@ethancedwards.com>
+Date: Thu, 20 Feb 2025 00:50:53 -0500
+Subject: [PATCH] btf: move kern_type_id to goto cand_cache_unlock
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250219224730.73093-2-thorsten.blum@linux.dev>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250220-bpf-uninit-v1-1-af07a5a57e5b@ethancedwards.com>
+X-B4-Tracking: v=1; b=H4sIALzCtmcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDIyMD3aSCNN3SvMy8zBJdY2Mj40QTEyOzlERLJaCGgqLUtMwKsGHRsbW
+ 1ADZnIgtcAAAA
+X-Change-ID: 20250220-bpf-uninit-3323a4426da9
+To: Andrii Nakryiko <andrii@kernel.org>
+Cc: Martin KaFai Lau <martin.lau@linux.dev>, 
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+ Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+ Yonghong Song <yonghong.song@linux.dev>, 
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+ Jiri Olsa <jolsa@kernel.org>, bpf@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+ Ethan Carter Edwards <ethan@ethancedwards.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1179;
+ i=ethan@ethancedwards.com; h=from:subject:message-id;
+ bh=Q1/h5UcSOF0+IitiK3DRpDk+zkM8EvN7YEECp6mauzs=;
+ b=LS0tLS1CRUdJTiBQR1AgTUVTU0FHRS0tLS0tCgpvd0o0bkp2QXk4ekFKWGJEOXFoNThlVGp6e
+ GhQcXlVeHBHODd0SGR6eGVxLzRqTFpjVWVNRDJ3L1lEUnRqV1RkCjM0NHFmaDhIeWZybmJ2TzJO
+ Tzd1S0dWaEVPTmlrQlZUWlBtZm81ejJVSE9Hd3M2L0xrMHdjMWlaUUlZd2NIRUsKd0VUaXJ6QXl
+ kUHllY3VBZ2c5VTM0UVdpZlo5dnpoZC91UFp0L3F6OTkzYi81R0hqWkZrbTZjYnczem5MMEZEbQ
+ pxNmp1blBEdWlCb3gyeWRoUGk5RTB3OTh2bHV6WGpsWHEwbUpHUUEyTGswOAo9L3ZhMQotLS0tL
+ UVORCBQR1AgTUVTU0FHRS0tLS0tCg==
+X-Developer-Key: i=ethan@ethancedwards.com; a=openpgp;
+ fpr=2E51F61839D1FA947A7300C234C04305D581DBFE
+X-Rspamd-Queue-Id: 4Yz2S20gypz9spg
 
-On Wed, Feb 19, 2025 at 11:47:31PM +0100, Thorsten Blum wrote:
-> strncpy() is deprecated for NUL-terminated destination buffers. Use
-> strscpy_pad() instead and remove the manual NUL-termination.
+In most code paths variable move_kern_type_id remains uninitialized upon
+return. By moving it to the goto, it is initialized in these code paths.
+As well as others. Caught by Coverity.
 
-When doing these conversions, please describe two aspects of
-conversions:
+Closes: https://scan5.scan.coverity.com/#/project-view/63874/10063?selectedIssue=1595567
+Fixes: e2b3c4ff5d183d ("bpf: add __arg_trusted global func arg tag")
+Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
+---
+ kernel/bpf/btf.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-- Why is it safe to be NUL terminated
-- Why is it safe to be/not-be NUL-padded
+diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
+index 9de6acddd479b4f5e32a5e6ba43cf369de4cee29..8c82ced7da299ad1ad769024fe097898c269013b 100644
+--- a/kernel/bpf/btf.c
++++ b/kernel/bpf/btf.c
+@@ -7496,9 +7496,9 @@ static int btf_get_ptr_to_btf_id(struct bpf_verifier_log *log, int arg_idx,
+ 		err = -EOPNOTSUPP;
+ 		goto cand_cache_unlock;
+ 	}
+-	kern_type_id = cc->cands[0].id;
+ 
+ cand_cache_unlock:
++	kern_type_id = cc->cands[0].id;
+ 	mutex_unlock(&cand_cache_mutex);
+ 	if (err)
+ 		return err;
 
-In this case, the latter needs examination. Looking at how ctr is used,
-it is memcpy()ed later, which means this string MUST be NUL padded or it
-will leak stack memory contents.
+---
+base-commit: 87a132e73910e8689902aed7f2fc229d6908383b
+change-id: 20250220-bpf-uninit-3323a4426da9
 
-So, please use strscpy_pad() here. :)
-
--Kees
-
-> 
-> Compile-tested only.
-> 
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
-> ---
->  net/rds/stats.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/net/rds/stats.c b/net/rds/stats.c
-> index 9e87da43c004..cb2e3d2cdf73 100644
-> --- a/net/rds/stats.c
-> +++ b/net/rds/stats.c
-> @@ -89,8 +89,7 @@ void rds_stats_info_copy(struct rds_info_iterator *iter,
->  
->  	for (i = 0; i < nr; i++) {
->  		BUG_ON(strlen(names[i]) >= sizeof(ctr.name));
-> -		strncpy(ctr.name, names[i], sizeof(ctr.name) - 1);
-> -		ctr.name[sizeof(ctr.name) - 1] = '\0';
-> +		strscpy_pad(ctr.name, names[i]);
->  		ctr.value = values[i];
->  
->  		rds_info_copy(iter, &ctr, sizeof(ctr));
-> -- 
-> 2.48.1
-> 
-> 
-
+Best regards,
 -- 
-Kees Cook
+Ethan Carter Edwards <ethan@ethancedwards.com>
+
