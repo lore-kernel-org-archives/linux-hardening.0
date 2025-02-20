@@ -1,155 +1,91 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CACF18A6CF;
-	Thu, 20 Feb 2025 14:50:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEF1341C7F;
+	Thu, 20 Feb 2025 15:00:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740063034; cv=none; b=YK/zRHPqFZvVibRIfbRZZ1UMndkrgx17te51k58sqHYzZGCbzLLQ8Ah7ypMASjWO4dkxybquXmoO7T9UTJ2XQNyH9o9jUFPeAo3Y1r/XcZ4UMbyX2zV/+vW72Nx6iXPaBRyUYKdeHPQNs2yy+l1hqjNWS79R9OBb1WfwS5UZF9w=
+	t=1740063619; cv=none; b=LJGLcCtaG0EtLQr90h7zHWFbsrEdV8ocVgjAyhUyRsmDTvbFxdlMdtSvw1OjmuJ7Vg7gOUKHfVFMBqU1BYNGld3S/C6+utOIusHr3OxlJSZ0CPm2YWdiLSygcH+UWR+JyDthjlDQlV5pj88pCMiUhHv58fmpxU/+xA5j5Q8ubYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740063034; c=relaxed/simple;
-	bh=7ODVJoWcxbVhSMxjP97wQSd4lRfo/v0mxOOLT6X5bqk=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
-	 In-Reply-To:Content-Type; b=PaC5IY6GDoXr+FJFtBk6+zRctWRtm1yM5Vwd65nvYxPifSX70Mu73snklfCJ1jSEyQ42ixJcAQ0prxp3x56gKRqd6bl/fFAJTils/7045s0wIVkPtIFnJtl6FJZOmeU8NqwPsh4icU2ciJr+anzB98tXlM7JWn0rV9l6J5eyHyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=D9isSpvt; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1740063619; c=relaxed/simple;
+	bh=5Rg9aQx5SAJd2GvpGKDyvHWzOMlS7BIa+3iz31itNHM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Paw1XYfNJ+zAzrabwLIjt4fD1ubsS3L8u0Zh0XcLzuRttMEcedEqtZU3aMBijjHtkmfhp9nPDHq9pX25CQrw75nbD8/xJcs+VnoDSWCak1kPtO6FyvM4CGFJYgLwEfK0YXMEk5r6mhY0Pi/Em8vSItNLPJGZHfI+stcX3fiSRd4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com; spf=pass smtp.mailfrom=ethancedwards.com; dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b=G1mAi/io; arc=none smtp.client-ip=80.241.56.161
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ethancedwards.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="D9isSpvt"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51K6YqQk014997;
-	Thu, 20 Feb 2025 14:50:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	p7ZxLcaLU0fXupOi2fwh6hh7LMaX89KYoIfbFDMpISs=; b=D9isSpvtZkW2kXUg
-	MU8ZaVE+gmUzqca2mlYsXtpu0XfMdeBQwQ0TBcJauEvHnutfy+GObD1/v7dPgtMr
-	2Abv1z4RAox+Rm+VZ8bqoXOwfBjplIVk6/nIM9+Z3JQqSlaSFKFABLPavF2aWdn0
-	OTuoYdWu/nzW6LK9/JUE4nykh82VwLImBAfUc2mfFf99gGW+XbZx09eEOUEmRg/8
-	yU9yBXZgOyyZVrlQflbNqMgH7/9R7vG6VCAFLaUrJOd4FNZX1P3ZNSmFfKxt9WfA
-	vxmmzDeMY2tJru2Qsq3DcV/tpieVmXXFg8y21Wzhr3iVbumA0GHwKRm3t1UuHOOU
-	xJlAYA==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44vyy16dq5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 20 Feb 2025 14:50:17 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51KEoGD1011425
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 20 Feb 2025 14:50:16 GMT
-Received: from [10.253.79.77] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 20 Feb
- 2025 06:50:10 -0800
-Message-ID: <877b3796-3afc-4f3e-a0f5-ec1a6174a921@quicinc.com>
-Date: Thu, 20 Feb 2025 22:50:08 +0800
+	dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b="G1mAi/io"
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4YzGdd6FJpz9t1r;
+	Thu, 20 Feb 2025 16:00:05 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ethancedwards.com;
+	s=MBO0001; t=1740063606;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zQv/p8LzF7Z9WyGzYQQMo/D3FUK2j9qiT5sUMHm7YZU=;
+	b=G1mAi/ionHBKxJX7ekixjsAsofzCvn3p0Nfl+JbuPgR3H66Th6LXg+ivpObjFjwHsxBcJT
+	HUD26KNGF94RkYHLiYIEwlBCtJHyLGPBnWKHbpbnoDujeA5vwgw+xiJ+hLLpFpzYvoB735
+	rD3NjcBTDik9fwxceaANulCABOwqKROw3qGjx4aTwaas1/+5bs1TCERYYWeHqv45X9SOkX
+	EUI6j9hleGCU5i+xZjMZeL7FKelO/XBeS8Hq07mOm71f50C2+Y9Zx5ANAtqopHXrB2pKsU
+	46buYpi1QXe9ad/iT19m8TK87yi69M/kmf/ZcKZVGZ9j7lsfV4XZXW3QqEGitA==
+Date: Thu, 20 Feb 2025 10:00:00 -0500
+From: Ethan Carter Edwards <ethan@ethancedwards.com>
+To: Pu Lehui <pulehui@huawei.com>
+Cc: Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, 
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, bpf@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] btf: move kern_type_id to goto cand_cache_unlock
+Message-ID: <nw73mlf4p4qpjeoc6jie76xxmvl2iuj2f6p44sq2p5x2dzdrcv@iekulfikhdc4>
+References: <20250220-bpf-uninit-v1-1-af07a5a57e5b@ethancedwards.com>
+ <c6a25b61-6545-4a03-b2f1-a38c07037d29@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Jie Luo <quic_luoj@quicinc.com>
-Subject: Re: [PATCH net-next v3 06/14] net: ethernet: qualcomm: Initialize the
- PPE scheduler settings
-To: Andrew Lunn <andrew@lunn.ch>
-CC: Andrew Lunn <andrew+netdev@lunn.ch>,
-        "David S. Miller"
-	<davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>, Lei Wei <quic_leiwei@quicinc.com>,
-        Suruchi Agarwal
-	<quic_suruchia@quicinc.com>,
-        Pavithra R <quic_pavir@quicinc.com>,
-        "Simon
- Horman" <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook
-	<kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        "Philipp
- Zabel" <p.zabel@pengutronix.de>,
-        <linux-arm-msm@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-doc@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-        <quic_kkumarcs@quicinc.com>, <quic_linchen@quicinc.com>,
-        <srinivas.kandagatla@linaro.org>, <bartosz.golaszewski@linaro.org>,
-        <john@phrozen.org>
-References: <20250209-qcom_ipq_ppe-v3-0-453ea18d3271@quicinc.com>
- <20250209-qcom_ipq_ppe-v3-6-453ea18d3271@quicinc.com>
- <f8d30195-1ee9-42f2-be82-819c7f7bd219@lunn.ch>
-Content-Language: en-US
-In-Reply-To: <f8d30195-1ee9-42f2-be82-819c7f7bd219@lunn.ch>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: UqlydHCOZGvsAx6NFK3-EGLfOY31OCHO
-X-Proofpoint-ORIG-GUID: UqlydHCOZGvsAx6NFK3-EGLfOY31OCHO
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-20_06,2025-02-20_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- priorityscore=1501 lowpriorityscore=0 phishscore=0 clxscore=1015
- suspectscore=0 spamscore=0 mlxlogscore=999 mlxscore=0 bulkscore=0
- malwarescore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2502100000 definitions=main-2502200106
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c6a25b61-6545-4a03-b2f1-a38c07037d29@huawei.com>
 
-
-
-On 2/11/2025 9:32 PM, Andrew Lunn wrote:
->> +/* Scheduler configuration for the assigning and releasing buffers for the
->> + * packet passing through PPE, which is different per SoC.
->> + */
->> +static const struct ppe_scheduler_bm_config ipq9574_ppe_sch_bm_config[] = {
->> +	{1, 0, 0, 0, 0},
->> +	{1, 1, 0, 0, 0},
->> +	{1, 0, 5, 0, 0},
->> +	{1, 1, 5, 0, 0},
->> +	{1, 0, 6, 0, 0},
->> +	{1, 1, 6, 0, 0},
->> +	{1, 0, 1, 0, 0},
->> +	{1, 1, 1, 0, 0},
+On 25/02/20 08:24PM, Pu Lehui wrote:
+> On 2025/2/20 13:50, Ethan Carter Edwards wrote:
+> > In most code paths variable move_kern_type_id remains uninitialized upon
+> > return. By moving it to the goto, it is initialized in these code paths.
+> > As well as others. Caught by Coverity.
+> > 
+> > Closes: https://scan5.scan.coverity.com/#/project-view/63874/10063?selectedIssue=1595567
+> > Fixes: e2b3c4ff5d183d ("bpf: add __arg_trusted global func arg tag")
+> > Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
+> > ---
+> >   kernel/bpf/btf.c | 2 +-
+> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
+> > index 9de6acddd479b4f5e32a5e6ba43cf369de4cee29..8c82ced7da299ad1ad769024fe097898c269013b 100644
+> > --- a/kernel/bpf/btf.c
+> > +++ b/kernel/bpf/btf.c
+> > @@ -7496,9 +7496,9 @@ static int btf_get_ptr_to_btf_id(struct bpf_verifier_log *log, int arg_idx,
+> >   		err = -EOPNOTSUPP;
+> >   		goto cand_cache_unlock;
+> >   	}
+> > -	kern_type_id = cc->cands[0].id;
+> >   cand_cache_unlock:
+> > +	kern_type_id = cc->cands[0].id;
 > 
-> Rather than add a comment what it is, add a comment what it means.
+> Hi, for goto's branches, it will always `return err`, no need to make this
+> move.
 
-Sure, I will enhance the comment to describe the functionality for
-this table better.
+You are right. My apologies. I should probably do less coding at 2AM.
 
-> 
-> It also looks like the first, 3 and 4 value are fixed, so do they even
-> need to be in the table? And the second value flip-flops?
-> 
-> 	Andrew
-
-This array is defined to closely reflect the layout of the scheduler
-BM configuration table in the PPE hardware. The value at index 0
-indicates whether the entry is valid or not. In this case (for IPQ9574),
-all the entries are marked as 'enabled', but for a different IPQ SoC,
-some of these entries may be marked as disabled (Note: the table
-structure is same for all IPQ SoCs that support PPE).
-
-The values at index 3 and 4 indicate whether there is any backup port
-configured for assigning these buffers, in the case when the primary
-port is down. This option is disabled by default by the hardware
-for this SoC and hence the values are marked '0'.
-
-The value at index 1 flip flops, because for the same port, we have two
-entries - one for ingress port buffer assignment (value 0) and one for
-egress port buffer release (value 1).
-
-The value at index 2 is the port number.
-
-As a general rule, we have tried to keep the data structure definition
-accurately mirror the hardware table design, for easier understanding
-and debug ability of the code.
-
-I will change the values of array index 0/1/3 to true/false to make it
-more readable, thanks.
+Thanks,
+Ethan
