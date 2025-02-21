@@ -1,70 +1,47 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-bc09.mail.infomaniak.ch (smtp-bc09.mail.infomaniak.ch [45.157.188.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B96320967C;
-	Fri, 21 Feb 2025 14:51:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36CE042049;
+	Fri, 21 Feb 2025 16:00:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740149499; cv=none; b=VH2wl3AfkrVu/E1wge/oSk8soPxF4MaONYyi/X3iGg1XiIjRcanTjjNl1/YkQophXHlc1301jS4Ug7dogSSF6rto1123yTEHT/O2G0Dz6yYSlEXwz4P13qZwHP6zszkmosaF7PhrxrbRoeEGxps+1cL47kwhtXyhFgHOUNBYF4I=
+	t=1740153642; cv=none; b=Hy4XrUwekhfMAZsb7vJZ5b+jiMU4hWddvPxqtUBkVR2/aRW7XbyRLFm0Z+SZfFE7SIYBpdnVTtTViV+lmMzg/Pl7/1NOzRyiGr002cHy9pHI7M8dF+HIuhhosB1TJ/Ckz9NutJSRaMkHU8o2Umftx3cyJFMRY5M2jI/8NbTkaEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740149499; c=relaxed/simple;
-	bh=KlOFAfwXgVYnkP+0HYSywTYAzwGnknijZouPeXduiOI=;
+	s=arc-20240116; t=1740153642; c=relaxed/simple;
+	bh=8JwxSrAkb49WD2mDErfKLvyH0/6S3kZaUGqW2G14m5Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PTvzPff3SudgRPst9DGPF9mPHHJ/E9uI701S3DjDpD9W8lop5J1djNkq5alKSIH+uIQXRaOPgnJA6HTzyotpOU+akGB9KxEHq5bqdT8l1bo6Ak6DWQyy7qGCa5x8y0CeBTX4kE6lIfvqV1Iq1Hdf9UL4NtzYxAzMNUih9fqnKmw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VSvvOssv; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=BZxrsaSKHHFlyYJJg2JeqCvZ5Ki2FNNGFjFRivmuVvTF5WFd0E7xSXQyyWMnRRYNeic/Si3tzWV8G3v8MqEOIVVILKqeQhRILS3SujL52kwwA17Jcru2rQo3QYvP5mKADRqk0Vqc/M4eA7aG6kwDVET68AcJ6AvAP6kcjcpLhhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=Wd3VgrGl; arc=none smtp.client-ip=45.157.188.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VSvvOssv"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5ded6c31344so3095977a12.1;
-        Fri, 21 Feb 2025 06:51:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740149496; x=1740754296; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=YaSHAiicQMVxF+e1cjxL0Pgf32H3hq7BXsRBqwBc+UU=;
-        b=VSvvOssvGtg7YGEUiGBu2bcBmBDyBMB9fQVcpy+GPfxOZtuBJj4ExpTGRlCd76C6mO
-         4rDHwBTDBjh7UZNJ6koBPFgmEzN1wC16LjjbLAPnZizkcL5hi2P41R7f0CJy7XSiIP7y
-         H5fMlv4XeBWDoOXpylvTs2m8wY6GJSvWM46Bo9euhUM4E92PkDowFijJ/2zkIl6+XT1O
-         FoW4fGiD/I/0XXUmtK37yHoaklzob236PkLfWixicy/VUL95ePaPFA0heqamQyg7pWay
-         FheaVYQBRvRDFCBTpJB0zzjqQUDNT5+fRqAcBvJx6PmAavrvg/zD45Q3hvpokItQfmsF
-         hd7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740149496; x=1740754296;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YaSHAiicQMVxF+e1cjxL0Pgf32H3hq7BXsRBqwBc+UU=;
-        b=FzooqNxhK5n/w1dKsyizfXBO64RGOiXBO2lWLn5iVBduMFbB/i2W308Kb101SOQBRL
-         +SG39UnUPn4s2MsuuniTgIIZ0NWuR8A5nnYpAXBLPNZL5+U/FyGl3s6pYAAojmlIOJOu
-         OZWROb8R+uCriJFQtoCBkcwNkcEXu7ohtVPGyHQn8HDfj7+3/kiw9wMAxPnTRSvVs3yc
-         jWQ4F22T1gODOUYeeD0uVYCK5RpC3OWhHYJlZobd854jvQQl6VviJNzQ9+/cF8NaHZ5b
-         gRy/umAYoZVQdC2oJCSE3jVDuGeikJDCcK6TiRFnEPZGIgVeDg+edKLMovd7n5Mhnjn4
-         rlAg==
-X-Forwarded-Encrypted: i=1; AJvYcCUVp3KGy/WTTIc4WtXcAz++EPKVYO+4sZjFz31tastExX5r3mH/k2q7O6INUhHjFOM7CD5vcoC4WYx6vac4@vger.kernel.org, AJvYcCVQjNaQIIrx2GfaxrmYbry2suoeMavQWsUNZ0zC0TIeUDmbgzR5aQBE702uyWyYkEyZQJFAOdy8AHF0E7MEr6Gp@vger.kernel.org, AJvYcCXBF8U/+N7FxTYyl6qXlYNIEmYmgQqCtgvggVnTKjmdSosAoIREl2hPk6kIT9vwvzTnBxhjTWp8jGdRTYmM@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJ4y/Ro6StX7lazUtIvQK7b3PfEwOS3FnOrOvgpmzc07R5RSar
-	DIyVW2R2xBVTXTZrhb2SV19LPgG/nMut1EkQbZ0rylQNGHYcOMQu
-X-Gm-Gg: ASbGncuW4dS4MNOkQR9rJgP7ChP3B7jTDqzNWK8VZO7yUkqY1Jmm+oWiABFxnx8d+tM
-	LAEn43dX8sVgofF3FbCeZSwqMel4BuZwkLCBMtgQbUqw869rEFiCln5UJmCb/KLWGfsA5g+p2YE
-	urBnMVM/qI8kuF5N/YqKRyIdeuXLpZC3YyDVOEaSe0xEo6Rr3PUhsoKSyIe24Fo8dFoq2ABqJyG
-	/YH0QxKAe7fLdK0LDRE9Rw2UyeFD84+ZoPW+9RwFwXH/pZKXnwhC/jYOlCkkT5F/nBvP2WRXcQA
-	6esYlw1FOkYrvyu2LDd1110Beuz5S/RwwhtnnHc=
-X-Google-Smtp-Source: AGHT+IHZRrShA+k1iG226oPUcIHkWuudqIkFbuurdySBHahKpZucCgMOvOvDNAHTZU5Ka+gDKW42KQ==
-X-Received: by 2002:a05:6402:26d2:b0:5dc:80ba:dda1 with SMTP id 4fb4d7f45d1cf-5e0b70df049mr6734748a12.9.1740149496291;
-        Fri, 21 Feb 2025 06:51:36 -0800 (PST)
-Received: from f (cst-prg-82-23.cust.vodafone.cz. [46.135.82.23])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abb9cee79fasm958432266b.129.2025.02.21.06.51.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2025 06:51:35 -0800 (PST)
-Date: Fri, 21 Feb 2025 15:51:23 +0100
-From: Mateusz Guzik <mjguzik@gmail.com>
-To: Ronald Monthero <debug.penguin32@gmail.com>
-Cc: al@alarsen.net, keescook@chromium.org, gustavoars@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, brauner@kernel.org, 
-	jack@suse.cz, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH] qnx4: fix to avoid panic due to buffer overflow
-Message-ID: <gfnn2owle4abn3bhhrmesubed5asqxdicuzypfrcvchz7wbwyv@bdyn7bkpwwut>
-References: <20231112095353.579855-1-debug.penguin32@gmail.com>
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="Wd3VgrGl"
+Received: from smtp-4-0001.mail.infomaniak.ch (unknown [IPv6:2001:1600:7:10:40ca:feff:fe05:1])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4Yzvx01MRfzhfX;
+	Fri, 21 Feb 2025 17:00:36 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
+	s=20191114; t=1740153636;
+	bh=bzQREuWWWsR2CIYsAKZ/AYGR6t2UePv92kGxLbABb24=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Wd3VgrGl6XF5Mb3O9V4H28Jc/XuZkOXkVlwUk6gWUIiGjwc5DMUVu/Viwn21aOl6p
+	 7YGIL6b7a8D84nOQO/r2Rh0K6IoQ0TY+kB3OskTqKEVoyANhXyDRf82jrZKfoh25Q+
+	 lAgYf5VQLnbtELW6PXW2op7t6A4vdKp1L2QVYRl8=
+Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4Yzvwz4GQHzgjK;
+	Fri, 21 Feb 2025 17:00:35 +0100 (CET)
+Date: Fri, 21 Feb 2025 17:00:34 +0100
+From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+To: Kees Cook <kees@kernel.org>, Guo Ren <guoren@kernel.org>
+Cc: linux-hardening@vger.kernel.org, kernel test robot <lkp@intel.com>, 
+	oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	James Morris <jamorris@linux.microsoft.com>, Jann Horn <jannh@google.com>, linux-csky@vger.kernel.org, 
+	=?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>
+Subject: Re: security/landlock/ruleset.c:96:9: warning: 'memcpy' accessing
+ 4294967295 bytes at offsets 20 and 0 overlaps 6442450943 bytes at offset
+ -2147483648
+Message-ID: <20250221.ga2OSh6ieZei@digikod.net>
+References: <202501040747.S3LYfvYq-lkp@intel.com>
+ <20250106.uu8as0Ha6pof@digikod.net>
+ <202501061623.7A617B09@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -73,21 +50,43 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20231112095353.579855-1-debug.penguin32@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <202501061623.7A617B09@keescook>
+X-Infomaniak-Routing: alpha
 
-On Sun, Nov 12, 2023 at 07:53:53PM +1000, Ronald Monthero wrote:
-> qnx4 dir name length can vary to be of maximum size
-> QNX4_NAME_MAX or QNX4_SHORT_NAME_MAX depending on whether
-> 'link info' entry is stored and the status byte is set.
-> So to avoid buffer overflow check di_fname length
-> fetched from (struct qnx4_inode_entry *)
-> before use in strlen to avoid buffer overflow.
+Cc csky developers.
+
+See https://lore.kernel.org/r/202501040747.S3LYfvYq-lkp@intel.com
+
+On Mon, Jan 06, 2025 at 04:27:26PM -0800, Kees Cook wrote:
+> On Mon, Jan 06, 2025 at 06:04:56PM +0100, Mickaël Salaün wrote:
+> > On Sat, Jan 04, 2025 at 07:26:27AM +0800, kernel test robot wrote:
+> > >    security/landlock/ruleset.c: In function 'create_rule':
+> > > >> security/landlock/ruleset.c:96:9: warning: 'memcpy' accessing 4294967295 bytes at offsets 20 and 0 overlaps 6442450943 bytes at offset -2147483648 [-Wrestrict]
+> > >       96 |         memcpy(new_rule->layers, layers,
+> > >          |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > >       97 |                         flex_array_size(new_rule, layers, num_layers));
+> > >          |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This warning seems to only show with the csky architecture.
+
+> >
+> > I guess the GCC warning is a false positive?
+> > See https://gcc.gnu.org/bugzilla/show_bug.cgi?id=116494
 > 
+> Does the warning go away if flex_array_size() is open-coded or if the
+> create_rule prototype uses "*" instead of "[]" syntax for the "layers"
+> argument?
 
-Inspired by removals of reiserfs and sysv I decided to try to whack
-qnx4.
+But that would not be correct right?
 
-This here is the only qnx4-specific change made to the fs in years.
-
-Are you using the filesystem? Perhaps you just playing around fuzzing
-and that's how you got there instead?
+> 
+> The warning is about the "read" part ("accessing"). Using tip-of-tree
+> gcc with -fdiagnostics-details might show more details on the calling
+> path.
+> 
+> -Kees
+> 
+> -- 
+> Kees Cook
+> 
