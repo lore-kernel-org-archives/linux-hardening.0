@@ -1,66 +1,44 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1506B1DE896;
-	Fri, 21 Feb 2025 09:00:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A012E201017;
+	Fri, 21 Feb 2025 09:36:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740128413; cv=none; b=fmMz1YKtvQnhI56YyT4FMnNuLyOxsp6ndXSPSHUpk56oW1DWJOuugABrkRaaQAuvFw+EQnYuYO4H9z8/9bNaoyQYXy3GjBAVDVpPWnkyYrz9xIoXERiSb9gw1OwxtId4OxGEjU8nqYszWZ7mWta0lUWyU12Ta1FQjk/OYEbfpH8=
+	t=1740130580; cv=none; b=eRM/IF2inA3rgCnDC388UAkWJ7IY6rYHSLvGpPGOUrND9aONZZlaBppQD+aIGanL/VMvK4lK01MrXoRKWAi31vtbQsStZWSl1g7mKMGpOZNIBRrFwCrQgzlOsyIDSH6Yjua69GqZJtnCKzxKBmYtpFwmWeMVssGLh/+xkwbYoAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740128413; c=relaxed/simple;
-	bh=xkit/bBxrP/47/FJNxQVtKp/kzEycbPTUEmxxkZe/qU=;
+	s=arc-20240116; t=1740130580; c=relaxed/simple;
+	bh=2JYtZqX939Y+D87kR0xAmcGyGqDeR/SDLpu7Ha5+6ps=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q0y73oEW3vG3Bz+kqMZBzvw52NKPDN9NrQELUhzdb+8YG0aoVUGvSYVstQpLZrO39jsqYI+60dcfdrsHKzFiSVUK40Rf9ZXgyrWYswcdt86kct351Dj/NsO9OtrzjbCpAeUnE8vQB4lkBQYVuTBk2np/edVQSmyu7GhNai+usvM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fjFRHyE+; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=OFsgpslr; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=EJTzXXAfQ91WIN0A2PofrlXoR8c2CtGzOtFmyHYLnFHA1oeIyBwpTyRDsQ+1ZSrInC9JUEKzooUvrhJ/bWaQCiCYGkooMqM3RxmxqDUDd0FMIeKA/+g+BFQ86F4a5j0OOyjOekmQXldH4naAtyNTg4XHRE4ISJRcz3Xq74ruOlY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TAWlb8BW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fjFRHyE+";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OFsgpslr"
-Date: Fri, 21 Feb 2025 10:00:08 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1740128410;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/G8u2w8Nz/6LNRqOihn9/E0oO4aWnl10a49dAoNX2lw=;
-	b=fjFRHyE+thVo4Q5iFcC3ygYJmMOFVyg6DuwmklDo2Uu/mBBp03Dj4HTV+CIXGklN0JeAG2
-	w9HeBnK6ZRp35pq5VJxKiQwvrJ5ayUZ+dTRQj46e4raD5blYmkvJi2lUVDSJ6vYOTwKux6
-	Wfsj6pl8KrDm8dVmP5BgJGKjPNd4ktY4f8xrw98q1E6UZL5V4hCB7F1065ubf4ltY1t9yy
-	WmkRvexmH6g9fuHPxxLeBP5zGsVYMW6ttLu9qrU/t6CIT//fGT0ZA/FcxpWFPH1Hzzt3Rb
-	kcOQXgAkTvJLYdMXncpROhdPJqlS69G8Oylnw2SbGImSET+LtxETv/PaRE+J5g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1740128410;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/G8u2w8Nz/6LNRqOihn9/E0oO4aWnl10a49dAoNX2lw=;
-	b=OFsgpslrBT/3cxqqJfdOkE1EMygeHC3qIqcF2YoYX+56MorvTojESh7Ho87/zwdXhMGskh
-	lOjDRtOfUnp3sOBw==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Marco Elver <elver@google.com>
-Cc: Oliver Sang <oliver.sang@intel.com>, oe-lkp@lists.linux.dev,
-	lkp@intel.com, Petr Pavlu <petr.pavlu@suse.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
-	kasan-dev@googlegroups.com, linux-hardening@vger.kernel.org,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Kees Cook <kees@kernel.org>,
-	Alexander Potapenko <glider@google.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	Waiman Long <longman@redhat.com>
-Subject: Re: [linux-next:master] [x86] 66fbf67705:
- kernel-selftests.kvm.hardware_disable_test.fail
-Message-ID: <20250221090008.5aWGygvI@linutronix.de>
-References: <Z7bUC9QY815Cv6nb@xsang-OptiPlex-9020>
- <20250220155722.2Z2a-3z0@linutronix.de>
- <CANpmjNN9zpcPa4S+Zq+vJWJ3EcO0zCZJ=Z4FgNzDRXdi0YQA9g@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TAWlb8BW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1AFAC4CED6;
+	Fri, 21 Feb 2025 09:36:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740130580;
+	bh=2JYtZqX939Y+D87kR0xAmcGyGqDeR/SDLpu7Ha5+6ps=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TAWlb8BWw0ZkWQSpCua6PtYzLZmlyMoBOktuhHneAneNEbrKIOzBF8duUu9GRVTiJ
+	 cnIumZ/AOh10dWag5FO33bxpV6CyO1USpCBsRc6shfTKZVV5l3ct92KO7q2qi0rac9
+	 zZT3E7549u6k9bLw9sQcaU1vBmcuOu8V3Xccd7p25yjnYkUPoQEfFt/dO2wdQg7Tu8
+	 98KIQWkNzXv3MTOhKyCjQvKGjfUCgkLgye69mjup0i51Mm6wlWDZbEHiBaDVqkkbUk
+	 wDHEmwbC47+A5gbP36yjoJGrLfF08N6Uvk9jV9mEUQ9yWHg9vW66TkG+1qHSgzXr1A
+	 oRGfOBnZCpLKQ==
+Date: Fri, 21 Feb 2025 10:36:17 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Kaustabh Chakraborty <kauschluss@disroot.org>
+Cc: Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Alim Akhtar <alim.akhtar@samsung.com>, Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, 
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>, Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3 0/7] Add support for the Exynos7870 SoC, along with
+ three devices
+Message-ID: <20250221-able-quoll-of-storm-1cd6aa@krzk-bin>
+References: <20250219-exynos7870-v3-0-e384fb610cad@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -69,32 +47,48 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CANpmjNN9zpcPa4S+Zq+vJWJ3EcO0zCZJ=Z4FgNzDRXdi0YQA9g@mail.gmail.com>
+In-Reply-To: <20250219-exynos7870-v3-0-e384fb610cad@disroot.org>
 
-On 2025-02-20 17:30:22 [+0100], Marco Elver wrote:
-> > How much do we care here? Is this something that makes UBSAN + KASAN
-> > folks uncomfortable? Or is lockdep slowing things down anyway?
+On Wed, Feb 19, 2025 at 12:33:10AM +0530, Kaustabh Chakraborty wrote:
+> Samsung Exynos 7870 (codename: Joshua) is an ARM-v8 system-on-chip that was
+> announced in 2016. The chipset was found in several popular mid-range to
+> low-end Samsung phones, released within 2016 to 2019.
 > 
-> Does this series from Waiman help?
-> https://lore.kernel.org/all/20250213200228.1993588-4-longman@redhat.com/
+> This patch series aims to add support for Exynos 7870, starting with the
+> most basic yet essential components such as CPU, GPU, clock controllers,
+> PMIC, pin controllers, etc.
+> 
+> Moreover, the series also adds support for three Exynos 7870 devices via
+> devicetree. The devices are:
+>  * Samsung Galaxy J7 Prime	- released 2016, codename on7xelte
+>  * Samsung Galaxy J6		- released 2018, codename j6lte
+>  * Samsung Galaxy A2 Core	- released 2019, codename a2corelte
+> 
 
-I have applied
+You have some dependencies here, so you must always clearly mention
+them.
 
-| locking/lock_events: Add locking events for rtmutex slow paths
-| locking/lock_events: Add locking events for lockdep
-| locking/lockdep: Disable KASAN instrumentation of lockdep.c
-| locking/lockdep: Add kasan_check_byte() check in lock_acquire()
+> Additional features implemented in this series include:
+>  * I2C	- touchscreen, IIO sensors, etc.
+>  * UART	- bluetooth and serial debugging
+>  * MMC	- eMMC, Wi-Fi SDIO, SDCard
+>  * USB	- micro-USB 2.0 interface
+> 
+> Here is a list of all sub-series:
+>  * bootmode	  	- https://lore.kernel.org/all/20250204-exynos7870-bootmode-v1-1-0f17b3033c2d@disroot.org/
+>  * gpu			R https://lore.kernel.org/all/20250204-exynos7870-gpu-v1-1-0db4c163a030@disroot.org/
+>  * i2c	      		A https://lore.kernel.org/all/20250204-exynos7870-i2c-v1-0-63d67871ab7e@disroot.org/
+>  * mmc			- https://lore.kernel.org/all/20250219-exynos7870-mmc-v2-0-b4255a3e39ed@disroot.org/
+>  * pinctrl	  	- https://lore.kernel.org/all/20250219-exynos7870-pinctrl-v2-0-1ff9b10bf913@disroot.org/
+>  * pmic-regulators	- https://lore.kernel.org/all/20250219-exynos7870-pmic-regulators-v2-0-1ea86fb332f7@disroot.org/
+>  * pmu-clocks		- https://lore.kernel.org/all/20250219-exynos7870-pmu-clocks-v3-0-0d1e415e9e3a@disroot.org/
+>  * uart			- https://lore.kernel.org/all/20250219-exynos7870-uart-v2-1-c8c67f3a936c@disroot.org/
+>  * usb			- https://lore.kernel.org/all/20250219-exynos7870-usb-v2-0-1de41a89c9d4@disroot.org/
+>  * usbphy		- https://lore.kernel.org/all/20250219-exynos7870-usbphy-v2-0-b8ba4e7a72e9@disroot.org/
 
-and with this I am down to:
+These are not dependencies. Weirdly, you link related patches but you do
+not even mention the actual dependency.
 
-| ~# time ./hardware_disable_test
-| Random seed: 0x6b8b4567
-| 
-| real    0m29.517s
-| user    0m0.493s
-| sys     0m10.891s
+Best regards,
+Krzysztof
 
-Which is the pre-RCU case. Yes, the series from Waiman helps. This is my
-favorite solution.
-
-Sebastian
