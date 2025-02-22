@@ -1,41 +1,41 @@
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9FDA101E6;
-	Sat, 22 Feb 2025 19:46:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0529E1D88B4;
+	Sat, 22 Feb 2025 19:55:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740253601; cv=none; b=SEwgivRl0vNCTFMMg7dcq4T3PWk23noonfs7CwkhtD6InLnqUeq6UIj8/Ik+V8jXnU8Ktq442Z25xriqjSg8JSd+TBUyd34Or3yIU8w8+AJh1+2T37Gd2UUnG+kJIA8v1DuEJZI5ntkScVdDgQuCxSAF//zb+ZLlyVw4acez9io=
+	t=1740254147; cv=none; b=Qomq3YHmav+9QjzQLH9UQP5KPOfWVHLtF0GcR6JfJI0xMlgA01jcVyT9VRvt9JGJYQFEDzofQ/UVFnNylNy35wdQNO7B34sNV4pxiugo3x5L0QRz2LPM6i81zSk99MXYTdEk5q/QyuC0fMbjG6fRcjMD/LomgzHH5T3021GhFik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740253601; c=relaxed/simple;
-	bh=WJXh6otmXryLoI09QxuBOmx096ot4bpbrMJcxXLcU78=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=UEPiM2BHY6nMjOtc5MRnzpQl4OMZjKQw4b5lk11lAVlSLP4jOYRPVAOM2J1Zg6M4PlTBd5tmAWzG6VuU5EOOVJr8HrWrJjjwvEzBjUOAZ7PaTJcxOEnNRC+g+SZ3Xd8XL3V1WLd0AXREt/9SYLpznrBgKAj1774nfTGLantKm3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com; spf=pass smtp.mailfrom=ethancedwards.com; dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b=S0qkwSA/; arc=none smtp.client-ip=80.241.56.172
+	s=arc-20240116; t=1740254147; c=relaxed/simple;
+	bh=UaONxZHrIkQdwjdaIA92qutGOMkPFTSXdH4J/zbT7yw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=TUKhhICtx5sMFgW4zt9OZf9/S9RJUMNPIWs9re9ifo6D8HAK6YZQnzEdoo75VuX69d/1b1jIwjZarkNObw4AXMZNzQeKl851mvy1REQ9Q1pi/IxyV03ZSQMngGckvM+Xn4zR/xtlo/hcYXsm3pHuyaxhTjWTkkhNupnUwgBt7po=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com; spf=pass smtp.mailfrom=ethancedwards.com; dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b=PM2MDlNP; arc=none smtp.client-ip=80.241.56.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ethancedwards.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b="S0qkwSA/"
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
+	dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b="PM2MDlNP"
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4Z0cv83bk6z9sck;
-	Sat, 22 Feb 2025 20:46:28 +0100 (CET)
+	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4Z0d5f6y8Cz9sRl;
+	Sat, 22 Feb 2025 20:55:34 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ethancedwards.com;
-	s=MBO0001; t=1740253588;
+	s=MBO0001; t=1740254135;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding;
-	bh=9+CXkYaMZwIZzzOXM/b51T1ZwM7ATw1x8gihAxLB1DM=;
-	b=S0qkwSA/zL/H8R6HLpWJsyK4onCp6SvUPlMMeegRRCv4CnTeqZRhykzWwZbQ+Hd24x5LZl
-	BqGCBdXY7LR/MWLzgsft7EXu5R6NVQ+yIos4cOdF0DWQtXcvUbSXfqpoM3CFUJ1C3Dlh4U
-	ppTXK3VWGnatYeZymsGCocChLEWmvsGITUPqHrX85e/FGQhsb0ufeWTjLjwCTrhOMHDFC6
-	vyycysV4yINR87vh4XDpojTpVAXWc8u4buAcOjqEsOEFCKFPQQKot0bVBIh/DDFHbAd1b9
-	DqjxfgG8NyemX9x1vDl5d2TvxUJZfQW05SrVBAUbT+7mqMwCWbvK6sl8YHjnVg==
+	bh=fT1wsd1pyY3tybKJU0jZhvDhCC3s6dxKcQvCiDTMJY0=;
+	b=PM2MDlNPSxxclBlRE/u5cezRl2sXUjlPolEy/HxoXno77rkfymoyY9xN5073KJlzX5uc6d
+	bfbx5CAkOxprSUI2Xe/uSMyXuvOnGmeHD6B1JjKnI6yTq3M9ap+6tcNL+ufgGDfHyqW3x4
+	tv2mg1OUbkBBan3b9AvkPV01JhmdzVY3iirrPDCnghXKkVA0bAJnq9b41OxeAoXdMxmncD
+	GC5wNS15ApyzxTUCQRgjw5tipuDBcXSFoRD4+AAfp3odUQDrm+iI4F5BQtIKrlpK8zLMc4
+	QY9d3HlvfmOW/xsSuQVPlNyYvudxJ3LPInqd14rWmVl+g0TB/CgdMeoOyP77/w==
 From: Ethan Carter Edwards <ethan@ethancedwards.com>
-Date: Sat, 22 Feb 2025 14:46:23 -0500
-Subject: [PATCH] sched/topology: replace kzalloc() with kcalloc() in
- sched_init_numa()
+Date: Sat, 22 Feb 2025 14:55:20 -0500
+Subject: [PATCH] ASoC: q6dsp: q6apm: replace kzalloc() with kcalloc() in
+ q6apm_map_memory_regions()
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -44,31 +44,30 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250222-sched-kcalloc-v1-1-4dee15fd8241@ethancedwards.com>
-X-B4-Tracking: v=1; b=H4sIAI4pumcC/x3MQQqAIBBA0avIrBN0KKKuEi1snHIoNBQiiO6et
- HyL/x8onIULjOqBzJcUSbHCNgoouLixFl8NaLAziKgLBfZ6J3ccibT1nSN2PbbDArU5M69y/79
- pft8PuaOK+18AAAA=
-X-Change-ID: 20250222-sched-kcalloc-1d5acea7249b
+Message-Id: <20250222-q6apm-kcalloc-v1-1-6f09dae6c31c@ethancedwards.com>
+X-B4-Tracking: v=1; b=H4sIAKcrumcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDIyMj3UKzxIJc3ezkxJyc/GRd05RUg7RkC5NkE0tjJaCegqLUtMwKsHn
+ RsbW1AKSps71fAAAA
+X-Change-ID: 20250222-q6apm-kcalloc-5de0fc84c493
 To: Markus Elfring <Markus.Elfring@web.de>
-Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
- Juri Lelli <juri.lelli@redhat.com>, 
- Vincent Guittot <vincent.guittot@linaro.org>, 
- Dietmar Eggemann <dietmar.eggemann@arm.com>, 
- Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, 
- Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>, 
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+ linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
  linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
  Ethan Carter Edwards <ethan@ethancedwards.com>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1578;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1346;
  i=ethan@ethancedwards.com; h=from:subject:message-id;
- bh=WJXh6otmXryLoI09QxuBOmx096ot4bpbrMJcxXLcU78=;
+ bh=UaONxZHrIkQdwjdaIA92qutGOMkPFTSXdH4J/zbT7yw=;
  b=LS0tLS1CRUdJTiBQR1AgTUVTU0FHRS0tLS0tCgpvd0o0bkp2QXk4ekFKWGJEOXFoNThlVGp6e
- GhQcXlVeHBPL1M3RGUvOC9ieTM2VkZLWTgrN3E5ZEZscCtJOEhPClYyenh2SjNMR0x5V0JmVnUx
- Rm5SVWNyQ0lNYkZJQ3VteVBJL1J6bnRvZVlNaFoxL1hacGc1ckF5Z1F4aDRPSVUKZ0lrMGJXRDR
- uM1BYYnNvQ1JyOFpaUTNHaHF3WDF6QWNTV2dKYXZqT3ZPSjdxVzZQL0huZDF3ei9DeGIyLzFoNg
- pOTFF2WnA3Wng4MUtuMWtpTTVXK0xsK29za2hoOHNUd0QrOE1lQUdMZUUvbAo9WmhxNgotLS0tL
- UVORCBQR1AgTUVTU0FHRS0tLS0tCg==
+ GhQcXlVeHBPL1MzbmlFajBIc3VmV3YwOWtTRE44blRzbG4wWlFPCm54ZjBOU0IxVWRhM2I5czF4
+ VloxbExJd2lIRXh5SW9wc3Z6UFVVNTdxRGxEWWVkZmx5YVlPYXhNSUVNWXVEZ0YKWUNMdEx4bit
+ HZXp0YTFrbzArdHplUDFzZC9VZG56N01sTW02WDNMZzhOSWZiZ1dMT2VXbDFqQXlIRjl5Yk90YQ
+ ozWFBmemVJZml6enJtczI1Z01uN0h0ZWI3NHN0bjYwOEdkTEF3UThBWG54T3pBPT0KPWtWZDQKL
+ S0tLS1FTkQgUEdQIE1FU1NBR0UtLS0tLQo=
 X-Developer-Key: i=ethan@ethancedwards.com; a=openpgp;
  fpr=2E51F61839D1FA947A7300C234C04305D581DBFE
+X-Rspamd-Queue-Id: 4Z0d5f6y8Cz9sRl
 
 We are trying to get rid of all multiplications from allocation
 functions to prevent integer overflows[1]. Here the multiplication is
@@ -80,35 +79,26 @@ Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-ar
 
 Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
 ---
- kernel/sched/topology.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/soc/qcom/qdsp6/q6apm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-index c49aea8c10254dec985bba47b18f61be954d23f6..b4539b29fb36f6b2f0c5ca310620ebda29755e5c 100644
---- a/kernel/sched/topology.c
-+++ b/kernel/sched/topology.c
-@@ -1918,7 +1918,7 @@ void sched_init_numa(int offline_node)
- 	 */
- 	sched_domains_numa_levels = 0;
+diff --git a/sound/soc/qcom/qdsp6/q6apm.c b/sound/soc/qcom/qdsp6/q6apm.c
+index 2a2a5bd98110bc70c2a164efb22df4147979d295..11e252a70f6972ed8527a0a70a5a3dcf37dfac31 100644
+--- a/sound/soc/qcom/qdsp6/q6apm.c
++++ b/sound/soc/qcom/qdsp6/q6apm.c
+@@ -230,7 +230,7 @@ int q6apm_map_memory_regions(struct q6apm_graph *graph, unsigned int dir, phys_a
+ 		return 0;
+ 	}
  
--	masks = kzalloc(sizeof(void *) * nr_levels, GFP_KERNEL);
-+	masks = kcalloc(nr_levels, sizeof(void *), GFP_KERNEL);
- 	if (!masks)
- 		return;
- 
-@@ -1927,7 +1927,7 @@ void sched_init_numa(int offline_node)
- 	 * CPUs of nodes that are that many hops away from us.
- 	 */
- 	for (i = 0; i < nr_levels; i++) {
--		masks[i] = kzalloc(nr_node_ids * sizeof(void *), GFP_KERNEL);
-+		masks[i] = kcalloc(nr_node_ids, sizeof(void *), GFP_KERNEL);
- 		if (!masks[i])
- 			return;
- 
+-	buf = kzalloc(((sizeof(struct audio_buffer)) * periods), GFP_KERNEL);
++	buf = kcalloc(periods, sizeof(struct audio_buffer), GFP_KERNEL);
+ 	if (!buf) {
+ 		mutex_unlock(&graph->lock);
+ 		return -ENOMEM;
 
 ---
 base-commit: 5cf80612d3f72c46ad53ef5042b4c609c393122f
-change-id: 20250222-sched-kcalloc-1d5acea7249b
+change-id: 20250222-q6apm-kcalloc-5de0fc84c493
 
 Best regards,
 -- 
