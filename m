@@ -1,91 +1,112 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86EFA13C81B;
-	Sat, 22 Feb 2025 16:36:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADD6920AF98;
+	Sat, 22 Feb 2025 19:19:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740242187; cv=none; b=k7Q4VxOQ3lB92TAItnQe+YgJZ9OKGzixpI7QuQO+PaMFjkPAzYomckFqIYwZXnzGuuMQF7xofMVgNsWmNZCvbT/p+gi2Ddj9dvAobLohiVLbW6Lsa3q9QYNOc+yj3WyfCDgYrH7vsm5jeycIgA9UK/GE9yeN78adcypGA3m+wWk=
+	t=1740251999; cv=none; b=Z6ukhAloRbU7XavlqbSkI+FMwvQ7dauZ1oyGsSYWVXHFbqz9i19eK2NZKbOWUvlebaUcUdq52ww8naBRT44ZD65VknRzrTq0o+rUbkMdGO98Oqg17GgKkW1NNVc92TY/uAZ5Ya12OlOcm6N2TyO+rvQ4/yVaCJfM4xg5ZfIOG6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740242187; c=relaxed/simple;
-	bh=rtocORGzCiCgEQdJ5J8bKjDbeb2QhBgSx+UwY48U/hE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=g676ojQ3sIDyruU8QosowznIi5libSbtFOBAEnZS5AaXGAY2kfkSVjza8FLq3ZqmBMRZncxgn7dEaHRA6ioGQA4R3hGcNPVarIgmJ1KqBr7PnFNpoXP2v1c0g2QS+yuyIqKRD8ErhyGyV0oh1Rnm9hCqdxuzFvMfRYFqIuDumcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YacEjXNT; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740251999; c=relaxed/simple;
+	bh=yOvvdjiU0jdJ3UdjDOTfD6mRKuTsj9mR2aIGQknKyaM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=o15aigJER+IRWLi82L7P9/BAQjCXjpyDUlfqlVG+abV8KvIMsvbTVBDLrHRmFiOFHyH2Mea12kTTWd5QmO39T2ugbcKv3j9jFQuiZju80Gc7aT5WTlV5xcMBKS8hqXtF1Q8ZSfXfKuQ1BvDIJ8vWebg9s8zmQiywS4RumglsA3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com; spf=pass smtp.mailfrom=ethancedwards.com; dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b=C8qqaaTN; arc=none smtp.client-ip=80.241.56.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ethancedwards.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YacEjXNT"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5dedd4782c6so5852344a12.3;
-        Sat, 22 Feb 2025 08:36:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740242184; x=1740846984; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rtocORGzCiCgEQdJ5J8bKjDbeb2QhBgSx+UwY48U/hE=;
-        b=YacEjXNTT+t9oJyXD/ZCmJ+MAcy2oaluZBojcQzBvlZgYrox6ZLOM8aSTyXbfjcbQH
-         kps0nhZwlBH82cQicZuUl5VypKIechg6XwbW/vZjS6jE76z/vSVOnKGtjTtZWBlQB9+H
-         H0QovYw9ql2j3H6NnT4tJ+Eq4iCx33wWBwPfS3mkbQugwDu9gO17suCk0qLg57Sf5YPv
-         zljryDadNpScPM/A9TtRBrPaUmsXZE+hc2rcNTakrtX6TwSP5teP0EL98yzWM1LnmjKb
-         HyVNN3gZyna372HJt3a9tuplKhxyx9Bsehs7KFNSIkc8UfbgPWFf11nuAPVB32iZyiDR
-         w1zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740242184; x=1740846984;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rtocORGzCiCgEQdJ5J8bKjDbeb2QhBgSx+UwY48U/hE=;
-        b=YnAzuFgQ7+bqbXI1VVTIwOD2tAutP3K4amVIECuv/Pr7tYNbRtcHf0T6pFgAcXamQA
-         aSWW8uOfVFirs5ndWpdaQ0RS21M3BmL3AT6FvFbV+2gz4Do2gB5YzMMUlqB2nClFYmIA
-         W09PUMZ0JoqyXi8gvrb2Htf8I4o/i0I3lBDzv0qoKSUZ7BKfNX2q4LAzOcChBwsQ6i/n
-         GlBiGazJjl3n9yJrIYN0MFD2VkvhKNehjnUZk3ZynYp28utcF6V3iSHthZMPh8lPZRwK
-         H6n112xAD1hCSmTrvWRNyZXQXaL6X9zPe3sctvLljHLCnHME1Pt8r554U9C6InNCheTF
-         kpjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUFKMyKnhYgDAz+bb+uXLkrjPFuq0Q2NEPNh4z0/qeOzu50o8CmFmL/bH8OU4NaG6fc0b/zcVvu+bmVI9Hs@vger.kernel.org, AJvYcCUR/hFEegsfQNH0kdIMS2p6pX9lMjcAPJgrGXsMmszG75gizwcSjZHm+IjqIyidGI8e607WJP/1tYAeVdGZ@vger.kernel.org, AJvYcCUeG7IQP1Uds7mIp91yJuhKdInCEPhiegfQXNkiR7jZL7uOy6vpkIUvv42hYg2NtO/jS+uo6/lvNIM3Kxy3kD9o@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywak1IveBzm/uapjTM7q8yPty56hH5MI41JVdWQEmwxaab6rO3W
-	2xgajm7+mgYF9CO27QB5NSUV0fsWxXWxwJzK8u0T+5jBoY+hARg3PYVJ5eL6oyEod+X1e9ZeRrz
-	dQ92FJS4MrRuE/ZlMXQSiqhJn64s=
-X-Gm-Gg: ASbGncu8n8h5Mrjd2hneS+JH4UL/PAFXmT8ceGevP9BlqFOWlmiM3FEEBw2FU8rQpfL
-	w/IiAAb8Vhfra6ntyHUs7SXGYckxK5WaLDfG1MwnOEOw+zwigzEjp/OwX60W/zF+/CXZBDbZPi4
-	awhmlleg==
-X-Google-Smtp-Source: AGHT+IFoTbdYhtMQGikIy6G8PoWJvpf+gybBSbSK/2WABhKajv8WRol8YlxcddMnnL2dDGgT019UyARxlKZVnElem8U=
-X-Received: by 2002:a05:6402:3509:b0:5e0:4276:c39e with SMTP id
- 4fb4d7f45d1cf-5e0b724439amr7711854a12.30.1740242183583; Sat, 22 Feb 2025
- 08:36:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b="C8qqaaTN"
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4Z0cJM2lr7z9snx;
+	Sat, 22 Feb 2025 20:19:47 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ethancedwards.com;
+	s=MBO0001; t=1740251987;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=5b6ehKCWNH72ToV9CKBN72vhsFPXWtjWbIceXxBIUQg=;
+	b=C8qqaaTNpnIbwIbem6hbEmowvFzu34PishhG4VM6bU1Q0Ku6S15gIiyKty38oofGAozrRs
+	YrXzjmDm12VvU9q8rOujPZfvAQe1H22HGWI4E4WHelfbUasdCVKAFkwaMP/0fzpqx0DNZ7
+	qxX7J9EgnXI2gP2mRnA0/XxiIgKvduVx+YbJW82TNoBz80BW2NPndLEBvwrrm6mm+v6EGt
+	TLE1udKEtDLHbLNmi4t+bkp5AXp1qKeS4LAh18nAAPofWp2LGJiEPpxYi3OrCzc1YR4bRs
+	9NPbAD8lEWbzlrc2cnVRv/N/jcWzOS9z51Djx1JkW5TWLkKfoi6odcRa5sldzQ==
+From: Ethan Carter Edwards <ethan@ethancedwards.com>
+Date: Sat, 22 Feb 2025 14:19:43 -0500
+Subject: [PATCH] mtd: rawnand: use kcalloc() instead of kzalloc()
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231112095353.579855-1-debug.penguin32@gmail.com>
- <gfnn2owle4abn3bhhrmesubed5asqxdicuzypfrcvchz7wbwyv@bdyn7bkpwwut>
- <202502210936.8A4F1AB@keescook> <CAGudoHHB6CsVntmBTgXd_nP727eGg6xr_cPe2=p6FyAN=rTvzw@mail.gmail.com>
- <202502220717.3F49F76D3@keescook>
-In-Reply-To: <202502220717.3F49F76D3@keescook>
-From: Mateusz Guzik <mjguzik@gmail.com>
-Date: Sat, 22 Feb 2025 17:36:11 +0100
-X-Gm-Features: AWEUYZmKQosZykKblnkg3KxtVoch81HrzwmyrB7GiwZeJcOjQPtX6hxk5lhJCdI
-Message-ID: <CAGudoHGtRdu-s=RKDbQtcOxNx8NBaCvJFmq7u+kUbVymLTZj1g@mail.gmail.com>
-Subject: Re: [PATCH] qnx4: fix to avoid panic due to buffer overflow
-To: Kees Cook <kees@kernel.org>
-Cc: Ronald Monthero <debug.penguin32@gmail.com>, al@alarsen.net, gustavoars@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	brauner@kernel.org, jack@suse.cz, linux-fsdevel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250222-mtd-nand-kzalloc-v1-1-fbb41db6fd8e@ethancedwards.com>
+X-B4-Tracking: v=1; b=H4sIAE4jumcC/x3MQQ5AMBBA0avIrE1SgwRXEYtqBxOUtCJC3F1j+
+ Rb/PxDYCwdokgc8nxJkcxFZmoCZtBsZxUYDKSoVEeF6WHTaWZxvvSybQaqNUVWWVz0VELPd8yD
+ Xv2y79/0Aw7Y8gGIAAAA=
+X-Change-ID: 20250222-mtd-nand-kzalloc-29cc08138b24
+To: Miquel Raynal <miquel.raynal@bootlin.com>, 
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>
+Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-hardening@vger.kernel.org, 
+ Ethan Carter Edwards <ethan@ethancedwards.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1676;
+ i=ethan@ethancedwards.com; h=from:subject:message-id;
+ bh=yOvvdjiU0jdJ3UdjDOTfD6mRKuTsj9mR2aIGQknKyaM=;
+ b=LS0tLS1CRUdJTiBQR1AgTUVTU0FHRS0tLS0tCgpvd0o0bkp2QXk4ekFKWGJEOXFoNThlVGp6e
+ GhQcXlVeHBPOVM5ai9XOTIzbnYvUHlpOTNtQmJML0NsMlZVUzNOClZleVhiY2VlMHJCN3J2OUZl
+ ZDZPVWhZR01TNEdXVEZGbHY4NXlta1BOV2NvN1B6cjBnUXpoNVVKWkFnREY2Y0EKVENUZ0E4UC9
+ 6S0NjL0djdGgyMGNMSyt6Q3kvMGxQdHlZNVBJeHlYQlA5dkVuWVhMUk96RkdQNTdtOTI5R1RIRg
+ pvdittMHNFZGJXZkxObXl1WGNvZkdIRlBndDh6M2FScmtqOHpBS2tHU2RNPQo9dDFVRQotLS0tL
+ UVORCBQR1AgTUVTU0FHRS0tLS0tCg==
+X-Developer-Key: i=ethan@ethancedwards.com; a=openpgp;
+ fpr=2E51F61839D1FA947A7300C234C04305D581DBFE
+X-Rspamd-Queue-Id: 4Z0cJM2lr7z9snx
 
-On Sat, Feb 22, 2025 at 4:17=E2=80=AFPM Kees Cook <kees@kernel.org> wrote:
->
-> On Sat, Feb 22, 2025 at 01:12:47PM +0100, Mateusz Guzik wrote:
-> > If it was not for the aforementioned bugfix, I would be sending a
-> > removal instead.
->
-> Less code is fewer bugs. I'm for it. :)
->
+We are trying to get rid of all multiplications from allocation
+functions to prevent integer overflows[1]. Here the multiplication is
+obviously safe, but using kcalloc() is more appropriate and improves
+readability. This patch has no effect on runtime behavior.
 
-Removed code is debugged code.
+Link: https://github.com/KSPP/linux/issues/162 [1]
+Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments
 
---=20
-Mateusz Guzik <mjguzik gmail.com>
+Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
+---
+ drivers/mtd/nand/raw/nand_base.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/mtd/nand/raw/nand_base.c b/drivers/mtd/nand/raw/nand_base.c
+index 53e16d39af4bf95c16505e0b528da1f3ba832010..13e4060bd1b6a1a360d430260b881edc8a3abeff 100644
+--- a/drivers/mtd/nand/raw/nand_base.c
++++ b/drivers/mtd/nand/raw/nand_base.c
+@@ -1833,7 +1833,7 @@ int nand_readid_op(struct nand_chip *chip, u8 addr, void *buf,
+ 
+ 		/* READ_ID data bytes are received twice in NV-DDR mode */
+ 		if (len && nand_interface_is_nvddr(conf)) {
+-			ddrbuf = kzalloc(len * 2, GFP_KERNEL);
++			ddrbuf = kcalloc(2, len, GFP_KERNEL);
+ 			if (!ddrbuf)
+ 				return -ENOMEM;
+ 
+@@ -2203,7 +2203,7 @@ int nand_read_data_op(struct nand_chip *chip, void *buf, unsigned int len,
+ 		 * twice.
+ 		 */
+ 		if (force_8bit && nand_interface_is_nvddr(conf)) {
+-			ddrbuf = kzalloc(len * 2, GFP_KERNEL);
++			ddrbuf = kcalloc(2, len, GFP_KERNEL);
+ 			if (!ddrbuf)
+ 				return -ENOMEM;
+ 
+
+---
+base-commit: d4b0fd87ff0d4338b259dc79b2b3c6f7e70e8afa
+change-id: 20250222-mtd-nand-kzalloc-29cc08138b24
+
+Best regards,
+-- 
+Ethan Carter Edwards <ethan@ethancedwards.com>
+
