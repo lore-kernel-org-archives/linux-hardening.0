@@ -1,71 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BF385383;
-	Sat, 22 Feb 2025 00:52:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F28A20ADC0;
+	Sat, 22 Feb 2025 12:13:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740185534; cv=none; b=E/PvmA/UWBxpbF6h2ZlDyyQPuldsxAahOR1LrnWDmQKLliAwIOTiIlczsvIx/JTUpBSuewTuYkDRihgzVn4GrSa3LNMqfUBJlFtCw+LdCvseBVyuNmTVGEBIVMTV6dIouTsUADFAC7W8KIbryUvZeAs5EFuk3k8kuOajSIb1wuM=
+	t=1740226384; cv=none; b=CXRfU+bN2XNZF+kHAs/cg5rEOR3+T9wmQU23QRGT5czAc1Y8bf3reEZqVea+WN3t8tf6B+3uYiBYxTO+zvDTPbEeO1U1mvMuafT8FQZIwV/hvCUuKp3qgerIZcXtwoNcSiR4RNrZBRfzqIVctZ5gYV0WD3JAfVO4uIBqOL+guBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740185534; c=relaxed/simple;
-	bh=p3Z3OV/D1L8Z9Gx0KgTb3RoA/MWjnp5ufzpx82ZXlAY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dDRQ2dw0SbIbb60hDAn0O//L5+Zk92zAtAx8BPRJAb4hz70jmK2lPg+NcRPzlNXVcmQuutyeRmuy6FYFH4/1U8CuCUmWCk/vlTakC8axe41o6qFcB0Iy4EKtM+PRw79ofXH3YXqJKRFwncjcsKMsKS32jLSJnUPocp/jjEuHpc4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p/4zBEGc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740226384; c=relaxed/simple;
+	bh=UcCs92//+CGxlxHBIWo7ThWL5U5qDI/Ou+tv4w3OPwI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DkXlKH4oPQ1PK8efeQTSj5RcFgJ5VIrvYIc9f5p0tnNNFTTu4pBO2iNIG7MNinZB/nrDJImRpLFP6yRcK8zDdBrJEHONlNS30uWrFkiWqg4BCJABTTDcc7kBinjRgnmVr/WGWqKGNDw8XNPC7jkrvOfFouXWoF3lx1j6GXDg8S0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S0+zcLGZ; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p/4zBEGc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCFBAC4CED6;
-	Sat, 22 Feb 2025 00:52:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740185533;
-	bh=p3Z3OV/D1L8Z9Gx0KgTb3RoA/MWjnp5ufzpx82ZXlAY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=p/4zBEGccczupXg+ewnuC2hmKWM51kfTF8QiA4iFGnRal5FHNFJqV8wMSXJ18KAtw
-	 tn33Agh3zexCGhuX3CsOPomkhn0VwSKAz0YU4rdubFJmHbTo2wK0LA0jAPvVgOMIh4
-	 pawPurfCNhx1I2mHL75wLEeDgSprjbrf6wsg/KBTIZVjqlYxN7orliHxhPqi+hf2Mn
-	 eQTYsRpi8qn6kgn8WqurZ11sNWX1S1FUDyglLOjPMK3aVJOIwtPkD2TGS6KQAr3glL
-	 oCWclS46Owqda/sRAEd4SAz9KxvnUg7l7Lxjii5OZ0KaVt5oZjQjBWJzgN5wxZE1hB
-	 Q3XF8ExgcWUxw==
-From: Kees Cook <kees@kernel.org>
-To: "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org,
-	Lukas Bulwahn <lbulwahn@redhat.com>
-Cc: Kees Cook <kees@kernel.org>,
-	kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Lukas Bulwahn <lukas.bulwahn@redhat.com>
-Subject: Re: [PATCH] MAINTAINERS: adjust entries in FORTIFY_SOURCE and KERNEL HARDENING
-Date: Fri, 21 Feb 2025 16:52:08 -0800
-Message-Id: <174018552604.3367606.18022424280657472316.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250217100643.20182-1-lukas.bulwahn@redhat.com>
-References: <20250217100643.20182-1-lukas.bulwahn@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S0+zcLGZ"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5dccaaca646so5277521a12.0;
+        Sat, 22 Feb 2025 04:13:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740226381; x=1740831181; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UcCs92//+CGxlxHBIWo7ThWL5U5qDI/Ou+tv4w3OPwI=;
+        b=S0+zcLGZkiASyxzyw/AHgAje8mz0+BnTP1DIhJrJvc4gcvIvlXwIdnPfCkcTEBLaUP
+         fnVobN+pzOOgO09XevbBKw4SKrj4Ppuwc+bsElp0P0YrnJ+wh8IKGSawKlLJt9h9JRDx
+         Ao6+LbG2dxGYTRG70cQQShN/Cdekac8h/+VhLYaw51gflH6VEhqpNNV0+Voxs2trui8c
+         7OrUIFtkufGMpz4mstsrLPC93wbV6rFuBoURHAGh0+20GFJy1MZEfL0aSXeWVEN+u6RC
+         sY+6aVs3/W/JsMU49VCEclTGQNFV8CDKJmSOIkND1UnhrQm5+Q6QhiXfPgDMA+Et8/Xh
+         jfIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740226381; x=1740831181;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UcCs92//+CGxlxHBIWo7ThWL5U5qDI/Ou+tv4w3OPwI=;
+        b=nQfpa34Q1zIIWJ0Oqq1e8x/dFtoOQLvrfemJPPotVuWNMtN13v6dA7Y3Z5l2T3idpo
+         MiMwUmR1LNoRqTGPmYYKE6IZjwFsI3suXcdvvm2/d5ccGhtGLSqeX4RzYnctLI0a4FCj
+         MKuy9mR2oxsQbwQjoEgMXYoxCdlwqBNHVKNXuAdpHcGVUCdTfqqw7b7cGBweh4E/YBmj
+         LWHCsL7LVJadfdmRgyuqOLpL+5mSutP+nsyFqw2gmmuVewzgU5QTdvGscjAJHLMeFg06
+         Y7jukNcKq8l378tbf/NoGs9M2+GO7SmDjzzyOmMhGlyty8W/RwrJLmSduCr/PvVuVt2w
+         jCBA==
+X-Forwarded-Encrypted: i=1; AJvYcCUyh1NLsE+NjAIJv8BldjAqaPQL/LrY5x9MBH2H3lCKla220xxNw4/XnHrdOS89aCKRVMMSFCcYQytn8oBRvQcZ@vger.kernel.org, AJvYcCWi74tXedOlDqc2vOJQvf3E5/fCzvNU6UxfRjrqAv/gMzz0RrglJzaKSz97EBO2+jElq7RHdSNpq1JG/HAS@vger.kernel.org, AJvYcCXq4Ukwmo8Fq49L1pc6OVBGMYFkAT833C1YRPBVo12ZVX9XIAhJv1SZ6iCP0dqVfzF2LukCeuiIgTOIaeDw@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxrQkOpmxivwYfEpdrKO2etsK72DELm/8B16IPF8kltccp8plD
+	9E9QrDgEarXTrghkYaKsViAKXL6pjPO7eBTtu5k4HYZPm+CWtgIOwvpsF9z4mJDmSR3pF80hxaQ
+	60DRvUp2JlPjUQldngyPnPQOnXqwVuP3mdzg=
+X-Gm-Gg: ASbGnctvkN/jM76to0qxS6aSxXjefAdT50p/uTYp+33UCs+ADmrbBdzAvMcc9fhHsoC
+	MJ5jd6ckf1XHXOe4Dj7AI6Q2GWwLN6f9tjYJg3iRwg9IG/xn/QLSf8vv1OCX33vcUSFZFTw++J7
+	RznG5G+w==
+X-Google-Smtp-Source: AGHT+IGVFDoKMuSJlmbG3dDfeHZVI4UMPL3h12SNa7oIv7JVKBH7eWOsn2mydhYqH2cx8FkD/b6rPUf1AbJwjVPFnwU=
+X-Received: by 2002:a05:6402:27cc:b0:5e0:752a:1c7c with SMTP id
+ 4fb4d7f45d1cf-5e0a11fff09mr10005828a12.1.1740226381108; Sat, 22 Feb 2025
+ 04:13:01 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20231112095353.579855-1-debug.penguin32@gmail.com>
+ <gfnn2owle4abn3bhhrmesubed5asqxdicuzypfrcvchz7wbwyv@bdyn7bkpwwut> <202502210936.8A4F1AB@keescook>
+In-Reply-To: <202502210936.8A4F1AB@keescook>
+From: Mateusz Guzik <mjguzik@gmail.com>
+Date: Sat, 22 Feb 2025 13:12:47 +0100
+X-Gm-Features: AWEUYZkrczdGvPossTY-laNaH0XG4wYU8BX1rt6xqTV7TvImEDyhx208Ptv2FVQ
+Message-ID: <CAGudoHHB6CsVntmBTgXd_nP727eGg6xr_cPe2=p6FyAN=rTvzw@mail.gmail.com>
+Subject: Re: [PATCH] qnx4: fix to avoid panic due to buffer overflow
+To: Kees Cook <kees@kernel.org>
+Cc: Ronald Monthero <debug.penguin32@gmail.com>, al@alarsen.net, gustavoars@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	brauner@kernel.org, jack@suse.cz, linux-fsdevel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 17 Feb 2025 11:06:43 +0100, Lukas Bulwahn wrote:
-> Commit db6fe4d61ece ("lib: Move KUnit tests into tests/ subdirectory") adds
-> a file entry to the non-existing file scripts/test_fortify.sh. Probably,
-> this entry intends to refer to ./lib/test_fortify/test_fortify.sh, though.
-> As that file is already covered by the entry lib/test_fortify/*, there is
-> no need for a separate file entry. So, drop the unnecessary file entry to
-> the test_fortify script.
-> 
-> [...]
+On Fri, Feb 21, 2025 at 6:38=E2=80=AFPM Kees Cook <kees@kernel.org> wrote:
+>
+> On Fri, Feb 21, 2025 at 03:51:23PM +0100, Mateusz Guzik wrote:
+> > On Sun, Nov 12, 2023 at 07:53:53PM +1000, Ronald Monthero wrote:
+> > > qnx4 dir name length can vary to be of maximum size
+> > > QNX4_NAME_MAX or QNX4_SHORT_NAME_MAX depending on whether
+> > > 'link info' entry is stored and the status byte is set.
+> > > So to avoid buffer overflow check di_fname length
+> > > fetched from (struct qnx4_inode_entry *)
+> > > before use in strlen to avoid buffer overflow.
+> > >
+> >
+> > Inspired by removals of reiserfs and sysv I decided to try to whack
+> > qnx4.
+>
+> I have no strong opinion here beyond just pointing out that it appears
+> that the qnx4 fs is still extant in the world. QNX itself is still alive
+> and well and using this filesystem based on what I can find.
+>
 
-Applied to for-next/move-kunit-tests, thanks!
+I'm aware.
 
-[1/1] MAINTAINERS: adjust entries in FORTIFY_SOURCE and KERNEL HARDENING
-      https://git.kernel.org/kees/c/ee0445d6b6e9
+However, we reached a point where should someone need to access a
+now-removed filesystem, they can spin up a VM with an older system to
+do it (including with one of the myriad Linux distro releases).
+Suppose support disappears tomorrow. You still have something like
+debian which will have a kernel with the module for several years. But
+suppose you are years down the road and all the Linux distros which
+had it are past EOL and you still need it. For the purpose of reading
+the sucker, you can still use them.
 
-Take care,
+So I don't believe this will cut anyone off of transferring data out
+of a filesystem which got whacked upstream. That's concerning old
+filesystems in general.
 
--- 
-Kees Cook
+As for qnx4 in particular, should you git log on it, you will find the
+support is read-only. And should you read between the commits (if you
+will) I am not at all convinced even that was high quality to begin
+with -- looks like an abandoned WIP.
 
+General tune is not holding the codebase hostage to obsolete (and
+probably not at all operational) components. If in doubt, prune it.
+
+This reminded me of a funny remark made by someone else concerning
+removal of drivers for stale hardware. It was in the lines of "if you
+ask if anyone is still using it, someone will respond they have an old
+machine in their garage which they were totally going to boot up this
+weekend. if you just remove it, nobody will ever notice".
+
+If it was not for the aforementioned bugfix, I would be sending a
+removal instead.
+--=20
+Mateusz Guzik <mjguzik gmail.com>
