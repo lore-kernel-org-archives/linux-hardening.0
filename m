@@ -1,104 +1,124 @@
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+Received: from mail2.medvecky.net (mail2.medvecky.net [85.118.132.153])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41F591EEA43;
-	Sat, 22 Feb 2025 20:02:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D17AA1D63D3;
+	Sat, 22 Feb 2025 20:50:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.118.132.153
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740254573; cv=none; b=r7vANk9zHta6figvjL2FcgQeLEht2usfXg8ix/1I3uDVISkwLacdsYIzaxbkkV6EEZTmywgEE47R/HU1fE3mQBJoePai7uj4DTC8l4oTUNUGhMO298erNyvvT70Z+QrIMAT8kdFDVLCSiKLTKlVVlEaQ8F95U0p9oniCA35coMU=
+	t=1740257444; cv=none; b=DuMDz2QEcgVNdL4xVDE+YgDSG8CeE5aX65FZioQPc6GRoW3BG6kKMMUqdFrMFdREey3DTBRugqEh9m+zEilWWNeNGCNLQZve86bYOTmOGtouQqJwEDrEe6eo+udJ38o1rTl4X2Ph/KFReTZqYERXN8xBVK+F8BQPmyklPervDvk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740254573; c=relaxed/simple;
-	bh=1ysXJ9tNqbTNnC5MOSLRwjUBTc9Nx5MfsWwXFqejhwo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=JVj91VDU06gXpqcJWfwXbBp3jd1Bosy/Kd0ziURaeD2aOjHtYS+Uu9iP1zFMxkliViLSQCxUyjo9g1I5aXFr+GBBZnGEH17/tjKrMv5jO/fPFlfXkxLFNoof80qnKZ1gfDvWiTZ3F8r8cV/Wdhd6gSGct72eqcDa4jD+DeoXLhc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com; spf=pass smtp.mailfrom=ethancedwards.com; dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b=Ph4CAjkV; arc=none smtp.client-ip=80.241.56.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ethancedwards.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b="Ph4CAjkV"
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4Z0dFz1w3Zz9t1g;
-	Sat, 22 Feb 2025 21:02:47 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ethancedwards.com;
-	s=MBO0001; t=1740254567;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Z6djf3boNN959313q2ECyr8yAQbh1eNxQmRkyyOk0VU=;
-	b=Ph4CAjkV2ku4zIUUVJ93F6Rk2zWDvDGXMfwgZSgQxikk3uZ/N1ZeuYD/txQK+F+XihyTqn
-	DJAOkqG7WjFjD3fedGfCn/x45DDMyJ2T2852uMukJ4HITLn+qGzAuo9PP/JZA0WztDdub7
-	0ihldMq4ihrL4SBGqXyWM6PZgRlZWsLjuM3z3Cw3t4ud232skCEH7bOQ0YAxMhnJP3XKWz
-	mVzGqpq9Zmh2cmk8S/A5wU9e46AEpra7peKnc+41sDBUdZP6bNe6LS7/zjlH59EoKivysj
-	xVwStx+UesTGcJIbs2+oCE8W9pXFb8oi8Sjx57mrzHn0pgB25QxmQtnAhtAdvg==
-From: Ethan Carter Edwards <ethan@ethancedwards.com>
-Date: Sat, 22 Feb 2025 15:02:42 -0500
-Subject: [PATCH] thermal/debugfs: replace kzalloc() with kcalloc() in
- thermal_debug_tz_add()
+	s=arc-20240116; t=1740257444; c=relaxed/simple;
+	bh=kcHyPYJb28bHH5abHA7/j70IiajgjFyIlnoc2KlKKqo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oTniV5vCKmoL7HK7/Vcdf41HSsQ/Juv8JgakIAH0Dys6bfbwNd6PnFHIVrcV8Eq0l5O3mXJulJgcbF9Fcy/1Bxzppxs16MWan5iURB2L0XDmkoEpt/8inyN+zrc48rGguvoSrxN8PFeJiKRWSppz32/6nO7s08NfH7aWvik1n6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=assembler.cz; spf=pass smtp.mailfrom=assembler.cz; arc=none smtp.client-ip=85.118.132.153
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=assembler.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=assembler.cz
+Message-ID: <e46ca730-8858-4f57-bdd0-2fd0db086500@assembler.cz>
+Date: Sat, 22 Feb 2025 21:43:42 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250222-thermal_kcalloc-v1-1-9f7a747fbed7@ethancedwards.com>
-X-B4-Tracking: v=1; b=H4sIAGEtumcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDIyMj3ZKM1KLcxJz47OTEnJz8ZF0LC8OU5DTTJHPzJAsloK6CotS0zAq
- widGxtbUAOmYgfGEAAAA=
-X-Change-ID: 20250222-thermal_kcalloc-881dcf5b77b8
-To: Markus Elfring <Markus.Elfring@web.de>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, 
- Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
- Lukasz Luba <lukasz.luba@arm.com>, linux-pm@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
- Ethan Carter Edwards <ethan@ethancedwards.com>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1388;
- i=ethan@ethancedwards.com; h=from:subject:message-id;
- bh=1ysXJ9tNqbTNnC5MOSLRwjUBTc9Nx5MfsWwXFqejhwo=;
- b=LS0tLS1CRUdJTiBQR1AgTUVTU0FHRS0tLS0tCgpvd0o0bkp2QXk4ekFKWGJEOXFoNThlVGp6e
- GhQcXlVeHBPL1NUWlpJbS9QMWJkeVV2V1gzRys0cXJ6clBNM1dUCnVqS24rUVRuRnVGWFVuZWNI
- Ny9yS0dWaEVPTmlrQlZUWlBtZm81ejJVSE9Hd3M2L0xrMHdjMWlaUUlZd2NIRUsKd0VTK0JESXk
- vTmJjRWI3UzJYaXU2SlRTeFFZT0UvTW5UdGs0Ujd3My9JL1BjcWF5Qm8vcmF4ais2WVhNYXJ4eA
- p1MDN2K0pQSDRVY3Rpcjh6NTM3emNOMWZ3eTgvUTdrcjNvR0pFd0JwaTB2cQo9azhudAotLS0tL
- UVORCBQR1AgTUVTU0FHRS0tLS0tCg==
-X-Developer-Key: i=ethan@ethancedwards.com; a=openpgp;
- fpr=2E51F61839D1FA947A7300C234C04305D581DBFE
+Subject: Re: [RFC] Circumventing FineIBT Via Entrypoints
+To: Andrew Cooper <andrew.cooper3@citrix.com>, Jann Horn <jannh@google.com>
+Cc: jmill@asu.edu, joao@overdrivepizza.com, luto@kernel.org,
+ samitolvanen@google.com, "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+ linux-hardening@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>,
+ x86 maintainers <x86@kernel.org>
+References: <CAG48ez09JuZPt112nnE6N=hS6cfCLkT-iHUAmidQ-QGNGMVoBw@mail.gmail.com>
+ <c46f5614-a82e-42fc-91eb-05e483a7df9c@citrix.com>
+ <CAG48ez0h0wUS6y+W1HTOwN14V95gKmmFZ_2TamAX+JKTmXT=DA@mail.gmail.com>
+ <1cf8d5a5-bf3e-4667-bc6a-d1b1d662d822@citrix.com>
+Content-Language: en-US
+From: Rudolf Marek <r.marek@assembler.cz>
+Autocrypt: addr=r.marek@assembler.cz; keydata=
+ xsBNBFN2VH4BCADpv+3Tkikr+X489Xso9UC719YdxgGiy0xBjDiWC22wAd3tHy6G3nEhWfh4
+ 1UNGcqscPAvJMn2GhgSJRfBzj0wALXLkoTYta78wEK+Ji+Gs7PX9VhqRKt9/OIn/2XJ1Yv9i
+ e8uo9MFBGFCB5roz+Ws8rdXq0Quu7VZylzRv7qqhxMAk9RvXCT2tyt6XY16R7ZEL9wbSLRAl
+ h8LRPMF0iiLH1YenfSCX2XkW7eA7CJSjh9pwIBFOF5cd5mcT69OPO+TuAbdvgCcZPEoQQBhk
+ QmOr2PlUOl3CSgqtTxjAjAxXhPTU7Q3xxgB2Oa7xbt3Eic2Z4lltP/dowULZqXvsC5DxABEB
+ AAHNI1J1ZG9sZiBNYXJlayA8ci5tYXJla0Bhc3NlbWJsZXIuY3o+wsCVBBMBCgA/AhsjBgsJ
+ CAcDAgYVCAIJCgsEFgIDAQIeAQIXgBYhBJmYg4ih63dUUwlgxcBvbatkz11wBQJnOaU1BQkV
+ pALyAAoJEMBvbatkz11wgYUH/2Cs+hmNUj5f8z1xI8O07OL8KfxiWAv1DVq+QEGsbhdub/pH
+ cNbCP52hioIjr48ylpE4PriuxPxC5zd6/s/z1fJQXPc2rd9xfKMsC7ZmpIjfzTzoX9JuINhW
+ cwY+SFXOFuVUT2UacaowLTVX1NVevLhqb1wxSgGe1KAyqWBllrUYI/tqDF20MuzYDkuL0TdJ
+ fSk3mfrF+GWG7DSzH27kwmY1ui4QUnW7PQ23c56xuRAtRDPhTgaglk52Pz7IsQHfy8rPZmTE
+ jFTaN6kdW324wZYGYJBCriffNaIekz+C+i7aRivABNpeAY2O5ae6qcZknalGrU71M8p2TULA
+ tSGNCc7OwE0EU3ZUfgEIAOyD3W4D+aaXoA875pbKqSI+MQ2t5PYNPaCahoSSnTuNmvM1xCsv
+ I2EaGwfr5S0IktX1g0dt8lvvCx9eZeEhGH5NBgsmWtTi0Gq9UHQXbj4wQAV23/X+MCZqKFFl
+ Yp0T86C23RhXsEQp8mTYpnGsbjAsHgaDnuQj5pWahVGXv9aYzjomk4mEGq8jr8/D9kgOEll+
+ s5cIJYzeliPHR+2SRQs+XoTp1e/dXs310xXhuo2Pg8N/Kym0WhWjTYBuUeoyaYFDYtwj6jkc
+ 2baI/JOSUoyarxnmRuVcNHoZd7as7lzmPS9Dqrm5LJVrfQk0lx+XaJRPZqQW/uf5FFaGXIIi
+ 2OkAEQEAAcLAhgQYAQoAJgIbDBYhBJmYg4ih63dUUwlgxcBvbatkz11wBQJnOaU1BQkVpALy
+ ABQJEMBvbatkz11wCRDAb22rZM9dcA/zCADBJl5FizQY1GWQ0hdaRLpFelc5TMnB58LQXLs+
+ b0cbCGHSCYdB8u4EwBcMF55qF2MT6Owd7ydjFoLY7WdQYcorbMPw91LFqLEuA/mQnaWtrSV5
+ XyBcFHIRNH1ZtHL+28ywyDZY0GE13R3IoNh8E25JFeEBdR5uWH/1+Y7v3VCFkDp8VX3Pa+66
+ AyicyWjrWKf0ADPWcAuyF8kVqJv+61FnOUE9M/23CNp5y+9cWJnViYK015c9l04xdrcwPra9
+ XVGi/hKZ6EIEiqFa55LHmoB4QLOYbYVC9xMoDnKYDuBfU4VlyTe6//eSRHc3wer7/avb1gKC
+ EDihgW9OFim1SsU6
+In-Reply-To: <1cf8d5a5-bf3e-4667-bc6a-d1b1d662d822@citrix.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Authentication-Results: mail2.medvecky.net;
+	auth=pass smtp.mailfrom=r.marek@assembler.cz
+X-Spamd-Bar: /
 
-We are trying to get rid of all multiplications from allocation
-functions to prevent integer overflows[1]. Here the multiplication is
-obviously safe, but using kcalloc() is more appropriate and improves
-readability. This patch has no effect on runtime behavior.
+Hi,
 
-Link: https://github.com/KSPP/linux/issues/162 [1]
-Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments
+Dne 13. 02. 25 v 3:42 Andrew Cooper napsal(a):
+> The SYSCALL behaviour TLDR is:
+> 
+>      %rcx = %rip
+>      %r11 = %eflags
+>      %cs = fixed attr
+>      %ss = fixed attr
+>      %rip = MSR_LSTAR
+> 
+> which means that %rcx (old rip) is the only piece of state which
+> userspace can't feasibly forge (and therefore could distinguish a
+> SYSCALL from user vs kernel mode), yet if we're talking about a JOP
+> chain to get here, then %rcx is under attacker control too.
 
-Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
----
- drivers/thermal/thermal_debugfs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The SYSCALL instruction also provides means to create "incoherent" state of the processor selectors
+where the value of selector do not match pre-loaded values in the descriptor caches.
 
-diff --git a/drivers/thermal/thermal_debugfs.c b/drivers/thermal/thermal_debugfs.c
-index c800504c3cfe0ea3b4a51286f348dd5802e1898f..60ee6c366998e26447a0b985112f578ba8757f17 100644
---- a/drivers/thermal/thermal_debugfs.c
-+++ b/drivers/thermal/thermal_debugfs.c
-@@ -876,7 +876,7 @@ void thermal_debug_tz_add(struct thermal_zone_device *tz)
- 
- 	tz_dbg->tz = tz;
- 
--	tz_dbg->trips_crossed = kzalloc(sizeof(int) * tz->num_trips, GFP_KERNEL);
-+	tz_dbg->trips_crossed = kcalloc(tz->num_trips, sizeof(int), GFP_KERNEL);
- 	if (!tz_dbg->trips_crossed) {
- 		thermal_debugfs_remove_id(thermal_dbg);
- 		return;
+Would it work to have KERNEL_CS as last entry in the GDT table? Therefore executing SYSCALL would set the CS as usual,
+but the numeric value of SS selector would be larger than GDT limit?
 
----
-base-commit: 5cf80612d3f72c46ad53ef5042b4c609c393122f
-change-id: 20250222-thermal_kcalloc-881dcf5b77b8
+That would mean that "impossible" selector is loaded into SS if we came from usermode,
+but operation with stack would still work as the descriptor caches will be sane.
+The "impossible" selector value can be fixed by loading SS with NULL which is cheap.
 
-Best regards,
--- 
-Ethan Carter Edwards <ethan@ethancedwards.com>
+The check in hotpath could maybe use VERR %SS which would fail because of GDT limit is reached. The VERR with mem operand
+does not use any GPR!
+
+Or simply check for "impossible" selector would work if we misuse zeros in high32 of R11 (usermode rflags) maybe like:
+
+entry:
+endbr64
+rol $32, %r11
+movw %ss, %r11w
+cmpw $IMPOSSIBLE_SEL, %r11w
+jnz panic
+; load null to SS, fix R11 and pretend above never happened
+
+If attacker would execute SYSCALL in the kernel, likely we could check the %RCX if it is OK or not?
+
+Bit variation to this "theme" would be to have SYSCALL SS GDT entry still in the GDT but set as "not present".
+Another brainstorm idea would be to misuse RFLAGS.ID and clear it in MSR FMASK but run kernel or most of it with RFLAGS.ID set.
+I don't know what is the threat model you are trying to fix.
+
+Lets fight x86 insanity with yet another x86 insanity - I think it is fair.
+
+I hope above helps or at least I will learn why not if I overseen something obvious!
+
+I tried to CC all the lists. I'm not subscribed.
+
+Thanks,
+Rudolf
+
+PS: I'm leaving as an exercise to a reader NMI and #MC handling!
 
