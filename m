@@ -1,81 +1,71 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17B7BEC4;
-	Sat, 22 Feb 2025 00:10:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BF385383;
+	Sat, 22 Feb 2025 00:52:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740183005; cv=none; b=erYr7rmbhVhvBMHOke6Ci3W6jLi1C6pShYnNYTt7q+gr42eV3Bo9UOoSYppT7iW3hYjWofElBbiDixexHR3szPCqNVL1MOq9ZIGlNOK3Nsm0a01MHDET1dTFOvkZXBfKsXAto0GT1tfnTva2aozjRiTQfjqAkcKlLl2J6Ya44XE=
+	t=1740185534; cv=none; b=E/PvmA/UWBxpbF6h2ZlDyyQPuldsxAahOR1LrnWDmQKLliAwIOTiIlczsvIx/JTUpBSuewTuYkDRihgzVn4GrSa3LNMqfUBJlFtCw+LdCvseBVyuNmTVGEBIVMTV6dIouTsUADFAC7W8KIbryUvZeAs5EFuk3k8kuOajSIb1wuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740183005; c=relaxed/simple;
-	bh=ufqPbEn1WJmaUW/hr5sj7ngYgOO92iLyjzLVnXeK+9g=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=ta5gwhKEYUz7PevU3EJggS9ba4k1yxs9rJaGUeuyxr10lmbCnYNx8DQhVGYTvBlnQrfaTaD+4igEtAtiLiZBUdAcYqOm/0qIj+CsktLzkI7ehqC1QamccSANJSHFRwpRjPNXOBXFzR3LT42ZsRjPH8mVYf3hdurpDIC/Uaulkhs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i7DHbKB6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740185534; c=relaxed/simple;
+	bh=p3Z3OV/D1L8Z9Gx0KgTb3RoA/MWjnp5ufzpx82ZXlAY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dDRQ2dw0SbIbb60hDAn0O//L5+Zk92zAtAx8BPRJAb4hz70jmK2lPg+NcRPzlNXVcmQuutyeRmuy6FYFH4/1U8CuCUmWCk/vlTakC8axe41o6qFcB0Iy4EKtM+PRw79ofXH3YXqJKRFwncjcsKMsKS32jLSJnUPocp/jjEuHpc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p/4zBEGc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i7DHbKB6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 819CAC4CED6;
-	Sat, 22 Feb 2025 00:10:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p/4zBEGc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCFBAC4CED6;
+	Sat, 22 Feb 2025 00:52:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740183004;
-	bh=ufqPbEn1WJmaUW/hr5sj7ngYgOO92iLyjzLVnXeK+9g=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=i7DHbKB6NFWygo4TyWoeniWsCe3QpzanpPp6KSZkZYZnghds+qGQkDCnaNyMk0pF4
-	 C1LzeG73BfzVjBQmtFtkyvVUSZMzyd2SqLSqVoyiJgao59IK3XOwgZvrU8yU+69Fbe
-	 OxpvUo07WUEKjl6cRSZeFj30YX7taXyju+4vKrXuxWyQvNRTH8dP9PbAYAdyTJkR6E
-	 m5m3A80pzEZECJjZL0nwxWb46Gmg/SKAKWIdp+bqhCQRRxQfPSI4KpsI266D73bthx
-	 0YPk8H4z7VKWEFwPOwfmUSyWUuQbvL6JtgduxsZ6T7NWleyTONXWwGRn/1SPpMzvUk
-	 UmVvO0l0ySymw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE070380CEEC;
-	Sat, 22 Feb 2025 00:10:36 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1740185533;
+	bh=p3Z3OV/D1L8Z9Gx0KgTb3RoA/MWjnp5ufzpx82ZXlAY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=p/4zBEGccczupXg+ewnuC2hmKWM51kfTF8QiA4iFGnRal5FHNFJqV8wMSXJ18KAtw
+	 tn33Agh3zexCGhuX3CsOPomkhn0VwSKAz0YU4rdubFJmHbTo2wK0LA0jAPvVgOMIh4
+	 pawPurfCNhx1I2mHL75wLEeDgSprjbrf6wsg/KBTIZVjqlYxN7orliHxhPqi+hf2Mn
+	 eQTYsRpi8qn6kgn8WqurZ11sNWX1S1FUDyglLOjPMK3aVJOIwtPkD2TGS6KQAr3glL
+	 oCWclS46Owqda/sRAEd4SAz9KxvnUg7l7Lxjii5OZ0KaVt5oZjQjBWJzgN5wxZE1hB
+	 Q3XF8ExgcWUxw==
+From: Kees Cook <kees@kernel.org>
+To: "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org,
+	Lukas Bulwahn <lbulwahn@redhat.com>
+Cc: Kees Cook <kees@kernel.org>,
+	kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Lukas Bulwahn <lukas.bulwahn@redhat.com>
+Subject: Re: [PATCH] MAINTAINERS: adjust entries in FORTIFY_SOURCE and KERNEL HARDENING
+Date: Fri, 21 Feb 2025 16:52:08 -0800
+Message-Id: <174018552604.3367606.18022424280657472316.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250217100643.20182-1-lukas.bulwahn@redhat.com>
+References: <20250217100643.20182-1-lukas.bulwahn@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next] net/rds: Replace deprecated strncpy() with
- strscpy_pad()
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174018303525.2244175.8423041588413050651.git-patchwork-notify@kernel.org>
-Date: Sat, 22 Feb 2025 00:10:35 +0000
-References: <20250219224730.73093-2-thorsten.blum@linux.dev>
-In-Reply-To: <20250219224730.73093-2-thorsten.blum@linux.dev>
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: allison.henderson@oracle.com, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
- linux-hardening@vger.kernel.org, netdev@vger.kernel.org,
- linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com,
- linux-kernel@vger.kernel.org
 
-Hello:
-
-This patch was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Wed, 19 Feb 2025 23:47:31 +0100 you wrote:
-> strncpy() is deprecated for NUL-terminated destination buffers. Use
-> strscpy_pad() instead and remove the manual NUL-termination.
-> 
-> Compile-tested only.
-> 
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+On Mon, 17 Feb 2025 11:06:43 +0100, Lukas Bulwahn wrote:
+> Commit db6fe4d61ece ("lib: Move KUnit tests into tests/ subdirectory") adds
+> a file entry to the non-existing file scripts/test_fortify.sh. Probably,
+> this entry intends to refer to ./lib/test_fortify/test_fortify.sh, though.
+> As that file is already covered by the entry lib/test_fortify/*, there is
+> no need for a separate file entry. So, drop the unnecessary file entry to
+> the test_fortify script.
 > 
 > [...]
 
-Here is the summary with links:
-  - [net-next] net/rds: Replace deprecated strncpy() with strscpy_pad()
-    https://git.kernel.org/netdev/net-next/c/c451715d78e3
+Applied to for-next/move-kunit-tests, thanks!
 
-You are awesome, thank you!
+[1/1] MAINTAINERS: adjust entries in FORTIFY_SOURCE and KERNEL HARDENING
+      https://git.kernel.org/kees/c/ee0445d6b6e9
+
+Take care,
+
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+Kees Cook
 
