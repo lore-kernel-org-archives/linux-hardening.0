@@ -1,41 +1,41 @@
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0529E1D88B4;
-	Sat, 22 Feb 2025 19:55:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41F591EEA43;
+	Sat, 22 Feb 2025 20:02:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740254147; cv=none; b=Qomq3YHmav+9QjzQLH9UQP5KPOfWVHLtF0GcR6JfJI0xMlgA01jcVyT9VRvt9JGJYQFEDzofQ/UVFnNylNy35wdQNO7B34sNV4pxiugo3x5L0QRz2LPM6i81zSk99MXYTdEk5q/QyuC0fMbjG6fRcjMD/LomgzHH5T3021GhFik=
+	t=1740254573; cv=none; b=r7vANk9zHta6figvjL2FcgQeLEht2usfXg8ix/1I3uDVISkwLacdsYIzaxbkkV6EEZTmywgEE47R/HU1fE3mQBJoePai7uj4DTC8l4oTUNUGhMO298erNyvvT70Z+QrIMAT8kdFDVLCSiKLTKlVVlEaQ8F95U0p9oniCA35coMU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740254147; c=relaxed/simple;
-	bh=UaONxZHrIkQdwjdaIA92qutGOMkPFTSXdH4J/zbT7yw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=TUKhhICtx5sMFgW4zt9OZf9/S9RJUMNPIWs9re9ifo6D8HAK6YZQnzEdoo75VuX69d/1b1jIwjZarkNObw4AXMZNzQeKl851mvy1REQ9Q1pi/IxyV03ZSQMngGckvM+Xn4zR/xtlo/hcYXsm3pHuyaxhTjWTkkhNupnUwgBt7po=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com; spf=pass smtp.mailfrom=ethancedwards.com; dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b=PM2MDlNP; arc=none smtp.client-ip=80.241.56.171
+	s=arc-20240116; t=1740254573; c=relaxed/simple;
+	bh=1ysXJ9tNqbTNnC5MOSLRwjUBTc9Nx5MfsWwXFqejhwo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=JVj91VDU06gXpqcJWfwXbBp3jd1Bosy/Kd0ziURaeD2aOjHtYS+Uu9iP1zFMxkliViLSQCxUyjo9g1I5aXFr+GBBZnGEH17/tjKrMv5jO/fPFlfXkxLFNoof80qnKZ1gfDvWiTZ3F8r8cV/Wdhd6gSGct72eqcDa4jD+DeoXLhc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com; spf=pass smtp.mailfrom=ethancedwards.com; dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b=Ph4CAjkV; arc=none smtp.client-ip=80.241.56.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ethancedwards.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b="PM2MDlNP"
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
+	dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b="Ph4CAjkV"
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4Z0d5f6y8Cz9sRl;
-	Sat, 22 Feb 2025 20:55:34 +0100 (CET)
+	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4Z0dFz1w3Zz9t1g;
+	Sat, 22 Feb 2025 21:02:47 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ethancedwards.com;
-	s=MBO0001; t=1740254135;
+	s=MBO0001; t=1740254567;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding;
-	bh=fT1wsd1pyY3tybKJU0jZhvDhCC3s6dxKcQvCiDTMJY0=;
-	b=PM2MDlNPSxxclBlRE/u5cezRl2sXUjlPolEy/HxoXno77rkfymoyY9xN5073KJlzX5uc6d
-	bfbx5CAkOxprSUI2Xe/uSMyXuvOnGmeHD6B1JjKnI6yTq3M9ap+6tcNL+ufgGDfHyqW3x4
-	tv2mg1OUbkBBan3b9AvkPV01JhmdzVY3iirrPDCnghXKkVA0bAJnq9b41OxeAoXdMxmncD
-	GC5wNS15ApyzxTUCQRgjw5tipuDBcXSFoRD4+AAfp3odUQDrm+iI4F5BQtIKrlpK8zLMc4
-	QY9d3HlvfmOW/xsSuQVPlNyYvudxJ3LPInqd14rWmVl+g0TB/CgdMeoOyP77/w==
+	bh=Z6djf3boNN959313q2ECyr8yAQbh1eNxQmRkyyOk0VU=;
+	b=Ph4CAjkV2ku4zIUUVJ93F6Rk2zWDvDGXMfwgZSgQxikk3uZ/N1ZeuYD/txQK+F+XihyTqn
+	DJAOkqG7WjFjD3fedGfCn/x45DDMyJ2T2852uMukJ4HITLn+qGzAuo9PP/JZA0WztDdub7
+	0ihldMq4ihrL4SBGqXyWM6PZgRlZWsLjuM3z3Cw3t4ud232skCEH7bOQ0YAxMhnJP3XKWz
+	mVzGqpq9Zmh2cmk8S/A5wU9e46AEpra7peKnc+41sDBUdZP6bNe6LS7/zjlH59EoKivysj
+	xVwStx+UesTGcJIbs2+oCE8W9pXFb8oi8Sjx57mrzHn0pgB25QxmQtnAhtAdvg==
 From: Ethan Carter Edwards <ethan@ethancedwards.com>
-Date: Sat, 22 Feb 2025 14:55:20 -0500
-Subject: [PATCH] ASoC: q6dsp: q6apm: replace kzalloc() with kcalloc() in
- q6apm_map_memory_regions()
+Date: Sat, 22 Feb 2025 15:02:42 -0500
+Subject: [PATCH] thermal/debugfs: replace kzalloc() with kcalloc() in
+ thermal_debug_tz_add()
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -44,30 +44,28 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250222-q6apm-kcalloc-v1-1-6f09dae6c31c@ethancedwards.com>
-X-B4-Tracking: v=1; b=H4sIAKcrumcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDIyMj3UKzxIJc3ezkxJyc/GRd05RUg7RkC5NkE0tjJaCegqLUtMwKsHn
- RsbW1AKSps71fAAAA
-X-Change-ID: 20250222-q6apm-kcalloc-5de0fc84c493
+Message-Id: <20250222-thermal_kcalloc-v1-1-9f7a747fbed7@ethancedwards.com>
+X-B4-Tracking: v=1; b=H4sIAGEtumcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDIyMj3ZKM1KLcxJz47OTEnJz8ZF0LC8OU5DTTJHPzJAsloK6CotS0zAq
+ widGxtbUAOmYgfGEAAAA=
+X-Change-ID: 20250222-thermal_kcalloc-881dcf5b77b8
 To: Markus Elfring <Markus.Elfring@web.de>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
- linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
+ Lukasz Luba <lukasz.luba@arm.com>, linux-pm@vger.kernel.org, 
  linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
  Ethan Carter Edwards <ethan@ethancedwards.com>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1346;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1388;
  i=ethan@ethancedwards.com; h=from:subject:message-id;
- bh=UaONxZHrIkQdwjdaIA92qutGOMkPFTSXdH4J/zbT7yw=;
+ bh=1ysXJ9tNqbTNnC5MOSLRwjUBTc9Nx5MfsWwXFqejhwo=;
  b=LS0tLS1CRUdJTiBQR1AgTUVTU0FHRS0tLS0tCgpvd0o0bkp2QXk4ekFKWGJEOXFoNThlVGp6e
- GhQcXlVeHBPL1MzbmlFajBIc3VmV3YwOWtTRE44blRzbG4wWlFPCm54ZjBOU0IxVWRhM2I5czF4
- VloxbExJd2lIRXh5SW9wc3Z6UFVVNTdxRGxEWWVkZmx5YVlPYXhNSUVNWXVEZ0YKWUNMdEx4bit
- HZXp0YTFrbzArdHplUDFzZC9VZG56N01sTW02WDNMZzhOSWZiZ1dMT2VXbDFqQXlIRjl5Yk90YQ
- ozWFBmemVJZml6enJtczI1Z01uN0h0ZWI3NHN0bjYwOEdkTEF3UThBWG54T3pBPT0KPWtWZDQKL
- S0tLS1FTkQgUEdQIE1FU1NBR0UtLS0tLQo=
+ GhQcXlVeHBPL1NUWlpJbS9QMWJkeVV2V1gzRys0cXJ6clBNM1dUCnVqS24rUVRuRnVGWFVuZWNI
+ Ny9yS0dWaEVPTmlrQlZUWlBtZm81ejJVSE9Hd3M2L0xrMHdjMWlaUUlZd2NIRUsKd0VTK0JESXk
+ vTmJjRWI3UzJYaXU2SlRTeFFZT0UvTW5UdGs0Ujd3My9JL1BjcWF5Qm8vcmF4ais2WVhNYXJ4eA
+ p1MDN2K0pQSDRVY3Rpcjh6NTM3emNOMWZ3eTgvUTdrcjNvR0pFd0JwaTB2cQo9azhudAotLS0tL
+ UVORCBQR1AgTUVTU0FHRS0tLS0tCg==
 X-Developer-Key: i=ethan@ethancedwards.com; a=openpgp;
  fpr=2E51F61839D1FA947A7300C234C04305D581DBFE
-X-Rspamd-Queue-Id: 4Z0d5f6y8Cz9sRl
 
 We are trying to get rid of all multiplications from allocation
 functions to prevent integer overflows[1]. Here the multiplication is
@@ -79,26 +77,26 @@ Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-ar
 
 Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
 ---
- sound/soc/qcom/qdsp6/q6apm.c | 2 +-
+ drivers/thermal/thermal_debugfs.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/qcom/qdsp6/q6apm.c b/sound/soc/qcom/qdsp6/q6apm.c
-index 2a2a5bd98110bc70c2a164efb22df4147979d295..11e252a70f6972ed8527a0a70a5a3dcf37dfac31 100644
---- a/sound/soc/qcom/qdsp6/q6apm.c
-+++ b/sound/soc/qcom/qdsp6/q6apm.c
-@@ -230,7 +230,7 @@ int q6apm_map_memory_regions(struct q6apm_graph *graph, unsigned int dir, phys_a
- 		return 0;
- 	}
+diff --git a/drivers/thermal/thermal_debugfs.c b/drivers/thermal/thermal_debugfs.c
+index c800504c3cfe0ea3b4a51286f348dd5802e1898f..60ee6c366998e26447a0b985112f578ba8757f17 100644
+--- a/drivers/thermal/thermal_debugfs.c
++++ b/drivers/thermal/thermal_debugfs.c
+@@ -876,7 +876,7 @@ void thermal_debug_tz_add(struct thermal_zone_device *tz)
  
--	buf = kzalloc(((sizeof(struct audio_buffer)) * periods), GFP_KERNEL);
-+	buf = kcalloc(periods, sizeof(struct audio_buffer), GFP_KERNEL);
- 	if (!buf) {
- 		mutex_unlock(&graph->lock);
- 		return -ENOMEM;
+ 	tz_dbg->tz = tz;
+ 
+-	tz_dbg->trips_crossed = kzalloc(sizeof(int) * tz->num_trips, GFP_KERNEL);
++	tz_dbg->trips_crossed = kcalloc(tz->num_trips, sizeof(int), GFP_KERNEL);
+ 	if (!tz_dbg->trips_crossed) {
+ 		thermal_debugfs_remove_id(thermal_dbg);
+ 		return;
 
 ---
 base-commit: 5cf80612d3f72c46ad53ef5042b4c609c393122f
-change-id: 20250222-q6apm-kcalloc-5de0fc84c493
+change-id: 20250222-thermal_kcalloc-881dcf5b77b8
 
 Best regards,
 -- 
