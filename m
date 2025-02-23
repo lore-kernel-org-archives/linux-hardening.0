@@ -1,41 +1,41 @@
 Received: from mout.web.de (mout.web.de [212.227.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B3D81DDC12;
-	Sun, 23 Feb 2025 09:50:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C51DD1E871;
+	Sun, 23 Feb 2025 10:11:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740304234; cv=none; b=ZH20BqOaxhqkj6GiNgXgWOIGPuLouJ4dosQgq+l77gdlvXeKDW2luHAdyhHdBhcHNr9yzjQDdPKnqz13CV/xBKC+9qs96YrNkg1N7L2fIiQv5tggD/+ARk/dcTD2XKcrl8QoYo4KJYT8+7uk+8r+y6J3ED0IQHC5J3Uu0weanMg=
+	t=1740305507; cv=none; b=qY6A7lZIkEPikW1T2SYTQ72n6d9UMdYak8h+fLI1l+oe4JzNNIChvGaatAVn19YhfsDSXIImh3g4Nu6Fr5G5Y4hxAxK1RX14R7G8K1cJ6jI9ukrfJvEuchmezp0Xgk/qDUZpkWjl4YpmK+ocAx+WS/l/nu4dU46ReGE52Gv6y3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740304234; c=relaxed/simple;
-	bh=d58RwVa7DbcO1qKm0r+LcPPaDjg73Am3OIA+pp6DxJ8=;
+	s=arc-20240116; t=1740305507; c=relaxed/simple;
+	bh=IiJYWfUzjvzO64rFYkVBgyFB2/WFf5T4phOFcLu6ucg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sF4Xx2yWSYyuYIuKU+a7Fu2xmIJVZAVqyxYejSmmCkuHkKX/I3VMsrxj1FYxYxP8bBUWZw0smen3/cTONlYyjCjo1PKs3l7A/euz0UTNP2k5KQJOzJ3+PjuDukKFpniQe82AbeVdkrr3sHfaswNDGnXVurHq5NmZLvX/wS/QXTI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=MUrgKJvn; arc=none smtp.client-ip=212.227.17.11
+	 In-Reply-To:Content-Type; b=RiWgDDf9JCQA/cbeI0UUi8d7g4uyI9uO8cpCYWeIsNx7aP27U9pG3tMEU4Zh877cIj749v4YC2KAw7sx3XF9OAak437fhLpFTmnYXdqE2z2mw8tqn2A1ZAkFp25hWTLOt4kI+bwlEMpH+JenZYc+NnlJOAGaiEXsjgyXmEctFxk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=pDAe4ucz; arc=none smtp.client-ip=212.227.17.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="MUrgKJvn"
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="pDAe4ucz"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1740304218; x=1740909018; i=markus.elfring@web.de;
-	bh=uNqtagFfaX+k1TuZfiWllVGWvAnzX37lvyjkNmWZte8=;
+	s=s29768273; t=1740305497; x=1740910297; i=markus.elfring@web.de;
+	bh=+n81tpsUZjiYF8TyqwTYd0MJyUxrzC5UmrBbfS3jvuk=;
 	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
 	 References:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding:cc:content-transfer-encoding:
 	 content-type:date:from:message-id:mime-version:reply-to:subject:
 	 to;
-	b=MUrgKJvnzf8bl89mBXk5+a6sYHhBCdm/CbvdYwA/gAlYSkF42N0tsuTCi190Ycwb
-	 joYGEspNS+fL16QoyidqL6tOBXrRcNfFDtU57gDS6J87HucPdFV8YHWu1uQG+3qk5
-	 1BXo4H43AoRrC46G38VZiWN3RM37/QjlDoxSOoW+vaOjY6kyypc7fNS0PmfMQ4q6M
-	 GgYVTvXggPwyuCTz8kzlwbmeJG14+9Co4lk1Fawa7clMF9kIdBDvVFC2P8VQARoUh
-	 ifgFfyZp9tXBk6D0VUtyGUTIzBZT2zRkoHSEYGwGEplIfJ+zKixc1BmpcPntmOypF
-	 MnSPXtjUeiH84Kca3w==
+	b=pDAe4uczsP/GplF5u56BqD6C71APc1fEGYJhyJEPE0b+2kTqHDoru1cUfHEHD13r
+	 vcTzRtkZZzq2P4nLSDlypQFdJlNlDYhIgD3dj7frFRhQad07p50A8LSxI6LMwAPCB
+	 5Obf1UY3EIuRzhv4PPVsrVClSPo+rC/sBbm4zpOcTsdkFozexB09Fq3Bg/vvWUDXd
+	 NjHyRopkdahaEioZjyNi9pEXJkrtJaR7uQHMUeY9cGwZVpkXViJZ5mPZAaKSi2Efz
+	 KD9m9PrqG6M0LRHgG3KB7E2R07j7L7uVy4Sisl0yuJVqAX8NeGEhByY1VRBOe7rQz
+	 6y/3VBMEYSqcsDvtwg==
 X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
 Received: from [192.168.178.29] ([94.31.70.18]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MOUxo-1txcWq2vV8-00Wa8T; Sun, 23
- Feb 2025 10:50:18 +0100
-Message-ID: <c8cb0a78-c547-41dc-ac35-d569c57ebe3c@web.de>
-Date: Sun, 23 Feb 2025 10:50:08 +0100
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MBjMM-1tcDLB1kdA-0017BQ; Sun, 23
+ Feb 2025 11:11:37 +0100
+Message-ID: <ebe9e9d5-2058-429e-b733-183c437ba154@web.de>
+Date: Sun, 23 Feb 2025 11:11:35 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -43,48 +43,47 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2?] ASoC: q6dsp: q6apm: replace kzalloc() with kcalloc()
- in q6apm_map_memory_regions()
-To: Ethan Carter Edwards <ethan@ethancedwards.com>,
- linux-sound@vger.kernel.org, linux-hardening@vger.kernel.org,
- linux-arm-msm@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>, Jaroslav Kysela <perex@perex.cz>,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
- Takashi Iwai <tiwai@suse.com>
-References: <20250222-q6apm-kcalloc-v1-1-6f09dae6c31c@ethancedwards.com>
+Subject: Re: [PATCH v4?] thermal/debugfs: replace kzalloc() with kcalloc() in
+ thermal_debug_tz_add()
+To: Ethan Carter Edwards <ethan@ethancedwards.com>, linux-pm@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>, Lukasz Luba
+ <lukasz.luba@arm.com>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Zhang Rui <rui.zhang@intel.com>
+References: <20250222-thermal_kcalloc-v1-1-9f7a747fbed7@ethancedwards.com>
 Content-Language: en-GB
 From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250222-q6apm-kcalloc-v1-1-6f09dae6c31c@ethancedwards.com>
+In-Reply-To: <20250222-thermal_kcalloc-v1-1-9f7a747fbed7@ethancedwards.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:rYfx/2i6V4IQ3Dw4RZIfxE9GJ1AH7VPLFCjjLUor9tddYNk4qf4
- iR936YWJXwQd3oOEGiX+aBc0Vp+qvfEnlIhqn4CqP3xhrSD9qo8QFD1dYP+nA4tfpqUS24t
- hjmGFdu/eHaXNsOPMC8iSSebejS+z80IEnt6oJasWJ+zkDJThr/aoJRgiSlPcJG5ET+ztBc
- LAr8LbKkCaQZIcUBmKxaQ==
+X-Provags-ID: V03:K1:Ky02Zy49vEaQHUodvPB1zMlzETqh0IZFLRVNj+LsxYYM+qgqmx9
+ Fi9pnUT6BChB4qVrV/EQcZk/NPM/f8ZULPfMAexBem6Po99MoZSpkjOux4Lj/heJqyMIH70
+ PbhCMMw/R2VeA0cLMZqmeFE9K95PqTu/uJay/WVW5RVlGaUAOmpxSoDgTagnUOgbhJC2npb
+ qLSUqrX9IUKCTtn3tUyyA==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:frMgY1647xs=;/6lsbY/b9/Ua30DHNQG4CgdhlcX
- xHZHCdor/0mLXZXYLmpmCujHrSgZnHpfzzwFNqe61jwJfFCLE/D4r6MeJDOhl+ITz+U871kge
- +w82eon+5hQy1gWoa4f0YJAjXSInBmncXldm1xfZf1ut5JwLtnjDcQP8JNFgZkhzR4BmOq89p
- KUf22pKeCdMuxP7e08ThjEB/R89F7wDL35d6id7YCs+1/cyQwYeoGKX5dEvUt3dEimXIPCigP
- AdUWNVrC2dvI2sh2vX+uIKy0Uq8iSZPWgAeEhqbicUTsQZBuFCfjbcg5CoVIPb7JWJTDxpM/U
- PwRNU1DyrJbfrFaGyGS+wH9tWPckM9no+EoulC5s6TBCRkaWRvpRmFFj2Ip9qUMuQLQUvHsGA
- Ln7L1HroGOT3wCQFELsnHAwr0WObQ/mnVck1RvxId415T1wREz1UflTYvYhgJs0LjIYL3fuWy
- Yh8W/dY3wGZ0gqhj7X5CLnngZH42hGyXnPbGVpe+t2tliRmL+HJGTa7wP2Q580iSwBu9G5wdT
- jTmVhv7UQMa3yybacDsRH3csuaVEXIIigUpaKHdn/cCLI4gzgEPJ9J2exGQOgJChx+rxIVKK6
- V3pjQ4e1HchVSBuJIhu2dy+b8exO66mNaGjL82lHtJDJEUPmKLpHkQQI/DzB1I/NvTeYgu7Sp
- FdnRkv7dKDZ6BCZ3cNHPaNROBgIGUFp5Em+zTFmjhHG0xfSB7AZikrwybNRp2khS31L6TiSpv
- K97TaIEkp64XITs7dgqIerOrFR/8WOQa6CRex8/yhWhzbXckm7HsJkM5kEu68vR8q2EpY393E
- ijU6iRg2oidTgdz3+gtgI5o/Kq6WxW/lLnoW2eTc2Zug+zS/L2Q5QmNkbK3RCSJ2enikZVQez
- Lh5mU15nM/ttRlnMkHmKMZR6do9H9rIajkCIV8N/Qfc1cSVxNfM9X1FW/drYp80Yka7WvVkWO
- Qw9VDWsLfQpa38/GxMy4k3Dm40CBSo/3g34ZGCn3iSoi/zmAnnSBwoI2PAtkdrhgjUlrYbEg/
- 3b5jiGnUTt4TaRDeuQ7O5LVbUe2jnB/uSiIPxRsBBxd8VmIO5Bbo9tM4H73ZTadAN7/4fQo66
- j7UK65xNgJWjw9usG9b7zdC4YfJlchcB2WTtTFEUeCikL7vfVSD+AabrZabRWj1tGYzYbd1P9
- ZABRPqwOp9ZYGqGNjn1D7JQAT4IwpuZ9jO0ZCXRyhu7m2x2jnNBJMS5uZUGMPyNrGLvqMcDpu
- j6Z1TIbffqX5fVM11kKf0CIBNnK/fROC6/3QnXAeQn0IhQU7bVK57quPHr/Hfp7vrsOtiN50l
- TvKnMUe7SeVDJLMXbP69JYZOct2a6pTjOp5PJkfSakLCLi91YV4cEqE8LmXyYUJUqt7fRbhGY
- VtIgY2UePs9cRdexwKBohYNiI1bhLNrK4ZVqin1Bqr17LEIcRxL5r4/ofE6HTetmrTRMiZ4bo
- NDhnLHN/iKnwrjSakBIaCvIsjxJk=
+UI-OutboundReport: notjunk:1;M01:P0:66X98Lpb8ZY=;tAWMZY7AGEJNEZudrGY34EyO07c
+ ON30F9mdVqIUBHfIvPnqOfXRcGCCRwU36UNJ3A3bZQxxSNbDs6jN8YbeyOyeQNygp6RrLasum
+ quAkmwYXGX6QaTRJWxo6euC0QvEUiXpV714h/frms+jJASQGuIzd6E/XKSLmefZNyFkWROB9Z
+ 6eZ4W8uRnveh5IIxXV4CuPHLfhH6B36ewl7AW/QEL82n/C+6VDObj+q9YBA5gwvFYnFgqLyJS
+ NsyVPxXvPpaTDBEJFebMZ8i7yG8Hb25fwYbN5XeW6e3Alh11ClF8ORXOF+g6tRCG9g5dVOYeV
+ CgHweCJsPcbXqLXSCReFW7WlRs1GfPiDD8qe3As+x3BwMSpIJfVmOYQ1yffZuRytxvDx5qG8L
+ fp1djDM62JXlHhR4Yrx5JEahJhcEPIIiZ5dKTmH3a/9+G73qVaHPssndD/vrondMLMbVhDcIS
+ alsQ2v7vpuwTAWaPjdM+hqgwQO9EDxTSR/CRPFoa9Wie1CHfcn0y01j/LnlwtPjih4zK4UDgj
+ VGlX9XgQmT20jR1NRti2dEE7udbQlcXVeG65mZlxP0XphpXI7VUmtqWF84kVA5o0a5U6vLfyR
+ IKqabwC8fwZFXqOgdjxgEFgCA3+12G19bj018M6JFgclZZtdtJ04OgJf0mdmWdyA2v/unSEOP
+ 75xthdz2mEzbojY1xM/xTPadhM9d6jzSpRQ5xkV/8HVgR0L80qqntGjfdb3e4x1ygWTYuGI+i
+ qyoBaE/pTxv8/BP0uCfgzKpDJjOyru9yg8sbNgJRY7gC2RbUJglAjbaHPebrhg45XYonhekkF
+ wH2JO8Z/NvQ8hBVZD/J4i/INOcLcljyHd7YSuggP4ZIMontuz0oZo7YucuNO8nQW7ZOSrFPCo
+ sbqJzu3QwIUlhRLxw9Tok9Nk5h7eaJDZfj5RFHrWvVyuGBHsXcKQth7ml/OvuZ5NetgsbTX9I
+ +ylfsvUnPTUqkMEDGjT7pj/OPPT7y5jlLYNH8r17NrjH8b0KSHUr9qQhoCy9pY1+HvhTqDPKs
+ 9JfZthAQUr+YVcVFhjwuGcXIxACvhFEtwmZrld/P/STa+M8b2ja68TWyA0mFcu8PjSRmkL4Nb
+ gOIC/GBv871Inyxu4FKJgqNYzCQsCeqkiFH9Tvw/wnIOpDcVfQgr1MHvft4DhWn2DYsTFc1Q/
+ D8NF5vNs4Oinw8zFF1FapAvkKO2wCyfGNaMfRE4TyAnpkZx64cyFbfDLG+jFJAw+9yzGVvKHD
+ zqyZAjNnd8LWrLcCLVppb7O3YATmd8Uqo3emA7J2DGdXGPcRAErhLebawYfaP1lkIjXHMVqmL
+ 6NvNo4qNO8IjweQZ5XlgJBt1C5Cdo48lvzvgaB51Ggzn/T3Ss31ydc4s/J7btMEqXEur75v76
+ APIpNMH50SN29rMBWsHoxFCKQdVmPnBRHwcA+rBFqQt3duyz7YCNryzhZ7EGh8G+pDpYvzwul
+ h5A9ohgXvcWBL7oDOmjpNhWpYMxE=
 
 =E2=80=A6
 > We are trying to get rid of all multiplications from allocation
@@ -97,7 +96,7 @@ cumentation/process/submitting-patches.rst?h=3Dv6.14-rc3#n94
 
 =E2=80=A6
 > ---
->  sound/soc/qcom/qdsp6/q6apm.c | 2 +-
+>  drivers/thermal/thermal_debugfs.c | 2 +-
 =E2=80=A6
 
 How do you think about to improve your version management?
@@ -108,24 +107,21 @@ cumentation/process/submitting-patches.rst?h=3Dv6.14-rc3#n780
 
 
 =E2=80=A6
-> +++ b/sound/soc/qcom/qdsp6/q6apm.c
-> @@ -230,7 +230,7 @@ int q6apm_map_memory_regions(struct q6apm_graph *gra=
-ph, unsigned int dir, phys_a
->  		return 0;
->  	}
+> +++ b/drivers/thermal/thermal_debugfs.c
+> @@ -876,7 +876,7 @@ void thermal_debug_tz_add(struct thermal_zone_device=
+ *tz)
 >
-> -	buf =3D kzalloc(((sizeof(struct audio_buffer)) * periods), GFP_KERNEL)=
-;
-> +	buf =3D kcalloc(periods, sizeof(struct audio_buffer), GFP_KERNEL);
+>  	tz_dbg->tz =3D tz;
+>
+> -	tz_dbg->trips_crossed =3D kzalloc(sizeof(int) * tz->num_trips, GFP_KER=
+NEL);
+> +	tz_dbg->trips_crossed =3D kcalloc(tz->num_trips, sizeof(int), GFP_KERN=
+EL);
 =E2=80=A6
 
 See also:
 https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
 cumentation/process/coding-style.rst?h=3Dv6.14-rc3#n941
-
-
-How do you think about to increase the application of scope-based resource=
- management?
 
 Regards,
 Markus
