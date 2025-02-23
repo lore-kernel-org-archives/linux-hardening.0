@@ -1,41 +1,41 @@
-Received: from mout.web.de (mout.web.de [212.227.17.11])
+Received: from mout.web.de (mout.web.de [217.72.192.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C51DD1E871;
-	Sun, 23 Feb 2025 10:11:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0723204C27;
+	Sun, 23 Feb 2025 10:30:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740305507; cv=none; b=qY6A7lZIkEPikW1T2SYTQ72n6d9UMdYak8h+fLI1l+oe4JzNNIChvGaatAVn19YhfsDSXIImh3g4Nu6Fr5G5Y4hxAxK1RX14R7G8K1cJ6jI9ukrfJvEuchmezp0Xgk/qDUZpkWjl4YpmK+ocAx+WS/l/nu4dU46ReGE52Gv6y3k=
+	t=1740306638; cv=none; b=bzp7z/yxsTQB1oq4H0WgQ3i8qJRbKvao2X19UybEetpDwF3Cj3hAYV5xWgYqhbRSZZq3sljzxNa1paqYc6R/vTkRLNQwRlZDxLkTF7DT1+8ifWjvxxfi2Fp8DmSWOB+tpY46kTzVcdU1qFqI/u0Z5FmpQFmcY/RdwdAHPFRC0Ho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740305507; c=relaxed/simple;
-	bh=IiJYWfUzjvzO64rFYkVBgyFB2/WFf5T4phOFcLu6ucg=;
+	s=arc-20240116; t=1740306638; c=relaxed/simple;
+	bh=r9wwqaJRtk9sOisVJ2iyPiOMx6Bdq8PHJKb1LjosIZM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RiWgDDf9JCQA/cbeI0UUi8d7g4uyI9uO8cpCYWeIsNx7aP27U9pG3tMEU4Zh877cIj749v4YC2KAw7sx3XF9OAak437fhLpFTmnYXdqE2z2mw8tqn2A1ZAkFp25hWTLOt4kI+bwlEMpH+JenZYc+NnlJOAGaiEXsjgyXmEctFxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=pDAe4ucz; arc=none smtp.client-ip=212.227.17.11
+	 In-Reply-To:Content-Type; b=jxbfVZQOs6YRosKTCpo7x56sdJnSTt1UjEsIQNKok2DV7JejQ5lNR+3pkKCEROYLVaGG0DvWqhZGwouUwdjcNQNx6RYS55Wyz0yfoVFhxjiTk7zYKd9IYZbuAusPbbsKstRyKRRc75s4mQA3aAEOreGH7zYyJCuCssVUMXnYqsI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=iwhUJxZF; arc=none smtp.client-ip=217.72.192.78
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="pDAe4ucz"
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="iwhUJxZF"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1740305497; x=1740910297; i=markus.elfring@web.de;
-	bh=+n81tpsUZjiYF8TyqwTYd0MJyUxrzC5UmrBbfS3jvuk=;
+	s=s29768273; t=1740306611; x=1740911411; i=markus.elfring@web.de;
+	bh=PbEif29t4SAIHbCmdiQGiPpEasdSjQ1egXOJVydscBQ=;
 	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
 	 References:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding:cc:content-transfer-encoding:
 	 content-type:date:from:message-id:mime-version:reply-to:subject:
 	 to;
-	b=pDAe4uczsP/GplF5u56BqD6C71APc1fEGYJhyJEPE0b+2kTqHDoru1cUfHEHD13r
-	 vcTzRtkZZzq2P4nLSDlypQFdJlNlDYhIgD3dj7frFRhQad07p50A8LSxI6LMwAPCB
-	 5Obf1UY3EIuRzhv4PPVsrVClSPo+rC/sBbm4zpOcTsdkFozexB09Fq3Bg/vvWUDXd
-	 NjHyRopkdahaEioZjyNi9pEXJkrtJaR7uQHMUeY9cGwZVpkXViJZ5mPZAaKSi2Efz
-	 KD9m9PrqG6M0LRHgG3KB7E2R07j7L7uVy4Sisl0yuJVqAX8NeGEhByY1VRBOe7rQz
-	 6y/3VBMEYSqcsDvtwg==
+	b=iwhUJxZFB6ap5DO7t+PvJt8NIVWkFJ8ass5I7Z0Rd6NsprE+ecudFC94v4MTNUbG
+	 5qoHOPQ/MHei7dJVWrGJ6HMeG5Tm+AQs9RavyUZ3CRJ+nnhCF58iuVewaQM95yr0I
+	 V/FgzfmfW6+wzLCcTkQiN5P5nVBymiQzGsVOMFqrVJsPvhV4eSezYpqzE06jCnJGc
+	 IY+hAUldl4TBd5lmB0QeuikEVJfW0UDx2Y4AWF90+PRqaAHIqFynyHaV8ykU78MUC
+	 g70emJ/UdHlQbNFlUKo0Ap4jtsgMkmMILdecKqm9ZIRbARtqFuh9NkojLfypBG3ct
+	 cGa9a/IpaeCB0Sr+Tw==
 X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.70.18]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MBjMM-1tcDLB1kdA-0017BQ; Sun, 23
- Feb 2025 11:11:37 +0100
-Message-ID: <ebe9e9d5-2058-429e-b733-183c437ba154@web.de>
-Date: Sun, 23 Feb 2025 11:11:35 +0100
+Received: from [192.168.178.29] ([94.31.70.18]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MSIEs-1tsdVT2iz2-00QT7H; Sun, 23
+ Feb 2025 11:30:11 +0100
+Message-ID: <31853d6d-a0bd-45b9-beaa-5d67c34ae09c@web.de>
+Date: Sun, 23 Feb 2025 11:30:08 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -43,47 +43,51 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4?] thermal/debugfs: replace kzalloc() with kcalloc() in
- thermal_debug_tz_add()
-To: Ethan Carter Edwards <ethan@ethancedwards.com>, linux-pm@vger.kernel.org,
+Subject: Re: [PATCH v3?] sched/topology: replace kzalloc() with kcalloc() in
+ sched_init_numa()
+To: Ethan Carter Edwards <ethan@ethancedwards.com>,
  linux-hardening@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Daniel Lezcano <daniel.lezcano@linaro.org>, Lukasz Luba
- <lukasz.luba@arm.com>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Zhang Rui <rui.zhang@intel.com>
-References: <20250222-thermal_kcalloc-v1-1-9f7a747fbed7@ethancedwards.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org,
+ Ben Segall <bsegall@google.com>, Dietmar Eggemann
+ <dietmar.eggemann@arm.com>, Ingo Molnar <mingo@redhat.com>,
+ Juri Lelli <juri.lelli@redhat.com>,
+ Madadi Vineeth Reddy <vineethr@linux.ibm.com>, Mel Gorman <mgorman@suse.de>,
+ Peter Zijlstra <peterz@infradead.org>, Steven Rostedt <rostedt@goodmis.org>,
+ Valentin Schneider <vschneid@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>
+References: <20250222-sched-kcalloc-v1-1-4dee15fd8241@ethancedwards.com>
 Content-Language: en-GB
 From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250222-thermal_kcalloc-v1-1-9f7a747fbed7@ethancedwards.com>
+In-Reply-To: <20250222-sched-kcalloc-v1-1-4dee15fd8241@ethancedwards.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Ky02Zy49vEaQHUodvPB1zMlzETqh0IZFLRVNj+LsxYYM+qgqmx9
- Fi9pnUT6BChB4qVrV/EQcZk/NPM/f8ZULPfMAexBem6Po99MoZSpkjOux4Lj/heJqyMIH70
- PbhCMMw/R2VeA0cLMZqmeFE9K95PqTu/uJay/WVW5RVlGaUAOmpxSoDgTagnUOgbhJC2npb
- qLSUqrX9IUKCTtn3tUyyA==
+X-Provags-ID: V03:K1:HDGssSRZxKiT8gDiaJYDr9WtSjjbq3k37tt9irOMvIDgtkfSqhO
+ DMUb5lB7Pn5CKR6tI1aUuLEzugj7+s50uJhZoy/0hu3Xx9jYqdsm3TVR2CsipPqsuHfIRx2
+ 6jV4ZrQfgaNEQITeTbuIq9ZIss1tx42yCT1ge+7EdeVo1bUboPATDJj+WkhD2PTr/b2Xi/a
+ 8dOGEkCXguXkQzmVXxz1Q==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:66X98Lpb8ZY=;tAWMZY7AGEJNEZudrGY34EyO07c
- ON30F9mdVqIUBHfIvPnqOfXRcGCCRwU36UNJ3A3bZQxxSNbDs6jN8YbeyOyeQNygp6RrLasum
- quAkmwYXGX6QaTRJWxo6euC0QvEUiXpV714h/frms+jJASQGuIzd6E/XKSLmefZNyFkWROB9Z
- 6eZ4W8uRnveh5IIxXV4CuPHLfhH6B36ewl7AW/QEL82n/C+6VDObj+q9YBA5gwvFYnFgqLyJS
- NsyVPxXvPpaTDBEJFebMZ8i7yG8Hb25fwYbN5XeW6e3Alh11ClF8ORXOF+g6tRCG9g5dVOYeV
- CgHweCJsPcbXqLXSCReFW7WlRs1GfPiDD8qe3As+x3BwMSpIJfVmOYQ1yffZuRytxvDx5qG8L
- fp1djDM62JXlHhR4Yrx5JEahJhcEPIIiZ5dKTmH3a/9+G73qVaHPssndD/vrondMLMbVhDcIS
- alsQ2v7vpuwTAWaPjdM+hqgwQO9EDxTSR/CRPFoa9Wie1CHfcn0y01j/LnlwtPjih4zK4UDgj
- VGlX9XgQmT20jR1NRti2dEE7udbQlcXVeG65mZlxP0XphpXI7VUmtqWF84kVA5o0a5U6vLfyR
- IKqabwC8fwZFXqOgdjxgEFgCA3+12G19bj018M6JFgclZZtdtJ04OgJf0mdmWdyA2v/unSEOP
- 75xthdz2mEzbojY1xM/xTPadhM9d6jzSpRQ5xkV/8HVgR0L80qqntGjfdb3e4x1ygWTYuGI+i
- qyoBaE/pTxv8/BP0uCfgzKpDJjOyru9yg8sbNgJRY7gC2RbUJglAjbaHPebrhg45XYonhekkF
- wH2JO8Z/NvQ8hBVZD/J4i/INOcLcljyHd7YSuggP4ZIMontuz0oZo7YucuNO8nQW7ZOSrFPCo
- sbqJzu3QwIUlhRLxw9Tok9Nk5h7eaJDZfj5RFHrWvVyuGBHsXcKQth7ml/OvuZ5NetgsbTX9I
- +ylfsvUnPTUqkMEDGjT7pj/OPPT7y5jlLYNH8r17NrjH8b0KSHUr9qQhoCy9pY1+HvhTqDPKs
- 9JfZthAQUr+YVcVFhjwuGcXIxACvhFEtwmZrld/P/STa+M8b2ja68TWyA0mFcu8PjSRmkL4Nb
- gOIC/GBv871Inyxu4FKJgqNYzCQsCeqkiFH9Tvw/wnIOpDcVfQgr1MHvft4DhWn2DYsTFc1Q/
- D8NF5vNs4Oinw8zFF1FapAvkKO2wCyfGNaMfRE4TyAnpkZx64cyFbfDLG+jFJAw+9yzGVvKHD
- zqyZAjNnd8LWrLcCLVppb7O3YATmd8Uqo3emA7J2DGdXGPcRAErhLebawYfaP1lkIjXHMVqmL
- 6NvNo4qNO8IjweQZ5XlgJBt1C5Cdo48lvzvgaB51Ggzn/T3Ss31ydc4s/J7btMEqXEur75v76
- APIpNMH50SN29rMBWsHoxFCKQdVmPnBRHwcA+rBFqQt3duyz7YCNryzhZ7EGh8G+pDpYvzwul
- h5A9ohgXvcWBL7oDOmjpNhWpYMxE=
+UI-OutboundReport: notjunk:1;M01:P0:vxsDjfL+reg=;MknuHBV43lDa80L2CAw30rdXaHw
+ akCapvI1poewCtA2hK9DU2M+oTr62mnRa4T7Jl842Z9uKIwzHTkmnAa6NJ24IeFVys/yWtt2+
+ wbDYrulvyVlgmLIYXG4DVRWC4lN00P7YzZ8pVymDmDdBVLAqVK3RCTdXucAxsa6zSIZUAdtVm
+ wJir+1SPVPQHF9t+hKPUTmaxE/8DMaBjWD4H9A35BT7E+hPw+RpjjIZWfZl3qkgsFWxLWaCZp
+ EN4IFmlZfG9rs+a9ohrQDvTNob6UULX0cttmo3Y1HGv5dHZKQ3QqtTepR0opBa9BVdefP0R/n
+ 7M6gDeAOKFJ4uRn4/H/gsbKBTGzPWfv6nF2fB9qMjIGajg566t9CHYG0kq/4v9rXGmuezoyU4
+ bQRX4GrTAQZEhT+4z2sX7Jr4h+AG9BZrWzOtHSP+jpIR6KSKy55HyxJM9/Fl3BvQ/7lVXP17Z
+ qwe6wWmwp9dtTlUKAP0HWHDzvQxv10M70nHxoLLbP+e/fqsEQMUGs516otiXqJzPox7NoOy4d
+ RBr0+q2b7ArLIz5kDEHOaGo/Hhm1a8tHwpMU23JsWHpw0VIUh0tiNxSbOk4PqJ3IYfgePEwea
+ hjDvFcohuSnjJIJ2nZO0XtTE/sGx1Lig1M9fdWpbTNUZ4k5oEwZG0Mtn6k2c50tZkv1+RIS3P
+ DhUTaBlEm8R8IN7EbD2XuHL7O0OQoQjQrzfn6+8NgOLq//U+26/3j9oGFTb9OBG2edrHJ95jM
+ C0UcsmWowve1zS0LDi5mxd6jJTWYu3GMl2mGguXSN6AL+Va9IYzorbcpzSaMDG2nQZdVIabC1
+ rNVCDALyJJFBsx+ldniqYCftl0mARHZDqayf7IkRutKZqce27WQ7/1s4GPGfaVSgOU0o6KXD8
+ Yydkki1lvb7OZU0xhpzDzK5vEkZ5h1ElxNVTx3SjGpYt87z0nPY4qa183UKrwi+50s/0i46pP
+ oX+bvyHXO2tUazsuOWGQKdziBTOvablY3JTDo26ySyJ+2lnj7drTc++0ssX+WpLJReXDKhL16
+ HMlPiW9KWgfOA1s9cM7tDhGZG6cjqNeE/C4eIbKDQWf7ORXOfxUToyR0vNZZK1LfSVozWEYFL
+ moe/T568iK7p2rAhfZe9qTzoBFSgEsst472O02VpyNLcQH/KYksYldpUjZDYuA5ZRh+k6QPT7
+ EiF+TTUvUv63CfmZWrQe0bARt6oRwLYRSUM7AZSaFNEVnwUhFem2EDctRlnCLPx0SPlPIHolg
+ YyBKjxP5M5z83cgChu/0vnZla3xBsSMAjVHGFSEBc07kMMGRXyWE0JS4I4FKYH5lfU1wo5qZ7
+ 8Tmn5saG9K7/iD/qQZwC+j8Lyi8/hsRNMH0MeTOHqAyIY7pl0RkRkEprr7gvp5d9EFDLN/4Go
+ TOvokZLve/U8AwNH0Ah0hf+3asCZJ+01+xowsv8U59pdyf/M/wlu9zz7hjIYxYJ1UhTiDeHcn
+ zixYXa9CJQ6seCPtAqhdLlOR5YRQ=
 
 =E2=80=A6
 > We are trying to get rid of all multiplications from allocation
@@ -96,7 +100,7 @@ cumentation/process/submitting-patches.rst?h=3Dv6.14-rc3#n94
 
 =E2=80=A6
 > ---
->  drivers/thermal/thermal_debugfs.c | 2 +-
+>  kernel/sched/topology.c | 4 ++--
 =E2=80=A6
 
 How do you think about to improve your version management?
@@ -107,16 +111,13 @@ cumentation/process/submitting-patches.rst?h=3Dv6.14-rc3#n780
 
 
 =E2=80=A6
-> +++ b/drivers/thermal/thermal_debugfs.c
-> @@ -876,7 +876,7 @@ void thermal_debug_tz_add(struct thermal_zone_device=
- *tz)
+> +++ b/kernel/sched/topology.c
+> @@ -1918,7 +1918,7 @@ void sched_init_numa(int offline_node)
+>  	 */
+>  	sched_domains_numa_levels =3D 0;
 >
->  	tz_dbg->tz =3D tz;
->
-> -	tz_dbg->trips_crossed =3D kzalloc(sizeof(int) * tz->num_trips, GFP_KER=
-NEL);
-> +	tz_dbg->trips_crossed =3D kcalloc(tz->num_trips, sizeof(int), GFP_KERN=
-EL);
+> -	masks =3D kzalloc(sizeof(void *) * nr_levels, GFP_KERNEL);
+> +	masks =3D kcalloc(nr_levels, sizeof(void *), GFP_KERNEL);
 =E2=80=A6
 
 See also:
