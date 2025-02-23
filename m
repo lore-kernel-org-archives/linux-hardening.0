@@ -1,160 +1,156 @@
-Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AFC0AD5E
-	for <linux-hardening@vger.kernel.org>; Sun, 23 Feb 2025 02:05:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 770E02BAF7;
+	Sun, 23 Feb 2025 07:19:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740276351; cv=none; b=r+BVBA9aZfJmXpBvKExu/3+RkWewNBLw4LD4EvbTNbr6KG3yskSqD0CKg6LqHN3Lan6KMIqVtYsOXHh8WVWzxXabLXUdzAqS0M90Cs0nD34kshdFPMQAziQP43g7FaoGySIgVms62V+21A+91AneXaiM68tn0LtIgCXZoNAPiX4=
+	t=1740295184; cv=none; b=ejrSoliO2yTCF9ILQEZMrBi+KdNnksRuWmrH3Bt/xq8AAqd9Xup4lr9QDnsDc2Z6b23w8ADT+MlCoUFJLauf2ZHhO9pIygPlBPhQ2h8AdsvHxZweLBIsFVFswtpYotleWVsuAlFO69YnMEU2o+mQxhrBgvuDvpF754N4iSD5hOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740276351; c=relaxed/simple;
-	bh=s3toQqjjS/oD9wydqQT7abiPlhSbLbUpblMrUOl2+CA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Fc7qcmbbmK6tDOPIP5tXr0/b/HjvHh7qPz/7w3cUDXxwSnlucwgVnE9ZutpVD4SJpAthFxJ3bqaw9zaxFrRtCqxqh8lolWF4Mh9JKNH3+8I2ixXkv7VxZShd1IaV0ZTDyr6Wcp+yE/52raP5m1sPR2tolFvX4maQ+EBcYihzaDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=VquT1po/; arc=none smtp.client-ip=209.85.161.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1740295184; c=relaxed/simple;
+	bh=3s//kK1v5HwrGxA4bxbPTKrcj8IMbSIhu0XLaPZ8Qro=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MPOzUDIiZ2ZqLivlkaYMcS0scLUBcqvvhwjnXgPldlk9VbNwppduG2PPfSsNYilh2P2k3PnjiDVTTO0ixmCTRsMl3p1NCW4pVAEDP/e96b7dMoVVqjouR608vgeg7OtHVrl34rLdkag4NOwMpFVVRaDFwpRFMmw7hFX6TNfuYcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=CT/8dlH4; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VquT1po/"
-Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-5fcde6cdd8bso157239eaf.3
-        for <linux-hardening@vger.kernel.org>; Sat, 22 Feb 2025 18:05:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1740276348; x=1740881148; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/2XEj1hbiH6o5CDpfSnYdqt5AMNqF18Pd/CIj/Ve+KU=;
-        b=VquT1po/eA3z6ALBxPSTnLj8L7Ml7nU1vR3MgEkIKlyYtCv9XbHIOr8J4NpB0vtB6D
-         CKfBWTETn97Yc9nOW8yhH2ygWyZ4vAYSMDBac0x0W6N0tpPlSA/Angpa535jhCzF6zc1
-         XWp8+jhhrRVHJC3H16SeKP1PCAVfqelWykT5g=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740276348; x=1740881148;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/2XEj1hbiH6o5CDpfSnYdqt5AMNqF18Pd/CIj/Ve+KU=;
-        b=QRWcHw22q+zMnoxnZ3BW4Prrd5AA8ZnPHjg5yc8YBhyJyAtthixuUN1MUlKQkLfIAM
-         yJj6M7ju+9ilJRqa7O/ZFDQNr/LYBhDgmBtquWt/HXtxAoaFegoNNTrAVl3SUEhyXWAZ
-         RkEit+UZmlNfwZgammnx51kqyC9FQ6QK5Pmuq9zMrf00c+TWt1R1B1Oswy/jrePNgyau
-         sZIfiMiqhrQnmvRCH5wk7q/1KrPSoWwNQ40D/SLl7vV+MIMYlb5iKBdKoeDqKuN75GQo
-         FF/u50x2B/CceTN4EYMKzPiLBHsV0GqSDpbwVbVtihoTZIZCu/3SGCAd0peeUM8fzhg2
-         iaJw==
-X-Forwarded-Encrypted: i=1; AJvYcCX6oTsK5TqGriEQr2SgL5b9QTkN1w8UMENRmRLfjFwSaxMYl/HnTjIzzDxUP4YHvx3oTj9HAT7/ykXrvByGQH8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGTvjUshDPkAp764C+Aq/KJH3l+It4HywoR6kfHvqD03Y2KT7+
-	S+EGvBEv2SNxM8wadmg2Ml17qUL2ObtyPWUwzvgZVd7U14OZEWShN5/S/2acYK3oyyb+Slo0gio
-	YrrwXgViYzKUtQH26smCV9bbc4eVTzMMXi6yH
-X-Gm-Gg: ASbGncvgKua3vlIZiv7R2ogdxoFP6fHdNQkHO5OFCI7FIAUkDPbcggn3hWWihvqzj8G
-	T8Aqzjechcgk0+jPleG2MbpOzzJGgYAhtdNxikAhGmpMJKofDRdm4KBDr3jS3XJfl2j7insGjxi
-	BJUabWl9OIdbf1AvdD6+4Nk6L2r/gmApqj3LtV2L4t
-X-Google-Smtp-Source: AGHT+IFYiKfj7n9oq2z10qTkYhOrFEAS3wfYsvDaOSNLv5Kzbj7Q9svtXXu5LyLgAFkx1mNPmsy7UCDxvQfO3Nq1L3E=
-X-Received: by 2002:a4a:e9b0:0:b0:5fc:f416:e315 with SMTP id
- 006d021491bc7-5fd3c5e739cmr169433eaf.0.1740276348473; Sat, 22 Feb 2025
- 18:05:48 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="CT/8dlH4"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51N3K4RL027970;
+	Sun, 23 Feb 2025 07:19:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=dij0yI
+	Yzj4zL8CNIMdW5A046jovSl4+qz20bZoGhC8M=; b=CT/8dlH4Z2r3fDdhgg40PQ
+	D2n0qHlz+RVESvzoW4ovZvXrA0HKakRbc3zQQsdxeYNLCUYJOqGO9ZrG7sQGoXD5
+	1nrR63sH0fZrn0XTh2H8d5mGvltZ6KyO9oO51KFGDj0fIz/33PSSP5lf6lirAeeX
+	E8B45GUStlU72sTzSg+zZBv2DLiDWGe7s8TOet9uFXC3RyPDymOF55+rx1kxEazv
+	6FP//DrSnEPpz6AwiV/s/LMPcxgxdcQbl92btgaTaEGvuI3KH2P4+gQQDgZO9uIi
+	5l5ok4M21iYGB/yoJmT0o5YmatAndr7FXDWtGqnPCwQTc1XxIAyyUCL2JWe0M4sw
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44ysr9rw2g-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 23 Feb 2025 07:19:18 +0000 (GMT)
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 51N7JI3C011010;
+	Sun, 23 Feb 2025 07:19:18 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44ysr9rw2d-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 23 Feb 2025 07:19:18 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51N4vCvS012597;
+	Sun, 23 Feb 2025 07:19:16 GMT
+Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44ys9y1byp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 23 Feb 2025 07:19:16 +0000
+Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
+	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51N7JG3a24052284
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sun, 23 Feb 2025 07:19:16 GMT
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 316FF58055;
+	Sun, 23 Feb 2025 07:19:16 +0000 (GMT)
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3C3DC58043;
+	Sun, 23 Feb 2025 07:19:11 +0000 (GMT)
+Received: from [9.43.34.198] (unknown [9.43.34.198])
+	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Sun, 23 Feb 2025 07:19:10 +0000 (GMT)
+Message-ID: <3eaea922-0c78-414b-9609-abda0c97a13a@linux.ibm.com>
+Date: Sun, 23 Feb 2025 12:49:09 +0530
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250212032155.1276806-1-jeffxu@google.com> <b114f48a-a485-4ebd-9278-6c62a1f33d9c@lucifer.local>
- <CAKbZUD0TAX8F9kDCEEvGSbcegDD4GLyra3ewtxncBbs45WJZ3g@mail.gmail.com>
- <7545d5eb-a16e-4cc8-a9e3-5431be01aade@lucifer.local> <CAKbZUD3kaYEqQFU1TWfJWvtV02ESaMb0_ygadGgeAKo-b+GRcA@mail.gmail.com>
- <202502131240.A57C749@keescook> <CAKbZUD16kfO2OBxY2fMbnmnEinTeKbPpTOLVC=Pc+FbWN_kjcQ@mail.gmail.com>
-In-Reply-To: <CAKbZUD16kfO2OBxY2fMbnmnEinTeKbPpTOLVC=Pc+FbWN_kjcQ@mail.gmail.com>
-From: Jeff Xu <jeffxu@chromium.org>
-Date: Sat, 22 Feb 2025 18:05:37 -0800
-X-Gm-Features: AWEUYZnuOFzxTft1Ol1ezbgtkwfxRwvwDnRZCiBdBqQfVmfm8mLtznn6nJkF5y0
-Message-ID: <CABi2SkU_owKfgeUrFaFQUqHYkz1gnTbav2yAABgP2ThkFRMiQA@mail.gmail.com>
-Subject: Re: [RFC PATCH v5 0/7] mseal system mappings
-To: Pedro Falcato <pedro.falcato@gmail.com>
-Cc: Kees Cook <kees@kernel.org>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	akpm@linux-foundation.org, jannh@google.com, torvalds@linux-foundation.org, 
-	vbabka@suse.cz, Liam.Howlett@oracle.com, adhemerval.zanella@linaro.org, 
-	oleg@redhat.com, avagin@gmail.com, benjamin@sipsolutions.net, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	linux-mm@kvack.org, jorgelo@chromium.org, sroettger@google.com, hch@lst.de, 
-	ojeda@kernel.org, thomas.weissschuh@linutronix.de, adobriyan@gmail.com, 
-	johannes@sipsolutions.net, hca@linux.ibm.com, willy@infradead.org, 
-	anna-maria@linutronix.de, mark.rutland@arm.com, linus.walleij@linaro.org, 
-	Jason@zx2c4.com, deller@gmx.de, rdunlap@infradead.org, davem@davemloft.net, 
-	peterx@redhat.com, f.fainelli@gmail.com, gerg@kernel.org, 
-	dave.hansen@linux.intel.com, mingo@kernel.org, ardb@kernel.org, 
-	mhocko@suse.com, 42.hyeyoo@gmail.com, peterz@infradead.org, ardb@google.com, 
-	enh@google.com, rientjes@google.com, groeck@chromium.org, mpe@ellerman.id.au, 
-	aleksandr.mikhalitsyn@canonical.com, mike.rapoport@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] sched/topology: replace kzalloc() with kcalloc() in
+ sched_init_numa()
+To: Ethan Carter Edwards <ethan@ethancedwards.com>
+Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
+        Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Markus Elfring <Markus.Elfring@web.de>,
+        Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+References: <20250222-sched-kcalloc-v1-1-4dee15fd8241@ethancedwards.com>
+Content-Language: en-US
+From: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+In-Reply-To: <20250222-sched-kcalloc-v1-1-4dee15fd8241@ethancedwards.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: hHOPWLPOYiaij2BIl7zKRnHgDr42fKQe
+X-Proofpoint-GUID: 1qsb0fS9nhYsqnZlMJuPL_Eq6iwjelU6
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-23_02,2025-02-20_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 suspectscore=0
+ mlxlogscore=999 clxscore=1011 mlxscore=0 lowpriorityscore=0 malwarescore=0
+ phishscore=0 priorityscore=1501 impostorscore=0 bulkscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
+ definitions=main-2502230052
 
-On Tue, Feb 18, 2025 at 3:18=E2=80=AFPM Pedro Falcato <pedro.falcato@gmail.=
-com> wrote:
-> The problem with something like prctl is that we either indirectly
-> provide some kind of limited form of munseal, or we require some sort
-> of handover (like personality(2) + execve(2)), which both sound like a
-> huge PITA and still don't solve any of our backwards compat issues...
-> all binaries would need to be patched with this
-> prctl/personality()/whatever call, and old ones wouldn't work.
->
-SECBIT (such as AT_EXECVE_CHECK) can be locked, which provides a
-strong security guarantee.
+Hi Ethan,
 
-> The semantics behind GNU_PROPERTY_MEMORY_SEAL are unclear to me (maybe
-> the toolchain folks could shed some light?), but it sounds like it'd
-> fit perfectly.
-> I suspect we probably want to parse this on the kernel's side anyway
-> (to seal the main program/interp's segments)[1], then extending them
-> to the kernel system mappings should be somewhat trivial...
-> I don't think we'll ever get a program that can't cope with sealing
-> the system mappings but can cope with sealing itself (and if we do, we
-> just won't seal the entire thing and that's _okay_).
->
-> Deploying mseal-ready programs could then be done in a phased way by
-> distros. e.g chromeOS and android could simply enable the
-> corresponding linker option in LDFLAGS and let it rip. Other more
-> mainstream distros could obviously take a little longer or test/deploy
-> this on all programs not named gVisor and/or after CRIU is okay with
-> all of this. We then might not need a user-configurable CONFIG_ (only
-> an arch HAS_SYSTEM_MAPPINGS_MSEAL or whatever), nor a sysctl, and
-> everyone is happy.
->
-> I glanced through libc-alpha again and it seems like the glibc folks
-> also seem to have reached the same idea, but I'd love to hear from
-> Adhemerval.
->
-> Am I missing anything?
->
-I'm hesitant to rely on HAS_SYSTEM_MAPPINGS_MSEAL in the kernel for
-special mappings.
+On 23/02/25 01:16, Ethan Carter Edwards wrote:
+> We are trying to get rid of all multiplications from allocation
+> functions to prevent integer overflows[1]. Here the multiplication is
+> obviously safe, but using kcalloc() is more appropriate and improves
+> readability. This patch has no effect on runtime behavior.
+> 
+> Link: https://github.com/KSPP/linux/issues/162 [1]
+> Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments
+> 
+> Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
+> ---
+>  kernel/sched/topology.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+> index c49aea8c10254dec985bba47b18f61be954d23f6..b4539b29fb36f6b2f0c5ca310620ebda29755e5c 100644
+> --- a/kernel/sched/topology.c
+> +++ b/kernel/sched/topology.c
+> @@ -1918,7 +1918,7 @@ void sched_init_numa(int offline_node)
+>  	 */
+>  	sched_domains_numa_levels = 0;
+>  
+> -	masks = kzalloc(sizeof(void *) * nr_levels, GFP_KERNEL);
+> +	masks = kcalloc(nr_levels, sizeof(void *), GFP_KERNEL);
 
-Think this way: some apps don't want vdso, but the kernel creates it
-anyway,  those apps were forced to unmap or remap them.
+Even though an overflow is very unlikely here, using kcalloc() improves
+readability and adds a safeguard since its built-in overflow check has
+minimal overhead.
 
-If the kernel should take a new dependency on the elf header, a better
-approach is adding a bit in the elf header to indicate "not-creating
-vdso".  This would solve problems for those apps that want to unmap
-vdso.
+Reviewed-by: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
 
-CRIU would need more than this new bit, i.e.  an ability to create
-vdso on demand. Currently, during restore workflow, CRIU remaps the
-vdso created by the current kernel (can't use vdso from the back-up,
-because vdso is tied to the kernel version), and the remapping address
-must be the same address  as the backed-up process, to avoid
-symbol-relocation. Kernel can provide a new functionality to create
-this vdso mapping as desired by CRIU.
+Thanks,
+Madadi Vineeth Reddy
 
-Then the vdso can be sealed from creation in all cases, this is the
-most secure approach. And the kernel also doesn't need that code to
-remap/unmap vdso - that is also cleaner IMO.
+>  	if (!masks)
+>  		return;
+>  
+> @@ -1927,7 +1927,7 @@ void sched_init_numa(int offline_node)
+>  	 * CPUs of nodes that are that many hops away from us.
+>  	 */
+>  	for (i = 0; i < nr_levels; i++) {
+> -		masks[i] = kzalloc(nr_node_ids * sizeof(void *), GFP_KERNEL);
+> +		masks[i] = kcalloc(nr_node_ids, sizeof(void *), GFP_KERNEL);
+>  		if (!masks[i])
+>  			return;
+>  
+> 
+> ---
+> base-commit: 5cf80612d3f72c46ad53ef5042b4c609c393122f
+> change-id: 20250222-sched-kcalloc-1d5acea7249b
+> 
+> Best regards,
 
-Thanks.
--Jeff
-
-
->
-> [1] we should probably nail this responsibility handover down before
-> glibc msealing (or bionic) makes it to a release. It'd probably be a
-> little nicer if we could mseal these segments from the kernel instead
-> of forcing the libc to take care of this, now that we have this
-> property.
->
-> --
-> Pedro
