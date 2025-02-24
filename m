@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C402F2040BD;
-	Mon, 24 Feb 2025 19:25:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 564B81FCFE2;
+	Mon, 24 Feb 2025 19:26:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740425104; cv=none; b=Vou+VXcYHdsGp/FsNPoeJhDJMw8Dpz/Fe1bQYG9Itq3B7RDXJ6CzvrtrT+M1DGWq2dYvBK7bgIYAgoFUTud8VACu061gk1f8ECH2BoSCItOsiEaVrKRklkfwDB8kHo6m+AvIQoQGXx4gimOTXUTlaRmEFzcahRVxvAAfgQlgEYI=
+	t=1740425187; cv=none; b=iFnkqLeIoL0C7X5k4HDnc3i1kAilvM7oLQEyAGS3UAfY0sJViWThwfftSESWFe9dFE/jq5+vrUGAp7pvJk4izL4lGskqhIIiT2QIPulRRF+9oCwCPsGW1ReM9AA5M3QOCp39OhAGvL2UJZ6VjuTI/QJ1eWv4knfOXAntYL5yt9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740425104; c=relaxed/simple;
-	bh=fjHcvZgvhTSj5FFdxPdTk8Lrdzdg91sRk6S1mMi4Ecg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O1Mz71WDJWLYmKmw5pyoHPoQVzVN1XLcGL+ybaPG6VS97lLecIWt6NLvvN2UP2PfH01RVesnUmgaIU4rqWI9AwxCiiLUzqkcTWLvOCOazwejmhvgG7yUMZ60yN0136SErkPWii6a6xUlO436oRWsBNDPdr4SaND1Ww5Ykzq8uXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M+Un/Jtp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740425187; c=relaxed/simple;
+	bh=3FT9s1t6iJB4QohyR9vPRCV6YPVdGd4Yaqn2jw8n9ss=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qfXegUtjBaLeo0LYeAgSppvwTjHlzotgbl7t0YXvvmsGlGKvWnbSs21Xa1YydGd2yH+Asmt691JFLc870NKNtHqJ0Ip6W7Q5o+i0SpMrLl/MRuBBW77dLgusWHC0LJv+4QUXjVAYSq5ykWYrPD+aT7RUOAPxYoGVIOETpBdaBS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Oz0Rl+93; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M+Un/Jtp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AFA8C4CED6;
-	Mon, 24 Feb 2025 19:25:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Oz0Rl+93"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B15E6C4CED6;
+	Mon, 24 Feb 2025 19:26:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740425104;
-	bh=fjHcvZgvhTSj5FFdxPdTk8Lrdzdg91sRk6S1mMi4Ecg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=M+Un/Jtp4PMYsu31G/MB+IssTm4ML0IcZHZJuXJZ5gat79fHEjhseokSxoMn37u0U
-	 cMPJlHQMu8vpQYUwr0zcFhE6jye6ox9AkoXfGZ3dUjfbfSrD+fJARvD/f+qm8Xlb76
-	 a5aYZdqadSKVP4kxOcxwV8hlPfqxbzKQ1sSgyNGydW6Ati8FarqauaHK2JQOQp8aXk
-	 zYe0vy9lg4Wmb9q9Y3PfEVrgN3RZYIjySk2LixWgwOQy905Gx8aMN5yprecw3WGPJC
-	 /a/X3AgCfNuYpwq5lV/adtEbh+ExsuBrI/1fuQqNEhYH9YHowmOjBpSG0VBv3xVppI
-	 75gxhF8ZQzOzQ==
-Date: Mon, 24 Feb 2025 11:25:00 -0800
+	s=k20201202; t=1740425186;
+	bh=3FT9s1t6iJB4QohyR9vPRCV6YPVdGd4Yaqn2jw8n9ss=;
+	h=Date:From:To:Subject:References:In-Reply-To:From;
+	b=Oz0Rl+93ss0qSQdiDaK8lNcvvfq3+OmN1KTMEiHko1yuF96EIMp6UQCqFBHrWVYn4
+	 RcDQOWXO37K4zyNxLHYdFWIDDlD08TPlZ/XH1EwXc9XxgTRXrt10/P8hUMzsEavydl
+	 VYWt9XTv0uLtek0ozimYehbWUlpjdApwAyhp6Kc1aAhgEUPT2LV38pP/F+Eb4g8TEC
+	 OYEjLQ7VgaXzvC0a2Cn/R2qnuTAIDwnrTccHtQMVDZB3TYP/Vt0DBrcYk2Jmz6+TQx
+	 Tw+jE8421EuyzsEkmMjvk4PB33YJSWQRztCaL27/NP85XbOTEoyAfY7A4AnRgDMh5L
+	 GANp+jV5WhznA==
+Date: Mon, 24 Feb 2025 11:26:22 -0800
 From: Kees Cook <kees@kernel.org>
-To: Jeff Xu <jeffxu@chromium.org>
-Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Dave Hansen <dave.hansen@intel.com>, akpm@linux-foundation.org,
-	jannh@google.com, torvalds@linux-foundation.org, vbabka@suse.cz,
+To: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Dave Hansen <dave.hansen@intel.com>, Jeff Xu <jeffxu@chromium.org>,
+	akpm@linux-foundation.org, jannh@google.com,
+	torvalds@linux-foundation.org, vbabka@suse.cz,
 	lorenzo.stoakes@oracle.com, adhemerval.zanella@linaro.org,
 	oleg@redhat.com, avagin@gmail.com, benjamin@sipsolutions.net,
 	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
@@ -50,82 +50,60 @@ Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
 	mike.rapoport@gmail.com
 Subject: Re: [PATCH v6 1/7] mseal, system mappings: kernel config and header
  change
-Message-ID: <202502241123.D398A24@keescook>
+Message-ID: <202502241125.75EF4FC783@keescook>
 References: <20250224174513.3600914-1-jeffxu@google.com>
  <20250224174513.3600914-2-jeffxu@google.com>
  <443992d7-f694-4e46-b120-545350a5d598@intel.com>
  <CABi2SkVKhjShryG0K-NSjjBvGs0UOVsY-6MQVOuQCkfuph5K8Q@mail.gmail.com>
- <3nxcy7zshqxmjia7y6cyajeoclcxizkrhhsitji5ujbafbvhlu@7hqs6uodor56>
- <CABi2SkV-RwWjfXZfK4tHzQWG=dCJU7CRGmthSA8vqhHcbeCiQw@mail.gmail.com>
+ <385e1498-2444-4a7a-a1b0-0013b0b8fd68@intel.com>
+ <202502241053.1FF33D5B0@keescook>
+ <lvzy3x2tv4uskn7dmatdqwqhhs4xv4vumk5f46thunndxqro6q@egremlepcgo7>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CABi2SkV-RwWjfXZfK4tHzQWG=dCJU7CRGmthSA8vqhHcbeCiQw@mail.gmail.com>
+In-Reply-To: <lvzy3x2tv4uskn7dmatdqwqhhs4xv4vumk5f46thunndxqro6q@egremlepcgo7>
 
-On Mon, Feb 24, 2025 at 11:10:22AM -0800, Jeff Xu wrote:
-> On Mon, Feb 24, 2025 at 11:03 AM Liam R. Howlett
-> <Liam.Howlett@oracle.com> wrote:
-> >
-> > * Jeff Xu <jeffxu@chromium.org> [250224 13:44]:
-> > > On Mon, Feb 24, 2025 at 10:21 AM Dave Hansen <dave.hansen@intel.com> wrote:
-> > > >
-> > > > On 2/24/25 09:45, jeffxu@chromium.org wrote:
-> > > > > +/*
-> > > > > + * mseal of userspace process's system mappings.
-> > > > > + */
-> > > > > +#ifdef CONFIG_MSEAL_SYSTEM_MAPPINGS
-> > > > > +#define MSEAL_SYSTEM_MAPPINGS_VM_FLAG        VM_SEALED
-> > > > > +#else
-> > > > > +#define MSEAL_SYSTEM_MAPPINGS_VM_FLAG        VM_NONE
-> > > > > +#endif
-> > > >
-> > > > This ends up looking pretty wonky in practice:
-> > > >
-> > > > > +     vm_flags = VM_READ|VM_MAYREAD|VM_IO|VM_DONTDUMP|VM_PFNMAP;
-> > > > > +     vm_flags |= MSEAL_SYSTEM_MAPPINGS_VM_FLAG;
-> > > >
-> > > > because MSEAL_SYSTEM_MAPPINGS_VM_FLAG is so much different from the
-> > > > other ones.
-> > > >
-> > > > Would it really hurt to have
-> > > >
-> > > >  #ifdef CONFIG_64BIT
-> > > >  /* VM is sealed, in vm_flags */
-> > > >  #define VM_SEALED       _BITUL(63)
-> > > > +#else
-> > > > +#define VM_SEALED       VM_NONE
-> > > >  #endif
-> > > >
-> > > > ?
-> > > >
-> > > VM_SEALED isn't defined in 32-bit systems, and mseal.c isn't part of
-> > > the build. This is intentional. Any 32-bit code trying to use the
-> > > sealing function or the VM_SEALED flag will immediately fail
-> > > compilation. This makes it easier to identify incorrect usage.
-> > >
-> >
-> > The reason that two #defines are needed is because you can have mseal
-> > enabled while not sealing system mappings, so for this to be clean we
-> > need two defines.
-> >
-> > However MSEAL_SYSTEM_MAPPINGS_VM_FLAG, is _way_ too long, in my opinion.
-> > Keeping with "VM_SEALED" I'd suggest "VM_SYSTEM_SEALED".
-> >
-> How about MSEAL_SYSTME_MAPPINGS as Kees suggested ?
+On Mon, Feb 24, 2025 at 02:10:58PM -0500, Liam R. Howlett wrote:
+> * Kees Cook <kees@kernel.org> [250224 13:55]:
+> > On Mon, Feb 24, 2025 at 10:52:13AM -0800, Dave Hansen wrote:
+> > > On 2/24/25 10:44, Jeff Xu wrote:
+> > > > For example:
+> > > > Consider the case below in src/third_party/kernel/v6.6/fs/proc/task_mmu.c,
+> > > > 
+> > > > #ifdef CONFIG_64BIT
+> > > > [ilog2(VM_SEALED)] = "sl",
+> > > > #endif
+> > > > 
+> > > > Redefining VM_SEALED  to VM_NONE for 32 bit won't detect the problem
+> > > > in case that  "#ifdef CONFIG_64BIT" line is missing.
+> > > > 
+> > > > Please note, this has been like this since the first version of
+> > > > mseal() RFC patch, and I prefer to keep it this way.
+> > > 
+> > > That logic is reasonable. But it's different from the _vast_ majority of
+> > > other flags.
+> > > 
+> > > So what justifies VM_SEALED being so different? It's leading to pretty
+> > > objectively ugly code in this series.
+> > 
+> > Note that VM_SEALED is the "is this VMA sealed?" bit itself. The define
+> > for "should we perform system mapping sealing?" is intentionally separate
+> > here, so that it can be Kconfig and per-arch toggled, etc.
+> > 
 > 
-> The VM_SYSTEM_SEALED doesn't have the MSEAL key or the MAPPING, so it
-> might take longer for the new reader to understand what it is.
+> Considering Dave is the second person that did not find the huge commit
+> message helpful, can we please limit the commit message to be about the
+> actual code and not the entire series?
+> 
+> I thought we said that it was worth while making this change in v5?
 
-I think to address Dave's concern, it should start with "VM_". We use
-"SEAL" already with VM_SEALED, so the "M" in "MSEAL" may be redundant,
-and to clarify the system mapping, how avout VM_SEAL_SYSMAP  ? That
-capture's, hopefully, Dave, Liam, and your thoughts about the naming?
+Right, please minimize patch #1's commit log to just what it is doing,
+etc, and leave the rest of the rationale in the 0/N cover letter.
 
 -- 
 Kees Cook
