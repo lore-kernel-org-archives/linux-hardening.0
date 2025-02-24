@@ -1,174 +1,191 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C094118F2CF
-	for <linux-hardening@vger.kernel.org>; Mon, 24 Feb 2025 21:45:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D8791DDC18
+	for <linux-hardening@vger.kernel.org>; Mon, 24 Feb 2025 21:52:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740433548; cv=none; b=uUNC9xMrTnK6a9QmmVZaFyMtUMZbT8+/55abFZezRsMt+XKf+DuB2SnzU631Xq2r1nTT51ckqGqIMj+IYVe6Zb/B3+6bqn68nQ3pCW7n7/pXVRof6+ZfxdoG68jxBi0VgbTsGH20L/1pmlh0wLehXShyJ0i+1fPWEzoDAfR9SWA=
+	t=1740433933; cv=none; b=K++7bNVHM0k4qRWsa/MePOMu5aKyCfUNpyod6Q/XZYSYW5Drb94sSnDWVqMSTtjxy6SCM18UFc/Y8yM6Uwof0adt6MdRUlwjUc21wG2xYaY9WrFV8wW4k8I7Dddd4+9VfyzK14Nesq/Jqd0gvxf1G4fOQzzXjvSIIq4MIDm9rv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740433548; c=relaxed/simple;
-	bh=B8Um3eMk3hvqma38jKFiyIbEi663Dt3UgWX5h5sXLl8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q406t4wEvD6dGNZnixWbGiz+QnNbNM7M6m5ZOfTRPGQqh5rFsQSPAFWpmomAE77s8INdAJ+hn4GHaeYIma4jaotkig8BU8QdlP28oPjYESQYcGUfTVCU5CDcg8AqkgPrj1gVDU5+fH2sZYQZLaBeKUaAPZwsTZCgUhL6PuvrV/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=XZDplTQP; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
+	s=arc-20240116; t=1740433933; c=relaxed/simple;
+	bh=7vTZ4bcifDx0uBbn/YdD+tR5nT8QjS33t2BFPkAir4g=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=BghHmY9RmFpSdF6FGfe0gzVnAYVXbWC0e+OVklg9nZ4n5AYXFef9jrEioF6RBjzipAgI4Xoj80OOZv3NbEJhamqWk9fVyUPbihj8GZBHhkhJoHAgU9ZaZatqqFmH/8rX5yPGuHsQHNfJfK8UL0ln9kGyLhzXGreOtLjqM/1TIV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RTijXo78; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="XZDplTQP"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-220dc3831e3so92319655ad.0
-        for <linux-hardening@vger.kernel.org>; Mon, 24 Feb 2025 13:45:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RTijXo78"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43690d4605dso30551105e9.0
+        for <linux-hardening@vger.kernel.org>; Mon, 24 Feb 2025 13:52:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1740433546; x=1741038346; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=baQcd4BlBbeci4pq+lkQS7gSttZ++rUKJi5374wmvuA=;
-        b=XZDplTQPnT2QE+FR9MkNOp94a+o/ES4Ftkv3D99+hGCxy9U9g5/Ilt6ay0cHDhy9FX
-         0m8cGAwuyTrwC3nEffFU7eijYtsAvsAql6LnIrmsao+iOfbmyx51POIBF4howRhzRMmb
-         I0QkrjL7KMy74GCknt62ju5VLWfA908YhZxP3J3dvMVlAgmOeMqMwWjNo8Vl0vZ8Plh8
-         EbSwK60l4YkLB9q2Bm2UsFSAs9Nq8cCQbYPUXmE6Uf7INaTG7mf9cb4L8eeWO3M/HFKL
-         lvfJdJnpy9v5nBmUXFg8XlT2fob7WkHwx1OuO9bGkdoPB7+1ypSksihpX7ivHZbGpYk4
-         ycKA==
+        d=linaro.org; s=google; t=1740433928; x=1741038728; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=7vTZ4bcifDx0uBbn/YdD+tR5nT8QjS33t2BFPkAir4g=;
+        b=RTijXo78K7Nkv6aS8jriXBFtU45mxiRA841f06CFVKYew5ga2WuR8XL/6K05nsw/l3
+         cwmsN4Q42fRCWBz3Oaut7qoUBOqG26O4crrzPnUsmDRwCq6DjZkAHHEPFtajNhYps3i9
+         J9DkOwGW7zJnp53siwqPF8N5IQt+4HKvR/9iPUP2roG0b7kTJKbwMXO3WlPhXFOZAMSZ
+         nss9LCsXb7EZrLZ+Xny7d7HoV/31YXZdlLTrClPiMz4J7ex7sisPprFSwld0qE1SZUwA
+         j2m67KCrtTtHsAGg4ARX62FlqO72YI50tHJhPgzf+R9sHLMll3ufUy7MHmj39cUKvqet
+         2a+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740433546; x=1741038346;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=baQcd4BlBbeci4pq+lkQS7gSttZ++rUKJi5374wmvuA=;
-        b=dI9thwa2X4ZHNav5MSkB/pdhF2f4MKFpYt1snn/6agitx+/L9I3Ui3jmnINo4QCYBx
-         9AHG0mO1/gyLk8Oj6wbymydQADI7Ibg4/yyhriZ2ZrNHVkY73DggioIyOOp2Q6FkIOuH
-         qh+v1zne8wK0PhPmlsW3nt0dv825iLV2/mOPITkyGcXEFBAJFYd9uLVxioC9tsp7zgau
-         DJCkHBXn9dSEpdGvOJMQfHQQb1Y6EGkHg4xNN1LCEtik0D05OWjqES5mIAsCk+3MRFss
-         6LuTwMnYZuMhQoqJoScfWwy4z0by0PLqbB/vtzkxzzv9DsbJGtmYDh56/UcpJl9j2vbT
-         VecA==
-X-Forwarded-Encrypted: i=1; AJvYcCV2aBlpQhBIdOBgE+d8R/jLYQcpx7cLwjaEtQcOmLJV5kB1gXmJJPNFtA+LOBszvas79okjdxbmHcBQkNgOS/Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyeBuKZQQ/Hmt849JQ+njMzNGSJk0B3RAoqORcwievAwwiLMECy
-	OHtCO8UnOB2W0W9asAEvaCvhW/tlPAKZFLnCxmheL6RZxjhqjxNLIiJq4UDeuss=
-X-Gm-Gg: ASbGncvw0rmSfdQBe9NQbnSXlsstW6IaT75FlMQLcKotzkgItTl7jNqxBj5Jp+a8TQC
-	wZLtTyxe7gYJ2SXZWvhsDNWPqGK2DJyAMc/E2gLlHQwFgmuEQPYi1IVQarfF9Mm++354SiUEnJR
-	e4bAvsCgRgMV4Nr57a8qVYN0pbMiAtn2xou1WDgGJwHnqlFEGghg0UqaHf2Pl9twVsCnxJfVaPD
-	btV5as4pczs+HX43JJSvKw+u/NWjE73/vj3svxInBmouJZAHcIJ0AOD+IpZ91GGGnMH8HEEYuGQ
-	eMSdCibu8vXV8iXT5oXYpfa8cQDC7I/YpkqxR2SYVD3gcDz33ykkfqMtpOwPDWd2zwDywdY4/yL
-	lkw==
-X-Google-Smtp-Source: AGHT+IF1kivAJK+5XJv15nd3N2xNPfYMjBaPhJULgUhbrdplw1aav3juq/XyTUOTjPQZBXSn8PmxHg==
-X-Received: by 2002:a05:6a00:3d0f:b0:732:61d2:8187 with SMTP id d2e1a72fcca58-7341411d7c9mr30371600b3a.11.1740433546051;
-        Mon, 24 Feb 2025 13:45:46 -0800 (PST)
-Received: from dread.disaster.area (pa49-186-89-135.pa.vic.optusnet.com.au. [49.186.89.135])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-aeda8384d1esm114878a12.38.2025.02.24.13.45.45
+        d=1e100.net; s=20230601; t=1740433928; x=1741038728;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=7vTZ4bcifDx0uBbn/YdD+tR5nT8QjS33t2BFPkAir4g=;
+        b=kdqV3Z93XclBdImKnb/cotZsYXL+Zyc/wOuC1mgRnXvN4IOfnJJZR7uuIo5CgsDOTn
+         ISx5mgg9gB7stzQz8Sj7i5NG4xjA1FN36ctQCbk1oRf6UlaGeIxZ39m4mxSC/7N45/NQ
+         dubztq9fSuDma2Cyv7LvlpwIpVWDcynTHesKMjtGbPAea3AdG8Ksf05Ce7MdqnThGJh/
+         DVxQiqIekSPKz/zQExrGl6w5LEoVQLjwNGexfjsmuKw2fZp1bxRZ51DQkcYd9OE000gc
+         5lIgM7zoXH9ls+nF/eCstuFEvpuP2T9zpCGvYWfck7gpedQ10AqGLhIA45sENZSxXTa1
+         6Kaw==
+X-Forwarded-Encrypted: i=1; AJvYcCX7w0Jhya+s5uJ5/hncMkp9srmnc5+4TXC7/RR9UA5Fs6YFii4EDrpPmcdjz3bYj4ntH9zz0jpLzAumtAGftmg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxVYoOzgmj50sgr65H3123P59+x/KtY+q6B0eXNC15P3TuQcZRz
+	72RYYqWw7518k0AQUyIqQf3PRwMRQGwo4FXo7AniTBtdxjY+gid+1mrQriDcyVM=
+X-Gm-Gg: ASbGncsUF7hFat2x0csgqCU0aK55JWwDByrDV/+tGVC0eGtHvwHqGCvQtqc+BiuzPcT
+	HTLhyZLw5xmkn1GkM02B0hEiMBUgTAkyYjVcoYS8ugzGiUS3vVn4WiWlokbsEAwOGOyPzs3KaVP
+	lvogi1X+3G95Yc5WHBt/wINXNHDJLdS2qWj9kpIBlmsHdRRaos9Wzoo1TZ3KXkFmr7XxR5vibWy
+	R/X4x615rVplxGqC83C268xwb3ZlLI/ZZl4fYQphLJ28kQdyZM5NsaKZIBmbK2BuhwKtiKnMmez
+	TP6pW2s68wVVzAUsZWuOm5IJ41nVjw==
+X-Google-Smtp-Source: AGHT+IHmJNkurL7RO4E3X7dffqrJqghhJyUiAOpbxbEyAGEjCiGP4Aji7mTnE2UrlwDFQi5MR+cgww==
+X-Received: by 2002:a05:600c:468c:b0:439:a1c7:7b29 with SMTP id 5b1f17b1804b1-43ab0f426c6mr7915255e9.17.1740433928545;
+        Mon, 24 Feb 2025 13:52:08 -0800 (PST)
+Received: from draszik.lan ([80.111.64.44])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390cd88371asm216037f8f.57.2025.02.24.13.52.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2025 13:45:45 -0800 (PST)
-Received: from dave by dread.disaster.area with local (Exim 4.98)
-	(envelope-from <david@fromorbit.com>)
-	id 1tmgGk-00000005Vo4-2uVO;
-	Tue, 25 Feb 2025 08:45:42 +1100
-Date: Tue, 25 Feb 2025 08:45:42 +1100
-From: Dave Chinner <david@fromorbit.com>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Carlos Maiolino <cem@kernel.org>, "Darrick J. Wong" <djwong@kernel.org>,
-	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 3/8][next] xfs: Avoid -Wflex-array-member-not-at-end
- warnings
-Message-ID: <Z7zohueO2E3ZSpfj@dread.disaster.area>
-References: <cover.1739957534.git.gustavoars@kernel.org>
- <e1b8405de7073547ed6252a314fb467680b4c7e8.1739957534.git.gustavoars@kernel.org>
+        Mon, 24 Feb 2025 13:52:07 -0800 (PST)
+Message-ID: <854925a6204f36fff6d653bb4a30c55a6adb3aef.camel@linaro.org>
+Subject: Re: [PATCH 2/6] dt-bindings: gpio: add max77759 binding
+From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Lee Jones <lee@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Linus Walleij
+ <linus.walleij@linaro.org>, Bartosz Golaszewski	 <brgl@bgdev.pl>, Srinivas
+ Kandagatla <srinivas.kandagatla@linaro.org>, Kees Cook <kees@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, Peter Griffin	
+ <peter.griffin@linaro.org>, Tudor Ambarus <tudor.ambarus@linaro.org>, Will
+ McVicker <willmcvicker@google.com>, kernel-team@android.com,
+ linux-kernel@vger.kernel.org, 	devicetree@vger.kernel.org,
+ linux-gpio@vger.kernel.org, 	linux-hardening@vger.kernel.org
+Date: Mon, 24 Feb 2025 21:52:06 +0000
+In-Reply-To: <20250224153858.GC3137990-robh@kernel.org>
+References: <20250224-max77759-mfd-v1-0-2bff36f9d055@linaro.org>
+	 <20250224-max77759-mfd-v1-2-2bff36f9d055@linaro.org>
+	 <20250224153858.GC3137990-robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.53.2-1 
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e1b8405de7073547ed6252a314fb467680b4c7e8.1739957534.git.gustavoars@kernel.org>
 
-On Mon, Feb 24, 2025 at 08:27:44PM +1030, Gustavo A. R. Silva wrote:
-> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-> getting ready to enable it, globally.
-> 
-> Change the type of the middle struct members currently causing trouble
-> from `struct bio` to `struct bio_hdr`.
+Hi Rob,
 
-What's this bio_hdr thing? You haven't sent the patch to the XFS
-list, so we cannot review this for correctness. Please cc the
--entire- patch set to -all- recipients so we can see the whole
-change in it's full context.
+On Mon, 2025-02-24 at 09:38 -0600, Rob Herring wrote:
+> On Mon, Feb 24, 2025 at 10:28:50AM +0000, Andr=C3=A9 Draszik wrote:
+> > Add the DT binding document for the GPIO module of the Maxim MAX77759.
+> >=20
+> > Signed-off-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
+> > ---
+> > =C2=A0.../bindings/gpio/maxim,max77759-gpio.yaml=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 47 ++++++++++++++++++++++
+> > =C2=A01 file changed, 47 insertions(+)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/gpio/maxim,max77759-gpio=
+.yaml
+> > b/Documentation/devicetree/bindings/gpio/maxim,max77759-gpio.yaml
+> > new file mode 100644
+> > index 000000000000..9bafb16ad688
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/gpio/maxim,max77759-gpio.yaml
+> > @@ -0,0 +1,47 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/gpio/maxim,max77759-gpio.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Maxim Integrated MAX77759 GPIO
+> > +
+> > +maintainers:
+> > +=C2=A0 - Andr=C3=A9 Draszik <andre.draszik@linaro.org>
+> > +
+> > +description: |
+> > +=C2=A0 This module is part of the MAX77759 PMIC. For additional inform=
+ation, see
+> > +=C2=A0 Documentation/devicetree/bindings/mfd/maxim,max77759.yaml.
+> > +
+> > +=C2=A0 The MAX77759 is a PMIC integrating, amongst others, a GPIO cont=
+roller
+> > +=C2=A0 including interrupt support for 2 GPIO lines.
+> > +
+> > +properties:
+> > +=C2=A0 compatible:
+> > +=C2=A0=C2=A0=C2=A0 const: maxim,max77759-gpio
+> > +
+> > +=C2=A0 "#interrupt-cells":
+> > +=C2=A0=C2=A0=C2=A0 const: 2
+> > +
+> > +=C2=A0 interrupt-controller: true
+> > +
+> > +=C2=A0 interrupts:
+> > +=C2=A0=C2=A0=C2=A0 maxItems: 2
+>=20
+> You need to define what each interrupt is.
 
-> We also use `container_of()` whenever we need to retrieve a pointer to
-> the flexible structure `struct bio`, through which we can access the
-> flexible-array member in it, if necessary.
-> 
-> With these changes fix 27 of the following warnings:
-> 
-> fs/xfs/xfs_log_priv.h:208:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->  fs/xfs/xfs_log.c      | 15 +++++++++------
->  fs/xfs/xfs_log_priv.h |  2 +-
->  2 files changed, 10 insertions(+), 7 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
-> index f8851ff835de..7e8b71f64a46 100644
-> --- a/fs/xfs/xfs_log.c
-> +++ b/fs/xfs/xfs_log.c
-> @@ -1245,7 +1245,7 @@ xlog_ioend_work(
->  	}
->  
->  	xlog_state_done_syncing(iclog);
-> -	bio_uninit(&iclog->ic_bio);
-> +	bio_uninit(container_of(&iclog->ic_bio, struct bio, __hdr));
+I think maybe the interrupts property is not needed after all:
 
-This is a pretty nasty conversion. The code is obviously correct
-right now - the bio uses an external bvec table, so has no
-associated allocated bvec space and so the bio isn't flexibly
-sized.
+The PMIC has one external interrupt line (described by the top-level
+device), and the two interrupts here are just a representation of
+the PMIC's internal status register (i.e. top level interrupt is
+raised when status register for one of the gpio lines changes,
+amongst other things).
 
-Making the code more complex for humans to understand and get
-right because "the compiler is dumb" is a bad tradeoff.
+The intention is for a gpio driver to just treat and model them as
+cascaded interrupts, but they don't need to be configured in any
+way via device tree, as everything happens internally inside the
+PMIC, there is no board-dependent routing or trigger type possible.
+(Of course, there can be drivers subscribing to one (or both) of the two
+cascaded interrupts here, but that shouldn't matter I believe).
 
-I also think this is a really nasty way of fixing the problem;
-casting the fixed size structure to a flex sized structure that can
-overlap other parent structure fields really isn't a good solution.
-IMO, it is a recipe for unexpected memory corruption when the bio
-isn't set up properly by the caller or there are bugs in the way the
-bio is iterated/processed....
+Does that make sense? I added the property because
+Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+says it's a requirement to have an interrupts property, but I
+believe it doesn't actually apply in this case as there's nothing
+than can be configured.
 
->  	return;
->  shutdown:
->  	xlog_force_shutdown(log, SHUTDOWN_LOG_IO_ERROR);
-> diff --git a/fs/xfs/xfs_log_priv.h b/fs/xfs/xfs_log_priv.h
-> index f3d78869e5e5..32abc48aef24 100644
-> --- a/fs/xfs/xfs_log_priv.h
-> +++ b/fs/xfs/xfs_log_priv.h
-> @@ -205,7 +205,7 @@ typedef struct xlog_in_core {
->  #endif
->  	struct semaphore	ic_sema;
->  	struct work_struct	ic_end_io_work;
-> -	struct bio		ic_bio;
-> +	struct bio_hdr		ic_bio;
->  	struct bio_vec          ic_bvec[];
+Am I missing something?
 
-But then there is the bigger question: ic_bvec is a *fixed size*
-that is allocated at mount time. The fact it is defined as a
-flexible array is the problem here, not the embedding of a struct
-bio. i.e. we've used a flex array to optimise away an extra
-allocation in a non-performance sensitive path.
+Cheers,
+Andre'
 
-Hence if we had done it this way:
+>=20
+> > +
+> > +=C2=A0 "#gpio-cells":
+> > +=C2=A0=C2=A0=C2=A0 const: 2
+> > +
+> > +=C2=A0 gpio-controller: true
+> > +
+> > +=C2=A0 gpio-line-names:
+> > +=C2=A0=C2=A0=C2=A0 minItems: 1
+> > +=C2=A0=C2=A0=C2=A0 maxItems: 2
+> > +
+> > +required:
+> > +=C2=A0 - compatible
+> > +=C2=A0 - "#gpio-cells"
+> > +=C2=A0 - gpio-controller
+> > +=C2=A0 - "#interrupt-cells"
+> > +=C2=A0 - interrupt-controller
+> > +
+> > +additionalProperties: false
+> >=20
+> > --=20
+> > 2.48.1.658.g4767266eb4-goog
+> >=20
 
-	struct bvec		*ic_bvecs;
-	struct bio		ic_bio;		// must be last
-};
-
-and use another allocation for ic_bvecs in xlog_alloc_log() (similar
-to how we do the separate allocation of the *ic_data buffer that is
-mapped into ic_bio at IO time), then none of the code that accesses
-ic_bio for IO purposes needs to change and the compiler warnings go
-away. That's a much cleaner solution that requires no extra
-cognitive load on developers to maintain in correct working order.
-
--Dave.
--- 
-Dave Chinner
-david@fromorbit.com
