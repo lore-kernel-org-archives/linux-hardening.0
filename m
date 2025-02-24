@@ -1,55 +1,55 @@
-Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com [209.85.160.53])
+Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E77C38DE9
-	for <linux-hardening@vger.kernel.org>; Mon, 24 Feb 2025 19:33:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 747D11A23AA
+	for <linux-hardening@vger.kernel.org>; Mon, 24 Feb 2025 19:34:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740425637; cv=none; b=GDGW7B1WAuOxC4C/BPjq4eGh2+20i5j0p7A6YmWVFJaUHqn60Y+s/mUsMdDvztZ+RP1MhHTOtlSUMwpe9hT4G9OuBlAGMnHpTqi7drv2hZ16gjwdtnfaw/46VXYFQmIFbs/b+cxpz/Z+BwFl0tLefvXNuS70ztFt2qyF/J5rpQQ=
+	t=1740425660; cv=none; b=XrZoktlWUsgzYUgmqYkipoTC9nrP17rkBeHj0pD3nmKTtmgIw1Pzmed4mgLctVjbCvygdFQTA++LryLU53EsPo0WkNzHGdeg1qKqQgP0DC1p58sxAWBvfCy2pRcDm8TSfTYQWNyz5G94QvrneQBsINYiD4ozPQBJHvwjjqgyroM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740425637; c=relaxed/simple;
-	bh=OotrpF0rvaeGp0UXEx4PTFmbFI/xIa0pun0V/TapBT4=;
+	s=arc-20240116; t=1740425660; c=relaxed/simple;
+	bh=ZNAJBzjfq6uYqRLXpoJyrh8DGBBLa5628qhsEzaSUHs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=ScIrXAR5WpIEdsI9fZ+0wd/NCfXygOOXlcObHcmRvMZF1KJoe39vPbvZuT3HfyRf7+bEYyGDcPMxJpdy15iNSg9cqueyTnifqsWxche13W7o5LuD3x1zbMYeSkSq1hdxBRD8w+X8rU4+mzjUsZmc/Q3ZXsYqTsfRZRqRJy8Q7G8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=UnXsnLN7; arc=none smtp.client-ip=209.85.160.53
+	 To:Cc:Content-Type; b=Yh23L9+qfYl9uwhEhgG7gK36JgjTHCUrevfwEHT5OHdwylBSyrhsjK5G21UnbinXSdQ8Mct8OCm4cRcfzPZ8nsEgiCDQ9HbKdVhL1xJA4nMUHzxRo+mkwa/Ja3z4CfbujKZPRAo22ivGZcrhOgLur95DYOdng0uCNyF6WDOjSLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=NaH9T0ST; arc=none smtp.client-ip=209.85.167.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UnXsnLN7"
-Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-2b1f2b286f5so123544fac.3
-        for <linux-hardening@vger.kernel.org>; Mon, 24 Feb 2025 11:33:55 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NaH9T0ST"
+Received: by mail-oi1-f180.google.com with SMTP id 5614622812f47-3f401d3b7a2so106283b6e.2
+        for <linux-hardening@vger.kernel.org>; Mon, 24 Feb 2025 11:34:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1740425635; x=1741030435; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
+        d=chromium.org; s=google; t=1740425657; x=1741030457; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hnjUGFbaBrwW6kAgXcvKtRWxmUU2D5hodPgXl1k5G+U=;
-        b=UnXsnLN7C0hALvk/xFR6UIfsGSSRqKg+wrCo1eshB4osKlUWtITSWw+OW7yJvO1KU9
-         wXt7YMoH4twMZNINazEQbvCpeMwMKsvwByVF9V8X7zXFUf6niel6FcuWPxFSJHD7/JZZ
-         ACbpN4vuNdP5yxWEBb1aE0VePx9gDrgZrFeFY=
+        bh=oQY6dOosAcucIiRDQdMzsS+fL5tcNzoRGW55wAAQqwA=;
+        b=NaH9T0ST7thZR1yZpBqvdhLxdmbViMCj731Q2fRcrVKvJACCSZOU5vYFEKIf8OLd+Z
+         +hvGSqU4qeZX/PA5YZzfblp4aFfbU9V9yNDjRS41EKj3ndOQzJUwTRjgz0hq8+CGy6yX
+         Hm3rhtL7EShD9xpeO4GEHQHGd2k6s92bpbOYI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740425635; x=1741030435;
-        h=content-transfer-encoding:to:subject:message-id:date:from
+        d=1e100.net; s=20230601; t=1740425657; x=1741030457;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hnjUGFbaBrwW6kAgXcvKtRWxmUU2D5hodPgXl1k5G+U=;
-        b=A72Zv5gd5X4L/JWs0XN3n8Is7kdhZNcVYL3GmE+l5j7xaI9KM6+mGJ/Ic5koP42rd1
-         tVzEGW0mTMVDZq0owqLN5XZbJhE+W2QfR2+2vEAj5cH71LZnhGL0Qr2unaDHKPpv1OCM
-         iHuXn/4r3fSoI6lj2tuThs1Iqf4vWXUHxAbFxUFGZmxAtHcQP5k5e54O6r5mqnDhHfoZ
-         hmelmC2FlX/OIIeftQUO5L7KZq3bCMAKrRskmBUWk0s+X3lmykI82yujYGHvtSfncHDR
-         2PX/OkuUtKx59uYt4u4HNHr5cyRHRgNdtE+fBrSoWbL3sMfzu6ay9AVAHvGYSfj6awec
-         3O5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWatc+s2JJ4aJZNyCnojq55KlBs+RoslX3K03pMUMHHguFzZdh+pMrZbvBeZPmiFmXcXobqFRQJpoRU8FrRjkY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGQd1HqCN9R+AUXi/UTACriWG3Y9yeTuFXh4BHngPRDny9YRU6
-	6QNqNAzKr0l0PWUZmG1YhsL866HuJVWbQPNzW6uhMrM2ZsvR023mW4/D4SxGhTAniaP5iZ3QXgU
-	dw9xRGKzMNMsMxgCfACHAqZTNjRbHypvmNxkH
-X-Gm-Gg: ASbGncudZuj80S5IGgviFJBag2L1b8gBSyea/wdP83KXpXkVfHS0q8Do3odE1gW584V
-	76U94/ZBrnk8tuT0+2r+oydQ3MMyx2JU3FZFUmqfOslg6sA6F/KeaTORFf/wKmOaHiLUWqiUzFL
-	Ms089bgYPtA06xKsUNobUpRx2a9gAIj5MFeMF5
-X-Google-Smtp-Source: AGHT+IECBfDc8bF342UbaverJqxNJi+02rwQZrqufXUbn5FURGsu+d5N6F2sRjUe0EB4G3TUt2ZhKvacRWuj2clyLAY=
-X-Received: by 2002:a05:6870:6284:b0:29e:32e7:5f0d with SMTP id
- 586e51a60fabf-2bd50f74b8fmr3955851fac.10.1740425635255; Mon, 24 Feb 2025
- 11:33:55 -0800 (PST)
+        bh=oQY6dOosAcucIiRDQdMzsS+fL5tcNzoRGW55wAAQqwA=;
+        b=oOvEdEv8Avkw7ZeA+OfRmkcQKOjhf9OE//v7KY9x/Mpg+8Ja4dSToPVxT+nEAULbR0
+         ytYQCEJhpD/9zyuBlCYuD/4xIgFLKMKn2oZvi/qZJoaCSeXpoPpZoQ3IqnMb/9DVquYy
+         d72qPW30Ibq0wbTLpetGfwAIY2KJb+kpbaCg8gLgTKVOfVA8p6sxSQmX7IrFDqTGV4J1
+         Jt4j+saq/JZ4l+QkOq82w+3H3lNYgffrdwHvqrWOdtoL6T93wyHlXUTvhsyvvvb15Z37
+         5FNzhi5mxhHlOQts5wsj1HxzQwthxLmCkLC/imGWSC2lWEHHiCljJGEc7cgSIvRKqS9u
+         6MHw==
+X-Forwarded-Encrypted: i=1; AJvYcCVx+At14FytracPhjskqwdl0bFWf0Id5ceKFBOAP/BXfc6K4T8GYI41FN3awwFnLo2elYBkbTnH1z8LGmxu6Vw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx7neGKpcAjPiNqSyv859zE1VhtmkeyFWfba6U6x85n84GcZvFw
+	27A9Pi1zQ2pAHPpi1gr2dklsZVVGr3ah1OghdUVwS94noUnWPbZTeCBxNspD13msW+IrzTiBNcp
+	Lw2wH70rAt7rXBaNY74BAHJ6aLYmgNjDSuFBe
+X-Gm-Gg: ASbGncsn6MBsypZqA8IkGccWPOqY2ZZH+XKn9j2akDXCTCawBIBcoTmx4T4VGEFYwcO
+	5SUORpKx1L+A64amE56+rPlVcg0RKgPCH6jqT4099EmlZD6j5qVRTvKzzQBm+2/Gm62ueRJO4Hq
+	3AygQZ++T5jtiKRBFnBYlr6q0JJZpHRvxMoIfh
+X-Google-Smtp-Source: AGHT+IFsKQI/wA+4sHfEV/I1olQBkEfue3loUdNFzmEYTOMnz4MZXEFiZGBxlenlf0rK5hXvgVztHBZRVg4eMn9wabc=
+X-Received: by 2002:a05:6808:178a:b0:3f4:cf:5d7d with SMTP id
+ 5614622812f47-3f4247c0d9emr4328678b6e.7.1740425655952; Mon, 24 Feb 2025
+ 11:34:15 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -59,22 +59,21 @@ MIME-Version: 1.0
 References: <20250224174513.3600914-1-jeffxu@google.com> <20250224174513.3600914-2-jeffxu@google.com>
  <443992d7-f694-4e46-b120-545350a5d598@intel.com> <CABi2SkVKhjShryG0K-NSjjBvGs0UOVsY-6MQVOuQCkfuph5K8Q@mail.gmail.com>
  <385e1498-2444-4a7a-a1b0-0013b0b8fd68@intel.com> <202502241053.1FF33D5B0@keescook>
- <lvzy3x2tv4uskn7dmatdqwqhhs4xv4vumk5f46thunndxqro6q@egremlepcgo7>
- <CABi2SkVv8+hNt-WjO2jp8zUNOiabncU35vNXApQi8yhBxcf86w@mail.gmail.com> <hnlyeo4bnmxlraihgpdqfucxfpkqu7zmcxs5yqokohudliotpe@ngiv444c2bdp>
-In-Reply-To: <hnlyeo4bnmxlraihgpdqfucxfpkqu7zmcxs5yqokohudliotpe@ngiv444c2bdp>
+ <lvzy3x2tv4uskn7dmatdqwqhhs4xv4vumk5f46thunndxqro6q@egremlepcgo7> <202502241125.75EF4FC783@keescook>
+In-Reply-To: <202502241125.75EF4FC783@keescook>
 From: Jeff Xu <jeffxu@chromium.org>
-Date: Mon, 24 Feb 2025 11:33:44 -0800
-X-Gm-Features: AWEUYZnp8EKxv3yJ29ShfwTeO42iLw8jApAg8SH2LEssheFiIXEtzkDSr3kDQfc
-Message-ID: <CABi2SkU_-4sZgM8cTaEev_1V=M0QHk3=DK3ZBFr4Le7-d_v+7A@mail.gmail.com>
+Date: Mon, 24 Feb 2025 11:34:05 -0800
+X-Gm-Features: AWEUYZlICjQ_BKj7NOI18C7IZh1axQsiUlF463h-YGPwCWcvEopchlkyDHgqfEE
+Message-ID: <CABi2SkXLFnfMkZ8xjxiu6Evcvk_yqNt3Yw9Xm0GXbTKMdi2mrQ@mail.gmail.com>
 Subject: Re: [PATCH v6 1/7] mseal, system mappings: kernel config and header change
-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Jeff Xu <jeffxu@chromium.org>, 
-	Kees Cook <kees@kernel.org>, Dave Hansen <dave.hansen@intel.com>, akpm@linux-foundation.org, 
-	jannh@google.com, torvalds@linux-foundation.org, vbabka@suse.cz, 
-	lorenzo.stoakes@oracle.com, adhemerval.zanella@linaro.org, oleg@redhat.com, 
-	avagin@gmail.com, benjamin@sipsolutions.net, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-mm@kvack.org, jorgelo@chromium.org, 
-	sroettger@google.com, hch@lst.de, ojeda@kernel.org, 
-	thomas.weissschuh@linutronix.de, adobriyan@gmail.com, 
+To: Kees Cook <kees@kernel.org>
+Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Dave Hansen <dave.hansen@intel.com>, 
+	akpm@linux-foundation.org, jannh@google.com, torvalds@linux-foundation.org, 
+	vbabka@suse.cz, lorenzo.stoakes@oracle.com, adhemerval.zanella@linaro.org, 
+	oleg@redhat.com, avagin@gmail.com, benjamin@sipsolutions.net, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	linux-mm@kvack.org, jorgelo@chromium.org, sroettger@google.com, hch@lst.de, 
+	ojeda@kernel.org, thomas.weissschuh@linutronix.de, adobriyan@gmail.com, 
 	johannes@sipsolutions.net, pedro.falcato@gmail.com, hca@linux.ibm.com, 
 	willy@infradead.org, anna-maria@linutronix.de, mark.rutland@arm.com, 
 	linus.walleij@linaro.org, Jason@zx2c4.com, deller@gmx.de, 
@@ -87,75 +86,52 @@ To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Jeff Xu <jeffxu@chromium.org>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 24, 2025 at 11:32=E2=80=AFAM Liam R. Howlett
-<Liam.Howlett@oracle.com> wrote:
+On Mon, Feb 24, 2025 at 11:26=E2=80=AFAM Kees Cook <kees@kernel.org> wrote:
 >
-> * Jeff Xu <jeffxu@chromium.org> [250224 14:23]:
-> > On Mon, Feb 24, 2025 at 11:11=E2=80=AFAM Liam R. Howlett
-> > <Liam.Howlett@oracle.com> wrote:
-> > >
-> > > * Kees Cook <kees@kernel.org> [250224 13:55]:
-> > > > On Mon, Feb 24, 2025 at 10:52:13AM -0800, Dave Hansen wrote:
-> > > > > On 2/24/25 10:44, Jeff Xu wrote:
-> > > > > > For example:
-> > > > > > Consider the case below in src/third_party/kernel/v6.6/fs/proc/=
-task_mmu.c,
-> > > > > >
-> > > > > > #ifdef CONFIG_64BIT
-> > > > > > [ilog2(VM_SEALED)] =3D "sl",
-> > > > > > #endif
-> > > > > >
-> > > > > > Redefining VM_SEALED  to VM_NONE for 32 bit won't detect the pr=
-oblem
-> > > > > > in case that  "#ifdef CONFIG_64BIT" line is missing.
-> > > > > >
-> > > > > > Please note, this has been like this since the first version of
-> > > > > > mseal() RFC patch, and I prefer to keep it this way.
+> On Mon, Feb 24, 2025 at 02:10:58PM -0500, Liam R. Howlett wrote:
+> > * Kees Cook <kees@kernel.org> [250224 13:55]:
+> > > On Mon, Feb 24, 2025 at 10:52:13AM -0800, Dave Hansen wrote:
+> > > > On 2/24/25 10:44, Jeff Xu wrote:
+> > > > > For example:
+> > > > > Consider the case below in src/third_party/kernel/v6.6/fs/proc/ta=
+sk_mmu.c,
 > > > > >
-> > > > > That logic is reasonable. But it's different from the _vast_ majo=
-rity of
-> > > > > other flags.
+> > > > > #ifdef CONFIG_64BIT
+> > > > > [ilog2(VM_SEALED)] =3D "sl",
+> > > > > #endif
 > > > > >
-> > > > > So what justifies VM_SEALED being so different? It's leading to p=
-retty
-> > > > > objectively ugly code in this series.
+> > > > > Redefining VM_SEALED  to VM_NONE for 32 bit won't detect the prob=
+lem
+> > > > > in case that  "#ifdef CONFIG_64BIT" line is missing.
+> > > > >
+> > > > > Please note, this has been like this since the first version of
+> > > > > mseal() RFC patch, and I prefer to keep it this way.
 > > > >
-> > > > Note that VM_SEALED is the "is this VMA sealed?" bit itself. The de=
-fine
-> > > > for "should we perform system mapping sealing?" is intentionally se=
-parate
-> > > > here, so that it can be Kconfig and per-arch toggled, etc.
+> > > > That logic is reasonable. But it's different from the _vast_ majori=
+ty of
+> > > > other flags.
 > > > >
+> > > > So what justifies VM_SEALED being so different? It's leading to pre=
+tty
+> > > > objectively ugly code in this series.
 > > >
-> > > Considering Dave is the second person that did not find the huge comm=
-it
-> > > message helpful, can we please limit the commit message to be about t=
-he
-> > > actual code and not the entire series?
+> > > Note that VM_SEALED is the "is this VMA sealed?" bit itself. The defi=
+ne
+> > > for "should we perform system mapping sealing?" is intentionally sepa=
+rate
+> > > here, so that it can be Kconfig and per-arch toggled, etc.
 > > >
-> > > I thought we said that it was worth while making this change in v5?
-> > >
-> > I include the cover letter's content in the first commit message to
-> > clearly communicate the purpose of the entire patch series, saving
-> > maintainers' time when accepting the patch.
->
-> Having more text than patch for such a patch seems unreasonable.  I'd
-> find it more acceptable if it were a complicated race condition, but
-> everyone is getting lost in the summary.
->
-I will remove the cover letter from the first patch then.
-
 > >
-> > Should I still include that, and add what the first patch does, and
-> > separate it from the cover letter with  "----"? What do you think?
+> > Considering Dave is the second person that did not find the huge commit
+> > message helpful, can we please limit the commit message to be about the
+> > actual code and not the entire series?
+> >
+> > I thought we said that it was worth while making this change in v5?
 >
-> Here is my v5 answer, I think it was clear about not putting the entire
-> summary into the first patch.
+> Right, please minimize patch #1's commit log to just what it is doing,
+> etc, and leave the rest of the rationale in the 0/N cover letter.
 >
-Thanks.
+Sure.
 
-> [1]. https://lore.kernel.org/all/ml3x5qchmnehdzz2rxsdcdghivaqffojiweuhvpv=
-zw45u3l5bh@23sblrom3m36/
->
-> Thanks,
-> Liam
+> --
+> Kees Cook
