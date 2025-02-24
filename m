@@ -1,55 +1,55 @@
-Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
+Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2429D156F44
-	for <linux-hardening@vger.kernel.org>; Mon, 24 Feb 2025 19:40:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C422200138
+	for <linux-hardening@vger.kernel.org>; Mon, 24 Feb 2025 19:42:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740426012; cv=none; b=kjj9VlkT3i3VHkm481y5mPR94P2NJHwHASxeqvOko/duR3RBMmLaTlzkkM67JcS1xEnbFV2XKzA4YHtELPfbpwnnoGCHQXhlkD9suDsQJYBrqnTePY4L7RrBTo8ua+YH14KbwnlJGmltICjQh0+EesTEFD3NBUFRm4UqPVXzbEE=
+	t=1740426165; cv=none; b=Q09xYzXWcDR6orS6rzpqdOZAQwrYfT9k2cN1Fx8BwRWhVgCcrGTYvwl9EKZOaSHAgkobDn8j0bJbmxCr4Hx09l6E6hfzCxOwnpvNkHFcrzkHLoxmGki1buWlfKg+2fPXWGR1LJJnv/BMzWKqAPmDPqBMsS6S6Lk72mNSU4pKxV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740426012; c=relaxed/simple;
-	bh=jjo3DCB5gJAuKxWQFmPKlMM3UGP5qto/Mwx+MnTre2w=;
+	s=arc-20240116; t=1740426165; c=relaxed/simple;
+	bh=KQ4mgA7vR3HIK5onJDgr5Ls9mIKasO7wOQLm1ymJX6g=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=V8hYUav/G+roQ/OVVBy8YPvn16wzibo6Q4Npjr5pFjusvoXfGJjLfrPHV1Q0majTlBywVk8A/tOIuuFNK87olTy5cnlxNXAo5UKg34K/yH5dZZEC7t3jsE8QWDnhh9uNyAOZFpMvzVl7YJULw8M+lleGSBqDohIV8SuyOBCpt3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=NjqEf9To; arc=none smtp.client-ip=209.85.167.174
+	 To:Cc:Content-Type; b=U+pclJskQ8YQn/J9o4kYa/qbIgRk9HVjL8kfXw/+GG+7Al2g9qqhpRo4O4aaCz0PzcsRJ69C+EJItIL8lxHH0yib4tF6IFTJdEx8h3bqTxvb7/HFU5dHF6bKB/lN3BIdwROsRf9HzQUFMhrGbiTwmR14hpNn+eqe+EhSADsp7vg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=m6Q+tg4/; arc=none smtp.client-ip=209.85.210.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NjqEf9To"
-Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-3f40a18826fso114666b6e.3
-        for <linux-hardening@vger.kernel.org>; Mon, 24 Feb 2025 11:40:09 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="m6Q+tg4/"
+Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-7272b51f677so647812a34.1
+        for <linux-hardening@vger.kernel.org>; Mon, 24 Feb 2025 11:42:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1740426009; x=1741030809; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
+        d=chromium.org; s=google; t=1740426162; x=1741030962; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=jjo3DCB5gJAuKxWQFmPKlMM3UGP5qto/Mwx+MnTre2w=;
-        b=NjqEf9Totnh0QDJqlKRAI6O2/DtSWEOZDBVxtO2r40wAudxObJmpXoaCDGAEmD935z
-         3HjOFSHNeAQ8MniqDObD/LNwJndWEs/JBkZV9AKYRhXxdS1C4h0SONJHyMiOeTuDQWHf
-         h7NrEMyyqMwFqc2hxFHrZvJat1oNj74gWjJ70=
+        bh=2Es3p7SgafSY4oLQGoZeThVjJZmm01HoRMAcWvJvl1k=;
+        b=m6Q+tg4/ZQ6BH/dedIRcuBZ86rGrdzQUwpV51ZX6NDCjwCBBhF9ldAC8OXGgbu1tp6
+         B3FDJM9SobG7QBmT9TC7VFeH6wG/in+tu/XXBoHDaJtjY0/kj0xjzK9gJyd0EL/QTLb2
+         nis3tGfRkgNZy9xUwPFgeaLi4oEmKzPLI61aE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740426009; x=1741030809;
-        h=content-transfer-encoding:to:subject:message-id:date:from
+        d=1e100.net; s=20230601; t=1740426162; x=1741030962;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=jjo3DCB5gJAuKxWQFmPKlMM3UGP5qto/Mwx+MnTre2w=;
-        b=HrIJtH9yzpD6BVQa1xFaCN/UekQYwcFitRlMKVGdBngL2EN24sNjc0GzrBeA8tm88K
-         K6jjUVTvjxfPcp1yUqgDtL/kjR0tw6ZtMGXGypZKIIW5ec69dsbc7mj3d36ZF1nJHHQ0
-         GuT9moyGlgADzsz4cr96JtZVasAhbuilr0LqPqLuusuTM5J/DhhLj6bNShzg3qWmsgsL
-         Wi7T8t9ocv+/R3TMj9dJQkWv59JHNO6fyCjZlHcLL4HmY5DrajyMzQWB2t/bp6aqBXa7
-         vdW1ua80eieDY76A6jspyPskZW5DwgkdBYze9g2pL7YAswNMwZsyArHZ2q39TLLXmHDF
-         mnxA==
-X-Forwarded-Encrypted: i=1; AJvYcCUdrxgcYtLZHY6GlOT1hq7W1+HiJJGO0IRsjMZADHrOUyueFySJAMzpGy3vWXSQXUJiw5MOsp+7xvr0mp3/s2c=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyd42CCGJT1vcmf96RO6ZDT60laVPaAehi/pzyoG2xY9VSDxfSj
-	PBy1fhEvy3aId7N7h6dJv5QS/BgtnQ+lW/BB6y7fhUq4kYJCpdKz6r9g97WMkHTuRGWhfEL4BF0
-	7EhrE4xx70WEMLYfc7K3m1f3CQPlVktjaqWO4
-X-Gm-Gg: ASbGncvYNQAO+17EQ0b3pqHln4lCWyEdtCxlUqHjm0pnpkBFA2RtPU43qYKKP/PaxV7
-	nKUWjz5w9THkmFyi1b+YTaDGslBUVfZYTfP1vJGA0BIRi1HUg9sLQtQZ+UhWzo4auxZwfilJDf6
-	7Tjlh4drXkQP+OwslZdb+LtTjB6huXGnxu9fXO
-X-Google-Smtp-Source: AGHT+IGWt4RiFKwGN9imhadTo5MXXk1b6QQFMgDJMWwSygsMoh1MZ9ZA63MJQ10dxfaIqmQAhr3shgJlB1Vp4bkXouA=
-X-Received: by 2002:a05:6808:201f:b0:3f4:11a1:615a with SMTP id
- 5614622812f47-3f4247a9cd8mr4214905b6e.6.1740426009055; Mon, 24 Feb 2025
- 11:40:09 -0800 (PST)
+        bh=2Es3p7SgafSY4oLQGoZeThVjJZmm01HoRMAcWvJvl1k=;
+        b=P+JnKlVZQ6mPjtGFEMvTVM/EwgSA3OXsCvDej1Hev5BXuw120A511+G1DzuJniRPuS
+         fp8q32sDYHKIWMwvTpuQS+SjYI1WLdBTaljYr1v11GgykgLlmygTSuNyO5jJ6iOYUB1a
+         X+DZiFZ7ak8MPMSHn7pOQ2GGvyP7OZx838ZbyckRzp6Q2ywJOqDJsdMXawH2zYGKnCiZ
+         SxgPCQghzfZY+xRiYsaytLnmOjjtIzzPIsTuZwKW2mNqJx9FNidWFoML4hvm6UponGyY
+         kfzKYtFMeMfAYbFHylmuEaTpJkbcUnybXrPLYTvYaq9tdvu6amUGVASwp8CY8zahZpYO
+         NwNw==
+X-Forwarded-Encrypted: i=1; AJvYcCUWXB5vvs2LWWDWZ3RVAgnLzyXckHe1gExkat+5zFGktsU2khubWL9z8vPu9OUWL5whjuh1vGSKI4DE3sOAvdI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwjLKzG5ubEahKHD65cLEMr8UwTDievVa6HG5wL1F6OR8d7t9RH
+	7/ZNkmeki3l+5+PY10y5TV+S4pMg0YdB+baOXILjX65PZoon4E5yxBj8ekaTGpb6SZ77KxfqbSU
+	SqVhdg/ZHQp7PTnCdRL3IDpeIgYiLsTu0qNyY
+X-Gm-Gg: ASbGncs9PEbdwheAv2JK1kRpkdQlr4V9Aeld44hdMZVyFTpkh7oG5HZpu31cic1xBC5
+	nyho1j/rfjzWepYb1OJXAq+7RdTQ6z2jiU3sxCzwVFKSv0N0UPeRS0dV3aMN70c6tC/J9xcodB7
+	r+6773yovWsbuCFan1F3dm9fg8693v02+Igwbv
+X-Google-Smtp-Source: AGHT+IHQebWFIc+YbZsrpXi37OAN8G/Vl942Csx4aIQSIGMLUFk3ZZIO2UooV/I8ugypB3Do3y/oUyp5eBDftpI9Je0=
+X-Received: by 2002:a05:6870:6e02:b0:29e:5f79:21b4 with SMTP id
+ 586e51a60fabf-2bd50fb9776mr3779734fac.13.1740426162024; Mon, 24 Feb 2025
+ 11:42:42 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -59,21 +59,21 @@ MIME-Version: 1.0
 References: <20250224174513.3600914-1-jeffxu@google.com> <20250224174513.3600914-2-jeffxu@google.com>
  <443992d7-f694-4e46-b120-545350a5d598@intel.com> <CABi2SkVKhjShryG0K-NSjjBvGs0UOVsY-6MQVOuQCkfuph5K8Q@mail.gmail.com>
  <3nxcy7zshqxmjia7y6cyajeoclcxizkrhhsitji5ujbafbvhlu@7hqs6uodor56>
- <CABi2SkUfABFR+SpjBzHT9dEcsJ0OOHiyttKkQVhqrHLrtZzopA@mail.gmail.com> <gr4i4o7cy2nxah52kiyglzl4ax63zdblvwqvqbdl7vhlfdy3ko@izskzrcapjxq>
-In-Reply-To: <gr4i4o7cy2nxah52kiyglzl4ax63zdblvwqvqbdl7vhlfdy3ko@izskzrcapjxq>
+ <CABi2SkV-RwWjfXZfK4tHzQWG=dCJU7CRGmthSA8vqhHcbeCiQw@mail.gmail.com> <202502241123.D398A24@keescook>
+In-Reply-To: <202502241123.D398A24@keescook>
 From: Jeff Xu <jeffxu@chromium.org>
-Date: Mon, 24 Feb 2025 11:39:58 -0800
-X-Gm-Features: AWEUYZkzU0yEfaz4ODfBE0tPPx4QdLJ1gi9VHaTZHUQGnm7_jSep0PCoxlmlNIM
-Message-ID: <CABi2SkXew-7bDD5c6ZDhbM3kRQPMTXrq=1cXX1rUvy1Yb+XvAQ@mail.gmail.com>
+Date: Mon, 24 Feb 2025 11:42:31 -0800
+X-Gm-Features: AWEUYZnIh-aVK2V5D2Z7CSJGHhvBCNIiddlen5uSwHi2kaMpnPPFF88FSIikjiE
+Message-ID: <CABi2SkXLdL37LxLuo+W=rUOrBKfMbxgkkR+s3TqnnS-eAQbakg@mail.gmail.com>
 Subject: Re: [PATCH v6 1/7] mseal, system mappings: kernel config and header change
-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Jeff Xu <jeffxu@chromium.org>, 
-	Dave Hansen <dave.hansen@intel.com>, akpm@linux-foundation.org, keescook@chromium.org, 
-	jannh@google.com, torvalds@linux-foundation.org, vbabka@suse.cz, 
-	lorenzo.stoakes@oracle.com, adhemerval.zanella@linaro.org, oleg@redhat.com, 
-	avagin@gmail.com, benjamin@sipsolutions.net, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-mm@kvack.org, jorgelo@chromium.org, 
-	sroettger@google.com, hch@lst.de, ojeda@kernel.org, 
-	thomas.weissschuh@linutronix.de, adobriyan@gmail.com, 
+To: Kees Cook <kees@kernel.org>
+Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Dave Hansen <dave.hansen@intel.com>, 
+	akpm@linux-foundation.org, jannh@google.com, torvalds@linux-foundation.org, 
+	vbabka@suse.cz, lorenzo.stoakes@oracle.com, adhemerval.zanella@linaro.org, 
+	oleg@redhat.com, avagin@gmail.com, benjamin@sipsolutions.net, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	linux-mm@kvack.org, jorgelo@chromium.org, sroettger@google.com, hch@lst.de, 
+	ojeda@kernel.org, thomas.weissschuh@linutronix.de, adobriyan@gmail.com, 
 	johannes@sipsolutions.net, pedro.falcato@gmail.com, hca@linux.ibm.com, 
 	willy@infradead.org, anna-maria@linutronix.de, mark.rutland@arm.com, 
 	linus.walleij@linaro.org, Jason@zx2c4.com, deller@gmx.de, 
@@ -86,23 +86,79 @@ To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Jeff Xu <jeffxu@chromium.org>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 24, 2025 at 11:18=E2=80=AFAM Liam R. Howlett
-<Liam.Howlett@oracle.com> wrote:
+On Mon, Feb 24, 2025 at 11:25=E2=80=AFAM Kees Cook <kees@kernel.org> wrote:
 >
-> Also, do we need something like the above test for VM_SEALED_SYS?
+> On Mon, Feb 24, 2025 at 11:10:22AM -0800, Jeff Xu wrote:
+> > On Mon, Feb 24, 2025 at 11:03=E2=80=AFAM Liam R. Howlett
+> > <Liam.Howlett@oracle.com> wrote:
+> > >
+> > > * Jeff Xu <jeffxu@chromium.org> [250224 13:44]:
+> > > > On Mon, Feb 24, 2025 at 10:21=E2=80=AFAM Dave Hansen <dave.hansen@i=
+ntel.com> wrote:
+> > > > >
+> > > > > On 2/24/25 09:45, jeffxu@chromium.org wrote:
+> > > > > > +/*
+> > > > > > + * mseal of userspace process's system mappings.
+> > > > > > + */
+> > > > > > +#ifdef CONFIG_MSEAL_SYSTEM_MAPPINGS
+> > > > > > +#define MSEAL_SYSTEM_MAPPINGS_VM_FLAG        VM_SEALED
+> > > > > > +#else
+> > > > > > +#define MSEAL_SYSTEM_MAPPINGS_VM_FLAG        VM_NONE
+> > > > > > +#endif
+> > > > >
+> > > > > This ends up looking pretty wonky in practice:
+> > > > >
+> > > > > > +     vm_flags =3D VM_READ|VM_MAYREAD|VM_IO|VM_DONTDUMP|VM_PFNM=
+AP;
+> > > > > > +     vm_flags |=3D MSEAL_SYSTEM_MAPPINGS_VM_FLAG;
+> > > > >
+> > > > > because MSEAL_SYSTEM_MAPPINGS_VM_FLAG is so much different from t=
+he
+> > > > > other ones.
+> > > > >
+> > > > > Would it really hurt to have
+> > > > >
+> > > > >  #ifdef CONFIG_64BIT
+> > > > >  /* VM is sealed, in vm_flags */
+> > > > >  #define VM_SEALED       _BITUL(63)
+> > > > > +#else
+> > > > > +#define VM_SEALED       VM_NONE
+> > > > >  #endif
+> > > > >
+> > > > > ?
+> > > > >
+> > > > VM_SEALED isn't defined in 32-bit systems, and mseal.c isn't part o=
+f
+> > > > the build. This is intentional. Any 32-bit code trying to use the
+> > > > sealing function or the VM_SEALED flag will immediately fail
+> > > > compilation. This makes it easier to identify incorrect usage.
+> > > >
+> > >
+> > > The reason that two #defines are needed is because you can have mseal
+> > > enabled while not sealing system mappings, so for this to be clean we
+> > > need two defines.
+> > >
+> > > However MSEAL_SYSTEM_MAPPINGS_VM_FLAG, is _way_ too long, in my opini=
+on.
+> > > Keeping with "VM_SEALED" I'd suggest "VM_SYSTEM_SEALED".
+> > >
+> > How about MSEAL_SYSTME_MAPPINGS as Kees suggested ?
+> >
+> > The VM_SYSTEM_SEALED doesn't have the MSEAL key or the MAPPING, so it
+> > might take longer for the new reader to understand what it is.
 >
-Do you mean adding selftest for sealing vdso ? or test the
-VM_SEALED_SYS macro in 32 bit vs 64 bits ?
+> I think to address Dave's concern, it should start with "VM_". We use
+> "SEAL" already with VM_SEALED, so the "M" in "MSEAL" may be redundant,
+> and to clarify the system mapping, how avout VM_SEAL_SYSMAP  ? That
+> capture's, hopefully, Dave, Liam, and your thoughts about the naming?
+>
+Liam had a comment in the previous version, asking everything related
+with mseal() to have the MSEAL keyword, that is why KCONFIG change has
+MSEAL.
 
-CONFIG_MSEAL_SYSTEM_MAPPINGS is by default disabled. I'm not sure
-about the common practice here.
-
-I also don't know how to detect CONFIG_MSEAL_SYSTEM_MAPPINGS from
-selftest, that is needed for the selftest.
+How about VM_MSEAL_SYSMAP ?
 
 -Jeff
 
-
-> Thanks,
-> Liam
->
+> --
+> Kees Cook
