@@ -1,143 +1,75 @@
-Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93A4F1A9B23
-	for <linux-hardening@vger.kernel.org>; Mon, 24 Feb 2025 21:55:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7EF61E9917
+	for <linux-hardening@vger.kernel.org>; Mon, 24 Feb 2025 21:56:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740434109; cv=none; b=BHp6rUUjRYRPZ3NoBmkD+4E95HJrejfOgFbdrItCMvlCRiGDp9CNWcghsvNFkQoiYCGagDXEPojrgfPkHwwsLGEJTGclDnLYy9oIsZMAeeDyQhDNFCi4HQUgaI3cxfzcTtBDcFWqb/icCNUmHrVCUEku8ChaXBAQLuKR/pkBJWE=
+	t=1740434210; cv=none; b=bE2lfuKpk+n4f3ZQnVfWUmLFii8qHKivK9IhvQJhvH9dF5gWRkNq9wKLdMAA2q+3740eqcFTJSSF0HNSgsUpnQeDb9Wzm4I+o7byE0Hl2mizswvlFJSvn2IDUG56N4i2S2zFuAZ7XMtaJFBG4o3u/GXeSqi1/F3GhLCj3CBi4Mo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740434109; c=relaxed/simple;
-	bh=Of10dtPjq6kWwFSX40vy9fJ7xn30JPo1sH0xcAGR6B0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=NKome6oXjksMe4eQJ6EjjNTxyYwpD7GwiDEdfha3PBLZDzOkCKhFqPC6y/LMjy3w/vacTbeYfKJmcw7rx5yyhBJmHj9z+q8zbEO/ECkRMzAlU1YpV5uRSiJ3WT/W15thn6GwGRkpToF4CYwl70PehfqhAi5NuJasvucsR27ocz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=aRXp1Kyk; arc=none smtp.client-ip=209.85.210.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1740434210; c=relaxed/simple;
+	bh=GUhgL6hS//UQepLQQDcUz5xENrHigAyZeokfv/kaliU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MFJgqA6+qrunx+UFNgzysBh+qUAomFRORfj5DgIt79Q+6l6HUhSkoTIZbX3oVxAYm+UI8Kjr9N5WpfC0Elz5vrJRDUlH2HMKpH0op31FuVAOTWjwRtRHq/MpJgXNElEocuRl7uwQDZikckqoH0fQCmy60HVEQ45A9nyneS/weoU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=BbnVatbb; arc=none smtp.client-ip=95.215.58.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aRXp1Kyk"
-Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-72726a5db1aso535132a34.2
-        for <linux-hardening@vger.kernel.org>; Mon, 24 Feb 2025 13:55:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1740434106; x=1741038906; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UPTTDChOSqTCFQv4mLssfhA9N88UjfFx6y+XJgJnTAA=;
-        b=aRXp1KyknTPyek918yF/w0JNb75j71x4YHHsjhpbdS29zpJd1A6QT83AGTVEaCDdvk
-         vHAtucYQ8MgFakUdNImQe19Z88OdLaLCnQPUocRpGL7HJ2XgMv/rkOURwK4n+Fcyfk/L
-         7IyBjhrBnq6KUReYVmZd2SuWU2BDNVwY+ZF9g=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740434106; x=1741038906;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UPTTDChOSqTCFQv4mLssfhA9N88UjfFx6y+XJgJnTAA=;
-        b=Fp8I7SGSVZs2Q4HZOIAM6bFxE4I/pSjEDVDqX+6R/AuHg0WeI4ujqH+PDvJ/NEUwOs
-         wZg+Mltbqf3bBuNsJATBRTUKnJZu/HmDb4r0MpyAPBlWpTuE2g18YuT4kFYWgbENFHU9
-         IWkYxjTKOmyQtfGb2onXC2bH+ukFN7VowGnfi3zjbm1Cx7nmN8RalxtlLwxbMotwB7YE
-         Sbu9IgZzdvr1YBqGLQnVM8vS9Xk83tA2GIkrYh524s1f/1nNUECpdtTaCS1YZlPe2pD1
-         R5oVWwKzxP3ieFiKtnhn05peJzwWLvsFM0IfQILQPfjFP3yisqfSUUzysStqcNFB0Z/7
-         lD8g==
-X-Forwarded-Encrypted: i=1; AJvYcCUa8+MlfhP8tOpIHEHE4CXoTk06kKLu3hAOp9OOoqjjUorgW4txQRRGtJaIkTnFJcui5muGxTeE+n98bNUoJOA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLlKcDOgDCNxrTCfLIobGUxy6GWLBSRLUEfOmgTBgstoJ018JI
-	ARDVCnN/k/bTd0HCheiRuqKEmB0csOr3wMm8gfqmF2eTcLQOCouWQ1RBVdxNm2u7yvZ2AAQ09HF
-	Au55jvCdtpZucHNdxapS+gSbgkgTQWsO3qv52
-X-Gm-Gg: ASbGncvVwQ194WDtbA/NaVtXjM058qII9/oyJAIKmo/4iJBzE5DUyJefexg8QEA15Od
-	mVQseML18aq3Ws9aPcoFBys9qVNa/cTc9SxxQn1wyKHsyCryo3Mn4dwcD9Mv3NMDMDgn8Rbbdm4
-	pULNfPu4j+dE/7qcj2UqCqLVbtV12IbEjvP2kX
-X-Google-Smtp-Source: AGHT+IFwwLbERjxJfPs0yISPzcIvd1i2WMO0vsZI2MTAgbx4mU/byaBF43rcmsNs7HBDDxb+7CjeT5YTOOP1+HnX5Xk=
-X-Received: by 2002:a05:6808:13c4:b0:3f4:1ba:9e89 with SMTP id
- 5614622812f47-3f4246a145amr4457000b6e.1.1740434106640; Mon, 24 Feb 2025
- 13:55:06 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="BbnVatbb"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1740434197;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=rE+rorFgyeXZ3jXULEAJWqUQ+FDPOU0lGoqzwNbi0Hg=;
+	b=BbnVatbbD75pCJ5aXM9CE4hD8I/VZ3Bq4IEAOG/fRm4EWsRqqK2dx+xXp6xMzwcTx/2aBE
+	QJVXcVMlrDyD6KF/9vof3tvAgaJ5MqS6lPPtbxcKdwkP7zlvhfstLpft2dpbWcltkSwpy4
+	naK89UHgiI2gwyaPVS//qs4R3ZxJWcw=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	linux-hardening@vger.kernel.org,
+	linux-mips@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH]  MIPS: Loongson2ef: Replace deprecated strncpy() with strscpy()
+Date: Mon, 24 Feb 2025 22:54:50 +0100
+Message-ID: <20250224215451.195727-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250224174513.3600914-1-jeffxu@google.com> <20250224174513.3600914-8-jeffxu@google.com>
- <rzhfepcwdwiq6khrepv7x7gpgynek4p54fhx4enqgyw7nubegc@uydhglfx67gp> <CABi2SkVLOWEZ6vkUwZyQspz8aqBZ4yhfob-SmscA5RhNv_vS-Q@mail.gmail.com>
-In-Reply-To: <CABi2SkVLOWEZ6vkUwZyQspz8aqBZ4yhfob-SmscA5RhNv_vS-Q@mail.gmail.com>
-From: Jeff Xu <jeffxu@chromium.org>
-Date: Mon, 24 Feb 2025 13:54:56 -0800
-X-Gm-Features: AWEUYZlWnyV6Jdfb2-SNecn18hyqiYaIseEaup8aJSHrCsv9Z2O_gnjBeFaB_Sg
-Message-ID: <CABi2SkWzgcFo+PF58K2azNZ1BgmgM-7LtJ8NmOgscN6_NyEo=w@mail.gmail.com>
-Subject: Re: [PATCH v6 7/7] mseal, system mappings: update mseal.rst
-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, jeffxu@chromium.org, akpm@linux-foundation.org, 
-	keescook@chromium.org, jannh@google.com, torvalds@linux-foundation.org, 
-	vbabka@suse.cz, lorenzo.stoakes@oracle.com, adhemerval.zanella@linaro.org, 
-	oleg@redhat.com, avagin@gmail.com, benjamin@sipsolutions.net, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	linux-mm@kvack.org, jorgelo@chromium.org, sroettger@google.com, hch@lst.de, 
-	ojeda@kernel.org, thomas.weissschuh@linutronix.de, adobriyan@gmail.com, 
-	johannes@sipsolutions.net, pedro.falcato@gmail.com, hca@linux.ibm.com, 
-	willy@infradead.org, anna-maria@linutronix.de, mark.rutland@arm.com, 
-	linus.walleij@linaro.org, Jason@zx2c4.com, deller@gmx.de, 
-	rdunlap@infradead.org, davem@davemloft.net, peterx@redhat.com, 
-	f.fainelli@gmail.com, gerg@kernel.org, dave.hansen@linux.intel.com, 
-	mingo@kernel.org, ardb@kernel.org, mhocko@suse.com, 42.hyeyoo@gmail.com, 
-	peterz@infradead.org, ardb@google.com, enh@google.com, rientjes@google.com, 
-	groeck@chromium.org, mpe@ellerman.id.au, aleksandr.mikhalitsyn@canonical.com, 
-	mike.rapoport@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, Feb 24, 2025 at 1:06=E2=80=AFPM Jeff Xu <jeffxu@chromium.org> wrote=
-:
->
-> On Mon, Feb 24, 2025 at 12:26=E2=80=AFPM Liam R. Howlett
-> <Liam.Howlett@oracle.com> wrote:
-> >
-> > * jeffxu@chromium.org <jeffxu@chromium.org> [250224 12:45]:
-> > > From: Jeff Xu <jeffxu@chromium.org>
-> > >
-> > > Update memory sealing documentation to include details about system
-> > > mappings.
-> > >
-> > > Signed-off-by: Jeff Xu <jeffxu@chromium.org>
-> > > ---
-> > >  Documentation/userspace-api/mseal.rst | 7 +++++++
-> > >  1 file changed, 7 insertions(+)
-> > >
-> > > diff --git a/Documentation/userspace-api/mseal.rst b/Documentation/us=
-erspace-api/mseal.rst
-> > > index 41102f74c5e2..10147281bf2d 100644
-> > > --- a/Documentation/userspace-api/mseal.rst
-> > > +++ b/Documentation/userspace-api/mseal.rst
-> > > @@ -130,6 +130,13 @@ Use cases
-> > >
-> > >  - Chrome browser: protect some security sensitive data structures.
-> >
-> > Did you mean to drop this line?
-> >
-> Ah, thank you for catching that.
->
-Actually, this isn't a problem here.
-The "-" here is part of the text, for list, so that line is not dropped).
+strncpy() is deprecated for NUL-terminated destination buffers. Use
+strscpy() instead and remove the manual NUL-termination.
 
--Jeff
+Compile-tested only.
 
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+---
+ arch/mips/loongson2ef/common/machtype.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-> -Jeff
->
->
-> > >
-> > > +- System mappings:
-> > > +  If supported by an architecture (via CONFIG_ARCH_HAS_MSEAL_SYSTEM_=
-MAPPINGS),
-> > > +  the CONFIG_MSEAL_SYSTEM_MAPPINGS seals system mappings, e.g. vdso,=
- vvar,
-> > > +  uprobes, sigpage, vectors, etc. CHECKPOINT_RESTORE, UML, gVisor, r=
-r are
-> > > +  known to relocate or unmap system mapping, therefore this config c=
-an't be
-> > > +  enabled universally.
-> > > +
-> > >  When not to use mseal
-> > >  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > >  Applications can apply sealing to any virtual memory region from use=
-rspace,
-> > > --
-> > > 2.48.1.601.g30ceb7b040-goog
-> > >
+diff --git a/arch/mips/loongson2ef/common/machtype.c b/arch/mips/loongson2ef/common/machtype.c
+index 82f6de49f20f..e635e66d2e6c 100644
+--- a/arch/mips/loongson2ef/common/machtype.c
++++ b/arch/mips/loongson2ef/common/machtype.c
+@@ -48,8 +48,7 @@ void __init prom_init_machtype(void)
+ 		return;
+ 	}
+ 	p += strlen("machtype=");
+-	strncpy(str, p, MACHTYPE_LEN);
+-	str[MACHTYPE_LEN] = '\0';
++	strscpy(str, p);
+ 	p = strstr(str, " ");
+ 	if (p)
+ 		*p = '\0';
+-- 
+2.48.1
+
