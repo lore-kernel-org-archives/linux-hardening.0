@@ -1,128 +1,194 @@
-Received: from mout.web.de (mout.web.de [217.72.192.78])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0723204C27;
-	Sun, 23 Feb 2025 10:30:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E7D6245015;
+	Mon, 24 Feb 2025 09:09:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740306638; cv=none; b=bzp7z/yxsTQB1oq4H0WgQ3i8qJRbKvao2X19UybEetpDwF3Cj3hAYV5xWgYqhbRSZZq3sljzxNa1paqYc6R/vTkRLNQwRlZDxLkTF7DT1+8ifWjvxxfi2Fp8DmSWOB+tpY46kTzVcdU1qFqI/u0Z5FmpQFmcY/RdwdAHPFRC0Ho=
+	t=1740388143; cv=none; b=IaddgZF1UShkUUvEih75XIxNNOvokGWFoL429PNoHDW0MNy2T2BwJEsmHRuqD+TKfAlAu5wYc4aUI+iZ54tEtx5Io9YyyDR/NZ5dHpQ/QoHJ/eqDm18xBhZCVp1DobDQByxHjPDXB/J6iYgi5YFzRv38+7gt8aSxGk6YQQYyC0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740306638; c=relaxed/simple;
-	bh=r9wwqaJRtk9sOisVJ2iyPiOMx6Bdq8PHJKb1LjosIZM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jxbfVZQOs6YRosKTCpo7x56sdJnSTt1UjEsIQNKok2DV7JejQ5lNR+3pkKCEROYLVaGG0DvWqhZGwouUwdjcNQNx6RYS55Wyz0yfoVFhxjiTk7zYKd9IYZbuAusPbbsKstRyKRRc75s4mQA3aAEOreGH7zYyJCuCssVUMXnYqsI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=iwhUJxZF; arc=none smtp.client-ip=217.72.192.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1740388143; c=relaxed/simple;
+	bh=44L74dHmGe2TU7EQRUfkK0TjEkVHS2UIUGo5a4H4lz8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AedpQtMzoKUhPHnvunhHGBQu7tcwE1wwlvXSKECceMbW9RaQmHQa+9OXgGnzMJuHH8pEXLAU+u4K2KWtzoT3ZfcuaMfoOAs9imKQp9SNxJFlvHpPEBYdgXs3tU8Ld+DQ32Dngq4nCRHoEipUWulmwK3W+DWoETotjQJYDiTWIp0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IknIikHH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="iwhUJxZF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1740306611; x=1740911411; i=markus.elfring@web.de;
-	bh=PbEif29t4SAIHbCmdiQGiPpEasdSjQ1egXOJVydscBQ=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=iwhUJxZFB6ap5DO7t+PvJt8NIVWkFJ8ass5I7Z0Rd6NsprE+ecudFC94v4MTNUbG
-	 5qoHOPQ/MHei7dJVWrGJ6HMeG5Tm+AQs9RavyUZ3CRJ+nnhCF58iuVewaQM95yr0I
-	 V/FgzfmfW6+wzLCcTkQiN5P5nVBymiQzGsVOMFqrVJsPvhV4eSezYpqzE06jCnJGc
-	 IY+hAUldl4TBd5lmB0QeuikEVJfW0UDx2Y4AWF90+PRqaAHIqFynyHaV8ykU78MUC
-	 g70emJ/UdHlQbNFlUKo0Ap4jtsgMkmMILdecKqm9ZIRbARtqFuh9NkojLfypBG3ct
-	 cGa9a/IpaeCB0Sr+Tw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.70.18]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MSIEs-1tsdVT2iz2-00QT7H; Sun, 23
- Feb 2025 11:30:11 +0100
-Message-ID: <31853d6d-a0bd-45b9-beaa-5d67c34ae09c@web.de>
-Date: Sun, 23 Feb 2025 11:30:08 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IknIikHH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3ADAC4CEE8;
+	Mon, 24 Feb 2025 09:09:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740388142;
+	bh=44L74dHmGe2TU7EQRUfkK0TjEkVHS2UIUGo5a4H4lz8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=IknIikHHAiNqRFJKwiAvsVwQK1WBhsAlo6h2pWfVvsEfYX3BBFpUeoraIWLKCBd8p
+	 wC7muDfBiORTJVrDugS6wOaso2nqSVhssZMGlITsVp5wL4xuc3GLUdz3oBWnYBr+eW
+	 aj4owju7TA2G27ISW9QBWMVRebWBdo4MMLqIMNlWZvuj4TgP0C4tH5lHwFPboF1sGb
+	 moNIlihBZUJ+2wkBViyrsQS8RrGh4+Mz8z1Wc7ZhwRarLBlFOPeAqytwQB2XmN1VDe
+	 NIfBXcEKNZBVAvjxZJADACwluVtE6iygQ2fPe+iG7Hq3Tnhcl+K1YiE3S7fL/qyDvp
+	 l9hNvTRd7m91Q==
+Received: from mchehab by mail.kernel.org with local (Exim 4.98)
+	(envelope-from <mchehab+huawei@kernel.org>)
+	id 1tmUSS-00000003p3R-3GJK;
+	Mon, 24 Feb 2025 10:09:00 +0100
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>
+Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <mchehab+huawei@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Bingbu Cao <bingbu.cao@intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Kees Cook <mchehab+huawei@kernel.org>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+	Tianshu Qiu <tian.shu.qiu@intel.com>,
+	linux-arch@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	linux-staging@lists.linux.dev,
+	linux1394-devel@lists.sourceforge.net
+Subject: [PATCH v2 00/39] Implement kernel-doc in Python
+Date: Mon, 24 Feb 2025 10:08:06 +0100
+Message-ID: <cover.1740387599.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3?] sched/topology: replace kzalloc() with kcalloc() in
- sched_init_numa()
-To: Ethan Carter Edwards <ethan@ethancedwards.com>,
- linux-hardening@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org,
- Ben Segall <bsegall@google.com>, Dietmar Eggemann
- <dietmar.eggemann@arm.com>, Ingo Molnar <mingo@redhat.com>,
- Juri Lelli <juri.lelli@redhat.com>,
- Madadi Vineeth Reddy <vineethr@linux.ibm.com>, Mel Gorman <mgorman@suse.de>,
- Peter Zijlstra <peterz@infradead.org>, Steven Rostedt <rostedt@goodmis.org>,
- Valentin Schneider <vschneid@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>
-References: <20250222-sched-kcalloc-v1-1-4dee15fd8241@ethancedwards.com>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250222-sched-kcalloc-v1-1-4dee15fd8241@ethancedwards.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:HDGssSRZxKiT8gDiaJYDr9WtSjjbq3k37tt9irOMvIDgtkfSqhO
- DMUb5lB7Pn5CKR6tI1aUuLEzugj7+s50uJhZoy/0hu3Xx9jYqdsm3TVR2CsipPqsuHfIRx2
- 6jV4ZrQfgaNEQITeTbuIq9ZIss1tx42yCT1ge+7EdeVo1bUboPATDJj+WkhD2PTr/b2Xi/a
- 8dOGEkCXguXkQzmVXxz1Q==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:vxsDjfL+reg=;MknuHBV43lDa80L2CAw30rdXaHw
- akCapvI1poewCtA2hK9DU2M+oTr62mnRa4T7Jl842Z9uKIwzHTkmnAa6NJ24IeFVys/yWtt2+
- wbDYrulvyVlgmLIYXG4DVRWC4lN00P7YzZ8pVymDmDdBVLAqVK3RCTdXucAxsa6zSIZUAdtVm
- wJir+1SPVPQHF9t+hKPUTmaxE/8DMaBjWD4H9A35BT7E+hPw+RpjjIZWfZl3qkgsFWxLWaCZp
- EN4IFmlZfG9rs+a9ohrQDvTNob6UULX0cttmo3Y1HGv5dHZKQ3QqtTepR0opBa9BVdefP0R/n
- 7M6gDeAOKFJ4uRn4/H/gsbKBTGzPWfv6nF2fB9qMjIGajg566t9CHYG0kq/4v9rXGmuezoyU4
- bQRX4GrTAQZEhT+4z2sX7Jr4h+AG9BZrWzOtHSP+jpIR6KSKy55HyxJM9/Fl3BvQ/7lVXP17Z
- qwe6wWmwp9dtTlUKAP0HWHDzvQxv10M70nHxoLLbP+e/fqsEQMUGs516otiXqJzPox7NoOy4d
- RBr0+q2b7ArLIz5kDEHOaGo/Hhm1a8tHwpMU23JsWHpw0VIUh0tiNxSbOk4PqJ3IYfgePEwea
- hjDvFcohuSnjJIJ2nZO0XtTE/sGx1Lig1M9fdWpbTNUZ4k5oEwZG0Mtn6k2c50tZkv1+RIS3P
- DhUTaBlEm8R8IN7EbD2XuHL7O0OQoQjQrzfn6+8NgOLq//U+26/3j9oGFTb9OBG2edrHJ95jM
- C0UcsmWowve1zS0LDi5mxd6jJTWYu3GMl2mGguXSN6AL+Va9IYzorbcpzSaMDG2nQZdVIabC1
- rNVCDALyJJFBsx+ldniqYCftl0mARHZDqayf7IkRutKZqce27WQ7/1s4GPGfaVSgOU0o6KXD8
- Yydkki1lvb7OZU0xhpzDzK5vEkZ5h1ElxNVTx3SjGpYt87z0nPY4qa183UKrwi+50s/0i46pP
- oX+bvyHXO2tUazsuOWGQKdziBTOvablY3JTDo26ySyJ+2lnj7drTc++0ssX+WpLJReXDKhL16
- HMlPiW9KWgfOA1s9cM7tDhGZG6cjqNeE/C4eIbKDQWf7ORXOfxUToyR0vNZZK1LfSVozWEYFL
- moe/T568iK7p2rAhfZe9qTzoBFSgEsst472O02VpyNLcQH/KYksYldpUjZDYuA5ZRh+k6QPT7
- EiF+TTUvUv63CfmZWrQe0bARt6oRwLYRSUM7AZSaFNEVnwUhFem2EDctRlnCLPx0SPlPIHolg
- YyBKjxP5M5z83cgChu/0vnZla3xBsSMAjVHGFSEBc07kMMGRXyWE0JS4I4FKYH5lfU1wo5qZ7
- 8Tmn5saG9K7/iD/qQZwC+j8Lyi8/hsRNMH0MeTOHqAyIY7pl0RkRkEprr7gvp5d9EFDLN/4Go
- TOvokZLve/U8AwNH0Ah0hf+3asCZJ+01+xowsv8U59pdyf/M/wlu9zz7hjIYxYJ1UhTiDeHcn
- zixYXa9CJQ6seCPtAqhdLlOR5YRQ=
+Content-Transfer-Encoding: 8bit
+Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-=E2=80=A6
-> We are trying to get rid of all multiplications from allocation
-> functions to prevent integer overflows[1]. =E2=80=A6
+Hi Jon,
 
-Is an imperative wording more desirable for such a change description?
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/submitting-patches.rst?h=3Dv6.14-rc3#n94
+This changeset contains the kernel-doc.py script to replace the verable
+kernel-doc originally written in Perl. It replaces the first version and the
+second series I sent on the top of it.
+
+I tried to stay as close as possible of the original Perl implementation
+on the first patch introducing kernel-doc.py, as it helps to double check
+if each function was  properly translated to Python.  This have been 
+helpful debugging troubles that happened during the conversion.
+
+I worked hard to make it bug-compatible with the original one. Still, its
+output has a couple of differences from the original one:
+
+- The tab expansion works better with the Python script. With that, some
+  outputs that contain tabs at kernel-doc markups are now different;
+
+- The new script  works better stripping blank lines. So, there are a couple
+  of empty new lines that are now stripped with this version;
+
+- There is a buggy logic at kernel-doc to strip empty description and
+  return sections. I was not able to replicate the exact behavior. So, I ended
+  adding an extra logic to strip empty sections with a different algorithm.
+
+Yet, on my tests, the results are compatible with the venerable script
+output for all .. kernel-doc tags found in Documentation/. I double-checked
+this by adding support to output the kernel-doc commands when V=1, and
+then I ran a diff between kernel-doc.pl and kernel-doc.py for the same
+command lines.
+
+On version 2, kerneldoc.py Sphinx extension now uses the Python classes
+if KERNELDOC  environment var ends with kernel-doc.py. It  keeps a cache
+of previously-parsed files to avoid performance penalties when the same
+file is added on multiple places.
+
+This series contains:
+
+- 4 patches fixing some kernel-doc issues. One of them is for media, but
+   I prefer to have this merged via your tree, as it suppresses a warning
+   that happens after the changes;
+
+- 2 cleanup patches for Perl kernel-doc;
+
+- 2 patches renaming kernel-doc to kernel-doc.pl and adding a symlink.
+  I opted to have the symlink in separate to make easier to review, but
+  feel free to merge them on a single patch if you want.
+
+The remaining patches add the new script, converts it into a library and
+addresses lots of minor compatibility issues. The last patch changes
+Sphinx extension to directly use the Python classes.
+
+The only patch that doesn't belong to this series is a patch dropping
+kernel-doc.py. I opted to keep it for now, as it can help to better
+test the new tools.
+
+With such changes, if one wants to build docs with the old script,
+all it is needed is to use KERNELDOC parameter, e.g.:
+
+	$ make KERNELDOC=scripts/kernel-doc.pl htmldocs
+
+Mauro Carvalho Chehab (39):
+  include/asm-generic/io.h: fix kerneldoc markup
+  drivers: media: intel-ipu3.h: fix identation on a kernel-doc markup
+  drivers: firewire: firewire-cdev.h: fix identation on a kernel-doc
+    markup
+  docs: driver-api/infiniband.rst: fix Kerneldoc markup
+  scripts/kernel-doc: don't add not needed new lines
+  scripts/kernel-doc: drop dead code for Wcontents_before_sections
+  scripts/kernel-doc: rename it to scripts/kernel-doc.pl
+  scripts/kernel-doc: add a symlink to the Perl version of kernel-doc
+  scripts/kernel-doc.py: add a Python parser
+  scripts/kernel-doc.py: output warnings the same way as kerneldoc
+  scripts/kernel-doc.py: better handle empty sections
+  scripts/kernel-doc.py: properly handle struct_group macros
+  scripts/kernel-doc.py: move regex methods to a separate file
+  scripts/kernel-doc.py: move KernelDoc class to a separate file
+  scripts/kernel-doc.py: move KernelFiles class to a separate file
+  scripts/kernel-doc.py: move output classes to a separate file
+  scripts/kernel-doc.py: convert message output to an interactor
+  scripts/kernel-doc.py: move file lists to the parser function
+  scripts/kernel-doc.py: implement support for -no-doc-sections
+  scripts/kernel-doc.py: fix line number output
+  scripts/kernel-doc.py: fix handling of doc output check
+  scripts/kernel-doc.py: properly handle out_section for ReST
+  scripts/kernel-doc.py: postpone warnings to the output plugin
+  docs: add a .pylintrc file with sys path for docs scripts
+  docs: sphinx: kerneldoc: verbose kernel-doc command if V=1
+  docs: sphinx: kerneldoc: ignore "\" characters from options
+  docs: sphinx: kerneldoc: use kernel-doc.py script
+  scripts/kernel-doc.py: Set an output format for --none
+  scripts/kernel-doc.py: adjust some coding style issues
+  scripts/lib/kdoc/kdoc_parser.py: fix Python compat with < v3.13
+  scripts/kernel-doc.py: move modulename to man class
+  scripts/kernel-doc.py: properly handle KBUILD_BUILD_TIMESTAMP
+  scripts/lib/kdoc/kdoc_parser.py: remove a python 3.9 dependency
+  scripts/kernel-doc.py: Properly handle Werror and exit codes
+  scripts/kernel-doc.py: some coding style cleanups
+  scripts/kernel-doc: switch to use kernel-doc.py
+  scripts/lib/kdoc/kdoc_files.py: allow filtering output per fname
+  scripts/kernel_doc.py: better handle exported symbols
+  docs: sphinx: kerneldoc: Use python class if available
+
+ .pylintrc                                     |    2 +
+ Documentation/Makefile                        |    2 +-
+ Documentation/conf.py                         |    2 +-
+ Documentation/driver-api/infiniband.rst       |   16 +-
+ Documentation/sphinx/kerneldoc.py             |  183 +-
+ .../media/ipu3/include/uapi/intel-ipu3.h      |    3 +-
+ include/asm-generic/io.h                      |    6 +-
+ include/uapi/linux/firewire-cdev.h            |    3 +-
+ scripts/kernel-doc                            | 2447 +----------------
+ scripts/kernel-doc.pl                         | 2439 ++++++++++++++++
+ scripts/kernel-doc.py                         |  240 ++
+ scripts/lib/kdoc/kdoc_files.py                |  281 ++
+ scripts/lib/kdoc/kdoc_output.py               |  792 ++++++
+ scripts/lib/kdoc/kdoc_parser.py               | 1714 ++++++++++++
+ scripts/lib/kdoc/kdoc_re.py                   |  273 ++
+ 15 files changed, 5930 insertions(+), 2473 deletions(-)
+ create mode 100644 .pylintrc
+ mode change 100755 => 120000 scripts/kernel-doc
+ create mode 100755 scripts/kernel-doc.pl
+ create mode 100755 scripts/kernel-doc.py
+ create mode 100755 scripts/lib/kdoc/kdoc_files.py
+ create mode 100755 scripts/lib/kdoc/kdoc_output.py
+ create mode 100755 scripts/lib/kdoc/kdoc_parser.py
+ create mode 100755 scripts/lib/kdoc/kdoc_re.py
+
+-- 
+2.48.1
 
 
-=E2=80=A6
-> ---
->  kernel/sched/topology.c | 4 ++--
-=E2=80=A6
-
-How do you think about to improve your version management?
-https://lore.kernel.org/all/?q=3D%22This+looks+like+a+new+version+of+a+pre=
-viously+submitted+patch%22
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/submitting-patches.rst?h=3Dv6.14-rc3#n780
-
-
-=E2=80=A6
-> +++ b/kernel/sched/topology.c
-> @@ -1918,7 +1918,7 @@ void sched_init_numa(int offline_node)
->  	 */
->  	sched_domains_numa_levels =3D 0;
->
-> -	masks =3D kzalloc(sizeof(void *) * nr_levels, GFP_KERNEL);
-> +	masks =3D kcalloc(nr_levels, sizeof(void *), GFP_KERNEL);
-=E2=80=A6
-
-See also:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/coding-style.rst?h=3Dv6.14-rc3#n941
-
-Regards,
-Markus
