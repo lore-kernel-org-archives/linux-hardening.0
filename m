@@ -1,324 +1,174 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98DCE3B784
-	for <linux-hardening@vger.kernel.org>; Mon, 24 Feb 2025 21:32:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C094118F2CF
+	for <linux-hardening@vger.kernel.org>; Mon, 24 Feb 2025 21:45:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740432776; cv=none; b=rWRyKz0wAxpnvYRNjjXBkUm3ON9hs9XMK5Pf+2iB9FAqh07i6/f2MXGsvh0Qu4H1VvG+GYfMJf6TmzKXzajgpxVbXt0rEOZjvsUglTjUOuhsIIMfTdhO1YQ9QQbkRgq0SadpxUJvRwZUHUbfdFCWrX0pL0I2a9x7wd5EH/8rpi4=
+	t=1740433548; cv=none; b=uUNC9xMrTnK6a9QmmVZaFyMtUMZbT8+/55abFZezRsMt+XKf+DuB2SnzU631Xq2r1nTT51ckqGqIMj+IYVe6Zb/B3+6bqn68nQ3pCW7n7/pXVRof6+ZfxdoG68jxBi0VgbTsGH20L/1pmlh0wLehXShyJ0i+1fPWEzoDAfR9SWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740432776; c=relaxed/simple;
-	bh=WrjhDqPRM6T52db6Xf2kdzSRNUFVzL9x4gWZoTfv+Po=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=SMrBCByCvoDMxfx3rDu4pHS1CivucVgWlGSHRqxDDXk17EIE+WtLBi8vI/OBPxfiE93q15enBCc9B7tRL7r5cvT8FqVPqDRqT6Wtf5zfCUNbXwgkMwCqdM7EiV/LrTaWvj2aOPI5hkeo+ILiz1YkDA29vtjvYEyHZ67DjJiySyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SGQ1pCDO; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1740433548; c=relaxed/simple;
+	bh=B8Um3eMk3hvqma38jKFiyIbEi663Dt3UgWX5h5sXLl8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q406t4wEvD6dGNZnixWbGiz+QnNbNM7M6m5ZOfTRPGQqh5rFsQSPAFWpmomAE77s8INdAJ+hn4GHaeYIma4jaotkig8BU8QdlP28oPjYESQYcGUfTVCU5CDcg8AqkgPrj1gVDU5+fH2sZYQZLaBeKUaAPZwsTZCgUhL6PuvrV/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=XZDplTQP; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SGQ1pCDO"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-38f406e9f80so4530216f8f.2
-        for <linux-hardening@vger.kernel.org>; Mon, 24 Feb 2025 13:32:53 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="XZDplTQP"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-220dc3831e3so92319655ad.0
+        for <linux-hardening@vger.kernel.org>; Mon, 24 Feb 2025 13:45:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740432772; x=1741037572; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=6yYp/v8xOGfHjSjL9Fj0luMhn4Nf5/1efXVSCVDqfX0=;
-        b=SGQ1pCDO2YqfphZV78IYnQDF7wh1BJM6831pXcDvNetMJz5KWLUbc1kswhRT3vBDzK
-         Z/kjEI9TFwZWoI7U+EsKuTu++IYrBf1FWPHINNeuAgFWyqO7+MVzoi7ylF0TwlrPp2Zb
-         uPX7GyDC9ZHFBQXQsHAqxIsoAxGZ80NeYQEqVAlEuCm3q2znKhKTpxtGstIv6k++gFV6
-         g1vm0z82soemnuGwc1UIAfZcwFiNVI4B6EzpOX235XE/h3irOA2U27Cr4ju7ATyBdLbv
-         8C0td6bcIYLFXhMG3jpVMzAwmpZ2NnWXnaJTboDo7uBV29U6TXmSTn99r83wbWHwZt3Z
-         WDrA==
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1740433546; x=1741038346; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=baQcd4BlBbeci4pq+lkQS7gSttZ++rUKJi5374wmvuA=;
+        b=XZDplTQPnT2QE+FR9MkNOp94a+o/ES4Ftkv3D99+hGCxy9U9g5/Ilt6ay0cHDhy9FX
+         0m8cGAwuyTrwC3nEffFU7eijYtsAvsAql6LnIrmsao+iOfbmyx51POIBF4howRhzRMmb
+         I0QkrjL7KMy74GCknt62ju5VLWfA908YhZxP3J3dvMVlAgmOeMqMwWjNo8Vl0vZ8Plh8
+         EbSwK60l4YkLB9q2Bm2UsFSAs9Nq8cCQbYPUXmE6Uf7INaTG7mf9cb4L8eeWO3M/HFKL
+         lvfJdJnpy9v5nBmUXFg8XlT2fob7WkHwx1OuO9bGkdoPB7+1ypSksihpX7ivHZbGpYk4
+         ycKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740432772; x=1741037572;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=6yYp/v8xOGfHjSjL9Fj0luMhn4Nf5/1efXVSCVDqfX0=;
-        b=s+2zizpNNTJrZwjTNx90/VTI1M3AGlJFnIGDkFifCwj9lTpxPqZhmiq0TZyxgVhXgJ
-         5esyPgZ06+eN9RGbLPRVutJw+raH7DlvGMdMWRURFtUjGy2Ynl2LARPWngmNxewdj/A6
-         K6e5gsIRpkMZRkLykw1J7FZUSqkIj5rP3ONLyrO85uh4iqRRLW/nJJJFHGcHg6i5rqaK
-         aqj0YBWrlwV7Vrz4Pkfb2aYA70IPYWcoSufFgnOjgWpQxAW9pQzS5orTOHmL+g17iEBa
-         dKOmxuRwmzRkyiKCn1YUJwzARBtXYDcekiAtW0dxycoPxE8c34UvOoZbPdzmSOK8xx3c
-         mEqA==
-X-Forwarded-Encrypted: i=1; AJvYcCVQdy5e+QNJykjBwKROVpYmIM76asQd09jy59i92hAyNYzvcu4rq8aFCS+2ueyp6hGJAcbxMu86hg28cx1O+9U=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+LRk9R1zHYhxaUFPIQd+lNEE8DRbDB0UZ2Lw60UTlF5VM8ljn
-	Fm6cKYgToH1eO/phX9BXH5MYGdnE90fVp2N4pi/cRTHqB7iNbFQlrzTzH+cer3s=
-X-Gm-Gg: ASbGncusFObFFkdjpI/4IvjGm1XCIhaeZYkn0l1Mj4KHb7yqu7XWRCqoeKWQb9McDMD
-	3LG9YfsXOU3x/pqp7X2aoB5klEx//dyzXniKv4FbXHIe7NZLD50rpKz+SnvwnHpR3EttkTqC8vr
-	WAnmLWX9sBtIDXNoYnxFmDTNYPlwiUDVPp9ZvFWKJdIVLad9wDifc7LhWL4qPUNCaCLlxwYD/7a
-	PMpqv6VpsDyih/mjLTBDjoQ5sC+BEMoQof0ebEOcmOhbl5Wf075o3SWIxiFgS8hxf3QK8ShNOCa
-	JfR67off7oTtsm4NYEtrGZ/ty0/NeQ==
-X-Google-Smtp-Source: AGHT+IGnjNhw2ePHIwTVNQz38TDJrPHLJK4RmqiEpCJBvXZdLazsQGn257uV/OrJchF8HQ2Y7U4yhg==
-X-Received: by 2002:a5d:648b:0:b0:38f:3139:f57f with SMTP id ffacd0b85a97d-38f6e95c31emr14555685f8f.16.1740432771879;
-        Mon, 24 Feb 2025 13:32:51 -0800 (PST)
-Received: from draszik.lan ([80.111.64.44])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390cd86ca9csm180054f8f.22.2025.02.24.13.32.50
+        d=1e100.net; s=20230601; t=1740433546; x=1741038346;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=baQcd4BlBbeci4pq+lkQS7gSttZ++rUKJi5374wmvuA=;
+        b=dI9thwa2X4ZHNav5MSkB/pdhF2f4MKFpYt1snn/6agitx+/L9I3Ui3jmnINo4QCYBx
+         9AHG0mO1/gyLk8Oj6wbymydQADI7Ibg4/yyhriZ2ZrNHVkY73DggioIyOOp2Q6FkIOuH
+         qh+v1zne8wK0PhPmlsW3nt0dv825iLV2/mOPITkyGcXEFBAJFYd9uLVxioC9tsp7zgau
+         DJCkHBXn9dSEpdGvOJMQfHQQb1Y6EGkHg4xNN1LCEtik0D05OWjqES5mIAsCk+3MRFss
+         6LuTwMnYZuMhQoqJoScfWwy4z0by0PLqbB/vtzkxzzv9DsbJGtmYDh56/UcpJl9j2vbT
+         VecA==
+X-Forwarded-Encrypted: i=1; AJvYcCV2aBlpQhBIdOBgE+d8R/jLYQcpx7cLwjaEtQcOmLJV5kB1gXmJJPNFtA+LOBszvas79okjdxbmHcBQkNgOS/Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyeBuKZQQ/Hmt849JQ+njMzNGSJk0B3RAoqORcwievAwwiLMECy
+	OHtCO8UnOB2W0W9asAEvaCvhW/tlPAKZFLnCxmheL6RZxjhqjxNLIiJq4UDeuss=
+X-Gm-Gg: ASbGncvw0rmSfdQBe9NQbnSXlsstW6IaT75FlMQLcKotzkgItTl7jNqxBj5Jp+a8TQC
+	wZLtTyxe7gYJ2SXZWvhsDNWPqGK2DJyAMc/E2gLlHQwFgmuEQPYi1IVQarfF9Mm++354SiUEnJR
+	e4bAvsCgRgMV4Nr57a8qVYN0pbMiAtn2xou1WDgGJwHnqlFEGghg0UqaHf2Pl9twVsCnxJfVaPD
+	btV5as4pczs+HX43JJSvKw+u/NWjE73/vj3svxInBmouJZAHcIJ0AOD+IpZ91GGGnMH8HEEYuGQ
+	eMSdCibu8vXV8iXT5oXYpfa8cQDC7I/YpkqxR2SYVD3gcDz33ykkfqMtpOwPDWd2zwDywdY4/yL
+	lkw==
+X-Google-Smtp-Source: AGHT+IF1kivAJK+5XJv15nd3N2xNPfYMjBaPhJULgUhbrdplw1aav3juq/XyTUOTjPQZBXSn8PmxHg==
+X-Received: by 2002:a05:6a00:3d0f:b0:732:61d2:8187 with SMTP id d2e1a72fcca58-7341411d7c9mr30371600b3a.11.1740433546051;
+        Mon, 24 Feb 2025 13:45:46 -0800 (PST)
+Received: from dread.disaster.area (pa49-186-89-135.pa.vic.optusnet.com.au. [49.186.89.135])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-aeda8384d1esm114878a12.38.2025.02.24.13.45.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2025 13:32:51 -0800 (PST)
-Message-ID: <e32ea1e0cc9445136907d9445b8036d1a1439d5d.camel@linaro.org>
-Subject: Re: [PATCH 4/6] mfd: max77759: add Maxim MAX77759 core mfd driver
-From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: brgl@bgdev.pl, conor+dt@kernel.org, devicetree@vger.kernel.org, 
-	gustavoars@kernel.org, kees@kernel.org, kernel-team@android.com, 
-	krzk+dt@kernel.org, lee@kernel.org, linus.walleij@linaro.org, 
-	linux-gpio@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, peter.griffin@linaro.org, robh@kernel.org, 
-	srinivas.kandagatla@linaro.org, tudor.ambarus@linaro.org, 
-	willmcvicker@google.com
-Date: Mon, 24 Feb 2025 21:32:50 +0000
-In-Reply-To: <614644f9-71f7-41af-af90-7ae892581646@wanadoo.fr>
-References: <20250224-max77759-mfd-v1-0-2bff36f9d055@linaro.org>
-	 <20250224-max77759-mfd-v1-4-2bff36f9d055@linaro.org>
-	 <614644f9-71f7-41af-af90-7ae892581646@wanadoo.fr>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.53.2-1 
+        Mon, 24 Feb 2025 13:45:45 -0800 (PST)
+Received: from dave by dread.disaster.area with local (Exim 4.98)
+	(envelope-from <david@fromorbit.com>)
+	id 1tmgGk-00000005Vo4-2uVO;
+	Tue, 25 Feb 2025 08:45:42 +1100
+Date: Tue, 25 Feb 2025 08:45:42 +1100
+From: Dave Chinner <david@fromorbit.com>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Carlos Maiolino <cem@kernel.org>, "Darrick J. Wong" <djwong@kernel.org>,
+	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 3/8][next] xfs: Avoid -Wflex-array-member-not-at-end
+ warnings
+Message-ID: <Z7zohueO2E3ZSpfj@dread.disaster.area>
+References: <cover.1739957534.git.gustavoars@kernel.org>
+ <e1b8405de7073547ed6252a314fb467680b4c7e8.1739957534.git.gustavoars@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e1b8405de7073547ed6252a314fb467680b4c7e8.1739957534.git.gustavoars@kernel.org>
 
-Hi Christophe,
+On Mon, Feb 24, 2025 at 08:27:44PM +1030, Gustavo A. R. Silva wrote:
+> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> getting ready to enable it, globally.
+> 
+> Change the type of the middle struct members currently causing trouble
+> from `struct bio` to `struct bio_hdr`.
 
-Thanks for your review!
+What's this bio_hdr thing? You haven't sent the patch to the XFS
+list, so we cannot review this for correctness. Please cc the
+-entire- patch set to -all- recipients so we can see the whole
+change in it's full context.
 
-On Mon, 2025-02-24 at 21:20 +0100, Christophe JAILLET wrote:
-> Le 24/02/2025 =C3=A0 11:28, Andr=C3=A9 Draszik a =C3=A9crit=C2=A0:
-> > The Maxim MAX77759 is a companion Power Management IC for USB Type-C
-> > applications with Battery Charger, Fuel Gauge, temperature sensors, USB
-> > Type-C Port Controller (TCPC), NVMEM, and additional GPIO interfaces.
-> >=20
-> > Fuel Gauge and TCPC have separate and independent I2C addresses,
-> > register maps, and interrupt lines and are therefore excluded from the
-> > MFD core device driver here.
-> >=20
-> > The GPIO and NVMEM interfaces are accessed via specific commands to the
-> > built-in microprocessor. This driver implements an API that client
-> > drivers can use for accessing those.
->=20
-> Hi,
->=20
-> ...
->=20
-> > +int max77759_maxq_command(struct max77759_mfd *max77759_mfd,
-> > +			=C2=A0 const struct max77759_maxq_command *cmd,
-> > +			=C2=A0 struct max77759_maxq_response *rsp)
-> > +{
-> > +	DEFINE_FLEX(struct max77759_maxq_response, _rsp, rsp, length, 1);
-> > +	int ret;
-> > +	static const unsigned int timeout_ms =3D 200;
-> > +
-> > +	if (cmd->length > MAX77759_MAXQ_REG_AP_MESSAGESZ_MAX)
-> > +		return -EINVAL;
-> > +
-> > +	/* rsp is allowed to be NULL. In that case we do need a temporary. */
-> > +	if (!rsp)
-> > +		rsp =3D _rsp;
-> > +
-> > +	BUILD_BUG_ON(MAX77759_MAXQ_OPCODE_MAXLENGTH
-> > +		=C2=A0=C2=A0=C2=A0=C2=A0 !=3D MAX77759_MAXQ_REG_AP_MESSAGESZ_MAX);
-> > +	if (!rsp->length || rsp->length > MAX77759_MAXQ_REG_AP_MESSAGESZ_MAX)
-> > +		return -EINVAL;
-> > +
-> > +	guard(mutex)(&max77759_mfd->maxq_lock);
-> > +
-> > +	reinit_completion(&max77759_mfd->cmd_done);
-> > +
-> > +	/* write the opcode and data */
-> > +	ret =3D regmap_bulk_write(max77759_mfd->regmap_maxq,
-> > +				MAX77759_MAXQ_REG_AP_DATAOUT0, cmd->cmd,
-> > +				cmd->length);
-> > +	if (!ret && cmd->length < MAX77759_MAXQ_REG_AP_MESSAGESZ_MAX) {
-> > +		/* writing the last byte triggers MaxQ */
-> > +		ret =3D regmap_write(max77759_mfd->regmap_maxq,
-> > +				=C2=A0=C2=A0 MAX77759_MAXQ_REG_AP_DATAOUT32, 0);
-> > +	}
-> > +	if (ret)
-> > +		dev_warn(regmap_get_device(max77759_mfd->regmap_maxq),
->=20
-> Maybe regmap_get_device(max77759_mfd->regmap_maxq) could be assigned to=
-=20
-> a variable to simplify its usage?
+> We also use `container_of()` whenever we need to retrieve a pointer to
+> the flexible structure `struct bio`, through which we can access the
+> flexible-array member in it, if necessary.
+> 
+> With these changes fix 27 of the following warnings:
+> 
+> fs/xfs/xfs_log_priv.h:208:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  fs/xfs/xfs_log.c      | 15 +++++++++------
+>  fs/xfs/xfs_log_priv.h |  2 +-
+>  2 files changed, 10 insertions(+), 7 deletions(-)
+> 
+> diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
+> index f8851ff835de..7e8b71f64a46 100644
+> --- a/fs/xfs/xfs_log.c
+> +++ b/fs/xfs/xfs_log.c
+> @@ -1245,7 +1245,7 @@ xlog_ioend_work(
+>  	}
+>  
+>  	xlog_state_done_syncing(iclog);
+> -	bio_uninit(&iclog->ic_bio);
+> +	bio_uninit(container_of(&iclog->ic_bio, struct bio, __hdr));
 
-Sure, can do.
+This is a pretty nasty conversion. The code is obviously correct
+right now - the bio uses an external bvec table, so has no
+associated allocated bvec space and so the bio isn't flexibly
+sized.
 
->=20
-> > +			 "write data failed: %d\n", ret);
-> > +	if (ret)
-> > +		return ret;
->=20
-> Merge with the if (ret) just above? (as done a few lines below)
+Making the code more complex for humans to understand and get
+right because "the compiler is dumb" is a bad tradeoff.
 
-Definitely, that was an oversight somehow :-(
+I also think this is a really nasty way of fixing the problem;
+casting the fixed size structure to a flex sized structure that can
+overlap other parent structure fields really isn't a good solution.
+IMO, it is a recipe for unexpected memory corruption when the bio
+isn't set up properly by the caller or there are bugs in the way the
+bio is iterated/processed....
 
->=20
-> > +
-> > +	/* wait for response from MaxQ */
-> > +	if (!wait_for_completion_timeout(&max77759_mfd->cmd_done,
-> > +					 usecs_to_jiffies(timeout_ms))) {
-> > +		dev_err(regmap_get_device(max77759_mfd->regmap_maxq),
-> > +			"timed out waiting for data\n");
-> > +		return -ETIMEDOUT;
-> > +	}
-> > +
-> > +	ret =3D regmap_bulk_read(max77759_mfd->regmap_maxq,
-> > +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 MAX77759_MAXQ_REG_AP_DATAIN0,
-> > +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 rsp->rsp, rsp->length);
-> > +	if (ret) {
-> > +		dev_warn(regmap_get_device(max77759_mfd->regmap_maxq),
-> > +			 "read data failed: %d\n", ret);
-> > +		return ret;
-> > +	}
-> > +
-> > +	/*
-> > +	 * As per the protocol, the first byte of the reply will match the
-> > +	 * request.
-> > +	 */
-> > +	if (rsp->rsp[0] !=3D cmd->cmd[0]) {
-> > +		dev_warn(regmap_get_device(max77759_mfd->regmap_maxq),
-> > +			 "unexpected opcode response for %#.2x: %*ph\n",
-> > +			 cmd->cmd[0], (int)rsp->length, rsp->rsp);
-> > +		return -EIO;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
->=20
-> ...
->=20
-> > +static int max77759_probe(struct i2c_client *client)
-> > +{
-> > +	struct regmap *regmap_top;
-> > +	unsigned int pmic_id;
-> > +	int ret;
-> > +	struct irq_data *irq_data;
-> > +	struct max77759_mfd *max77759_mfd;
-> > +	unsigned long irq_flags;
-> > +	struct regmap_irq_chip_data *irq_chip_data_pmic;
-> > +
-> > +	regmap_top =3D devm_regmap_init_i2c(client, &max77759_regmap_config_t=
-op);
-> > +	if (IS_ERR(regmap_top))
-> > +		return dev_err_probe(&client->dev, PTR_ERR(regmap_top),
-> > +				=C2=A0=C2=A0=C2=A0=C2=A0 "regmap init failed\n");
-> > +
-> > +	ret =3D regmap_read(regmap_top, MAX77759_PMIC_REG_PMIC_ID, &pmic_id);
-> > +	if (ret)
-> > +		return dev_err_probe(&client->dev, ret,
-> > +				=C2=A0=C2=A0=C2=A0=C2=A0 "Unable to read Device ID\n");
-> > +
-> > +	if (pmic_id !=3D MAX77759_PMIC_REG_PMIC_ID_MAX77759)
-> > +		return dev_err_probe(&client->dev, -ENODEV,
-> > +				=C2=A0=C2=A0=C2=A0=C2=A0 "Unsupported Device ID %#.2x (%d)\n",
-> > +				=C2=A0=C2=A0=C2=A0=C2=A0 pmic_id, pmic_id);
-> > +
-> > +	irq_data =3D irq_get_irq_data(client->irq);
-> > +	if (!irq_data)
-> > +		return dev_err_probe(&client->dev, -EINVAL,
-> > +				=C2=A0=C2=A0=C2=A0=C2=A0 "Invalid IRQ: %d\n", client->irq);
-> > +
-> > +	max77759_mfd =3D devm_kzalloc(&client->dev, sizeof(*max77759_mfd),
-> > +				=C2=A0=C2=A0=C2=A0 GFP_KERNEL);
-> > +	if (!max77759_mfd)
-> > +		return -ENOMEM;
-> > +
-> > +	max77759_mfd->regmap_top =3D regmap_top;
-> > +	devm_mutex_init(&client->dev, &max77759_mfd->maxq_lock);
->=20
-> Error handling?
+>  	return;
+>  shutdown:
+>  	xlog_force_shutdown(log, SHUTDOWN_LOG_IO_ERROR);
+> diff --git a/fs/xfs/xfs_log_priv.h b/fs/xfs/xfs_log_priv.h
+> index f3d78869e5e5..32abc48aef24 100644
+> --- a/fs/xfs/xfs_log_priv.h
+> +++ b/fs/xfs/xfs_log_priv.h
+> @@ -205,7 +205,7 @@ typedef struct xlog_in_core {
+>  #endif
+>  	struct semaphore	ic_sema;
+>  	struct work_struct	ic_end_io_work;
+> -	struct bio		ic_bio;
+> +	struct bio_hdr		ic_bio;
+>  	struct bio_vec          ic_bvec[];
 
-Thanks! There's a similar one in the gpio driver which
-also needs fixing.
+But then there is the bigger question: ic_bvec is a *fixed size*
+that is allocated at mount time. The fact it is defined as a
+flexible array is the problem here, not the embedding of a struct
+bio. i.e. we've used a flex array to optimise away an extra
+allocation in a non-performance sensitive path.
 
->=20
-> > +
-> > +	i2c_set_clientdata(client, max77759_mfd);
->=20
-> Harmless, but is it needed? (there is no i2c_get_clientdata() in the flil=
-e)
+Hence if we had done it this way:
 
-Yes, this is needed. The leaf drivers need to access it, see
-dev_get_drvdata(pdev->dev.parent) in those.
+	struct bvec		*ic_bvecs;
+	struct bio		ic_bio;		// must be last
+};
 
->=20
-> > +
-> > +	for (int i =3D 0; i < ARRAY_SIZE(max77759_i2c_subdevs); ++i) {
->=20
-> Unusual. Maybe declare 'i' at the beginning of the function?
+and use another allocation for ic_bvecs in xlog_alloc_log() (similar
+to how we do the separate allocation of the *ic_data buffer that is
+mapped into ic_bio at IO time), then none of the code that accesses
+ic_bio for IO purposes needs to change and the compiler warnings go
+away. That's a much cleaner solution that requires no extra
+cognitive load on developers to maintain in correct working order.
 
-A naive grep returned > 1000 statements like this in the kernel
-tree. It doesn't look like it's that unusual these days anymore.
-
->=20
-> > +		ret =3D max77759_create_i2c_subdev(client,
-> > +						 max77759_mfd,
-> > +						 &max77759_i2c_subdevs[i]);
-> > +		if (ret)
-> > +			return ret;
-> > +	}
-> > +
-> > +	irq_flags =3D IRQF_ONESHOT | IRQF_SHARED;
-> > +	irq_flags |=3D irqd_get_trigger_type(irq_data);
-> > +
-> > +	ret =3D devm_regmap_add_irq_chip(&client->dev, max77759_mfd->regmap_t=
-op,
-> > +				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 client->irq, irq_flags, 0,
-> > +				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 &max77759_pmic_irq_chip,
-> > +				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 &irq_chip_data_pmic);
-> > +	if (ret)
-> > +		return dev_err_probe(&client->dev, ret,
-> > +				=C2=A0=C2=A0=C2=A0=C2=A0 "Failed to add IRQ chip\n");
-> > +
-> > +	/* INTSRC - MaxQ & children */
-> > +	ret =3D max77759_add_chained_maxq(client, max77759_mfd,
-> > +					irq_chip_data_pmic);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	/* INTSRC - topsys & children */
-> > +	ret =3D max77759_add_chained_topsys(client, max77759_mfd,
-> > +					=C2=A0 irq_chip_data_pmic);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	/* INTSRC - charger & children */
-> > +	ret =3D max77759_add_chained_charger(client, max77759_mfd,
-> > +					=C2=A0=C2=A0 irq_chip_data_pmic);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	return devm_mfd_add_devices(&client->dev, PLATFORM_DEVID_AUTO,
-> > +				=C2=A0=C2=A0=C2=A0 max77759_cells, ARRAY_SIZE(max77759_cells),
-> > +				=C2=A0=C2=A0=C2=A0 NULL, 0,
-> > +				=C2=A0=C2=A0=C2=A0 regmap_irq_get_domain(irq_chip_data_pmic));
-> > +}
-> > +
-> > +static const struct i2c_device_id max77759_i2c_id[] =3D {
-> > +	{ "max77759", 0 },
-> > +	{ }
-> > +};
-> > +MODULE_DEVICE_TABLE(i2c, max77759_i2c_id);
-> > +
-> > +static const struct of_device_id max77759_of_id[] =3D {
-> > +	{ .compatible =3D "maxim,max77759", },
-> > +	{},
->=20
-> Unneeded trailing comma after a terminator.
-> Maybe { }=C2=A0 to match the style used in max77759_i2c_id?
-
-OK. I'll also fix the similar leaf drivers.
-
-Cheers,
-Andre'
-
-
->=20
-> > +};
-> > +MODULE_DEVICE_TABLE(of, max77759_of_id);
->=20
-
+-Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
