@@ -1,138 +1,145 @@
-Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C99BD266190
-	for <linux-hardening@vger.kernel.org>; Mon, 24 Feb 2025 18:44:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39C602661B7;
+	Mon, 24 Feb 2025 18:52:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740422660; cv=none; b=TMHTp0FDVmn8vDT6KrJsyRoYcq7QgHVLwYcynARkkYqWxU6HgZaUlnRH79jD7ASUO7fWByxGdX692MBjcKyskWQi7Ny865LvpVvNk/ZzbMV6rqUwwhYFxKUKXxivu61/b/Ar98JpJovFSzjE5Xo7VjEztOC5tIVoHs+VrpoS6h4=
+	t=1740423130; cv=none; b=GA5O5N65UtxX0b+57d6Ezp5M8jC5uoEDyJwSAsjscpdaT228OnYbnrd+86XorJ5q5YDQA4fXq4ioBqWoqMTu0NATYEHiVc8hpgOKLLxggA/j0MdBDlUTL4PLnD1RS1Hg6gyuveEoDyQE16MxSPXHMWxyqEb5wsYGTGGrmS9scKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740422660; c=relaxed/simple;
-	bh=khj59qHPmTHqrt6WaeToKlT0AivW47rW2SfqTzUq9gw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qLyWuWRAkRUD2vTYidceUL/uFtX52xc5ZT77IO6Ea61gnFxpNAXnYR05UDxYXPMipZQekXz7Saz2THE1OY4RgGSdd2BbhTe8IDqvduUyaU6LG7+QFhRRGuPetygi47vJj2jjgjFqB+3dlyeejmUEgE2Vn8sYseXlJwAV7EC7Y5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=CpcE9dJ7; arc=none smtp.client-ip=209.85.167.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1740423130; c=relaxed/simple;
+	bh=p8WahEKH3FtIxaDZp3CmgnleCkUrzMZgELQO6SZHpQ0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SpNzQTgOa4Y4h8wPtg+30ESd2wO7c8atX5pb8yvFuHXtmu7dP6xy8dvNVC6x6BDdtsjHIj2IHsfKUqnvc31UFJ0zdt12UAxHKXeKdFos54OtZGi0KzldNZY11Q5vH5D8zeNth80LBOZ+d6FoZOnq0o+YmiOq33sX4m0Jgx/lqos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TqRVQ+bC; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CpcE9dJ7"
-Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-3f40b7899f9so75647b6e.0
-        for <linux-hardening@vger.kernel.org>; Mon, 24 Feb 2025 10:44:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1740422658; x=1741027458; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=l3xWA/77tS/bA1FDIGO2ulCuHvVLqpsD27PQsdyeLvA=;
-        b=CpcE9dJ7cjnzj/lF4aefTjDC9/dHuSQdNXujN1lzu3gHUEeQ1i7CM36vYPVTbrQx2c
-         PkkwQ4vtxgH6nSyesy9KlAC4GbuAmzsGZB2uC7oL0S4FCdorLyobQEcqMxPUIMobhC7p
-         ookijqy+E7cEc60OkFm8C83sRJBXk186jtqG4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740422658; x=1741027458;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=l3xWA/77tS/bA1FDIGO2ulCuHvVLqpsD27PQsdyeLvA=;
-        b=D27WYULiH9DkLdacpCqVxdiuCydRYcV4INIwbtcR7WgLbyafXwk/OMnSNR/qU9LINy
-         EKn5y6JLXnxPg8IT9y4H9mDXnRLLC907T+Q6iZeG/owIAZDnpsYC9ZlXNPjzqZJ+xcR2
-         ODyfIUKIELyXfnbqnZd5u/n8NKZADckXZM9Y0ht+/eKjh/OXY91wMGsObXsMJhvuUzl6
-         XHk19BAeUKY2/vMqz3rfFhy3CrB/+SEy1VxUZWPEUpo3JTpqCfwbkp8ow6Wgy0LlAsMw
-         k1EFDx28hBCGIzRaVoPNDdP2Nd6en1myRr/ntJzIKjNJWlXotovBqxRxwtdOuUMKaUwU
-         lKaA==
-X-Forwarded-Encrypted: i=1; AJvYcCWszQJfY5OfsauR1u81BmAvcQR0Cxr2SW17pIJ506sc3rcL3dNMc7SJnx6C06tzRuznILd6CcM0k914XhZeb+8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy9RubY6NjDXnyG1Ae3tusfFIdTPiATBKbdIE/iWU1pB2kl/ZIi
-	EkD6lRKK3Rxv76c9UwxNYMyLECYnzHkBTDzyCdsDXrVqSsm4VRuzqPDemVOq0TvNBJ0/BoaOQyz
-	BTi+LBSg8RN84VjbI4dp+bchrFXUVI+JcSjSJ
-X-Gm-Gg: ASbGncuez0zkWZgWgNNFbwd0mGObNAGccqZ6WdFFEd3vz/XP1Ug7p8QkgIsax7FojUG
-	ybkPUnqJpYTBFonDEGqNGVx6esbQsRpUCM2pmsrEglF26yc5lyib+lH020vc2oY30KjdZc6ikPt
-	tzqWdipEn+PHbaQUgeFp2Sackvz4uSLNYXCcFW
-X-Google-Smtp-Source: AGHT+IFN+bvliOIeTRCEzzqueIeoaQOjdPQ9OrltDO6mVppq+7ugAyjJAg5Sdh7fwscXh0PnNqV1UaZJHQv0Bp5Y3+U=
-X-Received: by 2002:a05:6808:1525:b0:3f4:1f1e:7459 with SMTP id
- 5614622812f47-3f4247bf741mr3932358b6e.6.1740422657819; Mon, 24 Feb 2025
- 10:44:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TqRVQ+bC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740423129; x=1771959129;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=p8WahEKH3FtIxaDZp3CmgnleCkUrzMZgELQO6SZHpQ0=;
+  b=TqRVQ+bCIVe1zA64aqGR15jaHcWAMkAbzs8q3iYpYfYp+bYv+CIZFwYi
+   TVkLMfd+hE2upcW5aUfJ8pvpnckWd3BaCPT9xwHXKjv7/KglM6h6AOtHT
+   urbqI8UB1KMSjURgG/uv7fSgJZvIHtjdmaDzAMZqD7wvu7uzssCvGDJ8J
+   TfEPeRyp+J7/oZcwgu00yxwiLH4CWR7BH/VblJZ19+oUtEwazadMTuIQ2
+   ks8SrIkqxK+bojf47aiwzukHPcfAoMhiahrOyl9aj7+IKdBevAYfZFntc
+   bxqhHcM4tTqMo86Gf/EVnEhqE/8jHLro++e7SlSvW2og33w+weY9rp1Lb
+   A==;
+X-CSE-ConnectionGUID: +NyHpPk8SzGsMboPb58mRw==
+X-CSE-MsgGUID: zrzzKKAyT7iXXeGGzZTN/Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11355"; a="41077352"
+X-IronPort-AV: E=Sophos;i="6.13,312,1732608000"; 
+   d="scan'208";a="41077352"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2025 10:52:08 -0800
+X-CSE-ConnectionGUID: XBIhuaevS5WPDtri+kYBvw==
+X-CSE-MsgGUID: fxayIjWdSveDXmRs3xcdYw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,312,1732608000"; 
+   d="scan'208";a="116644263"
+Received: from cmdeoliv-mobl4.amr.corp.intel.com (HELO [10.125.111.40]) ([10.125.111.40])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2025 10:52:06 -0800
+Message-ID: <385e1498-2444-4a7a-a1b0-0013b0b8fd68@intel.com>
+Date: Mon, 24 Feb 2025 10:52:13 -0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250224174513.3600914-1-jeffxu@google.com> <20250224174513.3600914-2-jeffxu@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 1/7] mseal, system mappings: kernel config and header
+ change
+To: Jeff Xu <jeffxu@chromium.org>
+Cc: akpm@linux-foundation.org, keescook@chromium.org, jannh@google.com,
+ torvalds@linux-foundation.org, vbabka@suse.cz, lorenzo.stoakes@oracle.com,
+ Liam.Howlett@oracle.com, adhemerval.zanella@linaro.org, oleg@redhat.com,
+ avagin@gmail.com, benjamin@sipsolutions.net, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, linux-mm@kvack.org, jorgelo@chromium.org,
+ sroettger@google.com, hch@lst.de, ojeda@kernel.org,
+ thomas.weissschuh@linutronix.de, adobriyan@gmail.com,
+ johannes@sipsolutions.net, pedro.falcato@gmail.com, hca@linux.ibm.com,
+ willy@infradead.org, anna-maria@linutronix.de, mark.rutland@arm.com,
+ linus.walleij@linaro.org, Jason@zx2c4.com, deller@gmx.de,
+ rdunlap@infradead.org, davem@davemloft.net, peterx@redhat.com,
+ f.fainelli@gmail.com, gerg@kernel.org, dave.hansen@linux.intel.com,
+ mingo@kernel.org, ardb@kernel.org, mhocko@suse.com, 42.hyeyoo@gmail.com,
+ peterz@infradead.org, ardb@google.com, enh@google.com, rientjes@google.com,
+ groeck@chromium.org, mpe@ellerman.id.au,
+ aleksandr.mikhalitsyn@canonical.com, mike.rapoport@gmail.com
+References: <20250224174513.3600914-1-jeffxu@google.com>
+ <20250224174513.3600914-2-jeffxu@google.com>
  <443992d7-f694-4e46-b120-545350a5d598@intel.com>
-In-Reply-To: <443992d7-f694-4e46-b120-545350a5d598@intel.com>
-From: Jeff Xu <jeffxu@chromium.org>
-Date: Mon, 24 Feb 2025 10:44:07 -0800
-X-Gm-Features: AWEUYZmHQiSO8llCjmhY8a1Y8Dk59_j8_WwL1SOLQEoLurxsiSGp7YKgCz-mRG0
-Message-ID: <CABi2SkVKhjShryG0K-NSjjBvGs0UOVsY-6MQVOuQCkfuph5K8Q@mail.gmail.com>
-Subject: Re: [PATCH v6 1/7] mseal, system mappings: kernel config and header change
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: akpm@linux-foundation.org, keescook@chromium.org, jannh@google.com, 
-	torvalds@linux-foundation.org, vbabka@suse.cz, lorenzo.stoakes@oracle.com, 
-	Liam.Howlett@oracle.com, adhemerval.zanella@linaro.org, oleg@redhat.com, 
-	avagin@gmail.com, benjamin@sipsolutions.net, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-mm@kvack.org, jorgelo@chromium.org, 
-	sroettger@google.com, hch@lst.de, ojeda@kernel.org, 
-	thomas.weissschuh@linutronix.de, adobriyan@gmail.com, 
-	johannes@sipsolutions.net, pedro.falcato@gmail.com, hca@linux.ibm.com, 
-	willy@infradead.org, anna-maria@linutronix.de, mark.rutland@arm.com, 
-	linus.walleij@linaro.org, Jason@zx2c4.com, deller@gmx.de, 
-	rdunlap@infradead.org, davem@davemloft.net, peterx@redhat.com, 
-	f.fainelli@gmail.com, gerg@kernel.org, dave.hansen@linux.intel.com, 
-	mingo@kernel.org, ardb@kernel.org, mhocko@suse.com, 42.hyeyoo@gmail.com, 
-	peterz@infradead.org, ardb@google.com, enh@google.com, rientjes@google.com, 
-	groeck@chromium.org, mpe@ellerman.id.au, aleksandr.mikhalitsyn@canonical.com, 
-	mike.rapoport@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+ <CABi2SkVKhjShryG0K-NSjjBvGs0UOVsY-6MQVOuQCkfuph5K8Q@mail.gmail.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <CABi2SkVKhjShryG0K-NSjjBvGs0UOVsY-6MQVOuQCkfuph5K8Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Feb 24, 2025 at 10:21=E2=80=AFAM Dave Hansen <dave.hansen@intel.com=
-> wrote:
->
-> On 2/24/25 09:45, jeffxu@chromium.org wrote:
-> > +/*
-> > + * mseal of userspace process's system mappings.
-> > + */
-> > +#ifdef CONFIG_MSEAL_SYSTEM_MAPPINGS
-> > +#define MSEAL_SYSTEM_MAPPINGS_VM_FLAG        VM_SEALED
-> > +#else
-> > +#define MSEAL_SYSTEM_MAPPINGS_VM_FLAG        VM_NONE
-> > +#endif
->
-> This ends up looking pretty wonky in practice:
->
-> > +     vm_flags =3D VM_READ|VM_MAYREAD|VM_IO|VM_DONTDUMP|VM_PFNMAP;
-> > +     vm_flags |=3D MSEAL_SYSTEM_MAPPINGS_VM_FLAG;
->
-> because MSEAL_SYSTEM_MAPPINGS_VM_FLAG is so much different from the
-> other ones.
->
-> Would it really hurt to have
->
->  #ifdef CONFIG_64BIT
->  /* VM is sealed, in vm_flags */
->  #define VM_SEALED       _BITUL(63)
-> +#else
-> +#define VM_SEALED       VM_NONE
->  #endif
->
-> ?
->
-VM_SEALED isn't defined in 32-bit systems, and mseal.c isn't part of
-the build. This is intentional. Any 32-bit code trying to use the
-sealing function or the VM_SEALED flag will immediately fail
-compilation. This makes it easier to identify incorrect usage.
+On 2/24/25 10:44, Jeff Xu wrote:
+> For example:
+> Consider the case below in src/third_party/kernel/v6.6/fs/proc/task_mmu.c,
+> 
+> #ifdef CONFIG_64BIT
+> [ilog2(VM_SEALED)] = "sl",
+> #endif
+> 
+> Redefining VM_SEALED  to VM_NONE for 32 bit won't detect the problem
+> in case that  "#ifdef CONFIG_64BIT" line is missing.
+> 
+> Please note, this has been like this since the first version of
+> mseal() RFC patch, and I prefer to keep it this way.
 
-For example:
-Consider the case below in src/third_party/kernel/v6.6/fs/proc/task_mmu.c,
+That logic is reasonable. But it's different from the _vast_ majority of
+other flags.
 
-#ifdef CONFIG_64BIT
-[ilog2(VM_SEALED)] =3D "sl",
-#endif
-
-Redefining VM_SEALED  to VM_NONE for 32 bit won't detect the problem
-in case that  "#ifdef CONFIG_64BIT" line is missing.
-
-Please note, this has been like this since the first version of
-mseal() RFC patch, and I prefer to keep it this way.
-
-Thanks
--Jeff
+So what justifies VM_SEALED being so different? It's leading to pretty
+objectively ugly code in this series.
