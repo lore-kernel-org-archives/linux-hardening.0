@@ -1,241 +1,265 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-23.smtpout.orange.fr [80.12.242.23])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7106B244E8C;
-	Mon, 24 Feb 2025 20:27:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740428848; cv=fail; b=iHULcvF0Lg70YljyNxusxX5hnDnY9HHQ0WMT+n6O38vTNfdKr0UkSIJOuOiCasoANc5Z8gslF4PRDC0TFcaLNLFE9ByHPbTQkQmnpjDWlEzi4zDHPlScC2EVNbhPmZ3iywTjj+OjLRoF3exA+uquJOasfnL6bCH5aDF77+TLrIk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740428848; c=relaxed/simple;
-	bh=ImaQWVtrBHhggtLKCpUVHFgrByf3/IYC3fPXSNllc1E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=rNjWXgOtN2u1LowSKUtcpFUSanKfsPOpSEP3XM2NQ2OT/8TZOKp+QkhQwAdsj++OMgjluEPcfCuHawx8Sz7hRyHJmY/gwygOQ/E6rZzqdihiRXkCN1GsPYC5Rid3SDTeqKRtmtut7wU/fWAIznouZjrErNgzYkVPElr8upzD/74=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=g8PPWp4M; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=eQ9nfHnY; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7E0926AFB;
+	Mon, 24 Feb 2025 20:29:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.23
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740428976; cv=none; b=GSDZxMYFUcZIVUSAGkNXW+jeFPSAIaJgdRgCgCJeqrtmaG+utyqXIvrh9k/efNtQDNEOcSaDqu/ZQUb1POJeP+YiOAqA9hPJW6anD+2ypNmYoF5evGtoKkTYiC6E4lv1UrLNbIhMB47UTLosBMLeyPx1tJlp8MCAN06jMxUhm78=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740428976; c=relaxed/simple;
+	bh=0+5ylH1RpEMxad2fU57+zr3KWtLmylDPnzNe+ClA5vo=;
+	h=Message-ID:Date:MIME-Version:Subject:References:From:To:Cc:
+	 In-Reply-To:Content-Type; b=nm7TNtxBmO8mX18YfDNEJMJNEPjNRPmt0q/FxtMvQ29z6wpFL+kh4UhDb5k+6uNHdPalIPGrVmYr+VR4Jc2NgKY3nSbJ639jnaIh0f4UmwYOmSzD/2qTf+SmQFhLD4JHLkv3Snj4JUTCaTvkaMwsRi6po3nL8uy5qQaYRZhWHOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=r1LWAxau; arc=none smtp.client-ip=80.12.242.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="g8PPWp4M";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="eQ9nfHnY"
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51OJXhLl023373;
-	Mon, 24 Feb 2025 20:26:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2023-11-20; bh=qrSo6ECKDhlnt8KznZ
-	QN/w2oC/cI/QPFnL1rug+kuqI=; b=g8PPWp4MhxJzkkyh/4lpTnnXv5HXwZa74T
-	ayrAIXd6pgkQqUevR7PkX3q3G2UDrF1zTjRY9Mt50qT774+l5g1wOTZbSWGD/K8G
-	lLzhEO/eAj0M34VGx6al9rFrpnHmFIAgN++WoBMBDXJmOv6avVzG9J3bYP4wG2zt
-	0Lzv97RvaK35dhYVilZwJCoZ7RH25nB2KyHOGQMXh+31DNL1S5cWIKQnn6/PKyMR
-	XDJvj71bRGeYBtcJHs12aXqmRiHTtDwqeATiXJj2Quhhuq68WnsFs+eCMLOO8vTA
-	50mPA4yUTVP7sfIjIiQcuZKN7nZF+3iGzy0n3XU2iFf0IVZruukA==
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44y5603j6u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 24 Feb 2025 20:26:46 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 51OK5n2C010488;
-	Mon, 24 Feb 2025 20:26:45 GMT
-Received: from nam04-mw2-obe.outbound.protection.outlook.com (mail-mw2nam04lp2173.outbound.protection.outlook.com [104.47.73.173])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 44y517y1ng-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 24 Feb 2025 20:26:45 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=CC6bFUk3mcy4lSUHKjMfscTXxjpwi0iWpct30/x2oTh9KAXCNws+XhYT/EOfMTqrBCgWymac/aUIuUooWWkRVdqTY+WzHiGJG3At5S9/IMKo18ceAE3x8XNKvcwlwmM+vPPWGcPb7usHOp+k1zo9OmCdC3XlKvkPZvHQAEq77ins5i62zPRULymO/RtiByykdjaJ+zAhC8J0yDbmQNSwtvbf17PUv2w47IgkwucDGwzlqMNWHDZjqBbsWoqvd9Lm/w8P5UYJAB9NofOPi3PdO3uV/AncePH1cxJljGUMt9AS9fhdJP0fy+kP9lXVNs7lwNmHzr7579w7YN2fpQoEcw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qrSo6ECKDhlnt8KznZQN/w2oC/cI/QPFnL1rug+kuqI=;
- b=V/DP7gg8HIJv0qr1vK0Ucefl2owuqNNcYyMCKfb316ZifDEETiZDM1i+s0WA6NJvb+shhyApfv1tnD2h6QV0cv7OIcMzQ1X89loWu9HSHWsfJfONB9s8Z/ztFjzkDM8Yag2tbH6ie7OM6c5vJKFuOIx49SmBPRe3XPsaQwgjnsYgoI5Jc/OnEgEnJwvJvpgy7AgZLGMDOH8zO7Tprzz8xD/IO1kFAEYUgac8DR5HQaWl7MYrwgIlzFn/SCWCiBKd7cr+7gNoEQAxbISvd+C9UcyDfQ1rAiDYjUC1fHNenfIdcAuxpSBrh0SDJ0oqbARFrCliuX7/S2dafwsWkFNzuw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qrSo6ECKDhlnt8KznZQN/w2oC/cI/QPFnL1rug+kuqI=;
- b=eQ9nfHnY5WDTItlW2qYiNYT1fSLaxHmoGqweAlX8l9CzgCYqxERmM/Tn4aPVSqtvZXSaIaGeZLuK9vdDSo+PeeBafY21VGFZKc3/RVg5BRTb6X+Y3eIwWv5kj4bdJ3a7HxcI5iqBoqPI/wy8SeukRo/5rX99DachsGfE6jBkZDM=
-Received: from PH0PR10MB5777.namprd10.prod.outlook.com (2603:10b6:510:128::16)
- by CH2PR10MB4279.namprd10.prod.outlook.com (2603:10b6:610:a8::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.21; Mon, 24 Feb
- 2025 20:26:38 +0000
-Received: from PH0PR10MB5777.namprd10.prod.outlook.com
- ([fe80::75a8:21cc:f343:f68c]) by PH0PR10MB5777.namprd10.prod.outlook.com
- ([fe80::75a8:21cc:f343:f68c%4]) with mapi id 15.20.8466.016; Mon, 24 Feb 2025
- 20:26:38 +0000
-Date: Mon, 24 Feb 2025 15:26:32 -0500
-From: "Liam R. Howlett" <Liam.Howlett@oracle.com>
-To: jeffxu@chromium.org
-Cc: akpm@linux-foundation.org, keescook@chromium.org, jannh@google.com,
-        torvalds@linux-foundation.org, vbabka@suse.cz,
-        lorenzo.stoakes@oracle.com, adhemerval.zanella@linaro.org,
-        oleg@redhat.com, avagin@gmail.com, benjamin@sipsolutions.net,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        linux-mm@kvack.org, jorgelo@chromium.org, sroettger@google.com,
-        hch@lst.de, ojeda@kernel.org, thomas.weissschuh@linutronix.de,
-        adobriyan@gmail.com, johannes@sipsolutions.net,
-        pedro.falcato@gmail.com, hca@linux.ibm.com, willy@infradead.org,
-        anna-maria@linutronix.de, mark.rutland@arm.com,
-        linus.walleij@linaro.org, Jason@zx2c4.com, deller@gmx.de,
-        rdunlap@infradead.org, davem@davemloft.net, peterx@redhat.com,
-        f.fainelli@gmail.com, gerg@kernel.org, dave.hansen@linux.intel.com,
-        mingo@kernel.org, ardb@kernel.org, mhocko@suse.com,
-        42.hyeyoo@gmail.com, peterz@infradead.org, ardb@google.com,
-        enh@google.com, rientjes@google.com, groeck@chromium.org,
-        mpe@ellerman.id.au, aleksandr.mikhalitsyn@canonical.com,
-        mike.rapoport@gmail.com
-Subject: Re: [PATCH v6 7/7] mseal, system mappings: update mseal.rst
-Message-ID: <rzhfepcwdwiq6khrepv7x7gpgynek4p54fhx4enqgyw7nubegc@uydhglfx67gp>
-Mail-Followup-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	jeffxu@chromium.org, akpm@linux-foundation.org, keescook@chromium.org, 
-	jannh@google.com, torvalds@linux-foundation.org, vbabka@suse.cz, 
-	lorenzo.stoakes@oracle.com, adhemerval.zanella@linaro.org, oleg@redhat.com, avagin@gmail.com, 
-	benjamin@sipsolutions.net, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	linux-mm@kvack.org, jorgelo@chromium.org, sroettger@google.com, hch@lst.de, 
-	ojeda@kernel.org, thomas.weissschuh@linutronix.de, adobriyan@gmail.com, 
-	johannes@sipsolutions.net, pedro.falcato@gmail.com, hca@linux.ibm.com, willy@infradead.org, 
-	anna-maria@linutronix.de, mark.rutland@arm.com, linus.walleij@linaro.org, Jason@zx2c4.com, 
-	deller@gmx.de, rdunlap@infradead.org, davem@davemloft.net, peterx@redhat.com, 
-	f.fainelli@gmail.com, gerg@kernel.org, dave.hansen@linux.intel.com, mingo@kernel.org, 
-	ardb@kernel.org, mhocko@suse.com, 42.hyeyoo@gmail.com, peterz@infradead.org, 
-	ardb@google.com, enh@google.com, rientjes@google.com, groeck@chromium.org, 
-	mpe@ellerman.id.au, aleksandr.mikhalitsyn@canonical.com, mike.rapoport@gmail.com
-References: <20250224174513.3600914-1-jeffxu@google.com>
- <20250224174513.3600914-8-jeffxu@google.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250224174513.3600914-8-jeffxu@google.com>
-User-Agent: NeoMutt/20240425
-X-ClientProxiedBy: YT3PR01CA0130.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:83::13) To PH0PR10MB5777.namprd10.prod.outlook.com
- (2603:10b6:510:128::16)
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="r1LWAxau"
+Received: from [192.168.1.37] ([90.11.132.44])
+	by smtp.orange.fr with ESMTPA
+	id mevztE6C3KGvrmew2tsEVG; Mon, 24 Feb 2025 21:20:16 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1740428416;
+	bh=zXvGjak3HqVlV81qtbZ7PYjHL81uIlDbJz0ggojYpY8=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To;
+	b=r1LWAxauFhYfUxEL9mkYC5X/vQmAnYURZZy2xWKN49VQZxmw42GDRGUkn5aD8Khot
+	 BF/3RfdCIurvlhZGfoX4qZhMQiUyyGAB3zDWXaK3bFQR3WYQeQgnMyo2PwYk+Hw5zf
+	 sAdUm8CcFVNDPGPetowSfkypjllAD3/BZco9yblhm7j82m3yrDj4iMDtbfePj0ezy1
+	 EoCGzg2geQKtcBZuyXXXqzO6c2LtWjzdj5twfKbo5GGLWP7xJArGEpjywtyWwDlGTF
+	 GVGTd9QTJDdvgMHegqpgrbXw07rhegTDNJ2AQLmXPgq8RGIB2ILVlYLAyzXg+HjxO8
+	 ferPrBGilLmMw==
+X-ME-Helo: [192.168.1.37]
+X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
+X-ME-Date: Mon, 24 Feb 2025 21:20:16 +0100
+X-ME-IP: 90.11.132.44
+Message-ID: <614644f9-71f7-41af-af90-7ae892581646@wanadoo.fr>
+Date: Mon, 24 Feb 2025 21:20:11 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH0PR10MB5777:EE_|CH2PR10MB4279:EE_
-X-MS-Office365-Filtering-Correlation-Id: f72c3541-632f-4187-cbf8-08dd55118a95
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|1800799024|366016|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?HWYn6uX0XOgLb9PycezDbgqJDFrrZEZO7HJOKlLwFD3W173w1upnQ5FjiUYB?=
- =?us-ascii?Q?a+qRLQL2TWPYYbVtopF0Tp0bUnF1noGShCzYWrW/FMUrYyDc4Zake5X3AuV7?=
- =?us-ascii?Q?KFqJexU6u2F8m2Wl6+VHad4C4VbUQ0wk6Ex2hn3i/z6mB3JwFmZ80ozFa8Kt?=
- =?us-ascii?Q?pBSzqUjAX5JidBCNgoQugspDNwTz/mO3BnKCWW+0P0OCEvP9W3uw5CjWJk8t?=
- =?us-ascii?Q?4FTi/OjnwEsyS1zUfYfev3Ezx/FMF8utM40lB3JdxEL/s1P6skhAN2L6JDFA?=
- =?us-ascii?Q?nzoBXGtamZpgxldNCSrpqTiC3NyXNH5ZHa5BDd1OD7zdHPPx2yRCcmIu0j3g?=
- =?us-ascii?Q?oFensU20iCJVDw3HEzuCXX+qLxGbwtXiPa3yMF32ccrZ7QYpY2mJtyNiTosR?=
- =?us-ascii?Q?M4szbmb+U+W4bFd3HJ4YNM5LKaK1pko/c7kbwGYWP98aXv/e8dIUalsFVb+m?=
- =?us-ascii?Q?pkyMHf4Ikq9ljofKeTXeWlo6HxkPJ5OENIYeaJ5Ferw+nQNr/oPfeiMUMpML?=
- =?us-ascii?Q?QMrz5MRYCL1lHqf+/5omh7B4W4Xs3P2uKjkRgw2e120Ty5atWKzdPR2U7leJ?=
- =?us-ascii?Q?dgGdDSi5hCQZhAiV18E9TDJYKRBu/kJ2MH3BfhUDx/wnzO2exGxwDgvk/bBq?=
- =?us-ascii?Q?KUFXC9f4PA0vQiXHiZ9KkWHA2FDdvws4unhb5sO6ioe5yZHpgmyvU1nbyCpd?=
- =?us-ascii?Q?yhX20zRsJ62AcUC3W/8tO4dbfSm370qN8u0FxdoR+nL6IM4sW3Dn8AJdKuY7?=
- =?us-ascii?Q?GK4GAxJ2S3zOEfJioqYqPov7tvmxMgPWOEqIf5ksbNiIf7YVr0VRYzaKMXu6?=
- =?us-ascii?Q?Dk3bvjqY+8h20qcgHv5DkCK+1iKMwo4OTAfxztzaKcbK+AxspgA6btKcnab+?=
- =?us-ascii?Q?B1czKcM/X7013lPozSnOieBhtI6ET8QVotUqJamtMb6F1rfnzZSD8MdgU4jv?=
- =?us-ascii?Q?lRol1vzHIwRS74Ix5c0i6iUa/Gtizg26d8SEIGHAiee5GumCdpFeaSWjb9Ft?=
- =?us-ascii?Q?cdSsQ89mDetS8zUWc+L48gJoR0RRJ2DCj3V1YvDBe+M+HFRYp2MgmpJzatA9?=
- =?us-ascii?Q?8LtpgdljYurkWjc236mZQct9nLBRnlf8UOrfKSBqfv4CUGK5ZXfF+CIjtcIO?=
- =?us-ascii?Q?ZwiBUjYVGzS5xX3ZarfGSwXzX3puPPK7gJ9/YkkOZtjkGZWpc0eX76HlLJ5x?=
- =?us-ascii?Q?Num7JlqVDYD2sI1jrjAwvQKD97jQE3iQvHGVrqvYwDVnEtGaXLUycVLjk/hL?=
- =?us-ascii?Q?W2G4rkrmDjbXfH9BRwSXy3cEDgz7TYm/CkU+lx4n8hF13MbOIO5/D9rj7qmf?=
- =?us-ascii?Q?6OF49XrvYCVk7kk6IKnPcp3/JMU2YlCu1dkufw2HzF56/pwuYCbmQa1kvvtj?=
- =?us-ascii?Q?7F7x+gXenKc5jK7Mzn7PVr3Et2Hh?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB5777.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?U2Iu7es1M4UrcQ6PMWG2jG0YQ0RhTiJqBj+gbXf1D4JgmOIh+tVoNBY6g7QQ?=
- =?us-ascii?Q?L1AHneYV/H319AQqOkoDr56V+q4TyE8Jb9TTE5Nz5e3DX+RHb9/KIMxcB9hV?=
- =?us-ascii?Q?+MeSkm/7foQOCkUxj3f56xos6yTUibNy28Q7/HjyB4Ew0RFknpynM5NVVAYB?=
- =?us-ascii?Q?35Y6JwvjMxtWCgjVDBo16OSjE4AoRAxuzVDEoujvS62YpK6c6bJ1lhyMk7FQ?=
- =?us-ascii?Q?wmgxwWuNW1myUBx9i4yNhpGH6+Q0ybHp7Pxm7MvjG4zOR/N6733EGs5B5Jci?=
- =?us-ascii?Q?Ij5cYu+rG1SLnD2deER3VtwTSDy3kBlS5qs80yN/LTMKravEbmdQQ6j6Sbbn?=
- =?us-ascii?Q?Rg6zbHr23BsZofmb4QrwWzBhi6bF9NbQBs6Liz5jBT7P66gnou6pDCbPAIcI?=
- =?us-ascii?Q?S9tKzp5VS3FS5cZR0rdXQMCipeoKwaPmX4Wt1GjUu2NlhR7gy8ELGsXAJwHg?=
- =?us-ascii?Q?ec837zqHMbo7bSeMKS0GD6tzCTLwxYVH6UmFVbtx+5uOXQfchTnQhugh1DIp?=
- =?us-ascii?Q?c+DB0n6e+aI/wbXQ6M2380unDfjKZbrdFRoc3WopofMJwGvNY2esvnoAfG0/?=
- =?us-ascii?Q?KK5lgyrXUbN5LYG0jjIulDtPb+V7IVsKNg/+Slt+KEVeWj33qV/fw6TLxEW2?=
- =?us-ascii?Q?z39+arWN1R3INO4qIOWZTP2YJ0Ce885hLWmAoY4E9VnbSu/DeobIPbuG/eNB?=
- =?us-ascii?Q?6mX22RbfcegUXKR4rG0LduZ1SPk/LF5HUeFoxT6yygpvfPlf74A/rj0NL9T4?=
- =?us-ascii?Q?Ux6jPUeCeVXnpXgzw+7Bev14h8wxnQ6YwPMW+tBEUdDjfofRpLAgQ0IjBBQM?=
- =?us-ascii?Q?oOd3dBfGpz2iLagb08zg+M3H/LX5Isdn+P+V0q3h2MDMe14PYUjfOdxoCjnT?=
- =?us-ascii?Q?MLn4LWBpJbwMTqStCR4occ63GCr7ikSM3hTGaiX5HtX2a5hz9+QDvK5HIA7R?=
- =?us-ascii?Q?/1M+bgVChgXBVtV7V16ueAYXl2AEkxO3l6lD6HSXUPLXr9+9zRHouHEsn4YB?=
- =?us-ascii?Q?b1h6AWCJGKjNrmv7MHHnkQqujs2tiER+DyFULU2RiL0vJJKlYMLQgzeaiyG3?=
- =?us-ascii?Q?8yPk45vOgJ4em7Xxhqi0zDN5XkGUiavHoIJVfw1gXbLXP6HbtJ0IjRR1b164?=
- =?us-ascii?Q?MXEcb7TpRz+QCM1VD7uPMmPKEgoJISz/0NKQ+HlAolEIgedaXp9zMeVj9fOy?=
- =?us-ascii?Q?0+47jjYBe/W1thoHF2XFOW1dqbqFBUs59Qhpo4x3N1/BphBDvYvZBxuxiaPH?=
- =?us-ascii?Q?XYqfWLQsFHg+pFH3jnZ37lIziSA2kgxj1PN3g9tt6XrSe0CnHnQ1V93Ujuch?=
- =?us-ascii?Q?yCg/SGE1ljU5lMx7LgEMZ2DCVbN3YY4IBPqeDYuraNrQ9A0HASdr9AgUoIcy?=
- =?us-ascii?Q?RPDBUEIWMPFx7vaVDm+b9pDRAfZqURBFu99kUyDMbfiM/FQJfqaKzMJ1LOVg?=
- =?us-ascii?Q?ZN2lvWuUlWz9/m49a18qyuC0zYj0zStOLo7wci4EFoi+9zh7Z6Bi3IbgK8ja?=
- =?us-ascii?Q?rulVmfoqgBMa5c4c7vho3wI2K4khhTHW2JFMduppYQtbmdpxotoHPBOjwKIH?=
- =?us-ascii?Q?q52Jf9nQrO3Wjifu/WldaqP7HrKlPY2FQVFp/m63T3sQ26CeeH6YLvwmk6I6?=
- =?us-ascii?Q?Fg=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	aOw1UIQ0ybwSLy/tK9K9G8Xe40xEPL/TnKyhvEdUHkg8eeexRmy1lMfI30ygJGLFA02zWMMwNwJiS1ZyZE4Jw+iWLeavf9FpdE9ErTEwgwOPOIioHsRau1Qj/ohaFOwU0C8l8UKroMeu7loBqtNylQ4iG4Aes9kJwtDTJUfcJburoeBmHkZcKpplQVsjQOzzT/Crq3hZDWD5J0Gb3M1oCUuhCdu4clI6o9Suw/KQ/qdEEiOp8IygTtX2NIUhrGdQ7kLaTQMsn6hK1WGRU+7FLU5JSjzeH1Y4n0ayHwlCirK26WhmQhKS7w4Pfsot/FVZr91I7/hJnAsGls7z0mQPGigevNBMGb5KZ2FNi1nzRRfyV4FhNTMgHGDdFvSurRN4kkS4baV4esUcPJ5xNuIBTz7tjT57N/tXrOCZu74VFCC9jEaMJrboQ4hYc5XjSPcqWkPTrqPkYTvyb9kym5K4pLqp0jGclE9ynykNXfQZt6Jfn4Mahs3oKrYjTG6nleF/ajTrG5awS2cvRNumpQWtYWM+h8CbrXjdUANjEzmTXFA/V2/pHIEv4MHfTPYrJyiSxPi786ZgBVXip4vREJ0POkNIycZPLJPBjkSTKcQz5fQ=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f72c3541-632f-4187-cbf8-08dd55118a95
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB5777.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Feb 2025 20:26:38.5668
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ykoz01NaawCefXJ/4ptHsBUVxDFKlYdXNj0nWobei6XsWcOh49tdaRoZTkWBUXu/zSTHU5pA3PWi4x1L+hw60A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR10MB4279
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-24_10,2025-02-24_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 adultscore=0
- mlxlogscore=999 bulkscore=0 suspectscore=0 malwarescore=0 spamscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2502100000 definitions=main-2502240129
-X-Proofpoint-GUID: 1fqHUBI1SMQtWRnmZ80HgXIDNX-GbMBX
-X-Proofpoint-ORIG-GUID: 1fqHUBI1SMQtWRnmZ80HgXIDNX-GbMBX
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/6] mfd: max77759: add Maxim MAX77759 core mfd driver
+References: <20250224-max77759-mfd-v1-0-2bff36f9d055@linaro.org>
+ <20250224-max77759-mfd-v1-4-2bff36f9d055@linaro.org>
+Content-Language: en-US, fr-FR
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+Cc: brgl@bgdev.pl, conor+dt@kernel.org, devicetree@vger.kernel.org,
+ gustavoars@kernel.org, kees@kernel.org, kernel-team@android.com,
+ krzk+dt@kernel.org, lee@kernel.org, linus.walleij@linaro.org,
+ linux-gpio@vger.kernel.org, linux-hardening@vger.kernel.org,
+ linux-kernel@vger.kernel.org, peter.griffin@linaro.org, robh@kernel.org,
+ srinivas.kandagatla@linaro.org, tudor.ambarus@linaro.org,
+ willmcvicker@google.com
+In-Reply-To: <20250224-max77759-mfd-v1-4-2bff36f9d055@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-* jeffxu@chromium.org <jeffxu@chromium.org> [250224 12:45]:
-> From: Jeff Xu <jeffxu@chromium.org>
+Le 24/02/2025 à 11:28, André Draszik a écrit :
+> The Maxim MAX77759 is a companion Power Management IC for USB Type-C
+> applications with Battery Charger, Fuel Gauge, temperature sensors, USB
+> Type-C Port Controller (TCPC), NVMEM, and additional GPIO interfaces.
 > 
-> Update memory sealing documentation to include details about system
-> mappings.
+> Fuel Gauge and TCPC have separate and independent I2C addresses,
+> register maps, and interrupt lines and are therefore excluded from the
+> MFD core device driver here.
 > 
-> Signed-off-by: Jeff Xu <jeffxu@chromium.org>
-> ---
->  Documentation/userspace-api/mseal.rst | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/Documentation/userspace-api/mseal.rst b/Documentation/userspace-api/mseal.rst
-> index 41102f74c5e2..10147281bf2d 100644
-> --- a/Documentation/userspace-api/mseal.rst
-> +++ b/Documentation/userspace-api/mseal.rst
-> @@ -130,6 +130,13 @@ Use cases
->  
->  - Chrome browser: protect some security sensitive data structures.
+> The GPIO and NVMEM interfaces are accessed via specific commands to the
+> built-in microprocessor. This driver implements an API that client
+> drivers can use for accessing those.
 
-Did you mean to drop this line?
+Hi,
 
->  
-> +- System mappings:
-> +  If supported by an architecture (via CONFIG_ARCH_HAS_MSEAL_SYSTEM_MAPPINGS),
-> +  the CONFIG_MSEAL_SYSTEM_MAPPINGS seals system mappings, e.g. vdso, vvar,
-> +  uprobes, sigpage, vectors, etc. CHECKPOINT_RESTORE, UML, gVisor, rr are
-> +  known to relocate or unmap system mapping, therefore this config can't be
-> +  enabled universally.
+...
+
+> +int max77759_maxq_command(struct max77759_mfd *max77759_mfd,
+> +			  const struct max77759_maxq_command *cmd,
+> +			  struct max77759_maxq_response *rsp)
+> +{
+> +	DEFINE_FLEX(struct max77759_maxq_response, _rsp, rsp, length, 1);
+> +	int ret;
+> +	static const unsigned int timeout_ms = 200;
 > +
->  When not to use mseal
->  =====================
->  Applications can apply sealing to any virtual memory region from userspace,
-> -- 
-> 2.48.1.601.g30ceb7b040-goog
-> 
+> +	if (cmd->length > MAX77759_MAXQ_REG_AP_MESSAGESZ_MAX)
+> +		return -EINVAL;
+> +
+> +	/* rsp is allowed to be NULL. In that case we do need a temporary. */
+> +	if (!rsp)
+> +		rsp = _rsp;
+> +
+> +	BUILD_BUG_ON(MAX77759_MAXQ_OPCODE_MAXLENGTH
+> +		     != MAX77759_MAXQ_REG_AP_MESSAGESZ_MAX);
+> +	if (!rsp->length || rsp->length > MAX77759_MAXQ_REG_AP_MESSAGESZ_MAX)
+> +		return -EINVAL;
+> +
+> +	guard(mutex)(&max77759_mfd->maxq_lock);
+> +
+> +	reinit_completion(&max77759_mfd->cmd_done);
+> +
+> +	/* write the opcode and data */
+> +	ret = regmap_bulk_write(max77759_mfd->regmap_maxq,
+> +				MAX77759_MAXQ_REG_AP_DATAOUT0, cmd->cmd,
+> +				cmd->length);
+> +	if (!ret && cmd->length < MAX77759_MAXQ_REG_AP_MESSAGESZ_MAX) {
+> +		/* writing the last byte triggers MaxQ */
+> +		ret = regmap_write(max77759_mfd->regmap_maxq,
+> +				   MAX77759_MAXQ_REG_AP_DATAOUT32, 0);
+> +	}
+> +	if (ret)
+> +		dev_warn(regmap_get_device(max77759_mfd->regmap_maxq),
+
+Maybe regmap_get_device(max77759_mfd->regmap_maxq) could be assigned to 
+a variable to simplify its usage?
+
+> +			 "write data failed: %d\n", ret);
+> +	if (ret)
+> +		return ret;
+
+Merge with the if (ret) just above? (as done a few lines below)
+
+> +
+> +	/* wait for response from MaxQ */
+> +	if (!wait_for_completion_timeout(&max77759_mfd->cmd_done,
+> +					 usecs_to_jiffies(timeout_ms))) {
+> +		dev_err(regmap_get_device(max77759_mfd->regmap_maxq),
+> +			"timed out waiting for data\n");
+> +		return -ETIMEDOUT;
+> +	}
+> +
+> +	ret = regmap_bulk_read(max77759_mfd->regmap_maxq,
+> +			       MAX77759_MAXQ_REG_AP_DATAIN0,
+> +			       rsp->rsp, rsp->length);
+> +	if (ret) {
+> +		dev_warn(regmap_get_device(max77759_mfd->regmap_maxq),
+> +			 "read data failed: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	/*
+> +	 * As per the protocol, the first byte of the reply will match the
+> +	 * request.
+> +	 */
+> +	if (rsp->rsp[0] != cmd->cmd[0]) {
+> +		dev_warn(regmap_get_device(max77759_mfd->regmap_maxq),
+> +			 "unexpected opcode response for %#.2x: %*ph\n",
+> +			 cmd->cmd[0], (int)rsp->length, rsp->rsp);
+> +		return -EIO;
+> +	}
+> +
+> +	return 0;
+> +}
+
+...
+
+> +static int max77759_probe(struct i2c_client *client)
+> +{
+> +	struct regmap *regmap_top;
+> +	unsigned int pmic_id;
+> +	int ret;
+> +	struct irq_data *irq_data;
+> +	struct max77759_mfd *max77759_mfd;
+> +	unsigned long irq_flags;
+> +	struct regmap_irq_chip_data *irq_chip_data_pmic;
+> +
+> +	regmap_top = devm_regmap_init_i2c(client, &max77759_regmap_config_top);
+> +	if (IS_ERR(regmap_top))
+> +		return dev_err_probe(&client->dev, PTR_ERR(regmap_top),
+> +				     "regmap init failed\n");
+> +
+> +	ret = regmap_read(regmap_top, MAX77759_PMIC_REG_PMIC_ID, &pmic_id);
+> +	if (ret)
+> +		return dev_err_probe(&client->dev, ret,
+> +				     "Unable to read Device ID\n");
+> +
+> +	if (pmic_id != MAX77759_PMIC_REG_PMIC_ID_MAX77759)
+> +		return dev_err_probe(&client->dev, -ENODEV,
+> +				     "Unsupported Device ID %#.2x (%d)\n",
+> +				     pmic_id, pmic_id);
+> +
+> +	irq_data = irq_get_irq_data(client->irq);
+> +	if (!irq_data)
+> +		return dev_err_probe(&client->dev, -EINVAL,
+> +				     "Invalid IRQ: %d\n", client->irq);
+> +
+> +	max77759_mfd = devm_kzalloc(&client->dev, sizeof(*max77759_mfd),
+> +				    GFP_KERNEL);
+> +	if (!max77759_mfd)
+> +		return -ENOMEM;
+> +
+> +	max77759_mfd->regmap_top = regmap_top;
+> +	devm_mutex_init(&client->dev, &max77759_mfd->maxq_lock);
+
+Error handling?
+
+> +
+> +	i2c_set_clientdata(client, max77759_mfd);
+
+Harmless, but is it needed? (there is no i2c_get_clientdata() in the flile)
+
+> +
+> +	for (int i = 0; i < ARRAY_SIZE(max77759_i2c_subdevs); ++i) {
+
+Unusual. Maybe declare 'i' at the beginning of the function?
+
+> +		ret = max77759_create_i2c_subdev(client,
+> +						 max77759_mfd,
+> +						 &max77759_i2c_subdevs[i]);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	irq_flags = IRQF_ONESHOT | IRQF_SHARED;
+> +	irq_flags |= irqd_get_trigger_type(irq_data);
+> +
+> +	ret = devm_regmap_add_irq_chip(&client->dev, max77759_mfd->regmap_top,
+> +				       client->irq, irq_flags, 0,
+> +				       &max77759_pmic_irq_chip,
+> +				       &irq_chip_data_pmic);
+> +	if (ret)
+> +		return dev_err_probe(&client->dev, ret,
+> +				     "Failed to add IRQ chip\n");
+> +
+> +	/* INTSRC - MaxQ & children */
+> +	ret = max77759_add_chained_maxq(client, max77759_mfd,
+> +					irq_chip_data_pmic);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* INTSRC - topsys & children */
+> +	ret = max77759_add_chained_topsys(client, max77759_mfd,
+> +					  irq_chip_data_pmic);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* INTSRC - charger & children */
+> +	ret = max77759_add_chained_charger(client, max77759_mfd,
+> +					   irq_chip_data_pmic);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return devm_mfd_add_devices(&client->dev, PLATFORM_DEVID_AUTO,
+> +				    max77759_cells, ARRAY_SIZE(max77759_cells),
+> +				    NULL, 0,
+> +				    regmap_irq_get_domain(irq_chip_data_pmic));
+> +}
+> +
+> +static const struct i2c_device_id max77759_i2c_id[] = {
+> +	{ "max77759", 0 },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(i2c, max77759_i2c_id);
+> +
+> +static const struct of_device_id max77759_of_id[] = {
+> +	{ .compatible = "maxim,max77759", },
+> +	{},
+
+Unneeded trailing comma after a terminator.
+Maybe { }  to match the style used in max77759_i2c_id?
+
+> +};
+> +MODULE_DEVICE_TABLE(of, max77759_of_id);
+
