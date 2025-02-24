@@ -1,90 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E6B5802;
-	Mon, 24 Feb 2025 13:10:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79DDA23BD0C
+	for <linux-hardening@vger.kernel.org>; Mon, 24 Feb 2025 13:14:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740402634; cv=none; b=VthaZbnQMzouKjhzhjmIPqe4aXIXej38gcdHfmlqtRyyfaTWaQ9I3ScVzryytb7xvPd0xfgwax13sbKTX/7pv07GlF9PkfnRT1ghC6n2WiM5MUg5h13jq7tjguFXtQQ8H+WuDKZQFy5Xeomcev0wtGg3T1wEj/ySt6TkYmfiPx0=
+	t=1740402892; cv=none; b=fBd19FyW23Nd1fUN5I58I7z/w7ZqQCYSK2ky/qbsdRCyvklD1C5IZsnicwdX39LX3JExm6MhI290YPIK9VZrZG3zmug1nTKrSJwAVlPKK+jnRMxXuRPTOH55ySoWOFCvJ7sI5XYY+wn/Vp87eQ9JrxbVnsrfjWpEKEcantK3/go=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740402634; c=relaxed/simple;
-	bh=jPf0vXxulqNG6ytq3OL5NdOLGT2lPoxZa/EG3YOU4aw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r6n6w1kgRzL0tH1TkbW5w7fJUUkaqVf/5WAtcZ5f9w1Tt9bs6DZk6GeQL2BU5yV+RaRXR8olbotBsUy2wNuCy5FihGz8/rYq7uY44og601xFXVyBy+x6Zh0VJSPCMrxYE8IPve6CSevOBCqO6YQqAAPNmhXcYXGC7PupeivwfmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NUti6LwS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740402892; c=relaxed/simple;
+	bh=bLLZFvEQ2mcyD7duh47ZwGoHjIPEzHkxh/Sc0z24Kyk=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Ied1XWvLo2DDa5UgHF4FxEuEcalOucwHQhqKbDFJj8BvPDUFCVjpaKvAic/D7lsAvYGRKXfpAltmGAgcQlGmvWLxiLe5btplzBMNEDGShWpSe0BnHqsahlz5XOCDl3NYQQztsZdAEpmoFasXnTCC8OBy4iaNGhSoTpgEMakebxI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=A+Ogy8EU; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NUti6LwS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C739C4CED6;
-	Mon, 24 Feb 2025 13:10:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740402633;
-	bh=jPf0vXxulqNG6ytq3OL5NdOLGT2lPoxZa/EG3YOU4aw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NUti6LwS7LTYgKmWPyzFtgg6oVMjVZlV1jziVZ519FEEfn5qL9RHnGwPcNEkEjcdT
-	 qENtuACV/K6DbOiyToZNyoHELTHvfQRYTAvt9jsDDphwjqRjkF4PRx7lFZpo2I3k/x
-	 mITxUxntqJlp+eTbuJ8mSxztVdiAyt9TvzMsHh6y++LpiJI9UR8ye5axCMrrSlVLy5
-	 xVQg/3+aKshduOpMz1EJGa/nYdN6huEAdrGP1OExCYqvSVZiKz5uvtJDlQJm183of6
-	 wqDgUblpWNkm8tIOLZF51p3M6PMCP+9hZiMDhisNgP3NTksMeyUW33Po4kIk/G2O+j
-	 AkSbPSf93laFA==
-Date: Mon, 24 Feb 2025 13:10:28 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Markus Elfring <Markus.Elfring@web.de>
-Cc: Ethan Carter Edwards <ethan@ethancedwards.com>,
-	linux-sound@vger.kernel.org, linux-hardening@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Takashi Iwai <tiwai@suse.com>
-Subject: Re: [PATCH v2?] ASoC: q6dsp: q6apm: replace kzalloc() with kcalloc()
- in q6apm_map_memory_regions()
-Message-ID: <e3cbcff7-e7a4-4e7a-9c16-2d0a3b48d588@sirena.org.uk>
-References: <20250222-q6apm-kcalloc-v1-1-6f09dae6c31c@ethancedwards.com>
- <c8cb0a78-c547-41dc-ac35-d569c57ebe3c@web.de>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A+Ogy8EU"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-388cae9eb9fso2245978f8f.3
+        for <linux-hardening@vger.kernel.org>; Mon, 24 Feb 2025 05:14:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1740402889; x=1741007689; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=bLLZFvEQ2mcyD7duh47ZwGoHjIPEzHkxh/Sc0z24Kyk=;
+        b=A+Ogy8EUQE8JKzQGGQ8yzHdOe/0MnX5du9SpvG1kacFoiGmm70s+MBXnYjNR7GojN/
+         kiVDAZ93+M7Uc5FBhSfCfn55OBf7aiz33XEFm2YcMZN3lpxBF5EF8DlahS1ZiAoZoLfg
+         eO0TS4s70buKHwUncBL/oTMH59bIo+x/UByxX6lkvv0Y01gtvpuUXVWcMBnGWW18unaU
+         TlqnFAggM/4JTQnF4kDteIORunGNTSjv2g756BZN2cbC15QUFcDnkvPRCUx3czvRvm/o
+         UJxhbvgc3s0EKj/exnfYM6T/Gb7trNl3SVeK/xLs0hHSbVkVW7ArGs124A7eeFPVvCO2
+         cTug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740402889; x=1741007689;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bLLZFvEQ2mcyD7duh47ZwGoHjIPEzHkxh/Sc0z24Kyk=;
+        b=lHKwdGsHg/0c+4AYWoBkMu5M+PSh78aToQYvPqXc4GnWm98FxLquPeJ02JoCa1O62E
+         12tonJE30gwckb6a5TyLJcG5gQ3m96Hkane8XFqrxlBSG9uL3Omrs6EZk7Aj7yYjxhr2
+         UqEu2fIdPs/mCLMUNbqnwq0NEVo5EpiPpxaEF+M10R3pO7Nqfb1W0mZrGVAFeN8cVeCQ
+         y7zJ9AfH5aXxlapWay4Wnu2SWdiJz9u0cDkbn094HWgIKbPVbk/DC4g/miln4maUTqHL
+         oTIRCDJNCFM+fzF7r8wCe4x0X0YPByOniYUB/G1f0M29jtlyV0aLMR0E5JUvYdOd9nzZ
+         I8YA==
+X-Forwarded-Encrypted: i=1; AJvYcCVZSZw+SfZWOUgUuIRo0HKG0cnzYsbxp9aP8EYNdTClQ6Jrt+OPj19mGYAr0xQuzFG1WpqVUXmg2DYusCS5WMM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1mJDCtQj2C1THqvh525+3iui/VEWKPAvksUtgjmAyyFy44ANd
+	9Rd61gQSMl1+29zP+gmHoaV7WPoU1V2Dj6XsTcLOVGfAj4A3tA5hmGyz0CtWpS4=
+X-Gm-Gg: ASbGnctbGeyzCLtLpauyHet7zyYIZF/g7+OqzJcFUO+WhB25M0JtuHz5cLDUYOOBeaE
+	n/l8edpFkNv8hGwWG3drQWl5opvdq1+/IO0qQ2AdZIr/uCnxKFmPjwNQBMDonhxJKMLXW4JlYnn
+	ZG5Ob1zkmS6u9fPtd4PSmmXlPCBvjAySIxAsu/zAmaGTHGDYpd8DwuHPnNzigUJoDpQQjqoKs9L
+	O7g3d4kBcTioSLtqu0H6Sf5dJVjbYClWy3kuds87sQhHJUGqiSINyaue2k9/b1d1r/UV+yV0Mer
+	0PXM1er3BwwiJud7XdWrZbqDkEPL0w==
+X-Google-Smtp-Source: AGHT+IE62+bU4+ul+YKhx4/yDKxUqcbC0QHBkW4DOt4UrwyrOCzCT+b1QBYFtOue4gs6rL65DxMppQ==
+X-Received: by 2002:a5d:47a3:0:b0:38e:c2de:70d4 with SMTP id ffacd0b85a97d-38f6f0959bamr11119239f8f.42.1740402888772;
+        Mon, 24 Feb 2025 05:14:48 -0800 (PST)
+Received: from draszik.lan ([80.111.64.44])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f258b4158sm31190873f8f.3.2025.02.24.05.14.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2025 05:14:48 -0800 (PST)
+Message-ID: <b2c8c4757d30b808e3ce800daf6078df6a7a5bcd.camel@linaro.org>
+Subject: Re: [PATCH 1/6] dt-bindings: mfd: add max77759 binding
+From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>, Lee Jones <lee@kernel.org>, Rob
+ Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
+ Dooley	 <conor+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Srinivas Kandagatla
+ <srinivas.kandagatla@linaro.org>, Kees Cook	 <kees@kernel.org>, "Gustavo A.
+ R. Silva" <gustavoars@kernel.org>
+Cc: Peter Griffin <peter.griffin@linaro.org>, Tudor Ambarus
+	 <tudor.ambarus@linaro.org>, Will McVicker <willmcvicker@google.com>, 
+	kernel-team@android.com, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Date: Mon, 24 Feb 2025 13:14:47 +0000
+In-Reply-To: <288a69e2-0618-4dce-a96d-646daeb6ca70@kernel.org>
+References: <20250224-max77759-mfd-v1-0-2bff36f9d055@linaro.org>
+	 <20250224-max77759-mfd-v1-1-2bff36f9d055@linaro.org>
+	 <288a69e2-0618-4dce-a96d-646daeb6ca70@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.53.2-1 
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="+4ATTtF2MzkEeXSa"
-Content-Disposition: inline
-In-Reply-To: <c8cb0a78-c547-41dc-ac35-d569c57ebe3c@web.de>
-X-Cookie: Phone call for chucky-pooh.
 
-
---+4ATTtF2MzkEeXSa
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sun, Feb 23, 2025 at 10:50:08AM +0100, Markus Elfring wrote:
-> =E2=80=A6
-> > We are trying to get rid of all multiplications from allocation
-> > functions to prevent integer overflows[1]. =E2=80=A6
+On Mon, 2025-02-24 at 14:07 +0100, Krzysztof Kozlowski wrote:
+> On 24/02/2025 11:28, Andr=C3=A9 Draszik wrote:
+> > +=C2=A0 gpio-controller: true
+> > +
+> > +=C2=A0 "#gpio-cells":
+> > +=C2=A0=C2=A0=C2=A0 const: 2
+> > +
+> > +=C2=A0 gpio:
+> > +=C2=A0=C2=A0=C2=A0 $ref: /schemas/gpio/maxim,max77759-gpio.yaml
 >=20
-> Is an imperative wording more desirable for such a change description?
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/D=
-ocumentation/process/submitting-patches.rst?h=3Dv6.14-rc3#n94
+> There is no such file at this moment, so this is not bisectable. What's
+> more, even if you fix it, you will have dependency which you *must*
+> always clearly express in patch changelog or *top* (the first people
+> see) of cover letter.
 
-Feel free to ignore Markus, he has a long history of sending
-unhelpful review comments and continues to ignore repeated requests
-to stop.
+Thanks Krzysztof. You're right of course.
+I'll fix the dependency issues in the next version
 
---+4ATTtF2MzkEeXSa
-Content-Type: application/pgp-signature; name="signature.asc"
+Cheers,
+Andre'
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAme8b8MACgkQJNaLcl1U
-h9CHSQf/ZsdmPgAZ5W32WEQhd7Fc7ycWjp7hI7rXc8Psb7PTKQm9C4pIgdJw++cV
-pNGXEj7rhsFIkXSQddNs4iSMEmkK9oRMgJ/6ujF0SaZ8wUtTC5ezUGBfMaJjzJBX
-VveDIyuietqG1W11N7p9nI5sWHe1jiKbITNQC8h1RKnCEQw26UejNfOezHZprUAH
-/ID4JDzhrape7zrzmGaMgFchnaAa9x+wgfbBOM3lFthYh2h9mLM2SpC9J71yRWGP
-giQmkQILv0Y0NO8vaf6y8GDR+ApQrqOVgR8HIMphTtUnkAp5ssnUYTzSltoonIKP
-aXtd/Y/GZxshL0jqQ+op8x9SheWYkw==
-=S3dc
------END PGP SIGNATURE-----
-
---+4ATTtF2MzkEeXSa--
