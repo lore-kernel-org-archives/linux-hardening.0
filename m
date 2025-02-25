@@ -1,100 +1,121 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D49B3CA6B;
-	Tue, 25 Feb 2025 00:33:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4232199B8;
+	Tue, 25 Feb 2025 01:03:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740443625; cv=none; b=Bw9bk2T5dJ9C3/EFQcrASuEUE5jff02GQUXP/8kW/AsJEChsAWF5pB7sYwHIcARLlr9kDNyO0hAoYNSlEf09yF0SxPpWAjUAjTM9irgDxQKyGQECHP+teMI/QwZJsGqcE5PRDei32XwXvS9uWdW7E5TYYDLNUJ62oR7HkoAANcM=
+	t=1740445425; cv=none; b=nA+TBEdSxlt3zUwZyVKnWEqaj1E9a54bjnimqTCZ/7p0wYBJ+w57L0bWkprvnzyjb+oqj9pmuxyh4QODklOTRjCASob0Ke0lp5ivnwcPkygZxR2qsIlN/ioX4sR6pf+vTqmofUtNGbnHDCgyD3LAY38UGEdzmi6hWAdblV1HGqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740443625; c=relaxed/simple;
-	bh=VPjW16HL/MR0kbNuqCgGzR0y0tEBnAh/4k5KF+hpfl0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ra4J9qkZ2V3c/BXRS4M7+gw7JWXWBx3WYi9ViwOwOfmdw7R4E0dPhlQeaLJvU3xB0+zA6qBOvGZJ15qG3hLZZabiCAw+i32QSuMW7FUR96dn9u8T+MgN5sH/4p77UjaAQsswExkVJVK+KC9NBwvoX1z0VDLvwzbCd5qum6OtWlA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=V7q4Myp/; arc=none smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1740445425; c=relaxed/simple;
+	bh=qVBpEBOr3T9ej//S5va2dYCUn5teYHqMQYnjiTs0RJo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kh5PL2tWej2sE0BG6nmKvMqIglnTIssOlE9idDWsbfGlo3t6LDXhpWCjFGNI1H3wELXtDKm7ibLhvwtfw6PCRINOehRHh6ma/gsZlr/R8nXVgzrwy8dSrUgliZpuHc3eTeg4x1u/7rhSUdZv8x2uvP2fofZ4CqdzhPV4EWrf0Kk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Uj0s2Yu3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="V7q4Myp/"
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51OMKN0t031493;
-	Tue, 25 Feb 2025 00:33:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2023-11-20; bh=6F7GSf7y872wvokfJjv8eyOl3WB6d5p+t9ZkC3/DwSs=; b=
-	V7q4Myp/e3iCAvgdB9nwWOCqZNm5RE+G6tDCBEK56t/WqnBg8ftlFnaZy9d79+lD
-	nwsArIZS++1LHrJ/SY24fTCjd3EeFv0KqlwS5wCM+/lQapOsRd3XldV7YalH/jG3
-	7FEnVyTgITkRzo/exslA1d5jAIksQCWaCUuKYZlXlKnG1QwWfXXq6yL8GoQUoGTt
-	rhOVEWyLEI4LrrK3oSAeamdM9iUJQiI+ztAM0s5nBR2qYyvFN/p/lft4+X89GE9G
-	7Jpa4WJyk7u28gx2kDWJjdEfie9Y26Kx7y9vGpWb2VPh/HiAcpuyl0q1u/KVBQ3Y
-	SNwJnkAf0buouBYvquuJiQ==
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44y74t3vwa-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 25 Feb 2025 00:33:23 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 51ON3jRi025221;
-	Tue, 25 Feb 2025 00:33:21 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 44y51f0q9e-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 25 Feb 2025 00:33:21 +0000
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 51P0XI23025171;
-	Tue, 25 Feb 2025 00:33:21 GMT
-Received: from ca-mkp2.ca.oracle.com.com (mpeterse-ol9.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.251.135])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 44y51f0q87-6;
-	Tue, 25 Feb 2025 00:33:21 +0000
-From: "Martin K. Petersen" <martin.petersen@oracle.com>
-To: Don Brace <don.brace@microchip.com>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Thorsten Blum <thorsten.blum@linux.dev>
-Cc: "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-hardening@vger.kernel.org, Kees Cook <kees@kernel.org>,
-        David Laight <david.laight.linux@gmail.com>,
-        Bart Van Assche <bvanassche@acm.org>, storagedev@microchip.com,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] scsi: hpsa: Remove deprecated and unnecessary strncpy()
-Date: Mon, 24 Feb 2025 19:32:51 -0500
-Message-ID: <174044345120.2973737.13335141842683533992.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250214114302.86001-2-thorsten.blum@linux.dev>
-References: <20250214114302.86001-2-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Uj0s2Yu3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11094C4CED6;
+	Tue, 25 Feb 2025 01:03:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740445425;
+	bh=qVBpEBOr3T9ej//S5va2dYCUn5teYHqMQYnjiTs0RJo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Uj0s2Yu3wPdceenGrkKQiKxquc9/687ysdpx17KJFeceHbZWBw8hKJIL/4nO19wDc
+	 ANzsCbqSO1xH7WJ2+HudcZwuGCVCYxd1D2v6FIzL9Ll4Vpm3m1LZGYLsAIK0C49Q2m
+	 QU8I1utLt9nFMjZ/ZBOrxcrOYQONo7H5qFeR3PUp3TTytRVqZw12j4KYJLR1T5qMfC
+	 SYwCiaqt3iW8W/Dzf4rS842EtfCYrNuB4BqqtbNkRbQ9/fvLkII1teivkxN7uNV2QT
+	 zFNQBwr+dOYSKMAnqauYNkohyg6Om7R9NkONYRjlBjXSjJDKtv0xGE4W8h9va1l6w9
+	 jNMPI/L2NCezw==
+Date: Mon, 24 Feb 2025 17:03:41 -0800
+From: Kees Cook <kees@kernel.org>
+To: jeffxu@chromium.org
+Cc: akpm@linux-foundation.org, jannh@google.com,
+	torvalds@linux-foundation.org, vbabka@suse.cz,
+	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
+	adhemerval.zanella@linaro.org, oleg@redhat.com, avagin@gmail.com,
+	benjamin@sipsolutions.net, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-mm@kvack.org,
+	jorgelo@chromium.org, sroettger@google.com, hch@lst.de,
+	ojeda@kernel.org, thomas.weissschuh@linutronix.de,
+	adobriyan@gmail.com, johannes@sipsolutions.net,
+	pedro.falcato@gmail.com, hca@linux.ibm.com, willy@infradead.org,
+	anna-maria@linutronix.de, mark.rutland@arm.com,
+	linus.walleij@linaro.org, Jason@zx2c4.com, deller@gmx.de,
+	rdunlap@infradead.org, davem@davemloft.net, peterx@redhat.com,
+	f.fainelli@gmail.com, gerg@kernel.org, dave.hansen@linux.intel.com,
+	mingo@kernel.org, ardb@kernel.org, mhocko@suse.com,
+	42.hyeyoo@gmail.com, peterz@infradead.org, ardb@google.com,
+	enh@google.com, rientjes@google.com, groeck@chromium.org,
+	mpe@ellerman.id.au, aleksandr.mikhalitsyn@canonical.com,
+	mike.rapoport@gmail.com
+Subject: Re: [PATCH v7 3/7] mseal, system mappings: enable x86-64
+Message-ID: <202502241703.10E2F5926F@keescook>
+References: <20250224225246.3712295-1-jeffxu@google.com>
+ <20250224225246.3712295-4-jeffxu@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-24_11,2025-02-24_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 mlxlogscore=999
- phishscore=0 mlxscore=0 suspectscore=0 adultscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502100000
- definitions=main-2502250001
-X-Proofpoint-GUID: 2hUhov6sZMqw84mRY405nNKbs2O_PR_s
-X-Proofpoint-ORIG-GUID: 2hUhov6sZMqw84mRY405nNKbs2O_PR_s
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250224225246.3712295-4-jeffxu@google.com>
 
-On Fri, 14 Feb 2025 12:43:02 +0100, Thorsten Blum wrote:
-
-> While replacing strncpy() with strscpy(), Bart Van Assche pointed out
-> that the code occurs inside sysfs write callbacks, which already uses
-> NUL-terminated strings. This allows the string to be passed directly to
-> sscanf() without requiring a temporary copy.
+On Mon, Feb 24, 2025 at 10:52:42PM +0000, jeffxu@chromium.org wrote:
+> From: Jeff Xu <jeffxu@chromium.org>
 > 
-> Remove the deprecated and unnecessary strncpy() and the corresponding
-> local variables, and pass the buffer buf directly to sscanf().
+> Provide support for CONFIG_MSEAL_SYSTEM_MAPPINGS on x86-64,
+> covering the vdso, vvar, vvar_vclock.
 > 
-> [...]
+> Production release testing passes on Android and Chrome OS.
+> 
+> Signed-off-by: Jeff Xu <jeffxu@chromium.org>
+> ---
+>  arch/x86/Kconfig          |  1 +
+>  arch/x86/entry/vdso/vma.c | 16 ++++++++++------
+>  2 files changed, 11 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index 87198d957e2f..8fa17032ca46 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -26,6 +26,7 @@ config X86_64
+>  	depends on 64BIT
+>  	# Options that are inherently 64-bit kernel only:
+>  	select ARCH_HAS_GIGANTIC_PAGE
+> +	select ARCH_HAS_MSEAL_SYSTEM_MAPPINGS
+>  	select ARCH_SUPPORTS_INT128 if CC_HAS_INT128
+>  	select ARCH_SUPPORTS_PER_VMA_LOCK
+>  	select ARCH_SUPPORTS_HUGE_PFNMAP if TRANSPARENT_HUGEPAGE
+> diff --git a/arch/x86/entry/vdso/vma.c b/arch/x86/entry/vdso/vma.c
+> index 39e6efc1a9ca..1b1c009f20a8 100644
+> --- a/arch/x86/entry/vdso/vma.c
+> +++ b/arch/x86/entry/vdso/vma.c
+> @@ -247,6 +247,7 @@ static int map_vdso(const struct vdso_image *image, unsigned long addr)
+>  	struct mm_struct *mm = current->mm;
+>  	struct vm_area_struct *vma;
+>  	unsigned long text_start;
+> +	unsigned long vm_flags;
+>  	int ret = 0;
+>  
+>  	if (mmap_write_lock_killable(mm))
+> @@ -264,11 +265,12 @@ static int map_vdso(const struct vdso_image *image, unsigned long addr)
+>  	/*
+>  	 * MAYWRITE to allow gdb to COW and set breakpoints
+>  	 */
+> +	vm_flags = VM_READ|VM_EXEC|VM_MAYREAD|VM_MAYWRITE|VM_MAYEXEC;
+> +	vm_flags |= VM_SEALED_SYSMAP;
+>  	vma = _install_special_mapping(mm,
+>  				       text_start,
+>  				       image->size,
+> -				       VM_READ|VM_EXEC|
+> -				       VM_MAYREAD|VM_MAYWRITE|VM_MAYEXEC,
+> +				       vm_flags,
+>  				       &vdso_mapping);
 
-Applied to 6.15/scsi-queue, thanks!
-
-[1/1] scsi: hpsa: Remove deprecated and unnecessary strncpy()
-      https://git.kernel.org/mkp/scsi/c/d69ddae194ca
+I think these (in all patches) were supposed to be reworked without the
+"vm_flags" variable addition?
 
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+Kees Cook
