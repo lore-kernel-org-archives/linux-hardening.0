@@ -1,133 +1,94 @@
-Received: from mail2.medvecky.net (mail2.medvecky.net [85.118.132.153])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2C0239ACC;
-	Tue, 25 Feb 2025 20:07:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.118.132.153
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E47D19B5A3;
+	Tue, 25 Feb 2025 20:10:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740514041; cv=none; b=OF4IqaUFz7EaEd6NjBgDvZHorhHWTb4yHsOuuGoKBayG1rducYwwHeZOkSHnewrI8gqom4x18/LoWdOSB1lbRLh+9Rn81mIKdgNTx/DgfN+s2MjonXpuDfI6Lljjbh8CAi3p0EoWwTvEXpAvzZ9vHvD2QwKSQ9aaTv80KIflg+Y=
+	t=1740514223; cv=none; b=VV7JHWgNrjnzvkxa0kIUjpw2LpoeDO8vEUoZVuEt+yizf0Jmx0Z5lYZVaY+W66CMkBuUuD+ngSbUNUR3JKiiqiS+CPvXrZO2P7Ge8cI8QALk0YDEvvPOa4P01Le/s6d/26zwiE3UBAjdTS+N0wgBkxXUTxrw5O3y/wt0fy+olnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740514041; c=relaxed/simple;
-	bh=O1Syw3fgKkrvZzVika0gY7DMfDsb5ZEuf9BQ7yVSbM4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=phI8U85BY2CI4mngxICz//9QRUKpcS6kj/58jECD5J40zN58beaIpwuAEc7Oi5jRNvWK48ttYoj/Y236DhrVkDtJCQK1+JZ2+PBiMGI3P0Qqy1h58zILyKwq3433QEpVpYkTpGrTcqZyWe0qsUiK2rYWsIyjC1jZaO8j5SBLNqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=assembler.cz; spf=pass smtp.mailfrom=assembler.cz; arc=none smtp.client-ip=85.118.132.153
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=assembler.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=assembler.cz
-Message-ID: <d50dac43-51da-4b18-9fab-214896bdc9a5@assembler.cz>
-Date: Tue, 25 Feb 2025 21:06:39 +0100
+	s=arc-20240116; t=1740514223; c=relaxed/simple;
+	bh=9Sikho32R619XOFYLt/q+5TkXxnLWtEEZEAnylAOoGs=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=ewzLvcPsCuWfVu914tC3vS89s7oPdMziEQjy7nJnV3B50JPiyr6Z3qLszkX4Y0vVLhgICJFuWTuVqY9Dx8eg9IPjhJbUvny7TO1ga6ZG9aEgZdHgLmvZTJyVm/tGaSO4OL+B5VZ3TcevwPoT1V4HG+Kw0F8L3srGZW2GKlhHCKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=obGn1mYL; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="obGn1mYL"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 2FE5748EC1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1740514220; bh=slRgZF0YUGBpz++3WDLE3bOeRLCVZObJIeYEzYOIpCc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=obGn1mYLsYj0Td+2DDjCeU5YLxeiAW2kMrjnQxi7v/Wa4GRvnuTSspJUZnShbImxB
+	 Q2SkDVdcrD9X9ivjbPRE6P6QSc952yqQ9o70c4hP1+zQRyCF6cGk7ptjQsBKJY1nX9
+	 /A0pi3oHnK9cJQmdIw+g19qkIHirm/++2WQHG0BJCjip93wmVmvb1uxKORgw7gfaWZ
+	 95Pmz7+UGqG58IBC1Xn5zg+PTTyAdenWFvaQEzds/tf/7IGuzgdJmvrRDKdkMy3i6Y
+	 RFXDlXlkgIQV4HPWHS3UqrsYAaJuj1qzsikZcAzM/ODaYRM96mSmuMkoLOGXKi73l/
+	 SDUVGmKvSErRg==
+Received: from localhost (unknown [IPv6:2601:280:4600:2d7f::1fe])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 2FE5748EC1;
+	Tue, 25 Feb 2025 20:10:20 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+ linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 09/39] scripts/kernel-doc.py: add a Python parser
+In-Reply-To: <20250225083814.51975742@foz.lan>
+References: <cover.1740387599.git.mchehab+huawei@kernel.org>
+ <3905b7386d5f1bfa76639cdf1108a46f0bccbbea.1740387599.git.mchehab+huawei@kernel.org>
+ <87v7sy29rh.fsf@trenco.lwn.net> <20250225083814.51975742@foz.lan>
+Date: Tue, 25 Feb 2025 13:10:19 -0700
+Message-ID: <87tt8hyedw.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [RFC] Circumventing FineIBT Via Entrypoints
-To: Andrew Cooper <andrew.cooper3@citrix.com>, Jann Horn <jannh@google.com>
-Cc: jmill@asu.edu, joao@overdrivepizza.com, luto@kernel.org,
- samitolvanen@google.com, "Peter Zijlstra (Intel)" <peterz@infradead.org>,
- linux-hardening@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>,
- x86 maintainers <x86@kernel.org>
-References: <CAG48ez09JuZPt112nnE6N=hS6cfCLkT-iHUAmidQ-QGNGMVoBw@mail.gmail.com>
- <c46f5614-a82e-42fc-91eb-05e483a7df9c@citrix.com>
- <CAG48ez0h0wUS6y+W1HTOwN14V95gKmmFZ_2TamAX+JKTmXT=DA@mail.gmail.com>
- <1cf8d5a5-bf3e-4667-bc6a-d1b1d662d822@citrix.com>
- <e46ca730-8858-4f57-bdd0-2fd0db086500@assembler.cz>
- <fa66e2f1-4770-45f5-aa4d-1a0ebec8a912@citrix.com>
-Content-Language: en-US
-From: Rudolf Marek <r.marek@assembler.cz>
-Autocrypt: addr=r.marek@assembler.cz; keydata=
- xsBNBFN2VH4BCADpv+3Tkikr+X489Xso9UC719YdxgGiy0xBjDiWC22wAd3tHy6G3nEhWfh4
- 1UNGcqscPAvJMn2GhgSJRfBzj0wALXLkoTYta78wEK+Ji+Gs7PX9VhqRKt9/OIn/2XJ1Yv9i
- e8uo9MFBGFCB5roz+Ws8rdXq0Quu7VZylzRv7qqhxMAk9RvXCT2tyt6XY16R7ZEL9wbSLRAl
- h8LRPMF0iiLH1YenfSCX2XkW7eA7CJSjh9pwIBFOF5cd5mcT69OPO+TuAbdvgCcZPEoQQBhk
- QmOr2PlUOl3CSgqtTxjAjAxXhPTU7Q3xxgB2Oa7xbt3Eic2Z4lltP/dowULZqXvsC5DxABEB
- AAHNI1J1ZG9sZiBNYXJlayA8ci5tYXJla0Bhc3NlbWJsZXIuY3o+wsCVBBMBCgA/AhsjBgsJ
- CAcDAgYVCAIJCgsEFgIDAQIeAQIXgBYhBJmYg4ih63dUUwlgxcBvbatkz11wBQJnOaU1BQkV
- pALyAAoJEMBvbatkz11wgYUH/2Cs+hmNUj5f8z1xI8O07OL8KfxiWAv1DVq+QEGsbhdub/pH
- cNbCP52hioIjr48ylpE4PriuxPxC5zd6/s/z1fJQXPc2rd9xfKMsC7ZmpIjfzTzoX9JuINhW
- cwY+SFXOFuVUT2UacaowLTVX1NVevLhqb1wxSgGe1KAyqWBllrUYI/tqDF20MuzYDkuL0TdJ
- fSk3mfrF+GWG7DSzH27kwmY1ui4QUnW7PQ23c56xuRAtRDPhTgaglk52Pz7IsQHfy8rPZmTE
- jFTaN6kdW324wZYGYJBCriffNaIekz+C+i7aRivABNpeAY2O5ae6qcZknalGrU71M8p2TULA
- tSGNCc7OwE0EU3ZUfgEIAOyD3W4D+aaXoA875pbKqSI+MQ2t5PYNPaCahoSSnTuNmvM1xCsv
- I2EaGwfr5S0IktX1g0dt8lvvCx9eZeEhGH5NBgsmWtTi0Gq9UHQXbj4wQAV23/X+MCZqKFFl
- Yp0T86C23RhXsEQp8mTYpnGsbjAsHgaDnuQj5pWahVGXv9aYzjomk4mEGq8jr8/D9kgOEll+
- s5cIJYzeliPHR+2SRQs+XoTp1e/dXs310xXhuo2Pg8N/Kym0WhWjTYBuUeoyaYFDYtwj6jkc
- 2baI/JOSUoyarxnmRuVcNHoZd7as7lzmPS9Dqrm5LJVrfQk0lx+XaJRPZqQW/uf5FFaGXIIi
- 2OkAEQEAAcLAhgQYAQoAJgIbDBYhBJmYg4ih63dUUwlgxcBvbatkz11wBQJnOaU1BQkVpALy
- ABQJEMBvbatkz11wCRDAb22rZM9dcA/zCADBJl5FizQY1GWQ0hdaRLpFelc5TMnB58LQXLs+
- b0cbCGHSCYdB8u4EwBcMF55qF2MT6Owd7ydjFoLY7WdQYcorbMPw91LFqLEuA/mQnaWtrSV5
- XyBcFHIRNH1ZtHL+28ywyDZY0GE13R3IoNh8E25JFeEBdR5uWH/1+Y7v3VCFkDp8VX3Pa+66
- AyicyWjrWKf0ADPWcAuyF8kVqJv+61FnOUE9M/23CNp5y+9cWJnViYK015c9l04xdrcwPra9
- XVGi/hKZ6EIEiqFa55LHmoB4QLOYbYVC9xMoDnKYDuBfU4VlyTe6//eSRHc3wer7/avb1gKC
- EDihgW9OFim1SsU6
-In-Reply-To: <fa66e2f1-4770-45f5-aa4d-1a0ebec8a912@citrix.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Authentication-Results: mail2.medvecky.net;
-	auth=pass smtp.mailfrom=r.marek@assembler.cz
-X-Spamd-Bar: /
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi Andrew,
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
 
-Dne 25. 02. 25 v 19:10 Andrew Cooper napsal(a):
-> Very cunning.  Yes it does, but the state needs to be safe to IRET back
-> to, and ...
+> Em Mon, 24 Feb 2025 16:38:58 -0700
+> Jonathan Corbet <corbet@lwn.net> escreveu:
+>
+>> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
+>>=20
+>>=20
+>> I also think you should give consideration to preserving the other
+>> copyright notices in the Perl version.  A language translation doesn't
+>> remove existing copyrights...who knows how much creativity went into
+>> some of those regexes?
+>
+> Makes sense, but the copyrights at kernel-doc.pl:
+>
+> 	## Copyright (c) 1998 Michael Zucchi, All Rights Reserved        ##
+> 	## Copyright (C) 2000, 1  Tim Waugh <twaugh@redhat.com>          ##
+> 	## Copyright (C) 2001  Simon Huggins                             ##
+> 	## Copyright (C) 2005-2012  Randy Dunlap                         ##
+> 	## Copyright (C) 2012  Dan Luedtke                               ##
+> 	##                                                               ##
+> 	## #define enhancements by Armin Kuster <akuster@mvista.com>     ##
+> 	## Copyright (c) 2000 MontaVista Software, Inc.                  ##
+> 	#
+> 	# Copyright (C) 2022 Tomasz Warnie=C5=82=C5=82o (POD)
+>
+> Also doesn't preserve all copyrights from people that worked hard to
+> maintain it all over those years.
 
-... And intellectually very pleasing!
+Agreed ... and I'm not sure what we can do about that.  But *removing*
+existing copyright notices is a bit of a different story; that is
+generally considered to be fairly bad form.
 
->> Would it work to have KERNEL_CS as last entry in the GDT table?
->> Therefore executing SYSCALL would set the CS as usual,
->> but the numeric value of SS selector would be larger than GDT limit?
-> 
-> ... this isn't safe.  Any exception/interrupt will yield #SS when trying
-> to load an out-of-limit %ss.> i.e. a wrongly-timed NMI will take out the system with a very bizarre
-> looking oops.
-
-Hmm I was hoping that "the reader" will perform this NMI/#MC exercise :)
-
-The SYSCALL/SYSENTER startup has interrupts disabled, so it is the problem of NMI/#MC
-handler which would need deal with the normal case and attack case.
-
-It would need to check if it was executing that critical part of syscall64 entry
-from endbr64 to checkselector section, and if yes, the saved %ss needs to be
-"impossible" one. If it isn't -> panic.
-
-For non-attack case it just needs to forward RIP after the check...
-
-> You can do this in a less fatal way by e.g. having in-GDT form have a
-> segment limit, but any exception/interrupt will resync the out-of-sync
-> state, and break detection.  Also it would make the segment unusable for
-> compatibility userspace, where the limit would take effect.
-
-Yeah couldn't figure out what else could work "vice-versa" :(
-  
-> Finally, while this potentially gives us an option for SYSCALL and maybe
-> SYSENTER, it doesn't help with any of the main IDT entrypoints which can
-> also be attacked.
-
-I see, sorry I wasn't aware of this. But if I recall correctly only "paranoid"
-IDT entries do something with swapgs. But is there also some stack pivot where
-it would depend on GS? Or is it somewhat unrelated issue, that you might just
-redirect to "any endbr64" which are IDT entrypoints?
-
-Maybe you can share some details of how the attack would work in this case,
-or point me somewhere where I can read about it.
-
-If it is "any endbr64" case, would it work to just do "sanity check" of the exception stackframe?
-
-I mean if it is real or some random kernel stack state?
-
-1) check %RSP alignment if it was ok
-2) check if %ss and %cs for all possible valid values (16 bit)
-
-Unfortunately I think intel is not clearing high 48 bits of saved selector, AMD is.
-
-3) check if %rip is kernel range
-4) check if %rflags is sane (bit1 is 1)
-
-Because if the attacker has no or limited control on the stack content, it would be difficult to fake it.
+I don't have a problem with adding a longer credits area, I guess, if we
+want to do that (though it's not normal for other source files).  But
+I'm not sure we need to.
 
 Thanks,
-Rudolf
 
+jon
