@@ -1,242 +1,455 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4432256C77;
-	Tue, 25 Feb 2025 06:25:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740464712; cv=fail; b=sxvyvPQjX/6SunFrRNUg0q8OJRSCC6u6XChSUBgaUIBCfYPKczePDdqzD/Z0kcBySu5vUZleWISvHzzG2j+DE2n7QSQDrhFdEsdUoiddSeg8uI9LjYLKmtMsUW2yxZhe3aJ0AVafYDo/tPslp31a0DmaRtez/9k940u9jhrqylA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740464712; c=relaxed/simple;
-	bh=JVjawY9aZCejlwFom3POnVhafUIkw285Vbm+Y9CUleQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=ajk86NbiYedOTTuPhPcggfljzXHNW3MJMBJngvAeV65TF9hEnMbSgy0Wc6xRTJ85P2jbpFLf+CjRgAatZwkW8jy916OB5KO17Ey7pTgwf9HHX4slnf9u7j4q89qF3bHY63JuOaJgZiFUHkI668EZ7kC3MDCSsihOLnicrQ9lVoA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=klL13hu/; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=GbJRxdzZ; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18A351F60A;
+	Tue, 25 Feb 2025 07:38:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740469099; cv=none; b=ZRlIvAGXwa6cuqrmebPxMnYowRiamEhHHoqiaE/27KQ9Cl0iGV02W157eKedartJDnkOKTkAn1Q40MtAwEdmF7ToHIpOC6T0GcvC/+K2SCAK3prThIIi1WDPJMufPQyq7E+ZXhjf93AoquZqIOhl77N10VMOHCHzvVQpmLpJLpg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740469099; c=relaxed/simple;
+	bh=tT2niTwoBYVO9mGuyqYE+01wPaaljZ/pBtsqLp/zrzM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mA7HnVXIwf9EW2dSOQVesh2IcHIO324+QiGznued+evlSF7A/+NhrU4Fc5IyqHcEmR6w+7sZMW35h+we+caKo7pJJZz3MW3ce8zavHJ2HQfzHILlngDtSOj5utLGD2DcOg9u15mYc6as9KRQe18/1lA0C8PDKxZsQU1ETeyLwFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZByzwb7A; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="klL13hu/";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="GbJRxdzZ"
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51P1Bh63030876;
-	Tue, 25 Feb 2025 06:24:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2023-11-20; bh=Imj5l8BQhu2cXCQZ64
-	glERtmq0Ba0vP+wPcV3vlEcdA=; b=klL13hu/h1ijw23sKignRvWCmgkkTyve2I
-	rZFvir4TPIFiqBAJtQCNCmWyE4U9hOUpiEYhysVumKHg8g7DtTYXUqeHLSNcXTzl
-	u6qEvYXIZsfuZ8Qd6Fi7fa8QQj7ObHls26kQOk2RAA/oUlUUCwbUI9NiLBIRF5VF
-	MZZdakQrVaPCucD9iZJSCJqcnhyG3e8Khz/8NHue1Y++13fssjUQf3/W58v0muAP
-	rjKO5EF+QYMHKwV52qFMR05PifewhPRAKRa3fnqAPb36w7TQMGIywYnMPtuExl/h
-	9UTFuw5Q/uTV6Jy+V5kNO0RC6t6aMHms6aMSPEE77n8cWlG9bn+Q==
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44y74t48y5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 25 Feb 2025 06:24:29 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 51P5FCBv025292;
-	Tue, 25 Feb 2025 06:24:27 GMT
-Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2044.outbound.protection.outlook.com [104.47.58.44])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 44y51f8qg6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 25 Feb 2025 06:24:27 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=bAgXD8cojySyMPfUkBsUlO5XLCODOiEFz2z9zyg2mVIC4rwxdn1KtFct0vXHvIhg5m6wyH4gmZTLJDNgVGuTNR6XddzovHKQTgi/efpU3PxRPqXPSsMZ0/pGmLaNwXxmYYQwpQ53KAZZY9TENs2e9Iag38r1tNt0syT1sKTjQ1Nj0H6yCssx21reqfpjoz+AykWTaDMSWDaKkC/BoUrn1WhIyZFHxIjpwYwQb7RlWr64pBkwc9LJbcX3UJ0is/ub6wLSxHH3K9k7dAGw8uCWywPcRLNPb/fgTRk2sxAN+9anUVp4wD22zt92v2zQMHFs75Obuq/Ck99NqSnX4gPuQQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Imj5l8BQhu2cXCQZ64glERtmq0Ba0vP+wPcV3vlEcdA=;
- b=SL1VLjHd6mReRraW8oTVkkxNVDgeTjnNqQToDKuJuT80+8+psyBmoqJV5+9tEWpDsb9nYqHyRRL17cK+tL7JMKEeCTwRj/edyxfCM97ORPmEAdR7VKoyWow/qbI51Q+AURteiLV5xbwvcjFpQCLrETYU1dQEK35kv/CX8BhsGdhjjYxVYAksE1FNE5z4/GSxk+FkQzzxjA5qhFMD6RQ+w2RaBieGlvEb2WJZKYzs4XBC74UQYlN/AN5sT0bA4DPiEHNFqfib9KkQCs0fQco1+pMvYrVpfbx69mtIwhDTJuqW7DPQMGENbhfl54g+xvk3zn9eL1UalC6zGFjP85Bs1A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Imj5l8BQhu2cXCQZ64glERtmq0Ba0vP+wPcV3vlEcdA=;
- b=GbJRxdzZXGnMKjhSN4ob8ayYCONDZbDktKclrqbm69BS+DVg9nvcukUT5lPUBYeXmxMwyAQ/fLnMMQxMMSf8Zcxn6nA0mGagRZLBrr/lpLE5WFLs4vphBkSPqmL4DRPX3tcXAcK14NHMmtjBjbfjDIN44CVlso1+45PzS5FlKYQ=
-Received: from MN2PR10MB4112.namprd10.prod.outlook.com (2603:10b6:208:11e::33)
- by MW6PR10MB7686.namprd10.prod.outlook.com (2603:10b6:303:24a::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.20; Tue, 25 Feb
- 2025 06:24:24 +0000
-Received: from MN2PR10MB4112.namprd10.prod.outlook.com
- ([fe80::3256:3c8c:73a9:5b9c]) by MN2PR10MB4112.namprd10.prod.outlook.com
- ([fe80::3256:3c8c:73a9:5b9c%7]) with mapi id 15.20.8466.016; Tue, 25 Feb 2025
- 06:24:24 +0000
-Date: Tue, 25 Feb 2025 06:24:22 +0000
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-To: jeffxu@chromium.org
-Cc: akpm@linux-foundation.org, keescook@chromium.org, jannh@google.com,
-        torvalds@linux-foundation.org, vbabka@suse.cz, Liam.Howlett@oracle.com,
-        adhemerval.zanella@linaro.org, oleg@redhat.com, avagin@gmail.com,
-        benjamin@sipsolutions.net, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-mm@kvack.org,
-        jorgelo@chromium.org, sroettger@google.com, hch@lst.de,
-        ojeda@kernel.org, thomas.weissschuh@linutronix.de, adobriyan@gmail.com,
-        johannes@sipsolutions.net, pedro.falcato@gmail.com, hca@linux.ibm.com,
-        willy@infradead.org, anna-maria@linutronix.de, mark.rutland@arm.com,
-        linus.walleij@linaro.org, Jason@zx2c4.com, deller@gmx.de,
-        rdunlap@infradead.org, davem@davemloft.net, peterx@redhat.com,
-        f.fainelli@gmail.com, gerg@kernel.org, dave.hansen@linux.intel.com,
-        mingo@kernel.org, ardb@kernel.org, mhocko@suse.com,
-        42.hyeyoo@gmail.com, peterz@infradead.org, ardb@google.com,
-        enh@google.com, rientjes@google.com, groeck@chromium.org,
-        mpe@ellerman.id.au, aleksandr.mikhalitsyn@canonical.com,
-        mike.rapoport@gmail.com
-Subject: Re: [PATCH v7 6/7] mseal, system mappings: uprobe mapping
-Message-ID: <55a9ff15-c72e-45cb-ab38-ad814011e27e@lucifer.local>
-References: <20250224225246.3712295-1-jeffxu@google.com>
- <20250224225246.3712295-7-jeffxu@google.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250224225246.3712295-7-jeffxu@google.com>
-X-ClientProxiedBy: LNXP123CA0018.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:d2::30) To MN2PR10MB4112.namprd10.prod.outlook.com
- (2603:10b6:208:11e::33)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZByzwb7A"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 694ECC4CEDD;
+	Tue, 25 Feb 2025 07:38:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740469098;
+	bh=tT2niTwoBYVO9mGuyqYE+01wPaaljZ/pBtsqLp/zrzM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ZByzwb7AkfjiAxqbq1rGLo/1zHFCiiPZY2beJFXyCwCoB5EYAV7U0and0NjMZZxhd
+	 NqQYkMNWgg4kWgCsQJdsq7IwwG2pR8vMulfH7BfqfJ4jjybwBUzZHWt1Ln80qX/Xga
+	 O3RlTZFh0xQny12Iu1+4zqC0x0RrFWaG/k5Wo+WUInXsuaG24tmkF+LvsFSD/lXZXR
+	 z6l9+mvEGxsnzfgiGa7HLcsZZtcooGS30viMaS0PTdfwd9w8pohCUXZXvdTdmSN1IW
+	 wv3l2mciX25yW55nWKWmARZOj96ouX8/rm6saKQ6pF2IrkUGjYU/J1r+voK+BkPMUZ
+	 DnFVoSESssflg==
+Date: Tue, 25 Feb 2025 08:38:14 +0100
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+ linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 09/39] scripts/kernel-doc.py: add a Python parser
+Message-ID: <20250225083814.51975742@foz.lan>
+In-Reply-To: <87v7sy29rh.fsf@trenco.lwn.net>
+References: <cover.1740387599.git.mchehab+huawei@kernel.org>
+	<3905b7386d5f1bfa76639cdf1108a46f0bccbbea.1740387599.git.mchehab+huawei@kernel.org>
+	<87v7sy29rh.fsf@trenco.lwn.net>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN2PR10MB4112:EE_|MW6PR10MB7686:EE_
-X-MS-Office365-Filtering-Correlation-Id: 156e5aae-7b35-4f64-7913-08dd55650c25
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|7416014|366016|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?kSaIdhl+Oi10DjQN/qG4YnpC67KTJ3FJ441eh7CKDASLVUU+f4qpiSiy5hM6?=
- =?us-ascii?Q?m+ACRf+/g/Gyo9fuYD0Ud+vn0HMR4DlHoqOm1WALmCPLZID4T8S3m0pOVU2k?=
- =?us-ascii?Q?HFemkG+tLHfqCcOMpQQ5NdwbuOtsaA1JpjUvxb1Vzj9Fs7b1ynURRIf4YiEq?=
- =?us-ascii?Q?dumAm7ZAuUK4cgkOAziYJlMiIAeqixsSi14rixT+hJ4jSTsvTwG35nTO8R2q?=
- =?us-ascii?Q?2/k5ejErAf9e9sKtYOTwE6uXU6djyuRoEaHAXwoUzU0sOPdbXy+IvotQiBjB?=
- =?us-ascii?Q?/lY4674Q620JsUZor8hEkGQ52BJZQWH16jtCFV0LFs/Tfi8HIk2FQsr+9YYr?=
- =?us-ascii?Q?v6DI5iDhwVR0zflOArxBr98hcS6jPhErTfd1S5Mn7PeIAXUT1RbG/AyZgJX7?=
- =?us-ascii?Q?TEz3NqqaVZfoztz6JEyJaL7U3J0Mp+qnXmt6EbyNR4RByHNp48ZV4SJZnOuJ?=
- =?us-ascii?Q?PuXsUG2OqBlhHr5AYrZTB/9vg4ri0ppNNmP2PXBck4saAbGMGyXtUheWOYst?=
- =?us-ascii?Q?5e2OHG1DuNlVbCQe80Nw4GXXRrSSsaqQu//ThaICnnUMbqB19b7yf2I2p3Ck?=
- =?us-ascii?Q?8BunxgUIrxvEnmJ5yXUQ2sEdMKJAdg3556Q/v7s8Gghop0FdWIhOzvbppfTL?=
- =?us-ascii?Q?s86X7vz7im6UZwrQWBTd1PPTj6jwDsg3YTYyiXqUGaJ/Y1W2OTg7nmKT2vjB?=
- =?us-ascii?Q?egRi37Mcg+2UV3z2jtPr5ppcy8YsCrqU+vVPT3iqN9xUx/VqF+D24jDGZWbB?=
- =?us-ascii?Q?RsHaj55J7+L+5cLyz6ipUJzNHvZC6yc2NYi4EVVkiPey6j3nZlfA7Y67uDWW?=
- =?us-ascii?Q?3Jn7EL/wwbs4fj4A22iaaGYmARYQVJz1thZ0OXdTznrCkZ9pLs1mVe1q8nyq?=
- =?us-ascii?Q?2Sii2yyUaAJkckvqJasr3rf3NV1M2ecHNEqzkiekUcNB5xioIxAMu7dkAvH5?=
- =?us-ascii?Q?dY85w11qZKbSfoximlzAetNc0vlGfnf4KR25latMGfB8pQP87+SiK45YbUMr?=
- =?us-ascii?Q?NvPR2FuOlkXZSoGsACwdhvdMzPDn1v702Fztjpw1s8poIByWACQcyXIUrZ8t?=
- =?us-ascii?Q?MGkf++parJH025Rz1LTdXG0L1ezstANBKFDEDY8xGBmfcX5EIV0XWs+d/bB8?=
- =?us-ascii?Q?3u1WCI62heKXiWC/gN31zpEtNQOa44Nneg69Ipf1vu5+Sq7JEVTHN4xiahHh?=
- =?us-ascii?Q?xbVON1VJFNtAqnrGp6c8mjNEmDx2JLGlvlA+oICn4Xvql2oYCuJs6PBqKuEg?=
- =?us-ascii?Q?NnoaQWsr6E/ObOE2AIAxyvRJ47Y40W5pKnhqnNe8pV3d4JfNfSDROF/Dp+cq?=
- =?us-ascii?Q?84pASfExXXj4Ax54Qh8in58PFh0F0yLp/ps0tVT4hK0D1ABmHuXVn24dGT8K?=
- =?us-ascii?Q?Va/GLlF4nU5V2c41pfJjgk9tQOCC?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR10MB4112.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?70/qTRJg93QvsPvz3hFcTnl/Q0R2PNTfGwJZQEpDCLI9ZHnWQEpUvseK7Y+w?=
- =?us-ascii?Q?RD3HvMKtu6iBktmfDvn/xSew/+eIZy5GK9ZDRy3r3dHX3VfcZz4KWtzziFOb?=
- =?us-ascii?Q?aiFeh+7SLF0HVhEqxJq34tMTb7a4SOM8ZyvMrIF5/owTuLg/iNB2TNw2WZHJ?=
- =?us-ascii?Q?vPHy7eWsdF+SDmLXx02f4zg+ZTEpeKXiYsqdoC7p+k9g+T1z1ddJfWP2n9yW?=
- =?us-ascii?Q?VEUR4CCFvZZfPTn5mh3Cukaj945IpyfaP5Fbe68HQNYdo+CKI9MsJIj6Jch/?=
- =?us-ascii?Q?bwITEMstfKAf2nA1RXctCX6SIkYmY6r8ah0/GsfTbQi+ZEVGnCPTZor4w0v1?=
- =?us-ascii?Q?L19NqJSeFdC83/8acwQQtWwvLoL++cRBaN0JaGssI7dsepAtZCnUJ7M+g+m4?=
- =?us-ascii?Q?J2G3+ZpFz+NpRR5iAPuTBh8wiZtUOgnDSpaW8sSBEn+yd9OlS42yK/aCMPXR?=
- =?us-ascii?Q?Vry0ikEVqp/hGWZK2soj8OtPCm465yYgz3AOsIz8z/Nb0XnRc8qw2rYrEHnz?=
- =?us-ascii?Q?UsZshtkTUjZ5bsNInZU3OCu3plI0gCxUaMppnpiP1aCrOvo+NPcxZvNrK8H4?=
- =?us-ascii?Q?8MihMNgmETX9L/m5zcrW+2tp53jV+s4dagAm2VOpQhPDMNlzZ7imW5vdvU06?=
- =?us-ascii?Q?qQVqecaWsRWYLlkONFh18RJUZQvNF3oD5h4W+ZASFj7HgaGz6mUj4u93HVGs?=
- =?us-ascii?Q?CZcV8g0mzKSq+XtDSZuIppCbhDSY4q5Ia+f4bBsZeSf5pJMvkMMqDpB8bvlz?=
- =?us-ascii?Q?NI7oN2mmAg+MZjwnFeQTXupeEgkc7A67oqfTJXYprJQrf6BcqFE3CW8OgBu/?=
- =?us-ascii?Q?rapfXRC0Z5Ph2Vu5/aK1C43/1oEJMowKOAShN5g9PEEqyFTTc5TEYqgyfSWe?=
- =?us-ascii?Q?hNrQJXfw6t/fWL4OTnCaTEL5RH4BvlxtEpg3rY1KkyrHDZ4KD0c+sOsec7US?=
- =?us-ascii?Q?pNv6pSDPOdRB1Yxv+sJctWceXnJFaRqLa7khayLHTfcOE+Psd5yMjI6Mnil2?=
- =?us-ascii?Q?7uyFznr0XwOSUnFe309niBKXIxcBjJ3C5uz6rtXCNe4WN9FmZRZgkQpDYj4L?=
- =?us-ascii?Q?vER3h4bjELKg8bPTqsQPOnS0eQsr17RDbhpMni20hEx6SVfBGRfg0m0/tnke?=
- =?us-ascii?Q?bjkL6Yh7yBV6lJ3dgLR8NABVbQWYT9NW5rvLYnFyOPXvMGcKJwF618Y/J22n?=
- =?us-ascii?Q?eL+ICUjQTm5NzCn32ldEY4tee3ymgwZIsoFPdXg6kVuTgRVc9fQJEYkIgB9Z?=
- =?us-ascii?Q?1OX/5CbE8U853IYAx2XHVIUt+Gx9DrdjP6NXnft0ALZucG3mCbXX2LFWb4zT?=
- =?us-ascii?Q?4lLjzjKNTfQEFlrDrtj/MUF1rfBfZwKYvtrSHJBwwRZJGK+ngr5Fmkx1IEyl?=
- =?us-ascii?Q?9Lot0MNtq106o/UYW4Kxrkle534HaQ7tq0m5MLNFQZYbQaZyHxkxM4oFDwdg?=
- =?us-ascii?Q?jiKd6N/Ep9DQmlIHCvc3JwWtMKwQDxNisRGq80QtckLoA0Joboandvcob8zy?=
- =?us-ascii?Q?QBGsJicifZuOfvKH7+2GlLINWI7TgCWRf9Q69CIYussvoAsGXP7g+aYASIPS?=
- =?us-ascii?Q?9bMoIYpWyQujlzNLxo+uYNcUbGf7c96rl/IZ6qzhYHwAClZo9LLrJ6TC2Czv?=
- =?us-ascii?Q?bw=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	7vfgrPholfv5ria0MiABKhcbNWTCT5ksh8oSmhHF41muGRetbmDgzeuchtllcHtTVishEraFbAyTczShlUmH9BFdhpxJPzDpSnh+VCo6lsj7JUy2EUs6nRMoSH1fVWk0kErXAsfzmYKOh2p2IPyP0Lrx4Ox4tvS8CLNbd5wjAoizYLdwC2zBUR1goaZBEPtpJgGvrvua+PvyNs0odKGu9EQUIZ4em5pl6eJLwxb8DiX4ULyxtCav/N2wGAqhXlO+oyXWu0dkDX2W8khLxmaU+hlMpPF4PeU68cXDvv97v5tVkwPYfQOBEFghPW6Ijbk3zDx3XX7BNiKVgfOoZvplfy8zQgJcTD0eSaeoRScUkYOUXM9pldqfwTc/cLzeVMvEAHeiDS5zFXHWxQdEZbKQYnguyo4UDWsS1ni1E51dxSyVnifZTjGESBK0vwvHrD9q0ERgmOE1YKIGU+sTxsx3DhRFZt7zdKIgRIdar0bCmbSRH2ja4XdH1gk1NnL21IG76Bp8dNUm+LmtWCiFam6WQ7dCp/bba7pviIV0j7+8E3RfbedA71u/eOPP6BPlCYk5Y14U2bve0VzjBeJuyk/Nk8xwhs+1OQzNiOIShMTO74o=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 156e5aae-7b35-4f64-7913-08dd55650c25
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR10MB4112.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Feb 2025 06:24:24.2030
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: qmtQRbBvXfpKy09anPH0kXWOlnM4G2pXOtRvfcWFXJbqEe9F8varb283ccJpf5jm0QjwrKz7vJRQzbBtzNvrafSdAWXq+JnOpK8s5ezgnMw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR10MB7686
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-25_02,2025-02-24_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 mlxlogscore=999
- phishscore=0 mlxscore=0 suspectscore=0 adultscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502100000
- definitions=main-2502250040
-X-Proofpoint-GUID: VRcjIQZUvZ4QMAX0FGPVYwkw4aQrPpD6
-X-Proofpoint-ORIG-GUID: VRcjIQZUvZ4QMAX0FGPVYwkw4aQrPpD6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 24, 2025 at 10:52:45PM +0000, jeffxu@chromium.org wrote:
-> From: Jeff Xu <jeffxu@chromium.org>
->
-> Provide support to mseal the uprobe mapping.
->
-> Unlike other system mappings, the uprobe mapping is not
-> established during program startup. However, its lifetime is the same
-> as the process's lifetime. It could be sealed from creation.
->
+Em Mon, 24 Feb 2025 16:38:58 -0700
+Jonathan Corbet <corbet@lwn.net> escreveu:
 
-I thought we agreed not to enable this for uprobes for now? What testing
-have you done to ensure this is functional?
+> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
+>=20
+> > Maintaining kernel-doc has been a challenge, as there aren't many
+> > perl developers among maintainers. Also, the logic there is too
+> > complex. Having lots of global variables and using pure functions
+> > doesn't help.
+> >
+> > Rewrite the script in Python, placing most global variables
+> > inside classes. This should help maintaining the script in long
+> > term. =20
+>=20
+> [...]
+>=20
+> > diff --git a/scripts/kernel-doc.py b/scripts/kernel-doc.py
+> > new file mode 100755
+> > index 000000000000..5cf5ed63f215
+> > --- /dev/null
+> > +++ b/scripts/kernel-doc.py
+> > @@ -0,0 +1,2757 @@
+> > +#!/usr/bin/env python3
+> > +# pylint: disable=3DR0902,R0903,R0904,R0911,R0912,R0913,R0914,R0915,R0=
+917,R1702
+> > +# pylint: disable=3DC0302,C0103,C0301
+> > +# pylint: disable=3DC0116,C0115,W0511,W0613
+> > +# Copyright(c) 2025: Mauro Carvalho Chehab <mchehab@kernel.org>.
+> > +# SPDX-License-Identifier: GPL-2.0 =20
+>=20
+> The SPDX tag is supposed to be up top, right under the shebang
 
-I mean is this literally _all_ uprobe mappings now being sealed?
+I'll move it.=20
 
-I'd really like some more assurances on this one. And what are you
-mitigating by sealing these? I get VDSO (kinda) but uprobes?
+>=20
+> I also think you should give consideration to preserving the other
+> copyright notices in the Perl version.  A language translation doesn't
+> remove existing copyrights...who knows how much creativity went into
+> some of those regexes?
 
-You really need to provide more justification here.
+Makes sense, but the copyrights at kernel-doc.pl:
 
-> Signed-off-by: Jeff Xu <jeffxu@chromium.org>
-> ---
->  kernel/events/uprobes.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
->
-> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> index 2ca797cbe465..8dcdfa0d306b 100644
-> --- a/kernel/events/uprobes.c
-> +++ b/kernel/events/uprobes.c
-> @@ -1662,6 +1662,7 @@ static const struct vm_special_mapping xol_mapping = {
->  static int xol_add_vma(struct mm_struct *mm, struct xol_area *area)
->  {
->  	struct vm_area_struct *vma;
-> +	unsigned long vm_flags;
->  	int ret;
->
->  	if (mmap_write_lock_killable(mm))
-> @@ -1682,8 +1683,10 @@ static int xol_add_vma(struct mm_struct *mm, struct xol_area *area)
->  		}
->  	}
->
-> +	vm_flags = VM_EXEC|VM_MAYEXEC|VM_DONTCOPY|VM_IO;
-> +	vm_flags |= VM_SEALED_SYSMAP;
->  	vma = _install_special_mapping(mm, area->vaddr, PAGE_SIZE,
-> -				VM_EXEC|VM_MAYEXEC|VM_DONTCOPY|VM_IO,
-> +				vm_flags,
->  				&xol_mapping);
->  	if (IS_ERR(vma)) {
->  		ret = PTR_ERR(vma);
-> --
-> 2.48.1.658.g4767266eb4-goog
->
+	## Copyright (c) 1998 Michael Zucchi, All Rights Reserved        ##
+	## Copyright (C) 2000, 1  Tim Waugh <twaugh@redhat.com>          ##
+	## Copyright (C) 2001  Simon Huggins                             ##
+	## Copyright (C) 2005-2012  Randy Dunlap                         ##
+	## Copyright (C) 2012  Dan Luedtke                               ##
+	##                                                               ##
+	## #define enhancements by Armin Kuster <akuster@mvista.com>     ##
+	## Copyright (c) 2000 MontaVista Software, Inc.                  ##
+	#
+	# Copyright (C) 2022 Tomasz Warnie=C5=82=C5=82o (POD)
+
+Also doesn't preserve all copyrights from people that worked hard to
+maintain it all over those years.
+
+A quick check with git log shows 68 different authors touching it
+(didn't check how trivial/hard were the changes):
+
+$ git log --follow --pretty=3D"%an" scripts/kernel-doc.pl|sort|uniq -c|sort=
+ -n
+      1 Alexander A. Klimov
+      1 Alexander Lobakin
+      1 Anna-Maria Behnsen
+      1 Bart Van Assche
+      1 Chen-Yu Tsai
+      1 Coco Li
+      1 Dan Luedtke
+      1 Donald Hunter
+      1 Gabriel Krisman Bertazi
+      1 Greg Kroah-Hartman
+      1 Harvey Harrison
+      1 Horia Geanta
+      1 Jason Gunthorpe
+      1 J=C3=A9r=C3=A9my Bobbio
+      1 Johannes Weiner
+      1 Jonathan Cameron
+      1 Kamil Rytarowski
+      1 Laurent Pinchart
+      1 Levin, Alexander (Sasha Levin)
+      1 Linus Torvalds
+      1 Lucas De Marchi
+      1 Mark Rutland
+      1 Masahiro Yamada
+      1 Michal Wajdeczko
+      1 Niklas S=C3=B6derlund
+      1 Nishanth Menon
+      1 Peter Maydell
+      1 Pierre-Louis Bossart
+      1 Randy.Dunlap
+      1 Richard Kennedy
+      1 Rich Walker
+      1 Rolf Eike Beer
+      1 Silvio Fricke
+      1 Utkarsh Tripathi
+      1 valdis.kletnieks@vt.edu
+      1 Will Deacon
+      2 Ilya Dryomov
+      2 Jakub Kicinski
+      2 Jason Baron
+      2 Jonathan Neusch=C3=A4fer
+      2 Markus Heiser
+      2 Pavan Kumar Linga
+      2 Pavel Pisa
+      2 Sakari Ailus
+      2 Yacine Belkadi
+      2 Yujie Liu
+      3 Akira Yokosawa
+      3 Andr=C3=A9 Almeida
+      3 Andy Shevchenko
+      3 Ben Hutchings
+      3 Borislav Petkov
+      3 Conch=C3=BAr Navid
+      3 Daniel Santos
+      3 Danilo Cesar Lemes de Paula
+      3 Mike Rapoport
+      4 Daniel Vetter
+      4 Matthew Wilcox
+      5 Martin Waitz
+      5 Paolo Bonzini
+      6 Aditya Srivastava
+      6 Vegard Nossum
+      7 Kees Cook
+     11 Johannes Berg
+     11 Tomasz Warnie=C5=82=C5=82o
+     20 Jonathan Corbet
+     32 Jani Nikula
+     57 Mauro Carvalho Chehab
+     65 Randy Dunlap
+
+So, picking the latest e-mails from the above authors, maybe we can add
+some credit lines like these:
+
+# Converted from the kernel-doc script originally written in Perl
+# under GPLv2, copyrighted since 1998 by the following authors:
+#
+#    Aditya Srivastava <yashsri421@gmail.com>
+#    Akira Yokosawa <akiyks@gmail.com>
+#    Alexander A. Klimov <grandmaster@al2klimov.de>
+#    Alexander Lobakin <aleksander.lobakin@intel.com>
+#    Andr=C3=A9 Almeida <andrealmeid@igalia.com>
+#    Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+#    Anna-Maria Behnsen <anna-maria@linutronix.de>
+#    Armin Kuster <akuster@mvista.com>
+#    Bart Van Assche <bart.vanassche@sandisk.com>
+#    Ben Hutchings <ben@decadent.org.uk>
+#    Borislav Petkov <bbpetkov@yahoo.de>
+#    Chen-Yu Tsai <wenst@chromium.org>
+#    Coco Li <lixiaoyan@google.com>
+#    Conch=C3=BAr Navid <conchur@web.de>
+#    Daniel Santos <daniel.santos@pobox.com>
+#    Danilo Cesar Lemes de Paula <danilo.cesar@collabora.co.uk>
+#    Dan Luedtke <mail@danrl.de>
+#    Donald Hunter <donald.hunter@gmail.com>
+#    Gabriel Krisman Bertazi <krisman@collabora.co.uk>
+#    Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+#    Harvey Harrison <harvey.harrison@gmail.com>
+#    Horia Geanta <horia.geanta@freescale.com>
+#    Ilya Dryomov <idryomov@gmail.com>
+#    Jakub Kicinski <kuba@kernel.org>
+#    Jani Nikula <jani.nikula@intel.com>
+#    Jason Baron <jbaron@redhat.com>
+#    Jason Gunthorpe <jgg@nvidia.com>
+#    J=C3=A9r=C3=A9my Bobbio <lunar@debian.org>
+#    Johannes Berg <johannes.berg@intel.com>
+#    Johannes Weiner <hannes@cmpxchg.org>
+#    Jonathan Cameron <Jonathan.Cameron@huawei.com>
+#    Jonathan Corbet <corbet@lwn.net>
+#    Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+#    Kamil Rytarowski <n54@gmx.com>
+#    Kees Cook <kees@kernel.org>
+#    Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+#    Levin, Alexander (Sasha Levin) <alexander.levin@verizon.com>
+#    Linus Torvalds <torvalds@linux-foundation.org>
+#    Lucas De Marchi <lucas.demarchi@profusion.mobi>
+#    Mark Rutland <mark.rutland@arm.com>
+#    Markus Heiser <markus.heiser@darmarit.de>
+#    Martin Waitz <tali@admingilde.org>
+#    Masahiro Yamada <masahiroy@kernel.org>
+#    Matthew Wilcox <willy@infradead.org>
+#    Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+#    Michal Wajdeczko <michal.wajdeczko@intel.com>
+#    Michael Zucchi
+#    Mike Rapoport <rppt@linux.ibm.com>
+#    Niklas S=C3=B6derlund <niklas.soderlund@corigine.com>
+#    Nishanth Menon <nm@ti.com>
+#    Paolo Bonzini <pbonzini@redhat.com>
+#    Pavan Kumar Linga <pavan.kumar.linga@intel.com>
+#    Pavel Pisa <pisa@cmp.felk.cvut.cz>
+#    Peter Maydell <peter.maydell@linaro.org>
+#    Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+#    Randy Dunlap <rdunlap@infradead.org>
+#    Richard Kennedy <richard@rsk.demon.co.uk>
+#    Rich Walker <rw@shadow.org.uk>
+#    Rolf Eike Beer <eike-kernel@sf-tec.de>
+#    Sakari Ailus <sakari.ailus@linux.intel.com>
+#    Silvio Fricke <silvio.fricke@gmail.com>
+#    Simon Huggins
+#    Tim Waugh <twaugh@redhat.com>=20
+#    Tomasz Warnie=C5=82=C5=82o <tomasz.warniello@gmail.com>
+#    Utkarsh Tripathi <utripathi2002@gmail.com>
+#    valdis.kletnieks@vt.edu <valdis.kletnieks@vt.edu>
+#    Vegard Nossum <vegard.nossum@oracle.com>
+#    Will Deacon <will.deacon@arm.com>
+#    Yacine Belkadi <yacine.belkadi.1@gmail.com>
+#    Yujie Liu <yujie.liu@intel.com>
+
+Note: unfortunately, two of the original authors didn't send any patches
+with their names since when we migrated to git. So, I'm placing them
+without e-mails.
+
+On a side note, I would keep the above credits line only at the main
+kernel-doc.py, as it would be really hard to distribute it along
+the several kernel-doc classes.
+
+
+>=20
+> > +# TODO: implement warning filtering
+> > +
+> > +"""
+> > +kernel_doc
+> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > +
+> > +Print formatted kernel documentation to stdout
+> > +
+> > +Read C language source or header FILEs, extract embedded
+> > +documentation comments, and print formatted documentation
+> > +to standard output.
+> > +
+> > +The documentation comments are identified by the "/**"
+> > +opening comment mark.
+> > +
+> > +See Documentation/doc-guide/kernel-doc.rst for the
+> > +documentation comment syntax.
+> > +"""
+> > +
+> > +import argparse
+> > +import logging
+> > +import os
+> > +import re
+> > +import sys
+> > +
+> > +from datetime import datetime
+> > +from pprint import pformat
+> > +
+> > +from dateutil import tz
+> > +
+> > +# Local cache for regular expressions
+> > +re_cache =3D {}
+> > +
+> > +
+> > +class Re: =20
+>=20
+> So I have to say this bugs me a bit ... the class is fine, but the
+> one-letter case-only difference from the standard "re" class is just
+> going to make the code harder for others to approach.  "kern_re" or
+> something like that?  Or even "kre" if you really want it to be as short
+> as possible.
+
+A short name close to "re" made easier to convert the script ;-)
+
+I'll rename the class to KernRe (*)
+
+(*) I opted to follow pylint convention for class names, which
+    is using camel case. As we don't have classes in C, this
+    doesn't strictly conflicts with our Kernel conventions ;-)
+
+To make easier, I'll do such change as a separate patch at the end
+of the series.
+
+>=20
+> > +    """
+> > +    Helper class to simplify regex declaration and usage,
+> > +
+> > +    It calls re.compile for a given pattern. It also allows adding
+> > +    regular expressions and define sub at class init time.
+> > +
+> > +    Regular expressions can be cached via an argument, helping to spee=
+dup
+> > +    searches.
+> > +    """ =20
+>=20
+> [...]
+>=20
+> > +
+> > +class KernelDoc:
+> > +    # Parser states
+> > +    STATE_NORMAL        =3D 0        # normal code
+> > +    STATE_NAME          =3D 1        # looking for function name
+> > +    STATE_BODY_MAYBE    =3D 2        # body - or maybe more description
+> > +    STATE_BODY          =3D 3        # the body of the comment
+> > +    STATE_BODY_WITH_BLANK_LINE =3D 4 # the body which has a blank line
+> > +    STATE_PROTO         =3D 5        # scanning prototype
+> > +    STATE_DOCBLOCK      =3D 6        # documentation block
+> > +    STATE_INLINE        =3D 7        # gathering doc outside main block
+> > +
+> > +    st_name =3D [
+> > +        "NORMAL",
+> > +        "NAME",
+> > +        "BODY_MAYBE",
+> > +        "BODY",
+> > +        "BODY_WITH_BLANK_LINE",
+> > +        "PROTO",
+> > +        "DOCBLOCK",
+> > +        "INLINE",
+> > +    ] =20
+>=20
+> So these ... kind of look like enums?
+
+Yes. I considered using Python enum there:
+	https://docs.python.org/3/library/enum.html
+
+but it would simply be:
+
+	from enum import Enum
+
+	class state(enum):
+	    NORMAL        =3D 0        # normal code
+	    NAME          =3D 1        # looking for function name
+	    BODY_MAYBE    =3D 2        # body - or maybe more description
+	    BODY          =3D 3        # the body of the comment
+	    BODY_WITH_BLANK_LINE =3D 4 # the body which has a blank line
+	    PROTO         =3D 5        # scanning prototype
+	    DOCBLOCK      =3D 6        # documentation block
+	    INLINE        =3D 7        # gathering doc outside main block
+
+and we would replace:
+
+	self.STATE_NORMAL
+	...
+
+to:
+	state.NORMAL
+
+(and a similar change for inline states as well)
+
+Except for an ancillary number-to-string conversion with this syntax:
+
+	Color =3D Enum('Color', [('RED', 1), ('GREEN', 2), ('BLUE', 3)])
+
+I didn't see much advantage of using it. See, we only use the string
+on a single line, when --debug is used to show the per-line state machine.
+
+Yet, perhaps we can split the states on a separate class anyway.
+
+> That's kind of it for nits ... I do have one wish that will kind of hard
+> to grant overall ... for the long-term maintenance of this code, it
+> would be really nice if every non-trivial regex were described by a
+> comment explaining what it is trying to do.  It's not reasonable to
+> expect that as a condition for accepting this rewrite, but it sure would
+> be a nice goal to be working toward.
+
+Agreed. For the future, the best would be to request a description for
+every new regex added.
+
+For the future, my plan is to split the C source parser (e.g. the code that
+calls output_declaration() and/or modifies self.entry at the KernelDoc
+class inside kdoc_parser to a separate file and class. We can then work
+to implement some regexes to a more lexical way. For instance, all those
+regexes:
+
+            (Re(r'\bstruct_group\s*\(([^,]*,)', re.S), r'STRUCT_GROUP('),
+            (Re(r'\bstruct_group_attr\s*\(([^,]*,){2}', re.S), r'STRUCT_GRO=
+UP('),
+            (Re(r'\bstruct_group_tagged\s*\(([^,]*),([^,]*),', re.S), r'str=
+uct \1 \2; STRUCT_GROUP('),
+            (Re(r'\b__struct_group\s*\(([^,]*,){3}', re.S), r'STRUCT_GROUP(=
+'),
+
+            (Re(r'__ETHTOOL_DECLARE_LINK_MODE_MASK\s*\(([^\)]+)\)', re.S), =
+r'DECLARE_BITMAP(\1, __ETHTOOL_LINK_MODE_MASK_NBITS)'),
+            (Re(r'DECLARE_PHY_INTERFACE_MASK\s*\(([^\)]+)\)', re.S), r'DECL=
+ARE_BITMAP(\1, PHY_INTERFACE_MODE_MAX)'),
+            (Re(r'DECLARE_BITMAP\s*\(' + args_pattern + r',\s*' + args_patt=
+ern + r'\)', re.S), r'unsigned long \1[BITS_TO_LONGS(\2)]'),
+            (Re(r'DECLARE_HASHTABLE\s*\(' + args_pattern + r',\s*' + args_p=
+attern + r'\)', re.S), r'unsigned long \1[1 << ((\2) - 1)]'),
+            (Re(r'DECLARE_KFIFO\s*\(' + args_pattern + r',\s*' + args_patte=
+rn + r',\s*' + args_pattern + r'\)', re.S), r'\2 *\1'),
+            (Re(r'DECLARE_KFIFO_PTR\s*\(' + args_pattern + r',\s*' + args_p=
+attern + r'\)', re.S), r'\2 *\1'),
+            (Re(r'(?:__)?DECLARE_FLEX_ARRAY\s*\(' + args_pattern + r',\s*' =
++ args_pattern + r'\)', re.S), r'\1 \2[]'),
+            (Re(r'DEFINE_DMA_UNMAP_ADDR\s*\(' + args_pattern + r'\)', re.S)=
+, r'dma_addr_t \1'),
+            (Re(r'DEFINE_DMA_UNMAP_LEN\s*\(' + args_pattern + r'\)', re.S),=
+ r'__u32 \1'),
+
+could be converted on a more lexical representation where the macro
+name with their arguments could be represented on a clearer expression.
+
+Something like:
+
+	ReplaceMatch("DECLARE_HASHTABLE($1, $2)", "unsigned long $1[1 << (($2) - 1=
+)]")
+
+We have already the NestedMatch class that do something similar to
+that(*) could be improved to do things like that - or we can come up with
+something new.
+
+(*) NestedMatch currently miss one feature: it doesn't split the contents
+    inside parenthesis on multiple match groups. I guess it won't be hard to
+    add such features to it.
+
+Thanks,
+Mauro
