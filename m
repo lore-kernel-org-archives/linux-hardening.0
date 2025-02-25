@@ -1,83 +1,100 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E698020C037;
-	Mon, 24 Feb 2025 23:49:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D49B3CA6B;
+	Tue, 25 Feb 2025 00:33:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740440953; cv=none; b=HWCCJjW10wFXBne5jbQj4+URk5+uWyJQj34TgvVAwA++/IqizfUgnJYL3exuD+fRN1YwAn6kL8BTPooJablIzF7PY1g0sWlC2P+YoQWc5gY+Wl8VY+dZYAvv5+1nRgm2v7/lMEnZ68dLJNeIolSUP6hc69mhiOiGghFeObE2P68=
+	t=1740443625; cv=none; b=Bw9bk2T5dJ9C3/EFQcrASuEUE5jff02GQUXP/8kW/AsJEChsAWF5pB7sYwHIcARLlr9kDNyO0hAoYNSlEf09yF0SxPpWAjUAjTM9irgDxQKyGQECHP+teMI/QwZJsGqcE5PRDei32XwXvS9uWdW7E5TYYDLNUJ62oR7HkoAANcM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740440953; c=relaxed/simple;
-	bh=bSZ1BbEYc5oTKZWo6TwEiFHmEdVxTC2MtfdfcPQcJIE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=iFRLbrzfszfZctBWcotadjFphwtcFNHQl8ekAW9OGNRE1aVKmVsVmYzV02XeD4x2bFJShlyLJssnL3FSy13er+2hZtiJhdjJY3qDr1Z4W1B2UFB40B+MD6rIlElOkhgQPhbHDbDtIt3goWqJLrEZd9Cudqod336se2iLdVlaqEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=GUCUJCV7; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1740443625; c=relaxed/simple;
+	bh=VPjW16HL/MR0kbNuqCgGzR0y0tEBnAh/4k5KF+hpfl0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ra4J9qkZ2V3c/BXRS4M7+gw7JWXWBx3WYi9ViwOwOfmdw7R4E0dPhlQeaLJvU3xB0+zA6qBOvGZJ15qG3hLZZabiCAw+i32QSuMW7FUR96dn9u8T+MgN5sH/4p77UjaAQsswExkVJVK+KC9NBwvoX1z0VDLvwzbCd5qum6OtWlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=V7q4Myp/; arc=none smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="GUCUJCV7"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net CBF4D48EBA
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1740440951; bh=pHGnij/eQmKrMRgKcJ0yPzwB3EItplvkoxWR3vEZS0M=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=GUCUJCV71P0WD5pGzeQ6pnT03wD/CWTLelZENJYTf2t2PdgTk2KFIb2Ypg582Z2ne
-	 Dkrv0sH6cV2iTw9w5UtDnkb3acQcUFtwTyKfMje711n0J7/2APZdWZYl0h60nKMA24
-	 JNJDa38zvOpWLFOOYqBm+PVSWazh6Mi1OjlXXTvvsN1Z3ovEHLk4xwka4Gn2R8AumJ
-	 7XXe5JtmG87omImTS+j3Rpm3SYTnIGW+JzXwqFg/I8l7zuozaSYc86KKftKV+Qayx0
-	 B4AhEQHrwwYN92Gf939Kk8AF9xStt2YN7jkgWk3jtuejtV5ABrzCLEfXEBy9AuJyNo
-	 C2+bSGF8eSZAg==
-Received: from localhost (unknown [IPv6:2601:280:4600:2d7f::1fe])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id CBF4D48EBA;
-	Mon, 24 Feb 2025 23:49:10 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Linux Doc Mailing
- List <linux-doc@vger.kernel.org>
-Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Mauro Carvalho Chehab
- <mchehab+huawei@kernel.org>, linux-kernel@vger.kernel.org, "Gustavo A. R.
- Silva" <mchehab+huawei@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Bingbu
- Cao <bingbu.cao@intel.com>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, Kees Cook <mchehab+huawei@kernel.org>,
- Sakari Ailus <sakari.ailus@linux.intel.com>, Takashi Sakamoto
- <o-takashi@sakamocchi.jp>, Tianshu Qiu <tian.shu.qiu@intel.com>,
- linux-arch@vger.kernel.org, linux-hardening@vger.kernel.org,
- linux-media@vger.kernel.org, linux-staging@lists.linux.dev,
- linux1394-devel@lists.sourceforge.net
-Subject: Re: [PATCH v2 00/39] Implement kernel-doc in Python
-In-Reply-To: <cover.1740387599.git.mchehab+huawei@kernel.org>
-References: <cover.1740387599.git.mchehab+huawei@kernel.org>
-Date: Mon, 24 Feb 2025 16:49:10 -0700
-Message-ID: <87msea29ah.fsf@trenco.lwn.net>
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="V7q4Myp/"
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51OMKN0t031493;
+	Tue, 25 Feb 2025 00:33:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2023-11-20; bh=6F7GSf7y872wvokfJjv8eyOl3WB6d5p+t9ZkC3/DwSs=; b=
+	V7q4Myp/e3iCAvgdB9nwWOCqZNm5RE+G6tDCBEK56t/WqnBg8ftlFnaZy9d79+lD
+	nwsArIZS++1LHrJ/SY24fTCjd3EeFv0KqlwS5wCM+/lQapOsRd3XldV7YalH/jG3
+	7FEnVyTgITkRzo/exslA1d5jAIksQCWaCUuKYZlXlKnG1QwWfXXq6yL8GoQUoGTt
+	rhOVEWyLEI4LrrK3oSAeamdM9iUJQiI+ztAM0s5nBR2qYyvFN/p/lft4+X89GE9G
+	7Jpa4WJyk7u28gx2kDWJjdEfie9Y26Kx7y9vGpWb2VPh/HiAcpuyl0q1u/KVBQ3Y
+	SNwJnkAf0buouBYvquuJiQ==
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44y74t3vwa-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 25 Feb 2025 00:33:23 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 51ON3jRi025221;
+	Tue, 25 Feb 2025 00:33:21 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 44y51f0q9e-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 25 Feb 2025 00:33:21 +0000
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 51P0XI23025171;
+	Tue, 25 Feb 2025 00:33:21 GMT
+Received: from ca-mkp2.ca.oracle.com.com (mpeterse-ol9.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.251.135])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 44y51f0q87-6;
+	Tue, 25 Feb 2025 00:33:21 +0000
+From: "Martin K. Petersen" <martin.petersen@oracle.com>
+To: Don Brace <don.brace@microchip.com>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Thorsten Blum <thorsten.blum@linux.dev>
+Cc: "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-hardening@vger.kernel.org, Kees Cook <kees@kernel.org>,
+        David Laight <david.laight.linux@gmail.com>,
+        Bart Van Assche <bvanassche@acm.org>, storagedev@microchip.com,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] scsi: hpsa: Remove deprecated and unnecessary strncpy()
+Date: Mon, 24 Feb 2025 19:32:51 -0500
+Message-ID: <174044345120.2973737.13335141842683533992.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250214114302.86001-2-thorsten.blum@linux.dev>
+References: <20250214114302.86001-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-24_11,2025-02-24_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 mlxlogscore=999
+ phishscore=0 mlxscore=0 suspectscore=0 adultscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502100000
+ definitions=main-2502250001
+X-Proofpoint-GUID: 2hUhov6sZMqw84mRY405nNKbs2O_PR_s
+X-Proofpoint-ORIG-GUID: 2hUhov6sZMqw84mRY405nNKbs2O_PR_s
 
-Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
+On Fri, 14 Feb 2025 12:43:02 +0100, Thorsten Blum wrote:
 
-> Hi Jon,
->
-> This changeset contains the kernel-doc.py script to replace the verable
-> kernel-doc originally written in Perl. It replaces the first version and the
-> second series I sent on the top of it.
+> While replacing strncpy() with strscpy(), Bart Van Assche pointed out
+> that the code occurs inside sysfs write callbacks, which already uses
+> NUL-terminated strings. This allows the string to be passed directly to
+> sscanf() without requiring a temporary copy.
+> 
+> Remove the deprecated and unnecessary strncpy() and the corresponding
+> local variables, and pass the buffer buf directly to sscanf().
+> 
+> [...]
 
-I've sent minor comments on a couple of the patches.  The new version
-works for me, I can't find any real problems with it.
+Applied to 6.15/scsi-queue, thanks!
 
-Here's the question: what were your thoughts on when to do this?  I can
-certainly take the initial fixup patches and get them out of your queue,
-but at some point there will be a need to dive into the deep end.  I'm
-just a bit leery of doing that as we head toward -rc5...  what do you
-think of "just after the merge window"?
+[1/1] scsi: hpsa: Remove deprecated and unnecessary strncpy()
+      https://git.kernel.org/mkp/scsi/c/d69ddae194ca
 
-I'm definitely looking forward to no longer having to bash my head
-against the Perl version...
-
-Thanks,
-
-jon
+-- 
+Martin K. Petersen	Oracle Linux Engineering
