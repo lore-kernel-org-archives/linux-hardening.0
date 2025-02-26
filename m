@@ -1,135 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A910723535E;
-	Wed, 26 Feb 2025 18:49:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D2D2236A99
+	for <linux-hardening@vger.kernel.org>; Wed, 26 Feb 2025 18:56:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740595777; cv=none; b=SXjAirYlUsHRgwQo8HmXKoUbOnLLgiRnXY379A3rxzmdbmLn1ld9MsQbTd1TL9rrzpA+FwfVpElXoX/aZQq6BY5sagQ1KXZL+oinzRtY5/agf0cvNojQ5xH+C9Rj8Jd4oBof5cD1mf2IaqcKBoml3CLjlnImq9lgerxhUSKKaks=
+	t=1740596174; cv=none; b=ErYBRdwSWU5yFGj6oqmPFvmkNvIa6tUol0zOGI3n8LPwDTaXb4BqkjUy0UzP0LuqpfsGVK/LV3afQTSqheZDmaD0Vke9esPXIfEEXdI5A+UKo99fVMRXd95tUxM2bddkAV8F9e4cDovt+J+l8Tbut9Sk8W2MxaIUaimRT4fvei8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740595777; c=relaxed/simple;
-	bh=xGnAoCtrL4SJxvd4YJG63aFaBi2DqwKPVCV7akM3pFE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qmeoMdbj6ONvkwOPwwBpAwy63V4GxyGD0WKosmwf2rzEnUnct0mRkVF5HVafUQd9YeVfXANtDAHCXVPDNdWVOOfO/p1pQkvjLBQGbbjv2u2KZFCcxgnWDxOKyqaqrbGv+8ZUrrdcgu5JLiiZJGyRd4V8rAwFMOsfu5Foa27Y4ak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=by4ovl24; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740596174; c=relaxed/simple;
+	bh=GJLG6HT2p/F44pvEf+vdQir4GFIdOm/KN9Mpn40nQZ4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QFX1/Qi939GYCYXYcoZclXR4G/zNYyHDIwnh4IFx386w8SDkrAQdvyeR5rl2paRhToFDMi9zInxumrzFXQRAeITbX2qoZUJwRPjwA+OME1+b1GjJWqEIb24ymY24+PMH4KmLEX1ivNDqgq7378vBTfoe9RuKBPd0foyLoLleFig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=KGSqJ6pY; arc=none smtp.client-ip=91.218.175.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="by4ovl24"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 206F5C4CED6;
-	Wed, 26 Feb 2025 18:49:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740595777;
-	bh=xGnAoCtrL4SJxvd4YJG63aFaBi2DqwKPVCV7akM3pFE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=by4ovl240vLVWQyD8uL0FQuBbuOPuubKpd1l4EsFrQPf6TvekfMl3mkUVrqovgoB2
-	 65UrsVFWYoBK70Lin1NrOo7cduddfUieSwrovzGXsYDhQX7KD1BRtRFmVrq9dlWnWh
-	 iMGxE5SSikvEPXtllFEQY19BF+8fcSY/WrmdOeLi4UrZKUneLwA3rbJ9MueLyNILsP
-	 xaKFJ+U/iEWXKnjPrCDJEuV1tmH8+OjG993E9OzExkF1gy5BMe3V7tJdJc0vbOP7TI
-	 pGzPoGngA0bSD0mVLDlVCArEKK9TCgtYL4W/2A+N5RP9LLoaIOWZpzdPYGxZ9x5W60
-	 7nrpAkN1Mmqug==
-Date: Wed, 26 Feb 2025 10:49:35 -0800
-From: Saeed Mahameed <saeed@kernel.org>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Saeed Mahameed <saeedm@nvidia.com>, Leon Romanovsky <leon@kernel.org>,
-	Tariq Toukan <tariqt@nvidia.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3][next] net/mlx5e: Avoid a hundred
- -Wflex-array-member-not-at-end warnings
-Message-ID: <Z79iP0glNCZOznu4@x130>
-References: <Z76HzPW1dFTLOSSy@kspp>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="KGSqJ6pY"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1740596161;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=R4cAkbTSz/JJdoqp8OKkTxMEEUgI6W1GWFWWM9AMUuk=;
+	b=KGSqJ6pY9pcbZNl3CC3YM9Y/0xKyMoZuIZo4rAAadNchrEPFIKCH9PHH0jDCmdKmSTPMDv
+	bQoWFQeRk95IUq2IyGsw8qkvfSgSiq/+vasAtDvAcM4TpQkKurSyL0gHRaXf4PRkbeP33u
+	SJMJVQnn1OCqBRvbSkzs1m91kNDLiJw=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: James Smart <james.smart@broadcom.com>,
+	Ram Vegesna <ram.vegesna@broadcom.com>,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	linux-hardening@vger.kernel.org,
+	linux-scsi@vger.kernel.org,
+	target-devel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] scsi: elx: sli4: Replace deprecated strncpy() with strscpy()
+Date: Wed, 26 Feb 2025 19:55:26 +0100
+Message-ID: <20250226185531.1092-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <Z76HzPW1dFTLOSSy@kspp>
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On 26 Feb 13:47, Gustavo A. R. Silva wrote:
->-Wflex-array-member-not-at-end was introduced in GCC-14, and we are
->getting ready to enable it, globally.
->
->So, in this particular case, we create a new `struct mlx5e_umr_wqe_hdr`
->to enclose the header part of flexible structure `struct mlx5e_umr_wqe`.
->This is, all the members except the flexible arrays `inline_mtts`,
->`inline_klms` and `inline_ksms` in the anonymous union. We then replace
->the header part with `struct mlx5e_umr_wqe_hdr hdr;` in `struct
->mlx5e_umr_wqe`, and change the type of the object currently causing
->trouble `umr_wqe` from `struct mlx5e_umr_wqe` to `struct
->mlx5e_umr_wqe_hdr` --this last bit gets rid of the flex-array-in-the-middle
->part and avoid the warnings.
->
->Also, no new members should be added to `struct mlx5e_umr_wqe`, instead
->any new members must be included in the header structure `struct
->mlx5e_umr_wqe_hdr`. To enforce this, we use `static_assert()`, ensuring
->that the memory layout of both the flexible structure and the newly
->created header struct remain consistent.
->
->The next step is to refactor the rest of the related code accordingly,
->which means adding a bunch of `hdr.` wherever needed.
->
->Lastly, we use `container_of()` whenever we need to retrieve a pointer
->to the flexible structure `struct mlx5e_umr_wqe`.
->
->So, with these changes, fix 125 of the following warnings:
->
->drivers/net/ethernet/mellanox/mlx5/core/en.h:664:48: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
->
->Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->---
->Changes in v3:
-> - Update error message in the assertion.
-> - Also, this part is intentionally left as-is (to keep the assertion
->   as close as possible to the flex struct):
->
->| CHECK: Please use a blank line after function/struct/union/enum declarations
->| #63: FILE: drivers/net/ethernet/mellanox/mlx5/core/en.h:249:
->| };
->| +static_assert(offsetof(struct mlx5e_umr_wqe, inline_mtts) == sizeof(struct mlx5e_umr_wqe_hdr),
->
->Changes in v2:
-> - Split the header members of `struct mlx5e_umr_wqe` into a
->   separate `struct mlx5e_umr_wqe_hdr`, and refactor the code
->   accordingly. (Jakub)
-> - Update the changelog text.
-> - Link: https://lore.kernel.org/linux-hardening/Z76FE8oZO2Ssuj9T@kspp/
->
->v1:
-> - Link: https://lore.kernel.org/linux-hardening/Z6GCJY8G9EzASrwQ@kspp/
->
-> drivers/net/ethernet/mellanox/mlx5/core/en.h  | 10 +++++++--
-> .../ethernet/mellanox/mlx5/core/en/xsk/rx.c   |  6 ++---
-> .../net/ethernet/mellanox/mlx5/core/en_main.c |  8 ++++---
-> .../net/ethernet/mellanox/mlx5/core/en_rx.c   | 22 +++++++++----------
-> 4 files changed, 27 insertions(+), 19 deletions(-)
->
->diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en.h b/drivers/net/ethernet/mellanox/mlx5/core/en.h
->index 979fc56205e1..90de40521029 100644
->--- a/drivers/net/ethernet/mellanox/mlx5/core/en.h
->+++ b/drivers/net/ethernet/mellanox/mlx5/core/en.h
->@@ -232,16 +232,22 @@ struct mlx5e_rx_wqe_cyc {
-> 	DECLARE_FLEX_ARRAY(struct mlx5_wqe_data_seg, data);
-> };
->
->-struct mlx5e_umr_wqe {
->+struct mlx5e_umr_wqe_hdr {
-> 	struct mlx5_wqe_ctrl_seg       ctrl;
-> 	struct mlx5_wqe_umr_ctrl_seg   uctrl;
-> 	struct mlx5_mkey_seg           mkc;
->+};
->+
->+struct mlx5e_umr_wqe {
->+	struct mlx5e_umr_wqe_hdr hdr;
+strncpy() is deprecated for NUL-terminated destination buffers; use
+strscpy() instead.
 
-You missed or ignored my comment on v0, anyway:
+Compile-tested only.
 
-Can we have struct mlx5e_umr_wq_hdr defined anonymously within
-mlx5e_umr_wqe? Let's avoid namespace pollution.
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+---
+ drivers/scsi/elx/libefc_sli/sli4.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
+diff --git a/drivers/scsi/elx/libefc_sli/sli4.c b/drivers/scsi/elx/libefc_sli/sli4.c
+index 5e7fb110bc3f..d9a231fc0e0d 100644
+--- a/drivers/scsi/elx/libefc_sli/sli4.c
++++ b/drivers/scsi/elx/libefc_sli/sli4.c
+@@ -3804,7 +3804,7 @@ sli_cmd_common_write_object(struct sli4 *sli4, void *buf, u16 noc,
+ 	wr_obj->desired_write_len_dword = cpu_to_le32(dwflags);
+ 
+ 	wr_obj->write_offset = cpu_to_le32(offset);
+-	strncpy(wr_obj->object_name, obj_name, sizeof(wr_obj->object_name) - 1);
++	strscpy(wr_obj->object_name, obj_name);
+ 	wr_obj->host_buffer_descriptor_count = cpu_to_le32(1);
+ 
+ 	bde = (struct sli4_bde *)wr_obj->host_buffer_descriptor;
+@@ -3833,7 +3833,7 @@ sli_cmd_common_delete_object(struct sli4 *sli4, void *buf, char *obj_name)
+ 			 SLI4_SUBSYSTEM_COMMON, CMD_V0,
+ 			 SLI4_RQST_PYLD_LEN(cmn_delete_object));
+ 
+-	strncpy(req->object_name, obj_name, sizeof(req->object_name) - 1);
++	strscpy(req->object_name, obj_name);
+ 	return 0;
+ }
+ 
+@@ -3856,7 +3856,7 @@ sli_cmd_common_read_object(struct sli4 *sli4, void *buf, u32 desired_read_len,
+ 		cpu_to_le32(desired_read_len & SLI4_REQ_DESIRE_READLEN);
+ 
+ 	rd_obj->read_offset = cpu_to_le32(offset);
+-	strncpy(rd_obj->object_name, obj_name, sizeof(rd_obj->object_name) - 1);
++	strscpy(rd_obj->object_name, obj_name);
+ 	rd_obj->host_buffer_descriptor_count = cpu_to_le32(1);
+ 
+ 	bde = (struct sli4_bde *)rd_obj->host_buffer_descriptor;
+-- 
+2.48.1
 
