@@ -1,55 +1,55 @@
-Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
+Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FE9614A8B
-	for <linux-hardening@vger.kernel.org>; Wed, 26 Feb 2025 00:21:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B81D114D2A0
+	for <linux-hardening@vger.kernel.org>; Wed, 26 Feb 2025 00:48:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740529286; cv=none; b=Q2lEmRM+A83waSWeEeKGY7PIn3dV5I4FWDvE7W5WEBURf9yu1m1Kov2gKZA5SeuxEBIo5AbkVVF4IQZTqJ8D3NimQJ3PY+4wmzIJ+takKnBnJsdYkq1jO+LzPvq6M02qsFvIbsggqspm/ahABw9v01bE6SE8Q4iIItYqWSlqQeA=
+	t=1740530941; cv=none; b=k98rtko6GFntCPVH4pyfTEMG1eXAKaDGAQpyWAqRoy2wobkTJKGq+3oOlKJSqPcLE/AqjksRyvhka5mFo12b3oxdotVc/kodEJL1/fB+5YV8kp3+fr9GxFomxrxANbKJrycdz/4puyBzcT2MopM6rLTrJPk+bWj5weRjGmSBYoA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740529286; c=relaxed/simple;
-	bh=voH9uXstSCKOftUa1R587pOuaD+6gGvBypetLTqzM74=;
+	s=arc-20240116; t=1740530941; c=relaxed/simple;
+	bh=NdAKpzv41KIxBAk3AHe542XBbfiX3FwfgvvJR12NlTk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ljEzHu6+T3yXDm6OO2WczdhY3fT7zJHURTtsxtO/Vs9+9v6+TZRyCUPZwR9m+hB9m/OWHvDSUZDha/VBHkGIxAV3s+OKgfCI+cEDnXlUsGDI55+ON+UvaUAbzGn2oCFBY3xJf3WYAuN5PXhAZ3a1FSdpbb2G2Z1pbBYRiS0YA6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=EwAiiBn6; arc=none smtp.client-ip=209.85.167.181
+	 To:Cc:Content-Type; b=hEp77DetWejPb3INBDaTdmPozvDsFZ5Ol3ttIsqK54ruG35ytmCEyL6rkBRfZ7P4LdmXBWjfVRNfp1A2T0LhfIrSZ8LSV6pBmiz4PjwJjyGNoJkMWgME28T8BWyCLNOZE0sFOEs5mPyP2pQwLN2SSDK9615+EOwtkRb4dk83wzs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=STuYX3oS; arc=none smtp.client-ip=209.85.160.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EwAiiBn6"
-Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-3f40a18826fso143679b6e.3
-        for <linux-hardening@vger.kernel.org>; Tue, 25 Feb 2025 16:21:24 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="STuYX3oS"
+Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-2a8880c40fdso443298fac.1
+        for <linux-hardening@vger.kernel.org>; Tue, 25 Feb 2025 16:48:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1740529283; x=1741134083; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1740530939; x=1741135739; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=G7+1raIMQPaglzaGTumlpv6MCHAyLD6+J+LQuyLHZvQ=;
-        b=EwAiiBn6NyiST56bliqfuICdzCmr0GuBtklB12GzY+3gBR41JEJZkBPUjUKjeVt6uk
-         sGY3X6mRcb6Z6VBquFqC2Oy4JBfZC7w6+xFhvFSSVHmYJNoG9lqxfrCN9+/VLxo0W7B+
-         Fuwe0oAGdAkKCkTW6hwSE9aEJ04r0sl4tiHjY=
+        bh=AVjqrV9ooYY5XM2Ro6nNPVrSgDfeAb3Lv275HPJChck=;
+        b=STuYX3oS5Dt5tgfWAodnVWqlVl6mGUMsm7vwhuU29x0GQlbhz4GyRJp5X0bX1IqqhK
+         5DMXCdDrgAWRN+BOnmazKbkB/Oa961nhJSwXc2Qz+8GFHjdpuuYLzQSYPx+9lD0RkAng
+         QicqqrykDDFYRLvIlqhfeoKlYQk1N+todNVkI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740529283; x=1741134083;
+        d=1e100.net; s=20230601; t=1740530939; x=1741135739;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=G7+1raIMQPaglzaGTumlpv6MCHAyLD6+J+LQuyLHZvQ=;
-        b=fzuZmG/5U7jkymRdq++a12P6W6c/dRLA/ptSGa7WcF7Q9bxwfxUBjo92ZNC5vQaIut
-         ZILUSkSKtoMdZ6ddlJXnRQz7QFUmMUlOwVIitHw4Qnym1jDOFF8Xigem2DNaZz0SSs2+
-         oYeLTdnYOHhXIOC0YwW7Q7mbuLw6puIXEySRIHxkymB6ZJ74mEeVMUJKCX+QqH2PtSCR
-         wHM70smCOFB8/+Q8/n0Ew0mIpBKv5dLC5ofu4PV4/6QVkOs8CHjDoVlPlFkob9WWgP54
-         nxFluV8vWzwJvGA3u/HhBRhSoP1w6kbiTLj6sbiPkFK5llzwL90TRL2beFONgEWCzPbg
-         /M+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVTunavxejpdLocuByTXE33/2iGAgYTepZ9xQ2qH37uWYK/YoZTIJExOteRF3ljPlhBSUQmRpCqqwFF615wpfE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOLc8MMB+nMt/66qc8dVmHZ0IvLz7iDDy4zu2Otloe/CW415jz
-	4D17o6DXGMDbGvZvGgWPnFpcbb70+9kqvXJOK+HnKSK3twqgTG6CK1krow9pUDqzolzuahyFwGO
-	edBYgPsTZSqaTVGblhVDmR/Wja3ljB+2ri/zI
-X-Gm-Gg: ASbGncuIlK4vNm4fqOE5A2JNw/6X5kfD0k3ZIu47UK7Ja3i/GpOu1WA3b+LWa7HgSqE
-	1jLWD6LPV8ZsYL0K4jMY0Qpy+XZKcJ6wxOWZy345+FuvmsP3aYj8CWbH3pBnxcx0dAr3A6VlsCo
-	H1G/ram6hamAtgntsr6vOLUl3dvy9XqbpDqz0=
-X-Google-Smtp-Source: AGHT+IGY/afTPtHGu3S9iFPRBYMWvaVmp6AOJZ4waE968ELeWN3y78jCxYbne0VvSzzQbPe0wN0b9EYK+1gcKFKzcP8=
-X-Received: by 2002:a05:6808:13c4:b0:3f4:1ba:9e89 with SMTP id
- 5614622812f47-3f4246a145amr5505459b6e.1.1740529283456; Tue, 25 Feb 2025
- 16:21:23 -0800 (PST)
+        bh=AVjqrV9ooYY5XM2Ro6nNPVrSgDfeAb3Lv275HPJChck=;
+        b=IbP4nA8/5vz0krFU/ubKssd4+6fKc0VAltjdQTvs1GOSlxW4VQPMPE3iuj31q/cn6j
+         GaGQ6GamxvfZXQa3m6bj6NKHD5dhlDaQfQoYUcmUZZvDjWKoQNj3NufPH8YNDxVxw2uL
+         B1d6JMMXcE3F1znEPqBphmRJsyoD0kRwi2yjY2sntxbtnUrmNcgmPkPuMKWiPfPN14cD
+         tMqLlN7IH84DSQc1PpQQjnMygAgStGyXOppkFkEx3womp8ExkNEP19uk0G1/urWraUs8
+         mdUAATt0ZiD6ECwtvjuCImsq+NS/M8JCg2ASce8Zs2h8llPsAd94hLn2vQJwAkazf6Ib
+         1B5A==
+X-Forwarded-Encrypted: i=1; AJvYcCXJzobooci+SA+euVcMVE88qKafH8EOK9RJQExxcVzIkLV05A8UWEcvYYqODgh3ogSJI4CIA+oXCBGtdp1nq64=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/WRBhPQWpg+HmouaR5dbSSrII+71Xk5Iq/VsLVsO8yWfBQR0O
+	bh2STZ4F8tYkhqfp+7Q4dOHBxRpSmDnCUKUNws+4UglE46jzGZFYc0LWN87eADCHMzRvSAIEqhi
+	Oxyr7ciRyhWYQrcfJ+sDMI4yIA6dLhRZrKiwo
+X-Gm-Gg: ASbGncvcH1gSxzJxZCqDkJPpgpZjvndpOGgbTJ6SVbKK6gV7cklpmxzClSGOFS5d/Kl
+	z1BR+Grog5RtdeulobDdmeyf9zRjifhZzwLd3vrwZuooYmnTemS8Zr64vryA1cR3eIOwbJzRvov
+	BVDy55/rx6Dc6obU8vl+roQQO5jAC/J8gtAdk=
+X-Google-Smtp-Source: AGHT+IGZbr9C3fw/M80D7U25WXvQ+YkVYOhFcuvGjWOO46noie5b+33k+LuPnjzb/dFNh57i49Vsajbe1fap9TbizXk=
+X-Received: by 2002:a05:6808:2109:b0:3f4:159d:a27e with SMTP id
+ 5614622812f47-3f4247df7a0mr5851557b6e.8.1740530938691; Tue, 25 Feb 2025
+ 16:48:58 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -57,21 +57,20 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20250224225246.3712295-1-jeffxu@google.com> <20250224225246.3712295-4-jeffxu@google.com>
- <202502241703.10E2F5926F@keescook>
-In-Reply-To: <202502241703.10E2F5926F@keescook>
+ <20250225085728-24167715-8562-45a8-86cd-0ea503e4bc73@linutronix.de>
+In-Reply-To: <20250225085728-24167715-8562-45a8-86cd-0ea503e4bc73@linutronix.de>
 From: Jeff Xu <jeffxu@chromium.org>
-Date: Tue, 25 Feb 2025 16:21:11 -0800
-X-Gm-Features: AQ5f1JraoweAReTNFgpv0N_8SgvtS5K7ko3SUH-S4TdSE7f4swI_E-wKBY547fU
-Message-ID: <CABi2SkXEkhkQmO32GzR_3k1R7tNfLK_mM_4ekr-XwgrNqMFjOQ@mail.gmail.com>
+Date: Tue, 25 Feb 2025 16:48:47 -0800
+X-Gm-Features: AQ5f1JrsyQpU8D8-7sqmxrCWx44j7l_vFI1HjJFXH5LWUwsT0KeRVBq5_z7J_YU
+Message-ID: <CABi2SkUwETzrBSYm0QV9+eoeo0kgA+r2JM4QaFpQqeTiidFEDA@mail.gmail.com>
 Subject: Re: [PATCH v7 3/7] mseal, system mappings: enable x86-64
-To: Kees Cook <kees@kernel.org>
-Cc: akpm@linux-foundation.org, jannh@google.com, torvalds@linux-foundation.org, 
-	vbabka@suse.cz, lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, 
-	adhemerval.zanella@linaro.org, oleg@redhat.com, avagin@gmail.com, 
-	benjamin@sipsolutions.net, linux-kernel@vger.kernel.org, 
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+Cc: akpm@linux-foundation.org, keescook@chromium.org, jannh@google.com, 
+	torvalds@linux-foundation.org, vbabka@suse.cz, lorenzo.stoakes@oracle.com, 
+	Liam.Howlett@oracle.com, adhemerval.zanella@linaro.org, oleg@redhat.com, 
+	avagin@gmail.com, benjamin@sipsolutions.net, linux-kernel@vger.kernel.org, 
 	linux-hardening@vger.kernel.org, linux-mm@kvack.org, jorgelo@chromium.org, 
-	sroettger@google.com, hch@lst.de, ojeda@kernel.org, 
-	thomas.weissschuh@linutronix.de, adobriyan@gmail.com, 
+	sroettger@google.com, hch@lst.de, ojeda@kernel.org, adobriyan@gmail.com, 
 	johannes@sipsolutions.net, pedro.falcato@gmail.com, hca@linux.ibm.com, 
 	willy@infradead.org, anna-maria@linutronix.de, mark.rutland@arm.com, 
 	linus.walleij@linaro.org, Jason@zx2c4.com, deller@gmx.de, 
@@ -84,7 +83,10 @@ Cc: akpm@linux-foundation.org, jannh@google.com, torvalds@linux-foundation.org,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 24, 2025 at 5:03=E2=80=AFPM Kees Cook <kees@kernel.org> wrote:
+On Tue, Feb 25, 2025 at 12:08=E2=80=AFAM Thomas Wei=C3=9Fschuh
+<thomas.weissschuh@linutronix.de> wrote:
+>
+> Hi Jeff,
 >
 > On Mon, Feb 24, 2025 at 10:52:42PM +0000, jeffxu@chromium.org wrote:
 > > From: Jeff Xu <jeffxu@chromium.org>
@@ -139,11 +141,49 @@ e, unsigned long addr)
 > > -                                    VM_MAYREAD|VM_MAYWRITE|VM_MAYEXEC,
 > > +                                    vm_flags,
 > >                                      &vdso_mapping);
+> >
+> >       if (IS_ERR(vma)) {
+> > @@ -276,11 +278,12 @@ static int map_vdso(const struct vdso_image *imag=
+e, unsigned long addr)
+> >               goto up_fail;
+> >       }
+> >
+> > +     vm_flags =3D VM_READ|VM_MAYREAD|VM_IO|VM_DONTDUMP|VM_PFNMAP;
+> > +     vm_flags |=3D VM_SEALED_SYSMAP;
+> >       vma =3D _install_special_mapping(mm,
+> >                                      addr,
+> >                                      (__VVAR_PAGES - VDSO_NR_VCLOCK_PAG=
+ES) * PAGE_SIZE,
+> > -                                    VM_READ|VM_MAYREAD|VM_IO|VM_DONTDU=
+MP|
+> > -                                    VM_PFNMAP,
+> > +                                    vm_flags,
+> >                                      &vvar_mapping);
 >
-> I think these (in all patches) were supposed to be reworked without the
-> "vm_flags" variable addition?
+> This hunk (and the vvar mapping in the arm64 patch) will conflict with my
+> "Generic vDSO datapage" series.
+> That series is already part of the tip tree (branch timers/vdso) and sche=
+duled
+> for the next merge window.
 >
-OK.
+> https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/log/?h=3Dtime=
+rs/vdso
+>
+> The conflict resolution is fairly easy:
+> Move the new flag logic into lib/vdso/datastore.c
+>
+Thank you for bringing this to my attention.
 
-> --
-> Kees Cook
+In your change,  it seems lib/vdso/datastore.c implements a
+vdso_install_vvar_mapping(), then all the architectures call this
+function.
+
+So merging conflict won't be as straightforward.  Maybe a better
+approach is that I continue resolving all the comments, based on the
+latest main. Then wait for your change to be merged and submit another
+version.
+
+Thanks
+-Jeff
+
+-Jeff
