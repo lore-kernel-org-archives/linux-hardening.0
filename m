@@ -1,130 +1,74 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AF011E1E10
-	for <linux-hardening@vger.kernel.org>; Wed, 26 Feb 2025 08:11:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5046221DA1
+	for <linux-hardening@vger.kernel.org>; Wed, 26 Feb 2025 12:10:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740557512; cv=none; b=i5yRANgehEed7tiJOtge3Qs3A5N3Co59+/rhzfWIS0+n7xu0AuU4XkTO1ymFXft1dYwD55pvasQRtYAXRaHKfmayLPbrhhrosDGXrrNrUN/u/SWks06+l3L+ADnlnk3/BVZPfY3s0vEf/5gwKdYMzPj7YDWIhrH3ZACT7QBAlQs=
+	t=1740571821; cv=none; b=PLOkIH07kTffinCEdTJWvgOQfL99sWLjhxp4lTsza8PYaUSYURCNMGNYIFI29vQEotJ/cQc9seX2kUrb79xXs6LDsWvc0GVOSWnYF4V4f02zCvmlWL/q13LY8dqGO8nx1T+2OyhxFWYnAc2UyLaUcVkdkhD1+ZRouN11k9uo8I8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740557512; c=relaxed/simple;
-	bh=ngVPVzEoGTQofPb2IuC5RPQf+fnemEe3saOAh3C/qTg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tTfDUkGbVeiJ1eAZIPyjj3SrPOGhrZCpg6n6EimFuB6kG2MfDKnn60QHt6GsNi3NJEO8bEYG6+9rlhQpOQJ16SFRj+2cqbFpRaVwL/ZpKY13Hh+oyYHWb9NmfQd7p9M6kGnbTtlyMsY8CZaoFX0N9yXJcMzL5RMX/7t2c8IIfBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=M52k0xCi; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=8iRN0KEK; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=M52k0xCi; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=8iRN0KEK; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1740571821; c=relaxed/simple;
+	bh=NDQLjOPiRU48JFwf9tbOAqkkM206hTnuNHycxmdmLjI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MTMG6oPCTZaXTiH4+8LvHVqWWxvxI7VZUIwRFC1+VoZBWDM4FefOY++AQ9NhL/Jx+rmil4/Gl9xTBzlW3IFJt6iZCXrOMV9aiZqK4M4QCSlFP41EwKB1l6t6t90EH39eaIs1khcEXAD+XK8ciAyKfSw1uuKcc/EJNZCqoOYToAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=mGTdLCAZ; arc=none smtp.client-ip=95.215.58.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="M52k0xCi";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="8iRN0KEK";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="M52k0xCi";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="8iRN0KEK"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id B7A831F38A;
-	Wed, 26 Feb 2025 08:11:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1740557508;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5oSK5a0wXtrsCNbcDCNVM2B7YuQM4YVWXEKgiWoGr4g=;
-	b=M52k0xCidBShUQAUieS3yPeEKYbp9SkWFdE1T3Y9LN5qr+qoYQf7ZkLHS+lGpskYFmX84o
-	rj9MORggsjWLOOWi/wz2wycGn+wJaTmZBjktZaO+KZUIC3AmoqtrO/rEulVAIrr84IJswA
-	fagXdOSFcorVbEFOJXuRji/5Ut1Z0Lk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1740557508;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5oSK5a0wXtrsCNbcDCNVM2B7YuQM4YVWXEKgiWoGr4g=;
-	b=8iRN0KEKaA2TzYhRyiJviHM7S5ocd8Wgx3odRIDBHuMEw1X2YH9ID+lMEUobTzWCFcCrsV
-	lywwqivyW5oEyPCA==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1740557508;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5oSK5a0wXtrsCNbcDCNVM2B7YuQM4YVWXEKgiWoGr4g=;
-	b=M52k0xCidBShUQAUieS3yPeEKYbp9SkWFdE1T3Y9LN5qr+qoYQf7ZkLHS+lGpskYFmX84o
-	rj9MORggsjWLOOWi/wz2wycGn+wJaTmZBjktZaO+KZUIC3AmoqtrO/rEulVAIrr84IJswA
-	fagXdOSFcorVbEFOJXuRji/5Ut1Z0Lk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1740557508;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5oSK5a0wXtrsCNbcDCNVM2B7YuQM4YVWXEKgiWoGr4g=;
-	b=8iRN0KEKaA2TzYhRyiJviHM7S5ocd8Wgx3odRIDBHuMEw1X2YH9ID+lMEUobTzWCFcCrsV
-	lywwqivyW5oEyPCA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8DD6F1377F;
-	Wed, 26 Feb 2025 08:11:48 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id O2tbIsTMvmf5QAAAD6G6ig
-	(envelope-from <dsterba@suse.cz>); Wed, 26 Feb 2025 08:11:48 +0000
-Date: Wed, 26 Feb 2025 09:11:42 +0100
-From: David Sterba <dsterba@suse.cz>
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-	David Sterba <dsterba@suse.com>, linux-hardening@vger.kernel.org,
-	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] btrfs: Replace deprecated strncpy() with strscpy()
-Message-ID: <20250226081142.GR5777@suse.cz>
-Reply-To: dsterba@suse.cz
-References: <20250225192613.330409-2-thorsten.blum@linux.dev>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="mGTdLCAZ"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1740571815;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=+i6UfT5KyDRrgh8kYOD+6Aqz438J4G3HLbqw7xmE2yY=;
+	b=mGTdLCAZDtzVp/Uo0ar2swpaAsTqoP15oWrtR6IiRyLQyeRGr6tT4k0PgodS2mmOqG7pT/
+	5xQwEUPqi6tu5DJ7G3OKlTKKinEurFpoymNL3DPjbxlHJ0BW1ynYW30l/18zgns30n+6gf
+	bg+85t1xcXbNWmfYZXGQaU/RACeTS3Y=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	linux-hardening@vger.kernel.org,
+	linux-scsi@vger.kernel.org,
+	target-devel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] scsi: target: Replace deprecated strncpy() with strscpy()
+Date: Wed, 26 Feb 2025 13:10:03 +0100
+Message-ID: <20250226121003.359876-1-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250225192613.330409-2-thorsten.blum@linux.dev>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Spam-Score: -4.00
-X-Spamd-Result: default: False [-4.00 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	NEURAL_HAM_SHORT(-0.20)[-0.996];
-	MIME_GOOD(-0.10)[text/plain];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	ARC_NA(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	REPLYTO_ADDR_EQ_FROM(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	MID_RHS_MATCH_FROM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.dev:email]
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, Feb 25, 2025 at 08:26:14PM +0100, Thorsten Blum wrote:
-> strncpy() is deprecated for NUL-terminated destination buffers. Use
-> strscpy() instead and don't zero-initialize the param array.
-> 
-> Compile-tested only.
-> 
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+Since strncpy() is deprecated for NUL-terminated destination buffers,
+use strscpy() instead.
 
-Added to for-next, thanks.
+Compile-tested only.
+
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+---
+ drivers/target/target_core_configfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/target/target_core_configfs.c b/drivers/target/target_core_configfs.c
+index c40217f44b1b..446682f900e4 100644
+--- a/drivers/target/target_core_configfs.c
++++ b/drivers/target/target_core_configfs.c
+@@ -143,7 +143,7 @@ static ssize_t target_core_item_dbroot_store(struct config_item *item,
+ 	}
+ 	filp_close(fp, NULL);
+ 
+-	strncpy(db_root, db_root_stage, read_bytes);
++	strscpy(db_root, db_root_stage, read_bytes);
+ 	pr_debug("Target_Core_ConfigFS: db_root set to %s\n", db_root);
+ 
+ 	r = read_bytes;
+-- 
+2.48.1
+
