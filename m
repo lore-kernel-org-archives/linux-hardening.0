@@ -1,127 +1,74 @@
-Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CED0313AA2A
-	for <linux-hardening@vger.kernel.org>; Thu, 27 Feb 2025 01:36:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
+Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CD56224231;
+	Thu, 27 Feb 2025 10:04:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740620187; cv=none; b=EClFk0FUvdqrg/4p9G9lgA4IordCFBHKERj4um3d0RY/ocEQrW2yiOHiVDEgnp3Ykfprx06zaTh9SSTH8acRyvdMlIJPCs2cfFAVYDFVAkrkfe/yY8AMqOl4oh14EyiaNLfo8HOmLyMnX2+kxSYDchnqq5DSLekQUTJBFMunFmg=
+	t=1740650683; cv=none; b=r3tL8lSwCpQzJIQdqxjk/FAs0R5TnW2cPlbWh50snKJWqFerM6P8kEfwnI2G7QDmtJTMp465DX1JNg6BloWYqaUvrA3f4iC1H7c7xbCCUo/I72uK/Oj+TXfE8RyfZHy9FboWTrG0hyJjovdEk4OCNoQAYDncfm2MuLXXQP5GWsg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740620187; c=relaxed/simple;
-	bh=k2V7wphUG6wKt5QZ7PREMxbVooD5fqXo1+/9VvP6jDU=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=X0rohBzZXMpIi4nqLWBp6kPjSHu08tKRUxeFalsK2yD4EyOS+a92tJ8WetB8la8wN007Hke/phoYPtJFIsPDPPIrOJss7Ytp6Qc0pk2idOuc8J/xCGjqfJ6AM54Ks1NnLT6oD0ucrT4z2WojexucTxtR1Fh45GcVL3kzZ2AVQAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=T5LDkSA1; arc=none smtp.client-ip=35.89.44.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="T5LDkSA1"
-Received: from eig-obgw-5007a.ext.cloudfilter.net ([10.0.29.141])
-	by cmsmtp with ESMTPS
-	id nNBRt2KilAfjwnSp1tlxeo; Thu, 27 Feb 2025 01:36:19 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id nSoztkMNBqwd6nSp0tvhxe; Thu, 27 Feb 2025 01:36:18 +0000
-X-Authority-Analysis: v=2.4 cv=dOygmvZb c=1 sm=1 tr=0 ts=67bfc192
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=6Vi/Wpy7sgpXGMLew8oZcg==:17
- a=IkcTkHD0fZMA:10 a=T2h4t0Lz3GQA:10 a=7T7KSl7uo7wA:10
- a=Ni3fNgrDxWfqb646fvIA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=Xt_RvD8W3m28Mn_h3AK8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:Cc:To:Subject:From:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=7j6L+RvzF30uDg3oPgVDVuCmXIOBWIYoqTV2PAWYZFs=; b=T5LDkSA108o7GyBzmBz3/ULjvL
-	UWpbH1JZsFyPJXeiuWmh0KLDiHOT8KG4BtBmfzqLhig72b4SrizY8rfyePko9JZHRQvDCb+MbcNSe
-	kmHjPp1VtFQo+u0/NClxCNwNZ/zb52aFS2KO6EfOnGFOtUYmciQS6Wwg56UpV2SJXdWkusIQGAv7b
-	vSYLizQMEZK26uHsBX9Le0uuH4Z2dqtXSEHtv7aAnv8puiXqkBLqQ+N5frmz9OGjXqHlSfDqN2pWh
-	j3wyx4fPnv6Cjp/JVAGwy3Zqmq5E/s/fHC2JBfwj9pTOEnox65eojyhb3bwz/rGA6VpwJeU/pPYEF
-	k83KFHvA==;
-Received: from [45.124.203.140] (port=53654 helo=[192.168.0.158])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1tnSox-00000001mIp-12OT;
-	Wed, 26 Feb 2025 19:36:15 -0600
-Message-ID: <69815658-68cd-46cf-bca1-81119bbdb49a@embeddedor.com>
-Date: Thu, 27 Feb 2025 12:06:03 +1030
+	s=arc-20240116; t=1740650683; c=relaxed/simple;
+	bh=4mzm6RixguZVPFOXrj/XJ75po2vAmeyvFNlxEUw77PY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PG9hoi89/b4m7skQTy+xqNSMVKQbqW1d1DMhednqCOIWxYsZp9OcF55zYhQOX6dEM3y40Xc8XX25a7TGq/b0g3c9blbLwez2j9pbE5fkGaxmWSotVodkDcxCbKNb0okHV9hSAEI9Vq38rw2QMSRlu4zb9K+8eNlxuLSKvJ017KM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
+Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
+	id 1tnakv-0007xi-00; Thu, 27 Feb 2025 11:04:37 +0100
+Received: by alpha.franken.de (Postfix, from userid 1000)
+	id 97ECCC04B4; Thu, 27 Feb 2025 11:04:01 +0100 (CET)
+Date: Thu, 27 Feb 2025 11:04:01 +0100
+From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To: Thorsten Blum <thorsten.blum@linux.dev>
+Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-hardening@vger.kernel.org,
+	linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH]  MIPS: Loongson2ef: Replace deprecated strncpy() with
+ strscpy()
+Message-ID: <Z8A4kVKXXgy5KskY@alpha.franken.de>
+References: <20250224215451.195727-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: Re: [PATCH v3][next] net/mlx5e: Avoid a hundred
- -Wflex-array-member-not-at-end warnings
-To: Saeed Mahameed <saeed@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Saeed Mahameed <saeedm@nvidia.com>, Leon Romanovsky <leon@kernel.org>,
- Tariq Toukan <tariqt@nvidia.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <Z76HzPW1dFTLOSSy@kspp> <Z79iP0glNCZOznu4@x130>
-Content-Language: en-US
-In-Reply-To: <Z79iP0glNCZOznu4@x130>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 45.124.203.140
-X-Source-L: No
-X-Exim-ID: 1tnSox-00000001mIp-12OT
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.0.158]) [45.124.203.140]:53654
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfIX+GXtyvOioi346mMmi2KTTgGq4RsROOsza/tyh1Z/TObnOaUkF91DbB1q8gqDXobr3rFEBVkjBkdtKiRn/+FvKmoqRUDV5CBYeBJH8ap9LEtb+01Fi
- IHZFyBMeUNie6+QAFNrDqk12vbBIQlfmXq7xxnDvpSLzZeyg/+bxsQ0PVHXGLpkBBf+DTAfeLXUoNRjjt0fecT4m+7ke5uG1w4F/v/1VVtKZvZ/wWucDpWn5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250224215451.195727-2-thorsten.blum@linux.dev>
 
-
->>
->> -struct mlx5e_umr_wqe {
->> +struct mlx5e_umr_wqe_hdr {
->>     struct mlx5_wqe_ctrl_seg       ctrl;
->>     struct mlx5_wqe_umr_ctrl_seg   uctrl;
->>     struct mlx5_mkey_seg           mkc;
->> +};
->> +
->> +struct mlx5e_umr_wqe {
->> +    struct mlx5e_umr_wqe_hdr hdr;
+On Mon, Feb 24, 2025 at 10:54:50PM +0100, Thorsten Blum wrote:
+> strncpy() is deprecated for NUL-terminated destination buffers. Use
+> strscpy() instead and remove the manual NUL-termination.
 > 
-> You missed or ignored my comment on v0, anyway:
+> Compile-tested only.
 > 
-> Can we have struct mlx5e_umr_wq_hdr defined anonymously within
-> mlx5e_umr_wqe? Let's avoid namespace pollution.
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+> ---
+>  arch/mips/loongson2ef/common/machtype.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/arch/mips/loongson2ef/common/machtype.c b/arch/mips/loongson2ef/common/machtype.c
+> index 82f6de49f20f..e635e66d2e6c 100644
+> --- a/arch/mips/loongson2ef/common/machtype.c
+> +++ b/arch/mips/loongson2ef/common/machtype.c
+> @@ -48,8 +48,7 @@ void __init prom_init_machtype(void)
+>  		return;
+>  	}
+>  	p += strlen("machtype=");
+> -	strncpy(str, p, MACHTYPE_LEN);
+> -	str[MACHTYPE_LEN] = '\0';
+> +	strscpy(str, p);
+>  	p = strstr(str, " ");
+>  	if (p)
+>  		*p = '\0';
+> -- 
+> 2.48.1
 
-I thought your comment was directed to Jabuk.
+applied to mips-next.
 
-I don't see how to avoid that and at the same time changing
-the type of the conflicting object and fix the warnings:
+Thomas.
 
--			struct mlx5e_umr_wqe   umr_wqe;
-+			struct mlx5e_umr_wqe_hdr umr_wqe;
-
-My first patch avoids the need to introduce a bunch of `hdr.`
-changes. However, `hdr` is introduced as an identifier for
-the members grouped in the new type `struct mlx5e_umr_wqe_hdr`.
-
-Of course struct_group_tagged() also creates an anonymous struct,
-which is why we can avoid all those `hdr.` changes in v1.
-
---
-Gustavo
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
