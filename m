@@ -1,80 +1,81 @@
-Received: from out-176.mta0.migadu.com (out-176.mta0.migadu.com [91.218.175.176])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D97B1DEFEB
-	for <linux-hardening@vger.kernel.org>; Thu, 27 Feb 2025 17:41:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5E9F270023;
+	Thu, 27 Feb 2025 18:35:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740678073; cv=none; b=fpiipSiQmKyIwyz6GQBjDufX5wWZs7Xw1h2lgk1xQvz91shwcLPURg+hynhg7m4Yw9P7Sg2hB+vTpsXlDqsessP68LdLYPxBl1jEV7c3em0wX6W6PxvLjm73DNxGBnnZPPZRctCBPLeu56W/Y043D6rokf/KQhRwdOpLC1rEAYA=
+	t=1740681302; cv=none; b=NYsXHTog00lBMUn9u401LK8MSzdHx6O2nWXV30eZHyoI2jIz2IdE9M/l2wa3w+bGzwYSB6VfIfYIWgdRohi5C/LGJjYAkmil8io5AlIsXUMZn/NjnET+5ZHnloZpXNC9wfv+VWBE9cycXbWddfhFI0oNhPeF1CS6voyfX5KPA1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740678073; c=relaxed/simple;
-	bh=iJRxVaTtxnoERXUpMpoBNWSM0ZxK+oaomsKPSuKCxuE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SURTx3WpSVoRDJyIyZVL24qtmhU1aPBgVviL528plL1OK4+7EsNSLdmobvnB9gB+KwUQkbvYWKsy1WmCSv2q5LuDIFMO/gN+TfmNt6EH1ImKJVpSku21Bku7K2FcUpeSZ839LuKFIoMGXPuXiWRhB1Z7btcHgDetmsidLZ2w9zE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=KmAQpiep; arc=none smtp.client-ip=91.218.175.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1740681302; c=relaxed/simple;
+	bh=sAJRYRGK3w6GvTTl2sxildoAonH5/GMP+Mj1aAQ7Qxk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fH9Ej5+KjnUtDqp3bvSvhzq7qV1qwB7XTy0kksAzpSQ6kkNpiQ/vlzNSS/QpdKMlymyegfHwaeB2sCghO36wrq1Z/SxopTvyGV8FFdCXROJVL+Tapjtf3K5pjzywMrY6ZybqVEZBBH9qfhFq6wqbAfGbhABgYgdiAAkK/A2K0qE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RlVtBGsM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="KmAQpiep"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1740678058;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=LtW5EyiYN8qDte8Np1uuhB8NxmEozhwwfYVBmt/mcc8=;
-	b=KmAQpiepNGLKc9zPdXJZslDbW0Cs5rYAriSFQv7G9K79WQIgEnwcAgjxaJGhEfJuHQRJs8
-	ag26V26XhiVe2Wa/pHnRZURHq1Tuh76xN7W9UTqaYCcdqoxPjTo/19uw0unoCmhCjKDmcB
-	2MPcAnoUP1kT69TAa5ViEBmhn1htMYU=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Patryk Biel <pbiel7@gmail.com>,
-	Ninad Palsule <ninad@linux.ibm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Patrick Rudolph <patrick.rudolph@9elements.com>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	linux-hardening@vger.kernel.org,
-	linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] hwmon: (pmbus/core) Replace deprecated strncpy() with strscpy()
-Date: Thu, 27 Feb 2025 18:39:33 +0100
-Message-ID: <20250227173936.7746-2-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RlVtBGsM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A601CC4CEDD;
+	Thu, 27 Feb 2025 18:35:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740681302;
+	bh=sAJRYRGK3w6GvTTl2sxildoAonH5/GMP+Mj1aAQ7Qxk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=RlVtBGsMBB/u/6D/4mht5TGcJe6DjuDbk2Y2awU55lvWixJhiQvJoCGnKLXHJtx75
+	 bszfBmK46QhtO+XDJSPZDkozLs7fi2vkBJ2ifqiwLIPAJdxPHsn2UXNtuukW+y+s1t
+	 zUXTukrqujHnxCckpntplYeGLNgA2miXObzQ9fgqoNIW4oGD7NgxGuA6180fGX81ws
+	 C2Wf+LjxxgW0NhySzpXdDYE9IQXL0rZilbXslOyyMB55qBBWmDOBZQuJqyF3qQEQzj
+	 Aw53Ir13xzBODZuN+R52G3kwjlaHn+ANN0VKJnHSfpQgYo3ea2osYPuL7Dzifcw5wP
+	 GXrzlfsYYUHnw==
+Message-ID: <df8b8d59-470f-43e6-a8c2-cc40a4ebe5d6@kernel.org>
+Date: Thu, 27 Feb 2025 19:34:58 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH][next] drm/nouveau: Avoid multiple
+ -Wflex-array-member-not-at-end warnings
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <Z6xjZhHxRp4Bu_SX@kspp>
+From: Danilo Krummrich <dakr@kernel.org>
+Content-Language: en-US
+In-Reply-To: <Z6xjZhHxRp4Bu_SX@kspp>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-strncpy() is deprecated for NUL-terminated destination buffers; use
-strscpy() instead.
+On 2/12/25 10:01 AM, Gustavo A. R. Silva wrote:
+> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> getting ready to enable it, globally.
+> 
+> So, in order to avoid ending up with flexible-array members in the
+> middle of other structs, we use the `struct_group_tagged()` helper
+> to separate the flexible arrays from the rest of the members in the
+> flexible structures. We then use the newly created tagged `struct
+> nvif_ioctl_v0_hdr` and `struct nvif_ioctl_mthd_v0_hdr` to replace the
+> type of the objects causing trouble in multiple structures.
+> 
+> We also want to ensure that when new members need to be added to the
+> flexible structures, they are always included within the newly created
+> tagged structs. For this, we use `static_assert()`. This ensures that the
+> memory layout for both the flexible structure and the new tagged struct
+> is the same after any changes.
+> 
+> So, with these changes, fix the following warnings:
+> drivers/gpu/drm/nouveau/nvif/object.c:60:38: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> drivers/gpu/drm/nouveau/nvif/object.c:233:38: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> drivers/gpu/drm/nouveau/nvif/object.c:214:38: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> drivers/gpu/drm/nouveau/nvif/object.c:152:38: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> drivers/gpu/drm/nouveau/nvif/object.c:138:38: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> drivers/gpu/drm/nouveau/nvif/object.c:104:38: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> drivers/gpu/drm/nouveau/nouveau_svm.c:83:35: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> drivers/gpu/drm/nouveau/nouveau_svm.c:82:30: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Compile-tested only.
-
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
- drivers/hwmon/pmbus/pmbus_core.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/hwmon/pmbus/pmbus_core.c b/drivers/hwmon/pmbus/pmbus_core.c
-index 787683e83db6..cdde8b03a6e9 100644
---- a/drivers/hwmon/pmbus/pmbus_core.c
-+++ b/drivers/hwmon/pmbus/pmbus_core.c
-@@ -1470,8 +1470,7 @@ static int pmbus_add_label(struct pmbus_data *data,
- 	snprintf(label->name, sizeof(label->name), "%s%d_label", name, seq);
- 	if (!index) {
- 		if (phase == 0xff)
--			strncpy(label->label, lstring,
--				sizeof(label->label) - 1);
-+			strscpy(label->label, lstring);
- 		else
- 			snprintf(label->label, sizeof(label->label), "%s.%d",
- 				 lstring, phase);
--- 
-2.48.1
-
+Applied to drm-misc-next, thanks!
