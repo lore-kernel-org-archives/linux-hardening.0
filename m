@@ -1,43 +1,43 @@
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 927A823E345;
-	Thu, 27 Feb 2025 23:16:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DBEA274264;
+	Thu, 27 Feb 2025 23:17:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740698219; cv=none; b=GUOqpHqrYx2AUY0z6G8MuFaLHdaRAAzMl8HCZrN2VAtv820Z4lCxFAS8+VJXG7gcrPS98IObevszcAke+ssQlXwhscamgshgRTVXh5BHz4DwylFpXJC8A0uqenRojcAtmroUQldaQONx2IJTa5VgFxoFd79U9yPvIBDaKbvv4Gg=
+	t=1740698222; cv=none; b=AoHszEwoHlWfYJzCI8/2yklLZCIBYfViIZpupqrb0bRXQdAzwUDquA3bRiLtD97AjFHRxAO773CnLk9915lEZVWsnv2O/fXHYs6Lv/nMUZ1IyGyEAo9kK5hT5I1VTGX2V7GTGKk2fJgsWZfaN3c9EsUCMK1nfbZCZfwaRjjP7Vs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740698219; c=relaxed/simple;
-	bh=cAV7WBwuMNIg8mUstqxd2CG6goEQdSkmSbHl1v/E+LM=;
+	s=arc-20240116; t=1740698222; c=relaxed/simple;
+	bh=lhEkQHSHKxxPjFm3cTGvCg+tLSulTLA3kG/2/zxmN6w=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=VOe9socfOt1LBeqci4FbFMn878Sualy8ZAFJO0sx9pij74HMOOMMKpy1rGhDfZ05KNjq6ThYLuJr86y0wp6HnkAgTqUWBkGO31CMOtN2gqDW/rw4ANr0onwvIyi1ITMxzie9FbVeaV9MydV4KMg+bObPyP91KN78gQNTWwVQnWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com; spf=pass smtp.mailfrom=ethancedwards.com; dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b=tJ6hnfQL; arc=none smtp.client-ip=80.241.56.151
+	 In-Reply-To:To:Cc; b=Y9N3uyp6CSxpZ/YcnToqhdpoSgMa1Pk8OiM52LcWfCsldORDh3MWtr33sSlb/fJPRrn5VgFmKITB9wQXRizCxmgXlkA3T9LDblc3mBnC0jxTg2pHvbBTCCbdLV31uphP4WvNPHjg72b1CXe78WqkCoNMKWZwqO1m4eqyZiDOmB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com; spf=pass smtp.mailfrom=ethancedwards.com; dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b=h7HpFEDg; arc=none smtp.client-ip=80.241.56.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ethancedwards.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b="tJ6hnfQL"
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
+	dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b="h7HpFEDg"
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4Z3nKX23KVz9scS;
-	Fri, 28 Feb 2025 00:16:48 +0100 (CET)
+	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4Z3nKb3F7sz9t8B;
+	Fri, 28 Feb 2025 00:16:51 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ethancedwards.com;
-	s=MBO0001; t=1740698208;
+	s=MBO0001; t=1740698211;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=bfrIERDSLZU397qOA/JWnUat3PPhKFnmrvFYp1l2KP0=;
-	b=tJ6hnfQLISYQEdd8MyptdSleD2L7nLHcIH+WmU9+75rNs6cmweOwCE+C8Gt7hfdUDfuRcb
-	/Jq6t7nijBqfK+cWm95AY9kiv7UMV8076202zFlTl5fWOhvhsZ6C7/GQJtONEBDKFWPld8
-	XhkGtk7kpCSbWfvbR45NPzyf4zRHrAn7vVAZ7crJcWEyj6wZ/D5jzUhDre8RBMOi2KR+Hp
-	gOAhY0vidViwuPCskr7PgzArpH3dYyqklgXGNreTFiGNHt7sD/Y3aRxlm04Lzd7zqzzjVp
-	7e9ednbaNwq+1Ylkr1DNQJW/71TTEuWSBAu49T6furLB46WSzcgalbuXPqbptA==
+	bh=dseSSk06wU9SM6m6oJmDceqrN9+4jBBoifE50IN8BVw=;
+	b=h7HpFEDgPbMibIp9Oa9ArHCLHqiaIT5s9lHkH1hxekL4XWxgljHuH/qQrD+tzJAVyoEYI4
+	G/YvQjJazTAssJ22hSluaoxhUozLSWxHdWmMlntbpRBmGfwsfSNas9COZsKdh5Dy+dsLwn
+	VCbfnm3PtaDMppLiyaVx/+PYi6YHPfQPuDJSU8MAqbR3BrfLI0PG0bDa7uanZGdAH7Su8s
+	O5zYRc/lWBhzFy27XwFgJW4rgfUYtnFX12tn3OpJgfyjInYLZEn2GmRMHVXHqXdrlGF76o
+	n3jLywXfsE6jYIm0U0ljnl0hB4EEirfe/dzSAd6xHoSiExjbIxDBRxbaEdjWHQ==
 From: Ethan Carter Edwards <ethan@ethancedwards.com>
-Date: Thu, 27 Feb 2025 18:16:22 -0500
-Subject: [PATCH 2/4] drm/amd/display: change kzalloc to kcalloc in
- dcn31_validate_bandwidth()
+Date: Thu, 27 Feb 2025 18:16:23 -0500
+Subject: [PATCH 3/4] drm/amd/display: change kzalloc to kcalloc in
+ dcn314_validate_bandwidth()
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -46,7 +46,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250227-amd-display-v1-2-52a060a78d08@ethancedwards.com>
+Message-Id: <20250227-amd-display-v1-3-52a060a78d08@ethancedwards.com>
 References: <20250227-amd-display-v1-0-52a060a78d08@ethancedwards.com>
 In-Reply-To: <20250227-amd-display-v1-0-52a060a78d08@ethancedwards.com>
 To: Harry Wentland <harry.wentland@amd.com>, Leo Li <sunpeng.li@amd.com>, 
@@ -57,14 +57,14 @@ To: Harry Wentland <harry.wentland@amd.com>, Leo Li <sunpeng.li@amd.com>,
 Cc: amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
  linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
  Ethan Carter Edwards <ethan@ethancedwards.com>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1275;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1286;
  i=ethan@ethancedwards.com; h=from:subject:message-id;
- bh=cAV7WBwuMNIg8mUstqxd2CG6goEQdSkmSbHl1v/E+LM=;
+ bh=lhEkQHSHKxxPjFm3cTGvCg+tLSulTLA3kG/2/zxmN6w=;
  b=LS0tLS1CRUdJTiBQR1AgTUVTU0FHRS0tLS0tCgpvd0o0bkp2QXk4ekFKWGJEOXFoNThlVGp6e
- GhQcXlVeHBCLzRGUFRwdnFQMnRmaHpSeFk1TVcwdzdWMjUvV0JzCnlqYysrZTFacXU5V2JWajJ4
- SEo3UnlrTGd4Z1hnNnlZSXN2L0hPVzBoNW96RkhiK2RXbUNtY1BLQkRLRWdZdFQKQUNZaU9ZR1I
- 0ZGZXbzk3VmJHcS85Z3VXbXo0WE9WRy8vK0p0eWN6eis4K0hDVGszM3BVOGRKZmhyMGl6NHZIMw
- oweTEwV2xvVG1jcGNObVJrK1p5ZDFzYmJJUDNWUUYvUVZQQW5Hd0MwMmszZAo9TFU0MgotLS0tL
+ GhQcXlVeHBCLzRGQlNyWVBPNjZlbGFObGVEekpxdCtmVkdBVEsyClBYYnlMNWdYTGxldnpGM1Bk
+ ckNqbElWQmpJdEJWa3lSNVgrT2N0cER6UmtLTy8rNk5NSE1ZV1VDR2NMQXhTa0EKRTlFc1lXUjQ
+ rM2JIQ2hrUGhZS1czMWFyb3F3ayswb2R0OW9kTFdTZitNOUc5NXhEd1A4bmpBdzMyYmZGMkV4Vw
+ ppRzhPK3Bxbjh0cm1PTS9INGxQN1ArKzludlpUOWVwblAyZFdBRXFpUzdjPQo9dzhQQwotLS0tL
  UVORCBQR1AgTUVTU0FHRS0tLS0tCg==
 X-Developer-Key: i=ethan@ethancedwards.com; a=openpgp;
  fpr=2E51F61839D1FA947A7300C234C04305D581DBFE
@@ -76,14 +76,14 @@ readability. This patch has no effect on runtime behavior.
 
 Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
 ---
- drivers/gpu/drm/amd/display/dc/resource/dcn31/dcn31_resource.c | 3 ++-
+ drivers/gpu/drm/amd/display/dc/resource/dcn314/dcn314_resource.c | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/resource/dcn31/dcn31_resource.c b/drivers/gpu/drm/amd/display/dc/resource/dcn31/dcn31_resource.c
-index 3c42ba8566cf8b79106de25c9e0aad4a70898ea6..dddddbfef85f8f65a6f76c86cbb6db59d608a74b 100644
---- a/drivers/gpu/drm/amd/display/dc/resource/dcn31/dcn31_resource.c
-+++ b/drivers/gpu/drm/amd/display/dc/resource/dcn31/dcn31_resource.c
-@@ -1768,7 +1768,8 @@ bool dcn31_validate_bandwidth(struct dc *dc,
+diff --git a/drivers/gpu/drm/amd/display/dc/resource/dcn314/dcn314_resource.c b/drivers/gpu/drm/amd/display/dc/resource/dcn314/dcn314_resource.c
+index e3ba105034f83434c3e77d343ee267069d34d926..26becc4cb80408cb2778f6af62c7a1c497f06505 100644
+--- a/drivers/gpu/drm/amd/display/dc/resource/dcn314/dcn314_resource.c
++++ b/drivers/gpu/drm/amd/display/dc/resource/dcn314/dcn314_resource.c
+@@ -1704,7 +1704,8 @@ bool dcn314_validate_bandwidth(struct dc *dc,
  
  	int vlevel = 0;
  	int pipe_cnt = 0;
