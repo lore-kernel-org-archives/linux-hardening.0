@@ -1,99 +1,154 @@
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f42.google.com (mail-oo1-f42.google.com [209.85.161.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AB152755F6;
-	Thu, 27 Feb 2025 23:17:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0271A276D23
+	for <linux-hardening@vger.kernel.org>; Thu, 27 Feb 2025 23:38:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740698226; cv=none; b=sVk66x3HDf6FOsEGxWlB6OLLCrcUVM/t7LWf/crranHMB5Czv/Xsx+sC66Nwa32XjiuS1SXk1ORWL3fnwjdtCGN79umxoZaTlg5kCmQwn8bYyrDV8s+LAKKxPzgClRlz67Nksr7bMqDXEa4hId1EefdIxuLfGOXwhTKDT5GOWr4=
+	t=1740699541; cv=none; b=FHpxtFx2OZiRKPGSwpHOl3uN2g2GQYwiF2S/TA2h9VfgoM7TSTt65OR/eaVzzIy5dGdmM8SPrg4F//x47i0cGviEOb4oHn570sq/NyBDNWY42MKlvQDtEN2I1d7aMbRLNMDjJDTQAW677FNAyO920wwYeo8bjgIBTXOrLfgvPUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740698226; c=relaxed/simple;
-	bh=24YShaBC0pMX9hWdPx8iIgoaysi2N4zb0byElG8tKlw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=DJXd05z5zAKjrjQgTlUBHwyF4WmMKb2kzgO7HRVjtcXc8bcOUMZmcccZkijYUVfQW9cu5SfN7UPpfzZWvVIKijoMNpeCPrz8EgSz+sPYCb3yqGZ22a2YS6FtK/sAImqEb+hUNU+GX2SguB6xPeshL6RrBO0aMVCMr3tK8sXy2dc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com; spf=pass smtp.mailfrom=ethancedwards.com; dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b=A5LMf7DH; arc=none smtp.client-ip=80.241.56.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ethancedwards.com
+	s=arc-20240116; t=1740699541; c=relaxed/simple;
+	bh=uazbQbXAgJkqYDiwEOwqWCYWk/4zsx2AxDpUxCHm10E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FoSSsmLQlifx/yuG1ASA/eoox3TJG1YZShAOlzCSwn+DubpfT9GTi/bOEAbASk7x7ukrb3KkvkHybaKWwXcHFfZFR19L3MwmqYcKIHXY1UrSBvBzECgkDXFfbJ+s4T78W4sJrrwRrkU3iAwIQSsqlrsX0LcKelzF0NYf2g5CAGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=fKc1RRcE; arc=none smtp.client-ip=209.85.161.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b="A5LMf7DH"
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4Z3nKg0cKkz9t9M;
-	Fri, 28 Feb 2025 00:16:55 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ethancedwards.com;
-	s=MBO0001; t=1740698215;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FBDZiW19X5cn3cuHGveHbiMlwS0ltwOdMSwNVeMLsVU=;
-	b=A5LMf7DHg2J3Jqs6X+r3H3RrTVzijiBxOWa/Sb7yVRo3duj4dObBr9F+BVxg8agsOn030D
-	/mqVCxZUkv8QhPj3m17QvSsAFiAEX7uLPBVfABHYxOxr4dNXn/R9La0NQI1CbaCYcM8wAW
-	Bx/0Z5wmyS/TU72iT9DDBAjI6epQ+KJhLyqzo2p8b3iNEhjn5GsLL1OC3CWofozBp/l44o
-	CCQqU9C01Kv7gFtXthRK8hhFyGdOrUiTgKzOhrE28fWtVeSsqsRKc3x3C4LMhAZ50tFlwx
-	cZZ4K/2s6Z534/Yrn9lXspUE5mcLcF3XKPtIoiIWRiSp0uTnuTW25TR5QvvaTQ==
-From: Ethan Carter Edwards <ethan@ethancedwards.com>
-Date: Thu, 27 Feb 2025 18:16:24 -0500
-Subject: [PATCH 4/4] drm/amd/display: change kzalloc to kcalloc in
- dml1_validate()
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fKc1RRcE"
+Received: by mail-oo1-f42.google.com with SMTP id 006d021491bc7-5fd062e9f91so78599eaf.0
+        for <linux-hardening@vger.kernel.org>; Thu, 27 Feb 2025 15:38:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1740699539; x=1741304339; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BtvOHIMuelDkAYqCBYw4pmTE6kjO3Q01OuRJQEoDcUw=;
+        b=fKc1RRcEGDUZyYWtSMByqX9B9cHwAbgxw6kJAIBLl38G8StmfOTvlmpx+9Tgz4s5a0
+         i6veTF78h5Ws2AudlsdDUqazKPTQZ6Yu5izi8ln/Y70UR8lXec0t13vj+HraQe9n6Thv
+         SwyZPxbeDZGyeyNL9XYJAvc6oCvKnZPe88hbs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740699539; x=1741304339;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BtvOHIMuelDkAYqCBYw4pmTE6kjO3Q01OuRJQEoDcUw=;
+        b=bVIggtBhOg5AxUf7Hwy0y+SHvcge+ThuPyZZ5Tj0AhmFjIJxXy9sOGQcYORk3pkmad
+         flpYE3UYeNi4yYJxBSmfeLqQG9QRSV3/nj+RrjdvXvVRTF6ZZ8BnKnlwxm+VxupuGi11
+         UgEaVSOAYW2dYqFKxSpK6XDkZosSOIIwv8H71FNIef2XzLakW7tOV7Py5LiZQ3goYb3m
+         7kJT3Ccm9Tobuneh5GO6Ml+tA8d4NUP4Xg9CDSEkqFL7MbYpj3aa6Lf0vISaZySTIhuF
+         TvbzKvFy1ljFr841OAQ9noDkxxJIJhG6Nfp+YMnrFy5qyywxJEtSVqg+Aa2Vy5hnYIj0
+         p8CQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU+3BPmf19vKWQyRcdgoU7E/tuYQ+pjQkoqa1pNBhgbz0I5WOlNGAIR8vr50LaQax6osQBxEgx2A2uAPnsN29c=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yws/B2y6mVM14EyoqB0siYqdLnEE1tmvChDgyaJdOEPG5q09M1A
+	v8Psr+ai6fS7NCWSeDlBG87YfSsjvMP1pCUDGv22g7oALREQ7UfnbminoEv5njRkyJByOb7tdT/
+	zBvq90pgnhVYxmYFsigQpzDUqmvf9HsEWsko3
+X-Gm-Gg: ASbGnct9zB8UVDpLDjLkUeJ0Cz8BmORjhyZsFSco3xBC6Rpj6ruBNvsP9+ilE0RXWqV
+	2D8/pIh2AHSb0jkqxbU80lo+1vrC4AEvKSNyWt/tjqyGYcTCZgWqIjOQp7aXvZ6cETclrW96uAW
+	SIb5gPxtN1JNZaYTvgj9+3vQSwmQNpvunLd8R/KpQC
+X-Google-Smtp-Source: AGHT+IGa5qWw6mWS9FqBki1tFln20XRNh8F87XAQ33WnPErm38DCBjPn+ns0NBr5sJsRp+DHD4erKnV1oUgv1UGVsr8=
+X-Received: by 2002:a05:6820:a110:b0:5fc:e9dd:45ed with SMTP id
+ 006d021491bc7-5feb352ea7bmr202854eaf.1.1740699539040; Thu, 27 Feb 2025
+ 15:38:59 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250227-amd-display-v1-4-52a060a78d08@ethancedwards.com>
-References: <20250227-amd-display-v1-0-52a060a78d08@ethancedwards.com>
-In-Reply-To: <20250227-amd-display-v1-0-52a060a78d08@ethancedwards.com>
-To: Harry Wentland <harry.wentland@amd.com>, Leo Li <sunpeng.li@amd.com>, 
- Rodrigo Siqueira <siqueira@igalia.com>, 
- Alex Deucher <alexander.deucher@amd.com>, 
- =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-Cc: amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
- Ethan Carter Edwards <ethan@ethancedwards.com>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1378;
- i=ethan@ethancedwards.com; h=from:subject:message-id;
- bh=24YShaBC0pMX9hWdPx8iIgoaysi2N4zb0byElG8tKlw=;
- b=LS0tLS1CRUdJTiBQR1AgTUVTU0FHRS0tLS0tCgpvd0o0bkp2QXk4ekFKWGJEOXFoNThlVGp6e
- GhQcXlVeHBCLzRGSlQ1SWVuUytaSnpxOFBUT3laM3Jab2g2RlZVCkVCT1k5L0REd2VXdjcwV3Z2
- cit5bzVTRlFZeUxRVlpNa2VWL2puTGFRODBaQ2p2L3VqVEJ6R0ZsQWhuQ3dNVXAKQUJOWjZjWHd
- UKzJ4VUgvVDJZUVpKUm5sdlh2NDcyaElIWHpGZVV2bm5VL0t5Z1kzNTJzNlVZd01mU2UyUE5xNg
- o4K1F6Z2RDdkMyZk0wakQ3L01oUzZpNkx3M0YrZjJVOXhiZXJ1QUNXTmxFSgo9ZXlXZQotLS0tL
- UVORCBQR1AgTUVTU0FHRS0tLS0tCg==
-X-Developer-Key: i=ethan@ethancedwards.com; a=openpgp;
- fpr=2E51F61839D1FA947A7300C234C04305D581DBFE
+References: <20250224225246.3712295-1-jeffxu@google.com> <20250224225246.3712295-7-jeffxu@google.com>
+ <20250226162604.GA17833@redhat.com> <c489fea2-644c-411d-a03b-15e448b2778c@lucifer.local>
+ <20250226180135.GI8995@redhat.com> <b67cb9de-24b1-4670-8f8f-195e426c8781@lucifer.local>
+ <20250226182050.GK8995@redhat.com> <ba83f8c3-6f8f-4ed9-81ec-104f72ea4ef1@lucifer.local>
+In-Reply-To: <ba83f8c3-6f8f-4ed9-81ec-104f72ea4ef1@lucifer.local>
+From: Jeff Xu <jeffxu@chromium.org>
+Date: Thu, 27 Feb 2025 15:38:47 -0800
+X-Gm-Features: AQ5f1JpI4wTwciE-lKyx_Ev93hW3Fh_Xe8B3FCHbhfxf4AGtcraQIrvmSgrDIxs
+Message-ID: <CABi2SkUi6EOfMag37GOLNt3Fb71-QgYiXbcwVuiVTreRuEFW2Q@mail.gmail.com>
+Subject: Re: [PATCH v7 6/7] mseal, system mappings: uprobe mapping
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Oleg Nesterov <oleg@redhat.com>, akpm@linux-foundation.org, keescook@chromium.org, 
+	jannh@google.com, torvalds@linux-foundation.org, vbabka@suse.cz, 
+	Liam.Howlett@oracle.com, adhemerval.zanella@linaro.org, avagin@gmail.com, 
+	benjamin@sipsolutions.net, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, linux-mm@kvack.org, jorgelo@chromium.org, 
+	sroettger@google.com, hch@lst.de, ojeda@kernel.org, 
+	thomas.weissschuh@linutronix.de, adobriyan@gmail.com, 
+	johannes@sipsolutions.net, pedro.falcato@gmail.com, hca@linux.ibm.com, 
+	willy@infradead.org, anna-maria@linutronix.de, mark.rutland@arm.com, 
+	linus.walleij@linaro.org, Jason@zx2c4.com, deller@gmx.de, 
+	rdunlap@infradead.org, davem@davemloft.net, peterx@redhat.com, 
+	f.fainelli@gmail.com, gerg@kernel.org, dave.hansen@linux.intel.com, 
+	mingo@kernel.org, ardb@kernel.org, mhocko@suse.com, 42.hyeyoo@gmail.com, 
+	peterz@infradead.org, ardb@google.com, enh@google.com, rientjes@google.com, 
+	groeck@chromium.org, mpe@ellerman.id.au, aleksandr.mikhalitsyn@canonical.com, 
+	mike.rapoport@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-We are trying to get rid of all multiplications from allocation
-functions to prevent integer overflows. Here the multiplication is
-probably safe, but using kcalloc() is more appropriate and improves
-readability. This patch has no effect on runtime behavior.
+On Wed, Feb 26, 2025 at 10:25=E2=80=AFAM Lorenzo Stoakes
+<lorenzo.stoakes@oracle.com> wrote:
+>
+> On Wed, Feb 26, 2025 at 07:20:50PM +0100, Oleg Nesterov wrote:
+> > On 02/26, Lorenzo Stoakes wrote:
+> > >
+> > > Like I said, Jeff opposes the change. I disagree with him, and agree =
+with you,
+> > > because this is very silly.
+> > >
+> > > But I don't want to hold up this series with that discussion (this is=
+ for his
+> > > sake...)
+> >
+> > Neither me, so lets go with VM_SEALED_SYSMAP.
+> >
+> > My only objection is that
+> >
+> >       vm_flags =3D VM_EXEC|VM_MAYEXEC|VM_DONTCOPY|VM_IO;
+> >       vm_flags |=3D VM_SEALED_SYSMAP;
+> >
+> > looks unnecessarily confusing to me,
+> >
+> >       vm_flags =3D VM_EXEC|VM_MAYEXEC|VM_DONTCOPY|VM_IO|VM_SEALED_SYSMA=
+P;
+> >
+> > or just
+> >
+> >       vma =3D _install_special_mapping(...,
+> >                               VM_EXEC|VM_MAYEXEC|VM_DONTCOPY|VM_IO|VM_S=
+EALED_SYSMAP,
+> >                               ...
+> >
+> > looks more readable. But this is cosmetic/subjective, so I won't argue/=
+insist.
+>
+> Agreed. This would be good.
+>
+> >
+> > > Jeff - perhaps drop this and let's return to it in a follow up so thi=
+s series
+> > > isn't held up?
+> >
+> > Up to you and Jeff.
+> >
+> > But this patch looks "natural" to me in this series.
+>
+> OK, I mean in that case I'm ok with it as-is, as you confirms there's no
+> issue, I've looked at the code and there's no issue.
+>
+> It was only if we wanted to try the VM_SEALED thing, i.e. _always_ seal
+> then it'd do better outside of the series as there'd be a discussion abou=
+t
+> maybe changing this CONFIG_64BIT thing yada yada.
+>
+> >
+> > Oleg.
+> >
+>
+> Jeff - in that case, do NOT drop this one :P but do please look at the
+> above style nit.
+>
+Ok.
 
-Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
----
- drivers/gpu/drm/amd/display/dc/resource/dcn32/dcn32_resource.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/resource/dcn32/dcn32_resource.c b/drivers/gpu/drm/amd/display/dc/resource/dcn32/dcn32_resource.c
-index 664302876019072a77b9330229f7fe8545787396..2a59cc61ed8c918a4b5beb1d90bf3a8f77fcdeb9 100644
---- a/drivers/gpu/drm/amd/display/dc/resource/dcn32/dcn32_resource.c
-+++ b/drivers/gpu/drm/amd/display/dc/resource/dcn32/dcn32_resource.c
-@@ -1749,7 +1749,8 @@ static bool dml1_validate(struct dc *dc, struct dc_state *context, bool fast_val
- 
- 	int vlevel = 0;
- 	int pipe_cnt = 0;
--	display_e2e_pipe_params_st *pipes = kzalloc(dc->res_pool->pipe_count * sizeof(display_e2e_pipe_params_st), GFP_KERNEL);
-+	display_e2e_pipe_params_st *pipes = kcalloc(dc->res_pool->pipe_count,
-+			sizeof(display_e2e_pipe_params_st), GFP_KERNEL);
- 
- 	/* To handle Freesync properly, setting FreeSync DML parameters
- 	 * to its default state for the first stage of validation
-
--- 
-2.48.1
-
+> Let's keep things moving... :)
