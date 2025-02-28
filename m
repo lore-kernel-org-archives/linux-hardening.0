@@ -1,713 +1,278 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BFC127FE84;
-	Fri, 28 Feb 2025 19:48:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14779230BD8;
+	Fri, 28 Feb 2025 19:50:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740772100; cv=none; b=peZTpDJOgZI2RzwIXfqfWubNajYkfAuS6kfB86aTcMKioN0IvD1TcCH8hhP0aZuFScVAFCUYzaOMedRdAHbahgkfH6ub7tgwaIncKB0pWwth92pTa9oSxnM/twDeCBCq0Y+f2sAejorq2c3+h0dM5JJ5INh72lYysFcI7ntU3hA=
+	t=1740772239; cv=none; b=sd7eW9l7Efc6zAQEn01y0FiHAVZLNbMtUmyIAj1a94j99Nhg2dm28oz0O2kCfc8mtEGn7Rr5vrz+9Wkh3+KWfoot1Nc/GxsQSlrpbwitj5QFJ/ND6OH7zBEMG/3veX56MvMEN1N61kcFMP/zTyRtjkJicvy/pYC1aqU2R5Z7NIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740772100; c=relaxed/simple;
-	bh=g7aAp6wAdmGaON3EYJNKaoJGcuDZJQ+WVeF/yH56lTw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=IE15XWeCyEhwpB0y67yMVI44TQpsuEJWiwh8raxJpkEmcqzlV9wAxsC75QWvodp/uccLjnHIID/8yOiWRXF5KMVbTg3brofctFPSq+K4JsS3O8CXgWLOYVa2zuDvWF/1qZyFxBRmZTae3jtkLem5ATuuhgVW55AwzwicB09BeDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=jFBX5SYj; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1740772239; c=relaxed/simple;
+	bh=1oTYdMLj5IJV7VGpD5+wlKsa4biWQMpU+M06wbYFhIo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Y8AXO9DVvqSGDw3Cv+GwPvjuLDX+fRAt2iDxdVbS4XwT4VLtdl/RgkNd0JFEE29imn/0mB2kX52OnEoQvcJUAP4bEnRwjh/Skhq1YwPiN7XhaTFhLOlXcUaJjqkR7MlRR6myuu26/ajToG/7AqhpQ352ycI0Ugy49Ot++WkGWDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NNSV9REg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="jFBX5SYj"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 03FAA25CD1;
-	Fri, 28 Feb 2025 20:48:17 +0100 (CET)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id eHwZoPFPoQma; Fri, 28 Feb 2025 20:48:12 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1740772092; bh=g7aAp6wAdmGaON3EYJNKaoJGcuDZJQ+WVeF/yH56lTw=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=jFBX5SYjFwKRJ79CJRQkZ9BQXblh90atAjMbRLhrP+I0iAGkN3Le39utgdPIHqfkC
-	 ygEiprJ0aMeMP1sGsK/ruxckywLH23UMOFMdHHwi6wyzdiodb7ljKeidTw/A0JLOZZ
-	 KXZ4UmmPlIfQiQrSzdHX4Xr/sd0VF8yyTEM0R6uvyih0dWniDXzqUcXgxi3JW9uwu+
-	 hvZKk6SJgmxwg5lqVUhnxKmBs1aM3ix1P1tsQPBTzqAIh9lGsiDIdKLSKSzihhjg+L
-	 ScwJU1E+jxogS5mgA0xMpOWLFLyITXkZikvL83ZBAYtA+t9DymUrZgSJGQzDF1HYby
-	 51CmJKvGCyA/w==
-From: Kaustabh Chakraborty <kauschluss@disroot.org>
-Date: Sat, 01 Mar 2025 01:16:55 +0530
-Subject: [PATCH v4 7/7] arm64: dts: exynos: add initial support for Samsung
- Galaxy J6
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NNSV9REg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E60EC4CEE9;
+	Fri, 28 Feb 2025 19:50:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740772238;
+	bh=1oTYdMLj5IJV7VGpD5+wlKsa4biWQMpU+M06wbYFhIo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=NNSV9REg9Bw7j6BcHsc5c96iIjmxtrvK6/O2TY92s+YnhYOZMX6JJLeWl3DbsX68o
+	 UG8qnu3QSMo6d9pxOGANjJzTooD/H9tBE+O6wfpecwg7EaOPdqAW6aR4vrC1VoCbZC
+	 jCo0CWla8MGYYgPRDhvM823n5pThGNMYYa+h4g0CA4eNAyDLgJs6ehaX0AZ9AnzK3y
+	 U7MyhzEsGnshu9St8I9bSQTosUNq8exGX+6Y4ex5G936mgiOpQZ7hi0KRFDsVjuiN/
+	 YWgkBSfb39zwG6MA+V83XX2RDr03GfSffShQVgccKmmhCcXNmkKBRxk3Okx0/srYxY
+	 FTfYYFx1e2OAg==
+From: Kees Cook <kees@kernel.org>
+To: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Kees Cook <kees@kernel.org>,
+	kernel test robot <lkp@intel.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Mel Gorman <mgorman@techsingularity.net>,
+	Aleksa Sarai <cyphar@cyphar.com>,
+	Christian Brauner <brauner@kernel.org>,
+	Alexander Potapenko <glider@google.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	linux-hardening@vger.kernel.org,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Alice Ryhl <aliceryhl@google.com>,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: [PATCH] uaccess: Introduce ucopysize.h
+Date: Fri, 28 Feb 2025 11:50:23 -0800
+Message-Id: <20250228195019.work.296-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250301-exynos7870-v4-7-2925537f9b2a@disroot.org>
-References: <20250301-exynos7870-v4-0-2925537f9b2a@disroot.org>
-In-Reply-To: <20250301-exynos7870-v4-0-2925537f9b2a@disroot.org>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
- Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, 
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>, 
- Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
- Kaustabh Chakraborty <kauschluss@disroot.org>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1740772038; l=16232;
- i=kauschluss@disroot.org; s=20250202; h=from:subject:message-id;
- bh=g7aAp6wAdmGaON3EYJNKaoJGcuDZJQ+WVeF/yH56lTw=;
- b=2tTQakFikZHj9PzGJLAIE10ohHhlHQT65DI5UENtsDNrKhDVEcM+k60cFCSorfn5e6wCdI94c
- KpU7rQBWwpuCYbXX+H9bIq6gvm9kGz8V9eVSunX4omicnKZEYUoUXWi
-X-Developer-Key: i=kauschluss@disroot.org; a=ed25519;
- pk=h2xeR+V2I1+GrfDPAhZa3M+NWA0Cnbdkkq1bH3ct1hE=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6926; i=kees@kernel.org; h=from:subject:message-id; bh=1oTYdMLj5IJV7VGpD5+wlKsa4biWQMpU+M06wbYFhIo=; b=owGbwMvMwCVmps19z/KJym7G02pJDOmHhOstV3qUHGmv73j1crmKgRWbgnLetzi2rXx7u1a87 nrVXC3aUcrCIMbFICumyBJk5x7n4vG2Pdx9riLMHFYmkCEMXJwCMJGmBIbfbIK7/dvEfL4GFXF3 Mq7XCf9oESi4/Z3u46Ov7mxxCAg+x8iwzro/V9/fT3zNm8O1HJ+DOGYV+tXZV7qxuAiIzVx6qIM bAA==
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-Add initial devicetree support for Samsung Galaxy J6 (codename: j6lte),
-an Exynos7870 device.
+The object size sanity checking macros that uaccess.h and uio.h use
+have been living in thread_info.h for historical reasons. Needing to
+use jump labels for these checks, however, introduces a header include
+loop under certain conditions. The dependencies for the object checking
+macros are very limited, but they are used by separate header files,
+so introduce a new header that can be used directly by uaccess.h and
+uio.h. As a result, this also means thread_info.h (which is rather large)
+and be removed from those headers.
 
-Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202502281153.TG2XK5SI-lkp@intel.com/
+Signed-off-by: Kees Cook <kees@kernel.org>
 ---
- arch/arm64/boot/dts/exynos/Makefile             |   1 +
- arch/arm64/boot/dts/exynos/exynos7870-j6lte.dts | 616 ++++++++++++++++++++++++
- 2 files changed, 617 insertions(+)
+I'll carry this in the hardening tree since the usercopy hardening changes
+depend on it...
 
-diff --git a/arch/arm64/boot/dts/exynos/Makefile b/arch/arm64/boot/dts/exynos/Makefile
-index e0da4c4972c7344cf957e00ef701d6405a16bdcb..89c90564c3d86a268ea46492b67d72fa69ad3e95 100644
---- a/arch/arm64/boot/dts/exynos/Makefile
-+++ b/arch/arm64/boot/dts/exynos/Makefile
-@@ -6,6 +6,7 @@ dtb-$(CONFIG_ARCH_EXYNOS) += \
- 	exynos5433-tm2e.dtb		\
- 	exynos7-espresso.dtb		\
- 	exynos7870-a2corelte.dtb	\
-+	exynos7870-j6lte.dtb		\
- 	exynos7870-on7xelte.dtb		\
- 	exynos7885-jackpotlte.dtb	\
- 	exynos850-e850-96.dtb		\
-diff --git a/arch/arm64/boot/dts/exynos/exynos7870-j6lte.dts b/arch/arm64/boot/dts/exynos/exynos7870-j6lte.dts
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Mel Gorman <mgorman@techsingularity.net>
+Cc: Aleksa Sarai <cyphar@cyphar.com>
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: Alexander Potapenko <glider@google.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: linux-hardening@vger.kernel.org
+---
+ MAINTAINERS                 |  1 +
+ include/linux/thread_info.h | 48 -------------------------------
+ include/linux/uaccess.h     |  2 +-
+ include/linux/ucopysize.h   | 56 +++++++++++++++++++++++++++++++++++++
+ include/linux/uio.h         |  2 +-
+ mm/usercopy.c               |  2 +-
+ 6 files changed, 60 insertions(+), 51 deletions(-)
+ create mode 100644 include/linux/ucopysize.h
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 25c86f47353d..a1900962ced9 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12586,6 +12586,7 @@ F:	Documentation/ABI/testing/sysfs-kernel-warn_count
+ F:	arch/*/configs/hardening.config
+ F:	include/linux/overflow.h
+ F:	include/linux/randomize_kstack.h
++F:	include/linux/ucopysize.h
+ F:	kernel/configs/hardening.config
+ F:	lib/usercopy_kunit.c
+ F:	mm/usercopy.c
+diff --git a/include/linux/thread_info.h b/include/linux/thread_info.h
+index cf2446c9c30d..dd925d84fa46 100644
+--- a/include/linux/thread_info.h
++++ b/include/linux/thread_info.h
+@@ -217,54 +217,6 @@ static inline int arch_within_stack_frames(const void * const stack,
+ }
+ #endif
+ 
+-#ifdef CONFIG_HARDENED_USERCOPY
+-extern void __check_object_size(const void *ptr, unsigned long n,
+-					bool to_user);
+-
+-static __always_inline void check_object_size(const void *ptr, unsigned long n,
+-					      bool to_user)
+-{
+-	if (!__builtin_constant_p(n))
+-		__check_object_size(ptr, n, to_user);
+-}
+-#else
+-static inline void check_object_size(const void *ptr, unsigned long n,
+-				     bool to_user)
+-{ }
+-#endif /* CONFIG_HARDENED_USERCOPY */
+-
+-extern void __compiletime_error("copy source size is too small")
+-__bad_copy_from(void);
+-extern void __compiletime_error("copy destination size is too small")
+-__bad_copy_to(void);
+-
+-void __copy_overflow(int size, unsigned long count);
+-
+-static inline void copy_overflow(int size, unsigned long count)
+-{
+-	if (IS_ENABLED(CONFIG_BUG))
+-		__copy_overflow(size, count);
+-}
+-
+-static __always_inline __must_check bool
+-check_copy_size(const void *addr, size_t bytes, bool is_source)
+-{
+-	int sz = __builtin_object_size(addr, 0);
+-	if (unlikely(sz >= 0 && sz < bytes)) {
+-		if (!__builtin_constant_p(bytes))
+-			copy_overflow(sz, bytes);
+-		else if (is_source)
+-			__bad_copy_from();
+-		else
+-			__bad_copy_to();
+-		return false;
+-	}
+-	if (WARN_ON_ONCE(bytes > INT_MAX))
+-		return false;
+-	check_object_size(addr, bytes, is_source);
+-	return true;
+-}
+-
+ #ifndef arch_setup_new_exec
+ static inline void arch_setup_new_exec(void) { }
+ #endif
+diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
+index e9c702c1908d..7c06f4795670 100644
+--- a/include/linux/uaccess.h
++++ b/include/linux/uaccess.h
+@@ -7,7 +7,7 @@
+ #include <linux/minmax.h>
+ #include <linux/nospec.h>
+ #include <linux/sched.h>
+-#include <linux/thread_info.h>
++#include <linux/ucopysize.h>
+ 
+ #include <asm/uaccess.h>
+ 
+diff --git a/include/linux/ucopysize.h b/include/linux/ucopysize.h
 new file mode 100644
-index 0000000000000000000000000000000000000000..34df09b2291830781908801249afe80daa757ef7
+index 000000000000..b3e1b875d565
 --- /dev/null
-+++ b/arch/arm64/boot/dts/exynos/exynos7870-j6lte.dts
-@@ -0,0 +1,616 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Samsung Galaxy J6 (j6lte) device tree source
-+ *
-+ * Copyright (c) 2018 Samsung Electronics Co., Ltd.
-+ * Copyright (c) 2025 Kaustabh Chakraborty <kauschluss@disroot.org>
-+ */
-+
-+/dts-v1/;
-+#include "exynos7870.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
-+/ {
-+	model = "Samsung Galaxy J6";
-+	compatible = "samsung,j6lte", "samsung,exynos7870";
-+	chassis-type = "handset";
-+
-+	aliases {
-+		mmc0 = &mmc0;
-+		mmc1 = &mmc1;
-+		mmc2 = &mmc2;
-+		serial0 = &serial0;
-+		serial1 = &serial1;
-+		serial2 = &serial2;
-+	};
-+
-+	chosen {
-+		#address-cells = <2>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		stdout-path = &serial2;
-+
-+		framebuffer@67000000 {
-+			compatible = "simple-framebuffer";
-+			reg = <0x0 0x67000000 (720 * 1480 * 4)>;
-+			width = <720>;
-+			height = <1480>;
-+			stride = <(720 * 4)>;
-+			format = "a8r8g8b8";
-+		};
-+	};
-+
-+	gpio-hall-effect-sensor {
-+		compatible = "gpio-keys";
-+		label = "GPIO Hall Effect Sensor";
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&hall_irq>;
-+
-+		event-hall-effect-sensor {
-+			label = "Hall Effect Sensor";
-+			gpios = <&gpa1 3 GPIO_ACTIVE_LOW>;
-+			linux,input-type = <EV_SW>;
-+			linux,code = <SW_LID>;
-+			linux,can-disable;
-+			wakeup-source;
-+		};
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+		label = "GPIO Keys";
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&key_power &key_voldown &key_volup>;
-+
-+		key-power {
-+			label = "Power Key";
-+			gpios = <&gpa0 0 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_POWER>;
-+		};
-+
-+		key-voldown {
-+			label = "Volume Down Key";
-+			gpios = <&gpa2 1 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_VOLUMEDOWN>;
-+		};
-+
-+
-+		key-volup {
-+			label = "Volume Up Key";
-+			gpios = <&gpa2 0 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_VOLUMEUP>;
-+		};
-+	};
-+
-+	memory@40000000 {
-+		device_type = "memory";
-+		reg = <0x0 0x40000000 0x3d800000>;
-+	};
-+
-+	memory@80000000 {
-+		device_type = "memory";
-+		reg = <0x0 0x80000000 0x40000000>;
-+	};
-+
-+	pwrseq_mmc1: pwrseq-mmc1 {
-+		compatible = "mmc-pwrseq-simple";
-+		reset-gpios = <&gpd3 6 GPIO_ACTIVE_LOW>;
-+	};
-+
-+	/* mmc2: vmmc */
-+	vdd_fixed_mmc2: regulator-fixed-mmc2 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vdd_fixed_mmc2";
-+		regulator-max-microvolt = <2800000>;
-+		regulator-min-microvolt = <2800000>;
-+		gpio = <&gpc0 0 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		ramoops@46e00000 {
-+			compatible = "ramoops";
-+			reg = <0x0 0x46e00000 0x8000>;
-+			console-size = <0x4000>;
-+			pmsg-size = <0x4000>;
-+		};
-+
-+		framebuffer@67000000 {
-+			reg = <0x0 0x67000000 (720 * 1480 * 4)>;
-+			no-map;
-+		};
-+	};
-+
-+	vibrator {
-+		compatible = "regulator-haptic";
-+		haptic-supply = <&vdd_ldo32>;
-+		min-microvolt = <3300000>;
-+		max-microvolt = <3300000>;
-+	};
-+};
-+
-+&gpu {
-+	status = "okay";
-+};
-+
-+&hsi2c0 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	status = "okay";
-+
-+	pmic@66 {
-+		compatible = "samsung,s2mpu05-pmic";
-+		reg = <0x66>;
-+		interrupt-parent = <&gpa0>;
-+		interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pmic_irq>;
-+
-+		regulators {
-+			vdd_buck1: buck1 {
-+				regulator-name = "vdd_buck1";
-+				regulator-min-microvolt = <500000>;
-+				regulator-max-microvolt = <1300000>;
-+				regulator-ramp-delay = <12000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vdd_buck2: buck2 {
-+				regulator-name = "vdd_buck2";
-+				regulator-min-microvolt = <500000>;
-+				regulator-max-microvolt = <1300000>;
-+				regulator-ramp-delay = <12000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vdd_buck3: buck3 {
-+				regulator-name = "vdd_buck3";
-+				regulator-min-microvolt = <500000>;
-+				regulator-max-microvolt = <1300000>;
-+				regulator-ramp-delay = <12000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vdd_buck4: buck4 {
-+				regulator-name = "vdd_buck4";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <1500000>;
-+				regulator-ramp-delay = <12000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vdd_buck5: buck5 {
-+				regulator-name = "vdd_buck5";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <2100000>;
-+				regulator-ramp-delay = <12000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vdd_ldo1: ldo1 {
-+				regulator-name = "vdd_ldo1";
-+				regulator-min-microvolt = <650000>;
-+				regulator-max-microvolt = <1350000>;
-+				regulator-ramp-delay = <12000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			/* mmc2: vqmmc */
-+			vdd_ldo2: ldo2 {
-+				regulator-name = "vdd_ldo2";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <2800000>;
-+				regulator-ramp-delay = <12000>;
-+			};
-+
-+			vdd_ldo3: ldo3 {
-+				regulator-name = "vdd_ldo3";
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <2375000>;
-+				regulator-ramp-delay = <12000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vdd_ldo4: ldo4 {
-+				regulator-name = "vdd_ldo4";
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <1350000>;
-+				regulator-ramp-delay = <12000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vdd_ldo5: ldo5 {
-+				regulator-name = "vdd_ldo5";
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <1350000>;
-+				regulator-ramp-delay = <12000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vdd_ldo6: ldo6 {
-+				regulator-name = "vdd_ldo6";
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <1350000>;
-+				regulator-ramp-delay = <12000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vdd_ldo7: ldo7 {
-+				regulator-name = "vdd_ldo7";
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <2375000>;
-+				regulator-ramp-delay = <12000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			/* usbdrd: vdd33 */
-+			vdd_ldo8: ldo8 {
-+				regulator-name = "vdd_ldo8";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3375000>;
-+				regulator-ramp-delay = <12000>;
-+			};
-+
-+			vdd_ldo9: ldo9 {
-+				regulator-name = "vdd_ldo9";
-+				regulator-min-microvolt = <650000>;
-+				regulator-max-microvolt = <1350000>;
-+				regulator-ramp-delay = <12000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vdd_ldo10: ldo10 {
-+				regulator-name = "vdd_ldo10";
-+				regulator-min-microvolt = <650000>;
-+				regulator-max-microvolt = <1350000>;
-+				regulator-ramp-delay = <12000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vdd_ldo25: ldo25 {
-+				regulator-name = "vdd_ldo25";
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <2375000>;
-+				regulator-ramp-delay = <12000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			/* mmc0: vmmc */
-+			vdd_ldo26: ldo26 {
-+				regulator-name = "vdd_ldo26";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3375000>;
-+				regulator-ramp-delay = <12000>;
-+			};
-+
-+			/* mmc0: vqmmc */
-+			vdd_ldo27: ldo27 {
-+				regulator-name = "vdd_ldo27";
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <2375000>;
-+				regulator-ramp-delay = <12000>;
-+			};
-+
-+			vdd_ldo29: ldo29 {
-+				regulator-name = "vdd_ldo29";
-+				regulator-min-microvolt = <3000000>;
-+				regulator-max-microvolt = <3000000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vdd_ldo30: ldo30 {
-+				regulator-name = "vdd_ldo30";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vdd_ldo31: ldo31 {
-+				regulator-name = "vdd_ldo31";
-+				regulator-min-microvolt = <2800000>;
-+				regulator-max-microvolt = <2800000>;
-+				regulator-ramp-delay = <12000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			/* vibrator: haptic */
-+			vdd_ldo32: ldo32 {
-+				regulator-name = "vdd_ldo32";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-ramp-delay = <12000>;
-+			};
-+
-+			vdd_ldo33: ldo33 {
-+				regulator-name = "vdd_ldo33";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-ramp-delay = <12000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			/* touchscreen: vdd */
-+			vdd_ldo34: ldo34 {
-+				regulator-name = "vdd_ldo34";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+			};
-+
-+			vdd_ldo35: ldo35 {
-+				regulator-name = "vdd_ldo35";
-+				regulator-min-microvolt = <2800000>;
-+				regulator-max-microvolt = <2800000>;
-+				regulator-ramp-delay = <12000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+		};
-+	};
-+};
-+
-+&i2c5 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	samsung,i2c-sda-delay = <100>;
-+	samsung,i2c-max-bus-freq = <400000>;
-+
-+	status = "okay";
-+
-+	accelerometer@1d {
-+		compatible = "st,lis2ds12";
-+		reg = <0x1d>;
-+		interrupt-parent = <&gpa2>;
-+		interrupts = <3 IRQ_TYPE_EDGE_RISING>;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&accel_irq>;
-+
-+		mount-matrix = "-1", "0",  "0",
-+				"0", "1",  "0",
-+				"0", "0", "-1";
-+
-+		st,drdy-int-pin = <1>;
-+	};
-+};
-+
-+&i2c6 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	samsung,i2c-sda-delay = <100>;
-+	samsung,i2c-max-bus-freq = <400000>;
-+
-+	status = "okay";
-+
-+	touchscreen@20 {
-+		compatible = "zinitix,bt532";
-+		reg = <0x20>;
-+		interrupt-parent = <&gpa0>;
-+		interrupts = <6 IRQ_TYPE_LEVEL_LOW>;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&touch_irq>;
-+
-+		touchscreen-size-x = <720>;
-+		touchscreen-size-y = <1480>;
-+
-+		vdd-supply = <&vdd_ldo34>;
-+	};
-+};
-+
-+&mmc0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_rdqs &sd0_bus1 &sd0_bus4 &sd0_bus8>;
-+
-+	vmmc-supply = <&vdd_ldo26>;
-+	vqmmc-supply = <&vdd_ldo27>;
-+
-+	fifo-depth = <64>;
-+	samsung,dw-mshc-ciu-div = <3>;
-+	samsung,dw-mshc-sdr-timing = <0 4>;
-+	samsung,dw-mshc-ddr-timing = <2 4>;
-+	non-removable;
-+
-+	status = "okay";
-+};
-+
-+&mmc1 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sd1_clk &sd1_cmd &sd1_bus1 &sd1_bus4>;
-+
-+	mmc-pwrseq = <&pwrseq_mmc1>;
-+
-+	bus-width = <4>;
-+	fifo-depth = <64>;
-+	samsung,dw-mshc-ciu-div = <3>;
-+	samsung,dw-mshc-sdr-timing = <0 3>;
-+	samsung,dw-mshc-ddr-timing = <1 2>;
-+	non-removable;
-+	cap-sd-highspeed;
-+	cap-sdio-irq;
-+
-+	status = "okay";
-+
-+	wifi@1 {
-+		compatible = "brcm,bcm43430a1-fmac", "brcm,bcm4329-fmac";
-+		reg = <0x1>;
-+		interrupt-names = "host-wake";
-+		interrupt-parent = <&gpa2>;
-+		interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
-+
-+		reset-gpios = <&gpd3 6 GPIO_ACTIVE_LOW>;
-+	};
-+};
-+
-+&mmc2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_bus1 &sd2_bus4 &dwmmc2_irq>;
-+
-+	vmmc-supply = <&vdd_fixed_mmc2>;
-+	vqmmc-supply = <&vdd_ldo2>;
-+
-+	bus-width = <4>;
-+	fifo-depth = <64>;
-+	samsung,dw-mshc-ciu-div = <3>;
-+	samsung,dw-mshc-sdr-timing = <0 3>;
-+	samsung,dw-mshc-ddr-timing = <1 2>;
-+	sd-uhs-sdr50;
-+	sd-uhs-sdr104;
-+	disable-wp;
-+
-+	status = "okay";
-+};
-+
-+&oscclk {
-+	clock-frequency = <26000000>;
-+};
-+
-+&pinctrl_alive {
-+	accel_irq: accel-irq-pins {
-+		samsung,pins = "gpa2-3";
-+		samsung,pin-function = <EXYNOS_PIN_FUNC_EINT>;
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-+		samsung,pin-drv = <EXYNOS5433_PIN_DRV_FAST_SR1>;
-+	};
-+
-+	dwmmc2_irq: dwmmc2-irq-pins {
-+		samsung,pins = "gpa0-1";
-+		samsung,pin-function = <EXYNOS_PIN_FUNC_EINT>;
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-+		samsung,pin-drv = <EXYNOS5433_PIN_DRV_FAST_SR1>;
-+	};
-+
-+	fuel_irq: fuel-irq-pins {
-+		samsung,pins = "gpa0-3";
-+		samsung,pin-function = <EXYNOS_PIN_FUNC_INPUT>;
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-+		samsung,pin-drv = <EXYNOS5433_PIN_DRV_FAST_SR1>;
-+	};
-+
-+	hall_irq: hall-irq-pins {
-+		samsung,pins = "gpa1-3";
-+		samsung,pin-function = <EXYNOS_PIN_FUNC_EINT>;
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-+		samsung,pin-drv = <EXYNOS5433_PIN_DRV_FAST_SR1>;
-+	};
-+
-+	key_power: key-power-pins {
-+		samsung,pins = "gpa0-0";
-+		samsung,pin-function = <EXYNOS_PIN_FUNC_EINT>;
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-+		samsung,pin-drv = <EXYNOS5433_PIN_DRV_FAST_SR1>;
-+	};
-+
-+	key_voldown: key-voldown-pins {
-+		samsung,pins = "gpa2-1";
-+		samsung,pin-function = <EXYNOS_PIN_FUNC_EINT>;
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-+		samsung,pin-drv = <EXYNOS5433_PIN_DRV_FAST_SR1>;
-+	};
-+
-+	key_volup: key-volup-pins {
-+		samsung,pins = "gpa2-0";
-+		samsung,pin-function = <EXYNOS_PIN_FUNC_EINT>;
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-+		samsung,pin-drv = <EXYNOS5433_PIN_DRV_FAST_SR1>;
-+	};
-+
-+	pmic_irq: pmic-irq-pins {
-+		samsung,pins = "gpa0-2";
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_UP>;
-+		samsung,pin-drv = <EXYNOS5433_PIN_DRV_FAST_SR4>;
-+	};
-+
-+	touch_irq: touch-irq-pins {
-+		samsung,pins = "gpa0-6";
-+		samsung,pin-function = <EXYNOS_PIN_FUNC_EINT>;
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-+		samsung,pin-drv = <EXYNOS5433_PIN_DRV_FAST_SR1>;
-+	};
-+
-+	wlan_hostwake: wlan-hostwake-pins {
-+		samsung,pins = "gpa2-2";
-+		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_UP>;
-+	};
-+};
-+
-+&pinctrl_top {
-+	bt_enable: bt-enable-pins {
-+		samsung,pins = "gpd4-0";
-+		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
-+		samsung,pin-con-pdn = <EXYNOS_PIN_PDN_PREV>;
-+		samsung,pin-pud-pdn = <EXYNOS_PIN_PULL_NONE>;
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_DOWN>;
-+	};
-+
-+	wlan_enable: wlan-enable-pins {
-+		samsung,pins = "gpd3-6";
-+		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
-+		samsung,pin-con-pdn = <EXYNOS_PIN_PDN_PREV>;
-+		samsung,pin-pud-pdn = <EXYNOS_PIN_PULL_NONE>;
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-+		samsung,pin-drv = <EXYNOS5433_PIN_DRV_FAST_SR4>;
-+		samsung,pin-val = <0>;
-+	};
-+};
-+
-+&serial1 {
-+	status = "okay";
-+
-+	bluetooth {
-+		compatible = "brcm,bcm43430a1-bt";
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&bt_btwake &bt_hostwake &bt_enable>;
-+
-+		device-wakeup-gpios = <&gpa1 2 GPIO_ACTIVE_HIGH>;
-+		host-wakeup-gpios = <&gpa1 6 GPIO_ACTIVE_HIGH>;
-+		shutdown-gpios = <&gpd4 0 GPIO_ACTIVE_HIGH>;
-+
-+		max-speed = <3000000>;
-+	};
-+};
-+
-+&serial2 {
-+	status = "okay";
-+};
-+
-+&usbdrd {
-+	vdd33-supply = <&vdd_ldo8>;
-+
-+	status = "okay";
-+};
-
++++ b/include/linux/ucopysize.h
+@@ -0,0 +1,56 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/* Perform sanity checking for object sizes for uaccess.h and uio.h. */
++#ifndef __LINUX_UCOPYSIZE_H__
++#define __LINUX_UCOPYSIZE_H__
++
++#include <linux/bug.h>
++
++#ifdef CONFIG_HARDENED_USERCOPY
++extern void __check_object_size(const void *ptr, unsigned long n,
++					bool to_user);
++
++static __always_inline void check_object_size(const void *ptr, unsigned long n,
++					      bool to_user)
++{
++	if (!__builtin_constant_p(n))
++		__check_object_size(ptr, n, to_user);
++}
++#else
++static inline void check_object_size(const void *ptr, unsigned long n,
++				     bool to_user)
++{ }
++#endif /* CONFIG_HARDENED_USERCOPY */
++
++extern void __compiletime_error("copy source size is too small")
++__bad_copy_from(void);
++extern void __compiletime_error("copy destination size is too small")
++__bad_copy_to(void);
++
++void __copy_overflow(int size, unsigned long count);
++
++static inline void copy_overflow(int size, unsigned long count)
++{
++	if (IS_ENABLED(CONFIG_BUG))
++		__copy_overflow(size, count);
++}
++
++static __always_inline __must_check bool
++check_copy_size(const void *addr, size_t bytes, bool is_source)
++{
++	int sz = __builtin_object_size(addr, 0);
++	if (unlikely(sz >= 0 && sz < bytes)) {
++		if (!__builtin_constant_p(bytes))
++			copy_overflow(sz, bytes);
++		else if (is_source)
++			__bad_copy_from();
++		else
++			__bad_copy_to();
++		return false;
++	}
++	if (WARN_ON_ONCE(bytes > INT_MAX))
++		return false;
++	check_object_size(addr, bytes, is_source);
++	return true;
++}
++
++#endif /* __LINUX_UCOPYSIZE_H__ */
+diff --git a/include/linux/uio.h b/include/linux/uio.h
+index 8ada84e85447..49ece9e1888f 100644
+--- a/include/linux/uio.h
++++ b/include/linux/uio.h
+@@ -6,8 +6,8 @@
+ #define __LINUX_UIO_H
+ 
+ #include <linux/kernel.h>
+-#include <linux/thread_info.h>
+ #include <linux/mm_types.h>
++#include <linux/ucopysize.h>
+ #include <uapi/linux/uio.h>
+ 
+ struct page;
+diff --git a/mm/usercopy.c b/mm/usercopy.c
+index 83c164aba6e0..16d63bd010af 100644
+--- a/mm/usercopy.c
++++ b/mm/usercopy.c
+@@ -17,7 +17,7 @@
+ #include <linux/sched.h>
+ #include <linux/sched/task.h>
+ #include <linux/sched/task_stack.h>
+-#include <linux/thread_info.h>
++#include <linux/ucopysize.h>
+ #include <linux/vmalloc.h>
+ #include <linux/atomic.h>
+ #include <linux/jump_label.h>
 -- 
-2.48.1
+2.34.1
 
