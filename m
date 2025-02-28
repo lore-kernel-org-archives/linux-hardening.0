@@ -1,88 +1,87 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41CD723F38A;
-	Fri, 28 Feb 2025 21:37:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA1C01D9A50;
+	Fri, 28 Feb 2025 21:56:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740778634; cv=none; b=AsHVhLMPBKG0K5A7BO6FiIHTSUxR53cNmoHMd6jPKz/cQIoLGSLxIeWTIFGU1pEJp7oHsWot1ow37XSRRV3acRaelNYUas6Tq3ZTbw+POLOXd5WOcP6TDugZertYfleCarBmA2yxOsdBNEGXHvS4XmhOZs4lb3Jfkiev5EO3gC4=
+	t=1740779761; cv=none; b=Pl3ZysuBb8aziAdl9L5eg2fuLrwbC4anVJG2bUK0qUzAZzyv8lKhkGEO/M3dVXokQ5m4UPV8bXsBNy52lDjguzZ84+W0uD5S6MfdK4rM0brJfTMR1yzdMX9W4P4LU8uwwFRFjxlVw4CATbYIef8JHv8RPPI2L/WU6IkKTxfK43Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740778634; c=relaxed/simple;
-	bh=ZhhF66IDytc7d+VK5dX8uguB4k3kmoyARZcxaJrdIlY=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=IHpD1LR9JagOoNwMEj5kNyUyjz/cbSvBPvmZ4oS30cjwP/XABWiSCw6OgllEbKqJ4XTO4lFd/X2ORDpBrjJyx04z1YkuiC4xrCjfsE1uIoObDD37Uyz2kD0IIF3J4gGdF1hX+1QszJ3Urp8bXbJs5cUsxw8RgrKfbez8fnL9rdw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XEg1816w; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740779761; c=relaxed/simple;
+	bh=WzG/KNySzTFxJVLImnFPJc4V3svrWDbTCG0HQL5y8dc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=avd5d4EoA2G+ht/ro8aJEFlon8Zge8lnnuiHZtZZlwNKLrBzxrx5zCqLvdJIYU5Bwk6+TSgBDDRBk7MndkSZM97++NVMt4RC1nhtLuX5XoBxTI11QmMMHoFPQAamPGeSuSzGbczFHzACMpeXePAHMSGem0MOMW9BgE6EvZi7LS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YAxao5J2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XEg1816w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 554DCC4CED6;
-	Fri, 28 Feb 2025 21:37:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YAxao5J2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B204C4CEE2;
+	Fri, 28 Feb 2025 21:56:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740778633;
-	bh=ZhhF66IDytc7d+VK5dX8uguB4k3kmoyARZcxaJrdIlY=;
-	h=Date:From:Subject:To:Cc:References:In-Reply-To:From;
-	b=XEg1816wbeBUPBhSFNZiRo0EX1R4RVoGD4CxES+eRJGks2vzwpG3GLsSX+94m9ttI
-	 zkeGcLtObhB7WsF9pe8ZZMtnEEJaCLkmHBKm7bHRw3QhHgs+UaE5qXIxcphEo0nQYI
-	 ZXR4LWbNTBkqztIzSSxPRhtQX9ZmIkW5fLb75yuFGrTanj2G2HnRT9F3u7osxT8vko
-	 5UFyr28wrg73kuWUMebpgcZQbjZpjEgGnJjV4x/BqwmtQxN/pr10jVGrFQh8uS41mU
-	 PQTOCIVWIWs/1VYYlmLpIlGcXA0TqN+iI5zkipg2dGsT2AmvtkZNVH7jXYMPe+FCxK
-	 6SRAjf8JgT3QA==
-Message-ID: <cb862288-51be-443e-b770-ed2273978daa@kernel.org>
-Date: Fri, 28 Feb 2025 21:37:10 +0000
+	s=k20201202; t=1740779760;
+	bh=WzG/KNySzTFxJVLImnFPJc4V3svrWDbTCG0HQL5y8dc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YAxao5J2J1HHb/UgaH5L4Az1eD1k0lkbp6bQgKG1x6hJDg87aaXApSu2GTUVtuxwz
+	 7SAvVZqC5Y5YVCmr2KYgJDF9n2+kGizrfKn6LTJzaKNLYHHS2brMeVi1UdiVJRsvak
+	 BPKx56n0RU0fgUaHsJJ7vKxA15Ub7WqM/m9xaPeqUA3Xf3Jd+XkVsO7kr2/OnoC6xs
+	 1Wqi6ry5Y7+g31liiCmNLOsOdo/QOPC7wNXC9a6PmHB8df2HDhb4TNqEeFu65gSaeJ
+	 4MdXG1qinZKwsaA4icCV2DfIfq04nrjIocKnS04WiOv1c1jC7egmJ18bi03GTGG0BN
+	 vFMlgUHFw3hOw==
+Date: Fri, 28 Feb 2025 15:55:58 -0600
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: =?iso-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
+Cc: Peter Griffin <peter.griffin@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, kernel-team@android.com,
+	Tudor Ambarus <tudor.ambarus@linaro.org>,
+	linux-gpio@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	devicetree@vger.kernel.org, Will McVicker <willmcvicker@google.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Lee Jones <lee@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3 3/6] dt-bindings: mfd: add max77759 binding
+Message-ID: <174077970526.3762322.8276687312075496853.robh@kernel.org>
+References: <20250228-max77759-mfd-v3-0-0c3627d42526@linaro.org>
+ <20250228-max77759-mfd-v3-3-0c3627d42526@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Quentin Monnet <qmo@kernel.org>
-Subject: Re: [PATCH] bpftool: Replace strncpy with strscpy
-To: Michael Estner <michaelestner@web.de>, ast@kernel.org,
- daniel@iogearbox.net
-Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20250228181827.90436-1-michaelestner@web.de>
-Content-Language: en-GB
-In-Reply-To: <20250228181827.90436-1-michaelestner@web.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250228-max77759-mfd-v3-3-0c3627d42526@linaro.org>
 
-2025-02-28 19:18 UTC+0100 ~ Michael Estner <michaelestner@web.de>
-> strncpy() is deprecated for NUL-terminated destination buffers. Use
-> strscpy() instead and remove the manual NUL-termination.
+
+On Fri, 28 Feb 2025 14:25:17 +0000, André Draszik wrote:
+> The Maxim MAX77759 is a companion PMIC for USB Type-C applications and
+> includes Battery Charger, Fuel Gauge, temperature sensors, USB Type-C
+> Port Controller (TCPC), NVMEM, and a GPIO expander.
 > 
-> Compile-tested only.
+> This describes the top-level device.
+> 
+> Signed-off-by: André Draszik <andre.draszik@linaro.org>
+> 
+> ---
+> v3:
+> * drop gpio-controller and gpio-cells, GPIO is provided by the child
+>   (Rob)
+> 
+> v2:
+> * rename expected nvmem subdev nodename to 'nvmem-0'
+>   I'd have preferred just 'nvmem', but that matches nvmem-consumer.yaml
+>   and fails validation.
+> 
+> Note: MAINTAINERS doesn't need updating, the binding update for the
+> first leaf device (gpio) adds a wildcard matching all max77759 bindings
+> ---
+>  .../devicetree/bindings/mfd/maxim,max77759.yaml    | 99 ++++++++++++++++++++++
+>  1 file changed, 99 insertions(+)
+> 
 
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
-How? The change does _not_ compile in my case:
-
-	$ cd tool/bpf/bpftool
-	$ make -j
-	[...]
-	/usr/bin/ld: xlated_dumper.o: in function `print_insn_json':
-	xlated_dumper.c:(.text+0x1f6): undefined reference to `strscpy'
-	collect2: error: ld returned 1 exit status
-	make: *** [Makefile:254: bpftool] Error 1
-
-(Besides, this code should be rather easy to test, so running it is
-appreciated.)
-
-strscpy() has been proposed for bpftool a few times in the past, but
-bpftool is a user space utility and does not currently #include header
-linux/string.h. If we wanted to use strscpy(), we'd likely need to use
-this header, and also to copy the definition of the function to the
-GitHub mirror. Given that - as far as I know - the current use of
-strncpy() is not broken, I'm not sure this is worth the effort.
-
-
-> Link: https://github.com/KSPP/linux/issues/90
-
-
-I note that this Issue provides a command for looking for strncpy()
-instances to replace, but this command filters out occurrences that are
-under tools/:
-
-	"git grep ... | grep -vE '^(Documentation|tools|...) ..."
-
-Thanks,
-Quentin
