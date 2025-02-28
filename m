@@ -1,137 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.web.de (mout.web.de [212.227.15.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 578BF1F4C83;
-	Fri, 28 Feb 2025 17:41:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A63E2755E3;
+	Fri, 28 Feb 2025 18:24:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740764501; cv=none; b=OcqafcBqqV4auJNgS0jxXd/T+d6BzVMVhvj6bCOR/zMN+a9dqrMbzaqaeGx1n6FEQPygNiqXgORKXwzbjem9bZ53YlmztvAQ+2QE0rGq3dqxaDO61DgyWUQTq9gN0FWjqS390GbE0SH24MIcODbAOgbFn1qaGKzTdMBRE9JjH5s=
+	t=1740767072; cv=none; b=gwtTOTeO1TUQWLf9uLsJVjyMrhDuGItGvWTlcU9vIAN/qt7j/QliITHuqegU2d+lwzE28nv5zQHHau8Vlf0FF7s1af2jOIqLl81S5tMQr9Y6Y3PCHv0/45pUQgOC4UToTc121LAnzI1jB0zWm7HeCa30FmvoV0hXZz6kZoxzybQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740764501; c=relaxed/simple;
-	bh=LfJTVv81rgrDxdAduGKQ5P6oTcbMEPC4C5fHHQtKh7U=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uD3ty5x+w0f7nn+aP2cQA23D9EG17ig/ZugAQYdcPn9regMg5BpjLXqtnJUJYGju1OITrrEEfnm6L4M1DgtH0dpsxrgABEGpsme45VoS4YpigAMklf4JzivkBPWmrJMYGag9GFkOWLo5Bil4kBd+N//gpwG03pg+0E4qDr73tD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TFXYM04B; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740767072; c=relaxed/simple;
+	bh=ulEoNTWX2ai/i1e+m4dRcAUEVFZP1m1dYHYLPjm/u9Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VQd2zzwVt/EJlGHd22M6/MLQyu5SU0ch6uVY4Ta25XZBl0FIjocjY589UtQ0Hkbgvhhk6pktNLMW3MV8PNf/L9jwSLaVnjxYDPhEbIW6bs3bpEmvBK+CJcrzoRQtXjxq59G3+4K/w1bdjTnCCVpH6qMxbyhFXq1Y1vpIn9qMCrk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=michaelestner@web.de header.b=L3dReFgQ; arc=none smtp.client-ip=212.227.15.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TFXYM04B"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B47CFC4CED6;
-	Fri, 28 Feb 2025 17:41:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740764499;
-	bh=LfJTVv81rgrDxdAduGKQ5P6oTcbMEPC4C5fHHQtKh7U=;
-	h=From:To:Cc:Subject:Date:From;
-	b=TFXYM04Bbdyi3s5W3E0wy7Vi8xbcN7UcM3XfURa/W9APAqjCIeTxpLrqyzaV4alZg
-	 YvpyOFcJ30bZdNVfiggfR4orKSwkb5mH9ApHUBAVE/aOd3as6dmtTN5iJBnj7tciKa
-	 oZgDkoY7ZDIc5gIuAkdfOVyXUBM+eZN10XJPDkxTQweoRDEppHKKLHASM0xo0Zpwfc
-	 W2xLvRMg1od2MZz8UItcV51YAOE75moPPPW1K3RPVC9aTXblTrEUttTH4fy675FWyg
-	 N+dwXRq+wJMV3hWLkihYmYFjfE1Mq6ewbB/CI/WYUGMGUc+0pdZSdyz/9k/KjnjVJo
-	 EO4iZWekQIOhA==
-From: Kees Cook <kees@kernel.org>
-To: Venkat Rao Bagalkote <venkat88@linux.vnet.ibm.com>
-Cc: Kees Cook <kees@kernel.org>,
-	Stephen Rothwell <sfr@canb.auug.org.au>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Michael Kelley <mhklinux@outlook.com>,
-	Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Marco Elver <elver@google.com>,
-	Alexander Potapenko <glider@google.com>,
-	Tony Ambardar <tony.ambardar@gmail.com>,
-	Jan Hendrik Farr <kernel@jfarr.cc>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	dkim=pass (2048-bit key) header.d=web.de header.i=michaelestner@web.de header.b="L3dReFgQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1740767064; x=1741371864; i=michaelestner@web.de;
+	bh=Hm2gsSINyxASyXm+O82PUycRhtyQCwm+OL7u80TaOZI=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:
+	 MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=L3dReFgQIiuBskn8vKITtOJKhi9FsY/9XfNr0xxfgYdPEmFYWVZAKirXxWgB4YyE
+	 BF42hFcgNe1Qxxq4XRJOjkhipvE2uN0P76OXAbn2+gOZ1JKykQw1E20eobYYGUIdn
+	 9WqcaYBYg8mnIKSQqGnNPv2sYWMGMTbcom/9U4w3tggCp0uTMgcSh4gX9y/Q96HjV
+	 eMyHi3blIKJ5Mo8ppyfAWo8D3cyRdPozx1b0CC/C+EaG1m6BUHT5xX2DgfLI8entm
+	 XIvTYH9rpWlCKVYWjGwRn/fF+Dk2lSF/3Fc/NOiYzBxNDY7mXKUZjUVShy3zVioNO
+	 V8ZhfnNxHGY+VTRO+g==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from del01453.ebgroup.elektrobit.com ([87.150.19.59]) by smtp.web.de
+ (mrweb005 [213.165.67.108]) with ESMTPSA (Nemesis) id
+ 1Mty5w-1t0Mbh3nCu-00zaaT; Fri, 28 Feb 2025 19:18:45 +0100
+From: Michael Estner <michaelestner@web.de>
+To: qmo@kernel.org,
+	ast@kernel.org,
+	daniel@iogearbox.net
+Cc: bpf@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v2] compiler.h: Introduce __must_be_noncstr()
-Date: Fri, 28 Feb 2025 09:41:34 -0800
-Message-Id: <20250228174130.it.875-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	linux-hardening@vger.kernel.org,
+	Michael Estner <michaelestner@web.de>
+Subject: [PATCH] bpftool: Replace strncpy with strscpy
+Date: Fri, 28 Feb 2025 19:18:27 +0100
+Message-Id: <20250228181827.90436-1-michaelestner@web.de>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3318; i=kees@kernel.org; h=from:subject:message-id; bh=LfJTVv81rgrDxdAduGKQ5P6oTcbMEPC4C5fHHQtKh7U=; b=owGbwMvMwCVmps19z/KJym7G02pJDOkHv/o9VVzifPOBpa5oitITnsiQjWw93XfX/nG21Nr6s MJZY4dyRykLgxgXg6yYIkuQnXuci8fb9nD3uYowc1iZQIYwcHEKwERObWJk2N6SLP74ZuKKBeG+ jxrEbDL1jl0/enqFbZFr85G1S0Ksmhj+8E1eZ9wo6J+Tc+dl8ZuN++bunzGt7/jmFtfuk/d0s/k 9GQE=
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:dTJ1bEHopl8bQxzT6+oHnNYmgNuyVP6QWCwbZ70KhlIHpIGhism
+ t6XRtAPQPR9OgLHxesMCbqnjAu2gXKzbHQa2ud4f2HYxW5zp/e7SMQXG/u39h8upXtE781K
+ Xz6RVrVFl4GT88mKMQ5V6Dn/i8U8+erchfHaUmPXzIyzlmvkfRYMkoPE3eX5by/SU/9+bBV
+ T+8tj66PSMBszC+4NsXnw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:ErGF/CS68pI=;ttSUjnhCdosvNWlTyoPbi2gETk/
+ acYvPgpENAlDADA5d7IhgBma9c+wc8LY0ZX+dng/Cvox9rYurQPGolUtLviVU2fJLfOBX1WdB
+ Sa21/o3v7EeDK5vuoWDiRRtcwTzvYw2Jw4JDJZEBz07MXnG2ymNDm4IF4pNyxguS8U57G1AAZ
+ O4x1ZmMveqQe8zKBIqGhZjIFZqgqqwH7cVxsXg8Ll+nv+QMp+yfZLEXj5XI6DO0fJgAuwSPN5
+ 7ZRdvGGgUV4FRPLajP6oXYj+2GKWA8gfffUd3gLkoSG9Bueg7I2WgTNxc3VAqpa6wg4/Hy/cj
+ +j8YVX3QDRriBOGgeNXEFKI/RHKKoAbZutMwfXUwkDMoV4LPQ1lg4Ibagt7gmZgHiAZnvtoAn
+ PGzNeSz8rjjQuWnTAJRsc+R0FidoDRXL32sS1Ls3yQ5dSihHvmgQhtRgKeZNJWRHlTc3oUMzr
+ 8COA3fjrwoOv+s7NkrL8dG7ifDpaT2NmIH8dO/EMN4EvGFuUiCLPvZlrhhtzgTnpnQS2lM66U
+ ad5Ju/ZHdjCmdGca3w9Bgx9GDPaTA0QSc4YEnEF8nnRsQdNEsXhR7b50ZffoTjqok+lv0oRvo
+ 4s5Sv69kyKMDEnCcGs4/SMM4m9rLGxKzIck2S3HmWDQ+NvFfTz/NkRXEKVrESrP+8jDb9bdoP
+ pp2XadOtw1hCLzUbhxCjDvg2Vhw85NSlCqYkv3Q+t2kcVWcXaa8FCK0RHYLnzF6KgQSgQra46
+ 39nVwzKEhOz0CH49wHih9yGo0fBXydWtKmajY3Z5znSd3P7nKgyZ8oi4EiNe96L9gWYiPD7sI
+ w0/BehX8roluPcVtH2g5EBNLUpI/bO6DdwycdDbdmNAo+T4M59IowTHRDjE/r2+UBZYtOydJS
+ 4yqHdUjPpNNZZE34LLwxGUMXjbwCXT3KFdp0E1ehNt/nhVdTNgjx8Yv2GJJzKfWLV+fv8+4nM
+ KkmulHCATdut8lr/LBq9vSn5Gx+9XspIm7ruRYHpn0cAdoa7wCwn/gB9xQXON0GZbdu2UN3Qt
+ N40UB+rRK6IpRJ9/STTM5spJcj6UmOkiJZSjKa76NQWCnPkiapvsToqSeFJaDT97hoCi0oZJh
+ ynvk7/wQB5yOWJRNks23LGNSL/bi49SJ5MMI41cL4wFAYlvgL5smcBnhrXKhpoirGNADIQ4/Z
+ PVbMpwpNBM/q+u77zKwNgczFoFfblI1RuDHfx4QTMoo5BokIeomf827f/7VWu3n7HuG0P7sFl
+ 5vgNyoRfynJGXMA8Ci56E9DI1hDkbgTmV89ud3wfXKWWP4ppIZWDa9ktAaLKrmXWJOVrvgHH+
+ rRLI2Oi/RISc4+bnJe8X9q7fC+mnKjdWAKHMR5zBfkW59QWpraRPXoZbcC3gezqROHvtfr/rM
+ 3ew7DY7ggjsfwD/lYiMDVmzUHdLgTamk/rztfaBg98e4IJDlGYT9qg9UgolZqzGqDGw/bjnrx
+ tiN3aloIS/vKIPCla5wD8Am40GHg=
 
-In preparation for adding more type checking to the memtostr/strtomem*()
-helpers, introduce the ability to check for the "nonstring" attribute.
-This is the reverse of what was added to strscpy*() in commit 559048d156ff
-("string: Check for "nonstring" attribute on strscpy() arguments").
+strncpy() is deprecated for NUL-terminated destination buffers. Use
+strscpy() instead and remove the manual NUL-termination.
 
-Note that __annotated() must be explicitly tested for, as GCC added
-__builtin_has_attribute() after it added the "nonstring" attribute. Do
-so here to avoid the !__annotated() test triggering build failures
-when __builtin_has_attribute() was missing but __nonstring was defined.
-(I've opted to squash this fix into this patch so we don't end up with
-a possible bisection target that would leave the kernel unbuildable.)
+Compile-tested only.
 
-Reported-by: Venkat Rao Bagalkote <venkat88@linux.vnet.ibm.com>
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Reported-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-Reported-by: Michael Kelley <mhklinux@outlook.com>
-Closes: https://lore.kernel.org/all/adbe8dd1-a725-4811-ae7e-76fe770cf096@linux.vnet.ibm.com/
-Signed-off-by: Kees Cook <kees@kernel.org>
----
- include/linux/compiler.h       | 18 +++++++++++++++++-
- include/linux/compiler_types.h |  9 ++++++---
- 2 files changed, 23 insertions(+), 4 deletions(-)
+Link: https://github.com/KSPP/linux/issues/90
 
-diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-index 200fd3c5bc70..d5201464c5e6 100644
---- a/include/linux/compiler.h
-+++ b/include/linux/compiler.h
-@@ -206,9 +206,25 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
- #define __must_be_byte_array(a)	__BUILD_BUG_ON_ZERO_MSG(!__is_byte_array(a), \
- 							"must be byte array")
- 
-+/*
-+ * If the "nonstring" attribute isn't available, we have to return true
-+ * so the __must_*() checks pass when "nonstring" isn't supported.
-+ */
-+#if __has_attribute(__nonstring__) && defined(__annotated)
-+#define __is_cstr(a)		(!__annotated(a, nonstring))
-+#define __is_noncstr(a)		(__annotated(a, nonstring))
-+#else
-+#define __is_cstr(a)		(true)
-+#define __is_noncstr(a)		(true)
-+#endif
-+
- /* Require C Strings (i.e. NUL-terminated) lack the "nonstring" attribute. */
- #define __must_be_cstr(p) \
--	__BUILD_BUG_ON_ZERO_MSG(__annotated(p, nonstring), "must be cstr (NUL-terminated)")
-+	__BUILD_BUG_ON_ZERO_MSG(!__is_cstr(p), \
-+				"must be C-string (NUL-terminated)")
-+#define __must_be_noncstr(p) \
-+	__BUILD_BUG_ON_ZERO_MSG(!__is_noncstr(p), \
-+				"must be non-C-string (not NUL-terminated)")
- 
- #endif /* __KERNEL__ */
- 
-diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
-index 981cc3d7e3aa..f59393464ea7 100644
---- a/include/linux/compiler_types.h
-+++ b/include/linux/compiler_types.h
-@@ -446,11 +446,14 @@ struct ftrace_likely_data {
- #define __member_size(p)	__builtin_object_size(p, 1)
- #endif
- 
--/* Determine if an attribute has been applied to a variable. */
-+/*
-+ * Determine if an attribute has been applied to a variable.
-+ * Using __annotated needs to check for __annotated being available,
-+ * or negative tests may fail when annotation cannot be checked. For
-+ * example, see the definition of __is_cstr().
-+ */
- #if __has_builtin(__builtin_has_attribute)
- #define __annotated(var, attr)	__builtin_has_attribute(var, attr)
--#else
--#define __annotated(var, attr)	(false)
- #endif
- 
- /*
--- 
-2.34.1
+Signed-off-by: Michael Estner <michaelestner@web.de>
+=2D--
+ tools/bpf/bpftool/xlated_dumper.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/tools/bpf/bpftool/xlated_dumper.c b/tools/bpf/bpftool/xlated_=
+dumper.c
+index d0094345fb2b..60dbe48a91a3 100644
+=2D-- a/tools/bpf/bpftool/xlated_dumper.c
++++ b/tools/bpf/bpftool/xlated_dumper.c
+@@ -135,8 +135,7 @@ print_insn_json(void *private_data, const char *fmt, .=
+..)
+
+ 	va_start(args, fmt);
+ 	if (l > 0) {
+-		strncpy(chomped_fmt, fmt, l - 1);
+-		chomped_fmt[l - 1] =3D '\0';
++		strscpy(chomped_fmt, fmt);
+ 	}
+ 	jsonw_vprintf_enquote(json_wtr, chomped_fmt, args);
+ 	va_end(args);
+=2D-
+2.25.1
 
