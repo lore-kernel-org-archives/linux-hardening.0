@@ -1,75 +1,76 @@
-Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
+Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8366310E5
-	for <linux-hardening@vger.kernel.org>; Fri, 28 Feb 2025 00:04:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7EE1276D2D
+	for <linux-hardening@vger.kernel.org>; Fri, 28 Feb 2025 00:48:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740701059; cv=none; b=F6jMrFps1oM2he2WMd2+w4QhjLNMDBpRRlbGk+gyyMphJId1Fr8QIcuZq3gl75vZ7ny10oPjK6T/BkNU/dqSMz4CC3zEYpJCd9a+3KSSRy1hiEe6ur/3q8/1Mo8P06mkv9RUpXBoRDRfg/nEWy604Wyx0e9hC1gwzdvbGyTu3co=
+	t=1740703718; cv=none; b=S+CXBC2sI32KxE70Rp1UOg7F1MXfCF0+KIKx3MJVCrDuzvbkpUsPbI5NF2evtiO1vzzbplCfokAFUTq7BarFK/t+pgoHfLpXhwTvwxrS4y88M9oLRC112K37LFBRw5YC5129Y3x7LMVmxqdawm/PfBUI7fYyZW1PYn47ZnJOtyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740701059; c=relaxed/simple;
-	bh=PEcWf1lC0yhjFwXmZ+djf4p4vdM62eIMsikl4LRYCy0=;
+	s=arc-20240116; t=1740703718; c=relaxed/simple;
+	bh=GOzFXFh70+Yjyf/cQoTW9LJg+fDbHupie/qomZSw2Zc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bnpMiwS/L4GgY9C+EzfNpqcpp23xyGA8IoG7trjPcMsUqfBwEX89RY9EsEr4+VzUSw04hzMu5yxAx1zNzBK3I0se7MsQb98RFcZndL3CDGnmLyhGun9tEy/0VMY5g3lzOAiCOeC0q2qFrxCwT6p5Kp8ORlz6gnersiV93RfAS94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=kvic/EVZ; arc=none smtp.client-ip=209.85.161.53
+	 To:Cc:Content-Type; b=QHF/wsABn+drdy2hz6n7Z1or1VIJUtdP0EPIc/KvyNaNIHaAVydRFtUhWt+UPAAHn0KgPrdZbiwAwb5m6nco6GuNxXMSCf2A8c84EwtXP2alOqaHnoK/J178KqRMJTmSj8pQlwX3Xcytm1aje4HmTAIDnQPBLwQBPkGSzvuiU+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=UvQz5kCT; arc=none smtp.client-ip=209.85.210.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kvic/EVZ"
-Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-5fc6f75aa8aso81188eaf.1
-        for <linux-hardening@vger.kernel.org>; Thu, 27 Feb 2025 16:04:16 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UvQz5kCT"
+Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-72726a5db1aso145968a34.2
+        for <linux-hardening@vger.kernel.org>; Thu, 27 Feb 2025 16:48:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1740701055; x=1741305855; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1740703716; x=1741308516; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=TdAKRoI4MWNZS1p5ikuwofSWZ+m+ABE0cVc0cuX4/8s=;
-        b=kvic/EVZUyZ01lsS213y+Wl0oiYKgD0Vo8fZTu7yhfIAMYA5xRc73CCZ9KgNHmlum1
-         4XMttEnng3BT+pAKyh4jyoxQ5670+ma1MshtA55Zj86r1O++pRV8ZCe9VGxhyJyRMug3
-         oM3cR/g7oqnk4IuEPyEftiTC6GOKs4akHMpZs=
+        bh=mambjBaAXGR/a8NgOxwtya3jL9uRTgAKw1NEqKaou4s=;
+        b=UvQz5kCTWKj960ctyMkguSC5yF3qdDuJjZmW5c2Cqr66ckKD8E6hwJqqKNhTWFD/mS
+         Yr3RV35sV4cs493nyJoqc+iVgQaevjPv/9o8/rBUS2vuJJIvTrEPuzVC6sjX5fWf/qnL
+         89gMJFP0TaL5WnD71ELR3VrOS9C18o7oylRhU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740701055; x=1741305855;
+        d=1e100.net; s=20230601; t=1740703716; x=1741308516;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=TdAKRoI4MWNZS1p5ikuwofSWZ+m+ABE0cVc0cuX4/8s=;
-        b=SfSIX/eZ5fB/bPkFqYjNFzCGejANjdIiZVqoZMDloFHN377JEuQrh/RdQ9KNMhKgFl
-         v5yRuHzH9mU0LCbAHyaAX0lbBiS9NNkK6yCDnl08V3pezeZzxifYje0bEfA5OH2xEZpI
-         Zw0CeLzDk/rwMWKJaclCIKurcm88+z24FUgROXH3CrPTbSmDslfQop45U+H/kDhLWooO
-         pmAtt4pslp4ICZA1BlHu9uhVsoCGeRNWoANNkulml52ont1NrhvHuxHLoK1Dya99pSew
-         ohk9JLr80Hi7LKOe/8OGtDgVa5x1E26ysYH2E9zdvLMgSmqI7T064XRPnRiZk7113Uep
-         JaVw==
-X-Forwarded-Encrypted: i=1; AJvYcCUH/S7abK92AED1RcYR8naQWrFcLds9B5YjaQgDXXVJdpCYQbgErZl1i5xj034x2hyf3qFkybFwZGwKJ6lUui0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwSZgAsl4W56w3hqW0+txQW8E1pzhNoblAwwdOzvnhINAzEiGtu
-	ZFNT5K7No1eQrDtT2Sih1kEBJcucyuIWZt08afxC/SIm6skRX+f/iHgt54xCoEV5Hh+v1kE8on9
-	bsYFR2P8EkaoeIKibcgdFb3G9ZqIvI/+EETE8
-X-Gm-Gg: ASbGncs8W6TFglm7PInCzkzn3Ls9aG107JXH7GsppvYQfAdztlOFtSV8UXw55BvUkYm
-	Rzs7STe4ubRQSv7Je6gau41vnrmpySehC7uzyPKvwnieA5as1GGIvcwwBPbikWa6Vl8orJphzBp
-	hnLbbb6+60CuHtCYgvQbfXWiUfUbc2YsTvssiohlX4
-X-Google-Smtp-Source: AGHT+IGWuXQs0PIThChSzMMhBYpO8F+O5v1PgymX4okVh9IJ0FU07Sbjp0HW52pAlPT3tSirmglti/FDlIKqYQSJ9pg=
-X-Received: by 2002:a05:6830:6c0f:b0:727:2f27:2a5d with SMTP id
- 46e09a7af769-728b82f0b63mr269890a34.3.1740701055553; Thu, 27 Feb 2025
- 16:04:15 -0800 (PST)
+        bh=mambjBaAXGR/a8NgOxwtya3jL9uRTgAKw1NEqKaou4s=;
+        b=UUSblCm/FdMEU6CCLcpw1vIaf3UYPdj1hiCGZSOTSWuj+A4BUKotC40uir34Vt3Tb5
+         z2z1I/T18e0p4M3UCx+BEs0EbrCUAZbU2DCcqu1MWULQifJT3lZlDdtDTF00F7hj/rnz
+         Yo2eGi9/HgtihdpP3mwhLlzn21w655k6uwKLyEYX00Cz7jNrSPKyKEg7JMof+JMqWpAW
+         kw4AfYHjIrONUqIP2EvFHie+wYGQu4TcPSEKsDT1m9w8KOYFLqtLqEfQTmgIFdPf9+tX
+         pr0B83uVWqPtys7tBCFElDH8A4dCsfOCaRlpo3GuufA/J8bowmA6q8Yg35Fn3kK9X9D3
+         vHmA==
+X-Forwarded-Encrypted: i=1; AJvYcCULv7/h51VwwCTEcW3M/tYXlOLaE3IvdKNKl8vB5GWHkmQarFVg6HaCUsesvJdIoeeSmbXgDbBrqgOp7VAk9Bw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwBAK744lpvwvHM41LEWD8aZQafVwYqXe5kMRTJIsFaFDeHvBpS
+	0tEdCYNnsW5QoG3eDZ7L0GoYrojIqNY5jcfU3EWyCzB1oqXmKK0drSWAKgRsBSBVko+Wsf1ebpa
+	14NwfbZUQDFAsNLpdDlAHQtJzTdjqL1qCshVf
+X-Gm-Gg: ASbGnctUS7EoW+PXnRCP2fhIQ/kiuovi31LyYvzfzNlaDvo3j/+Uw0zhvN8eyfbKDad
+	A4XEbgyZVh09rg0aGmHyd0v0w3Nkev9BREasBW2SMYmivfgTWd7OWQ5TXYGnMqwWhT23zsgyRUQ
+	D4xKauvkvflW0Gc02Ch+xc6JClYru65IlOgg9T6uVo
+X-Google-Smtp-Source: AGHT+IHtq3r53vjQyLYRE5/olRbAlnuREoRvRu7BboZZh87Sxp3Nzk7HTBjsC2ak72lsggVPV5qzwgHPgUT2nN2+fvA=
+X-Received: by 2002:a05:6808:1312:b0:3f4:13ee:5073 with SMTP id
+ 5614622812f47-3f558616df4mr285558b6e.7.1740703715878; Thu, 27 Feb 2025
+ 16:48:35 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250224225246.3712295-1-jeffxu@google.com> <20250224225246.3712295-2-jeffxu@google.com>
- <9abd68d9-3e6d-46a0-b92c-5aee0a90abf3@lucifer.local> <CABi2SkXT0z9YFsEkf3-HH0r_NuXXs_SJid9yzjuu0SwuxxWmZw@mail.gmail.com>
- <b7a38abf-f102-47b4-b085-213298c51aae@lucifer.local>
-In-Reply-To: <b7a38abf-f102-47b4-b085-213298c51aae@lucifer.local>
+References: <20250224225246.3712295-1-jeffxu@google.com> <20250224225246.3712295-5-jeffxu@google.com>
+ <899d39af-08d2-4cd9-9698-9741d37186b8@lucifer.local> <CABi2SkX0oGnqM4BDfRt0+7Pcf31td8np3=dVg1ixcaDNoUyHkQ@mail.gmail.com>
+ <ea970928-ccea-4314-9cde-b64fa1a7824e@lucifer.local> <qk4m74uscjxdnlchcxolvgbw7ijppzqk57ajyc4m6jjixq5gti@lokjqegpftzh>
+ <CABi2SkUprOT=TEDQb62SByjyW+csarKnGypdmxVdktj=+C9_yg@mail.gmail.com> <ba04b513-0eb5-425d-b24c-82c9f9b6c7ee@lucifer.local>
+In-Reply-To: <ba04b513-0eb5-425d-b24c-82c9f9b6c7ee@lucifer.local>
 From: Jeff Xu <jeffxu@chromium.org>
-Date: Thu, 27 Feb 2025 16:04:03 -0800
-X-Gm-Features: AQ5f1Jq9-ymrZNzxRItoW5EEM_7nmfT5SZHdmMKzLXHDq-gTSSV1Cci_cu2NaII
-Message-ID: <CABi2SkWeXJXmuE8OETJvbmxzGjk1e+5FUT9Gi2ZC35M-TcZWEA@mail.gmail.com>
-Subject: Re: [PATCH v7 1/7] mseal, system mappings: kernel config and header change
+Date: Thu, 27 Feb 2025 16:48:23 -0800
+X-Gm-Features: AQ5f1JpGUcOCdr5zrX3g_BrVkhytRR2N2kSp3XD88QAhkjOS5BLQ1YE3wTDvUZY
+Message-ID: <CABi2SkV6JJwJeviDLsq9N4ONvQ=EFANsiWkgiEOjyT9TQSt+HA@mail.gmail.com>
+Subject: Re: [PATCH v7 4/7] mseal, system mappings: enable arm64
 To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: akpm@linux-foundation.org, keescook@chromium.org, jannh@google.com, 
-	torvalds@linux-foundation.org, vbabka@suse.cz, Liam.Howlett@oracle.com, 
-	adhemerval.zanella@linaro.org, oleg@redhat.com, avagin@gmail.com, 
-	benjamin@sipsolutions.net, linux-kernel@vger.kernel.org, 
+Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>, akpm@linux-foundation.org, 
+	keescook@chromium.org, jannh@google.com, torvalds@linux-foundation.org, 
+	vbabka@suse.cz, adhemerval.zanella@linaro.org, oleg@redhat.com, 
+	avagin@gmail.com, benjamin@sipsolutions.net, linux-kernel@vger.kernel.org, 
 	linux-hardening@vger.kernel.org, linux-mm@kvack.org, jorgelo@chromium.org, 
 	sroettger@google.com, hch@lst.de, ojeda@kernel.org, 
 	thomas.weissschuh@linutronix.de, adobriyan@gmail.com, 
@@ -85,68 +86,130 @@ Cc: akpm@linux-foundation.org, keescook@chromium.org, jannh@google.com,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 25, 2025 at 10:04=E2=80=AFPM Lorenzo Stoakes
+On Wed, Feb 26, 2025 at 9:43=E2=80=AFAM Lorenzo Stoakes
 <lorenzo.stoakes@oracle.com> wrote:
 >
-> On Tue, Feb 25, 2025 at 05:33:24PM -0800, Jeff Xu wrote:
-> > On Mon, Feb 24, 2025 at 10:05=E2=80=AFPM Lorenzo Stoakes
-> > <lorenzo.stoakes@oracle.com> wrote:
-> > > > +config ARCH_HAS_MSEAL_SYSTEM_MAPPINGS
-> > > > +     bool
-> > > > +     help
-> > > > +       Control MSEAL_SYSTEM_MAPPINGS access based on architecture.
-> > > > +
-> > > > +       A 64-bit kernel is required for the memory sealing feature.
-> > > > +       No specific hardware features from the CPU are needed.
-> > > > +
-> > > > +       To enable this feature, the architecture needs to update th=
-eir
-> > > > +       special mappings calls to include the sealing flag and conf=
-irm
-> > > > +       that it doesn't unmap/remap system mappings during the life
-> > > > +       time of the process. After the architecture enables this, a
-> > > > +       distribution can set CONFIG_MSEAL_SYSTEM_MAPPING to manage =
-access
-> > > > +       to the feature.
+> On Wed, Feb 26, 2025 at 09:17:10AM -0800, Jeff Xu wrote:
+> > On Wed, Feb 26, 2025 at 9:12=E2=80=AFAM Liam R. Howlett <Liam.Howlett@o=
+racle.com> wrote:
 > > >
-> > > Architectures also need to be confirmed not to require any form of VD=
-SO
-> > > relocation, which as discussed in previous series some arches appear =
-to
-> > > need to do. I'd mention that here.
+> > > * Lorenzo Stoakes <lorenzo.stoakes@oracle.com> [250226 00:26]:
+> > > > On Tue, Feb 25, 2025 at 02:26:50PM -0800, Jeff Xu wrote:
+> > > > > On Mon, Feb 24, 2025 at 10:20=E2=80=AFPM Lorenzo Stoakes
+> > > > > <lorenzo.stoakes@oracle.com> wrote:
+> > > > > >
+> > > > > > On Mon, Feb 24, 2025 at 10:52:43PM +0000, jeffxu@chromium.org w=
+rote:
+> > > > > > > From: Jeff Xu <jeffxu@chromium.org>
+> > > > > > >
+> > > > > > > Provide support for CONFIG_MSEAL_SYSTEM_MAPPINGS on arm64, co=
+vering
+> > > > > > > the vdso, vvar, and compat-mode vectors and sigpage mappings.
+> > > > > > >
+> > > > > > > Production release testing passes on Android and Chrome OS.
+> > > > > >
+> > > > > > This is pretty limited (yes yes I know android is massive etc. =
+but we must
+> > > > > > account for all the weird and wonderful arm64 devices out there=
+ in context of
+> > > > > > upstream :)
+> > > > > >
+> > > > > > Have you looking through all arm64-code relating to vdso, vvar,=
+ compat-mode
+> > > > > > vectors, sigpage mapping and ensured nothing kernel-side relies=
+ upon relocation?
+> > > > > > Some arches actually seem to want to do this. Pretty sure PPC d=
+oes... so a bit
+> > > > > > nervous of that.
+> > > > > >
+> > > > > Can you please point out where PPC munmap/mremap the vdso ?
+> > > > >
+> > > > > Previously, when you mentioned that, I thought you meant user spa=
+ce in
+> > > > > PPC, I didn't realize that you meant that kernel code in PPC.  I
+> > > > > tried, but didn't find anything, hence asking.
+> > > >
+> > > > Jeff, please stick to replying to review. 'Have you looking through=
+ all
+> > > > arm64-code'.
+> > > >
+I checked the kernel code and couldn't find any instances of kernel
+unmap/remap system mapping in any architecture. But I could be wrong,
+so I've also included developers from different architectures since
+V1, and hoping to get some insight.
+
+> > > > I ended up doing this myself yesterday and found no issues, as with=
+ x86-64.
+> > > >
+Thank you for double checking.
+
+> > > > I said I'm _pretty sure_ PPC does this. Liam mentioned something ab=
+out
+> > > > it. We can discuss it, and I can find specifics if + when you try t=
+o add
+> > > > this to PPC.
+> > > >
 > > >
-> > This might need clarification, the system mapping includes vdso, right
-> > ? Why the focus on vdso ?
->
-> My mistake, I thought scope was more limited than this when I first
-> looked. Please disregard the focus on VDSO here... :)
->
+> > > PPC allows the vma to be munmapped then detects and falls back to the
+> > > slower method, iirc.
+> > >
+> > Is this code in the kernel or userspace?
 > >
-> > The sentence  "... it doesn't unmap/remap system mappings during the
-> > lifetime of the process."  already cover what you want here, I think.
+> > If PPC doesn't want to create vdso for all its userspace apps, we
+> > could instead "don't create" vdso during the execve call.
 > >
+> >
+> > > They were against the removal of the fallback; other archs also have
+> > > this infrastructure.  Really, if we fixed the fallback to work for
+> > > all platforms then it would probably also remove the possibility of a
+> > > remap over the VDSO being a problem (if it is today, which still isn'=
+t
+> > > clear?).
+> > >
+> > Any past thread/communication about this that I can read ?
 >
-> Right, I guess it just doesn't quite _emphasise_ it enough for me. Someth=
-ing
-> like the below would really help bring that out:
+> Jeff, I'm sure you don't intend to, but I find it quite disrespectful tha=
+t you
+> ignored my feedback here (and elsewhere, regarding you ignoring 4 sets of
+> feedback).
 >
->         The existing of this flag for an architecture implies that it doe=
-s not
->         require the remapping of these system mappings during process lif=
-etime,
->         so sealing these mappings is safe from a kernel perspective.
->
-I'm not sure I get the difference, but I can add it,  is below OK ?
+I'm just interested in the details :),  If we know why PPC needs to
+unmap/remap vdso, then there are additional data points to consider,
+when we develop pre-process level control for this feature. But sure,
+we can postpone this.
 
-To enable this feature, the architecture needs to update their
-special mappings calls to include the sealing flag and confirm
-that it doesn't unmap/remap system mappings during the life
-time of the process. The existence of this flag for an architecture
-implies that it does not require the remapping of these system
-mappings during process lifetime, so sealing these mappings is
-safe from a kernel perspective. After the architecture enables this,
-a distribution can set CONFIG_MSEAL_SYSTEM_MAPPING to
-manage access to the feature.
+> This?
+>
+> https://elixir.bootlin.com/linux/v6.13.4/source/arch/powerpc/kernel/vdso.=
+c#L236
+>
+OK, you meant the failed case ? i.e. when install_special_mappings
+failed ? That is a case that I haven't considered. It looks like error
+handling, and I was expecting the install_special_mappings to never
+fail, maybe I'm wrong here for PPC.
 
-Thanks
+> Was [0] a relevant discussion?
+>
+Sorry, I'm kind of lost.  This link doesn't give a reason why PPC
+needs to be unmap. If it is due to CRIU or  other user space apps,
+that is not an architecture dependency, maybe a distribution
+dependency.
+
+Anyway, we can postpone this discussion for PPC, I don't mean to make
+you spend more time responding to me. Please feel free to ignore this
+one.
+
+Thanks.
 -Jeff
+
+
+> [0]: https://lore.kernel.org/all/lhe2mky6ahlk2jzvvfjyongqiseelyx2uy7sbyus=
+o6jcy3b2dq@7ju6cea62jgk/
+>
+> >
+> > Thanks
+> > -Jeff
+> >
+> >
+> > > Thanks,
+> > > Liam
