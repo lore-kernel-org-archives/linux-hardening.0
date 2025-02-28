@@ -1,134 +1,102 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9667C1EF389;
-	Fri, 28 Feb 2025 15:24:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33FA5186E20;
+	Fri, 28 Feb 2025 15:45:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740756277; cv=none; b=rwp+9Naf77fuTxLNcn3zR+shgtZOU2KtAfAbgV8v98KtdzIPm6U2tmr/dt8WCkHr6dqGb+HRODXMSJwcSQqFdfn9ZlZVkctHCKR6veXuEa5zrfcqoICMG4hBV3yONrUw5jr1EAjTPycp4ZY0P25mQTz9Jb5B2v2UYD2tGWT2mgM=
+	t=1740757547; cv=none; b=MinqEgwWIkR23wbCOdRODXAqgoWbZXoUZH0EyU6YwbatpfMph6CgpDrqd8XkDFhPWSaGzQNVrkYnduuYBFGODMo7mbM80u2SuMr7EL1EkNTI4nGga4WLeUS/WEzfpQihNhlol4Vytz5NQZfXm2YQuTJ8AZQjHbKvSqwoJsxGKx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740756277; c=relaxed/simple;
-	bh=fdHTrCQaf2WzOLBugDNFz6q3/+1PV3s2MWhFiZNu8XM=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
-	 In-Reply-To:Content-Type; b=uoISdNXrho/S1q6mRyXXd+OtFGcfrJJ8yzJIbu80GRn0uoYTp+tQugpcERECtDoK1YvEb+InKBmSxnFqoHq3tG3yMV2dTeR6ZfVz5DLiDzkHtIoPwzW0XN/nieiyyRa/yjg0O2WyTmMLQglHHbJ7PyJnS65YlPpJBA2uZ+6EUeI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=drmekr33; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1740757547; c=relaxed/simple;
+	bh=5nP7KH7x87oSyhZzLyi7xNGYya5Yqe7l7kW9rlTyesA=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=ocjxmdAePQHVurCWuhqwyMsvqqcD/AHpPppdYiW0PM2r2VYDd5wUByArVqJhSQGrE/MVNFAz6vQw2znjZE1BTchcwQ03nrZUGZA/KupsP/7TnlWtK1ZriHY3UQgSMxm4qxAaZwOtQwMVldNLDX2OweudhGZgtV62lm+J4j3sl70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g+kxnesL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="drmekr33"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51SAXHQx011045;
-	Fri, 28 Feb 2025 15:24:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	YmeFxvI2yR6UVdzo02dmsTmlBlfgTFLRHjuSM9wlVnU=; b=drmekr33e4XmpAmW
-	cv3Q/ofRggDSZweRvqclJzhHIcH056c0rJv+ajgKQ0ebJ9YoDi31lBYp3YcmI2Y7
-	QIlewOMcA/AL9etvEB4ku2/JlNlcziC+hLJhSOOxhxVUhuwjkFVMuxHV8bLa5hTN
-	Nz4Cs3rvZhp5bFwWDtWv8Mm3Ybh2xCTPENbhuXHq/gpShoeOTJ2jg7WLRMxhNryt
-	vOKUHu3qeqAg6FbwTdurAh3C3rw1IZHg9Ko5PYl9cMKb5kuGreeUamlBIysDCv3U
-	eBgRhusfKsvOc+VGHzQ/7JHeqrkK0g+dLugGshNgjvU5mQC497ULLMa9gQwZbKON
-	Od/ssg==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 451prk9tse-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 28 Feb 2025 15:24:18 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51SFOHfh025285
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 28 Feb 2025 15:24:17 GMT
-Received: from [10.253.33.252] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 28 Feb
- 2025 07:24:10 -0800
-Message-ID: <36fbefff-a985-4aba-8085-4a6e139b88ba@quicinc.com>
-Date: Fri, 28 Feb 2025 23:24:07 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g+kxnesL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F0BFC4CEE2;
+	Fri, 28 Feb 2025 15:45:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740757546;
+	bh=5nP7KH7x87oSyhZzLyi7xNGYya5Yqe7l7kW9rlTyesA=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=g+kxnesLwcgC5KTH48/RY+ddqXaR4y3mKzA3ebnf2/i7cks+pv43VpOt5MpO+DYgT
+	 6D1Hf5/2VoeGuhlLV05Fg/IcZi/wfCfyQeEvN1erUotxi26cp3bdKWtVoycAfCSyIA
+	 lX+KzxlLNGBNrZthg9K2K3V8y7ExhPosmenjJcv5iXE01ZMaUU1osC6UbMtNn/rICl
+	 EtiduL6YBSZGLYrbgYMTPDCJkopaM6OGSq5KLg75uoeWxodbzzEBqVBeexe5eNZ58n
+	 sDx9vDKL8EK6GbYs42XhTl/sbJzWD7gWYHyuGJLEmUPRXtgd0nD1T6WqRKA57Oufdl
+	 OEPS7MHmaQu3Q==
+Date: Fri, 28 Feb 2025 09:45:44 -0600
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Jie Luo <quic_luoj@quicinc.com>
-Subject: Re: [PATCH net-next v3 06/14] net: ethernet: qualcomm: Initialize the
- PPE scheduler settings
-To: Andrew Lunn <andrew@lunn.ch>
-CC: Andrew Lunn <andrew+netdev@lunn.ch>,
-        "David S. Miller"
-	<davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>, Lei Wei <quic_leiwei@quicinc.com>,
-        Suruchi Agarwal
-	<quic_suruchia@quicinc.com>,
-        Pavithra R <quic_pavir@quicinc.com>,
-        "Simon
- Horman" <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook
-	<kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        "Philipp
- Zabel" <p.zabel@pengutronix.de>,
-        <linux-arm-msm@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-doc@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-        <quic_kkumarcs@quicinc.com>, <quic_linchen@quicinc.com>,
-        <srinivas.kandagatla@linaro.org>, <bartosz.golaszewski@linaro.org>,
-        <john@phrozen.org>
-References: <20250209-qcom_ipq_ppe-v3-0-453ea18d3271@quicinc.com>
- <20250209-qcom_ipq_ppe-v3-6-453ea18d3271@quicinc.com>
- <f8d30195-1ee9-42f2-be82-819c7f7bd219@lunn.ch>
- <877b3796-3afc-4f3e-a0f5-ec1a6174a921@quicinc.com>
- <d0cf941b-db9b-451c-904f-468ffb11e2f7@lunn.ch>
-Content-Language: en-US
-In-Reply-To: <d0cf941b-db9b-451c-904f-468ffb11e2f7@lunn.ch>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: alDS7pMMps2ZgDfqbsolwbFnKzYXLJQj
-X-Proofpoint-ORIG-GUID: alDS7pMMps2ZgDfqbsolwbFnKzYXLJQj
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-28_04,2025-02-27_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- lowpriorityscore=0 priorityscore=1501 suspectscore=0 impostorscore=0
- phishscore=0 spamscore=0 mlxscore=0 mlxlogscore=701 malwarescore=0
- adultscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2502280112
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: linux-gpio@vger.kernel.org, 
+ Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
+ kernel-team@android.com, linux-hardening@vger.kernel.org, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Peter Griffin <peter.griffin@linaro.org>, 
+ Tudor Ambarus <tudor.ambarus@linaro.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, 
+ Kees Cook <kees@kernel.org>, Lee Jones <lee@kernel.org>, 
+ Will McVicker <willmcvicker@google.com>, devicetree@vger.kernel.org
+To: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+In-Reply-To: <20250228-max77759-mfd-v3-1-0c3627d42526@linaro.org>
+References: <20250228-max77759-mfd-v3-0-0c3627d42526@linaro.org>
+ <20250228-max77759-mfd-v3-1-0c3627d42526@linaro.org>
+Message-Id: <174075754372.2982326.17447607347334540253.robh@kernel.org>
+Subject: Re: [PATCH v3 1/6] dt-bindings: gpio: add max77759 binding
 
 
-
-On 2/20/2025 11:12 PM, Andrew Lunn wrote:
->> As a general rule, we have tried to keep the data structure definition
->> accurately mirror the hardware table design, for easier understanding
->> and debug ability of the code.
+On Fri, 28 Feb 2025 14:25:15 +0000, André Draszik wrote:
+> The Maxim MAX77759 is a companion PMIC for USB Type-C applications and
+> includes Battery Charger, Fuel Gauge, temperature sensors, USB Type-C
+> Port Controller (TCPC), NVMEM, and a GPIO expander.
 > 
-> Could you point me at the datasheet which describes the table?
+> This describes its GPIO module.
 > 
-> 	Andrew
+> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+> Signed-off-by: André Draszik <andre.draszik@linaro.org>
+> ---
+> v2:
+> * drop 'interrupts' property and sort properties alphabetically
+> ---
+>  .../bindings/gpio/maxim,max77759-gpio.yaml         | 44 ++++++++++++++++++++++
+>  MAINTAINERS                                        |  6 +++
+>  2 files changed, 50 insertions(+)
+> 
 
-Hi Andrew,
-We are under process of requesting our Ops team to release the datasheet
-of IPQ9574. This may take a few days.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-In the mean time, let me provide the description of this register table
-to clarify.
+yamllint warnings/errors:
 
-Bits	Field Name	Access	Description
-31:12	Reserve		RW	Reserved field
-11:8	SEC_PORT_NUM	RW	Second port ID
-7	Reserve		RW	Reserved field
-6	SEC_PORT_VALID	RW	Second port valid or not
-5	VALID		RW	Valid or not
-4	DIR		RW	Egress or Ingress
-3:0	PORT_NUM	RW	Port ID
+dtschema/dtc warnings/errors:
 
-Thanks.
+
+doc reference errors (make refcheckdocs):
+Warning: Documentation/devicetree/bindings/gpio/maxim,max77759-gpio.yaml references a file that doesn't exist: Documentation/devicetree/bindings/mfd/maxim,max77759.yaml
+Documentation/devicetree/bindings/gpio/maxim,max77759-gpio.yaml: Documentation/devicetree/bindings/mfd/maxim,max77759.yaml
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250228-max77759-mfd-v3-1-0c3627d42526@linaro.org
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
