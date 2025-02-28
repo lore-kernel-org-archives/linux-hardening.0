@@ -1,163 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B3E82F41;
-	Fri, 28 Feb 2025 13:01:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D50226D5D3
+	for <linux-hardening@vger.kernel.org>; Fri, 28 Feb 2025 13:59:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740747709; cv=none; b=XD2mzqn9+xke9ouYB8VPuYX0Tq4Mlq6Ng9Yx1aC+y6ZsuTQl/0nsjgGedP271zkPgNb+FT5sLY3oBNHLRAUEdbykWi3lwCeHk1BNaIhyz8LP8tzpTsHA1Gzyi0DvuOmc2jmGJrIBsrlKYnelpUCZ45ubMNNfcyj/lkL97KlQ4D0=
+	t=1740751172; cv=none; b=rzi/u0eyGDOwy5aVVIAXuJwnEIw9xd/RaxP9IuKPmUeZc0PczM414c5v7mnJkIDDD1HQOFaiqXpfKuoYKmSJpGKDxc9TfIkIJkTb6iLM1GZpZB0hB7G1qWgR13eTtNVBgK0Cn5eyr7IdD0JUoxI7QbnauVGMNCaypd96L2RO/bY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740747709; c=relaxed/simple;
-	bh=lqnR+JheswhvgrFJM6KyRTYNfvwJMuW0EW4T0IeIFF0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sxsy+C+GBWfdL/jF99bzeWyUNScl6pWgkfXIzN/Zn7qMgxRQ1ALGTug0IJzCoxKhqryV77bguICCkEJgX8bIBRUUfCC3BkJXQonYPZgUOH3opCKLRVai6HmNDwhl44/BVALeDi7kjNKZfLeE6Kmxe+WwpQomNMLrvu0dyxp/95M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gs/8PV+g; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740751172; c=relaxed/simple;
+	bh=px+x86aKSLPgbV52+S2WFBDfxcJqop/aXnFFgDBY9tU=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=dCl/QvKly09ytNa/LiE4NMS9vKEOy8OzMi88l0iA2kdag1mRSE150R96nlmo7hcVkj0W+EnmzdbWY6aLZt45zjCvvPwsFyA8FWYZNkn4rDAANEAOp7JMLMrt16RN3LH+99sWEJUBje37Hy/C7FcgFA4ImxEuUEdnxYmwxURAN8o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=grI+STAK; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gs/8PV+g"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B3EFC4CEE9;
-	Fri, 28 Feb 2025 13:01:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740747709;
-	bh=lqnR+JheswhvgrFJM6KyRTYNfvwJMuW0EW4T0IeIFF0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Gs/8PV+gdhuqgRbRq3PWjR3X7flzk5Sve8/pUNLfAw1jQyg46GaipmTQE1u7rL9KI
-	 cC8DRRVmSMQ/maxG43w/CCFfvrgMfBO286h9OoQMJCu029WsOjx7jXnOtit9wUTJ2m
-	 LL0LhSAx8yHebaGiZAusP9sUL9bjehVR4Qmz3PP8ZswaIDDwESVk2yBWOkdfFgTvqa
-	 Jt2pVvAVS95SHofj/HczhBM9c3gAcDW1mTu/BRhbUgAEW9tQ0y8hEdMREN7Dq0ywAd
-	 xXmzv+kqWC2B3uL7MB20vnyrHyrh/i9M+R3Y00WgK0HqlmMUnQScr2qKg0coCu66aH
-	 J84bAXsnYzvSw==
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5e0373c7f55so3089500a12.0;
-        Fri, 28 Feb 2025 05:01:49 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVKt4VjA6jSdf8HixjSv8FZ2Jok8LIJLcD5QMkoe5IL9QGLsj5n8y5VQbI1SVC5vkFT2XuV/2Cpw98Gapvh@vger.kernel.org, AJvYcCWOFFE7n6eR+6Dr+f8vMgFq3c+12QRdP/hdVWbhilNv/BDpyN4Ssu7aSS8qxaUr8OM7rCQ3kbKcHZAsBg==@vger.kernel.org, AJvYcCX7qIV4O9qUBpMXDctToiTaLSlxQimwmd1h8x4s/hmjPclwK2eP0a+nsE6m+SGhr6zwM4EB8PC1mzL6/zKXAK8d@vger.kernel.org, AJvYcCXeCrl/b5jec72yhIYBLeR8yaR5Fn8EdeRPECv0UeRqDayYanX+s5XPMnLBv/DHUCZx7GH4OVik5fZm@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyxy9j3iz84o6m1ADyTRWTNojSQWMxwqRYA0eX0G2vsKR/l1sGl
-	eolASQHN7jg7NAUalcr4lWqjrqR0yTfmLIyI3o9X80Tu28UDMYWwfBxiHGvO6yerNNKV1NOQXBD
-	oU6AUsWcnUIedTwKGOFheVcm+2Q==
-X-Google-Smtp-Source: AGHT+IE3NVig6fcg7AWmf0LSZkEe9NZzSMZOtu4y73Ybn5vbLk/MQ08kJCOadYw8rDMrC7ULMWJhx6pGL/o+kHXgo3E=
-X-Received: by 2002:a17:907:6e87:b0:ab7:d537:91cb with SMTP id
- a640c23a62f3a-abf261f98e3mr316126266b.7.1740747707559; Fri, 28 Feb 2025
- 05:01:47 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="grI+STAK"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-390dc0a7605so1174655f8f.1
+        for <linux-hardening@vger.kernel.org>; Fri, 28 Feb 2025 05:59:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1740751168; x=1741355968; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=px+x86aKSLPgbV52+S2WFBDfxcJqop/aXnFFgDBY9tU=;
+        b=grI+STAKOAnH08bihdrVdSxnngP7J2jW3cKPR/2Y5MaVL0evvPR0W3GzgzXLLYwR02
+         u5AvChKCZpyDKfHvyh6wqJNJ3iR3PeAdDruTVVJLAsMt3fk8zc8rQQ183v+hwwhk7HLz
+         /Pmr+qtoqG8NlpXVL9dbiPdgqVu2iVcmT39SkEJd8TraGr5jgVoj0+3fXwT/jXVnCU+3
+         ly9xKRuwG397WPW8o5uX63mYDvTpS/1gVgWd7Km2ciUy2hZi8pvmTKOlz11IHDhehorp
+         gdfLMBHpQw1JttRu1/RG0yCHKsf52m5VoUPXXWa+OtM1GgDDu/ArHT2ioYrFvwyK/QJl
+         iWJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740751168; x=1741355968;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=px+x86aKSLPgbV52+S2WFBDfxcJqop/aXnFFgDBY9tU=;
+        b=vjtZgcRlcM33NABK9yxaqkfVyv1SNfraJm0/DF7FzCMaYvzoLPhhdrsCRsHKVdEK9h
+         +UYeD7LZTlbjusWUoz3fm49PK4o10qCWix5cfjRmE3Fh3i2VKUXV7BCQVFxq0R+3U8Ee
+         TMWrEp5S37Vais2jJDQishw7WhcaWkJZqpqKQW+v9sP/OHIpdETks8zWjWptXfZrqoKS
+         Pp8tYB/nQvPPOnz2otHB/Q2OIATQl+BxsqylENSsODgDNxIUqwWrGNd7cj2Dno4/bBgV
+         zBBlzG5oyQyRA6OwANBeMjUCKOJR2czKhKFW2TjStNOt5bwj61zmQ2tS6V7GAKGsB/NA
+         gxLA==
+X-Forwarded-Encrypted: i=1; AJvYcCVueNQIEK7FreE3QdVAG2kjg5Z1poOhU64eoc4+F5DBPGRPY4XtpmCG/2nKPLVLychvA/62XNGQWxeGs393Bvg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx3QcbW8vERz6Nic/AWWtOkSZYOPjYMOXrrjI2J1LqFxESIJ99C
+	We8rIh2z9UY97s15C/CnMCVCd91vIdwP/LTUC9bqoayyPj92TOFJhI+uRz7PUt8=
+X-Gm-Gg: ASbGncu5TZghOAPdSJTYczvPXJoWjX2osQK2/FBKd9pWNdYtuIEREnn+doZ642un8bl
+	wDw1nysBnrcYeUJubscrXshAp5tCaj7nfyNhfcjYfnlXB6v5IRpVxvb0WS6Qdv1njdHKuBN8tso
+	q1UtmdcWw4+P5z7OSvpv07wgnsX215zHDKjLCfX1GgaUzJvJ5x7qXNaEuWVeCafuydB2QmCEUww
+	b4wGssos+xyB38de+OQjeSXSJ+7rYTV2AqpT7y7pkLgPCgFRqgqB5z65H8jghU+q3KrFt6Pn1Ek
+	UCvhWS3fDFUm4xy25HRNeOOdUHvDPQ==
+X-Google-Smtp-Source: AGHT+IECpo32ALWrFa1cNaiDX3uH6CqXkFCNWGuhJmwvZ0p1RSpM7dQPjKfV2CnvU0hTwmPQDg65lg==
+X-Received: by 2002:a05:6000:2a4:b0:38f:2990:c074 with SMTP id ffacd0b85a97d-390ec7cfe62mr4082089f8f.16.1740751168393;
+        Fri, 28 Feb 2025 05:59:28 -0800 (PST)
+Received: from draszik.lan ([80.111.64.44])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e485df22sm5389786f8f.97.2025.02.28.05.59.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Feb 2025 05:59:28 -0800 (PST)
+Message-ID: <e355ce38815760e69f40ec6d9d27fb6cab8f9894.camel@linaro.org>
+Subject: Re: [PATCH v2 3/6] dt-bindings: mfd: add max77759 binding
+From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Lee Jones <lee@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Linus Walleij
+ <linus.walleij@linaro.org>, Bartosz Golaszewski	 <brgl@bgdev.pl>, Srinivas
+ Kandagatla <srinivas.kandagatla@linaro.org>, Kees Cook <kees@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, Peter Griffin	
+ <peter.griffin@linaro.org>, Tudor Ambarus <tudor.ambarus@linaro.org>, Will
+ McVicker <willmcvicker@google.com>, kernel-team@android.com,
+ linux-kernel@vger.kernel.org, 	devicetree@vger.kernel.org,
+ linux-gpio@vger.kernel.org, 	linux-hardening@vger.kernel.org
+Date: Fri, 28 Feb 2025 13:59:26 +0000
+In-Reply-To: <CAL_JsqK-_rPZqt_vRv75dSWDLUAyZ-LB=qz5J=Kse=7bO4q8sA@mail.gmail.com>
+References: <20250226-max77759-mfd-v2-0-a65ebe2bc0a9@linaro.org>
+	 <20250226-max77759-mfd-v2-3-a65ebe2bc0a9@linaro.org>
+	 <20250227130451.GA1783593-robh@kernel.org>
+	 <503e105b71fa4271f40a2d3ca18ba13ed7d45a65.camel@linaro.org>
+	 <CAL_JsqK-_rPZqt_vRv75dSWDLUAyZ-LB=qz5J=Kse=7bO4q8sA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.53.2-1 
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250226-max77759-mfd-v2-0-a65ebe2bc0a9@linaro.org>
- <20250226-max77759-mfd-v2-3-a65ebe2bc0a9@linaro.org> <20250227130451.GA1783593-robh@kernel.org>
- <503e105b71fa4271f40a2d3ca18ba13ed7d45a65.camel@linaro.org>
-In-Reply-To: <503e105b71fa4271f40a2d3ca18ba13ed7d45a65.camel@linaro.org>
-From: Rob Herring <robh@kernel.org>
-Date: Fri, 28 Feb 2025 07:01:35 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqK-_rPZqt_vRv75dSWDLUAyZ-LB=qz5J=Kse=7bO4q8sA@mail.gmail.com>
-X-Gm-Features: AQ5f1Jo7EndHwP8BRLSbmoeH26pdkVjNoOZvQIz2llEEQ2ewDNuDr81I38wLGHg
-Message-ID: <CAL_JsqK-_rPZqt_vRv75dSWDLUAyZ-LB=qz5J=Kse=7bO4q8sA@mail.gmail.com>
-Subject: Re: [PATCH v2 3/6] dt-bindings: mfd: add max77759 binding
-To: =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-Cc: Lee Jones <lee@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
-	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	Peter Griffin <peter.griffin@linaro.org>, Tudor Ambarus <tudor.ambarus@linaro.org>, 
-	Will McVicker <willmcvicker@google.com>, kernel-team@android.com, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 27, 2025 at 7:14=E2=80=AFAM Andr=C3=A9 Draszik <andre.draszik@l=
-inaro.org> wrote:
->
-> On Thu, 2025-02-27 at 07:04 -0600, Rob Herring wrote:
-> > On Wed, Feb 26, 2025 at 05:51:22PM +0000, Andr=C3=A9 Draszik wrote:
-> > > The Maxim MAX77759 is a companion PMIC for USB Type-C applications an=
-d
-> > > includes Battery Charger, Fuel Gauge, temperature sensors, USB Type-C
-> > > Port Controller (TCPC), NVMEM, and a GPIO expander.
+On Fri, 2025-02-28 at 07:01 -0600, Rob Herring wrote:
+> On Thu, Feb 27, 2025 at 7:14=E2=80=AFAM Andr=C3=A9 Draszik <andre.draszik=
+@linaro.org> wrote:
+> >=20
+> > On Thu, 2025-02-27 at 07:04 -0600, Rob Herring wrote:
 > > >
-> > > This describes the top-level device.
-> > >
-> > > Signed-off-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
-> > >
-> > > ---
-> > > v2:
-> > > * rename expected nvmem subdev nodename to 'nvmem-0'
-> > >   I'd have preferred just 'nvmem', but that matches nvmem-consumer.ya=
-ml
-> > >   and fails validation.
-> > >
-> > > Note: MAINTAINERS doesn't need updating, the binding update for the
-> > > first leaf device (gpio) adds a wildcard matching all max77759 bindin=
-gs
-> > > ---
-> > >  .../devicetree/bindings/mfd/maxim,max77759.yaml    | 104 +++++++++++=
-++++++++++
-> > >  1 file changed, 104 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/mfd/maxim,max77759.yam=
-l b/Documentation/devicetree/bindings/mfd/maxim,max77759.yaml
-> > > new file mode 100644
-> > > index 0000000000000000000000000000000000000000..87e3737896a289998a18b=
-67932dbccacfb8e3150
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/mfd/maxim,max77759.yaml
-> > > @@ -0,0 +1,104 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/mfd/maxim,max77759.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Maxim Integrated MAX77759 PMIC for USB Type-C applications
-> > > +
-> > > +maintainers:
-> > > +  - Andr=C3=A9 Draszik <andre.draszik@linaro.org>
-> > > +
-> > > +description: |
-> > > +  This is a part of device tree bindings for the MAX77759 companion =
-Power
-> > > +  Management IC for USB Type-C applications.
-> > > +
-> > > +  The MAX77759 includes Battery Charger, Fuel Gauge, temperature sen=
-sors, USB
-> > > +  Type-C Port Controller (TCPC), NVMEM, and a GPIO expander.
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    const: maxim,max77759
-> > > +
-> > > +  interrupts:
-> > > +    maxItems: 1
-> > > +
-> > > +  interrupt-controller: true
-> > > +
-> > > +  "#interrupt-cells":
-> > > +    const: 2
-> > > +
-> > > +  gpio-controller: true
-> > > +
-> > > +  "#gpio-cells":
-> > > +    const: 2
-> >
-> > Why do you have GPIO properties here and in the child node? Either woul=
-d
-> > be valid, but both probably not. Putting them here is actually
-> > preferred.
->
-> That's an oversight, I meant to put them into the child only, not here,
-> since the child is the one providing the gpio functionality.
->
-> What's the reason to have it preferred inside this parent node?
+> > >=20
+> > > Why do you have GPIO properties here and in the child node? Either wo=
+uld
+> > > be valid, but both probably not. Putting them here is actually
+> > > preferred.
+> >=20
+> > That's an oversight, I meant to put them into the child only, not here,
+> > since the child is the one providing the gpio functionality.
+> >=20
+> > What's the reason to have it preferred inside this parent node?
+>=20
+> It really depends whether the GPIO block is a separate sub-block which
+> is going to get reused or has its own resources or not. It's the same
+> thing in system controllers which are often just a collection of
+> leftover control bits.
+>=20
+> We just don't want child nodes created just for the ease of
+> instantiating drivers in Linux. While it's nice if drivers and nodes
+> are 1 to 1, but that's specific to an OS.
+>=20
+> You already need other child nodes here, so I don't care too much in this=
+ case.
 
-It really depends whether the GPIO block is a separate sub-block which
-is going to get reused or has its own resources or not. It's the same
-thing in system controllers which are often just a collection of
-leftover control bits.
+Thanks Rob for taking the time and for the explanation! I'll keep
+that in mind for the future.
 
-We just don't want child nodes created just for the ease of
-instantiating drivers in Linux. While it's nice if drivers and nodes
-are 1 to 1, but that's specific to an OS.
+Cheers,
+Andre'
 
-You already need other child nodes here, so I don't care too much in this c=
-ase.
 
-Rob
