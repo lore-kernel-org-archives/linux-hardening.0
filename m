@@ -1,111 +1,103 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 365E135971;
-	Sat,  1 Mar 2025 15:47:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2E8C1BC4E;
+	Sat,  1 Mar 2025 16:57:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740844060; cv=none; b=pdlOrfA2YgY1TTqTR9Z27VVw6yB5ghWk/VTX5wjZXTeMZj9jqWHfN2/x77wKWBQxPuXo8HRGzUkNPUA86CVGdbe3oztYvDYBPib9jZKpPVEzruQ40+D8OCyqFfFWBtGSItY3xuNe/dRWhkB7lnGk5UIqyIKtUCH57W5OK3Dl2aQ=
+	t=1740848250; cv=none; b=RjtM1ZogvwtUw9O47LeUovEhgdKvQ2icNzwBRUOI93bidxMEcYqwmiA183Tft01f9pQyU+ntJVUl7DbBrKlWhF1zfdOoDcX8uTpCD6L0bxggiVtH1cWzOEs97xsOKjCmEHlI5ALsEsJoe+KsTYjxmyJDaxf24eaI6RitTmfG5LA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740844060; c=relaxed/simple;
-	bh=qaYwzM0tPLZWBNtMZwEjySSIGmwDhWL+JeN07b9+R70=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=c1lkKMLyUCSBYmSKXItlTf0wwA+xdHmvK11XrUo9vuMGguPF2SW376l3alieSJCJVSUyPxwdl/NsMfrv/ndGlTephXITWQmnL7Nhtz73KfNJoD4Onwb/i61rQlu6Xilbpp5Lv5lVNnJ1WzSS31/brc8MxXqqUftOGghoBQNNN1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PihMv54q; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740848250; c=relaxed/simple;
+	bh=861EVDC7x+OyGKwSipHTxhIzgg06WFsS/lrp6j4vdXQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Aogsm2G1DHs925/riI8MvbWsLov5XWK5bPF3gexZCXa+6rXMXshA/dpAEpL4wsZ3mFxd1IsaPO5OQHOEwsBYRl8S54HTiFAROK5XJEAw/EsB//FS5jkuu8n2IaUTwt8C9XA7CyWBE2tinZ072Nf9Du1CgswE/PCGpqbxAOqtkjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com; spf=pass smtp.mailfrom=ethancedwards.com; dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b=HbrJfcYq; arc=none smtp.client-ip=80.241.56.161
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ethancedwards.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PihMv54q"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ab7430e27b2so529128666b.3;
-        Sat, 01 Mar 2025 07:47:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740844057; x=1741448857; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=pvcp/Ow9PKUt0GAoY+iQqvy3UdZ1k/popr5tmmzvjdw=;
-        b=PihMv54qMAT6tRv6Iyp0TGc1+p9MzOjOc/vVPs4jTYlvy+fFL6ARWQjnQbJoB9NHTV
-         MZRwo+y9gn5TIMErHDSzX4eDUgFVqwMwXm3zUUT9TF7RPVpxLUyqdQentt79D4EjgUoN
-         t1Nepo7h2Ek3F3AMfZVnv48v+DjCBT6xnJGinEkzE5NEUwC3KG4hHNJ/MADG1Dw/MneV
-         4UWz1/iPtMdrCsUdHFuUDPpNIC+qE1v/X2VSHi3VAXXhj4OFqhWR73EKgo/oTzudw3Cn
-         cobAYjxK3cQBVogUhM11NtNsatL3GhtXU1NzAy8Gu6Y+Om0fzjMiKspVURCu2Fr9ki5d
-         PfvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740844057; x=1741448857;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pvcp/Ow9PKUt0GAoY+iQqvy3UdZ1k/popr5tmmzvjdw=;
-        b=qUwk3BbXbDJD3JcwCqJrXyzAfAgQVGPmY3uNXuWz1HkSceBP8CkMftXE/b4L1dG+mb
-         UiFcaGfvz0On6kOeBeWmwrANGM6qr5gNp96EDcna5YvNOsklrBjdcgnn15h+P6lGV6y9
-         1kF3//XvSkMp4K6AED2vevcBTFKbTdzegvdlkkBp5Upg5Vpu+Ii/OxAlHZNHvH7hoAGg
-         G6TuJ8TnA9dV/V6tE7+DCcOwvnDrlMSq4FnGYeY5TWURlkipssxMyw7bWqX1xDV4W8MI
-         innGHhmJY+wgRZMIB+MwXlzsTSD+Q5I1xrASc8quZlqcCi1w/+jBhuboobjHKyDqhXBW
-         4P4g==
-X-Forwarded-Encrypted: i=1; AJvYcCV48j9TLc8ThyXTUKB50idw5FXFp403XVFuWpFZqcunVor2yp97qLPFqkTAfCw4CGZRfPc7/dd+8w4ZSPs4XUz1@vger.kernel.org, AJvYcCX9cb08MTLRg6X92+Zi0O3T7CDKZuQQ9ekNRcBnyA290B8hgfN2Jsd8BCFeD22LPMu/jls/3jfCJ7xRliMc@vger.kernel.org, AJvYcCXtlRk6/MXcq0C2rUCdBIJfqwlk8OM4yfSAiU0scvYrmBaTCkGRQQPHcFI80xaoaNjUKYBKxU6aZu19u+6SWX8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YztyTqUs35ERtd51dgcx1XxBx8wIcKR7EA3rw/XcXF4+jgRDWj+
-	8yFZwctPeaJcOVdpsIUyDXb0dbax4Zqvq1tVnK7aE3yp69jaXplf
-X-Gm-Gg: ASbGncvWQ2/Lw9cDag0GSAh05ZTw5cBwy17nnG1E/RTwpjsHxikXIXmYMqi+Ugz5fyL
-	aplN+TYN49DGJTTu9stR/MjN6WHpDdcIvYX/6Cy6wM9cSlay07cN5hsMgtPFoQ7CeaV4bc/EyU8
-	NLiIYctNVPn1qTkKOOrpIXK98BH381rcg6X/ctQNuHj0oD3mqKeQ0YAU1C9AGUI/L1L53BLHTSO
-	dE3NfaEAjkjH0Jy6NY9NtKccnICkbe5e8uzyxw5z95whK+s0E5vretK9QpUgELs2YJ2nuUGJgMe
-	UiUMTQhDpcHmrXvmBTcoaDtTgGZrkQi6lCzEQXZjK7D7JW7/0n7uVyfy0LBR56QhQXPB3KoNqRQ
-	qKqTi717Ijc/epfg0py4Axwvi4PJ/t6y2cGc7AHxrcM+Hujvzu60ckirVMe8/naCe6I0UNDXnIU
-	ZQpZLXv3enfx18FWic06Y=
-X-Google-Smtp-Source: AGHT+IG+eqrFeyO3A7KDD2S5BrzG0fkxCUE3rRFtAlmdPlWrBAor9q1vffWfk9dSAf3TW6qzlDGFvA==
-X-Received: by 2002:a17:907:2d8c:b0:abf:4c5f:7546 with SMTP id a640c23a62f3a-abf4c5f7590mr317216866b.38.1740844057241;
-        Sat, 01 Mar 2025 07:47:37 -0800 (PST)
-Received: from ?IPV6:2001:1c00:20d:1300:1b1c:4449:176a:89ea? (2001-1c00-020d-1300-1b1c-4449-176a-89ea.cable.dynamic.v6.ziggo.nl. [2001:1c00:20d:1300:1b1c:4449:176a:89ea])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e4c3b6d252sm4287355a12.26.2025.03.01.07.47.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 01 Mar 2025 07:47:36 -0800 (PST)
-Message-ID: <fc5129dd-35a8-4bcc-8e54-b8facda2cbc4@gmail.com>
-Date: Sat, 1 Mar 2025 16:47:32 +0100
+	dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b="HbrJfcYq"
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4Z4rpq6l8hz9smn;
+	Sat,  1 Mar 2025 17:57:23 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ethancedwards.com;
+	s=MBO0001; t=1740848244;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=RPlJyMQSOJ2wMYTmAfyfebLAl5Ru+/PjDjFutvpbEog=;
+	b=HbrJfcYqmRqIaAv96HLJvK25k+DWJ98fobbKa0p2903dojUzCgifi/KKZiCEVWrGNqL5Hp
+	G2CA5kn+9O/jrtG/9wCFvJE6VAgy6jDtK0qoeaL75SQGPwjVhgeT3fTefdWkHvTDMQOU6C
+	AKz8tuEdUNZqRq2Tcmhh2nbA+vMiXbehLLZUd4r9sL6a1YJfp12T6RilkdeD0eBeJgg5+R
+	z9LR8YqTLoA4pL1Xzz8uGZg4uuRyYst3ALIDxndCqbTOSjypvnwJwH0wogwl2XLMn/M2rO
+	ysin6aY/dyHYky/b0viqRQW7N5vJjiXZEiaiFgTsoH798CjZZ7TpX/SlrQyuxA==
+From: Ethan Carter Edwards <ethan@ethancedwards.com>
+Date: Sat, 01 Mar 2025 11:57:19 -0500
+Subject: [PATCH] mm/shmem: fix uninitialized scalar variable
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 net-next 01/15] net: pppoe: avoid zero-length arrays in
- struct pppoe_hdr
-To: Michal Ostrowski <mostrows@earthlink.net>,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>, Pablo Neira Ayuso <pablo@netfilter.org>,
- Jozsef Kadlecsik <kadlec@netfilter.org>, Jiri Pirko <jiri@resnulli.us>,
- Ivan Vecera <ivecera@redhat.com>, Roopa Prabhu <roopa@nvidia.com>,
- Nikolay Aleksandrov <razor@blackwall.org>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Kuniyuki Iwashima <kuniyu@amazon.com>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- Ahmed Zaki <ahmed.zaki@intel.com>,
- Alexander Lobakin <aleksander.lobakin@intel.com>,
- Vladimir Oltean <olteanv@gmail.com>,
- Frank Wunderlich <frank-w@public-files.de>,
- Daniel Golle <daniel@makrotopia.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
- bridge@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, linux-hardening@vger.kernel.org,
- Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
-References: <20250228201533.23836-1-ericwouds@gmail.com>
- <20250228201533.23836-2-ericwouds@gmail.com>
-From: Eric Woudstra <ericwouds@gmail.com>
-Content-Language: en-US
-In-Reply-To: <20250228201533.23836-2-ericwouds@gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250301-entry_order_uninit-v1-1-3543b4e3fb28@ethancedwards.com>
+X-B4-Tracking: v=1; b=H4sIAG48w2cC/x3MPQqAMAxA4atIZgtNpYNeRUT8STVLlFRFKd7d4
+ vgN7yWIpEwRmiKB0sWRN8nAsoBpHWQhw3M2OOu8rSwakkOfftOZtD+FhQ+DrnYeRxymOkAOd6X
+ A9z9tu/f9ABOc159kAAAA
+X-Change-ID: 20250301-entry_order_uninit-129251b1ac9f
+To: Hugh Dickins <hughd@google.com>, 
+ Baolin Wang <baolin.wang@linux.alibaba.com>, 
+ Andrew Morton <akpm@linux-foundation.org>, Zi Yan <ziy@nvidia.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+ linux-hardening@vger.kernel.org, 
+ Ethan Carter Edwards <ethan@ethancedwards.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1211;
+ i=ethan@ethancedwards.com; h=from:subject:message-id;
+ bh=861EVDC7x+OyGKwSipHTxhIzgg06WFsS/lrp6j4vdXQ=;
+ b=LS0tLS1CRUdJTiBQR1AgTUVTU0FHRS0tLS0tCgpvd0o0bkp2QXk4ekFKWGJEOXFoNThlVGp6e
+ GhQcXlVeHBCKzJLV0M5dU1XdTdlemIwOG82SzhxT3VxaHRpdC83CnArZ1o0OGJBTXdmNTV1ODl5
+ cHZhVWNyQ0lNYkZJQ3VteVBJL1J6bnRvZVlNaFoxL1hacGc1ckF5Z1F4aDRPSVUKZ0luOEZtSDR
+ aNzMxdlorZTZ3M0R5d2VxQlF4VXpNS2VMVjZlMnJxblFmZHJiTkZjK2ZuUlV4bitlNW03M21YcQ
+ pES2lUSzFsNmNmbjg3QVVDTXNJemprN1ZjREZoL0xxa28rb25Nd0RPc1V5bgo9RFdQMgotLS0tL
+ UVORCBQR1AgTUVTU0FHRS0tLS0tCg==
+X-Developer-Key: i=ethan@ethancedwards.com; a=openpgp;
+ fpr=2E51F61839D1FA947A7300C234C04305D581DBFE
+X-Rspamd-Queue-Id: 4Z4rpq6l8hz9smn
 
+int entry_order has the possibility of being uninitialized when
+returning. Initializing it to zero at declaration appeases coverity and
+reduces risk of returning nonsense.
 
+Closes: https://scan7.scan.coverity.com/#/project-view/53698/11354?selectedIssue=1637878
+Fixes: 6dbc440b79b6 ("mm/shmem: use xas_try_split() in shmem_split_large_entry()")
+Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
+---
+ mm/shmem.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-On 2/28/25 9:15 PM, Eric Woudstra wrote:
->  drivers/net/ppp/pppoe.c       | 2 +-
->  include/uapi/linux/if_pppox.h | 4 ++++
->  2 files changed, 5 insertions(+), 1 deletion(-)
+diff --git a/mm/shmem.c b/mm/shmem.c
+index d19d33e98320d5e0ccbc86616bb3ea30d29f0cc1..3718c71aba9304dd3ca8df137a19e0564b8aadb2 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -2153,7 +2153,8 @@ static int shmem_split_large_entry(struct inode *inode, pgoff_t index,
+ {
+ 	struct address_space *mapping = inode->i_mapping;
+ 	XA_STATE_ORDER(xas, &mapping->i_pages, index, 0);
+-	int split_order = 0, entry_order;
++	int split_order = 0;
++	int entry_order = 0;
+ 	int i;
+ 
+ 	/* Convert user data gfp flags to xarray node gfp flags */
 
-The maintainers email: Michal Ostrowski <mostrows@earthlink.net>
-Returns 403: 550 5.5.1 Recipient rejected. This mailbox does not exist here.
+---
+base-commit: c0eb65494e59d9834af7cbad983629e9017b25a1
+change-id: 20250301-entry_order_uninit-129251b1ac9f
+
+Best regards,
+-- 
+Ethan Carter Edwards <ethan@ethancedwards.com>
+
