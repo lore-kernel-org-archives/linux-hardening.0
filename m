@@ -1,47 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBB8E78F3A;
-	Mon,  3 Mar 2025 21:49:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1D6B1E5213;
+	Mon,  3 Mar 2025 21:52:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741038581; cv=none; b=L9DSuynpf8PnJd79brHHtCT5cakiGRKLS5rRtZE8Xj2QHvNiu39H3FFgaiT1IEZjY11PGXfsIYoNkVGrKPeLFMv47QzodjgHuYyh4QW6M5iBD4/7nJSMONnrPByLepW7W0SS8HBXNFfyB5A9XMMcYrVUU/i8iwGijUIpILABwfI=
+	t=1741038766; cv=none; b=ShkbStd3og/imRnrNotGcibAyGc/yUHpFo1aLVMgYeu6xrM9nDS6DZjjQln3R3IpfkfI7YKqRNTsdh86ldKeZF4eEXqC9Okgf6H1GkSuxU6RBPLN9agL8X/q9PR4wL5+6m7UnEloMvhUcrhKbnf7IoXvNtcPDZJQQ5rHpcRAkx0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741038581; c=relaxed/simple;
-	bh=gNKh6z+V0XfWDMmfeQlgbVycioc4zKytg64P1clkbJ8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bTzYxd05HirpPni0RtUyn1zrfFJGY739r6VuZ22h++tmZ62G7Fp2lEfFDFEK26FJ4OktdBb0tNv4g6v0w5guXEBILAnmODg0AqGxeq7VtWdarB307aoMyY2SkCqysEQzj2DINBC/sYhhm5/jFt7qXtYK4Bpy65Kdix0iZWBL00M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nRvVNibq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741038766; c=relaxed/simple;
+	bh=5u8kfojZwKUUhSAm2BNerYZcjQOmKlfy3X+YC7zYZRY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lIMN321zYGShKhKmzyIj0MBiJMpjcHyjEh3Tj1eGL5n1rFA41Pw44ua7flR4297qG8OagesQ4Hl3HPR4mjAjjcoFlSmMD3Bq9n+tB0Sv10+AgIDeXXdBJZ3I5cSaUbKu2iBFTsFxCBSS4fWsvjfS041wYi7bNuyG/Cq7HLUVs28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lSqNzfik; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nRvVNibq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37EE5C4CED6;
-	Mon,  3 Mar 2025 21:49:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lSqNzfik"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A622C4CED6;
+	Mon,  3 Mar 2025 21:52:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741038581;
-	bh=gNKh6z+V0XfWDMmfeQlgbVycioc4zKytg64P1clkbJ8=;
+	s=k20201202; t=1741038766;
+	bh=5u8kfojZwKUUhSAm2BNerYZcjQOmKlfy3X+YC7zYZRY=;
 	h=From:To:Cc:Subject:Date:From;
-	b=nRvVNibqDskIMcUP6QRGlSo6ndaTnORk+V1rY4h6zFMWlt+59QCiXREcFsXN+aB05
-	 vgv3/ZnhDP4Q1Xzjy71YstxX7cZCbzyEIG9pkZBu/jMrxJXG30K4bysukDerGNW7Kt
-	 f6Si+DgQN67zDt7M5Skds95RBKHoJ4JGnQGpifCvgCKQcACYNuIQMow8wc7DVxlPa2
-	 iC1JPxrTrNGruGPh9RSA3HhM4y7HGCyKa9fHYJlIeRY21Qj3vSyy7q/4aWYDARjlO/
-	 icxYKrOnldxclpTLzb3BhZ0qBpGMqn4ev1HxE0ejb6xR8hdPc3E4kip1g9eBsCXGyX
-	 lvXgGKzSHGdAA==
+	b=lSqNzfikbpnoZYDMtA/etknEuUAqP9odrbb3O0I3M7EN/cz8fM3CkX3zyWZ7HTOgW
+	 2u/9pGOVduJ9CEgCEvbdFE+l+ZSvgZC9z0GD7KxqmDmrTI80MH1lHRuyrQk/9Ib91Y
+	 AoOiOQKQd3v48bMfODpnBrnv6S6WG46oyN/atlHR4oOoBh/vbhhIIW8UpfSXIMzzek
+	 RCkfLw+1yvxHC1yiaL6pMfSvb5P715rBp+n+8KEWoJRCHv33rWpdreywLFRmi8TT+t
+	 KbNuD9VlrBpe7YzKXCwnYxduER+FLqqQSz5k5gisdpTzhhUtY/wAkdLCeTnFnDh7Q0
+	 pjHEk3kgLGVog==
 From: Kees Cook <kees@kernel.org>
 To: Nathan Chancellor <nathan@kernel.org>
 Cc: Kees Cook <kees@kernel.org>,
 	Nick Desaulniers <ndesaulniers@google.com>,
 	Bill Wendling <morbo@google.com>,
 	Justin Stitt <justinstitt@google.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>,
 	llvm@lists.linux.dev,
-	linux-hardening@vger.kernel.org,
-	Paul Moore <paul@paul-moore.com>,
-	James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
+	linux-kbuild@vger.kernel.org,
+	David Gow <davidgow@google.com>,
 	linux-kernel@vger.kernel.org,
-	linux-security-module@vger.kernel.org
-Subject: [PATCH] hardening: Enable i386 FORTIFY_SOURCE on Clang 16+
-Date: Mon,  3 Mar 2025 13:49:37 -0800
-Message-Id: <20250303214929.work.499-kees@kernel.org>
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] kbuild: clang: Support building UM with SUBARCH=i386
+Date: Mon,  3 Mar 2025 13:52:41 -0800
+Message-Id: <20250303215240.work.379-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -49,40 +48,58 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1258; i=kees@kernel.org; h=from:subject:message-id; bh=gNKh6z+V0XfWDMmfeQlgbVycioc4zKytg64P1clkbJ8=; b=owGbwMvMwCVmps19z/KJym7G02pJDOnHlD8Y9LldbrLIfRttGnPjptzaosvZxZ7bORW9ThsG2 K9/f7q+o5SFQYyLQVZMkSXIzj3OxeNte7j7XEWYOaxMIEMYuDgFYCJK4Qx/OJS0Ms7W364rUzf4 xXTvwdz2dd2//jI8Ey+VvsOQb6yny8gw+4Rll1LAT/3ofXXir5ytGi7vfLT6Y8qk9P5/69QOpB5 kBQA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1751; i=kees@kernel.org; h=from:subject:message-id; bh=5u8kfojZwKUUhSAm2BNerYZcjQOmKlfy3X+YC7zYZRY=; b=owGbwMvMwCVmps19z/KJym7G02pJDOnHVFYGcmZcbd+5tO75XZ8Txdf6H6k+3nnxgvHn8Glfo o5NK3h/t6OUhUGMi0FWTJElyM49zsXjbXu4+1xFmDmsTCBDGLg4BWAiEdcYGWb7+fHoJH6buZ7h jtrvkr7EVOZbsx6u3Capetc31u/KxjRGhvtckmaL3E5/Ypio9d9wXrNrRbrgt38d4ZNDF8z7ovU 4nREA
 X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-The i386 regparm bug exposed with FORTIFY_SOURCE with Clang was fixed
-in Clang 16[1].
+The UM builds distinguish i386 from x86_64 via SUBARCH, but we don't
+support building i386 directly with Clang. To make SUBARCH work for
+i386 UM, we need to explicitly test for it.
 
-Link: https://github.com/llvm/llvm-project/commit/c167c0a4dcdb998affb2756ce76903a12f7d8ca5 [1]
+This lets me run i386 KUnit tests with Clang:
+
+$ ./tools/testing/kunit/kunit.py run \
+	--make_options LLVM=1 \
+	--make_options SUBARCH=i386
+...
+
+Fixes: c7500c1b53bf ("um: Allow builds with Clang")
 Signed-off-by: Kees Cook <kees@kernel.org>
 ---
+I could not find a cleaner way to do this without hardcoding a test
+for i386 UM. Does anyone see a more sane way to accomplish this? The
+comment above the CLANG_TARGET_FLAGS seems like it can't be done with
+UM's Makefile...
+
 Cc: Nathan Chancellor <nathan@kernel.org>
 Cc: Nick Desaulniers <ndesaulniers@google.com>
 Cc: Bill Wendling <morbo@google.com>
 Cc: Justin Stitt <justinstitt@google.com>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Nicolas Schier <nicolas@fjasle.eu>
 Cc: llvm@lists.linux.dev
-Cc: linux-hardening@vger.kernel.org
+Cc: linux-kbuild@vger.kernel.org
 ---
- security/Kconfig.hardening | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ scripts/Makefile.clang | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/security/Kconfig.hardening b/security/Kconfig.hardening
-index 23ffb0d7c845..c17366ce8224 100644
---- a/security/Kconfig.hardening
-+++ b/security/Kconfig.hardening
-@@ -286,7 +286,7 @@ config FORTIFY_SOURCE
- 	bool "Harden common str/mem functions against buffer overflows"
- 	depends on ARCH_HAS_FORTIFY_SOURCE
- 	# https://github.com/llvm/llvm-project/issues/53645
--	depends on !CC_IS_CLANG || !X86_32
-+	depends on !X86_32 || !CC_IS_CLANG || CLANG_VERSION >= 160000
- 	help
- 	  Detect overflows of buffers in common string and memory functions
- 	  where the compiler can determine and validate the buffer sizes.
+diff --git a/scripts/Makefile.clang b/scripts/Makefile.clang
+index 2435efae67f5..fa6f9a9be4ac 100644
+--- a/scripts/Makefile.clang
++++ b/scripts/Makefile.clang
+@@ -12,8 +12,12 @@ CLANG_TARGET_FLAGS_riscv	:= riscv64-linux-gnu
+ CLANG_TARGET_FLAGS_s390		:= s390x-linux-gnu
+ CLANG_TARGET_FLAGS_sparc	:= sparc64-linux-gnu
+ CLANG_TARGET_FLAGS_x86		:= x86_64-linux-gnu
++ifeq ($(SRCARCH):$(SUBARCH),um:i386)
++CLANG_TARGET_FLAGS		:= i386-linux-gnu
++else
+ CLANG_TARGET_FLAGS_um		:= $(CLANG_TARGET_FLAGS_$(SUBARCH))
+ CLANG_TARGET_FLAGS		:= $(CLANG_TARGET_FLAGS_$(SRCARCH))
++endif
+ 
+ ifeq ($(CLANG_TARGET_FLAGS),)
+ $(error add '--target=' option to scripts/Makefile.clang)
 -- 
 2.34.1
 
