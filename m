@@ -1,177 +1,557 @@
-Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B12EB217F40
-	for <linux-hardening@vger.kernel.org>; Mon,  3 Mar 2025 19:34:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B93A61C9EB1;
+	Mon,  3 Mar 2025 19:40:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741030459; cv=none; b=ViVGBVAYWOSe9B4zgZ7fatdJEonsH106FOEQbFHKzBYDrvrVS5S3A0hTF/uhIcQcHCM5PQUSR8z9gH1HcHogmTZYmrMnSNGtVMjlbGqUIFc8UsqmH+AKGRXC/pAydH10G3dYkIMKdfJ39F2hJxDTW4lRKzvfZNifs+4KCmNGfmQ=
+	t=1741030836; cv=none; b=tNl4jwkK9mJEQVOvffPvA5LfHdVcXSDGu2tNN5N/iOrj5j7uCVR0Pjn1MS7XWW4y+U0f7NKemYO3VaU6n+3xUuIeT0RmcWxCapCT5UeN+EgZVMR14lqzcq9tMbVOf6P3VkwZ1csbUX7WiTf/XcKw9UVFf6UK4vuXU0VFQb2rI2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741030459; c=relaxed/simple;
-	bh=v+CymtTSnhzau6gvKAu/GJ76T7dVVsDpnT9yJxPQmtI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ff1RUc3ZlKvHKsdcl9i1TJGO3mz49Tbkk+sFfHmXpFksxphNg16td6Lm7i4mn2olMcz6JLbYHvxLkCkqnV6zbGUMKn1iraJkjciriypVcqxg9ohzKGU4vMLXUbUSpzbVPQ8waOL/4MKtP87SmBiOYZQhUHPGpfyRXSwWohZiWFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=YpuA3+Vc; arc=none smtp.client-ip=209.85.210.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1741030836; c=relaxed/simple;
+	bh=FnECioS5CJY9R5MBrpJLf6oWuTWfgDPybF/o0FBnxh8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RFwTOdb/MNtX+mg6rml94q88dygaZ1hC5Bhh5UOCWUna3fbeuUtgiAqQZBWA/jYMKRxY3/PPUEN35BpjvvQeb/yjs0i1yzElFg/CpvaS/cs6khX1O8pl2/NsinArZUvhi8CLRkCo+BohYCgwRa12XaV5g8zB68h+L7404lmu5tk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FCVkQ0XN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YpuA3+Vc"
-Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-724daedf8c3so908345a34.3
-        for <linux-hardening@vger.kernel.org>; Mon, 03 Mar 2025 11:34:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1741030456; x=1741635256; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7TRJ44BH31NUhCHJXuBhqstjp6BiV2xjfEwoVOhwUP0=;
-        b=YpuA3+VcdJluMgth9Y1o4DnQ1qkAf3A3HQ4/YSxzFHm9jyBjwoqChGbO1w9NHne3/s
-         4kmHxGYUlS/bYmQoj8PZP5ImiT66Yq0bHElT/Cv1sTkD3meaeQrkqBTCwjRsHxAkkJZn
-         OSTb1bdVDB4/Boj4ic+RkT4xBIF+CDQWEVk1Y=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741030456; x=1741635256;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7TRJ44BH31NUhCHJXuBhqstjp6BiV2xjfEwoVOhwUP0=;
-        b=uKjITvDdrJRvFzdG+Nbzm3GixqcVRaliJXjzs6zqkHy7OsskNwIQCqhUrrlWqyTbvb
-         t9L8/cka3LmMiXFCCNVSSMvNZhuJnoKAy07tFQUHHsilLRJX4ROTlBNFVI3CwHB97Isi
-         +5yHCTPMeNplIHK4rTdorOSl6HPkzIehFy19R8I5QCWAfoiGHsW+7WyntbR6MGYoAYun
-         xnMU8Y4hP1BU2/u4gzp+hSC3q+58YYqhvBNu+B6Mtqw2rZSmMmZ7WL5CRO6DBXb5XgcD
-         d/vgZElM+NripluQf7XqOHAUC3T9mCZLY1+QgWAn5oOD4kzmKSy1pUqiMQwcgllnK/pH
-         JOEA==
-X-Forwarded-Encrypted: i=1; AJvYcCUSPGpm2nmYdUFCEy0tsH8+LAC70nrz2YPyYESrANrDz8ru1uyjVjjf759Zo7Jb2yB/gNw2XQkAuKQ3q3JpdRA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxvoVSbjwdLg6u3QdP4Cp66tA3uiNBgT46q25LzZ9+NnG/muU8n
-	C++MYS2PyZcF+Zvax9a8d/XFaQ81bptreC81GCYSENou7A2jMcFz9M2C6nKThr3JGIkFJpFBdDB
-	o9ewqpGMMXulHwN6ta2CCU404UIWitafDBEEq
-X-Gm-Gg: ASbGncvsB7B+Qzg2eBEt3Pc9jxDL1b1tK8o1GUAzjT9Ui85ltOTGgPAOcEHyD/v8kTr
-	RE0/1dROpBafNCcoTk7hHQJn0I0wXMAstaP67CiQIcqb/opXiZOJTI8UKWUxfcBgdW4DVokU9Kq
-	VVdTzmXGZ0jYpHThT/ilWxbQ5utgu2pS9jeUzhwFD7TLJjQk09RGXt/AI=
-X-Google-Smtp-Source: AGHT+IEwrg6wY8Y2ouC1pR3h3Bh3ijMUnINP28bst/fv0Tz3SsD+Thqpp0hOQ1CjWKueIO3bwWa1zIY9jvKARU43hRY=
-X-Received: by 2002:a05:6808:179f:b0:3f4:3ec:11ff with SMTP id
- 5614622812f47-3f558304cd2mr3549126b6e.0.1741030456616; Mon, 03 Mar 2025
- 11:34:16 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FCVkQ0XN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45D85C4CED6;
+	Mon,  3 Mar 2025 19:40:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741030836;
+	bh=FnECioS5CJY9R5MBrpJLf6oWuTWfgDPybF/o0FBnxh8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FCVkQ0XNHr6Pqzhsl385ybq33MQQeHc9slRUnDeXGUG/El7dAHA8AqzSHj423Y4dH
+	 ISF9dS2c1oVpH23lWuupZkGYzKp3BJdTSiG2gVnL21xHfZkwmLBXwiItvMSTUBLlmj
+	 4eJc/1zi8M4N7hXR7QMetwkH0yyjfN73V7FJagQcrgO9ol7FP0UAhhmpX1djvq+2Lb
+	 lSbKVWODGIDOB2IFA4+oFtSrklZuGOjKUC2AZ+BPJzb1qTx0HxVdmooFHopCY8Mszi
+	 ycqBQRnJJVda7STOoB4Z2sWoKN+QeMaDBeHcE2dbrcXjb0BiL0QxHb7BDhs3loaPLL
+	 7bTDcmrzxDe2g==
+Date: Mon, 3 Mar 2025 11:40:33 -0800
+From: Kees Cook <kees@kernel.org>
+To: dev@aravind.cc
+Cc: linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+	torvalds@linux-foundation.org, linux-hardening@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: Re: NEW GCC EXTENSION for kernel memory management.
+Message-ID: <202503031112.534E856@keescook>
+References: <1a7b27a4-1030-c30f-03e8-0868ee9ea6b9@aravind.cc>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250303050921.3033083-1-jeffxu@google.com> <20250303050921.3033083-4-jeffxu@google.com>
- <24be17fd-4899-49ae-9b4e-9372fcb4e0cd@lucifer.local>
-In-Reply-To: <24be17fd-4899-49ae-9b4e-9372fcb4e0cd@lucifer.local>
-From: Jeff Xu <jeffxu@chromium.org>
-Date: Mon, 3 Mar 2025 11:34:05 -0800
-X-Gm-Features: AQ5f1Jq2xY3e4auvFuYbMS1vMNpdRf4M_yrHWrDo25LJ6mNLdQqRcc_Co3iWjCs
-Message-ID: <CABi2SkVbu13SQ9HOWHiVUqCddYc9tuphV4L-obDQaEQy5wqx1w@mail.gmail.com>
-Subject: Re: [PATCH v8 3/7] mseal sysmap: enable x86-64
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: akpm@linux-foundation.org, keescook@chromium.org, jannh@google.com, 
-	torvalds@linux-foundation.org, vbabka@suse.cz, Liam.Howlett@oracle.com, 
-	adhemerval.zanella@linaro.org, oleg@redhat.com, avagin@gmail.com, 
-	benjamin@sipsolutions.net, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-mm@kvack.org, 
-	linux-kselftest@vger.kernel.org, jorgelo@chromium.org, sroettger@google.com, 
-	hch@lst.de, ojeda@kernel.org, thomas.weissschuh@linutronix.de, 
-	adobriyan@gmail.com, johannes@sipsolutions.net, pedro.falcato@gmail.com, 
-	hca@linux.ibm.com, willy@infradead.org, anna-maria@linutronix.de, 
-	mark.rutland@arm.com, linus.walleij@linaro.org, Jason@zx2c4.com, 
-	deller@gmx.de, rdunlap@infradead.org, davem@davemloft.net, peterx@redhat.com, 
-	f.fainelli@gmail.com, gerg@kernel.org, dave.hansen@linux.intel.com, 
-	mingo@kernel.org, ardb@kernel.org, mhocko@suse.com, 42.hyeyoo@gmail.com, 
-	peterz@infradead.org, ardb@google.com, enh@google.com, rientjes@google.com, 
-	groeck@chromium.org, mpe@ellerman.id.au, aleksandr.mikhalitsyn@canonical.com, 
-	mike.rapoport@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1a7b27a4-1030-c30f-03e8-0868ee9ea6b9@aravind.cc>
 
-On Mon, Mar 3, 2025 at 4:01=E2=80=AFAM Lorenzo Stoakes
-<lorenzo.stoakes@oracle.com> wrote:
->
-> I tried b4 shazam'ing this and there's a problem applying the patch, seem=
-s
-> maybe a conflict?
->
-> Not sure if Andrew can resolve or if something needs to be done here?
->
-> Seems to be commit d77a800944d8 ("mm: make DEBUG_@WX dependent on
-> GENERIC_PTDUMP")?
->
-> Should be a trivial resolve though.
->
-This version is based on linux-main, if that helps resolving the conflict.
+On Thu, Feb 20, 2025 at 07:26:10PM -0500, Aravind Ceyardass wrote:
+> Hello Kernel People,
+> 
+> I have developed a new GCC extension called reftrack that could be used for reference counting. Instead of manually adding code for
+> add()/dec() the reference count, it could be generated by this extension. 
 
-I can also rebase using the mm-(unstable/stable) branch or other
-branches if asked.
+Interesting! Two questions immediately pop to mind:
 
-Thanks
--Jeff
+1) Have you done any performance analysis of the resulting kernel?
+   Specifically, comparing it against stuff like KASAN which would catch
+   similar problems. And comparing memory usage between this and KASAN too.
+
+2) Have you validated this implementation against any existing
+   Use-After-Free flaws? I'd be curious to see which kinds of UaF flaws
+   it would catch. I think many depend on dangling pointers -- i.e. the
+   alloc/free count is correct but something is still holding a pointer
+   anyway.
+
+> 1-minute intro 
+> 
+> If you have a structure S like this
+> 
+> 
+> typedef struct S S;
+> S *p = ... , *q = ...;
+> p = q;
+> 
+> It gets transformed into 
+> 
+> 
+> typedef struct S S;
+> S *p = ... , *q = ...;
+> S_addref(q);
+> S_removeref(p);
+> p = q;
+
+It looks like the reference counting is happening in a header of the
+allocated memory? Assuming alignment is correctly handled, this should
+be fine for kmalloc, though I'm less sure about vmalloc, which may have
+users depending on allocations being PAGE_SIZE aligned or having a
+multiple of PAGE_SIZE available. That might need some checking.
+
+> The extension is available at https://github.com/acbits/reftrack-plugin. I have also attached a prototype kernel implementation with this email.
+
+For compiler extensions we want things to be upstream in GCC or Clang,
+preferably both. We're considering GCC plugins as deprecated in Linux,
+but they do serve as a good proof of concept! :)
+
+> All suggestions welcome.
+
+I've added the linux-hardening and linux-mm mailing lists, as folks in
+both lists will likely have Opinions. :)
+
+The "hooking" of kmalloc and vmalloc would need to be reworked -- I
+expect it would be better to include the logical changes directly
+in the existing allocators.
+
+I would upgrade the pr_err() and pr_warn() calls to WARN_ONCE() or
+similar so it would trigger full backtraces.
+
+Perhaps a liveness check is also needed as a compiler instrumentation,
+as in, check that refcount>0 before accessing the object. I would expect
+that to be extremely expensive, though.
+
+I think you may need to add some more advanced analysis of the ref
+counts when a page is freed back to the page allocator to detect
+dangling pointers. i.e. if a page is being released back to the page
+allocator, all the objects in the page must have their ref count be
+zero.
+
+Have you tried this against the existing LKDTM tests? (See
+drivers/misc/lkdtm/.) I expect these Use After Free cases wouldn't
+be caught, as they depend on dangling pointers:
+	WRITE_AFTER_FREE
+        READ_AFTER_FREE
+
+I would assume SLAB_FREE_DOUBLE would be caught (though right now it
+already is, but adding a better test might be good, something that
+performs: A = alloc, B = alloc, free A, free B, free A. Current sanity
+checks in the slab won't catch that, but I think this refcount
+implementation would.
+
+Thanks for sending this! I'd be very curious to see how well it performs
+and whether it'd be possible to get this extension into GCC and Clang.
+
+-Kees
+
+> 
+> Regards
+> 
+> Aravind
+
+> // GCC reftrack plugin based heap management for the Linux kernel
+> // SPDX-License-Identifier: GPL-2.0-only
+> /************************************************************
+> Copyright (C) 2022-2023 Aravind Ceyardass (dev@aravind.cc)
+> ************************************************************/
+> 
+> 
+> #ifndef LKRCMM__
+> #define LKRCMM__
+> 
+> #include <linux/compiler.h>
+> #include <linux/compiler_attributes.h>
+> #include <linux/overflow.h>
+> #include <linux/printk.h>
+> #include <linux/types.h>
+> #include <linux/syslog.h>
+> #include <linux/mm.h>
+> #include <linux/vmalloc.h>
+> #include <linux/limits.h>
+> #include <linux/slab.h>
+> #include <linux/atomic.h>
+> #include <linux/reftrack.h>
+> 
+> #ifdef REFTRACK_DEBUG
+> #define REFTRACK_USE_MARK
+> #endif
+> 
+> typedef atomic_t reftrack_count_t;
+> 
+> // structure that is prefixed to allocated memory
+> 
+> struct reftrack_ {
+>     reftrack_count_t rc;       // reference count
+> #ifdef REFTRACK_DEBUG
+>     const char *filename;      // filename of file where allocation happened
+>     unsigned lineno;           // line number in the corresponding file
+> #endif
+> #ifdef REFTRACK_USE_MARK
+>     int mark;
+> #endif
+>     void (*dtor)(void*);       // destructor
+> };
+> 
+> typedef struct reftrack_ reftrack_t;
+> 
+> // Enable extremely verbose tracing.
+> // TODO At present, it is a compile time option. Make it dynamic through kernel facilities.
+> 
+> #ifdef REFTRACK_TRACE
+> #define REFTRACK_TRACE_LOG(...) do{__VA_ARGS__}while(0)
+> #else
+> #define REFTRACK_TRACE_LOG(...)
+> #endif
+> 
+> 
+> #define REFCOUNT_SET(v, x)     atomic_set(&(v), x)
+> #define REFCOUNT_INC(v)        atomic_inc(&(v))
+> #define REFCOUNT_DEC(v)        atomic_dec(&(v))
+> #define REFCOUNT_DEC_READ(v)   atomic_dec_and_test(&(v))
+> #define REFCOUNT_READ(v)       atomic_read(&(v))
+> 
+> #define REFTRACK_MARKER 0xfacebeef
+> 
+> 
+> typedef void *(*alloc_fn_t)(size_t, gfp_t);
+> 
+> #define REFTRACK_HDR(bodyp) ((reftrack_t *)((void *)(bodyp) - sizeof(reftrack_t)))
+> #define REFTRACK_BODY(hdrp) ((void*)hdrp + sizeof(reftrack_t))
+> #define REFTRACK_COUNTER(bodyp) (REFTRACK_HDR(bodyp)->rc)
+> #define REFTRACK_COUNT(bodyp) REFCOUNT_READ(REFTRACK_COUNTER(bodyp))
+> #define REFTRACK_DTOR(hdrp) (hdrp->dtor)
+> 
+> #ifdef REFTRACK_USE_MARK
+> 
+> #define REFTRACK_SET_MARK(p, v) do{ (p)->mark = v; } while(0)
+> #define mark_found(bodyp) (REFTRACK_HDR(bodyp)->mark == REFTRACK_MARKER)
+> 
+> #else
+> 
+> #define REFTRACK_SET_MARK(p, v) /* discard */
+> #define mark_found(p) true
+> 
+> #endif
+> 
+> #ifdef REFTRACK_DEBUG
+> 
+> #define REFTRACK_DEBUG_ARGS    ,__BASE_FILE__,__LINE__
+> #define REFTRACK_DEBUG_PARAMS_DECL  ,const char *const filename,const unsigned lineno
+> #define REFTRACK_DEBUG_PARAMS ,filename,lineno
+> 
+> #define reftrack_debug_init(x)                  \
+>     do{                                         \
+>         reftrack_t *const p = x;                \
+>         p->filename = filename;                 \
+>         p->lineno = lineno;                     \
+>     } while(0)
+> 
+> #define REFTRACK_DEBUG_LOG(...)                \
+>     do{                                         \
+>         __VA_ARGS__;                            \
+>     } while (0)
+> 
+> #else
+> 
+> #define REFTRACK_DEBUG_ARGS
+> #define REFTRACK_DEBUG_PARAMS_DECL
+> #define REFTRACK_DEBUG_PARAMS
+> #define reftrack_debug_init(x) /* discard */
+> #define REFTRACK_DEBUG_LOG(...)
+> 
+> #endif
+> 
+> /*
+>  * Create wrappers as some of the kernel memory functions are already macros and we can't use macros
+>  * due to their limitations.
+>  */
+> 
+> static inline void *old_kmalloc(size_t n, gfp_t flags){	return kmalloc(n, flags); }
+> 
+> static inline void *old_vmalloc(unsigned long n){ return vmalloc(n); }
+> 
+> static inline void *old_vzalloc(unsigned long n){ return vzalloc(n); }
+> 
+> static inline void *old_kvmalloc(size_t n, gfp_t flags){ return kvmalloc(n, flags); }
+> 
+> static inline void old_kfree(const void *p) { kfree(p); }
+> static inline void old_vfree(const void *p) { vfree(p); }
+> static inline void old_kvfree(const void *p) { kvfree(p); }
+> 
+> static void reftrack_hdr_init(reftrack_t *const rtp REFTRACK_DEBUG_PARAMS_DECL){
+>         REFCOUNT_SET(rtp->rc, 0);
+>         REFTRACK_SET_MARK(rtp, REFTRACK_MARKER);
+>         reftrack_debug_init(rtp);
+>         rtp->dtor = NULL;
+> }
+> 
+> REFTRACK_IGNORE MALLOC_LIKE static void *
+> rc_alloc_helper_(size_t n, gfp_t flags, alloc_fn_t alloc_fn REFTRACK_DEBUG_PARAMS_DECL)
+> {
+> 
+> 	size_t total_size;
+> 	void *p;
+> 
+> 	if (unlikely(check_add_overflow(n, sizeof(reftrack_t), &total_size)))
+> 		return NULL;
+> 
+> 	p = alloc_fn(total_size, flags);
+> 
+> 	if (p) {
+>         reftrack_hdr_init(p REFTRACK_DEBUG_PARAMS);
+>         p = REFTRACK_BODY(p);
+> 	}
+> 	return p;
+> }
+> 
+> REFTRACK_IGNORE MALLOC_LIKE static void *
+> rc_kcalloc_(size_t n, size_t size, gfp_t flags REFTRACK_DEBUG_PARAMS_DECL)
+> {
+> 
+> 	size_t total_size;
+> 
+> 	if (unlikely(check_mul_overflow(n, size, &total_size)))
+> 		return NULL;
+> 	else
+> 		return rc_alloc_helper_(total_size, flags, old_kmalloc REFTRACK_DEBUG_PARAMS);
+> }
+> 
+> 
+> REFTRACK_IGNORE MALLOC_LIKE static void *
+> rc_vmalloc_helper_(unsigned long n, void *(*const alloc_fn)(unsigned long)
+>                    REFTRACK_DEBUG_PARAMS_DECL)
+> {
+> 
+> 	size_t total_size;
+> 	void *p;
+> 
+> 	if (unlikely(check_add_overflow(n, sizeof(reftrack_t), &total_size)))
+> 		return NULL;
+> 
+> 	p = alloc_fn(total_size);
+> 
+> 	if (p) {
+> 		reftrack_hdr_init(p REFTRACK_DEBUG_PARAMS);
+>         p = REFTRACK_BODY(p);
+> 	}
+> 	return p;
+> }
+> 
+> REFTRACK_HEAP_FN static void *
+> rc_krealloc_(const void *p, size_t new_size, gfp_t flags
+>              REFTRACK_DEBUG_PARAMS_DECL)
+> {
+> 	void *rv = NULL;
+> 
+> 	if (!p) {
+> 		rv = rc_alloc_helper_(new_size, flags, old_kmalloc REFTRACK_DEBUG_PARAMS);
+> 		/* we have to increment reference count here due to realloc
+> 		 * behaving like malloc and we are forced to declare krealloc as a heap function.
+> 		 */
+> 		if (rv) {
+> 			REFCOUNT_INC(REFTRACK_COUNTER(rv));
+> 
+> 		}
+> 	} else if (new_size) {
+> 		void *orig_p = REFTRACK_HDR(p);
+> 		size_t total_size;
+> 
+> 		if (unlikely(check_add_overflow(new_size, sizeof(reftrack_t), &total_size))) {
+> 			pr_err("reftrack:realloc for |0x%p| has incorrect size:|%lu|\n",
+>                  p, new_size);
+> 		} else {
+> 			rv = krealloc(orig_p, total_size, flags);
+> 			if (rv != orig_p) {
+> 				int count = REFTRACK_COUNT(REFTRACK_BODY(rv));
+> 				if (count > 1)
+> 					pr_warn("reftrack:object |0x%p| moved while |%d| active references exist\n",
+>                          p, count);
+> 			}
+> 		}
+> 	} else {
+> /*
+>  * case: new_size is zero
+>  * We don't free the object as in original implementation because the object is
+>  * freed when reference count goes to zero.
+>  */
+>         int count = REFTRACK_COUNT(p);
+>         if (count > 1)
+>             pr_warn("reftrack:attempt to free object |0x%p| with |%d| active references\n",
+>                     count-1);
+> 	}
+> 
+> 	return rv ? REFTRACK_BODY(rv) : rv;
+> 
+> }
+> 
+> REFTRACK_IGNORE static void
+> rc_free_helper_(void *p, void (*const free_fn)(const void *)
+>                 REFTRACK_DEBUG_PARAMS_DECL){
+> 
+> 
+> 	if(!p || !mark_found(p))
+>             return;
+> 
+>     reftrack_t *rtp = REFTRACK_HDR(p);
+> 
+>     if (REFCOUNT_READ(rtp->rc) != 0) {
+>         pr_warn(
+> #ifdef REFTRACK_DEBUG
+>             "reftrack: WARNING object |0x%p| allocated at |%s:%u|, freed at |%s:%u| has |%d| reference(s)\n",
+>             rtp, rtp->filename, rtp->lineno,
+>             filename, lineno, REFCOUNT_READ(rtp->rc)
+> #else
+>             "reftrack: WARNING object |0x%p| has |%u| reference(s)\n",
+>             rtp, REFCOUNT_READ(rtp->rc)
+> #endif
+>             );
+>     }
+> 
+>     if (free_fn) {
+>         REFTRACK_SET_MARK(rtp, 0);
+>         free_fn(rtp);
+> 
+>     }
+> 
+> }
+> 
+> 
+> 
+> #define rc_kmalloc(n, f)     rc_alloc_helper_(n, f, old_kmalloc REFTRACK_DEBUG_ARGS)
+> #define rc_kcalloc(c, n, f)  rc_kcalloc_(c, n, f REFTRACK_DEBUG_ARGS)
+> #define rc_kzalloc(n, f)     rc_alloc_helper_(n, (f|__GFP_ZERO), old_kmalloc REFTRACK_DEBUG_ARGS)
+> #define rc_vmalloc(n)        rc_vmalloc_helper_(n, old_vmalloc REFTRACK_DEBUG_ARGS)
+> #define rc_vzalloc(n)        rc_vmalloc_helper_(n, old_vzalloc REFTRACK_DEBUG_ARGS)
+> #define rc_kvmalloc(n, f)    rc_alloc_helper_(n, f, old_kvmalloc REFTRACK_DEBUG_ARGS)
+> #define rc_krealloc(p, n, f) rc_krealloc_(p, n, f REFTRACK_DEBUG_ARGS)
+> #define rc_kfree(x)          rc_free_helper_(x, old_kfree REFTRACK_DEBUG_ARGS)
+> #define rc_vfree(x)          rc_free_helper_(x, old_vfree REFTRACK_DEBUG_ARGS)
+> #define rc_kvfree(x)         rc_free_helper_(x, old_kvfree REFTRACK_DEBUG_ARGS)
+> 
+> 
+> #define REFTRACK_PROLOG(S)                                            \
+>     struct S;                                                         \
+>     static void S##_addref(const struct S *const);                    \
+>     static void S##_removeref(const struct S *const);                 \
+>     REFTRACK_IGNORE static void S##_destroy(struct S *const);
+> 
+> #define DECL_ADDREF(S)                                                  \
+>     static inline void S##_addref(const struct S *const p) {            \
+>         if (!p)                                                         \
+>             return;                                                     \
+>                                                                         \
+>         if (!mark_found(p)){                                            \
+>             pr_warn("reftrack: Invalid pointer/use-after-free |0x%p| to |%s_addref|\n", p, #S); \
+>             return;                                                     \
+>         }                                                               \
+>         REFCOUNT_INC(REFTRACK_COUNTER(p));                              \
+>         REFTRACK_TRACE_LOG(pr_info("%s:|0x%p|:+1\n", #S, p));           \
+>     }
+> 
+> #define DECL_REMOVEREF(S, DTOR)                                         \
+>     static inline void S##_removeref(const struct S *const p) {         \
+>         if (!p)                                                         \
+>             return;                                                     \
+>                                                                         \
+>         if (!mark_found(p)) {                                           \
+>             pr_warn("reftrack: Invalid pointer/use-after-free |0x%p| to |%s_removeref|\n", p, #S); \
+>             return;                                                     \
+>         }                                                               \
+>         REFTRACK_TRACE_LOG(pr_info("%s:|0x%p|:-1n", #S, p));            \
+>         reftrack_t *const rtp = REFTRACK_HDR(p);                        \
+>                                                                         \
+>         if (REFCOUNT_DEC_READ(rtp->rc)){                                \
+>             REFTRACK_TRACE_LOG(pr_info("reftrack:free object:%p: type:%s:\n",p,#S)); \
+>             do{ DTOR((struct S*)p); }while(0);                          \
+>             rc_kvfree((void*)p);                                        \
+>         }                                                               \
+>                                                                         \
+>     }
+> 
+> #define REFTRACK_STRUCT(S)                      \
+>     REFTRACK_PROLOG(S);                         \
+>     struct REFTRACK(S) S
+> 
+> #define REFTRACK_EPILOG(S)                      \
+>     DECL_ADDREF(S)                              \
+>     DECL_REMOVEREF(S, REFTRACK_NOP)
+> 
+> #define REFTRACK_EPILOG_WITH_DTOR(S)      \
+>     DECL_ADDREF(S)                        \
+>     DECL_REMOVEREF(S, S##_destroy)
+> 
+> /*
+>  * Default implementation of addref & removeref functions.
+>  */
+> 
+> static void reftrack_addref(const void *const);
+> 
+> static inline void reftrack_addref(const void *const p) {
+>     
+>     if (!p)
+>         return;
+> 
+>     if (!mark_found(p)){
+>         pr_warn("reftrack: Invalid pointer/use-after-free |0x%p|\n", p);
+>         return;
+>     }
+> 
+>     REFCOUNT_INC(REFTRACK_COUNTER(p));
+>     REFTRACK_TRACE_LOG(pr_info("reftrack:|0x%p|:+1\n", p));
+> 
+> }
+> 
+> static void reftrack_removeref(const void *const);
+> 
+> static inline void reftrack_removeref(const void *const p) {
+> 
+>     if (!p)
+>         return;
+> 
+>     if (!mark_found(p)){
+>         pr_warn("reftrack: Invalid pointer/use-after-free |0x%p|\n", p);
+>         return;
+>     }
+> 
+>     REFTRACK_TRACE_LOG(pr_info("reftrack:|0x%p|:-1\n", p));
+>     reftrack_t *const rtp = REFTRACK_HDR(p);
+> 
+>     /* checking for one as the value before decrement to zero is one */
+>     if (REFCOUNT_DEC_READ(rtp->rc)){
+>         REFTRACK_DEBUG_LOG(pr_info("reftrack: releasing object |0x%p|\n", p));
+>         void (*dtor)(void *) = REFTRACK_DTOR(rtp);
+>         if (dtor) dtor((void*)p);
+>         rc_kvfree((void*)p);
+>     }
+> 
+> }
+> 
+> #ifdef REFTRACK_REPLACE_ALL
+> #define kmalloc(n, f)  rc_kmalloc(n, f)
+> #define kcalloc(c, n, f)  rc_kcalloc(c, n, f)
+> #define kzalloc(n, f)  rc_kzalloc(n, f)
+> #define vmalloc(n)  rc_vmalloc(n)
+> #define vzalloc(n)  rc_vzalloc(n)
+> #define kvmalloc(n, f) rc_kvmalloc(n, f)
+> #define krealloc(p, n, f) rc_krealloc(p, n, f)
+> #define kfree(x)    rc_kfree(x)
+> #define vfree(x)    rc_vfree(x)
+> #define kvfree(x)   rc_kvfree(x)
+> #endif
+> 
+> #endif // LKRCMM__
+
+> // SPDX-License-Identifier: Apache-2.0
+> /************************************************************
+> Copyright (C) 2023 Aravind Ceyardass (dev@aravind.cc)
+> ************************************************************/
+> 
+> #ifndef REFTRACK__
+> #define REFTRACK__
+> 
+> #define REFTRACK_IGNORE_FLAG 0x1
+> #define REFTRACK_HEAP_FN_FLAG 0x2
+> #define REFTRACK_DESTRUCTOR_FN_FLAG 0x4
+> 
+> #define REFTRACK            __attribute__((__reftrack__()))
+> #define REFTRACK_CUSTOM(S)  __attribute__((__reftrack__(S##_addref, S##_removeref)))
+> #define REFTRACK_IGNORE     __attribute__((__reftrack__(REFTRACK_IGNORE_FLAG)))
+> #define REFTRACK_HEAP_FN    __attribute__((__reftrack__(REFTRACK_HEAP_FN_FLAG | REFTRACK_IGNORE_FLAG)))
+> #define REFTRACK_DESTRUCTOR_FN __attribute__((__reftrack__(REFTRACK_DESTRUCTOR_FN_FLAG)))
+> #define REFTRACK_NOP(x)
+> 
+> #define MALLOC_LIKE __attribute__((__malloc__))
+> 
+> #endif // REF TRACK__
 
 
-> On Mon, Mar 03, 2025 at 05:09:17AM +0000, jeffxu@chromium.org wrote:
-> > From: Jeff Xu <jeffxu@chromium.org>
-> >
-> > Provide support for CONFIG_MSEAL_SYSTEM_MAPPINGS on x86-64,
-> > covering the vdso, vvar, vvar_vclock.
-> >
-> > Production release testing passes on Android and Chrome OS.
-> >
-> > Signed-off-by: Jeff Xu <jeffxu@chromium.org>
-> > ---
-> >  arch/x86/Kconfig          | 1 +
-> >  arch/x86/entry/vdso/vma.c | 7 ++++---
-> >  2 files changed, 5 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> > index be2c311f5118..c6f9ebcbe009 100644
-> > --- a/arch/x86/Kconfig
-> > +++ b/arch/x86/Kconfig
-> > @@ -26,6 +26,7 @@ config X86_64
-> >       depends on 64BIT
-> >       # Options that are inherently 64-bit kernel only:
-> >       select ARCH_HAS_GIGANTIC_PAGE
-> > +     select ARCH_SUPPORTS_MSEAL_SYSTEM_MAPPINGS
-> >       select ARCH_SUPPORTS_INT128 if CC_HAS_INT128
-> >       select ARCH_SUPPORTS_PER_VMA_LOCK
-> >       select ARCH_SUPPORTS_HUGE_PFNMAP if TRANSPARENT_HUGEPAGE
-> > diff --git a/arch/x86/entry/vdso/vma.c b/arch/x86/entry/vdso/vma.c
-> > index 39e6efc1a9ca..a4f312495de1 100644
-> > --- a/arch/x86/entry/vdso/vma.c
-> > +++ b/arch/x86/entry/vdso/vma.c
-> > @@ -268,7 +268,8 @@ static int map_vdso(const struct vdso_image *image,=
- unsigned long addr)
-> >                                      text_start,
-> >                                      image->size,
-> >                                      VM_READ|VM_EXEC|
-> > -                                    VM_MAYREAD|VM_MAYWRITE|VM_MAYEXEC,
-> > +                                    VM_MAYREAD|VM_MAYWRITE|VM_MAYEXEC|
-> > +                                    VM_SEALED_SYSMAP,
-> >                                      &vdso_mapping);
-> >
-> >       if (IS_ERR(vma)) {
-> > @@ -280,7 +281,7 @@ static int map_vdso(const struct vdso_image *image,=
- unsigned long addr)
-> >                                      addr,
-> >                                      (__VVAR_PAGES - VDSO_NR_VCLOCK_PAG=
-ES) * PAGE_SIZE,
-> >                                      VM_READ|VM_MAYREAD|VM_IO|VM_DONTDU=
-MP|
-> > -                                    VM_PFNMAP,
-> > +                                    VM_PFNMAP|VM_SEALED_SYSMAP,
-> >                                      &vvar_mapping);
-> >
-> >       if (IS_ERR(vma)) {
-> > @@ -293,7 +294,7 @@ static int map_vdso(const struct vdso_image *image,=
- unsigned long addr)
-> >                                      addr + (__VVAR_PAGES - VDSO_NR_VCL=
-OCK_PAGES) * PAGE_SIZE,
-> >                                      VDSO_NR_VCLOCK_PAGES * PAGE_SIZE,
-> >                                      VM_READ|VM_MAYREAD|VM_IO|VM_DONTDU=
-MP|
-> > -                                    VM_PFNMAP,
-> > +                                    VM_PFNMAP|VM_SEALED_SYSMAP,
-> >                                      &vvar_vclock_mapping);
-> >
-> >       if (IS_ERR(vma)) {
-> > --
-> > 2.48.1.711.g2feabab25a-goog
-> >
+-- 
+Kees Cook
