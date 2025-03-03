@@ -1,65 +1,73 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AE0521C175;
-	Mon,  3 Mar 2025 17:17:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B30CB2153F7
+	for <linux-hardening@vger.kernel.org>; Mon,  3 Mar 2025 17:18:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741022252; cv=none; b=KtMnED4vNyT5W8kWLboU5t/EOV2Xtw8eVc2ukZHXOTArCkCj8OANscJ1lINY/uYv0AA+lL2ht234+rYslMHQ2IdMZe8r7BO+MhyQjehpgYfDrr5V4XKgfF0JXRQD76AVtVG4HplODZEETf4cTpqy90abFWKolSzHKYMOG6zSD4g=
+	t=1741022285; cv=none; b=CAf4kFSbXHxNSa7LQcLvPudOriRHL4igefvxJTmgcoo3e5TzSBYBTyMFaIvYtD7jWvs4OL5ZEzsRbX91MoVwCiGDtakiAQKi2VXnEFaj84slELVB6PBfxvavv2WOsI4fbcX1IHT9TOuK6bknM/RbnY15yS7ORn2tAmPJ6AMgLmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741022252; c=relaxed/simple;
-	bh=79w1X6pyIzGDJm1JHXG17hzw354uAzGwUl3ep4Nij4A=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=N72w9bmsmPBwUBv9GuGMU5uGndij8Vv6+dOThlPmZRgF1/wTC3baG5gIbPx0dmICj/NU30rmk+yVPQFp3hlMh4r40xZfeqD3vDtuI+e+TTXAnyoh7YOJv8NEoOi4yjElWHhr2lwd5HeqkA/DAQiy89E9u6K4CH2Wg8oKi3NG6Uc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WmJoVnKD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741022285; c=relaxed/simple;
+	bh=V2Ie10wQUXloxZeJ2MQE6IhJ6q3P5prVv5HAqJjEtIU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TGBBc2gTtkXuO3bxXO5f2xC+5xRVz1LYC40brbhMV83Kse3sCNU/NwVTu8GQoQjl7B46JGh4aDF/Tlf/7G4OVHat5ydOSSGueMHn4jFpLlwKws8sfleljy26GsWDGpVLQlMxoybBxK3V51lNcC0if/IlLGaBDlh7xTU0EOKhWqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ivBaPbWp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WmJoVnKD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1565C4CED6;
-	Mon,  3 Mar 2025 17:17:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ivBaPbWp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3477FC4CED6;
+	Mon,  3 Mar 2025 17:18:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741022251;
-	bh=79w1X6pyIzGDJm1JHXG17hzw354uAzGwUl3ep4Nij4A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=WmJoVnKD7a5kIqGNAHXry5k3P8avIICo0FIVNfcolPSFkPZXmV+OHRlNmPIUONfvQ
-	 xUERjG1fDnpLYZZ6qqcDaE/4ga7f6yPBJzYI2YIK8ldjeKuaIgYJBHSjoBwzyqMWIs
-	 G8v7e4/xGnarVjowPscxplZF7XVKWmjdghLFKO+f+SHqWr93Omo7LHTt8ax/wH/iay
-	 sOoioa9aGNvw7jYe5ifemNfp48i7ZiH52tqZbYx/7rstIEyChfpBysP3Mql/5V/vyC
-	 7zkd0nOvSkdlCsP6R7kwg5+uL3RcQ83u8EM2dzwvtWJ4i4XBNV2U8Q1DoBAYkFf4Rv
-	 dlt9c/hco/eNQ==
+	s=k20201202; t=1741022285;
+	bh=V2Ie10wQUXloxZeJ2MQE6IhJ6q3P5prVv5HAqJjEtIU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ivBaPbWpoE15iGYxAafq83zsrkZQ5VlKPT++9mbePxkuucL1fLQxUnsEECTwNWzG0
+	 G8sDAtaZELh9cXapzbNDiAiQkYLMRsww/fRYwM6X72u57oqcXTxIIxJIy+O1pbg7ZH
+	 0uYac0W8TvB7pOLCpgQyFE5Eb/kOcJ9lULe0993Q62uoJFZT6glfUCu/hfzx0V5q4p
+	 ndBX6Txz1xGESNGdLln7Q44xiks5Y/PQTCRiOHYxE3eAmqNJECF5c1sNyUQ4bN3ZUr
+	 b/bGKJBGSgC4yb8X7BjYd16ehVSAg3qyCpgP/KDPfxhgK4RruDOnlilSvqNPytCJmn
+	 t9f7sUJQ6+VLQ==
+Date: Mon, 3 Mar 2025 09:18:01 -0800
 From: Kees Cook <kees@kernel.org>
-To: Andy Shevchenko <andy@kernel.org>,
-	R Sundar <prosunofficial@gmail.com>
-Cc: Kees Cook <kees@kernel.org>,
-	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: (subset) [PATCH v2 linux-next 1/2] lib/string_choices: Rearrange functions in sorted order
-Date: Mon,  3 Mar 2025 09:17:26 -0800
-Message-Id: <174102224389.3197544.6260199272458870850.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20241119021719.7659-2-prosunofficial@gmail.com>
-References: <20241119021719.7659-1-prosunofficial@gmail.com> <20241119021719.7659-2-prosunofficial@gmail.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+	Andy Shevchenko <andy@kernel.org>, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 00/10] lib/string_choices: Add new helpers
+Message-ID: <202503030917.6A99B05D2D@keescook>
+References: <87y0xt6zgn.wl-kuninori.morimoto.gx@renesas.com>
+ <202502281143.149423E53@keescook>
+ <CAHp75VdX_LtL8vJAjwSqHfW9KbLGV5xhjX4MjFnpFo0VA2SMWA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHp75VdX_LtL8vJAjwSqHfW9KbLGV5xhjX4MjFnpFo0VA2SMWA@mail.gmail.com>
 
-On Tue, 19 Nov 2024 07:47:18 +0530, R Sundar wrote:
-> Rearrange misplaced functions in sorted order.
+On Fri, Feb 28, 2025 at 10:24:22PM +0200, Andy Shevchenko wrote:
+> On Fri, Feb 28, 2025 at 9:44 PM Kees Cook <kees@kernel.org> wrote:
+> >
+> > On Wed, Feb 26, 2025 at 05:34:48AM +0000, Kuninori Morimoto wrote:
+> > > I would like to use string_choices helper to cleanup the code, but it missing
+> > > some of well used string pair in kernel. This patch-set adds it.
+> >
+> > Do you have some Coccinelle scripts or other patches that show the use
+> > of these helpers? We tend to avoid adding new helpers to the kernel
+> > unless there are active uses of them.
 > 
-> 
+> Kees, what is the status of the
+> https://lore.kernel.org/linux-kernel/20241119021719.7659-1-prosunofficial@gmail.com/
+> ?
 
-Applied to for-next/hardening, thanks!
+Fell through the cracks! I've applied patch 1 now.
 
-[1/2] lib/string_choices: Rearrange functions in sorted order
-      https://git.kernel.org/kees/c/e8cd61e403ea
+If we can see some conversions for locked/unlocked, we can do patch 2 as
+well.
 
-Take care,
+-Kees
 
 -- 
 Kees Cook
-
