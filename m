@@ -1,281 +1,89 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88433215F58;
-	Mon,  3 Mar 2025 17:01:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CD572153CD
+	for <linux-hardening@vger.kernel.org>; Mon,  3 Mar 2025 17:13:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741021278; cv=none; b=Kr7dtWueeJ+i/E148r17a+QhShWpi+MzBRBP/hKOyt983hoirKvJMEgFs+FCXGsRGJ1dBX6bbnZ8hWmLUBxbV4/hV5ecvVqNNm+KVrGpnLB2yYLOGO70u/98+mYF6suhCX6gbfjx72RwB74t1PIO7AjUno8oKPr5F6XugjdSu5o=
+	t=1741021993; cv=none; b=u/YdEUeRWMOPc+YDhKjgzJMm/4vAtAE8SnR3onaNxU6OPt76udp4skXWdFFgGgdeOS1Im+pL4zOnY8HiKQ7IIQY74+Zi7/9A4u++iM5jbDcJ35I7Z3zLM8iXEiJ+3c2zIBrbhqCj+im/zjF9hE31jKj3f2jObyk+Penkks55MNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741021278; c=relaxed/simple;
-	bh=cbk68TMZcZXPbVfxtAAvvisgzKDF0RnGN/M9es88iRg=;
+	s=arc-20240116; t=1741021993; c=relaxed/simple;
+	bh=wjV3Q9OQE+KWxTknAB+Hn0XOQ/7ghCZqsPx0BsXVc9A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c3uEi5c2v9PrGvsK2+K+k+rOJYkMaJhGdOz1WFCS08a/BVRp4DWebQ/TONJadJY9haw8ESBvnLi2nKpxgrIWfov8kXqAuMRGbibt+KcU+IaJ3pALc/7GTFvZ2Hdthlm4sxQl8GBz9tVL6ymEK3zY8Z3rV1EVw2QyYW7q3+QFSSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uA+kUUFz; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=RmEtuKYes3kVdSR+Nh1+JFWAjeOWRoRf7fq2JK91gH1jeg2ezd4vA3B0D9OKeriMF+w8xwTAjLtTIJZFL/laX8Szlk7GPANgEbGyHDjRlFE/C9H27nspbHUtA3skXxGDnBMWab+SHLxafufrexmapvRM9IBjzjfjjjVhLx4kEek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bZY2xu10; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uA+kUUFz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6E63C4CED6;
-	Mon,  3 Mar 2025 17:01:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bZY2xu10"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87698C4CED6;
+	Mon,  3 Mar 2025 17:13:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741021276;
-	bh=cbk68TMZcZXPbVfxtAAvvisgzKDF0RnGN/M9es88iRg=;
+	s=k20201202; t=1741021992;
+	bh=wjV3Q9OQE+KWxTknAB+Hn0XOQ/7ghCZqsPx0BsXVc9A=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uA+kUUFzAyFJzxGo2c79X7S5ceLqIq3ldGivgBqF4tPZliJ2p7I+AGU6DP0SbHReI
-	 VE9J+isQT3+tgUvPMvsm3B8htvD5NvRP0rTjxVSecr5LF8WlAlTVUvbxWuHTeH9ArK
-	 G298QUULsxlQC31qili97454NkIz9wbLuvUYSOUVv61VffBeF/BNfAh/WAn1S4nzBK
-	 EkUVyUPxs/aT1BxvGIUlWMxl3ITOJnV4Gc4o/fa5r2U0iUYoZlwhzBwwNLCM8vtskt
-	 xPzBFPXlqEX0wl7173FoYiV7B7naKFhgd3J1PMIMwz8TeWWFO6tQAEW7YO7a0kcCf1
-	 trt2J6HjqAMug==
-Date: Mon, 3 Mar 2025 09:01:11 -0800
+	b=bZY2xu10it+1g2cSt4Xbu7Z7M+JuXQBYG+FCVbRKiuQh+Vbv7Buh4W1JOaXQd/Lrh
+	 AH95zR5NKLpy2YQ49Sk4A6OQ18hKuwoO/Oa6EaRvQ0S89haEE6s3Z0DLlcJ4KfcSPd
+	 QSjQYMsrBerTUA3M5/M3LxdytjsbotilqV+dqZjZnt9CKc9WA07gQQMzYxf9gRmsPL
+	 NWHN+8LJ4CVbcymNCW7+ZD7XoqAtSAK8drqVdFtrcEwWXn8N10+WmtFCEoH+sq7bbZ
+	 Ax8hy47cHEGWND6zj7AMQ5Pv7OS7Kw9pXOvPvErNpT5fy3ZC2FEwkQL3yUWFo89HSM
+	 P4+PYxUlKUO9w==
+Date: Mon, 3 Mar 2025 09:13:09 -0800
 From: Kees Cook <kees@kernel.org>
-To: jeffxu@chromium.org
-Cc: akpm@linux-foundation.org, jannh@google.com,
-	torvalds@linux-foundation.org, vbabka@suse.cz,
-	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
-	adhemerval.zanella@linaro.org, oleg@redhat.com, avagin@gmail.com,
-	benjamin@sipsolutions.net, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org, jorgelo@chromium.org,
-	sroettger@google.com, hch@lst.de, ojeda@kernel.org,
-	thomas.weissschuh@linutronix.de, adobriyan@gmail.com,
-	johannes@sipsolutions.net, pedro.falcato@gmail.com,
-	hca@linux.ibm.com, willy@infradead.org, anna-maria@linutronix.de,
-	mark.rutland@arm.com, linus.walleij@linaro.org, Jason@zx2c4.com,
-	deller@gmx.de, rdunlap@infradead.org, davem@davemloft.net,
-	peterx@redhat.com, f.fainelli@gmail.com, gerg@kernel.org,
-	dave.hansen@linux.intel.com, mingo@kernel.org, ardb@kernel.org,
-	mhocko@suse.com, 42.hyeyoo@gmail.com, peterz@infradead.org,
-	ardb@google.com, enh@google.com, rientjes@google.com,
-	groeck@chromium.org, mpe@ellerman.id.au,
-	aleksandr.mikhalitsyn@canonical.com, mike.rapoport@gmail.com
-Subject: Re: [PATCH v8 7/7] selftest: test system mappings are sealed.
-Message-ID: <202503030848.30D0E54E7@keescook>
-References: <20250303050921.3033083-1-jeffxu@google.com>
- <20250303050921.3033083-8-jeffxu@google.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+	Andy Shevchenko <andy@kernel.org>, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 00/10] lib/string_choices: Add new helpers
+Message-ID: <202503030912.11512B29@keescook>
+References: <87y0xt6zgn.wl-kuninori.morimoto.gx@renesas.com>
+ <202502281143.149423E53@keescook>
+ <87o6yjyqeb.wl-kuninori.morimoto.gx@renesas.com>
+ <CAHp75VdX-ZMf-mYrnA=DYszK8KvjVfi0kz30WfHRN_oYOJR_Hw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250303050921.3033083-8-jeffxu@google.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHp75VdX-ZMf-mYrnA=DYszK8KvjVfi0kz30WfHRN_oYOJR_Hw@mail.gmail.com>
 
-On Mon, Mar 03, 2025 at 05:09:21AM +0000, jeffxu@chromium.org wrote:
-> From: Jeff Xu <jeffxu@chromium.org>
+On Mon, Mar 03, 2025 at 08:20:20AM +0200, Andy Shevchenko wrote:
+> On Mon, Mar 3, 2025 at 1:16 AM Kuninori Morimoto
+> <kuninori.morimoto.gx@renesas.com> wrote:
+> >
+> >
+> > Hi Kees
+> >
+> > Thank you for your feedback
+> >
+> > > > I would like to use string_choices helper to cleanup the code, but it missing
+> > > > some of well used string pair in kernel. This patch-set adds it.
+> > >
+> > > Do you have some Coccinelle scripts or other patches that show the use
+> > > of these helpers? We tend to avoid adding new helpers to the kernel
+> > > unless there are active uses of them.
+> >
+> > I have a lot of patches which uses new helper functions.
+> > Because it has dependency (add new helper 1st, use it in 2nd), and
+> > different maintainers (helper patch maintainers vs each driver/framwork
+> > maintainers), I have posted new helper patch-set 1st (= this patch-set).
+> > After that, I will post 2nd patch-set which uses new helper, like
+> > new helper patch for v6.15, each driver/framework patch for v6.16, etc.
+> >
+> > Because there are a lot of patches which uses new helpers, is it OK to
+> > indicates some of them (as sample patch) ?
 > 
-> Add sysmap_is_sealed.c to test system mappings are sealed.
-> 
-> Note: CONFIG_MSEAL_SYSTEM_MAPPINGS must be set, as indicated in
-> config file.
-> 
-> Signed-off-by: Jeff Xu <jeffxu@chromium.org>
-> ---
->  .../mseal_system_mappings/.gitignore          |   2 +
->  .../selftests/mseal_system_mappings/Makefile  |   6 +
->  .../selftests/mseal_system_mappings/config    |   1 +
->  .../mseal_system_mappings/sysmap_is_sealed.c  | 113 ++++++++++++++++++
->  4 files changed, 122 insertions(+)
->  create mode 100644 tools/testing/selftests/mseal_system_mappings/.gitignore
->  create mode 100644 tools/testing/selftests/mseal_system_mappings/Makefile
->  create mode 100644 tools/testing/selftests/mseal_system_mappings/config
->  create mode 100644 tools/testing/selftests/mseal_system_mappings/sysmap_is_sealed.c
-> 
-> diff --git a/tools/testing/selftests/mseal_system_mappings/.gitignore b/tools/testing/selftests/mseal_system_mappings/.gitignore
-> new file mode 100644
-> index 000000000000..319c497a595e
-> --- /dev/null
-> +++ b/tools/testing/selftests/mseal_system_mappings/.gitignore
-> @@ -0,0 +1,2 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +sysmap_is_sealed
-> diff --git a/tools/testing/selftests/mseal_system_mappings/Makefile b/tools/testing/selftests/mseal_system_mappings/Makefile
-> new file mode 100644
-> index 000000000000..2b4504e2f52f
-> --- /dev/null
-> +++ b/tools/testing/selftests/mseal_system_mappings/Makefile
-> @@ -0,0 +1,6 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +CFLAGS += -std=c99 -pthread -Wall $(KHDR_INCLUDES)
-> +
-> +TEST_GEN_PROGS := sysmap_is_sealed
-> +
-> +include ../lib.mk
-> diff --git a/tools/testing/selftests/mseal_system_mappings/config b/tools/testing/selftests/mseal_system_mappings/config
-> new file mode 100644
-> index 000000000000..675cb9f37b86
-> --- /dev/null
-> +++ b/tools/testing/selftests/mseal_system_mappings/config
-> @@ -0,0 +1 @@
-> +CONFIG_MSEAL_SYSTEM_MAPPINGS=y
-> diff --git a/tools/testing/selftests/mseal_system_mappings/sysmap_is_sealed.c b/tools/testing/selftests/mseal_system_mappings/sysmap_is_sealed.c
-> new file mode 100644
-> index 000000000000..c1e93794a58b
-> --- /dev/null
-> +++ b/tools/testing/selftests/mseal_system_mappings/sysmap_is_sealed.c
-> @@ -0,0 +1,113 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * test system mappings are sealed when
-> + * KCONFIG_MSEAL_SYSTEM_MAPPINGS=y
-> + */
-> +
-> +#define _GNU_SOURCE
-> +#include <stdio.h>
-> +#include <errno.h>
-> +#include <unistd.h>
-> +#include <string.h>
-> +#include <stdbool.h>
-> +
-> +#include "../kselftest.h"
-> +#include "../kselftest_harness.h"
-> +
-> +#define VDSO_NAME "[vdso]"
-> +#define VVAR_NAME "[vvar]"
-> +#define VVAR_VCLOCK_NAME "[vvar_vclock]"
-> +#define UPROBES_NAME "[uprobes]"
-> +#define SIGPAGE_NAME "[sigpage]"
-> +#define VECTORS_NAME "[vectors]"
+> I am not Kees, but my point of view on this is that you may take one
+> subsystem which, for example, I can review (listed as a Designated
+> Reviewer or Maintainer in the MAINTAINERS) and add sample patches from
+> it. It will speed up the process as my tag would suffice. Also you can
+> add into the cover letter the statistics (how many drivers are
+> affected (per subsystem/folder) by each of the new helpers in the
+> upcoming series.
 
-These are only ever used once, and it feels like having them spelled out
-right in the variant definitions would be more readable, but I'm not
-sure I feel strongly enough about it to say it should be changed.
-They're available via "variant->name" as well, which makes it unlikely
-the macros will be used anywhere in the future? Maybe you have plans for
-them. :)
-
-> +#define VMFLAGS "VmFlags:"
-
-This one gets a strlen() on it, so it feels better to have a macro.
-
-> +#define MSEAL_FLAGS "sl"
-> +#define MAX_LINE_LEN 512
-> +
-> +bool has_mapping(char *name, FILE *maps)
-> +{
-> +	char line[MAX_LINE_LEN];
-> +
-> +	while (fgets(line, sizeof(line), maps)) {
-> +		if (strstr(line, name))
-> +			return true;
-> +	}
-> +
-> +	return false;
-> +}
-> +
-> +bool mapping_is_sealed(char *name, FILE *maps)
-> +{
-> +	char line[MAX_LINE_LEN];
-> +
-> +	while (fgets(line, sizeof(line), maps)) {
-> +		if (!strncmp(line, VMFLAGS, strlen(VMFLAGS))) {
-> +			if (strstr(line, MSEAL_FLAGS))
-> +				return true;
-> +
-> +			return false;
-> +		}
-> +	}
-> +
-> +	return false;
-> +}
-> +
-> +FIXTURE(basic) {
-> +	FILE *maps;
-> +};
-> +
-> +FIXTURE_SETUP(basic)
-> +{
-> +	self->maps = fopen("/proc/self/smaps", "r");
-> +	if (!self->maps)
-> +		SKIP(return, "Could not open /proc/self/smap, errno=%d",
-> +			errno);
-
-Good SKIP usage, though I wonder if not having /proc should be a full
-blown failure?
-
-> +};
-> +
-> +FIXTURE_TEARDOWN(basic)
-> +{
-> +	if (self->maps)
-> +		fclose(self->maps);
-> +};
-> +
-> +FIXTURE_VARIANT(basic)
-> +{
-> +	char *name;
-> +};
-> +
-> +FIXTURE_VARIANT_ADD(basic, vdso) {
-> +	.name = VDSO_NAME,
-> +};
-> +
-> +FIXTURE_VARIANT_ADD(basic, vvar) {
-> +	.name = VVAR_NAME,
-> +};
-> +
-> +FIXTURE_VARIANT_ADD(basic, vvar_vclock) {
-> +	.name = VVAR_VCLOCK_NAME,
-> +};
-> +
-> +FIXTURE_VARIANT_ADD(basic, sigpage) {
-> +	.name = SIGPAGE_NAME,
-> +};
-> +
-> +FIXTURE_VARIANT_ADD(basic, vectors) {
-> +	.name = VECTORS_NAME,
-> +};
-> +
-> +FIXTURE_VARIANT_ADD(basic, uprobes) {
-> +	.name = UPROBES_NAME,
-> +};
-
-I love seeing variants used in the test harness. :)
-
-> +
-> +TEST_F(basic, is_sealed)
-> +{
-> +	if (!has_mapping(variant->name, self->maps)) {
-> +		SKIP(return, "could not found the mapping, %s",
-
-typo nit: "find" instead of "found"
-
-> +			variant->name);
-> +	}
-> +
-> +	EXPECT_TRUE(mapping_is_sealed(variant->name, self->maps));
-> +};
-
-This is a good "positive" test, but I'd like to see a negative test
-added as well. (This adds robustness against something going "all wrong"
-or "all right", like imagine that someone adds a VmFlags string named
-"slow", suddenly this test will always pass due to matching "sl". With
-a negative test added, it will fail when it finds "sl" when it's not
-expected.) For example, also check "[stack]" and "[heap]" and expect
-them NOT to be sealed.
-
-You could update the variant as:
-
-FIXTURE_VARIANT(basic)
-{
-	char *name;
-	bool sealed;
-};
-
-FIXTURE_VARIANT_ADD(basic, vdso) {
-	.name = "[vdso]",
-	.sealed = true,
-};
-
-FIXTURE_VARIANT_ADD(basic, stack) {
-	.name = "[stack]",
-	.sealed = false,
-};
-
-And then update the is_sealed test to:
-
-	EXPECT_EQ(variant->sealed, mapping_is_sealed(variant->name, self->maps));
+Yeah, I'd say just post the series you have and in the cover letter
+refer to this series as a prerequisite.
 
 -- 
 Kees Cook
