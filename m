@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1936922332D;
-	Mon,  3 Mar 2025 16:47:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66821214A8A;
+	Mon,  3 Mar 2025 16:48:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741020439; cv=none; b=CkW7PBn2dckMML+sDV8Z52DJmZho6mIyHJ3J7lwojsmD070KHFW4tnLbUPtOHsq58RmS4RnuBEU0tRf8SOhGRDk5kLFe1BtZ5h/1ZBwwgC3qFvfBKjIe9weaPbuhUFSWLYFCm6xImvjuNLb6j9IHJcH9t/Qiwaz2im6Sjio2Ofc=
+	t=1741020494; cv=none; b=g1p/eicSW3sY+0dVjLA2cu81VcEDfuK1DoT6RD7DA/296Sj1VNiizDOlue00gDsTblXW6pxOrGutIdgwl67eotGDjilBZ/k+tvY5u5X36ajDYobOZ//insCVTnGLCd0SxXNk7Yc6hh9PF7H1VdBvZr9nKIT2pQOQWUw2crNXfDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741020439; c=relaxed/simple;
-	bh=4yX2ove+H3YjYb7KFBwrFbNCLgvX35Q86cuMFRmKlmw=;
+	s=arc-20240116; t=1741020494; c=relaxed/simple;
+	bh=bw0yJZnhs1/BZaCqXfD9wjtRb11sZ067nWTPBfuSx8k=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jOfLGbEz2H5QKxzJ2rvMxvR3DG04kg6nythPQONy0Ia9kntQWYNTfQ78ndDmNiAXw/zXoEMafJ+XWDqtKap4h5dhJmNyEp6iMo10zL090pHYFXcNoPnpcpy0fLIhxZsymVXUjuBiENgNO99z4SI7G0X0ah2vum3W1eUx0aslVI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CsRv0MyW; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ODdqkuO8A8hVpbtHK7kMaFJKSyKY36k2GgFGa9Hd/bl0y+E3jKug+sYmvFh74tDGtLebCsCI3w3KIT7bOwWYy9yDanitBNSLgTBZiED78TEiL3hUBHuYwMX9Adl01PG6RCL4Y0I9RBkX8L8RiysnoRcbKw6XsYu5nEQqCkYbTr8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kma46+1m; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CsRv0MyW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8464FC4CED6;
-	Mon,  3 Mar 2025 16:47:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kma46+1m"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D655DC4CED6;
+	Mon,  3 Mar 2025 16:48:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741020436;
-	bh=4yX2ove+H3YjYb7KFBwrFbNCLgvX35Q86cuMFRmKlmw=;
+	s=k20201202; t=1741020493;
+	bh=bw0yJZnhs1/BZaCqXfD9wjtRb11sZ067nWTPBfuSx8k=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CsRv0MyWb+t3rjCyUZTUyqI56U/wOdbvhCqw7g+9KdrxzR3/QeNOxqJ65ZG4omkdd
-	 ruH0sc6mTJoa6DU3Vb4Y6MTZ2RpmRisWPO5hgfOX+r8wpMIL5VAQMJQ/cmlX63MZcy
-	 ek8rOlVpJc3p0sfU3yTqqqkAo+DdPepnQmjAMgz7lHMzarDpqMFtvGSmuXMAmk1YPK
-	 D3/l/IdInHqvuXDEUQ9BurqRH20feH0B1krtXTp+KxxEPNasrAbjCSqIkFYFNEA58i
-	 ajZ0QzoQZlC96mxyDoJvdYJPGkrOeFRQKnWp69A5QaWUp0SQunJz1Mc3Q5vnY210aF
-	 nztTqWcHF922g==
-Date: Mon, 3 Mar 2025 08:47:13 -0800
+	b=Kma46+1mbo5HVbvSYni1BkXX+MDggtOQ4udarzKeT0m3EGju2PFRlGQ9KOdvgAHYj
+	 xuH7xIujwcqkI8VldRhMtzPRoJW1xMiaB8vELBXD4z94E1DPXsQnBO6FbLJSORi6yU
+	 qkBnC+fe6HFJRSnmsswBb9bUF+Rn0qWZsnM2eQlgETiFjtfStyeOpbxfwZCFnbDua2
+	 txE5ukd7zBvy7W2mkC4+YHInipJyqlCTnEZpJGH+vEDLOjkiMSKDVMdbPt0mcRxHxQ
+	 FYuNxam14opEZtWVKlYIB+30IudERhVk3LhDfclOncqey/tJVPiDd4hmnaFcgzjjb8
+	 w+RQHt2dVgslw==
+Date: Mon, 3 Mar 2025 08:48:10 -0800
 From: Kees Cook <kees@kernel.org>
 To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 Cc: jeffxu@chromium.org, akpm@linux-foundation.org, jannh@google.com,
@@ -49,10 +49,11 @@ Cc: jeffxu@chromium.org, akpm@linux-foundation.org, jannh@google.com,
 	mpe@ellerman.id.au, aleksandr.mikhalitsyn@canonical.com,
 	mike.rapoport@gmail.com
 Subject: Re: [PATCH v8 7/7] selftest: test system mappings are sealed.
-Message-ID: <202503030843.553DA01@keescook>
+Message-ID: <202503030847.5E73540@keescook>
 References: <20250303050921.3033083-1-jeffxu@google.com>
  <20250303050921.3033083-8-jeffxu@google.com>
  <d945816e-b01f-4a7c-b698-23ec356280f3@lucifer.local>
+ <8285bc26-6afe-4141-ad1a-6d8c5d6d76f9@lucifer.local>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -61,51 +62,53 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d945816e-b01f-4a7c-b698-23ec356280f3@lucifer.local>
+In-Reply-To: <8285bc26-6afe-4141-ad1a-6d8c5d6d76f9@lucifer.local>
 
-On Mon, Mar 03, 2025 at 12:08:49PM +0000, Lorenzo Stoakes wrote:
-> 
-> On Mon, Mar 03, 2025 at 05:09:21AM +0000, jeffxu@chromium.org wrote:
-> > From: Jeff Xu <jeffxu@chromium.org>
+On Mon, Mar 03, 2025 at 04:43:47PM +0000, Lorenzo Stoakes wrote:
+> On Mon, Mar 03, 2025 at 12:08:49PM +0000, Lorenzo Stoakes wrote:
 > >
-> > Add sysmap_is_sealed.c to test system mappings are sealed.
+> > On Mon, Mar 03, 2025 at 05:09:21AM +0000, jeffxu@chromium.org wrote:
+> > > From: Jeff Xu <jeffxu@chromium.org>
+> > >
+> > > Add sysmap_is_sealed.c to test system mappings are sealed.
+> > >
+> > > Note: CONFIG_MSEAL_SYSTEM_MAPPINGS must be set, as indicated in
+> > > config file.
+> > >
+> > > Signed-off-by: Jeff Xu <jeffxu@chromium.org>
 > >
-> > Note: CONFIG_MSEAL_SYSTEM_MAPPINGS must be set, as indicated in
-> > config file.
+> > We do need to add this to the general selftests Makefile, but this code is
+> > fine, so have a:
 > >
-> > Signed-off-by: Jeff Xu <jeffxu@chromium.org>
+> > Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> >
+> > Congratulations! :) and thanks for addressing the issues that were raised,
+> > appreciate your efforts on this.
+> >
+> > Maybe you could send a fix patch? As it's such a small fix.
+> >
+> > Cheers, Lorenzo
+> >
+> >
+> > > ---
+> > >  .../mseal_system_mappings/.gitignore          |   2 +
+> > >  .../selftests/mseal_system_mappings/Makefile  |   6 +
+> > >  .../selftests/mseal_system_mappings/config    |   1 +
+> > >  .../mseal_system_mappings/sysmap_is_sealed.c  | 113 ++++++++++++++++++
+> >
+> > Can you add this to tools/testing/selftests/Makefile? I _think_ adding:
+> >
+> > TARGETS += mm
+> >
+> > Should do it. Thanks!
 > 
-> We do need to add this to the general selftests Makefile, but this code is
-> fine, so have a:
+> Obviously I meant to say:
 > 
-> Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> 	TARGETS += mseal_system_mappings
 > 
-> Congratulations! :) and thanks for addressing the issues that were raised,
-> appreciate your efforts on this.
-> 
-> Maybe you could send a fix patch? As it's such a small fix.
-> 
-> Cheers, Lorenzo
-> 
-> 
-> > ---
-> >  .../mseal_system_mappings/.gitignore          |   2 +
-> >  .../selftests/mseal_system_mappings/Makefile  |   6 +
-> >  .../selftests/mseal_system_mappings/config    |   1 +
-> >  .../mseal_system_mappings/sysmap_is_sealed.c  | 113 ++++++++++++++++++
-> 
-> Can you add this to tools/testing/selftests/Makefile? I _think_ adding:
-> 
-> TARGETS += mm
+> Doh! :)
 
-You mean this, I think?
-
-TARGETS += mseal_system_mappings
-
-(But while we're here, why is "mm" where it is in that Makefile?
-Everything else is alphabetical?)
-
--Kees
+Heh. Simultaneous emails! ;)
 
 -- 
 Kees Cook
