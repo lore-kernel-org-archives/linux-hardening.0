@@ -1,112 +1,96 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3900A1E5B6B
-	for <linux-hardening@vger.kernel.org>; Mon,  3 Mar 2025 06:20:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A4D0156237
+	for <linux-hardening@vger.kernel.org>; Mon,  3 Mar 2025 06:29:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740982859; cv=none; b=gH+ZJ5WZQ5p9BPvafwo49XWsO1E0JwjyXL4IJsXJkFvw0fjw/2ZAFcKTzAOz/yIEbGDqMB3wiKmbyphp7kvcc9A6kPxCoL8P4D3B/sZizPZG31a9m6N55/SVrxnMy3T8T5QxH1hGM5ldAKDTjkAp+E3U4EgSqdFwn3hZNSGwBzA=
+	t=1740983350; cv=none; b=IXdfay5Qs1wxPM027GEtjSawMnY1TmihQPT9dtAZrpRbr6pYnDnUNCT63VPKQvZ3w01znY5pkxb+X5glymrve9V+t0BR0naDzGBBukBdyKzexPCKaQ+BSyzVn3Z1pjKtzjmhIuaMhiebQi6D3cPkeS8lwCM4P0Q4irOIJyQcST4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740982859; c=relaxed/simple;
-	bh=ejz2PtWNPFITFdwjeu0BwpoHHMNxTR5GOfBDgb+9ciY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=N7vLeGQ+g/+VVuMJob5WCQG8n69/NXgrcpOYcVexfZ5YUruOc9vmW5lzUQ/puMtJxpCt8j+H/4hBupKReZ6Poh2BWvwsLNKXJFydV86qiN7nxOh8mX/lazJTW8/b8mI1mHSRZkI9DeM+X7rphf9Ix2m0ljLUa8w8GJycG7da9Ic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U25bkToI; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740983350; c=relaxed/simple;
+	bh=zjUGrTwaUn5LEO0HOCEY0bCWk0oa59RpPixuOMkUiv0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CoprOtY+sBhIu9h+DSnz3Zc/V+WGDisH/JH+ergmoDIuK3y5IwRoxXAX3VdgeqiTON0KEYf+i7yvwYnX2RNlrTFh7pS6DZvE4yNQxxREJHyA7Dn1xrO9zV8ilJHrytHRJCegwEp5R2WDJE7s1xrsP/M2st+GmITcIyl54DQfP7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iCvWqW1Z; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U25bkToI"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-aaec61d0f65so824809166b.1
-        for <linux-hardening@vger.kernel.org>; Sun, 02 Mar 2025 22:20:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740982856; x=1741587656; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ejz2PtWNPFITFdwjeu0BwpoHHMNxTR5GOfBDgb+9ciY=;
-        b=U25bkToIucX0e/cKPxt7KEgaewSRFghPNMexooAerUvA0M6eS7GNOdkLyCCpfwE56s
-         BaAGYDDXDjY2CbbpuPrYNVqJFoJyKZ+Scp2E7dUPs/CFdBO20aajkDT3hZZSXgeZ6LNd
-         EMXZlYjo90qdjs2KRD6VIa9nlpB64JNADR9HIA20+D5lVntMEO2Zn9PY2w5VVSQiFird
-         aB0OfYg1aOC6OZbYR7Vag62kHBIHe4tTWDoCQxZOTj0qEe3BTArVceWCt770WpmOJSdK
-         1P/uwQLNLqagHCUw0hiz90g7BOBPkdLRxmMw09ILG/2jnv5O1DFfV7/Df8JCRcMOrMDx
-         8Tuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740982856; x=1741587656;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ejz2PtWNPFITFdwjeu0BwpoHHMNxTR5GOfBDgb+9ciY=;
-        b=a7OFIeFGWFeBf8+2o9u28QEo3aTkId+Zyvkw1rUmif+14LHJ/4JROUI0PHA20cENzq
-         Vz7agLUn2aQK9w9O0nqDdCOAi5Snq1SMkuROOcohqUYafPKUP0/jR66Sv0HO4hIdmXgy
-         dpiGE7x4hljd1gRQXzzIvlfIfr8vPWFgxbuLyGT2MurEO4x3WI2a5KGwke7r2DuBQxjm
-         SqStvo0gkl1aVkUsfHiZDeJWJZ1sZ3w9kJ7wVFZW883L/ji6BKqCUJ2AA1KCGSxJYzfO
-         lrHUmkLAYPh6jKTICYy7RlXO2ZfPFKHZ9hac7j6snElwR0MAMJ8/XMpnLeFAasRVDZCc
-         klrQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVq1Ag7jen73xf6JhLU9Dioa/HXC4JmT/jGoXm25rfRNhhuWF2kmEQW+LkpEXIMt7yXsY8Qs8QpKa7LsxKjSpo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxWey9Py34H0CPeEyHJLrKyDAtsX9M53Wn8U62OhMLL8+UZ5Hhb
-	hXZ8O23sOImdprjugudSqj78DiTs+9rbfh2IHk+gNlC7k8bZIK6viBEP4TQRn9/2cQvI4hLi7RJ
-	R3/nshmbKi/Cn/VCVNp8bZVQ3L1Y=
-X-Gm-Gg: ASbGncuMOctgFjmTtknPLjT2T4SQQQjIZt372o79Q4JyJJ3DSOIrbo2j7U0QDbhIXxB
-	IECfP+JYcjAcSlv2F7qrC+C+Fy7wf9G8d+y8OiAmAFf+T7TrqaZqpW8T91UbUUbDK6P3wh1YXOh
-	AcCfhOUCIKrTubO0x4xXqlhlKJ1w==
-X-Google-Smtp-Source: AGHT+IHACSIenOhasEqHFqB0qhwwwZceTvLfDIWydkDBDL9+gfCMsdG0jokaPV60p7Uwj4peIoACShvwOWtym3DDkcE=
-X-Received: by 2002:a17:907:2d2b:b0:ac1:cceb:d9b0 with SMTP id
- a640c23a62f3a-ac1ccebdc9bmr123131266b.16.1740982856198; Sun, 02 Mar 2025
- 22:20:56 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iCvWqW1Z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740983348;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Cd8L5wa/M3S5qOwn29qdcGEa3r9OYcaXV/GNXOZPOCs=;
+	b=iCvWqW1ZFMK2O24hHlpD3tuz8BxnYbAKkIrQXXlLk997MgOOLrVZ22wyYyzRUa7UV9tLTD
+	nGa7eXCkwbr04NzgrMBfJt2GT1oFKo3jzTqNIwHkJapXyNPdGZukw6z+nbEeqzxZ5vHk5C
+	em04QI1pb+dw1e6sIPODU7KBhS++6Lw=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-507-bFodggW4M7OAwnOgOuZSnw-1; Mon,
+ 03 Mar 2025 01:28:56 -0500
+X-MC-Unique: bFodggW4M7OAwnOgOuZSnw-1
+X-Mimecast-MFC-AGG-ID: bFodggW4M7OAwnOgOuZSnw_1740983331
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 599301801A10;
+	Mon,  3 Mar 2025 06:28:49 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.44.32.92])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 7596F1956048;
+	Mon,  3 Mar 2025 06:28:32 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Mon,  3 Mar 2025 07:28:19 +0100 (CET)
+Date: Mon, 3 Mar 2025 07:28:01 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: jeffxu@chromium.org
+Cc: akpm@linux-foundation.org, keescook@chromium.org, jannh@google.com,
+	torvalds@linux-foundation.org, vbabka@suse.cz,
+	lorenzo.stoakes@oracle.com, Liam.Howlett@Oracle.com,
+	adhemerval.zanella@linaro.org, avagin@gmail.com,
+	benjamin@sipsolutions.net, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org, jorgelo@chromium.org,
+	sroettger@google.com, hch@lst.de, ojeda@kernel.org,
+	thomas.weissschuh@linutronix.de, adobriyan@gmail.com,
+	johannes@sipsolutions.net, pedro.falcato@gmail.com,
+	hca@linux.ibm.com, willy@infradead.org, anna-maria@linutronix.de,
+	mark.rutland@arm.com, linus.walleij@linaro.org, Jason@zx2c4.com,
+	deller@gmx.de, rdunlap@infradead.org, davem@davemloft.net,
+	peterx@redhat.com, f.fainelli@gmail.com, gerg@kernel.org,
+	dave.hansen@linux.intel.com, mingo@kernel.org, ardb@kernel.org,
+	mhocko@suse.com, 42.hyeyoo@gmail.com, peterz@infradead.org,
+	ardb@google.com, enh@google.com, rientjes@google.com,
+	groeck@chromium.org, mpe@ellerman.id.au,
+	aleksandr.mikhalitsyn@canonical.com, mike.rapoport@gmail.com
+Subject: Re: [PATCH v8 5/7] mseal sysmap: uprobe mapping
+Message-ID: <20250303062800.GA1694@redhat.com>
+References: <20250303050921.3033083-1-jeffxu@google.com>
+ <20250303050921.3033083-6-jeffxu@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <87y0xt6zgn.wl-kuninori.morimoto.gx@renesas.com>
- <202502281143.149423E53@keescook> <87o6yjyqeb.wl-kuninori.morimoto.gx@renesas.com>
-In-Reply-To: <87o6yjyqeb.wl-kuninori.morimoto.gx@renesas.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Mon, 3 Mar 2025 08:20:20 +0200
-X-Gm-Features: AQ5f1Jqn4dEVWirmYXrIHwo4bQXH86r7VhPCKu7i7BhJlbkPYndpysbXFR_1cm0
-Message-ID: <CAHp75VdX-ZMf-mYrnA=DYszK8KvjVfi0kz30WfHRN_oYOJR_Hw@mail.gmail.com>
-Subject: Re: [PATCH 00/10] lib/string_choices: Add new helpers
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250303050921.3033083-6-jeffxu@google.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On Mon, Mar 3, 2025 at 1:16=E2=80=AFAM Kuninori Morimoto
-<kuninori.morimoto.gx@renesas.com> wrote:
+On 03/03, jeffxu@chromium.org wrote:
 >
->
-> Hi Kees
->
-> Thank you for your feedback
->
-> > > I would like to use string_choices helper to cleanup the code, but it=
- missing
-> > > some of well used string pair in kernel. This patch-set adds it.
-> >
-> > Do you have some Coccinelle scripts or other patches that show the use
-> > of these helpers? We tend to avoid adding new helpers to the kernel
-> > unless there are active uses of them.
->
-> I have a lot of patches which uses new helper functions.
-> Because it has dependency (add new helper 1st, use it in 2nd), and
-> different maintainers (helper patch maintainers vs each driver/framwork
-> maintainers), I have posted new helper patch-set 1st (=3D this patch-set)=
-.
-> After that, I will post 2nd patch-set which uses new helper, like
-> new helper patch for v6.15, each driver/framework patch for v6.16, etc.
->
-> Because there are a lot of patches which uses new helpers, is it OK to
-> indicates some of them (as sample patch) ?
+> @@ -1683,7 +1683,8 @@ static int xol_add_vma(struct mm_struct *mm, struct xol_area *area)
+>  	}
+>  
+>  	vma = _install_special_mapping(mm, area->vaddr, PAGE_SIZE,
+> -				VM_EXEC|VM_MAYEXEC|VM_DONTCOPY|VM_IO,
+> +				VM_EXEC|VM_MAYEXEC|VM_DONTCOPY|VM_IO|
+> +				VM_SEALED_SYSMAP,
+>  				&xol_mapping);
 
-I am not Kees, but my point of view on this is that you may take one
-subsystem which, for example, I can review (listed as a Designated
-Reviewer or Maintainer in the MAINTAINERS) and add sample patches from
-it. It will speed up the process as my tag would suffice. Also you can
-add into the cover letter the statistics (how many drivers are
-affected (per subsystem/folder) by each of the new helpers in the
-upcoming series.
+Reviewed-by: Oleg Nesterov <oleg@redhat.com>
 
---=20
-With Best Regards,
-Andy Shevchenko
