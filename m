@@ -1,382 +1,212 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFE6520E30C;
-	Mon,  3 Mar 2025 12:09:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741003774; cv=fail; b=Z8utbz6OAeCMUdtTZ/AtwiLeXsaHdxhQ+BAENAhVu+UZ8xKrSUIaRh/KP4K12iBz5rPSnBYVew6dA0yCe+tFN9Ot92Qj7CW1BBa0aLTZqN8hVcKPCiaPzkZlsdN937d6UkvLFRS0dZZ7b1grA435rJoGp4z/yFuMzUhs4gdkPos=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741003774; c=relaxed/simple;
-	bh=ednP7Nxr1N7eOVb8SDu7DnuIxIM2bRfL/MsEB4/N6mM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=U/B92IsrpaK4oHiIPwYLE+Qhm2/xPiwUACYJQqDDDH8G19xlLlJ6QvmF59KTLYlwrdWHJwrmLn/CsAX5ysSQmkEM5WAHquY+DYthagzdqIDEekLcmtSA/qN8VYDO0aVTOMAIEMxRXtAiEsS3IgUDWzkdDs+O8VnFEOPQLD3LSZ4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=XLQLVXUP; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=P2VsUW0V; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A6002B9AA;
+	Mon,  3 Mar 2025 13:14:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741007663; cv=none; b=IdOvCffhexAzcR0qqhxlASIpA6B3VkVZm2vJAKnGzBizkGCZ8G+ut81vjz6qt+JEeQm8OakfYIk2wgkm16kHEPHPYJf4T2wo1jr/qq4qjctnmp+IiQl8T0IB/Jt8L4h5whVijGI07UgZwKLeqXznIUBWka+hLENYejUyVMWTcEY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741007663; c=relaxed/simple;
+	bh=G1uZpetOhbHY9bpzj+SkAW4l9OHZnpwWUgprbajQf+4=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=GezSRKV+CdCZyPlX+A5uzcd9+3cpb8TvPrK4nz2FqERc6CdFSQs1JtbZt60Hj62wCwLd7XZsYVluzrRYB7CEGs2KT/rz67r1cA37YLV9RLenPSKtTyywL0RrzGnnJy6lsS18A3+sF8j9PsozvukOLh7tBwhVmeyO3FIdkArS+fs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jAIT05GX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="XLQLVXUP";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="P2VsUW0V"
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5237tfGa030063;
-	Mon, 3 Mar 2025 12:08:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2023-11-20; bh=ad24i9RVQnjI3t1hu3
-	8flu9G+cuT0Ic/yam/8L0LBBk=; b=XLQLVXUP7dnlMxluZotnpVw/xcESdMjZhX
-	UszcmNUwvSNyWXArwYcJCnKRYsoYPDAb1X3nzIqP0d7tNAWdYmd3kUM7TrVpJjem
-	WNiU7vOhscH6OQLHlfRRDd0Igp6K/aj5K6vUSYwwG62PFxwiRO1dlJTt0MHDEn73
-	zrbW3kdcFj46i4cj4rve2hXylh6uG4wKTXuRX+4NRlv+Q/LUb4BbSvd583RlidjO
-	lp91Y3pWpnrwzwTMCZnl2i9UvYKgdNhVumYc0eJnAxg97UPK++x4wbZAAw3+Xxh8
-	m2EymolvuyLYnsJDW/wUDJYefzwP9efPfZbE52ExGZO0o9Dd8mVg==
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 453u86jgm3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 03 Mar 2025 12:08:55 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 523AGx6q039093;
-	Mon, 3 Mar 2025 12:08:54 GMT
-Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2169.outbound.protection.outlook.com [104.47.57.169])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 453rp84eku-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 03 Mar 2025 12:08:54 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Zy8D8TRhW9UWx8Pr2Dw4J2qDT5hZRZIX8Qxa/nibqfBIz9f2EFuPMcVcZBbkQnMtlOTAuGXkfVcaJTUC6npxEtkvyQN+N6AzUb1LR1XCw8ZejIF6P4cG5RgNOEvVLTPKuwuvrrRdV2SxRU93Ab6p/7a6SJZx8doxBtOCeVzpSZT2HZDEkBqE4IOwCI6yPApep67JdvZvvqGVTl4DNzj6biAqcv53L2VLqU9aUBPT1i0JLyHGhul9LFe3+Endb2QvjyN3dpTE5NpxZymliE8wR7JVyX1HXKEmA/Q/cWvQKDjxraGeCoTHMwIHsPiw8woSm36hcOt6lE5iUdycs5+GAA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ad24i9RVQnjI3t1hu38flu9G+cuT0Ic/yam/8L0LBBk=;
- b=JZRQ6Fu6YrPZ23q6FC7SWAPxDaA4eeUd1WUZ6O9G1i2AnoNGuCm8iSjkXVezKDda7J9GNggJZdV6ZkdvKD5DcXRWNPm5W0f5fCStaqnSzR1Lc/qZTccndo5g5lDuuUTJJuW7aO7Cc/aZkuAo2aqPcUs5Wnk24rmg3kBnSLXZATOxtPpP6klPqijlNHpYTv0PWFiZhvQAGGGkaA2QOxIScZYtS/qkFaeAB3t33k16bxOHkaQa5/YKw7/TX+n2sGGHqjbUMpGpEl0edAOBOfFUFazrBDXFS4UpEwzMRdI3c0RRRzLjfIhOBeZ0/mF801ai+pP7F1i5Of/ScvuZQvqWLw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ad24i9RVQnjI3t1hu38flu9G+cuT0Ic/yam/8L0LBBk=;
- b=P2VsUW0VZYUwL8BwJrtun8UrFD6SX4xzh60GByb3sKTc1Q0JuC7gZO8DhgeEWQ413/JLneZxzP5FPS61KmTSTfzgq68iXcmTPr4FWzQzx14bj0PN8hN9v3nFcQXSoaLEisdS3tXStfz6iCjxu5db5LK1EY8Xi4Xmo+KK8UAgzrI=
-Received: from MN2PR10MB4112.namprd10.prod.outlook.com (2603:10b6:208:11e::33)
- by MW6PR10MB7552.namprd10.prod.outlook.com (2603:10b6:303:23f::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.28; Mon, 3 Mar
- 2025 12:08:51 +0000
-Received: from MN2PR10MB4112.namprd10.prod.outlook.com
- ([fe80::3256:3c8c:73a9:5b9c]) by MN2PR10MB4112.namprd10.prod.outlook.com
- ([fe80::3256:3c8c:73a9:5b9c%7]) with mapi id 15.20.8489.025; Mon, 3 Mar 2025
- 12:08:51 +0000
-Date: Mon, 3 Mar 2025 12:08:49 +0000
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-To: jeffxu@chromium.org
-Cc: akpm@linux-foundation.org, keescook@chromium.org, jannh@google.com,
-        torvalds@linux-foundation.org, vbabka@suse.cz, Liam.Howlett@oracle.com,
-        adhemerval.zanella@linaro.org, oleg@redhat.com, avagin@gmail.com,
-        benjamin@sipsolutions.net, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-mm@kvack.org,
-        linux-kselftest@vger.kernel.org, jorgelo@chromium.org,
-        sroettger@google.com, hch@lst.de, ojeda@kernel.org,
-        thomas.weissschuh@linutronix.de, adobriyan@gmail.com,
-        johannes@sipsolutions.net, pedro.falcato@gmail.com, hca@linux.ibm.com,
-        willy@infradead.org, anna-maria@linutronix.de, mark.rutland@arm.com,
-        linus.walleij@linaro.org, Jason@zx2c4.com, deller@gmx.de,
-        rdunlap@infradead.org, davem@davemloft.net, peterx@redhat.com,
-        f.fainelli@gmail.com, gerg@kernel.org, dave.hansen@linux.intel.com,
-        mingo@kernel.org, ardb@kernel.org, mhocko@suse.com,
-        42.hyeyoo@gmail.com, peterz@infradead.org, ardb@google.com,
-        enh@google.com, rientjes@google.com, groeck@chromium.org,
-        mpe@ellerman.id.au, aleksandr.mikhalitsyn@canonical.com,
-        mike.rapoport@gmail.com
-Subject: Re: [PATCH v8 7/7] selftest: test system mappings are sealed.
-Message-ID: <d945816e-b01f-4a7c-b698-23ec356280f3@lucifer.local>
-References: <20250303050921.3033083-1-jeffxu@google.com>
- <20250303050921.3033083-8-jeffxu@google.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250303050921.3033083-8-jeffxu@google.com>
-X-ClientProxiedBy: LO4P123CA0137.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:193::16) To MN2PR10MB4112.namprd10.prod.outlook.com
- (2603:10b6:208:11e::33)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jAIT05GX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C876C4CED6;
+	Mon,  3 Mar 2025 13:14:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741007662;
+	bh=G1uZpetOhbHY9bpzj+SkAW4l9OHZnpwWUgprbajQf+4=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=jAIT05GXn7yxRhRLvLdFqbZwM88rIEzp9VkwLrCcLRGjM+RJsPJhHB9unwTNOhfXs
+	 kAyzTLYIn2MbD86d34TTk+hzLP1LKaWVL5huvpQUBbNPxKWA8cTtYoULDt6oA0eKI9
+	 xExWzr2DXx6ajZBNho2wyZxZrWEol3jLutehR2lghiZA975diAfjB8ll7wt/wcHsV7
+	 RF/Z8A3L2Z2/4ATFrxuyDPY3xCq+IKq1LJXDzk0XKRffU5JwJZ+5wos15nu5bKLZkG
+	 g4c/sGJqZ47An5cSxCunJFXQtLkJEilcoJ2FlO4jGQrCFJY/EFsi1A/ioU3HbGpYjl
+	 yRKnFFRgbu5AQ==
+Date: Mon, 03 Mar 2025 07:14:20 -0600
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN2PR10MB4112:EE_|MW6PR10MB7552:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2e3de22c-5ed5-4017-e0a7-08dd5a4c291a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|7416014|376014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?vuzmaQ9rl43zihtizr3DMKd4mLncp87hm4yyDnvJvmHKIy+9gUh/AhFI9WmS?=
- =?us-ascii?Q?xFicsRKs/MLb0KSCImWeZ+wgrISR7CMM7vmmBbUV98DOp835kRqr2SDnGDTa?=
- =?us-ascii?Q?k+xyrq2EnOjBykZhhkMWga+u6liWvnZOUoXedZFh+sIS0OdFmMjZrBYCZr1B?=
- =?us-ascii?Q?Ae8JlQFW7wjYn8MqtLGrGJr2WwLhrQ7eogkrjkF76WuQ1u/MDTL6GGeQfBm7?=
- =?us-ascii?Q?oNqNpSVI4H3mr41eniD6tYiTrn173ToLC1YB0cPw2Wcfp10vRe29Ss/MYmhl?=
- =?us-ascii?Q?XzpFLk08zIISC7IPFhr8TePho4Kp9Xuq0BAgROWQCgU+axyx6qMyrMVPd81U?=
- =?us-ascii?Q?r7UG1goMxj5eMsrqfwpY8BCA/Kaw0GZfqOWWyZ93YSPgdaEXmmkxOwNSlogk?=
- =?us-ascii?Q?7pMjdwokyojpMFnhPUqLgeINJEiPZd1D967n6KVg67PyrqXUmdY0G6TtaWcA?=
- =?us-ascii?Q?to5OgG6XOnBsV658dwrWb0hpsjV0t9h1P8gT7Rjnpr93zhv7ejsVZaTR0CLJ?=
- =?us-ascii?Q?XmW13TAbhUMGft+4e3gF5Ars3gKhmGZ43BvrXpNiYyWAAzJoQIbgTK+DcWt/?=
- =?us-ascii?Q?CT/tuxJITuNUO4/jyYwXc2BFfk5sIiKT31wWVgL27Tij5CXwuQva5i36qMCA?=
- =?us-ascii?Q?zK+BV/g6TDBbAikF2C69vIj23c8zwMqaPX61l54GxRdATrs9BY6Og95mUkCS?=
- =?us-ascii?Q?RSIkFWhePnu8aMunOK+JD/F9idXBdEeTJhfImez7bBJjaSp3RrAzUH9da0d6?=
- =?us-ascii?Q?/w5I/sCtZyta+fzKW648QO7pxYhzRKTtXCv/wwcZTORu03NsZj7O7bRf/9Yy?=
- =?us-ascii?Q?IMXoqRRbt0Wwi3XNrg6DvdJiTO41ILvNJZ6WMjEmm+Gc30BbgFqyFFxY0WP5?=
- =?us-ascii?Q?mFiPAwHekT0einHunjHY+aVs2IzUvUl+iOq1WaCeEV3Fe0AZKK+aJUSZPmmY?=
- =?us-ascii?Q?E9XfrbkcrrCOtIYuawrUQZQBhI+QHPUVny2O0rC/1gm05OJwdGA01Fnisl1l?=
- =?us-ascii?Q?QDYu9U9FWtRMGilmK0Bs4yDMcrgDILejUPgpODtMav1z/v0nv8BR8TwDF3IT?=
- =?us-ascii?Q?rz+WlLy0Oc5hUdV+fkoWWFL7hStVEByPxoFc8otJhB2OIRuuzv+/1NP+FV/t?=
- =?us-ascii?Q?epzn39gSEEQ7VXV1Gf/d6LQKFpLj9arS9MTz0QJGWQY33c91IhuiShCth4ej?=
- =?us-ascii?Q?ehWSolkKFfxKGFPr0q4tkiAett2QqNoEMFZH5OTDceG1G9uEFMVrNu+YbsO1?=
- =?us-ascii?Q?9XdH0KK861hVMQZomFa/cDfShsi01Zt6qVVXO1WR3tKazzb5Gc7zgfX01VUL?=
- =?us-ascii?Q?Z9grbQ12SFfDK68Ut/+WoL+vtmcrR6ega/ohtuRM32RplqCADBlt1c4WH/Rb?=
- =?us-ascii?Q?TQuN8mgk7W6zU2gJgK3MkXgkCdlO?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR10MB4112.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?jHmR+70smI1cTMXfwu84PHPyQdBl+qa9UXDQL/W1NraCobQ+6nS8Fgn53cEV?=
- =?us-ascii?Q?1pWkebHfI5hGayfU3bi0xvtvCZiBBLkPP6R4oKyFfxjFS3uJF5xSx4Pjoudq?=
- =?us-ascii?Q?WjNZAHjJ635GyutC+nASyxvVRQHBWxCByp8WKqp55O5Qt4PpiTI6mjzYHgjD?=
- =?us-ascii?Q?O3hbpCKDB2fqJbRsqsfvFapcm8z2ukMc1iB4r/stmdGcGAgoa65woqDW35n5?=
- =?us-ascii?Q?WdhBF1HRE1YorhE5iyEkTXELBIbpMBCAMTPRuA7O+uWn5Zj9MQKLqfTZCoXu?=
- =?us-ascii?Q?YA0ycL/qgvi8YgNkqeW+i1ojr4l8sWskZaEqZbZrV/YgwFhDGd5mdIoDzZYA?=
- =?us-ascii?Q?mvgRKKWMUweXHj5hOx+PLt24L9r4LlQvrw6utaoJMsfhRgWhUVJebCXWt6Q5?=
- =?us-ascii?Q?FLCMrHoi3WTR7+/9Opz2D3FXNfAloFPGwK3ioCIqfYQRvTkohELiQU5t7X2M?=
- =?us-ascii?Q?5PYjAjflr4zsM1XXnUFWKYwXPSoc7mskmLz8s9zDC1zKnXm1eONJxsLGzlFl?=
- =?us-ascii?Q?kDnMs6lafrSWD7gRcN6/NfsibQThX5sLpv9bGWz1AarD9rukt+6GRSnBEo5+?=
- =?us-ascii?Q?g3apCps48Rn6yHpAUTHBHpOkdmhOFxBdshxxQR6V+JCdYRpoPMrLJth/znJc?=
- =?us-ascii?Q?eI1vgcBzK7XQhmq7IPt4vMcPl/JblxU5KSrqgl5CqfQxZNn3yZO0vJVq0zww?=
- =?us-ascii?Q?2azRzi0xDABPU+LjD/0vko+YJ+n2RS+RW9mcIl419yVry5rd3ALTp5SXK9DB?=
- =?us-ascii?Q?djaefi1EfygknTzlEGnIUjwUMq9msjpCVjFlJ0KjWkEqpkc6+Witu/t4t0YL?=
- =?us-ascii?Q?8VQJgqhbmNgxE+WAnmR+UlxHgMpLVAothWCaahFnzCjCGqXQ973NVcP6qllS?=
- =?us-ascii?Q?Pf4OEiiHBe/BTOtS1dxBkCnrsJrTYyQPyk46epVmmGbl7UWlAhzwuZIVbH52?=
- =?us-ascii?Q?xIpIaGBauonzNAtL6AlLwOVMLmmJ98bRbfo8cm5UiPG7VZrrPeJt8eZDDgJ2?=
- =?us-ascii?Q?cmOmJT3SHys+XAcVNCGGUnwNT7BzReq6r8VtVNLhaooD+P7dRFSzGgstsMs5?=
- =?us-ascii?Q?qBAFZStXxmbjReMVyLj4MBm+cp9eUdWFXHt0TY2mIXQ9vLuQAAJ05KUsc02D?=
- =?us-ascii?Q?umq4eq/EwUsEy4ZfTxh7ZUz0QYfcmT5OMNWEulxzZZsMayRhBeuaYXdy7pJn?=
- =?us-ascii?Q?fqpoI9PLYYkP7mcP44L/L1SYnmU8BGRCbswny0sbLlhXDZ99ZmAcZuJ1IxSe?=
- =?us-ascii?Q?KRfgqebhjOKMao0/bXMahtwh7nI1VkKErffonht4kk1w56HmYmCjoYOD4fhv?=
- =?us-ascii?Q?EJhkorvA9yU83iZAY/Q4n4F7pjAz9DUasBZYUrek3YUC4EGAGC0NkKmTqrEI?=
- =?us-ascii?Q?gpyjDaxCmY5rNNuskiOkze62XfhNiFAVNtIWQwB9HLx5aIgIxWNJXF71xyLa?=
- =?us-ascii?Q?g30ZNZIlEOB9ErqILiOSghaZUW6fpV4m0tcGpeqpSh2p/9zkeZmmXsg6gKSY?=
- =?us-ascii?Q?oQ+ou1vewqZefhWhjcDwhE+DkFZAdtNVnpr3tPiMvfN5qCN8Nb+aRQKNlKK+?=
- =?us-ascii?Q?VOY7u0nPA2+kRhpt2FEjxM4ldCpDTUouBgZHEvjwhIGKblFZ1dcn/XnK6+IM?=
- =?us-ascii?Q?cg=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	L8zIRXB+ucJidKSIBXBuprcS83EDrSo6pFEHADnfd5sn+c4RazGRDQDNF2Ag990gJafn6SDO/VgHDtHwsotya9HC7uWkFRzA5Hrpjm3XDZiKyMb5xavQKQ1vUZc7Os9FNu2g6CR4YSFjb2SHjvqAoj0B0k2jnAhlaJzNjBYMhRPcZkNDa80rcZDv2winVKZSP8rbpejoVvzfoNlL3rFGmjEH/drGitMreS/5FBxwfvXhiiKozFT8p8dJDDKYUhb+rjQMboDTHa9tQ/hNezBpoUH+CkZHxKaiVOU2JRfW4p6B6PlXjkrHDeN7KDs8HUeMY4xgAt6tNchSobhQckzRz9WBpjV+iKGBWE826fy2RrHi5pzHWVtgcUK2zRJzSV8F96HlLE1w4xjf1uIrUVOgMYNpxT/jgYzUL0BFyJavSH0zSs+hhayAgaJnAki3n7Shft6NLp1DLDnt+/IHhZyyEuMhvc4/vGbu5RtmZZjRQKpFGRkcbPl55c+/NRrGDk1GhsS5jg9otLq2Xtpdl+qawmgshZnYw4clpJ3Cec172hycuexl2RQ524kaDovLDeHvSbWQZbRpu7mdwNj0QV3unM7BXe12Pf/L8L4cdyPlHus=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2e3de22c-5ed5-4017-e0a7-08dd5a4c291a
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR10MB4112.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Mar 2025 12:08:51.1153
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: K56rTpRF567gkJzvKaEqydb/RdRNoqnKBgZc3Ndrxiod40Okmx8AVcIXv0t0ODXQWgEvBBnQrlETX6Y1BCH9JNeyoS36VLnb4nj4Yp7EwO8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR10MB7552
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-03_07,2025-03-03_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 suspectscore=0 spamscore=0
- mlxscore=0 mlxlogscore=999 adultscore=0 malwarescore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502100000
- definitions=main-2503030093
-X-Proofpoint-ORIG-GUID: ucIHrbBFuMp1JKpfl8NZ5v2yvHmwAI-g
-X-Proofpoint-GUID: ucIHrbBFuMp1JKpfl8NZ5v2yvHmwAI-g
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Alim Akhtar <alim.akhtar@samsung.com>, Tony Luck <tony.luck@intel.com>, 
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
+ Krzysztof Kozlowski <krzk@kernel.org>, Kees Cook <kees@kernel.org>, 
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>, linux-kernel@vger.kernel.org, 
+ Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>, 
+ Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
+ linux-hardening@vger.kernel.org
+To: Kaustabh Chakraborty <kauschluss@disroot.org>
+In-Reply-To: <20250301-exynos7870-v4-0-2925537f9b2a@disroot.org>
+References: <20250301-exynos7870-v4-0-2925537f9b2a@disroot.org>
+Message-Id: <174100756283.1496281.12555971793250210333.robh@kernel.org>
+Subject: Re: [PATCH v4 0/7] Add support for the Exynos7870 SoC, along with
+ three devices
 
 
-On Mon, Mar 03, 2025 at 05:09:21AM +0000, jeffxu@chromium.org wrote:
-> From: Jeff Xu <jeffxu@chromium.org>
->
-> Add sysmap_is_sealed.c to test system mappings are sealed.
->
-> Note: CONFIG_MSEAL_SYSTEM_MAPPINGS must be set, as indicated in
-> config file.
->
-> Signed-off-by: Jeff Xu <jeffxu@chromium.org>
-
-We do need to add this to the general selftests Makefile, but this code is
-fine, so have a:
-
-Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-
-Congratulations! :) and thanks for addressing the issues that were raised,
-appreciate your efforts on this.
-
-Maybe you could send a fix patch? As it's such a small fix.
-
-Cheers, Lorenzo
-
-
+On Sat, 01 Mar 2025 01:16:48 +0530, Kaustabh Chakraborty wrote:
+> Samsung Exynos 7870 (codename: Joshua) is an ARM-v8 system-on-chip that was
+> announced in 2016. The chipset was found in several popular mid-range to
+> low-end Samsung phones, released within 2016 to 2019.
+> 
+> This patch series aims to add support for Exynos 7870, starting with the
+> most basic yet essential components such as CPU, GPU, clock controllers,
+> PMIC, pin controllers, etc.
+> 
+> Moreover, the series also adds support for three Exynos 7870 devices via
+> devicetree. The devices are:
+>  * Samsung Galaxy J7 Prime	- released 2016, codename on7xelte
+>  * Samsung Galaxy J6		- released 2018, codename j6lte
+>  * Samsung Galaxy A2 Core	- released 2019, codename a2corelte
+> 
+> Additional features implemented in this series include:
+>  * I2C	- touchscreen, IIO sensors, etc.
+>  * UART	- bluetooth and serial debugging
+>  * MMC	- eMMC, Wi-Fi SDIO, SDCard
+>  * USB	- micro-USB 2.0 interface
+> 
+> Build dependencies are in these sub-series:
+>  * bootmode	  	- https://lore.kernel.org/all/20250204-exynos7870-bootmode-v1-1-0f17b3033c2d@disroot.org/
+>  * pmu-clocks		- https://lore.kernel.org/all/20250301-exynos7870-pmu-clocks-v4-0-0f3e73b10db7@disroot.org/
+> 
+> Other related sub-series:
+>  * gpu			R https://lore.kernel.org/all/20250204-exynos7870-gpu-v1-1-0db4c163a030@disroot.org/
+>  * i2c	      		A https://lore.kernel.org/all/20250204-exynos7870-i2c-v1-0-63d67871ab7e@disroot.org/
+>  * mmc			- https://lore.kernel.org/all/20250219-exynos7870-mmc-v2-0-b4255a3e39ed@disroot.org/
+>  * pinctrl	  	- https://lore.kernel.org/all/20250301-exynos7870-pinctrl-v3-0-ba1da9d3cd2f@disroot.org/
+>  * pmic-regulators	- https://lore.kernel.org/all/20250301-exynos7870-pmic-regulators-v3-0-808d0b47a564@disroot.org/
+>  * uart			R https://lore.kernel.org/all/20250219-exynos7870-uart-v2-1-c8c67f3a936c@disroot.org/
+>  * usb			- https://lore.kernel.org/all/20250301-exynos7870-usb-v3-0-f01697165d19@disroot.org/
+>  * usbphy		- https://lore.kernel.org/all/20250219-exynos7870-usbphy-v2-0-b8ba4e7a72e9@disroot.org/
+> (Legend: [R]eviewed, [A]pplied)
+> 
+> Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
 > ---
->  .../mseal_system_mappings/.gitignore          |   2 +
->  .../selftests/mseal_system_mappings/Makefile  |   6 +
->  .../selftests/mseal_system_mappings/config    |   1 +
->  .../mseal_system_mappings/sysmap_is_sealed.c  | 113 ++++++++++++++++++
-
-Can you add this to tools/testing/selftests/Makefile? I _think_ adding:
-
-TARGETS += mm
-
-Should do it. Thanks!
-
->  4 files changed, 122 insertions(+)
->  create mode 100644 tools/testing/selftests/mseal_system_mappings/.gitignore
->  create mode 100644 tools/testing/selftests/mseal_system_mappings/Makefile
->  create mode 100644 tools/testing/selftests/mseal_system_mappings/config
->  create mode 100644 tools/testing/selftests/mseal_system_mappings/sysmap_is_sealed.c
->
-> diff --git a/tools/testing/selftests/mseal_system_mappings/.gitignore b/tools/testing/selftests/mseal_system_mappings/.gitignore
-> new file mode 100644
-> index 000000000000..319c497a595e
-> --- /dev/null
-> +++ b/tools/testing/selftests/mseal_system_mappings/.gitignore
-> @@ -0,0 +1,2 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +sysmap_is_sealed
-> diff --git a/tools/testing/selftests/mseal_system_mappings/Makefile b/tools/testing/selftests/mseal_system_mappings/Makefile
-> new file mode 100644
-> index 000000000000..2b4504e2f52f
-> --- /dev/null
-> +++ b/tools/testing/selftests/mseal_system_mappings/Makefile
-> @@ -0,0 +1,6 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +CFLAGS += -std=c99 -pthread -Wall $(KHDR_INCLUDES)
-> +
-> +TEST_GEN_PROGS := sysmap_is_sealed
-> +
-> +include ../lib.mk
-> diff --git a/tools/testing/selftests/mseal_system_mappings/config b/tools/testing/selftests/mseal_system_mappings/config
-> new file mode 100644
-> index 000000000000..675cb9f37b86
-> --- /dev/null
-> +++ b/tools/testing/selftests/mseal_system_mappings/config
-> @@ -0,0 +1 @@
-> +CONFIG_MSEAL_SYSTEM_MAPPINGS=y
-> diff --git a/tools/testing/selftests/mseal_system_mappings/sysmap_is_sealed.c b/tools/testing/selftests/mseal_system_mappings/sysmap_is_sealed.c
-> new file mode 100644
-> index 000000000000..c1e93794a58b
-> --- /dev/null
-> +++ b/tools/testing/selftests/mseal_system_mappings/sysmap_is_sealed.c
-> @@ -0,0 +1,113 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * test system mappings are sealed when
-> + * KCONFIG_MSEAL_SYSTEM_MAPPINGS=y
-> + */
-> +
-> +#define _GNU_SOURCE
-> +#include <stdio.h>
-> +#include <errno.h>
-> +#include <unistd.h>
-> +#include <string.h>
-> +#include <stdbool.h>
-> +
-> +#include "../kselftest.h"
-> +#include "../kselftest_harness.h"
-> +
-> +#define VDSO_NAME "[vdso]"
-> +#define VVAR_NAME "[vvar]"
-> +#define VVAR_VCLOCK_NAME "[vvar_vclock]"
-> +#define UPROBES_NAME "[uprobes]"
-> +#define SIGPAGE_NAME "[sigpage]"
-> +#define VECTORS_NAME "[vectors]"
-> +
-> +#define VMFLAGS "VmFlags:"
-> +#define MSEAL_FLAGS "sl"
-> +#define MAX_LINE_LEN 512
-> +
-> +bool has_mapping(char *name, FILE *maps)
-> +{
-> +	char line[MAX_LINE_LEN];
-> +
-> +	while (fgets(line, sizeof(line), maps)) {
-> +		if (strstr(line, name))
-> +			return true;
-> +	}
-> +
-> +	return false;
-> +}
-> +
-> +bool mapping_is_sealed(char *name, FILE *maps)
-> +{
-> +	char line[MAX_LINE_LEN];
-> +
-> +	while (fgets(line, sizeof(line), maps)) {
-> +		if (!strncmp(line, VMFLAGS, strlen(VMFLAGS))) {
-> +			if (strstr(line, MSEAL_FLAGS))
-> +				return true;
-> +
-> +			return false;
-> +		}
-> +	}
-> +
-> +	return false;
-> +}
-> +
-> +FIXTURE(basic) {
-> +	FILE *maps;
-> +};
-> +
-> +FIXTURE_SETUP(basic)
-> +{
-> +	self->maps = fopen("/proc/self/smaps", "r");
-> +	if (!self->maps)
-> +		SKIP(return, "Could not open /proc/self/smap, errno=%d",
-> +			errno);
-> +};
-> +
-> +FIXTURE_TEARDOWN(basic)
-> +{
-> +	if (self->maps)
-> +		fclose(self->maps);
-> +};
-> +
-> +FIXTURE_VARIANT(basic)
-> +{
-> +	char *name;
-> +};
-> +
-> +FIXTURE_VARIANT_ADD(basic, vdso) {
-> +	.name = VDSO_NAME,
-> +};
-> +
-> +FIXTURE_VARIANT_ADD(basic, vvar) {
-> +	.name = VVAR_NAME,
-> +};
-> +
-> +FIXTURE_VARIANT_ADD(basic, vvar_vclock) {
-> +	.name = VVAR_VCLOCK_NAME,
-> +};
-> +
-> +FIXTURE_VARIANT_ADD(basic, sigpage) {
-> +	.name = SIGPAGE_NAME,
-> +};
-> +
-> +FIXTURE_VARIANT_ADD(basic, vectors) {
-> +	.name = VECTORS_NAME,
-> +};
-> +
-> +FIXTURE_VARIANT_ADD(basic, uprobes) {
-> +	.name = UPROBES_NAME,
-> +};
-> +
-> +TEST_F(basic, is_sealed)
-> +{
-> +	if (!has_mapping(variant->name, self->maps)) {
-> +		SKIP(return, "could not found the mapping, %s",
-> +			variant->name);
-> +	}
-> +
-> +	EXPECT_TRUE(mapping_is_sealed(variant->name, self->maps));
-> +};
-> +
-> +TEST_HARNESS_MAIN
+> Changes in v4:
+> - Drop merged [PATCH v3 1/7].
+> - Explicitly mention sub-series having build dependencies.
+> - Include the following patch from the pmu-clocks series:
+>   - dt-bindings: soc: samsung: exynos-pmu: add exynos7870-pmu compatible
+> - Adjust clock header file name to match changes in pmu-clocks.
+> - Change regulator node names to match changes in pmic-regulators.
+> - Remove non-removable flag for the SDCard's mmc node.
+> - Link to v3: https://lore.kernel.org/r/20250219-exynos7870-v3-0-e384fb610cad@disroot.org
+> 
+> Changes in v3:
+> - Added patches from https://lore.kernel.org/all/20250204-exynos7870-chipid-v1-0-0bf2db08e621@disroot.org/
+> - Fix devicetree formatting according to the devicetree style guide.
+> - Take over ownership of patches by the co-author, upon their request.
+> - Link to v2: https://lore.kernel.org/r/20250204-exynos7870-v2-0-56313165ef0c@disroot.org
+> 
+> Changes in v2:
+> - Redo a few commit descriptions.
+> - Split patchsets into multiple sub-series, subsystem-wise.
+> - Link to v1: https://lore.kernel.org/r/20250203-exynos7870-v1-0-2b6df476a3f0@disroot.org
+> 
+> ---
+> Kaustabh Chakraborty (7):
+>       dt-bindings: soc: samsung: exynos-pmu: add exynos7870-pmu compatible
+>       dt-bindings: arm: samsung: add compatibles for exynos7870 devices
+>       soc: samsung: exynos-chipid: add support for exynos7870
+>       arm64: dts: exynos: add initial devicetree support for exynos7870
+>       arm64: dts: exynos: add initial support for Samsung Galaxy J7 Prime
+>       arm64: dts: exynos: add initial support for Samsung Galaxy A2 Core
+>       arm64: dts: exynos: add initial support for Samsung Galaxy J6
+> 
+>  .../bindings/arm/samsung/samsung-boards.yaml       |    8 +
+>  .../bindings/soc/samsung/exynos-pmu.yaml           |    1 +
+>  arch/arm64/boot/dts/exynos/Makefile                |    3 +
+>  .../arm64/boot/dts/exynos/exynos7870-a2corelte.dts |  628 ++++++++++++
+>  arch/arm64/boot/dts/exynos/exynos7870-j6lte.dts    |  616 ++++++++++++
+>  arch/arm64/boot/dts/exynos/exynos7870-on7xelte.dts |  664 +++++++++++++
+>  arch/arm64/boot/dts/exynos/exynos7870-pinctrl.dtsi | 1022 ++++++++++++++++++++
+>  arch/arm64/boot/dts/exynos/exynos7870.dtsi         |  714 ++++++++++++++
+>  drivers/soc/samsung/exynos-chipid.c                |    1 +
+>  9 files changed, 3657 insertions(+)
+> ---
+> base-commit: be5c7bbb3a64baf884481a1ba0c2f8fb2f93f7c3
+> change-id: 20250201-exynos7870-049587e4b7df
+> 
+> Best regards,
 > --
-> 2.48.1.711.g2feabab25a-goog
->
+> Kaustabh Chakraborty <kauschluss@disroot.org>
+> 
+> 
+> 
+
+
+My bot found new DTB warnings on the .dts files added or changed in this
+series.
+
+Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+are fixed by another series. Ultimately, it is up to the platform
+maintainer whether these warnings are acceptable or not. No need to reply
+unless the platform maintainer has comments.
+
+If you already ran DT checks and didn't see these error(s), then
+make sure dt-schema is up to date:
+
+  pip3 install dtschema --upgrade
+
+
+New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/exynos/' for 20250301-exynos7870-v4-0-2925537f9b2a@disroot.org:
+
+In file included from arch/arm64/boot/dts/exynos/exynos7870-on7xelte.dts:10:
+arch/arm64/boot/dts/exynos/exynos7870.dtsi:9:10: fatal error: dt-bindings/clock/samsung,exynos7870-cmu.h: No such file or directory
+    9 | #include <dt-bindings/clock/samsung,exynos7870-cmu.h>
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+make[3]: *** [scripts/Makefile.dtbs:131: arch/arm64/boot/dts/exynos/exynos7870-on7xelte.dtb] Error 1
+make[2]: *** [scripts/Makefile.build:461: arch/arm64/boot/dts/exynos] Error 2
+make[2]: Target 'arch/arm64/boot/dts/exynos/exynos7870-on7xelte.dtb' not remade because of errors.
+make[1]: *** [/home/rob/proj/linux-dt-testing/Makefile:1462: exynos/exynos7870-on7xelte.dtb] Error 2
+In file included from arch/arm64/boot/dts/exynos/exynos7870-a2corelte.dts:10:
+arch/arm64/boot/dts/exynos/exynos7870.dtsi:9:10: fatal error: dt-bindings/clock/samsung,exynos7870-cmu.h: No such file or directory
+    9 | #include <dt-bindings/clock/samsung,exynos7870-cmu.h>
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+make[3]: *** [scripts/Makefile.dtbs:131: arch/arm64/boot/dts/exynos/exynos7870-a2corelte.dtb] Error 1
+make[2]: *** [scripts/Makefile.build:461: arch/arm64/boot/dts/exynos] Error 2
+make[2]: Target 'arch/arm64/boot/dts/exynos/exynos7870-a2corelte.dtb' not remade because of errors.
+make[1]: *** [/home/rob/proj/linux-dt-testing/Makefile:1462: exynos/exynos7870-a2corelte.dtb] Error 2
+In file included from arch/arm64/boot/dts/exynos/exynos7870-j6lte.dts:10:
+arch/arm64/boot/dts/exynos/exynos7870.dtsi:9:10: fatal error: dt-bindings/clock/samsung,exynos7870-cmu.h: No such file or directory
+    9 | #include <dt-bindings/clock/samsung,exynos7870-cmu.h>
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+make[3]: *** [scripts/Makefile.dtbs:131: arch/arm64/boot/dts/exynos/exynos7870-j6lte.dtb] Error 1
+make[2]: *** [scripts/Makefile.build:461: arch/arm64/boot/dts/exynos] Error 2
+make[2]: Target 'arch/arm64/boot/dts/exynos/exynos7870-j6lte.dtb' not remade because of errors.
+make[1]: *** [/home/rob/proj/linux-dt-testing/Makefile:1462: exynos/exynos7870-j6lte.dtb] Error 2
+make: *** [Makefile:251: __sub-make] Error 2
+make: Target 'exynos/exynos8895-dreamlte.dtb' not remade because of errors.
+make: Target 'exynos/exynos850-e850-96.dtb' not remade because of errors.
+make: Target 'exynos/exynos7870-on7xelte.dtb' not remade because of errors.
+make: Target 'exynos/exynos7885-jackpotlte.dtb' not remade because of errors.
+make: Target 'exynos/exynos990-x1slte.dtb' not remade because of errors.
+make: Target 'exynos/exynos5433-tm2.dtb' not remade because of errors.
+make: Target 'exynos/exynos990-r8s.dtb' not remade because of errors.
+make: Target 'exynos/exynos7-espresso.dtb' not remade because of errors.
+make: Target 'exynos/google/gs101-oriole.dtb' not remade because of errors.
+make: Target 'exynos/google/gs101-raven.dtb' not remade because of errors.
+make: Target 'exynos/exynosautov920-sadk.dtb' not remade because of errors.
+make: Target 'exynos/exynosautov9-sadk.dtb' not remade because of errors.
+make: Target 'exynos/exynos990-c1s.dtb' not remade because of errors.
+make: Target 'exynos/exynos9810-starlte.dtb' not remade because of errors.
+make: Target 'exynos/exynos990-x1s.dtb' not remade because of errors.
+make: Target 'exynos/exynos7870-a2corelte.dtb' not remade because of errors.
+make: Target 'exynos/exynos5433-tm2e.dtb' not remade because of errors.
+make: Target 'exynos/exynos7870-j6lte.dtb' not remade because of errors.
+
+
+
+
+
