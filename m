@@ -1,393 +1,128 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C88E1F3FCB;
-	Tue,  4 Mar 2025 04:38:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F27A13D561
+	for <linux-hardening@vger.kernel.org>; Tue,  4 Mar 2025 05:57:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741063112; cv=none; b=CdfRgVtB7NOvlhBUEk4abq4SJRPYVXeF7XRhU0kRryuLNKn46bU3txG9wpEKv0rvqemX4PH9uLSyb9Pow0wK7EuZVxWFq22iMR07ULu0nPz3mvrb58elrC5kAPitm2Frt5vHaiTVGajMrpigZ7yzGDMVUAj5GYH4Kg4j+92R2FE=
+	t=1741067873; cv=none; b=iUmIv/Lvjsz5CIRzlkuNPl+/rdou1+jCAuUhxUX9X9LVUQ9CBtlJUA6iHOuPsbc6CLFE/4+uGTJlZQDljfsjlNBigW+waKs43I/DW4kJD5Hx+gX3VpxhGzyZOBe1Zaq0YdkgAvoGgYiKuAbBd8KMQEdL1WkMXiOmxIKai0ldsKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741063112; c=relaxed/simple;
-	bh=ctVHWnUs3W+39jI/gTkCn72pxrx2I0Oo7GySVcQPxwI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EYnr4JBehiGBO8c30fgk1HNhovYZ0FwcBoJPym06pWGZq+e/6IZkjPs1PJAtAcg57wZ4be18mx9psmb+03noJmiMKmijSoVRuJJYwSF2w+8O+EYdwruBtzYwWuw8udDHXi8sI1IOntTJyEu0QaiamzXNM1Z+4hghcRWC5j9x8Bw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=bUeQP/Tw; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1741067873; c=relaxed/simple;
+	bh=z2ItC8liAwqGt1jXzC+4UDH7hKciOu946UiANvWqDeQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sH6Pde6OFCd22uf9NsjAgeaGfzIe9OxDw7NAsIMeO1bNgwvpuVaBHv6eFvf8Yn6cZpZTa0OdDk0nzf0fd92el0jIl+ZjxCx8ppGugiik8QNevFmZhU6s/49PsE8odS6CZ8mypCv9HHNxyRg2eRRxum1oSXuRyIN0GXstedo4yDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jkGwtlzH; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="bUeQP/Tw"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 65DBE259E3;
-	Tue,  4 Mar 2025 05:38:27 +0100 (CET)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id EbJyYfcrLNdi; Tue,  4 Mar 2025 05:38:23 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1741063103; bh=ctVHWnUs3W+39jI/gTkCn72pxrx2I0Oo7GySVcQPxwI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=bUeQP/Tw86c+X0H/oitIliOAWKyxj52xeziD4otPBQQdRoCKhqaYqSqhxi+rhzgdD
-	 TLTjJbeHqzPENwNuBxZxgeZMEQDOkemnOSmzmcsqX0m+fsr9SLei1KdpGo7KBxyNLJ
-	 hcZ9mPHjVeMCa+cmREowAJ6QtF4myx+ImWUXfzyDz49q5Zlbc9jMb3a+no1PKSxr06
-	 JENnX8JFIX8y7cCOQ07pGNHfoA1gXkLnBlw12/RBa8JAGM/sbFGViNWVthoPCL0DTR
-	 CXgi+/tvQ0wpSLUDs7/UVuQUeqnHYNcGpH4zjyv3kNNFNibnmCV6mIwhwlfDjKY6nw
-	 MEyJDfrUAI3ag==
-From: Gabriel Gonzales <semfault@disroot.org>
-To: linux-kernel@vger.kernel.org
-Cc: Gabriel Gonzales <semfault@disroot.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Kees Cook <kees@kernel.org>,
-	Tony Luck <tony.luck@intel.com>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v1 2/2] arm64: dts: qcom: sm6125: Initial support for xiaomi-ginkgo
-Date: Tue,  4 Mar 2025 12:37:40 +0800
-Message-ID: <20250304043742.9252-2-semfault@disroot.org>
-In-Reply-To: <20250304043742.9252-1-semfault@disroot.org>
-References: <20250304043742.9252-1-semfault@disroot.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jkGwtlzH"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5e4c0c12bccso9246105a12.1
+        for <linux-hardening@vger.kernel.org>; Mon, 03 Mar 2025 21:57:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741067870; x=1741672670; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2kdXEVdWEFQsVMrlXmKigkO5x1vDrnMoGVc5B9lksM0=;
+        b=jkGwtlzHJ3cQQIrpIJNoKPQprhurq8NPM9QyXcFlUI8sw0CiFpnsVbMbWLLaq8hEJ+
+         Q3JwTBv32fzR60j6TjGWq03Mv003icGgg7x/5IZH1jXsPK4HT9DU1Prqo/9u5wqEF3wp
+         638Dzo2zSrbpSrJWSXCRzR5aMa14unacPh2RuLVfAtJiv05t1ySEvFxIcJHMT8jLRRvz
+         jzGkLvoyeEgz9Agmv2JNA652XKEnUhWmhBFSMHZkldr1fJ4wurJBRRLNfLrO6LOTWqjg
+         ibsvVvVFG+qGyMIwBd5WoiEUwV4FzUhN7EakI0wKWWnLefenfU/SkEm7AJivl2ZfAp3n
+         mUkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741067870; x=1741672670;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2kdXEVdWEFQsVMrlXmKigkO5x1vDrnMoGVc5B9lksM0=;
+        b=THSUHUoCqWEPYAG9xVZpNuuROZHAEHJJYyyrrr0zjwm52UWpTkQP76YsRGo+R7BolC
+         nIjQTblpbEroVoIVEAV1fL/Gj7CmEk/HrtdZrpeVqunD9CrfIdXJQ6VAjGAKvtKQEU1r
+         KNSGtCoQPGc06yBAIRCkBIPrcXn83BcyU0qtYfqvKpxQmTLnvTdmOAawHUkqL6b0YQk2
+         owGBjoBSBOeIyapX6v9MfCZYnecLyz60H7ijQ4sImLr+1N+8C7O2H626VD48KshJtvf/
+         zdDXKDpw92PcJ/BcqpNEzGPgJ3g9IZ6kAlggrNgy45vILXi1dHKvU87Ris4ZSiwHk6WC
+         DwWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWgx7a8hgOEzKXBrQYzfFBLsbZsS9UbRg9Es8EtQQ5UU4FsUZWYY+dNGKsADt0XNJWwyyvlO///I01JN2W8mGI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyct52AjLz5qUhazoOPuy+o5RhyUtSM1idcX0WDCdmna0Pfnkih
+	lMGgQdMn7a3cPyVc8qtLPNAvTwnG1RdCWPUTCirQFIgWUyMJuKuPtjf0ARD2wg4+0W9xpGaVQ+6
+	3OCt5nzdF2+2CN2MArOnPA6Vq7SNnl8+i17M=
+X-Gm-Gg: ASbGncvN4uFbRq1vQHJW8+Bl7KGpE6JiXbtS9vLyfT+aRHEC63foTqbdsWHxfHPRiN7
+	yLu8nAPy/uVhq5uo/Qu2Nw+vgnK0vPe4RwkjsSNsouKACcTDAIBz+s/hwyp7lB2l/uzrwGkcMq8
+	5iTDp6gAR9gE/csZkUmY/C5YWKww==
+X-Google-Smtp-Source: AGHT+IHX33WyC/gFLH0WmNzyrwr5Hnwf11twRUS6xy6i4hdWgJ63YtjcDQLuwSdAGkFBG0YZ1AF50N7a3Xym112Fqvw=
+X-Received: by 2002:a17:907:781:b0:ab7:9df1:e562 with SMTP id
+ a640c23a62f3a-abf2682aed4mr1795362466b.48.1741067869951; Mon, 03 Mar 2025
+ 21:57:49 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <87v7sppmqu.wl-kuninori.morimoto.gx@renesas.com>
+In-Reply-To: <87v7sppmqu.wl-kuninori.morimoto.gx@renesas.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Tue, 4 Mar 2025 07:57:13 +0200
+X-Gm-Features: AQ5f1Jr64dy2ZelkYUvgqUyqHEIsNjlFHltXurXRfxvep7hohATIUQtKLSZZ1o4
+Message-ID: <CAHp75VdeNoz=QoiMF6hK+eJZH2N7+vUm+1-ovmwGAY5NZ_zTqQ@mail.gmail.com>
+Subject: Re: [PATCH v2 00/10] lib/string_choices: Add new helpers
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Andy Shevchenko <andy@kernel.org>, Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add support for the Xiaomi Redmi Note 8 based on the SM6125 SoC.
+On Tue, Mar 4, 2025 at 4:12=E2=80=AFAM Kuninori Morimoto
+<kuninori.morimoto.gx@renesas.com> wrote:
+>
+>
+> Hi Kees, Andy
+>
+> This is v2 patch-set of "add new helpers".
 
-Defined features:
-- dmesg output to bootloader preconfigured display
-- USB
-- eMMC
-- SD card
-- SMD RPM regulators
-- Volume Up, Down and Power buttons
+First of all, please rebase your series against the top of the Kees'
+branch: https://web.git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/=
+log/?h=3Dfor-next/hardening.
+Also use --base when preparing the patch series.
 
-Signed-off-by: Gabriel Gonzales <semfault@disroot.org>
----
- arch/arm64/boot/dts/qcom/Makefile             |   1 +
- .../boot/dts/qcom/sm6125-xiaomi-ginkgo.dts    | 294 ++++++++++++++++++
- 2 files changed, 295 insertions(+)
- create mode 100644 arch/arm64/boot/dts/qcom/sm6125-xiaomi-ginkgo.dts
+When you do that, you will note that the helpers now are ordered
+alphabetically (which your series doesn't follow). So, you will need
+the next version. But wait a bit (2-3 days) before sending it out to
+give a chance to others to comment on your series and samples.
 
-diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-index 140b0b2ab..4d7d54f69 100644
---- a/arch/arm64/boot/dts/qcom/Makefile
-+++ b/arch/arm64/boot/dts/qcom/Makefile
-@@ -246,6 +246,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sm4450-qrd.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sm6115-fxtec-pro1x.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sm6115p-lenovo-j606f.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sm6125-sony-xperia-seine-pdx201.dtb
-+dtb-$(CONFIG_ARCH_QCOM) += sm6125-xiaomi-ginkgo.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sm6125-xiaomi-laurel-sprout.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sm6350-sony-xperia-lena-pdx213.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sm6375-sony-xperia-murray-pdx225.dtb
-diff --git a/arch/arm64/boot/dts/qcom/sm6125-xiaomi-ginkgo.dts b/arch/arm64/boot/dts/qcom/sm6125-xiaomi-ginkgo.dts
-new file mode 100644
-index 000000000..c4677cffa
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/sm6125-xiaomi-ginkgo.dts
-@@ -0,0 +1,294 @@
-+// SPDX-License-Identifier: BSD-3-Clause
-+/*
-+ * Copyright (c) 2025, Gabriel Gonzales <semfault@disroot.org>
-+ */
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/input/gpio-keys.h>
-+#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
-+#include "sm6125.dtsi"
-+#include "pm6125.dtsi"
-+
-+/ {
-+	/* required for bootloader to select correct board */
-+	qcom,msm-id = <394 0>; /* sm6125 v1 */
-+	qcom,board-id = <22 0>;
-+
-+	model = "Xiaomi Redmi Note 8";
-+	compatible = "xiaomi,ginkgo", "qcom,sm6125";
-+	chassis-type = "handset";
-+
-+	chosen {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		framebuffer0: framebuffer@5c000000 {
-+			compatible = "simple-framebuffer";
-+			reg = <0 0x5c000000 0 (2340 * 1080 * 4)>;
-+			width = <1080>;
-+			height = <2340>;
-+			stride = <(1080 * 4)>;
-+			format = "a8r8g8b8";
-+		};
-+	};
-+
-+	reserved-memory {
-+		debug_mem: debug@ffb00000 {
-+			reg = <0x0 0xffb00000 0x0 0xc0000>;
-+			no-map;
-+		};
-+
-+		last_log_mem: lastlog@ffbc0000 {
-+			reg = <0x0 0xffbc0000 0x0 0x80000>;
-+			no-map;
-+		};
-+
-+		pstore_mem: ramoops@ffc00000 {
-+			compatible = "ramoops";
-+			reg = <0x0 0xffc40000 0x0 0xc0000>;
-+			record-size = <0x1000>;
-+			console-size = <0x40000>;
-+			pmsg-size = <0x20000>;
-+		};
-+
-+		cmdline_mem: memory@ffd00000 {
-+			reg = <0x0 0xffd40000 0x0 0x1000>;
-+			no-map;
-+		};
-+	};
-+
-+	extcon_usb: extcon-usb {
-+		compatible = "linux,extcon-usb-gpio";
-+		id-gpios = <&tlmm 102 GPIO_ACTIVE_HIGH>;
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+
-+		pinctrl-0 = <&vol_up_n>;
-+		pinctrl-names = "default";
-+
-+		key-volume-up {
-+			label = "Volume Up";
-+			gpios = <&pm6125_gpios 6 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_VOLUMEUP>;
-+			debounce-interval = <15>;
-+			linux,can-disable;
-+			wakeup-source;
-+		};
-+	};
-+};
-+
-+&pm6125_gpios {
-+	vol_up_n: vol-up-n-state {
-+		pins = "gpio6";
-+		function = "normal";
-+		power-source = <1>;
-+		bias-pull-up;
-+		input-enable;
-+	};
-+};
-+
-+&hsusb_phy1 {
-+	vdd-supply = <&vreg_l7a>;
-+	vdda-pll-supply = <&vreg_l10a>;
-+	vdda-phy-dpdm-supply = <&vreg_l15a>;
-+	status = "okay";
-+};
-+
-+&pon_pwrkey {
-+	status = "okay";
-+};
-+
-+&pon_resin {
-+	linux,code = <KEY_VOLUMEDOWN>;
-+	status = "okay";
-+};
-+
-+&rpm_requests {
-+	regulators-0 {
-+		compatible = "qcom,rpm-pm6125-regulators";
-+
-+		vreg_s6a: s6 {
-+			regulator-min-microvolt = <936000>;
-+			regulator-max-microvolt = <1422000>;
-+		};
-+
-+		vreg_l1a: l1 {
-+			regulator-min-microvolt = <1200000>;
-+			regulator-max-microvolt = <1256000>;
-+		};
-+
-+		vreg_l2a: l2 {
-+			regulator-min-microvolt = <1000000>;
-+			regulator-max-microvolt = <1056000>;
-+		};
-+
-+		vreg_l3a: l3 {
-+			regulator-min-microvolt = <1000000>;
-+			regulator-max-microvolt = <1064000>;
-+		};
-+
-+		vreg_l4a: l4 {
-+			regulator-min-microvolt = <872000>;
-+			regulator-max-microvolt = <976000>;
-+			regulator-allow-set-load;
-+		};
-+
-+		vreg_l5a: l5 {
-+			regulator-min-microvolt = <1648000>;
-+			regulator-max-microvolt = <2950000>;
-+			regulator-allow-set-load;
-+		};
-+
-+		vreg_l6a: l6 {
-+			regulator-min-microvolt = <576000>;
-+			regulator-max-microvolt = <656000>;
-+		};
-+
-+		vreg_l7a: l7 {
-+			regulator-min-microvolt = <872000>;
-+			regulator-max-microvolt = <976000>;
-+		};
-+
-+		vreg_l8a: l8 {
-+			regulator-min-microvolt = <400000>;
-+			regulator-max-microvolt = <728000>;
-+		};
-+
-+		vreg_l9a: l9 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1896000>;
-+		};
-+
-+		vreg_l10a: l10 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1896000>;
-+			regulator-allow-set-load;
-+		};
-+
-+		vreg_l11a: l11 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1952000>;
-+			regulator-allow-set-load;
-+		};
-+
-+		vreg_l12a: l12 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1996000>;
-+		};
-+
-+		vreg_l13a: l13 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1832000>;
-+		};
-+
-+		vreg_l14a: l14 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1904000>;
-+		};
-+
-+		vreg_l15a: l15 {
-+			regulator-min-microvolt = <3104000>;
-+			regulator-max-microvolt = <3232000>;
-+		};
-+
-+		vreg_l16a: l16 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1904000>;
-+		};
-+
-+		vreg_l17a: l17 {
-+			regulator-min-microvolt = <1248000>;
-+			regulator-max-microvolt = <1304000>;
-+		};
-+
-+		vreg_l18a: l18 {
-+			regulator-min-microvolt = <1200000>;
-+			regulator-max-microvolt = <1264000>;
-+			regulator-allow-set-load;
-+		};
-+
-+		vreg_l19a: l19 {
-+			regulator-min-microvolt = <1648000>;
-+			regulator-max-microvolt = <2952000>;
-+		};
-+
-+		vreg_l20a: l20 {
-+			regulator-min-microvolt = <1648000>;
-+			regulator-max-microvolt = <2952000>;
-+		};
-+
-+		vreg_l21a: l21 {
-+			regulator-min-microvolt = <2600000>;
-+			regulator-max-microvolt = <2856000>;
-+		};
-+
-+		vreg_l22a: l22 {
-+			regulator-min-microvolt = <2944000>;
-+			regulator-max-microvolt = <2950000>;
-+			regulator-allow-set-load;
-+		};
-+
-+		vreg_l23a: l23 {
-+			regulator-min-microvolt = <3000000>;
-+			regulator-max-microvolt = <3400000>;
-+		};
-+
-+		vreg_l24a: l24 {
-+			regulator-min-microvolt = <2944000>;
-+			regulator-max-microvolt = <2950000>;
-+			regulator-allow-set-load;
-+		};
-+
-+	};
-+};
-+
-+&sdc2_off_state {
-+	sd-cd-pins {
-+		pins = "gpio98";
-+		function = "gpio";
-+		drive-strength = <2>;
-+		bias-disable;
-+	};
-+};
-+
-+&sdc2_on_state {
-+	sd-cd-pins {
-+		pins = "gpio98";
-+		function = "gpio";
-+		drive-strength = <2>;
-+		bias-pull-up;
-+	};
-+};
-+
-+&sdhc_1 {
-+	vmmc-supply = <&vreg_l24a>;
-+	vqmmc-supply = <&vreg_l11a>;
-+	status = "okay";
-+};
-+
-+&sdhc_2 {
-+	cd-gpios = <&tlmm 98 GPIO_ACTIVE_HIGH>;
-+	vmmc-supply = <&vreg_l22a>;
-+	vqmmc-supply = <&vreg_l5a>;
-+	no-sdio;
-+	no-mmc;
-+	status = "okay";
-+};
-+
-+&tlmm {
-+	gpio-reserved-ranges = <22 2>, <28 6>;
-+};
-+
-+&usb3 {
-+	status = "okay";
-+};
-+
-+&usb3_dwc3 {
-+	extcon = <&extcon_usb>;
-+};
--- 
-2.47.0
+> I would like to use string_choices helper to cleanup the code, but it is
+> missing some of well used string pair in kernel. This patch-set adds it.
+>
+> Step1
+>         Add new helpers (This patch-set)
+> Step2
+>         Each driver/framework use new helper
+>
+> You can see "git diff --stat" of Step2 on last of this mail.
+> One note is that it is including the patch which is using only existing
+> helper (=3D not using new helper).
 
+The mentioned patch you can send as is separately.
+
+> I added sample patch of Step2 in this patch-set as [SAMPLE].
+
+> One concern is that it adds "pass/fail", but we can find many similar
+> strings, like below. I have choiced "pass/fail" and use it on all cases
+> in my local branch (You can see some of them in [SAMPLE].
+> I need your opinion
+>
+>         passed     / failed
+>         succeed    / failed
+>         success    / failed
+>         successful / failed
+>         succeeded  / failed
+>         worked     / failed
+
+It looks like something with the 'successful' / 'succeeded' needs to be pre=
+sent.
+
+But in general here is the BIG NOTE: some of the strings may be used
+in ABI, which must not change them.
+
+--=20
+With Best Regards,
+Andy Shevchenko
