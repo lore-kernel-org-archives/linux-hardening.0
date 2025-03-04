@@ -1,146 +1,133 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11E78281520;
-	Tue,  4 Mar 2025 17:08:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF60B2923B6;
+	Tue,  4 Mar 2025 17:38:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741108081; cv=none; b=JJ0M0wqEOF+kf/+sj4fpTOrhsflWm/YpTd7VatKcEhWwtpCswN7t9qsoN0pUtDMOIr8mNznv57zZYZpars+HLxcl6XyFleM/PK8AxIWmGSjgRGFSXuAFRxevjbSBMy3wpXjos5g/bNyAng4x9vdccLJWzj/+7pJjY3HaWt44lj0=
+	t=1741109928; cv=none; b=NdPWHH2age6QzPc85vPRNoT/Ek/Yu6Oj9fiJPzqc4TNwQJmq44YRN4LAcDyOqqXe2I8gLhull9hfkCK3v50lpzDJ2I+LNPPwZ/o9Vmy6w1n+Qxe0kRK1j7TFXkn0g7gst5VtLMDylQ7oY+WeDvQIUG+syW0NcGBSCyutTr91JaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741108081; c=relaxed/simple;
-	bh=ExQy865opXw6DJMm2Zy8thSEQ2//ZajmzZjhLDdgip8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lNIF2diNE7S7lAZrKhXy2KLBn8+z/VbnN5MS7mW/1cOSm+tt6Q0jblth+YsJpnDOQ7HVZUOLmHUfbzK9iPae6w27UXIVqt+dGG78zB/NQhfrlHuQxr0+wxvwPYwa/p+gaAzi0lBPnIFTqorIbS1YgWS2I0O4cWeY9cBRVm35UWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U/S/n5mc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741109928; c=relaxed/simple;
+	bh=zU5caYQO5b1oHRAv+SsibCFiieRoE+s8buOnLkoA+C4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=DSGLDaHdQW48CJdyOcrs6f5xGAvoCUlBMCcB/mbKLltc7jGjuI/6ZrKzKyFd6Fzg9RXFI5LuJP+w9hRmss63IjnqjqytigpWbgOWefhIdLpJnpluqsZNGdRRwOgfpu2vxWSg+m9ZloYcvXMeSqbMZmZQAdMbg3fze9IQTY3VuE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UoqOSEwF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U/S/n5mc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74E9FC4CEE7;
-	Tue,  4 Mar 2025 17:08:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UoqOSEwF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 260FFC4CEE5;
+	Tue,  4 Mar 2025 17:38:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741108080;
-	bh=ExQy865opXw6DJMm2Zy8thSEQ2//ZajmzZjhLDdgip8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=U/S/n5mcWu/UBrYJ+TCBDohmSpkaKpp3W/oYgHiI/KuhAbI9KA2kv7BZLyzpMCfOt
-	 5Wq8oedYv0QjWahN3qmeV3zxSsUGOq2uOUp/yflUURVb/OTCKj8hW7Vxnp8gBESsjC
-	 pc2HyY1m7X1gZDrLSonteoxRMWPrg7RwvOkKcEJgi/fTEGOMeFqPe+AKHrnuCe2evj
-	 4+CGuNjEonQLrRuMQXHebM9/xLHR0V2qQ/ZRWoWxw6hWG9Q2EvGTPOkbjYC976JGta
-	 kmU7BYLOeu+jvgOx9uHuREM5azgdxWj5CcwgpT/+IY6xkW5/rRoQOEqIASs706Ky6i
-	 CHiKZp8kuCXww==
-Date: Tue, 4 Mar 2025 09:07:57 -0800
+	s=k20201202; t=1741109928;
+	bh=zU5caYQO5b1oHRAv+SsibCFiieRoE+s8buOnLkoA+C4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=UoqOSEwFZET/tJ7hA0NMK2AG4IWrsCK5+6FzESXVTAPtzD1iOf7vbfqn9TYDYWRwG
+	 bwkigff0oMQ5SKGNDrKdekpvAfEefrPoVqwQwplOZArewnF0mLKH4ixZhWSupogDRZ
+	 vXO/i7Uq2yGAesRJQWYVlQ1t/Hc3VJ3feyoYa5wEEUm0m2+ON3e6pp6v3ZInjE7MAz
+	 mozug4s7Lo8k0rYGS//xGKGDoODcYiNIjmlWWscdjR8swSU2LOWcKIdTVerF3+2yVq
+	 L08Sd43h0b6CmQUG3qfPvgkucycnzvtC/vHntX3KNNKtFfPL6S9lY2FVBW3eq4aHQJ
+	 m0DQOra27RBkw==
 From: Kees Cook <kees@kernel.org>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
-Cc: Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Kees Cook <kees@kernel.org>,
+	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org,
 	Bill Wendling <morbo@google.com>,
 	Justin Stitt <justinstitt@google.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nicolas Schier <nicolas@fjasle.eu>, llvm@lists.linux.dev,
-	linux-kbuild@vger.kernel.org, David Gow <davidgow@google.com>,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] kbuild: clang: Support building UM with SUBARCH=i386
-Message-ID: <202503040842.1177A1F15B@keescook>
-References: <20250303215240.work.379-kees@kernel.org>
- <05a25510-ab44-4eb1-a878-71e84c8aff0d@t-8ch.de>
- <20250304102536.GB2529736@ax162>
- <e1a1531d-6968-4ae8-a3b5-5ea0547ec4b3@t-8ch.de>
+	Christian Schrefl <chrisi.schrefl@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: [PATCH] kunit/overflow: Fix DEFINE_FLEX tests for counted_by
+Date: Tue,  4 Mar 2025 09:38:40 -0800
+Message-Id: <20250304173835.work.970-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3889; i=kees@kernel.org; h=from:subject:message-id; bh=zU5caYQO5b1oHRAv+SsibCFiieRoE+s8buOnLkoA+C4=; b=owGbwMvMwCVmps19z/KJym7G02pJDOnHrebfVToi2LOM3XrZsXc2pgeKIw3ZrQQsfjDaHNp+Y MIGEW63jlIWBjEuBlkxRZYgO/c4F4+37eHucxVh5rAygQxh4OIUgIkcMmf4HxYpf+nc4uma2xrn NqzdFun1m0P38ssDc9f7cxx+dknq33lGhkt2Bc5/t+7WduPw5v9wN7f0Nk/7xWO8NUsSzGxdf/U e5gQA
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <e1a1531d-6968-4ae8-a3b5-5ea0547ec4b3@t-8ch.de>
 
-On Tue, Mar 04, 2025 at 03:51:19PM +0100, Thomas Weiﬂschuh wrote:
-> On 2025-03-04 11:25:36+0100, Nathan Chancellor wrote:
-> > On Mon, Mar 03, 2025 at 11:29:58PM +0100, Thomas Weiﬂschuh wrote:
-> > > On 2025-03-03 13:52:41-0800, Kees Cook wrote:
-> 
-> <snip>
-> 
-> > > This is also what exists in tools/testing/selftests/lib.mk.
-> > > Minus the missing CONFIG_FORTIFY_SOURCE on clang x86_32
-> > > and a failure of overflow.DEFINE_FLEX_test (clang 19.1.7).
-> > 
-> > Does Kees's other patch resolve the second issue? It'll obviously fix
-> > the first :P
-> > 
-> > https://lore.kernel.org/20250303214929.work.499-kees@kernel.org/
-> 
-> No, it doesn't.
-> 
-> Running tests with:
-> $ .kunit/linux kunit.filter_glob=overflow.DEFINE_FLEX_test kunit.enable=1 mem=1G console=tty kunit_shutdown=halt
-> [15:48:30] =================== overflow (1 subtest) ===================
-> [15:48:30] # DEFINE_FLEX_test: EXPECTATION FAILED at lib/overflow_kunit.c:1200
-> [15:48:30] Expected __builtin_dynamic_object_size(two_but_zero, 0) == expected_raw_size, but
-> [15:48:30]     __builtin_dynamic_object_size(two_but_zero, 0) == 12 (0xc)
-> [15:48:30]     expected_raw_size == 8 (0x8)
-> [15:48:30] [FAILED] DEFINE_FLEX_test
-> [15:48:30] # module: overflow_kunit
-> [15:48:30] ==================== [FAILED] overflow =====================
-> [15:48:30] ============================================================
-> [15:48:30] Testing complete. Ran 1 tests: failed: 1
-> [15:48:31] Elapsed time: 43.985s total, 0.001s configuring, 43.818s building, 0.133s running
-> 
-> If I force CONFIG_CC_HAS_COUNTED_BY=n then the test succeeds.
-> Clang 19.1.7 from the Arch Linux repos.
+Unfortunately, __builtin_dynamic_object_size() does not take into account
+flexible array sizes, even when they are sized by __counted_by. As a
+result, the size tests for the flexible arrays need to be separated to
+get an accurate check of the compiler's behavior. While at it, fully test
+sizeof, __struct_size (bdos(..., 0)), and __member_size (bdos(..., 1)).
 
-I wasn't seeing with Clang 20 from git:
-ClangBuiltLinux clang version 20.0.0git (git@github.com:llvm/llvm-project.git 72901fe19eb1e55d0ee1c380ab7a9f57d2f187c5)
+I still think this is a compiler design issue, but there's not much to
+be done about it currently beyond adjusting these tests. GCC and Clang
+agree on this behavior at least. :)
 
-But I do see the error with ToT Clang:
-ClangBuiltLinux clang version 21.0.0git (git@github.com:llvm/llvm-project.git eee3db5421040cfc3eae6e92ed714650a6f741fa)
+Reported-by: "Thomas Wei√üschuh" <linux@weissschuh.net>
+Closes: https://lore.kernel.org/lkml/e1a1531d-6968-4ae8-a3b5-5ea0547ec4b3@t-8ch.de/
+Fixes: 9dd5134c6158 ("kunit/overflow: Adjust for __counted_by with DEFINE_RAW_FLEX()")
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+Cc: Nathan Chancellor <nathan@kernel.org>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-hardening@vger.kernel.org
+---
+ lib/overflow_kunit.c | 38 ++++++++++++++++++++++++++++----------
+ 1 file changed, 28 insertions(+), 10 deletions(-)
 
-Clang 17.1: (does not support counted_by)
-
-    # DEFINE_FLEX_test: missing counted_by
-    # DEFINE_FLEX_test: sizeof(two_but_zero): 8
-    # DEFINE_FLEX_test: __struct_size(two_but_zero): 12
-    # DEFINE_FLEX_test: __member_size(two_but_zero): 12
-    # DEFINE_FLEX_test: __member_size(two_but_zero->array): 4
-
-Clang 19.1.1: (actually is _does_ support counted_by, but Linux disables it)
-
-    # DEFINE_FLEX_test: missing counted_by
-    # DEFINE_FLEX_test: sizeof(two_but_zero): 8
-    # DEFINE_FLEX_test: __struct_size(two_but_zero): 12
-    # DEFINE_FLEX_test: __member_size(two_but_zero): 12
-    # DEFINE_FLEX_test: __member_size(two_but_zero->array): 4
-
-GCC 13.3:
-
-    # DEFINE_FLEX_test: missing counted_by
-    # DEFINE_FLEX_test: sizeof(two_but_zero): 8
-    # DEFINE_FLEX_test: __struct_size(two_but_zero): 12
-    # DEFINE_FLEX_test: __member_size(two_but_zero): 12
-    # DEFINE_FLEX_test: __member_size(two_but_zero->array): 4
-
-Clang 21 (ToT):
-
-    # DEFINE_FLEX_test: has counted_by
-    # DEFINE_FLEX_test: sizeof(two_but_zero): 8
-    # DEFINE_FLEX_test: __struct_size(two_but_zero): 12
-    # DEFINE_FLEX_test: __member_size(two_but_zero): 12
-    # DEFINE_FLEX_test: __member_size(two_but_zero->array): 0
-
-GCC 15 (ToT):
-
-    # DEFINE_FLEX_test: has counted_by
-    # DEFINE_FLEX_test: sizeof(two_but_zero): 8
-    # DEFINE_FLEX_test: __struct_size(two_but_zero): 12
-    # DEFINE_FLEX_test: __member_size(two_but_zero): 12
-    # DEFINE_FLEX_test: __member_size(two_but_zero->array): 0
-
-It seems like the on-stack sizes with __bdos all agree now, regardless
-of the used compiler features. It is only the array size calculation
-that now gets masked by counted_by. (i.e. the stack size is overridden
-by the zero "count" for the array elements.)
-
-I'll send a fix for the test...
-
+diff --git a/lib/overflow_kunit.c b/lib/overflow_kunit.c
+index 5222c6393f11..894691b4411a 100644
+--- a/lib/overflow_kunit.c
++++ b/lib/overflow_kunit.c
+@@ -1185,22 +1185,40 @@ struct bar {
+ 
+ static void DEFINE_FLEX_test(struct kunit *test)
+ {
+-	/* Using _RAW_ on a __counted_by struct will initialize "counter" to zero */
+-	DEFINE_RAW_FLEX(struct foo, two_but_zero, array, 2);
+-#ifdef CONFIG_CC_HAS_COUNTED_BY
+-	int expected_raw_size = sizeof(struct foo);
+-#else
+-	int expected_raw_size = sizeof(struct foo) + 2 * sizeof(s16);
+-#endif
+-	/* Without annotation, it will always be on-stack size. */
+ 	DEFINE_RAW_FLEX(struct bar, two, array, 2);
+ 	DEFINE_FLEX(struct foo, eight, array, counter, 8);
+ 	DEFINE_FLEX(struct foo, empty, array, counter, 0);
++	/* Using _RAW_ on a __counted_by struct will initialize "counter" to zero */
++	DEFINE_RAW_FLEX(struct foo, two_but_zero, array, 2);
++	int array_size_override = 0;
+ 
+-	KUNIT_EXPECT_EQ(test, __struct_size(two_but_zero), expected_raw_size);
++	KUNIT_EXPECT_EQ(test, sizeof(*two), sizeof(struct bar));
+ 	KUNIT_EXPECT_EQ(test, __struct_size(two), sizeof(struct bar) + 2 * sizeof(s16));
+-	KUNIT_EXPECT_EQ(test, __struct_size(eight), 24);
++	KUNIT_EXPECT_EQ(test, __member_size(two), sizeof(struct bar) + 2 * sizeof(s16));
++	KUNIT_EXPECT_EQ(test, __struct_size(two->array), 2 * sizeof(s16));
++	KUNIT_EXPECT_EQ(test, __member_size(two->array), 2 * sizeof(s16));
++
++	KUNIT_EXPECT_EQ(test, sizeof(*eight), sizeof(struct foo));
++	KUNIT_EXPECT_EQ(test, __struct_size(eight), sizeof(struct foo) + 8 * sizeof(s16));
++	KUNIT_EXPECT_EQ(test, __member_size(eight), sizeof(struct foo) + 8 * sizeof(s16));
++	KUNIT_EXPECT_EQ(test, __struct_size(eight->array), 8 * sizeof(s16));
++	KUNIT_EXPECT_EQ(test, __member_size(eight->array), 8 * sizeof(s16));
++
++	KUNIT_EXPECT_EQ(test, sizeof(*empty), sizeof(struct foo));
+ 	KUNIT_EXPECT_EQ(test, __struct_size(empty), sizeof(struct foo));
++	KUNIT_EXPECT_EQ(test, __member_size(empty), sizeof(struct foo));
++	KUNIT_EXPECT_EQ(test, __struct_size(empty->array), 0);
++	KUNIT_EXPECT_EQ(test, __member_size(empty->array), 0);
++
++	/* If __counted_by is not being used, array size will have the on-stack size. */
++	if (!IS_ENABLED(CONFIG_CC_HAS_COUNTED_BY))
++		array_size_override = 2 * sizeof(s16);
++
++	KUNIT_EXPECT_EQ(test, sizeof(*two_but_zero), sizeof(struct foo));
++	KUNIT_EXPECT_EQ(test, __struct_size(two_but_zero), sizeof(struct foo) + 2 * sizeof(s16));
++	KUNIT_EXPECT_EQ(test, __member_size(two_but_zero), sizeof(struct foo) + 2 * sizeof(s16));
++	KUNIT_EXPECT_EQ(test, __struct_size(two_but_zero->array), array_size_override);
++	KUNIT_EXPECT_EQ(test, __member_size(two_but_zero->array), array_size_override);
+ }
+ 
+ static struct kunit_case overflow_test_cases[] = {
 -- 
-Kees Cook
+2.34.1
+
