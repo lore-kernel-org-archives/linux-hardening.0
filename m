@@ -1,220 +1,184 @@
-Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from OS0P286CU010.outbound.protection.outlook.com (mail-japanwestazon11011019.outbound.protection.outlook.com [40.107.74.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C9F92620EF
-	for <linux-hardening@vger.kernel.org>; Tue,  4 Mar 2025 23:13:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.46
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741130010; cv=none; b=kgAyI3xWMu2vpo3qHofJrS2icmaP6WHngHfmmrjgFPxB01MKKFhxCWmsszTCK7miYw/7aZdHEatHWIo75h4NhaM7v2BjUnzeEPIjyEiCLUnKjyJlpd2PG9XjHFZu0ND+jzgbao+rixwCRf0E3MJ53JAkYX34FDgH7R2l3Dlh8dE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741130010; c=relaxed/simple;
-	bh=+juI39UkMjK2hFbdLd8QrOqQCiokC7UYEEN7+NysMGE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=olzmDjQlM4jOWJJvBcZfhdGol36PP/K/DsXcorpeXyPdztBKne1q2gdcTNHNw/+KCaYrAmt4Npna0Ts1TAhZBJBkDgYunS3C4Wgf2pSfBXj+E2/VjVXJautWyOvVdGIOjteJDj0pt5hn2+x2xXNA1KIpwjOIBj8WJHeGaiu5muI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=d4zDbLjh; arc=none smtp.client-ip=209.85.166.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45483BA2D
+	for <linux-hardening@vger.kernel.org>; Tue,  4 Mar 2025 23:51:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.74.19
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741132284; cv=fail; b=EFnITGhrywMK/ow9OZwlVArmnS5JAdsWI0AFNk3bNH1Cl9mWAM/z4nrALLGQC6+IxFLbD0mshNXqH0NZq/bniZWKjiE/BgyEtDGgfclXR+IghSyAqyhWvE2TmmiiZlp6fVOECqu7Tb3CyM7Soqp9EoeDNItdB93ha6AB7fPxfuA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741132284; c=relaxed/simple;
+	bh=timKwJ3XjnKDG0dWQ+HzVWtS2q9O1l70im4ErzXM6A0=;
+	h=Message-ID:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 Date:MIME-Version; b=nYuGlWphPQ4vjIbv9C17YGr8Dcgo2c9GjnaSei6YyOOxVOV+J9kv6CbFspJiKRay3w1UdmX/XBwF/PU92nywcyls4U/a22NAk3rp9HtYBPngnLMjmOPhmlbeuOPecxwwPOygIp9fdoc692izo7A5txdWE2XrOgEBdWGTEobWIso=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; dkim=pass (1024-bit key) header.d=renesas.com header.i=@renesas.com header.b=l5QUiiQk; arc=fail smtp.client-ip=40.107.74.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="d4zDbLjh"
-Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-85add67e9c1so12501339f.0
-        for <linux-hardening@vger.kernel.org>; Tue, 04 Mar 2025 15:13:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1741130006; x=1741734806; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=59HZ8tZLHxLXmGJMZxMv1F6Re9ll3UmlPVN8e+mYZjU=;
-        b=d4zDbLjhmN/r8cD0h4Y74T9URuzHxBA1c2r1wlQSftSVZcfv4Rwp66oA8dKb0TIlmO
-         GfqpnSG3WIry3oDwnVHmCNFh90TMyGG6Nk/ben/larZ7mQ634ER3OvhVZQEt4GfvyJR8
-         ZOE5ijf5FM7wFdL23N2pCJqwzbm5NJDS6jfxmjvyb46v19bt7b4DSuegNNr2Tfi5Ktua
-         CFxTZIyPujKA8fRm+vheuqDElMXL4YgHmn3rvckvth+8ggudO/A5gcnw7pnmQxJs4kwI
-         ucAjSIxsZajPVD74tKSHQp9axkllS0M4WCcgeiHS8y14lfx5WlcprWw4Rncmad2OhzsT
-         pcnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741130006; x=1741734806;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=59HZ8tZLHxLXmGJMZxMv1F6Re9ll3UmlPVN8e+mYZjU=;
-        b=OY2LkVqcR06fQ8s4GomF6w+g3bvqmZEA0dkZE+mnncrwB8BCOGJJDwGn9uxAf8FHfF
-         pLA/uHFuz7m7h6QT48OyZH1kCaX0L9umaXjeAMiNXP+3GerAUDIOCWGCiKC4PTOpjYnB
-         ySju4TbjuCKOlb9AJsehBzDimHl600BERseELPQrBkakN8rgT/+0/igk04JuILudAfud
-         Mdvu7Nro41fPzOLjCVyTPif3Z8xJ+iZScV3kz3bcFE4avg0VQARIABc2qVAA58kBZY8h
-         KouvTR1K8sW0exaXTAXcFNRaVEWbHbXVavWk+tc+8zb5gu0ByLeFcHAurVjg2+KUgqst
-         ZJLA==
-X-Forwarded-Encrypted: i=1; AJvYcCW/sANIvnRunFtUTPu5SLKr/YvIqou6E6mtzA2UnxvBRjiNg4CKq1lfA5EptcTQswfwB+x+cILGceabnZGmEvY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyAmw/AcEh1QC0Q/0gvmCUBDdO/R8c2eU60Di/FL+LMIk8mvZLy
-	KSNLagcsUc+TCjxf3rIGN1t/CohSkdmSqkJG/j1t/MXRs6q9ZL8P5J9o2Bre5BfjcLfKNOiq1wZ
-	oyg==
-X-Gm-Gg: ASbGncsuiE/JE/bOLxgcJuTZWfNXpoPnYcI+ccCFRwy/E7hh8+5adRRWJBLUYO7WtWR
-	4Wu0WQP0ucofCCPJ3FO43eW3ppBfVZSb+ZNSBB5/fuA7NcY+RoB3qrJ98vIzr3j3Nd6mFrlyMSw
-	+TKuK76k63WwCWaXhLD7I5SHE+JhfzJVlD1XSRlAzROvOdnBWpjJpRcCjWLcrhjGiJbjHQDHrSO
-	PAu9YGrkGTf5dk45ZBuO1DjB4BptV5mU1Q0tLpU4MOy2CkJEtdJBlZPs3hJaPm3z0u70hnjQKpF
-	96kUYlLQZgmGRVJsZY3XJ948cHBvLpg9dGmvFrWrpE35FBtUqlURzq9PZvqzinUkOhNdz/3yKtl
-	YcmVVQseA
-X-Google-Smtp-Source: AGHT+IHBfcFeumjvj4rA4l40FUKj/f/jAOwwXWaxhzT4WaQ7T/3LH4KE1g7LoRITZupof6p1CTThvw==
-X-Received: by 2002:a6b:f204:0:b0:858:7b72:ec89 with SMTP id ca18e2360f4ac-85af053d3afmr611415139f.5.1741130006218;
-        Tue, 04 Mar 2025 15:13:26 -0800 (PST)
-Received: from google.com (26.80.59.108.bc.googleusercontent.com. [108.59.80.26])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f09cac9f8asm1372769173.39.2025.03.04.15.13.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Mar 2025 15:13:25 -0800 (PST)
-Date: Tue, 4 Mar 2025 15:13:20 -0800
-From: Justin Stitt <justinstitt@google.com>
+	dkim=pass (1024-bit key) header.d=renesas.com header.i=@renesas.com header.b="l5QUiiQk"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=bGAp1dDpOYtAEm9414GQiq1hXdFmhzFTvNeTcZJmc+mn2jOsjTGX1cVMTE9g+mDTSjqmA73gKOhoDkZbxhwmv3BTe5PZ5/AwxvFrT2MaULKOVEIahB72cUuHrDWkY81auKs+XvtLCLByCuwpC/DGtOwzqbqfxib8VlsP33/C9wHvrDap2qE6L9BjMBKfycmixGzCH1QruMCyICRv7fs39QHaEZXCAgNUxeCRuZSonvO9MLHJzopfZeGIsVpe7J02xnEJXh3IDXEQe4PmygssnEUNl7Yx7ijAzzPHI8chpzT69UiQw/6Hiy8SB/J0goM7a1LpbVon1piS5tAcLBAllw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=jHknT3plkKoJWS0pHBR8zLqsZVN0E1miULNR2DvIkzk=;
+ b=LDuzDASrXf+EvuMNZXNGNAJ7PEWSGb9bBu3jBRpFKS2CkIqasmLnI1lc7Pry94mPxzrBkkl6dKP3pBCvLLbpKUTCckBp68SEUZH1QxPs/ImobdtZFWiL5eWGaTlB83FX3wh/D9M/a175NrhDzf97YqUCkfbBumRhaWBSXrNftmGgSwsdhlX7krVOQCPilZk1qounvktjJskR5vbamcmDsCG89C0Y57nYVA1sNrqMLUKenDhi19qNpUsrIsFxs3ASMrDRNWkDB1xkI1yxk5acnXvk1ZQOX4/WBwFzAgJkckF2Aj6MSI30q5BKObfJ2TnKN3MkcwWHvqdjaGHK9Nf1/w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=renesas.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jHknT3plkKoJWS0pHBR8zLqsZVN0E1miULNR2DvIkzk=;
+ b=l5QUiiQk1I2vOUhqJbzj8QpBXsgFrLG91hGBK7z7/2IM4dZXQqKveA8gNzNP4vVU+H0rOiJ8LOPxji+EZMtuQnLyjq7UxfD68nx56JdGX0nKZeK0/CHAh8/QrPB1pvk2P+4vygsV0ZlEJFEsoj+WknunCQZ1nA0wX7O+RfYNrGU=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=renesas.com;
+Received: from TYCPR01MB10914.jpnprd01.prod.outlook.com
+ (2603:1096:400:3a9::11) by TYAPR01MB5964.jpnprd01.prod.outlook.com
+ (2603:1096:402:39::9) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.17; Tue, 4 Mar
+ 2025 23:51:18 +0000
+Received: from TYCPR01MB10914.jpnprd01.prod.outlook.com
+ ([fe80::c568:1028:2fd1:6e11]) by TYCPR01MB10914.jpnprd01.prod.outlook.com
+ ([fe80::c568:1028:2fd1:6e11%4]) with mapi id 15.20.8489.025; Tue, 4 Mar 2025
+ 23:51:17 +0000
+Message-ID: <87wmd4z762.wl-kuninori.morimoto.gx@renesas.com>
+From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 To: Kees Cook <kees@kernel.org>
-Cc: Nathan Chancellor <nathan@kernel.org>, 
-	Bill Wendling <morbo@google.com>, llvm@lists.linux.dev, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, David Gow <davidgow@google.com>, 
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Jeff Johnson <quic_jjohnson@quicinc.com>, 
-	Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] kunit/stackinit: Use fill byte different from Clang i386
- pattern
-Message-ID: <db7mpp7nhhlnt6shpwkz4tkhftbedup7xq5zdgmn5lj23fcfq5@pulrtzlamrql>
-References: <20250304225606.work.030-kees@kernel.org>
+Cc: Andy Shevchenko <andy@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 00/10] lib/string_choices: Add new helpers
+In-Reply-To: <202503041222.6A4843E77E@keescook>
+References: <87v7sppmqu.wl-kuninori.morimoto.gx@renesas.com>
+	<202503041222.6A4843E77E@keescook>
+User-Agent: Wanderlust/2.15.9 Emacs/29.3 Mule/6.0
+Content-Type: text/plain; charset=US-ASCII
+Date: Tue, 4 Mar 2025 23:51:17 +0000
+X-ClientProxiedBy: TYAPR04CA0014.apcprd04.prod.outlook.com
+ (2603:1096:404:15::26) To TYCPR01MB10914.jpnprd01.prod.outlook.com
+ (2603:1096:400:3a9::11)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250304225606.work.030-kees@kernel.org>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TYCPR01MB10914:EE_|TYAPR01MB5964:EE_
+X-MS-Office365-Filtering-Correlation-Id: e13ac686-3e7d-4e12-6ffb-08dd5b7774ea
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|52116014|1800799024|366016|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?wOsX4Ogzosh2WtDpNNQMVOUPVbpxqvMFBnKP8azuuf/XBtSWRKKakAo1PUnO?=
+ =?us-ascii?Q?PeowH9QpkzLt31lM+pxJe9wfFVKQj8UYBppNsKBDuVBnKyu4p7XyKHsBSANk?=
+ =?us-ascii?Q?8XHsYJ3WkcfH230yW++xPpTvFC4sK4Z1JvD4hP4Rc2nX2RbfkeOE3MlUfDOy?=
+ =?us-ascii?Q?Be6BMgqJomSZediXBpyrDxWMv5ag8l4HXeD3+bPVvqxlJcPwAS13egYisWxz?=
+ =?us-ascii?Q?IY+3e82NBoSJZ/t7kTqfJqlSexjpn49d2PKL79aXEymX83YPL332yuN6NxOX?=
+ =?us-ascii?Q?NO2s7RhdOfRnGSScRJTwb6f8TRI3W/d20xxvEgvU9jBkfVcnLGl7Ik/aiNW3?=
+ =?us-ascii?Q?rypS12w5rfJwGJIlJjTYAHrU0UdCJc5z6zP8vPCzou9f4ux0bpA+ll2zRroZ?=
+ =?us-ascii?Q?1wDcUxVM7fnYbVda5Y5YzFnCuevuf/8TusMuiTNl2sIA/mjEazJ4L1Mn0rWY?=
+ =?us-ascii?Q?2mJuAYX+sP6LT20ggDy7o+Deo/8NFvawvciJOjaczB9se/nmITpm9QEUSpRV?=
+ =?us-ascii?Q?4DZ2yXgzzD0Mpq0PZX+tS8eHvbJub+YZFc6TTah4psabaBGSsrrOCc6kha37?=
+ =?us-ascii?Q?VA0UP4QCQ4UlQM705wfsVjc9P4A/fJHOG1G14USZWFjbabemtRKA+1Na0haB?=
+ =?us-ascii?Q?yoFw6ncuRbwt7rFedr3yluMNmQNFCMkwcxFgeu0aUotvHqxqk4Rk16Zy1ANo?=
+ =?us-ascii?Q?ay8XVQGHVn4S53A4DeWZyB/uQBAeXeWw5hr/rkfrF1/qEOqPjZz+WYWaBtpo?=
+ =?us-ascii?Q?+Om0Tu0PGHDFnqczqWDvObTzx72qVWWiAQqZcXGaAL6nIyB8j28dui1hoN+T?=
+ =?us-ascii?Q?+HM9Y3GQ1zgVv8rLef/FzvR1CeiL9QKNBUIx9KQcRGiVtYzoUcKE4S8ExJ8q?=
+ =?us-ascii?Q?jnPjHACs6hYx5/okMHYyIBR0hiR3zyNHvT16Fw0GdVMk78njBRJ1xfbig7YH?=
+ =?us-ascii?Q?nTPZRyennQkyizM7whYPTqdQXFmoWdVQa+pNcNRB0NO4kcTmLq5+lh7t9mJD?=
+ =?us-ascii?Q?FZaCLb4PYBm35FClSfkqYkjC4ALrcZliBYmBqThCq3gGGauPLq/waKHb2pjj?=
+ =?us-ascii?Q?dUjiIO29gcLzYPnzP7EPPOTzI1i169G2mhUeWOKwydFccAsMMUCFZlNL7Eyn?=
+ =?us-ascii?Q?MLE6ukzsaaD93/dhMtHAHRcblD+DLLuhJpcelJaqjEU0R+CLIE+hIXf+ArjD?=
+ =?us-ascii?Q?ycJYy4wcS4M+hUFRwb2WPEYRsJBJMrzEGZAvC7ueB3WZ0/Zlr9kvqMmYPneG?=
+ =?us-ascii?Q?/c7Xdl2u4ovAHJ44MAJu7y2N/nmJvoxUx12D91e/mZeMD8YFqe9bW8eJQXtL?=
+ =?us-ascii?Q?mBJNX+VV6GIVDmj9kgM34LRpMRTgchjwAcXSoD4oafr1XdWCxg8EDXTwViUx?=
+ =?us-ascii?Q?bDu+nxBkyMzTG1ab/ztjdUpKTAuyCIEVtKGE0LFNW7xHdI2CfugfvB0ftjYK?=
+ =?us-ascii?Q?ZqbO1l+m7pj87USIUB3Re6k0iHmM349F?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYCPR01MB10914.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(52116014)(1800799024)(366016)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?G8i2LSQoJxs55dM6Caw7b13Nkdjvqf4dUmZGt2JG3UQDuoBWhnqzuxxmngOi?=
+ =?us-ascii?Q?WONkTG9Cb3YcyqqiR7M2lwM6J25PFYRwcwTvWMPb9VupZhQ/WhJ2YMLa+sss?=
+ =?us-ascii?Q?blxnBNP9danDiHDYBjBtA6SYzX9Ji8VBCx2doijoVyyo9L+EirNkBLt1KAA/?=
+ =?us-ascii?Q?fo2AENnF6ENFmuB9ex+wsmq/dMzpUJEiBOAZmbJ3ERcL3vyZPga+2ktWSHSE?=
+ =?us-ascii?Q?x1BUZVkuhaBzt/JwnteFtOX06z1S4lEwAwErPVodMsj1DG/ycGOKwZRxngMT?=
+ =?us-ascii?Q?VHB05cAUKtgp+QV91hdJcJZup6oiU4nplHzmcl3oaSsLC6Cmqx35wWNXxBrK?=
+ =?us-ascii?Q?m9jH0rfRuHI/i5/BkP1KxswYVNeFTe/lgtVe1r05s4jchIRWBBvL6GYFCdL3?=
+ =?us-ascii?Q?zqf0AxliDBNJdUUe6NHYOZeicQYUzEKLL5mUOGpNBOCkFLlMTyoWb07qWOzf?=
+ =?us-ascii?Q?V+5A/qDrWXjztR03fnoVP6OMKYTXI9fJ6obL9PXlSKwxQm58R1uPWtmyR7+G?=
+ =?us-ascii?Q?t7YXiG7LYwnZUp3NdSCZZJ2PIfGe+xz0cIG9Q/RbjahivR+mzqchOAtIDoL6?=
+ =?us-ascii?Q?Z1YH41tMudnIKdsGWaGwBSNsYWoPUSu6o5Unc4DrBtF7M26HsFbZBOk6J0Zn?=
+ =?us-ascii?Q?ayioz8/LIKJ4BqZHj0wAMXQ5a0q8Clx3h78MyfnFE2ZvVHsWa0jjdejuJYoO?=
+ =?us-ascii?Q?TX/z+R4hiAs+3WdNPAV1A03IE/MssUX1voZOdldwe2/HsZtf4iq+QAthIyK5?=
+ =?us-ascii?Q?ygOsL1P6bX2RXpgr9UVGLwZ1ee02UOEOQV+5pAjPofohDxuRRGjC4qQewUH7?=
+ =?us-ascii?Q?mGEDyn/P2KEL12pWhXGeqG2ABAsIK0L0I1H8y+DQjKBLHullKhoIee22QxcM?=
+ =?us-ascii?Q?MF6K/jO0LhnKi3JvPD/+DksStn7Fg5fixly75qd1uY2ooEm0J5UHls/8DK+P?=
+ =?us-ascii?Q?jkwG/jYVz11j1lsV2KCjMK/vStTthZhR6v2t8YUSuXG/XklYRYrqAaF2dI7P?=
+ =?us-ascii?Q?1Ar1QZxU6CORUsag0u73MY4y8A46a7bFrjYOrXTKbFjn54OOC4rySHcGCqSW?=
+ =?us-ascii?Q?2w/VB7FDHek/dymxwYIyM8o08BHCPBBbE7uQiOPJ3HKMuRfOImAerXqFISVE?=
+ =?us-ascii?Q?sFkl1w7uPHQrPXtUf4qhuvlUvdBo0cKsrxC8sKoX8YCNgwJqRZ2/uSu6WWkh?=
+ =?us-ascii?Q?EdGhq9hsoh2GQsWs04imSmQmkHKeuQaiAmaxBB5ABWgzsypg2Ab/vSfUTwPD?=
+ =?us-ascii?Q?t49gKAq3NMbNCpk+K26BeneQQz4Gr24aLjb36hFUqVHI7rnlxbwGI8Q+cgoK?=
+ =?us-ascii?Q?D+oPhzGrrKxSPYrfyyr8Lz4KosBybPWA5lIm4o0eXj1s7u2ETOQZ1Eye5F5L?=
+ =?us-ascii?Q?DSNeg7aBvVMtvcxtGvEtXLm6g8wHnb+uBiKwJ/SWHNKSuvCoxrLJiIPTQmof?=
+ =?us-ascii?Q?nT9KRgunqXZIRiCv7UNgnl6Qtnm5h7kAzMv6ISsM71t2yypWjV4xEa4fiQuD?=
+ =?us-ascii?Q?CXS8dZgB0xZYxicdnWYZaJQQoAKfOr8wcqur6RVnK/xRa2KMZKzQzphSGM7D?=
+ =?us-ascii?Q?ACBVxT0qjiUAPGevdICAWclt2yWDtMNTbwlncNm912CCET4sKdha63pqCuyz?=
+ =?us-ascii?Q?D4e2j5Y8CbE5pj7iQL/t3rg=3D?=
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e13ac686-3e7d-4e12-6ffb-08dd5b7774ea
+X-MS-Exchange-CrossTenant-AuthSource: TYCPR01MB10914.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2025 23:51:17.8736
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: KX7QvKk5yhtI4W8OLZREmIEc1U/zcoH87h5C2oLJX/q9U+Aasn0sLm/nOlQRsAGG4Zt9aQeQXnU+c0RPN8LnjmcLNW6gU/XI8RGHmTtYt3jUnCr9YmrJryJrtQcZPM6I
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB5964
 
-Hi,
 
-On Tue, Mar 04, 2025 at 02:56:11PM -0800, Kees Cook wrote:
-> The byte initialization values used with -ftrivial-auto-var-init=pattern
-> (CONFIG_INIT_STACK_ALL_PATTERN=y) depends on the compiler, architecture,
-> and byte position relative to struct member types. On i386 with Clang,
-> this includes the 0xFF value, which means it looks like nothing changes
-> between the leaf byte filling pass and the expected "stack wiping"
-> pass of the stackinit test.
-> 
-> Use the byte fill value of 0x99 instead, fixing the test for i386 Clang
-> builds.
-> 
-> Reported-by: ernsteiswuerfel
-> Closes: https://github.com/ClangBuiltLinux/linux/issues/2071
-> Fixes: 8c30d32b1a32 ("lib/test_stackinit: Handle Clang auto-initialization pattern")
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
-> Cc: Nathan Chancellor <nathan@kernel.org>
-> Cc: Bill Wendling <morbo@google.com>
-> Cc: Justin Stitt <justinstitt@google.com>
-> Cc: llvm@lists.linux.dev
-> ---
->  lib/tests/stackinit_kunit.c | 30 ++++++++++++++++++++----------
+Hi Kees, Andy
 
-Ah, couldn't find this file at first. Depends on [1].
+Thank you for your feedbacks
 
->  1 file changed, 20 insertions(+), 10 deletions(-)
-> 
-> diff --git a/lib/tests/stackinit_kunit.c b/lib/tests/stackinit_kunit.c
-> index 135322592faf..63aa78e6f5c1 100644
-> --- a/lib/tests/stackinit_kunit.c
-> +++ b/lib/tests/stackinit_kunit.c
-> @@ -184,6 +184,15 @@ static bool stackinit_range_contains(char *haystack_start, size_t haystack_size,
->  #define INIT_UNION_assigned_copy(var_type)		\
->  	INIT_STRUCT_assigned_copy(var_type)
->  
-> +/*
-> + * The "did we actually fill the stack?" check value needs
-> + * to be neither 0 nor any of the "pattern" bytes. The
-> + * pattern bytes are compiler, architecture, and type based,
-> + * so we have to pick a value that never appears for those
-> + * combinations. Use 0x99 which is not 0xFF, 0xFE, nor 0xAA.
-> + */
-> +#define FILL_BYTE	0x99
-> +
->  /*
->   * @name: unique string name for the test
->   * @var_type: type to be tested for zeroing initialization
-> @@ -206,12 +215,12 @@ static noinline void test_ ## name (struct kunit *test)		\
->  	ZERO_CLONE_ ## which(zero);				\
->  	/* Clear entire check buffer for 0xFF overlap test. */	\
->  	memset(check_buf, 0x00, sizeof(check_buf));		\
-> -	/* Fill stack with 0xFF. */				\
-> +	/* Fill stack with FILL_BYTE. */			\
->  	ignored = leaf_ ##name((unsigned long)&ignored, 1,	\
->  				FETCH_ARG_ ## which(zero));	\
-> -	/* Verify all bytes overwritten with 0xFF. */		\
-> +	/* Verify all bytes overwritten with FILL_BYTE. */	\
->  	for (sum = 0, i = 0; i < target_size; i++)		\
-> -		sum += (check_buf[i] != 0xFF);			\
-> +		sum += (check_buf[i] != FILL_BYTE);		\
->  	/* Clear entire check buffer for later bit tests. */	\
->  	memset(check_buf, 0x00, sizeof(check_buf));		\
->  	/* Extract stack-defined variable contents. */		\
-> @@ -222,7 +231,8 @@ static noinline void test_ ## name (struct kunit *test)		\
->  	 * possible between the two leaf function calls.	\
->  	 */							\
->  	KUNIT_ASSERT_EQ_MSG(test, sum, 0,			\
-> -			    "leaf fill was not 0xFF!?\n");	\
-> +			    "leaf fill was not 0x%02X!?\n",	\
-> +			    FILL_BYTE);				\
-
-  	KUNIT_ASSERT_EQ_MSG(test, sum, 0,			\
- -			    "leaf fill was not 0xFF!?\n");	\
- +			    "leaf fill was not 0x%02X!??!?!?!?!?!?!?!\n",	\
- +			    FILL_BYTE);				\
-
->  								\
->  	/* Validate that compiler lined up fill and target. */	\
->  	KUNIT_ASSERT_TRUE_MSG(test,				\
-> @@ -234,9 +244,9 @@ static noinline void test_ ## name (struct kunit *test)		\
->  		(int)((ssize_t)(uintptr_t)fill_start -		\
->  		      (ssize_t)(uintptr_t)target_start));	\
->  								\
-> -	/* Look for any bytes still 0xFF in check region. */	\
-> +	/* Validate check region has no FILL_BYTE bytes. */	\
->  	for (sum = 0, i = 0; i < target_size; i++)		\
-> -		sum += (check_buf[i] == 0xFF);			\
-> +		sum += (check_buf[i] == FILL_BYTE);		\
->  								\
->  	if (sum != 0 && xfail)					\
->  		kunit_skip(test,				\
-> @@ -271,12 +281,12 @@ static noinline int leaf_ ## name(unsigned long sp, bool fill,	\
->  	 * stack frame of SOME kind...				\
->  	 */							\
->  	memset(buf, (char)(sp & 0xff), sizeof(buf));		\
-> -	/* Fill variable with 0xFF. */				\
-> +	/* Fill variable with FILL_BYTE. */			\
->  	if (fill) {						\
->  		fill_start = &var;				\
->  		fill_size = sizeof(var);			\
->  		memset(fill_start,				\
-> -		       (char)((sp & 0xff) | forced_mask),	\
-> +		       FILL_BYTE & forced_mask,			\
->  		       fill_size);				\
->  	}							\
->  								\
-> @@ -469,7 +479,7 @@ static int noinline __leaf_switch_none(int path, bool fill)
->  			fill_start = &var;
->  			fill_size = sizeof(var);
->  
-> -			memset(fill_start, forced_mask | 0x55, fill_size);
-> +			memset(fill_start, (forced_mask | 0x55) & FILL_BYTE, fill_size);
->  		}
->  		memcpy(check_buf, target_start, target_size);
->  		break;
-> @@ -480,7 +490,7 @@ static int noinline __leaf_switch_none(int path, bool fill)
->  			fill_start = &var;
->  			fill_size = sizeof(var);
->  
-> -			memset(fill_start, forced_mask | 0xaa, fill_size);
-> +			memset(fill_start, (forced_mask | 0xaa) & FILL_BYTE, fill_size);
->  		}
->  		memcpy(check_buf, target_start, target_size);
->  		break;
-> -- 
-> 2.34.1
-> 
+> That said, I would expect the series out of 3/4 patches
+> 1) add str_in_out() and/or str_input_output();
+> 2) use it in gpio-crystalcove.c
+> 3) use it in gpio-wcove.c
 >
+> This can be easily combined into an immutable tag/branch and pulled by
+> the affected subsystems. With your lengthy series it will be ages to
+> get it in.
+(snip)
+> str_in_out.patch:              66 files changed, 130 insertions(+), 136 deletions(-)
+> str_tx_rx.patch:               33 files changed, 48 insertions(+), 53 deletions(-)
+> str_input_output.patch:        17 files changed, 27 insertions(+), 29 deletions(-)
+> str_enabling_disabling.patch:  16 files changed, 25 insertions(+), 25 deletions(-)
+> str_Y_N.patch:                 13 files changed, 98 insertions(+), 89 deletions(-)
+> str_kernel_user.patch:          7 files changed, 8 insertions(+), 7 deletions(-)
+> str_level_edge.patch:           5 files changed, 6 insertions(+), 6 deletions(-)
+> str_to_from.patch:              3 files changed, 4 insertions(+), 4 deletions(-)
+> str_pass_fail.patch:            2 files changed, 2 insertions(+), 2 deletions(-)
+> str_attach_detach.patch:        1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> So, IMO, the first 5 are clear winners. The others are probably fine,
+> but pass/fail and attach/detach are really not used much.
 
-I don't understand the stack init pattern tendencies enough to give a RB
-but I looked at your patch and it seems to fully replace the fill test
-values from 0xff to 0x99, so if 0x99 is OK then OK.
+Thanks.
+My plan was add new helper 1st, and use helper (both new and exists) 2nd
+on each driver/framwork. But indeed it is not so good from reviewer point
+of view. And (aside from the "success/failed" topic) indeed some of new
+helper are not good/needed.
 
-[1]: https://lore.kernel.org/all/20250211003136.2860503-3-kees@kernel.org/
+I will try to post v3 patch, but want to cleanup before that.
+v3 will be above top 5 helpers only.
 
-Justin
+Thank you for your help !!
+
+Best regards
+---
+Kuninori Morimoto
