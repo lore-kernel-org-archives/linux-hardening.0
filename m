@@ -1,73 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD8CC1FCF4F;
-	Tue,  4 Mar 2025 17:50:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 467A725F7A8;
+	Tue,  4 Mar 2025 18:13:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741110648; cv=none; b=NBtD3JZu3P18BzYF45nM7qA8dnvNmWaQtqBkt0i8P7BAKAosaY4E3unytyw63AN8GceR4ozray5gpaNshPQxhsrfGkcLjEGVGbGabvJTO173SFVe5k/JLt0TKSVA5MsJLKotMlZS0tvpTCUnTQr7jXrRSHOTj27qFlvQ+IX9cB0=
+	t=1741111996; cv=none; b=uQ1MyBFtnz7DTxCeC7n52T3svTzZManUkNWwOFLyBJKv/Br1hhudoWCT+jqgc13+IUws05rcVzgybCH+UB/QL97A+RpIsvkeUnQPO/SkBpDU+ijXcU/JDBtP2aZSHyKlkMInaq7H9i2Oy2CzNyuZfg8b2oJ/hkCpvD1E9+9GKhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741110648; c=relaxed/simple;
-	bh=stqbPtGtEoTsmvvD0BvrvJ9ag8H9MyLeEeDpLmC9Vw4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Blv3XEk7J3Fl0Cj52iu8WlZ7gVFYWyYN+f5svd8ttPb3lromW7y/6S9V6Rq89IolByo2WuGf90zwDADI8X9Da0G2eXuzAdRYAA0xhXZGwPaf+Fm8gNV2K5qMV9jisnciYZNf6QwJ3vDjIIuEViugQkWoPvutrwsVcJ+s9gw2ZCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=up4yF2Td; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741111996; c=relaxed/simple;
+	bh=k250k5iWybCa1wkP+YKQpFlJjVQ7GgntMVMffR/LSUA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P0/lBezR9V0Q6pHNe7+Y0z5BAEXfAmxqXcarbEBV/VC0/bk2Ujn9A5H1rFD3uh6UXlkn803dYrgklWcheqXJZ0G6yEJuLRA47VbjydSJO+VFxp+psB4bvn0pcakn9/6EwRyth/KqXK+fCZ3Dk2kTBKKz00N1n3FPe5KyMKStpYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=lak/FVUi; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="up4yF2Td"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38524C4CEE5;
-	Tue,  4 Mar 2025 17:50:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741110648;
-	bh=stqbPtGtEoTsmvvD0BvrvJ9ag8H9MyLeEeDpLmC9Vw4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=up4yF2TdVsC2T+pMfyfy0GGXXY9kyqhbXoPo3pFHamZMUzFJGxWfxO8RGs57B/SGT
-	 w2j0xUoZsFrH+o5FyPXg+37zwzTAygCSXJW2lbj3AzLMAJWjVJyP+qCinTGUCzE79K
-	 vAKLA2CylUO34gym3zzEi/GzdWhn1VXEj8wuniYy/wpKKCelNNzmWY/LkyR46IUL7/
-	 F2Xj2oOLF4h4tOnFrIlnxLPE/mJLnuw6KqWFzLFs/edHUQWiDJZqWa4sWiloXurM0i
-	 kh5kIYkWUoMUNBVAXjwLIupe4uKeZfb8jus0XMqc1uLeg3m43j1EptuEAKed901ICH
-	 dlAR0KA6n448g==
-From: Kees Cook <kees@kernel.org>
-To: Nathan Chancellor <nathan@kernel.org>,
-	Kees Cook <kees@kernel.org>
-Cc: Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	llvm@lists.linux.dev,
-	linux-hardening@vger.kernel.org,
-	Paul Moore <paul@paul-moore.com>,
-	James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	linux-kernel@vger.kernel.org,
-	linux-security-module@vger.kernel.org
-Subject: Re: [PATCH] hardening: Enable i386 FORTIFY_SOURCE on Clang 16+
-Date: Tue,  4 Mar 2025 09:50:44 -0800
-Message-Id: <174111064321.3934933.4843198067758331073.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250303214929.work.499-kees@kernel.org>
-References: <20250303214929.work.499-kees@kernel.org>
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="lak/FVUi"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=3Lx/8uaGq/ePxcQT7EdGKpzZUVOF43Fgxz10C6z4MHs=; b=lak/FVUiTYK7QAQbtJ+wELgdHo
+	ZHuWSqpysQFLxSTn+fuCmNVLZF3JCi6DH7usTnw7qdd1oOlk8EYXCmOy0ZDyvIZXr9VxBe3HceJAL
+	Ttc/ath5/wDzyZ+ohQuqGUHLW2NdIz1AK/15ysR6i/J8fTCcszFo5C4nY2MpRDV7vOx8N790zezHF
+	QH3I26pApal7zeAUprQkGVB7FvitbeVIkTuL4uGnbP2xl+dSbAy6hwqrlyzaV3mXjXBoRSpsZl9o2
+	IQWs/eejq+mf4Ks8V3ipHX3Y3lhDzNfj7F7hNqkTxt379XXn9L7njqkjBWm8xs8rKN7i16H+jr8bo
+	n+sfdnNQ==;
+Received: from d162-157-58-14.abhsia.telus.net ([162.157.58.14] helo=maloca.localdomain)
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1tpWlA-003qIS-NE; Tue, 04 Mar 2025 19:12:58 +0100
+Date: Tue, 4 Mar 2025 11:12:52 -0700
+From: Rodrigo Siqueira <siqueira@igalia.com>
+To: Ethan Carter Edwards <ethan@ethancedwards.com>, 
+	Alex Hung <alex.hung@amd.com>, Aurabindo Pillai <aurabindo.pillai@amd.com>, 
+	Roman Li <Roman.Li@amd.com>
+Cc: Harry Wentland <harry.wentland@amd.com>, Leo Li <sunpeng.li@amd.com>, 
+	Alex Deucher <alexander.deucher@amd.com>, Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, amd-gfx@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 0/4] drm/amd/display: move from kzalloc(size * nr, ...)
+ to kcalloc(nr, size, ...)
+Message-ID: <rhmsb6pxlblxzaviawfuomm6vrvkenmskau63oxfdhdlsa7gbg@qbpznssr6al6>
+References: <20250227-amd-display-v1-0-52a060a78d08@ethancedwards.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250227-amd-display-v1-0-52a060a78d08@ethancedwards.com>
 
-On Mon, 03 Mar 2025 13:49:37 -0800, Kees Cook wrote:
-> The i386 regparm bug exposed with FORTIFY_SOURCE with Clang was fixed
-> in Clang 16[1].
+On 02/27, Ethan Carter Edwards wrote:
+> We are trying to get rid of all multiplications from allocation
+> functions to prevent integer overflows. Here the multiplications are
+> probably safe, but using kcalloc() is more appropriate and improves
+> readability. It is also safer. This series contains a few patches
+> with these fixes.
 > 
+> Part of the Kernel Self Protection Project efforts. Links below have
+> more details.
 > 
+> Link: https://github.com/KSPP/linux/issues/162
+> Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments
+> 
+> Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
+> ---
+> Ethan Carter Edwards (4):
+>       drm/amd/display: change kzalloc to kcalloc in dcn30_validate_bandwidth()
+>       drm/amd/display: change kzalloc to kcalloc in dcn31_validate_bandwidth()
+>       drm/amd/display: change kzalloc to kcalloc in dcn314_validate_bandwidth()
+>       drm/amd/display: change kzalloc to kcalloc in dml1_validate()
+> 
+>  drivers/gpu/drm/amd/display/dc/resource/dcn30/dcn30_resource.c   | 3 ++-
+>  drivers/gpu/drm/amd/display/dc/resource/dcn31/dcn31_resource.c   | 3 ++-
+>  drivers/gpu/drm/amd/display/dc/resource/dcn314/dcn314_resource.c | 3 ++-
+>  drivers/gpu/drm/amd/display/dc/resource/dcn32/dcn32_resource.c   | 3 ++-
+>  4 files changed, 8 insertions(+), 4 deletions(-)
+> ---
+> base-commit: be5c7bbb3a64baf884481a1ba0c2f8fb2f93f7c3
+> change-id: 20250227-amd-display-a8342c55a9a0
+> 
+> Best regards,
+> -- 
+> Ethan Carter Edwards <ethan@ethancedwards.com>
+>
 
-Applied to for-next/hardening, thanks!
+Hi,
 
-[1/1] hardening: Enable i386 FORTIFY_SOURCE on Clang 16+
-      https://git.kernel.org/kees/c/3e5820429980
+This series LGTM,
 
-Take care,
+Reviewed-by: Rodrigo Siqueira <siqueira@igalia.com>
+
+To Display folks,
+(Cc some other devs)
+
+If possible, try to include this series in this week's promotion tests,
+or check the IGT test in the CI just to be safe.
+
+Thanks
 
 -- 
-Kees Cook
-
+Rodrigo Siqueira
