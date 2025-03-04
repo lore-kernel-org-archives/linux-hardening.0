@@ -1,95 +1,84 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C7F120485B
-	for <linux-hardening@vger.kernel.org>; Tue,  4 Mar 2025 10:37:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C7C920A5EB;
+	Tue,  4 Mar 2025 14:51:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741084660; cv=none; b=fvWPzX9W0zisucDrvN6e15+KWJXk5vVy8brVkqHGXzrSQ36CPtlvh6xfrvbvUSzRLzqyW3ozL/M7VIKjnkUOxU5/WuH0mQTJixWeKeka+vJQ04JbQWkSt7jrhs2N+Ex8e3QoImTxhGrRoxfOzNW9upyCefqm9OrJDbvu10Nindc=
+	t=1741099885; cv=none; b=Dk03XqbeYB4woZy9M9PfnnwnX4JIW7xL6bv0DQ1CpHfU/zd8QrFfvy+rv/24Y2hs5omxN9VTWx2LDHZeaJ7Vx7yySkQ1WG/WDUXs3JULYXBIUzWs3ONXMVYQMV0IoU9Q9NJSk7fyBbDghcqQ0xYfJ/VUcxzNyGeq37zjonxdPjw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741084660; c=relaxed/simple;
-	bh=W7wu7x2CGHp+hodRLerhrOyuQsqw+FEk+o1KUxZ12pk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rXtOZrlvxDZt8omHnjsX6fZ8Fa1JqMJKQeiWphWQWhNfGLww8asPRxgsGcKtGa5T4LiR4BMqZe87LA9WQAqy4GlxUPnzOq/3dfDIgQE3z5RkIKyC+lVh0+UoLAt2eCQkhdsPhPmPIvsQ6lpOskEJl37+7NQJYjFDijtehilIwJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=0YTgtxRc; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1741099885; c=relaxed/simple;
+	bh=tXTdXRn7ghG5zVsDSwWDun4bx1MHi7MVxfjidCyX9Xo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QZAwHSfsi3VaF4VyLMYk1si+6eNg9gRj4LmG2jg28asmWcz4PJ+zjXfN0XEiQJxzRV7vNJjQZuGbf0TWIYox+ejJjk5Emo4fjSDl9cM5SerxiOFURg1x5rNc011H+oIJPhl3kVDD6bzkoDALseboacnqgYavhJe02L54xfgwdjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=M1SKXOHD; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="0YTgtxRc"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5497590ffbbso934926e87.1
-        for <linux-hardening@vger.kernel.org>; Tue, 04 Mar 2025 02:37:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1741084656; x=1741689456; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W7wu7x2CGHp+hodRLerhrOyuQsqw+FEk+o1KUxZ12pk=;
-        b=0YTgtxRc1G9z7rDwnABxcg/ByXXadjxAutXZ1ItVvJh0QPNu1I0EhtOvaOHp6SHWoe
-         sKyjlFNH7v0qDv7HvwHME/z2mQA0EEaiL/Mb7me4XwOz+CWtyGjmcyJsk+2oH4eudi0U
-         752W1pzlKTyEkRjC22eSIJI2FU5zQUzJDctJ8NjF+3eZR78QVeJT/HmkztbO62FqkENb
-         4TvzAcwoWgTZjcOiwonK45m58k2tptJ5122aJfYzY2REZuizWBn0L1XDqHi7I2kGgtJW
-         +RiHSigepggpyIqULqYZvochfIF9G5yeZxxf/zGH1ZgjdOF+N9bWxAzMuFle6vhHxDl+
-         d4rw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741084656; x=1741689456;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=W7wu7x2CGHp+hodRLerhrOyuQsqw+FEk+o1KUxZ12pk=;
-        b=v0ekYEYk3ENkvo9uM9OK7l+fGHljfym2JAHs3TOcTDj7qvPphlawNWRij9MsL8q5W6
-         E1MsOALAdkcN8m65gLSaMvD30Wdo8ZFMFA4zWfr/P5CFOhjfuuJt6tCWGxQb3X7TwnAc
-         ho+BuOvsbWnsIDr967OnNlVW65gJFE/GKDTd/vitgw5lzByvvKfb7wA6A4wjxWkpms75
-         abSnuS9/xUT/oRsvxUnUoOzgjsdm8dLZCQI4/zwMQsLc7+AgUzOHx3Thn2tLwYyEDZh3
-         j5gEAvGEKnxkQpPRMYPqjEC4L1nbjxR/Wo0Aqhaol83UfaCS4S3v4kX+Sot15Ont9XiP
-         z/Xw==
-X-Forwarded-Encrypted: i=1; AJvYcCX+kveiVI26YaP1flqs4GtCnMpPVCV+qh28uflEYHqhghNK84VeCgCmJUt8ufcnxxtSkR7ucdsHvL23ks/jcLk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyiF396w/YHv6rr00KhJM/EINBP9tQTaItY99nAxEVf/vgCRYi5
-	nmeTnD8+txMWaSDc6FY3AOmQ6DuanQmMdAl0eO42vD9K/t4+Xo5HxefIjaK0omGqtJQIuZesA87
-	0W7orTqDc+ujc6k2LiLGuPGUwyMtJTnpxb79xXg==
-X-Gm-Gg: ASbGncsxDejfon5Wr7dmkVGpTZuWuHmngMcxcPxFZBy7dM2oXaRyKLwfYYKV/GRzqrM
-	l112v6iqA1pR4oGySMznUXRorTrVaLObXqOFRAUGSryASDozvHRLh+ER/fOLdb09mKLf6iEz1c4
-	6gbAEocc9zwvEaiiwuzTXhpliDUByQUU6+IRpfXzaczclRfxgamBoDQZkYIQ==
-X-Google-Smtp-Source: AGHT+IFB+Oj8/Xe4YEFmV/Rb3Rt3KPraZIDAVAusl2gbbTUJaqBBb2xF6ULfEj5cbkgmnDxxA+ahMM664a5woA/zI1I=
-X-Received: by 2002:ac2:4a74:0:b0:549:4e80:6dc0 with SMTP id
- 2adb3069b0e04-5494e806dc6mr5633715e87.0.1741084656455; Tue, 04 Mar 2025
- 02:37:36 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="M1SKXOHD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1741099880;
+	bh=tXTdXRn7ghG5zVsDSwWDun4bx1MHi7MVxfjidCyX9Xo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=M1SKXOHDTkwjPcy8GfnDAQyQhohNdVNcEZ9DBtCotWWkXdXMoHUYR6NfZu8K8PUMs
+	 GaSnx2p5moxNLsup++713v8M735cBfb53S3PMNLhru8nqT34Blr6ZiTBJk4x7g33ai
+	 0ixPxORspwjZNUg3h719R2CmiAOYIW9F9An7txNo=
+Date: Tue, 4 Mar 2025 15:51:19 +0100
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Kees Cook <kees@kernel.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Masahiro Yamada <masahiroy@kernel.org>, 
+	Nicolas Schier <nicolas@fjasle.eu>, llvm@lists.linux.dev, linux-kbuild@vger.kernel.org, 
+	David Gow <davidgow@google.com>, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] kbuild: clang: Support building UM with SUBARCH=i386
+Message-ID: <e1a1531d-6968-4ae8-a3b5-5ea0547ec4b3@t-8ch.de>
+References: <20250303215240.work.379-kees@kernel.org>
+ <05a25510-ab44-4eb1-a878-71e84c8aff0d@t-8ch.de>
+ <20250304102536.GB2529736@ax162>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250228-max77759-mfd-v3-0-0c3627d42526@linaro.org> <20250228-max77759-mfd-v3-5-0c3627d42526@linaro.org>
-In-Reply-To: <20250228-max77759-mfd-v3-5-0c3627d42526@linaro.org>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 4 Mar 2025 11:37:24 +0100
-X-Gm-Features: AQ5f1JpxU_9Y_clBmQu6eNXqzblGFz3KZ1pj5Yu3Z5R1OCnwlBjw0Sc-D8_i8O4
-Message-ID: <CAMRc=MeYXFonF8wcU_5RzSYpTUXEhnY+wpsFKJQ6-EJ1h=K3Wg@mail.gmail.com>
-Subject: Re: [PATCH v3 5/6] gpio: max77759: add Maxim MAX77759 gpio driver
-To: =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, 
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Peter Griffin <peter.griffin@linaro.org>, 
-	Tudor Ambarus <tudor.ambarus@linaro.org>, Will McVicker <willmcvicker@google.com>, 
-	kernel-team@android.com, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250304102536.GB2529736@ax162>
 
-On Fri, Feb 28, 2025 at 3:25=E2=80=AFPM Andr=C3=A9 Draszik <andre.draszik@l=
-inaro.org> wrote:
->
-> The Maxim MAX77759 is a companion PMIC for USB Type-C applications and
-> includes Battery Charger, Fuel Gauge, temperature sensors, USB Type-C
-> Port Controller (TCPC), NVMEM, and a GPIO expander.
->
-> This driver supports the GPIO functions using the platform device
-> registered by the core MFD driver.
->
-> Signed-off-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
->
+On 2025-03-04 11:25:36+0100, Nathan Chancellor wrote:
+> On Mon, Mar 03, 2025 at 11:29:58PM +0100, Thomas Weißschuh wrote:
+> > On 2025-03-03 13:52:41-0800, Kees Cook wrote:
 
-Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+<snip>
+
+> > This is also what exists in tools/testing/selftests/lib.mk.
+> > Minus the missing CONFIG_FORTIFY_SOURCE on clang x86_32
+> > and a failure of overflow.DEFINE_FLEX_test (clang 19.1.7).
+> 
+> Does Kees's other patch resolve the second issue? It'll obviously fix
+> the first :P
+> 
+> https://lore.kernel.org/20250303214929.work.499-kees@kernel.org/
+
+No, it doesn't.
+
+Running tests with:
+$ .kunit/linux kunit.filter_glob=overflow.DEFINE_FLEX_test kunit.enable=1 mem=1G console=tty kunit_shutdown=halt
+[15:48:30] =================== overflow (1 subtest) ===================
+[15:48:30] # DEFINE_FLEX_test: EXPECTATION FAILED at lib/overflow_kunit.c:1200
+[15:48:30] Expected __builtin_dynamic_object_size(two_but_zero, 0) == expected_raw_size, but
+[15:48:30]     __builtin_dynamic_object_size(two_but_zero, 0) == 12 (0xc)
+[15:48:30]     expected_raw_size == 8 (0x8)
+[15:48:30] [FAILED] DEFINE_FLEX_test
+[15:48:30] # module: overflow_kunit
+[15:48:30] ==================== [FAILED] overflow =====================
+[15:48:30] ============================================================
+[15:48:30] Testing complete. Ran 1 tests: failed: 1
+[15:48:31] Elapsed time: 43.985s total, 0.001s configuring, 43.818s building, 0.133s running
+
+If I force CONFIG_CC_HAS_COUNTED_BY=n then the test succeeds.
+Clang 19.1.7 from the Arch Linux repos.
+
+<snip>
