@@ -1,65 +1,65 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D4661F582D
-	for <linux-hardening@vger.kernel.org>; Wed,  5 Mar 2025 08:22:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2D191F3BB2
+	for <linux-hardening@vger.kernel.org>; Wed,  5 Mar 2025 08:29:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741162961; cv=none; b=ZbKMBwZus77+BQBlA9NGJhmIeVTLu3IWGErYlmulDTZZ+EsuPkLzamV2dQ2eyscaOQnDi0YJGJ/n1ZVEln2Yu5MlbzSEjmaiKpDRsKSCuTZ2ap3zuJkC3EKr59LGt9MRb1sueMesho8J93kxRYlXQ6ODKKVSxoH5Ss+c/0sb36c=
+	t=1741163381; cv=none; b=DjdpTzO4djNfB6IuAqkJRD1Imo99u2ysXcmbGy6H6S1G8Cvrbo6CzZwPB0rQyFmcWvddNgmLShQuu5NIq7LmvQH831166iSXzKGc/zaGqZNqM6ATbnsQgDAo5Bjlc1Sf1FgXRBFDeW9LinDilIVNMvGBGphUjKKJrqn7hLUHBWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741162961; c=relaxed/simple;
-	bh=nefCuvZh9BBXP1HgTB2e4dXo3Ejs7pSEpE8D1o/5fHU=;
+	s=arc-20240116; t=1741163381; c=relaxed/simple;
+	bh=BIb8PPjZHUval8yQxPaR2VI3OQirSDX4w545WCXSCig=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=f5EnhIjNi4I4dKAMrNicmg8sUoFmO0b/TXp4YR0NJZoxT6UO00/3UyyR6Qr5/UuY32caNjY0t/1cdqzBtG0rujZycpHsGCcNzGpSTGu7WX8Wgap2QVHju5aiPYwu4CX8lhJg7b/JsGMLz7IC3M2DoN/VPWAiRSbRTbUMovSF/zI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org; spf=none smtp.mailfrom=blackwall.org; dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b=oy4gfSHP; arc=none smtp.client-ip=209.85.208.42
+	 In-Reply-To:Content-Type; b=H5ztBFa/NY/Sc4eynH3ypq9n4+V0ZkWd3FXZj/GUkK5rPvrv4Vxp9Wy/b/uqTEci1C2BjFDeNRsJfx3/7q5tIf0vYgzGO8lZFBlnbAk9zFvLcCqnFTG51NCu/XugN13z0Et2obvvHSr2BiTgp8yiKy9xfrwyZET6/NQMMoiO/Yk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org; spf=none smtp.mailfrom=blackwall.org; dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b=C/AInHnP; arc=none smtp.client-ip=209.85.218.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=blackwall.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b="oy4gfSHP"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5e5491eb37dso5416921a12.0
-        for <linux-hardening@vger.kernel.org>; Wed, 05 Mar 2025 00:22:39 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b="C/AInHnP"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-abf5f4e82caso685305866b.1
+        for <linux-hardening@vger.kernel.org>; Wed, 05 Mar 2025 00:29:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=blackwall-org.20230601.gappssmtp.com; s=20230601; t=1741162958; x=1741767758; darn=vger.kernel.org;
+        d=blackwall-org.20230601.gappssmtp.com; s=20230601; t=1741163377; x=1741768177; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=1brnVJAGUyBrrxRVaMvTP6y55O5yEMp4c+P5cyU9eYc=;
-        b=oy4gfSHPVrs6EKnJ6VdugQ/D6WJbu7Hvhkz/xOUGN0u8aq8yhPGUChia/pc0qJmEkE
-         lmzGcuI4p7AnUFYt0/ugjJj3EIqjrRyNDPk0ecPp/iKW+w8ddqSv18fJGyDLuujNpOXE
-         ICZuDdFncPvzWlUXFd/i1+TbRPF3pjx7zNi6mqkGLT7+3RZwwJGOR2DgLKi2lN2p0muU
-         3s7XfKBdYXh/q0I2kdIa3Q0qf90okSt3yO7qpkKiXB749GKIuKXUOtJnXfWMvPoa4hQI
-         7jnDk4CwU1HRimIFfxegfIdqvSPiVGoV+QGM27bpUIhklGcphgQgq2IbMwPLCTYNG3M3
-         ig9Q==
+        bh=iS635IvOc12Hbl5A1UFbpTyLqQYfDtGYrejudL0pBtc=;
+        b=C/AInHnPu6QEjteXzTU/Y+8cXSDnlwTkiooAJDKunOxZzuyXInimEwnJpecJbpBo3o
+         S0UwivWB0GwvIyxeMHaN7kHTe8v9oWO8YEWbnI+3h9H+r6sM9huilXAF30fpcyuJxNry
+         vQHWkiNk5GpMBotSLwAx8VmIyzmnw31+gj2/wYmyQ9aohqYul/YubmdUtV1YULJ3ueUf
+         FZSqkMhgWVa4aibkSIeJZkFHujC/3ywr1mpvpJ70ptJ9X3Voog5WLOfvXh2hdfwIEPpk
+         cvKKZhVCj0ZGtNxECF8jjfftN1S7xScxZbWrwuJLw1Zf9y0aK/TKDnTgPwJSsBEVb3Ez
+         mWAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741162958; x=1741767758;
+        d=1e100.net; s=20230601; t=1741163377; x=1741768177;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1brnVJAGUyBrrxRVaMvTP6y55O5yEMp4c+P5cyU9eYc=;
-        b=GX7tkRXEe+k9VSsXutYBkhoAjJ4s/jy3Lgj8/bYMvhLI8q7QGhg9Hoi+exoVYKgV82
-         bqH+b6XpM0z+mafGbzr9AZEfjN3btl+VyYeYHhNmf/hI8eazwUQN+iXsc213jtYaceex
-         DvSkRwAxepPkK4hTohTsjm9cOCjn9T9rZ3VjJI+0u8cuLaJEtxah/JfM4k7L4pW6yz1G
-         Ujx0OZZgRNgQDEI4SeHxbkeyvJUmIcOvMImi0qNtMCnpEeiL3Gn4bdlcNQnibKIhn89/
-         tgCr9NYhC5tVCdWe+m+I7TOBjSM74/fsHIL0anfl5IvYkPfgI6jALjNacU9e+02dmvFe
-         aeZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUzvVKc1w+W+h4LgXHJnaqhMP77lpWe15FBqrrMLwI/ASxZX6lJwG2DZwwhLJPJ/Eh55UhvS1tIl+h0iEdLs9o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwnvpVP9Jf7oEGRLgM4sppPatsaCxkFzGelfrVcv9IksqRHNpLx
-	R1oEmMbKsU8z56Zzj+M7rTEk31dzkrjurkQUlosfrXL8rrXSl4Q1hIo1LR5NbQQ=
-X-Gm-Gg: ASbGncuxIcHkazvdamnG/COHAdtCltZY+a56qihXhLpfjomxHB94d/bOBRcCfYACZ9/
-	URjaAZ4th5xzbs7SyhgEaH5QSjbyDki7c5HXCdWBMG4pb6lzQOJhAUyIjLbkcSRNxluGoN5RnSe
-	s7czxjNmr0mwnJsImpbGxF/OSi7dlHiCLvssu97gPS38pN7FQ3ac4Bo8pf5I7IB7PwYGIFRgU7r
-	Z6x9iR5zQxYxTLLCsC/MVQO/A6PINZlSpEDNCgE11J7MEwFNqRzHPchf/ymiu22P8UZcdKPN7r4
-	Sj+01RIke6skIwZBAkYkPUCUpH71AyEEhjCbUZz/cvyGcvRPprM4xkm1r3QtE5qYHbOoHAiP+YU
-	6
-X-Google-Smtp-Source: AGHT+IHSB1wDKnA9pHV1GSviWm2eGdZkD28ziFa7v6M0Rd/G5QVSKS+XqVwTfVjxopyszVvymfpwQA==
-X-Received: by 2002:a05:6402:40cf:b0:5de:dfd0:9d22 with SMTP id 4fb4d7f45d1cf-5e59f470c8dmr2220203a12.22.1741162957444;
-        Wed, 05 Mar 2025 00:22:37 -0800 (PST)
+        bh=iS635IvOc12Hbl5A1UFbpTyLqQYfDtGYrejudL0pBtc=;
+        b=lp+b+RhdlqduyfMeVu6LoxwXr9UGNFHRqhEP3VyZ7UHMXGWMhFSvSY78fb+0weKc9m
+         3AC6IEifVpWWTCLFQ+xEsVzq+2oqyl+VIdY5mN1u7MmxHeIZNLWUdfc3YHe8aJdmFYVQ
+         uT8g7h2SUkdSqPJq32h7TqB1zJGjLiK8psL6TXFienl+jtVbasBpaE1P6FsxAEJhMpH+
+         peeqBNkDr29YUr+Czm6pukCsPLmkqXbnA9GfgkFZ0JGR880h06Sm9KgR1LEHrjEM6BSC
+         iQk80R4ruYs1iN09PPWtkgjTZEwS3WgJXtVb6eZwkXVMVlnOhdB/kFvdSBlbvC5B1Dxg
+         CBIw==
+X-Forwarded-Encrypted: i=1; AJvYcCXTaweaoXsde/1QX0N0Mk8dHSZacaIv8M9l9gvOv0Zmn3iv5npuLzj2GYmKPYmm+xz9dToOLKLE8COxLCrDp9s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwCLKdJV32u9+JOvoe9KclkcRppTd6k5uMrKEnivj2ixcDadY8G
+	z4IPvPAej095OegCnFQ+MYnXSMjU+R3Ty6gbfBqmSdLJIoLzgmwp8fnDvwaNsgM=
+X-Gm-Gg: ASbGncuna8y7vnj5C1hV6U5m1pN1i8Ure6XS2rGH7OZZyFDR079Z7DkTe0RCaQdacRj
+	tNqtxJaP7gWM9h4uDp1u2w1Izuunqm3hTtFX7ALjfIFqzZbOp1OFkuIozam5utK3uOs7owSVNWm
+	48FsmxM94PjWv9pJXhkCiNAzMp7Q1HILbW/RJZu+rG9itKFBKj2ThV6SI7Bvnx76Mj6QlvteHuv
+	nNDcJoyFBlPZaxKwRQ9c5eGuMtyRdKhO2y+Dg7Wxt3HUCxpRMTSbJR+e8F9gEviVXlgBFFOGTK3
+	LU1k9iofq4K1Yyh5ojtbc7rHg2j+xgThp1hELengcKHoxozgwCHJUd71ql+WIoIlosCTnpdJBH6
+	K
+X-Google-Smtp-Source: AGHT+IEjj5zOJcj1/OsRfe5VF46uWo7cJGLTZaHw0tlhP7T8cxub/kFHcc4MiHV1iodJ3D5MAmAOeQ==
+X-Received: by 2002:a17:907:9446:b0:ac2:b73:db3d with SMTP id a640c23a62f3a-ac20da4c87fmr226467166b.4.1741163376857;
+        Wed, 05 Mar 2025 00:29:36 -0800 (PST)
 Received: from [192.168.0.205] (78-154-15-142.ip.btc-net.bg. [78.154.15.142])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e4c3b6dbbbsm9395036a12.22.2025.03.05.00.22.35
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abfa393dd6dsm453290666b.96.2025.03.05.00.29.35
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Mar 2025 00:22:36 -0800 (PST)
-Message-ID: <350a057e-39ae-4e8d-a4ec-12b2f78f51cb@blackwall.org>
-Date: Wed, 5 Mar 2025 10:22:35 +0200
+        Wed, 05 Mar 2025 00:29:36 -0800 (PST)
+Message-ID: <1975f2a1-9461-400d-8b3f-f40e8b94be80@blackwall.org>
+Date: Wed, 5 Mar 2025 10:29:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -67,8 +67,8 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 net-next 11/15] netfilter: nft_flow_offload: Add
- DEV_PATH_MTK_WDMA to nft_dev_path_info()
+Subject: Re: [PATCH v8 net-next 15/15] netfilter: nft_flow_offload: Add
+ bridgeflow to nft_flow_offload_eval()
 To: Eric Woudstra <ericwouds@gmail.com>,
  Michal Ostrowski <mostrows@earthlink.net>,
  Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
@@ -92,55 +92,25 @@ Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-mediatek@lists.infradead.org, linux-hardening@vger.kernel.org,
  Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
 References: <20250228201533.23836-1-ericwouds@gmail.com>
- <20250228201533.23836-12-ericwouds@gmail.com>
+ <20250228201533.23836-16-ericwouds@gmail.com>
 Content-Language: en-US
 From: Nikolay Aleksandrov <razor@blackwall.org>
-In-Reply-To: <20250228201533.23836-12-ericwouds@gmail.com>
+In-Reply-To: <20250228201533.23836-16-ericwouds@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 2/28/25 22:15, Eric Woudstra wrote:
-> In case of using mediatek wireless, in nft_dev_fill_forward_path(), the
-> forward path is filled, ending with mediatek wlan1.
+> Edit nft_flow_offload_eval() to make it possible to handle a flowtable of
+> the nft bridge family.
 > 
-> Because DEV_PATH_MTK_WDMA is unknown inside nft_dev_path_info() it returns
-> with info.indev = NULL. Then nft_dev_forward_path() returns without
-> setting the direct transmit parameters.
-> 
-> This results in a neighbor transmit, and direct transmit not possible.
-> But we want to use it for flow between bridged interfaces.
-> 
-> So this patch adds DEV_PATH_MTK_WDMA to nft_dev_path_info() and makes
-> direct transmission possible.
+> Use nft_flow_offload_bridge_init() to fill the flow tuples. It uses
+> nft_dev_fill_bridge_path() in each direction.
 > 
 > Signed-off-by: Eric Woudstra <ericwouds@gmail.com>
 > ---
->  net/netfilter/nft_flow_offload.c | 5 +++++
->  1 file changed, 5 insertions(+)
+>  net/netfilter/nft_flow_offload.c | 142 +++++++++++++++++++++++++++++--
+>  1 file changed, 137 insertions(+), 5 deletions(-)
 > 
-> diff --git a/net/netfilter/nft_flow_offload.c b/net/netfilter/nft_flow_offload.c
-> index 323c531c7046..b9e6d9e6df66 100644
-> --- a/net/netfilter/nft_flow_offload.c
-> +++ b/net/netfilter/nft_flow_offload.c
-> @@ -105,6 +105,7 @@ static void nft_dev_path_info(const struct net_device_path_stack *stack,
->  		switch (path->type) {
->  		case DEV_PATH_ETHERNET:
->  		case DEV_PATH_DSA:
-> +		case DEV_PATH_MTK_WDMA:
->  		case DEV_PATH_VLAN:
->  		case DEV_PATH_PPPOE:
->  			info->indev = path->dev;
-> @@ -117,6 +118,10 @@ static void nft_dev_path_info(const struct net_device_path_stack *stack,
->  				i = stack->num_paths;
->  				break;
->  			}
-> +			if (path->type == DEV_PATH_MTK_WDMA) {
-> +				i = stack->num_paths;
-> +				break;
-> +			}
->  
->  			/* DEV_PATH_VLAN and DEV_PATH_PPPOE */
->  			if (info->num_encaps >= NF_FLOW_TABLE_ENCAP_MAX) {
 
 Reviewed-by: Nikolay Aleksandrov <razor@blackwall.org>
 
