@@ -1,92 +1,145 @@
-Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB57C219305
-	for <linux-hardening@vger.kernel.org>; Wed,  5 Mar 2025 12:32:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3FF7204C35;
+	Wed,  5 Mar 2025 14:46:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741177954; cv=none; b=G3ABm6uMTr/BDF1hv8t8/wcfdzSwkJVVeHWlEZBsOf4suHtkPMzXdFRV5oQ2otuQr6XN8H+talgdUkOktHkYOsiaMutoJmUjp8dIqIHYwXNhXyuJSGwQqAEmotg6HoN6OJFHHP5w0tNZgNsnCtRTFeJlGmq3CGyPyHrOV4jq4d0=
+	t=1741185960; cv=none; b=luAuxk4X6Kjx9PGfSVVyJSRIkzaJxA/nwv32iPz8C/9fVOwWe+rBgErhKe0T4KMHU5Dt2OjlG3iSsQVUSvIsHhUJ/NpJ+DHGKBrkdfKlnIG+T5HKrKaVxKp78nP0npSasUXCY7S3YQHf7itpTgDI7pMwPM6WIkiVuax+/budC84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741177954; c=relaxed/simple;
-	bh=dXE3te4kQJY93qBMdosIpzt1ZUS/aM0VyK6cRXSNxrw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=d0NXJ78kdihMHbBL4ZKBzQ3P74pDbqIgjo/pBnBb9vVRA1a3ZWamjsj9VPEazlNNaBWHlLoeJKzX3TwJx7WcuqgMcDXkm8OQdXJRvKyYnH9hv6oCoMx78Ho7jQCWl9l1qsBBm9U5D3qRCw9eFo4jUIz/1SxNLJcebUsymXzdJQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=qn6cqf3s; arc=none smtp.client-ip=91.218.175.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1741185960; c=relaxed/simple;
+	bh=IJITA4ytTmUFMzhJpi0Z7MN58Xcdm8gfOaBFwHxdNW0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PCwni12AMGyiz5E8GVcO1LsCXtcPhgLlhvvttV8SZGoUbTbWg7v9Kx/hjrRyZ5WnznO1nj03p8Z5ExKLqIDYHPtqcsCEWe8Krjh0Z1ql6XoIpg7t1ZgJS4pRpiaeyib7QQgEUZiK4TZMKuL00UE0ZhsVeKtsR71Txp8LGQzxmwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FT3IPME9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="qn6cqf3s"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1741177940;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=3GecHDOGgegYwrhEKH8zk3nBufY5dLgCupPlLv22dWw=;
-	b=qn6cqf3sA2FKk6XMHEacdujDsO8DkgjUNNT6P13JMtd32+VyTf8QLkGcPeVJztGAau/0wf
-	eQ001OyTTF0UxmOIJrlEijXCi5/L4yiUVcKv65ZY03xTtQBwg01TfV5yPsM7l4sEjbcPVg
-	jEuTnVzuEQyv5X2Lj8QzFJgz4SFT8Cs=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v2] perf/x86: Annotate struct bts_buffer with __counted_by()
-Date: Wed,  5 Mar 2025 13:31:34 +0100
-Message-ID: <20250305123134.215577-2-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FT3IPME9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 933EEC4CED1;
+	Wed,  5 Mar 2025 14:45:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741185960;
+	bh=IJITA4ytTmUFMzhJpi0Z7MN58Xcdm8gfOaBFwHxdNW0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FT3IPME95VlP5ie8KtxCMaGhv9WI7HkAgfV5txTXgSUAmriapmls6XY88Bc6Uq/sD
+	 scdeXCE3d2n4As1YBHd89RRWC77MAo8l3T0nfGCDIxatUROgcdF58Dhkvwl1RXq9G7
+	 TmBB2FsZdA9RmziGtrzZ94Xi1GnIIu8Nkm7MtN/j2aBJ3m598Oow/b4Juv/dsH3q/t
+	 KVPHICTnHEFuWXQdnokU77/RHvyM4lEBeILVBEE/t82FMtoHuM9CJeSCjFu3UbtdNe
+	 4phE+5IAs10TfByEyJ6wDCa7r4k/BvQ7dF+VRhNh6OKKhyyajodAuWWNkQPIuy372O
+	 +F0IYyZO+GtGA==
+Date: Wed, 5 Mar 2025 15:45:54 +0100
+From: Nathan Chancellor <nathan@kernel.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>, llvm@lists.linux.dev,
+	linux-kbuild@vger.kernel.org, David Gow <davidgow@google.com>,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] kbuild: clang: Support building UM with SUBARCH=i386
+Message-ID: <20250305144554.GA3574115@ax162>
+References: <20250303215240.work.379-kees@kernel.org>
+ <05a25510-ab44-4eb1-a878-71e84c8aff0d@t-8ch.de>
+ <20250304102536.GB2529736@ax162>
+ <e1a1531d-6968-4ae8-a3b5-5ea0547ec4b3@t-8ch.de>
+ <202503040842.1177A1F15B@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <202503040842.1177A1F15B@keescook>
 
-Add the __counted_by() compiler attribute to the flexible array member
-buf to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
-CONFIG_FORTIFY_SOURCE.
+On Tue, Mar 04, 2025 at 09:07:57AM -0800, Kees Cook wrote:
+> On Tue, Mar 04, 2025 at 03:51:19PM +0100, Thomas Weißschuh wrote:
+> > No, it doesn't.
+> > 
+> > Running tests with:
+> > $ .kunit/linux kunit.filter_glob=overflow.DEFINE_FLEX_test kunit.enable=1 mem=1G console=tty kunit_shutdown=halt
+> > [15:48:30] =================== overflow (1 subtest) ===================
+> > [15:48:30] # DEFINE_FLEX_test: EXPECTATION FAILED at lib/overflow_kunit.c:1200
+> > [15:48:30] Expected __builtin_dynamic_object_size(two_but_zero, 0) == expected_raw_size, but
+> > [15:48:30]     __builtin_dynamic_object_size(two_but_zero, 0) == 12 (0xc)
+> > [15:48:30]     expected_raw_size == 8 (0x8)
+> > [15:48:30] [FAILED] DEFINE_FLEX_test
+> > [15:48:30] # module: overflow_kunit
+> > [15:48:30] ==================== [FAILED] overflow =====================
+> > [15:48:30] ============================================================
+> > [15:48:30] Testing complete. Ran 1 tests: failed: 1
+> > [15:48:31] Elapsed time: 43.985s total, 0.001s configuring, 43.818s building, 0.133s running
+> > 
+> > If I force CONFIG_CC_HAS_COUNTED_BY=n then the test succeeds.
+> > Clang 19.1.7 from the Arch Linux repos.
+> 
+> I wasn't seeing with Clang 20 from git:
+> ClangBuiltLinux clang version 20.0.0git (git@github.com:llvm/llvm-project.git 72901fe19eb1e55d0ee1c380ab7a9f57d2f187c5)
+> 
+> But I do see the error with ToT Clang:
+> ClangBuiltLinux clang version 21.0.0git (git@github.com:llvm/llvm-project.git eee3db5421040cfc3eae6e92ed714650a6f741fa)
+> 
+> Clang 17.1: (does not support counted_by)
+> 
+>     # DEFINE_FLEX_test: missing counted_by
+>     # DEFINE_FLEX_test: sizeof(two_but_zero): 8
+>     # DEFINE_FLEX_test: __struct_size(two_but_zero): 12
+>     # DEFINE_FLEX_test: __member_size(two_but_zero): 12
+>     # DEFINE_FLEX_test: __member_size(two_but_zero->array): 4
+> 
+> Clang 19.1.1: (actually is _does_ support counted_by, but Linux disables it)
+> 
+>     # DEFINE_FLEX_test: missing counted_by
+>     # DEFINE_FLEX_test: sizeof(two_but_zero): 8
+>     # DEFINE_FLEX_test: __struct_size(two_but_zero): 12
+>     # DEFINE_FLEX_test: __member_size(two_but_zero): 12
+>     # DEFINE_FLEX_test: __member_size(two_but_zero->array): 4
+> 
+> GCC 13.3:
+> 
+>     # DEFINE_FLEX_test: missing counted_by
+>     # DEFINE_FLEX_test: sizeof(two_but_zero): 8
+>     # DEFINE_FLEX_test: __struct_size(two_but_zero): 12
+>     # DEFINE_FLEX_test: __member_size(two_but_zero): 12
+>     # DEFINE_FLEX_test: __member_size(two_but_zero->array): 4
+> 
+> Clang 21 (ToT):
+> 
+>     # DEFINE_FLEX_test: has counted_by
+>     # DEFINE_FLEX_test: sizeof(two_but_zero): 8
+>     # DEFINE_FLEX_test: __struct_size(two_but_zero): 12
+>     # DEFINE_FLEX_test: __member_size(two_but_zero): 12
+>     # DEFINE_FLEX_test: __member_size(two_but_zero->array): 0
+> 
+> GCC 15 (ToT):
+> 
+>     # DEFINE_FLEX_test: has counted_by
+>     # DEFINE_FLEX_test: sizeof(two_but_zero): 8
+>     # DEFINE_FLEX_test: __struct_size(two_but_zero): 12
+>     # DEFINE_FLEX_test: __member_size(two_but_zero): 12
+>     # DEFINE_FLEX_test: __member_size(two_but_zero->array): 0
+> 
+> It seems like the on-stack sizes with __bdos all agree now, regardless
+> of the used compiler features. It is only the array size calculation
+> that now gets masked by counted_by. (i.e. the stack size is overridden
+> by the zero "count" for the array elements.)
+> 
+> I'll send a fix for the test...
 
-No functional changes intended.
+Just for my own understanding, is this because of the adjustment that
+Bill did to the __bdos() calculation in [1]? I think that tracks because
+the version of LLVM 20 that you have is pretty old and does not have
+that change. I know for a fact I tested the original change to the
+overflow KUnit test to adjust the expected calculation result and it
+passed but it was before that change as well. If I use a current version
+of LLVM 20, I see the failure. If I allow LLVM 18 to use __counted_by(),
+the test passes with it. Not that it truly matters but it does explain
+how we got to this point.
 
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
-Changes in v2:
-- struct_size() changes should be a separate patch as suggested by Ingo
-- Link to v1: https://lore.kernel.org/r/20250304183056.78920-2-thorsten.blum@linux.dev/
----
- arch/x86/events/intel/bts.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+[1]: https://github.com/llvm/llvm-project/commit/8c62bf54df76e37d0978f4901c6be6554e978b53
 
-diff --git a/arch/x86/events/intel/bts.c b/arch/x86/events/intel/bts.c
-index 8f78b0c900ef..c7be60c0b94f 100644
---- a/arch/x86/events/intel/bts.c
-+++ b/arch/x86/events/intel/bts.c
-@@ -58,7 +58,7 @@ struct bts_buffer {
- 	local_t		head;
- 	unsigned long	end;
- 	void		**data_pages;
--	struct bts_phys	buf[];
-+	struct bts_phys	buf[] __counted_by(nr_bufs);
- };
- 
- static struct pmu bts_pmu;
--- 
-2.48.1
-
+Cheers,
+Nathan
