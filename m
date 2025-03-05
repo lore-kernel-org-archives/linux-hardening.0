@@ -1,125 +1,92 @@
-Received: from out-185.mta1.migadu.com (out-185.mta1.migadu.com [95.215.58.185])
+Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DA981EA7DB
-	for <linux-hardening@vger.kernel.org>; Wed,  5 Mar 2025 12:24:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB57C219305
+	for <linux-hardening@vger.kernel.org>; Wed,  5 Mar 2025 12:32:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741177469; cv=none; b=k+lGFykwNCNvhmT4QE7o5k1HVR+b7GdxPbIWRUv2dTN97ZGQRa0aXdmOso3Gr0S5sdF1Um7lQ9IxpnF6cHePkkM63JD4zg4oof/5+fde0/ExIdYkSSkiDaSL2H+F+9gmrSH0MrwUaKSH/i0IwBsVjS6X7+8pxhYOok9obVtI0F4=
+	t=1741177954; cv=none; b=G3ABm6uMTr/BDF1hv8t8/wcfdzSwkJVVeHWlEZBsOf4suHtkPMzXdFRV5oQ2otuQr6XN8H+talgdUkOktHkYOsiaMutoJmUjp8dIqIHYwXNhXyuJSGwQqAEmotg6HoN6OJFHHP5w0tNZgNsnCtRTFeJlGmq3CGyPyHrOV4jq4d0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741177469; c=relaxed/simple;
-	bh=Wba23t8y4zeAzzGOgYyj3RMEi3ZmOBs6WmgEB1JM6xs=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=pI8gKLkM91ns3p+Bl6Pfqg5fCyZqZ+cfIwnE0NoOWMeNXEO4yEkPKNX3P/HxeY6mXjbwuQXG4UBGIr2JbbpSV5+uaqhB7zh4jNueg7czGM+Jm6wu5m0ZxSsuJZbug/e3DKUafM9xqsE0QNbw80cpmyYkjQcGOjkt3SNohw94W/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=iX+VRdPu; arc=none smtp.client-ip=95.215.58.185
+	s=arc-20240116; t=1741177954; c=relaxed/simple;
+	bh=dXE3te4kQJY93qBMdosIpzt1ZUS/aM0VyK6cRXSNxrw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=d0NXJ78kdihMHbBL4ZKBzQ3P74pDbqIgjo/pBnBb9vVRA1a3ZWamjsj9VPEazlNNaBWHlLoeJKzX3TwJx7WcuqgMcDXkm8OQdXJRvKyYnH9hv6oCoMx78Ho7jQCWl9l1qsBBm9U5D3qRCw9eFo4jUIz/1SxNLJcebUsymXzdJQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=qn6cqf3s; arc=none smtp.client-ip=91.218.175.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="iX+VRdPu"
-Content-Type: text/plain;
-	charset=us-ascii
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="qn6cqf3s"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1741177464;
+	t=1741177940;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PaXpS2qkRKWHzM6dsXV1e2J5mXqRVuhX+G+d5r7JJMk=;
-	b=iX+VRdPuH9ACyHY1AGshnkdwBKtlzIS2BUu9J8U03WQUDacjSygQIZ1GncW2L7PPMp5xu1
-	DX+o00cUrv0E4qkO/QfEOc4h8Dzia4w0KwbAI/kwOQa9Dxm/RBqKapSizeviuDpbmWGoEg
-	2xBpIPVfF1D3KhYHTKOHTL4pZLoaSdw=
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=3GecHDOGgegYwrhEKH8zk3nBufY5dLgCupPlLv22dWw=;
+	b=qn6cqf3sA2FKk6XMHEacdujDsO8DkgjUNNT6P13JMtd32+VyTf8QLkGcPeVJztGAau/0wf
+	eQ001OyTTF0UxmOIJrlEijXCi5/L4yiUVcKv65ZY03xTtQBwg01TfV5yPsM7l4sEjbcPVg
+	jEuTnVzuEQyv5X2Lj8QzFJgz4SFT8Cs=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v2] perf/x86: Annotate struct bts_buffer with __counted_by()
+Date: Wed,  5 Mar 2025 13:31:34 +0100
+Message-ID: <20250305123134.215577-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51.11.1\))
-Subject: Re: [tip: perf/core] perf/x86: Annotate struct bts_buffer with
- __counted_by()
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Thorsten Blum <thorsten.blum@linux.dev>
-In-Reply-To: <Z8gvYIYXMHRC-btB@gmail.com>
-Date: Wed, 5 Mar 2025 13:24:11 +0100
-Cc: linux-kernel@vger.kernel.org,
- linux-tip-commits@vger.kernel.org,
- Peter Zijlstra <peterz@infradead.org>,
- x86@kernel.org,
- linux-hardening@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <0921EF60-73BB-481C-AC5E-152470BBAB79@linux.dev>
-References: <20250304183056.78920-2-thorsten.blum@linux.dev>
- <174111554764.14745.14213573362217486017.tip-bot2@tip-bot2>
- <Z8gW1rihV0aIp8Oo@gmail.com> <04A79410-77DA-40F9-8904-44DC2DE1E810@linux.dev>
- <Z8gvYIYXMHRC-btB@gmail.com>
-To: Ingo Molnar <mingo@kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-On 5. Mar 2025, at 12:02, Ingo Molnar wrote:
-> * Thorsten Blum <thorsten.blum@linux.dev> wrote:
->> On 5. Mar 2025, at 10:18, Ingo Molnar wrote:
->>> Actually, on a second thought:
->>>=20
->>>> - buf =3D kzalloc_node(offsetof(struct bts_buffer, buf[nbuf]), =
-GFP_KERNEL, node);
->>>> + buf =3D kzalloc_node(struct_size(buf, buf, nbuf), GFP_KERNEL, =
-node);
->>>=20
->>> Firstly, in what world is 'buf, buf' more readable? One is a member =
-of=20
->>> a structure, the other is the name of the structure - and they =
-match,=20
->>> which shows that this function's naming conventions are a mess.
->>>=20
->>> Which should be fixed first ...
->>=20
->> Yes, I noticed this too, but since buf->buf[] is used all over the =
-place
->> (also in other functions), I didn't rename it in this patch.
->>=20
->> We could just keep offsetof(struct bts_buffer, buf[nbuf]), or use
->> struct_size_t(struct bts_buffer, buf, nbuf) and still benefit from
->> additional compile-time checks, or rename the local variable to =
-struct
->> bts_buffer *bts and use struct_size(bts, buf, nbuf), for example. Any
->> preferences or other ideas?
->=20
-> To clean up this code before changing it, so that the changes become=20=
+Add the __counted_by() compiler attribute to the flexible array member
+buf to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
+CONFIG_FORTIFY_SOURCE.
 
-> obvious to review.
->=20
-> Please also split out the annotation for instrumentation, it's =
-separate=20
-> from any struct_size() changes, right?
+No functional changes intended.
 
-Yes, I'll send a v2 with the __counted_by() annotation and submit a
-separate patch for struct_size() and other changes.
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+---
+Changes in v2:
+- struct_size() changes should be a separate patch as suggested by Ingo
+- Link to v1: https://lore.kernel.org/r/20250304183056.78920-2-thorsten.blum@linux.dev/
+---
+ arch/x86/events/intel/bts.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->>> I'm also not sure the code is correct ...
->>=20
->> Which part of it?
->=20
-> The size calculation. On a second reading I *think* it's correct, but=20=
-
-> it's unnecessarily confusing due to the buf<->buf aliasing.
->=20
-> So in a cleaned up version of the code:
->=20
-> - If we name 'struct bts_buffer' objects 'bb'
-> - and bb:buf[] is the var-array
-> - and we rename 'nbuf' to 'nr_buf' (the number of bb:buf[] elements)
->=20
-> then the code right now does:
->=20
->       bb =3D kzalloc_node(offsetof(struct bts_buffer, bb[nr_buf]), =
-GFP_KERNEL, node);
->=20
-> ... which looks correct.
-
-If bb:buf[] is the flexible array, it should be buf[nr_buf] like this:
-
-	bb =3D kzalloc_node(offsetof(struct bts_buffer, buf[nr_buf]), =
-GFP_KERNEL, node);
-
-Thanks,
-Thorsten
+diff --git a/arch/x86/events/intel/bts.c b/arch/x86/events/intel/bts.c
+index 8f78b0c900ef..c7be60c0b94f 100644
+--- a/arch/x86/events/intel/bts.c
++++ b/arch/x86/events/intel/bts.c
+@@ -58,7 +58,7 @@ struct bts_buffer {
+ 	local_t		head;
+ 	unsigned long	end;
+ 	void		**data_pages;
+-	struct bts_phys	buf[];
++	struct bts_phys	buf[] __counted_by(nr_bufs);
+ };
+ 
+ static struct pmu bts_pmu;
+-- 
+2.48.1
 
