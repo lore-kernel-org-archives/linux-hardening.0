@@ -1,77 +1,331 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8800415575B;
-	Wed,  5 Mar 2025 01:58:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 089CFDF5C
+	for <linux-hardening@vger.kernel.org>; Wed,  5 Mar 2025 02:17:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741139917; cv=none; b=oxuX/EGNMGkpPhqItMPSM8H7+13Sop73GkwfTZO3EPBlupTLct5cZkIl1NLelH2Mgw1hT/4EPESAr9N0ldHtmXO/sgQEn8yBcq9t2jRmMi08BGmDofCjk8WH4D5hjAqS/36Lm/O7olZe+b4ce0QFd62sip6ufTc1s8nQ2/gofMw=
+	t=1741141043; cv=none; b=Ifw1myY3h/kmPSF8Ae8YdQw0oZUdD+6MWnWnUeh5RgG5BaNxEMgAfT6oQ6bNqpkQq92mM5wwxz8YrXFXLw7YfEwbxvMYG1nxL6mahkg72+w8zvMNTp0S5pmQZPf1sxoZbk+JMhpwwQzC8cHOyR+jMG6PK63rsb0lzLdJcFT6buU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741139917; c=relaxed/simple;
-	bh=faPPTc6fEqFkFFgMOn0XiUUr2KwsjokpKxnGBmLUfb4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NxbwM4yN96GZpEuswSMRJusM6hEnNfWdrk4EYX2hAd7RjtmjFbhVS6C6nAsddjj6p3EzR2LaNK0EPn7NU6fIUDA0/1Mp1Lt3nWO0W9c3iRChnuiHADPRcFWMfRAMEKC6PP1Pgs/O2NF8SrCL8aa6FFTlRhpsGME+nT521i2ltlY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BaX8Oa72; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741141043; c=relaxed/simple;
+	bh=On54tDRUS6TI1ccIjKILXTQawB/Q78xP8RuJ0wrOx14=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LnoL70N2Y44y9E16xqyWiEXbKqOAFKbie2mKc9pPudXokWcBszW2ApjYfh4UQFAjcRnm6eLHuFrL5sgbvSLF4tICBr+0CzgxgBoVwDQXqt2zu4sKPTUZ7wHiT8lkZFyDXKHX7/1KZFmmyPG3FqIUawEimkeM6SfLb+Gf/fOBvAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=FI9xMl1Y; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BaX8Oa72"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 964B6C4CEE5;
-	Wed,  5 Mar 2025 01:58:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741139917;
-	bh=faPPTc6fEqFkFFgMOn0XiUUr2KwsjokpKxnGBmLUfb4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=BaX8Oa727DhaBLVOvWypoECVFTTcmn6+Wx3yBzMVT6rm7vhjZLt3VJHewLq0r1Y4c
-	 QtFWcquZ/i9LIVonDQaO3cuQsC5t8rWZ1W03jRgIwZFiJ+ZgRtIboC7S2URCj+UaEo
-	 dvOVJCsvqim32rLbUhnX4DbVsM0mu9cAMoqTBdzKDS2a/yHoUY5EQtdmsMVHlEpgQK
-	 Dy/83nzSNqk8XVhbipHuO+T5mHBrMDcHuS6UfPgDmRcx6gpNHqdfle3WBOdIoeMZOA
-	 RyTkq0EAcgIT1eAq7dLfE1itPJlInCwUB/hRAzzwJWV7xN1kpSHVYrr7JFKSeCj/uU
-	 AVTFBSIxa/cvQ==
-Date: Tue, 4 Mar 2025 17:58:34 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: Eric Woudstra <ericwouds@gmail.com>
-Cc: Michal Ostrowski <mostrows@earthlink.net>, Andrew Lunn
- <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Simon
- Horman <horms@kernel.org>, Pablo Neira Ayuso <pablo@netfilter.org>, Jozsef
- Kadlecsik <kadlec@netfilter.org>, Jiri Pirko <jiri@resnulli.us>, Ivan
- Vecera <ivecera@redhat.com>, Roopa Prabhu <roopa@nvidia.com>, Nikolay
- Aleksandrov <razor@blackwall.org>, Matthias Brugger
- <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
- <angelogioacchino.delregno@collabora.com>, Kuniyuki Iwashima
- <kuniyu@amazon.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- Ahmed Zaki <ahmed.zaki@intel.com>, Alexander Lobakin
- <aleksander.lobakin@intel.com>, Vladimir Oltean <olteanv@gmail.com>, "Frank
- Wunderlich" <frank-w@public-files.de>, Daniel Golle
- <daniel@makrotopia.org>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, netfilter-devel@vger.kernel.org,
- coreteam@netfilter.org, bridge@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- linux-hardening@vger.kernel.org, Kees Cook <kees@kernel.org>, "Gustavo A.
- R. Silva" <gustavoars@kernel.org>
-Subject: Re: [PATCH v8 net-next 00/15] bridge-fastpath and related
- improvements
-Message-ID: <20250304175834.4306c670@kernel.org>
-In-Reply-To: <20250228201533.23836-1-ericwouds@gmail.com>
-References: <20250228201533.23836-1-ericwouds@gmail.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FI9xMl1Y"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5e4cbbb37ccso746335a12.1
+        for <linux-hardening@vger.kernel.org>; Tue, 04 Mar 2025 18:17:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1741141039; x=1741745839; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=x8KwX6NeTRi2sXa8vhuc0snxgnOuiDK19+zFcgBNOqI=;
+        b=FI9xMl1Y4Jl2ZkdiVhfKL8WjSkeak8bwmY2epTEDNP4Fx4nbpFPrqAasvA08dCL5RY
+         2pazJSoRrRU16XHVzP1AfCAXRa8DGd+Dc87itqZn14h9kS6Qhaiqg1zqjQy6G+GLiII/
+         fE+5UfBFznKjaDxAMVIqj4BxlbTdlIadm70J0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741141039; x=1741745839;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=x8KwX6NeTRi2sXa8vhuc0snxgnOuiDK19+zFcgBNOqI=;
+        b=lXd6b2uuFGkvsU9rqPNZJz/9KAhIyBSeD4zOeIkQRUDfILk3O9SAkCwhXWKVVFlUYQ
+         P11jhoguo2sVoVM7iKo2HzZ6cMMt5PIU+ZciGEp42fbKHt7lUT/BhQ+kMuNuWiMmMakc
+         BSgZ2HOiMGd797zNMFMaAXUW0sVAhkSgIWRzwDBuc+KKV+vnli6L5C2S5yysiW246quH
+         TTD5nIByaWypmJAA2Eq7CEEMNhBiiiYuvwzK+7ZINGQIaIiFm46BuhUQk8WRaeNPjjZY
+         z/XLsERO6kie5tx7POoXnpHjpi1gvnGP26CoJKcE+LjToB8TW2Xk5nHng5mit64Kzqwq
+         /ovg==
+X-Forwarded-Encrypted: i=1; AJvYcCUYNOsbtfHxSrJJnHTHPEXvZFn58Nw+UjyBmTXC69G+dotjnVW96uwvU0opw5jmqXUSAPmCO9WJX5hpWQqXQQQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJF77WMqrIUlpACVcY2/Z2beKUoA+Ik3B1yY4tzXNut2TtnyTM
+	6G3XhHZ8s7jXJMV6IP2qIJy+BQTlhNE+J7tqOWX0chMPUgIFNXeHxyCzEJocrQ==
+X-Gm-Gg: ASbGnctl3gLD9yI6dGcFoyqCz8/WPCYjox7OIUu6dFAJM/BeUK9YvBz2hLv4cwUbSDv
+	nRMpi8IE+B40TBn3jhieWp0yBalxSiXB+oi/tiEYKQjoQ9rAbiTpSO9fklwrGOuxZpd1mkoB7ak
+	dFw1BX+PUbsn8t//R2GugpfJCSBXubWmJrHWKeUEExqoLT+Rd/zNCGjyiBxjAVyfePte28BgXgp
+	FOwP+jh6Xyex0rbOJy7j6g6skzM/nt/wvi5OV3NLc+vKvnBP5o/T7Inn+F+6I2L7LMU2FFo0PxB
+	GN0oSaJEjERCabzR4NBpzUZ8PA+haLLld7Gy1NQGcXbq46GCGNDJeJzRS01gYaxVnpnmycZhc+E
+	l
+X-Google-Smtp-Source: AGHT+IFW/bnkh/EXUarYUjFcjTWQL/8MURY2vEnuH4PoUi0AT2GFPUZ+5ZTlzNAFJBJhfu5/nDZg7w==
+X-Received: by 2002:a05:6402:270b:b0:5e0:36fa:ac1c with SMTP id 4fb4d7f45d1cf-5e59f4b6de6mr480560a12.9.1741141039103;
+        Tue, 04 Mar 2025 18:17:19 -0800 (PST)
+Received: from cfish.c.googlers.com.com (40.162.204.35.bc.googleusercontent.com. [35.204.162.40])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e4c43a55besm8891211a12.72.2025.03.04.18.17.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Mar 2025 18:17:17 -0800 (PST)
+From: jeffxu@chromium.org
+To: akpm@linux-foundation.org,
+	keescook@chromium.org,
+	jannh@google.com,
+	torvalds@linux-foundation.org,
+	vbabka@suse.cz,
+	lorenzo.stoakes@oracle.com,
+	Liam.Howlett@Oracle.com,
+	adhemerval.zanella@linaro.org,
+	oleg@redhat.com,
+	avagin@gmail.com,
+	benjamin@sipsolutions.net
+Cc: linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org,
+	jorgelo@chromium.org,
+	sroettger@google.com,
+	hch@lst.de,
+	ojeda@kernel.org,
+	thomas.weissschuh@linutronix.de,
+	adobriyan@gmail.com,
+	johannes@sipsolutions.net,
+	pedro.falcato@gmail.com,
+	hca@linux.ibm.com,
+	willy@infradead.org,
+	anna-maria@linutronix.de,
+	mark.rutland@arm.com,
+	linus.walleij@linaro.org,
+	Jason@zx2c4.com,
+	deller@gmx.de,
+	rdunlap@infradead.org,
+	davem@davemloft.net,
+	peterx@redhat.com,
+	f.fainelli@gmail.com,
+	gerg@kernel.org,
+	dave.hansen@linux.intel.com,
+	mingo@kernel.org,
+	ardb@kernel.org,
+	mhocko@suse.com,
+	42.hyeyoo@gmail.com,
+	peterz@infradead.org,
+	ardb@google.com,
+	enh@google.com,
+	rientjes@google.com,
+	groeck@chromium.org,
+	mpe@ellerman.id.au,
+	aleksandr.mikhalitsyn@canonical.com,
+	mike.rapoport@gmail.com,
+	Jeff Xu <jeffxu@chromium.org>
+Subject: [PATCH v9 0/7] mseal system mappings
+Date: Wed,  5 Mar 2025 02:17:04 +0000
+Message-ID: <20250305021711.3867874-1-jeffxu@google.com>
+X-Mailer: git-send-email 2.48.1.711.g2feabab25a-goog
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Fri, 28 Feb 2025 21:15:18 +0100 Eric Woudstra wrote:
-> This patchset makes it possible to set up a software fastpath between
-> bridged interfaces. One patch adds the flow rule for the hardware
-> fastpath. This creates the possibility to have a hardware offloaded
-> fastpath between bridged interfaces. More patches are added to solve
-> issues found with the existing code.
+From: Jeff Xu <jeffxu@chromium.org>
 
-For some reason this series didn't get ingested by patchwork correctly.
-Instead of reposting for net-next maybe lets use this opportunity to
-resend to netfilter instead? Looks like we have some acks from Nik but
-none from Pablo.
+This is V9 version, addressing comments from V8, without code logic
+change.
+
+-------------------------------------------------------------------
+As discussed during mseal() upstream process [1], mseal() protects
+the VMAs of a given virtual memory range against modifications, such
+as the read/write (RW) and no-execute (NX) bits. For complete
+descriptions of memory sealing, please see mseal.rst [2].
+
+The mseal() is useful to mitigate memory corruption issues where a
+corrupted pointer is passed to a memory management system. For
+example, such an attacker primitive can break control-flow integrity
+guarantees since read-only memory that is supposed to be trusted can
+become writable or .text pages can get remapped.
+
+The system mappings are readonly only, memory sealing can protect
+them from ever changing to writable or unmmap/remapped as different
+attributes.
+
+System mappings such as vdso, vvar, vvar_vclock,
+vectors (arm compat-mode), sigpage (arm compat-mode),
+are created by the kernel during program initialization, and could
+be sealed after creation.
+
+Unlike the aforementioned mappings, the uprobe mapping is not
+established during program startup. However, its lifetime is the same
+as the process's lifetime [3]. It could be sealed from creation.
+
+The vsyscall on x86-64 uses a special address (0xffffffffff600000),
+which is outside the mm managed range. This means mprotect, munmap, and
+mremap won't work on the vsyscall. Since sealing doesn't enhance
+the vsyscall's security, it is skipped in this patch. If we ever seal
+the vsyscall, it is probably only for decorative purpose, i.e. showing
+the 'sl' flag in the /proc/pid/smaps. For this patch, it is ignored.
+
+It is important to note that the CHECKPOINT_RESTORE feature (CRIU) may
+alter the system mappings during restore operations. UML(User Mode Linux)
+and gVisor, rr are also known to change the vdso/vvar mappings.
+Consequently, this feature cannot be universally enabled across all
+systems. As such, CONFIG_MSEAL_SYSTEM_MAPPINGS is disabled by default.
+
+To support mseal of system mappings, architectures must define
+CONFIG_ARCH_SUPPORTS_MSEAL_SYSTEM_MAPPINGS and update their special
+mappings calls to pass mseal flag. Additionally, architectures must
+confirm they do not unmap/remap system mappings during the process
+lifetime. The existence of this flag for an architecture implies that
+it does not require the remapping of thest system mappings during
+process lifetime, so sealing these mappings is safe from a kernel
+perspective.
+
+This version covers x86-64 and arm64 archiecture as minimum viable feature.
+
+While no specific CPU hardware features are required for enable this
+feature on an archiecture, memory sealing requires a 64-bit kernel. Other
+architectures can choose whether or not to adopt this feature. Currently,
+I'm not aware of any instances in the kernel code that actively
+munmap/mremap a system mapping without a request from userspace. The PPC
+does call munmap when _install_special_mapping fails for vdso; however,
+it's uncertain if this will ever fail for PPC - this needs to be
+investigated by PPC in the future [4]. The UML kernel can add this support
+when KUnit tests require it [5].
+
+In this version, we've improved the handling of system mapping sealing from
+previous versions, instead of modifying the _install_special_mapping
+function itself, which would affect all architectures, we now call
+_install_special_mapping with a sealing flag only within the specific
+architecture that requires it. This targeted approach offers two key
+advantages: 1) It limits the code change's impact to the necessary
+architectures, and 2) It aligns with the software architecture by keeping
+the core memory management within the mm layer, while delegating the
+decision of sealing system mappings to the individual architecture, which
+is particularly relevant since 32-bit architectures never require sealing.
+
+Prior to this patch series, we explored sealing special mappings from
+userspace using glibc's dynamic linker. This approach revealed several
+issues:
+- The PT_LOAD header may report an incorrect length for vdso, (smaller
+  than its actual size). The dynamic linker, which relies on PT_LOAD
+  information to determine mapping size, would then split and partially
+  seal the vdso mapping. Since each architecture has its own vdso/vvar
+  code, fixing this in the kernel would require going through each
+  archiecture. Our initial goal was to enable sealing readonly mappings,
+  e.g. .text, across all architectures, sealing vdso from kernel since
+  creation appears to be simpler than sealing vdso at glibc.
+- The [vvar] mapping header only contains address information, not length
+  information. Similar issues might exist for other special mappings.
+- Mappings like uprobe are not covered by the dynamic linker,
+  and there is no effective solution for them.
+
+This feature's security enhancements will benefit ChromeOS, Android,
+and other high security systems.
+
+Testing:
+This feature was tested on ChromeOS and Android for both x86-64 and ARM64.
+- Enable sealing and verify vdso/vvar, sigpage, vector are sealed properly,
+  i.e. "sl" shown in the smaps for those mappings, and mremap is blocked.
+- Passing various automation tests (e.g. pre-checkin) on ChromeOS and
+  Android to ensure the sealing doesn't affect the functionality of
+  Chromebook and Android phone.
+
+I also tested the feature on Ubuntu on x86-64:
+- With config disabled, vdso/vvar is not sealed,
+- with config enabled, vdso/vvar is sealed, and booting up Ubuntu is OK,
+  normal operations such as browsing the web, open/edit doc are OK.
+
+Link: https://lore.kernel.org/all/20240415163527.626541-1-jeffxu@chromium.org/ [1]
+Link: Documentation/userspace-api/mseal.rst [2]
+Link: https://lore.kernel.org/all/CABi2SkU9BRUnqf70-nksuMCQ+yyiWjo3fM4XkRkL-NrCZxYAyg@mail.gmail.com/ [3]
+Link: https://lore.kernel.org/all/CABi2SkV6JJwJeviDLsq9N4ONvQ=EFANsiWkgiEOjyT9TQSt+HA@mail.gmail.com/ [4]
+Link: https://lore.kernel.org/all/202502251035.239B85A93@keescook/ [5]
+
+-------------------------------------------
+History:
+
+V9:
+ - Add negative test in selftest (Kees Cook)
+ - fx typos in text (Kees Cook)
+
+V8:
+  - Change ARCH_SUPPORTS_MSEAL_X to ARCH_SUPPORTS_MSEAL_X (Liam R. Howlett)
+  - Update comments in Kconfig and mseal.rst (Lorenzo Stoakes, Liam R. Howlett)
+  - Change patch header perfix to "mseal sysmap" (Lorenzo Stoakes)
+  - Remove "vm_flags =" (Kees Cook, Liam R. Howlett,  Oleg Nesterov)
+  - Drop uml architecture (Lorenzo Stoakes, Kees Cook)
+  - Add a selftest to verify system mappings are sealed (Lorenzo Stoakes)
+
+V7:
+  https://lore.kernel.org/all/20250224225246.3712295-1-jeffxu@google.com/
+  - Remove cover letter from the first patch (Liam R. Howlett)
+  - Change macro name to VM_SEALED_SYSMAP (Liam R. Howlett)
+  - logging and fclose() in selftest (Liam R. Howlett)
+
+V6:
+  https://lore.kernel.org/all/20250224174513.3600914-1-jeffxu@google.com/
+  - mseal.rst: fix a typo (Randy Dunlap)
+  - security/Kconfig: add rr into note (Liam R. Howlett)
+  - remove mseal_system_mappings() and use macro instead (Liam R. Howlett)
+  - mseal.rst: add incompatible userland software (Lorenzo Stoakes)
+  - remove RFC from title (Kees Cook)
+
+V5
+  https://lore.kernel.org/all/20250212032155.1276806-1-jeffxu@google.com/
+  - Remove kernel cmd line (Lorenzo Stoakes)
+  - Add test info (Lorenzo Stoakes)
+  - Add threat model info (Lorenzo Stoakes)
+  - Fix x86 selftest: test_mremap_vdso
+  - Restrict code change to ARM64/x86-64/UM arch only.
+  - Add userprocess.h to include seal_system_mapping().
+  - Remove sealing vsyscall.
+  - Split the patch.
+
+V4:
+  https://lore.kernel.org/all/20241125202021.3684919-1-jeffxu@google.com/
+  - ARCH_HAS_SEAL_SYSTEM_MAPPINGS (Lorenzo Stoakes)
+  - test info (Lorenzo Stoakes)
+  - Update  mseal.rst (Liam R. Howlett)
+  - Update test_mremap_vdso.c (Liam R. Howlett)
+  - Misc. style, comments, doc update (Liam R. Howlett)
+
+V3:
+  https://lore.kernel.org/all/20241113191602.3541870-1-jeffxu@google.com/
+  - Revert uprobe to v1 logic (Oleg Nesterov)
+  - use CONFIG_SEAL_SYSTEM_MAPPINGS instead of _ALWAYS/_NEVER (Kees Cook)
+  - Move kernel cmd line from fs/exec.c to mm/mseal.c and
+    misc. (Liam R. Howlett)
+
+V2:
+  https://lore.kernel.org/all/20241014215022.68530-1-jeffxu@google.com/
+  - Seal uprobe always (Oleg Nesterov)
+  - Update comments and description (Randy Dunlap, Liam R.Howlett, Oleg Nesterov)
+  - Rebase to linux_main
+
+V1:
+ - https://lore.kernel.org/all/20241004163155.3493183-1-jeffxu@google.com/
+
+--------------------------------------------------
+
+
+
+Jeff Xu (7):
+  mseal sysmap: kernel config and header change
+  selftests: x86: test_mremap_vdso: skip if vdso is msealed
+  mseal sysmap: enable x86-64
+  mseal sysmap: enable arm64
+  mseal sysmap: uprobe mapping
+  mseal sysmap: update mseal.rst
+  selftest: test system mappings are sealed.
+
+ Documentation/userspace-api/mseal.rst         |  20 +++
+ arch/arm64/Kconfig                            |   1 +
+ arch/arm64/kernel/vdso.c                      |  12 +-
+ arch/x86/Kconfig                              |   1 +
+ arch/x86/entry/vdso/vma.c                     |   7 +-
+ include/linux/mm.h                            |  10 ++
+ init/Kconfig                                  |  22 ++++
+ kernel/events/uprobes.c                       |   3 +-
+ security/Kconfig                              |  21 ++++
+ tools/testing/selftests/Makefile              |   1 +
+ .../mseal_system_mappings/.gitignore          |   2 +
+ .../selftests/mseal_system_mappings/Makefile  |   6 +
+ .../selftests/mseal_system_mappings/config    |   1 +
+ .../mseal_system_mappings/sysmap_is_sealed.c  | 119 ++++++++++++++++++
+ .../testing/selftests/x86/test_mremap_vdso.c  |  43 +++++++
+ 15 files changed, 261 insertions(+), 8 deletions(-)
+ create mode 100644 tools/testing/selftests/mseal_system_mappings/.gitignore
+ create mode 100644 tools/testing/selftests/mseal_system_mappings/Makefile
+ create mode 100644 tools/testing/selftests/mseal_system_mappings/config
+ create mode 100644 tools/testing/selftests/mseal_system_mappings/sysmap_is_sealed.c
+
 -- 
-pw-bot: cr
+2.48.1.711.g2feabab25a-goog
+
