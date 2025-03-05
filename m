@@ -1,103 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-185.mta1.migadu.com (out-185.mta1.migadu.com [95.215.58.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0643820D508;
-	Wed,  5 Mar 2025 11:03:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DA981EA7DB
+	for <linux-hardening@vger.kernel.org>; Wed,  5 Mar 2025 12:24:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741172581; cv=none; b=j66qhNe5BBr+j0TUGfqeyITvx81SA9DOeKRSoLkSwU+yJyVhOw6wt4VIdNP65191BxYx1rrtQZLjbtbLp1cARlpFTSciw8cs2Y32ZkUR9Q9yZeFHH5w7M+JI/mlny6mUD2dQHAhDn7CA0ARYOzdt99+qpc/mi374hgjUr+jyZLc=
+	t=1741177469; cv=none; b=k+lGFykwNCNvhmT4QE7o5k1HVR+b7GdxPbIWRUv2dTN97ZGQRa0aXdmOso3Gr0S5sdF1Um7lQ9IxpnF6cHePkkM63JD4zg4oof/5+fde0/ExIdYkSSkiDaSL2H+F+9gmrSH0MrwUaKSH/i0IwBsVjS6X7+8pxhYOok9obVtI0F4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741172581; c=relaxed/simple;
-	bh=rGJv2pMYOWgOkuJv/QdJlZWmnY/QX+rPMnbrawdSm8M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J3WJC2N47eZ9EGRJ5f1UOzsOpasNz3mdfvteu9sqwox/oFb1quEtB9csFxPXyQurjYQPmO6IJ1D+prlQ3GK8DXGhPlaPj/DJ+kLB/GDDGdJnIdiP3vHDnm8fnwvd5zcxQddukStceb43WgzWI60S3EyPA2AtlNVuAY9ZhgM4LqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t+W0SDdm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741177469; c=relaxed/simple;
+	bh=Wba23t8y4zeAzzGOgYyj3RMEi3ZmOBs6WmgEB1JM6xs=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=pI8gKLkM91ns3p+Bl6Pfqg5fCyZqZ+cfIwnE0NoOWMeNXEO4yEkPKNX3P/HxeY6mXjbwuQXG4UBGIr2JbbpSV5+uaqhB7zh4jNueg7czGM+Jm6wu5m0ZxSsuJZbug/e3DKUafM9xqsE0QNbw80cpmyYkjQcGOjkt3SNohw94W/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=iX+VRdPu; arc=none smtp.client-ip=95.215.58.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t+W0SDdm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB79AC4CEE2;
-	Wed,  5 Mar 2025 11:02:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741172580;
-	bh=rGJv2pMYOWgOkuJv/QdJlZWmnY/QX+rPMnbrawdSm8M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=t+W0SDdmuFH/fy2F4X2vmwmZmw8TLa3gGMQdlozWhJ39ZicCwr2e5witl5Yy8K15K
-	 5UiUXkCqUnSOEwLX3PSQDNZQf/CmNcaRBdbzXx7JJEiS9XvG+I7jsVvP7VlCDuGRmf
-	 GPuh4/D7ReBU7J3IMKMShLnjNTEuYSlQ/+ZMK8cVexYeYTY8alHVZNDdie1Tshpw26
-	 BF1NfocQFIMrRMbyg8JARr3JMNx9aODQKuZ1F8VGCekQi4AYKb3WmA9weTqsNxJ+pd
-	 /5Bjo0ilP70Z8CrlyYL8fP5uqV86aFNuVFFYrTvuMHl2zCZ/lyZFdh7Oig7RJBp1wS
-	 cIozVZQZkwNgA==
-Date: Wed, 5 Mar 2025 12:02:56 +0100
-From: Ingo Molnar <mingo@kernel.org>
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
-	Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [tip: perf/core] perf/x86: Annotate struct bts_buffer with
- __counted_by()
-Message-ID: <Z8gvYIYXMHRC-btB@gmail.com>
-References: <20250304183056.78920-2-thorsten.blum@linux.dev>
- <174111554764.14745.14213573362217486017.tip-bot2@tip-bot2>
- <Z8gW1rihV0aIp8Oo@gmail.com>
- <04A79410-77DA-40F9-8904-44DC2DE1E810@linux.dev>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="iX+VRdPu"
+Content-Type: text/plain;
+	charset=us-ascii
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1741177464;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PaXpS2qkRKWHzM6dsXV1e2J5mXqRVuhX+G+d5r7JJMk=;
+	b=iX+VRdPuH9ACyHY1AGshnkdwBKtlzIS2BUu9J8U03WQUDacjSygQIZ1GncW2L7PPMp5xu1
+	DX+o00cUrv0E4qkO/QfEOc4h8Dzia4w0KwbAI/kwOQa9Dxm/RBqKapSizeviuDpbmWGoEg
+	2xBpIPVfF1D3KhYHTKOHTL4pZLoaSdw=
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <04A79410-77DA-40F9-8904-44DC2DE1E810@linux.dev>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51.11.1\))
+Subject: Re: [tip: perf/core] perf/x86: Annotate struct bts_buffer with
+ __counted_by()
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Thorsten Blum <thorsten.blum@linux.dev>
+In-Reply-To: <Z8gvYIYXMHRC-btB@gmail.com>
+Date: Wed, 5 Mar 2025 13:24:11 +0100
+Cc: linux-kernel@vger.kernel.org,
+ linux-tip-commits@vger.kernel.org,
+ Peter Zijlstra <peterz@infradead.org>,
+ x86@kernel.org,
+ linux-hardening@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <0921EF60-73BB-481C-AC5E-152470BBAB79@linux.dev>
+References: <20250304183056.78920-2-thorsten.blum@linux.dev>
+ <174111554764.14745.14213573362217486017.tip-bot2@tip-bot2>
+ <Z8gW1rihV0aIp8Oo@gmail.com> <04A79410-77DA-40F9-8904-44DC2DE1E810@linux.dev>
+ <Z8gvYIYXMHRC-btB@gmail.com>
+To: Ingo Molnar <mingo@kernel.org>
+X-Migadu-Flow: FLOW_OUT
 
+On 5. Mar 2025, at 12:02, Ingo Molnar wrote:
+> * Thorsten Blum <thorsten.blum@linux.dev> wrote:
+>> On 5. Mar 2025, at 10:18, Ingo Molnar wrote:
+>>> Actually, on a second thought:
+>>>=20
+>>>> - buf =3D kzalloc_node(offsetof(struct bts_buffer, buf[nbuf]), =
+GFP_KERNEL, node);
+>>>> + buf =3D kzalloc_node(struct_size(buf, buf, nbuf), GFP_KERNEL, =
+node);
+>>>=20
+>>> Firstly, in what world is 'buf, buf' more readable? One is a member =
+of=20
+>>> a structure, the other is the name of the structure - and they =
+match,=20
+>>> which shows that this function's naming conventions are a mess.
+>>>=20
+>>> Which should be fixed first ...
+>>=20
+>> Yes, I noticed this too, but since buf->buf[] is used all over the =
+place
+>> (also in other functions), I didn't rename it in this patch.
+>>=20
+>> We could just keep offsetof(struct bts_buffer, buf[nbuf]), or use
+>> struct_size_t(struct bts_buffer, buf, nbuf) and still benefit from
+>> additional compile-time checks, or rename the local variable to =
+struct
+>> bts_buffer *bts and use struct_size(bts, buf, nbuf), for example. Any
+>> preferences or other ideas?
+>=20
+> To clean up this code before changing it, so that the changes become=20=
 
-* Thorsten Blum <thorsten.blum@linux.dev> wrote:
+> obvious to review.
+>=20
+> Please also split out the annotation for instrumentation, it's =
+separate=20
+> from any struct_size() changes, right?
 
-> On 5. Mar 2025, at 10:18, Ingo Molnar wrote:
-> > Actually, on a second thought:
-> > 
-> >> - buf = kzalloc_node(offsetof(struct bts_buffer, buf[nbuf]), GFP_KERNEL, node);
-> >> + buf = kzalloc_node(struct_size(buf, buf, nbuf), GFP_KERNEL, node);
-> > 
-> > Firstly, in what world is 'buf, buf' more readable? One is a member of 
-> > a structure, the other is the name of the structure - and they match, 
-> > which shows that this function's naming conventions are a mess.
-> > 
-> > Which should be fixed first ...
-> 
-> Yes, I noticed this too, but since buf->buf[] is used all over the place
-> (also in other functions), I didn't rename it in this patch.
-> 
-> We could just keep offsetof(struct bts_buffer, buf[nbuf]), or use
-> struct_size_t(struct bts_buffer, buf, nbuf) and still benefit from
-> additional compile-time checks, or rename the local variable to struct
-> bts_buffer *bts and use struct_size(bts, buf, nbuf), for example. Any
-> preferences or other ideas?
+Yes, I'll send a v2 with the __counted_by() annotation and submit a
+separate patch for struct_size() and other changes.
 
-To clean up this code before changing it, so that the changes become 
-obvious to review.
+>>> I'm also not sure the code is correct ...
+>>=20
+>> Which part of it?
+>=20
+> The size calculation. On a second reading I *think* it's correct, but=20=
 
-Please also split out the annotation for instrumentation, it's separate 
-from any struct_size() changes, right?
+> it's unnecessarily confusing due to the buf<->buf aliasing.
+>=20
+> So in a cleaned up version of the code:
+>=20
+> - If we name 'struct bts_buffer' objects 'bb'
+> - and bb:buf[] is the var-array
+> - and we rename 'nbuf' to 'nr_buf' (the number of bb:buf[] elements)
+>=20
+> then the code right now does:
+>=20
+>       bb =3D kzalloc_node(offsetof(struct bts_buffer, bb[nr_buf]), =
+GFP_KERNEL, node);
+>=20
+> ... which looks correct.
 
-> > I'm also not sure the code is correct ...
-> 
-> Which part of it?
+If bb:buf[] is the flexible array, it should be buf[nr_buf] like this:
 
-The size calculation. On a second reading I *think* it's correct, but 
-it's unnecessarily confusing due to the buf<->buf aliasing.
-
-So in a cleaned up version of the code:
-
-  - If we name 'struct bts_buffer' objects 'bb'
-  - and bb:buf[] is the var-array
-  - and we rename 'nbuf' to 'nr_buf' (the number of bb:buf[] elements)
-
-then the code right now does:
-
-        bb = kzalloc_node(offsetof(struct bts_buffer, bb[nr_buf]), GFP_KERNEL, node);
-
-... which looks correct.
+	bb =3D kzalloc_node(offsetof(struct bts_buffer, buf[nr_buf]), =
+GFP_KERNEL, node);
 
 Thanks,
+Thorsten
 
-	Ingo
