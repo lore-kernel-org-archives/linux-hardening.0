@@ -1,65 +1,65 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 747401DE8A5
-	for <linux-hardening@vger.kernel.org>; Wed,  5 Mar 2025 08:20:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 641FE1F5836
+	for <linux-hardening@vger.kernel.org>; Wed,  5 Mar 2025 08:21:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741162825; cv=none; b=SVZA/oDA8daLSAFfz2Qs36AvX8dskANeFHSFFWvbGrHmgh5mn6jUcur40yP2HCL1FAwcU3/RT110JxDfdAOZLEz8OIs5BBIg+xgTo0YD77okwAfGwtZdnPCdyKzvmCTpmyNzykGFPxYFEf4GrDP60u1Cz879gSX1TXJCZMXQ7hY=
+	t=1741162899; cv=none; b=QaraKYhfgSt2NDGfQpS9FZw0CdtB9W6mLB7Y1GODpfJMrUd9sEikZ2LYuH7rGgJG555DkX7eMvqO2cnX10UQUdFSgQDBPh61SYxBVF5vJVr4bR7PPhKJKf5dAXZUZsoDyMDvcC1Y0r2EUD/BumPpl50b0fcrLhvtE1mmI6OcT1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741162825; c=relaxed/simple;
-	bh=RWpWc+faJ0YZsTPx4jkXwG1vJYFHTnCeCj6HQ2ZWZ8Q=;
+	s=arc-20240116; t=1741162899; c=relaxed/simple;
+	bh=Dd3fU7x3Zyy9J91IPT2gBtr3RmiUZhQvAeaOmlAbIPA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SiVO7ONyc+vniUsl668B534jSRB1+Ul385S0NgsBvdJMIiJoXObW40ONaK6E2ap7rIkpj7fycKzsCZXrGaYsvwM7O/pV1ehR2hWaK2fsy/xZZbOqgoS0Vz6BactflOjJGrOGOytvcIYzYoILFlWU15UxsisO7i3WjsBi1F07dco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org; spf=none smtp.mailfrom=blackwall.org; dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b=03cl7met; arc=none smtp.client-ip=209.85.218.44
+	 In-Reply-To:Content-Type; b=BC5aSKoJy8cKh2xdLgWb+z5yTK65w3txHlOakHfo4as8kNPLZWbRUHd4TUJYYE0onreBNKRhCQiF3f9BVTHa80oi2QOpLQeVwpFyqkrzuCqhTnkjeA77Vmh46WjYafFmGQgKKfOiHY3ddBeoLBs1/RPqjACb96dafpr7mEE9JfY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org; spf=none smtp.mailfrom=blackwall.org; dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b=A2bhTYH2; arc=none smtp.client-ip=209.85.218.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=blackwall.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b="03cl7met"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ac21c5d0ea0so19494066b.2
-        for <linux-hardening@vger.kernel.org>; Wed, 05 Mar 2025 00:20:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b="A2bhTYH2"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-abf45d8db04so661976466b.1
+        for <linux-hardening@vger.kernel.org>; Wed, 05 Mar 2025 00:21:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=blackwall-org.20230601.gappssmtp.com; s=20230601; t=1741162821; x=1741767621; darn=vger.kernel.org;
+        d=blackwall-org.20230601.gappssmtp.com; s=20230601; t=1741162896; x=1741767696; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=DZ9TMmWBCnKwhuUOANBJp50uacRGJFZ/d6Ba0SS8K6o=;
-        b=03cl7metXI1cLSykSQ15A0v9urzKwbn0ZkT+OxAUedRRVCcXmLO4k/5QngaDzqWWxx
-         OJpFu0+eWvnv/Sj3U1pIo1XkyZXjKxeLn2K11hS2ZyZmSACwCW1dxHknTMgct0ASxAP8
-         svykkAMIMCcArfI0VNMDN+dnaBE7rjvYnER16lHjGb/pweLNbHe/U0rLhR3vVOl3coRw
-         HKggazQcB8fgfDAp9j0I1qh9v9+BNbiTaL7o4dLv0klNKODMsAqt1/uWNoGvtwMIyplc
-         2WhF0vJI9xcORt0EiyhdFVep21WwHSiVHd8kw4DOsRavKYAhBZauJ/MB/Uf2vvVnmJ+1
-         Hnlw==
+        bh=Nsv6iruxF/55s5GG7wPPBagKb4juSNlpcghKgAFq1qg=;
+        b=A2bhTYH2IUKPMamHYkFV5kaQY8j11XM1Rkzkh8OksbViihKIHdIyYaOl68RIpO6mJ9
+         0hS5ZGLixOaBzMhOI+yG6WhYFTQ4GvqL9Nc/G3etuoWG7vQVXGzS+zuwOJPAXifC/UTl
+         XF/kDOlaCo9md4uupo/S3HQC0igucI4fKqBDm52qzqnPbGZwkujc/SsZj7uw3a/yqdsK
+         R2R5d+LjtiqUYkiv8EgQiG4rLJm21gZmemC1eIyLxXGlwhxKO3jmhAf8UIXj0PwCpkfj
+         sGTOddwdQTN5kI4jOrmHFMWg2zZHCLBhrGM/Fzp0lRv+M3RkPsvVT00gLuCjUT+aoHAy
+         Qp3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741162821; x=1741767621;
+        d=1e100.net; s=20230601; t=1741162896; x=1741767696;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DZ9TMmWBCnKwhuUOANBJp50uacRGJFZ/d6Ba0SS8K6o=;
-        b=FWA5t0iKeOXWPc4CWcaah/CsKkZddMxcc5lkROecyXszPXCudF9cvV+OiFc6ALWc9/
-         kZW7JdnMAxuLNW82hM1qsPTS9l3OCCb5kNox+r+Zd/C03CWBCQqrd+G3USyVtZCjx5Iv
-         9Ms3uSlzrJSmf1m0255gVzBHWDt5FI3yzLZrxACBS4dYCr3QDGdiUiJ3h3MGkBaJD5Y1
-         XrDgF9Bgf90fKu+UoL5ZELthHLHBz4jYsG39P1MKoMThZDukD2uxr8r2ANbaCB+OeIKB
-         X1CIrl/xo5YyiY+A7iFH0LnC3+PbRAMiBEsG3Fc+zsMsta2jZVTBohIRizqL0HYjcjWB
-         PWdw==
-X-Forwarded-Encrypted: i=1; AJvYcCUBrxroC8ddzWsPE42IloKWB9mdvTwtkPg7WofbsVfqURsf/+WPDZueB3YAgKomBQ7vxgkkN7uT46+KsV5JFmQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yybq5pOLSNCFYqRQ94cmCJjk0ua5mlb4chR7CobO6VKaTBrXbRo
-	Q6/kL+L4O1ejESTByCrmWwdpQBXoBhS572aD1ZzaSzSn5/uiiQJ4n+87tz6WClw=
-X-Gm-Gg: ASbGncvGpdFck6+BoFYd6YGfArgf25HHrwewHSr0E41+NZvGMnCNnYnvlyTTCoUyi0w
-	1HUnBBMdvBEWD0sf1axSppssv/zedMgXqImqgA4/9NghUIEcZVZpNUAv9fOoW5+FVxa11f1M91m
-	UeLZ3ux3j4aTFRdlVc6F5B8V/ubDbPUgg//wHO7s9SzbbG8YbV4wbPhphSayPhRT652bB3AX+9s
-	hKTtK9O33J0ulTmkr1s00B6Le2bYSuEdftNlGCDS3rwM9vBSh829nGEZg6Wr2/5QMfyanx2Qz5e
-	Qu9ctzQ6JhbDpTFZ+QyxHjhKLmt7emXFxh6OMoyLxqEpuBGqFc9AznJFjRHN19Z3AkLnFslTsBP
-	d
-X-Google-Smtp-Source: AGHT+IG3uX4osOFdkeIE8BVoOkaHQ2eM06ismAlJEsM6OrJRVb5spjiMCAH7SqlSZ6VKBFc01zjVCQ==
-X-Received: by 2002:a05:6402:2714:b0:5dc:6e27:e6e8 with SMTP id 4fb4d7f45d1cf-5e59f47ced8mr4078134a12.24.1741162821234;
-        Wed, 05 Mar 2025 00:20:21 -0800 (PST)
+        bh=Nsv6iruxF/55s5GG7wPPBagKb4juSNlpcghKgAFq1qg=;
+        b=ay/xac3Qpw+LLZgfo3/Kd/5AVZ2n/lyCzETDeiO/IkZFENzyUswHICCMjGpDTRxd/X
+         /Hq1oU/7IH2M+Xgk4XwhnoR7qDXH56FOi/23+2dlLxIwD9K/3dVuX3j+bLL8rSlLf6SZ
+         z6PdIBPRuqWZZH5tMuaH3TrwEdAXuY+oBbQaxwl5eCuW2GxC/+oDWmeaueVrMqAqrIHD
+         Ud0+uWQbmAirXe2eZhD2M/uQ/lL/YXkvoV0U/TAxQKvrlGF1fPSj7Plr/bFl2mcSeDwV
+         IiE52DtmSJoKDzWJtF+1Mt6BO8mkGzNAgVu+27rPPli/OLVEu9Hu0fugVAKExNgqgDfA
+         S3wg==
+X-Forwarded-Encrypted: i=1; AJvYcCUzoo0MUYZkaM6zZTYYegBs5FHX8PVTU5kxFHa0aUZJMzW501dRhpiSmcGEPQk2aM7BGAhxA+8YKCOga/Tsk0c=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz04dTFxtKyKv3q1qd8w1fUYXrlDcjFRrzDXRtFd97GUEQI+ZWg
+	YXGj/m1I+48j4MASDlcR61N1QcGcAf3/ppvRyDk9IPv9v1OGXy2IOZoscn5uSxE=
+X-Gm-Gg: ASbGncvW5dd49uLR21ujJnluxINNCfHUvWIgjI7WaCAON14Q8EoWwtk4oNblfkkwwWY
+	jHwaa/D/r1pB66laemL8/yWGM39/xJylw7csghEf6bwpaRfcwXmeCJkgPRzZWwrnZ/bI3D7wHyh
+	Qz2D3Up8zIoI0w1Ny27PZuNpA+i/7LEyfH7elJI50WVyAB6Grcto6WEwFsAildvQ5rKkEiZ9/ql
+	SAT1KD68VCZfCRxDJV63ZRHG0o1F1xN317fQ0Ty3+mTREj6WU/0mc/rGIF4f/m/JbUr9+74oWzc
+	MBVfsKGI97ISDsNYNYvQ4g0Mzvb1Y57liIXJrSBwpe4mK2H/Q11eSx/6NF+tweJRZ1Wg4WbXmh8
+	y
+X-Google-Smtp-Source: AGHT+IGaoXnq3lSxzaaUwAuVfK+jenlYaXFrv+TPSgSHSnmbmoUQLeCI462sahYSphebEzq/qYnUHQ==
+X-Received: by 2002:a17:907:7f0b:b0:ac1:fb60:2269 with SMTP id a640c23a62f3a-ac20d925048mr217259766b.27.1741162895402;
+        Wed, 05 Mar 2025 00:21:35 -0800 (PST)
 Received: from [192.168.0.205] (78-154-15-142.ip.btc-net.bg. [78.154.15.142])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abf3f3bbfb3sm845989066b.77.2025.03.05.00.20.19
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abf58804b49sm693744066b.26.2025.03.05.00.21.33
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Mar 2025 00:20:20 -0800 (PST)
-Message-ID: <2690fc33-0646-4aff-aacf-2760706139e1@blackwall.org>
-Date: Wed, 5 Mar 2025 10:20:18 +0200
+        Wed, 05 Mar 2025 00:21:34 -0800 (PST)
+Message-ID: <b3b5418c-65d5-48bf-8868-2d9abcb4f758@blackwall.org>
+Date: Wed, 5 Mar 2025 10:21:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -67,8 +67,8 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 net-next 04/15] netfilter: bridge: Add conntrack double
- vlan and pppoe
+Subject: Re: [PATCH v8 net-next 01/15] net: pppoe: avoid zero-length arrays in
+ struct pppoe_hdr
 To: Eric Woudstra <ericwouds@gmail.com>,
  Michal Ostrowski <mostrows@earthlink.net>,
  Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
@@ -92,22 +92,34 @@ Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-mediatek@lists.infradead.org, linux-hardening@vger.kernel.org,
  Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
 References: <20250228201533.23836-1-ericwouds@gmail.com>
- <20250228201533.23836-5-ericwouds@gmail.com>
+ <20250228201533.23836-2-ericwouds@gmail.com>
 Content-Language: en-US
 From: Nikolay Aleksandrov <razor@blackwall.org>
-In-Reply-To: <20250228201533.23836-5-ericwouds@gmail.com>
+In-Reply-To: <20250228201533.23836-2-ericwouds@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 2/28/25 22:15, Eric Woudstra wrote:
-> This adds the capability to conntrack 802.1ad, QinQ, PPPoE and PPPoE-in-Q
-> packets that are passing a bridge.
+> Jakub Kicinski suggested following patch:
+> 
+> W=1 C=1 GCC build gives us:
+> 
+> net/bridge/netfilter/nf_conntrack_bridge.c: note: in included file (through
+> ../include/linux/if_pppox.h, ../include/uapi/linux/netfilter_bridge.h,
+> ../include/linux/netfilter_bridge.h): include/uapi/linux/if_pppox.h:
+> 153:29: warning: array of flexible structures
+> 
+> It doesn't like that hdr has a zero-length array which overlaps proto.
+> The kernel code doesn't currently need those arrays.
+> 
+> PPPoE connection is functional after applying this patch.
 > 
 > Signed-off-by: Eric Woudstra <ericwouds@gmail.com>
 > ---
->  net/bridge/netfilter/nf_conntrack_bridge.c | 83 ++++++++++++++++++----
->  1 file changed, 71 insertions(+), 12 deletions(-)
->
+>  drivers/net/ppp/pppoe.c       | 2 +-
+>  include/uapi/linux/if_pppox.h | 4 ++++
+>  2 files changed, 5 insertions(+), 1 deletion(-)
+> 
 
 Reviewed-by: Nikolay Aleksandrov <razor@blackwall.org>
 
