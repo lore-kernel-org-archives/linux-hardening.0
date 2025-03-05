@@ -1,176 +1,358 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A0378635D;
-	Wed,  5 Mar 2025 15:12:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85C9A2505A0
+	for <linux-hardening@vger.kernel.org>; Wed,  5 Mar 2025 15:30:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741187577; cv=none; b=g99hbq/n6SUEvIOD0K0G1w4ZpTgvxwnBE7XnBiYhOcJqj4tkJyKRSQ7EimPYVbJgAtWTu85fHUmlplG6QiVp3TGmbG0358gbnPJuilEof891iWj968nQAEbNH9wvsZyeA/C12DhvFvSv3va9BF6Gnau33a/rbi3th0ANwn9WcMo=
+	t=1741188614; cv=none; b=fksTRI/oMD1rLUey+JUH9Z0aDAciwzb1/EVlK89XxU5EH2JuSFsEqF0DdISPSO/1tUaJMimsk/BhsVjVHaVQnt3DhgLkzT0Tc8zmJ7CAcOota0wDOEcEfUzZF1Fx2KJbV53iqMSwwaDnUWz0Pgct9Sepy46asQrrfySalmcEE10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741187577; c=relaxed/simple;
-	bh=4zHaL04CB0Fya4HCFRotOuAVke6Rb0AyD3EyARxmoZE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MURhALZuqJgHXPLn58NIj2hWCLV8Fa+LsqLSHLa8mSlLPUZQB/uu8J7cLU8ji18bvJg6GQ1Nj3w0YTjRhJxxWsu4WuxiMe+wQN0gCIQTcLD0M4sFKdnKF6r2E/QusQ+Q/sdyeHjzKMQIivul+a6xGXtN6dGfSfvFXkZfRVj+uHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G/fiRUVw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741188614; c=relaxed/simple;
+	bh=gHVlgN101n3+XVq8QXEPU23oKAm13pn+ne80d5rhJzw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SuLQSh6oSt4v0O5HwhbH6Qn/LXmTfTdOGNydwmTB6O/7ZpIMdZU/xehhm3WRYEubMON5+j5t02jkKMdSrfLG392vzysf4gcTIFLFFX5psGOMJnI1c81qyaWp4bzET7ui1c7wUNKC8AsnDWYzxaLiU52gKN7nvHBSn4FGw79ppxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=aAkjUc4o; arc=none smtp.client-ip=209.85.167.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G/fiRUVw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 858D5C4CED1;
-	Wed,  5 Mar 2025 15:12:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741187576;
-	bh=4zHaL04CB0Fya4HCFRotOuAVke6Rb0AyD3EyARxmoZE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=G/fiRUVwGRsFHKTa7NN3r6GwkLo1RlvTiHhJlIKJdwnkqsjdGIUwSwR8Mr8k6Xkxy
-	 wbl+IxpLDDKH24bvfRPfh2YO6TddwmUJHjWy1d++9vByaZtWgHZRG2yae7kj2zq4RV
-	 gY6NqLyXTZpyPrZUqon0DgXHM5/VxY6433iWU23qNBbttiMozpGlmGhBEcNQeVi4Y9
-	 TijtoFVKRBs3KRq+ALxYAdtm2uinBvBvcDvL1ez96H7wtXPETjPSS+CwVLLqVG3oyH
-	 uFjd5MdSiXGxMEW0x1Z2AnPr5cYlwadRZJ0dtBK9ujqfDfdhHB9h8NajCHQ0/rzwtI
-	 woXWbl7OHqSDA==
-Date: Wed, 5 Mar 2025 16:12:51 +0100
-From: Nathan Chancellor <nathan@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
-	llvm@lists.linux.dev, Geert Uytterhoeven <geert+renesas@glider.be>,
-	David Gow <davidgow@google.com>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	Jeff Johnson <quic_jjohnson@quicinc.com>,
-	Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] kunit/stackinit: Use fill byte different from Clang i386
- pattern
-Message-ID: <20250305151251.GA1538566@ax162>
-References: <20250304225606.work.030-kees@kernel.org>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aAkjUc4o"
+Received: by mail-oi1-f169.google.com with SMTP id 5614622812f47-3f427baa7caso156772b6e.2
+        for <linux-hardening@vger.kernel.org>; Wed, 05 Mar 2025 07:30:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1741188611; x=1741793411; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UEdRnbd6ElHaf0cylSreE5si0Xhw1DFHYyknOm0Ao9g=;
+        b=aAkjUc4oPF2QdI1DCfTGId2n+mOWbk5IryzHhT0n3WiQNdhEVVy0L0ukT6JJmt3Lyx
+         T/DdLtq9lNfcfe1DPgl7HZUrv2kZ/ov0ZZV8GEQj4V9NhFQlVu+vMjUMH6hzDFMLGiDk
+         sSLkvEa6NlsLiI0S4E58gso9CoL9MwxDlPJtI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741188611; x=1741793411;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UEdRnbd6ElHaf0cylSreE5si0Xhw1DFHYyknOm0Ao9g=;
+        b=GNRmHEyVPmzwqeTJNKsrIiUbiW9vdV6TJJwHvD41H7N3Bk/G27Xfku6Q7tnmMBk0Ma
+         OemPBVjGHVWlkDAxLeifQbMls9gZ1uTh++ryio/+O8wQji81XMIViXcz4/bjzwWOWhiM
+         Pru4m/z3L1bjzFNMJrDa+RXY7jSBb0QCvX6LyrDLqBjOSyNehMWcETISn5//Imy+GYvk
+         sNE+5gIfLprstiqlJfp3o2gp3tH9hF/oeQZ8pctG9t57Mp0aaU+jhAxZudJf6zuPoj7x
+         OeRxv7GT31DuYXjY/uqEGTaG5UERHbvBm1Ssrd+VB57bDK+//dhVgIn52PP1vJeVkB1T
+         Fhrg==
+X-Forwarded-Encrypted: i=1; AJvYcCVwZy2OoauUT2/3IOXEjLyDZQ05JWzUHc8bARiXJK8AOTODCJUCbdsmhd3k/GnD1QhcTOF7A14pJlAHVoB5JEA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZcP9T6FW99Rh9m6VlrZExFWMRVQ9boKpev6bh+LUkZfhASU0a
+	Il+rSd3ksm8YV7Jjmi0pxXWFa8gXkUKnGdwulMQ8YkQ8K8/pc+HHY8xlaTU6XQq9l/qRQVj47Vj
+	C++oxgqMOeTLDlp8WaVC88EHva8plg7pcEsZn
+X-Gm-Gg: ASbGncs/lxad8m5DsDzRnvZZuOHjBmm2p4m/Kxx7E4d6m/0jVZwJGEYin2PTPm7+U8/
+	vTlWYK+b0mJsihCVokIdhlu32N2vJkqaVTNBOGm3PEIzRHRqTHHLS9kjc/r3nD0CiahydIBPInv
+	tNAzb76bXrrKRhTqkZbBPavxy6EqUEhspWYPevjW8rHjSa1nbrB8ZeV3kZnvM=
+X-Google-Smtp-Source: AGHT+IHSB04tBSW+Z7KYy5xTLyH1se2r+v919O73Ygx407YmZX9n7zbmBy8DtITaRXN/cqKLUXbKwVYEidOnAMnJqKE=
+X-Received: by 2002:a05:6808:181c:b0:3f6:769b:56e8 with SMTP id
+ 5614622812f47-3f6831fe2a2mr745572b6e.7.1741188611147; Wed, 05 Mar 2025
+ 07:30:11 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250304225606.work.030-kees@kernel.org>
+References: <20250305021711.3867874-1-jeffxu@google.com> <dfc9d260-ad0d-404d-8b90-fbcc5ce212df@lucifer.local>
+In-Reply-To: <dfc9d260-ad0d-404d-8b90-fbcc5ce212df@lucifer.local>
+From: Jeff Xu <jeffxu@chromium.org>
+Date: Wed, 5 Mar 2025 07:29:59 -0800
+X-Gm-Features: AQ5f1JpmPA1PDfBWtfjrkZLUmrQFxsJpyVBNI69QbozoCWMZFvLED0uZhWOGskk
+Message-ID: <CABi2SkX2zLNPdQMuS6JmYPaQCRa3WeKYa74rGu3UfmvqZY+HbA@mail.gmail.com>
+Subject: Re: [PATCH v9 0/7] mseal system mappings
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: akpm@linux-foundation.org, keescook@chromium.org, jannh@google.com, 
+	torvalds@linux-foundation.org, vbabka@suse.cz, Liam.Howlett@oracle.com, 
+	adhemerval.zanella@linaro.org, oleg@redhat.com, avagin@gmail.com, 
+	benjamin@sipsolutions.net, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, linux-mm@kvack.org, 
+	linux-kselftest@vger.kernel.org, jorgelo@chromium.org, sroettger@google.com, 
+	hch@lst.de, ojeda@kernel.org, thomas.weissschuh@linutronix.de, 
+	adobriyan@gmail.com, johannes@sipsolutions.net, pedro.falcato@gmail.com, 
+	hca@linux.ibm.com, willy@infradead.org, anna-maria@linutronix.de, 
+	mark.rutland@arm.com, linus.walleij@linaro.org, Jason@zx2c4.com, 
+	deller@gmx.de, rdunlap@infradead.org, davem@davemloft.net, peterx@redhat.com, 
+	f.fainelli@gmail.com, gerg@kernel.org, dave.hansen@linux.intel.com, 
+	mingo@kernel.org, ardb@kernel.org, mhocko@suse.com, 42.hyeyoo@gmail.com, 
+	peterz@infradead.org, ardb@google.com, enh@google.com, rientjes@google.com, 
+	groeck@chromium.org, mpe@ellerman.id.au, aleksandr.mikhalitsyn@canonical.com, 
+	mike.rapoport@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 04, 2025 at 02:56:11PM -0800, Kees Cook wrote:
-> The byte initialization values used with -ftrivial-auto-var-init=pattern
-> (CONFIG_INIT_STACK_ALL_PATTERN=y) depends on the compiler, architecture,
-> and byte position relative to struct member types. On i386 with Clang,
-> this includes the 0xFF value, which means it looks like nothing changes
-> between the leaf byte filling pass and the expected "stack wiping"
-> pass of the stackinit test.
-> 
-> Use the byte fill value of 0x99 instead, fixing the test for i386 Clang
-> builds.
-> 
-> Reported-by: ernsteiswuerfel
-> Closes: https://github.com/ClangBuiltLinux/linux/issues/2071
-> Fixes: 8c30d32b1a32 ("lib/test_stackinit: Handle Clang auto-initialization pattern")
-> Signed-off-by: Kees Cook <kees@kernel.org>
+On Tue, Mar 4, 2025 at 9:51=E2=80=AFPM Lorenzo Stoakes
+<lorenzo.stoakes@oracle.com> wrote:
+>
+> On Wed, Mar 05, 2025 at 02:17:04AM +0000, jeffxu@chromium.org wrote:
+> > From: Jeff Xu <jeffxu@chromium.org>
+> >
+> > This is V9 version, addressing comments from V8, without code logic
+> > change.
+> >
+> > -------------------------------------------------------------------
+> > As discussed during mseal() upstream process [1], mseal() protects
+> > the VMAs of a given virtual memory range against modifications, such
+> > as the read/write (RW) and no-execute (NX) bits. For complete
+> > descriptions of memory sealing, please see mseal.rst [2].
+> >
+> > The mseal() is useful to mitigate memory corruption issues where a
+> > corrupted pointer is passed to a memory management system. For
+> > example, such an attacker primitive can break control-flow integrity
+> > guarantees since read-only memory that is supposed to be trusted can
+> > become writable or .text pages can get remapped.
+> >
+> > The system mappings are readonly only, memory sealing can protect
+> > them from ever changing to writable or unmmap/remapped as different
+> > attributes.
+> >
+> > System mappings such as vdso, vvar, vvar_vclock,
+> > vectors (arm compat-mode), sigpage (arm compat-mode),
+> > are created by the kernel during program initialization, and could
+> > be sealed after creation.
+> >
+> > Unlike the aforementioned mappings, the uprobe mapping is not
+> > established during program startup. However, its lifetime is the same
+> > as the process's lifetime [3]. It could be sealed from creation.
+> >
+> > The vsyscall on x86-64 uses a special address (0xffffffffff600000),
+> > which is outside the mm managed range. This means mprotect, munmap, and
+> > mremap won't work on the vsyscall. Since sealing doesn't enhance
+> > the vsyscall's security, it is skipped in this patch. If we ever seal
+> > the vsyscall, it is probably only for decorative purpose, i.e. showing
+> > the 'sl' flag in the /proc/pid/smaps. For this patch, it is ignored.
+> >
+> > It is important to note that the CHECKPOINT_RESTORE feature (CRIU) may
+> > alter the system mappings during restore operations. UML(User Mode Linu=
+x)
+> > and gVisor, rr are also known to change the vdso/vvar mappings.
+> > Consequently, this feature cannot be universally enabled across all
+> > systems. As such, CONFIG_MSEAL_SYSTEM_MAPPINGS is disabled by default.
+> >
+> > To support mseal of system mappings, architectures must define
+> > CONFIG_ARCH_SUPPORTS_MSEAL_SYSTEM_MAPPINGS and update their special
+> > mappings calls to pass mseal flag. Additionally, architectures must
+> > confirm they do not unmap/remap system mappings during the process
+> > lifetime. The existence of this flag for an architecture implies that
+> > it does not require the remapping of thest system mappings during
+> > process lifetime, so sealing these mappings is safe from a kernel
+> > perspective.
+> >
+> > This version covers x86-64 and arm64 archiecture as minimum viable feat=
+ure.
+> >
+> > While no specific CPU hardware features are required for enable this
+> > feature on an archiecture, memory sealing requires a 64-bit kernel. Oth=
+er
+> > architectures can choose whether or not to adopt this feature. Currentl=
+y,
+> > I'm not aware of any instances in the kernel code that actively
+> > munmap/mremap a system mapping without a request from userspace. The PP=
+C
+> > does call munmap when _install_special_mapping fails for vdso; however,
+> > it's uncertain if this will ever fail for PPC - this needs to be
+> > investigated by PPC in the future [4]. The UML kernel can add this supp=
+ort
+> > when KUnit tests require it [5].
+> >
+> > In this version, we've improved the handling of system mapping sealing =
+from
+> > previous versions, instead of modifying the _install_special_mapping
+> > function itself, which would affect all architectures, we now call
+> > _install_special_mapping with a sealing flag only within the specific
+> > architecture that requires it. This targeted approach offers two key
+> > advantages: 1) It limits the code change's impact to the necessary
+> > architectures, and 2) It aligns with the software architecture by keepi=
+ng
+> > the core memory management within the mm layer, while delegating the
+> > decision of sealing system mappings to the individual architecture, whi=
+ch
+> > is particularly relevant since 32-bit architectures never require seali=
+ng.
+> >
+> > Prior to this patch series, we explored sealing special mappings from
+> > userspace using glibc's dynamic linker. This approach revealed several
+> > issues:
+> > - The PT_LOAD header may report an incorrect length for vdso, (smaller
+> >   than its actual size). The dynamic linker, which relies on PT_LOAD
+> >   information to determine mapping size, would then split and partially
+> >   seal the vdso mapping. Since each architecture has its own vdso/vvar
+> >   code, fixing this in the kernel would require going through each
+> >   archiecture. Our initial goal was to enable sealing readonly mappings=
+,
+> >   e.g. .text, across all architectures, sealing vdso from kernel since
+> >   creation appears to be simpler than sealing vdso at glibc.
+> > - The [vvar] mapping header only contains address information, not leng=
+th
+> >   information. Similar issues might exist for other special mappings.
+> > - Mappings like uprobe are not covered by the dynamic linker,
+> >   and there is no effective solution for them.
+> >
+> > This feature's security enhancements will benefit ChromeOS, Android,
+> > and other high security systems.
+> >
+> > Testing:
+> > This feature was tested on ChromeOS and Android for both x86-64 and ARM=
+64.
+> > - Enable sealing and verify vdso/vvar, sigpage, vector are sealed prope=
+rly,
+> >   i.e. "sl" shown in the smaps for those mappings, and mremap is blocke=
+d.
+> > - Passing various automation tests (e.g. pre-checkin) on ChromeOS and
+> >   Android to ensure the sealing doesn't affect the functionality of
+> >   Chromebook and Android phone.
+> >
+> > I also tested the feature on Ubuntu on x86-64:
+> > - With config disabled, vdso/vvar is not sealed,
+> > - with config enabled, vdso/vvar is sealed, and booting up Ubuntu is OK=
+,
+> >   normal operations such as browsing the web, open/edit doc are OK.
+> >
+> > Link: https://lore.kernel.org/all/20240415163527.626541-1-jeffxu@chromi=
+um.org/ [1]
+> > Link: Documentation/userspace-api/mseal.rst [2]
+> > Link: https://lore.kernel.org/all/CABi2SkU9BRUnqf70-nksuMCQ+yyiWjo3fM4X=
+kRkL-NrCZxYAyg@mail.gmail.com/ [3]
+> > Link: https://lore.kernel.org/all/CABi2SkV6JJwJeviDLsq9N4ONvQ=3DEFANsiW=
+kgiEOjyT9TQSt+HA@mail.gmail.com/ [4]
+> > Link: https://lore.kernel.org/all/202502251035.239B85A93@keescook/ [5]
+> >
+> > -------------------------------------------
+> > History:
+> >
+> > V9:
+> >  - Add negative test in selftest (Kees Cook)
+> >  - fx typos in text (Kees Cook)
+>
+> You have a bad habit of missing stuff off these logs. Usually I don't
+> comment, as it's trivial, but while we're here :)
+>
+> Please try to keep an accurate log of changes requested so you can popula=
+te
+> these properly.
+>
+> Obviously this is not going to block anything. But for future reference..=
+.
+>
+>   - Add selftest to main selftest Makefile (Lorenzo Stoakes)
+>
+> >
+> > V8:
+>
+> Nit, but no lore link?
+https://lore.kernel.org/all/20250303050921.3033083-1-jeffxu@google.com/
 
-stackinit passes with arm, arm64, i386, and x86_64 when using
-LLVM 20.1.0-rc3. Hopefully they do not change the init pattern :)
+Thanks for noticing this.
 
-Tested-by: Nathan Chancellor <nathan@kernel.org>
-
-> ---
-> Cc: Nathan Chancellor <nathan@kernel.org>
-> Cc: Bill Wendling <morbo@google.com>
-> Cc: Justin Stitt <justinstitt@google.com>
-> Cc: llvm@lists.linux.dev
-> ---
->  lib/tests/stackinit_kunit.c | 30 ++++++++++++++++++++----------
->  1 file changed, 20 insertions(+), 10 deletions(-)
-> 
-> diff --git a/lib/tests/stackinit_kunit.c b/lib/tests/stackinit_kunit.c
-> index 135322592faf..63aa78e6f5c1 100644
-> --- a/lib/tests/stackinit_kunit.c
-> +++ b/lib/tests/stackinit_kunit.c
-> @@ -184,6 +184,15 @@ static bool stackinit_range_contains(char *haystack_start, size_t haystack_size,
->  #define INIT_UNION_assigned_copy(var_type)		\
->  	INIT_STRUCT_assigned_copy(var_type)
->  
-> +/*
-> + * The "did we actually fill the stack?" check value needs
-> + * to be neither 0 nor any of the "pattern" bytes. The
-> + * pattern bytes are compiler, architecture, and type based,
-> + * so we have to pick a value that never appears for those
-> + * combinations. Use 0x99 which is not 0xFF, 0xFE, nor 0xAA.
-> + */
-> +#define FILL_BYTE	0x99
-> +
->  /*
->   * @name: unique string name for the test
->   * @var_type: type to be tested for zeroing initialization
-> @@ -206,12 +215,12 @@ static noinline void test_ ## name (struct kunit *test)		\
->  	ZERO_CLONE_ ## which(zero);				\
->  	/* Clear entire check buffer for 0xFF overlap test. */	\
->  	memset(check_buf, 0x00, sizeof(check_buf));		\
-> -	/* Fill stack with 0xFF. */				\
-> +	/* Fill stack with FILL_BYTE. */			\
->  	ignored = leaf_ ##name((unsigned long)&ignored, 1,	\
->  				FETCH_ARG_ ## which(zero));	\
-> -	/* Verify all bytes overwritten with 0xFF. */		\
-> +	/* Verify all bytes overwritten with FILL_BYTE. */	\
->  	for (sum = 0, i = 0; i < target_size; i++)		\
-> -		sum += (check_buf[i] != 0xFF);			\
-> +		sum += (check_buf[i] != FILL_BYTE);		\
->  	/* Clear entire check buffer for later bit tests. */	\
->  	memset(check_buf, 0x00, sizeof(check_buf));		\
->  	/* Extract stack-defined variable contents. */		\
-> @@ -222,7 +231,8 @@ static noinline void test_ ## name (struct kunit *test)		\
->  	 * possible between the two leaf function calls.	\
->  	 */							\
->  	KUNIT_ASSERT_EQ_MSG(test, sum, 0,			\
-> -			    "leaf fill was not 0xFF!?\n");	\
-> +			    "leaf fill was not 0x%02X!?\n",	\
-> +			    FILL_BYTE);				\
->  								\
->  	/* Validate that compiler lined up fill and target. */	\
->  	KUNIT_ASSERT_TRUE_MSG(test,				\
-> @@ -234,9 +244,9 @@ static noinline void test_ ## name (struct kunit *test)		\
->  		(int)((ssize_t)(uintptr_t)fill_start -		\
->  		      (ssize_t)(uintptr_t)target_start));	\
->  								\
-> -	/* Look for any bytes still 0xFF in check region. */	\
-> +	/* Validate check region has no FILL_BYTE bytes. */	\
->  	for (sum = 0, i = 0; i < target_size; i++)		\
-> -		sum += (check_buf[i] == 0xFF);			\
-> +		sum += (check_buf[i] == FILL_BYTE);		\
->  								\
->  	if (sum != 0 && xfail)					\
->  		kunit_skip(test,				\
-> @@ -271,12 +281,12 @@ static noinline int leaf_ ## name(unsigned long sp, bool fill,	\
->  	 * stack frame of SOME kind...				\
->  	 */							\
->  	memset(buf, (char)(sp & 0xff), sizeof(buf));		\
-> -	/* Fill variable with 0xFF. */				\
-> +	/* Fill variable with FILL_BYTE. */			\
->  	if (fill) {						\
->  		fill_start = &var;				\
->  		fill_size = sizeof(var);			\
->  		memset(fill_start,				\
-> -		       (char)((sp & 0xff) | forced_mask),	\
-> +		       FILL_BYTE & forced_mask,			\
->  		       fill_size);				\
->  	}							\
->  								\
-> @@ -469,7 +479,7 @@ static int noinline __leaf_switch_none(int path, bool fill)
->  			fill_start = &var;
->  			fill_size = sizeof(var);
->  
-> -			memset(fill_start, forced_mask | 0x55, fill_size);
-> +			memset(fill_start, (forced_mask | 0x55) & FILL_BYTE, fill_size);
->  		}
->  		memcpy(check_buf, target_start, target_size);
->  		break;
-> @@ -480,7 +490,7 @@ static int noinline __leaf_switch_none(int path, bool fill)
->  			fill_start = &var;
->  			fill_size = sizeof(var);
->  
-> -			memset(fill_start, forced_mask | 0xaa, fill_size);
-> +			memset(fill_start, (forced_mask | 0xaa) & FILL_BYTE, fill_size);
->  		}
->  		memcpy(check_buf, target_start, target_size);
->  		break;
-> -- 
-> 2.34.1
-> 
+>
+> >   - Change ARCH_SUPPORTS_MSEAL_X to ARCH_SUPPORTS_MSEAL_X (Liam R. Howl=
+ett)
+> >   - Update comments in Kconfig and mseal.rst (Lorenzo Stoakes, Liam R. =
+Howlett)
+> >   - Change patch header perfix to "mseal sysmap" (Lorenzo Stoakes)
+> >   - Remove "vm_flags =3D" (Kees Cook, Liam R. Howlett,  Oleg Nesterov)
+> >   - Drop uml architecture (Lorenzo Stoakes, Kees Cook)
+> >   - Add a selftest to verify system mappings are sealed (Lorenzo Stoake=
+s)
+> >
+> > V7:
+> >   https://lore.kernel.org/all/20250224225246.3712295-1-jeffxu@google.co=
+m/
+> >   - Remove cover letter from the first patch (Liam R. Howlett)
+> >   - Change macro name to VM_SEALED_SYSMAP (Liam R. Howlett)
+> >   - logging and fclose() in selftest (Liam R. Howlett)
+> >
+> > V6:
+> >   https://lore.kernel.org/all/20250224174513.3600914-1-jeffxu@google.co=
+m/
+> >   - mseal.rst: fix a typo (Randy Dunlap)
+> >   - security/Kconfig: add rr into note (Liam R. Howlett)
+> >   - remove mseal_system_mappings() and use macro instead (Liam R. Howle=
+tt)
+> >   - mseal.rst: add incompatible userland software (Lorenzo Stoakes)
+> >   - remove RFC from title (Kees Cook)
+> >
+> > V5
+> >   https://lore.kernel.org/all/20250212032155.1276806-1-jeffxu@google.co=
+m/
+> >   - Remove kernel cmd line (Lorenzo Stoakes)
+> >   - Add test info (Lorenzo Stoakes)
+> >   - Add threat model info (Lorenzo Stoakes)
+> >   - Fix x86 selftest: test_mremap_vdso
+> >   - Restrict code change to ARM64/x86-64/UM arch only.
+> >   - Add userprocess.h to include seal_system_mapping().
+> >   - Remove sealing vsyscall.
+> >   - Split the patch.
+> >
+> > V4:
+> >   https://lore.kernel.org/all/20241125202021.3684919-1-jeffxu@google.co=
+m/
+> >   - ARCH_HAS_SEAL_SYSTEM_MAPPINGS (Lorenzo Stoakes)
+> >   - test info (Lorenzo Stoakes)
+> >   - Update  mseal.rst (Liam R. Howlett)
+> >   - Update test_mremap_vdso.c (Liam R. Howlett)
+> >   - Misc. style, comments, doc update (Liam R. Howlett)
+> >
+> > V3:
+> >   https://lore.kernel.org/all/20241113191602.3541870-1-jeffxu@google.co=
+m/
+> >   - Revert uprobe to v1 logic (Oleg Nesterov)
+> >   - use CONFIG_SEAL_SYSTEM_MAPPINGS instead of _ALWAYS/_NEVER (Kees Coo=
+k)
+> >   - Move kernel cmd line from fs/exec.c to mm/mseal.c and
+> >     misc. (Liam R. Howlett)
+> >
+> > V2:
+> >   https://lore.kernel.org/all/20241014215022.68530-1-jeffxu@google.com/
+> >   - Seal uprobe always (Oleg Nesterov)
+> >   - Update comments and description (Randy Dunlap, Liam R.Howlett, Oleg=
+ Nesterov)
+> >   - Rebase to linux_main
+> >
+> > V1:
+> >  - https://lore.kernel.org/all/20241004163155.3493183-1-jeffxu@google.c=
+om/
+> >
+> > --------------------------------------------------
+> >
+> >
+> >
+> > Jeff Xu (7):
+> >   mseal sysmap: kernel config and header change
+> >   selftests: x86: test_mremap_vdso: skip if vdso is msealed
+> >   mseal sysmap: enable x86-64
+> >   mseal sysmap: enable arm64
+> >   mseal sysmap: uprobe mapping
+> >   mseal sysmap: update mseal.rst
+> >   selftest: test system mappings are sealed.
+> >
+> >  Documentation/userspace-api/mseal.rst         |  20 +++
+> >  arch/arm64/Kconfig                            |   1 +
+> >  arch/arm64/kernel/vdso.c                      |  12 +-
+> >  arch/x86/Kconfig                              |   1 +
+> >  arch/x86/entry/vdso/vma.c                     |   7 +-
+> >  include/linux/mm.h                            |  10 ++
+> >  init/Kconfig                                  |  22 ++++
+> >  kernel/events/uprobes.c                       |   3 +-
+> >  security/Kconfig                              |  21 ++++
+> >  tools/testing/selftests/Makefile              |   1 +
+> >  .../mseal_system_mappings/.gitignore          |   2 +
+> >  .../selftests/mseal_system_mappings/Makefile  |   6 +
+> >  .../selftests/mseal_system_mappings/config    |   1 +
+> >  .../mseal_system_mappings/sysmap_is_sealed.c  | 119 ++++++++++++++++++
+> >  .../testing/selftests/x86/test_mremap_vdso.c  |  43 +++++++
+> >  15 files changed, 261 insertions(+), 8 deletions(-)
+> >  create mode 100644 tools/testing/selftests/mseal_system_mappings/.giti=
+gnore
+> >  create mode 100644 tools/testing/selftests/mseal_system_mappings/Makef=
+ile
+> >  create mode 100644 tools/testing/selftests/mseal_system_mappings/confi=
+g
+> >  create mode 100644 tools/testing/selftests/mseal_system_mappings/sysma=
+p_is_sealed.c
+> >
+> > --
+> > 2.48.1.711.g2feabab25a-goog
+> >
