@@ -1,118 +1,232 @@
-Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F0FF1EA7CD;
-	Thu,  6 Mar 2025 09:37:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 394762E64A;
+	Thu,  6 Mar 2025 10:02:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741253852; cv=none; b=ZRKAYrXbjPeNo9qo9WZ/OBvBypHYPzJvrIx73xYFlxivcoktbNjhmGaKcjmOF/eEthi0aw039o4YzdBvFbxT94X+YLQhmK95lg602ZJuUDLL318x+i09ZDdsb2Q8tBBYNWAFeQvd0TdkbN41hZVvORE7N3nHt2JDscbuozU/QK4=
+	t=1741255338; cv=none; b=lHfb543M/FkwLw+eeoLbA4zQKNJOAyKlPUO10WoME30K0cU685MFUH2vVNQDxLNIJ4WeznMZQRGNeGv/7SQA1yEDELL79+cxM+3s0okq9hFgHUBOta7vC1pFxfRN2lBes+YmCC62eNeZolpqQUBEZ+QGabV3wB7efvnW//Goa2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741253852; c=relaxed/simple;
-	bh=732h9girWgFnvVQvApu9Uvs/bcUr3m8WGqWSmfl21Sc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=skqHLZ2lyY7m2NfrvzsdVn4bgdVGxjVE1fsxBKMs+JRs06TxMlO8ja2X0ZGX9TCvs3nhsueIsKlgGvNdyUp4Sfq6WhCxIDWOS6I9k+37x2YCuvPLcqXg4DTrTHWhoULRRjSJ89EX8V5r+ZR3PGMK5BDJl7EjzxMTOmsABjVL3nk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EC1A9kmx; arc=none smtp.client-ip=209.85.167.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741255338; c=relaxed/simple;
+	bh=4PhF8y6VGkokPsiYhWYkMDRA6AcFOvVZ20VX6LyDvh8=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
+	 In-Reply-To:Content-Type; b=jIT/UjvFzV1ZxMk2NYDTu4bZ95OojgsgJ2ePXQs63Gt54N1zfKlVCWx8RMuvavzUXeVzpKV9bProa3R7oPEQxwYvohGlG1+X7CwIu3t4f4tYe3R9PVnqlMxWIagQ3tG5/nciyC5yAdagpMbK2WThwtnuK1NdyuWnMOSlQdR7m8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=S2xB2lWj; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EC1A9kmx"
-Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-3f546cbf71cso277843b6e.0;
-        Thu, 06 Mar 2025 01:37:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741253850; x=1741858650; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GLprdd91YTpO/D6PCgkynt4/vJgy2iO2mLGTKPJDuBE=;
-        b=EC1A9kmxBpu+T79k3s+O4xp87K3R4whKNkTjStT9WMZ2XLuEhBExK9CujlcAVc2wXl
-         Y0AipswKITTF+EN53Hk9xHGbOhNKP6DnydyyGKJq71KhDjK6GF+6QxkO/P2y53emv6sT
-         U5LiKfmN+zQKqsofeGJpmLjCYEyNAeKmYQ9Ln5KVzIaxfHYgAYPSV28xivOfshEQ4Y5l
-         5KicOYNmE1qDLu+tIUAKS0s6Hf/zd8flQwbX9OwJYs479ikQq25z2glOtW2vo1gYMXNu
-         agVaFqUTiegiCjgAmolsJiOW8kHf6IfT6kVY5IPEWyTgYvi0PH22/nVs79Step9nGRrS
-         KUxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741253850; x=1741858650;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GLprdd91YTpO/D6PCgkynt4/vJgy2iO2mLGTKPJDuBE=;
-        b=Qxr7d6uiLQMrGGntZ+ZHSJTcrhtA+XVBIMzJPvdDNVze9SBEvs+qG2h++xaaATucJm
-         h6sa6yiPgazLUujeNfdDJfiCarMXLO4o64DpUbrILVbc7rYsxPwZIA/iy15uqacvtYum
-         s1Sa/wHk5x74IjO7WcV/M8gzQinqG+k12Nvlgw6Irx8h5hX9+IX29/j2JUJhoswwFR2g
-         71izYPzBzUUmQuu9xtCLm3w8024Mc/9ZbB4+rXRqEO5MFq3JNux9MBx+L25qGtQUIC3j
-         htn9sPPQn02kqzV6t7PmVg7PyHtrfKBHG3OYyoqkhXT3Hx/1OnApLblcHM7CRdhowB7N
-         1avw==
-X-Forwarded-Encrypted: i=1; AJvYcCVcV8gqlRzSgtlQQ3exgiex4IctA7T+R/O32BAZT7M2Mz5kFggcpLZU4DMIlEZ+ACkJ//FeHlupyLB6tu17@vger.kernel.org, AJvYcCXEKQnDYo3PCDU2Q17rTDbeTSYMqS0IqtAzetOgjhw4x2jKCKAWACs9bBb5mj0kUfguCAWliuKpCAP4H2E7tM4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyoVzQsH2FrfIKxKaEQZ/UfLgGnkCX5GygP8+yfBUtK6Vhucldm
-	eTVzoPcj/ZSt1TWXsPTr+pl1fnXBJc9nQkUKI62A8U7HHVFw5tfC+QnyNFz0uqlR66MqVavJ+NV
-	Mu1DG/yXLDlbYrtNx4TjxXowYllHTQUlB
-X-Gm-Gg: ASbGnctSduMhavI7Fj41BoIEaOraxNq+PfGJtPrHSwtGos7U34/DYP1whprVOAVT6IQ
-	0mlHuglqSaTkUb8VC0ZxcMkT56E85X46UPvtsHkcxxXuaBlZel5Mw78vaPtS265v+8OJ+LLADME
-	KeSqrWKn8i4gxG/g+bWGUvU/IM
-X-Google-Smtp-Source: AGHT+IG9A27vX8y4RjMpuxk7loCAGz0dZw9H5VkaAL6LjExFUGPLf0UL66ugvSrUJjKHZoWAZYRZwHUIAF3aSPY3uCk=
-X-Received: by 2002:a05:6808:1901:b0:3f3:fca6:e780 with SMTP id
- 5614622812f47-3f683144936mr3774926b6e.4.1741253850578; Thu, 06 Mar 2025
- 01:37:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="S2xB2lWj"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5268stUI027093;
+	Thu, 6 Mar 2025 10:01:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	GUiNQxR6oXFyrfw8pmpUcgdUr3UYT8uMhlX0EwErzwg=; b=S2xB2lWjBg2sjruf
+	Qioeo9dhbHS8bie7RPugvvpgnWm9GDmfsS78ExNm7PQ8wXuQ5E9WJA1YzLBXtaSg
+	iVBRqa0vKn2LMkafTk9O6AcuKP8XWXCvsrJwRZlHgC8cE1x+fJtJY3U1SUl2L6x1
+	XgRLjPi1wiPbfjnAcfsoPwUuVpm8/b6AUAv5AyOfn6DXQY//oBT7uklBk/Yzti+H
+	jj+e4cyJzDWUFfceXxsMVmm7qRwOPW4gQ9oz2qv9tekLQv50olhcOPqcR6/swP6h
+	Z+dSCngBj9RUBEj5xV/mRUkhl+2le8IX+QujkrIUHavcTiNK2eHM8/3XnjM7ZhwJ
+	iSWRew==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 455p6trhph-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 06 Mar 2025 10:01:58 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 526A1vdl007311
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 6 Mar 2025 10:01:57 GMT
+Received: from [10.253.37.89] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 6 Mar 2025
+ 02:01:51 -0800
+Message-ID: <cffdd8e8-76bc-4424-8cdb-d48f5010686d@quicinc.com>
+Date: Thu, 6 Mar 2025 18:01:49 +0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250225203932.334123-1-thorsten.blum@linux.dev>
-In-Reply-To: <20250225203932.334123-1-thorsten.blum@linux.dev>
-From: Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
-Date: Thu, 6 Mar 2025 10:37:18 +0100
-X-Gm-Features: AQ5f1JqPYte1Y1sfZ1elIHoDjXZLpaJ74CYxKBCuHA-IVr92zEQbBbverVAm8j4
-Message-ID: <CAMeQTsZaE626TpmygVQTXDep-8KiB=HcEo62x+EL=F4Ctfq+wQ@mail.gmail.com>
-Subject: Re: [PATCH] drm/gma500: Replace deprecated strncpy() with strscpy()
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	linux-hardening@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+From: Jie Luo <quic_luoj@quicinc.com>
+Subject: Re: [PATCH net-next v3 04/14] net: ethernet: qualcomm: Initialize PPE
+ buffer management for IPQ9574
+To: Andrew Lunn <andrew@lunn.ch>
+CC: Andrew Lunn <andrew+netdev@lunn.ch>,
+        "David S. Miller"
+	<davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+	<kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>, Lei Wei <quic_leiwei@quicinc.com>,
+        Suruchi Agarwal
+	<quic_suruchia@quicinc.com>,
+        Pavithra R <quic_pavir@quicinc.com>,
+        "Simon
+ Horman" <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook
+	<kees@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        "Philipp
+ Zabel" <p.zabel@pengutronix.de>,
+        <linux-arm-msm@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
+        <quic_kkumarcs@quicinc.com>, <quic_linchen@quicinc.com>,
+        <srinivas.kandagatla@linaro.org>, <bartosz.golaszewski@linaro.org>,
+        <john@phrozen.org>
+References: <20250209-qcom_ipq_ppe-v3-0-453ea18d3271@quicinc.com>
+ <20250209-qcom_ipq_ppe-v3-4-453ea18d3271@quicinc.com>
+ <a79027ed-012c-4771-982c-b80b55ab0c8a@lunn.ch>
+ <c592c262-5928-476f-ac2a-615c44d67277@quicinc.com>
+ <33529292-00cd-4a0f-87e4-b8127ca722a4@lunn.ch>
+Content-Language: en-US
+In-Reply-To: <33529292-00cd-4a0f-87e4-b8127ca722a4@lunn.ch>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=HZbuTjE8 c=1 sm=1 tr=0 ts=67c97296 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=P-IC7800AAAA:8 a=pGLkceISAAAA:8 a=-cV8Hw4QFi719GmBsEsA:9
+ a=QEXdDO2ut3YA:10 a=d3PnA9EDa4IxuAV0gXij:22
+X-Proofpoint-GUID: ORV12Dt2uiUbTZnam6MxJqs5otzzHqIG
+X-Proofpoint-ORIG-GUID: ORV12Dt2uiUbTZnam6MxJqs5otzzHqIG
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-06_04,2025-03-06_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ adultscore=0 mlxscore=0 spamscore=0 clxscore=1015 phishscore=0 bulkscore=0
+ priorityscore=1501 impostorscore=0 suspectscore=0 malwarescore=0
+ mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
+ definitions=main-2503060074
 
-On Tue, Feb 25, 2025 at 9:39=E2=80=AFPM Thorsten Blum <thorsten.blum@linux.=
-dev> wrote:
->
-> strncpy() is deprecated for NUL-terminated destination buffers. Use
-> strscpy() instead and remove the manual NUL-termination.
->
-> Compile-tested only.
->
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
 
-Thanks for the patch.
-Applied to drm-misc-next
 
--Patrik
+On 2/20/2025 11:09 PM, Andrew Lunn wrote:
+> On Thu, Feb 20, 2025 at 10:38:03PM +0800, Jie Luo wrote:
+>>
+>>
+>> On 2/11/2025 9:22 PM, Andrew Lunn wrote:
+>>>> +	/* Configure BM flow control related threshold. */
+>>>> +	PPE_BM_PORT_FC_SET_WEIGHT(bm_fc_val, port_cfg.weight);
+>>>> +	PPE_BM_PORT_FC_SET_RESUME_OFFSET(bm_fc_val, port_cfg.resume_offset);
+>>>> +	PPE_BM_PORT_FC_SET_RESUME_THRESHOLD(bm_fc_val, port_cfg.resume_ceil);
+>>>> +	PPE_BM_PORT_FC_SET_DYNAMIC(bm_fc_val, port_cfg.dynamic);
+>>>> +	PPE_BM_PORT_FC_SET_REACT_LIMIT(bm_fc_val, port_cfg.in_fly_buf);
+>>>> +	PPE_BM_PORT_FC_SET_PRE_ALLOC(bm_fc_val, port_cfg.pre_alloc);
+>>>
+>>> ...
+>>>
+>>>> +#define PPE_BM_PORT_FC_CFG_TBL_ADDR		0x601000
+>>>> +#define PPE_BM_PORT_FC_CFG_TBL_ENTRIES		15
+>>>> +#define PPE_BM_PORT_FC_CFG_TBL_INC		0x10
+>>>> +#define PPE_BM_PORT_FC_W0_REACT_LIMIT		GENMASK(8, 0)
+>>>> +#define PPE_BM_PORT_FC_W0_RESUME_THRESHOLD	GENMASK(17, 9)
+>>>> +#define PPE_BM_PORT_FC_W0_RESUME_OFFSET		GENMASK(28, 18)
+>>>> +#define PPE_BM_PORT_FC_W0_CEILING_LOW		GENMASK(31, 29)
+>>>> +#define PPE_BM_PORT_FC_W1_CEILING_HIGH		GENMASK(7, 0)
+>>>> +#define PPE_BM_PORT_FC_W1_WEIGHT		GENMASK(10, 8)
+>>>> +#define PPE_BM_PORT_FC_W1_DYNAMIC		BIT(11)
+>>>> +#define PPE_BM_PORT_FC_W1_PRE_ALLOC		GENMASK(22, 12)
+>>>> +
+>>>> +#define PPE_BM_PORT_FC_SET_REACT_LIMIT(tbl_cfg, value)	\
+>>>> +	u32p_replace_bits((u32 *)tbl_cfg, value, PPE_BM_PORT_FC_W0_REACT_LIMIT)
+>>>> +#define PPE_BM_PORT_FC_SET_RESUME_THRESHOLD(tbl_cfg, value)	\
+>>>> +	u32p_replace_bits((u32 *)tbl_cfg, value, PPE_BM_PORT_FC_W0_RESUME_THRESHOLD)
+>>>
+>>> Where is u32p_replace_bits()?
+>>
+>> u32p_replace_bits is defined by the macro __MAKE_OP(32) in the header
+>> file "include/linux/bitfield.h".
+> 
+> Given it is pretty well hidden, and not documented, it makes me think
+> you should not be using it. The macros you are expected to use from
+> that file are all well documented.
 
-> ---
->  drivers/gpu/drm/gma500/cdv_intel_dp.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
->
-> diff --git a/drivers/gpu/drm/gma500/cdv_intel_dp.c b/drivers/gpu/drm/gma5=
-00/cdv_intel_dp.c
-> index cc2ed9b3fd2d..ca7f59ff1fda 100644
-> --- a/drivers/gpu/drm/gma500/cdv_intel_dp.c
-> +++ b/drivers/gpu/drm/gma500/cdv_intel_dp.c
-> @@ -855,8 +855,7 @@ cdv_intel_dp_i2c_init(struct gma_connector *connector=
-,
->
->         memset(&intel_dp->adapter, '\0', sizeof (intel_dp->adapter));
->         intel_dp->adapter.owner =3D THIS_MODULE;
-> -       strncpy (intel_dp->adapter.name, name, sizeof(intel_dp->adapter.n=
-ame) - 1);
-> -       intel_dp->adapter.name[sizeof(intel_dp->adapter.name) - 1] =3D '\=
-0';
-> +       strscpy(intel_dp->adapter.name, name);
->         intel_dp->adapter.algo_data =3D &intel_dp->algo;
->         intel_dp->adapter.dev.parent =3D connector->base.kdev;
->
-> --
-> 2.48.1
->
+OK, understand.
+
+> 
+>>> This cast does not look good.
+>>
+>> Yes, we can remove the cast.
+> 
+> To some extent, this is a symptom. Why is the cast there in the first
+> place? Cast suggest bad design, not thinking about types, thinking it
+> is actual O.K. to cast between types. Please look at all the casts you
+> have. Is it because of bad design? If so, please fix your types to
+> eliminate the casts.
+
+Sure, this cast is actually redundant, the type of value passed to this
+macro is already defined as the type u32. I will review and remove the
+remaining casts in the ppe_reg.h file.
+
+> 
+>>> And this does not look like anything any
+>>> other driver does. I suspect you are not using FIELD_PREP() etc when
+>>> you should.
+>>>
+>>> https://elixir.bootlin.com/linux/v6.14-rc2/source/include/linux/bitfield.h
+>>>
+>>> 	Andrew
+>>
+>> The PPE_BM_XXX macros defined here write to either of two different
+>> 32bit words in the register table, and the actual word used (0 or 1)
+>> is hidden within the macro. For example, the below macro.
+>>
+>> #define PPE_BM_PORT_FC_SET_CEILING_HIGH(tbl_cfg, value)	\
+>> 	u32p_replace_bits((u32 *)(tbl_cfg) + 0x1, value,
+>> 	PPE_BM_PORT_FC_W1_CEILING_HIGH)
+>>
+>> We could have used FIELD_PREP as well for this purpose. However using
+>> u32p_replace_bits() seemed more convenient and cleaner in this case,
+>> since with FIELD_PREP, we would have needed an assignment statement to
+>> be defined in the macro implementation. We also noticed many other
+>> drivers using u32_replace_bits(). Hope this is ok.
+> 
+> Please extend the set of FIELD_{GET,PREP} macros to cover your use
+> case. Document them to the level of the existing macros. Submit the
+> patch to:
+> 
+> Yury Norov <yury.norov@gmail.com> (maintainer:BITMAP API)
+> Rasmus Villemoes <linux@rasmusvillemoes.dk> (reviewer:BITMAP API)
+> etc
+> 
+> and see what they say about this.
+> 
+> 	Andrew
+
+Thanks for the suggestion. Just to clarify, we preferred
+u32p_replace_bits() over FIELD_PREP() because the former does
+a clear-and-set operation against a given mask, where as with
+FIELD_PREP(), we need to clear the bits first before we use the
+macro and then set it. Due to this, we preferred using
+u32_replace_bits() since it made the macro definitions to modify
+the registers simpler. Given this, would it be acceptable to
+document u32p_replace_bits() better, as it is already being used
+by other drivers as well?
+
+If you prefer to use FIELD_PREP() over u32p_replace_bits(), we
+can update the driver to change the macros to use FIELD_PREP().
+Please note that all our macros for register modifications
+operate only on 32bit values. so we do not have any necessity
+for casts in the code.
+
+Below is one example per my understanding, implemented for
+both cases - u32p_replace_bits() and FIELD_PREP:
+
+#define PPE_BM_PORT_FC_SET_WEIGHT(tbl_cfg, value) \
+       u32p_replace_bits(tbl_cfg + 0x1, value, PPE_BM_PORT_FC_W1_WEIGHT)
+		
+#define PPE_BM_PORT_FC_SET_WEIGHT(tbl_cfg, value) \
+do { \
+      *(tbl_cfg + 0x1) &= ~PPE_BM_PORT_FC_W1_WEIGHT; \
+      *(tbl_cfg + 0x1) |= FIELD_PREP(PPE_BM_PORT_FC_W1_WEIGHT, value); \
+} while (0)
+
