@@ -1,81 +1,97 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C39C31A23B0;
-	Fri,  7 Mar 2025 21:47:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DBEC18BC36;
+	Fri,  7 Mar 2025 22:57:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741384061; cv=none; b=NInKWJkKU1YXSB1IdzKpOPz2as8jZXDLUHQAda/3/YXbryi8oX9Y7v+qCeBj3dd1DIXZXuN8PNOnkrgXeXlTsN2bAom0STj9FHZTQhbJx7K+a5m7O+NDqIMmLpNATM7rdGD2T2h6p4BH+zXjTIiv4BfDfclnVRHljf2BL+sr4yE=
+	t=1741388227; cv=none; b=Fs4OBa35ZuuI7IR0YZ89l+zieTiSY0RnKQHqnCrp3YrScZdkFYNEc5idusg0pXkZL3tfuUcZnxOmhwgMkBtzBIeiUq4kaFqOI7TXLyAy8WJJKyQTJcazdCsGe893HHanIcggdvHVx9t1fVyU3AFlgiFGjF06yNSdQtL6nYyLZBc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741384061; c=relaxed/simple;
-	bh=PgozwpVvDw4x6kQAljVRZ/c6g7ZLJ2jt4q+YmNhYcYs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YvCmBHRPwDpPoJuWCnK5tXVPYnqKTEGAok5UbRwrqiyNy+NcvPHcl94FKD6iEMZrqvdsVIKdQNK54v+0vp+X4SSe0yWqaDxoa8JwOKChXSEUcBZZzs2kcrZuVI4hJNM6g9mYl/2U8i4hy3Med/xzcxDZg9YYQnxc8BuEyiImavQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ABFCTAkC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741388227; c=relaxed/simple;
+	bh=faabc9m9uPxQtgKRC+DivTBLvntW27eLE3A5nEZFZHI=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=dXAoe04WusNqJADLVpECj2SZBdOxcry2w87BVMFEVe2vQkwBxLVR3EpTeiRW/m/sYcPFkKh07U+ojx/GUgN6eP6ejMZHaOjsNNkm5VoBjQeD2zbGKUWldEGfljjT27wTyfLEVnzXb1zmD6+etyWQmC04q2je6+3m3pfv/Br8dEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k4fGlQvE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ABFCTAkC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74122C4CED1;
-	Fri,  7 Mar 2025 21:47:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k4fGlQvE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FD40C4CED1;
+	Fri,  7 Mar 2025 22:57:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741384060;
-	bh=PgozwpVvDw4x6kQAljVRZ/c6g7ZLJ2jt4q+YmNhYcYs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ABFCTAkCYJGDl7FT/DQX1FAtSH/kxO34MMqrkJWriQ/XiHRvGlyrvhNCEYYOw4Kwc
-	 pAoDJx/I0fmQQoUdmubibw67HoOrTYK7Yi2iZfKIDNNO4QvQWMaxh6AZAjyfRVpzY6
-	 BvsOgKcTl0+ct+tyl5HJ0vtFaz4zEAwvR6mQ3QNEFRgMMCMelE74JDdpj3Srx5S1CA
-	 8WFjIu1M8gnuHczMjRVGEgtYuhjb6lN/LLqIbo4RZelseSE+XOVlceePJChzCc5HJM
-	 lgZcuHK+EnbrCo9xPTNH7z+vZPernPPsD6qo/2e8bOyR+FjsVZxL5X0z6h57p4o5kP
-	 akC34nyieVQDA==
-Date: Fri, 7 Mar 2025 22:47:34 +0100
-From: Nathan Chancellor <nathan@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, llvm@lists.linux.dev,
-	linux-hardening@vger.kernel.org, Paul Moore <paul@paul-moore.com>,
-	James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>, linux-kernel@vger.kernel.org,
-	linux-security-module@vger.kernel.org
+	s=k20201202; t=1741388227;
+	bh=faabc9m9uPxQtgKRC+DivTBLvntW27eLE3A5nEZFZHI=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=k4fGlQvEDCyy06S9nfFcXx+TiunjbbSWtAj2yb0cFfzy6wqXqg7YXDWVad/ydKZve
+	 FJZSZOUSxFte1lWBmLGPP4piTjbunRlor6EKR05MUMWrqZZIVDRyPXYL028v23/Ily
+	 oiRVzkIb1b0MJcq8DWavMfNiFx4biuWMhIvk7ehbV16aJs3vOlnsky5LmBll59nKER
+	 /OMw5w+NwExtmVCmqnlFTaHgt+4iebaSlHtpoHjGXmM9/EaX+VckmPsP98RPAlGS+P
+	 0ciTeNfVxQcElqTl9W7vfGNzoSIRNEChnyibrPXZHdxXuDjaww755H+N2so1bFkFhX
+	 +jYySf1FjEhmQ==
+Date: Fri, 07 Mar 2025 14:57:06 -0800
+From: Kees Cook <kees@kernel.org>
+To: Nathan Chancellor <nathan@kernel.org>
+CC: Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, llvm@lists.linux.dev,
+ linux-hardening@vger.kernel.org, Paul Moore <paul@paul-moore.com>,
+ James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>,
+ linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org
 Subject: Re: [PATCH] hardening: Enable i386 FORTIFY_SOURCE on Clang 16+
-Message-ID: <20250307214734.GA2871848@ax162>
-References: <20250303214929.work.499-kees@kernel.org>
- <174111064321.3934933.4843198067758331073.b4-ty@kernel.org>
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20250307214734.GA2871848@ax162>
+References: <20250303214929.work.499-kees@kernel.org> <174111064321.3934933.4843198067758331073.b4-ty@kernel.org> <20250307214734.GA2871848@ax162>
+Message-ID: <F8636F62-BF8F-4485-826B-83951ACB53A3@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <174111064321.3934933.4843198067758331073.b4-ty@kernel.org>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 04, 2025 at 09:50:44AM -0800, Kees Cook wrote:
-> On Mon, 03 Mar 2025 13:49:37 -0800, Kees Cook wrote:
-> > The i386 regparm bug exposed with FORTIFY_SOURCE with Clang was fixed
-> > in Clang 16[1].
-> > 
-> > 
-> 
-> Applied to for-next/hardening, thanks!
-> 
-> [1/1] hardening: Enable i386 FORTIFY_SOURCE on Clang 16+
->       https://git.kernel.org/kees/c/3e5820429980
 
-Turns out this is actually incomplete based on my testing, I see the
-following warnings with ARCH=i386 allmodconfig with all supported clang
-versions:
 
-  warning: unsafe strcpy() usage lacked '__write_overflow' symbol in lib/test_fortify/write_overflow-strcpy-lit.c
-  warning: unsafe strcpy() usage lacked '__write_overflow' symbol in lib/test_fortify/write_overflow-strcpy.c
+On March 7, 2025 1:47:34 PM PST, Nathan Chancellor <nathan@kernel=2Eorg> w=
+rote:
+>On Tue, Mar 04, 2025 at 09:50:44AM -0800, Kees Cook wrote:
+>> On Mon, 03 Mar 2025 13:49:37 -0800, Kees Cook wrote:
+>> > The i386 regparm bug exposed with FORTIFY_SOURCE with Clang was fixed
+>> > in Clang 16[1]=2E
+>> >=20
+>> >=20
+>>=20
+>> Applied to for-next/hardening, thanks!
+>>=20
+>> [1/1] hardening: Enable i386 FORTIFY_SOURCE on Clang 16+
+>>       https://git=2Ekernel=2Eorg/kees/c/3e5820429980
+>
+>Turns out this is actually incomplete based on my testing, I see the
+>following warnings with ARCH=3Di386 allmodconfig with all supported clang
+>versions:
+>
+>  warning: unsafe strcpy() usage lacked '__write_overflow' symbol in lib/=
+test_fortify/write_overflow-strcpy-lit=2Ec
+>  warning: unsafe strcpy() usage lacked '__write_overflow' symbol in lib/=
+test_fortify/write_overflow-strcpy=2Ec
+>
+>We also need to drop '-ffreestanding' from arch/x86/Makefile (which Nick
+>has mentioned in [1])=2E Time to revive [2]? :) or just do it in this
+>patch, since it sounds like there was no regression with GCC?
+>
+>[1]: https://github=2Ecom/ClangBuiltLinux/linux/issues/1583#issuecomment-=
+1123016466
+>[2]: https://lore=2Ekernel=2Eorg/20200817220212=2E338670-5-ndesaulniers@g=
+oogle=2Ecom/
 
-We also need to drop '-ffreestanding' from arch/x86/Makefile (which Nick
-has mentioned in [1]). Time to revive [2]? :) or just do it in this
-patch, since it sounds like there was no regression with GCC?
+Oh good catch! Probably I need to do this in two patches just to be safe:
+- make -ffreestanding be Clang only
+- switch to version checks for FORTIFY and freestanding
 
-[1]: https://github.com/ClangBuiltLinux/linux/issues/1583#issuecomment-1123016466
-[2]: https://lore.kernel.org/20200817220212.338670-5-ndesaulniers@google.com/
+That will split the changes for GCC and Clang into separate patches=2E Or =
+maybe that's overkill?
 
-Cheers,
-Nathan
+-Kees
+
+--=20
+Kees Cook
