@@ -1,198 +1,95 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2086.outbound.protection.outlook.com [40.107.243.86])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25EDC1A3176;
-	Thu,  6 Mar 2025 21:25:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.86
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741296302; cv=fail; b=WmTRISFZsQ6/itFSwkLDg3Wa+e8BlVSx2u1jpTrHn0okckC/Z6P92s+bCHB41cGieIMssHjEi1mD+u513jZ44L5qi7uSearNoXUNfvhdesDYvmz4KAwBNWEyhx0oOFxmuCXrHntxmgmjyjtp+qRugz37WJTdH1QmZp4+Q/R66UY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741296302; c=relaxed/simple;
-	bh=g11pf+Sx00UUqCR/RIwzu2h9LOENtT5WxAgPP5jNa80=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=q2nH1L22GKmL6BQT+TT13r09PUiT9GmQZS8a9nBRlH5XbaeXOyswKes32+ldgOY1c509XCOantLzF5pskvK0FBNFK7FOjL+DZnPfD6YLj5GPjG9YyRQQoW0HkSH0siLPcN0oHMfHGJPRPD6rD5V1PuRCBTwUpkIj0/jFl4J3s9Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=PV5EdqM5; arc=fail smtp.client-ip=40.107.243.86
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 096BB14AD0D;
+	Fri,  7 Mar 2025 03:42:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741318923; cv=none; b=qczlsTR8TXxf4pWxpgcRqQ2OLU2jKtB3/kzMqERgV4AI2d1WPsmH7/HS9O16+xxYYJ35BIrMJ6g5IJOZFJ7uvoJMrCW6qdL7GcWjLsCV4fJNytaqcJ/ip7iIoEPEwfWF9HkJMGP/Fx3G7mJX+Fr/+LzoNFrBjFQWIBEwt+2cWHw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741318923; c=relaxed/simple;
+	bh=7ZKmaLDPkgzayTW7zs8/xwX8IdPe6S/kyUqYROT1Tkw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jxMPr9nkxznTDegmeePDNGaaT4nE+Y/g/XPl4uNvs+Bwz878fawekUW+hHhTpN+LLfwBBEoK4AqIf82qe/vC3SnAJcXNU7zTjA6vOflMUEF6PiLP/bqS+o9xfweYik4N+jJw0sRa4y8RJCdNVgTBxOCemuzxKRT+gvDSiDJu+h8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WoGU3bhI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="PV5EdqM5"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=uDMTxKbYxZ7vEen8ejjKgHWO94pIspZRxLLUrjIeYzZkAN2iBkys0Ds8tHm4xnHtw9ZvVTG/Fbr7kq68uTGs9+8Db7nNeeW20LrTqtnnQI60FPyFUs8wYa8FUGewTiNEKSLkZWHUyEXmGjkZNoR/wxQ5OhRKq22CjTLpr1NuX28fcaTbrmqiMEsdYxXCM/qS9tEko+cmKNxtLKp5OVJlXIlu7XB0GzrQb3kdLRXRJTM55kP2MXEGcLhxLYykhGweHKy91Il8HcmjbmGTYcD3M1Vil9jscHSulmkiCBeshvNTpwFgF8sGemm4zQAeSQszTfWmzEegEf6TNVl2kmRwSg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=42ADgpribZWOJmF4hh3zuJB7dbIkN58G1/P57Ag1n/w=;
- b=NgOCpCqTW9UECfQ0SuUpAFPBexbELjfm+7WM9wFvihx14c5DXBAr8znVfmBNgQDd+Z9XLkyBSCTR6PmL12bS2pRtlcymii9hUh5Zw1rp1+1s5EMh6xX4urH4ifXdpfrwTn/TtNyipDD5mvxEmjCsW0+7zrcwyhODzMS5ZF/4KopLcOlY3R+A5JILOw1vTrps5GcBu3dpViohoBocG5S2yv3b7qt6ARsOcGfS5cpeRx41xRcHlm8QrEKD4GQ8yy+1g7KjL/IjzH4MQ4ePjRCEJazbQpio8o1QDXJE2to5pu2oDm1BJ9pCgfoxSdCbuUMQ7xoNqP1BCI9rBEDPBcvjyA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=42ADgpribZWOJmF4hh3zuJB7dbIkN58G1/P57Ag1n/w=;
- b=PV5EdqM5CGCo+S09/H96Nb1pdMb4EysdffiREKxeGSN563GRyMVIbel8f2yo3DWyrg4rFvkKGYBfUQ+z3KpRqfV+R3ezTGfWR9V0pcIsuy0EYaJTguINVo8+Qk8eDK+8YOirPkRLyKS2cRPV3EZD8OfKijCbd3Nfmx4KTl2elmI=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB8476.namprd12.prod.outlook.com (2603:10b6:8:17e::15)
- by CY8PR12MB9034.namprd12.prod.outlook.com (2603:10b6:930:76::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.17; Thu, 6 Mar
- 2025 21:24:58 +0000
-Received: from DM4PR12MB8476.namprd12.prod.outlook.com
- ([fe80::2ed6:28e6:241e:7fc1]) by DM4PR12MB8476.namprd12.prod.outlook.com
- ([fe80::2ed6:28e6:241e:7fc1%4]) with mapi id 15.20.8511.017; Thu, 6 Mar 2025
- 21:24:58 +0000
-Message-ID: <1e9cdcd7-b0a6-4c87-a5bb-b8e637ad8d49@amd.com>
-Date: Thu, 6 Mar 2025 14:24:55 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/4] drm/amd/display: move from kzalloc(size * nr, ...) to
- kcalloc(nr, size, ...)
-To: Ethan Carter Edwards <ethan@ethancedwards.com>,
- Harry Wentland <harry.wentland@amd.com>, Leo Li <sunpeng.li@amd.com>,
- Rodrigo Siqueira <siqueira@igalia.com>,
- Alex Deucher <alexander.deucher@amd.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-Cc: amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20250227-amd-display-v1-0-52a060a78d08@ethancedwards.com>
-Content-Language: en-US
-From: Alex Hung <alex.hung@amd.com>
-In-Reply-To: <20250227-amd-display-v1-0-52a060a78d08@ethancedwards.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: YQZPR01CA0150.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c01:8c::9) To DM4PR12MB8476.namprd12.prod.outlook.com
- (2603:10b6:8:17e::15)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WoGU3bhI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59E67C4CED1;
+	Fri,  7 Mar 2025 03:42:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741318922;
+	bh=7ZKmaLDPkgzayTW7zs8/xwX8IdPe6S/kyUqYROT1Tkw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WoGU3bhIbmj/RgbH4PG/wcamx2JxqjI4P/F+zRU/wQxDnHv1lJFvQmgSLL+IgRmRE
+	 sOLjdcQiryXV5ei9ZgXApTIIe0mm3mSOsWo1Eshg0EF5yWMSycDMpbSPG3wQSEeOPX
+	 dKykgdVeye4scfjjTOvPHSNB5C968bDsFBsyL+q6NPAYKPPHI/dLSJ2waVf0xvPJm7
+	 jyec22eqjat8dDN7W6wO+aPHZzuUWePjb8q3M9DANp/jBzGSFUwh/+CeJEGEhZLnPk
+	 4l9UVcHb8KGemAZJ886iLxmiBg35EoWpiG8b95Hg6+SpVKwdaFfP3MJ2y3TGLlZMqN
+	 O9TCcizARoOnA==
+Date: Thu, 6 Mar 2025 19:41:59 -0800
+From: Kees Cook <kees@kernel.org>
+To: David Gow <davidgow@google.com>
+Cc: Nathan Chancellor <nathan@kernel.org>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>, llvm@lists.linux.dev,
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] kbuild: clang: Support building UM with SUBARCH=i386
+Message-ID: <202503061939.AAC6EF5A44@keescook>
+References: <20250304162124.it.785-kees@kernel.org>
+ <CABVgOSnEaTVUfZB6KACFJE4mM=oSWnUtcrf7ETHFq8h_k=mFTw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB8476:EE_|CY8PR12MB9034:EE_
-X-MS-Office365-Filtering-Correlation-Id: 84164f0d-c77c-413b-1a3e-08dd5cf558f1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Q2tQS3VxbU15V2ZaQk1Kd05mY2hhNXNrbWVWclYzcHgzTER3Z0Zoc2NLMmEx?=
- =?utf-8?B?VWpSeXN0dGJyUjhRZG9tUHZEL0lQVHZoVWk1ZWFuaVBkK1dkYTJtNElRYlVX?=
- =?utf-8?B?VHY2TWg0Z0Y5eG80TjlLOXc0Wjk0ZkJoZWcyeEhMVmRvOUpmUmxPNStHdFlG?=
- =?utf-8?B?TW9DM0s0bVVSeERQbEZjMGQvcGdYZjJNMUlrZWxERzhMSGtCeU1hYWJlcUJI?=
- =?utf-8?B?dE4yWjRkWm1mbWd2aFFvbWVzc0tacUg3ZWRod1lWQUdYRFdQd3I2VXRsTDFG?=
- =?utf-8?B?RUxHcWdnU2hldFpFUExQMDRyVzBjSDdYWjBnMkhqOXJzUXA3NW9GWlBQenpl?=
- =?utf-8?B?ZWhieVVtYzBmY1EzRDlTYUpqUEY3U1lrTXpFdytJY1orNjExWndqRExIL1lC?=
- =?utf-8?B?eVJqTm5XSzhmSmowREwvU21lU1JybXRNMEZMMExjc29JZ29NQk5WdmdpeExs?=
- =?utf-8?B?eU1zOEErYnRVenYrWFZWRFVIcGMxODdib1JwWGhpZzkyajlCSEpXcUxKaG5n?=
- =?utf-8?B?UURkbzl6WHliSkEzVGpjYWgySFZsancyTTFCVUpiMW5aS01KNi9ON25RTGZk?=
- =?utf-8?B?Q1FIYmNjdVpKSTVCbXBEUmlBbEZ0a0ZEWVcvZGtjTTQyOUhtM2ZKakR3SHpF?=
- =?utf-8?B?cnJRYzZCdlZTMUJuN05MMlUxbjVERjFVWUlkZ25xRHMvK1JYbFVLRC91U3dH?=
- =?utf-8?B?cVY5cm16Nkw3NlhDdGY0UXgyK2U0YUQ4UXFidW5Nb2s0RG1LblNIcDk3OXVn?=
- =?utf-8?B?eWMrMUdqbkJrY3dqVUcydWZucGZnTEloQmlUWlFpOTlFTUVXRExmN2lWNmxr?=
- =?utf-8?B?QTdtdmJGN3plNDA4dStzdDhndDkvYzZaRXhsZmo3d1BFZUh0VUpLZDVsNEU2?=
- =?utf-8?B?bVZmbDE4YndvVHdQQ1VyL2h3eGI2R3ZDY2c0bDgrc1g1aWF1QUFETnZ0dUJo?=
- =?utf-8?B?VGpKY1NKU2pRNGs2ek56QTRwZlpFaW5RTXZLTGNRc2ZqU0pZeGdLN1ZDbWxC?=
- =?utf-8?B?aWV5WER0OEk1THB5QTdiV2tsN3RLOEJMWnVWeFBVSk9NeFB1c0tjQ3ZJRDBP?=
- =?utf-8?B?WlloSkpCSCtXeWthVHFuYWhZbjhDaTcxVndSQk4rZVlvMlJMTkhzUXBSdjJy?=
- =?utf-8?B?SzBaRkRhMmJMSGtkeVFDb25ab0JYSFA3ZmtkSUF5Tk0xS01tejZSMWNVMHc3?=
- =?utf-8?B?akhUUVkvc3hEZld0b0MwWjZnd0svVWI3Q3graHd0S1pobjlJZExRUmtraTEz?=
- =?utf-8?B?VVVzQlVxUExZaVVSMmxobEU3WXU4cmxUS3lRR2x5cjNOU0Yxb0tJNWlNM3Ft?=
- =?utf-8?B?VmRkRk1ydWtidDYzeFA5dysvZXRFcWEzTkxxTFRKUWJ3ZHFmazZLWHlhd0xo?=
- =?utf-8?B?aVpHTDB4Z1JSTnU3UTBhL0ZYeDk2QTREc3pYd1ZteWdhYUoxbTJFVE9nRVpZ?=
- =?utf-8?B?dXBlS1lWcTZDU3RUQXRteVp4dnZDUW9WNDBwckJUV1VaeWk1ZVhaTzVEazQ0?=
- =?utf-8?B?WTVBd29yN3I2TUhsTkJ0azZlYnZmM2JYeHNBb3pvOG9ESW54R01Ia1RrU2sy?=
- =?utf-8?B?d0hreVNWc2pSdGNJUjZjSmxHTVlDUlc1a25NS1ZQM1RzVHlyUlZ6TWJqWUFW?=
- =?utf-8?B?bXUwQlRKTHZ2dHFkenhGZG9KMHlUNVVkR0p0S2RuM0paTkxPRUFhYXRDd2d4?=
- =?utf-8?B?OVNuZ1ZLNWUyNTEyZ2ZNaFZmVnBPZ3M4SkpkbkdYKzBFQ1FqQ09tQWs0THJx?=
- =?utf-8?B?cVJuNTRHNmhGNDV4MVJkcjEzN3NPQm04NC96WkFzVlVFdHJCMU9ZSmVZdkVL?=
- =?utf-8?B?dzJQSkE3L0U2alg2QzV6Y1ZieUFSQzhEYTFXL2QyakNGUFk0cmpCaUd6Wnh6?=
- =?utf-8?B?VmZBWERCdk1pVGxSYnY1Tk9lTnZVZ0hUbzk1dm1sUWhYTmc9PQ==?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB8476.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Qmc1RUFYdU9TQkw5dERBem5Obm93RUxPdk9rOEdxc2NQR1VyS0VZSnhYRFRT?=
- =?utf-8?B?eU5uUytQQ0h4K3RDV3NrZGRWeUxOYXlhOGt2bFNmOFBKN3dxQjc3RFBad2ZF?=
- =?utf-8?B?bSs0MVpveHZFUXpSM2dLMFVrR1AxbG43Q3crd1dEcTFKUFp3ZmRsNXo5TE5a?=
- =?utf-8?B?V3lqeEFlVXpQa2RXYUN4MU1CM0loSmswTUQySXNwZk43QmFodTBldWFUbW9Q?=
- =?utf-8?B?Q05jRDEvRGMzTUZpMzM3WU9jNFBUS2hJRkRxUXAySXJsbFROSmpYckk2TEFK?=
- =?utf-8?B?VjVXVVNheVZLYThhbFZxdnRsSk03S3RENEdKTFNnVkVhOVozencxem9kVElP?=
- =?utf-8?B?WU9wdjcrSUswVHdrK2YyaVZCRlQ4YURBTmp1eWR5ZUlrNG5PbXVKWXYxbndp?=
- =?utf-8?B?NUc0dDFRcEE4dkNzWk12cGdPdDkzbkpTL1cvUXV0TGFWYmRVR3U5elFnamNy?=
- =?utf-8?B?TzBZMzhsLzBIT1NLaEp4OFV4d2QxNXZIR3ZtYjRNYnJ5QndsYnlkSjdXM29a?=
- =?utf-8?B?US8zSzZsQllYa09UanUxeElCcFNXQWhyUS9SSlNzTFVNeVVmVnlycW5wZHdI?=
- =?utf-8?B?U09ZaDI1Yy9iNzdYT3E0aEZRNExWcUZvM0ZJZTduTVlKOHQrbW5RcG5HWVZy?=
- =?utf-8?B?cVFkbm12bXdMaGxZVXlFbFNjV0xqblFCNWMvNklibnRnNXA2cndnNFlxazc5?=
- =?utf-8?B?YTR1WWhrY2t1eVdUWTluR2t5d282V2d1WGlONXUwamxGQ1QxakI2bGEveXBG?=
- =?utf-8?B?bjVpeU1LUjFyTTBaSWFXSEYxdU4ydURLZWxMOFM4QWdLUDBMQ1dNdTc1Wjlk?=
- =?utf-8?B?OWJjQWdvY1hiamo0YkdQUnNhY3JBMm9yVldCTmdIWHlEYyt3WjFSWWdBZk4x?=
- =?utf-8?B?T2pEckh5UFVvKzZxUk1uUm9RKzl0ZEg4emVnZUtqSG5hWmxSZFMyMWFKS3cw?=
- =?utf-8?B?b05nVUk4V1JkY096SUErTVRPdHBKdTMvTEMrTzNnU0dkVHA4TXBIbi9jdUxO?=
- =?utf-8?B?U3RoSDkrTUt5VWxkWHgzekdiRWpLTmw3RzFOcXdlK0hYekVGYkdKQmw1dm0z?=
- =?utf-8?B?ZXFSa242R0NoTE1WbVJJcHBJN2ZvOThsekJjM0pKRndLUitaalAxMllnU2tT?=
- =?utf-8?B?dnRWRTVGY3loMUUvMkVjRHJqZVBwOWtld015UGZzTU4xWDRoVVBzckQ4OGpa?=
- =?utf-8?B?RnBoazJVSUorWFc3U3p5U1p3bTExQ0d0L1hPS3V5ZnliUDM1V0kvN0lEWUVl?=
- =?utf-8?B?eGVaZnRWUEhVZklRUi90L21iYlIwUERSWlZVek0wQUJianBtUFNTaURoazU3?=
- =?utf-8?B?MVdZS2JiRVl5UHVIMTkvc0tSd3dkZktTNEhPcEpyYmJpOG4vK2VyWktyUFZO?=
- =?utf-8?B?eEJHQjJsdWhWMlowZVNZMHJSQ2VLTklkT1hmQ2h1RmZXdkVGWncwZDJFRUR5?=
- =?utf-8?B?M2t6N0lZYjM0R1F5N3Zib0FRZ1R4TGxodmd4R1NpZWk3UVNJa1d5K2dkdFVS?=
- =?utf-8?B?MzRTZVJBU1JNSWVuMmFBMFd2Ly9EUlJ2WmRmL0k3ajk4Znc3VERYWGlKS21i?=
- =?utf-8?B?YTY3NnFYL0ZtK3dHMVY0Zm9xamxTMFJ1c0VhM0hNYTlvUVZVa1ZoeDl5eXhx?=
- =?utf-8?B?L2hoalNrZFRxc2Q1YzByanVpdndiUkxtSDdkNXVSRlNwOUxEOXNrbklrazg0?=
- =?utf-8?B?ZTFnMi9nYkpCU0I1QjhzcmtXb0NJVGsvdWZYQmdXU2RaVkgxZjJqeTN4OUQz?=
- =?utf-8?B?cFdzRXBKeWk4WDdOaHlnOHRFaHNMWDZFRmVJdE5IVmdUOWhNUnE0YUFLV1po?=
- =?utf-8?B?ZTg1T1UzQVIxTlgzQ20xdGMxaFRDQ2IxY1N3TkRCTDRPRlFzT2EzR1V0TGlQ?=
- =?utf-8?B?MUc5ZWpNWnp2MFdHVUJoZlZhaTNoR3IyVkNOK1VxLzI0SjNSTFNCMXE5Um1D?=
- =?utf-8?B?eExLNE0wK3pOYXowYitRNzFneFg0Q3BGdFJITmRzRHVwRUw0S3NFSjhrbTg1?=
- =?utf-8?B?V3pic1dRSktsbWJOd1kwcnhOR0FCOTBVNkZsTkxSU3Y5c3g1U1ZaMktJdExN?=
- =?utf-8?B?U2lmSHVMSUx4RDQzbDFNZmg3QW14RVF3RlJIVUZ6R2RpL1oxRDZqUUwyRC9r?=
- =?utf-8?Q?ZHeUa9nOmCjOC2NUwFQeIXpkN?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 84164f0d-c77c-413b-1a3e-08dd5cf558f1
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB8476.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Mar 2025 21:24:58.7071
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 5qD1ePd0SChZ7M5Mg2KqEO/Y3PDc17FlD23alAFnQPKjizAY81Md6u3TfkoxN9wuXZqpBulBt43LShR4CJKREQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB9034
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABVgOSnEaTVUfZB6KACFJE4mM=oSWnUtcrf7ETHFq8h_k=mFTw@mail.gmail.com>
 
-This series LGTM too.
+On Thu, Mar 06, 2025 at 04:59:53PM +0800, David Gow wrote:
+> On Wed, 5 Mar 2025 at 00:21, Kees Cook <kees@kernel.org> wrote:
+> >
+> > The UM builds distinguish i386 from x86_64 via SUBARCH, but we don't
+> > support building i386 directly with Clang. To make SUBARCH work for
+> > i386 UM, we need to explicitly test for it.
+> >
+> > This lets me run i386 KUnit tests with Clang:
+> >
+> > $ ./tools/testing/kunit/kunit.py run \
+> >         --make_options LLVM=1 \
+> >         --make_options SUBARCH=i386
+> > ...
+> >
+> > Fixes: c7500c1b53bf ("um: Allow builds with Clang")
+> > Signed-off-by: Kees Cook <kees@kernel.org>
+> > ---
+> 
+> Thanks for this -- I'd been using `--kconfig_add CONFIG_64BIT=n` as a
+> way to build i386 UML kernels, which seems to work even without this
+> patch -- but this is definitely an improvement.
 
-Reviewed-by: Alex Hung <alex.hung@amd.com>
+Thanks! Yeah, I figured there must have been a way to get at it. I
+wanted to make it work the "normal" way.
 
-On 2/27/25 16:16, Ethan Carter Edwards wrote:
-> We are trying to get rid of all multiplications from allocation
-> functions to prevent integer overflows. Here the multiplications are
-> probably safe, but using kcalloc() is more appropriate and improves
-> readability. It is also safer. This series contains a few patches
-> with these fixes.
-> 
-> Part of the Kernel Self Protection Project efforts. Links below have
-> more details.
-> 
-> Link: https://github.com/KSPP/linux/issues/162
-> Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments
-> 
-> Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
-> ---
-> Ethan Carter Edwards (4):
->        drm/amd/display: change kzalloc to kcalloc in dcn30_validate_bandwidth()
->        drm/amd/display: change kzalloc to kcalloc in dcn31_validate_bandwidth()
->        drm/amd/display: change kzalloc to kcalloc in dcn314_validate_bandwidth()
->        drm/amd/display: change kzalloc to kcalloc in dml1_validate()
-> 
->   drivers/gpu/drm/amd/display/dc/resource/dcn30/dcn30_resource.c   | 3 ++-
->   drivers/gpu/drm/amd/display/dc/resource/dcn31/dcn31_resource.c   | 3 ++-
->   drivers/gpu/drm/amd/display/dc/resource/dcn314/dcn314_resource.c | 3 ++-
->   drivers/gpu/drm/amd/display/dc/resource/dcn32/dcn32_resource.c   | 3 ++-
->   4 files changed, 8 insertions(+), 4 deletions(-)
-> ---
-> base-commit: be5c7bbb3a64baf884481a1ba0c2f8fb2f93f7c3
-> change-id: 20250227-amd-display-a8342c55a9a0
-> 
-> Best regards,
+> It may be worth noting that CONFIG_FORTIFY_SOURCE is incompatible with
+> clang + i386, which seems to affect UML as well. (That might actually
+> not be required, as I think UML doesn't use any of the strange
+> -mregparm calling convention stuff which appears to be what breaks
+> FORTIFY_SOURCE here.)
 
+Also fixed! :)
+https://lore.kernel.org/lkml/20250303214929.work.499-kees@kernel.org/
+
+> Tested-by: David Gow <davidgow@google.com>
+
+Thanks for testing; I've updated the trailers in my tree.
+
+-Kees
+
+-- 
+Kees Cook
