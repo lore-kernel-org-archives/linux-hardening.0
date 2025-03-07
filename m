@@ -1,184 +1,81 @@
-Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.166.228])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFAC028E8;
-	Fri,  7 Mar 2025 13:09:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.166.228
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C39C31A23B0;
+	Fri,  7 Mar 2025 21:47:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741353001; cv=none; b=lFuRXEzKK8S67p0gg5Qj9RjU2GnSdImQW2FE054ddEgK88ePlGHS4b5A86MBix7Zme9jFYXvW2+d2IuNPvgUKHZL3oetcvz31XgOVxun4EEr5UWoEihaNqOCJ7SYviyyFWRAkgynQxOLeAxZbWgAQ4vq0jp+JI53ZLsVu1WxXhs=
+	t=1741384061; cv=none; b=NInKWJkKU1YXSB1IdzKpOPz2as8jZXDLUHQAda/3/YXbryi8oX9Y7v+qCeBj3dd1DIXZXuN8PNOnkrgXeXlTsN2bAom0STj9FHZTQhbJx7K+a5m7O+NDqIMmLpNATM7rdGD2T2h6p4BH+zXjTIiv4BfDfclnVRHljf2BL+sr4yE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741353001; c=relaxed/simple;
-	bh=61W0DVgUYGDHwdQnl98upOBa9S56v+QGmP8p3pP1OVA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=kTZ9SF1vEfvgXR3gDhx/wYfwjXnsBYjLK070vVN2qgxZccURobaf6Ni5D3w44OT6gZMTWb1o40Ry/hRe9YM6M+He42l/wqUawk47gEV1eqvdKnBZtfZXwsbdTevQd37f6jlerv7RUr0LospWDajYblf4tSFKt/qP6TaappdcY6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=Yl1wTmCw; arc=none smtp.client-ip=192.19.166.228
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1741384061; c=relaxed/simple;
+	bh=PgozwpVvDw4x6kQAljVRZ/c6g7ZLJ2jt4q+YmNhYcYs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YvCmBHRPwDpPoJuWCnK5tXVPYnqKTEGAok5UbRwrqiyNy+NcvPHcl94FKD6iEMZrqvdsVIKdQNK54v+0vp+X4SSe0yWqaDxoa8JwOKChXSEUcBZZzs2kcrZuVI4hJNM6g9mYl/2U8i4hy3Med/xzcxDZg9YYQnxc8BuEyiImavQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ABFCTAkC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Yl1wTmCw"
-Received: from mail-acc-it-01.broadcom.com (mail-acc-it-01.acc.broadcom.net [10.35.36.83])
-	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id C1DF7C0000F6;
-	Fri,  7 Mar 2025 05:09:58 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com C1DF7C0000F6
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-	s=dkimrelay; t=1741352998;
-	bh=61W0DVgUYGDHwdQnl98upOBa9S56v+QGmP8p3pP1OVA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Yl1wTmCw9hus0D2UYql7XBFu5cOykadRflAEKL5Cp+L1CX9xi4zdtPjOjj0b8q4Nj
-	 vtKaJMZcm0uScvNW68mdfhjf1+4NOXgXce/MpGhgI16Gf4yksVIq3STnZRAniI7xiM
-	 kz/PsFwT0GGKWpuNiPb2ZE9tEqbltWjcX9ZsYAKs=
-Received: from stbirv-lnx-1.igp.broadcom.net (stbirv-lnx-1.igp.broadcom.net [10.67.48.32])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail-acc-it-01.broadcom.com (Postfix) with ESMTPSA id A15C94003021;
-	Fri,  7 Mar 2025 08:09:57 -0500 (EST)
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-To: linux-kernel@vger.kernel.org
-Cc: stable@vger.kernel.org,
-	Kees Cook <keescook@chromium.org>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	linux-hardening@vger.kernel.org,
-	Andrzej Hajda <andrzej.hajda@intel.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Keith Busch <kbusch@kernel.org>
-Subject: [PATCH stable v5.4 v2 3/3] overflow: Allow mixed type arguments
-Date: Fri,  7 Mar 2025 05:09:53 -0800
-Message-Id: <20250307130953.3427986-4-florian.fainelli@broadcom.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250307130953.3427986-1-florian.fainelli@broadcom.com>
-References: <20250307130953.3427986-1-florian.fainelli@broadcom.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ABFCTAkC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74122C4CED1;
+	Fri,  7 Mar 2025 21:47:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741384060;
+	bh=PgozwpVvDw4x6kQAljVRZ/c6g7ZLJ2jt4q+YmNhYcYs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ABFCTAkCYJGDl7FT/DQX1FAtSH/kxO34MMqrkJWriQ/XiHRvGlyrvhNCEYYOw4Kwc
+	 pAoDJx/I0fmQQoUdmubibw67HoOrTYK7Yi2iZfKIDNNO4QvQWMaxh6AZAjyfRVpzY6
+	 BvsOgKcTl0+ct+tyl5HJ0vtFaz4zEAwvR6mQ3QNEFRgMMCMelE74JDdpj3Srx5S1CA
+	 8WFjIu1M8gnuHczMjRVGEgtYuhjb6lN/LLqIbo4RZelseSE+XOVlceePJChzCc5HJM
+	 lgZcuHK+EnbrCo9xPTNH7z+vZPernPPsD6qo/2e8bOyR+FjsVZxL5X0z6h57p4o5kP
+	 akC34nyieVQDA==
+Date: Fri, 7 Mar 2025 22:47:34 +0100
+From: Nathan Chancellor <nathan@kernel.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, llvm@lists.linux.dev,
+	linux-hardening@vger.kernel.org, Paul Moore <paul@paul-moore.com>,
+	James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>, linux-kernel@vger.kernel.org,
+	linux-security-module@vger.kernel.org
+Subject: Re: [PATCH] hardening: Enable i386 FORTIFY_SOURCE on Clang 16+
+Message-ID: <20250307214734.GA2871848@ax162>
+References: <20250303214929.work.499-kees@kernel.org>
+ <174111064321.3934933.4843198067758331073.b4-ty@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <174111064321.3934933.4843198067758331073.b4-ty@kernel.org>
 
-From: Kees Cook <keescook@chromium.org>
+On Tue, Mar 04, 2025 at 09:50:44AM -0800, Kees Cook wrote:
+> On Mon, 03 Mar 2025 13:49:37 -0800, Kees Cook wrote:
+> > The i386 regparm bug exposed with FORTIFY_SOURCE with Clang was fixed
+> > in Clang 16[1].
+> > 
+> > 
+> 
+> Applied to for-next/hardening, thanks!
+> 
+> [1/1] hardening: Enable i386 FORTIFY_SOURCE on Clang 16+
+>       https://git.kernel.org/kees/c/3e5820429980
 
-commit d219d2a9a92e39aa92799efe8f2aa21259b6dd82 upstream
+Turns out this is actually incomplete based on my testing, I see the
+following warnings with ARCH=i386 allmodconfig with all supported clang
+versions:
 
-When the check_[op]_overflow() helpers were introduced, all arguments
-were required to be the same type to make the fallback macros simpler.
-However, now that the fallback macros have been removed[1], it is fine
-to allow mixed types, which makes using the helpers much more useful,
-as they can be used to test for type-based overflows (e.g. adding two
-large ints but storing into a u8), as would be handy in the drm core[2].
+  warning: unsafe strcpy() usage lacked '__write_overflow' symbol in lib/test_fortify/write_overflow-strcpy-lit.c
+  warning: unsafe strcpy() usage lacked '__write_overflow' symbol in lib/test_fortify/write_overflow-strcpy.c
 
-Remove the restriction, and add additional self-tests that exercise
-some of the mixed-type overflow cases, and double-check for accidental
-macro side-effects.
+We also need to drop '-ffreestanding' from arch/x86/Makefile (which Nick
+has mentioned in [1]). Time to revive [2]? :) or just do it in this
+patch, since it sounds like there was no regression with GCC?
 
-[1] https://git.kernel.org/linus/4eb6bd55cfb22ffc20652732340c4962f3ac9a91
-[2] https://lore.kernel.org/lkml/20220824084514.2261614-2-gwan-gyeong.mun@intel.com
+[1]: https://github.com/ClangBuiltLinux/linux/issues/1583#issuecomment-1123016466
+[2]: https://lore.kernel.org/20200817220212.338670-5-ndesaulniers@google.com/
 
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Cc: linux-hardening@vger.kernel.org
-Reviewed-by: Andrzej Hajda <andrzej.hajda@intel.com>
-Reviewed-by: Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>
-Tested-by: Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>
-Signed-off-by: Kees Cook <keescook@chromium.org>
-[florian: Drop changes to lib/test_overflow.c]
-Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
----
- include/linux/overflow.h | 72 +++++++++++++++++++++++-----------------
- 1 file changed, 41 insertions(+), 31 deletions(-)
-
-diff --git a/include/linux/overflow.h b/include/linux/overflow.h
-index d1dd039fe1c3..54788a3cdcf5 100644
---- a/include/linux/overflow.h
-+++ b/include/linux/overflow.h
-@@ -55,40 +55,50 @@ static inline bool __must_check __must_check_overflow(bool overflow)
- }
- 
- #ifdef COMPILER_HAS_GENERIC_BUILTIN_OVERFLOW
--/*
-- * For simplicity and code hygiene, the fallback code below insists on
-- * a, b and *d having the same type (similar to the min() and max()
-- * macros), whereas gcc's type-generic overflow checkers accept
-- * different types. Hence we don't just make check_add_overflow an
-- * alias for __builtin_add_overflow, but add type checks similar to
-- * below.
-+/** check_add_overflow() - Calculate addition with overflow checking
-+ *
-+ * @a: first addend
-+ * @b: second addend
-+ * @d: pointer to store sum
-+ *
-+ * Returns 0 on success.
-+ *
-+ * *@d holds the results of the attempted addition, but is not considered
-+ * "safe for use" on a non-zero return value, which indicates that the
-+ * sum has overflowed or been truncated.
-  */
--#define check_add_overflow(a, b, d) __must_check_overflow(({	\
--	typeof(a) __a = (a);			\
--	typeof(b) __b = (b);			\
--	typeof(d) __d = (d);			\
--	(void) (&__a == &__b);			\
--	(void) (&__a == __d);			\
--	__builtin_add_overflow(__a, __b, __d);	\
--}))
-+#define check_add_overflow(a, b, d)	\
-+	__must_check_overflow(__builtin_add_overflow(a, b, d))
- 
--#define check_sub_overflow(a, b, d) __must_check_overflow(({	\
--	typeof(a) __a = (a);			\
--	typeof(b) __b = (b);			\
--	typeof(d) __d = (d);			\
--	(void) (&__a == &__b);			\
--	(void) (&__a == __d);			\
--	__builtin_sub_overflow(__a, __b, __d);	\
--}))
-+/** check_sub_overflow() - Calculate subtraction with overflow checking
-+ *
-+ * @a: minuend; value to subtract from
-+ * @b: subtrahend; value to subtract from @a
-+ * @d: pointer to store difference
-+ *
-+ * Returns 0 on success.
-+ *
-+ * *@d holds the results of the attempted subtraction, but is not considered
-+ * "safe for use" on a non-zero return value, which indicates that the
-+ * difference has underflowed or been truncated.
-+ */
-+#define check_sub_overflow(a, b, d)	\
-+	__must_check_overflow(__builtin_sub_overflow(a, b, d))
- 
--#define check_mul_overflow(a, b, d) __must_check_overflow(({	\
--	typeof(a) __a = (a);			\
--	typeof(b) __b = (b);			\
--	typeof(d) __d = (d);			\
--	(void) (&__a == &__b);			\
--	(void) (&__a == __d);			\
--	__builtin_mul_overflow(__a, __b, __d);	\
--}))
-+/** check_mul_overflow() - Calculate multiplication with overflow checking
-+ *
-+ * @a: first factor
-+ * @b: second factor
-+ * @d: pointer to store product
-+ *
-+ * Returns 0 on success.
-+ *
-+ * *@d holds the results of the attempted multiplication, but is not
-+ * considered "safe for use" on a non-zero return value, which indicates
-+ * that the product has overflowed or been truncated.
-+ */
-+#define check_mul_overflow(a, b, d)	\
-+	__must_check_overflow(__builtin_mul_overflow(a, b, d))
- 
- #else
- 
--- 
-2.34.1
-
+Cheers,
+Nathan
