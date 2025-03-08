@@ -1,81 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C1E21537A7;
-	Sat,  8 Mar 2025 17:23:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4E6A8BFF;
+	Sat,  8 Mar 2025 18:53:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741454604; cv=none; b=ebhzhtWITTziDGbG/D1fWKqwHlpqq6Et8U6v4vvZ3TMgbwS/XcClRXzzjfoZGO7Ejia5qAmANfcfd3k6FMa0AgJl7kri/5x8JPz20S3yNHzTTdPXGISvT0j9zDuz1Jyvt00MO0LjCF84N5WLpftl0jT7Hm/TIaxL5tLEN45Hdeo=
+	t=1741459995; cv=none; b=gE2lnMXLabEfGTHYw9v7my0k3vP/R6xDdvMVaBPKQar0j7yL2jjoM28iTVbOLA7rNibESv+By5gUeQct2f9UaEb452XWgWm8zHY/9iv+vXTnWaYDve5RY2CYZTtmi3c24amIJTlDUv9SMMSelup7QX1VRUJwIsrXoqNWkgOsPS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741454604; c=relaxed/simple;
-	bh=DlQgq+nTfYXehSgy8StfVyl+ry6xsjxTIGAX43yqTC4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OHIBkEwdzWEar77gr2A0X2Rku3oAfrUePYJQmAYWrXsubhpIpWESdQP0VBwoW2/yFQ6oN/ZVhWTAg+pYhly2SdHHpOrRnKpS+aawMicnGpqKr2WdTAix3M9q4U5pLmM9dXVXM294AolmPfTeR51JA0vkrRHUKD8s8d0OBBtuOq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aiJIW/mJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741459995; c=relaxed/simple;
+	bh=6ywE/KCsG0OSGAcCoBVFTnvWrFMrpzEIEtPG/KeiqYw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=bfAMUW60Ap7q7l7HQG6e1pRdI9Xp5yIVBWfKaviuOdL+yn+pMyczxL1prVwx258RsK3A1wbgZ9ft4t4MYMrDBJH0l5MBLEuge37d49qfS1SATMT1L1/sQXpz1eHkTr6N6EH/ZUeFP7mDKTVWouHbiazXfbbgx69kbhTMN8pLAio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com; spf=pass smtp.mailfrom=ethancedwards.com; dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b=jEO+Wnq4; arc=none smtp.client-ip=80.241.56.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ethancedwards.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aiJIW/mJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88377C4CEE0;
-	Sat,  8 Mar 2025 17:23:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741454603;
-	bh=DlQgq+nTfYXehSgy8StfVyl+ry6xsjxTIGAX43yqTC4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aiJIW/mJwLF5MpzsSmVgsP0Wj3Q7Qiika82FBziDrgURGrJDS8+yCf87I/dLVmFU2
-	 IkR8MpN3500LXKWSbtLPb62jPGkPnsf+9wHGyXtLpzv6e9lYuetUDISBxBsPkvHnKW
-	 4TFPQgSrld+8Gr8Rkva6Mwa6PfyVhsMNtevm0c+cRta0X40tuFBn7UdgHZJ8mEAced
-	 j8MtkwNiYKlHDwGpKeUPLlUa6Qa6n3myI5eUalzF82s33LKzowhfMRIokG05qMKaxJ
-	 ud9PxlVLZXGYtMJLiwsLlqk4jT6DqGmS9y+Wzz7eWoXC8RpT0DRNJsjN9i86jOmgp/
-	 dZo+gmdi7SncA==
-Date: Sat, 8 Mar 2025 09:23:20 -0800
-From: Kees Cook <kees@kernel.org>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	linux-security-module@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v2 1/2] x86/build: Remove -ffreestanding on i386 with GCC
-Message-ID: <202503080922.AB2CF7C9@keescook>
-References: <20250308041950.it.402-kees@kernel.org>
- <20250308042929.1753543-1-kees@kernel.org>
- <20250308091746.GA707537@ax162>
+	dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b="jEO+Wnq4"
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4Z9C326Z90z9sp5;
+	Sat,  8 Mar 2025 19:53:02 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ethancedwards.com;
+	s=MBO0001; t=1741459983;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=VTH4EiXKCLPkA8f3JyVPpOxN9JqCF6IoIwgh5tn62r8=;
+	b=jEO+Wnq4qhmkOYi6bWahHtVIyqAj/MLjKZBGDYHxNuy77zZXyDOV2btqyiN0xayGKKPZ3y
+	XA1tl5ydjzksnAJT/ntl8t/Evbt/JvEKvwYMNX8tnvl0iWPiirtJiDEtwn0eaUxX6X4K33
+	dQGGxYev1HDjH5yaa6Gw7mONaQjLXYAhdw7SdLrrJxReT1DTmh6DLPy8IC5qb81EdQNiGl
+	QiALYUTLShDqRcHSyiPRmknPrKkQA+V/iutnFrHSzQ8/ZEqekY0aaw3PucFXTlpdbI0hYV
+	Q3MzRnbjEjY19IYPrNY9xWSyTcU65NO1iJfWMBgYd9Yj+FrOJ3XU29vdbjXZzQ==
+From: Ethan Carter Edwards <ethan@ethancedwards.com>
+Date: Sat, 08 Mar 2025 13:52:59 -0500
+Subject: [PATCH] ALSA: ctxfi: change dao_set_input functions from kzalloc
+ to kcalloc
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250308091746.GA707537@ax162>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250308-ctdaio-kzalloc-v1-1-804a09875b0e@ethancedwards.com>
+X-B4-Tracking: v=1; b=H4sIAAqSzGcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDYwML3eSSlMTMfN3sqsScnPxk3bTkNBPzJItkkzRzEyWgpoKi1LTMCrC
+ B0bG1tQBmipiKYAAAAA==
+X-Change-ID: 20250308-ctdaio-kzalloc-fcf47b8c4f74
+To: Takashi Iwai <tiwai@suse.com>
+Cc: Jaroslav Kysela <perex@perex.cz>, linux-sound@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+ Ethan Carter Edwards <ethan@ethancedwards.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1615;
+ i=ethan@ethancedwards.com; h=from:subject:message-id;
+ bh=6ywE/KCsG0OSGAcCoBVFTnvWrFMrpzEIEtPG/KeiqYw=;
+ b=LS0tLS1CRUdJTiBQR1AgTUVTU0FHRS0tLS0tCgpvd0o0bkp2QXk4ekFKWGJEOXFoNThlVGp6e
+ GhQcXlVeHBKK1p4RDFGZXVkR3U0cy85bHhuV2VIL2RlY0x0WTl6CnkzKzdGOHpZK09DQjZIR1RW
+ WXpHSGFVc0RHSmNETEppaWl6L2M1VFRIbXJPVU5qNTE2VUpaZzRyRThnUUJpNU8KQVpqSXB1V01
+ EQXM2VEdKSzA4VytMNUIvL0ozdm1QbG5sMWVieXI4c3ordFNsLzNrYVpHMGc0dmhENC93dDBNMQ
+ pyVFlYZkdZd3R3bXFmVnNjZC9STjFLdFdvM2Rkdno4Y1VaODdod01BdFJaUSt3PT0KPU5YVWkKL
+ S0tLS1FTkQgUEdQIE1FU1NBR0UtLS0tLQo=
+X-Developer-Key: i=ethan@ethancedwards.com; a=openpgp;
+ fpr=2E51F61839D1FA947A7300C234C04305D581DBFE
+X-Rspamd-Queue-Id: 4Z9C326Z90z9sp5
 
-On Sat, Mar 08, 2025 at 10:17:46AM +0100, Nathan Chancellor wrote:
-> On Fri, Mar 07, 2025 at 08:29:25PM -0800, Kees Cook wrote:
-> > The use of -ffreestanding is a leftover that is only needed for certain
-> > versions of Clang. Adjust this to be Clang-only. A later patch will make
-> > this a versioned check.
-> > 
-> > Signed-off-by: Kees Cook <kees@kernel.org>
-> 
-> This could also adjust the comment but it is probably not that big of a
-> deal since the "temporary" is already pretty stale.
+We are trying to get rid of all multiplications from allocation
+functions to prevent potential integer overflows. Here the
+multiplication is probably safe, but using kcalloc() is more
+appropriate and improves readability. This patch has no effect
+on runtime behavior.
 
-Ah yeah, good call. I'll fix that up locally.
+Link: https://github.com/KSPP/linux/issues/162 [1]
+Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments
 
-> 
-> Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
+---
+ sound/pci/ctxfi/ctdaio.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Thanks!
+diff --git a/sound/pci/ctxfi/ctdaio.c b/sound/pci/ctxfi/ctdaio.c
+index 9993b02d2968c6c6858475f7ab98d4e90e7ffe2a..806c4d7543877ed74f8ec2dd894cf6b76af6f314 100644
+--- a/sound/pci/ctxfi/ctdaio.c
++++ b/sound/pci/ctxfi/ctdaio.c
+@@ -159,7 +159,7 @@ static int dao_set_left_input(struct dao *dao, struct rsc *input)
+ 	struct daio *daio = &dao->daio;
+ 	int i;
+ 
+-	entry = kzalloc((sizeof(*entry) * daio->rscl.msr), GFP_KERNEL);
++	entry = kcalloc(daio->rscl.msr, sizeof(*entry), GFP_KERNEL);
+ 	if (!entry)
+ 		return -ENOMEM;
+ 
+@@ -188,7 +188,7 @@ static int dao_set_right_input(struct dao *dao, struct rsc *input)
+ 	struct daio *daio = &dao->daio;
+ 	int i;
+ 
+-	entry = kzalloc((sizeof(*entry) * daio->rscr.msr), GFP_KERNEL);
++	entry = kcalloc(daio->rscr.msr, sizeof(*entry), GFP_KERNEL);
+ 	if (!entry)
+ 		return -ENOMEM;
+ 
 
--Kees
+---
+base-commit: 0a2f889128969dab41861b6e40111aa03dc57014
+change-id: 20250308-ctdaio-kzalloc-fcf47b8c4f74
 
+Best regards,
 -- 
-Kees Cook
+Ethan Carter Edwards <ethan@ethancedwards.com>
+
