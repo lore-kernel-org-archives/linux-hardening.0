@@ -1,113 +1,95 @@
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
+Received: from mout.web.de (mout.web.de [212.227.17.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4E6A8BFF;
-	Sat,  8 Mar 2025 18:53:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA1F1182BD;
+	Sat,  8 Mar 2025 19:10:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741459995; cv=none; b=gE2lnMXLabEfGTHYw9v7my0k3vP/R6xDdvMVaBPKQar0j7yL2jjoM28iTVbOLA7rNibESv+By5gUeQct2f9UaEb452XWgWm8zHY/9iv+vXTnWaYDve5RY2CYZTtmi3c24amIJTlDUv9SMMSelup7QX1VRUJwIsrXoqNWkgOsPS4=
+	t=1741461034; cv=none; b=YoESdMcLPY5CIYSsQBpegAk+c5Y/TBr6kvG0Qowh1p7V1LaPfFYTycIXQAzQKUuhAWUBtOWgtIA0v8j14f053t7JcanxbG00vh/xxDwaC6zwZxNJbvENOBMzDnzBhCmNisLbptS5FmyYotO45lYyXIijyv9cbXhhjkyQ5tya1Jc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741459995; c=relaxed/simple;
-	bh=6ywE/KCsG0OSGAcCoBVFTnvWrFMrpzEIEtPG/KeiqYw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=bfAMUW60Ap7q7l7HQG6e1pRdI9Xp5yIVBWfKaviuOdL+yn+pMyczxL1prVwx258RsK3A1wbgZ9ft4t4MYMrDBJH0l5MBLEuge37d49qfS1SATMT1L1/sQXpz1eHkTr6N6EH/ZUeFP7mDKTVWouHbiazXfbbgx69kbhTMN8pLAio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com; spf=pass smtp.mailfrom=ethancedwards.com; dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b=jEO+Wnq4; arc=none smtp.client-ip=80.241.56.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ethancedwards.com
+	s=arc-20240116; t=1741461034; c=relaxed/simple;
+	bh=MFhWjnwCq9VAZ1ofWC8aiiD17UJ5XlmzNLHT6UJtbaI=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=r2qp60O4yhkbLRU4jjEkSEhtNcsyHkqBs5Vf23YmKZfWRXU42M/jdvWr93wcmh7V73fkOrW5CeniTQnHosq7/UhSY1LF6V7DRw73HCIEuGpLthpZ167clevfsLfYBFNoORGqukpzFUj6HOCkY2/DCKwO3fzfIhkkd0Gz1/75Na8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=GZ9fVXSh; arc=none smtp.client-ip=212.227.17.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b="jEO+Wnq4"
-Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4Z9C326Z90z9sp5;
-	Sat,  8 Mar 2025 19:53:02 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ethancedwards.com;
-	s=MBO0001; t=1741459983;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=VTH4EiXKCLPkA8f3JyVPpOxN9JqCF6IoIwgh5tn62r8=;
-	b=jEO+Wnq4qhmkOYi6bWahHtVIyqAj/MLjKZBGDYHxNuy77zZXyDOV2btqyiN0xayGKKPZ3y
-	XA1tl5ydjzksnAJT/ntl8t/Evbt/JvEKvwYMNX8tnvl0iWPiirtJiDEtwn0eaUxX6X4K33
-	dQGGxYev1HDjH5yaa6Gw7mONaQjLXYAhdw7SdLrrJxReT1DTmh6DLPy8IC5qb81EdQNiGl
-	QiALYUTLShDqRcHSyiPRmknPrKkQA+V/iutnFrHSzQ8/ZEqekY0aaw3PucFXTlpdbI0hYV
-	Q3MzRnbjEjY19IYPrNY9xWSyTcU65NO1iJfWMBgYd9Yj+FrOJ3XU29vdbjXZzQ==
-From: Ethan Carter Edwards <ethan@ethancedwards.com>
-Date: Sat, 08 Mar 2025 13:52:59 -0500
-Subject: [PATCH] ALSA: ctxfi: change dao_set_input functions from kzalloc
- to kcalloc
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="GZ9fVXSh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1741461011; x=1742065811; i=markus.elfring@web.de;
+	bh=MFhWjnwCq9VAZ1ofWC8aiiD17UJ5XlmzNLHT6UJtbaI=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=GZ9fVXShcYPk36YjF/USdyCj+HqQr4HPRMvWhpgh9xylo123bKqShlbxZXrNT7Km
+	 1DK8uLkhHaVu5q/forUQc57zNUgVMunq1uluXKpG9kJZ7LT9ef+qtXBsyDqNM9DFF
+	 OGlbI8FzNprEn5/6AlIfAfcdqKzL0/DPxobF7vNEgQ2DicjK4tcEbO+l5uCLxYx6i
+	 CJuvhNR9cMVc1uqXVfEA+nUlLyQ7GUwlt1ea944vMvCajLra8mC91p1IgmcORpeE5
+	 OwKH8mmzEpzeE7LOpx/9yy/4zqT0uNvptaUMVx5hq4oDBMzRYd0x/ODCBnf2VCYFv
+	 GdDN4boGXacaYkTyNg==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.70.79]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MWzCt-1tklNy1ezR-00YcVT; Sat, 08
+ Mar 2025 20:10:11 +0100
+Message-ID: <61137c75-1b24-4425-bed8-518e1bfb0e0d@web.de>
+Date: Sat, 8 Mar 2025 20:10:10 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250308-ctdaio-kzalloc-v1-1-804a09875b0e@ethancedwards.com>
-X-B4-Tracking: v=1; b=H4sIAAqSzGcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDYwML3eSSlMTMfN3sqsScnPxk3bTkNBPzJItkkzRzEyWgpoKi1LTMCrC
- B0bG1tQBmipiKYAAAAA==
-X-Change-ID: 20250308-ctdaio-kzalloc-fcf47b8c4f74
-To: Takashi Iwai <tiwai@suse.com>
-Cc: Jaroslav Kysela <perex@perex.cz>, linux-sound@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
- Ethan Carter Edwards <ethan@ethancedwards.com>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1615;
- i=ethan@ethancedwards.com; h=from:subject:message-id;
- bh=6ywE/KCsG0OSGAcCoBVFTnvWrFMrpzEIEtPG/KeiqYw=;
- b=LS0tLS1CRUdJTiBQR1AgTUVTU0FHRS0tLS0tCgpvd0o0bkp2QXk4ekFKWGJEOXFoNThlVGp6e
- GhQcXlVeHBKK1p4RDFGZXVkR3U0cy85bHhuV2VIL2RlY0x0WTl6CnkzKzdGOHpZK09DQjZIR1RW
- WXpHSGFVc0RHSmNETEppaWl6L2M1VFRIbXJPVU5qNTE2VUpaZzRyRThnUUJpNU8KQVpqSXB1V01
- EQXM2VEdKSzA4VytMNUIvL0ozdm1QbG5sMWVieXI4c3ordFNsLzNrYVpHMGc0dmhENC93dDBNMQ
- pyVFlYZkdZd3R3bXFmVnNjZC9STjFLdFdvM2Rkdno4Y1VaODdod01BdFJaUSt3PT0KPU5YVWkKL
- S0tLS1FTkQgUEdQIE1FU1NBR0UtLS0tLQo=
-X-Developer-Key: i=ethan@ethancedwards.com; a=openpgp;
- fpr=2E51F61839D1FA947A7300C234C04305D581DBFE
-X-Rspamd-Queue-Id: 4Z9C326Z90z9sp5
+User-Agent: Mozilla Thunderbird
+To: Ethan Carter Edwards <ethan@ethancedwards.com>,
+ linux-sound@vger.kernel.org, linux-hardening@vger.kernel.org
+Cc: LKML <linux-kernel@vger.kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>
+References: <20250308-ctdaio-kzalloc-v1-1-804a09875b0e@ethancedwards.com>
+Subject: Re: [PATCH] ALSA: ctxfi: change dao_set_input functions from kzalloc
+ to kcalloc
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20250308-ctdaio-kzalloc-v1-1-804a09875b0e@ethancedwards.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:Dsp8DBc0wP5H3VzZJi1LMWqnO101NZOaF6ZxuUTZpY1kn7sddfe
+ hTtY6fvvqnf2WwfRyZpwRVjvrFHCKH7TuI7tzxciBQhYp71Iz88Md+WNor/O0OCRnICmap2
+ d+RKhjHEs45pOtRmgBBjmv2rpgLaL9WGYHIG8lM1MFa0YDdzaIpsXcmcVdVRMLYnYQN71S7
+ 1ooSS6xxo5Co0w7uJNf9w==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:F0IpBO66jtY=;+ffitv7G7GsrvY+Ptl1hdlzG4VM
+ tNJOcLiEGykBDZSP7RmjKyrWZoHMGGRRvsZJik/k09qX8nRAeVBCEXrEQT2/KvJOm9sjiRVDn
+ JtG09aAYby24JyywHzDCJnWGu3YD286W4FCK9wofsyEALq44GHAs3FC+9VL4nEQNDB51JTbIZ
+ G1AHikl7WuDHiZfU8uV1JlJc0qE0JDRq1ogH1yIbC1tzNyVyjObuAIVSTL/ljDzYVs6Qz0bNd
+ rv6tmV+GHuyRYS0DEI5Vk7yfLFOzIDqVEX+Ol1VbRGx1owWTywJVbkLwPMH20ODkkiBrHsJW4
+ b3eq0bnYPw7u5Td/IHYa9qZHYc0svZVffba1PK2KyCxA2xjaLhfiQq//p72faVHemASG+srxb
+ cAi28hYlAGIWu/y9U3AOgiDTbLruPjmkL24SUcL/kKxdrcESLt+Wasi+aTnKlePkcO6qtx4dw
+ ZZp7I82lNAsmAO7vkjmGqoCbHvxcpwLJ25Wz36oYr0OQlXeSIZ3yNO8i5Mq0qGNOKIG1SFpXe
+ ExBNJuDaU8SNc1Fafj2FDLQH6SY8NpLuQF3GUZO1srIwgFzEcalqKNdzY+1cm0jDYFnGKVvC9
+ 7BpFCqib4vriRzieqOuctKBtkLSvGHsfjymD5gHELoW1VsRN65mEA8gO3m8Cg7cpalGEHP7hh
+ Ij/mBn+sjis0HVfnuZYC41QZCkSgQSg4DdX7mcBdtdQU8254Rhrkyqqxs6R9jHQx8RLiqujMb
+ ktv2FLcSNR0Nc/Wjp3IcGn4cuMV6acIJ6kZXcZFIllLpm/AfDUCABf4mTUIrBV3Wplmzvmi4l
+ 4geD5D2w9Oskm8KrGpr2fQyHxyl1Q5EOXbaw+lu7M4tOecxrx/vhfIKIpB6+EsIx7bTyX/4uR
+ aHbumsiIPp33d9LfDdpm5kbtJcN45exv94FB+eI1XJHwh0w8j1+nR8KbkexwqIQ4YigsTa2kU
+ z16ycaguEnKTbVn09nqAFZyRU3Y53vagfHnVXW41G9dsqQ4oYDlvQfsIGXYX661oe2um/e7hm
+ 1TfQLnx2EiV71VB/hbtJ0xFwcqX68W2ptVLUq+JVXeGGw9cGXuX3hAzG+1qW3YwmlRHBLWT/c
+ bgRR6+CYwDraEvQC6rqghmfAKQLB/dcmHFQz7ybpQVBqH6GlbYeoowXDf6xNMRFcNU7rOpt5R
+ 8uR8IuIsTfWJGbV8jYd3tRdPj1QROVufupukT+WkSSXWB5dWpkfJbaT71T6AfH5L1prk3opYk
+ wtRy9E9k800PjVvG/qx0To99y+81tETFTBF09i8X4HpGiZQY5dVCx7cOZS4R6KPSKP3TzPEQN
+ CZMFeuqoqwuLkNzj2QozwsmjbiSeaIYPQGfhpjVMV1QdJ/l3ldu03D5LTYqJtrWvqZd2bbB9i
+ YQKyIVpN/vv5hOonbBEik0mumeHSnPXaqdJ7REW8iJ+xaFKthg3X1dyeGNKDCJyhcNPHjX61F
+ JAML5Z78WVw3tQVSHe9yY69Jb334=
 
-We are trying to get rid of all multiplications from allocation
-functions to prevent potential integer overflows. Here the
-multiplication is probably safe, but using kcalloc() is more
-appropriate and improves readability. This patch has no effect
-on runtime behavior.
+> We are trying to get rid of all multiplications from allocation
+=E2=80=A6
 
-Link: https://github.com/KSPP/linux/issues/162 [1]
-Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments
+Please improve such a change description another bit.
 
-Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
----
- sound/pci/ctxfi/ctdaio.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+See also:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tre=
+e/Documentation/process/submitting-patches.rst?h=3Dv6.14-rc5#n94
 
-diff --git a/sound/pci/ctxfi/ctdaio.c b/sound/pci/ctxfi/ctdaio.c
-index 9993b02d2968c6c6858475f7ab98d4e90e7ffe2a..806c4d7543877ed74f8ec2dd894cf6b76af6f314 100644
---- a/sound/pci/ctxfi/ctdaio.c
-+++ b/sound/pci/ctxfi/ctdaio.c
-@@ -159,7 +159,7 @@ static int dao_set_left_input(struct dao *dao, struct rsc *input)
- 	struct daio *daio = &dao->daio;
- 	int i;
- 
--	entry = kzalloc((sizeof(*entry) * daio->rscl.msr), GFP_KERNEL);
-+	entry = kcalloc(daio->rscl.msr, sizeof(*entry), GFP_KERNEL);
- 	if (!entry)
- 		return -ENOMEM;
- 
-@@ -188,7 +188,7 @@ static int dao_set_right_input(struct dao *dao, struct rsc *input)
- 	struct daio *daio = &dao->daio;
- 	int i;
- 
--	entry = kzalloc((sizeof(*entry) * daio->rscr.msr), GFP_KERNEL);
-+	entry = kcalloc(daio->rscr.msr, sizeof(*entry), GFP_KERNEL);
- 	if (!entry)
- 		return -ENOMEM;
- 
-
----
-base-commit: 0a2f889128969dab41861b6e40111aa03dc57014
-change-id: 20250308-ctdaio-kzalloc-fcf47b8c4f74
-
-Best regards,
--- 
-Ethan Carter Edwards <ethan@ethancedwards.com>
-
+Regards,
+Markus
