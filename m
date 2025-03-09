@@ -1,100 +1,508 @@
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A9789460;
-	Sun,  9 Mar 2025 01:27:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD949190497
+	for <linux-hardening@vger.kernel.org>; Sun,  9 Mar 2025 08:33:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741483678; cv=none; b=kAOK8rktVTeHVyQc03kdn8RbN8qE/O4FF8Zi49kUowcPDnbk0AwHDd4QLq+sZmtVFay7M+huMyaep8Qzi6aELF/lL7tvdm1m/F8MawRBjJkjfdbPwEslvK+3j6qWch0S+4NNJxDyHHY/tsNRpmR30sudJLCVvI3vhjuXsKSejRE=
+	t=1741509232; cv=none; b=kF2md/GpVxGZVnAYkm/nOY17HUCZbO3UiEQ4jf5SjHAHUe3iZOF6ng7Ec6NqiD/XTnRoB9gFr4PzQA7uHYAMBP2ez6nfX7wZ+Rk5HZyuAUNBA9htoOm+AF+Oh1OOgwM9gMYiPuS2KyShXcsZAl7mxavaB2OzF/x/7AEorsqp9So=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741483678; c=relaxed/simple;
-	bh=xJPFbbCqg6D1eGooecE45eWO6eo2FRhq7cqhpX/lTuc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=owcoF3zNbbulzWIK3JbH6Qj9/4aRCMU3A/BMz4/p8p6aWRU9XsRPP+4czWNzpu9DmiQ89VvG8JB/5W9SiX5+mA6O1i4V+3fqKjOU6WpUusgi4t8DsICdi9xkPlUZAO52Rkr6zZjzVjq6jQxNftoVEexueBRvffhMJnh7JIxXjy8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com; spf=pass smtp.mailfrom=ethancedwards.com; dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b=yPNZGgS2; arc=none smtp.client-ip=80.241.56.161
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ethancedwards.com
+	s=arc-20240116; t=1741509232; c=relaxed/simple;
+	bh=DA4Kxjtg2wyfiGDjO0XkWZ8J8EZ7dUH8HeuhUhvDAGw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dwsv+xqWbF/HBq5D3wOZa2buuDgMuk6/Mem4CHT9e7v5hJ4da8NxuCJni3mv4m/QrC5ltrnafmFOzd3fE7dPMhp1pr3myoqN4Lqm5iVup8lccP4Ynew9qal49+GXf3fUroFwT45rqgGFyKgchVKki5W3kcgXcwLB40ODiTF08co=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eQM7SNW3; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b="yPNZGgS2"
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4Z9MpT5LQ6z9sTd;
-	Sun,  9 Mar 2025 02:27:45 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ethancedwards.com;
-	s=MBO0001; t=1741483666;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=tuC52dWg8Ua+xArW/iLzWfqJB+lNGdXuO8bhICk80qY=;
-	b=yPNZGgS2P5Xhj0FZuR4IlwaaqI0vgSIw1KOnJx9YPo2OpM0jtus0XMuoK5e+vFbkeqYCNy
-	HXWfI0cqPhV1rEfb8zhCEyye2+df8V8c4DF24QGgufrGl1jxnyl9zOdO5rBrfWl1DWCRyM
-	oo6+aef6h8pB9kCkc5viO/c1C2fsTPtSJqE4//im+/evGsgRNMFWiBbtshD5cUfM/A9Vrs
-	eWRIAGSxt00ML7+27GPZnHDSQXZCDmq5orb57AtNUC6MRlohBf/bPdW4HE7vdaBSrVVCVk
-	J5Fz9+3yU3Ok5DxcCZ8/VkpbhpnjnOdairkKMzbE8Pr/HMa8Gf+nYfIM4dXVbQ==
-From: Ethan Carter Edwards <ethan@ethancedwards.com>
-Date: Sat, 08 Mar 2025 20:27:41 -0500
-Subject: [PATCH] efi: efibc: change kmalloc(size * count, ...) to
- kmalloc_array()
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eQM7SNW3"
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-30bfd4d4c63so16410821fa.2
+        for <linux-hardening@vger.kernel.org>; Sun, 09 Mar 2025 00:33:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741509227; x=1742114027; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=rKR4H/QECSO/fobjTrFesS+ZjcSBWrrROqlfipaQXZQ=;
+        b=eQM7SNW35/m/HoGbWCq4xC8drIOSJM8BTkpYqE1Px1/RCBavPlyaNNLx6MNcvXApSQ
+         rZHPXzqHSwFoVpnic/1y9ikE23mVSVBf+S2+0ypCnSPngKy24ladqwAmb+iEIrgTRFJD
+         nw74SoLZ+tc74qoFgncqpLXeAY+XZLalzpwd+YXq4Kmi8Svaid0bG5TC7con8MAUMnbK
+         QwbZck+ZpCk1Ly+ugJ5KXkuxxkof+mWmEUOj+wpZwX+knlLKB/AxWcXh39DIp01HBL+e
+         8LKTnTppqbjYR1p2PhaufZnEjzZ4BmL8rvCBMsrV1t5aSyW3e2VKiDOm+SFpsqbdFF0L
+         69bQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741509227; x=1742114027;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rKR4H/QECSO/fobjTrFesS+ZjcSBWrrROqlfipaQXZQ=;
+        b=L7N2zcts/uwt9sX8VDA9wLS+4Natktlnl0lvKoUvrNyDuvfngY0aat+TGc7D37UZCG
+         QMXORmoX2Yy54ct7LFWnp87dJpBgDfdp0sR0uisL5uzrKGCZESOw8iy+jVqnRVCAjznj
+         NuTWbeV3bH0i7K59HB5dUHQZ6l1mQ5UlSQ7j5egoaQV7uwTdSvJ+1NA1xTs+ZdDVh+aA
+         tqISyoYg26ARNkl6JLfej/BGk+U+bLVUwpgjEz3pYK6EGOc2zU1ISE6if6KaxVpTyU+O
+         5IT8tA8E3oa3ueoG9X1BmE111piQS6jbBFN9EvmjfJE82H8St4DFw8d/gnEkYDDsMVWO
+         o/sg==
+X-Forwarded-Encrypted: i=1; AJvYcCVtqZbrwXaelz/wbPN/hEiPeviry3hptQqcMnyKIaaSgKfuBjAffmsLPPBIzb0Ix6Xk89gkZZNf/ecXQfgc6YI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3xNIRY6koCHG7ugmdzTeqcycsqo5lC9nO9shJBQYVFh2KvF/7
+	ljEsCtTJhSDyAZkMAsy3J+4fi2khcnzooc7kD8CUOjOfybzJCWTJqlTZqs9iW6I=
+X-Gm-Gg: ASbGnctfPlUf/v/cEY+41Yh9NZ62qllaOtqh4Z8rub3hgfXIT1/gZ9lftICVYYHybjh
+	SkAGGQnNAVM2hWdTC1dtB15J37srQsEAZdRkIK+FQ69DE8ZzgmGNKCsq+2Ji1de0up7IWCNu2+k
+	BzYYBrFipK5Ht0tIoIK0pQqLH4WdurHGvbiQQGsbIz3ysfrP78HX12A3rd9iaYpYVOwgOgtL1A1
+	CeF08dbHUiDMyB0aflTP3G7VJk/R4Jf5Z5uXQoaVKvAY5BHKjRcEMp7QFF4H+JgbZmHNSKRmrCg
+	axWpUSJTrJiQTP1eRfTwmX3/pcjTkNHl1H412ZMOJZo1SNAeWYd5Y3nV8fNc09iCoFtLfiXZ9th
+	pjUQzpTRl6CNRGe+vm2lZpiMC
+X-Google-Smtp-Source: AGHT+IGeARXVcG2cHhhuIEZTvFQOsMPoaHjmx3ib/t6sXJ722tNpW4RJ3V2x8jYPJEBhJrS3NGqcyA==
+X-Received: by 2002:a05:6512:1597:b0:549:8d67:c48b with SMTP id 2adb3069b0e04-54990e5d44dmr3729878e87.20.1741509226867;
+        Sun, 09 Mar 2025 00:33:46 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5498ae4605asm1047163e87.29.2025.03.09.00.33.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 09 Mar 2025 00:33:46 -0800 (PST)
+Date: Sun, 9 Mar 2025 10:33:44 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: david@ixit.cz
+Cc: Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Kees Cook <kees@kernel.org>, 
+	Tony Luck <tony.luck@intel.com>, "Guilherme G. Piccoli" <gpiccoli@igalia.com>, 
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Ivan Belokobylskiy <belokobylskij@gmail.com>
+Subject: Re: [PATCH v3] ARM: dts: nexus4: Initial dts
+Message-ID: <l4lv22oi2ktubf7aveqxqtwb7zz7cfrzdayuxxgwdj46ygubfs@qpl6ut37taoe>
+References: <20250309-lg-nexus4-mako-v3-1-1dc2807df296@ixit.cz>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250308-efibc-kmalloc_array-v1-1-7bfc4013986f@ethancedwards.com>
-X-B4-Tracking: v=1; b=H4sIAIzuzGcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDYwML3dS0zKRk3ezcxJyc/OT4xKKixErdpERzCwNL80QDcwMLJaDOgiK
- gqgqwqdGxtbUAQ0c37GUAAAA=
-X-Change-ID: 20250308-efibc-kmalloc_array-ba78097a0708
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-hardening@vger.kernel.org, 
- Ethan Carter Edwards <ethan@ethancedwards.com>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1167;
- i=ethan@ethancedwards.com; h=from:subject:message-id;
- bh=xJPFbbCqg6D1eGooecE45eWO6eo2FRhq7cqhpX/lTuc=;
- b=LS0tLS1CRUdJTiBQR1AgTUVTU0FHRS0tLS0tCgpvd0o0bkp2QXk4ekFKWGJEOXFoNThlVGp6e
- GhQcXlVeHBKOTUxeXRlOWlmMVhiWFdsWTJicHo5ZVppYnFLS0oyCitBcWpqK0R0dE96Y3p5dldu
- WFB2S0dWaEVPTmlrQlZUWlBtZm81ejJVSE9Hd3M2L0xrMHdjMWlaUUlZd2NIRUsKd0VUVUZ6RXl
- yUGgvdzVOTDVMM3IyZnZobjdmRTdBOHB1YnJzNWk3UlY4OGkwM2RMbXljZWZzZndUMjBuMDZ4Zg
- oxcVlpOWJuM3ZxeWNWZUpmZTBrbWk2dE83cnJkeGNONzFxeXo1d0FBcE9wUkhBPT0KPXlLWGMKL
- S0tLS1FTkQgUEdQIE1FU1NBR0UtLS0tLQo=
-X-Developer-Key: i=ethan@ethancedwards.com; a=openpgp;
- fpr=2E51F61839D1FA947A7300C234C04305D581DBFE
-X-Rspamd-Queue-Id: 4Z9MpT5LQ6z9sTd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250309-lg-nexus4-mako-v3-1-1dc2807df296@ixit.cz>
 
-Open coded arithmetic in allocator arguments is discouraged. Helper
-functions like kcalloc or, in this case, kmalloc_array are preferred.
+On Sun, Mar 09, 2025 at 01:45:51AM +0100, David Heidelberg via B4 Relay wrote:
+> From: Ivan Belokobylskiy <belokobylskij@gmail.com>
+> 
+> Add initial support for LG Nexus 4 (mako).
+> 
+> Features currently working: regulators, eMMC, WiFi, and volume keys.
+> 
+> Signed-off-by: Ivan Belokobylskiy <belokobylskij@gmail.com>
+> Signed-off-by: David Heidelberg <david@ixit.cz>
+> ---
+> Changes in v3:
+> - rebased against next-20250307
+> - dropped backlight until driver gets converted to DT
+> 
+> Changes in v2:
+> - lge vendor doesn't exist anymore, rename to lg
+> - sdcc@ to mmc@ to comply with dt-schema
+> ---
+>  arch/arm/boot/dts/qcom/Makefile                    |   1 +
+>  .../boot/dts/qcom/qcom-apq8064-lg-nexus4-mako.dts  | 342 +++++++++++++++++++++
+>  2 files changed, 343 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/qcom/Makefile b/arch/arm/boot/dts/qcom/Makefile
+> index f06c6d425e91dd73c2b453d15543d95bd32383b9..0c1d116f6e84f76994aa8c8286350bdcd1657a42 100644
+> --- a/arch/arm/boot/dts/qcom/Makefile
+> +++ b/arch/arm/boot/dts/qcom/Makefile
+> @@ -12,6 +12,7 @@ dtb-$(CONFIG_ARCH_QCOM) += \
+>  	qcom-apq8064-ifc6410.dtb \
+>  	qcom-apq8064-sony-xperia-lagan-yuga.dtb \
+>  	qcom-apq8064-asus-nexus7-flo.dtb \
+> +	qcom-apq8064-lg-nexus4-mako.dtb \
+>  	qcom-apq8074-dragonboard.dtb \
+>  	qcom-apq8084-ifc6540.dtb \
+>  	qcom-apq8084-mtp.dtb \
+> diff --git a/arch/arm/boot/dts/qcom/qcom-apq8064-lg-nexus4-mako.dts b/arch/arm/boot/dts/qcom/qcom-apq8064-lg-nexus4-mako.dts
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..bcb57675aa24892b290d543601f7a6b36b6a65f6
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/qcom/qcom-apq8064-lg-nexus4-mako.dts
+> @@ -0,0 +1,342 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +#include "qcom-apq8064-v2.0.dtsi"
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/input/input.h>
+> +#include <dt-bindings/mfd/qcom-rpm.h>
+> +#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
+> +/ {
+> +	model = "LG Nexus 4 (mako)";
+> +	compatible = "lg,nexus4-mako", "qcom,apq8064";
+> +
+> +	aliases {
+> +		serial0 = &gsbi7_serial;
+> +		serial1 = &gsbi6_serial;
+> +		serial2 = &gsbi4_serial;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = "serial2:115200n8";
+> +	};
+> +
+> +	reserved-memory {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges;
+> +
+> +		ramoops@88d00000{
+> +			compatible = "ramoops";
+> +			reg = <0x88d00000 0x100000>;
+> +			record-size = <0x00020000>;
+> +			console-size = <0x00020000>;
+> +			ftrace-size = <0x00020000>;
+> +		};
+> +	};
+> +
+> +	battery_cell: battery-cell {
+> +		compatible = "simple-battery";
+> +		constant-charge-current-max-microamp = <900000>;
+> +		operating-range-celsius = <0 45>;
+> +	};
+> +
+> +	soc {
+> +		rpm@108000 {
 
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments
+Please use &rpm { ... }; instead.
 
-Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
----
- drivers/firmware/efi/efibc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> +			regulators {
+> +				vdd_l1_l2_l12_l18-supply = <&pm8921_s4>;
+> +				vin_lvs1_3_6-supply = <&pm8921_s4>;
 
-diff --git a/drivers/firmware/efi/efibc.c b/drivers/firmware/efi/efibc.c
-index 4f9fb086eab7b0e22252d22e59e5aae55865322d..0a7c764dcc614fbba3cbcd94183dc07939837a03 100644
---- a/drivers/firmware/efi/efibc.c
-+++ b/drivers/firmware/efi/efibc.c
-@@ -47,7 +47,7 @@ static int efibc_reboot_notifier_call(struct notifier_block *notifier,
- 	if (ret || !data)
- 		return NOTIFY_DONE;
- 
--	wdata = kmalloc(MAX_DATA_LEN * sizeof(efi_char16_t), GFP_KERNEL);
-+	wdata = kmalloc_array(MAX_DATA_LEN, sizeof(efi_char16_t), GFP_KERNEL);
- 	if (!wdata)
- 		return NOTIFY_DONE;
- 
+Please move vin_lvs2-supply here.
 
----
-base-commit: 0a2f889128969dab41861b6e40111aa03dc57014
-change-id: 20250308-efibc-kmalloc_array-ba78097a0708
+> +				vin_lvs4_5_7-supply = <&pm8921_s4>;
+> +
 
-Best regards,
+Please move vdd_l1_l2_l12_l18 here.
+
+> +				vdd_l24-supply = <&pm8921_s1>;
+> +				vdd_l25-supply = <&pm8921_s1>;
+> +				vin_lvs2-supply = <&pm8921_s1>;
+> +
+> +				vdd_l26-supply = <&pm8921_s7>;
+> +				vdd_l27-supply = <&pm8921_s7>;
+> +				vdd_l28-supply = <&pm8921_s7>;
+> +
+> +				/* Buck SMPS */
+> +				s1 {
+> +					regulator-always-on;
+> +					regulator-min-microvolt = <1225000>;
+> +					regulator-max-microvolt = <1225000>;
+> +					qcom,switch-mode-frequency = <3200000>;
+> +					bias-pull-down;
+> +				};
+
+empty line
+
+> +				s2 {
+> +					regulator-min-microvolt = <1300000>;
+> +					regulator-max-microvolt = <1300000>;
+> +					qcom,switch-mode-frequency = <1600000>;
+> +					bias-pull-down;
+> +				};
+> +
+> +				/* msm otg HSUSB_VDDCX */
+> +				s3 {
+> +					regulator-min-microvolt = <500000>;
+> +					regulator-max-microvolt = <1150000>;
+> +					qcom,switch-mode-frequency = <4800000>;
+> +					bias-pull-down;
+> +				};
+> +
+> +				/*
+> +				 * msm_sdcc.1-sdc-vdd_io
+> +				 * tabla2x-slim-CDC_VDDA_RX
+> +				 * tabla2x-slim-CDC_VDDA_TX
+> +				 * tabla2x-slim-CDC_VDD_CP
+> +				 * tabla2x-slim-VDDIO_CDC
+> +				 */
+> +				s4 {
+> +					regulator-always-on;
+> +					regulator-min-microvolt	= <1800000>;
+> +					regulator-max-microvolt	= <1800000>;
+> +					qcom,switch-mode-frequency = <1600000>;
+> +					bias-pull-down;
+> +					qcom,force-mode = <QCOM_RPM_FORCE_MODE_AUTO>;
+> +				};
+> +
+> +				/*
+> +				 * supply vdd_l26, vdd_l27, vdd_l28
+> +				 */
+> +				s7 {
+> +					regulator-min-microvolt = <1300000>;
+> +					regulator-max-microvolt = <1300000>;
+> +					qcom,switch-mode-frequency = <3200000>;
+> +				};
+> +
+> +				s8 {
+> +					regulator-min-microvolt = <2200000>;
+> +					regulator-max-microvolt = <2200000>;
+> +					qcom,switch-mode-frequency = <1600000>;
+> +				};
+> +
+> +				l1 {
+> +					regulator-min-microvolt = <1100000>;
+> +					regulator-max-microvolt = <1100000>;
+> +					regulator-always-on;
+> +					bias-pull-down;
+> +				};
+> +
+> +				/* mipi_dsi.1-dsi1_pll_vdda */
+> +				l2 {
+> +					regulator-min-microvolt = <1200000>;
+> +					regulator-max-microvolt = <1200000>;
+> +					bias-pull-down;
+> +				};
+> +
+> +				/* msm_otg-HSUSB_3p3 */
+> +				l3 {
+> +					regulator-min-microvolt = <3075000>;
+> +					regulator-max-microvolt = <3500000>;
+> +					bias-pull-down;
+> +				};
+> +
+> +				/* msm_otg-HSUSB_1p8 */
+> +				l4 {
+> +					regulator-always-on;
+> +					regulator-min-microvolt = <1800000>;
+> +					regulator-max-microvolt = <1800000>;
+> +				};
+> +
+> +				/* msm_sdcc.1-sdc_vdd */
+> +				l5 {
+> +					regulator-min-microvolt = <2950000>;
+> +					regulator-max-microvolt = <2950000>;
+> +					bias-pull-down;
+> +				};
+> +
+> +				/* earjack_debug */
+> +				l6 {
+> +					regulator-min-microvolt = <3000000>;
+> +					regulator-max-microvolt = <3000000>;
+> +					bias-pull-down;
+> +				};
+> +
+> +				/* mipi_dsi.1-dsi_vci */
+> +				l8 {
+> +					regulator-min-microvolt = <2800000>;
+> +					regulator-max-microvolt = <3000000>;
+> +					bias-pull-down;
+> +				};
+> +
+> +				/* wcnss_wlan.0-iris_vddpa */
+> +				l10 {
+> +					regulator-min-microvolt = <2900000>;
+> +					regulator-max-microvolt = <2900000>;
+> +					bias-pull-down;
+> +				};
+> +
+> +				/* mipi_dsi.1-dsi1_avdd */
+> +				l11 {
+> +					regulator-min-microvolt = <2850000>;
+> +					regulator-max-microvolt = <2850000>;
+> +					bias-pull-down;
+> +				};
+> +
+> +				/* touch_vdd */
+> +				l15 {
+> +					regulator-min-microvolt = <1800000>;
+> +					regulator-max-microvolt = <2950000>;
+> +					bias-pull-down;
+> +				};
+> +
+> +				/* slimport_dvdd */
+> +				l18 {
+> +					regulator-min-microvolt = <1100000>;
+> +					regulator-max-microvolt = <1100000>;
+> +					bias-pull-down;
+> +				};
+> +
+> +				/* touch_io */
+> +				l22 {
+> +					regulator-min-microvolt = <1800000>;
+> +					regulator-max-microvolt = <1800000>;
+> +					bias-pull-down;
+> +				};
+> +
+> +				/*
+> +				 * mipi_dsi.1-dsi_vddio
+> +				 * pil_qdsp6v4.1-pll_vdd
+> +				 * pil_qdsp6v4.2-pll_vdd
+> +				 * msm_ehci_host.0-HSUSB_1p8
+> +				 * msm_ehci_host.1-HSUSB_1p8
+> +				 */
+> +				l23 {
+> +					regulator-min-microvolt = <1800000>;
+> +					regulator-max-microvolt = <1800000>;
+> +					bias-pull-down;
+> +				};
+> +
+> +				/*
+> +				 * tabla2x-slim-CDC_VDDA_A_1P2V
+> +				 * tabla2x-slim-VDDD_CDC_D
+> +				 */
+> +				l24 {
+> +					regulator-min-microvolt = <750000>;
+> +					regulator-max-microvolt = <1150000>;
+> +					bias-pull-down;
+> +				};
+> +
+> +				l25 {
+> +					regulator-min-microvolt = <1250000>;
+> +					regulator-max-microvolt = <1250000>;
+> +					regulator-always-on;
+> +					bias-pull-down;
+> +				};
+> +
+> +				l26 {
+> +					regulator-min-microvolt = <375000>;
+> +					regulator-max-microvolt = <1050000>;
+> +					regulator-always-on;
+> +					bias-pull-down;
+> +				};
+> +
+> +				l27 {
+> +					regulator-min-microvolt = <1100000>;
+> +					regulator-max-microvolt = <1100000>;
+> +				};
+> +
+> +				l28 {
+> +					regulator-min-microvolt = <1050000>;
+> +					regulator-max-microvolt = <1050000>;
+> +					bias-pull-down;
+> +				};
+> +
+> +				/* wcnss_wlan.0-iris_vddio */
+> +				lvs1 {
+> +					bias-pull-down;
+> +				};
+> +
+> +				/* wcnss_wlan.0-iris_vdddig */
+> +				lvs2 {
+> +					bias-pull-down;
+> +				};
+> +
+> +				lvs3 {
+> +					bias-pull-down;
+> +				};
+> +
+> +				lvs4 {
+> +					bias-pull-down;
+> +				};
+> +
+> +				lvs5 {
+> +					bias-pull-down;
+> +				};
+> +
+> +				/* mipi_dsi.1-dsi_iovcc */
+> +				lvs6 {
+> +					bias-pull-down;
+> +				};
+> +
+> +				/*
+> +				 * pil_riva-pll_vdd
+> +				 * lvds.0-lvds_vdda
+> +				 * mipi_dsi.1-dsi1_vddio
+> +				 * hdmi_msm.0-hdmi_vdda
+> +				 */
+> +				lvs7 {
+> +					bias-pull-down;
+> +				};
+> +
+> +				ncp {
+> +					regulator-min-microvolt = <1800000>;
+> +					regulator-max-microvolt = <1800000>;
+> +					qcom,switch-mode-frequency = <1600000>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&pmicintc {
+> +	keypad@148 {
+> +		compatible = "qcom,pm8921-keypad";
+> +		reg = <0x148>;
+> +		interrupt-parent = <&pmicintc>;
+> +		interrupts = <74 1>, <75 1>;
+
+IRQ_TYPE_EDGE_RISING
+
+
+> +		linux,keymap = <
+> +			MATRIX_KEY(0, 0, KEY_VOLUMEDOWN)
+> +			MATRIX_KEY(0, 1, KEY_VOLUMEUP)
+> +		>;
+> +
+> +		keypad,num-rows = <1>;
+> +		keypad,num-columns = <5>;
+> +		debounce = <15>;
+> +		scan-delay = <32>;
+> +		row-hold = <91500>;
+> +	};
+> +};
+> +
+> +&gsbi1 {
+> +	status = "okay";
+
+Status should be the last property. Add empty line before it (here and
+further)
+
+> +	qcom,mode = <GSBI_PROT_I2C>;
+> +};
+> +
+> +&gsbi1_i2c {
+> +	status = "okay";
+> +	clock-frequency = <200000>;
+> +	pinctrl-0 = <&i2c1_pins>;
+> +	pinctrl-names = "default";
+
+I don't see i2c1_pins being defined. Did it pass the build?
+Also there is already a pinctrl for this device. Why do you need to
+overwrite it?
+
+> +};
+> +
+> +&gsbi4 {
+> +	status = "okay";
+> +	qcom,mode = <GSBI_PROT_I2C_UART>;
+> +};
+> +
+> +&gsbi4_serial {
+> +	status = "okay";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&gsbi4_uart_pin_a>;
+
+Unnecessary, can be dropped. It's set in qcom-apq8064.dtsi.
+
+> +};
+> +
+> +/* eMMC */
+> +&sdcc1 {
+> +	status = "okay";
+> +	vmmc-supply = <&pm8921_l5>;
+> +	vqmmc-supply = <&pm8921_s4>;
+> +};
+> +
+> +&riva {
+> +	status = "okay";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&riva_wlan_pin_a>;
+
+Where is it defined? Also pinctrl-names should come after pinctrl-N.
+
+> +};
+> 
+> ---
+> base-commit: 0a2f889128969dab41861b6e40111aa03dc57014
+> change-id: 20250309-lg-nexus4-mako-da0833885b26
+> 
+> Best regards,
+> -- 
+> David Heidelberg <david@ixit.cz>
+> 
+> 
+
 -- 
-Ethan Carter Edwards <ethan@ethancedwards.com>
-
+With best wishes
+Dmitry
