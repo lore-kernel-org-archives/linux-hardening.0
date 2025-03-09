@@ -1,77 +1,70 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1D361A8409
-	for <linux-hardening@vger.kernel.org>; Sun,  9 Mar 2025 09:36:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DFAF1C6FF4;
+	Sun,  9 Mar 2025 16:11:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741512982; cv=none; b=L7QriH6iS/UnyBQ3ijaVrq3LvdGWAXNyxKkox25JmRDZABXb5EWfx9t06ieErJWPGUYq+oceuP0Lt9YGn+P03PHScH7aUiNcbTsDUPyXPZmLsjuf2D0Cq+TPpaQg6IX//id4oOCzajFOdnlHbRHO/1I63FMnrBryaggePu4Tl48=
+	t=1741536708; cv=none; b=BI5Dioj7DBGJXpRlyfr7qgIRW//sSzOjfB4XU7WxP7XcwsXrSvAv7HRG/0rA8dZ9vU5AsdNWACSJsRa9f27hHhm72IYwXzzODad8o+9pw5WSobL/IBCjwYdx18zR8xhGu6KoaKAk6l8tYgVgyyoKeniEvrEFwUcIYyhDRHWWFg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741512982; c=relaxed/simple;
-	bh=RVfu8DAMzXPHxXwHgpPDG4/bBTmqwuwrt/l5NUmzylc=;
+	s=arc-20240116; t=1741536708; c=relaxed/simple;
+	bh=9hCZiuQUrvw8C6VOe681QbTu6p8BIa79fAzB/mklYP4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LuyL6kr2MYzQKbQAom4YinJYd900NeDQqCg/zUytbbBEH+0nVr68RuJFGf7dlxigO3rZLHm6aVmqlR3eXyXf7OlHdPoEU9tjTRlLTUQ1rW3gJVOyD8+sPvXV0h5FGt/+94yUzavC1XfsiEpSYm2yROhHJDSTwi1AW27S2cEECeg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RMagQJTR; arc=none smtp.client-ip=209.85.208.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=aXEEDh+rCdIQ47QT+ImXMhNtqN2LXTFGdGpM65WApGqRHn2LUL41C76PM4NydudfouvG6MhEgTuoX/Pf73ipV1+L5gIMxmzJIANB8/1vxloDLWRPH+aK/lTSyQPXjc4AgOi5iaZJl1rdba1TfG+bn7i/K095J73kXAy36yec19g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YZbGiYZo; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RMagQJTR"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-30bf7d0c15eso22183171fa.0
-        for <linux-hardening@vger.kernel.org>; Sun, 09 Mar 2025 01:36:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741512975; x=1742117775; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=qv7t9LAWFlrZnh/h1qzmcLb/WgGltOmnbPS1Sywm160=;
-        b=RMagQJTRI0VuKI6kR+3xBVVqMfQWa9rJjUQfZlWWZMTzEm0N8Y/wGNpGD+I1aeQNFZ
-         o04lA0H4vIX0OHiXZ3IC8vzEcgQli+gWNEsqJd/yII7xDni0BFpXCr7HpnWHhgD2YfcV
-         xOiNS2T+GrAD7u78FgXkb5Hb1j69CKz3FSk0APN5lhEQrPhKLFs+Vu9Eivq5D2JxompA
-         YFTTsAV9lcKjU1cvsE46Wsy2ZbXm4oy/sJVX8ylg0E70iyGQGL3njhw1SVlkvoecm4Yd
-         SFgmjYwI/ggtlpxYLeHTqeg535+3ewLV9KJJrKTTyBV/Z1ORCE8g80cm8K08S+0PHC/S
-         L7OQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741512975; x=1742117775;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qv7t9LAWFlrZnh/h1qzmcLb/WgGltOmnbPS1Sywm160=;
-        b=ihD85nVg1Bx0p8P8ICf72LLhEKiv/p8kuiAHT8mBVs12Muxs5ThBNM+tPMzZwDls4o
-         FfMVOIzWbNY35F3+3avn8U5FvjFMUC7f2vmlpeA6/Jxdz39KfGqNpHPNgyD1w0x+CqhX
-         cYwfyOv6pVXdWScgBgfC87/6uZ6DD3TQoCDD5OkzCta80CC1yaQHXOgstvWEW7npULc3
-         nWtIZOsJVPL+67Btg9q99tze9JWtDiQ3uirNJYrLn0XOqRpXpUqBxvzDsYXVtKFhzjCz
-         T6G4mMDEBysNqDWkgsSSsAN/UFUVm/9ya2adk66nR1DIt+WvahURCo6wXHpuwNvSiN8f
-         7/RQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVjWWHJ1RdLAWTB4oKVgqC8yxP7JH/0R5hH66ZE9mz4WDovQk5IW73x3m+7aB7/H9CuTeLCdvpjeH4LT0QE/t0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx8s4AvUwQQkUNk8hmu+w0Cabv32TAwdLMMA/gVCJ6kgeJRgh4E
-	3rSjkgW72pI+hyPq7KahSTbRBkGayujCrQh9NQXeYb3I6T4t1YxVxMksCGFdQCEYzGqWdfZLyG0
-	lUms=
-X-Gm-Gg: ASbGncutz6ehrGC4dNnExJc2v43CxhZYU3y6AGudbb55CQDtmsVRfIzTfNrxC2CQ1Ru
-	TH/8D62zSqKs6cidRBPYxGkdG5z4X3UP4NhzuDbTcI/62K4Wk3JROY2aAwP1FcIAH7mlD3pQcY8
-	B5/OtEUZ5xLwHWVki0+Oo/huXMQBrgt1UXNSWOcwz8/5M/ZvfZV716S0pystQRX62isu/6pIt/t
-	4vtQ4hfXKJiWip2z859lS+eFjNGEf0TN6V7KqGSLyo+SJFxaRYbFi+Qhx89Q1mHOsIr+WaEuAsv
-	cpAoZUvjmyijfr82aEzhlZhwDkeUKpDsXYhOOjcScoIX/BPmEQ5U8amD0+yt7tV26dUHaW3pHWQ
-	V0qC8Ydb7ZUcr+6En4v+jkWvo
-X-Google-Smtp-Source: AGHT+IFQyC6l+Pw1P/BVH/g0erUa7GdcnXNOr76Jgy50Rjd/lC1C4UYs/hv4IKjbXl6NI52mEWrsnw==
-X-Received: by 2002:a05:651c:1541:b0:30b:d63c:ad20 with SMTP id 38308e7fff4ca-30bf45e28fbmr31911591fa.24.1741512974977;
-        Sun, 09 Mar 2025 01:36:14 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30c00e42dbfsm5573811fa.89.2025.03.09.01.36.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Mar 2025 01:36:13 -0800 (PST)
-Date: Sun, 9 Mar 2025 11:36:11 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: David Heidelberg <david@ixit.cz>
-Cc: Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Kees Cook <kees@kernel.org>, 
-	Tony Luck <tony.luck@intel.com>, "Guilherme G. Piccoli" <gpiccoli@igalia.com>, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, Ivan Belokobylskiy <belokobylskij@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YZbGiYZo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741536707; x=1773072707;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=9hCZiuQUrvw8C6VOe681QbTu6p8BIa79fAzB/mklYP4=;
+  b=YZbGiYZor6PfrgcvcNyBXY5ypy84ve6NQ22SlkMjKE5tgRJ3dna0G1gn
+   dr2led+iP31wMj7HLoRuqCzx3MEMcenbAWnei16GxE/gwl7k2P7re9QRE
+   FbuYvjeaWVMXnIRn1OCkXXv2HzOMnwgeKxJEvVrwxZbM41qMRGT8iIO20
+   MWYwhladsmmHwKE37BdAbIXR5rJOJ+0q0T85BRUxUjaJUkmVayvnjUqRf
+   h3xm7G1VhqOI2u1SXcsE8vHYvKi6Dy5U+Vh2vlwHjN1D7mdwCYOQml0I8
+   B9Kn1pI8P4FwTbLtvJjnCupJdGsVKBLidRZA5lz+uByU/BmKXsAAt+fnh
+   w==;
+X-CSE-ConnectionGUID: YLZw3CLtSFCfBdMxuWoEGw==
+X-CSE-MsgGUID: pSoZrAsfQN6h4MOaoQeNjA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11368"; a="42240133"
+X-IronPort-AV: E=Sophos;i="6.14,234,1736841600"; 
+   d="scan'208";a="42240133"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2025 09:11:46 -0700
+X-CSE-ConnectionGUID: igfIiSO4REKuMBuIYyKnfg==
+X-CSE-MsgGUID: P9l/zbXRSr+FhzXTflQ3MA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="120680370"
+Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
+  by orviesa008.jf.intel.com with ESMTP; 09 Mar 2025 09:11:42 -0700
+Received: from kbuild by a4747d147074 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1trJFb-0003Gk-22;
+	Sun, 09 Mar 2025 16:11:39 +0000
+Date: Mon, 10 Mar 2025 00:11:22 +0800
+From: kernel test robot <lkp@intel.com>
+To: David Heidelberg via B4 Relay <devnull+david.ixit.cz@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Kees Cook <kees@kernel.org>,
+	Tony Luck <tony.luck@intel.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	Ivan Belokobylskiy <belokobylskij@gmail.com>,
+	David Heidelberg <david@ixit.cz>
 Subject: Re: [PATCH v3] ARM: dts: nexus4: Initial dts
-Message-ID: <qu5w56bp5yurdgbhjpeiabn5pvpoov7xfyta5j7djnnrveak42@povbs5bddtsz>
+Message-ID: <202503092337.8UvZ5rwI-lkp@intel.com>
 References: <20250309-lg-nexus4-mako-v3-1-1dc2807df296@ixit.cz>
- <l4lv22oi2ktubf7aveqxqtwb7zz7cfrzdayuxxgwdj46ygubfs@qpl6ut37taoe>
- <88da307c-0403-405d-8356-c8baeb18eaba@ixit.cz>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -80,55 +73,32 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <88da307c-0403-405d-8356-c8baeb18eaba@ixit.cz>
+In-Reply-To: <20250309-lg-nexus4-mako-v3-1-1dc2807df296@ixit.cz>
 
-On Sun, Mar 09, 2025 at 10:17:29AM +0100, David Heidelberg wrote:
-> Hello Dmitry!
-> 
-> Thank you for looking into it. See replies.
-> 
-> On 09/03/2025 09:33, Dmitry Baryshkov wrote:
-> > On Sun, Mar 09, 2025 at 01:45:51AM +0100, David Heidelberg via B4 Relay wrote:
-> > > +
-> > > +&riva {
-> > > +	status = "okay";
-> > > +	pinctrl-names = "default";
-> > > +	pinctrl-0 = <&riva_wlan_pin_a>;
-> > 
-> > Where is it defined? Also pinctrl-names should come after pinctrl-N.
-> 
-> definition is kinda aside in qcom-apq8064-pins.dtsi .
+Hi David,
 
-Ack, missed it.
+kernel test robot noticed the following build errors:
 
-> 
-> All other suggestions incorporated, if it's OK otherwise, let me send v2
+[auto build test ERROR on 0a2f889128969dab41861b6e40111aa03dc57014]
 
-I think this also needs several supplies in the riva device itself and
-in the iris subdevice. See qcom-apq8064-sony-xperia-lagan-yuga.dts.
+url:    https://github.com/intel-lab-lkp/linux/commits/David-Heidelberg-via-B4-Relay/ARM-dts-nexus4-Initial-dts/20250309-084753
+base:   0a2f889128969dab41861b6e40111aa03dc57014
+patch link:    https://lore.kernel.org/r/20250309-lg-nexus4-mako-v3-1-1dc2807df296%40ixit.cz
+patch subject: [PATCH v3] ARM: dts: nexus4: Initial dts
+config: arm-randconfig-002-20250309 (https://download.01.org/0day-ci/archive/20250309/202503092337.8UvZ5rwI-lkp@intel.com/config)
+compiler: arm-linux-gnueabi-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250309/202503092337.8UvZ5rwI-lkp@intel.com/reproduce)
 
-> 
-> Thank you
-> David
-> 
-> > 
-> > > +};
-> > > 
-> > > ---
-> > > base-commit: 0a2f889128969dab41861b6e40111aa03dc57014
-> > > change-id: 20250309-lg-nexus4-mako-da0833885b26
-> > > 
-> > > Best regards,
-> > > -- 
-> > > David Heidelberg <david@ixit.cz>
-> > > 
-> > > 
-> > 
-> 
-> -- 
-> David Heidelberg
-> 
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503092337.8UvZ5rwI-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> Error: arch/arm/boot/dts/qcom/qcom-apq8064-lg-nexus4-mako.dts:289.1-10 Label or path pmicintc not found
+   FATAL ERROR: Syntax error parsing input tree
 
 -- 
-With best wishes
-Dmitry
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
