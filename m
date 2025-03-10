@@ -1,156 +1,334 @@
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 222AE214218
-	for <linux-hardening@vger.kernel.org>; Sun,  9 Mar 2025 21:52:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B67DA3EA83
+	for <linux-hardening@vger.kernel.org>; Mon, 10 Mar 2025 03:48:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741557159; cv=none; b=U/UNDdoAGmlaKtZXxy/zle7EQmckLuX6w6xSfHK0oJigIMHKcNNO63CxRcrWN2y2KAd0BYYXbD2UmmpWmiTcU3dKG5Jk6oxkALR6c5V+8JvitRffwYobuTGRDB02+u3GmIySmDRNFl5P5bD0cSs+yItyXGHYK5ZR044syCEMb3k=
+	t=1741578510; cv=none; b=EyzWfP2i8esSkMlzmExZfTgvKyn6ckLJawChir929w0Tz8zRk4FpcD/bJE2Q+qqbQTdjj10xXfG+060pzLiznWvN0P6jUxN4WoLmyLGhF3xVKtWokbdBKjO8stZ5VVryO7H4p2S/GXpVVPsqxzdgxpL52VviFoFzdyXoLOM1rSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741557159; c=relaxed/simple;
-	bh=znDduV8o5do63kBgnI87Al2XfPX6k0jTsz0vM1YT25o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JDfNSOh7quLxgNuoNBXC7Pp5GBAsTrbAYB6rmHAXjeSw0rY2n38IOgooynArfQzfcu4WUoAkkzkpvYZZ4VDycoqsl2owfl3d4o5pAML5ifgi6Xelez4t9X1fywskun89nfWrlhyRQGEDwntEFLx40lWdkJUqx4pxyA2YGFcbSeg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xdM81uMJ; arc=none smtp.client-ip=209.85.128.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741578510; c=relaxed/simple;
+	bh=jCqQx+2wyzEeRATfrax0w3j/o77xh9jXJXw2czcRkCc=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=awGlCdqYfDwW5B8Epu+oYpCMzHqD1YA9s5iMWGxtZQfbxw6Mhrz+UDAe6bT5CezX5dSqcBSj3/RKWUKnUFlfOmc6TDxayIxP1iboRwE+xweeRQMxeAdkV+NucAG5GH8UXqUCBs46mNyBS3PNqNA3SczPK+RZ+3mEqtSuE7ZEkgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=vm3OIMCA; arc=none smtp.client-ip=44.202.169.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xdM81uMJ"
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-6f77b9e0a34so28216027b3.2
-        for <linux-hardening@vger.kernel.org>; Sun, 09 Mar 2025 14:52:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741557157; x=1742161957; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=x2cXZ1H4OWYbGTrPh8vFke/8+4UNPAMB80eBPTb7iwg=;
-        b=xdM81uMJ8UUubdaE9BAReuxEUkQmJPSYLKm1g+r53p7I+R1wGOKzP8pwiSnVFV4q05
-         +9zMEcx1oKBxl07pIERLrYr5r+UYTW7K7SjYueE3iyOfbGPQop3wi7nulqmYyq0TozS1
-         m8bmhaWaHyfzkBlp4FhHfwpagWv7kFpQ4p3PpKnSCPwKIABQqXNfvZ0dvQ6G2oC3Fd2k
-         2+7gWwXMsSLo7U3xfCcek8hSsdaxGhZ1bvf9CiXC48hwd2TFU7RlunPgDP6I+6D9wQod
-         uSIG57P5J68a+AiS9GpXZkArPaqy/hXHZEB+4bNov+oj7o8UwMxtKYZbZguSWdDaBFpO
-         ziXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741557157; x=1742161957;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=x2cXZ1H4OWYbGTrPh8vFke/8+4UNPAMB80eBPTb7iwg=;
-        b=bDDhWQ7rE5p2CVMlYbyZV9OxhVZI7CkcYVSqENq52OR7pESSkRUtdO82y/17McgBqO
-         mdqT7OuyD1khGNTke0DFhqZ+Kfc8kuofKQRBhvFLqLx2h6oxKiQe1bflHl515TzrKluP
-         eVLvyya0J7wsStC6zJg1/UHCwamIHXg3D6l7TTfXLpjwUOUA4eTpU8ddoteUcbcnd2xH
-         DQsYdqrt47yIOc/2XKKAG8LMRy2KB1D8yTvyRcIRleq37bTtUTwgJzHtw3VcpYd15IMu
-         I8U0+Zz+g+no1uNryXVdZvlYF0tSyPR/WjxBZjqHaL0/TZHVIOga9x3++uf0oZo4TkKP
-         9cHw==
-X-Forwarded-Encrypted: i=1; AJvYcCXdvMhKfvmNM61OarBQADPtiSXBDT5o5p4sOdPLYJjEGEcfnHLaHcjQe50TlVgiC8DMiIDfHdizdJmKytKFNsI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQFRG6txsUg3IAMC6+QgDpZ6mntpd5nU+9WPshMA49IXvBwwoC
-	wqGwbXMG4IZvIAo9wrYp7ccTDNGPaigTJkpFFJO6IIoOgjdHjEO/x/qB0H6rTvh4Gxt+k9gQdpE
-	3sUWGZe4UbwOTfSL0Jf3DYwnHVjS9bMemiGgXFg==
-X-Gm-Gg: ASbGnctT84DpxKM4a6re62Rbw+4wWeVIgQNJ4r4rkMDwKskI5Z6DDgdPdtYyvR56WS0
-	srVc0d0Ju3r4azdetsriTVmQUNYMNwxZ5gtTe53mQgRF3U1vPOKTZCSrZ858IFAzeSvxKnucpQb
-	yWgHgONXJFl+wiYR9PrAAX770+52bUG2e9m2e+rLTeiBmeoWvI6G6BaFY=
-X-Google-Smtp-Source: AGHT+IEwTe7+gG6re5FQDG7RY1yURSNJRkSyIZAU9lwF7FoyT/rEI0T3LIFPG8BM7OfSqpJwMlkh2/UTicN36O2msKk=
-X-Received: by 2002:a05:690c:6f12:b0:6fd:9f44:f3ab with SMTP id
- 00721157ae682-6febf2f2438mr162990607b3.13.1741557157024; Sun, 09 Mar 2025
- 14:52:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="vm3OIMCA"
+Received: from eig-obgw-5005a.ext.cloudfilter.net ([10.0.29.234])
+	by cmsmtp with ESMTPS
+	id rQWotqNX2iuzSrU7ptV3xY; Mon, 10 Mar 2025 03:48:21 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id rU7ntZWzDhQfUrU7nti8ax; Mon, 10 Mar 2025 03:48:20 +0000
+X-Authority-Analysis: v=2.4 cv=Negt1HD4 c=1 sm=1 tr=0 ts=67ce6104
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=6Vi/Wpy7sgpXGMLew8oZcg==:17
+ a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
+ a=c4eUQaDwDrymSewtKsoA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=Xt_RvD8W3m28Mn_h3AK8:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:References:Cc:To:From:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=iehuRxON5e/9TArHPokZB3vq6KHR3st/cD7mbCSzkC0=; b=vm3OIMCA7qTjMjhVRxeYdYYcKt
+	FWyieTjRCz8Bf+C+vvfuOsQcfw1sDWZsO4ix0yrcS/oKqeV/U73NuylMuPXRsUYFXJLxsyM3SY7l1
+	xD9wCJmxZ1vI9D2PZNc1nFurhcPE7cWbT1o/M2uNOPVnVi09p7oG9Df83mXlsPUcGxoTXOLiLSjmT
+	AuOkoIt52o9nI0Xg7mY2dY+8m2F4Vfl12tTUgYYS2b5IH5QS1Hx+X6RDBKM10kDF94U5eZnwVZWdf
+	6qhQdHmRrMZqnDh2p+qQjdzVXzeplLamDrkJxvf+x35h4Uh4dgRMLT/GNgPn7tSLpQXaxHFmiNYSG
+	WH0WwYGA==;
+Received: from [45.124.203.140] (port=53866 helo=[192.168.0.155])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1trU7m-00000001ToW-3LMA;
+	Sun, 09 Mar 2025 22:48:19 -0500
+Message-ID: <75551003-17c7-450a-89b0-818b6a01051c@embeddedor.com>
+Date: Mon, 10 Mar 2025 14:17:50 +1030
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250309-lg-nexus4-mako-v3-1-1dc2807df296@ixit.cz>
- <l4lv22oi2ktubf7aveqxqtwb7zz7cfrzdayuxxgwdj46ygubfs@qpl6ut37taoe>
- <88da307c-0403-405d-8356-c8baeb18eaba@ixit.cz> <qu5w56bp5yurdgbhjpeiabn5pvpoov7xfyta5j7djnnrveak42@povbs5bddtsz>
- <c67defb5-f677-45e0-9316-cf0a60238393@ixit.cz>
-In-Reply-To: <c67defb5-f677-45e0-9316-cf0a60238393@ixit.cz>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Sun, 9 Mar 2025 23:52:27 +0200
-X-Gm-Features: AQ5f1Jo8FnoegJUkwQU389SNer04ipCTPWac6KL_0tUVVQOS-Rp5nkRzvpEdsJ0
-Message-ID: <CAA8EJprdmS1dFem_7vud=QgZ2G27crYF2X3G4=QRS76c8EJvCA@mail.gmail.com>
-Subject: Re: [PATCH v3] ARM: dts: nexus4: Initial dts
-To: David Heidelberg <david@ixit.cz>
-Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, 
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>, linux-arm-msm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, Ivan Belokobylskiy <belokobylskij@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH][next] wifi: iwlwifi: dvm: Avoid
+ -Wflex-array-member-not-at-end warnings
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Miri Korenblit <miriam.rachel.korenblit@intel.com>,
+ Kalle Valo <kvalo@kernel.org>
+Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <Zr5QR03+wyw571zd@elsanto>
+ <b0f25000-396c-4a83-abc1-1a07b3065c10@embeddedor.com>
+Content-Language: en-US
+In-Reply-To: <b0f25000-396c-4a83-abc1-1a07b3065c10@embeddedor.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 45.124.203.140
+X-Source-L: No
+X-Exim-ID: 1trU7m-00000001ToW-3LMA
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.0.155]) [45.124.203.140]:53866
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfCpT+Il+42f6oJkq1uY4C40OsRNxKVw0pnctDipZPXNmtfiaZ+q9v736IX+ra3rmst6A5WiDrhzjfsUAxn1KF67uwVkz4ZttbNHdylJP4C9IfsZOC302
+ yI9o6SNtNJiAAwtjIyEVEouiGiz51cahvrRbbdBzDM2Qr+lpLF13wgDiNQ4ikGSJY6Y85zf277m2y8j+9a6KAT362U814ClX9JxUxvjge/uiQGVgvp8CP1UN
 
-On Sun, 9 Mar 2025 at 23:39, David Heidelberg <david@ixit.cz> wrote:
->
->
->
-> On 09/03/2025 10:36, Dmitry Baryshkov wrote:
-> > On Sun, Mar 09, 2025 at 10:17:29AM +0100, David Heidelberg wrote:
-> >> Hello Dmitry!
-> >>
-> >> Thank you for looking into it. See replies.
-> >>
-> >> On 09/03/2025 09:33, Dmitry Baryshkov wrote:
-> >>> On Sun, Mar 09, 2025 at 01:45:51AM +0100, David Heidelberg via B4 Relay wrote:
-> >>>> +
-> >>>> +&riva {
-> >>>> +  status = "okay";
-> >>>> +  pinctrl-names = "default";
-> >>>> +  pinctrl-0 = <&riva_wlan_pin_a>;
-> >>>
-> >>> Where is it defined? Also pinctrl-names should come after pinctrl-N.
-> >>
-> >> definition is kinda aside in qcom-apq8064-pins.dtsi .
-> >
-> > Ack, missed it.
-> >
-> >>
-> >> All other suggestions incorporated, if it's OK otherwise, let me send v2
-> >
-> > I think this also needs several supplies in the riva device itself and
-> > in the iris subdevice. See qcom-apq8064-sony-xperia-lagan-yuga.dts.
-> >
->
-> I don't have the device in my hands, so if I figure out the regulators,
-> I'll not be able to test new WiFi setup. I would drop the WiFi node for
-> now, so at least the base regulators and eMMC gets and possible someone
-> with devices in his hand can push more functionality forward, if you
-> don't object.
->
-> There is slowly forming some APQ8064/MSM8960 community, so I think there
-> will be updates, now I would just settle with minimum, so our downstream
-> changes will contain only small chunks to get upstreamed.
->
-> Would you be ok with this approach?
+Hi all,
 
-Yes, that sounds perfectly fine.
+I wonder who can take this patch, please. :)
 
->
-> >>
-> >> Thank you
-> >> David
-> >>
-> >>>
-> >>>> +};
-> >>>>
-> >>>> ---
-> >>>> base-commit: 0a2f889128969dab41861b6e40111aa03dc57014
-> >>>> change-id: 20250309-lg-nexus4-mako-da0833885b26
-> >>>>
-> >>>> Best regards,
-> >>>> --
-> >>>> David Heidelberg <david@ixit.cz>
-> >>>>
-> >>>>
-> >>>
-> >>
-> >> --
-> >> David Heidelberg
-> >>
-> >
->
-> --
-> David Heidelberg
->
+It was submitted around the same time as this other one:
 
+https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=a7e8997ae18c42d30bc7181421b5715e319c0f71
 
--- 
-With best wishes
-Dmitry
+And for some reason it wasn't taken back then.
+
+If you have any comments, please let me know.
+
+Thanks!
+--
+Gustavo
+
+On 05/10/24 05:09, Gustavo A. R. Silva wrote:
+> Hi all,
+> 
+> Friendly ping: who can take this, please? 🙂
+> 
+> Thanks
+> -Gustavo
+> 
+> On 15/08/24 13:00, Gustavo A. R. Silva wrote:
+>> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+>> getting ready to enable it, globally.
+>>
+>> So, in order to avoid ending up with a flexible-array member in the
+>> middle of multiple other structs, we use the `__struct_group()`
+>> helper to create a new tagged `struct iwl_tx_cmd_hdr`. This structure
+>> groups together all the members of the flexible `struct iwl_tx_cmd`
+>> except the flexible array.
+>>
+>> As a result, the array is effectively separated from the rest of the
+>> members without modifying the memory layout of the flexible structure.
+>> We then change the type of the middle struct members currently causing
+>> trouble from `struct iwl_tx_cmd` to `struct iwl_tx_cmd_hdr`.
+>>
+>> We also want to ensure that when new members need to be added to the
+>> flexible structure, they are always included within the newly created
+>> tagged struct. For this, we use `static_assert()`. This ensures that the
+>> memory layout for both the flexible structure and the new tagged struct
+>> is the same after any changes.
+>>
+>> This approach avoids having to implement `struct iwl_tx_cmd_hdr`
+>> as a completely separate structure, thus preventing having to maintain
+>> two independent but basically identical structures, closing the door
+>> to potential bugs in the future.
+>>
+>> So, with these changes, fix the following warnings:
+>>
+>> drivers/net/wireless/intel/iwlwifi/dvm/commands.h:2315:27: warning: structure containing a flexible array member is not at the end of another structure [- 
+>> Wflex-array-member-not-at-end]
+>> drivers/net/wireless/intel/iwlwifi/dvm/commands.h:2426:27: warning: structure containing a flexible array member is not at the end of another structure [- 
+>> Wflex-array-member-not-at-end]
+>>
+>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>> ---
+>>   .../net/wireless/intel/iwlwifi/dvm/commands.h | 154 +++++++++---------
+>>   1 file changed, 78 insertions(+), 76 deletions(-)
+>>
+>> diff --git a/drivers/net/wireless/intel/iwlwifi/dvm/commands.h b/drivers/net/wireless/intel/iwlwifi/dvm/commands.h
+>> index 3f49c0bccb28..96ea6c8dfc89 100644
+>> --- a/drivers/net/wireless/intel/iwlwifi/dvm/commands.h
+>> +++ b/drivers/net/wireless/intel/iwlwifi/dvm/commands.h
+>> @@ -1180,85 +1180,87 @@ struct iwl_dram_scratch {
+>>   } __packed;
+>>   struct iwl_tx_cmd {
+>> -    /*
+>> -     * MPDU byte count:
+>> -     * MAC header (24/26/30/32 bytes) + 2 bytes pad if 26/30 header size,
+>> -     * + 8 byte IV for CCM or TKIP (not used for WEP)
+>> -     * + Data payload
+>> -     * + 8-byte MIC (not used for CCM/WEP)
+>> -     * NOTE:  Does not include Tx command bytes, post-MAC pad bytes,
+>> -     *        MIC (CCM) 8 bytes, ICV (WEP/TKIP/CKIP) 4 bytes, CRC 4 bytes.i
+>> -     * Range: 14-2342 bytes.
+>> -     */
+>> -    __le16 len;
+>> -
+>> -    /*
+>> -     * MPDU or MSDU byte count for next frame.
+>> -     * Used for fragmentation and bursting, but not 11n aggregation.
+>> -     * Same as "len", but for next frame.  Set to 0 if not applicable.
+>> -     */
+>> -    __le16 next_frame_len;
+>> -
+>> -    __le32 tx_flags;    /* TX_CMD_FLG_* */
+>> -
+>> -    /* uCode may modify this field of the Tx command (in host DRAM!).
+>> -     * Driver must also set dram_lsb_ptr and dram_msb_ptr in this cmd. */
+>> -    struct iwl_dram_scratch scratch;
+>> -
+>> -    /* Rate for *all* Tx attempts, if TX_CMD_FLG_STA_RATE_MSK is cleared. */
+>> -    __le32 rate_n_flags;    /* RATE_MCS_* */
+>> -
+>> -    /* Index of destination station in uCode's station table */
+>> -    u8 sta_id;
+>> -
+>> -    /* Type of security encryption:  CCM or TKIP */
+>> -    u8 sec_ctl;        /* TX_CMD_SEC_* */
+>> -
+>> -    /*
+>> -     * Index into rate table (see REPLY_TX_LINK_QUALITY_CMD) for initial
+>> -     * Tx attempt, if TX_CMD_FLG_STA_RATE_MSK is set.  Normally "0" for
+>> -     * data frames, this field may be used to selectively reduce initial
+>> -     * rate (via non-0 value) for special frames (e.g. management), while
+>> -     * still supporting rate scaling for all frames.
+>> -     */
+>> -    u8 initial_rate_index;
+>> -    u8 reserved;
+>> -    u8 key[16];
+>> -    __le16 next_frame_flags;
+>> -    __le16 reserved2;
+>> -    union {
+>> -        __le32 life_time;
+>> -        __le32 attempt;
+>> -    } stop_time;
+>> -
+>> -    /* Host DRAM physical address pointer to "scratch" in this command.
+>> -     * Must be dword aligned.  "0" in dram_lsb_ptr disables usage. */
+>> -    __le32 dram_lsb_ptr;
+>> -    u8 dram_msb_ptr;
+>> -
+>> -    u8 rts_retry_limit;    /*byte 50 */
+>> -    u8 data_retry_limit;    /*byte 51 */
+>> -    u8 tid_tspec;
+>> -    union {
+>> -        __le16 pm_frame_timeout;
+>> -        __le16 attempt_duration;
+>> -    } timeout;
+>> -
+>> -    /*
+>> -     * Duration of EDCA burst Tx Opportunity, in 32-usec units.
+>> -     * Set this if txop time is not specified by HCCA protocol (e.g. by AP).
+>> -     */
+>> -    __le16 driver_txop;
+>> -
+>> +    /* New members MUST be added within the __struct_group() macro below. */
+>> +    __struct_group(iwl_tx_cmd_hdr, __hdr, __packed,
+>> +        /*
+>> +         * MPDU byte count:
+>> +         * MAC header (24/26/30/32 bytes) + 2 bytes pad if 26/30 header size,
+>> +         * + 8 byte IV for CCM or TKIP (not used for WEP)
+>> +         * + Data payload
+>> +         * + 8-byte MIC (not used for CCM/WEP)
+>> +         * NOTE:  Does not include Tx command bytes, post-MAC pad bytes,
+>> +         *        MIC (CCM) 8 bytes, ICV (WEP/TKIP/CKIP) 4 bytes, CRC 4 bytes.i
+>> +         * Range: 14-2342 bytes.
+>> +         */
+>> +        __le16 len;
+>> +
+>> +        /*
+>> +         * MPDU or MSDU byte count for next frame.
+>> +         * Used for fragmentation and bursting, but not 11n aggregation.
+>> +         * Same as "len", but for next frame.  Set to 0 if not applicable.
+>> +         */
+>> +        __le16 next_frame_len;
+>> +
+>> +        __le32 tx_flags;    /* TX_CMD_FLG_* */
+>> +
+>> +        /* uCode may modify this field of the Tx command (in host DRAM!).
+>> +         * Driver must also set dram_lsb_ptr and dram_msb_ptr in this cmd. */
+>> +        struct iwl_dram_scratch scratch;
+>> +
+>> +        /* Rate for *all* Tx attempts, if TX_CMD_FLG_STA_RATE_MSK is cleared. */
+>> +        __le32 rate_n_flags;    /* RATE_MCS_* */
+>> +
+>> +        /* Index of destination station in uCode's station table */
+>> +        u8 sta_id;
+>> +
+>> +        /* Type of security encryption:  CCM or TKIP */
+>> +        u8 sec_ctl;        /* TX_CMD_SEC_* */
+>> +
+>> +        /*
+>> +         * Index into rate table (see REPLY_TX_LINK_QUALITY_CMD) for initial
+>> +         * Tx attempt, if TX_CMD_FLG_STA_RATE_MSK is set.  Normally "0" for
+>> +         * data frames, this field may be used to selectively reduce initial
+>> +         * rate (via non-0 value) for special frames (e.g. management), while
+>> +         * still supporting rate scaling for all frames.
+>> +         */
+>> +        u8 initial_rate_index;
+>> +        u8 reserved;
+>> +        u8 key[16];
+>> +        __le16 next_frame_flags;
+>> +        __le16 reserved2;
+>> +        union {
+>> +            __le32 life_time;
+>> +            __le32 attempt;
+>> +        } stop_time;
+>> +
+>> +        /* Host DRAM physical address pointer to "scratch" in this command.
+>> +         * Must be dword aligned.  "0" in dram_lsb_ptr disables usage. */
+>> +        __le32 dram_lsb_ptr;
+>> +        u8 dram_msb_ptr;
+>> +
+>> +        u8 rts_retry_limit;    /*byte 50 */
+>> +        u8 data_retry_limit;    /*byte 51 */
+>> +        u8 tid_tspec;
+>> +        union {
+>> +            __le16 pm_frame_timeout;
+>> +            __le16 attempt_duration;
+>> +        } timeout;
+>> +
+>> +        /*
+>> +         * Duration of EDCA burst Tx Opportunity, in 32-usec units.
+>> +         * Set this if txop time is not specified by HCCA protocol (e.g. by AP).
+>> +         */
+>> +        __le16 driver_txop;
+>> +
+>> +    );
+>>       /*
+>>        * MAC header goes here, followed by 2 bytes padding if MAC header
+>>        * length is 26 or 30 bytes, followed by payload data
+>>        */
+>> -    union {
+>> -        DECLARE_FLEX_ARRAY(u8, payload);
+>> -        DECLARE_FLEX_ARRAY(struct ieee80211_hdr, hdr);
+>> -    };
+>> +    struct ieee80211_hdr hdr[];
+>>   } __packed;
+>> +static_assert(offsetof(struct iwl_tx_cmd, hdr) == sizeof(struct iwl_tx_cmd_hdr),
+>> +          "struct member likely outside of __struct_group()");
+>>   /*
+>>    * TX command response is sent after *agn* transmission attempts.
+>> @@ -2312,7 +2314,7 @@ struct iwl_scan_cmd {
+>>       /* For active scans (set to all-0s for passive scans).
+>>        * Does not include payload.  Must specify Tx rate; no rate scaling. */
+>> -    struct iwl_tx_cmd tx_cmd;
+>> +    struct iwl_tx_cmd_hdr tx_cmd;
+>>       /* For directed active scans (set to all-0s otherwise) */
+>>       struct iwl_ssid_ie direct_scan[PROBE_OPTION_MAX];
+>> @@ -2423,7 +2425,7 @@ struct iwlagn_beacon_notif {
+>>    */
+>>   struct iwl_tx_beacon_cmd {
+>> -    struct iwl_tx_cmd tx;
+>> +    struct iwl_tx_cmd_hdr tx;
+>>       __le16 tim_idx;
+>>       u8 tim_size;
+>>       u8 reserved1;
+> 
+
