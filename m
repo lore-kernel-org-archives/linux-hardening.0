@@ -1,118 +1,82 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2326A1DE3D2;
-	Mon, 10 Mar 2025 23:04:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D1CA1B6CF1;
+	Mon, 10 Mar 2025 23:28:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741647858; cv=none; b=s/JQuNG9UCJ3g6JQxdC9ephlHkmDg0DEXwMrdnqjoTszG/RjvE6pHbK+buyrydJVujWft/kRPKkn6NMvAoN7pF8oe694U30F38No32+1pWfkqBhrtHQI8OPL5tnZBLqL0qFfheCgs5yvp91LOojYlbePZAX0rZay/wkTLqZU/AE=
+	t=1741649304; cv=none; b=f3UpRivAzAQO9LnOOuflTcK1VJ4WlIK+yqZpNMZg06amb67XhvN9r3Nb2Mw+QMgZpEDCnOc9GtlOO0ksSyFIXA+eH7lGhjngNYL6lPLsJlr7G3XgjuGvVUf0pjDBhOoGR4jQOh+vyPunEqg01EEFtW6XCwbOXSiR8SxPNH6WosU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741647858; c=relaxed/simple;
-	bh=Zdfhh0ipuN8MCu+L9MfsZd22Ig8nwfFBb83EjH5gd20=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LmGik4XulpdqjcxHk6c/A9FXKEBX5993zzH9ZVipV22V7iEyqEPfglQ5/Mo65T4sk2JK8aPxZlhIDY4xxsXgV+87dVEDGT61O+OobG+cVZ2glX0R8NiFOrwvCafAajC/Ma8kAXDf9MDp18hSpGV+F+TGlxXk0jChg2POzDxexNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bi7UI5DE; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741649304; c=relaxed/simple;
+	bh=YgtDs42GP3+hQVvEJ5bZ8+W8RlDBquC/5yK6WJ9VOeE=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=or19p7Vbi+VYLaGq2dSOyK9PDKvjp29PT1ZFTMEXvGm8O0864cncc1jVzUFnAVHnKi6k+I3toK4d52DLkjdPwiC5NW6na8tzutg+As0cKOSSunPMdiWnkBkPBUIduij/SPZ5JVtHBJYXUty2wnfiZsb4c8nzpD4cOZk425ivHvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=D3VztlVi; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bi7UI5DE"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2ff5f2c5924so1354251a91.2;
-        Mon, 10 Mar 2025 16:04:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741647855; x=1742252655; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Zdfhh0ipuN8MCu+L9MfsZd22Ig8nwfFBb83EjH5gd20=;
-        b=bi7UI5DEBJlt7U4r55V7KBGdjXbdTvBKyq/SSMRyB06RKZAE8w4BeZSmSypdq5xir/
-         kYwODsGm7fzIveNDY9dlVeLlExO63G7EnftqXOeEwdww2p1MWE91biOc8PDSfTdGVMEJ
-         9Sw/qPQ01jVBm86s/AtC1QE7X2/Gaptl0ZrYWqKlxVtJld6mKvopVTro+b0n6eR84Awq
-         tQciBCQXtSVUDE6uOr4F0k0DiQMPWRoWuMJhPp597cT5vaeklyXbN9THdKPzqhGfYodQ
-         5f2rT1fDlPLItK0s/mLAO9tYW/TmrvJcp0za5RYbEjPMeZPZV6zmEXdNPCgvRVkSBsA0
-         yraQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741647855; x=1742252655;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Zdfhh0ipuN8MCu+L9MfsZd22Ig8nwfFBb83EjH5gd20=;
-        b=kLLVZoGYFfq2RePo2ERgysSINvUBKC+9O40nKX8mA8qNJyYI47PMdbWkrgX2tYfyUK
-         5nIetnNCvd5hLibMeqKtL0YujUw5dhsWiQVL6ybU1vLhnDM472TcONiTNogdbA+bXkNT
-         hgg6x87GXwKCtG1PAJ+iifkKIPeJIkxrLLFvq8sqo7m+CGD2xFU2PhoFNhGu3vtIcFDz
-         1DTb76MW0vA4FXZaCWY/ujv4xG2FqG4qqMFl5cXQb6EJSsFE2tmvCksYykAHNiCggLEr
-         MKdr4/CtPvc+VS2oiUHc8690E/J2izp2KxBBzlFTaQSGiTEO0sME6pSewW5K+UscyPPc
-         TwVg==
-X-Forwarded-Encrypted: i=1; AJvYcCUCNUQIe3/SGZFv346cez0UHAUgWtPxA58hbWIxid9TXF6ho6WWzMhUI1ef+QtT0J0RIBJdHUjodi9LwFWr3Czv@vger.kernel.org, AJvYcCVtbcN3ICg6dgtylRTXcjq49d9gTrE+qTUzvWlebXYEZ5ovSncxf3wKTEgNsj8NMK1HmrItWT5gbNZe@vger.kernel.org, AJvYcCWg1q0cTPK707yCR5kl/2r/Ov5pkEkrwtJBYe95NG/ZqM9ct86r5Fnqu/u7c+Q9ARoOEw5WrupzfBfkJ96k@vger.kernel.org
-X-Gm-Message-State: AOJu0YyzM6SZhqQEpQfEUgYafmiHfxBrbm0mYX1FACE/43r1guXvWUCk
-	+qE6y2zC9ztKWLjZmYOo0J5k//M9hvPniPx34UWY4Ep1UqqeNIzvUCt5/a1XCepaDvFHGmOtRTS
-	HkzJl50vlYTvSljNtuuyQw9LxiRU=
-X-Gm-Gg: ASbGncvaRsah+kUNPZL8a8AWUtz5MrSzbopS9Jry7TnnceLahJURnSToXjHWW0i6s9q
-	tiUFCaKIBEnD59IgxQebU8D+e5Bm4QvvxmicKfDMcVV9T+ukJm5yNZkLzEhqUZ0HGdwFKp3P+Wv
-	fr6W2j9vVCnVWcMUYyOxXixRWC4w==
-X-Google-Smtp-Source: AGHT+IH6T8fdGIzDXC4W4TJjk1AVx/xQcuVgZrI0OMlDI+CxP0UiXAkP8MlnNFwcdqOhyukWA7xsEQmiPq3/ophLU1U=
-X-Received: by 2002:a17:90b:1c8d:b0:2ee:6563:20b5 with SMTP id
- 98e67ed59e1d1-300ff37b586mr756039a91.0.1741647855338; Mon, 10 Mar 2025
- 16:04:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="D3VztlVi"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 4ED3D2523E;
+	Tue, 11 Mar 2025 00:28:19 +0100 (CET)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id arNFgvqEY91e; Tue, 11 Mar 2025 00:28:15 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1741649294; bh=YgtDs42GP3+hQVvEJ5bZ8+W8RlDBquC/5yK6WJ9VOeE=;
+	h=Date:To:Cc:References:Subject:From:In-Reply-To;
+	b=D3VztlViWhYZRVFOT2knHCNPNvKqkQnK2SL2SkfMU6y1cXM+1rZLG2KeXKwdek/XP
+	 QTVc/edoFIne15TLRmKZC6ogwrasn/B9LORQiMcMlZ9EKF1rZFyQcf14TfU3OaKj2n
+	 LQSTlwKCFnsZEkPKCsM6oFwZsM/+VQnUtQgQjbdgIMpxR9tPEhEivvzd5Vgezlbrqm
+	 LR6nbtyVfq97NiktQv7oVL5dRQXw4+F6P2qsDxM5DZRFsVwaibt4Wzb1vklBthMbLy
+	 FLfkb9+di+thL8nZPyG8NLDB6LB3vx4d93P9SK3KFGcfG21EVYAJy/DflVBhXSuPNZ
+	 o0mgkETyui2ng==
+Message-ID: <69f26012-e71b-438f-ac58-e0a3faaf4d43@disroot.org>
+Date: Tue, 11 Mar 2025 07:28:05 +0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250310214244.work.194-kees@kernel.org>
-In-Reply-To: <20250310214244.work.194-kees@kernel.org>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Tue, 11 Mar 2025 00:04:02 +0100
-X-Gm-Features: AQ5f1JpZqJCnF45H_65NrQFI7MtNuIN6z8BNK855RsbyJrPe9EJztgfm--UbPaE
-Message-ID: <CANiq72=n97YAJEMtgQFJbRP=Mt-SqznX0xcqxxXeeiXCPTqpoA@mail.gmail.com>
-Subject: Re: [PATCH] compiler_types: Introduce __nonstring_array
-To: Kees Cook <kees@kernel.org>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, Marco Elver <elver@google.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Przemek Kitszel <przemyslaw.kitszel@intel.com>, 
-	Hao Luo <haoluo@google.com>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Johannes Weiner <hannes@cmpxchg.org>, 
-	linux-acpi@vger.kernel.org, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Alexander Potapenko <glider@google.com>, Yafang Shao <laoar.shao@gmail.com>, 
-	Jan Hendrik Farr <kernel@jfarr.cc>, Tony Ambardar <tony.ambardar@gmail.com>, 
-	Alexander Lobakin <aleksander.lobakin@intel.com>, Alice Ryhl <aliceryhl@google.com>, 
-	Tejun Heo <tj@kernel.org>, Yoann Congal <yoann.congal@smile.fr>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Jens Axboe <axboe@kernel.dk>, 
-	Chen Ridong <chenridong@huawei.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Jann Horn <jannh@google.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+To: konrad.dybcio@oss.qualcomm.com
+Cc: andersson@kernel.org, conor+dt@kernel.org, devicetree@vger.kernel.org,
+ gpiccoli@igalia.com, kees@kernel.org, konradybcio@kernel.org,
+ krzk+dt@kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+ robh@kernel.org, semfault@disroot.org, tony.luck@intel.com
+References: <0bcdb8f9-9a3b-4d6b-bf7e-55a22ffc5df9@oss.qualcomm.com>
+Subject: Re: [PATCH v2 2/2] arm64: dts: qcom: sm6125: Initial support for
+ xiaomi-ginkgo
+Content-Language: en-US
+From: Gabriel Gonzales <semfault@disroot.org>
+In-Reply-To: <0bcdb8f9-9a3b-4d6b-bf7e-55a22ffc5df9@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, Mar 10, 2025 at 10:42=E2=80=AFPM Kees Cook <kees@kernel.org> wrote:
->
-> GCC has expanded support of the "nonstring" attribute so that it can be
-> applied to arrays of character arrays[1], which is needed to identify
-> correct static initialization of those kinds of objects. Since this was
-> not supported prior to GCC 15, we need to distinguish the usage of Linux'=
-s
-> existing __nonstring macro for the attribute for non-multi-dimensional
-> char arrays. Until GCC 15 is the minimum version, use __nonstring_array t=
-o
-> mark arrays of non-string character arrays. (Regular non-string character
-> arrays can continue to use __nonstring.)
+On 3/8/25 23:11, Konrad Dybcio wrote:
 
-Sounds reasonable. So this means that, when the GCC minimum goes over
-15 in some years, we can both remove it and move it to
-`compiler_attributes.h`, right?
+ > > +&hsusb_phy1 {
+ > > +    vdd-supply = <&vreg_l7a>;
+ > > +    vdda-pll-supply = <&vreg_l10a>;
+ > > +    vdda-phy-dpdm-supply = <&vreg_l15a>;
+ >> +    status = "okay";
+ > Please add a before 'status', file-wide
 
-Perhaps we should mention part of this commit message (or the sentence
-above) in the comment to clarify (it will also help to clarify what
-that "only supported since GCC >=3D 15" means).
+'a-status'?
 
-If you are going to use it in a series that has a use case:
+[...]
 
-Acked-by: Miguel Ojeda <ojeda@kernel.org>
+ > > +&tlmm {
+ > > +    gpio-reserved-ranges = <22 2>, <28 6>;
 
-Thanks!
+ > Would you happen to know what's on the other end of these?
 
-Cheers,
-Miguel
+Unfortunately, no.
+
+[...]
+
+Gabriel
+
