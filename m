@@ -1,164 +1,90 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 443ED22F389;
-	Mon, 10 Mar 2025 14:36:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FC4E22AE7C;
+	Mon, 10 Mar 2025 17:24:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741617383; cv=none; b=E5DWc1AMk/i4qUB8L52doB9PbnZz4GI6iX9EWAZ3ArmeyY07WQNdpGqZDfd8LQvaFQS+cYemBkngLbD+WWdkrQZJS+hx+jzrdrQczKaH5VPaQzJS6xoS8q7YdjUAMR8pomwvuQuQpgJd08hibKzBJhowwGyQS09S39/QQI8kC1A=
+	t=1741627453; cv=none; b=ZGJGtw6SpM1ZKa532v2MLl4JrwzTTp5wbz0t/Y4SP4C/Fx1KCSvKJBFImQsoS7DRUF4+mwHQsXg8Oe7dRmBZPhQnlc4WMKGuE9s8gge17GMpilzTIobvXVWPGS/TI8D59VrSG8BUOJp3hslW1abxpPMPVFzyO42LMdwdOT79KOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741617383; c=relaxed/simple;
-	bh=q3s4rOnXy37wdFzxQu/RNjjCEcykgoi23YsXA8+FOWI=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=Hv9mCRCViZZ5YF/NMnlb6Rm6BveVxu6SO9zYi8tYPxpBnuOk7/HCqD18ypsXaTHIjH3bKocRPzHyU3jIaXJrl67jDdL8Mp3IrEiLlSnxifEfU+wNP5f9faQ4qt8GHLHaVUiZKZR84zCL3RBs03PqyaNApca0BWBFL4YiD1aq2zY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kfxd2Taz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741627453; c=relaxed/simple;
+	bh=KxCVrFtEEQ489IO+8LWASMRjBenAxwUf883ccdADMVc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hXoSGCHg4ybUNCilarScnhno2Fz0X44zcoxSq0CyIIQEMzFuMKjEpotdBQPACqbDs/h4b1SaQ3hDavbxWLyhzjQfmtUzjAOy+H9cdktw46W1P6dnbxrtTs4PwNk95RSj9lR2Hj/0v0MEkyaQOp6FYmIIfhIR9OTuy2PD2eLe19c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pt3cuynU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kfxd2Taz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81848C4CEE5;
-	Mon, 10 Mar 2025 14:36:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pt3cuynU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8AC4C4CEEC;
+	Mon, 10 Mar 2025 17:24:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741617382;
-	bh=q3s4rOnXy37wdFzxQu/RNjjCEcykgoi23YsXA8+FOWI=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=kfxd2TazEccTDm5XMf3ZFHC9m1w7x2tUDW/VVBLqF3WLhn5RMrq+sMt32CecErOFF
-	 JJeosqitGJGV/gbwweEC15l3qqCUXdxagzMXiGmxD/XitdHtD4GHzJLh1yCcxcyUvY
-	 YS9on5cE2x7iNLSWFGLP6H7FJ9aQo5ITqzjUB8cipqWQp8xZmQEA54QqbENncsq18U
-	 0PS14rlzzX5K9E98e+E4xi90y8frHVbKYGOqf/1gKLvhvIzsT2MBZd0O5/4f54lX9c
-	 D+Ak4vAY09nJOTwB28pfcV7hjQBsUNF85rfODa2fBwPb8bvuyG4KjPgVLREaxBD57A
-	 EXpHn+j++IzIg==
-Date: Mon, 10 Mar 2025 09:36:21 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=k20201202; t=1741627452;
+	bh=KxCVrFtEEQ489IO+8LWASMRjBenAxwUf883ccdADMVc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Pt3cuynUjtE+SMseBKPGdQYThBoNnPCnoJwgIL0KGM5Ixz0N3mCXFufKTs9kkSFsH
+	 kotbgn9hmuA9XQu5LX0coGkGs+/v6b9jm2PfsNvHj0MHc+SBjsEl+guByNBzS3nCZR
+	 615PZLM5isfmdCN7xk1S0aDZn8Hh2X/GsXDcBRObtjn0PDtBEvDixCqpT2l13hy7CG
+	 As8CP9unJ2bnI6QAvpjQmFONddNeFeM+giBRkh+4hs792q+I1mcBa+bn2s5H3MmhFC
+	 cs1REYTNtcwepOAoE/wX/VReN8YT8DVyIjMtCjnfxYbqj7idUILczrUfSq1Z3fljgD
+	 B4QSzSWe+RCDA==
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-30bf251025aso34247471fa.1;
+        Mon, 10 Mar 2025 10:24:12 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWpFiIjixI31TEawQARX4CafUigwrU7f1ZbpIJxChytzzT4vm9mMfuKpQEHk1mnBYhTkYf8OhhQ2kSMNEdx@vger.kernel.org, AJvYcCWtYxHG0UHC7Kn/IrdZ0EWXuokzEF28+PYmUi8ncYeQimiA3X3cQjpbVmXwe9dL0e+sraFTFvCunafL63fPIZU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YydE3k38yVFxtMOkDLSW4GNEa9ITQYR2xn9k1TqfRU9HpzgY1ZD
+	Ump9ybTsM55lKblTsG/beglPbbOQYnanlrINcg7QF0Pp8q3dVPu5KjeJKCYKSWLzdgkPuI5R+m6
+	PsQq+QLAJWF6/Q/PyALTkIx2hhiI=
+X-Google-Smtp-Source: AGHT+IGDP35HxL6L4rAJ9cayRi1yFXnNJWJ+1hc45NrBGj/WElMB/wxvCYz04jCP6aYQds3stLvQSAMSUrqB0yhFHXw=
+X-Received: by 2002:a2e:9d05:0:b0:309:23ea:5919 with SMTP id
+ 38308e7fff4ca-30bf462423dmr40930191fa.31.1741627451205; Mon, 10 Mar 2025
+ 10:24:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, linux-kernel@vger.kernel.org, 
- Kees Cook <kees@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
- linux-hardening@vger.kernel.org, devicetree@vger.kernel.org, 
- Tony Luck <tony.luck@intel.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- linux-arm-msm@vger.kernel.org, Ivan Belokobylskiy <belokobylskij@gmail.com>, 
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>, 
- Conor Dooley <conor+dt@kernel.org>
-To: David Heidelberg <david@ixit.cz>
-In-Reply-To: <20250309-lg-nexus4-mako-v3-1-1dc2807df296@ixit.cz>
-References: <20250309-lg-nexus4-mako-v3-1-1dc2807df296@ixit.cz>
-Message-Id: <174161712658.4185344.17167597331215036705.robh@kernel.org>
-Subject: Re: [PATCH v3] ARM: dts: nexus4: Initial dts
+References: <20250308-efibc-kmalloc_array-v1-1-7bfc4013986f@ethancedwards.com>
+In-Reply-To: <20250308-efibc-kmalloc_array-v1-1-7bfc4013986f@ethancedwards.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Mon, 10 Mar 2025 18:23:59 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXHuMt5QfkKbErmou3TB=5aOENPW=0+Vexom_Y_iFd98qA@mail.gmail.com>
+X-Gm-Features: AQ5f1Jp7a1_yGUrVfOp-0rUojPlpvr9tH7JA_CWRKmb9aQX44_SaGdio6iKyS_Q
+Message-ID: <CAMj1kXHuMt5QfkKbErmou3TB=5aOENPW=0+Vexom_Y_iFd98qA@mail.gmail.com>
+Subject: Re: [PATCH] efi: efibc: change kmalloc(size * count, ...) to kmalloc_array()
+To: Ethan Carter Edwards <ethan@ethancedwards.com>
+Cc: linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-
-On Sun, 09 Mar 2025 01:45:51 +0100, David Heidelberg wrote:
-> From: Ivan Belokobylskiy <belokobylskij@gmail.com>
-> 
-> Add initial support for LG Nexus 4 (mako).
-> 
-> Features currently working: regulators, eMMC, WiFi, and volume keys.
-> 
-> Signed-off-by: Ivan Belokobylskiy <belokobylskij@gmail.com>
-> Signed-off-by: David Heidelberg <david@ixit.cz>
+On Sun, 9 Mar 2025 at 02:27, Ethan Carter Edwards
+<ethan@ethancedwards.com> wrote:
+>
+> Open coded arithmetic in allocator arguments is discouraged. Helper
+> functions like kcalloc or, in this case, kmalloc_array are preferred.
+>
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments
+>
+> Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
 > ---
-> Changes in v3:
-> - rebased against next-20250307
-> - dropped backlight until driver gets converted to DT
-> 
-> Changes in v2:
-> - lge vendor doesn't exist anymore, rename to lg
-> - sdcc@ to mmc@ to comply with dt-schema
+>  drivers/firmware/efi/efibc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/firmware/efi/efibc.c b/drivers/firmware/efi/efibc.c
+> index 4f9fb086eab7b0e22252d22e59e5aae55865322d..0a7c764dcc614fbba3cbcd94183dc07939837a03 100644
+> --- a/drivers/firmware/efi/efibc.c
+> +++ b/drivers/firmware/efi/efibc.c
+> @@ -47,7 +47,7 @@ static int efibc_reboot_notifier_call(struct notifier_block *notifier,
+>         if (ret || !data)
+>                 return NOTIFY_DONE;
+>
+> -       wdata = kmalloc(MAX_DATA_LEN * sizeof(efi_char16_t), GFP_KERNEL);
+> +       wdata = kmalloc_array(MAX_DATA_LEN, sizeof(efi_char16_t), GFP_KERNEL);
+>         if (!wdata)
+>                 return NOTIFY_DONE;
+>
+>
 > ---
->  arch/arm/boot/dts/qcom/Makefile                    |   1 +
->  .../boot/dts/qcom/qcom-apq8064-lg-nexus4-mako.dts  | 342 +++++++++++++++++++++
->  2 files changed, 343 insertions(+)
-> 
+> base-commit: 0a2f889128969dab41861b6e40111aa03dc57014
+> change-id: 20250308-efibc-kmalloc_array-ba78097a0708
+>
 
-
-My bot found new DTB warnings on the .dts files added or changed in this
-series.
-
-Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-are fixed by another series. Ultimately, it is up to the platform
-maintainer whether these warnings are acceptable or not. No need to reply
-unless the platform maintainer has comments.
-
-If you already ran DT checks and didn't see these error(s), then
-make sure dt-schema is up to date:
-
-  pip3 install dtschema --upgrade
-
-
-New warnings running 'make CHECK_DTBS=y for arch/arm/boot/dts/qcom/' for 20250309-lg-nexus4-mako-v3-1-1dc2807df296@ixit.cz:
-
-Error: arch/arm/boot/dts/qcom/qcom-apq8064-lg-nexus4-mako.dts:289.1-10 Label or path pmicintc not found
-FATAL ERROR: Syntax error parsing input tree
-make[3]: *** [scripts/Makefile.dtbs:131: arch/arm/boot/dts/qcom/qcom-apq8064-lg-nexus4-mako.dtb] Error 1
-make[2]: *** [scripts/Makefile.build:461: arch/arm/boot/dts/qcom] Error 2
-make[2]: Target 'arch/arm/boot/dts/qcom/qcom-apq8064-lg-nexus4-mako.dtb' not remade because of errors.
-make[1]: *** [/home/rob/proj/linux-dt-testing/Makefile:1467: qcom/qcom-apq8064-lg-nexus4-mako.dtb] Error 2
-make: *** [Makefile:251: __sub-make] Error 2
-make: Target 'qcom/qcom-mdm9615-wp8548-mangoh-green.dtb' not remade because of errors.
-make: Target 'qcom/qcom-ipq4019-ap.dk07.1-c1.dtb' not remade because of errors.
-make: Target 'qcom/qcom-msm8974-lge-nexus5-hammerhead.dtb' not remade because of errors.
-make: Target 'qcom/qcom-msm8974pro-samsung-klte.dtb' not remade because of errors.
-make: Target 'qcom/qcom-ipq4019-ap.dk07.1-c2.dtb' not remade because of errors.
-make: Target 'qcom/qcom-msm8916-samsung-serranove.dtb' not remade because of errors.
-make: Target 'qcom/qcom-sdx65-mtp.dtb' not remade because of errors.
-make: Target 'qcom/qcom-msm8226-samsung-ms013g.dtb' not remade because of errors.
-make: Target 'qcom/qcom-ipq4018-ap120c-ac-bit.dtb' not remade because of errors.
-make: Target 'qcom/qcom-msm8974-sony-xperia-rhine-amami.dtb' not remade because of errors.
-make: Target 'qcom/qcom-msm8226-microsoft-dempsey.dtb' not remade because of errors.
-make: Target 'qcom/qcom-msm8916-samsung-grandmax.dtb' not remade because of errors.
-make: Target 'qcom/qcom-apq8064-ifc6410.dtb' not remade because of errors.
-make: Target 'qcom/qcom-apq8064-sony-xperia-lagan-yuga.dtb' not remade because of errors.
-make: Target 'qcom/qcom-ipq4019-ap.dk01.1-c1.dtb' not remade because of errors.
-make: Target 'qcom/qcom-msm8974pro-samsung-kltechn.dtb' not remade because of errors.
-make: Target 'qcom/qcom-msm8974pro-sony-xperia-shinano-aries.dtb' not remade because of errors.
-make: Target 'qcom/qcom-apq8026-samsung-matisse-wifi.dtb' not remade because of errors.
-make: Target 'qcom/qcom-apq8064-cm-qs600.dtb' not remade because of errors.
-make: Target 'qcom/qcom-apq8084-ifc6540.dtb' not remade because of errors.
-make: Target 'qcom/qcom-ipq4019-ap.dk04.1-c3.dtb' not remade because of errors.
-make: Target 'qcom/qcom-msm8916-samsung-e7.dtb' not remade because of errors.
-make: Target 'qcom/qcom-msm8226-samsung-s3ve3g.dtb' not remade because of errors.
-make: Target 'qcom/qcom-msm8974-sony-xperia-rhine-honami.dtb' not remade because of errors.
-make: Target 'qcom/qcom-ipq4018-jalapeno.dtb' not remade because of errors.
-make: Target 'qcom/qcom-apq8026-samsung-milletwifi.dtb' not remade because of errors.
-make: Target 'qcom/qcom-msm8974pro-sony-xperia-shinano-leo.dtb' not remade because of errors.
-make: Target 'qcom/qcom-apq8026-lg-lenok.dtb' not remade because of errors.
-make: Target 'qcom/qcom-sdx55-mtp.dtb' not remade because of errors.
-make: Target 'qcom/qcom-msm8960-cdp.dtb' not remade because of errors.
-make: Target 'qcom/qcom-apq8016-sbc.dtb' not remade because of errors.
-make: Target 'qcom/qcom-apq8064-asus-nexus7-flo.dtb' not remade because of errors.
-make: Target 'qcom/qcom-ipq4018-ap120c-ac.dtb' not remade because of errors.
-make: Target 'qcom/qcom-msm8974pro-htc-m8.dtb' not remade because of errors.
-make: Target 'qcom/qcom-apq8026-asus-sparrow.dtb' not remade because of errors.
-make: Target 'qcom/qcom-msm8926-htc-memul.dtb' not remade because of errors.
-make: Target 'qcom/qcom-apq8026-huawei-sturgeon.dtb' not remade because of errors.
-make: Target 'qcom/qcom-ipq8064-ap148.dtb' not remade because of errors.
-make: Target 'qcom/qcom-msm8226-microsoft-makepeace.dtb' not remade because of errors.
-make: Target 'qcom/qcom-ipq8064-rb3011.dtb' not remade because of errors.
-make: Target 'qcom/qcom-msm8974pro-fairphone-fp2.dtb' not remade because of errors.
-make: Target 'qcom/qcom-apq8074-dragonboard.dtb' not remade because of errors.
-make: Target 'qcom/qcom-msm8916-samsung-e5.dtb' not remade because of errors.
-make: Target 'qcom/qcom-msm8926-motorola-peregrine.dtb' not remade because of errors.
-make: Target 'qcom/qcom-msm8926-samsung-matisselte.dtb' not remade because of errors.
-make: Target 'qcom/msm8226-motorola-falcon.dtb' not remade because of errors.
-make: Target 'qcom/qcom-apq8060-dragonboard.dtb' not remade because of errors.
-make: Target 'qcom/qcom-msm8974pro-oneplus-bacon.dtb' not remade because of errors.
-make: Target 'qcom/qcom-sdx55-t55.dtb' not remade because of errors.
-make: Target 'qcom/qcom-apq8084-mtp.dtb' not remade because of errors.
-make: Target 'qcom/qcom-msm8960-samsung-expressatt.dtb' not remade because of errors.
-make: Target 'qcom/qcom-msm8926-microsoft-tesla.dtb' not remade because of errors.
-make: Target 'qcom/qcom-ipq4019-ap.dk04.1-c1.dtb' not remade because of errors.
-make: Target 'qcom/qcom-msm8926-microsoft-superman-lte.dtb' not remade because of errors.
-make: Target 'qcom/qcom-sdx55-telit-fn980-tlb.dtb' not remade because of errors.
-make: Target 'qcom/qcom-msm8974pro-sony-xperia-shinano-castor.dtb' not remade because of errors.
-make: Target 'qcom/qcom-msm8660-surf.dtb' not remade because of errors.
-make: Target 'qcom/qcom-msm8974-samsung-hlte.dtb' not remade because of errors.
-make: Target 'qcom/qcom-apq8064-lg-nexus4-mako.dtb' not remade because of errors.
-make: Target 'qcom/qcom-msm8226-microsoft-moneypenny.dtb' not remade because of errors.
-
-
-
-
-
+Queued up in efi/next, thanks.
