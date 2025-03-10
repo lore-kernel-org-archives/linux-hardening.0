@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 490DE1F4C87;
-	Mon, 10 Mar 2025 22:25:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2366A1F0980;
+	Mon, 10 Mar 2025 22:25:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741645535; cv=none; b=mM0tc6K7wBCaOA3ZjBE7DPGiq8QxnRsyGxUicdjD8UsoKnxmLq1oGElIIP6c78dKITFR8vXp8OvQ+PGn7OaYBDOkGzNTzA0JcxWub3/x+PATp8af9ANT1E3KSxaw9ne0MNS33TiOivysIhM5NP2KZnPr72XM+SiBF2NoLnGXZwg=
+	t=1741645559; cv=none; b=LcabxHSGno7fuFAWWwmoLSgoGC2Q2Ag2X1hJEibzouy5XMOXELdGlpcbf6TIZ3MuJzMVT3yp7YFk7iFH4kT3eMEQZhwbQiu58Ehuv22I5yGzmbvbAxUYSgRp1b+DZKsnQ48fQZIpPvBeIpHG1+IghdAUqxbOvM+ICykGgVwJdp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741645535; c=relaxed/simple;
-	bh=toNx9CLEtAH8f4PMhwMHxq60ik9H3b5D5G1iFVqwsCQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OZPiY6uix4Ak/+EUgqm0/PZS7h9Y48FDuJPk/wGCLR/w4SXJNcW4YHAsthH6q7dss199XT2eWLrf5M44MYqfc45vffTS6NQdW8AAlh7+0hVAlVCyVc/hhtrOisI1xDoQ0qUrzdeoHgE9QkF6M0XYz0wIEcGuHD6MwHfMOCd1bdw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SVgqByfm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741645559; c=relaxed/simple;
+	bh=TbMG0G5ruPGPNuDA0sR4FCIF3PfxM4T3VhFvCKDb0ik=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=azLr0dsCqkOVnLIHUgUjBtsBc2DPTQYDp2sds7u9KgXjJ8/bwLgZg58sfmYdM9RrKQVPwT3C/Mbu/2IQ3Wemhkgr9NMf+oMqd/MTd9ZvuoraTxGdQEIeo7qftnIa2K2LxjcsQfpHOZzceWyj1BOd6/AdfntFt+tgMhniFvilOuc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SObI+u1e; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SVgqByfm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9871C4CEE5;
-	Mon, 10 Mar 2025 22:25:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SObI+u1e"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A8C9C4CEE5;
+	Mon, 10 Mar 2025 22:25:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741645534;
-	bh=toNx9CLEtAH8f4PMhwMHxq60ik9H3b5D5G1iFVqwsCQ=;
+	s=k20201202; t=1741645558;
+	bh=TbMG0G5ruPGPNuDA0sR4FCIF3PfxM4T3VhFvCKDb0ik=;
 	h=From:To:Cc:Subject:Date:From;
-	b=SVgqByfmQG5t3EUNHd5WH6CNPf7u12LskLfFkqpVHLK3J1KQVThp676+43DiMAKqx
-	 yMGVx0+ZMY4rsovPju8TE3aLwr1d51ETXZOcxwh9aqNrzS02pav2B7/esbVQITHyeF
-	 vLU/5WUMP5Jbfaf5geAQvA2HQ6YnxGQ4Fmv/Ft+NbScUjP8BX1GO33il0R0mKO5dtw
-	 2dQ1i6bRqwfa9HG6//VCf3R86hJYklaX+W1OnBfy6jU8bvxtuIp9L6WNP1eQcF4AZO
-	 8TNyPgjgxp2cYJ36T1x/l4ViYjtUpkzly7rUWpav1P5fk0RNbJNnEoWFaNKLPYXOqJ
-	 cQCtZj8dN6p2Q==
+	b=SObI+u1eHtJrhNrnNfjdzHiVMO4L8czNpI1B6OJ4x5ZSOMbMMB0YbRm/2LlTh/TS6
+	 OoLC3cw4tKh3alP5FS/bNutCrIfJtmVbAdiKv6iAtgk4Dmf/PKpO5F/sh9Uw7jXQEP
+	 q7Z9ik64BbPw5dRXFNAjkPGkOOZL2ec+jeALQmKyWEzMmQiUnZzJvEHW9CQs3zoejJ
+	 NhAG4iB+HyR2AnVO1rtbTryY7T4nG6RJeiglH2h+y0Ce6zT3PnJboCfLvP4401J1P6
+	 /9STKfOqRpxoaug8EtaTQ02l/40XMr2ZfaDHc4ncndvAPvGonzTTQWo7lmJKPPyceP
+	 cgLbcNBsVpWwA==
 From: Kees Cook <kees@kernel.org>
-To: Hans de Goede <hdegoede@redhat.com>
+To: Jack Wang <jinpu.wang@cloud.ionos.com>
 Cc: Kees Cook <kees@kernel.org>,
-	Brahmajit Das <brahmajit.xyz@gmail.com>,
-	Christian Brauner <brauner@kernel.org>,
-	linux-fsdevel@vger.kernel.org,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	linux-scsi@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH] vboxsf: Add __nonstring annotations for unterminated strings
-Date: Mon, 10 Mar 2025 15:25:31 -0700
-Message-Id: <20250310222530.work.374-kees@kernel.org>
+Subject: [PATCH] scsi: pm80xx: Add __nonstring annotations for unterminated strings
+Date: Mon, 10 Mar 2025 15:25:54 -0700
+Message-Id: <20250310222553.work.437-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -43,7 +43,7 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1404; i=kees@kernel.org; h=from:subject:message-id; bh=toNx9CLEtAH8f4PMhwMHxq60ik9H3b5D5G1iFVqwsCQ=; b=owGbwMvMwCVmps19z/KJym7G02pJDOnn026dMlzJw8kzLVpZ+Vno97LZV5rCPp5qqHvHtGudr NDr2+cedJSyMIhxMciKKbIE2bnHuXi8bQ93n6sIM4eVCWQIAxenAEzkcznDP1Vbgb3Wp5mueLV3 XDg7s+YdM3/ohvq0/BlTJ8lqpiZd6GVkuHekmfuQhLJjlKpH9zk9+7UXJsdcluaenOa7/PqxF0d u8AIA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1200; i=kees@kernel.org; h=from:subject:message-id; bh=TbMG0G5ruPGPNuDA0sR4FCIF3PfxM4T3VhFvCKDb0ik=; b=owGbwMvMwCVmps19z/KJym7G02pJDOnn0z5FMwuoJQrkmhhPNm2ely9wMjZlo5l1bMfVEI6Zc SJ7Ba07SlkYxLgYZMUUWYLs3ONcPN62h7vPVYSZw8oEMoSBi1MAJnKXn5Hh/uskyVku/kFROc07 /dbx9717q5Mw2edvRMSld+1h4qlqDP9rjFcJlz3Sa365vpp5V0/91aceahObeTa4uEn/ennglRI rAA==
 X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
@@ -53,34 +53,29 @@ warn if the array lacks the "nonstring" attribute[1]. Mark the arrays
 with __nonstring to and correctly identify the char array as "not a C
 string" and thereby eliminate the warning.
 
-This effectively reverts the change in 4e7487245abc ("vboxsf: fix building
-with GCC 15"), to add the annotation that has other uses (i.e. warning
-if the string is ever used with C string APIs).
-
 Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=117178 [1]
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: Brahmajit Das <brahmajit.xyz@gmail.com>
-Cc: Christian Brauner <brauner@kernel.org>
-Cc: linux-fsdevel@vger.kernel.org
+Cc: Jack Wang <jinpu.wang@cloud.ionos.com>
+Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
+Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: linux-scsi@vger.kernel.org
 Signed-off-by: Kees Cook <kees@kernel.org>
 ---
- fs/vboxsf/super.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/scsi/pm8001/pm8001_ctl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/vboxsf/super.c b/fs/vboxsf/super.c
-index 1d94bb784108..0bc96ab6580b 100644
---- a/fs/vboxsf/super.c
-+++ b/fs/vboxsf/super.c
-@@ -21,8 +21,7 @@
+diff --git a/drivers/scsi/pm8001/pm8001_ctl.c b/drivers/scsi/pm8001/pm8001_ctl.c
+index 85ff95c6543a..7618f9cc9986 100644
+--- a/drivers/scsi/pm8001/pm8001_ctl.c
++++ b/drivers/scsi/pm8001/pm8001_ctl.c
+@@ -644,7 +644,7 @@ static DEVICE_ATTR(gsm_log, S_IRUGO, pm8001_ctl_gsm_log_show, NULL);
+ #define FLASH_CMD_SET_NVMD    0x02
  
- #define VBOXSF_SUPER_MAGIC 0x786f4256 /* 'VBox' little endian */
+ struct flash_command {
+-     u8      command[8];
++     u8      command[8] __nonstring;
+      int     code;
+ };
  
--static const unsigned char VBSF_MOUNT_SIGNATURE[4] = { '\000', '\377', '\376',
--						       '\375' };
-+static const unsigned char VBSF_MOUNT_SIGNATURE[4] __nonstring = "\000\377\376\375";
- 
- static int follow_symlinks;
- module_param(follow_symlinks, int, 0444);
 -- 
 2.34.1
 
