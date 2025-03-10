@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C58B71EF398;
-	Mon, 10 Mar 2025 22:23:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 932AE1F09B5;
+	Mon, 10 Mar 2025 22:23:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741645424; cv=none; b=gPiBwWdLi3nRf9AHXKg+Sr3WS2ttClkuTWkOGzpsRK7uQcbgRQ3TfxZ7CKttKeKVtAIueQApnIP0meDxwyMAxWKn4gOkB67MrAEWFupH6NIFl3hxXzic4fqnCv25Z1P+0JnPkcv1FTdz7kSKaxfMh383L4PDEAaZ7BM87dYcr8w=
+	t=1741645430; cv=none; b=QM/ygyK0kTQ/HlPhrWi4tT8bkoh8alCk08mhW1Cjw4/Nm0dlkoQk7HRJNAUDd83M2yYrZHMDvVqDPSrrJMwt2wcMcv/TL7VsbNHLk4gOdtTPkXgy0iWaiixml+cV3t2UQdWcaERNZYIUtlcTAmjG7PbO6/OJ3tG5ITMXnpuaJI0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741645424; c=relaxed/simple;
-	bh=y2vB5VLFr3e3/HEwicy0eo+5v4Jm5b4+FPrqBJd8ICA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=IMhhU1XEvP85r/6EFaQ88WRlqfYq7K2k9eR+BSDszjU9sCHqBf8e+igeWO2pwDrqIR2gOLObFIwiIZ/kRaN2g4km+ccXHxIQVcwToizOlQHtqCt1717zqyQeACY06sFyiLEvZRB/EhpuvjMNqI6+EIEcC77u8WvDRU+5McvHQ4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sRD7/F6J; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741645430; c=relaxed/simple;
+	bh=kdUCSqpuasqowRfAXURMX8w3Qjxb4lGeKUORyMRWdKU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=c/YoN5d9tsv64VUUMXReS7alHq1qyXOzL7/rdIdvKmG8Mv/7jCV6n+pFh23hKqcV3abVjGPDEwHLSa2QncexwOlAf50l6cqOVc5Qz+rg8+WGGSOvuyju5MuZq/Fxk5YGplyt+DRK9/RpXYDPLZWJSoBLUJXeXuPp8Sb5aitIyQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oluzkh+7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sRD7/F6J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D5A9C4CEE5;
-	Mon, 10 Mar 2025 22:23:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oluzkh+7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D58AC4CEE5;
+	Mon, 10 Mar 2025 22:23:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741645424;
-	bh=y2vB5VLFr3e3/HEwicy0eo+5v4Jm5b4+FPrqBJd8ICA=;
+	s=k20201202; t=1741645430;
+	bh=kdUCSqpuasqowRfAXURMX8w3Qjxb4lGeKUORyMRWdKU=;
 	h=From:To:Cc:Subject:Date:From;
-	b=sRD7/F6JDqS4jQIsbj4grEcW1m+r1zx242I5Ljvup8dNxyiVYV8oloFSF6fTf2KyI
-	 W5CZLR7HtxprWrfuBCgYNlxoc5rz1yRHTNpLO1cl7t1XZobNrGHQznlzMqTIFdld0W
-	 dlUs/dV9Jy/x0717g+w3vUM1jDCIc/808mCojU+58JXv+aEozQ8vIfM+pMg3qsjcmI
-	 V+Z0pCUidxulAMDvOf44nBR1h+uNpVTXmcUYnl1s1AFEfiPpxRS/0lsi7zrTIH90NG
-	 jE3iQXy4JACDOEJ+lnLBlIwK8Ln+xUzXxk4dSYPgbR8HLlf73j7HA34ltXkiKLqdgw
-	 ZKsnkZDYwt8Kg==
+	b=oluzkh+772UtuIkObeJ5fMfMlTc2tTUhswd04G6ShiTvTE80i6rLI/tcDHNIo0bfI
+	 PdlT4vL4veTeqD1X1rI6wyGTSagpnAS/veT+Id0it9hv3GORfGK4ZBH71r1Pzs0FIr
+	 nRRcZAOQFMS6yVPLkWX3NEmT0EePEaUobAu/Cs3EV322jfRrydu01I+CNTAIt0tGlZ
+	 6D19ZQnEo6LyeTLJiOuHEoxSdKQiwfWpl1Lp73VzFGBPow324ELSnisYQvUqQ76YW8
+	 VQmdFDNdtkiqEu8JCLXHd78xFo2OMbrwMIsVQKw+mxsxzd4DkyKhfeSL4cmarzPF2/
+	 ndWYJ+f79b6AQ==
 From: Kees Cook <kees@kernel.org>
-To: Christian Lamparter <chunkeey@googlemail.com>
+To: Linus Walleij <linus.walleij@linaro.org>
 Cc: Kees Cook <kees@kernel.org>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	linux-wireless@vger.kernel.org,
+	Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	linux-iio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH] wifi: carl9170: Add __nonstring annotations for unterminated strings
-Date: Mon, 10 Mar 2025 15:23:40 -0700
-Message-Id: <20250310222339.work.654-kees@kernel.org>
+Subject: [PATCH] iio: magnetometer: ak8974: Add __nonstring annotations for unterminated strings
+Date: Mon, 10 Mar 2025 15:23:47 -0700
+Message-Id: <20250310222346.work.810-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -42,7 +43,7 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1235; i=kees@kernel.org; h=from:subject:message-id; bh=y2vB5VLFr3e3/HEwicy0eo+5v4Jm5b4+FPrqBJd8ICA=; b=owGbwMvMwCVmps19z/KJym7G02pJDOnn03LyrX2rPb158/c6ZLE3c1rnHlzhIztHyGPhvUZFi cu78053lLIwiHExyIopsgTZuce5eLxtD3efqwgzh5UJZAgDF6cATOTEK4b/YRr/moKWmtTfsui+ LabWnXTvxEGHkItWcRp/Z07byyfOw8hw3NgiM2KjyF5r2wdiLw0Nwhcff9SzSv9Wci5/YBPL0p1 sAA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1415; i=kees@kernel.org; h=from:subject:message-id; bh=kdUCSqpuasqowRfAXURMX8w3Qjxb4lGeKUORyMRWdKU=; b=owGbwMvMwCVmps19z/KJym7G02pJDOnn04pKn8xfm5Qw8Z1KiXGX3OKp0741VmX08Hcc3Ri6k c/nxJ8pHaUsDGJcDLJiiixBdu5xLh5v28Pd5yrCzGFlAhnCwMUpABNZdYvhv9f8I5d3uJ37mJhz +UGmoE7tpBufg3gi/D8LBV7gyQ7g4mFkmJhqvbXl4sWVJQ8aA1Ts4k4uP66rojLj62FbRXtJFp8 cNgA=
 X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
@@ -53,27 +54,30 @@ with __nonstring to and correctly identify the char array as "not a C
 string" and thereby eliminate the warning.
 
 Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=117178 [1]
-Cc: Christian Lamparter <chunkeey@googlemail.com>
-Cc: Johannes Berg <johannes@sipsolutions.net>
-Cc: linux-wireless@vger.kernel.org
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Jonathan Cameron <jic23@kernel.org>
+Cc: Lars-Peter Clausen <lars@metafoo.de>
+Cc: linux-iio@vger.kernel.org
 Signed-off-by: Kees Cook <kees@kernel.org>
 ---
- drivers/net/wireless/ath/carl9170/fw.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/iio/magnetometer/ak8974.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/carl9170/fw.c b/drivers/net/wireless/ath/carl9170/fw.c
-index 4c1aecd1163c..419f5530f885 100644
---- a/drivers/net/wireless/ath/carl9170/fw.c
-+++ b/drivers/net/wireless/ath/carl9170/fw.c
-@@ -15,7 +15,7 @@
- #include "fwcmd.h"
- #include "version.h"
+diff --git a/drivers/iio/magnetometer/ak8974.c b/drivers/iio/magnetometer/ak8974.c
+index 08975c60e325..44d8428a69b0 100644
+--- a/drivers/iio/magnetometer/ak8974.c
++++ b/drivers/iio/magnetometer/ak8974.c
+@@ -535,8 +535,8 @@ static int ak8974_detect(struct ak8974 *ak8974)
+ 				       fab_data2, sizeof(fab_data2));
  
--static const u8 otus_magic[4] = { OTUS_MAGIC };
-+static const u8 otus_magic[4] __nonstring = { OTUS_MAGIC };
- 
- static const void *carl9170_fw_find_desc(struct ar9170 *ar, const u8 descid[4],
- 	const unsigned int len, const u8 compatible_revision)
+ 		for (i = 0; i < 3; ++i) {
+-			static const char axis[3] = "XYZ";
+-			static const char pgaxis[6] = "ZYZXYX";
++			static const char axis[3] __nonstring = "XYZ";
++			static const char pgaxis[6] __nonstring = "ZYZXYX";
+ 			unsigned offz = le16_to_cpu(fab_data2[i]) & 0x7F;
+ 			unsigned fine = le16_to_cpu(fab_data1[i]);
+ 			unsigned sens = le16_to_cpu(fab_data1[i + 3]);
 -- 
 2.34.1
 
