@@ -1,102 +1,118 @@
-Received: from lamorak.hansenpartnership.com (lamorak.hansenpartnership.com [198.37.111.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 670F31F0980;
-	Mon, 10 Mar 2025 22:38:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.37.111.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2326A1DE3D2;
+	Mon, 10 Mar 2025 23:04:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741646285; cv=none; b=bbojwPYUjgynzmHcOhU1h3gOfrZPD3gdEdkva1l1/OYBCJn8BLFas/SMsC1jg1oDDHCiq4m2VFSHXSn8ZflTWLHISIPE8F/nfybdmyGMv21GJeXM54l9XQuMN1NDklZ+iD0Rea3TF2CAAIa6cgs04nF6IohPfSTtye4Kx6rqx8g=
+	t=1741647858; cv=none; b=s/JQuNG9UCJ3g6JQxdC9ephlHkmDg0DEXwMrdnqjoTszG/RjvE6pHbK+buyrydJVujWft/kRPKkn6NMvAoN7pF8oe694U30F38No32+1pWfkqBhrtHQI8OPL5tnZBLqL0qFfheCgs5yvp91LOojYlbePZAX0rZay/wkTLqZU/AE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741646285; c=relaxed/simple;
-	bh=+jEvQWn2mBVpJnKBZIXzqYAstBsSeuePf54z1fe50N0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ZZ1ugoJ76m65No99lXvMz26XYhSDWqO6YCfS9ADATunsIe1kkidjZ+KDGj1Bvl4+Z1aTXBTWHrmWii0Ef41HW2otOr5L/eVbR5hlOsYh/Uda2jfGdyS+X/3MJ7eDrBa3/GtUfwh0qM+CxFP2cZDe1UeqoUY7HuDQ1xz6WJUsjNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=E8zRecxO; arc=none smtp.client-ip=198.37.111.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
+	s=arc-20240116; t=1741647858; c=relaxed/simple;
+	bh=Zdfhh0ipuN8MCu+L9MfsZd22Ig8nwfFBb83EjH5gd20=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LmGik4XulpdqjcxHk6c/A9FXKEBX5993zzH9ZVipV22V7iEyqEPfglQ5/Mo65T4sk2JK8aPxZlhIDY4xxsXgV+87dVEDGT61O+OobG+cVZ2glX0R8NiFOrwvCafAajC/Ma8kAXDf9MDp18hSpGV+F+TGlxXk0jChg2POzDxexNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bi7UI5DE; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="E8zRecxO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=hansenpartnership.com; s=20151216; t=1741646282;
-	bh=+jEvQWn2mBVpJnKBZIXzqYAstBsSeuePf54z1fe50N0=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
-	b=E8zRecxO00JVAuGEjjk5M6BBL0oGAzf5El311mS7HJi68bt+iG+VSJsmeJg1WgXni
-	 OJw5FRDZ1MEOLRYNjRSeQglC5rdjDt9PLF61fMIOYj0LDFYSeoVQiyucx6tRZONFNK
-	 0r5JwSgHP3TrJkbkpgDLInfR5YxLV+R5qTNcKwlk=
-Received: from lingrow.int.hansenpartnership.com (unknown [IPv6:2601:5c4:4302:c21::a774])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by lamorak.hansenpartnership.com (Postfix) with ESMTPSA id 23C151C0280;
-	Mon, 10 Mar 2025 18:38:02 -0400 (EDT)
-Message-ID: <98ca3727d65a418e403b03f6b17341dbcb192764.camel@HansenPartnership.com>
-Subject: Re: [PATCH] scsi: pm80xx: Add __nonstring annotations for
- unterminated strings
-From: James Bottomley <James.Bottomley@HansenPartnership.com>
-To: Kees Cook <kees@kernel.org>, Jack Wang <jinpu.wang@cloud.ionos.com>
-Cc: "Martin K. Petersen" <martin.petersen@oracle.com>, 
-	linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Date: Mon, 10 Mar 2025 18:38:01 -0400
-In-Reply-To: <20250310222553.work.437-kees@kernel.org>
-References: <20250310222553.work.437-kees@kernel.org>
-Autocrypt: addr=James.Bottomley@HansenPartnership.com;
- prefer-encrypt=mutual;
- keydata=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
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.3 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bi7UI5DE"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2ff5f2c5924so1354251a91.2;
+        Mon, 10 Mar 2025 16:04:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741647855; x=1742252655; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Zdfhh0ipuN8MCu+L9MfsZd22Ig8nwfFBb83EjH5gd20=;
+        b=bi7UI5DEBJlt7U4r55V7KBGdjXbdTvBKyq/SSMRyB06RKZAE8w4BeZSmSypdq5xir/
+         kYwODsGm7fzIveNDY9dlVeLlExO63G7EnftqXOeEwdww2p1MWE91biOc8PDSfTdGVMEJ
+         9Sw/qPQ01jVBm86s/AtC1QE7X2/Gaptl0ZrYWqKlxVtJld6mKvopVTro+b0n6eR84Awq
+         tQciBCQXtSVUDE6uOr4F0k0DiQMPWRoWuMJhPp597cT5vaeklyXbN9THdKPzqhGfYodQ
+         5f2rT1fDlPLItK0s/mLAO9tYW/TmrvJcp0za5RYbEjPMeZPZV6zmEXdNPCgvRVkSBsA0
+         yraQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741647855; x=1742252655;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Zdfhh0ipuN8MCu+L9MfsZd22Ig8nwfFBb83EjH5gd20=;
+        b=kLLVZoGYFfq2RePo2ERgysSINvUBKC+9O40nKX8mA8qNJyYI47PMdbWkrgX2tYfyUK
+         5nIetnNCvd5hLibMeqKtL0YujUw5dhsWiQVL6ybU1vLhnDM472TcONiTNogdbA+bXkNT
+         hgg6x87GXwKCtG1PAJ+iifkKIPeJIkxrLLFvq8sqo7m+CGD2xFU2PhoFNhGu3vtIcFDz
+         1DTb76MW0vA4FXZaCWY/ujv4xG2FqG4qqMFl5cXQb6EJSsFE2tmvCksYykAHNiCggLEr
+         MKdr4/CtPvc+VS2oiUHc8690E/J2izp2KxBBzlFTaQSGiTEO0sME6pSewW5K+UscyPPc
+         TwVg==
+X-Forwarded-Encrypted: i=1; AJvYcCUCNUQIe3/SGZFv346cez0UHAUgWtPxA58hbWIxid9TXF6ho6WWzMhUI1ef+QtT0J0RIBJdHUjodi9LwFWr3Czv@vger.kernel.org, AJvYcCVtbcN3ICg6dgtylRTXcjq49d9gTrE+qTUzvWlebXYEZ5ovSncxf3wKTEgNsj8NMK1HmrItWT5gbNZe@vger.kernel.org, AJvYcCWg1q0cTPK707yCR5kl/2r/Ov5pkEkrwtJBYe95NG/ZqM9ct86r5Fnqu/u7c+Q9ARoOEw5WrupzfBfkJ96k@vger.kernel.org
+X-Gm-Message-State: AOJu0YyzM6SZhqQEpQfEUgYafmiHfxBrbm0mYX1FACE/43r1guXvWUCk
+	+qE6y2zC9ztKWLjZmYOo0J5k//M9hvPniPx34UWY4Ep1UqqeNIzvUCt5/a1XCepaDvFHGmOtRTS
+	HkzJl50vlYTvSljNtuuyQw9LxiRU=
+X-Gm-Gg: ASbGncvaRsah+kUNPZL8a8AWUtz5MrSzbopS9Jry7TnnceLahJURnSToXjHWW0i6s9q
+	tiUFCaKIBEnD59IgxQebU8D+e5Bm4QvvxmicKfDMcVV9T+ukJm5yNZkLzEhqUZ0HGdwFKp3P+Wv
+	fr6W2j9vVCnVWcMUYyOxXixRWC4w==
+X-Google-Smtp-Source: AGHT+IH6T8fdGIzDXC4W4TJjk1AVx/xQcuVgZrI0OMlDI+CxP0UiXAkP8MlnNFwcdqOhyukWA7xsEQmiPq3/ophLU1U=
+X-Received: by 2002:a17:90b:1c8d:b0:2ee:6563:20b5 with SMTP id
+ 98e67ed59e1d1-300ff37b586mr756039a91.0.1741647855338; Mon, 10 Mar 2025
+ 16:04:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20250310214244.work.194-kees@kernel.org>
+In-Reply-To: <20250310214244.work.194-kees@kernel.org>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Tue, 11 Mar 2025 00:04:02 +0100
+X-Gm-Features: AQ5f1JpZqJCnF45H_65NrQFI7MtNuIN6z8BNK855RsbyJrPe9EJztgfm--UbPaE
+Message-ID: <CANiq72=n97YAJEMtgQFJbRP=Mt-SqznX0xcqxxXeeiXCPTqpoA@mail.gmail.com>
+Subject: Re: [PATCH] compiler_types: Introduce __nonstring_array
+To: Kees Cook <kees@kernel.org>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, Marco Elver <elver@google.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Przemek Kitszel <przemyslaw.kitszel@intel.com>, 
+	Hao Luo <haoluo@google.com>, Masahiro Yamada <masahiroy@kernel.org>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Johannes Weiner <hannes@cmpxchg.org>, 
+	linux-acpi@vger.kernel.org, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Alexander Potapenko <glider@google.com>, Yafang Shao <laoar.shao@gmail.com>, 
+	Jan Hendrik Farr <kernel@jfarr.cc>, Tony Ambardar <tony.ambardar@gmail.com>, 
+	Alexander Lobakin <aleksander.lobakin@intel.com>, Alice Ryhl <aliceryhl@google.com>, 
+	Tejun Heo <tj@kernel.org>, Yoann Congal <yoann.congal@smile.fr>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Jens Axboe <axboe@kernel.dk>, 
+	Chen Ridong <chenridong@huawei.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Jann Horn <jannh@google.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2025-03-10 at 15:25 -0700, Kees Cook wrote:
-> When a character array without a terminating NUL character has a
-> static
-> initializer, GCC 15's -Wunterminated-string-initialization will only
-> warn if the array lacks the "nonstring" attribute[1]. Mark the arrays
-> with __nonstring to and correctly identify the char array as "not a C
-> string" and thereby eliminate the warning.
->=20
-> Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D117178=C2=A0[1]
-> Cc: Jack Wang <jinpu.wang@cloud.ionos.com>
-> Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
-> Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
-> Cc: linux-scsi@vger.kernel.org
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
-> =C2=A0drivers/scsi/pm8001/pm8001_ctl.c | 2 +-
-> =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/scsi/pm8001/pm8001_ctl.c
-> b/drivers/scsi/pm8001/pm8001_ctl.c
-> index 85ff95c6543a..7618f9cc9986 100644
-> --- a/drivers/scsi/pm8001/pm8001_ctl.c
-> +++ b/drivers/scsi/pm8001/pm8001_ctl.c
-> @@ -644,7 +644,7 @@ static DEVICE_ATTR(gsm_log, S_IRUGO,
-> pm8001_ctl_gsm_log_show, NULL);
-> =C2=A0#define FLASH_CMD_SET_NVMD=C2=A0=C2=A0=C2=A0 0x02
-> =C2=A0
-> =C2=A0struct flash_command {
-> -=C2=A0=C2=A0=C2=A0=C2=A0 u8=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 command[8];
-> +=C2=A0=C2=A0=C2=A0=C2=A0 u8=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 command[8] __n=
-onstring;
+On Mon, Mar 10, 2025 at 10:42=E2=80=AFPM Kees Cook <kees@kernel.org> wrote:
+>
+> GCC has expanded support of the "nonstring" attribute so that it can be
+> applied to arrays of character arrays[1], which is needed to identify
+> correct static initialization of those kinds of objects. Since this was
+> not supported prior to GCC 15, we need to distinguish the usage of Linux'=
+s
+> existing __nonstring macro for the attribute for non-multi-dimensional
+> char arrays. Until GCC 15 is the minimum version, use __nonstring_array t=
+o
+> mark arrays of non-string character arrays. (Regular non-string character
+> arrays can continue to use __nonstring.)
 
-This looks a bit suboptimal ... is there anywhere in the kernel u8[] is
-actually used for real strings?  In which case it would seem the better
-place to put the annotation is in the typedef for u8 arrays.
+Sounds reasonable. So this means that, when the GCC minimum goes over
+15 in some years, we can both remove it and move it to
+`compiler_attributes.h`, right?
 
-Regards,
+Perhaps we should mention part of this commit message (or the sentence
+above) in the comment to clarify (it will also help to clarify what
+that "only supported since GCC >=3D 15" means).
 
-James
+If you are going to use it in a series that has a use case:
 
+Acked-by: Miguel Ojeda <ojeda@kernel.org>
+
+Thanks!
+
+Cheers,
+Miguel
