@@ -1,45 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FFC71EB5EA;
-	Mon, 10 Mar 2025 22:24:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42C071EB5F9;
+	Mon, 10 Mar 2025 22:24:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741645460; cv=none; b=Y2HzNZXwww5Nkl3qEJrGnsHMUbzGjpNSTT5pb89q0FLOLVi1PgSUGGXRitmKzyTXrGdlGQmPleQwDpODzHjNJxgYK2NDOri7cUo1tiERJWSBVXaxrN8iGxRQzeMaqGuZKGq/fsPhP0rmoIZl1FaERvVfcS4WTR/KYPy0PMPJIwg=
+	t=1741645471; cv=none; b=slQ+UfYBVxeCN9wx33S0RT1wAmWmxPSEg90IwFRJeyRCDMzuLpmFrqX0GZKMlwFmCie9pBX7lw382Cfg5hK2ZDhUet9gMWyAK75eS3GaycCR91iCeqboCLulAsLD6Nt4mdyT2c7BD/Sbi0rJb04YamYFurkJIOrm1KQLg/jsnnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741645460; c=relaxed/simple;
-	bh=ZZPKfTff+4XkuWzowbB6+5yPpDikqeZUD868ViPhT+E=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=if6K76XqTYkfUvV1ogeDnMG/IwQ9UMx3ZQqNxiZlDed/4vneQvgY2/82nQX+56M9JegbVF1TnM9x7fXDj0tKLSmwU0NxJfuvZJOdNg5ipPyQU2A5eZTobUgou6Lh7ok30YHhtOtAd/3IgbIXKg7ChGBOhoc3ZPOz8BOP6xooX1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dR3+7L9W; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741645471; c=relaxed/simple;
+	bh=0ZN81sc+mlFXPD8VwpWN1nVUepxowHeMKZ9LyzvkLkU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=toQQxDbgdDYBtE7iPbRyE+P2lB3g782cUmNgxu6zHrUVeKsRyZpQXzmjKvHyEijuVa2HbfzHtXwYzNCROhzeEY3JVCt2QOROQ2m5TjppcL6wRWo2xSVqchymrK0C4OVIcDtRBS06RPbJ0Br+oaZn7ofBl66N9fi55IuQ7sjsNY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h7r1PVQf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dR3+7L9W"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F5A9C4CEE5;
-	Mon, 10 Mar 2025 22:24:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h7r1PVQf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A597DC4CEE5;
+	Mon, 10 Mar 2025 22:24:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741645460;
-	bh=ZZPKfTff+4XkuWzowbB6+5yPpDikqeZUD868ViPhT+E=;
+	s=k20201202; t=1741645470;
+	bh=0ZN81sc+mlFXPD8VwpWN1nVUepxowHeMKZ9LyzvkLkU=;
 	h=From:To:Cc:Subject:Date:From;
-	b=dR3+7L9WthtQJP4qMydaejDUY+OiFFgQL3U2Wbfyek52ZuVOIgzCQcxoZADvP2Cl/
-	 WlKD1gcK9ZMCJm8vw9Adcicbwfp0jS9FO+d1ZUd0x4TCmt3s/Af08/D1MO7ZCQAHCr
-	 MEFVQqYd0YOjjzwH2+8891ejkIGgyil6sEbxrkTvXy5fexL+JpTgE3NvVhJK4/gEmt
-	 VK9+jnsLuX2tFPflgnQkoPZKRtmwGmGDlEalVlfhAM4vNqKDYbM5JpJ5nGVWaoJ2mf
-	 zHOVGdRcMWCp7mZvhGuPIIPUKeewSUK8I/HIQR5Uex+dvsVQ+FdDvYhM6vKRHXHWBo
-	 7jfoj+8dZg/wQ==
+	b=h7r1PVQfBQJaYOOrAHhhhqiJGCTS3m4ZLEQZOzIaVKXi2lgYoLY470E553vr6hNpT
+	 APVnllrXACe2xLCBNH7bNMdkqWN5RGgPOYFr001aa7r5rq3tCw22vt09Phm1V7ZSC5
+	 g2BdmnkDK/hLA3ArWdBLJr2ElRKQxTjC2Iml1t1l2oB/aS2wpSqWxk6IwZ8E612WYp
+	 65LwSrUoIKF0j4oqRhYjEM90x9lMx/qwt/ANXowXFLmCJeWoeBPCSJ+WM4nQMqFrQG
+	 shjL8vKYrcbrOadcMYp9nus151Xm/DCzRuykby5O/3IJXSaN0bR2f58rvseEM5zmd1
+	 UTOL/Se6xnmsw==
 From: Kees Cook <kees@kernel.org>
-To: Nicolas Ferre <nicolas.ferre@microchip.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Kees Cook <kees@kernel.org>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org,
+	Azeem Shaikh <azeemshaikh38@gmail.com>,
+	Alex Elder <elder@kernel.org>,
+	Sumit Garg <sumit.garg@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH] net: macb: Truncate TX1519CNT for trailing NUL
-Date: Mon, 10 Mar 2025 15:24:16 -0700
-Message-Id: <20250310222415.work.815-kees@kernel.org>
+Subject: [PATCH] EISA: Increase length of device names
+Date: Mon, 10 Mar 2025 15:24:25 -0700
+Message-Id: <20250310222424.work.107-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -47,41 +43,61 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1420; i=kees@kernel.org; h=from:subject:message-id; bh=ZZPKfTff+4XkuWzowbB6+5yPpDikqeZUD868ViPhT+E=; b=owGbwMvMwCVmps19z/KJym7G02pJDOnn0yZIsjVuWrednc9NPYRbZMdRxZcL+C4LsBqVmc7oe GxjsJOxo5SFQYyLQVZMkSXIzj3OxeNte7j7XEWYOaxMIEMYuDgFYCKHvzH8DyuoS7U9cLuslTU1 YOLdTZV9m77LRM+x3NcQX7uw8L3oFYZ/eh1sxw6Ib/63dP+XSqVTavXP6idNs//imb8/aHaLqU0 ZMwA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1772; i=kees@kernel.org; h=from:subject:message-id; bh=0ZN81sc+mlFXPD8VwpWN1nVUepxowHeMKZ9LyzvkLkU=; b=owGbwMvMwCVmps19z/KJym7G02pJDOnn02bcX6GYOZPhqptv5L2EcxfCvvksS2Wp1l0msjxDv Sm2Xb6so5SFQYyLQVZMkSXIzj3OxeNte7j7XEWYOaxMIEMYuDgFYCIt+xgZbq8p6RV+8Hz1rFuv 1x+6ZWW0YqFQ8I4Ns/XmvnKIMWBtv8nwz1Bo+dLohQlGJtLm55ydoxWnnUlSff1xzYGNAh2Rc44 2sQIA
 X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-GCC 15's -Wunterminated-string-initialization saw that this string was
-being truncated. Adjust the initializer so that the needed final NUL
-character will be present.
+GCC 15's -Wunterminated-string-initialization warned about truncated
+name strings. Instead of marking them with the "nonstring" attribute[1],
+increase their length to correctly include enough space for the
+terminating NUL character, as they are used with %s format specifiers.
 
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
-Cc: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org
+Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=117178 [1]
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Azeem Shaikh <azeemshaikh38@gmail.com>
+Cc: Alex Elder <elder@kernel.org>
+Cc: Sumit Garg <sumit.garg@kernel.org>
 Signed-off-by: Kees Cook <kees@kernel.org>
 ---
- drivers/net/ethernet/cadence/macb.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/eisa/eisa-bus.c | 2 +-
+ include/linux/eisa.h    | 4 +++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/cadence/macb.h b/drivers/net/ethernet/cadence/macb.h
-index 2847278d9cd4..9a6acb97c82d 100644
---- a/drivers/net/ethernet/cadence/macb.h
-+++ b/drivers/net/ethernet/cadence/macb.h
-@@ -1067,7 +1067,8 @@ static const struct gem_statistic gem_statistics[] = {
- 	GEM_STAT_TITLE(TX256CNT, "tx_256_511_byte_frames"),
- 	GEM_STAT_TITLE(TX512CNT, "tx_512_1023_byte_frames"),
- 	GEM_STAT_TITLE(TX1024CNT, "tx_1024_1518_byte_frames"),
--	GEM_STAT_TITLE(TX1519CNT, "tx_greater_than_1518_byte_frames"),
-+	GEM_STAT_TITLE(TX1519CNT, "tx_greater_than_1518_byte_frame"),
+diff --git a/drivers/eisa/eisa-bus.c b/drivers/eisa/eisa-bus.c
+index cb586a362944..edceea083b98 100644
+--- a/drivers/eisa/eisa-bus.c
++++ b/drivers/eisa/eisa-bus.c
+@@ -21,7 +21,7 @@
+ 
+ struct eisa_device_info {
+ 	struct eisa_device_id id;
+-	char name[50];
++	char name[EISA_DEVICE_INFO_NAME_SIZE];
+ };
+ 
+ #ifdef CONFIG_EISA_NAMES
+diff --git a/include/linux/eisa.h b/include/linux/eisa.h
+index f98200cae637..c73a410bf88f 100644
+--- a/include/linux/eisa.h
++++ b/include/linux/eisa.h
+@@ -28,6 +28,8 @@
+ #define EISA_CONFIG_ENABLED         1
+ #define EISA_CONFIG_FORCED          2
+ 
++#define EISA_DEVICE_INFO_NAME_SIZE	51
 +
- 	GEM_STAT_TITLE_BITS(TXURUNCNT, "tx_underrun",
- 			    GEM_BIT(NDS_TXERR)|GEM_BIT(NDS_TXFIFOERR)),
- 	GEM_STAT_TITLE_BITS(SNGLCOLLCNT, "tx_single_collision_frames",
+ /* There is not much we can say about an EISA device, apart from
+  * signature, slot number, and base address. dma_mask is set by
+  * default to parent device mask..*/
+@@ -41,7 +43,7 @@ struct eisa_device {
+ 	u64                   dma_mask;
+ 	struct device         dev; /* generic device */
+ #ifdef CONFIG_EISA_NAMES
+-	char		      pretty_name[50];
++	char		      pretty_name[EISA_DEVICE_INFO_NAME_SIZE];
+ #endif
+ };
+ 
 -- 
 2.34.1
 
