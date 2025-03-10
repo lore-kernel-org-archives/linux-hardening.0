@@ -1,99 +1,106 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06DB91B4138
-	for <linux-hardening@vger.kernel.org>; Mon, 10 Mar 2025 11:07:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BF2922CBD7;
+	Mon, 10 Mar 2025 14:36:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741604841; cv=none; b=U/iygyyoBjY104/iPEAOc8tvY4brFl3k2t3rZGVIF3nwtUGmylYjfskYLXXwmvWsqnSkioLjOw+ekgnSi5yo46Q4BNrrYvnc4FpygIulMmfLgDDeB/jx0jGOKHYg5nyHbHN7BSDJWAJw8htKsaeGk52f2IjpI3NGxAWYg/Uho8o=
+	t=1741617380; cv=none; b=OTK2LLHT65DT59zM42rVNvVVJ8wv3KaC9E0KlF37HJMmvSJa9eD4lVvVX+XTLRLjytuTUJNQqfQbGOh/AjL78FtUYt8yu5XQrWp/SjoGQylwVdLRz+M7HDw6iG7XJIAtRbAQtxeBaoA0xXLy0IBQgYcPzKa4a5f+l15w4Xe5Px8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741604841; c=relaxed/simple;
-	bh=E3SkaDiyXKVedK5kf/LG+F6Dw3khT24RClCdqmT6xxg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=moS+V3pcpbEDpzI+RkOisL85aBFzl8EzTgnyHAAdB5H6oC8uTNMZDPCvRAkXa6pFhIsjlQfKze3XjAUaWtnwOjpGJ9k52WiLQXlurEqX1xKDFDlJVaVtyqNK7EOTwkJW8jQwpsf8Ki4bH1qVqC9mO9z3YYAiZ+gPS1oC9DTB8eM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=O/TaV/xJ; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1741617380; c=relaxed/simple;
+	bh=LS/oECQPwubMgLMkVFtys9DEM3QQeczYhmGXwL4fRrE=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=nELykdjx5sbU7ro1V+69kUQXpld2CmtpLAoo0lkS5iSmP4n+ryp4fOVvIITn3TWTJlXggDDQPLh0fyqd0LS8V0KBf3ascXtJ3wnRGJRMUa9vuErXFLr9sUSfLVCeVeXeBaDrV6kVPuAZgef/Xgl0yAT95GrbI0cZEC0GMO4SV+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CNv16CWj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="O/TaV/xJ"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3912fdddf8fso1933543f8f.1
-        for <linux-hardening@vger.kernel.org>; Mon, 10 Mar 2025 04:07:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1741604838; x=1742209638; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=JBcgqyPlbosjp2zy3+ac6vsF4qpWptDr9INnNUVK6yk=;
-        b=O/TaV/xJ5qCwzereSakC8r4boyJoWxcCHOqZ+eK5aWyGoksPS2T936FrSQXgg6DAl6
-         8StyBZEN7r7VfqcgRXSR+zmPNIq5UvurImiM6nT3YcheZq0NN1RcS4Rdz6nhzKXjci9z
-         NJ5zCIqTlIDMbvRHBdVDmjfzzk9V1+MEHSCQ8HKRcsgXkzlq3hqogaHlJCqcmVshk3VW
-         F5zGaqpTUI5nBZ/Oqnx6azJXuq+fdK8l5crZv8l42ldrDuekIz4ly02+q+S4YrB85d3I
-         VZ2qUuwSzUcPguvuLSzKjprr1qpHojW3tRFqgQgbUigCYlDKOuJ2/UmvKIPCXIQNYP40
-         hFyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741604838; x=1742209638;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JBcgqyPlbosjp2zy3+ac6vsF4qpWptDr9INnNUVK6yk=;
-        b=EgqOgH/k7qvAJUkM3jlBv0kSRrtI53lnairxf8ykWEz/WOMsBVFBfUuOJg6zfcjgtN
-         WM71lmg4eJD8cXPrmLA7cPgymmsbGIN7IPfprmvUm0wCTSChKHHhmZNr4vXP4zsAIy21
-         c2G2VCMmhctpcvH74rs19xN+pUfoUfcsJBeQWhLAw4ThYfEiHGbGg+SxLi2MaHqD2Bib
-         d4J+Ib/FJcunoiXjELzZqpghZ7MkaTcnoYNLv/DUgE4wgFE7Sx6wosm4oiH+1XAGkPI9
-         YQJmfQj2FKtxhyaWvtug7DxpWed9QZwoZHzlVA6n86twID/HFq3ijba4hzAxcouJTVCk
-         /Ofw==
-X-Forwarded-Encrypted: i=1; AJvYcCXz3gczT3LlSGQuVEN4eWTc+9RaMKVrlREbnac2311WZqmISvn7JgfPYIa5Ij+NrLlqXoeTp30ps0BviwPkNjM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxgikGuYagfPvf6bxQR3tNC+R7Akjb9YLR0ZdjB7xfBwsnlbjyp
-	lxWjKDg+pNMd5qOmfXAMzj0YgcMcgevlsy8aZxe5Fbpi5lhnRod3lvQtoq2JSs0+6MoOBUuchoT
-	2
-X-Gm-Gg: ASbGncs3bgWTElSDP4v3GF1IXPBaUogHQTjEkyZi6+MbgoP01G/K7ELO6Ob+0rFsk7W
-	ViKCzFZ2hn0+3NXeHHGy4Wl7NdNX2mb/2BqP0d2JoYEUqbxdn+/MkohZpH+YilXIar4ASSBo6VV
-	lOCXCWEJUZ6Pfuj8Z3CEIVjWpyAAxI2nDuY9zFIJz+N9tmbIa9vgy6AJ8c3JpTlCSr4kgti2gzY
-	D/kedFBMJCBDuBP/atx8NR4AemEQDggV1nVVoWGntPvWVh8R9w7iDI6xolwLcL1/erGkukGRNpv
-	E2IFbDp629UWwaGfCQ68gAumnH8c2oDUkVl5Y4HtILyQw6Po
-X-Google-Smtp-Source: AGHT+IH9/rdUnizpqSBA8HQZRuo5gzzbf5lJb9mjbnEeKpVc0nSuueyiE3WfSrFLVop5GR7AmRPlJw==
-X-Received: by 2002:a05:6000:184b:b0:38f:23c4:208c with SMTP id ffacd0b85a97d-3913af2e472mr5183779f8f.18.1741604838405;
-        Mon, 10 Mar 2025 04:07:18 -0700 (PDT)
-Received: from [10.100.51.161] ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43cfa7e4f36sm24039495e9.40.2025.03.10.04.07.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Mar 2025 04:07:17 -0700 (PDT)
-Message-ID: <975dff84-234d-4fad-b15d-0427672785d1@suse.com>
-Date: Mon, 10 Mar 2025 12:07:16 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CNv16CWj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4DECC4CEEB;
+	Mon, 10 Mar 2025 14:36:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741617379;
+	bh=LS/oECQPwubMgLMkVFtys9DEM3QQeczYhmGXwL4fRrE=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=CNv16CWjYPGamtWTIeIz5KuO8FCd0OGCizIVaiQ5ic1qRnIsPLyujwnMhyHzLnmdy
+	 vqDPl2ZrxM3OF1iFpnx3QgU7/pzT9F+9l8Z0/P85oQEuzIByFQ4EnJ7eGcDpxaElR+
+	 SreqIzwA0tNECDxpPm1t+9BgJ90CdSXxAzm0tpS0ePpbGR6vHfnTYZppN/ul5TInTk
+	 jV0wfDUWFttIuQIINo34+042ANM1ECqDiiQG5YvSTunndRJXunudwdYEb5C2kRmaGU
+	 vAbY5DnE74OGVs1bNGghbesRaasTsoSVwGXlWF0sLdxdmC8MkITL2h19Ol8iIT/AY1
+	 aswtnk5cN0T3Q==
+Date: Mon, 10 Mar 2025 09:36:18 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] module: Replace deprecated strncpy() with strscpy()
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: Luis Chamberlain <mcgrof@kernel.org>,
- Sami Tolvanen <samitolvanen@google.com>, Daniel Gomez
- <da.gomez@samsung.com>, linux-hardening@vger.kernel.org,
- linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250307113546.112237-2-thorsten.blum@linux.dev>
-Content-Language: en-US
-From: Petr Pavlu <petr.pavlu@suse.com>
-In-Reply-To: <20250307113546.112237-2-thorsten.blum@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Conor Dooley <conor+dt@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, 
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>, linux-arm-msm@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Kees Cook <kees@kernel.org>, devicetree@vger.kernel.org, 
+ Bjorn Andersson <andersson@kernel.org>, linux-hardening@vger.kernel.org, 
+ Tony Luck <tony.luck@intel.com>
+To: Gabriel Gonzales <semfault@disroot.org>
+In-Reply-To: <20250308013019.10321-1-semfault@disroot.org>
+References: <20250304043742.9252-1-semfault@disroot.org>
+ <20250308013019.10321-1-semfault@disroot.org>
+Message-Id: <174161712464.4185281.4494690781692098732.robh@kernel.org>
+Subject: Re: [PATCH v2 0/2] Add Xiaomi Redmi Note 8 support
 
-On 3/7/25 12:35, Thorsten Blum wrote:
-> strncpy() is deprecated for NUL-terminated destination buffers; use
-> strscpy() instead. The destination buffer ownername is only used with
-> "%s" format strings and must therefore be NUL-terminated, but not NUL-
-> padded.
+
+On Sat, 08 Mar 2025 09:30:10 +0800, Gabriel Gonzales wrote:
+> This patchset introduces support for the Redmi Note 8 (codenamed ginkgo). This series is a follow-up to v1 (message-id in in-reply-to header) which was sent without a cover letter.
 > 
-> No functional changes intended.
+> Changes in v2:
+> - Add missing cover letter
+> - Fix up commit message for schema
 > 
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+> Gabriel Gonzales (2):
+>   dt-bindings: arm: qcom: Add Xiaomi Redmi Note 8
+>   arm64: dts: qcom: sm6125: Initial support for xiaomi-ginkgo
+> 
+>  .../devicetree/bindings/arm/qcom.yaml         |   1 +
+>  arch/arm64/boot/dts/qcom/Makefile             |   1 +
+>  .../boot/dts/qcom/sm6125-xiaomi-ginkgo.dts    | 294 ++++++++++++++++++
+>  3 files changed, 296 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/qcom/sm6125-xiaomi-ginkgo.dts
+> 
+> --
+> 2.48.1
+> 
+> 
+> 
 
-Looks good to me. I've queued it on modules-next.
 
--- 
-Thanks,
-Petr
+My bot found new DTB warnings on the .dts files added or changed in this
+series.
+
+Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+are fixed by another series. Ultimately, it is up to the platform
+maintainer whether these warnings are acceptable or not. No need to reply
+unless the platform maintainer has comments.
+
+If you already ran DT checks and didn't see these error(s), then
+make sure dt-schema is up to date:
+
+  pip3 install dtschema --upgrade
+
+
+New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/qcom/' for 20250308013019.10321-1-semfault@disroot.org:
+
+arch/arm64/boot/dts/qcom/sm6125-xiaomi-ginkgo.dtb: geniqup@4ac0000: #address-cells: 2 was expected
+	from schema $id: http://devicetree.org/schemas/soc/qcom/qcom,geni-se.yaml#
+arch/arm64/boot/dts/qcom/sm6125-xiaomi-ginkgo.dtb: geniqup@4ac0000: #size-cells: 2 was expected
+	from schema $id: http://devicetree.org/schemas/soc/qcom/qcom,geni-se.yaml#
+arch/arm64/boot/dts/qcom/sm6125-xiaomi-ginkgo.dtb: geniqup@4cc0000: #address-cells: 2 was expected
+	from schema $id: http://devicetree.org/schemas/soc/qcom/qcom,geni-se.yaml#
+arch/arm64/boot/dts/qcom/sm6125-xiaomi-ginkgo.dtb: geniqup@4cc0000: #size-cells: 2 was expected
+	from schema $id: http://devicetree.org/schemas/soc/qcom/qcom,geni-se.yaml#
+
+
+
+
+
