@@ -1,83 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A87D725A648;
-	Tue, 11 Mar 2025 12:07:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2A1F235374;
+	Tue, 11 Mar 2025 12:33:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741694853; cv=none; b=Cm59c3MXBjC4s9V91gOGLbEdtzSc4qO1zLBo/9R4I1dJ/xK37DtG5m2g3bBGHNpGtKwGFkKSMs4WG/GXmy3sIf0Ycmn9620u1s7ep/QTPU5EjMbcrWwUMBUv2ycf9+CfhmMMvMyV0vLB3SWpeJYLJlxT8PjUrKPHeX1ojk35dCU=
+	t=1741696433; cv=none; b=sHrUskXBTmww5RUJt4fSfwCuKpKQKWJnXT97zWpWefZHT/q3jRlKBvBXbri5yuWSYucTZ6eKDZfb1kd/DQsuDHk+Sc2vcCADzHFkgZjI8t9UA2PDAoz40ov+nGbiAqiS6HfWHv12folEdGRsyDtoyBpsAd0XVFsmhchTWvwhkME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741694853; c=relaxed/simple;
-	bh=jmQ7nPvDWPX4ysCzL3zjUSbc5owtj/SgCViNOxWXCg0=;
+	s=arc-20240116; t=1741696433; c=relaxed/simple;
+	bh=/ZqH/OzJhJybXtGvfJ2LdQDVARslJXhZ1jNu4St5Lfs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=To9lI9WlT2AxwWymwSVhGdOLo0FbYCq7herkc5ulIYUIooeChpeZnE1kPZ4/Fd0fnA14rxiG7KkVGq2uYTR0f7ZmLzxFEwiaU1v7aoHGSqwIVQJDJWQOhTYTFAC6jBqGJapJwJLMf8ozAUOVBrhZN40yufzLhDJQwyuaRfjQ4YI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V2hm2Lw/; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=htgUXWj73Yo4xpirGp8VvGFG5/5fYzZsdjCJA4Isswo0uqNYOD/7HGrJvbsImbx/18GpZq6vZj/UaEVC68lCbOG5UGGwD3c+JrUhK62IyA5WSKXlpqCKMtIFUiY3C+9Q43PotCnnsmMr25WR/VifY45kvzcAtn1OaYCjT8IpfZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Ea1vYaNg; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V2hm2Lw/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EE4FC4CEE9;
-	Tue, 11 Mar 2025 12:07:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741694853;
-	bh=jmQ7nPvDWPX4ysCzL3zjUSbc5owtj/SgCViNOxWXCg0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=V2hm2Lw/aCNAksho3mLJw/PIJCA0dLQer0MnGVMEdTNxgEtMGJ3IdknFxcV4XMaD2
-	 ns4jN6ivLRPEWzleRqOcMP30B/FXkPFTiKerD/iPuNh4lfHXplJzPduuFbvw5ZMIi4
-	 9hB6Gue9Fmty1TVxVLbJgtErHwpgkpunZ3KjTzLUJ4SOe5+8x7MTO1ymQfwYkS6m6c
-	 LD5ku7xybWG3N6BdPrO0X+QqtIhn3BxmxJ1xQ5R4WX2fk9OEGMcVl2L9D9lySL1i+T
-	 gTO8jV8EB7b8xDE0ALvY2U7Ca0LUgLux7/58j+KZPA33tyucPEKSyCyeoX0DMT5HSz
-	 8XxDBwPJWjhKw==
-From: Christian Brauner <brauner@kernel.org>
-To: Hans de Goede <hdegoede@redhat.com>,
-	Kees Cook <kees@kernel.org>
-Cc: Christian Brauner <brauner@kernel.org>,
-	Brahmajit Das <brahmajit.xyz@gmail.com>,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] vboxsf: Add __nonstring annotations for unterminated strings
-Date: Tue, 11 Mar 2025 13:07:26 +0100
-Message-ID: <20250311-daran-einige-e64c81600277@brauner>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250310222530.work.374-kees@kernel.org>
-References: <20250310222530.work.374-kees@kernel.org>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Ea1vYaNg"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52B9P46v001921;
+	Tue, 11 Mar 2025 12:33:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=pp1; bh=v7NwAy9lYADasK3AR
+	PRjsggbKrh0vi/90nC9hkllay8=; b=Ea1vYaNg9p7tyO4znc04katnb6MEDwRfw
+	BNIbA9mpOlgOs2r5qGv9kujNCiPmD3Jc89ezpE9fk/VqW7jppQM5f0EIxlYG6JkM
+	3kQ73OB9NdnjiI/Ufx77zWbiA6TkeO7aF5ZoArzIzqs77Gfo6dvSkEJTI5AhOM2x
+	jp3W4zmTl8K4pCKKEgCeRYn7rgfik+9I1fLh4ryOIvfjLPW8ts9bZ1q84TJMGVM2
+	fzePj6H+x5JEYLyjZHRdkaBFKubk3nbB8USYa2Itcq8R/84IsypuE9YCLvZGJTUJ
+	eXyRMDCKqzGQuPtAM0C+KmswZmzoAHEOlj2cKC6gPEx7cqhvhZm4g==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45a7g5uquj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 11 Mar 2025 12:33:34 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52B9g32P022223;
+	Tue, 11 Mar 2025 12:33:33 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45917nc4k6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 11 Mar 2025 12:33:33 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52BCXSit58982866
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 11 Mar 2025 12:33:28 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6CB222004B;
+	Tue, 11 Mar 2025 12:33:28 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E600D2004F;
+	Tue, 11 Mar 2025 12:33:27 +0000 (GMT)
+Received: from tuxmaker.lnxne.boe (unknown [9.152.85.9])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 11 Mar 2025 12:33:27 +0000 (GMT)
+From: Heiko Carstens <hca@linux.ibm.com>
+To: Andrew Morton <akpm@linux-foundation.org>, Jeff Xu <jeffxu@chromium.org>,
+        Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+        "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+        Kees Cook <kees@kernel.org>,
+        =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH mm-unstable 2/2] mseal sysmap: enable s390
+Date: Tue, 11 Mar 2025 13:33:26 +0100
+Message-ID: <20250311123326.2686682-3-hca@linux.ibm.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250311123326.2686682-1-hca@linux.ibm.com>
+References: <20250311123326.2686682-1-hca@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1388; i=brauner@kernel.org; h=from:subject:message-id; bh=jmQ7nPvDWPX4ysCzL3zjUSbc5owtj/SgCViNOxWXCg0=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaRfUK9PKr4euCnMqv+//Y68A+IS9fzr0475cpSl6E9eJ L3sp/+5jlIWBjEuBlkxRRaHdpNwueU8FZuNMjVg5rAygQxh4OIUgImoHWD4pxoYsbF1i3njql6W RheT9pnX2qy+3v+2NsXRNvlJve5SPUaGs59qDv19k+zD1egmWZqUcSLi9938tjdWmq/exs/0v6n HDgA=
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: MtQCe0fUy6IfEAWGegeAn-LxBAPpKsgg
+X-Proofpoint-ORIG-GUID: MtQCe0fUy6IfEAWGegeAn-LxBAPpKsgg
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-11_02,2025-03-11_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ bulkscore=0 spamscore=0 mlxlogscore=756 suspectscore=0 phishscore=0
+ priorityscore=1501 adultscore=0 clxscore=1015 malwarescore=0
+ impostorscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2503110080
 
-On Mon, 10 Mar 2025 15:25:31 -0700, Kees Cook wrote:
-> When a character array without a terminating NUL character has a static
-> initializer, GCC 15's -Wunterminated-string-initialization will only
-> warn if the array lacks the "nonstring" attribute[1]. Mark the arrays
-> with __nonstring to and correctly identify the char array as "not a C
-> string" and thereby eliminate the warning.
-> 
-> This effectively reverts the change in 4e7487245abc ("vboxsf: fix building
-> with GCC 15"), to add the annotation that has other uses (i.e. warning
-> if the string is ever used with C string APIs).
-> 
-> [...]
+Provide support for CONFIG_MSEAL_SYSTEM_MAPPINGS on s390, covering the
+vdso.
 
-Applied to the vfs.fixes branch of the vfs/vfs.git tree.
-Patches in the vfs.fixes branch should appear in linux-next soon.
+Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
+---
+ arch/s390/Kconfig       | 1 +
+ arch/s390/kernel/vdso.c | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
+diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
+index 608a965e2344..93b880992596 100644
+--- a/arch/s390/Kconfig
++++ b/arch/s390/Kconfig
+@@ -141,6 +141,7 @@ config S390
+ 	select ARCH_SUPPORTS_DEBUG_PAGEALLOC
+ 	select ARCH_SUPPORTS_HUGETLBFS
+ 	select ARCH_SUPPORTS_INT128 if CC_HAS_INT128 && CC_IS_CLANG
++	select ARCH_SUPPORTS_MSEAL_SYSTEM_MAPPINGS
+ 	select ARCH_SUPPORTS_NUMA_BALANCING
+ 	select ARCH_SUPPORTS_PER_VMA_LOCK
+ 	select ARCH_USE_BUILTIN_BSWAP
+diff --git a/arch/s390/kernel/vdso.c b/arch/s390/kernel/vdso.c
+index 70c8f9ad13cd..430feb1a5013 100644
+--- a/arch/s390/kernel/vdso.c
++++ b/arch/s390/kernel/vdso.c
+@@ -80,7 +80,7 @@ static int map_vdso(unsigned long addr, unsigned long vdso_mapping_len)
+ 	vdso_text_start = vvar_start + VDSO_NR_PAGES * PAGE_SIZE;
+ 	/* VM_MAYWRITE for COW so gdb can set breakpoints */
+ 	vma = _install_special_mapping(mm, vdso_text_start, vdso_text_len,
+-				       VM_READ|VM_EXEC|
++				       VM_READ|VM_EXEC|VM_SEALED_SYSMAP|
+ 				       VM_MAYREAD|VM_MAYWRITE|VM_MAYEXEC,
+ 				       vdso_mapping);
+ 	if (IS_ERR(vma)) {
+-- 
+2.45.2
 
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
-
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs.fixes
-
-[1/1] vboxsf: Add __nonstring annotations for unterminated strings
-      https://git.kernel.org/vfs/vfs/c/986a6f5eacb9
