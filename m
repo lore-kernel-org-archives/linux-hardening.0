@@ -1,51 +1,66 @@
-Received: from omta34.uswest2.a.cloudfilter.net (omta34.uswest2.a.cloudfilter.net [35.89.44.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8CCB1DE894
-	for <linux-hardening@vger.kernel.org>; Tue, 11 Mar 2025 08:11:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFB1A1EB182;
+	Tue, 11 Mar 2025 08:22:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741680685; cv=none; b=tae7rHKCXoH9SlEXooARqOgPq1a548L8napn63hjJ/M062t4hrq58dDVohhQav8Sa8+SpRvRRNicFlFc7aHD/dQqrc+6SpRu8qmVqdmdR+LrGGm33KgtgFBdAKz0Fy2SfH+n9EXHUfzg+W/L2fCdrNI0984TIgGCblLIrF4211k=
+	t=1741681361; cv=none; b=M7wI8d2hE6rwBXR2MzcFJ7TrC9jdo/lREwEhdEZBrfYJkpLAuFgcBflE0rhfWrqbLXry2dab8dvJFbUuDKj4vd4F8V1si7BT2bHOujFN1E+/4EolfimeClDyCNw2jTe02NJGTzKO7ST7oO3q3KtU1TCg070b35C8xfJSY1KvcRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741680685; c=relaxed/simple;
-	bh=0c1JB1mhBjJNviQkaqiKr/lgyKO/7RrJgIykZMGH444=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kqbSneOzNKGNxypu92xvLAzTQGMuvr8sVDkQoBJg0nPG8wKW+LbdFADHbNm6DM2D3vbkwDpYhnEwNMISRRpH64eTSZDvec/r+MZuP56XUX2bFV12NDGbQZgzFQ6Cfr1BzUs5DCKp2UYdBAMi7n7M+e21A/qP/9RFrU3/eIxngWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=pThZM7nP; arc=none smtp.client-ip=35.89.44.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1741681361; c=relaxed/simple;
+	bh=UFNNBRGR/6gDpDCHdvz/G/BUoK1siPWwMWJCgE09xoA=;
+	h=Message-ID:Date:MIME-Version:Subject:Cc:References:From:To:
+	 In-Reply-To:Content-Type; b=EKcB2N8oOmOeCHtpMThcfXpxzBNxWwlgbBEE+RG+GSuQxi7Wav7u0TfQLOoPjXMiCKDmuvwLr6p+tWYEG8PRdQLYchM01crCltLQ4aful1Do76zXNsOiGdVwZM534b21YWLqT2hbC7/vt03bL9uH2VbQGuYrZ7vFAV3yW+nhv2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k4eUPaWD; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="pThZM7nP"
-Received: from eig-obgw-6002a.ext.cloudfilter.net ([10.0.30.222])
-	by cmsmtp with ESMTPS
-	id rpyetK27NWuHKruhottCFd; Tue, 11 Mar 2025 08:11:16 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id ruhmto0LvPWBNruhmtJIxK; Tue, 11 Mar 2025 08:11:14 +0000
-X-Authority-Analysis: v=2.4 cv=A/+nPLWG c=1 sm=1 tr=0 ts=67cff023
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=6Vi/Wpy7sgpXGMLew8oZcg==:17
- a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
- a=OXdeduLSBdMSo9eDwqgA:9 a=QEXdDO2ut3YA:10 a=Xt_RvD8W3m28Mn_h3AK8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=R/lmvIUe4lNj3XZkokRwvbtDuIId69U724e5krgi9KE=; b=pThZM7nPgN1l69lZs5n4FvJSgN
-	cctP7X0ETqCTUmN41PgQLiXR2Zhk/9C/NgrZtNyZugh7IieJnDDl9f9uH434A6bL0w2+4JPlDVrNP
-	IrF88Kpj7xT8yos1vAk2qMZSYRh2YtaODtzLqsp/u0OwhbmVD9kD0Akbr64zp4Wbld97we2O7ouz9
-	c3vi6OWNcrB0HDtW5WB7g5KuTnXV8ZfrzWrrj/RJULJvvPdBJalRiTvN2BhPwl6pfmN9tQrlrdEvx
-	8PjhqO3/F/I21q+gncexY3AsIYJd3ztoJ4yKeNZGP2KS3+nZ7+/k/qO8ilZ6DwjHnZV51vyL3p66s
-	megrRwng==;
-Received: from [45.124.203.140] (port=53616 helo=[192.168.0.158])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1truhj-00000003Tls-1Sv0;
-	Tue, 11 Mar 2025 03:11:12 -0500
-Message-ID: <864c7dd5-0deb-4adb-a1cf-c8a809514d7e@embeddedor.com>
-Date: Tue, 11 Mar 2025 18:40:56 +1030
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k4eUPaWD"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5e5e22e6ed2so6303663a12.3;
+        Tue, 11 Mar 2025 01:22:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741681358; x=1742286158; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:to:content-language:from
+         :references:cc:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=UFNNBRGR/6gDpDCHdvz/G/BUoK1siPWwMWJCgE09xoA=;
+        b=k4eUPaWDRKJBzVskNX5h82cXsdLBnSenekb1UNAW/A8CvxQps2GlZv98gAcXFtxs5g
+         dmeoSaBum1KDmpi4uL2pzxi8qcA0GA6RSwquXeOj8YPtUwsPqxl+JpjWakY/+STpNEPN
+         Tmt2sGeMZFfN6mRO5taeNsupyuqU2FO0bSQ7NVQX1pKhzOGvgT/rGc+imxGpbXMgiFlC
+         geG8V05mvE6dpwOkiHxM+AldAXGivkETSZpwf2/fDCCPVTuQScoB/4yRwEN+BHHVEFe8
+         tP9jqH8HTrFLUegg4lHM5iGKAQwoZPl1huRl78fp/4CHn/PONZtFtEx7bUSNsKUBtWhi
+         PIUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741681358; x=1742286158;
+        h=content-transfer-encoding:in-reply-to:to:content-language:from
+         :references:cc:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=UFNNBRGR/6gDpDCHdvz/G/BUoK1siPWwMWJCgE09xoA=;
+        b=hkHso5/esosbIwSRE3eaUHPiybudIRJOnT2BVRQt9gFQ7wSYgxDQf16mXbHslpENMw
+         S0i9VeheYEPHBESm9AS+AUVKYru3afIAWDeD1JjQEzvcV2yq9ZgTWolW8ZY/KzQr3L3O
+         FMacQ8a7u8fRah42D0EzGPnN8S8yxoK6iURNjm70qy7N3gYtmFNCYy38EGQRxmJhcrCP
+         jD9ghbZpLAewIfqvlGy4KCWji8j/fxF0RV9SI3MwbZFMevsLw8xeN6PjjFyr+pBGeDi5
+         SuoGx/2eCY5UMenGbqqQZ6CELlTSkjOq71uhKBhl/zdZX1fkgVNYaEVMEyzS0I9bp8y2
+         y0/w==
+X-Forwarded-Encrypted: i=1; AJvYcCUK+HHfeqwlRx1+8Dciib1FayTsZQb5x8hL+HRDB73GR7+vyDRLSttSib4jGWYoxdj1TaGf6CXdG1yFWLzILe3v@vger.kernel.org, AJvYcCUtoLQ+Rq+SYTdMXVnOA9lLKrUReCThYup/L3nECppvF0Yso/WCXLgHgQ9Y98I7ldHwHEn2PsADOP1RpyIE@vger.kernel.org, AJvYcCV66mtRXXgegyI1LtxqXrlYzgam7vOOmXABCbzlGMQQX+APl1rX/rdA8RVW9YvIg5CJQIoQNffVr8p+N691Mlc=@vger.kernel.org, AJvYcCXcRLYYTvbLGekhXNUyg86zJZ6wggoZOxGbmDfKu0LDUAWQF+rmZGpZaKLqaqF/dRTiqK4DvWI3@vger.kernel.org
+X-Gm-Message-State: AOJu0YyheTMxVW27y29nMWdJKWxHP+DYwqm+bftxXGVjgVvO3aDdSXaj
+	eUZsbWfFeZsMFmRtoiDzQLubZMYwyXovUw4ILzniQpOpOnca4IBB
+X-Gm-Gg: ASbGncvVwMMjs1DriPqYuLdQh5HSnOG0mnVEVTzPhwWM65AiCR3zd1xIlCOgFG4kiLI
+	cEWpLK+GLGZbjbiXadzY1AIZ1MGtUUAgVfbNEzArUEeefPyt0mWZg/4FoVi7RQmvsCiqhKdnGZI
+	Kt0Y31lPtBKoMc3PpNLn5Rg86TZocjOtKMb718mJfx0KPf0wXD4Dxv7s2GTMpmocq28iaiqCDWS
+	mPpzjo+5QWiGhP8upiTqEGdADiqqb+f9n14AOYwA+1MvDrtR/9DgnDu2jJRIszf02TBnFQ7vxhb
+	h5qGeKefcqnzxB7iPt2vpv53cuSLPvK/sH7CDDgZv5qvNv5c8aUEMnfuio6zA+3gUGP3pHGZE5r
+	RMgtJxPppxUs9wjXV/aSC/aCrcW9slcgHDrkJKKNAPrMya9KGe5Z0A5f0z4PMqPl0GJGG4wIEGz
+	EyV01wEGUk8wjA2BVXr6c=
+X-Google-Smtp-Source: AGHT+IHVZMV/MbyEPPexb7J3WeNZYZ5CxjZ+VTFaUFe+rZPsUq+igvni96NJQxPQP+jJ8ClbAvXlfA==
+X-Received: by 2002:a05:6402:4302:b0:5e7:7262:3bb6 with SMTP id 4fb4d7f45d1cf-5e772625471mr1960367a12.29.1741681357815;
+        Tue, 11 Mar 2025 01:22:37 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:20d:1300:1b1c:4449:176a:89ea? (2001-1c00-020d-1300-1b1c-4449-176a-89ea.cable.dynamic.v6.ziggo.nl. [2001:1c00:20d:1300:1b1c:4449:176a:89ea])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e5c76913bbsm7880931a12.78.2025.03.11.01.22.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Mar 2025 01:22:37 -0700 (PDT)
+Message-ID: <897ade0e-a4d0-47d0-8bf7-e5888ef45a61@gmail.com>
+Date: Tue, 11 Mar 2025 09:22:35 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -53,198 +68,55 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] drm/amd/pm: Avoid multiple
- -Wflex-array-member-not-at-end warnings
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Kenneth Feng <kenneth.feng@amd.com>, Alex Deucher
- <alexander.deucher@amd.com>, =?UTF-8?Q?Christian_K=C3=B6nig?=
- <christian.koenig@amd.com>, Xinhui Pan <Xinhui.Pan@amd.com>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-Cc: amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <Z678TNhCbTk363Tw@kspp>
+Subject: Re: [PATCH v9 nf 00/15] bridge-fastpath and related improvements
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ Kuniyuki Iwashima <kuniyu@amazon.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ Nikolay Aleksandrov <razor@blackwall.org>, Roopa Prabhu <roopa@nvidia.com>,
+ Ivan Vecera <ivecera@redhat.com>, Jiri Pirko <jiri@resnulli.us>,
+ Jozsef Kadlecsik <kadlec@netfilter.org>, Simon Horman <horms@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
+ Eric Dumazet <edumazet@google.com>, "David S. Miller" <davem@davemloft.net>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, netfilter-devel@vger.kernel.org,
+ coreteam@netfilter.org, bridge@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ linux-hardening@vger.kernel.org, Kees Cook <kees@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Alexander Lobakin <aleksander.lobakin@intel.com>,
+ Ahmed Zaki <ahmed.zaki@intel.com>, Vladimir Oltean <olteanv@gmail.com>,
+ Frank Wunderlich <frank-w@public-files.de>,
+ Daniel Golle <daniel@makrotopia.org>
+References: <20250305102949.16370-1-ericwouds@gmail.com>
+From: Eric Woudstra <ericwouds@gmail.com>
 Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <Z678TNhCbTk363Tw@kspp>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To: Pablo Neira Ayuso <pablo@netfilter.org>
+In-Reply-To: <20250305102949.16370-1-ericwouds@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 45.124.203.140
-X-Source-L: No
-X-Exim-ID: 1truhj-00000003Tls-1Sv0
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.0.158]) [45.124.203.140]:53616
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfFbz1c/TniSdOH3i/+XqVEZBU5jwJ/V8fgE2Dj3NMZqnz0TffW5KMJ56c/7dJD2Ybttb29RW2LMdjr7X3SB2XpiaLMbwJv4vWkVsEX6U3GUzi7yfEUGK
- IovJIGWg0efxfr7ds5oQRFg2WfxvE2VSHy70mAdjewdMVtu8pVfF2B9GGLyQUeN8GPcXfN1T3QYAwmEKZWqn3ZfVVSqxpK4SyCYfwr7dwgoRGj5vn2CiQZPa
 
-Hi all,
 
-Friendly ping: who can take this, please? :)
 
-Thanks!
---
-Gustavo
+On 3/5/25 11:29 AM, Eric Woudstra wrote:
+> This patchset makes it possible to set up a software fastpath between
+> bridged interfaces. One patch adds the flow rule for the hardware
+> fastpath. This creates the possibility to have a hardware offloaded
+> fastpath between bridged interfaces. More patches are added to solve
+> issues found with the existing code.
 
-On 14/02/25 18:48, Gustavo A. R. Silva wrote:
-> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-> getting ready to enable it, globally.
-> 
-> So, in order to avoid ending up with a flexible-array member in the
-> middle of other structs, we use the `struct_group_tagged()` helper
-> to create a new tagged `struct NISLANDS_SMC_SWSTATE_HDR` (and `struct
-> SISLANDS_SMC_SWSTATE_HDR`). This structures group together all the
-> members of the flexible `struct NISLANDS_SMC_SWSTATE` (and `struct
-> SISLANDS_SMC_SWSTATE`) except the flexible array.
-> 
-> As a result, the array is effectively separated from the rest of the
-> members without modifying the memory layout of the flexible structure.
-> We then change the type of the middle struct members currently causing
-> trouble from `struct NISLANDS_SMC_SWSTATE` to `struct
-> NISLANDS_SMC_SWSTATE_HDR` (and from `struct SISLANDS_SMC_SWSTATE` to
-> `struct SISLANDS_SMC_SWSTATE_HDR`).
-> 
-> We also want to ensure that when new members need to be added to the
-> flexible structure, they are always included within the newly created
-> tagged struct. For this, we use `static_assert()`. This ensures that
-> the memory layout for both the flexible structure and the new tagged
-> struct is the same after any changes.
-> 
-> This approach avoids having to implement `struct NISLANDS_SMC_SWSTATE_HDR`
-> (and `struct SISLANDS_SMC_SWSTATE_HDR`) as a completely separate structure,
-> thus preventing having to maintain two independent but basically identical
-> structures, closing the door to potential bugs in the future.
-> 
-> We also use `container_of()` whenever we need to retrieve a pointer to
-> the flexible structure, through which we can access the flexible-array
-> member, if necessary.
-> 
-> So, with this changes, fix the following warnings:
-> 
-> drivers/gpu/drm/amd/amdgpu/../pm/legacy-dpm/sislands_smc.h:218:49: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> drivers/gpu/drm/amd/amdgpu/../pm/legacy-dpm/si_dpm.h:819:41: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> drivers/gpu/drm/amd/amdgpu/../pm/legacy-dpm/si_dpm.h:818:41: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> drivers/gpu/drm/amd/amdgpu/../pm/legacy-dpm/si_dpm.h:817:41: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> drivers/gpu/drm/amd/amdgpu/../pm/legacy-dpm/si_dpm.h:816:41: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->   drivers/gpu/drm/amd/pm/legacy-dpm/si_dpm.c    |  7 ++++--
->   drivers/gpu/drm/amd/pm/legacy-dpm/si_dpm.h    | 23 +++++++++++--------
->   .../gpu/drm/amd/pm/legacy-dpm/sislands_smc.h  | 15 ++++++++----
->   3 files changed, 29 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/amd/pm/legacy-dpm/si_dpm.c b/drivers/gpu/drm/amd/pm/legacy-dpm/si_dpm.c
-> index a87dcf0974bc..2c9d473d122f 100644
-> --- a/drivers/gpu/drm/amd/pm/legacy-dpm/si_dpm.c
-> +++ b/drivers/gpu/drm/amd/pm/legacy-dpm/si_dpm.c
-> @@ -5234,7 +5234,8 @@ static int si_init_smc_table(struct amdgpu_device *adev)
->   
->   	table->driverState.flags = table->initialState.flags;
->   	table->driverState.levelCount = table->initialState.levelCount;
-> -	table->driverState.levels[0] = table->initialState.level;
-> +	container_of(&table->driverState, SISLANDS_SMC_SWSTATE, __hdr)->levels[0] =
-> +								table->initialState.level;
->   
->   	ret = si_do_program_memory_timing_parameters(adev, amdgpu_boot_state,
->   						     SISLANDS_INITIAL_STATE_ARB_INDEX);
-> @@ -5755,7 +5756,9 @@ static int si_upload_sw_state(struct amdgpu_device *adev,
->   	int ret;
->   	u32 address = si_pi->state_table_start +
->   		offsetof(SISLANDS_SMC_STATETABLE, driverState);
-> -	SISLANDS_SMC_SWSTATE *smc_state = &si_pi->smc_statetable.driverState;
-> +	SISLANDS_SMC_SWSTATE *smc_state =
-> +		container_of(&si_pi->smc_statetable.driverState,
-> +			     SISLANDS_SMC_SWSTATE, __hdr);
->   	size_t state_size = struct_size(smc_state, levels,
->   					new_state->performance_level_count);
->   	memset(smc_state, 0, state_size);
-> diff --git a/drivers/gpu/drm/amd/pm/legacy-dpm/si_dpm.h b/drivers/gpu/drm/amd/pm/legacy-dpm/si_dpm.h
-> index 11cb7874a6bb..62530f89ebdf 100644
-> --- a/drivers/gpu/drm/amd/pm/legacy-dpm/si_dpm.h
-> +++ b/drivers/gpu/drm/amd/pm/legacy-dpm/si_dpm.h
-> @@ -784,12 +784,17 @@ typedef struct NISLANDS_SMC_HW_PERFORMANCE_LEVEL NISLANDS_SMC_HW_PERFORMANCE_LEV
->   
->   struct NISLANDS_SMC_SWSTATE
->   {
-> -    uint8_t                             flags;
-> -    uint8_t                             levelCount;
-> -    uint8_t                             padding2;
-> -    uint8_t                             padding3;
-> -    NISLANDS_SMC_HW_PERFORMANCE_LEVEL   levels[];
-> +	/* New members MUST be added within the struct_group() macro below. */
-> +	struct_group_tagged(NISLANDS_SMC_SWSTATE_HDR, __hdr,
-> +		uint8_t                             flags;
-> +		uint8_t                             levelCount;
-> +		uint8_t                             padding2;
-> +		uint8_t                             padding3;
-> +	);
-> +	NISLANDS_SMC_HW_PERFORMANCE_LEVEL   levels[];
->   };
-> +static_assert(offsetof(struct NISLANDS_SMC_SWSTATE, levels) == sizeof(struct NISLANDS_SMC_SWSTATE_HDR),
-> +	      "struct member likely outside of struct_group_tagged()");
->   
->   typedef struct NISLANDS_SMC_SWSTATE NISLANDS_SMC_SWSTATE;
->   
-> @@ -813,10 +818,10 @@ struct NISLANDS_SMC_STATETABLE
->       uint32_t                            lowSMIO[NISLANDS_MAX_NO_VREG_STEPS];
->       NISLANDS_SMC_VOLTAGEMASKTABLE       voltageMaskTable;
->       PP_NIslands_DPM2Parameters          dpm2Params;
-> -    NISLANDS_SMC_SWSTATE                initialState;
-> -    NISLANDS_SMC_SWSTATE                ACPIState;
-> -    NISLANDS_SMC_SWSTATE                ULVState;
-> -    NISLANDS_SMC_SWSTATE                driverState;
-> +    struct NISLANDS_SMC_SWSTATE_HDR		initialState;
-> +    struct NISLANDS_SMC_SWSTATE_HDR		ACPIState;
-> +    struct NISLANDS_SMC_SWSTATE_HDR		ULVState;
-> +    struct NISLANDS_SMC_SWSTATE_HDR		driverState;
->       NISLANDS_SMC_HW_PERFORMANCE_LEVEL   dpmLevels[NISLANDS_MAX_SMC_PERFORMANCE_LEVELS_PER_SWSTATE - 1];
->   };
->   
-> diff --git a/drivers/gpu/drm/amd/pm/legacy-dpm/sislands_smc.h b/drivers/gpu/drm/amd/pm/legacy-dpm/sislands_smc.h
-> index 90ec411c5029..1711e3e35e80 100644
-> --- a/drivers/gpu/drm/amd/pm/legacy-dpm/sislands_smc.h
-> +++ b/drivers/gpu/drm/amd/pm/legacy-dpm/sislands_smc.h
-> @@ -172,12 +172,17 @@ struct SISLANDS_SMC_HW_PERFORMANCE_LEVEL {
->   typedef struct SISLANDS_SMC_HW_PERFORMANCE_LEVEL SISLANDS_SMC_HW_PERFORMANCE_LEVEL;
->   
->   struct SISLANDS_SMC_SWSTATE {
-> -	uint8_t                             flags;
-> -	uint8_t                             levelCount;
-> -	uint8_t                             padding2;
-> -	uint8_t                             padding3;
-> +	/* New members MUST be added within the struct_group() macro below. */
-> +	struct_group_tagged(SISLANDS_SMC_SWSTATE_HDR, __hdr,
-> +		uint8_t                             flags;
-> +		uint8_t                             levelCount;
-> +		uint8_t                             padding2;
-> +		uint8_t                             padding3;
-> +	);
->   	SISLANDS_SMC_HW_PERFORMANCE_LEVEL   levels[];
->   };
-> +static_assert(offsetof(struct SISLANDS_SMC_SWSTATE, levels) == sizeof(struct SISLANDS_SMC_SWSTATE_HDR),
-> +	      "struct member likely outside of struct_group_tagged()");
->   
->   typedef struct SISLANDS_SMC_SWSTATE SISLANDS_SMC_SWSTATE;
->   
-> @@ -215,7 +220,7 @@ struct SISLANDS_SMC_STATETABLE {
->   	struct SISLANDS_SMC_SWSTATE_SINGLE	initialState;
->   	struct SISLANDS_SMC_SWSTATE_SINGLE	ACPIState;
->   	struct SISLANDS_SMC_SWSTATE_SINGLE	ULVState;
-> -	SISLANDS_SMC_SWSTATE			driverState;
-> +	struct SISLANDS_SMC_SWSTATE_HDR		driverState;
->   	SISLANDS_SMC_HW_PERFORMANCE_LEVEL	dpmLevels[SISLANDS_MAX_SMC_PERFORMANCE_LEVELS_PER_SWSTATE];
->   };
->   
+
+> Changes in v9:
+> - No changes, resend to netfilter
+
+Hi Pablo,
+
+I've changed tag [net-next] to [nf], hopefully you can have a look at
+this patch-set. But, after some days, I was in doubt if this way I have
+brought it to your attention. Perhaps I need to do something different
+to ask the netfilter maintainer have a look at it?
+
+Best regards,
+
+Eric
 
