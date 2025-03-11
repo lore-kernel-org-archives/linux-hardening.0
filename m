@@ -1,55 +1,55 @@
-Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com [209.85.160.42])
+Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E48B926139C
-	for <linux-hardening@vger.kernel.org>; Tue, 11 Mar 2025 21:56:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B3BB264F93
+	for <linux-hardening@vger.kernel.org>; Tue, 11 Mar 2025 22:13:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741730174; cv=none; b=qJjlDCKqseEJxyhUJPUUQzgsMAQLoOj12n5iD7PFnJA39v8kww/21gh1Lmsh1G8dbrGq7mX+cYYk7w9Ek5HiY24SKeidPQ/BPnr4knRHHKubAvP4Ky192O1+8H5GzWwNjAJsxDGf2eu68aJFif99cpF2TR6wcEtRHunpb/iOsvI=
+	t=1741731189; cv=none; b=JXz5RGF+3q4uWqcGDW/HeElhs/6kSv4CoOYOEc6GdexQJgVzQ8HqvX2SF88qkq9myM8oTTqCV4D/e6yiGx5pGWphl/6X6DGRgFsingiN5KnDHtPK92Igk0fKWAu7lBmo610r3GxEITXqpOAZ1qLsPvR9mHlxmfDCkir1gL7h6IM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741730174; c=relaxed/simple;
-	bh=E2Ss5NU0spuwxknqZWemIH5Bil/LpOahITbGiXOzgGA=;
+	s=arc-20240116; t=1741731189; c=relaxed/simple;
+	bh=/m2scfei2Ytzh5tu9Nw/wGalvCrzP8JZJmXDECgc3h0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jKzM6RNpxJzhK+kqGNNeGaN4ZtBzcc5NN+/Pjb+1RuTWEPuxS4G5fSuPHSD8AzfWyN6YZzAutQ5XmJqnQUNEYkE0ZZA3p26luZYYap/SsAGymBFNTx4QvkhFbFwweGQtRu6hai7oE1f7+MOdU0e4wT0bn2Ma1uia1Pb4j1DNHHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Su3t1zwB; arc=none smtp.client-ip=209.85.160.42
+	 To:Cc:Content-Type; b=Hp0UCh6RnxO/ttAzdNoqs16HX5pD3wHylAeo4zYz5X4BcmaJ2zvdt15ZlPG5I340/uE1Hw8hj6YB3FKpFgfwsmX3Tj/ZRspkdydBkIF/sUFrNqe71sZANV6bMjsUsBMAv5LSsma6TcYSpTKBwjzzD92e9Xa/S45wk/55pIr8+wQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ZTDg1D0r; arc=none smtp.client-ip=209.85.210.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Su3t1zwB"
-Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-2c1dbe1bc13so179660fac.0
-        for <linux-hardening@vger.kernel.org>; Tue, 11 Mar 2025 14:56:12 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZTDg1D0r"
+Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-72b7c8c8537so263786a34.1
+        for <linux-hardening@vger.kernel.org>; Tue, 11 Mar 2025 15:13:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1741730172; x=1742334972; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1741731187; x=1742335987; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=yId3DOG2e6LlUiE4YXCj07p8IPr1qnG+3GuI1v19BNE=;
-        b=Su3t1zwBwl2UWJU46+OS2HMWcYyDBRGoV+EmccnNU1OoGAl7hzv7mEDikYgBn2o8eB
-         GM4Ij6ne19mBECYUBmbzJFeeMF0lcYM3S0gbzysV0FbvUKZbrx4Cip2Sh8GdzJ1XpkhW
-         IJRB1xUJQt9pES1FhO9kE5HcFZZ/qYDMaYxwM=
+        bh=9gx/uI7Jj+LFnh/Y9Cm66/wk2fyG/s7LdrL3JXmhnGY=;
+        b=ZTDg1D0ryFXRp5GlDcrzjKLGw6BJkINECL7kurvTS4XmJ7njzfSh7K/B61705i/pxM
+         +ZD8R2Q49Jh+aJuHbMGx82FMNJamqH266JVhibaprjadjzF0t+YP5riTczhQsKf9mDdB
+         crfTvajdHPqG229PkoR3+wmGs0dnk5iJEFWVE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741730172; x=1742334972;
+        d=1e100.net; s=20230601; t=1741731187; x=1742335987;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=yId3DOG2e6LlUiE4YXCj07p8IPr1qnG+3GuI1v19BNE=;
-        b=G0Js/nd4beLFa+2D86TlJHDVMqoow0pr2VTSh8uawWuMjaqcXEJJsSrsrC23/iZnIn
-         E5jSbE5Aguf0bAVZCUXPNkU3oy3is+DMa/DtxYXsIWUyF+7LMr2rvFL5Oh2kb6XF90s8
-         v/jRei8KAADQSXaz9dFHLSRQKcP/cUEmMrlmjoD7jlyWXbTXZjpcHSFu0ODPHJRFDqlD
-         y1MgHTpHO6rU4iuCr6CgOvuuobh3ObmepLbRc6TziD6pl759Hb6ES5wf1yDxx8uzFrkL
-         e5qi+WLdYWMpVcJPdUWQxWF+jGvPhbyTwj2sVIm9A/Z/kZt4TquYgB8LzurHKaK3RIA/
-         3+Tw==
-X-Forwarded-Encrypted: i=1; AJvYcCWEX19wn6mrl/MBvgjOte820Y2tWoUspHRL1ZAuX4ZGEvZJBBt3xf9NTDGOYHryOHVplnLbr39PyvZ5n9eNbqw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6jyxcJSsEN6J/AMqs3RBFmL7SxTLs6uFHmNQ0jsQoa8aWv6Cd
-	Vl59BD6s5x/gItAsb3YIPpjznRkLmYIvD9WcWB+okPFDfeR4EwPhE3bhlmreDbOr3OJcNEmg8ge
-	gJaZEud79saJdtxwDAGe1D7XuEjV9FtSFZ2Se
-X-Gm-Gg: ASbGnctAfI1ddQU729kzJZuKmv1aSgR3/HY8RsYZQ8GT7QQsEeeAyoExJMNOWCFjClP
-	uvBBVwrF+L/oQf/g2xIgitEAMA5f3BqCE9kiK3Qo74Gf/sHJsjwgMq50akVsgL9qMs+LDzmmSHg
-	/Ktosm50J2knBPzUhwHyAPMVj9
-X-Google-Smtp-Source: AGHT+IHlIOjzVU3TM4dAFFXmY4mVFxixVLDQO7jLvUUapi5nUmtI8Bm/xq9NCtalUP4/G3pEnLRKtNTRMz4I9D16xZw=
-X-Received: by 2002:a05:6870:e40c:b0:2b8:f99d:7ce6 with SMTP id
- 586e51a60fabf-2c2867c0110mr2804325fac.3.1741730171998; Tue, 11 Mar 2025
- 14:56:11 -0700 (PDT)
+        bh=9gx/uI7Jj+LFnh/Y9Cm66/wk2fyG/s7LdrL3JXmhnGY=;
+        b=prrnX7mXvjqdk6U7ayyydqiiQdbmkHeLyOgikBBJU+Z3Z25MuHm5Wg5YaRGH10vugS
+         7eekGdn37ekLuxd6X4SFZMgVqjyt7GM4UaUt+zR2gdUphEUAUdp5ptb/1kwPNkAqU8f+
+         yjOKs43VR62sHJvfCzcOi7Bo/suLTXkXi1u+MI6LEV2w2DhWuQbPgxpVH5ofpnL5QMxi
+         JmWMXeyo/p/+jipnY9E0fLoxdipjpitwGYV7g4SGAng9iET3q1UxYnPiAOY4ZW7XDZsc
+         pzQMAac1pLCHjec7eM4wBJcbd/d6fdZhjX4/fUo/L3Y4hhxmOTivKhvebaeQNNhg0+Sj
+         Lqrg==
+X-Forwarded-Encrypted: i=1; AJvYcCWevMCo0JchQ9qjmRT+yeQYqdyMUMcIsvLZ2Byn3LKf4G304Z7SaWzDnbfjpPAEWoAJAHm2Gn5tyfMyJ1Y9Rm0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzFs9TRX86B2YoyRv17laCW5u5UpQklPHtvo+PVTuaDmLCYM2MN
+	LUckRYLR+hBd1xChGj1J3ypHvfVycCvmmw9xD4mCcbzNYOQQD+7GmQm2AjTMSguxvHZqSUakD9I
+	hVQgf5Iy89MWzFqDavMc7+RZTXtCWvMdut3ESO7qgCUS+u/bbvA==
+X-Gm-Gg: ASbGncs+BQ04jSv0umv4Nms8GxBM27pG7dYFRhiaegs55Ipyxx1FAuny15ILQB2v0Oq
+	SaJKJeBRM/zxjyp3lLnUB3VsKr4M4epRE5rWpVfPJ6zaS2FX/CCIVJSGNTEAuUqnxmewcvBgAu8
+	kJu6qRJuMb3vFvpmyRylZ6FpdU
+X-Google-Smtp-Source: AGHT+IF6cHOCc1/WT6rYQME8ZwTzRijq4TF0n6zKoV4EldL5MeMYHAbxupldljEVnQ7QDui54Qopy4486X05dA/Olqo=
+X-Received: by 2002:a05:6830:3808:b0:727:32f5:df87 with SMTP id
+ 46e09a7af769-72b9b51ba95mr1072927a34.4.1741731187229; Tue, 11 Mar 2025
+ 15:13:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -57,11 +57,12 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20250311123326.2686682-1-hca@linux.ibm.com> <20250311123326.2686682-3-hca@linux.ibm.com>
-In-Reply-To: <20250311123326.2686682-3-hca@linux.ibm.com>
+ <CABi2SkXWD4Pg7Y7TG9fMV9eat_1fOGwHjvEUKHXREN+pRe18NA@mail.gmail.com>
+In-Reply-To: <CABi2SkXWD4Pg7Y7TG9fMV9eat_1fOGwHjvEUKHXREN+pRe18NA@mail.gmail.com>
 From: Jeff Xu <jeffxu@chromium.org>
-Date: Tue, 11 Mar 2025 14:55:59 -0700
-X-Gm-Features: AQ5f1JproEjPKIxAE30A0OuywGTTestqZJn0ft9KPznI_k8qhCvO_e_XSZ-aYQc
-Message-ID: <CABi2SkXWD4Pg7Y7TG9fMV9eat_1fOGwHjvEUKHXREN+pRe18NA@mail.gmail.com>
+Date: Tue, 11 Mar 2025 15:12:55 -0700
+X-Gm-Features: AQ5f1Jp67jwM-684SO1tDeImf4lP5e9Q1ZLCVvcfHKRXZQkMxKgJL8mewS-yfP0
+Message-ID: <CABi2SkXzqJ10NW3j1y-FtmrheDkqzL5QgMcN9UN6UvhbXFHCuQ@mail.gmail.com>
 Subject: Re: [PATCH mm-unstable 2/2] mseal sysmap: enable s390
 To: Heiko Carstens <hca@linux.ibm.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
@@ -74,48 +75,63 @@ Cc: Andrew Morton <akpm@linux-foundation.org>, Lorenzo Stoakes <lorenzo.stoakes@
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 11, 2025 at 5:33=E2=80=AFAM Heiko Carstens <hca@linux.ibm.com> =
-wrote:
->
-> Provide support for CONFIG_MSEAL_SYSTEM_MAPPINGS on s390, covering the
-> vdso.
->
-> Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
-> ---
->  arch/s390/Kconfig       | 1 +
->  arch/s390/kernel/vdso.c | 2 +-
->  2 files changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
-> index 608a965e2344..93b880992596 100644
-> --- a/arch/s390/Kconfig
-> +++ b/arch/s390/Kconfig
-> @@ -141,6 +141,7 @@ config S390
->         select ARCH_SUPPORTS_DEBUG_PAGEALLOC
->         select ARCH_SUPPORTS_HUGETLBFS
->         select ARCH_SUPPORTS_INT128 if CC_HAS_INT128 && CC_IS_CLANG
-> +       select ARCH_SUPPORTS_MSEAL_SYSTEM_MAPPINGS
->         select ARCH_SUPPORTS_NUMA_BALANCING
->         select ARCH_SUPPORTS_PER_VMA_LOCK
->         select ARCH_USE_BUILTIN_BSWAP
-> diff --git a/arch/s390/kernel/vdso.c b/arch/s390/kernel/vdso.c
-> index 70c8f9ad13cd..430feb1a5013 100644
-> --- a/arch/s390/kernel/vdso.c
-> +++ b/arch/s390/kernel/vdso.c
-> @@ -80,7 +80,7 @@ static int map_vdso(unsigned long addr, unsigned long v=
-dso_mapping_len)
->         vdso_text_start =3D vvar_start + VDSO_NR_PAGES * PAGE_SIZE;
->         /* VM_MAYWRITE for COW so gdb can set breakpoints */
->         vma =3D _install_special_mapping(mm, vdso_text_start, vdso_text_l=
-en,
-> -                                      VM_READ|VM_EXEC|
-> +                                      VM_READ|VM_EXEC|VM_SEALED_SYSMAP|
->                                        VM_MAYREAD|VM_MAYWRITE|VM_MAYEXEC,
->                                        vdso_mapping);
->         if (IS_ERR(vma)) {
-> --
-> 2.45.2
->
-Great ! one more architecture uses this feature.
+One more thing: do you want to update mseal.rst to add s390 as
+supported architecture?
 
-Reviewed-by: Jeff Xu <jeffxu@chromium.org>
+Currently in the mseal.rst:
+ "The following architectures currently support this feature: x86-64 and ar=
+m64."
+
+Thanks
+-Jeff
+
+On Tue, Mar 11, 2025 at 2:55=E2=80=AFPM Jeff Xu <jeffxu@chromium.org> wrote=
+:
+>
+> On Tue, Mar 11, 2025 at 5:33=E2=80=AFAM Heiko Carstens <hca@linux.ibm.com=
+> wrote:
+> >
+> > Provide support for CONFIG_MSEAL_SYSTEM_MAPPINGS on s390, covering the
+> > vdso.
+> >
+> > Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
+> > ---
+> >  arch/s390/Kconfig       | 1 +
+> >  arch/s390/kernel/vdso.c | 2 +-
+> >  2 files changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
+> > index 608a965e2344..93b880992596 100644
+> > --- a/arch/s390/Kconfig
+> > +++ b/arch/s390/Kconfig
+> > @@ -141,6 +141,7 @@ config S390
+> >         select ARCH_SUPPORTS_DEBUG_PAGEALLOC
+> >         select ARCH_SUPPORTS_HUGETLBFS
+> >         select ARCH_SUPPORTS_INT128 if CC_HAS_INT128 && CC_IS_CLANG
+> > +       select ARCH_SUPPORTS_MSEAL_SYSTEM_MAPPINGS
+> >         select ARCH_SUPPORTS_NUMA_BALANCING
+> >         select ARCH_SUPPORTS_PER_VMA_LOCK
+> >         select ARCH_USE_BUILTIN_BSWAP
+> > diff --git a/arch/s390/kernel/vdso.c b/arch/s390/kernel/vdso.c
+> > index 70c8f9ad13cd..430feb1a5013 100644
+> > --- a/arch/s390/kernel/vdso.c
+> > +++ b/arch/s390/kernel/vdso.c
+> > @@ -80,7 +80,7 @@ static int map_vdso(unsigned long addr, unsigned long=
+ vdso_mapping_len)
+> >         vdso_text_start =3D vvar_start + VDSO_NR_PAGES * PAGE_SIZE;
+> >         /* VM_MAYWRITE for COW so gdb can set breakpoints */
+> >         vma =3D _install_special_mapping(mm, vdso_text_start, vdso_text=
+_len,
+> > -                                      VM_READ|VM_EXEC|
+> > +                                      VM_READ|VM_EXEC|VM_SEALED_SYSMAP=
+|
+> >                                        VM_MAYREAD|VM_MAYWRITE|VM_MAYEXE=
+C,
+> >                                        vdso_mapping);
+> >         if (IS_ERR(vma)) {
+> > --
+> > 2.45.2
+> >
+> Great ! one more architecture uses this feature.
+>
+> Reviewed-by: Jeff Xu <jeffxu@chromium.org>
