@@ -1,112 +1,130 @@
-Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
+Received: from mail-oo1-f46.google.com (mail-oo1-f46.google.com [209.85.161.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B3EB262D16
-	for <linux-hardening@vger.kernel.org>; Tue, 11 Mar 2025 17:36:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19834264629
+	for <linux-hardening@vger.kernel.org>; Tue, 11 Mar 2025 21:54:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741714572; cv=none; b=HeGCF5YalrDIcIFjZM5uAhsVzEP8NILOmSdQQYOA563J7ua5oLe+rhmqlN5yesuw4SshbROmbbPQDw11Ab9YgoSuVTzxg/mYsnwFgptyeVGQnhgGuA1SeqojpY7zvAJic47QnCsDRciZtvfJUZbNrIBrHy3ab8jF0bKD648snkw=
+	t=1741730092; cv=none; b=CGdWf5W94p5u5OI6BTK3Uahg6gYDUpbPu0VuzQh+NGtWtNbZFzChKoHk1SRTuhh1PGVWN5oxNyfOF8lNKI25SrolcFMDfBeZSnNZEV1h2VUCFeeLuhwB8NdzhbBpHdUO8p51vr43H9W8mZct6vzhFxYqhvjje+pF9cImBagQiEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741714572; c=relaxed/simple;
-	bh=5aUsqOrI16iMveQNEajx0BokuB8rnFuNsAld9sPRVSo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=l+pLQYttPTSA1WSgk0GgD6XoB0Z2oR2JG/HsfNvC2VQgC6sBI1BhB1g3HLivlXaANeXHVxY5PD3FkRmL/n1jvLNOElktBNiaKELgFYkmPZw+ku+g0EXJJds2riAmsv1V/fV95opcjPRTEzAyA0K6GrC/SZilPTcTUeNdLRPYiZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=YJlDg6+G; arc=none smtp.client-ip=209.85.160.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1741730092; c=relaxed/simple;
+	bh=lx6oQy6ulCdJcKW6pyA6L4sW6xfoPq/2WIZT3ctB5TQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oSWF+xjhMP8FyodB0iNRi/XRLJ9tiPH7z/VrV/L/TkTq9dBN5qnHZKLZcUYBEcJWYbXyvA65z18w7CgO0cngHS2hyB1UV8BXbhs/io13aMYPjFGLKfNWm0M7N/dpqU0abSCKqURzlSR3qnWqVb6WuGWIEyUwozJNrrovB57HVuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=JoMB+255; arc=none smtp.client-ip=209.85.161.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="YJlDg6+G"
-Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-2c2c754af3cso1257968fac.3
-        for <linux-hardening@vger.kernel.org>; Tue, 11 Mar 2025 10:36:08 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JoMB+255"
+Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-601a15186f0so260222eaf.2
+        for <linux-hardening@vger.kernel.org>; Tue, 11 Mar 2025 14:54:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1741714568; x=1742319368; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4/AZGEVmfxF0jKoqVNVNRMBGz9sxfr8KBwzFyulmeIs=;
-        b=YJlDg6+GFLBTrY5+hbodE6loh2u46+g1BNHmXUiata7GIe7AyA7U97p/a4f+9QdmGG
-         MIxBquwZV7z4DtCoOXGES3AZteZc+Ei8I7q522qbgL6oHGZ9Ws8qNIYWxQOuWqD7m18U
-         3YI3M31CEnkJ999vm+dQ0Luq3gaY7FwlAiA4I=
+        d=chromium.org; s=google; t=1741730089; x=1742334889; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZqtLjg1DzXxI0seit2K5+J+AUgYKo7ZSLSErJeqONSA=;
+        b=JoMB+255sF2i8fhdBJHvHjw4KW+rB8y5LAiR03LkvLMSV674R/GMu9+QF8XjBMlpqz
+         iLIP9Pt+mkVatgHHlktlkUlhiF7oKMQxzd0X6B/zR8iXgWVe+k3uO1AlcPb0lFuld7Sz
+         Fl5I6xQ3tKuvWG2SAZHNszd8/Y2kKFFKjteKg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741714568; x=1742319368;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4/AZGEVmfxF0jKoqVNVNRMBGz9sxfr8KBwzFyulmeIs=;
-        b=ZVRMl6ZMQ5IB3/+WDHh7TGqEIdViRtPagptZHQg1XyRAUqTdnyCU5t1Mjv+iykb6i6
-         o6kBZngrIHZZP8xwGVOJ9jYqzXcREfphZdBQTv2z0LxzV0Zv8WjEwCsebXs84a744sQC
-         WNo3zMA81UsTjdG7ECylOIconxGkt5tgMpDS84kLqAsbbVW5MDJP8cVA4pBt7Ud8NxEK
-         sVrejd208q0rbwpneeXu54jUSUNR1jlQriOrLrTrWO7AX+Q7ldhGcMP+Q0zmn8krPJ1J
-         L/kHPq0UBxxz3Qd9JaQTqk/d1myyW/hUEfmvMxPjHqHL/89i9fmtaQXn6LiZ9o8vPlsg
-         nMLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXsPf2nas4wFJH9m8MMHkA6HBR24GE5hoJHKzl7Swh1tmd1wPlyhN3ytOe6Jgktbpg1/o6U0JlmR6Ni7lsLwaM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YymSce1/2ySdsL+rKBP8XUr3H2V8XjtIp3tgppqdNnTQPHDaSWO
-	KK7lD4uKic+IGcU4YzCnDUojW0XF07PtyxoRPxV5vPbW9zWhCXG3ITfpsclaJw==
-X-Gm-Gg: ASbGnct8rDH9gVVSKemeZx1DlrYu7H60PerkCIFzIcxXeZcfyCw0HtAb9msbZS7Nl7m
-	GGYbxPdBiFo72RNMbGgIGhazZ3E3SrjfdWzaVunI4IpsstqEPx1mnycx5kSChsXZ+fxV27du980
-	Y6Jt+Eamwpm3fzLaZRLSctW3VAmrVcSPisz8F0bek//wVoEjhMDoAP72GGDboOmXxW05spEzQKI
-	Pm509tLcFdZCLOTpEU30Qq6QDYEuJnSL4JaIE6mSuN1giIt0gRfdEkh6uSIUhAZp44WHJ5WHwih
-	nkHYUoVSEe+352hhFOzO8i6qIlgBujipeMFFAxMw7a8+bAdaGlSX14jrbmlBztvZX+9ppVC94OR
-	+13BN
-X-Google-Smtp-Source: AGHT+IF6stv4KV1HaEag5+77smmBKlZX0b6JVQBTx2uQ9Bg2ZjG5KNAD+BqnyMHU0PQVstMcpo8f2A==
-X-Received: by 2002:a05:6871:8416:b0:2c2:c404:465f with SMTP id 586e51a60fabf-2c2c4044b38mr3090975fac.6.1741714568018;
-        Tue, 11 Mar 2025 10:36:08 -0700 (PDT)
-Received: from [10.136.13.65] ([192.19.161.248])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2c2d749e115sm661597fac.13.2025.03.11.10.36.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Mar 2025 10:36:06 -0700 (PDT)
-Message-ID: <9188b3d1-ee61-c1d1-f06e-854ffd2ccff7@broadcom.com>
-Date: Tue, 11 Mar 2025 10:20:05 -0700
+        d=1e100.net; s=20230601; t=1741730089; x=1742334889;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZqtLjg1DzXxI0seit2K5+J+AUgYKo7ZSLSErJeqONSA=;
+        b=LUpNnjuzcZmiejAAH88lKdpFaI/b8y16fmhUKqnKs7VBhhLBjdkClTzoRsLWp0R2sO
+         lzavU8w1gXh8dpOjqUsiy8uVZiNvgPcsN3+WSURdEOfFKWx6ARnZq+XtBorPzl6J0rAd
+         /Ou27LCzu9zEmH0G0WWWQmg8Y2poQEV6bxMePpsSb5I1n+kfpJ86BLQkMJZbajS0hGlb
+         MROrO+ozz767Jr7HiS8xRtaMfZcXVOjFvXicF9XCQKNIDkQCxf75GKHarAl7KBX1BbIH
+         U9AjsNYTeVWL8vA6KrCkoHiSIUoCqTkDIqeK7YOEPNNqQ5pcB2n7EELOAoH5oJZtLMcd
+         r9mw==
+X-Forwarded-Encrypted: i=1; AJvYcCV61Jf7ofUJOb2IWxjFjyTKmtCS+qa+m1f6vBxskd9tspvjYKrs1Og/o52LdUf80rfxERp3eSyF0lSauCICvBs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywxai3F7aEcE+/ZePqDh+a0ioAutOSUl26KtbgwU671fvHGyxbZ
+	HG1m8LsjhxJ30n/yW5sSepCPNuE5lL8Ai08hNAFHsEERJN/ZVU5i4hXjcXcBRl2n+6tVVcCspTQ
+	UrxnpEiSVgBbpW60Wu0M7lo1iYrcLZoplRN84
+X-Gm-Gg: ASbGnct4eqhx3j7RsgMb12AZc3AuNUj6cA7n25defGDTQ0SH8VHQPdqez2dVsr9K5dO
+	08lG1CmkPhUyt1DRDsBnmfWY/WmgUvCf50WrOxzZvQysqakDbFbntVJDkGH/QNN5o4RBpyaWXnQ
+	asrboiz6AsbgE/VmZXiXgfQ2AR
+X-Google-Smtp-Source: AGHT+IH2IPSslGXs3S6U3SZyEjhufps+FOgJ4MI5DY7Uu+/0+4vI/knID5uO2tWz7qPzGa2aOnkdzTN2mj4h7r9KJSs=
+X-Received: by 2002:a05:6808:228a:b0:3f4:1be4:b1d4 with SMTP id
+ 5614622812f47-3f6a2b39ca2mr2959328b6e.2.1741730088963; Tue, 11 Mar 2025
+ 14:54:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [RFC] misc: bcm-vk: avoid -Wflex-array-member-not-at-end warning
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <Z8_twT77rSIK-S_-@kspp>
-Content-Language: en-US
-From: Scott Branden <scott.branden@broadcom.com>
-In-Reply-To: <Z8_twT77rSIK-S_-@kspp>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250311123326.2686682-1-hca@linux.ibm.com> <20250311123326.2686682-2-hca@linux.ibm.com>
+In-Reply-To: <20250311123326.2686682-2-hca@linux.ibm.com>
+From: Jeff Xu <jeffxu@chromium.org>
+Date: Tue, 11 Mar 2025 14:54:37 -0700
+X-Gm-Features: AQ5f1JoHdL7fy9WOBHHtsPNXX2PhdRPHU3FfnSh5XG6auVNGW-V5IoHWDbRycD8
+Message-ID: <CABi2SkUG6ddwOpZqp3frfHh+AvQP3fyhfN5WOn-cCNpavUhZ3A@mail.gmail.com>
+Subject: Re: [PATCH mm-unstable 1/2] mseal sysmap: generic vdso vvar mapping
+To: Heiko Carstens <hca@linux.ibm.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>, Kees Cook <kees@kernel.org>, 
+	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, 
+	Vasily Gorbik <gor@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Gustavo,
+On Tue, Mar 11, 2025 at 5:33=E2=80=AFAM Heiko Carstens <hca@linux.ibm.com> =
+wrote:
+>
+> With the introduction of the generic vdso data storage the VM_SEALED_SYSM=
+AP
+> vm flag must be moved from the architecture specific
+> _install_special_mapping() call [1] [2] which maps the vvar mapping to
+> generic code.
+>
+Thanks for fixing this merging problem.
+The new selftest in mseal_system_mappings should catch this :-)
 
-On 2025-03-11 01:01, Gustavo A. R. Silva wrote:
-> Hi all,
-> 
-> I'm trying to fix the following warning:
-> 
-> drivers/misc/bcm-vk/bcm_vk.h:415:32: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> 
-> after a quick look, I don't see any code directly using the flexible
-> array `data[]`, so this patch should probably suffice:
-> 
-> diff --git a/drivers/misc/bcm-vk/bcm_vk.h b/drivers/misc/bcm-vk/bcm_vk.h
-> index 386884c2a263..9344c2366a4b 100644
-> --- a/drivers/misc/bcm-vk/bcm_vk.h
-> +++ b/drivers/misc/bcm-vk/bcm_vk.h
-> @@ -311,7 +311,6 @@ struct bcm_vk_peer_log {
->          u32 wr_idx;
->          u32 buf_size;
->          u32 mask;
-> -       char data[];
->   };
-> 
-> What do you think?
-If it is changed to data[0] does the warning go away?  If not, you could 
-remove it or change the code to use it instead of the sizeof used to
-calculate peer offset.
-> 
-> Thanks
+Hi Andrew,
+when you apply this to mm-unstable, could you please insert this between:
+
+commit 5bda54a4f304a7c3d65a40c9c3f015901caa2ce6
+selftests: x86: test_mremap_vdso: skip if vdso is msealed
+and
+commit 884323e928c6938923e5dfcb8a601b3363e1130b
+ mseal sysmap: enable x86-64
+
+That will make the series complete.
+
+
+> [1] https://lkml.kernel.org/r/20250305021711.3867874-4-jeffxu@google.com
+> [2] https://lkml.kernel.org/r/20250305021711.3867874-5-jeffxu@google.com
+>
+> Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
+> ---
+>  lib/vdso/datastore.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/lib/vdso/datastore.c b/lib/vdso/datastore.c
+> index e227fbbcb796..b7c7386c98a9 100644
+> --- a/lib/vdso/datastore.c
+> +++ b/lib/vdso/datastore.c
+> @@ -99,7 +99,8 @@ const struct vm_special_mapping vdso_vvar_mapping =3D {
+>  struct vm_area_struct *vdso_install_vvar_mapping(struct mm_struct *mm, u=
+nsigned long addr)
+>  {
+>         return _install_special_mapping(mm, addr, VDSO_NR_PAGES * PAGE_SI=
+ZE,
+> -                                       VM_READ | VM_MAYREAD | VM_IO | VM=
+_DONTDUMP | VM_PFNMAP,
+> +                                       VM_READ | VM_MAYREAD | VM_IO | VM=
+_DONTDUMP |
+> +                                       VM_PFNMAP | VM_SEALED_SYSMAP,
+>                                         &vdso_vvar_mapping);
+>  }
+>
 > --
-> Gustavo
+> 2.45.2
+>
+Reviewed-by: Jeff Xu <jeffxu@chromium.org>
