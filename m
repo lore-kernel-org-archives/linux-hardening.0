@@ -1,65 +1,66 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7822F23A9BF
-	for <linux-hardening@vger.kernel.org>; Wed, 12 Mar 2025 09:26:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00EFB23AE93
+	for <linux-hardening@vger.kernel.org>; Wed, 12 Mar 2025 09:26:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741771578; cv=none; b=RqDDuhNGEidn+CFOYQj4osw+NAXYuyVfWoAdCm+G0tfgGuXE1EnhM+pn4N4k9DbCB5k2A0pJRUxIG4eHtV6RRgJBAtFOeyg3fs9THJNzf4bz9KpU2cYhZshSkq4xIbOnoDX59RZg3tTj7jcZwkMUXI34JsCfLkT9O/GudU5+PrQ=
+	t=1741771579; cv=none; b=rX6BLun5pxGl9/VY/ZHDtgQ4YNheRkLpf0N797UDGqwBER+PTWAkuo+aQbQHkiQad+Q2I7Rre9opgtCaqFwpXj+7cNq40p7aBR2itUP1e494+Q3NGrKtpVODar6F/vxEW/rpMpq1zT0DmUON5ea/IidrP4wBUVgdbJvAwdk7oOY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741771578; c=relaxed/simple;
-	bh=WrKCHVU9WeE23NeOMrdhi+N2H8I570pU6Ew1AKLcPyg=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=FvF6PLmvitfCL+D5nOuF7Rj2dQU1p4sD0+ftajovZ/JuLlKCfej3ibKNG1nFNlQ4k8oHEcO32Jpwnw4Ey3yUgiYqLohHVBK5NHk/VH3k3Ahci+PxTUkJvUYUgA3k2Nb6g6sOSgcQioQTBSOSXw07kNeVnmoDj3WGh1VDC/tZB2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=I7e/l9JF; arc=none smtp.client-ip=209.85.218.52
+	s=arc-20240116; t=1741771579; c=relaxed/simple;
+	bh=kxHzYlD4Q7ouIup6NnoChAXZHHmMaS1kTRKj6jvl4Gw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=ZqMum3lqwM4c9jbmBr8GRnTdYBtAgs8P3La5uA1BbXblE0xzXZSthTKqY3Ut8UlQj7s5rnSkiUNNB+FcCnwsQh7V+UbWB8WHiOn4rszE+RlzCqj0asoh9wB4q4gQ/XwkiLAY6CuNpsgALhwELcOwzdf5bhmGQi3eTax/bBzxe2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ik4Jjyd3; arc=none smtp.client-ip=209.85.208.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I7e/l9JF"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-aaf0f1adef8so1116273866b.3
-        for <linux-hardening@vger.kernel.org>; Wed, 12 Mar 2025 02:26:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ik4Jjyd3"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5e56b229d60so1276850a12.0
+        for <linux-hardening@vger.kernel.org>; Wed, 12 Mar 2025 02:26:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741771574; x=1742376374; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=+Lfobpgc3Deyg3z2F30QYKZenkvsowTCFz1IUvtrFV4=;
-        b=I7e/l9JFBGWxUbrBYIb4KZpPlvnLot4Ae2gGS8Dso5uL9snVibcdocOt1MxJtC7BqI
-         WytDUEZERenf/tCfvE8bzFofzLY4gBhXryEqMleBJXzdkqj1XxDHD8Buuy8L63tSF8ul
-         CMO6fpN6yL+0AUV9SkUjYaZRfgTTulYyanMc9afNei7bWqJDKX9ODNH6rPDeZ/9Q4co8
-         lxNuLUVNJDmetoIDzsnnZmQXf3zjpogJvnhaFVuS5iGVGk+8U8jJzYxZONjmT37orvHg
-         b2IPJphha+8BsSl5dUPYwuFoMj3klPAxfgdk+Pcoa/a839CcYbL/S0xIMewgYbaCEkqi
-         XGcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741771574; x=1742376374;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1741771575; x=1742376375; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=+Lfobpgc3Deyg3z2F30QYKZenkvsowTCFz1IUvtrFV4=;
-        b=pPWMFYwwB0O1NSRLGWueWrIKNktD8jmhbu38zOvOWJuAa43RqS1T+/4dkPGNfW3uo5
-         oNNrvPhWxirc7pzwq/L4dbERtV21Nf6fRAIZdC5mX6U3Vg18c+RJ/89otitQcTAJJVC4
-         Q9cKcv9i1DTqotyZFD4s6WT2KfPIQu+sZApXPZiYetTb7Qj0OhJrbVcoTgVzvJVNqoem
-         ZoraMMS0IZ8xih3E8Rb9dBdPdvXTO1T9iJxGVCBY27fPjQOwlfyTTocSpImc11xYnBko
-         dFzsJomf+i9FVf0TwKua64ogsrm7e1B7O+CFXd65k5Pp+pGRlvYPcNc0eODDgoPSqdYv
-         kEHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWbSrI2/gpRgjbWAfIxu/UZAe17FT12pEWSsLq4T7dPLElqLshDw7/FTtA/jY+pXmyQYwrpXBBT9eyIaeBZMHI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzoq+Jux48MnQSKanAthsSHdXLzG2JvK0Yi5j4urcSNV8gdzcnK
-	ljL9CPsfOpprIhdPGwoAimWSW4eVXeCrOqE/eg6cQbCBXzzboItUUf2BBLiJ/N4=
-X-Gm-Gg: ASbGncthrzcTWmcj6x07hiVmnxbag6UvixjKykaaC0qMWJtoBqpPilgH5a/Rc1Bhk7X
-	vfsjI9FoPzYRe7+RkUTfNbsn2dTFm6aaA9Z82KOWNTCF4I8zMs6EW0FuVQ4M9yHIQ4UbT9ji4LG
-	MyRLkhT6j85fK2Ozd/FYdzJvtLDrOZqOHMIxWaIUQj7BnE9YXWamUbmDSer8iaWELWqxQSnqfRn
-	bHTLrvnPCzyn5/ESrwzsyTW8Ay7jrJSCz1ZVJD7VYexkeHlSFsrE5xB5C0l2iub8c3P/LlBRf1j
-	cxaJeFdtQvgFPlC4WUQsdabaUeUAOqxbx/AcsCh75z/bN8MeNHDfQS1YF4idty8FoecsXtEISOY
-	74B5/cDUwH/MUP1un446PRJY/YzOQ/cF45kxKRNM=
-X-Google-Smtp-Source: AGHT+IGMqDlLwT7rGvz8I6XYBpku/gmPdWmh/R1p3fJdAcAGTYdKy3MrEXnddG5CRbYlt4DioQT3/Q==
-X-Received: by 2002:a17:907:828a:b0:ac2:c424:c316 with SMTP id a640c23a62f3a-ac2c424cd75mr606058866b.57.1741771573595;
-        Wed, 12 Mar 2025 02:26:13 -0700 (PDT)
+        bh=NpG4SN8+SswQB9WTTY/KhrQ2hSRzm3/LAyaIh8poviQ=;
+        b=ik4Jjyd3MjaIjHdhdqlWNF2fUvp0KT4S0KQwZZvPGnT5c0RJVyr/C4Kd2UreJgIMYh
+         xLf3inY88BnaUi787eBVohPRXDjwW4in8VEizqhDWXYb4oG1vie51WTeKZ7hyhpjcoDU
+         RN440RU4FPIBLlP/pUWar4rwBBy2JepgaljiuFp2JWC3kvew7tuz3bNzycYVTertz+oj
+         K2Sb8ySI0HzfAx2b8aZ8jYWwcQYtPxTSIw5Fj2iIJLzETg3/GjZVjKadwi21xgrLr6XG
+         WBTp1jtA9Z/SXCxBAlnibr7F8NJqGB5E10bLBoQJAO6x1kunbnRvncVqpPd4linD/xyk
+         DJlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741771575; x=1742376375;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NpG4SN8+SswQB9WTTY/KhrQ2hSRzm3/LAyaIh8poviQ=;
+        b=EzOunhYVL6eVDuS/oMh/+yxwhYrmtCqcTpzxM71VxIdHuYFFF6/TNYRND4hyb/yA4n
+         +EEWJVExygzNgmxhxkpALS9YoIq3PH9+apC/4UnGzOmcKSNgWuoJ+5Bw9wo4XWLcgBU7
+         1tdDlR9Zo4G2tlBLGHjVY+g4bR7Nth7U0MYyLYkbHU0VSRf0lKu78WNJzm3NCxTglD36
+         5sfJAwo3dr0vN4ddJwz0Jy8QvTBq4DbRdJSRahTvlqgrYjoksLaKGrteLXp2hNc57onm
+         3h9lOOkFSiFxbnfSRaBzUsPjxYstYqxanJAn6B9BLPhsTwPn/oFi+uWS4cg8a0QN6XDd
+         G7xQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVd7VgMwh+qONyCUKMQZJLPpbGhAj1tsV24GFChMTJioYc6zTRluAJQSwSzIWwJBDDpRfMXhwIzCg5IajNeM5s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzmtEj/Me9a2yRpNGH3amuA/M9FR2ey9sHmTywyu2H3/S9k+kR+
+	SRYxRj7U81a7zd94ubQc/cIm2XesVzfTXWSx73v0sLOmvTRna7Bnb1k5pK6nlDI=
+X-Gm-Gg: ASbGncuKoKsF5K+xQEUWKRqSoUIIXDZjKeCI3yegOoEsOw6ylXcGuHwsXXi0a2YIjZl
+	Zpkw0P0udRzcK54iKW4ZLFnXmyvLfZCPOKW43gr6Xffv1bnGE3ieWp7wmbLCk+GIIAwVke1fqpl
+	qgLfls2cEB8qhp66K/aYdNyi4hkSvbBaCJnMjGz5WcJUbaxjCcvQMJsNWMfbh+BpWzS4FUEM8EI
+	5/ZcdtVaBleUaWKviwr7ZRW0Fzv5yxq1gghDyoHWKPHONO+qwKo2wnQ/A9QFpLHIF4NW8XEq6eQ
+	gR8QrDr142Kf4gEC4Wf/hxIHjC/8n8i+7N7V0uhQMoeX7kckiAmYZr6ITtBGbIsmlkR4jdYmsNz
+	RCEnxUUjRw7LteanB7l4wiClKyP/t+0jQ4xvcbT4=
+X-Google-Smtp-Source: AGHT+IGMTylQyff6vU9GdrAYd99Xs9o2ZI+8BDiTPyKAU8vPNdImCoElshfShEdRpTQwXFn9jHo+tg==
+X-Received: by 2002:a17:906:628a:b0:abf:27ac:2cf8 with SMTP id a640c23a62f3a-ac2ba563d91mr826133366b.21.1741771575046;
+        Wed, 12 Mar 2025 02:26:15 -0700 (PDT)
 Received: from puffmais.c.googlers.com (8.239.204.35.bc.googleusercontent.com. [35.204.239.8])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac25777c748sm894535266b.2.2025.03.12.02.26.13
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac25777c748sm894535266b.2.2025.03.12.02.26.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Mar 2025 02:26:13 -0700 (PDT)
+        Wed, 12 Mar 2025 02:26:14 -0700 (PDT)
 From: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-Subject: [PATCH v4 0/6] Maxim Integrated MAX77759 PMIC MFD-based drivers
-Date: Wed, 12 Mar 2025 09:25:58 +0000
-Message-Id: <20250312-max77759-mfd-v4-0-b908d606c8cb@linaro.org>
+Date: Wed, 12 Mar 2025 09:26:01 +0000
+Subject: [PATCH v4 3/6] dt-bindings: mfd: add max77759 binding
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -68,11 +69,9 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIACZT0WcC/3XM0Q6CIBiG4VtxHEeDH4HsqPtoHfwIKFtpw8Zsz
- nsPPTJbh9+3Pe9EBheDG8i5mEh0KQyh7/IoDwWpW+waR4PNmwADyQBK+sBRay0r+vCWIqJGwYE
- bBSSTZ3Q+jGvuesu7DcOrj++1nvjy/gklThkF471QvrJMyss9dBj7Yx8bspQSbLXaacgalXTGg
- akZVj9abPVpp0XWrBYKtC1BgvrS8zx/AAKKFmMlAQAA
-X-Change-ID: 20250224-max77759-mfd-aaa7a3121b62
+Message-Id: <20250312-max77759-mfd-v4-3-b908d606c8cb@linaro.org>
+References: <20250312-max77759-mfd-v4-0-b908d606c8cb@linaro.org>
+In-Reply-To: <20250312-max77759-mfd-v4-0-b908d606c8cb@linaro.org>
 To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzk+dt@kernel.org>, 
  Conor Dooley <conor+dt@kernel.org>, 
@@ -85,120 +84,139 @@ Cc: Peter Griffin <peter.griffin@linaro.org>,
  Will McVicker <willmcvicker@google.com>, kernel-team@android.com, 
  linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
  linux-gpio@vger.kernel.org, linux-hardening@vger.kernel.org, 
- =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+ =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
 X-Mailer: b4 0.14.2
 
-Hi,
+The Maxim MAX77759 is a companion PMIC for USB Type-C applications and
+includes Battery Charger, Fuel Gauge, temperature sensors, USB Type-C
+Port Controller (TCPC), NVMEM, and a GPIO expander.
 
-This series improves support for the Maxim Integrated MAX77759
-companion PMIC for USB Type-C applications using the MFD framework.
+This describes the top-level device.
 
-This series must be applied in-order, due to interdependencies of some
-of the patches:
-* to avoid use of undocumented compatibles by the newly added drivers,
-  the bindings are added first in this series
-* patch 1 ("dt-bindings: gpio: add max77759 binding") also creates a
-  new MAINTAINERS entry, including a wildcard match for the other
-  bindings in this series
-* patch 3 ("dt-bindings: mfd: add max77759 binding") references the
-  bindings added in patch 1 and 2 and can not work if those aren't
-  available
-* patch 4 ("mfd: max77759: add Maxim MAX77759 core mfd driver") adds
-  the core MFD driver, which also exposes an API to its leaf drivers
-  and is used by patches 5 and 6
-* patches 5 and 6 won't compile without patch 4
-
-The MAX77759 PMIC includes Battery Charger, Fuel Gauge, temperature
-sensors, USB Type-C Port Controller (TCPC), NVMEM, and a GPIO expander.
-
-This PMIC is used on the Google Pixel 6 and 6 Pro (oriole / raven).
-
-This series adds support for the top-level MFD device, the gpio, and
-nvmem cells. Other components are excluded for the following reasons:
-
-    While in the same package, Fuel Gauge and TCPC have separate and
-    independent I2C addresses, register maps, interrupt lines, and
-    aren't part of the top-level package interrupt hierarchy.
-    Furthermore, a driver for the TCPC part exists already (in
-    drivers/usb/typec/tcpm/tcpci_maxim_core.c).
-
-    I'm leaving out temperature sensors and charger in this submission,
-    because the former are not in use on Pixel 6 and I therefore can
-    not test them, and the latter can be added later, once we look at
-    the whole charging topic in more detail.
-
-To make maintainers' work easier, I am planning to send the relevant
-DTS and defconfig changes via a different series, unless everything
-is expected to go via Lee's MFD tree in one series?
-
-Cheers,
-Andre'
-
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 Signed-off-by: André Draszik <andre.draszik@linaro.org>
 ---
-Changes in v4:
-- collect tags
-- mfd: add missing build_bug.h include
-- mfd: update an irq chip comment
-- mfd: fix a whitespace in register definitions
-- Link to v3: https://lore.kernel.org/r/20250228-max77759-mfd-v3-0-0c3627d42526@linaro.org
+v3:
+* drop gpio-controller and gpio-cells, GPIO is provided by the child
+  (Rob)
 
-Changes in v3:
-- collect tags
-- mfd: drop gpio-controller and gpio-cells, GPIO is provided by the
-  child (Rob)
-- gpio: drop duplicate init of 'handled' variable in irq handler
-- gpio: use boolean with IRQ_RETVAL() (Linus)
-- gpio: drop 'virq' variable inside irq handler to avoid confusion
-  (Linus)
-- gpio: drop assignment of struct gpio_chip::owner (Linus)
-- Link to v2: https://lore.kernel.org/r/20250226-max77759-mfd-v2-0-a65ebe2bc0a9@linaro.org
+v2:
+* rename expected nvmem subdev nodename to 'nvmem-0'
+  I'd have preferred just 'nvmem', but that matches nvmem-consumer.yaml
+  and fails validation.
 
-Changes in v2:
-- reorder bindings patches to avoid validation failures
-- add dependency information to cover letter (Krzysztof)
-- fix max77759_gpio_direction_from_control() in gpio driver
-- gpio: drop 'interrupts' property from binding and sort properties
-  alphabetically (Rob)
-- nvmem: drop example from nvmem binding as the MFD binding has a
-  complete one (Rob)
-- nvmem: rename expected nvmem subdev nodename to 'nvmem-0' (Rob)
-- mfd: add kernel doc
-- mfd: fix an msec / usec typo
-- mfd: error handling of devm_mutex_init (Christophe)
-- whitespace fixes & tidy-ups (Christophe)
-- Link to v1: https://lore.kernel.org/r/20250224-max77759-mfd-v1-0-2bff36f9d055@linaro.org
-
+Note: MAINTAINERS doesn't need updating, the binding update for the
+first leaf device (gpio) adds a wildcard matching all max77759 bindings
 ---
-André Draszik (6):
-      dt-bindings: gpio: add max77759 binding
-      dt-bindings: nvmem: add max77759 binding
-      dt-bindings: mfd: add max77759 binding
-      mfd: max77759: add Maxim MAX77759 core mfd driver
-      gpio: max77759: add Maxim MAX77759 gpio driver
-      nvmem: max77759: add Maxim MAX77759 NVMEM driver
+ .../devicetree/bindings/mfd/maxim,max77759.yaml    | 99 ++++++++++++++++++++++
+ 1 file changed, 99 insertions(+)
 
- .../bindings/gpio/maxim,max77759-gpio.yaml         |  44 ++
- .../devicetree/bindings/mfd/maxim,max77759.yaml    |  99 +++
- .../bindings/nvmem/maxim,max77759-nvmem.yaml       |  32 +
- MAINTAINERS                                        |  10 +
- drivers/gpio/Kconfig                               |  13 +
- drivers/gpio/Makefile                              |   1 +
- drivers/gpio/gpio-max77759.c                       | 524 +++++++++++++++
- drivers/mfd/Kconfig                                |  20 +
- drivers/mfd/Makefile                               |   1 +
- drivers/mfd/max77759.c                             | 738 +++++++++++++++++++++
- drivers/nvmem/Kconfig                              |  12 +
- drivers/nvmem/Makefile                             |   2 +
- drivers/nvmem/max77759-nvmem.c                     | 156 +++++
- include/linux/mfd/max77759.h                       |  98 +++
- 14 files changed, 1750 insertions(+)
----
-base-commit: 0226d0ce98a477937ed295fb7df4cc30b46fc304
-change-id: 20250224-max77759-mfd-aaa7a3121b62
+diff --git a/Documentation/devicetree/bindings/mfd/maxim,max77759.yaml b/Documentation/devicetree/bindings/mfd/maxim,max77759.yaml
+new file mode 100644
+index 0000000000000000000000000000000000000000..525de9ab3c2b7b431e48497330640857540625b1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/maxim,max77759.yaml
+@@ -0,0 +1,99 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mfd/maxim,max77759.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Maxim Integrated MAX77759 PMIC for USB Type-C applications
++
++maintainers:
++  - André Draszik <andre.draszik@linaro.org>
++
++description: |
++  This is a part of device tree bindings for the MAX77759 companion Power
++  Management IC for USB Type-C applications.
++
++  The MAX77759 includes Battery Charger, Fuel Gauge, temperature sensors, USB
++  Type-C Port Controller (TCPC), NVMEM, and a GPIO expander.
++
++properties:
++  compatible:
++    const: maxim,max77759
++
++  interrupts:
++    maxItems: 1
++
++  interrupt-controller: true
++
++  "#interrupt-cells":
++    const: 2
++
++  reg:
++    maxItems: 1
++
++  gpio:
++    $ref: /schemas/gpio/maxim,max77759-gpio.yaml
++
++  nvmem-0:
++    $ref: /schemas/nvmem/maxim,max77759-nvmem.yaml
++
++required:
++  - compatible
++  - interrupts
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        pmic@66 {
++            compatible = "maxim,max77759";
++            reg = <0x66>;
++            interrupts-extended = <&gpa8 3 IRQ_TYPE_LEVEL_LOW>;
++
++            interrupt-controller;
++            #interrupt-cells = <2>;
++
++            gpio {
++                compatible = "maxim,max77759-gpio";
++
++                gpio-controller;
++                #gpio-cells = <2>;
++
++                interrupt-controller;
++                #interrupt-cells = <2>;
++            };
++
++            nvmem-0 {
++                compatible = "maxim,max77759-nvmem";
++
++                nvmem-layout {
++                    compatible = "fixed-layout";
++                    #address-cells = <1>;
++                    #size-cells = <1>;
++
++                    reboot-mode@0 {
++                        reg = <0x0 0x4>;
++                    };
++
++                    boot-reason@4 {
++                        reg = <0x4 0x4>;
++                    };
++
++                    shutdown-user-flag@8 {
++                        reg = <0x8 0x1>;
++                    };
++
++                    rsoc@10 {
++                        reg = <0xa 0x2>;
++                    };
++                };
++            };
++        };
++    };
 
-Best regards,
 -- 
-André Draszik <andre.draszik@linaro.org>
+2.49.0.rc0.332.g42c0ae87b1-goog
 
