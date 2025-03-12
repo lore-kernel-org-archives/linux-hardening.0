@@ -1,41 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A5BA1DE3AF;
-	Wed, 12 Mar 2025 20:05:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EE6D1ADC6C;
+	Wed, 12 Mar 2025 20:07:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741809941; cv=none; b=b6kijFbs0niKb9/pgqMP6aJzLYFFJpGFaQQvbiJVVjHRmCa8XdMCePQYtsT4I3s/x14J7jTnaOJMk8bltciYfV/6fYW6QmtcK97pEMDaIl/hXOHADef9hOI1WlvU8oUJVhjlCTKHFRaGFSMx41S+zK44PPWGgRA9LvsHdSqMTKw=
+	t=1741810026; cv=none; b=bxSGOvDizI+MWX30Zc8dKco5Oh3KFADCqnpo75WNe4gF3OGcIo4fdwz7qdsBNZsEJOV2BQnoxl1Vsd6du62kCJgR2nuQurq28Q1X5fR/+9soGWh5EiLNodAsl2wQ25u9HZmMwJ5kbTfcUwZwOMoswdo2zY5ghgXHHGas+dF5jjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741809941; c=relaxed/simple;
-	bh=x0rT9NEiiYRX5MkFRJvYMmCV2JTVEDgBLYkWCR5UE2s=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=h5nYpX1g5uwi2ds+3zUcBHa5AxGDKaKyieo6uMpDd41yKdx+UDD3ArBCOw3sguWB6oPWDRqg2C3CZ7t7nffnR6ygH53wynFskGvbHlRvO8oKzsimyrf2GS7o/VNtuA1I/Rd9NSKLnxVIdL9JTLpEW2kqCvroCzCo+e07yOl/G4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XsrwRrCm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741810026; c=relaxed/simple;
+	bh=GBnlE5zE4WucF8iLnWQgHp7rfMGPZL48Cv0Cjo6JR0c=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DgJWcaJaVa2UwmMprOT70/X9BrLWofXhnreH5lh6jQ707y4PiZVS5Uh7PUYJvMvkB51PVqILImD0AfOJ5u0DijYWhfFtA8vgv79yO9c3YvXNGeHQfcf4boi7FWyQpdaj0a8Ph7R3j/+oKVDI7QjO6WOddELjI12pLMQlGSQF/n8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EJrj1rk8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XsrwRrCm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86B00C4CEEA;
-	Wed, 12 Mar 2025 20:05:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EJrj1rk8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16638C4CEDD;
+	Wed, 12 Mar 2025 20:07:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741809940;
-	bh=x0rT9NEiiYRX5MkFRJvYMmCV2JTVEDgBLYkWCR5UE2s=;
+	s=k20201202; t=1741810026;
+	bh=GBnlE5zE4WucF8iLnWQgHp7rfMGPZL48Cv0Cjo6JR0c=;
 	h=From:To:Cc:Subject:Date:From;
-	b=XsrwRrCmBEHVV+lbD5wu78PeeixNX1nwJYlhdReSR5Ww3cDVenlhpv3LJkfHNW1sL
-	 LUE58nPEkPadhdyACVgsijRCjjSvxXMr+xW+BGxM8VF9RX0ANbPYHfAthhcsYTUPPY
-	 F0mujDm+LK67IzYL0cAPP4QYyk96qGe7rIDQ606QzDV2Tqk/LVa7G50UX5oBRmTmay
-	 RFqmjMWemfszgozOoavFt1/isxUNE2k5zFWADN0KH6Ha81iswWTA5q2OtwreNPv+9S
-	 XwTtguZBiq0D4KTFYZRMeANzSE1hPnf3cHdkpLdI64BCX/+dmdBjHJGt7fgRzMcOh9
-	 XcJlqCc6heKrQ==
+	b=EJrj1rk8SH10JTGrI1rXTuUL0AZet2AcGmgdfUz4zYxcQRrigpGaXMG3dPzqHvSdj
+	 +iVJV4TOpRjd8EuF8SBHrg0fF98C81nGZnAwtqfMAYo6XzDHrduRxFPfktT93WXluI
+	 c83shzuCKLhvIyyD9gXKjWbPyUkCq0gmIwXrc0pWF+/VhCTJ/Mcc/4N9DkWALb1Ul5
+	 Er3Rp3p7ipMBTPkyl6VGIQBNHi0YD3TxrwSfIuEb87i9C6cQ6G8qKSmOUIA6fVbtTc
+	 FIsCFx5trgPB0IRjbtsjJl+/SqrILQo27p0WJKbl3wJt9eZMc+ubx2RiXsx8vY/0kS
+	 gYNFl66xRo1Jw==
 From: Kees Cook <kees@kernel.org>
-To: Jack Wang <jinpu.wang@cloud.ionos.com>
+To: Nicolas Ferre <nicolas.ferre@microchip.com>
 Cc: Kees Cook <kees@kernel.org>,
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	linux-scsi@vger.kernel.org,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH v2] scsi: pm80xx: Use C String API for string comparisons
-Date: Wed, 12 Mar 2025 13:05:36 -0700
-Message-Id: <20250312200532.it.808-kees@kernel.org>
+Subject: [PATCH v3] net: macb: Add __nonstring annotations for unterminated strings
+Date: Wed, 12 Mar 2025 13:07:01 -0700
+Message-Id: <20250312200700.make.521-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -43,59 +47,73 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2142; i=kees@kernel.org; h=from:subject:message-id; bh=x0rT9NEiiYRX5MkFRJvYMmCV2JTVEDgBLYkWCR5UE2s=; b=owGbwMvMwCVmps19z/KJym7G02pJDOkXXwp4zXjT+XJrvd0CZW7zC3LBV2/pHfsXrWj7K/7aU UcvkY2HO0pZGMS4GGTFFFmC7NzjXDzetoe7z1WEmcPKBDKEgYtTAC5SyPDftZeLK6VsR4Dksl3d zIH8r0Ob+nPvi9vonCi+F3iyRl+PkWH5gTkSKoYtLx8uM/x1+cbvH+7l91hb9j7a9tF1iydj8jZ WAA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3457; i=kees@kernel.org; h=from:subject:message-id; bh=GBnlE5zE4WucF8iLnWQgHp7rfMGPZL48Cv0Cjo6JR0c=; b=owGbwMvMwCVmps19z/KJym7G02pJDOkXX6ZsaBFbd7L4Qff7ee+fLpwzK3JG8+8XETckeOTe/ +SrmreQqaOUhUGMi0FWTJElyM49zsXjbXu4+1xFmDmsTCBDGLg4BWAib2oZ/hkVybR8NbAv685Z Z/EsfZbQu0ccAXM+rnJ9W/z97MzvlxQZGRoVjGVtvJw2zIs261gxr/3OTnUPqwVu8xrNTn5+8FR 9GisA
 X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
 When a character array without a terminating NUL character has a static
 initializer, GCC 15's -Wunterminated-string-initialization will only
-warn if the array lacks the "nonstring" attribute[1]. There is no reason
-for the command lookup logic to not use strcmp(), so grow the string
-length and update the check to eliminate the warning:
+warn if the array lacks the "nonstring" attribute[1]. Mark the arrays
+with __nonstring to correctly identify the char array as "not a C string"
+and thereby eliminate the warning:
 
-../drivers/scsi/pm8001/pm8001_ctl.c:652:7: warning: initializer-string for array of 'unsigned char' truncates NUL terminator but destination lacks 'nonstring' attribute (9 chars into 8 available) [-Wunterminated-string-initialization]
-  652 |      {"set_nvmd",    FLASH_CMD_SET_NVMD},
-      |       ^~~~~~~~~~
+In file included from ../drivers/net/ethernet/cadence/macb_main.c:42:
+../drivers/net/ethernet/cadence/macb.h:1070:35: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (33 chars into 32 available) [-Wunterminated-string-initialization]
+ 1070 |         GEM_STAT_TITLE(TX1519CNT, "tx_greater_than_1518_byte_frames"),
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/cadence/macb.h:1050:24: note: in definition of macro 'GEM_STAT_TITLE_BITS'
+ 1050 |         .stat_string = title,                           \
+      |                        ^~~~~
+../drivers/net/ethernet/cadence/macb.h:1070:9: note: in expansion of macro 'GEM_STAT_TITLE'
+ 1070 |         GEM_STAT_TITLE(TX1519CNT, "tx_greater_than_1518_byte_frames"),
+      |         ^~~~~~~~~~~~~~
+../drivers/net/ethernet/cadence/macb.h:1097:35: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (33 chars into 32 available) [-Wunterminated-string-initialization]
+ 1097 |         GEM_STAT_TITLE(RX1519CNT, "rx_greater_than_1518_byte_frames"),
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/cadence/macb.h:1050:24: note: in definition of macro 'GEM_STAT_TITLE_BITS'
+ 1050 |         .stat_string = title,                           \
+      |                        ^~~~~
+../drivers/net/ethernet/cadence/macb.h:1097:9: note: in expansion of macro 'GEM_STAT_TITLE'
+ 1097 |         GEM_STAT_TITLE(RX1519CNT, "rx_greater_than_1518_byte_frames"),
+      |         ^~~~~~~~~~~~~~
+
+Since these strings are copied with memcpy() they do not need to be
+NUL terminated, and can use __nonstring:
+
+                        memcpy(p, gem_statistics[i].stat_string,
+                               ETH_GSTRING_LEN);
 
 Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=117178 [1]
 Signed-off-by: Kees Cook <kees@kernel.org>
 ---
-In taking another look at this, I realize that actually strcmp() should be used,
-so just grow the size of this character array and use strcmp().
- v1: https://lore.kernel.org/lkml/20250310222553.work.437-kees@kernel.org/
- v2: Use strcmp()
+ v3: improve commit message (Bill), drop whitespace change (Bill)
+ v2: https://lore.kernel.org/lkml/20250311224412.it.153-kees@kernel.org/
+ v1: https://lore.kernel.org/lkml/20250310222415.work.815-kees@kernel.org/
+Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
+Cc: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org
 ---
-Cc: Jack Wang <jinpu.wang@cloud.ionos.com>
-Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
-Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: linux-scsi@vger.kernel.org
----
- drivers/scsi/pm8001/pm8001_ctl.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/cadence/macb.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/pm8001/pm8001_ctl.c b/drivers/scsi/pm8001/pm8001_ctl.c
-index 85ff95c6543a..bb8fd5f0f441 100644
---- a/drivers/scsi/pm8001/pm8001_ctl.c
-+++ b/drivers/scsi/pm8001/pm8001_ctl.c
-@@ -644,7 +644,7 @@ static DEVICE_ATTR(gsm_log, S_IRUGO, pm8001_ctl_gsm_log_show, NULL);
- #define FLASH_CMD_SET_NVMD    0x02
- 
- struct flash_command {
--     u8      command[8];
-+     u8      command[9];
-      int     code;
+diff --git a/drivers/net/ethernet/cadence/macb.h b/drivers/net/ethernet/cadence/macb.h
+index 2847278d9cd4..d2a4c180d6a6 100644
+--- a/drivers/net/ethernet/cadence/macb.h
++++ b/drivers/net/ethernet/cadence/macb.h
+@@ -1027,7 +1027,7 @@ struct gem_stats {
+  * this register should contribute to.
+  */
+ struct gem_statistic {
+-	char stat_string[ETH_GSTRING_LEN];
++	char stat_string[ETH_GSTRING_LEN] __nonstring;
+ 	int offset;
+ 	u32 stat_bits;
  };
- 
-@@ -825,8 +825,7 @@ static ssize_t pm8001_store_update_fw(struct device *cdev,
- 	}
- 
- 	for (i = 0; flash_command_table[i].code != FLASH_CMD_NONE; i++) {
--		if (!memcmp(flash_command_table[i].command,
--				 cmd_ptr, strlen(cmd_ptr))) {
-+		if (!strcmp(flash_command_table[i].command, cmd_ptr)) {
- 			flash_command = flash_command_table[i].code;
- 			break;
- 		}
 -- 
 2.34.1
 
