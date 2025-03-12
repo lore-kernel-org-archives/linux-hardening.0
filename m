@@ -1,134 +1,109 @@
-Received: from mail.netfilter.org (mail.netfilter.org [217.70.190.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 314891E1021;
-	Tue, 11 Mar 2025 23:44:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.190.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95926645;
+	Wed, 12 Mar 2025 00:04:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741736666; cv=none; b=hujV7AcWdNARRveF5ttWCOqEPqtOdpJkj4vGr836DFLeuQnErRwr8PTEZyvZYRjefHDUFx7VN/txNVXY/8AaDFJgaNNu4+iP4jc9y5f9a5+1XzG8TYPA9dGNODA94RFxA/7vUzRmfSaTYbYvDW5K+fBQuU6plNQzWdde1sYNNFs=
+	t=1741737843; cv=none; b=XJici4wv4F5C2HF6jQ2icMKLTztA7icOk55Cuw3B4ShopwCDFrOh1hWoxRcunr4F5qVFt4i1CBxGaRAQ0CPIY48Zj5WosPvk31Bb5ZDjqEQ6YKwghKA6Mrch4w1EgmXIcKpfGh3QvJXk9FBFZCvp5rporqrg5nemJwlSwzfwAMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741736666; c=relaxed/simple;
-	bh=zo5S5g9SDDg5D0vyXj5+j5Nom1Jl/tHuPw0zZZUjYXA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nHJuKiBFDHP5R+MrqO3nJ7rjmM286jINy6zJr+uS5ZjlDTlY4Myu2Px+4tNLAJBsjuHkXd9+cRrgGp41tJ/k/vpApivC4GKSyaZdk4vB2Zv/ToOFL7XEdooaIipNkbIAbomT8BGvgKYxRVprpOMm26qPQYMy43pW9JXT/B46+xY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=netfilter.org; spf=pass smtp.mailfrom=netfilter.org; dkim=pass (2048-bit key) header.d=netfilter.org header.i=@netfilter.org header.b=dCuQrjld; dkim=pass (2048-bit key) header.d=netfilter.org header.i=@netfilter.org header.b=kLBL1Hza; arc=none smtp.client-ip=217.70.190.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=netfilter.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netfilter.org
+	s=arc-20240116; t=1741737843; c=relaxed/simple;
+	bh=pVvYwXP0gQ1oJIiqQk7qHSzwxsq9T8FMCmlNNJluSIE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gs2wyvG6OKe0xis3SR80ulLYN5OINdVtoyvNj4BsQ4u8pdc5hyf9FvS544s6eQAXL7y+z058B0HaJ9tkn/4qDFl2Q68d8wx+LmnAbirx3HRvSlhw6jxpmHBMomOEhxj2QuSVKW+OnQHxe5Xb4wYZS1yQfY0JXatzzMR2MAYMt2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m4Ab04Ja; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=netfilter.org header.i=@netfilter.org header.b="dCuQrjld";
-	dkim=pass (2048-bit key) header.d=netfilter.org header.i=@netfilter.org header.b="kLBL1Hza"
-Received: by mail.netfilter.org (Postfix, from userid 109)
-	id CE1CD60292; Wed, 12 Mar 2025 00:44:13 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=netfilter.org;
-	s=2025; t=1741736653;
-	bh=Zy4H9Jv5YfvsQEUnC9uG0DhMz5JfwXq9yCcEHqiTgoA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dCuQrjldqeqnYI/PldvkMU2V6Bp+hA/HwlY9EMQeDrnYiBAjZICwM9gPlxhJoSSpG
-	 wZ3sm4kF8H+BL9z6zaEdVcQ/LglJa/NqsPKC27g454L/lUFHDW99BptODIrzN/yyHT
-	 t/yZoMDc9WykSeScCm4MMymPj4k/tiOEdh21gQNHONXTisiY59ILJiAUrofoANGdla
-	 oFfcx2OdWhPYSQhr+vFxI8YONrevo7KDoM2OkKZf1Esg6h8lTFFECWmg0bTtYGIVCM
-	 QdlSGFdCQdx27d6o0ZttuKXJdvlJ8iVY9nlduIVZMRIFYGUp4iyjX6OFh030AcfvYT
-	 EskUkG6I4SoAA==
-X-Spam-Level: 
-Received: from netfilter.org (mail-agni [217.70.190.124])
-	by mail.netfilter.org (Postfix) with ESMTPSA id F13DD60281;
-	Wed, 12 Mar 2025 00:44:07 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=netfilter.org;
-	s=2025; t=1741736648;
-	bh=Zy4H9Jv5YfvsQEUnC9uG0DhMz5JfwXq9yCcEHqiTgoA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kLBL1Hzar1cmkrQuKybLF66CTNES1VcZwNNIMmceAZVUWG5+PeM/BvDuffpu85yec
-	 wSCdNGmitWR2/y3qO93O7m5UoYNKtgV+UMNE3RSCZLEtC3QrrCx5Ui7dzYI58OpWlx
-	 NwubfakCqFL6Je9par6JdWhDjcNJFmritUaP6eC06ocENmPzpiec0y8GuyB+7RNRpX
-	 yhqSCf2339YL33+0nTwjf5i1QZ20gGgH7fTS6Lw5NjdHN+qVQ+1exZ2T3tciJq/8kh
-	 KqPz2aZ2hTBXT2boxpytoDg2qPdtF3KzUcG9KrRXHFunP2n1vk46/9Q2OKi2SN/ESu
-	 yNF8SeDIdPDXQ==
-Date: Wed, 12 Mar 2025 00:44:04 +0100
-From: Pablo Neira Ayuso <pablo@netfilter.org>
-To: Eric Woudstra <ericwouds@gmail.com>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	Nikolay Aleksandrov <razor@blackwall.org>,
-	Roopa Prabhu <roopa@nvidia.com>, Ivan Vecera <ivecera@redhat.com>,
-	Jiri Pirko <jiri@resnulli.us>,
-	Jozsef Kadlecsik <kadlec@netfilter.org>,
-	Simon Horman <horms@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Andrew Lunn <andrew+netdev@lunn.ch>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, netfilter-devel@vger.kernel.org,
-	coreteam@netfilter.org, bridge@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, linux-hardening@vger.kernel.org,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Ahmed Zaki <ahmed.zaki@intel.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	Frank Wunderlich <frank-w@public-files.de>,
-	Daniel Golle <daniel@makrotopia.org>
-Subject: Re: [PATCH v9 nf 00/15] bridge-fastpath and related improvements
-Message-ID: <Z9DKxOnxr1fSv0On@calendula>
-References: <20250305102949.16370-1-ericwouds@gmail.com>
- <897ade0e-a4d0-47d0-8bf7-e5888ef45a61@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m4Ab04Ja"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D609EC4CEE9;
+	Wed, 12 Mar 2025 00:04:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741737842;
+	bh=pVvYwXP0gQ1oJIiqQk7qHSzwxsq9T8FMCmlNNJluSIE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=m4Ab04Ja1tv70a06NpWbU7+CjYmFO8Tt4GmjX0rtwxwjlNrRX3ePmhRrddlrNBSdS
+	 AjeQozt2sYWE/b5uE/7kRRs05qExhDVyGm+bIC4e4RmaROQdignp91Qtv/zYJZq4qK
+	 gWhqPqwME5RI71jiqt54aM46Mrq2HEUrcbglhNICPMDN/FBQ3D2xtLhg0EGSib5O7r
+	 GvWW3GWNXSxWosjhJ5YEf7xJ+2YP91mN+dsP+3LKbrZaJHPqGd4YtbFSYPZA/GzIzF
+	 CD8S4uz2q457VkNDoHzyZBMuwjCS1+r319MKrP7gxuF0TnbrfG45/pMUuVd4mv59HV
+	 x4yYk0rMFxJFw==
+From: Kees Cook <kees@kernel.org>
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Kees Cook <kees@kernel.org>,
+	linux-hardening@vger.kernel.org,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: [PATCH] kunit/fortify: Expand testing of __compiletime_strlen()
+Date: Tue, 11 Mar 2025 17:03:56 -0700
+Message-Id: <20250312000349.work.786-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <897ade0e-a4d0-47d0-8bf7-e5888ef45a61@gmail.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2336; i=kees@kernel.org; h=from:subject:message-id; bh=pVvYwXP0gQ1oJIiqQk7qHSzwxsq9T8FMCmlNNJluSIE=; b=owGbwMvMwCVmps19z/KJym7G02pJDOkXzud89I3m82RZ/mcSj5FXX+365zq71p1+VdyfKhvN8 q3pynLljlIWBjEuBlkxRZYgO/c4F4+37eHucxVh5rAygQxh4OIUgImEPGH4w7nCpH9R2UfOXymf HJIabBwO+ilccZgWUfMmbH5BddnKawz/E4+JnL+3Wv2SkYD30t9X37RlMnvdVxR1sc/cMtvw6S4 +bgA=
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-Hi,
+It seems that Clang thinks __builtin_constant_p() of undefined variables
+should return true[1]. This is being fixed separately[2], but in the
+meantime, expand the fortify tests to help track this kind of thing down
+faster in the future.
 
-On Tue, Mar 11, 2025 at 09:22:35AM +0100, Eric Woudstra wrote:
-> 
-> 
-> On 3/5/25 11:29 AM, Eric Woudstra wrote:
-> > This patchset makes it possible to set up a software fastpath between
-> > bridged interfaces. One patch adds the flow rule for the hardware
-> > fastpath. This creates the possibility to have a hardware offloaded
-> > fastpath between bridged interfaces. More patches are added to solve
-> > issues found with the existing code.
-> 
-> 
-> > Changes in v9:
-> > - No changes, resend to netfilter
-> 
-> Hi Pablo,
-> 
-> I've changed tag [net-next] to [nf], hopefully you can have a look at
-> this patch-set. But, after some days, I was in doubt if this way I have
-> brought it to your attention. Perhaps I need to do something different
-> to ask the netfilter maintainer have a look at it?
+Link: https://github.com/ClangBuiltLinux/linux/issues/2073 [1]
+Link: https://github.com/llvm/llvm-project/pull/130713 [2]
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+Cc: Nathan Chancellor <nathan@kernel.org>
+Cc: linux-hardening@vger.kernel.org
+---
+ lib/tests/fortify_kunit.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-Apologies, this maintainance service is best effort.
+diff --git a/lib/tests/fortify_kunit.c b/lib/tests/fortify_kunit.c
+index ecb638d4cde1..18dcdedf777f 100644
+--- a/lib/tests/fortify_kunit.c
++++ b/lib/tests/fortify_kunit.c
+@@ -60,6 +60,7 @@ static int fortify_write_overflows;
+ 
+ static const char array_of_10[] = "this is 10";
+ static const char *ptr_of_11 = "this is 11!";
++static const char * const unchanging_12 = "this is 12!!";
+ static char array_unknown[] = "compiler thinks I might change";
+ 
+ void fortify_add_kunit_error(int write)
+@@ -83,12 +84,28 @@ void fortify_add_kunit_error(int write)
+ 
+ static void fortify_test_known_sizes(struct kunit *test)
+ {
++	char stack[80] = "Test!";
++
++	KUNIT_EXPECT_FALSE(test, __is_constexpr(__builtin_strlen(stack)));
++	KUNIT_EXPECT_EQ(test, __compiletime_strlen(stack), 5);
++
++	KUNIT_EXPECT_TRUE(test, __is_constexpr(__builtin_strlen("88888888")));
+ 	KUNIT_EXPECT_EQ(test, __compiletime_strlen("88888888"), 8);
++
++	KUNIT_EXPECT_TRUE(test, __is_constexpr(__builtin_strlen(array_of_10)));
+ 	KUNIT_EXPECT_EQ(test, __compiletime_strlen(array_of_10), 10);
++
++	KUNIT_EXPECT_FALSE(test, __is_constexpr(__builtin_strlen(ptr_of_11)));
+ 	KUNIT_EXPECT_EQ(test, __compiletime_strlen(ptr_of_11), 11);
+ 
++	KUNIT_EXPECT_TRUE(test, __is_constexpr(__builtin_strlen(unchanging_12)));
++	KUNIT_EXPECT_EQ(test, __compiletime_strlen(unchanging_12), 12);
++
++	KUNIT_EXPECT_FALSE(test, __is_constexpr(__builtin_strlen(array_unknown)));
+ 	KUNIT_EXPECT_EQ(test, __compiletime_strlen(array_unknown), SIZE_MAX);
++
+ 	/* Externally defined and dynamically sized string pointer: */
++	KUNIT_EXPECT_FALSE(test, __is_constexpr(__builtin_strlen(test->name)));
+ 	KUNIT_EXPECT_EQ(test, __compiletime_strlen(test->name), SIZE_MAX);
+ }
+ 
+-- 
+2.34.1
 
-I am also going to be very busy until April to complete a few more
-deliverables, I cannot afford more cancelled projects. I will try to
-collect what is left for net-next and wait for the next merge window.
-
-Therefore, I suggest you start with a much smaller series with a
-carefully selected subset including preparatory patches. I suggest you
-start with the software enhancements only. Please, add datapath tests.
-
-As for the hardware offload part, I have a board that I received 4.5
-ago years as a engineering sample that maybe I can use to test this,
-but no idea, really.
-
-You are a passer-by (ahem, "contributor"), this will get merged
-upstream at some point and we will have to maintain all this new code
-without your help maybe ... (people change bussiness units...), I have
-to understand what is going on here. The throughput available is
-limited, I am afraid we can only go _slow and careful_.
-
-Thanks.
-
-P.S: You work is important, very important, but maybe there is no need
-to Cc so many mailing lists and people, maybe netdev@,
-netfilter-devel@ and bridge@ is sufficient.
