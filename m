@@ -1,139 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7628A15539A;
-	Wed, 12 Mar 2025 15:28:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACD112505CA;
+	Wed, 12 Mar 2025 15:40:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741793281; cv=none; b=Rro7s6uU5Ze92GDZ78F1jmPVS3ARheEAoT6DaAdayOGK/atWKkb4/RO3JYfEZsge1BpaVKxj2TOnBCc6hAr+v6oGjOQULFPKQteImKns58YaLl0GAdi1cCpvIA7fXP7dkIT1sepgri4BcwI9iPiAgpfQBNVEsXsWSZa1L/4Gsdg=
+	t=1741794015; cv=none; b=KORVgvv2B61as7zdIiy4qy07jM7tb/CrjKkdcrGkUc/0S1eGGPLNuuU6uR1BIhZWedzQ+hCEs/xCdO5X0EgCYwVtKAuRvTc0LdVgWr8Yqvf7dLki0x9Wl0Q0gwxsdjz4xeaF4M1UBs+ZiaUUu6jFcOAl7ZeS5eoYu12RgTzgu9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741793281; c=relaxed/simple;
-	bh=knZ+0Ki91XfMnnNBjvRtQYxda8bcVvsvaE8A+MwLFJY=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=FzbGAAwJssFJ7w8MidavEdvnslrSgTt21OPoO2UKo3MB9cD2C4IQfKtLScq5wqYzZKw5qcCGTC8WFP3a/vIeyVzd9h2NiFIetNzlKGiSD57C1cZPQ7KmRT9gtSqSJa+7uyrSTS0j79HCG5/RtwaErQpGGDSibTwB/VjSYq4M5cU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cu6VBmQz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741794015; c=relaxed/simple;
+	bh=uWMXUuJdjNFPcXgYW0FLnqKEeb9+smRa/7n//Bl3ARk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LEJihNvJ0tHtAgywUxjSZ8gE/sRukrm+AxSOaj92pg9Dm/BzVZgw6Xd8/IDJG+22ddo6qO34NtxNONNoUVTK5Gqhu2mmkhxNa9pGKXygJfZUeQ+zLtBRKUOqfGcc0CB6Zo1AT03/3S0Ai/yQhz/vPNDCpmYNAKK0uHXOR+Y5cBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=P6osIvGd; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cu6VBmQz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1AD8C4CEDD;
-	Wed, 12 Mar 2025 15:28:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741793280;
-	bh=knZ+0Ki91XfMnnNBjvRtQYxda8bcVvsvaE8A+MwLFJY=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=cu6VBmQz26ajpPamenktK8g8GX/gSYoIYgTmN5l+RfYdCJzKwBt7BzNIJbL84ItlK
-	 Jvl+nOahTBFgn9Ui++4b5xOD4aRvGcFb7GW7QP734hYNxsFkvRyBF0wlZs2Kb33SKC
-	 UklngiqgjbOxKFocLsWxCeQ/wrU8F67OzDIQ+X6Szr6EXP+9EB+dVIyPBFbcGdYrBj
-	 X6udwysXh1kU/fI1E0R05tiF6xDiWGbv5AMAE1EiGtklHkYzZHfwJ1UL9G3tnW7yrZ
-	 8ZdjlrgSMmdgKqGeChgl5Zxv8Uxisp7LGJX4oZ8hirmU4+Vm8TyeMQW6y9QDNZQURI
-	 wAoG3IGVVQuvw==
-Date: Wed, 12 Mar 2025 08:27:57 -0700
-From: Kees Cook <kees@kernel.org>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, jeffxu@chromium.org
-CC: akpm@linux-foundation.org, vbabka@suse.cz, Liam.Howlett@oracle.com,
- broonie@kernel.org, skhan@linuxfoundation.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-mm@kvack.org, jorgelo@chromium.org, keescook@chromium.org,
- pedro.falcato@gmail.com, rdunlap@infradead.org, jannh@google.com
-Subject: Re: [RFC PATCH v1 2/2] mseal: allow noop mprotect
-User-Agent: K-9 Mail for Android
-In-Reply-To: <c867bff9-2293-4890-af46-8a797cf512c2@lucifer.local>
-References: <20250312002117.2556240-1-jeffxu@google.com> <20250312002117.2556240-3-jeffxu@google.com> <c867bff9-2293-4890-af46-8a797cf512c2@lucifer.local>
-Message-ID: <64B6294F-B059-4744-8548-89D7B519BE72@kernel.org>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="P6osIvGd"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52CE3Q2I023238;
+	Wed, 12 Mar 2025 15:39:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=VZ7ifWZBuEZlwJ/gbqhjVZwDwvUPlj
+	6sC7oEJEnDm38=; b=P6osIvGdcWpwVdGfgcvVsgKATzdWsJwpWY+Z+PSX1vJONV
+	ffzqYd+Nn5oJ5OMJ67+vcrS23fmguQdljpqe6i5W3KT9UuxleXXAkEx3CTFfOBjj
+	qFAyBZh7hPN7BJHc76QdQbX2z1sTTHTyOGCc86C/nC1Kt/V6txweDrJJGq6nHgYF
+	y4JVRNR+m+OwVm/EAEiBSkafAR4dmg81qT3ID3bJXg+reICncEUuwCK+7/Ep62fy
+	wfXwdsihAfbKynCu/h2qt/0Wx4Aht3jGG6aPVDK7Sh0VvZzbszCtXeH79JNMzrDj
+	jc1f8/QE2EIq2LPC7ctrAlQiIMann+8CXjmAbYKA==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45bbpprhjt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 12 Mar 2025 15:39:53 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52CE1frV007468;
+	Wed, 12 Mar 2025 15:39:52 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45atsr4tmg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 12 Mar 2025 15:39:52 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52CFdmas18219500
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 12 Mar 2025 15:39:48 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8C0962004D;
+	Wed, 12 Mar 2025 15:39:48 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C287120040;
+	Wed, 12 Mar 2025 15:39:47 +0000 (GMT)
+Received: from osiris (unknown [9.171.49.190])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Wed, 12 Mar 2025 15:39:47 +0000 (GMT)
+Date: Wed, 12 Mar 2025 16:39:46 +0100
+From: Heiko Carstens <hca@linux.ibm.com>
+To: Jeff Xu <jeffxu@chromium.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+        Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+        "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+        Kees Cook <kees@kernel.org>,
+        Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH mm-unstable 2/2] mseal sysmap: enable s390
+Message-ID: <20250312153946.10610B02-hca@linux.ibm.com>
+References: <20250311123326.2686682-1-hca@linux.ibm.com>
+ <20250311123326.2686682-3-hca@linux.ibm.com>
+ <CABi2SkXWD4Pg7Y7TG9fMV9eat_1fOGwHjvEUKHXREN+pRe18NA@mail.gmail.com>
+ <CABi2SkXzqJ10NW3j1y-FtmrheDkqzL5QgMcN9UN6UvhbXFHCuQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABi2SkXzqJ10NW3j1y-FtmrheDkqzL5QgMcN9UN6UvhbXFHCuQ@mail.gmail.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: iThVHiUBlsCRTPEGkrdgIkFIkJsnOiAK
+X-Proofpoint-GUID: iThVHiUBlsCRTPEGkrdgIkFIkJsnOiAK
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-12_05,2025-03-11_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ suspectscore=0 phishscore=0 lowpriorityscore=0 impostorscore=0 spamscore=0
+ adultscore=0 malwarescore=0 bulkscore=0 clxscore=1015 mlxscore=0
+ mlxlogscore=507 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2503120105
 
+On Tue, Mar 11, 2025 at 03:12:55PM -0700, Jeff Xu wrote:
+> One more thing: do you want to update mseal.rst to add s390 as
+> supported architecture?
+> 
+> Currently in the mseal.rst:
+>  "The following architectures currently support this feature: x86-64 and arm64."
 
+Thanks, I missed that, however I'm wondering if it would make sense to add
+mseal to the generic feature list instead (no, I am not volunteering to do
+that :) ).
 
-On March 12, 2025 6:49:39 AM PDT, Lorenzo Stoakes <lorenzo=2Estoakes@oracl=
-e=2Ecom> wrote:
->On Wed, Mar 12, 2025 at 12:21:17AM +0000, jeffxu@chromium=2Eorg wrote:
->> From: Jeff Xu <jeffxu@chromium=2Eorg>
->>
->> Initially, when mseal was introduced in 6=2E10, semantically, when a VM=
-A
->> within the specified address range is sealed, the mprotect will be reje=
-cted,
->> leaving all of VMA unmodified=2E However, adding an extra loop to check=
- the mseal
->> flag for every VMA slows things down a bit, therefore in 6=2E12, this i=
-ssue was
->> solved by removing can_modify_mm and checking each VMA=E2=80=99s mseal =
-flag directly
->> without an extra loop [1]=2E This is a semantic change, i=2Ee=2E partia=
-l update is
->> allowed, VMAs can be updated until a sealed VMA is found=2E
->>
->> The new semantic also means, we could allow mprotect on a sealed VMA if=
- the new
->> attribute of VMA remains the same as the old one=2E Relaxing this avoid=
-s unnecessary
->> impacts for applications that want to seal a particular mapping=2E Doin=
-g this also
->> has no security impact=2E
->>
->> [1] https://lore=2Ekernel=2Eorg/all/20240817-mseal-depessimize-v3-0-d8d=
-2e037df30@gmail=2Ecom/
->>
->> Fixes: 4a2dd02b0916 ("mm/mprotect: replace can_modify_mm with can_modif=
-y_vma")
->> Signed-off-by: Jeff Xu <jeffxu@chromium=2Eorg>
->> ---
->>  mm/mprotect=2Ec | 6 +++---
->>  1 file changed, 3 insertions(+), 3 deletions(-)
->>
->> diff --git a/mm/mprotect=2Ec b/mm/mprotect=2Ec
->> index 516b1d847e2c=2E=2Ea24d23967aa5 100644
->> --- a/mm/mprotect=2Ec
->> +++ b/mm/mprotect=2Ec
->> @@ -613,14 +613,14 @@ mprotect_fixup(struct vma_iterator *vmi, struct m=
-mu_gather *tlb,
->>  	unsigned long charged =3D 0;
->>  	int error;
->>
->> -	if (!can_modify_vma(vma))
->> -		return -EPERM;
->> -
->>  	if (newflags =3D=3D oldflags) {
->>  		*pprev =3D vma;
->>  		return 0;
->>  	}
->>
->> +	if (!can_modify_vma(vma))
->> +		return -EPERM;
->> +
->>  	/*
->>  	 * Do PROT_NONE PFN permission checks here when we can still
->>  	 * bail out without undoing a lot of state=2E This is a rather
->> --
->> 2=2E49=2E0=2Erc0=2E332=2Eg42c0ae87b1-goog
->>
->
->Hm I'm not so sure about this, to me a seal means 'don't touch', even if
->the touch would be a no-op=2E It's simpler to be totally consistent on th=
-is
->and makes the code easier everywhere=2E
->
->Because if we start saying 'apply mseal rules, except if we can determine
->this to be a no-op' then that implies we might have some inconsistency in
->other operations that do not do that, and sometimes a 'no-op' might be
->ill-defined etc=2E
-
-Does mseal mean "you cannot call mprotect on this VMA" or does it mean "yo=
-u cannot change this VMA"=2E I've always considered it the latter since the=
- entry point to making VMA changes doesn't matter (mmap, mprotect, etc) it'=
-s the VMA that can't change=2E Even the internal function name is "can_modi=
-fy", and if the flags aren't changing then it's not a modification=2E
-
-I think it's more ergonomic to check for _changes_=2E
-
--Kees
-
---=20
-Kees Cook
+See Documentation/features/... and scripts/get_feat.pl
