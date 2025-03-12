@@ -1,124 +1,130 @@
-Received: from mail.netfilter.org (mail.netfilter.org [217.70.190.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B2511F12F2;
-	Wed, 12 Mar 2025 23:11:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.190.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB14D1F3BA2
+	for <linux-hardening@vger.kernel.org>; Wed, 12 Mar 2025 23:30:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741821111; cv=none; b=LuUhJaOlSwNUUbGATgWg/gv+ISDxS9HxK33L4wQpm0DyhYH38icTWmaiqjRrH42D+D3siSMpcyQgzhnWjhnLHkFJMpdeDbAluDOFf9W0MQr2TUZoD228yGq167b70+q1Kztg08fyMNNMeDcIMMV2HpE026nOREJtiE3XtK0OQ48=
+	t=1741822204; cv=none; b=P/PKpCkHBB96UyksFRyJun7FnJft+JFXMAgreUkzWIiRstBfJ3sPQZLsMCM876dPWU50m0LKBbmoiXvlUz8qwxGGvg60viy/8c3JOjGGOuweT4lUUSHnHYELHaLyzt42wZXd+YxePFEQubAoVQJuBAU0ZsdFpiBcWMjtlQBgvws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741821111; c=relaxed/simple;
-	bh=2W3aVFmGwvClwVTmM7aCRx2KgO4A4R1U0tJDkBzH+nk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WyUcKwlaqXv7zMtQADwTmZmLwCo+AjDdPFl7/K/LDa2gFn38Dq5Zva412OIT2DztPDa0NQ3d/Y1C0pUMWJb0biIcn8hMlKUNdK3Wp03o+T4O/Onnhm86pLP56JjjhhtG44JO4OAqh3EepHR2kwZon+XKYqKRCg284l+yMygib2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=netfilter.org; spf=pass smtp.mailfrom=netfilter.org; dkim=pass (2048-bit key) header.d=netfilter.org header.i=@netfilter.org header.b=t0qJL/2b; dkim=pass (2048-bit key) header.d=netfilter.org header.i=@netfilter.org header.b=qbeolRdz; arc=none smtp.client-ip=217.70.190.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=netfilter.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netfilter.org
+	s=arc-20240116; t=1741822204; c=relaxed/simple;
+	bh=xtGCELKG2VSoTGpGJxxtVIorL1o3aUsplhMbETRvi8o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=h8ERty/02sixC4jW2I4+TF35fZZMc+EPoQAXHekus2K7OQfdZDZksIcI2mHDqv2Zi3ynt7n5PuseED16FJhyVsHLWenUNygNOSjsC2jacwTA8oNFecDZO/UQCnLoTzH10m+3I7hR9+XloTG8MXLj97vJ7Qtozd8u4I61aRA0GOs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=d31cMpTX; arc=none smtp.client-ip=209.85.210.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=netfilter.org header.i=@netfilter.org header.b="t0qJL/2b";
-	dkim=pass (2048-bit key) header.d=netfilter.org header.i=@netfilter.org header.b="qbeolRdz"
-Received: by mail.netfilter.org (Postfix, from userid 109)
-	id EC09C602BB; Thu, 13 Mar 2025 00:11:47 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=netfilter.org;
-	s=2025; t=1741821107;
-	bh=PQSKrOlMPfzl9nwDmSr8qh4iamX82LLyOlMFMg/9c7E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=t0qJL/2bU8GPh32cdA69JdoMZVh7TSHGCLtgmOuIXAHN5T4eCT+YGrfUtcdLc6w+H
-	 wBBFOYHJGgv4OwC9drZb/SBxoeodBTIhuHSuKLTgwzxJP1oKP+FkzrL4MghCg4YOP9
-	 /oT591oO5UG7EmDyYrM22yxzBY4bgwlvZLjRZkYGRWS61A52Yyp0C1TPy5uZ1ntRqz
-	 pjqhRrBlNu9dCHr4EiGmpfrW5KjQLI9BSXXrfrqvle9U6Ua/ut73znipRs/3NmHf4P
-	 Y1kr3PP1yTEQ0T2sj/JmgDVGyL71KEnhVue+A8agztNv6lH/wDkMfRSrUjBBnzjue4
-	 p2eP3mU7YW7OQ==
-X-Spam-Level: 
-Received: from netfilter.org (mail-agni [217.70.190.124])
-	by mail.netfilter.org (Postfix) with ESMTPSA id 49BB3602A4;
-	Thu, 13 Mar 2025 00:11:42 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=netfilter.org;
-	s=2025; t=1741821102;
-	bh=PQSKrOlMPfzl9nwDmSr8qh4iamX82LLyOlMFMg/9c7E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qbeolRdzmWfAU19cU0ccSVcMVP9Fk4SSQN9BVqHZ8FLRhk39ZK03WcEJ+WQOmOxZF
-	 cy23JB5bF5+aVpudZJXvgQrTaeLjetLivZIvhEEDf9Re9Itl0VnGNk2tB0s4w2+kXT
-	 talIeV1XAVKL25ykSMxM5fUeXwDlOLPo7r2V1/53tyLuKpyHDKpWW+c4oRWWG6CHax
-	 4zIHURnVcKBNHgV75Bd3agsDnngcIvT3lvGyOfj2Ddp/CejMNpCEnvtz+qkgNMldVY
-	 o5hT/rRHam+N+4/Lhradu4N5nlIXFhpj14jDpnuYxuEfASgXrzhghIOpCK4MXyAr4O
-	 CBArB71yfg7xQ==
-Date: Thu, 13 Mar 2025 00:11:40 +0100
-From: Pablo Neira Ayuso <pablo@netfilter.org>
-To: Eric Woudstra <ericwouds@gmail.com>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	Nikolay Aleksandrov <razor@blackwall.org>,
-	Roopa Prabhu <roopa@nvidia.com>, Ivan Vecera <ivecera@redhat.com>,
-	Jiri Pirko <jiri@resnulli.us>,
-	Jozsef Kadlecsik <kadlec@netfilter.org>,
-	Simon Horman <horms@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Andrew Lunn <andrew+netdev@lunn.ch>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, netfilter-devel@vger.kernel.org,
-	coreteam@netfilter.org, bridge@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, linux-hardening@vger.kernel.org,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Ahmed Zaki <ahmed.zaki@intel.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	Frank Wunderlich <frank-w@public-files.de>,
-	Daniel Golle <daniel@makrotopia.org>
-Subject: Re: [PATCH v9 nf 00/15] bridge-fastpath and related improvements
-Message-ID: <Z9IUrL0IHTKQMUvC@calendula>
-References: <20250305102949.16370-1-ericwouds@gmail.com>
- <897ade0e-a4d0-47d0-8bf7-e5888ef45a61@gmail.com>
- <Z9DKxOnxr1fSv0On@calendula>
- <58cbe875-80e7-4a44-950b-b836b97f3259@gmail.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="d31cMpTX"
+Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-728a2736e7aso42256a34.1
+        for <linux-hardening@vger.kernel.org>; Wed, 12 Mar 2025 16:30:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1741822202; x=1742427002; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2epRF2yIZ4WoKvdTuk66kXn9icmipQ0jsgIlyAwLUYE=;
+        b=d31cMpTXmhEvFlbozeNsKyjJUuGDyC+FV3WYUrtqhI/uojKmitQzSLGiN5QdYbqdfP
+         UrBk8QxkovK/5iEZSxoxi+PIv8seZ+5hAbEg39+uO7awlyPAyjDAusWf5uRhXiEFEkPd
+         AJWFrnJ7wa/6jnOZ8fyG3bVjpmEesaMrMkKzI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741822202; x=1742427002;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2epRF2yIZ4WoKvdTuk66kXn9icmipQ0jsgIlyAwLUYE=;
+        b=cC4NeQUjWMZhOc+yRtjCkIPiyqSVL7yb7h/XFAe33gR83SSo4HY+byFkkKzVLUDNsb
+         fc7DoRnk070aW7/8uNpajHIwESrdeaTRZebHY+de5nFqxZ51tqTaObSVbF/x9nuL34v3
+         bxu7FUmPxD7PHntDXnKBN131TREHFlH2YjutZ/lJQvi7pJr6x+a2knczH+XUWQRLJIO0
+         04QfApp1q5TEd0ync8A74vstefBxKV4O2WyGdPnMksap6ESZ9egwKYBmjshwMDipV4DX
+         qWcWDEMN4+N8b+QheXt5pz/Nf8vcvoe4F7GgSHlGQwAAfxXTBOXah692yDzIhBI3kdQL
+         sO0A==
+X-Forwarded-Encrypted: i=1; AJvYcCWK0c5ReD61N9luB7wAJpDiAli9W5k9MlOdnJkE0yPb80303L/lMYksJheq9uLmKkCvlv2XjwNE9bW+4Xbme9w=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyx95xsQp08AcClcpxgWMUfYFFWxC0yn3Ur8Xs/RzF1dss5IA5F
+	3/cS6ogVpEuD8IzURYc/OP9OqrmzPOOnAydQqdqvvpox90JUdank6fEhza8+9UEmNB9YnZ8JdZ2
+	FcCadz959S671hFQuOU1QTSM2JCeDyU7HEexY
+X-Gm-Gg: ASbGncu4uYgxirU3IF4eisviSOt4rv2GGA/K2roziaoXhy7VVZzb/2nXRCbKFC7ak0B
+	ekzmei8bVWybnip+IktqLrVHM2f06u53FU99wj80Il2xPK+r2MhSnInZ/b0p7Y24xcMMHrVnmSt
+	HPY3DxEfuQEU0o3zmTPYYL0wxI
+X-Google-Smtp-Source: AGHT+IF3KK2zPAe3DQbz1LO5JCsOn/xBbba1NwUWwZbYJy3s2T7qPHVL8YcMfh75jIyOKbZ08RS1xlD+8DXPHeL6Fb8=
+X-Received: by 2002:a4a:db95:0:b0:600:24f9:21fc with SMTP id
+ 006d021491bc7-601c24cff19mr1200447eaf.2.1741822201807; Wed, 12 Mar 2025
+ 16:30:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <58cbe875-80e7-4a44-950b-b836b97f3259@gmail.com>
+References: <20250312002117.2556240-1-jeffxu@google.com> <20250312002117.2556240-3-jeffxu@google.com>
+ <c867bff9-2293-4890-af46-8a797cf512c2@lucifer.local> <64B6294F-B059-4744-8548-89D7B519BE72@kernel.org>
+ <9b3a3ac6-a947-4be2-98b3-c35c195d87ab@lucifer.local> <202503120931.3BD7A36445@keescook>
+In-Reply-To: <202503120931.3BD7A36445@keescook>
+From: Jeff Xu <jeffxu@chromium.org>
+Date: Wed, 12 Mar 2025 16:29:50 -0700
+X-Gm-Features: AQ5f1JqOVPfwUnKOxqrdAsJKAmIgChV5YiCTfryTQdRd23HMgTcMUTwhsepcUGA
+Message-ID: <CABi2SkUs3bXB2jw+1CUQPtWfZ6-kZDunQweOSSw6j_8JALUfAQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v1 2/2] mseal: allow noop mprotect
+To: Kees Cook <kees@kernel.org>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, akpm@linux-foundation.org, vbabka@suse.cz, 
+	Liam.Howlett@oracle.com, broonie@kernel.org, skhan@linuxfoundation.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, jorgelo@chromium.org, 
+	pedro.falcato@gmail.com, rdunlap@infradead.org, jannh@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 12, 2025 at 05:21:29PM +0100, Eric Woudstra wrote:
-> 
-> 
-> On 3/12/25 12:44 AM, Pablo Neira Ayuso wrote:
-> > Therefore, I suggest you start with a much smaller series with a
-> > carefully selected subset including preparatory patches. I suggest you
-> > start with the software enhancements only. Please, add datapath tests.
-> 
-> Then I will split it in:
-> 1. Separate preparatory patches and small patch-sets that apply
->      to the forward-fastpath already.
-> 2. One patch-set that brings the bridge-fastpath with datapath tests.
-> 
-> > P.S: You work is important, very important, but maybe there is no need
-> > to Cc so many mailing lists and people, maybe netdev@,
-> > netfilter-devel@ and bridge@ is sufficient.
-> 
-> Ok, but my main question then is which tree should I work in, and
-> therefore which tag should I give my patches, [nf] or [net-next].
-> I think it will get more complicated if I split my patch-set and half of
-> the patches go to [nf] and another half to [net-next].
+On Wed, Mar 12, 2025 at 9:45=E2=80=AFAM Kees Cook <kees@kernel.org> wrote:
+>
+> On Wed, Mar 12, 2025 at 03:50:40PM +0000, Lorenzo Stoakes wrote:
+> > What about madvise() with MADV_DONTNEED on a r/o VMA that's not faulted=
+ in?
+> > That's a no-op right? But it's not permitted.
+>
+Madvise's semantics are about behavior, while mprotect is about
+attributes. To me:  madvise is like "make this VMA do that" while
+mprotect is about "update this VMA's attributes to a new value".
 
-Use [nf-next].
+It is more difficult to determine if a behavior is no-op, so I don't
+intend to apply the same no-op concept to madvise().
 
-> What do you suggest?
+> Hmm, yes, that's a good example. Thank you!
+>
+> > So now we have an inconsistency between the two calls.
+>
+> Yeah, I see your concern now.
+>
+> > I don't know what you mean by 'ergonomic'?
+>
+> I was thinking about idempotent-ness. Like, some library setting up a
+> memory region, it can't call its setup routine twice if the second time
+> through (where no changes are made) it gets rejected. But I think this
+> is likely just a userspace problem: check for the VMAs before blindly
+> trying to do it again. (This is strictly an imagined situation.)
+>
+Yes.
 
-Probably I can collect 4/15 and 5/15 from this series to be included
-in the next pull request, let me take a look. But it would be good to
-have tests for these two patches.
+ We also don't have a system call to query the "mprotect" attributes,
+so it is understandable that userspace can rely on idempotents of the
+mprotect.
 
-I would suggest you continue by making a series to add bridge support
-for the flowtable, software only, including tests.
+> > My reply seemed to get truncated at the end here :) So let me ask again=
+ -
+> > do you have a practical case in mind for this?
+>
+I noticed there were idempotent mprotects last year while working on
+applying mseal on stack in Android. I assume this might not be the
+only instance since mprotect gets called a lot in general.
 
-Once this gets merged, then follow up with the hardware offload code.
+Blocking this won't improve security, it could actually hinder the
+adoption of mseal, i.e. force apps to make code change.
 
-Thanks.
+-Jeff
+
+> Sorry, I didn't have any reply to that part, so I left it off. If Jeff
+> has a specific case in mind, I'll let him answer that part. :)
+>
+> -Kees
+>
+> --
+> Kees Cook
