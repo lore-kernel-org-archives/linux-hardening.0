@@ -1,112 +1,122 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34D441B87F3;
-	Wed, 12 Mar 2025 16:59:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6020F282F1;
+	Wed, 12 Mar 2025 17:07:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741798777; cv=none; b=deKG/llKAGIzK5ZEDCg4YV6pzZH6rRFbcLmX2uYg6VLtS8h21BpaPk/ym3NAg/GgIdDG0uetvU1ymHEixS9AS1xMCl3bRqfHs45MCT4Po0jSb89jLjup5mkOcEGm/OgEdvbcNzraXGpUvnZ07vhOwn/uyLISyH2YTGJCrnyfgcs=
+	t=1741799236; cv=none; b=YM8Vxw0y+j8jKUtLRCKG0Nh/ww6W+4zKZ+RaUL522MsV7ylr0XLp8nWKRxgAn039kItnHkNzcVw/QyXZMgULUSpXlQdZmtyxLoQXVXnHZ+Qg/XG2ltNxfCzW9VrWWBEU0OSJXKUIO0EyhncHlZiVyeCstSG9xYhw4WLDlVYs6Ls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741798777; c=relaxed/simple;
-	bh=OXSXt8JRe88bc9jaXTJlcjEd0ik8aTsjuG+zs9/eZaI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Z7zds31/IE8zAjKuVXMt0xa+GpQJ9pBmxV+8FlzuQf7WmYuGIyiNMRK9kAo9q886EyQiZUsVlO6UFRgF7v5YsDxY9ncE7zuOCuQoakDIVR9GD7RZjwYv/Rph5uCEqBjSezRGoJ1Wz3tRmmxOS0U9tVEnNoXjeNR3R/AnTDr8tvM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E2wnzQv1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741799236; c=relaxed/simple;
+	bh=FP+WHfpDqrQUet8b9rSagtq/sf/6LIUq8xvSIayKDzQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p9gpA4XDeV4y2UTwXjlOA0pAWePqWBs8HQMGuxgBzMpzC+Qc6dDdb1qeGp+cszISIpkOPh7vc+CKskUSFMnUKAXxWTrSe6UvtXMMQLgOhqsmQkU2im8mWlai7AIMTRdb+39km7dHDim/zAl6jRoIEI3hpEG/W8zNnAwmC6u3g4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AWwTIVeR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E2wnzQv1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B538C4CEDD;
-	Wed, 12 Mar 2025 16:59:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AWwTIVeR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5AECC4CEDD;
+	Wed, 12 Mar 2025 17:07:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741798776;
-	bh=OXSXt8JRe88bc9jaXTJlcjEd0ik8aTsjuG+zs9/eZaI=;
-	h=From:To:Cc:Subject:Date:From;
-	b=E2wnzQv1viG1OqsjF5pEOKKwikOm93zMtTKoqGTq/QJtFrwPzEetbWoGBMrrem2nO
-	 NQySivLpTB+Og+UmDkwJnhILHKzOBixJXNufqWGaxaMLb6YBfJ5zUCvK1Kw1+RhN8W
-	 UW7YzURoE/2NhWK+ZGJ6lZ8QJ1RN7gc9P8O67Lj18gae/Wfv1F2cn6ErsjOjuqtLCe
-	 9/lIuC6VpFlAs/IqscPnDv0mp73xUWadrF6j1xvi9tpDMdquZV1JWVZsF5sk3OkJnS
-	 rPxZQ0sVOmQ1q5M9CJjWYVIMTvM7bNi28RxjHMbEcypQ8lQuK6lxOQSrEMQeocm2O+
-	 bw9JazyP3CG7Q==
+	s=k20201202; t=1741799233;
+	bh=FP+WHfpDqrQUet8b9rSagtq/sf/6LIUq8xvSIayKDzQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AWwTIVeRtrSJ9GCwVKdanu88XwHvxCI5wr1Z3x9Zb4uZR1KWJDGeAZgidgP+ofwg3
+	 YL6jRKj7tpEzMnayJVx9xlvlGMo7OlN+2/GVxObGwDk6MgBREA9G9OfxDrY3+4NpDl
+	 WXQ/UhnyAV+Jjf9Tz5Gj7kOA0PzQFuT6IPYWBoiH6eCtgK0LAjS9FheJuFxg2nNbXE
+	 3Zsx4/Ze/KsSly0ZjySGkB4oN+sAcWEohfuTXVmW7rKppksRIBiggvqRIrnNHP42Sq
+	 7ljVY/+o436uBfnM4RouI9xYV2OZwfIuiZ+ZR2YI+YB4NX2boUwQtEpsbJFUCcuJ0Z
+	 B6cS333GhU/3A==
+Date: Wed, 12 Mar 2025 10:07:11 -0700
 From: Kees Cook <kees@kernel.org>
-To: Robert Moore <robert.moore@intel.com>
-Cc: Kees Cook <kees@kernel.org>,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	Len Brown <lenb@kernel.org>,
-	linux-acpi@vger.kernel.org,
-	acpica-devel@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
+To: Bill Wendling <morbo@google.com>
+Cc: Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH] ACPICA: Add __nonstring annotations for unterminated strings
-Date: Wed, 12 Mar 2025 09:59:26 -0700
-Message-Id: <20250312165922.work.963-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+Subject: Re: [PATCH v2] net: macb: Add __nonstring annotations for
+ unterminated strings
+Message-ID: <202503121005.DC5E16ACF8@keescook>
+References: <20250311224412.it.153-kees@kernel.org>
+ <CAGG=3QUJ4NztStM3GDxLqMyT4_O+8WuhaYCiK4rin-i40qwCcA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2399; i=kees@kernel.org; h=from:subject:message-id; bh=OXSXt8JRe88bc9jaXTJlcjEd0ik8aTsjuG+zs9/eZaI=; b=owGbwMvMwCVmps19z/KJym7G02pJDOkX9+ZazYmIiOUK2eQpuJCbX615XdMqtcIDryftZFbbq e+yx/JLRykLgxgXg6yYIkuQnXuci8fb9nD3uYowc1iZQIYwcHEKwEROxzP8d93WHr1d+sieVc8d lE8k7dmZ6/XpqLWV5+t/vxW4HTYtu8HIsPMS+xUe0UUMtc7rE7/G++TmJ6lMXN4d5PzX/2p2Qso 9fgA=
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGG=3QUJ4NztStM3GDxLqMyT4_O+8WuhaYCiK4rin-i40qwCcA@mail.gmail.com>
 
-When a character array without a terminating NUL character has a static
-initializer, GCC 15's -Wunterminated-string-initialization will only
-warn if the array lacks the "nonstring" attribute[1]. Mark the arrays
-with __nonstring to and correctly identify the char array as "not a C
-string" and thereby eliminate the warning.
+On Tue, Mar 11, 2025 at 04:04:24PM -0700, Bill Wendling wrote:
+> On Tue, Mar 11, 2025 at 3:44 PM Kees Cook <kees@kernel.org> wrote:
+> >
+> > When a character array without a terminating NUL character has a static
+> > initializer, GCC 15's -Wunterminated-string-initialization will only
+> > warn if the array lacks the "nonstring" attribute[1]. Mark the arrays
+> > with __nonstring to and correctly identify the char array as "not a C
+> 
+> s/__nonstring to and correctly/__nonstring to correctly/ ?
 
-Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=117178 [1]
-Signed-off-by: Kees Cook <kees@kernel.org>
----
-I wanted to send this as the fix from the "Linux perspective", but
-I know ACPICA is separate upstream, and likely the fixes will come
-from there. To that end, I've proposed these changes uptream as well:
-https://github.com/acpica/acpica/pull/1006
+Whoops. Rewriting glitch. Yes, "and" should be dropped. I will fix this
+locally for all the patches with the same language and send v3 for this
+one.
 
-Cc: Robert Moore <robert.moore@intel.com>
-Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Cc: Len Brown <lenb@kernel.org>
-Cc: linux-acpi@vger.kernel.org
-Cc: acpica-devel@lists.linux.dev
----
- drivers/acpi/acpica/aclocal.h   | 4 ++--
- drivers/acpi/acpica/nsrepair2.c | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+> 
+> > string" and thereby eliminate the warning.
+> >
+> > Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=117178 [1]
+> > Signed-off-by: Kees Cook <kees@kernel.org>
+> > ---
+> >  v1: https://lore.kernel.org/lkml/20250310222415.work.815-kees@kernel.org/
+> >  v2: switch to __nonstring annotation
+> > Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
+> > Cc: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+> > Cc: Andrew Lunn <andrew+netdev@lunn.ch>
+> > Cc: "David S. Miller" <davem@davemloft.net>
+> > Cc: Eric Dumazet <edumazet@google.com>
+> > Cc: Jakub Kicinski <kuba@kernel.org>
+> > Cc: Paolo Abeni <pabeni@redhat.com>
+> > Cc: netdev@vger.kernel.org
+> > ---
+> >  drivers/net/ethernet/cadence/macb.h | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/net/ethernet/cadence/macb.h b/drivers/net/ethernet/cadence/macb.h
+> > index 2847278d9cd4..003483073223 100644
+> > --- a/drivers/net/ethernet/cadence/macb.h
+> > +++ b/drivers/net/ethernet/cadence/macb.h
+> > @@ -1027,7 +1027,7 @@ struct gem_stats {
+> >   * this register should contribute to.
+> >   */
+> >  struct gem_statistic {
+> > -       char stat_string[ETH_GSTRING_LEN];
+> > +       char stat_string[ETH_GSTRING_LEN] __nonstring;
+> >         int offset;
+> >         u32 stat_bits;
+> >  };
+> > @@ -1068,6 +1068,7 @@ static const struct gem_statistic gem_statistics[] = {
+> >         GEM_STAT_TITLE(TX512CNT, "tx_512_1023_byte_frames"),
+> >         GEM_STAT_TITLE(TX1024CNT, "tx_1024_1518_byte_frames"),
+> >         GEM_STAT_TITLE(TX1519CNT, "tx_greater_than_1518_byte_frames"),
+> > +
+> 
+> Is this an errant inclusion? :-)
 
-diff --git a/drivers/acpi/acpica/aclocal.h b/drivers/acpi/acpica/aclocal.h
-index 6f4fe47c955b..6481c48c22bb 100644
---- a/drivers/acpi/acpica/aclocal.h
-+++ b/drivers/acpi/acpica/aclocal.h
-@@ -293,7 +293,7 @@ acpi_status (*acpi_internal_method) (struct acpi_walk_state * walk_state);
-  * expected_return_btypes - Allowed type(s) for the return value
-  */
- struct acpi_name_info {
--	char name[ACPI_NAMESEG_SIZE];
-+	char name[ACPI_NAMESEG_SIZE] __nonstring;
- 	u16 argument_list;
- 	u8 expected_btypes;
- };
-@@ -370,7 +370,7 @@ typedef acpi_status (*acpi_object_converter) (struct acpi_namespace_node *
- 					      converted_object);
- 
- struct acpi_simple_repair_info {
--	char name[ACPI_NAMESEG_SIZE];
-+	char name[ACPI_NAMESEG_SIZE] __nonstring;
- 	u32 unexpected_btypes;
- 	u32 package_index;
- 	acpi_object_converter object_converter;
-diff --git a/drivers/acpi/acpica/nsrepair2.c b/drivers/acpi/acpica/nsrepair2.c
-index 1bb7b71f07f1..330b5e4711da 100644
---- a/drivers/acpi/acpica/nsrepair2.c
-+++ b/drivers/acpi/acpica/nsrepair2.c
-@@ -25,7 +25,7 @@ acpi_status (*acpi_repair_function) (struct acpi_evaluate_info * info,
- 				     return_object_ptr);
- 
- typedef struct acpi_repair_info {
--	char name[ACPI_NAMESEG_SIZE];
-+	char name[ACPI_NAMESEG_SIZE] __nonstring;
- 	acpi_repair_function repair_function;
- 
- } acpi_repair_info;
+Ah, yeah, I had removed the truncation change but the whitespace change
+stuck around. Also fixing!
+
+> 
+> Reviewed-by: Bill Wendling <morbo@google.com>
+
+Thanks!
+
+-Kees
+
 -- 
-2.34.1
-
+Kees Cook
