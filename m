@@ -1,121 +1,113 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D65B63E47B;
-	Thu, 13 Mar 2025 18:01:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C68F7143895;
+	Thu, 13 Mar 2025 18:57:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741888906; cv=none; b=BwrtvY7YHcYX3NVKOTmGMznnLjTGtgqGQQnZtbMLUHn7R9PyIPmT67mox1SOSNa3K7EM/LGqbkrOODpVbtkGInWSfDIWPRwFdXTbhYEh0tKrJiA9YQGysFb3wa2Afi4Uel0Hup9HWoOcjuYe8xgpO5DLdLeFN4QlTkMdGg2O67A=
+	t=1741892263; cv=none; b=BnDV23aiFwIg98MkrdaEjFNE3FiENw7E0b34E3+rxGZw822GxpXZdGz/JFPqTLe7GrErn1D2djkbMno0Y8OL/JCpuIjy0fuuJvzoYVUuzlEIib+IniIZQcBZ2+lwUCv1Yg9QS08AEmZDFJwEY2DnsqoGP68lUEjGcsLpvVqaghM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741888906; c=relaxed/simple;
-	bh=6jV0radH4S2lzjjNkKAxQaEnlVGn3SNEWffq1tdiwe8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TgONvomoTo1Qv3Zew5q+fV3ybBHjANS+fIFCASAUrkuDHYjOM1TWcDzncGip3niJsYvf1fFiWfiIRpKPwOR78DynPP9v/A1qLWAJ3HqU2UFZsXMCzljLfWUaOxLZD4t4oVi96nBmHnWqvyn58Mf3Nx6p2lXC06nJR9eH/Y45zZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EwI3hJMZ; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741892263; c=relaxed/simple;
+	bh=pnM3/eXJlQYbAOmQMatwU3RDryh3qaaZieUTqjGuzcY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UlhO1dA46LkX47DckEfQxlKAvJqiI6PhiVeyBkMZ55AF2f8xwNbtjypYS/13UZAF45fzILiHlZa5nYl40ZNOmDyIWrksPFy4WIsfK5S2ILqr9W55lkgpYlrzXwhY6Docdrbkk+zZto+xyC2HmDBDFO/8rbe2WNYkRyK1AYdUTeA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XbUJ/Vgt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EwI3hJMZ"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5dccaaca646so2316336a12.0;
-        Thu, 13 Mar 2025 11:01:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741888903; x=1742493703; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=W/aqvoIKuR6wHeO9Dw3liQGVZV24Y7M6R/uaPC7XW8g=;
-        b=EwI3hJMZfiWy0F3PRXMymRU4/wA0hwI92ctwSimkBEOUi6S5/zltisCWfaGOAz8h2r
-         YSYHBDh2XyXQVU/K6y6JQ3vbHgF60udb8F/rldTjQJpGkW/zybn1VyrtwuR4ZORJd6/J
-         jHA+WZRZ47jNFf4N+X5lslnkCNesVNNpb6lWCq/Gg3R9nhjM9DjB6BHPeKHjwxQJHAVQ
-         6RcKb409zS+inC3oKthmfsAFgvrffGRY9RH9CgxqJ77Eui7Ew0f7I7ruk8qZhruuEaC0
-         BUoqhL57+pO8MCiPidob7LAQKPYyHREA2OzpGtm3kh91eYi3urVg8Lob+lsCHRgaCjWd
-         ucqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741888903; x=1742493703;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=W/aqvoIKuR6wHeO9Dw3liQGVZV24Y7M6R/uaPC7XW8g=;
-        b=p1D4Qx97QgQb34YlrBoX2B5+NO69oAe/ZYKS6qg9uRzR2fGJaXRJHryKS75TvkgSL5
-         Es6ZlYyp+ZC+m8Ti9L1awjZKuAbxfi0ecJTS6wf4oKERMaxYv+KQWV1S6nde5yo4zI+r
-         zoPxBI3ufWnkXEr3yO/CoTXsB6gWth5+lhm0LJ+IoWAfaFRp8enAOdbUXvaGYqFtvBzy
-         MC/h2KoqdgdUD8/4XbRC3db+4sYWcL03F8XikOJe1QQz6Z8i4Ip8Q1LCpeVCx+TtnUcB
-         a99VeXnRqSVOUV90L5gbDOQWl/l30F6JRrD8cVm8W3jRg8wYnMbwjYpnwcKYy4N/gvvS
-         dw3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUUTikTIKxwD6ddPg+Z4KOHTBaJCR6btXAYtoCVhAh0umMYYAkkzooMMzWUJS+/UGSIAdbyPR6oPPJVyuxnKUo=@vger.kernel.org, AJvYcCUbKo4ncz0oYwJ/vUj48B+QfdTxWBeGn2dZX5M/YgovYzKPYUrIO4pZuBa0hIfRaK9qHzwf68ZfqZS+S2vQ@vger.kernel.org, AJvYcCVOS4C+QKiJ6q69MoyG5BHF1u4pKRGFlvmwGSZ9bM05aIc6G6mK/vP/21mk8kxEPxadR+eHfXPn/e4sMEJOuS+i@vger.kernel.org, AJvYcCXq8PJ9axCecW30opIXfw2Xdgx+i6alcllm9/EBJb7A7RALNHLVFjaejYbuXCPqrcNEmLJ/atgM@vger.kernel.org
-X-Gm-Message-State: AOJu0YyRICr+Yk0wFhy4uu5VMLKlgCT0Sk5H8c8GqhAMRWjnnc2GIhCJ
-	/PS9w3PYmJ6LLI/ZFZ3i+9Y35LlD0H6lsblXQWlgVikKJbDRN9l7
-X-Gm-Gg: ASbGncsWsto95ZKRIh9H/fmxD+gqP+BXAsJcNlyLzQ/b+tOTv62AP0hVskrsS0cDqNV
-	WlBH4tXul3pSPqszIM72Ydb8004wdC3ufBAIzGucH1g4w/vtJde1cxPM7epN3TC455bXtdT2plZ
-	ZLDbpoYkH7xNYr6ruSiPDXcn0cM5yiXfVsL6bZENeMtCUHm2lTmMaR2uWXHFqwSD9WXhoaimI44
-	J15WAMRL8uECv8vOC9Ahhkil9lmlYpTtOBAVSmb0pVzetjz3NvKZNYyDgLAzmoc967x7vRYNidR
-	NJb/AKv5rwux1CTsAwep1pWRp9plMw3KYvraooNoXFgYvePNZSpWbOxPlbGS7S6eeyS8Jnoqmrk
-	TBfU6FVIhOtiFnDAHYX4whoDg+3YxAEAr8FfUbKa2T3sIpkjo6Y3icq0g4O5wVketb/x6RyZpEQ
-	sTP1AKSKyqV4LC2w+E88k=
-X-Google-Smtp-Source: AGHT+IFuZtAhl/EeTwlESgZEmFiH1TMtmKl7RGfRolizt1DBUCNDPnPwoWBarCBAea1UlBVhaKlHyA==
-X-Received: by 2002:a05:6402:2550:b0:5e5:9c04:777 with SMTP id 4fb4d7f45d1cf-5e814d805b7mr3320106a12.6.1741888902566;
-        Thu, 13 Mar 2025 11:01:42 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:20d:1300:1b1c:4449:176a:89ea? (2001-1c00-020d-1300-1b1c-4449-176a-89ea.cable.dynamic.v6.ziggo.nl. [2001:1c00:20d:1300:1b1c:4449:176a:89ea])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e81692e6d4sm945413a12.9.2025.03.13.11.01.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Mar 2025 11:01:41 -0700 (PDT)
-Message-ID: <02b97708-1214-4fa4-a011-70388cff8f79@gmail.com>
-Date: Thu, 13 Mar 2025 19:01:38 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XbUJ/Vgt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45F48C4CEEE;
+	Thu, 13 Mar 2025 18:57:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741892263;
+	bh=pnM3/eXJlQYbAOmQMatwU3RDryh3qaaZieUTqjGuzcY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=XbUJ/Vgt4NSdO9qOguXWJRHolBFAbh0mqx2ScE7onbocPyUmW+Y1RZs2bIFR9jOz6
+	 KEp8O/6V58UaOAVIJeYcAh5ryZ+wKk4apH3HPcE4qBJsS2VgF5DHOVwuoVLEAVgqva
+	 jnbveei5ls+7kt/xGLgtFVMsTqYSql/2QUMgsmv/gxL22bKMJOGAEiMdtWmXqQ2Ucg
+	 +bdROyxh/Hrjznj7MJPNTBkcY1MjMm91iv+bp4Cl+7aoV9Quwgwh9t+9ZBT4eOtbS4
+	 juQFIg47kMGZ3ZPIQnUi/Jx/kL27K4ptr5LgfVK851e5MgYpmLWzu8z3N4KzhDCzrN
+	 dGzlaqzqndrPw==
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ac25d2b2354so229483766b.1;
+        Thu, 13 Mar 2025 11:57:43 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUaQ+w6vC9hGN3xCdplWaPofY4dbnY6OLw5YyWiqca722hAi52SXv5BcLJhywnQdKiSEe/aT7CQYtQTFqBoVQ/2@vger.kernel.org, AJvYcCUqCF8QYKMUFOt5PmoTBaOV8NJoY/O6ueQeJB/nA+iSq6u4Zn1tWgkLyMFz9O/fOlv/2x/gYVPu3jY97KEU@vger.kernel.org, AJvYcCWdo4SwihzGwzxCUnnT2ZamebFKYlfGlgc9baD5UmDV19pTHze+L1UqWGRkHBvTn8TLkNhIlFxoBvGC@vger.kernel.org
+X-Gm-Message-State: AOJu0YwlWc9yFx6UKU5C9yXj71CrDHxi6sUdXYu3n5wn/Iicw7SJ85ix
+	e5+yK8qf/U3aQVsJelKmf9R90tHJbhQqEG762XSspY273GIqgxsBuTDIrq5yJBx7svXES9d4x99
+	Sp13co1bD+veHG+Ms//GjYmnQNw==
+X-Google-Smtp-Source: AGHT+IGxvyDPIkZ3HfnSzL4kE9l/WHzwDQwashvlehk6CqU5kYwwwa++MhzGCLauTSyn3LtQmieTQa9VDQRaakTmrE0=
+X-Received: by 2002:a17:907:1ca7:b0:ac1:fa91:2b98 with SMTP id
+ a640c23a62f3a-ac3290b5b89mr57840666b.14.1741892261803; Thu, 13 Mar 2025
+ 11:57:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 nf 00/15] bridge-fastpath and related improvements
-To: Pablo Neira Ayuso <pablo@netfilter.org>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- Kuniyuki Iwashima <kuniyu@amazon.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- Nikolay Aleksandrov <razor@blackwall.org>, Roopa Prabhu <roopa@nvidia.com>,
- Ivan Vecera <ivecera@redhat.com>, Jiri Pirko <jiri@resnulli.us>,
- Jozsef Kadlecsik <kadlec@netfilter.org>, Simon Horman <horms@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
- Eric Dumazet <edumazet@google.com>, "David S. Miller" <davem@davemloft.net>,
- Andrew Lunn <andrew+netdev@lunn.ch>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, netfilter-devel@vger.kernel.org,
- coreteam@netfilter.org, bridge@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- linux-hardening@vger.kernel.org, Kees Cook <kees@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Alexander Lobakin <aleksander.lobakin@intel.com>,
- Ahmed Zaki <ahmed.zaki@intel.com>, Vladimir Oltean <olteanv@gmail.com>,
- Frank Wunderlich <frank-w@public-files.de>,
- Daniel Golle <daniel@makrotopia.org>
-References: <20250305102949.16370-1-ericwouds@gmail.com>
- <897ade0e-a4d0-47d0-8bf7-e5888ef45a61@gmail.com> <Z9DKxOnxr1fSv0On@calendula>
- <58cbe875-80e7-4a44-950b-b836b97f3259@gmail.com> <Z9IUrL0IHTKQMUvC@calendula>
-From: Eric Woudstra <ericwouds@gmail.com>
-Content-Language: en-US
-In-Reply-To: <Z9IUrL0IHTKQMUvC@calendula>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <1741874545-19091-1-git-send-email-abhitiwari@linux.microsoft.com>
+In-Reply-To: <1741874545-19091-1-git-send-email-abhitiwari@linux.microsoft.com>
+From: Rob Herring <robh@kernel.org>
+Date: Thu, 13 Mar 2025 13:57:30 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKU8hE=dXdQ+hO0WvU-GuXAjEBgCPJ4rnxef9851zyKMw@mail.gmail.com>
+X-Gm-Features: AQ5f1Jq_oFazuB_slJkD16lfmh_exdSsFXOeEWw1Ss12ha7__KdFDzrMJ1oGPx4
+Message-ID: <CAL_JsqKU8hE=dXdQ+hO0WvU-GuXAjEBgCPJ4rnxef9851zyKMw@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: memory: Document linux,usable-memory property
+To: Abhishek Tiwari <abhitiwari@linux.microsoft.com>
+Cc: krzk+dt@kernel.org, conor+dt@kernel.org, kees@kernel.org, 
+	tony.luck@intel.com, gpiccoli@igalia.com, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	abhitiwari@microsoft.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Mar 13, 2025 at 9:03=E2=80=AFAM Abhishek Tiwari
+<abhitiwari@linux.microsoft.com> wrote:
+>
+> Add Documentation for linux,usable-memory
+>
+> Signed-off-by: Abhishek Tiwari <abhitiwari@linux.microsoft.com>
+> ---
+>  .../bindings/linux,usable-memory.txt          | 32 +++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/linux,usable-memory=
+.txt
+>
+> diff --git a/Documentation/devicetree/bindings/linux,usable-memory.txt b/=
+Documentation/devicetree/bindings/linux,usable-memory.txt
+> new file mode 100644
+> index 000000000000..167054d2e9a2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/linux,usable-memory.txt
+> @@ -0,0 +1,32 @@
+> +linux,usable-memory
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 
+This belongs here:
+https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/memo=
+ry.yaml
 
-On 3/13/25 12:11 AM, Pablo Neira Ayuso wrote:
+> +
+> +Description
+> +-----------
+> +The ``linux,usable-memory`` property can be used to restrict usable memo=
+ry
+> +region. This property holds a base address and size, Memory outside of t=
+his
+> +range is not accessible by the kernel. This property is particularly use=
+ful
+> +in specialized hardware platforms where certain memory regions must be
+> +reserved for specific use.
+> +
+> +Common use cases include:
+> +- Allocating ``ramoops`` region
+> +- Reserving memory for hardware-specific needs
+> +- Fake Protecting persistent memory (PMEM)
 
->> What do you suggest?
-> 
-> Probably I can collect 4/15 and 5/15 from this series to be included
-> in the next pull request, let me take a look. But it would be good to
-> have tests for these two patches.
-> 
+All these examples belong in /reserved-memory nodes, not
+linux,usable-memory. Go see the ramoops binding for example.
 
-These are not most important to bridge-fastpath, but it gives extra
-possibilities. How about concentrating first on patch 2/15 (with 1/15
-removing a warning and 3/15 cleaning up), adding nf_flow_encap_push()
-for xmit direct? It is a vital patch for the bridge-fastpath.
+This was really for the case where you already have 'reg' (in the
+memory node), but need to limit memory while at the same time not
+overwriting 'reg'. Basically, for kexec where you can keep booting
+another kernel forever. If that's not your usecase, you shouldn't be
+using this.
 
-Anyway, I will look into writing selftests for conntrack-bridge setup,
-including various vlan setups. This will take me some time, which I
-do not have in abundance, so for that I do not know if I get it done
-before the merge window.
-
+Rob
