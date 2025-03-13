@@ -1,131 +1,82 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DE1C173
-	for <linux-hardening@vger.kernel.org>; Thu, 13 Mar 2025 00:06:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12FCB847C;
+	Thu, 13 Mar 2025 01:29:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741824395; cv=none; b=h3oYZ7exNAlpLavLtq/4XTp4y3CAiCcZad3yQ0M3AULxfnDUwFgp5rQxuhDrj5NbHfY2+GZo+OgfouWIZNPEIPDE5k4FLifDJyA1XMi0d9oQ0gic5d39PTLF2TUrKl6/P7LqzyfDavsa+YN6EFvevvOmYnd7nEo9mTZzV4lwLjQ=
+	t=1741829351; cv=none; b=J5D0rBrzmWESIyv7NTpffTSqsJXsEi5tlWx5uYnFaccLLmjNjeRPlwOFAGeksZSr3ulWClVpbbshuAPGPoiIwCzn8TIsopstWGvjzyholQnEhrQOIP2Swey0RoCogKY/6tiYvcsfiVc2zvMYLixMQgoQ+Xi8bpoDSkYnWkibKyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741824395; c=relaxed/simple;
-	bh=23GDT0Rk8r3jrPpap9e9b1IjBBxLwjDYfdQD/VF0D2Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jbwp2T0ZG9tjuMaZEBUh552RCW8dAiwyp95tRh8Jp21izuiOzSafDXklHX45gy5pH0O1qVrWfp/XshU0ev+Ylqe/j6YwvgUfWUPM16mjp9UJALEkYjuTN9BSRajgWjIyp6T8SHY407rK/jt1aTxikASAJc5eB+93m+UyZCCifXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=mkHn3aH3; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1741829351; c=relaxed/simple;
+	bh=DmFGl3cW63z36zoSLZ+e3qENuPfpCm1i9LEkpTNMFqY=;
+	h=From:To:CC:Subject:In-Reply-To:References:MIME-Version:
+	 Content-Type:Message-ID:Date; b=plZnigwOr0FaO13h1JFIcP4d4nyttEx05Vj9E0ZA3GnRzDV7mqlvrl4othQkg2tgt+girALdxD+6tqjITMUWj1h6qxvi5lMvhzL2TEMJf3YBBUxjvslmXQhFrtlbc41CIgEI/sD0izxTdc4bcE/X9TXJKY66MtYIzVaR7n8Riy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=h3YwrrfD; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mkHn3aH3"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5e5b736b3fcso50838a12.1
-        for <linux-hardening@vger.kernel.org>; Wed, 12 Mar 2025 17:06:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1741824392; x=1742429192; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=LTBXSAZcTlB0kyn5reMeVRSItQEZmzd639cfqrTnQ5g=;
-        b=mkHn3aH3M2uC5/LU/AWh63mq41v8aULFRTIVrLUTUEToY/ze5BbQ9FEDQoMBFHjpUZ
-         rEep7UJNXq4Jx7VpmKxPxw4HsWZrl59n1gicz4mdWuprgLTsib/L+0UOpTlSMj9j3onY
-         FpYkUdId5fIiIbe4o/QUG91/C39BRcSazrFH0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741824392; x=1742429192;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LTBXSAZcTlB0kyn5reMeVRSItQEZmzd639cfqrTnQ5g=;
-        b=XnKrQfqHn+yPFur01bV+KOlNJ5SAD9HvOpb7DPI266qY2fZlOnGONp3w4/EQR5ekCY
-         2UA9Yp0tebRqRucovAfL0oBwBu//I9Cr8tL2dnuf3st7QY8dIzZPsCAJG//K8B2anFn/
-         WRUTN5wtrnlqFoqGe+LI9ea2x3VIDt6lVjX7XZ6PcleOUfsgnp8qIj9NN4PAa6csy9/B
-         z3/ZSMqg7pN0YoH1CEqIp5FW3n3tbjcKc+EXNVVJ6g9vQyHsGURCT4aORuIjSqyKVrA8
-         v/FzBed/XZSyj7zCiPbfUrqVD1ij3CeyJpRwKAydnHjzUcwGDAnBRB1ZOa7XiX7d0iBc
-         eXaw==
-X-Forwarded-Encrypted: i=1; AJvYcCV77Wc2YkNS/IVsVsES9T3X6epFx91v6KKg8opHR9YRdrt4QWAgQQm9uAXfqZRnDHOC9Lu6BvZyuNtbz2I3K8g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzuMPTmTLuwAjXfOGP8OXeE+oEqH/Q/gRZTjlm1GpjzV0sVNlNi
-	NZjTxM014BGvaHfUc3yRxos/qYxw1Bzx20MwtraCwaCPvJ79UsO0cbI4oWLQaw==
-X-Gm-Gg: ASbGnctqdcN0FkPS/aRwg0E9RU5bnevZU/8hho5JZj4cy5dxFtdY8Fpx9gEM1d5GqCk
-	DYGh1vZY7IhYqHNU/fbILthIGcUbU2f2SUKvNx56o8IIgyEvzwuytfny1xn45AtCQbRyPRXBJZg
-	YBxhzU6jJNWo2e7oD46ctmrqzTrSwummLlPJSiLMOrL+kdXfAZNJpTFw/IE7QnyltyS1+BQofYD
-	8HDYahsLXLSkLnbmG+p8NXFfBEFzINvPZw9is6t86bdh4hEpqftixnQzlXtIGEl+xyzHWoY7r4b
-	Z6Wnigmp8TAP0qlUIJxQ/WJdm46vZoRxx7+EvD927E8mdtVI5R8KA6URv5t7CnisQWq4XqjsT4k
-	M
-X-Google-Smtp-Source: AGHT+IF2hsLGbRFexw4cBQVMbT4+nYhN0RM3ql6SWU6N3Q/kqXvpffne9qXzzhEiJHBV/0VVycU7Sw==
-X-Received: by 2002:a17:907:3e8f:b0:abf:7a26:c489 with SMTP id a640c23a62f3a-ac2b9ea164cmr368075466b.9.1741824391899;
-        Wed, 12 Mar 2025 17:06:31 -0700 (PDT)
-Received: from cfish.c.googlers.com.com (40.162.204.35.bc.googleusercontent.com. [35.204.162.40])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac314a3fc7asm7404766b.135.2025.03.12.17.06.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Mar 2025 17:06:31 -0700 (PDT)
-From: jeffxu@chromium.org
-To: jeffxu@chromium.org,
-	akpm@linux-foundation.org
-Cc: Liam.Howlett@oracle.com,
-	agordeev@linux.ibm.com,
-	borntraeger@linux.ibm.com,
-	gor@linux.ibm.com,
-	hca@linux.ibm.com,
-	kees@kernel.org,
-	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	lorenzo.stoakes@oracle.com,
-	svens@linux.ibm.com,
-	thomas.weissschuh@linutronix.de
-Subject: [PATCH] mseal sysmap: add arch-support txt
-Date: Thu, 13 Mar 2025 00:06:23 +0000
-Message-ID: <20250313000623.3192896-1-jeffxu@google.com>
-X-Mailer: git-send-email 2.49.0.rc0.332.g42c0ae87b1-goog
+	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="h3YwrrfD"
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 52D1SukkE268791, This message is accepted by code: ctloc85258
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
+	t=1741829336; bh=DmFGl3cW63z36zoSLZ+e3qENuPfpCm1i9LEkpTNMFqY=;
+	h=From:To:CC:Subject:In-Reply-To:References:MIME-Version:
+	 Content-Type:Message-ID:Date;
+	b=h3YwrrfDRlsv0fz8lxhEuG+0TY6ZVa+BhvVwINftd9Z05D69wFcbOj/55Cgud7hqH
+	 Ca9c6LX5jMQYIfkpubAo6qFLfZgyLx1b3hNcz4+8mx9GlEt69mICt3H8AWpxZ22wMc
+	 Xy6LYNruBRNjOVBZrsjbJ8lt6M0oMA/ShaOy/i8gdUo2ONFFx4LOcbxZk9VL0pGbT2
+	 vaSPcwi1j1/kFkSO/ycjl49FaD58HA2IFFY5RjxDDYl2kkyJwakH55CbcVcHoXO1tH
+	 XO3ogRQjBghaiao8KotZdHNxGTcWOlptbi+IuyaBiIpjh175Ecf6dc0kkTW/MoTmWG
+	 wGGsqQ/ulsRWQ==
+Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
+	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 52D1SukkE268791
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 13 Mar 2025 09:28:56 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Thu, 13 Mar 2025 09:28:55 +0800
+Received: from [127.0.1.1] (172.21.69.94) by RTEXMBS04.realtek.com.tw
+ (172.21.6.97) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Thu, 13 Mar
+ 2025 09:28:54 +0800
+From: Ping-Ke Shih <pkshih@realtek.com>
+To: Kees Cook <kees@kernel.org>, Ping-Ke Shih <pkshih@realtek.com>
+CC: Kees Cook <kees@kernel.org>, Johannes Berg <johannes@sipsolutions.net>,
+        <linux-wireless@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH] wifi: rtw88: Add __nonstring annotations for unterminated strings
+In-Reply-To: <20250310222257.work.866-kees@kernel.org>
+References: <20250310222257.work.866-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+Message-ID: <c5003d73-b135-4c3a-a4da-3d036ff3c2d2@RTEXMBS04.realtek.com.tw>
+Date: Thu, 13 Mar 2025 09:28:54 +0800
+X-ClientProxiedBy: RTEXMBS02.realtek.com.tw (172.21.6.95) To
+ RTEXMBS04.realtek.com.tw (172.21.6.97)
 
-From: Jeff Xu <jeffxu@chromium.org>
+Kees Cook <kees@kernel.org> wrote:
 
-Add Documentation/features/core/mseal_sys_mappings/arch-support.txt
+> When a character array without a terminating NUL character has a static
+> initializer, GCC 15's -Wunterminated-string-initialization will only
+> warn if the array lacks the "nonstring" attribute[1]. Mark the arrays
+> with __nonstring to and correctly identify the char array as "not a C
+> string" and thereby eliminate the warning.
+> 
+> Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=117178 [1]
+> Cc: Ping-Ke Shih <pkshih@realtek.com>
+> Cc: Johannes Berg <johannes@sipsolutions.net>
+> Cc: linux-wireless@vger.kernel.org
+> Signed-off-by: Kees Cook <kees@kernel.org>
 
-Signed-off-by: Jeff Xu <jeffxu@chromium.org>
+1 patch(es) applied to rtw-next branch of rtw.git, thanks.
+
+d58ad77d5cc2 wifi: rtw88: Add __nonstring annotations for unterminated strings
+
 ---
- .../core/mseal_sys_mappings/arch-support.txt  | 30 +++++++++++++++++++
- 1 file changed, 30 insertions(+)
- create mode 100644 Documentation/features/core/mseal_sys_mappings/arch-support.txt
-
-diff --git a/Documentation/features/core/mseal_sys_mappings/arch-support.txt b/Documentation/features/core/mseal_sys_mappings/arch-support.txt
-new file mode 100644
-index 000000000000..8db637254de9
---- /dev/null
-+++ b/Documentation/features/core/mseal_sys_mappings/arch-support.txt
-@@ -0,0 +1,30 @@
-+#
-+# Feature name:          mseal-system-mappings
-+#         Kconfig:       ARCH_SUPPORTS_MSEAL_SYSTEM_MAPPINGS
-+#         description:   arch supports mseal system mappings
-+#
-+    -----------------------
-+    |         arch |status|
-+    -----------------------
-+    |       alpha: | TODO |
-+    |         arc: | TODO |
-+    |         arm: |  N/A |
-+    |       arm64: |  ok  |
-+    |        csky: | TODO |
-+    |     hexagon: | TODO |
-+    |   loongarch: | TODO |
-+    |        m68k: | TODO |
-+    |  microblaze: | TODO |
-+    |        mips: | TODO |
-+    |       nios2: | TODO |
-+    |    openrisc: | TODO |
-+    |      parisc: | TODO |
-+    |     powerpc: | TODO |
-+    |       riscv: | TODO |
-+    |        s390: |  ok  |
-+    |          sh: | TODO |
-+    |       sparc: | TODO |
-+    |          um: | TODO |
-+    |         x86: |  ok  |
-+    |      xtensa: | TODO |
-+    -----------------------
--- 
-2.49.0.rc0.332.g42c0ae87b1-goog
+https://github.com/pkshih/rtw.git
 
