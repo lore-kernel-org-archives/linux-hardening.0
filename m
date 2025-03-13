@@ -1,99 +1,157 @@
-Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-b1-smtp.messagingengine.com (fhigh-b1-smtp.messagingengine.com [202.12.124.152])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D16DF1EDA20
-	for <linux-hardening@vger.kernel.org>; Wed, 12 Mar 2025 23:53:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50FB0173;
+	Thu, 13 Mar 2025 00:03:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741823617; cv=none; b=f95lG6gBtQgSv0MxDbS7SlJhg1hasN+WUwmsNmR2qSg/LXC1yrB31tTi9EWPzaLUraJ/p7AnhECHivI/qxUzQwxdMKPlskxATYeZ29TAwDtCaF7svAuP7z6bwrf0XGPSt5I/WabmXH/3a+eMW5XowzMipaKz1TI40PlIWJnxwks=
+	t=1741824224; cv=none; b=poCCfubl39F5qjbH1nHx45c4N0y60QgJtyOyW76Dz+BsWcbsmqhvcezoyWMvR7uDL4z/2cmsYMDcvOns7Z0lUJKY1cySoiIBBzt4fbtXA5uwiWyeRYO1QqHh9dzC/ymYqRcDxkpyHEiuvph758YDjVUBI7Z/KSlIDFH03BzIKNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741823617; c=relaxed/simple;
-	bh=AeGft02PCfpVr0FAIZGX6Xlm9LKJIDZ9am3sD5SGW/M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JPAxgp9afyXt/J/RZL1uIwg6wOxcGeMN/E7tAjrF/BG2p9k0BbXaj0OUzu5UHKbNOlGCQ+WlvFMdw+jrQiXWzokfCfmVGk1Dzl208/3gtFYLlFdRm0gnwDMhtuqOtctEdjfMQP8Fxjr8oJIF0qvjU0jMtFp4ccSYWK+4Jug2bBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=PFk0EfgC; arc=none smtp.client-ip=209.85.161.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1741824224; c=relaxed/simple;
+	bh=UaF7HWD7KnuM/tcxBho4NWWozl24AgWzgEfnWk8w7i4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DinV1djc0wWvZLG8obTgh+b1EcwiU4+qI7/U0sIgqumw5EWhX2jAoAMiJsMk/Evwj/VPK+qNUd88zYtcBF1yV0mJre+cQkgf1UZEJjR5fy3+KbR+b13mkUtQxWDPnmAcI1wb0abRNLXC61Z0taYYp0qMNdLSoHMYg/AZp2OP3wo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp; spf=pass smtp.mailfrom=sakamocchi.jp; dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b=LZ304NhK; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=CHrjBbMr; arc=none smtp.client-ip=202.12.124.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sakamocchi.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PFk0EfgC"
-Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-601a15186f0so60900eaf.2
-        for <linux-hardening@vger.kernel.org>; Wed, 12 Mar 2025 16:53:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1741823615; x=1742428415; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8H6u01PvxgJprnkIiXjJQ4sDMD89dhh8rkhvlxkSKIk=;
-        b=PFk0EfgCfcgTGmQiHNt80npqdJMZ8eCdoQhyKeMatewoigAbHyC9cqdPtdFZpMV1mk
-         nlzki1esIUEgmRlJ7MFmUeiiGCxbkummMPyXIAbg0gU3mv/d+03Z2tGObrNoT6/DVVf1
-         YAut3E4fAVA8jg1WMymwmH8GcPPEcfxQzj2Kw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741823615; x=1742428415;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8H6u01PvxgJprnkIiXjJQ4sDMD89dhh8rkhvlxkSKIk=;
-        b=A50oVqu0ANl7w9TAlpSg1sdrCFmPS4ckunyNU9mcHMVqgpnU3qlHLy09uKqb/b77Od
-         2rv5OwZhOBSFNb4LHPlrY48KBLcWFdjLZJZDhdQecIi9mVBuiee47wI7nzvK6MhIlGP0
-         HYR0aAPY/sn3w+ZsVEiWOvK4wNynyypNE/r7OoGcGTCJijte6We7NzoNKvZ5h0oRDpN5
-         zjgdgEk0+nH4td1HX+rw7WQFEeifY2oMjgPG1oReKnEQPzK8AZYGFPmf9H431xRILM3x
-         4C0TPvN+6YnkDpr7AA4y8CKyvldLKepQ44XTrQIOnQ/Paeh/TjKDA6LvOjRPJG8kTM6A
-         gVNw==
-X-Forwarded-Encrypted: i=1; AJvYcCVkpAE+uz4Ojc3IDH+xgsG+eDaWLtIRToikAKff/GxUhRMF8jxa7qPKwwWbzhqxblttP6cl0N/8S8hnLWIXxMk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywx7KgpYfiojP22HTjJth+ixs0BKOtjoxValDDUbxf7/bDDzfnb
-	9ALDZI1Kpe+1/q/SsiYC1blj26LHsw7IW2Lczbbx7PbgGdX1YGB836354IEJ2H9FlOF0VI+KNrZ
-	vjbnhJdt/4cc7AKUI2LGjxiifNTqAtmtXvfm3
-X-Gm-Gg: ASbGncsBvsDMUmLrf6fBxv1B93jEK6vVUV/ZIO/6iF1DSTZ1ui5ixIzSzoIz7lUsxia
-	cGteN6NPcRk8KD3p8jJsChD12GhxnT9QbJiKR13vI7CeiQLydpkZAbE0x/LkQkzbigjEBFG9S1w
-	Lwy2HFAgRwJ7A2MRuJUwyp8TKq
-X-Google-Smtp-Source: AGHT+IHjNAYQ0ub88nN1552iMB2eL8X1RV4+1cI8aJCntlA0geWWYJiWNKkJ8nP6eRkdBx32XB4wFpN6HoYn7iau44M=
-X-Received: by 2002:a05:6820:458f:b0:5fc:92ed:639a with SMTP id
- 006d021491bc7-6005a21992bmr2215701eaf.2.1741823614821; Wed, 12 Mar 2025
- 16:53:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="LZ304NhK";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="CHrjBbMr"
+Received: from phl-compute-08.internal (phl-compute-08.phl.internal [10.202.2.48])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 1A93B25401B8;
+	Wed, 12 Mar 2025 20:03:40 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-08.internal (MEProxy); Wed, 12 Mar 2025 20:03:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
+	 h=cc:cc:content-type:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm1; t=1741824219; x=
+	1741910619; bh=ivul6aIvs6HSo9qOyouoHkt7QFmrzjtgI/MDUv4pG6o=; b=L
+	Z304NhKmwGdc5rucdjKPOPi52lbHQJMxfn1SZkgvxEBOrVY/1DEUPCnIPeMpum8p
+	RdP6JmJVd9p6KkSTAtIIrutR1DwTFJm/rWxmdrjL/J2pZ5sZnyAKLAuQzTkQG0xC
+	X9vmxY1OsXIJ0mKlOIrt0tYqrmJLpyF5VGcBv1i7RL3vaYBDf82I44dwC9W/QcvO
+	30ydPh2NPPrb9LLNF5bqEgdk55H1qo9PS96qpNQ92HkPnR8kLvIkQzkPZHnfIIP8
+	3cIvAG3YKFwVtHJDAy/BXt+9KFz9Rf6mhLW+qFvf0TRgQ087XOaXbbo3b7rFqThT
+	dbC6tfJYHVxwhJ3qTI9og==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+	1741824219; x=1741910619; bh=ivul6aIvs6HSo9qOyouoHkt7QFmrzjtgI/M
+	DUv4pG6o=; b=CHrjBbMrj5KOoW9wgEdlWeW5yzK9764GQV0WRT3M1nRqe7kbN9K
+	TDWf+Vgygmn0gjkimSIp8vgmOJ38zyc5Ec9mQFqSK7pBnzDy+X5TF3L734VvXLD3
+	HFOSpy6lBycHZ/wfvZ3YHz5l+lmusn6x/Nja+h6bQApZJx93cYluu/BOgUvdStUi
+	t0bnfbXJsYsSuHOCtQK0QR9/s6XLhYTu9whj2nCrRKnppr12fRbuVNhzr84BqTwh
+	p26YEZkeNXoPolv1DzKqg1wMjG9FfpM4edmptpVEPeGz36GGBLMmG5uJDvSizoyh
+	7iQdb+B/pj2eV6LTw6Icl9HvXft2k9KKnsQ==
+X-ME-Sender: <xms:2yDSZy4cVe9o23idBt2K14fYyLxDHbDHR0KOlFr_aLrCmxtUxLX5BQ>
+    <xme:2yDSZ75v7ITufVpYM6UWMXsfL9XSaNB_vQCsSeZcK4pxwI6OxmtoWWFAb4ileXeEP
+    uLYT-tSyGCyT-1bYAY>
+X-ME-Received: <xmr:2yDSZxegmMPqwZd84hjELVjpwsLtSxLcLzAzevO8ddQVj-fDFCUQNGW-aIaxt7qTcnNGnxl1lwQN5Bdta4e34Md71GU2Q8I5UyI>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduvdeigeeiucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucenucfjughrpeffhf
+    fvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefvrghkrghshhhiucfurghk
+    rghmohhtohcuoehoqdhtrghkrghshhhisehsrghkrghmohgttghhihdrjhhpqeenucggtf
+    frrghtthgvrhhnpeehhffhteetgfekvdeiueffveevueeftdelhfejieeitedvleeftdfg
+    feeuudekueenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhroh
+    hmpehoqdhtrghkrghshhhisehsrghkrghmohgttghhihdrjhhppdhnsggprhgtphhtthho
+    peegpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehguhhsthgrvhhorghrsheskh
+    gvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidufeelgedquggvvhgvlheslhhi
+    shhtshdrshhouhhrtggvfhhorhhgvgdrnhgvthdprhgtphhtthhopehlihhnuhigqdhkvg
+    hrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhh
+    rghruggvnhhinhhgsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:2yDSZ_I_6DOc7d5OeZSTgKgcTBUsHpiXlCaA1WtbiiQw1gykBKPhiA>
+    <xmx:2yDSZ2Jqss4ZBDKBjJA1qCQwIduyQxfWKA1sJHGxrrGXR1sAmkP3vg>
+    <xmx:2yDSZwz0ydw3T1PGBV_Em6scwqblBu4ZG8GbjUvrgdol0wlY9LZsyg>
+    <xmx:2yDSZ6JC7UjNpSviQPhqhd4Mg6x2KMqcFoqe69ITHX2BpnBtPvh-jQ>
+    <xmx:2yDSZ7HDU1cWI4dqPqrCQ1pQ3xf9QZm4ohUATzFvzidyE0-pQenGDrGe>
+Feedback-ID: ie8e14432:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 12 Mar 2025 20:03:38 -0400 (EDT)
+Date: Thu, 13 Mar 2025 09:03:35 +0900
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux1394-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] firewire: core: avoid
+ -Wflex-array-member-not-at-end warning
+Message-ID: <20250313000335.GA320863@workstation.local>
+Mail-Followup-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux1394-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+References: <Z9AA9tAbcIcz6BMO@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250311123326.2686682-1-hca@linux.ibm.com> <20250311123326.2686682-3-hca@linux.ibm.com>
- <CABi2SkXWD4Pg7Y7TG9fMV9eat_1fOGwHjvEUKHXREN+pRe18NA@mail.gmail.com>
- <CABi2SkXzqJ10NW3j1y-FtmrheDkqzL5QgMcN9UN6UvhbXFHCuQ@mail.gmail.com> <20250312153946.10610B02-hca@linux.ibm.com>
-In-Reply-To: <20250312153946.10610B02-hca@linux.ibm.com>
-From: Jeff Xu <jeffxu@chromium.org>
-Date: Wed, 12 Mar 2025 16:53:23 -0700
-X-Gm-Features: AQ5f1JqCIcxEvjlYrZ3A0vTQkfvlQ3azH4ngw0Oh5F45vZFYCocj3YPdsQosWIk
-Message-ID: <CABi2SkVk-LNWioxONFDppLJNnd8kj+UH9PXG3BU-5GKcUJDavA@mail.gmail.com>
-Subject: Re: [PATCH mm-unstable 2/2] mseal sysmap: enable s390
-To: Heiko Carstens <hca@linux.ibm.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>, Kees Cook <kees@kernel.org>, 
-	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, 
-	Vasily Gorbik <gor@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z9AA9tAbcIcz6BMO@kspp>
 
-On Wed, Mar 12, 2025 at 8:39=E2=80=AFAM Heiko Carstens <hca@linux.ibm.com> =
-wrote:
->
-> On Tue, Mar 11, 2025 at 03:12:55PM -0700, Jeff Xu wrote:
-> > One more thing: do you want to update mseal.rst to add s390 as
-> > supported architecture?
-> >
-> > Currently in the mseal.rst:
-> >  "The following architectures currently support this feature: x86-64 an=
-d arm64."
->
-> Thanks, I missed that, however I'm wondering if it would make sense to ad=
-d
-> mseal to the generic feature list instead (no, I am not volunteering to d=
-o
-> that :) ).
->
-> See Documentation/features/... and scripts/get_feat.pl
-Thanks for this suggestion. I will add that file.
+Hi,
 
--Jeff
+On Tue, Mar 11, 2025 at 07:53:02PM +1030, Gustavo A. R. Silva wrote:
+> Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
+> a flexible structure where the size of the flexible-array member
+> is known at compile-time, and refactor the rest of the code,
+> accordingly.
+> 
+> So, with these changes, fix the following warning:
+> 
+> drivers/firewire/core-cdev.c:1141:38: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  drivers/firewire/core-cdev.c | 42 ++++++++++++++++--------------------
+>  1 file changed, 19 insertions(+), 23 deletions(-)
+
+Thanks for the improvement, however I think it includes a slight concern
+about the calculation for the length of array.
+
+> diff --git a/drivers/firewire/core-cdev.c b/drivers/firewire/core-cdev.c
+> index b360dca2c69e..706b9037faac 100644
+> --- a/drivers/firewire/core-cdev.c
+> +++ b/drivers/firewire/core-cdev.c
+> @@ -1137,10 +1137,7 @@ static int ioctl_queue_iso(struct client *client, union ioctl_arg *arg)
+>  	unsigned long payload, buffer_end, transmit_header_bytes = 0;
+>  	u32 control;
+>  	int count;
+> -	struct {
+> -		struct fw_iso_packet packet;
+> -		u8 header[256];
+> -	} u;
+> +	DEFINE_RAW_FLEX(struct fw_iso_packet, u, header, 8);
+
+The definition of 'struct fw_iso_packet' is in 'include/linux/firewire.h':
+
+```
+$ cat include/linux/firewire.h
+...
+460 struct fw_iso_packet {
+461         u16 payload_length;     /* Length of indirect payload           */
+462         u32 interrupt:1;        /* Generate interrupt on this packet    */
+463         u32 skip:1;             /* tx: Set to not send packet at all    */
+464                                 /* rx: Sync bit, wait for matching sy   */
+465         u32 tag:2;              /* tx: Tag in packet header             */
+466         u32 sy:4;               /* tx: Sy in packet header              */
+467         u32 header_length:8;    /* Size of immediate header             */
+468         u32 header[];           /* tx: Top of 1394 isoch. data_block    */
+469 };
+```
+
+The size of element of 'header' array is 4 byte (= 32 / 8). The original code keeps
+256 bytes storage following to the structure. Therefore the 'COUNT' argument of DEFINE_RAW_FLEX()
+macro should be 64 (= 256 / 4).
+
+Although the header field is not rarely used by userspace applications
+actually and the reduction of kernel stack usage is preferable itself,
+it is preferable to keep the compatibility.
+
+
+Thanks
+
+Takashi Sakamoto
