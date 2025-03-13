@@ -1,65 +1,96 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CBA5266B73;
-	Thu, 13 Mar 2025 13:25:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BE7211CA9;
+	Thu, 13 Mar 2025 14:03:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741872320; cv=none; b=gdYjY5SD1Nnms4e4IyeA/vncVuLbEUPEP9E9kGaew/JhiVe5njllkuUlZyysTg5k9c1FfoOgIFvBRLzzDJwv9s9K9l1oLR6wkrHMkOyani9ieXvFUzDeLU7fngBIBNcUR6offhjlF1fwfpBgqeM2KUf5yBrKJwfKYrM4IgXjfyQ=
+	t=1741874605; cv=none; b=CcRsEmkHKlGo3ywytKO8xKyx3XCnc6qY564NXdxj/ECe6i5ixOhPSk6gND34sYv1O9d17ddtqvyefcF00bHFbM0h2jpJhjH9wS232GWw7rYRROvvjFVAINl/fBXupm035bmunZuWf0I/rpgbha338vu0CywRidVmM8g/XTbrXi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741872320; c=relaxed/simple;
-	bh=AzQsSEcDe7w/OOBpJoKQT9Hq4elC2jmXAtjGg3hdDrI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O/Cl2kWQtfiadYlzxxRec932aj9rKxbvt88fGQ8KUoNBKn6MZEu20MbNKZE8IBHkkljTh5BLtgQMa0/yh/M0m+n7x3HIcrmKoatirLq7U8Y7UB5Ygt6CpUlNAQMDcJEMcxJesCSTkMQLHe5/RwNPvIEXgF4/+XUmc3FAZliANG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=GedkEBqv; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1741874605; c=relaxed/simple;
+	bh=5GOXMi43b2br+eJe7B+HzXuFeUte47U460ED9s1ePqg=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=pGWjTMKeKWaRJ9GzjwLVXkx9McVlxfWed9YvzRm8j0tQ+K/cIt1puueKHbPthYxmwllbi/mL1Kncr2Lf00IZrlhCL66ZRHSZX8D2VSKj/J39BaeSLhh8uoN3uJNZ80flOdPQUn7RSlkbbVwN7jijPDtAoWgSwMGxO6JLli/BZUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=jPDw6ug8; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="GedkEBqv"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=Y4Lm4YZ3BFWz1g1FrDh9R2DUroubnxR1ccujrip328I=; b=GedkEBqvZu3WjhDB/hUqKCpuOn
-	cgjYxWNCvscRWpwihg5EaAu9QpSWodXfc1uO6v5OKa3CcN3pT00u1Rd6u1QCwJKh+yX+hMNpko7As
-	vuVSlDej5feEYkU8DbKQmLUsc0Zi4Z1CQDh0SzQhb8kmtuG3DQI4MCsI0SGcxy2HJHqM=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1tsiYf-004zy5-KZ; Thu, 13 Mar 2025 14:25:09 +0100
-Date: Thu, 13 Mar 2025 14:25:09 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Kees Cook <kees@kernel.org>
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="jPDw6ug8"
+Received: by linux.microsoft.com (Postfix, from userid 1218)
+	id C510E210B174; Thu, 13 Mar 2025 07:03:23 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C510E210B174
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1741874603;
+	bh=eJL1r7Uke2I0Gu+6nN6SjJW+WcL3S+JauWgGgw37SJA=;
+	h=From:To:Cc:Subject:Date:From;
+	b=jPDw6ug8qjHWz0ptpuH3a6V4o17/C2BYmBdukR5ltocowSiEqafTtwW5BvKjEKmb5
+	 gaSQe1h15mIoqqe0QiMva6i1LviLdSgKXxz/PQzzGKj2sgb3iQacYq+5N/T9ea2Vyg
+	 kTY5nt/mGzl9LxZPMDDgdoMfGGOZzlqmoqAUElaI=
+From: Abhishek Tiwari <abhitiwari@linux.microsoft.com>
+To: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	kees@kernel.org,
+	tony.luck@intel.com,
+	gpiccoli@igalia.com,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3] net: macb: Add __nonstring annotations for
- unterminated strings
-Message-ID: <634dbbef-d7c0-41ec-8614-efee824142a9@lunn.ch>
-References: <20250312200700.make.521-kees@kernel.org>
+Cc: abhitiwari@microsoft.com,
+	Abhishek Tiwari <abhitiwari@linux.microsoft.com>
+Subject: [PATCH] dt-bindings: memory: Document linux,usable-memory property
+Date: Thu, 13 Mar 2025 07:02:25 -0700
+Message-Id: <1741874545-19091-1-git-send-email-abhitiwari@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250312200700.make.521-kees@kernel.org>
 
->  struct gem_statistic {
-> -	char stat_string[ETH_GSTRING_LEN];
-> +	char stat_string[ETH_GSTRING_LEN] __nonstring;
+Add Documentation for linux,usable-memory
 
-This general pattern of a char foo[ETH_GSTRING_LEN]' will appear
-throughout drivers/net/ethernet. Maybe Coccinelle can find them all
-and add the __nonstring ?
+Signed-off-by: Abhishek Tiwari <abhitiwari@linux.microsoft.com>
+---
+ .../bindings/linux,usable-memory.txt          | 32 +++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/linux,usable-memory.txt
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+diff --git a/Documentation/devicetree/bindings/linux,usable-memory.txt b/Documentation/devicetree/bindings/linux,usable-memory.txt
+new file mode 100644
+index 000000000000..167054d2e9a2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/linux,usable-memory.txt
+@@ -0,0 +1,32 @@
++linux,usable-memory
++===================
++
++Description
++-----------
++The ``linux,usable-memory`` property can be used to restrict usable memory
++region. This property holds a base address and size, Memory outside of this
++range is not accessible by the kernel. This property is particularly useful
++in specialized hardware platforms where certain memory regions must be
++reserved for specific use.
++
++Common use cases include:
++- Allocating ``ramoops`` region
++- Reserving memory for hardware-specific needs
++- Fake Protecting persistent memory (PMEM)
++
++Valid memory may be sparse within the specified range.
++An example device tree configuration is shown below:
++
++.. code-block:: dts
++/ {
++	&memory {
++		linux,usable-memory = <
++			0x00000000 0x80000000 0x00000000 0x1BA00000
++			0x00000000 0xA1000000 0x00000000 0x2AC00000
++		>;
++	};
++};
++
++While this property does not represent a real hardware, the address
++and the size are expressed in #address-cells and #size-cells,
++respectively, of the root node.
+-- 
+2.48.1
 
-    Andrew
