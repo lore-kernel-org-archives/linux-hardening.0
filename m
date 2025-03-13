@@ -1,168 +1,154 @@
-Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF5A61F4630
-	for <linux-hardening@vger.kernel.org>; Thu, 13 Mar 2025 22:25:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 124C31F75A9;
+	Thu, 13 Mar 2025 22:28:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741904760; cv=none; b=dkwUxXbz/XmZV6DcXON/eRCw+iy0QTYHt55iaRaUUd0xSBK2ykTdfb9/HT/Q2tHjVZHboXBw2ondOUAHL/wgu96/oV48yseTnVRES2xhuoatOCkcbekRVTDeHxnOoXedmYrpa6IbHAEFJ5bwPwCz3QO9egURVbwo60PfEmNqkNA=
+	t=1741904902; cv=none; b=cqkMtphbKHe4AjcJV5ZGzcaxLnzfpWFCAZLnka4r3BlDz/fkOqXCB2xRAqRUGooyy7TpYM2H9vknzCpad4+WB175dP3CF2XyPFg2ciFo+1u4jQE2zgflDhb3NC6Z+RNKWb7eBf11+HvW7kOOUmQEnA7xVsHFuzmjXvcLszQtbPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741904760; c=relaxed/simple;
-	bh=QZV2NTgEg7k+1XHNq5HE27b9f2LssIVk3RUzMP/R1r8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JGn8gZEgbaIniOaPfs0ZM9GJSfiJHLcCQwFkIHdU+1ZvR7fyWk2xT+xC7Rx7Ixx2zi0OEnI5ttatijeYSWMWwXCe4Ei792hZu+Y4noBYlZFDIlJx1wkUeGJj6t6n6yHiYWyO6XsU6hw3ApvlEkOce7qQkg1Cdwr0TeOrbn7vVn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=lPQcFsDm; arc=none smtp.client-ip=209.85.160.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1741904902; c=relaxed/simple;
+	bh=o7UMXnwXNFO3PGtSyVpZFrQrH7A6FtO8QMXwMvwlE70=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=KkFcuhoyImP0OptAFVvd6DXe3ktSPvjEJP4HGxDvfvMaAZa2t6UJ43ztRsti76DYXWomI46ZpfjbUab0soyqQRaEUSoYyZZYPWwFVmkeey8EZm1/9cOy8EyEzo2pk+BBT2YnqKUztH1JxIjBf8R+K377FsuzAuZ5sDwl9paChSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gKjx50c9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lPQcFsDm"
-Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-2c2bc6acd74so201059fac.2
-        for <linux-hardening@vger.kernel.org>; Thu, 13 Mar 2025 15:25:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1741904758; x=1742509558; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HO0VpTSFVmDIRg6D2iUyymvRyONg1pufELLgkVchWVM=;
-        b=lPQcFsDmbZy6AEqIflKhd9RqVMEAaX/V3CmrKtK+/ehEXw4UlsUl0Zws0QlR/IlV1X
-         VX6iRbMJzUxxvi5tW2J/EBjQ+HaG2QEMleLlE50U4ZC05e26SNkMixHWajrQo/edHZQI
-         YSuwXegy7cgYyyUHqWbY+iZA38i8ox4dkYskQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741904758; x=1742509558;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HO0VpTSFVmDIRg6D2iUyymvRyONg1pufELLgkVchWVM=;
-        b=iwaHr7fW5tFTwsss1onxZ+ncJmLs1yaJvPWT0HBXJYn7aH+xAhX6h7z7CgD61/QOCx
-         X/6BtOEuoTPWQd6qy95xi92xXJHT1FuMJaX3FDDEcQUOqGjdAYPRzG4PjhuOooUWG5bW
-         tA4+WA/UZ9oAv/91Ic1w6AqzkN51cbVWO1hs0fmdyJ2dlAYIgQ18WARfBvV9OE5bPqH2
-         uPxsxC8w5QE2a2XJdokLRESzWlFHGHNLQUkVgdLb/100T55BlzWSKni3sDqszk5N6WXq
-         MxNHXG9Gs7ROzlE24u35rKyWi1aQ2Fzhl1VY2B9MSfdPqVeWJplnnDuiOPuRp+fGLYvp
-         /f3w==
-X-Forwarded-Encrypted: i=1; AJvYcCXEUm/ul4Md74ikNe38iNrA597nbkiNoA+HabRSMBy5hdAMe8irlZOP3xKRaMAUMV8sVb1omiT5yKaeUe34Gx0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxqkv7YrF+tHNq7VvlndvyN5shsglWF1DlBbIKE7VOxR9OcxUXa
-	F55nKyxEYHq1a0vi0YefA4BQWjY7rLEc9KnwKep9G2HIdLUpMy4kKCU03NCk8jo7QrmbcYqLbv9
-	5WNiT4PMIXaBJ/EUJPO9od37QaLa9xQOTtIz5
-X-Gm-Gg: ASbGncuhd/8P/DmkCAs01JcA1Ba0S9NoaQNV80IcTD+g2vU01DxXU71csELuAwvhUKI
-	LxTeHLNqGuFVxvvOCjrpPP1GZFWw1SmS9jOzJ8RqfcijgD+f6t8/upcvPP9+LldDV0y1mfkGh6n
-	IfNg0z7+moHSK8cxfu04y8YlOiDcqS1wPikSM=
-X-Google-Smtp-Source: AGHT+IFGFOX+JdCKJ5EW0lljriIIgVcYBIERJmy8IRbYMG52NjTsVEcHPVx2F0p10iZ15QufBCgqhdZZ/AQ7u3A452s=
-X-Received: by 2002:a05:6870:41cd:b0:29e:723c:8e9d with SMTP id
- 586e51a60fabf-2c690f385c8mr57268fac.4.1741904757815; Thu, 13 Mar 2025
- 15:25:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gKjx50c9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13C55C4CEDD;
+	Thu, 13 Mar 2025 22:28:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741904901;
+	bh=o7UMXnwXNFO3PGtSyVpZFrQrH7A6FtO8QMXwMvwlE70=;
+	h=Date:From:To:Cc:Subject:From;
+	b=gKjx50c96+AOt7Od3k3N6tlxQyo+ZUO57Mi8Efqkkh+ymAK15/5mOOeErqblDkAdY
+	 PIKEuixrcua3aCgwU+ygmjFR+xA2FNGZs1EzrDSZjWs5DQUI3H3iSzpwkyLjSb8ibk
+	 dZOL437FCUYJkWWTcT/RTaPgdZi+A3IRSqD4SAxfMTTkYTdyTqSzv7osb/+nimHa+n
+	 2OqOpEVMWH/pzPXDDxePeT8+EqU4VT+aCoIw/x6Sdwc3cL2tkDYDXgEyYHykUZtOkI
+	 ysgijvjzwj4F0GQS/EyBU6O9VI72+CK6X/yjB/MfSdrf6JexlWOyOgJ/JCBJkhZPk0
+	 dACcNyEhhZVBw==
+Date: Fri, 14 Mar 2025 08:58:23 +1030
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Cc: linux1394-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v2][next] firewire: core: avoid
+ -Wflex-array-member-not-at-end warning
+Message-ID: <Z9NcB81yfPo-8o0h@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250313000623.3192896-1-jeffxu@google.com> <1bbce89c-1efe-40cf-9085-ec4ec16f7996@lucifer.local>
-In-Reply-To: <1bbce89c-1efe-40cf-9085-ec4ec16f7996@lucifer.local>
-From: Jeff Xu <jeffxu@chromium.org>
-Date: Thu, 13 Mar 2025 15:25:46 -0700
-X-Gm-Features: AQ5f1Jp2EPkBExs0LgI3wECuDDPaXmKkN-4wE1NQSGw_NG7eEjTDTsm1Ivwa46c
-Message-ID: <CABi2SkVKxyX0uDabg+wHiq_vTBFbUST-nRdur7cCPB2myhCWhg@mail.gmail.com>
-Subject: Re: [PATCH] mseal sysmap: add arch-support txt
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: akpm@linux-foundation.org, Liam.Howlett@oracle.com, agordeev@linux.ibm.com, 
-	borntraeger@linux.ibm.com, gor@linux.ibm.com, hca@linux.ibm.com, 
-	kees@kernel.org, linux-hardening@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, svens@linux.ibm.com, 
-	thomas.weissschuh@linutronix.de
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Wed, Mar 12, 2025 at 10:21=E2=80=AFPM Lorenzo Stoakes
-<lorenzo.stoakes@oracle.com> wrote:
->
-> On Thu, Mar 13, 2025 at 12:06:23AM +0000, jeffxu@chromium.org wrote:
-> > From: Jeff Xu <jeffxu@chromium.org>
-> >
-> > Add Documentation/features/core/mseal_sys_mappings/arch-support.txt
-> >
-> > Signed-off-by: Jeff Xu <jeffxu@chromium.org>
-> > ---
-> >  .../core/mseal_sys_mappings/arch-support.txt  | 30 +++++++++++++++++++
-> >  1 file changed, 30 insertions(+)
-> >  create mode 100644 Documentation/features/core/mseal_sys_mappings/arch=
--support.txt
-> >
-> > diff --git a/Documentation/features/core/mseal_sys_mappings/arch-suppor=
-t.txt b/Documentation/features/core/mseal_sys_mappings/arch-support.txt
-> > new file mode 100644
-> > index 000000000000..8db637254de9
-> > --- /dev/null
-> > +++ b/Documentation/features/core/mseal_sys_mappings/arch-support.txt
-> > @@ -0,0 +1,30 @@
-> > +#
-> > +# Feature name:          mseal-system-mappings
-> > +#         Kconfig:       ARCH_SUPPORTS_MSEAL_SYSTEM_MAPPINGS
-> > +#         description:   arch supports mseal system mappings
-> > +#
-> > +    -----------------------
-> > +    |         arch |status|
-> > +    -----------------------
-> > +    |       alpha: | TODO |
-> > +    |         arc: | TODO |
-> > +    |         arm: |  N/A |
-> > +    |       arm64: |  ok  |
-> > +    |        csky: | TODO |
-> > +    |     hexagon: | TODO |
-> > +    |   loongarch: | TODO |
-> > +    |        m68k: | TODO |
-> > +    |  microblaze: | TODO |
-> > +    |        mips: | TODO |
-> > +    |       nios2: | TODO |
-> > +    |    openrisc: | TODO |
-> > +    |      parisc: | TODO |
-> > +    |     powerpc: | TODO |
-> > +    |       riscv: | TODO |
-> > +    |        s390: |  ok  |
-> > +    |          sh: | TODO |
-> > +    |       sparc: | TODO |
-> > +    |          um: | TODO |
-> > +    |         x86: |  ok  |
-> > +    |      xtensa: | TODO |
-> > +    -----------------------
-> > --
-> > 2.49.0.rc0.332.g42c0ae87b1-goog
-> >
->
-> I mean fine, but why not in the existing mseal documentation file where y=
-ou
-> already document system mappings?
->
-you mean adding s390 in the mseal.rst ? I thought Heiko was going to
-add that ? [1], maybe not ?
+Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
+a flexible structure where the size of the flexible-array member
+is known at compile-time, and refactor the rest of the code,
+accordingly.
 
-From the example given by Heiko [1] , arch-support.txt is the official
-way of documenting arch specific support. But adding these info in
-mseal.rst won't hurt.
+So, with these changes, fix the following warning:
 
-> Plus I feel this need expansion a bit 'N/A' is because of being non-64 bi=
-t
-> right?
->
-Below is the definition of N/A in Documentation/features/arch-support.txt
-   | N/A|  # feature doesn't apply to the architecture
+drivers/firewire/core-cdev.c:1141:38: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
-It fits the arm case because mseal is not supported in 32 bit.
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+Changes in v2:
+ - Adjust COUNT argument for DEFINE_RAW_FLEX() to 64. (Takashi)
 
-> Actually this will change soon btw, based on Matthew's idea I plan to dro=
-p the
-> 32-bit vma flags limit.
->
-Okay, we can update this section to TODO when 32-bit vma flags are
-expanded. Based on past comments, I gather we want the document to
-reflect the current state of the kernel, not future features.
+v1:
+ - Link: https://lore.kernel.org/linux-hardening/Z9AA9tAbcIcz6BMO@kspp/
 
-> Anyway yeah, let's move that over there please.
+ drivers/firewire/core-cdev.c | 42 ++++++++++++++++--------------------
+ 1 file changed, 19 insertions(+), 23 deletions(-)
 
-I'm looking at Heiko's direction first to see if mseal.rst will be
-updated as part of the s390 patch, technically that belongs to Heiko's
-patch series. I can also add that if Heiko doesn't care :-)
+diff --git a/drivers/firewire/core-cdev.c b/drivers/firewire/core-cdev.c
+index b360dca2c69e..bd04980009a4 100644
+--- a/drivers/firewire/core-cdev.c
++++ b/drivers/firewire/core-cdev.c
+@@ -1137,10 +1137,7 @@ static int ioctl_queue_iso(struct client *client, union ioctl_arg *arg)
+ 	unsigned long payload, buffer_end, transmit_header_bytes = 0;
+ 	u32 control;
+ 	int count;
+-	struct {
+-		struct fw_iso_packet packet;
+-		u8 header[256];
+-	} u;
++	DEFINE_RAW_FLEX(struct fw_iso_packet, u, header, 64);
+ 
+ 	if (ctx == NULL || a->handle != 0)
+ 		return -EINVAL;
+@@ -1172,29 +1169,29 @@ static int ioctl_queue_iso(struct client *client, union ioctl_arg *arg)
+ 	while (p < end) {
+ 		if (get_user(control, &p->control))
+ 			return -EFAULT;
+-		u.packet.payload_length = GET_PAYLOAD_LENGTH(control);
+-		u.packet.interrupt = GET_INTERRUPT(control);
+-		u.packet.skip = GET_SKIP(control);
+-		u.packet.tag = GET_TAG(control);
+-		u.packet.sy = GET_SY(control);
+-		u.packet.header_length = GET_HEADER_LENGTH(control);
++		u->payload_length = GET_PAYLOAD_LENGTH(control);
++		u->interrupt = GET_INTERRUPT(control);
++		u->skip = GET_SKIP(control);
++		u->tag = GET_TAG(control);
++		u->sy = GET_SY(control);
++		u->header_length = GET_HEADER_LENGTH(control);
+ 
+ 		switch (ctx->type) {
+ 		case FW_ISO_CONTEXT_TRANSMIT:
+-			if (u.packet.header_length & 3)
++			if (u->header_length & 3)
+ 				return -EINVAL;
+-			transmit_header_bytes = u.packet.header_length;
++			transmit_header_bytes = u->header_length;
+ 			break;
+ 
+ 		case FW_ISO_CONTEXT_RECEIVE:
+-			if (u.packet.header_length == 0 ||
+-			    u.packet.header_length % ctx->header_size != 0)
++			if (u->header_length == 0 ||
++			    u->header_length % ctx->header_size != 0)
+ 				return -EINVAL;
+ 			break;
+ 
+ 		case FW_ISO_CONTEXT_RECEIVE_MULTICHANNEL:
+-			if (u.packet.payload_length == 0 ||
+-			    u.packet.payload_length & 3)
++			if (u->payload_length == 0 ||
++			    u->payload_length & 3)
+ 				return -EINVAL;
+ 			break;
+ 		}
+@@ -1204,20 +1201,19 @@ static int ioctl_queue_iso(struct client *client, union ioctl_arg *arg)
+ 		if (next > end)
+ 			return -EINVAL;
+ 		if (copy_from_user
+-		    (u.packet.header, p->header, transmit_header_bytes))
++		    (u->header, p->header, transmit_header_bytes))
+ 			return -EFAULT;
+-		if (u.packet.skip && ctx->type == FW_ISO_CONTEXT_TRANSMIT &&
+-		    u.packet.header_length + u.packet.payload_length > 0)
++		if (u->skip && ctx->type == FW_ISO_CONTEXT_TRANSMIT &&
++		    u->header_length + u->payload_length > 0)
+ 			return -EINVAL;
+-		if (payload + u.packet.payload_length > buffer_end)
++		if (payload + u->payload_length > buffer_end)
+ 			return -EINVAL;
+ 
+-		if (fw_iso_context_queue(ctx, &u.packet,
+-					 &client->buffer, payload))
++		if (fw_iso_context_queue(ctx, u, &client->buffer, payload))
+ 			break;
+ 
+ 		p = next;
+-		payload += u.packet.payload_length;
++		payload += u->payload_length;
+ 		count++;
+ 	}
+ 	fw_iso_context_queue_flush(ctx);
+-- 
+2.43.0
 
-Thanks
--Jeff
-
-[1]https://lore.kernel.org/all/20250312153946.10610B02-hca@linux.ibm.com/
