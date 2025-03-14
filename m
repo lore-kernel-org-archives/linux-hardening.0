@@ -1,43 +1,43 @@
 Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8731F201032;
-	Fri, 14 Mar 2025 14:38:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67EA3202988;
+	Fri, 14 Mar 2025 14:38:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741963133; cv=none; b=sH86jOCfQNgte5tcgmGd8snHkcXUsrLgSnrSPlvywm0Wj0IA4LXFkQWioKCOZpWbm9VDz3KG5zZ7ugc9uajfoMVm4j34XI7LpUHQHhmVvPT/Ec8UjdTY911qn2af2YhMHZdmYrgC3bylT2a7RO/wtbwJswaqdK64b/wwZeoPqwc=
+	t=1741963133; cv=none; b=dKmPOAUuMZkdjjQSLcYnWgempyKqWymnyVwZga7H82WziovPr7jFz89vi6aarrM1bACu15o3z7oiTCs+Zb5ktmF3adXo2/aNkijNdRzIRr6KpEgMytmU5pfvVK4cc13SxxuAbSPA+kgy+AEcZ17l4+UhYHzjGh44U7PT0s9v++I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741963133; c=relaxed/simple;
-	bh=HJCET7mgulLHspf8Gs5iMvlePcTNhhZdDgqmCsIb31g=;
+	bh=omVwGwH+tvai1xWEI2/VPAx6grba7+WPfxfB6hPpCok=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=qzJrGwDrFieEtkm1AR1Rsxt63OPIJoVINPr3V5uJrNVY9OyYt4Th0a5dOE1ovPaPyGu2J76Fz2c2iQiw4KgO0TNj6VOmWUC48lC0Swt/9tkSp9mhxrdiooMeeaTCTLIvqgBMI635M8w3cajZhiWai+G9afc4yKyxdixSCb4d6Kg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com; spf=pass smtp.mailfrom=ethancedwards.com; dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b=SJWo0IRt; arc=none smtp.client-ip=80.241.56.171
+	 In-Reply-To:To:Cc; b=gH3/pYe7k4hT9kdKrNm00vKKlyQaLT1lNAhwLoxCJh4ImCzORxiqTC8wZcyJCqKGVRg8eSWgg1W0pzFA9Xtm4HwTihjn2JFu3zYNvqM1TqLwzg3mrOUIs2jImoLEhpzFIajMImyUjrTBHfkaFMG1klcVX9/BrUHJA7zEKTHaBdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com; spf=pass smtp.mailfrom=ethancedwards.com; dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b=kT3EnxgA; arc=none smtp.client-ip=80.241.56.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ethancedwards.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b="SJWo0IRt"
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
+	dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b="kT3EnxgA"
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4ZDn6j4Kn6z9t1F;
-	Fri, 14 Mar 2025 15:38:37 +0100 (CET)
+	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4ZDn6n4VbXz9scL;
+	Fri, 14 Mar 2025 15:38:41 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ethancedwards.com;
-	s=MBO0001; t=1741963117;
+	s=MBO0001; t=1741963121;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=IbP/x9WUX07vvJ4O8R+Y29AUaRRBKVspNcjX165mDgw=;
-	b=SJWo0IRtWizU4CfG2vojgF5L3kf3R5YbjsOfWreH7iUT2cDJtFK03zctqnR7TnPV0bPHH1
-	X46MMMeepwjYG9Q+7QSpXv9rwH+XidRVblTNs2fqxYUBDP66qjBucSgnF/uk4serwx7Jlt
-	RumIe5M6C9orIX4ZsgXTx7r3iA1BSz5BCbBubMO+NpsMPWDWlQe2OPRju6Y0sQL63nvOmB
-	TteuiIyZp1Fc6e3J/l8lUcODCgMnpdtxlbDlivk+MRcuocq82Y8AZzesTKmcmqIOdCyC+c
-	ZUjuR35zkqQ4+S3hYcmGsWV54JNL2BTiEIEyNfhxP1aEyEZCyXkHMeDT2IqKQw==
+	bh=Yl6oKjE2VPFEN1ImI40/0DFO/bK2RZZ4SFwIfhRzkX8=;
+	b=kT3EnxgAy4hGUd0isbaVaSLESqzhlDddxebZVLD3LohYQFxAKISB9nG/6sAyN4zX6EQ9NZ
+	tth7TJSjLyUifn1mXad59IzLDdcxonQue1b5TsMYqgU/nvX1p6yeitsd4KCazP1awugRPT
+	i4ibzHgLO0hMl0LDKW5C6iM6x/SlzyRikqfL7xdVNiXG+2MPRrwQ1rd+ojUSB3Hf/FpL18
+	xjEqoMBe3yaEqCK3LwhlMKPbWGJCgKvETfJAVAImdAkMOxorDVbnrC84+xka5da/Gzs+Eg
+	SHsxlfCq4KSTfAtyQabMwHC8u3OtCBUsE/qKDZz5lipULYRF9OwQHF7qJ9ADVQ==
 From: Ethan Carter Edwards <ethan@ethancedwards.com>
-Date: Fri, 14 Mar 2025 10:38:22 -0400
-Subject: [PATCH 2/4] ASoC: Intel: ssm4567: move devm_kzalloc(..., size * n,
- ...) to devm_kcalloc
+Date: Fri, 14 Mar 2025 10:38:23 -0400
+Subject: [PATCH 3/4] ASoC: Intel: max98373: move devm_kzalloc(..., size *
+ n, ...) to devm_kcalloc
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -46,7 +46,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250314-sound-avs-kcalloc-v1-2-985f2734c020@ethancedwards.com>
+Message-Id: <20250314-sound-avs-kcalloc-v1-3-985f2734c020@ethancedwards.com>
 References: <20250314-sound-avs-kcalloc-v1-0-985f2734c020@ethancedwards.com>
 In-Reply-To: <20250314-sound-avs-kcalloc-v1-0-985f2734c020@ethancedwards.com>
 To: Cezary Rojewski <cezary.rojewski@intel.com>, 
@@ -61,14 +61,14 @@ To: Cezary Rojewski <cezary.rojewski@intel.com>,
 Cc: gustavoars@kernel.org, linux-sound@vger.kernel.org, 
  linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
  Ethan Carter Edwards <ethan@ethancedwards.com>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1196;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1203;
  i=ethan@ethancedwards.com; h=from:subject:message-id;
- bh=HJCET7mgulLHspf8Gs5iMvlePcTNhhZdDgqmCsIb31g=;
+ bh=omVwGwH+tvai1xWEI2/VPAx6grba7+WPfxfB6hPpCok=;
  b=LS0tLS1CRUdJTiBQR1AgTUVTU0FHRS0tLS0tCgpvd0o0bkp2QXk4ekFKWGJEOXFoNThlVGp6e
- GhQcXlVeHBGK3hUNUNQYnBYaUVaZ3o3Kzh0b2R2Tk9qZGFibVV0CmE3dVZ3bDJVdERsME51ZGVD
- OWVPVWhZR01TNEdXVEZGbHY4NXlta1BOV2NvN1B6cjBnUXpoNVVKWkFnREY2Y0EKVEVUckxzTi9
- qdzBtbTR1TTUrV2VLTDlvRWFRVXJmcHJqZmNMYldlaEpoMGVxdzNNL1ZLUEdmNm55T1F0ZVYvMQ
- pNdEpNOWFLN3lhRTE4NnM5YXVZRS9QWGN2VVAweFUzSlNWNDhBSXdqU3FNPQo9R2RBZgotLS0tL
+ GhQcXlVeHBGK3hUNWpFWW1UMGlIMy8zQTl6ODhKQ1huS3pYK3QrCkh2cythZHVDd3duaXBlb3k2
+ MDA3U2xrWXhMZ1laTVVVV2Y3bktLYzkxSnloc1BPdlN4UE1IRllta0NFTVhKd0MKTUJFbFBvYi9
+ 1ZXpwR3h5RmY4MjF0TnJ2M25yckd1TzlIZkUxU1o0MzVwYW1QZiswYkFhbkN5TkRqLzYyM0sxeQ
+ p2N2I4eUZzUzdzelllWHhoZDR6djB0M1h1aVkzemRkN1VxUERBUURldDB4dgo9S2hCSwotLS0tL
  UVORCBQR1AgTUVTU0FHRS0tLS0tCg==
 X-Developer-Key: i=ethan@ethancedwards.com; a=openpgp;
  fpr=2E51F61839D1FA947A7300C234C04305D581DBFE
@@ -80,14 +80,14 @@ Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-
 
 Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
 ---
- sound/soc/intel/avs/boards/ssm4567.c | 2 +-
+ sound/soc/intel/avs/boards/max98373.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/intel/avs/boards/ssm4567.c b/sound/soc/intel/avs/boards/ssm4567.c
-index c9d89bfe7178cd6acba0797c56e56462d7c41d8d..7667790d52739b98b97d2bc9fc9496da82affef1 100644
---- a/sound/soc/intel/avs/boards/ssm4567.c
-+++ b/sound/soc/intel/avs/boards/ssm4567.c
-@@ -97,7 +97,7 @@ static int avs_create_dai_link(struct device *dev, const char *platform_name, in
+diff --git a/sound/soc/intel/avs/boards/max98373.c b/sound/soc/intel/avs/boards/max98373.c
+index 6f25e66344b7a4b46d6598619b6b1362cad8c39e..970f82bf4ce8920b1965a0b81e8623ab5bf91ef1 100644
+--- a/sound/soc/intel/avs/boards/max98373.c
++++ b/sound/soc/intel/avs/boards/max98373.c
+@@ -111,7 +111,7 @@ static int avs_create_dai_link(struct device *dev, const char *platform_name, in
  	dl->name = devm_kasprintf(dev, GFP_KERNEL,
  				  AVS_STRING_FMT("SSP", "-Codec", ssp_port, tdm_slot));
  	dl->cpus = devm_kzalloc(dev, sizeof(*dl->cpus), GFP_KERNEL);
