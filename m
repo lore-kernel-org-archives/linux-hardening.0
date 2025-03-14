@@ -1,118 +1,164 @@
-Received: from mail.netfilter.org (mail.netfilter.org [217.70.190.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B6561FF613;
-	Fri, 14 Mar 2025 12:38:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.190.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42E8218A6D7;
+	Fri, 14 Mar 2025 13:06:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741955886; cv=none; b=SBhIWwR/oJNhDIvwcWh/LkpbqEiGrUENxe5P9Ntw00hr9a+4Ppl4oU7qax25mWoBVhaq6lKIEVfCfOTMD1kxdeo9PQRD5gxvk4YwKC2namDFkLTXk45UOE1HJa6B1HL9Oe50Ny7Aj1TH0kKSnhUL8jEU4CxlKXUDveq4nqK+2Uw=
+	t=1741957584; cv=none; b=MgbhYcVyEpO/4QbPNWCCMpZjgf93fC8wZI1N8d11KE4wv/0ujHIQvpZxLrxWgqgbEAiy10VT2lgKjnr0/iQX57hP2HHruWz3pRt0mHHL64WilBBSCWaakK6/hll04aWTA2PSlN3n9l7DRPMVoLSdxckAG+277qOlX5vhvqyphZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741955886; c=relaxed/simple;
-	bh=p9mM05uTuuSxp/itWQ1aYr7D/Kek2qjOInkizONDbWo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QxIVw0mOjzlndXMK6hNiB5WuueZ2lIsdmInqjKIh9Bq3Tt7wn7zjJLim7AYDc4iQdr6R+ruN3JQUyS2RgOKNKvQ35xJFb3mvNyY/hBfyWUNcZePZ4VB5NoJtpDak7imQfLwVHlG8U6cHkjYsqCS6ahcPPOtnSznz/HfqxkRB7Do=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=netfilter.org; spf=pass smtp.mailfrom=netfilter.org; dkim=pass (2048-bit key) header.d=netfilter.org header.i=@netfilter.org header.b=KOe75BT5; dkim=pass (2048-bit key) header.d=netfilter.org header.i=@netfilter.org header.b=GSRWPm72; arc=none smtp.client-ip=217.70.190.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=netfilter.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netfilter.org
+	s=arc-20240116; t=1741957584; c=relaxed/simple;
+	bh=pvKDOhhPmz+nkonLGF4cGCVxtZnaV+RBHXBkesdmSXU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uHN/1FZTtQ4DmQ4swtJr5O/GaspRICadnTIzFhYimH987CWQwwQKCdEQ3AlRK/L9v0Cm0ONNuprUPhv64AQHJs+NjgY8QEUZRkoeBC+XhiGkA5Uha46TSSVFegdrEAf+kCfETA+Jow4C8exmG8IxHcLnmc7cilG3KHHER8A0e+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ePnssBkq; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=netfilter.org header.i=@netfilter.org header.b="KOe75BT5";
-	dkim=pass (2048-bit key) header.d=netfilter.org header.i=@netfilter.org header.b="GSRWPm72"
-Received: by mail.netfilter.org (Postfix, from userid 109)
-	id 30568603C7; Fri, 14 Mar 2025 13:37:52 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=netfilter.org;
-	s=2025; t=1741955872;
-	bh=rPmJhpBheVqSUhPhE5IrqXg0aOCdmG4JQWmir+xGcw0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KOe75BT5fdnVHqcLuHnE+/zbg0SqDkpt1vfmqUe9yn1VV6HS8oANUox2ECks/ogIY
-	 EeLVs1iaZfaFreMKCYahqzFQX6UgjLAZf2QfbWhtfEDUXQBt8hE3ir6e3Xh6BHGjIw
-	 ChuJ1sV/aHOMZvjZvfmxgfW53YS1rPIdOZOnF5YVPpsvOlVZR5xyFVZh4Olt2gNTKF
-	 gE09asYyfShSEwkMudB9qoX4KPV7wsRRTxn/QPiBDLlG1uXVAAeZEjr+2VO9u+rmP3
-	 QpuagjteSJVQj35cv33ria3JWbJbntOyQKoF+sDIr1CXVS0dN8PBmF26uGX05XoQ5P
-	 xqgrOCHGtAykg==
-X-Spam-Level: 
-Received: from netfilter.org (mail-agni [217.70.190.124])
-	by mail.netfilter.org (Postfix) with ESMTPSA id 94C35603BE;
-	Fri, 14 Mar 2025 13:37:46 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=netfilter.org;
-	s=2025; t=1741955866;
-	bh=rPmJhpBheVqSUhPhE5IrqXg0aOCdmG4JQWmir+xGcw0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GSRWPm72uFyqXTyUIJzzcpsMAUkh40VOnAyEcDD7VyG9eADghYPABLGJQdrSQUmwp
-	 ADzLKsqM/OgNyItHC69MGJkQMY9vFkOIUWclF/hPBeKglTj3RXqIqewOnLmq+PRo5T
-	 wjdPi1wutXLVs+jy6NHGkOQEk4SHS/ftJBZporkZBy527X5e0XMXYM6LO/tD+9fKvu
-	 F8vQ+5giSRhYXullElHg/Tqy98titObJDDwX9UcKwlJBqw8xzb4xomAVpVz7rskQ7K
-	 C+YlaTlzzdrM+cysMJNyirwtjrLw3dDIGKi0pAraMhKV0pHJ70SUuYzFCESM0rIWNj
-	 MBwY2wueKzqNQ==
-Date: Fri, 14 Mar 2025 13:37:43 +0100
-From: Pablo Neira Ayuso <pablo@netfilter.org>
-To: Eric Woudstra <ericwouds@gmail.com>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	Nikolay Aleksandrov <razor@blackwall.org>,
-	Roopa Prabhu <roopa@nvidia.com>, Ivan Vecera <ivecera@redhat.com>,
-	Jiri Pirko <jiri@resnulli.us>,
-	Jozsef Kadlecsik <kadlec@netfilter.org>,
-	Simon Horman <horms@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Andrew Lunn <andrew+netdev@lunn.ch>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, netfilter-devel@vger.kernel.org,
-	coreteam@netfilter.org, bridge@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, linux-hardening@vger.kernel.org,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Ahmed Zaki <ahmed.zaki@intel.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	Frank Wunderlich <frank-w@public-files.de>,
-	Daniel Golle <daniel@makrotopia.org>
-Subject: Re: [PATCH v9 nf 00/15] bridge-fastpath and related improvements
-Message-ID: <Z9QjF5LhavodVA4Y@calendula>
-References: <20250305102949.16370-1-ericwouds@gmail.com>
- <897ade0e-a4d0-47d0-8bf7-e5888ef45a61@gmail.com>
- <Z9DKxOnxr1fSv0On@calendula>
- <58cbe875-80e7-4a44-950b-b836b97f3259@gmail.com>
- <Z9IUrL0IHTKQMUvC@calendula>
- <02b97708-1214-4fa4-a011-70388cff8f79@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ePnssBkq"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3913fdd003bso1107743f8f.1;
+        Fri, 14 Mar 2025 06:06:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741957579; x=1742562379; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4SFpGYCDodlkPXivSr5gqPpw/Y4gMd19OkUZwBMUB8Y=;
+        b=ePnssBkqoGeGqkHbWsGtr5JRHxO6WNwUbXTiC24G298H1qDhkOIBI5oZOtlTWd2Voj
+         zl9mCsR/BKfX2uTOBoxiJGsMUbo34rs9COVNUw+HRBYW9S7eTvRA+i1Gs09Aiqf2qK84
+         zU7dJdLE/RcdTep9ij7x5DEyu3hlV18BayX3dd0WwmJL4S+bBbnRu9GrsLWP96UI+ngE
+         q9v3PJZcRD5mzW+rN0ELPFL2nWE6MwPaKQzEovrUxXOqTbWmdp3n9yl8pQw7roF6B97k
+         asg8c7b5cXIAgVMASX0FqckTBt+QBrWRN5iFJJyb8Ygcb495StBmRBWtTJQos3jk9nvv
+         U4AQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741957579; x=1742562379;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4SFpGYCDodlkPXivSr5gqPpw/Y4gMd19OkUZwBMUB8Y=;
+        b=vO99RsejxhgbCL0IhEp4DpsErUqA5LjK2aQYPBHRTofLGw2KAAoUuwxr4CLtUQvCSL
+         e9+S9BvMpzQcoO/9MqPvIy4aoMFN9bLlwOmhv3h5BH5Tibqd4lTRhC2ftALcWhQeAAU+
+         k2IsVMwCnNm1KhVfcb4lr09aB1Tv25Y/5ptOxlS7PEoY9wdBy1l7MWj5LKnPL9EYGC9Y
+         hSYQ0N13sjwfXQ9v+UiVyjxziqHvu/Tna8vFSwSF7sBr1R/MyH+FFluBn+P/XETkU2jO
+         pa/0GsyfG8cA9xfkmULwniokMoj76O/mrSXUaJgkGHKgXx5xPWxttvvX4jOGFVdm6x3G
+         JNTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVH2qYzC5qz/in2CaqiC8OkRjYkElpAFYXO+2AVcRjyn+TWJGnTwnDBJe25MQ9vLfKpyI4fZDQHOGkzPSbndMg=@vger.kernel.org, AJvYcCVaF4+CfMLRZPvhO39o/oodqlQyNzrW6jZJD3T3B5cZsrpgZP2JwhSopjoBY4rM+Ig4Cd14xvmH4zAznlT+@vger.kernel.org, AJvYcCWDyjqfy5ocL3D4NUIIaFPtVs1MUWCpM/6rdek3krY9TEz1v9hda78KuSs4uc+4l+cvkZX5zaNKHObFkA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxStquK4IZtsBA0pr+7TgpDrJj0kX2cizcq9aVMv3LOUTTu+8sQ
+	S8YupaMahEgtU2giGyi07XZmjXvnO6dernoZagtgsA2plC+oGzAv
+X-Gm-Gg: ASbGncuHx3ZONZ1PUVy4Igx959RTxsUtXRt8JJuVDuL8GFaxKUSO1G+rionyQWIISLM
+	1Vmt78iN68JD2qxrqLo64JqLFnTXGvl+voDFYhB+O4f0E/xr0s9ggjy6pcPT0M9InLbfGPRsXX7
+	hIJALPiMGKBggIyusrprBEC+3BIZxxgbRQfjTUuEfPS2f55JnHx7kyRa7OR5omh4YSq5zcH32tH
+	S3Sql3TMJK43N+O9HCRDjCc4qnLCEhyZdUiI4HftzfJ+ylqdtE+kji9lyp5OB1EIR7EhFT3jeZW
+	4Bq2ef7sC97xzyS6O0PO+dajMOaLFimAUBfUrMdWCGGej+wvcyObCMEb47DW31wpGz0oaD4MBE7
+	0CB+V5Dg=
+X-Google-Smtp-Source: AGHT+IFB9fJVxXR1+YasAAcJ2EjdchnXbaSLip2HmpU3n9g2YMrKc6gqwWkOEaCEXbcelPEursA9xQ==
+X-Received: by 2002:a05:6000:1acd:b0:390:dec3:2780 with SMTP id ffacd0b85a97d-3971dae92ddmr3160856f8f.24.1741957579032;
+        Fri, 14 Mar 2025 06:06:19 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395c7df3506sm5720789f8f.11.2025.03.14.06.06.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Mar 2025 06:06:18 -0700 (PDT)
+Date: Fri, 14 Mar 2025 13:06:14 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: Kees Cook <kees@kernel.org>
+Cc: Jack Wang <jinpu.wang@cloud.ionos.com>, "James E.J. Bottomley"
+ <James.Bottomley@HansenPartnership.com>, "Martin K. Petersen"
+ <martin.petersen@oracle.com>, linux-scsi@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] scsi: pm80xx: Use C String API for string
+ comparisons
+Message-ID: <20250314130614.729131f6@pumpkin>
+In-Reply-To: <20250312200532.it.808-kees@kernel.org>
+References: <20250312200532.it.808-kees@kernel.org>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <02b97708-1214-4fa4-a011-70388cff8f79@gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Mar 13, 2025 at 07:01:38PM +0100, Eric Woudstra wrote:
+On Wed, 12 Mar 2025 13:05:36 -0700
+Kees Cook <kees@kernel.org> wrote:
+
+> When a character array without a terminating NUL character has a static
+> initializer, GCC 15's -Wunterminated-string-initialization will only
+> warn if the array lacks the "nonstring" attribute[1]. There is no reason
+> for the command lookup logic to not use strcmp(), so grow the string
+> length and update the check to eliminate the warning:
 > 
+> ../drivers/scsi/pm8001/pm8001_ctl.c:652:7: warning: initializer-string for array of 'unsigned char' truncates NUL terminator but destination lacks 'nonstring' attribute (9 chars into 8 available) [-Wunterminated-string-initialization]
+>   652 |      {"set_nvmd",    FLASH_CMD_SET_NVMD},
+>       |       ^~~~~~~~~~
 > 
-> On 3/13/25 12:11 AM, Pablo Neira Ayuso wrote:
+
+Did you look at the code just before it?
+It is horrid beyond belief.
+
+The function parameters include 'buf' and 'count'.
+There is no real indication buf[] is '\0' terminated, but it does:
+
+	cmd_ptr = kcalloc(count, 2, GFP_KERNEL);
+	if (!cmd_ptr) {
+		pm8001_ha->fw_status = FAIL_OUT_MEMORY;
+		return -ENOMEM;
+	}
+
+	filename_ptr = cmd_ptr + count;
+	res = sscanf(buf, "%s %s", cmd_ptr, filename_ptr);
+
+The search loop is then using cmd_ptr.
+It only needs to find the separating ' ', no need to copy anything.
+
+
+> Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=117178 [1]
+> Signed-off-by: Kees Cook <kees@kernel.org>
+> ---
+> In taking another look at this, I realize that actually strcmp() should be used,
+> so just grow the size of this character array and use strcmp().
+>  v1: https://lore.kernel.org/lkml/20250310222553.work.437-kees@kernel.org/
+>  v2: Use strcmp()
+> ---
+> Cc: Jack Wang <jinpu.wang@cloud.ionos.com>
+> Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
+> Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
+> Cc: linux-scsi@vger.kernel.org
+> ---
+>  drivers/scsi/pm8001/pm8001_ctl.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
 > 
-> >> What do you suggest?
-> > 
-> > Probably I can collect 4/15 and 5/15 from this series to be included
-> > in the next pull request, let me take a look. But it would be good to
-> > have tests for these two patches.
-> > 
-> 
-> These are not most important to bridge-fastpath, but it gives extra
-> possibilities. How about concentrating first on patch 2/15 (with 1/15
-> removing a warning and 3/15 cleaning up), adding nf_flow_encap_push()
-> for xmit direct? It is a vital patch for the bridge-fastpath.
+> diff --git a/drivers/scsi/pm8001/pm8001_ctl.c b/drivers/scsi/pm8001/pm8001_ctl.c
+> index 85ff95c6543a..bb8fd5f0f441 100644
+> --- a/drivers/scsi/pm8001/pm8001_ctl.c
+> +++ b/drivers/scsi/pm8001/pm8001_ctl.c
+> @@ -644,7 +644,7 @@ static DEVICE_ATTR(gsm_log, S_IRUGO, pm8001_ctl_gsm_log_show, NULL);
+>  #define FLASH_CMD_SET_NVMD    0x02
+>  
+>  struct flash_command {
+> -     u8      command[8];
+> +     u8      command[9];
+>       int     code;
 
-I see cleanup patch 3/15 is a consequence of 2/15, let me take a look.
+'code' can only be 0/1/2 - so could be u8 to remove the padding.
 
-> Anyway, I will look into writing selftests for conntrack-bridge setup,
-> including various vlan setups. This will take me some time, which I
-> do not have in abundance, so for that I do not know if I get it done
-> before the merge window.
+>  };
+>  
+> @@ -825,8 +825,7 @@ static ssize_t pm8001_store_update_fw(struct device *cdev,
+>  	}
+>  
+>  	for (i = 0; flash_command_table[i].code != FLASH_CMD_NONE; i++) {
+> -		if (!memcmp(flash_command_table[i].command,
+> -				 cmd_ptr, strlen(cmd_ptr))) {
+> +		if (!strcmp(flash_command_table[i].command, cmd_ptr)) {
+>  			flash_command = flash_command_table[i].code;
 
-There is tools/testing/selftests/net/netfilter/nft_flowtable.sh that
-can possibly be extended to improve coverage.
+This looks like a API change since an unique initial portion used to
+be enough. the strcmp() requires a full match.
 
-Thanks.
+	David
+
+>  			break;
+>  		}
+
