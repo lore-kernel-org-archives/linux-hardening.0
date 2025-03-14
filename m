@@ -1,64 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87F661DAC81;
-	Fri, 14 Mar 2025 08:58:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A37641F0997
+	for <linux-hardening@vger.kernel.org>; Fri, 14 Mar 2025 10:31:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741942699; cv=none; b=pe8FeN2QqPLwem7mczTiD6yEJqbvcrRbobFpJ6GVojsQ+baBNZ9Plszl74gRniXakna7DfuQ47pn+KWpMAK+ntjEl6BI6Xkc7SItWw2fGrdS9QNJL/IiMW4TgsDMWeVigmKDVWJIP2QKo7u9FFhspbdgZLvplkOlF4+e0v0B7+s=
+	t=1741948285; cv=none; b=DF1hZk53KFg0bxqZL4Eus2EHk6gDwICaX/eP3K5jS9vsfXL6QOweQLEVVnW5eJR2nzWM5IfmfcxERgANuW7vM7NfERwtkcz9nf9/FuogD+5KkKp0zyQHMQTGVrOhHGD8TPIv2FPYcoDDJwkaRuglls0Mhda6ZXejtjMqq2zdjN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741942699; c=relaxed/simple;
-	bh=3mIJSm06YxRGhx1k9fxKkWTTiVXafceuKeP4nRH10+4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sAxYWYiSuNLK2HMcxk9XKQ+QVrwdaS4PfBGhUVDMg2P6F5l5yOUvm5vzdK1Fq+PoLnn/7yKVyXxPBMlkj/jQhZ/m6/SpdBCb/KoJ5c98JuLAywQH9xR/xLAYTnWYnBMNvIUgalR8+6lAQ4+70bDmPYD3S4fEwyxpFmbwmRWyAU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oH2SDzvC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741948285; c=relaxed/simple;
+	bh=nNTlIP64VWuaxH6vlQJigqC7wOX/ArX0l0vWy7DI/vI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jhny99S3I5/zML4ltaCpSfgDPxhpzPBiUyArrQ02LH7BxTAVjXZfjF5C91NRoGCsR/jmUWtV7ZRxTZWiOyqzMWT5EdXx2UYEPY76kDiWsHVOpwx8NX+lHBohMEpMXyyuEhkU66m/KQsCsXImLSdGoD/C5uB0gWL/SPz/I/K7FgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HJsjKuBv; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oH2SDzvC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB311C4CEE5;
-	Fri, 14 Mar 2025 08:58:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741942699;
-	bh=3mIJSm06YxRGhx1k9fxKkWTTiVXafceuKeP4nRH10+4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oH2SDzvCb26vKBz2jjfDjEUORM/o+zOTu6tdhyp2vSOjmgsv1qaxoUK7CS94utsQf
-	 JDCMZ/2B0RfV9xsoHBETGGm+zCYJERnQZR823z6kpr7y/KlWGUV/qz8UOO4SBxLVsa
-	 XTWQSG2O3c0TD8Pj9G1Tsg44usnZ8wCw+u+R5WhNP18ATlj/+UnHsm8YOo2ehhHjxX
-	 P/3PYzxh8cMHRp9lCClxBKjZODLeridLCryg2lqcr54L+3krFA1ETC2gNRRe11Sr48
-	 6MrSDiET9u0Zz9h1uc795xDyjcNm8GWiTAy+xJ+ZIaNbEd2QbakO06MvoArx2Y6Bbq
-	 1emc8fnLp+pQw==
-Date: Fri, 14 Mar 2025 08:58:15 +0000
-From: Tzung-Bi Shih <tzungbi@kernel.org>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Benson Leung <bleung@chromium.org>,
-	Guenter Roeck <groeck@chromium.org>, linux-rtc@vger.kernel.org,
-	chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2][next] rtc: Avoid a couple of
- -Wflex-array-member-not-at-end warnings
-Message-ID: <Z9Pvp4i4Mm4vAXSA@google.com>
-References: <Z9PpPg06OK8ghNvm@kspp>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HJsjKuBv"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5499c8fa0f3so2129529e87.2
+        for <linux-hardening@vger.kernel.org>; Fri, 14 Mar 2025 03:31:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741948282; x=1742553082; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nNTlIP64VWuaxH6vlQJigqC7wOX/ArX0l0vWy7DI/vI=;
+        b=HJsjKuBvRJuaQTAFz5gSufDxtM48jqo9Zwi7A2mCJEGkyY0Iy72vsyvGtqPb+0DqUB
+         7yJBjM5D73OaBwOK+vlYr3f0CfleUw9N0TWZC190rgoLpAyrwKC7UltJ8eZzMtlJ77Cu
+         PWkvfGUVsNqPmPyVumncXhdUXW+5GtT4kTHTq5/RVzJLkPRYXIc/ceeQksT6QEmqLjKL
+         ci8IvDmgg2lND/QLgQJquIcAOz03uD8dILAN5OjHx5fWv98UZ+LScUh/4gttKZMvQjUl
+         yhSnKW7JeV9PzxECod69dPKJC5sBpU8elhuyManjQQ59PjF+1clfxSwsd7S7NZ41w6qD
+         3k0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741948282; x=1742553082;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nNTlIP64VWuaxH6vlQJigqC7wOX/ArX0l0vWy7DI/vI=;
+        b=SZIRR17gITzXOG2HPc198Xq5R4yaNDyuK7zF5O+maMbNz488fbYOU71N9OQ3cPHPiP
+         vDDYjX+z3J1VRmHL9EgQ2KrKk3W20inoPhwSmI1z/T74swsmcSD7ox043o9iw4s1A3y0
+         W6g+ytQWZZnx/7hrCL6FguTfAhxPEm/cmN3RVYDZlawyHKgSFT78V4AcI3fSuUr7jb0/
+         DX8PnpgCtkPUBGqWu/x+c65irp+3SuSN9dl4vuIzPwbtF5k8MkeJZC/k+4iyAW7y+S+F
+         rLNksMFlwfuWKM3ibdmsI39OUnEgKod9YiFIVlD3Bjzvmr4sr++ZLpgDEhvB1Cn0supR
+         8UrA==
+X-Forwarded-Encrypted: i=1; AJvYcCXRIQOqkgQOrYCguqOpSRTysvVPCAsPA2qLWc6oSfNWJv6ujCW4uBtT/g6nZ5DUayyMlYqJPC9me+N0KTEhEu0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzdafr4naqbRSwPEZh3YCjZ+X4s79q4dzFXRK3Pn37XuGKCijQ8
+	6RLAkdcb0So6yCNd1RwanuD8QeTgW/R7qgQES526YnCuQtk/1Rxrp2UNB/fdy3IW4VHTAkYdXTy
+	q7gQuL2qHSYjvTT//T/UJWaRW6PoKY0wSnfzydwqC/lcmTVXF
+X-Gm-Gg: ASbGncth2UyVPbe11x5XmvXC551InuqCp+ZuS+A0n9eBD7c0PuvaFHwCO/G2Xqt28hA
+	1UNerDcqfpP8aCa1IPMfHQKKLkYTtYTZ9kxuNs9PdhOeLY2n22JNKt3kzLrhdpJ92H2jpMR4O+W
+	WVq12+wvhlfmdQXcDVjh19l9FwxqLsm6pfdA==
+X-Google-Smtp-Source: AGHT+IHHJVLG78L/tK6Q3XLixMJoXbS1n8+RbbB0s2hgbtfLNENuP47sykuixt2xNZY8ET4FhMdKzfG1ly56I7GxcgI=
+X-Received: by 2002:a05:6512:6cc:b0:549:7145:5d25 with SMTP id
+ 2adb3069b0e04-549c396e1f1mr648317e87.34.1741948281686; Fri, 14 Mar 2025
+ 03:31:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z9PpPg06OK8ghNvm@kspp>
+References: <20250310222346.work.810-kees@kernel.org>
+In-Reply-To: <20250310222346.work.810-kees@kernel.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Fri, 14 Mar 2025 11:31:09 +0100
+X-Gm-Features: AQ5f1JpQ5MbaMz7xgIgPNXa2CMGzdO17pTnCnXzZL4yUASvYJyCNKkw0MADQ8EQ
+Message-ID: <CACRpkdbUk8bVWLPwVRq0qzaKRC80=bV1Wd01h+5xfH1O7-BVaQ@mail.gmail.com>
+Subject: Re: [PATCH] iio: magnetometer: ak8974: Add __nonstring annotations
+ for unterminated strings
+To: Kees Cook <kees@kernel.org>
+Cc: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, linux-iio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 14, 2025 at 07:00:54PM +1030, Gustavo A. R. Silva wrote:
-> Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
-> a flexible structure where the size of the flexible-array member
-> is known at compile-time, and refactor the rest of the code,
-> accordingly.
-> 
-> So, with these changes, fix the following warning:
-> 
-> drivers/rtc/rtc-cros-ec.c:62:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> drivers/rtc/rtc-cros-ec.c:40:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+On Mon, Mar 10, 2025 at 11:23=E2=80=AFPM Kees Cook <kees@kernel.org> wrote:
 
-Reviewed-by: Tzung-Bi Shih <tzungbi@kernel.org>
+> When a character array without a terminating NUL character has a static
+> initializer, GCC 15's -Wunterminated-string-initialization will only
+> warn if the array lacks the "nonstring" attribute[1]. Mark the arrays
+> with __nonstring to and correctly identify the char array as "not a C
+> string" and thereby eliminate the warning.
+>
+> Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D117178 [1]
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Jonathan Cameron <jic23@kernel.org>
+> Cc: Lars-Peter Clausen <lars@metafoo.de>
+> Cc: linux-iio@vger.kernel.org
+> Signed-off-by: Kees Cook <kees@kernel.org>
+
+Fair enough,
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Yours,
+Linus Walleij
