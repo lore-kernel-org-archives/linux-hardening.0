@@ -1,190 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC4AC79F5;
-	Fri, 14 Mar 2025 00:04:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 251272E3385
+	for <linux-hardening@vger.kernel.org>; Fri, 14 Mar 2025 00:20:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741910669; cv=none; b=ZIh4SGyEF1+lLRpxcELOqlNvijaebs/81FOXNcEUJ6kMJ+wGuKDfr3MqkID7KmWwXWGMFYOIKM2nLXfBc73bDVYTqlH7GTZOHU49xKfgmoiGCpTTGRrVw9t2S02Of9Im8pKi9hf85waZe3PtV7I3WBkBDLPKA70znEz2mRFCAzI=
+	t=1741911636; cv=none; b=NZfiCbCn/PIEIyl788aBAhg69FHUoSG+fIzyd9BaGb+z/1lGpPRDPyXfq52bPHvklCCCoGvoiZXy5+EaUT25YIngbC4bLo8bf21Wg2sbaC5B0a6I0BoMaLwG8dGbyQ2GFhUK0yXrMrk2Fc5Ug4OP5PBVHkLYL9kHS50dkxJ5gMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741910669; c=relaxed/simple;
-	bh=iy+/mlqotFK2+b4LNmaNTDTHCIY1kqn2/OKiI6vljG4=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=Wfv2qxqcmQSwglNitYlDpNlqUkJIb4Kis94ieL35TBU/IA0/8unWQe+n9qA9J7ozytNRwlc/JkS0UyVLCzaIkl1XxJAot+QqAqnawf0hQUT0MnTN5Kcl9db6Cj7jMAG9YJWkKn1C1574jLpx4PnZloMdDkk38yAkno5zOzV7PFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=taviz52E; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741911636; c=relaxed/simple;
+	bh=S5YjmPSadUARmwccSDcjcvFgEP5CfKEn0cJkIPybeFk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VCkEM2H3qNSze3HpER/A8pkAP9O1PMrJk/NsGeB7wZtdAkNnykMoKzDEyNs2nSCz4NEwhPy+4A2Lb7fSBylyDByFShpcwdCPOBjZtsRl3Vjf2aRSKjd7shWhxsdoeNicBJfnBUmlFawghMYoPpcVAlpHdIvP69dgJMGTwH52VvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=bk9YWhzZ; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="taviz52E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CB50C4CEEE;
-	Fri, 14 Mar 2025 00:04:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741910668;
-	bh=iy+/mlqotFK2+b4LNmaNTDTHCIY1kqn2/OKiI6vljG4=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=taviz52EpSNtJVagcI+yCCzKxm6FB4u4RfEbyIqy1BLal+gFZD2oMKObljY1aoCPx
-	 IBPkTHn2SC6TmJZgZmH0s/gXFH9PINYlc7Aq9beg6qTsRUp0z1jnHGyJjyNrZKYSJo
-	 wCGiHFon2jtd4tS+c+aBCufo5qPL7FB1zut4Zn3yuwxbuz2sE8seUrVRwXuxJIpknO
-	 c3Jahtu2V758ParqSaNmFILHgs4wGwPMjiVrkFzfW9bbjTm1GIhimQ2NPAOvTIw0ky
-	 ZZSJOwcTg1qyIFL1Bsr3foy05TYgfJABQshAlOFIp+eVaITP5YXeuLtISG++vm6zmu
-	 h57x+8LIv8AWQ==
-Date: Thu, 13 Mar 2025 17:04:24 -0700
-From: Kees Cook <kees@kernel.org>
-To: Marco Elver <elver@google.com>
-CC: Justin Stitt <justinstitt@google.com>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Andrey Konovalov <andreyknvl@gmail.com>,
- Andrey Ryabinin <ryabinin.a.a@gmail.com>,
- Masahiro Yamada <masahiroy@kernel.org>,
- Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>,
- Miguel Ojeda <ojeda@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>,
- Hao Luo <haoluo@google.com>, Przemek Kitszel <przemyslaw.kitszel@intel.com>,
- linux-hardening@vger.kernel.org, kasan-dev@googlegroups.com,
- linux-kbuild@vger.kernel.org, Bill Wendling <morbo@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Tony Ambardar <tony.ambardar@gmail.com>,
- Alexander Potapenko <glider@google.com>, Jan Hendrik Farr <kernel@jfarr.cc>,
- Alexander Lobakin <aleksander.lobakin@intel.com>,
- linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_1/3=5D_ubsan/overflow=3A_Rework_integer_?=
- =?US-ASCII?Q?overflow_sanitizer_option_to_turn_on_everything?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CANpmjNOHSanxX7EyXhia4AuVd+6q5v1mXQMTM_k0Rj20P_ASAA@mail.gmail.com>
-References: <20250307040948.work.791-kees@kernel.org> <20250307041914.937329-1-kees@kernel.org> <CANpmjNOHSanxX7EyXhia4AuVd+6q5v1mXQMTM_k0Rj20P_ASAA@mail.gmail.com>
-Message-ID: <2AACDA6E-F7EF-4962-937A-C9511E4E2930@kernel.org>
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="bk9YWhzZ"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-22349bb8605so34844065ad.0
+        for <linux-hardening@vger.kernel.org>; Thu, 13 Mar 2025 17:20:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1741911634; x=1742516434; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xKQQgSJ6pX+A9i14RTtMFH1e8UlSjoleXWfJUUAl0Zw=;
+        b=bk9YWhzZD+4uzg9e5U9vm41+LBdIfHi2oP6vq9sYKcMX7KsEkwAcHu/BpZj+960OG+
+         8HRCY6wGXrJcSYJM1D4s7vflTpyuynG0OWepheCkxLrK62PrLszL+LGCeuAjBzDKF8PD
+         sj0OH9eIsbX6ngjm3K7Fl+ZvarBfZzyiAiXBg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741911634; x=1742516434;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xKQQgSJ6pX+A9i14RTtMFH1e8UlSjoleXWfJUUAl0Zw=;
+        b=cMdyqQFAoRlubUm9X6wLjmxlAmA6N+nb2kQunPY4vlpZaj4YKe9jyOQ87kfmi4RQmb
+         XSZbpnf7CoCeWOJouddfAQ6WjI53hVPWpoWWRXd3mmCgS6lITbzZjhCgtVLBQBReUsl3
+         fh8BJOMvJRT9wXdXxQRiQri2R5nO/azkRxAU70NJMxQve57nojb2DI3APcxPWJNscXrJ
+         ajl1n737KV/u1KPdQt8jFjVFKWBRHyzbKeeY6z6HkFmg2pgJtDsLsI0w9Rd1KfzHTRQj
+         N46rhtN6aPsDJ4W4QPY/1o5eJJJXvYjYE0cXuu5ogXTDGFhslOBbIG5cSpJF9jwW6NXx
+         PkSA==
+X-Forwarded-Encrypted: i=1; AJvYcCWtIZdbDWaCydphD+o55zo2yZcHz09u9NCbkT+euu0duJdtfooFvMOCtPgvrQMDHxYcuwSzU5hZgfEf3arvzFE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXD14h5GONz0i9pDyDEgFfSeU0yLjH8yaeQlk+ZDX6UI5Ax8YZ
+	hl9xHwfgjYtba94GHeK1txqTu8Opjx6HO0RiXYuRxIsC245q1cO3+CpZ/r6U/w==
+X-Gm-Gg: ASbGncskPFawcXeG40P02dw3ZMprFJdxOghbsjLx7133lz/L523ud1Wjs/vSadWs5PU
+	YE9YJdNM5Y1WYQXDxr5yKtd/AlSAQCKu/KwKXtjNuP/ozuwmOJx4r0YKdB05ygFaAo/WRWufAsG
+	SjUmxsC5FUb71pTdV/0d6u1S74mWez+AADndweQ6JVYJmEn41iUVlWTAZo9+KGYXl68KwdCDmeQ
+	tUZPUBbmF7rMEii7HVL5DYVga38xOsMauRkQgOzXI8z2uWUxYktmdkW/O3vVSDSKuNxEollaWcY
+	lyW5fSg3/Tb7TD+Agd5xyUTOz4Rp3VxLzSZKe5LO2NY/ESzBgJS+Yib8w4DZOXPix8OVhfFSgTf
+	en0qh
+X-Google-Smtp-Source: AGHT+IFO4eHT7EMLxAUZQcUPLJax7b7GpW64YoD3Aqnq64qGUBHwbVXqhyOVEAxtzl2d2b/7JBsA6w==
+X-Received: by 2002:a05:6a21:1519:b0:1f5:8221:d68c with SMTP id adf61e73a8af0-1f5c111720bmr946258637.3.1741911634454;
+        Thu, 13 Mar 2025 17:20:34 -0700 (PDT)
+Received: from [10.136.13.65] ([192.19.161.248])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af56e9e4cd5sm1910573a12.31.2025.03.13.17.20.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 13 Mar 2025 17:20:34 -0700 (PDT)
+Message-ID: <547ce7ba-7042-70ff-8468-8e449be6fada@broadcom.com>
+Date: Thu, 13 Mar 2025 17:04:28 -0700
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH][next] misc: bcm-vk: avoid -Wflex-array-member-not-at-end
+ warning
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>, Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <Z9Nd4AmgrQDiK1Gn@kspp>
+Content-Language: en-US
+From: Scott Branden <scott.branden@broadcom.com>
+In-Reply-To: <Z9Nd4AmgrQDiK1Gn@kspp>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+looks fine
 
-
-On March 13, 2025 8:29:29 AM PDT, Marco Elver <elver@google=2Ecom> wrote:
->On Thu, 6 Mar 2025 at 23:19, Kees Cook <kees@kernel=2Eorg> wrote:
->>
->> Since we're going to approach integer overflow mitigation a type at a
->> time, we need to enable all of the associated sanitizers, and then opt
->> into types one at a time=2E
->>
->> Rename the existing "signed wrap" sanitizer to just the entire topic ar=
-ea:
->> "integer wrap"=2E Enable the implicit integer truncation sanitizers, wi=
-th
->> required callbacks and tests=2E
->>
->> Notably, this requires features (currently) only available in Clang,
->> so we can depend on the cc-option tests to determine availability
->> instead of doing version tests=2E
->>
->> Signed-off-by: Kees Cook <kees@kernel=2Eorg>
->> ---
->> Cc: Justin Stitt <justinstitt@google=2Ecom>
->> Cc: "Gustavo A=2E R=2E Silva" <gustavoars@kernel=2Eorg>
->> Cc: Andrew Morton <akpm@linux-foundation=2Eorg>
->> Cc: Marco Elver <elver@google=2Ecom>
->> Cc: Andrey Konovalov <andreyknvl@gmail=2Ecom>
->> Cc: Andrey Ryabinin <ryabinin=2Ea=2Ea@gmail=2Ecom>
->> Cc: Masahiro Yamada <masahiroy@kernel=2Eorg>
->> Cc: Nathan Chancellor <nathan@kernel=2Eorg>
->> Cc: Nicolas Schier <nicolas@fjasle=2Eeu>
->> Cc: Miguel Ojeda <ojeda@kernel=2Eorg>
->> Cc: Nick Desaulniers <ndesaulniers@google=2Ecom>
->> Cc: Hao Luo <haoluo@google=2Ecom>
->> Cc: Przemek Kitszel <przemyslaw=2Ekitszel@intel=2Ecom>
->> Cc: linux-hardening@vger=2Ekernel=2Eorg
->> Cc: kasan-dev@googlegroups=2Ecom
->> Cc: linux-kbuild@vger=2Ekernel=2Eorg
->> ---
->>  include/linux/compiler_types=2Eh  |  2 +-
->>  kernel/configs/hardening=2Econfig |  2 +-
->>  lib/Kconfig=2Eubsan               | 23 +++++++++++------------
->>  lib/test_ubsan=2Ec                | 18 ++++++++++++++----
->>  lib/ubsan=2Ec                     | 28 ++++++++++++++++++++++++++--
->>  lib/ubsan=2Eh                     |  8 ++++++++
->>  scripts/Makefile=2Elib            |  4 ++--
->>  scripts/Makefile=2Eubsan          |  8 ++++++--
->>  8 files changed, 69 insertions(+), 24 deletions(-)
->>
->> diff --git a/include/linux/compiler_types=2Eh b/include/linux/compiler_=
-types=2Eh
->> index f59393464ea7=2E=2E4ad3e900bc3d 100644
->> --- a/include/linux/compiler_types=2Eh
->> +++ b/include/linux/compiler_types=2Eh
->> @@ -360,7 +360,7 @@ struct ftrace_likely_data {
->>  #endif
->>
->>  /* Do not trap wrapping arithmetic within an annotated function=2E */
->> -#ifdef CONFIG_UBSAN_SIGNED_WRAP
->> +#ifdef CONFIG_UBSAN_INTEGER_WRAP
->>  # define __signed_wrap __attribute__((no_sanitize("signed-integer-over=
-flow")))
->>  #else
->>  # define __signed_wrap
->> diff --git a/kernel/configs/hardening=2Econfig b/kernel/configs/hardeni=
-ng=2Econfig
->> index 3fabb8f55ef6=2E=2Edd7c32fb5ac1 100644
->> --- a/kernel/configs/hardening=2Econfig
->> +++ b/kernel/configs/hardening=2Econfig
->> @@ -46,7 +46,7 @@ CONFIG_UBSAN_BOUNDS=3Dy
->>  # CONFIG_UBSAN_SHIFT is not set
->>  # CONFIG_UBSAN_DIV_ZERO is not set
->>  # CONFIG_UBSAN_UNREACHABLE is not set
->> -# CONFIG_UBSAN_SIGNED_WRAP is not set
->> +# CONFIG_UBSAN_INTEGER_WRAP is not set
->>  # CONFIG_UBSAN_BOOL is not set
->>  # CONFIG_UBSAN_ENUM is not set
->>  # CONFIG_UBSAN_ALIGNMENT is not set
->> diff --git a/lib/Kconfig=2Eubsan b/lib/Kconfig=2Eubsan
->> index 1d4aa7a83b3a=2E=2E63e5622010e0 100644
->> --- a/lib/Kconfig=2Eubsan
->> +++ b/lib/Kconfig=2Eubsan
->> @@ -116,21 +116,20 @@ config UBSAN_UNREACHABLE
->>           This option enables -fsanitize=3Dunreachable which checks for=
- control
->>           flow reaching an expected-to-be-unreachable position=2E
->>
->> -config UBSAN_SIGNED_WRAP
->> -       bool "Perform checking for signed arithmetic wrap-around"
->> +config UBSAN_INTEGER_WRAP
->> +       bool "Perform checking for integer arithmetic wrap-around"
->>         default UBSAN
->>         depends on !COMPILE_TEST
->> -       # The no_sanitize attribute was introduced in GCC with version =
-8=2E
->> -       depends on !CC_IS_GCC || GCC_VERSION >=3D 80000
->>         depends on $(cc-option,-fsanitize=3Dsigned-integer-overflow)
->> -       help
->> -         This option enables -fsanitize=3Dsigned-integer-overflow whic=
-h checks
->> -         for wrap-around of any arithmetic operations with signed inte=
-gers=2E
->> -         This currently performs nearly no instrumentation due to the
->> -         kernel's use of -fno-strict-overflow which converts all would=
--be
->> -         arithmetic undefined behavior into wrap-around arithmetic=2E =
-Future
->> -         sanitizer versions will allow for wrap-around checking (rathe=
-r than
->> -         exclusively undefined behavior)=2E
->> +       depends on $(cc-option,-fsanitize=3Dunsigned-integer-overflow)
->> +       depends on $(cc-option,-fsanitize=3Dimplicit-signed-integer-tru=
-ncation)
->> +       depends on $(cc-option,-fsanitize=3Dimplicit-unsigned-integer-t=
-runcation)
->
->Can these be in 1 cc-option? I know it might look slightly more ugly,
->but having 3 different ones will shell out to the compiler 3 times,
->which is a little less efficient=2E At some point it might noticeably
->increase the build initialization latency=2E
-
-Yeah, good point=2E I could probably just test the most recently added opt=
-ion, as it implies all the rest, too=2E I'll send an update!
-
--Kees
-
-
---=20
-Kees Cook
+On 2025-03-13 15:36, Gustavo A. R. Silva wrote:
+> Fix the following warning by removing unused flex-array member
+> `data` in `struct bcm_vk_peer_log`:
+> 
+> drivers/misc/bcm-vk/bcm_vk.h:415:32: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Acked-by: Scott Branden <scott.branden@broadcom.com>
+> ---
+>   drivers/misc/bcm-vk/bcm_vk.h | 1 -
+>   1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/misc/bcm-vk/bcm_vk.h b/drivers/misc/bcm-vk/bcm_vk.h
+> index 386884c2a263..9344c2366a4b 100644
+> --- a/drivers/misc/bcm-vk/bcm_vk.h
+> +++ b/drivers/misc/bcm-vk/bcm_vk.h
+> @@ -311,7 +311,6 @@ struct bcm_vk_peer_log {
+>   	u32 wr_idx;
+>   	u32 buf_size;
+>   	u32 mask;
+> -	char data[];
+>   };
+>   
+>   /* max buf size allowed */
