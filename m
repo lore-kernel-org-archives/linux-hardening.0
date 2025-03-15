@@ -1,37 +1,51 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D0F8178CF8;
-	Sat, 15 Mar 2025 04:54:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC17518A6B5
+	for <linux-hardening@vger.kernel.org>; Sat, 15 Mar 2025 05:19:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742014444; cv=none; b=DWw/seYC4E7sWiMwA/kdTM0nWfPp842i4e281ZUEsoD9BUxpnbD5kIn1m1z1onk31tPmWWAqNhYmqaYDm7vVCIaT874+10X1eeKXujP2LyIqrRL7g1cCV3Uy2qYXJmDuPGc2g5W4Dy0ohteRMuhu/U1NAZGQHytltjdC5RoCncs=
+	t=1742015944; cv=none; b=W0I5XWq+617bNC6zh0ChDtuV6MiDa5mWD33IC/WqKeCFrMNrJriS7lHxil5tpRMfPytUr0dUJRmcnMxOYPe/G1nexIbUdEg5YqHr6mEEz5lrtxDRaRPIpPdWT7MtzgaG8d6U8lkDryhxeSHmvnix29rmJjJG0zsVP+HynDtFMCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742014444; c=relaxed/simple;
-	bh=/FDqs1pCJojhK5Llb/7LM7tQKfHwOZ5rzRm+N/z2LRc=;
+	s=arc-20240116; t=1742015944; c=relaxed/simple;
+	bh=gCKOMTSR7SFGeALdClJ4oeqAp32aiNNdltbx70uY+l0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=d0CPsWioDTpd7e54xbrfmrjElQ8igIrdsXMEVTJ1jXMEiHNUPKw1ePOMjFkpiI+UxfYKnwQzjEpJRnXRvby9t51FHBkQwiFrEWtT7tt4HZ9n6/T+ctf7sUoWEzAnhgHOChPNoxnV2t1Go9O5DfzXM0OFqDObBttq+SFhUUcvjtI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=mqtd67zN; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 In-Reply-To:Content-Type; b=Hj2aPfWWBOuLJs+l3el8h9ooKhtTXtF4MUa08zccDGNN7JOQ8Fn0XGEd1ZfdesIpeFfmfptEJRFUzJHnvgf05jnzw3vtXSZbgaZeBovJLW9wu2CX9Ug+lvuwLdUoPT3BEU5kTkU5xfY72jtAY0PmWcwrCR6MmzTv9YZBewVUrj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=Yr4eOeb1; arc=none smtp.client-ip=35.89.44.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mqtd67zN"
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="Yr4eOeb1"
+Received: from eig-obgw-6008a.ext.cloudfilter.net ([10.0.30.227])
+	by cmsmtp with ESMTPS
+	id tFdftFDhsMETltJvEtLAsQ; Sat, 15 Mar 2025 05:18:56 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id tJvDt3tyXzUYttJvEtnu08; Sat, 15 Mar 2025 05:18:56 +0000
+X-Authority-Analysis: v=2.4 cv=VrElAf2n c=1 sm=1 tr=0 ts=67d50dc0
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=6Vi/Wpy7sgpXGMLew8oZcg==:17
+ a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=7T7KSl7uo7wA:10
+ a=ZeKeiZ7te2ZlWvWP_YkA:9 a=QEXdDO2ut3YA:10 a=Xt_RvD8W3m28Mn_h3AK8:22
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=mQhJm5J645ymleMXzmsLIqdcp5cZsngAWaCVY5IJcSs=; b=mqtd67zNyJUoUFSs7XIGr5xFoJ
-	mscSRcTffByeTyIAvzLMxBfoOfWy7K5r3StiTmBZ1Arbty+J7EGX+I0onfk7rxJfjd2Ut6WtZsjVc
-	jE8X4+ML4TKxY5UXsXA4J4chq+AgGvkNgKm7czCQ9ZSVIKNXhiklRwUjiTCbP2CGQp++vmBxiXZ+U
-	yqGAF98jhSOvpcYlzc9/i//rvH51voF9nO+HBq6nY/MOdiYrDmaAZXufutswWt92Orf9JnL78CZEk
-	j+4WDLiz96mKNT/Ow2Frfj5NZhJ1AQAxOA7P2qxk2fy7fpDpkiUwbxRxiGTtRSDWi26lcOaFwIc07
-	v0WfOg6A==;
-Received: from [50.53.2.24] (helo=[192.168.254.17])
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1ttJWw-0000000338B-2bOV;
-	Sat, 15 Mar 2025 04:53:51 +0000
-Message-ID: <03d69156-1cee-43bc-901b-5f85f3aa7575@infradead.org>
-Date: Fri, 14 Mar 2025 21:53:41 -0700
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=Z9CV7YjZm2q81+e0gd2CqFBpJBtXFWEm4J6h1AlGC2s=; b=Yr4eOeb1ZdZrGAUExLuwFtBdA0
+	nLqdok3y8dnsk+9TMsOUiAau/LeIdzsleTe+RsXaC+eKo7WA2vw9O+ZDoCobJc71qNEP3yBDJqSY8
+	V33x6N2YcTNMGeKjinas8zekF6sFG+m3BTqfBGYwID5FBalv6TkQt89yt5QjZxYfJvLzeb7cVW6ad
+	iDiThwZY6Y4mI/m8APdvW+VOiiQ8w8ndJJqtPNQrZKWVVAZHkKeYbJpAOgmqYWHlwES/MB4nUP7OI
+	aXp9T9KRlrJXlq2+RWizYEnzljWrMOMf7yOCuk7ti2bDMNa4xfFfBRwFmlSw3bYfcjxB/e4kNbaZl
+	k6L/kZiQ==;
+Received: from [45.124.203.140] (port=53524 helo=[192.168.0.160])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1ttJv8-00000003Ac1-2JPJ;
+	Sat, 15 Mar 2025 00:18:50 -0500
+Message-ID: <17076519-33fd-4fac-a718-784b9597c9e6@embeddedor.com>
+Date: Sat, 15 Mar 2025 15:48:30 +1030
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -39,101 +53,76 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/2] compiler_types: Introduce __flex_counter() and
- family
+Subject: Re: [PATCH v4 2/2] slab: Introduce kmalloc_obj() and family
 To: Kees Cook <kees@kernel.org>, Vlastimil Babka <vbabka@suse.cz>
-Cc: Miguel Ojeda <ojeda@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Nathan Chancellor <nathan@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Marco Elver <elver@google.com>,
- Przemek Kitszel <przemyslaw.kitszel@intel.com>,
- linux-hardening@vger.kernel.org, Christoph Lameter <cl@linux.com>,
- Pekka Enberg <penberg@kernel.org>, David Rientjes <rientjes@google.com>,
- Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+Cc: Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
+ David Rientjes <rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>,
  Andrew Morton <akpm@linux-foundation.org>,
  Roman Gushchin <roman.gushchin@linux.dev>,
- Hyeonggon Yoo <42.hyeyoo@gmail.com>, Bill Wendling <morbo@google.com>,
- Justin Stitt <justinstitt@google.com>, Jann Horn <jannh@google.com>,
+ Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+ "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ Jann Horn <jannh@google.com>, Przemek Kitszel
+ <przemyslaw.kitszel@intel.com>, Marco Elver <elver@google.com>,
  Linus Torvalds <torvalds@linux-foundation.org>,
  Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Sasha Levin <sashal@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- Jakub Kicinski <kuba@kernel.org>, Yafang Shao <laoar.shao@gmail.com>,
- Tony Ambardar <tony.ambardar@gmail.com>,
+ Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org,
+ Miguel Ojeda <ojeda@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+ Jonathan Corbet <corbet@lwn.net>, Jakub Kicinski <kuba@kernel.org>,
+ Yafang Shao <laoar.shao@gmail.com>, Tony Ambardar <tony.ambardar@gmail.com>,
  Alexander Lobakin <aleksander.lobakin@intel.com>,
  Jan Hendrik Farr <kernel@jfarr.cc>, Alexander Potapenko <glider@google.com>,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-doc@vger.kernel.org,
- llvm@lists.linux.dev
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+ linux-doc@vger.kernel.org, llvm@lists.linux.dev
 References: <20250315025852.it.568-kees@kernel.org>
- <20250315031550.473587-1-kees@kernel.org>
+ <20250315031550.473587-2-kees@kernel.org>
 Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20250315031550.473587-1-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20250315031550.473587-2-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 45.124.203.140
+X-Source-L: No
+X-Exim-ID: 1ttJv8-00000003Ac1-2JPJ
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.0.160]) [45.124.203.140]:53524
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 3
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfJRck8fJ14u7Id+HdBz8VW2oqq89of1IiSJHJFM8v26wu2DniTLgBng6sx8TvECSvGqsYf70hcOI9jYA1Bo4Ub7GiGOkVq4Fpnh3T8IOMHq/YIWog2tc
+ Qdy+vV+qr1ctstmbI/eXMaeMiHoed+83KThxWFu6FgtB73x9h8knv4PTF8xVcD1kng2oLp+Ei7PCTjm6rAnOxTnM6YZohRdk20DanXdVMUP4yWaZTB9EWMk4
 
-Hi Kees,
 
+> These each return the assigned value of ptr (which may be NULL on
+> failure). For cases where the total size of the allocation is needed,
+> the kmalloc_obj_sz(), kmalloc_objs_sz(), and kmalloc_flex_sz() family
+> of macros can be used. For example:
+> 
+> 	info->size = struct_size(ptr, flex_member, count);
+> 	ptr = kmalloc(info->size, gfp);
+> 
+> becomes:
+> 
+> 	kmalloc_flex_sz(ptr, flex_member, count, gfp, &info->size);
 
-On 3/14/25 8:15 PM, Kees Cook wrote:
+I wonder if it'd be better to keep the gfp flags as the last argument
+for all these `*_sz()` cases:
 
+	kmalloc_flex_sz(ptr, flex_member, count, &info->size, gpf);
 
-> diff --git a/include/linux/overflow.h b/include/linux/overflow.h
-> index 0c7e3dcfe867..e2b81cb5576e 100644
-> --- a/include/linux/overflow.h
-> +++ b/include/linux/overflow.h
-> @@ -440,4 +440,40 @@ static inline size_t __must_check size_sub(size_t minuend, size_t subtrahend)
->  #define DEFINE_FLEX(TYPE, NAME, MEMBER, COUNTER, COUNT)	\
->  	_DEFINE_FLEX(TYPE, NAME, MEMBER, COUNT, = { .obj.COUNTER = COUNT, })
->  
-> +/**
-> + * typeof_flex_counter() - Return the type of the counter variable of a given
-> + *                         flexible array member annotated by __counted_by().
-> + * @FAM: Pointer to the flexible array member within a given struct.
-> + *
-> + * Returns "size_t" if no annotation exists.
+Probably, even for __alloc_objs()
 
-Please use
- * Returns: <text>
-instead so that kernel-doc can make a special doc section for it.
-
-Same for patch 2/2.
-
-> + */
-> +#define typeof_flex_counter(FAM)				\
-> +	typeof(_Generic(__flex_counter(FAM),			\
-> +			void *: (size_t)0,			\
-> +			default: *__flex_counter(FAM)))
-> +
-> +/** can_set_flex_counter() - Check if the counter associated with the given
-
-Needs a newline between /** and the function name, as in set_flex_counter() below.
-
-> + *                           flexible array member can represent a value.
-> + * @FAM: Pointer to the flexible array member within a given struct.
-> + * @COUNT: Value to check against the __counted_by annotated @FAM's counter.
-> + */
-> +#define can_set_flex_counter(FAM, COUNT)			\
-> +	(!overflows_type(COUNT, typeof_flex_counter(FAM)))
-> +
-> +/**
-> + * set_flex_counter() - Set the counter associated with the given flexible
-> + *                      array member that has been annoated by __counted_by().
-> + * @FAM: Pointer to the flexible array member within a given struct.
-> + * @COUNT: Value to store to the __counted_by annotated @FAM's counter.
-> + *
-> + * This is a no-op if no annotation exists. Count needs to be checked with
-> + * can_set_flex_counter(FAM, COUNT) before using this function.
-> + */
-> +#define set_flex_counter(FAM, COUNT)				\
-> +({								\
-> +	*_Generic(__flex_counter(FAM),				\
-> +		  void *:  &(size_t){ 0 },			\
-> +		  default: __flex_counter(FAM)) = (COUNT);	\
-> +})
-> +
->  #endif /* __LINUX_OVERFLOW_H */
-
--- 
-~Randy
-
+--
+Gustavo
