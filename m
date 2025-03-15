@@ -1,104 +1,87 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AEC7204085;
-	Sat, 15 Mar 2025 18:03:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D38241CD1F;
+	Sat, 15 Mar 2025 18:31:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742061830; cv=none; b=Sm2/ZtA4oQfRfc/nHcJ1r0tnXktvvrNHVpXQxsXIZEsAdXSRwdSFhtAkJJbJHjnn0858GAMfIqMYomoyr6a09vgi7cVcFS9IJOac7LHxueqytcAmp7cM6RJQ+QsdrII7UYNrPec82CpweYhDIrD6L6d6fekuTUY8YLsJLGcUeKg=
+	t=1742063493; cv=none; b=UwzLT6vplCgtOEOEu8yVfs1Pn+M1oA4HjoXQ5nY4vGAhtvGyoLdjRln45xSWlwg+bRmij1PPvVHkEwa1q2ubfkrS/hrd/QqyLua9N11PFi/46hfGqw+LLZCSkyUajqY7JZiUPXKT7IzNw78S1v8XlwR2nDLJDQprzwKmnNUgQ2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742061830; c=relaxed/simple;
-	bh=+Y44pJkK2drE1ZjpcjI0oXLOIywGAfeMnU9+my8wLzU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SrZbDl7oMV+quBLE+pOJHFJuFJZ5XdsCmvCHV/K/34iRw2M2ZwK+4jO2tHQViNGkxktT/f74ewjh9PkBj/F4NfEETHlKoi9Imfwy7scMoy6Sk41fo3ZIMm6jm0m7yTMcHHmzHXUZzL1Bdlba0F8NA2qBi6dJtmz9/TVRtyu3kRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=pOvvnAfv; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1742063493; c=relaxed/simple;
+	bh=1eCl0H/Io7JBG9hn06zddztdlZ4zO0KVqLIi4Be0JpI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DVE7vMXq6fsVBi9uoTRHMkWe/4F+oc0SxD/g3D7QNP1/2d+w4ITYOkCz+yrLEjbr8d3ahHuwjIiI4bOVhxDOOGFH5zHBZaOAsx+KnkRTjq/lRcR7WCcLIVB8HMQQ/7QBUtkM8xYrf+XPOUhOP6PzKNjqQQ0eEbok7JHYWrCo0yc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MLyVyfmB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pOvvnAfv"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description;
-	bh=TxcYWvWfTpFytX2D5Aa/xv5rAouDt22VcPR3LokvoEw=; b=pOvvnAfvZ7o61cTyL4/lUajVig
-	9YiQVI4OybWgNI5DYghOhAKjcN6VInSb+GgUAfY3a4e4c2kD/lCDg1tqroTn8KKftmYcnNRcUjS6Q
-	5wkiyNJHELVsy9EDSUSJePFsyZCYBJqPjs8fHAm13PY9/Q+tuAGqMvwTtDKjdtI3kX5Jg0pd+4+x+
-	FDTlCX2XXmLVo12aJuWxHXhSEdJR59hC5wn+aEOLQN70li/VQuhSYzF7U0t5D3rQ3K0sBSrvvdPMO
-	RZAgzcBVAHep/5DORO2meRd3PiTyxg6g/CDIpD0jZ/1wT92ImW/ooHNUXdQDENm1r3fYbrU0S6iGa
-	VzYUNgJQ==;
-Received: from [50.53.2.24] (helo=[192.168.254.17])
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1ttVq1-000000044np-2gfS;
-	Sat, 15 Mar 2025 18:02:45 +0000
-Message-ID: <04ea2c10-39c5-46ad-a4f9-e5dc98c77eff@infradead.org>
-Date: Sat, 15 Mar 2025 11:02:12 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MLyVyfmB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACEC0C4CEE5;
+	Sat, 15 Mar 2025 18:31:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742063493;
+	bh=1eCl0H/Io7JBG9hn06zddztdlZ4zO0KVqLIi4Be0JpI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=MLyVyfmBepCfcP2wJK8aYnwApctOP/XRbPz5ja0sHQQz/ttnl7VxK03OLhq8z7WiI
+	 eef1lcQek6otutCWRCj2SHEuWWUTvy00uaG5UoCpLAM+5G/fPeTuJ/NDyDbVVeO7C8
+	 fWF+tCiMxaUzb1GLZd3Z5ZHpxMMtRR2XC8KRtLZjILA8nDMGzn1HxAT3+TgM3RT3eA
+	 3NNklnaALiDnNOSupS3VOOl+iZM6+8MeJ2bOQRoFGeOLkfOnJT9MEEzskNbx45fPdd
+	 TZmcjMXJJidkg3p2TAoAhY5JE2hvFUpl8RxP+mmZ4ynbLhpYI1wcsFKfgEfe18N6/H
+	 UqMwpvlGkKGoQ==
+Date: Sat, 15 Mar 2025 18:31:25 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Kees Cook <kees@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] iio: magnetometer: ak8974: Add __nonstring annotations
+ for unterminated strings
+Message-ID: <20250315183125.40f9c566@jic23-huawei>
+In-Reply-To: <CACRpkdbUk8bVWLPwVRq0qzaKRC80=bV1Wd01h+5xfH1O7-BVaQ@mail.gmail.com>
+References: <20250310222346.work.810-kees@kernel.org>
+	<CACRpkdbUk8bVWLPwVRq0qzaKRC80=bV1Wd01h+5xfH1O7-BVaQ@mail.gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/2] slab: Introduce kmalloc_obj() and family
-To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
- Kees Cook <kees@kernel.org>, Vlastimil Babka <vbabka@suse.cz>
-Cc: Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
- David Rientjes <rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Roman Gushchin <roman.gushchin@linux.dev>,
- Hyeonggon Yoo <42.hyeyoo@gmail.com>,
- "Gustavo A . R . Silva" <gustavoars@kernel.org>,
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- Jann Horn <jannh@google.com>, Przemek Kitszel
- <przemyslaw.kitszel@intel.com>, Marco Elver <elver@google.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org,
- Miguel Ojeda <ojeda@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>,
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Jonathan Corbet <corbet@lwn.net>, Jakub Kicinski <kuba@kernel.org>,
- Yafang Shao <laoar.shao@gmail.com>, Tony Ambardar <tony.ambardar@gmail.com>,
- Alexander Lobakin <aleksander.lobakin@intel.com>,
- Jan Hendrik Farr <kernel@jfarr.cc>, Alexander Potapenko <glider@google.com>,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
- linux-doc@vger.kernel.org, llvm@lists.linux.dev
-References: <20250315025852.it.568-kees@kernel.org>
- <20250315031550.473587-2-kees@kernel.org>
- <17076519-33fd-4fac-a718-784b9597c9e6@embeddedor.com>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <17076519-33fd-4fac-a718-784b9597c9e6@embeddedor.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, 14 Mar 2025 11:31:09 +0100
+Linus Walleij <linus.walleij@linaro.org> wrote:
 
+> On Mon, Mar 10, 2025 at 11:23=E2=80=AFPM Kees Cook <kees@kernel.org> wrot=
+e:
+>=20
+> > When a character array without a terminating NUL character has a static
+> > initializer, GCC 15's -Wunterminated-string-initialization will only
+> > warn if the array lacks the "nonstring" attribute[1]. Mark the arrays
+> > with __nonstring to and correctly identify the char array as "not a C
+> > string" and thereby eliminate the warning.
+> >
+> > Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D117178 [1]
+> > Cc: Linus Walleij <linus.walleij@linaro.org>
+> > Cc: Jonathan Cameron <jic23@kernel.org>
+> > Cc: Lars-Peter Clausen <lars@metafoo.de>
+> > Cc: linux-iio@vger.kernel.org
+> > Signed-off-by: Kees Cook <kees@kernel.org> =20
+>=20
+> Fair enough,
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+>=20
+Kees,
 
-On 3/14/25 10:18 PM, Gustavo A. R. Silva wrote:
-> 
->> These each return the assigned value of ptr (which may be NULL on
->> failure). For cases where the total size of the allocation is needed,
->> the kmalloc_obj_sz(), kmalloc_objs_sz(), and kmalloc_flex_sz() family
->> of macros can be used. For example:
->>
->>     info->size = struct_size(ptr, flex_member, count);
->>     ptr = kmalloc(info->size, gfp);
->>
->> becomes:
->>
->>     kmalloc_flex_sz(ptr, flex_member, count, gfp, &info->size);
-> 
-> I wonder if it'd be better to keep the gfp flags as the last argument
-> for all these `*_sz()` cases:
+I've currently queued this for next cycle as it doesn't feel like a fix
+as such and I've already sent my pull request for the merge window.
 
-That was my reaction when I reviewed the patch also. [I just didn't express it.]
+Is it worth rushing it in, or is a fully cycle delay an issue? (6.16)
 
-> 
->     kmalloc_flex_sz(ptr, flex_member, count, &info->size, gpf);
-> 
-> Probably, even for __alloc_objs()
+If slow is fine, applied to the testing branch of iio.git which gets
+0-day bot exposure.
 
+Jonathan
 
--- 
-~Randy
+> Yours,
+> Linus Walleij
 
