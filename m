@@ -1,160 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 520CD189916;
-	Sat, 15 Mar 2025 18:56:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D346198A08;
+	Sat, 15 Mar 2025 19:47:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742064999; cv=none; b=HZh/k+3VzQIWac+fZ7WMxdoLWWpzWBPxEYsU39LeWQSYCJDtJWPSjDhvbZhgKrefXQDiE51OTzsB5zuBKzGsmTqB2oGL46KgwxTbI+ulcdFgmRrNdH/DH0jTqeQWqJYkND0Z3z0ZR48Fap/zES3Tq2ZZv+QlHawdpcwtccAfEio=
+	t=1742068080; cv=none; b=mb6jsA5C7D1BX6GiSGl54LWCFHH8bH7hHkbasXKJjMKHJxClayLW+rXLHBv+6Mg6z0Pr37RD6KgQ4r1fpWrKM2KYaDmparFfQT/PUD0fB+s7/TJqfmWXmRDoMglFGxAyfTL7BSUY3GLDU2019xmXiZU2N7ZtqQlyw+NWT/329r0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742064999; c=relaxed/simple;
-	bh=0cVJbATR2qhQxWDKABbizVxbgFKBOKXwQRb4x0P1LuA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f76v7a98n5Hb7/xbgNAy5bQsBSRIARTbafg7uh1T3ErQytgvw6fpKLoGxeG4DRQZw7CZC2GHpL6zs0Ga0kDsrcavmB19KkRobzbE1CUxeW6U460J8cg1ziQOTyQtjRoBoKllrpPNYH6IbbCWlxeB+a2DICXYlVPB9VYJd5w+7r4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OoLBfqcz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742068080; c=relaxed/simple;
+	bh=wJ4l6J6G+qyPJ3aBxSxuXZf5GDw9i2YcrDUY7OWKhmU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kHdWOXQ0rWmoyGoO8C+HhUkgoiiPVNNNSbQqYx+Kiw3TM7QmRa9RVvxwr1YgUJE315ZbXjXutGZ6Y+ROMKA2e5nDAPH0kfuVV6Tumqh2PGoK0SyX61Y7CXNucPC6SzREEruPfrRnDwRopbzMB0CYCffDyAv8ZpUjC30M3V7wW/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NiHoR6a0; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OoLBfqcz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19EF5C4CEE5;
-	Sat, 15 Mar 2025 18:56:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742064999;
-	bh=0cVJbATR2qhQxWDKABbizVxbgFKBOKXwQRb4x0P1LuA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OoLBfqczX8GbTuzhShU9uH41LAx+3ilH+BtIiLpfqkhkV+o4lEIEH48I/aP9dfIfi
-	 kYQfu6IwW0MmnimgscShZs7soXM8mXW4TJRflCP6t2B1MWIAW+5TBQ8ResuiuNjuiG
-	 Caidl8s+1iUpCYFQv8EhUE8L1SZD5Q4p9s3r0jTfHlMQxNM+fqjOm+koEY7e4yrv6o
-	 eTsfKbVs/zsDJcsL9C7gUA8+k7Rn6Ykl/lXfsJ20SyhshPXjkX1nD12n/YeXZ9tPEg
-	 j4SxykaFoSE+iPgJh7SKenYmozEJwcYMHPKkrfA7OAq64DAo/Acaplpe4epTkykv4I
-	 cFEv/78Fd5Hfg==
-Date: Sat, 15 Mar 2025 11:56:35 -0700
-From: Kees Cook <kees@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Vlastimil Babka <vbabka@suse.cz>, Christoph Lameter <cl@linux.com>,
-	Pekka Enberg <penberg@kernel.org>,
-	David Rientjes <rientjes@google.com>,
-	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>, Jann Horn <jannh@google.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Marco Elver <elver@google.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Jonathan Corbet <corbet@lwn.net>, Jakub Kicinski <kuba@kernel.org>,
-	Yafang Shao <laoar.shao@gmail.com>,
-	Tony Ambardar <tony.ambardar@gmail.com>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Jan Hendrik Farr <kernel@jfarr.cc>,
-	Alexander Potapenko <glider@google.com>,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	linux-doc@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v4 2/2] slab: Introduce kmalloc_obj() and family
-Message-ID: <202503151141.786736B85B@keescook>
-References: <20250315025852.it.568-kees@kernel.org>
- <20250315031550.473587-2-kees@kernel.org>
- <CAHk-=wiFjwOk9knz8i-zAqE=Kc73+3TgkMuj-C_mNB1U=k2W7A@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NiHoR6a0"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2ff6ce72844so188559a91.2;
+        Sat, 15 Mar 2025 12:47:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742068078; x=1742672878; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mMChtj/qs0+2j6FZvP0hkcUuVJ7qalGUp9JEm+CkAO0=;
+        b=NiHoR6a0NL+5gasW45XWmAYXDQ85mxafGg9OnJjghZVpAp1FNg0COTxm3p2Ihg9O08
+         8Q1z3Tz/sb4r+EtOAWstYRu9k9lDeEKkR4LxKdZ185oIvy0G5X1/M+QJOevjHzHgnecu
+         a9DwQe2/oFxF3IyxPTq/gL/8GSkee7nMGA1gob0L2fb9BUdbl+ZNQ7ZcPEMv9u1axSku
+         /XwY/Rf2odGdKEtS5/2/9ZZ/z/hJW67uppG+TIMGTVnYLr30vxsFR5LFiLYVuyXinO/l
+         +Q3uUjIv2mZd6HOdPoHckjmhU9WRrC+6wWZUbUsJA1/2QOKR8wF3J7rbW46P9mxIt6BV
+         orfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742068078; x=1742672878;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mMChtj/qs0+2j6FZvP0hkcUuVJ7qalGUp9JEm+CkAO0=;
+        b=NAareuXlZcnqp+qDhUXg/umh8aTGHdxwmrRf21dHZGSugAOOc+C9Oj76uobiJn9F1M
+         C9KwlpuzUyR51b9Aea1xTI5EvCJvcGJi8SybXksl2PEG4oPqsuDtxGdN73rrZxPE8H92
+         BpcnHtt0PQh1pmA6N+gyZ4AJ8IFCXMIzP636asOhUtXuf6Jmd7bzi2Grq8ajFU7oGpTf
+         S08vc5mXnY2xrmRkKMiaj+dCuSN5peO8WOA1QR8qu1pbp6t0nCzTQMUKIFuy4QeiXBsE
+         ARRvCBZa+xUP0DG/STDa6AwJMYNom8+oB57SubOX5UyfglFoogh9lIFxWZloB1BucWK8
+         2J3A==
+X-Forwarded-Encrypted: i=1; AJvYcCXUcioZANBkmPjZnlzofe0Ui9fHBrjHkprotl4eil/UYxUqhLlG1hstu5E2ZefceJR0+KVtplFPlEQ=@vger.kernel.org, AJvYcCXX3fhN7s2OtKW4RUdyLBnufjEMdk1m4V8V1+AywLJI5w7ILl+YxDpxDESexcBukTgjbT4xoVXMlb2nhzIJ@vger.kernel.org, AJvYcCXwnqVroRYk0akTFTw4zEDO9vSk8iOMXjGLed6dTff/0b4qKexbb0HQltSuLI+j80Zc9Q7OL825cin+e7+pOKg4@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEHV+UMJGuprT4E8aHlM259Y27ipChB25mb0kZnCOXvuTWhlwr
+	WuRizrKhXDm5mz4uZoAMjHDGvmhIFFm+o3BJh920+KNanEHbWqADC59Gp05IHcU+6BX1DKY3zGG
+	IAMHP0y7aFAUBDnAgw+Qsj1Qy70I=
+X-Gm-Gg: ASbGnctH9x+XX21jAsbSPLENwYjzvsHHAF60CjSirORffaTZLIMbRjhYxqOLiJZJpop
+	YWcIm5WnEingxfQKJrCwo02MXDmOLTMpJ9a5mQHXNAzzreZjeeC/htuN/HasmTP7qlEdnLKWB9H
+	PSZjGHZCK2EsFf5ghRnLvCthPSs5T77F3M/IA3
+X-Google-Smtp-Source: AGHT+IEdSuV95kVoV/AdTuJBpKGMb2i9LnB/HhcT8qPMxQn66E6o9ceqOM1QpXD2UnRrMI7THra8nGM+kEBtkK5IxYQ=
+X-Received: by 2002:a17:90b:4d8d:b0:2fe:b77a:2eba with SMTP id
+ 98e67ed59e1d1-30151c5dfd6mr3410961a91.1.1742068078596; Sat, 15 Mar 2025
+ 12:47:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wiFjwOk9knz8i-zAqE=Kc73+3TgkMuj-C_mNB1U=k2W7A@mail.gmail.com>
+References: <20250315025852.it.568-kees@kernel.org> <20250315031550.473587-1-kees@kernel.org>
+In-Reply-To: <20250315031550.473587-1-kees@kernel.org>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Sat, 15 Mar 2025 20:47:46 +0100
+X-Gm-Features: AQ5f1Jpcv2jHsvKdPH3ud-Cw7eDilZMZWJEW0e1jOqoBRQkpg0FQvOZE9YOPiqI
+Message-ID: <CANiq72ki=h4YWBWpoTpZz6525Cdt38aFN0kFwW7dJNPcVi_m2Q@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] compiler_types: Introduce __flex_counter() and family
+To: Kees Cook <kees@kernel.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>, Miguel Ojeda <ojeda@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+	Marco Elver <elver@google.com>, Przemek Kitszel <przemyslaw.kitszel@intel.com>, 
+	linux-hardening@vger.kernel.org, Christoph Lameter <cl@linux.com>, 
+	Pekka Enberg <penberg@kernel.org>, David Rientjes <rientjes@google.com>, 
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, Jann Horn <jannh@google.com>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sasha Levin <sashal@kernel.org>, 
+	Jonathan Corbet <corbet@lwn.net>, Jakub Kicinski <kuba@kernel.org>, Yafang Shao <laoar.shao@gmail.com>, 
+	Tony Ambardar <tony.ambardar@gmail.com>, Alexander Lobakin <aleksander.lobakin@intel.com>, 
+	Jan Hendrik Farr <kernel@jfarr.cc>, Alexander Potapenko <glider@google.com>, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, linux-doc@vger.kernel.org, llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Mar 15, 2025 at 08:31:21AM -1000, Linus Torvalds wrote:
-> Alternatively, this might be acceptable if the syntax makes mistakes
-> much harder to do. So for example, if it wasn't just an assignment,
-> but also declared the 'ptr' variable, maybe it would become much safer
-> simply because it would make the compiler warn about mis-uses.
+On Sat, Mar 15, 2025 at 4:15=E2=80=AFAM Kees Cook <kees@kernel.org> wrote:
+>
+> + * clang: https://github.com/llvm/llvm-project/pull/102549
 
-Yeah, this is the real goal (it just so happens that it's fewer
-characters). We need some way to gain both compile-time and run-time
-sanity checking while making the writing of allocations easier.
+That is an unmerged PR -- should we link to the merged one?
 
-> Using visual cues (something that makes it look like it's not a
-> regular function call) might also help. The traditional C way is
-> obviously to use ALL_CAPS() names, which is how we visually show "this
-> is a macro that doesn't necessarily work like the normal stuff". Some
-> variation of that might help the fundamental issue with your
-> horrendous thing.
+Or, better, to the docs, since they seem to exist:
 
-Yeah, I really didn't like using &ptr, etc. It just make it weirder.
+    https://clang.llvm.org/docs/LanguageExtensions.html#builtin-counted-by-=
+ref
 
-> My suggestion would be to look at some bigger pattern, maybe including
-> that declaration. To take a real example matching that kind of
-> pattern, we have
-> 
->         struct mod_unload_taint *mod_taint;
->         ...
->         mod_taint = kmalloc(sizeof(*mod_taint), GFP_KERNEL);
-> 
-> and maybe those *two* lines could be combined into something saner like
-> 
->         ALLOC(mod_taint, struct mod_unload_taint, GFP_KERNEL);
+?
 
-Yeah, this covers a fair bit, but there's still an absolute ton of
-"allocating stuff tracked by pointers in another structure", like:
+Thanks!
 
-	foo->items = kmalloc_array(sizeof(*foo->items), count, GFP_KERNEL)
-
-There's no declaration there. :(
-
-One thing that I noticed at the tail end of building up the Coccinelle
-script was the pattern of variable-less "return" allocations:
-
-struct foo *something(...)
-{
-	...
-	return kmalloc(sizeof(struct foo), GFP_KERNEL);
-}
-
-And that doesn't fit either my proposal nor the ALLOC() proposal very
-well.
-
-> We allow declarations in the middle of code these days because we
-> needed it for the guarding macros, so this would be a new kind of
-> interface that dos that.
-
-Yeah, that does make part of it easier.
-
-> And no, I'm not married to that disgusting "ALLOC()" thing. I'm
-> throwing it out not as TheSOlution(tm), but as a "this interface
-> absolutely needs clarity and must stand out syntactically both to
-> humans and the compiler".
-
-What about making the redundant information the type/var itself instead
-of just the size info of the existing API? For example:
-
-	ptr = kmalloc_obj(ptr, GFP_KERNEL);
-
-as in, don't pass a size, but pass the variable (or type) that can be
-examined for type, size, alignment, etc info, but still require that the
-assignment happen externally? In other words, at the end of the proposed
-macro, instead of:
-
-	(P) = __obj_ptr;
-
-it just does:
-
-	__obj_ptr;
-
-so that the macro usage can't "drift" towards being used without an
-assignment? And this would work for the "return" case as well:
-
-	return kmalloc_objs(struct foo, count, GFP_KERNEL);
-
-That would be a much smaller shift in the "usage" of the exist API.
-
-Shall I refactor this proposal for that?
-
--- 
-Kees Cook
+Cheers,
+Miguel
