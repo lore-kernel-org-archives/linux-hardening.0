@@ -1,101 +1,104 @@
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F95F18EB0;
-	Sat, 15 Mar 2025 16:29:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AEC7204085;
+	Sat, 15 Mar 2025 18:03:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742056186; cv=none; b=WpwHUiOWIOMIwHnoiPk1Fd/D33/eFuJPi059w4PlSwJs89Ay1B4CUrL/htXp77cAJ2zaPYx77WoG+vLm4NSZFvJd+F5KbcZxKjdW7cM9ZcuEgzf/1aDrntqNxCGHJumHYYWcl/ndRyT0vGpm0KczM7axhYfV1QYubEeBRhDRT/w=
+	t=1742061830; cv=none; b=Sm2/ZtA4oQfRfc/nHcJ1r0tnXktvvrNHVpXQxsXIZEsAdXSRwdSFhtAkJJbJHjnn0858GAMfIqMYomoyr6a09vgi7cVcFS9IJOac7LHxueqytcAmp7cM6RJQ+QsdrII7UYNrPec82CpweYhDIrD6L6d6fekuTUY8YLsJLGcUeKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742056186; c=relaxed/simple;
-	bh=8vJXzyaQxkgbOcUUR87Kt2S7V5pydAm0KqlwcjOWcRw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=HH1FmTDZtZx5p0F88B2qfSPf8CjcFkvm1xuFbobr9WwkOqiCHL0VB+JF2dsoGS5bGS4Krk8OE13z40ov4GYfsa4E5X65I/29Hwp4I9jskZg16iRqpxOjuyZAxXdGV+htY0QZsRPpf14fhDTixIpsZxIKvyJYOzqKrA0y3tdPWVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com; spf=pass smtp.mailfrom=ethancedwards.com; dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b=Um+8Qf41; arc=none smtp.client-ip=80.241.56.161
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ethancedwards.com
+	s=arc-20240116; t=1742061830; c=relaxed/simple;
+	bh=+Y44pJkK2drE1ZjpcjI0oXLOIywGAfeMnU9+my8wLzU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SrZbDl7oMV+quBLE+pOJHFJuFJZ5XdsCmvCHV/K/34iRw2M2ZwK+4jO2tHQViNGkxktT/f74ewjh9PkBj/F4NfEETHlKoi9Imfwy7scMoy6Sk41fo3ZIMm6jm0m7yTMcHHmzHXUZzL1Bdlba0F8NA2qBi6dJtmz9/TVRtyu3kRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=pOvvnAfv; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b="Um+8Qf41"
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4ZFRXL6pX0z9sWp;
-	Sat, 15 Mar 2025 17:29:38 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ethancedwards.com;
-	s=MBO0001; t=1742056179;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=fmVK8GPId0IRUuWU4GHSeQ2zxJjlVPvROrUh8P67LzE=;
-	b=Um+8Qf41oTrmnTS+ZEEq07LW3ATiYaYcQFRZBSAYriXtz5gfIIqg/w2PMz7fQMRBCvkM3E
-	FEMukr0FOdUhdOujbiqsM7IVoVDN8VK+zKBNEgYI7klUCkU9Y/t7WYa1eXsHEDP3fpTdKH
-	3VVBOczvTM4g8SjGX53NRHZG6aCW89cBuAcuoM/zJwbD1ZXRWkAWB5XNrdURE5dsLprR8G
-	TsgKHmU2SFk2ZNm+XFV7q2ZJAdyVKSfJeV3WH1y84Wg7QqikeZCJSo50Rf5VibBLrRa2Pq
-	yRwl+uAgJc4xyKsnoA5e5DXsPoyqDmNng6zQhaO7+lZAT3RPX/Q/74Jk1bhdgA==
-From: Ethan Carter Edwards <ethan@ethancedwards.com>
-Date: Sat, 15 Mar 2025 12:29:34 -0400
-Subject: [PATCH] ext4: hash: change kzalloc(n * sizeof, ...) to kcalloc(n,
- sizeof, ...)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pOvvnAfv"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description;
+	bh=TxcYWvWfTpFytX2D5Aa/xv5rAouDt22VcPR3LokvoEw=; b=pOvvnAfvZ7o61cTyL4/lUajVig
+	9YiQVI4OybWgNI5DYghOhAKjcN6VInSb+GgUAfY3a4e4c2kD/lCDg1tqroTn8KKftmYcnNRcUjS6Q
+	5wkiyNJHELVsy9EDSUSJePFsyZCYBJqPjs8fHAm13PY9/Q+tuAGqMvwTtDKjdtI3kX5Jg0pd+4+x+
+	FDTlCX2XXmLVo12aJuWxHXhSEdJR59hC5wn+aEOLQN70li/VQuhSYzF7U0t5D3rQ3K0sBSrvvdPMO
+	RZAgzcBVAHep/5DORO2meRd3PiTyxg6g/CDIpD0jZ/1wT92ImW/ooHNUXdQDENm1r3fYbrU0S6iGa
+	VzYUNgJQ==;
+Received: from [50.53.2.24] (helo=[192.168.254.17])
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1ttVq1-000000044np-2gfS;
+	Sat, 15 Mar 2025 18:02:45 +0000
+Message-ID: <04ea2c10-39c5-46ad-a4f9-e5dc98c77eff@infradead.org>
+Date: Sat, 15 Mar 2025 11:02:12 -0700
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250315-ext4-hash-kcalloc-v1-1-a9132cb49276@ethancedwards.com>
-X-B4-Tracking: v=1; b=H4sIAO2q1WcC/x3MQQqAIBBA0avErBswLcKuEi3MphySCo0QpLsnL
- d/i/wyRAlOEocoQ6OHI51HQ1BVYZ46NkJdikEJ2QjUdUrpbdCY63K3x/rQohRJK6b6fFw2luwK
- tnP7nOL3vB0szHIdjAAAA
-X-Change-ID: 20250315-ext4-hash-kcalloc-203033977bd9
-To: Theodore Ts'o <tytso@mit.edu>, 
- Andreas Dilger <adilger.kernel@dilger.ca>
-Cc: linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-fsdevel@vger.kernel.org, linux-hardening@vger.kernel.org, 
- Ethan Carter Edwards <ethan@ethancedwards.com>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1088;
- i=ethan@ethancedwards.com; h=from:subject:message-id;
- bh=8vJXzyaQxkgbOcUUR87Kt2S7V5pydAm0KqlwcjOWcRw=;
- b=LS0tLS1CRUdJTiBQR1AgTUVTU0FHRS0tLS0tCgpvd0o0bkp2QXk4ekFKWGJEOXFoNThlVGp6e
- GhQcXlVeHBGOWQ5YTV5V2ZUVURRa0xmNTZWTG1FL2Z1THpydTNYClpWeGlabDNwbU0zOFVPd0FT
- MWh5UnlrTGd4Z1hnNnlZSXN2L0hPVzBoNW96RkhiK2RXbUNtY1BLQkRLRWdZdFQKQUNieWNCdkQ
- vOEsrZlcvbVhWUGxaM0VPUHNlVWZldE0rKzVmeDdaclpLVUtYSGtWMzVtWTBzVHdUOEZoV1diZQ
- pneFYzcTQ0NktyTzkvQ3o1YzJMRzdFenVZeitkL2JiR3NyVDFzUUFBVCtaUjlBPT0KPTU2a1UKL
- S0tLS1FTkQgUEdQIE1FU1NBR0UtLS0tLQo=
-X-Developer-Key: i=ethan@ethancedwards.com; a=openpgp;
- fpr=2E51F61839D1FA947A7300C234C04305D581DBFE
-X-Rspamd-Queue-Id: 4ZFRXL6pX0z9sWp
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/2] slab: Introduce kmalloc_obj() and family
+To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+ Kees Cook <kees@kernel.org>, Vlastimil Babka <vbabka@suse.cz>
+Cc: Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
+ David Rientjes <rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Roman Gushchin <roman.gushchin@linux.dev>,
+ Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+ "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ Jann Horn <jannh@google.com>, Przemek Kitszel
+ <przemyslaw.kitszel@intel.com>, Marco Elver <elver@google.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org,
+ Miguel Ojeda <ojeda@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+ Jonathan Corbet <corbet@lwn.net>, Jakub Kicinski <kuba@kernel.org>,
+ Yafang Shao <laoar.shao@gmail.com>, Tony Ambardar <tony.ambardar@gmail.com>,
+ Alexander Lobakin <aleksander.lobakin@intel.com>,
+ Jan Hendrik Farr <kernel@jfarr.cc>, Alexander Potapenko <glider@google.com>,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+ linux-doc@vger.kernel.org, llvm@lists.linux.dev
+References: <20250315025852.it.568-kees@kernel.org>
+ <20250315031550.473587-2-kees@kernel.org>
+ <17076519-33fd-4fac-a718-784b9597c9e6@embeddedor.com>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <17076519-33fd-4fac-a718-784b9597c9e6@embeddedor.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Open coded arithmetic in allocator arguments is discouraged. Helper
-functions like kcalloc are preferred.
 
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments
 
-Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
----
- fs/ext4/hash.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 3/14/25 10:18 PM, Gustavo A. R. Silva wrote:
+> 
+>> These each return the assigned value of ptr (which may be NULL on
+>> failure). For cases where the total size of the allocation is needed,
+>> the kmalloc_obj_sz(), kmalloc_objs_sz(), and kmalloc_flex_sz() family
+>> of macros can be used. For example:
+>>
+>>     info->size = struct_size(ptr, flex_member, count);
+>>     ptr = kmalloc(info->size, gfp);
+>>
+>> becomes:
+>>
+>>     kmalloc_flex_sz(ptr, flex_member, count, gfp, &info->size);
+> 
+> I wonder if it'd be better to keep the gfp flags as the last argument
+> for all these `*_sz()` cases:
 
-diff --git a/fs/ext4/hash.c b/fs/ext4/hash.c
-index deabe29da7fbc3d35f674ff861a2f3b579ffdea2..7a9afac1597c69f319f02bb816ca797d32c188ca 100644
---- a/fs/ext4/hash.c
-+++ b/fs/ext4/hash.c
-@@ -302,7 +302,7 @@ int ext4fs_dirhash(const struct inode *dir, const char *name, int len,
- 
- 	if (len && IS_CASEFOLDED(dir) &&
- 	   (!IS_ENCRYPTED(dir) || fscrypt_has_encryption_key(dir))) {
--		buff = kzalloc(sizeof(char) * PATH_MAX, GFP_KERNEL);
-+		buff = kcalloc(PATH_MAX, sizeof(char), GFP_KERNEL);
- 		if (!buff)
- 			return -ENOMEM;
- 
+That was my reaction when I reviewed the patch also. [I just didn't express it.]
 
----
-base-commit: da920b7df701770e006928053672147075587fb2
-change-id: 20250315-ext4-hash-kcalloc-203033977bd9
+> 
+>     kmalloc_flex_sz(ptr, flex_member, count, &info->size, gpf);
+> 
+> Probably, even for __alloc_objs()
 
-Best regards,
+
 -- 
-Ethan Carter Edwards <ethan@ethancedwards.com>
+~Randy
 
