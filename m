@@ -1,67 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BEC5197A8B;
-	Sat, 15 Mar 2025 21:06:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46B65197A8E;
+	Sat, 15 Mar 2025 21:56:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742072793; cv=none; b=YPvidTE4WKPq+AtIfZ8JHXwscgjKz6nS0O+RNqy6M1Gdd+G4FU++bw8Xv0XsuVI4j4eovREDbQEo2c/S0mgUy3dmMHPNSqFJkFYMpXxow3QThcta4MwESif2pperoiVtcuvPQf0rqh9G9urasBZCNZjTUBdXNiBZ39vrvFU57iE=
+	t=1742075767; cv=none; b=K792J5u9EQkreUyDA3pr3zqdJG80kQ3yrlo6gKJXcFOJrseRETXffv/5Nnk+oLupFcRDZqVWZt9Vq/8kQebU0el/Q8m1SJpqibhXcnUZwngr9Y3F0+vqu5z+oyCPNtchpSbku1WEn4i9BZKU6R/45S9H2ihL4aiWgfH5ClDHook=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742072793; c=relaxed/simple;
-	bh=FlVJ5imhiRn5VNO/DGLrnhEKpXT0naJJHp+CyhtqAnc=;
+	s=arc-20240116; t=1742075767; c=relaxed/simple;
+	bh=zEP1AsJWOjAINPoMS205umleYb+VbBnUqXVLudVGoZM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hxzGhn8nQKQ663hKCQxRSTwtOxx8mHkc0Srlg1VZoCwf9xEg3uPFhEkvhtVZgKnUrmC6d3I8EFvfrg0f4fwXikGooZsk8jAt8dU2yxqv9hODG1SwBELRpLLD/8G6G32IYhuzLjPOU14dFz+fwVjnPK2w48Ph0ANffVMqlzTjE5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H7OUHnKi; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=pMBmzeib7hdGRGIdDnujijVR/v0HTvGJ+NKNxikPQqKOa2W6NYZaXHz+7iPTX+t0NPkQ/EcDWasJcYchLNWO9/P8PmgB+DJ0Dogi3ZGQKRH3ynA1pgecHJFNm/yqgzU6sp6+dHqEf94XXrqvxbzIfJnV19wpJyD7SdKvqEyF2YI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dUyMT9gt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H7OUHnKi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B742C4CEE5;
-	Sat, 15 Mar 2025 21:06:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dUyMT9gt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2F3DC4CEE5;
+	Sat, 15 Mar 2025 21:56:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742072792;
-	bh=FlVJ5imhiRn5VNO/DGLrnhEKpXT0naJJHp+CyhtqAnc=;
+	s=k20201202; t=1742075765;
+	bh=zEP1AsJWOjAINPoMS205umleYb+VbBnUqXVLudVGoZM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=H7OUHnKiyKxWr0I5xGDO00+zloOUoQb89kqHTzRB/UHC9H4fwDtdAQrjnn6KRMZBi
-	 NJ7nzhBNwcc3OK+0DZcl9bTt3PN4WRcYlXrEf9m4MPx+20B8QGr0vPtvn3fiJxACUt
-	 o4iBTl6yuBFZYYcn3NkzCVAQd7bC4jVnOJ3GfpaoSWRmNukbz9iBdTUdIK8ZwIIqIW
-	 FxgyYwmNYwG+P75RvFXpCZp8OnQQVCZiQsgd7nhjcKLa/k9kt87L5X+1UIR+L003MJ
-	 AZNxCoUT97vK6iSUOSU0d/JYxe9dviOpL6UGaANvPg6YZ6JLTED3e1BP4+u6u4+TlK
-	 RH0Q9AdZL2ThQ==
-Date: Sat, 15 Mar 2025 14:06:29 -0700
+	b=dUyMT9gtTl45VUvStCjjZOTVc7vEwcPEdZXIpk1iFimk4gJv9KxAAFVLiLGhzBjG5
+	 dNNoZUHSg+Vr3FMPa3XafkRsaSEB6zR3eIvmiqtQ6U91aPPpmrTCDtEObXJXedwVHt
+	 i/3P4DA5bE6P4W1arIRkUj4oLQvkJhy1ZPkDbL1EiG7mYZusY71p+n/jC9cjtPL0WK
+	 aO+EVa4cMaZ8mXFfjD8Pl+u+H3tT74krUzrKZLGodmn+UbiltSE3bvSOoH4yfo/9sq
+	 uDrBi4gzIz7o6TeWcnrkEOQ36iT1huN1gYgHIerK30Z3sJQBkOxFewPzNJlefZT5uo
+	 Aw85g2/QugGAQ==
+Date: Sat, 15 Mar 2025 14:56:02 -0700
 From: Kees Cook <kees@kernel.org>
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>, Miguel Ojeda <ojeda@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Marco Elver <elver@google.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	linux-hardening@vger.kernel.org, Christoph Lameter <cl@linux.com>,
-	Pekka Enberg <penberg@kernel.org>,
-	David Rientjes <rientjes@google.com>,
-	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>, Jann Horn <jannh@google.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Sasha Levin <sashal@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Yafang Shao <laoar.shao@gmail.com>,
-	Tony Ambardar <tony.ambardar@gmail.com>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Jan Hendrik Farr <kernel@jfarr.cc>,
-	Alexander Potapenko <glider@google.com>,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-doc@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v4 1/2] compiler_types: Introduce __flex_counter() and
- family
-Message-ID: <202503151406.19A299AF@keescook>
-References: <20250315025852.it.568-kees@kernel.org>
- <20250315031550.473587-1-kees@kernel.org>
- <CANiq72ki=h4YWBWpoTpZz6525Cdt38aFN0kFwW7dJNPcVi_m2Q@mail.gmail.com>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Lars-Peter Clausen <lars@metafoo.de>, linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] iio: magnetometer: ak8974: Add __nonstring annotations
+ for unterminated strings
+Message-ID: <202503151455.B8E9F6F1@keescook>
+References: <20250310222346.work.810-kees@kernel.org>
+ <CACRpkdbUk8bVWLPwVRq0qzaKRC80=bV1Wd01h+5xfH1O7-BVaQ@mail.gmail.com>
+ <20250315183125.40f9c566@jic23-huawei>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -71,21 +47,42 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANiq72ki=h4YWBWpoTpZz6525Cdt38aFN0kFwW7dJNPcVi_m2Q@mail.gmail.com>
+In-Reply-To: <20250315183125.40f9c566@jic23-huawei>
 
-On Sat, Mar 15, 2025 at 08:47:46PM +0100, Miguel Ojeda wrote:
-> On Sat, Mar 15, 2025 at 4:15 AM Kees Cook <kees@kernel.org> wrote:
-> >
-> > + * clang: https://github.com/llvm/llvm-project/pull/102549
+On Sat, Mar 15, 2025 at 06:31:25PM +0000, Jonathan Cameron wrote:
+> On Fri, 14 Mar 2025 11:31:09 +0100
+> Linus Walleij <linus.walleij@linaro.org> wrote:
 > 
-> That is an unmerged PR -- should we link to the merged one?
+> > On Mon, Mar 10, 2025 at 11:23 PM Kees Cook <kees@kernel.org> wrote:
+> > 
+> > > When a character array without a terminating NUL character has a static
+> > > initializer, GCC 15's -Wunterminated-string-initialization will only
+> > > warn if the array lacks the "nonstring" attribute[1]. Mark the arrays
+> > > with __nonstring to and correctly identify the char array as "not a C
+> > > string" and thereby eliminate the warning.
+> > >
+> > > Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=117178 [1]
+> > > Cc: Linus Walleij <linus.walleij@linaro.org>
+> > > Cc: Jonathan Cameron <jic23@kernel.org>
+> > > Cc: Lars-Peter Clausen <lars@metafoo.de>
+> > > Cc: linux-iio@vger.kernel.org
+> > > Signed-off-by: Kees Cook <kees@kernel.org>  
+> > 
+> > Fair enough,
+> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> > 
+> Kees,
 > 
-> Or, better, to the docs, since they seem to exist:
+> I've currently queued this for next cycle as it doesn't feel like a fix
+> as such and I've already sent my pull request for the merge window.
 > 
->     https://clang.llvm.org/docs/LanguageExtensions.html#builtin-counted-by-ref
+> Is it worth rushing it in, or is a fully cycle delay an issue? (6.16)
+> 
+> If slow is fine, applied to the testing branch of iio.git which gets
+> 0-day bot exposure.
 
-Ah! Perfect. I was looking under builtins and couldn't find it. :) I
-will update the link.
+No rush needed at all. This is just for cleaning up warnings for the
+coming releases of GCC 15 in couple months. Thanks for picking it up!
 
 -- 
 Kees Cook
