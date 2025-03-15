@@ -1,249 +1,218 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 701292629D;
-	Fri, 14 Mar 2025 17:45:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16A5210F1;
+	Sat, 15 Mar 2025 03:15:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741974303; cv=none; b=uIlKrLjm57r5wyNV822p2icXdawd6itoWPkmKSqtdFiYXi9KAW7a32uhcO/IzaSbbShVLb5bugUY/5P9utwMn1Bo/TWbMiOCKDv4YudJi/vICfIp2Riy0zLBPp9+lXNWiFadGGRKSDbOcJpTPiv/h++w1uKkOmOY9REcbQmkLTQ=
+	t=1742008554; cv=none; b=QY7vj6cx4OL/0TLe8BH6QoVQ/vA/+uc/LIAoJdu0jn8UJprNQCGAXErtz4/gZ5ICuVjjkzIldXB6ztPrH63ZLUwK0s216cqaxYsoRkr5+TRdgudDLd0TcRgSwp66tvtpYQyyjuhL0geHyGczQ8PjdXqdMULMY6B9N4Uh7zSF1M4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741974303; c=relaxed/simple;
-	bh=IudoS3tWFygkixhr5W7NaCnVIiBxoRIaZA8TWY3GaK8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RcyXWKmH9OXC2M3vUeP/9L4q02xT4U4EY2P4tHd2r/jMYkLfqtEbn4UhJI8zIheVyUPP0FcX8f5G8VJq7lA0DoyJpkoZSIaazidG0UcOS9dNKTIlRztfnmeyC53b7nI6aB+Rk3lGayAjrsTSNDC2yA9eKBIduv7xEHjQq9uSwKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Mfu4ZL4q; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742008554; c=relaxed/simple;
+	bh=6fauUqJf2RETc23o77eFJUZM9KoHAbkVXnkZpps4aeQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Vr/kw9Co9rP4ZOBBfZ+E+a1U9WxNojbTZuP632hz8RhMegurtKm+kdTUeKl+C2zzNiLxL9tTFsYgGyS7eYjDruhVNE7PrQE6Yl0H27gReTcqWbWHRtcNYGEFm1SsU+xM4dJe+iZOMr47pVOIfWJqTDMRi18WfxbF87b0ghYUYUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E2decw82; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mfu4ZL4q"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2240b4de12bso64922045ad.2;
-        Fri, 14 Mar 2025 10:45:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741974301; x=1742579101; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=XTK+zFsZSk+m7SXsEBUdWvQ9eyMFzVYuOZ0uuc5BCqc=;
-        b=Mfu4ZL4qFFas2msbw52YAEC8txJ4ZHMBVgj/Wv4UW99CdKxxACd9VP53x99GZLY4DY
-         cyWbM1ur/snuNGzwYv4wgFYo890pukRnTqr67PWwpgbOELQlqk6wVSq1VA/SipcNWni1
-         1Tfw+oNAYT4SXVksbQlrTu8pckIT6vFu7wvWYMAnWMKva8rPnbablRnlMxpNpEFbHjzN
-         nxXdrdvT3WBJtFCaOLuLsmwFbLQ2DBguCn52zsnQLXwH78g5CyXGkuxmKhCK9zCQmAXp
-         6WS9w4yaT6iFGmwj09h2aJqkcR2OqN3elMjU/ztS8POYG7Wl/+uyIrbmX6rhJ2WoQXdg
-         /7fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741974301; x=1742579101;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XTK+zFsZSk+m7SXsEBUdWvQ9eyMFzVYuOZ0uuc5BCqc=;
-        b=daH0uDmWWY7bMmkr+mmxFTCiZYNYEuoIVs6macOcniMJuY81y1cFN1eNEazuOWsSKH
-         or3T7Gux3t5AvXrdY9UryuXpL5qQJXL7g/XIXars12h3KmDhAv3pv5pi7ie5sNsUFmT1
-         2PFr5szfUMvrHuch3OtAvJ4G5ZLesAzsL1kNuwCTuJRNWvYxcgjivaXdHldZpCf1wPxN
-         XAn7gYOP+uwh0dgpLQPFo5j53tsdZErBZA/tnBgAVWEdXRZ4DxS64mMyS8p/GqDHaZr2
-         hVsS9tacoEgOGKWU96OteBkT+mWDUFCWWMXoksNKgBgzuSPwx/jyvQTcYTBKNscGZNEV
-         QOyA==
-X-Forwarded-Encrypted: i=1; AJvYcCUwBHqE0Lc5sqOLfZkJnZygWiMx2WRwOpaHCa4nqY/+MFFS0E2glDsgNK5K/qCaSaFiRcoqwIhf+1aDnKH+gda6e3iaM9aQ@vger.kernel.org, AJvYcCVYWETWALwVM3ugRw4uxK5Z6UOC0Rbrm5VkrP1uf4wAQdLG03yJZty+Mkjo63KwhLAuuq+dlYUpADVROyXz@vger.kernel.org, AJvYcCXD6qHpyjXhCSCVPzD0GxJTunXVOvLgZ8YjHSorPuaCYOvkliB1wxrDZGKxQt03UPd9a6IUkovVtJqcnYrSlS4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywx6TUwd/Qh5p62AFiWHp/mLslkwN552bskIy5zk6H9G8zme6nm
-	wmPrvQW5YoCqeAYsBryEp68BQoToZ+EtGQrpUYaIFdL6c7/JHIRX
-X-Gm-Gg: ASbGnct/LNWHx69OYFXko2iObRDl+1MOSQtsFP/EUAgSPTex0Yr2xjraMLzMDd1Qukp
-	eHoMOaW65xqnnXe1I29kigCo589xzhw/aZeCCUztbeHHO2AgRGhlDz0msj9AIsrnN8AVjDFAZob
-	dIAf9wc9U52eqQIEHp2d8yd9mspxetTXAt+cLuZxnKzCwmQsDIzdv4tKLJPa9QV8gXFfqOrwLnR
-	OI0OWIi+PletqTHbFrb2A+PG4p0LdEciRW/qYL2l0Y5ji+31T8yUmYvVVejXZ/R0HB9uofR67qw
-	dcBZ77beMPdEQJDwTcD/3la405wUdYcT6QBqB2qQMb08oG0IABW1pF0l9imB8fUGOJJI5x5I6iU
-	y9IewFA1h9DoFlGZSwGfMxIw04YQ9
-X-Google-Smtp-Source: AGHT+IG8t2RiWWHqExlCkH4UwwB/yJrN/VA6OIGwl2mVQE7y86DFcAhX5X9HvMhZiSS2xp1OznHmTQ==
-X-Received: by 2002:a05:6a00:2e20:b0:736:34ff:be8 with SMTP id d2e1a72fcca58-73722412c0amr3677682b3a.19.1741974300516;
-        Fri, 14 Mar 2025 10:45:00 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7371167e018sm3221272b3a.91.2025.03.14.10.44.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Mar 2025 10:45:00 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <2628dd1f-1b8f-478a-aa89-4c0f78b27962@roeck-us.net>
-Date: Fri, 14 Mar 2025 10:44:58 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E2decw82"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63672C4AF09;
+	Sat, 15 Mar 2025 03:15:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742008553;
+	bh=6fauUqJf2RETc23o77eFJUZM9KoHAbkVXnkZpps4aeQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=E2decw82ERVUEzB8Epa5JhaqLbgcc1DQ62K27AWM3sI24cuq7ab/oHUYAOyaeaVeO
+	 DyO/eq/x02vrEAs5AO6qkep1I+c23m/ErHVJc9PdR8aTi4Vm1gKXsVk++/enmTOZzL
+	 PfXL4lDeb3ncd8kZp4q4JZPIsNxwnRcp+4pAjVhCX3kBHnSt73WPzg0iKAi/z5VmVM
+	 6EPr6WAHNMs1n6SN5zK7ckXH5fvLEkIpp1c8j4V9a78aXVRYdrcOprDEXCqBzQXav0
+	 JhIc25qskgxIcD/Sci/GNzgWeROVwxSnl49e9YSF9DvCeZ3g7UTKG+PvUDHYk+q2Th
+	 3IzrZEf3KOWoA==
+From: Kees Cook <kees@kernel.org>
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Kees Cook <kees@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Marco Elver <elver@google.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	linux-hardening@vger.kernel.org,
+	Christoph Lameter <cl@linux.com>,
+	Pekka Enberg <penberg@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Jann Horn <jannh@google.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Sasha Levin <sashal@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Yafang Shao <laoar.shao@gmail.com>,
+	Tony Ambardar <tony.ambardar@gmail.com>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Jan Hendrik Farr <kernel@jfarr.cc>,
+	Alexander Potapenko <glider@google.com>,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-doc@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: [PATCH v4 1/2] compiler_types: Introduce __flex_counter() and family
+Date: Fri, 14 Mar 2025 20:15:44 -0700
+Message-Id: <20250315031550.473587-1-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250315025852.it.568-kees@kernel.org>
+References: <20250315025852.it.568-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5] hwmon: (pmbus/tps53679) Add support for TPS53685
-To: Chiang Brian <chiang.brian@inventec.com>, Jean Delvare
- <jdelvare@suse.com>, =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
- =?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>,
- Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>,
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc: linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-security-module@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <CAJCfHmW61d2jd_tYpNEqBG_Z58bEnVKAmsvhrEP1zXQoXqrUVw@mail.gmail.com>
- <20250314033040.3190642-1-chiang.brian@inventec.com>
-Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <20250314033040.3190642-1-chiang.brian@inventec.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5026; i=kees@kernel.org; h=from:subject; bh=6fauUqJf2RETc23o77eFJUZM9KoHAbkVXnkZpps4aeQ=; b=owGbwMvMwCVmps19z/KJym7G02pJDOlXPjxIjE73nBMiZa7s/XPC1yVaSm9P+sa7ZV2RO7f5t a8Xh2JDRykLgxgXg6yYIkuQnXuci8fb9nD3uYowc1iZQIYwcHEKwER47zEyXPnkmFQj8EN7XpBd S/CzJB4flnDzcxIKSU68Z0Trp794yciw4O+FVc8Sa16bfLbtOyMnFXRT84Tq+jTPKYlF5/azia1 kAgA=
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On 3/13/25 20:30, Chiang Brian wrote:
-> The TPS53685 is a fully AMD SVI3 compliant step down
-> controller with trans-inductor voltage regulator
-> (TLVR) topology support, dual channels, built-in
-> non-volatile memory (NVM), PMBus interface, and
-> full compatible with TI NexFET smart power
-> stages.
-> Add support for it to the tps53679 driver.
-> 
-> Signed-off-by: Chiang Brian <chiang.brian@inventec.com>
-> ---
-> v4 -> V5:
->      1. document the compatible of tps53685 into dt-bindings
-> 	2. add the buffer length as argument for %*ph
-> 	3. Add Changelog
-> v3 -> V4:
->      1. Add length comparison into the comparison of "id",or it may be true when
-> 	   the substring of "id" matches device id.
-> 	2. Restore `return 0;` in `tps53679_identify_chip()`
-> V2 -> V3:
->      1. Remove the length comparsion in the comparison of "id".
-> V1 -> V2:
-> 	1. Modify subject and description to meet requirements
-> 	2. Add "tps53685" into enum chips with numeric order
-> 	3. Modify the content of marco "TPS53681_DEVICE_ID" from 0x81 to "\x81"
-> 	   Add marco "TPS53685_DEVICE_ID" with content "TIShP"
-> 	4. Modify the type of "id" from u16 to char* in `tps53679_identify_chip()`
-> 	5. Modify the comparison of "id". It will be true if the string "id" matches
-> 	   device ID and compare with type char*,
-> 	6. Add the length comparsion into the comparison of "id".
-> 	7. Modify "len" as return code in `tps53679_identify_chip()`
-> 	8. Output device error log with %*ph, instead of 0x%x\n"
->      9. Use existing tps53679_identify_multiphase() with argument
-> 	   "TPS53685_DEVICE_ID" in tps53685_identify() rather than creating one
-> 	   tps53685_identify_multiphase()
-> 
-> boot-log:
+Introduce __flex_counter() which wraps __builtin_counted_by_ref(),
+as newly introduced by GCC[1] and Clang[2]. Use of __flex_counter()
+allows access to the counter member of a struct's flexible array member
+when it has been annotated with __counted_by().
 
-This is completely useless noise.
+Introduce typeof_flex_counter(), can_set_flex_counter(), and
+set_flex_counter() to provide the needed _Generic() wrappers to get sane
+results out of __flex_counter().
 
-> 	
->   drivers/hwmon/pmbus/tps53679.c | 29 +++++++++++++++++++++++------
->   1 file changed, 23 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/hwmon/pmbus/tps53679.c b/drivers/hwmon/pmbus/tps53679.c
-> index 63524dff5e75..091d5eacbee0 100644
-> --- a/drivers/hwmon/pmbus/tps53679.c
-> +++ b/drivers/hwmon/pmbus/tps53679.c
-> @@ -16,7 +16,7 @@
->   #include "pmbus.h"
->   
->   enum chips {
-> -	tps53647, tps53667, tps53676, tps53679, tps53681, tps53688
-> +	tps53647, tps53667, tps53676, tps53679, tps53681, tps53685, tps53688
->   };
->   
->   #define TPS53647_PAGE_NUM		1
-> @@ -31,7 +31,8 @@ enum chips {
->   #define TPS53679_PROT_VR13_5MV		0x07 /* VR13.0 mode, 5-mV DAC */
->   #define TPS53679_PAGE_NUM		2
->   
-> -#define TPS53681_DEVICE_ID		0x81
-> +#define TPS53681_DEVICE_ID     "\x81"
-> +#define TPS53685_DEVICE_ID     "TIShP"
->   
->   #define TPS53681_PMBUS_REVISION		0x33
->   
-> @@ -86,7 +87,7 @@ static int tps53679_identify_phases(struct i2c_client *client,
->   }
->   
->   static int tps53679_identify_chip(struct i2c_client *client,
-> -				  u8 revision, u16 id)
-> +				  u8 revision, char *id)
->   {
->   	u8 buf[I2C_SMBUS_BLOCK_MAX];
->   	int ret;
-> @@ -102,8 +103,8 @@ static int tps53679_identify_chip(struct i2c_client *client,
->   	ret = i2c_smbus_read_block_data(client, PMBUS_IC_DEVICE_ID, buf);
->   	if (ret < 0)
->   		return ret;
-> -	if (ret != 1 || buf[0] != id) {
-> -		dev_err(&client->dev, "Unexpected device ID 0x%x\n", buf[0]);
-> +	if (ret != strlen(id) || strncmp(id, buf, ret)) {
-> +		dev_err(&client->dev, "Unexpected device ID: %*ph\n", ret, buf);
->   		return -ENODEV;
->   	}
->   	return 0;
-> @@ -138,6 +139,14 @@ static int tps53679_identify(struct i2c_client *client,
->   	return tps53679_identify_mode(client, info);
->   }
->   
-> +static int tps53685_identify(struct i2c_client *client,
-> +				 struct pmbus_driver_info *info)
-> +{
-> +	info->format[PSC_VOLTAGE_OUT] = linear;
-> +	return tps53679_identify_chip(client, TPS53681_PMBUS_REVISION,
-> +					   TPS53685_DEVICE_ID);
-> +}
-> +
->   static int tps53681_identify(struct i2c_client *client,
->   			     struct pmbus_driver_info *info)
->   {
-> @@ -215,7 +224,9 @@ static struct pmbus_driver_info tps53679_info = {
->   		PMBUS_HAVE_IOUT | PMBUS_HAVE_STATUS_IOUT |
->   		PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP |
->   		PMBUS_HAVE_POUT,
-> -	.func[1] = PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT |
-> +	.func[1] = PMBUS_HAVE_VIN | PMBUS_HAVE_IIN | PMBUS_HAVE_PIN |
-> +	    PMBUS_HAVE_STATUS_INPUT |
-> +		PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT |
+For example, with:
 
-This changes the attributes supported for the other chips supported by this
-driver. If those chips indeed support the additional attributes, the change
-should be submitted as separate patch. Otherwise, please explain how the change
-is supposed to work for those chips (and why you don't add the additional flags
-after determining that the chip is a tps53685 and after copying the data structure).
+	struct foo {
+		int counter;
+		short array[] __counted_by(counter);
+	} *p;
 
-Guenter
+__flex_counter(p->array) will resolve to: &p->counter
+
+typeof_flex_counter(p->array) will resolve to "int". (If p->array was not
+annotated, it would resolve to "size_t".)
+
+can_set_flex_counter(p->array, COUNT) is the same as:
+
+	COUNT <= type_max(p->counter) && COUNT >= type_min(p->counter)
+
+(If p->array was not annotated it would return true since everything
+fits in size_t.)
+
+set_flex_counter(p->array, COUNT) is the same as:
+
+	p->counter = COUNT;
+
+(It is a no-op if p->array is not annotated with __counted_by().)
+
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+Cc: Miguel Ojeda <ojeda@kernel.org>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Nick Desaulniers <nick.desaulniers+lkml@gmail.com>
+Cc: Marco Elver <elver@google.com>
+Cc: Przemek Kitszel <przemyslaw.kitszel@intel.com>
+Cc: linux-hardening@vger.kernel.org
+---
+ include/linux/compiler_types.h | 31 +++++++++++++++++++++++++++++
+ include/linux/overflow.h       | 36 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 67 insertions(+)
+
+diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
+index 981cc3d7e3aa..8b45ecfad5b1 100644
+--- a/include/linux/compiler_types.h
++++ b/include/linux/compiler_types.h
+@@ -453,6 +453,37 @@ struct ftrace_likely_data {
+ #define __annotated(var, attr)	(false)
+ #endif
+ 
++/*
++ * Optional: only supported since gcc >= 15, clang >= 19
++ *
++ *   gcc: https://gcc.gnu.org/onlinedocs/gcc/Other-Builtins.html#index-_005f_005fbuiltin_005fcounted_005fby_005fref
++ * clang: https://github.com/llvm/llvm-project/pull/102549
++ */
++#if __has_builtin(__builtin_counted_by_ref)
++/**
++ * __flex_counter() - Get pointer to counter member for the given
++ *                    flexible array, if it was annotated with __counted_by()
++ * @FAM: Pointer to flexible array member of an addressable struct instance
++ *
++ * For example, with:
++ *
++ *	struct foo {
++ *		int counter;
++ *		short array[] __counted_by(counter);
++ *	} *p;
++ *
++ * __flex_counter(p->array) will resolve to &p->counter.
++ *
++ * Note that Clang may not allow this to be assigned to a separate
++ * variable; it must be used directly.
++ *
++ * If p->array is unannotated, this returns (void *)NULL.
++ */
++#define __flex_counter(FAM)	__builtin_counted_by_ref(FAM)
++#else
++#define __flex_counter(FAM)	((void *)NULL)
++#endif
++
+ /*
+  * Some versions of gcc do not mark 'asm goto' volatile:
+  *
+diff --git a/include/linux/overflow.h b/include/linux/overflow.h
+index 0c7e3dcfe867..e2b81cb5576e 100644
+--- a/include/linux/overflow.h
++++ b/include/linux/overflow.h
+@@ -440,4 +440,40 @@ static inline size_t __must_check size_sub(size_t minuend, size_t subtrahend)
+ #define DEFINE_FLEX(TYPE, NAME, MEMBER, COUNTER, COUNT)	\
+ 	_DEFINE_FLEX(TYPE, NAME, MEMBER, COUNT, = { .obj.COUNTER = COUNT, })
+ 
++/**
++ * typeof_flex_counter() - Return the type of the counter variable of a given
++ *                         flexible array member annotated by __counted_by().
++ * @FAM: Pointer to the flexible array member within a given struct.
++ *
++ * Returns "size_t" if no annotation exists.
++ */
++#define typeof_flex_counter(FAM)				\
++	typeof(_Generic(__flex_counter(FAM),			\
++			void *: (size_t)0,			\
++			default: *__flex_counter(FAM)))
++
++/** can_set_flex_counter() - Check if the counter associated with the given
++ *                           flexible array member can represent a value.
++ * @FAM: Pointer to the flexible array member within a given struct.
++ * @COUNT: Value to check against the __counted_by annotated @FAM's counter.
++ */
++#define can_set_flex_counter(FAM, COUNT)			\
++	(!overflows_type(COUNT, typeof_flex_counter(FAM)))
++
++/**
++ * set_flex_counter() - Set the counter associated with the given flexible
++ *                      array member that has been annoated by __counted_by().
++ * @FAM: Pointer to the flexible array member within a given struct.
++ * @COUNT: Value to store to the __counted_by annotated @FAM's counter.
++ *
++ * This is a no-op if no annotation exists. Count needs to be checked with
++ * can_set_flex_counter(FAM, COUNT) before using this function.
++ */
++#define set_flex_counter(FAM, COUNT)				\
++({								\
++	*_Generic(__flex_counter(FAM),				\
++		  void *:  &(size_t){ 0 },			\
++		  default: __flex_counter(FAM)) = (COUNT);	\
++})
++
+ #endif /* __LINUX_OVERFLOW_H */
+-- 
+2.34.1
 
