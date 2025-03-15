@@ -1,118 +1,77 @@
-Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 191BB8633F
-	for <linux-hardening@vger.kernel.org>; Sat, 15 Mar 2025 07:49:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8083F192B8F;
+	Sat, 15 Mar 2025 09:17:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742024985; cv=none; b=jkR+u1SCd21TbR8TbkbtfgC6O9eZ731dWINpyMWxXABgLawCC0x1rtZhIj62Ue+lxziT9wWn8D52s3OD6GjZhy37XmpqYn4d+/GL8j/nHPB+5V3M8NvsOK/gKlwzemA8eN/OZThtpX73G2b7FHxlafzZ7bKfSab24lfvUVpytIs=
+	t=1742030268; cv=none; b=dmBrm5zwB4LVTUeoLDdgUgdVlANe+y/fT/jN+ScgEI3DCtcFQkQHi6Z1UA/oLyiLYrjJACp1zQ41TfNLnRZylotenaeb2sGTjljIiU+iEXCPwjHwxrGnmOTpwxf0g1aWTXlJ+iE4+sLFMxk/WPL+pmtp8vMvgRl2YrjSsI1CqHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742024985; c=relaxed/simple;
-	bh=R0Gg5Jt7lqUVrBZPRV6z1e75dkugdVy+iodMgGgZx0c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LkLMdvWXMO1VYS6Tq4fTAkE6r8oYddaUjc9py3eUAO1HssLWWuRRRiCtkPOHyaUZ6KWBGGGaE3A11E+V+uFQD+79ZpoGImpQov+xAAF4TqExbCjAWQFr4cuJ84CCJ2HdGHgJjV3vH7279ArzIE+qZuZnMfMon/lf2hO9WYDWyi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=m1rnKBnb; arc=none smtp.client-ip=44.202.169.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1742030268; c=relaxed/simple;
+	bh=uSXcwOF4OX+6FyoJVGHlnICPZ0NEobxqqLmgMlnJEnI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UwihmhAACkvi2OWrymtE1FEU6WV2XbtGhKVoqbSCFSzAWBSftTMC6pR6+f5ZlOJJLDXu0lQ4OUqSivO4Rz05eBpO2Iinh5zk4jTMHVVeosAdqVFVNAgClCtZPm7dRdNr9qu+URiPxciuACC2H9+zzTXkARiye8ns7+bzgu0x/Jw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=iyx2UdBY; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="m1rnKBnb"
-Received: from eig-obgw-6005a.ext.cloudfilter.net ([10.0.30.201])
-	by cmsmtp with ESMTPS
-	id tD6jtDhp8zZPatMH8tpga9; Sat, 15 Mar 2025 07:49:43 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id tMH7tZuyGZ6h1tMH7tIWtl; Sat, 15 Mar 2025 07:49:42 +0000
-X-Authority-Analysis: v=2.4 cv=ergUzZpX c=1 sm=1 tr=0 ts=67d53116
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=6Vi/Wpy7sgpXGMLew8oZcg==:17
- a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=7T7KSl7uo7wA:10
- a=7XQe7QQrGAp21atFurkA:9 a=QEXdDO2ut3YA:10 a=QYH75iMubAgA:10
- a=Xt_RvD8W3m28Mn_h3AK8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=UNKnXi0eqTGn5Iah8wJgR3gA8aNMiLmiP3z2WLfLaC8=; b=m1rnKBnbBQ//eMuv0LxYb7I4Xw
-	ulNkhmExLpXwVYxLPD1SBPrzthmE12QPN6TM0Xb25KW4355+q9+QDfPRVOE+ysemb7+dN6M159l+t
-	udPmqNR6s5kHVEKoXxL3DR82usEFr32OMEb5MerN2MvZgYb5dYFu9zBahTFfyR5Qd64fjc7xan3LR
-	ohWhHkrZBnkBTcaVNNS0ASO/PDRO1DY2uTWCszGx+xOEdQAznjdca28fKerEakgNZOlfOa8gBwR9F
-	XEpoEbPKg8RFAflC889nOUqQyeeWtNpG8YabA10QaJ6QzJfjj7Jls8FNavaR8kQLQcdHHpdmGQBcU
-	yuIWwJwg==;
-Received: from [45.124.203.140] (port=53936 helo=[192.168.0.160])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1ttMH5-00000003ubx-3aqH;
-	Sat, 15 Mar 2025 02:49:41 -0500
-Message-ID: <b6dd5eff-581f-41e0-a121-8d0614b1a469@embeddedor.com>
-Date: Sat, 15 Mar 2025 18:19:25 +1030
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="iyx2UdBY"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=7ZKaV4wAzdHrL5lpJWveTwc7e0pa/4045fv/4FAgM+U=; b=iyx2UdBYaNjcrqKevY3u8kJAdw
+	7QCKP5Ow5whvuCI/A2vPWw3LQ18w5XtuR2GrUuYaPowyEWez4ZGaS3TAFxSt952bOiPqkjdyPj0mi
+	hgulOMYneeyV8L4Z4gSFj4ZTNzTlqZOGwuigseNoU3dERBe2ZRrblScz208t8bS2q/9sH3O7L937c
+	CO8s9rQ4CSPSlGlyQ/caj5nf5aNwm4ISaVjSnrAXFe8geFNY+wWbsjxUyceFLSRDqArmkT8H6x4GT
+	ZCh1H2IdEMMuKcDWb6OroB6yH4hvTsoP2LUZQmMPyGZXFAVF5l2OI7KUl4mYixSj1gPJch9vzaFmS
+	NhtRHLwQ==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1ttNe5-006o9I-1j;
+	Sat, 15 Mar 2025 17:17:30 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Sat, 15 Mar 2025 17:17:29 +0800
+Date: Sat, 15 Mar 2025 17:17:29 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Ethan Carter Edwards <ethan@ethancedwards.com>
+Cc: Jesper Nilsson <jesper.nilsson@axis.com>,
+	Lars Persson <lars.persson@axis.com>,
+	"David S. Miller" <davem@davemloft.net>, linux-arm-kernel@axis.com,
+	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] crypto: axis/artpec6: change from kzalloc to kcalloc in
+ artpec6_crypto_probe()
+Message-ID: <Z9VFqX75Uz1JOImq@gondor.apana.org.au>
+References: <20250308-artpec6-devm_kcalloc-v1-1-37886eaebd16@ethancedwards.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] wifi: iwlwifi: dvm: Avoid
- -Wflex-array-member-not-at-end warnings
-To: Johannes Berg <johannes@sipsolutions.net>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Miri Korenblit <miriam.rachel.korenblit@intel.com>,
- Kalle Valo <kvalo@kernel.org>
-Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <Zr5QR03+wyw571zd@elsanto>
- <b0f25000-396c-4a83-abc1-1a07b3065c10@embeddedor.com>
- <75551003-17c7-450a-89b0-818b6a01051c@embeddedor.com>
- <af8e60b46567a0612b71d4cd198b07dc93b046e4.camel@sipsolutions.net>
- <c058eedc7fe0d6b58dba376140291a0ba048a6d5.camel@sipsolutions.net>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <c058eedc7fe0d6b58dba376140291a0ba048a6d5.camel@sipsolutions.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 45.124.203.140
-X-Source-L: No
-X-Exim-ID: 1ttMH5-00000003ubx-3aqH
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.0.160]) [45.124.203.140]:53936
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfBYcEq+Z+YRfKVeIsgP9T3FfPfw8gh6euAZeUPib6dmTVu14U7De7CLjvtX71xw1+cSO0YmcN6LB1jItEh+7m6ItCoAs0p56M5gonprk0WZXmqYNOPI5
- dzzjq9Lrdtsjjhp+XYPnW4J9DzCMkVM0MKBFwEuVdnISKXZreOScM8qIWVpnKIbnLBDzgEb5ETE8zGLHyeLotT+b3xX5JMwcdZYCeen0A5/bhVtRzJKsUje+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250308-artpec6-devm_kcalloc-v1-1-37886eaebd16@ethancedwards.com>
 
-
-
-On 11/03/25 21:12, Johannes Berg wrote:
-> On Tue, 2025-03-11 at 11:40 +0100, Johannes Berg wrote:
->> On Mon, 2025-03-10 at 14:17 +1030, Gustavo A. R. Silva wrote:
->>> Hi all,
->>>
->>> I wonder who can take this patch, please. :)
->>>
->>
->> At the very least you're going to have to resend, I don't have the patch
->> in patchwork any more.
->>
+On Sat, Mar 08, 2025 at 07:30:52PM -0500, Ethan Carter Edwards wrote:
+> We are trying to get rid of all multiplications from allocation
+> functions to prevent potential integer overflows. Here the
+> multiplication is probably safe, but using kcalloc() is more
+> appropriate and improves readability. This patch has no effect
+> on runtime behavior.
 > 
-> Oh, no, sorry, it's still there but assigned to Miri.
+> Link: https://github.com/KSPP/linux/issues/162 [1]
+> Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments
+> 
+> Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
+> ---
+>  drivers/crypto/axis/artpec6_crypto.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
-I see.
-
-It's been months. I wonder what can we do to move it to -next. :)
-
-Thanks
---
-Gustavo
+Patch applied.  Thanks.
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
