@@ -1,88 +1,69 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46B65197A8E;
-	Sat, 15 Mar 2025 21:56:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D5BB7DA8C;
+	Sun, 16 Mar 2025 03:30:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742075767; cv=none; b=K792J5u9EQkreUyDA3pr3zqdJG80kQ3yrlo6gKJXcFOJrseRETXffv/5Nnk+oLupFcRDZqVWZt9Vq/8kQebU0el/Q8m1SJpqibhXcnUZwngr9Y3F0+vqu5z+oyCPNtchpSbku1WEn4i9BZKU6R/45S9H2ihL4aiWgfH5ClDHook=
+	t=1742095806; cv=none; b=CxoIATMB5k/6xPifGCfcaw5M6oCM5ck+u8TtREk5hWsfYhcwyJVk5QVhbUlyme7xO7jR6SnzneiyOOX7QsSXtjorh6jeR9cptpuUPod5P0iRUQpWmKs86OO6QfW8k2JMrQaQIwEWNqK8Ayx07jQinjZkZGqsItVnp5saXflCmQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742075767; c=relaxed/simple;
-	bh=zEP1AsJWOjAINPoMS205umleYb+VbBnUqXVLudVGoZM=;
+	s=arc-20240116; t=1742095806; c=relaxed/simple;
+	bh=HPlN6EQ4TqhduOGC6gbXQx2ti+IJ2nJLaoZfd3YbLSY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pMBmzeib7hdGRGIdDnujijVR/v0HTvGJ+NKNxikPQqKOa2W6NYZaXHz+7iPTX+t0NPkQ/EcDWasJcYchLNWO9/P8PmgB+DJ0Dogi3ZGQKRH3ynA1pgecHJFNm/yqgzU6sp6+dHqEf94XXrqvxbzIfJnV19wpJyD7SdKvqEyF2YI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dUyMT9gt; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZzGFgHKKdQHnvvtj+P9QTdHbIQN2RNeRckp+yMi6qai8JDqFU0aUQ3kbErhtUkIaoq+HOimD22NCrUzy5G5oTqS6603GX1CSePwHrvhX7tgKrYeP5drVlG8ERnwvZyCKV6ZgDHKFTdITHqTXa9Z5vrcTQKjPDaHuUEgBy2ij4Jc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=YC7Yw5dg; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dUyMT9gt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2F3DC4CEE5;
-	Sat, 15 Mar 2025 21:56:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742075765;
-	bh=zEP1AsJWOjAINPoMS205umleYb+VbBnUqXVLudVGoZM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dUyMT9gtTl45VUvStCjjZOTVc7vEwcPEdZXIpk1iFimk4gJv9KxAAFVLiLGhzBjG5
-	 dNNoZUHSg+Vr3FMPa3XafkRsaSEB6zR3eIvmiqtQ6U91aPPpmrTCDtEObXJXedwVHt
-	 i/3P4DA5bE6P4W1arIRkUj4oLQvkJhy1ZPkDbL1EiG7mYZusY71p+n/jC9cjtPL0WK
-	 aO+EVa4cMaZ8mXFfjD8Pl+u+H3tT74krUzrKZLGodmn+UbiltSE3bvSOoH4yfo/9sq
-	 uDrBi4gzIz7o6TeWcnrkEOQ36iT1huN1gYgHIerK30Z3sJQBkOxFewPzNJlefZT5uo
-	 Aw85g2/QugGAQ==
-Date: Sat, 15 Mar 2025 14:56:02 -0700
-From: Kees Cook <kees@kernel.org>
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Lars-Peter Clausen <lars@metafoo.de>, linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] iio: magnetometer: ak8974: Add __nonstring annotations
- for unterminated strings
-Message-ID: <202503151455.B8E9F6F1@keescook>
-References: <20250310222346.work.810-kees@kernel.org>
- <CACRpkdbUk8bVWLPwVRq0qzaKRC80=bV1Wd01h+5xfH1O7-BVaQ@mail.gmail.com>
- <20250315183125.40f9c566@jic23-huawei>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YC7Yw5dg"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=FSu43IEnd9G6UVWlhy9qpwM+6c8I+Yb5z7euF1j53zk=; b=YC7Yw5dg3Mmiti9+u/w5zC4Srm
+	5dm75T8uBuzXeTRAPjy+DUOjznvY761c2sQHlRGN8+rrLT04U8r4Om8ova9UHSY1CbxRGul6DqMSs
+	8AApvWDNdOfl9OA6yK1IvHFcyCO0v7TBQlPOXxgFG3g/w2HzWFtKqrGdE5gK5kFKOXXVP7R7mkOUJ
+	kLlJy8+F9Sg488czTSEjIePzDNgCUIFhFlDDjsWMG1ZzuO4fES1G36APrb5jlsmDZ7zKgf4OUZOxW
+	LEy/w6LgnIRhZT/HlBLKNUo6EfVbPedHyP0T1HaWarX59GUVwcAUvlcd/AyadKGpqSmrHi8s9WQMQ
+	wCvpJTWA==;
+Received: from willy by casper.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tteg5-0000000Gefo-2SuV;
+	Sun, 16 Mar 2025 03:29:35 +0000
+Date: Sun, 16 Mar 2025 03:28:41 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: Ethan Carter Edwards <ethan@ethancedwards.com>
+Cc: Theodore Ts'o <tytso@mit.edu>,
+	Andreas Dilger <adilger.kernel@dilger.ca>,
+	linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] ext4: hash: change kzalloc(n * sizeof, ...) to
+ kcalloc(n, sizeof, ...)
+Message-ID: <Z9ZFabmQuSLiwfE5@casper.infradead.org>
+References: <20250315-ext4-hash-kcalloc-v1-1-a9132cb49276@ethancedwards.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250315183125.40f9c566@jic23-huawei>
+In-Reply-To: <20250315-ext4-hash-kcalloc-v1-1-a9132cb49276@ethancedwards.com>
 
-On Sat, Mar 15, 2025 at 06:31:25PM +0000, Jonathan Cameron wrote:
-> On Fri, 14 Mar 2025 11:31:09 +0100
-> Linus Walleij <linus.walleij@linaro.org> wrote:
-> 
-> > On Mon, Mar 10, 2025 at 11:23 PM Kees Cook <kees@kernel.org> wrote:
-> > 
-> > > When a character array without a terminating NUL character has a static
-> > > initializer, GCC 15's -Wunterminated-string-initialization will only
-> > > warn if the array lacks the "nonstring" attribute[1]. Mark the arrays
-> > > with __nonstring to and correctly identify the char array as "not a C
-> > > string" and thereby eliminate the warning.
-> > >
-> > > Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=117178 [1]
-> > > Cc: Linus Walleij <linus.walleij@linaro.org>
-> > > Cc: Jonathan Cameron <jic23@kernel.org>
-> > > Cc: Lars-Peter Clausen <lars@metafoo.de>
-> > > Cc: linux-iio@vger.kernel.org
-> > > Signed-off-by: Kees Cook <kees@kernel.org>  
-> > 
-> > Fair enough,
-> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> > 
-> Kees,
-> 
-> I've currently queued this for next cycle as it doesn't feel like a fix
-> as such and I've already sent my pull request for the merge window.
-> 
-> Is it worth rushing it in, or is a fully cycle delay an issue? (6.16)
-> 
-> If slow is fine, applied to the testing branch of iio.git which gets
-> 0-day bot exposure.
+On Sat, Mar 15, 2025 at 12:29:34PM -0400, Ethan Carter Edwards wrote:
+> Open coded arithmetic in allocator arguments is discouraged. Helper
+> functions like kcalloc are preferred.
 
-No rush needed at all. This is just for cleaning up warnings for the
-coming releases of GCC 15 in couple months. Thanks for picking it up!
+Well, yes, but ...
 
--- 
-Kees Cook
+> +++ b/fs/ext4/hash.c
+> @@ -302,7 +302,7 @@ int ext4fs_dirhash(const struct inode *dir, const char *name, int len,
+>  
+>  	if (len && IS_CASEFOLDED(dir) &&
+>  	   (!IS_ENCRYPTED(dir) || fscrypt_has_encryption_key(dir))) {
+> -		buff = kzalloc(sizeof(char) * PATH_MAX, GFP_KERNEL);
+> +		buff = kcalloc(PATH_MAX, sizeof(char), GFP_KERNEL);
+
+sizeof(char) is defined to be 1.  So this should just be
+kzalloc(PATH_MAX, GFP_KERNEL).
+
