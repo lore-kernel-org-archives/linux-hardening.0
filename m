@@ -1,172 +1,484 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08E051A3161
-	for <linux-hardening@vger.kernel.org>; Sun, 16 Mar 2025 12:54:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5319642A8B;
+	Sun, 16 Mar 2025 22:17:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742129673; cv=none; b=Raf3XwDIVnksrUoqbKrVwXWXX4q7pBoO22s8PDX986Q+lpsyC95h3U13r2iCAW7XW/CIa5R3dKtYt//agEUTtHSG2lRWE892dcVCngV5EzKPhoiggKVF0WGAtqMeCNVqOD0tFyFxGE98fNcc3lw8GMsOLd9VBbe433qIliJR2IM=
+	t=1742163426; cv=none; b=hMyeqgFFjExWBa0De5P/VEfkx0okydofU5h1RO51aXcgLcXwRZAQtKCFvt1vVY2Bp2KHIrO5XJ/5FzJWCL9/DaRpTX8Kk+SPFqrD7DX5TjXMY8GzZZNuh74iN/Tnf4SBi3WVDuiRqAms+mhhihY77VTeZuRu2Ni8WYR1frTI06E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742129673; c=relaxed/simple;
-	bh=OxA9qjBJqKakYnBRGso9o9ug7I0v0v6fw9kJZL/v/EQ=;
-	h=From:Message-Id:Content-Type:Mime-Version:Subject:Date:
-	 In-Reply-To:Cc:To:References; b=E3IhWaUf9aa+9reWiU7WdNMLr+V0fkzMQvoJiGu6BkkTy1Nb+h5ytT3jxNlfsRj+pedPcfDtOgAc+IcbYoLg3rfEDbCQvHObVqBLNiMCR24lZ5pB/j4lyEzW5AvNXfrt8UMUHMimGfObCg08z1xWYgE+/3R/YaEDoUx7BkSRZaI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dilger.ca; spf=pass smtp.mailfrom=dilger.ca; dkim=pass (2048-bit key) header.d=dilger-ca.20230601.gappssmtp.com header.i=@dilger-ca.20230601.gappssmtp.com header.b=Ld8tWdC/; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dilger.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dilger.ca
+	s=arc-20240116; t=1742163426; c=relaxed/simple;
+	bh=KeNynuubeta2ne4/SAZz2ZAsxWspSzUhDae9z5ojBI0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=W3lGNyVs/i73h2uqTfdShG4K0SKz78/VUd555nYX6yIFKDbo3CD4YzSq7GzZpw34I3+cGHou+WviuyCMULZH4dB/OnrwnGCoMUA4/gVX3cUt8pTJ26dFn9sXV4WWRvVBPg0PgbkieaIZxQr7LtwOU/aa7s9kAmsbjM24q1s9uO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iqHsUbQn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dilger-ca.20230601.gappssmtp.com header.i=@dilger-ca.20230601.gappssmtp.com header.b="Ld8tWdC/"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2239c066347so69354445ad.2
-        for <linux-hardening@vger.kernel.org>; Sun, 16 Mar 2025 05:54:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dilger-ca.20230601.gappssmtp.com; s=20230601; t=1742129670; x=1742734470; darn=vger.kernel.org;
-        h=references:to:cc:in-reply-to:date:subject:mime-version:message-id
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=DNgoIYRjmwaaNFGCS9H1CvEFT1qMkwLF12E6od/1rOs=;
-        b=Ld8tWdC/eOY6w1F+Fnc/5pk2MW7JvwwhAuT4snjfVVTFRKSj9GWyKF60SQ8s6/c83a
-         Oeo7RVzYpsCGk0JddN7Pgmv9sGjV3vh0SnYi432XaBi7bhJsCTkSv3vByoYemkmsbdFt
-         TSxWZBtT/YC2BRYHudBk/Jl5ROQYU3ixpIjv3ucTF4FLtddKo3SOtonLLWqlU6aRCqrG
-         9Qfl9MJPyujYhtElGkk6gU6j3a2K33lcEiw9TLMrPeKebdyMCdB+rrsxk0Nbk/6MfVOX
-         mvZiqlBYRzitSNRQJFIU9Xlw2xoSvmMy1zgCN/ySq79mKSlnM4dv+zEU3uNtPtyjMixU
-         VPwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742129670; x=1742734470;
-        h=references:to:cc:in-reply-to:date:subject:mime-version:message-id
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DNgoIYRjmwaaNFGCS9H1CvEFT1qMkwLF12E6od/1rOs=;
-        b=Hxkzz16Damg9GMWqmZI6GyloQq0PhgvgP/6Ws/zKIQZeG7dZwCYE0BB6O7+E8is4ZL
-         dD6/dNA3q1vzJ/ey3Pf9NFhSGsMCQ4V3YNl3QWoJ0pmshRCIgHLYDP/eF0aSQBd87JBW
-         zsyfFQbM4BISnMKjRxtt5hOH9iraJAgMlOycbIDXReCzYRNV7rn6E/vUB3uk6hP4WhvW
-         A3iBz1GcgHKiAri1Zg2THUDbRwmzpDSpePX67LUlsjtA3fUcOeT6+fHr/iHZ3SXKaJMr
-         F6FZ7ZSDlvCPD3/i68dloI5O1J5nBMMlHipWq0t9QL+FUAffm8ceDP1iXVkul1na+7Na
-         BbBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWRAWVA8781BVSncvkV57ent1QHOLIwe9C4MjfezLzOqQO5+5BtSMWgtcmxxycCOMrhpKBCoY7uZUSitrkL5A4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxczg8HQRyArk+8LX/uMMBO2DCfgcToGCda9b9d32WLvtAmvWDy
-	zDhZOflP+0krrPzHiG/iWF0pWdqa6+P5CyoIqXLPhRMd8RUy4DHPAijFm9iIF3M=
-X-Gm-Gg: ASbGncvOojMM65RlXOIt5rHPyGoXHHWgrN//kMxToG8pnbkUj3r7uoSOPReoW/wL7Jt
-	QNamc4Io0i63u+Yyq0+y7iG9dVAVvBLytEsRaPa0hGjIecx4nx5yMGfFTDeTNXWAggWyraP95/B
-	XRXzRgNU8nW9VG5w6+pitkT4BQGEFbusYJEkTXdiltRjdO4wXLvF0+ZSfE+JJPSoyqCTQRharQB
-	O1o5bR3paSMhcfCsVQ8vFpK3k5NWwmWzU7R1Rz+Cw5aac1pFxJI1plpLsjNKTa2Zl48dyMFDNkc
-	wIAvNIq9I/1qxVCphxw/NF0+IA97Q8rlC27TA9dpGwAEQHRvE6/YilKrouw/ty7l+r/wfgzLvhT
-	ilVtuA+buwwi0Sb3sng==
-X-Google-Smtp-Source: AGHT+IFzsFhOYNXxQ4P0xXMx/sSODUbQClgIcbHZhWjx33vG1Z2MB70E9uzcFuoB9hQ2s+qFlx9SMA==
-X-Received: by 2002:a17:902:dacc:b0:224:1c95:451e with SMTP id d9443c01a7336-225e0af5c09mr90792615ad.33.1742129670186;
-        Sun, 16 Mar 2025 05:54:30 -0700 (PDT)
-Received: from cabot.adilger.int (S01068c763f81ca4b.cg.shawcable.net. [70.77.200.158])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c6bbeb94sm57281945ad.199.2025.03.16.05.54.28
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 16 Mar 2025 05:54:29 -0700 (PDT)
-From: Andreas Dilger <adilger@dilger.ca>
-Message-Id: <1AFB99D7-8C35-4011-8A76-8D5099963C00@dilger.ca>
-Content-Type: multipart/signed;
- boundary="Apple-Mail=_39AAF613-7FCD-49C2-BDB1-1F3EA6BDDDA2";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iqHsUbQn"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id ADB1FC4CEDD;
+	Sun, 16 Mar 2025 22:17:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742163425;
+	bh=KeNynuubeta2ne4/SAZz2ZAsxWspSzUhDae9z5ojBI0=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=iqHsUbQnqjk78LPWTUcq56ibnrDpehxfCX+o9AD6r17canv6oaebNAyWqeERsQNb4
+	 0rcEaRTJtd/JfF6MEQK0qJnF8gK1LsSNAuCWL99cgtHO5pf0JApdaVz5sEI0/j5x6D
+	 FqR22kAq4vkUqfwNK4/TaGGRzJKdnp1CTqGxqouAJikGpCzXIUuQUNIYJKGwDfx/Qy
+	 YhgeZW3SxO7YubfF/sxn5ORK1+qU7akFfa8vwRT7K6qRNuQ1q9brfYHisB7RRAiV0G
+	 F4Rk6wudnigq628CQ28Jr9aBzkigClJQLKc/APay7AZxhIrQ5slN1K2ldlf+Refy8L
+	 3m9nsv/JEnrKw==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94EE0C35FF1;
+	Sun, 16 Mar 2025 22:17:05 +0000 (UTC)
+From: David Heidelberg via B4 Relay <devnull+david.ixit.cz@kernel.org>
+Date: Sun, 16 Mar 2025 23:16:55 +0100
+Subject: [PATCH v5] ARM: dts: nexus4: Initial dts
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Subject: Re: [PATCH v2] ext4: hash: simplify kzalloc(n * 1, ...) to kzalloc(n,
- ...)
-Date: Sun, 16 Mar 2025 06:54:11 -0600
-In-Reply-To: <20250316-ext4-hash-kcalloc-v2-1-2a99e93ec6e0@ethancedwards.com>
-Cc: Matthew Wilcox <willy@infradead.org>,
- Theodore Ts'o <tytso@mit.edu>,
- Ext4 Developers List <linux-ext4@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>,
- linux-fsdevel <linux-fsdevel@vger.kernel.org>,
- linux-hardening@vger.kernel.org
-To: Ethan Carter Edwards <ethan@ethancedwards.com>
-References: <20250316-ext4-hash-kcalloc-v2-1-2a99e93ec6e0@ethancedwards.com>
-X-Mailer: Apple Mail (2.3273)
-
-
---Apple-Mail=_39AAF613-7FCD-49C2-BDB1-1F3EA6BDDDA2
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain;
-	charset=us-ascii
-
-On Mar 15, 2025, at 11:33 PM, Ethan Carter Edwards =
-<ethan@ethancedwards.com> wrote:
->=20
-> sizeof(char) evaluates to 1. Remove the churn.
->=20
-> Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
-
-Thanks,
-
-Reviewed-by: Andreas Dilger <adilger@dilger.ca>
-
-> ---
-> Changes in v2:
-> - change back to kzalloc because sizeof(char) is 1. Nice catch. =
-Thanks.
-> - Link to v1: =
-https://lore.kernel.org/r/20250315-ext4-hash-kcalloc-v1-1-a9132cb49276@eth=
-ancedwards.com
-> ---
-> fs/ext4/hash.c | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/fs/ext4/hash.c b/fs/ext4/hash.c
-> index =
-deabe29da7fbc3d35f674ff861a2f3b579ffdea2..33cd5b6b02d59fb749844fe481022f5f=
-44244bb6 100644
-> --- a/fs/ext4/hash.c
-> +++ b/fs/ext4/hash.c
-> @@ -302,7 +302,7 @@ int ext4fs_dirhash(const struct inode *dir, const =
-char *name, int len,
->=20
-> 	if (len && IS_CASEFOLDED(dir) &&
-> 	   (!IS_ENCRYPTED(dir) || fscrypt_has_encryption_key(dir))) {
-> -		buff =3D kzalloc(sizeof(char) * PATH_MAX, GFP_KERNEL);
-> +		buff =3D kzalloc(PATH_MAX, GFP_KERNEL);
-> 		if (!buff)
-> 			return -ENOMEM;
->=20
->=20
-> ---
-> base-commit: da920b7df701770e006928053672147075587fb2
-> change-id: 20250315-ext4-hash-kcalloc-203033977bd9
->=20
-> Best regards,
-> --
-> Ethan Carter Edwards <ethan@ethancedwards.com>
->=20
-
-
-Cheers, Andreas
-
-
-
-
-
-
---Apple-Mail=_39AAF613-7FCD-49C2-BDB1-1F3EA6BDDDA2
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename=signature.asc
-Content-Type: application/pgp-signature;
-	name=signature.asc
-Content-Description: Message signed with OpenPGP
+Message-Id: <20250316-lg-nexus4-mako-v5-1-79feae815a85@ixit.cz>
+X-B4-Tracking: v=1; b=H4sIANZN12cC/3XMSw6CMBSF4a2QO7amDx7FkfswDqC9wI0KpsUGJ
+ ezdwkQT4/Cc5Ptn8OgIPRySGRwG8jT0cWS7BExX9S0ysnGD5DLjipfs2rIep4dP2a26DMxWXCu
+ ldVbLHCK6O2xo2oKnc9wd+XFwz60f1Pr+TQXFBBPWSM0L28gyP9JE4968YA2F9AsL8YPTiFUpc
+ qPRFGjrD16W5Q3X+TEB5wAAAA==
+X-Change-ID: 20250309-lg-nexus4-mako-da0833885b26
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Kees Cook <kees@kernel.org>, 
+ Tony Luck <tony.luck@intel.com>, 
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+ Ivan Belokobylskiy <belokobylskij@gmail.com>, 
+ David Heidelberg <david@ixit.cz>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=9706; i=david@ixit.cz;
+ h=from:subject:message-id;
+ bh=eiVSVBGFky6FNlAEKXP/r3BB2aTVwWzF7cR+i71YhIc=;
+ b=owEBbQKS/ZANAwAIAWACP8TTSSByAcsmYgBn103gJtWmEuuA5HbbieYN2dcnVOCGm30Fj4jWx
+ OKH0siN4h2JAjMEAAEIAB0WIQTXegnP7twrvVOnBHRgAj/E00kgcgUCZ9dN4AAKCRBgAj/E00kg
+ cteND/0bsziHNxnWwSWGlEKhMoVe99SGNW0HJHuZVpm4Gsme7o9exGtH6/lLmwAHeZ4p74IiBr8
+ 2DvUekBeRxZVwFm5GnI9u0z4S3er1szx48Uo/uICBRAPYFnWNgFr831jvgikh+kgLUoCqlpMFoh
+ GwvplIi1WQARNpaH5/5Oig32kCyqVIJ3ck7MhMSpijrB3dnpZLTVycgsbph+CTyti0Qt+wP/iQ8
+ Q3fZPz1KOgXjfwlZg6kdhE3Av6zOAQpMuiuIwj7qsimzBZ95EL1tHChtzMev3XyplvXavJ4ErfR
+ U8RXRNe0Ofq7dphILm4cTZokviVmYL5rRW23gUclExRM9//bp3vLd16p0lSG+h5M4fHBRndQxk7
+ a9DlIdeAzbZWqMJ75wZy8x6AoHvwPZ1Xyas1Z5/55RHiIfnGi61ZeTmcCWAy8tuAO1uOOLtmmdN
+ eaaizUofPP21LHYrlkZ4qi/o/9kAgwixEQmXcECCBrScVBwmmwzuMGjmaVAI+uxLW6+wB5vRn1n
+ D4xa/Zp0HxWneKgxgp0nbaZHkp1am1xv/hMST52QQII+jxlNBsWjyH5fMFcmCnxqXTSkt5O1I6V
+ h/dTEXw3ARfuzjrHDPe4+HKAQ9c2iE18KNBSrcoK+CxHJJrDAtDH+HGmZIAdC0mP2F8WQahdIFi
+ gHe3bqA6pxPp3Lw==
+X-Developer-Key: i=david@ixit.cz; a=openpgp;
+ fpr=D77A09CFEEDC2BBD53A7047460023FC4D3492072
+X-Endpoint-Received: by B4 Relay for david@ixit.cz/default with auth_id=355
+X-Original-From: David Heidelberg <david@ixit.cz>
+Reply-To: david@ixit.cz
 
------BEGIN PGP SIGNATURE-----
-Comment: GPGTools - http://gpgtools.org
+From: Ivan Belokobylskiy <belokobylskij@gmail.com>
 
-iQIzBAEBCAAdFiEEDb73u6ZejP5ZMprvcqXauRfMH+AFAmfWygAACgkQcqXauRfM
-H+BQ0BAAsNaIw3vgIaT+xh7yJw5BH45EMg3Ku3GEXEt1acV4lFDZhcF1LVfC0vsa
-M74lEHtETKjJWBIcYZLqXHZGLne/JpFbt6g1HfTjaV4MMfooNNrA44VnZYLUUA2+
-RZM3HrlWFUhgvqP+j8nY8pO/1x6KuStnv2FiitZbAFeKyw+HjrGF3hZD9BZU3tds
-AG0jpP6rindOWFzQFgIBB88Tl09BUSDsq4twC3vdkJ69fxYtuEhVqrQsQTRSG5oQ
-Xp8OaKkgUsOr+AqWSqtqYLBH96Ogp61qsjQH1Ax7aYvt63hTlsVLCjwa+vMz1gTf
-ji6BYvz7SP/4lFJJfDqVlvUlPhFKd2StdFn8WhAUqgkseIVA+GCaSGlcXuC+lFaG
-pimvYEKQ6kNETl7aop+tMn2ijy1Nb8XFO9mf7PpuIDFIjtdvCNEj+vbnMbdI1VLm
-CymVdzVeQENPg78GqlumiJm7BIX8FjdA4yH3enUueXDoAlT/3eNu9a+kfLBngqci
-HxYzThWlICLdSQhnX1ciIaB3P9b5e8+4vEE5j8AXbaVJYURdEr2UDQUnXRYBL0Zo
-zE9MbxpxXwVju3m7khAj5L/XQOIK3cC9HUcYA+/CPTZ8O9d2EkYHQYc6bqXOs+7t
-ldMLrwbbyRBVSZjHoR/wsr8TD3budCa9f6A8/rw7um/MBqWIXJU=
-=jEr/
------END PGP SIGNATURE-----
+Add initial support for LG Nexus 4 (mako).
 
---Apple-Mail=_39AAF613-7FCD-49C2-BDB1-1F3EA6BDDDA2--
+Features currently working: regulators, eMMC, and volume keys.
+
+Signed-off-by: Ivan Belokobylskiy <belokobylskij@gmail.com>
+Co-developed-by: David Heidelberg <david@ixit.cz>
+Signed-off-by: David Heidelberg <david@ixit.cz>
+---
+Changes in v5:
+- Sorted nodes alphabetically.
+- Link to v4: https://lore.kernel.org/r/20250311-lg-nexus4-mako-v4-1-3916c8ec7edb@ixit.cz
+
+Changes in v4:
+- Sorted regulators and added regulators compatible.
+- Corrected pmic include and references.
+- Moved &rpm outside of / node.
+- Moved and simplify pm8921 keypad.
+- Added chasis-type.
+- Dropped incomplete WiFi node, will be provided in future
+  contributions.
+- Link to v3: https://lore.kernel.org/r/20250309-lg-nexus4-mako-v3-1-1dc2807df296@ixit.cz
+
+Changes in v3:
+- rebased against next-20250307
+- dropped backlight until driver gets converted to DT
+
+Changes in v2:
+- lge vendor doesn't exist anymore, rename to lg
+- sdcc@ to mmc@ to comply with dt-schema
+---
+ arch/arm/boot/dts/qcom/Makefile                    |   1 +
+ .../boot/dts/qcom/qcom-apq8064-lg-nexus4-mako.dts  | 341 +++++++++++++++++++++
+ 2 files changed, 342 insertions(+)
+
+diff --git a/arch/arm/boot/dts/qcom/Makefile b/arch/arm/boot/dts/qcom/Makefile
+index f06c6d425e91dd73c2b453d15543d95bd32383b9..0c1d116f6e84f76994aa8c8286350bdcd1657a42 100644
+--- a/arch/arm/boot/dts/qcom/Makefile
++++ b/arch/arm/boot/dts/qcom/Makefile
+@@ -12,6 +12,7 @@ dtb-$(CONFIG_ARCH_QCOM) += \
+ 	qcom-apq8064-ifc6410.dtb \
+ 	qcom-apq8064-sony-xperia-lagan-yuga.dtb \
+ 	qcom-apq8064-asus-nexus7-flo.dtb \
++	qcom-apq8064-lg-nexus4-mako.dtb \
+ 	qcom-apq8074-dragonboard.dtb \
+ 	qcom-apq8084-ifc6540.dtb \
+ 	qcom-apq8084-mtp.dtb \
+diff --git a/arch/arm/boot/dts/qcom/qcom-apq8064-lg-nexus4-mako.dts b/arch/arm/boot/dts/qcom/qcom-apq8064-lg-nexus4-mako.dts
+new file mode 100644
+index 0000000000000000000000000000000000000000..5710450faabf34fa5991d8803a2369cfbb09e4ea
+--- /dev/null
++++ b/arch/arm/boot/dts/qcom/qcom-apq8064-lg-nexus4-mako.dts
+@@ -0,0 +1,341 @@
++// SPDX-License-Identifier: GPL-2.0-only
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++#include <dt-bindings/mfd/qcom-rpm.h>
++#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
++
++#include "qcom-apq8064-v2.0.dtsi"
++#include "pm8821.dtsi"
++#include "pm8921.dtsi"
++
++/ {
++	model = "LG Nexus 4 (mako)";
++	compatible = "lg,nexus4-mako", "qcom,apq8064";
++	chassis-type = "handset";
++
++	aliases {
++		serial0 = &gsbi7_serial;
++		serial1 = &gsbi6_serial;
++		serial2 = &gsbi4_serial;
++	};
++
++	chosen {
++		stdout-path = "serial2:115200n8";
++	};
++
++	battery_cell: battery-cell {
++		compatible = "simple-battery";
++		constant-charge-current-max-microamp = <900000>;
++		operating-range-celsius = <0 45>;
++	};
++
++	reserved-memory {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		ramoops@88d00000{
++			compatible = "ramoops";
++			reg = <0x88d00000 0x100000>;
++			record-size = <0x20000>;
++			console-size = <0x20000>;
++			ftrace-size = <0x20000>;
++		};
++	};
++};
++
++&gsbi1 {
++	qcom,mode = <GSBI_PROT_I2C>;
++
++	status = "okay";
++};
++
++&gsbi1_i2c {
++	clock-frequency = <200000>;
++
++	status = "okay";
++};
++
++&gsbi4 {
++	qcom,mode = <GSBI_PROT_I2C_UART>;
++
++	status = "okay";
++};
++
++&gsbi4_serial {
++	status = "okay";
++};
++
++&pm8821 {
++	interrupts-extended = <&tlmm_pinmux 76 IRQ_TYPE_LEVEL_LOW>;
++};
++
++&pm8921 {
++	interrupts-extended = <&tlmm_pinmux 74 IRQ_TYPE_LEVEL_LOW>;
++};
++
++&pm8921_keypad {
++	linux,keymap = <
++		MATRIX_KEY(0, 0, KEY_VOLUMEDOWN)
++		MATRIX_KEY(0, 1, KEY_VOLUMEUP)
++	>;
++
++	keypad,num-rows = <1>;
++	keypad,num-columns = <5>;
++
++	status = "okay";
++};
++
++&rpm {
++	regulators {
++		compatible = "qcom,rpm-pm8921-regulators";
++
++		vdd_l1_l2_l12_l18-supply = <&pm8921_s4>;
++		vdd_l24-supply = <&pm8921_s1>;
++		vdd_l25-supply = <&pm8921_s1>;
++		vdd_l26-supply = <&pm8921_s7>;
++		vdd_l27-supply = <&pm8921_s7>;
++		vdd_l28-supply = <&pm8921_s7>;
++		vin_lvs1_3_6-supply = <&pm8921_s4>;
++		vin_lvs2-supply = <&pm8921_s1>;
++		vin_lvs4_5_7-supply = <&pm8921_s4>;
++
++		pm8921_l1: l1 {
++			regulator-min-microvolt = <1100000>;
++			regulator-max-microvolt = <1100000>;
++			regulator-always-on;
++			bias-pull-down;
++		};
++
++		/* mipi_dsi.1-dsi1_pll_vdda */
++		pm8921_l2: l2 {
++			regulator-min-microvolt = <1200000>;
++			regulator-max-microvolt = <1200000>;
++			bias-pull-down;
++		};
++
++		/* msm_otg-HSUSB_3p3 */
++		pm8921_l3: l3 {
++			regulator-min-microvolt = <3075000>;
++			regulator-max-microvolt = <3500000>;
++			bias-pull-down;
++		};
++
++		/* msm_otg-HSUSB_1p8 */
++		pm8921_l4: l4 {
++			regulator-always-on;
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++		};
++
++		/* msm_sdcc.1-sdc_vdd */
++		pm8921_l5: l5 {
++			regulator-min-microvolt = <2950000>;
++			regulator-max-microvolt = <2950000>;
++			bias-pull-down;
++		};
++
++		/* earjack_debug */
++		pm8921_l6: l6 {
++			regulator-min-microvolt = <3000000>;
++			regulator-max-microvolt = <3000000>;
++			bias-pull-down;
++		};
++
++		/* mipi_dsi.1-dsi_vci */
++		pm8921_l8: l8 {
++			regulator-min-microvolt = <2800000>;
++			regulator-max-microvolt = <3000000>;
++			bias-pull-down;
++		};
++
++		/* wcnss_wlan.0-iris_vddpa */
++		pm8921_l10: l10 {
++			regulator-min-microvolt = <2900000>;
++			regulator-max-microvolt = <2900000>;
++			bias-pull-down;
++		};
++
++		/* mipi_dsi.1-dsi1_avdd */
++		pm8921_l11: l11 {
++			regulator-min-microvolt = <2850000>;
++			regulator-max-microvolt = <2850000>;
++			bias-pull-down;
++		};
++
++		/* touch_vdd */
++		pm8921_l15: l15 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <2950000>;
++			bias-pull-down;
++		};
++
++		/* slimport_dvdd */
++		pm8921_l18: l18 {
++			regulator-min-microvolt = <1100000>;
++			regulator-max-microvolt = <1100000>;
++			bias-pull-down;
++		};
++
++		/* touch_io */
++		pm8921_l22: l22 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			bias-pull-down;
++		};
++
++		/*
++		 * mipi_dsi.1-dsi_vddio
++		 * pil_qdsp6v4.1-pll_vdd
++		 * pil_qdsp6v4.2-pll_vdd
++		 * msm_ehci_host.0-HSUSB_1p8
++		 * msm_ehci_host.1-HSUSB_1p8
++		 */
++		pm8921_l23: l23 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			bias-pull-down;
++		};
++
++		/*
++		 * tabla2x-slim-CDC_VDDA_A_1P2V
++		 * tabla2x-slim-VDDD_CDC_D
++		 */
++		pm8921_l24: l24 {
++			regulator-min-microvolt = <750000>;
++			regulator-max-microvolt = <1150000>;
++			bias-pull-down;
++		};
++
++		pm8921_l25: l25 {
++			regulator-min-microvolt = <1250000>;
++			regulator-max-microvolt = <1250000>;
++			regulator-always-on;
++			bias-pull-down;
++		};
++
++		pm8921_l26: l26 {
++			regulator-min-microvolt = <375000>;
++			regulator-max-microvolt = <1050000>;
++			regulator-always-on;
++			bias-pull-down;
++		};
++
++		pm8921_l27: l27 {
++			regulator-min-microvolt = <1100000>;
++			regulator-max-microvolt = <1100000>;
++		};
++
++		pm8921_l28: l28 {
++			regulator-min-microvolt = <1050000>;
++			regulator-max-microvolt = <1050000>;
++			bias-pull-down;
++		};
++
++		/* wcnss_wlan.0-iris_vddio */
++		pm8921_lvs1: lvs1 {
++			bias-pull-down;
++		};
++
++		/* wcnss_wlan.0-iris_vdddig */
++		pm8921_lvs2: lvs2 {
++			bias-pull-down;
++		};
++
++		pm8921_lvs3: lvs3 {
++			bias-pull-down;
++		};
++
++		pm8921_lvs4: lvs4 {
++			bias-pull-down;
++		};
++
++		pm8921_lvs5: lvs5 {
++			bias-pull-down;
++		};
++
++		/* mipi_dsi.1-dsi_iovcc */
++		pm8921_lvs6: lvs6 {
++			bias-pull-down;
++		};
++
++		/*
++		 * pil_riva-pll_vdd
++		 * lvds.0-lvds_vdda
++		 * mipi_dsi.1-dsi1_vddio
++		 * hdmi_msm.0-hdmi_vdda
++		 */
++		pm8921_lvs7: lvs7 {
++			bias-pull-down;
++		};
++
++		pm8921_ncp: ncp {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			qcom,switch-mode-frequency = <1600000>;
++		};
++
++		/* Buck SMPS */
++		pm8921_s1: s1 {
++			regulator-always-on;
++			regulator-min-microvolt = <1225000>;
++			regulator-max-microvolt = <1225000>;
++			qcom,switch-mode-frequency = <3200000>;
++			bias-pull-down;
++		};
++
++		pm8921_s2: s2 {
++			regulator-min-microvolt = <1300000>;
++			regulator-max-microvolt = <1300000>;
++			qcom,switch-mode-frequency = <1600000>;
++			bias-pull-down;
++		};
++
++		/* msm otg HSUSB_VDDCX */
++		pm8921_s3: s3 {
++			regulator-min-microvolt = <500000>;
++			regulator-max-microvolt = <1150000>;
++			qcom,switch-mode-frequency = <4800000>;
++			bias-pull-down;
++		};
++
++		/*
++		 * msm_sdcc.1-sdc-vdd_io
++		 * tabla2x-slim-CDC_VDDA_RX
++		 * tabla2x-slim-CDC_VDDA_TX
++		 * tabla2x-slim-CDC_VDD_CP
++		 * tabla2x-slim-VDDIO_CDC
++		 */
++		pm8921_s4: s4 {
++			regulator-always-on;
++			regulator-min-microvolt	= <1800000>;
++			regulator-max-microvolt	= <1800000>;
++			qcom,switch-mode-frequency = <1600000>;
++			bias-pull-down;
++			qcom,force-mode = <QCOM_RPM_FORCE_MODE_AUTO>;
++		};
++
++		/*
++		 * supply vdd_l26, vdd_l27, vdd_l28
++		 */
++		pm8921_s7: s7 {
++			regulator-min-microvolt = <1300000>;
++			regulator-max-microvolt = <1300000>;
++			qcom,switch-mode-frequency = <3200000>;
++		};
++
++		pm8921_s8: s8 {
++			regulator-min-microvolt = <2200000>;
++			regulator-max-microvolt = <2200000>;
++			qcom,switch-mode-frequency = <1600000>;
++		};
++	};
++};
++
++/* eMMC */
++&sdcc1 {
++	vmmc-supply = <&pm8921_l5>;
++	vqmmc-supply = <&pm8921_s4>;
++
++	status = "okay";
++};
+
+---
+base-commit: 0a2f889128969dab41861b6e40111aa03dc57014
+change-id: 20250309-lg-nexus4-mako-da0833885b26
+
+Best regards,
+-- 
+David Heidelberg <david@ixit.cz>
+
+
