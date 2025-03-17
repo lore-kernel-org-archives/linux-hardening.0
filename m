@@ -1,43 +1,43 @@
 Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A17C721D3DF;
-	Mon, 17 Mar 2025 12:22:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF07923958B;
+	Mon, 17 Mar 2025 12:22:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742214144; cv=none; b=ETIcKxC+Iv2aqI+w+ac/GsnXktX0hclBjly0AmuQP/K7EjfW6E+4g4Wo38NbYVC9a4gRmA+HZyhouI6cxTm5NobDOOoG3SCO36b9ZJlvOqyHLv/ItMkYVt2c+5vqeICml1ZqX9gyLC/Wc7kX8qzYVm7/UvBTktHZ6LG/KiZQ/xg=
+	t=1742214147; cv=none; b=XTCOs3bjJwBxcGrXYlyI403lSG7x4iibkrmuDr0up0qPJFwyPZImeksCeKUmAsXlfifCfrD7s7II+n0ZdOu9Xhmn/DvV0PWMCq6DQyP1xoLKi2zFX8Mj4sYjWNIMFPlMcUq1uScG3lhhd6a0+vKAImnrl3RWn1trSo6LQ1k60hk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742214144; c=relaxed/simple;
-	bh=eAkDFbzVdNVyTi7DUJge+6/7wcN1f+Qj0Cj6lduJCXA=;
+	s=arc-20240116; t=1742214147; c=relaxed/simple;
+	bh=39zMcV0evS9psPxjOhf44n5dx6EBrLz4LgfZq0SSclw=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=bK8kvRnH2AvE8Qfko1hWZ8nv2wemFOpO3qqfv5bQi39z2H3iotc5cYaQ3pIxBDbo7+Ft4Z1BSPZvAjK7MEumfyKdNeiir3aXkjTgVXDQ+K7e7Bga3uxIhsfh5V3DI9PQNnMqypsZXsiGU7ZFBczEtpH72IH5Ph7rYsO8afa6AYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com; spf=pass smtp.mailfrom=ethancedwards.com; dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b=TaTVKYhl; arc=none smtp.client-ip=80.241.56.161
+	 In-Reply-To:To:Cc; b=kv+qRMpdak4PppL9klgWOGyqQ0ZFXnckRa5qDcB2un2qx5440GofI2Psmn3zpoX9FdxtVwNohZVRalah+o7/Mt7abLLbqJiwxmXgP0HYBenruLZSjRFY7wNfVOE8DZdocDVX/I5N05IETwQ2tHx4Js0zqSYEXXcaDKF1emTNr7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com; spf=pass smtp.mailfrom=ethancedwards.com; dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b=O0tcUvdJ; arc=none smtp.client-ip=80.241.56.161
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ethancedwards.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b="TaTVKYhl"
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
+	dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b="O0tcUvdJ"
+Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4ZGYxw54HXz9sc4;
-	Mon, 17 Mar 2025 13:22:12 +0100 (CET)
+	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4ZGYy55L5lz9scY;
+	Mon, 17 Mar 2025 13:22:21 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ethancedwards.com;
-	s=MBO0001; t=1742214132;
+	s=MBO0001; t=1742214141;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=aeiO5E1BKLORJkqniB4tdZ1D9m/ct4HqBQPCts46txE=;
-	b=TaTVKYhla/4Rx3SePQJrhSLVtsGqm1dr6WrSv6QtCpFWvPtqoZErgqc7SHUkdj53bDWeob
-	lQ/GCLoz3F6AE1TVG9rsQoq0tjJWj/i1OuGJtQrQ1yk6qu3kr97PsRmjERtbIs+VIcWjSz
-	iq+v6BUgmFBEea2YFuc4/vBc9CdMsglrW3gV36wdxKzThK0sdI5gmmwpHVLQVn/iD3wASg
-	Sax1k6nJzkK7nRJNtICA5mcUovPW3l1l2UFrJPCJN1u9vj91ffijwM/VfxHe1lBQzCKXZx
-	8rgAH9LZWYQbJ8bFW5wis3RkQ33LO33K+iMLJ8iY50NHJT6oOjTXPCvv2mTYEw==
+	bh=+XlaXGgZRU2vFQqsZoLTJLTHYYtNNxvsF9OJuPE45t8=;
+	b=O0tcUvdJiZuw7FRGL+cgYerQm53JKV9VbPquOGVPhyHcUZnUfTKb7pUa3e3UTW8nefoixd
+	Z/DmqmiJ7OEtg9gtVnj2OQ8Qaj79ZH+MT9PTPyXv4aQONtAeqfN3jfqJrhXjzzAdhJQmL0
+	NA2/M/06HwEMzCAy6g3JHKZ5+fdQQTT2yPDZZ4oJOLHJuev53cWmEP2ysWN0xwGjUY+/a1
+	tCtiuhfIbs7aaTHPYuFl4gBk0OOcJlX+iH5Z2OsHjgAJZx/HtDGyM2TcfRKBqVyJTgs4TQ
+	jqHVowksIn4ZrOpJwQ+CvQpBqvR7NF3+YXeg1GApuZZSGL+p7gSSFR+MaVZ0Ew==
 From: Ethan Carter Edwards <ethan@ethancedwards.com>
-Date: Mon, 17 Mar 2025 08:21:56 -0400
-Subject: [PATCH v2 1/4] ASoC: Intel: avs: Replace devm_kzalloc() with
- devm_kcalloc()
+Date: Mon, 17 Mar 2025 08:21:58 -0400
+Subject: [PATCH v2 3/4] ASoC: Intel: avs: max98373: Replace devm_kzalloc()
+ with devm_kcalloc()
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -46,7 +46,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250317-sound-avs-kcalloc-v2-1-20e2a132b18f@ethancedwards.com>
+Message-Id: <20250317-sound-avs-kcalloc-v2-3-20e2a132b18f@ethancedwards.com>
 References: <20250317-sound-avs-kcalloc-v2-0-20e2a132b18f@ethancedwards.com>
 In-Reply-To: <20250317-sound-avs-kcalloc-v2-0-20e2a132b18f@ethancedwards.com>
 To: Cezary Rojewski <cezary.rojewski@intel.com>, 
@@ -61,14 +61,14 @@ To: Cezary Rojewski <cezary.rojewski@intel.com>,
 Cc: gustavoars@kernel.org, linux-sound@vger.kernel.org, 
  linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
  Ethan Carter Edwards <ethan@ethancedwards.com>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1039;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1206;
  i=ethan@ethancedwards.com; h=from:subject:message-id;
- bh=eAkDFbzVdNVyTi7DUJge+6/7wcN1f+Qj0Cj6lduJCXA=;
+ bh=39zMcV0evS9psPxjOhf44n5dx6EBrLz4LgfZq0SSclw=;
  b=LS0tLS1CRUdJTiBQR1AgTUVTU0FHRS0tLS0tCgpvd0o0bkp2QXk4ekFKWGJEOXFoNThlVGp6e
- GhQcXlVeHBOOFFmcG5xZmpQK1h0T01iUFpYOHNzc1dGS1huaXlZCjRwcHVlbUsrNVZHRnlTK1cz
- bExvS0dWaEVPTmlrQlZUWlBtZm81ejJVSE9Hd3M2L0xrMHdjMWlaUUlZd2NIRUsKd0VRc1pSait
- DbVh2MjhBVWJ5M1R0VldSb1R0d3l0cWRGamZNaTlnTmpyeFpvcmNrczJqbmZJYi9GVzdyaTQyNw
- p2NGNiWkdoYzYrQ3M4KzBQMnZZcllicG9tcnFXMmM1TG4yNXpBZ0FZYjB0NAo9Vks4MgotLS0tL
+ GhQcXlVeHBOOFFmcWxsRWYrcld2Nmx4allKYWZsM0w5eFRZdG1lCk1TZ21IN3gwOXhzWFoxaVJD
+ RnRIS1F1REdCZURySmdpeS84YzViU0htak1VZHY1MWFZS1p3OG9FTW9TQmkxTUEKSnBKNW0rRi9
+ 3R2VuME9Bb0hXdWVob2JkVWlXUzJzOS92NUJiOU1WNCt1Zk5mT3c3cnU3Y3dzaHdnUDNmRGQvcA
+ pIWk1TVFNmTVg5N05hbm9nOTd4N3lESm1yeWp6TUE1eEpuRVdBRVQyU0FRPQo9dWVvSAotLS0tL
  UVORCBQR1AgTUVTU0FHRS0tLS0tCg==
 X-Developer-Key: i=ethan@ethancedwards.com; a=openpgp;
  fpr=2E51F61839D1FA947A7300C234C04305D581DBFE
@@ -80,20 +80,20 @@ functions like kcalloc or, in this case, devm_kcalloc are preferred.
 
 Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
 ---
- sound/soc/intel/avs/pcm.c | 2 +-
+ sound/soc/intel/avs/boards/max98373.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/intel/avs/pcm.c b/sound/soc/intel/avs/pcm.c
-index 4bfbcb5a5ae8aff5a981389e61afb3c72b07b15c..dac463390da135d7972808cb55e1c2866dd736c7 100644
---- a/sound/soc/intel/avs/pcm.c
-+++ b/sound/soc/intel/avs/pcm.c
-@@ -1380,7 +1380,7 @@ int avs_i2s_platform_register(struct avs_dev *adev, const char *name, unsigned l
- 		for_each_set_bit(i, &port_mask, ssp_count)
- 			cpu_count += hweight_long(tdms[i]);
- 
--	cpus = devm_kzalloc(adev->dev, sizeof(*cpus) * cpu_count, GFP_KERNEL);
-+	cpus = devm_kcalloc(adev->dev, cpu_count, sizeof(*cpus), GFP_KERNEL);
- 	if (!cpus)
+diff --git a/sound/soc/intel/avs/boards/max98373.c b/sound/soc/intel/avs/boards/max98373.c
+index 6f25e66344b7a4b46d6598619b6b1362cad8c39e..970f82bf4ce8920b1965a0b81e8623ab5bf91ef1 100644
+--- a/sound/soc/intel/avs/boards/max98373.c
++++ b/sound/soc/intel/avs/boards/max98373.c
+@@ -111,7 +111,7 @@ static int avs_create_dai_link(struct device *dev, const char *platform_name, in
+ 	dl->name = devm_kasprintf(dev, GFP_KERNEL,
+ 				  AVS_STRING_FMT("SSP", "-Codec", ssp_port, tdm_slot));
+ 	dl->cpus = devm_kzalloc(dev, sizeof(*dl->cpus), GFP_KERNEL);
+-	dl->codecs = devm_kzalloc(dev, sizeof(*dl->codecs) * 2, GFP_KERNEL);
++	dl->codecs = devm_kcalloc(dev, 2, sizeof(*dl->codecs), GFP_KERNEL);
+ 	if (!dl->name || !dl->cpus || !dl->codecs)
  		return -ENOMEM;
  
 
