@@ -1,42 +1,42 @@
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
+Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF07923958B;
-	Mon, 17 Mar 2025 12:22:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC9F623A58B;
+	Mon, 17 Mar 2025 12:22:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742214147; cv=none; b=XTCOs3bjJwBxcGrXYlyI403lSG7x4iibkrmuDr0up0qPJFwyPZImeksCeKUmAsXlfifCfrD7s7II+n0ZdOu9Xhmn/DvV0PWMCq6DQyP1xoLKi2zFX8Mj4sYjWNIMFPlMcUq1uScG3lhhd6a0+vKAImnrl3RWn1trSo6LQ1k60hk=
+	t=1742214148; cv=none; b=n59gmYk/GEoPstYyRu17BHCqM8yBUjyToUB90W8n+Z5wdqFO6PzTPBjxpiohiaZoJ6uB5/dVdNQ8ww/QGO/99UmYnkWSUw3Fc1K7Vi4rc5FYk7+RXkdUMw7R+3M7AiIheq54MdsQoUNZCEt778Q4b9G6/pMXXIqvra09EePiE94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742214147; c=relaxed/simple;
-	bh=39zMcV0evS9psPxjOhf44n5dx6EBrLz4LgfZq0SSclw=;
+	s=arc-20240116; t=1742214148; c=relaxed/simple;
+	bh=nBzwUNeRJWp5YNRZV+skPkvDjE0mdhAHAX98cQJUHC0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=kv+qRMpdak4PppL9klgWOGyqQ0ZFXnckRa5qDcB2un2qx5440GofI2Psmn3zpoX9FdxtVwNohZVRalah+o7/Mt7abLLbqJiwxmXgP0HYBenruLZSjRFY7wNfVOE8DZdocDVX/I5N05IETwQ2tHx4Js0zqSYEXXcaDKF1emTNr7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com; spf=pass smtp.mailfrom=ethancedwards.com; dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b=O0tcUvdJ; arc=none smtp.client-ip=80.241.56.161
+	 In-Reply-To:To:Cc; b=Z7YYfLkwtnXJY2WjJXXCGnwkQ/JAHkXnKpPqbnfi2I3QthyIBnX/SuX7L+C4vWXE8gICERAB6SO+hlXRIBbAGvB79cLFWg5z6lcrd4djObRLoGf58e3NF0X5dhN3jGro3rZ9AIaZlPSFQNgLeyed0C9bLQwhdB2di0OIgSFgdMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com; spf=pass smtp.mailfrom=ethancedwards.com; dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b=U0Udz3EP; arc=none smtp.client-ip=80.241.56.152
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ethancedwards.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b="O0tcUvdJ"
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
+	dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b="U0Udz3EP"
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4ZGYy55L5lz9scY;
-	Mon, 17 Mar 2025 13:22:21 +0100 (CET)
+	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4ZGYy12J1Cz9tRr;
+	Mon, 17 Mar 2025 13:22:17 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ethancedwards.com;
-	s=MBO0001; t=1742214141;
+	s=MBO0001; t=1742214137;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=+XlaXGgZRU2vFQqsZoLTJLTHYYtNNxvsF9OJuPE45t8=;
-	b=O0tcUvdJiZuw7FRGL+cgYerQm53JKV9VbPquOGVPhyHcUZnUfTKb7pUa3e3UTW8nefoixd
-	Z/DmqmiJ7OEtg9gtVnj2OQ8Qaj79ZH+MT9PTPyXv4aQONtAeqfN3jfqJrhXjzzAdhJQmL0
-	NA2/M/06HwEMzCAy6g3JHKZ5+fdQQTT2yPDZZ4oJOLHJuev53cWmEP2ysWN0xwGjUY+/a1
-	tCtiuhfIbs7aaTHPYuFl4gBk0OOcJlX+iH5Z2OsHjgAJZx/HtDGyM2TcfRKBqVyJTgs4TQ
-	jqHVowksIn4ZrOpJwQ+CvQpBqvR7NF3+YXeg1GApuZZSGL+p7gSSFR+MaVZ0Ew==
+	bh=Lu0bS+hk05nB2rHAH5OpFQAb7M6qRJkcoGJ72x9VhMc=;
+	b=U0Udz3EPlwi1MqWCDbkXh+0mt5AsZnyTggtV2C6tIxstHpLM6OlfLIECD9erINSTE09CCm
+	Mvw5FajBinEApZ1bunwUkzmMngwJvSwKl1TPR7d1bX3sEvD7xXRrKs6gKKp7mSiDG6mDDX
+	SpoRDWaP34mE4WT0oesKEasnEFNvdIrpcdD1TGI5GLXX7J+8XgpojYA5hr45tqTTGYxWGy
+	C8LDnoPXJ0xNx/OPzHeNtIkiEgAHmS0H39qiJj7OHWU6EFypSK+PiTfuUTCFmOi4eXcylj
+	1OfK04pgK/xtk9sKUkp0SUOuVtyKJWxXdoTnVgh6pgMJqhOJAH1Z2pioyeBM8g==
 From: Ethan Carter Edwards <ethan@ethancedwards.com>
-Date: Mon, 17 Mar 2025 08:21:58 -0400
-Subject: [PATCH v2 3/4] ASoC: Intel: avs: max98373: Replace devm_kzalloc()
+Date: Mon, 17 Mar 2025 08:21:57 -0400
+Subject: [PATCH v2 2/4] ASoC: Intel: avs: ssm4567: Replace devm_kzalloc()
  with devm_kcalloc()
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -46,7 +46,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250317-sound-avs-kcalloc-v2-3-20e2a132b18f@ethancedwards.com>
+Message-Id: <20250317-sound-avs-kcalloc-v2-2-20e2a132b18f@ethancedwards.com>
 References: <20250317-sound-avs-kcalloc-v2-0-20e2a132b18f@ethancedwards.com>
 In-Reply-To: <20250317-sound-avs-kcalloc-v2-0-20e2a132b18f@ethancedwards.com>
 To: Cezary Rojewski <cezary.rojewski@intel.com>, 
@@ -61,14 +61,14 @@ To: Cezary Rojewski <cezary.rojewski@intel.com>,
 Cc: gustavoars@kernel.org, linux-sound@vger.kernel.org, 
  linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
  Ethan Carter Edwards <ethan@ethancedwards.com>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1206;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1199;
  i=ethan@ethancedwards.com; h=from:subject:message-id;
- bh=39zMcV0evS9psPxjOhf44n5dx6EBrLz4LgfZq0SSclw=;
+ bh=nBzwUNeRJWp5YNRZV+skPkvDjE0mdhAHAX98cQJUHC0=;
  b=LS0tLS1CRUdJTiBQR1AgTUVTU0FHRS0tLS0tCgpvd0o0bkp2QXk4ekFKWGJEOXFoNThlVGp6e
- GhQcXlVeHBOOFFmcWxsRWYrcld2Nmx4allKYWZsM0w5eFRZdG1lCk1TZ21IN3gwOXhzWFoxaVJD
- RnRIS1F1REdCZURySmdpeS84YzViU0htak1VZHY1MWFZS1p3OG9FTW9TQmkxTUEKSnBKNW0rRi9
- 3R2VuME9Bb0hXdWVob2JkVWlXUzJzOS92NUJiOU1WNCt1Zk5mT3c3cnU3Y3dzaHdnUDNmRGQvcA
- pIWk1TVFNmTVg5N05hbm9nOTd4N3lESm1yeWp6TUE1eEpuRVdBRVQyU0FRPQo9dWVvSAotLS0tL
+ GhQcXlVeHBOOFFmdWx6WkZIWnJFNmZMNm9xeTkyTFgzRkdsUDlJCjN0Ty9XLzJqL2YxbnYyTDNI
+ MHZ1S0dWaEVPTmlrQlZUWlBtZm81ejJVSE9Hd3M2L0xrMHdjMWlaUUlZd2NIRUsKd0VTcWVoa1p
+ lbklqeGQvSi81TzlJSkFUMXJUTjUrVHFHczY2dzQzem1UYTNSai9obGJrU3dmRGZiL0c5Q05lbg
+ pPc2RQU0t6L3U2aG5tOFdMZWV2bW1NL1hkbGtaZlZRMys4aEpOZ0NLd2xBNgo9V2t3ZAotLS0tL
  UVORCBQR1AgTUVTU0FHRS0tLS0tCg==
 X-Developer-Key: i=ethan@ethancedwards.com; a=openpgp;
  fpr=2E51F61839D1FA947A7300C234C04305D581DBFE
@@ -80,14 +80,14 @@ functions like kcalloc or, in this case, devm_kcalloc are preferred.
 
 Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
 ---
- sound/soc/intel/avs/boards/max98373.c | 2 +-
+ sound/soc/intel/avs/boards/ssm4567.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/intel/avs/boards/max98373.c b/sound/soc/intel/avs/boards/max98373.c
-index 6f25e66344b7a4b46d6598619b6b1362cad8c39e..970f82bf4ce8920b1965a0b81e8623ab5bf91ef1 100644
---- a/sound/soc/intel/avs/boards/max98373.c
-+++ b/sound/soc/intel/avs/boards/max98373.c
-@@ -111,7 +111,7 @@ static int avs_create_dai_link(struct device *dev, const char *platform_name, in
+diff --git a/sound/soc/intel/avs/boards/ssm4567.c b/sound/soc/intel/avs/boards/ssm4567.c
+index c9d89bfe7178cd6acba0797c56e56462d7c41d8d..7667790d52739b98b97d2bc9fc9496da82affef1 100644
+--- a/sound/soc/intel/avs/boards/ssm4567.c
++++ b/sound/soc/intel/avs/boards/ssm4567.c
+@@ -97,7 +97,7 @@ static int avs_create_dai_link(struct device *dev, const char *platform_name, in
  	dl->name = devm_kasprintf(dev, GFP_KERNEL,
  				  AVS_STRING_FMT("SSP", "-Codec", ssp_port, tdm_slot));
  	dl->cpus = devm_kzalloc(dev, sizeof(*dl->cpus), GFP_KERNEL);
