@@ -1,132 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BA151A3168;
-	Mon, 17 Mar 2025 17:48:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 723B41AF0C1
+	for <linux-hardening@vger.kernel.org>; Mon, 17 Mar 2025 17:52:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742233724; cv=none; b=ZpE93FnBBYJVFdd0P8tt0FEXn0nQ2ekHP9Ku2tQBpO3e2k8BE+u59zMUfZ5/vQ0K71pzWBNsX2av/iuKh0WR64X0PoUyabFMQpQRWI9ZjLQDRcyZGIbYKJMpE6RHG9pjqetcHkWZRa8Emw8P0cCcmWZ081jDjSCX81H+t52YXyE=
+	t=1742233958; cv=none; b=GenSQTeVwD36XBiL7k8OqHTxFR+BX6RWgRcg4oixWoNOt18lu4q/MD7QW6rpvvPfnTcUjTLhO6YEYMEeNmnd9HwDI8UKqrChCuTdsus9sUdBOfgpmfs/FjKm+P+DgjOok29IoTtZgrJify1FcBczU2c60aFobC1IY8yi4nPwBCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742233724; c=relaxed/simple;
-	bh=+ajp6u19uztN9LzhI5yDd7wErjsDqGFizACW7A6xC28=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Fr5kIsbxYRHWlqk0VzbGcvH7oO18tVCwtoUDFHveK/Gbi3au+dHkKuGHhq8oFeoRhfKGK7TjM61QwIXs2OK1p7hWqracLOJXu0Tw0L8OOGlE9w7RbXjXFxek1yLKowSRd4SZGFDFctxuiD59H5WK4ZmUr0Tq1oXNCx63wIUNJME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nCrp7lBT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742233958; c=relaxed/simple;
+	bh=f62ojl+o4A2l90TEjbig1mzXjGY+K9lbk5ckJztb9fI=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=BeI80CeRqopJAUoLW8sv3huJw0/Jjn/ZzMyH70ESQ9PhH+uawUuQBpQXMq+mc2BhdMaCEvVUfiR8FXTYV17jAnqvvHTqlse4bKqEWzdXyb3R9fBaQLopWql1AQ+535gzOnRhhHv304WSQlLXrJCtgSBW6BwDAfeVBqTw2mrC+18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=N2GX2AuS; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nCrp7lBT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48BBFC4CEE3;
-	Mon, 17 Mar 2025 17:48:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742233724;
-	bh=+ajp6u19uztN9LzhI5yDd7wErjsDqGFizACW7A6xC28=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nCrp7lBTfGBqEHXP48lS3nqfXNtJcLXmHOLTVKNxn/BVY19ocTZGdVNaB/S3V6Pwv
-	 LV4eJWxg4H7bSJh0ygVFuyxV4RqnMp6iHK6QJAerqlupxFR3VlN7L/i2pQa/bLfj7O
-	 yC+MSAE9n1MCRl4XZ1hFL8f3iM5KI/hDP9Hax2aS4vCUZTTTfczePnoXai42KwFlqm
-	 l92dF/vj8UKz4QRPBqI8uxery3W7Go8XmEhLeltylK0ismLDLNdiRql6S0QymXYYBh
-	 bP/zKaL8oxzwvo8QN9qv2Z2EGBl1vcRsXsmrB+pXtho9Q24dJAiAHw46pcMPBW+ZV+
-	 7jZklMlRKpmFg==
-Date: Mon, 17 Mar 2025 10:48:40 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kunit/fortify: Replace "volatile" with
- OPTIMIZER_HIDE_VAR()
-Message-ID: <20250317174840.GA1451320@ax162>
-References: <20250312000439.work.112-kees@kernel.org>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="N2GX2AuS"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52HA4YBM025359
+	for <linux-hardening@vger.kernel.org>; Mon, 17 Mar 2025 17:52:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	W48kH/S0HGkEFujKBeAyySxmQc5Opn4Q4HURKwAUaJE=; b=N2GX2AuS7C7jtsmU
+	utzBsgrhMK8REKcFP5qyJPfU6W0xRQVGyB7jErhersrg7uIA6emij9BKup7Fi/GV
+	SV2G9K8a7KWDg/s4Fpl0Znty7O52uIp+KFrbpNUQfYdGLq6X+WiWuoKIyFEM7oTG
+	CTpfv3hqXHPtE4W75+SRRAj8bkcSpHQx35FdXl+56M5dWJEzmrIOkFOnlq6KJEUw
+	scw19AdC2K1nUu9TSGDl88efrTXo1AgPdMQs+tTKTvR/pzSshUXtzJKRNButHGVY
+	eZVxQnqGg2L8Xn15dM0RyZjjTv4P2E83wb/02nCsfKpqV8JEFpwJmagKJCKEV3mZ
+	hV/dRg==
+Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45d1s3wkk7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-hardening@vger.kernel.org>; Mon, 17 Mar 2025 17:52:36 +0000 (GMT)
+Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-2241e7e3addso69206505ad.1
+        for <linux-hardening@vger.kernel.org>; Mon, 17 Mar 2025 10:52:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742233945; x=1742838745;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=W48kH/S0HGkEFujKBeAyySxmQc5Opn4Q4HURKwAUaJE=;
+        b=emWMmlox3LL4wcdTmUauzA4Pg5qlttLCxj0QN6xybw4TeDy7/eLV6gzjc21r5A6KTo
+         Z5L5eR6vfyWyOA8af+duYC9+Ao9ZNpvYsf2Os/EcGE1p25HoFxXWiy/7SbQx1rSw0BZt
+         7Y6aPCvDO6/DSYUQFe8q4BEoPUV3MUG8fSwMRo9V5YsJ+xkQc07nZy2abR9NE7Pku5/u
+         gTKv3G2SU5FJKMLGlgseWx+otCkN1T31i2mgyHkO5bf5yRsY/Ten6thqaH3N5ysEEgIH
+         LTMXW8BRUTEEwUZvK25DqYOAwMPzWe/1lxZNOsz49G4S1Y5UEAJiJEGORYTsmX7Mcd0v
+         dGFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUWZcNZ2n5Qm4CYBv02+v53KMlKrNQLmfRhv5dPHrwToVqFjcG9xe6J882m427wX5wuQX58NERSRQbmMCfiMGw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxnaeigeeDDSt6ifCkPyN+mNPh9oZuDAdI24EVy3SRUZfCnYzb+
+	xsQbkHNLBNPxLCBnXyNhIfM49abmdT4kw68JoeCQsJ4KHv971gYEZzuan+zbXZUGFGLqPdZGkgD
+	z4iSlxTWHOtkN32QeuN9Hrbnt9RXpD1EOR1e5NBOKZ6BXVFUYPhLW50OT3m8Nrp17FQM=
+X-Gm-Gg: ASbGncsmccMQ7Cg/6jF7rb4hrqxAmYsaMm8OuP11bCntkivi0BmtWLnncqZI0/7khgU
+	2wVWrQbZMNlnZjwwSJ2m2MRqwRMrK5pvecP7qnK4CDO0v61Kxsp8mm05eAlDvOj7yzhs/Izt7F8
+	wi3aHb2GEeKBsLe5203AVjBKAO321I+T7Cs/r6McCS16PeShVgS3XhvGsRKVHARqZuw12nhZJc2
+	TnobCmj9B8MaGLeFpQOay5ESME8/vlG7ih8COhqF3pnKDlO8jy8AHdBv+29UyJBp8TOuFmH2SL9
+	Bsqglql1rqraE6QGlnjiJWhJ1K1bVadzwLCBjcp+a04MU+PYGUG8
+X-Received: by 2002:a17:903:22c8:b0:21f:136a:a374 with SMTP id d9443c01a7336-225e0b098a2mr184232355ad.43.1742233945098;
+        Mon, 17 Mar 2025 10:52:25 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEoIwZ/XaW2xB5u/EDFQEQhDMqg39v0rU7Oq0/roBytKAynLPkZcvcV3MFWkdWN+E2yf8FxAg==
+X-Received: by 2002:a17:903:22c8:b0:21f:136a:a374 with SMTP id d9443c01a7336-225e0b098a2mr184231995ad.43.1742233944697;
+        Mon, 17 Mar 2025 10:52:24 -0700 (PDT)
+Received: from [169.254.0.1] (Global_NAT1.qualcomm.com. [129.46.96.20])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c6bd5ce5sm78291485ad.252.2025.03.17.10.52.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Mar 2025 10:52:24 -0700 (PDT)
+From: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+To: Christian Lamparter <chunkeey@googlemail.com>, Kees Cook <kees@kernel.org>
+Cc: Johannes Berg <johannes@sipsolutions.net>, linux-wireless@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+In-Reply-To: <20250310222339.work.654-kees@kernel.org>
+References: <20250310222339.work.654-kees@kernel.org>
+Subject: Re: [PATCH] wifi: carl9170: Add __nonstring annotations for
+ unterminated strings
+Message-Id: <174223394380.578193.6449253449477522706.b4-ty@oss.qualcomm.com>
+Date: Mon, 17 Mar 2025 10:52:23 -0700
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250312000439.work.112-kees@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.0
+X-Authority-Analysis: v=2.4 cv=WbQMa1hX c=1 sm=1 tr=0 ts=67d86164 cx=c_pps a=cmESyDAEBpBGqyK7t0alAg==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=EUspDBNiAAAA:8 a=a8UXU1FYSwnUjzW3zpYA:9 a=QEXdDO2ut3YA:10
+ a=1OuFwYUASf3TG4hYMiVC:22
+X-Proofpoint-GUID: PlcSm2JYqiGjFtTkvbmfhbe_MfKRUVHp
+X-Proofpoint-ORIG-GUID: PlcSm2JYqiGjFtTkvbmfhbe_MfKRUVHp
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-17_07,2025-03-17_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ phishscore=0 adultscore=0 malwarescore=0 bulkscore=0 lowpriorityscore=0
+ mlxlogscore=609 spamscore=0 clxscore=1015 impostorscore=0 suspectscore=0
+ mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503170129
 
-Hi Kees,
 
-On Tue, Mar 11, 2025 at 05:04:40PM -0700, Kees Cook wrote:
-> It does seem that using "volatile" isn't going to be sane compared to
-> using OPTIMIZER_HIDE_VAR() going forward. Some strange interactions[1]
-> with the sanitizers have been observed in the self-test code, so replace
-> the logic.
+On Mon, 10 Mar 2025 15:23:40 -0700, Kees Cook wrote:
+> When a character array without a terminating NUL character has a static
+> initializer, GCC 15's -Wunterminated-string-initialization will only
+> warn if the array lacks the "nonstring" attribute[1]. Mark the arrays
+> with __nonstring to and correctly identify the char array as "not a C
+> string" and thereby eliminate the warning.
 > 
-> Reported-by: Nathan Chancellor <nathan@kernel.org>
-> Closes: https://github.com/ClangBuiltLinux/linux/issues/2075 [1]
-> Signed-off-by: Kees Cook <kees@kernel.org>
-...
-> diff --git a/lib/tests/fortify_kunit.c b/lib/tests/fortify_kunit.c
-> index 18dcdedf777f..29ffc62a71e3 100644
-> --- a/lib/tests/fortify_kunit.c
-> +++ b/lib/tests/fortify_kunit.c
-...
-> @@ -993,8 +1003,11 @@ static void fortify_test_memcmp(struct kunit *test)
->  {
->  	char one[] = "My mind is going ...";
->  	char two[] = "My mind is going ... I can feel it.";
-> -	size_t one_len = sizeof(one) + unconst - 1;
-> -	size_t two_len = sizeof(two) + unconst - 1;
-> +	size_t one_len = sizeof(one) - 1;
-> +	size_t two_len = sizeof(two) - 1;
-> +
-> +	OPTIMIZER_HIDE_VAR(one_len);
-> +	OPTIMIZER_HIDE_VAR(two_len);
->  
->  	/* We match the first string (ignoring the %NUL). */
->  	KUNIT_ASSERT_EQ(test, memcmp(one, two, one_len), 0);
+> 
+> [...]
 
-I am sorry for bringing this up some time after you sent this change, as
-I have only now had a chance to actually sit down and understand the
-results of my bisect. I am still seeing a __read_overflow error when
-building lib/tests/fortify_kunit.o with Fedora's configuration + LTO in
-next-20250317, which contains this change. I do not think it is issue
-2075, as I can reproduce it without UBSAN enabled altogether. This is
-with LLVM 20.1.0.
+Applied, thanks!
 
-$ cat kernel/configs/repro.config
-CONFIG_FORTIFY_KUNIT_TEST=m
-CONFIG_FORTIFY_SOURCE=y
-CONFIG_KUNIT=y
-# CONFIG_LTO_NONE is not set
-CONFIG_LTO_CLANG_THIN=y
+[1/1] wifi: carl9170: Add __nonstring annotations for unterminated strings
+      commit: 9a1cf85c9c7cca15bfc452f207818977621dedf8
 
-# or x86_64
-$ make -skj"$(nproc)" ARCH=arm64 LLVM=1 mrproper {def,repro.}config lib/tests/fortify_kunit.o
-ld.lld: error: call to __read_overflow marked "dontcall-error": detected read beyond size of object (1st parameter)
-make[6]: *** [scripts/Makefile.build:203: lib/tests/fortify_kunit.o] Error 1
+Best regards,
+-- 
+Jeff Johnson <jeff.johnson@oss.qualcomm.com>
 
-Selectively reverting this avoids the problem, which is definitely
-odd... Maybe issue 2075 is related more to issue 2077 and this patch
-should not be entertained?
-
-Cheers,
-Nathan
-
-diff --git a/lib/tests/fortify_kunit.c b/lib/tests/fortify_kunit.c
-index 29ffc62a71e3..1164223654ac 100644
---- a/lib/tests/fortify_kunit.c
-+++ b/lib/tests/fortify_kunit.c
-@@ -411,6 +411,8 @@ struct fortify_padding {
- 	char buf[32];
- 	unsigned long bytes_after;
- };
-+/* Force compiler into not being able to resolve size at compile-time. */
-+static volatile int unconst;
- 
- static void fortify_test_strlen(struct kunit *test)
- {
-@@ -1003,11 +1005,8 @@ static void fortify_test_memcmp(struct kunit *test)
- {
- 	char one[] = "My mind is going ...";
- 	char two[] = "My mind is going ... I can feel it.";
--	size_t one_len = sizeof(one) - 1;
--	size_t two_len = sizeof(two) - 1;
--
--	OPTIMIZER_HIDE_VAR(one_len);
--	OPTIMIZER_HIDE_VAR(two_len);
-+	size_t one_len = sizeof(one) + unconst - 1;
-+	size_t two_len = sizeof(two) + unconst - 1;
- 
- 	/* We match the first string (ignoring the %NUL). */
- 	KUNIT_ASSERT_EQ(test, memcmp(one, two, one_len), 0);
