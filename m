@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FEF4DF71;
-	Mon, 17 Mar 2025 01:32:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2494814885D;
+	Mon, 17 Mar 2025 01:37:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742175154; cv=none; b=mdvfUByffu2zwOCiI9BYNiUD2yrUaN6WbV0y9tRIos4naFPYqFTEulv8aV6B/zGfgCCr3w+kK/B+JmbsCmU1TUVzBho9Xq8znMLwwW2h2NKBrZsOnKFBJkO6j7f0GLMP8rnBFSNcZd++lcblq+7H1rmpOBXnQljFuz+RxXqbL2M=
+	t=1742175422; cv=none; b=XoL/BG3LXC8mN2qcMe/WbybvAFKrg/1YxD7iQhcjSNV/cs4u0Su/FzPd2gFu3WSrdDu2BBw6XGxqyqK8RPT4DH6+5D9vrBL4U6pIuDIaBP51aJIgi+yFWHFKABU+cO5BhnEVwa+QjvLUOcTV+ibfyPpB1GpLAWbAOM/mYxWIX4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742175154; c=relaxed/simple;
-	bh=s8GEmYzbmS9r1yi+MUIttdEdJaVN5wVHb6I3vPopbTQ=;
+	s=arc-20240116; t=1742175422; c=relaxed/simple;
+	bh=nwx6ZMPwuOfMY3kzRkY8EBTEoySAEbPQO8MSRkYzdsQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U+Rx2mK/Zk7y85Iw8IoPaDTD+M8buQjVLzan6tYe83yy59anxZ5yyqTufJb59kV8wzHM4XKMqeV7zu2C0ZKswWnK4QturKPWUcucMi1WpeWy4l4M33xy3jmZl41WGKzBSP70shS2P83XfY+E9y8/gbrTyAhcF3mtpV9rzNR9wKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OvvtAdcY; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=SUh9GtyHzvi420bNcZ51MRVSKawsu6PHQzrIV/B0CTTLBmTPKsbkZvfVnJ5M928ESZnGgkAUg8QXqGoz2saf0OFpRmOkhNGTWEi99hkBod1BOtaFSY3aCH7hDBrE70pHSG7c4t5Ba1+N64V04uAWx2VbEtkNGj+7D0EumdSndIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fj8o900N; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OvvtAdcY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C8C7C4CEDD;
-	Mon, 17 Mar 2025 01:32:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fj8o900N"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FE47C4CEE9;
+	Mon, 17 Mar 2025 01:37:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742175154;
-	bh=s8GEmYzbmS9r1yi+MUIttdEdJaVN5wVHb6I3vPopbTQ=;
+	s=k20201202; t=1742175421;
+	bh=nwx6ZMPwuOfMY3kzRkY8EBTEoySAEbPQO8MSRkYzdsQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OvvtAdcY3LePAv0xsm6FdDZcrFUa/xd8jEpteznMBts5AU8E+vF7+GGlMc115YNRH
-	 BQWFNZ3f1wLPIMOhbyvOGwS2qwFRaM0nwE/0Vb3uuT4RTGbDjBq2VdxZOCBNmcCUIY
-	 zoR4yeBN87VjEDsPtPXB8jeH1EnHQClpbX4rWRF7fhsY8MR8upGNGI6KetBB/EUf/n
-	 vZ9eKQCfseOVVmgqaith+zXVjL0vobpGa7Poz9sbCOVkYCtL+LsxMs2nGA8GnLaRF6
-	 YFLhJ6aZg7SfuKgQL2XMYCeVbg0bmRxh7KLMSI3MN77a6jdpYTXThuv/tVuJWESizU
-	 TX3ewDoH0483A==
-Date: Mon, 17 Mar 2025 01:32:30 +0000
+	b=fj8o900NllfjXhsZEl/xWYe/VmnBWlqCMtkFi4RoEpDWTEbGiQTDIaFHEo+c3eoEW
+	 blzqEvYjjhk+QQPKHSR/X+7jHJE//Cw5heBC5+u46tNKMNHbU3AgRjEBWjUqKkYqds
+	 I1OA5cnP1kKwvizkh9EO6g72bRX9vQlrXP+xE0wjon3TEMlbqz1KsZ7N4Y3ExeBlvx
+	 hMBN8W9SnBgAu5K2DFRTaNvs/cRoJJg91JqSeRmJQwlUN/R5QrGk2K/N3zcHHp/6+j
+	 kcOzI8KLmBJ3pLapLepEUp6+Vuc5rNS5HGJsSnwQt3LBMrfMapNw9nFj1jz502TZDn
+	 ECiMnkzjseMCg==
+Date: Mon, 17 Mar 2025 01:36:58 +0000
 From: Tzung-Bi Shih <tzungbi@kernel.org>
 To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
 Cc: Jonathan Cameron <jic23@kernel.org>,
@@ -35,10 +35,10 @@ Cc: Jonathan Cameron <jic23@kernel.org>,
 	Guenter Roeck <groeck@chromium.org>, linux-iio@vger.kernel.org,
 	chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] iio: cros_ec: Avoid -Wflex-array-member-not-at-end
- warning
-Message-ID: <Z9d7rp-ullvmXKoM@google.com>
-References: <Z9dy43vUUh4goi-Q@kspp>
+Subject: Re: [PATCH][next] iio: proximity: cros_ec_mkbp_proximity: Avoid
+ -Wflex-array-member-not-at-end warning
+Message-ID: <Z9d8uhMqHJ6K0nci@google.com>
+References: <Z9dzDB1gttXehYGO@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -47,14 +47,22 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z9dy43vUUh4goi-Q@kspp>
+In-Reply-To: <Z9dzDB1gttXehYGO@kspp>
 
-On Mon, Mar 17, 2025 at 11:24:59AM +1030, Gustavo A. R. Silva wrote:
->  static int cros_ec_get_host_cmd_version_mask(struct cros_ec_device *ec_dev,
->  					     u16 cmd_offset, u16 cmd, u32 *mask)
+On Mon, Mar 17, 2025 at 11:25:40AM +1030, Gustavo A. R. Silva wrote:
+>  static int cros_ec_mkbp_proximity_query(struct cros_ec_device *ec_dev,
+>  					int *state)
 >  {
-> +	DEFINE_RAW_FLEX(struct cros_ec_command, buf, data,
-> +			sizeof(struct ec_response_get_cmd_versions));
+> -	struct {
+> -		struct cros_ec_command msg;
+> -		union {
+> -			struct ec_params_mkbp_info params;
+> -			u32 switches;
+> -		};
+> -	} __packed buf = { };
+> -	struct ec_params_mkbp_info *params = &buf.params;
+> -	struct cros_ec_command *msg = &buf.msg;
+> -	u32 *switches = &buf.switches;
+> +	DEFINE_RAW_FLEX(struct cros_ec_command, buf, data, sizeof(u32));
 
-max(sizeof(struct ec_params_get_cmd_versions),
-    sizeof(struct ec_response_get_cmd_versions))?
+max(sizeof(struct ec_params_mkbp_info), sizeof(u32))?
