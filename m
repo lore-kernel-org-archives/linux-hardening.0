@@ -1,100 +1,167 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CB55212D6A;
-	Tue, 18 Mar 2025 16:29:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D382212FAA
+	for <linux-hardening@vger.kernel.org>; Tue, 18 Mar 2025 17:21:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742315343; cv=none; b=Y+/Et7Uvp/MkOqRIbZkdHO+OBZKk+7iEYiUv+IIePPMRYlKc2+P/fIyUHSDenOOA9vqxT2IJ+0bryUfTyHcvyVbft9kEJs2NRuGVxrG8iWBGtHmdNC8dN7DJZZccUggkIZPWhCvw3xqHBusXm3dwjDYGYe0jLjw0/HML3yL7ruo=
+	t=1742318498; cv=none; b=AOwmHeAmNBrlocaXagrIloXS9ki7uSlQX7NEkcBMlel4L7YVzxELCQwUibkCbf6JnXisFnXsrmG8c5J31QFyFXUEThwM9/JxRuKiAQAwj9f2bQZHY0+mwDfRMhNVJ34twquz/IOEnorpnkh98ASIt/rQl/03N81iK/T1J4Jagz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742315343; c=relaxed/simple;
-	bh=5Jml5c4VhYCK9bsIj128Ieb0yao7Oc8nLd57R5iqpS4=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=YQXTmxy9G2ZzFkarLAG0MbXvNsMtjULXkeKmrKkeOer7BGU7yRyxr9p5mV6DnOk/w+kzrW/mAqHKo6EjTACTfjFKCCBwuVAx3haaRoujWRicJ+4FVzOBWSjHf5hdnuUiQYQ89shwkB2kSOfGISCVvNa8OX+TSc3jCjv8FvrbxcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DZn0QwCK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742318498; c=relaxed/simple;
+	bh=6nkANdaVG7IayPoAi6liKaZChcd4niM0WV300kXmOwk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Goipdu3MuuRTNZu9PbfzTcZtOsJjAz6IU8fnpZlnsqaqYv6RjWs5DW3fgMf/+ZIbOQI4g5Crcm97uOboSi0MSIdVUpzk6ZZlQ0yKEkRBGp8h0uc8bhBjrfDUXa2aWoAExf87ZcCf2RHlguzGL9r82BbtIY/qyQWskVAVIobAblc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=nrM8p/Oa; arc=none smtp.client-ip=209.85.160.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DZn0QwCK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F37D7C4CEE9;
-	Tue, 18 Mar 2025 16:28:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742315342;
-	bh=5Jml5c4VhYCK9bsIj128Ieb0yao7Oc8nLd57R5iqpS4=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=DZn0QwCKmzootjfnvX8YvEl3sCNcddZXVf2WwOmHsCMJS2xIhRWqgf9CQ4H+x+a9R
-	 M0qEeOo2nzJml14Ela4LPipnKAxRo232IVXRvdubYRTRD6/FuKdtcyY2eM+sBPoCJg
-	 vM53YxSPgrKoMPoYIu3Hk9+ABYjJH0+rAv5JFdSQyYnvdY2iA0g9+D1GGsx4xTpycR
-	 +l2zRlTlrwAZ40QW0aiqdJAtF3GjBQCm0DADncr4j4DKyQmkz6uHA9FC6il+9rfYz7
-	 DZ92lmHszFUMn7KVQlv0siolYHPhDB7lWOb9vGVmELBYWvY+Db0Pf3qnwGJLdH1GAh
-	 CkoshxFFDrIYg==
-From: Mark Brown <broonie@kernel.org>
-To: Cezary Rojewski <cezary.rojewski@intel.com>, 
- Liam Girdwood <liam.r.girdwood@linux.intel.com>, 
- Peter Ujfalusi <peter.ujfalusi@linux.intel.com>, 
- Bard Liao <yung-chuan.liao@linux.intel.com>, 
- Ranjani Sridharan <ranjani.sridharan@linux.intel.com>, 
- Kai Vehmanen <kai.vehmanen@linux.intel.com>, 
- Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>, 
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
- Ethan Carter Edwards <ethan@ethancedwards.com>
-Cc: gustavoars@kernel.org, linux-sound@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-In-Reply-To: <20250317-sound-avs-kcalloc-v2-0-20e2a132b18f@ethancedwards.com>
-References: <20250317-sound-avs-kcalloc-v2-0-20e2a132b18f@ethancedwards.com>
-Subject: Re: [PATCH v2 0/4] ASoC: Intel: avs: Replace devm_kzalloc() with
- devm_kcalloc()
-Message-Id: <174231533973.179247.5473589269509240114.b4-ty@kernel.org>
-Date: Tue, 18 Mar 2025 16:28:59 +0000
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nrM8p/Oa"
+Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-2b2806d5b61so220945fac.3
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Mar 2025 10:21:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1742318496; x=1742923296; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7YTuIFIQ1RBKziTG64pV4QoQGQt4itwRwA2JcwE5F4U=;
+        b=nrM8p/OakNE55mMw9RyGNl78PWiOHBjlVct8RjZQkoL5FSZSRcmknKT9WoRYFFxYx7
+         mJGV0M0/kXjraQkkS65bVIfoWN4sb71mfAMUS1DhRda77VhYRQA7zuDTDBcORDzlYvRH
+         BP18wMBUsM3uj5dxYSH3lNWz45J6vU6R2DyDk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742318496; x=1742923296;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7YTuIFIQ1RBKziTG64pV4QoQGQt4itwRwA2JcwE5F4U=;
+        b=bhmtHDQhhb98PWsyR4Wx3iucHoSVQuWPtbqgAzZWUOHsKDa7yn5QYvrA/Pd2YVt0Bu
+         oua83Z3NC9SZE3cvV7YMu0ZOvbaC7l8GNCvhxYglzhxAHyfryEfPONt3ZZV4ok7PeveS
+         bileVN24IokZXQOCqZLTT4m+VUA1N9IITUlC1cI/uj9fGbWyn0pE9tQCIoOQL/bNfXcu
+         qaPlDydrp5sbQLfqnuS9oHPOtis7qOFa4LY2VDEjpsxger6G/icIlBmRCmfe+g6txqH8
+         GIcGAopPerivhkAYdYb4KkO0mvHI78767lqwYkl22wYFvTI5y/aVZhiUASxOILHq2tNq
+         Zpsg==
+X-Forwarded-Encrypted: i=1; AJvYcCXbd/YhECzX0HOcAtfMGX9bJQdIv5wAGXfi4u3FmAlbSzwZt1kH41QeBIAPj77u5oaU1haAJlIEacXILQoyUVE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2D5k5WRjvwsidnGcOaJu9vxs21B0JJJFrBFzBT3mouZ9YSn+j
+	WGpznMR5yAqyVRp8kXQvNd00ZvbeMce+yRfFxtSzOeqneNIGeqmX9l5MUf+ovsHvSFla3TWZIVT
+	aOPIIRJnrjqus/MLDwAb76A+/TvAHy3s+7RKw
+X-Gm-Gg: ASbGncuRI6A1XGgFBma2Qvhdt0scfdxXSdWVqzAVhUgyOetYx6meo3q5cTMCWv8ipI+
+	8Jtsx+wu8dS5jfXHnRzDbEHvp3+0pZW3Wfj8tvaZkHEB3RLyPPS/RPrA0VTgP5hiRHE6TK4cPda
+	LgrbMTd1TnSRkJOdOxLnvYaRhnhn7d301siJLHGFzigMylFrwGxhRrGMBYfNjKJ7Xjsw==
+X-Google-Smtp-Source: AGHT+IEA9vu4VLhY8SzQ5C5fLE3cuDbaXAtONvPGEXdN9PbXXBPEIkkr42m3jqwSpjbVyqbyqTeMXJB8Z5YFyBGFIpc=
+X-Received: by 2002:a05:6870:d629:b0:2c1:aed2:abc4 with SMTP id
+ 586e51a60fabf-2c691117783mr3251144fac.8.1742318496170; Tue, 18 Mar 2025
+ 10:21:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-1b0d6
+References: <20250313000623.3192896-1-jeffxu@google.com> <1bbce89c-1efe-40cf-9085-ec4ec16f7996@lucifer.local>
+ <CABi2SkVKxyX0uDabg+wHiq_vTBFbUST-nRdur7cCPB2myhCWhg@mail.gmail.com>
+ <CAMuHMdWLjX-OavON-rj50kZyvV5+Pf0x34WJbcdKsCgAQA7TwQ@mail.gmail.com>
+ <CABi2SkWU6orm-wBFKVt9rsSpYURHPb7fjHRzkOiPGd=Lh-DdkA@mail.gmail.com>
+ <CABi2SkWmxwM-MbfmRCZvBYek8KpmOKPMsFmb=-eZTgKfp3AN6w@mail.gmail.com> <CAMuHMdWUHwRXR1VHEVJm36Dp0B_H6SNwtWHAW1dMQ-iM4ORUWQ@mail.gmail.com>
+In-Reply-To: <CAMuHMdWUHwRXR1VHEVJm36Dp0B_H6SNwtWHAW1dMQ-iM4ORUWQ@mail.gmail.com>
+From: Jeff Xu <jeffxu@chromium.org>
+Date: Tue, 18 Mar 2025 10:21:25 -0700
+X-Gm-Features: AQ5f1JoBLvo5ksTh4tDs9xdewPkyUsD-KtLmDytrGzKKunZXfDz1Qx0ABMtNmGY
+Message-ID: <CABi2SkVndMyOUpRR8z7f0J-r7chkVNZ17-kaEcBje1kBjk-1iw@mail.gmail.com>
+Subject: Re: [PATCH] mseal sysmap: add arch-support txt
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, akpm@linux-foundation.org, 
+	Liam.Howlett@oracle.com, agordeev@linux.ibm.com, borntraeger@linux.ibm.com, 
+	gor@linux.ibm.com, hca@linux.ibm.com, kees@kernel.org, 
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, svens@linux.ibm.com, thomas.weissschuh@linutronix.de
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 17 Mar 2025 08:21:55 -0400, Ethan Carter Edwards wrote:
-> Open coded arithmetic in allocator arguments is discouraged. Helper
-> functions like kcalloc or, in this case, devm_kcalloc are preferred. Not
-> only for readability purposes but safety purposes.
-> 
-> The changes move `devm_kzalloc(dev, sizeof(var) * n, GFP_KERNEL)` to
-> the helper function `devm_kcalloc(dev, n, sizeof(var), GFP_KERNEL)`.
-> 
-> [...]
+Hi Geert,
 
-Applied to
+On Mon, Mar 17, 2025 at 12:14=E2=80=AFPM Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
+>
+> Hi Jeff,
+>
+> On Mon, 17 Mar 2025 at 20:02, Jeff Xu <jeffxu@chromium.org> wrote:
+> > On Mon, Mar 17, 2025 at 11:14=E2=80=AFAM Jeff Xu <jeffxu@chromium.org> =
+wrote:
+> > > On Fri, Mar 14, 2025 at 3:41=E2=80=AFAM Geert Uytterhoeven <geert@lin=
+ux-m68k.org> wrote:
+> > > > On Thu, 13 Mar 2025 at 23:26, Jeff Xu <jeffxu@chromium.org> wrote:
+> > > > > On Wed, Mar 12, 2025 at 10:21=E2=80=AFPM Lorenzo Stoakes
+> > > > > <lorenzo.stoakes@oracle.com> wrote:
+> > > > > > On Thu, Mar 13, 2025 at 12:06:23AM +0000, jeffxu@chromium.org w=
+rote:
+> > > > > > > From: Jeff Xu <jeffxu@chromium.org>
+> > > > > > > Add Documentation/features/core/mseal_sys_mappings/arch-suppo=
+rt.txt
+> > > > > > >
+> > > > > > > Signed-off-by: Jeff Xu <jeffxu@chromium.org>
+> > > >
+> > > > Thanks for your patch!
+> >
+> > I used "find * |xargs grep -i  CONFIG_64BIT" to look for CONFIG_64BIT
+> > under arch/, and together with internet search/wiki page, and below is
+> > the proposed update.
+>
+> That way you only find users of the symbol, not where it is defined.
+>
+> You can use
+>
+>     git grep -W "config\s*64BIT" -- arch/
+>
+> to find out which architectures are 32-bit, 64-bit, or support both.
+>
+Good to know, thanks!
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+> > > > > > > --- /dev/null
+> > > > > > > +++ b/Documentation/features/core/mseal_sys_mappings/arch-sup=
+port.txt
+> > > > > > > @@ -0,0 +1,30 @@
+> > > > > > > +#
+> > > > > > > +# Feature name:          mseal-system-mappings
+> > > > > > > +#         Kconfig:       ARCH_SUPPORTS_MSEAL_SYSTEM_MAPPINGS
+> > > > > > > +#         description:   arch supports mseal system mappings
+> > > > > > > +#
+> > > > > > > +    -----------------------
+> > > > > > > +    |         arch |status|
+> > > > > > > +    -----------------------
+> > > > > > > +    |       alpha: | TODO |
+> > No CONFIG_64BIT found under arch/alpha, but search results show alpha
+> > supports 64 bits. Keep as TODO.
+>
+> Alpha is 64-bit only. So the code under arch/alpha/ does not need to chec=
+k for
+> CONFIG_64BIT, hence you didn't find it;-)
+>
+> > > > > > > +    |         arc: | TODO |
+> > > > > > > +    |         arm: |  N/A |
+> > > > > > > +    |       arm64: |  ok  |
+> > > > > > > +    |        csky: | TODO |
+> > (N/A)
+> >
+> > > > > > > +    |     hexagon: | TODO |
+> > No CONFIG_64BIT found under arch/hexagon, but search results show
+> > hexagon supports 64 bits. Keep as TODO.
+>
+> 32-bit only on Linux.
+>
+Ok. Thank you for correcting this.
 
-Thanks!
+Thanks
+-Jeff
 
-[1/4] ASoC: Intel: avs: Replace devm_kzalloc() with devm_kcalloc()
-      commit: 6d9d66626c58bcd9b949574aca7d47149b8ad9e1
-[2/4] ASoC: Intel: avs: ssm4567: Replace devm_kzalloc() with devm_kcalloc()
-      commit: 61b1a1bddf7d166946d7ca7054b6cbced29b72f5
-[3/4] ASoC: Intel: avs: max98373: Replace devm_kzalloc() with devm_kcalloc()
-      commit: bde479694a7da7c127bb5bba98e2e4773f1d7951
-[4/4] ASoC: Intel: avs: max98927: Replace devm_kzalloc() with devm_kcalloc()
-      commit: 3602571baf9a6864bde89422d179e422a3ea4d8d
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m6=
+8k.org
+>
+> In personal conversations with technical people, I call myself a hacker. =
+But
+> when I'm talking to journalists I just say "programmer" or something like=
+ that.
+>                                 -- Linus Torvalds
