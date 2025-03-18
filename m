@@ -1,156 +1,289 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.netfilter.org (mail.netfilter.org [217.70.190.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7162B2063D3
-	for <linux-hardening@vger.kernel.org>; Tue, 18 Mar 2025 21:41:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8986C1DED62;
+	Tue, 18 Mar 2025 23:23:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.190.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742334114; cv=none; b=iM4Zd2Aygx5aNCbtV6byZ6QvDxkOnZluueQyZtjAIY3/7CSLxhO8sJn8kGS/8UzQzckCUZGx7IWSp+t1rN13OUw1CcHNTs7aRuhBt2d/D1V6/ThkxqAzVVh4gTPfB7KoeHKGfGqdJw/EsZWaq1+qslInXSIE2c1fYN8ILf9eMJs=
+	t=1742340228; cv=none; b=g6SL6Zd5qwMzctwcEQb6aU/om7vlHHoo30cz/17RM60pEXCvW21Y82+nPWVd4cpqt3bQ6VFvJw0++TNSWQ7npqcGopV3WUpSvjO2IwtxS+5hkTYypFkNeBe+NDJE18S1+LlOVJl8xmgF0wWWWghxcpPJJlEBYFpUATk71er7cps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742334114; c=relaxed/simple;
-	bh=H257vBUGFgZallMqQK8Sv95gmOBmQfu53ct0C021Sc0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Lw9Zmoxmh0g4RBgR5GrwjGAqu+REPMVaD/lW7M0JBTLvBTSPJ+G+fv9Szh+il3LDuGQKtKmhMzjxcPH9MlswCQRffO0QUq22xtzuq7+I0R2RvAQVBlMVXw0xQk5W+AEVJ33oxIhHCDqRQhInvdSDYaL/G/MFOws0KfUUGGMpOKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=piSHUsvM; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1742340228; c=relaxed/simple;
+	bh=L9G4cm5suUsEr6dfWAfkpgsY6UwZGyLwjWcniuegWpE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XAPulCC0YdnW2HEIMN2GUe1Ste8hdSx/pLzv9tZt4Yai7yWA4FC7m9VZ54qlMkbBc9ITafDVpWEVjfjMkGyGRNbFWjdAaiI/UzrDElETKwbREaAiKpwsJi9EyuN8Ub2UBOAJ1QdJrTc9yfqVyJqUPOESZf8jrBu1aaRfFT/SEPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=netfilter.org; spf=pass smtp.mailfrom=netfilter.org; dkim=pass (2048-bit key) header.d=netfilter.org header.i=@netfilter.org header.b=Qrx0keNz; dkim=pass (2048-bit key) header.d=netfilter.org header.i=@netfilter.org header.b=FCdP+LeE; arc=none smtp.client-ip=217.70.190.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=netfilter.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netfilter.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="piSHUsvM"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5e5cbd8b19bso1475a12.1
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Mar 2025 14:41:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742334111; x=1742938911; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=huRWnbUSFIOrYn2QxkW4BG9y2bRatI4h8QE+NxAGfCE=;
-        b=piSHUsvM5H/mSHb8x1PkAH9/jM3Jcioj5pb8vT3Bo9r7dypkEGJtpFMieOXKtTesM8
-         A53HXrxO21yJ5vxX/XAOh7hcV1h/4esABT2nwcvr2JZJgck46HHkdqdp5QjTvrIC6Zgd
-         vCC1mOcWa2+oolmd3750k1s5PYSuBShXbB61OCL+1gpOERzR0CGWBitv+nrtwPH0a8NF
-         zJU5BdiHdKOSXCtq3FVPlQ1kS7nm/GY+uJtgV3sCEX1LqVwMWuU6hX1bAr5xpaZVEaBk
-         I/NzrTiB75q4Q5E3JmJ1/JCp7U2hdEEhiWeg7FgY3kkRx4R8GEVPQqXrMV6cm02dpre8
-         nUFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742334111; x=1742938911;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=huRWnbUSFIOrYn2QxkW4BG9y2bRatI4h8QE+NxAGfCE=;
-        b=Ag6rkSUwjwb71gE9/fR33wqhwqQ8zr7q22x6xekHsCaNbPozNa6YS88uPsV5J7/ziQ
-         QAE1Gf4x/uPReiO/pNDCZSlPBkSYj7dqt/rSvQAUEauN3KfxBfDBBt317Bl6hQaaxV1o
-         o53wRHuEX9IKtZJN793KTLkpt9hoFnpRuFwxYAeneAoUqR3jctK0+aSdAdSox80Xudfq
-         PhWPL5gKpvX0DPj2CvHKm5toGMhmfiDPEdJvm8d/L7Adsh4WSrLXvYcdtzmFjDOQbCCq
-         UsZrfp5mxVnGiqPY6HrfuWLuVJEoclnQw4VPFg7Gubj/U4Mk3ccK/ZaTHrudwXusngNn
-         W0Xw==
-X-Forwarded-Encrypted: i=1; AJvYcCXbTRt/p6E17+XnO+x7HOR/jtQMBna6smQ6kAgkbpr0EyhT1UL6Rbg+KTSbJn0NkeRJhWFJEzWZIu2WFjG7paY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywvrzey2k7WFd4k1OAJQXHJyF/EOB6Co025zHpNfKCDnzZ+MIkG
-	TVyLI/+vY66G4EDH3+Jur0tTASQI7auTV8ccm15MErvI4YPHk/qw2Fr9VQCgJqnvKnPF7ZGWG18
-	iTrgIG8s0pfWDe8uIBgzxaWYUwklCDR9PJ1Bf
-X-Gm-Gg: ASbGncvY1kY5FaVIUfCeR2ExjGLcpmiOEmwma3YmLi1h/RbhBZCdFLsStMoYXOuIFPn
-	gmDgFItlyUngT4M9Pb02Xav8+nRjxzezAJGvwPu6oXOfRwqxGR4mdDOmOCqr8VOltne+VQyBFAm
-	LcW7RukrLFJYDmfAn7y9OfXtOQ23ctc7xhGGMJ1wX/jSpRqZWdLIbEkK4=
-X-Google-Smtp-Source: AGHT+IEE7SnidIPRfD/tsQUEwB4S5fYvYHXaK7pjnnRSY2/bfQtUnICoMM+NMzU+Q4G5iu99RUJkJd34epkaV7xV8uM=
-X-Received: by 2002:a05:6402:2072:b0:5e6:15d3:ffe7 with SMTP id
- 4fb4d7f45d1cf-5eb81ca377cmr5954a12.7.1742334110577; Tue, 18 Mar 2025 14:41:50
- -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=netfilter.org header.i=@netfilter.org header.b="Qrx0keNz";
+	dkim=pass (2048-bit key) header.d=netfilter.org header.i=@netfilter.org header.b="FCdP+LeE"
+Received: by mail.netfilter.org (Postfix, from userid 109)
+	id 155256054C; Wed, 19 Mar 2025 00:23:44 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=netfilter.org;
+	s=2025; t=1742340224;
+	bh=dwGU1IpfSZnRD6UAttPD8hi29anzn8fQpPnbFhuosq8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Qrx0keNz9oFc5uR0TF+LZNWsjj6sDNrYViFl1aRa4RiHhkGkBqgGZ+2v024jSgzuw
+	 vxt1QmC08RLfLsda6eB2ufuOkb5nVmFVSljaURevXwTd3kfEIDTm2A9hWN/qI+JbHI
+	 pY+8SMduN+MeY0hph9NjSw684mqC70WGw8d/sGRGDKWr1FK7DsQxCwABtTQYvgsYkT
+	 sljhmg6oReAvYRKQaQWiiV4XekerpKHm0JvXbcQv0vns0G7JdsXhNeOgirn6Xqi5pX
+	 hAsAMGskr8UyIv+dLyeKBkdG7Mr8RSVUi3E6PGxD7Ndo13mU6mMcWOoPQ/E9JhUQJx
+	 Lb9Yy57sXLSkw==
+X-Spam-Level: 
+Received: from netfilter.org (mail-agni [217.70.190.124])
+	by mail.netfilter.org (Postfix) with ESMTPSA id 84E786054C;
+	Wed, 19 Mar 2025 00:23:39 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=netfilter.org;
+	s=2025; t=1742340219;
+	bh=dwGU1IpfSZnRD6UAttPD8hi29anzn8fQpPnbFhuosq8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FCdP+LeEqe2X5YLCkhAuOL+of8fEd6EC34qac2A/05+Bf3Iu+IGppC7ayyGIFe/0x
+	 pemY5cBqXIa91iVp2f7ZyU1eE5Bq0QlgUnAgelMi9u5+aNQCk9BqVzkG+gWgqa/blM
+	 R/8IXCfzP4q9mtFPUQVGSgANGlTwmH4DIMxNxEcMsgyGxQu8dmDGYAOAPq08V7rd1a
+	 CQpplp/DCLvsLVXGxTVHT86P9VeXmvKWLvik4lSXQLUwYEgMVLDjtRgDNuHRXKU9jC
+	 vxnkgz3NHgM0Y2udOUmUT1W+hGgcBQdKZqHZ/henqRfudI4MT7cz74mKNoyshLGTa2
+	 ctj9VZAvjZscA==
+Date: Wed, 19 Mar 2025 00:23:36 +0100
+From: Pablo Neira Ayuso <pablo@netfilter.org>
+To: Eric Woudstra <ericwouds@gmail.com>
+Cc: Michal Ostrowski <mostrows@earthlink.net>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Jozsef Kadlecsik <kadlec@netfilter.org>,
+	Simon Horman <horms@kernel.org>, netdev@vger.kernel.org,
+	netfilter-devel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	Nikolay Aleksandrov <razor@blackwall.org>
+Subject: Re: [PATCH v10 nf-next 2/3] netfilter: nf_flow_table_offload: Add
+ nf_flow_encap_push() for xmit direct
+Message-ID: <Z9oAeJ5KifLxllEa@calendula>
+References: <20250315195910.17659-1-ericwouds@gmail.com>
+ <20250315195910.17659-3-ericwouds@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250308023314.3981455-1-pcc@google.com> <202503071927.1A795821A@keescook>
- <Z88jbhobIz2yWBbJ@arm.com>
-In-Reply-To: <Z88jbhobIz2yWBbJ@arm.com>
-From: Peter Collingbourne <pcc@google.com>
-Date: Tue, 18 Mar 2025 14:41:39 -0700
-X-Gm-Features: AQ5f1JoCSww36ZPRvbJPagyRsMZce1-_UGQToveMTebIsOSwVuNrh895PUcBWPA
-Message-ID: <CAMn1gO6Zy1W0M_JsHcX6pcOp8cb7=uWUScf3WGxKTRm=AjXKKA@mail.gmail.com>
-Subject: Re: [PATCH] string: Disable read_word_at_a_time() optimizations if
- kernel MTE is enabled
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Kees Cook <kees@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Andrew Morton <akpm@linux-foundation.org>, Andy Shevchenko <andy@kernel.org>, 
-	Andrey Konovalov <andreyknvl@gmail.com>, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, stable@vger.kernel.org, 
-	Mark Rutland <mark.rutland@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250315195910.17659-3-ericwouds@gmail.com>
 
-On Mon, Mar 10, 2025 at 10:37=E2=80=AFAM Catalin Marinas
-<catalin.marinas@arm.com> wrote:
->
-> On Fri, Mar 07, 2025 at 07:36:31PM -0800, Kees Cook wrote:
-> > On Fri, Mar 07, 2025 at 06:33:13PM -0800, Peter Collingbourne wrote:
-> > > The optimized strscpy() and dentry_string_cmp() routines will read 8
-> > > unaligned bytes at a time via the function read_word_at_a_time(), but
-> > > this is incompatible with MTE which will fault on a partially invalid
-> > > read. The attributes on read_word_at_a_time() that disable KASAN are
-> > > invisible to the CPU so they have no effect on MTE. Let's fix the
-> > > bug for now by disabling the optimizations if the kernel is built
-> > > with HW tag-based KASAN and consider improvements for followup change=
-s.
-> >
-> > Why is faulting on a partially invalid read a problem? It's still
-> > invalid, so ... it should fault, yes? What am I missing?
->
-> read_word_at_a_time() is used to read 8 bytes, potentially unaligned and
-> beyond the end of string. The has_zero() function is then used to check
-> where the string ends. For this uses, I think we can go with
-> load_unaligned_zeropad() which handles a potential fault and pads the
-> rest with zeroes.
+On Sat, Mar 15, 2025 at 08:59:09PM +0100, Eric Woudstra wrote:
+> Loosely based on wenxu's patches:
+> 
+> "nf_flow_table_offload: offload the vlan/PPPoE encap in the flowtable".
 
-Agreed, strscpy() should be using load_unaligned_zeropad() if
-available. We can also disable the code that checks for page
-boundaries if load_unaligned_zeropad() is available.
+I remember that patch.
 
-The only other use of read_word_at_a_time() is the one in
-dentry_string_cmp(). At the time that I sent the patch I hadn't
-noticed the comment in dentry_string_cmp() stating that its argument
-to read_word_at_a_time() is aligned. Since calling
-read_word_at_a_time() is fine if the pointer is aligned but partially
-invalid (not possible with MTE but it is possible with SW KASAN which
-uses a 1:1 shadow mapping), I left this user as-is. In other words, I
-didn't make read_word_at_a_time() arch-specific as in Vincenzo's
-series.
+> Fixed double vlan and pppoe packets, almost entirely rewriting the patch.
+>
+> After this patch, it is possible to transmit packets in the fastpath with
+> outgoing encaps, without using vlan- and/or pppoe-devices.
+> 
+> This makes it possible to use more different kinds of network setups.
+> For example, when bridge tagging is used to egress vlan tagged
+> packets using the forward fastpath. Another example is passing 802.1q
+> tagged packets through a bridge using the bridge fastpath.
+> 
+> This also makes the software fastpath process more similar to the
+> hardware offloaded fastpath process, where encaps are also pushed.
 
-I sent a v2 with my patch to switch strscpy() over to using
-load_unaligned_zeropad() if available, as well as the patch adding
-tests from Vincenzo's series (which had some issues that I fixed).
+I am not convinced that making the software flowtable more similar
+hardware is the way the go, we already have to deal with issues with
+flow teardown mechanism (races) to make it more suitable for hardware
+offload.
 
-Peter
+I think the benefit for pppoe is that packets do not go to userspace
+anymore, but probably pppoe driver can be modified push the header
+itself?
 
-> > > Signed-off-by: Peter Collingbourne <pcc@google.com>
-> > > Link: https://linux-review.googlesource.com/id/If4b22e43b5a4ca49726b4=
-bf98ada827fdf755548
-> > > Fixes: 94ab5b61ee16 ("kasan, arm64: enable CONFIG_KASAN_HW_TAGS")
-> > > Cc: stable@vger.kernel.org
-> > > ---
-> > >  fs/dcache.c  | 2 +-
-> > >  lib/string.c | 3 ++-
-> > >  2 files changed, 3 insertions(+), 2 deletions(-)
-> >
-> > Why are DCACHE_WORD_ACCESS and HAVE_EFFICIENT_UNALIGNED_ACCESS separate
-> > things? I can see at least one place where it's directly tied:
-> >
-> > arch/arm/Kconfig:58:    select DCACHE_WORD_ACCESS if HAVE_EFFICIENT_UNA=
-LIGNED_ACCESS
->
-> DCACHE_WORD_ACCESS requires load_unaligned_zeropad() which handles the
-> faults. For some reason, read_word_at_a_time() doesn't expect to fault
-> and it is only used with HAVE_EFFICIENT_UNALIGNED_ACCESS. I guess arm32
-> only enabled load_unaligned_zeropad() on hardware that supports
-> efficient unaligned accesses (v6 onwards), hence the dependency.
->
-> > Would it make sense to sort this out so that KASAN_HW_TAGS can be taken
-> > into account at the Kconfig level instead?
->
-> I don't think we should play with config options but rather sort out the
-> fault path (load_unaligned_zeropad) or disable MTE temporarily. I'd go
-> with the former as long as read_word_at_a_time() is only used for
-> strings in conjunction with has_zero(). I haven't checked.
->
-> --
-> Catalin
+As for vlan, this is saving an indirection?
+
+Going in this direction means the flowtable datapath will get more
+headers to be pushed in this path in the future, eg. mpls.
+
+Is this also possibly breaking existing setups? eg. xfrm + vlan
+devices, but maybe I'm wrong.
+
+> After applying this patch, always info->outdev = info->hw_outdev,
+> so the netfilter code can be further cleaned up by removing:
+>  * hw_outdev from struct nft_forward_info
+>  * out.hw_ifindex from struct nf_flow_route
+>  * out.hw_ifidx from struct flow_offload_tuple
+> 
+> Reviewed-by: Nikolay Aleksandrov <razor@blackwall.org>
+> Signed-off-by: Eric Woudstra <ericwouds@gmail.com>
+> ---
+>  net/netfilter/nf_flow_table_ip.c | 96 +++++++++++++++++++++++++++++++-
+>  net/netfilter/nft_flow_offload.c |  6 +-
+>  2 files changed, 96 insertions(+), 6 deletions(-)
+> 
+> diff --git a/net/netfilter/nf_flow_table_ip.c b/net/netfilter/nf_flow_table_ip.c
+> index 8cd4cf7ae211..d0c3c459c4d2 100644
+> --- a/net/netfilter/nf_flow_table_ip.c
+> +++ b/net/netfilter/nf_flow_table_ip.c
+> @@ -306,6 +306,92 @@ static bool nf_flow_skb_encap_protocol(struct sk_buff *skb, __be16 proto,
+>  	return false;
+>  }
+>  
+> +static int nf_flow_vlan_inner_push(struct sk_buff *skb, __be16 proto, u16 id)
+> +{
+> +	struct vlan_hdr *vhdr;
+> +
+> +	if (skb_cow_head(skb, VLAN_HLEN))
+> +		return -1;
+> +
+> +	__skb_push(skb, VLAN_HLEN);
+> +	skb_reset_network_header(skb);
+> +
+> +	vhdr = (struct vlan_hdr *)(skb->data);
+> +	vhdr->h_vlan_TCI = htons(id);
+> +	vhdr->h_vlan_encapsulated_proto = skb->protocol;
+> +	skb->protocol = proto;
+> +
+> +	return 0;
+> +}
+> +
+> +static int nf_flow_ppoe_push(struct sk_buff *skb, u16 id)
+> +{
+> +	struct ppp_hdr {
+> +		struct pppoe_hdr hdr;
+> +		__be16 proto;
+> +	} *ph;
+> +	int data_len = skb->len + 2;
+> +	__be16 proto;
+> +
+> +	if (skb_cow_head(skb, PPPOE_SES_HLEN))
+> +		return -1;
+> +
+> +	if (skb->protocol == htons(ETH_P_IP))
+> +		proto = htons(PPP_IP);
+> +	else if (skb->protocol == htons(ETH_P_IPV6))
+> +		proto = htons(PPP_IPV6);
+> +	else
+> +		return -1;
+> +
+> +	__skb_push(skb, PPPOE_SES_HLEN);
+> +	skb_reset_network_header(skb);
+> +
+> +	ph = (struct ppp_hdr *)(skb->data);
+> +	ph->hdr.ver  = 1;
+> +	ph->hdr.type = 1;
+> +	ph->hdr.code = 0;
+> +	ph->hdr.sid  = htons(id);
+> +	ph->hdr.length = htons(data_len);
+> +	ph->proto = proto;
+> +	skb->protocol = htons(ETH_P_PPP_SES);
+> +
+> +	return 0;
+> +}
+> +
+> +static int nf_flow_encap_push(struct sk_buff *skb,
+> +			      struct flow_offload_tuple_rhash *tuplehash,
+> +			      unsigned short *type)
+> +{
+> +	int i = 0, ret = 0;
+> +
+> +	if (!tuplehash->tuple.encap_num)
+> +		return 0;
+> +
+> +	if (tuplehash->tuple.encap[i].proto == htons(ETH_P_8021Q) ||
+> +	    tuplehash->tuple.encap[i].proto == htons(ETH_P_8021AD)) {
+> +		__vlan_hwaccel_put_tag(skb, tuplehash->tuple.encap[i].proto,
+> +				       tuplehash->tuple.encap[i].id);
+> +		i++;
+> +		if (i >= tuplehash->tuple.encap_num)
+> +			return 0;
+> +	}
+> +
+> +	switch (tuplehash->tuple.encap[i].proto) {
+> +	case htons(ETH_P_8021Q):
+> +		*type = ETH_P_8021Q;
+> +		ret = nf_flow_vlan_inner_push(skb,
+> +					      tuplehash->tuple.encap[i].proto,
+> +					      tuplehash->tuple.encap[i].id);
+> +		break;
+> +	case htons(ETH_P_PPP_SES):
+> +		*type = ETH_P_PPP_SES;
+> +		ret = nf_flow_ppoe_push(skb,
+> +					tuplehash->tuple.encap[i].id);
+> +		break;
+> +	}
+> +	return ret;
+> +}
+> +
+>  static void nf_flow_encap_pop(struct sk_buff *skb,
+>  			      struct flow_offload_tuple_rhash *tuplehash)
+>  {
+> @@ -335,6 +421,7 @@ static void nf_flow_encap_pop(struct sk_buff *skb,
+>  
+>  static unsigned int nf_flow_queue_xmit(struct net *net, struct sk_buff *skb,
+>  				       const struct flow_offload_tuple_rhash *tuplehash,
+> +				       struct flow_offload_tuple_rhash *other_tuplehash,
+>  				       unsigned short type)
+>  {
+>  	struct net_device *outdev;
+> @@ -343,6 +430,9 @@ static unsigned int nf_flow_queue_xmit(struct net *net, struct sk_buff *skb,
+>  	if (!outdev)
+>  		return NF_DROP;
+>  
+> +	if (nf_flow_encap_push(skb, other_tuplehash, &type) < 0)
+> +		return NF_DROP;
+> +
+>  	skb->dev = outdev;
+>  	dev_hard_header(skb, skb->dev, type, tuplehash->tuple.out.h_dest,
+>  			tuplehash->tuple.out.h_source, skb->len);
+> @@ -462,7 +552,8 @@ nf_flow_offload_ip_hook(void *priv, struct sk_buff *skb,
+>  		ret = NF_STOLEN;
+>  		break;
+>  	case FLOW_OFFLOAD_XMIT_DIRECT:
+> -		ret = nf_flow_queue_xmit(state->net, skb, tuplehash, ETH_P_IP);
+> +		ret = nf_flow_queue_xmit(state->net, skb, tuplehash,
+> +					 &flow->tuplehash[!dir], ETH_P_IP);
+>  		if (ret == NF_DROP)
+>  			flow_offload_teardown(flow);
+>  		break;
+> @@ -757,7 +848,8 @@ nf_flow_offload_ipv6_hook(void *priv, struct sk_buff *skb,
+>  		ret = NF_STOLEN;
+>  		break;
+>  	case FLOW_OFFLOAD_XMIT_DIRECT:
+> -		ret = nf_flow_queue_xmit(state->net, skb, tuplehash, ETH_P_IPV6);
+> +		ret = nf_flow_queue_xmit(state->net, skb, tuplehash,
+> +					 &flow->tuplehash[!dir], ETH_P_IPV6);
+>  		if (ret == NF_DROP)
+>  			flow_offload_teardown(flow);
+>  		break;
+> diff --git a/net/netfilter/nft_flow_offload.c b/net/netfilter/nft_flow_offload.c
+> index 221d50223018..d320b7f5282e 100644
+> --- a/net/netfilter/nft_flow_offload.c
+> +++ b/net/netfilter/nft_flow_offload.c
+> @@ -124,13 +124,12 @@ static void nft_dev_path_info(const struct net_device_path_stack *stack,
+>  				info->indev = NULL;
+>  				break;
+>  			}
+> -			if (!info->outdev)
+> -				info->outdev = path->dev;
+>  			info->encap[info->num_encaps].id = path->encap.id;
+>  			info->encap[info->num_encaps].proto = path->encap.proto;
+>  			info->num_encaps++;
+>  			if (path->type == DEV_PATH_PPPOE)
+>  				memcpy(info->h_dest, path->encap.h_dest, ETH_ALEN);
+> +			info->xmit_type = FLOW_OFFLOAD_XMIT_DIRECT;
+>  			break;
+>  		case DEV_PATH_BRIDGE:
+>  			if (is_zero_ether_addr(info->h_source))
+> @@ -158,8 +157,7 @@ static void nft_dev_path_info(const struct net_device_path_stack *stack,
+>  			break;
+>  		}
+>  	}
+> -	if (!info->outdev)
+> -		info->outdev = info->indev;
+> +	info->outdev = info->indev;
+>  
+>  	info->hw_outdev = info->indev;
+>  
+> -- 
+> 2.47.1
+> 
