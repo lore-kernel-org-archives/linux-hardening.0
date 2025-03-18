@@ -1,109 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8EA9204F80;
-	Tue, 18 Mar 2025 11:49:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A17B120A5DE;
+	Tue, 18 Mar 2025 11:55:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742298578; cv=none; b=WSWOsdbWFdqKZmYM1Mc0HOygqZBSEeg/PzqKNz8aj7CKvy48a+IdWvGRQixvv1l49HPHHewRo7YHm7yqayi1EphSfEc7Y1VYshXogO/45OFxyXP8scYFow/XTsZWrX8tEmPnGfrVHDYJCEJhvIkYRbymzLj04+d0JxxRY7+x9BI=
+	t=1742298945; cv=none; b=o3nlhGsQbofYtq3GnREgBSWT/LpYQDdKY2T606BprSWwUnO0ykZmQMN5Hgi7qq/rOBBXuWS5SYSgzEopxRcaSArFli+w+67CEBv1IGGVxDMlKxrAUzAPaizod7MWUPmwlHANheZleKc79IezZoMhVIriQarsrL9XjR+nfxj46Tc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742298578; c=relaxed/simple;
-	bh=/7gUA5wr5lSbtn6XGDFZQHcPv+nxkvvS/+Cn6cdpAGA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S6DlpMz/ztiogRp3Eo4v6rKSKcmtK4/0LlOwMinZORf/SKOJw51PBnGlme1YTpIEX44b7Zni4QJdQd/CYX4X9Y8spDlYsthOGV1Yib5egbyac5pFf76Wya911XGS1JHNspsw4dDrFb8ySeb+7KwBw/2chek8tYnxioUh6pAB4ew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Djb39rZS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742298945; c=relaxed/simple;
+	bh=JQ5utqpG6y1Ex545GbLiV+P0yO2TxTZwfB14ybeEbcM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aAJ414hPqgigEa6ccsi7LjI4sgX6B0//dLvecROLc9ArSl+L+LfgyJQf4lvIhQdolNsFvaWNDo3BJJ0autIYDHW6b7jlNb6Q+Qt1QfXWDi2RUzPYgou16r9I4+dLw8PXzgrbE5ETIuT9QvThmPQcMi42XCFqviOefAFYod2sXp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IePG8UoL; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Djb39rZS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F4FFC4CEDD;
-	Tue, 18 Mar 2025 11:49:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742298578;
-	bh=/7gUA5wr5lSbtn6XGDFZQHcPv+nxkvvS/+Cn6cdpAGA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Djb39rZS2Mg8xNI28sjEjETHsq7/6lvK38g4NtBsxaYxey/r4QYHSmiObWHcF/mBM
-	 P84kePUcEam/V90h5POW8rIFJVJnI4xKjJn6lQtXJOQhI5BJ5O5oiZyWDcReHioIT8
-	 dRkLX07l9F/iYFjaNoBakjG/SZeJxFr17cryMUkWxENDrLXRkisaL71PUP8z3AT3f6
-	 6avd68fUhyAFj6IXbTEXFxpN16Fuo88lSwrV+TP+VsbJEtlr2rYaWbUtcS+ahA87zU
-	 XmkWuCzRFIkNoI9z9P3kHjlUV92tuX5mgFz35H7oICvOSqU2o3GV7cZcu/qf9QnJSQ
-	 M1fbu9ZtFGDZQ==
-Date: Tue, 18 Mar 2025 11:49:33 +0000
-From: Simon Horman <horms@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] net: macb: Add __nonstring annotations for
- unterminated strings
-Message-ID: <20250318114933.GP688833@kernel.org>
-References: <20250311224412.it.153-kees@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IePG8UoL"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2fecba90cc3so7179934a91.2;
+        Tue, 18 Mar 2025 04:55:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742298940; x=1742903740; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=cKyihIKo/pH3bvfSdmsukEMIsZJtwyOFl7m6Edus9Dg=;
+        b=IePG8UoLfkpoKZSkB8rrOWOzwomipjKLklPudNdfJWXTRoPXrmHZbG0ASDx2COVNcW
+         A/5lfZ2acwHMIeLBPRYBFzdABMiErIgjuyR2LPb96ltvZajdkiR5iF0Q5hxXYa6Jrdxd
+         CTIFlcLkcVJThOX7cyXJy7e8EWhyRhSr8alncf9P/dWKtKRjKiRAx7X8JHvNQ7fF56uF
+         tRUiSdea07c/teWepI6FxRpJlle1FKtxgpejKFR8W0NLgQo1HPwLpAN1XuBIpz6k3los
+         fDQKbJ9f28O4wETdUQvO2YOE5HRMy2k1fmY0eA3n3G5Sk+f9uA8Z2szk+mweZu7dtQlP
+         UgrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742298940; x=1742903740;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=cKyihIKo/pH3bvfSdmsukEMIsZJtwyOFl7m6Edus9Dg=;
+        b=aV6AdxMOTRlist5WvQC+uPaLaoHrtMlxl/YFOBwd0XB3rD9kMrFrCixbQqLDQ+Dacw
+         OZK+Re0Am0A/wXKuuC/4rnA6nd9aGeSElKtCb374HDzDYxTutz9BWF52K+XOTHHh2SSZ
+         fYG+q0FpwaqurztMIDN9S3joMNvC1ahT4UH7HkZCn/QDf7OfK4gJPNxftJKslaQT1Bcz
+         MT5EMpAhCrV/hgeYPDKsqOjQdrcT+BSkBq7A/SbMlGrtrPSQRDqeZ1UMY2D2Z2OgFE5p
+         iqBKp0dAsx93WXNLDWrsI2RiFsUDmYzrOYY8ZDxRRUJhVT3w1+Ri1kMaiyyOMfYOi+9g
+         WMUA==
+X-Forwarded-Encrypted: i=1; AJvYcCU+EQzC7yFrY5CbymwcjQonbYYZNBas9YZKgBff9AaXmg7mWPKiWRRYNMlSjDg4WC3X+DX+lqo2Da4=@vger.kernel.org, AJvYcCWOGef1kp0ilGu+wH81ucBtURwUGuj8+g71ds1k56HLfKtyma5Tx2A36Ks5HIL3xXX5j6efSow7AKlvSoIm+UBk@vger.kernel.org
+X-Gm-Message-State: AOJu0YxR27aUNtpVT8tDDG3eYbQaraukTC8iTU3OBmoQxVYejO9s54PN
+	koH1SLzeWkzzDwy5kDl9uAKADacmLKilBRINboIq1dw/DMgoaaYDT8W1xPA=
+X-Gm-Gg: ASbGncu3brPdSwzB0pWsixiZ/aUipZfuB9oMJVPyH+d1jet65lKOmX7WNN01Je3tzR5
+	+89Ni9fjuLvgjYkPZi1mJgxVYtCobgvuBAP8ByUzINGf1j3uw7PfKD560mWwMzAVo0mYWqbw9M7
+	ye4TpOMlhHOORkr6JAR7iTbcYFMCwyAsIusZOJPnh6Mqn8GBZFqy7m7/HBvZuXHTjFRWZ9F0ROY
+	O6nEw2djARF9KeotAymHhTtMNFgAXK33pSBsEG1HS7jLCqyXfvTEei33255nNyW1KPps9mY7hfD
+	WOxc4DDK59nHA7YNFfdyAdnidLIFEJMNc9Hy87snPs8=
+X-Google-Smtp-Source: AGHT+IGHyw9jpFHb0aZNa7IBr5fLIyNMqKS2+tIQTNTWVJAr+zH6ZWKTwNlqMg6M1sYOe3HKq0hxDA==
+X-Received: by 2002:a17:90b:1b47:b0:2ee:8ea0:6b9c with SMTP id 98e67ed59e1d1-301a5b14c80mr2967926a91.12.1742298939730;
+        Tue, 18 Mar 2025 04:55:39 -0700 (PDT)
+Received: from localhost ([222.151.198.97])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-225c6ba6cbbsm91808155ad.117.2025.03.18.04.55.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Mar 2025 04:55:39 -0700 (PDT)
+From: takumaw1990@gmail.com
+To: linux-mm@kvack.org,
+	linux-hardening@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Cc: Takuma Watanabe <takumaw1990@gmail.com>
+Subject: [PATCH] mseal: Fix typo and style in documentation
+Date: Tue, 18 Mar 2025 20:55:19 +0900
+Message-ID: <20250318115521.11654-1-takumaw1990@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250311224412.it.153-kees@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Mar 11, 2025 at 03:44:16PM -0700, Kees Cook wrote:
-> When a character array without a terminating NUL character has a static
-> initializer, GCC 15's -Wunterminated-string-initialization will only
-> warn if the array lacks the "nonstring" attribute[1]. Mark the arrays
-> with __nonstring to and correctly identify the char array as "not a C
-> string" and thereby eliminate the warning.
-> 
-> Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=117178 [1]
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
->  v1: https://lore.kernel.org/lkml/20250310222415.work.815-kees@kernel.org/
->  v2: switch to __nonstring annotation
-> Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
-> Cc: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-> Cc: Andrew Lunn <andrew+netdev@lunn.ch>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Eric Dumazet <edumazet@google.com>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Paolo Abeni <pabeni@redhat.com>
-> Cc: netdev@vger.kernel.org
-> ---
->  drivers/net/ethernet/cadence/macb.h | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/ethernet/cadence/macb.h b/drivers/net/ethernet/cadence/macb.h
-> index 2847278d9cd4..003483073223 100644
-> --- a/drivers/net/ethernet/cadence/macb.h
-> +++ b/drivers/net/ethernet/cadence/macb.h
-> @@ -1027,7 +1027,7 @@ struct gem_stats {
->   * this register should contribute to.
->   */
->  struct gem_statistic {
-> -	char stat_string[ETH_GSTRING_LEN];
-> +	char stat_string[ETH_GSTRING_LEN] __nonstring;
+From: Takuma Watanabe <takumaw1990@gmail.com>
 
-Hi Kees, all,
+Corrected a typo in the mseal documentation.
 
-I see where this is going, and I have no objections to it.
-But a member called *_string which is annotated as __nonstring
-does seem a somewhat unintuitive.
+Signed-off-by: Takuma Watanabe <takumaw1990@gmail.com>
+---
+ Documentation/userspace-api/mseal.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->  	int offset;
->  	u32 stat_bits;
->  };
-> @@ -1068,6 +1068,7 @@ static const struct gem_statistic gem_statistics[] = {
->  	GEM_STAT_TITLE(TX512CNT, "tx_512_1023_byte_frames"),
->  	GEM_STAT_TITLE(TX1024CNT, "tx_1024_1518_byte_frames"),
->  	GEM_STAT_TITLE(TX1519CNT, "tx_greater_than_1518_byte_frames"),
-> +
->  	GEM_STAT_TITLE_BITS(TXURUNCNT, "tx_underrun",
->  			    GEM_BIT(NDS_TXERR)|GEM_BIT(NDS_TXFIFOERR)),
->  	GEM_STAT_TITLE_BITS(SNGLCOLLCNT, "tx_single_collision_frames",
-> -- 
-> 2.34.1
-> 
-> 
+diff --git a/Documentation/userspace-api/mseal.rst b/Documentation/userspace-api/mseal.rst
+index 41102f74c5e2..42f32b57e7e2 100644
+--- a/Documentation/userspace-api/mseal.rst
++++ b/Documentation/userspace-api/mseal.rst
+@@ -27,7 +27,7 @@ SYSCALL
+ =======
+ mseal syscall signature
+ -----------------------
+-   ``int mseal(void \* addr, size_t len, unsigned long flags)``
++   ``int mseal(void *addr, size_t len, unsigned long flags)``
+ 
+    **addr**/**len**: virtual memory address range.
+       The address range set by **addr**/**len** must meet:
+-- 
+2.43.0
+
