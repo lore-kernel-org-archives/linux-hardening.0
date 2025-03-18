@@ -1,45 +1,48 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFB3617BBF;
-	Mon, 17 Mar 2025 22:33:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B6BD175D47;
+	Tue, 18 Mar 2025 01:51:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742250818; cv=none; b=u3I2PEEgl4Bu7fv9d5leFCS9UOCzrf+IOhcgJqxBrlBNXODIvqS+UabnFz4cezcqn5keAxhY3+KpUdrz9MW+lysb5qU8TaLxdFHdN8josrF9M9bPZFhWI1yzXi3VrxS2GKCpbDtkHtr0P5ORexnNLMfCzbMejCe7ykpbaznxut4=
+	t=1742262716; cv=none; b=tTwVRgNegXkq1qroxqTA76rpZ+VrRkOqjeca/Kj9aLFf5+1KxzXUnEEdBW1kGaHplj36z3mYOgko1bvhIWBSIV21tbCN5obo86e9XRjooQWpTjSPRiHCl/jXjd/rJclI1oS7MjW818ZFZTo+OB8Iu15cqAfFWkdTjA+Sr6qU5Q4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742250818; c=relaxed/simple;
-	bh=5evH5hxDSJYzkVboZ6IFWK0TA54VK7B3YDyzYALK7b0=;
+	s=arc-20240116; t=1742262716; c=relaxed/simple;
+	bh=B4jkCowqNhZ8/th7Pe4Z251HnJHfp1DmkrTSzF+kwPY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tcjcdIhRGLcO89VCy9D2PxDDEmc231eAQTEv0//vgxSHhEpwQAl+kl2TtNgms1mwgtIwczy/B83nDDV05ONZy0VxqP+8yqx5LkTvAXLNEPF8F/lyUS/HQ6+E4t1xrugXqgFU1NhB22youEmtcaOoSCWjb0nKwffSAh87EYkJ9Us=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=BSPVlcfk; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=u04/cF9q9SCZb4Yo7omcbVcxMg5Iv3a6vsGmydv4F8nFuoIjCELRIWxDlJdlKvh0fvT+GGQ8j83igxloD4xF84qltUj2AG2zjqHu/6jYhFo/tW0OjtbzKufMZyBsh26zbCwd+/g028SDgPAn+OpKEugzrUhk7IZ/alXPLA70jvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jjQUKdl/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="BSPVlcfk"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id B8526432EB;
-	Mon, 17 Mar 2025 22:33:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1742250815;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1JkgyP3NSZUKGIiR5ww73hdF3uIzJbl4G8VkBozlivs=;
-	b=BSPVlcfkPVxjFJGXRC1NsqzJMXzgoP/fRPVW368UrHhRDC0Waq1KeJcOAkYAFX3fW10ji0
-	bo4j+K7ypK3rA0ouALu85iZT2eMocGOgFqebY3S2/iOx/6nUuv01l/EqhMbQ/f3z60Galb
-	EZkDDrQslhY7/gPA/CpBYRc2ygcgi/Tp4SDWdiNf8DIEmtxpOqUXXmu/n5w0V1rVtLwNla
-	0puoaAKOKb4yJv7MTgU3LPiK0alDUlbHijalZKpsC9ZXNEFHxjv8P9bx3y1le79/JbXtfm
-	OKRxIypX68t6vpwiEnBTJLlLrbQYjL6Dm0y6ihOm6XBsmCzKw7DekBapGDH5pg==
-Date: Mon, 17 Mar 2025 23:33:33 +0100
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-To: Benson Leung <bleung@chromium.org>, Guenter Roeck <groeck@chromium.org>,
-	Tzung-Bi Shih <tzungbi@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: linux-rtc@vger.kernel.org, chrome-platform@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2][next] rtc: Avoid a couple of
- -Wflex-array-member-not-at-end warnings
-Message-ID: <174225080420.1592452.18415523185009670787.b4-ty@bootlin.com>
-References: <Z9PpPg06OK8ghNvm@kspp>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jjQUKdl/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D5ACC4CEED;
+	Tue, 18 Mar 2025 01:51:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742262713;
+	bh=B4jkCowqNhZ8/th7Pe4Z251HnJHfp1DmkrTSzF+kwPY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jjQUKdl/BvIl8AUf24mPXZyaG54Fv0zMkLX7Wf2zQlGGeFdQCqvFBfC78Frgm/vsh
+	 xOHxpljo1cmo8jKD6eDhwPH01OIHOrLmmAjp5+RVqBjKgRe6WtjFODlPrnOgt1HJCO
+	 n8iqlUNSB+qRG3ft+sXeP/R7bu5FxR7+8ZZURtFFF8DT7eV+HlDeHOAflV8+ro6gax
+	 IQxtK4+ZWsfKINTBaihRveTjzaFDMVqKbrID+cel201fRyQf+X7emTzIa0X9QnN6IW
+	 tAWkuzN/s+RRDUIFH1m6QLHp2IMCrQCkHjm8t1gnQzoKfWxojXPjwC9v+OZLXQBkWp
+	 Z4fJva7qe5iJA==
+Date: Tue, 18 Mar 2025 01:51:50 +0000
+From: Tzung-Bi Shih <tzungbi@kernel.org>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Benson Leung <bleung@chromium.org>,
+	Guenter Roeck <groeck@chromium.org>, linux-iio@vger.kernel.org,
+	chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] iio: cros_ec: Avoid -Wflex-array-member-not-at-end
+ warning
+Message-ID: <Z9jRtoDZM0opi_4C@google.com>
+References: <Z9dy43vUUh4goi-Q@kspp>
+ <Z9d7rp-ullvmXKoM@google.com>
+ <112490dd-4490-44f4-abd2-07f7a519aa7b@embeddedor.com>
+ <20250317120447.4fa26083@jic23-huawei>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -48,31 +51,29 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z9PpPg06OK8ghNvm@kspp>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddugedtjeehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeetlhgvgigrnhgurhgvuceuvghllhhonhhiuceorghlvgigrghnughrvgdrsggvlhhlohhnihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepieejfefhffekjeeuheevueevjedvleevjeetudffheeutdffudefjeduffeuvddtnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegvtdgrmedvugemieefjedtmeejkegvtdemtgdtvgekmedvkedtieemkegrtgeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegvtdgrmedvugemieefjedtmeejkegvtdemtgdtvgekmedvkedtieemkegrtgeipdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpegrlhgvgigrnhgurhgvrdgsvghllhhonhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeekpdhrtghpthhtohepsghlvghunhhgsegthhhrohhmihhumhdrohhrghdprhgtphhtthhopehgrhhovggtkhestghhrhhomhhiuhhmrdhorhhgpdhrtghpthhtohept
- hiiuhhnghgsiheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepghhushhtrghvohgrrhhssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhrthgtsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghhrhhomhgvqdhplhgrthhfohhrmheslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhhrghruggvnhhinhhgsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-GND-Sasl: alexandre.belloni@bootlin.com
+In-Reply-To: <20250317120447.4fa26083@jic23-huawei>
 
-On Fri, 14 Mar 2025 19:00:54 +1030, Gustavo A. R. Silva wrote:
-> Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
-> a flexible structure where the size of the flexible-array member
-> is known at compile-time, and refactor the rest of the code,
-> accordingly.
+On Mon, Mar 17, 2025 at 12:04:47PM +0000, Jonathan Cameron wrote:
+> On Mon, 17 Mar 2025 15:10:38 +1030
+> "Gustavo A. R. Silva" <gustavo@embeddedor.com> wrote:
 > 
-> So, with these changes, fix the following warning:
-> 
-> [...]
+> > On 17/03/25 12:02, Tzung-Bi Shih wrote:
+> > > On Mon, Mar 17, 2025 at 11:24:59AM +1030, Gustavo A. R. Silva wrote:  
+> > >>   static int cros_ec_get_host_cmd_version_mask(struct cros_ec_device *ec_dev,
+> > >>   					     u16 cmd_offset, u16 cmd, u32 *mask)
+> > >>   {
+> > >> +	DEFINE_RAW_FLEX(struct cros_ec_command, buf, data,
+> > >> +			sizeof(struct ec_response_get_cmd_versions));  
+> > > 
+> > > max(sizeof(struct ec_params_get_cmd_versions),
+> > >      sizeof(struct ec_response_get_cmd_versions))?  
+> > 
+> > I considered that, but DEFINE_RAW_FLEX() complains about it due to the
+> > 
+> > _Static_assert(__builtin_constant_p(count),				\
+> > 		       "onstack flex array members require compile-time const count");
+> > 
+> Maybe add an assert that you indeed have the larger of the two + a comment
+> on why it matters?
 
-Applied, thanks!
-
-[1/1] rtc: Avoid a couple of -Wflex-array-member-not-at-end warnings
-      https://git.kernel.org/abelloni/c/0176188220a7
-
-Best regards,
-
--- 
-Alexandre Belloni, co-owner and COO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Or, is there a way for using compiler-time MAX()?  I failed to find so.
