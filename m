@@ -1,94 +1,103 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14E881C6FF4;
-	Tue, 18 Mar 2025 08:18:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F8513FC3;
+	Tue, 18 Mar 2025 10:01:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742285932; cv=none; b=Loo9bBvdz6yCGxjqvHyEkTqq/hx1Tiw/Y4rc43OIcKzZT9syYUKokSUDzYbfHFmkokQMIfdKqAezS3pT4qX2F7E7s6xVPkUb7Uy/bdb9PRV6prKy8LDE3+WEVnhNeXzLx3G7NDGcIn2B6kwv5KgY9QinOZ5egya8oaXRDJdxxJo=
+	t=1742292064; cv=none; b=A0wPKwmfrgo68RltrQprSIHgbI/RCyJdQ5XgcvVVictgHd7WOxc1qoF3bqQK8WIPxltlKt4RNV3UZ7ng5nd/rSDJGd71w8SVY62tdHH7y9GOfJGTGmASUF7Nb0ury0xZg4YLKnGJqufxLz531YHMLkMjsCJFo7QwHXNmkfMZ94s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742285932; c=relaxed/simple;
-	bh=dScpwu90YUNJr/8QqjQTY3QTLtw075gaJ/d333YNViA=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=h+3RsmeX9lwXwSRX4DohRvpwTXcqlYr45yKL1RLETDxhrdAlQzcESTuFey/dxqKx6UX5Ci6VgRwU6FLTcSTa3GIDPzOgiKpFLCSq+Xg9OaAJgt4sB4ASYR5+MIC4ItKoc/PwwPugvrhvlPZYNDsUl8TC6/GeVRlzgT5LrXBR8mg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ux+EoWXc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742292064; c=relaxed/simple;
+	bh=tt3Nu4a7fSE5kL5LsQ+x0JD00Jc5aMTc6CLr+Hbgmms=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=K1NPCydmkN/wz6r58ckU3sn1DxztSwDVBAsvr92bK0V+J8wQ5UVAkBHBO72WijX8AOYHpVHCSHNv3Xz03qE4lk5zi0PYLq/aUXZZCK12A5P8gotQa5nbhwRcu5W9UpvfJsvXI7PDgn6qV59b9hBz0XFsaiNtwN+2Wtj+17Cyz4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=et6Az3ud; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ux+EoWXc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7DB4C4CEDD;
-	Tue, 18 Mar 2025 08:18:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="et6Az3ud"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DACE2C4CEE9;
+	Tue, 18 Mar 2025 10:00:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742285931;
-	bh=dScpwu90YUNJr/8QqjQTY3QTLtw075gaJ/d333YNViA=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=ux+EoWXcsfi0Ov90Qtlw0Ik/ZuG51uVPuZ4Mpz0Vb8owJ7L7Ni6SKWIQmAfAVHCUv
-	 Vx+EsGw0fE5n3dT9gilGtaKr2L1kCT6H2YTxeMFv8egfbnHe+m0KxUiMIKxxB+GLyG
-	 /4L73NONm4lyxBovfGF2DK8SCynJwIbCPaPowGgU0RbTFKh4g3Ey8iBGDO6fQ4UbdH
-	 TmoI+3fUBQuqX+CTpJEuNxLTg9xsfh6k7rjMJyFPIa8NgZj02ssimy5QQ5qza5ZB00
-	 FBHOf7dDP3CHZzV5tElqKiNZ+eSjAA+62JNxamL+fezQwaUytUmCd0RPyQyuqG5Bh/
-	 5QRo1FJcQ+G2Q==
-Date: Tue, 18 Mar 2025 01:18:47 -0700
-From: Kees Cook <kees@kernel.org>
-To: Tzung-Bi Shih <tzungbi@kernel.org>, Jonathan Cameron <jic23@kernel.org>
-CC: "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Lars-Peter Clausen <lars@metafoo.de>, Benson Leung <bleung@chromium.org>,
- Guenter Roeck <groeck@chromium.org>, linux-iio@vger.kernel.org,
- chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH=5D=5Bnext=5D_iio=3A_cros=5Fec=3A_Avoid_?=
- =?US-ASCII?Q?-Wflex-array-member-not-at-end_warning?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <Z9jRtoDZM0opi_4C@google.com>
-References: <Z9dy43vUUh4goi-Q@kspp> <Z9d7rp-ullvmXKoM@google.com> <112490dd-4490-44f4-abd2-07f7a519aa7b@embeddedor.com> <20250317120447.4fa26083@jic23-huawei> <Z9jRtoDZM0opi_4C@google.com>
-Message-ID: <5524C796-6426-4A32-962E-AB4B4E3DC4A7@kernel.org>
+	s=k20201202; t=1742292064;
+	bh=tt3Nu4a7fSE5kL5LsQ+x0JD00Jc5aMTc6CLr+Hbgmms=;
+	h=Date:From:To:Cc:Subject:From;
+	b=et6Az3udmz4Mz657jl3MASizJt9x4k4sbiXaZrJMLBVdWl3EJXskHIiACfubDovzm
+	 /juqTtALTBRanx7nCHMVAUyI8PLAgNSV+2ZczK2ht/eefJGF/a3Wq04WVlL45b2LC7
+	 sCr83n5QYB3PkKiBWZbihUWFjUvPxfrXuk/wO8GLeWI+kpvNrNZOIGf6a5Id+OOMgV
+	 NSC8vrVZvuoi0Z5pW+vQiXaIsfiX5tMGgLcyofxeuNsXQNOx+9TSnvskK4MIiLlcqb
+	 sTEmoCFyg3+y9j9iCG7B3mlWIcOTUl23G8W+ExcneG41j/fF9JTiTgjcKrckORRqN7
+	 6kTeB+MdugmGQ==
+Date: Tue, 18 Mar 2025 20:31:05 +1030
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Benson Leung <bleung@chromium.org>,
+	Guenter Roeck <groeck@chromium.org>,
+	Tzung-Bi Shih <tzungbi@kernel.org>
+Cc: linux-iio@vger.kernel.org, chrome-platform@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org, Kees Cook <kees@kernel.org>
+Subject: [PATCH v2][next] iio: proximity: cros_ec_mkbp_proximity: Avoid
+ -Wflex-array-member-not-at-end warning
+Message-ID: <Z9lEYdPPIyiRGm36@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+-Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+getting ready to enable it, globally.
 
+Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
+a flexible structure where the size of the flexible-array member
+is known at compile-time, and refactor the rest of the code,
+accordingly.
 
-On March 17, 2025 6:51:50 PM PDT, Tzung-Bi Shih <tzungbi@kernel=2Eorg> wro=
-te:
->On Mon, Mar 17, 2025 at 12:04:47PM +0000, Jonathan Cameron wrote:
->> On Mon, 17 Mar 2025 15:10:38 +1030
->> "Gustavo A=2E R=2E Silva" <gustavo@embeddedor=2Ecom> wrote:
->>=20
->> > On 17/03/25 12:02, Tzung-Bi Shih wrote:
->> > > On Mon, Mar 17, 2025 at 11:24:59AM +1030, Gustavo A=2E R=2E Silva w=
-rote: =20
->> > >>   static int cros_ec_get_host_cmd_version_mask(struct cros_ec_devi=
-ce *ec_dev,
->> > >>   					     u16 cmd_offset, u16 cmd, u32 *mask)
->> > >>   {
->> > >> +	DEFINE_RAW_FLEX(struct cros_ec_command, buf, data,
->> > >> +			sizeof(struct ec_response_get_cmd_versions)); =20
->> > >=20
->> > > max(sizeof(struct ec_params_get_cmd_versions),
->> > >      sizeof(struct ec_response_get_cmd_versions))? =20
->> >=20
->> > I considered that, but DEFINE_RAW_FLEX() complains about it due to th=
-e
->> >=20
->> > _Static_assert(__builtin_constant_p(count),				\
->> > 		       "onstack flex array members require compile-time const count=
-");
->> >=20
->> Maybe add an assert that you indeed have the larger of the two + a comm=
-ent
->> on why it matters?
->
->Or, is there a way for using compiler-time MAX()?  I failed to find so=2E
+So, with these changes, fix the following warning:
 
-Did MAX() not work? I would expect it to do compile time comparison of two=
- sizeof()s=2E It can do other arithmetic no problem, e=2Eg=2E:
-https://elixir=2Ebootlin=2Ecom/linux/v6=2E13=2E7/source/lib/vsprintf=2Ec#L=
-1097
+drivers/iio/proximity/cros_ec_mkbp_proximity.c:63:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
---=20
-Kees Cook
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+Changes in v2:
+ - Use MAX() to calculate the number of bytes for the flex array. (Kees)
+
+v1:
+ - Link: https://lore.kernel.org/linux-hardening/Z9dzDB1gttXehYGO@kspp/
+
+ drivers/iio/proximity/cros_ec_mkbp_proximity.c | 15 +++++----------
+ 1 file changed, 5 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/iio/proximity/cros_ec_mkbp_proximity.c b/drivers/iio/proximity/cros_ec_mkbp_proximity.c
+index 667369be0555..d2ddb7d45ec2 100644
+--- a/drivers/iio/proximity/cros_ec_mkbp_proximity.c
++++ b/drivers/iio/proximity/cros_ec_mkbp_proximity.c
+@@ -59,16 +59,11 @@ static int cros_ec_mkbp_proximity_parse_state(const void *data)
+ static int cros_ec_mkbp_proximity_query(struct cros_ec_device *ec_dev,
+ 					int *state)
+ {
+-	struct {
+-		struct cros_ec_command msg;
+-		union {
+-			struct ec_params_mkbp_info params;
+-			u32 switches;
+-		};
+-	} __packed buf = { };
+-	struct ec_params_mkbp_info *params = &buf.params;
+-	struct cros_ec_command *msg = &buf.msg;
+-	u32 *switches = &buf.switches;
++	DEFINE_RAW_FLEX(struct cros_ec_command, buf, data,
++			MAX(sizeof(u32), sizeof(struct ec_params_mkbp_info)));
++	struct ec_params_mkbp_info *params = (struct ec_params_mkbp_info *)buf->data;
++	struct cros_ec_command *msg = buf;
++	u32 *switches = (u32 *)buf->data;
+ 	size_t insize = sizeof(*switches);
+ 	int ret;
+ 
+-- 
+2.43.0
+
