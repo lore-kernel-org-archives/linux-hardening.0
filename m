@@ -1,159 +1,132 @@
-Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3C241E0DE6
-	for <linux-hardening@vger.kernel.org>; Wed, 19 Mar 2025 16:56:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EC15187FEC;
+	Wed, 19 Mar 2025 18:38:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742403403; cv=none; b=tDaunWMbrZIFk1aALsubn3r8cLj+1T5mNiYhCJeF6KOYEbwOWw/I0EDYhLX3nvmbbrCLWIgWRUqVM2MnFjywLhOBBHql2EsOAC/93prti2KNQXlQ9w5oWRrncwUZ35xqQRVhwNJQAnjoxqxFTltTbQ6VNDvp1PagoDx7m00TKos=
+	t=1742409522; cv=none; b=slexWZiyV//ERwbEAxJVlP6kKClH7Whb4JnLcNtolr2g1PuHYk5UJtYwfqT0Jnj/TYAFaKVliFOSFX5PwHk2FHQwcLs/lq8gGZQEw0DGywlFWVojiJZ+Yuafg0gfwimo3eXBLZ6OX4Dh82AHYIgO28SsDsXEIELW68sfXomu9AY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742403403; c=relaxed/simple;
-	bh=zwYnXMMsa1QDVsiNd/S8z1RYMd3ZqeeN/TUb6PISgzU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FHCsAs40H1BqCG7I1nlaG8i51QGAw+8lV4WGcdhI3VIb7D4HUPx/ElwGzifmdm5B+ou+mWsBHh1TE53zXAttoWgGGUh4IH58q29WlAC4q5VIvv6TXDulPwYcuXxW2P6cm5+oIghOMZ02wwBdbx9vVg5AF2x9Hnra0LkkT2Aajqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=EBBhk5uN; arc=none smtp.client-ip=209.85.210.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1742409522; c=relaxed/simple;
+	bh=xxc1VsGnvFXqzw9zxTVKLq0ZNRg09z107d4U6coGVOE=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=eEvyJQTH8VPoUAWSTXnEO5HnImD0Iniarq1AsFNC0ILtiV7G0PgK+ODWd9lqqhQY8en8mzeg9o6TkCjL4hj6o1d/bnTpbYCCdbIUh4mDQJ61FQwrNo5spIoHZ1SNaUhogiijEf0+/lX1JL004S1w5MMcEyio2Nee2vljvu1b96M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cP/s+lF8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EBBhk5uN"
-Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-72b9143f4c8so416992a34.0
-        for <linux-hardening@vger.kernel.org>; Wed, 19 Mar 2025 09:56:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1742403400; x=1743008200; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RE5HVBmGckTruTp6gXALafzs0whRU9prTDWUYYmCwK0=;
-        b=EBBhk5uNZh9ZBAyboCzc1aIyUl1KCcgE7b0IlGjfBsTfXjT5aOl9rr0f32KQIj9mp1
-         Q8od83wTNmVoYo1FOmolYeqmgaGXgjY58Qth5cU4Uj4kYRlcDzJ6NiUt+TtIo4Rxa6TR
-         N4pwpJnIotjlWOP7uLm7S5XHRu5Ct1FKhuGUc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742403400; x=1743008200;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RE5HVBmGckTruTp6gXALafzs0whRU9prTDWUYYmCwK0=;
-        b=wqINfq6t1n3S6oHkF2ydwD2OEBO1mYMF0C0gaU2PyrII30QM4hdL+79kUpMoSM72CR
-         oOE/9b0LY5cymAdV8LixZMyVMbPqFF7oNXeWJnHBREAGTfkJBGPz5ayZpev/n9oKscgP
-         VRA2/jlduynf5cp38qb8kOO8TNAQP+Z3jHS4ZyY1+qViR79GdzGeftYpv3/J1udMqqhf
-         Ql2WhnTXJwhqE4t8jH03Kbac1wf1vK6czj7HWOj+BjfXLdKTXSKfczGgf1ZNmDwToPK2
-         ij2alXNG4+7wsejFu24fCZCWD8S++HUGrQCHcGlc+nhXpKNMng283fb4tbCGZyfdh1Cl
-         DlEw==
-X-Forwarded-Encrypted: i=1; AJvYcCWFE3vc4pr4ye8lucFTklnMDYHkde92OjUj1XXtt4PVftd9mO+MgLYgdWcJ+ar81XSlkjjMZn0x4SELSEC5GGk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUNxetT+vtxwyqwzq60RpmZWsYOeXuBnIIP+5Wk5OsAy7TfAc9
-	jpYS2IBZBjBcSaIztpb92OwK8SM4BN2sPhCNvwR+Mu3Uz2Bt65UbaJjmJdo7tHq5eT7H6E4i0fB
-	lVaZAElniSnhZ4G39DxV8sCpR/IwibBboi87L
-X-Gm-Gg: ASbGncvvJ+LTm0wW8iAcgoqdyR0lgF3OOIKWoRYJRqZ7EhHTNcjwJVFuyaxke8VVJXg
-	E3wD4Eb+7WOeqKz6clC4jjK8hpqPLU4YIru7YGclgqzCWpn7NPt0A5Vwfcv+Bom02f0+qSnkHoT
-	4YmQhKSLt17w1xSG9nFQcIxumFVUUXUeM22URvBdISqi8R/JMtIoBrjjipsF/5s4JJiA==
-X-Google-Smtp-Source: AGHT+IFzgXMNQcpoWareSib6wev3ti0IRU9vlUdrQeO22LdB0Bu/vQYpcQWzOYqllkJTRFeitamGLkxU/bPpWHg0/cs=
-X-Received: by 2002:a05:6808:228c:b0:3fe:ab9b:1a8a with SMTP id
- 5614622812f47-3fead6023f0mr973087b6e.5.1742403400056; Wed, 19 Mar 2025
- 09:56:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cP/s+lF8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B2F4C4CEE4;
+	Wed, 19 Mar 2025 18:38:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742409521;
+	bh=xxc1VsGnvFXqzw9zxTVKLq0ZNRg09z107d4U6coGVOE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=cP/s+lF8HISnXacs9ZPUuzigjGTgQ1p+XwdHZHgTAzH9gt3CJUABlgR426eWV4Yw7
+	 KJKH+LG8vUAJzLDYQwCrwRVFrTKjKN/JEcKYuQc8QXtvu7+VOIt72ic+2ePQk/LDr+
+	 dm9AyCDaRdkqQ9AGemNrE/VEawK3KZP+cePFOGWAj7X7eHUhDJtggVFg4Qzy032X4C
+	 pzVMtAtk/EOpX/RWukuuvzZt3LCXbpRrcbd9lN5PfqxIuoLTdFG6tAGSWcG7gTkyCA
+	 e/DAavfGqxgVV1Jxx49/u0qrgU/izRFICLPc5KCtRq9DE5SSF1lDrqBUYFVQYPjiIK
+	 Yd+Rj4Zu08Dww==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1tuyJL-00FBqr-6X;
+	Wed, 19 Mar 2025 18:38:39 +0000
+Date: Wed, 19 Mar 2025 18:38:38 +0000
+Message-ID: <86ldt0n9w1.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Akihiko Odaki <akihiko.odaki@daynix.com>
+Cc: Oliver Upton <oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu
+ <yuzenghui@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	devel@daynix.com
+Subject: Re: [PATCH RFC] KVM: arm64: PMU: Use multiple host PMUs
+In-Reply-To: <cd7b4528-34a3-4d87-9711-acc2c2e6f6e1@daynix.com>
+References: <20250319-hybrid-v1-1-4d1ada10e705@daynix.com>
+	<Z9pze3J2_zrTk_yC@linux.dev>
+	<e8324d9d-3756-41cf-a102-28572e302368@daynix.com>
+	<86plidmjwh.wl-maz@kernel.org>
+	<bd681ec6-0b4c-47d9-8a4a-b7324c0883a6@daynix.com>
+	<86o6xxmg87.wl-maz@kernel.org>
+	<aabd71eb-286b-475c-a30e-d5cf5c4f2769@daynix.com>
+	<86msdhmemw.wl-maz@kernel.org>
+	<cd7b4528-34a3-4d87-9711-acc2c2e6f6e1@daynix.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250313000623.3192896-1-jeffxu@google.com> <1bbce89c-1efe-40cf-9085-ec4ec16f7996@lucifer.local>
- <CABi2SkVKxyX0uDabg+wHiq_vTBFbUST-nRdur7cCPB2myhCWhg@mail.gmail.com>
- <CAMuHMdWLjX-OavON-rj50kZyvV5+Pf0x34WJbcdKsCgAQA7TwQ@mail.gmail.com>
- <CABi2SkWU6orm-wBFKVt9rsSpYURHPb7fjHRzkOiPGd=Lh-DdkA@mail.gmail.com>
- <CABi2SkWmxwM-MbfmRCZvBYek8KpmOKPMsFmb=-eZTgKfp3AN6w@mail.gmail.com>
- <CAMuHMdWUHwRXR1VHEVJm36Dp0B_H6SNwtWHAW1dMQ-iM4ORUWQ@mail.gmail.com>
- <CABi2SkVndMyOUpRR8z7f0J-r7chkVNZ17-kaEcBje1kBjk-1iw@mail.gmail.com>
- <CABi2SkUAnWAu9L-Km35U4XMmbp9-w+hKCXkM6MYNejYi5ip5Tg@mail.gmail.com> <CAMuHMdUruXfLCZ7vC+VmPRnJUH1Z1LnN9iaeafGaa_EAisnk6A@mail.gmail.com>
-In-Reply-To: <CAMuHMdUruXfLCZ7vC+VmPRnJUH1Z1LnN9iaeafGaa_EAisnk6A@mail.gmail.com>
-From: Jeff Xu <jeffxu@chromium.org>
-Date: Wed, 19 Mar 2025 09:56:28 -0700
-X-Gm-Features: AQ5f1Jo5j5hm3bh2_R1XoS4SHAz-D931z9dWRwfaWf7nMpMXBKMw_L75WG7Uvjk
-Message-ID: <CABi2SkX2piCzCHMoxe5txGCZ0wAkMbZ0A1VeMottZo5xa3-A-A@mail.gmail.com>
-Subject: Re: [PATCH] mseal sysmap: add arch-support txt
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: edumazet@google.com, m-malladi@ti.com, 
-	Kevin Brodsky <kevin.brodsky@arm.com>, guoweikang.kernel@gmail.com, 
-	Qi Zheng <zhengqi.arch@bytedance.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	akpm@linux-foundation.org, Liam.Howlett@oracle.com, agordeev@linux.ibm.com, 
-	borntraeger@linux.ibm.com, gor@linux.ibm.com, hca@linux.ibm.com, 
-	kees@kernel.org, linux-hardening@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, svens@linux.ibm.com, 
-	thomas.weissschuh@linutronix.de
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: akihiko.odaki@daynix.com, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, will@kernel.org, kees@kernel.org, gustavoars@kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, devel@daynix.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-Hi Geert
+On Wed, 19 Mar 2025 11:51:21 +0000,
+Akihiko Odaki <akihiko.odaki@daynix.com> wrote:
+> 
+> On 2025/03/19 20:41, Marc Zyngier wrote:
+> > On Wed, 19 Mar 2025 11:26:18 +0000,
+> > Akihiko Odaki <akihiko.odaki@daynix.com> wrote:
+> >> 
+> >> On 2025/03/19 20:07, Marc Zyngier wrote:
+> >>> On Wed, 19 Mar 2025 10:26:57 +0000,
+> >>>> 
+> >>> But that'd be a new ABI, which again would require buy-in from
+> >>> userspace.  Maybe there is scope for an all CPUs, cycle-counter only
+> >>> PMUv3 exposed to the guest, but that cannot be set automatically, as
+> >>> we would otherwise regress existing setups.
+> >>> 
+> >>> At this stage, and given that you need to change userspace, I'm not
+> >>> sure what the best course of action is.
+> >> 
+> >> Having an explicit flag for the userspace is fine for QEMU, which I
+> >> care. It can flip the flag if and only if threads are not pinned to
+> >> one PMU and the machine is a new setup.
+> >> 
+> >> I also wonder what regression you think setting it automatically causes.
+> > 
+> > The current behaviour is that if you don't specify anything other than
+> > creating a PMUv3 (without KVM_ARM_VCPU_PMU_V3_SET_PMU), you get *some*
+> > PMU, and userspace is responsible for running the vcpu on CPUs that
+> > will implement that PMU. When if does, all the counters, all the
+> > events are valid. If it doesn't, nothing counts, but the
+> > counters/events are still valid.
+> > 
+> > If you now add this flag automatically, the guest doesn't see the full
+> > PMU anymore. Only the cycle counter. That's the regression.
+> 
+> What about setting the flag automatically when a user fails to pin
+> vCPUs to CPUs that are covered by one PMU? There would be no change if
+> a user correctly pins vCPUs as it is. Otherwise, they will see a
+> correct feature set advertised to the guest and the cycle counter
+> working.
 
-On Wed, Mar 19, 2025 at 1:17=E2=80=AFAM Geert Uytterhoeven <geert@linux-m68=
-k.org> wrote:
->
-> Hi Jeff,
->
-> On Tue, 18 Mar 2025 at 19:39, Jeff Xu <jeffxu@chromium.org> wrote:
-> > On Tue, Mar 18, 2025 at 10:21=E2=80=AFAM Jeff Xu <jeffxu@chromium.org> =
-wrote:
-> > > On Mon, Mar 17, 2025 at 12:14=E2=80=AFPM Geert Uytterhoeven
-> > > <geert@linux-m68k.org> wrote:
-> > > > On Mon, 17 Mar 2025 at 20:02, Jeff Xu <jeffxu@chromium.org> wrote:
-> > > > > On Mon, Mar 17, 2025 at 11:14=E2=80=AFAM Jeff Xu <jeffxu@chromium=
-.org> wrote:
-> > > > > > On Fri, Mar 14, 2025 at 3:41=E2=80=AFAM Geert Uytterhoeven <gee=
-rt@linux-m68k.org> wrote:
-> > > > > > > On Thu, 13 Mar 2025 at 23:26, Jeff Xu <jeffxu@chromium.org> w=
-rote:
-> > > > > > > > On Wed, Mar 12, 2025 at 10:21=E2=80=AFPM Lorenzo Stoakes
-> > > > > > > > <lorenzo.stoakes@oracle.com> wrote:
-> > > > > > > > > On Thu, Mar 13, 2025 at 12:06:23AM +0000, jeffxu@chromium=
-.org wrote:
-> > > > > > > > > > From: Jeff Xu <jeffxu@chromium.org>
-> > > > > > > > > > Add Documentation/features/core/mseal_sys_mappings/arch=
--support.txt
-> > > > > > > > > >
-> > > > > > > > > > Signed-off-by: Jeff Xu <jeffxu@chromium.org>
-> > > > > > >
-> > > > > > > Thanks for your patch!
-> > > > >
-> > > > > I used "find * |xargs grep -i  CONFIG_64BIT" to look for CONFIG_6=
-4BIT
-> > > > > under arch/, and together with internet search/wiki page, and bel=
-ow is
-> > > > > the proposed update.
-> > > >
-> > > > That way you only find users of the symbol, not where it is defined=
-.
-> > > >
-> > > > You can use
-> > > >
-> > > >     git grep -W "config\s*64BIT" -- arch/
-> > > >
-> > > > to find out which architectures are 32-bit, 64-bit, or support both=
-.
-> > > >
-> > Microblaze, openrisc, sh, hexagon all don't have CONFIG 64BIT defined
-> > in KCONFIG, and are not using CONFIG_64BIT in their arch code.  Is
-> > there something else that makes you point out the hexagon as 32 bit
-> > only (and not other 3) ?
->
-> AFAIK Microblaze, openrisc, and hexagon are all 32-bit.
-> Linux used to support sh64, but that was dropped, as sh64 never went
-> beyond prototype hardware.
->
-Great !  Thanks for the information.
-I will update accordingly.
+How do you know that the affinity is "correct"? VCPU affinity can be
+changed at any time. I, for one, do not want my VMs to change
+behaviour because I let the vcpus bounce around as the scheduler sees
+fit.
 
--Jeff
+Honestly, this is not a can of worm I want to open. We already have a
+pretty terrible userspace API for the PMU, let's not add to the
+confusion. *If* we are going down the road of presenting a dumbed-down
+PMU to the guest, it has to be an explicit buy-in from userspace.
 
+	M.
 
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m6=
-8k.org
->
-> In personal conversations with technical people, I call myself a hacker. =
-But
-> when I'm talking to journalists I just say "programmer" or something like=
- that.
->                                 -- Linus Torvalds
+-- 
+Without deviation from the norm, progress is not possible.
