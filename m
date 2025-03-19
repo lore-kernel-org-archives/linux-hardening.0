@@ -1,297 +1,208 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2042.outbound.protection.outlook.com [40.107.237.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BFC422F19;
-	Wed, 19 Mar 2025 11:25:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.42
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742383511; cv=fail; b=fnAdpGNaI78EMeU/ckEoePKawRSWiXIyVbhyIFT9dw/7Xh10I9cKMCEaT/UpslHmdJnpAzx3v3cI9Ou0nIV5oIC/loWMNACWOcIEmvI5W5Tkd8rO38flJLUAmND7LJe3OUwCKhJouGkvPS4MQEikJvvxf1dvkkcS1tUUsJzBpIA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742383511; c=relaxed/simple;
-	bh=wc7JNkFLa9qPab9+XwoIeMt7Ierx+un6hvx4YtrlTqE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Bh/O+gd0mcUVoayFkJZ3bEcokLNuGV1zViP2QETnY+Og0Mqmkj2GmRS81t5a9CzrPxDukJQZseB/ZRhPyiKK5VtWufO/kD1zFUw59x8ry/VWdISvFpnUUtXeqBYRg9mL7N/OcqP5xuUI76sR6+MTA5LwXzcAxXjkJKBOSiKF9dk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=mmVqVlr1; arc=fail smtp.client-ip=40.107.237.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40CFA253F1B
+	for <linux-hardening@vger.kernel.org>; Wed, 19 Mar 2025 11:26:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742383584; cv=none; b=Q+y+l+F3KINpn4nyIhuhfiUyW03BYB/0kpF7WqclilEpg7u818Yc0hyKqKX78UGPH2MD9hBrnRDLXOosijgvcHO/pE+Ws+TlVRGj/rXEHnlmbQLkK9EBlgi5yrp41cn/cKS6xnt+BoCBktMm5tVzzg9cWyYqTAgcOsTfc58DAIE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742383584; c=relaxed/simple;
+	bh=y+dIPWIfwKVAL/oo14ew2WBtJcHAtp0+oSdbLwz1FyU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cSH8/Cg2MwvD00l7dxqk6TFvwUMssFZTWBvZcSH5FwQwgyPllS0ubEXrzk88wEipzrpIqSfO6tH0AVVqBOaSzu69m8P9dScIxc8HvEM5I9r9MgO7vtHNtjsQgPftjT/4PF6Gdb7YEqI0i/tRsZrYHvIxUA9honZBa78LkQz/HHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com; spf=pass smtp.mailfrom=daynix.com; dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b=iB/9WWxk; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=daynix.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="mmVqVlr1"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=oJ26tS1AiO7hFNMgfzS6gO1FZHusyslV1wnsLxL9i8jDHHDyXMzYsCidyTUb86p7C+9WtZ5nVp3HEwqhryTUI9tTHKQm2VAwDw+oNQ/AZS9kveXz3YVPHOdS7nwc4Jf+oFeyqrPjrw//Se7OEkdsz7NTw73QcVQKmoOLxZF8ZSF1sobie1CekU/q50sSDmDuR9mff7D1n5/MMbTBpDRz8OzdrRtNGuzSV/PpUDqo0RRJL3aBd4N5ObPt/XLj+Vm8jrbmV1aDyjI6baKixe795BWDmo463EXyWlqVvyEUsxktpeeeIFa3uTWivNvH1seefyDrjQ4x++DmcAgSq8GHNw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=A+RyEqCiFVnYuGI8RoFkiMpJQTDzpEop+yKvN0mOz8c=;
- b=MfzF2HKbY2r8gU/grjQCLRPgjfneygZHoNni7kQKr1RdSz9aqwd7PZq+oScb6gK7GVveWtUt/aF7+3bR9T6rH+qjcz6LJH3cOL7jRCgbws2kFw+xKit2gduK6jaupNxPzU84GlbiR/Dx4HytyrHCuLuEZpk52XcXWLphldZgoAkPU51viTE/4DNRT5YDCZ5b59LQUWd0vapP9+/U/1++qxEISwYDnrJol7Q2s05EV5K/0fQTEnrp+5m7KZHLuDiTuXWcDjyzXIbJXArcghNr6RzhqOREUMYaDizp1kwrh/ZfCqJXB7Q5nXHtmQdTDDad3LN1CoznRPi/0WbmRh3qHA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=A+RyEqCiFVnYuGI8RoFkiMpJQTDzpEop+yKvN0mOz8c=;
- b=mmVqVlr1GLGTCByv846OMsF8zQj4NtbtlCL3YL3m6BJukoD0lZrwyPxF4AEmIl6/9irPQmwJOuuCeiYgB+tmmXvq0A3MwWkDC06ANClmHMrw3wzmfA4C5UWEN4Ipbwtd9pfU3hxIPocmL9pDBijpJHUU/Y0BRPxGNzHT6eiqPAq+b50uwbo05uHFbi5tTvlyZ4oGM5tXeNoHwT7nzBOSpiOZiGoK5aYwsiV/j+totXnQhzvbPvppB3oGaUR7C/ogYsxFMtKyX5w5LdF02Ia8qrgmVMSRMbe1qN8ZfLqAQKKMeoUy+OAWMU9VEkpwzmPQon7fRFNoA4/wmlRqYI1MEg==
-Received: from BY5PR04CA0019.namprd04.prod.outlook.com (2603:10b6:a03:1d0::29)
- by SN7PR12MB8790.namprd12.prod.outlook.com (2603:10b6:806:34b::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.33; Wed, 19 Mar
- 2025 11:25:03 +0000
-Received: from SJ5PEPF000001F1.namprd05.prod.outlook.com
- (2603:10b6:a03:1d0:cafe::3) by BY5PR04CA0019.outlook.office365.com
- (2603:10b6:a03:1d0::29) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.34 via Frontend Transport; Wed,
- 19 Mar 2025 11:25:03 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- SJ5PEPF000001F1.mail.protection.outlook.com (10.167.242.69) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8534.20 via Frontend Transport; Wed, 19 Mar 2025 11:25:03 +0000
-Received: from rnnvmail205.nvidia.com (10.129.68.10) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Wed, 19 Mar
- 2025 04:24:52 -0700
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by rnnvmail205.nvidia.com
- (10.129.68.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Wed, 19 Mar
- 2025 04:24:52 -0700
-Received: from willie-obmc-builder.nvidia.com (10.127.8.10) by mail.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server id 15.2.1544.14 via Frontend
- Transport; Wed, 19 Mar 2025 04:24:51 -0700
-From: Willie Thai <wthai@nvidia.com>
-To: <krzk@kernel.org>
-CC: <andrew@codeconstruct.com.au>, <andrew@lunn.ch>, <conor+dt@kernel.org>,
-	<devicetree@vger.kernel.org>, <dkodihalli@nvidia.com>, <gpiccoli@igalia.com>,
-	<joel@jms.id.au>, <kees@kernel.org>, <krzk+dt@kernel.org>,
-	<leohu@nvidia.com>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-aspeed@lists.ozlabs.org>, <linux-hardening@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <maryang@nvidia.com>,
-	<openbmc@lists.ozlabs.org>, <pmenzel@molgen.mpg.de>, <robh@kernel.org>,
-	<tingkaic@nvidia.com>, <tony.luck@intel.com>, <wthai@nvidia.com>
-Subject: [PATCH v2] ARM: dts: aspeed: Add device tree for Nvidia's GB200NVL BMC
-Date: Wed, 19 Mar 2025 11:24:51 +0000
-Message-ID: <20250319112451.4171471-1-wthai@nvidia.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <93bb3092-7f49-4a7f-ac97-3cf1a62ac39d@kernel.org>
-References: <93bb3092-7f49-4a7f-ac97-3cf1a62ac39d@kernel.org>
+	dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b="iB/9WWxk"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-22409077c06so167908885ad.1
+        for <linux-hardening@vger.kernel.org>; Wed, 19 Mar 2025 04:26:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=daynix-com.20230601.gappssmtp.com; s=20230601; t=1742383582; x=1742988382; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=gvHNVZyKR2DtKBoW11M6k8zN4d/kmrkOW2ikjxRgacU=;
+        b=iB/9WWxk4DoB3Bmk7XuUsLgaiQ7sJypJia5wAKjdBfBFPWHfeIuh7X/qoHZMDoQYvq
+         EGYILIre0D2aMkygTbyTWuZKldhavTpblKkGhBsMdnr2cMXjCrgTdBu41c1/qvfp6neD
+         ZL5/7cw/FY4INy6iBUHc1Zh+HfxRP25toUfdVhbwjhwrlsQT+SKh269RTc3tn0SLSUYB
+         tSVDmo0QM94E+LnvEhn1uNHg4K2plbj+K2hJZOC7LCYi6YSquY2OHZVaeJrwW/U70WTC
+         D07edUBt0iqHCXOq0IuEMryJefN0JaSJVCC5YTZ3KmuupkYOaXGJYpOHBBExjtYBjyZT
+         x9Mw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742383582; x=1742988382;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gvHNVZyKR2DtKBoW11M6k8zN4d/kmrkOW2ikjxRgacU=;
+        b=e7+/YeR2SjblK3TBG3cDpeghdd3rNML2tZZikTSQ8qF3a1S1pVwkOIU2pmM/8VFDA4
+         bJtozkOny2XgvwbQ18xpATdbVqGkW7ikRNLKgyA/W2nlimS8TpotECZXUKqQEiQYLxen
+         KUNnFpdgNpDkamVP4IHGSZXmdca5ndH2kvn9abPCHybgfapgkD36LHgDnJpFEHXU/qhI
+         0n1/h2C5/+w2pKuASjoPis8ZnAjEzZ2JnlO+VyCdHdlCNfHi+HXDYEd19eJ6DrL0b3Fl
+         xEtAWz+owi7YC6lNGKnD7AF+d4eQg/X3294KhxRqZXVFbkT4IgxPF5BeMIg9jLp/lARp
+         Ez8w==
+X-Forwarded-Encrypted: i=1; AJvYcCXIw22uWBncq26Jx/IlNzv5SuyEnQLUNGy+pzp0JYX963CBLRXzrISdX2iEV7fx+FpdwbF/5XXbOVKKkC1H8rA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz00K+MsMFH+Oy5xBfTVJ7tSm+/lK9OaOelEkQtJK3+DdLkWO95
+	7Vm1R3c4TKfTzNwEHYJZmopsAO3bacKvQsFwjc5GtdkjgPTb9XifTGSUhCC/T2o=
+X-Gm-Gg: ASbGncto0mH51EC8fmx3pV4c09nx7SOPJjdvHL1CVvRjLrxYgrH4evx63UVrku83aDH
+	6p8ZmY1Wf7LPB/uATWzMcXUKjKpNmwdR892W5W/89/zzL7vu5Ue9scy8wlP3U0B7TDCRycg2ADs
+	0p4qf1C240N+7Evyiu6JaATtrg8tZ96XQAVGTga0LshXxFo8FLu/yQgJfPei/hFHsi7d2azF/NX
+	H+gvoudDpytnqdAYN8ThnKIFErFdJiAx7hSfnScbp+WI/G1qA0iH+U9lB4f8icUerTSzau+j53B
+	22j2ERTnMldqU4OEaEnr6qfx11p1yMtkQNAl6L+QuyWV/cQ/ftQJLMvIVg==
+X-Google-Smtp-Source: AGHT+IHYI4Zbz8LC6Q+OTsZJdgqJkzYI1MdKioTutHwbHR0I7glDazEa7IUKMxIdUxtXsKc3B5OuKg==
+X-Received: by 2002:a05:6a21:3a48:b0:1ee:63d7:1d32 with SMTP id adf61e73a8af0-1fbe8334084mr4316868637.0.1742383582502;
+        Wed, 19 Mar 2025 04:26:22 -0700 (PDT)
+Received: from [157.82.207.107] ([157.82.207.107])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73711529526sm11302182b3a.24.2025.03.19.04.26.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Mar 2025 04:26:22 -0700 (PDT)
+Message-ID: <aabd71eb-286b-475c-a30e-d5cf5c4f2769@daynix.com>
+Date: Wed, 19 Mar 2025 20:26:18 +0900
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF000001F1:EE_|SN7PR12MB8790:EE_
-X-MS-Office365-Filtering-Correlation-Id: e5b5526e-2326-4998-cce9-08dd66d8b183
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|82310400026|7416014|36860700013|1800799024|13003099007|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?QrD4o91WS0ZQq/5K+kjfG0SfMBrC8aXnl3fa2PRBiZwObMEAyZmjUNA9pBLW?=
- =?us-ascii?Q?lEO8rDou/Z610Rs4Euffariy979oREXYFnxjPMuasw6k2mL9n+yPJ1ItpIa1?=
- =?us-ascii?Q?0j1rAWIHxcGLxNWn1dLTzmu2uG1ec+G22Li25IHO/jDI4NJRHg+iDAAZjkm9?=
- =?us-ascii?Q?06+m94JmuzrZYWpC06Ofrvs7JnpVa/jirexcJf5PT3yh/GeYm6e3eL1uC47D?=
- =?us-ascii?Q?yyalcLx/R6QkFJAHKnUrZf/N6iGReBkwlfYLHKFK0PIi+lssGIibL9dpk2fk?=
- =?us-ascii?Q?SCIQyRHlM6H6aouBYhJ83JHRWBQ8mZe3eOIWNtIPympYKKnGfZqbqR39I8Vv?=
- =?us-ascii?Q?zjGR05X91sGIdlCpxNHGBYiZjWL/A+g0SF7y7wrm40oQk1DeYtlMJHW9C4H4?=
- =?us-ascii?Q?dLwM9G/CrpDEqCl7fCdjWctd/Q0GnwDzU++G+ke6pQRwDdfPFBEgEXzp9R1n?=
- =?us-ascii?Q?jS/CAc0uF7a40J2KInwKl43Y6dyePmRBzJG2XInxQH0cx3x3gBzGSa2/f44Y?=
- =?us-ascii?Q?wqoNlMEMG004Kk8hPFIhzASoTPG9xDD3J7eiDMAETcwUWN/H9FzDKqEOzqT/?=
- =?us-ascii?Q?67PMuMFZC3DRtbBMSKB7iXj+51Jf1AYIzosXW8zw4R92/oMVjPLpJNv+PVJh?=
- =?us-ascii?Q?6arzscRNskSGNKtb+VxKLHG5r3V5WK3wb8QH2Dz4WO3f2K/juwtCjYIzAAlG?=
- =?us-ascii?Q?U4mwQW/oshXJAx2S6dyOTKApEnP6mWml37MWG+DtH+tYD+jz9gv6HW/iT5IK?=
- =?us-ascii?Q?XZQGeILc0gcs+12TLIlL3oeFZnN6xJXJT8qCIv4skO4+Yabis6+KUtTONMyv?=
- =?us-ascii?Q?pxXbzwQN6DZxNrMpbBEc2bHNDARAkycSbbfkMC1gCHKUXp6KhH1qKRqANH4Q?=
- =?us-ascii?Q?v5ZS9wLrG+msdgj7YOTZRVh0q5IDOyBUWlIipV1Lb3G//5zS+A5/V5ernKPC?=
- =?us-ascii?Q?1PESBQ6T4K6aX7KtkHiJmRypVo0LN8mqvQBnC4RhdKGHwV9nlMXt0pmLyK0m?=
- =?us-ascii?Q?r40cDCD+XWDK0bzdfe3Dos6j6/8aC3iZ8AULMy4t6X0aYZ1siObZI11RBYHA?=
- =?us-ascii?Q?d5tg4oJ//Ee9WAPFyD3rQdhnxAYxS73OwuKXBCPk2CzYGp+EcHOITy2xqfbV?=
- =?us-ascii?Q?Le9Ew/+xlGNsMgBCl/IHcgnxczd/l5xD/M4hNO208zw+IhWv/mYzNGNZ54Ty?=
- =?us-ascii?Q?1aTfl0Qz6F3ed7/MPeQJqjn7oK4yxkf1Y27KsR6d5x8Uz0UQd92cgzoo1Qj6?=
- =?us-ascii?Q?QaGvO56UjMj8h2xNiTFsTIa71unM6cvU0Oole0aqvCPthuyaLTMxlE0N/5q0?=
- =?us-ascii?Q?HD4m6ZbskIk0yfRu/ixWX+oxwjH/6PKTcVXdMiL+rJiQFT5MvLwIRnfrtcS+?=
- =?us-ascii?Q?SRetL75eyjIZ6+xV6Tys01l2HOZDs8pq+M/UILHjun8oWRRipbSJvEIlNteo?=
- =?us-ascii?Q?uzEib1G9J1X9eBSHumWIJnjbUVgS64+sZVxycYa8WRLy1kSaQdcZPb1yNpxB?=
- =?us-ascii?Q?CMBdPJrZ/OvNll8=3D?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(376014)(82310400026)(7416014)(36860700013)(1800799024)(13003099007)(7053199007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Mar 2025 11:25:03.3496
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e5b5526e-2326-4998-cce9-08dd66d8b183
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ5PEPF000001F1.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB8790
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC] KVM: arm64: PMU: Use multiple host PMUs
+To: Marc Zyngier <maz@kernel.org>
+Cc: Oliver Upton <oliver.upton@linux.dev>, Joey Gouly <joey.gouly@arm.com>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
+ <yuzenghui@huawei.com>, Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>, Kees Cook <kees@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+ devel@daynix.com
+References: <20250319-hybrid-v1-1-4d1ada10e705@daynix.com>
+ <Z9pze3J2_zrTk_yC@linux.dev>
+ <e8324d9d-3756-41cf-a102-28572e302368@daynix.com>
+ <86plidmjwh.wl-maz@kernel.org>
+ <bd681ec6-0b4c-47d9-8a4a-b7324c0883a6@daynix.com>
+ <86o6xxmg87.wl-maz@kernel.org>
+Content-Language: en-US
+From: Akihiko Odaki <akihiko.odaki@daynix.com>
+In-Reply-To: <86o6xxmg87.wl-maz@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
->> The GB200NVL BMC is an Aspeed Ast2600 based BMC
->> for Nvidia Blackwell GB200NVL platform.
->> Reference to Ast2600 SOC [1].
->> Reference to Blackwell GB200NVL Platform [2].
+On 2025/03/19 20:07, Marc Zyngier wrote:
+> On Wed, 19 Mar 2025 10:26:57 +0000,
+> Akihiko Odaki <akihiko.odaki@daynix.com> wrote:
+>>
+>>>> It should also be the reason why the perf program creates an event for
+>>>> each PMU. tools/perf/Documentation/intel-hybrid.txt has more
+>>>> descriptions.
+>>>
+>>> But perf on non-Intel behaves pretty differently. ARM PMUs behaves
+>>> pretty differently, because there is no guarantee of homogeneous
+>>> events.
+>>
+>> It works in the same manner in this particular aspect (i.e., "perf
+>> stat -e cycles -a" creates events for all PMUs).
 > 
-> Missing blank line
-> 
+> But it then becomes a system-wide counter, and that's not what KVM
+> needs to do.
 
-Thanks Krzysztof for the comments !
-Will fix in the v3.
+There is also an example of program profiling:
+"perf stat -e cycles \-- taskset -c 16 ./triad_loop"
 
->> Co-developed-by: Mars Yang <maryang@nvidia.com>
->> Signed-off-by: Mars Yang <maryang@nvidia.com>
->> Cc: Krzysztof Kozlowski <krzk@kernel.org>
->> Cc: Andrew Lunn <andrew@lunn.ch>
->> Cc: Paul Menzel <pmenzel@molgen.mpg.de>
->> Link: Reference to Ast2600 SOC: https://www.aspeedtech.com/server_ast2600/ [1]
->> Link: Reference to Blackwell GB200NVL Platform: https://nvdam.widen.net/s/wwnsxrhm2w/blackwell-datasheet-3384703 [2]
-> 
-> Links do not have text, I think. Just link.
-> 
-
-Will fix in the v3.
-
->> Signed-off-by: Willie Thai <wthai@nvidia.com>
->> ---
->> Changes in v2:
->>   - Fix the SOB name [Krzysztof]
->>   - Fix warnings from scripts/checkpatch.pl run [Krzysztof]
->>   - Fix DTS coding style [Krzysztof]
->>   - Move pinctrl override to the bottom [Krzysztof]
->>   - Drop bootargs [Krzysztof]
->>   - Follow DTS coding style and change naming for leds node [Krzysztof]
->>   - Change flash 0 status property [Krzysztof]
->>   - Change the phy-mode to rgmii [Andrew]
->>   - Remove the max-speed in mac0 [Andrew]
->> ---
->> ---
->>  arch/arm/boot/dts/aspeed/Makefile             |    1 +
->>  .../aspeed/aspeed-bmc-nvidia-gb200nvl-bmc.dts | 1229 +++++++++++++++++
->>  2 files changed, 1230 insertions(+)
->>  create mode 100644 arch/arm/boot/dts/aspeed/aspeed-bmc-nvidia-gb200nvl-bmc.dts
->> 
->> diff --git a/arch/arm/boot/dts/aspeed/Makefile b/arch/arm/boot/dts/aspeed/Makefile
->> index 2e5f4833a073..20fd357a1ee9 100644
->> --- a/arch/arm/boot/dts/aspeed/Makefile
->> +++ b/arch/arm/boot/dts/aspeed/Makefile
->> @@ -50,6 +50,7 @@ dtb-$(CONFIG_ARCH_ASPEED) += \
->>  	aspeed-bmc-lenovo-hr630.dtb \
->>  	aspeed-bmc-lenovo-hr855xg2.dtb \
->>  	aspeed-bmc-microsoft-olympus.dtb \
->> +	aspeed-bmc-nvidia-gb200nvl-bmc.dtb \
->>  	aspeed-bmc-opp-lanyang.dtb \
->>  	aspeed-bmc-opp-mowgli.dtb \
->>  	aspeed-bmc-opp-nicole.dtb \
->> diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-nvidia-gb200nvl-bmc.dts b/arch/arm/boot/dts/aspeed/aspeed-bmc-nvidia-gb200nvl-bmc.dts
->> new file mode 100644
->> index 000000000000..eeec3704a43b
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-nvidia-gb200nvl-bmc.dts
->> @@ -0,0 +1,1229 @@
->> +// SPDX-License-Identifier: GPL-2.0+
->> +/dts-v1/;
->> +
->> +#include "aspeed-g6.dtsi"
->> +#include <dt-bindings/gpio/aspeed-gpio.h>
->> +#include <dt-bindings/leds/common.h>
->> +
->> +/ {
->> +	model = "AST2600 GB200NVL BMC";
->> +	compatible = "nvidia,gb200nvl-bmc", "aspeed,ast2600";
-> 
-> Missing bindings.
-> 
-> Please run scripts/checkpatch.pl and fix reported warnings. After that,
-> run also `scripts/checkpatch.pl --strict` and (probably) fix more
-> warnings. Some warnings can be ignored, especially from --strict run,
-> but the code here looks like it needs a fix. Feel free to get in touch
-> if the warning is not clear.
-> 
-
-Will add the binding to dt-bindings in patch v3.
+This also creates events for all PMUs.
 
 > 
-> ...
+>>>> Allowing to enable more than one counter and/or an event type other
+>>>> than the cycle counter is not the goal. Enabling another event type
+>>>> may result in a garbage value, but I don't think it's worse than the
+>>>> current situation where the count stays zero; please tell me if I miss
+>>>> something.
+>>>>
+>>>> There is still room for improvement. Returning a garbage value may not
+>>>> be worse than returning zero, but counters and event types not
+>>>> supported by some cores shouldn't be advertised as available in the
+>>>> first place. More concretely:
+>>>>
+>>>> - The vCPU should be limited to run only on cores covered by PMUs when
+>>>> KVM_ARM_VCPU_PMU_V3 is set.
+>>>
+>>> That's userspace's job. Bind to the desired PMU, and run. KVM will
+>>> actively prevent you from running on the wrong CPU.
+>>>
+>>>> - PMCR_EL0.N advertised to the guest should be the minimum of ones of
+>>>> host PMUs.
+>>>
+>>> How do you find out? CPUs can be hot-plugged on long after a VM has
+>>> started, bringing in a new PMU, with a different number of counters.
+>>>
+>>>> - PMCEID0_EL0 and PMCEID1_EL0 advertised to the guest should be the
+>>>> result of the AND operations of ones of host PMUs.
+>>>
+>>> Same problem.
+>>
+>> I guess special-casing the cycle counter is the only option if the
+>> kernel is going to deal with this.
 > 
->> +	leds {
->> +		compatible = "gpio-leds";
->> +		led-0{
+> Indeed. I think Oliver's idea is the least bad of them all, but man,
+> this is really ugly.
 > 
-> Missing space befre {
+>>>> Special-casing the cycle counter may make sense if we are going to fix
+>>>> the advertised values of PMCR_EL0.N, PMCEID0_EL0, and
+>>>> PMCEID1_EL0. PMCR_EL0.N as we can simply return zero for these
+>>>> registers. We can also prevent enabling a counter that returns zero or
+>>>> a garbage value.
+>>>>
+>>>> Do you think it's worth fixing these registers? If so, I'll do that by
+>>>> special-casing the cycle counter.
+>>>
+>>> I think this is really going in the wrong direction.
+>>>
+>>> The whole design of the PMU emulation is that we expose a single,
+>>> architecturally correct PMU implementation. This is clearly
+>>> documented.
+>>>
+>>> Furthermore, userspace is being given all the relevant information to
+>>> place vcpus on the correct physical CPUs. Why should we add this sort
+>>> of hack in the kernel, creating a new userspace ABI that we will have
+>>> to support forever, when usespace can do the correct thing right now?
+>>>
+>>> Worse case, this is just a 'taskset' away, and everything will work.
+>>
+>> It's surprisingly difficult to do that with libvirt; of course it is a
+>> userspace problem though.
 > 
-> This applies everywhere.
+> Sorry, I must admit I'm completely ignorant of libvirt. I tried it
+> years ago, and concluded that 95% of what I needed was adequately done
+> with a shell script...
 > 
->> +			label = "uid_led";
->> +			gpios = <&sgpiom0 27 GPIO_ACTIVE_LOW>;
->> +		};
->> +		led-1{
->> +			label = "fault_led";
->> +			gpios = <&sgpiom0 29 GPIO_ACTIVE_LOW>;
->> +		};
->> +		led-2{
->> +			label = "power_led";
->> +			gpios = <&sgpiom0 31 GPIO_ACTIVE_LOW>;
->> +		};
->> +
->> +	};
->> +
->> +	buttons {
->> +		button-power {
->> +			label = "power-btn";
->> +			gpio = <&sgpiom0 156 GPIO_ACTIVE_LOW>;
->> +		};
->> +		button-uid {
->> +			label = "uid-btn";
->> +			gpio = <&sgpiom0 154 GPIO_ACTIVE_LOW>;
->> +		};
->> +	};
->> +
->> +};
->> +
->> +// Enable Primary flash on FMC for bring up activity
->> +&fmc {
->> +	status = "okay";
->> +	flash@0 {
->> +		status = "okay";
+>>> Frankly, I'm not prepared to add more hacks to KVM for the sake of the
+>>> combination of broken userspace and broken guest.
+>>
+>> The only counter argument I have in this regard is that some change is
+>> also needed to expose all CPUs to Windows guest even when the
+>> userspace does its best. It may result in odd scheduling, but still
+>> gives the best throughput.
 > 
-> Nothing improved.
+> But that'd be a new ABI, which again would require buy-in from
+> userspace.  Maybe there is scope for an all CPUs, cycle-counter only
+> PMUv3 exposed to the guest, but that cannot be set automatically, as
+> we would otherwise regress existing setups.
 > 
-> Respond to comment instead of ignoring it.
+> At this stage, and given that you need to change userspace, I'm not
+> sure what the best course of action is.
+
+Having an explicit flag for the userspace is fine for QEMU, which I 
+care. It can flip the flag if and only if threads are not pinned to one 
+PMU and the machine is a new setup.
+
+I also wonder what regression you think setting it automatically causes.
+
+Regards,
+Akihiko Odaki
+
+> 
+> Thanks,
+> 
+> 	M.
 > 
 
-The property was disabled here: https://github.com/torvalds/linux/blob/master/arch/arm/boot/dts/aspeed/aspeed-g6.dtsi#L172
-
-> 
-> 
-> ...
-> 
-> 
->> +
->> +		imux33: i2c@1 {
->> +			#address-cells = <1>;
->> +			#size-cells = <0>;
->> +			reg = <1>;
->> +			pca9555@21 {
-> 
-> Node names should be generic. See also an explanation and list of
-> examples (not exhaustive) in DT specification:
-> https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
-> 
-> You already got this comment. You must apply such feedback to entire
-> file instead of fixing only one issue and relying on us to find all
-> instances. It's your task to find all of the instances.
-> 
-
-Sure, will modify node names to generic
-
-Thanks !
