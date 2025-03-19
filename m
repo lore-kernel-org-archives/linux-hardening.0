@@ -1,33 +1,66 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BEA91361;
-	Wed, 19 Mar 2025 19:29:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46994212FBD;
+	Wed, 19 Mar 2025 19:37:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742412546; cv=none; b=sHz0/c909rUUbxc93Nt0K0N8YLA/cblSxZNxBfuUzVH0LGxWmv9FMWcGz/EhGf9CF/ixo5Gzk49Ex8WVRPfmg0OTCwXlPROXKBkPa+utISO+t279uK3uCive8wCLA620u38A3QjPHLuIPj0cynYNTYE6wExnKM1QsV9vw7Qq6Gw=
+	t=1742413053; cv=none; b=HHItc+amCXk0Y+WFiuyutE/ulLL366pNK1I6fnCuVMF/1YAH3mCJJXl3yj3bs11LekC4gE/EyPZgDyWPAT1WoPbqFF/iyKL5TIgcqO0CMJKIfTfGVMyqSLwFXXRuO0t4y/XYooUV6NQ8v7G5pcYkS2Yaxoag04bP/rww5XBoGrU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742412546; c=relaxed/simple;
-	bh=ZzMX55IjDIprWqceWohngFCM6EBQHJSx4FKfnv2T0Ac=;
+	s=arc-20240116; t=1742413053; c=relaxed/simple;
+	bh=NUjywNL79Bcz4+kco3+goMMB0g0EPgUwAxsOhv4kh1w=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OKiLFhH/hcVGwCndAXeJYZYZvEOIqyk2MAqoJC14Z4B7i5/y4bj5IdRiE+c9D6iY05CFjPLZj6GRUvzjJ+2hsM4gp0zLBM4F8zZ2e6zli4H8OoIgYJYt9YSelglITtdXFRFhMywQ2GtVtyC6wC0ZnzI6LkTSS2LNB9Kh9yO5iCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pzO/WD9d; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=poITFQ7AoQLaI8cy6xvgVseYZ4eM68DuWeT6I7mq5E9aaQ6mLDMrd+NN1yhTVrGCCki2q2q5Ggc9XcEU3pFdZCQROWqVox/4VpKLdXmW3iDKpu1eb4UhjjDC6zfvp0wVPhPK5ygNX57PeIvWrP77N8nN6PGxfhxDiHzHu/Z0seM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NDeFIrH5; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pzO/WD9d"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E0A4C4CEE9;
-	Wed, 19 Mar 2025 19:28:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742412545;
-	bh=ZzMX55IjDIprWqceWohngFCM6EBQHJSx4FKfnv2T0Ac=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=pzO/WD9dL5W+fwp7FqW8OjOYtwusOt0EiiKi7IrOJ8q9ngMf6Kq3cwcm/WCzb3xDq
-	 bxseUheWXp5G01aDdO3IfNGmWpaN/Sg7jRw2UBA1ezdzcVPY3kz+1z7iD9IQ2iIWkt
-	 utGAd7YoEcVwmy+kyqB2rC5u3tHkX1MtT3ZpxSay1C2Ut9wFA4A+ZIRcuLUOMdJhpo
-	 cx8xbmJNjvJtufT9nODAFx2t0a4VmeYnSgcg3tAXO9up2Pquh7OadHBtgMk5SL08Il
-	 4g85Qv9OOygkFUK0cu5vUrThgvQI3hPFrdbe0xMOOj90pw7ueY7lK4Tzc0iW4iOpgs
-	 Uryed/e1F8ksg==
-Message-ID: <44f2387b-0a86-46cc-a5d2-950dd688b207@kernel.org>
-Date: Wed, 19 Mar 2025 20:28:56 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NDeFIrH5"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ac2bfcd2a70so12556966b.0;
+        Wed, 19 Mar 2025 12:37:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742413050; x=1743017850; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/hWjp2lAOR+xlpu16vpG0lA3R8Vrfh8sFtASS1Glky4=;
+        b=NDeFIrH58b0as23jtqDnr6ZDqDruXPv0od6poETwRfviXoIu75d/zQ4+M5uj+gjP37
+         EmgLMV9jCQnYQ9SKVh0ikohlfKDGPsmUxJzK9VIEvOl97lFzffKGye38uBbNSRO44rBG
+         rLdVQLUiqw2+4/ARegu83pt6Gy8mtKZhte2ZKrkYMnT+FNhj8gaYqZGGDftaK8uWa368
+         3tNYCAX/9fOLBKqyPtMpGIy3XfLvUvMAu/m1TZjkOmU+ziLon7gxN2C/e0+V8k/EREWd
+         4ZbTvEVKhpvQwjj1qJ/KWVHIwtIqR+ceA/TPXLCutZ2gydsyPWilUU6PwhTP/YRFA7zp
+         F/hQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742413050; x=1743017850;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/hWjp2lAOR+xlpu16vpG0lA3R8Vrfh8sFtASS1Glky4=;
+        b=FPgzz6rWMtFVzEVT+F3SbeA2eEK9nteall0Aac54a3zZ4WjB3esuGoCMvRd3knduxp
+         UfyOmjv47iHFuCMGB7paFXRwvSxpZLac6Gzu2x2j/zpyX0szmEETMhcL6pW7Ib1FKYZH
+         vXfaFc+SODPisFiQ/CdJN4lVFFjPZGxqtbONprKrrhUY474ZHaJX0B/h6lMO8dlJhmIS
+         an4cpMK3hXRFonMkpgmNiIvbRIdFc8MWifTH7EQMswRC2mMrVdicW6Q2ikRPdnENBmWZ
+         6ZHGmIW9pEisTY79bzUI3AWixNfSo+6TsGgR0zj9ZtGuUivq750uMPpdkvG9xkkGb23A
+         bofg==
+X-Forwarded-Encrypted: i=1; AJvYcCU9Wja1OMZDM9GnU19LVWlBJQ6pzTRo0OU3MMPLLl47EL5cijhHuEiDKQe9AHQZlPVkfplGqENF@vger.kernel.org, AJvYcCV96C3BA9uezoZFgwPP97NDWjHFcOrwZrIVvHyc8pNlccRXcBI9TAPOdu6TyhXvEwazbvjJtTDjgUogMysOvjHW@vger.kernel.org, AJvYcCWxRZVX6NdREPvMPpdZBBvqmobjkY3jiNJal264QosXEngUBoQsOOwmMhgdqCqYOfLj2C+15A4YY3pO7lBj+HI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx3EYFPNZTmOG0P8ThioXTnxM2W5I/AOqA1cqRoPJ2DIzjGfD3E
+	VJRkDEgb1EySjvkxLBr0UFJw/DGGoOV9Sqaop2TnlSWl3CrOLQq/
+X-Gm-Gg: ASbGnct+R53EUevpzBP3c7Sc5Fyg5LO0cjrzmEQQ7ZQV4IL/kc1/mpHVyAv84fIHoyu
+	gi5hFp7ueePrVue+lfF7p74hd64UtqCCttUFbJvbQiHpPuSjk0yxHhXJiXAbwuuloLRkukI6OXL
+	do1yZKdnjgDdZOp3N30e7vty9S11kcojMimFitisQuYv+3OgIGBkbRmawD8FHOFPUunCgZgkQ14
+	xB4DJqMcYaOyuetwxwK0pX5R4YyIJmevjUr24qFWJtrb03DFcV90O9Xmy+C2Hon0QSKudmqBqd+
+	UjxO6WTLDRraBQUuKPAnqI9VQcydh63BqIB/ElehVwR4Uc5ZO8OrkFzeE0usI6zXMbrbI1mZWGi
+	cwIaN0SsP1Fa0fU8KRc9cL8frhjSWpQbcIuM4/eVZAeUyJ2giL7LVNFD3MZgAnLMSXdp/wIfg2n
+	fSdPaJPeV2goHWJZFYOss=
+X-Google-Smtp-Source: AGHT+IFxBYUpzqxGSZdBA0JubUlnSNecSwjgT24V4GH75JqqwyWr1waPwEMz8/JdpX6S2eAzwSPnRw==
+X-Received: by 2002:a17:907:ec0d:b0:ac2:dcb9:d2d7 with SMTP id a640c23a62f3a-ac3b7a97454mr522728466b.12.1742413050194;
+        Wed, 19 Mar 2025 12:37:30 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:20d:1300:1b1c:4449:176a:89ea? (2001-1c00-020d-1300-1b1c-4449-176a-89ea.cable.dynamic.v6.ziggo.nl. [2001:1c00:20d:1300:1b1c:4449:176a:89ea])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3146aecbasm1039783166b.37.2025.03.19.12.37.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Mar 2025 12:37:29 -0700 (PDT)
+Message-ID: <eacbd4b8-b8dc-4402-9cbe-666c1ae112e2@gmail.com>
+Date: Wed, 19 Mar 2025 20:37:27 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -35,84 +68,82 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] ARM: dts: aspeed: Add device tree for Nvidia's
- GB200NVL BMC
-To: Willie Thai <wthai@nvidia.com>
-Cc: andrew@codeconstruct.com.au, andrew@lunn.ch, conor+dt@kernel.org,
- devicetree@vger.kernel.org, dkodihalli@nvidia.com, gpiccoli@igalia.com,
- joel@jms.id.au, kees@kernel.org, krzk+dt@kernel.org, leohu@nvidia.com,
- linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
- linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
- maryang@nvidia.com, openbmc@lists.ozlabs.org, pmenzel@molgen.mpg.de,
- robh@kernel.org, tingkaic@nvidia.com, tony.luck@intel.com
-References: <93bb3092-7f49-4a7f-ac97-3cf1a62ac39d@kernel.org>
- <20250319112451.4171471-1-wthai@nvidia.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v10 nf-next 2/3] netfilter: nf_flow_table_offload: Add
+ nf_flow_encap_push() for xmit direct
+To: Pablo Neira Ayuso <pablo@netfilter.org>
+Cc: Michal Ostrowski <mostrows@earthlink.net>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Jozsef Kadlecsik <kadlec@netfilter.org>, Simon Horman <horms@kernel.org>,
+ netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, Nikolay Aleksandrov <razor@blackwall.org>
+References: <20250315195910.17659-1-ericwouds@gmail.com>
+ <20250315195910.17659-3-ericwouds@gmail.com> <Z9oAeJ5KifLxllEa@calendula>
+From: Eric Woudstra <ericwouds@gmail.com>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
- QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
- gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
- /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
- iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
- VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
- 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
- xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
- eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
- AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
- MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
- Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
- ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
- vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
- oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
- lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
- t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
- uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
- 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
- 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250319112451.4171471-1-wthai@nvidia.com>
+In-Reply-To: <Z9oAeJ5KifLxllEa@calendula>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 19/03/2025 12:24, Willie Thai wrote:
->>> +
->>> +// Enable Primary flash on FMC for bring up activity
->>> +&fmc {
->>> +	status = "okay";
->>> +	flash@0 {
->>> +		status = "okay";
+
+
+On 3/19/25 12:23 AM, Pablo Neira Ayuso wrote:
+> On Sat, Mar 15, 2025 at 08:59:09PM +0100, Eric Woudstra wrote:
+>> Loosely based on wenxu's patches:
 >>
->> Nothing improved.
->>
->> Respond to comment instead of ignoring it.
->>
+>> "nf_flow_table_offload: offload the vlan/PPPoE encap in the flowtable".
 > 
-> The property was disabled here: https://github.com/torvalds/linux/blob/master/arch/arm/boot/dts/aspeed/aspeed-g6.dtsi#L172
+> I remember that patch.
+> 
+>> Fixed double vlan and pppoe packets, almost entirely rewriting the patch.
+>>
+>> After this patch, it is possible to transmit packets in the fastpath with
+>> outgoing encaps, without using vlan- and/or pppoe-devices.
+>>
+>> This makes it possible to use more different kinds of network setups.
+>> For example, when bridge tagging is used to egress vlan tagged
+>> packets using the forward fastpath. Another example is passing 802.1q
+>> tagged packets through a bridge using the bridge fastpath.
+>>
+>> This also makes the software fastpath process more similar to the
+>> hardware offloaded fastpath process, where encaps are also pushed.
+> 
+> I am not convinced that making the software flowtable more similar
+> hardware is the way the go, we already have to deal with issues with
+> flow teardown mechanism (races) to make it more suitable for hardware
+> offload.
+> 
+> I think the benefit for pppoe is that packets do not go to userspace
+> anymore, but probably pppoe driver can be modified push the header
+> itself?
+> 
+> As for vlan, this is saving an indirection?
+> 
+> Going in this direction means the flowtable datapath will get more
+> headers to be pushed in this path in the future, eg. mpls.
+> 
+> Is this also possibly breaking existing setups? eg. xfrm + vlan
+> devices, but maybe I'm wrong.
+> 
 
-I see, thanks.
+If you do not want to touch the software fastpath, It should be possible
+to do it without.
 
+For bridged interfaces, only use the hardware fastpath, not installing a
+hook for the software fastpath at all.
 
-Best regards,
-Krzysztof
+Another option is installing the hook (matching the hash, updating
+counter and perhaps calling flow_offload_refresh() and so), but then
+letting traffic continue the normal path. That is, until the hardware
+offload takes over.
+
+In both cases only allow to add the flowtable if the offload flag is set.
+
+What do you think?
+
+But in all cases (including existing cases in existing code), I think we
+need the patches from "[PATCH v10 nf-next 0/3] netfilter: fastpath fixes".
+
+Could you look at these?
+
