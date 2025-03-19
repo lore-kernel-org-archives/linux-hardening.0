@@ -1,97 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1CB0187FEC;
-	Wed, 19 Mar 2025 18:39:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6B5014AD29
+	for <linux-hardening@vger.kernel.org>; Wed, 19 Mar 2025 18:51:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742409599; cv=none; b=TXvCQvVZsgPG9RmG2V0mXa/Tda3Ur7KBrZ1DNJDXuAE9X7NsGYk17Pd5gt5G/3UzE6/RsPSd90oUFMZxrb0e++Q41lA3t5XKj15LMOW0JY47lXoJxsteQhTuOl35g9/gJITBnsO6/WyGz1TXGAdtPpTIOCf+PMhih1TMa0YTrz8=
+	t=1742410301; cv=none; b=lJtpk2ncikELFlpkYvLjcUv6pUVvawfPXqJBya8jZRKfCL5tdsbVjeEfpsdh+VpHveCFj95/cteXXU1LXpfak9KlcWKIDdNPQGvUXveeaTwffmU/A7+BVH9XHXvjxuiHDraNEiN9h0PInJV8DIUjCL7ZkIUVmQiS/D9LlXGfKvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742409599; c=relaxed/simple;
-	bh=ADlMtJwjQX2yIIUmswrpWLAyb4fE4uw/exy/gEEuVaE=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=boRINR+xXDVZZqXZgw3H4vu479giryhHUxX+lXZQeumUsJBs/+k+YLOAxXw0yAnMVhGV538ikoYSLqsnK+6jbWkCr1u77beVoLu7PL+uaXoe5CKgOTZ8vqoVzHNPIF+NHBfg1XjUBIb/qbBcCK8nhglmPrcdQv01FTt2XTzqW2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DxM3jJkI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742410301; c=relaxed/simple;
+	bh=x32Q3z6i1wVzW80/cI1dSEJFN0lmoG/8IKCRNI6L9BM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=n3uknt8r9Efuc9e4iyHiYoZy8FDAtkq9Dry3ICa1vsibTPJittfZ+SePN2qMaQwB//C4yqFIXYjXzObrejP0B8iL4DwSaZ2Y009FSA8QsJu0CFoJPr0nsAxOTW99H2HkE+iqVqnAT6Pd7wpHrvGCM/5uJdzmJGUub5l3SiAOX+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=KqcKeG4k; arc=none smtp.client-ip=95.215.58.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DxM3jJkI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EEB9C4CEE4;
-	Wed, 19 Mar 2025 18:39:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742409599;
-	bh=ADlMtJwjQX2yIIUmswrpWLAyb4fE4uw/exy/gEEuVaE=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=DxM3jJkIjOfne9gXJK65QbmNBlvcHvKTDoRB/5gezIa+zO8pt+kCOrWt9oznpWA2F
-	 pH8/cKJWIPld647NuAjfb1Usq0c94KGLoaEvHMWEiVjBg8OkdseYz6eyQA6FBtDaHf
-	 6uQRldwyQBBo2LHS/0mhYWTUchwax+R33gnHTxgkyBOAAzmC9w1xuuEF4YmByCWzH9
-	 Xj7yv0JOVreS7LCYyIdTrki60zJK7+a+CmEZ84zGj3ONPK14vaqD68KLo4aRYcbjUC
-	 tsEyrRtALadSTqvGZ72Boe3N6QZPTuQQad9aT1rG0Ohxv7qfpdI4JIo2q2BS9h8vxW
-	 47Viq/YFKhJcg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 3A29C380CFFE;
-	Wed, 19 Mar 2025 18:40:36 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="KqcKeG4k"
+Date: Wed, 19 Mar 2025 11:51:28 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1742410297;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wNlnynwUVrUL3+4dcgZ4JkcxO+z5yinGLAIs8NF2EaQ=;
+	b=KqcKeG4kg1CjIHu5E1S93MAqKvO2VkP26+wOoYoDLUbU2v4sV7cAhZuJHlSq0JPHeoRw7R
+	sLICve42DoZJVxwW4dPtdM99aWKqHqvov18qhOCQTMxLUYM+clTTxPk8bY6LJ2V65knsSC
+	e78n3Hs/BzWi8uBQ5HduarMD/apWMXE=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Oliver Upton <oliver.upton@linux.dev>
+To: Marc Zyngier <maz@kernel.org>
+Cc: Akihiko Odaki <akihiko.odaki@daynix.com>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	devel@daynix.com
+Subject: Re: [PATCH RFC] KVM: arm64: PMU: Use multiple host PMUs
+Message-ID: <Z9sSMJAlf7cQ5viu@linux.dev>
+References: <20250319-hybrid-v1-1-4d1ada10e705@daynix.com>
+ <Z9pze3J2_zrTk_yC@linux.dev>
+ <e8324d9d-3756-41cf-a102-28572e302368@daynix.com>
+ <86plidmjwh.wl-maz@kernel.org>
+ <bd681ec6-0b4c-47d9-8a4a-b7324c0883a6@daynix.com>
+ <86o6xxmg87.wl-maz@kernel.org>
+ <aabd71eb-286b-475c-a30e-d5cf5c4f2769@daynix.com>
+ <86msdhmemw.wl-maz@kernel.org>
+ <cd7b4528-34a3-4d87-9711-acc2c2e6f6e1@daynix.com>
+ <86ldt0n9w1.wl-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v3] net: macb: Add __nonstring annotations for unterminated
- strings
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174240963487.1149743.12928700103940851464.git-patchwork-notify@kernel.org>
-Date: Wed, 19 Mar 2025 18:40:34 +0000
-References: <20250312200700.make.521-kees@kernel.org>
-In-Reply-To: <20250312200700.make.521-kees@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: nicolas.ferre@microchip.com, claudiu.beznea@tuxon.dev,
- andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <86ldt0n9w1.wl-maz@kernel.org>
+X-Migadu-Flow: FLOW_OUT
 
-Hello:
-
-This patch was applied to netdev/net-next.git (main)
-by Paolo Abeni <pabeni@redhat.com>:
-
-On Wed, 12 Mar 2025 13:07:01 -0700 you wrote:
-> When a character array without a terminating NUL character has a static
-> initializer, GCC 15's -Wunterminated-string-initialization will only
-> warn if the array lacks the "nonstring" attribute[1]. Mark the arrays
-> with __nonstring to correctly identify the char array as "not a C string"
-> and thereby eliminate the warning:
+On Wed, Mar 19, 2025 at 06:38:38PM +0000, Marc Zyngier wrote:
+> On Wed, 19 Mar 2025 11:51:21 +0000, Akihiko Odaki <akihiko.odaki@daynix.com> wrote:
+> > What about setting the flag automatically when a user fails to pin
+> > vCPUs to CPUs that are covered by one PMU? There would be no change if
+> > a user correctly pins vCPUs as it is. Otherwise, they will see a
+> > correct feature set advertised to the guest and the cycle counter
+> > working.
 > 
-> In file included from ../drivers/net/ethernet/cadence/macb_main.c:42:
-> ../drivers/net/ethernet/cadence/macb.h:1070:35: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (33 chars into 32 available) [-Wunterminated-string-initialization]
->  1070 |         GEM_STAT_TITLE(TX1519CNT, "tx_greater_than_1518_byte_frames"),
->       |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> ../drivers/net/ethernet/cadence/macb.h:1050:24: note: in definition of macro 'GEM_STAT_TITLE_BITS'
->  1050 |         .stat_string = title,                           \
->       |                        ^~~~~
-> ../drivers/net/ethernet/cadence/macb.h:1070:9: note: in expansion of macro 'GEM_STAT_TITLE'
->  1070 |         GEM_STAT_TITLE(TX1519CNT, "tx_greater_than_1518_byte_frames"),
->       |         ^~~~~~~~~~~~~~
-> ../drivers/net/ethernet/cadence/macb.h:1097:35: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (33 chars into 32 available) [-Wunterminated-string-initialization]
->  1097 |         GEM_STAT_TITLE(RX1519CNT, "rx_greater_than_1518_byte_frames"),
->       |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> ../drivers/net/ethernet/cadence/macb.h:1050:24: note: in definition of macro 'GEM_STAT_TITLE_BITS'
->  1050 |         .stat_string = title,                           \
->       |                        ^~~~~
-> ../drivers/net/ethernet/cadence/macb.h:1097:9: note: in expansion of macro 'GEM_STAT_TITLE'
->  1097 |         GEM_STAT_TITLE(RX1519CNT, "rx_greater_than_1518_byte_frames"),
->       |         ^~~~~~~~~~~~~~
+> How do you know that the affinity is "correct"? VCPU affinity can be
+> changed at any time. I, for one, do not want my VMs to change
+> behaviour because I let the vcpus bounce around as the scheduler sees
+> fit.
 > 
-> [...]
+> Honestly, this is not a can of worm I want to open. We already have a
+> pretty terrible userspace API for the PMU, let's not add to the
+> confusion. *If* we are going down the road of presenting a dumbed-down
+> PMU to the guest, it has to be an explicit buy-in from userspace.
 
-Here is the summary with links:
-  - [v3] net: macb: Add __nonstring annotations for unterminated strings
-    https://git.kernel.org/netdev/net-next/c/3d97da0ee625
+I also have a very strong distaste for the crappy UAPI we have around a
+'default' PMU. At the same time I do recognize this hurts practical
+usecases since some VMMs can't be bothered to configure the vPMU / vCPU
+pinning correctly.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+I'm at least willing to plug my nose and do the following:
 
+ 1) When the VMM does not specify a vPMU type:
 
+   - We continue to present the 'default' PMU (including event counters)
+     to the VM
+
+   - KVM ensures that the fixed CPU cycle counter works on any PMUv3
+     implementation in the system, even if it is different from the
+     default
+
+   - Otherwise, event counters will only count on the default
+     implementation and will not count on different PMUs
+
+ 2) Implement your suggestion of a UAPI where the VMM can select a PMU
+    that only has the CPU cycle counter and works on any PMUv3
+    implementation.
+
+Either way KVM will need to have some special case handling of the fixed
+CPU cycle counter. That'd allow users to actually run Windows *now* and
+provide a clear mechanism for userspace to present a less-broken vPMU if
+it cares.
+
+Thanks,
+Oliver
