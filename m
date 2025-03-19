@@ -1,137 +1,149 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FE3A2528F1
-	for <linux-hardening@vger.kernel.org>; Wed, 19 Mar 2025 11:51:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFD7C20CCE9;
+	Wed, 19 Mar 2025 13:38:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742385088; cv=none; b=iaxK05PVtTRdTWzBDEdFCBxhPUGolVLvdk9jXjLy4DypSYnuLI6kuLARNFPtqKLECO49q7kPhuVgWxrezMyE44Hh2ZpYmVof3EDB/pjlJySxcZqwtZBkdq2EQpfo89gjbYVQfXiWRHiflhhcKzVOimDDmn9IjmrCWPn/IlV9kug=
+	t=1742391483; cv=none; b=bwmbbMC+KCz60lt9bdBuUGrnO8FJ8FO+0xjG60mT0OV79JP9VFWrTkqncHPl6EWpKtyLxOGUBZ4uhyr0vwv5BqRrBEZL/PaQQ1vzS6xmGEiyXojwRF4MZIwwJ8jjQHUMdT0JG7NqZgJJFY8HsNiopqeOX4eBVfbg+5eueHXLoyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742385088; c=relaxed/simple;
-	bh=/l612sg75Uja1o1NjiZ0/+cOeL1Yx5rIICdOKYCvLtI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=S9vEzQ+tdoUS6WK5G+U3Y8rKpLpcBD8sC7mDHG0lZ/n3AWcFqkGSjZRp98GQtpLQKh+5aVme0BaG1Qnl/o4LIFd4o7fV5RcoolAkcAPCL3BgsVUSJZJRQex4QOJASDNiv1wvbAWafKoZIYvc1GPDACfazTqRSJ0z5o1WRX5U3H4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com; spf=pass smtp.mailfrom=daynix.com; dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b=nEVsswCr; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=daynix.com
+	s=arc-20240116; t=1742391483; c=relaxed/simple;
+	bh=KdwvDs/LJhlEGwHAfpsYj5Uf0iDrX2Am/u8k/2yb+2Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JLoIPSnlK116rJob/NoaVS8aVQvN45rcYDYR9WDucEDUFMWg1CoVNWlktw0ZWFdIYundXPWQGjUp3HUcVENQ6VV4KaoPPFEZzzatm0c7DL18V2Riz0rmZeCwCsHVM8IA4CUc4kUCVqx5dF0LJ7kqgYokcNBzJu6k5nSJfrm6UAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=B0mWfGHL; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b="nEVsswCr"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2ff784dc055so7386281a91.1
-        for <linux-hardening@vger.kernel.org>; Wed, 19 Mar 2025 04:51:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=daynix-com.20230601.gappssmtp.com; s=20230601; t=1742385086; x=1742989886; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2XjuEqbxb70zWO25+d3tN3N8uLlo3z0B0itj0TevOYE=;
-        b=nEVsswCrcWRimVv3IX3EyzIPGIVc8rvOo5zns541MPSjCPgajAdlP/xeNuNjDw0UnZ
-         IlTSxzkLtCvgyHJRbw8ctiVflPmFo2F7ZQmPDnOgbJYg+O0w+6MoNHoB/bHUQkP0e7BN
-         yA2Skas9WigRMJgsOSg93nBGZ0oPakKnUV7LGyxeoqAHp0ULwr+1Ex1vXt7A5ytbYVwJ
-         G0SPWt9acvq/j6m1PBGyB0M6CuH6SBJpSZjbWgFacmYIjoafCajy1WJsGYdcvnsmbbf5
-         FRqCzh4E4QsQfTDutwheIrpi6HmdOPVp1a+uueFglOZWf2sZZxVpiMAvwHx2ibLW+M4N
-         Kpew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742385086; x=1742989886;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2XjuEqbxb70zWO25+d3tN3N8uLlo3z0B0itj0TevOYE=;
-        b=R/TgBM3H3vcGJ9JtHmFp3iLGgQvxyZBQzAcsLURDw/G3gxrxEGr6lt4a94KZSGoV6a
-         NLz+RAHo9W4NjMqN8WSfFztOOisTwLuXo5UqeRFF2eXfo0VfIhVcjJHiJZl4qyMfs/i4
-         l6VIbksMAW9zJ6XZ0J0RIwq6aKLtvB2OmrT1+EgploMh9JHPKdnfzylmxcJc4sMzcEvj
-         F0Wa5q85ZNVEaqy/vLSkhES0JI+ZCN2zbEEz38rg3EEthMGFJg/0dRTltswj0kbw2PiB
-         2feDC1+esS6JDnmybS7/hTky12pPalth3rzhwuXsevFfPefpYFk0PPhgfctEERqtZ4ue
-         Y+oQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXMF/EAYzioqhdwpGiS7L9FMiKegTrqYbW8Oc3PvxOI526yR1eB2E/pjD4r0z/lkIVaIQmky1Jt/pHpMeZQVSs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz0Xrrow4jLprC8aUVRfc8gqMrewEfRbx+D8aP1KnA/yvFhqX8U
-	9NxRPiVg/PvE8yOKjL95/giN50ZSa0hCl3oiEjaK1zVu9VtSzlxJyYlrP1JtKlo=
-X-Gm-Gg: ASbGncubpQjBLDXTjtbCl3Ei/KjAL+paXhU+COu4NUR9fzpsiq/LpCAlzNFHfIDV/Ac
-	AoQq69Jul7lfAFxVN5A5cl9bgrCu6szuHFFG1gQ9/nQh0oEgeRb8UMCz/BsLzkIUfgEzOTGByT6
-	O/EU4cwKzoKj5Vw9iCZ02uSrWtrTslJAFUy4j7L1wH+YlTW+daAvuNgoL9mZ+SNtwuR79Wr5478
-	JGYfjMQ4IlNNueeDNjrVmsnSPz2OzonCEvJItA+3f+WiM21OKa55j6PgHtUNci4xX9XfQ3bklXh
-	y2ptLyQBjXQB6wVilGCLUNyS31w4fa1PA4dZ8jhfyyUthKY+nUijXVkX6pUxo01zHXv5
-X-Google-Smtp-Source: AGHT+IGhjZrvNsCHZE3eGjx1ElWi189KImICdnFKn/7uc1+V/eDwoskYfYeRmlItwFCzuuJKYXSmdQ==
-X-Received: by 2002:a17:90b:4a47:b0:2fe:84d6:cdf9 with SMTP id 98e67ed59e1d1-301be200c7bmr3227168a91.26.1742385086353;
-        Wed, 19 Mar 2025 04:51:26 -0700 (PDT)
-Received: from [157.82.207.107] ([157.82.207.107])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-301bf5b799dsm1336508a91.31.2025.03.19.04.51.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Mar 2025 04:51:25 -0700 (PDT)
-Message-ID: <cd7b4528-34a3-4d87-9711-acc2c2e6f6e1@daynix.com>
-Date: Wed, 19 Mar 2025 20:51:21 +0900
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="B0mWfGHL"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=6IFhAEM6QXSnnfEsfKnYA9AhAD6BenyTboqR3ogwdfI=; b=B0mWfGHLsRaufUhImXjS3PmpaS
+	in1Lkaq2WqPXk9zjBA42rkH2Aq9yvTihr8padx5LBRXKYeO9ath/zqi+OYx5bUFNoAduy5fkK8sHF
+	ILcbFybvEveDbj3pM5jqcXTXTDqBgT3nZ9Yuc8lkVrkEDXZH6xGfcU5osKJ7F5qlBzME=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1tutcB-006Mtf-Ut; Wed, 19 Mar 2025 14:37:47 +0100
+Date: Wed, 19 Mar 2025 14:37:47 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Cc: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+	Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	Felipe Balbi <balbi@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+	linux-hardening@vger.kernel.org, Devarsh Thakkar <devarsht@ti.com>,
+	Hari Nagalla <hnagalla@ti.com>, linux@ew.tq-group.com
+Subject: Re: [PATCH v2 5/5] arm64: dts: ti: Add TQ-Systems TQMa62xx SoM and
+ MBa62xx carrier board Device Trees
+Message-ID: <262ff436-2334-43bb-a998-ab48f06ea0e3@lunn.ch>
+References: <cover.1733737487.git.matthias.schiffer@ew.tq-group.com>
+ <95ff66ca2c89f69d893c2ce9eed9a0c677633c7b.1733737487.git.matthias.schiffer@ew.tq-group.com>
+ <a9c5cfda-e3e3-436a-8d05-b2f096157cfe@lunn.ch>
+ <c902a56cf34838f60cee67624bb923e91d74e9e0.camel@ew.tq-group.com>
+ <d25b1447-c28b-4998-b238-92672434dc28@lunn.ch>
+ <e16076d16349e929af82fa987a658bff1d9804c4.camel@ew.tq-group.com>
+ <a2a2f201-73a4-4a99-baef-0d593a88c872@lunn.ch>
+ <309052f3f69950fe43390505cc7254aee8c8f5c6.camel@ew.tq-group.com>
+ <2953e10c-0a57-4d49-b831-3864a07eefd5@lunn.ch>
+ <e6ee878f655c31473bca54e4187d9006a19158b1.camel@ew.tq-group.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC] KVM: arm64: PMU: Use multiple host PMUs
-To: Marc Zyngier <maz@kernel.org>
-Cc: Oliver Upton <oliver.upton@linux.dev>, Joey Gouly <joey.gouly@arm.com>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
- <yuzenghui@huawei.com>, Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>, Kees Cook <kees@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
- devel@daynix.com
-References: <20250319-hybrid-v1-1-4d1ada10e705@daynix.com>
- <Z9pze3J2_zrTk_yC@linux.dev>
- <e8324d9d-3756-41cf-a102-28572e302368@daynix.com>
- <86plidmjwh.wl-maz@kernel.org>
- <bd681ec6-0b4c-47d9-8a4a-b7324c0883a6@daynix.com>
- <86o6xxmg87.wl-maz@kernel.org>
- <aabd71eb-286b-475c-a30e-d5cf5c4f2769@daynix.com>
- <86msdhmemw.wl-maz@kernel.org>
-Content-Language: en-US
-From: Akihiko Odaki <akihiko.odaki@daynix.com>
-In-Reply-To: <86msdhmemw.wl-maz@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e6ee878f655c31473bca54e4187d9006a19158b1.camel@ew.tq-group.com>
 
-On 2025/03/19 20:41, Marc Zyngier wrote:
-> On Wed, 19 Mar 2025 11:26:18 +0000,
-> Akihiko Odaki <akihiko.odaki@daynix.com> wrote:
->>
->> On 2025/03/19 20:07, Marc Zyngier wrote:
->>> On Wed, 19 Mar 2025 10:26:57 +0000,
->>>>
->>> But that'd be a new ABI, which again would require buy-in from
->>> userspace.  Maybe there is scope for an all CPUs, cycle-counter only
->>> PMUv3 exposed to the guest, but that cannot be set automatically, as
->>> we would otherwise regress existing setups.
->>>
->>> At this stage, and given that you need to change userspace, I'm not
->>> sure what the best course of action is.
->>
->> Having an explicit flag for the userspace is fine for QEMU, which I
->> care. It can flip the flag if and only if threads are not pinned to
->> one PMU and the machine is a new setup.
->>
->> I also wonder what regression you think setting it automatically causes.
+> Hi Andrew,
 > 
-> The current behaviour is that if you don't specify anything other than
-> creating a PMUv3 (without KVM_ARM_VCPU_PMU_V3_SET_PMU), you get *some*
-> PMU, and userspace is responsible for running the vcpu on CPUs that
-> will implement that PMU. When if does, all the counters, all the
-> events are valid. If it doesn't, nothing counts, but the
-> counters/events are still valid.
+> I've just thought about this issue again. As mentioned, a number of MAC
+> drivers(*) implement what is described here:
 > 
-> If you now add this flag automatically, the guest doesn't see the full
-> PMU anymore. Only the cycle counter. That's the regression.
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/net/ethernet-controller.yaml?h=v6.13#n77
+> 
+> 
+> That is, the delay is either added by the PHY or the MAC; having a delay on the
+> PCB is simply not supported.
 
-What about setting the flag automatically when a user fails to pin vCPUs 
-to CPUs that are covered by one PMU? There would be no change if a user 
-correctly pins vCPUs as it is. Otherwise, they will see a correct 
-feature set advertised to the guest and the cycle counter working.
+Yes it is, you are reading it wrong. First off, as said a number of
+times in the last couple of months, this description is from the
+perspective of the PHY. It is not the board perspective. So:
 
-Regards,
-Akihiko Odaki
+      # RX and TX delays are added by the MAC when required
+      - rgmii
 
-> 
-> Thanks,
-> 
-> 	M.
-> 
+From the perspective of the PHY, "when required" the MAC adds the
+delay. It might not be required, because the PCB adds the delay.
 
+      # RGMII with internal RX and TX delays provided by the PHY,
+      # the MAC should not add the RX or TX delays in this case
+      - rgmii-id
+
+The MAC should not add delays because the PHY does. But this implies
+the PCB cannot also be adding delays because you would end up with two
+sets of delays.
+
+> Fixing MAC drivers to interpret the values without
+> "id" to mean that there is a delay on the PCB will break existing Device Trees,
+> so that's no good.
+
+You need to look at it broken driver by broken driver. I _think_ the
+Aspeed case can be fixed. Others we need to look at the details. Maybe
+in some cases we do need to add a warning to the device tree binding
+the driver is FUBAR and has special, broken meaning for 'rgmii'.
+
+> As a first step, I'd update the docs to describe the intended behavior, but
+> mention that some drivers implement it wrong.
+
+Feel free to submit patches. However, please think about it. DT is OS
+agnostic. DT describes the hardware, not configuration. Other OSes
+might decide on a different policy about which of the MAC/PHY pair
+implements the delay, since that is configuration, not a hardware
+description.
+
+> The question is how to deal with
+> the wrong behavior going forward. I see the following options, but none spark
+> joy for me...
+> 
+> - Keep current driver behavior forever where fixing it would break existing
+>   Device Trees
+> - Deprecate all existing "rgmii*" values because of their inconsistent
+>   implementation, come up with new ones. Seems like a huge pain to add support
+>   for in all MAC drivers and other code that deals with PHY modes...
+
+Won't help anyway. If developers are getting it wrong now, why should
+they suddenly start getting it right when all you are changing is the
+name.
+
+The real issue is that you can combine two bugs to get a working
+system. It seems like few developers actually understand RGMII
+delays. They don't spend time to understand it, they just try random
+things until it works. As a result, they get systems where the MAC is
+unknowingly adding delays, and 'rgmii' works, so job done. They don't
+know or care it is wrong.
+
+> - Introduce an additional DTS flag next to phy-mode to express that the
+>   phy-mode is supposed to be interpreted correctly
+
+If you are going to do add any sort of property, it should be a bool
+indicating the opposite, 'phy-mode-is-fubar'. Something which
+developers will think about before copying into their DT.
+
+> Do you have any suggestions?
+
+Add a checkpatch.pl check. Any patch which adds a phy-mode !=
+'rgmii-id' needs to have a comment on the previous line containing the
+word PCB. That should at least help stop more broken DT being added.
+
+	Andrew
