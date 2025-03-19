@@ -1,112 +1,118 @@
-Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6B5014AD29
-	for <linux-hardening@vger.kernel.org>; Wed, 19 Mar 2025 18:51:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BEA91361;
+	Wed, 19 Mar 2025 19:29:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742410301; cv=none; b=lJtpk2ncikELFlpkYvLjcUv6pUVvawfPXqJBya8jZRKfCL5tdsbVjeEfpsdh+VpHveCFj95/cteXXU1LXpfak9KlcWKIDdNPQGvUXveeaTwffmU/A7+BVH9XHXvjxuiHDraNEiN9h0PInJV8DIUjCL7ZkIUVmQiS/D9LlXGfKvA=
+	t=1742412546; cv=none; b=sHz0/c909rUUbxc93Nt0K0N8YLA/cblSxZNxBfuUzVH0LGxWmv9FMWcGz/EhGf9CF/ixo5Gzk49Ex8WVRPfmg0OTCwXlPROXKBkPa+utISO+t279uK3uCive8wCLA620u38A3QjPHLuIPj0cynYNTYE6wExnKM1QsV9vw7Qq6Gw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742410301; c=relaxed/simple;
-	bh=x32Q3z6i1wVzW80/cI1dSEJFN0lmoG/8IKCRNI6L9BM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n3uknt8r9Efuc9e4iyHiYoZy8FDAtkq9Dry3ICa1vsibTPJittfZ+SePN2qMaQwB//C4yqFIXYjXzObrejP0B8iL4DwSaZ2Y009FSA8QsJu0CFoJPr0nsAxOTW99H2HkE+iqVqnAT6Pd7wpHrvGCM/5uJdzmJGUub5l3SiAOX+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=KqcKeG4k; arc=none smtp.client-ip=95.215.58.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1742412546; c=relaxed/simple;
+	bh=ZzMX55IjDIprWqceWohngFCM6EBQHJSx4FKfnv2T0Ac=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OKiLFhH/hcVGwCndAXeJYZYZvEOIqyk2MAqoJC14Z4B7i5/y4bj5IdRiE+c9D6iY05CFjPLZj6GRUvzjJ+2hsM4gp0zLBM4F8zZ2e6zli4H8OoIgYJYt9YSelglITtdXFRFhMywQ2GtVtyC6wC0ZnzI6LkTSS2LNB9Kh9yO5iCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pzO/WD9d; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="KqcKeG4k"
-Date: Wed, 19 Mar 2025 11:51:28 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1742410297;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wNlnynwUVrUL3+4dcgZ4JkcxO+z5yinGLAIs8NF2EaQ=;
-	b=KqcKeG4kg1CjIHu5E1S93MAqKvO2VkP26+wOoYoDLUbU2v4sV7cAhZuJHlSq0JPHeoRw7R
-	sLICve42DoZJVxwW4dPtdM99aWKqHqvov18qhOCQTMxLUYM+clTTxPk8bY6LJ2V65knsSC
-	e78n3Hs/BzWi8uBQ5HduarMD/apWMXE=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Oliver Upton <oliver.upton@linux.dev>
-To: Marc Zyngier <maz@kernel.org>
-Cc: Akihiko Odaki <akihiko.odaki@daynix.com>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	devel@daynix.com
-Subject: Re: [PATCH RFC] KVM: arm64: PMU: Use multiple host PMUs
-Message-ID: <Z9sSMJAlf7cQ5viu@linux.dev>
-References: <20250319-hybrid-v1-1-4d1ada10e705@daynix.com>
- <Z9pze3J2_zrTk_yC@linux.dev>
- <e8324d9d-3756-41cf-a102-28572e302368@daynix.com>
- <86plidmjwh.wl-maz@kernel.org>
- <bd681ec6-0b4c-47d9-8a4a-b7324c0883a6@daynix.com>
- <86o6xxmg87.wl-maz@kernel.org>
- <aabd71eb-286b-475c-a30e-d5cf5c4f2769@daynix.com>
- <86msdhmemw.wl-maz@kernel.org>
- <cd7b4528-34a3-4d87-9711-acc2c2e6f6e1@daynix.com>
- <86ldt0n9w1.wl-maz@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pzO/WD9d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E0A4C4CEE9;
+	Wed, 19 Mar 2025 19:28:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742412545;
+	bh=ZzMX55IjDIprWqceWohngFCM6EBQHJSx4FKfnv2T0Ac=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=pzO/WD9dL5W+fwp7FqW8OjOYtwusOt0EiiKi7IrOJ8q9ngMf6Kq3cwcm/WCzb3xDq
+	 bxseUheWXp5G01aDdO3IfNGmWpaN/Sg7jRw2UBA1ezdzcVPY3kz+1z7iD9IQ2iIWkt
+	 utGAd7YoEcVwmy+kyqB2rC5u3tHkX1MtT3ZpxSay1C2Ut9wFA4A+ZIRcuLUOMdJhpo
+	 cx8xbmJNjvJtufT9nODAFx2t0a4VmeYnSgcg3tAXO9up2Pquh7OadHBtgMk5SL08Il
+	 4g85Qv9OOygkFUK0cu5vUrThgvQI3hPFrdbe0xMOOj90pw7ueY7lK4Tzc0iW4iOpgs
+	 Uryed/e1F8ksg==
+Message-ID: <44f2387b-0a86-46cc-a5d2-950dd688b207@kernel.org>
+Date: Wed, 19 Mar 2025 20:28:56 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <86ldt0n9w1.wl-maz@kernel.org>
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] ARM: dts: aspeed: Add device tree for Nvidia's
+ GB200NVL BMC
+To: Willie Thai <wthai@nvidia.com>
+Cc: andrew@codeconstruct.com.au, andrew@lunn.ch, conor+dt@kernel.org,
+ devicetree@vger.kernel.org, dkodihalli@nvidia.com, gpiccoli@igalia.com,
+ joel@jms.id.au, kees@kernel.org, krzk+dt@kernel.org, leohu@nvidia.com,
+ linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
+ linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+ maryang@nvidia.com, openbmc@lists.ozlabs.org, pmenzel@molgen.mpg.de,
+ robh@kernel.org, tingkaic@nvidia.com, tony.luck@intel.com
+References: <93bb3092-7f49-4a7f-ac97-3cf1a62ac39d@kernel.org>
+ <20250319112451.4171471-1-wthai@nvidia.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250319112451.4171471-1-wthai@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Mar 19, 2025 at 06:38:38PM +0000, Marc Zyngier wrote:
-> On Wed, 19 Mar 2025 11:51:21 +0000, Akihiko Odaki <akihiko.odaki@daynix.com> wrote:
-> > What about setting the flag automatically when a user fails to pin
-> > vCPUs to CPUs that are covered by one PMU? There would be no change if
-> > a user correctly pins vCPUs as it is. Otherwise, they will see a
-> > correct feature set advertised to the guest and the cycle counter
-> > working.
+On 19/03/2025 12:24, Willie Thai wrote:
+>>> +
+>>> +// Enable Primary flash on FMC for bring up activity
+>>> +&fmc {
+>>> +	status = "okay";
+>>> +	flash@0 {
+>>> +		status = "okay";
+>>
+>> Nothing improved.
+>>
+>> Respond to comment instead of ignoring it.
+>>
 > 
-> How do you know that the affinity is "correct"? VCPU affinity can be
-> changed at any time. I, for one, do not want my VMs to change
-> behaviour because I let the vcpus bounce around as the scheduler sees
-> fit.
-> 
-> Honestly, this is not a can of worm I want to open. We already have a
-> pretty terrible userspace API for the PMU, let's not add to the
-> confusion. *If* we are going down the road of presenting a dumbed-down
-> PMU to the guest, it has to be an explicit buy-in from userspace.
+> The property was disabled here: https://github.com/torvalds/linux/blob/master/arch/arm/boot/dts/aspeed/aspeed-g6.dtsi#L172
 
-I also have a very strong distaste for the crappy UAPI we have around a
-'default' PMU. At the same time I do recognize this hurts practical
-usecases since some VMMs can't be bothered to configure the vPMU / vCPU
-pinning correctly.
+I see, thanks.
 
-I'm at least willing to plug my nose and do the following:
 
- 1) When the VMM does not specify a vPMU type:
-
-   - We continue to present the 'default' PMU (including event counters)
-     to the VM
-
-   - KVM ensures that the fixed CPU cycle counter works on any PMUv3
-     implementation in the system, even if it is different from the
-     default
-
-   - Otherwise, event counters will only count on the default
-     implementation and will not count on different PMUs
-
- 2) Implement your suggestion of a UAPI where the VMM can select a PMU
-    that only has the CPU cycle counter and works on any PMUv3
-    implementation.
-
-Either way KVM will need to have some special case handling of the fixed
-CPU cycle counter. That'd allow users to actually run Windows *now* and
-provide a clear mechanism for userspace to present a less-broken vPMU if
-it cares.
-
-Thanks,
-Oliver
+Best regards,
+Krzysztof
