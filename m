@@ -1,64 +1,81 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C65D81E9B02;
-	Thu, 20 Mar 2025 16:55:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BAC42063EE
+	for <linux-hardening@vger.kernel.org>; Thu, 20 Mar 2025 16:58:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742489729; cv=none; b=hn2UR3iT43vEHa3oCBWeWKS3m2ZB4g7tim7VmmbxBKmzLxqCRXBDFq2hbUY871PfWl7TkV/xy4PNM8OAD4zuYE/ddZkhn/qs9yASKiY6UH7vqdefuGCK6KUdCeJ6olUy6/a7zzekcZbV2I1eTBIwiyybDePoAS0aiBcY1bzyjmg=
+	t=1742489887; cv=none; b=NDE8G8frLYPmWOvDnGaP4u75scaxKd6zAvE5Na+JsfMGgWa/HiVRadkEgPMj79xJ2MAH4kqEE+rVzZApzcrR1pc6aX9sALG8o93P669u6CP+4JG4PgVRPd6QLr8PyjJj/ZBKgeaIc1p2Ixw5hqTiTaVv+M0j1wAydtT2tIaTXaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742489729; c=relaxed/simple;
-	bh=h830iovzs+H85c6/sS1xXv46lXYYa2W1ibIND2/XF0k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gJV4W8DDF8vPViqR7i7BQtwx1StScD5lVQqZ1ULOXYEY3o3Gkj1drMXqnPWztGq+7f2/4LHZZTblsQkfjH8f+DRoDKG0DtZ9wf/IFckkJDmV8hcIyuAMnD8pHM8Ad5XQA/HrvGCm6n72YLgWoM7h1fJdvjl/iSHblRz+g7O3s8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=MlEEVOai; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1742489887; c=relaxed/simple;
+	bh=dyIhQWaY4fiplUjXQOOGrh2L5RiQUibHfO1gKrRs7O8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ObsdsntH7kjn5PbQjZz64Bp8ewQ90ibe20vlbvw8uNoGNly0JoocszsrLJKR7HOOLwKJQyOfB9JDceY7eRUcLtXh+oPW9Rg76XGE+JO4vhmrOQdgA1b34eKoZgENqoYP0nM3kr9wE/ScwfHX+WYHyYN1kRExDaRwaBVrVDL/nO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=JEuXukIP; arc=none smtp.client-ip=91.218.175.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="MlEEVOai"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=P0Ivq67bbotH4ADjJAlFztdw/IUYFM+eBRURP7U+L1E=; b=MlEEVOaiCDs90bRztnCdRaJ8ow
-	OK0zmlKkUw3+EaeajJmdoGHTn6Kq3ENk0vEmbsBu+0tX/1xvNzVUS4OfrbQ/lz1HOWHzvSZG+q1oq
-	mDXmR2Jb9BJrw+qDVUbZqkMolVWFZq7SpGAwiRLh7lfbtwfMzApi/DHu41/+eiJ3NXxY=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1tvJAZ-006V1c-OP; Thu, 20 Mar 2025 17:54:59 +0100
-Date: Thu, 20 Mar 2025 17:54:59 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Willie Thai <wthai@nvidia.com>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	joel@jms.id.au, andrew@codeconstruct.com.au, kees@kernel.org,
-	tony.luck@intel.com, gpiccoli@igalia.com,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, openbmc@lists.ozlabs.org,
-	leohu@nvidia.com, tingkaic@nvidia.com, dkodihalli@nvidia.com,
-	Mars Yang <maryang@nvidia.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Paul Menzel <pmenzel@molgen.mpg.de>
-Subject: Re: [PATCH v3 1/2] ARM: dts: aspeed: Add device tree for Nvidia's
- GB200NVL BMC
-Message-ID: <fbf6a89b-80c4-47f3-9dad-2725c040e041@lunn.ch>
-References: <20250320164633.101331-1-wthai@nvidia.com>
- <20250320164633.101331-2-wthai@nvidia.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="JEuXukIP"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1742489873;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=ZHXa8rRgShcH/Fzedr+KAxXDW6SI/idDSVZI7FKt2Kk=;
+	b=JEuXukIP+6vbMe5mDzrTcOcZ5R4dUvl4zXrcQGPU3pJQqoplt7o5Z+obT/6Ud0FYCzUe/d
+	jpvcSaOJehYOe/MgUeipVZBY8D28xT2u4up3ZPvfIj14VgR0y3fqo/pRMdpzU2pJcP8FnT
+	QCC2qb87dn0+n+zT18KyJ7AJBr6tjvI=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Al Viro <viro@zeniv.linux.org.uk>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	linux-hardening@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] USB: gadget: Replace deprecated strncpy() with strscpy()
+Date: Thu, 20 Mar 2025 17:56:44 +0100
+Message-ID: <20250320165647.34859-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250320164633.101331-2-wthai@nvidia.com>
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
->   - Skip mac setting and wait till the delay issue in phy-mode fix from Aspeed SOC vendor side [Andrew]
+strncpy() is deprecated for NUL-terminated destination buffers; use
+strscpy() instead. Since kzalloc() already zeroes out the destination
+buffer, the potential NUL-padding by strncpy() is unnecessary. strscpy()
+copies only the required characters and guarantees NUL-termination.
 
-For this part only:
+Since the destination buffer has a fixed length, strscpy() automatically
+determines its size using sizeof() when the argument is omitted. This
+makes an explicit sizeof() call unnecessary.
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+The source string is also NUL-terminated and meets the __must_be_cstr()
+requirement of strscpy().
 
-    Andrew
+No functional changes intended.
+
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+---
+ drivers/usb/gadget/legacy/inode.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/usb/gadget/legacy/inode.c b/drivers/usb/gadget/legacy/inode.c
+index b6a30d88a800..fcce84a726f2 100644
+--- a/drivers/usb/gadget/legacy/inode.c
++++ b/drivers/usb/gadget/legacy/inode.c
+@@ -1615,7 +1615,7 @@ static int activate_ep_files (struct dev_data *dev)
+ 		mutex_init(&data->lock);
+ 		init_waitqueue_head (&data->wait);
+ 
+-		strncpy (data->name, ep->name, sizeof (data->name) - 1);
++		strscpy(data->name, ep->name);
+ 		refcount_set (&data->count, 1);
+ 		data->dev = dev;
+ 		get_dev (dev);
