@@ -1,66 +1,64 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46994212FBD;
-	Wed, 19 Mar 2025 19:37:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1556C1B422A
+	for <linux-hardening@vger.kernel.org>; Thu, 20 Mar 2025 06:03:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742413053; cv=none; b=HHItc+amCXk0Y+WFiuyutE/ulLL366pNK1I6fnCuVMF/1YAH3mCJJXl3yj3bs11LekC4gE/EyPZgDyWPAT1WoPbqFF/iyKL5TIgcqO0CMJKIfTfGVMyqSLwFXXRuO0t4y/XYooUV6NQ8v7G5pcYkS2Yaxoag04bP/rww5XBoGrU=
+	t=1742450622; cv=none; b=fapuXs6GlmrRc2tSP5ZkWYem9WF8skd9S6XFBbgGfutfJQQ52dQHz+/mJuXNeOEqCA0t4Zn9GwY4iG4SN47KKNNEK2PQoxI5pW+o8kq4lxvjLiQv//0d5AynqcdAc43iToESsTfEm8RL0fTVsZg7iXiS3bj0zsKoZXEXuXcVFDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742413053; c=relaxed/simple;
-	bh=NUjywNL79Bcz4+kco3+goMMB0g0EPgUwAxsOhv4kh1w=;
+	s=arc-20240116; t=1742450622; c=relaxed/simple;
+	bh=oBycr6yoTR/XQt9L743N6Lo8JRUTc8DPHmcT1O2rPO8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=poITFQ7AoQLaI8cy6xvgVseYZ4eM68DuWeT6I7mq5E9aaQ6mLDMrd+NN1yhTVrGCCki2q2q5Ggc9XcEU3pFdZCQROWqVox/4VpKLdXmW3iDKpu1eb4UhjjDC6zfvp0wVPhPK5ygNX57PeIvWrP77N8nN6PGxfhxDiHzHu/Z0seM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NDeFIrH5; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=BuK+WVd16nupLGbYOJxEVoN3q4tpqlXyTu6u6bqGTkryYwhFKs5oe5gfW196jHEwvUCSP94V06ZPYKqi35oYKUVRlaMV/SE3XQznAluPvxhjdUu18z1kLMuEYPd3ziBnLqHzbTAwRznJm798iAe+MkSGFNr8x0RognerekiDuTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com; spf=pass smtp.mailfrom=daynix.com; dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b=W5ezF0t3; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=daynix.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NDeFIrH5"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ac2bfcd2a70so12556966b.0;
-        Wed, 19 Mar 2025 12:37:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b="W5ezF0t3"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2255003f4c6so5217805ad.0
+        for <linux-hardening@vger.kernel.org>; Wed, 19 Mar 2025 23:03:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742413050; x=1743017850; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
+        d=daynix-com.20230601.gappssmtp.com; s=20230601; t=1742450620; x=1743055420; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=/hWjp2lAOR+xlpu16vpG0lA3R8Vrfh8sFtASS1Glky4=;
-        b=NDeFIrH58b0as23jtqDnr6ZDqDruXPv0od6poETwRfviXoIu75d/zQ4+M5uj+gjP37
-         EmgLMV9jCQnYQ9SKVh0ikohlfKDGPsmUxJzK9VIEvOl97lFzffKGye38uBbNSRO44rBG
-         rLdVQLUiqw2+4/ARegu83pt6Gy8mtKZhte2ZKrkYMnT+FNhj8gaYqZGGDftaK8uWa368
-         3tNYCAX/9fOLBKqyPtMpGIy3XfLvUvMAu/m1TZjkOmU+ziLon7gxN2C/e0+V8k/EREWd
-         4ZbTvEVKhpvQwjj1qJ/KWVHIwtIqR+ceA/TPXLCutZ2gydsyPWilUU6PwhTP/YRFA7zp
-         F/hQ==
+        bh=EUlQy+omekyAlQ/UT0+jDTx9lfmxYWK64YNT4WpuUK4=;
+        b=W5ezF0t3yXUaQx7LeiVZS+sVU0dAcO3LcOcC9R55zaAGQqNGZrhN3baAGeER9qr+lO
+         7hU0Af/WDVvTwH03PhXpNHkQcW1KA2+QovelRnfz+VZCQgafhUS+bUZzEAW/9vJF5vO1
+         1VocisXxV7MjxmoEMO7o6Xh78zfoZdAy4Vy+x8pfYrGHHLGHpU+sNfXT9fBrdIqjB5pN
+         U1JX0fMxkFlhSFHrHjKi9FUWq7ReTSazdamHJWOYF23tw7OeCep/VuSMINE/LbXQsrbV
+         2qSZyagslvEHqQV2uSRhIQsbiwyzXtVo469EUkOo0fHRG3FUa/bLgWzUSuJ+Mlz3rQAg
+         w3LA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742413050; x=1743017850;
-        h=content-transfer-encoding:in-reply-to:content-language:from
+        d=1e100.net; s=20230601; t=1742450620; x=1743055420;
+        h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/hWjp2lAOR+xlpu16vpG0lA3R8Vrfh8sFtASS1Glky4=;
-        b=FPgzz6rWMtFVzEVT+F3SbeA2eEK9nteall0Aac54a3zZ4WjB3esuGoCMvRd3knduxp
-         UfyOmjv47iHFuCMGB7paFXRwvSxpZLac6Gzu2x2j/zpyX0szmEETMhcL6pW7Ib1FKYZH
-         vXfaFc+SODPisFiQ/CdJN4lVFFjPZGxqtbONprKrrhUY474ZHaJX0B/h6lMO8dlJhmIS
-         an4cpMK3hXRFonMkpgmNiIvbRIdFc8MWifTH7EQMswRC2mMrVdicW6Q2ikRPdnENBmWZ
-         6ZHGmIW9pEisTY79bzUI3AWixNfSo+6TsGgR0zj9ZtGuUivq750uMPpdkvG9xkkGb23A
-         bofg==
-X-Forwarded-Encrypted: i=1; AJvYcCU9Wja1OMZDM9GnU19LVWlBJQ6pzTRo0OU3MMPLLl47EL5cijhHuEiDKQe9AHQZlPVkfplGqENF@vger.kernel.org, AJvYcCV96C3BA9uezoZFgwPP97NDWjHFcOrwZrIVvHyc8pNlccRXcBI9TAPOdu6TyhXvEwazbvjJtTDjgUogMysOvjHW@vger.kernel.org, AJvYcCWxRZVX6NdREPvMPpdZBBvqmobjkY3jiNJal264QosXEngUBoQsOOwmMhgdqCqYOfLj2C+15A4YY3pO7lBj+HI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3EYFPNZTmOG0P8ThioXTnxM2W5I/AOqA1cqRoPJ2DIzjGfD3E
-	VJRkDEgb1EySjvkxLBr0UFJw/DGGoOV9Sqaop2TnlSWl3CrOLQq/
-X-Gm-Gg: ASbGnct+R53EUevpzBP3c7Sc5Fyg5LO0cjrzmEQQ7ZQV4IL/kc1/mpHVyAv84fIHoyu
-	gi5hFp7ueePrVue+lfF7p74hd64UtqCCttUFbJvbQiHpPuSjk0yxHhXJiXAbwuuloLRkukI6OXL
-	do1yZKdnjgDdZOp3N30e7vty9S11kcojMimFitisQuYv+3OgIGBkbRmawD8FHOFPUunCgZgkQ14
-	xB4DJqMcYaOyuetwxwK0pX5R4YyIJmevjUr24qFWJtrb03DFcV90O9Xmy+C2Hon0QSKudmqBqd+
-	UjxO6WTLDRraBQUuKPAnqI9VQcydh63BqIB/ElehVwR4Uc5ZO8OrkFzeE0usI6zXMbrbI1mZWGi
-	cwIaN0SsP1Fa0fU8KRc9cL8frhjSWpQbcIuM4/eVZAeUyJ2giL7LVNFD3MZgAnLMSXdp/wIfg2n
-	fSdPaJPeV2goHWJZFYOss=
-X-Google-Smtp-Source: AGHT+IFxBYUpzqxGSZdBA0JubUlnSNecSwjgT24V4GH75JqqwyWr1waPwEMz8/JdpX6S2eAzwSPnRw==
-X-Received: by 2002:a17:907:ec0d:b0:ac2:dcb9:d2d7 with SMTP id a640c23a62f3a-ac3b7a97454mr522728466b.12.1742413050194;
-        Wed, 19 Mar 2025 12:37:30 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:20d:1300:1b1c:4449:176a:89ea? (2001-1c00-020d-1300-1b1c-4449-176a-89ea.cable.dynamic.v6.ziggo.nl. [2001:1c00:20d:1300:1b1c:4449:176a:89ea])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3146aecbasm1039783166b.37.2025.03.19.12.37.29
+        bh=EUlQy+omekyAlQ/UT0+jDTx9lfmxYWK64YNT4WpuUK4=;
+        b=b0kBztLmSIJes1csOpibK/RVqP+nz7zh+RCwJjmCfiZ6GlHIeCj65grKXIR1GXaN6m
+         cY9ZgB/4xSOvusIHcJ//41CynmP2E+QN7l8D7VnC2EceIFRRDIVudRmyNt0yAyKl116b
+         Czi6Cw8dlhhEJKE/hL8PZxOwyOP2za/kGAQiV49Kf/8F35gcZ+IAMo+mV7FlLya1PpF1
+         +HoGNr0KI6iWgFoVPVD0LOBVMoOncA7Gk7CzJPLiUD70Tr49u+DKgyHJkU7X/VRTjkTN
+         CdJEJP++Moe1uZ+qKkSiCQ/kA5cSVp5oJza77+94Z6NY/RcHs3a5EKE6in6ttaMKkVa7
+         e2ng==
+X-Forwarded-Encrypted: i=1; AJvYcCXbT4Etey3NAxpnH8FhGCgxWJ+XnBc0xgYrDVc6Vj4O/m272yRS2lmf+Dk0ApbwJlAQKwxYMzQUF0GCm0Z4y9Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YypA0myVEsBmAzz37l5cwAFQromj2JVL6DnAsNS5kjBb/1OGy1Z
+	PqktlSduuxU4Lwl0VmkzknmV8+I5KziQKz+R9SR/BpmYzUfF8qHLV25HfFG1+Wg=
+X-Gm-Gg: ASbGncsS5bpJchER5WR5m6AinomxZDB4NfuvzEf8SZJkbOE5+YBkdGKxdyaKyUWRcmH
+	4hyZ+9UwYZk+rI1f88K+3Ec9dBeqdo0B2o7nwrEL3Zch78XH9XRlwduYnOcpcN6fvaGOHniSd/v
+	4Cz6OfnyZv6rgs0UwIzaeORGVBlALvxwwKUthD/dwcPxTHKAAP+S9F8ca8JXZGFf+vOZLE2iczC
+	MLxV+79xaZhe1XgnecpJae6GWEuOx+jlPdFCKmejt1wR/0EB2S1VBTr7M8PJCtBWjXv0T+/HagH
+	sPNDKdrnSDoXvn1/YGoUWQT9pXOZLa6kUSxYiAvYPR3wacoUC2SsgxZZ2Q==
+X-Google-Smtp-Source: AGHT+IFenEJO6TI9Hsl5cc1hX2SStJer0wmUMMpctF1K7VqnKKB8w0l0InlYXp+IwtSylHw5lHcLYg==
+X-Received: by 2002:a17:902:d2cc:b0:224:1c41:a4c0 with SMTP id d9443c01a7336-2264981b59bmr83265325ad.9.1742450620129;
+        Wed, 19 Mar 2025 23:03:40 -0700 (PDT)
+Received: from [157.82.207.107] ([157.82.207.107])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73711557e9fsm13269592b3a.51.2025.03.19.23.03.36
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Mar 2025 12:37:29 -0700 (PDT)
-Message-ID: <eacbd4b8-b8dc-4402-9cbe-666c1ae112e2@gmail.com>
-Date: Wed, 19 Mar 2025 20:37:27 +0100
+        Wed, 19 Mar 2025 23:03:39 -0700 (PDT)
+Message-ID: <0d84bc94-1c65-4737-a2eb-aa7f96a7d1e0@daynix.com>
+Date: Thu, 20 Mar 2025 15:03:35 +0900
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -68,82 +66,93 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 nf-next 2/3] netfilter: nf_flow_table_offload: Add
- nf_flow_encap_push() for xmit direct
-To: Pablo Neira Ayuso <pablo@netfilter.org>
-Cc: Michal Ostrowski <mostrows@earthlink.net>,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Jozsef Kadlecsik <kadlec@netfilter.org>, Simon Horman <horms@kernel.org>,
- netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
- linux-hardening@vger.kernel.org, Nikolay Aleksandrov <razor@blackwall.org>
-References: <20250315195910.17659-1-ericwouds@gmail.com>
- <20250315195910.17659-3-ericwouds@gmail.com> <Z9oAeJ5KifLxllEa@calendula>
-From: Eric Woudstra <ericwouds@gmail.com>
+Subject: Re: [PATCH RFC] KVM: arm64: PMU: Use multiple host PMUs
+To: Oliver Upton <oliver.upton@linux.dev>, Marc Zyngier <maz@kernel.org>
+Cc: Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose
+ <suzuki.poulose@arm.com>, Zenghui Yu <yuzenghui@huawei.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+ devel@daynix.com
+References: <20250319-hybrid-v1-1-4d1ada10e705@daynix.com>
+ <Z9pze3J2_zrTk_yC@linux.dev>
+ <e8324d9d-3756-41cf-a102-28572e302368@daynix.com>
+ <86plidmjwh.wl-maz@kernel.org>
+ <bd681ec6-0b4c-47d9-8a4a-b7324c0883a6@daynix.com>
+ <86o6xxmg87.wl-maz@kernel.org>
+ <aabd71eb-286b-475c-a30e-d5cf5c4f2769@daynix.com>
+ <86msdhmemw.wl-maz@kernel.org>
+ <cd7b4528-34a3-4d87-9711-acc2c2e6f6e1@daynix.com>
+ <86ldt0n9w1.wl-maz@kernel.org> <Z9sSMJAlf7cQ5viu@linux.dev>
 Content-Language: en-US
-In-Reply-To: <Z9oAeJ5KifLxllEa@calendula>
-Content-Type: text/plain; charset=UTF-8
+From: Akihiko Odaki <akihiko.odaki@daynix.com>
+In-Reply-To: <Z9sSMJAlf7cQ5viu@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-
-
-On 3/19/25 12:23 AM, Pablo Neira Ayuso wrote:
-> On Sat, Mar 15, 2025 at 08:59:09PM +0100, Eric Woudstra wrote:
->> Loosely based on wenxu's patches:
+On 2025/03/20 3:51, Oliver Upton wrote:
+> On Wed, Mar 19, 2025 at 06:38:38PM +0000, Marc Zyngier wrote:
+>> On Wed, 19 Mar 2025 11:51:21 +0000, Akihiko Odaki <akihiko.odaki@daynix.com> wrote:
+>>> What about setting the flag automatically when a user fails to pin
+>>> vCPUs to CPUs that are covered by one PMU? There would be no change if
+>>> a user correctly pins vCPUs as it is. Otherwise, they will see a
+>>> correct feature set advertised to the guest and the cycle counter
+>>> working.
 >>
->> "nf_flow_table_offload: offload the vlan/PPPoE encap in the flowtable".
-> 
-> I remember that patch.
-> 
->> Fixed double vlan and pppoe packets, almost entirely rewriting the patch.
+>> How do you know that the affinity is "correct"? VCPU affinity can be
+>> changed at any time. I, for one, do not want my VMs to change
+>> behaviour because I let the vcpus bounce around as the scheduler sees
+>> fit.
+
+Checking the affinity when picking the default PMU; the vCPU affinity is 
+the only thing that rules the choice of the default PMU even now.
+
+Perhaps we may model the API as follows: introduce another "composite" 
+PMU that works on any core but only exposes the cycle counter. Robust 
+VMMs will choose it or one of hardware PMUs with 
+KVM_ARM_VCPU_PMU_V3_SET_PMU. KVM will choose the default PMU according 
+to the vCPU affinity at the point of KVM_ARM_VCPU_INIT otherwise. If the 
+affinity is covered by one hardware PMU, that PMU will be chosen as the 
+default. The "composite" PMU will be the default otherwise.
+
+Regards,
+Akihiko Odaki
+
 >>
->> After this patch, it is possible to transmit packets in the fastpath with
->> outgoing encaps, without using vlan- and/or pppoe-devices.
->>
->> This makes it possible to use more different kinds of network setups.
->> For example, when bridge tagging is used to egress vlan tagged
->> packets using the forward fastpath. Another example is passing 802.1q
->> tagged packets through a bridge using the bridge fastpath.
->>
->> This also makes the software fastpath process more similar to the
->> hardware offloaded fastpath process, where encaps are also pushed.
+>> Honestly, this is not a can of worm I want to open. We already have a
+>> pretty terrible userspace API for the PMU, let's not add to the
+>> confusion. *If* we are going down the road of presenting a dumbed-down
+>> PMU to the guest, it has to be an explicit buy-in from userspace.
 > 
-> I am not convinced that making the software flowtable more similar
-> hardware is the way the go, we already have to deal with issues with
-> flow teardown mechanism (races) to make it more suitable for hardware
-> offload.
+> I also have a very strong distaste for the crappy UAPI we have around a
+> 'default' PMU. At the same time I do recognize this hurts practical
+> usecases since some VMMs can't be bothered to configure the vPMU / vCPU
+> pinning correctly.
 > 
-> I think the benefit for pppoe is that packets do not go to userspace
-> anymore, but probably pppoe driver can be modified push the header
-> itself?
+> I'm at least willing to plug my nose and do the following:
 > 
-> As for vlan, this is saving an indirection?
+>   1) When the VMM does not specify a vPMU type:
 > 
-> Going in this direction means the flowtable datapath will get more
-> headers to be pushed in this path in the future, eg. mpls.
+>     - We continue to present the 'default' PMU (including event counters)
+>       to the VM
 > 
-> Is this also possibly breaking existing setups? eg. xfrm + vlan
-> devices, but maybe I'm wrong.
+>     - KVM ensures that the fixed CPU cycle counter works on any PMUv3
+>       implementation in the system, even if it is different from the
+>       default
 > 
-
-If you do not want to touch the software fastpath, It should be possible
-to do it without.
-
-For bridged interfaces, only use the hardware fastpath, not installing a
-hook for the software fastpath at all.
-
-Another option is installing the hook (matching the hash, updating
-counter and perhaps calling flow_offload_refresh() and so), but then
-letting traffic continue the normal path. That is, until the hardware
-offload takes over.
-
-In both cases only allow to add the flowtable if the offload flag is set.
-
-What do you think?
-
-But in all cases (including existing cases in existing code), I think we
-need the patches from "[PATCH v10 nf-next 0/3] netfilter: fastpath fixes".
-
-Could you look at these?
+>     - Otherwise, event counters will only count on the default
+>       implementation and will not count on different PMUs
+> 
+>   2) Implement your suggestion of a UAPI where the VMM can select a PMU
+>      that only has the CPU cycle counter and works on any PMUv3
+>      implementation.
+> 
+> Either way KVM will need to have some special case handling of the fixed
+> CPU cycle counter. That'd allow users to actually run Windows *now* and
+> provide a clear mechanism for userspace to present a less-broken vPMU if
+> it cares.
+> 
+> Thanks,
+> Oliver
 
