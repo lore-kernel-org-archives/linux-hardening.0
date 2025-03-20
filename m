@@ -1,106 +1,126 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 326AF1BE251;
-	Thu, 20 Mar 2025 07:58:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 447C8213245;
+	Thu, 20 Mar 2025 09:11:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742457481; cv=none; b=tbXX78WRxNgujduXJ9DBNJEUNuE+3PFbyH/Jsqigv+FNbEckkt6JTzmqgnEwnyLa52zbil+UfpTAKApihoUlJS4cI3+ezUcmUdSHnMyVhKzOzkuDYKEg4bQVo5/deiZFww6hLLFxKObd8lk3sSfUGGrADk8UXRE3wRSbzTlp2RM=
+	t=1742461862; cv=none; b=uNiGawy0n9OMDihUe/BLyFGQp/6R1oJvAyY1TsY2ECMXSezSSsmDZaZfyx1GSqAfbtKvieDrP5eO+NRS9N3jxt1fKbDWfodWvcFYRxqFrmGz5W3HE0q6124fHQlNu5AUC+cza8LTgNQR2TXuVT8BwSvAMvALxz32R54dmem2Xrs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742457481; c=relaxed/simple;
-	bh=Ess/GFiXQnY/TJf5j8pZaKg+a4s6VGT+FXoCIdtSljY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iZeUtnN/zX6wzXyox2NOjyk0NZCRB/p+ngWfaEHZC93mJhZq7Lc9HKAJjotj8RDgM56Bwfxl7P7TjixiRv3n7OUMi98ZZIxppvsfC8UOv0eq0NX/xtWJaJNaLWYTKwfe4yxIWlbK4uP/NDQ8uUGSdvcTaPaBW77PH9PMaPKqkDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LTvARj4N; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742461862; c=relaxed/simple;
+	bh=15a5VxRJS8V9l6kVXtwQdjDgviqb/vy7Z07smrfa5V0=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nc5RAcyGR7vBNTIq9SVmrspmzmuloDqKY66uFz7ursO/IAaa36lG4izIAhjB2vefhUu2/RwOrj9EZ+xIPTeW03enFfq9IybyA7NQuwx0lyscTfU6y1rGEyNIBIAM9qZ1GOVhfNSqI4TkWszw2JwwtYDmxxttZjJjZIo9jVbpxRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=In1g4rUi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LTvARj4N"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BBFCC4CEEC;
-	Thu, 20 Mar 2025 07:58:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="In1g4rUi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D944C4CEDD;
+	Thu, 20 Mar 2025 09:11:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742457480;
-	bh=Ess/GFiXQnY/TJf5j8pZaKg+a4s6VGT+FXoCIdtSljY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=LTvARj4Ns2d9QyrT1ya7RPJ0WCyjrQ2F+ebTYcZzc3PQh4FZwUFJg+iYm8PXWvzVi
-	 /wSZ3RywOLddXzanBd2Qij0dRnUWs7EAzB03L+8B5JlX+n6eiTJ+lg5T/H0uXDRaLF
-	 obhdhDfNtSR+1BsAlkJnf8YKFTE7X6gint44dg5IRhwuRabbg6PN5PFnTXdqENJS6/
-	 95wmNBccSi04IyWQEnrj+rwlkpSICO/dn8s4w213IXdEVxcn31MVXbU5c1NW57UHUa
-	 aaLx39jeLV3/Z8gSVxcHqzJT5THrbuGcYYI5CxB6oy1ADb0KSrS83/jLygoSKu+cg8
-	 2mfJUJUH5PUVQ==
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-549946c5346so616131e87.2;
-        Thu, 20 Mar 2025 00:58:00 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWzYHUJo4eCMBklIXGyYw9i75JdvL2LdSTaNm/M3zfdDnA+WyS5yPw7JP83shTmXNb+/Kk1qSbAl36ARCXr@vger.kernel.org, AJvYcCXpi8QQSdBUlEv/pk+bDVOiFwQLqnoc/TfopdDm49EROE9I5SQA9Yd1E+/BRq8aIlszBzAPTdKfH5yisHSC8Lo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzs9w03hcn2ShbJK4m5HIcQMIFTlcStBhp2RWac+sbc4LxvgUEe
-	6lWlzJd+bV3++JLRKJ3LM9yRso87oCZhrJBkmwCeX23gG1KKhIL74+PDcOm2etZxet3Nr/zmaVm
-	SSSWQDn9QLrc0nm1eGYvP6nAc04M=
-X-Google-Smtp-Source: AGHT+IHxMPNnW3ahoF6dyr61q+mJ5mQKb0REzmKIWVM/WDF7dR9vMAw2jTe0SRluNBmN6Nesu4NshFyCdDUXlanegeA=
-X-Received: by 2002:a05:6512:3ca8:b0:549:8fd0:bad8 with SMTP id
- 2adb3069b0e04-54acb1b83f6mr1925566e87.21.1742457478970; Thu, 20 Mar 2025
- 00:57:58 -0700 (PDT)
+	s=k20201202; t=1742461862;
+	bh=15a5VxRJS8V9l6kVXtwQdjDgviqb/vy7Z07smrfa5V0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=In1g4rUiolC6SIkmnEALCTEXDYVMLz5EFWLWj36oPyKIcgjFEHaTZuNatgG2DhL+1
+	 Mzvun4IotKG63Ip76H8ynAUYaBMRTZdwMjcb3XKYdJSU8UrZPc74fnMsnfJNc2pc1M
+	 xMZdIDOyppa8ka4pwHgmwX4CTQd0GR1wSxhCDPwMb9VPds4sbGY5OFmBvZuzXkUDBZ
+	 F+Qh8HLG7IYqoTb/jzbN3wYx/XVugVsY4ragG1iYScTkhzJpHAASddNDx0xxGgfKA1
+	 jo7Z7EQY3rGzzc1i8eGLq3pWRFbzbNeKrHJJ2SQeLfi7DBuQvFfdlZtIGI+Qr70ahK
+	 N9wpoIB7Yk6Fg==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1tvBvX-00FMTh-OY;
+	Thu, 20 Mar 2025 09:10:59 +0000
+Date: Thu, 20 Mar 2025 09:10:59 +0000
+Message-ID: <86iko4m5i4.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Akihiko Odaki <akihiko.odaki@daynix.com>
+Cc: Oliver Upton <oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose
+ <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	devel@daynix.com
+Subject: Re: [PATCH RFC] KVM: arm64: PMU: Use multiple host PMUs
+In-Reply-To: <0d84bc94-1c65-4737-a2eb-aa7f96a7d1e0@daynix.com>
+References: <20250319-hybrid-v1-1-4d1ada10e705@daynix.com>
+	<Z9pze3J2_zrTk_yC@linux.dev>
+	<e8324d9d-3756-41cf-a102-28572e302368@daynix.com>
+	<86plidmjwh.wl-maz@kernel.org>
+	<bd681ec6-0b4c-47d9-8a4a-b7324c0883a6@daynix.com>
+	<86o6xxmg87.wl-maz@kernel.org>
+	<aabd71eb-286b-475c-a30e-d5cf5c4f2769@daynix.com>
+	<86msdhmemw.wl-maz@kernel.org>
+	<cd7b4528-34a3-4d87-9711-acc2c2e6f6e1@daynix.com>
+	<86ldt0n9w1.wl-maz@kernel.org>
+	<Z9sSMJAlf7cQ5viu@linux.dev>
+	<0d84bc94-1c65-4737-a2eb-aa7f96a7d1e0@daynix.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250318134949.3194334-2-ardb+git@google.com>
-In-Reply-To: <20250318134949.3194334-2-ardb+git@google.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Thu, 20 Mar 2025 08:57:47 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXHXAYt0xLnx4=+qiCbnuF5U+9dzwnds1yd+vhTtpP5v3Q@mail.gmail.com>
-X-Gm-Features: AQ5f1JruVvX2NW9k2AtKWjmGfECveHlfhMO7faRJZ8Td6Fub8xUy3jUEpJHaXeo
-Message-ID: <CAMj1kXHXAYt0xLnx4=+qiCbnuF5U+9dzwnds1yd+vhTtpP5v3Q@mail.gmail.com>
-Subject: Re: [RFC PATCH] arm64/mm: Remove randomization of the linear map
-To: Ard Biesheuvel <ardb+git@google.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Ryan Roberts <ryan.roberts@arm.com>, 
-	Mark Rutland <mark.rutland@arm.com>, Anshuman Khandual <anshuman.khandual@arm.com>, 
-	Kees Cook <kees@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: akihiko.odaki@daynix.com, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, will@kernel.org, kees@kernel.org, gustavoars@kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, devel@daynix.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Tue, 18 Mar 2025 at 14:50, Ard Biesheuvel <ardb+git@google.com> wrote:
+On Thu, 20 Mar 2025 06:03:35 +0000,
+Akihiko Odaki <akihiko.odaki@daynix.com> wrote:
+> 
+> On 2025/03/20 3:51, Oliver Upton wrote:
+> > On Wed, Mar 19, 2025 at 06:38:38PM +0000, Marc Zyngier wrote:
+> >> On Wed, 19 Mar 2025 11:51:21 +0000, Akihiko Odaki <akihiko.odaki@daynix.com> wrote:
+> >>> What about setting the flag automatically when a user fails to pin
+> >>> vCPUs to CPUs that are covered by one PMU? There would be no change if
+> >>> a user correctly pins vCPUs as it is. Otherwise, they will see a
+> >>> correct feature set advertised to the guest and the cycle counter
+> >>> working.
+> >> 
+> >> How do you know that the affinity is "correct"? VCPU affinity can be
+> >> changed at any time. I, for one, do not want my VMs to change
+> >> behaviour because I let the vcpus bounce around as the scheduler sees
+> >> fit.
+> 
+> Checking the affinity when picking the default PMU; the vCPU affinity
+> is the only thing that rules the choice of the default PMU even now.
 >
-> From: Ard Biesheuvel <ardb@kernel.org>
->
-> Since commit
->
->   97d6786e0669 ("arm64: mm: account for hotplug memory when randomizing the linear region")
->
-> the decision whether or not to randomize the placement of the system's
-> DRAM inside the linear map is based on the capabilities of the CPU
-> rather than how much memory is present at boot time. This change was
-> necessary because memory hotplug may result in DRAM appearing in places
-> that are not covered by the linear region at all (and therefore
-> unusable) if the decision is solely based on the memory map at boot.
->
-> In the Android GKI kernel, which requires support for memory hotplug,
-> and is built with a reduced virtual address space of only 39 bits wide,
-> randomization of the linear map never happens in practice as a result.
-> And even on arm64 kernels built with support for 48 bit virtual
-> addressing, the wider PArange of recent CPUs means that linear map
-> randomization is slowly becoming a feature that only works on systems
-> that will soon be obsolete.
->
-> So let's just remove this feature. We can always bring it back in an
-> improved form if there is a real need for it.
->
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Ryan Roberts <ryan.roberts@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Anshuman Khandual <anshuman.khandual@arm.com>
-> Cc: Kees Cook <kees@kernel.org>
-> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> Perhaps we may model the API as follows: introduce another "composite"
+> PMU that works on any core but only exposes the cycle counter. Robust
+> VMMs will choose it or one of hardware PMUs with
+> KVM_ARM_VCPU_PMU_V3_SET_PMU. KVM will choose the default PMU according
+> to the vCPU affinity at the point of KVM_ARM_VCPU_INIT otherwise. If
+> the affinity is covered by one hardware PMU, that PMU will be chosen
+> as the default. The "composite" PMU will be the default otherwise.
 
-Additional note based on an off-list discussion with Kees and the KSPP team:
+This makes no sense to me. A VCPU is always affine to a PMU, because
+we do not support configurations where only some CPUs have a PMU. This
+is an all-or-nothing situation.
 
-Initially, the randomization of the linear map was considered to be a
-layer of defense against the abuse of writable linear aliases of
-read-only mappings in the vmalloc range, such as module text and
-rodata. This has been addressed in the meantime, by mapping the linear
-region down to pages by default, and mapping linear aliases read-only
-if the vmalloc mapping is read-only.
+More importantly, you keep suggesting the same "new default", and I
+keep saying NO.
 
-So considering that, and the fact that randomization of the linear map
-occurs rarely if at all on recent CPUs, I think we should go ahead and
-remove this feature.
+My position is clear: if you want a *new* behaviour, you *must* add a
+new flag that the VMM explicitly provides to enable this CC-only PMU.
+No change in default behaviour at all.
+
+I'm not going to move from that.
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
