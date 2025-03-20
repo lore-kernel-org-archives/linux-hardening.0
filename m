@@ -1,180 +1,113 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 987F0223706;
-	Thu, 20 Mar 2025 17:25:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2BEC1494BB
+	for <linux-hardening@vger.kernel.org>; Thu, 20 Mar 2025 17:44:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742491519; cv=none; b=LgP2mGo3yWZbHDEs6xK60t+kWNtyu2DitrXWM6jmWTjIZgmQ8m3DDawAT9wZS287vgmnTGIb9N1OEhyx9niVqKv326XZqJSW5c2xIzmw1nIxiTblNEaSvoHHP9iMWDq9Kp4W4MVxFemLkXPnIComWZ5JitVfiJk1LKeEqdYSgI8=
+	t=1742492673; cv=none; b=jlWRvfqmZ+jqv0iTYz/xlLGEVi47CGtJFQMFvQ8aDgYM8bXfWIBQIShpIRHCCM+EJdeu+xZSduYb1gD5p5to8xgEpFc1MBmBFGjzeQCLfmCmFCCNALXNNR5XidZdm/mesTwCjP3eQfTGYdAJdExqia+HsxXzDTRBxWs5wqpsrTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742491519; c=relaxed/simple;
-	bh=4zqqM/obyW2E0BuqiJ/Nxhmg3i/+8Sb12y9pHFBqpXk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RdzvEN1CpubXyrSxADbxTqn6OP2UwantdZ/BTdZ4GFazkYiQnqwhG0lX13hfVJASDGsrPRWhz1WNZPtAoPRJy9nJL5vmAnuoipC4UjPj/3Om9wvHntOuxkAW0oWoIzwqHJbfpuCoOZx0RBb+1xzQmtF8e97jDhExE+VegBj6vSM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XV1vnlxc; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742492673; c=relaxed/simple;
+	bh=kp5gSLLd6PjV+marxwMgoHBh0YDqzC67ywX2X0Na7+c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z/TZrA16oX8akBeiJeOwwu1g1TvRctldjsujOBPpu/RoOnJ/u6bi4pcSKN7t7CWB7WKYbRN6kBaXJ+3MLzxIIeQmCzucvrwwJIqnX5ynOP0sf7K3cYFLT9G5PviKsCps5IAW6365hcgvI7nGrzrVYRa+8jK+XCMzvqVLIkwpxUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=JTCyBZ6m; arc=none smtp.client-ip=95.215.58.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XV1vnlxc"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3997205e43eso856179f8f.0;
-        Thu, 20 Mar 2025 10:25:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742491516; x=1743096316; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Srr0VBZQwN4yXqvwN4Xth0EZBYASL+7tLcIViL1r650=;
-        b=XV1vnlxcopTo0M+QJMUADjcOqKg4eddLqrJ26Jrcx/CnmaqvEI9jLQtEU5hngR0Jw3
-         ZkLRaz50+jeLB4Bei0OhCpO+d92hbibOgDwy+uaXpq/NK3BI3m5hDYftjuhSo7W4IoR9
-         QfyRYcZWso6g8J1Tvks8NNC7+NAcyKZjn3nrWM/we1frAe1HVDTegCS3MyZj8PQDqcy/
-         duc6qwCV42gy1g4XHsKwrqcemMksItFCF+HpswP12puoB9Fuo84+NhlHrpiCf9gKjfYV
-         MALyfs9LrQWH2Wh5k3zPBlv4qkoT7U0sgwjp4BC5C2GW8SDcH2YwAD/wu87F4VYRnCrV
-         Pmgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742491516; x=1743096316;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Srr0VBZQwN4yXqvwN4Xth0EZBYASL+7tLcIViL1r650=;
-        b=MYMcz+QT3x996vvKJNral6nnaoSlgKiSQrxdBxExLxkzbZMXNct2/IIgGg9c8dAOYq
-         bCwWHeRCtVPI2XSJBmZIFWwEhX0hlRP+v2JN/wN3I3stDw48GL2tY1tnHyYrIpLDw1uf
-         hPTCIeivOUeY01a5UAO/DqxQ7/2skkgZ6016BdXSTXil87hjNC7gV2Ano17Tn5/FnSKV
-         Qv4f1ObufpdaEte42tHMMTgUOxDoTnGl24YWvfDYsQ/1vyUtONiJbps9m1+zCqJSSXVh
-         5i9RfYMxtLVugEShn/IWsfXjqwgwfCnyBSYy5R7u/8H/5fln2+GgkvMWUBWRnLUqjrwJ
-         Vs8w==
-X-Forwarded-Encrypted: i=1; AJvYcCUK6N+N0Vx3xGY9CMNU7N9Ox8lQLMc0y6oRfrLS7VAtMTTJFfPiAPHvSye7ihBXdqzt4Ecn14AZ2D9Cew9z@vger.kernel.org, AJvYcCWIz1yk+ozHqQ6FCgZyHZk/+yWRfT/qa4GgmgVwqUr6RGggJNMkMvHr/oIrRjQSWoEpQLs3iJ7ha5q2MxsW@vger.kernel.org, AJvYcCXyHZagZTVYnX00o1wn0YVaTAhhCIHvxrW06f4N8GdRK6QOLpuD9XtFePp4SG/uIHrp/T6/XXT/K9Lh92AnEHwX@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw5G4zYJrIb880pvWuEhTrMraPveMalCA0lyAXECDYU+Bv7Zlnj
-	sDYvCNQJJtMkc8HhJhqj0bEg+l8031UngNWOmSL5JWDiBjABCAo5VZCw7d5MV+k3S4MaNxBeSf0
-	hMpl1ZQXGexoo0PzfbfyjaH39OrU=
-X-Gm-Gg: ASbGncuS2cbJCvMqwG0F2PcPO3hprfRN51NfQQfKevUkbfEx8ym8piQw+atitOMGUqb
-	5neLKplmp04a7LclYQEAyks0+mK5m3gogSiPx739P4q8FxNcyeute/bzrQRqcvrcg92NmwwFbjT
-	OdiodBmREOHdTBzYBAui6FBloUlfc=
-X-Google-Smtp-Source: AGHT+IHbGxKbQYCFuWIhUZcVJczLm09+fIRHtWAIdQXRdJS6TuroZiuhT9dXX9oyzczviIbaRcswg6Yl68ThvI97uCA=
-X-Received: by 2002:a05:6000:21c6:b0:385:d7f9:f157 with SMTP id
- ffacd0b85a97d-3997f9375admr249521f8f.36.1742491515474; Thu, 20 Mar 2025
- 10:25:15 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="JTCyBZ6m"
+Date: Thu, 20 Mar 2025 17:44:03 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1742492660;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=T+nATEGPwxa2fwpxH+oyQjnjtO3F1E78wE3wcZDa8qM=;
+	b=JTCyBZ6mjiYhZGkv782PMWnYrzrKTbJ3koWgqojfxmL4ewWviXPY0IyXE8HjwsaLSf10Wc
+	NlnV38ZtLi9zY89NSxiMVnXzGuD9xU4Er7f+X8odYLu78qoIK7anhWcMI6CtIv0I/jpVBR
+	ltETHPFcSerr+Yyx7eDLcRRzlzAunQw=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Oliver Upton <oliver.upton@linux.dev>
+To: Marc Zyngier <maz@kernel.org>
+Cc: Akihiko Odaki <akihiko.odaki@daynix.com>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	devel@daynix.com
+Subject: Re: [PATCH RFC] KVM: arm64: PMU: Use multiple host PMUs
+Message-ID: <Z9xT4_fwCgp7VSgC@linux.dev>
+References: <e8324d9d-3756-41cf-a102-28572e302368@daynix.com>
+ <86plidmjwh.wl-maz@kernel.org>
+ <bd681ec6-0b4c-47d9-8a4a-b7324c0883a6@daynix.com>
+ <86o6xxmg87.wl-maz@kernel.org>
+ <aabd71eb-286b-475c-a30e-d5cf5c4f2769@daynix.com>
+ <86msdhmemw.wl-maz@kernel.org>
+ <cd7b4528-34a3-4d87-9711-acc2c2e6f6e1@daynix.com>
+ <86ldt0n9w1.wl-maz@kernel.org>
+ <Z9sSMJAlf7cQ5viu@linux.dev>
+ <86h63om54p.wl-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250318214035.481950-1-pcc@google.com> <20250318214035.481950-3-pcc@google.com>
-In-Reply-To: <20250318214035.481950-3-pcc@google.com>
-From: Andrey Konovalov <andreyknvl@gmail.com>
-Date: Thu, 20 Mar 2025 18:25:04 +0100
-X-Gm-Features: AQ5f1Jokd8HHitZidj6J_qrj1ibwtVddlmZs6GFQ40Nq--4p2Wt3mzW0XeogKWQ
-Message-ID: <CA+fCnZfG79JmGG9rj7KbE=9yX-EM4e8CXDSm5F9=YEmgyX5v3w@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] kasan: Add strscpy() test to trigger tag fault on arm64
-To: Peter Collingbourne <pcc@google.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Andrew Morton <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>, 
-	Andy Shevchenko <andy@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Mark Rutland <mark.rutland@arm.com>, Vincenzo Frascino <vincenzo.frascino@arm.com>, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	Will Deacon <will@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <86h63om54p.wl-maz@kernel.org>
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, Mar 18, 2025 at 10:41=E2=80=AFPM Peter Collingbourne <pcc@google.co=
-m> wrote:
->
-> From: Vincenzo Frascino <vincenzo.frascino@arm.com>
->
-> When we invoke strscpy() with a maximum size of N bytes, it assumes
-> that:
-> - It can always read N bytes from the source.
-> - It always write N bytes (zero-padded) to the destination.
->
-> On aarch64 with Memory Tagging Extension enabled if we pass an N that is
-> bigger then the source buffer, it triggers an MTE fault.
->
-> Implement a KASAN KUnit test that triggers the issue with the current
-> implementation of read_word_at_a_time() on aarch64 with MTE enabled.
->
-> Cc: Will Deacon <will@kernel.org>
-> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-> Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-> Co-developed-by: Peter Collingbourne <pcc@google.com>
-> Signed-off-by: Peter Collingbourne <pcc@google.com>
-> Link: https://linux-review.googlesource.com/id/If88e396b9e7c058c1a4b5a252=
-274120e77b1898a
-> ---
-> v2:
-> - rebased
-> - fixed test failure
->
->  mm/kasan/kasan_test_c.c | 31 ++++++++++++++++++++++++++++++-
->  1 file changed, 30 insertions(+), 1 deletion(-)
->
-> diff --git a/mm/kasan/kasan_test_c.c b/mm/kasan/kasan_test_c.c
-> index 59d673400085f..c4bb3ee497b54 100644
-> --- a/mm/kasan/kasan_test_c.c
-> +++ b/mm/kasan/kasan_test_c.c
-> @@ -1570,7 +1570,9 @@ static void kasan_memcmp(struct kunit *test)
->  static void kasan_strings(struct kunit *test)
->  {
->         char *ptr;
-> -       size_t size =3D 24;
-> +       char *src, *src2;
-> +       u8 tag;
-> +       size_t size =3D 2 * KASAN_GRANULE_SIZE;
->
->         /*
->          * str* functions are not instrumented with CONFIG_AMD_MEM_ENCRYP=
-T.
-> @@ -1581,6 +1583,33 @@ static void kasan_strings(struct kunit *test)
->         ptr =3D kmalloc(size, GFP_KERNEL | __GFP_ZERO);
->         KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
->
-> +       src =3D kmalloc(size, GFP_KERNEL | __GFP_ZERO);
-> +       strscpy(src, "f0cacc1a00000000f0cacc1a00000000", size);
-> +
-> +       tag =3D get_tag(src);
-> +
-> +       src2 =3D src + KASAN_GRANULE_SIZE;
-> +
-> +       /*
-> +        * Shorten string and poison the granule after it so that the una=
-ligned
-> +        * read in strscpy() triggers a tag mismatch.
-> +        */
-> +       src[KASAN_GRANULE_SIZE - 1] =3D '\0';
-> +       kasan_poison(src2, KASAN_GRANULE_SIZE, tag + 1, false);
-> +
-> +       /*
-> +        * The expected size does not include the terminator '\0'
-> +        * so it is (KASAN_GRANULE_SIZE - 2) =3D=3D
-> +        * KASAN_GRANULE_SIZE - ("initial removed character" + "\0").
-> +        */
-> +       KUNIT_EXPECT_EQ(test, KASAN_GRANULE_SIZE - 2,
-> +                       strscpy(ptr, src + 1, size));
-> +
-> +       /* Undo operations above. */
-> +       src[KASAN_GRANULE_SIZE - 1] =3D '0';
-> +       kasan_poison(src2, KASAN_GRANULE_SIZE, tag, false);
-> +
-> +       kfree(src);
+On Thu, Mar 20, 2025 at 09:19:02AM +0000, Marc Zyngier wrote:
+> On Wed, 19 Mar 2025 18:51:28 +0000, Oliver Upton <oliver.upton@linux.dev> wrote:
+> > I'm at least willing to plug my nose and do the following:
+> > 
+> >  1) When the VMM does not specify a vPMU type:
+> > 
+> >    - We continue to present the 'default' PMU (including event counters)
+> >      to the VM
+> > 
+> >    - KVM ensures that the fixed CPU cycle counter works on any PMUv3
+> >      implementation in the system, even if it is different from the
+> >      default
+> > 
+> >    - Otherwise, event counters will only count on the default
+> >      implementation and will not count on different PMUs
+> 
+> I think this is confusing. The CC is counting, but nothing else, and
+> people using the cycle counters in conjunction with other events (a
+> very common use case) will not be able to correlate things correctly.
+> The current behaviour is, for all its sins, at least consistent.
 
-I have trouble understanding what this code is doing...
+You of course have a good point. What Windows is doing is definitely an
+outlier.
 
-So the goal is to call strcpy with such an address, that the first 8
-bytes (partially) cover 2 granules, one accessible and the other is
-not?
+> > 
+> >  2) Implement your suggestion of a UAPI where the VMM can select a PMU
+> >     that only has the CPU cycle counter and works on any PMUv3
+> >     implementation.
+> > 
+> > Either way KVM will need to have some special case handling of the fixed
+> > CPU cycle counter. That'd allow users to actually run Windows *now* and
+> > provide a clear mechanism for userspace to present a less-broken vPMU if
+> > it cares.
+> 
+> Honestly, I don't care about one guest or another. My point is that if
+> we are changing the behaviour of the PMU to deal with this sort of
+> things, then it has to be a userspace buy-in.
 
-If so, can we not do something like:
+I'm fine with just the user buy-in then. But I still do care about the
+guest compatibility issue, especially since the end user of all this
+crap is unlikely to know/care about the fine details of the
+implementation.
 
-src =3D kmalloc(KASAN_GRANULE_SIZE, GFP_KERNEL | __GFP_ZERO);
-strscpy(src, "aabbcceeddeeffg\0", size);
-strscpy(ptr, src + KASAN_GRANULE_SIZE - 2, sizeof(unsigned long));
+So, Akihiko, I would *greatly* appreciate it if you propose a complete
+solution to the problem, including the KVM and VMM patches to make it
+all work.
 
-Otherwise, this code needs more explanatory comments and it's probably
-better to move it out to a helper function.
-
->         kfree(ptr);
->
->         /*
-> --
-> 2.49.0.395.g12beb8f557-goog
->
+Thanks,
+Oliver
