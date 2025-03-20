@@ -1,113 +1,105 @@
-Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2BEC1494BB
-	for <linux-hardening@vger.kernel.org>; Thu, 20 Mar 2025 17:44:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47F3F226173;
+	Thu, 20 Mar 2025 18:09:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742492673; cv=none; b=jlWRvfqmZ+jqv0iTYz/xlLGEVi47CGtJFQMFvQ8aDgYM8bXfWIBQIShpIRHCCM+EJdeu+xZSduYb1gD5p5to8xgEpFc1MBmBFGjzeQCLfmCmFCCNALXNNR5XidZdm/mesTwCjP3eQfTGYdAJdExqia+HsxXzDTRBxWs5wqpsrTc=
+	t=1742494175; cv=none; b=oL+Q9tcVC5A/j/O8HXSON3QOne+wo/iD+deuFXWHLq5IadnAJOxixnvVSWRaCynv1GK+Hw1a2G0s9FJElRcRWGVRy3urenphjUhwd6/ac2ZInh49+Wi6CYwmn+uxL3U1DD59cRAs3F8a8u7fUtvtwUeh3DD8lfyB0JOSz3Cov4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742492673; c=relaxed/simple;
-	bh=kp5gSLLd6PjV+marxwMgoHBh0YDqzC67ywX2X0Na7+c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z/TZrA16oX8akBeiJeOwwu1g1TvRctldjsujOBPpu/RoOnJ/u6bi4pcSKN7t7CWB7WKYbRN6kBaXJ+3MLzxIIeQmCzucvrwwJIqnX5ynOP0sf7K3cYFLT9G5PviKsCps5IAW6365hcgvI7nGrzrVYRa+8jK+XCMzvqVLIkwpxUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=JTCyBZ6m; arc=none smtp.client-ip=95.215.58.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1742494175; c=relaxed/simple;
+	bh=ZjSo7eVpfj+8bQUd8bOZ5xX/jg5b3oj1RsnbRQGEH9M=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LQcoSwos/X+N+QdtP8iz/bvPc2tHJ1lXIW0Lg9sGgmrWOJHB5gWzIpE7HLHb5QFbsjct7KLJeU6XJcGuRFE57hlGfyw1P83D31oPOTpLPr/80zKcNc70LclHKzOIzJyPei5lH30vQD0MKAnGtDC1tDdkXkJZx+RYM8gmZjH/Oy0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nhI7RhMw; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="JTCyBZ6m"
-Date: Thu, 20 Mar 2025 17:44:03 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1742492660;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=T+nATEGPwxa2fwpxH+oyQjnjtO3F1E78wE3wcZDa8qM=;
-	b=JTCyBZ6mjiYhZGkv782PMWnYrzrKTbJ3koWgqojfxmL4ewWviXPY0IyXE8HjwsaLSf10Wc
-	NlnV38ZtLi9zY89NSxiMVnXzGuD9xU4Er7f+X8odYLu78qoIK7anhWcMI6CtIv0I/jpVBR
-	ltETHPFcSerr+Yyx7eDLcRRzlzAunQw=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Oliver Upton <oliver.upton@linux.dev>
-To: Marc Zyngier <maz@kernel.org>
-Cc: Akihiko Odaki <akihiko.odaki@daynix.com>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	devel@daynix.com
-Subject: Re: [PATCH RFC] KVM: arm64: PMU: Use multiple host PMUs
-Message-ID: <Z9xT4_fwCgp7VSgC@linux.dev>
-References: <e8324d9d-3756-41cf-a102-28572e302368@daynix.com>
- <86plidmjwh.wl-maz@kernel.org>
- <bd681ec6-0b4c-47d9-8a4a-b7324c0883a6@daynix.com>
- <86o6xxmg87.wl-maz@kernel.org>
- <aabd71eb-286b-475c-a30e-d5cf5c4f2769@daynix.com>
- <86msdhmemw.wl-maz@kernel.org>
- <cd7b4528-34a3-4d87-9711-acc2c2e6f6e1@daynix.com>
- <86ldt0n9w1.wl-maz@kernel.org>
- <Z9sSMJAlf7cQ5viu@linux.dev>
- <86h63om54p.wl-maz@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nhI7RhMw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742494173; x=1774030173;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=ZjSo7eVpfj+8bQUd8bOZ5xX/jg5b3oj1RsnbRQGEH9M=;
+  b=nhI7RhMw3WoFS59rb221ncNv3qM73xE680L3ljrqwWVGoZBLLOS7k6Tg
+   idSkqQcSXszzmsMSd4Ai+a/fzvnJoDXVcM3GKP1FWTj/bW9PcTIBUHcqZ
+   il+yMKF1WfA3fbijlwOGYb3PGaI1QFOZqmx6FPsRiXUs7wj9dJQpAmuMt
+   Tn/iazAKVJIsQvXN8TnH2ke1xoP5VOQ4PDvnBfFD9OSHN50IINAkIdoBr
+   UH0TkA6n4OzwdOC5RsBFdq07d+NAzN51Xe5z+xEQQzLT0fdPJ2gI3e89e
+   gb7o8xZBKpP9F+SwPpUBysGD7hDdL1yoU5+Zub7Gv4Wt2OXHmPnaTHyWb
+   A==;
+X-CSE-ConnectionGUID: A5r6vbjpSxKVMpmpYOHrsQ==
+X-CSE-MsgGUID: jHqWRRWfQpOE+3RMSW6RJQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11379"; a="66208788"
+X-IronPort-AV: E=Sophos;i="6.14,262,1736841600"; 
+   d="scan'208";a="66208788"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2025 11:09:32 -0700
+X-CSE-ConnectionGUID: qm5chT69RlW864m3IXdCuw==
+X-CSE-MsgGUID: bix4mCOxR7eM5F5LNBk5FQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,262,1736841600"; 
+   d="scan'208";a="146405835"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa002.fm.intel.com with ESMTP; 20 Mar 2025 11:09:29 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id A712C2A7; Thu, 20 Mar 2025 20:09:27 +0200 (EET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Petr Mladek <pmladek@suse.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Kees Cook <kees@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: John Ogness <john.ogness@linutronix.de>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Subject: [PATCH v1 2/6] seq_file: Mark binary printing functions with __printf() attribute
+Date: Thu, 20 Mar 2025 20:04:23 +0200
+Message-ID: <20250320180926.4002817-3-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250320180926.4002817-1-andriy.shevchenko@linux.intel.com>
+References: <20250320180926.4002817-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <86h63om54p.wl-maz@kernel.org>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, Mar 20, 2025 at 09:19:02AM +0000, Marc Zyngier wrote:
-> On Wed, 19 Mar 2025 18:51:28 +0000, Oliver Upton <oliver.upton@linux.dev> wrote:
-> > I'm at least willing to plug my nose and do the following:
-> > 
-> >  1) When the VMM does not specify a vPMU type:
-> > 
-> >    - We continue to present the 'default' PMU (including event counters)
-> >      to the VM
-> > 
-> >    - KVM ensures that the fixed CPU cycle counter works on any PMUv3
-> >      implementation in the system, even if it is different from the
-> >      default
-> > 
-> >    - Otherwise, event counters will only count on the default
-> >      implementation and will not count on different PMUs
-> 
-> I think this is confusing. The CC is counting, but nothing else, and
-> people using the cycle counters in conjunction with other events (a
-> very common use case) will not be able to correlate things correctly.
-> The current behaviour is, for all its sins, at least consistent.
+Binary printing functions are using printf() type of format, and compiler
+is not happy about them as is:
 
-You of course have a good point. What Windows is doing is definitely an
-outlier.
+fs/seq_file.c:418:35: error: function ‘seq_bprintf’ might be a candidate for ‘gnu_printf’ format attribute [-Werror=suggest-attribute=format]
 
-> > 
-> >  2) Implement your suggestion of a UAPI where the VMM can select a PMU
-> >     that only has the CPU cycle counter and works on any PMUv3
-> >     implementation.
-> > 
-> > Either way KVM will need to have some special case handling of the fixed
-> > CPU cycle counter. That'd allow users to actually run Windows *now* and
-> > provide a clear mechanism for userspace to present a less-broken vPMU if
-> > it cares.
-> 
-> Honestly, I don't care about one guest or another. My point is that if
-> we are changing the behaviour of the PMU to deal with this sort of
-> things, then it has to be a userspace buy-in.
+Fix the compilation errors by adding __printf() attribute.
 
-I'm fine with just the user buy-in then. But I still do care about the
-guest compatibility issue, especially since the end user of all this
-crap is unlikely to know/care about the fine details of the
-implementation.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ include/linux/seq_file.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-So, Akihiko, I would *greatly* appreciate it if you propose a complete
-solution to the problem, including the KVM and VMM patches to make it
-all work.
+diff --git a/include/linux/seq_file.h b/include/linux/seq_file.h
+index 2fb266ea69fa..d6ebf0596510 100644
+--- a/include/linux/seq_file.h
++++ b/include/linux/seq_file.h
+@@ -181,6 +181,7 @@ int seq_open_private(struct file *, const struct seq_operations *, int);
+ int seq_release_private(struct inode *, struct file *);
+ 
+ #ifdef CONFIG_BINARY_PRINTF
++__printf(2, 0)
+ void seq_bprintf(struct seq_file *m, const char *f, const u32 *binary);
+ #endif
+ 
+-- 
+2.47.2
 
-Thanks,
-Oliver
