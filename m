@@ -1,176 +1,215 @@
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2066.outbound.protection.outlook.com [40.107.96.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAE3CB664;
-	Fri, 21 Mar 2025 05:27:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.66
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742534846; cv=fail; b=vDR/x0p0wKRjVMWY7Er6uUsWWPBVl+yD7jGsW4L6Dx3oyyIfvUzzUn/cqQ924Ed/bFnZ1hOC37QJvy5qKY5ZRkYABepyLX39n68iZCHFut11W+5g8JuoFpAEtzwlL0AMAXR7dTUMAmljseniVo+BzY92/cE74f3QzJS0f6puP5g=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742534846; c=relaxed/simple;
-	bh=r02zmA6/j2pmJ97pctzGtm/uKeXGnsPKq52ta2mzTbA=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KV2xhthBcNSQvCynxXjmSj4q1okqgVkT5Ljg7sFdxt7yCMd0g76DgQ2ns565cs8Wy8ziDiE56ysyn++RxxgvcKjKKFkOpd990icg4/xdqYpDKfG5Hi7JJbywXTwDlr/NHaHoonaifytz5YwUDzdVlpBnG4rA9I/wh1swVj1YaIU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=l2aB2qpQ; arc=fail smtp.client-ip=40.107.96.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4F68200B0
+	for <linux-hardening@vger.kernel.org>; Fri, 21 Mar 2025 06:20:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742538057; cv=none; b=k9QuYKXoTx5tjpRAlkm2WSkVY1F6lzBj0WcdB+DSuxGM03Eg1Q0eB1gilfaD2BfvEGrwMIvvr6/y3DD8fvy1i5EKaZcZq1Ht45SDzWTBhOMbXj0PR85/ryM6yyZLe27hKU6TwH7DEpIVRYyCHlu21Vn3PJiIvYxBK9+PKnxQ70Y=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742538057; c=relaxed/simple;
+	bh=CScUA6RZAjunTZQEia8fno5GArrQSBbHMDC++5vQewk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KwsQkjPAv6Snzq9N1bAwp6j4fleBe9DlTgYm+tgj9CKB+BHGZgQ+tNxPI6jjsHnY2kgSsyD3CQcq6zwWZl78A8Tt9Dk655mL18fUwNHdIkAueGP0dV8NMJsx6Mp8/Au8ZZf5DaSyitTLIvXKZM2eHnnWtV2RtaWYOzgm0ESs1BQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com; spf=pass smtp.mailfrom=daynix.com; dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b=ycDv/0tM; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=daynix.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="l2aB2qpQ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=iYA50OOlLMSCrc8NhFc5bi5Jj8tMkSZ3b0xwNzhVLLJ8aArQ0mLrOr0wO8USXFLQjDNSOw7nVX+LwsGtRUpPROKUUtQtuNF0xWabnHMVCRQth1xZSrnxRNXzIUBruXI92BQ6dnwisiI/7SHmZDeypyZnCXFcuWMOh1bLmnwFhU+OiPAk8dXQFw6tqZjVIgvmf7JoQQ40DZ25vZyb51jx5qbt5CCcVvEd9MQUZG7Tv602XT8AkYU48X6DXE3hjSqFdmG7oBX4ZwSDyDvbiwsj3q9PUS1hmaTAPNDtfwiZt7XXEtlTM+NwBvAY52ZrnHweGDA/vtsoXQIuIS2QWjTAIA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dWe4i/o/emgIU7KiUTXmsXGJjkkR9LPYZ+BbJq3N7u8=;
- b=DrxJF7SI9gJbYZPdez0TT3n2mpznFFZzlTzgo6rbDV3NqRnIR84MguWwHiSn4LSumHg9cnKFW9aFpRUXUexzDdPHwXm9RMNaG77ZX4glEnoNfsGOVFtj0JcYxaEvsck1Hqkw9fPBSUfJ6AsK6qNuBplQUqhz6B7w58iNqgSVDlMPPq9woUgG/DVA7VcW8eHa+jK7dEV7Lospe8kotYNg2upaLuXHKey0ow1+bYfNhlSlUldrSHWQw9BCXa66PqOA+EwP75K6vdBXKbUnDAyFEZ1R0GyD1gMt83ozl01FAAbVYJ9yoDVb4u17SXPZfOI0vawM17yCSCERxllqa5xp4g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=codeconstruct.com.au
- smtp.mailfrom=nvidia.com; dmarc=pass (p=reject sp=reject pct=100) action=none
- header.from=nvidia.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dWe4i/o/emgIU7KiUTXmsXGJjkkR9LPYZ+BbJq3N7u8=;
- b=l2aB2qpQA7MC7xMe8rtF0dnQW769LgmtsdgZC5F5o0BXdfRyUBm5VFDthPkUjjrJPfFFPhU9zTKA57KFEwokHWFq1LgzFWqoghUPm5FqSDyNb5zgc6Fl6nfhx+bHo9reKlg/P2zdMYbvML99G72qwpDtu8MOsg89FF748JMfket4wOkIL7SoL6cZHA0upz16s6xTQyiltYTxcu1ciHROjGIibakmvtaa9pJ4gpK7WbMDMjAi9JzihNHuH7UCSgqxQIClMN29kDNPxHHSa2QX15Cd1zJQWnIqH1WuSyBRe384BANKuoOQfUSK64dA8Je/tNWcQ+YLggmTcFskR9el2A==
-Received: from PH1PEPF000132F7.NAMP220.PROD.OUTLOOK.COM (2603:10b6:518:1::3c)
- by IA1PR12MB8553.namprd12.prod.outlook.com (2603:10b6:208:44e::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.36; Fri, 21 Mar
- 2025 05:27:20 +0000
-Received: from CY4PEPF0000EE37.namprd05.prod.outlook.com
- (2a01:111:f403:f912::2) by PH1PEPF000132F7.outlook.office365.com
- (2603:1036:903:47::3) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.36 via Frontend Transport; Fri,
- 21 Mar 2025 05:27:20 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- CY4PEPF0000EE37.mail.protection.outlook.com (10.167.242.43) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8534.20 via Frontend Transport; Fri, 21 Mar 2025 05:27:19 +0000
-Received: from rnnvmail204.nvidia.com (10.129.68.6) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Thu, 20 Mar
- 2025 22:27:13 -0700
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by rnnvmail204.nvidia.com
- (10.129.68.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Thu, 20 Mar
- 2025 22:27:12 -0700
-Received: from willie-obmc-builder.nvidia.com (10.127.8.10) by mail.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server id 15.2.1544.14 via Frontend
- Transport; Thu, 20 Mar 2025 22:27:12 -0700
-From: Willie Thai <wthai@nvidia.com>
-To: <andrew@codeconstruct.com.au>
-CC: <conor+dt@kernel.org>, <devicetree@vger.kernel.org>,
-	<dkodihalli@nvidia.com>, <gpiccoli@igalia.com>, <joel@jms.id.au>,
-	<kees@kernel.org>, <krzk+dt@kernel.org>, <leohu@nvidia.com>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-aspeed@lists.ozlabs.org>,
-	<linux-hardening@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<maryang@nvidia.com>, <openbmc@lists.ozlabs.org>, <robh@kernel.org>,
-	<tingkaic@nvidia.com>, <tony.luck@intel.com>, <wthai@nvidia.com>
-Subject: Re: [PATCH v3 2/2] dt-bindings: arm: aspeed: add Nvidia's GB200NVL BMC
-Date: Fri, 21 Mar 2025 05:27:12 +0000
-Message-ID: <20250321052712.104446-1-wthai@nvidia.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <585c2b050a44f4009b3a61cab69f800c88a0cf5e.camel@codeconstruct.com.au>
-References: <585c2b050a44f4009b3a61cab69f800c88a0cf5e.camel@codeconstruct.com.au>
+	dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b="ycDv/0tM"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-22580c9ee0aso32556705ad.2
+        for <linux-hardening@vger.kernel.org>; Thu, 20 Mar 2025 23:20:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=daynix-com.20230601.gappssmtp.com; s=20230601; t=1742538054; x=1743142854; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=QrQp4u7BKm6gGzZCqOb8APZXqNDJNPpqpX8eEWyOLX8=;
+        b=ycDv/0tM77V6zzPFnZK42xFS9mcJ70qYsEzFLmMHFWAWokVwS8IKSMoXAMXbP60Ygk
+         KmLZWzuNzObQ47x5uUthRVmid9ZMFRZOFGKvsEQAnawwWMKSJ178hQMdoGsvEWaOw0wA
+         mWCF78+6sdTVQEZozoOEYIkRFUM9OBIFqdBCrYX8sih6KaDgFT3e92/ha7AVJBNOOqvm
+         81ZFu8O5mvubsRG87iJ8FBrNokM0zrB0EhO6vafhdKmNDPd3UJPTve1LaRKq/LF9CvHB
+         5EDTQm7l8rGq1Morh9mHYQQpbEO23yPY1yp8dD72uSqLFMCq+yhVRksTzsyWh8PLrF8W
+         mPrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742538054; x=1743142854;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QrQp4u7BKm6gGzZCqOb8APZXqNDJNPpqpX8eEWyOLX8=;
+        b=BnDsomVrICXyM5E6sD2dPwPorJIjLVDr4WOSZTp6VOUtDn+ywjzEBGC1K+qDwo9xpL
+         Kq/aRrf6drliT3l12Il0XbpsoRjF7943rHL+bQKKqRBUt5MKyDLPjxjiVjLTyLWNGf4V
+         9Si/JStC0J32Jrj4UN/dcnhpzlF2EWNpTJe4ulLEveaMgXBmlCyJ4k/rzK/TBxu2M8cS
+         lRCV4FMIpfCI1M3J6jnWwpz1RhzYxrDV4HNlRTNus3/xR7z5ev8SQAg18EQFaWEL6SUv
+         cJUUSOrVvtqCATolp4aJ0PiPOZQDoFo9IqkfnA+Np5Fh0zQ+s5ULzqwLar0YVbQu+Egt
+         Y12Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXYU8iL9i8KmzPg6TXSAAwRTmx7xwZhxEKYGBrqfbqBT/HDcRO231WROO21DiwJA5ggQvw1DwoYrM0W5Rj3gP4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxlOCkApq7itUGfep/oBOga0fIjtjuL50l3xLe2MKfmGm3531Lr
+	pDzL9GPystaGEAeQ/atD21T/1XwA96o9z25heqkMrW4xUtwIqdp2uQ67VUiGSoM=
+X-Gm-Gg: ASbGncuGmRc939BFTls2jNm2Bxkv51V1j4cDx0wOf8fJ+oOuAysAiw3QPDr4bvTUeI9
+	AqgCTFCrr/MUWoBzszjkndBedhrYQ0n++BW2cnP8//vjfSexy+YZaCteb5+2/KGhXin4uJ6UUXp
+	q9a0LIswqu/Pmj7j+UKqw688eypb49wVFYW3DF2ntbYjX2P7VnjmMNhEKR+y1RcD+n4kgVtWMH4
+	tI8eTmU4HF5yvIcLt3wrX/DylO1DSHiPmbIdK8nZH6ZIV78dqA658Bn02fiFKVwx9cGiKKhDIC4
+	pRYwCyLN3L7I7luYpLQQ6vNLB0nq6AP8nzwZWT5KVB3vsG5xW+ZnqZsSnA==
+X-Google-Smtp-Source: AGHT+IHe/Q9y2RWJQUcpyi6SzGNru8XSVxXcx9in0WkoW/tVessiSlrZXGzWXyQI3jGi8CYr6TyrAg==
+X-Received: by 2002:a17:902:8b85:b0:21f:bd66:cafa with SMTP id d9443c01a7336-22780c7ba20mr26069275ad.17.1742538054144;
+        Thu, 20 Mar 2025 23:20:54 -0700 (PDT)
+Received: from [157.82.207.107] ([157.82.207.107])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-227811b806asm8600895ad.111.2025.03.20.23.20.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Mar 2025 23:20:53 -0700 (PDT)
+Message-ID: <54cb5388-e278-41de-be29-d578cc5c37c5@daynix.com>
+Date: Fri, 21 Mar 2025 15:20:49 +0900
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE37:EE_|IA1PR12MB8553:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0b334aa3-0d8e-45e4-a8df-08dd68390d0d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|1800799024|36860700013|82310400026|13003099007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?/BFd7w6qYybSixwtYLholfNEeUXI04hCCG6Xv39JK2EanSiRDJo2vrrkm0uO?=
- =?us-ascii?Q?t/jYdeUO1chAFXmbYeqImJ8hWgx+Y0piNtJSyAYpYb5mR+96n93cnhgUp2aO?=
- =?us-ascii?Q?P5FZwOsPhTjIPUoUV86NKogKbyk2W8CUf4/Rij+tsSbK9b04HoZr3ANFED5L?=
- =?us-ascii?Q?e70xY3f2Omxu5Mg6iARKuJXBEmaRBHygrxjaLuBAPzPfoIuuSnIPSpWY0p4o?=
- =?us-ascii?Q?o4WD1oY0B7fmu332KN1+a8ZYhbOQei4WstWKG9tj1194q0p8gIyzwWH9AaNR?=
- =?us-ascii?Q?RRojdyBmomAWFc52Hg0N1szqf3Qu6pKzeKaPUa3LsoQkHl2C5/H1jGfqTObK?=
- =?us-ascii?Q?LyfjpCX/mIVaxFfJOsREKwexk2JcCJ3Ev2VpCxKus7XmomjZHa4hlKyVDwoA?=
- =?us-ascii?Q?FJE0HZhUmtMvbXICvNMRUD/k54qJtaB0uxXIHRDA5fv5g7ZZQ+0jXzxUdgxw?=
- =?us-ascii?Q?izb1WMd0YY9yXX5RPjckQDH7XCS8gF8WOjmsyKfr6EKJFiroq6ZIUzjP7dNc?=
- =?us-ascii?Q?APcgc1IjKMfajaZXFG4bmXOUUGhUYwkmsMyvFyY542hgd1ZqTm3GJkxkBRQa?=
- =?us-ascii?Q?MqwmJiEh9T5jMHTfJMjNpNe+BspwsKzbUXk0YTI/SZE9wAzCgE+pIQkJo8Vh?=
- =?us-ascii?Q?oAEYx1OLteLFVXjOKUVIAmsbarbd3cwa4sNQ/bCMfppwBB1nJT2902FX/Gl7?=
- =?us-ascii?Q?Dlwrma5nEETqiFvZvPHDcy56LmWEuLTyP9yWSWji5LvhO7OcLAPJQ9NWYKby?=
- =?us-ascii?Q?m/G8ei79UWsFJDmjVo5kxq42Uzd40JtX0rHmjUVZHVbE3ANb0rP9uULnhonN?=
- =?us-ascii?Q?kulTVW/HWxuh8xA54AXISlFrtrkdMe/6OddwtDF3X4N0GT97MVKKHMpzHzIf?=
- =?us-ascii?Q?iZAIiMF/kH0CWLS/ZJxfrWhY+4KQ+YhSrGcDrQlqorDw8wP6senDJ0nZYORf?=
- =?us-ascii?Q?P3M+9R8HUciMASB67Og7CDpcptm9bqQfPF2dPg7O5rK0qYgGf6TbDysWFw6M?=
- =?us-ascii?Q?atUzO8SiEl/weSCVHm0o3vGQLBE0msISWJpJek1ScjMuzv8rKIZLaA4USEOB?=
- =?us-ascii?Q?V7HghJ5sYWAeajmyzWl58yItODN2y5LyPvjx1L5XWfrWLkzpGS1nc89nkdIo?=
- =?us-ascii?Q?+mEfybx6fdtIBCeWUxWGIz/Cut6dGJ+ysz9Ux79Y/1VbJ6DWMmcxERHu8n7w?=
- =?us-ascii?Q?3eMahbCpf3I1qlrOVBKJoKde7ob9lwBWznz6WIobS42DHd2PQbzH85p5iwrB?=
- =?us-ascii?Q?1y+jCB0/FvP927tlPMLM7bkfz7qY+QgxcaaRGeN5xghTpd9G/VDEi6cZZ+3d?=
- =?us-ascii?Q?jd8DtSoDRpWY3r19vXWRJBJvcuaT24F4fE+Av8JtFNFJzoJg/ziXbq0gqqfz?=
- =?us-ascii?Q?SArmMnm+xJpw2Qz0i9aA+vYqZRLaYBkjY1wFyL4CKOsPcy9FupzmvJDE9VxB?=
- =?us-ascii?Q?LcEvZOPpn+RUpvGY2IyLbGdo9N+DI0icRExlk6VRzRu8PMEom4gPoA=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(36860700013)(82310400026)(13003099007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Mar 2025 05:27:19.7277
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0b334aa3-0d8e-45e4-a8df-08dd68390d0d
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000EE37.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8553
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC] KVM: arm64: PMU: Use multiple host PMUs
+To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>
+Cc: Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose
+ <suzuki.poulose@arm.com>, Zenghui Yu <yuzenghui@huawei.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+ devel@daynix.com
+References: <20250319-hybrid-v1-1-4d1ada10e705@daynix.com>
+ <Z9pze3J2_zrTk_yC@linux.dev>
+ <e8324d9d-3756-41cf-a102-28572e302368@daynix.com>
+ <86plidmjwh.wl-maz@kernel.org>
+ <bd681ec6-0b4c-47d9-8a4a-b7324c0883a6@daynix.com>
+ <86o6xxmg87.wl-maz@kernel.org>
+ <aabd71eb-286b-475c-a30e-d5cf5c4f2769@daynix.com>
+ <86msdhmemw.wl-maz@kernel.org>
+ <cd7b4528-34a3-4d87-9711-acc2c2e6f6e1@daynix.com>
+ <86ldt0n9w1.wl-maz@kernel.org> <Z9sSMJAlf7cQ5viu@linux.dev>
+ <0d84bc94-1c65-4737-a2eb-aa7f96a7d1e0@daynix.com>
+ <86iko4m5i4.wl-maz@kernel.org>
+ <ba9cd6d2-1ee5-478a-8102-42b4dac411ce@daynix.com>
+ <86cyebmxo7.wl-maz@kernel.org>
+Content-Language: en-US
+From: Akihiko Odaki <akihiko.odaki@daynix.com>
+In-Reply-To: <86cyebmxo7.wl-maz@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-> Hi Willie,
+On 2025/03/21 2:14, Marc Zyngier wrote:
+> On Thu, 20 Mar 2025 09:52:59 +0000,
+> Akihiko Odaki <akihiko.odaki@daynix.com> wrote:
+>>
+>> On 2025/03/20 18:10, Marc Zyngier wrote:
+>>> On Thu, 20 Mar 2025 06:03:35 +0000,
+>>> Akihiko Odaki <akihiko.odaki@daynix.com> wrote:
+>>>>
+>>>> On 2025/03/20 3:51, Oliver Upton wrote:
+>>>>> On Wed, Mar 19, 2025 at 06:38:38PM +0000, Marc Zyngier wrote:
+>>>>>> On Wed, 19 Mar 2025 11:51:21 +0000, Akihiko Odaki <akihiko.odaki@daynix.com> wrote:
+>>>>>>> What about setting the flag automatically when a user fails to pin
+>>>>>>> vCPUs to CPUs that are covered by one PMU? There would be no change if
+>>>>>>> a user correctly pins vCPUs as it is. Otherwise, they will see a
+>>>>>>> correct feature set advertised to the guest and the cycle counter
+>>>>>>> working.
+>>>>>>
+>>>>>> How do you know that the affinity is "correct"? VCPU affinity can be
+>>>>>> changed at any time. I, for one, do not want my VMs to change
+>>>>>> behaviour because I let the vcpus bounce around as the scheduler sees
+>>>>>> fit.
+>>>>
+>>>> Checking the affinity when picking the default PMU; the vCPU affinity
+>>>> is the only thing that rules the choice of the default PMU even now.
+>>>>
+>>>> Perhaps we may model the API as follows: introduce another "composite"
+>>>> PMU that works on any core but only exposes the cycle counter. Robust
+>>>> VMMs will choose it or one of hardware PMUs with
+>>>> KVM_ARM_VCPU_PMU_V3_SET_PMU. KVM will choose the default PMU according
+>>>> to the vCPU affinity at the point of KVM_ARM_VCPU_INIT otherwise. If
+>>>> the affinity is covered by one hardware PMU, that PMU will be chosen
+>>>> as the default. The "composite" PMU will be the default otherwise.
+>>>
+>>> This makes no sense to me. A VCPU is always affine to a PMU, because
+>>> we do not support configurations where only some CPUs have a PMU. This
+>>> is an all-or-nothing situation.
+>>
+>> At least isn't it fine to have the composite PMU with a new value for
+>> KVM_ARM_VCPU_PMU_V3_SET_PMU?
 > 
-> On Thu, 2025-03-20 at 16:46 +0000, Willie Thai wrote:
->> This patch adds a binding for GB200NVL BMC.
->> 
->> The GB200NVL BMC is an Aspeed Ast2600 based BMC for Nvidia Blackwell
->> GB200NVL platform.
->> Reference to Ast2600 SOC [1].
->> Reference to Blackwell GB200NVL Platform [2].
->> 
->> Co-developed-by: Mars Yang <maryang@nvidia.com>
->> Signed-off-by: Mars Yang <maryang@nvidia.com>
->> Link: https://www.aspeedtech.com/server_ast2600/ [1]
->> Link:
->> https://nvdam.widen.net/s/wwnsxrhm2w/blackwell-datasheet-3384703 [2]
->> Signed-off-by: Willie Thai <wthai@nvidia.com>
->> ---
->>  Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml | 1 +
->>  1 file changed, 1 insertion(+)
->> 
->> diff --git a/Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml
->> b/Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml
->> index 01333ac111fb..a3736f134130 100644
->> --- a/Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml
->> +++ b/Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml
->> @@ -98,6 +98,7 @@ properties:
->>                - inventec,starscream-bmc
->>                - inventec,transformer-bmc
->>                - jabil,rbp-bmc
->> +              - nvidia,gb200nvl-bmc
->>                - qcom,dc-scm-v1-bmc
->>                - quanta,s6q-bmc
->>                - ufispace,ncplite-bmc
+> Not sure KVM_ARM_VCPU_PMU_V3_SET_PMU is the right hook (it takes a PMU
+> 'type', which is under control of the perf subsystem). But if we can
+> find a value that is guaranteed to be unique, why not.
 > 
-> Please order this patch first in your series, before the devicetree.
+>>> More importantly, you keep suggesting the same "new default", and I
+>>> keep saying NO.
+>>>
+>>> My position is clear: if you want a *new* behaviour, you *must* add a
+>>> new flag that the VMM explicitly provides to enable this CC-only PMU.
+>>> No change in default behaviour at all.
+>>>
+>>> I'm not going to move from that.
+>>
+>> Why not? It will not break anything guaranteed to work in the past.
 > 
-> Andrew
+> It doesn't have to be guaranteed. It just has to *exist*. That's the
+> Linux ABI for you.
+> 
+>> Currently KVM only guarantees that the emulated PMU correctly counts
+>> only when
+>> 1) the vCPU affinity is contained by one PMU and
+>> 2) it will not expand
+>>
+>> Breaking these conditions will make the behavior of the emulated PMU
+>> undefined. Now I'm proposing to remove 1).
+> 
+> And I'm saying no to that. I'm also getting tired of arguing the same
+> point on and on.
+> 
+> We currently have two different behaviours:
+> 
+> - either you explicitly set a PMU, and the affinity of this PMU
+>    constraints the affinity of the vcpus. The vcpus are not allowed to
+>    run outside of this affinity. Everything counts all the time.
+> 
+> - or you don't explicitly set a PMU, and a default PMU will be picked
+>    from the current affinity of the first vcpu. Your vcpus will be able
+>    to run anywhere, but the virtual PMU will *only* count when the
+>    vcpus are affine to the default PMU. When the vcpus are not affine
+>    to default PMU, *nothing* counts.
+> 
+> These two behaviours are ABI. They are not changing. They don't get
+> relaxed, they don't get tightened, they stay just as they are,
+> forever.
 
-Thanks Andrew for the feedback, will order the patches in v4.
+Is the latter one is really ABI? I see it as part of behaviors that are 
+undefined and not included in ABI for the following reasons:
+
+1) It depends on the scheduler behavior, which cannot be ABI.
+
+2) It provides a broken PMU so the proposed behavioral change is similar 
+a bug fix though I call it a undefined behavior instead of a bug as it 
+is explicitly told that there is no assurance that the PMU works in such 
+a scenario.
+
+3) The userspace could not have relied on it so the "no regressions" 
+rule cannot be applied here; how can anyone have a userspace that relies 
+on a kernel behavior that depends on scheduling?
+
+But for 3), Oliver raised a concern for the guest compatibility so I'd 
+like to hear an explanation for that concern.
+
+> 
+> You want a *third* behaviour, go ahead. Define it the way you want.
+> But the behaviours described above will stay unchanged.> > I'm looking forward to your patches implementing it, but I am also
+> done arguing on it.
+
+I understand the discussion is tiring but I want to know the reasoning 
+behind such a design decision before sending an RFC patch to a VMM 
+(QEMU) so that I can explain them why it is necessary in turn.
+
+Regards,
+Akihiko Odaki
+
+> 
+> 	M.
+> 
+
