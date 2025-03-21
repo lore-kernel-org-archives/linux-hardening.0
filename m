@@ -1,137 +1,121 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A541198E8C;
-	Fri, 21 Mar 2025 14:17:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DB3F1D514E;
+	Fri, 21 Mar 2025 14:48:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742566626; cv=none; b=qrAN3vJtNPCUwaqZAc1LBpm//G5u2c2bNI93ceQkq7w2RnF4kZv/833Me42HxYdjvj/dlo881TQlZQjXcMEQFoIXaN1yfn84ll7B8w1CZJQEn8tTpSromInpaqMZgvzrlvrw/kJRIhnlI2LCSjH4srZE3EUcncVV42elwqNv0fs=
+	t=1742568511; cv=none; b=SnU0lH5K1y15BIkXzHbMRui/+aNTBCbqn9WGrPxzuByLWxZ9uF25iWYi5nTIf8PlnofooZi4qf5okNFZKAmMwRRjGLm6hY7FWWTYi8TTrMfPJ+esVOPiOGYjhxAIaNXPT8y4lsDre4Q+P1RnVwbVq0d1RI0jPV+zn2+GTGBXU/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742566626; c=relaxed/simple;
-	bh=rfxQZ12VRvZhdpuDOEdyntZXq2wHJ2FkqU+shH7sIiQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L9izSEPUP6CPEduH72j9f2sZfdsvISc5v2x9Asq4NSscY+6d09NGZmnMK4PN8VP+h/ANDBXK7x3QMSJi4T78XbXzEZQtBKPKacXoRqfx+Z1FYj8bTRxgNjC27bW3Y7hFSggvSjoZp+G11t/NGe1BhOyRzaEl1zi2RvIYKBnELk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DZa4ZUbs; arc=none smtp.client-ip=192.198.163.19
+	s=arc-20240116; t=1742568511; c=relaxed/simple;
+	bh=1FHN7C7JwKB38srjLAJ+yUcrgQTnh4rrm3GJV2ZvjVw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WMNuD8rZd/Jl764ZXqGyHcZ4ZwUJzMLWN3htlIEsU9U0rf6zUDtpK2etusqDPa8j5/l6VW0jqQkCd9Qh7H1O4ksfg3T/D/tZR8cNb9+d8swTzGSyN079IiKSOhk6NodKFrVAijEASxnj/tJs5RMjehcg6l63Lr13iw3kCCTFkGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lA7ODjJX; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DZa4ZUbs"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lA7ODjJX"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742566625; x=1774102625;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=rfxQZ12VRvZhdpuDOEdyntZXq2wHJ2FkqU+shH7sIiQ=;
-  b=DZa4ZUbs+ZoOHd2/6xlYhH0KexMzRbju/cNZbDgZXJ1xn+dzztWbeAN3
-   dIB4ANkvh+FyNUgbrRmg3+HCjL8sDoq2qAHONBDQu0CofsRGBTOsOUfdL
-   fBMTPHieQSl7jApVaePIGVfdRNICK8euSAxSyi8QWl12CdjG6NVqEE+Ev
-   V0ftoVacAPpSPxkz4E/mxvqDl2Y4iElG1U6v6CUIE82FNaMfxhL1dNRFP
-   ugccU0XeHdjBnGnNlwTKr7ESfMOo9RCu2CbrwFJH2IiK6z5hZHKK4zI5K
-   D20CmR3/evIvf13ZHtKkYFXLUWz1I9F7U6sHYGC/X9MD0lAariDz0umBA
-   w==;
-X-CSE-ConnectionGUID: HvBSnUAkSMiEQGUEd6NiNw==
-X-CSE-MsgGUID: N+LcY0qAQqCXp7kryka7bQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11380"; a="42997958"
+  t=1742568510; x=1774104510;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=1FHN7C7JwKB38srjLAJ+yUcrgQTnh4rrm3GJV2ZvjVw=;
+  b=lA7ODjJXShIesYyY48c32qa5SkV7XxUL/6GgJdLFpkB3SXRYr8lS4VZ3
+   1b6d6nnp2YVBHVhUrYx8YRVmeP1taaFKnIo+73G8LhVwXAM+yOtayDFJ9
+   zI5trGVc/wBmX4mxXRJw1PKBLxILvuXZcdK7POD+8U3OgTD1rS1VKzqWM
+   tNeH6Cq2W6TH7CG6nXF9VOHWOpY//WyOL6FKcWjraHitekOwoAe2nnhSt
+   0lC1Nnq0O9IXxiunyHCg1Q1UV2+gJ3zx9viv3b0WoCn2vW8BoMXK/W5G3
+   aetSgnp7ySp10b8RD9IeIKLsLCBfmW1qevEKc7/TAbH9lLyigd1chPcr0
+   Q==;
+X-CSE-ConnectionGUID: 5/goPzAzSJSWjVIafERQ9w==
+X-CSE-MsgGUID: qvsdVFmHTdiD/X6nnDqvNw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11380"; a="43955832"
 X-IronPort-AV: E=Sophos;i="6.14,264,1736841600"; 
-   d="scan'208";a="42997958"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2025 07:17:04 -0700
-X-CSE-ConnectionGUID: xIq/6NPoSYCfSUIs7XLQKw==
-X-CSE-MsgGUID: k7rGACY/QFugt68sEzF9Lw==
+   d="scan'208";a="43955832"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2025 07:48:29 -0700
+X-CSE-ConnectionGUID: TLrJEag3TEaqkNSfbQmI+A==
+X-CSE-MsgGUID: W972xYkATPKc36pjfu1F0A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.14,264,1736841600"; 
-   d="scan'208";a="128634465"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2025 07:17:01 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tvdBB-00000004XGa-38n0;
-	Fri, 21 Mar 2025 16:16:57 +0200
-Date: Fri, 21 Mar 2025 16:16:57 +0200
+   d="scan'208";a="128250097"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa003.jf.intel.com with ESMTP; 21 Mar 2025 07:48:25 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 1A14A25B; Fri, 21 Mar 2025 16:48:24 +0200 (EET)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Rasmus Villemoes <ravi@prevas.dk>
-Cc: Petr Mladek <pmladek@suse.com>,
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Kees Cook <kees@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
+	Kees Cook <kees@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
 	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: Andy Shevchenko <andy@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v1 6/6] vsnprintf: Mark va_format() with __printf()
- attribute
-Message-ID: <Z9102aHbXlVS50Cq@smile.fi.intel.com>
-References: <20250320180926.4002817-1-andriy.shevchenko@linux.intel.com>
- <20250320180926.4002817-7-andriy.shevchenko@linux.intel.com>
- <87iko2ear3.fsf@prevas.dk>
+	Andrew Morton <akpm@linux-foundation.org>,
+	Petr Mladek <pmladek@suse.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>
+Subject: [PATCH v2 0/6] vsprintf: Add __printf attribute to where it's required
+Date: Fri, 21 Mar 2025 16:40:46 +0200
+Message-ID: <20250321144822.324050-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87iko2ear3.fsf@prevas.dk>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Mar 21, 2025 at 03:09:20PM +0100, Rasmus Villemoes wrote:
-> On Thu, Mar 20 2025, Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+This whole series started from a simple fix (see the last patch)
+to make GCC (Debian 14.2.0-17) happy when compiling with `make W=1`
+(note, that CONFIG_WERROR=y and all warnings break the build!)
+down to a rabbit hole.
 
-...
+However starting from v2 the last patch doesn't require the first
+part, I prefer still to have them since the functions, while being
+_binary_ printf()-like, are still printf()-like. It also puts in align
+the tracing stuff with the rest and fixes the wrong parameter value.
 
-> I'm sorry, but this is broken in so many ways I don't know where to
-> start.
+These first 4 patches are organised in a strict order and can't be
+reshuffled, otherwise it will produce a warnings in between.
 
-You shouldn't be sorry, my guts feeling was on the same page, I was sending it
-with the expectation that someone will direct me, so thank you!
+I believe the best route for the series is printk tree with immutable
+tag or branch for the others.
 
-(And that's why there is a paragraph about this rather hackish patch)
+Alternatively the first 4 patches can be applied first as they
+are pretty much straightforward. They also can be squashed to one
+(as the same topic behind), but it all is up to the respective
+maintainers.
 
-> The format string that va_format actually passes on is va_fmt->fmt, and
-> that is _not_ at all the same thing as va_fmt cast to (const char*),
-> even if ->fmt is the first member, so the static_assert doesn't do what
-> you think it does. So of course the ptr variable (which is (void*)) can
-> be passed as a (const char*) argument just as well as it can be passed
-> as a (struct va_format *) argument, and sure, the callee can take that
-> arbitrary pointer and cast to the real type of that argument. But it
-> seems you did that only to have _some_ random const char* parameter to
-> attach that __printf attribute to.
+In v2:
+- split out patch 5 (Rasmus)
+- rewritten the approach for the va_format() fix (Rasmus)
+- amended tracing patch (removed a blank line and a __printf() in C file)
 
-True, and again, I felt that what I'm doing here is all not right.
+Andy Shevchenko (6):
+  seq_buf: Mark binary printing functions with __printf() attribute
+  seq_file: Mark binary printing functions with __printf() attribute
+  tracing: Mark binary printing functions with __printf() attribute
+  vsnprintf: Mark binary printing functions with __printf() attribute
+  vsnprintf: Drop unused const char fmt * in va_format()
+  vsnprintf: Silence false positive GCC warning for va_format()
 
-> So, since the format string that va_format() passes to vsnprintf() is
-> not one of va_format()'s own parameters, there is no parameter to attach
-> that __printf() attribute to. So I actually consider this somewhat of a
-> gcc bug. But can't we just silence that false positive with the tool
-> that gcc provides for this very purpose:
-> 
-> #pragma GCC diagnostic push
-> #pragma GCC diagnostic ignored "-Wsuggest-attribute=format"
-> static char *va_format(char *buf, char *end, struct va_format *va_fmt,
-> ...
-> }
-> #pragma GCC diagnostic pop
-> 
-> with whatever added sauce to also make it work for clang.
-
-clang doesn't produce this warning to me. But I will check again.
-
-> Then you don't need to annotate pointer(),
-
-Sure, I also felt that that one is hack to satisfy a broken tool.
-
-> and then you don't need to annotate the BINARY_PRINTF users of pointer(),
-> though I think those two do make sense.
-
-I prefer to have them marked as they really like printf():s.
-
-Thanks for the suggestion, I will experiment and send the result in v2.
+ include/linux/seq_buf.h   |  4 ++--
+ include/linux/seq_file.h  |  1 +
+ include/linux/string.h    |  4 ++--
+ include/linux/trace.h     |  4 ++--
+ include/linux/trace_seq.h |  8 ++++----
+ kernel/trace/trace.c      | 11 +++--------
+ kernel/trace/trace.h      | 16 +++++++++-------
+ lib/vsprintf.c            |  9 +++++++--
+ 8 files changed, 30 insertions(+), 27 deletions(-)
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.47.2
 
