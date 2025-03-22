@@ -1,52 +1,52 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9082FAD2D;
-	Sat, 22 Mar 2025 07:03:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A04B312F399;
+	Sat, 22 Mar 2025 07:18:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742626993; cv=none; b=IapxWE40oEM7+24yHu/Eyjv/rMxjvfxs7NW2UwcpSMH3KGtNqcWAJbfAoeBQytDVJDXS9rK99a3/VaQH/SVWDJJgo5Iw8Q/iTd9P1LftzOUIzHovYDkHb16OXcK8yhLwnYr7sr0zUWmZxg90pqJmcAXFPsK/euU23lSGZR0m8Lo=
+	t=1742627933; cv=none; b=rw8J+UciPLZ0xRc8N9DTmE5Lhof+twvNITLsfqwQ10+gKXGR0BGCXYttqbuf2swrMIFQdPUeJRcRbjWhPy6jkPDGVPsVJPPeEg0IvTMz8YwaEv6bJE0NLcVSPdWtCqXTO6FMbuuai6Ki3THenvBTDpkHAO24sh+Kt00fq05dJpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742626993; c=relaxed/simple;
-	bh=HtzlmGFKNc96G3c31xfHA2/WSc+840Arh4hTDS/Blu4=;
+	s=arc-20240116; t=1742627933; c=relaxed/simple;
+	bh=5YMW/DlS0ebGtlxpPMHrs7Dv7gA/oYjUad8cwYfX9Ys=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=idcQDn/wKBzNrPCNc+aM7JrtppPrJ3PqX71Aw/Jyj7vGrRZ8+fcKuf4F44FpHGC6iRLS5iI5qvh4ErOXgyv1rUojqbMRv7fWfcQy6hSnMT7T7sH9sK0fwGZ1yg0zWCa6xEy/NSIgGK+xs8GPx5T/19A3q4DuOOFIp4Jyaa6I3N0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uh8bkayS; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Yt4LyKCSwLMBw6Zv3qtlVnPxaUG9kgODoOqLQrM7u2kBVDkvc9RX3u/xT9ea663Fr7kxIsA3YeJTrQTAiHVsKPZGKcyorP2s+9hpo5YOM/5cbplTo6xe1UOuwoCgpfW7RgzfZx/1xkYMJ2uJSeQB+Ri3G7aIYFjWY/awGjhcgME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nMFiqeNI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uh8bkayS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4C8CC4CEDD;
-	Sat, 22 Mar 2025 07:03:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nMFiqeNI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 169ADC4CEDD;
+	Sat, 22 Mar 2025 07:18:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742626993;
-	bh=HtzlmGFKNc96G3c31xfHA2/WSc+840Arh4hTDS/Blu4=;
+	s=k20201202; t=1742627933;
+	bh=5YMW/DlS0ebGtlxpPMHrs7Dv7gA/oYjUad8cwYfX9Ys=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uh8bkaySVZxDeFbmWF40056K7l8MVIb+9kF4CPx6jnwyybECJMrvd1REqb6+ZGb/7
-	 U1M5Zwze0ONfLVHeZABlmUHipLqjLu0fd0Ibaf/a8/dI/4dcMUjq0xIm74Ox02xp5t
-	 7WMD1NaJ6nuv24ylk6fz4ZSXJ+HF8jQBfEe2F2ahX3sBX/vgAT8SZ/0CGzmQTA/et7
-	 epxym2eHwY69WirMTSZHNyvsMbhYU5XJ/Dvy4qaTqU4nonav25pjjM0Vt4MfXM3sd0
-	 jTzv9+YZqKA8tcvByuN4WGOc+/V1HIX6UD47YGXBnnEC2Hat5xdrTMF9NRqIQJ1PN+
-	 FVCchGpV2CxWQ==
-Date: Sat, 22 Mar 2025 00:03:09 -0700
+	b=nMFiqeNIksNdGGRfCHxNVLnfEM0y+dtvL4aPrDhAWdnK6/kfk0QxvmdrO3iv9fpxw
+	 DLNpWIooMxIjV+zHXcTTay4U3gjiAEeBCJD2MQXxEP/473xpYLhrM4F25Axravembf
+	 cATBSlxgy67RYIpjrpUHOH/C9mbvKiQvHNg1kbGTz8eEq/P8jMbOILzy18Amt0BKX8
+	 +NoGdA80UA8YGxGZk0gJT5LSqDKAqqvsmaGT57kWxGvRgmwy21RWxDlKFlVIFsnKap
+	 0RP11hAGgBowov3NI0SRqsBJUY2RmS8Sqx5N6y8doSBWSgpGROgYKgilW4jURCBv+Y
+	 u8oR0afv5C95A==
+Date: Sat, 22 Mar 2025 00:18:49 -0700
 From: Kees Cook <kees@kernel.org>
 To: Jann Horn <jannh@google.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>, Miguel Ojeda <ojeda@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Marco Elver <elver@google.com>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
+Cc: Vlastimil Babka <vbabka@suse.cz>, Christoph Lameter <cl@linux.com>,
+	Pekka Enberg <penberg@kernel.org>,
 	David Rientjes <rientjes@google.com>,
 	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
 	Andrew Morton <akpm@linux-foundation.org>,
 	Roman Gushchin <roman.gushchin@linux.dev>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, linux-hardening@vger.kernel.org,
-	Andrew Pinski <pinskia@gmail.com>
-Subject: Re: [PATCH 3/5] compiler_types: Introduce __is_lvalue()
-Message-ID: <202503212348.C21AACA6@keescook>
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Marco Elver <elver@google.com>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 4/5] slab: Set freed variables to NULL by default
+Message-ID: <202503220003.FABF5E82D1@keescook>
 References: <20250321202620.work.175-kees@kernel.org>
- <20250321204105.1898507-3-kees@kernel.org>
- <CAG48ez17ZtF4YESkGeegJYMTuQMsRcU3njVkNqbSbgv75jpc5g@mail.gmail.com>
+ <20250321204105.1898507-4-kees@kernel.org>
+ <CAG48ez2-stu91bgZawx_AaypEuMnc5=nJQUiDzUCb+CbsJS6kw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -56,151 +56,132 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAG48ez17ZtF4YESkGeegJYMTuQMsRcU3njVkNqbSbgv75jpc5g@mail.gmail.com>
+In-Reply-To: <CAG48ez2-stu91bgZawx_AaypEuMnc5=nJQUiDzUCb+CbsJS6kw@mail.gmail.com>
 
-On Sat, Mar 22, 2025 at 04:38:21AM +0100, Jann Horn wrote:
+On Sat, Mar 22, 2025 at 02:50:15AM +0100, Jann Horn wrote:
 > On Fri, Mar 21, 2025 at 9:41 PM Kees Cook <kees@kernel.org> wrote:
-> > If __builtin_is_lvalue() is available, use it with __is_lvalue(). There
-> > is patch to Clang to provide this builtin now[1].
+> > To defang a subset of "dangling pointer" use-after-free flaws[1], take the
+> > address of any lvalues passed to kfree() and set them to NULL after
+> > freeing.
 > >
-> > Link: https://github.com/kees/llvm-project/commits/builtin_is_lvalue/ [1]
-> > Signed-off-by: Kees Cook <kees@kernel.org>
+> > To do this manually, kfree_and_null() (and the "sensitive" variant)
+> > are introduced.
 > 
-> Before you land that LLVM patch, it might be a good idea to figure out
-> how this interacts with the fun C quirk where you can have temporary
-> rvalues which can contain array members to which you can technically
-> create lvalues but must not write. As far as I understand, calling
-> "kfree(getS().ptrs[0])" as in the following example would cause UB
-> with your patch:
+> Unless callers of kfree() are allowed to rely on this behavior, we
+> might want to have an option to use a poison value instead of NULL for
+> this in debug builds.
 
-Yay UB! I can confirm that currently isModifiableLvalue() does not catch
-this.
+Sure -- we have many to choose from. Is there a specific one you think
+would be good?
 
 > 
-> ```
-> $ cat kees-kfree-test.c
-> #include <stdlib.h>
+> Hmm... in theory, we could have an object that points to its own type, like so:
 > 
-> #define __is_lvalue(expr)      __builtin_is_lvalue(expr)
+>     struct foo {
+>      struct foo *ptr;
+>     };
 > 
-> void __kfree(void *ptr);
-> void BEFORE_SET_TO_NULL();
-> void AFTER_SET_TO_NULL();
-> static inline void kfree_and_null(void **ptr)
-> {
->        __kfree(*ptr);
->        BEFORE_SET_TO_NULL();
->        *ptr = NULL;
->        AFTER_SET_TO_NULL();
-> }
-> #define __force_lvalue_expr(x) \
->        __builtin_choose_expr(__is_lvalue(x), x, (void *){ NULL })
-> #define __free_and_null(__how, x)      \
-> ({                                     \
->        typeof(x) *__ptr = &(x);        \
->        __how ## _and_null((void **)__ptr);     \
-> })
-> #define __free_and_maybe_null(__how, x)        \
->        __builtin_choose_expr(__is_lvalue(x), \
->                __free_and_null(__how, __force_lvalue_expr(x)), \
->                __kfree(x))
-> #define kfree(x)          __free_and_maybe_null(kfree, x)
+> And if that was initialized like so:
 > 
-> struct S {
->     void *ptrs[1];
-> };
-> struct S getS(void);
+>     struct foo *obj = kmalloc(sizeof(struct foo));
+>     obj->ptr = obj;
 > 
-> int is_lvalue_test(void) {
->   return __is_lvalue(getS().ptrs[0]);
-> }
-> void testfn2(void) {
->   kfree(getS().ptrs[0]);
-> }
-> $ [...]/bin/clang-14 -c -o kees-kfree-test.o kees-kfree-test.c -O3 -Wall
-> $ objdump -d -Mintel -r kees-kfree-test.o
+> Then the following is currently fine, but would turn into UAF with this patch:
 > 
-> kees-kfree-test.o:     file format elf64-x86-64
+>     kfree(obj->ptr);
 > 
-> 
-> Disassembly of section .text:
-> 
-> 0000000000000000 <is_lvalue_test>:
->    0:   b8 01 00 00 00          mov    eax,0x1
->    5:   c3                      ret
->    6:   66 2e 0f 1f 84 00 00    cs nop WORD PTR [rax+rax*1+0x0]
->    d:   00 00 00
-> 
-> 0000000000000010 <testfn2>:
->   10:   50                      push   rax
->   11:   e8 00 00 00 00          call   16 <testfn2+0x6>
->                         12: R_X86_64_PLT32      getS-0x4
->   16:   48 89 c7                mov    rdi,rax
->   19:   e8 00 00 00 00          call   1e <testfn2+0xe>
->                         1a: R_X86_64_PLT32      __kfree-0x4
->   1e:   31 c0                   xor    eax,eax
->   20:   e8 00 00 00 00          call   25 <testfn2+0x15>
->                         21: R_X86_64_PLT32      BEFORE_SET_TO_NULL-0x4
->   25:   31 c0                   xor    eax,eax
->   27:   59                      pop    rcx
->   28:   e9 00 00 00 00          jmp    2d <testfn2+0x1d>
->                         29: R_X86_64_PLT32      AFTER_SET_TO_NULL-0x4
+> That is a fairly contrived example; but maybe it would make sense to
+> reorder the NULL assignment and the actual freeing to avoid this
+> particular case?
 
-I don't see UB manifested here, though? It looks more like a dead store
-was eliminated (i.e. it was an automatic variable that wasn't going to
-be referenced outside of the expression statement).
+Ew. Yeah. Reordering this looks okay, yes:
 
-If I add a global and assign the global from *ptr, it all seems to work
-fine:
-
---- kees-kfree-test.c.orig    2025-03-22 00:00:53.550633347 -0700
-+++ kees-kfree-test.c       2025-03-21 23:58:57.124268268 -0700
-@@ -2,6 +2,8 @@
+diff --git a/include/linux/slab.h b/include/linux/slab.h
+index 3f8fb60963e3..8913b05eca33 100644
+--- a/include/linux/slab.h
++++ b/include/linux/slab.h
+@@ -473,13 +473,15 @@ extern atomic_t count_nulled;
  
- #define __is_lvalue(expr)      __builtin_is_modifiable_lvalue(expr)
- 
-+void *g;
-+
- void __kfree(void *ptr);
- void BEFORE_SET_TO_NULL();
- void AFTER_SET_TO_NULL();
-@@ -11,6 +13,7 @@
-        BEFORE_SET_TO_NULL();
-        *ptr = NULL;
-        AFTER_SET_TO_NULL();
-+       g = *ptr;
+ static inline void kfree_and_null(void **ptr)
+ {
+-	__kfree(*ptr);
++	void *addr = *ptr;
+ 	*ptr = NULL;
++	__kfree(addr);
  }
- #define __force_lvalue_expr(x) \
-        __builtin_choose_expr(__is_lvalue(x), x, (void *){ NULL })
+ static inline void kfree_sensitive_and_null(void **ptr)
+ {
+-	__kfree_sensitive(*ptr);
++	void *addr = *ptr;
+ 	*ptr = NULL;
++	__kfree_sensitive(addr);
+ }
+ 
+ #define __force_assignable(x)	\
 
-...
-
-  27:   e8 00 00 00 00          call   2c <testfn2+0x1c>
-                        28: R_X86_64_PLT32      AFTER_SET_TO_NULL-0x4
-  2c:   48 c7 05 00 00 00 00    mov    QWORD PTR [rip+0x0],0x0        # 37 <testfn2+0x27>
-  33:   00 00 00 00 
-
-> jannh@horn:~/test/kees-kfree$
-> ```
+> Another pattern that is theoretically currently fine but would be
+> problematic after this would be if code continues to access a pointer
+> after the pointed-to object has been freed, but just to check for
+> NULL-ness to infer something about the state of the object containing
+> the pointer, or to check pointer identity, or something like that. But
+> I guess that's probably not very common? Something like:
 > 
-> As far as I understand, this causes UB in C99 ("If an attempt is made
-> to modify the result of a function call or to access it after the next
-> sequence point, the behavior is undefined.") and in C11 ("A non-lvalue
-> expression with structure or union type, where the structure or union
-> contains a member with array type (including, recursively, members of
-> all contained structures and unions) refers to an object with
-> automatic storage duration and temporary lifetime. 36) Its lifetime
-> begins when the expression is evaluated and its initial value is the
-> value of the expression. Its lifetime ends when the evaluation of the
-> containing full expression or full declarator ends. Any attempt to
-> modify an object with temporary lifetime results in undefined
-> behavior.").
-> 
-> Basically, something like getS().ptrs[0] gives you something that is
-> technically an lvalue but must not actually be written to, and
-> ->isModifiableLvalue() does not catch that.
+>     if (ptr) {
+>         mutex_lock(&some_lock);
+>         ...
+>         kfree(ptr);
+>     }
+>     ...
+>     if (ptr) {
+>         ...
+>         mutex_unlock(&some_lock);
+>     }
 
-But I agree, any mention of UB does give me pause! :)
+Yeah, this would be bad form IMO. But it's not impossible. This idea
+was mentioned on the Fediverse thread for this RFC too.
+https://fosstodon.org/@kees/114202495615591299
+
+> But from scrolling through the kernel sources and glancing at a few
+> hundred kfree() calls (not a lot compared to the ~40000 callsites we
+> have), I haven't actually found any obvious instances like that. There
+> is KMSAN test code that intentionally does a UAF, which might need to
+> be adjusted to not hit a NULL deref instead.
+> (And just an irrelevant sidenote: snd_gf1_dma_interrupt() has
+> commented-out debugging code that would UAF the "block" variable if it
+> was not commented out.)
+
+Yeah, the heap LKDTM tests need to switch to __kfree() too. :)
+
+I'm going to see if I can build a sensible Coccinelle script to look for
+this. It's currently getting very confused by the may "for_each" helpers,
+but here's what I've got currently:
+
+@use_freed@
+expression E, RHS;
+@@
+
+(
+        kfree(E);
+        ... when != E
+?       E = RHS
+|
+        kfree(E);
+        ...
+*       E
+)
+
+It is finding a few, though. For example:
+
+--- ./drivers/md/dm-ima.c
++++ /tmp/nothing/drivers/md/dm-ima.c
+@@ -584,13 +584,11 @@ error:
+ exit:
+        kfree(md->ima.active_table.device_metadata);
+ 
+-       if (md->ima.active_table.device_metadata !=
+            md->ima.inactive_table.device_metadata)
+                kfree(md->ima.inactive_table.device_metadata);
+
 
 -- 
 Kees Cook
