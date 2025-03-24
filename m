@@ -1,148 +1,192 @@
-Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F512BA36;
-	Mon, 24 Mar 2025 09:03:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3732625E445;
+	Mon, 24 Mar 2025 12:54:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742807016; cv=none; b=pvxBmBz/fFBv8WdW6dnYXoIQuLrfHS2YbT94tmEHH7GDcZAcDcxv4JTwApQZdoGmXOGE7X8GNOfu0OQCHPhzhp+m+1NCFVh1Y8eIhRhTTSVMOwKpdcnXB+f+BsasmbsCz5JNzzxNna0Nv3urMuaiUb71DzMbBJH3jZVGZAAQLOk=
+	t=1742820887; cv=none; b=r/T/IAfWTHvayZgw2rtP/4fK1yc59ZYWh2wie7LtKM5XXt0saib7Q28c3w0KI0xTZ3zTVYA9wMfEyxLB0T/K2WGlmpjYGHFtHWodHXSX+LATglguqoaCCYW4FgPgNUVcgEcXJeD1pdc/YVllJ66Fz00PwK2kazbuw5RHKQ6Spzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742807016; c=relaxed/simple;
-	bh=KqRUMD2XdQQ9CG7Nb2vZ5/GtFfomSxM64REk2V7g3po=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TLImVVDrdBoBeM1sAkVnw6iTaQUvqufqbmW8ZEqqWLQb5a6agfjiWATPJdxFJca0mtbywCJIQrqgtLA5MyVimzyHI97BizLkY+YujeqztUBgFJN8kcTITnJMOPXH0/7OqEmXZOL4tV/MJZ8jv4SBWUyRJwH8C3fHYLi/xKrVjnY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-86ba07fe7a4so3615134241.2;
-        Mon, 24 Mar 2025 02:03:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742807014; x=1743411814;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=12C9f7Hkrurs0MZwp3rUXbOHTi8BuaCTTSuYZ39XhRs=;
-        b=Yl5I6vfScXTeIM1ASKwR+MuWpWlvDalT9iree8XN+ifk7V4wTqEL7nELotbfSeMpa/
-         N6vITO3pgNyis8wB+0PaMY0QlRI/gFvhdQByPv8420tRcRLtIUrXgPBgyufJexAd/LPs
-         Y6dWnSj+iePvtMsar12C/hyWCiah8ZrjWMenXEweX6qgb96dxUjpZ0/X/yVvt0o7dT+R
-         EEeqOynl6uvi84cYw5qdA3aYsewwntDeYxWJHE87BAytufPH9avjMphNhWj0t8hegPcF
-         FTDKtqRGz3N/SK1N2nZc2YNiGN+e3BlV/s/0oLJOjStPU6+KPqosbAZg1Hk8W49NRp+l
-         Zu5A==
-X-Forwarded-Encrypted: i=1; AJvYcCVWx3lkPWXJMJ2svFz+HZJqWi8cB/96dHw47CpCOcqblUts3bIm8wr7el/qsXmaYBqt9YKAFEKi33VAhtc6468=@vger.kernel.org, AJvYcCWKi69VaNGM6E+Go0QesUfVMle1gvUSZOp+ggEQfQzSybJu0ZGYvR7QDo8s1IOaRnhKCdJ1PgxDGdvY2GqB@vger.kernel.org
-X-Gm-Message-State: AOJu0YwIg0x2KuaFFU29mDLnWERZbMbwjZodVJmFnv5E9GSxqDLF/rp+
-	RhwTImD/yPpP0mpG0a7gcVVR9OP7J9JJ8jb/pJJBnjsbWBBdpiHCv77apnu2
-X-Gm-Gg: ASbGncsc9WDWLBUsjHLPeaMrzeYcsHyTQst9KURYCV0jRFYGwxPFwYLysz00vBBIumB
-	IvwxSLhFNXeKEG4pv+8B3hIbu1ks/az8Lm1zkNn/m8BBRq4VUgldFqQ1Coo8d+2BOANWB7wsuR/
-	j/w1A5Q0WeUC+mmQwaLSLxy0miYK0VzOEnpg1ktYGif5qDVIBvRb56dFjb0Ocv3IEGgmCgpfk2S
-	T2Mv20LdMk2fFUJApS4C8J278r3FuQDL7EiB54q9Qs9D3PewQaJoJHbSuFfRVh//hh9iCAg7nFm
-	NyJhUzi6etX4C/iUMYMu8fB2SxutLjcaq9p8x3yIXmQte4mcbhnHbKCmSVgZ/qLDj9h+8WcQCTY
-	QSistS9sMA7o=
-X-Google-Smtp-Source: AGHT+IEu/ZrdRQHW5S3aziTM3AcCWGNi0CFd17W1ltj4xgGQjydX+UbH5MIQddYnuJIsxXhhcocH5g==
-X-Received: by 2002:a05:6102:fa1:b0:4c1:9288:906c with SMTP id ada2fe7eead31-4c50d4b49cemr9449136137.9.1742807013477;
-        Mon, 24 Mar 2025 02:03:33 -0700 (PDT)
-Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com. [209.85.221.174])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-86f9f385523sm1538132241.7.2025.03.24.02.03.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Mar 2025 02:03:32 -0700 (PDT)
-Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-52410fb2afeso3668455e0c.3;
-        Mon, 24 Mar 2025 02:03:32 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXGGj9x098i7WlDik4uaUfpaKEbTyUlFar5iX3a7/pXPhOii4sR41F9HJBhWBiznpGstJBuUBFZzLMhnO4I@vger.kernel.org, AJvYcCXucWxasXT3vcReadEnrloXZY2Tz7ttvpezILP0n+MAMkZyAOs9byHEJ0z7R1nhCqNesJ2xdrEb/+Es7WmYImM=@vger.kernel.org
-X-Received: by 2002:a05:6102:dca:b0:4c4:e451:6f24 with SMTP id
- ada2fe7eead31-4c50d623b0amr9079671137.22.1742807012667; Mon, 24 Mar 2025
- 02:03:32 -0700 (PDT)
+	s=arc-20240116; t=1742820887; c=relaxed/simple;
+	bh=5Yofkm1dNa6vGniR8xlKP/z1QwhPxmHysFr4OgO1Qtk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=KvOdr5FCeoveD/RgdMJ+hFBWRQ1Qh9sJC0lHSzfNWFi2F+U7I1OSTY0e7ZZrG8aShzRiOBUZnSvbJziItm6e/8zVSmCrdMppJfbfQhHitXrdTPBSgdXgdiaMy03FjaYZM59hnAJJrH8hyMU87lz6AK2lT5kqJ5LwTop0Bj0CBhg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cjqGr3+m; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cjqGr3+m"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742820885; x=1774356885;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version:content-transfer-encoding;
+  bh=5Yofkm1dNa6vGniR8xlKP/z1QwhPxmHysFr4OgO1Qtk=;
+  b=cjqGr3+m94657UAMQLtc5dieGJiIS9TGNrVmcPeWCHxonAzFoWvgzKC7
+   oSA1NoGK3s4tb8MfTVtFk7tnFn91Ehd/+tfihgLuk/NEspALOADXCQHQO
+   iw5rUlIOMX7wfIs9SXxcrKpteJNuibdYOFTjK4s0f/oTpB4Oz6/b6rkUf
+   KWNHXCqv4hbDYd9hBe6QkpnT+5sJSVC47yvgsgeJl9tOdPglfBN+gKtjM
+   36IFyU9Pv3BBednbov7TmpTHc5vXm2Yj7HUvbMWa0A6s8yViGHrkMWQ7H
+   UqMzx3qGzM1tv9OjAaJHp2W/i18PkAtxRp+OUPyMyR2/jp7P9TY/kadl5
+   Q==;
+X-CSE-ConnectionGUID: 4sMa5BH5R4KQpoGGRdBzxQ==
+X-CSE-MsgGUID: 4ANoNXOOQvi3w988TJ2ABw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11383"; a="43178727"
+X-IronPort-AV: E=Sophos;i="6.14,272,1736841600"; 
+   d="scan'208";a="43178727"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2025 05:54:44 -0700
+X-CSE-ConnectionGUID: YsdPNGcISjGrFVNme+iMeg==
+X-CSE-MsgGUID: IBn7zjQUQz60GGLw/GwisQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,272,1736841600"; 
+   d="scan'208";a="147243419"
+Received: from kniemiec-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.246.30])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2025 05:54:39 -0700
+From: Jani Nikula <jani.nikula@linux.intel.com>
+To: Damian Tometzki <damian@riscv-rocks.de>, Kees Cook <kees@kernel.org>
+Cc: Zhenyu Wang <zhenyuw@linux.intel.com>, Zhi Wang
+ <zhi.wang.linux@gmail.com>, Joonas Lahtinen
+ <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
+ Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, intel-gvt-dev@lists.freedesktop.org,
+ intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] drm/i915/gvt: Add __nonstring annotations for
+ unterminated strings
+In-Reply-To: <01070195c306db7f-9f28efdd-9456-4db3-b6c6-343298bd571b-000000@eu-central-1.amazonses.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20250310222355.work.417-kees@kernel.org>
+ <01070195c306db7f-9f28efdd-9456-4db3-b6c6-343298bd571b-000000@eu-central-1.amazonses.com>
+Date: Mon, 24 Mar 2025 14:54:36 +0200
+Message-ID: <87r02ma8s3.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250321032627.4147562-1-jeffxu@google.com> <20250321032627.4147562-2-jeffxu@google.com>
-In-Reply-To: <20250321032627.4147562-2-jeffxu@google.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 24 Mar 2025 10:03:21 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdWDrByGrgcTK9dRKRJyQ3ecQwadJjCcW=Nd0SjUeEukpg@mail.gmail.com>
-X-Gm-Features: AQ5f1JptHW9VS-Yelex_Y6M47FPBnm2RiYqpGcgh9ZUdERvWy3D01ssL2b_YVHU
-Message-ID: <CAMuHMdWDrByGrgcTK9dRKRJyQ3ecQwadJjCcW=Nd0SjUeEukpg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] mseal sysmap: add arch-support txt
-To: jeffxu@chromium.org
-Cc: Liam.Howlett@oracle.com, agordeev@linux.ibm.com, akpm@linux-foundation.org, 
-	borntraeger@linux.ibm.com, edumazet@google.com, gor@linux.ibm.com, 
-	guoweikang.kernel@gmail.com, hca@linux.ibm.com, kees@kernel.org, 
-	kevin.brodsky@arm.com, linux-hardening@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, lorenzo.stoakes@oracle.com, 
-	m-malladi@ti.com, svens@linux.ibm.com, thomas.weissschuh@linutronix.de, 
-	zhengqi.arch@bytedance.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi Jeff,
+On Sun, 23 Mar 2025, Damian Tometzki <damian@riscv-rocks.de> wrote:
+> On Mon, 10. Mar 15:23, Kees Cook wrote:
+>> When a character array without a terminating NUL character has a static
+>> initializer, GCC 15's -Wunterminated-string-initialization will only
+>> warn if the array lacks the "nonstring" attribute[1]. Mark the arrays
+>> with __nonstring to and correctly identify the char array as "not a C
+>> string" and thereby eliminate the warning.
+>>=20
+>> Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D117178 [1]
+>> Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
+>> Cc: Zhi Wang <zhi.wang.linux@gmail.com>
+>> Cc: Jani Nikula <jani.nikula@linux.intel.com>
+>> Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+>> Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
+>> Cc: Tvrtko Ursulin <tursulin@ursulin.net>
+>> Cc: David Airlie <airlied@gmail.com>
+>> Cc: Simona Vetter <simona@ffwll.ch>
+>> Cc: intel-gvt-dev@lists.freedesktop.org
+>> Cc: intel-gfx@lists.freedesktop.org
+>> Cc: dri-devel@lists.freedesktop.org
+>> Signed-off-by: Kees Cook <kees@kernel.org>
+>> ---
+>>  drivers/gpu/drm/i915/gvt/opregion.c | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>=20
+>> diff --git a/drivers/gpu/drm/i915/gvt/opregion.c b/drivers/gpu/drm/i915/=
+gvt/opregion.c
+>> index 509f9ccae3a9..f701638d3145 100644
+>> --- a/drivers/gpu/drm/i915/gvt/opregion.c
+>> +++ b/drivers/gpu/drm/i915/gvt/opregion.c
+>> @@ -43,7 +43,7 @@
+>>  #define DEVICE_TYPE_EFP4   0x10
+>>=20=20
+>>  struct opregion_header {
+>> -	u8 signature[16];
+>> +	u8 signature[16] __nonstring;
 
-On Fri, 21 Mar 2025 at 04:26, <jeffxu@chromium.org> wrote:
-> From: Jeff Xu <jeffxu@chromium.org>
+Why would this annotation be needed? It's not treated as a string
+anywhere, and it's u8 not char.
+
+>>  	u32 size;
+>>  	u32 opregion_ver;
+>>  	u8 bios_ver[32];
+>> @@ -222,7 +222,7 @@ int intel_vgpu_init_opregion(struct intel_vgpu *vgpu)
+>>  	u8 *buf;
+>>  	struct opregion_header *header;
+>>  	struct vbt v;
+>> -	const char opregion_signature[16] =3D OPREGION_SIGNATURE;
+>> +	const char opregion_signature[16] __nonstring =3D OPREGION_SIGNATURE;
+>>=20=20
+>>  	gvt_dbg_core("init vgpu%d opregion\n", vgpu->id);
+>>  	vgpu_opregion(vgpu)->va =3D (void *)__get_free_pages(GFP_KERNEL |
+>> --=20
+>> 2.34.1
+>>=20
+> Hello together,
 >
-> Add Documentation/features/core/mseal_sys_mappings/arch-support.txt
+> it doesnt resolve the build issue with gcc15 gcc (GCC) 15.0.1 20250228
 >
-> Signed-off-by: Jeff Xu <jeffxu@chromium.org>
+> CC [M]  drivers/gpu/drm/i915/gvt/scheduler.o
+> /home/damian/kernel/linux/drivers/gpu/drm/i915/gvt/opregion.c: In functio=
+n =E2=80=98intel_vgpu_init_opregion=E2=80=99:
+> /home/damian/kernel/linux/drivers/gpu/drm/i915/gvt/opregion.c:35:28: erro=
+r: initializer-string for array of =E2=80=98char=E2=80=99 is too long [-Wer=
+ror=3Dunterminated-string-initialization]
+>    35 | #define OPREGION_SIGNATURE "IntelGraphicsMem"
+>       |                            ^~~~~~~~~~~~~~~~~~
+> /home/damian/kernel/linux/drivers/gpu/drm/i915/gvt/opregion.c:225:57: not=
+e: in expansion of macro =E2=80=98OPREGION_SIGNATURE=E2=80=99
+>   225 |         const char opregion_signature[16] __nonstring =3D OPREGIO=
+N_SIGNATURE;
+>       |                                                         ^~~~~~~~~=
+~~~~~~~~~
+>   CC [M]  drivers/gpu/drm/i915/gvt/trace_points.o
+> cc1: all warnings being treated as errors
+> make[7]: *** [/home/damian/kernel/linux/scripts/Makefile.build:207: drive=
+rs/gpu/drm/i915/gvt/opregion.o] Error 1
+> make[7]: *** Waiting for unfinished jobs....
+>   CC [M]  drivers/gpu/drm/i915/gvt/vgpu.o
+> make[6]: *** [/home/damian/kernel/linux/scripts/Makefile.build:465: drive=
+rs/gpu/drm/i915] Error 2
+> make[5]: *** [/home/damian/kernel/linux/s
 
-Thanks for your patch!
+What about this?
 
-> --- /dev/null
-> +++ b/Documentation/features/core/mseal_sys_mappings/arch-support.txt
-> @@ -0,0 +1,30 @@
-> +#
-> +# Feature name:          mseal-system-mappings
-> +#         Kconfig:       ARCH_SUPPORTS_MSEAL_SYSTEM_MAPPINGS
-> +#         description:   arch supports mseal system mappings
-> +#
-> +    -----------------------
-> +    |         arch |status|
-> +    -----------------------
-> +    |       alpha: | TODO |
-> +    |         arc: | TODO |
+IMO it's anyway good practice to use sizeof(dest) rather than
+sizeof(src) for memcpy.
 
-N/A (32-bit only)
 
-> +    |         arm: |  N/A |
-> +    |       arm64: |  ok  |
-> +    |        csky: | TODO |
+diff --git a/drivers/gpu/drm/i915/gvt/opregion.c b/drivers/gpu/drm/i915/gvt=
+/opregion.c
+index 509f9ccae3a9..dbad4d853d3a 100644
+--- a/drivers/gpu/drm/i915/gvt/opregion.c
++++ b/drivers/gpu/drm/i915/gvt/opregion.c
+@@ -222,7 +222,6 @@ int intel_vgpu_init_opregion(struct intel_vgpu *vgpu)
+ 	u8 *buf;
+ 	struct opregion_header *header;
+ 	struct vbt v;
+-	const char opregion_signature[16] =3D OPREGION_SIGNATURE;
+=20
+ 	gvt_dbg_core("init vgpu%d opregion\n", vgpu->id);
+ 	vgpu_opregion(vgpu)->va =3D (void *)__get_free_pages(GFP_KERNEL |
+@@ -236,8 +235,10 @@ int intel_vgpu_init_opregion(struct intel_vgpu *vgpu)
+ 	/* emulated opregion with VBT mailbox only */
+ 	buf =3D (u8 *)vgpu_opregion(vgpu)->va;
+ 	header =3D (struct opregion_header *)buf;
+-	memcpy(header->signature, opregion_signature,
+-	       sizeof(opregion_signature));
++
++	static_assert(sizeof(header->signature) =3D=3D sizeof(OPREGION_SIGNATURE)=
+ - 1);
++	memcpy(header->signature, OPREGION_SIGNATURE, sizeof(header->signature));
++
+ 	header->size =3D 0x8;
+ 	header->opregion_ver =3D 0x02000000;
+ 	header->mboxes =3D MBOX_VBT;
 
-N/A (32-bit only)
 
-> +    |     hexagon: |  N/A |
-> +    |   loongarch: | TODO |
-> +    |        m68k: | TODO |
 
-N/A (32-bit only)
-
-> +    |  microblaze: |  N/A |
-> +    |        mips: | TODO |
-> +    |       nios2: | TODO |
-
-N/A (32-bit only)
-
-> +    |    openrisc: |  N/A |
-> +    |      parisc: | TODO |
-> +    |     powerpc: | TODO |
-> +    |       riscv: | TODO |
-> +    |        s390: |  ok  |
-> +    |          sh: |  N/A |
-> +    |       sparc: | TODO |
-> +    |          um: | TODO |
-> +    |         x86: |  ok  |
-> +    |      xtensa: | TODO |
-
-N/A (32-bit only)
-
-> +    -----------------------
-> --
-> 2.49.0.395.g12beb8f557-goog
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+--=20
+Jani Nikula, Intel
