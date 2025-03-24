@@ -1,92 +1,148 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0883EF510;
-	Sun, 23 Mar 2025 16:48:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F512BA36;
+	Mon, 24 Mar 2025 09:03:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742748488; cv=none; b=LkNFg1apeKwiaootVzZHLmSXN+Ldt8hETYGN8zLhsX2mdkrRb377rqFICk2PPEQFQqD2fEZNvkCrtY3DomUteamNqL+gve5O3Af249lEtENKh+ccw/Vo8pDAYfh0pxRKrvTO2XQJDH5+Njz5BTRSBwnFwm84vawi8gfya65sKH4=
+	t=1742807016; cv=none; b=pvxBmBz/fFBv8WdW6dnYXoIQuLrfHS2YbT94tmEHH7GDcZAcDcxv4JTwApQZdoGmXOGE7X8GNOfu0OQCHPhzhp+m+1NCFVh1Y8eIhRhTTSVMOwKpdcnXB+f+BsasmbsCz5JNzzxNna0Nv3urMuaiUb71DzMbBJH3jZVGZAAQLOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742748488; c=relaxed/simple;
-	bh=NEy6S0p5xzIfy6ODr1lpmVmlv6zgmNVtot/sei4opx0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rUkFK2z/yQYqecDfXNPc3yEr965SJkAVKcKTiEw6+wbfcTNPgdDoKoTjD0Y3VP28Sum+DsKbnnItkxBzvg43e2PacGbPusHVLkno/oAynJwTabfjwoEeT8U1VzzNNdXPR0Z4ncg+MdybEAlEho+1KIVeELtWYCaZOSGZnESiri0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o9Tn8Cbp; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o9Tn8Cbp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 519BBC4CEE2;
-	Sun, 23 Mar 2025 16:48:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742748486;
-	bh=NEy6S0p5xzIfy6ODr1lpmVmlv6zgmNVtot/sei4opx0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=o9Tn8CbpqNwKSsIdobFS00lNUgLtMSC6ZjE/0//uCGvnE9NY3xf4iF9fmkLXxjVwz
-	 7sQcyfN9Vu4CyGSgjSDAxtk4UpSU4A1N2XM5Fx3EUAjMODnecPaZ6KdRJ+dtYMsfYt
-	 wCnGiLKYGio4S+wENJcETL5x947S9jSTPp/BudWtNU5kO3Plce8XSkoXN5iDu0PUBp
-	 6/Ubzbb8ABqMRqxLoFZ4CT0DU35Wto6KE4pJDFg1S4HRPBWBeZoSIoNkIST401gjX6
-	 LWbPskvt//DXxfTSa7BM9Ih7TLe43DOAx0SM+vil6PeB/wxNL8R2cAGJbo7bkn3/mQ
-	 /Njwiv6/YdojA==
-Date: Sun, 23 Mar 2025 16:48:00 +0000
-From: Simon Horman <horms@kernel.org>
-To: Eric Woudstra <ericwouds@gmail.com>
-Cc: Michal Ostrowski <mostrows@earthlink.net>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Pablo Neira Ayuso <pablo@netfilter.org>,
-	Jozsef Kadlecsik <kadlec@netfilter.org>, netdev@vger.kernel.org,
-	netfilter-devel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	Nikolay Aleksandrov <razor@blackwall.org>
-Subject: Re: [PATCH v10 nf-next 1/3] net: pppoe: avoid zero-length arrays in
- struct pppoe_hdr
-Message-ID: <20250323164800.GR892515@horms.kernel.org>
-References: <20250315195910.17659-1-ericwouds@gmail.com>
- <20250315195910.17659-2-ericwouds@gmail.com>
+	s=arc-20240116; t=1742807016; c=relaxed/simple;
+	bh=KqRUMD2XdQQ9CG7Nb2vZ5/GtFfomSxM64REk2V7g3po=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TLImVVDrdBoBeM1sAkVnw6iTaQUvqufqbmW8ZEqqWLQb5a6agfjiWATPJdxFJca0mtbywCJIQrqgtLA5MyVimzyHI97BizLkY+YujeqztUBgFJN8kcTITnJMOPXH0/7OqEmXZOL4tV/MJZ8jv4SBWUyRJwH8C3fHYLi/xKrVjnY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-86ba07fe7a4so3615134241.2;
+        Mon, 24 Mar 2025 02:03:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742807014; x=1743411814;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=12C9f7Hkrurs0MZwp3rUXbOHTi8BuaCTTSuYZ39XhRs=;
+        b=Yl5I6vfScXTeIM1ASKwR+MuWpWlvDalT9iree8XN+ifk7V4wTqEL7nELotbfSeMpa/
+         N6vITO3pgNyis8wB+0PaMY0QlRI/gFvhdQByPv8420tRcRLtIUrXgPBgyufJexAd/LPs
+         Y6dWnSj+iePvtMsar12C/hyWCiah8ZrjWMenXEweX6qgb96dxUjpZ0/X/yVvt0o7dT+R
+         EEeqOynl6uvi84cYw5qdA3aYsewwntDeYxWJHE87BAytufPH9avjMphNhWj0t8hegPcF
+         FTDKtqRGz3N/SK1N2nZc2YNiGN+e3BlV/s/0oLJOjStPU6+KPqosbAZg1Hk8W49NRp+l
+         Zu5A==
+X-Forwarded-Encrypted: i=1; AJvYcCVWx3lkPWXJMJ2svFz+HZJqWi8cB/96dHw47CpCOcqblUts3bIm8wr7el/qsXmaYBqt9YKAFEKi33VAhtc6468=@vger.kernel.org, AJvYcCWKi69VaNGM6E+Go0QesUfVMle1gvUSZOp+ggEQfQzSybJu0ZGYvR7QDo8s1IOaRnhKCdJ1PgxDGdvY2GqB@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIg0x2KuaFFU29mDLnWERZbMbwjZodVJmFnv5E9GSxqDLF/rp+
+	RhwTImD/yPpP0mpG0a7gcVVR9OP7J9JJ8jb/pJJBnjsbWBBdpiHCv77apnu2
+X-Gm-Gg: ASbGncsc9WDWLBUsjHLPeaMrzeYcsHyTQst9KURYCV0jRFYGwxPFwYLysz00vBBIumB
+	IvwxSLhFNXeKEG4pv+8B3hIbu1ks/az8Lm1zkNn/m8BBRq4VUgldFqQ1Coo8d+2BOANWB7wsuR/
+	j/w1A5Q0WeUC+mmQwaLSLxy0miYK0VzOEnpg1ktYGif5qDVIBvRb56dFjb0Ocv3IEGgmCgpfk2S
+	T2Mv20LdMk2fFUJApS4C8J278r3FuQDL7EiB54q9Qs9D3PewQaJoJHbSuFfRVh//hh9iCAg7nFm
+	NyJhUzi6etX4C/iUMYMu8fB2SxutLjcaq9p8x3yIXmQte4mcbhnHbKCmSVgZ/qLDj9h+8WcQCTY
+	QSistS9sMA7o=
+X-Google-Smtp-Source: AGHT+IEu/ZrdRQHW5S3aziTM3AcCWGNi0CFd17W1ltj4xgGQjydX+UbH5MIQddYnuJIsxXhhcocH5g==
+X-Received: by 2002:a05:6102:fa1:b0:4c1:9288:906c with SMTP id ada2fe7eead31-4c50d4b49cemr9449136137.9.1742807013477;
+        Mon, 24 Mar 2025 02:03:33 -0700 (PDT)
+Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com. [209.85.221.174])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-86f9f385523sm1538132241.7.2025.03.24.02.03.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Mar 2025 02:03:32 -0700 (PDT)
+Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-52410fb2afeso3668455e0c.3;
+        Mon, 24 Mar 2025 02:03:32 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXGGj9x098i7WlDik4uaUfpaKEbTyUlFar5iX3a7/pXPhOii4sR41F9HJBhWBiznpGstJBuUBFZzLMhnO4I@vger.kernel.org, AJvYcCXucWxasXT3vcReadEnrloXZY2Tz7ttvpezILP0n+MAMkZyAOs9byHEJ0z7R1nhCqNesJ2xdrEb/+Es7WmYImM=@vger.kernel.org
+X-Received: by 2002:a05:6102:dca:b0:4c4:e451:6f24 with SMTP id
+ ada2fe7eead31-4c50d623b0amr9079671137.22.1742807012667; Mon, 24 Mar 2025
+ 02:03:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250315195910.17659-2-ericwouds@gmail.com>
+References: <20250321032627.4147562-1-jeffxu@google.com> <20250321032627.4147562-2-jeffxu@google.com>
+In-Reply-To: <20250321032627.4147562-2-jeffxu@google.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 24 Mar 2025 10:03:21 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdWDrByGrgcTK9dRKRJyQ3ecQwadJjCcW=Nd0SjUeEukpg@mail.gmail.com>
+X-Gm-Features: AQ5f1JptHW9VS-Yelex_Y6M47FPBnm2RiYqpGcgh9ZUdERvWy3D01ssL2b_YVHU
+Message-ID: <CAMuHMdWDrByGrgcTK9dRKRJyQ3ecQwadJjCcW=Nd0SjUeEukpg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] mseal sysmap: add arch-support txt
+To: jeffxu@chromium.org
+Cc: Liam.Howlett@oracle.com, agordeev@linux.ibm.com, akpm@linux-foundation.org, 
+	borntraeger@linux.ibm.com, edumazet@google.com, gor@linux.ibm.com, 
+	guoweikang.kernel@gmail.com, hca@linux.ibm.com, kees@kernel.org, 
+	kevin.brodsky@arm.com, linux-hardening@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, lorenzo.stoakes@oracle.com, 
+	m-malladi@ti.com, svens@linux.ibm.com, thomas.weissschuh@linutronix.de, 
+	zhengqi.arch@bytedance.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Sat, Mar 15, 2025 at 08:59:08PM +0100, Eric Woudstra wrote:
-> Jakub Kicinski suggested following patch:
-> 
-> W=1 C=1 GCC build gives us:
-> 
-> net/bridge/netfilter/nf_conntrack_bridge.c: note: in included file (through
-> ../include/linux/if_pppox.h, ../include/uapi/linux/netfilter_bridge.h,
-> ../include/linux/netfilter_bridge.h): include/uapi/linux/if_pppox.h:
-> 153:29: warning: array of flexible structures
-> 
-> It doesn't like that hdr has a zero-length array which overlaps proto.
-> The kernel code doesn't currently need those arrays.
-> 
-> PPPoE connection is functional after applying this patch.
-> 
-> Reviewed-by: Nikolay Aleksandrov <razor@blackwall.org>
-> 
-> ---
-> 
-> Split from patch-set: bridge-fastpath and related improvements v9
-> 
-> Signed-off-by: Eric Woudstra <ericwouds@gmail.com>
+Hi Jeff,
 
-Hi Eric,
+On Fri, 21 Mar 2025 at 04:26, <jeffxu@chromium.org> wrote:
+> From: Jeff Xu <jeffxu@chromium.org>
+>
+> Add Documentation/features/core/mseal_sys_mappings/arch-support.txt
+>
+> Signed-off-by: Jeff Xu <jeffxu@chromium.org>
 
-Perhaps this is due to tooling, but your Signed-off-by line should
-appear immediately after the Reviewed-by line. No blank line in between.
+Thanks for your patch!
 
-And, in particular, the Signed-off-by line should appear above the (first)
-scissors ("---"), as if git am is used to apply your patch then the
-commit message will be truncated at that point. Which results
-in a commit with no signed-off-by line.
+> --- /dev/null
+> +++ b/Documentation/features/core/mseal_sys_mappings/arch-support.txt
+> @@ -0,0 +1,30 @@
+> +#
+> +# Feature name:          mseal-system-mappings
+> +#         Kconfig:       ARCH_SUPPORTS_MSEAL_SYSTEM_MAPPINGS
+> +#         description:   arch supports mseal system mappings
+> +#
+> +    -----------------------
+> +    |         arch |status|
+> +    -----------------------
+> +    |       alpha: | TODO |
+> +    |         arc: | TODO |
 
-FWIIW, putting the note about splitting the patch-set below the scissors
-looks good to me.
+N/A (32-bit only)
 
-...
+> +    |         arm: |  N/A |
+> +    |       arm64: |  ok  |
+> +    |        csky: | TODO |
+
+N/A (32-bit only)
+
+> +    |     hexagon: |  N/A |
+> +    |   loongarch: | TODO |
+> +    |        m68k: | TODO |
+
+N/A (32-bit only)
+
+> +    |  microblaze: |  N/A |
+> +    |        mips: | TODO |
+> +    |       nios2: | TODO |
+
+N/A (32-bit only)
+
+> +    |    openrisc: |  N/A |
+> +    |      parisc: | TODO |
+> +    |     powerpc: | TODO |
+> +    |       riscv: | TODO |
+> +    |        s390: |  ok  |
+> +    |          sh: |  N/A |
+> +    |       sparc: | TODO |
+> +    |          um: | TODO |
+> +    |         x86: |  ok  |
+> +    |      xtensa: | TODO |
+
+N/A (32-bit only)
+
+> +    -----------------------
+> --
+> 2.49.0.395.g12beb8f557-goog
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
