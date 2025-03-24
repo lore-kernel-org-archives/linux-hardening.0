@@ -1,105 +1,68 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from gentwo.org (gentwo.org [62.72.0.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 243E8263885;
-	Mon, 24 Mar 2025 16:17:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65AA625D1E1;
+	Mon, 24 Mar 2025 16:48:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.72.0.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742833082; cv=none; b=qdWFLadbh7/8yJnrILBTt1qlNfmVPs1mPRjZ9HSkTDxFGLotmlmop+NTWuYDOv+2GX30q4pgOHEY61c7uj9/5cwb3QNBqgDoXFuf9/5EwlJDwEqu7zoVbfCaDiMFWf+PsDJqoVbDXuCPKXgMB1zcvPWnFWKd4d5Y5UhBBd2dhEs=
+	t=1742834932; cv=none; b=KZ1MA7gz9u8B5a+XUzSKZTEBFPS3Go7ld7jff7uyq82I+0+d1C8S+juLWw7KA5kJ+KHiCatyJKiNorKQBPnYqcgeWrt5i+1lBWUc6BHTki+lsS43Iy0f9GIFtr0H7oQCssMocZ1Cf6ayVBCBbGcf0w9dktXDIsVUsci+27QARHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742833082; c=relaxed/simple;
-	bh=r1CWYmSitq8ffSacjnIINz9x92kI2IJzQEeKRfc58Ts=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ch8uaiOhsDO5XqXfrY6EHC51u4otvBRldrsT9jdwW6hmXOnCgMh40cnazML8E0Wg9y/sbGwz1WbyeyVuoH9+7WV7RZUQyyEt9XmbvLizHHoexETltRI9PoDDt9Ru7XcIYFhm+2vR/RvhBtX/EcI1EvLznIGePjK0A3YDdT/BxvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eZGdRWRs; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1742834932; c=relaxed/simple;
+	bh=sayeoWKFFq1gCersPRDqm3tR8WeC5c4VRp8l8D2eJ7Y=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=nuoFwJhiG6SbZKLP+Zu60dsfUfuS2CB9U9MDLszYVsYXt2UyX7c5wX5h7nqAq4u5YcVQvOkTCKg7ZGmKQ31HDmYzCfI0g58PDGX4+yFW3VmA9ytRU/cR+Am19pJ6LnzB2j4HQJQHfzFlj1B9qtAN2UMymo9VYVdTDz1YCZVQ+VA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gentwo.org; spf=pass smtp.mailfrom=gentwo.org; dkim=pass (1024-bit key) header.d=gentwo.org header.i=@gentwo.org header.b=PuNW8IJM; arc=none smtp.client-ip=62.72.0.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gentwo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentwo.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eZGdRWRs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742833080; x=1774369080;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=r1CWYmSitq8ffSacjnIINz9x92kI2IJzQEeKRfc58Ts=;
-  b=eZGdRWRsbgik6YQdoteM/UOgNEZdJ/qbsbJ+MhSPo5mlJ9mtVplbmmzi
-   VjxOa6wmRR0OVeVjTP5spQHVHO4A2CyxiU8p/X1it4Mpi2Yalrk0GvjvS
-   a9jzoBXgSAtAEcn6BMBKMjth4bICRYsgl+jb14fF5j3U9/uGj2fRncOOK
-   mAXsxplPCIVY18Dj7JhF8R2KYKv0qGXM7b9+W9SvHFgMgV2HcIQk7RJ/c
-   yh7TYirHqJVNDkc6gSzyxH9XmIPSoBZ6gybGfOL3p3yuwhDkRKyjXnk3u
-   6cQcKorAGQM4v/6nXRewyfIlFtLeFj9UyEoclrNMFNE9kZyhtWU/dV5Od
-   w==;
-X-CSE-ConnectionGUID: owDA7x07TMuQ1WFl944HWw==
-X-CSE-MsgGUID: 4fh7HGukQnq0zZuOavSDjg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11383"; a="55426930"
-X-IronPort-AV: E=Sophos;i="6.14,272,1736841600"; 
-   d="scan'208";a="55426930"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2025 09:17:57 -0700
-X-CSE-ConnectionGUID: MI0HGLbxSTSEOprtpndLBg==
-X-CSE-MsgGUID: kP5VE1NRTm6Z+IaGNcSjZQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,272,1736841600"; 
-   d="scan'208";a="155000896"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2025 09:17:53 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1twkUn-00000005UlE-391E;
-	Mon, 24 Mar 2025 18:17:49 +0200
-Date: Mon, 24 Mar 2025 18:17:49 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Petr Mladek <pmladek@suse.com>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Kees Cook <kees@kernel.org>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: Re: [PATCH v1 1/6] seq_buf: Mark binary printing functions with
- __printf() attribute
-Message-ID: <Z-GFrV3B1eoK0wrq@smile.fi.intel.com>
-References: <20250320180926.4002817-1-andriy.shevchenko@linux.intel.com>
- <20250320180926.4002817-2-andriy.shevchenko@linux.intel.com>
- <20250324120430.0620a8f6@gandalf.local.home>
+	dkim=pass (1024-bit key) header.d=gentwo.org header.i=@gentwo.org header.b="PuNW8IJM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gentwo.org;
+	s=default; t=1742833007;
+	bh=sayeoWKFFq1gCersPRDqm3tR8WeC5c4VRp8l8D2eJ7Y=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=PuNW8IJMRMPqmJoHY28KOKknba33zkvjaGV+/sa/zYLs7an3WLSXSqyZYOc+PbYaq
+	 bMg+fwipm3EQ7e7HD453pzc4EAU1x96demCTo+8BnZewB/GkMqnxGfxFwIr96MI+8M
+	 PPQq2Ypi0ufeYnFdWPm+TG7hE+HMqv2KVTvIDvNE=
+Received: by gentwo.org (Postfix, from userid 1003)
+	id 61C6A4027F; Mon, 24 Mar 2025 09:16:47 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+	by gentwo.org (Postfix) with ESMTP id 5F45E401C4;
+	Mon, 24 Mar 2025 09:16:47 -0700 (PDT)
+Date: Mon, 24 Mar 2025 09:16:47 -0700 (PDT)
+From: "Christoph Lameter (Ampere)" <cl@gentwo.org>
+To: Kees Cook <kees@kernel.org>
+cc: Vlastimil Babka <vbabka@suse.cz>, Pekka Enberg <penberg@kernel.org>, 
+    David Rientjes <rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, 
+    Andrew Morton <akpm@linux-foundation.org>, 
+    Roman Gushchin <roman.gushchin@linux.dev>, 
+    Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org, 
+    Miguel Ojeda <ojeda@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+    Marco Elver <elver@google.com>, Nick Desaulniers <ndesaulniers@google.com>, 
+    Przemek Kitszel <przemyslaw.kitszel@intel.com>, 
+    linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 5/5] [DEBUG] slab: Report number of NULLings
+In-Reply-To: <20250321204105.1898507-5-kees@kernel.org>
+Message-ID: <e3437446-798d-f4f3-11d7-675f8886575b@gentwo.org>
+References: <20250321202620.work.175-kees@kernel.org> <20250321204105.1898507-5-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250324120430.0620a8f6@gandalf.local.home>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=US-ASCII
 
-On Mon, Mar 24, 2025 at 12:04:30PM -0400, Steven Rostedt wrote:
-> On Thu, 20 Mar 2025 20:04:22 +0200
-> Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
-> 
-> > Binary printing functions are using printf() type of format, and compiler
-> > is not happy about them as is:
-> > 
-> > lib/seq_buf.c:162:17: error: function ‘seq_buf_bprintf’ might be a candidate for ‘gnu_printf’ format attribute [-Werror=suggest-attribute=format]
-> > 
-> > Fix the compilation errors by adding __printf() attribute.
-> > 
-> 
-> Should also note the removal of "extern"
+On Fri, 21 Mar 2025, Kees Cook wrote:
 
-Ah, just noticed that you are looking at v1, there is also v2 available:
-20250321144822.324050-1-andriy.shevchenko@linux.intel.com
+> diff --git a/include/linux/slab.h b/include/linux/slab.h
+> index 2717ad238fa2..a4740c8b6ccb 100644
+> --- a/include/linux/slab.h
+> +++ b/include/linux/slab.h
+> @@ -469,6 +469,8 @@ void __kfree(const void *objp);
+>  void __kfree_sensitive(const void *objp);
+>  size_t __ksize(const void *objp);
+>
+> +extern atomic_t count_nulled;
 
-Thank you for the review, nevertheless!
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+That is a scalability issue. Use a vmstat counter instead?
 
