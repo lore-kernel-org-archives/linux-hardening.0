@@ -1,51 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF9227DA73;
-	Tue, 25 Mar 2025 19:45:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 625F219F422;
+	Tue, 25 Mar 2025 21:45:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742931914; cv=none; b=pcKouYjABC5fKmgKNh7Bq68ygw765u74e8C+T6xzuXdug2VvpxUn6AmUW49E77/H9rIy6eVRxd+p29QKLlkvdWsraP5UCHpf6/etZaE08QXllm7TozvmeK067RINw2O9Ll3j/hPFElj8G+4Nx3ULLxxfwFBPH2JbNj66suDguIw=
+	t=1742939121; cv=none; b=ekzG9GeEWpWwHEOVFFaGpfqjrHepwyDeHn6U6OYkz1mAeB4ZxwJ7h3gspnaDXZf2SF43C5bP7xvCFFO/uymPxRL/Um1R0X8/v/GvcGT2VstSoc6gyDVybir5s+zjUu3H367wnWv/vAj7YqZvonyL+N7T9aYXaq/v+K/TBIwYPFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742931914; c=relaxed/simple;
-	bh=xGYquhQCBrhq2OSfhRrStIcjF6AppssofRH9M5AUzbA=;
+	s=arc-20240116; t=1742939121; c=relaxed/simple;
+	bh=rDdLVVOB1kS1Rur+co5d17dcdxdeV+fdRJuaWwVbsuo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fgt5LdyYZd7URFr+FjXasi3BYycBlMd9qRNSitAUkLGHLPWkpFUB+McfsxobEkk5DfuZY0qckPvgWznKfDAgUiZ5AF6YQ7b1Av78UcU/+vU7zK2ndwCyHq6AxVefs7ijlaMVZaGtekcdsx0FSjNdXZolXEY8rUb2Z2e5hx66UJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e/VzJZYo; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=YCGLrwOcAhuW7BqiZYFj4IJyJ7nQ5lmEDC7MwdNsnWeZVFPqmIH8cc25t6iDZxkFBL6AkJAchlcI1Ryb5jjWDL9UBdLRGUk8FM7ETpyRrDy7jHuHrNWOGZkQoOKRyCv6I+kNf6H3I9b9HvG9pTKm+a1DuInwwhhyM/TBfOfbwo0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cLIa4DHk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e/VzJZYo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 500A7C4CEE4;
-	Tue, 25 Mar 2025 19:45:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cLIa4DHk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB043C4CEE9;
+	Tue, 25 Mar 2025 21:45:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742931913;
-	bh=xGYquhQCBrhq2OSfhRrStIcjF6AppssofRH9M5AUzbA=;
+	s=k20201202; t=1742939120;
+	bh=rDdLVVOB1kS1Rur+co5d17dcdxdeV+fdRJuaWwVbsuo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=e/VzJZYoLKtf+M1/ZFVlJVERgZhOI5sX9iBIKBC19rg5IpwfmNoYHDWxwHFThqoBK
-	 u1mMlajcwQx4PH7oOBGSGWPxJ/cA25CuGB8DNvgJ0WRUIrs6CN8k9uXboWPjW3Etbq
-	 iwD8gqCU8jMVvqJsbFz3+xoUYScVnJ/l6mQ+u47jD9o/64WdZvWmJ+hH4hZvw43VdC
-	 3esxSCJplc7cVi93uM0qo1Aa1Z9PvEPm+FCVzi5IH3HZbevIRWBLV1hsa44m4T3+qx
-	 nPy2bAJtJDry0sbjsks/GARUeVYYfXgxDbVYdH1DJhUOvUkbgQMFB6RhxFuIZhiwY+
-	 d2b9QyO+2nO9w==
-Date: Tue, 25 Mar 2025 12:45:10 -0700
-From: Kees Cook <kees@kernel.org>
-To: "Christoph Lameter (Ampere)" <cl@gentwo.org>
-Cc: Vlastimil Babka <vbabka@suse.cz>, Pekka Enberg <penberg@kernel.org>,
-	David Rientjes <rientjes@google.com>,
-	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Marco Elver <elver@google.com>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 5/5] [DEBUG] slab: Report number of NULLings
-Message-ID: <202503251244.CA3E0F8@keescook>
-References: <20250321202620.work.175-kees@kernel.org>
- <20250321204105.1898507-5-kees@kernel.org>
- <e3437446-798d-f4f3-11d7-675f8886575b@gentwo.org>
+	b=cLIa4DHkHu6DZUzJ7CVPddiUkvWsIOiF5FxQZabr9XLtulzdbDbAcTzYSk4t3bwff
+	 fL16Cj00rxs5iw/B3tlh+4c+lX+8qBz9ZIu8yto0AvURVKOdZdweCpRcmPRS+UTgMt
+	 Vnsmaj2R4ykyNtr6dHqLJtkkunoPGZcXVkBrXySAjNmqWxSTgMfD/TtbtmLTlqs4SC
+	 ar/TtJ9JnjHpNxNQ9AByKrCO6gSpujk4AkQ9LypD8CP1wgBZRZ5giznshuO0bWdnyf
+	 2qnDR1rhwwG54j1Yqt6y8t9aiVN9tOZpZmjZCBLbexmYOHm6woI5N/CtzXTBIazeX7
+	 nxlz8s0mckJ+w==
+Date: Tue, 25 Mar 2025 14:45:16 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Andy Shevchenko <andy@kernel.org>
+Cc: Kees Cook <kees@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, llvm@lists.linux.dev,
+	linux-efi@vger.kernel.org
+Subject: Re: [PATCH RFC 2/2] wcslen() prototype in string.h
+Message-ID: <20250325214516.GA672870@ax162>
+References: <20250325-string-add-wcslen-for-llvm-opt-v1-0-b8f1e2c17888@kernel.org>
+ <20250325-string-add-wcslen-for-llvm-opt-v1-2-b8f1e2c17888@kernel.org>
+ <Z-LXHssrcpdtFqqn@smile.fi.intel.com>
+ <20250325165847.GA2603000@ax162>
+ <Z-LiWDbrEvVaTLZU@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -54,25 +51,147 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e3437446-798d-f4f3-11d7-675f8886575b@gentwo.org>
+In-Reply-To: <Z-LiWDbrEvVaTLZU@smile.fi.intel.com>
 
-On Mon, Mar 24, 2025 at 09:16:47AM -0700, Christoph Lameter (Ampere) wrote:
-> On Fri, 21 Mar 2025, Kees Cook wrote:
+On Tue, Mar 25, 2025 at 07:05:28PM +0200, Andy Shevchenko wrote:
+> On Tue, Mar 25, 2025 at 09:58:47AM -0700, Nathan Chancellor wrote:
+> > On Tue, Mar 25, 2025 at 06:17:34PM +0200, Andy Shevchenko wrote:
+> > > On Tue, Mar 25, 2025 at 08:45:19AM -0700, Nathan Chancellor wrote:
 > 
-> > diff --git a/include/linux/slab.h b/include/linux/slab.h
-> > index 2717ad238fa2..a4740c8b6ccb 100644
-> > --- a/include/linux/slab.h
-> > +++ b/include/linux/slab.h
-> > @@ -469,6 +469,8 @@ void __kfree(const void *objp);
-> >  void __kfree_sensitive(const void *objp);
-> >  size_t __ksize(const void *objp);
-> >
-> > +extern atomic_t count_nulled;
+> ...
 > 
-> That is a scalability issue. Use a vmstat counter instead?
+> > > > Rename the efi function to avoid the conflict.
+> > > 
+> > > Hmm... Why not split this to two, rename patch as a standalone makes sense to
+> > > me even outside of this series.
+> > 
+> > How so? If nls.h is not included in printk.c via string.h, which does
+> > not happen without this series, what value does the rename have? I do
+> > not mind splitting it up that way to keep things cleaner, I am just
+> > wondering what would be the justification in the changelog (I guess just
+> > that nls.h may get included in the future for some reason)?
+> 
+> Inside this series the justification is obvious (a.k.a. the same), outside
+> yes something like "Put EFI specific function to the respective namespace
+> to avoid potential clash in the future when including another header."
 
-Yeah, this patch (marked "DEBUG") isn't intended for upstreaming. It was
-just a quick hack to get a ballpark statistic. :)
+Okay, sounds reasonable to me. This is what I ended up with for that
+change, which will become patch one of the series.
 
+From f79267c05d2853c034e2c490f171aed064b85dd6 Mon Sep 17 00:00:00 2001
+From: Nathan Chancellor <nathan@kernel.org>
+Date: Tue, 25 Mar 2025 14:31:25 -0700
+Subject: [PATCH] efi: libstub: Rename utf8_to_utf32() to avoid collision with
+ NLS version
+
+A future change will add nls.h to string.h, which will break the libstub
+build because NLS includes its own version of utf8_to_utf32():
+
+  drivers/firmware/efi/libstub/printk.c:27:5: error: static declaration of 'utf8_to_utf32' follows non-static declaration
+     27 | u32 utf8_to_utf32(const u8 **s8)
+        |     ^
+  include/linux/nls.h:55:12: note: previous declaration is here
+     55 | extern int utf8_to_utf32(const u8 *s, int len, unicode_t *pu);
+        |            ^
+  drivers/firmware/efi/libstub/printk.c:85:26: error: too few arguments to function call, expected 3, have 1
+     85 |                 c32 = utf8_to_utf32(&s8);
+        |                       ~~~~~~~~~~~~~    ^
+  include/linux/nls.h:55:12: note: 'utf8_to_utf32' declared here
+     55 | extern int utf8_to_utf32(const u8 *s, int len, unicode_t *pu);
+        |            ^             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  2 errors generated.
+
+Rename the libstub version since it is static to avoid the conflict.
+
+Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+---
+ drivers/firmware/efi/libstub/printk.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/firmware/efi/libstub/printk.c b/drivers/firmware/efi/libstub/printk.c
+index 3a67a2cea7bd..334f7e89845c 100644
+--- a/drivers/firmware/efi/libstub/printk.c
++++ b/drivers/firmware/efi/libstub/printk.c
+@@ -24,7 +24,7 @@ void efi_char16_puts(efi_char16_t *str)
+ }
+ 
+ static
+-u32 utf8_to_utf32(const u8 **s8)
++u32 efi_utf8_to_utf32(const u8 **s8)
+ {
+ 	u32 c32;
+ 	u8 c0, cx;
+@@ -82,7 +82,7 @@ void efi_puts(const char *str)
+ 	while (*s8) {
+ 		if (*s8 == '\n')
+ 			buf[pos++] = L'\r';
+-		c32 = utf8_to_utf32(&s8);
++		c32 = efi_utf8_to_utf32(&s8);
+ 		if (c32 < 0x10000) {
+ 			/* Characters in plane 0 use a single word. */
+ 			buf[pos++] = c32;
 -- 
-Kees Cook
+2.49.0
+
+Then the first patch (which becomes the second) becomes:
+
+diff --git a/include/linux/string.h b/include/linux/string.h
+index 0403a4ca4c11..45e01cf3434c 100644
+--- a/include/linux/string.h
++++ b/include/linux/string.h
+@@ -7,6 +7,7 @@
+ #include <linux/cleanup.h>	/* for DEFINE_FREE() */
+ #include <linux/compiler.h>	/* for inline */
+ #include <linux/types.h>	/* for size_t */
++#include <linux/nls.h>		/* for wchar_t */
+ #include <linux/stddef.h>	/* for NULL */
+ #include <linux/err.h>		/* for ERR_PTR() */
+ #include <linux/errno.h>	/* for E2BIG */
+@@ -203,6 +204,7 @@ extern __kernel_size_t strlen(const char *);
+ #ifndef __HAVE_ARCH_STRNLEN
+ extern __kernel_size_t strnlen(const char *,__kernel_size_t);
+ #endif
++extern __kernel_size_t wcslen(const wchar_t *s);
+ #ifndef __HAVE_ARCH_STRPBRK
+ extern char * strpbrk(const char *,const char *);
+ #endif
+diff --git a/lib/string.c b/lib/string.c
+index eb4486ed40d2..1aa09925254b 100644
+--- a/lib/string.c
++++ b/lib/string.c
+@@ -21,6 +21,7 @@
+ #include <linux/errno.h>
+ #include <linux/limits.h>
+ #include <linux/linkage.h>
++#include <linux/nls.h>
+ #include <linux/stddef.h>
+ #include <linux/string.h>
+ #include <linux/types.h>
+@@ -429,6 +430,16 @@ size_t strnlen(const char *s, size_t count)
+ EXPORT_SYMBOL(strnlen);
+ #endif
+ 
++size_t wcslen(const wchar_t *s)
++{
++	const wchar_t *sc;
++
++	for (sc = s; *sc != '\0'; ++sc)
++		/* nothing */;
++	return sc - s;
++}
++EXPORT_SYMBOL(wcslen);
++
+ #ifndef __HAVE_ARCH_STRSPN
+ /**
+  * strspn - Calculate the length of the initial substring of @s which only contain letters in @accept
+---
+
+with basically the same changelog.
+
+I will send v2 either tomorrow afternoon or Thursday morning to give a
+little more time for initial review/comments.
+
+Thanks for the quick feedback!
+
+Cheers,
+Nathan
