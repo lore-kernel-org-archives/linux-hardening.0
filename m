@@ -1,48 +1,73 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 625F219F422;
-	Tue, 25 Mar 2025 21:45:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF5B526A0BF
+	for <linux-hardening@vger.kernel.org>; Tue, 25 Mar 2025 22:40:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742939121; cv=none; b=ekzG9GeEWpWwHEOVFFaGpfqjrHepwyDeHn6U6OYkz1mAeB4ZxwJ7h3gspnaDXZf2SF43C5bP7xvCFFO/uymPxRL/Um1R0X8/v/GvcGT2VstSoc6gyDVybir5s+zjUu3H367wnWv/vAj7YqZvonyL+N7T9aYXaq/v+K/TBIwYPFQ=
+	t=1742942427; cv=none; b=MzF/HqaRjdu9Hp4kiBul17KQ6t1/m/25tI1KA3XkZJMkgb2cBB3Bgg9QNoRSrKZ2UhM0WAmxbBsVDBhR4aSlo7+0k8F/O+oCz2T2NA/YLA8SjB43IDLtp4hLA99Hn5nLHrub+x3cuR0ilBYf/YxLBGTkqRR7x/b3gfxibUEufA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742939121; c=relaxed/simple;
-	bh=rDdLVVOB1kS1Rur+co5d17dcdxdeV+fdRJuaWwVbsuo=;
+	s=arc-20240116; t=1742942427; c=relaxed/simple;
+	bh=pQ4UoyDlpkHuiZgOcYbiP4Xig7yGzQ3Q2/+D3ehiXNE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YCGLrwOcAhuW7BqiZYFj4IJyJ7nQ5lmEDC7MwdNsnWeZVFPqmIH8cc25t6iDZxkFBL6AkJAchlcI1Ryb5jjWDL9UBdLRGUk8FM7ETpyRrDy7jHuHrNWOGZkQoOKRyCv6I+kNf6H3I9b9HvG9pTKm+a1DuInwwhhyM/TBfOfbwo0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cLIa4DHk; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Fmucd1QU/yesErwkkPzpiT71mk6EVq4MvlX1mZ5bWBIoSXNgyXfazDM2PoP7VMsaouHgAcui6rhPq5vq1AtQJBbad5dqG5/gR54adrqDmG5vWbXJKUylp02zsAeepjNpcVzW9b1y5cAPYBA6kfhi5OaIrVYAndqbBrv2OVcx+Nw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=GQhYK1hd; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cLIa4DHk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB043C4CEE9;
-	Tue, 25 Mar 2025 21:45:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742939120;
-	bh=rDdLVVOB1kS1Rur+co5d17dcdxdeV+fdRJuaWwVbsuo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cLIa4DHkHu6DZUzJ7CVPddiUkvWsIOiF5FxQZabr9XLtulzdbDbAcTzYSk4t3bwff
-	 fL16Cj00rxs5iw/B3tlh+4c+lX+8qBz9ZIu8yto0AvURVKOdZdweCpRcmPRS+UTgMt
-	 Vnsmaj2R4ykyNtr6dHqLJtkkunoPGZcXVkBrXySAjNmqWxSTgMfD/TtbtmLTlqs4SC
-	 ar/TtJ9JnjHpNxNQ9AByKrCO6gSpujk4AkQ9LypD8CP1wgBZRZ5giznshuO0bWdnyf
-	 2qnDR1rhwwG54j1Yqt6y8t9aiVN9tOZpZmjZCBLbexmYOHm6woI5N/CtzXTBIazeX7
-	 nxlz8s0mckJ+w==
-Date: Tue, 25 Mar 2025 14:45:16 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Andy Shevchenko <andy@kernel.org>
-Cc: Kees Cook <kees@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, llvm@lists.linux.dev,
-	linux-efi@vger.kernel.org
-Subject: Re: [PATCH RFC 2/2] wcslen() prototype in string.h
-Message-ID: <20250325214516.GA672870@ax162>
-References: <20250325-string-add-wcslen-for-llvm-opt-v1-0-b8f1e2c17888@kernel.org>
- <20250325-string-add-wcslen-for-llvm-opt-v1-2-b8f1e2c17888@kernel.org>
- <Z-LXHssrcpdtFqqn@smile.fi.intel.com>
- <20250325165847.GA2603000@ax162>
- <Z-LiWDbrEvVaTLZU@smile.fi.intel.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GQhYK1hd"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2ff799d99dcso10436412a91.1
+        for <linux-hardening@vger.kernel.org>; Tue, 25 Mar 2025 15:40:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1742942425; x=1743547225; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZQ0mQOw62tpJtHtq3bDP+LhjKb7VU3twZUif4e7fNdo=;
+        b=GQhYK1hdsQPc38IdJ6AIvyattcUJJLw0K6nefnDPT46rZvc/BQs5h3hF377S31XDhK
+         3KxXg8htAQA1HPmJufoEETmGqsFahje/CjWGlEbF4b/fDpuKuDmG1pbmxk6XsG0vP9Bb
+         CU5VaaihLJgMKAFvhoL9BnTJAawhZOR5+Kd5s=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742942425; x=1743547225;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZQ0mQOw62tpJtHtq3bDP+LhjKb7VU3twZUif4e7fNdo=;
+        b=eQoBrqzhs5oFkvgFUuNbN2kps8jCk/yOwNTyCE6HYkHgcvMe7rqPK5EjvKqAN23dfA
+         yYAzxbenn4QSTrI4ZNIhCxe6ocjM+cmOgdSEitjH1CKWq2eTIbRSylh6Mpexj8R+H+KG
+         dhaVGaMdAV+OjhI4YvwbSKrkM5DpM4W1rJiX30x5f2H5DViuJdxlfwDWoHG7+C+Bp3HA
+         kJq2+SrmI2z0z1AG3XJPJsvrWA1Sw0PUYkoATIwI+QVxsX9aTQIXW7Hl6sWLcc1rZSh/
+         7zXuC2YJV+cIVNiHhwfxol1IQHXGFA+CXuaI7HsbxK2hwNj91qtrHkHKqioSWgEGKsiL
+         kOVg==
+X-Forwarded-Encrypted: i=1; AJvYcCUHG8h3c3BcG5F1O8eVuRQuhPpCc7BMC96L/42Tp0ncH3RCl6v41G6pRsedXBotZnxP1oOnXUiNR4jL90+tmNI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzfDnEDk60zedg2p8Q5XvmcyUdX8IDJGF5J9air3mjl8pf8+hcf
+	pDDfPRJPQEkleRf1A0/RQdbormFyWo12R+tW/9LzSj+Zb8ppvifmeEGLtxl0Uw==
+X-Gm-Gg: ASbGncvQLa2jgStNRkGVKeXarE/krPtMme2c1vHtwogKtncwcWWZv4ohv6muFlXJnRo
+	J2IEPUaGdf7xg5TSEAx+fa5EjObkBhxlm5d3a1vlTI5c1AxCj9UP2UvV+aI1wrRxi7pmHFrE+Nx
+	2SuizRDWVW4T8W1x63G5DkuYd1T0D1jH+l8C1BXCUtoyNesTi2O1OLSEq0Z7Y4MkuP+UV2muySC
+	HTIlMHcpEhRlF/uBsPIOLq87RZxqs++CN/ZCkzzt4fsOkGd8IJD2oJlZefRU+1wfKoG8p4iqtLR
+	TYFJ4juNYnDI1FDdkEnidTdwopBnCBDl3sJj6JeJLY6VmQV8/yFWaNKFFZNlahQYuhvJC8UdstK
+	eUnjXZxY=
+X-Google-Smtp-Source: AGHT+IFnMbdSPWJg/PZpthIfsM4Byyr22hmvQEezyxPZc4t6JJRig3bNhZIvvWZylXPImyBG3wYAXA==
+X-Received: by 2002:a17:90b:4d07:b0:2ff:69d4:6fe2 with SMTP id 98e67ed59e1d1-3030fe9c932mr32753804a91.16.1742942424766;
+        Tue, 25 Mar 2025 15:40:24 -0700 (PDT)
+Received: from localhost ([2a00:79e0:2e14:7:b885:47c3:6268:77fb])
+        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-301bf61b525sm14937020a91.35.2025.03.25.15.40.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Mar 2025 15:40:24 -0700 (PDT)
+Date: Tue, 25 Mar 2025 15:40:22 -0700
+From: Brian Norris <briannorris@chromium.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Francesco Dolcini <francesco@dolcini.it>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Allison Randal <allison@lohutok.net>,
+	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] wifi: mwifiex: Add __nonstring annotations for
+ unterminated strings
+Message-ID: <Z-Mw1gvbkBQ1fZ7y@google.com>
+References: <20250310222332.work.202-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -51,147 +76,31 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z-LiWDbrEvVaTLZU@smile.fi.intel.com>
+In-Reply-To: <20250310222332.work.202-kees@kernel.org>
 
-On Tue, Mar 25, 2025 at 07:05:28PM +0200, Andy Shevchenko wrote:
-> On Tue, Mar 25, 2025 at 09:58:47AM -0700, Nathan Chancellor wrote:
-> > On Tue, Mar 25, 2025 at 06:17:34PM +0200, Andy Shevchenko wrote:
-> > > On Tue, Mar 25, 2025 at 08:45:19AM -0700, Nathan Chancellor wrote:
+On Mon, Mar 10, 2025 at 03:23:32PM -0700, Kees Cook wrote:
+> When a character array without a terminating NUL character has a static
+> initializer, GCC 15's -Wunterminated-string-initialization will only
+> warn if the array lacks the "nonstring" attribute[1]. Mark the arrays
+> with __nonstring to and correctly identify the char array as "not a C
+> string" and thereby eliminate the warning.
 > 
-> ...
-> 
-> > > > Rename the efi function to avoid the conflict.
-> > > 
-> > > Hmm... Why not split this to two, rename patch as a standalone makes sense to
-> > > me even outside of this series.
-> > 
-> > How so? If nls.h is not included in printk.c via string.h, which does
-> > not happen without this series, what value does the rename have? I do
-> > not mind splitting it up that way to keep things cleaner, I am just
-> > wondering what would be the justification in the changelog (I guess just
-> > that nls.h may get included in the future for some reason)?
-> 
-> Inside this series the justification is obvious (a.k.a. the same), outside
-> yes something like "Put EFI specific function to the respective namespace
-> to avoid potential clash in the future when including another header."
+> Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=117178 [1]
+> Cc: Brian Norris <briannorris@chromium.org>
+> Cc: Francesco Dolcini <francesco@dolcini.it>
+> Cc: Johannes Berg <johannes@sipsolutions.net>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Allison Randal <allison@lohutok.net>
+> Cc: linux-wireless@vger.kernel.org
+> Signed-off-by: Kees Cook <kees@kernel.org>
 
-Okay, sounds reasonable to me. This is what I ended up with for that
-change, which will become patch one of the series.
+This code is kinda weird, because only 2 bytes actually end up used, and
+yet we explicitly initialize it with 3 non-NUL bytes.
 
-From f79267c05d2853c034e2c490f171aed064b85dd6 Mon Sep 17 00:00:00 2001
-From: Nathan Chancellor <nathan@kernel.org>
-Date: Tue, 25 Mar 2025 14:31:25 -0700
-Subject: [PATCH] efi: libstub: Rename utf8_to_utf32() to avoid collision with
- NLS version
+This solutions seems fine though, as it is indeed not a C string and
+does not desire nor rely on a NUL byte:
 
-A future change will add nls.h to string.h, which will break the libstub
-build because NLS includes its own version of utf8_to_utf32():
+Acked-by: Brian Norris <briannorris@chromium.org>
 
-  drivers/firmware/efi/libstub/printk.c:27:5: error: static declaration of 'utf8_to_utf32' follows non-static declaration
-     27 | u32 utf8_to_utf32(const u8 **s8)
-        |     ^
-  include/linux/nls.h:55:12: note: previous declaration is here
-     55 | extern int utf8_to_utf32(const u8 *s, int len, unicode_t *pu);
-        |            ^
-  drivers/firmware/efi/libstub/printk.c:85:26: error: too few arguments to function call, expected 3, have 1
-     85 |                 c32 = utf8_to_utf32(&s8);
-        |                       ~~~~~~~~~~~~~    ^
-  include/linux/nls.h:55:12: note: 'utf8_to_utf32' declared here
-     55 | extern int utf8_to_utf32(const u8 *s, int len, unicode_t *pu);
-        |            ^             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  2 errors generated.
-
-Rename the libstub version since it is static to avoid the conflict.
-
-Signed-off-by: Nathan Chancellor <nathan@kernel.org>
----
- drivers/firmware/efi/libstub/printk.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/firmware/efi/libstub/printk.c b/drivers/firmware/efi/libstub/printk.c
-index 3a67a2cea7bd..334f7e89845c 100644
---- a/drivers/firmware/efi/libstub/printk.c
-+++ b/drivers/firmware/efi/libstub/printk.c
-@@ -24,7 +24,7 @@ void efi_char16_puts(efi_char16_t *str)
- }
- 
- static
--u32 utf8_to_utf32(const u8 **s8)
-+u32 efi_utf8_to_utf32(const u8 **s8)
- {
- 	u32 c32;
- 	u8 c0, cx;
-@@ -82,7 +82,7 @@ void efi_puts(const char *str)
- 	while (*s8) {
- 		if (*s8 == '\n')
- 			buf[pos++] = L'\r';
--		c32 = utf8_to_utf32(&s8);
-+		c32 = efi_utf8_to_utf32(&s8);
- 		if (c32 < 0x10000) {
- 			/* Characters in plane 0 use a single word. */
- 			buf[pos++] = c32;
--- 
-2.49.0
-
-Then the first patch (which becomes the second) becomes:
-
-diff --git a/include/linux/string.h b/include/linux/string.h
-index 0403a4ca4c11..45e01cf3434c 100644
---- a/include/linux/string.h
-+++ b/include/linux/string.h
-@@ -7,6 +7,7 @@
- #include <linux/cleanup.h>	/* for DEFINE_FREE() */
- #include <linux/compiler.h>	/* for inline */
- #include <linux/types.h>	/* for size_t */
-+#include <linux/nls.h>		/* for wchar_t */
- #include <linux/stddef.h>	/* for NULL */
- #include <linux/err.h>		/* for ERR_PTR() */
- #include <linux/errno.h>	/* for E2BIG */
-@@ -203,6 +204,7 @@ extern __kernel_size_t strlen(const char *);
- #ifndef __HAVE_ARCH_STRNLEN
- extern __kernel_size_t strnlen(const char *,__kernel_size_t);
- #endif
-+extern __kernel_size_t wcslen(const wchar_t *s);
- #ifndef __HAVE_ARCH_STRPBRK
- extern char * strpbrk(const char *,const char *);
- #endif
-diff --git a/lib/string.c b/lib/string.c
-index eb4486ed40d2..1aa09925254b 100644
---- a/lib/string.c
-+++ b/lib/string.c
-@@ -21,6 +21,7 @@
- #include <linux/errno.h>
- #include <linux/limits.h>
- #include <linux/linkage.h>
-+#include <linux/nls.h>
- #include <linux/stddef.h>
- #include <linux/string.h>
- #include <linux/types.h>
-@@ -429,6 +430,16 @@ size_t strnlen(const char *s, size_t count)
- EXPORT_SYMBOL(strnlen);
- #endif
- 
-+size_t wcslen(const wchar_t *s)
-+{
-+	const wchar_t *sc;
-+
-+	for (sc = s; *sc != '\0'; ++sc)
-+		/* nothing */;
-+	return sc - s;
-+}
-+EXPORT_SYMBOL(wcslen);
-+
- #ifndef __HAVE_ARCH_STRSPN
- /**
-  * strspn - Calculate the length of the initial substring of @s which only contain letters in @accept
----
-
-with basically the same changelog.
-
-I will send v2 either tomorrow afternoon or Thursday morning to give a
-little more time for initial review/comments.
-
-Thanks for the quick feedback!
-
-Cheers,
-Nathan
+Looks like Johannes already applied it anyway.
