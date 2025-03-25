@@ -1,54 +1,54 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EF1514900B
-	for <linux-hardening@vger.kernel.org>; Tue, 25 Mar 2025 01:56:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 539711865EB
+	for <linux-hardening@vger.kernel.org>; Tue, 25 Mar 2025 01:56:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742867786; cv=none; b=aV6h9Oz58462EOukY0mLoJSPtT3c9pPF65PkYyUPNt8/VVh9Sx4cPSutN8x5vFdamqdgupVdl/eZ6RHLejhs5WaODW3CTIMxYjwsQM7fl6PHOYyNaftdevyfc1hRiyIKuKq6C2LTprTwe2nzpoYCxx+rzq8j2Cbrpf9LSUJey8Y=
+	t=1742867787; cv=none; b=HyC8SBFMsjUC/+ZnVEfLrIlP1DDnumS7jETjgfdj3Kecl9r+ioLVp0eHLiFHNg5+WbfB0ay9pN4C8fo92xVjm5ZYXWnlNHxpCcYX2ZBLbUzLIzZCvvNAI0X5uw73n+yKRFFJ0xvIN1GTvs4NR+ILFNZSyaH1fXRaIOOLJWWeVsw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742867786; c=relaxed/simple;
-	bh=48tNNYVxNbJIhapHHVTjKQnmA5ByjfhX/glfPRAKIhc=;
+	s=arc-20240116; t=1742867787; c=relaxed/simple;
+	bh=3Ssal8wO83LAvy5YDPICfixRHLNHOiETBBH4FyiHuA4=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=dtxLw1iV1o1s3NGk3B77AxxLWYMZ7IQe3SCSL9YxEQsN1MyeRvrO88ziUnfJqXj3VK8g4VRvx6UpwTKj2wX96i5oH58zLPFM+16VN9fH8H8vNxVVXA6uAOucJj4biAWMf0hc3aAhvlkkRwTqvXxCI8ss1IKKtT8bEUc+i5rhlkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--pcc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FkjewmG+; arc=none smtp.client-ip=209.85.216.73
+	 To:Cc:Content-Type; b=VLJJKGGSJ9s7vXQJhtIa1E90lwX4SQvWTeDWaCWoSLOAdfRrTqf7imG8IMndPlpadlJsqz19gfnU9gEDghcp+fOJhFnJPS5NWg2vSGNp0rMKAAi8/Rqcfp7rOoO7Q0qdLH18NkFCquYnrpkmGOsNVd4sjXqfHHAgsncJOLVK/zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--pcc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ai6+ezQl; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--pcc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FkjewmG+"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff798e8c90so7884028a91.1
-        for <linux-hardening@vger.kernel.org>; Mon, 24 Mar 2025 18:56:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ai6+ezQl"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2fec3e38c2dso13552215a91.2
+        for <linux-hardening@vger.kernel.org>; Mon, 24 Mar 2025 18:56:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742867784; x=1743472584; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1742867785; x=1743472585; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=eTUn5qDH83alwoR8172wGnmaTD/nkQcDeotToQ/FQtU=;
-        b=FkjewmG+FV+EP/1KOy41Zni1Cd5leqp1EcL7phKYW7cpCLzn++Zs/1mKxv6n5tipbN
-         v6dldqrqUyTQ4n+7PVcr7ZTSnPCA38OJWYhB0kcH9grWUqi1AFYcJ/Kvvrv0JGosqNRD
-         U1ezVSKfhrrIJ1G05C5QOck61+fy+ZbPZ0vSEwlSIbkG7RvHdGHmBGBEScKIyQeoAc4l
-         Pofpt8FV4VBQPXA8Cmk+wsX17H1XKjhZCGYD+o0CvkIjrzvlHm2dB9bOEqBMVq9Sf30M
-         6ARjGhcT6puXgBDjmL6spc0Apu15+90hynW8e973xxVIczDWlACRW8SLAFecjQO8WO9N
-         vnkA==
+        bh=KbmWscRvAoMTscJ7YX1VjxJzdFRKT7QCMrJKO+SUNOM=;
+        b=ai6+ezQl3Qry/w+DxlaCoWIW9hEYsT4UsBt8KqEaJZNhdBrqxfeUL5iOnecn1BG2af
+         EDg+0uY07u1qxYRJm70E/0pvw3WHrhgIm03yhFAInkZ0AWiHuPsaeLZNjBxImQknNCl+
+         wGSWVWYNj9NYBxnRyEMs9tMXspQ0/lVdFIVD7U2E9y8rsfWZL1hamUHIAomkRpuArI5M
+         1B7Q2+lO7gGqNZT86Li/L2a/TImIAVPnMhFxB1HcRN9nsmQlQBfuRo/K7CXo6VkRUbEp
+         JlZfOmuFE8+7711ikI/TgVPcJJccPyg5l+e0CV8lq3t3Ap31uK8YqGeFrkaBBZkzNULZ
+         +/kQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742867784; x=1743472584;
+        d=1e100.net; s=20230601; t=1742867785; x=1743472585;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=eTUn5qDH83alwoR8172wGnmaTD/nkQcDeotToQ/FQtU=;
-        b=D8JrlgL+F31fHUxMrsL+dmoJGKFz0nC9XUNzihvadqagt2OyoscLDGdHUVTFe1CnsY
-         XFwzRrYjufiQdwuhi+CUT2CfHXtImp+l5yxzsnRvekI5jR7HbrBmqsYVPY3qhL538Opp
-         A+WHetHKNEh+x89/mSKsmD9SKQV8L8L9nszrwH8Mrh8v52lN9iMMYdF4LVTxzPHJavYP
-         wbJKm0zOYYhpZb2g8GrlWsiSR74IlnEbl8iOsh2Yoct3iiukN5ony/jGkmpfmnYEFUNd
-         jqFq7PoUsnbFyI0ZEBniUFIbujkNPktcdnNFZUq/GQ1vFI/uKz70qaGOKZGSvyxWxA7M
-         K75A==
-X-Forwarded-Encrypted: i=1; AJvYcCWTKKJpiziWZrF8E6BTNrz81opO7kNlIMc9vaiLxC7wki0mG9dTOyScr063cTh1rIX7/2V8r14dI3ySBuY0XTo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzOzSWJz9nyb9817Op5QGAnzs8/i4pFoyicyX5ei23IviyxAV40
-	9g4ZtVz7nwypD8A2spn83gB7Sl9sGq+NBNhnr4FsDynJsu632hT6goSbRM2CCUFq6w==
-X-Google-Smtp-Source: AGHT+IFIvVndmJ5T1LC0v2mYgG4gIWIkXYdD4jSAqc98z2o614eIuEt5Jeeq109zoC0i0zwJ2WUV6dM=
-X-Received: from pgrx8.prod.google.com ([2002:a65:4548:0:b0:af2:734a:2cfb])
- (user=pcc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:788b:b0:1f5:8179:4f47
- with SMTP id adf61e73a8af0-1fe42f557edmr27545583637.20.1742867783666; Mon, 24
- Mar 2025 18:56:23 -0700 (PDT)
-Date: Mon, 24 Mar 2025 18:56:14 -0700
+        bh=KbmWscRvAoMTscJ7YX1VjxJzdFRKT7QCMrJKO+SUNOM=;
+        b=WL6zmrJL24r6rhUDrEdF8DjAPTaspU334QCMG2pi2lXmBGqjl/BbnxzV4kS8MfXgQS
+         SuBZvjf8rCT6re2Z+K7jS8GBcoWqyVIyl0s4dTexH/VI/nIwTdqvOwLz9engoGUmQuZ1
+         4yk4E4kxvPrzSQ9RDydNKAYJ6+zXg/C6s4UOz/tY/FhJhEdwTKC1a43W+FGTvl2I6jLf
+         BaY59KZsqOQZL3ssizt8zbSIKDMOKz90ADgs1ybWSnh03NjaRZrIp38JKBxHI0jsKror
+         9OpXSnT85RZ3Rltbjjte7zGZrVDrZ1P6bvBBXKWTl/ErYMTCUnNB27HoFZzXsXEHKKro
+         F+qQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUcipqMxi75Ap6THU4S8vYvzZz545QT1DZ0m6ITjA/b4j3Z3zwvGXem/tp8YWqj6J2qDWI42aBnDPTWJBAsEfU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyfDS3GSLXS+8k/FEzOUAKXB7KbGnwl964Rjg30LeNcDnUOzlrq
+	gE/lqsbL4yjRg2VgVwH+jtjCz4znAcQu5R8M5ocwbn2SoqryWYNOxINcIUb7E21g9Q==
+X-Google-Smtp-Source: AGHT+IHw/mFa4K32w6FBmgVCLK0lfqwfx84tHmcbhBFHdeJjTz1GHC7yDdmMbL5MTLDA5q8NZ++fySA=
+X-Received: from pgcu63.prod.google.com ([2002:a63:7942:0:b0:af2:3541:76e2])
+ (user=pcc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:113:b0:1f5:874c:c987
+ with SMTP id adf61e73a8af0-1fe42f2c872mr24619131637.15.1742867785611; Mon, 24
+ Mar 2025 18:56:25 -0700 (PDT)
+Date: Mon, 24 Mar 2025 18:56:15 -0700
 In-Reply-To: <20250325015617.23455-1-pcc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -58,81 +58,80 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250325015617.23455-1-pcc@google.com>
 X-Mailer: git-send-email 2.49.0.395.g12beb8f557-goog
-Message-ID: <20250325015617.23455-2-pcc@google.com>
-Subject: [PATCH v3 1/2] string: Add load_unaligned_zeropad() code path to sized_strscpy()
+Message-ID: <20250325015617.23455-3-pcc@google.com>
+Subject: [PATCH v3 2/2] kasan: Add strscpy() test to trigger tag fault on arm64
 From: Peter Collingbourne <pcc@google.com>
 To: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
 	Andrew Morton <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>, 
 	Andy Shevchenko <andy@kernel.org>, Andrey Konovalov <andreyknvl@gmail.com>, 
 	Catalin Marinas <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>
-Cc: Peter Collingbourne <pcc@google.com>, linux-fsdevel@vger.kernel.org, 
+Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>, linux-fsdevel@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, stable@vger.kernel.org
+	linux-arm-kernel@lists.infradead.org, Will Deacon <will@kernel.org>, 
+	Peter Collingbourne <pcc@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-The call to read_word_at_a_time() in sized_strscpy() is problematic
-with MTE because it may trigger a tag check fault when reading
-across a tag granule (16 bytes) boundary. To make this code
-MTE compatible, let's start using load_unaligned_zeropad()
-on architectures where it is available (i.e. architectures that
-define CONFIG_DCACHE_WORD_ACCESS). Because load_unaligned_zeropad()
-takes care of page boundaries as well as tag granule boundaries,
-also disable the code preventing crossing page boundaries when using
-load_unaligned_zeropad().
+From: Vincenzo Frascino <vincenzo.frascino@arm.com>
 
+When we invoke strscpy() with a maximum size of N bytes, it assumes
+that:
+- It can always read N bytes from the source.
+- It always write N bytes (zero-padded) to the destination.
+
+On aarch64 with Memory Tagging Extension enabled if we pass an N that is
+bigger then the source buffer, it triggers an MTE fault.
+
+Implement a KASAN KUnit test that triggers the issue with the current
+implementation of read_word_at_a_time() on aarch64 with MTE enabled.
+
+Cc: Will Deacon <will@kernel.org>
+Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Co-developed-by: Peter Collingbourne <pcc@google.com>
 Signed-off-by: Peter Collingbourne <pcc@google.com>
-Link: https://linux-review.googlesource.com/id/If4b22e43b5a4ca49726b4bf98ada827fdf755548
-Fixes: 94ab5b61ee16 ("kasan, arm64: enable CONFIG_KASAN_HW_TAGS")
-Cc: stable@vger.kernel.org
+Link: https://linux-review.googlesource.com/id/If88e396b9e7c058c1a4b5a252274120e77b1898a
 ---
+v3:
+- simplify test case
+
 v2:
-- new approach
+- rebased
+- fixed test failure
 
- lib/string.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ mm/kasan/kasan_test_c.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/lib/string.c b/lib/string.c
-index eb4486ed40d25..b632c71df1a50 100644
---- a/lib/string.c
-+++ b/lib/string.c
-@@ -119,6 +119,7 @@ ssize_t sized_strscpy(char *dest, const char *src, size_t count)
- 	if (count == 0 || WARN_ON_ONCE(count > INT_MAX))
- 		return -E2BIG;
- 
-+#ifndef CONFIG_DCACHE_WORD_ACCESS
- #ifdef CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
- 	/*
- 	 * If src is unaligned, don't cross a page boundary,
-@@ -133,12 +134,14 @@ ssize_t sized_strscpy(char *dest, const char *src, size_t count)
- 	/* If src or dest is unaligned, don't do word-at-a-time. */
- 	if (((long) dest | (long) src) & (sizeof(long) - 1))
- 		max = 0;
-+#endif
- #endif
+diff --git a/mm/kasan/kasan_test_c.c b/mm/kasan/kasan_test_c.c
+index 59d673400085f..b69f66b7eda1d 100644
+--- a/mm/kasan/kasan_test_c.c
++++ b/mm/kasan/kasan_test_c.c
+@@ -1570,6 +1570,7 @@ static void kasan_memcmp(struct kunit *test)
+ static void kasan_strings(struct kunit *test)
+ {
+ 	char *ptr;
++	char *src;
+ 	size_t size = 24;
  
  	/*
--	 * read_word_at_a_time() below may read uninitialized bytes after the
--	 * trailing zero and use them in comparisons. Disable this optimization
--	 * under KMSAN to prevent false positive reports.
-+	 * load_unaligned_zeropad() or read_word_at_a_time() below may read
-+	 * uninitialized bytes after the trailing zero and use them in
-+	 * comparisons. Disable this optimization under KMSAN to prevent
-+	 * false positive reports.
- 	 */
- 	if (IS_ENABLED(CONFIG_KMSAN))
- 		max = 0;
-@@ -146,7 +149,11 @@ ssize_t sized_strscpy(char *dest, const char *src, size_t count)
- 	while (max >= sizeof(unsigned long)) {
- 		unsigned long c, data;
+@@ -1581,6 +1582,18 @@ static void kasan_strings(struct kunit *test)
+ 	ptr = kmalloc(size, GFP_KERNEL | __GFP_ZERO);
+ 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
  
-+#ifdef CONFIG_DCACHE_WORD_ACCESS
-+		c = load_unaligned_zeropad(src+res);
-+#else
- 		c = read_word_at_a_time(src+res);
-+#endif
- 		if (has_zero(c, &data, &constants)) {
- 			data = prep_zero_mask(c, data, &constants);
- 			data = create_zero_mask(data);
++	src = kmalloc(KASAN_GRANULE_SIZE, GFP_KERNEL | __GFP_ZERO);
++	strscpy(src, "f0cacc1a0000000", KASAN_GRANULE_SIZE);
++
++	/*
++	 * The expected size does not include the terminator '\0'
++	 * so it is (KASAN_GRANULE_SIZE - 2) ==
++	 * KASAN_GRANULE_SIZE - ("initial removed character" + "\0").
++	 */
++	KUNIT_EXPECT_EQ(test, KASAN_GRANULE_SIZE - 2,
++			strscpy(ptr, src + 1, KASAN_GRANULE_SIZE));
++
++	kfree(src);
+ 	kfree(ptr);
+ 
+ 	/*
 -- 
 2.49.0.395.g12beb8f557-goog
 
