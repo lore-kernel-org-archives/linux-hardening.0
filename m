@@ -1,119 +1,103 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAC4C1DDC3B
-	for <linux-hardening@vger.kernel.org>; Tue, 25 Mar 2025 10:15:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6743325949A;
+	Tue, 25 Mar 2025 12:55:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742897724; cv=none; b=nFCPbLD8E/gOFOHB9LxZtPhf4qYVY0OHMn5FJtEF23n77vHQ1zxd+hsrwivMh3ZtqKTm9u9QVMq1NjX6jUnP3unEBAbSPpgFlL6+bCQMA8VDlo8TVlp3X7ReRfJYRRUSRJI3DUNm0RD0js52KUxIAC0+1gapQqL81FhWArc5wec=
+	t=1742907309; cv=none; b=ek8s7OEe0TdKraFpD23vbhMVsC2062pHPe32fTGojoXS3BzRGbJKEhUKjOeIaRXLpCZEqT5VTUE/aCzfTWNlOyvqJAPTgynZuqDGPD+oSV4Hw/reusjdDLvaQVEQd0uS3XEwjNx6QqNCzNuLkBhK7W6M6VHSc1ZB+eIRQU+ARHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742897724; c=relaxed/simple;
-	bh=gBxlLT5ivpGDh72oKPJ3CBVf2yMPWUqCIsclGPiI0ug=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S/ojOKdut1mE3Hk4OZL3goe3WwnviWuAUN3X5SJrFsfKrCRBCbSFBn77WrwWUupivSS8G7bma7c8AtCVOBN4btZSMoTSLk6wJqQUWa2pLkJjPzcogh+ryKN+JSoj7E/bGE5LYcJQmp2GnbwFBXzQ6+aaWCIiIJY8kbVxpXIdf7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Fc6lIOAK; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1742907309; c=relaxed/simple;
+	bh=ckzAE8HF0ZWj4AwxiTL55C67VRklHv8GEBJ1a65+i08=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=qTbzQlu8krhvQcPWIvHH1TpmoL/jVRPY3df1rSkSzH2aFsd3IEh/HLqyXmB9SXOnkAPiw7g+Uu/QalwpIZoXgpMftN/t2/5tkZnLLzolk7SIsfjvZZw3PYgfIaDN9IsJwRi5Fiw7p+9lel1H1CzB+pphw1QSc4k11FhW+ZEN9+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YUnUnYE0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Fc6lIOAK"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43bb6b0b898so51551355e9.1
-        for <linux-hardening@vger.kernel.org>; Tue, 25 Mar 2025 03:15:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1742897721; x=1743502521; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=VSbCNl4BxWO8IbyHRgNtn/a7Rf0u1sJorrF8gojdNyo=;
-        b=Fc6lIOAKpCOraZEvR/fbMV5DPHBT9DVzUJxny4j4iSVPija1FrydvR31VLyl9m0P+3
-         st+zmzGmXGZ73QIc3dXalcaw91I5w3P7vT426vY5pUqgLyziJcfoqOdbgodK+8P9vKh6
-         2poKQl7dd/2hNfG2GG3wenA7LXBMeIIyOACwJ+eEviS/HHsqvObC7FX5QZ7PwDsX+Wpj
-         xH2NV4KxrEtTLzbDlFjxSAs+SxBRrlgSfl3ccvgU+0qneT8Vu/5toPBGhYI2TQvWUr5X
-         UiwNQkLTv+lMQGSVrABaVF55REQI17nfgtaAtzXZoZM225/5YsKBN92o01tcCHg2RT0S
-         9/cg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742897721; x=1743502521;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VSbCNl4BxWO8IbyHRgNtn/a7Rf0u1sJorrF8gojdNyo=;
-        b=Nll8CLJMgdA1DY6F8BmTQD2pS4fcEXMUBaddPqoLwMpHk0Ti54P8DIKqDhYzfk/k0i
-         EgMAaUHrLIVKtqviI8/S/dgcHCNjh8BpeBoLewgVdcSPkWOENrPC58DVeP1c/PhI/dI1
-         /WKCsqC3h/cch4Q3Td8QPdvGO8qBr1CRhoFNDClmgOuy4Abx4mSpDiZydugi42Nt2Rbl
-         XUpDlHjEU9FBldUiwwHqeH+z9mtw/vKxVg9sb2DYUD/pic4Uh4VFY+9NDoTZ7Vg3yCeF
-         sNFe3PCzyD9ZEeDL5ysjw8rPTiw2PKFmHMGU9KAb9i6yo73GxVat+LFTthHC5GDb0QEu
-         mkbg==
-X-Forwarded-Encrypted: i=1; AJvYcCVjBxUvzJjh5j+AChS0TjKu2Y+dYhyPqFLHO4RuqFoWtoEShSeLGCvxeYzrH7t4ezWn4kZhbG6KXE+eqwPquTY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywv0IpWdlyRAN7xRjQMd9a4iDFwuNW59RDv2ecxQCOYcNIk9qzj
-	uGdEq53PkSUngoSEkKl/lqfXIhq8HGygmWC1H41mLsXyqNN0xnR4oxjGZ2GkOY4=
-X-Gm-Gg: ASbGnctXRF51cIQMGMqnvyhYNhUVRzqqMmBvVegmgDurY+s2YbWLklLEPz1nGItQMMG
-	odzs1hKYUo25njDi3RsgwWWCtkTfv02zjYnJJdi7sWlD2Te4jrBDsH7tON+/MF70Mb2L26Q+GX0
-	w9TN/hDubXa6AVAJMwBbfDYXsg0K8FvXOg3V/Aaf1guMQtf6n6402g7iwTBMkRVrZokOX7Yz5+H
-	kcVrwmg8CwX34XzkTq3u9ivbtzRgBdyov0Fen8FvO/x+fywAbverQuFh0KDR7aPi5KiAtOOg3aT
-	nc6EBKZrOu5Ty8z3qbBTD5n3Jur0MBYraspBRMaUhD76
-X-Google-Smtp-Source: AGHT+IEHsfS3jwIQd3DXLtKs6BlMXePkgOPcd8GrAW7V3JTw8OOWk8DEnFNJlXsh14KOgVQNsnrCHg==
-X-Received: by 2002:a05:600c:4584:b0:43c:efed:733e with SMTP id 5b1f17b1804b1-43d509f58b4mr147592855e9.14.1742897721087;
-        Tue, 25 Mar 2025 03:15:21 -0700 (PDT)
-Received: from pathway.suse.cz ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d4fceb780sm149735745e9.4.2025.03.25.03.15.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Mar 2025 03:15:20 -0700 (PDT)
-Date: Tue, 25 Mar 2025 11:15:19 +0100
-From: Petr Mladek <pmladek@suse.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Kees Cook <kees@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Andy Shevchenko <andy@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: Re: [PATCH v2 0/6] vsprintf: Add __printf attribute to where it's
- required
-Message-ID: <Z-KCNy7Qu2vFdwVx@pathway.suse.cz>
-References: <20250321144822.324050-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YUnUnYE0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4914C4CEE9;
+	Tue, 25 Mar 2025 12:55:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742907308;
+	bh=ckzAE8HF0ZWj4AwxiTL55C67VRklHv8GEBJ1a65+i08=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=YUnUnYE0RhBK5Mu+AjpF6eKDDaJ1g4syNkA6COLKkt2ADNEGcpvmXd7ySB5t1R1sN
+	 maP3AB2QucK+3iRnUQejjs3hnwJ24lUitJdN12DHlLFet8BO+DCdjWW6qiethDe0Dd
+	 0wVeP+XZ6XQgt4JbylIV/Kw4fPpKznSkAPSsYopk66NfjTFzwlAw0SFHtGpKMfxKMK
+	 ld7t0NnM0ggqgVZnysdgY5bsxUi326TvlLQjgHXyBbnLLtsQQ2bS0EZsrNrHQmGJvR
+	 1l29MBk3uAJzGtChOs8Hyg1zdAhFLqB+ySX11z0pG4xHMgHrwhMdipYv/bur3TEprN
+	 BaU37JYllKICg==
+Date: Tue, 25 Mar 2025 07:55:07 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250321144822.324050-1-andriy.shevchenko@linux.intel.com>
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: kernel-team@android.com, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Lee Jones <lee@kernel.org>, 
+ Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
+ linux-gpio@vger.kernel.org, Tudor Ambarus <tudor.ambarus@linaro.org>, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+ linux-hardening@vger.kernel.org, devicetree@vger.kernel.org, 
+ Will McVicker <willmcvicker@google.com>, 
+ Peter Griffin <peter.griffin@linaro.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org, 
+ Kees Cook <kees@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>
+To: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+In-Reply-To: <20250325-max77759-mfd-v6-1-c0870ca662ba@linaro.org>
+References: <20250325-max77759-mfd-v6-0-c0870ca662ba@linaro.org>
+ <20250325-max77759-mfd-v6-1-c0870ca662ba@linaro.org>
+Message-Id: <174290730586.1654929.1967433750081044561.robh@kernel.org>
+Subject: Re: [PATCH v6 1/6] dt-bindings: gpio: add max77759 binding
 
-On Fri 2025-03-21 16:40:46, Andy Shevchenko wrote:
-> This whole series started from a simple fix (see the last patch)
-> to make GCC (Debian 14.2.0-17) happy when compiling with `make W=1`
-> (note, that CONFIG_WERROR=y and all warnings break the build!)
-> down to a rabbit hole.
+
+On Tue, 25 Mar 2025 08:27:02 +0000, André Draszik wrote:
+> The Maxim MAX77759 is a companion PMIC for USB Type-C applications and
+> includes Battery Charger, Fuel Gauge, temperature sensors, USB Type-C
+> Port Controller (TCPC), NVMEM, and a GPIO expander.
 > 
-> However starting from v2 the last patch doesn't require the first
-> part, I prefer still to have them since the functions, while being
-> _binary_ printf()-like, are still printf()-like. It also puts in align
-> the tracing stuff with the rest and fixes the wrong parameter value.
+> This describes its GPIO module.
 > 
-> These first 4 patches are organised in a strict order and can't be
-> reshuffled, otherwise it will produce a warnings in between.
+> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+> Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> Signed-off-by: André Draszik <andre.draszik@linaro.org>
+> ---
+> v2:
+> * drop 'interrupts' property and sort properties alphabetically
+> ---
+>  .../bindings/gpio/maxim,max77759-gpio.yaml         | 44 ++++++++++++++++++++++
+>  MAINTAINERS                                        |  6 +++
+>  2 files changed, 50 insertions(+)
 > 
-> I believe the best route for the series is printk tree with immutable
-> tag or branch for the others.
-> 
-> Alternatively the first 4 patches can be applied first as they
-> are pretty much straightforward. They also can be squashed to one
-> (as the same topic behind), but it all is up to the respective
-> maintainers.
 
-The whole series looks good to me:
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Reviewed-by: Petr Mladek <pmladek@suse.com>
+yamllint warnings/errors:
 
-I am going to push it via the printk tree. I think about doing
-so as a second pull request by the end of this merge window.
+dtschema/dtc warnings/errors:
 
-Anyway, I am going to wait few more days for eventual feedback
-or push back.
 
-Best Regards,
-Petr
+doc reference errors (make refcheckdocs):
+Warning: Documentation/devicetree/bindings/gpio/maxim,max77759-gpio.yaml references a file that doesn't exist: Documentation/devicetree/bindings/mfd/maxim,max77759.yaml
+Documentation/devicetree/bindings/gpio/maxim,max77759-gpio.yaml: Documentation/devicetree/bindings/mfd/maxim,max77759.yaml
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250325-max77759-mfd-v6-1-c0870ca662ba@linaro.org
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
