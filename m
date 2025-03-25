@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1A548460;
-	Tue, 25 Mar 2025 07:17:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22CAB1FECBF;
+	Tue, 25 Mar 2025 07:17:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742887050; cv=none; b=PHZ/47mAYtWvC5rR5NCdKaEsExoxtXMHRQIP2H+zSergSeaLU6u+3HRELT2SjI9ImWAh00baurhgkDhADlo+ZZoj9vkSDcoQ0J2EkS9AITcYTE4Gj6wuAqCpz3HkS78t2R80SNLPvQVJBVDmuO6i8vs47d/b/4ZG3H1FmAAq2+A=
+	t=1742887066; cv=none; b=FPmlWVCk3tAelDGhn/rL+0jhrVQutsm7pleEz2rbSnBUdF63WUZbVNOxaHMJKMyhsxNYACnRt53cXVyV91iau+CWzFiunB0N69LyC+TgqAYaZKq/aFpbc6oszO1Ec3AjPuYqq/puto4rDdfyQoC2f6qOZeHMw/SwOVbM0fDoGT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742887050; c=relaxed/simple;
-	bh=n7mb7O4AT4k8LuaRNLE8Z2JLAXYdBakAXOdaSM+1GmU=;
+	s=arc-20240116; t=1742887066; c=relaxed/simple;
+	bh=dPL/Puqjjdi0RH/fJRKYqZV53Z1SSiSqqjVNCx2Q+64=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=R3vjSAWSNZl42RSAnypkxXzNaMAsMIYcnD4Ys9cEkbiuJbL+SN8RbmxUKBPWTaPXeYyCpcKgwt7IQLI0lB94azji95epw9P3xK3wCBBeJexYGLljvRhWydAXztvSnW620xojPvWQxJKRo6TeYeXTUbURy+xLfOLMEyIVDCoRi6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=txHMkcgl; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=blJGqrFj3X2vsUxIIH2rQUegVp7JyunYJnxPTa7c2D33h/DRv8oW44kVOTXXU+7IJWTDSpm996O2HecoSyZFUf7l1trBpwAWIsLUGPc20RbbwyvPVwxcS49VWIelQrqpa1xH5UQ6xnB2NOEjuaGj4E2hSrHEfBua2g2cXp/p8FE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eQtA14yf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="txHMkcgl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2F13C4CEE8;
-	Tue, 25 Mar 2025 07:17:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eQtA14yf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C84EBC4CEE8;
+	Tue, 25 Mar 2025 07:17:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742887049;
-	bh=n7mb7O4AT4k8LuaRNLE8Z2JLAXYdBakAXOdaSM+1GmU=;
+	s=k20201202; t=1742887065;
+	bh=dPL/Puqjjdi0RH/fJRKYqZV53Z1SSiSqqjVNCx2Q+64=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=txHMkcglOJUEbzF3pVudhYJH8Zx103UOYJ+Au+ZBdlfkCSjChjlHiNrWZm5uIVdFQ
-	 l0w/ImzGjdHUf/9zwg6smsuZtt+5xzGJ74Q2kH1ZGTG1eJ1szWH8w+j8odsLd2ijj4
-	 44J2AMTmZExTkKjhg/jkKE6uVzffKBUrCsiWgCbb5jrxA+moXnG3Saz4NKzu+ddbEJ
-	 q7pNIkL8e9gnt0Kf8TpeVcM1g7+M10sxFEcUIH1NmqrgWZiMrA70ZY7TOmT2xd8mlh
-	 mNOWX6cZh0upUZsN3CXp6RU/7ehbNBv6xpUWnOyTHbpZUQIctkEn373FALe/JlsLkc
-	 jAdfB2MfabZLA==
-Message-ID: <99ec033f-7557-49cb-9b73-117ddc63d6d1@kernel.org>
-Date: Tue, 25 Mar 2025 08:17:20 +0100
+	b=eQtA14yf/fiXE4P/szG4Tq5ZyOCI9fda5fFmbIpJElchcz+HE1QEwKaX3Pj+zpn7a
+	 EY0IsXS+1YTspcbKop8zdXl3qsbIuy1feq3iye7e5RtPEm+m2xGUYGcwfE+CdL09WF
+	 SeIui/U01UBFf8ctLYj0s5tU/kI1Ts/oojKu3JYN2SvdJuHVbNAFl77Vgbv43lnj2a
+	 HCsmymNN2c0TqZk1kFV4j3yo/ZSYwzPXil72k9rIMXYu/S9J/u/1ehsT5ZEts4n8bu
+	 ePoT6LI7V4Q4oadmo5XEw6tBnHoOTYetepZcrlD4cFuFI8w9Tj/17Yp2gDiNbTTGK/
+	 1ZGTkO79KO/dw==
+Message-ID: <5fb97347-927b-44e1-bc0b-ff711d342be4@kernel.org>
+Date: Tue, 25 Mar 2025 08:17:37 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -35,18 +35,16 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/3] dt-bindings: arm: aspeed: add Nvidia's GB200NVL
- BMC
+Subject: Re: [PATCH v4 2/3] dt-bindings: pinctrl: aspeed,ast2600-pinctrl
 To: Willie Thai <wthai@nvidia.com>, robh@kernel.org, krzk+dt@kernel.org,
  conor+dt@kernel.org, joel@jms.id.au, andrew@codeconstruct.com.au,
  kees@kernel.org, tony.luck@intel.com, gpiccoli@igalia.com,
  devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
  linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
  linux-hardening@vger.kernel.org, openbmc@lists.ozlabs.org
-Cc: leohu@nvidia.com, tingkaic@nvidia.com, dkodihalli@nvidia.com,
- Mars Yang <maryang@nvidia.com>
+Cc: leohu@nvidia.com, tingkaic@nvidia.com, dkodihalli@nvidia.com
 References: <20250324175926.222473-1-wthai@nvidia.com>
- <20250324175926.222473-2-wthai@nvidia.com>
+ <20250324175926.222473-3-wthai@nvidia.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -92,16 +90,14 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250324175926.222473-2-wthai@nvidia.com>
+In-Reply-To: <20250324175926.222473-3-wthai@nvidia.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 24/03/2025 18:59, Willie Thai wrote:
-> Add Nvidia's  GB200NVL BMC board compatible.
+> Add EMMCG5 enum to compatible list of pinctrl binding for emmc enabling.
 > 
-> Co-developed-by: Mars Yang <maryang@nvidia.com>
-> Signed-off-by: Mars Yang <maryang@nvidia.com>
-> Cc: Krzysztof Kozlowski <krzk@kernel.org>
+> Cc: Andrew Jeffery <andrew@codeconstruct.com.au>
 > Signed-off-by: Willie Thai <wthai@nvidia.com>
 > ---
 
