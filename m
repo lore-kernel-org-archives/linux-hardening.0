@@ -1,107 +1,518 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22CAB1FECBF;
-	Tue, 25 Mar 2025 07:17:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC864253332
+	for <linux-hardening@vger.kernel.org>; Tue, 25 Mar 2025 07:44:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742887066; cv=none; b=FPmlWVCk3tAelDGhn/rL+0jhrVQutsm7pleEz2rbSnBUdF63WUZbVNOxaHMJKMyhsxNYACnRt53cXVyV91iau+CWzFiunB0N69LyC+TgqAYaZKq/aFpbc6oszO1Ec3AjPuYqq/puto4rDdfyQoC2f6qOZeHMw/SwOVbM0fDoGT0=
+	t=1742888647; cv=none; b=nLCtg26+O7sv9cLe/k8dBlFqFUcfwoz4brZOUxyMAtAA0oTvb4Pw5sE9Vkxy5irkDabqFa5xjxQmVInu8QNs7xPBTnXH3AYIhy4qHjHAgDhy2rgfYdjQoKcCM0eSOcJOEbBWz2G3tkdHcT8ICkO2LMJGBq4JFHHAfSJbYzF+cMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742887066; c=relaxed/simple;
-	bh=dPL/Puqjjdi0RH/fJRKYqZV53Z1SSiSqqjVNCx2Q+64=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=blJGqrFj3X2vsUxIIH2rQUegVp7JyunYJnxPTa7c2D33h/DRv8oW44kVOTXXU+7IJWTDSpm996O2HecoSyZFUf7l1trBpwAWIsLUGPc20RbbwyvPVwxcS49VWIelQrqpa1xH5UQ6xnB2NOEjuaGj4E2hSrHEfBua2g2cXp/p8FE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eQtA14yf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742888647; c=relaxed/simple;
+	bh=4NiQgZMSwrlR+JP7H+qFxgTQg9u9tPLA/MMcOxm14aI=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Y1g4/NKlOuyiRtOOkyMm7bjt+CpFANdKMmy7ABBtp7iEApgSb0yf1h5xSITnWPDPI2JTw81Da21/y56EScyxbNmI3mFAS52T5sM1N0Ciq3l7xPWUNlo8AVZxowaDmgD9eIHLNAef7BjP/l9P5OwuyURdxlUWL9EuH8AyAgD2+Y0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xbdkhIqZ; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eQtA14yf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C84EBC4CEE8;
-	Tue, 25 Mar 2025 07:17:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742887065;
-	bh=dPL/Puqjjdi0RH/fJRKYqZV53Z1SSiSqqjVNCx2Q+64=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=eQtA14yf/fiXE4P/szG4Tq5ZyOCI9fda5fFmbIpJElchcz+HE1QEwKaX3Pj+zpn7a
-	 EY0IsXS+1YTspcbKop8zdXl3qsbIuy1feq3iye7e5RtPEm+m2xGUYGcwfE+CdL09WF
-	 SeIui/U01UBFf8ctLYj0s5tU/kI1Ts/oojKu3JYN2SvdJuHVbNAFl77Vgbv43lnj2a
-	 HCsmymNN2c0TqZk1kFV4j3yo/ZSYwzPXil72k9rIMXYu/S9J/u/1ehsT5ZEts4n8bu
-	 ePoT6LI7V4Q4oadmo5XEw6tBnHoOTYetepZcrlD4cFuFI8w9Tj/17Yp2gDiNbTTGK/
-	 1ZGTkO79KO/dw==
-Message-ID: <5fb97347-927b-44e1-bc0b-ff711d342be4@kernel.org>
-Date: Tue, 25 Mar 2025 08:17:37 +0100
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xbdkhIqZ"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-39127512371so3444560f8f.0
+        for <linux-hardening@vger.kernel.org>; Tue, 25 Mar 2025 00:44:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1742888643; x=1743493443; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=eczzhwXoRgAcqLghhwJhTM97oQ4KgvKobW4G8xPa/PU=;
+        b=xbdkhIqZw5hCXXi7LidZmGuKsoAPUV0HCNFzuQuAAeJ7D/10erMH4v1soxQoAU9SJD
+         fMYCb+ykMbQJE/RM0FmGdeUNc1VWfOhHN3Z5hNJ18tuKWqyTRnS//EVhPOIAWsJ6wV8Y
+         NCSOcfemkapWdqakw46NCwf8tfF2AsBzyrRBR/axsyo/0J4cYXz7OehQtgFpxBbTRU7D
+         gcU7DcOgt644tmUroTD0HlB38ZOL45/b6rw0Yn8tyCF01KF5V06e048s4br/F8sg9SL7
+         UmKzPH9RORvVv6BJNufS0rEnuX9rnAX9KWQUdEdHJE/E8gEaOQfbNVnXRRXyrzJo/Yar
+         TfqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742888643; x=1743493443;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=eczzhwXoRgAcqLghhwJhTM97oQ4KgvKobW4G8xPa/PU=;
+        b=MUHXkfQ+hvMPfAwnoVkO5wNmF2zpeRp3Gsqv0OkY8jrJv8GSfB0doROsodLs8ZtYSq
+         wTQahVq0wDC0fEq8BC/oUn4jlnOBfkFMV6+xz1FxpQ6RFSwshBjr33TDRYLOFFhS+YAz
+         uJTD3h12LnGWwMEn3Z8Um+USTJNzk/0rM9xzNcB54TYpICV68+/8HjZB/d+jBkX2kQcU
+         S6rBlr9iSRk82PXTPVYfPwze79/n11ztR60se8DGOqKCHInEJ4g+54scteAEcYe7RhIc
+         IS0LTm+Zt5IbsBzxALq/c+L9jcya5JH1n6gs28+33KkQx1ahsiC/HJgqlSGEGYwJsCB1
+         pA0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVGlm5XrVa8IKgZTAXXTAo3aSZBIAz9zi5sX9iyEESHF6keoAsT6sD3x5YdX4SjwPlBTHfaCXMfM2FoyGl3K9k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzSXq1jyjrFup4Nm2/NKQq9rSOBY/bLef1ePas7qehkstSfG/Cz
+	ewT7mvx5/2SwGZWXsUoO5vFlI3ScdLyT5xrUSIR12yalny0d/+8VxXfAh4XB5GA=
+X-Gm-Gg: ASbGncvG9WA49u9651SrVanWg7CCZgDYD2eprHiYr/jzHOJyX5nkmbyc4IFb4QE6ckX
+	wM0fXh3jlhwXNdzkkTX7J5Advu4tbhbAumg9av6jfPxRr3mYzutcjo3BKfBuDJXBd72mRjyotPx
+	oNGhH8wZTeMaqP1PXzcBt3weFb9CpqL3nwswscKcysFdL6kHm9X9WDuqMAy3LLlBzg7MnkAIjyZ
+	KRmkUnlKLKCYGuoZBI+qGzAYREiMYREICdjkUKnQTL9KQKHs+rwrHCtmBg2mz8rYURcrCoTH9Fw
+	/dWUPIcn3J9qt8+9z0eNJsYqIKMw4gbjNdDPycvlRBwa0WnegA==
+X-Google-Smtp-Source: AGHT+IGE2O3IeAFMHRAltTNfiA5eMN0un3ogwPPEss4f2Fe3njXvrUl/tTHABRDHWxnCK4rwwyn/3Q==
+X-Received: by 2002:a05:6000:1ac8:b0:397:5de8:6937 with SMTP id ffacd0b85a97d-3997f932ddfmr16284259f8f.41.1742888642897;
+        Tue, 25 Mar 2025 00:44:02 -0700 (PDT)
+Received: from [10.1.1.109] ([80.111.64.44])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d440eda26sm193960045e9.36.2025.03.25.00.44.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Mar 2025 00:44:02 -0700 (PDT)
+Message-ID: <0edda62ae5616bec2453467f21728334ded19286.camel@linaro.org>
+Subject: Re: [PATCH v4 4/6] mfd: max77759: add Maxim MAX77759 core mfd driver
+From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
+To: Lee Jones <lee@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+  Conor Dooley <conor+dt@kernel.org>, Linus Walleij
+ <linus.walleij@linaro.org>, Bartosz Golaszewski	 <brgl@bgdev.pl>, Srinivas
+ Kandagatla <srinivas.kandagatla@linaro.org>, Kees Cook <kees@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, Peter Griffin	
+ <peter.griffin@linaro.org>, Tudor Ambarus <tudor.ambarus@linaro.org>, Will
+ McVicker <willmcvicker@google.com>, kernel-team@android.com,
+ linux-kernel@vger.kernel.org, 	devicetree@vger.kernel.org,
+ linux-gpio@vger.kernel.org, 	linux-hardening@vger.kernel.org
+Date: Tue, 25 Mar 2025 07:44:00 +0000
+In-Reply-To: <20250321105457.GG1750245@google.com>
+References: <20250312-max77759-mfd-v4-0-b908d606c8cb@linaro.org>
+	 <20250312-max77759-mfd-v4-4-b908d606c8cb@linaro.org>
+	 <20250314123150.GM3890718@google.com>
+	 <7d94ed5bd79f0081d392747f74773e7f866252bd.camel@linaro.org>
+	 <20250321105457.GG1750245@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.53.2-1 
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/3] dt-bindings: pinctrl: aspeed,ast2600-pinctrl
-To: Willie Thai <wthai@nvidia.com>, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, joel@jms.id.au, andrew@codeconstruct.com.au,
- kees@kernel.org, tony.luck@intel.com, gpiccoli@igalia.com,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org, openbmc@lists.ozlabs.org
-Cc: leohu@nvidia.com, tingkaic@nvidia.com, dkodihalli@nvidia.com
-References: <20250324175926.222473-1-wthai@nvidia.com>
- <20250324175926.222473-3-wthai@nvidia.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250324175926.222473-3-wthai@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 24/03/2025 18:59, Willie Thai wrote:
-> Add EMMCG5 enum to compatible list of pinctrl binding for emmc enabling.
-> 
-> Cc: Andrew Jeffery <andrew@codeconstruct.com.au>
-> Signed-off-by: Willie Thai <wthai@nvidia.com>
-> ---
+Thanks Lee for your patience,
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+On Fri, 2025-03-21 at 10:54 +0000, Lee Jones wrote:
+> On Fri, 14 Mar 2025, Andr=C3=A9 Draszik wrote:
+>=20
+> > Hi Lee,
+> >=20
+> > Thanks for your review!
+> >=20
+> > On Fri, 2025-03-14 at 12:31 +0000, Lee Jones wrote:
+> > > On Wed, 12 Mar 2025, Andr=C3=A9 Draszik wrote:
 
-Best regards,
-Krzysztof
+[...]
+> >=20
+
+> > > This sort of goes without saying.=C2=A0 Suggest you remove this comme=
+nt.
+> > >=20
+> > > > +/* PMIC / TOP */
+> > > > +#define MAX77759_PMIC_REG_PMIC_ID=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x00
+> > > > +#define MAX77759_PMIC_REG_PMIC_ID_MAX77759=C2=A0=C2=A0=C2=A0 59
+> > >=20
+> > > Is this a register or a value?
+> >=20
+> > It's a value, which the suffix in the macro name was meant to
+> > convey :-) 59 is the value (in decimal) for max77759 that
+> > the ID register is expected to contain.
+>=20
+> You mean the REG suffix, that is in both the register address and value?
+
+With suffix, I meant the last part '_MAX77759$' above.
+
+>=20
+> And why do you have MAX77759 in there twice?=C2=A0 That's just odd.
+
+Everything starts with max77759 in this driver, for namespace reasons. The
+suffix could be different if support for a different ICs was added in the
+future, but I'll use your suggested enum below instead.
+ =20
+>=20
+> Suggest that expected values, like IDs are placed in an enum with the
+> other supported platforms
+>=20
+> enum {
+> 	MAX77759_CHIP_ID =3D 59,
+> 	MAX77760_CHIP_ID =3D 60,
+> 	MAX77761_CHIP_ID =3D 61,
+> };
+
+OK, will do, although this introduces a new prefix for a symbol name
+in this driver in case support for a different ICs was added in the
+future.
+
+> >=20
+> > >=20
+> > > > +#define MAX77759_PMIC_REG_PMIC_REVISION=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 0x01
+> > > > +#define MAX77759_PMIC_REG_OTP_REVISION=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 0x02
+> > > > +
+> > > > +#define MAX77759_PMIC_REG_INTSRC=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x22
+> > > > +#define MAX77759_PMIC_REG_INTSRCMASK=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 0x23
+> > > > +#define MAX77759_PMIC_REG_INTSRC_MAXQ=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 BIT(3)
+> > > > +#define MAX77759_PMIC_REG_INTSRC_TOPSYS=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 BIT(1)
+> > > > +#define MAX77759_PMIC_REG_INTSRC_CHGR=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 BIT(0)
+> > >=20
+> > > These look like bit offsets rather than reg addresses?
+> >=20
+> > Of course, could you please clarify what you're hinting at
+> > here?
+>=20
+> Register bits/masks {c,sh}ould be indented below the register names:
+>=20
+> #define MAX77759_PMIC_REG_INTSRCMASK		0x23
+> #define=C2=A0=C2=A0 MAX77759_PMIC_REG_INTSRC_MAXQ		BIT(3)
+
+Thanks for your clarification.
+
+> > > > +#define MAX77759_PMIC_REG_TOPSYS_INT=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 0x24
+> > > > +#define MAX77759_PMIC_REG_TOPSYS_INT_MASK=C2=A0=C2=A0=C2=A0=C2=A0 =
+0x26
+> > > > +#define MAX77759_PMIC_REG_TOPSYS_INT_TSHDN=C2=A0=C2=A0=C2=A0 BIT(6=
+)
+> > > > +#define MAX77759_PMIC_REG_TOPSYS_INT_SYSOVLO=C2=A0 BIT(5)
+> > > > +#define MAX77759_PMIC_REG_TOPSYS_INT_SYSUVLO=C2=A0 BIT(4)
+> > > > +#define MAX77759_PMIC_REG_TOPSYS_INT_FSHIP=C2=A0=C2=A0=C2=A0 BIT(0=
+)
+> > > > +
+> > > > +#define MAX77759_PMIC_REG_I2C_CNFG=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x40
+> > > > +#define MAX77759_PMIC_REG_SWRESET=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x50
+> > > > +#define MAX77759_PMIC_REG_CONTROL_FG=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 0x51
+> > > > +#define MAX77759_PMIC_REG_LAST_REGISTER=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 MAX77759_PMIC_REG_CONTROL_FG
+> > >=20
+> > > You could just use MAX77759_PMIC_REG_CONTROL_FG in-place?
+> >=20
+> > I think this makes it more obvious in the regmap definition
+> > below - struct regmap_config::max_register vs
+> > struct regmap_config::num_reg_defaults_raw
+>=20
+> The attributes are already suitably named.
+>=20
+> Creating a new define to make this doubly obvious is not required.
+
+Ok.
+
+>=20
+> [...]
+>=20
+> > > Where are the other registers?
+> >=20
+> > The intention is to add them once we start working on charger.
+>=20
+> Add it when you do instead.
+
+I've added them here now.
+
+>=20
+> > > > +enum max77759_i2c_subdev_id {
+> > > > +	MAX77759_I2C_SUBDEV_ID_MAXQ,
+> > > > +	MAX77759_I2C_SUBDEV_ID_CHARGER,
+> > >=20
+> > > Are these truly arbitrary or are you relying on the fact that the
+> > > compiler usually starts from 0 and incs by 1?
+> >=20
+> > It's not arbitrary. A conforming compiler is required to start with
+> > 0, this is part of the C standard, e.g.
+> > https://www.open-std.org/jtc1/sc22/wg14/www/docs/n1256.pdf=C2=A06.7.2.2=
+.3
+>=20
+> I'm aware of the standard.
+>=20
+> However from a readability perspective they look arbitrary, so either
+> add a comment to say that you're relying on this behaviour and that the
+> presence and order of each entry is fixed and should not be amended or
+> do future contributors a favour and hard code them from the beginning.
+
+I've added a comment to clarify.
+
+> [...]
+>=20
+> > > > +	struct mutex maxq_lock;
+> > > > +	struct regmap *regmap_maxq;
+> > > > +	struct completion cmd_done;
+> > > > +
+> > > > +	struct regmap *regmap_top;
+> > >=20
+> > > What is top?
+> >=20
+> > One of its functional blocks as per the data sheet. I think
+> > it makes sense to use nomenclature from it.
+>=20
+> Maybe a comment should be added to say what top actually represents.
+>=20
+> Not all readers of this code will have the datasheet open.
+
+I've added a kerneldoc to the struct, hopefully that's good enough :-)
+
+>=20
+> > > > +	struct regmap *regmap_charger;
+> > > > +};
+> > > > +
+> > > > +struct max77759_i2c_subdev {
+> > > > +	enum max77759_i2c_subdev_id id;
+> > > > +	const struct regmap_config *cfg;
+> > > > +	u16 i2c_address;
+> > > > +};
+> > > > +
+> > > > +/* TOP registers */
+> > > > +static const struct regmap_range max77759_top_registers[] =3D {
+> > > > +	regmap_reg_range(0x00, 0x02),
+> > > > +	regmap_reg_range(0x22, 0x24),
+> > > > +	regmap_reg_range(0x26, 0x26),
+> > > > +	regmap_reg_range(0x40, 0x40),
+> > > > +	regmap_reg_range(0x50, 0x51),
+> > >=20
+> > > What are these magic numbers?=C2=A0 Can you define them?
+> >=20
+> > This is on purpose, as I think it makes it much easier to have
+> > the ranges as numbers, otherwise you always have to look them up
+> > in the header when trying to verify correctness or simply looking
+> > at this. Additionally, things wouldn't be nicely aligned anymore,
+> >=20
+> > Without data sheet, whether these are numbers or macro names
+> > makes no difference, and it's impossible to reason about them.
+> >=20
+> > With data sheet, it's easier this way to compare.
+> >=20
+> > But I'll change them.
+>=20
+> Or provide come helpful comments.=C2=A0 Magic numbers are generally decri=
+ed.
+>=20
+> This is made worse here, since it's not obvious what this function block =
+does.
+
+I've added some comments, hopefully better :-)
+
+[...
+
+> > > > +	struct device *dev =3D regmap_get_device(max77759_mfd->regmap_max=
+q);
+> > >=20
+> > > > +	static const unsigned int timeout_ms =3D 200;
+> > >=20
+> > > Why 200?
+> >=20
+> > This is what downstream uses, I can add a comment to say so.
+>=20
+> We're not generally interested in downstream here.
+>=20
+> Why do downstream use it?=C2=A0 Is there a value in the datasheet?
+
+No, there isn't. We know that 200ms must work reliably since downstream
+uses that value, hence I re-used it.
+I've dropped it to 20ms now, since in most cases in very simple tests it
+takes less than 5ms, but I don't know if there are cases when e.g.
+the uC is busy (e.g doing USB-C related handling) where it might take
+longer. I guess we'll see.
+
+>=20
+> > > > +
+> > > > +	if (cmd->length > MAX77759_MAXQ_REG_AP_MESSAGESZ_MAX)
+> > > > +		return -EINVAL;
+> > > > +
+> > > > +	/* rsp is allowed to be NULL. In that case we do need a temporary=
+. */
+> > >=20
+> > > More details please.
+> > >=20
+> > > Why is NULL valid?
+> >=20
+> > The kernel doc explains it:
+> >=20
+> > =C2=A0* @rsp: Any response data associated with the command will be cop=
+ied here;
+> > =C2=A0*=C2=A0=C2=A0=C2=A0=C2=A0 can be %NULL if the command has no resp=
+onse (other than ACK).
+> >=20
+> > Do you want me to duplicate this information?
+>=20
+> You already did, just in a less useful way.
+>=20
+> It's arguably more critical to document it here than tucked away in the h=
+eader.
+>=20
+> > > Why does it need a placeholder?=C2=A0 What are you using as the place=
+holder?
+> >=20
+> > Here, we still need a location to write the response to, as we
+> > need to verify that the command was indeed completed correctly.
+>=20
+> Then please tell all of the future readers who may have the same queries.
+
+The header / kdoc is for API users, so it makes sense to have it there. I'v=
+e
+updated the comment here as well.
+
+> > > > [...]
+
+
+> > > > +	ret =3D devm_mutex_init(&client->dev, &max77759_mfd->maxq_lock);
+> > > > +	if (ret)
+> > > > +		return ret;
+> > > > +
+> > > > +	i2c_set_clientdata(client, max77759_mfd);
+> > > > +
+> > > > +	for (int i =3D 0; i < ARRAY_SIZE(max77759_i2c_subdevs); ++i) {
+> > >=20
+> > > Any reason for the pre-increment?
+> > >=20
+> > > If not, it's more standards to post-inc.
+> >=20
+> > My reason is that historically compilers have created better code
+> > with preinc, and I generally still prefer it, to make it obvious.
+>=20
+> Is this still true today?
+>=20
+> Historically, we used program computers with punched cards as well.=C2=A0=
+ =3D:-)
+>=20
+> > There are thousands of users doing preinc in for loops in the kernel
+> > tree, so unless you really insist, I'd like to keep it that way for
+> > that reason if you're OK with reason :-)
+>=20
+> Let's play top-trumps:
+>=20
+> % git grep "++i" | wc -l
+> 7062
+> % git grep "i++" | wc -l
+> 75158
+>=20
+> There is more than an order of magnitude of difference between the
+> styles and I bet quite a few of the aforementioned cases were authored
+> because they _required_ pre-inc.
+
+It's unlikely that
+
+$ git grep 'for (i.*++i' | wc -l
+5861
+
+_require_ pre-inc. But sure, since that's the preference, I've changed it
+
+>=20
+> [...]
+>=20
+> > > > diff --git a/include/linux/mfd/max77759.h b/include/linux/mfd/max77=
+759.h
+> > > > new file mode 100644
+> > > > index 0000000000000000000000000000000000000000..b038b4e9b748287e23e=
+3a7030496f09dc8bdc816
+> > > > --- /dev/null
+> > > > +++ b/include/linux/mfd/max77759.h
+> > > > @@ -0,0 +1,98 @@
+> > > > +/* SPDX-License-Identifier: GPL-2.0-only */
+> > > > +/*
+> > > > + * Copyright 2020 Google Inc.
+> > > > + * Copyright 2025 Linaro Ltd.
+> > > > + *
+> > > > + * Client interface for Maxim MAX77759 MFD driver
+> > > > + */
+> > > > +
+> > > > +#ifndef __LINUX_MFD_MAX77759_H
+> > > > +#define __LINUX_MFD_MAX77759_H
+> > > > +
+> > > > +/* MaxQ opcodes */
+> > > > +#define MAX77759_MAXQ_OPCODE_MAXLENGTH 33
+> > > > +
+> > > > +#define MAX77759_MAXQ_OPCODE_GPIO_TRIGGER_READ=C2=A0=C2=A0 0x21
+> > > > +#define MAX77759_MAXQ_OPCODE_GPIO_TRIGGER_WRITE=C2=A0 0x22
+> > > > +#define MAX77759_MAXQ_OPCODE_GPIO_CONTROL_READ=C2=A0=C2=A0 0x23
+> > > > +#define MAX77759_MAXQ_OPCODE_GPIO_CONTROL_WRITE=C2=A0 0x24
+> > > > +#define MAX77759_MAXQ_OPCODE_USER_SPACE_READ=C2=A0=C2=A0=C2=A0=C2=
+=A0 0x81
+> > > > +#define MAX77759_MAXQ_OPCODE_USER_SPACE_WRITE=C2=A0=C2=A0=C2=A0 0x=
+82
+> > > > +
+> > > > +/*
+> > > > + * register map (incomplete) - registers not useful for drivers ar=
+e not
+> > > > + * declared here
+> > > > + */
+> > > > +/* MaxQ */
+> > > > +#define MAX77759_MAXQ_REG_UIC_INT1=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x64
+> > > > +#define MAX77759_MAXQ_REG_UIC_INT1_APCMDRESI=C2=A0 BIT(7)
+> > > > +#define MAX77759_MAXQ_REG_UIC_INT1_SYSMSGI=C2=A0=C2=A0=C2=A0 BIT(6=
+)
+> > > > +#define MAX77759_MAXQ_REG_UIC_INT1_GPIO6I=C2=A0=C2=A0=C2=A0=C2=A0 =
+BIT(1)
+> > > > +#define MAX77759_MAXQ_REG_UIC_INT1_GPIO5I=C2=A0=C2=A0=C2=A0=C2=A0 =
+BIT(0)
+> > > > +#define MAX77759_MAXQ_REG_UIC_INT1_GPIOxI(offs, en)=C2=A0 (((en) &=
+ 1) << (offs))
+> > > > +#define MAX77759_MAXQ_REG_UIC_INT1_GPIOxI_MASK(offs) \
+> > > > +				MAX77759_MAXQ_REG_UIC_INT1_GPIOxI(offs, ~0)
+> > > > +
+> > > > +#define MAX77759_MAXQ_REG_UIC_INT2=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x65
+> > > > +#define MAX77759_MAXQ_REG_UIC_INT3=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x66
+> > > > +#define MAX77759_MAXQ_REG_UIC_INT4=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x67
+> > > > +#define MAX77759_MAXQ_REG_UIC_UIC_STATUS1=C2=A0=C2=A0=C2=A0=C2=A0 =
+0x68
+> > > > +#define MAX77759_MAXQ_REG_UIC_UIC_STATUS2=C2=A0=C2=A0=C2=A0=C2=A0 =
+0x69
+> > > > +#define MAX77759_MAXQ_REG_UIC_UIC_STATUS3=C2=A0=C2=A0=C2=A0=C2=A0 =
+0x6a
+> > > > +#define MAX77759_MAXQ_REG_UIC_UIC_STATUS4=C2=A0=C2=A0=C2=A0=C2=A0 =
+0x6b
+> > > > +#define MAX77759_MAXQ_REG_UIC_UIC_STATUS5=C2=A0=C2=A0=C2=A0=C2=A0 =
+0x6c
+> > > > +#define MAX77759_MAXQ_REG_UIC_UIC_STATUS6=C2=A0=C2=A0=C2=A0=C2=A0 =
+0x6d
+> > > > +#define MAX77759_MAXQ_REG_UIC_UIC_STATUS7=C2=A0=C2=A0=C2=A0=C2=A0 =
+0x6f
+> > > > +#define MAX77759_MAXQ_REG_UIC_UIC_STATUS8=C2=A0=C2=A0=C2=A0=C2=A0 =
+0x6f
+> > > > +#define MAX77759_MAXQ_REG_UIC_INT1_M=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 0x70
+> > > > +#define MAX77759_MAXQ_REG_UIC_INT2_M=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 0x71
+> > > > +#define MAX77759_MAXQ_REG_UIC_INT3_M=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 0x72
+> > > > +#define MAX77759_MAXQ_REG_UIC_INT4_M=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 0x73
+> > > > +
+> > > > +/* charger */
+> > > > +#define MAX77759_CHGR_REG_CHG_INT=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 0xb0
+> > > > +#define MAX77759_CHGR_REG_CHG_INT2=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 0xb1
+> > > > +#define MAX77759_CHGR_REG_CHG_INT_MASK=C2=A0=C2=A0 0xb2
+> > > > +#define MAX77759_CHGR_REG_CHG_INT2_MASK=C2=A0 0xb3
+> > > > +
+> > > > +struct max77759_mfd;
+> > >=20
+> > > Place the definition in here instead.
+> >=20
+> > I would like to keep it private. There is no need for it to
+> > become public, it's meant to be an opaque handle.
+>=20
+> No, it's not.
+>=20
+> It's device data that you already shared with all of the children.
+>=20
+> If you don't want them to have it, don't give it to them.
+
+It's normal to have opaque handles for API users if those API users
+don't need to know implementation details, like in this case.
+
+Anyway, I've made it public.
+
+Thanks Lee!
+
+Cheers,
+A.
+
