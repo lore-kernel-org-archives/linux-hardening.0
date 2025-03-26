@@ -1,89 +1,102 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09AB91F4621
-	for <linux-hardening@vger.kernel.org>; Wed, 26 Mar 2025 17:13:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D560202C4E;
+	Wed, 26 Mar 2025 17:19:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743009189; cv=none; b=LeIUELpwwR28cGWhmAeb6KlOS/UcXgVvmV76V7SYbHBCX7JKuR27f1bOsqwbQtQYGTEvt5CNxh6DhN8WRsOV7HkP5+P29C1YvBYXRweUHpLjJIyr/EXt4dNSV6X8dOCmrW7QisbllL4EQuBD9UUH6BUPkqHyKv4Q0wUqNmHtnqI=
+	t=1743009576; cv=none; b=Pc5kZkWoCV/sScgWsYTeMt1k6OFeJJ+CyDcGXzuSB4/QoeUycNHSC3b5GB/z6m3fppg3mGTqT5vvX50EI/CdYylMZDT8qbrTPdsO2iu74FP8gpYCfBR5nlINIdDdw7Fmjd6FSqJFQOjhLsLhybuBGXKjZ9DGFgIjAT1NGjGJ7i0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743009189; c=relaxed/simple;
-	bh=tU4zVqjsmoIfqvS43cfmupX6NzIQQKSAzd5QQ/IuB4g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZQFdl28AP95XzISZqksgOb1hFRCczYPvjAsW8vEA81srb0urm1SrCCdkm3p4ZtqW/xEJ+u7kb/K2CgXx6WLmURxRQd1uMMjFnkGESDqLhg9qZJI8iR2rMPa+vNyauoSngqDrAdYMq+4a8HJaJh4qrv7qOL72ZFEI9hdNen3hPlc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2ulq3LNU; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1743009576; c=relaxed/simple;
+	bh=+49VODqoj66jw7qSglZ0qzDiNUhovV3FO932Zf0ilsw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=UvMp5TKMi/ulOSgt+yPHqPpEjNHjZsjm8aiYT7+Ld6Tw+OHnQzXGzTqa3I6LjHcSiVj24h2EJg6C2tCMjRBxUbshY+aOwV9V7mJAo6HOgIjDFhEJyl7PbBnkSdaDxf5zSVxVc1IPJH2J/el7qvCVNjNWMreZ+YF5TTcE/IoflKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=by5Ez+4C; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2ulq3LNU"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2264c9d0295so12305ad.0
-        for <linux-hardening@vger.kernel.org>; Wed, 26 Mar 2025 10:13:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743009187; x=1743613987; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tU4zVqjsmoIfqvS43cfmupX6NzIQQKSAzd5QQ/IuB4g=;
-        b=2ulq3LNUbq8QlmlGGFHsJyljuyR3endfuqLV47tEye+OYOrJwCV85qm4mkFkiAZi0U
-         0c4XJv7YGjfFcA7rB0v3qD4P1fhGIvN0X4AtFZmGJ4VIsi93w3bjFz6xu8DJTjql3JJk
-         +QKDyBwF2yuvM3X9Qzh5dBImn1IHAX+stvGP8t62JN+ag3D6HfluNYbG1G10obJA7kln
-         HnPEWvyiAZ6aZMlWfQMaPzq0ceoh7FJTK+iJfqU7tv4VnPDW4JYcU8BK6lL8m7EYLgNQ
-         nvqMPmo0IrDpxmnNV8iNmvojvksxKbqP1i2IpUB8QfzKgbcfYY2ag7hXW4oSK3lutrYB
-         HxWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743009187; x=1743613987;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tU4zVqjsmoIfqvS43cfmupX6NzIQQKSAzd5QQ/IuB4g=;
-        b=tiU0gtk1VZ2jO4ROPvHeNC7IshRQC04mohNStjbmwINqNNLssPrdU1UXELsuzK8zcY
-         yZ0wjVYj3Nzh4iCFpeIl2x3wwM+uczMjkl02RutNtio1eJje27YkfbIMvjlHoGVJWqKk
-         keNklRds6e2tgI0Op+MvGHTCwS1LsXZvJqYLOm3Cnov9r5kWeBeRPjiv/OswVuxqRt4F
-         DabgfLvp4Oygn/AFcF3eAP/ifcVaHph/LXmPtFtV0kGqBNLoHUF03f5WTd2F+NlIAllP
-         nAIfe8CuakgTJ+64SUIqVGszEqHpscITBSKEcMIlOR/WcOCdzHDB1LTi6+xEZXLei1xs
-         Ijuw==
-X-Forwarded-Encrypted: i=1; AJvYcCXM2dE2fhXVdaW7yzYUTlSAXOAfg/Ki756p8yEsqKmj+kGAbaEMJFaLOiy4YW9oOTtdELwpyX2/95SPdxcHyVQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5Levb+63Y/u53CkJk9XnPDACHVo4QUMe7SJ7U+DGiAoinGyZ1
-	l4QRZux1Eutmzd6DKkvaM+QmyJgC26BiXOhJlPDhj1zahfZYQXR6GAiUcJSDEvWCzP/X/dWsNRU
-	Uj76oo52A93t0fOJOPWoIm73Y6lGM5chlh7ES
-X-Gm-Gg: ASbGnctlq7UOP32dHQdr+T/SxQhuhhKE8my/HUpuEcPLq6kkyfITmx992b3WGoGsl/u
-	fkFyvr6GNAdf44tVIXAhKM4AyxxKnF1CKBGacNn4avKDW8ipDwFr6fPdhbq3PRV1O4BlG1GuilH
-	9gr4ERefouuEivDLUWlNBGkUq5bxd1KSgNQrilYFiHLYZhotL10139+3bO
-X-Google-Smtp-Source: AGHT+IFvk39LnkeMkX25OX1JcG8F54jZn2W19dDnfX7iWusa4FMz7ouKzjv48eaBIVtkQbCfKLgP4xKq2VNnjn++uzA=
-X-Received: by 2002:a17:903:13d0:b0:223:37ec:63be with SMTP id
- d9443c01a7336-227f365b723mr3316495ad.4.1743009186911; Wed, 26 Mar 2025
- 10:13:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="by5Ez+4C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF39BC4CEE2;
+	Wed, 26 Mar 2025 17:19:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743009576;
+	bh=+49VODqoj66jw7qSglZ0qzDiNUhovV3FO932Zf0ilsw=;
+	h=From:Subject:Date:To:Cc:From;
+	b=by5Ez+4CGpJ4g3aL+02KdMQdu1IAWtduTkPCqVeHcRJT0hSiqJaRLin/05YS7biYx
+	 CUuoDZ5KhtWc7r9bZn4I8UuGMxrQQ6gFQFTqph9e1W7lLX/sxt/J7ISB8rtNb3i/nX
+	 AcqdUTjfeBCPK9wLSApiIYzRNowy4gYU+FvfaJooRbhZCj+KkE8kK/1NM11mhF89zh
+	 1hKgPtjp1Ybi8VcY32rP/a2B4uKswtDNZ1rcWqanCoRA2B7LfPI5ARf9B0pfsZG9qG
+	 AONO+u238blggxajwtaUdwXepSvrJARBaaQrEACbw47EKFR+0y502RAYUw1JiZ/7b0
+	 7LrFoemKIj8mw==
+From: Nathan Chancellor <nathan@kernel.org>
+Subject: [PATCH v2 0/2] Add wcslen()
+Date: Wed, 26 Mar 2025 09:32:30 -0700
+Message-Id: <20250326-string-add-wcslen-for-llvm-opt-v2-0-d864ab2cbfe4@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250325015617.23455-1-pcc@google.com> <202503251242.FFDB6940@keescook>
-In-Reply-To: <202503251242.FFDB6940@keescook>
-From: Peter Collingbourne <pcc@google.com>
-Date: Wed, 26 Mar 2025 10:12:54 -0700
-X-Gm-Features: AQ5f1JrGljJm4PeWBnKXpI12td-rU59plY-cd4apU9o-HArGlIBfJwqu8UHG7l4
-Message-ID: <CAMn1gO5Ero80wm=P3_-BQAFPuefUr_VUBV-msTN-FD6oL_1Gig@mail.gmail.com>
-Subject: Re: [PATCH v3 0/2] string: Add load_unaligned_zeropad() code path to sized_strscpy()
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAB4s5GcC/4WNQQ7CIBAAv9Jwdg2gTakn/2F6aGHbEhGapUFNw
+ 9/FJp49zhxmNhaRLEZ2qTZGmGy0wReQh4rpufcTgjWFmeSy5id5hriS9RP0xsBTR4cexkDgXHp
+ AWFZoeN20wgyt1JyVyEI42tc+uHWFZxvXQO/9l8TX/tL1v3QSwGFQo0CpRaOUut6RPLpjoIl1O
+ ecPgEpbss0AAAA=
+X-Change-ID: 20250324-string-add-wcslen-for-llvm-opt-705791db92c0
 To: Kees Cook <kees@kernel.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Andrew Morton <akpm@linux-foundation.org>, Andy Shevchenko <andy@kernel.org>, 
-	Andrey Konovalov <andreyknvl@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Mark Rutland <mark.rutland@arm.com>, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Cc: Andy Shevchenko <andy@kernel.org>, 
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+ Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org, 
+ linux-hardening@vger.kernel.org, llvm@lists.linux.dev, 
+ stable@vger.kernel.org, Nathan Chancellor <nathan@kernel.org>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1541; i=nathan@kernel.org;
+ h=from:subject:message-id; bh=+49VODqoj66jw7qSglZ0qzDiNUhovV3FO932Zf0ilsw=;
+ b=owGbwMvMwCUmm602sfCA1DTG02pJDOlPzFXbuHpfx290nF57fAa3ze9fKzltO65lNs240cJxZ
+ qr0MpXfHaUsDGJcDLJiiizVj1WPGxrOOct449QkmDmsTCBDGLg4BWAiKpKMDAcKVux88OXDd7Vj
+ gu0LLs/7/CH9unrn9y+ztOpN+j5vvriKkeGXR//X3nVJV9dP/sv/6suNaf78LBdvFR9ecuEoL9O
+ 7RXJ8AA==
+X-Developer-Key: i=nathan@kernel.org; a=openpgp;
+ fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
 
-On Tue, Mar 25, 2025 at 12:43=E2=80=AFPM Kees Cook <kees@kernel.org> wrote:
->
-> On Mon, Mar 24, 2025 at 06:56:13PM -0700, Peter Collingbourne wrote:
-> > This series fixes an issue where strscpy() would sometimes trigger
-> > a false positive KASAN report with MTE.
->
-> Thanks! Should this go via string API (me) or KASAN?
+Hi all,
 
-Let's take this via string API.
+A recent LLVM change [1] introduces a call to wcslen() in
+fs/smb/client/smb2pdu.c through UniStrcat() via
+alloc_path_with_tree_prefix(). Similar to the bcmp() and stpcpy()
+additions that happened in 5f074f3e192f and 1e1b6d63d634, add wcslen()
+to fix the linkage failure.
 
-Peter
+[1]: https://github.com/llvm/llvm-project/commit/9694844d7e36fd5e01011ab56b64f27b867aa72d
+
+---
+Changes in v2:
+- Refactor typedefs from nls.h into nls_types.h to make it safe to
+  include in string.h, which may be included in many places throughout
+  the kernel that may not like the other stuff nls.h brings in:
+  https://lore.kernel.org/202503260611.MDurOUhF-lkp@intel.com/
+- Drop libstub change due to the above change, as it is no longer
+  necessary.
+- Move prototype shuffle of patch 2 into the patch that adds wcslen()
+  (Andy)
+- Use new nls_types.h in string.{c,h}
+- Link to v1: https://lore.kernel.org/r/20250325-string-add-wcslen-for-llvm-opt-v1-0-b8f1e2c17888@kernel.org
+
+---
+Nathan Chancellor (2):
+      include: Move typedefs in nls.h to their own header
+      lib/string.c: Add wcslen()
+
+ include/linux/nls.h       | 19 +------------------
+ include/linux/nls_types.h | 25 +++++++++++++++++++++++++
+ include/linux/string.h    |  2 ++
+ lib/string.c              | 11 +++++++++++
+ 4 files changed, 39 insertions(+), 18 deletions(-)
+---
+base-commit: 78ab93c78fb31c5dfe207318aa2b7bd4e41f8dba
+change-id: 20250324-string-add-wcslen-for-llvm-opt-705791db92c0
+
+Best regards,
+-- 
+Nathan Chancellor <nathan@kernel.org>
+
