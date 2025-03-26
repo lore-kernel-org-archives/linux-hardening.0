@@ -1,107 +1,114 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CF7725FA2B;
-	Wed, 26 Mar 2025 22:29:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 864571EA7F3;
+	Wed, 26 Mar 2025 22:35:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743028141; cv=none; b=KvQaZkoOEKUDhmKlepgequRvg7r9rM9ifFItLztmdSoE3A6w8XJLV9ffrdWnWLte8XY6u8vpMu6x9IXv/+AvRqG1Ai/DQtqc+WnxzH9pxl73j/oG6Mi/ZiNMA4SiAx5EJGZ1DYG6I8iIitP/Vq5deuVO1QweIawLhnVe3Vo+AX4=
+	t=1743028517; cv=none; b=Z5F5lAlRjO6C/Wl4vU4rXliUxj+Z6Eos6DYkbaW/HJMTiwq5OBEejsezidGr044a7AxKrDRErgxdB3JiGOByePQw27Z8uz7xVloTEod1biPR/DQ8r6qTuIZMbAOFxGjepCbfEsSRVr4dJBGa00xow6gYQMU//Lv1RjtfXc5XzSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743028141; c=relaxed/simple;
-	bh=RGQ79AL+YiCZDMaPjLjHdeFsWSeNiy/I9zBCHtxfCFk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nwWDkQo0i4gp3U1lceJUKMBwjOj5AAuEX5Zjd2duOfYFt6RmKjrXRG52DuUvPLdQLwi0WgVGnZKoGPrXvA2cxmoD+HursLcIWqaEXPaVI9pWP01Lom0Kl0hn+whrKJQjLOdU1OZUoTAgq+StQklZoaDdCzP7ah9nIGgiCWq/95Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uwSh2KGo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743028517; c=relaxed/simple;
+	bh=h2/FjSfnO5tJCgplmMq/TCSw9ir41yrKi5nabwTvw6Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=n9Nqax1lKEQSDnZqxKeKXbnx6/VM0+nlJd1VSH/WZ9VIzhkOB3UB/YLGjcKbUaJTa8hjfPb9lBzMOX2JsHM7nK/eXAfu9EzgUAXL59Gi26iZy8QFWVg4/8XaU64alj2KWLVTKwdTfTON30/dyQ3KPYe+HRwoqYodAcmxET++KVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ajWO2PEj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uwSh2KGo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68863C4CEE2;
-	Wed, 26 Mar 2025 22:28:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ajWO2PEj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C09BC4CEE5;
+	Wed, 26 Mar 2025 22:35:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743028140;
-	bh=RGQ79AL+YiCZDMaPjLjHdeFsWSeNiy/I9zBCHtxfCFk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uwSh2KGoDSh0k9ts3ex8EcysqoerhYeP/RsZiGcucNqQVE1V3ACizOw2bsLjFPc5L
-	 ohKa3ymzYuSCCleA4smeL3fXqp2s2/mPaTlYJQPECmIzIqUY8r3qBPYiFw1yz77owJ
-	 cRc1+91Ctf2zNlup9JhvmjNTNL20h9RqpHqSMyb1VgyMy+dE5fT+busfiPQcDSIXGf
-	 an6FrcoaFmKjm8sBW0fxJ2UYxjvrX+1SQL9VcfE4oYvWC/PGXWd/fFVrt3+qtg7NMj
-	 k0x8Ws2Q1pZkFa1uKog0G7WNcJ9S2fY+QVXVzsde9F6U1eEZL9lmslwuTwa52L8uzs
-	 xKzZzFRwmHvEQ==
-Date: Wed, 26 Mar 2025 15:28:55 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, llvm@lists.linux.dev,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] lib/string.c: Add wcslen()
-Message-ID: <20250326222855.GA378784@ax162>
-References: <20250326-string-add-wcslen-for-llvm-opt-v2-0-d864ab2cbfe4@kernel.org>
- <20250326-string-add-wcslen-for-llvm-opt-v2-2-d864ab2cbfe4@kernel.org>
- <CAHp75Vd_mJggRRLfziWUf0tgr3K125uVBNh9VdSo9LHVJz2r_w@mail.gmail.com>
- <CAHp75VdQv=0wvgMDGNoXojALWh2B-92gjkO7zrv=d42ocamM4Q@mail.gmail.com>
+	s=k20201202; t=1743028516;
+	bh=h2/FjSfnO5tJCgplmMq/TCSw9ir41yrKi5nabwTvw6Q=;
+	h=Date:From:To:Cc:Subject:From;
+	b=ajWO2PEjA+UzL2cs0zSXt+8Ca37WkTkpWlyFQy3H6smrpaUgoep2xYSKHtf4lc+Qd
+	 yHGoPzFDjh72YQBJ/koHFDmosC6d4/7GdxYDsoh7GdqOJeMW7Gv7RAsXuyBA3L7x2m
+	 L14j5r2v8KyOJdAY5INFNWQicXGtfZ41p037k1wdz1/DBPywFej1n3femDl7YfW6vi
+	 BSR0wZQCCmhQKuu8E6GnpXpxbR1756sdUXlGtnF0kRXngmjmfETby33J4tai+WL8pg
+	 bSk2UJQ+zJB9yfuden7W1h5+tCEpNT3BHdYeijBcBS2vbIJwyGmmG/l7Y0D0IC9RMD
+	 0NmTdef4DtwwQ==
+Date: Wed, 26 Mar 2025 16:35:13 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Lukasz Majczak <lma@chromium.org>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Benson Leung <bleung@chromium.org>
+Cc: chrome-platform@lists.linux.dev, linux-watchdog@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH][next] watchdog: cros-ec: Avoid
+ -Wflex-array-member-not-at-end warning
+Message-ID: <Z-SBITmMfwjocYwL@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHp75VdQv=0wvgMDGNoXojALWh2B-92gjkO7zrv=d42ocamM4Q@mail.gmail.com>
 
-On Wed, Mar 26, 2025 at 08:41:44PM +0200, Andy Shevchenko wrote:
-> On Wed, Mar 26, 2025 at 8:39 PM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> > On Wed, Mar 26, 2025 at 7:19 PM Nathan Chancellor <nathan@kernel.org> wrote:
-> 
-> ...
-> 
-> > > --- a/include/linux/string.h
-> > > +++ b/include/linux/string.h
-> > > @@ -7,6 +7,7 @@
-> > >  #include <linux/cleanup.h>     /* for DEFINE_FREE() */
-> > >  #include <linux/compiler.h>    /* for inline */
-> > >  #include <linux/types.h>       /* for size_t */
-> >
-> > > +#include <linux/nls_types.h>   /* for wchar_t */
-> >
-> > I know it's not ordered, but can we at least not make it worse, i.e.
-> > squeeze this to be after the compiler.h? Or even somewhere after below
-> > the err*.h? Whatever gives a better (sparsely) ordered overall
-> > result...
-> 
-> I just checked, and the only unordered piece is those two: types +
-> stddef right now, and if you move nls_types.h after errno.h it will
-> keep the status quo.
-> 
-> > >  #include <linux/stddef.h>      /* for NULL */
-> > >  #include <linux/err.h>         /* for ERR_PTR() */
+-Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+getting ready to enable it, globally.
 
-Yeah, I had noticed there was no alphabetical consistency, so I decided
-to use this place to keep the types together but I have no strong
-opinion. I can send v3 tomorrow unless Kees is happy with this version
-and is okay with just applying this diff on top.
+Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
+a flexible structure where the size of the flexible-array member
+is known at compile-time, and refactor the rest of the code,
+accordingly.
 
-Cheers,
-Nathan
+So, with these changes, fix the following warning:
 
-diff --git a/include/linux/string.h b/include/linux/string.h
-index 4a48f8eac301..750715768a62 100644
---- a/include/linux/string.h
-+++ b/include/linux/string.h
-@@ -7,10 +7,10 @@
- #include <linux/cleanup.h>	/* for DEFINE_FREE() */
- #include <linux/compiler.h>	/* for inline */
- #include <linux/types.h>	/* for size_t */
--#include <linux/nls_types.h>	/* for wchar_t */
- #include <linux/stddef.h>	/* for NULL */
- #include <linux/err.h>		/* for ERR_PTR() */
- #include <linux/errno.h>	/* for E2BIG */
-+#include <linux/nls_types.h>	/* for wchar_t */
- #include <linux/overflow.h>	/* for check_mul_overflow() */
- #include <linux/stdarg.h>
- #include <uapi/linux/string.h>
+rivers/watchdog/cros_ec_wdt.c:29:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/watchdog/cros_ec_wdt.c | 30 +++++++++++++-----------------
+ 1 file changed, 13 insertions(+), 17 deletions(-)
+
+diff --git a/drivers/watchdog/cros_ec_wdt.c b/drivers/watchdog/cros_ec_wdt.c
+index 716c23f4388c..f6dba17d1036 100644
+--- a/drivers/watchdog/cros_ec_wdt.c
++++ b/drivers/watchdog/cros_ec_wdt.c
+@@ -25,26 +25,22 @@ static int cros_ec_wdt_send_cmd(struct cros_ec_device *cros_ec,
+ 				union cros_ec_wdt_data *arg)
+ {
+ 	int ret;
+-	struct {
+-		struct cros_ec_command msg;
+-		union cros_ec_wdt_data data;
+-	} __packed buf = {
+-		.msg = {
+-			.version = 0,
+-			.command = EC_CMD_HANG_DETECT,
+-			.insize  = (arg->req.command == EC_HANG_DETECT_CMD_GET_STATUS) ?
+-				   sizeof(struct ec_response_hang_detect) :
+-				   0,
+-			.outsize = sizeof(struct ec_params_hang_detect),
+-		},
+-		.data.req = arg->req
+-	};
+-
+-	ret = cros_ec_cmd_xfer_status(cros_ec, &buf.msg);
++	DEFINE_RAW_FLEX(struct cros_ec_command, buf, data,
++			sizeof(union cros_ec_wdt_data));
++
++	buf->version = 0;
++	buf->command = EC_CMD_HANG_DETECT;
++	buf->insize  = (arg->req.command == EC_HANG_DETECT_CMD_GET_STATUS) ?
++		   sizeof(struct ec_response_hang_detect) :
++		   0;
++	buf->outsize = sizeof(struct ec_params_hang_detect);
++	((union cros_ec_wdt_data *)buf->data)->req = arg->req;
++
++	ret = cros_ec_cmd_xfer_status(cros_ec, buf);
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	arg->resp = buf.data.resp;
++	arg->resp = ((union cros_ec_wdt_data *)buf->data)->resp;
+ 
+ 	return 0;
+ }
+-- 
+2.43.0
+
