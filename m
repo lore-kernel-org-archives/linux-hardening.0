@@ -1,114 +1,71 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 864571EA7F3;
-	Wed, 26 Mar 2025 22:35:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C80118BC2F;
+	Wed, 26 Mar 2025 22:35:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743028517; cv=none; b=Z5F5lAlRjO6C/Wl4vU4rXliUxj+Z6Eos6DYkbaW/HJMTiwq5OBEejsezidGr044a7AxKrDRErgxdB3JiGOByePQw27Z8uz7xVloTEod1biPR/DQ8r6qTuIZMbAOFxGjepCbfEsSRVr4dJBGa00xow6gYQMU//Lv1RjtfXc5XzSg=
+	t=1743028560; cv=none; b=ra/5th/BS6jeHlxV2UxFV6BjjZIxyJFyq2rtHlDLtSfRTOT86s61EMg1Db+stKwkU28l+3BeCLAd3ykduKhg+6nptbtr/g8rFxuq5PICxdD+lS/2XaGMHM2SdI5/QAPQGxERWmgdA1jqJtC1qVyEiTHWm1eS3ehQZW7eJWFNPEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743028517; c=relaxed/simple;
-	bh=h2/FjSfnO5tJCgplmMq/TCSw9ir41yrKi5nabwTvw6Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=n9Nqax1lKEQSDnZqxKeKXbnx6/VM0+nlJd1VSH/WZ9VIzhkOB3UB/YLGjcKbUaJTa8hjfPb9lBzMOX2JsHM7nK/eXAfu9EzgUAXL59Gi26iZy8QFWVg4/8XaU64alj2KWLVTKwdTfTON30/dyQ3KPYe+HRwoqYodAcmxET++KVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ajWO2PEj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743028560; c=relaxed/simple;
+	bh=eOTKzmRs+bwoW5lr5TNvNEtSGFqce0QMmgSQHH0xkMM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=asi8w3SgjJ9NfDjpHKNM/aVFn6IoZuvJPC1LOYd34XXHt2hifodpm0+Z69U+q2GgkkhOmLBo4H4IVe32J0LjxbdT7mVni3Gl7x7Un2YFdVr+ExdI6odqguHXb0+riwmT8g4cUTphDRwiTFrVFeSxDN40Yyzhq0WhJeUHabgjYwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qokUbgcG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ajWO2PEj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C09BC4CEE5;
-	Wed, 26 Mar 2025 22:35:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qokUbgcG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84079C4CEE5;
+	Wed, 26 Mar 2025 22:35:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743028516;
-	bh=h2/FjSfnO5tJCgplmMq/TCSw9ir41yrKi5nabwTvw6Q=;
-	h=Date:From:To:Cc:Subject:From;
-	b=ajWO2PEjA+UzL2cs0zSXt+8Ca37WkTkpWlyFQy3H6smrpaUgoep2xYSKHtf4lc+Qd
-	 yHGoPzFDjh72YQBJ/koHFDmosC6d4/7GdxYDsoh7GdqOJeMW7Gv7RAsXuyBA3L7x2m
-	 L14j5r2v8KyOJdAY5INFNWQicXGtfZ41p037k1wdz1/DBPywFej1n3femDl7YfW6vi
-	 BSR0wZQCCmhQKuu8E6GnpXpxbR1756sdUXlGtnF0kRXngmjmfETby33J4tai+WL8pg
-	 bSk2UJQ+zJB9yfuden7W1h5+tCEpNT3BHdYeijBcBS2vbIJwyGmmG/l7Y0D0IC9RMD
-	 0NmTdef4DtwwQ==
-Date: Wed, 26 Mar 2025 16:35:13 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Lukasz Majczak <lma@chromium.org>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Benson Leung <bleung@chromium.org>
-Cc: chrome-platform@lists.linux.dev, linux-watchdog@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] watchdog: cros-ec: Avoid
- -Wflex-array-member-not-at-end warning
-Message-ID: <Z-SBITmMfwjocYwL@kspp>
+	s=k20201202; t=1743028559;
+	bh=eOTKzmRs+bwoW5lr5TNvNEtSGFqce0QMmgSQHH0xkMM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qokUbgcG8rzF734QjCiM09F2xGV9YyKqr59sZjOR7SXH+rbIEC8RV46/5J2lVhZMu
+	 m01RWqyOp5Fim68h4UYoKkQ3MO8gzKN0P3Eo9Z75jV4FyPM4fYlyz6A/N1kRCIfvGR
+	 eheZ2qSSkVAtapZS8LVYJiulLAG2yXNVYadbWH6I2vJgaT49Z42O/nct4XmadMQ+V0
+	 mSQEx0DWFd4iVX5671HXui+NsRYy7Q75LnDUwwhA2IV7mEpWYG90Oqow0nU1seA2hX
+	 XGtxclvUk6yZlve3beJPvMVgE40IhRPdsvkgFNhrCkq0+WTm73TS9O//i+zYg001SQ
+	 tRmE0bRsbimVg==
+Date: Wed, 26 Mar 2025 15:35:54 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, llvm@lists.linux.dev,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] lib/string.c: Add wcslen()
+Message-ID: <20250326223554.GB378784@ax162>
+References: <20250326-string-add-wcslen-for-llvm-opt-v2-0-d864ab2cbfe4@kernel.org>
+ <20250326-string-add-wcslen-for-llvm-opt-v2-2-d864ab2cbfe4@kernel.org>
+ <CAHp75Vd_mJggRRLfziWUf0tgr3K125uVBNh9VdSo9LHVJz2r_w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHp75Vd_mJggRRLfziWUf0tgr3K125uVBNh9VdSo9LHVJz2r_w@mail.gmail.com>
 
--Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-getting ready to enable it, globally.
+On Wed, Mar 26, 2025 at 08:39:37PM +0200, Andy Shevchenko wrote:
+> On Wed, Mar 26, 2025 at 7:19 PM Nathan Chancellor <nathan@kernel.org> wrote:
+> >  #ifndef __HAVE_ARCH_STRNLEN
+> >  extern __kernel_size_t strnlen(const char *,__kernel_size_t);
+> >  #endif
+> > +extern __kernel_size_t wcslen(const wchar_t *s);
+> 
+> I'm wondering why we still continue putting this 'extern' keyword.
+> Yes, I see that the rest is like this, but for new code do we really
+> need it?
 
-Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
-a flexible structure where the size of the flexible-array member
-is known at compile-time, and refactor the rest of the code,
-accordingly.
+Yeah, I just did it to keep it consistent with what is around it but
+there should be no reason that it cannot be removed. I am happy to do
+that in v3 if desired.
 
-So, with these changes, fix the following warning:
-
-rivers/watchdog/cros_ec_wdt.c:29:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/watchdog/cros_ec_wdt.c | 30 +++++++++++++-----------------
- 1 file changed, 13 insertions(+), 17 deletions(-)
-
-diff --git a/drivers/watchdog/cros_ec_wdt.c b/drivers/watchdog/cros_ec_wdt.c
-index 716c23f4388c..f6dba17d1036 100644
---- a/drivers/watchdog/cros_ec_wdt.c
-+++ b/drivers/watchdog/cros_ec_wdt.c
-@@ -25,26 +25,22 @@ static int cros_ec_wdt_send_cmd(struct cros_ec_device *cros_ec,
- 				union cros_ec_wdt_data *arg)
- {
- 	int ret;
--	struct {
--		struct cros_ec_command msg;
--		union cros_ec_wdt_data data;
--	} __packed buf = {
--		.msg = {
--			.version = 0,
--			.command = EC_CMD_HANG_DETECT,
--			.insize  = (arg->req.command == EC_HANG_DETECT_CMD_GET_STATUS) ?
--				   sizeof(struct ec_response_hang_detect) :
--				   0,
--			.outsize = sizeof(struct ec_params_hang_detect),
--		},
--		.data.req = arg->req
--	};
--
--	ret = cros_ec_cmd_xfer_status(cros_ec, &buf.msg);
-+	DEFINE_RAW_FLEX(struct cros_ec_command, buf, data,
-+			sizeof(union cros_ec_wdt_data));
-+
-+	buf->version = 0;
-+	buf->command = EC_CMD_HANG_DETECT;
-+	buf->insize  = (arg->req.command == EC_HANG_DETECT_CMD_GET_STATUS) ?
-+		   sizeof(struct ec_response_hang_detect) :
-+		   0;
-+	buf->outsize = sizeof(struct ec_params_hang_detect);
-+	((union cros_ec_wdt_data *)buf->data)->req = arg->req;
-+
-+	ret = cros_ec_cmd_xfer_status(cros_ec, buf);
- 	if (ret < 0)
- 		return ret;
- 
--	arg->resp = buf.data.resp;
-+	arg->resp = ((union cros_ec_wdt_data *)buf->data)->resp;
- 
- 	return 0;
- }
--- 
-2.43.0
-
+Cheers,
+Nathan
