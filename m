@@ -1,86 +1,107 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A24019D88B;
-	Wed, 26 Mar 2025 22:17:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CF7725FA2B;
+	Wed, 26 Mar 2025 22:29:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743027464; cv=none; b=WZ1Dj76SWraGtnlruLMOljB1qfHjfFPb5nhsh3c3o8sbQH0h1mHnos/eTVJe0ckLeaQ/a57PrVBv1iZLrcXMftl7Viajo33++vxDC2MnHAOOlDg2tRKoD2b+nGA1ePS1ubFkWh/2zNzkYsxyqWcOxiM4TP+k5HZLdxJobViQov4=
+	t=1743028141; cv=none; b=KvQaZkoOEKUDhmKlepgequRvg7r9rM9ifFItLztmdSoE3A6w8XJLV9ffrdWnWLte8XY6u8vpMu6x9IXv/+AvRqG1Ai/DQtqc+WnxzH9pxl73j/oG6Mi/ZiNMA4SiAx5EJGZ1DYG6I8iIitP/Vq5deuVO1QweIawLhnVe3Vo+AX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743027464; c=relaxed/simple;
-	bh=ztcSyDM8688dY/x4+PbD/IkRXQaivYoZnohIQ5z1uOk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Qg2y2bGmu1s4ioSDIlWGbMHj5Ele88soFGAIoMj+yEvYZsTbWGY53bbMecrEoERJngmzagRuO2Moq1mpIUVpJVqWQzjqP3U7I4Yu95cZQyvy0VOXYV0V0qMFU8Fr7pUDO+MRI8ITN92ZOGV/RUM2YrM0uh/H8q8AmS0duuDAY6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aZjKyefw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743028141; c=relaxed/simple;
+	bh=RGQ79AL+YiCZDMaPjLjHdeFsWSeNiy/I9zBCHtxfCFk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nwWDkQo0i4gp3U1lceJUKMBwjOj5AAuEX5Zjd2duOfYFt6RmKjrXRG52DuUvPLdQLwi0WgVGnZKoGPrXvA2cxmoD+HursLcIWqaEXPaVI9pWP01Lom0Kl0hn+whrKJQjLOdU1OZUoTAgq+StQklZoaDdCzP7ah9nIGgiCWq/95Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uwSh2KGo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aZjKyefw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C32DC4CEE2;
-	Wed, 26 Mar 2025 22:17:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uwSh2KGo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68863C4CEE2;
+	Wed, 26 Mar 2025 22:28:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743027463;
-	bh=ztcSyDM8688dY/x4+PbD/IkRXQaivYoZnohIQ5z1uOk=;
-	h=Date:From:To:Cc:Subject:From;
-	b=aZjKyefwZKYW7LeGPlItgSyUrpIMQulGkTH7hGBOcy36+7XQoK4Una1scZ6ZVHlax
-	 WaKJRvg4WEcH7nrTkKZCrZv5Lagw9FRHfG6zutH3FgYnIdrjgn/bc76FOlfgd38VgU
-	 Yp9g5LKLFsH6vrWDjxJywPxkBeXiavmEH4zl0wcNKSHr5tlb4BIBOXRRQPdfODkIla
-	 SJvWdMdjhjy6repYF27U25o5E6JpVyMr0HBpNOmsccm/fhEHc4FREkWs23WNG8dZp4
-	 t4Q2rN4/UZVh1/palTutmswlnOOFiuQi7AlXTIM0aLpWkGdCQgkUCzRzUQzmL28ba9
-	 BtMEoboYuKvsA==
-Date: Wed, 26 Mar 2025 16:17:41 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Alan Stern <stern@rowland.harvard.edu>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] usb: ehci-fsl: Avoid -Wflex-array-member-not-at-end
- warning
-Message-ID: <Z-R9BcnSzrRv5FX_@kspp>
+	s=k20201202; t=1743028140;
+	bh=RGQ79AL+YiCZDMaPjLjHdeFsWSeNiy/I9zBCHtxfCFk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uwSh2KGoDSh0k9ts3ex8EcysqoerhYeP/RsZiGcucNqQVE1V3ACizOw2bsLjFPc5L
+	 ohKa3ymzYuSCCleA4smeL3fXqp2s2/mPaTlYJQPECmIzIqUY8r3qBPYiFw1yz77owJ
+	 cRc1+91Ctf2zNlup9JhvmjNTNL20h9RqpHqSMyb1VgyMy+dE5fT+busfiPQcDSIXGf
+	 an6FrcoaFmKjm8sBW0fxJ2UYxjvrX+1SQL9VcfE4oYvWC/PGXWd/fFVrt3+qtg7NMj
+	 k0x8Ws2Q1pZkFa1uKog0G7WNcJ9S2fY+QVXVzsde9F6U1eEZL9lmslwuTwa52L8uzs
+	 xKzZzFRwmHvEQ==
+Date: Wed, 26 Mar 2025 15:28:55 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, llvm@lists.linux.dev,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] lib/string.c: Add wcslen()
+Message-ID: <20250326222855.GA378784@ax162>
+References: <20250326-string-add-wcslen-for-llvm-opt-v2-0-d864ab2cbfe4@kernel.org>
+ <20250326-string-add-wcslen-for-llvm-opt-v2-2-d864ab2cbfe4@kernel.org>
+ <CAHp75Vd_mJggRRLfziWUf0tgr3K125uVBNh9VdSo9LHVJz2r_w@mail.gmail.com>
+ <CAHp75VdQv=0wvgMDGNoXojALWh2B-92gjkO7zrv=d42ocamM4Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHp75VdQv=0wvgMDGNoXojALWh2B-92gjkO7zrv=d42ocamM4Q@mail.gmail.com>
 
--Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-getting ready to enable it, globally.
+On Wed, Mar 26, 2025 at 08:41:44PM +0200, Andy Shevchenko wrote:
+> On Wed, Mar 26, 2025 at 8:39 PM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> > On Wed, Mar 26, 2025 at 7:19 PM Nathan Chancellor <nathan@kernel.org> wrote:
+> 
+> ...
+> 
+> > > --- a/include/linux/string.h
+> > > +++ b/include/linux/string.h
+> > > @@ -7,6 +7,7 @@
+> > >  #include <linux/cleanup.h>     /* for DEFINE_FREE() */
+> > >  #include <linux/compiler.h>    /* for inline */
+> > >  #include <linux/types.h>       /* for size_t */
+> >
+> > > +#include <linux/nls_types.h>   /* for wchar_t */
+> >
+> > I know it's not ordered, but can we at least not make it worse, i.e.
+> > squeeze this to be after the compiler.h? Or even somewhere after below
+> > the err*.h? Whatever gives a better (sparsely) ordered overall
+> > result...
+> 
+> I just checked, and the only unordered piece is those two: types +
+> stddef right now, and if you move nls_types.h after errno.h it will
+> keep the status quo.
+> 
+> > >  #include <linux/stddef.h>      /* for NULL */
+> > >  #include <linux/err.h>         /* for ERR_PTR() */
 
-Move the conflicting declaration to the end of the structure. Notice
-that `struct ehci_hcd` is a flexible structure --a structure that
-contains a flexible-array member.
+Yeah, I had noticed there was no alphabetical consistency, so I decided
+to use this place to keep the types together but I have no strong
+opinion. I can send v3 tomorrow unless Kees is happy with this version
+and is okay with just applying this diff on top.
 
-Fix the following warning:
+Cheers,
+Nathan
 
-drivers/usb/host/ehci-fsl.c:414:25: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/usb/host/ehci-fsl.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/usb/host/ehci-fsl.c b/drivers/usb/host/ehci-fsl.c
-index 26f13278d4d6..c720d55f4982 100644
---- a/drivers/usb/host/ehci-fsl.c
-+++ b/drivers/usb/host/ehci-fsl.c
-@@ -411,12 +411,13 @@ static int ehci_fsl_setup(struct usb_hcd *hcd)
- }
- 
- struct ehci_fsl {
--	struct ehci_hcd	ehci;
--
- #ifdef CONFIG_PM
- 	/* Saved USB PHY settings, need to restore after deep sleep. */
- 	u32 usb_ctrl;
- #endif
-+
-+	/* Must be last --ends in a flexible-array member. */
-+	struct ehci_hcd	ehci;
- };
- 
- #ifdef CONFIG_PM
--- 
-2.43.0
-
+diff --git a/include/linux/string.h b/include/linux/string.h
+index 4a48f8eac301..750715768a62 100644
+--- a/include/linux/string.h
++++ b/include/linux/string.h
+@@ -7,10 +7,10 @@
+ #include <linux/cleanup.h>	/* for DEFINE_FREE() */
+ #include <linux/compiler.h>	/* for inline */
+ #include <linux/types.h>	/* for size_t */
+-#include <linux/nls_types.h>	/* for wchar_t */
+ #include <linux/stddef.h>	/* for NULL */
+ #include <linux/err.h>		/* for ERR_PTR() */
+ #include <linux/errno.h>	/* for E2BIG */
++#include <linux/nls_types.h>	/* for wchar_t */
+ #include <linux/overflow.h>	/* for check_mul_overflow() */
+ #include <linux/stdarg.h>
+ #include <uapi/linux/string.h>
