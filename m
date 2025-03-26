@@ -1,58 +1,58 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D65EC253340;
-	Wed, 26 Mar 2025 18:27:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C60B924CEEE;
+	Wed, 26 Mar 2025 18:40:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743013652; cv=none; b=nfLK41IWmNGrdozxmNr35X/suwZh+X+ja4CHaKW6w16EbPvT9LPjyYBIuOlHHMaMx/MLMnWupkA+L93lJJcNQqI2FNzZL/z9tJektzrlzGeViVYrX7u5wdCcU140y5VJwZH8NWZi31FEig5TJL9I9QsIHh2lJdC1lDGDaOhLZNk=
+	t=1743014417; cv=none; b=KNBlWwxa2DvOB/NeLIQj100iE5R2qrXk1KIhTr7u8xnuSl0c+/9xQtp4dcarz36g76qbCmKFTeVbEACU/TExK6DAMXA2GgAjQiEgPkHVQVj+GqLHXIuOWbSbdWa4iJ2EvjPhFUTmJm4DHCMAc4nkcYns5vHT+sTu7rcAZb68eww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743013652; c=relaxed/simple;
-	bh=WmQEkXsfznu8w+rBf6ZgS1QtNrnadeHs+aER+P43DfE=;
+	s=arc-20240116; t=1743014417; c=relaxed/simple;
+	bh=F5Y3RF0ndf8/9azcsuLfDmtYTAz9gCrDPqNMbnYLM/c=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JpEdXNv7vWjUnIweyIEzSOwq65/h5neZXeRSCOdrsiPZpSXaITuHmNOC5QqUkOpPj4wDXGF8RCcIEURVkAfO47CudT0Al+gVOqLJ0rRE5lTp6Sy5InXLSHq/jNzJI3qkx2HaJ+XGvXG0j+L0gpzqPPBATSTWGLBUqrblYxaBrkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TzWfP5i0; arc=none smtp.client-ip=209.85.218.50
+	 To:Cc:Content-Type; b=iW1MaRX1lPV3oPCjwNX5o/R5nafaUmqrkDKnEXQAPbjGx/EvsjtOkeuo1ksZHSQjWFHPVOXUx+XAyn2PswCgPRpyndarTISvCRql68426IqEOc2oRPWm5I4l770ezWlDgbEk1T1aeuOUO091AzSAKpe8cITIm3q3YQkbga+O7no=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R5GNfyBu; arc=none smtp.client-ip=209.85.208.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TzWfP5i0"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ab78e6edb99so15270466b.2;
-        Wed, 26 Mar 2025 11:27:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R5GNfyBu"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5e8be1c6ff8so246953a12.1;
+        Wed, 26 Mar 2025 11:40:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743013649; x=1743618449; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1743014414; x=1743619214; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=wwZ/kZVKA3ly+94BX9Iupd7sb0MCbfiMrJTL+cNfKIk=;
-        b=TzWfP5i0bGxBcueEf8oRLjHNjbdR+XMkxXB0lJa6wjvCSpW46Fk6wdyq/7DUnf1m0K
-         B37yRJlWv7b87wuvnsClNMuk3qiLiwqTnVVSvUWYD9iH3i31y7Gk19KmRtAx7EZOcl8S
-         vR2ycLStbGLNdb2CR/Dv5zakpL65cXUkxxgKlLJlBTA+ktBcfJ6ksEiKbEV28bCtJ2rX
-         pLl39zF/eC6gJCXaPIQ0ZnNwDV0YV7LHvPv4zUw8yPNbP8DAqHGGmzmEZanHV119ZQOa
-         BfsBo7tmEtf40mT6qh8mUthgvas/MmpElgNtFfNBSUnvqDTIQ35Kr3aFOiPr+LkjvFku
-         /TFQ==
+        bh=sOrtiNV+oGhM+385d+TAFbT9mzLoUCEIKut5q82hzIo=;
+        b=R5GNfyBus4A7nney46YC6LA4g0kZ5jJauSUQT2USKS0yaqq498/WbbRytLe9U63Y1v
+         C5yuP88u1TWK6Yu9GgK/78pq7Z5EoaC0G/0Ckr/tfg799viwijUpzOhFfoJRyATnZNoO
+         ft7z857N1nzDfscRqJ3hY5aGJkHDiRD+Z+42JXgQYLZkN1RRYLkPxF2MOI5DKVgdshPb
+         nNGUPsdwa+t6ULJcdeNwpJg61S9XhB7vON52aaEjLyBd4/D4xqJ0svJPlNJSxbkmNW8n
+         M0b8QDMWQntANFwGqSVLi2bOkyYe/MvVTGmYkLblhIc+BfFPotAPbozKh336vqSwSCEi
+         Ak4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743013649; x=1743618449;
+        d=1e100.net; s=20230601; t=1743014414; x=1743619214;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=wwZ/kZVKA3ly+94BX9Iupd7sb0MCbfiMrJTL+cNfKIk=;
-        b=YudMKusVtUdxLNKkcIvOGJN1eFIUKeDJDviLqPMHYUHo57O5e7vuDGGS0ofHWKnjCe
-         ZbSWOH1eCFFPUgSgHxNaMQOEdjudz3FHGcPmqa+Fu2qeh1SUbIS8jelWlaQorB3HxH9p
-         9aXVCCfRKw9aBVGCF2EiYNox3ppgdBqS0QUAPdEnfUS7ob7PFmeu5QxKQ5unT2+6dhcs
-         4f1Qa8uG9mjQlbMnz7PRD/1iASN7tH5/pWi0Lp/pbkUeVz55XmL6c+WBVOOLszHbsnrp
-         jrbwGgxEgNzUH+WwFZjcngb6NWpyTXLycBOQDlVi1c/4Sk6o3UqDig3aE8Clp5mSRsL9
-         Sb6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUDO1LXHRuMcHnwdg1wg3ZHBNENlUWhjVSNWh8uYtTNEKSwWnGE9B0GCl/QorZI1Ynf+XC+JLyqdht7J7UTILY=@vger.kernel.org, AJvYcCW99BqDojLkmFnpB7jUD8rC/Wt4K4qHQGY4yPQ1VLhGJMBvbcAyVpGvQ+DhFGvGzbClE/rbiANj@vger.kernel.org, AJvYcCWkO7nyvTnIetnJR35zG1p+oIm0FAFANAMK/2jZcpkg8gC6lBMrVHzAmtzEfFEz2qmTIO1ZmG0vsMQKujUl@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHBngO7QoE2ypS8F+7a8feYpKE1i35qI31aNAegs8ncSVpC1ht
-	qDJT7lq4fvGu/4alP4gPrv2YjpS18mf0QNqAskVWCkJCorbN22cjvhoWAcFUjPlimZbnhw8hOPy
-	6AOpEHzrG0NP+jIoUN2a8+oUwK5I=
-X-Gm-Gg: ASbGncthx8P3IyLHU74jfe3cOjn7dhqYAz3TeM2mYI14cTejbUh1q0K3vcOCKi9tucc
-	rLDECk4Ji5kdeqxiyjyxgIRTD97YF9UKBokrOWkCfhDIJahESqrXu8PlcHTviRtqj73LTmR0nwl
-	yd5EArYoA7gZFVfiz+rCfStkiB7A==
-X-Google-Smtp-Source: AGHT+IHEdBI95BIvNnCvD45NxkwA9Jfkjd2N/HbrhhEJ2QD36+kiqZsHBQL6YYQBJvkZKUHnv2ISqLpkZVcqd7Q0+Sc=
-X-Received: by 2002:a17:907:94c5:b0:ac2:84db:5916 with SMTP id
- a640c23a62f3a-ac6faf0a6a9mr43494566b.31.1743013648829; Wed, 26 Mar 2025
- 11:27:28 -0700 (PDT)
+        bh=sOrtiNV+oGhM+385d+TAFbT9mzLoUCEIKut5q82hzIo=;
+        b=tfJWbQEq+1yeRMp/4jruCcudQQg6KzN+rKO610c3BXJDneV+4Yh/o0f/LBwkYazOuK
+         8NLkS3pZuJBLJrQY9k2iNjpgKLEcM3Pqdxl9l9BqVLeIgBc/DSB2rugTVqHwQLggQif8
+         qAZifM8b0BNqEn1AK9oyNF1I+jalxIoFxfcmeqUejxDfHoygYGW/oz7Xwx75CbNUFnei
+         kNcNSy2NvjlruwbP3vadlz7DyL3Liie7kh+UwUF5V1zTaUXZz4oUdCUQKbQUqQp9VKwR
+         I77+HkMD9/Vaor2OeD23D7DTcv401VjoWNkNq4oiRgRUPJxJOJh4URA/hDJjsSElAfqo
+         DjSg==
+X-Forwarded-Encrypted: i=1; AJvYcCUXlwQcZ7Y1elfHg/qJrx0x6+88M30QCVTnmEMU1VX1iwWhUZSk4XjVnHutdDkt0aesPX0bdrE4@vger.kernel.org, AJvYcCVrjOIt5xe+BQ5rkIU7Xurr1xcLD68JVEffzvndYd3eYsMdjWtSYsB7cCTC7ijEosejKgX5JVSCRGEVWOVL@vger.kernel.org, AJvYcCXTHhknumUFIymQbN6cHXnqlyKmLiH/Y++JKRegDeji6OMsZe2TtijPCAZ0i/VMikrRgCxEdf39c4ceFpg3R5I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwO/tvLWCpMmTfiCXo3kPSjNgEKPSc+i2rQBa4sgZekbHMVBKdB
+	jpq8yWoGM1zdaqV4ehGaE5gmSUJZoVCSoc9phpIq676nmUPs8qhWazCnxpaeeBlOzyPHgktWcsP
+	0dqRpN8mnpdcBpwP7QG+cBS0LwsM=
+X-Gm-Gg: ASbGncuhW4he5pmh6VLHD65R2pDnBsmyY5ww+MHnXpWdtH6n69s/J+rakpjmhLth9Jv
+	kyjiM9MKjBd3nBsrJJHhAcsi1suSgeACjqKr4CCjY3tF4HpchoI+pp+MZ+WEv6kn0IlIzHSbV4+
+	B4HllRvGSNvbByRRblxahTGX59tw==
+X-Google-Smtp-Source: AGHT+IG/c8A09fmH4Hvi2r2iNvibbo0gF+QCVgYY3qZ1UUFDvGnHQ5yFC2x9sm4XWN8Ulm3xGBe6lcMopbawOHcqDlo=
+X-Received: by 2002:a17:907:3da1:b0:ac2:6bb5:413c with SMTP id
+ a640c23a62f3a-ac6faf45fbcmr48841566b.31.1743014413852; Wed, 26 Mar 2025
+ 11:40:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -60,13 +60,13 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20250326-string-add-wcslen-for-llvm-opt-v2-0-d864ab2cbfe4@kernel.org>
- <20250326-string-add-wcslen-for-llvm-opt-v2-1-d864ab2cbfe4@kernel.org>
-In-Reply-To: <20250326-string-add-wcslen-for-llvm-opt-v2-1-d864ab2cbfe4@kernel.org>
+ <20250326-string-add-wcslen-for-llvm-opt-v2-2-d864ab2cbfe4@kernel.org>
+In-Reply-To: <20250326-string-add-wcslen-for-llvm-opt-v2-2-d864ab2cbfe4@kernel.org>
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 26 Mar 2025 20:26:51 +0200
-X-Gm-Features: AQ5f1JpKCzAXQfQrm4wlizX6k3LQpGAsnw7BZMrTEbEqg_iMhTRlQx6b_DF8dWw
-Message-ID: <CAHp75VfdNcQKCza0gYMg_hKAbZK_J3uSwZsoTS5-Bbt5_P5HPQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] include: Move typedefs in nls.h to their own header
+Date: Wed, 26 Mar 2025 20:39:37 +0200
+X-Gm-Features: AQ5f1JqlCAtx3V-rK5Wv2QTv2YVgCmrK0MvTDzYhi8EajWnLgB-2pLN4PzLaYE0
+Message-ID: <CAHp75Vd_mJggRRLfziWUf0tgr3K125uVBNh9VdSo9LHVJz2r_w@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] lib/string.c: Add wcslen()
 To: Nathan Chancellor <nathan@kernel.org>
 Cc: Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>, 
 	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
@@ -78,36 +78,64 @@ Content-Transfer-Encoding: quoted-printable
 On Wed, Mar 26, 2025 at 7:19=E2=80=AFPM Nathan Chancellor <nathan@kernel.or=
 g> wrote:
 >
-> In order to allow commonly included headers such as string.h to access
-> typedefs such as wchar_t without running into issues with the rest of
-> the NLS library, refactor the typedefs out into their own header that
-> can be included in a much safer manner.
+> A recent optimization change in LLVM [1] aims to transform certain loop
+> idioms into calls to strlen() or wcslen(). This change transforms the
+> first while loop in UniStrcat() into a call to wcslen(), breaking the
+> build when UniStrcat() gets inlined into alloc_path_with_tree_prefix():
+>
+>   ld.lld: error: undefined symbol: wcslen
+>   >>> referenced by nls_ucs2_utils.h:54 (fs/smb/client/../../nls/nls_ucs2=
+_utils.h:54)
+>   >>>               vmlinux.o:(alloc_path_with_tree_prefix)
+>   >>> referenced by nls_ucs2_utils.h:54 (fs/smb/client/../../nls/nls_ucs2=
+_utils.h:54)
+>   >>>               vmlinux.o:(alloc_path_with_tree_prefix)
+>
+> The kernel does not build with '-ffreestanding' (which would avoid this
+> transformation) because it does want libcall optimizations in general
+> and turning on '-ffreestanding' disables the majority of them. While
+> '-fno-builtin-wcslen' would be more targeted at the problem, it does not
+> work with LTO.
+>
+> Add a basic wcslen() to avoid this linkage failure. While no
+> architecture or FORTIFY_SOURCE overrides this, add it to string.c
+> instead of string_helpers.c so that it is built with '-ffreestanding',
+> otherwise the compiler might transform it into a call to itself.
 
 ...
 
-While the below is the original text, we can reduce churn for the
-future by doing the following change while at it (no need to recend,
-maybe Kees can amend this while applying):
+> --- a/include/linux/string.h
+> +++ b/include/linux/string.h
+> @@ -7,6 +7,7 @@
+>  #include <linux/cleanup.h>     /* for DEFINE_FREE() */
+>  #include <linux/compiler.h>    /* for inline */
+>  #include <linux/types.h>       /* for size_t */
 
-> +/* Unicode has changed over the years.  Unicode code points no longer
+> +#include <linux/nls_types.h>   /* for wchar_t */
 
-/*
- * This is an incorrect comment style. Should be
- * like in this example.
- */
+I know it's not ordered, but can we at least not make it worse, i.e.
+squeeze this to be after the compiler.h? Or even somewhere after below
+the err*.h? Whatever gives a better (sparsely) ordered overall
+result...
 
-> + * fit into 16 bits; as of Unicode 5 valid code points range from 0
-> + * to 0x10ffff (17 planes, where each plane holds 65536 code points).
-> + *
-> + * The original decision to represent Unicode characters as 16-bit
-> + * wchar_t values is now outdated.  But plane 0 still includes the
-> + * most commonly used characters, so we will retain it.  The newer
-> + * 32-bit unicode_t type can be used when it is necessary to
-> + * represent the full Unicode character set.
-> + */
+>  #include <linux/stddef.h>      /* for NULL */
+>  #include <linux/err.h>         /* for ERR_PTR() */
 
-In either case it's fine and not a big deal,
-Reviewed-by: Andy Shevchenko <andy@kernel.org>
+...
+
+>  #ifndef __HAVE_ARCH_STRNLEN
+>  extern __kernel_size_t strnlen(const char *,__kernel_size_t);
+>  #endif
+> +extern __kernel_size_t wcslen(const wchar_t *s);
+
+I'm wondering why we still continue putting this 'extern' keyword.
+Yes, I see that the rest is like this, but for new code do we really
+need it?
+
+>  #ifndef __HAVE_ARCH_STRPBRK
+>  extern char * strpbrk(const char *,const char *);
+>  #endif
+
 
 --=20
 With Best Regards,
