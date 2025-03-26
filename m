@@ -1,71 +1,112 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C80118BC2F;
-	Wed, 26 Mar 2025 22:35:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A19818801A;
+	Wed, 26 Mar 2025 22:55:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743028560; cv=none; b=ra/5th/BS6jeHlxV2UxFV6BjjZIxyJFyq2rtHlDLtSfRTOT86s61EMg1Db+stKwkU28l+3BeCLAd3ykduKhg+6nptbtr/g8rFxuq5PICxdD+lS/2XaGMHM2SdI5/QAPQGxERWmgdA1jqJtC1qVyEiTHWm1eS3ehQZW7eJWFNPEg=
+	t=1743029754; cv=none; b=UQUVhzS1Z6mEwr2cgmPWtHxtqgBGsoRTAAjXzWIchW2E8DuPhPW2L4i38XmqPOCYKMp6BXMBy4MFTBHBXBg9qFvHh+WwSKua5zrNBd7T44WV/Tzwp/JXZ5efwXLZspk+xqk6vGMYFNOnUYHHKNO/0qH9yUmlJGLfWTWDQnv8Lrc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743028560; c=relaxed/simple;
-	bh=eOTKzmRs+bwoW5lr5TNvNEtSGFqce0QMmgSQHH0xkMM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=asi8w3SgjJ9NfDjpHKNM/aVFn6IoZuvJPC1LOYd34XXHt2hifodpm0+Z69U+q2GgkkhOmLBo4H4IVe32J0LjxbdT7mVni3Gl7x7Un2YFdVr+ExdI6odqguHXb0+riwmT8g4cUTphDRwiTFrVFeSxDN40Yyzhq0WhJeUHabgjYwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qokUbgcG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743029754; c=relaxed/simple;
+	bh=ItoMvWidGT+0fiNTNyX78Fe5vybtTDqUWelw4ieMly4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=dZJp3xs1r61d+MuRXLGhlbENCEPhavImiN+BzmxeBwZJ/heVxqoZKGF9BdkT7nGDO3ClsaACZ5Sdtwkk1Y56EbE5jfeZquJiTlQBuYwmU9319BlhpLJTsVX3z5LQ2eR2Z35CnQIk/bvmhatu3f6SX/+n60MnKVk0rZ4543lCwOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IqCMYdlH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qokUbgcG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84079C4CEE5;
-	Wed, 26 Mar 2025 22:35:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IqCMYdlH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62103C4CEE2;
+	Wed, 26 Mar 2025 22:55:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743028559;
-	bh=eOTKzmRs+bwoW5lr5TNvNEtSGFqce0QMmgSQHH0xkMM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qokUbgcG8rzF734QjCiM09F2xGV9YyKqr59sZjOR7SXH+rbIEC8RV46/5J2lVhZMu
-	 m01RWqyOp5Fim68h4UYoKkQ3MO8gzKN0P3Eo9Z75jV4FyPM4fYlyz6A/N1kRCIfvGR
-	 eheZ2qSSkVAtapZS8LVYJiulLAG2yXNVYadbWH6I2vJgaT49Z42O/nct4XmadMQ+V0
-	 mSQEx0DWFd4iVX5671HXui+NsRYy7Q75LnDUwwhA2IV7mEpWYG90Oqow0nU1seA2hX
-	 XGtxclvUk6yZlve3beJPvMVgE40IhRPdsvkgFNhrCkq0+WTm73TS9O//i+zYg001SQ
-	 tRmE0bRsbimVg==
-Date: Wed, 26 Mar 2025 15:35:54 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, llvm@lists.linux.dev,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] lib/string.c: Add wcslen()
-Message-ID: <20250326223554.GB378784@ax162>
-References: <20250326-string-add-wcslen-for-llvm-opt-v2-0-d864ab2cbfe4@kernel.org>
- <20250326-string-add-wcslen-for-llvm-opt-v2-2-d864ab2cbfe4@kernel.org>
- <CAHp75Vd_mJggRRLfziWUf0tgr3K125uVBNh9VdSo9LHVJz2r_w@mail.gmail.com>
+	s=k20201202; t=1743029753;
+	bh=ItoMvWidGT+0fiNTNyX78Fe5vybtTDqUWelw4ieMly4=;
+	h=Date:From:To:Cc:Subject:From;
+	b=IqCMYdlHSI2UPSepRzrgRx4+JdIBPTJ7tBSZxZPKwn6s/upaY3PH7h+try4hsD4su
+	 9rZkMi7BA9GlXfk0DKjP5J8KqrjVMEhZh36ng5j0IYWNHOT1yntckym9VAeV+HCOth
+	 kDRuPGOZF4plixcsJLvG36weWbkyS8qVxWkQWCQRBvO10e2SP85ZEAzim9pe4ih16U
+	 ktcqJeWqRF1p1/aIlBVdYqWUvSI3PGvkGo7eT6iOn55i6PFrv7OrmxMxTjPhFtphT3
+	 av7WHdbx7arG1YRXvhxL0doCFblTS0HKUtkXi+QqV7ujVCzA8juGjkxYd4/yfu2L5L
+	 LDZ24Wosx4ZJA==
+Date: Wed, 26 Mar 2025 16:55:51 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Theodore Ts'o <tytso@mit.edu>,
+	Andreas Dilger <adilger.kernel@dilger.ca>
+Cc: linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH][next] ext4: Avoid -Wflex-array-member-not-at-end warning
+Message-ID: <Z-SF97N3AxcIMlSi@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHp75Vd_mJggRRLfziWUf0tgr3K125uVBNh9VdSo9LHVJz2r_w@mail.gmail.com>
 
-On Wed, Mar 26, 2025 at 08:39:37PM +0200, Andy Shevchenko wrote:
-> On Wed, Mar 26, 2025 at 7:19 PM Nathan Chancellor <nathan@kernel.org> wrote:
-> >  #ifndef __HAVE_ARCH_STRNLEN
-> >  extern __kernel_size_t strnlen(const char *,__kernel_size_t);
-> >  #endif
-> > +extern __kernel_size_t wcslen(const wchar_t *s);
-> 
-> I'm wondering why we still continue putting this 'extern' keyword.
-> Yes, I see that the rest is like this, but for new code do we really
-> need it?
+-Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+getting ready to enable it, globally.
 
-Yeah, I just did it to keep it consistent with what is around it but
-there should be no reason that it cannot be removed. I am happy to do
-that in v3 if desired.
+Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
+a flexible structure where the size of the flexible-array member
+is known at compile-time, and refactor the rest of the code,
+accordingly.
 
-Cheers,
-Nathan
+So, with these changes, fix the following warning:
+
+fs/ext4/mballoc.c:3041:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ fs/ext4/mballoc.c | 18 ++++++++----------
+ 1 file changed, 8 insertions(+), 10 deletions(-)
+
+diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
+index 0d523e9fb3d5..f88424c28194 100644
+--- a/fs/ext4/mballoc.c
++++ b/fs/ext4/mballoc.c
+@@ -3037,10 +3037,8 @@ static int ext4_mb_seq_groups_show(struct seq_file *seq, void *v)
+ 	unsigned char blocksize_bits = min_t(unsigned char,
+ 					     sb->s_blocksize_bits,
+ 					     EXT4_MAX_BLOCK_LOG_SIZE);
+-	struct sg {
+-		struct ext4_group_info info;
+-		ext4_grpblk_t counters[EXT4_MAX_BLOCK_LOG_SIZE + 2];
+-	} sg;
++	DEFINE_RAW_FLEX(struct ext4_group_info, sg, bb_counters,
++			EXT4_MAX_BLOCK_LOG_SIZE + 2);
+ 
+ 	group--;
+ 	if (group == 0)
+@@ -3048,7 +3046,7 @@ static int ext4_mb_seq_groups_show(struct seq_file *seq, void *v)
+ 			      " 2^0   2^1   2^2   2^3   2^4   2^5   2^6  "
+ 			      " 2^7   2^8   2^9   2^10  2^11  2^12  2^13  ]\n");
+ 
+-	i = (blocksize_bits + 2) * sizeof(sg.info.bb_counters[0]) +
++	i = (blocksize_bits + 2) * sizeof(sg->bb_counters[0]) +
+ 		sizeof(struct ext4_group_info);
+ 
+ 	grinfo = ext4_get_group_info(sb, group);
+@@ -3068,14 +3066,14 @@ static int ext4_mb_seq_groups_show(struct seq_file *seq, void *v)
+ 	 * We care only about free space counters in the group info and
+ 	 * these are safe to access even after the buddy has been unloaded
+ 	 */
+-	memcpy(&sg, grinfo, i);
+-	seq_printf(seq, "#%-5u: %-5u %-5u %-5u [", group, sg.info.bb_free,
+-			sg.info.bb_fragments, sg.info.bb_first_free);
++	memcpy(sg, grinfo, i);
++	seq_printf(seq, "#%-5u: %-5u %-5u %-5u [", group, sg->bb_free,
++			sg->bb_fragments, sg->bb_first_free);
+ 	for (i = 0; i <= 13; i++)
+ 		seq_printf(seq, " %-5u", i <= blocksize_bits + 1 ?
+-				sg.info.bb_counters[i] : 0);
++				sg->bb_counters[i] : 0);
+ 	seq_puts(seq, " ]");
+-	if (EXT4_MB_GRP_BBITMAP_CORRUPT(&sg.info))
++	if (EXT4_MB_GRP_BBITMAP_CORRUPT(sg))
+ 		seq_puts(seq, " Block bitmap corrupted!");
+ 	seq_putc(seq, '\n');
+ 	return 0;
+-- 
+2.43.0
+
