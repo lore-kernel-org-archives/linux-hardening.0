@@ -1,45 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF8B0DDD3;
-	Thu, 27 Mar 2025 17:12:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C2A82914;
+	Thu, 27 Mar 2025 19:02:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743095535; cv=none; b=asvpxRD5hggTCfKV0a2LCuU1YOiCIHM9Zji4ZVmQx4106K5bmPPX7wJviZO/2e9FOVdaK6AIaOrVGmgS+8QU8NnY1vgtwdplacP5qe74T6sokUEJbOwMVyldrBcM+zoW3wTwsJgNcdVosN2IZDXqK/XG6N9xjiAByEZ58c8YatI=
+	t=1743102149; cv=none; b=ThKyXR2hBs1+U5QXLV5tCMbQLS4wcetYRqXoXzGmMBpCLkYdgbr32e8qaDD9ZUnzR2HxXkw8XKPTbPEQAglKYMhBFxVeJQ534LT/EVj/lMebzdO3iJh/x3ScXxZF/GHrhozmJYY8CZ5x5xwxXohXxeUuI68Ht/KONyVLREak1sw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743095535; c=relaxed/simple;
-	bh=z+x6GOiCYUO9WeWlaEnR17peJA+ucADMPc1YaQ7EjVY=;
+	s=arc-20240116; t=1743102149; c=relaxed/simple;
+	bh=NcEipiXRDPNIQvSQYCxxP64XpMs62RHs2rr65kOqoro=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=d+Hcw18mdKPPx3Cj+J0pYkY0bAuWsBXjS3RGyO+J6OmNtHlKLnHLCScaLapUPtZL5zI4HPhTu0qPVS80EyPuRmjPBXe7XN/P2prA7z7jV2AVNX1PNQW8UemAK7eBo9VXRSr+8S9tUzIKgSndaLBhiuAxElDoANXqzJnkF+oxBl0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XKHy/9tQ; arc=none smtp.client-ip=10.30.226.201
+	 Content-Disposition; b=I6XzrTvlaBkp3VzAAHOiia9pvX8mW4l7aKMXpk6MI4maXF6ZKIfINpcTa4IjvPhJlzPrKs+zCupTo3r75Y/1VVAP2wN6dGYhNpOqCm8wnzc3K4EGEP70j40Sa+xma1Hyv68jeIlKJ09zRXeoB81gF7yB4ywW6Ajm7iq4t37jYJs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ads8pB1e; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XKHy/9tQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D432C4CEDD;
-	Thu, 27 Mar 2025 17:12:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ads8pB1e"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DCB0C4CEDD;
+	Thu, 27 Mar 2025 19:02:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743095534;
-	bh=z+x6GOiCYUO9WeWlaEnR17peJA+ucADMPc1YaQ7EjVY=;
+	s=k20201202; t=1743102148;
+	bh=NcEipiXRDPNIQvSQYCxxP64XpMs62RHs2rr65kOqoro=;
 	h=Date:From:To:Cc:Subject:From;
-	b=XKHy/9tQeLQQFL23dUITE8IR/qAnIPAKs7YTUFba9LnnMWoDup2sXsMRAbYIonHhm
-	 4Qst1cY04ukFOXNE3J5a1hf/HetIdXKlvBu2F6APxpGCkk4EcCP+Axz/6ozCkCuDWl
-	 hangwdc9OlJ+JS94JIdpStsBR14H8jnBEg+YXzkcLWPEyVfuk7YItGxloUBkzXOfwf
-	 zVPO6ENWllCwWOakC+9hMdVkp7X+5u0ccQ5M7IfYcZt7tJO14IPzHLW+Vt7fQfOWOt
-	 mXXewwEa3PWx4FJXUESltUtlv3/zzaPlTyD56zhtXsONR7ZTD+CgiHI8elU4F/XtWb
-	 3PwBcg9fj0tlQ==
-Date: Thu, 27 Mar 2025 11:12:11 -0600
+	b=ads8pB1eJeByNThL5P+xLR0hPgwdnmWxmo5EOyVP6BTo9EsaBZL5LfHbeWhuITbnw
+	 l6uD5x3z0KmQ3sKFOm7Odb3EQX+Ss6STAgoDOlFV95pL6e1PG5UFRw5eY+C1lMhtFH
+	 53zr9jgJUgFUvq9hdircKNmW1iddE9fplRCI8OHBDxUD8ZUPXRiCopO8f5FzpQUYKU
+	 ishY5+nqaGF/dk1Ae4g+r3NNZZhk2IM809N1ymclwudg1Vob+IXUSZfgKE+PSoDffM
+	 QT/bI9XU78KqJszXKPfFBtanW5+FtdzVC2kSxol/izfArXvE0KDEIj7kXiAJS8iyoQ
+	 c/F81Az6kEAlg==
+Date: Thu, 27 Mar 2025 13:02:26 -0600
 From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Lukasz Majczak <lma@chromium.org>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Benson Leung <bleung@chromium.org>,
-	Tzung-Bi Shih <tzungbi@kernel.org>
-Cc: chrome-platform@lists.linux.dev, linux-watchdog@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
+To: Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>
+Cc: linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH v2][next] watchdog: cros-ec: Avoid
- -Wflex-array-member-not-at-end warning
-Message-ID: <Z-WG6_uhWsy_FCq3@kspp>
+Subject: [PATCH][next] IB/hfi1: Avoid -Wflex-array-member-not-at-end warning
+Message-ID: <Z-WgwsCYIXaBxnvs@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -52,74 +47,39 @@ Content-Disposition: inline
 -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
 getting ready to enable it, globally.
 
-Use the `DEFINE_RAW_FLEX()` helper for on-stack definitions of
-a flexible structure where the size of the flexible-array member
-is known at compile-time, and refactor the rest of the code,
-accordingly.
+Move the conflicting declaration to the end of the structure. Notice
+that `struct opa_mad_notice_attr` is a flexible structure --a structure
+that contains a flexible-array member.
 
-So, with these changes, fix the following warning:
+Fix the following warning:
 
-drivers/watchdog/cros_ec_wdt.c:29:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/infiniband/hw/hfi1/mad.c:23:36: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
-Reviewed-by: Tzung-Bi Shih <tzungbi@kernel.org>
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
-Changes v2:
- - Fix truncated line in changelog text. (Tzung-Bi)
- - Update variable name: s/buf/msg (Tzung-Bi)
- - Cast to structs instead of union. (Tzung-Bi)
- - Add RB tag.
+ drivers/infiniband/hw/hfi1/mad.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-v1:
- - Link: https://lore.kernel.org/linux-hardening/Z-SBITmMfwjocYwL@kspp/
-
- drivers/watchdog/cros_ec_wdt.c | 30 +++++++++++++-----------------
- 1 file changed, 13 insertions(+), 17 deletions(-)
-
-diff --git a/drivers/watchdog/cros_ec_wdt.c b/drivers/watchdog/cros_ec_wdt.c
-index 716c23f4388c..9ffe7f505645 100644
---- a/drivers/watchdog/cros_ec_wdt.c
-+++ b/drivers/watchdog/cros_ec_wdt.c
-@@ -25,26 +25,22 @@ static int cros_ec_wdt_send_cmd(struct cros_ec_device *cros_ec,
- 				union cros_ec_wdt_data *arg)
- {
- 	int ret;
--	struct {
--		struct cros_ec_command msg;
--		union cros_ec_wdt_data data;
--	} __packed buf = {
--		.msg = {
--			.version = 0,
--			.command = EC_CMD_HANG_DETECT,
--			.insize  = (arg->req.command == EC_HANG_DETECT_CMD_GET_STATUS) ?
--				   sizeof(struct ec_response_hang_detect) :
--				   0,
--			.outsize = sizeof(struct ec_params_hang_detect),
--		},
--		.data.req = arg->req
--	};
--
--	ret = cros_ec_cmd_xfer_status(cros_ec, &buf.msg);
-+	DEFINE_RAW_FLEX(struct cros_ec_command, msg, data,
-+			sizeof(union cros_ec_wdt_data));
-+
-+	msg->version = 0;
-+	msg->command = EC_CMD_HANG_DETECT;
-+	msg->insize  = (arg->req.command == EC_HANG_DETECT_CMD_GET_STATUS) ?
-+		   sizeof(struct ec_response_hang_detect) :
-+		   0;
-+	msg->outsize = sizeof(struct ec_params_hang_detect);
-+	*(struct ec_params_hang_detect *)msg->data = arg->req;
-+
-+	ret = cros_ec_cmd_xfer_status(cros_ec, msg);
- 	if (ret < 0)
- 		return ret;
+diff --git a/drivers/infiniband/hw/hfi1/mad.c b/drivers/infiniband/hw/hfi1/mad.c
+index b39f63ce6dfc..3f11a90819d1 100644
+--- a/drivers/infiniband/hw/hfi1/mad.c
++++ b/drivers/infiniband/hw/hfi1/mad.c
+@@ -20,12 +20,14 @@
  
--	arg->resp = buf.data.resp;
-+	arg->resp = *(struct ec_response_hang_detect *)msg->data;
+ struct trap_node {
+ 	struct list_head list;
+-	struct opa_mad_notice_attr data;
+ 	__be64 tid;
+ 	int len;
+ 	u32 retry;
+ 	u8 in_use;
+ 	u8 repress;
++
++	/* Must be last --ends in a flexible-array member. */
++	struct opa_mad_notice_attr data;
+ };
  
- 	return 0;
- }
+ static int smp_length_check(u32 data_size, u32 request_len)
 -- 
 2.43.0
 
