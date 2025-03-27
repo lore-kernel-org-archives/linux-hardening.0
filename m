@@ -1,95 +1,85 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CA07221F09;
-	Thu, 27 Mar 2025 19:42:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B4C81DED45;
+	Thu, 27 Mar 2025 21:57:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743104553; cv=none; b=IiHMnEKbveIKiVZMpzLv1SarkzsiQ5O46/5+ZVjcFozwqhhyudnZn76YBWW+WXCNOqgbHpXIj9dOBHq6ylxHt26o6lAi086xPU86yD2VuT8oyudGjxkP2x9P/JYBtZf6T4KVWObEPdFSrm1aFySCT4g3gATUZ0el0ynfr+NeF64=
+	t=1743112671; cv=none; b=GAIsXX3/hHT2FF1SSUrip23/8Dyt8rvWPaiZu0rw7z6Z2xtHnpM/kfSkQAygiZxJRdviZdBo7rQNr+X5HfKHdbtPFbPfmpzLxLKXJB9mBQGh2vmeEHwi6gOEyPgfBxPMYZ2kYa/O3x4fXgYbQa7JaFWxa4SiTqd6SIl29oNk4T8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743104553; c=relaxed/simple;
-	bh=8VLPrYwd0O/9onX2vpUeJm+LUfurWuWUGHnekjXlM0s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WzUeuJHlu/BrrnbUZUzMH7lPfd0078X+9PodM5SJhc8VZ383ZSbV7EyiljBtZPAPR8ZPxxwemFUmaw/yMEW3T5r8eBq8g6L8rfWEDZQztwoBWYa9w1Dg/NDYTfgGJYyYhR273iaFlbmAO8ekE/VwR/bGM3S2YGpb/0C4Bn3CDCg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=fowTjCZh; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1743112671; c=relaxed/simple;
+	bh=2JaAn98f3WVVTUV4zPmAkU4cOoVTOpFjAd0eloNL26s=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=YJ5vre7eXNJFfEvNwaT+5miCpoKrVIgUV8UR+OrPDhGH6UVNrMQe1SW1EewZlee7yan9tI228JVc6EGGysZqONndwPlcTXeOyaoYB7EcFiIkr0wOPRGXWlascJANjD+uqmm+CdF+xW2J2jdK3kT0XHjyvOqz82NwWtBqC8ywoSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B6COfFjl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fowTjCZh"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=QxApuPwvbMdm/tcX2I8PfZPt6Mt8W2Cnmp2BQW93RHc=; b=fowTjCZh/e+GKmEDK0YMRnIYmK
-	/Oc5324O6IaG9I1uwb7bVc1qOpmkgPDAHUT8ppVvICTG0wwcQvS+9qU2yaKqO5xAec5HpeK0R8Vtq
-	P5IHBdKUhq4H0N2QRe7LrkkQ/0thifhWAJXITMj8n12n3nVXbdaf4L4nFfreUrRxkPZd6W9SUr4ZD
-	Hlkqdyxt7sbMmRDahXecGIKKe0O2dZGDsDOvtwzbqzV0eBm8n5Jxt75qgPRF5sCS6odokZtLPHTN+
-	sbPdTUna7cLds8tnopETdwsoikEqIw05Cg0j2ggLoS1n2Ygz02+2ZHq6Xj6byI70Lv8x0aDIkGSL5
-	+FU4OoNw==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1txt7B-00000000usX-17Ii;
-	Thu, 27 Mar 2025 19:42:09 +0000
-Date: Thu, 27 Mar 2025 19:42:09 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Vlastimil Babka <vbabka@suse.cz>, Christoph Lameter <cl@linux.com>,
-	Pekka Enberg <penberg@kernel.org>,
-	David Rientjes <rientjes@google.com>,
-	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Marco Elver <elver@google.com>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 4/5] slab: Set freed variables to NULL by default
-Message-ID: <Z-WqEUWOvwzBt5ni@casper.infradead.org>
-References: <20250321202620.work.175-kees@kernel.org>
- <20250321204105.1898507-4-kees@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B6COfFjl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0BF0C4CEDD;
+	Thu, 27 Mar 2025 21:57:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743112670;
+	bh=2JaAn98f3WVVTUV4zPmAkU4cOoVTOpFjAd0eloNL26s=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=B6COfFjlmv44H/k8P+/lDonPywmqiVsjydXWYBGmwJNHXItK56LsIYYCHHQsNCi4m
+	 c8rDyU3SMmrjRXWXb4ZOTIUkAjf05A0hKeJKoHpRLXReBDGuzUUW/eZaSoDTyRK3BK
+	 Khjkc7cJSoPNhaOvjjnbXbD02ffpLYPlRS6fC9xq8J88o17qUC+1K/ophEYU+IZCQJ
+	 iv1KIjQaCTnZm+pVc/Q5fL2DhtGYEeQcDDS7ejfsxW3Ab5DPvDhRvhFhRTA17cABWY
+	 KgAGz2fwz++ipPkeXUlTM6Vzuk/lcC0EZZ4SLuQabCgAHXkMoLioP57G+iE7wt0m0Z
+	 +AB0AExum5kcA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 7109C380AAFD;
+	Thu, 27 Mar 2025 21:58:28 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250321204105.1898507-4-kees@kernel.org>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [f2fs-dev] [RFC v2 00/38] Improve ABI documentation generation
+From: patchwork-bot+f2fs@kernel.org
+Message-Id: 
+ <174311270700.2230226.6627341491675246186.git-patchwork-notify@kernel.org>
+Date: Thu, 27 Mar 2025 21:58:27 +0000
+References: <cover.1738020236.git.mchehab+huawei@kernel.org>
+In-Reply-To: <cover.1738020236.git.mchehab+huawei@kernel.org>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc: linux-doc@vger.kernel.org, corbet@lwn.net, gregkh@linuxfoundation.org,
+ linux-pm@vger.kernel.org, netdev@vger.kernel.org, coresight@lists.linaro.org,
+ linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+ linux-block@vger.kernel.org, linux-iio@vger.kernel.org,
+ linux-hardening@vger.kernel.org, workflows@vger.kernel.org,
+ bpf@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-media@vger.kernel.org
 
-On Fri, Mar 21, 2025 at 01:41:00PM -0700, Kees Cook wrote:
->  /**
-> - * kfree - free previously allocated memory
-> + * __kfree - free previously allocated memory
+Hello:
 
-No.  After applying this patch, we now have documentation for __kfree --
-a function we want precisely 0 people to call directly, and no
-documentation for kfree(), which is the function we want everybody to
-use.
+This patch was applied to jaegeuk/f2fs.git (dev)
+by Jonathan Corbet <corbet@lwn.net>:
 
-I don't know what the right solution to kernel documentation is here,
-but this is definitely not it.  Something I've done in the past is to
-note that kernel-doc ignores preprocessor, so we could do something
-like:
+On Tue, 28 Jan 2025 01:05:49 +0100 you wrote:
+> Hi Jon/Greg,
+> 
+> That's the second version of my RFC patches meant to modenize the ABI
+> parser that I wrote in Perl.
+> 
+> I originally started it due to some issues I noticed when searching for
+> ABI symbols. While I could just go ahead and fix the already existing
+> script, I noticed that the script maintainance didn't have much care over
+> all those years, probably because it is easier to find Python programmers
+> those days.
+> 
+> [...]
 
-#if 0
-/**
- * kfree - blah blah
- * @blah: blah
- *
- * blah blah blah
- */
-void kfree(const void *object) { }
-#endif
-void __kfree(const void *object)
-{
-...
-}
+Here is the summary with links:
+  - [f2fs-dev,RFC,v2,10/38] ABI: sysfs-fs-f2fs: fix date tags
+    https://git.kernel.org/jaegeuk/f2fs/c/90800df0da78
 
-We'd get warnings if people asked the kbuild system to show them all
-EXPORT_SYMBOL functions which don't have kdoc, but nobody's that
-invested in having complete documentation.  I don't know if this is
-a good approach to solving the problem.
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
