@@ -1,79 +1,40 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C89991CFBC
-	for <linux-hardening@vger.kernel.org>; Fri, 28 Mar 2025 13:51:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A35831BD9CE;
+	Fri, 28 Mar 2025 14:25:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743169919; cv=none; b=G8TyJ+YK79CDS9RsYDsB7uuUiwW1LB8/4DL0DZqYLC+OzeP4lxoh1iD+RfrJnBr4SR0j66oizvf7BQlvyelL9nsdVPyIsqfkYay/J9f92XC7jTyUSMitfC6ARCQUx5Md1zLlYiARueBN2vRfEcgHDMXsM3UlYWbi3mJUfCdyOAg=
+	t=1743171911; cv=none; b=bs8g83jRFn59wvDq4bSxsJ7UzdVZlZY88p1gA/94ZsMnRReUdIxe/eryuaT9emoZeJQnhp32IPfSjwGUMZwT/bH2H72+0FqY3b1FyaoV2dQzFDCUpOInkCCrWHLpbzqjPmnvTCTb/L6887FJjKuF4TmA1feCTQ1gZOTg0DIxiAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743169919; c=relaxed/simple;
-	bh=7keX5FQHfuj5criWs662qvX5Y0mvZuQ+wEIWA+09qU0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZdzTSj0/6KpLyh0Zt8MU0OBpos0kOxCkfhgqqIE5oP3PdrLDjuaaufk0d52EdWZ7TD9LIX7Kq0sp/e8LHZTjhTt/Wky4fh4I5+ahbi6uFed0mV3VPt2BFD5HS25GPtHd/p7qCFnFq+9HOKAY9QEvWyIbO38gUXFhroAPTa/vpIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Ri52rTuY; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1743171911; c=relaxed/simple;
+	bh=NF/NsSaGzQgrMigKCwS79D/GaMkgDB1dF0QZBIL8yIY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=O2tjvxUPO4W62YdMLpgjKvHC7g9MGdov+SutBfaxTVP7W4bBS2pKK+LhPa03ePVO31DjQsxxotL8CC5YhaCvK03vGRFDBCun9pz0VV+3hpTizz/si8iYOKaUgegCuNVzfhDpQz6a8b6L01+hJ8iSNSwdudk1TuHKp28ClmeE+9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ssWLEUdC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Ri52rTuY"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3997205e43eso1812342f8f.0
-        for <linux-hardening@vger.kernel.org>; Fri, 28 Mar 2025 06:51:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1743169915; x=1743774715; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=olQvXU3SlpssZcd54ZBPK/yHAsySM9j/3+8owqmZXYk=;
-        b=Ri52rTuY+auIlCiZoHCuVbwfsheeZHWQ1FjX+m0j7RQjXBzvmnDcfAW0Twomki44QH
-         H/AY0m5enj43ba3w/UsyeJ9GYkolrQRZTj0eV53UxSJsBSqPM4ByLvPe0KqN2P6DMHRg
-         MWFEjTiDp/OlbsZTBU1YrK/kxKLpkYT0M+O+QQrGU3FLG/EVTbYnGYumiplgEAWrlTas
-         8ZiXqcstegbn4gbJHY/us/tanKGWOsdXyaTqBSbkLY+N8nQm0iA34YdQC/PAv17XtEBL
-         o8WhJH1ljNGuYE0dLHBm937FxgfZr23qPQxOsi8XGvRb2KcmtiyRk75tfmlTD9gWb8bm
-         SUbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743169915; x=1743774715;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=olQvXU3SlpssZcd54ZBPK/yHAsySM9j/3+8owqmZXYk=;
-        b=VOxOyMGZP3B5GDrqS7deL0PrWq9JcBPEL5DCp424mZMtXJMou4ynk3zNAevAiWqhYC
-         2IVjvyPQOf6UaNsC9zRVLUSvCnSOoKfhveQ21ThYInqDn1Tkv6zLRBGLUqqBlzsiXFGW
-         aNLacyCalBhqj2YSx69Pn9dR9rIpyVHDpPwcAbSgN4gYQpmt/kw0yd6tMbcc0Po+yNmm
-         wGdUrfcCU5/wy9Ka/yf1tCvR3bj5T2uRR7xniaV0YxoaQ3wGiBuVeGIaD7ELtQVgf5PR
-         7S5Epe8rkFRR28xBQUUjwzEueniYcTJJyj9ypT4BY7RqXxBJ28XkmpuZCIABeRZdKNcf
-         nedg==
-X-Forwarded-Encrypted: i=1; AJvYcCV9ySO+yGawLFp3b7LxgY1vgENP74MXsMDvykdrc8KbOP4W/JObD8C/uA/RI+1fKIA4qYc2vaHPaUXqybjavwA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwS7KPiPcgxHIoq+P4qPLWsV3PeH01BEFbW39b4hwOabR7QX/nK
-	OxNEHWzHoUr/sy9nyVqfQBNA+ReSGad9+xETsWw/G6WakBswnSSAld2w7CSCK+8=
-X-Gm-Gg: ASbGnct+pcSUF+bhadsCF61RhuFPp6LGelM1nSS8liBfhPScB1E2XF/6ssk40+raxU3
-	z7wWVGSMRRrzhqMN/pmnCQOtEmV8yAgRrqDcZu4PEQLg9cWw4vpI7JzMsg6ARxZ900ml4w8ajvW
-	BiJbLWXOz4I6lEItSptckRZP4NYsdNjkOiDSESALpgDe5vdzZcUT+sMRVlfrw4coEjIWc+o3tXg
-	c0gq7Cx/eRNtmR7OgwaRrcjibJggtzrG+PsGM4kUfSbbD5dje2iso0T9kcN1d3HV6tCPlsJ2adb
-	zDGUWJVtvNyjO+two63Yq4h9VQvhoRazE3foASxCTdZfI0Q=
-X-Google-Smtp-Source: AGHT+IHbfndbuHfkuasI/Cf4p6r8nuRFhsT5d5n30IcceIH6HCihEcayWTwO3EYsoj8rQdERKU6JoQ==
-X-Received: by 2002:a5d:47a2:0:b0:391:3049:d58d with SMTP id ffacd0b85a97d-39ad1719a55mr6958877f8f.0.1743169915024;
-        Fri, 28 Mar 2025 06:51:55 -0700 (PDT)
-Received: from pathway.suse.cz ([176.114.240.130])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d8fba4b4fsm29091505e9.1.2025.03.28.06.51.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Mar 2025 06:51:54 -0700 (PDT)
-Date: Fri, 28 Mar 2025 14:51:52 +0100
-From: Petr Mladek <pmladek@suse.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Kees Cook <kees@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Andy Shevchenko <andy@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: Re: [PATCH v2 0/6] vsprintf: Add __printf attribute to where it's
- required
-Message-ID: <Z-apePufuwt19djQ@pathway.suse.cz>
-References: <20250321144822.324050-1-andriy.shevchenko@linux.intel.com>
- <Z-KCNy7Qu2vFdwVx@pathway.suse.cz>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ssWLEUdC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F2C3C4CEE5;
+	Fri, 28 Mar 2025 14:25:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743171911;
+	bh=NF/NsSaGzQgrMigKCwS79D/GaMkgDB1dF0QZBIL8yIY=;
+	h=Date:From:To:Cc:Subject:From;
+	b=ssWLEUdC5GNsvoMJw38U3qhtmJvRq8N1dBTq7LkgnL8xO0IlrsTkgpZumRr0pG3AX
+	 aFzuIbON/gO2TowE6260ADpKUebYVtEPYQ27EbonDBXNKWVpUvLKv7mamMzORYOUGi
+	 MhY41QxstEx5GV51XPMYOS5dMwzekAgNGWvmSBvigv44abzCnlgAtr3sLfVCRepwsS
+	 J9e+G6gOPwWnm4BINDcgUofRaVzpRImDNHLMCr6xVjZgXPB/0SJPkzdhrvSYf+IdJJ
+	 fJ6sRdSKD1TDKKF/IT5l2oeaZcKjdTKp5ePxPCLOmbzwxrkDgM0azke3y1GsV6qcow
+	 R7DZCpwq7wKmA==
+Date: Fri, 28 Mar 2025 08:25:08 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+	Chaitanya Kulkarni <kch@nvidia.com>
+Cc: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH][next] nvme-loop: Avoid -Wflex-array-member-not-at-end warning
+Message-ID: <Z-axRObjXYjIHGQC@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -82,46 +43,41 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z-KCNy7Qu2vFdwVx@pathway.suse.cz>
 
-On Tue 2025-03-25 11:15:21, Petr Mladek wrote:
-> On Fri 2025-03-21 16:40:46, Andy Shevchenko wrote:
-> > This whole series started from a simple fix (see the last patch)
-> > to make GCC (Debian 14.2.0-17) happy when compiling with `make W=1`
-> > (note, that CONFIG_WERROR=y and all warnings break the build!)
-> > down to a rabbit hole.
-> > 
-> > However starting from v2 the last patch doesn't require the first
-> > part, I prefer still to have them since the functions, while being
-> > _binary_ printf()-like, are still printf()-like. It also puts in align
-> > the tracing stuff with the rest and fixes the wrong parameter value.
-> > 
-> > These first 4 patches are organised in a strict order and can't be
-> > reshuffled, otherwise it will produce a warnings in between.
-> > 
-> > I believe the best route for the series is printk tree with immutable
-> > tag or branch for the others.
-> > 
-> > Alternatively the first 4 patches can be applied first as they
-> > are pretty much straightforward. They also can be squashed to one
-> > (as the same topic behind), but it all is up to the respective
-> > maintainers.
-> 
-> The whole series looks good to me:
-> 
-> Reviewed-by: Petr Mladek <pmladek@suse.com>
-> 
-> I am going to push it via the printk tree. I think about doing
-> so as a second pull request by the end of this merge window.
-> 
-> Anyway, I am going to wait few more days for eventual feedback
-> or push back.
+-Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+getting ready to enable it, globally.
 
-JFYI, I have pushed the patchset into printk/linux.git,
-branch for-6.15-printf-attribute.
+Move the conflicting declaration to the end of the structure. Notice
+that `struct nvme_loop_iod` is a flexible structure --a structure
+that contains a flexible-array member.
 
-I am going to send a pull request the following week
-if nothing happens in the meantime.
+Fix the following warning:
 
-Best Regards,
-Petr
+drivers/nvme/target/loop.c:36:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/nvme/target/loop.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/nvme/target/loop.c b/drivers/nvme/target/loop.c
+index a5c41144667c..d02b80803278 100644
+--- a/drivers/nvme/target/loop.c
++++ b/drivers/nvme/target/loop.c
+@@ -33,10 +33,12 @@ struct nvme_loop_ctrl {
+ 
+ 	struct list_head	list;
+ 	struct blk_mq_tag_set	tag_set;
+-	struct nvme_loop_iod	async_event_iod;
+ 	struct nvme_ctrl	ctrl;
+ 
+ 	struct nvmet_port	*port;
++
++	/* Must be last --ends in a flexible-array member. */
++	struct nvme_loop_iod	async_event_iod;
+ };
+ 
+ static inline struct nvme_loop_ctrl *to_loop_ctrl(struct nvme_ctrl *ctrl)
+-- 
+2.43.0
+
