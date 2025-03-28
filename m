@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECD5812C544;
-	Fri, 28 Mar 2025 13:20:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD1D2221569;
+	Fri, 28 Mar 2025 13:50:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743168004; cv=none; b=nTS8WNIDCXsFK0e4piEhk+FzPJWVyGnqh9szB40DXJZJV7EDJo+Xa8av+j6w6CSJ69yqJZZj8FsowPmTNkL///dzxxbpS/LnwJfMeb6W7jY9nrgKGVmOg43FR2e07VJrZ3vejQZhM+IwVTUTyLuesooJJWoyLS/56bCT7ZCb8yU=
+	t=1743169815; cv=none; b=F5TMBksl5Zj8fd6f2IC/2VWDw2a8Hx4dKdCJM9J04LZbrv/q4SBMlIdbhM+5jXxhVfc1beyNguc3Tfwok5ibD65d1CHEY/i1lcAFKIAvBgF6t+d8Vm+mkWnbRqT1w5bv7K2drT8Y8LMPWXGp5okrTqgD8NS2iifgIS283dRaibk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743168004; c=relaxed/simple;
-	bh=PbE3P7d+0IgWJs59aXFiaqzoZImTTdZogccba+32FoA=;
+	s=arc-20240116; t=1743169815; c=relaxed/simple;
+	bh=wovA4Aud7DhDJdEaIv13byMvexafADunHResb3o9c/I=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=fhMHXXxlMDoOSSCRSi+n6N7C4TGbMtXT+60QNfermDingNv1jZLKFbRR+PE/TDlzdO8xHbumlDb+pbJ3uiiLQ8cikqVm1MVdRouq+6Zh+Tdk6MMuWikOuFXlMVJSXuvODN8lxF7m1/wmnyw4UoqZ7GE3oigNwnvG4+ey80pIj58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZyLzW/Me; arc=none smtp.client-ip=10.30.226.201
+	 Content-Disposition; b=p5D8QXpXhT9cYW7OAHVJKQe6ggsn3Nn7NoF/7TPqjtiwtVIvJ0NCUYr4DmPl5Ces0Wxt35sDeSXxkyoC1c4XpSoaEgy0I/7LggmqLMgTado+UcUKb0S3nY16BHmLK0egL+xBxivwRnff/RVYPxTdaLuHQmVKkvIp9HHNglEsGSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SQkOikoo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZyLzW/Me"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B836BC4CEE4;
-	Fri, 28 Mar 2025 13:20:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SQkOikoo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D95DC4CEE4;
+	Fri, 28 Mar 2025 13:50:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743168003;
-	bh=PbE3P7d+0IgWJs59aXFiaqzoZImTTdZogccba+32FoA=;
+	s=k20201202; t=1743169814;
+	bh=wovA4Aud7DhDJdEaIv13byMvexafADunHResb3o9c/I=;
 	h=Date:From:To:Cc:Subject:From;
-	b=ZyLzW/MeCbWhIBaIKgKM+VyXR7Ri2ulEOJ2nuHK22872cnvXaQSCdx7A8xiyU8548
-	 AhpqBe8Dp9ZaRxnntSI9ubUuvhmosXs3rRQRdWsPxVz95/KcG6NP1/w4GofNGNMfAW
-	 kajV6c4CsxJcB+pP3v4uAQd3i0KcicOAD9uD0MfU8lZFC+gF+ca9Ib22Q7sujtyFee
-	 CgXuX+2dOPKUWedVn6nzb9jjnNoxr6MjQTiwena84eoD1uhoKaTa3BNYx2t3KH45qz
-	 akbXubZtbtUVXg8dDqwm1hjOsUCgIq7q+DtztXE6bcL1qMuHNK4N5x21U80NQw5t7F
-	 9toMkG0/qWYAg==
-Date: Fri, 28 Mar 2025 07:20:00 -0600
+	b=SQkOikoocc5ajqf+GsC/NyT9N/He3BHYNnePbD4I3saofoYa6vu+uRMrEOknILRXE
+	 CDKnDJJOeV60xZYg+YFGNItagokMk8Wub8p7DdmQoXtkYOqkfa+f/b/dr5yD5FaTYG
+	 yDTLsSbcAz0CXAW/OOHs7EC1G0oKR1UMe2hxtaFfYBm9n21KHuOXgs0KA2fVdKzrxD
+	 8TRaXn00sRjHNnIYzSDaH3PD4SYwKAaaiA1AJJ1pAOdn3OiSCXwtTvA7LmShxWwLGt
+	 wh3zsMeSMgVkREcLDO/GWa9rU30fpppwXD2RQQTEJV4xyZfxI5HyKLbKPLJrEY1VMK
+	 6+AfTIG5GBlvg==
+Date: Fri, 28 Mar 2025 07:50:11 -0600
 From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
 To: Benson Leung <bleung@chromium.org>, Tzung-Bi Shih <tzungbi@kernel.org>,
 	Guenter Roeck <groeck@chromium.org>
 Cc: chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] platform/chrome: cros_ec_debugfs: Avoid
- -Wflex-array-member-not-at-end warnings
-Message-ID: <Z-aiAAcIP7sBRtz0@kspp>
+Subject: [PATCH][next] platform/chrome: cros_ec: Avoid
+ -Wflex-array-member-not-at-end warning
+Message-ID: <Z-apE0ZmckBjRDyx@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -53,102 +53,96 @@ a flexible structure where the size of the flexible-array member
 is known at compile-time, and refactor the rest of the code,
 accordingly.
 
-So, with these changes, fix the following warnings:
+So, with these changes, fix the following warning:
 
-drivers/platform/chrome/cros_ec_debugfs.c:211:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/platform/chrome/cros_ec_debugfs.c:257:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/platform/chrome/cros_ec_debugfs.c:279:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/platform/chrome/cros_ec.c:106:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/platform/chrome/cros_ec_debugfs.c | 52 +++++++++--------------
- 1 file changed, 20 insertions(+), 32 deletions(-)
+ drivers/platform/chrome/cros_ec.c | 47 +++++++++++++++++--------------
+ 1 file changed, 26 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/platform/chrome/cros_ec_debugfs.c b/drivers/platform/chrome/cros_ec_debugfs.c
-index 92ac9a2f9c88..d10f9561990c 100644
---- a/drivers/platform/chrome/cros_ec_debugfs.c
-+++ b/drivers/platform/chrome/cros_ec_debugfs.c
-@@ -207,22 +207,15 @@ static ssize_t cros_ec_pdinfo_read(struct file *file,
- 	char read_buf[EC_USB_PD_MAX_PORTS * 40], *p = read_buf;
- 	struct cros_ec_debugfs *debug_info = file->private_data;
- 	struct cros_ec_device *ec_dev = debug_info->ec->ec_dev;
+diff --git a/drivers/platform/chrome/cros_ec.c b/drivers/platform/chrome/cros_ec.c
+index 110771a8645e..cd15aa0cb082 100644
+--- a/drivers/platform/chrome/cros_ec.c
++++ b/drivers/platform/chrome/cros_ec.c
+@@ -99,51 +99,56 @@ irqreturn_t cros_ec_irq_thread(int irq, void *data)
+ }
+ EXPORT_SYMBOL(cros_ec_irq_thread);
+ 
++union cros_ec_sleep_data {
++	struct ec_params_host_sleep_event req0;
++	struct ec_params_host_sleep_event_v1 req1;
++	struct ec_response_host_sleep_event_v1 resp1;
++} __packed;
++
+ static int cros_ec_sleep_event(struct cros_ec_device *ec_dev, u8 sleep_event)
+ {
+ 	int ret;
 -	struct {
 -		struct cros_ec_command msg;
 -		union {
--			struct ec_response_usb_pd_control_v1 resp;
--			struct ec_params_usb_pd_control params;
--		};
--	} __packed ec_buf;
--	struct cros_ec_command *msg;
--	struct ec_response_usb_pd_control_v1 *resp;
--	struct ec_params_usb_pd_control *params;
+-			struct ec_params_host_sleep_event req0;
+-			struct ec_params_host_sleep_event_v1 req1;
+-			struct ec_response_host_sleep_event_v1 resp1;
+-		} u;
+-	} __packed buf;
 +	DEFINE_RAW_FLEX(struct cros_ec_command, msg, data,
-+			MAX(sizeof(struct ec_response_usb_pd_control_v1),
-+			    sizeof(struct ec_params_usb_pd_control)));
-+	struct ec_response_usb_pd_control_v1 *resp =
-+			(struct ec_response_usb_pd_control_v1 *)msg->data;
-+	struct ec_params_usb_pd_control *params =
-+			(struct ec_params_usb_pd_control *)msg->data;
- 	int i;
++			sizeof(union cros_ec_sleep_data));
++	struct ec_params_host_sleep_event *req0 =
++			(struct ec_params_host_sleep_event *)msg->data;
++	struct ec_params_host_sleep_event_v1 *req1 =
++			(struct ec_params_host_sleep_event_v1 *)msg->data;
++	struct ec_response_host_sleep_event_v1 *resp1 =
++			(struct ec_response_host_sleep_event_v1 *)msg->data;
  
--	msg = &ec_buf.msg;
--	params = (struct ec_params_usb_pd_control *)msg->data;
--	resp = (struct ec_response_usb_pd_control_v1 *)msg->data;
--
- 	msg->command = EC_CMD_USB_PD_CONTROL;
- 	msg->version = 1;
- 	msg->insize = sizeof(*resp);
-@@ -253,17 +246,15 @@ static ssize_t cros_ec_pdinfo_read(struct file *file,
+-	memset(&buf, 0, sizeof(buf));
  
- static bool cros_ec_uptime_is_supported(struct cros_ec_device *ec_dev)
- {
--	struct {
--		struct cros_ec_command cmd;
--		struct ec_response_uptime_info resp;
--	} __packed msg = {};
-+	DEFINE_RAW_FLEX(struct cros_ec_command, msg, data,
-+			sizeof(struct ec_response_uptime_info));
- 	int ret;
+ 	if (ec_dev->host_sleep_v1) {
+-		buf.u.req1.sleep_event = sleep_event;
+-		buf.u.req1.suspend_params.sleep_timeout_ms =
++		req1->sleep_event = sleep_event;
++		req1->suspend_params.sleep_timeout_ms =
+ 				ec_dev->suspend_timeout_ms;
  
--	msg.cmd.command = EC_CMD_GET_UPTIME_INFO;
--	msg.cmd.insize = sizeof(msg.resp);
-+	msg->command = EC_CMD_GET_UPTIME_INFO;
-+	msg->insize = sizeof(struct ec_response_uptime_info);
+-		buf.msg.outsize = sizeof(buf.u.req1);
++		msg->outsize = sizeof(*req1);
+ 		if ((sleep_event == HOST_SLEEP_EVENT_S3_RESUME) ||
+ 		    (sleep_event == HOST_SLEEP_EVENT_S0IX_RESUME))
+-			buf.msg.insize = sizeof(buf.u.resp1);
++			msg->insize = sizeof(*resp1);
  
--	ret = cros_ec_cmd_xfer_status(ec_dev, &msg.cmd);
--	if (ret == -EPROTO && msg.cmd.result == EC_RES_INVALID_COMMAND)
+-		buf.msg.version = 1;
++		msg->version = 1;
+ 
+ 	} else {
+-		buf.u.req0.sleep_event = sleep_event;
+-		buf.msg.outsize = sizeof(buf.u.req0);
++		req0->sleep_event = sleep_event;
++		msg->outsize = sizeof(*req0);
+ 	}
+ 
+-	buf.msg.command = EC_CMD_HOST_SLEEP_EVENT;
++	msg->command = EC_CMD_HOST_SLEEP_EVENT;
+ 
+-	ret = cros_ec_cmd_xfer_status(ec_dev, &buf.msg);
 +	ret = cros_ec_cmd_xfer_status(ec_dev, msg);
-+	if (ret == -EPROTO && msg->result == EC_RES_INVALID_COMMAND)
- 		return false;
+ 	/* Report failure to transition to system wide suspend with a warning. */
+ 	if (ret >= 0 && ec_dev->host_sleep_v1 &&
+ 	    (sleep_event == HOST_SLEEP_EVENT_S0IX_RESUME ||
+ 	     sleep_event == HOST_SLEEP_EVENT_S3_RESUME)) {
+ 		ec_dev->last_resume_result =
+-			buf.u.resp1.resume_response.sleep_transitions;
++			resp1->resume_response.sleep_transitions;
  
- 	/* Other errors maybe a transient error, do not rule about support. */
-@@ -275,20 +266,17 @@ static ssize_t cros_ec_uptime_read(struct file *file, char __user *user_buf,
- {
- 	struct cros_ec_debugfs *debug_info = file->private_data;
- 	struct cros_ec_device *ec_dev = debug_info->ec->ec_dev;
--	struct {
--		struct cros_ec_command cmd;
--		struct ec_response_uptime_info resp;
--	} __packed msg = {};
--	struct ec_response_uptime_info *resp;
-+	DEFINE_RAW_FLEX(struct cros_ec_command, msg, data,
-+			sizeof(struct ec_response_uptime_info));
-+	struct ec_response_uptime_info *resp =
-+				(struct ec_response_uptime_info *)msg->data;
- 	char read_buf[32];
- 	int ret;
- 
--	resp = (struct ec_response_uptime_info *)&msg.resp;
--
--	msg.cmd.command = EC_CMD_GET_UPTIME_INFO;
--	msg.cmd.insize = sizeof(*resp);
-+	msg->command = EC_CMD_GET_UPTIME_INFO;
-+	msg->insize = sizeof(*resp);
- 
--	ret = cros_ec_cmd_xfer_status(ec_dev, &msg.cmd);
-+	ret = cros_ec_cmd_xfer_status(ec_dev, msg);
- 	if (ret < 0)
- 		return ret;
+-		WARN_ONCE(buf.u.resp1.resume_response.sleep_transitions &
++		WARN_ONCE(resp1->resume_response.sleep_transitions &
+ 			  EC_HOST_RESUME_SLEEP_TIMEOUT,
+ 			  "EC detected sleep transition timeout. Total sleep transitions: %d",
+-			  buf.u.resp1.resume_response.sleep_transitions &
++			  resp1->resume_response.sleep_transitions &
+ 			  EC_HOST_RESUME_SLEEP_TRANSITIONS_MASK);
+ 	}
  
 -- 
 2.43.0
