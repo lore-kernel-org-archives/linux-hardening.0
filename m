@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 796EF2F37;
-	Fri, 28 Mar 2025 13:00:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ADB835963;
+	Fri, 28 Mar 2025 13:07:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743166819; cv=none; b=nqKdQimGIHSv1i+EPkiDXggC3OU03n7yKkvffptj8h0ZTbdjsdqKV4I4bD4aSsdF4z8UGiLwDZE0iteSHsEvNTaDlzj/4/mHPwuc2t6bwlUNhpDHwyIdObborGPkdoqMNwNQJ0SKiqrRPJ+tlLux4H0U8JHLR0VtlA+6kzGiSc8=
+	t=1743167262; cv=none; b=WUpxUVSQ5V9F5kh82JWUuT0FMU7waOF1vCrFIPxVF7J3+ma07T6ZcdDrmdZyyLtr9Kvz8b5F0DILjKCIgk87BpSm/Tjn0DaUwsZv4ZgarupeLvp0sufQkp1MnP1eIqWAEWGm7Efkf2tEFLFPCqnpb/NQyqzNFmWLeOpilGfUqjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743166819; c=relaxed/simple;
-	bh=+Wp2n86SjMypBd/q2Xpm8OByrsTcdjUxmeMbmDjejKA=;
+	s=arc-20240116; t=1743167262; c=relaxed/simple;
+	bh=Ur4N8elwGrWj1rS6Eiw35A5mFTwoDB/CX4cOH4JBqEg=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=jRrvMw4WPUujy17xJcPzfhwitNrk3ixM1BU1JoLsa66+aGJljxrEkhfpT0KzTsBdGupWn0pupP4kud6ttt5Fr2u8prp9QgpbE6/ESfAeLbTYvjQ0RvEnwMQ7IHWQJ2ITJ64zJXhJByhO2KulcGmX3nnHoGdtv+jt7PV3PY3h3S8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cVmaWdNG; arc=none smtp.client-ip=10.30.226.201
+	 Content-Disposition; b=Ge3rewCdsZ2swAoDcqWI0EancFE0BgJOnwNyHin3lWfMzU2gMHvrMcRXpFeAmYpM54Qee/oNFza6Jzz+XXx0VRG4zKrARxrJGO8roREpL/ae9LDNcfc1uR5jxtdxwd4AwmoIx5TREBI/JHT00+7v3LGNysmm+anGWIkixIQnm9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HRviPZ9l; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cVmaWdNG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57F02C4CEE5;
-	Fri, 28 Mar 2025 13:00:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HRviPZ9l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22233C4CEE4;
+	Fri, 28 Mar 2025 13:07:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743166817;
-	bh=+Wp2n86SjMypBd/q2Xpm8OByrsTcdjUxmeMbmDjejKA=;
+	s=k20201202; t=1743167260;
+	bh=Ur4N8elwGrWj1rS6Eiw35A5mFTwoDB/CX4cOH4JBqEg=;
 	h=Date:From:To:Cc:Subject:From;
-	b=cVmaWdNGzBt+DHsJ12cynn4l63wP9k9bT99CeUjiv+/qsOqu9fpwsa4OCI7TvmdyX
-	 GcfP8V3HTqdD1eRWs1iBTOQP8NahsC8ibHW+LzGFERhPpXpw/MiY0whtCWzd69r5ry
-	 6NPZMI66/nP730Oqve6TsCl3Yr+xeGt8eGlEpy5iwD2Zc9nikycUs+RRxo7ABZlwIB
-	 7BRJS2ZQ7COrU2u+DuETf6r8gNpoZPzaKO7FuHkftgn3ummCPD6pE6zfs8DSDJZOqH
-	 xfghiqbA3J5Ubl/cw6iUZ293EpQDpeOz1ZtTNwNQA8nKfyKSY+MddZqfGqNekA9PtX
-	 IlAf/NYkU3JgA==
-Date: Fri, 28 Mar 2025 07:00:15 -0600
+	b=HRviPZ9lGA2QulYhpv/x1IpKekLI1XjcHRPs0fWBhuzQ9Vh/rAmkgZaW+t+3r5OTo
+	 AxGur5t75PT3txGSURQ9yvzlIKGDGck/lK+txFsLKKjl1Z72ocWi0uf0z7tIvzhKTf
+	 CnL9yaPN6Z4q4n1LIAVTPY6Rzw1JdwOjXxY0Ptr83O9seSsI1ozjpSdL58u4F8tkgR
+	 Ad5Jnh8EhqXnPr/qVFlLF1mznrmi8fSpc98LsYodjcrNRblbX01+R1re0zt8omFzZK
+	 jA/kNYpk0hMYRXIkMcF1MbvXa0Y4L7VDpMjTGbaa5XJpR+oijqgGvUYdNwDGKAKi05
+	 gJrlgyypHxsfA==
+Date: Fri, 28 Mar 2025 07:07:38 -0600
 From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Benson Leung <bleung@chromium.org>, Tzung-Bi Shih <tzungbi@kernel.org>,
-	Guenter Roeck <groeck@chromium.org>
+To: Benson Leung <bleung@chromium.org>, Tzung-Bi Shih <tzungbi@kernel.org>
 Cc: chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] platform/chrome: cros_ec_proto: Avoid
+Subject: [PATCH][next] platform/chrome: cros_kbd_led_backlight: Avoid
  -Wflex-array-member-not-at-end warnings
-Message-ID: <Z-adX1BB30dcSJ7x@kspp>
+Message-ID: <Z-afGnRbyGs4dHb1@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -55,56 +54,61 @@ accordingly.
 
 So, with these changes, fix the following warnings:
 
-drivers/platform/chrome/cros_ec_proto.c:143:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/platform/chrome/cros_ec_proto.c:761:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/platform/chrome/cros_kbd_led_backlight.c:141:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/platform/chrome/cros_kbd_led_backlight.c:162:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/platform/chrome/cros_ec_proto.c | 21 ++++++++-------------
- 1 file changed, 8 insertions(+), 13 deletions(-)
+ .../platform/chrome/cros_kbd_led_backlight.c  | 24 +++++++------------
+ 1 file changed, 8 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
-index 877b107fee4b..586358fbf981 100644
---- a/drivers/platform/chrome/cros_ec_proto.c
-+++ b/drivers/platform/chrome/cros_ec_proto.c
-@@ -139,12 +139,10 @@ static int cros_ec_xfer_command(struct cros_ec_device *ec_dev, struct cros_ec_co
- 
- static int cros_ec_wait_until_complete(struct cros_ec_device *ec_dev, uint32_t *result)
+diff --git a/drivers/platform/chrome/cros_kbd_led_backlight.c b/drivers/platform/chrome/cros_kbd_led_backlight.c
+index fc27bd7fc4b9..f4c2282129f5 100644
+--- a/drivers/platform/chrome/cros_kbd_led_backlight.c
++++ b/drivers/platform/chrome/cros_kbd_led_backlight.c
+@@ -137,16 +137,12 @@ static int
+ keyboard_led_set_brightness_ec_pwm(struct led_classdev *cdev,
+ 				   enum led_brightness brightness)
  {
 -	struct {
 -		struct cros_ec_command msg;
--		struct ec_response_get_comms_status status;
+-		struct ec_params_pwm_set_keyboard_backlight params;
 -	} __packed buf;
+-	struct ec_params_pwm_set_keyboard_backlight *params = &buf.params;
 -	struct cros_ec_command *msg = &buf.msg;
--	struct ec_response_get_comms_status *status = &buf.status;
 +	DEFINE_RAW_FLEX(struct cros_ec_command, msg, data,
-+			sizeof(struct ec_response_get_comms_status));
-+	struct ec_response_get_comms_status *status =
-+			(struct ec_response_get_comms_status *)msg->data;
- 	int ret = 0, i;
++			sizeof(struct ec_params_pwm_set_keyboard_backlight));
++	struct ec_params_pwm_set_keyboard_backlight *params =
++			(struct ec_params_pwm_set_keyboard_backlight *)msg->data;
+ 	struct keyboard_led *keyboard_led = container_of(cdev, struct keyboard_led, cdev);
  
- 	msg->version = 0;
-@@ -757,16 +755,13 @@ static int get_next_event_xfer(struct cros_ec_device *ec_dev,
+-	memset(&buf, 0, sizeof(buf));
+-
+ 	msg->command = EC_CMD_PWM_SET_KEYBOARD_BACKLIGHT;
+ 	msg->outsize = sizeof(*params);
  
- static int get_next_event(struct cros_ec_device *ec_dev)
+@@ -158,17 +154,13 @@ keyboard_led_set_brightness_ec_pwm(struct led_classdev *cdev,
+ static enum led_brightness
+ keyboard_led_get_brightness_ec_pwm(struct led_classdev *cdev)
  {
 -	struct {
 -		struct cros_ec_command msg;
--		struct ec_response_get_next_event_v3 event;
+-		struct ec_response_pwm_get_keyboard_backlight resp;
 -	} __packed buf;
+-	struct ec_response_pwm_get_keyboard_backlight *resp = &buf.resp;
 -	struct cros_ec_command *msg = &buf.msg;
--	struct ec_response_get_next_event_v3 *event = &buf.event;
 +	DEFINE_RAW_FLEX(struct cros_ec_command, msg, data,
-+			sizeof(struct ec_response_get_next_event_v3));
-+	struct ec_response_get_next_event_v3 *event =
-+			(struct ec_response_get_next_event_v3 *)msg->data;
- 	int cmd_version = ec_dev->mkbp_event_supported - 1;
- 	u32 size;
++			sizeof(struct ec_response_pwm_get_keyboard_backlight));
++	struct ec_response_pwm_get_keyboard_backlight *resp =
++			(struct ec_response_pwm_get_keyboard_backlight *)msg->data;
+ 	struct keyboard_led *keyboard_led = container_of(cdev, struct keyboard_led, cdev);
+ 	int ret;
  
--	memset(msg, 0, sizeof(*msg));
- 	if (ec_dev->suspended) {
- 		dev_dbg(ec_dev->dev, "Device suspended.\n");
- 		return -EHOSTDOWN;
+-	memset(&buf, 0, sizeof(buf));
+-
+ 	msg->command = EC_CMD_PWM_GET_KEYBOARD_BACKLIGHT;
+ 	msg->insize = sizeof(*resp);
+ 
 -- 
 2.43.0
 
