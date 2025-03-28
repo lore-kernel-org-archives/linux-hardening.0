@@ -1,114 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9933D35958;
-	Fri, 28 Mar 2025 15:05:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93ECD79E1;
+	Fri, 28 Mar 2025 15:06:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743174343; cv=none; b=kuLYb80K9t/O0dO6+ZSqNNRnsypG/uSRnZ2gOLVVYSn6hdVrdKLKsy3iH4cY8z9QRrihaFs2azdalS6Oz41PyjZ5Lx9yT72pfEXP6ldbzsvewg8AdxJkYoOBAcA27edXAsAVP3WgZXN8rryClGBD+SseXhusetDpIVstCSYSHnc=
+	t=1743174393; cv=none; b=lv7F0hHMJIS9mckreG8w1yP7SmHEB2rklaak6zzsg5jP+IJVnhWWgzDZ3Kuc34/cSp6rjZApnZyDoJgvjG5O97MxLQMezLagvbEAjy4WhZ68XgvSPGd7y6UtS+Bv2AUoWg2Qwf3I9EqfcCvOEzqi7X5Rx87gEdQzsZBzlbck2rM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743174343; c=relaxed/simple;
-	bh=DFlgmDbfFVNEIC8CuMgkRVk9uaSaT4iLRwL3bDdyVjU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XbhXU4WjfcVSBUd1SPM4lWBFdrrmNW+BZKAiryUmALZz59c/wTadoAsGGexE91Rim9wRZzw2w5OSobc7M1ttzRAGYGzYQ3N4wGQjt6cg7EepZxeZTBSS1oVIyHl84qVdBsdNBfVuwcWnKWhUI6v5kyZPgQz+UcvwfzDnRGf5sNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c6J7IYiL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743174393; c=relaxed/simple;
+	bh=Msd4djB5R4l+uchgtEHVjrVjZkqKDfz854vGB8wNEkM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Exuu49fn4bFGcBxCnl88c9YBBnlcmCcxO2yMO0jJ70bx2wOd4JlHhwSYB198oEcsBT0nuplZkF736LokHC38G9Qf+casw26ZaIVgUQY7gTGtKJs6KpEAbT+yXFPKLYwlKEKmAWreEGVAaqZUR1cm0JKe3mpp3UdjbhqVPu2tXDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UgYLGahh; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c6J7IYiL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5010FC4CEE4;
-	Fri, 28 Mar 2025 15:05:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743174343;
-	bh=DFlgmDbfFVNEIC8CuMgkRVk9uaSaT4iLRwL3bDdyVjU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=c6J7IYiLwYEa8HUpwYBGYRDyIuKnXwG2AIg/IQgkucNhPP7TlZ3NVRsWsoA+kw1GR
-	 AFGsDW3zqA7Y5WXozoKfKFjNwK0AK9hPJZQTeFbRLuOf721qwquNcEwMHcIl/fBiuX
-	 m9eKDJn3BEz7+QM9DG4mft7OcdU7ZhpmWUrhLESEUp7CKwfxTbLkqJ065KFjDIOtdD
-	 Rz414Fe68nmJwmIP24fAuRXdstVNpGWk5HKwp7gkRUCYtI5rCn+xu2nVm+8NcN3uE2
-	 9JHPX1z7eBO7QQtFfxiSeLnTfAI9Z5fA+iyxT0l0bVaquQGxy4vkQI/1HEPB9Kcg+I
-	 P6cDE2SXaOtbQ==
-Date: Fri, 28 Mar 2025 16:05:38 +0100
-From: Danilo Krummrich <dakr@kernel.org>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Lyude Paul <lyude@redhat.com>, David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org,
-	nouveau@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] drm/nouveau/outp: Avoid
- -Wflex-array-member-not-at-end warning
-Message-ID: <Z-a6wtoIAkDY2ERx@pollux>
-References: <Z-a2DAQmcsHHlyci@kspp>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UgYLGahh"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ac2a9a74d9cso424360166b.1;
+        Fri, 28 Mar 2025 08:06:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743174390; x=1743779190; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Msd4djB5R4l+uchgtEHVjrVjZkqKDfz854vGB8wNEkM=;
+        b=UgYLGahhw/yF4pHZqHqZmGHu26jEgGdaE8st8l4Gpj+VfpgD+o0A3BTmrhQ1lcQwPk
+         xT5BZXyOvMWUxZ7RtzPrvwxtVBLWq1SC3kY33tyS0USyZvfyEG+w/kRt7tSVjRXQyTV7
+         UTf/+j+JN6kJtXMH+CRIg9cn8HX5T7f4G8ZN5JXbRS4zzU55UMEh8MS+57lC5b02Viaa
+         CeKblFl8ZuEaAlX2+NIK8VpwNjSDhy+92JxaIoG89UQaNMbwbxIPgrF/v8aGQNAGeBYT
+         gzbgqS//V6tp3HHTyb24J5izYe/6Yi84tKykeH0cB6rMdVOzdmKcG+CPBZkl5VZupVmO
+         txqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743174390; x=1743779190;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Msd4djB5R4l+uchgtEHVjrVjZkqKDfz854vGB8wNEkM=;
+        b=Ea+HdHakX3Lha9feqIfIIEJN7xlQ1oXUuNAtrtciYAX/kEOWeb/ypSvgoL0YD07uCY
+         1fUbCA8iH6jb2FaRTVOo9V8pO+BXPbEgvCa/+cmfl+6P5MLL8Y5mAiBCFWod+WYOrj5Z
+         kV0cs4Yr/rlED2nKdYRBL1+zI8PlXxCCBdJiO/71nhjHRjJ5so2cUOaIZGqDhkuZL7DB
+         1bAn0amSD/8D25AGpMJ3OkJL2I0vKhkvknlYFUMQ7T9mtc31/LjNE6by/m/QLhKeBBBu
+         KncMsfThPYuplF/QP6EFj9c3XVuI1Rpw7BWxq746FuzUtAng1FXr90CTTMES3VvKUdFS
+         sgew==
+X-Forwarded-Encrypted: i=1; AJvYcCU0aUziBrqLXugnjpPcG6dxmm7f3TrfpcWxUUEceZfXTk7OmcRzIEFTFfXw5kxKlUMRHv0rbyZVvA0bYYif@vger.kernel.org, AJvYcCU78BsEvdOiyfMuCbu2GlaTuLsa/Tw1TDz9+ARrq8PPapFk5jjPEdoIxafqXEpMm0QQP0fkSpB6zK5qd2lR2lmThoJ5@vger.kernel.org, AJvYcCUnBhWnzxJ7NUUdLzjoiZbVgBoeAXMhudnSSw/S+GtJc9KF+FNyDdR9rKnDCSnqUtpvmnX/9DtTNZ8sAe0aH7Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyABzTWk5LYvnVxYNLylZAEebPVq74FIXvDYGx0KakoMJwSf3BX
+	UMstphhoISDgDiRsLzZkQFWM0+wLxfyvh09QTmRP5fXwy4LjRGFEYCLT/Z885uR50W2GSDrg0mp
+	7BwVq+MUfS0iLiHp4YWQbVExnrM4=
+X-Gm-Gg: ASbGncuI3V8oIWLXYecZSJxiH1waSuk3tf04Les48PJOlN9TyQb49p8jXTbiYJkApzD
+	vDP/OOTjGoeKILzcQ5DZbT8chl0WgEVuKzocdkrUOcsZJyv1p4ApW95nW+YeIcQm5QumEvnn2QT
+	oquDWFkowHaqS1ug1hW+V3UabUVIj/
+X-Google-Smtp-Source: AGHT+IF3awyMowLWcH8PYZtZ0QIKNGeH7GystPt3Pz6u/xIoaX7e+hcV/huIRE3IqTiua+SWdLXB5i53FCvfcvy67/g=
+X-Received: by 2002:a17:907:2ce6:b0:ac3:bd68:24f0 with SMTP id
+ a640c23a62f3a-ac6fae6cecemr822946266b.7.1743174389460; Fri, 28 Mar 2025
+ 08:06:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z-a2DAQmcsHHlyci@kspp>
+References: <20250321144822.324050-1-andriy.shevchenko@linux.intel.com>
+ <Z-KCNy7Qu2vFdwVx@pathway.suse.cz> <Z-apePufuwt19djQ@pathway.suse.cz>
+In-Reply-To: <Z-apePufuwt19djQ@pathway.suse.cz>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Fri, 28 Mar 2025 17:05:52 +0200
+X-Gm-Features: AQ5f1Jolt35aKfTTrIroDhj_MxpPPjpfJR6IiTWJztgRTkKXPo6i2wePW3zd0rc
+Message-ID: <CAHp75VeZBUVhGB8mSRFFJ5i70qUxmKRgeEoJzuPtQ5YPWh-MUA@mail.gmail.com>
+Subject: Re: [PATCH v2 0/6] vsprintf: Add __printf attribute to where it's required
+To: Petr Mladek <pmladek@suse.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>, Kees Cook <kees@kernel.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Andy Shevchenko <andy@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+	Sergey Senozhatsky <senozhatsky@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 28, 2025 at 08:45:32AM -0600, Gustavo A. R. Silva wrote:
-> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-> getting ready to enable it, globally.
-> 
-> Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
-> a flexible structure where the size of the flexible-array member
-> is known at compile-time, and refactor the rest of the code,
-> accordingly.
-> 
-> So, with these changes, fix the following warning:
-> 
-> drivers/gpu/drm/nouveau/nvif/outp.c:199:45: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->  drivers/gpu/drm/nouveau/nvif/outp.c | 16 +++++++---------
->  1 file changed, 7 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/nouveau/nvif/outp.c b/drivers/gpu/drm/nouveau/nvif/outp.c
-> index 6daeb7f0b09b..403cf16d5e84 100644
-> --- a/drivers/gpu/drm/nouveau/nvif/outp.c
-> +++ b/drivers/gpu/drm/nouveau/nvif/outp.c
-> @@ -195,20 +195,18 @@ nvif_outp_dp_aux_pwr(struct nvif_outp *outp, bool enable)
->  int
->  nvif_outp_hda_eld(struct nvif_outp *outp, int head, void *data, u32 size)
->  {
-> -	struct {
-> -		struct nvif_outp_hda_eld_v0 mthd;
-> -		u8 data[128];
-> -	} args;
-> +	DEFINE_RAW_FLEX(struct nvif_outp_hda_eld_v0, mthd, data, 128);
->  	int ret;
->  
-> -	if (WARN_ON(size > ARRAY_SIZE(args.data)))
-> +	if (WARN_ON(size > 128))
+On Fri, Mar 28, 2025 at 3:51=E2=80=AFPM Petr Mladek <pmladek@suse.com> wrot=
+e:
+> On Tue 2025-03-25 11:15:21, Petr Mladek wrote:
+> > On Fri 2025-03-21 16:40:46, Andy Shevchenko wrote:
+> > > This whole series started from a simple fix (see the last patch)
+> > > to make GCC (Debian 14.2.0-17) happy when compiling with `make W=3D1`
+> > > (note, that CONFIG_WERROR=3Dy and all warnings break the build!)
+> > > down to a rabbit hole.
+> > >
+> > > However starting from v2 the last patch doesn't require the first
+> > > part, I prefer still to have them since the functions, while being
+> > > _binary_ printf()-like, are still printf()-like. It also puts in alig=
+n
+> > > the tracing stuff with the rest and fixes the wrong parameter value.
+> > >
+> > > These first 4 patches are organised in a strict order and can't be
+> > > reshuffled, otherwise it will produce a warnings in between.
+> > >
+> > > I believe the best route for the series is printk tree with immutable
+> > > tag or branch for the others.
+> > >
+> > > Alternatively the first 4 patches can be applied first as they
+> > > are pretty much straightforward. They also can be squashed to one
+> > > (as the same topic behind), but it all is up to the respective
+> > > maintainers.
+> >
+> > The whole series looks good to me:
+> >
+> > Reviewed-by: Petr Mladek <pmladek@suse.com>
+> >
+> > I am going to push it via the printk tree. I think about doing
+> > so as a second pull request by the end of this merge window.
+> >
+> > Anyway, I am going to wait few more days for eventual feedback
+> > or push back.
+>
+> JFYI, I have pushed the patchset into printk/linux.git,
+> branch for-6.15-printf-attribute.
+>
+> I am going to send a pull request the following week
+> if nothing happens in the meantime.
 
-Seems a bit unfortunate that the size is duplicated here.
+Thank you!
+It will make us much closer to the moment when we can enable WERROR=3Dy
+in the CIs for `make W=3D1` on x86 defconfigs (those that are in the
+kernel source tree).
 
-Can we have an accessor macro to derive the size for us?
-
-	union {
-		u8 bytes[struct_size_t(type, member, count)];
-		type obj;
-	} name##_u initializer;
-
-Maybe a macro that returns the size difference between bytes and obj?
-
->  		return -EINVAL;
->  
-> -	args.mthd.version = 0;
-> -	args.mthd.head = head;
-> +	mthd->version = 0;
-> +	mthd->head = head;
->  
-> -	memcpy(args.data, data, size);
-> -	ret = nvif_mthd(&outp->object, NVIF_OUTP_V0_HDA_ELD, &args, sizeof(args.mthd) + size);
-> +	memcpy(mthd->data, data, size);
-> +	ret = nvif_mthd(&outp->object, NVIF_OUTP_V0_HDA_ELD, mthd,
-> +			__struct_size(mthd) + size);
->  	NVIF_ERRON(ret, &outp->object, "[HDA_ELD head:%d size:%d]", head, size);
->  	return ret;
->  }
-> -- 
-> 2.43.0
-> 
+--=20
+With Best Regards,
+Andy Shevchenko
