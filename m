@@ -1,159 +1,147 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A70926AC3;
-	Fri, 28 Mar 2025 03:22:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B81714F11E;
+	Fri, 28 Mar 2025 04:41:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743132172; cv=none; b=TWl5W1QLdRmR+38E8g4jeHaJ2zbsj+640flT1NdgVxMNzkDO/e+IqLSDNsiT4amiagKN/atPy/tobrI9cWOaZm5E8gdt7Iv/B1Vm/YRH+QG/5UCKJcH8kYCvNeyFVogeY3B1jVtRMyaxZWLf+dXmebA+A8lKP10LgRzqWI0xOr0=
+	t=1743136915; cv=none; b=AsID6vemuEL03BufhiNIa1ND8gynqJ/zxuVIWzK9NJIICF6E1XSjRfrDfIon+RzbPAa56aTLNoqe0bO1UgciO+2dZ8g4ma0/5XCvg671v9wTl/r6+enpK32n5TplEsOyqsLWjq/Eqw4/32EeJUkEl39+NjmCqs4PQ3gW1eHxkfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743132172; c=relaxed/simple;
-	bh=M5y+SHEBcaPioIYa3upR4kMT+jizMmJOTydbfnEFN+w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uceNLdTarelUR7Deu/IxdEKAQ5EQKIKOjztgXIL1pgpcUXSN9Wf2JfLOwgB5yNPS+5Itvub22aGGB5maZzyyd1i9or/yXP78rG69RU760pS5xdN0qLpNXnbGKLUfnwSdCgtbeOQIB8djDdTx+jbpZFsifHpJTgAa8hQTJ0HZQXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LbeIj9xe; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1743136915; c=relaxed/simple;
+	bh=lgjNZxcRDwmASamYFFnxAYYwYKIpdKj9jeglt+wPP8U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=POoq4MpXnseaKuBSaRrtnyoegrsIb4fzLIXLRnfaZAtouyned9CVVmUHgqUE9Z4uQ5wBZ9HsFF/29pwmRAXRjHzwAf/0dSVAoVTo8FbnAWCKA5mH7m0m/j16s08pmV4xa8TqGp61rJxGysMSYKHsE+7rZzpk0ErrVF3IaOP66aM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fZoRYMww; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LbeIj9xe"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-38a25d4b9d4so880527f8f.0;
-        Thu, 27 Mar 2025 20:22:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fZoRYMww"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-30332dfc820so2888114a91.2;
+        Thu, 27 Mar 2025 21:41:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743132169; x=1743736969; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=B7C8z55+T8oYS2KV30NvrF9v2VMjdBS5RbEDCZuaYTo=;
-        b=LbeIj9xezHgffGo3joskGQv1UQzhGj9sUy5jSgktp/AYhWTFPJWlcJrJTzmqzkWDu6
-         0angimizh3ez1Qy6BdBP0RO9P2NMJ0jhClOrQmqQ4EV+4cN6fqUGYadjv7KKQKk5eGrS
-         NiB3ENmwoSBfhepNLMJGRJpBgZFRXze3iwYnyG4/VuNRn+ML21ycz//Kv4aEh2XWGytn
-         43d5tQXB4UHwvon/lIPf+kcFLI6w147MmQcrl+TQDEVrI6a8xjVnJo+mgrYhXqVYBJa+
-         b25CB+tEXm6hBY/WI5DdZ1mhG5iXb1dvFWxhx2A3RGtUn9LvtyvhucR7IMaxEOQRG318
-         fkkw==
+        d=gmail.com; s=20230601; t=1743136913; x=1743741713; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=8cDzefW9v/a2UVbOEaMdH7r/je/KKOPgsOOsMN3Zz58=;
+        b=fZoRYMwwIybkoqJGvfnEMH+aNuclQPnynq09lEY5O5EcDt2Vz1fqk7ZXWIUVzn7aVf
+         Tqi5sCGy1LBP9vl1cyoA/brZfwJkYisx965nytYj7/tz1ZlWTzsLezAb+jiDEqiJb0vm
+         9ScZFGMtzgLKqIxrcph4Ycl0Y3XHli3LBP5aRmuXQ7AYyzWA5SAH6RwY78vErh9Sr4GU
+         zXn29+y6kjqEEg0c9FauefFF3YzzEdn8u1wtYdTjxpX6tsjZmXRk/ZpaULC4VKmx5nF1
+         YG2Aum1bEXocggzmmitzQQAhW8mRYswmESy9xFgD9WW8mNTdP/2HyGebxoXSftVcYcqo
+         0N0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743132169; x=1743736969;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=B7C8z55+T8oYS2KV30NvrF9v2VMjdBS5RbEDCZuaYTo=;
-        b=LFGA/qh/0PQNFztF5HKjsbPvmLX6k12jVdHDtoH+o46+kUW/oQ/2OaIc4XHr3gfNU3
-         H/ntvCZrqzlQzin4+OnyuqlmKGqurmwyawJbLsCwUSGrALo2TnWtanxfBiMSn3qBKbOC
-         XK49Hs6EShr602aRdzRqb224B7sIVYk/Jd7A6R3mrabvIZGkiCIMLxZGg+VjFVS4IAjd
-         LSirkg6f79LBVNtlKhrH7PEmh5z2MVBiZk1oVdkKfpVPXLOJa29Cv+eqUsW7pMPggxmO
-         fCGupTKYkk910oEban284wTB06JNm10QIdCmgZ6z5gxfOjkPdoechXm9n8/87ZqNZ8Ln
-         IRRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVRjIQRSnkXkeXOKkzoY15KgFdR+jLvDtSYpjutf31eIl+7L2r54NNbEj7WCiGPla9ASu1DUlr20x/sk/zgMxRu@vger.kernel.org, AJvYcCWbc/GyeLvRVqC358ztlKjE0mwobP37/044MTk7l5NimxKPQlBGWHxvk7hX+Gukxq7+Ltkhq6RZ6nA7pnz5@vger.kernel.org, AJvYcCX0/vAhBbatX2wsM1Gse+x70G1M4Rmd6wVjDFVfAiif7bEdFmUfLsXFuj9v0LilB4MTNPIlxXgT0BET+9vB@vger.kernel.org
-X-Gm-Message-State: AOJu0YyA6DTlZjIp9pIxXf762RKBoHdl6k8kdRPEJPlj8IwYdDZ++pQ8
-	7EuwamifIQ9KDKcyDT7/W9UWf3dxdITrrRqBOweQ5p6MDUYAycECLxe/uihLwiWgUiiWurWP8Fi
-	MZ26KwOGH8hC27Pg+eHKV96bOuYo=
-X-Gm-Gg: ASbGnctPhnbXQWfIywbpoM2lSH6rq3X0XDvVhLhDW2Ec++j1gTWzGdS1B/kVH+5APaX
-	e9hwr6DNO8GgiSWcqob8bJvrF9txzgq6NVUm2IliqLgPKOU3y7OhqFBfcGPZMyZ7whKwBvH2VxI
-	Pvy6zagEwRn+hjAgnr+kH3OhfK1PI+
-X-Google-Smtp-Source: AGHT+IHVqJ00wvtvQwj5eSUkJyD/Qm8KBYe23yrQxTy9l1qjtGvOpEvI62C4RjCoDOOLaZM92/M93nihjWAGw7b+r8o=
-X-Received: by 2002:a05:6000:40e0:b0:391:4189:d28d with SMTP id
- ffacd0b85a97d-39ad176dea8mr5129848f8f.34.1743132168612; Thu, 27 Mar 2025
- 20:22:48 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743136913; x=1743741713;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8cDzefW9v/a2UVbOEaMdH7r/je/KKOPgsOOsMN3Zz58=;
+        b=rCpMP+Rl9zGxSoKbcWLPBEeXFAB03qwcOWXNQjD3jxl7FGOhEMuwmXC7QU9fsYvFle
+         FnzCdLCTl1fID1zH+YRoJKMpKJ1RKODw8ssqf1DaEsfRFZEHqomwOg1hEAgAxsvVSs1H
+         DzUYaGv2BAPWrM+uO4lPz7vgNVRGk4VaubybvMRgY6+EX5UCgwJRSZWrLwvy9CFPcOcj
+         oWB0xmK3iT+WPREv5Mq3nR2OJzF0fJk0q8DqeFAhv0NNoVAspxHeWivSCJb70dWgJdRO
+         Wt3C88e8fctZpN+HJN1hZDAIGYFJ0dnji7H0n/JyzA/SKOZjsDkQ2GpVMyW+cP+NyQ17
+         1dwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVcDRzW+pe/cBRKUEU2WYQSJTyISNL0BsAugGzPEa4JixPd3YjNZMCEkSwGIPS6VSCb9yTV22WS4aWa67Wo3SE=@vger.kernel.org, AJvYcCVujB63vSDH0qRdPFs3NnSDuciiV3q9rlb/YMMVt+8mAfMDblap0Iuvd46ykOMyAqkYt8diIDB87Q92GY4f@vger.kernel.org, AJvYcCXU3OMjLXqu89tNk31aHJ/Fu4V2UfGrkGRdlk5Tb1YM8E+mdO4T/HWXWM74XZZLIsPUDZvl5yxEbWyJ+hBsCm8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzo+dnoaLSTskr0IiAvk6wyhnHiFs54dLH6ofaAaqTny/YHFNHk
+	uiNIfuyuSTQRzFJQKYu0vsRylJiffdr8W+IJZ+ruAGQSB8hM/Y8B
+X-Gm-Gg: ASbGncvAo+u6p4iJ2YC6FUXniJ7RqwevX3jQWJCdAmsdHdHPN6yImydNTQljDXxbqjj
+	blE+H17a/leHXfVR+kYGFT+ZM2C1fGFyu0uLEHxpDZwLxW9V5ULGgoJ/8w+q9JhUxc1mh6jLxmP
+	x8oJ+t6Po+V194WEyCMtmWm/G8xIYlFBp5+SqqMCXG82avBLpnUyQ1W0dwkHKBvzwKqhFX2YJSq
+	ETcJTybFXVnrMllSqFMBnoGNNnT1vrJtJx4xcVcFfnSvb5ZCZdQ7zepQbWkC6SD/vKGLWVXu5rr
+	i4eHW9INtDTTyzV/lRd74U7rq9irU9X9uTm1EKlmgsgYkgmgkWFKyvlcnGOpPvusaW/0aDI19Im
+	tVbs6lxdTdKI1/4+6/pAGnqL1KDxA
+X-Google-Smtp-Source: AGHT+IFUr871gBbcE/ITOJcpUtX31Ab3GbZp4AbSiOfXeGRHHqZwTYc3dshdaDL7cQBzEkE3cXj8kw==
+X-Received: by 2002:a05:6a20:430e:b0:1ee:e24d:8fe3 with SMTP id adf61e73a8af0-1fea2d90449mr9947884637.10.1743136913094;
+        Thu, 27 Mar 2025 21:41:53 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af93b69b127sm738649a12.17.2025.03.27.21.41.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Mar 2025 21:41:52 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <3f9fcc7d-931b-446a-b36a-1745f650c6cd@roeck-us.net>
+Date: Thu, 27 Mar 2025 21:41:50 -0700
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250325015617.23455-1-pcc@google.com> <20250325015617.23455-3-pcc@google.com>
-In-Reply-To: <20250325015617.23455-3-pcc@google.com>
-From: Andrey Konovalov <andreyknvl@gmail.com>
-Date: Fri, 28 Mar 2025 04:22:37 +0100
-X-Gm-Features: AQ5f1JrJXWzo2O7BIgaxbbGefH-hJc8YZYbR3ERisHcev8zGo0XarIRgt3wr42U
-Message-ID: <CA+fCnZe+KzyBOBPsJonEhDV-5ZH57QPfTCREawXiwvpTcspNug@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] kasan: Add strscpy() test to trigger tag fault on arm64
-To: Peter Collingbourne <pcc@google.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Andrew Morton <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>, 
-	Andy Shevchenko <andy@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Mark Rutland <mark.rutland@arm.com>, Vincenzo Frascino <vincenzo.frascino@arm.com>, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	Will Deacon <will@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2][next] watchdog: cros-ec: Avoid
+ -Wflex-array-member-not-at-end warning
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Lukasz Majczak <lma@chromium.org>, Wim Van Sebroeck
+ <wim@linux-watchdog.org>, Benson Leung <bleung@chromium.org>,
+ Tzung-Bi Shih <tzungbi@kernel.org>
+Cc: chrome-platform@lists.linux.dev, linux-watchdog@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <Z-WG6_uhWsy_FCq3@kspp>
+Content-Language: en-US
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <Z-WG6_uhWsy_FCq3@kspp>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Mar 25, 2025 at 2:56=E2=80=AFAM Peter Collingbourne <pcc@google.com=
-> wrote:
->
-> From: Vincenzo Frascino <vincenzo.frascino@arm.com>
->
-> When we invoke strscpy() with a maximum size of N bytes, it assumes
-> that:
-> - It can always read N bytes from the source.
-> - It always write N bytes (zero-padded) to the destination.
->
-> On aarch64 with Memory Tagging Extension enabled if we pass an N that is
-> bigger then the source buffer, it triggers an MTE fault.
->
-> Implement a KASAN KUnit test that triggers the issue with the current
-> implementation of read_word_at_a_time() on aarch64 with MTE enabled.
+On 3/27/25 10:12, Gustavo A. R. Silva wrote:
+> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> getting ready to enable it, globally.
+> 
+> Use the `DEFINE_RAW_FLEX()` helper for on-stack definitions of
+> a flexible structure where the size of the flexible-array member
+> is known at compile-time, and refactor the rest of the code,
+> accordingly.
+> 
+> So, with these changes, fix the following warning:
+> 
+> drivers/watchdog/cros_ec_wdt.c:29:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 
+> Reviewed-by: Tzung-Bi Shih <tzungbi@kernel.org>
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-I think the wording here is confusing, makes it sound like the issue
-is not fixed.
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-> Cc: Will Deacon <will@kernel.org>
-> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-> Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-> Co-developed-by: Peter Collingbourne <pcc@google.com>
-> Signed-off-by: Peter Collingbourne <pcc@google.com>
-> Link: https://linux-review.googlesource.com/id/If88e396b9e7c058c1a4b5a252=
-274120e77b1898a
-> ---
-> v3:
-> - simplify test case
->
-> v2:
-> - rebased
-> - fixed test failure
->
->  mm/kasan/kasan_test_c.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
->
-> diff --git a/mm/kasan/kasan_test_c.c b/mm/kasan/kasan_test_c.c
-> index 59d673400085f..b69f66b7eda1d 100644
-> --- a/mm/kasan/kasan_test_c.c
-> +++ b/mm/kasan/kasan_test_c.c
-> @@ -1570,6 +1570,7 @@ static void kasan_memcmp(struct kunit *test)
->  static void kasan_strings(struct kunit *test)
->  {
->         char *ptr;
-> +       char *src;
->         size_t size =3D 24;
->
->         /*
-> @@ -1581,6 +1582,18 @@ static void kasan_strings(struct kunit *test)
->         ptr =3D kmalloc(size, GFP_KERNEL | __GFP_ZERO);
->         KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
->
-> +       src =3D kmalloc(KASAN_GRANULE_SIZE, GFP_KERNEL | __GFP_ZERO);
-> +       strscpy(src, "f0cacc1a0000000", KASAN_GRANULE_SIZE);
-> +
-> +       /*
-
-Please also extend the comment here to say something like: "Make sure
-that strscpy() does not trigger KASAN if it overreads into poisoned
-memory".
-
-> +        * The expected size does not include the terminator '\0'
-> +        * so it is (KASAN_GRANULE_SIZE - 2) =3D=3D
-> +        * KASAN_GRANULE_SIZE - ("initial removed character" + "\0").
-> +        */
-> +       KUNIT_EXPECT_EQ(test, KASAN_GRANULE_SIZE - 2,
-> +                       strscpy(ptr, src + 1, KASAN_GRANULE_SIZE));
-> +
-> +       kfree(src);
->         kfree(ptr);
->
->         /*
-> --
-> 2.49.0.395.g12beb8f557-goog
->
-
-The code looks much better!
-
-Reviewed-by: Andrey Konovalov <andreyknvl@gmail.com>
