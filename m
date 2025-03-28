@@ -1,80 +1,110 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 568C91DE4D0;
-	Fri, 28 Mar 2025 09:18:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 796EF2F37;
+	Fri, 28 Mar 2025 13:00:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743153537; cv=none; b=e5bPmS3drcAj67GRZE2v26pR7t7LlqgI95sUF4bRv9EZlM6lQJrT31Cw8qb7yOzfHM6nzu1jLk8dqo6qS86rymTrIti5jCZ5z6LxFYxrKX/V2cM4fRyYHr7OgTkrN5c7PatwX4GQMQKJGAiN/x8EVqu2AFZ8eP5jcFxqZeZVkCQ=
+	t=1743166819; cv=none; b=nqKdQimGIHSv1i+EPkiDXggC3OU03n7yKkvffptj8h0ZTbdjsdqKV4I4bD4aSsdF4z8UGiLwDZE0iteSHsEvNTaDlzj/4/mHPwuc2t6bwlUNhpDHwyIdObborGPkdoqMNwNQJ0SKiqrRPJ+tlLux4H0U8JHLR0VtlA+6kzGiSc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743153537; c=relaxed/simple;
-	bh=XNAwCLv/vF2XPivuKN0kO6nF+TkG13gfAKTB7wxmtQ0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=We1+Jb3ps/J8W6bhJOf30HO6Zyw1ZGKXRUq46qHFWwWuj6lL/19F2ERqiu7I+crdfZJviS6mwsE4Z0KFfM6mWjh+Eo3MiKlLn4UMuFz8QAYS12zwgk3MgHfVZlw0FWLyXb/orkHe/tJAht9JOGFH0CFcQsTToqfxJgeXPHpck7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gWmXuvrI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743166819; c=relaxed/simple;
+	bh=+Wp2n86SjMypBd/q2Xpm8OByrsTcdjUxmeMbmDjejKA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=jRrvMw4WPUujy17xJcPzfhwitNrk3ixM1BU1JoLsa66+aGJljxrEkhfpT0KzTsBdGupWn0pupP4kud6ttt5Fr2u8prp9QgpbE6/ESfAeLbTYvjQ0RvEnwMQ7IHWQJ2ITJ64zJXhJByhO2KulcGmX3nnHoGdtv+jt7PV3PY3h3S8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cVmaWdNG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gWmXuvrI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A609C4CEE4;
-	Fri, 28 Mar 2025 09:18:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cVmaWdNG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57F02C4CEE5;
+	Fri, 28 Mar 2025 13:00:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743153536;
-	bh=XNAwCLv/vF2XPivuKN0kO6nF+TkG13gfAKTB7wxmtQ0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gWmXuvrIzxSEfRgoPXrjOT4pKhYvSnxzMto6YAhHHiI7eibe+WDc3XO1fpMPex611
-	 T5kK05aABMPQV8Ts7T886gludtOofRNQOaeqJH/gBL6ucviO57rjlszZXKyGc6lRPN
-	 eiiGsrfrFV7VNRlXXgSMC2pkxocOANuJE8nIL1YtUhM4U643isEFs7wWvufNm0RL5o
-	 CCUCYFT7ythvFGSwn7a/mckZIW3kyYZwwMuVf73S0X/FgLCTSbrPgPOT8ZV+nJneBY
-	 nnBUFS27jHMAuN1YwLl6M5c6eaV9l+2acDXVXz0UsVzrKiEzfqU9XVhhxKedF+2UVk
-	 kkLVDITXkMKWA==
-From: Christian Brauner <brauner@kernel.org>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Christian Brauner <brauner@kernel.org>,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Jan Kara <jack@suse.cz>
-Subject: Re: [PATCH][next] fs: namespace: Avoid -Wflex-array-member-not-at-end warning
-Date: Fri, 28 Mar 2025 10:18:45 +0100
-Message-ID: <20250328-speziell-typisch-49284d100d8a@brauner>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <Z-SZKNdCiAkVJvqm@kspp>
-References: <Z-SZKNdCiAkVJvqm@kspp>
+	s=k20201202; t=1743166817;
+	bh=+Wp2n86SjMypBd/q2Xpm8OByrsTcdjUxmeMbmDjejKA=;
+	h=Date:From:To:Cc:Subject:From;
+	b=cVmaWdNGzBt+DHsJ12cynn4l63wP9k9bT99CeUjiv+/qsOqu9fpwsa4OCI7TvmdyX
+	 GcfP8V3HTqdD1eRWs1iBTOQP8NahsC8ibHW+LzGFERhPpXpw/MiY0whtCWzd69r5ry
+	 6NPZMI66/nP730Oqve6TsCl3Yr+xeGt8eGlEpy5iwD2Zc9nikycUs+RRxo7ABZlwIB
+	 7BRJS2ZQ7COrU2u+DuETf6r8gNpoZPzaKO7FuHkftgn3ummCPD6pE6zfs8DSDJZOqH
+	 xfghiqbA3J5Ubl/cw6iUZ293EpQDpeOz1ZtTNwNQA8nKfyKSY+MddZqfGqNekA9PtX
+	 IlAf/NYkU3JgA==
+Date: Fri, 28 Mar 2025 07:00:15 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Benson Leung <bleung@chromium.org>, Tzung-Bi Shih <tzungbi@kernel.org>,
+	Guenter Roeck <groeck@chromium.org>
+Cc: chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH][next] platform/chrome: cros_ec_proto: Avoid
+ -Wflex-array-member-not-at-end warnings
+Message-ID: <Z-adX1BB30dcSJ7x@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1146; i=brauner@kernel.org; h=from:subject:message-id; bh=XNAwCLv/vF2XPivuKN0kO6nF+TkG13gfAKTB7wxmtQ0=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaQ/y6wuun9TeJNAsuLr0vwNIZ6B2ovai7ctWNlcfO//j 6KzpdtsOkpZGMS4GGTFFFkc2k3C5ZbzVGw2ytSAmcPKBDKEgYtTACby7iUjw6QtV6N15vV3nha0 luCbvazOff2Kg0eWZ7NIG8YodBz13MLI8Nfx1pcLC/9pnIyeXnJDYvcsfg/npE/PFm4+lpmRutr 6KhMA
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Wed, 26 Mar 2025 18:17:44 -0600, Gustavo A. R. Silva wrote:
-> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-> getting ready to enable it, globally.
-> 
-> Move the conflicting declaration to the end of the structure. Notice
-> that `struct statmount` is a flexible structure --a structure that
-> contains a flexible-array member.
-> 
-> [...]
+-Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+getting ready to enable it, globally.
 
-Applied to the vfs.fixes branch of the vfs/vfs.git tree.
-Patches in the vfs.fixes branch should appear in linux-next soon.
+Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
+a flexible structure where the size of the flexible-array member
+is known at compile-time, and refactor the rest of the code,
+accordingly.
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
+So, with these changes, fix the following warnings:
 
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
+drivers/platform/chrome/cros_ec_proto.c:143:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/platform/chrome/cros_ec_proto.c:761:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/platform/chrome/cros_ec_proto.c | 21 ++++++++-------------
+ 1 file changed, 8 insertions(+), 13 deletions(-)
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs.fixes
+diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
+index 877b107fee4b..586358fbf981 100644
+--- a/drivers/platform/chrome/cros_ec_proto.c
++++ b/drivers/platform/chrome/cros_ec_proto.c
+@@ -139,12 +139,10 @@ static int cros_ec_xfer_command(struct cros_ec_device *ec_dev, struct cros_ec_co
+ 
+ static int cros_ec_wait_until_complete(struct cros_ec_device *ec_dev, uint32_t *result)
+ {
+-	struct {
+-		struct cros_ec_command msg;
+-		struct ec_response_get_comms_status status;
+-	} __packed buf;
+-	struct cros_ec_command *msg = &buf.msg;
+-	struct ec_response_get_comms_status *status = &buf.status;
++	DEFINE_RAW_FLEX(struct cros_ec_command, msg, data,
++			sizeof(struct ec_response_get_comms_status));
++	struct ec_response_get_comms_status *status =
++			(struct ec_response_get_comms_status *)msg->data;
+ 	int ret = 0, i;
+ 
+ 	msg->version = 0;
+@@ -757,16 +755,13 @@ static int get_next_event_xfer(struct cros_ec_device *ec_dev,
+ 
+ static int get_next_event(struct cros_ec_device *ec_dev)
+ {
+-	struct {
+-		struct cros_ec_command msg;
+-		struct ec_response_get_next_event_v3 event;
+-	} __packed buf;
+-	struct cros_ec_command *msg = &buf.msg;
+-	struct ec_response_get_next_event_v3 *event = &buf.event;
++	DEFINE_RAW_FLEX(struct cros_ec_command, msg, data,
++			sizeof(struct ec_response_get_next_event_v3));
++	struct ec_response_get_next_event_v3 *event =
++			(struct ec_response_get_next_event_v3 *)msg->data;
+ 	int cmd_version = ec_dev->mkbp_event_supported - 1;
+ 	u32 size;
+ 
+-	memset(msg, 0, sizeof(*msg));
+ 	if (ec_dev->suspended) {
+ 		dev_dbg(ec_dev->dev, "Device suspended.\n");
+ 		return -EHOSTDOWN;
+-- 
+2.43.0
 
-[1/1] fs: namespace: Avoid -Wflex-array-member-not-at-end warning
-      https://git.kernel.org/vfs/vfs/c/9e6901f17a71
