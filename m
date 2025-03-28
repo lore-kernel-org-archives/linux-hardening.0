@@ -1,41 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD1D2221569;
-	Fri, 28 Mar 2025 13:50:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C89991CFBC
+	for <linux-hardening@vger.kernel.org>; Fri, 28 Mar 2025 13:51:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743169815; cv=none; b=F5TMBksl5Zj8fd6f2IC/2VWDw2a8Hx4dKdCJM9J04LZbrv/q4SBMlIdbhM+5jXxhVfc1beyNguc3Tfwok5ibD65d1CHEY/i1lcAFKIAvBgF6t+d8Vm+mkWnbRqT1w5bv7K2drT8Y8LMPWXGp5okrTqgD8NS2iifgIS283dRaibk=
+	t=1743169919; cv=none; b=G8TyJ+YK79CDS9RsYDsB7uuUiwW1LB8/4DL0DZqYLC+OzeP4lxoh1iD+RfrJnBr4SR0j66oizvf7BQlvyelL9nsdVPyIsqfkYay/J9f92XC7jTyUSMitfC6ARCQUx5Md1zLlYiARueBN2vRfEcgHDMXsM3UlYWbi3mJUfCdyOAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743169815; c=relaxed/simple;
-	bh=wovA4Aud7DhDJdEaIv13byMvexafADunHResb3o9c/I=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=p5D8QXpXhT9cYW7OAHVJKQe6ggsn3Nn7NoF/7TPqjtiwtVIvJ0NCUYr4DmPl5Ces0Wxt35sDeSXxkyoC1c4XpSoaEgy0I/7LggmqLMgTado+UcUKb0S3nY16BHmLK0egL+xBxivwRnff/RVYPxTdaLuHQmVKkvIp9HHNglEsGSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SQkOikoo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743169919; c=relaxed/simple;
+	bh=7keX5FQHfuj5criWs662qvX5Y0mvZuQ+wEIWA+09qU0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZdzTSj0/6KpLyh0Zt8MU0OBpos0kOxCkfhgqqIE5oP3PdrLDjuaaufk0d52EdWZ7TD9LIX7Kq0sp/e8LHZTjhTt/Wky4fh4I5+ahbi6uFed0mV3VPt2BFD5HS25GPtHd/p7qCFnFq+9HOKAY9QEvWyIbO38gUXFhroAPTa/vpIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Ri52rTuY; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SQkOikoo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D95DC4CEE4;
-	Fri, 28 Mar 2025 13:50:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743169814;
-	bh=wovA4Aud7DhDJdEaIv13byMvexafADunHResb3o9c/I=;
-	h=Date:From:To:Cc:Subject:From;
-	b=SQkOikoocc5ajqf+GsC/NyT9N/He3BHYNnePbD4I3saofoYa6vu+uRMrEOknILRXE
-	 CDKnDJJOeV60xZYg+YFGNItagokMk8Wub8p7DdmQoXtkYOqkfa+f/b/dr5yD5FaTYG
-	 yDTLsSbcAz0CXAW/OOHs7EC1G0oKR1UMe2hxtaFfYBm9n21KHuOXgs0KA2fVdKzrxD
-	 8TRaXn00sRjHNnIYzSDaH3PD4SYwKAaaiA1AJJ1pAOdn3OiSCXwtTvA7LmShxWwLGt
-	 wh3zsMeSMgVkREcLDO/GWa9rU30fpppwXD2RQQTEJV4xyZfxI5HyKLbKPLJrEY1VMK
-	 6+AfTIG5GBlvg==
-Date: Fri, 28 Mar 2025 07:50:11 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Benson Leung <bleung@chromium.org>, Tzung-Bi Shih <tzungbi@kernel.org>,
-	Guenter Roeck <groeck@chromium.org>
-Cc: chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] platform/chrome: cros_ec: Avoid
- -Wflex-array-member-not-at-end warning
-Message-ID: <Z-apE0ZmckBjRDyx@kspp>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Ri52rTuY"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3997205e43eso1812342f8f.0
+        for <linux-hardening@vger.kernel.org>; Fri, 28 Mar 2025 06:51:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1743169915; x=1743774715; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=olQvXU3SlpssZcd54ZBPK/yHAsySM9j/3+8owqmZXYk=;
+        b=Ri52rTuY+auIlCiZoHCuVbwfsheeZHWQ1FjX+m0j7RQjXBzvmnDcfAW0Twomki44QH
+         H/AY0m5enj43ba3w/UsyeJ9GYkolrQRZTj0eV53UxSJsBSqPM4ByLvPe0KqN2P6DMHRg
+         MWFEjTiDp/OlbsZTBU1YrK/kxKLpkYT0M+O+QQrGU3FLG/EVTbYnGYumiplgEAWrlTas
+         8ZiXqcstegbn4gbJHY/us/tanKGWOsdXyaTqBSbkLY+N8nQm0iA34YdQC/PAv17XtEBL
+         o8WhJH1ljNGuYE0dLHBm937FxgfZr23qPQxOsi8XGvRb2KcmtiyRk75tfmlTD9gWb8bm
+         SUbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743169915; x=1743774715;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=olQvXU3SlpssZcd54ZBPK/yHAsySM9j/3+8owqmZXYk=;
+        b=VOxOyMGZP3B5GDrqS7deL0PrWq9JcBPEL5DCp424mZMtXJMou4ynk3zNAevAiWqhYC
+         2IVjvyPQOf6UaNsC9zRVLUSvCnSOoKfhveQ21ThYInqDn1Tkv6zLRBGLUqqBlzsiXFGW
+         aNLacyCalBhqj2YSx69Pn9dR9rIpyVHDpPwcAbSgN4gYQpmt/kw0yd6tMbcc0Po+yNmm
+         wGdUrfcCU5/wy9Ka/yf1tCvR3bj5T2uRR7xniaV0YxoaQ3wGiBuVeGIaD7ELtQVgf5PR
+         7S5Epe8rkFRR28xBQUUjwzEueniYcTJJyj9ypT4BY7RqXxBJ28XkmpuZCIABeRZdKNcf
+         nedg==
+X-Forwarded-Encrypted: i=1; AJvYcCV9ySO+yGawLFp3b7LxgY1vgENP74MXsMDvykdrc8KbOP4W/JObD8C/uA/RI+1fKIA4qYc2vaHPaUXqybjavwA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwS7KPiPcgxHIoq+P4qPLWsV3PeH01BEFbW39b4hwOabR7QX/nK
+	OxNEHWzHoUr/sy9nyVqfQBNA+ReSGad9+xETsWw/G6WakBswnSSAld2w7CSCK+8=
+X-Gm-Gg: ASbGnct+pcSUF+bhadsCF61RhuFPp6LGelM1nSS8liBfhPScB1E2XF/6ssk40+raxU3
+	z7wWVGSMRRrzhqMN/pmnCQOtEmV8yAgRrqDcZu4PEQLg9cWw4vpI7JzMsg6ARxZ900ml4w8ajvW
+	BiJbLWXOz4I6lEItSptckRZP4NYsdNjkOiDSESALpgDe5vdzZcUT+sMRVlfrw4coEjIWc+o3tXg
+	c0gq7Cx/eRNtmR7OgwaRrcjibJggtzrG+PsGM4kUfSbbD5dje2iso0T9kcN1d3HV6tCPlsJ2adb
+	zDGUWJVtvNyjO+two63Yq4h9VQvhoRazE3foASxCTdZfI0Q=
+X-Google-Smtp-Source: AGHT+IHbfndbuHfkuasI/Cf4p6r8nuRFhsT5d5n30IcceIH6HCihEcayWTwO3EYsoj8rQdERKU6JoQ==
+X-Received: by 2002:a5d:47a2:0:b0:391:3049:d58d with SMTP id ffacd0b85a97d-39ad1719a55mr6958877f8f.0.1743169915024;
+        Fri, 28 Mar 2025 06:51:55 -0700 (PDT)
+Received: from pathway.suse.cz ([176.114.240.130])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d8fba4b4fsm29091505e9.1.2025.03.28.06.51.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Mar 2025 06:51:54 -0700 (PDT)
+Date: Fri, 28 Mar 2025 14:51:52 +0100
+From: Petr Mladek <pmladek@suse.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Kees Cook <kees@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Andy Shevchenko <andy@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>
+Subject: Re: [PATCH v2 0/6] vsprintf: Add __printf attribute to where it's
+ required
+Message-ID: <Z-apePufuwt19djQ@pathway.suse.cz>
+References: <20250321144822.324050-1-andriy.shevchenko@linux.intel.com>
+ <Z-KCNy7Qu2vFdwVx@pathway.suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -44,106 +82,46 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <Z-KCNy7Qu2vFdwVx@pathway.suse.cz>
 
--Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-getting ready to enable it, globally.
+On Tue 2025-03-25 11:15:21, Petr Mladek wrote:
+> On Fri 2025-03-21 16:40:46, Andy Shevchenko wrote:
+> > This whole series started from a simple fix (see the last patch)
+> > to make GCC (Debian 14.2.0-17) happy when compiling with `make W=1`
+> > (note, that CONFIG_WERROR=y and all warnings break the build!)
+> > down to a rabbit hole.
+> > 
+> > However starting from v2 the last patch doesn't require the first
+> > part, I prefer still to have them since the functions, while being
+> > _binary_ printf()-like, are still printf()-like. It also puts in align
+> > the tracing stuff with the rest and fixes the wrong parameter value.
+> > 
+> > These first 4 patches are organised in a strict order and can't be
+> > reshuffled, otherwise it will produce a warnings in between.
+> > 
+> > I believe the best route for the series is printk tree with immutable
+> > tag or branch for the others.
+> > 
+> > Alternatively the first 4 patches can be applied first as they
+> > are pretty much straightforward. They also can be squashed to one
+> > (as the same topic behind), but it all is up to the respective
+> > maintainers.
+> 
+> The whole series looks good to me:
+> 
+> Reviewed-by: Petr Mladek <pmladek@suse.com>
+> 
+> I am going to push it via the printk tree. I think about doing
+> so as a second pull request by the end of this merge window.
+> 
+> Anyway, I am going to wait few more days for eventual feedback
+> or push back.
 
-Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
-a flexible structure where the size of the flexible-array member
-is known at compile-time, and refactor the rest of the code,
-accordingly.
+JFYI, I have pushed the patchset into printk/linux.git,
+branch for-6.15-printf-attribute.
 
-So, with these changes, fix the following warning:
+I am going to send a pull request the following week
+if nothing happens in the meantime.
 
-drivers/platform/chrome/cros_ec.c:106:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/platform/chrome/cros_ec.c | 47 +++++++++++++++++--------------
- 1 file changed, 26 insertions(+), 21 deletions(-)
-
-diff --git a/drivers/platform/chrome/cros_ec.c b/drivers/platform/chrome/cros_ec.c
-index 110771a8645e..cd15aa0cb082 100644
---- a/drivers/platform/chrome/cros_ec.c
-+++ b/drivers/platform/chrome/cros_ec.c
-@@ -99,51 +99,56 @@ irqreturn_t cros_ec_irq_thread(int irq, void *data)
- }
- EXPORT_SYMBOL(cros_ec_irq_thread);
- 
-+union cros_ec_sleep_data {
-+	struct ec_params_host_sleep_event req0;
-+	struct ec_params_host_sleep_event_v1 req1;
-+	struct ec_response_host_sleep_event_v1 resp1;
-+} __packed;
-+
- static int cros_ec_sleep_event(struct cros_ec_device *ec_dev, u8 sleep_event)
- {
- 	int ret;
--	struct {
--		struct cros_ec_command msg;
--		union {
--			struct ec_params_host_sleep_event req0;
--			struct ec_params_host_sleep_event_v1 req1;
--			struct ec_response_host_sleep_event_v1 resp1;
--		} u;
--	} __packed buf;
-+	DEFINE_RAW_FLEX(struct cros_ec_command, msg, data,
-+			sizeof(union cros_ec_sleep_data));
-+	struct ec_params_host_sleep_event *req0 =
-+			(struct ec_params_host_sleep_event *)msg->data;
-+	struct ec_params_host_sleep_event_v1 *req1 =
-+			(struct ec_params_host_sleep_event_v1 *)msg->data;
-+	struct ec_response_host_sleep_event_v1 *resp1 =
-+			(struct ec_response_host_sleep_event_v1 *)msg->data;
- 
--	memset(&buf, 0, sizeof(buf));
- 
- 	if (ec_dev->host_sleep_v1) {
--		buf.u.req1.sleep_event = sleep_event;
--		buf.u.req1.suspend_params.sleep_timeout_ms =
-+		req1->sleep_event = sleep_event;
-+		req1->suspend_params.sleep_timeout_ms =
- 				ec_dev->suspend_timeout_ms;
- 
--		buf.msg.outsize = sizeof(buf.u.req1);
-+		msg->outsize = sizeof(*req1);
- 		if ((sleep_event == HOST_SLEEP_EVENT_S3_RESUME) ||
- 		    (sleep_event == HOST_SLEEP_EVENT_S0IX_RESUME))
--			buf.msg.insize = sizeof(buf.u.resp1);
-+			msg->insize = sizeof(*resp1);
- 
--		buf.msg.version = 1;
-+		msg->version = 1;
- 
- 	} else {
--		buf.u.req0.sleep_event = sleep_event;
--		buf.msg.outsize = sizeof(buf.u.req0);
-+		req0->sleep_event = sleep_event;
-+		msg->outsize = sizeof(*req0);
- 	}
- 
--	buf.msg.command = EC_CMD_HOST_SLEEP_EVENT;
-+	msg->command = EC_CMD_HOST_SLEEP_EVENT;
- 
--	ret = cros_ec_cmd_xfer_status(ec_dev, &buf.msg);
-+	ret = cros_ec_cmd_xfer_status(ec_dev, msg);
- 	/* Report failure to transition to system wide suspend with a warning. */
- 	if (ret >= 0 && ec_dev->host_sleep_v1 &&
- 	    (sleep_event == HOST_SLEEP_EVENT_S0IX_RESUME ||
- 	     sleep_event == HOST_SLEEP_EVENT_S3_RESUME)) {
- 		ec_dev->last_resume_result =
--			buf.u.resp1.resume_response.sleep_transitions;
-+			resp1->resume_response.sleep_transitions;
- 
--		WARN_ONCE(buf.u.resp1.resume_response.sleep_transitions &
-+		WARN_ONCE(resp1->resume_response.sleep_transitions &
- 			  EC_HOST_RESUME_SLEEP_TIMEOUT,
- 			  "EC detected sleep transition timeout. Total sleep transitions: %d",
--			  buf.u.resp1.resume_response.sleep_transitions &
-+			  resp1->resume_response.sleep_transitions &
- 			  EC_HOST_RESUME_SLEEP_TRANSITIONS_MASK);
- 	}
- 
--- 
-2.43.0
-
+Best Regards,
+Petr
