@@ -1,43 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25080DDC5;
-	Fri, 28 Mar 2025 14:33:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 317BD157E6B;
+	Fri, 28 Mar 2025 14:45:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743172406; cv=none; b=N87snSCe8194S9Ozv4FObyITezNuOMGMf9hcq6sb2MX8iCv/5qbRfARCVdyIxxVGSfPAK4dfGZ2VSvkjqe7KkNyh/qHXQKR5+20CKf43RF3XK6pkRr/XJj/hJPoEf2OHbvI71HGbvnPFKlMoooXRXX98rN2TwyBQmdGrY4MuYy4=
+	t=1743173136; cv=none; b=sBYS8td6jwn0sVlJze4qXWTtCEHGKxsq0o1QfIVonzEJ1juwGd0hfLuan3TNh7vJSbg3uuq8jpgEhCr2/oIKaqeeUyIsBePk9oSyB7E11wzaymukCQjNkEuWUf2y6k0DIVVMlHagrS3Y8pi38fOQBXf0+VIkg3DgnotkGge5hQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743172406; c=relaxed/simple;
-	bh=exiAf3JTR79CnexHmDH248L4l9xNspbe/I1gW2NbaE4=;
+	s=arc-20240116; t=1743173136; c=relaxed/simple;
+	bh=7qGrXEoUERdDE37I+v3l/CeEtOIhffhKARqqG2bFKTg=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=HUvvvCfqCcRlU+qm5HgGwNNnyEdoPl9NyhF1vykC4X3TzhDBGOiDhukaGIs781xXHvHAfzOWPKBeutj/2VxyWpr8yIZNA1r91PhaHywAB1eOLASJBN8S5M3IxBNI6w+hXVPud6/JB4pKh43cXU69xCsx8g6ZKlfCkQQf01ARrnU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZQL65rkv; arc=none smtp.client-ip=10.30.226.201
+	 Content-Disposition; b=Bz0jlJ3Eu4omiaqlU89LDWYx3NM6v8YcrtyScCnhFJSB5huUhkpaI+O1Na13vYSLDeSYI0pjkafqLb97vaI2CIeUjB97ivAljA2Z1qvSgYIOuLuNi10G7Y3tUcVXAMV/bKTCu2TdBn00g21CWEgODTq3xNyrAK+C4wKVG2fExPs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YGHjYwng; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZQL65rkv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BE05C4CEE5;
-	Fri, 28 Mar 2025 14:33:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YGHjYwng"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6B64C4CEE4;
+	Fri, 28 Mar 2025 14:45:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743172405;
-	bh=exiAf3JTR79CnexHmDH248L4l9xNspbe/I1gW2NbaE4=;
+	s=k20201202; t=1743173135;
+	bh=7qGrXEoUERdDE37I+v3l/CeEtOIhffhKARqqG2bFKTg=;
 	h=Date:From:To:Cc:Subject:From;
-	b=ZQL65rkvLNsYajUVehOZdQvoqim9PhQFwVSbc+IjFidxLmlBGf1/d31zFcEMgxJ7o
-	 aajh69zIdetdVvULoWVr0kyHctvuaZJO0DE9P2ejYunk1ZnqqfFuLmelBKsbdiwReF
-	 X5NOXtxWWdTjCLJ5uLF6giW/EHDxrpLoQmbzsUpF1llG/rmG8AZ6abK9oMplaQv4WO
-	 McCEVKJwnNz3wOn1iqk3L8QF9AgS4qCWhX5hSLNgvRETmQMfzjNz8gOSbe/ttR2s7x
-	 kFlQO7850P0Sn5wRUUf9Q3FIk1pINtNntM9ZHa6pSnbCcTX8EafV8wzA2r5stPq8ta
-	 X6sI9vy9ViQSQ==
-Date: Fri, 28 Mar 2025 08:33:22 -0600
+	b=YGHjYwngkfoyxnQor0tqAGGqzrL1qZP6Y8DipI/P3wXV0okkGj+rV1pBOJ4y0uslY
+	 EPUGbFfFqqqFgVv56h+ztrJZ+5Mq9Vksy5ZPLfXFtfTpFveGDGi4hU8zFqynvxpnpL
+	 MWL/zLNmUu4or5WkVj3NuFr842EYQUm6tXZDRbZ7bDwGjqM2T7cVYbMyzdhekaa9b1
+	 /uVS7eiK51z71h/RkRrEdhqNvebahTxhRgI02Me6Q5BSMv3+knSro6ef3qHTM1tan6
+	 RG3rJ8tm33elXoTdvYPhoA72WtxIrvs64QG+qmx9jdw2rgUk6p2bMGl0XiDgF+e22N
+	 Y37qbE260PYSw==
+Date: Fri, 28 Mar 2025 08:45:32 -0600
 From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@weissschuh.net>,
-	Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>,
-	Benson Leung <bleung@chromium.org>,
-	Guenter Roeck <groeck@chromium.org>
-Cc: linux-leds@vger.kernel.org, chrome-platform@lists.linux.dev,
+To: Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] leds: Avoid -Wflex-array-member-not-at-end warning
-Message-ID: <Z-azMlPnP7nPPJrY@kspp>
+Subject: [PATCH][next] drm/nouveau/outp: Avoid -Wflex-array-member-not-at-end
+ warning
+Message-ID: <Z-a2DAQmcsHHlyci@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -57,52 +56,44 @@ accordingly.
 
 So, with these changes, fix the following warning:
 
-drivers/leds/leds-cros_ec.c:70:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/gpu/drm/nouveau/nvif/outp.c:199:45: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/leds/leds-cros_ec.c | 26 +++++++++++---------------
- 1 file changed, 11 insertions(+), 15 deletions(-)
+ drivers/gpu/drm/nouveau/nvif/outp.c | 16 +++++++---------
+ 1 file changed, 7 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/leds/leds-cros_ec.c b/drivers/leds/leds-cros_ec.c
-index 275522b81ea5..6eab0474f52d 100644
---- a/drivers/leds/leds-cros_ec.c
-+++ b/drivers/leds/leds-cros_ec.c
-@@ -66,24 +66,20 @@ static int cros_ec_led_send_cmd(struct cros_ec_device *cros_ec,
- 				union cros_ec_led_cmd_data *arg)
+diff --git a/drivers/gpu/drm/nouveau/nvif/outp.c b/drivers/gpu/drm/nouveau/nvif/outp.c
+index 6daeb7f0b09b..403cf16d5e84 100644
+--- a/drivers/gpu/drm/nouveau/nvif/outp.c
++++ b/drivers/gpu/drm/nouveau/nvif/outp.c
+@@ -195,20 +195,18 @@ nvif_outp_dp_aux_pwr(struct nvif_outp *outp, bool enable)
+ int
+ nvif_outp_hda_eld(struct nvif_outp *outp, int head, void *data, u32 size)
  {
- 	int ret;
 -	struct {
--		struct cros_ec_command msg;
--		union cros_ec_led_cmd_data data;
--	} __packed buf = {
--		.msg = {
--			.version = 1,
--			.command = EC_CMD_LED_CONTROL,
--			.insize  = sizeof(arg->resp),
--			.outsize = sizeof(arg->req),
--		},
--		.data.req = arg->req
--	};
--
--	ret = cros_ec_cmd_xfer_status(cros_ec, &buf.msg);
-+	DEFINE_RAW_FLEX(struct cros_ec_command, msg, data,
-+			sizeof(union cros_ec_led_cmd_data));
-+
-+	msg->version = 1;
-+	msg->command = EC_CMD_LED_CONTROL;
-+	msg->insize  = sizeof(arg->resp);
-+	msg->outsize = sizeof(arg->req);
-+	*(struct ec_params_led_control *)msg->data = arg->req;
-+
-+	ret = cros_ec_cmd_xfer_status(cros_ec, msg);
- 	if (ret < 0)
- 		return ret;
+-		struct nvif_outp_hda_eld_v0 mthd;
+-		u8 data[128];
+-	} args;
++	DEFINE_RAW_FLEX(struct nvif_outp_hda_eld_v0, mthd, data, 128);
+ 	int ret;
  
--	arg->resp = buf.data.resp;
-+	arg->resp = *(struct ec_response_led_control *)msg->data;
+-	if (WARN_ON(size > ARRAY_SIZE(args.data)))
++	if (WARN_ON(size > 128))
+ 		return -EINVAL;
  
- 	return 0;
+-	args.mthd.version = 0;
+-	args.mthd.head = head;
++	mthd->version = 0;
++	mthd->head = head;
+ 
+-	memcpy(args.data, data, size);
+-	ret = nvif_mthd(&outp->object, NVIF_OUTP_V0_HDA_ELD, &args, sizeof(args.mthd) + size);
++	memcpy(mthd->data, data, size);
++	ret = nvif_mthd(&outp->object, NVIF_OUTP_V0_HDA_ELD, mthd,
++			__struct_size(mthd) + size);
+ 	NVIF_ERRON(ret, &outp->object, "[HDA_ELD head:%d size:%d]", head, size);
+ 	return ret;
  }
 -- 
 2.43.0
