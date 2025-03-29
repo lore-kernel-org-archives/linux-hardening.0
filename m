@@ -1,62 +1,65 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09625382
-	for <linux-hardening@vger.kernel.org>; Sat, 29 Mar 2025 00:03:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF22C320F
+	for <linux-hardening@vger.kernel.org>; Sat, 29 Mar 2025 00:03:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743206631; cv=none; b=UgxzARltc/Nkg4wF44R8/n2INOy2RVC8yt4N53oCJHH2KDkXzzRw2WLJxMdmkZflTGLCenhUkvteFsSzqJiyrg6Y2B5IKBnC+CqJ0FMeoYY5M6ZqU9MmutgoXvWoZJy5tJys1CZWw6s6Q7lqG91TG7IZrwwSDgITI9Mwzf+5WZM=
+	t=1743206633; cv=none; b=O4zAEOAhFNC3vHts0uOiV7tRdzB4VuQbxwSrOcq95hsgg3wraXcXSWjA6s4UOftzn4ytdg4dVa2yN5Q1pT/DdFob6AOV3n23RdbvCLpeNTyip8nHHQiAcVvfqPH4Zd7z3H1DNQz+s6KkuuFHy1MsqFwM8tUfX3vcjT1G09F0c8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743206631; c=relaxed/simple;
-	bh=fIVZQd3GTQn8c3H2yxUcuv35aYVzYmUAczMT90tM7+E=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=KFRda70Xa8F1RT6UR54R0U/FhKiVKJQ48UKZVmwPPBXslyC7a+L2asu20UJQlqP/V4+CDZcrNKkUdHMsHWjkschW4INRcbNyuqlx8g53uOE6CoB26rxkoLUuQsTPYaOzHT5Fvj0WLH9w6O1M32muRsdHlYjx9FgDcawqBD3Cv5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--pcc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pUNvFFRD; arc=none smtp.client-ip=209.85.216.73
+	s=arc-20240116; t=1743206633; c=relaxed/simple;
+	bh=A4qOF8g/Lp0fNN70XKVNtD9pF/sKUksq0VFQkLxYtOA=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Z1h/UVBVlY45rTZ2yDA2OwcArHh8+vg2AzyYSelUXCd4v6N3d8JMjczZ9IW+v6cWv3mrtLhMyO9UR0S4Q2jr7tN4bQfhySx40JZWMLo0KL76bzk9okgQC+LRHaE5J1aD1tmnVaSQGLS0+zsVXy4DGrUhWoevuw/1kfAM4DHavS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--pcc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CqM6trdQ; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--pcc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pUNvFFRD"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff581215f7so2838136a91.3
-        for <linux-hardening@vger.kernel.org>; Fri, 28 Mar 2025 17:03:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CqM6trdQ"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-224364f2492so46320255ad.3
+        for <linux-hardening@vger.kernel.org>; Fri, 28 Mar 2025 17:03:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743206629; x=1743811429; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=T16tHjdcydDyfcQnO+rO78FihM7DOnKeDErtF6szV0c=;
-        b=pUNvFFRDxksRW1HMD47izGIosTI8awE7rlxPaEbJo6dN8bhIhPQLG6Ww5U1YOJSAwr
-         JYST1KWiqcggcTtpE9MKIIYoIj0eoFg+Gv4zce0axjS6WHX/FDJ4E93W9uQhv2JUYowa
-         0NVMjfpUSLP1q9KjGJ8KVRbzlq6NqTdeKIdX6KnVTKBvC0xn+ZCA5D7ru5UFNdkX22HW
-         CHTUHkAyM2t/c9JVzVYsOC+QshYzRNgsxfKLKmYwzWtDC1YVLT6cHMyOUS2kNSKzkO99
-         1Jkryt/Z17QC/ZdqAA+60oJvVDzz0uBaGsHvCThmm/fi5XBDfxA7ibt2LSyBQVYIZOFE
-         jRBg==
+        d=google.com; s=20230601; t=1743206631; x=1743811431; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=mEgmoeCU7ZoBbD/6q07yzTwvuV9KDxvtvsClWJ9QuF8=;
+        b=CqM6trdQnGyRuGojGezqW97vHKKPBba0YFXnxkJYUjR5WqFZ+srqQE/JxKuUcrK1zP
+         epGyEB5E/IvmhgFwRBI2siYtJ+9TpAc0LvKD3TUdQMB1lsRs0o/H5vMU9RvMw05WVbFP
+         PDBPYUTokovsDljKlToIbpQl5uCL/XAmwpkxibZ9JZi8Vristc4qGncD3ffkFnQt7/Gg
+         6Gj/ge9MlbXnOw62liHAG6yavJcuJEQ8ek3eitT2Ym/4+fNkLctPutd3WvTpeGAZVmGX
+         A/P++a8ym79yEDclEgWtyjaD7XOF84i3KRdjStdb21hrbdrD8gdxxxMnFwMG6UEiZ4Kh
+         ucww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743206629; x=1743811429;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=T16tHjdcydDyfcQnO+rO78FihM7DOnKeDErtF6szV0c=;
-        b=o1JsmBAFRAO8QJgfW8rZPIaDAUGmFpfLpZiqKu46DUg83+BztNf+bx/g3DIXQ5MJ35
-         vy5fzwc6/TXuCvyQnbR/2/YVKoDsAYzksMUYXCpzu0sAKvOVMiYcEqCC9jvFW7By42rB
-         EQI2wEG7SilRtWH7AZ2kRKPmkLJ3is3WMCuhs6LzWTQzwZnRB5cugfgYfsHFnHjuVcTa
-         meClvSinbkom3EKz0I9X8pD0b6a0RSoHBuE76SVeBcp9APqRJpLChn3CVlndNMOKb/+6
-         S1W6kzDb6XT82V3g2E8QcGctbXNsaKdAImashHThiZ75QVRSKOKI2KILISazvSppPt/X
-         gHSg==
-X-Forwarded-Encrypted: i=1; AJvYcCXTG5JaS9pkTK8XfgQMplWFKV1tqZCvGyFDj3n6m/UN7jRPGuZKJlo1MmNzhxdXu7Q5hUIYmxClksi9RHBf4To=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzUwDWLThgqAGg9i9HeYzsSHMnBXjkAjPJsq/VInL05opZY0ySD
-	ZVd5f8wyezy6BArdzjRHlIZCkg5E6ZyjEwEGY0FOWclj+v69vVRjhDA9enUe71gMmw==
-X-Google-Smtp-Source: AGHT+IFXbp95YRShZyWDHTfWt39VhfR88gtKILTuI2qmMg5tUTqt0nYA/ekMozYHGJNsTbYe2UjU9BY=
-X-Received: from pgac16.prod.google.com ([2002:a05:6a02:2950:b0:af2:37c4:2ad])
- (user=pcc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:9e4a:b0:1f5:862b:a583
- with SMTP id adf61e73a8af0-2009f78553bmr2229842637.34.1743206629156; Fri, 28
- Mar 2025 17:03:49 -0700 (PDT)
-Date: Fri, 28 Mar 2025 17:03:35 -0700
+        d=1e100.net; s=20230601; t=1743206631; x=1743811431;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mEgmoeCU7ZoBbD/6q07yzTwvuV9KDxvtvsClWJ9QuF8=;
+        b=sESWhGE4/0mw52Zp1OJMg/gz6f4kqBdgojx2kV7f6R2Dnj4NiqAcnrztHcenW4esBq
+         YqJYMJ1bE/s02xYfpJRani34TZUAXfmNjwo3cikg0aGg7/p86G/37BTp1bD4jtw2IKom
+         KPhxjX35fWOaUfg+CNEm1AH3zdHcIipyMRtOIY8RGQZVTki4p0IK5ju62zMYFz+NJBMb
+         M/sfcszPsymlU586r8No31XLY1ABIInTIUDEI8Sh9aNtleZJevashVV7Ws/a/alDTNmB
+         ES2OUU7mWF+xwNAHuYMXKfGKmyTQ6yxPgqXJljp5JfRHE7xvmSWPjMaAXhwBzH2a4gQa
+         brYg==
+X-Forwarded-Encrypted: i=1; AJvYcCVah76zypY5PNiGBuXcK7rdCw2wMbfySpSSjE95PRK34RIwnaRxcPTBHj63BrpyU8T2iZu8WmPYeZYlEgUvwnk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzbiXGziwq+ctyH8/NmamqTBQyGG1j8B+5IdHzm+0MilUIBd/1o
+	VXh+GWGdrug0cLKYl4eexrGZVSGx9Xu4z8qvTFOSp3HMQIZiPEd5P4AWsPCS6aovOg==
+X-Google-Smtp-Source: AGHT+IHjR6hGtSOVpUkc0nyNRot3w3fhTtOD52YS62CSenulpOThQdeL5LjrShYtAkO27skye9Y/6dw=
+X-Received: from pfbmd6.prod.google.com ([2002:a05:6a00:7706:b0:739:4935:6146])
+ (user=pcc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:e887:b0:223:f408:c3f8
+ with SMTP id d9443c01a7336-2292f960348mr16354725ad.14.1743206631260; Fri, 28
+ Mar 2025 17:03:51 -0700 (PDT)
+Date: Fri, 28 Mar 2025 17:03:36 -0700
+In-Reply-To: <20250329000338.1031289-1-pcc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20250329000338.1031289-1-pcc@google.com>
 X-Mailer: git-send-email 2.49.0.472.ge94155a9ec-goog
-Message-ID: <20250329000338.1031289-1-pcc@google.com>
-Subject: [PATCH v4 0/2] string: Add load_unaligned_zeropad() code path to sized_strscpy()
+Message-ID: <20250329000338.1031289-2-pcc@google.com>
+Subject: [PATCH v4 1/2] string: Add load_unaligned_zeropad() code path to sized_strscpy()
 From: Peter Collingbourne <pcc@google.com>
 To: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
 	Andrew Morton <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>, 
@@ -64,29 +67,72 @@ To: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.
 	Catalin Marinas <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>
 Cc: Peter Collingbourne <pcc@google.com>, linux-fsdevel@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org
+	linux-arm-kernel@lists.infradead.org, stable@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-This series fixes an issue where strscpy() would sometimes trigger
-a false positive KASAN report with MTE.
+The call to read_word_at_a_time() in sized_strscpy() is problematic
+with MTE because it may trigger a tag check fault when reading
+across a tag granule (16 bytes) boundary. To make this code
+MTE compatible, let's start using load_unaligned_zeropad()
+on architectures where it is available (i.e. architectures that
+define CONFIG_DCACHE_WORD_ACCESS). Because load_unaligned_zeropad()
+takes care of page boundaries as well as tag granule boundaries,
+also disable the code preventing crossing page boundaries when using
+load_unaligned_zeropad().
 
-v4:
-- clarify commit message
-- improve comment
+Signed-off-by: Peter Collingbourne <pcc@google.com>
+Link: https://linux-review.googlesource.com/id/If4b22e43b5a4ca49726b4bf98ada827fdf755548
+Fixes: 94ab5b61ee16 ("kasan, arm64: enable CONFIG_KASAN_HW_TAGS")
+Cc: stable@vger.kernel.org
+---
+v2:
+- new approach
 
-v3:
-- simplify test case
+ lib/string.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-Peter Collingbourne (1):
-  string: Add load_unaligned_zeropad() code path to sized_strscpy()
-
-Vincenzo Frascino (1):
-  kasan: Add strscpy() test to trigger tag fault on arm64
-
- lib/string.c            | 13 ++++++++++---
- mm/kasan/kasan_test_c.c | 16 ++++++++++++++++
- 2 files changed, 26 insertions(+), 3 deletions(-)
-
+diff --git a/lib/string.c b/lib/string.c
+index eb4486ed40d25..b632c71df1a50 100644
+--- a/lib/string.c
++++ b/lib/string.c
+@@ -119,6 +119,7 @@ ssize_t sized_strscpy(char *dest, const char *src, size_t count)
+ 	if (count == 0 || WARN_ON_ONCE(count > INT_MAX))
+ 		return -E2BIG;
+ 
++#ifndef CONFIG_DCACHE_WORD_ACCESS
+ #ifdef CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
+ 	/*
+ 	 * If src is unaligned, don't cross a page boundary,
+@@ -133,12 +134,14 @@ ssize_t sized_strscpy(char *dest, const char *src, size_t count)
+ 	/* If src or dest is unaligned, don't do word-at-a-time. */
+ 	if (((long) dest | (long) src) & (sizeof(long) - 1))
+ 		max = 0;
++#endif
+ #endif
+ 
+ 	/*
+-	 * read_word_at_a_time() below may read uninitialized bytes after the
+-	 * trailing zero and use them in comparisons. Disable this optimization
+-	 * under KMSAN to prevent false positive reports.
++	 * load_unaligned_zeropad() or read_word_at_a_time() below may read
++	 * uninitialized bytes after the trailing zero and use them in
++	 * comparisons. Disable this optimization under KMSAN to prevent
++	 * false positive reports.
+ 	 */
+ 	if (IS_ENABLED(CONFIG_KMSAN))
+ 		max = 0;
+@@ -146,7 +149,11 @@ ssize_t sized_strscpy(char *dest, const char *src, size_t count)
+ 	while (max >= sizeof(unsigned long)) {
+ 		unsigned long c, data;
+ 
++#ifdef CONFIG_DCACHE_WORD_ACCESS
++		c = load_unaligned_zeropad(src+res);
++#else
+ 		c = read_word_at_a_time(src+res);
++#endif
+ 		if (has_zero(c, &data, &constants)) {
+ 			data = prep_zero_mask(c, data, &constants);
+ 			data = create_zero_mask(data);
 -- 
 2.49.0.472.ge94155a9ec-goog
 
