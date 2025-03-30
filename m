@@ -1,95 +1,86 @@
-Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BDD12B2CF
-	for <linux-hardening@vger.kernel.org>; Sun, 30 Mar 2025 09:53:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22CB88F5B;
+	Sun, 30 Mar 2025 18:11:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743328429; cv=none; b=QPKGLp4hhfMWeUsJiC6m6CXVETBvoAICxq+Ge9DfsnOBQ1NS0v0GW2jr2niyz/jzRiAGu95yg59yP1HEBpQPOw3Ng6K9g8IvUVGbzxQXdK2UyML3W58sXORttUMgAJgo+2UjbOLRYU01uN2TxvJR2cnPUTm36UqtFR2azpvTfoo=
+	t=1743358307; cv=none; b=W1YdUixN01sUa1r3EcxNeb+odgN4tGl9x6LaZCE/sT8saWEwviO4XPGDNObB0Tz3VQ+cRVSblpzNnnL3+ZEOnKixw0cSnKu97Tyi9X2E8ejOMIbE/PqyZh/dk0zgzd6oHn2whsxyNh2+sF5Yr2776Ysnkaf318ArWr5MA75ncEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743328429; c=relaxed/simple;
-	bh=Y77qOZJg1ztePs3u1ibfM+37emwBml1d4mvWvji+LaM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tlEKCQkpg2XP7zP5tShh0VxxO18t59/oWSY5zuqOof+6vGliA2/hBKCm1s37eeH2yagIxliZTK0CdGC49iO6oSgCzlNaZD1txfn9+nrpfe1MnO3KTWAH5YTv+P3HyXjVyqeUZpB2MC+LVX1FevzqOfiCHe9OOCMMyYqSiElW7aM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=css6jhxY; arc=none smtp.client-ip=91.218.175.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1743358307; c=relaxed/simple;
+	bh=4HDFXcoZxGwUNwcERXxyDzyzx2MdPQVoyBaEIey3EOs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=a3463yjUDpFpo+05olEeYGmL875WW0/vDoEkNRnbgvUHXMZUc/wEFu8zeD5kp58MxVzeeVrrvRiKnWQORFt05UWmBTRdOh4YMpOgUpqoAhDPLWktew/q8gBXSoEyId96WHvcr/zNJA9eOTQIr/Ygu0GxGGbYlA8z7aIeLSlt39Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k6s5wsIo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="css6jhxY"
-Message-ID: <cdc1fbbb-4299-4283-9bac-f1d7fb6962b6@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1743328424;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=28ZmjUKSGx9bHyjrPWK8SrKiBbCt6lY+A/8H7faqvwU=;
-	b=css6jhxYQSoSJQO+hyUEb6FQkLXz6A011PSJP6LoueaA50IGcM4GFHbzDMaNL4clnzEIFk
-	sE7mxlof2wEOKpVizkRCidqSOrRhD3dS5PSCyVWNVfYr7U+7iDTczD1dJQBd405ulhqf1z
-	BUeNENUAV9Ac/WGg12TCfqvilw3btDs=
-Date: Sun, 30 Mar 2025 11:53:33 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k6s5wsIo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A71B8C4CEEB;
+	Sun, 30 Mar 2025 18:11:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743358306;
+	bh=4HDFXcoZxGwUNwcERXxyDzyzx2MdPQVoyBaEIey3EOs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=k6s5wsIoPaFjbaSUwR26H7uuyoD1bHfLN45Wxqv27MrhOPm7pUJ7V6A8HAOmDzL8r
+	 Jn7ihEGGX+RU/plRpnIvjXACfB/IVFOA5qTBDrouUqz8bmkC9rjisQvCFybzHlaPPT
+	 ANRkn7ZBOoeVekTTBgQNJGN83cnhteyHeKQ82mMss8oI8B4wwzykSjt2p7N5gOMOQy
+	 13MserMavplFyVmviVH8evoW4B/MfnSnXkX38EDnTyRA8fh25BrHv+r/ENigHyG0sa
+	 2R1CBdmQSJeaAFXa6dHSBbPwfSWJLbgcXJZ593VQ6mpvP5hH1+RApJ5qZjL22ixuOq
+	 E/Y4ekCDLXUoA==
+Date: Sun, 30 Mar 2025 19:11:37 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Tzung-Bi Shih <tzungbi@kernel.org>
+Cc: Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva"
+ <gustavoars@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Benson Leung
+ <bleung@chromium.org>, Guenter Roeck <groeck@chromium.org>,
+ linux-iio@vger.kernel.org, chrome-platform@lists.linux.dev,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2][next] iio: cros_ec: Avoid
+ -Wflex-array-member-not-at-end warning
+Message-ID: <20250330191137.037735d3@jic23-huawei>
+In-Reply-To: <Z9qKyZsH4akWG2q3@google.com>
+References: <Z9lE6IVDeC5lnChN@kspp>
+	<202503180840.77F2F47DE8@keescook>
+	<Z9qKyZsH4akWG2q3@google.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH][next] IB/hfi1: Avoid -Wflex-array-member-not-at-end
- warning
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
- Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>
-Cc: linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <Z-WgwsCYIXaBxnvs@kspp>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Zhu Yanjun <yanjun.zhu@linux.dev>
-In-Reply-To: <Z-WgwsCYIXaBxnvs@kspp>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-在 2025/3/27 20:02, Gustavo A. R. Silva 写道:
-> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-> getting ready to enable it, globally.
-> 
-> Move the conflicting declaration to the end of the structure. Notice
-> that `struct opa_mad_notice_attr` is a flexible structure --a structure
-> that contains a flexible-array member.
-> 
-> Fix the following warning:
-> 
-> drivers/infiniband/hw/hfi1/mad.c:23:36: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+On Wed, 19 Mar 2025 09:13:45 +0000
+Tzung-Bi Shih <tzungbi@kernel.org> wrote:
 
-Reviewed-by: Zhu Yanjun <yanjun.zhu@linux.dev>
+> On Tue, Mar 18, 2025 at 08:42:41AM -0700, Kees Cook wrote:
+> > > +	((struct ec_params_get_cmd_versions *)buf->data)->cmd = cmd;
+> > > +
+> > > +	ret = cros_ec_cmd_xfer_status(ec_dev, buf);
+> > >  	if (ret >= 0)
+> > > -		*mask = buf.resp.version_mask;
+> > > +		*mask = ((struct ec_response_get_cmd_versions *)buf->data)->version_mask;
+> > >  	return ret;
+> > >  }  
+> > 
+> > Since "params" is used twice, I'd say do like the other patch and assign
+> > it to a new variable:
+> > 
+> > 	struct ec_response_get_cmd_versions *params = buf->data;
+> > 	...
+> > 	params->cmd = cmd;
+> > 	...
+> > 		*mask = params->version_mask;  
+> 
+> Not a pushback for introducing new variables.  FWIW, it uses "param" and
+> "response" only once.
+
+Given that reply I'm assuming Kees is fine with this.
+
+Applied.
 
 Thanks,
-Zhu Yanjun
 
-> ---
->   drivers/infiniband/hw/hfi1/mad.c | 4 +++-
->   1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/infiniband/hw/hfi1/mad.c b/drivers/infiniband/hw/hfi1/mad.c
-> index b39f63ce6dfc..3f11a90819d1 100644
-> --- a/drivers/infiniband/hw/hfi1/mad.c
-> +++ b/drivers/infiniband/hw/hfi1/mad.c
-> @@ -20,12 +20,14 @@
->   
->   struct trap_node {
->   	struct list_head list;
-> -	struct opa_mad_notice_attr data;
->   	__be64 tid;
->   	int len;
->   	u32 retry;
->   	u8 in_use;
->   	u8 repress;
-> +
-> +	/* Must be last --ends in a flexible-array member. */
-> +	struct opa_mad_notice_attr data;
->   };
->   
->   static int smp_length_check(u32 data_size, u32 request_len)
+Jonathan
 
