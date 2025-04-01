@@ -1,67 +1,67 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94A76249EB
-	for <linux-hardening@vger.kernel.org>; Tue,  1 Apr 2025 00:38:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EC252E3360
+	for <linux-hardening@vger.kernel.org>; Tue,  1 Apr 2025 00:49:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743467908; cv=none; b=CQ7+HcDNLMRskgo2K3eRgqtvc5NFwPtpHv5ncIRkJJSX4mOEzow3lXreYQXNRCFkZj+P+TW1M9HkTrZHJUiKJ1Zc0Bp0Y771lqYMq1i06vTeWW6oL6f+p5r2xYd2NXX2ERWc/7E7Ld8xAsUJRyFz//l23Mp6nFwd72/ArTkbGxw=
+	t=1743468570; cv=none; b=R7eaiGKgvGH+89/gxqHAgbV2n7iP2rB88iJ6RP4DBzFDOhvto6rs3ss6rQaMkcA+lM2di0yGicw8xmj+opbwX2MaKML7SdGT+zMV2XpkPWxoWeQ9s1j4njkOlZyva2DokFTdFMf4GIkL+wuIyXz4FS8lDAmG6mldZpK7YCQy0EE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743467908; c=relaxed/simple;
-	bh=EI1mPvdCbyYHIwBWxdtH54j+BVCkqp7WsbZyJafCRLA=;
+	s=arc-20240116; t=1743468570; c=relaxed/simple;
+	bh=OUTcZq07JBkgTrYml5GuZJ2vQhCaARTC9w+Z21EM7tE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uYuDhhgelEFSbTz49FwB6ReLkYujjfT5auJRrDpIyeEZ5sjBRjOiNUTHgbk8kyUwiUgPHY63HbjP1Amxhjby45G0zgv7gLQirFYGCfVtMFLymGOBAAp9vsxGg2cA6Mmh5+sInZOASv06Gdo8W/NtbFmUPgrKScAP6skrx8ZzhhY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=feYzh6nc; arc=none smtp.client-ip=209.85.218.42
+	 To:Cc:Content-Type; b=aYGNnIq/yi0AOuxqtHtrX8PDlhl/+s6QLuZlD5tU2lLzUefYR87pos0Ca8btJN7vZf6trNZk9TL29KkOMfYFTYOakgAbAHQorVrWhx3BnPpv0X62tWZQDSRaJph5sZiHD3EHqbSOYsD7SS/BG78T+uaGARHoblD/PTTLhs2sU84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=QRcaOUvl; arc=none smtp.client-ip=209.85.218.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="feYzh6nc"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ac25520a289so838401766b.3
-        for <linux-hardening@vger.kernel.org>; Mon, 31 Mar 2025 17:38:26 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="QRcaOUvl"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ac2dfdf3c38so897312766b.3
+        for <linux-hardening@vger.kernel.org>; Mon, 31 Mar 2025 17:49:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1743467904; x=1744072704; darn=vger.kernel.org;
+        d=linux-foundation.org; s=google; t=1743468566; x=1744073366; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=jmYjDTtlr4FUxPBxvb78kyKW+ePiRCaB/F3Y0k4Lqp4=;
-        b=feYzh6ncXAnSo0shkcojcEi2a5yZQF9Vxece1fJ9YM4WGCvWkWZY8qkIZh1DjFVCor
-         MqLayQP8Hto5waMeh9sH2fxztgwJuPwnlzg5YwlbNATIqFAJ69RLCRDx+KlbCIABnvLg
-         Gxn6ONG4bnVRYDZxo5BEva7ptRt+T1jb5yPQU=
+        bh=vqJ2N3VREVt47VEa4RxuNWaTBMsssQWWo8kvJYNbQLk=;
+        b=QRcaOUvlPOKx8CF/pXQKGrqy3fS9mIj8ystH1ObZE+7CIHxDzwmcjsTxxAfatgEA+T
+         0UJvUCOwPkFq8Rw2ohVGu2Gg6ukn2iEuZmfPNSrDtiocEO/CBl7L1lo4RZH1t3jn9Ljq
+         4jiAhH3Lcqo75qbRDewmVvWymwBp7d50XAJl4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743467904; x=1744072704;
+        d=1e100.net; s=20230601; t=1743468566; x=1744073366;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=jmYjDTtlr4FUxPBxvb78kyKW+ePiRCaB/F3Y0k4Lqp4=;
-        b=vVWnKWZq1szu/21wvZdDnJuO2dczPJRWtHotM9jezycOvjwdmyCeqqS2r2s71uD2dU
-         Qib57QQG//jsGD3nGN/TcBuW0hTD8g5p7WqcoS4Y36c1bkGg3KZi/aGHLCLM+xgO6tjs
-         C9X5CHuH0EMbDWEukuDKs8ClWNZETtg4PYyv+IxV21sbwQls6LIZPeN0CCEGd/2dg2Ra
-         1snUpdACF1LuAFca8LUjqfK3xM95tsJ1x5IMOvK4Sj8LwNj9gkzrmK8TfFbjwQYnmbaA
-         nCHuuYVKC86D9LXQ1VFTf9Hd0J8ukIgG9TZIIDvFNEpF7OsozdReJEeNgVUZvrZt4nvk
-         i/VQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVoRhf+MBbOriIFk7at5uWNI/qL+TvH+yW1JvlBzrhxfb6EaE6n518UKtEDsMclfF2Q8uzpYYxsIlpdenqUWvc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyDcbA9FKFFMAJJ8M9CJhGkjoTu0lvJT6y/+S/b+SrA0LOztimt
-	z5La1VCe9QR8sW4x+ahO8LsEbvfzIy2jc8dk9BEP9WsX4RC4ITzhotw3JZ+GTwLHKyV/B8Mm4n5
-	JE5A=
-X-Gm-Gg: ASbGncu7IppQiWY/u7ypdvXL0HiISDWuoxbrPOBk4N+F5E+4Vn0+pRs1wjY3Sia773b
-	hrrVrfR3ZWc8yVQ5xiS22t8nLHBmWBVsntCEN4bZvwmrxyKUtaEnPFT/EZJ4z4tmo8NQQXL5xpN
-	zPb7hhPnF7iWbjaaCghiPYuGCIJLdiT15AH8PQVOa39nkPbBvjR8APfJ3CYqgoY4MhNVXomE2pJ
-	IrqM7HlDkxTk0Xc2oRvrXzAh6K0iG8xONNrqu7A/jc4/h2GHmGvqb16rqnHOIiUVI6tLASU0uSn
-	pu1qal8L0jruqqIDWYca7WOoSxhmGkxVya86Ituyw7pXx0Q9ve14nLLJ+xsJf2ujfsMyom9vuTC
-	CLUlJs/qrilB0MEre3q4hL4JraqBUWA==
-X-Google-Smtp-Source: AGHT+IF0y7eS+Pr7fIbaUM81psJ+kn174Rl/fReZuRJpyk1vl/ygsZhGgO/GKt0PQhfVvOpybF5lVg==
-X-Received: by 2002:a17:907:a089:b0:abc:4b7:e3d3 with SMTP id a640c23a62f3a-ac738a3e93bmr1116375866b.27.1743467904436;
-        Mon, 31 Mar 2025 17:38:24 -0700 (PDT)
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com. [209.85.218.48])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac71927b150sm696640366b.46.2025.03.31.17.38.23
+        bh=vqJ2N3VREVt47VEa4RxuNWaTBMsssQWWo8kvJYNbQLk=;
+        b=sCXdRicU5R+JsUU+FRzmOwxnBbkEhIRC920DcqWi79C0vxgq4LMhRcUVZqibF8p6ic
+         JDJERJ2/aaH6U3aGgQgT7kWx20+CnWwXGYPJLy1CB6LXvYVAAwW2O3U/USs0azP/oKg3
+         fx9/+IkZs7HT8Y/H0ptVhV496zGzqN7tv6vt2DkPBS4LyDHIUsiKFRkjpwb3iLb/F18g
+         YdXV56xZCrfJsTNIsX5BrwQAfSHOzkYORyqwk89XP0vJyeM3TBbjAv4DHQk6ChVlzb73
+         JvD7RTRv6OR/jIh2F0eZJFCUgmep634+aKbNsF4OSX8zFeGAEFl2qQSAmJrvLwy5T3UC
+         XI8w==
+X-Forwarded-Encrypted: i=1; AJvYcCXoxJQlQYdhZIPl3S7yxVqDq9pkx6+SeVkXzzY9aWfN1LPCk8s1QoiKJTbJ9DMhW1EETDoy0/eUSum7Vyn2i3w=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5+u56MQJpKBjo5RBSncSmFODFM/Y1PQ+7Y8ov+yCZIrkS6E4v
+	8BCqvwSjY2j1OmYBmYXVSXobIQ4MebWtlEhqe+VlgCu4GwM5tHAvb9T6DstCOpYM8j+vQXrR0+4
+	tkZ4=
+X-Gm-Gg: ASbGncvQiiCnvNQR1/MCyrSEw/UTf2x9+ByYvFdi2ZjpJNUwXPAZJwBvQTExhW8Siup
+	AHQs/vPxE4L3Mr4IlHF0JI5jwg9qH3uytSiaHbajVqk6TfnppXNUz5TR+WrEXQdUKfgPi8Y6zj/
+	xfHjgdvsMnskAeETDHbnOLfU3Rbm2XnT2LWnXuJVzT4lepGegzMjiAGo6/0ZPjl58kQQjbPg8jT
+	dmc3Dt6DZ6cxjgOiGU21xmFpBUEgW6DNmqnF+n4PGidhqGApKLcjV0hwRkiX/fNWAWwJLSWn6xh
+	eoH0+fTquprcLlU101yKdxtgSP12n2+wT8p3mBJT503ZGzRrZRi5B8GF52wvo+SmP71BzPEVQpK
+	URvtwwEUIvhHah77pp60Nt7ROaDnwpQ==
+X-Google-Smtp-Source: AGHT+IFykWI1QD7P6unalNU2F+kVK+HLd7AWtfREdStrjUhLtOayYfnZ7NfOfa1hFNFmTy+GdcbEDA==
+X-Received: by 2002:a17:907:3f12:b0:ac6:b639:5a1a with SMTP id a640c23a62f3a-ac738b0ba28mr1015943966b.28.1743468566309;
+        Mon, 31 Mar 2025 17:49:26 -0700 (PDT)
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com. [209.85.218.44])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac719621718sm702839066b.102.2025.03.31.17.49.24
         for <linux-hardening@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 31 Mar 2025 17:38:24 -0700 (PDT)
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac25d2b2354so804913866b.1
-        for <linux-hardening@vger.kernel.org>; Mon, 31 Mar 2025 17:38:23 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVdIRRA5b0vwO9R3w7Gf6YhW4qe1zywA+ycDsZjKikFb+pt8es48jL8LzVE3S64Tya1YVDRUX7SuDW/C6OV9j4=@vger.kernel.org
-X-Received: by 2002:a17:907:9491:b0:ac3:84d5:a911 with SMTP id
- a640c23a62f3a-ac738a3fb45mr1010426866b.28.1743467902999; Mon, 31 Mar 2025
- 17:38:22 -0700 (PDT)
+        Mon, 31 Mar 2025 17:49:24 -0700 (PDT)
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ac2dfdf3c38so897309866b.3
+        for <linux-hardening@vger.kernel.org>; Mon, 31 Mar 2025 17:49:24 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUupK5EHhZB4b/Ix5vBhnzFpPV+ub4jj7hTPI6CCuffLckaOVIhYgl2boozM9naudZZdkSDxtZcpm5be/AJIfw=@vger.kernel.org
+X-Received: by 2002:a17:907:97c9:b0:ac3:3fe7:b254 with SMTP id
+ a640c23a62f3a-ac738a152d0mr1032969566b.4.1743468563964; Mon, 31 Mar 2025
+ 17:49:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -73,13 +73,13 @@ References: <20250331143426.947281958@goodmis.org> <20250331143532.459810712@goo
  <20250331133906.48e115f5@gandalf.local.home> <CAHk-=wi5pLoe3szxLREQGGJuWU0w_POK9Sv6717UH3b7OvvfjQ@mail.gmail.com>
  <20250331165801.715aba48@gandalf.local.home> <CAHk-=whRNxdkLC6Z91g-_RbrRsUo6K6+nvRWqccjsOycwUe_JQ@mail.gmail.com>
  <20250331194251.02a4c238@gandalf.local.home> <CAHk-=wiDQpOeXi_GjKB7Mrh93Zbd__4k+FF_vJd+-prbaacEug@mail.gmail.com>
- <20250331203014.5108200c@gandalf.local.home>
-In-Reply-To: <20250331203014.5108200c@gandalf.local.home>
+ <20250331203014.5108200c@gandalf.local.home> <CAHk-=wg0wQb+CbUk2GY0CeVuTQvq67-oYR0nL8wGgySia3ce7g@mail.gmail.com>
+In-Reply-To: <CAHk-=wg0wQb+CbUk2GY0CeVuTQvq67-oYR0nL8wGgySia3ce7g@mail.gmail.com>
 From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Mon, 31 Mar 2025 17:38:06 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wg0wQb+CbUk2GY0CeVuTQvq67-oYR0nL8wGgySia3ce7g@mail.gmail.com>
-X-Gm-Features: AQ5f1JqkcRUTrAOWfRx6dOFz_CgrRYBalx1pwXYdM-tsf3km_onhfKZdgX2Gx8Y
-Message-ID: <CAHk-=wg0wQb+CbUk2GY0CeVuTQvq67-oYR0nL8wGgySia3ce7g@mail.gmail.com>
+Date: Mon, 31 Mar 2025 17:49:07 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wh4b8hNT5XRDj9M4damUmij2bJGaRamqQ_icEkVUv8svg@mail.gmail.com>
+X-Gm-Features: AQ5f1JoBkC_QKfs81TmJ3LMb4XougE5RrROka215j19iecgzoAx9QaQPEIrhB0Y
+Message-ID: <CAHk-=wh4b8hNT5XRDj9M4damUmij2bJGaRamqQ_icEkVUv8svg@mail.gmail.com>
 Subject: Re: [PATCH v2 1/2] tracing: ring-buffer: Have the ring buffer code do
  the vmap of physical memory
 To: Steven Rostedt <rostedt@goodmis.org>
@@ -92,34 +92,25 @@ Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
 	Matthew Wilcox <willy@infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 
-On Mon, 31 Mar 2025 at 17:29, Steven Rostedt <rostedt@goodmis.org> wrote:
+ On Mon, 31 Mar 2025 at 17:38, Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
 >
-> > Of course, I would expect the same to be true of the page/folio cases,
-> > so I don't think using flush_cache_range() should be any worse, but I
-> > *could* imagine that it's bad in a different way ;)
->
-> At least we can say we covered those other archs, and if a bug is reported,
-> then all that would need to be fixed is the flush_cache_range()
-> implementation ;-)
+> So *this* is the kind of "bad in a different way" I could imagine:
+> things that probably should be cleaned up and be available to generic
+> code, but very few people have cared, and so they are used in ad-hoc
+> places and haven't been sufficiently generalized and cleaned up.
 
-Well, there's also the whole "is it I$ or D$" question.
+Of course, the good news is that (a) few people care - which is why we
+are in this situation - and (b) the people who *do* care about these
+issues tend to be both responsible and responsive.
 
-I think flush_cache_range() is basically expected to do both, and you
-don't care about the I$ side (and I$ coherency issues are a *lot* more
-common than D$ coherency issues are - while D$ coherency is happily
-the common situation, the I$ not being coherent is actually the
-default, and x86 - and s390? - is unusual in this area).
+So not some unfixable morass, more of a "one or two architectures may
+care, and we might have to extend interfaces that haven't been used
+this way before".
 
-So maybe powerpc people will be unhappy about flush_cache_range()
-because it does the "look out for I$" thing too.
+For example, just adding flush_dcache_range() into
+include/asm-generic/cacheflush.h should be more-or-less trivial, with
+the same kinds of "architectures can make clear they have their own
+optimized version".
 
-There's a flush_dcache_range() thing too, but I don't see a single use
-of that function in generic code, so I suspect that one is currently
-purely for architecture-specific drivers and doesn't work in egneral.
-
-So *this* is the kind of "bad in a different way" I could imagine:
-things that probably should be cleaned up and be available to generic
-code, but very few people have cared, and so they are used in ad-hoc
-places and haven't been sufficiently generalized and cleaned up.
-
-           Linus
+              Linus
