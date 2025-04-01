@@ -1,58 +1,67 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B5B06A33B
-	for <linux-hardening@vger.kernel.org>; Tue,  1 Apr 2025 01:28:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51EA02AF04
+	for <linux-hardening@vger.kernel.org>; Tue,  1 Apr 2025 01:30:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743470941; cv=none; b=tTKOpgHBLQ3WZTlyf+Vmk3DkDe2QbajtfUeUmK3c3CamfdiDd5VOHCRIsiZ5JTAsQrSMYhFnwsuLLF8ffBaig1Ul6qB/aij79NH++r8ol/Fl4fNP4A25/x3p/Cn+yAXpo7JJ96+xKzw0jd/YqvS18Ifq9tlg/oHDve0Te8BO6p0=
+	t=1743471058; cv=none; b=i23wji7wMgHIjBemAIjZLPw0uF4dFd0yaSsg6G0gH5ObayKvNHUpvA+Fjzb8jkTxjHjMrRTKaVhqgBrim4UcfQolLqZKOignkgnGhaR0X1L2we1MKcmWUMI/mfq5yekf+kotnurTTIDOraBJMJEHc2jaFZOU03f49o2DbUNvBY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743470941; c=relaxed/simple;
-	bh=GhPAaqOA3j3FYRbo3B5JHACvUs9UEP/cCHIrgKY6SZU=;
+	s=arc-20240116; t=1743471058; c=relaxed/simple;
+	bh=ZrZnWSEQfOVCXfCXId9BoQTQz62E8du+T3QQHmnRCcw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JqmfR6K/oXlo3hdThEAeHcQgBOHG4JIcd6tuSOIXHnGUGS7fcXGqA5BaHyYzLotxHToVenGkfAZK9P+wZoj4eWYYLrOfSG1VMzhCcbjo/hK3Vnqbzfx2qN+BTmMEEuU7vso1EaKpednp15h0YfJGSRsPs7idPaJQZNssS22uaco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=G//9xqmf; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=T17ypJbgCYazbZ8ZY1LTVmMqtINdcd8h9IFZtylhtOk9/pFMc6oe3ivR7fqrzzGWVaUmsJ+1w7tugnKU7Eiwbj/a//8z1xa12UMepEvjBO2+U2hpBWHYW+UnHFM7fA0LGtmZ+TJN0KeeDBDksnS7AlwBAAqrOmr70lGjJNmCchU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=WL4CmDdl; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G//9xqmf"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5ee2e154a35so5216a12.0
-        for <linux-hardening@vger.kernel.org>; Mon, 31 Mar 2025 18:28:59 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="WL4CmDdl"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5e5b6f3025dso7929498a12.1
+        for <linux-hardening@vger.kernel.org>; Mon, 31 Mar 2025 18:30:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743470937; x=1744075737; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GhPAaqOA3j3FYRbo3B5JHACvUs9UEP/cCHIrgKY6SZU=;
-        b=G//9xqmfZQOOGvzbsoGlwXElN8A52saeFQYQ4z15+GegKArgx+RFp5Qz/XoyodpEdw
-         j1LpYY8zKrTrvOgt6T3ebbp5+NSZbkad/W/LrVfCQszzddDF0bfCTSgqD7XVTWOGGEAe
-         kglMX+IM4rdYyO7bMtWPCu436FGpMfB8MIqLHQWnWw1HecG1h6MMeFC4IkJx9qTDzysZ
-         bm/z/gQTxWgO39W+33W/HNmoE7nmeEUO6grD/QIoMISJmc0WIJpSOftkk4Nm7F7amvwJ
-         T5yZnrsDDEYTz6kImKhAsaaRdt9aB8p8AwjAbJ9j2PNemtWRtrkIdNUSROCawCTlG3gE
-         efXQ==
+        d=linux-foundation.org; s=google; t=1743471054; x=1744075854; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=hobhqw8HB8gJ+OpvQWZBbfhBUu6vl3N3/WGeelA1Yck=;
+        b=WL4CmDdlDcDtCKLbiVCMl/1JZEx4yMt0lB0NMdcMEilcfoyL6obtPBp6WVnVtLb+ft
+         7fcYlL2uOkqBG1I8UFqSJcJLjNdhWiLx7qoLaJWwU/RvgQINW2BvtCizbjEsXgasoOUQ
+         N67H6EjDqqirOYzHOipjvlDm4d/YfVP24rfpQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743470937; x=1744075737;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GhPAaqOA3j3FYRbo3B5JHACvUs9UEP/cCHIrgKY6SZU=;
-        b=nQ8WFjNMiHtr9FZU/GYKY3UijhJoznPmoqj8u3YdVdGBS6qoh6hceZjX3BzT32karX
-         ZmOv07CLiZmHEGoCOc17kDbovPFzifXl8qXrE6ZWk1iReNYScvmIXxnNPuuznOq9S26U
-         Znz9ipcAdevu1IOnVhOfNYzOrVMMFSQYHTx8Ne4TqNm+klq5IwVKuMjVlJLyVPBG028G
-         rwU0EKL6IadH0y35cB8OTCCzTC/9OCXJrYdyt4Q7SDmLfAncMHwtqAlASCecfvdnqw7f
-         QRgTEVL8sa+1Jwzw6XTlrgBVBBdd43QqWw0G9ujmv21vqslXqcwKJQQR7dXGdIaURkj8
-         VvHw==
-X-Forwarded-Encrypted: i=1; AJvYcCW/vIBlzrpbC7T/nZGYX/tAuVVUDRf0QX+VQEdP7UGyg/TxM55gAu6igIBE7IM84kgwW5Y4iMQKsZlKHqtJZe0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyqHxc5sYXFTULFWcNUEg6d7szVLTKDUT9YksgDjd57fMnX1oHi
-	rUhbhxIcA/PdYE0iSC4XqFsh4kitGUZFjNYwqHs3McJFMX5CMgsyBknGIiGNBpOXmWQ4JBBcSqp
-	gLWO8jKlSye9fdGRzpMT78Nw7tP2iWORPb9Lz
-X-Gm-Gg: ASbGnctm8CmDUlEQ0hH53mUrY98ZNPlP+KpjvqVhDjbYWLymUMusvr3LO4g7p9a3rFo
-	HaNI5d6DyiRyM4hoz3ppVUqbPhSBxgTI0LNnhQByecyeH2jRO9jASVrFN01cyrWnIyIYxzB7NQE
-	wD0Ki+vk3AFG0lSmzTdqpii9Fc+XHXs8YnH/L4aC9Fgh/FWvX6N2YWbA==
-X-Google-Smtp-Source: AGHT+IFdpNIM74DMCYlSQZGDg0V5ofJ9VTljm7g6xclq3VUdZ5+XmVgPyYoA5Gbye57wb0GhpZdA2Nga3kXNHdUDLRo=
-X-Received: by 2002:aa7:c31a:0:b0:5e5:c024:ec29 with SMTP id
- 4fb4d7f45d1cf-5f029198a48mr66087a12.0.1743470937193; Mon, 31 Mar 2025
- 18:28:57 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743471054; x=1744075854;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hobhqw8HB8gJ+OpvQWZBbfhBUu6vl3N3/WGeelA1Yck=;
+        b=JGdIyH+h5/5vCa7WGWWkEWVcnIZmOQrIxM+LDqguX3oXX8lxH/lG3psSkHtMzTv5Qj
+         yfF9fn6Glb/oZSYg1tCSfQEPBT+JS7fzJNQKCEDybKus/ywcQ6MAHGYgBC71XxBQJWn3
+         8WYHG0xMWlHa0BeLqFWLQ/qdKYEu1lipIpBRI+HLmj2ev6kCcXP+PQsJdTX+sl5E5OLu
+         Lq412rOdza6yEJFJNyq8diTj31c3jubCd7LW5pnkpeV9J+cEhA3zo04uvXM60m/e28ZI
+         X9+pqarInhbuKvOQP8rLkl1nSx3UwWplCamfWPOxsfh3Qi3LGhKNfEHj47wJ31zsIaLX
+         8Jjg==
+X-Forwarded-Encrypted: i=1; AJvYcCXpFuOIVTZcDHJuKd7l6k1a3k5qR7zAX3PTE1Q/gHWTOM1yMLtLhIffGt8KCPsl/Bm6zj6VZ5F/kk+yOO+d8VA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxIf8pKZ3bMhB5n4fTRdlBsI42hxVsi1yOrpnKH0ebMTwNmA+FN
+	zxLalv6n5G/kGMA2hiEYxMJBegTkQD6VTR46Gq6HkHX+GsBQ92L8BPyjQmSSg/mfuRsDXRLnY5A
+	Miqs=
+X-Gm-Gg: ASbGncs51OXmKA7CzT5NA26L/evvxF1agHlsTskj0WhGw5Jc+FNFXeiE0kfUf1eJB0L
+	rt5CnRpVGL0khKKq1PkCJDL5dHjWNzKA8mToa6A8nu3SciB5xY/kdSNQDqMXHRAqiKxEamraCqt
+	kpiq5KlRVCUpwqPh77Q0Ki8D/DG7AkQj9x/pn7Ww6CFTOelsg8VdEV2Hyza+kaj8nVsb60FiMbt
+	OPseAj+I6c7MFiYJzH7eFi773tFg2CYkkKU18wFKnYvoCVncZOphBYto0E+InsdLF/2YbU4wn5O
+	TSxZ6F39WO5sYwbfsF9kcnnYA4eczuKdTLlckl9AZLoFCVBS4Ok+RiuyTqUtEs3EEQaJzXKcZgN
+	EtmVF2pwuKSMJQ4yqPXx73Hf92v7QRg==
+X-Google-Smtp-Source: AGHT+IHSh1RhkNyZabwXtTq0zf4QDcQq1DQiKOUhPFE3kEhxsTmzp9n32Rvqfd5g4vFjDPNQVKZ4JQ==
+X-Received: by 2002:a05:6402:35cf:b0:5e5:d91c:4151 with SMTP id 4fb4d7f45d1cf-5edfd0fd67emr9757531a12.16.1743471054383;
+        Mon, 31 Mar 2025 18:30:54 -0700 (PDT)
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com. [209.85.218.46])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5edc17dff0bsm6329873a12.70.2025.03.31.18.30.50
+        for <linux-hardening@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 31 Mar 2025 18:30:51 -0700 (PDT)
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ac345bd8e13so853042966b.0
+        for <linux-hardening@vger.kernel.org>; Mon, 31 Mar 2025 18:30:50 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUvBPsF712/sVt4nJqXTs54Ih0DRxvO6j89ecKRD/bkGIWH8Xkv531L3aAkdRKrAVAo60iJu055HJdeEcou3JU=@vger.kernel.org
+X-Received: by 2002:a17:906:94e:b0:ac7:7e2c:68e9 with SMTP id
+ a640c23a62f3a-ac77e2c72ecmr169045266b.25.1743471050531; Mon, 31 Mar 2025
+ 18:30:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -66,14 +75,15 @@ References: <20250331143426.947281958@goodmis.org> <20250331143532.459810712@goo
  <20250331194251.02a4c238@gandalf.local.home> <CAG48ez3w0my4Rwttbc5tEbNsme6tc0mrSN95thjXUFaJ3aQ6SA@mail.gmail.com>
  <20250331210245.585fff23@gandalf.local.home>
 In-Reply-To: <20250331210245.585fff23@gandalf.local.home>
-From: Jann Horn <jannh@google.com>
-Date: Tue, 1 Apr 2025 03:28:20 +0200
-X-Gm-Features: AQ5f1JokqTzRkKiXuPKditTAiXHP1I8Yb_LJd1w5FZamGO9Sa0X64-0iuZtZY8I
-Message-ID: <CAG48ez1mZ4nq-_DXHqiHe8_tSX37DdcngnULqXQ71fFt0oQPyA@mail.gmail.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Mon, 31 Mar 2025 18:30:33 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wi=GNaLzNt5zjee6m9OHNvr=Sc1S-xsnS0cNMfdVp15hg@mail.gmail.com>
+X-Gm-Features: AQ5f1JqTHDgiJbxdZ1rnfePfFiTU7-9XsI1CRh3n0IspxIqnhuyKNGYHhQ9hJTY
+Message-ID: <CAHk-=wi=GNaLzNt5zjee6m9OHNvr=Sc1S-xsnS0cNMfdVp15hg@mail.gmail.com>
 Subject: Re: [PATCH v2 1/2] tracing: ring-buffer: Have the ring buffer code do
  the vmap of physical memory
 To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, 
+Cc: Jann Horn <jannh@google.com>, linux-kernel@vger.kernel.org, 
 	linux-trace-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, 
 	Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
 	Andrew Morton <akpm@linux-foundation.org>, Vincent Donnefort <vdonnefort@google.com>, 
@@ -81,102 +91,25 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org
 	Tony Luck <tony.luck@intel.com>, "Guilherme G. Piccoli" <gpiccoli@igalia.com>, 
 	linux-hardening@vger.kernel.org, Matthew Wilcox <willy@infradead.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 1, 2025 at 3:01=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org>=
- wrote:
-> On Tue, 1 Apr 2025 02:09:10 +0200
-> Jann Horn <jannh@google.com> wrote:
+On Mon, 31 Mar 2025 at 18:01, Steven Rostedt <rostedt@goodmis.org> wrote:
 >
-> > On Tue, Apr 1, 2025 at 1:41=E2=80=AFAM Steven Rostedt <rostedt@goodmis.=
-org> wrote:
-> > > On Mon, 31 Mar 2025 14:42:38 -0700
-> > > Linus Torvalds <torvalds@linux-foundation.org> wrote:
-> > >
-> > > > .. and *after* you've given it back to the memory allocator, and it
-> > > > gets allocated using the page allocators, at that point ahead and u=
-se
-> > > > 'struct page' as much as you want.
-> > > >
-> > > > Before that, don't. Even if it might work. Because you didn't alloc=
-ate
-> > > > it as a struct page, and for all you know it might be treated as a
-> > > > different hotplug memory zone or whatever when given back.
-> > >
-> > > Hmm, so if we need to map this memory to user space memory, then I ca=
-n't
-> > > use the method from this patch series, if I have to avoid struct page=
-.
-> > >
-> > > Should I then be using vm_iomap_memory() passing in the physical addr=
-ess?
-> >
-> > For mapping random physical memory ranges into userspace, we have
-> > helpers like remap_pfn_range() (the easy option, for use in an mmap
-> > handler, in case you want to want to map one contiguous physical
-> > region into userspace) and vmf_insert_pfn() (for use in a page fault
-> > handler, in case you want to map random physical pages into userspace
-> > on demand).
->
-> Note, I believe that Linus brought up the issue that because this physica=
-l
-> memory is not currently part of the memory allocator (it's not aware of i=
-t
+> Note, I believe that Linus brought up the issue that because this physical
+> memory is not currently part of the memory allocator (it's not aware of it
 > yet), that the getting struct page or a "pfn" for it may not be reliable.
 
-PFN mappings are specifically designed to work with memory that does
-not have "struct page":
+'pfn' is always reliable.
 
-#define VM_PFNMAP 0x00000400 /* Page-ranges managed without "struct
-page", just pure PFN */
+The pfn ('page frame number') is literally just the physical address
+expressed in 'page units', ie just shifted down by the page shift.
 
-> > > As for architectures that do not have user/kernel data cache coherenc=
-y, how
-> > > does one flush the page when there's an update on the kernel side so =
-that
-> > > the user side doesn't see stale data?
-> >
-> > flush_kernel_vmap_range() (and invalidate_kernel_vmap_range() for the
-> > other direction) might be what you want... I found those by going
-> > backwards from an arch-specific cache-flushing implementation.
-> >
-> > > As the code currently uses flush_dcache_folio(), I'm guessing there's=
- an
-> > > easy way to create a folio that points to physical memory that's not =
-part
-> > > of the memory allocator?
-> >
-> > Creating your own folio structs sounds like a bad idea; folio structs
-> > are supposed to be in specific kernel memory regions. For example,
-> > conversions from folio* to physical address can involve pointer
-> > arithmetic on the folio*, or they can involve reading members of the
-> > pointed-to folio.
->
-> Linus already mentioned flush_cache_range() which looks to be the thing t=
-o
-> use.
+So pfn and phys_addr_t are interchangeable when it comes to mapping
+pages. The pfn is in fact often the preferred form, because on 32-bit
+architectures a pfn is 32-bit, but a phys_addr_t is often 64-bit and
+generates extra code.
 
-It looks like flush_kernel_vmap_range() is used for flushing dcache
-for the kernel mapping, while flush_cache_range() is for flushing
-dcache/icache for the userspace mapping?
+I think 'pfn' was introduced as a name ong long ago because it was
+what the alpha architecture used in the VM documentation. It probably
+predates that too, but it's where I got it from, iirc.
 
-For example, on 32-bit arm, you might go down these paths, ending up
-in arch-specific functions that make it clear whether they're for the
-user side or the kernel side:
-
-flush_cache_range -> __cpuc_flush_user_range
-
-flush_kernel_vmap_range -> __cpuc_flush_dcache_area ->
-cpu_cache.flush_kern_dcache_area
-
-I think you probably need flushes on both sides, since you might have
-to first flush out the dirty cacheline you wrote through the kernel
-mapping, then discard the stale clean cacheline for the user mapping,
-or something like that? (Unless these VIVT cache architectures provide
-stronger guarantees on cache state than I thought.) But when you're
-adding data to the tracing buffers, I guess maybe you only want to
-flush the kernel mapping from the kernel, and leave flushing of the
-user mapping to userspace? I think if you're running in some random
-kernel context, you probably can't even reliably flush the right
-userspace context - see how for example vivt_flush_cache_range() does
-nothing if the MM being flushed is not running on the current CPU.
+              Linus
