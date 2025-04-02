@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37AEC78C91;
-	Wed,  2 Apr 2025 21:39:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88ABF155382;
+	Wed,  2 Apr 2025 21:59:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743629951; cv=none; b=Jd700IWr4GzrjztplhhdXdX2l20yNgjqrh55nW1GrTEEg719FkCNSIrJOyTsVcL7SVa8ecTpmgUhHqeVY8ZoEc9Ddp53nhcMZfo6h0xchDhfM7rMo/UnGTL6atM17+RiHTWatqhQL8sLU4jlEn464sRkzBsPdVERJD2G8V4SajA=
+	t=1743631142; cv=none; b=lbksnjWWcd1KC5nB8BBk+d8qmWpZ2Ek6jDgS/gfxa2JWOktWbKjNDDGzaNMkFX5URUjfPHbxJu8Qhmo42jVUi9N64OrJ1RNYiJMsICxzeHgTKX9GUHhDo8NP9gpCc6lZ4XA3ZevuqNxyOdUc+eYDhLUfQMJD4HMVDm8plTzGtS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743629951; c=relaxed/simple;
-	bh=TSUZ/BtivkLRiKLsU2XCL8Ugofa5D2b//TRkx+fWb90=;
+	s=arc-20240116; t=1743631142; c=relaxed/simple;
+	bh=0BXP9Sttv9k8REO+ljfXfz32urOtrGdhguS+/WAW0jA=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=QLkVgokIt+4yC+zGVavDIeaUulAB+KVZVgXKi0yZHp43aOrFNYd2Z0WjxZ9IWFdXsKWFlN1TieECixHn2Uurw+UTneAkiB+yLdsTUACFanAeIjQRTswxu59klGA6HCThwuikL2lEgbBrkkva5HYj/QPEPnd1f6Y9aS/Kf93i0u8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gd1zNfiK; arc=none smtp.client-ip=10.30.226.201
+	 Content-Disposition; b=me7tUOUa9s0ihOjDssAbpffeOIRbH07VcKARtkz+Uo6oVEvyANunE9TzyAbLZooQOvM6Xwj6mFhh6JTgPkkb/Rpv7RlqFAh2Mn+AyatG6pxhZve+rEyOt3+BaCAfcpVVbOA2mSk+BaoHa40l6v9h/Xz90vPvoqGPqDe71BQINEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hJJ3Qkza; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gd1zNfiK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7B5DC4CEEA;
-	Wed,  2 Apr 2025 21:39:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hJJ3Qkza"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31D46C4CEE7;
+	Wed,  2 Apr 2025 21:59:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743629950;
-	bh=TSUZ/BtivkLRiKLsU2XCL8Ugofa5D2b//TRkx+fWb90=;
+	s=k20201202; t=1743631142;
+	bh=0BXP9Sttv9k8REO+ljfXfz32urOtrGdhguS+/WAW0jA=;
 	h=Date:From:To:Cc:Subject:From;
-	b=Gd1zNfiK12s9/7C+9AiJxdL37Jazmrvm2NVQveKCMeStcTD8bdgZ4g5vPmXFMZfF4
-	 FHo9du/fzkGCwZ6RbnqQnnVAVTt+70lJqq33GWG6m8wnNDEJG0w9azwVqpdI0drjyN
-	 SX9I/vDWWXiKYFWADa0UgE06UZ6rTQpjCh+6YX3USklPSEWgm+OBqxTdVdy48yA4Rf
-	 VmUWYuaI3hNv7gHNaztS5eNgFmjMoxwKmtQV/qrGAnNbI+ja3b4L9wRCf89rBLRD4U
-	 MOqD3nKvhtoWRiyUN9WLal56LDporgVl4J9aJyQe6ORkhNHcgcwcZarkc6Qu7g2mr0
-	 tR8TzxA8/8sYw==
-Date: Wed, 2 Apr 2025 15:39:07 -0600
+	b=hJJ3QkzafMZCUvkyswDqA/xuoQh8r0ItuHa0MzoW9hLNxLeHxMNOLepDMEvRbuFjK
+	 dzXruQbPrWwfVhR5i7NbG4yFlAGY5DIPQVgjAHJs53QufguQk3K5e/09zZIAXh8FlH
+	 40yg3pn5v2t2640k760GjlbyhPmc9LqTsgkjLb4LzjQUfeb7jJx7w+fpiyvzCIj3To
+	 JzDzg+uUg7aNOXzPWwxPqgmYgKCAcQVWmb8D7y2yMBGp5SKFKQwotMloIxi2yCNVr3
+	 /4+gxZntVCiUCrgU87AxoAcxtc3aN81LwpQkffEgrkWk7QLx9mdEwmYb9NmbScgw+A
+	 m81lgmgcuhN6Q==
+Date: Wed, 2 Apr 2025 15:58:59 -0600
 From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
 To: Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>,
 	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
@@ -34,9 +34,9 @@ Cc: dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] drm/nouveau: svm: Avoid -Wflex-array-member-not-at-end
- warning
-Message-ID: <Z-2uezeHt1aaHH6x@kspp>
+Subject: [PATCH v2][next] drm/nouveau: disp: Avoid
+ -Wflex-array-member-not-at-end warning
+Message-ID: <Z-2zI55Qf88jTfNK@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -56,100 +56,73 @@ accordingly.
 
 So, with these changes, fix the following warning:
 
-drivers/gpu/drm/nouveau/nouveau_svm.c:724:44: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/gpu/drm/nouveau/dispnv50/disp.c:779:47: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nouveau_svm.c | 39 +++++++++++++--------------
- 1 file changed, 18 insertions(+), 21 deletions(-)
+Changes in v2:
+ - Calculate the size of `data[]` using ` __struct_size(args) - sizeof(*args)`.
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_svm.c b/drivers/gpu/drm/nouveau/nouveau_svm.c
-index e12e2596ed84..6fa387da0637 100644
---- a/drivers/gpu/drm/nouveau/nouveau_svm.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_svm.c
-@@ -720,10 +720,7 @@ nouveau_svm_fault(struct work_struct *work)
- 	struct nouveau_svm *svm = container_of(buffer, typeof(*svm), buffer[buffer->id]);
- 	struct nvif_object *device = &svm->drm->client.device.object;
- 	struct nouveau_svmm *svmm;
+v1:
+ - Link: https://lore.kernel.org/linux-hardening/ZsZLFS1CsHkKjw+C@elsanto/
+
+ drivers/gpu/drm/nouveau/dispnv50/disp.c | 20 +++++++++-----------
+ 1 file changed, 9 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/gpu/drm/nouveau/dispnv50/disp.c b/drivers/gpu/drm/nouveau/dispnv50/disp.c
+index 504cb3f2054b..725331638a15 100644
+--- a/drivers/gpu/drm/nouveau/dispnv50/disp.c
++++ b/drivers/gpu/drm/nouveau/dispnv50/disp.c
+@@ -775,10 +775,8 @@ nv50_hdmi_enable(struct drm_encoder *encoder, struct nouveau_crtc *nv_crtc,
+ 	union hdmi_infoframe infoframe = { 0 };
+ 	const u8 rekey = 56; /* binary driver, and tegra, constant */
+ 	u32 max_ac_packet;
 -	struct {
--		struct nouveau_pfnmap_args i;
--		u64 phys[1];
--	} args;
-+	DEFINE_RAW_FLEX(struct nouveau_pfnmap_args, args, p.phys, 1);
- 	unsigned long hmm_flags;
- 	u64 inst, start, limit;
- 	int fi, fn;
-@@ -772,11 +769,11 @@ nouveau_svm_fault(struct work_struct *work)
- 	mutex_unlock(&svm->mutex);
+-		struct nvif_outp_infoframe_v0 infoframe;
+-		u8 data[17];
+-	} args = { 0 };
++	DEFINE_RAW_FLEX(struct nvif_outp_infoframe_v0, args, data, 17);
++	const u8 data_len = __struct_size(args) - sizeof(*args);
+ 	int ret, size;
  
- 	/* Process list of faults. */
--	args.i.i.version = 0;
--	args.i.i.type = NVIF_IOCTL_V0_MTHD;
--	args.i.m.version = 0;
--	args.i.m.method = NVIF_VMM_V0_PFNMAP;
--	args.i.p.version = 0;
-+	args->i.version = 0;
-+	args->i.type = NVIF_IOCTL_V0_MTHD;
-+	args->m.version = 0;
-+	args->m.method = NVIF_VMM_V0_PFNMAP;
-+	args->p.version = 0;
+ 	max_ac_packet  = mode->htotal - mode->hdisplay;
+@@ -815,29 +813,29 @@ nv50_hdmi_enable(struct drm_encoder *encoder, struct nouveau_crtc *nv_crtc,
+ 		return;
  
- 	for (fi = 0; fn = fi + 1, fi < buffer->fault_nr; fi = fn) {
- 		struct svm_notifier notifier;
-@@ -802,9 +799,9 @@ nouveau_svm_fault(struct work_struct *work)
- 		 * fault window, determining required pages and access
- 		 * permissions based on pending faults.
- 		 */
--		args.i.p.addr = start;
--		args.i.p.page = PAGE_SHIFT;
--		args.i.p.size = PAGE_SIZE;
-+		args->p.addr = start;
-+		args->p.page = PAGE_SHIFT;
-+		args->p.size = PAGE_SIZE;
- 		/*
- 		 * Determine required permissions based on GPU fault
- 		 * access flags.
-@@ -832,16 +829,16 @@ nouveau_svm_fault(struct work_struct *work)
+ 	/* AVI InfoFrame. */
+-	args.infoframe.version = 0;
+-	args.infoframe.head = nv_crtc->index;
++	args->version = 0;
++	args->head = nv_crtc->index;
  
- 		notifier.svmm = svmm;
- 		if (atomic)
--			ret = nouveau_atomic_range_fault(svmm, svm->drm,
--							 &args.i, sizeof(args),
-+			ret = nouveau_atomic_range_fault(svmm, svm->drm, args,
-+							 __struct_size(args),
- 							 &notifier);
- 		else
--			ret = nouveau_range_fault(svmm, svm->drm, &args.i,
--						  sizeof(args), hmm_flags,
--						  &notifier);
-+			ret = nouveau_range_fault(svmm, svm->drm, args,
-+						  __struct_size(args),
-+						  hmm_flags, &notifier);
- 		mmput(mm);
+ 	if (!drm_hdmi_avi_infoframe_from_display_mode(&infoframe.avi, &nv_connector->base, mode)) {
+ 		drm_hdmi_avi_infoframe_quant_range(&infoframe.avi, &nv_connector->base, mode,
+ 						   HDMI_QUANTIZATION_RANGE_FULL);
  
--		limit = args.i.p.addr + args.i.p.size;
-+		limit = args->p.addr + args->p.size;
- 		for (fn = fi; ++fn < buffer->fault_nr; ) {
- 			/* It's okay to skip over duplicate addresses from the
- 			 * same SVMM as faults are ordered by access type such
-@@ -855,14 +852,14 @@ nouveau_svm_fault(struct work_struct *work)
- 			if (buffer->fault[fn]->svmm != svmm ||
- 			    buffer->fault[fn]->addr >= limit ||
- 			    (buffer->fault[fi]->access == FAULT_ACCESS_READ &&
--			     !(args.phys[0] & NVIF_VMM_PFNMAP_V0_V)) ||
-+			     !(args->p.phys[0] & NVIF_VMM_PFNMAP_V0_V)) ||
- 			    (buffer->fault[fi]->access != FAULT_ACCESS_READ &&
- 			     buffer->fault[fi]->access != FAULT_ACCESS_PREFETCH &&
--			     !(args.phys[0] & NVIF_VMM_PFNMAP_V0_W)) ||
-+			     !(args->p.phys[0] & NVIF_VMM_PFNMAP_V0_W)) ||
- 			    (buffer->fault[fi]->access != FAULT_ACCESS_READ &&
- 			     buffer->fault[fi]->access != FAULT_ACCESS_WRITE &&
- 			     buffer->fault[fi]->access != FAULT_ACCESS_PREFETCH &&
--			     !(args.phys[0] & NVIF_VMM_PFNMAP_V0_A)))
-+			     !(args->p.phys[0] & NVIF_VMM_PFNMAP_V0_A)))
- 				break;
- 		}
+-		size = hdmi_infoframe_pack(&infoframe, args.data, ARRAY_SIZE(args.data));
++		size = hdmi_infoframe_pack(&infoframe, args->data, data_len);
+ 	} else {
+ 		size = 0;
+ 	}
  
+-	nvif_outp_infoframe(&nv_encoder->outp, NVIF_OUTP_INFOFRAME_V0_AVI, &args.infoframe, size);
++	nvif_outp_infoframe(&nv_encoder->outp, NVIF_OUTP_INFOFRAME_V0_AVI, args, size);
+ 
+ 	/* Vendor InfoFrame. */
+-	memset(&args.data, 0, sizeof(args.data));
++	memset(args->data, 0, data_len);
+ 	if (!drm_hdmi_vendor_infoframe_from_display_mode(&infoframe.vendor.hdmi,
+ 							 &nv_connector->base, mode))
+-		size = hdmi_infoframe_pack(&infoframe, args.data, ARRAY_SIZE(args.data));
++		size = hdmi_infoframe_pack(&infoframe, args->data, data_len);
+ 	else
+ 		size = 0;
+ 
+-	nvif_outp_infoframe(&nv_encoder->outp, NVIF_OUTP_INFOFRAME_V0_VSI, &args.infoframe, size);
++	nvif_outp_infoframe(&nv_encoder->outp, NVIF_OUTP_INFOFRAME_V0_VSI, args, size);
+ 
+ 	nv_encoder->hdmi.enabled = true;
+ }
 -- 
 2.43.0
 
