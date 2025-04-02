@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50CA41E5B81;
-	Wed,  2 Apr 2025 21:28:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37AEC78C91;
+	Wed,  2 Apr 2025 21:39:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743629295; cv=none; b=A4/waHwbH0SuOF/igfXrBoa+xZLH9bb3gXIpg2sqEpqOIlQaYMUP9x6N10ZspyYJi3cbCTLfzVdFPUGSAfJlhXxdKMMPk8msZgxghiqzC5vYhJFrKnoSViaKSfv6CsjDojnl9y4C+FwgKIk7WptgcE4t6G1+nwolQWGml+Lowe0=
+	t=1743629951; cv=none; b=Jd700IWr4GzrjztplhhdXdX2l20yNgjqrh55nW1GrTEEg719FkCNSIrJOyTsVcL7SVa8ecTpmgUhHqeVY8ZoEc9Ddp53nhcMZfo6h0xchDhfM7rMo/UnGTL6atM17+RiHTWatqhQL8sLU4jlEn464sRkzBsPdVERJD2G8V4SajA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743629295; c=relaxed/simple;
-	bh=edoE/fK+KmO0AzWK9X+Xgit4xLYc3fFhZlCsJwvyiRU=;
+	s=arc-20240116; t=1743629951; c=relaxed/simple;
+	bh=TSUZ/BtivkLRiKLsU2XCL8Ugofa5D2b//TRkx+fWb90=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=kHWpWiGq4sWVrWI37yUHCUA+g7dQuBr+aIDIlTr6ctP3eTwttZ0f9Z6dplfqA5ClL6cv9kerXG1yreXqhDELB6/9tw3f0zsFl1+rKqoNDQVJaSo7kfRTmpZfLbRPEuyO89i2l4XvW5gTtXxRMR1j6339OxDwNxBhQ2AJlczZ6/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l9r5rKkw; arc=none smtp.client-ip=10.30.226.201
+	 Content-Disposition; b=QLkVgokIt+4yC+zGVavDIeaUulAB+KVZVgXKi0yZHp43aOrFNYd2Z0WjxZ9IWFdXsKWFlN1TieECixHn2Uurw+UTneAkiB+yLdsTUACFanAeIjQRTswxu59klGA6HCThwuikL2lEgbBrkkva5HYj/QPEPnd1f6Y9aS/Kf93i0u8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gd1zNfiK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l9r5rKkw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B0FAC4CEDD;
-	Wed,  2 Apr 2025 21:28:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gd1zNfiK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7B5DC4CEEA;
+	Wed,  2 Apr 2025 21:39:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743629295;
-	bh=edoE/fK+KmO0AzWK9X+Xgit4xLYc3fFhZlCsJwvyiRU=;
+	s=k20201202; t=1743629950;
+	bh=TSUZ/BtivkLRiKLsU2XCL8Ugofa5D2b//TRkx+fWb90=;
 	h=Date:From:To:Cc:Subject:From;
-	b=l9r5rKkwKXMDgDonLXJhU/RXDikac5iGeGe6sv1yJU/fqWy0dwFET+1Ia+sbagjUP
-	 aSG/ZG9F+plRRsxUQSekXRJYyyw7WwKhtaeqF081yR/BoNjKTygLvwMtOIGdrMEsIu
-	 RDcHMLf6IebIlpocFJvcj5ZY2j4k2pQ4hxwkqLe1UMkWEGaHSMC0n6LsIbVd79aZ/h
-	 BIajfah/T/vGmBEFINBju4lmthals0IJKs2ExqzQNVbn5lZ05PDMoAA/PhSicoH754
-	 MHXobs2hylEx0SE5GzRmGICUoNl9oXECgmlsq+dZB0B+PKA8veIIlURAwg3wJAL47p
-	 V9I2HZPNdGlTQ==
-Date: Wed, 2 Apr 2025 15:28:10 -0600
+	b=Gd1zNfiK12s9/7C+9AiJxdL37Jazmrvm2NVQveKCMeStcTD8bdgZ4g5vPmXFMZfF4
+	 FHo9du/fzkGCwZ6RbnqQnnVAVTt+70lJqq33GWG6m8wnNDEJG0w9azwVqpdI0drjyN
+	 SX9I/vDWWXiKYFWADa0UgE06UZ6rTQpjCh+6YX3USklPSEWgm+OBqxTdVdy48yA4Rf
+	 VmUWYuaI3hNv7gHNaztS5eNgFmjMoxwKmtQV/qrGAnNbI+ja3b4L9wRCf89rBLRD4U
+	 MOqD3nKvhtoWRiyUN9WLal56LDporgVl4J9aJyQe6ORkhNHcgcwcZarkc6Qu7g2mr0
+	 tR8TzxA8/8sYw==
+Date: Wed, 2 Apr 2025 15:39:07 -0600
 From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
 To: Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>,
 	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
@@ -34,9 +34,9 @@ Cc: dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] drm/nouveau: fence: Avoid
- -Wflex-array-member-not-at-end warning
-Message-ID: <Z-2r6v-Cji7vwOsz@kspp>
+Subject: [PATCH][next] drm/nouveau: svm: Avoid -Wflex-array-member-not-at-end
+ warning
+Message-ID: <Z-2uezeHt1aaHH6x@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -56,48 +56,100 @@ accordingly.
 
 So, with these changes, fix the following warning:
 
-drivers/gpu/drm/nouveau/nouveau_fence.c:188:38: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/gpu/drm/nouveau/nouveau_svm.c:724:44: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nouveau_fence.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ drivers/gpu/drm/nouveau/nouveau_svm.c | 39 +++++++++++++--------------
+ 1 file changed, 18 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_fence.c b/drivers/gpu/drm/nouveau/nouveau_fence.c
-index 7cc84472cece..7622587f149e 100644
---- a/drivers/gpu/drm/nouveau/nouveau_fence.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_fence.c
-@@ -184,10 +184,10 @@ nouveau_fence_context_new(struct nouveau_channel *chan, struct nouveau_fence_cha
- 	struct nouveau_cli *cli = chan->cli;
- 	struct nouveau_drm *drm = cli->drm;
- 	struct nouveau_fence_priv *priv = (void*)drm->fence;
+diff --git a/drivers/gpu/drm/nouveau/nouveau_svm.c b/drivers/gpu/drm/nouveau/nouveau_svm.c
+index e12e2596ed84..6fa387da0637 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_svm.c
++++ b/drivers/gpu/drm/nouveau/nouveau_svm.c
+@@ -720,10 +720,7 @@ nouveau_svm_fault(struct work_struct *work)
+ 	struct nouveau_svm *svm = container_of(buffer, typeof(*svm), buffer[buffer->id]);
+ 	struct nvif_object *device = &svm->drm->client.device.object;
+ 	struct nouveau_svmm *svmm;
 -	struct {
--		struct nvif_event_v0 base;
--		struct nvif_chan_event_v0 host;
+-		struct nouveau_pfnmap_args i;
+-		u64 phys[1];
 -	} args;
-+	DEFINE_RAW_FLEX(struct nvif_event_v0, args, data,
-+			sizeof(struct nvif_chan_event_v0));
-+	struct nvif_chan_event_v0 *host =
-+				(struct nvif_chan_event_v0 *)args->data;
- 	int ret;
++	DEFINE_RAW_FLEX(struct nouveau_pfnmap_args, args, p.phys, 1);
+ 	unsigned long hmm_flags;
+ 	u64 inst, start, limit;
+ 	int fi, fn;
+@@ -772,11 +769,11 @@ nouveau_svm_fault(struct work_struct *work)
+ 	mutex_unlock(&svm->mutex);
  
- 	INIT_WORK(&fctx->uevent_work, nouveau_fence_uevent_work);
-@@ -207,12 +207,12 @@ nouveau_fence_context_new(struct nouveau_channel *chan, struct nouveau_fence_cha
- 	if (!priv->uevent)
- 		return;
+ 	/* Process list of faults. */
+-	args.i.i.version = 0;
+-	args.i.i.type = NVIF_IOCTL_V0_MTHD;
+-	args.i.m.version = 0;
+-	args.i.m.method = NVIF_VMM_V0_PFNMAP;
+-	args.i.p.version = 0;
++	args->i.version = 0;
++	args->i.type = NVIF_IOCTL_V0_MTHD;
++	args->m.version = 0;
++	args->m.method = NVIF_VMM_V0_PFNMAP;
++	args->p.version = 0;
  
--	args.host.version = 0;
--	args.host.type = NVIF_CHAN_EVENT_V0_NON_STALL_INTR;
-+	host->version = 0;
-+	host->type = NVIF_CHAN_EVENT_V0_NON_STALL_INTR;
+ 	for (fi = 0; fn = fi + 1, fi < buffer->fault_nr; fi = fn) {
+ 		struct svm_notifier notifier;
+@@ -802,9 +799,9 @@ nouveau_svm_fault(struct work_struct *work)
+ 		 * fault window, determining required pages and access
+ 		 * permissions based on pending faults.
+ 		 */
+-		args.i.p.addr = start;
+-		args.i.p.page = PAGE_SHIFT;
+-		args.i.p.size = PAGE_SIZE;
++		args->p.addr = start;
++		args->p.page = PAGE_SHIFT;
++		args->p.size = PAGE_SIZE;
+ 		/*
+ 		 * Determine required permissions based on GPU fault
+ 		 * access flags.
+@@ -832,16 +829,16 @@ nouveau_svm_fault(struct work_struct *work)
  
- 	ret = nvif_event_ctor(&chan->user, "fenceNonStallIntr", (chan->runlist << 16) | chan->chid,
- 			      nouveau_fence_wait_uevent_handler, false,
--			      &args.base, sizeof(args), &fctx->event);
-+			      args, __struct_size(args), &fctx->event);
+ 		notifier.svmm = svmm;
+ 		if (atomic)
+-			ret = nouveau_atomic_range_fault(svmm, svm->drm,
+-							 &args.i, sizeof(args),
++			ret = nouveau_atomic_range_fault(svmm, svm->drm, args,
++							 __struct_size(args),
+ 							 &notifier);
+ 		else
+-			ret = nouveau_range_fault(svmm, svm->drm, &args.i,
+-						  sizeof(args), hmm_flags,
+-						  &notifier);
++			ret = nouveau_range_fault(svmm, svm->drm, args,
++						  __struct_size(args),
++						  hmm_flags, &notifier);
+ 		mmput(mm);
  
- 	WARN_ON(ret);
- }
+-		limit = args.i.p.addr + args.i.p.size;
++		limit = args->p.addr + args->p.size;
+ 		for (fn = fi; ++fn < buffer->fault_nr; ) {
+ 			/* It's okay to skip over duplicate addresses from the
+ 			 * same SVMM as faults are ordered by access type such
+@@ -855,14 +852,14 @@ nouveau_svm_fault(struct work_struct *work)
+ 			if (buffer->fault[fn]->svmm != svmm ||
+ 			    buffer->fault[fn]->addr >= limit ||
+ 			    (buffer->fault[fi]->access == FAULT_ACCESS_READ &&
+-			     !(args.phys[0] & NVIF_VMM_PFNMAP_V0_V)) ||
++			     !(args->p.phys[0] & NVIF_VMM_PFNMAP_V0_V)) ||
+ 			    (buffer->fault[fi]->access != FAULT_ACCESS_READ &&
+ 			     buffer->fault[fi]->access != FAULT_ACCESS_PREFETCH &&
+-			     !(args.phys[0] & NVIF_VMM_PFNMAP_V0_W)) ||
++			     !(args->p.phys[0] & NVIF_VMM_PFNMAP_V0_W)) ||
+ 			    (buffer->fault[fi]->access != FAULT_ACCESS_READ &&
+ 			     buffer->fault[fi]->access != FAULT_ACCESS_WRITE &&
+ 			     buffer->fault[fi]->access != FAULT_ACCESS_PREFETCH &&
+-			     !(args.phys[0] & NVIF_VMM_PFNMAP_V0_A)))
++			     !(args->p.phys[0] & NVIF_VMM_PFNMAP_V0_A)))
+ 				break;
+ 		}
+ 
 -- 
 2.43.0
 
