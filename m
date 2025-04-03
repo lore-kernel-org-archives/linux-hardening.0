@@ -1,81 +1,107 @@
-Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A711233993;
-	Thu,  3 Apr 2025 05:56:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 547FE194AC7;
+	Thu,  3 Apr 2025 06:00:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743659786; cv=none; b=V9tP1ulbQpDhHPnJFGVDL5ZTGeixmaf0clBnG8IW+AHR+cQEVIvi53GIeYXnTGBVYtlJ5kyN+EKW82EVdad73du1qy7Z6PXORxM7Hq335RfXpxQKyB0cWP9BFbWObKm3otatp70a1iPD53IQwCRCfVYbEFOIuPtZxJDP2zAbgUo=
+	t=1743660018; cv=none; b=TLbo4a+GIwNIBooaQ7PEiagHHHwKGvkhML4PnGOP4Myl+1jALlYY9mcktQ33fIOzk8wR8F+ghxAZDFUqI6oVanC/NaaIlg8oJ8ObGGQ44x3m7EvDjtwAgAQlLI7WwJnz7OCdL9DnNddc9oqD1WVq8yQbXHLGue93Ddj5tutR/MQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743659786; c=relaxed/simple;
-	bh=e+hB6TfsNEWsOBfPe7+0Du59DxYe84XYO03aEf1oq2w=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=NkUKydCDz8y2PS//QGU1yGnHdM9lES9B2qunYT6WPN9lN7GYYffPVPjEp/KulGj12osIvJTyLNsm0Wq4k0+60lyT/frkTpD0miIuqTtg14nq2mlSrYrBr9IlEg6FUrxjPUtaFUrhKn58E9H35+ldNqOlYgFWPK660OEQebI6h4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=YeCqwMTk; arc=none smtp.client-ip=203.29.241.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
+	s=arc-20240116; t=1743660018; c=relaxed/simple;
+	bh=GgGLK/JKAFdo0H9wSAMZLdeL31KlQxn4teieuzIC7e4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=KQRf57wG6QAS086LUr/ASYY18toHeX8UZcOV4K9vhuX2FaIU5uDq+HWldBKi3UEIlytLHlLibOzPELOidmj70RCHSybRLHxnigA2gZM5oFEA8gcA14bpSM2PjKtinmUqyKeqdFEFdNqk4r5mYN8F/cBoBTpeigHxSqoV7tdrMhw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=gdYF5TZd; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="YeCqwMTk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=codeconstruct.com.au; s=2022a; t=1743659775;
-	bh=e+hB6TfsNEWsOBfPe7+0Du59DxYe84XYO03aEf1oq2w=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=YeCqwMTkAaEXEzG3fK/V5nJFzmxl3eQwO96YkjdDajs7/4XBWpWWkpkVQreFkpou1
-	 nVMQFT9n7e2USYGg8wPzyjE3Z6I+DQ67V6uubhy/NZ1HPGIEvUJ3e2trugUKOj0z+J
-	 SbR4yaIks8jZJI7qZ4qENCQG1aLlcO/Jug21dgd/emU8StBtjUuCeRcj6N38rqK4EQ
-	 7BOPvqng/pk6T5qmR3zdUTwCuSdj330tEgtjfGzM/ajK02F+g615g7YpTVMG3jP9Sd
-	 HB40N5nrMRjJM21CtMtB0gdfFlpL7fYPvP13O0kKRL8B4X/aILvW8g+iqpeJG+yzm+
-	 GofwYelTCS5NQ==
-Received: from [192.168.68.112] (unknown [180.150.112.225])
-	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 60B3C7B352;
-	Thu,  3 Apr 2025 13:56:12 +0800 (AWST)
-Message-ID: <ca1f5dc3d0dd53dfe6abd9d6bea98838980f0840.camel@codeconstruct.com.au>
-Subject: Re: [PATCH v5 1/2] dt-bindings: arm: aspeed: add Nvidia's GB200NVL
- BMC
-From: Andrew Jeffery <andrew@codeconstruct.com.au>
-To: Krzysztof Kozlowski <krzk@kernel.org>, Willie Thai <wthai@nvidia.com>, 
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, joel@jms.id.au, 
-	kees@kernel.org, tony.luck@intel.com, gpiccoli@igalia.com, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, openbmc@lists.ozlabs.org
-Cc: leohu@nvidia.com, tingkaic@nvidia.com, dkodihalli@nvidia.com, Mars Yang
-	 <maryang@nvidia.com>
-Date: Thu, 03 Apr 2025 16:26:11 +1030
-In-Reply-To: <f563b33e-f552-4a3c-bb45-6b7add876fdd@kernel.org>
-References: <20250401153955.314860-1-wthai@nvidia.com>
-	 <20250401153955.314860-2-wthai@nvidia.com>
-	 <f563b33e-f552-4a3c-bb45-6b7add876fdd@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="gdYF5TZd"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:Message-ID:Subject:Cc:To:
+	From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:References:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=5NwkqZuewG0v34YS2DSouf6H/+kIB+PU0H+C6MMnpBo=; b=gdYF5TZdvGh9Vwsn8O2FKNpeb4
+	UQ9rL8LYkC1s+dWDW0+bG+nYwSBEtkWifq11PtQTeIqvCmHfYpJxJDSH1io13BwcPqWxuWpankDqV
+	tXKofZLYSY1EPbR4v05KKktU6v3q2KLPBSqRosSSQlw+HHBIxa+m+yguVd2X6zqrAosfc0BBcPOTx
+	5//aIrcnM3WkGfnOT7CXJ1zGO+o9JSMciu/zMwEgbipJ6EeoDL/s3oPx6aOpgLD1EiQwXuolAGaER
+	THtitDTc94QXgCbx0U9wxtEroTG9WFv5eCImTRBuv12jshe42t/8SqoDuCrhSk6dxi32GUnxjgZ76
+	orbc10aQ==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1u0Dc4-00COSZ-0p;
+	Thu, 03 Apr 2025 13:59:41 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Thu, 03 Apr 2025 13:59:40 +0800
+Date: Thu, 3 Apr 2025 13:59:40 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: rostedt@goodmis.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, mhiramat@kernel.org,
+	mark.rutland@arm.com, mathieu.desnoyers@efficios.com,
+	akpm@linux-foundation.org, vdonnefort@google.com, vbabka@suse.cz,
+	rppt@kernel.org, kees@kernel.org, tony.luck@intel.com,
+	gpiccoli@igalia.com, linux-hardening@vger.kernel.org,
+	willy@infradead.org, Eric Biggers <ebiggers@kernel.org>,
+	Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [PATCH v2 1/2] tracing: ring-buffer: Have the ring buffer code
+ do the vmap of physical memory
+Message-ID: <Z-4jzImykAbHK2Gz@gondor.apana.org.au>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wg0wQb+CbUk2GY0CeVuTQvq67-oYR0nL8wGgySia3ce7g@mail.gmail.com>
+X-Newsgroups: apana.lists.os.linux.kernel
 
-On Tue, 2025-04-01 at 17:51 +0200, Krzysztof Kozlowski wrote:
-> On 01/04/2025 17:39, Willie Thai wrote:
-> > Add Nvidia's=C2=A0 GB200NVL BMC board compatible.
-> >=20
-> > Co-developed-by: Mars Yang <maryang@nvidia.com>
-> > Signed-off-by: Mars Yang <maryang@nvidia.com>
-> > Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
->=20
-> Why are you faking tags/email addresses? Read carefully submitting
-> patches. I really suggest using b4 instead of manually editing
-> things.
-> And if you decide for manual way, you must never, *never* edit
-> people's
-> tag. You can only copy and paste it.
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
+>
+> There's a flush_dcache_range() thing too, but I don't see a single use
+> of that function in generic code, so I suspect that one is currently
+> purely for architecture-specific drivers and doesn't work in egneral.
+> 
+> So *this* is the kind of "bad in a different way" I could imagine:
+> things that probably should be cleaned up and be available to generic
+> code, but very few people have cared, and so they are used in ad-hoc
+> places and haven't been sufficiently generalized and cleaned up.
 
-I've applied the series, fixing the tag in the process, along with the
-line-wrapping of the commit message in the second patch.
+There is no fallback implementation of flush_dcache_range for the
+architectures that don't need it.
 
-Willie: scripts/checkpatch.pl warns of some of these things. Please
-make sure to use it in the future, or if you adopt b4 as Krzysztof
-suggests, use `b4 prep --check`.
+It would be nice to have that, as doing it by hand is pretty silly:
 
-Andrew
+static inline void scatterwalk_done_dst(struct scatter_walk *walk,
+					unsigned int nbytes)
+{
+	scatterwalk_unmap(walk);
+	/*
+	 * Explicitly check ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE instead of just
+	 * relying on flush_dcache_page() being a no-op when not implemented,
+	 * since otherwise the BUG_ON in sg_page() does not get optimized out.
+	 * This also avoids having to consider whether the loop would get
+	 * reliably optimized out or not.
+	 */
+	if (ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE) {
+		struct page *base_page;
+		unsigned int offset;
+		int start, end, i;
+
+		base_page = sg_page(walk->sg);
+		offset = walk->offset;
+		start = offset >> PAGE_SHIFT;
+		end = start + (nbytes >> PAGE_SHIFT);
+		end += (offset_in_page(offset) + offset_in_page(nbytes) +
+			PAGE_SIZE - 1) >> PAGE_SHIFT;
+		for (i = start; i < end; i++)
+			flush_dcache_page(nth_page(base_page, i));
+	}
+
+Cheers,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
