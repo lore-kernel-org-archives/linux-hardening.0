@@ -1,89 +1,95 @@
-Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A09B21F2377;
-	Wed,  2 Apr 2025 23:23:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7111F163
+	for <linux-hardening@vger.kernel.org>; Thu,  3 Apr 2025 00:08:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743636221; cv=none; b=QumObWdl9LTVEJX+2iQh1g9cTA+jBN/vq9bdmWVyc7I3p1aJkWcSCVgCCjJAHibcEz/HkXv3q2fxL9PcZN6eKxMtouss4Svvyb4pGenXRN3hmU4CadBAj7hrjgy5cE1STPNV87yD/cdfyDhm7eJ1em0I54BT0stoU4YqL3GLjK0=
+	t=1743638920; cv=none; b=kra8QPW6A6LQ5i0Kcs/9TvhKP07K+foCeRXn6CpKCUf/bsgseQdsgeoHNGCBIzdMo5hB1Vi0vpaAexizfHuWEf0yixsROJZCted3AumY3jI/W374E/gzjm9JVqAMpCdd1/8dDzlm7nVT3SWWaCIxEWH/c5+5ijTwRSc98EPZ+r8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743636221; c=relaxed/simple;
-	bh=jarzM8bV+gfpjOb7MSUI3rF4XdVi+5ZvGMZgQtIhcWA=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=EYPosuSbCfBWiiyRNqWbrryWdYZ0wjyc4UU2wCwBAsoK5Y/wLuIfI7fC/0ZfsLvBJ4mRyslDiqd0bl+rV+X31TNaVrZ03VL7SgZDrLc69IJU2fr7XNhj2NbRClTnePqLFSpCaYc4RWI7sb9Lgp0A6kS9CFjyLhFOqi7R/4OJw+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
-Received: by angie.orcam.me.uk (Postfix, from userid 500)
-	id 406FC92009C; Thu,  3 Apr 2025 01:23:31 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by angie.orcam.me.uk (Postfix) with ESMTP id 31C1492009B;
-	Thu,  3 Apr 2025 00:23:31 +0100 (BST)
-Date: Thu, 3 Apr 2025 00:23:31 +0100 (BST)
-From: "Maciej W. Rozycki" <macro@orcam.me.uk>
-To: Alejandro Colomar <alx@kernel.org>
-cc: Alex Elder <elder@riscstar.com>, Kees Cook <kees@kernel.org>, 
-    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-    Azeem Shaikh <azeemshaikh38@gmail.com>, Alex Elder <elder@kernel.org>, 
-    Sumit Garg <sumit.garg@kernel.org>, linux-kernel@vger.kernel.org, 
-    linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] EISA: Increase length of device names
-In-Reply-To: <y5hkfx6tld2khsv2rb7w3k5hlkhfjfn7ndwwj5g75hkdebvjat@mypbmvg5brfi>
-Message-ID: <alpine.DEB.2.21.2504021652130.53907@angie.orcam.me.uk>
-References: <20250310222424.work.107-kees@kernel.org> <3c6bc732-bd90-4a29-bcbc-f545b0ed79ad@riscstar.com> <y5hkfx6tld2khsv2rb7w3k5hlkhfjfn7ndwwj5g75hkdebvjat@mypbmvg5brfi>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+	s=arc-20240116; t=1743638920; c=relaxed/simple;
+	bh=hTAzDrPsZKafbecdYqshErtWX+i2KvAc7ypCbGygK2o=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=AAvHyH7TBCMu3ikF0j+J2G5d6dz75XAO3c/G9nrsYkXYI4Tc8UIqIpN27adlO2D4E8DFmlaZX55t8tCRS364pzRialx1jqvMy6HPZlYaPe6BPC4kmFEOy5Jz3EQPExHV3YTtLqxkMnYCpdDW5hdhruF8ZXSggpO/rUDD4q4vZxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--pcc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rA2LcBhH; arc=none smtp.client-ip=209.85.215.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--pcc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rA2LcBhH"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-af8d8e0689eso377428a12.2
+        for <linux-hardening@vger.kernel.org>; Wed, 02 Apr 2025 17:08:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1743638917; x=1744243717; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=D5lR/rBMuVOIoUwLH4/co+le8IOHRMi1RqbQlc2/Z8Y=;
+        b=rA2LcBhHshk/J3K/0DDG1sWrivwtO8jN1BdI0Xbe7lUnSSV9tmYamXFGFrr9Mcb76k
+         RfNjSJIImgwgoHRcvq9Yct88cHdTVclYes9rgzhHgU+7mJtwdqYOSCzLmposHtFumDHu
+         NOVsZJz/g2Bl2qfCk/voagVlJpo+iE4PliQudJCUef0igSxAYZt3lzHNLqYKYxiVYWGK
+         yA7ywRZ/pAMDvTu2U7cha+JFhy8ApRU30pCn3Leind0YEwp2M82JY6XKQqun7ZRrfbpg
+         RhlSBRaOWT0ltu0V06+QiB39yop5l4IuHArjuTulZTVZrK1Tq50f0grQpq84eAT8+geM
+         Nbhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743638917; x=1744243717;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=D5lR/rBMuVOIoUwLH4/co+le8IOHRMi1RqbQlc2/Z8Y=;
+        b=mgNQbtET9gPWKWqlQnQNqqpy91b8Itc1k5AG08ZQutFaoUw3Nzl7okx7jiaIIuOaFv
+         CyS7pnl2cj/veVRbMxA/YuSKH7KO9HICwRCx9W+n1MY/YtHROAl+VXepXrvJ+/Mf5dmF
+         ACB9A6cYsqceJDAYj5LDAen87bfHU3oh0LPfXFJdRcT3hDeQqqbcTPcxTuGVPLYKp/ml
+         HhVG8c5oGU91IDxChX34PEWHXTUN1mARU5RlmzHDeCPHApa73MVQj7yWv6LSQ31j9iCM
+         bovmI33mwMxp8G5KPOi1YJgKLhkqbiMhdBUt0gjzcW+S+7gTH184UahFvqIDjhc42Mjc
+         eeCA==
+X-Forwarded-Encrypted: i=1; AJvYcCWz9C1YSDdMBLOpHuzmU+GvL7g+c1nJbF2E0n9FAj8THWb94rsYV8YQ2xNG5NL4VqL5ve+7QCJE2n3rFx0BNoo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxfUUde63/viG+zIc/7fCLjv2OQKAt0gkT2ZOHBrssAl/N3ppQF
+	xv8WjHiEEAJiD4FogBcKwlI2o8y1J9E8nkdui5RHOfZ2gAaR5isg4ZMcj0y84OxA6A==
+X-Google-Smtp-Source: AGHT+IHuAOxtXzCgPBrdp5bAmlVDtunUBAbbk6Zek1hc3Rqn5Vy7UfRbt6b5OUG2vQgJn7Pm/udst/k=
+X-Received: from pjbsi7.prod.google.com ([2002:a17:90b:5287:b0:2fc:2e92:6cf])
+ (user=pcc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3b50:b0:301:1bce:c258
+ with SMTP id 98e67ed59e1d1-3053215e7femr21514740a91.22.1743638916776; Wed, 02
+ Apr 2025 17:08:36 -0700 (PDT)
+Date: Wed,  2 Apr 2025 17:06:58 -0700
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.472.ge94155a9ec-goog
+Message-ID: <20250403000703.2584581-1-pcc@google.com>
+Subject: [PATCH v5 0/2] string: Add load_unaligned_zeropad() code path to sized_strscpy()
+From: Peter Collingbourne <pcc@google.com>
+To: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Andrew Morton <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>, 
+	Andy Shevchenko <andy@kernel.org>, Andrey Konovalov <andreyknvl@gmail.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>
+Cc: Peter Collingbourne <pcc@google.com>, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Sat, 15 Mar 2025, Alejandro Colomar wrote:
+This series fixes an issue where strscpy() would sometimes trigger
+a false positive KASAN report with MTE.
 
-> > > GCC 15's -Wunterminated-string-initialization warned about truncated
-> > > name strings. Instead of marking them with the "nonstring" attribute[1],
-> > > increase their length to correctly include enough space for the
-> > > terminating NUL character, as they are used with %s format specifiers.
-> 
-> It might be interesting to mention where they are used with %s.
+v5:
+- add test for unreadable first byte of strscpy() source
 
- Indeed.  I seem to be missing something here as I can't see an issue in 
-reality:
+v4:
+- clarify commit message
+- improve comment
 
-# cat /proc/ioports | sed -n '/EISA/,$p'
-0c80-0c83 : 486EI EISA System Board
-5000-50ff : DEC FDDIcontroller/EISA Adapter
-  5000-503f : defxx
-  5040-5043 : defxx
-5400-54ff : DEC FDDIcontroller/EISA Adapter
-5800-58ff : DEC FDDIcontroller/EISA Adapter
-5c00-5cff : DEC FDDIcontroller/EISA Adapter
-  5c80-5cbf : defxx
-6000-60ff : Network Peripherals NP-EISA-3E Enhanced FDDI Inte
-6400-64ff : Network Peripherals NP-EISA-3E Enhanced FDDI Inte
-6800-68ff : Network Peripherals NP-EISA-3E Enhanced FDDI Inte
-6c00-6cff : Network Peripherals NP-EISA-3E Enhanced FDDI Inte
-8000-80ff : 3Com 3C509-Combo Network Adapter
-  8000-800f : 3c579-eisa
-8400-84ff : 3Com 3C509-Combo Network Adapter
-8800-88ff : 3Com 3C509-Combo Network Adapter
-8c00-8cff : 3Com 3C509-Combo Network Adapter
-# 
+v3:
+- simplify test case
 
-nor why incrementing the length specifically to 51 (where eisa.ids names 
-are up to 73 characters; one of the longer entries can be seen truncated 
-above) is going to change anything here.  Overall since the string length 
-is fixed I'd expect just using `%.50s' instead.
+Peter Collingbourne (1):
+  string: Add load_unaligned_zeropad() code path to sized_strscpy()
 
-> > For what it's worth, it looks fine to me.
-> 
-> LGTM too.  Assuming that changing the size of the arrays doesn't break
-> something else, it looks good.
+Vincenzo Frascino (1):
+  kasan: Add strscpy() test to trigger tag fault on arm64
 
- ISTM increasing to 74 instead might make more sense (I don't know what 
-the actual maximum size was according to the ECU standard, but it might 
-not be that we'll ever add any new entries to our list), once the origin 
-of the problem is known, though I think we need to evaluate what effect 
-such a change will have on the size of the compiled kernel.
+ lib/string.c            | 13 ++++++++++---
+ mm/kasan/kasan_test_c.c | 20 ++++++++++++++++++++
+ 2 files changed, 30 insertions(+), 3 deletions(-)
 
-  Maciej
+-- 
+2.49.0.472.ge94155a9ec-goog
+
