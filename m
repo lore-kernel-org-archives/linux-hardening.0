@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 914302836B4;
-	Thu,  3 Apr 2025 19:08:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC30F293B5F;
+	Thu,  3 Apr 2025 19:09:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743707307; cv=none; b=STZaAOyiUDuDzq+3vBpKQTYrElWoEjVl2E8MPo+fpyGsD0tni723Kb57ukFiLYfbqsf/eS7Sa+MzSxBoMboGOrRZbyG7yrzsrucZxIiMJ7i6StviIBgJLZBME+RwhsP1LNe+xNvcxTPJKj3lk5qpyp7AJ3Z7DdDX0u23Baq+0Yg=
+	t=1743707352; cv=none; b=D7Z4/9WcPVuJ02nq8PWk4Q9JT1fOtf7MscpqVMEkJgDrA5OsqpE2VvAvYdDGuJPCmfBUBwN51tA0oxr4laqgXOdMNkDxsNWwOeRp5VULCtKlNpRzlFlB1cS0o0e68EaPoEwhpo6f5lwJs2O4Dn5Mf95b6wm+L3q9z0M8v6PLZOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743707307; c=relaxed/simple;
-	bh=w2JAYpV5gq5FFih3htkzNyzWhw3BKjjQmD6NIruvfTI=;
+	s=arc-20240116; t=1743707352; c=relaxed/simple;
+	bh=Iqu8Ht57tBlY6pR4+f49nTNxqKt7KhDvjUiosvas0Kc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=rtfCr8FgQ+KcSeP+iaHeE37sczKI1kJnnp6O3KfUFBW+ijSCe1KqmiBX0Qyh0QJnktjgwk22DaEXDzNd8ZlMprDDG/ajlgfUes/GVDOQgvqfI9P0fkA4Fm2V1/Mprc6CJ0wffGsZxAYrdyTJohAWNzb23qx/zuVRXx/sc2fkRkE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=peIlU+V8; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=FxxaCMKdk1c+xl1Db4xvqVlQPecZFkFOU+BjvPPgsNcU8Qzgs+DIDpnXCfmQ9xLc9VybBVTCutdGlAm+dSxitiGYNl9uMZ+DUFxVRKGmOO6CFY/sjKRcnYNjLJmLQJDhGQWQoiT7LbVa62YfdLMFAVXpFzKOjzdHUQQMU6BZFVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HiYlw6YP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="peIlU+V8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D74CAC4CEEA;
-	Thu,  3 Apr 2025 19:08:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HiYlw6YP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C542C4CEE8;
+	Thu,  3 Apr 2025 19:09:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743707307;
-	bh=w2JAYpV5gq5FFih3htkzNyzWhw3BKjjQmD6NIruvfTI=;
+	s=k20201202; t=1743707352;
+	bh=Iqu8Ht57tBlY6pR4+f49nTNxqKt7KhDvjUiosvas0Kc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=peIlU+V8fVujp4TmUE5Vyfaz0C+p7ne7FqAKdidtCkFb/azfWJavWA1gWEc3HOpXd
-	 14j4Xbi/2ldkHKYQu3bFKqLS1rCV3ovpf2UrLlmCCO4nh2kWthnTiRPeg+14pFdRIp
-	 6B4EKyPyuSN0AFQglInsPiAID+wd1tx1G+Iux1caBabrbXhFZr1v1zfV2DVZy379V+
-	 pht0VKrv3+fS2X5atL6PGSzk05kj3vORR7wJtE85GxoOQd7JGTPCm9LQrkt+Z6YOui
-	 6npbeaMhL+wF5eNGCxvUY98U5NRAd9sqA3JRi1cpMClHAf+Ua6o/4eXNC8KUptH6Z/
-	 /WB3YTuu6bgZg==
+	b=HiYlw6YPGLoAVvh4HRjDMnOCyrKgGxRdS4vsvLSF20JJH8D70fVgvkkEZYx+z/uxP
+	 hnBH+GxUYMSYElQ2nCcARDCAL5Gz+uaDvZqLsrRczjQGj6Nk4zF1usRtRncTmrGB9n
+	 mK5GtY6GsfairjZ5mpXcEoapYoUXViRUa0O0hKUYBuQE1AsJijMx4MwHBMGTg7cDWH
+	 jpe1SFpKxT+eMYKtIoLZ++HE3Zk+JbPCYayxEdqfYkZIkD+A3jbk4qcIL6wifnxQAG
+	 bYyvr4k5iGNh9XEk4TT9ZAX9oqxqiujXk5RCmSmnG2PFqjGngv0BDhUntr7x1NxQGb
+	 VWreOmyGEd72g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -38,12 +38,12 @@ Cc: Bhupesh <bhupesh@igalia.com>,
 	kees@kernel.org,
 	linux-ext4@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 19/26] ext4: ignore xattrs past end
-Date: Thu,  3 Apr 2025 15:07:38 -0400
-Message-Id: <20250403190745.2677620-19-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.1 12/18] ext4: ignore xattrs past end
+Date: Thu,  3 Apr 2025 15:08:38 -0400
+Message-Id: <20250403190845.2678025-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250403190745.2677620-1-sashal@kernel.org>
-References: <20250403190745.2677620-1-sashal@kernel.org>
+In-Reply-To: <20250403190845.2678025-1-sashal@kernel.org>
+References: <20250403190845.2678025-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -52,7 +52,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.85
+X-stable-base: Linux 6.1.132
 Content-Transfer-Encoding: 8bit
 
 From: Bhupesh <bhupesh@igalia.com>
@@ -164,10 +164,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 10 insertions(+), 1 deletion(-)
 
 diff --git a/fs/ext4/xattr.c b/fs/ext4/xattr.c
-index df5ab1a75fc48..ca22aa9e04b4b 100644
+index 5598aec757752..95dbc7c9843b8 100644
 --- a/fs/ext4/xattr.c
 +++ b/fs/ext4/xattr.c
-@@ -1176,15 +1176,24 @@ ext4_xattr_inode_dec_ref_all(handle_t *handle, struct inode *parent,
+@@ -1127,15 +1127,24 @@ ext4_xattr_inode_dec_ref_all(handle_t *handle, struct inode *parent,
  {
  	struct inode *ea_inode;
  	struct ext4_xattr_entry *entry;
