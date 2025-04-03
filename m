@@ -1,198 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19FEB28C5A6;
-	Thu,  3 Apr 2025 19:10:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 161762E62BF;
+	Thu,  3 Apr 2025 21:15:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743707459; cv=none; b=grm9A4iNi8cJtXGL7N/Hkjmjm6sJMebxGpoulFsU5lMez5ewQW8/kL1Pw89d5bHI8HDU4h5RVGxe1y2rccTWJCkgG03mhQk3+TiUw63Lb+07m54sO3oUoE0dA4oIza5T1c1a0Wa+y2N+sue6CECb+0Su/z3azms2AaeFy9H7NDI=
+	t=1743714929; cv=none; b=B2nyCqdvcfkcE3J3JW0gd0xpUaP09SGR4JelU65U0V7DPYP5ghBaTuNq07lFHLQTvdI13W1cY1HS3YJhIxTXN02FBpYRSEONuyL7PYFQ3SGEa+1A9gNFttwx0v0iZUcHZX6MlltjWUsqXNeLp3ycqR1pne9LCoveSMIQZIv4v8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743707459; c=relaxed/simple;
-	bh=orlZzE6F90+mKEG4LC7/xb21b1erZCviTbFPJNvEUWU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=t2krJFHqGBqbEu9UsoyG/fmzMbrHoe7E/lt4RRC0gTTNfZ6WgY/a4AWWtBfaPq9zVKwqaMBR1gAtJ9IEFgbLhzgZApSyOQ51HH9v+1lO6SK5N68YDs7p6W8cDtOyEa/UZF6nlkMw6pleIlMMWmbA4uMwlk2NfrqRBSOJk9orBY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oMwfD/rv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743714929; c=relaxed/simple;
+	bh=HwCQpAQIh5B4VTTn8FN0DhJiCQM3f6//dB8KKhrCFJE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TXjkSWOb6cwyRJMdfW8HdjRxr3Qr/PwA1IFzfVJ+upSXSygK0iIk2peSZ+C8sgIBg2+L6LOLKFAr7QNZAsMINFKYb+qPPWtH8nEkDekjwyMmElNsyJvleF1OD7Gq80QP452BkdiBSTwMF3of8o9o0s6o+Py8UW7qnGtnfBIji8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V7V+SNqS; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oMwfD/rv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62307C4CEE8;
-	Thu,  3 Apr 2025 19:10:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743707458;
-	bh=orlZzE6F90+mKEG4LC7/xb21b1erZCviTbFPJNvEUWU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=oMwfD/rvy6Gc5LsJ7k14W8IzzgqPlXOgi4KBNp0ORFIKdGyEC16I463tH7ce9UO1n
-	 B9xMJdfHt+ff9U1QA/D/cvq9yWXaU28uE+vOtV2Btlr57y405/fHqB/C7HdvkBycho
-	 7CoEWW8vBS89O3WUPcqRM5OTiRn0WYeq1lV07XknWtned9MLW5i4PTlDWjywQ2Jnlf
-	 R6h/PvhYE/TmlBrEXJt5gnBaRTClclhWKffDkwWmZd8HyOyphX5M3Wh7ZC6xp7vcdE
-	 0/0FBoKvJYZ2Xiw+ugOWjIlfnhZhQkWEP4ky9N0b82iQgrxUuYGMluKk2bbcOi9oSE
-	 zMKI6xwMgTv9g==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Bhupesh <bhupesh@igalia.com>,
-	syzbot+b244bda78289b00204ed@syzkaller.appspotmail.com,
-	Thadeu Lima de Souza Cascardo <cascardo@igalia.com>,
-	Theodore Ts'o <tytso@mit.edu>,
-	Sasha Levin <sashal@kernel.org>,
-	adilger.kernel@dilger.ca,
-	kees@kernel.org,
-	linux-ext4@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 09/14] ext4: ignore xattrs past end
-Date: Thu,  3 Apr 2025 15:10:31 -0400
-Message-Id: <20250403191036.2678799-9-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250403191036.2678799-1-sashal@kernel.org>
-References: <20250403191036.2678799-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V7V+SNqS"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43ce71582e9so9397135e9.1;
+        Thu, 03 Apr 2025 14:15:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743714925; x=1744319725; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fvD1Km7wGFLtWOqgEFNWRLw6eJ4esFFynlnh8JehOFY=;
+        b=V7V+SNqSGYdah8Jilg6dLHkREWfB1Bp9/f+yy643BcEceO0ewH1rWVTAAlr+C43zOV
+         UBKfIOsidAlQDYQoG+mHin9muwkCFEbBvSZ2qNIB0tL9dgv6lCOXq0KudLJsjPRJgU61
+         k8jNtwH35PCKSZT9H/feQjtLq1HPll60QbtdMPGD5hz5oPQR4dZLhjQwouaVOsz8sR4l
+         yYX7s5niyvqlsV7SHrPM5/N4qsRJdjlvA6TAz6Xgd3bxBRaMGiDd+HmjYGH/PiA4q6Q8
+         NDNYbwynT142i/gGhPVGUSxusCzQ+dulstxEDSR3F4+p0KwJve++IlM6yhrbrl+YNuj2
+         m9Gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743714925; x=1744319725;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fvD1Km7wGFLtWOqgEFNWRLw6eJ4esFFynlnh8JehOFY=;
+        b=b1c2ZzQZUobnhp+F7VV2itBpSfFf0xKIqV/1E0dyq+FpWXfDyha2ApNXlzs0PRMpZw
+         2FP7JEkVfUyAXpyhdfUd/IfNHbC9z62ETDqlckU52CA+vE6O1xmPHS+59keUycGGkhp3
+         896vcbG5hri4OK12S7dKgkyMLlLPEd+eC7AO9lLot0pId1yFCVSUAsTRJ/hZwF3UbkBV
+         tFD0zGrpsoAzJY4B83+Ppvu5R2cTp7TW2vPP07m5o1Ot0g5AorOxM3yZnLiI44SnF75i
+         2aPY1j86byKVHn80fuB74GvmXGsjIvZwu7uIMQcYM+A+PS9oy42bvdKB7rEi9OX4n1kH
+         pyzA==
+X-Forwarded-Encrypted: i=1; AJvYcCVWB4jeDaQaErJHAwZ+kCrbP0lYQn1Fo15rO47hJ0eqIPeQ6Mf3NLVnr46OPxc1R8HX8s1Xw8yoDI0C2G0X@vger.kernel.org, AJvYcCWMb4hKZ0fHutHYCKzEXAtcwe/E4r+/Crd4ZgVDGXFgRbwmWx+3zuM++MPnioI/kDunzSDQgs1WyvnO8o8ktGO3@vger.kernel.org, AJvYcCX+Q7lv5auI0QlaMJwGTnw/ho2JP7dn2VK3+g+MPdci59WNVYc4nb26zrxcwFVbjnMwdQhPHPYt@vger.kernel.org, AJvYcCXe5k4Yxx2rxJv0GrskGsdgbMtDnuhgmQ+/+cIkg4mdgQhpcjjdJeu5J8AmSHf/IkCMv8Z6pEAgsKEYR8IW@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVbbjFVuIsfHwN3hdUX5WsKWUHyv2MO7IbSotEVjYzanTFudGF
+	TEdIwmGo/B0nngG6DL3/n7TqyMGU80AvVtxQ8cRZCVEf0Kie1yQa
+X-Gm-Gg: ASbGnctQkMd54GTd6M3wkuAHBbnfVSI88c+H4lfPxG8sfYQwoBa/WjCQ/TgTjZthlBY
+	sNAI9tOAbiS2g7feT/llX4CuCBnBWnL5VyMzjXhmPiNOCMa7LAEO7oi9PzilmVf6Hkl2+jTj3eZ
+	+jP1MN621LfdOtAYhxG38K0j/sASxAleinduGZsm9GjAZ80rYCE3PltDxKOMVPJXZnWnClH+Cpr
+	Jdm+FKolxfKJb/QksgNgKDpa8J1Xuns7wizZ43QhZ+9pgOMa/6Uf7pJrBMjuUcDw7Vi1bBLFC6A
+	tTgcP4QRcFdiAkkgbfqteHIyJ2++8Y0Lgahf2jl5Szamfro/9g7y9jRiQdIku1Be6Dba8aQwHei
+	A7V6PF6Y=
+X-Google-Smtp-Source: AGHT+IGBaHYjceQBSmbH3010b6NTsG3JdQrqaS3chq0W1aRj/OYqtwyl5jYbNbbhjuezGo2AbkFbvg==
+X-Received: by 2002:a05:600c:3494:b0:43c:f8fc:f697 with SMTP id 5b1f17b1804b1-43ed0bc8d96mr2756455e9.9.1743714925141;
+        Thu, 03 Apr 2025 14:15:25 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec17b0a38sm31305665e9.34.2025.04.03.14.15.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Apr 2025 14:15:24 -0700 (PDT)
+Date: Thu, 3 Apr 2025 22:15:22 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Peter Collingbourne <pcc@google.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Alexander Viro
+ <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara
+ <jack@suse.cz>, Andrew Morton <akpm@linux-foundation.org>, Kees Cook
+ <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>, Andrey Konovalov
+ <andreyknvl@gmail.com>, Mark Rutland <mark.rutland@arm.com>,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ stable@vger.kernel.org
+Subject: Re: [PATCH v4 1/2] string: Add load_unaligned_zeropad() code path
+ to sized_strscpy()
+Message-ID: <20250403221522.328b174b@pumpkin>
+In-Reply-To: <CAMn1gO55tC78BpD+KuFgygg1Of57pr16O4BvKsUsrpo830-jEw@mail.gmail.com>
+References: <20250329000338.1031289-1-pcc@google.com>
+	<20250329000338.1031289-2-pcc@google.com>
+	<Z-2ZwThH-7rkQW86@arm.com>
+	<CAMn1gO55tC78BpD+KuFgygg1Of57pr16O4BvKsUsrpo830-jEw@mail.gmail.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.4.291
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-From: Bhupesh <bhupesh@igalia.com>
+On Wed, 2 Apr 2025 17:08:51 -0700
+Peter Collingbourne <pcc@google.com> wrote:
 
-[ Upstream commit c8e008b60492cf6fd31ef127aea6d02fd3d314cd ]
+> On Wed, Apr 2, 2025 at 1:10=E2=80=AFPM Catalin Marinas <catalin.marinas@a=
+rm.com> wrote:
+..
+> > Reading across tag granule (but not across page boundary) and causing a
+> > tag check fault would result in padding but we can live with this and
+> > only architectures that do MTE-style tag checking would get the new
+> > behaviour. =20
+>=20
+> By "padding" do you mean the extra (up to sizeof(unsigned long)) nulls
+> now written to the destination? It seems unlikely that code would
+> deliberately depend on the nulls not being written, the number of
+> nulls written is not part of the documented interface contract and
+> will vary right now depending on how close the source string is to a
+> page boundary. If code is accidentally depending on nulls not being
+> written, that's almost certainly a bug anyway (because of the page
+> boundary thing) and we should fix it if discovered by this change.
 
-Once inside 'ext4_xattr_inode_dec_ref_all' we should
-ignore xattrs entries past the 'end' entry.
+There was an issue with one of the copy routines writing beyond
+the expected point in a destination buffer.
+I can't remember the full details, but it would match strscpy().
 
-This fixes the following KASAN reported issue:
-
-==================================================================
-BUG: KASAN: slab-use-after-free in ext4_xattr_inode_dec_ref_all+0xb8c/0xe90
-Read of size 4 at addr ffff888012c120c4 by task repro/2065
-
-CPU: 1 UID: 0 PID: 2065 Comm: repro Not tainted 6.13.0-rc2+ #11
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
-Call Trace:
- <TASK>
- dump_stack_lvl+0x1fd/0x300
- ? tcp_gro_dev_warn+0x260/0x260
- ? _printk+0xc0/0x100
- ? read_lock_is_recursive+0x10/0x10
- ? irq_work_queue+0x72/0xf0
- ? __virt_addr_valid+0x17b/0x4b0
- print_address_description+0x78/0x390
- print_report+0x107/0x1f0
- ? __virt_addr_valid+0x17b/0x4b0
- ? __virt_addr_valid+0x3ff/0x4b0
- ? __phys_addr+0xb5/0x160
- ? ext4_xattr_inode_dec_ref_all+0xb8c/0xe90
- kasan_report+0xcc/0x100
- ? ext4_xattr_inode_dec_ref_all+0xb8c/0xe90
- ext4_xattr_inode_dec_ref_all+0xb8c/0xe90
- ? ext4_xattr_delete_inode+0xd30/0xd30
- ? __ext4_journal_ensure_credits+0x5f0/0x5f0
- ? __ext4_journal_ensure_credits+0x2b/0x5f0
- ? inode_update_timestamps+0x410/0x410
- ext4_xattr_delete_inode+0xb64/0xd30
- ? ext4_truncate+0xb70/0xdc0
- ? ext4_expand_extra_isize_ea+0x1d20/0x1d20
- ? __ext4_mark_inode_dirty+0x670/0x670
- ? ext4_journal_check_start+0x16f/0x240
- ? ext4_inode_is_fast_symlink+0x2f2/0x3a0
- ext4_evict_inode+0xc8c/0xff0
- ? ext4_inode_is_fast_symlink+0x3a0/0x3a0
- ? do_raw_spin_unlock+0x53/0x8a0
- ? ext4_inode_is_fast_symlink+0x3a0/0x3a0
- evict+0x4ac/0x950
- ? proc_nr_inodes+0x310/0x310
- ? trace_ext4_drop_inode+0xa2/0x220
- ? _raw_spin_unlock+0x1a/0x30
- ? iput+0x4cb/0x7e0
- do_unlinkat+0x495/0x7c0
- ? try_break_deleg+0x120/0x120
- ? 0xffffffff81000000
- ? __check_object_size+0x15a/0x210
- ? strncpy_from_user+0x13e/0x250
- ? getname_flags+0x1dc/0x530
- __x64_sys_unlinkat+0xc8/0xf0
- do_syscall_64+0x65/0x110
- entry_SYSCALL_64_after_hwframe+0x67/0x6f
-RIP: 0033:0x434ffd
-Code: 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 8
-RSP: 002b:00007ffc50fa7b28 EFLAGS: 00000246 ORIG_RAX: 0000000000000107
-RAX: ffffffffffffffda RBX: 00007ffc50fa7e18 RCX: 0000000000434ffd
-RDX: 0000000000000000 RSI: 0000000020000240 RDI: 0000000000000005
-RBP: 00007ffc50fa7be0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000001
-R13: 00007ffc50fa7e08 R14: 00000000004bbf30 R15: 0000000000000001
- </TASK>
-
-The buggy address belongs to the object at ffff888012c12000
- which belongs to the cache filp of size 360
-The buggy address is located 196 bytes inside of
- freed 360-byte region [ffff888012c12000, ffff888012c12168)
-
-The buggy address belongs to the physical page:
-page: refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x12c12
-head: order:1 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
-flags: 0x40(head|node=0|zone=0)
-page_type: f5(slab)
-raw: 0000000000000040 ffff888000ad7640 ffffea0000497a00 dead000000000004
-raw: 0000000000000000 0000000000100010 00000001f5000000 0000000000000000
-head: 0000000000000040 ffff888000ad7640 ffffea0000497a00 dead000000000004
-head: 0000000000000000 0000000000100010 00000001f5000000 0000000000000000
-head: 0000000000000001 ffffea00004b0481 ffffffffffffffff 0000000000000000
-head: 0000000000000002 0000000000000000 00000000ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff888012c11f80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- ffff888012c12000: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> ffff888012c12080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                           ^
- ffff888012c12100: fb fb fb fb fb fb fb fb fb fb fb fb fb fc fc fc
- ffff888012c12180: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-==================================================================
-
-Reported-by: syzbot+b244bda78289b00204ed@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=b244bda78289b00204ed
-Suggested-by: Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
-Signed-off-by: Bhupesh <bhupesh@igalia.com>
-Link: https://patch.msgid.link/20250128082751.124948-2-bhupesh@igalia.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/ext4/xattr.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
-
-diff --git a/fs/ext4/xattr.c b/fs/ext4/xattr.c
-index 19982a682b9c1..f32e720e9e202 100644
---- a/fs/ext4/xattr.c
-+++ b/fs/ext4/xattr.c
-@@ -1152,15 +1152,24 @@ ext4_xattr_inode_dec_ref_all(handle_t *handle, struct inode *parent,
- {
- 	struct inode *ea_inode;
- 	struct ext4_xattr_entry *entry;
-+	struct ext4_iloc iloc;
- 	bool dirty = false;
- 	unsigned int ea_ino;
- 	int err;
- 	int credits;
-+	void *end;
-+
-+	if (block_csum)
-+		end = (void *)bh->b_data + bh->b_size;
-+	else {
-+		ext4_get_inode_loc(parent, &iloc);
-+		end = (void *)ext4_raw_inode(&iloc) + EXT4_SB(parent->i_sb)->s_inode_size;
-+	}
- 
- 	/* One credit for dec ref on ea_inode, one for orphan list addition, */
- 	credits = 2 + extra_credits;
- 
--	for (entry = first; !IS_LAST_ENTRY(entry);
-+	for (entry = first; (void *)entry < end && !IS_LAST_ENTRY(entry);
- 	     entry = EXT4_XATTR_NEXT(entry)) {
- 		if (!entry->e_value_inum)
- 			continue;
--- 
-2.39.5
-
+	David
