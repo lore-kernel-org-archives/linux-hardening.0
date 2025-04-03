@@ -1,98 +1,132 @@
-Received: from omta40.uswest2.a.cloudfilter.net (omta40.uswest2.a.cloudfilter.net [35.89.44.39])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AB8919ABD4
-	for <linux-hardening@vger.kernel.org>; Thu,  3 Apr 2025 17:35:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3958B2528E2;
+	Thu,  3 Apr 2025 17:41:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743701705; cv=none; b=CUd8NndXdfaCwdoywSfnBjX07BztRZRSgefrBLrjMSkRuBtg3wFbjsbMX9JQb+kxmdjZvDa+Vu7ytC+r8K4fCNZvM+btfhLzDUNlQqmMYdSXs2W9+bLIhUHIFuBeJzZuXydW5my5CWEt/D4hZ1zIxKPqkPUFAPs7hvPm+EFbu3k=
+	t=1743702084; cv=none; b=h4QAwtiHcm75v8UyOilfRoyMa1M/MD6/RRqn89NuqDAEMpLLqA2tiCGZ/NiKTjOvdj5eLWHg5s7ArRKSH4SBRZgf2M65KzyDbiNvgV61e/tyTT7EZTG7E5uXtVN7GrwclIqsWoD/48L/0bib1kEm7Opp6e6aukV5qZ3RYDbB3JQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743701705; c=relaxed/simple;
-	bh=N+/sPqbGOxBMdM7Zey0dI8Kpexl+RXW3F/uu+lKz95U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XeNiwNYtVACv5rjFNzN5EoDl9DDdQTchJsyALZm1zvaVjBHeGCJdkMnrkzQL+FvtcQ2xrn5VBZMcyq+k36g9Ry1fV7Z3MkdlckiuR8DYlDTaOup4iAVseeAK9xAxmw4l2Btl/AMSEJjQKJB+CidMckHM+knSA/HjQVPgX2nYW64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=f8hniX71; arc=none smtp.client-ip=35.89.44.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1743702084; c=relaxed/simple;
+	bh=8lR9ylBsfo7PBLZHWh9qmMylsgZ+XsmxjxGaNWbQYxA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=jx9I5ZCXLyy8YhA8X6T2QKBjxLWav9e96c0KMfMiwp1MIrmceY5O1OVOTd7VAriztyrPFhS0fPF1lbcCi6XhVqERMSQfKkNNMzFEkcRPyj4VtxB5PytgLp0MKLQUs8SC5MmiG2GTiSMPNQ1TTmUl/sSaCI3DkKek0Pm3crq97Mk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dPoLcU6S; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="f8hniX71"
-Received: from eig-obgw-6004a.ext.cloudfilter.net ([10.0.30.197])
-	by cmsmtp with ESMTPS
-	id 0MGeuhNL4f1UX0OSvuM8iy; Thu, 03 Apr 2025 17:34:57 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id 0OSuuTotORlrs0OSvusQc0; Thu, 03 Apr 2025 17:34:57 +0000
-X-Authority-Analysis: v=2.4 cv=Qamtvdbv c=1 sm=1 tr=0 ts=67eec6c1
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=B3fuDwYyW55wTQKIj88FGw==:17
- a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=7T7KSl7uo7wA:10
- a=AwQk-W9g5lI6dlRaMUIA:9 a=QEXdDO2ut3YA:10 a=Xt_RvD8W3m28Mn_h3AK8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=N+/sPqbGOxBMdM7Zey0dI8Kpexl+RXW3F/uu+lKz95U=; b=f8hniX71WgPZO1+E0lnTSk3xBQ
-	iLjc6NftmI9B7ejNFC9yV655NLm+rGZjHzJeAqSQGpl46kB9TAFV5ZpgwMPXhhtZrfnb7jQMxS0bj
-	saYdBslAnFmGXU/rU5upDh4WKckMmhCXzmrlfvZ40hv1VX4w9KOj4Ex8ZMfhi49fdZig9KoW+8Dwh
-	vo7OCycgb+DD2AiU86f/S/BmiuNM7sk2Dv2ZURuBguiT0wOE9eyd5/hM4egvm5yySw2byf80FhCJF
-	L+PgTNwjSgf28N8gtg+7oQWciHaB2kNO5pZ5O9XXLEeyR15kcjb3FWdp5/T3Upm5BOKeEIzoKGrK2
-	9pxaiv1w==;
-Received: from [201.172.174.147] (port=55110 helo=[192.168.15.6])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1u0OSu-00000000rpG-17It;
-	Thu, 03 Apr 2025 12:34:56 -0500
-Message-ID: <08f9d29f-9676-4c92-adfa-32368637f392@embeddedor.com>
-Date: Thu, 3 Apr 2025 11:34:50 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dPoLcU6S"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EED42C4CEE7;
+	Thu,  3 Apr 2025 17:41:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743702083;
+	bh=8lR9ylBsfo7PBLZHWh9qmMylsgZ+XsmxjxGaNWbQYxA=;
+	h=Date:From:To:Cc:Subject:From;
+	b=dPoLcU6SLa7ZgTJZaHaiRDW64dPYRH3R0/kUgslJwP6Oc8Zk4UilUUJ+wx4HPhgf9
+	 PC+5aY3fNv3g0VpN+shYeyJMpiajZZ9sQ6nHWfFRDICVfbvbozCbJklIdl3GnJ/ZIK
+	 SZg7VIarvzNTFY7QwvkgrbUmcKhqG/uKyKWh3eDD15JnnIRBGDC24gcPTPpieWO0H8
+	 kcHvzqm9K4M2vSSmwdthaiiWzgKgJBBrfJtdU88EiN1ljDnX3iTgMgaFJdckCJ8y90
+	 YoNkIDTPGC9a1uk13aXXd0386xbs0TBu/Yw0XNJ/21lWmDmQco7jptuqkA8IhCPArs
+	 nCKRo+DLE/qUA==
+Date: Thu, 3 Apr 2025 11:41:21 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH][next] drm/nouveau: fifo: Avoid
+ -Wflex-array-member-not-at-end warning
+Message-ID: <Z-7IQcWNePAMQEM0@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2][next] drm/nouveau: disp: Avoid
- -Wflex-array-member-not-at-end warning
-To: Danilo Krummrich <dakr@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Lyude Paul <lyude@redhat.com>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org,
- nouveau@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <Z-2zI55Qf88jTfNK@kspp> <Z-6xwS3qXIyxE05G@pollux>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <Z-6xwS3qXIyxE05G@pollux>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.174.147
-X-Source-L: No
-X-Exim-ID: 1u0OSu-00000000rpG-17It
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.6]) [201.172.174.147]:55110
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfDecRYNUWBm5iU2cJZWqgcowhwX0RirMzwaiUzTvPBDYfglE5TUTBmbjdjtUo7wEFvN8py8ssPNxDg21sn3S26h+vqrBM92TOdjcsxRi0bLiVpwDYtxV
- e4a8NuoO0RlLJPGcqn4AiJEbDtxsN1+wzZIBBIjvhhQmaqhzsSEnJoVOdOJlgpMvHeL3JH2XqIvHFkeIa8CRn+yrltdzSLP2mGRvRbScKIBrWCAla3YYKwQk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+-Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+getting ready to enable it, globally.
 
-> Applied this one (as well as the svm and fence one) to drm-misc-next, thanks!
+Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
+a flexible structure where the size of the flexible-array member
+is known at compile-time, and refactor the rest of the code,
+accordingly.
 
-Awesome. :)
+So, with these changes, fix the following warning:
 
-Thanks!
---
-Gustavo
+drivers/gpu/drm/nouveau/nvif/fifo.c:29:42: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/gpu/drm/nouveau/nvif/fifo.c | 32 ++++++++++++-----------------
+ 1 file changed, 13 insertions(+), 19 deletions(-)
+
+diff --git a/drivers/gpu/drm/nouveau/nvif/fifo.c b/drivers/gpu/drm/nouveau/nvif/fifo.c
+index a463289962b2..f8772340fec4 100644
+--- a/drivers/gpu/drm/nouveau/nvif/fifo.c
++++ b/drivers/gpu/drm/nouveau/nvif/fifo.c
+@@ -25,33 +25,28 @@ static int
+ nvif_fifo_runlists(struct nvif_device *device)
+ {
+ 	struct nvif_object *object = &device->object;
+-	struct {
+-		struct nv_device_info_v1 m;
+-		struct {
+-			struct nv_device_info_v1_data runlists;
+-			struct nv_device_info_v1_data runlist[64];
+-		} v;
+-	} *a;
++	DEFINE_RAW_FLEX(struct nv_device_info_v1, a, data, 65);
++	struct nv_device_info_v1_data *runlists = &a->data[0];
++	struct nv_device_info_v1_data *runlist = &a->data[1];
++	const u8 rl_cnt = (__struct_size(a) - sizeof(*a)) / sizeof(*a->data) - 1;
+ 	int ret, i;
+ 
+ 	if (device->runlist)
+ 		return 0;
+ 
+-	if (!(a = kmalloc(sizeof(*a), GFP_KERNEL)))
+-		return -ENOMEM;
+-	a->m.version = 1;
+-	a->m.count = sizeof(a->v) / sizeof(a->v.runlists);
+-	a->v.runlists.mthd = NV_DEVICE_HOST_RUNLISTS;
+-	for (i = 0; i < ARRAY_SIZE(a->v.runlist); i++) {
+-		a->v.runlist[i].mthd = NV_DEVICE_HOST_RUNLIST_ENGINES;
+-		a->v.runlist[i].data = i;
++	a->version = 1;
++	a->count = (__struct_size(a) - sizeof(*a)) / sizeof(*a->data);
++	runlists->mthd = NV_DEVICE_HOST_RUNLISTS;
++	for (i = 0; i < rl_cnt; i++) {
++		runlist[i].mthd = NV_DEVICE_HOST_RUNLIST_ENGINES;
++		runlist[i].data = i;
+ 	}
+ 
+ 	ret = nvif_object_mthd(object, NV_DEVICE_V0_INFO, a, sizeof(*a));
+ 	if (ret)
+ 		goto done;
+ 
+-	device->runlists = fls64(a->v.runlists.data);
++	device->runlists = fls64(runlists->data);
+ 	device->runlist = kcalloc(device->runlists, sizeof(*device->runlist),
+ 				  GFP_KERNEL);
+ 	if (!device->runlist) {
+@@ -60,12 +55,11 @@ nvif_fifo_runlists(struct nvif_device *device)
+ 	}
+ 
+ 	for (i = 0; i < device->runlists; i++) {
+-		if (a->v.runlist[i].mthd != NV_DEVICE_INFO_INVALID)
+-			device->runlist[i].engines = a->v.runlist[i].data;
++		if (runlist[i].mthd != NV_DEVICE_INFO_INVALID)
++			device->runlist[i].engines = runlist[i].data;
+ 	}
+ 
+ done:
+-	kfree(a);
+ 	return ret;
+ }
+ 
+-- 
+2.43.0
+
