@@ -1,42 +1,52 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B19551993B1;
-	Thu,  3 Apr 2025 16:45:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C88E19CC39;
+	Thu,  3 Apr 2025 16:45:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743698721; cv=none; b=DwfDa0AylqcT9KMgViJJHmuO1x/IXHJcTtjZjp6mG8XFWjJKzTVanHJuksH+78XbxqT/Ee4FL33tbrk44xHu9wQqaAFCQWWNwxDm8kXVXxhdbK0ERkZ6kTEmHgss+y9yqLtqhkB9rHgJ0pLCCRL1DNNRE51b8I/ZMChgHhpUQBA=
+	t=1743698752; cv=none; b=N2lJ89bcimn1xjYbuwKdvcM6bpy8GOM00+qP8ddxs38boAGPwzZ3EVYK0k/Efu9M9sgBkClF7zxwxueNGb1O0itHfUQAFiUt1LwtnQf6aYmXV5cQL+2ra0shl6ORNJI6DJhcj94mBGyfWuweoXYSL7Vbh7hCYYDBGlSa/3IvrZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743698721; c=relaxed/simple;
-	bh=rAccSmKogNdZqOMCmUuI1Eux/x/3CMaAChmohtmbCd8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=V0QENzb3BzuapbpN1R789wVFL08dQ0HYvwcEs/wXWVgj20zwVv0Ysk1ScF/dbKUzZiDqxbNxJICqepmXLSSIDo8eI8JvJsmSZpSH99/yIYQbaiw6HTeBC3ebTjbpRiRWoN/zdsBjHRZfhv6LMXR6aQQZT5XNFG5/uy+TEfU7kmU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uy68cCCL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743698752; c=relaxed/simple;
+	bh=QlqqyTgfhOBUsMseHj0iRoTR9OP1M3MGpYbSHK7gYic=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kcJ971uW0RyzA+x2TPNO8vEz41cAV3Eu+O0gcOwFFBwt5Fi1RHlAuaDRADiDCZ2uJ0eur3vCqCkE6sm7O/Y7a32R8+r0aoDrBgd/fVbC/g6tR1jaAMBsP1I1GAcZ6IpW+jprYZH5TMQlAoW+LcnZab296f67wmhb7cnO0MW5Wis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m0mntNNz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uy68cCCL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54625C4CEE3;
-	Thu,  3 Apr 2025 16:45:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m0mntNNz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7EC1C4CEE3;
+	Thu,  3 Apr 2025 16:45:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743698721;
-	bh=rAccSmKogNdZqOMCmUuI1Eux/x/3CMaAChmohtmbCd8=;
-	h=Date:From:To:Cc:Subject:From;
-	b=uy68cCCLzya5knEykk9QlaK/yc9DY2hkxl4f1N8xmkhCR6vNXbk59I2DbINpoz1hj
-	 z5fgcEWGV8X4zUH5TTnXdsWWHZIM3oVNl/XDnj6FUYUJOSTJc9bQ9FNpcM7BEfW3zL
-	 nctDcJnTqMKSIeHE7CEbFT8roJ+MHw/oAed09GVRhde48Xl3dVXE60pnJN/pTiS5cT
-	 rOj1wjPijICVs8ilEAZIZKtuiq+u0azA2GDDfWp9yflHnjFl4QUucTR+0dONGgsXPs
-	 Im/HnijfAz4lwO+20FakDpe+QTzE78JzEVLmBVX+wFTvWR+d+fFU/PEQi3sBDOsbmX
-	 b/iU1xCAb6kyQ==
-Date: Thu, 3 Apr 2025 10:45:18 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-Cc: dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	s=k20201202; t=1743698752;
+	bh=QlqqyTgfhOBUsMseHj0iRoTR9OP1M3MGpYbSHK7gYic=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=m0mntNNzRmV6GKNQWRx6dyXta5EpZ4+jICdyeitrea0jCYexlG241JBHs1nCNuqd4
+	 eSda6m+R7PYLlXN6LXMh/HhPOh26+KGmEm+NFmSFYezoyLFSy4T1tdHh5nF16nxblP
+	 OBdBR7DXyhfYBDSJe4157HLEwCh6MaqfwzVl7FDPXjGYZ2jnFINMN/ZbEqHTRHfuhb
+	 XMBhOrJPV05l2m/8S+uNbD55cM8NcnawXR5x0oFNciKe/hXGE8ks8k8sMWDXqeTTC8
+	 rdaV7rjTRKoJHgWIL23/N1xw6hsz5+WrOBMWv8h+G12Uv+YL4DbcMjKMh/ZNmtw7rp
+	 j0Ql0iexXV8Uw==
+Date: Thu, 3 Apr 2025 09:45:48 -0700
+From: Kees Cook <kees@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Vincent Donnefort <vdonnefort@google.com>,
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+	Tony Luck <tony.luck@intel.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] drm/nouveau: chan: Avoid
- -Wflex-array-member-not-at-end warnings
-Message-ID: <Z-67Hm9uHEJs0RGw@kspp>
+Subject: Re: [PATCH v2 1/2] tracing: ring-buffer: Have the ring buffer code
+ do the vmap of physical memory
+Message-ID: <202504030941.E0AA2E023@keescook>
+References: <20250331143426.947281958@goodmis.org>
+ <20250331143532.459810712@goodmis.org>
+ <CAHk-=whUOfVucfJRt7E0AH+GV41ELmS4wJqxHDnui6Giddfkzw@mail.gmail.com>
+ <20250331133906.48e115f5@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -45,219 +55,86 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20250331133906.48e115f5@gandalf.local.home>
 
--Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-getting ready to enable it, globally.
+On Mon, Mar 31, 2025 at 01:39:06PM -0400, Steven Rostedt wrote:
+> On Mon, 31 Mar 2025 09:55:28 -0700
+> Linus Torvalds <torvalds@linux-foundation.org> wrote:
+> > Anyway, that takes care of the horrific interface. However, there's
+> > another issue:
+> > 
+> > > +       pages = kmalloc_array(page_count, sizeof(struct page *), GFP_KERNEL);  
+> > 
+> > you create this pointless array of pages. Why? It's a physically
+> > contiguous area.
+> > 
+> > You do that just because you want to use vmap() to map that contiguous
+> > area one page at a time.
+> > 
+> > But this is NOT a new thing. It's exactly what every single PCI device
+> > with a random physical memory region BAR needs to do. And no, they
+> > don't create arrays of 'struct page *', because they use memory that
+> > doesn't even have page backing.
+> > 
+> > So we actually have interfaces to do linear virtual mappings of
+> > physical pages that *predate* vmap(), and do the right thing without
+> > any of these games.
+> 
+> [ Added the pstore folks ]
+> 
+> OK, so I did copy this from fs/pstore/ram_core.c as this does basically the
+> same thing as pstore. And it looks like pstore should be updated too.
 
-Use the `DEFINE_RAW_FLEX()` helper for a few on-stack definitions
-of a flexible structure where the size of the flexible-array member
-is known at compile-time, and refactor the rest of the code,
-accordingly.
+I think we're talking about persistent_ram_vmap()? That code predates my
+maintainership, but I'm happy to update it to use better APIs.
 
-So, with these changes, fix the following warnings:
+> > Yes, the legacy versions of interfaces are all for IO memory, but we
+> > do have things like vmap_page_range() which should JustWork(tm).
+> > 
+> > Yeah, you'll need to do something like
+> > 
+> >         unsigned long vmap_start, vmap_end;
+> > 
+> >         area = get_vm_area(size, VM_IOREMAP);
+> >         if (!area)
+> >                 return NULL;
+> > 
+> >         vmap_start = (unsigned long) area->addr;
+> >         vmap_end = vmap_start + size;
+> > 
+> >         ret = vmap_page_range(vmap_start, vmap_end,
+> >                 *start, prot_nx(PAGE_KERNEL));
+> > 
+> >         if (ret < 0) {
+> >                 free_vm_area(area);
+> >                 return NULL;
+> >         }
+> > 
+> > and the above is *entirely* untested and maybe there's something wrong
+> > there, but the concept should work, and when you don't do it a page at
+> > a time, you not only don't need the kmalloc_array(), it should even do
+> > things like be able to use large page mappings if the alignment and
+> > size work out.
+> > 
+> > That said, the old code is *really* broken to begin with. I don't
+> > understand why you want to vmap() a contiguous physical range. Either
+> > it's real pages to begin with, and you can just use "page_address()"
+> > to get a virtual address, it's *not* real pages, and doing
+> > "pfn_to_page()" is actively wrong, because it creates a fake 'struct
+> > page *' pointer that isn't valid.
+> > 
+> > Is this all just for some disgusting HIGHMEM use (in which case you
+> > need the virtual mapping because of HIGHMEM)? Is there any reason to
+> > support HIGHMEM in this area at all?
+> > 
+> > So I'm not sure why this code does all this horror in the first place.
+> > Either it's all just confused code that just didn't know what it was
+> > doing and just happened to work (very possible..) or there is
+> > something odd going on.
 
-drivers/gpu/drm/nouveau/nouveau_chan.c:274:37: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/gpu/drm/nouveau/nouveau_chan.c:371:46: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/gpu/drm/nouveau/nouveau_chan.c:524:42: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+pstore tries to work with either real RAM or with iomem things. What
+is there now Currently Works Fine, but should this be using
+vmap_page_range()?
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/gpu/drm/nouveau/nouveau_chan.c | 115 ++++++++++++-------------
- 1 file changed, 56 insertions(+), 59 deletions(-)
-
-diff --git a/drivers/gpu/drm/nouveau/nouveau_chan.c b/drivers/gpu/drm/nouveau/nouveau_chan.c
-index cd659b9fd1d9..a7e70517b7cd 100644
---- a/drivers/gpu/drm/nouveau/nouveau_chan.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_chan.c
-@@ -270,10 +270,7 @@ nouveau_channel_ctor(struct nouveau_cli *cli, bool priv, u64 runm,
- 		{    NV03_CHANNEL_DMA     , 0 },
- 		{}
- 	};
--	struct {
--		struct nvif_chan_v0 chan;
--		char name[TASK_COMM_LEN+16];
--	} args;
-+	DEFINE_RAW_FLEX(struct nvif_chan_v0, args, name, TASK_COMM_LEN + 16);
- 	struct nvif_device *device = &cli->device;
- 	struct nouveau_channel *chan;
- 	const u64 plength = 0x10000;
-@@ -298,28 +295,28 @@ nouveau_channel_ctor(struct nouveau_cli *cli, bool priv, u64 runm,
- 		return ret;
- 
- 	/* create channel object */
--	args.chan.version = 0;
--	args.chan.namelen = sizeof(args.name);
--	args.chan.runlist = __ffs64(runm);
--	args.chan.runq = 0;
--	args.chan.priv = priv;
--	args.chan.devm = BIT(0);
-+	args->version = 0;
-+	args->namelen = __struct_size(args) - sizeof(*args);
-+	args->runlist = __ffs64(runm);
-+	args->runq = 0;
-+	args->priv = priv;
-+	args->devm = BIT(0);
- 	if (hosts[cid].oclass < NV50_CHANNEL_GPFIFO) {
--		args.chan.vmm = 0;
--		args.chan.ctxdma = nvif_handle(&chan->push.ctxdma);
--		args.chan.offset = chan->push.addr;
--		args.chan.length = 0;
-+		args->vmm = 0;
-+		args->ctxdma = nvif_handle(&chan->push.ctxdma);
-+		args->offset = chan->push.addr;
-+		args->length = 0;
- 	} else {
--		args.chan.vmm = nvif_handle(&chan->vmm->vmm.object);
-+		args->vmm = nvif_handle(&chan->vmm->vmm.object);
- 		if (hosts[cid].oclass < FERMI_CHANNEL_GPFIFO)
--			args.chan.ctxdma = nvif_handle(&chan->push.ctxdma);
-+			args->ctxdma = nvif_handle(&chan->push.ctxdma);
- 		else
--			args.chan.ctxdma = 0;
--		args.chan.offset = ioffset + chan->push.addr;
--		args.chan.length = ilength;
-+			args->ctxdma = 0;
-+		args->offset = ioffset + chan->push.addr;
-+		args->length = ilength;
- 	}
--	args.chan.huserd = 0;
--	args.chan.ouserd = 0;
-+	args->huserd = 0;
-+	args->ouserd = 0;
- 
- 	/* allocate userd */
- 	if (hosts[cid].oclass >= VOLTA_CHANNEL_GPFIFO_A) {
-@@ -329,27 +326,28 @@ nouveau_channel_ctor(struct nouveau_cli *cli, bool priv, u64 runm,
- 		if (ret)
- 			return ret;
- 
--		args.chan.huserd = nvif_handle(&chan->mem_userd.object);
--		args.chan.ouserd = 0;
-+		args->huserd = nvif_handle(&chan->mem_userd.object);
-+		args->ouserd = 0;
- 
- 		chan->userd = &chan->mem_userd.object;
- 	} else {
- 		chan->userd = &chan->user;
- 	}
- 
--	snprintf(args.name, sizeof(args.name), "%s[%d]", current->comm, task_pid_nr(current));
-+	snprintf(args->name, __struct_size(args) - sizeof(*args), "%s[%d]",
-+		 current->comm, task_pid_nr(current));
- 
- 	ret = nvif_object_ctor(&device->object, "abi16ChanUser", 0, hosts[cid].oclass,
--			       &args, sizeof(args), &chan->user);
-+			       args, __struct_size(args), &chan->user);
- 	if (ret) {
- 		nouveau_channel_del(pchan);
- 		return ret;
- 	}
- 
--	chan->runlist = args.chan.runlist;
--	chan->chid = args.chan.chid;
--	chan->inst = args.chan.inst;
--	chan->token = args.chan.token;
-+	chan->runlist = args->runlist;
-+	chan->chid = args->chid;
-+	chan->inst = args->inst;
-+	chan->token = args->token;
- 	return 0;
- }
- 
-@@ -367,17 +365,17 @@ nouveau_channel_init(struct nouveau_channel *chan, u32 vram, u32 gart)
- 		return ret;
- 
- 	if (chan->user.oclass >= FERMI_CHANNEL_GPFIFO) {
--		struct {
--			struct nvif_event_v0 base;
--			struct nvif_chan_event_v0 host;
--		} args;
-+		DEFINE_RAW_FLEX(struct nvif_event_v0, args, data,
-+				sizeof(struct nvif_chan_event_v0));
-+		struct nvif_chan_event_v0 *host =
-+				(struct nvif_chan_event_v0 *)args->data;
- 
--		args.host.version = 0;
--		args.host.type = NVIF_CHAN_EVENT_V0_KILLED;
-+		host->version = 0;
-+		host->type = NVIF_CHAN_EVENT_V0_KILLED;
- 
- 		ret = nvif_event_ctor(&chan->user, "abi16ChanKilled", chan->chid,
- 				      nouveau_channel_killed, false,
--				      &args.base, sizeof(args), &chan->kill);
-+				      args, __struct_size(args), &chan->kill);
- 		if (ret == 0)
- 			ret = nvif_event_allow(&chan->kill);
- 		if (ret) {
-@@ -520,46 +518,45 @@ nouveau_channels_fini(struct nouveau_drm *drm)
- int
- nouveau_channels_init(struct nouveau_drm *drm)
- {
--	struct {
--		struct nv_device_info_v1 m;
--		struct {
--			struct nv_device_info_v1_data channels;
--			struct nv_device_info_v1_data runlists;
--		} v;
--	} args = {
--		.m.version = 1,
--		.m.count = sizeof(args.v) / sizeof(args.v.channels),
--		.v.channels.mthd = NV_DEVICE_HOST_CHANNELS,
--		.v.runlists.mthd = NV_DEVICE_HOST_RUNLISTS,
--	};
-+	DEFINE_RAW_FLEX(struct nv_device_info_v1, args, data, 2);
-+	struct nv_device_info_v1_data *channels = &args->data[0];
-+	struct nv_device_info_v1_data *runlists = &args->data[1];
- 	struct nvif_object *device = &drm->client.device.object;
- 	int ret, i;
- 
--	ret = nvif_object_mthd(device, NV_DEVICE_V0_INFO, &args, sizeof(args));
-+	args->version = 1;
-+	args->count = (__struct_size(args) - sizeof(*args)) /
-+		      sizeof(*args->data);
-+	channels->mthd = NV_DEVICE_HOST_CHANNELS;
-+	runlists->mthd = NV_DEVICE_HOST_RUNLISTS;
-+
-+	ret = nvif_object_mthd(device, NV_DEVICE_V0_INFO, args,
-+			       __struct_size(args));
- 	if (ret ||
--	    args.v.runlists.mthd == NV_DEVICE_INFO_INVALID || !args.v.runlists.data ||
--	    args.v.channels.mthd == NV_DEVICE_INFO_INVALID)
-+	    runlists->mthd == NV_DEVICE_INFO_INVALID || !runlists->data ||
-+	    channels->mthd == NV_DEVICE_INFO_INVALID)
- 		return -ENODEV;
- 
--	drm->chan_nr = drm->chan_total = args.v.channels.data;
--	drm->runl_nr = fls64(args.v.runlists.data);
-+	drm->chan_nr = drm->chan_total = channels->data;
-+	drm->runl_nr = fls64(runlists->data);
- 	drm->runl = kcalloc(drm->runl_nr, sizeof(*drm->runl), GFP_KERNEL);
- 	if (!drm->runl)
- 		return -ENOMEM;
- 
- 	if (drm->chan_nr == 0) {
- 		for (i = 0; i < drm->runl_nr; i++) {
--			if (!(args.v.runlists.data & BIT(i)))
-+			if (!(runlists->data & BIT(i)))
- 				continue;
- 
--			args.v.channels.mthd = NV_DEVICE_HOST_RUNLIST_CHANNELS;
--			args.v.channels.data = i;
-+			channels->mthd = NV_DEVICE_HOST_RUNLIST_CHANNELS;
-+			channels->data = i;
- 
--			ret = nvif_object_mthd(device, NV_DEVICE_V0_INFO, &args, sizeof(args));
--			if (ret || args.v.channels.mthd == NV_DEVICE_INFO_INVALID)
-+			ret = nvif_object_mthd(device, NV_DEVICE_V0_INFO, args,
-+					       __struct_size(args));
-+			if (ret || channels->mthd == NV_DEVICE_INFO_INVALID)
- 				return -ENODEV;
- 
--			drm->runl[i].chan_nr = args.v.channels.data;
-+			drm->runl[i].chan_nr = channels->data;
- 			drm->runl[i].chan_id_base = drm->chan_total;
- 			drm->runl[i].context_base = dma_fence_context_alloc(drm->runl[i].chan_nr);
- 
 -- 
-2.43.0
-
+Kees Cook
