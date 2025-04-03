@@ -1,107 +1,147 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 547FE194AC7;
-	Thu,  3 Apr 2025 06:00:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE79E24503F;
+	Thu,  3 Apr 2025 09:46:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743660018; cv=none; b=TLbo4a+GIwNIBooaQ7PEiagHHHwKGvkhML4PnGOP4Myl+1jALlYY9mcktQ33fIOzk8wR8F+ghxAZDFUqI6oVanC/NaaIlg8oJ8ObGGQ44x3m7EvDjtwAgAQlLI7WwJnz7OCdL9DnNddc9oqD1WVq8yQbXHLGue93Ddj5tutR/MQ=
+	t=1743673613; cv=none; b=P2gNqHIdLwmefvrpTxEBis3NlJBH2oHE2EKPZyEPrENimSNet6e6OPvX2MW6R2ZbX3pH5BRElzRNlKFMBfznBcs8byVbOrIGfO852LddbrSmwAkIglAGU9JwvPd6ljP5Z6YrbC2+IQ+sOipxHpvsUcKmIBj/JT9y0Fjc5ZlFEIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743660018; c=relaxed/simple;
-	bh=GgGLK/JKAFdo0H9wSAMZLdeL31KlQxn4teieuzIC7e4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=KQRf57wG6QAS086LUr/ASYY18toHeX8UZcOV4K9vhuX2FaIU5uDq+HWldBKi3UEIlytLHlLibOzPELOidmj70RCHSybRLHxnigA2gZM5oFEA8gcA14bpSM2PjKtinmUqyKeqdFEFdNqk4r5mYN8F/cBoBTpeigHxSqoV7tdrMhw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=gdYF5TZd; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="gdYF5TZd"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:Message-ID:Subject:Cc:To:
-	From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:References:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=5NwkqZuewG0v34YS2DSouf6H/+kIB+PU0H+C6MMnpBo=; b=gdYF5TZdvGh9Vwsn8O2FKNpeb4
-	UQ9rL8LYkC1s+dWDW0+bG+nYwSBEtkWifq11PtQTeIqvCmHfYpJxJDSH1io13BwcPqWxuWpankDqV
-	tXKofZLYSY1EPbR4v05KKktU6v3q2KLPBSqRosSSQlw+HHBIxa+m+yguVd2X6zqrAosfc0BBcPOTx
-	5//aIrcnM3WkGfnOT7CXJ1zGO+o9JSMciu/zMwEgbipJ6EeoDL/s3oPx6aOpgLD1EiQwXuolAGaER
-	THtitDTc94QXgCbx0U9wxtEroTG9WFv5eCImTRBuv12jshe42t/8SqoDuCrhSk6dxi32GUnxjgZ76
-	orbc10aQ==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1u0Dc4-00COSZ-0p;
-	Thu, 03 Apr 2025 13:59:41 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Thu, 03 Apr 2025 13:59:40 +0800
-Date: Thu, 3 Apr 2025 13:59:40 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: rostedt@goodmis.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, mhiramat@kernel.org,
-	mark.rutland@arm.com, mathieu.desnoyers@efficios.com,
-	akpm@linux-foundation.org, vdonnefort@google.com, vbabka@suse.cz,
-	rppt@kernel.org, kees@kernel.org, tony.luck@intel.com,
-	gpiccoli@igalia.com, linux-hardening@vger.kernel.org,
-	willy@infradead.org, Eric Biggers <ebiggers@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH v2 1/2] tracing: ring-buffer: Have the ring buffer code
- do the vmap of physical memory
-Message-ID: <Z-4jzImykAbHK2Gz@gondor.apana.org.au>
+	s=arc-20240116; t=1743673613; c=relaxed/simple;
+	bh=QnMCHcUeM+W1q0Zg76iQRhDEtl5RDhg+CheDfK0DLLg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k0KVn88lIjSLCtwMX0SMSqa3bXhYu6VJq19SiZHq8vPfGTnf2XQL+Enj63wLTkj3BZXRkPdgfSSaQDlpeGbZ9PT5RLAdAwRkEaTC5440xA5A8eqONflreB+OVG0k9q5Yua3pIxtfN5mZO1Fb0OJzaVOLgW8fasu36KeGonN6dl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFC1FC4CEE8;
+	Thu,  3 Apr 2025 09:46:50 +0000 (UTC)
+Date: Thu, 3 Apr 2025 10:46:48 +0100
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Peter Collingbourne <pcc@google.com>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Mark Rutland <mark.rutland@arm.com>, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, stable@vger.kernel.org
+Subject: Re: [PATCH v4 1/2] string: Add load_unaligned_zeropad() code path to
+ sized_strscpy()
+Message-ID: <Z-5ZCP5qw2Lcs9pA@arm.com>
+References: <20250329000338.1031289-1-pcc@google.com>
+ <20250329000338.1031289-2-pcc@google.com>
+ <Z-2ZwThH-7rkQW86@arm.com>
+ <CAMn1gO55tC78BpD+KuFgygg1Of57pr16O4BvKsUsrpo830-jEw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wg0wQb+CbUk2GY0CeVuTQvq67-oYR0nL8wGgySia3ce7g@mail.gmail.com>
-X-Newsgroups: apana.lists.os.linux.kernel
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMn1gO55tC78BpD+KuFgygg1Of57pr16O4BvKsUsrpo830-jEw@mail.gmail.com>
 
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
->
-> There's a flush_dcache_range() thing too, but I don't see a single use
-> of that function in generic code, so I suspect that one is currently
-> purely for architecture-specific drivers and doesn't work in egneral.
+On Wed, Apr 02, 2025 at 05:08:51PM -0700, Peter Collingbourne wrote:
+> On Wed, Apr 2, 2025 at 1:10 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
+> > On Fri, Mar 28, 2025 at 05:03:36PM -0700, Peter Collingbourne wrote:
+> > > diff --git a/lib/string.c b/lib/string.c
+> > > index eb4486ed40d25..b632c71df1a50 100644
+> > > --- a/lib/string.c
+> > > +++ b/lib/string.c
+> > > @@ -119,6 +119,7 @@ ssize_t sized_strscpy(char *dest, const char *src, size_t count)
+> > >       if (count == 0 || WARN_ON_ONCE(count > INT_MAX))
+> > >               return -E2BIG;
+> > >
+> > > +#ifndef CONFIG_DCACHE_WORD_ACCESS
+> > >  #ifdef CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
+> > >       /*
+> > >        * If src is unaligned, don't cross a page boundary,
+> > > @@ -133,12 +134,14 @@ ssize_t sized_strscpy(char *dest, const char *src, size_t count)
+> > >       /* If src or dest is unaligned, don't do word-at-a-time. */
+> > >       if (((long) dest | (long) src) & (sizeof(long) - 1))
+> > >               max = 0;
+> > > +#endif
+> > >  #endif
+> > >
+> > >       /*
+> > > -      * read_word_at_a_time() below may read uninitialized bytes after the
+> > > -      * trailing zero and use them in comparisons. Disable this optimization
+> > > -      * under KMSAN to prevent false positive reports.
+> > > +      * load_unaligned_zeropad() or read_word_at_a_time() below may read
+> > > +      * uninitialized bytes after the trailing zero and use them in
+> > > +      * comparisons. Disable this optimization under KMSAN to prevent
+> > > +      * false positive reports.
+> > >        */
+> > >       if (IS_ENABLED(CONFIG_KMSAN))
+> > >               max = 0;
+> > > @@ -146,7 +149,11 @@ ssize_t sized_strscpy(char *dest, const char *src, size_t count)
+> > >       while (max >= sizeof(unsigned long)) {
+> > >               unsigned long c, data;
+> > >
+> > > +#ifdef CONFIG_DCACHE_WORD_ACCESS
+> > > +             c = load_unaligned_zeropad(src+res);
+> > > +#else
+> > >               c = read_word_at_a_time(src+res);
+> > > +#endif
+> > >               if (has_zero(c, &data, &constants)) {
+> > >                       data = prep_zero_mask(c, data, &constants);
+> > >                       data = create_zero_mask(data);
+> >
+> > Kees mentioned the scenario where this crosses the page boundary and we
+> > pad the source with zeros. It's probably fine but there are 70+ cases
+> > where the strscpy() return value is checked, I only looked at a couple.
 > 
-> So *this* is the kind of "bad in a different way" I could imagine:
-> things that probably should be cleaned up and be available to generic
-> code, but very few people have cared, and so they are used in ad-hoc
-> places and haven't been sufficiently generalized and cleaned up.
+> The return value is the same with/without the patch, it's the number
+> of bytes copied before the null terminator (i.e. not including the
+> extra nulls now written).
 
-There is no fallback implementation of flush_dcache_range for the
-architectures that don't need it.
+I was thinking of the -E2BIG return but you are right, the patch
+wouldn't change this. If, for example, you read 8 bytes across a page
+boundary and it faults, load_unaligned_zeropad() returns fewer
+characters copied, implying the source was null-terminated.
+read_word_at_a_time(), OTOH, panics in the next
+byte-at-a-time loop. But it wouldn't return -E2BIG either, so it doesn't
+matter for the caller.
 
-It would be nice to have that, as doing it by hand is pretty silly:
+> > Could we at least preserve the behaviour with regards to page boundaries
+> > and keep the existing 'max' limiting logic? If I read the code
+> > correctly, a fall back to reading one byte at a time from an unmapped
+> > page would panic. We also get this behaviour if src[0] is reading from
+> > an invalid address, though for arm64 the panic would be in
+> > ex_handler_load_unaligned_zeropad() when count >= 8.
+> 
+> So do you think that the code should continue to panic if the source
+> string is unterminated because of a page boundary? I don't have a
+> strong opinion but maybe that's something that we should only do if
+> some error checking option is turned on?
 
-static inline void scatterwalk_done_dst(struct scatter_walk *walk,
-					unsigned int nbytes)
-{
-	scatterwalk_unmap(walk);
-	/*
-	 * Explicitly check ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE instead of just
-	 * relying on flush_dcache_page() being a no-op when not implemented,
-	 * since otherwise the BUG_ON in sg_page() does not get optimized out.
-	 * This also avoids having to consider whether the loop would get
-	 * reliably optimized out or not.
-	 */
-	if (ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE) {
-		struct page *base_page;
-		unsigned int offset;
-		int start, end, i;
+It's mostly about keeping the current behaviour w.r.t. page boundaries.
+Not a strong opinion either. The change would be to not read across page
+boundaries.
 
-		base_page = sg_page(walk->sg);
-		offset = walk->offset;
-		start = offset >> PAGE_SHIFT;
-		end = start + (nbytes >> PAGE_SHIFT);
-		end += (offset_in_page(offset) + offset_in_page(nbytes) +
-			PAGE_SIZE - 1) >> PAGE_SHIFT;
-		for (i = start; i < end; i++)
-			flush_dcache_page(nth_page(base_page, i));
-	}
+> > Reading across tag granule (but not across page boundary) and causing a
+> > tag check fault would result in padding but we can live with this and
+> > only architectures that do MTE-style tag checking would get the new
+> > behaviour.
+> 
+> By "padding" do you mean the extra (up to sizeof(unsigned long)) nulls
+> now written to the destination?
 
-Cheers,
+No, I meant the padding of the source when a fault occurs. The write to
+the destination would only be a single '\0' byte. It's the destination
+safe termination vs. panic above.
+
+> > What I haven't checked is whether a tag check fault in
+> > ex_handler_load_unaligned_zeropad() would confuse the KASAN logic for
+> > MTE (it would be a second tag check fault while processing the first).
+> > At a quick look, it seems ok but it might be worth checking.
+> 
+> Yes, that works, and I added a test case for that in v5. The stack
+> trace looks like this:
+
+Thanks for checking.
+
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Catalin
