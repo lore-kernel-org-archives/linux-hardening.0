@@ -1,156 +1,334 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 526D021C9EE;
-	Mon,  7 Apr 2025 17:29:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1347219A71
+	for <linux-hardening@vger.kernel.org>; Mon,  7 Apr 2025 17:29:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744046984; cv=none; b=fTVu8qFYUfykxfzvHSw2q7nR6zNMRptukT9mp4nwzfleUzybgICy5MMMeK4tbRHDD9ebZNCUaP+BpGintDAsoDa0FusiTxL7MhSCmCDvPFdwRTzLokZtLddEzWS/1/ItCTOWNm6q/3AMgGtIxm+uZCqv+GLzNBB5yOdUqM4p9HQ=
+	t=1744046984; cv=none; b=FpCXPYVZff9HQbeLY/O+FHxyFPrcu+827fUdFHe9lHGwg8UlviUJVvvnHdbsfMQJWzKiXLe3VEFMHhxfMtzIg6A+adWNBDkIWqa4be5pZ4QTX2+P1npcQTyiCjY+ZfrOSNKtqkwCvJyFS7QpcpYlKjVqSgaZdXMielscUuV3Uvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744046984; c=relaxed/simple;
-	bh=Y56DO+aQRPCY5yQB0R16rZt+S1/MCsRiFYTZs4yOjj4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jE6G0wzgM1gO1rVbRzvrUZ/Ens9SDVHEPIR66jkKi/GB+DByqixAvuX/TnSVhwjebEmFIyTsxp2gKTREmRQ3rtqY8cqMBuj8sFmdwbBP+p2VZ0PBnNj45yTxsM1FHwfcFJr41b1hmXP/K/mulajELiy4mYCBmEmWg73J3OlqHeg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E1WfzKgK; arc=none smtp.client-ip=10.30.226.201
+	bh=wDmeRftlsS2sqydvwRCNqk8/b4bEE1BAgviZ0NhpHSo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=e8WMOvM4KekHOvlnW9i9TRsJnwuDMaMfA6BncQWuYy4kjWIcsyXieu+4/twSztTpYAHZZg7OBN574sssFGVhAtc31qbb6I40j6JUd9dsgAR/FwzWQrhMr4sGfe1rnt2iP7hyl5SawZl8J/HGD1dJmbDyv5oJAFXqm4F7ceNsseE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=W8xww8Lh; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E1WfzKgK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9697C4CEEE;
-	Mon,  7 Apr 2025 17:29:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744046983;
-	bh=Y56DO+aQRPCY5yQB0R16rZt+S1/MCsRiFYTZs4yOjj4=;
-	h=From:To:Cc:Subject:Date:From;
-	b=E1WfzKgKCt4SgeEDDWwUT4E4twz9yGyxdTp6+8MqGzG8jUWUQC1lA0w351L+Ii1s/
-	 XW7sYkbn2Ft3jg87GRZwD9m76n6RbRgKq3E7IN+rjAzar5eTCSe8vXTVksrxJpgPNC
-	 6IXO8mYNuAPe8wiSeayjuleQeJ0SphxcefYaUXbT1nvqY86XlAKI2jBBMq63QifsbZ
-	 z07VeixjFhsHWE5liVXTD64io/KnfOHK0RxgzT9m6ly64VOBHwLKwO8JY+LR4QP3Pi
-	 UW878es2wOrQQuLZ/VNruWrbOSggUflFVs8rpc8G7rP2bDHEQ7j+mPxpBuqvxHStWa
-	 zxHFrb8lcFiPg==
-From: Kees Cook <kees@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Alejandro Colomar <alx@kernel.org>
-Cc: Kees Cook <kees@kernel.org>,
-	"Maciej W. Rozycki" <macro@orcam.me.uk>,
-	Azeem Shaikh <azeemshaikh38@gmail.com>,
-	Alex Elder <elder@kernel.org>,
-	Sumit Garg <sumit.garg@kernel.org>,
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W8xww8Lh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744046981;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bq6Q2Xg910WZ/PMWAwQHXShcurBaXkPUyBU7V9wKSVo=;
+	b=W8xww8LhVMEvSkk09YbAqnWrs8uKw8SHmx7DkB1S6f6SdgHYvMde3bNK5Fj9uoTVMD8MWH
+	SPw07Mj9iBNXT42qBhwS08U8i8wU8daRXPTafjQoamJYU5l1BE9bIUA3UsxhvRVDgL7c9U
+	SxI5Xs5A7lhZNf488yT6Dnw3Eyytt5o=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-635-QWT19wWEPYWM_ks2F_HFYA-1; Mon,
+ 07 Apr 2025 13:29:37 -0400
+X-MC-Unique: QWT19wWEPYWM_ks2F_HFYA-1
+X-Mimecast-MFC-AGG-ID: QWT19wWEPYWM_ks2F_HFYA_1744046974
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 948E9180AF50;
+	Mon,  7 Apr 2025 17:29:34 +0000 (UTC)
+Received: from p16v.luc.cera.cz (unknown [10.44.32.4])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 0EDE9180A803;
+	Mon,  7 Apr 2025 17:29:28 +0000 (UTC)
+From: Ivan Vecera <ivecera@redhat.com>
+To: netdev@vger.kernel.org
+Cc: Michal Schmidt <mschmidt@redhat.com>,
+	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+	Jiri Pirko <jiri@resnulli.us>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Prathosh Satish <Prathosh.Satish@microchip.com>,
+	Lee Jones <lee@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH v2] EISA: Increase length of device names
-Date: Mon,  7 Apr 2025 10:29:35 -0700
-Message-Id: <20250407172926.it.281-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+Subject: [PATCH 08/28] mfd: zl3073x: Add functions to work with register mailboxes
+Date: Mon,  7 Apr 2025 19:28:35 +0200
+Message-ID: <20250407172836.1009461-9-ivecera@redhat.com>
+In-Reply-To: <20250407172836.1009461-1-ivecera@redhat.com>
+References: <20250407172836.1009461-1-ivecera@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3862; i=kees@kernel.org; h=from:subject:message-id; bh=Y56DO+aQRPCY5yQB0R16rZt+S1/MCsRiFYTZs4yOjj4=; b=owGbwMvMwCVmps19z/KJym7G02pJDOlfuOt2Bc6I5BYwuCsS/WcnD8Pj3/Nf5ixSVNtw8cFZ8 f8Tlkj2dpSyMIhxMciKKbIE2bnHuXi8bQ93n6sIM4eVCWQIAxenAEzE15WRYaLU4TN8HEc+L3wQ yvo2PLTmqsuyFNmXhy8XPU7OZ37CKcHIsN1llu+qQJtTzZtSIx8d0Hjl9Pbr9OKdAf8v2bw83ca /ix0A
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-GCC 15's -Wunterminated-string-initialization warned about truncated
-name strings. Instead of marking them with the "nonstring" attribute[1],
-increase their length to correctly include enough space for the
-terminating NUL character, as they are used with %s format specifiers
-when showing resource allocations in /proc/ioports:
+Registers present in page 10 and higher are organized in so-called
+register mailboxes. These mailboxes are used to read and write
+configuration of particular object (dpll, output, reference & synth).
 
-        seq_printf(m, "%*s%0*llx-%0*llx : %s\n", ..., r->name);
+Each of these register pages contains mask register that is used by
+the driver to indicate an index of requested object to work with and
+also semaphore register to indicate what operation is requested.
+The rest of registers in the particular register page are latch
+registers that are filled by the firmware during read operation or by
+the driver prior write operation.
 
-The strings in eisa.ids have a max length of 73, and the 50 limit was an
-arbitrary limit that was removed back in 2008 with commit ca52a49846f1
-("driver core: remove DEVICE_NAME_SIZE define"). Change the limit to 74
-so nothing is truncated any more.
+For read operation the driver...
+1) ... updates the mailbox mask register with index of particular object
+2) ... sets the mailbox semaphore register read bit
+3) ... waits for the semaphore register read bit to be cleared by FW
+4) ... reads the configuration from latch registers
 
-Additionally fix the Makefile to use "if_changed" instead of "cmd"
-to detect changes to the command line used to generate the target,
-otherwise devlist.h won't be rebuilt.
+For write operation the driver...
+1) ... writes the requested configuration to latch registers
+2) ... sets the mailbox mask register for the DPLL to be updated
+3) ... sets the mailbox semaphore register bit for the write operation
+4) ... waits for the semaphore register bit to be cleared by FW
 
-Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=117178 [1]
-Signed-off-by: Kees Cook <kees@kernel.org>
+Add functions to read and write mailboxes for all supported object types.
+
+Reviewed-by: Michal Schmidt <mschmidt@redhat.com>
+Signed-off-by: Ivan Vecera <ivecera@redhat.com>
 ---
-Cc: Alejandro Colomar <alx@kernel.org>
-Cc: "Maciej W. Rozycki" <macro@orcam.me.uk>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Azeem Shaikh <azeemshaikh38@gmail.com>
-Cc: Alex Elder <elder@kernel.org>
-Cc: Sumit Garg <sumit.garg@kernel.org>
+ drivers/mfd/zl3073x-core.c  | 185 ++++++++++++++++++++++++++++++++++++
+ include/linux/mfd/zl3073x.h |  12 +++
+ 2 files changed, 197 insertions(+)
 
- v2: crank length to 74 for full coverage and fix Makefile too
- v1: https://lore.kernel.org/lkml/20250310222424.work.107-kees@kernel.org/
----
- drivers/eisa/Makefile   | 11 ++++-------
- drivers/eisa/eisa-bus.c |  2 +-
- include/linux/eisa.h    |  5 ++++-
- 3 files changed, 9 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/eisa/Makefile b/drivers/eisa/Makefile
-index a1dd0eaec2d4..f0d6cf7d1f32 100644
---- a/drivers/eisa/Makefile
-+++ b/drivers/eisa/Makefile
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- # Makefile for the Linux device tree
+diff --git a/drivers/mfd/zl3073x-core.c b/drivers/mfd/zl3073x-core.c
+index 33e76666e5694..feb139b550571 100644
+--- a/drivers/mfd/zl3073x-core.c
++++ b/drivers/mfd/zl3073x-core.c
+@@ -14,6 +14,47 @@ ZL3073X_REG16_DEF(revision,		0x0003);
+ ZL3073X_REG16_DEF(fw_ver,		0x0005);
+ ZL3073X_REG32_DEF(custom_config_ver,	0x0007);
  
--obj-$(CONFIG_EISA)	        += eisa-bus.o
-+obj-$(CONFIG_EISA)	        += devlist.h eisa-bus.o
- obj-${CONFIG_EISA_PCI_EISA}     += pci_eisa.o
- 
- # virtual_root.o should be the last EISA root device to initialize,
-@@ -9,14 +9,11 @@ obj-${CONFIG_EISA_PCI_EISA}     += pci_eisa.o
- obj-${CONFIG_EISA_VIRTUAL_ROOT} += virtual_root.o
- 
- 
--# Ugly hack to get DEVICE_NAME_SIZE value...
--DEVICE_NAME_SIZE = 50
--
- $(obj)/eisa-bus.o: $(obj)/devlist.h
- 
- quiet_cmd_eisaid = GEN     $@
--      cmd_eisaid = sed -e '/^\#/D' -e 's/^\([[:alnum:]]\{7\}\) \+"\([^"]\{1,$(DEVICE_NAME_SIZE)\}\).*"/EISA_DEVINFO ("\1", "\2"),/' $< > $@
-+      cmd_eisaid = sed -e '/^\#/D' -e 's/^\([[:alnum:]]\{7\}\) \+"\([^"]*\)"/EISA_DEVINFO ("\1", "\2"),/' $< > $@
- 
- clean-files := devlist.h
--$(obj)/devlist.h: $(src)/eisa.ids include/linux/device.h
--	$(call cmd,eisaid)
-+$(obj)/devlist.h: $(src)/eisa.ids include/linux/device.h FORCE
-+	$(call if_changed,eisaid)
-diff --git a/drivers/eisa/eisa-bus.c b/drivers/eisa/eisa-bus.c
-index cb586a362944..edceea083b98 100644
---- a/drivers/eisa/eisa-bus.c
-+++ b/drivers/eisa/eisa-bus.c
-@@ -21,7 +21,7 @@
- 
- struct eisa_device_info {
- 	struct eisa_device_id id;
--	char name[50];
-+	char name[EISA_DEVICE_INFO_NAME_SIZE];
- };
- 
- #ifdef CONFIG_EISA_NAMES
-diff --git a/include/linux/eisa.h b/include/linux/eisa.h
-index f98200cae637..21a2ecc1e538 100644
---- a/include/linux/eisa.h
-+++ b/include/linux/eisa.h
-@@ -28,6 +28,9 @@
- #define EISA_CONFIG_ENABLED         1
- #define EISA_CONFIG_FORCED          2
- 
-+/* Chosen to hold the longest string in eisa.ids. */
-+#define EISA_DEVICE_INFO_NAME_SIZE 74
++/*
++ * Register Map Page 10, Ref Mailbox
++ */
++ZL3073X_REG16_DEF(ref_mb_mask,			0x502);
++#define REF_MB_MASK				GENMASK(9, 0)
 +
- /* There is not much we can say about an EISA device, apart from
-  * signature, slot number, and base address. dma_mask is set by
-  * default to parent device mask..*/
-@@ -41,7 +44,7 @@ struct eisa_device {
- 	u64                   dma_mask;
- 	struct device         dev; /* generic device */
- #ifdef CONFIG_EISA_NAMES
--	char		      pretty_name[50];
-+	char		      pretty_name[EISA_DEVICE_INFO_NAME_SIZE];
- #endif
- };
++ZL3073X_REG8_DEF(ref_mb_sem,			0x504);
++#define REF_MB_SEM_WR				BIT(0)
++#define REF_MB_SEM_RD				BIT(1)
++
++/*
++ * Register Map Page 12, DPLL Mailbox
++ */
++ZL3073X_REG16_DEF(dpll_mb_mask,			0x602);
++
++ZL3073X_REG8_DEF(dpll_mb_sem,			0x604);
++#define DPLL_MB_SEM_WR				BIT(0)
++#define DPLL_MB_SEM_RD				BIT(1)
++
++/*
++ * Register Map Page 13, Synth Mailbox
++ */
++ZL3073X_REG16_DEF(synth_mb_mask,		0x682);
++
++ZL3073X_REG8_DEF(synth_mb_sem,			0x684);
++#define SYNTH_MB_SEM_WR				BIT(0)
++#define SYNTH_MB_SEM_RD				BIT(1)
++
++ZL3073X_REG16_DEF(synth_freq_base,		0x686);
++ZL3073X_REG32_DEF(synth_freq_mult,		0x688);
++ZL3073X_REG16_DEF(synth_freq_m,			0x68c);
++ZL3073X_REG16_DEF(synth_freq_n,			0x68e);
++
++/*
++ * Register Map Page 14, Output Mailbox
++ */
++ZL3073X_REG16_DEF(output_mb_mask,		0x702);
++ZL3073X_REG8_DEF(output_mb_sem,			0x704);
++#define OUTPUT_MB_SEM_WR			BIT(0)
++#define OUTPUT_MB_SEM_RD			BIT(1)
++
+ /*
+  * Regmap ranges
+  */
+@@ -142,6 +183,150 @@ int zl3073x_write_reg(struct zl3073x_dev *zldev, unsigned int reg,
+ }
+ EXPORT_SYMBOL_GPL(zl3073x_write_reg);
  
++/**
++ * ZL3073X_MB_OP - perform an operation on mailbox of certain type
++ * @_zldev: pointer to device structure
++ * @_type: type of mailbox (dpll, ref or output)
++ * @_index: object index of given type
++ * @_op: operation to perform
++ *
++ * Performs the requested operation on mailbox of certain type and
++ * returns 0 in case of success or negative value otherwise.
++ */
++#define ZL3073X_MB_OP(_zldev, _type, _index, _op)			\
++({									\
++	struct zl3073x_dev *__zldev = (_zldev);				\
++	u16 __mask = BIT(_index);					\
++	u8 __op = (_op);						\
++	int __rc;							\
++	do {								\
++		/* Select requested index in mask register */		\
++		__rc = zl3073x_write_##_type##_mb_mask(__zldev, __mask);\
++		if (__rc)						\
++			break;						\
++		/* Select requested command */				\
++		__rc = zl3073x_write_##_type##_mb_sem(__zldev, __op);	\
++		if (__rc)						\
++			break;						\
++		/* Wait for the command to actually finish */		\
++		__rc = zl3073x_wait_clear_bits(__zldev, _type##_mb_sem,	\
++					       __op);			\
++	} while (0);							\
++	__rc;								\
++})
++
++/**
++ * zl3073x_mb_dpll_read - read given DPLL configuration to mailbox
++ * @zldev: pointer to device structure
++ * @index: DPLL index
++ *
++ * Reads configuration of given DPLL into DPLL mailbox and returns 0
++ * in case of success or negative value otherwise.
++ */
++int zl3073x_mb_dpll_read(struct zl3073x_dev *zldev, u8 index)
++{
++	return ZL3073X_MB_OP(zldev, dpll, index, DPLL_MB_SEM_RD);
++}
++EXPORT_SYMBOL_GPL(zl3073x_mb_dpll_read);
++
++/**
++ * zl3073x_mb_dpll_write - write given DPLL configuration from mailbox
++ * @zldev: pointer to device structure
++ * @index: DPLL index
++ *
++ * Writes (commits) configuration of given DPLL from DPLL mailbox and
++ * returns 0 in case of success or negative value otherwise.
++ */
++int zl3073x_mb_dpll_write(struct zl3073x_dev *zldev, u8 index)
++{
++	return ZL3073X_MB_OP(zldev, dpll, index, DPLL_MB_SEM_WR);
++}
++EXPORT_SYMBOL_GPL(zl3073x_mb_dpll_write);
++
++/**
++ * zl3073x_mb_output_read - read given output configuration to mailbox
++ * @zldev: pointer to device structure
++ * @index: output index
++ *
++ * Reads configuration of given output into output mailbox and returns 0
++ * in case of success or negative value otherwise.
++ */
++int zl3073x_mb_output_read(struct zl3073x_dev *zldev, u8 index)
++{
++	return ZL3073X_MB_OP(zldev, output, index, OUTPUT_MB_SEM_RD);
++}
++EXPORT_SYMBOL_GPL(zl3073x_mb_output_read);
++
++/**
++ * zl3073x_mb_output_write - write given output configuration from mailbox
++ * @zldev: pointer to device structure
++ * @index: DPLL index
++ *
++ * Writes (commits) configuration of given output from output mailbox and
++ * returns 0 in case of success or negative value otherwise.
++ */
++int zl3073x_mb_output_write(struct zl3073x_dev *zldev, u8 index)
++{
++	return ZL3073X_MB_OP(zldev, output, index, OUTPUT_MB_SEM_WR);
++}
++EXPORT_SYMBOL_GPL(zl3073x_mb_output_write);
++
++/**
++ * zl3073x_mb_ref_read - read given reference configuration to mailbox
++ * @zldev: pointer to device structure
++ * @index: reference index
++ *
++ * Reads configuration of given reference into reference mailbox and
++ * returns 0 in case of success or negative value otherwise.
++ */
++int zl3073x_mb_ref_read(struct zl3073x_dev *zldev, u8 index)
++{
++	return ZL3073X_MB_OP(zldev, ref, index, REF_MB_SEM_RD);
++}
++EXPORT_SYMBOL_GPL(zl3073x_mb_ref_read);
++
++/**
++ * zl3073x_mb_ref_write - write given reference configuration from mailbox
++ * @zldev: pointer to device structure
++ * @index: reference index
++ *
++ * Writes (commits) configuration of given reference from reference mailbox
++ * and returns 0 in case of success or negative value otherwise.
++ */
++int zl3073x_mb_ref_write(struct zl3073x_dev *zldev, u8 index)
++{
++	return ZL3073X_MB_OP(zldev, ref, index, REF_MB_SEM_WR);
++}
++EXPORT_SYMBOL_GPL(zl3073x_mb_ref_write);
++
++/**
++ * zl3073x_mb_synth_read - read given synth configuration to mailbox
++ * @zldev: pointer to device structure
++ * @index: synth index
++ *
++ * Reads configuration of given synth into synth mailbox and returns 0
++ * in case of success or negative value otherwise.
++ */
++int zl3073x_mb_synth_read(struct zl3073x_dev *zldev, u8 index)
++{
++	return ZL3073X_MB_OP(zldev, synth, index, SYNTH_MB_SEM_RD);
++}
++EXPORT_SYMBOL_GPL(zl3073x_mb_synth_read);
++
++/**
++ * zl3073x_mb_synth_write - write given synth configuration from mailbox
++ * @zldev: pointer to device structure
++ * @index: synth index
++ *
++ * Writes (commits) configuration of given synth from reference mailbox
++ * and returns 0 in case of success or negative value otherwise.
++ */
++int zl3073x_mb_synth_write(struct zl3073x_dev *zldev, u8 index)
++{
++	return ZL3073X_MB_OP(zldev, synth, index, SYNTH_MB_SEM_WR);
++}
++EXPORT_SYMBOL_GPL(zl3073x_mb_synth_write);
++
+ /**
+  * zl3073x_devlink_info_get - Devlink device info callback
+  * @devlink: devlink structure pointer
+diff --git a/include/linux/mfd/zl3073x.h b/include/linux/mfd/zl3073x.h
+index 15dfb0d8bf3cb..436f79f2fda63 100644
+--- a/include/linux/mfd/zl3073x.h
++++ b/include/linux/mfd/zl3073x.h
+@@ -172,4 +172,16 @@ int zl3073x_write_##_name(struct zl3073x_dev *zldev, unsigned int idx,	\
+ 	__rc;								\
+ })
+ 
++/*
++ * Mailbox operations
++ */
++int zl3073x_mb_dpll_read(struct zl3073x_dev *zldev, u8 index);
++int zl3073x_mb_dpll_write(struct zl3073x_dev *zldev, u8 index);
++int zl3073x_mb_output_read(struct zl3073x_dev *zldev, u8 index);
++int zl3073x_mb_output_write(struct zl3073x_dev *zldev, u8 index);
++int zl3073x_mb_ref_read(struct zl3073x_dev *zldev, u8 index);
++int zl3073x_mb_ref_write(struct zl3073x_dev *zldev, u8 index);
++int zl3073x_mb_synth_read(struct zl3073x_dev *zldev, u8 index);
++int zl3073x_mb_synth_write(struct zl3073x_dev *zldev, u8 index);
++
+ #endif /* __LINUX_MFD_ZL3073X_H */
 -- 
-2.34.1
+2.48.1
 
