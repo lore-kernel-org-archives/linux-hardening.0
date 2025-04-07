@@ -1,74 +1,90 @@
-Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31C5E22E41D
-	for <linux-hardening@vger.kernel.org>; Mon,  7 Apr 2025 09:09:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E219923815A;
+	Mon,  7 Apr 2025 10:50:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744016943; cv=none; b=G1D8JU/f4Uzi8XVhoKOj1AvSdd+sAts9nDZcRwjo731vVD/QJBT3l5QtXw4k7WfoHq+HfvPbYOe2+QlCABOZNJ0y03uHDOXmTMjiMDc+ZilZeTT5SPLp5ZlkaqdAUDTWJf8h16e783U8Ky+IxU9YJu9bE7TIOakRGzaUI1tgzl8=
+	t=1744023021; cv=none; b=ukkd1QRuUIbPRQeEpgMVsPrvqqffILwa+5qg/USwQTt2RrB1ft02qtVFm5oLzxQiFFFX3xpuAZOcxn+9y+FkUeEsBoVLYmcjs3X902SWL7Z6GnfX8AqFZ8KFk6euD9pZSI7q2K8mpqYv3Md1ZaYH0EFsW3VKHz8NNgsQXdTV2BQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744016943; c=relaxed/simple;
-	bh=otjyu1yK+Nmm0V/n4TFbCOpBPDznw9MHSZTLk3O0/70=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ulzRTsMCZMM0/ZHvAuKgPz19J/abTYL648xFojiMfP6lvuJq9hH6iWrr4Br8rFkvCGkpOtm7+1ZSYQW0kTrRGgqA5mB86pygjPgmnUHEJujzAFdHek2VRly1Qe96ndLNjeA9qq+MItIFs+VHO6bgC5t/2WmN/bZxtD4yJ6XLiiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=MbvvmloL; arc=none smtp.client-ip=95.215.58.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1744023021; c=relaxed/simple;
+	bh=ox9GRWY6nvbeZArMaOwT3nxrycWzZcSJyn51bD8Zrh4=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=qvdcu7TFNcHegFaNIoWDVFxv92SIIGwZnj5L0X2Xow3+NJ5y9DLzVkccCU8A8oOLBl4rOeO/emTROJPtALxFodDDEHXQiePGVRfPyWCfdyTwznWfrV06p6t56T3OGd2BDTvcBSnLc8Fouq7+s5E5s61z+aXTCyi0XV1mzOwPUWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HIFd1DHF; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="MbvvmloL"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744016929;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=PI2yBm7HedcIW7BHq6L6NdzgVKH2U6R6R99lyNbMjAI=;
-	b=MbvvmloLqmACtwOASZdPBiiKhNS7Tlhx4oACe/gaRkdPZI2hpQlHnxYJ69k1YNPBbprgn+
-	OnhuWeTjD6uv58h2y1q3E8rQkrhiVqQrCWRIN3Oew/L2smy1XWH5ksN1/c/r/UGqrKQgxD
-	ZfiBcv9j0QkxIXd5CWOU2wxBIoqPcsY=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	linux-hardening@vger.kernel.org,
-	Takashi Iwai <tiwai@suse.de>,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] ALSA: azt2320: Replace deprecated strcpy() with strscpy()
-Date: Mon,  7 Apr 2025 11:08:29 +0200
-Message-ID: <20250407090832.743255-1-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HIFd1DHF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744023020; x=1775559020;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=ox9GRWY6nvbeZArMaOwT3nxrycWzZcSJyn51bD8Zrh4=;
+  b=HIFd1DHF0LBBsGHBm1sQzGlewoHk1bqN+loJsrcj1LyXpB41qo4eaWFw
+   xhYAT4kgz5toVkmZBdYTkKMfTuukcE5L4WyCqy93K2L1YtsV7R3vF4Sef
+   gdbkKvCrN1Z3cNJT+YU+Jd0IVKWGqK/cJSFI7ZQY6+dhrXejCmftf2Y1W
+   1oh6b5G5GWK7Xu1xDQgbgtyZU1GYoYyNWpCkV41/ZpN/AhLeyvciMjsj9
+   aT5wK76cHgv7FY90ZwHtQT6dOf0FBxCvOIaVjdQu7fqCYmQ74i4t7KLjO
+   MMJLdefEgz/+JxcTifIPGa778/oxtsDQm9niWDacO8Qcaq8RfP9acTBcB
+   A==;
+X-CSE-ConnectionGUID: 8UfJmuWbQKiFVg/n3/bIFg==
+X-CSE-MsgGUID: dF2p5X5MSmGr9TUopMWR0g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11396"; a="44545325"
+X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
+   d="scan'208";a="44545325"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 03:50:19 -0700
+X-CSE-ConnectionGUID: f1nTuujKQLm3g9jP4N2ZZg==
+X-CSE-MsgGUID: REmFyb67QcqdX9ffKAQDcw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
+   d="scan'208";a="133130367"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.229])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 03:50:17 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Mattia Dongili <malattia@linux.it>, Hans de Goede <hdegoede@redhat.com>, 
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-hardening@vger.kernel.org
+In-Reply-To: <Z-WlhL_tAP11M02G@kspp>
+References: <Z-WlhL_tAP11M02G@kspp>
+Subject: Re: [PATCH][next] platform/x86: Avoid
+ -Wflex-array-member-not-at-end warning
+Message-Id: <174402301172.2251.17175317523714748552.b4-ty@linux.intel.com>
+Date: Mon, 07 Apr 2025 13:50:11 +0300
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-strcpy() is deprecated, use strscpy() instead.
+On Thu, 27 Mar 2025 13:22:44 -0600, Gustavo A. R. Silva wrote:
 
-Link: https://github.com/KSPP/linux/issues/88
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
- sound/isa/azt2320.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> getting ready to enable it, globally.
+> 
+> Move the conflicting declaration to the end of the structure. Notice
+> that `struct acpi_resource_irq` is a flexible structure --a structure
+> that contains a flexible-array member.
+> 
+> [...]
 
-diff --git a/sound/isa/azt2320.c b/sound/isa/azt2320.c
-index b937c9138d12..588b9f0831d3 100644
---- a/sound/isa/azt2320.c
-+++ b/sound/isa/azt2320.c
-@@ -189,8 +189,8 @@ static int snd_card_azt2320_probe(int dev,
- 	if (error < 0)
- 		return error;
- 
--	strcpy(card->driver, "AZT2320");
--	strcpy(card->shortname, "Aztech AZT2320");
-+	strscpy(card->driver, "AZT2320");
-+	strscpy(card->shortname, "Aztech AZT2320");
- 	sprintf(card->longname, "%s, WSS at 0x%lx, irq %i, dma %i&%i",
- 		card->shortname, chip->port, irq[dev], dma1[dev], dma2[dev]);
- 
--- 
-2.49.0
+
+Thank you for your contribution, it has been applied to my local
+review-ilpo-next branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-next branch only once I've pushed my
+local branch there, which might take a while.
+
+The list of commits applied:
+[1/1] platform/x86: Avoid -Wflex-array-member-not-at-end warning
+      commit: a62372b6c9284ed42c68a0d8b3148f2dde61b4e4
+
+--
+ i.
 
