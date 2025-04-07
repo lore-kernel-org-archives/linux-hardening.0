@@ -1,339 +1,111 @@
-Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CF8922A4FE
-	for <linux-hardening@vger.kernel.org>; Mon,  7 Apr 2025 19:57:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3844D2206B6;
+	Mon,  7 Apr 2025 20:03:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744055879; cv=none; b=bTQCtTaoTO1pmbkGAwbIHyLm61GuGh9//oxT1KeWIMzHSoRUN+HCB6W0fLNtgVOkRJ6WMLdp0bMWBMp4SopINF3Mvj1GL64Gc6CQnfgUufniO7Yk5VZHGqZrIvRIoprq9yxbR1POQQ/q2qt6seolMIw6PNMWsJ3XbOdr9ezKMb0=
+	t=1744056197; cv=none; b=ki0MiJN2JmuKNh+1PITDewnSqc00blkW4/0Yvw+6kKfo/89o8rMM5g01gRzl4ywPUSWN1KxZTkgRQHOce7VWpzaWHgO/VpTW4yQTzRMyXD3peT+2qjj6TDmk30pLgbT0AO4sVNPov3oH4XPC88227cMQh6f4yg+PLPDRu1NxyCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744055879; c=relaxed/simple;
-	bh=OJIanmJobNF+BPU7TD7hAWBum72j0t/Ss/ccBjXxtjk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=H0USpWcGrHU3LaKNVOXYFdbNhwk+XQIZFjSPlZp4OP2zJUWVI1ezA8+1p+2DY4lYgr5xADqLRTJ5xTRyTixvZg3OBWxtPg/Cz6HfFN4SliuJVM1Ha+kEd9+nJxOeRZPn17QgJ9SjtFgAAn+7XZo2nbsb0G3665ckR95RtF6vXNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=AVAopYbg; arc=none smtp.client-ip=35.89.44.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1744056197; c=relaxed/simple;
+	bh=3EKCRIQbwtBUlUpec8gu+1qG8QcOMBPBU2NPHsauFtM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=GL+orTKJhXN97UAvC/sgDjV9dMvLacD2Y2pYC/XiEcBM/fDV0g7ShqjdaTaUhFnSqqsxLysboQ9L7/+1cEBx00t8RyJuUcl91sbmdSeVZyprKmnVVEMnYOxMuxUPH3w16iri7/qo8UnnnnfPVGY5XgA49uRls86mPlYUY87knF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tTDEVXji; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="AVAopYbg"
-Received: from eig-obgw-6003a.ext.cloudfilter.net ([10.0.30.151])
-	by cmsmtp with ESMTPS
-	id 1s63uFRu4METl1sbPuRFU2; Mon, 07 Apr 2025 19:57:51 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id 1sbOu94ieh9Zx1sbPu2CHe; Mon, 07 Apr 2025 19:57:51 +0000
-X-Authority-Analysis: v=2.4 cv=GODDEfNK c=1 sm=1 tr=0 ts=67f42e3f
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=B3fuDwYyW55wTQKIj88FGw==:17
- a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
- a=7uxg95fy6kqncDjJJCgA:9 a=QEXdDO2ut3YA:10 a=Xt_RvD8W3m28Mn_h3AK8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=yeTqSNh5wvMq1AuGfJRbvqgnVUFu7Bju2bJWfkxGsL8=; b=AVAopYbgXF9Q8S1Rm7e790qQYG
-	nU82WNSw5adlIxyWfJpKcedeEzKhLZY0QGle+29PYXdUiYMWkHToRIb9C+XWS4/8M1SyB0TgDxuXv
-	KkY/na9eG+JmqwgLC4nPHxq6XCtjwIv8AEkVg+O78VPQkvCOaqanEM1VYBW2H679pjbG+zae4jRjE
-	pE7dbMLw6pVny++KMVS+aCnrQVlfMHxo0QY0dhiLJgMuM4Am22Vf8Nb65WOdXuPSW5txlUv6EeRjm
-	4i4W0eubcdvEyfF0vKmAq+7hva5UunMgv571iMD4GWvtzrJUpcLWh277VeAPTJcTL4Qm09EE3njDi
-	E1CAKC6w==;
-Received: from [201.172.174.147] (port=36762 helo=[192.168.15.6])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1u1sbO-00000001mlB-0scu;
-	Mon, 07 Apr 2025 14:57:50 -0500
-Message-ID: <d8e63b8a-7a2c-46dc-a15c-9399044a23ee@embeddedor.com>
-Date: Mon, 7 Apr 2025 13:57:48 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tTDEVXji"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id B5DDDC4CEE9;
+	Mon,  7 Apr 2025 20:03:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744056196;
+	bh=3EKCRIQbwtBUlUpec8gu+1qG8QcOMBPBU2NPHsauFtM=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=tTDEVXjiTaRg82h666TCev6oxyYBA3yNSMqXz9fKJ9VD03cxgpQxeGWjDbEc/fWX0
+	 A4LdGH2kXT+I/jyDDQn5jBVg94xPRluaFfFX/m4gSGfOgGO91DWgCMIKE4QswKfUGJ
+	 F0tmdkY9HEsHjuJikB9RcjIZ36qoe6affu/v+EAFEhkVcERilMPidqWFul/o9QJZjY
+	 rjtVSYNE6xjcxfqLZ3bU4DoHze5QBMhDKuOqzhO97aSXZwOnm7jP+BceLLo102j1Q2
+	 A14dfkCCCeEm6rz7TRHAKdrY/Hfq45WHdiaK7wo4/jvQ73dXep+Z7e+9L4wy/VfISZ
+	 wDGguTS8N9QCA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0EB2C369A1;
+	Mon,  7 Apr 2025 20:03:16 +0000 (UTC)
+From: =?utf-8?q?Duje_Mihanovi=C4=87_via_B4_Relay?= <devnull+duje.mihanovic.skole.hr@kernel.org>
+Date: Mon, 07 Apr 2025 22:02:12 +0200
+Subject: [PATCH v15 1/4] dt-bindings: marvell: Document PXA1908 SoC and
+ samsung,coreprimevelte
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] drm/nouveau: chan: Avoid
- -Wflex-array-member-not-at-end warnings
-To: Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <Z-67Hm9uHEJs0RGw@kspp> <202504071227.E8484EB@keescook>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <202504071227.E8484EB@keescook>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.174.147
-X-Source-L: No
-X-Exim-ID: 1u1sbO-00000001mlB-0scu
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.6]) [201.172.174.147]:36762
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 30
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfOnaOvgzpKqpS4zonMy032hUmIeeYTQXgFVpIO5HY+wEa7mc0dnN0JBC0SXbenhGXX9RzwQ+tamM9/WfoIdZoLce5GbOqp0tRcM00WXnm559u36p3+5b
- p8gSU7KyTIrSocuGMNuHv1FYvEiBaMRgitiRgLrxrBh7o/dzsVnKDQxVpktW5vQiYChFrm+SkrWjxIouRIR4rRmm3/opYwT+3rm3bdzklYW/bOZWL8I95TKI
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250407-pxa1908-lkml-v15-1-e83ef101f944@skole.hr>
+References: <20250407-pxa1908-lkml-v15-0-e83ef101f944@skole.hr>
+In-Reply-To: <20250407-pxa1908-lkml-v15-0-e83ef101f944@skole.hr>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Lubomir Rintel <lkundrak@v3.sk>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+ Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>, 
+ Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, 
+ Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, 
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc: David Wronek <david@mainlining.org>, Karel Balej <balejk@matfyz.cz>, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org, 
+ phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht, 
+ soc@lists.linux.dev, 
+ =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1205;
+ i=duje.mihanovic@skole.hr; s=20240706; h=from:subject:message-id;
+ bh=0HZYngyzaREGDzMJHsAvgTM3SsJmtfsUf/jVpOGt2SA=;
+ b=owGbwMvMwCW21nBykGv/WmbG02pJDOlf9Bu3P7002btD6MyP5Ezu7c0/nsW96K749Oy29v7ki
+ JX++8sedJSyMIhxMciKKbLk/ne8xvtZZOv27GUGMHNYmUCGMHBxCsBEgmIZGY58lVa8/3Plnflb
+ NBbGLr9zMr+3THq/ONOCa+eXfdpSf6GZkeGgwoNX0o/Zvt9efsbgkG5E1+rZ4hkfpaTCDbzmFd6
+ 7t4gXAA==
+X-Developer-Key: i=duje.mihanovic@skole.hr; a=openpgp;
+ fpr=6DFF41D60DF314B5B76BA630AD319352458FAD03
+X-Endpoint-Received: by B4 Relay for duje.mihanovic@skole.hr/20240706 with
+ auth_id=191
+X-Original-From: =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
+Reply-To: duje.mihanovic@skole.hr
 
+From: Duje Mihanović <duje.mihanovic@skole.hr>
 
+Add dt bindings for the Marvell PXA1908 SoC and the Samsung Galaxy Core
+Prime VE LTE phone (model number SM-G361F) using the SoC.
 
-On 07/04/25 13:50, Kees Cook wrote:
-> On Thu, Apr 03, 2025 at 10:45:18AM -0600, Gustavo A. R. Silva wrote:
->> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
->> getting ready to enable it, globally.
->>
->> Use the `DEFINE_RAW_FLEX()` helper for a few on-stack definitions
->> of a flexible structure where the size of the flexible-array member
->> is known at compile-time, and refactor the rest of the code,
->> accordingly.
->>
->> So, with these changes, fix the following warnings:
->>
->> drivers/gpu/drm/nouveau/nouveau_chan.c:274:37: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
->> drivers/gpu/drm/nouveau/nouveau_chan.c:371:46: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
->> drivers/gpu/drm/nouveau/nouveau_chan.c:524:42: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
->>
->> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->> ---
->>   drivers/gpu/drm/nouveau/nouveau_chan.c | 115 ++++++++++++-------------
->>   1 file changed, 56 insertions(+), 59 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/nouveau/nouveau_chan.c b/drivers/gpu/drm/nouveau/nouveau_chan.c
->> index cd659b9fd1d9..a7e70517b7cd 100644
->> --- a/drivers/gpu/drm/nouveau/nouveau_chan.c
->> +++ b/drivers/gpu/drm/nouveau/nouveau_chan.c
->> @@ -270,10 +270,7 @@ nouveau_channel_ctor(struct nouveau_cli *cli, bool priv, u64 runm,
->>   		{    NV03_CHANNEL_DMA     , 0 },
->>   		{}
->>   	};
->> -	struct {
->> -		struct nvif_chan_v0 chan;
->> -		char name[TASK_COMM_LEN+16];
->> -	} args;
->> +	DEFINE_RAW_FLEX(struct nvif_chan_v0, args, name, TASK_COMM_LEN + 16);
->>   	struct nvif_device *device = &cli->device;
->>   	struct nouveau_channel *chan;
->>   	const u64 plength = 0x10000;
->> @@ -298,28 +295,28 @@ nouveau_channel_ctor(struct nouveau_cli *cli, bool priv, u64 runm,
->>   		return ret;
->>   
->>   	/* create channel object */
->> -	args.chan.version = 0;
->> -	args.chan.namelen = sizeof(args.name);
->> -	args.chan.runlist = __ffs64(runm);
->> -	args.chan.runq = 0;
->> -	args.chan.priv = priv;
->> -	args.chan.devm = BIT(0);
->> +	args->version = 0;
->> +	args->namelen = __struct_size(args) - sizeof(*args);
-> 
-> Does __struct_size(args->name) work here (and later)?
+The SoC comes with 4 Cortex-A53 cores clocked up to ~1.2GHz and a
+Vivante GC7000UL GPU. The phone also has a 4.5" 480x800 touchscreen, 8GB
+eMMC and 1GB of LPDDR3 RAM.
 
-Why not?
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Duje Mihanović <duje.mihanovic@skole.hr>
+---
+ Documentation/devicetree/bindings/arm/mrvl/mrvl.yaml | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-I mean, this should be equivalent to `TASK_COMM_LEN+16`, I could
-use the latter if people prefer it (see my comments below).
+diff --git a/Documentation/devicetree/bindings/arm/mrvl/mrvl.yaml b/Documentation/devicetree/bindings/arm/mrvl/mrvl.yaml
+index 4c43eaf3632e4ec8e7d9aeac62f7204e2af4405a..f73bb8ec3a1a1b9594eb059b72d95dcbf8c87c6b 100644
+--- a/Documentation/devicetree/bindings/arm/mrvl/mrvl.yaml
++++ b/Documentation/devicetree/bindings/arm/mrvl/mrvl.yaml
+@@ -35,6 +35,11 @@ properties:
+           - enum:
+               - dell,wyse-ariel
+           - const: marvell,mmp3
++      - description: PXA1908 based boards
++        items:
++          - enum:
++              - samsung,coreprimevelte
++          - const: marvell,pxa1908
+ 
+ additionalProperties: true
+ 
 
-> 
->> +	args->runlist = __ffs64(runm);
->> +	args->runq = 0;
->> +	args->priv = priv;
->> +	args->devm = BIT(0);
->>   	if (hosts[cid].oclass < NV50_CHANNEL_GPFIFO) {
->> -		args.chan.vmm = 0;
->> -		args.chan.ctxdma = nvif_handle(&chan->push.ctxdma);
->> -		args.chan.offset = chan->push.addr;
->> -		args.chan.length = 0;
->> +		args->vmm = 0;
->> +		args->ctxdma = nvif_handle(&chan->push.ctxdma);
->> +		args->offset = chan->push.addr;
->> +		args->length = 0;
->>   	} else {
->> -		args.chan.vmm = nvif_handle(&chan->vmm->vmm.object);
->> +		args->vmm = nvif_handle(&chan->vmm->vmm.object);
->>   		if (hosts[cid].oclass < FERMI_CHANNEL_GPFIFO)
->> -			args.chan.ctxdma = nvif_handle(&chan->push.ctxdma);
->> +			args->ctxdma = nvif_handle(&chan->push.ctxdma);
->>   		else
->> -			args.chan.ctxdma = 0;
->> -		args.chan.offset = ioffset + chan->push.addr;
->> -		args.chan.length = ilength;
->> +			args->ctxdma = 0;
->> +		args->offset = ioffset + chan->push.addr;
->> +		args->length = ilength;
->>   	}
->> -	args.chan.huserd = 0;
->> -	args.chan.ouserd = 0;
->> +	args->huserd = 0;
->> +	args->ouserd = 0;
->>   
->>   	/* allocate userd */
->>   	if (hosts[cid].oclass >= VOLTA_CHANNEL_GPFIFO_A) {
->> @@ -329,27 +326,28 @@ nouveau_channel_ctor(struct nouveau_cli *cli, bool priv, u64 runm,
->>   		if (ret)
->>   			return ret;
->>   
->> -		args.chan.huserd = nvif_handle(&chan->mem_userd.object);
->> -		args.chan.ouserd = 0;
->> +		args->huserd = nvif_handle(&chan->mem_userd.object);
->> +		args->ouserd = 0;
->>   
->>   		chan->userd = &chan->mem_userd.object;
->>   	} else {
->>   		chan->userd = &chan->user;
->>   	}
->>   
->> -	snprintf(args.name, sizeof(args.name), "%s[%d]", current->comm, task_pid_nr(current));
->> +	snprintf(args->name, __struct_size(args) - sizeof(*args), "%s[%d]",
->> +		 current->comm, task_pid_nr(current));
->>   
->>   	ret = nvif_object_ctor(&device->object, "abi16ChanUser", 0, hosts[cid].oclass,
->> -			       &args, sizeof(args), &chan->user);
->> +			       args, __struct_size(args), &chan->user);
->>   	if (ret) {
->>   		nouveau_channel_del(pchan);
->>   		return ret;
->>   	}
->>   
->> -	chan->runlist = args.chan.runlist;
->> -	chan->chid = args.chan.chid;
->> -	chan->inst = args.chan.inst;
->> -	chan->token = args.chan.token;
->> +	chan->runlist = args->runlist;
->> +	chan->chid = args->chid;
->> +	chan->inst = args->inst;
->> +	chan->token = args->token;
->>   	return 0;
->>   }
->>   
->> @@ -367,17 +365,17 @@ nouveau_channel_init(struct nouveau_channel *chan, u32 vram, u32 gart)
->>   		return ret;
->>   
->>   	if (chan->user.oclass >= FERMI_CHANNEL_GPFIFO) {
->> -		struct {
->> -			struct nvif_event_v0 base;
->> -			struct nvif_chan_event_v0 host;
->> -		} args;
->> +		DEFINE_RAW_FLEX(struct nvif_event_v0, args, data,
->> +				sizeof(struct nvif_chan_event_v0));
->> +		struct nvif_chan_event_v0 *host =
->> +				(struct nvif_chan_event_v0 *)args->data;
->>   
->> -		args.host.version = 0;
->> -		args.host.type = NVIF_CHAN_EVENT_V0_KILLED;
->> +		host->version = 0;
->> +		host->type = NVIF_CHAN_EVENT_V0_KILLED;
->>   
->>   		ret = nvif_event_ctor(&chan->user, "abi16ChanKilled", chan->chid,
->>   				      nouveau_channel_killed, false,
->> -				      &args.base, sizeof(args), &chan->kill);
->> +				      args, __struct_size(args), &chan->kill);
->>   		if (ret == 0)
->>   			ret = nvif_event_allow(&chan->kill);
->>   		if (ret) {
->> @@ -520,46 +518,45 @@ nouveau_channels_fini(struct nouveau_drm *drm)
->>   int
->>   nouveau_channels_init(struct nouveau_drm *drm)
->>   {
->> -	struct {
->> -		struct nv_device_info_v1 m;
->> -		struct {
->> -			struct nv_device_info_v1_data channels;
->> -			struct nv_device_info_v1_data runlists;
->> -		} v;
->> -	} args = {
->> -		.m.version = 1,
->> -		.m.count = sizeof(args.v) / sizeof(args.v.channels),
-> 
-> sizeof(args.v) == sizeof(struct nv_device_info_v1_data) * 2
-> 
-> and sizeof(args.v.channels) == sizeof(struct nv_device_info_v1_data).
-> 
-> Isn't this just "2"? i.e. isn't struct nv_device_info_v1::count the
-> counted_by for struct nv_device_info_v1::data?
+-- 
+2.49.0
 
-Yes, it's just `2`. However, I didn't want to explicitly use the magic
-number, in case people don't like it, as in other similar patches (in
-other subsystems).
-
-But, yeah, it's `2`. :)
-
-Thanks
---
-Gustavo
-
-> 
->> -		.v.channels.mthd = NV_DEVICE_HOST_CHANNELS,
->> -		.v.runlists.mthd = NV_DEVICE_HOST_RUNLISTS,
->> -	};
->> +	DEFINE_RAW_FLEX(struct nv_device_info_v1, args, data, 2);
->> +	struct nv_device_info_v1_data *channels = &args->data[0];
->> +	struct nv_device_info_v1_data *runlists = &args->data[1];
->>   	struct nvif_object *device = &drm->client.device.object;
->>   	int ret, i;
->>   
->> -	ret = nvif_object_mthd(device, NV_DEVICE_V0_INFO, &args, sizeof(args));
->> +	args->version = 1;
->> +	args->count = (__struct_size(args) - sizeof(*args)) /
->> +		      sizeof(*args->data);
->> +	channels->mthd = NV_DEVICE_HOST_CHANNELS;
->> +	runlists->mthd = NV_DEVICE_HOST_RUNLISTS;
->> +
->> +	ret = nvif_object_mthd(device, NV_DEVICE_V0_INFO, args,
->> +			       __struct_size(args));
->>   	if (ret ||
->> -	    args.v.runlists.mthd == NV_DEVICE_INFO_INVALID || !args.v.runlists.data ||
->> -	    args.v.channels.mthd == NV_DEVICE_INFO_INVALID)
->> +	    runlists->mthd == NV_DEVICE_INFO_INVALID || !runlists->data ||
->> +	    channels->mthd == NV_DEVICE_INFO_INVALID)
->>   		return -ENODEV;
->>   
->> -	drm->chan_nr = drm->chan_total = args.v.channels.data;
->> -	drm->runl_nr = fls64(args.v.runlists.data);
->> +	drm->chan_nr = drm->chan_total = channels->data;
->> +	drm->runl_nr = fls64(runlists->data);
->>   	drm->runl = kcalloc(drm->runl_nr, sizeof(*drm->runl), GFP_KERNEL);
->>   	if (!drm->runl)
->>   		return -ENOMEM;
->>   
->>   	if (drm->chan_nr == 0) {
->>   		for (i = 0; i < drm->runl_nr; i++) {
->> -			if (!(args.v.runlists.data & BIT(i)))
->> +			if (!(runlists->data & BIT(i)))
->>   				continue;
->>   
->> -			args.v.channels.mthd = NV_DEVICE_HOST_RUNLIST_CHANNELS;
->> -			args.v.channels.data = i;
->> +			channels->mthd = NV_DEVICE_HOST_RUNLIST_CHANNELS;
->> +			channels->data = i;
->>   
->> -			ret = nvif_object_mthd(device, NV_DEVICE_V0_INFO, &args, sizeof(args));
->> -			if (ret || args.v.channels.mthd == NV_DEVICE_INFO_INVALID)
->> +			ret = nvif_object_mthd(device, NV_DEVICE_V0_INFO, args,
->> +					       __struct_size(args));
->> +			if (ret || channels->mthd == NV_DEVICE_INFO_INVALID)
->>   				return -ENODEV;
->>   
->> -			drm->runl[i].chan_nr = args.v.channels.data;
->> +			drm->runl[i].chan_nr = channels->data;
->>   			drm->runl[i].chan_id_base = drm->chan_total;
->>   			drm->runl[i].context_base = dma_fence_context_alloc(drm->runl[i].chan_nr);
->>   
-> 
-> Otherwise looks good.
-> 
-> -Kees
-> 
 
