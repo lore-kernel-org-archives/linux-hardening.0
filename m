@@ -1,161 +1,214 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from omta40.uswest2.a.cloudfilter.net (omta40.uswest2.a.cloudfilter.net [35.89.44.39])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65052218AC0;
-	Mon,  7 Apr 2025 19:15:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFF9C219A9D
+	for <linux-hardening@vger.kernel.org>; Mon,  7 Apr 2025 19:19:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.39
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744053337; cv=none; b=hfsfb56f33Qg+G0c3ILdXV0/HBhs6cUH6s4TWywNMAe5bN/7rzQ8WQNOLXmBvgvpNMItIEwSkkVDc6CJzdhfs/oYvCUBA5yFRVVm5nedJBGHEZT1/A37L4pVacGGosaM7YRT/HaSuzdQShOc3q73ZUB9roP7/nz+66v0wGGESbc=
+	t=1744053577; cv=none; b=XtSKC6OOumWgtJEdH1im7VJtppao4FKOS9HxZkI4stsE2ZURUdG8yU8Z4QgkMfRx0JiazrKX/CljJ1BrsOz3xQrfFZxs7N3k7Ij1L7buU20UbeNsXi42z5Gtk/RMpRyeT8ZLF/Slx7mp/WnQ42lvExnhPMfvXknaUrOVw2/Bixg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744053337; c=relaxed/simple;
-	bh=hxg2O97nhJEMTUifQxQe0JJOBUMNYX7A6anLVkt8mH0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JhdpN5yvRN8LziPnvTjqAtCzkEJ1EoyjdunbFfaotSdj5M3iwHCctVnwvSLuL02gHDsJSYDo3KhfjcQqbvNAgTTWJussi3AGJIgw4vW6RokVHujhYo1qwBDOYuvMvH5PzVKuU+8FsZUsLgJ9wkzJb/rWu2g80b11ZMY86ODKgwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YWWMZqiX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744053577; c=relaxed/simple;
+	bh=1eb97aqE0jFhG3ua2t4QyKh8D7yORp6TFEcJBL375y4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kMWkHgn8/4cAdjEXs4aLmK9weGexRLi4cgn2KxCc1rMW5KcCN6uBZbim/StV7aCix27odwUfO1a1GL6nVVN0ZlJlIRTt6cvMqmWDbCdcZKYZbzl3VeHu+PWb6jYY2QgBEs+eiRQQMPrVcmH1VmNQb3cv5RIdl+4g+4FrlftXzl8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=hjIzSVH7; arc=none smtp.client-ip=35.89.44.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YWWMZqiX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC695C4CEDD;
-	Mon,  7 Apr 2025 19:15:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744053336;
-	bh=hxg2O97nhJEMTUifQxQe0JJOBUMNYX7A6anLVkt8mH0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YWWMZqiXjrEcG3bN+DFn3FBBHEaK/Soq+leOdAhafI52W7F+sxZpL1mvgP7wdupHy
-	 Pp7P49/m1ntny5pFWwLP9LKVNkgI41AVLEV7ouqGaaSFrKa9qTZ1z165Ns7z/eJOtD
-	 vHsZLSz2f+yElA56l4B/7xPqIGHjXb7IFimvY4b2TNx9P/V7gHUfZm0B5PS2NI588c
-	 JRSNCzDoq3lb90RJdA60SU5mIay6gugvI4a7LAv3/6JmvhTz83Bmxn9D0Y5oxJ7N5j
-	 5CeO+5yIwOTg0w4kKon4G1nhzXuo2mQYYTUXfACvScGBpMK4G+KAQqLnrjJhifLCtC
-	 4V+MzeLYADJew==
-Date: Mon, 7 Apr 2025 12:15:33 -0700
-From: Kees Cook <kees@kernel.org>
-To: Alan Stern <stern@rowland.harvard.edu>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] usb: ehci-fsl: Fix use of private data to avoid
- -Wflex-array-member-not-at-end warning
-Message-ID: <202504071215.DED5FA3535@keescook>
-References: <Z-R9BcnSzrRv5FX_@kspp>
- <1e82761e-8554-4168-8feb-561abbe49f7e@rowland.harvard.edu>
- <8139e4cc-4e5c-40e2-9c4b-717ad3215868@rowland.harvard.edu>
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="hjIzSVH7"
+Received: from eig-obgw-5004a.ext.cloudfilter.net ([10.0.29.221])
+	by cmsmtp with ESMTPS
+	id 1nxIu0inlf1UX1s0NuqB9I; Mon, 07 Apr 2025 19:19:35 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id 1s0Mu6S9Ejrgq1s0Mug11r; Mon, 07 Apr 2025 19:19:34 +0000
+X-Authority-Analysis: v=2.4 cv=PK7E+uqC c=1 sm=1 tr=0 ts=67f42546
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=B3fuDwYyW55wTQKIj88FGw==:17
+ a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
+ a=Ug0nj4SzLgKrA5L44zAA:9 a=QEXdDO2ut3YA:10 a=w-fa-FbTHyMX2ZhZN8In:22
+ a=Xt_RvD8W3m28Mn_h3AK8:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=JhK2lbu6iQXN42On7u6Rpw+HVGph+tSr1zyAzVNzGnQ=; b=hjIzSVH7/Jyyl6og6tVF2TAT+V
+	bNrcsGJcUzWTbgTx+c9gJXbpDLvETFNq+zR+GW0rFZyQDESPztw89kPD0SNChrItNOS5gstfecCOp
+	MgSOpd8/1mlFDjYYeNM3EjmslvXT5OOk8qR/NWIRHqRnv+nJ9q2YfM+X4DpuqsJQgFaeolQN924Yb
+	ploHdVmec2e6+5wE4hDZApcn759oG+Ja+/hKaDCyiejYLZ1L7PAeHS17uZ/ma1JoAQO87A3KS1Og+
+	aYO3vCVMDnJZsis7kNJ4o0Gic8XFLCxGdeIr/SyjG4b3spCNFBljYVfJLjb+h7tfQaLUSVhnd9pBQ
+	DvfwZU7w==;
+Received: from [201.172.174.147] (port=38782 helo=[192.168.15.6])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1u1s0L-0000000324w-3O9x;
+	Mon, 07 Apr 2025 14:19:33 -0500
+Message-ID: <1d87b6b5-04cc-48a3-ac5d-3b176814a0e6@embeddedor.com>
+Date: Mon, 7 Apr 2025 13:19:32 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8139e4cc-4e5c-40e2-9c4b-717ad3215868@rowland.harvard.edu>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH][next] w1: Avoid -Wflex-array-member-not-at-end warnings
+To: Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <Z-WD2NP_1A0ratnI@kspp> <202504071203.1024EFE5@keescook>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <202504071203.1024EFE5@keescook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.172.174.147
+X-Source-L: No
+X-Exim-ID: 1u1s0L-0000000324w-3O9x
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.15.6]) [201.172.174.147]:38782
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 14
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfPjAlHyTTJyOysID75jsBDSL+nCTddvS+A0Gf0zWDxdy1g392hwxM4Niysqy7lxJ4FlXWIGffb1rODRRRbIQYF/cRepw3ybWwsuIb0LBRkKMeCkdAm5T
+ 9oXMs/uUTBbz4zgvQHCGBPOOSIoOyXtNUGaTIPmEylPrrz+4bAzw6787nrTZ/xzL56riug7SRwiDi9PH28d7vGuBJp63+zaDwBY6naiqpayRFZPZu3opyvOD
 
-On Thu, Mar 27, 2025 at 03:31:15PM -0400, Alan Stern wrote:
-> In the course of fixing up the usages of flexible arrays, Gustavo
-> submitted a patch updating the ehci-fsl driver.  However, the patch
-> was wrong because the driver was using the .priv member of the
-> ehci_hcd structure incorrectly.  The private data is not supposed to
-> be a wrapper containing the ehci_hcd structure; it is supposed to be a
-> sub-structure stored in the .priv member.
+
+
+On 07/04/25 13:09, Kees Cook wrote:
+> On Thu, Mar 27, 2025 at 10:59:04AM -0600, Gustavo A. R. Silva wrote:
+>> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+>> getting ready to enable it, globally.
+>>
+>> Use the `DEFINE_RAW_FLEX()` helper for on-stack definitions of
+>> a flexible structure where the size of the flexible-array member
+>> is known at compile-time, and refactor the rest of the code,
+>> accordingly.
+>>
+>> So, with these changes, fix the following warnings:
+>>
+>> drivers/w1/w1_netlink.c:198:31: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+>> drivers/w1/w1_netlink.c:219:31: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+>>
+>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>> ---
+>>   drivers/w1/w1_netlink.c | 41 +++++++++++++++++++----------------------
+>>   1 file changed, 19 insertions(+), 22 deletions(-)
+>>
+>> diff --git a/drivers/w1/w1_netlink.c b/drivers/w1/w1_netlink.c
+>> index 691978cddab7..845d66ab7e89 100644
+>> --- a/drivers/w1/w1_netlink.c
+>> +++ b/drivers/w1/w1_netlink.c
+>> @@ -194,16 +194,16 @@ static void w1_netlink_queue_status(struct w1_cb_block *block,
+>>   static void w1_netlink_send_error(struct cn_msg *cn, struct w1_netlink_msg *msg,
+>>   	int portid, int error)
+>>   {
+>> -	struct {
+>> -		struct cn_msg cn;
+>> -		struct w1_netlink_msg msg;
+>> -	} packet;
+>> -	memcpy(&packet.cn, cn, sizeof(packet.cn));
+>> -	memcpy(&packet.msg, msg, sizeof(packet.msg));
+>> -	packet.cn.len = sizeof(packet.msg);
+>> -	packet.msg.len = 0;
+>> -	packet.msg.status = (u8)-error;
+>> -	cn_netlink_send(&packet.cn, portid, 0, GFP_KERNEL);
+>> +	DEFINE_RAW_FLEX(struct cn_msg, packet, data,
+>> +			sizeof(struct w1_netlink_msg));
+>> +	struct w1_netlink_msg *pkt_msg = (struct w1_netlink_msg *)packet->data;
 > 
-> Fix the problem by replacing the ehci_fsl structure with
-> ehci_fsl_priv, containing only the private data, along with a suitable
-> conversion macro for accessing it.  This removes the problem of having
-> data follow a flexible array member.
+> I'm starting to think we need a helper for "DEFINE_RAW_FLEX with a
+> trailing structure" for these. :)
+> 
+> Anyway, conversion looks good... structs are packed, so alignment issues
+> are unchanged.
+> 
+>> +
+>> +	memcpy(packet, cn, sizeof(*packet));
+>> +	memcpy(pkt_msg, msg, sizeof(*pkt_msg));
+> 
+> These could just be:
+> 
+> 	*packet = *cn;
+> 	*pkg_msg = *msg;
+> 
+> But that was always true. The memcpy() style is retained. But it would
+> catch type mismatches (like is accidentally introduced below).
+> 
+>> +	packet->len = sizeof(*pkt_msg);
+>> +	pkt_msg->len = 0;
+>> +	pkt_msg->status = (u8)-error;
+>> +	cn_netlink_send(packet, portid, 0, GFP_KERNEL);
+>>   }
+>>   
+>>   /**
+>> @@ -215,22 +215,19 @@ static void w1_netlink_send_error(struct cn_msg *cn, struct w1_netlink_msg *msg,
+>>    */
+>>   void w1_netlink_send(struct w1_master *dev, struct w1_netlink_msg *msg)
+>>   {
+>> -	struct {
+>> -		struct cn_msg cn;
+>> -		struct w1_netlink_msg msg;
+>> -	} packet;
+>> -	memset(&packet, 0, sizeof(packet));
+>> +	DEFINE_RAW_FLEX(struct cn_msg, packet, data,
+>> +			sizeof(struct w1_netlink_msg));
+>>   
+>> -	packet.cn.id.idx = CN_W1_IDX;
+>> -	packet.cn.id.val = CN_W1_VAL;
+>> +	packet->id.idx = CN_W1_IDX;
+>> +	packet->id.val = CN_W1_VAL;
+>>   
+>> -	packet.cn.seq = dev->seq++;
+>> -	packet.cn.len = sizeof(*msg);
+>> +	packet->seq = dev->seq++;
+>> +	packet->len = sizeof(*msg);
+>>   
+>> -	memcpy(&packet.msg, msg, sizeof(*msg));
+>> -	packet.msg.len = 0;
+>> +	memcpy(packet, msg, sizeof(*msg));
+> 
+> This memcpy() is wrong. It should be targeting packet->data.
 
-Thanks for figuring out the right solution! :)
+Ah yes! Other similar instances of this (in other subsystems) use `msg`
+as an alias for the flexible structure, so it seems I instinctively
+thought `packet == msg` for a moment. Thanks for catching this! :)
 
 > 
-> Reported-by: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-> Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-> Link: https://lore.kernel.org/linux-usb/Z-R9BcnSzrRv5FX_@kspp/
+>> +	((struct w1_netlink_msg *)packet->data)->len = 0;
+> 
+> And since you need it again here, I'd recommend defining a struct
+> w1_netlink_msg pointer similar to the first hunk.
 
-Reviewed-by: Kees Cook <kees@kernel.org>
+Right!
 
--Kees
+Thanks
+--
+Gustavo
 
 > 
-> ---
+> -Kees
 > 
->  drivers/usb/host/ehci-fsl.c |   25 ++++++++-----------------
->  1 file changed, 8 insertions(+), 17 deletions(-)
+>>   
+>> -	cn_netlink_send(&packet.cn, 0, 0, GFP_KERNEL);
+>> +	cn_netlink_send(packet, 0, 0, GFP_KERNEL);
+>>   }
+>>   
+>>   static void w1_send_slave(struct w1_master *dev, u64 rn)
+>> -- 
+>> 2.43.0
+>>
 > 
-> Index: usb-devel/drivers/usb/host/ehci-fsl.c
-> ===================================================================
-> --- usb-devel.orig/drivers/usb/host/ehci-fsl.c
-> +++ usb-devel/drivers/usb/host/ehci-fsl.c
-> @@ -410,15 +410,13 @@ static int ehci_fsl_setup(struct usb_hcd
->  	return retval;
->  }
->  
-> -struct ehci_fsl {
-> -	struct ehci_hcd	ehci;
-> -
-> -#ifdef CONFIG_PM
-> +struct ehci_fsl_priv {
->  	/* Saved USB PHY settings, need to restore after deep sleep. */
->  	u32 usb_ctrl;
-> -#endif
->  };
->  
-> +#define hcd_to_ehci_fsl_priv(h) ((struct ehci_fsl_priv *) hcd_to_ehci(h)->priv)
-> +
->  #ifdef CONFIG_PM
->  
->  #ifdef CONFIG_PPC_MPC512x
-> @@ -566,17 +564,10 @@ static inline int ehci_fsl_mpc512x_drv_r
->  }
->  #endif /* CONFIG_PPC_MPC512x */
->  
-> -static struct ehci_fsl *hcd_to_ehci_fsl(struct usb_hcd *hcd)
-> -{
-> -	struct ehci_hcd *ehci = hcd_to_ehci(hcd);
-> -
-> -	return container_of(ehci, struct ehci_fsl, ehci);
-> -}
-> -
->  static int ehci_fsl_drv_suspend(struct device *dev)
->  {
->  	struct usb_hcd *hcd = dev_get_drvdata(dev);
-> -	struct ehci_fsl *ehci_fsl = hcd_to_ehci_fsl(hcd);
-> +	struct ehci_fsl_priv *priv = hcd_to_ehci_fsl_priv(hcd);
->  	void __iomem *non_ehci = hcd->regs;
->  
->  	if (of_device_is_compatible(dev->parent->of_node,
-> @@ -589,14 +580,14 @@ static int ehci_fsl_drv_suspend(struct d
->  	if (!fsl_deep_sleep())
->  		return 0;
->  
-> -	ehci_fsl->usb_ctrl = ioread32be(non_ehci + FSL_SOC_USB_CTRL);
-> +	priv->usb_ctrl = ioread32be(non_ehci + FSL_SOC_USB_CTRL);
->  	return 0;
->  }
->  
->  static int ehci_fsl_drv_resume(struct device *dev)
->  {
->  	struct usb_hcd *hcd = dev_get_drvdata(dev);
-> -	struct ehci_fsl *ehci_fsl = hcd_to_ehci_fsl(hcd);
-> +	struct ehci_fsl_priv *priv = hcd_to_ehci_fsl_priv(hcd);
->  	struct ehci_hcd *ehci = hcd_to_ehci(hcd);
->  	void __iomem *non_ehci = hcd->regs;
->  
-> @@ -612,7 +603,7 @@ static int ehci_fsl_drv_resume(struct de
->  	usb_root_hub_lost_power(hcd->self.root_hub);
->  
->  	/* Restore USB PHY settings and enable the controller. */
-> -	iowrite32be(ehci_fsl->usb_ctrl, non_ehci + FSL_SOC_USB_CTRL);
-> +	iowrite32be(priv->usb_ctrl, non_ehci + FSL_SOC_USB_CTRL);
->  
->  	ehci_reset(ehci);
->  	ehci_fsl_reinit(ehci);
-> @@ -671,7 +662,7 @@ static int ehci_start_port_reset(struct
->  #endif /* CONFIG_USB_OTG */
->  
->  static const struct ehci_driver_overrides ehci_fsl_overrides __initconst = {
-> -	.extra_priv_size = sizeof(struct ehci_fsl),
-> +	.extra_priv_size = sizeof(struct ehci_fsl_priv),
->  	.reset = ehci_fsl_setup,
->  };
->  
 
--- 
-Kees Cook
