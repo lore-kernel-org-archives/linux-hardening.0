@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7995221D5BC;
-	Mon,  7 Apr 2025 18:54:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0865822E41C;
+	Mon,  7 Apr 2025 18:58:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744052051; cv=none; b=cI3TWL9bMr6csIkATgIFJonKgMXZdPC4ChSy4p40clGZQN90qK86Q5IoZiGqdKCBv5g5wnoQg7eZxb4Ucbsf5wwx3yeBxdmfRZfK37n2kEa/0WtHvIdcnIlvTJV62b4FRZpR5nQBwjdiSLknQL5FcRinGaiUhcoEJSserfRA7+4=
+	t=1744052301; cv=none; b=BgzyaR1mROZMMuxAiGZeBrPzZZBaS82WbdGX57NiF+M6Ahf6dZA7SnjtflH8wIVzA8oKAklb2anEy8rkjoKZZlR9l6ZlatI3+L4u5mGW/0S3WVbayNpPMKuNjZw0LeABBg9bN6ErnSgdGyXQO2xjAsOOpH2EKZH92qxsL2GBtIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744052051; c=relaxed/simple;
-	bh=Rjy7+gHwcN5R3Q73bvt6j0hYFAhCoXmIade8cQmpJMk=;
+	s=arc-20240116; t=1744052301; c=relaxed/simple;
+	bh=RJY+f1R8hI4t/Wsf1l9yEDTJPhNF5RCZngtFawzlXwc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B1Q00KGDzi30xpKwO7zUQd3MAV8MSt70D3Q/FEOIRgfUg/572ayPKdGd6sNgVy0QL5LY1Mj16onD/Li7a9OtsZAq9BKzeP4ulJ4fh7nxm420Vr7M75PqMbSbIYjgxenClGA0ZIKe+VE1t8e2ZOIcmLYqXZaUVjNzGVaUeW0kw7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mRxqjllV; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=MrTJEvkDt5lSg67SDNyiVxbXOnVzf5W3bg/wyN3k9W8RdIyvJE8okXme5wpxrbBL5Z5mLxJn2DCdLAKcoKf/koKmlOCBlgz7rTKjVJw6YFYt5vyKYHdBPs7yGdHqAOcfhKlbjuU5Bjk0hrfLoJmykITd1MgURuduY5g4JtA6aL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZF6Mwva6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mRxqjllV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0BF8C4CEDD;
-	Mon,  7 Apr 2025 18:54:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZF6Mwva6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77358C4CEDD;
+	Mon,  7 Apr 2025 18:58:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744052050;
-	bh=Rjy7+gHwcN5R3Q73bvt6j0hYFAhCoXmIade8cQmpJMk=;
+	s=k20201202; t=1744052300;
+	bh=RJY+f1R8hI4t/Wsf1l9yEDTJPhNF5RCZngtFawzlXwc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mRxqjllVEIoHXhcJ/cG5hI4NQhcJJVXXZCXKz6zeihbNv2UHA8cCI26AfONkeVsMp
-	 KUcbrdYILgvle3TQ3jwdv6NcpYrWXhcHUoF4wnUGjF+fdxEw5uHX6Q3vvJYObGFJdl
-	 Y4lb0RpVJW++Nmxjhie4hZZ7K99UiVFuQhk9cVGoGIdM5SEBdGbaPunJxFF3YkzhUV
-	 qLdPoBlNeX90W5d+7psGkDqt0I30Sfs2HrdtLiWHroUVhjGFJzANyFJatMMHzpjZ+o
-	 DPTFMPCuDwOqnRGxZ4p/VP4XmZ3APiCPSUmPhRojBcZeEiqKXUASLjlWu/7BHnMDH3
-	 Qevkot55QUWmA==
-Date: Mon, 7 Apr 2025 11:54:08 -0700
+	b=ZF6Mwva6UbJZzY0vnZ9L5tUFhcQF8KHT8qbFcwyDqIJkvI5YnJxnwh8DTRKC9itRw
+	 QGHVd+fiUPzjSYtyx2fLVTh0ls7zriFZdp7cfc/4PQxNA4ew0xzN5GFaiQCPRqH2l2
+	 1A84Viiss7tpJyfI7L+sYf00qXOJqTFFpoAQg/gmfiwwShZ85+75GRLxG4AA9SZoOF
+	 bruJqFYNkHWNDQft+qfH7jzE/OYTTZUEaqgILb+ocwSqoHLb2ZRYxUKgkOebLf2hql
+	 eE0Cu1XQnL7Ivh2hsGIbg/b19rdqOEyHZyAgitB5iBMilmpaa388dJXGfQNiKjO79Z
+	 4+HnP4AC9ao/Q==
+Date: Mon, 7 Apr 2025 11:58:17 -0700
 From: Kees Cook <kees@kernel.org>
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Al Viro <viro@zeniv.linux.org.uk>, linux-hardening@vger.kernel.org,
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] USB: gadget: Replace deprecated strncpy() with strscpy()
-Message-ID: <202504071153.46436ACBB@keescook>
-References: <20250320165647.34859-2-thorsten.blum@linux.dev>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Theodore Ts'o <tytso@mit.edu>,
+	Andreas Dilger <adilger.kernel@dilger.ca>,
+	linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] ext4: Avoid -Wflex-array-member-not-at-end warning
+Message-ID: <202504071156.2344BA19@keescook>
+References: <Z-SF97N3AxcIMlSi@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -44,50 +44,80 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250320165647.34859-2-thorsten.blum@linux.dev>
+In-Reply-To: <Z-SF97N3AxcIMlSi@kspp>
 
-On Thu, Mar 20, 2025 at 05:56:44PM +0100, Thorsten Blum wrote:
-> strncpy() is deprecated for NUL-terminated destination buffers; use
-> strscpy() instead. Since kzalloc() already zeroes out the destination
-> buffer, the potential NUL-padding by strncpy() is unnecessary. strscpy()
-> copies only the required characters and guarantees NUL-termination.
+On Wed, Mar 26, 2025 at 04:55:51PM -0600, Gustavo A. R. Silva wrote:
+> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> getting ready to enable it, globally.
+> 
+> Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
+> a flexible structure where the size of the flexible-array member
+> is known at compile-time, and refactor the rest of the code,
+> accordingly.
+> 
+> So, with these changes, fix the following warning:
+> 
+> fs/ext4/mballoc.c:3041:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  fs/ext4/mballoc.c | 18 ++++++++----------
+>  1 file changed, 8 insertions(+), 10 deletions(-)
+> 
+> diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
+> index 0d523e9fb3d5..f88424c28194 100644
+> --- a/fs/ext4/mballoc.c
+> +++ b/fs/ext4/mballoc.c
+> @@ -3037,10 +3037,8 @@ static int ext4_mb_seq_groups_show(struct seq_file *seq, void *v)
+>  	unsigned char blocksize_bits = min_t(unsigned char,
+>  					     sb->s_blocksize_bits,
+>  					     EXT4_MAX_BLOCK_LOG_SIZE);
+> -	struct sg {
+> -		struct ext4_group_info info;
+> -		ext4_grpblk_t counters[EXT4_MAX_BLOCK_LOG_SIZE + 2];
+> -	} sg;
+> +	DEFINE_RAW_FLEX(struct ext4_group_info, sg, bb_counters,
+> +			EXT4_MAX_BLOCK_LOG_SIZE + 2);
 
-Looks right to me; thanks for the details!
+Yup, struct ext4_group_info::bb_counters is ext4_grpblk_t, so everything
+matches up.
 
-> 
-> Since the destination buffer has a fixed length, strscpy() automatically
-> determines its size using sizeof() when the argument is omitted. This
-> makes an explicit sizeof() call unnecessary.
-> 
-> The source string is also NUL-terminated and meets the __must_be_cstr()
-> requirement of strscpy().
-> 
-> No functional changes intended.
-> 
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+>  
+>  	group--;
+>  	if (group == 0)
+> @@ -3048,7 +3046,7 @@ static int ext4_mb_seq_groups_show(struct seq_file *seq, void *v)
+>  			      " 2^0   2^1   2^2   2^3   2^4   2^5   2^6  "
+>  			      " 2^7   2^8   2^9   2^10  2^11  2^12  2^13  ]\n");
+>  
+> -	i = (blocksize_bits + 2) * sizeof(sg.info.bb_counters[0]) +
+> +	i = (blocksize_bits + 2) * sizeof(sg->bb_counters[0]) +
+>  		sizeof(struct ext4_group_info);
+>  
+>  	grinfo = ext4_get_group_info(sb, group);
+> @@ -3068,14 +3066,14 @@ static int ext4_mb_seq_groups_show(struct seq_file *seq, void *v)
+>  	 * We care only about free space counters in the group info and
+>  	 * these are safe to access even after the buddy has been unloaded
+>  	 */
+> -	memcpy(&sg, grinfo, i);
+> -	seq_printf(seq, "#%-5u: %-5u %-5u %-5u [", group, sg.info.bb_free,
+> -			sg.info.bb_fragments, sg.info.bb_first_free);
+> +	memcpy(sg, grinfo, i);
+> +	seq_printf(seq, "#%-5u: %-5u %-5u %-5u [", group, sg->bb_free,
+> +			sg->bb_fragments, sg->bb_first_free);
+>  	for (i = 0; i <= 13; i++)
+>  		seq_printf(seq, " %-5u", i <= blocksize_bits + 1 ?
+> -				sg.info.bb_counters[i] : 0);
+> +				sg->bb_counters[i] : 0);
+>  	seq_puts(seq, " ]");
+> -	if (EXT4_MB_GRP_BBITMAP_CORRUPT(&sg.info))
+> +	if (EXT4_MB_GRP_BBITMAP_CORRUPT(sg))
+>  		seq_puts(seq, " Block bitmap corrupted!");
+>  	seq_putc(seq, '\n');
+>  	return 0;
+
+Replacements looks good.
 
 Reviewed-by: Kees Cook <kees@kernel.org>
-
-
-> ---
->  drivers/usb/gadget/legacy/inode.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/usb/gadget/legacy/inode.c b/drivers/usb/gadget/legacy/inode.c
-> index b6a30d88a800..fcce84a726f2 100644
-> --- a/drivers/usb/gadget/legacy/inode.c
-> +++ b/drivers/usb/gadget/legacy/inode.c
-> @@ -1615,7 +1615,7 @@ static int activate_ep_files (struct dev_data *dev)
->  		mutex_init(&data->lock);
->  		init_waitqueue_head (&data->wait);
->  
-> -		strncpy (data->name, ep->name, sizeof (data->name) - 1);
-> +		strscpy(data->name, ep->name);
->  		refcount_set (&data->count, 1);
->  		data->dev = dev;
->  		get_dev (dev);
 
 -- 
 Kees Cook
