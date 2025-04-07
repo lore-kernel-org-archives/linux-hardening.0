@@ -1,89 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 912EC155A59;
-	Mon,  7 Apr 2025 20:30:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1885F20B7EF;
+	Mon,  7 Apr 2025 20:34:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744057849; cv=none; b=GTNdKXQIYDOXDrrVP0frmnUWctbrDaMVTMd8vjUHe0rgoVJhWQGVR/YSCldcqf+H7fz0My7TSDt6zK0ib4xDnPd9YmmEoaqIh/rA+sssTQP9jdiRiOClzBZ61lr6X6z227vo1gxEZvl3/HiEkAc8hV7hyck+aW+Ta1Q5rUsXOQw=
+	t=1744058073; cv=none; b=hpa3QBLXsADbdKVFTGjxE7XQaP4TsaNt6pQPU7pjz0gA+B8VSFRV6fH82QQoz4Ysn4lFX9vIMmrFORFF6QB4t07++lUFPOISl3ki3G518iEpUFQCuQqoXsXpl7K1WgqubdrcW2jZzUr4pvOU8+evaqmf7MUFA0ByEjp5k/7a3Ak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744057849; c=relaxed/simple;
-	bh=aX8gqFFDz3aJgiJg+W0QD39qGZotbE0J+oqjt08tgH8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KjOoqMFeGbYzg1kNvMsne7VgHETOGY+b7AO+JM6CAI1epY96ZRXmYuaj216BY4opw9D5/EhidNVD9w9dke3XM7gp9yXz8GjQW8ceZ+RILwNaCjAffOGMk6FtqAq6qNozZqQOIyP6V6Iv7cTP6K164oYZx5iL9+t6B6uZz3jF9EQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zt+xCYHt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744058073; c=relaxed/simple;
+	bh=tVR/F/NSylUgcJzbs2HkaEZkdZzrltsI8ghKO/ofRos=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=th4X4dXd1FI01Fpxr0IYFOlJIE7RklLwVSSpG2gHg9nFexwZzdBFwl3XsTWeTG3srFf5wCEFBQSq1Jgsh+De/ePA37Dg3NMvAc9dB+pjsUQ+PjTDkU/2O5osqZ5sKAL7sPZ2nLt98kBnSwE9NocmCUERxz/dx3GVfptgwCigv8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=U4J+JGhU; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zt+xCYHt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03EE6C4CEDD;
-	Mon,  7 Apr 2025 20:30:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744057849;
-	bh=aX8gqFFDz3aJgiJg+W0QD39qGZotbE0J+oqjt08tgH8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Zt+xCYHt9EIIZFqi6AgmNiWL6K0G8MoqwjgEl2rir6MnyEDm7706x+kqPjbBJVFBQ
-	 ghp53bHFXfyd2wiq8JyNROwlTD5ZWWu9/v7mrlNXDiEFiY3lEt/YNBQs282HiE4ijM
-	 brLgqF6YACgWs7FZpXsvkXiIOrERy8/yiGo24pvOs8NVzOZkG1lzXR3SWDi/qD0ATK
-	 FOzAjTq2F6oVjtcRv02VLtJ6hk/MS/1g5TGpnFcnsTK0d6tPfHI9JCT5KWnLmptn8F
-	 kkQqSy8NgiWp8n0hj3BULNWtrOhH1fTUorL5363XG6rD9DBzXc4QFOZ12y5X8HoM8C
-	 46Yqlkrj3AuLw==
-Date: Mon, 7 Apr 2025 13:30:46 -0700
-From: Kees Cook <kees@kernel.org>
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: James Smart <james.smart@broadcom.com>,
-	Ram Vegesna <ram.vegesna@broadcom.com>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	linux-hardening@vger.kernel.org, linux-scsi@vger.kernel.org,
-	target-devel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] scsi: elx: sli4: Replace deprecated strncpy() with
- strscpy()
-Message-ID: <202504071330.90FC6D8@keescook>
-References: <20250226185531.1092-2-thorsten.blum@linux.dev>
- <202504071126.37117C5D@keescook>
- <67E5FE26-F258-4690-A466-236A7E7484E8@linux.dev>
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="U4J+JGhU"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=oWjWmgLlKk+RYLGY1FfRtNeoSaBDNtMsU7hUod6knVg=;
+	t=1744058072; x=1745267672; b=U4J+JGhUrATF8K3jl/7txnBLNfBaBCUtrCLLI56okFxEWfU
+	AndkBr98q7CFzQal8w+zFp6AgnN8ufB5ERpH+jblGVnRfUuWJ4/S0mTX9f/k7D9xaiOVTfxFrgSx0
+	ePUQFhBMPIealVlxRpodU+uYi1raJfqaXEefchch5pBQpEUFRd1YVmy0/OGYICxaDYs7fXDEfIfbl
+	LLduYBX7JY6hISjaW7DX2W8YamWYqG/wPFgIbgbml3u7CIGe387G+nDhtqCKMQcwTbVJ01BdI8hdY
+	GRH/aD3kZCEGdtTmBYCsx6pMYwQkUlPWYYoR/0r2QaXij0jRZswvaLQawryLWLbw==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.98.1)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1u1tAq-00000002jo5-1yq9;
+	Mon, 07 Apr 2025 22:34:28 +0200
+Message-ID: <7f16ef040821818a0ac8f35b5636877eb7041bd8.camel@sipsolutions.net>
+Subject: Re: [PATCH][next] wifi: iwlwifi: mvm: d3: Avoid
+ -Wflex-array-member-not-at-end warnings
+From: Johannes Berg <johannes@sipsolutions.net>
+To: Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva"
+ <gustavoars@kernel.org>
+Cc: Miri Korenblit <miriam.rachel.korenblit@intel.com>, 
+	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Date: Mon, 07 Apr 2025 22:34:27 +0200
+In-Reply-To: <202504071310.17CBF96EEA@keescook>
+References: <Z_FxXjiMvG5u73fi@kspp> <202504071310.17CBF96EEA@keescook>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <67E5FE26-F258-4690-A466-236A7E7484E8@linux.dev>
+X-malware-bazaar: not-scanned
 
-On Mon, Apr 07, 2025 at 09:01:53PM +0200, Thorsten Blum wrote:
-> On 7. Apr 2025, at 20:28, Kees Cook wrote:
-> > On Wed, Feb 26, 2025 at 07:55:26PM +0100, Thorsten Blum wrote:
-> >> strncpy() is deprecated for NUL-terminated destination buffers; use
-> >> strscpy() instead.
-> >> 
-> >> Compile-tested only.
-> >> 
-> >> Link: https://github.com/KSPP/linux/issues/90
-> >> Cc: linux-hardening@vger.kernel.org
-> >> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
-> >> ---
-> > 
-> > Standard question for these kinds of conversions: Why is it safe that
-> > this is not NUL padded? I haven't found where this buffer is being
-> > zeroed out, but it probably is (given the "- 1" on the length), but
-> > without run-time testing, this needs much more careful analysis.
-> 
-> I think this was submitted before I started to explain this better.
-> 
-> 'wr_obj' is the zeroed out 'buf' returned from sli_config_cmd_init().
+On Mon, 2025-04-07 at 13:15 -0700, Kees Cook wrote:
+> lots of quotes
 
-I don't see how dma->virt and buf are associated?
+It'd be really good if you could trim the quotes a bit ...
 
-> 
-> I'll update the description and submit a v2.
+> > +		wkc->mac_id_n_color =3D
+> > +			cpu_to_le32(FW_CMD_ID_AND_COLOR(mvmvif->id,
+> > +							mvmvif->color));
+> > +		wkc->num_keys =3D 1;
+>=20
+> Looks like struct iwl_mvm_wep_key_cmd::num_keys is the counted_by for
+> struct iwl_mvm_wep_key_cmd::wep_key?
 
-Thanks!
+No no no. I'm still burned by you adding this to various places
+elsewhere in the wireless stack, let's not.
 
-> 
-> Thanks,
-> Thorsten
-> 
+Btw, Gustavo, I think it was probably the other iwlwifi patch, but
+please also make sure kernel-doc doesn't start complaining, we are
+trying keep it that way.
 
--- 
-Kees Cook
+johannes
