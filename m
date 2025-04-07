@@ -1,208 +1,106 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FEE326289;
-	Sun,  6 Apr 2025 21:13:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A312DA50;
+	Mon,  7 Apr 2025 01:04:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743973999; cv=none; b=PwDpUoIQ0UQzEjxZ+7cFFuJnPgDCx1QQHj/NLgyDThezA+vaikB+vbX2hmejbLJyO2tX+Mzxns9IPXR/OgDF1H2Du+cDrxYufo8dbUwuDvlZkO9ymQ785+573ZEYvPKoRCwh4ZIZ4jz+jxRrCXiJ/nYwpbMgFPMdlvrBXC2wB/w=
+	t=1743987874; cv=none; b=SjIdf3tSYZQO1+NaQpGru9+nheHRLr373YQJO7KajekdKyuPfJmSGZAXsj9fCZ5YfG0ez25SlJvrld0TXuMHuP4JLTL21oVj+IHhOJn/lh39hYas7RHEm3OkO+pLNw/uWnZWheF+PIVNqK1jkmodqyTKv78AzNktBWQIUjvSwZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743973999; c=relaxed/simple;
-	bh=bulRqcr47jc7VqE5WNZPcSb0IokI8W+YVgaj7tbjxrc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=tHit7Qjhrh9ELZB+enUatMnEPPBwf6tyfJwcKNO5TVNXpv7oucWxOsGUalc+T8UNpguPPkAsdmX7RRBV+aNK2GU0tW63fGjKaKpGbLl4pyvKInE3LqGhULt+DuU62VLetZATTmYJo2iB2JA8hl7Apo5kIdB/y6IU5/ujbnwjOec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HQQRNjNL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743987874; c=relaxed/simple;
+	bh=JKMvMFObK6FIBHypWWc6gchTEsm37qqvTo8DKKDS2JI=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=LqCffiA/TEtMFXAsrG/hYQwMQI4fEmyogyKB4wiuxA2Zp0wxZy4U2Wx/oH6w+UYw2qEjwaonieqImF+EgIZ1rdB68IquqqYyWKkGfoXGw9mPWWCGcPN/qYkFYMN+Drbdf7fLa4VPZmNqGs8ZhcOR8JuvUcjY23GBT4IE+58t2fY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Radphs9d; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HQQRNjNL"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D5478C4CEE3;
-	Sun,  6 Apr 2025 21:13:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Radphs9d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65496C4CEE3;
+	Mon,  7 Apr 2025 01:04:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743973998;
-	bh=bulRqcr47jc7VqE5WNZPcSb0IokI8W+YVgaj7tbjxrc=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=HQQRNjNLbDsEIf9G1ZxTGJbHEtDd70z+KepTyIlisqUP964c9zpUwE3GDFojA7jAG
-	 0s3OlEK0fQOUmfdEu60E5pyZgdPsjgjCq6D0oeOh+WgJFys/QqE1yEwIvQCJTTc4ZK
-	 7ypVofjrR6RAy3YBeedeN+AkTv47vAro4TbDb/AVbCRUP4zq1MD6ZUCELC1RimxiSE
-	 inI57rfzM4kiRDF/84gvSqfaK6ndzEnEvpvAhV89hF0iFOFwpMhdyfTPP4cBergqkH
-	 DNnoZ6VL0eSzIbxJPEmc2jWWqhEyyS37Zp+baOwn7f7tfskIQy/HFDh3+UEGSTiwAc
-	 vSCLP6rvUOrrA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C27BBC36002;
-	Sun,  6 Apr 2025 21:13:18 +0000 (UTC)
-From: Aaron Kling via B4 Relay <devnull+webgeek1234.gmail.com@kernel.org>
-Date: Sun, 06 Apr 2025 16:12:43 -0500
-Subject: [PATCH] arm64: tegra: Enable ramoops on Tegra210 and newer
+	s=k20201202; t=1743987873;
+	bh=JKMvMFObK6FIBHypWWc6gchTEsm37qqvTo8DKKDS2JI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Radphs9d7GdMTJTlhc1VfWtIbB+R1wde9GtJABPr22OP5rYkrdpTYfHcOEh8kikPG
+	 7PcdNxlFawShbp/Uy3QFpsH5uL+KN6rPmg5bdmqTnOK6jzyE31WWaPFVQtr1JgUn+J
+	 lbyuJRC2kuG3Ng6V3Pbm4MytmenM512Gr3v5o2phTAAnp2JamrqM2QyQma/EiR3nHe
+	 4jhpidBRuZvgJkKmLH6Wr3EpwEOZWppj3EACnAT8f6L4XkO5dh2YGtMTdm+DSR6Uqj
+	 q6shFWBvFkvwYceLp9fDiowSkQYnplCdYTH5jCChdZ35G+2vbYTVxhkP3MYwxExL8b
+	 O0wQH2ltGA9iw==
+Date: Mon, 7 Apr 2025 10:04:30 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Tom Zanussi <zanussi@kernel.org>, Kees Cook <keescook@chromium.org>,
+ linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] tracing: Always use memcpy() in histogram add_to_key()
+Message-Id: <20250407100430.5fbc9d1de5eb0c4c552323d9@kernel.org>
+In-Reply-To: <20250403210637.1c477d4a@gandalf.local.home>
+References: <20250403210637.1c477d4a@gandalf.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250406-tegra-pstore-v1-1-bf5b57f12293@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAEru8mcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDEwMT3ZLU9KJE3YLikvyiVF3TpNQU4zRzI0NjSwMloJaCotS0zAqwcdG
- xtbUAA397DF4AAAA=
-X-Change-ID: 20250404-tegra-pstore-5bed3f721390
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Thierry Reding <thierry.reding@gmail.com>, 
- Jonathan Hunter <jonathanh@nvidia.com>, Kees Cook <kees@kernel.org>, 
- Tony Luck <tony.luck@intel.com>, 
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
- Aaron Kling <webgeek1234@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1743973998; l=4405;
- i=webgeek1234@gmail.com; s=20250217; h=from:subject:message-id;
- bh=8+6obcSKfeNBlTaNefo4ySU2Kjh+Hx6xO5b9LE4VbJk=;
- b=Wma2bTDlc+b7ZVz6L59OvUcBddv6u31glDElqK3rt0iOwTPWBcDzQOuD1ooZRx+zEPh8hi3Lk
- sPHdAr4G41UDYqlvejaX92VClrwW9ziwuvPWa57miDebehCn7LFNdPr
-X-Developer-Key: i=webgeek1234@gmail.com; a=ed25519;
- pk=TQwd6q26txw7bkK7B8qtI/kcAohZc7bHHGSD7domdrU=
-X-Endpoint-Received: by B4 Relay for webgeek1234@gmail.com/20250217 with
- auth_id=342
-X-Original-From: Aaron Kling <webgeek1234@gmail.com>
-Reply-To: webgeek1234@gmail.com
 
-From: Aaron Kling <webgeek1234@gmail.com>
+On Thu, 3 Apr 2025 21:06:37 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-This allows using pstore on all such platforms. There are some
-differences per arch:
+> From: Steven Rostedt <rostedt@goodmis.org>
+> 
+> The add_to_key() function tests if the key is a string or some data. If
+> it's a string it does some further calculations of the string size (still
+> truncating it to the max size it can be), and calls strncpy().
+> 
+> If the key isn't as string it calls memcpy(). The interesting point is
+> that both use the exact same parameters:
+> 
+>                 strncpy(compound_key + key_field->offset, (char *)key, size);
+>         } else
+>                 memcpy(compound_key + key_field->offset, key, size);
+> 
+> As strncpy() is being used simply as a memcpy() for a string, and since
+> strncpy() is deprecated, just call memcpy() for both memory and string
+> keys.
+> 
 
-* Tegra132: Flounder does not appear to enumerate pstore and I do not
-  have access to norrin, thus Tegra132 is left out of this commit.
-* Tegra210: Does not support ramoops carveouts in the bootloader, instead
-  relying on a dowstream driver to allocate the carveout, hence this
-  hardcodes a location matching what the downstream driver picks.
-* Tegra186 and Tegra194 on cboot: Bootloader fills in the address and
-  size in a node specifically named /reserved-memory/ramoops_carveout,
-  thus these cannot be renamed.
-* Tegra194 and Tegra234 on edk2: Bootloader looks up the node based on
-  compatible, however the dt still does not know the address, so keeping
-  the node name consistent on Tegra186 and newer.
+Looks good to me.
 
-Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
----
- arch/arm64/boot/dts/nvidia/tegra186.dtsi | 16 ++++++++++++++++
- arch/arm64/boot/dts/nvidia/tegra194.dtsi | 16 ++++++++++++++++
- arch/arm64/boot/dts/nvidia/tegra210.dtsi | 13 +++++++++++++
- arch/arm64/boot/dts/nvidia/tegra234.dtsi | 16 ++++++++++++++++
- 4 files changed, 61 insertions(+)
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra186.dtsi b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-index 2b3bb5d0af17bd521f87db0484fcbe943dd1a797..2e2b27deb957dfd754e42dd03f5a1da5079971dc 100644
---- a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-@@ -2051,6 +2051,22 @@ pmu-denver {
- 		interrupt-affinity = <&denver_0 &denver_1>;
- 	};
- 
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		ramoops_carveout {
-+			compatible = "ramoops";
-+			size = <0x0 0x200000>;
-+			record-size = <0x00010000>;
-+			console-size = <0x00080000>;
-+			alignment = <0x0 0x10000>;
-+			alloc-ranges = <0x0 0x0 0x1 0x0>;
-+			no-map;
-+		};
-+	};
-+
- 	sound {
- 		status = "disabled";
- 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-index 33f92b77cd9d9e530eae87a4bb8ba61993ceffeb..90ffea161a57a8986c2493573c73e3cf9e2c43c0 100644
---- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-@@ -3105,6 +3105,22 @@ psci {
- 		method = "smc";
- 	};
- 
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		ramoops_carveout {
-+			compatible = "ramoops";
-+			size = <0x0 0x200000>;
-+			record-size = <0x00010000>;
-+			console-size = <0x00080000>;
-+			alignment = <0x0 0x10000>;
-+			alloc-ranges = <0x0 0x0 0x1 0x0>;
-+			no-map;
-+		};
-+	};
-+
- 	tcu: serial {
- 		compatible = "nvidia,tegra194-tcu";
- 		mboxes = <&hsp_top0 TEGRA_HSP_MBOX_TYPE_SM TEGRA_HSP_SM_RX(0)>,
-diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-index b6c84d195c0ef9ae90721fada09ffd46a9c11fa3..00ae127e8b8af3fe3b95d8ce5986d937a4fc6325 100644
---- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-@@ -2025,6 +2025,19 @@ pmu {
- 				      &{/cpus/cpu@2} &{/cpus/cpu@3}>;
- 	};
- 
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		ramoops@b0000000 {
-+			compatible = "ramoops";
-+			reg = <0x0 0xb0000000 0x0 0x200000>;
-+			record-size = <0x00010000>;
-+			console-size = <0x00080000>;
-+		};
-+	};
-+
- 	sound {
- 		status = "disabled";
- 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra234.dtsi b/arch/arm64/boot/dts/nvidia/tegra234.dtsi
-index 2601b43b2d8cadeb0d1f428018a82b144aa79392..36f35c6dc774d42aca8871dbfa0e0a16414cb860 100644
---- a/arch/arm64/boot/dts/nvidia/tegra234.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra234.dtsi
-@@ -5723,6 +5723,22 @@ psci {
- 		method = "smc";
- 	};
- 
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		ramoops_carveout {
-+			compatible = "ramoops";
-+			size = <0x0 0x200000>;
-+			record-size = <0x00010000>;
-+			console-size = <0x00080000>;
-+			alignment = <0x0 0x10000>;
-+			alloc-ranges = <0x0 0x0 0x1 0x0>;
-+			no-map;
-+		};
-+	};
-+
- 	tcu: serial {
- 		compatible = "nvidia,tegra234-tcu", "nvidia,tegra194-tcu";
- 		mboxes = <&hsp_top0 TEGRA_HSP_MBOX_TYPE_SM TEGRA_HSP_SM_RX(0)>,
+Thank you,
 
----
-base-commit: 91e5bfe317d8f8471fbaa3e70cf66cae1314a516
-change-id: 20250404-tegra-pstore-5bed3f721390
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+>  kernel/trace/trace_events_hist.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+> 
+> diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+> index c1ea6aaac182..4258324219ca 100644
+> --- a/kernel/trace/trace_events_hist.c
+> +++ b/kernel/trace/trace_events_hist.c
+> @@ -5224,10 +5224,8 @@ static inline void add_to_key(char *compound_key, void *key,
+>  		/* ensure NULL-termination */
+>  		if (size > key_field->size - 1)
+>  			size = key_field->size - 1;
+> -
+> -		strncpy(compound_key + key_field->offset, (char *)key, size);
+> -	} else
+> -		memcpy(compound_key + key_field->offset, key, size);
+> +	}
+> +	memcpy(compound_key + key_field->offset, key, size);
+>  }
+>  
+>  static void
+> -- 
+> 2.47.2
+> 
 
-Best regards,
+
 -- 
-Aaron Kling <webgeek1234@gmail.com>
-
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
