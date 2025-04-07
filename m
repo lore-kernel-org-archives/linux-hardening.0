@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EA6422172C;
-	Mon,  7 Apr 2025 18:52:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7995221D5BC;
+	Mon,  7 Apr 2025 18:54:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744051938; cv=none; b=bUm9hMUsmchF9/1L6XFlNMZ6QRMSP3/gXEQi4g5JqDQgBBh/aJhG3HnaO0igPuZ8liel2wDJvQuDwkTt/SCXm+YrDvXhORqFxH0xGiu+Lc8/FqvDI6Fkc6GOFho1iKFtuS3lVw7z46lxAtFosSus5mH7LayDVwsBFXB5p2rHb0o=
+	t=1744052051; cv=none; b=cI3TWL9bMr6csIkATgIFJonKgMXZdPC4ChSy4p40clGZQN90qK86Q5IoZiGqdKCBv5g5wnoQg7eZxb4Ucbsf5wwx3yeBxdmfRZfK37n2kEa/0WtHvIdcnIlvTJV62b4FRZpR5nQBwjdiSLknQL5FcRinGaiUhcoEJSserfRA7+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744051938; c=relaxed/simple;
-	bh=/cjh5PTdngsV2rrZrVQpnhYg1pc1i3/7ohYYCmKkUDQ=;
+	s=arc-20240116; t=1744052051; c=relaxed/simple;
+	bh=Rjy7+gHwcN5R3Q73bvt6j0hYFAhCoXmIade8cQmpJMk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KsCK9/kSuFzYE6zOqHOBNVXoTxHZv0Pn/HUqdW8x07lpwRBxsUc2kFwi8Or4UVsCOrTrJ+6Vz0MX4XWY6n/VEuo1yqfs4YlFCzKaYSI2pzfkBnjjWH+UKhYa50/qNghLzLKEcca+52WiHwftnxfICi6vEok4Sjq5MV37i113VbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SJUIBZbg; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=B1Q00KGDzi30xpKwO7zUQd3MAV8MSt70D3Q/FEOIRgfUg/572ayPKdGd6sNgVy0QL5LY1Mj16onD/Li7a9OtsZAq9BKzeP4ulJ4fh7nxm420Vr7M75PqMbSbIYjgxenClGA0ZIKe+VE1t8e2ZOIcmLYqXZaUVjNzGVaUeW0kw7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mRxqjllV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SJUIBZbg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B6D7C4CEED;
-	Mon,  7 Apr 2025 18:52:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mRxqjllV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0BF8C4CEDD;
+	Mon,  7 Apr 2025 18:54:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744051938;
-	bh=/cjh5PTdngsV2rrZrVQpnhYg1pc1i3/7ohYYCmKkUDQ=;
+	s=k20201202; t=1744052050;
+	bh=Rjy7+gHwcN5R3Q73bvt6j0hYFAhCoXmIade8cQmpJMk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SJUIBZbgzdqsmwDFK1kzCKIdu3zeLbwBgM12jT2a46x0KSiib2ka5d8S4fV8IMWIv
-	 P5sf7L+3zfcobE4jo65DG/gr/AubQ6Ed2K47vFYL5JaE0kYl/zRd01qgKV1VoxxuY1
-	 IXpBiFFYwjDCaa/p7omVQuKtuXvzRl6A2+7tmJ/5JDb7xWFe9DoXtn1YuXe8lgDOqb
-	 yPIOuRQHw69LsH4mK8+oyBpHo92g6w3hA28dtnnAFRWHpnPhbrSrgoWe6C6cRQVwnx
-	 b48AT4yMQOVSTqgSXP9DoXWSivY+2W76PaS05mRC0EgDbdSHjp99V3diSD/D0371wG
-	 rLjeTS4l2SyIg==
-Date: Mon, 7 Apr 2025 11:52:13 -0700
+	b=mRxqjllVEIoHXhcJ/cG5hI4NQhcJJVXXZCXKz6zeihbNv2UHA8cCI26AfONkeVsMp
+	 KUcbrdYILgvle3TQ3jwdv6NcpYrWXhcHUoF4wnUGjF+fdxEw5uHX6Q3vvJYObGFJdl
+	 Y4lb0RpVJW++Nmxjhie4hZZ7K99UiVFuQhk9cVGoGIdM5SEBdGbaPunJxFF3YkzhUV
+	 qLdPoBlNeX90W5d+7psGkDqt0I30Sfs2HrdtLiWHroUVhjGFJzANyFJatMMHzpjZ+o
+	 DPTFMPCuDwOqnRGxZ4p/VP4XmZ3APiCPSUmPhRojBcZeEiqKXUASLjlWu/7BHnMDH3
+	 Qevkot55QUWmA==
+Date: Mon, 7 Apr 2025 11:54:08 -0700
 From: Kees Cook <kees@kernel.org>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Thorsten Blum <thorsten.blum@linux.dev>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] usb: gadget: uvc: Avoid
- -Wflex-array-member-not-at-end warnings
-Message-ID: <202504071148.6F55B7AF34@keescook>
-References: <Z9dyY7_ydJiGqh_d@kspp>
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Al Viro <viro@zeniv.linux.org.uk>, linux-hardening@vger.kernel.org,
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] USB: gadget: Replace deprecated strncpy() with strscpy()
+Message-ID: <202504071153.46436ACBB@keescook>
+References: <20250320165647.34859-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -44,52 +44,50 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z9dyY7_ydJiGqh_d@kspp>
+In-Reply-To: <20250320165647.34859-2-thorsten.blum@linux.dev>
 
-On Mon, Mar 17, 2025 at 11:22:51AM +1030, Gustavo A. R. Silva wrote:
-> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-> getting ready to enable it, globally.
-> 
-> Move the conflicting declaration to the end of the structure. Notice
-> that `struct uvc_input_header_descriptor` is a flexible structure --a
-> structure that contains a flexible-array member.
-> 
-> With this, fix three of the following warnings:
-> 
-> drivers/usb/gadget/function/uvc_configfs.h:77:57: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->  drivers/usb/gadget/function/uvc_configfs.h | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/usb/gadget/function/uvc_configfs.h b/drivers/usb/gadget/function/uvc_configfs.h
-> index 2f78cd4f396f..9391614135e9 100644
-> --- a/drivers/usb/gadget/function/uvc_configfs.h
-> +++ b/drivers/usb/gadget/function/uvc_configfs.h
-> @@ -74,10 +74,12 @@ static inline struct uvcg_format *to_uvcg_format(struct config_item *item)
->  
->  struct uvcg_streaming_header {
->  	struct config_item				item;
-> -	struct uvc_input_header_descriptor		desc;
->  	unsigned					linked;
->  	struct list_head				formats;
->  	unsigned					num_fmt;
-> +
-> +	/* Must be last --ends in a flexible-array member. */
-> +	struct uvc_input_header_descriptor		desc;
->  };
->  
->  static inline struct uvcg_streaming_header *to_uvcg_streaming_header(struct config_item *item)
+On Thu, Mar 20, 2025 at 05:56:44PM +0100, Thorsten Blum wrote:
+> strncpy() is deprecated for NUL-terminated destination buffers; use
+> strscpy() instead. Since kzalloc() already zeroes out the destination
+> buffer, the potential NUL-padding by strncpy() is unnecessary. strscpy()
+> copies only the required characters and guarantees NUL-termination.
 
-This looks correct to me, and may be fixing some bugs -- I can see the
-allocation routine for this is already expecting the bmaControls (in
-desc) to be trailing:
+Looks right to me; thanks for the details!
 
-                /* bmaControls */
-                *size += h->num_fmt * UVCG_STREAMING_CONTROL_SIZE;
+> 
+> Since the destination buffer has a fixed length, strscpy() automatically
+> determines its size using sizeof() when the argument is omitted. This
+> makes an explicit sizeof() call unnecessary.
+> 
+> The source string is also NUL-terminated and meets the __must_be_cstr()
+> requirement of strscpy().
+> 
+> No functional changes intended.
+> 
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
 
 Reviewed-by: Kees Cook <kees@kernel.org>
+
+
+> ---
+>  drivers/usb/gadget/legacy/inode.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/usb/gadget/legacy/inode.c b/drivers/usb/gadget/legacy/inode.c
+> index b6a30d88a800..fcce84a726f2 100644
+> --- a/drivers/usb/gadget/legacy/inode.c
+> +++ b/drivers/usb/gadget/legacy/inode.c
+> @@ -1615,7 +1615,7 @@ static int activate_ep_files (struct dev_data *dev)
+>  		mutex_init(&data->lock);
+>  		init_waitqueue_head (&data->wait);
+>  
+> -		strncpy (data->name, ep->name, sizeof (data->name) - 1);
+> +		strscpy(data->name, ep->name);
+>  		refcount_set (&data->count, 1);
+>  		data->dev = dev;
+>  		get_dev (dev);
 
 -- 
 Kees Cook
