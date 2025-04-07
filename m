@@ -1,134 +1,175 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 523742153E8;
-	Mon,  7 Apr 2025 17:12:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFCA621660D
+	for <linux-hardening@vger.kernel.org>; Mon,  7 Apr 2025 17:28:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744045952; cv=none; b=eGVYVsKPLMTZErlLLPIvgDpU6ckt4jlMxTFvuwvvKScz9VSeDjIIAeXk7v/MrhKTLgFFOc2nwSnhpOLTS77iJNxG0KUsv4bKP5ZsLVO6dQY9ntF34nkTxtVAPsMMdpEXfiyqrNQDdsPoeh9nNZt8TYC+6XcrEQZq4O0E7E+hK/A=
+	t=1744046933; cv=none; b=WwnddKwLq+kkUitGywcgvAT7DRoly1bTeCmmysH2X2pCraoMlC9QpT0OHT1S2qnn6W1eCJDKCmKt1kFoR8ZQuI+3AHGFtl1svPKOd/qZLRbJqGMex3f7Ni1AoR0STMjBEag9edzoOjNWCqJIvvySelaECQIwkCT26z94t3ZjTes=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744045952; c=relaxed/simple;
-	bh=iExc9V1RZNbH82yR4R3zK7vVNa7a3hCQ5/uCwMnbJY0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uwMjpK5hoOGN6vlvaQAVwYJJq5jeh4SyNfXIUoAMol5gF/Q2T4IECYux+t7vb+JrSeryERUfnermn1ahqYJBro28fJfcf0th+3Axm1B0KlAKTRwp648NHHBwicVU79mGXGfImlLltmSQIT/FoY1IUZgdCuIyob1pIATnr1uFyeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MIWbhSNn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744046933; c=relaxed/simple;
+	bh=wsHHJZqntazBpATd7YuS+J2IlhAOuKOpdFMOBcPiE/8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DBnv7YP/c7Gb3Mx5DO22o3SpY+AKHNsImGeJOU4rl/mWmCFacRYWZamGOuMLU4onyV8Je2CMXwSf/tZx7xO46AiM1YNxM7XfY1pPieVNauTZ411MJquZZwpP/3T3EavLynIAoa6EILD1IsFShapEhjohMeG8gLG0Ave3cVku7Qw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TZURlk3m; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MIWbhSNn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF7AFC4CEDD;
-	Mon,  7 Apr 2025 17:12:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744045951;
-	bh=iExc9V1RZNbH82yR4R3zK7vVNa7a3hCQ5/uCwMnbJY0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MIWbhSNnWQLiZ/9F0PpvV82WY2PkfOoRwpyStw9ZwlWqZwT5Cszu8+rH4Wbqa/O1+
-	 u6hIbES7fW2u7uodDtT/2aaB41G02QhMZ00McS0hvNxTr7/UUl2fLvgpK58PM/Mx/P
-	 dpM8JQuVP7Gkm5whPPMGbpSCESKjZ5WrW75WkTyu6dYXHyic4po5Ky58g4EA41sxyh
-	 /YnLtQzpEa/KBA4VM5zBvIHiRQ5K+COLNCSXbaewHkaW2xcGf/0oj14YjFpBBzRQ+L
-	 IIHFW30PmF1L+Os8AzH2HrKlvoevb8fUFq+cVESIRT6Y45CAfluCHCToVnbEgv7a91
-	 h+5sWqvCNMCvA==
-Date: Mon, 7 Apr 2025 10:12:28 -0700
-From: Kees Cook <kees@kernel.org>
-To: "Maciej W. Rozycki" <macro@orcam.me.uk>
-Cc: Alejandro Colomar <alx@kernel.org>, Alex Elder <elder@riscstar.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Azeem Shaikh <azeemshaikh38@gmail.com>,
-	Alex Elder <elder@kernel.org>, Sumit Garg <sumit.garg@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] EISA: Increase length of device names
-Message-ID: <202504070957.A97CCC289B@keescook>
-References: <20250310222424.work.107-kees@kernel.org>
- <3c6bc732-bd90-4a29-bcbc-f545b0ed79ad@riscstar.com>
- <y5hkfx6tld2khsv2rb7w3k5hlkhfjfn7ndwwj5g75hkdebvjat@mypbmvg5brfi>
- <alpine.DEB.2.21.2504021652130.53907@angie.orcam.me.uk>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TZURlk3m"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744046930;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=bFO8XTLN8X6PR8VKPvsVUaoldbdxYBtD0THNWLQS6Mk=;
+	b=TZURlk3mRAveRf+LL1ah45JzqgnqGOB20jd6ZMh2zkhDAXeUzzIA3cJoVlQcZFHGVGQu+u
+	/jj+Ti2z1zeaU+qOD+n9z2JIkC5bLCbKgqp9Azrbnlr24TKvoR/jYEhGjDrQ909Jvk8bhn
+	bdHJwKFRlYfsZSJQKVj8G/CqD7y60kM=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-99-Thv6vA51MdGQe-uhtfgtTA-1; Mon,
+ 07 Apr 2025 13:28:46 -0400
+X-MC-Unique: Thv6vA51MdGQe-uhtfgtTA-1
+X-Mimecast-MFC-AGG-ID: Thv6vA51MdGQe-uhtfgtTA_1744046924
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 979BE180034D;
+	Mon,  7 Apr 2025 17:28:43 +0000 (UTC)
+Received: from p16v.luc.cera.cz (unknown [10.44.32.4])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 8A186180A803;
+	Mon,  7 Apr 2025 17:28:37 +0000 (UTC)
+From: Ivan Vecera <ivecera@redhat.com>
+To: netdev@vger.kernel.org
+Cc: Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+	Jiri Pirko <jiri@resnulli.us>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Prathosh Satish <Prathosh.Satish@microchip.com>,
+	Lee Jones <lee@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Michal Schmidt <mschmidt@redhat.com>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH 00/28] Add Microchip ZL3073x support
+Date: Mon,  7 Apr 2025 19:28:27 +0200
+Message-ID: <20250407172836.1009461-1-ivecera@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.2504021652130.53907@angie.orcam.me.uk>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On Thu, Apr 03, 2025 at 12:23:31AM +0100, Maciej W. Rozycki wrote:
-> On Sat, 15 Mar 2025, Alejandro Colomar wrote:
-> 
-> > > > GCC 15's -Wunterminated-string-initialization warned about truncated
-> > > > name strings. Instead of marking them with the "nonstring" attribute[1],
-> > > > increase their length to correctly include enough space for the
-> > > > terminating NUL character, as they are used with %s format specifiers.
-> > 
-> > It might be interesting to mention where they are used with %s.
-> 
->  Indeed.  I seem to be missing something here as I can't see an issue in 
-> reality:
-> 
-> # cat /proc/ioports | sed -n '/EISA/,$p'
-> 0c80-0c83 : 486EI EISA System Board
-> 5000-50ff : DEC FDDIcontroller/EISA Adapter
->   5000-503f : defxx
->   5040-5043 : defxx
-> 5400-54ff : DEC FDDIcontroller/EISA Adapter
-> 5800-58ff : DEC FDDIcontroller/EISA Adapter
-> 5c00-5cff : DEC FDDIcontroller/EISA Adapter
->   5c80-5cbf : defxx
-> 6000-60ff : Network Peripherals NP-EISA-3E Enhanced FDDI Inte
-> 6400-64ff : Network Peripherals NP-EISA-3E Enhanced FDDI Inte
-> 6800-68ff : Network Peripherals NP-EISA-3E Enhanced FDDI Inte
-> 6c00-6cff : Network Peripherals NP-EISA-3E Enhanced FDDI Inte
-> 8000-80ff : 3Com 3C509-Combo Network Adapter
->   8000-800f : 3c579-eisa
-> 8400-84ff : 3Com 3C509-Combo Network Adapter
-> 8800-88ff : 3Com 3C509-Combo Network Adapter
-> 8c00-8cff : 3Com 3C509-Combo Network Adapter
-> # 
-> 
-> nor why incrementing the length specifically to 51 (where eisa.ids names 
-> are up to 73 characters; one of the longer entries can be seen truncated 
-> above) is going to change anything here.  Overall since the string length 
-> is fixed I'd expect just using `%.50s' instead.
+This series adds support for Microchip Azurite DPLL/PTP/SyncE chip
+family. These chips provide DPLL and PTP functionality, so the series
+adds the common MFD driver that provides an access to the bus that can
+be either I2C or SPI. The second part of the series is DPLL driver that
+covers DPLL functionality. The PTP support will be added by separate
+series as well as flashing capability.
 
-These are produced from:
+All functionality was tested by myself and by Prathosh Satish on
+Microchip EDS2 development board with ZL30732 DPLL chip connected over
+I2C bus.
 
-        seq_printf(m, "%*s%0*llx-%0*llx : %s\n", ..., r->name);
+Patch breakdown
+===============
+Patch 1 - Basic support for I2C, SPI and regmap
+Patch 2 - Devlink registration
+Patches 3-4 - Helpers for accessing device registers
+Patches 5-6 - Component versions reporting via devlink dev info
+Patches 7-8 - Helpers for accessing register mailboxes
+Patch 9 - Clock ID generation for DPLL driver
+Patch 10 - Export strnchrnul function for modules
+           (used by next patch)
+Patch 11 - Support for MFG config initialization file
+Patch 12 - Fetch invariant register values used by DPLL and later by
+           PTP driver
+Patch 13 - Basic DPLL driver with required only functionality
+Patch 14 - Registration of DPLL sub-devices by MFD driver
+Patch 15 - Device tree bindings for DPLL device and pin
+Patch 16 - Device tree bindings for ZL3073x device
+Patch 17 - Read DPLL device types from firmware (DT,ACPI...)
+Patch 18 - Read basic pin properties from firmware
+Patch 19 - Implementation of input pin selection for DPLL in manual mode
+Patch 20 - Implementation of getting/setting priority for input pins
+Patch 21 - Implementation of input pin state setting for DPLL in auto mode
+Patch 22 - Implementation of getting/setting frequency for input pins
+Patch 23 - Implementation of getting/setting frequency for output pins
+Patch 24 - Read pin supported frequencies from firmware
+Patch 25 - Implementation of getting phase offset from input pins
+Patch 26 - Implementation of getting/setting phase adjust for both
+           pin types
+Patch 27 - Implementation of getting/setting embedded sync frequency
+           for both pin types
+Patch 28 - Implementation of getting fractional frequency offset for
+           input pins
 
-which is struct resource::name, which is unbounded.
+Ivan Vecera (28):
+  mfd: Add Microchip ZL3073x support
+  mfd: zl3073x: Register itself as devlink device
+  mfd: zl3073x: Add register access helpers
+  mfd: zl3073x: Add macros for device registers access
+  mfd: zl3073x: Add components versions register defs
+  mfd: zl3073x: Implement devlink device info
+  mfd: zl3073x: Add macro to wait for register value bits to be cleared
+  mfd: zl3073x: Add functions to work with register mailboxes
+  mfd: zl3073x: Add clock_id field
+  lib: Allow modules to use strnchrnul
+  mfd: zl3073x: Load mfg file into HW if it is present
+  mfd: zl3073x: Fetch invariants during probe
+  dpll: Add Microchip ZL3073x DPLL driver
+  mfd: zl3073x: Register DPLL sub-device during init
+  dt-bindings: dpll: Add device tree bindings for DPLL device and pin
+  dt-bindings: dpll: Add support for Microchip Azurite chip family
+  dpll: zl3073x: Read DPLL types from firmware
+  dpll: zl3073x: Read optional pin properties from firmware
+  dpll: zl3073x: Implement input pin selection in manual mode
+  dpll: zl3073x: Add support to get/set priority on input pins
+  dpll: zl3073x: Implement input pin state setting in automatic mode
+  dpll: zl3073x: Add support to get/set frequency on input pins
+  dpll: zl3073x: Add support to get/set frequency on output pins
+  dpll: zl3073x: Read pin supported frequencies from firmware
+  dpll: zl3073x: Add support to get phase offset on input pins
+  dpll: zl3073x: Add support to get/set phase adjust on pins
+  dpll: zl3073x: Add support to get/set esync on pins
+  dpll: zl3073x: Add support to get fractional frequency offset on input
+    pins
 
-> 
-> > > For what it's worth, it looks fine to me.
-> > 
-> > LGTM too.  Assuming that changing the size of the arrays doesn't break
-> > something else, it looks good.
-> 
->  ISTM increasing to 74 instead might make more sense (I don't know what 
-> the actual maximum size was according to the ECU standard, but it might 
-
-The only mention of names I could find in the EISA spec just says,
-"The NAME field contains text that describes the board. The MFR field
-contains the full name of the board manufacturer." This is in the
-configuration files, though, so it seems unbounded.
-
-I suspect the right choice is to use eisa.ids as the length guide, as
-you suggest.
-
-> not be that we'll ever add any new entries to our list), once the origin 
-> of the problem is known, though I think we need to evaluate what effect 
-> such a change will have on the size of the compiled kernel.
-
-I also see this hard limit of 50 in the Makefile:
-
-# Ugly hack to get DEVICE_NAME_SIZE value...
-DEVICE_NAME_SIZE = 50
-
-$(obj)/eisa-bus.o: $(obj)/devlist.h
-
-quiet_cmd_eisaid = GEN     $@
-      cmd_eisaid = sed -e '/^\#/D' -e 's/^\([[:alnum:]]\{7\}\) \+"\([^"]\{1,$(DEVICE_NAME_SIZE)\}\).*"/EISA_DEVINFO ("\1", "\2"),/' $< > $@
-
-The 50 was chosen seemingly at random in commit ca52a49846f1 ("driver
-core: remove DEVICE_NAME_SIZE define").
-
-I think that limit can be removed entirely.
+ .../devicetree/bindings/dpll/dpll-device.yaml |   84 +
+ .../devicetree/bindings/dpll/dpll-pin.yaml    |   43 +
+ .../bindings/dpll/microchip,zl3073x.yaml      |   74 +
+ MAINTAINERS                                   |   12 +
+ drivers/dpll/Kconfig                          |   16 +
+ drivers/dpll/Makefile                         |    2 +
+ drivers/dpll/dpll_zl3073x.c                   | 2768 +++++++++++++++++
+ drivers/mfd/Kconfig                           |   33 +
+ drivers/mfd/Makefile                          |    5 +
+ drivers/mfd/zl3073x-core.c                    |  840 +++++
+ drivers/mfd/zl3073x-i2c.c                     |   71 +
+ drivers/mfd/zl3073x-spi.c                     |   72 +
+ drivers/mfd/zl3073x.h                         |   13 +
+ include/linux/mfd/zl3073x.h                   |  335 ++
+ lib/string.c                                  |    1 +
+ 15 files changed, 4369 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dpll/dpll-device.yaml
+ create mode 100644 Documentation/devicetree/bindings/dpll/dpll-pin.yaml
+ create mode 100644 Documentation/devicetree/bindings/dpll/microchip,zl3073x.yaml
+ create mode 100644 drivers/dpll/dpll_zl3073x.c
+ create mode 100644 drivers/mfd/zl3073x-core.c
+ create mode 100644 drivers/mfd/zl3073x-i2c.c
+ create mode 100644 drivers/mfd/zl3073x-spi.c
+ create mode 100644 drivers/mfd/zl3073x.h
+ create mode 100644 include/linux/mfd/zl3073x.h
 
 -- 
-Kees Cook
+2.48.1
+
