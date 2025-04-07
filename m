@@ -1,159 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from omta40.uswest2.a.cloudfilter.net (omta40.uswest2.a.cloudfilter.net [35.89.44.39])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35620210184;
-	Mon,  7 Apr 2025 19:09:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01CA92206A3
+	for <linux-hardening@vger.kernel.org>; Mon,  7 Apr 2025 19:10:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.39
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744052994; cv=none; b=gw4H0DTxkQdt8nSYf1q8pb1FFSLn27TJtDeXPSPxPZidpOtpHErB0kyaKQuSQ0R2fsMyZPqBWMCRjivyktdcBwsMcWfDUHK4u5zNmwMS+njE5jfSbcfTQhDfffiHQMgARLoAVYLpU/aChuHYKWZhDsirhroBoGstPmBovQBwIpo=
+	t=1744053008; cv=none; b=oB2T2N/TZ6RVSKtKed9bYDs0M4AuoeG1C1WBMCw3N9N/VVfNeYu0tglCHd5Dh0IqfH9U3sxTEn2QNEbsUKVLbQE7vfWBEpGS3UoCzBHDAHnhCSky4PcrYSFAHhYfJPzZtPI5z+bRdbyBuZHKWH364P2kr5SFjcb5Zr6YLu2gG5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744052994; c=relaxed/simple;
-	bh=fpQyq5EzJqQT1ZD0Aov9HxzXKtuloe3+w6tId6ZagEY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZzQq2Bdnzua/S5aQ6fUXyjOsE82JaE5Fkp+4QMnk/SlH/xTO/KG4bGfijXuqrOl1Am+V4zvx/cqhmfj6qrT2sgE4+BZP1VhtIRNeRbfnT4pHFhg4FvfrJVlPndzYuE/8tzluvEFlCdgN8Mo+Zp9LTFdq6LWEG+R0Z1TUKuEI4m0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CV8+fnxX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744053008; c=relaxed/simple;
+	bh=hlvX3dKMPy7AKbI9AZt2/QooFInqEXvd3/I/fL8l5fI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YSIDMAbzmANr8SdRrc95o0sAAr5QHKduZpCEzKSdbjjY1cG1fEJfA4PsfR0hqLs8Zb+rN21YFYTEgVhl84q189f79ZUrMTxa1Fx9lMjLLB5EoYsMTl1CMCpZ/iWPnz2Tn4Po8FVBZPV4ui0cw+VuHwOPUooz4nN5wdUlxv2Y8L0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=Xdf9CB2d; arc=none smtp.client-ip=35.89.44.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CV8+fnxX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5E3DC4CEDD;
-	Mon,  7 Apr 2025 19:09:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744052993;
-	bh=fpQyq5EzJqQT1ZD0Aov9HxzXKtuloe3+w6tId6ZagEY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CV8+fnxXnyi4rIcxP6Mcw4tLItTqFZCykY0ZZrOLEruXei7/I7Qqd+//Rs3pULiKb
-	 36WQVH/k5y1q28v+j3fJ32gz5KZmhBFvCgwMkEAaRbb32F/M0Dbfmd71m30ubsUYKK
-	 7Vlpxue34ozpD84lFs2/l7N5LbW8kWHZJEjXl4w9UOBBrcxPgdx4nZiTsZAOaeX4nq
-	 WcJfdJ34QI/6oso0O+3iuHNgA48QFZFIHORsI5h5ejBi7AblkIAC0sPyF4HkfHujHN
-	 kColYfdHdInDIbTHDXMqIwGyWy7qj0mOBq7oIdPCg4FrHx7AkNwsMbjDSkbsUSOWh0
-	 8BMHWRtqQgioQ==
-Date: Mon, 7 Apr 2025 12:09:50 -0700
-From: Kees Cook <kees@kernel.org>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] w1: Avoid -Wflex-array-member-not-at-end warnings
-Message-ID: <202504071203.1024EFE5@keescook>
-References: <Z-WD2NP_1A0ratnI@kspp>
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="Xdf9CB2d"
+Received: from eig-obgw-5005a.ext.cloudfilter.net ([10.0.29.234])
+	by cmsmtp with ESMTPS
+	id 1kCyuzSSrf1UX1rr6uq5YO; Mon, 07 Apr 2025 19:10:00 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id 1rr5uvQvpq3CN1rr6uYT2U; Mon, 07 Apr 2025 19:10:00 +0000
+X-Authority-Analysis: v=2.4 cv=VpfoAP2n c=1 sm=1 tr=0 ts=67f42308
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=B3fuDwYyW55wTQKIj88FGw==:17
+ a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
+ a=QyXUC8HyAAAA:8 a=r2MVV0ggy3cR_goCns0A:9 a=QEXdDO2ut3YA:10
+ a=Xt_RvD8W3m28Mn_h3AK8:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=6Fx0cjpFIDP4TVvSQqu5zpeRXwbcNwQbAPGVgowUYRY=; b=Xdf9CB2dHJJGo5zpUmzK33wSBC
+	oqUBtFezyXl6wHdvY7YydiHqg1RVT0c/TSV/uffAA3UEOPueeWF8wyz6L72Au/5KEqy09cdegIfvt
+	npIxnP15aME7/oaENDMfM53z9se1OI337fnPiI0Hh3+0QwiM7JHlwrA5I+oxttpA0JM6UB3xbfgFN
+	rC+2CFTz+ft/f3TyX8LEpexdnI3wwGu5wQpKJ4a1KnXQt9dSOxF5VZausMuHQ3BO2OPhGBsWyRarq
+	dIMZDpv7P0Lv9YVo2cd+SYcVd4W0IF71SYJ5i7AThHgjwNQNxPiMatsyKhKzgOGp/W1ULUjnaLXvD
+	4GXlA3yQ==;
+Received: from [201.172.174.147] (port=39666 helo=[192.168.15.6])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1u1rr3-00000002JT0-2lW1;
+	Mon, 07 Apr 2025 14:09:57 -0500
+Message-ID: <b5ab34b1-e27a-40ca-be24-56a28b5d37bd@embeddedor.com>
+Date: Mon, 7 Apr 2025 13:09:51 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z-WD2NP_1A0ratnI@kspp>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH][next] UAPI: ndctl / acpi: intel: Avoid multiple
+ -Wflex-array-member-not-at-end warnings
+To: Kees Cook <kees@kernel.org>, Alison Schofield <alison.schofield@intel.com>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Dan Williams <dan.j.williams@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>,
+ Ira Weiny <ira.weiny@intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Len Brown <lenb@kernel.org>, nvdimm@lists.linux.dev,
+ linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <Z618ILbAR8YAvTkd@kspp> <Z65xV2TaFY32eYdp@aschofie-mobl2.lan>
+ <202504071106.3A0AF875F@keescook>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <202504071106.3A0AF875F@keescook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.172.174.147
+X-Source-L: No
+X-Exim-ID: 1u1rr3-00000002JT0-2lW1
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.15.6]) [201.172.174.147]:39666
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfLmfMmca6Mp0AZEfzbHjivkFVQuq+N27Rt51DxKOw3C5ofVl/snVKM8Rq7fVrD7SE9OaW0DQYN0aGJqFlGxgJRlpx6gJVBLtvfjf/vXYw4JE9F/j57uO
+ 9Ht9vvWd8JZ5/FQqNiuwlGMDbO0W2OhS0pxfkzOv5Nc+7Uxeu4dUfMRrM4nNLS83u5oyxAmk6ERguhLwY5y4tUGYxtB3v+Rby5EykYnO3n4YcmDz2nve1Pbk
 
-On Thu, Mar 27, 2025 at 10:59:04AM -0600, Gustavo A. R. Silva wrote:
-> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-> getting ready to enable it, globally.
-> 
-> Use the `DEFINE_RAW_FLEX()` helper for on-stack definitions of
-> a flexible structure where the size of the flexible-array member
-> is known at compile-time, and refactor the rest of the code,
-> accordingly.
-> 
-> So, with these changes, fix the following warnings:
-> 
-> drivers/w1/w1_netlink.c:198:31: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> drivers/w1/w1_netlink.c:219:31: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->  drivers/w1/w1_netlink.c | 41 +++++++++++++++++++----------------------
->  1 file changed, 19 insertions(+), 22 deletions(-)
-> 
-> diff --git a/drivers/w1/w1_netlink.c b/drivers/w1/w1_netlink.c
-> index 691978cddab7..845d66ab7e89 100644
-> --- a/drivers/w1/w1_netlink.c
-> +++ b/drivers/w1/w1_netlink.c
-> @@ -194,16 +194,16 @@ static void w1_netlink_queue_status(struct w1_cb_block *block,
->  static void w1_netlink_send_error(struct cn_msg *cn, struct w1_netlink_msg *msg,
->  	int portid, int error)
->  {
-> -	struct {
-> -		struct cn_msg cn;
-> -		struct w1_netlink_msg msg;
-> -	} packet;
-> -	memcpy(&packet.cn, cn, sizeof(packet.cn));
-> -	memcpy(&packet.msg, msg, sizeof(packet.msg));
-> -	packet.cn.len = sizeof(packet.msg);
-> -	packet.msg.len = 0;
-> -	packet.msg.status = (u8)-error;
-> -	cn_netlink_send(&packet.cn, portid, 0, GFP_KERNEL);
-> +	DEFINE_RAW_FLEX(struct cn_msg, packet, data,
-> +			sizeof(struct w1_netlink_msg));
-> +	struct w1_netlink_msg *pkt_msg = (struct w1_netlink_msg *)packet->data;
 
-I'm starting to think we need a helper for "DEFINE_RAW_FLEX with a
-trailing structure" for these. :)
-
-Anyway, conversion looks good... structs are packed, so alignment issues
-are unchanged.
-
-> +
-> +	memcpy(packet, cn, sizeof(*packet));
-> +	memcpy(pkt_msg, msg, sizeof(*pkt_msg));
-
-These could just be:
-
-	*packet = *cn;
-	*pkg_msg = *msg;
-
-But that was always true. The memcpy() style is retained. But it would
-catch type mismatches (like is accidentally introduced below).
-
-> +	packet->len = sizeof(*pkt_msg);
-> +	pkt_msg->len = 0;
-> +	pkt_msg->status = (u8)-error;
-> +	cn_netlink_send(packet, portid, 0, GFP_KERNEL);
->  }
->  
->  /**
-> @@ -215,22 +215,19 @@ static void w1_netlink_send_error(struct cn_msg *cn, struct w1_netlink_msg *msg,
->   */
->  void w1_netlink_send(struct w1_master *dev, struct w1_netlink_msg *msg)
->  {
-> -	struct {
-> -		struct cn_msg cn;
-> -		struct w1_netlink_msg msg;
-> -	} packet;
-> -	memset(&packet, 0, sizeof(packet));
-> +	DEFINE_RAW_FLEX(struct cn_msg, packet, data,
-> +			sizeof(struct w1_netlink_msg));
->  
-> -	packet.cn.id.idx = CN_W1_IDX;
-> -	packet.cn.id.val = CN_W1_VAL;
-> +	packet->id.idx = CN_W1_IDX;
-> +	packet->id.val = CN_W1_VAL;
->  
-> -	packet.cn.seq = dev->seq++;
-> -	packet.cn.len = sizeof(*msg);
-> +	packet->seq = dev->seq++;
-> +	packet->len = sizeof(*msg);
->  
-> -	memcpy(&packet.msg, msg, sizeof(*msg));
-> -	packet.msg.len = 0;
-> +	memcpy(packet, msg, sizeof(*msg));
-
-This memcpy() is wrong. It should be targeting packet->data.
-
-> +	((struct w1_netlink_msg *)packet->data)->len = 0;
-
-And since you need it again here, I'd recommend defining a struct
-w1_netlink_msg pointer similar to the first hunk.
-
--Kees
-
->  
-> -	cn_netlink_send(&packet.cn, 0, 0, GFP_KERNEL);
-> +	cn_netlink_send(packet, 0, 0, GFP_KERNEL);
->  }
->  
->  static void w1_send_slave(struct w1_master *dev, u64 rn)
-> -- 
-> 2.43.0
+> Gustavo, any updates on this patch? I'm skimming through patchwork to
+> check on stalled patches...
 > 
 
--- 
-Kees Cook
+Yep, I proposed a couple of patches for this:
+
+https://lore.kernel.org/linux-hardening/a66056cf-570c-4875-b5cf-c51e2bc488d9@intel.com/t/#mf958b73b3021db415b9e9c623c3f386259ca0829
+(not sure why my patch doesn't show up on linux-hardening anymore...)
+
+And this is the most recent alternative:
+https://lore.kernel.org/linux-hardening/Z-QpUcxFCRByYcTA@kspp/
+
+Thanks
+--
+Gustavo
