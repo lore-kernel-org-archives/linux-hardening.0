@@ -1,121 +1,142 @@
-Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28F781A8F84
-	for <linux-hardening@vger.kernel.org>; Mon,  7 Apr 2025 23:11:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95B4E1C3BE2;
+	Mon,  7 Apr 2025 23:28:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744067514; cv=none; b=iEV2PFfJjNvZRrd/e3LPlQN0wxEI5KAggKGZz0qWyjwfDNXCO/Gis/XtXnsheleB8H01A78nFEMQiq54VI3otXd+gletio99sN/mDqD/B4smsrCXHgwavaEA69XP3Bxk++kUHY/1WIQdfBGiw3THK+4YB0fDlA12PgYbfpsrQYE=
+	t=1744068503; cv=none; b=Z9gClrOqr/FU6TgNMxrx02Rvn/hGea77diNTVj9N3i64tzCHSHq1NT3km2pA1WGSWNIz8Z6SzDbEjq9VWrig6aey0XvYJXvc/G+dIb7dDPsM11oOf54ic6xSs0gUun4PmjZuCfliKvYNb3u7ZEMaQ05OgDJulcs2S0f9sDKK0i0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744067514; c=relaxed/simple;
-	bh=DyfkzHNaCLk5BrsigApA5Tn7gIVqUxs4a11J1ccvnzI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TjQ3FyPG8hgfbVY6KWLwswiL89buBGMimiABSp6iX9vEYX884moonxgleyNNr7OaRGZ4j3B1d/lgOuWya1WiRiZ799qW//X+YX4krlXCEKCDM+HW4XrC5GrkNW5PPHg5Mg1bw1/nOEaotLh+6yStgZS+9EQvXhasaGzATvsO2C8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=EzScG7cA; arc=none smtp.client-ip=35.89.44.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1744068503; c=relaxed/simple;
+	bh=CVByR+4DUcPMIUDLKFFCym0RNlJROf+tgLBlalzq684=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=CKwNyDLgBkRm42hc11DV3JClmGdmEmPfbOJdTLAwsjVi1Tqb/eupkvqNT+pn2ta1TqI41HrY6aaSHcNnWjeVbdzJ4322x80cjM6dTROhjvgCc/92i9SS5b/EK366I8Mhp97NIoWPIoQUF17HBsvRuFHaJ5jkNSMMsO6R2hwC7eI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dc/+YKaC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="EzScG7cA"
-Received: from eig-obgw-6002a.ext.cloudfilter.net ([10.0.30.222])
-	by cmsmtp with ESMTPS
-	id 1rTLuFDy7METl1vd9uScTb; Mon, 07 Apr 2025 23:11:51 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id 1vd8uHOIx1vNy1vd9u7qnW; Mon, 07 Apr 2025 23:11:51 +0000
-X-Authority-Analysis: v=2.4 cv=VMQWnMPX c=1 sm=1 tr=0 ts=67f45bb7
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=B3fuDwYyW55wTQKIj88FGw==:17
- a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
- a=GjqoV8KzObx_hdbUdTgA:9 a=QEXdDO2ut3YA:10 a=Xt_RvD8W3m28Mn_h3AK8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=bjzMiuiu1gDDSU1k3HJRMsaY2GZgvKUeAPV/ny0Wq8E=; b=EzScG7cAEgnu2cdpTOmdg7caQQ
-	fxF2AG47Ar1p6wFmllJ169cyzE3+q08mQozTXWCv8X9HkLBOHyY6nYOm9vO5R7rHfbGHo8chsSDBh
-	tx91fpo7KHqOuaj2p6lkDpVZkrPhwg/ejue89YTmxOBaivQNyiaWrqdn7JFHgEbV5L1tUXp/umEl8
-	09lXe0MgJegNBWfe/eMk1BLY68tlHzFxzd+DIcp+c9kVfJ/GVX9P0o1Yhs6c3GGUZ9aUUcxAUiAGz
-	Q/p+0/bjtZ4dwI1kh7WwDpWHqy6BE8NDt+XXsYQAbUpN4lXoPEQYCAACkKDhAp+7iQ0sO+5/IhYTf
-	Zqlr7cnQ==;
-Received: from [201.172.174.147] (port=34070 helo=[192.168.15.6])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1u1vd8-00000003Pbm-0muh;
-	Mon, 07 Apr 2025 18:11:50 -0500
-Message-ID: <95ae8a4e-c8d5-441e-84b9-b27655f68641@embeddedor.com>
-Date: Mon, 7 Apr 2025 17:11:41 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dc/+YKaC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 807C3C4CEDD;
+	Mon,  7 Apr 2025 23:28:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744068503;
+	bh=CVByR+4DUcPMIUDLKFFCym0RNlJROf+tgLBlalzq684=;
+	h=Date:From:To:Cc:Subject:From;
+	b=Dc/+YKaCZAPvYGK1OpQkKOxUDC4ZO/1otb1fw/TRkoT1ODBzj3oSSQds4z2ycU937
+	 NLnNR77OWPHc2oP4nPrniVwMT2cAvw6tR8+zW170fZaOtJJPUro7I/wiMi/U0BdSwj
+	 b/D7rl3VK3Ra8uk/x5q8es0WnvYaixS109NKHmjTcZHWUfRAISgW8sXXDFn6ax5PV0
+	 yzPyiu02cfktINIdyhMlZGl+bMLO+o3irAziOdQk3+UgrGJJPRLcSY6onqa2kfqSZA
+	 yRswvfcRXKdC4HKzNujhe6fReAOvHs5dfrftn4xCFS69NvOLKMw729826evop/5AKh
+	 cJzRYWcTDvRqw==
+Date: Mon, 7 Apr 2025 17:28:20 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>, Kees Cook <kees@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v3][next] w1: Avoid -Wflex-array-member-not-at-end warnings
+Message-ID: <Z_RflBe5iDGTMFjV@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2][next] w1: Avoid -Wflex-array-member-not-at-end
- warnings
-To: Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <Z_QpOlDTvyfRs4Su@kspp> <202504071326.564A591@keescook>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <202504071326.564A591@keescook>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.174.147
-X-Source-L: No
-X-Exim-ID: 1u1vd8-00000003Pbm-0muh
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.6]) [201.172.174.147]:34070
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfKpv+monY7MjfsIAqWcFnQJrxeqOBitNp7K/aHZdYOX5oAzIJ+gTD1eCApC1nOxfYuX8WvnD4AIuJH/jojtbhUooS3d6MT3sCSeB+oX6ycRhuRbNB191
- rEqYI8Eqtk6hZfBsZj8mznoSup+upUVrSkfWi1oITipsvxMagP+GC9j0SW1cra33gFoMih/b3VDUkCiVVlPWzpMqPDRu8jG0V8lLxdX365W5JxrDtosL12c2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+-Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+getting ready to enable it, globally.
 
+Use the `DEFINE_RAW_FLEX()` helper for on-stack definitions of
+a flexible structure where the size of the flexible-array member
+is known at compile-time, and refactor the rest of the code,
+accordingly.
 
-On 07/04/25 14:26, Kees Cook wrote:
-> On Mon, Apr 07, 2025 at 01:36:26PM -0600, Gustavo A. R. Silva wrote:
->> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
->> getting ready to enable it, globally.
->>
->> Use the `DEFINE_RAW_FLEX()` helper for on-stack definitions of
->> a flexible structure where the size of the flexible-array member
->> is known at compile-time, and refactor the rest of the code,
->> accordingly.
->>
->> So, with these changes, fix the following warnings:
->>
->> drivers/w1/w1_netlink.c:198:31: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
->> drivers/w1/w1_netlink.c:219:31: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
->>
->> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->> ---
->> Changes in v2:
->>   - Fix memcpy() instance - use new pointer `pkg_msg`, instead of `packet`. (Kees)
-> 
-> Thanks! You didn't want to use object assignments? Those are type
-> checked. :)
+So, with these changes, fix the following warnings:
 
-Mmh... you're so persuasive :p - OK, I'll respin!
+drivers/w1/w1_netlink.c:198:31: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/w1/w1_netlink.c:219:31: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
-> 
-> Reviewed-by: Kees Cook <kees@kernel.org>
-> 
+Reviewed-by: Kees Cook <kees@kernel.org>
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+Changes in v3:
+ - Use direct object assignments instead of memcpy(), and gain type checking. (Kees)
+ - Add RB tag.
 
-Thanks!
---
-Gustavo
+Changes in v2:
+ - Fix memcpy() instance - use new pointer `pkg_msg`, instead of `packet`. (Kees)
+ - Link: https://lore.kernel.org/linux-hardening/Z_QpOlDTvyfRs4Su@kspp/
+
+v1:
+ - Link: https://lore.kernel.org/linux-hardening/Z-WD2NP_1A0ratnI@kspp/
+
+ drivers/w1/w1_netlink.c | 42 ++++++++++++++++++++---------------------
+ 1 file changed, 20 insertions(+), 22 deletions(-)
+
+diff --git a/drivers/w1/w1_netlink.c b/drivers/w1/w1_netlink.c
+index 691978cddab7..e6b59d921076 100644
+--- a/drivers/w1/w1_netlink.c
++++ b/drivers/w1/w1_netlink.c
+@@ -194,16 +194,16 @@ static void w1_netlink_queue_status(struct w1_cb_block *block,
+ static void w1_netlink_send_error(struct cn_msg *cn, struct w1_netlink_msg *msg,
+ 	int portid, int error)
+ {
+-	struct {
+-		struct cn_msg cn;
+-		struct w1_netlink_msg msg;
+-	} packet;
+-	memcpy(&packet.cn, cn, sizeof(packet.cn));
+-	memcpy(&packet.msg, msg, sizeof(packet.msg));
+-	packet.cn.len = sizeof(packet.msg);
+-	packet.msg.len = 0;
+-	packet.msg.status = (u8)-error;
+-	cn_netlink_send(&packet.cn, portid, 0, GFP_KERNEL);
++	DEFINE_RAW_FLEX(struct cn_msg, packet, data,
++			sizeof(struct w1_netlink_msg));
++	struct w1_netlink_msg *pkt_msg = (struct w1_netlink_msg *)packet->data;
++
++	*packet = *cn;
++	*pkt_msg = *msg;
++	packet->len = sizeof(*pkt_msg);
++	pkt_msg->len = 0;
++	pkt_msg->status = (u8)-error;
++	cn_netlink_send(packet, portid, 0, GFP_KERNEL);
+ }
+ 
+ /**
+@@ -215,22 +215,20 @@ static void w1_netlink_send_error(struct cn_msg *cn, struct w1_netlink_msg *msg,
+  */
+ void w1_netlink_send(struct w1_master *dev, struct w1_netlink_msg *msg)
+ {
+-	struct {
+-		struct cn_msg cn;
+-		struct w1_netlink_msg msg;
+-	} packet;
+-	memset(&packet, 0, sizeof(packet));
++	DEFINE_RAW_FLEX(struct cn_msg, packet, data,
++			sizeof(struct w1_netlink_msg));
++	struct w1_netlink_msg *pkt_msg = (struct w1_netlink_msg *)packet->data;
+ 
+-	packet.cn.id.idx = CN_W1_IDX;
+-	packet.cn.id.val = CN_W1_VAL;
++	packet->id.idx = CN_W1_IDX;
++	packet->id.val = CN_W1_VAL;
+ 
+-	packet.cn.seq = dev->seq++;
+-	packet.cn.len = sizeof(*msg);
++	packet->seq = dev->seq++;
++	packet->len = sizeof(*msg);
+ 
+-	memcpy(&packet.msg, msg, sizeof(*msg));
+-	packet.msg.len = 0;
++	*pkt_msg = *msg;
++	pkt_msg->len = 0;
+ 
+-	cn_netlink_send(&packet.cn, 0, 0, GFP_KERNEL);
++	cn_netlink_send(packet, 0, 0, GFP_KERNEL);
+ }
+ 
+ static void w1_send_slave(struct w1_master *dev, u64 rn)
+-- 
+2.43.0
+
