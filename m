@@ -1,97 +1,106 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01DBF20898C;
-	Mon,  7 Apr 2025 18:37:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5801225FA38;
+	Mon,  7 Apr 2025 18:39:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744051079; cv=none; b=DZSh3YySGx6A9jhvkfbeFIRExZlziBB11HZgSJ5GBL/g2+2Ahq/ItZgZi3AgqYQZmJ2uGNfKxQ5wlKhOT2RFL0a7U7/x08fuIU7Q9uumMzqtF1o2vuu7hsLGLiQN3T1hUeHrB2ckakJSoKUAmlq9K+CyK+Fxh2BxrCcBnlO293Q=
+	t=1744051178; cv=none; b=b27A9NGD6S0RLkOdAKD0p+mZ076mkW6XxOt3mX8FREzxm88yfv/Thwqa8YEle8R9DkPwoSGQe2BoLCtQM7YQlVkoP9ipxGP0L85f0aoEtTYyocpBK5ecxhA8R7Yb2YaSotUSqAIoJRiSVCYB2nqjyNaMdVjCXee3GJYs12PMgQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744051079; c=relaxed/simple;
-	bh=q8KGRHuOSc7xz+NvnDVSZTtg4Ny5rvebOBGvxJwpKoA=;
+	s=arc-20240116; t=1744051178; c=relaxed/simple;
+	bh=FqBbfujZorWgG3rPeHe3EJNi1KkKcFDOQUHyCf5TY6k=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LRPQgSO/AfgQzbw1yfsOdIdeLGb82nwIF66J7AX6MGICVe/ebU5blPYU7FM57f5YCfrK/nUdgbDd9d4O+hk4b4QYbvcOrD5atPhZwu4n9KVPKDeVRCVfHW8O4Hi/m9LCfl0RDtD8RbnzxnHOMjHhPbycp9qzvdwA0Orx2AF6Md4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ioosVxHw; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=RTQvybjxeS3dt2onYcW9G2e0O2kv0apOsVDhSRUo8VJJ+bJ4PEx8kJHAXm6ByVYtdZPf8gt+xREJrPrxNaRw8rSV0rEZYpOBKNxDQPO3ZKj1wL4eQo7iQxbhi+d8lZveLLGpLgFF2OOZe53ZSNatM/lx0PmamCFW5w2as7v2ULk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=arFXIKZA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ioosVxHw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C4FFC4CEE7;
-	Mon,  7 Apr 2025 18:37:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="arFXIKZA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C41D1C4CEDD;
+	Mon,  7 Apr 2025 18:39:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744051078;
-	bh=q8KGRHuOSc7xz+NvnDVSZTtg4Ny5rvebOBGvxJwpKoA=;
+	s=k20201202; t=1744051177;
+	bh=FqBbfujZorWgG3rPeHe3EJNi1KkKcFDOQUHyCf5TY6k=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ioosVxHwp9x00u08Cn5gP67i2I2QTE8nn/V7eABcJLZ208uAciSoGlHpwjko8caex
-	 9p6E/gi7PUgZGMFYH7dJ7SGVQLhSdnEITtI6yA0jqH9Fd72aqK3kdjKRyFMqIp8wGz
-	 /PP5c7HJ40hsljDWrK141AexKB1W6P5r9z3KIiuGJYzYL1Updn1tfea1Aw/WcyUV/y
-	 4axj+EPV37kPDwxM0VdSiBjbyF6rBiLsiKh7lhbRJbHAoC9XnI1MyXQ1H1sknPM4wn
-	 W3p2dL9xp4RhHizRXFE6JV908quBesbaOhGhOztsbdSZ7aav4M/t/EQ9avsAplPOAP
-	 OE4AjbwEpMd2w==
-Date: Mon, 7 Apr 2025 11:37:54 -0700
+	b=arFXIKZA9VCS2brkxZJUTn7YyPSvWytivwyTvyMlTXOiZdn1DfXL2T9jkGH6fztBi
+	 hnKcsF0bAr+tBA7v8TPaWzcS+u6xzN/sa8pFk8/UPVwgaaybDk0KQ0l0o0FAU7QsBq
+	 fghq56XwRgZ6rVbW22jGMQgoDSotfSSekHQV2WGuiaz7JQa/UAzdkcfsZPvslMIEB9
+	 bV0rRCi0WuO7t9sLFrSkm8RX9JBF7ohec66F7cgx3I6D3a9JWfgMGkQBnd8CgtQiSB
+	 /cFy7ueImq3lKm/NRlh2J5uu4Brzes+mNmB/eru8AVV/ndag+iMGui8oyuPiUC01IJ
+	 as1yGmblcd4ag==
+Date: Mon, 7 Apr 2025 11:39:34 -0700
 From: Kees Cook <kees@kernel.org>
-To: James Bottomley <James.Bottomley@hansenpartnership.com>
-Cc: Jack Wang <jinpu.wang@cloud.ionos.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Johannes Berg <johannes@sipsolutions.net>,
+	Jeff Johnson <jjohnson@kernel.org>, linux-wireless@vger.kernel.org,
+	ath12k@lists.infradead.org, linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] scsi: pm80xx: Add __nonstring annotations for
- unterminated strings
-Message-ID: <202504071136.73E5C22D0B@keescook>
-References: <20250310222553.work.437-kees@kernel.org>
- <98ca3727d65a418e403b03f6b17341dbcb192764.camel@HansenPartnership.com>
+Subject: Re: [PATCH][next] wifi: ath12k: core.h: Avoid
+ -Wflex-array-member-not-at-end warnings
+Message-ID: <202504071138.98D5B6E@keescook>
+References: <Z8-Snz86Xfwdlyd7@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <98ca3727d65a418e403b03f6b17341dbcb192764.camel@HansenPartnership.com>
+In-Reply-To: <Z8-Snz86Xfwdlyd7@kspp>
 
-On Mon, Mar 10, 2025 at 06:38:01PM -0400, James Bottomley wrote:
-> On Mon, 2025-03-10 at 15:25 -0700, Kees Cook wrote:
-> > When a character array without a terminating NUL character has a
-> > static
-> > initializer, GCC 15's -Wunterminated-string-initialization will only
-> > warn if the array lacks the "nonstring" attribute[1]. Mark the arrays
-> > with __nonstring to and correctly identify the char array as "not a C
-> > string" and thereby eliminate the warning.
-> > 
-> > Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=117178 [1]
-> > Cc: Jack Wang <jinpu.wang@cloud.ionos.com>
-> > Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
-> > Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
-> > Cc: linux-scsi@vger.kernel.org
-> > Signed-off-by: Kees Cook <kees@kernel.org>
-> > ---
-> >  drivers/scsi/pm8001/pm8001_ctl.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/scsi/pm8001/pm8001_ctl.c
-> > b/drivers/scsi/pm8001/pm8001_ctl.c
-> > index 85ff95c6543a..7618f9cc9986 100644
-> > --- a/drivers/scsi/pm8001/pm8001_ctl.c
-> > +++ b/drivers/scsi/pm8001/pm8001_ctl.c
-> > @@ -644,7 +644,7 @@ static DEVICE_ATTR(gsm_log, S_IRUGO,
-> > pm8001_ctl_gsm_log_show, NULL);
-> >  #define FLASH_CMD_SET_NVMD    0x02
-> >  
-> >  struct flash_command {
-> > -     u8      command[8];
-> > +     u8      command[8] __nonstring;
+On Tue, Mar 11, 2025 at 12:02:15PM +1030, Gustavo A. R. Silva wrote:
+> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> getting ready to enable it, globally.
 > 
-> This looks a bit suboptimal ... is there anywhere in the kernel u8[] is
-> actually used for real strings?  In which case it would seem the better
-> place to put the annotation is in the typedef for u8 arrays.
+> Move the conflicting declaration to the end of the structure. Notice
+> that `struct ieee80211_chanctx_conf` is a flexible structure --a
+> structure that contains a flexible-array member.
+> 
+> Fix 30 of the following warnings:
+> 
+> drivers/net/wireless/ath/ath12k/core.h:298:39: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-I answered this in a merged thread[1]. Can this get picked up?
+Hi, just checking in on this patch. Is some adjustment needed for this
+to land?
 
 Thanks!
 
 -Kees
 
-[1] https://lore.kernel.org/lkml/202503111520.CF7527A@keescook/
+> ---
+>  drivers/net/wireless/ath/ath12k/core.h | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/wireless/ath/ath12k/core.h b/drivers/net/wireless/ath/ath12k/core.h
+> index 3fac4f00d383..d6b4c4d2c400 100644
+> --- a/drivers/net/wireless/ath/ath12k/core.h
+> +++ b/drivers/net/wireless/ath/ath12k/core.h
+> @@ -295,7 +295,6 @@ struct ath12k_link_vif {
+>  	int txpower;
+>  	bool rsnie_present;
+>  	bool wpaie_present;
+> -	struct ieee80211_chanctx_conf chanctx;
+>  	u8 vdev_stats_id;
+>  	u32 punct_bitmap;
+>  	u8 link_id;
+> @@ -303,6 +302,13 @@ struct ath12k_link_vif {
+>  	struct ath12k_rekey_data rekey_data;
+>  
+>  	u8 current_cntdown_counter;
+> +
+> +	/* Must be last - ends in a flexible-array member.
+> +	 *
+> +	 * FIXME: Driver should not copy struct ieee80211_chanctx_conf,
+> +	 * especially because it has a flexible array. Find a better way.
+> +	 */
+> +	struct ieee80211_chanctx_conf chanctx;
+>  };
+>  
+>  struct ath12k_vif {
+> -- 
+> 2.43.0
+> 
 
 -- 
 Kees Cook
