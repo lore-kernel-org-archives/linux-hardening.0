@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E2D22206AB;
-	Mon,  7 Apr 2025 18:06:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2B6722652D;
+	Mon,  7 Apr 2025 18:10:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744049211; cv=none; b=KG/odXORa9RFQ2D2Ao+BiQPCjMCxXMaHAr2L10RifACgiYPaUi8t7hger/I9DZ3oMV+tWHxOqcU1NDmpENWasuH7ocOIj7416anlmMhyUwZ7/+oP7PDePgHWKvLphc1i/A6k8AL1J4iQWTxBSPK9VWZQ66NKz/tU45MbsiBj1s0=
+	t=1744049414; cv=none; b=ZqLTt3mzsnR2BtdhQjjH4WJW4mZN+5REPvM02epqp4HAAr5d+ioRPIvLulQNS5+QrhzyZ/KEzyeLeBQPISxfGNoepsHj0Mdj6a61DSoKvXrSUpIhatUZsCFsJEBp4uXm2k3Svnq/0KCtop8jxsd3uM4Uo1ie4Zgd6ZsOKaxZusQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744049211; c=relaxed/simple;
-	bh=FsmCeWazI64tSkrlujtg9O9Kb5UT2thJSPKLzmk6DEE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ik7Ziw3jw3XdItsLVBpVAnTtF9bSCy0zW/GXn3Le/DJ06s9Gbn/NcOBvhKNSoRv8IULh0wby15pyOz3blVJEiFZGGDt/r53M2Qn/HFeSA78FP1FaxmzvHg3Uz734jxJLDKyikNhwgltZ2mGQF3BnBYlnU5Gl0PdG6ZKGGpbJTxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PO28sFEA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744049414; c=relaxed/simple;
+	bh=iXtslnS0wzQz4pKR0UogzZj88g+7+/4qQOlDzhBkFiA=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=KrpOA+dbKcLaWNVjuCOOv56g43IOv0ScQ15L8vLckEofXFR+MC1bgiNxOrXy87L80oXDkzjUrbybSu/8lgK3f4e8pxy3/e795AaEu5eQICTfrwMNKr/Cj9t2xY1SZLt3cuxhu8LHwdD+Ku1W//S4NCc7u964nqyKnYIC2ksZm0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E6Sepuxp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PO28sFEA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C91AC4CEDD;
-	Mon,  7 Apr 2025 18:06:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E6Sepuxp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11878C4CEE7;
+	Mon,  7 Apr 2025 18:10:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744049211;
-	bh=FsmCeWazI64tSkrlujtg9O9Kb5UT2thJSPKLzmk6DEE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=PO28sFEASTjc/GPxdXf8NPgHhYFf1cZNqdcAyoDf6GZ6T8o5PFCCND+Q9K5IXtu3i
-	 /IuOFLVARRWl2BAq9piwymt0SbC5pLKLdwi+65s8YjAWdu7ZodDkBzNswb2CX+BQfE
-	 koLcOyqOn5pPv+2vqnzk5agz7+AZPDf5QY2fXziceHjWu/v/JXcO4lT2YcTZwVUhHP
-	 dcGHsCRChK2X1LivG4RzZJMjaPAUR7/5XXKodVOzPfbSviebZZkbyKbBLmpYMhlrRM
-	 XIj2IlNLFcHFX8C0k7r9AuxG1OsKRIYQ5Lg8Ec6K93NWIgrEz6nqYjCkeIC6ZFxyXO
-	 tgxGcw4OsOS4A==
-Message-ID: <09e09598-945b-4f26-a5f4-9f1a17a709c4@kernel.org>
-Date: Mon, 7 Apr 2025 20:06:45 +0200
+	s=k20201202; t=1744049413;
+	bh=iXtslnS0wzQz4pKR0UogzZj88g+7+/4qQOlDzhBkFiA=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=E6SepuxpH5lUPV9LvkMXHbZMmpBEW0c+BI0taXokZpxs54V4oWQyc0+w3yV3AsQI+
+	 A3tnH96D7188ljxaVlShR3VFjuR0fDzyx+adS2KK5vOoh5jiZ1VpUG3guchkq1Hg9x
+	 C7M6hmk40ep244aJ1ErozbxR6XWgxmA11oKq/fI+stZUoEn+WMsnUvpeo1f7PLkE2j
+	 m7HFIPU4gve/HaRAlc62gVTm+e7eu9kkZ9FEWgDXp1m+Cxu9epMiisnraMBxK4DX4Y
+	 aXu9uXKPHaw6CBqCPU81tpjwY8ZcjfEAFdc1pysZ9agVZn7Imw24SQ2h3tY2JCxPTz
+	 uQ1m7qSeX1GLQ==
+Message-ID: <b1d0a55d-75ab-422b-9e38-2dc2bbd1be91@kernel.org>
+Date: Mon, 7 Apr 2025 20:10:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -35,8 +35,9 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 18/28] dpll: zl3073x: Read optional pin properties from
- firmware
+Subject: Re: [PATCH 15/28] dt-bindings: dpll: Add device tree bindings for
+ DPLL device and pin
+From: Krzysztof Kozlowski <krzk@kernel.org>
 To: Ivan Vecera <ivecera@redhat.com>, netdev@vger.kernel.org
 Cc: Michal Schmidt <mschmidt@redhat.com>,
  Vadim Fedorenko <vadim.fedorenko@linux.dev>,
@@ -49,8 +50,8 @@ Cc: Michal Schmidt <mschmidt@redhat.com>,
  <akpm@linux-foundation.org>, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 References: <20250407172836.1009461-1-ivecera@redhat.com>
- <20250407173149.1010216-9-ivecera@redhat.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+ <20250407173149.1010216-6-ivecera@redhat.com>
+ <74172acd-e649-4613-a408-d1f61ceeba8b@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -95,45 +96,44 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250407173149.1010216-9-ivecera@redhat.com>
+In-Reply-To: <74172acd-e649-4613-a408-d1f61ceeba8b@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 07/04/2025 19:31, Ivan Vecera wrote:
-> +
-> +	if (zl3073x_dpll_is_input_pin(pin))
-> +		node_name = "input-pins";
-> +	else
-> +		node_name = "output-pins";
-> +
-> +	/* Get node containing input or output pins */
-> +	pins_node = device_get_named_child_node(zldpll->mfd->dev, node_name);
-> +	if (!pins_node) {
-> +		dev_dbg(zldpll->mfd->dev, "'%s' sub-node is missing\n",
-> +			node_name);
-> +		return NULL;
-> +	}
-> +
-> +	/* Get pin HW index */
-> +	idx = zl3073x_dpll_pin_index_get(pin);
-> +
-> +	/* Enumerate pin nodes and find the requested one */
-> +	fwnode_for_each_child_node(pins_node, pin_node) {
-> +		u32 reg;
-> +
-> +		if (fwnode_property_read_u32(pin_node, "reg", &reg))
-> +			continue;
-> +
-> +		if (idx == reg)
-> +			break;
+On 07/04/2025 20:01, Krzysztof Kozlowski wrote:
+>> +
+>> +  input-pins:
+>> +    type: object
+>> +    description: DPLL input pins
+>> +    unevaluatedProperties: false
+> 
+> So this is all for pinctrl? Or something else? Could not figure out from
+> commit msg. This does not help me either.
+> 
+>> +
+>> +    properties:
+>> +      "#address-cells":
+>> +        const: 1
+> 
+> Why?
 
-Where do you drop the reference to pin_node?
+Ah, I see being used.
 
-> +	}
-> +
-> +	/* Release pin parent node */
-> +	fwnode_handle_put(pins_node);
-> +
+> 
+>> +      "#size-cells":
+>> +        const: 0
+> 
+> Why? I don't see these being used.
+
+And this as well.
+
+> 
+>> +
+>> +    patternProperties:
+>> +      "^pin@[0-9]+$":
+>> +        $ref: /schemas/dpll/dpll-pin.yaml
+>> +        unevaluatedProperties: false
+>> +
 
 
 
