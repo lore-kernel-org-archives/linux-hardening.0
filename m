@@ -1,47 +1,47 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB8E92550D2
-	for <linux-hardening@vger.kernel.org>; Mon,  7 Apr 2025 17:33:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D9ED255229
+	for <linux-hardening@vger.kernel.org>; Mon,  7 Apr 2025 17:33:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744047234; cv=none; b=c9COc7xxd82+Q594Gv5RDFNEpdadU4WMXfAH37F20GotPOo19VBpUCTmo2ItEM8Q9dXqwpHKN6bD8VWOeV+E6Lhpvh+w9/+I3wHaSOa+g9LTJq5GeijlYStwtRtbOvnbKcl0A4qQQz1FnZnGt/HfIkZWzab0CrHtN88HD9c3VKs=
+	t=1744047241; cv=none; b=mQtORf9EgWHXTnspVJ2wGeZsm2nu6Mo1j0Ka3wFiUnQ7OywJTLlrAoQ2abANeoz69wPTk8FBoQGpQt4VQKURIH+UQYIyeqtO6DoXQeWck21iCbVLorDTf4uOFGLem2VyafEGnM5Cyd6qCtDjKAYRYBrgQdU/B12p026sqnwt7a4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744047234; c=relaxed/simple;
-	bh=5U093kAY3hoxDsZMSwlw+0r/goDrQdnI3Vv4TryWwjs=;
+	s=arc-20240116; t=1744047241; c=relaxed/simple;
+	bh=yLTHJ05ygRIZZ5iwUiKUKh0Cm43hl1zFVEBf723h+S4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=g10g8MSzAEM+FwqOVfxHDrtqY2ZdX8OFzrT1js/9VDImJdCs4ONzVHOH2an4fmaR6OHhyTrh/CkAzyFBf2UPOpYVoIhG1ujpChRlitkUH0VStxVZPfMtYTHDohBGUCtIz5f7BNZkYKZkEaYnRGIehqr72L7Ppv0fKp2pshTZbxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=C/TM5uis; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=iIpAG7G9v2UKlawpIfbLZBdsjn4XYUqRXGJl+Vb7rrcUOR92xfzoLWqoGu0Q+Yn1236rW1lZiE0YFe8+jin7QfuZl1Ek74w471AoEE4r6pHioE4vpRmv0IDu7SWLE2+N7Prrufg1iqiERpEOzQEheBa74y/U9TzOy441ZkBgW2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ICzYlwAJ; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C/TM5uis"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ICzYlwAJ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744047232;
+	s=mimecast20190719; t=1744047238;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=FwU+hrjd2qkJ6gHJBxOGGNS7xPX2aUI8bJ62fHCyzOw=;
-	b=C/TM5uisnQBw3cHC0vzyirMjGxynQ0OxVvK7Iff0mToBxt4e6qn4ktG9PlT3XqeYuk1Avh
-	jGX9mX4Pdd81QJINhZ6nmXi67WlWEqrjs397FjwVVMO5V+4NNDkZorb228wnMTwYtCq0tU
-	V1/W7xVzIdP70thySGN++qY319+HSns=
+	bh=palQv57hQTCne25I0QNHI4EgnBuV8W5p0oe7j/ULdJ4=;
+	b=ICzYlwAJrQWqTiN9Lj8JWgeNRXXUwFHiPyMTKk8Qm7rAmgX9jk8xKvtbPAF2MZc4Smroyz
+	tFgXTAWSRjReDIcpw5FOo+ajxNdv+q0VM3VtS6Pg7mjzB6ezdHVY5zkm7ZhvkbZsx8Ldg+
+	Zvb5t13v+xzRtQzOWTmxnmdAldg4hnc=
 Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-570-c_A4qxucOme73u5Ag1nZcg-1; Mon,
- 07 Apr 2025 13:33:48 -0400
-X-MC-Unique: c_A4qxucOme73u5Ag1nZcg-1
-X-Mimecast-MFC-AGG-ID: c_A4qxucOme73u5Ag1nZcg_1744047225
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-261-9rKRSkUjP-C4FuEln5yjVQ-1; Mon,
+ 07 Apr 2025 13:33:54 -0400
+X-MC-Unique: 9rKRSkUjP-C4FuEln5yjVQ-1
+X-Mimecast-MFC-AGG-ID: 9rKRSkUjP-C4FuEln5yjVQ_1744047231
 Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B3279180025B;
-	Mon,  7 Apr 2025 17:33:45 +0000 (UTC)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B642B1800267;
+	Mon,  7 Apr 2025 17:33:51 +0000 (UTC)
 Received: from p16v.luc.cera.cz (unknown [10.44.32.4])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 2DA0D1828A80;
-	Mon,  7 Apr 2025 17:33:39 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 4743F180B488;
+	Mon,  7 Apr 2025 17:33:45 +0000 (UTC)
 From: Ivan Vecera <ivecera@redhat.com>
 To: netdev@vger.kernel.org
 Cc: Michal Schmidt <mschmidt@redhat.com>,
@@ -59,9 +59,9 @@ Cc: Michal Schmidt <mschmidt@redhat.com>,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH 26/28] dpll: zl3073x: Add support to get/set phase adjust on pins
-Date: Mon,  7 Apr 2025 19:32:59 +0200
-Message-ID: <20250407173301.1010462-7-ivecera@redhat.com>
+Subject: [PATCH 27/28] dpll: zl3073x: Add support to get/set esync on pins
+Date: Mon,  7 Apr 2025 19:33:00 +0200
+Message-ID: <20250407173301.1010462-8-ivecera@redhat.com>
 In-Reply-To: <20250407172836.1009461-1-ivecera@redhat.com>
 References: <20250407172836.1009461-1-ivecera@redhat.com>
 Precedence: bulk
@@ -73,60 +73,176 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-This adds support to get/set phase adjustment for both input and output
-pins. The phase adjustment is implemented using reference and output
-phase offset compensation registers. For input pins the adjustment value
-can be arbitrary number but for outputs the value has to be a multiple
-of half synthesizer clock cycles.
+This adds support to get/set embedded sync for both input and output
+pins. The DPLL is able to lock on input reference when the embedded sync
+frequency is 1 PPS and pulse width 25%. The esync on outputs are more
+versatille and theoretically supports any esync frequency that divides
+current output frequency but for now support the same that supported on
+input pins (1 PPS & 25% pulse).
+
+Note that for the output pins the esync divisor shares the same register
+used for N-divided signal formats. Due to this the esync cannot be
+enabled on outputs configured with one of the N-divided signal formats.
 
 Reviewed-by: Michal Schmidt <mschmidt@redhat.com>
 Co-developed-by: Prathosh Satish <Prathosh.Satish@microchip.com>
 Signed-off-by: Prathosh Satish <Prathosh.Satish@microchip.com>
 Signed-off-by: Ivan Vecera <ivecera@redhat.com>
 ---
- drivers/dpll/dpll_zl3073x.c | 182 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 182 insertions(+)
+ drivers/dpll/dpll_zl3073x.c | 370 +++++++++++++++++++++++++++++++++++-
+ 1 file changed, 368 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/dpll/dpll_zl3073x.c b/drivers/dpll/dpll_zl3073x.c
-index 3b28d229dd4be..b1f38f000899b 100644
+index b1f38f000899b..e1d7f6d4c3d57 100644
 --- a/drivers/dpll/dpll_zl3073x.c
 +++ b/drivers/dpll/dpll_zl3073x.c
-@@ -79,6 +79,7 @@ ZL3073X_REG16_DEF(ref_freq_base,		0x505);
- ZL3073X_REG16_DEF(ref_freq_mult,		0x507);
- ZL3073X_REG16_DEF(ref_ratio_m,			0x509);
+@@ -81,6 +81,14 @@ ZL3073X_REG16_DEF(ref_ratio_m,			0x509);
  ZL3073X_REG16_DEF(ref_ratio_n,			0x50b);
-+ZL3073X_REG48_DEF(ref_phase_compensation,	0x528);
+ ZL3073X_REG48_DEF(ref_phase_compensation,	0x528);
  
++ZL3073X_REG8_DEF(ref_sync_ctrl,			0x52e);
++#define REF_SYNC_CTRL_MODE			GENMASK(2, 0)
++#define REF_SYNC_CTRL_MODE_REFSYNC_PAIR_OFF	0
++#define REF_SYNC_CTRL_MODE_50_50_ESYNC_25_75	2
++
++ZL3073X_REG32_DEF(ref_esync_div,		0x530);
++#define REF_ESYNC_DIV_1HZ			0
++
  /*
   * Register Map Page 12, DPLL Mailbox
-@@ -98,6 +99,8 @@ ZL3073X_REG32_DEF(output_width,			0x710);
- ZL3073X_REG32_DEF(output_ndiv_period,		0x714);
- ZL3073X_REG32_DEF(output_ndiv_width,		0x718);
- 
-+ZL3073X_REG32_DEF(output_phase_compensation,	0x720);
+  */
+@@ -94,10 +102,17 @@ ZL3073X_REG8_IDX_DEF(dpll_ref_prio,		0x652,
+ /*
+  * Register Map Page 14, Output Mailbox
+  */
++ZL3073X_REG8_DEF(output_mode,			0x705);
++#define OUTPUT_MODE_CLOCK_TYPE			GENMASK(2, 0)
++#define OUTPUT_MODE_CLOCK_TYPE_NORMAL		0
++#define OUTPUT_MODE_CLOCK_TYPE_ESYNC		1
 +
- #define ZL3073X_REF_NONE			ZL3073X_NUM_INPUT_PINS
- #define ZL3073X_REF_IS_VALID(_ref)		((_ref) != ZL3073X_REF_NONE)
+ ZL3073X_REG32_DEF(output_div,			0x70c);
+ ZL3073X_REG32_DEF(output_width,			0x710);
+-ZL3073X_REG32_DEF(output_ndiv_period,		0x714);
+-ZL3073X_REG32_DEF(output_ndiv_width,		0x718);
++ZL3073X_REG32_DEF(output_esync_period,		0x714);
++ZL3073X_REG32_DEF(output_ndiv_period,		0x714); /* alias for previous */
++ZL3073X_REG32_DEF(output_esync_width,		0x718);
++ZL3073X_REG32_DEF(output_ndiv_width,		0x718); /* alias for previous */
  
-@@ -690,6 +693,85 @@ zl3073x_dpll_input_pin_phase_offset_get(const struct dpll_pin *dpll_pin,
+ ZL3073X_REG32_DEF(output_phase_compensation,	0x720);
+ 
+@@ -122,6 +137,7 @@ struct zl3073x_dpll_pin_info {
+  * @index: index in zl3073x_dpll.pins array
+  * @prio: pin priority <0, 14>
+  * @selectable: pin is selectable in automatic mode
++ * @esync_control: embedded sync is controllable
+  * @pin_state: last saved pin state
+  * @phase_offset: last saved pin phase offset
+  */
+@@ -130,6 +146,7 @@ struct zl3073x_dpll_pin {
+ 	u8				index;
+ 	u8				prio;
+ 	bool				selectable;
++	bool				esync_control;
+ 	enum dpll_pin_state		pin_state;
+ 	s64				phase_offset;
+ };
+@@ -213,6 +230,13 @@ zl3073x_dpll_is_n_pin(struct zl3073x_dpll_pin *pin)
+ 	return zl3073x_is_n_pin(zl3073x_dpll_pin_index_get(pin));
+ }
+ 
++/*
++ * Supported esync ranges for input and for output per output pair type
++ */
++static const struct dpll_pin_frequency esync_freq_ranges[] = {
++	DPLL_PIN_FREQUENCY_RANGE(0, 1),
++};
++
+ /**
+  * zl3073x_dpll_is_p_pin - check if the pin is P-pin
+  * @pin: pin to check
+@@ -352,6 +376,128 @@ zl3073x_dpll_input_ref_frequency_get(struct zl3073x_dev *zldev, u8 ref_id,
  	return rc;
  }
  
 +static int
-+zl3073x_dpll_input_pin_phase_adjust_get(const struct dpll_pin *dpll_pin,
-+					void *pin_priv,
-+					const struct dpll_device *dpll,
-+					void *dpll_priv,
-+					s32 *phase_adjust,
-+					struct netlink_ext_ack *extack)
++zl3073x_dpll_input_pin_esync_get(const struct dpll_pin *dpll_pin,
++				 void *pin_priv,
++				 const struct dpll_device *dpll,
++				 void *dpll_priv,
++				 struct dpll_pin_esync *esync,
++				 struct netlink_ext_ack *extack)
 +{
 +	struct zl3073x_dpll *zldpll = dpll_priv;
 +	struct zl3073x_dev *zldev = zldpll->mfd;
 +	struct zl3073x_dpll_pin *pin = pin_priv;
-+	s64 phase_comp;
-+	u8 ref_id;
++	u8 sync_mode, ref_id, ref_sync_ctrl;
++	u32 esync_div;
++	u64 ref_freq;
 +	int rc;
 +
++	/* Take device lock */
++	guard(zl3073x)(zldev);
++
++	/* Get index of the pin */
++	ref_id = zl3073x_dpll_pin_index_get(pin);
++
++	/* Get reference frequency */
++	rc = zl3073x_dpll_input_ref_frequency_get(zldev, ref_id, &ref_freq);
++	if (rc)
++		return rc;
++
++	/* Get ref sync mode */
++	rc = zl3073x_read_ref_sync_ctrl(zldev, &ref_sync_ctrl);
++	if (rc)
++		return rc;
++
++	sync_mode = FIELD_GET(REF_SYNC_CTRL_MODE, ref_sync_ctrl);
++
++	/* Get esync divisor */
++	rc = zl3073x_read_ref_esync_div(zldev, &esync_div);
++	if (rc)
++		return rc;
++
++	switch (sync_mode) {
++	case REF_SYNC_CTRL_MODE_50_50_ESYNC_25_75:
++		esync->freq = (esync_div == REF_ESYNC_DIV_1HZ) ? 1 : 0;
++		esync->pulse = 25;
++		break;
++	default:
++		esync->freq = 0;
++		esync->pulse = 50;
++		break;
++	}
++
++	/* If the pin supports esync control expose its range but only
++	 * if the current reference frequency is > 1 Hz.
++	 */
++	if (pin->esync_control && ref_freq > 1) {
++		esync->range = esync_freq_ranges;
++		esync->range_num = ARRAY_SIZE(esync_freq_ranges);
++	} else {
++		esync->range = NULL;
++		esync->range_num = 0;
++	}
++
++	return rc;
++}
++
++static int
++zl3073x_dpll_input_pin_esync_set(const struct dpll_pin *dpll_pin,
++				 void *pin_priv,
++				 const struct dpll_device *dpll,
++				 void *dpll_priv, u64 freq,
++				 struct netlink_ext_ack *extack)
++{
++	struct zl3073x_dpll *zldpll = dpll_priv;
++	struct zl3073x_dev *zldev = zldpll->mfd;
++	struct zl3073x_dpll_pin *pin = pin_priv;
++	u8 ref_id, ref_sync_ctrl, sync_mode;
++	int rc;
++
++	/* Take device lock */
 +	guard(zl3073x)(zldev);
 +
 +	/* Get index of the pin */
@@ -137,51 +253,31 @@ index 3b28d229dd4be..b1f38f000899b 100644
 +	if (rc)
 +		return rc;
 +
-+	/* Read current phase offset compensation */
-+	rc = zl3073x_read_ref_phase_compensation(zldev, &phase_comp);
++	/* Read ref sync control */
++	rc = zl3073x_read_ref_sync_ctrl(zldev, &ref_sync_ctrl);
 +	if (rc)
 +		return rc;
 +
-+	/* Perform sign extension for 48bit signed value */
-+	phase_comp = sign_extend64(phase_comp, 47);
++	/* Use freq == 0 to disable esync */
++	if (!freq)
++		sync_mode = REF_SYNC_CTRL_MODE_REFSYNC_PAIR_OFF;
++	else
++		sync_mode = REF_SYNC_CTRL_MODE_50_50_ESYNC_25_75;
 +
-+	/* Reverse two's complement negation applied during set and convert
-+	 * to 32bit signed int
-+	 */
-+	*phase_adjust = (s32) -phase_comp;
++	ref_sync_ctrl &= REF_SYNC_CTRL_MODE;
++	ref_sync_ctrl |= FIELD_PREP(REF_SYNC_CTRL_MODE, sync_mode);
 +
-+	return rc;
-+}
-+
-+static int
-+zl3073x_dpll_input_pin_phase_adjust_set(const struct dpll_pin *dpll_pin,
-+					void *pin_priv,
-+					const struct dpll_device *dpll,
-+					void *dpll_priv,
-+					s32 phase_adjust,
-+					struct netlink_ext_ack *extack)
-+{
-+	struct zl3073x_dpll *zldpll = dpll_priv;
-+	struct zl3073x_dev *zldev = zldpll->mfd;
-+	struct zl3073x_dpll_pin *pin = pin_priv;
-+	s64 phase_comp;
-+	u8 ref_id;
-+	int rc;
-+
-+	guard(zl3073x)(zldev);
-+
-+	/* The value in the register is stored as two's complement negation
-+	 * of requested value.
-+	 */
-+	phase_comp = (s64) -phase_adjust;
-+
-+	/* Write the requested value into the compensation register */
-+	rc = zl3073x_write_ref_phase_compensation(zldev, phase_comp);
++	/* Update ref sync control register */
++	rc = zl3073x_write_ref_sync_ctrl(zldev, ref_sync_ctrl);
 +	if (rc)
 +		return rc;
 +
-+	/* Get index of the pin */
-+	ref_id = zl3073x_dpll_pin_index_get(pin);
++	if (freq) {
++		/* 1 Hz is only supported frequnecy currently */
++		rc = zl3073x_write_ref_esync_div(zldev, REF_ESYNC_DIV_1HZ);
++		if (rc)
++			return rc;
++	}
 +
 +	/* Update reference configuration from mailbox */
 +	rc = zl3073x_mb_ref_write(zldev, ref_id);
@@ -192,129 +288,256 @@ index 3b28d229dd4be..b1f38f000899b 100644
 +}
 +
  static int
- zl3073x_dpll_ref_prio_get(struct zl3073x_dpll_pin *pin, u8 *prio)
- {
-@@ -1165,6 +1247,102 @@ zl3073x_dpll_output_pin_frequency_set(const struct dpll_pin *dpll_pin,
- 	return zl3073x_mb_output_write(zldev, output);
+ zl3073x_dpll_input_pin_frequency_get(const struct dpll_pin *dpll_pin,
+ 				     void *pin_priv,
+@@ -1017,6 +1163,218 @@ zl3073x_dpll_pin_synth_get(struct zl3073x_dpll_pin *pin)
+ 	return zl3073x_output_synth_get(pin_to_dev(pin), output);
  }
  
 +static int
-+zl3073x_dpll_output_pin_phase_adjust_get(const struct dpll_pin *dpll_pin,
-+					 void *pin_priv,
-+					 const struct dpll_device *dpll,
-+					 void *dpll_priv,
-+					 s32 *phase_adjust,
-+					 struct netlink_ext_ack *extack)
++zl3073x_dpll_output_pin_esync_get(const struct dpll_pin *dpll_pin,
++				  void *pin_priv,
++				  const struct dpll_device *dpll,
++				  void *dpll_priv,
++				  struct dpll_pin_esync *esync,
++				  struct netlink_ext_ack *extack)
 +{
 +	struct zl3073x_dpll *zldpll = dpll_priv;
 +	struct zl3073x_dev *zldev = zldpll->mfd;
 +	struct zl3073x_dpll_pin *pin = pin_priv;
-+	u8 output, synth;
++	u32 esync_period, esync_width, output_div;
++	u8 clock_type, output, output_mode, synth;
 +	u64 synth_freq;
-+	s32 phase_comp;
 +	int rc;
 +
-+	guard(zl3073x)(zldev);
-+
 +	output = zl3073x_dpll_output_pin_output_get(pin);
-+	synth = zl3073x_dpll_pin_synth_get(pin);
-+	synth_freq = zl3073x_synth_freq_get(zldev, synth);
++
++	/* If N-division is enabled, esync is not supported. The register used
++	 * for N-division is also used for the esync divider so both cannot
++	 * be used.
++	 */
++	switch (zl3073x_output_signal_format_get(zldev, output)) {
++	case OUTPUT_MODE_SIGNAL_FORMAT_TWO_N_DIV:
++	case OUTPUT_MODE_SIGNAL_FORMAT_TWO_N_DIV_INV:
++		return -EOPNOTSUPP;
++	default:
++		break;
++	}
++
++	/* Take device lock */
++	guard(zl3073x)(zldev);
 +
 +	/* Read output configuration into mailbox */
 +	rc = zl3073x_mb_output_read(zldev, output);
 +	if (rc)
 +		return rc;
 +
-+	/* Read current output phase compensation */
-+	rc = zl3073x_read_output_phase_compensation(zldev, &phase_comp);
++	/* Read output mode */
++	rc = zl3073x_read_output_mode(zldev, &output_mode);
 +	if (rc)
 +		return rc;
 +
-+	/* Value in register is expressed in half synth clock cycles */
-+	phase_comp *= (int)div_u64(PSEC_PER_SEC, 2 * synth_freq);
++	/* Read output divisor */
++	rc = zl3073x_read_output_div(zldev, &output_div);
++	if (rc)
++		return rc;
 +
-+	/* Reverse two's complement negation applied during 'set' */
-+	*phase_adjust = -phase_comp;
++	/* Check output divisor for zero */
++	if (!output_div) {
++		dev_err(zldev->dev,
++			"Zero divisor for OUTPUT%u got from device\n",
++			output);
++		return -EINVAL;
++	}
 +
-+	return rc;
++	/* Get synth attached to output pin */
++	synth = zl3073x_dpll_pin_synth_get(pin);
++
++	/* Get synth frequency */
++	synth_freq = zl3073x_synth_freq_get(zldev, synth);
++
++	clock_type = FIELD_GET(OUTPUT_MODE_CLOCK_TYPE, output_mode);
++	if (clock_type != OUTPUT_MODE_CLOCK_TYPE_ESYNC) {
++		/* No need to read esync data if it is not enabled */
++		esync->freq = 0;
++		esync->pulse = 50;
++
++		goto finish;
++	}
++
++	/* Read esync period */
++	rc = zl3073x_read_output_esync_period(zldev, &esync_period);
++	if (rc)
++		return rc;
++
++	/* Check esync divisor for zero */
++	if (!esync_period) {
++		dev_err(zldev->dev,
++			"Zero esync divisor for OUTPUT%u got from device\n",
++			output);
++		return -EINVAL;
++	}
++
++	/* Get esync pulse width in units of half synth cycles */
++	rc = zl3073x_read_output_esync_width(zldev, &esync_width);
++	if (rc)
++		return rc;
++
++	/* Compute esync frequency:
++	 * esync_freq = synth_freq / output_div / esync_period;
++	 *     ...    = synth_freq / (output_div * esync_period);
++	 */
++	esync->freq = div64_u64(synth_freq,
++				mul_u32_u32(output_div, esync_period));
++
++	/* By comparing the esync_pulse_width to the half of the pulse width
++	 * the esync pulse percentage can be determined.
++	 * Note that half pulse width is in units of half synth cycles, which
++	 * is why it reduces down to be output_div.
++	 */
++	esync->pulse = (50 * esync_width) / output_div;
++
++finish:
++	/* Set supported esync ranges if the pin supports esync control and
++	 * if the output frequency is > 1 Hz.
++	 */
++	if (pin->esync_control && div_u64(synth_freq, output_div) > 1) {
++		esync->range = esync_freq_ranges;
++		esync->range_num = ARRAY_SIZE(esync_freq_ranges);
++	} else {
++		esync->range = NULL;
++		esync->range_num = 0;
++	}
++
++	return 0;
 +}
 +
 +static int
-+zl3073x_dpll_output_pin_phase_adjust_set(const struct dpll_pin *dpll_pin,
-+					 void *pin_priv,
-+					 const struct dpll_device *dpll,
-+					 void *dpll_priv,
-+					 s32 phase_adjust,
-+					 struct netlink_ext_ack *extack)
++zl3073x_dpll_output_pin_esync_set(const struct dpll_pin *dpll_pin,
++				  void *pin_priv,
++				  const struct dpll_device *dpll,
++				  void *dpll_priv, u64 freq,
++				  struct netlink_ext_ack *extack)
 +{
 +	struct zl3073x_dpll *zldpll = dpll_priv;
 +	struct zl3073x_dev *zldev = zldpll->mfd;
 +	struct zl3073x_dpll_pin *pin = pin_priv;
-+	int half_synth_cycle;
-+	u8 output, synth;
++	u32 esync_period, esync_width, output_div;
++	u8 clock_type, output, output_mode, synth;
 +	u64 synth_freq;
-+	int phase_comp;
 +	int rc;
 +
-+	/* Get attached synth */
-+	synth = zl3073x_dpll_pin_synth_get(pin);
++	output = zl3073x_dpll_output_pin_output_get(pin);
 +
-+	/* Get synth's frequency */
-+	synth_freq = zl3073x_synth_freq_get(zldev, synth);
-+
-+	/* Value in register is expressed in half synth clock cycles so
-+	 * the given phase adjustment a multiple of half synth clock.
++	/* If N-division is enabled, esync is not supported. The register used
++	 * for N-division is also used for the esync divider so both cannot
++	 * be used.
 +	 */
-+	half_synth_cycle = (int)div_u64(PSEC_PER_SEC, 2 * synth_freq);
-+
-+	if ((phase_adjust % half_synth_cycle) != 0) {
-+		NL_SET_ERR_MSG_FMT(extack,
-+				   "Phase adjustment value has to be multiple of %d",
-+				   half_synth_cycle);
-+		return -EINVAL;
++	switch (zl3073x_output_signal_format_get(zldev, output)) {
++	case OUTPUT_MODE_SIGNAL_FORMAT_TWO_N_DIV:
++	case OUTPUT_MODE_SIGNAL_FORMAT_TWO_N_DIV_INV:
++		return -EOPNOTSUPP;
++	default:
++		break;
 +	}
-+	phase_adjust /= half_synth_cycle;
 +
++	/* Take device lock */
 +	guard(zl3073x)(zldev);
 +
-+	/* The value in the register is stored as two's complement negation
-+	 * of requested value.
-+	 */
-+	phase_comp = -phase_adjust;
-+
-+	/* Write the requested value into the compensation register */
-+	rc = zl3073x_write_output_phase_compensation(zldev, phase_comp);
++	/* Read output configuration into mailbox */
++	rc = zl3073x_mb_output_read(zldev, output);
 +	if (rc)
 +		return rc;
 +
++	/* Read output mode */
++	rc = zl3073x_read_output_mode(zldev, &output_mode);
++	if (rc)
++		return rc;
++
++	/* Select clock type */
++	if (freq)
++		clock_type = OUTPUT_MODE_CLOCK_TYPE_ESYNC;
++	else
++		clock_type = OUTPUT_MODE_CLOCK_TYPE_NORMAL;
++
++	/* Update clock type in ref sync control */
++	output_mode &= ~OUTPUT_MODE_CLOCK_TYPE;
++	output_mode |= FIELD_PREP(OUTPUT_MODE_CLOCK_TYPE, clock_type);
++	rc = zl3073x_write_output_mode(zldev, output_mode);
++	if (rc)
++		return rc;
++
++	/* If esync is being disabled just write mailbox and finish */
++	if (!freq)
++		goto write_mailbox;
++
++	/* Read output divisor */
++	rc = zl3073x_read_output_div(zldev, &output_div);
++	if (rc)
++		return rc;
++
++	/* Get synth attached to output pin */
++	synth = zl3073x_dpll_pin_synth_get(pin);
++
++	/* Get synth frequency */
++	synth_freq = zl3073x_synth_freq_get(zldev, synth);
++
++	/* Compute and update esync period */
++	esync_period = (u32)div64_u64(synth_freq, freq * output_div);
++	rc = zl3073x_write_output_esync_period(zldev, esync_period);
++	if (rc)
++		return rc;
++
++	/* Half of the period in units of 1/2 synth cycle can be represented by
++	 * the output_div. To get the supported esync pulse width of 25% of the
++	 * period the output_div can just be divided by 2. Note that this
++	 * assumes that output_div is even, otherwise some resolution will be
++	 * lost.
++	 */
++	esync_width = output_div / 2;
++	rc = zl3073x_write_output_esync_width(zldev, esync_width);
++	if (rc)
++		return rc;
++
++write_mailbox:
 +	/* Update output configuration from mailbox */
-+	output = zl3073x_dpll_output_pin_output_get(pin);
 +	rc = zl3073x_mb_output_write(zldev, output);
 +
 +	return rc;
 +}
 +
  static int
- zl3073x_dpll_output_pin_state_on_dpll_get(const struct dpll_pin *dpll_pin,
- 					  void *pin_priv,
-@@ -1243,6 +1421,8 @@ static const struct dpll_pin_ops zl3073x_dpll_input_pin_ops = {
+ zl3073x_dpll_output_pin_frequency_get(const struct dpll_pin *dpll_pin,
+ 				      void *pin_priv,
+@@ -1418,6 +1776,8 @@ zl3073x_dpll_mode_get(const struct dpll_device *dpll, void *dpll_priv,
+ 
+ static const struct dpll_pin_ops zl3073x_dpll_input_pin_ops = {
+ 	.direction_get = zl3073x_dpll_pin_direction_get,
++	.esync_get = zl3073x_dpll_input_pin_esync_get,
++	.esync_set = zl3073x_dpll_input_pin_esync_set,
  	.frequency_get = zl3073x_dpll_input_pin_frequency_get,
  	.frequency_set = zl3073x_dpll_input_pin_frequency_set,
  	.phase_offset_get = zl3073x_dpll_input_pin_phase_offset_get,
-+	.phase_adjust_get = zl3073x_dpll_input_pin_phase_adjust_get,
-+	.phase_adjust_set = zl3073x_dpll_input_pin_phase_adjust_set,
- 	.prio_get = zl3073x_dpll_input_pin_prio_get,
- 	.prio_set = zl3073x_dpll_input_pin_prio_set,
- 	.state_on_dpll_get = zl3073x_dpll_input_pin_state_on_dpll_get,
-@@ -1253,6 +1433,8 @@ static const struct dpll_pin_ops zl3073x_dpll_output_pin_ops = {
+@@ -1431,6 +1791,8 @@ static const struct dpll_pin_ops zl3073x_dpll_input_pin_ops = {
+ 
+ static const struct dpll_pin_ops zl3073x_dpll_output_pin_ops = {
  	.direction_get = zl3073x_dpll_pin_direction_get,
++	.esync_get = zl3073x_dpll_output_pin_esync_get,
++	.esync_set = zl3073x_dpll_output_pin_esync_set,
  	.frequency_get = zl3073x_dpll_output_pin_frequency_get,
  	.frequency_set = zl3073x_dpll_output_pin_frequency_set,
-+	.phase_adjust_get = zl3073x_dpll_output_pin_phase_adjust_get,
-+	.phase_adjust_set = zl3073x_dpll_output_pin_phase_adjust_set,
- 	.state_on_dpll_get = zl3073x_dpll_output_pin_state_on_dpll_get,
- };
+ 	.phase_adjust_get = zl3073x_dpll_output_pin_phase_adjust_get,
+@@ -1678,6 +2040,10 @@ zl3073x_dpll_pin_info_get(struct zl3073x_dpll_pin *pin)
+ 				 pin_type);
+ 	}
  
++	/* Check if the pin supports embedded sync control */
++	pin->esync_control = fwnode_property_read_bool(pin_info->fwnode,
++						       "esync-control");
++
+ 	/* Read supported frequencies property if it is specified */
+ 	num_freqs = fwnode_property_count_u64(pin_info->fwnode,
+ 					      "supported-frequencies");
 -- 
 2.48.1
 
