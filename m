@@ -1,156 +1,162 @@
-Received: from pv50p00im-ztdg10021801.me.com (pv50p00im-ztdg10021801.me.com [17.58.6.56])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2063.outbound.protection.outlook.com [40.107.94.63])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD271253B7C
-	for <linux-hardening@vger.kernel.org>; Mon,  7 Apr 2025 13:15:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744031758; cv=none; b=iTPKQtWjvMuMMHkwLNUxMeBo+HduMjNivC1yWAJCHHrxEcYEbnowhSt0+oBIK9L8aJVSmmchmnP51h1RBFaRqJwkJmner2LyfXDoL/O/t7o7mFa3Tws2wcv2zTUCoK+WwVNJqd6+PQ0NfkHjHDtHrGV/8NZdIPMSj6lFzda4NMg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744031758; c=relaxed/simple;
-	bh=XrX/Z+AOhfXmEUSaVhxUD9cmEn5LGPbbovm8Fw8fiFs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=VhztfXHCqoOu2N2t/t9A8KJx1OnBMhnHmlJoF7ksxFHUBuSJCtOJgRIfI4B85PazCzbjDP5SGCWiOCEWzenbzYxHHMvlwL7Y5kljVynYrzWlGy3zXP7mqgFk/N4XwoAmEYKZIph0ub9n198vY+spGfWFaJVc4BOFvFy+3VDgDqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=0Nlrh5hF; arc=none smtp.client-ip=17.58.6.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 361EF226170;
+	Mon,  7 Apr 2025 13:23:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.63
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744032208; cv=fail; b=lJA3aVZiHTdm/+zBCErCNgFyEWw9aM2LQk1+yyGLYBtLE9zZYQiVtIr9OTwR0O/NjGWTGpQVEB8KE6Rn35ukCgSCaNvZ1VcH+taeVdH/nvgSYOpbdeyGAZe6ukGlRMfGg6GW1CNQzmXTqviOiyCTTqv9rYFGBEzfGo7+yu9I7mc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744032208; c=relaxed/simple;
+	bh=iskuG+C+skMkOYNTwCz77NVxQFjQRBqrkY5Jrb6dros=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=eYCH1fo8F2VX3+gvDFtqGvNDjigZhU43YLEu7tKxKEqYLAKNYmj2YXx54jE966hTGPjwTMBjl6CAi/pEW6o7PRyWRqeUIqmvfE/td/F8FqG4FF3LGa9ChnPRk9ZyS1pNDPqqSs8HH+ivB5V8jOC+xZfCQd2X/lSVUdViq8zZGQY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=nGMf8AAz; arc=fail smtp.client-ip=40.107.94.63
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="0Nlrh5hF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; bh=oFXzI48UtHlC5gVTKT4LJShhvIch9BxoEqw0fKpqk/4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:x-icloud-hme;
-	b=0Nlrh5hF70k5PHoBhb2eYeJt2px45N3je3kaQ5F9mridzEOH8j118rRFE2nc7gwPD
-	 q4AkEcyfwcwsKPFP38IAXj1W2rhT5FI2OiSqKZRgI0X0R7XLpUfHnfBeGW4fjH9P45
-	 BUsw9JfeFwstjvf3YJZOzM/e6YK+DKtFfVVul5HE+kSPAjPqW0NPVbx7+jcy8//YhR
-	 oqunN5O2b/XfOM60659TwJWmjWxqFfDYKI0rPUBf48Ylmd/yleeZsDLrYZm0wBDzx8
-	 aJvxfh0OtA8fg1DohpJ7MfaO3KMDLoN9DZv+HUsd7Dwp7rzRpMpszus7fjODqMdu0d
-	 STFU4pgWYJhYA==
-Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
-	by pv50p00im-ztdg10021801.me.com (Postfix) with ESMTPSA id 69C4420103AB;
-	Mon,  7 Apr 2025 13:15:49 +0000 (UTC)
-From: Zijun Hu <zijun_hu@icloud.com>
-Date: Mon, 07 Apr 2025 21:15:05 +0800
-Subject: [PATCH 2/2] lib/string: Improve str_has_prefix() performance
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="nGMf8AAz"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=JNd6rrhhx74Dk4N/FAmSM2rG46HMeeYx23V1FF3aIyucgWYphxU0FQffuc73WdwnddBvPKrBVxTbFDdOgeS0sujmlPZWhrSVrMliJh7rU/QGjZl13253r7/pix7alk9bX44nNtpiE/t9tpWpU6C6vX1WllpwQjU/9Vs3nBLBmWuHumd8CF2rjdwwka2tANPKrxHKyUyWijCKTYfaaeKpQI0vx9k8i1sh0Kku6nlBvY9+9GddArqE2XRiekcFMcR9J9u2hN4RaI5TMVicTiaYvBIe3G+Jw/2OTbw6IeWL4cD20etBlgJv+eborvYr+ZpNH9ws+apLBfDCP/G3Gj3JwQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=CVgM58un3cCtD3jqVbcyvq2wq7hPlyYn9rgEReqakus=;
+ b=BlGoWt2dr2WZ3J99KPPOaVpMZG3VK0S6M02yfI+hXJdsiGBnswR4kIrsz9KGzsa2FFYSzbT3rfPnhImlL6Wn/omvHAvvBTZrDSIKGeY5gy2EDnUcO3PjswqqxOfApu7nHKGuaN+jh9cAueHCmllRmdFZzS7V6RXDMkh3p3ntcGLrONQ0cVhbVFX5ModunYEfwQ54QCbGWD9xCTMP4Ls/X+nGsH82kBCD+i53epPpGvcWqexh0h7wKww5kkQZI/kqlB+4rH4ZpE+cay1j4DhDQpKc0e54HWQyJv7gdo/sr+k9eTnZFDiXKy2mAUv4eSbij6xKgszeOumq+QFSxEfWuw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.233) smtp.rcpttodomain=codeconstruct.com.au
+ smtp.mailfrom=nvidia.com; dmarc=pass (p=reject sp=reject pct=100) action=none
+ header.from=nvidia.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CVgM58un3cCtD3jqVbcyvq2wq7hPlyYn9rgEReqakus=;
+ b=nGMf8AAzjfNnEfOpvrVJeNTumdqDHwxBR0d71pZDA+rOibUIe1uUmyGE4OA+XPVGSNWT9orASs6IMuz42gj8qL3aY+P7jcfNo987jv2cbNy5WH0Ds7x8h+O5DW+nYYEwpJD7W/pwLaFprJT4JbOXpgYIjKa5zCK06/EILzMOiYUTzfn7AmJXgMPf0eCvMWB7DdwcpmJX5wgFtKXIvLdQdtIEFR6fR2wbUaNsexV7AoGSvBYExFDebsMcAzlNhxa3OJ5FCXHoFS1n1reWINTzI2GVK6Nc0/zqrb/dk2zdnKRrBW5gd6LUq0VtxdP/z6UWKPZLFkSLglIfzMXkZRUjSA==
+Received: from BL1P223CA0036.NAMP223.PROD.OUTLOOK.COM (2603:10b6:208:5b6::18)
+ by DS7PR12MB6167.namprd12.prod.outlook.com (2603:10b6:8:98::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.34; Mon, 7 Apr
+ 2025 13:23:21 +0000
+Received: from BN2PEPF000044A7.namprd04.prod.outlook.com
+ (2603:10b6:208:5b6:cafe::80) by BL1P223CA0036.outlook.office365.com
+ (2603:10b6:208:5b6::18) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8606.34 via Frontend Transport; Mon,
+ 7 Apr 2025 13:23:21 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.233) by
+ BN2PEPF000044A7.mail.protection.outlook.com (10.167.243.101) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8606.22 via Frontend Transport; Mon, 7 Apr 2025 13:23:20 +0000
+Received: from drhqmail203.nvidia.com (10.126.190.182) by mail.nvidia.com
+ (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 7 Apr 2025
+ 06:23:08 -0700
+Received: from drhqmail201.nvidia.com (10.126.190.180) by
+ drhqmail203.nvidia.com (10.126.190.182) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Mon, 7 Apr 2025 06:23:07 -0700
+Received: from willie-obmc-builder.nvidia.com (10.127.8.10) by mail.nvidia.com
+ (10.126.190.180) with Microsoft SMTP Server id 15.2.1544.14 via Frontend
+ Transport; Mon, 7 Apr 2025 06:23:07 -0700
+From: Willie Thai <wthai@nvidia.com>
+To: <andrew@codeconstruct.com.au>
+CC: <conor+dt@kernel.org>, <devicetree@vger.kernel.org>,
+	<dkodihalli@nvidia.com>, <gpiccoli@igalia.com>, <joel@jms.id.au>,
+	<kees@kernel.org>, <krzk+dt@kernel.org>, <krzk@kernel.org>,
+	<leohu@nvidia.com>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-aspeed@lists.ozlabs.org>, <linux-hardening@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <maryang@nvidia.com>,
+	<openbmc@lists.ozlabs.org>, <robh@kernel.org>, <tingkaic@nvidia.com>,
+	<tony.luck@intel.com>, <wthai@nvidia.com>
+Subject: Re: [PATCH v5 1/2] dt-bindings: arm: aspeed: add Nvidia's GB200NVL BMC
+Date: Mon, 7 Apr 2025 13:23:06 +0000
+Message-ID: <20250407132306.355343-1-wthai@nvidia.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <ca1f5dc3d0dd53dfe6abd9d6bea98838980f0840.camel@codeconstruct.com.au>
+References: <ca1f5dc3d0dd53dfe6abd9d6bea98838980f0840.camel@codeconstruct.com.au>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250407-imp_str_perf-v1-2-ed95d52964a4@quicinc.com>
-References: <20250407-imp_str_perf-v1-0-ed95d52964a4@quicinc.com>
-In-Reply-To: <20250407-imp_str_perf-v1-0-ed95d52964a4@quicinc.com>
-To: Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>, 
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Zijun Hu <zijun_hu@icloud.com>, linux-hardening@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>, 
- "Rob Herring (Arm)" <robh@kernel.org>
-X-Mailer: b4 0.14.2
-X-Proofpoint-GUID: 2pNzYH1mkE44dWijZpEUiyG1UerlZF5X
-X-Proofpoint-ORIG-GUID: 2pNzYH1mkE44dWijZpEUiyG1UerlZF5X
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-07_04,2025-04-03_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0 spamscore=0
- mlxlogscore=843 mlxscore=0 phishscore=0 clxscore=1015 suspectscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2308100000 definitions=main-2504070093
-X-Apple-Remote-Links: v=1;h=KCk=;charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN2PEPF000044A7:EE_|DS7PR12MB6167:EE_
+X-MS-Office365-Filtering-Correlation-Id: 015495dc-59c9-4672-5217-08dd75d75d71
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|1800799024|82310400026|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?2/z03BCqdgviRnAcEcgjEwAQVTCWJ+84ccb76O4Yr/TOhyco6OD9r8AJQnBH?=
+ =?us-ascii?Q?AnqnW0eAK4RMfi0KQGGlUDbG85l5WBfQU0XbR7wTiKTL0GbNwZEyNVFyq8LP?=
+ =?us-ascii?Q?SUhvDvr/hBzwmuEO8yHSURmiplzTvgIrWPue47G25SFCaWzHSv5Dd5nRslUA?=
+ =?us-ascii?Q?H7+nFxukChPb7qEj4urDO0nT2bBfaIwJRUTIHVWOn3H99mZdooVfWAyDCspI?=
+ =?us-ascii?Q?/M/b9AfHNpDNrmq5xxOPytt0l/q1T4EU4uxD74GfOg8DCER0rebc22jzwaG+?=
+ =?us-ascii?Q?rxxTajxqHcYffw8ewDoiVFLXAgWn//uyzZJ7fQ/sXkhwbNoFHB3rFW3YJHWY?=
+ =?us-ascii?Q?NbcUajfL/vG0ixAQzCB+aaC6DSo3sJuU2/evOWz6NWdRN9rDLUkkmlZElpPz?=
+ =?us-ascii?Q?Q6FQjNpmhnf+6PEppisPGyX6Jjpolq1D9ZeR9o0tobbTwYsCT4AH5O1eLCE5?=
+ =?us-ascii?Q?zZnRv5jOfsTZe5pq0lqpeCnIluWyl1YYttMhR1fTgwSRTXIpRo0GcGjo7mFn?=
+ =?us-ascii?Q?TymCNCraZH5mn16cjODKmJRCQgjYZ8cx21UH2JDFfFw0FZZLZ19BP4flxjYg?=
+ =?us-ascii?Q?0sjE2nv5nBfdjQRMGiC+IgF9QPE5c8RRKfxziBMPeh2UUfqbOI7fRftAxafF?=
+ =?us-ascii?Q?+jW3+seky/0dqIlSHSr5YlLV7/8q08rFcLU3F44nvicPnExr795DdIW8ULap?=
+ =?us-ascii?Q?2TteIi9199joaIc8v/wLsbNekA6GqsmfrAwd/2z+YHI9tRlUUhSF4ThwunzG?=
+ =?us-ascii?Q?7oCp22znc08OOhlklZZfK+BgPsXEwXoCQ8XkiRGuAfueVHlrQmIeVhrlJxvi?=
+ =?us-ascii?Q?JJMDnJkmdKgP1nj8N16TnNroDKadw4QyFl69r/WxHedzMn3QPOxgxAJLCsF6?=
+ =?us-ascii?Q?tmwnkep1YsS/2JSt+jpG0p2eBRvumw6QrGSd+gzeGiL3gpZc3nA9M853pFUH?=
+ =?us-ascii?Q?1ZsMT4730dMPxE15LEDfEJO4u0gKaWMNOD69f6tB161fg/6AVjiqK4NbfJdE?=
+ =?us-ascii?Q?CmdNq94z57sB9iSluCHbrEMfXu+Ebfryqj9fanoiWDJfi7uwUojM92y1Ax3m?=
+ =?us-ascii?Q?7I9g8ug7/ZUt2/jLk8ELMwMRh77aJ60+zXTzumviNbaQ9CYLaSw91/nP/BhV?=
+ =?us-ascii?Q?9JT+RAyF2c26qFY2Zbt0KXAfCcOrYKmNxgGfoiUPX9dZxqVP+1huaZMeVl2x?=
+ =?us-ascii?Q?Qxl4nbvP8PYK9/GW3ML7pdqeVfh2DByEgSDAnlFqhhTMmtWvCyiFYQ5rDWOe?=
+ =?us-ascii?Q?NfEI1LzSY568X/DaDtoNX8wpiVQf3ok2Uj/1uRakSyZQ9bquk+vfWQxY93U2?=
+ =?us-ascii?Q?zz+h8HnJjMkNcBGCh8/pl47fJy2QwHouTcUn1pXufM6TSK0ghmy9K/pklzrM?=
+ =?us-ascii?Q?wn9SK3BvF/LzxassfZTrx/V508EiqwSTJ09LetKTjNvWWU3otu7LbFOp4WDT?=
+ =?us-ascii?Q?ViXB1i+YHebBd0CImrAOrBdqdDbhuZcVpdC8vdzPVC3YtgqIV3pumAZ5X1dc?=
+ =?us-ascii?Q?pyAZo7ja4tdtO+w=3D?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(82310400026)(376014)(7416014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2025 13:23:20.1198
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 015495dc-59c9-4672-5217-08dd75d75d71
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN2PEPF000044A7.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB6167
 
-From: Zijun Hu <quic_zijuhu@quicinc.com>
+>  On Tue, 2025-04-01 at 17:51 +0200, Krzysztof Kozlowski wrote:
+> > On 01/04/2025 17:39, Willie Thai wrote:
+> > > Add Nvidia's  GB200NVL BMC board compatible.
+> > > 
+> > > Co-developed-by: Mars Yang <maryang@nvidia.com>
+> > > Signed-off-by: Mars Yang <maryang@nvidia.com>
+> > > Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > 
+> > Why are you faking tags/email addresses? Read carefully submitting
+> > patches. I really suggest using b4 instead of manually editing
+> > things.
+> > And if you decide for manual way, you must never, *never* edit
+> > people's
+> > tag. You can only copy and paste it.
+>  
+>  I've applied the series, fixing the tag in the process, along with the
+>  line-wrapping of the commit message in the second patch.
+>  
+>  Willie: scripts/checkpatch.pl warns of some of these things. Please
+>  make sure to use it in the future, or if you adopt b4 as Krzysztof
+>  suggests, use `b4 prep --check`.
 
-str_has_prefix() is frequently invoked to return length of the prefix
-string if a string has another string as prefix, but its performance
-is degraded by the strlen() loop contained.
-
-Improve its performance by eliminating the strlen() loop.
-
-Link: https://lore.kernel.org/all/20250113234643.GA3631169-robh@kernel.org
-Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
-Cc: Rob Herring (Arm) <robh@kernel.org>
----
- include/linux/string.h | 21 +--------------------
- lib/string.c           | 33 +++++++++++++++++++++++++++++++++
- 2 files changed, 34 insertions(+), 20 deletions(-)
-
-diff --git a/include/linux/string.h b/include/linux/string.h
-index e5f7defa277572719e1dbfdd264f3de6ef8544f1..394b76666ece0924c50264aaca39784d5630a2fe 100644
---- a/include/linux/string.h
-+++ b/include/linux/string.h
-@@ -533,25 +533,6 @@ void memcpy_and_pad(void *dest, size_t dest_len, const void *src, size_t count,
- 	       sizeof(*(obj)) - offsetof(typeof(*(obj)), member));	\
- })
- 
--/**
-- * str_has_prefix - Test if a string has a given prefix
-- * @str: The string to test
-- * @prefix: The string to see if @str starts with
-- *
-- * A common way to test a prefix of a string is to do:
-- *  strncmp(str, prefix, sizeof(prefix) - 1)
-- *
-- * But this can lead to bugs due to typos, or if prefix is a pointer
-- * and not a constant. Instead use str_has_prefix().
-- *
-- * Returns:
-- * * strlen(@prefix) if @str starts with @prefix
-- * * 0 if @str does not start with @prefix
-- */
--static __always_inline size_t str_has_prefix(const char *str, const char *prefix)
--{
--	size_t len = strlen(prefix);
--	return strncmp(str, prefix, len) == 0 ? len : 0;
--}
-+size_t str_has_prefix(const char *str, const char *prefix);
- 
- #endif /* _LINUX_STRING_H_ */
-diff --git a/lib/string.c b/lib/string.c
-index ea52c8509328358e436766b1186a82419d45089d..17f1a070b190debc3eaeff6d1ae45b55bae69b29 100644
---- a/lib/string.c
-+++ b/lib/string.c
-@@ -332,6 +332,39 @@ int strncmp(const char *cs, const char *ct, size_t count)
- EXPORT_SYMBOL(strncmp);
- #endif
- 
-+/**
-+ * str_has_prefix - Test if a string has a given prefix
-+ * @str: The string to test
-+ * @prefix: The string to see if @str starts with
-+ *
-+ * A common way to test a prefix of a string is to do:
-+ *  strncmp(str, prefix, sizeof(prefix) - 1)
-+ *
-+ * But this can lead to bugs due to typos, or if prefix is a pointer
-+ * and not a constant. Instead use str_has_prefix().
-+ *
-+ * Returns:
-+ * * strlen(@prefix) if @str starts with @prefix
-+ * * 0 if @str does not start with @prefix
-+ */
-+size_t str_has_prefix(const char *str, const char *prefix)
-+{
-+	const char *p = prefix;
-+	unsigned char c1, c2;
-+
-+	do {
-+		c1 = *str++;
-+		c2 = *p++;
-+
-+		if (c1 != c2)
-+			return c2 == '\0' ? p - 1 - prefix : 0;
-+
-+	} while (c2 != '\0');
-+
-+	return p - 1 - prefix;
-+}
-+EXPORT_SYMBOL(str_has_prefix);
-+
- #ifndef __HAVE_ARCH_STRCHR
- /**
-  * strchr - Find the first occurrence of a character in a string
-
--- 
-2.34.1
-
+Thanks Andrew !
