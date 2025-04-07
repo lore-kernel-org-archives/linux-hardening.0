@@ -1,94 +1,95 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EE2C223715;
-	Mon,  7 Apr 2025 18:48:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EA6422172C;
+	Mon,  7 Apr 2025 18:52:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744051707; cv=none; b=IfWrinAw19PdYLYFLAFxMZ1OYeai38NgxcJWgHJnvkgkFQguQPJCn8QEccLu7thvdEhQEmdjBTcJiKoeV6ZSIgMe/R1Fn2Gbv2tuaNTyydoNSGRC7zq/Zp2cnOHCe8CLKcCcRekl/ToEP3lg36UkZDW2s1DzcOuI5yqPVbXIOM0=
+	t=1744051938; cv=none; b=bUm9hMUsmchF9/1L6XFlNMZ6QRMSP3/gXEQi4g5JqDQgBBh/aJhG3HnaO0igPuZ8liel2wDJvQuDwkTt/SCXm+YrDvXhORqFxH0xGiu+Lc8/FqvDI6Fkc6GOFho1iKFtuS3lVw7z46lxAtFosSus5mH7LayDVwsBFXB5p2rHb0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744051707; c=relaxed/simple;
-	bh=WXWBXg7Mxphp/ZcQx+1HGg2KHbspvDldDkveLIdFIX8=;
+	s=arc-20240116; t=1744051938; c=relaxed/simple;
+	bh=/cjh5PTdngsV2rrZrVQpnhYg1pc1i3/7ohYYCmKkUDQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fkmfBXMbVN0Yu+UrNj/sfpdzFvhQWx6qTWtfaKRg/Ew0P1FPiMXU2iL2M18PkRpPl0ZRX0Ct73n1/SyBWNMKXY8ijF5NcvLc7RpmGt4wsoFpZEzZ9+qIRnQMMtRWVak97N/nYI5yCyyr9bz4Y7skZDmIH+gRXOyZ6F4rJttcIq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wr5UMU39; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=KsCK9/kSuFzYE6zOqHOBNVXoTxHZv0Pn/HUqdW8x07lpwRBxsUc2kFwi8Or4UVsCOrTrJ+6Vz0MX4XWY6n/VEuo1yqfs4YlFCzKaYSI2pzfkBnjjWH+UKhYa50/qNghLzLKEcca+52WiHwftnxfICi6vEok4Sjq5MV37i113VbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SJUIBZbg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wr5UMU39"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6EF5C4CEDD;
-	Mon,  7 Apr 2025 18:48:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SJUIBZbg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B6D7C4CEED;
+	Mon,  7 Apr 2025 18:52:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744051706;
-	bh=WXWBXg7Mxphp/ZcQx+1HGg2KHbspvDldDkveLIdFIX8=;
+	s=k20201202; t=1744051938;
+	bh=/cjh5PTdngsV2rrZrVQpnhYg1pc1i3/7ohYYCmKkUDQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Wr5UMU39sO6Wo5hAa5DBkFozW402JKSyFJqViy+kN5Dh57rUYZZleQlCPhnGcIHXq
-	 TmjoJqBi4TmXdTK+vg/kuHwZHzz6hUEAIZYXNzrmbOMuWjJvHzm+cTlkF+VEfA7vTC
-	 zIKizWQ0aeMrS/sTFt+Ga0DTrBG9FmiOvFxJnxhfH7tqHYe43EEt1Huy0vtSc9P6Ri
-	 PKEqca1Jh1p9Y4koTH16WKKb3e/le7c8hFsak5tYlVbxifERaCnsou6GQrc493ey0/
-	 BqDkjogR+c1htFcP/8L51vfnaMZPK9vPKIMq5U0Uhprx9qxDhDAYqux9NQoye7SbmX
-	 ceOuP0m1jN8mA==
-Date: Mon, 7 Apr 2025 19:48:22 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
+	b=SJUIBZbgzdqsmwDFK1kzCKIdu3zeLbwBgM12jT2a46x0KSiib2ka5d8S4fV8IMWIv
+	 P5sf7L+3zfcobE4jo65DG/gr/AubQ6Ed2K47vFYL5JaE0kYl/zRd01qgKV1VoxxuY1
+	 IXpBiFFYwjDCaa/p7omVQuKtuXvzRl6A2+7tmJ/5JDb7xWFe9DoXtn1YuXe8lgDOqb
+	 yPIOuRQHw69LsH4mK8+oyBpHo92g6w3hA28dtnnAFRWHpnPhbrSrgoWe6C6cRQVwnx
+	 b48AT4yMQOVSTqgSXP9DoXWSivY+2W76PaS05mRC0EgDbdSHjp99V3diSD/D0371wG
+	 rLjeTS4l2SyIg==
+Date: Mon, 7 Apr 2025 11:52:13 -0700
+From: Kees Cook <kees@kernel.org>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] regulator: hi6421v600: Truncate long strings for
- trailing NUL
-Message-ID: <da71edb5-8333-4700-bcac-cc4bdfacd0bd@sirena.org.uk>
-References: <20250310222408.work.339-kees@kernel.org>
- <202504071134.1AAF30CAF5@keescook>
+Subject: Re: [PATCH][next] usb: gadget: uvc: Avoid
+ -Wflex-array-member-not-at-end warnings
+Message-ID: <202504071148.6F55B7AF34@keescook>
+References: <Z9dyY7_ydJiGqh_d@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="Mp9tbpEoV+X1gcVS"
-Content-Disposition: inline
-In-Reply-To: <202504071134.1AAF30CAF5@keescook>
-X-Cookie: Meester, do you vant to buy a duck?
-
-
---Mp9tbpEoV+X1gcVS
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <Z9dyY7_ydJiGqh_d@kspp>
 
-On Mon, Apr 07, 2025 at 11:35:33AM -0700, Kees Cook wrote:
-> On Mon, Mar 10, 2025 at 03:24:09PM -0700, Kees Cook wrote:
+On Mon, Mar 17, 2025 at 11:22:51AM +1030, Gustavo A. R. Silva wrote:
+> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> getting ready to enable it, globally.
+> 
+> Move the conflicting declaration to the end of the structure. Notice
+> that `struct uvc_input_header_descriptor` is a flexible structure --a
+> structure that contains a flexible-array member.
+> 
+> With this, fix three of the following warnings:
+> 
+> drivers/usb/gadget/function/uvc_configfs.h:77:57: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  drivers/usb/gadget/function/uvc_configfs.h | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/usb/gadget/function/uvc_configfs.h b/drivers/usb/gadget/function/uvc_configfs.h
+> index 2f78cd4f396f..9391614135e9 100644
+> --- a/drivers/usb/gadget/function/uvc_configfs.h
+> +++ b/drivers/usb/gadget/function/uvc_configfs.h
+> @@ -74,10 +74,12 @@ static inline struct uvcg_format *to_uvcg_format(struct config_item *item)
+>  
+>  struct uvcg_streaming_header {
+>  	struct config_item				item;
+> -	struct uvc_input_header_descriptor		desc;
+>  	unsigned					linked;
+>  	struct list_head				formats;
+>  	unsigned					num_fmt;
+> +
+> +	/* Must be last --ends in a flexible-array member. */
+> +	struct uvc_input_header_descriptor		desc;
+>  };
+>  
+>  static inline struct uvcg_streaming_header *to_uvcg_streaming_header(struct config_item *item)
 
-> > GCC 15's -Wunterminated-string-initialization saw that these strings
-> > were being truncated. Adjust the initializer so that the needed final
-> > NUL character will be present.
+This looks correct to me, and may be fixing some bugs -- I can see the
+allocation routine for this is already expecting the bmaControls (in
+desc) to be trailing:
 
-> Friendly ping on this patch. Who can pick this up?
+                /* bmaControls */
+                *size += h->num_fmt * UVCG_STREAMING_CONTROL_SIZE;
 
-Please don't send content free pings and please allow a reasonable time
-for review.  People get busy, go on holiday, attend conferences and so=20
-on so unless there is some reason for urgency (like critical bug fixes)
-please allow at least a couple of weeks for review.  If there have been
-review comments then people may be waiting for those to be addressed.
+Reviewed-by: Kees Cook <kees@kernel.org>
 
-Sending content free pings adds to the mail volume (if they are seen at
-all) which is often the problem and since they can't be reviewed
-directly if something has gone wrong you'll have to resend the patches
-anyway, so sending again is generally a better approach though there are
-some other maintainers who like them - if in doubt look at how patches
-for the subsystem are normally handled.
-
---Mp9tbpEoV+X1gcVS
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmf0HfYACgkQJNaLcl1U
-h9BDKwf9GIS0wm69aFKwCYCEHzmUyEMCsWc3FkSj7LdyIo7YlbKYxpZEAMp8YORn
-YNyEgEEzXhsGV/WCdzgN8b+UlrHf0EBJ+bs9DUIC7JcaTZUw6v4jhkh2omO87pw1
-JsAWaAahKJYna4noOx0RtmTogltXZWqcoXpnePK3wgRGo/4DC+wTbKG6kTUONUJ6
-2kdHU2q0KSJy4TBXlhl4AmG0o9ycy2PKdi8Hs1xTUD7U8rqIQmu9UjNzcdhAu/Ub
-0JBLsZe7s69v585jJjh6ii2URbspiBVcuN9NEigFLP5f/Oxf8Mhm3jIbmVsFHgqV
-wS7oxe7YC+8GvV1mKBUPA/0J7N839w==
-=b0+I
------END PGP SIGNATURE-----
-
---Mp9tbpEoV+X1gcVS--
+-- 
+Kees Cook
