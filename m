@@ -1,190 +1,275 @@
-Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79C07227EAB
-	for <linux-hardening@vger.kernel.org>; Mon,  7 Apr 2025 23:35:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 502F423C8B0;
+	Tue,  8 Apr 2025 01:47:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744068958; cv=none; b=hhujmrCPXKUwcrBymRNaD2BXZo/9Su05GBpP9GTt9wdy/RS2peNgCn0dvckD3larwmjCEhCnVmpsx3J+4EupZtono1BZjafb+d3qkk60bm0stEd6L/FchzNTv18amBv7KeYoV3fl10d5bo5H5CeAcq45eBZNhAKAZjyjhiT+LQU=
+	t=1744076827; cv=none; b=M3sWMAp5QpngrLnNRmKc7WjkVd+1NsLSpVWHXeNg+HsCFgusrEq21pYB4h16RJU4v8TH5AuFQXHF7gHhLjAHTZ4oYVv0GlqXskAWuiISUNkHuGl8AdjkXi+VLilxzruRwhkATeWOXGVGcrz52bKfrxxDKbrbBDiGOAyGuQomfsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744068958; c=relaxed/simple;
-	bh=nkroRZIsUPXnHwLiwTtvmSFph4NxNdnTJLh59C9Z0D8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WG3uqebDoLd4v82VNcAfMf7gYhSP7jgVGYAXOHbPEHDk2RHBw0AgGQ1DvGk7BJq4QeSeSWzz/RQpIshW0mxwRJyAdT3GRVi8tw5GBXXva/2qLH2/cYxCGrqJa57dG1Qf6ccGPUeSf+OVlXG0f1vS11SbhqdI02sh6HkPlEfL+8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=asNUF5Z2; arc=none smtp.client-ip=35.89.44.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1744076827; c=relaxed/simple;
+	bh=KE+Z3d6E92vWk+TGoKSL03e7Q9j7w8jegPEWdu9JpzA=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=j2fh94TFBy2+9sNB+E3Yr8ZeR1LxXrFt7nm2p3v0SIYQVZcez+6gIClOvaSntTA3JjPqgpKCgZ2OjxGO+BY3Dh0VTllAOuTngOqAFixQOtdT3S7J2e2b6jixxOWd7yqeHAhSBMqIWGCL78lQRK1kUjeFB/3IdZlrgNDMWfceb1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O93E/N+Y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="asNUF5Z2"
-Received: from eig-obgw-6002a.ext.cloudfilter.net ([10.0.30.222])
-	by cmsmtp with ESMTPS
-	id 1taSuWx5hAfjw1w0Mu6ugn; Mon, 07 Apr 2025 23:35:50 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id 1w0MuHyMj1vNy1w0Mu8Pi5; Mon, 07 Apr 2025 23:35:50 +0000
-X-Authority-Analysis: v=2.4 cv=VMQWnMPX c=1 sm=1 tr=0 ts=67f46156
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=B3fuDwYyW55wTQKIj88FGw==:17
- a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=7T7KSl7uo7wA:10
- a=4V2JOyclYXKWiCCFizwA:9 a=QEXdDO2ut3YA:10 a=Xt_RvD8W3m28Mn_h3AK8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=97bElyQUpdy5ltz54fpnmGgcyORr0BUbRtAfywk6zQM=; b=asNUF5Z2It4rsXVDS9wI3cyuFL
-	z5dmJT/VdtmEhWWqBsDWUHvckt/9PYfls8I6NdI6ZKRNQW05zzS8h1Lovv0rIo/ZibKl9kA4RK+Nk
-	S/W5Ama6lE326TKtAlQiIXWHRvl4TX06hmfCHUlPvEg8sDryjz9PhzsUc9Jvj38lkJuv6Ae8EIOte
-	9Ubg56Q+Hkj2AMXcDiRl0uSXQE6My8WhhrKnCr0ED2T0uFPfG1+KXQTGknyIT8xvX9kvrz96nzCOt
-	/4K3tTTdjqrHxuqosXCKrs3O9bQHemWcYCqLkJ+h+gmNaGYg0z0Jo33Uo2cn1GXVaAgDNrHWg2q55
-	QjuSa8Og==;
-Received: from [201.172.174.147] (port=49836 helo=[192.168.15.6])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1u1w0L-00000000auU-0VGL;
-	Mon, 07 Apr 2025 18:35:49 -0500
-Message-ID: <a6dccb66-3f97-443f-85e5-fe089cd93a5e@embeddedor.com>
-Date: Mon, 7 Apr 2025 17:35:47 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O93E/N+Y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86F87C4CEDD;
+	Tue,  8 Apr 2025 01:47:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744076826;
+	bh=KE+Z3d6E92vWk+TGoKSL03e7Q9j7w8jegPEWdu9JpzA=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=O93E/N+Y1Iljjtf88VhPCAaQwAn08ZSWJm2MAwM49fVIW8aJgKd76TKcJs96MK8C9
+	 UrUU3Rwmu723SdPp+9r+EsHll1LzN+A+cQu+UtqvP7vjOSpPo6Ds6xtkxWnuaCidMo
+	 bBTVzHfBL03c5XPylumSswLi8jStbwmrrKbsujjwasBwHE3kmdBz3UkEqVG9keXEh6
+	 qEakClUM9/pJPLveGa70iYIJI8Mjs0uuJJO3MJ7qUI7JrRfoTu71i2mBJAVlmDi4e6
+	 bwJ3A4i9Prj8En3cerE2Uy3trkXPOBGkdgyLeR1tEZs+yzIGhZIVpVZVck8WXT2uW5
+	 RoUsNWwATUPNw==
+Date: Mon, 07 Apr 2025 20:47:05 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] drm/nouveau: chan: Avoid
- -Wflex-array-member-not-at-end warnings
-To: Kees Cook <kees@kernel.org>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <Z-67Hm9uHEJs0RGw@kspp> <202504071227.E8484EB@keescook>
- <d8e63b8a-7a2c-46dc-a15c-9399044a23ee@embeddedor.com>
- <202504071336.0C708FCAB8@keescook>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <202504071336.0C708FCAB8@keescook>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.174.147
-X-Source-L: No
-X-Exim-ID: 1u1w0L-00000000auU-0VGL
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.6]) [201.172.174.147]:49836
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 6
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfFf0h3Iuc6XVJVXq6TbEolFRG66hRArySuvxPDmHKmfcsi0fOJf5myD/fWSJDdy/IPRFGyb747BDJHZ3VJTf84pfFlj0WnoARdm1QXtOvqp4sM3bkTWB
- PqQI6iV8UfvFqq2aZXLEmyIHxFOcDGommiqS7UTJUR1twqN8ZhtElXaiZaC6bMTwiknJjlCgn+9DFvcJIH4frBz8Bqh3FNxCi0tUTQaDtp4iWoKS4fS70hO5
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, 
+ Lubomir Rintel <lkundrak@v3.sk>, Karel Balej <balejk@matfyz.cz>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ Will Deacon <will@kernel.org>, phone-devel@vger.kernel.org, 
+ ~postmarketos/upstreaming@lists.sr.ht, 
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>, soc@lists.linux.dev, 
+ Andrew Lunn <andrew@lunn.ch>, David Wronek <david@mainlining.org>, 
+ linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, 
+ Gregory Clement <gregory.clement@bootlin.com>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Kees Cook <kees@kernel.org>, 
+ Tony Luck <tony.luck@intel.com>, Conor Dooley <conor+dt@kernel.org>, 
+ Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, 
+ devicetree@vger.kernel.org
+To: =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
+In-Reply-To: <20250407-pxa1908-lkml-v15-0-e83ef101f944@skole.hr>
+References: <20250407-pxa1908-lkml-v15-0-e83ef101f944@skole.hr>
+Message-Id: <174407675100.451724.4417307292758250572.robh@kernel.org>
+Subject: Re: [PATCH v15 0/4] Initial Marvell PXA1908 support
 
-[..]
 
->>>> -	struct {
->>>> -		struct nvif_chan_v0 chan;
->>>> -		char name[TASK_COMM_LEN+16];
->>>> -	} args;
->>>> +	DEFINE_RAW_FLEX(struct nvif_chan_v0, args, name, TASK_COMM_LEN + 16);
->>>>    	struct nvif_device *device = &cli->device;
->>>>    	struct nouveau_channel *chan;
->>>>    	const u64 plength = 0x10000;
->>>> @@ -298,28 +295,28 @@ nouveau_channel_ctor(struct nouveau_cli *cli, bool priv, u64 runm,
->>>>    		return ret;
->>>>    	/* create channel object */
->>>> -	args.chan.version = 0;
->>>> -	args.chan.namelen = sizeof(args.name);
->>>> -	args.chan.runlist = __ffs64(runm);
->>>> -	args.chan.runq = 0;
->>>> -	args.chan.priv = priv;
->>>> -	args.chan.devm = BIT(0);
->>>> +	args->version = 0;
->>>> +	args->namelen = __struct_size(args) - sizeof(*args);
->>>
->>> Does __struct_size(args->name) work here (and later)?
->>
->> Why not?
+On Mon, 07 Apr 2025 22:02:11 +0200, Duje Mihanović wrote:
+> Hello,
 > 
-> Uhm, I'm genuinely curious. I *think* it will work, but because it's
-> within the struct, not outside of it, I'm unclear if it'll DTRT for
-> finding the size (since __builtin_object_size() can be touchy).
+> This series adds initial support for the Marvell PXA1908 SoC and
+> "samsung,coreprimevelte", a smartphone using the SoC.
 > 
->> I mean, this should be equivalent to `TASK_COMM_LEN+16`, I could
->> use the latter if people prefer it (see my comments below).
+> USB works and the phone can boot a rootfs from an SD card, but there are
+> some warnings in the dmesg:
 > 
-> Right, it should be the same. I think __struct_size(args->name) would be
-> much more readable ... if it works. :)
-
-OK, I'll double check this.
-
-[..]
-
->>>> @@ -367,17 +365,17 @@ nouveau_channel_init(struct nouveau_channel *chan, u32 vram, u32 gart)
->>>>    		return ret;
->>>>    	if (chan->user.oclass >= FERMI_CHANNEL_GPFIFO) {
->>>> -		struct {
->>>> -			struct nvif_event_v0 base;
->>>> -			struct nvif_chan_event_v0 host;
->>>> -		} args;
->>>> +		DEFINE_RAW_FLEX(struct nvif_event_v0, args, data,
->>>> +				sizeof(struct nvif_chan_event_v0));
->>>> +		struct nvif_chan_event_v0 *host =
->>>> +				(struct nvif_chan_event_v0 *)args->data;
->>>> -		args.host.version = 0;
->>>> -		args.host.type = NVIF_CHAN_EVENT_V0_KILLED;
->>>> +		host->version = 0;
->>>> +		host->type = NVIF_CHAN_EVENT_V0_KILLED;
->>>>    		ret = nvif_event_ctor(&chan->user, "abi16ChanKilled", chan->chid,
->>>>    				      nouveau_channel_killed, false,
->>>> -				      &args.base, sizeof(args), &chan->kill);
->>>> +				      args, __struct_size(args), &chan->kill);
->>>>    		if (ret == 0)
->>>>    			ret = nvif_event_allow(&chan->kill);
->>>>    		if (ret) {
->>>> @@ -520,46 +518,45 @@ nouveau_channels_fini(struct nouveau_drm *drm)
->>>>    int
->>>>    nouveau_channels_init(struct nouveau_drm *drm)
->>>>    {
->>>> -	struct {
->>>> -		struct nv_device_info_v1 m;
->>>> -		struct {
->>>> -			struct nv_device_info_v1_data channels;
->>>> -			struct nv_device_info_v1_data runlists;
->>>> -		} v;
->>>> -	} args = {
->>>> -		.m.version = 1,
->>>> -		.m.count = sizeof(args.v) / sizeof(args.v.channels),
->>>
->>> sizeof(args.v) == sizeof(struct nv_device_info_v1_data) * 2
->>>
->>> and sizeof(args.v.channels) == sizeof(struct nv_device_info_v1_data).
->>>
->>> Isn't this just "2"? i.e. isn't struct nv_device_info_v1::count the
->>> counted_by for struct nv_device_info_v1::data?
->>
->> Yes, it's just `2`. However, I didn't want to explicitly use the magic
->> number, in case people don't like it, as in other similar patches (in
->> other subsystems).
->>
->> But, yeah, it's `2`. :)
+> During SMP initialization:
+> [    0.006519] CPU features: SANITY CHECK: Unexpected variation in SYS_CNTFRQ_EL0. Boot CPU: 0x000000018cba80, CPU1: 0x00000000000000
+> [    0.006542] CPU features: Unsupported CPU feature variation detected.
+> [    0.006589] CPU1: Booted secondary processor 0x0000000001 [0x410fd032]
+> [    0.010710] Detected VIPT I-cache on CPU2
+> [    0.010716] CPU features: SANITY CHECK: Unexpected variation in SYS_CNTFRQ_EL0. Boot CPU: 0x000000018cba80, CPU2: 0x00000000000000
+> [    0.010758] CPU2: Booted secondary processor 0x0000000002 [0x410fd032]
+> [    0.014849] Detected VIPT I-cache on CPU3
+> [    0.014855] CPU features: SANITY CHECK: Unexpected variation in SYS_CNTFRQ_EL0. Boot CPU: 0x000000018cba80, CPU3: 0x00000000000000
+> [    0.014895] CPU3: Booted secondary processor 0x0000000003 [0x410fd032]
 > 
-> Okay. So if "count" is set up as a counted_by, the assignment will
-> happen automatically (in DEFINE_FLEX -- no longer "RAW").
+> SMMU probing fails:
+> [    0.101798] arm-smmu c0010000.iommu: probing hardware configuration...
+> [    0.101809] arm-smmu c0010000.iommu: SMMUv1 with:
+> [    0.101816] arm-smmu c0010000.iommu:         no translation support!
+> 
+> A 3.14 based Marvell tree is available on GitHub
+> acorn-marvell/brillo_pxa_kernel, and a Samsung one on GitHub
+> CoderCharmander/g361f-kernel.
+> 
+> Andreas Färber attempted to upstream support for this SoC in 2017:
+> https://lore.kernel.org/lkml/20170222022929.10540-1-afaerber@suse.de/
+> 
+> Signed-off-by: Duje Mihanović <duje.mihanovic@skole.hr>
+> ---
+> Changes in v15:
+> - Update trailers
+> - Move device trees to mmp/ subdirectory
+> - Remove excess newline in board dts
+> - Add soc@ to Cc list
+> - Drop tree from MAINTAINERS
+> - Rebase to v6.15-rc1
+> - Link to v14: https://lore.kernel.org/r/20250115-pxa1908-lkml-v14-0-847d24f3665a@skole.hr
+> 
+> Changes in v14:
+> - Rebase on v6.13-rc7, dropping everything except DT
+> - Link to v13: https://lore.kernel.org/r/20241001-pxa1908-lkml-v13-0-6b9a7f64f9ae@skole.hr
+> 
+> Changes in v13:
+> - Better describe the hardware in bindings/arm commit message
+> - Rebase on v6.12-rc1
+> - Link to v12: https://lore.kernel.org/r/20240823-pxa1908-lkml-v12-0-cc3ada51beb0@skole.hr
+> 
+> Changes in v12:
+> - Rebase on v6.11-rc4
+> - Fix schmitt properties in accordance with 78d8815031fb ("dt-bindings: pinctrl: pinctrl-single: fix schmitt related properties")
+> - Drop a few redundant includes in clock drivers
+> - Link to v11: https://lore.kernel.org/r/20240730-pxa1908-lkml-v11-0-21dbb3e28793@skole.hr
+> 
+> Changes in v11:
+> - Rebase on v6.11-rc1 (conflict with DTS Makefile), no changes
+> - Link to v10: https://lore.kernel.org/r/20240424-pxa1908-lkml-v10-0-36cdfb5841f9@skole.hr
+> 
+> Changes in v10:
+> - Update trailers
+> - Rebase on v6.9-rc5
+> - Clock driver changes:
+>   - Add a couple of forgotten clocks in APBC
+>     - The clocks are thermal_clk, ipc_clk, ssp0_clk, ssp2_clk and swjtag
+>     - The IDs and register offsets were already present, but I forgot to
+>       actually register them
+>   - Split each controller block into own file
+>   - Drop unneeded -of in clock driver filenames
+>   - Simplify struct pxa1908_clk_unit
+>   - Convert to platform driver
+>   - Add module metadata
+> - DTS changes:
+>   - Properly name pinctrl nodes
+>   - Drop pinctrl #size-cells, #address-cells, ranges and #gpio-size-cells
+>   - Fix pinctrl input-schmitt configuration
+> - Link to v9: https://lore.kernel.org/20240402-pxa1908-lkml-v9-0-25a003e83c6f@skole.hr
+> 
+> Changes in v9:
+> - Update trailers and rebase on v6.9-rc2, no changes
+> - Link to v8: https://lore.kernel.org/20240110-pxa1908-lkml-v8-0-fea768a59474@skole.hr
+> 
+> Changes in v8:
+> - Drop SSPA patch
+> - Drop broken-cd from eMMC node
+> - Specify S-Boot hardcoded initramfs location in device tree
+> - Add ARM PMU node
+> - Correct inverted modem memory base and size
+> - Update trailers
+> - Rebase on next-20240110
+> - Link to v7: https://lore.kernel.org/20231102-pxa1908-lkml-v7-0-cabb1a0cb52b@skole.hr
+>   and https://lore.kernel.org/20231102152033.5511-1-duje.mihanovic@skole.hr
+> 
+> Changes in v7:
+> - Suppress SND_MMP_SOC_SSPA on ARM64
+> - Update trailers
+> - Rebase on v6.6-rc7
+> - Link to v6: https://lore.kernel.org/r/20231010-pxa1908-lkml-v6-0-b2fe09240cf8@skole.hr
+> 
+> Changes in v6:
+> - Address maintainer comments:
+>   - Add "marvell,pxa1908-padconf" binding to pinctrl-single driver
+> - Drop GPIO patch as it's been pulled
+> - Update trailers
+> - Rebase on v6.6-rc5
+> - Link to v5: https://lore.kernel.org/r/20230812-pxa1908-lkml-v5-0-a5d51937ee34@skole.hr
+> 
+> Changes in v5:
+> - Address maintainer comments:
+>   - Move *_NR_CLKS to clock driver from dt binding file
+> - Allocate correct number of clocks for each block instead of blindly
+>   allocating 50 for each
+> - Link to v4: https://lore.kernel.org/r/20230807-pxa1908-lkml-v4-0-cb387d73b452@skole.hr
+> 
+> Changes in v4:
+> - Address maintainer comments:
+>   - Relicense clock binding file to BSD-2
+> - Add pinctrl-names to SD card node
+> - Add vgic registers to GIC node
+> - Rebase on v6.5-rc5
+> - Link to v3: https://lore.kernel.org/r/20230804-pxa1908-lkml-v3-0-8e48fca37099@skole.hr
+> 
+> Changes in v3:
+> - Address maintainer comments:
+>   - Drop GPIO dynamic allocation patch
+>   - Move clock register offsets into driver (instead of bindings file)
+>   - Add missing Tested-by trailer to u32_fract patch
+>   - Move SoC binding to arm/mrvl/mrvl.yaml
+> - Add serial0 alias and stdout-path to board dts to enable UART
+>   debugging
+> - Rebase on v6.5-rc4
+> - Link to v2: https://lore.kernel.org/r/20230727162909.6031-1-duje.mihanovic@skole.hr
+> 
+> Changes in v2:
+> - Remove earlycon patch as it's been merged into tty-next
+> - Address maintainer comments:
+>   - Clarify GPIO regressions on older PXA platforms
+>   - Add Fixes tag to commit disabling GPIO pinctrl calls for this SoC
+>   - Add missing includes to clock driver
+>   - Clock driver uses HZ_PER_MHZ, u32_fract and GENMASK
+>   - Dual license clock bindings
+>   - Change clock IDs to decimal
+>   - Fix underscores in dt node names
+>   - Move chosen node to top of board dts
+>   - Clean up documentation
+>   - Reorder commits
+>   - Drop pxa,rev-id
+> - Rename muic-i2c to i2c-muic
+> - Reword some commits
+> - Move framebuffer node to chosen
+> - Add aliases for mmc nodes
+> - Rebase on v6.5-rc3
+> - Link to v1: https://lore.kernel.org/r/20230721210042.21535-1-duje.mihanovic@skole.hr
+> 
+> ---
+> Duje Mihanović (4):
+>       dt-bindings: marvell: Document PXA1908 SoC and samsung,coreprimevelte
+>       arm64: Kconfig.platforms: Add config for Marvell PXA1908 platform
+>       arm64: dts: Add DTS for Marvell PXA1908 and samsung,coreprimevelte
+>       MAINTAINERS: add myself as Marvell PXA1908 maintainer
+> 
+>  .../devicetree/bindings/arm/mrvl/mrvl.yaml         |   5 +
+>  MAINTAINERS                                        |   8 +
+>  arch/arm64/Kconfig.platforms                       |   8 +
+>  arch/arm64/boot/dts/marvell/Makefile               |   2 +
+>  arch/arm64/boot/dts/marvell/mmp/Makefile           |   2 +
+>  .../marvell/mmp/pxa1908-samsung-coreprimevelte.dts | 335 +++++++++++++++++++++
+>  arch/arm64/boot/dts/marvell/mmp/pxa1908.dtsi       | 300 ++++++++++++++++++
+>  7 files changed, 660 insertions(+)
+> ---
+> base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+> change-id: 20230803-pxa1908-lkml-6830e8da45c7
+> 
+> Best regards,
+> --
+> Duje Mihanović <duje.mihanovic@skole.hr>
+> 
+> 
 
-I really don't want to condition -Wflex-array-member-not-at-end patches
-on counted_by patches, for now.
 
-Thanks
---
-Gustavo
+My bot found new DTB warnings on the .dts files added or changed in this
+series.
+
+Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+are fixed by another series. Ultimately, it is up to the platform
+maintainer whether these warnings are acceptable or not. No need to reply
+unless the platform maintainer has comments.
+
+If you already ran DT checks and didn't see these error(s), then
+make sure dt-schema is up to date:
+
+  pip3 install dtschema --upgrade
+
+
+This patch series was applied (using b4) to base:
+ Base: using specified base-commit 0af2f6be1b4281385b618cb86ad946eded089ac8
+
+If this is not the correct base, please add 'base-commit' tag
+(or use b4 which does this automatically)
+
+New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/marvell/' for 20250407-pxa1908-lkml-v15-0-e83ef101f944@skole.hr:
+
+arch/arm64/boot/dts/marvell/mmp/pxa1908-samsung-coreprimevelte.dtb: / (samsung,coreprimevelte): memory: False schema does not allow {'device_type': ['memory'], 'reg': [[0, 0, 0, 0]]}
+	from schema $id: http://devicetree.org/schemas/root-node.yaml#
+arch/arm64/boot/dts/marvell/mmp/pxa1908-samsung-coreprimevelte.dtb: mmc@80000 (mrvl,pxav3-mmc): pinctrl-names: ['default'] is too short
+	from schema $id: http://devicetree.org/schemas/mmc/sdhci-pxa.yaml#
+arch/arm64/boot/dts/marvell/mmp/pxa1908-samsung-coreprimevelte.dtb: mmc@80000 (mrvl,pxav3-mmc): Unevaluated properties are not allowed ('pinctrl-names' was unexpected)
+	from schema $id: http://devicetree.org/schemas/mmc/sdhci-pxa.yaml#
+
+
+
+
+
